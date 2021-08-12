@@ -49,6 +49,7 @@
 
 using namespace std;
 
+extern int upc;
 
 // Need this for tracking segmentation faults in the threaded 
 // parts of the event() call.
