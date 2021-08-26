@@ -1892,9 +1892,9 @@ sub action {
     my($self, $tgt) = @_;
     my($src) = $tgt->{sources}[0];
     main::showcom("Install ${\$src->rpath} as ${\$tgt->path}")
-	if ($param::install && $param::quiet < 1);
+	if ($param::install && $param::quiet < 1 && -f ${\$src->rpath});
     return unless $param::build;
-    futil::install($src->rpath, $tgt);
+    futil::install($src->rpath, $tgt) if -f ${\$src->rpath};
     return 1;
 }
 
