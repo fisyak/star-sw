@@ -10,6 +10,7 @@ on:
 
 jobs:
   ROOT5:
+    if: github.repository_owner == 'star-bnl'
     runs-on: ubuntu-latest
     steps:
       - name: Get branch name
@@ -47,6 +48,7 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/star-sw-root5-build:${{ steps.branch-name.outputs.tag }}
 
   ROOT6:
+    if: github.repository_owner == 'star-bnl'
     runs-on: ubuntu-latest
     steps:
       - name: Get branch name
