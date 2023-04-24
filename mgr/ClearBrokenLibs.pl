@@ -7,6 +7,7 @@ foreach my $logfile (glob "b*.log") {
   while (my $line = <In>) {
 #    if ($line !~ /unrecognized relocation (0x2a) in section/) {next;}
     if ($line !~ /unrecognized relocation/ &&
+	$line !~ /file not recognized/ &&
 	$line !~ /access beyond end of merged section/) {next;}
 							 #    print "$line\n";
     my ($dummy,$lib) = split(":",$line);
