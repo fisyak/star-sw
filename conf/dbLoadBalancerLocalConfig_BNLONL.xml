@@ -22,8 +22,8 @@
 
 <Scatalog version="1.0.1">
                 <Server scope="Production" user="starreco,priv2" accessMode="read">
-                       <Host name="onldb3.starp.bnl.gov"  port="3316" />
-                       <Host name="onldb4.starp.bnl.gov"  port="3316" />
+                      <Host name="onldb3.starp.bnl.gov"  port="3316" />
+                      <Host name="onldb4.starp.bnl.gov"  port="3316" />
                 </Server>  
                 <Server scope="Analysis" accessMode="read">
                         <Host name="onldb3.starp.bnl.gov"  port="3316" />
