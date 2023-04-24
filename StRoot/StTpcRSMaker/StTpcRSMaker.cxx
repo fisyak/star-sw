@@ -673,8 +673,6 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
     delete [] pbins;
     delete [] pbinsL;
   }
-  St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
-  St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
   return kStOK;
 }
 //________________________________________________________________________________

@@ -230,10 +230,6 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
     }
     LOG_WARN << " dx2L in dE/dx predictions "<< endm;
   }
-#ifdef __CHECK_RDOMAP_AND_VOLTAGE__
-  St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
-  St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
-#endif /* __CHECK_RDOMAP_AND_VOLTAGE__ */
   return kStOK;
 }
 //_______________________________________________________________________________

@@ -1,9 +1,9 @@
 TDataSet *CreateTable() { 
   // ------  Test whether this table share library was loaded ------
   if (!gROOT->GetClass("St_tpcExtraGainCorrection")) return 0;
-  Int_t nrows = 694;
+  Int_t nrows = 696;
   St_tpcExtraGainCorrection *tableSet = new St_tpcExtraGainCorrection("tpcExtraGainCorrection",nrows);
-  tpcExtraGainCorrection_st row[694] = {
+  tpcExtraGainCorrection_st row[696] = {
     // y2020
     { 0, 0, 20344045, 21258004,21, -1, -1, -1, 1, 47, 0}, /* Dead  S21_F47 20191210.162105        20200914.081917 */
 
@@ -63,7 +63,8 @@ TDataSet *CreateTable() {
 
     { 0, 0, 21069008, 21069014,14, -1, -1, -1, 4, 27, 1}, /* Alive nruns = 6 iold = 3105 */
 
-    { 0, 0, 21069014, 21069020,21, -1, -1, -1, 1, 54, 1}, /* Alive nruns = 4*/
+    { 0, 0, 21069008, 21069014,14, -1, -1, -1, 4, 27, 1}, /* Alive nruns = 6 */
+    { 0, 0, 21069014, 21069020,21, -1, -1, -1, 1, 54, 1}, /* Alive nruns = 4 */
     { 0, 0, 21069017, 21069017,14, -1, -1, -1, 4, -1, 0}, /* Dead nruns = 1*/
 
     { 0, 0, 21070014, 21072010,18, -1, -1, -1, 1, -1, 0}, /* Dead nruns = 41 iold = 2581 */
@@ -86,6 +87,7 @@ TDataSet *CreateTable() {
     { 0, 0, 21080027, 21169035,10, -1, -1, -1, 4, -1, 0}, /* Dead nruns = 2*/
     { 0, 0, 21080027, 21169035,20, -1, -1, -1, 3, -1, 0}, /* Dead nruns = 2*/
 
+
     { 0, 0, 21243033, 21244023,14, -1, -1, -1, 5, -1, 0}, /* Dead nruns = 27 */
     { 0, 0, 21243033, 21244023,14, -1, -1, -1, 6, -1, 0}, /* Dead nruns = 27 */
     { 0, 0, 21243033, 21244023,14, -1, -1, -1, 7, -1, 0}, /* Dead nruns = 27 */
@@ -99,6 +101,7 @@ TDataSet *CreateTable() {
     { 0, 0, 21243033, 21244023,13, -1, -1, -1, 6, -1, 0}, /* Dead nruns = 27 */
     { 0, 0, 21243033, 21244023,13, -1, -1, -1, 7, -1, 0}, /* Dead nruns = 27 */
 
+    { 0, 0, 21243034, 21243042,14, -1, -1, -1, 1, -1, 0}, /* Dead nruns = 3 */
     { 0, 0, 21243034, 21243034,14, -1, -1, -1, 2, -1, 0}, /* Dead nruns = 1 */
     { 0, 0, 21243034, 21243044,13, -1, -1, -1, 1, -1, 0}, /* Dead nruns = 5 */
     { 0, 0, 21243038, 21243042,14, -1, -1, -1, 3, -1, 0}, /* Dead nruns = 2 */
