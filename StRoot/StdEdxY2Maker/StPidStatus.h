@@ -82,9 +82,9 @@ class StPidStatus {
     kI70,   kFit,   kI70U,   kFitU,   kdNdx,   kdNdxU,  kBTof,   kETof,   kMtd, kTotal
   };
   StPidStatus(StGlobalTrack *gTrack = 0, Bool_t Usedx2 = kTRUE);
-  StPidStatus(StMuTrack *muTrack = 0, Bool_t Usedx2 = kTRUE);
+  StPidStatus(StMuTrack *muTrack = 0, Bool_t Usedx2 = kTRUE, StThreeVectorD *g3KFP = 0);
 #ifdef __TFG__VERSION__
-  StPidStatus(StPicoTrack *picoTrack = 0, Bool_t Usedx2 = kFALSE);
+  StPidStatus(StPicoTrack *picoTrack = 0, Bool_t Usedx2 = kFALSE, StThreeVectorD *g3KFP = 0);
 #endif /* __TFG__VERSION__ */
   virtual ~StPidStatus() {
     SafeDelete(fProb); 

@@ -172,14 +172,17 @@ StPidStatus::StPidStatus(StGlobalTrack *gTrack, Bool_t Usedx2) : PiDStatus(-1), 
   Set();
 }
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StMuTrack *muTrack, Bool_t Usedx2) : PiDStatus(-1), fUsedx2(Usedx2) {
+StPidStatus::StPidStatus(StMuTrack *muTrack, Bool_t Usedx2, StThreeVectorD *g3KFP) : PiDStatus(-1), fUsedx2(Usedx2) {
   Clear();
   if (! muTrack) return;
   const StMuProbPidTraits &probPidTraits = muTrack->probPidTraits();
   const StMuBTofPidTraits &btofPidTraits = muTrack->btofPidTraits();
   const StMuETofPidTraits &etofPidTraits = muTrack->etofPidTraits();
   const StMuMtdPidTraits  &mtdPidTraits = muTrack->mtdPidTraits();
-  g3 = muTrack->p(); // p of global track
+  if (! g3KFP) 
+    g3 = muTrack->p(); // p of global track
+  else 
+    g3 = *g3KFP;
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
@@ -224,11 +227,15 @@ StPidStatus::StPidStatus(StMuTrack *muTrack, Bool_t Usedx2) : PiDStatus(-1), fUs
 }
 #ifdef __TFG__VERSION__
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StPicoTrack *picoTrack, Bool_t Usedx2) : PiDStatus(-1), fUsedx2(Usedx2) {
+StPidStatus::StPidStatus(StPicoTrack *picoTrack, Bool_t Usedx2, StThreeVectorD *g3KFP) : PiDStatus(-1), fUsedx2(Usedx2) {
   Clear();
   if (! picoTrack) return;
-  TVector3 gMom = picoTrack->gMom();
-  g3 = StThreeVectorF(gMom.X(), gMom.Y(), gMom.Z()); // p of global track
+  if (! g3KFP) {
+    TVector3 gMom = picoTrack->gMom();
+    g3 = StThreeVectorF(gMom.X(), gMom.Y(), gMom.Z()); // p of global track
+  } else {
+    g3 = *g3KFP;
+  }
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
