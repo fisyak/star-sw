@@ -64,7 +64,7 @@ class StKFParticleInterface: public TObject
   
   void SetField(float field);
   void SetBeamLine(KFParticle& p);
-  
+  void SetUsedx2(Bool_t k = kFALSE) { fUsedx2 = k;}
   void CleanPV();
   void AddPV(const KFVertex &pv, const std::vector<int> &tracks);
   void AddPV(const KFVertex &pv);
@@ -256,6 +256,7 @@ class StKFParticleInterface: public TObject
   Bool_t            fIsFixedTarget;
   Bool_t            fIsFixedTarget2018;
   Bool_t            fPidQA;
+  Bool_t            fUsedx2; //! flag for StPiDStatus to absord log2(dx) dependence into TpcLengthCorrectionMD2
 #endif /* __TFG__VERSION__ */
   ClassDef(StKFParticleInterface,1)
 };

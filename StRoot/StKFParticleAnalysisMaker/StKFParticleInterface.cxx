@@ -79,7 +79,7 @@ StKFParticleInterface::StKFParticleInterface():
   fStrictTofPID(true), fCleanKaonsWitTof(true), fdEdXMode(1), fTriggerMode(false),
   fChiPrimaryCut(18.6f), fChiPrimaryCutFragments(0.f), fChiPrimaryMaxCut(2e4f), fCleanLowPVTrackEvents(false), fUseHFTTracksOnly(false)
 #ifdef __TFG__VERSION__
-  , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE)
+  , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE), fUsedx2(kFALSE)
 #endif /* _TFG__VERSION__ */
 
 {
@@ -2995,7 +2995,7 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
 	p.Print();
 	gTrack->Print();
       }
-      StPidStatus PiD(gTrack); 
+      StPidStatus PiD(gTrack, fUsedx2); 
       if (PiD.PiDStatus < 0) continue;
       FillPidQA(&PiD, particle.GetPDG(), 0);
     }
@@ -3029,7 +3029,7 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
       p.Print();
       gTrack1->Print();
     }
-    StPidStatus PiD1(gTrack1); 
+    StPidStatus PiD1(gTrack1, fUsedx2); 
     if (PiD1.PiDStatus < 0) continue;
     FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
     StPicoTrack *gTrack2 = picoDst->track(index2); 
@@ -3040,7 +3040,7 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
       p.Print();
       gTrack2->Print();
     }
-    StPidStatus PiD2(gTrack2); 
+    StPidStatus PiD2(gTrack2, fUsedx2); 
     if (PiD2.PiDStatus < 0) continue;
     FillPidQA(&PiD2, p2.GetPDG(), particle->GetPDG());
   }
@@ -3070,7 +3070,7 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
 	p.Print();
 	gTrack->Print();
       }
-      StPidStatus PiD(gTrack); 
+      StPidStatus PiD(gTrack, fUsedx2); 
       if (PiD.PiDStatus < 0) continue;
       FillPidQA(&PiD, particle.GetPDG(), 0);
     }
@@ -3103,7 +3103,7 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
       p.Print();
       gTrack1->Print();
     }
-    StPidStatus PiD1(gTrack1); 
+    StPidStatus PiD1(gTrack1, fUsedx2); 
     if (PiD1.PiDStatus < 0) continue;
     FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
     StMuTrack *gTrack2 = muDst->globalTracks(index2); 
@@ -3114,7 +3114,7 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
       p.Print();
       gTrack2->Print();
     }
-    StPidStatus PiD2(gTrack2); 
+    StPidStatus PiD2(gTrack2, fUsedx2); 
     if (PiD2.PiDStatus < 0) continue;
     FillPidQA(&PiD2, p2.GetPDG(), particle->GetPDG());
   }

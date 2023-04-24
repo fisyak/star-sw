@@ -114,7 +114,7 @@ void kfpAnalysis(Int_t N = 10000000,
   StMaker *dbMk = chain->GetMaker("db");
   if (dbMk) dbMk->SetDebug(1);
   chain->Init();
-
+  //   StKFParticleInterface::instance()->SetUsedx2(kTRUE); // old dE/dx calibration before SL
   //  if(isPico)
   //  {
   if (triggerSet != "y2022") {
