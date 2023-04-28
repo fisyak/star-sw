@@ -83,6 +83,7 @@ class StKFParticleInterface: public TObject
   Bool_t PidQA(StPicoDst* picoDst, std::vector<int> trakIdToI);
   Bool_t PidQA(StMuDst* muDst, std::vector<int> trakIdToI);
   Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0); 
+  Bool_t PidQArmerteros(KFParticle TempPart); 
 #endif /* _TFG__VERSION__ */
   bool OpenCharmTrigger();
   void OpenCharmTriggerCompression(int nTracksTriggered, int nTracksInEvent, bool triggerDMesons);
@@ -194,19 +195,19 @@ class StKFParticleInterface: public TObject
   //0 - N HFT hits in track, 1 - PV error distribution, 2 - NPrimTracks/NAllTracks
   TH1F* fTrackHistograms[3];
 #ifndef __TFG__VERSION__
-  // 0 - dEdX, 1 - dEdX positive tracks, 2 - dEdX negative tracks, 3 - dEdX tracks with ToF, 4 - ToF PID, 5 - PV errors vs N tracks, 6 - PV errors vs N PV tracks, 7 - N secondary vs N prim, 8 - M2 vs dEdx, 9 - dEdX with EToF, 10 - EToF PID
+  // 0 - dEdX, 1 - dEdX positive tracks, 2 - dEdX negative tracks, 3 - dEdX tracks with Tof, 4 - Tof PID, 5 - PV errors vs N tracks, 6 - PV errors vs N PV tracks, 7 - N secondary vs N prim, 8 - M2 vs dEdx, 9 - dEdX with ETof, 10 - ETof PID
   TH2F* fTrackHistograms2D[11];
 
 
 #else /* __TFG__VERSION__ */
-  // 0 - dEdX, 1 - dEdX positive tracks, 2 - dEdX negative tracks, 3 - dEdX tracks with ToF or ETof,
-  // 4 - ToF PID, 5 - PV errors vs N tracks, 6 - PV errors vs N PV tracks, 7 - N Global vs N Primary
+  // 0 - dEdX, 1 - dEdX positive tracks, 2 - dEdX negative tracks, 3 - dEdX tracks with Tof or ETof,
+  // 4 - Tof PID, 5 - PV errors vs N tracks, 6 - PV errors vs N PV tracks, 7 - N Global vs N Primary
   // 8 - pT^2 versus eta for primary tracks
-  // 9 - dNdX, 10 - dNdX positive tracks, 11 - dNdX negative tracks, 12 - dNdX tracks with ToF or ETof.
+  // 9 - dNdX, 10 - dNdX positive tracks, 11 - dNdX negative tracks, 12 - dNdX tracks with Tof or ETof.
   // 13 - pT^2 versus eta for all tracks
-  // 14 - EToF PID
-  // 15 - ToF PID, eta > 0
-  // 16 - ToF PID, eta < 0
+  // 14 - ETof PID
+  // 15 - Tof PID, eta > 0
+  // 16 - Tof PID, eta < 0
   TH2F* fTrackHistograms2D[17];
 #endif /* __TFG__VERSION__ */
   TH1F* fPVHistograms[11];
@@ -215,7 +216,7 @@ class StKFParticleInterface: public TObject
   //PID histograms
   static const int NTrackHistoFolders = 26;
   TH2F* fHistodEdXTracks[NTrackHistoFolders];
-  TH2F* fHistodEdXwithToFTracks[NTrackHistoFolders];
+  TH2F* fHistodEdXwithTofTracks[NTrackHistoFolders];
 #ifndef __TFG__VERSION__
   TH2F* fHistoTofPIDTracks[NTrackHistoFolders];
 #else /* __TFG__VERSION__ */
@@ -228,7 +229,7 @@ class StKFParticleInterface: public TObject
   TH2F* fHistodEdXnSigma[NTrackHistoFolders];
 #ifdef __TFG__VERSION__
   TH2F* fHistodNdXTracks[NTrackHistoFolders];
-  TH2F* fHistodNdXwithToFTracks[NTrackHistoFolders];
+  TH2F* fHistodNdXwithTofTracks[NTrackHistoFolders];
   TH2F* fHistodNdXPull[NTrackHistoFolders];
   //  TH2F* fHistodNdXZ[NTrackHistoFolders];
 #endif /* __TFG__VERSION__ */

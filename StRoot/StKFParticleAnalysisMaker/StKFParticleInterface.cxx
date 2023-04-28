@@ -32,7 +32,7 @@
 #include <ctime>
 #include <algorithm>
 
-#define USETOF
+//   #define USETOF
 
 #ifndef __TFG__VERSION__
 // #define FXT
@@ -44,13 +44,15 @@
 #else /* __TFG__VERSION__ */
 //#define PID_2018
 // #define PID_MAY
-#if ! defined(PID_2018) && ! defined( PID_MAY)
-#define PID_JUNE
-#endif
+// #if ! defined(PID_2018) && ! defined( PID_MAY)
+// #define PID_JUNE
+// #endif
 #endif /* ! __TFG__VERSION__ */
 
 #ifdef __TFG__VERSION__
-#define USEETOF
+#define PrPP(A) if (_debug) {std::cout << (#A) << "\t"; A->Print();}
+#define PrPO(A) if (_debug) {std::cout << (#A) << "\t"; A.Print();}
+//    #define USEETOF
 //#define __USE_HFT__
 //#define __ETAPN_TOF_PLOTS__
 #define dEdxL10min 0.0
@@ -303,11 +305,11 @@ void StKFParticleInterface::CollectTrackHistograms()
   fTrackHistograms2D[2] = (TH2F *)   dirs[1]->Get("hdEdXNeg");
   if (! fTrackHistograms2D[2]) fTrackHistograms2D[2] = new TH2F("hdEdXNeg", "hdEdXNeg", 1000, 0, 10, 200, 0, 200);
   
-  fTrackHistograms2D[3] = (TH2F *)   dirs[1]->Get("hdEdXwithToF");
-  if (! fTrackHistograms2D[3]) fTrackHistograms2D[3] = new TH2F("hdEdXwithToF", "hdEdXwithToF", 1000, 0, 10, 200, 0, 200);
+  fTrackHistograms2D[3] = (TH2F *)   dirs[1]->Get("hdEdXwithTof");
+  if (! fTrackHistograms2D[3]) fTrackHistograms2D[3] = new TH2F("hdEdXwithTof", "hdEdXwithTof", 1000, 0, 10, 200, 0, 200);
   
 #else /* __TFG__VERSION__ */
-  const Char_t *chargeName[4] = {"","Pos","Neg","withToF"};
+  const Char_t *chargeName[4] = {"","Pos","Neg","withTof"};
   for (Int_t i = 0; i < 4; i++) {
     __BOOK_hdEdx__(dirs[1],fTrackHistograms2D[i]  , Form("hdEdX%s",chargeName[i]),  Form("hdEdX%s",chargeName[i]));
     __BOOK_hdNdx__(dirs[1],fTrackHistograms2D[i+9], Form("hdNdX%s",chargeName[i]),  Form("hdNdX%s",chargeName[i]));
@@ -424,16 +426,16 @@ void StKFParticleInterface::CollectPIDHistograms()
     fHistodEdXTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdX");
     if (! fHistodEdXTracks[iTrackHisto]) fHistodEdXTracks[iTrackHisto] = new TH2F("hdEdX", "hdEdX", 1000, 0, 10, 200, 0, 200);
 
-    fHistodEdXwithToFTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXwithToF");
-    if (! fHistodEdXwithToFTracks[iTrackHisto]) fHistodEdXwithToFTracks[iTrackHisto] = new TH2F("hdEdXwithToF", "hdEdXwithToF", 1000, 0, 10, 200, 0, 200);
+    fHistodEdXwithTofTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXwithTof");
+    if (! fHistodEdXwithTofTracks[iTrackHisto]) fHistodEdXwithTofTracks[iTrackHisto] = new TH2F("hdEdXwithTof", "hdEdXwithTof", 1000, 0, 10, 200, 0, 200);
 
     fHistoTofPIDTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hTofPID");
     if (! fHistoTofPIDTracks[iTrackHisto]) fHistoTofPIDTracks[iTrackHisto] = new TH2F("hTofPID", "hTofPID", 300, 0, 15, 1100, -1, 10);
 #else /* __TFG__VERSION__ */
     __BOOK_hdEdx__(dirs[2],fHistodEdXTracks[iTrackHisto], "hdEdX", "hdEdX");
-    __BOOK_hdEdx__(dirs[2],fHistodEdXwithToFTracks[iTrackHisto], "hdEdXwithToF", "hdEdXwithToF");
+    __BOOK_hdEdx__(dirs[2],fHistodEdXwithTofTracks[iTrackHisto], "hdEdXwithTof", "hdEdXwithTof");
     __BOOK_hdNdx__(dirs[2],fHistodNdXTracks[iTrackHisto], "hdNdX", "hdNdX");
-    __BOOK_hdNdx__(dirs[2],fHistodNdXwithToFTracks[iTrackHisto], "hdNdXwithToF", "hdNdXwithToF");
+    __BOOK_hdNdx__(dirs[2],fHistodNdXwithTofTracks[iTrackHisto], "hdNdXwithTof", "hdNdXwithTof");
 #endif /* __TFG__VERSION__ */
   
     fHistoTofPIDTracks[iTrackHisto][0] = (TH2F *)   dirs[2]->Get("hTofPID");
@@ -711,9 +713,9 @@ std::vector<int> StKFParticleInterface::GetTofPID(double m2, double p, int q, co
 
 std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, double dEdX, double dEdXPull[8], bool isTofm2, const int trackId)
 {
-  vector<int> ToFPDG;
+  vector<int> TofPDG;
   if(isTofm2)
-    ToFPDG = GetTofPID(m2, p, q, trackId);
+    TofPDG = GetTofPID(m2, p, q, trackId);
   
   for(int iPdg=0; iPdg<3; iPdg++)
     fTrackPidTpc[iPdg][trackId] = dEdXPull[iPdg+1];
@@ -725,8 +727,8 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
   if(fCleanKaonsWitTof)
     checkKTof = (p > 0.5) && (p < 2.);
   bool checkKHasTof = 0;
-  for(unsigned int iTofPDG=0; iTofPDG<ToFPDG.size(); iTofPDG++)
-    if(abs(ToFPDG[iTofPDG]) == 321)
+  for(unsigned int iTofPDG=0; iTofPDG<TofPDG.size(); iTofPDG++)
+    if(abs(TofPDG[iTofPDG]) == 321)
       checkKHasTof = 1;
 
   if(dEdXPull[2] < nSigmaCut)                                           dEdXPDG.push_back(211*q);  
@@ -740,9 +742,9 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
   else
   {
     for(unsigned int iPDG=0; iPDG<dEdXPDG.size(); iPDG++)
-      for(unsigned int iTofPDG=0; iTofPDG<ToFPDG.size(); iTofPDG++)
-        if(dEdXPDG[iPDG] == ToFPDG[iTofPDG])
-          totalPDG.push_back(ToFPDG[iTofPDG]);        
+      for(unsigned int iTofPDG=0; iTofPDG<TofPDG.size(); iTofPDG++)
+        if(dEdXPDG[iPDG] == TofPDG[iTofPDG])
+          totalPDG.push_back(TofPDG[iTofPDG]);        
   }
 
   if(dEdXPull[0] < nSigmaCut)  totalPDG.push_back(-11*q);
@@ -754,583 +756,13 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
     totalPDG.push_back(2000003112*q);
   }
   
-#ifdef PID_2018 // staryj
-  {
-    
-    //d
-#ifdef USETOF
-    if(isTofm2 && (m2>3 && m2<4.2))
-#endif
-    {
-      if(p<1.5){
-        double lowerParameters[4] = {7.11737e+00,-1.31428e+00, 1.96720e-01, 6.47905e-02};
-        double lowerDBound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-   
-        double upperParameters[4] = {1.39824e+01,-1.53919e+00, 1.10899e-01, 9.82910e-02};
-        double upperDBound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-        
-        if(dEdX > lowerDBound && dEdX < upperDBound)
-          totalPDG.push_back(1000010020*q); 
-      }
-      else if(dEdXPull[5] < nSigmaCut && dEdX < 8.) 
-        totalPDG.push_back(1000010020*q); 
-    }
-    
-    //t
-#ifdef USETOF
-    if(isTofm2 && (m2>6.8 && m2<9.1))
-#endif
-    {
-      if(p<2.5) {
-        double lowerParameters[4] = {1.38117e+01,-1.67910e+00,-4.52185e-03, 9.21224e-02};
-        double lowerTBound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-
-        double upperParameters[4] = {2.29456e+01,-1.41456e+00, 1.04286e-01, 1.26818e-01};
-        double upperTBound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-        
-        if(dEdX > lowerTBound && dEdX < upperTBound)
-          totalPDG.push_back(1000010030*q); 
-      }
-      else if(dEdXPull[6] < nSigmaCut && dEdX < 8.) 
-        totalPDG.push_back(1000010030*q);
-    }
-    
-    //He3   
-    if(p<3.0)
-    {
-      double lowerParameters[4] = {2.27715e+01,-1.36600e+00, 3.01143e-01, 2.38046e-01};
-      double lowerHe3Bound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-      
-      double upperParameters[4] = {3.33751e+01,-1.22800e+00, 2.98371e-01, 1.82920e-01};
-      double upperHe3Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-      
-      if(dEdX > lowerHe3Bound && dEdX < upperHe3Bound) 
-      {
-//         if(p<1.0)
-//         {
-//           if( isTofm2 && (m2>1.) && (m2<3.) )
-//             totalPDG.push_back(1000020030*q);
-//         }
-//         else
-//         {
-          if( !isTofm2 || (isTofm2 && (m2>1.) && (m2<3.) ) )
-            totalPDG.push_back(1000020030*q);
-//         }
-      }
-    }
-    else if(p>=3.0 && dEdX > 11. && dEdX < 18.)
-    {
-      if(dEdXPull[7] < nSigmaCut) 
-        if( !isTofm2 || (isTofm2 && (m2>1.) && (m2<3.) ) )
-          totalPDG.push_back(1000020030*q);
-    }
-    //He4
-    if(p<4.0)
-    {
-      double lowerParameters[4] = {3.45107e+01, -1.22371e+00,  1.89140e-01,  1.07000e-01};
-      double lowerHe4Bound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-      
-      double upperParameters[4] = {5.09065e+01, -1.36283e+00,  1.90657e-01,  1.98235e-01};
-      double upperHe4Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-      
-      if(dEdX > lowerHe4Bound && dEdX < upperHe4Bound) 
-      {
-//         if(p<1.0)
-//         {
-//           if( isTofm2 && (m2>3) && (m2<4.2) )
-//             totalPDG.push_back(1000020040*q);
-//         }
-//         else
-//         {
-          if( !isTofm2 || (isTofm2 && (m2>3) && (m2<4.2) ) )
-            totalPDG.push_back(1000020040*q);
-//         }
-      }
-    }
-    else if(p>=4.0 && dEdX > 11. && dEdX < 18.)
-    {
-      if(dEdXPull[8] < nSigmaCut) 
-        if( !isTofm2 || (isTofm2 && (m2>3) && (m2<4.2) ) )
-          totalPDG.push_back(1000020040*q);
-    } 
-// }
-  }
-  
-  //He6
-  if(p<4.5) {
-    double loweParameters[4] = {5.63562e+01,-1.29479e+00, 2.27883e-01,-4.10513e-02};
-    double lowerHe6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {7.52605e+01,-1.42948e+00, 5.87043e-01,-2.13013e-01};
-    double upperHe6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerHe6Bound && dEdX < upperHe6Bound) {
-      if(p>3.0) {
-        if(isTofm2 && m2>6.5)
-          totalPDG.push_back(1000020060*q);
-      }
-      else{
-        if(!isTofm2 || (isTofm2 && m2>6.5))
-          totalPDG.push_back(1000020060*q);
-      }
-    }
-  }
-  else if(p>=4.5 && dEdX > 11. && dEdX < 18.)
-    if(isTofm2 && m2>6.5)
-      totalPDG.push_back(1000020060*q);
-
-  //Li6
-  if(p<4){
-    double loweParameters[4] = {7.30295e+01,-1.08787e+00, 6.87593e-02, 1.14228e-01};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {9.35347e+01,-1.25594e+00, 2.91456e-01, 9.52847e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>2.8) && (m2<4.2) )
-          totalPDG.push_back(1000030060*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>2.8) && (m2<4.2) ) )
-          totalPDG.push_back(1000030060*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 25. && dEdX < 37.)
-    if( !isTofm2 || (isTofm2 && (m2>2.8) && (m2<4.2)) )
-      totalPDG.push_back(1000030060*q);
-
-  //Li7
-  if(p<4){
-    double loweParameters[4] = {9.30989e+01,-1.22084e+00, 3.73173e-01,-1.12695e-01};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {1.14003e+02,-1.33179e+00, 4.19395e-01,-3.20841e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>4) && (m2<6) )
-          totalPDG.push_back(1000030070*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>4) && (m2<6) ) )
-          totalPDG.push_back(1000030070*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 25. && dEdX < 37.)
-    if( !isTofm2 || (isTofm2 && (m2>4) && (m2<6)) )
-      totalPDG.push_back(1000030070*q);
-    
-  //Be7
-  if(p<4){
-    double loweParameters[4] = { 1.08163e+02,-1.08057e+00, 2.34159e-01, 1.98949e-02};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {1.37012e+02,-1.14016e+00, 3.73116e-01,-1.85678e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>2) && (m2<4) )
-          totalPDG.push_back(1000040070*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>2) && (m2<4) ) )
-          totalPDG.push_back(1000040070*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 40. && dEdX < 55.)
-    if( !isTofm2 || (isTofm2 && (m2>2) && (m2<4)) )
-      totalPDG.push_back(1000040070*q);
-#endif //  PID_2018
-
-    
-#ifdef PID_MAY // Mai
-    //d
-#ifdef USETOF
-    if(isTofm2 && (m2>3 && m2<4.2))
-#endif
-    {
-      if(p<1.5){
-        double lowerParameters[4] = {7.26450e+00,-1.48942e+00,-2.71718e-01,-8.21588e-02};
-        double lowerDBound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-
-        double upperParameters[4] = {1.37151e+01,-1.45881e+00,-3.58669e-02,3.97500e-02};
-        double upperDBound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-        
-        if(dEdX > lowerDBound && dEdX < upperDBound)
-          totalPDG.push_back(1000010020*q); 
-      }
-      else if(dEdXPull[5] < nSigmaCut && dEdX < 8.) 
-        totalPDG.push_back(1000010020*q); 
-    }
-
-    //t
-#ifdef USETOF
-    if(isTofm2 && (m2>6.8 && m2<9.1))
-#endif
-    {
-      if(p<2.5) {
-        double lowerParameters[4] = {1.38915e+01,-1.43926e+00,-8.10367e-02,-9.39156e-03};
-        double lowerTBound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-   
-        double upperParameters[4] = {2.20190e+01,-1.24588e+00,4.34070e-02,3.88409e-02};
-        double upperTBound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-        
-        if(dEdX > lowerTBound && dEdX < upperTBound)
-          totalPDG.push_back(1000010030*q); 
-      }
-      else if(dEdXPull[6] < nSigmaCut && dEdX < 8.) 
-        totalPDG.push_back(1000010030*q);
-    }
-
-    //He3   
-    if(p<3.0)
-    {
-      double lowerParameters[4] = { 2.23798e+01,-1.09106e+00, 1.35016e-01, 1.72563e-01};
-      double lowerHe3Bound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-      
-      double upperParameters[4] = {3.09025e+01,-9.75179e-01,1.03354e-01,1.29797e-01};
-      double upperHe3Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-      
-      if(dEdX > lowerHe3Bound && dEdX < upperHe3Bound) 
-      {
-//         if(p<1.0)
-//         {
-//           if( isTofm2 && (m2>1.) && (m2<3.) )
-//             totalPDG.push_back(1000020030*q);
-//         }
-//         else
-//         {
-          if( !isTofm2 || (isTofm2 && (m2>1.) && (m2<3.) ) )
-            totalPDG.push_back(1000020030*q);
-//         }
-      }
-    }
-    else if(p>=3.0 && dEdX > 11. && dEdX < 18.)
-    {
-      if(dEdXPull[7] < nSigmaCut) 
-        if( !isTofm2 || (isTofm2 && (m2>1.) && (m2<3.) ) )
-          totalPDG.push_back(1000020030*q);
-    }
-    //He4
-    if(p<4.0)
-    {
-      double lowerParameters[4] = {3.12534e+01,-9.52345e-01,1.63815e-02,2.03462e-02};
-      double lowerHe4Bound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-      
-      double upperParameters[4] = {4.10331e+01,-1.01056e+00,1.98636e-01,-2.77912e-02};
-      double upperHe4Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-      
-      if(dEdX > lowerHe4Bound && dEdX < upperHe4Bound) 
-      {
-//         if(p<1.0)
-//         {
-//           if( isTofm2 && (m2>3) && (m2<4.2) )
-//             totalPDG.push_back(1000020040*q);
-//         }
-//         else
-//         {
-          if( !isTofm2 || (isTofm2 && (m2>3) && (m2<4.2) ) )
-            totalPDG.push_back(1000020040*q);
-//         }
-      }
-    }
-    else if(p>=4.0 && dEdX > 11. && dEdX < 18.)
-    {
-      if(dEdXPull[8] < nSigmaCut) 
-        if( !isTofm2 || (isTofm2 && (m2>3) && (m2<4.2) ) )
-          totalPDG.push_back(1000020040*q);
-    } 
-  
-  //He6
-  if(p<4.5) {
-    double loweParameters[4] = {4.59563e+01,-1.05965e+00,3.70239e-02,4.92680e-02};
-    double lowerHe6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {5.52646e+01,-9.50780e-01,2.14347e-01,-1.03148e-01};
-    double upperHe6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerHe6Bound && dEdX < upperHe6Bound) {
-      if(p>3.0) {
-        if(isTofm2 && m2>6.5)
-          totalPDG.push_back(1000020060*q);
-      }
-      else{
-        if(!isTofm2 || (isTofm2 && m2>6.5))
-          totalPDG.push_back(1000020060*q);
-      }
-    }
-  }
-  else if(p>=4.5 && dEdX > 11. && dEdX < 18.)
-    if(isTofm2 && m2>6.5)
-      totalPDG.push_back(1000020060*q);
-
-  //Li6
-  if(p<4){
-    double loweParameters[4] = {5.33123e+01,-7.79828e-01,1.13380e-01,1.39092e-04};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {5.81213e+01,-7.88117e-01,5.20665e-01,-2.26597e-01};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>2.8) && (m2<4.2) )
-          totalPDG.push_back(1000030060*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>2.8) && (m2<4.2) ) )
-          totalPDG.push_back(1000030060*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 22. && dEdX < 30.)
-    if( !isTofm2 || (isTofm2 && (m2>2.8) && (m2<4.2)) )
-      totalPDG.push_back(1000030060*q);
-
-  //Li7
-  if(p<4){
-    double loweParameters[4] = {5.93075e+01,-7.23992e-01,1.22609e-01,-5.17200e-02,};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {7.16577e+01,-8.56517e-01,2.48878e-01,-3.66107e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>4) && (m2<6) )
-          totalPDG.push_back(1000030070*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>4) && (m2<6) ) )
-          totalPDG.push_back(1000030070*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 22. && dEdX < 30.)
-    if( !isTofm2 || (isTofm2 && (m2>4) && (m2<6)) )
-      totalPDG.push_back(1000030070*q);
-    
-  //Be7
-  if(p<4){
-    double loweParameters[4] = { 7.16577e+01,-8.56517e-01,2.48878e-01,-3.66107e-02};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {1.37012e+02,-1.14016e+00, 3.73116e-01,-1.85678e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>2) && (m2<4) )
-          totalPDG.push_back(1000040070*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>2) && (m2<4) ) )
-          totalPDG.push_back(1000040070*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 40. && dEdX < 55.)
-    if( !isTofm2 || (isTofm2 && (m2>2) && (m2<4)) )
-      totalPDG.push_back(1000040070*q);
-#endif //  PID_MAY
-
-#ifdef PID_JUNE //June
-    //d
-#ifdef USETOF
-    if(isTofm2 && (m2>3 && m2<4.2))
-#endif
-    {
-      if(p<1.5){
-        double lowerParameters[4] = {7.02144e+00,-1.77017e+00,-2.60061e-01,-1.68402e-02};
-        double lowerDBound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-
-        double upperParameters[4] = {1.48953e+01,-1.55755e+00,-2.80406e-01,-5.87432e-02};
-        double upperDBound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-        
-        if(dEdX > lowerDBound && dEdX < upperDBound)
-          totalPDG.push_back(1000010020*q); 
-      }
-      else if(dEdXPull[5] < nSigmaCut && dEdX < 8.) 
-        totalPDG.push_back(1000010020*q); 
-    }
-
-    //t
-#ifdef USETOF
-    if(isTofm2 && (m2>6.8 && m2<9.1))
-#endif
-    {
-      if(p<2.5) {
-        double lowerParameters[4] = {1.47794e+01,-1.52798e+00,-1.00490e-01, 9.46116e-03};
-        double lowerTBound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-   
-        double upperParameters[4] = {2.30993e+01,-1.34625e+00,4.73902e-02,7.94857e-02};
-        double upperTBound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-        
-        if(dEdX > lowerTBound && dEdX < upperTBound)
-          totalPDG.push_back(1000010030*q); 
-      }
-      else if(dEdXPull[6] < nSigmaCut && dEdX < 8.) 
-        totalPDG.push_back(1000010030*q);
-    }
-    //He3   
-    if(p<3.0)
-    {
-      double lowerParameters[4] = { 2.46334e+01,-9.18130e-01, 9.93814e-02, 6.08549e-02};
-      double lowerHe3Bound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-      
-      double upperParameters[4] = {3.33680e+01,-9.69092e-01, 1.15195e-01, 9.37487e-02};
-      double upperHe3Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-      
-      if(dEdX > lowerHe3Bound && dEdX < upperHe3Bound) 
-      {
-//         if(p<1.0)
-//         {
-//           if( isTofm2 && (m2>1.) && (m2<3.) )
-//             totalPDG.push_back(1000020030*q);
-//         }
-//         else
-//         {
-          if( !isTofm2 || (isTofm2 && (m2>1.) && (m2<3.) ) )
-            totalPDG.push_back(1000020030*q);
-//         }
-      }
-    }
-    else if(p>=3.0 && dEdX > 10. && dEdX < 17.)
-    {
-//       if(dEdXPull[7] < nSigmaCut)
-        if( !isTofm2 || (isTofm2 && (m2>1.) && (m2<3.) ) )
-          totalPDG.push_back(1000020030*q);
-    }
-    //He4
-    if(p<4.0)
-    {
-      double lowerParameters[4] = {3.37746e+01,-9.67771e-01, 9.44445e-02, 3.52215e-02};
-      double lowerHe4Bound = lowerParameters[0]*TMath::Power(p, lowerParameters[1] + lowerParameters[2]*log(p) + lowerParameters[3]*log(p)*log(p));
-
-      double upperParameters[4] = {4.42988e+01,-1.07999e+00, 1.50885e-01, 6.51833e-02};
-      double upperHe4Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-      
-      if(dEdX > lowerHe4Bound && dEdX < upperHe4Bound) 
-      {
-//         if(p<1.0)
-//         {
-//           if( isTofm2 && (m2>3) && (m2<4.2) )
-//             totalPDG.push_back(1000020040*q);
-//         }
-//         else
-//         {
-          if( !isTofm2 || (isTofm2 && (m2>3) && (m2<4.2) ) )
-            totalPDG.push_back(1000020040*q);
-//         }
-      }
-    }
-    else if(p>=4.0 && dEdX > 10. && dEdX < 17.)
-    {
-//       if(dEdXPull[8] < nSigmaCut) 
-        if( !isTofm2 || (isTofm2 && (m2>3) && (m2<4.2) ) )
-          totalPDG.push_back(1000020040*q);
-    } 
- 
-  //He6
-  if(p<4.5) {
-    double loweParameters[4] = {4.94040e+01,-1.03654e+00, 4.80683e-02, 7.45434e-03};
-    double lowerHe6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {6.71366e+01,-1.20558e+00, 1.63842e-01, 3.51544e-02};
-    double upperHe6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerHe6Bound && dEdX < upperHe6Bound) {
-      if(p>3.0) {
-        if(isTofm2 && m2>6.5)
-          totalPDG.push_back(1000020060*q);
-      }
-      else{
-        if(!isTofm2 || (isTofm2 && m2>6.5))
-          totalPDG.push_back(1000020060*q);
-      }
-    }
-  }
-  else if(p>=4.5 && dEdX > 10. && dEdX < 17.)
-    if(isTofm2 && m2>6.5)
-      totalPDG.push_back(1000020060*q);
-
-  //Li6
-  if(p<4){
-    double loweParameters[4] = {5.79920e+01,-8.01901e-01, 6.66119e-02, 5.34188e-02};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {6.66890e+01,-7.82862e-01, 2.14334e-01,-1.15082e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>2.8) && (m2<4.2) )
-          totalPDG.push_back(1000030060*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>2.8) && (m2<4.2) ) )
-          totalPDG.push_back(1000030060*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 22. && dEdX < 30.)
-    if( !isTofm2 || (isTofm2 && (m2>2.8) && (m2<4.2)) )
-      totalPDG.push_back(1000030060*q);
-   
-  //Li7
-  if(p<4){
-    double loweParameters[4] = {6.61051e+01,-7.37484e-01,-5.99112e-02, 5.92928e-02};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {8.32337e+01,-7.56362e-01,-5.56798e-02, 8.60781e-02};
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-    
-    if(dEdX > lowerLi6Bound && dEdX < upperLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>4) && (m2<6) )
-          totalPDG.push_back(1000030070*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>4) && (m2<6) ) )
-          totalPDG.push_back(1000030070*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 22. && dEdX < 30.)
-    if( !isTofm2 || (isTofm2 && (m2>4) && (m2<6)) )
-      totalPDG.push_back(1000030070*q);
-    
-  //Be7
-  if(p<4){
-    double loweParameters[4] = { 8.32337e+01,-7.56362e-01,-5.56798e-02, 8.60781e-02};
-    double lowerLi6Bound = loweParameters[0]*TMath::Power(p, loweParameters[1] + loweParameters[2]*log(p) + loweParameters[3]*log(p)*log(p));
-
-    double upperParameters[4] = {1.37012e+02,-1.14016e+00, 3.73116e-01,-1.85678e-02};
-#if 0
-    double upperLi6Bound = upperParameters[0]*TMath::Power(p, upperParameters[1] + upperParameters[2]*log(p) + upperParameters[3]*log(p)*log(p));
-#endif    
-    if(dEdX > lowerLi6Bound){
-      if(p<1.){
-        if( isTofm2 && (m2>2) && (m2<4) )
-          totalPDG.push_back(1000040070*q);
-      }
-      else{
-        if( !isTofm2 || (isTofm2 && (m2>2) && (m2<4) ) )
-          totalPDG.push_back(1000040070*q);
-      }
-    }
-  }
-  else if(p>=4.0 && dEdX > 40. && dEdX < 55.)
-    if( !isTofm2 || (isTofm2 && (m2>2) && (m2<4)) )
-      totalPDG.push_back(1000040070*q);
-#endif //  PID_JUNE
+#if defined(PID_2018) // staryj
+#include "PID2018.h"
+#elif  defined(PID_MAY) // Mai
+#include "PIDMAY.h"
+#eliif (defined(PID_JUNE) //June
+#include "PIDJUNE.h"
+#endif //PID_2018 || PID_MAY || PID_JUNE
     
   if(totalPDG.size() == 0)
     totalPDG.push_back(-1);
@@ -1557,10 +989,10 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
 #endif /* __TFG__VERSION__ */
       {
 #ifndef __TFG__VERSION__
-        fHistodEdXwithToFTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx());
+        fHistodEdXwithTofTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx());
         fHistoTofPIDTracks[iTrackHisto] -> Fill(momentum, m2tof);
 #else /* __TFG__VERSION__ */
-        fHistodEdXwithToFTracks[iTrackHisto] -> Fill(pL10, dEdxL10);
+        fHistodEdXwithTofTracks[iTrackHisto] -> Fill(pL10, dEdxL10);
         if (isTofm2) {
 	  fHistoTofPIDTracks[iTrackHisto][0] -> Fill(pL10, m2tof);
 #ifdef __ETAPN_TOF_PLOTS__
@@ -1713,7 +1145,7 @@ void StKFParticleInterface::FillPIDHistograms(StMuTrack *gTrack, const std::vect
       fHistodEdXTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx()*1.e6);
       if(isTofm2)
       {
-        fHistodEdXwithToFTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx()*1.e6);
+        fHistodEdXwithTofTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx()*1.e6);
 #ifndef __TFG__VERSION__	
         fHistoTofPIDTracks[iTrackHisto] -> Fill(momentum, m2tof);
 #else /* __TFG__VERSION__ */
@@ -1983,7 +1415,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     double m2Etof = -1.e6;
     bool isETofm2 = false;
 #endif /* __TFG__VERSION__ */
-#ifdef USETOF
     if(gTrack->bTofPidTraitsIndex() >= 0)
     {
       const StPicoBTofPidTraits* btofPid = picoDst->btofPidTraits(gTrack->bTofPidTraitsIndex());
@@ -2035,9 +1466,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 #endif /* ! __TFG__VERSION__ */
       }
     }
-#endif /* USETOF */
 
-#ifdef USEETOF
     if(gTrack->eTofPidTraitsIndex() >= 0)
     {
       const StPicoETofPidTraits* etofPid = picoDst->etofPidTraits(gTrack->eTofPidTraitsIndex());
@@ -2055,7 +1484,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
         isETofm2 = true;
       }
     }
-#endif /* USETOF */
       if(fCollectTrackHistograms && isETofm2) 
 	{
 #ifdef __TFG__VERSION__
@@ -2370,7 +1798,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 //     }
     double m2tof = -1.e6;
     bool isTofm2 = false;
-#ifdef USETOF
     if(timeTof > 0)
     {
 #ifdef __TFG__VERSION__
@@ -2441,7 +1868,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
       }
 #endif /* __TFG__VERSION__ */
-#endif /* USETOF */
     double dEdXPull[12] = { fabs(gTrack->dEdxPullElectron(fdEdXMode)),          //0 - e
                             fabs(gTrack->dEdxPull(0.1056583745, fdEdXMode, 1)), //1 - mu
                             fabs(gTrack->dEdxPullPion(fdEdXMode)),              //2 - pi
@@ -2936,23 +2362,20 @@ vector<const KFParticle *> StKFParticleInterface::Vec4Cfits() {
       const std::vector<KFParticle>& PrimaryCandidates = GetTopoReconstructor()->GetKFParticleFinder()->GetPrimaryCandidates()[iSet][iPV];
       if (_debug) cout << "PrimaryCandidates.size() = " << PrimaryCandidates.size() << endl;
       for(unsigned int iP=0; iP<PrimaryCandidates.size(); iP++)        {
-	KFParticle particle =  PrimaryCandidates[iP];
-	if (_debug) particle.Print("");
+	KFParticle particle =  PrimaryCandidates[iP]; PrPP(particle);
 // 	int iParticle = fParteff.GetParticleIndex(particle.GetPDG());
 // 	if(iParticle < 0) continue;
 	
 	const int id = particle.Id();
 	//	FillParticleParameters(particle,iParticle, id, iPV, hPartParamPrimaryMass, hPartParam2DPrimaryMass, 0, hFitQAMassConstraint);
           
-	particle = GetTopoReconstructor()->GetParticles()[id];
-	if (_debug) particle.Print("");
+	particle = GetTopoReconstructor()->GetParticles()[id]; PrPP(particle);
 	//	FillParticleParameters(particle,iParticle, id, iPV, hPartParamPrimary, hPartParam2DPrimary, 0, hFitQANoConstraint);
       }
       const std::vector<KFParticle>& PrimaryCandidatesTopo = GetTopoReconstructor()->GetKFParticleFinder()->GetPrimaryTopoCandidates()[iSet][iPV];
       if (_debug) cout << "PrimaryCandidatesTopo.size() = " << PrimaryCandidatesTopo.size() << endl;
       for(unsigned int iP=0; iP<PrimaryCandidatesTopo.size(); iP++)        {
-	KFParticle particle =  PrimaryCandidatesTopo[iP];
-	if (_debug) particle.Print("");
+	KFParticle particle =  PrimaryCandidatesTopo[iP]; PrPP(particle);
 // 	int iParticle = fParteff.GetParticleIndex(particle.GetPDG());
 // 	if(iParticle < 0) continue;
 	const int id = particle.Id();
@@ -2962,13 +2385,87 @@ vector<const KFParticle *> StKFParticleInterface::Vec4Cfits() {
       const std::vector<KFParticle>& PrimaryCandidatesTopoMass = GetTopoReconstructor()->GetKFParticleFinder()->GetPrimaryTopoMassCandidates()[iSet][iPV];
       if (_debug) cout << "PrimaryCandidatesTopoMass.size() = " << PrimaryCandidatesTopoMass.size() << endl;
       for(unsigned int iP=0; iP<PrimaryCandidatesTopoMass.size(); iP++)        {
-	const KFParticle *particle =  &PrimaryCandidatesTopoMass[iP];
-	if (_debug) particle->Print("");
+	const KFParticle *particle =  &PrimaryCandidatesTopoMass[iP]; PrPP(particle);
 	Vec4Cfit.push_back(particle);
       }
     }
   }
   return Vec4Cfit;
+}
+//________________________________________________________________________________
+Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempPart) {
+  Bool_t ok = kFALSE;
+  static Int_t _debug = 0;
+  enum {Ndecays = 4};
+  struct Decay_t {
+    Int_t pdgParent;
+    const Char_t *name;
+    Int_t pdg1;
+    Int_t pdg2;
+  };
+  static Decay_t parents[Ndecays] = {
+    {   310, "Ks",           211, -211},
+    {  3122, "Lambda",      2212, -211},
+    { -3122, "Lambdab",    -2212,  211},
+    {    22, "gamma",         11,  -11}
+  }; 
+  static TH2F *histo[Ndecays] = {0};
+  if (! histo[0]) {
+    TDirectory *top = StMaker::GetTopChain()->GetTFile();
+    if (! top->cd("PiDQA")) {
+      top->mkdir("PiDQA");
+    }
+   TDirectory * PiDQA = top->GetDirectory("PiDQA");
+    for (Int_t d = 0; d < Ndecays; d++) {
+      TDirectory *dir1 = PiDQA;
+      TDirectory *dir2 = dir1->GetDirectory(parents[d].name);
+      if (! dir2) {
+	dir1->mkdir(parents[d].name); 
+	dir2 = dir1->GetDirectory(parents[d].name); 
+      }
+      dir2->cd(); 
+      if (_debug) cout << "d = " << d << "\t" << gDirectory->GetPath() << endl;
+      TString Title(parents[d].name);
+      Title += " Armenteros";
+      histo[d] = new TH2F("Armenteros",Title, 50, -1, 1, 100,  0, 0.5);
+      histo[d]->GetXaxis()->SetTitle("#alpha (p_{L}^{+}-p_{L}^{-})/(p_{L}^{+}+p_{L}^{-})");
+      histo[d]->GetYaxis()->SetTitle("q_{t} [GeV/c]");
+      histo[d]->GetYaxis()->SetTitleOffset(1.0);
+    }
+  }
+  if (TempPart.NDaughters() != 2) return ok;
+  int index1 = TempPart.DaughterIds()[0];
+  int index2 = TempPart.DaughterIds()[1];
+  if(index1 >= int(GetParticles().size()) || 
+     index2 >= int(GetParticles().size()) || 
+     index1 < 0 || index2 < 0 ) 
+    return ok;
+  Int_t k = -1;
+  for (Int_t d = 0; d < Ndecays; d++) {
+    if (TempPart.GetPDG() != parents[d].pdgParent) continue;
+    k = d;
+    break;
+  }
+  if (k < 0) return ok;
+  assert(histo[k]);
+  KFParticle posDaughter, negDaughter;
+  if(int(GetParticles()[index1].Q()) > 0)    {
+    posDaughter = GetParticles()[index1];
+    negDaughter = GetParticles()[index2];
+  }    else    {
+    negDaughter = GetParticles()[index1];
+    posDaughter = GetParticles()[index2];
+  }
+  float vertex[3] = {TempPart.GetX(), TempPart.GetY(), TempPart.GetZ()};
+  posDaughter.TransportToPoint(vertex);
+  negDaughter.TransportToPoint(vertex);
+  Float_t QtAlpha[2];
+  KFParticle::GetArmenterosPodolanski(posDaughter, negDaughter, QtAlpha );
+  histo[k]->Fill(QtAlpha[1],QtAlpha[0],1);
+  ok = kTRUE;
+  if (parents[k].pdgParent ==  2212 && QtAlpha[0] <  0.2 ||
+      parents[k].pdgParent == -2212 && QtAlpha[0] > -0.2) ok = kFALSE;
+  return ok;
 }
 //________________________________________________________________________________
 Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdToI) {
@@ -2980,20 +2477,17 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
   const int nCandidates = GetParticles().size();
   if (! nCandidates) return kFALSE;
   for (Int_t iParticle = 0; iParticle < nCandidates; iParticle++) {
-    const KFParticle &particle = GetParticles()[iParticle];
-    if (_debug) particle.Print("");
+    const KFParticle &particle = GetParticles()[iParticle]; PrPO(particle);
     if (particle.NDaughters() != 1) continue;
     Int_t index = trakIdToI[particle.DaughterIds()[0]];
     //      cout << "trakIdToI[" << iParticle << "] = " << index << endl;
     if (index > 0 && index <= nGlobalTracks) {
-      StPicoTrack *gTrack = picoDst->track(index);
+      StPicoTrack *gTrack = picoDst->track(index); PrPP(gTrack);
       if (! gTrack) continue;
       if (_debug) {
 	StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index);
 	const StDcaGeometry dca = cov->dcaGeometry();
-	KFParticle p = dca.Particle(index,particle.GetPDG());
-	p.Print();
-	gTrack->Print();
+	KFParticle p = dca.Particle(index,particle.GetPDG()); PrPO(p);
       }
       StPidStatus PiD(gTrack, fUsedx2); 
       if (PiD.PiDStatus < 0) continue;
@@ -3003,16 +2497,16 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
   // list on unique fits
   vector<const KFParticle *> Vec4Cfit = Vec4Cfits();
   for (auto particle : Vec4Cfit) {
-    KFParticle p1 = GetParticles()[particle->DaughterIds()[0]]; if (_debug) p1.Print();
+    KFParticle p1 = GetParticles()[particle->DaughterIds()[0]]; PrPO(p1);
     Int_t index1 = trakIdToI[p1.DaughterIds()[0]];
-    KFParticle p2 = GetParticles()[particle->DaughterIds()[1]]; if (_debug) p2.Print();
+    KFParticle p2 = GetParticles()[particle->DaughterIds()[1]]; PrPO(p2);
     Int_t index2 = trakIdToI[p2.DaughterIds()[0]];
     Bool_t foundUniq = kTRUE;
     for (auto particle2 : Vec4Cfit) {
       if (particle == particle2) continue;
-      KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; if (_debug) p21.Print();
+      KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; PrPO(p21);
       Int_t index21 = trakIdToI[p21.DaughterIds()[0]];
-      KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; if (_debug) p22.Print();
+      KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; PrPO(p22);
       Int_t index22 = trakIdToI[p22.DaughterIds()[0]];
       if ((index1 == index21 && index2 == index22) ||
 	  (index2 == index21 && index1 == index22)) {
@@ -3021,24 +2515,21 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
       }
     }
     if (! foundUniq) continue;
-    StPicoTrack *gTrack1 = picoDst->track(index1); 
+    if (! PidQArmerteros(*particle)) continue;
+    StPicoTrack *gTrack1 = picoDst->track(index1); PrPP(gTrack1);
     if (_debug) {
       StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index1);
       const StDcaGeometry dca = cov->dcaGeometry();
-      KFParticle p = dca.Particle(index1,p1.GetPDG());
-      p.Print();
-      gTrack1->Print();
+      KFParticle p = dca.Particle(index1,p1.GetPDG()); PrPO(p);
     }
     StPidStatus PiD1(gTrack1, fUsedx2); 
     if (PiD1.PiDStatus < 0) continue;
     FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
-    StPicoTrack *gTrack2 = picoDst->track(index2); 
+    StPicoTrack *gTrack2 = picoDst->track(index2); PrPP(gTrack2);
     if (_debug) {
       StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index2);
       const StDcaGeometry dca = cov->dcaGeometry();
-      KFParticle p = dca.Particle(index2,p2.GetPDG());
-      p.Print();
-      gTrack2->Print();
+      KFParticle p = dca.Particle(index2,p2.GetPDG()); PrPO(p);
     }
     StPidStatus PiD2(gTrack2, fUsedx2); 
     if (PiD2.PiDStatus < 0) continue;
@@ -3056,19 +2547,16 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
   const int nCandidates = GetParticles().size();
   if (! nCandidates) return kFALSE;
   for (Int_t iParticle = 0; iParticle < nCandidates; iParticle++) {
-    const KFParticle &particle = GetParticles()[iParticle];
-    if (_debug) particle.Print("");
+    const KFParticle &particle = GetParticles()[iParticle]; PrPO(particle);
     if (particle.NDaughters() != 1) continue;
     Int_t index = trakIdToI[particle.DaughterIds()[0]];
     //      cout << "trakIdToI[" << iParticle << "] = " << index << endl;
     if (index > 0 && index <= nGlobalTracks) {
-      StMuTrack *gTrack = muDst->globalTracks(index);
+      StMuTrack *gTrack = muDst->globalTracks(index); PrPP(gTrack);
       if (! gTrack) continue;
       if (_debug) {
 	const StDcaGeometry* dca = gTrack->dcaGeom();
-	KFParticle p = dca->Particle(index,particle.GetPDG());
-	p.Print();
-	gTrack->Print();
+	KFParticle p = dca->Particle(index,particle.GetPDG()); PrPO(p);
       }
       StPidStatus PiD(gTrack, fUsedx2); 
       if (PiD.PiDStatus < 0) continue;
@@ -3077,16 +2565,16 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
   }
   vector<const KFParticle *> Vec4Cfit = Vec4Cfits(); 
   for (auto particle : Vec4Cfit) {
-    KFParticle p1 = GetParticles()[particle->DaughterIds()[0]]; if (_debug) p1.Print();
+    KFParticle p1 = GetParticles()[particle->DaughterIds()[0]]; PrPO(p1);
     Int_t index1 = trakIdToI[p1.DaughterIds()[0]];
-    KFParticle p2 = GetParticles()[particle->DaughterIds()[1]]; if (_debug) p2.Print();
+    KFParticle p2 = GetParticles()[particle->DaughterIds()[1]]; PrPO(p2);
     Int_t index2 = trakIdToI[p2.DaughterIds()[0]];
     Bool_t foundUniq = kTRUE;
     for (auto particle2 : Vec4Cfit) {
       if (particle == particle2) continue;
-      KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; if (_debug) p21.Print();
+      KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; PrPO(p21);
       Int_t index21 = trakIdToI[p21.DaughterIds()[0]];
-      KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; if (_debug) p22.Print();
+      KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; PrPO(p22);
       Int_t index22 = trakIdToI[p22.DaughterIds()[0]];
       if ((index1 == index21 && index2 == index22) ||
 	  (index2 == index21 && index1 == index22)) {
@@ -3095,24 +2583,23 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
       }
     }
     if (! foundUniq) continue;
-    StMuTrack *gTrack1 = muDst->globalTracks(index1); 
+    if (! PidQArmerteros(*particle)) continue;
+    StMuTrack *gTrack1 = muDst->globalTracks(index1); PrPP(gTrack1);
     if (_debug) {
-      p1.Print();
+      PrPO(p1);
       const StDcaGeometry* dca = gTrack1->dcaGeom();
       KFParticle p = dca->Particle(index1,p1.GetPDG());
-      p.Print();
-      gTrack1->Print();
+      PrPO(p);
     }
     StPidStatus PiD1(gTrack1, fUsedx2); 
     if (PiD1.PiDStatus < 0) continue;
     FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
     StMuTrack *gTrack2 = muDst->globalTracks(index2); 
     if (_debug) {
-      p2.Print();
+      PrPO(p2);
       const StDcaGeometry* dca = gTrack2->dcaGeom();
-      KFParticle p = dca->Particle(index2,p2.GetPDG());
-      p.Print();
-      gTrack2->Print();
+      KFParticle p = dca->Particle(index2,p2.GetPDG()); PrPO(p);
+      PrPP(gTrack2);      
     }
     StPidStatus PiD2(gTrack2, fUsedx2); 
     if (PiD2.PiDStatus < 0) continue;
@@ -3163,13 +2650,13 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
     Int_t pdg1;
     Int_t pdg2;
   };
-  Decay_t parents[4] = {
+  static Decay_t parents[4] = {
     {   310, "Ks",           211, -211},
     {  3122, "Lambda",      2212, -211},
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[Ndecays+1][Nparticles][8] = {0};
+  static TH2F *hist[Ndecays+1][Nparticles][9] = {0};
   if (! hist[0][0][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
@@ -3199,9 +2686,11 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
 	hist[d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
 	hist[d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
 	hist[d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
-	hist[d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,300,-3,3);
-	hist[d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,300,-3,3);
-	for (Int_t k = 0; k < 8; k++) {
+	hist[d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
+	hist[d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,500,-5,5);
+	hist[d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
+	//	hist[d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
+	for (Int_t k = 0; k < 9; k++) {
 	  hist[d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
 	}
       }
@@ -3225,19 +2714,26 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
       Double_t p2 = PiD->g3.mag2()/TMath::Power(StProbPidTraits::mPidParticleDefinitions[l]->charge(),2);
       Double_t M2 = TMath::Power(StProbPidTraits::mPidParticleDefinitions[l]->mass(),2);
       Double_t bgL10 = PiD->bghyp[l];
-      Double_t sigmaToF = 999;
+      Double_t sigmaTof = 999;
       if (PiD->fBTof) {
-	sigmaToF = PiD->fBTof->Sigma(l);
+	sigmaTof = PiD->fBTof->Sigma(l);
+	hist[d][p][8]->Fill(bgL10, sigmaTof);
       }
+#if 0
+      if (PiD->fETof) {
+	sigmaTof = PiD->fETof->Sigma(l);
+	hist[d][p][9]->Fill(bgL10, sigmaTof);
+      }
+#endif
       hist[d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
       hist[d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
-      if (sigmaToF < 3) {
+      if (sigmaTof < 3) {
 	hist[d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
 	hist[d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
       }
       if (PiD->fdNdx) {
 	hist[d][p][1]->Fill(bgL10, PiD->fdNdx->dev[l]);
-	if (sigmaToF < 3) hist[d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
+	if (sigmaTof < 3) hist[d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
       }
 
       if (PiD->fBTof) {
