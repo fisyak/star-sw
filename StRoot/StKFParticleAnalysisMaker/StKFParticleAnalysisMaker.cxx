@@ -1,4 +1,4 @@
-//*-- Author : Yuri Fisyak 02/02/2016
+//*-- Author : Maksym Zyzak & Yuri Fisyak 02/02/2016
 #include "StKFParticleAnalysisMaker.h"
 #include "TDirectory.h"
 #include "TNtuple.h"

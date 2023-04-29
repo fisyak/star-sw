@@ -28,7 +28,8 @@
 #include "StMuDSTMaker/COMMON/StMuBTofHit.h"
 #include "StMuDSTMaker/COMMON/StMuMcVertex.h"
 #include "StMuDSTMaker/COMMON/StMuMcTrack.h"
-
+#include "TLorentzVector.h"
+#include "TDatabasePDG.h"
 #include <ctime>
 #include <algorithm>
 
@@ -81,7 +82,7 @@ StKFParticleInterface::StKFParticleInterface():
   fStrictTofPID(true), fCleanKaonsWitTof(true), fdEdXMode(1), fTriggerMode(false),
   fChiPrimaryCut(18.6f), fChiPrimaryCutFragments(0.f), fChiPrimaryMaxCut(2e4f), fCleanLowPVTrackEvents(false), fUseHFTTracksOnly(false)
 #ifdef __TFG__VERSION__
-  , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE), fUsedx2(kFALSE)
+  , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE), fUsedx2(kFALSE), fUseTof(kFALSE)
 #endif /* _TFG__VERSION__ */
 
 {
@@ -714,7 +715,7 @@ std::vector<int> StKFParticleInterface::GetTofPID(double m2, double p, int q, co
 std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, double dEdX, double dEdXPull[8], bool isTofm2, const int trackId)
 {
   vector<int> TofPDG;
-  if(isTofm2)
+  if(isTofm2 && fUseTof)
     TofPDG = GetTofPID(m2, p, q, trackId);
   
   for(int iPdg=0; iPdg<3; iPdg++)
@@ -2393,7 +2394,7 @@ vector<const KFParticle *> StKFParticleInterface::Vec4Cfits() {
   return Vec4Cfit;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempPart) {
+Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 neg, TVector3 pos) {
   Bool_t ok = kFALSE;
   static Int_t _debug = 0;
   enum {Ndecays = 4};
@@ -2433,16 +2434,16 @@ Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempPart) {
       histo[d]->GetYaxis()->SetTitleOffset(1.0);
     }
   }
-  if (TempPart.NDaughters() != 2) return ok;
-  int index1 = TempPart.DaughterIds()[0];
-  int index2 = TempPart.DaughterIds()[1];
+  if (TempParticle.NDaughters() != 2) return ok;
+  int index1 = TempParticle.DaughterIds()[0];
+  int index2 = TempParticle.DaughterIds()[1];
   if(index1 >= int(GetParticles().size()) || 
      index2 >= int(GetParticles().size()) || 
      index1 < 0 || index2 < 0 ) 
     return ok;
   Int_t k = -1;
   for (Int_t d = 0; d < Ndecays; d++) {
-    if (TempPart.GetPDG() != parents[d].pdgParent) continue;
+    if (TempParticle.GetPDG() != parents[d].pdgParent) continue;
     k = d;
     break;
   }
@@ -2456,12 +2457,36 @@ Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempPart) {
     negDaughter = GetParticles()[index1];
     posDaughter = GetParticles()[index2];
   }
-  float vertex[3] = {TempPart.GetX(), TempPart.GetY(), TempPart.GetZ()};
+  float vertex[3] = {TempParticle.GetX(), TempParticle.GetY(), TempParticle.GetZ()};
   posDaughter.TransportToPoint(vertex);
   negDaughter.TransportToPoint(vertex);
   Float_t QtAlpha[2];
   KFParticle::GetArmenterosPodolanski(posDaughter, negDaughter, QtAlpha );
   histo[k]->Fill(QtAlpha[1],QtAlpha[0],1);
+  // Use exact mass to estimate fitted daughter momenta
+  TLorentzVector Mother, Neg, Pos;
+  auto M =  TDatabasePDG::Instance()->GetParticle(TempParticle.GetPDG())->Mass();
+  auto mN = TDatabasePDG::Instance()->GetParticle(negDaughter.GetPDG())->Mass();
+  auto mP = TDatabasePDG::Instance()->GetParticle(posDaughter.GetPDG())->Mass();
+  auto pmax = (M > mN + mP) ?  TMath::Sqrt ((M - mN + mP)*
+					    (M + mN - mP)*
+					    (M - mN - mP)*
+					    (M + mN + mP))/(2.*M) :
+    0;
+  
+  Mother.SetXYZM(TempParticle.Px(), TempParticle.Py(), TempParticle.Pz(), M);
+  Neg.SetXYZM(negDaughter.Px(), negDaughter.Py(), negDaughter.Pz(), mN);
+  Pos.SetXYZM(posDaughter.Px(), posDaughter.Py(), posDaughter.Pz(), mP);
+  
+  TVector3 beta = Mother.BoostVector();
+  TVector3 betaI = - beta;
+  Neg.Boost(betaI); 
+  Double_t pTN = Neg.Pt();
+  Double_t cosN = pTN/Neg.Px();
+  Pos.Boost(betaI);
+  Double_t pTP = Pos.Pt();
+  Double_t cosP = pTP/Pos.Px();
+
   ok = kTRUE;
   if (parents[k].pdgParent ==  2212 && QtAlpha[0] <  0.2 ||
       parents[k].pdgParent == -2212 && QtAlpha[0] > -0.2) ok = kFALSE;
@@ -2515,7 +2540,8 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
       }
     }
     if (! foundUniq) continue;
-    if (! PidQArmerteros(*particle)) continue;
+    TVector3 pos, neg;
+    if (! PidQArmerteros(*particle, neg, pos)) continue;
     StPicoTrack *gTrack1 = picoDst->track(index1); PrPP(gTrack1);
     if (_debug) {
       StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index1);
@@ -2583,7 +2609,8 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
       }
     }
     if (! foundUniq) continue;
-    if (! PidQArmerteros(*particle)) continue;
+    TVector3 pos, neg;
+    if (! PidQArmerteros(*particle, neg, pos)) continue;
     StMuTrack *gTrack1 = muDst->globalTracks(index1); PrPP(gTrack1);
     if (_debug) {
       PrPO(p1);

@@ -6,7 +6,7 @@
 #include "KFParticle.h"
 #include "TObject.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
-
+#include "TVector3.h"
 class KFParticleTopoReconstructor;
 class KFParticleFinder;
 class KFTopoPerformance;
@@ -83,7 +83,7 @@ class StKFParticleInterface: public TObject
   Bool_t PidQA(StPicoDst* picoDst, std::vector<int> trakIdToI);
   Bool_t PidQA(StMuDst* muDst, std::vector<int> trakIdToI);
   Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0); 
-  Bool_t PidQArmerteros(KFParticle TempPart); 
+  Bool_t PidQArmerteros(KFParticle TempPart, TVector3 negative, TVector3 positive ); 
 #endif /* _TFG__VERSION__ */
   bool OpenCharmTrigger();
   void OpenCharmTriggerCompression(int nTracksTriggered, int nTracksInEvent, bool triggerDMesons);
@@ -153,6 +153,7 @@ class StKFParticleInterface: public TObject
   Bool_t            IsFixedTarget()        {return fIsFixedTarget;}
   void              SetFixedTarget2018(Bool_t k=kTRUE) {fIsFixedTarget2018 = k;}
   Bool_t            IsFixedTarget2018()        {return fIsFixedTarget2018;}
+  void              SetUseTof(Bool_t k = kTRUE) {fUseTof = k;}
 #endif /* __TFG__VERSION__ */
  private:
   
@@ -258,6 +259,7 @@ class StKFParticleInterface: public TObject
   Bool_t            fIsFixedTarget2018;
   Bool_t            fPidQA;
   Bool_t            fUsedx2; //! flag for StPiDStatus to absord log2(dx) dependence into TpcLengthCorrectionMD2
+  Bool_t            fUseTof;
 #endif /* __TFG__VERSION__ */
   ClassDef(StKFParticleInterface,1)
 };
