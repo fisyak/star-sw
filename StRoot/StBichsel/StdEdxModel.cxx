@@ -68,8 +68,8 @@ StdEdxModel::StdEdxModel() : mdNdx(0), fScale(1)
   // Set normalization point the same as for I70 (increase energy per conduction electron from 20 eB to 52 eV)
   Double_t dEdxMIPLog = TMath::Log(2.62463815285237434); //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
-  //                  log2dx, charge
-  Double_t pars[3] = {   1.0,    1.0};
+  //                  log2dx, charge mass
+  Double_t pars[4] = {   1.0,     1.0, 0.};
   Double_t dEdxLog = zMP(&MIPBetaGamma10, pars);
   fLogkeVperElectron = dEdxMIPLog - dEdxLog;
   cout << "StdEdxModel:: set scale = " << Form("%5.1f",1e3*keVperElectron()) << " eV/electron" << endl;
@@ -503,8 +503,9 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
   Double_t pOverMRC  = TMath::Power(10., log10bg);
   Double_t log2dx  = p[0];
   Double_t charge  = p[1];
+  Double_t mass    = p[2];
   Double_t dx      = TMath::Power( 2., log2dx);
-  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge); // */dNdxVsBgC*.root [-1.5,5]
+  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge, mass); // */dNdxVsBgC*.root [-1.5,5]
   Double_t Np = dNdx*dx;
   //  Double_t NpLog = TMath::Log(Np);
   //  Double_t mu    = instance()->Parameter(Np, 0);
@@ -516,16 +517,17 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
   return   dEdxLog;
 }
 //________________________________________________________________________________
-TF1 *StdEdxModel::ZMP(Double_t log2dx) {
+TF1 *StdEdxModel::ZMP(Double_t log2dx, Double_t charge, Double_t mass) {
   TString fName(Form("New%i",(int)(2*(log2dx+2))));
   TF1 *f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(fName);
   if (! f) {
-    f = new TF1(fName,zMP,-2,5,2);
-    f->SetParName(0,"log2dx");
+    f = new TF1(fName,zMP,-2,5,3);
     f->SetLineStyle(4);
+    f->SetParNames("log2dx","charge","mass");
     f->SetParameter(0,log2dx);
-    f->SetParameter(1, 1.0); // charge
-    cout << "Create ZMPNew with name " << f->GetName() << " for log2dx = " << log2dx << endl;
+    f->SetParameter(1, charge); 
+    f->SetParameter(2, mass); 
+    cout << "Create ZMPNew with name " << f->GetName() << " for log2dx = " << log2dx << " and mass = " << mass << endl;
   }
   return f;
 }
@@ -666,23 +668,25 @@ Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
   return eff->Interpolate(bgL10);
 }
 //________________________________________________________________________________
-Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge) {
+Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass) {
   if (!fgStdEdxModel) instance();
   Double_t bgMC = bgCorrected(poverm); 
   Double_t dNdxMC = dNdx(bgMC, charge);
   Double_t dNdx = dNdxMC*NpCorrection(poverm); 
-  Double_t bgL10 = TMath::Log10(poverm);
-  static TF1 *elCor = 0;
-  static TF1 *elCor2 = 0;
-  static TF1 *piCor = 0;
   // Modification to dN/dx from analysis of daughter tracks of unique reconstructed strange particle V0 decays and gamma conversions. OO200GeV_2021 samples
   Double_t dNdxCor = 0;
+#if 0
+  Double_t bgL10 = TMath::Log10(poverm);
+  static TF1 *elCor = 0;
+  static TF1 *piCor = 0;
+#if 0
   if (bgL10 > 2.3) {
     if (bgL10 > 3.5) bgL10 = 3.5;
     if (! elCor) {elCor = new TF1("dNdxElCor","pol2",2.3,3.5); elCor->SetParameters(-0.66617,    0.42779,  -0.059554);}
     dNdxCor = elCor->Eval(bgL10);
   } 
   if (bgL10 > 2.1 && bgL10 < 2.55) {
+    static TF1 *elCor2 = 0;
     if (! elCor2) {elCor2 = new TF1("dNdxElCor2","pol7",2.1,2.55); elCor2->SetParameters(  123.04,    -102.77,    -4.7415,     12.443,     4.1275,   -0.88384,    -1.0646,    0.25247);}
     dNdxCor += elCor2->Eval(bgL10);
   }
@@ -692,6 +696,22 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge) {
     if (! piCor) {piCor = new TF1("dNdxPionCor","pol6",0.6,1.0); piCor->SetParameters( -0.026971,  -0.015765,    0.19093, -0.00048008,   -0.24187,  -0.072279,    0.17227);}
     dNdxCor = piCor->Eval(bgL10);
   }
+#else /* dEdxBTof */
+  if (bgL10 > 2.3) {
+    if (! elCor) {elCor = new TF1("dNdxElCor","pol3",2.3,3.5); elCor->SetParameters(   -2.5497,     2.2386,   -0.64123,   0.062087);}
+    dNdxCor = elCor->Eval(bgL10);
+  } else if (bgL10 > -0.1) {
+    if (! piCor) {piCor = new TF1("dNdxPionCor","pol4",-0.1,1.5); piCor->SetParameters( -0.071804,    0.19103,  -0.061166,   -0.14009,   0.080874);}
+    if (bgL10 > 1.2)  bgL10 = 1.2;
+    dNdxCor = piCor->Eval(bgL10);
+  } else {
+    static TF1 *protonCor = 0;
+    if (! protonCor) {protonCor = new TF1("dNdxPionCor","pol4",-0.7,0.5); protonCor->SetParameters( -0.028427,   0.040952,    0.23372,   -0.16693,   -0.31934);}
+    if (bgL10 > 0.5)  bgL10 = 0.5;
+    dNdxCor = protonCor->Eval(bgL10);
+  } 
+#endif
+#endif
   return dNdx*TMath::Exp(dNdxCor);
 }
 //________________________________________________________________________________

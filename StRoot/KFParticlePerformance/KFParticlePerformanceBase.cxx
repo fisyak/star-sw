@@ -1072,7 +1072,7 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
   {
     histoParameters2D[iPart][2] = new TH2F(parName2D[2].Data(),parTitle2D[2].Data(),
                                            50, -1.f, 1.f,
-                                          150,  0.f, 1.f);
+                                          100,  0.f, 0.5f);
     histoParameters2D[iPart][2]->GetXaxis()->SetTitle("#alpha (p_{L}^{+}-p_{L}^{-})/(p_{L}^{+}+p_{L}^{-})");
     histoParameters2D[iPart][2]->GetYaxis()->SetTitle("q_{t} [GeV/c]");
     histoParameters2D[iPart][2]->GetYaxis()->SetTitleOffset(1.0);

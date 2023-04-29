@@ -27,7 +27,7 @@ class StdEdxModel {
   static Double_t      gausexp(Double_t *x, Double_t *p); // versus mu, sigma, k 
   static Double_t      gausexpD(Double_t *x, Double_t *p, Double_t *der = 0); // versus mu, sigma, k 
   Double_t             dNdx(Double_t poverm, Double_t charge = 1.0);								      
-  Double_t     	       dNdxEff(Double_t poverm, Double_t charge = 1.0);							      
+  Double_t     	       dNdxEff(Double_t poverm, Double_t charge = 1.0, Double_t mass = 0);
   static Double_t      saturationFunc(Double_t *x, Double_t *p); // nP saturation versus beta*gamma from TpcRS (nP/dX - dN/dx_model) 
   TF1          	      *GGaus() {return fGGaus;}										      
   TF1          	      *GausExp() {return fGausExp;}										      
@@ -63,8 +63,8 @@ class StdEdxModel {
   Double_t 	       ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der = 0); // probability for give log(dE(GeV)) versus Np			       
   void     	       SetScale(Double_t scale = 1.0) {fScale = scale;}								       
   Double_t 	       dNdxScale() {return fScale;}											       
-  static Double_t      zMP(Double_t *x, Double_t *p); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx and p[1] =  charge 
-  TF1     	      *ZMP(Double_t log2dx = 1);                                                                                           
+  static Double_t      zMP(Double_t *x, Double_t *p); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx, p[1] =  charge, and p[2] = mass
+  TF1     	      *ZMP(Double_t log2dx = 1, Double_t charge = 1, Double_t mass = 0);                                                                                           
   // from 100 keV Tcut (GEXNor.C)
   void InitPar();
   Double_t tmaxL10eV(Double_t betagamma); // eV
