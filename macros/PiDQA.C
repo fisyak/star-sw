@@ -15,10 +15,17 @@
 #include "TArrayD.h"
 #include "TPaveLabel.h"
 #include "TString.h"
+#include "TFile.h"
 #endif
 #include "Ask.h"
 TMultiGraph *mg = 0;
 TMultiGraph *sg = 0;
+TMultiGraph *mgE = 0;
+TMultiGraph *sgE = 0;
+TMultiGraph *mgPion = 0;
+TMultiGraph *sgPion = 0;
+TMultiGraph *mgProton = 0;
+TMultiGraph *sgProton = 0;
 void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
   TString xTitle = "log_{10} (#beta #gamma)";
   if (! bg) xTitle = "log_{10} (p [GeV/c])";
@@ -47,7 +54,13 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
   TGraphErrors *grsigma[N] = {0};
   mg = new TMultiGraph(Form("DEV_%s",histN),Form("#mu for %s",histN));
   sg = new TMultiGraph(Form("SigmaV_%s",histN),Form("#sigma for %s",histN));
-  TLegend *l = new TLegend(0.6,0.1,0.9,0.4);
+  mgE = new TMultiGraph(Form("EDEV_%s",histN),Form("#mu for %s",histN));
+  sgE = new TMultiGraph(Form("ESigmaV_%s",histN),Form("#sigma for %s",histN));
+  mgPion = new TMultiGraph(Form("PionDEV_%s",histN),Form("#mu for %s",histN));
+  sgPion = new TMultiGraph(Form("PionSigmaV_%s",histN),Form("#sigma for %s",histN));
+  mgProton = new TMultiGraph(Form("ProtonDEV_%s",histN),Form("#mu for %s",histN));
+  sgProton = new TMultiGraph(Form("ProtonSigmaV_%s",histN),Form("#sigma for %s",histN));
+  TLegend *l = new TLegend(0.6,0.6,0.9,0.9);
   TLegend *ls = new TLegend(0.6,0.6,0.9,0.9);
   TPaveLabel pl;
   Float_t x1=0.3, y1=0.8, x2=0.75, y2=0.85;
@@ -116,19 +129,65 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
       grsigma[i]->SetMarkerStyle(marker);
       sg->Add(grsigma[i]);
       ls->AddEntry(grsigma[i],Particles[i].dir,"p");
+      if      (TString(Particles[i].dir).Contains("gamma/e"))  {mgE->Add(grmu[i]);      sgE->Add(grsigma[i]);}
+      else if (TString(Particles[i].dir).Contains("/pi"))      {mgPion->Add(grmu[i]);   sgPion->Add(grsigma[i]);}
+      else if (TString(Particles[i].dir).Contains("/p"))       {mgProton->Add(grmu[i]); sgProton->Add(grsigma[i]);}
     }
     if (! gROOT->IsBatch() && Ask()) return;
   }
-  TCanvas *cr = new TCanvas("cr","cr",200,100,1600,800);
+  if (! mg->GetListOfGraphs()) return;
+  if (mg->GetListOfGraphs()->GetSize() <= 0) return;
+  TString ctitle(Form("mu%s",histN));
+  if (bg) ctitle += "bg";
+  TCanvas *cr = new TCanvas(ctitle,ctitle,200,100,1600,800);
   mg->Draw("ap");
   mg->GetHistogram()->SetXTitle(xTitle);
   mg->Draw("p");
   l->Draw();
   cr->Update();
-  TCanvas *csigma = new TCanvas("csigma","sigma",200,1000,1600,800);
-  sg->Draw("ap");
+  TString File;
+  if (bg) File += "bg";
+  File += gFile->GetName();
+  File.ReplaceAll(".root",".png");
+  cr->SaveAs(ctitle+File);
+  ctitle = Form("sigma%s",histN);
+  if (bg) ctitle += "bg";
+  TCanvas *csigma = new TCanvas(ctitle,ctitle,200,1000,1600,800);
+  sg->Draw("axp");
   sg->GetHistogram()->SetXTitle(xTitle);
-  sg->Draw("p");
+  sg->Draw("axp");
   ls->Draw();
   csigma->Update();
+  ctitle = Form("sigma%s",histN);
+  csigma->SaveAs(ctitle+File);
+}
+//________________________________________________________________________________
+void PlotArmeteros() {
+  const Char_t *Path[4][2] = {
+    {"/PiDQA/gamma",   "/Particles/KFParticlesFinder/Particles/gamma/Parameters"},
+    {"/PiDQA/Ks",      "/Particles/KFParticlesFinder/Particles/Ks/Parameters"},
+    {"/PiDQA/Lambda",  "/Particles/KFParticlesFinder/Particles/Lambda/Parameters"},
+    {"/PiDQA/Lambdab", "/Particles/KFParticlesFinder/Particles/Lambdab/Parameters"}
+  };
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  if (c1) c1->Clear();
+  else    c1 = new TCanvas("c1","c1",1000,1600);
+  c1->Divide(2,4);
+  for (Int_t ix = 1; ix <= 2; ix++) {
+    for (Int_t iy = 1; iy <= 4; iy++) {
+      gDirectory->cd(Path[iy-1][2-ix]);
+      TH2F *h2 = (TH2F *) gDirectory->Get("Armenteros");
+      if (! h2) continue;
+      Int_t i = ix + 2*(iy-1);
+      c1->cd(i)->SetLogz(1);
+      h2->Draw("colz");
+      TLegend *l = new TLegend(0.1,0.7,0.8,0.8);
+      TString Title(Path[iy-1][2-ix]);
+      Title.ReplaceAll("/PiDQA/", "Unique ");
+      Title.ReplaceAll("/Particles/KFParticlesFinder/Particles/", "All ");
+      Title.ReplaceAll("/Parameters","");
+      l->AddEntry(h2,Title);
+      l->Draw();
+    }
+  }
 }

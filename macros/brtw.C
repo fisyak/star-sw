@@ -30,7 +30,7 @@ static TString        nameP("K_S0");
 static       Double_t M1 = mK;
 static       Double_t M2 = mpi;
 static       Int_t    NoSignals = 1; // 0 -> Scalar, 1 -> Vector, 2 => Tensor;
-static       Int_t NoParameters = 3*NoSignals + 4;
+static       Int_t NoParameters = 3*NoSignals + 3; // 4;
 static Bool_t Baryon = kFALSE; 
 static Bool_t reject = kFALSE;
 static const Char_t  *SignalNames[3] = {"S","V","T"};
