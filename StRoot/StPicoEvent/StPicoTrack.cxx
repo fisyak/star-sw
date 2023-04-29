@@ -253,7 +253,7 @@ Float_t StPicoTrack::dEdxPull(Float_t mass, UChar_t fit, Int_t charge) const {
     dedx_resolution = dNdxError();
   }
   if (dedx_resolution <= 0) return z;
-  z = StdEdxPull::Eval(dedx_measured,dedx_resolution,betagamma,fit,charge);
+  z = StdEdxPull::Eval(dedx_measured,dedx_resolution,betagamma,fit,charge, mass);
   return z;
 }
 
