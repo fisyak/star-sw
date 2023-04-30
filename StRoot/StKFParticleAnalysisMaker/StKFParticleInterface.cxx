@@ -51,6 +51,7 @@
 #endif /* ! __TFG__VERSION__ */
 
 #ifdef __TFG__VERSION__
+static Int_t _debug = 0;
 #define PrPP(A) if (_debug) {std::cout << (#A) << "\t"; A->Print();}
 #define PrPO(A) if (_debug) {std::cout << (#A) << "\t"; A.Print();}
 //    #define USEETOF
@@ -723,22 +724,20 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
   
   vector<int> dEdXPDG;
   float nSigmaCut = 3.f; //TODO
-  
-  bool checkKTof = false;
-  if(fCleanKaonsWitTof)
-    checkKTof = (p > 0.5) && (p < 2.);
+#if 0  
+  bool checkKTof = fCleanKaonsWitTof && (p > 0.5) && (p < 2.);
   bool checkKHasTof = 0;
   for(unsigned int iTofPDG=0; iTofPDG<TofPDG.size(); iTofPDG++)
     if(abs(TofPDG[iTofPDG]) == 321)
       checkKHasTof = 1;
-
+#endif
   if(dEdXPull[2] < nSigmaCut)                                           dEdXPDG.push_back(211*q);  
   //  if(dEdXPull[3] < 2.f && ((checkKTof && checkKHasTof) || !checkKTof) ) dEdXPDG.push_back(321*q);
   if(dEdXPull[3] < nSigmaCut )                                          dEdXPDG.push_back(321*q);
   if(dEdXPull[4] < nSigmaCut)                                           dEdXPDG.push_back(2212*q); 
       
   vector<int> totalPDG;
-  if(!isTofm2)
+  if(!isTofm2 || ! fUseTof)
     totalPDG = dEdXPDG;
   else
   {
@@ -1294,8 +1293,8 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   int nPartSaved = 0;
   int nUsedTracks = 0;
   
-  std::vector<float> m2TofArray(nGlobalTracks*2, -1.0e6f);
-  std::vector<int> trakIdToI(nGlobalTracks*2);
+  fm2TofArray = std::vector<float>(nGlobalTracks*2, -1.0e6f);
+  ftrackIdToI  = std::vector<int>(nGlobalTracks*2);
   
 //   KFParticle beamSpot;
 //   beamSpot.NDF() = -1;
@@ -1339,8 +1338,8 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.16 ) continue;
     if (  gTrack->status() && !gTrack->isPrimary()) continue;
     
-    if(index >= trakIdToI.size()) trakIdToI.resize(index+1);
-    trakIdToI[index] = iTrack;
+    if(index >= ftrackIdToI.size()) ftrackIdToI.resize(index+1);
+    ftrackIdToI[index] = iTrack;
     
     int nHftHitsInTrack = 0;
     if(gTrack->hasPxl1Hit()) nHftHitsInTrack++;
@@ -1433,8 +1432,8 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
       if(fabs(betaTof2) > 1.e-6)
 	{
 	  m2tof = track.GetP()*track.GetP()*(1./betaTof2 - 1.);
-	  if(index >= m2TofArray.size()) m2TofArray.resize(index+1);
-	  m2TofArray[index] = m2tof;
+	  if(index >= fm2TofArray.size()) fm2TofArray.resize(index+1);
+	  fm2TofArray[index] = m2tof;
 	  isTofm2 = true;
 	}
 //       else
@@ -1635,7 +1634,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 
 #ifdef __TFG__VERSION__
   if (fPidQA) {
-    PidQA(picoDst, trakIdToI);
+    PidQA(picoDst);
   }
 #endif /* __TFG__VERSION__ */
   return 1;
@@ -1695,7 +1694,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
   int nPartSaved = 0;
   int nUsedTracks = 0;
   
-  std::vector<int> trakIdToI(nGlobalTracks*2);
+  ftrackIdToI = std::vector<int>(nGlobalTracks*2);
   
   for (Int_t iTrack = 0; iTrack < nGlobalTracks; iTrack++) 
   {
@@ -1719,8 +1718,8 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 #endif /* __USE_HFT__ */
     const UInt_t index = gTrack->id();
     
-    if(index >= trakIdToI.size()) trakIdToI.resize(index+1);
-    trakIdToI[index] = iTrack;
+    if(index >= ftrackIdToI.size()) ftrackIdToI.resize(index+1);
+    ftrackIdToI[index] = iTrack;
     
     int mcIndex = gTrack->idTruth()-1;
     if(mcIndex >= int(mcTracks.size()))
@@ -1992,7 +1991,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
       KFParticle p1 = GetParticles()[particle.DaughterIds()[1]];
       KFParticle p2 = GetParticles()[particle.DaughterIds()[2]];
       
-      const int index = trakIdToI[p1.DaughterIds()[0]];
+      const int index = ftrackIdToI[p1.DaughterIds()[0]];
       StMuTrack *pTrack  = muDst->globalTracks(index);
       Int_t dcaGeometryIndex = pTrack->index2Cov();
       if (dcaGeometryIndex < 0) continue;
@@ -2051,7 +2050,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 #endif /* __TFG__VERSION__ */
 #ifdef __TFG__VERSION__
   if (fPidQA) {
-    PidQA(muDst, trakIdToI);
+    PidQA(muDst);
   }
 #endif /* __TFG__VERSION__ */
   return 1;
@@ -2354,7 +2353,6 @@ bool StKFParticleInterface::FindFixedTargetPV(StPicoDst* picoDst, KFVertex& pv, 
 #ifdef __TFG__VERSION__
 //________________________________________________________________________________
 vector<const KFParticle *> StKFParticleInterface::Vec4Cfits() {
-  static Int_t _debug = 0;
   vector<const KFParticle *> Vec4Cfit;
   for(int iSet=0; iSet<KFParticleFinder::GetNPrimarySets(); iSet++)    {
     for(int iPV=0; iPV<GetTopoReconstructor()->NPrimaryVertices(); iPV++)      {
@@ -2394,9 +2392,8 @@ vector<const KFParticle *> StKFParticleInterface::Vec4Cfits() {
   return Vec4Cfit;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 neg, TVector3 pos) {
+Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 &neg, TVector3 &pos) {
   Bool_t ok = kFALSE;
-  static Int_t _debug = 0;
   enum {Ndecays = 4};
   struct Decay_t {
     Int_t pdgParent;
@@ -2471,9 +2468,7 @@ Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 n
   auto pmax = (M > mN + mP) ?  TMath::Sqrt ((M - mN + mP)*
 					    (M + mN - mP)*
 					    (M - mN - mP)*
-					    (M + mN + mP))/(2.*M) :
-    0;
-  
+					    (M + mN + mP))/(2.*M) :    0;
   Mother.SetXYZM(TempParticle.Px(), TempParticle.Py(), TempParticle.Pz(), M);
   Neg.SetXYZM(negDaughter.Px(), negDaughter.Py(), negDaughter.Pz(), mN);
   Pos.SetXYZM(posDaughter.Px(), posDaughter.Py(), posDaughter.Pz(), mP);
@@ -2481,20 +2476,48 @@ Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 n
   TVector3 beta = Mother.BoostVector();
   TVector3 betaI = - beta;
   Neg.Boost(betaI); 
-  Double_t pTN = Neg.Pt();
-  Double_t cosN = pTN/Neg.Px();
+  Neg.SetRho(pmax);
+  Neg.Boost(beta);
   Pos.Boost(betaI);
-  Double_t pTP = Pos.Pt();
-  Double_t cosP = pTP/Pos.Px();
-
+  Pos.SetRho(pmax);
+  Pos.Boost(beta);
+  neg = Neg.Vect();
+  pos = Pos.Vect();
+  
   ok = kTRUE;
-  if (parents[k].pdgParent ==  2212 && QtAlpha[0] <  0.2 ||
-      parents[k].pdgParent == -2212 && QtAlpha[0] > -0.2) ok = kFALSE;
+  if ((parents[k].pdgParent ==  2212 && QtAlpha[0] <  0.2) ||
+      (parents[k].pdgParent == -2212 && QtAlpha[0] > -0.2)) ok = kFALSE;
   return ok;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdToI) {
-  static Int_t _debug = 0;
+Bool_t StKFParticleInterface::FindUnique(const KFParticle *particle, vector<const KFParticle *> Vec4Cfit, Int_t indxnp[2]) {
+  indxnp[0] = particle->DaughterIds()[0];
+  indxnp[1] = particle->DaughterIds()[1];
+  if ( int(GetParticles()[indxnp[0]].Q()) > 0) {
+    indxnp[0] = particle->DaughterIds()[1];
+    indxnp[1] = particle->DaughterIds()[0];
+  }
+  KFParticle p1 = GetParticles()[indxnp[0]]; PrPO(p1);
+  Int_t index1 = ftrackIdToI[p1.DaughterIds()[0]];
+  KFParticle p2 = GetParticles()[indxnp[1]]; PrPO(p2);
+  Int_t index2 = ftrackIdToI[p2.DaughterIds()[0]];
+  Bool_t foundUniq = kTRUE;
+  for (auto particle2 : Vec4Cfit) {
+    if (particle == particle2) continue;
+    KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; PrPO(p21);
+    Int_t index21 = ftrackIdToI[p21.DaughterIds()[0]];
+    KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; PrPO(p22);
+    Int_t index22 = ftrackIdToI[p22.DaughterIds()[0]];
+    if ((index1 == index21 && index2 == index22) ||
+	(index2 == index21 && index1 == index22)) {
+      foundUniq = kFALSE;
+      break;
+    }
+  }
+  return foundUniq;
+}
+//________________________________________________________________________________
+Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst) {
   StPicoEvent* picoEvent = picoDst->event();
   if(!picoEvent) return 0;
   Int_t nGlobalTracks = picoDst->numberOfTracks( );
@@ -2504,8 +2527,8 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
   for (Int_t iParticle = 0; iParticle < nCandidates; iParticle++) {
     const KFParticle &particle = GetParticles()[iParticle]; PrPO(particle);
     if (particle.NDaughters() != 1) continue;
-    Int_t index = trakIdToI[particle.DaughterIds()[0]];
-    //      cout << "trakIdToI[" << iParticle << "] = " << index << endl;
+    Int_t index = ftrackIdToI[particle.DaughterIds()[0]];
+    //      cout << "ftrackIdToI[" << iParticle << "] = " << index << endl;
     if (index > 0 && index <= nGlobalTracks) {
       StPicoTrack *gTrack = picoDst->track(index); PrPP(gTrack);
       if (! gTrack) continue;
@@ -2522,50 +2545,32 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst, std::vector<int> trakIdT
   // list on unique fits
   vector<const KFParticle *> Vec4Cfit = Vec4Cfits();
   for (auto particle : Vec4Cfit) {
-    KFParticle p1 = GetParticles()[particle->DaughterIds()[0]]; PrPO(p1);
-    Int_t index1 = trakIdToI[p1.DaughterIds()[0]];
-    KFParticle p2 = GetParticles()[particle->DaughterIds()[1]]; PrPO(p2);
-    Int_t index2 = trakIdToI[p2.DaughterIds()[0]];
-    Bool_t foundUniq = kTRUE;
-    for (auto particle2 : Vec4Cfit) {
-      if (particle == particle2) continue;
-      KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; PrPO(p21);
-      Int_t index21 = trakIdToI[p21.DaughterIds()[0]];
-      KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; PrPO(p22);
-      Int_t index22 = trakIdToI[p22.DaughterIds()[0]];
-      if ((index1 == index21 && index2 == index22) ||
-	  (index2 == index21 && index1 == index22)) {
-	foundUniq = kFALSE;
-	break;
+    Int_t indxnp[2] = {0};
+    if (! FindUnique(particle, Vec4Cfit, indxnp)) continue;
+    TVector3 negpos[2];
+    if (! PidQArmerteros(*particle, negpos[0], negpos[1])) continue;
+    for (Int_t np = 0; np < 2; np++) {
+      Int_t index = indxnp[np];
+      const KFParticle &p1 = GetParticles()[index]; PrPO(p1);
+      Int_t index1 = ftrackIdToI[p1.DaughterIds()[0]];
+      StPicoTrack *gTrack1 = picoDst->track(index1); PrPP(gTrack1);
+      if (_debug) {
+	StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index1);
+	const StDcaGeometry dca = cov->dcaGeometry();
+	KFParticle p = dca.Particle(p1.Id(),p1.GetPDG()); PrPO(p);
       }
+      StPidStatus PiD1(gTrack1, fUsedx2); 
+      if (PiD1.PiDStatus < 0) continue;
+      FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
+      StPidStatus PiD2(gTrack1, fUsedx2, &negpos[np] ); 
+      if (PiD2.PiDStatus < 0) continue;
+      FillPidQA(&PiD2, p1.GetPDG(), particle->GetPDG(), 1);
     }
-    if (! foundUniq) continue;
-    TVector3 pos, neg;
-    if (! PidQArmerteros(*particle, neg, pos)) continue;
-    StPicoTrack *gTrack1 = picoDst->track(index1); PrPP(gTrack1);
-    if (_debug) {
-      StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index1);
-      const StDcaGeometry dca = cov->dcaGeometry();
-      KFParticle p = dca.Particle(index1,p1.GetPDG()); PrPO(p);
-    }
-    StPidStatus PiD1(gTrack1, fUsedx2); 
-    if (PiD1.PiDStatus < 0) continue;
-    FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
-    StPicoTrack *gTrack2 = picoDst->track(index2); PrPP(gTrack2);
-    if (_debug) {
-      StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(index2);
-      const StDcaGeometry dca = cov->dcaGeometry();
-      KFParticle p = dca.Particle(index2,p2.GetPDG()); PrPO(p);
-    }
-    StPidStatus PiD2(gTrack2, fUsedx2); 
-    if (PiD2.PiDStatus < 0) continue;
-    FillPidQA(&PiD2, p2.GetPDG(), particle->GetPDG());
   }
   return kTRUE;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) {
-  static Int_t _debug = 0;
+Bool_t StKFParticleInterface::PidQA(StMuDst* muDst) {
   StMuEvent* muEvent = muDst->event();
   if(!muEvent) return 0;
   Int_t nGlobalTracks = muDst->numberOfGlobalTracks( );
@@ -2575,8 +2580,8 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
   for (Int_t iParticle = 0; iParticle < nCandidates; iParticle++) {
     const KFParticle &particle = GetParticles()[iParticle]; PrPO(particle);
     if (particle.NDaughters() != 1) continue;
-    Int_t index = trakIdToI[particle.DaughterIds()[0]];
-    //      cout << "trakIdToI[" << iParticle << "] = " << index << endl;
+    Int_t index = ftrackIdToI[particle.DaughterIds()[0]];
+    //      cout << "ftrackIdToI[" << iParticle << "] = " << index << endl;
     if (index > 0 && index <= nGlobalTracks) {
       StMuTrack *gTrack = muDst->globalTracks(index); PrPP(gTrack);
       if (! gTrack) continue;
@@ -2591,52 +2596,31 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst, std::vector<int> trakIdToI) 
   }
   vector<const KFParticle *> Vec4Cfit = Vec4Cfits(); 
   for (auto particle : Vec4Cfit) {
-    KFParticle p1 = GetParticles()[particle->DaughterIds()[0]]; PrPO(p1);
-    Int_t index1 = trakIdToI[p1.DaughterIds()[0]];
-    KFParticle p2 = GetParticles()[particle->DaughterIds()[1]]; PrPO(p2);
-    Int_t index2 = trakIdToI[p2.DaughterIds()[0]];
-    Bool_t foundUniq = kTRUE;
-    for (auto particle2 : Vec4Cfit) {
-      if (particle == particle2) continue;
-      KFParticle p21 = GetParticles()[particle2->DaughterIds()[0]]; PrPO(p21);
-      Int_t index21 = trakIdToI[p21.DaughterIds()[0]];
-      KFParticle p22 = GetParticles()[particle2->DaughterIds()[1]]; PrPO(p22);
-      Int_t index22 = trakIdToI[p22.DaughterIds()[0]];
-      if ((index1 == index21 && index2 == index22) ||
-	  (index2 == index21 && index1 == index22)) {
-	foundUniq = kFALSE;
-	break;
+    Int_t indxnp[2] = {0};
+    if (! FindUnique(particle, Vec4Cfit, indxnp)) continue;
+    TVector3 negpos[2];
+    if (! PidQArmerteros(*particle, negpos[0], negpos[1])) continue;
+    for (Int_t np = 0; np < 2; np++) {
+      Int_t index = indxnp[np];
+      const KFParticle &p1 = GetParticles()[index]; PrPO(p1);
+      Int_t index1 = ftrackIdToI[p1.DaughterIds()[0]];
+      StMuTrack *gTrack1 = muDst->globalTracks(index1); PrPP(gTrack1);
+      if (_debug) {
+	const StDcaGeometry* dca = gTrack1->dcaGeom();
+	KFParticle p = dca->Particle(index1,p1.GetPDG());      PrPO(p);
       }
+      StPidStatus PiD1(gTrack1, fUsedx2); 
+      if (PiD1.PiDStatus < 0) continue;
+      FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
+      StPidStatus PiD2(gTrack1, fUsedx2, &negpos[np] ); 
+      if (PiD2.PiDStatus < 0) continue;
+      FillPidQA(&PiD2, p1.GetPDG(), particle->GetPDG(), 1);
     }
-    if (! foundUniq) continue;
-    TVector3 pos, neg;
-    if (! PidQArmerteros(*particle, neg, pos)) continue;
-    StMuTrack *gTrack1 = muDst->globalTracks(index1); PrPP(gTrack1);
-    if (_debug) {
-      PrPO(p1);
-      const StDcaGeometry* dca = gTrack1->dcaGeom();
-      KFParticle p = dca->Particle(index1,p1.GetPDG());
-      PrPO(p);
-    }
-    StPidStatus PiD1(gTrack1, fUsedx2); 
-    if (PiD1.PiDStatus < 0) continue;
-    FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
-    StMuTrack *gTrack2 = muDst->globalTracks(index2); 
-    if (_debug) {
-      PrPO(p2);
-      const StDcaGeometry* dca = gTrack2->dcaGeom();
-      KFParticle p = dca->Particle(index2,p2.GetPDG()); PrPO(p);
-      PrPP(gTrack2);      
-    }
-    StPidStatus PiD2(gTrack2, fUsedx2); 
-    if (PiD2.PiDStatus < 0) continue;
-    FillPidQA(&PiD2, p2.GetPDG(), particle->GetPDG());
   }
   return kTRUE;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgParent) {
-  static Int_t _debug = 0;
+Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgParent, Int_t set) {
   struct Particle_t {
     Int_t pdg;
     const Char_t *name;
@@ -2683,42 +2667,48 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[Ndecays+1][Nparticles][9] = {0};
-  if (! hist[0][0][0]) {
+  static TH2F *hist[2][Ndecays+1][Nparticles][9] = {0};
+  if (! hist[0][0][0][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
     TDirectory *PiDQA = top->GetDirectory("PiDQA");
-    for (Int_t d = 0; d <= Ndecays; d++) {
-      for (Int_t p = 0; p < Nparticles; p++) {
-	PiDQA->cd();
-	if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	TDirectory *dir1 = PiDQA;
-	if (d > 0 && (particles[p].pdg != parents[d-1].pdg1 && particles[p].pdg != parents[d-1].pdg2)) continue;
-	if (d) {
-	  TDirectory *dir2 = dir1->GetDirectory(parents[d-1].name);
-	  if (! dir2) {
-	    dir1->mkdir(parents[d-1].name); 
-	    dir2 = dir1->GetDirectory(parents[d-1].name); 
-	  }
-	  dir2->cd(); dir1 = dir2;
+    for (Int_t s = 0; s < 2; s++) {// from Dst and from Fit
+      Int_t d1 = 0;
+      if (s) d1 = 1;
+      for (Int_t d = d1; d <= Ndecays; d++) {
+	for (Int_t p = 0; p < Nparticles; p++) {
+	  PiDQA->cd();
 	  if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	}
-	dir1->mkdir(particles[p].name);
-	TDirectory *dir3 = dir1->GetDirectory(particles[p].name);
-	dir3->cd();
-	if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	hist[d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,200,-0.5,0.5);
-	hist[d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",280,-1,4,200,-0.5,0.5);
-	hist[d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
-	hist[d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
-	hist[d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
-	hist[d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
-	hist[d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
-	hist[d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,500,-5,5);
-	hist[d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
-	//	hist[d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
-	for (Int_t k = 0; k < 9; k++) {
-	  hist[d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
+	  TDirectory *dir1 = PiDQA;
+	  if (d > 0 && (particles[p].pdg != parents[d-1].pdg1 && particles[p].pdg != parents[d-1].pdg2)) continue;
+	  if (d) {
+	    TDirectory *dir2 = dir1->GetDirectory(parents[d-1].name);
+	    if (! dir2) {
+	      dir1->mkdir(parents[d-1].name); 
+	      dir2 = dir1->GetDirectory(parents[d-1].name); 
+	    }
+	    dir2->cd(); dir1 = dir2;
+	    if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
+	  }
+	  TString name(particles[p].name);
+	  if (s) name += "C";
+	  dir1->mkdir(name);
+	  TDirectory *dir3 = dir1->GetDirectory(name);
+	  dir3->cd();
+	  if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
+	  hist[s][d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,200,-0.5,0.5);
+	  hist[s][d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",280,-1,4,200,-0.5,0.5);
+	  hist[s][d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
+	  hist[s][d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
+	  hist[s][d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
+	  hist[s][d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
+	  hist[s][d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
+	  hist[s][d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,500,-5,5);
+	  hist[s][d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
+	  //	hist[s][d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
+	  for (Int_t k = 0; k < 9; k++) {
+	    hist[s][d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
+	  }
 	}
       }
     }
@@ -2733,48 +2723,50 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
       break;
     }
   } 
+  Int_t s = 0;
+  if (set) s = 1;
   if (d >= 0) {
     for (Int_t p = 0; p < Nparticles; p++) {
       if (pdg != particles[p].pdg) continue;
       if (! PiD->fFit) continue;
       Int_t l = particles[p].code;
-      Double_t p2 = PiD->g3.mag2()/TMath::Power(StProbPidTraits::mPidParticleDefinitions[l]->charge(),2);
+      Double_t p2 = PiD->g3.Mag2()/TMath::Power(StProbPidTraits::mPidParticleDefinitions[l]->charge(),2);
       Double_t M2 = TMath::Power(StProbPidTraits::mPidParticleDefinitions[l]->mass(),2);
       Double_t bgL10 = PiD->bghyp[l];
       Double_t sigmaTof = 999;
       if (PiD->fBTof) {
 	sigmaTof = PiD->fBTof->Sigma(l);
-	hist[d][p][8]->Fill(bgL10, sigmaTof);
+	hist[s][d][p][8]->Fill(bgL10, sigmaTof);
       }
 #if 0
       if (PiD->fETof) {
 	sigmaTof = PiD->fETof->Sigma(l);
-	hist[d][p][9]->Fill(bgL10, sigmaTof);
+	hist[s][d][p][9]->Fill(bgL10, sigmaTof);
       }
 #endif
-      hist[d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
-      hist[d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
+      hist[s][d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
+      hist[s][d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
       if (sigmaTof < 3) {
-	hist[d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
-	hist[d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
+	hist[s][d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
+	hist[s][d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
       }
       if (PiD->fdNdx) {
-	hist[d][p][1]->Fill(bgL10, PiD->fdNdx->dev[l]);
-	if (sigmaTof < 3) hist[d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
+	hist[s][d][p][1]->Fill(bgL10, PiD->fdNdx->dev[l]);
+	if (sigmaTof < 3) hist[s][d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
       }
 
       if (PiD->fBTof) {
 	Float_t beta = PiD->fBTof->beta();
 	if (beta > 0 && beta < 2) {
 	  Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
-	  hist[d][p][2]->Fill(bgL10, dM2);
+	  hist[s][d][p][2]->Fill(bgL10, dM2);
 	}
       }
       if (PiD->fETof) {
 	Float_t beta = PiD->fETof->beta();
 	if (beta > 0 && beta < 2) {
 	  Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
-	  hist[d][p][3]->Fill(bgL10, dM2);
+	  hist[s][d][p][3]->Fill(bgL10, dM2);
 	}
       }
     }

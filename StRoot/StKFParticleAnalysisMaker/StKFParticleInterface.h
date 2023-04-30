@@ -80,10 +80,11 @@ class StKFParticleInterface: public TObject
 #ifdef __TFG__VERSION__
   void   SetPidQA(Bool_t k = kTRUE) {fPidQA = k;}
   vector<const KFParticle *> Vec4Cfits();
-  Bool_t PidQA(StPicoDst* picoDst, std::vector<int> trakIdToI);
-  Bool_t PidQA(StMuDst* muDst, std::vector<int> trakIdToI);
-  Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0); 
-  Bool_t PidQArmerteros(KFParticle TempPart, TVector3 negative, TVector3 positive ); 
+  Bool_t FindUnique(const KFParticle *particle, vector<const KFParticle *> Vec4Cfit, Int_t indxnp[2]);
+  Bool_t PidQA(StPicoDst* picoDst);
+  Bool_t PidQA(StMuDst* muDst);
+  Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0, Int_t set = 0); 
+  Bool_t PidQArmerteros(KFParticle TempPart, TVector3 &negative, TVector3 &positive ); 
 #endif /* _TFG__VERSION__ */
   bool OpenCharmTrigger();
   void OpenCharmTriggerCompression(int nTracksTriggered, int nTracksInEvent, bool triggerDMesons);
@@ -260,6 +261,8 @@ class StKFParticleInterface: public TObject
   Bool_t            fPidQA;
   Bool_t            fUsedx2; //! flag for StPiDStatus to absord log2(dx) dependence into TpcLengthCorrectionMD2
   Bool_t            fUseTof;
+  std::vector<float> fm2TofArray;
+  std::vector<int>   ftrackIdToI; // [trackId] => track index on [Mu|Pico]Dst track array
 #endif /* __TFG__VERSION__ */
   ClassDef(StKFParticleInterface,1)
 };
