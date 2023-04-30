@@ -241,6 +241,7 @@
 #include "TCernLib.h"
 #endif
 #include "TEnv.h"
+#include "TROOT.h"
 ClassImp(StTpcDbMaker)
 //_____________________________________________________________________________
 Int_t StTpcDbMaker::InitRun(int runnumber){
@@ -345,8 +346,10 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
 #endif
   }
   StTpcDb::instance()->SetTpcRotations();
-  St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
-  St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
+  if (  gROOT->GetClass("StTpcRTSHitMaker") || gROOT->GetClass("StiMaker")) {
+    St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
+    St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
+  }
   return kStOK;
 }
 //_____________________________________________________________________________
