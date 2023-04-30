@@ -509,7 +509,21 @@ Bfc_st BFC[] = { // standard chains
   {"pp2022","" ,"",
    "B2022,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,gmt,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx,analysis",
    "","",     "Production chain for year 2022 pp data - no Corr (+ epd, mtf, b/etof, fcs, e/b-emc)",kFALSE},
-
+// 2023  chains
+  {"B2023"  ,"","",
+   "ry2023,in,tpcX,UseXgeom,iTpcIT,CorrY,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
+   "","",                                                      "Base chain for run 2022 data (tpc)",kFALSE},
+  {"B2023a" ,"","",
+   "ry2023a,in,tpcX,UseXgeom,iTpcIT,CorrY,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
+   "","",                                                      "Base chain for run 2020 data (tpc)",kFALSE},
+  {"P2023","" ,"",
+   "B2023,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
+  {"P2023a","" ,"",
+   "B2023a,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
+ 
+  
   {"Calibration chains","------------","-----------","-----------------------------------","","","",kFALSE},
   {"LanaDV",   "","","LanaDVtpx","",""                                                   ,"get LDV",kFALSE},
   {"LanaDVtpx","","","MakeEvent,trgd,in,tpx,TpcHitMover,LaserIT,VFMinuit,Lana,Analysis,Corr4,"
