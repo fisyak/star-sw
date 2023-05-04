@@ -1,4 +1,4 @@
-//*-- Author : Yuri Fisyak 02/02/2016
+//*-- Author : Maksym Zyzak & Yuri Fisyak 02/02/2016
 #include "StKFParticleAnalysisMaker.h"
 #include "TDirectory.h"
 #include "TNtuple.h"
@@ -69,9 +69,9 @@ StKFParticleAnalysisMaker::StKFParticleAnalysisMaker(const char *name) : StMaker
   trackCutNames.push_back("dEdXPi_");
   trackCutNames.push_back("dEdXK_");
   trackCutNames.push_back("dEdXP_");
-  trackCutNames.push_back("ToFPi_");
-  trackCutNames.push_back("ToFK_");
-  trackCutNames.push_back("ToFP_");
+  trackCutNames.push_back("TofPi_");
+  trackCutNames.push_back("TofK_");
+  trackCutNames.push_back("TofP_");
   fNTrackTMVACuts = trackCutNames.size();
   
   fDaughterNames[0].push_back("K");     fDaughterNames[0].push_back("Pi");                                                                              //D0 -> Kpi

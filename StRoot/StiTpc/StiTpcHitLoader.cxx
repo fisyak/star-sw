@@ -19,6 +19,8 @@
 #include "Sti/StiKalmanTrackNode.h"
 #include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
+#include "StDetectorDbMaker/St_tpcAnodeHVavgC.h"
+#include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
 //________________________________________________________________________________
 StiTpcHitLoader::StiTpcHitLoader(): StiHitLoader<StEvent,StiDetectorBuilder>("TpcHitLoader"),
   _minRow(1), _maxRow(72), _minSector(1), _maxSector(24), _maxZ(1000)   { }
@@ -55,6 +57,7 @@ void StiTpcHitLoader::loadHits(StEvent* source,
     }
     _maxRow = St_tpcPadConfigC::instance()->padRows(sector+1);
     for (UInt_t row=_minRow-1; row<_maxRow; row++) {
+      if (! St_tpcAnodeHVavgC::instance()->livePadrow(sector+1,row+1)) continue;
       //cout << "StiTpcHitLoader:loadHits() -I- Loading row:"<<row<<" sector:"<<sector<<endl;
       const StTpcPadrowHitCollection* padrowHits = secHits->padrow(row);
       if (!padrowHits) break;
@@ -72,6 +75,8 @@ void StiTpcHitLoader::loadHits(StEvent* source,
 	if (hit->flag() & FCF_CHOPPED || hit->flag() & FCF_SANITY || hit->flag() & 256)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
 	if (hit->pad() > 182 || hit->timeBucket() > 511) continue; // some garbadge  for y2001 daq
 	if (TMath::Abs( hit->position().z() ) > _maxZ) continue;
+	Int_t iRdo    = StDetectorDbTpcRDOMasks::instance()->rdoForPadrow(sector+1,row+1,hit->pad());
+	if ( ! StDetectorDbTpcRDOMasks::instance()->isOn(sector+1,iRdo)) continue;
 #if 0 /*VP*/
 {        
         double x = hit->position().x();

@@ -42,7 +42,8 @@ foreach my $key ( sort keys %runs ) {
      if ($dt < $dtmin) {$dtmin = $dt;}
      print "$file dt = $dt  dtmin = $dtmin\n" if ($debug);
   }
-  if ($dtmin > 600) {
+#  if ($dtmin > 600) {
+  if ($dtmin > 0) {
     print "string:$key:$runs{$key}\n";
     $Njobs++;
   }

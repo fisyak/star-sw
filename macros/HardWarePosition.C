@@ -189,12 +189,24 @@ UInt_t getSectorMask(UInt_t sec=1, UInt_t MASK=65535) {
 }
 //________________________________________________________________________________
 UInt_t isRdoOn(UInt_t sec=1, Int_t rdo = 1, UInt_t MASK=65535) {
-  return getSectorMask(sec, MASK) >> (rdo-1) & 0x00000001;
+  Int_t m =  getSectorMask(sec, MASK);
+  Int_t b = m >> (rdo - 1);
+  Int_t c = b & 1;
+  //  cout << MASK << "\t" << m  << "\t" << b << "\t" << c << endl;
+  return c; // (getSectorMask(sec, MASK) >> (rdo-1)) & 1;
 }
 //________________________________________________________________________________
 void isRdosOn(UInt_t sec=1,  UInt_t MASK=65535) {
+  //  cout << "sec = " << sec << "\tMASK = " << MASK << endl;
   for (Int_t rdo = 1; rdo <= 8; rdo++) 
     cout << "rdo " << rdo << " is " << isRdoOn(sec, rdo, MASK) << endl;
+}
+//________________________________________________________________________________
+UInt_t SwitchOffRDO(UInt_t MASK=65535, UInt_t sec = 1, Int_t rdo1 = 1, Int_t rdo2 = -1) {
+  UInt_t mask = MASK;
+  if (rdo1 > 0) mask &= ~(1 << (8*((sec-1)%2) + rdo1 - 1));
+  if (rdo2 > 0) mask &= ~(1 << (8*((sec-1)%2) + rdo2 - 1));
+  return mask;
 }
 //________________________________________________________________________________
 Double_t xPad(Double_t pad, Int_t row) {

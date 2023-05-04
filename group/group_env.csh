@@ -1,9 +1,9 @@
 #!/bin/csh
-#       $Id: group_env.csh,v 1.265 2021/11/16 15:34:27 jeromel Exp $
+#       $Id: group_env.csh,v 1.266 2022/06/22 16:16:12 jeromel Exp $
 #	Purpose:	STAR group csh setup
 #
 # Revisions & notes
-#    2001-2017  Maintained J. Lauret
+#    2001-2022  Maintained J. Lauret
 #    24 Apr 01  J. Lauret  Disabled echoing in ! prompt.
 #                          DO NOT MODIFY THIS !!!
 #     2 Apr 01  J. Lauret  Insure path added

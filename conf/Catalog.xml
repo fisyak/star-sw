@@ -23,15 +23,16 @@
 <SCATALOG VERSION="1.0.1">
 	<SITE name="BNL">
 		<SERVER SCOPE="Admin">
-			<HOST NAME="fc1.star.bnl.gov" DBNAME="FileCatalog_BNL" PORT="3336">
+			<HOST NAME="star-fc1.sdcc.bnl.gov" DBNAME="FileCatalog_BNL" PORT="3336">
 				<ACCESS USER="FC_admin" PASS=""/>
 			</HOST>
 		</SERVER>
 		<SERVER SCOPE="User">
-			<HOST NAME="fc2.star.bnl.gov" DBNAME="FileCatalog_BNL" PORT="3336">
+			<HOST NAME="star-fc2.sdcc.bnl.gov" DBNAME="FileCatalog_BNL" PORT="3336">
 				<ACCESS USER="FC_user" PASS="FCatalog"/>
                         </HOST>
-			<HOST NAME="fc4.star.bnl.gov" DBNAME="FileCatalog_BNL" PORT="3336">
+
+			<HOST NAME="star-fc4.sdcc.bnl.gov" DBNAME="FileCatalog_BNL" PORT="3336">
 				<ACCESS USER="FC_user" PASS="FCatalog"/>
 			</HOST>
 		</SERVER>

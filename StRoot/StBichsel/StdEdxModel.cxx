@@ -68,8 +68,8 @@ StdEdxModel::StdEdxModel() : mdNdx(0), fScale(1)
   // Set normalization point the same as for I70 (increase energy per conduction electron from 20 eB to 52 eV)
   Double_t dEdxMIPLog = TMath::Log(2.62463815285237434); //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
-  //                  log2dx, charge
-  Double_t pars[3] = {   1.0,    1.0};
+  //                  log2dx, charge mass
+  Double_t pars[4] = {   1.0,     1.0, 0.};
   Double_t dEdxLog = zMP(&MIPBetaGamma10, pars);
   fLogkeVperElectron = dEdxMIPLog - dEdxLog;
   cout << "StdEdxModel:: set scale = " << Form("%5.1f",1e3*keVperElectron()) << " eV/electron" << endl;
@@ -93,7 +93,10 @@ Double_t StdEdxModel::dNdx(Double_t poverm, Double_t charge) {
     Double_t w3 = 121.4139*w2 + 0.0378*TMath::Sin(190.7165*w2);
     Q_eff      *= 1. -w1*TMath::Exp(-w3);
   }
-  if (mdNdx)    return fScale*Q_eff*Q_eff*mdNdx->Interpolate(poverm);
+  if (mdNdx)    {
+    Double_t dNdx = fScale*Q_eff*Q_eff*mdNdx->Interpolate(poverm);
+    return dNdx;
+  }
   return 0;
 }
 //________________________________________________________________________________
@@ -500,8 +503,9 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
   Double_t pOverMRC  = TMath::Power(10., log10bg);
   Double_t log2dx  = p[0];
   Double_t charge  = p[1];
+  Double_t mass    = p[2];
   Double_t dx      = TMath::Power( 2., log2dx);
-  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge); // */dNdxVsBgC*.root [-1.5,5]
+  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge, mass); // */dNdxVsBgC*.root [-1.5,5]
   Double_t Np = dNdx*dx;
   //  Double_t NpLog = TMath::Log(Np);
   //  Double_t mu    = instance()->Parameter(Np, 0);
@@ -513,16 +517,17 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
   return   dEdxLog;
 }
 //________________________________________________________________________________
-TF1 *StdEdxModel::ZMP(Double_t log2dx) {
+TF1 *StdEdxModel::ZMP(Double_t log2dx, Double_t charge, Double_t mass) {
   TString fName(Form("New%i",(int)(2*(log2dx+2))));
   TF1 *f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(fName);
   if (! f) {
-    f = new TF1(fName,zMP,-2,5,2);
-    f->SetParName(0,"log2dx");
+    f = new TF1(fName,zMP,-2,5,3);
     f->SetLineStyle(4);
+    f->SetParNames("log2dx","charge","mass");
     f->SetParameter(0,log2dx);
-    f->SetParameter(1, 1.0); // charge
-    cout << "Create ZMPNew with name " << f->GetName() << " for log2dx = " << log2dx << endl;
+    f->SetParameter(1, charge); 
+    f->SetParameter(2, mass); 
+    cout << "Create ZMPNew with name " << f->GetName() << " for log2dx = " << log2dx << " and mass = " << mass << endl;
   }
   return f;
 }
@@ -628,118 +633,30 @@ TH1D *StdEdxModel::protonEff() {
 //========= Macro generated from object: Func/
 //========= by ROOT version5.34/39
    
-   TH1D *Func__1 = new TH1D("protonEff","",100,-2.0,0.0);
-   Func__1->SetBinContent(1,0.829974);
-   Func__1->SetBinContent(2,0.833488);
-   Func__1->SetBinContent(3,0.836679);
-   Func__1->SetBinContent(4,0.839568);
-   Func__1->SetBinContent(5,0.842227);
-   Func__1->SetBinContent(6,0.844577);
-   Func__1->SetBinContent(7,0.846659);
-   Func__1->SetBinContent(8,0.848506);
-   Func__1->SetBinContent(9,0.850145);
-   Func__1->SetBinContent(10,0.851604);
-   Func__1->SetBinContent(11,0.857514);
-   Func__1->SetBinContent(12,0.863548);
-   Func__1->SetBinContent(13,0.869116);
-   Func__1->SetBinContent(14,0.874097);
-   Func__1->SetBinContent(15,0.878448);
-   Func__1->SetBinContent(16,0.88217);
-   Func__1->SetBinContent(17,0.885305);
-   Func__1->SetBinContent(18,0.887923);
-   Func__1->SetBinContent(19,0.890128);
-   Func__1->SetBinContent(20,0.891974);
-   Func__1->SetBinContent(21,0.893513);
-   Func__1->SetBinContent(22,0.894796);
-   Func__1->SetBinContent(23,0.895866);
-   Func__1->SetBinContent(24,0.896761);
-   Func__1->SetBinContent(25,0.897513);
-   Func__1->SetBinContent(26,0.898147);
-   Func__1->SetBinContent(27,0.898683);
-   Func__1->SetBinContent(28,0.899139);
-   Func__1->SetBinContent(29,0.899531);
-   Func__1->SetBinContent(30,0.899868);
-   Func__1->SetBinContent(31,0.90016);
-   Func__1->SetBinContent(32,0.900415);
-   Func__1->SetBinContent(33,0.900639);
-   Func__1->SetBinContent(34,0.900836);
-   Func__1->SetBinContent(35,0.90101);
-   Func__1->SetBinContent(36,0.901165);
-   Func__1->SetBinContent(37,0.901304);
-   Func__1->SetBinContent(38,0.901431);
-   Func__1->SetBinContent(39,0.90164);
-   Func__1->SetBinContent(40,0.901817);
-   Func__1->SetBinContent(41,0.901969);
-   Func__1->SetBinContent(42,0.902099);
-   Func__1->SetBinContent(43,0.902212);
-   Func__1->SetBinContent(44,0.902309);
-   Func__1->SetBinContent(45,0.902392);
-   Func__1->SetBinContent(46,0.902469);
-   Func__1->SetBinContent(47,0.902536);
-   Func__1->SetBinContent(48,0.902595);
-   Func__1->SetBinContent(49,0.902646);
-   Func__1->SetBinContent(50,0.902692);
-   Func__1->SetBinContent(51,0.902733);
-   Func__1->SetBinContent(52,0.902769);
-   Func__1->SetBinContent(53,0.902801);
-   Func__1->SetBinContent(54,0.90283);
-   Func__1->SetBinContent(55,0.902857);
-   Func__1->SetBinContent(56,0.902881);
-   Func__1->SetBinContent(57,0.902902);
-   Func__1->SetBinContent(58,0.902922);
-   Func__1->SetBinContent(59,0.90294);
-   Func__1->SetBinContent(60,0.902956);
-   Func__1->SetBinContent(61,0.90297);
-   Func__1->SetBinContent(62,0.902984);
-   Func__1->SetBinContent(63,0.902996);
-   Func__1->SetBinContent(64,0.903007);
-   Func__1->SetBinContent(65,0.903017);
-   Func__1->SetBinContent(66,0.903026);
-   Func__1->SetBinContent(67,0.903034);
-   Func__1->SetBinContent(68,0.903042);
-   Func__1->SetBinContent(69,0.903049);
-   Func__1->SetBinContent(70,0.903055);
-   Func__1->SetBinContent(71,0.903061);
-   Func__1->SetBinContent(72,0.903066);
-   Func__1->SetBinContent(73,0.903071);
-   Func__1->SetBinContent(74,0.903075);
-   Func__1->SetBinContent(75,0.903079);
-   Func__1->SetBinContent(76,0.90308);
-   Func__1->SetBinContent(77,0.90308);
-   Func__1->SetBinContent(78,0.90308);
-   Func__1->SetBinContent(79,0.90308);
-   Func__1->SetBinContent(80,0.90308);
-   Func__1->SetBinContent(81,0.90308);
-   Func__1->SetBinContent(82,0.90308);
-   Func__1->SetBinContent(83,0.90308);
-   Func__1->SetBinContent(84,0.90308);
-   Func__1->SetBinContent(85,0.90308);
-   Func__1->SetBinContent(86,0.90308);
-   Func__1->SetBinContent(87,0.90308);
-   Func__1->SetBinContent(88,0.90308);
-   Func__1->SetBinContent(89,0.90308);
-   Func__1->SetBinContent(90,0.90308);
-   Func__1->SetBinContent(91,0.90308);
-   Func__1->SetBinContent(92,0.90308);
-   Func__1->SetBinContent(93,0.90308);
-   Func__1->SetBinContent(94,0.90308);
-   Func__1->SetBinContent(95,0.90308);
-   Func__1->SetBinContent(96,0.90308);
-   Func__1->SetBinContent(97,0.90308);
-   Func__1->SetBinContent(98,0.90308);
-   Func__1->SetBinContent(99,0.90308);
-   Func__1->SetBinContent(100,0.90308);
-   Func__1->SetEntries(700);
-   Func__1->SetDirectory(0);
-   Func__1->SetStats(0);
-   Func__1->SetFillColor(19);
-   Func__1->SetFillStyle(0);
-   Func__1->SetLineColor(9);
-   Func__1->SetLineWidth(3);
-   Func__1->SetMarkerStyle(20);
-   Func__1->GetXaxis()->SetTitleOffset(1.2);
-   //   Func__1->Draw("");
-   return Func__1;
+   TH1D *eff = new TH1D("protonEff","",100,-2.0,0.0);
+   Double_t corr[102] = { 0, 
+			  0.8300, 0.8335, 0.8367, 0.8396, 0.8422, 0.8446, 0.8467, 0.8485, 0.8501, 0.8516, 
+			  0.8575, 0.8635, 0.8691, 0.8741, 0.8784, 0.8822, 0.8853, 0.8879, 0.8901, 0.8920, 
+			  0.8935, 0.8948, 0.8959, 0.8968, 0.8975, 0.8981, 0.8987, 0.8991, 0.8995, 0.8999, 
+			  0.9002, 0.9004, 0.9006, 0.9008, 0.9010, 0.9012, 0.9013, 0.9014, 0.9016, 0.9018, 
+			  0.9020, 0.9021, 0.9022, 0.9023, 0.9024, 0.9025, 0.9025, 0.9026, 0.9026, 0.9027, 
+			  0.9027, 0.9028, 0.9028, 0.9028, 0.9029, 0.9029, 0.9029, 0.9029, 0.9029, 0.9030, 
+			  0.9030, 0.9030, 0.9030, 0.9030, 0.9030, 0.9030, 0.9030, 0.9030, 0.9030, 0.9031, 
+			  0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 
+			  0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 
+			  0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031, 0.9031,
+			  0};
+   eff->Set(102, corr);
+   eff->SetDirectory(0);
+   eff->SetStats(0);
+   eff->SetFillColor(19);
+   eff->SetFillStyle(0);
+   eff->SetLineColor(9);
+   eff->SetLineWidth(3);
+   eff->SetMarkerStyle(20);
+   eff->GetXaxis()->SetTitleOffset(1.2);
+   //   eff->Draw("");
+   return eff;
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
@@ -751,12 +668,51 @@ Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
   return eff->Interpolate(bgL10);
 }
 //________________________________________________________________________________
-Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge) {
+Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass) {
   if (!fgStdEdxModel) instance();
   Double_t bgMC = bgCorrected(poverm); 
   Double_t dNdxMC = dNdx(bgMC, charge);
   Double_t dNdx = dNdxMC*NpCorrection(poverm); 
-  return dNdx;
+  // Modification to dN/dx from analysis of daughter tracks of unique reconstructed strange particle V0 decays and gamma conversions. OO200GeV_2021 samples
+  Double_t dNdxCor = 0;
+#if 0
+  Double_t bgL10 = TMath::Log10(poverm);
+  static TF1 *elCor = 0;
+  static TF1 *piCor = 0;
+#if 0
+  if (bgL10 > 2.3) {
+    if (bgL10 > 3.5) bgL10 = 3.5;
+    if (! elCor) {elCor = new TF1("dNdxElCor","pol2",2.3,3.5); elCor->SetParameters(-0.66617,    0.42779,  -0.059554);}
+    dNdxCor = elCor->Eval(bgL10);
+  } 
+  if (bgL10 > 2.1 && bgL10 < 2.55) {
+    static TF1 *elCor2 = 0;
+    if (! elCor2) {elCor2 = new TF1("dNdxElCor2","pol7",2.1,2.55); elCor2->SetParameters(  123.04,    -102.77,    -4.7415,     12.443,     4.1275,   -0.88384,    -1.0646,    0.25247);}
+    dNdxCor += elCor2->Eval(bgL10);
+  }
+  if (bgL10 < 2) {
+    if (bgL10 < -0.6) bgL10 = -0.6;
+    if (bgL10 >  1.0) bgL10 =  1.0;
+    if (! piCor) {piCor = new TF1("dNdxPionCor","pol6",0.6,1.0); piCor->SetParameters( -0.026971,  -0.015765,    0.19093, -0.00048008,   -0.24187,  -0.072279,    0.17227);}
+    dNdxCor = piCor->Eval(bgL10);
+  }
+#else /* dEdxBTof */
+  if (bgL10 > 2.3) {
+    if (! elCor) {elCor = new TF1("dNdxElCor","pol3",2.3,3.5); elCor->SetParameters(   -2.5497,     2.2386,   -0.64123,   0.062087);}
+    dNdxCor = elCor->Eval(bgL10);
+  } else if (bgL10 > -0.1) {
+    if (! piCor) {piCor = new TF1("dNdxPionCor","pol4",-0.1,1.5); piCor->SetParameters( -0.071804,    0.19103,  -0.061166,   -0.14009,   0.080874);}
+    if (bgL10 > 1.2)  bgL10 = 1.2;
+    dNdxCor = piCor->Eval(bgL10);
+  } else {
+    static TF1 *protonCor = 0;
+    if (! protonCor) {protonCor = new TF1("dNdxPionCor","pol4",-0.7,0.5); protonCor->SetParameters( -0.028427,   0.040952,    0.23372,   -0.16693,   -0.31934);}
+    if (bgL10 > 0.5)  bgL10 = 0.5;
+    dNdxCor = protonCor->Eval(bgL10);
+  } 
+#endif
+#endif
+  return dNdx*TMath::Exp(dNdxCor);
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::extremevalueG(Double_t *x, Double_t *p) {

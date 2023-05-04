@@ -131,7 +131,7 @@ StMtdPidTraits StPidStatus::SetMtdPidTraits(const StMuMtdPidTraits &pid) {
 StPidStatus::StPidStatus(StGlobalTrack *gTrack, Bool_t Usedx2) : PiDStatus(-1), fUsedx2(Usedx2) {// , gTrack(Track) {
   Clear();
   if (! gTrack) return;
-  g3 = gTrack->geometry()->momentum(); // p of global track
+  g3 = TVector3(gTrack->geometry()->momentum().xyz()); // p of global track
   StSPtrVecTrackPidTraits &traits = gTrack->pidTraits();
   if (! traits.size()) return;
   for (UInt_t i = 0; i < traits.size(); i++) {
@@ -172,14 +172,17 @@ StPidStatus::StPidStatus(StGlobalTrack *gTrack, Bool_t Usedx2) : PiDStatus(-1), 
   Set();
 }
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StMuTrack *muTrack, Bool_t Usedx2) : PiDStatus(-1), fUsedx2(Usedx2) {
+StPidStatus::StPidStatus(StMuTrack *muTrack, Bool_t Usedx2, TVector3 *g3KFP) : PiDStatus(-1), fUsedx2(Usedx2) {
   Clear();
   if (! muTrack) return;
   const StMuProbPidTraits &probPidTraits = muTrack->probPidTraits();
   const StMuBTofPidTraits &btofPidTraits = muTrack->btofPidTraits();
   const StMuETofPidTraits &etofPidTraits = muTrack->etofPidTraits();
   const StMuMtdPidTraits  &mtdPidTraits = muTrack->mtdPidTraits();
-  g3 = muTrack->p(); // p of global track
+  if (! g3KFP) 
+    g3 = TVector3(muTrack->p().xyz()); // p of global track
+  else 
+    g3 = *g3KFP;
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
@@ -224,11 +227,14 @@ StPidStatus::StPidStatus(StMuTrack *muTrack, Bool_t Usedx2) : PiDStatus(-1), fUs
 }
 #ifdef __TFG__VERSION__
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StPicoTrack *picoTrack, Bool_t Usedx2) : PiDStatus(-1), fUsedx2(Usedx2) {
+StPidStatus::StPidStatus(StPicoTrack *picoTrack, Bool_t Usedx2, TVector3 *g3KFP) : PiDStatus(-1), fUsedx2(Usedx2) {
   Clear();
   if (! picoTrack) return;
-  TVector3 gMom = picoTrack->gMom();
-  g3 = StThreeVectorF(gMom.X(), gMom.Y(), gMom.Z()); // p of global track
+  if (! g3KFP) {
+    g3 = picoTrack->gMom();
+  } else {
+    g3 = *g3KFP;
+  }
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
@@ -279,7 +285,7 @@ StPidStatus::StPidStatus(StPicoTrack *picoTrack, Bool_t Usedx2) : PiDStatus(-1),
 void StPidStatus::Set() {
   if (! fI70 && ! fFit && ! fdNdx) return;
   PiDStatus = 0;
-  Double_t pMomentum = g3.mag();
+  Double_t pMomentum = g3.Mag();
   //  Double_t bg = TMath::Log10(pMomentum/StProbPidTraits::mPidParticleDefinitions[kPidPion]->mass());
   Int_t l;
   PredBMN[0] = Pred70BMN[0] =  1;

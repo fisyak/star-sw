@@ -1,6 +1,5 @@
-# Set up STAR enviroment
-setenv STAR_LEVEL adev
-if ( -e $GROUP_DIR/group_env.csh ) then
-        source $GROUP_DIR/group_env.csh
+# Set up STAR enviroment - now all go through .starver
+if ( -e $GROUP_DIR/.starver ) then
+       source ${GROUP_DIR}/.starver adev $*
 endif
 

@@ -36,7 +36,7 @@
 #define VERSION		0x20180002
 // 0x20180001 until Jun 6 -- had cuts in do_ch()
 
-//#define __DEBUG__
+
 //#define DO_DBG1	1
 
 static double mark(void)
@@ -1249,7 +1249,7 @@ int itpc_fcf_c::do_blobs_stage2(int row)
 
 
 			int b_ix = blob_ix[ix] ;
-#ifdef __DEBUG__
+#ifdef DO_DBG1
 			LOG(TERR,"  using bix %d %d",ix,b_ix) ;
 			if(b_ix != ix) {
 				LOG(WARN,"Can't be: %d %d, RP %d:%d",b_ix,ix,row,p) ;
@@ -1347,7 +1347,7 @@ int itpc_fcf_c::do_blobs_stage2(int row)
 
 
 
-#if __DEBUG__
+#if DO_DBG1
 	LOG(TERR,"Blobs OK %d/%d in row %d",blob_ok,blob_cou,row) ;
 
 	for(int i=0;i<blob_cou;i++) {
@@ -1403,7 +1403,7 @@ int itpc_fcf_c::do_blobs_stage3(int row)
 
 
 #ifdef DO_DBG1
-		printf("...bytes %d vs %d\n",dt_2*(dp+2)*sizeof(short)*2,sizeof(smooth_dta)) ;
+		printf("...bytes %lu vs %lu\n",dt_2*(dp+2)*sizeof(short)*2,sizeof(smooth_dta)) ;
 #endif
 		memset(smooth_dta,0,dt_2*(dp+2)*sizeof(short)*2) ;	// clear both storages which is why there's a 2
 

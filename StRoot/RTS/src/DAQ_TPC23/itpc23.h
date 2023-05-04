@@ -35,12 +35,13 @@ public:
 	int rdo_scan(char *c_addr, int words) ;
 	int from22to23(char *dta, int words) ;
 	u_int get_token_s(char *c_addr, int words) ;
-	inline void set_rdo(int s, int r) ;
+	void set_rdo(int s, int r) ;  
 
 	int init(daq_dta *gain) ;
 
 	static struct row_pad_t (*rp_gain_itpc)[ROW_MAX+1][PAD_MAX+1] ;     // max for both dets; all sectors
 
+	static void itpc_fee_kill(int s0, int r0, int p0) ;
 
 private:
 	u_int *fee_non_trgd(u_int *d) ;

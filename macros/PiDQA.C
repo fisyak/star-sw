@@ -14,10 +14,21 @@
 #include "TStyle.h"
 #include "TArrayD.h"
 #include "TPaveLabel.h"
+#include "TString.h"
+#include "TFile.h"
 #endif
 #include "Ask.h"
 TMultiGraph *mg = 0;
-void PiDQA(const Char_t *histN="dEdx") {
+TMultiGraph *sg = 0;
+TMultiGraph *mgE = 0;
+TMultiGraph *sgE = 0;
+TMultiGraph *mgPion = 0;
+TMultiGraph *sgPion = 0;
+TMultiGraph *mgProton = 0;
+TMultiGraph *sgProton = 0;
+void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
+  TString xTitle = "log_{10} (#beta #gamma)";
+  if (! bg) xTitle = "log_{10} (p [GeV/c])";
   const Int_t N = 8;
   struct Part_t {
     const Char_t *dir;
@@ -39,9 +50,18 @@ void PiDQA(const Char_t *histN="dEdx") {
   else    c1 = new TCanvas("c1","c1",600,600);
   c1->SetLogz(1);
 #endif
-  TGraphErrors *grs[N] = {0};
-  mg = new TMultiGraph(Form("DEV_%s",histN),Form("Deviation for %s",histN));
-  TLegend *l = new TLegend(0.4,0.2,0.7,0.5);
+  TGraphErrors *grmu[N] = {0};
+  TGraphErrors *grsigma[N] = {0};
+  mg = new TMultiGraph(Form("DEV_%s",histN),Form("#mu for %s",histN));
+  sg = new TMultiGraph(Form("SigmaV_%s",histN),Form("#sigma for %s",histN));
+  mgE = new TMultiGraph(Form("EDEV_%s",histN),Form("#mu for %s",histN));
+  sgE = new TMultiGraph(Form("ESigmaV_%s",histN),Form("#sigma for %s",histN));
+  mgPion = new TMultiGraph(Form("PionDEV_%s",histN),Form("#mu for %s",histN));
+  sgPion = new TMultiGraph(Form("PionSigmaV_%s",histN),Form("#sigma for %s",histN));
+  mgProton = new TMultiGraph(Form("ProtonDEV_%s",histN),Form("#mu for %s",histN));
+  sgProton = new TMultiGraph(Form("ProtonSigmaV_%s",histN),Form("#sigma for %s",histN));
+  TLegend *l = new TLegend(0.6,0.6,0.9,0.9);
+  TLegend *ls = new TLegend(0.6,0.6,0.9,0.9);
   TPaveLabel pl;
   Float_t x1=0.3, y1=0.8, x2=0.75, y2=0.85;
   for (Int_t i = 0; i < N; i++) {
@@ -63,8 +83,6 @@ void PiDQA(const Char_t *histN="dEdx") {
     h2->FitSlicesY(0,0,-1,0,"qe",arr);
     TH1D *mu = (TH1D *) arr->At(1);
     TH1D *sigma = (TH1D *) arr->At(2);
-    //    TH1D *mu = (TH1D *) gDirectory->Get(Form("%s_1",histN));
-    //    TH1D *sigma = (TH1D *) gDirectory->Get(Form("%s_2",histN));
     if (mu && sigma) {
       h2->Draw("colz");
       //      pl.DrawPaveLabel(x1,y1,x2,y2,Particles[i].dir,"brNDC");
@@ -78,32 +96,98 @@ void PiDQA(const Char_t *histN="dEdx") {
       TArrayD X(nx);  Double_t *x = X.GetArray();
       TArrayD Y(nx);  Double_t *y = Y.GetArray();
       TArrayD E(nx);  Double_t *e = E.GetArray();
+      TArrayD S(nx);  Double_t *s = S.GetArray();
+      TArrayD SE(nx); Double_t *se = SE.GetArray();
       Int_t np = 0;
       for (Int_t j = 1; j <= nx; j++) {
 	//	if (h1->GetBinContent(j) < 0.25*ymax) continue;
-	if (sigma->GetBinContent(j) <= 0.0 || sigma->GetBinContent(j) > 0.25) continue;
+	if (sigma->GetBinContent(j) <= 0.0 || sigma->GetBinContent(j) > 3) continue;
 	Double_t err = mu->GetBinError(j);
 	if (err <= 0.0 || err > 0.02) continue;
 	//	x[np] = mu->GetBinCenter(j);
-	x[np] = mu->GetBinCenter(j) + TMath::Log10(Particles[i].mass);
+	x[np] = mu->GetBinCenter(j); 
+	if (! bg) x[np] +=  TMath::Log10(Particles[i].mass);
 	y[np] = mu->GetBinContent(j);
 	e[np] = err;
+	s[np] = sigma->GetBinContent(j);
+	se[np] = sigma->GetBinError(j);
 	np++;
       }
-      grs[i] = new TGraphErrors(np, x, y, 0, e);
-      grs[i]->SetLineColor(i+1);
-      grs[i]->SetMarkerColor(i+1);
+      grmu[i] = new TGraphErrors(np, x, y, 0, e);
+      grmu[i]->SetLineColor(i+1);
+      grmu[i]->SetMarkerColor(i+1);
+      grsigma[i] = new TGraphErrors(np, x, s, 0, se);
+      grsigma[i]->SetLineColor(i+1);
+      grsigma[i]->SetMarkerColor(i+1);
       TString Dir(Particles[i].dir);
       Int_t marker = 20;
       if (Dir.EndsWith("e+") || Dir.EndsWith("e-")) marker = 21;
       if (Dir.EndsWith("p") || Dir.EndsWith("p-")) marker = 22;
-      grs[i]->SetMarkerStyle(marker);
-      mg->Add(grs[i]);
-      l->AddEntry(grs[i],Particles[i].dir,"p");
+      grmu[i]->SetMarkerStyle(marker);
+      mg->Add(grmu[i]);
+      l->AddEntry(grmu[i],Particles[i].dir,"p");
+      grsigma[i]->SetMarkerStyle(marker);
+      sg->Add(grsigma[i]);
+      ls->AddEntry(grsigma[i],Particles[i].dir,"p");
+      if      (TString(Particles[i].dir).Contains("gamma/e"))  {mgE->Add(grmu[i]);      sgE->Add(grsigma[i]);}
+      else if (TString(Particles[i].dir).Contains("/pi"))      {mgPion->Add(grmu[i]);   sgPion->Add(grsigma[i]);}
+      else if (TString(Particles[i].dir).Contains("/p"))       {mgProton->Add(grmu[i]); sgProton->Add(grsigma[i]);}
     }
     if (! gROOT->IsBatch() && Ask()) return;
   }
-  TCanvas *cr = new TCanvas("cr","cr",600,600,1600,800);
+  if (! mg->GetListOfGraphs()) return;
+  if (mg->GetListOfGraphs()->GetSize() <= 0) return;
+  TString ctitle(Form("mu%s",histN));
+  if (bg) ctitle += "bg";
+  TCanvas *cr = new TCanvas(ctitle,ctitle,200,100,1600,800);
   mg->Draw("ap");
+  mg->GetHistogram()->SetXTitle(xTitle);
+  mg->Draw("p");
   l->Draw();
+  cr->Update();
+  TString File;
+  if (bg) File += "bg";
+  File += gFile->GetName();
+  File.ReplaceAll(".root",".png");
+  cr->SaveAs(ctitle+File);
+  ctitle = Form("sigma%s",histN);
+  if (bg) ctitle += "bg";
+  TCanvas *csigma = new TCanvas(ctitle,ctitle,200,1000,1600,800);
+  sg->Draw("axp");
+  sg->GetHistogram()->SetXTitle(xTitle);
+  sg->Draw("axp");
+  ls->Draw();
+  csigma->Update();
+  ctitle = Form("sigma%s",histN);
+  csigma->SaveAs(ctitle+File);
+}
+//________________________________________________________________________________
+void PlotArmeteros() {
+  const Char_t *Path[4][2] = {
+    {"/PiDQA/gamma",   "/Particles/KFParticlesFinder/Particles/gamma/Parameters"},
+    {"/PiDQA/Ks",      "/Particles/KFParticlesFinder/Particles/Ks/Parameters"},
+    {"/PiDQA/Lambda",  "/Particles/KFParticlesFinder/Particles/Lambda/Parameters"},
+    {"/PiDQA/Lambdab", "/Particles/KFParticlesFinder/Particles/Lambdab/Parameters"}
+  };
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  if (c1) c1->Clear();
+  else    c1 = new TCanvas("c1","c1",1000,1600);
+  c1->Divide(2,4);
+  for (Int_t ix = 1; ix <= 2; ix++) {
+    for (Int_t iy = 1; iy <= 4; iy++) {
+      gDirectory->cd(Path[iy-1][2-ix]);
+      TH2F *h2 = (TH2F *) gDirectory->Get("Armenteros");
+      if (! h2) continue;
+      Int_t i = ix + 2*(iy-1);
+      c1->cd(i)->SetLogz(1);
+      h2->Draw("colz");
+      TLegend *l = new TLegend(0.1,0.7,0.8,0.8);
+      TString Title(Path[iy-1][2-ix]);
+      Title.ReplaceAll("/PiDQA/", "Unique ");
+      Title.ReplaceAll("/Particles/KFParticlesFinder/Particles/", "All ");
+      Title.ReplaceAll("/Parameters","");
+      l->AddEntry(h2,Title);
+      l->Draw();
+    }
+  }
 }

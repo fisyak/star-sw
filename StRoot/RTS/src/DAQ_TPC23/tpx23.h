@@ -16,7 +16,7 @@ public:
 	int from22to23(char *c_addr, int words) ;
 
 	u_int get_token_s(char *c_addr, int words) ;
-	inline void set_rdo(int s, int r) ;
+	void set_rdo(int s, int r) ;
 
 	static class tpxPed *peds ;
 
@@ -26,6 +26,10 @@ public:
 	int init(daq_dta *gain) ;
 
 	static struct row_pad_t (*rp_gain_tpx)[ROW_MAX+1][PAD_MAX+1] ;     // max for both dets; all sectors
+
+	u_int tdbg[10] ;	// debugging counters, etc
+
+	u_char hdr_version ;
 
 private:
 
