@@ -5,18 +5,23 @@
  *
  ***************************************************************************/
 
-#ifndef StMuDst_h
-#define StMuDst_h
-#ifdef __TFG__VERSION__
-#include "StMuDst.TFG.h"
-#else /* ! __TFG__VERSION__ */
+#ifndef StMuDst_TFG_h
+#define StMuDst_TFG_h
+#include <stdint.h>       // for uint64_t
 #include "TObject.h"
 #include "TClonesArray.h"
 
+#include <map>
+#include <vector>
+#include <utility>
 class StMuDstMaker;
 class StMuEvent;
 class StMuPrimaryVertex;
 class StMuTrack;
+class StMuMcVertex;
+class StMuMcTrack;
+class KFParticle;
+class KFVertex;
 class StRichSpectra;
 class StDetectorState;
 class StL3AlgorithmInfo;
@@ -38,7 +43,6 @@ class StMuFcsCollection;
 class StMuFttCollection;
 class StMuFstCollection;
 class StMuPmdCollection;
-
 class StEvent;
 class StTriggerData;
 class StTrack;
@@ -86,12 +90,7 @@ class StMuMtdHeader;
 #include "StMuArrays.h"
 #include "StMuException.hh"
 
-
-
-#define ARRAY(NAME)  static TClonesArray* (NAME)##s() { return tca_##NAME##s;}
-#define OBJECT(TYPE,FUNC) static TYPE FUNC##(unsigned int i=0) { if (FUNC##s() && (i<(unsigned int)FUNC##s()->GetEntriesFast()) ) return (##TYPE##)FUNC##s()->UncheckedAt(i); return 0;}
-
-#define DO(TYPE,NAME) ARRAY(NAME)    OBJECT(TYPE,NAME)
+typedef multimap<StMuPrimaryVertex*,KFParticle*>::iterator RcVx2KFVxIter;
 
 
 /** 
@@ -104,15 +103,17 @@ class StMuMtdHeader;
     detector info, etc).  
     
 */
+enum PicoVtxMode {NotSet=0, Default=1, Vpd=2, VpdOrDefault=3, Mtd=4, FXT=5};
+
 class StMuDst : public TObject {
 public:
   /// constructor
   StMuDst(); 
   /// set the pointers to the TClonesArrays
-  static void set(StMuDstMaker* maker);
+  void set(StMuDstMaker* maker);
   /// set the pointers to the TClonesArrays
   /// dongx
-    static void set(TClonesArray** /* Arrays */, 
+    void set(TClonesArray** /* Arrays */, 
 #ifndef __NO_STRANGE_MUDST__
 		    TClonesArray** /* StrangeArrays */, 
 #endif
@@ -120,7 +121,7 @@ public:
 		    TClonesArray** emc_ptca=0, 
 		    TClonesArray** fms_ptca=0, 
         TClonesArray** rhicf_ptca=0,
-        TClonesArray** fcs_ptca=0, 
+	TClonesArray** fcs_ptca=0, 
         TClonesArray** ftt_ptca=0, 
         TClonesArray** fst_ptca=0, 
 		    TClonesArray** pmd_ptca=0, 
@@ -135,25 +136,26 @@ public:
 		    StMuEmcCollection *emc_col=0, 
 		    StMuFmsCollection *fms_col=0, 
         StMuRHICfCollection *rhicf_col=0,
-        StMuFcsCollection *fcs_col=0, 
-        StMuFttCollection *ftt_col=0, 
+        StMuFcsCollection *fcs_col=0,
+        StMuFttCollection *ftt_col=0,
         StMuFstCollection *fst_col=0, 
 		    TClonesArray *pmd_tca=0, 
 		    StMuPmdCollection *pmd_col=0
 );
   /// set pointer to current StEmcCollection
-  static void setEmcCollection(StEmcCollection *emc_coll) { mEmcCollection=emc_coll; }
+  static void setEmcCollection(StEmcCollection *emc_coll) { instance()->mEmcCollection=emc_coll; }
   
-  static void setFmsCollection(StFmsCollection *fms_coll) { mFmsCollection=fms_coll; }
+  static void setFmsCollection(StFmsCollection *fms_coll) { instance()->mFmsCollection=fms_coll; }
 
-  static void setRHICfCollection(StRHICfCollection* rhicf_coll) { mRHICfCollection=rhicf_coll; }
+  static void setRHICfCollection(StRHICfCollection* rhicf_coll) { instance()->mRHICfCollection=rhicf_coll; }
 
+  void  ResetMaps();
   /// resets the pointers to the TClonesArrays to 0
-  static void unset();
+  void unset();
   /// checks and if necessary corrects the indecies of elements pointing to each other (e.g., a primary track's index to the corresponding global track)
   static void fixTrackIndices(TClonesArray* primary, TClonesArray* global);
   /// checks and if necessary corrects the indecies of elements pointing to each other (e.g., a primary track's index to the corresponding global track)
-  void fixTrackIndices();
+  static void fixTrackIndices();
   //fills gloabl track's mIndex2Global with the index to the respective primary track
   static void fixTrackIndicesG(int mult=1);
   /// creates a StEvent from the StMuDst (this) and returns a pointer to it. (This function is not yet finished)  
@@ -172,6 +174,20 @@ public:
   void fixMtdTrackIndices();
 
   void setMtdArray(StMtdCollection *mtd_coll); 
+  static StMuDst *instance() {return fgMuDst;}
+  void SetInstance() {fgMuDst = this;}
+  static PicoVtxMode vtxMode()  {return mVtxMode;}
+  static Float_t     TpcVpdVzDiffCut() {return mTpcVpdVzDiffCut;}
+  static Double_t    erMax()    {return fgerMax;}	
+  static Double_t    dca3Dmax() {return fgdca3Dmax;} 	
+  static Double_t    VxXmin()   {return fgVxXmin;}	
+  static Double_t    VxXmax()   {return fgVxXmax;}	
+  static Double_t    VxYmin()   {return fgVxYmin;}	
+  static Double_t    VxYmax()   {return fgVxYmax;}	
+  static Double_t    VxZmin()   {return fgVxZmin;}	
+  static Double_t    VxZmax()   {return fgVxZmax;}  	
+  static Double_t    VxRmax()   {return fgVxRmax;}    
+  static PicoVtxMode VtxMode()  {return mVtxMode;}   
   
   // fseck
   void setETofArray( const StETofCollection* etof_coll );
@@ -180,366 +196,484 @@ public:
 
 
  protected:
+  static Double_t  fgerMax;
+  static Double_t  fgdca3Dmax; 
+  static Double_t  fgVxXmin;
+  static Double_t  fgVxXmax;
+  static Double_t  fgVxYmin;
+  static Double_t  fgVxYmax;
+  static Double_t  fgVxZmin;
+  static Double_t  fgVxZmax;
+  static Double_t  fgVxRmax;
+  static PicoVtxMode mVtxMode;
+  static Float_t   mTpcVpdVzDiffCut;
+
+  static StMuDst *fgMuDst; //!
   /// array of TClonesArrays
-  static TClonesArray** arrays;
+  TClonesArray** arrays;
 #ifndef __NO_STRANGE_MUDST__
   /// array of TClonesArrays for the stuff inherited from the StStrangeMuDst
-  static TClonesArray** strangeArrays;
+  TClonesArray** strangeArrays;
 #endif
-  static TClonesArray** mcArrays;
+  TClonesArray** mcArrays;
   /// array of TClonesArrays for the stuff inherited from the Emc
-  static TClonesArray** emcArrays;
+  TClonesArray** emcArrays;
   /// array of TClonesArrays for the stuff inherited from the Fms
-  static TClonesArray** fmsArrays;
+  TClonesArray** fmsArrays;
   /// array of TClonesArrays for the stuff inherited from the RHICf
-  static TClonesArray** rhicfArrays;
+  TClonesArray** rhicfArrays;
   /// array of TClonesArrays for the stuff inherited from the Fcs
-  static TClonesArray** fcsArrays;
+  TClonesArray** fcsArrays;
   /// array of TClonesArrays for the stuff inherited from the Ftt
-  static TClonesArray** fttArrays;
-  /// array of TClonesArrays for the stuff inherited from the Fst
-  static TClonesArray** fstArrays;
+  TClonesArray** fttArrays;
+  /// array of TClonesArrays for the stuff inherited from the Fst 
+  TClonesArray** fstArrays;
   /// array of TClonesArrays for the stuff inherited from the Pmd 
-  static TClonesArray** pmdArrays;
+  TClonesArray** pmdArrays;
   /// array of TClonesArrays for the stuff inherited from the TOF
-  static TClonesArray** tofArrays;
+  TClonesArray** tofArrays;
   /// array of TClonesArrays for the stuff inherited from the BTOF // dongx
-  static TClonesArray** btofArrays;  
-  /// array of TClonesArrays for ETof
-  static TClonesArray** etofArrays;
+  TClonesArray** btofArrays;  
+  //// array of TClonesArrays for ETof
+  TClonesArray** etofArrays;
   /// array of TClonesArrays for Epd
-  static TClonesArray** epdArrays;
+  TClonesArray** epdArrays;
   /// array of TClonesArrays for the stuff inherited from the Mtd
-  static TClonesArray** mtdArrays;  
+  TClonesArray** mtdArrays;  
   /// array of TClonesArrays for the stuff inherited from the Fgt
-  static TClonesArray** fgtArrays;
+  TClonesArray** fgtArrays;
   // pointer to array with MuEmcCollection (for backward compatible mode)
-  static TClonesArray *mMuEmcCollectionArray;
-  /// pointer to EmcCollection (manages the EmcArrays)
-  static StMuEmcCollection *mMuEmcCollection;
-  // pointer to array with MuPmdCollection (for backward compatible mode)
-  static TClonesArray *mMuPmdCollectionArray;
+  TClonesArray *mMuEmcCollectionArray;
+  // pointer to EmcCollection (manages the EmcArrays)
+  StMuEmcCollection *mMuEmcCollection;
+  /// pointer to array with MuPmdCollection (for backward compatible mode)
+  TClonesArray *mMuPmdCollectionArray;
   /// pointer to FmsCollection (manages the FmsArrays)
-  static StMuFmsCollection *mMuFmsCollection;
+  StMuFmsCollection *mMuFmsCollection; 
   /// pointer to RHICfCollection (manages the RHICfArrays)
-  static StMuRHICfCollection *mMuRHICfCollection;
+  StMuRHICfCollection *mMuRHICfCollection;
   /// pointer to FcsCollection (manages the FcsArrays)
-  static StMuFcsCollection *mMuFcsCollection; 
+  StMuFcsCollection *mMuFcsCollection; 
   /// pointer to FttCollection (manages the FttArrays)
-  static StMuFttCollection *mMuFttCollection; 
+  StMuFttCollection *mMuFttCollection; 
   /// pointer to FstCollection (manages the FstArrays)
-  static StMuFstCollection *mMuFstCollection; 
+  StMuFstCollection *mMuFstCollection; 
   /// pointer to PmdCollection (manages the PmdArrays)
-  static StMuPmdCollection *mMuPmdCollection;
+  StMuPmdCollection *mMuPmdCollection;
   /// pointer to EmcCollecion (for Emc clusterfinding etc)
-  static StEmcCollection *mEmcCollection;
+  StEmcCollection *mEmcCollection;
   /// pointer to FmsCollecion (for Fms clusterfinding etc)
-  static StFmsCollection *mFmsCollection;
+  StFmsCollection *mFmsCollection;
   /// pointer to RHICfCollecion (for RHICf clusterfinding etc)
-  static StRHICfCollection *mRHICfCollection;
+  StRHICfCollection *mRHICfCollection;
 
   /// array of TClonesArrays for the stuff inherited from the EZT (ezTree)
-  static TClonesArray** eztArrays;
+  TClonesArray** eztArrays;
 
   /// Index number of current primary vertex
-  static Int_t     mCurrVertexId;
+  Int_t     mCurrVertexId;
   /// Temporary array to collect tracks from currect primary vertex
-  static TObjArray *mCurrPrimaryTracks;
+  TObjArray *mCurrPrimaryTracks;
   /// Helper function to collect tracks for the current prim vertex
-  static void collectVertexTracks();
+  void collectVertexTracks();
   
 public:
   /// Set the index number of the current primary vertex (used by both primaryTracks() functions and for StMuEvent::refMult())
   static void setVertexIndex(Int_t vtx_id);
   /// Get the index number of the current primary vertex 
-  static Int_t currentVertexIndex() {return mCurrVertexId; }
+  static Int_t currentVertexIndex() ;
   /// returns pointer to the n-th TClonesArray 
-  static TClonesArray* array(int type) { return arrays[type]; }
+  static TClonesArray* array(Int_t type) ;
 #ifndef __NO_STRANGE_MUDST__
   /// returns pointer to the n-th TClonesArray from the strangeness arrays
-  static TClonesArray* strangeArray(int type) { return strangeArrays[type]; }
+  static TClonesArray* strangeArray(Int_t type) ;
 #endif
-  static TClonesArray* mcArray(int type) { return mcArrays[type]; }
+  static TClonesArray* mcArray(Int_t type) ;
+  static TClonesArray* mcVertices()      ;
+  static TClonesArray* mcTracks()        ;
   /// returns pointer to the n-th TClonesArray from the emc arrays
-  static TClonesArray* emcArray(int type) { return emcArrays[type]; }
-   /// returns pointer to the n-th TClonesArray from the fms arrays
-  static TClonesArray* fmsArray(int type) { return fmsArrays[type]; }
+  static TClonesArray* emcArray(int type) ;
+  /// returns pointer to the n-th TClonesArray from the fms arrays
+  static TClonesArray* fmsArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the rhicf arrays
-  static TClonesArray* rhicfArray(int type) { return rhicfArrays[type]; }
+  static TClonesArray* rhicfArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the fcs arrays
-  static TClonesArray* fcsArray(int type) { return fcsArrays[type]; }
+  static TClonesArray* fcsArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the ftt arrays
-  static TClonesArray* fttArray(int type) { return fttArrays[type]; }
-  /// returns pointer to the n-th TClonesArray from the fst arrays
-  static TClonesArray* fstArray(int type) { return fstArrays[type]; }
-    /// returns pointer to the n-th TClonesArray from the pmd arrays
-  static TClonesArray* pmdArray(int type) { return pmdArrays[type]; }
+  static TClonesArray* fttArray(int type) ;
+  /// returns pointer to the n-th TClonesArray from the pmd arrays
+  static TClonesArray* pmdArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the tof arrays
-  static TClonesArray* tofArray(int type) { return tofArrays[type]; }
-  /// returns pointer to the n-th TClonesArray from the btof arrays // dongx
-  static TClonesArray* btofArray(int type) { return btofArrays[type]; }
-  /// returns pointer to the n-th TClonesArray from the etof arrays // FS
-  static TClonesArray* etofArray(int type) { return etofArrays[type]; }
+  static TClonesArray* tofArray(Int_t type) ;
+  /// returns pointer to the n-th TClonesArray from the btof arrays /// dongx
+  static TClonesArray* btofArray(Int_t type) ;
+  //// returns pointer to the n-th TClonesArray from the etof arrays /// FS
+  static TClonesArray* etofArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the mtd arrays
-  static TClonesArray* mtdArray(int type) { return mtdArrays[type]; }
+  static TClonesArray* mtdArray(Int_t type) ;
   /// returns pointer to the n-th TClonesArray from the fgt arrays
-  static TClonesArray* fgtArray(int type) { return fgtArrays[type]; }
+  static TClonesArray* fgtArray(Int_t type) ;
   /// returns pointer to the n-th TClonesArray from the ezt arrays
-  static TClonesArray* eztArray(int type) { return eztArrays[type]; }
+  static TClonesArray* eztArray(int type) ;
   /// returns pointer to the EpdHitCollection
-  static TClonesArray* epdHits() { return epdArrays[muEpdHit]; }  // MALisa
+  static TClonesArray* epdHits() ;
   /// returns pointer to the primary vertex list
-  static TClonesArray* primaryVertices() { return arrays[muPrimaryVertex]; }
+  static TClonesArray* primaryVertices() ;
+  static TClonesArray* allPrimaryTracks() ;
   /// returns pointer to a list of tracks belonging to the selected primary vertex
-  static TObjArray* primaryTracks() { return mCurrPrimaryTracks; } 
+  static TObjArray* primaryTracks() ;
   /// returns pointer to the global tracks list
-  static TObjArray* globalTracks() { return arrays[muGlobal]; }
+  static TObjArray* globalTracks() ;
   /// returns pointer to the other tracks list (all tracks that are not flagged as primary of global)
-  static TClonesArray* otherTracks() { return arrays[muOther]; }
+  static TClonesArray* otherTracks() ;
   /// returns pointer to the l3Tracks list
-  static TClonesArray* l3Tracks() { return arrays[muL3]; }
+  static TClonesArray* l3Tracks() ;
   /// returns pointer to the list of rich spectra
-  static TClonesArray* richSpectra() { return arrays[muRich]; }
+  static TClonesArray* richSpectra() ;
   /// returns pointer to the list of detector states
-  static TClonesArray* detectorStates() { return arrays[muState]; }
+  static TClonesArray* detectorStates() ;
   /// returns pointer to list of accepted l3 algorithms 
-  static TClonesArray* l3AlgoAccept() { return arrays[muAccept]; }
+  static TClonesArray* l3AlgoAccept() ;
   /// returns pointer to list rejected l3 algorithms 
-  static TClonesArray* l3AlgoReject() { return arrays[muReject]; }
-  static TClonesArray* covGlobTrack() {return arrays[muCovGlobTrack];}
-  static TClonesArray* covPrimTrack() {return arrays[muCovPrimTrack];}
+  static TClonesArray* l3AlgoReject() ;
+  static TClonesArray* covGlobTrack() ;
+  static TClonesArray* covPrimTrack() ;
+  static TClonesArray* KFTracks() ;
+  static TClonesArray* KFVertices() ;
 
   /// returns pointer to current StMuEvent (class holding the event wise information, e.g. event number, run number)
-  static StMuEvent* event() { return (StMuEvent*)arrays[muEvent]->UncheckedAt(0); }
+  static StMuEvent* event() ;
+  static Int_t      eventId();
   /// return pointer to current primary vertex
-  static StMuPrimaryVertex* primaryVertex() { return (StMuPrimaryVertex*)arrays[muPrimaryVertex]->UncheckedAt(mCurrVertexId); }
+  static StMuPrimaryVertex* primaryVertex() ;
   /// return pointer to i-th primary vertex
-  static StMuPrimaryVertex* primaryVertex(int i) { return (StMuPrimaryVertex*)arrays[muPrimaryVertex]->UncheckedAt(i); }
+  static StMuPrimaryVertex* primaryVertex(Int_t i) ;
   /// return pointer to i-th primary track 
-  static StMuTrack* primaryTracks(int i) { return (StMuTrack*)mCurrPrimaryTracks->UncheckedAt(i); }
+  static StMuTrack* primaryTracks(Int_t i) ;
   /// return pointer to i-th global track 
-  static StMuTrack* globalTracks(int i) { return (StMuTrack*)arrays[muGlobal]->UncheckedAt(i); }
+  static StMuTrack* globalTracks(Int_t i) ;
   /// return pointer to i-th other track  (track that is not flagged as primary of global)
-  static StMuTrack* otherTracks(int i) { return (StMuTrack*)arrays[muOther]->UncheckedAt(i); }
+  static StMuTrack* otherTracks(Int_t i) ;
   /// return pointer to i-th l3 track
-  static StMuTrack* l3Tracks(int i) { return (StMuTrack*)arrays[muL3]->UncheckedAt(i); }
+  static StMuTrack* l3Tracks(Int_t i) ;
   /// returns pointer to i-th StRichSpectra
-  static StRichSpectra* richSpectra(int i) { return (StRichSpectra*)arrays[muRich]->UncheckedAt(i); }
+  static StRichSpectra* richSpectra(Int_t i) ;
   /// returns pointer to i-th StDetectorState
-  static StDetectorState* detectorStates(int i) { return (StDetectorState*)arrays[muState]->UncheckedAt(i); }
+  static StDetectorState* detectorStates(Int_t i) ;
   /// returns pointer to i-th accepted StL3AlgorithmInfo
-  static StL3AlgorithmInfo* l3AlgoAccept(int i) { return (StL3AlgorithmInfo*)arrays[muAccept]->UncheckedAt(i); }
+  static StL3AlgorithmInfo* l3AlgoAccept(Int_t i) ;
   /// returns pointer to i-th rejected StL3AlgorithmInfo
-  static StL3AlgorithmInfo* l3AlgoReject(int i) { return (StL3AlgorithmInfo*)arrays[muReject]->UncheckedAt(i); }
+  static StL3AlgorithmInfo* l3AlgoReject(Int_t i) ;
   //returns pp2pp infomation
-  static StMuRpsCollection* RpsCollection() { return (StMuRpsCollection*)arrays[mupp2pp]->UncheckedAt(0); }
-  static StMuMtdCollection* MtdCollection() { return (StMuMtdCollection*)arrays[muMtd]->UncheckedAt(0); }
+  static StMuRpsCollection* RpsCollection() ;
+  static StMuMtdCollection* MtdCollection() ;
 
-	static StDcaGeometry* covGlobTracks(int i) { return (StDcaGeometry*)arrays[muCovGlobTrack]->UncheckedAt(i); }
-  static StMuPrimaryTrackCovariance* covPrimTracks(int i) { return (StMuPrimaryTrackCovariance*)arrays[muCovPrimTrack]->UncheckedAt(i); }
+  static StDcaGeometry* covGlobTracks(Int_t i) ;
+  static StMuPrimaryTrackCovariance* covPrimTracks(Int_t i) ;
+  static KFParticle*                 KFtrack(Int_t i)  ;
+  static KFVertex*                   KFvertex(Int_t i) ;
+  static StMuMcTrack*                MCtrack(Int_t i)  ;
+  static StMuMcVertex*               MCvertex(Int_t i) ;
  
 #ifndef __NO_STRANGE_MUDST__
   /// returns pointer to current StStrangeEvMuDst (class holding the event wise information, e.g. event number, run number)
-  static StStrangeEvMuDst* strangeEvent() { return (StStrangeEvMuDst*)strangeArrays[smuEv]->UncheckedAt(0); }
+  static StStrangeEvMuDst* strangeEvent() ;
   /// returns pointer to MC version of current StStrangeEvMuDst
-  static StStrangeEvMuDst* strangeEventMc() { return (StStrangeEvMuDst*)strangeArrays[smuEvMc]->UncheckedAt(0); }
+  static StStrangeEvMuDst* strangeEventMc() ;
   /// returns pointer to the v0 list
-  static TClonesArray* v0s() { return strangeArrays[smuV0]; }
+  static TClonesArray* v0s() ;
   /// returns pointer to the mc v0 list
-  static TClonesArray* v0sMc() { return strangeArrays[smuV0Mc]; }
+  static TClonesArray* v0sMc() ;
   /// returns pointer to the v0 association list
-  static TClonesArray* v0Assoc() { return strangeArrays[smuV0Assoc]; }
+  static TClonesArray* v0Assoc() ;
   /// returns pointer to the xi list
-  static TClonesArray* xis() { return strangeArrays[smuXi]; }
+  static TClonesArray* xis() ;
   /// returns pointer to the mc xi list
-  static TClonesArray* xisMc() { return strangeArrays[smuXiMc]; }
+  static TClonesArray* xisMc() ;
   /// returns pointer to the xi association list
-  static TClonesArray* xiAssoc() { return strangeArrays[smuXiAssoc]; }
+  static TClonesArray* xiAssoc() ;
   /// returns pointer to the kink list
-  static TClonesArray* kinks() { return strangeArrays[smuKink]; }
+  static TClonesArray* kinks() ;
   /// returns pointer to the mc kink list
-  static TClonesArray* kinksMc() { return strangeArrays[smuKinkMc]; }
+  static TClonesArray* kinksMc() ;
   /// returns pointer to the kink association list
-  static TClonesArray* kinkAssoc() { return strangeArrays[smuKinkAssoc]; }
+  static TClonesArray* kinkAssoc() ;
   /// returns pointer to the list of strangeCuts
-  static TClonesArray* strangeCuts() { return strangeArrays[smuCut]; }
+  static TClonesArray* strangeCuts() ;
   /// returns pointer to the i-th v0
-  static StV0MuDst* v0s(int i) { return (StV0MuDst*)strangeArrays[smuV0]->UncheckedAt(i); }
-  static StV0Mc* v0sMc(int i) { return (StV0Mc*)strangeArrays[smuV0Mc]->UncheckedAt(i); }
-  static StStrangeAssoc* v0Assoc(int i) { return (StStrangeAssoc*)strangeArrays[smuV0Assoc]->UncheckedAt(i); }
+  static StV0MuDst* v0s(Int_t i) ;
+  static StV0Mc* v0sMc(Int_t i) ;
+  static StStrangeAssoc* v0Assoc(Int_t i) ;
   /// returns pointer to the i-th xi
-  static StXiMuDst* xis(int i) { return (StXiMuDst*)(void*)strangeArrays[smuXi]->UncheckedAt(i); }
-  static StXiMc* xisMc(int i) { return (StXiMc*)strangeArrays[smuXiMc]->UncheckedAt(i); }
-  static StStrangeAssoc* xiAssoc(int i) { return (StStrangeAssoc*)strangeArrays[smuXiAssoc]->UncheckedAt(i); }
+  static StXiMuDst* xis(Int_t i) ;
+  static StXiMc* xisMc(Int_t i) ;
+  static StStrangeAssoc* xiAssoc(Int_t i) ;
   /// returns pointer to the i-th kink
-  static StKinkMuDst* kinks(int i) { return (StKinkMuDst*)(void*)strangeArrays[smuKink]->UncheckedAt(i); }
-  static StKinkMc* kinksMc(int i) { return (StKinkMc*)strangeArrays[smuKinkMc]->UncheckedAt(i); }
-  static StStrangeAssoc* kinkAssoc(int i) { return (StStrangeAssoc*)strangeArrays[smuKinkAssoc]->UncheckedAt(i); }
+  static StKinkMuDst* kinks(Int_t i) ;
+  static StKinkMc* kinksMc(Int_t i) ;
+  static StStrangeAssoc* kinkAssoc(Int_t i) ;
   /// returns pointer to the i-th stranneCut (of type TCut)
-  static TCut* strangeCuts(int i) { return (TCut*)strangeArrays[smuCut]->UncheckedAt(i); }
+  static TCut* strangeCuts(Int_t i) ;
 #endif
   /// returns pointer to current StMuEmcCollection
-  static StMuEmcCollection* muEmcCollection() { if (mMuEmcCollectionArray) return (StMuEmcCollection*) mMuEmcCollectionArray->UncheckedAt(0); else return mMuEmcCollection; }
-   /// returns pointer to current StMuFmsCollection
-  static StMuFmsCollection* muFmsCollection() { return mMuFmsCollection; }
+  static StMuEmcCollection* muEmcCollection() ;
+  /// returns pointer to current StMuFmsCollection
+  static StMuFmsCollection* muFmsCollection() ;
   /// returns pointer to current StMuRHICfCollection
-  static StMuRHICfCollection* muRHICfCollection() { return mMuRHICfCollection; }
+  static StMuRHICfCollection* muRHICfCollection();
   /// returns pointer to current StMuFcsCollection
-  static StMuFcsCollection* muFcsCollection() { return mMuFcsCollection; }
+  static StMuFcsCollection* muFcsCollection();
   /// returns pointer to current StMuFttCollection
-  static StMuFttCollection* muFttCollection() { return mMuFttCollection; }
+  static StMuFttCollection* muFttCollection();
   /// returns pointer to current StMuFstCollection
-  static StMuFstCollection* muFstCollection() { return mMuFstCollection; }
+  static StMuFstCollection* muFstCollection();
   /// returns pointer to current StMuPmdCollection
-  static StMuPmdCollection* pmdCollection() { if (mMuPmdCollectionArray)  return (StMuPmdCollection*) mMuPmdCollectionArray->UncheckedAt(0); else return mMuPmdCollection; }
+  static StMuPmdCollection* pmdCollection() ;
   /// returns pointer to current StEmcCollection
-  static StEmcCollection* emcCollection() {  return mEmcCollection; }
+  static StEmcCollection* emcCollection() ;
   /// returns pointer to current StFmsCollection
-  static StFmsCollection* fmsCollection() {  return mFmsCollection; }
-  /// returns pointer to current StFmsCollection
-  static StRHICfCollection* rhicfCollection() {  return mRHICfCollection; }
+  static StFmsCollection* fmsCollection() ;
+  /// returns pointer to current StfRHICCollection
+  static StRHICfCollection* rhicfCollection();
 
   /// returns pointer to the i-th muTofHit
-  static StMuTofHit* tofHit(int i) { return (StMuTofHit*)tofArrays[muTofHit]->UncheckedAt(i); }
+  static StMuTofHit* tofHit(Int_t i) ;
   /// returns pointer to the i-th tofData
-  static StTofData* tofData(int i) { return (StTofData*)tofArrays[muTofData]->UncheckedAt(i); }
+  static StTofData* tofData(Int_t i) ;
   // run 5 - dongx
   /// returns pointer to the i-th tofRawData
-  static StTofRawData* tofRawData(int i) { return (StTofRawData*)tofArrays[muTofRawData]->UncheckedAt(i); }
+  static StTofRawData* tofRawData(Int_t i) ;
   /// returns pointer to the i-th muBTofHit
-  static StMuBTofHit* btofHit(int i) { return (StMuBTofHit*)btofArrays[muBTofHit]->UncheckedAt(i); }
+  static StMuBTofHit* btofHit(Int_t i) ;
   /// returns pointer to the i-th btofRawHit - dongx
-  static StBTofRawHit* btofRawHit(int i) { return (StBTofRawHit*)btofArrays[muBTofRawHit]->UncheckedAt(i); }
+  static StBTofRawHit* btofRawHit(Int_t i) ;
   /// returns pointer to the btofHeader - dongx
-  static StBTofHeader* btofHeader() { return (StBTofHeader*)btofArrays[muBTofHeader]->UncheckedAt(0); }
+  static StBTofHeader* btofHeader() ;
 
   // fseck ---
   /// returns pointer to the i-th StMuEtofDigi
-  static StMuETofDigi* etofDigi(int i) { return (StMuETofDigi*)etofArrays[muETofDigi]->UncheckedAt(i); }
+  static StMuETofDigi* etofDigi(Int_t  i);
   /// returns pointer to the i-th StMuETofHit
-  static StMuETofHit* etofHit(int i) { return (StMuETofHit*)etofArrays[muETofHit]->UncheckedAt(i); }
+  static StMuETofHit* etofHit(Int_t  i);
   /// returns pointer to the StMuETofHeader
-  static StMuETofHeader* etofHeader() { return (StMuETofHeader*)etofArrays[muETofHeader]->UncheckedAt(0); }
+  static StMuETofHeader* etofHeader();
   // -- ---
 
-  static StMuEpdHit* epdHit(int i) { return (StMuEpdHit*)epdArrays[muEpdHit]->UncheckedAt(i); }  // MALisa
+  static StMuEpdHit* epdHit(Int_t  i) ;
 
-  static StMuMtdHit* mtdHit(int i) { return (StMuMtdHit*)mtdArrays[muMTDHit]->UncheckedAt(i); }
-    static StMuMtdRawHit* mtdRawHit(int i) { return (StMuMtdRawHit*)mtdArrays[muMTDRawHit]->UncheckedAt(i); }
-    static StMuMtdHeader* mtdHeader() { return (StMuMtdHeader*)mtdArrays[muMTDHeader]->UncheckedAt(0); } 
+  static StMuMtdHit* mtdHit(Int_t  i) ;
+    static StMuMtdRawHit* mtdRawHit(Int_t  i) ;
+    static StMuMtdHeader* mtdHeader() ;
     
     
   /// returns pointer to eztHeader 
-  static  EztEventHeader* eztHeader() { return (EztEventHeader*)eztArrays[muEztHead]->UncheckedAt(0); }
+  static  EztEventHeader* eztHeader() ;
 
-//    static StMuBTofHit* btofHit(int i) { return (StMuBTofHit*)btofArrays[muBTofHit]->UncheckedAt(i); }
+///    static StMuBTofHit* btofHit(Int_t i) ;
 
     
   /// returns pointer to eztTrig 
   static  EztTrigBlob* eztTrig() 
-        { return (EztTrigBlob*)eztArrays[muEztTrig]->UncheckedAt(0); }
+    ;
 
   /// returns pointer to eztFpd 
   static  EztFpdBlob* eztFpd() 
-        { return (EztFpdBlob*)eztArrays[muEztFpd]->UncheckedAt(0); }
+    ;
 
   /// returns pointer to ETOW 
   static  EztEmcRawData* eztETow() 
-        { return (EztEmcRawData*)eztArrays[muEztETow]->UncheckedAt(0); }
+    ;
   /// returns pointer to eztESmd +pre/post
   static  EztEmcRawData* eztESmd() 
-        { return (EztEmcRawData*)eztArrays[muEztESmd]->UncheckedAt(0); }
+    ;
 
-  static unsigned int numberOfPrimaryVertices()  { return arrays[muPrimaryVertex]->GetEntriesFast(); }
-  static unsigned int numberOfPrimaryTracks()  { return mCurrPrimaryTracks->GetEntriesFast(); }
-  static unsigned int numberOfGlobalTracks()   { return arrays[muGlobal]->GetEntriesFast(); }
-  static unsigned int numberOfOtherTracks()    { return arrays[muOther]->GetEntriesFast(); }
-  static unsigned int numberOfL3Tracks()       { return arrays[muL3]->GetEntriesFast(); }
-  static unsigned int numberOfRichSpectras()   { return arrays[muRich]->GetEntriesFast(); }
-  static unsigned int numberOfDetectorStates() { return arrays[muState]->GetEntriesFast(); }
-  static unsigned int numberOfL3AlgoAccepts()  { return arrays[muAccept]->GetEntriesFast(); }
-  static unsigned int numberOfL3AlgoRejects()  { return arrays[muReject]->GetEntriesFast(); }
-  static unsigned int numberOfCovGlobTracks()  { return arrays[muCovGlobTrack]->GetEntriesFast(); }
-  static unsigned int numberOfCovPrimTracks()  { return arrays[muCovPrimTrack]->GetEntriesFast(); }
+  static UInt_t numberOfPrimaryVertices()  ;
+  static UInt_t numberOfPrimaryTracks()  ;
+  static UInt_t numberOfGlobalTracks()   ;
+  static UInt_t numberOfOtherTracks()    ;
+  static UInt_t numberOfL3Tracks()       ;
+  static UInt_t numberOfRichSpectras()   ;
+  static UInt_t numberOfDetectorStates() ;
+  static UInt_t numberOfL3AlgoAccepts()  ;
+  static UInt_t numberOfL3AlgoRejects()  ;
+  static UInt_t numberOfCovGlobTracks()  ;
+  static UInt_t numberOfCovPrimTracks()  ;
+  static UInt_t numberOfKFTracks()       ;
+  static UInt_t numberOfKFVertices()     ;
+  static UInt_t numberOfMcVertices()     ;
+  static UInt_t numberOfMcTracks()     ;
 #ifndef __NO_STRANGE_MUDST__
-  static unsigned int numberOfV0s()            { return strangeArrays[smuV0]->GetEntriesFast(); }
-  static unsigned int numberOfV0sMc()          { return strangeArrays[smuV0Mc]->GetEntriesFast(); }
-  static unsigned int numberOfV0Assoc()        { return strangeArrays[smuV0Assoc]->GetEntriesFast(); }
-  static unsigned int numberOfXis()            { return strangeArrays[smuXi]->GetEntriesFast(); }
-  static unsigned int numberOfXisMc()          { return strangeArrays[smuXiMc]->GetEntriesFast(); }
-  static unsigned int numberOfXiAssoc()        { return strangeArrays[smuXiAssoc]->GetEntriesFast(); }  
-  static unsigned int numberOfKinks()          { return strangeArrays[smuKink]->GetEntriesFast(); }
-  static unsigned int numberOfKinksMc()        { return strangeArrays[smuKinkMc]->GetEntriesFast(); } 
-  static unsigned int numberOfKinkAssoc()      { return strangeArrays[smuKinkAssoc]->GetEntriesFast(); }
-  static unsigned int numberOfStrangeCuts()    { return strangeArrays[smuCut]->GetEntriesFast(); }
+  static UInt_t numberOfV0s()            ;
+  static UInt_t numberOfV0sMc()          ;
+  static UInt_t numberOfV0Assoc()        ;
+  static UInt_t numberOfXis()            ;
+  static UInt_t numberOfXisMc()          ;
+  static UInt_t numberOfXiAssoc()        ;
+  static UInt_t numberOfKinks()          ;
+  static UInt_t numberOfKinksMc()        ;
+  static UInt_t numberOfKinkAssoc()      ;
+  static UInt_t numberOfStrangeCuts()    ;
 #endif
   // tofr
-  static unsigned int numberOfTofHit()        { return tofArrays[muTofHit]->GetEntriesFast(); }
-  static unsigned int numberOfTofData()       { return tofArrays[muTofData]->GetEntriesFast(); }
+  static UInt_t numberOfTofHit()        ;
+  static UInt_t numberOfTofData()       ;
   // run 5 - dongx
-  static unsigned int numberOfTofRawData()    { return tofArrays[muTofRawData]->GetEntriesFast(); }
+  static UInt_t numberOfTofRawData()    ;
   // dongx
-  static unsigned int numberOfBTofHit()       { return btofArrays[muBTofHit]->GetEntriesFast(); }
-  static unsigned int numberOfBTofRawHit()    { return btofArrays[muBTofRawHit]->GetEntriesFast(); }
+  static UInt_t numberOfBTofHit()       ;
+  static UInt_t numberOfBTofRawHit()    ;
 
   // fseck
-  static unsigned int numberOfETofDigi()      { return etofArrays[muETofDigi]->GetEntriesFast(); }
-  static unsigned int numberOfETofHit()       { return etofArrays[muETofHit]->GetEntriesFast(); }
+  static unsigned int numberOfETofDigi();
+  static unsigned int numberOfETofHit();
 
-  static unsigned int numberOfEpdHit()       { return epdArrays[muEpdHit]->GetEntriesFast(); }
+  static unsigned int numberOfEpdHit();
 
-  static unsigned int numberOfMTDHit()       { return mtdArrays[muMTDHit]->GetEntriesFast(); }
-  static unsigned int numberOfBMTDRawHit()    { return mtdArrays[muMTDRawHit]->GetEntriesFast(); }
+  static unsigned int numberOfMTDHit()       ;
+  static unsigned int numberOfBMTDRawHit()    ;
     
-  static unsigned int GetNPrimaryVertex()    { return numberOfPrimaryVertices(); }  
-  static unsigned int GetNPrimaryTrack()    { return numberOfPrimaryTracks(); }  
-  static unsigned int GetNGlobalTrack()     { return numberOfGlobalTracks(); }   
-  static unsigned int GetNOtherTrack()      { return numberOfOtherTracks(); }    
-  static unsigned int GetNL3Track()         { return numberOfL3Tracks(); }       
-  static unsigned int GetNRichSpectra()     { return numberOfRichSpectras(); }   
-  static unsigned int GetNDetectorState()   { return numberOfDetectorStates(); } 
-  static unsigned int GetNL3AlgoAccept()    { return numberOfL3AlgoAccepts(); }  
-  static unsigned int GetNL3AlgoReject()    { return numberOfL3AlgoRejects(); }  
+  static UInt_t GetNPrimaryVertex()    ;
+  static UInt_t GetNPrimaryTrack()    ;
+  static UInt_t GetNGlobalTrack()     ;
+  static UInt_t GetNOtherTrack()      ;
+  static UInt_t GetNL3Track()         ;
+  static UInt_t GetNRichSpectra()     ;
+  static UInt_t GetNDetectorState()   ;
+  static UInt_t GetNL3AlgoAccept()    ;
+  static UInt_t GetNL3AlgoReject()    ;
 #ifndef __NO_STRANGE_MUDST__
-  static unsigned int GetNV0()              { return numberOfV0s(); }            
-  static unsigned int GetNV0Mc()            { return numberOfV0sMc(); }            
-  static unsigned int GetNV0Assoc()         { return numberOfV0Assoc(); }            
-  static unsigned int GetNXi()              { return numberOfXis(); }            
-  static unsigned int GetNXiMc()            { return numberOfXisMc(); }            
-  static unsigned int GetNXiAssoc()         { return numberOfXiAssoc(); }            
-  static unsigned int GetNKink()            { return numberOfKinks(); }
-  static unsigned int GetNKinkMc()          { return numberOfKinksMc(); }            
-  static unsigned int GetNKinkAssoc()       { return numberOfKinkAssoc(); }            
-  static unsigned int GetNStrangeCut()      { return numberOfStrangeCuts(); }    
+  static UInt_t GetNV0()              ;
+  static UInt_t GetNV0Mc()            ;
+  static UInt_t GetNV0Assoc()         ;
+  static UInt_t GetNXi()              ;
+  static UInt_t GetNXiMc()            ;
+  static UInt_t GetNXiAssoc()         ;
+  static UInt_t GetNKink()            ;
+  static UInt_t GetNKinkMc()          ;
+  static UInt_t GetNKinkAssoc()       ;
+  static UInt_t GetNStrangeCut()      ;
 #endif
-  static unsigned int GetNTofHit()          { return numberOfTofHit(); }
-  static unsigned int GetNTofData()         { return numberOfTofData(); }
+  static UInt_t GetNTofHit()          ;
+  static UInt_t GetNTofData()         ;
   // run 5 - dongx
-  static unsigned int GetNTofRawData()      { return numberOfTofRawData(); }
+  static UInt_t GetNTofRawData()      ;
   // dongx
-  static unsigned int GetNBTofHit()         { return numberOfBTofHit(); }
-  static unsigned int GetNBTofRawHit()      { return numberOfBTofRawHit(); }
+  static UInt_t GetNBTofHit()         ;
+  static UInt_t GetNBTofRawHit()      ;
   // fseck
-  static unsigned int GetNETofDigi()        { return numberOfETofDigi(); }
-  static unsigned int GetNETofHit()         { return numberOfETofHit(); }
+  static unsigned int GetNETofDigi();
+  static unsigned int GetNETofHit();
 
-  static unsigned int GetNEpdHit()         { return numberOfEpdHit(); }
+  static unsigned int GetNEpdHit()         ;
 
-  static unsigned int GetNMTDHit()         { return numberOfMTDHit(); }
-  static unsigned int GetNMTDRawHit()      { return numberOfBMTDRawHit(); }
+  static unsigned int GetNMTDHit()         ;
+  static unsigned int GetNMTDRawHit()      ;
     
   virtual void Print(Option_t *option = "") const; ///< Print basic event info
   static void printPrimaryTracks();
+  static void printAllPrimaryTracks();
   static void printGlobalTracks() ;
   static void printVertices() ;
-
+  void printKFVertices(); 
+  void printKFTracks(); 
+  void printMcVertices();
+  void printMcTracks();
+  void PrintMcVx(UInt_t idVx = 1);
+  virtual Bool_t IsGoodTrigger() const;
   friend class StMuDstMaker;
   friend class StMuIOMaker;
 
-  // Increment this by 1 every time the class structure is changed
-  ClassDef(StMuDst,6)
+  // Maps
+  Bool_t Accept(const StMuTrack *gTrack);
+  Bool_t Accept(const StMuPrimaryVertex *RcVx);
+  Bool_t Accept(const StMuMcTrack *McTrack);
+  Bool_t Accept(const StMuMcVertex *McVx);
+  map<Int_t,Int_t>                            &IdGlTk2Indx();
+  map<Int_t,Int_t>                            &IdPrTk2Indx();
+  map<Int_t,Int_t>                            &IdPrVx2Indx();
+  map<Int_t,Int_t>                            &IdKFTk2Indx();
+  map<Int_t,Int_t>                            &IdKFVx2Indx();
+  
+  multimap<StMuMcVertex *,StMuMcTrack *>      &McVx2McTkR(); // 
+  map<StMuMcVertex *,StMuMcTrack *>           &McVx2McParentTk(); 
+  map<Int_t,StMuMcTrack *>                    &Id2McTk(); // 
+  map<Int_t,StMuMcVertex *>                   &Id2McVx(); // All Mc Vx, StMuMcVertex *McVx = Id2McVx[Id]();
+  map<Int_t,StMuMcVertex *>                   &Id2McVxR();// Reconstructable, i.e. contains > 1 Reconstructable Mc Tracks
+  map<Int_t,StMuPrimaryVertex*>               &Id2RcVx();
+  map<Int_t,Int_t>                            &IndxRcTk2Id();
+  map<Int_t,Int_t>                            &IndxKFTk2Id();
+  multimap<StMuPrimaryVertex*, StMuTrack *>   &RcVx2RcTk();
+  map<StMuPrimaryVertex*,StMuMcVertex *>      &RcVx2McVx();
+  multimap<StMuMcVertex *,StMuPrimaryVertex*> &McVx2RcVx();
+  vector<StMuPrimaryVertex *>                 &RcVxs();  // All accepted RcVx
+  vector<StMuPrimaryVertex *>                 &RecoVx();  //  1 to 1 Mc to Rc match
+  vector<StMuPrimaryVertex *>                 &CloneVx(); //  1 to many (>1) Mc to Rc match
+  vector<StMuPrimaryVertex *>                 &GhostVx(); //  no Mc match
+  vector<StMuMcVertex *>                      &LostVx();  //  no Rc match
+  map<Int_t,KFParticle*>                      &IdVx2KFVx(); // 
+  map<KFParticle*,StMuPrimaryVertex*>         &KFVx2RcVx();
+  multimap<StMuPrimaryVertex*,KFParticle*>    &RcVx2KFVx();
+  map<KFParticle*,StMuMcVertex *>             &KFVx2McVx(); 
+  multimap<StMuMcVertex*,KFParticle*>         &McVx2KFVx(); 
+  multimap<Int_t,StMuTrack *>                 &IdMc2RcTk(); // Reconstucted Track to IdTruth
+  map<Int_t,Int_t>                            &IdGlobalId2IdPrimaryTrack(); // map global to primary track Ids from vertex with idTruth == 1
+  map<Int_t,Int_t>                            &IdGlobal2IdPrimaryTrack();   // map global Id+1 to primary track Id+1 from vertex with idTruth == 1
+  multimap<Int_t,Int_t>                       &IdMc2IdRcTracks(); // map between global and Mc tracks from primary Mc vertex
+  multimap<Int_t,Int_t>                       &IdMc2IdRcVertices(); // map between indexes Mc and Rc Vertices
+  multimap<StMuMcTrack*,StMuTrack*>           &McTrack2GlobalTrack(); // McTrack => MuTrack global
+  multimap<StMuMcTrack*,StMuTrack*>           &McTrack2PrimaryTrack();// McTrack => MuTrack primary
+  multimap<StMuMcTrack*,KFParticle*>          &McTrack2KFParticle();  // McTrack => KFParticle fitted to vertex
+  static Int_t                                MinNoTpcMcHits; // minimum no. of TPC hits in order to consider the MC track reconstractable
+  static Int_t                                MinNoTpcRcHits; // minimum no. of TPC hits in order to consider the RC track as good
+ private:
+  multimap<StMuMcVertex *,StMuMcTrack *>      mMcVx2McTkRMap; 
+  map<StMuMcVertex *,StMuMcTrack *>           mMcVx2McParentTkMap; 
+  map<Int_t,StMuMcTrack *>                    mId2McTkMap; // 
+  map<Int_t,StMuMcVertex *>                   mId2McVxMap; // All Mc Vx, StMuMcVertex *McVx = Id2McVx[Id];
+  map<Int_t,StMuMcVertex *>                   mId2McVxRMap;// Reconstructable, i.e. contains > 1 Reconstructable Mc Tracks
+  map<Int_t,StMuPrimaryVertex*>               mId2RcVxMap;
+  map<Int_t,Int_t>                            mIndxRcTk2IdMap;
+  map<Int_t,Int_t>                            mIndxKFTk2IdMap;
+  multimap<StMuPrimaryVertex*, StMuTrack *>   mRcVx2RcTkMap;
+  map<StMuPrimaryVertex*,StMuMcVertex *>      mRcVx2McVxMap;
+  multimap<StMuMcVertex *,StMuPrimaryVertex*> mMcVx2RcVxMap;
+  map<Int_t,KFParticle*>                      mIdVx2KFVxMap; // 
+  map<KFParticle*,StMuPrimaryVertex*>         mKFVx2RcVxMap;
+  multimap<StMuPrimaryVertex*,KFParticle*>    mRcVx2KFVxMap;
+  map<KFParticle*,StMuMcVertex *>             mKFVx2McVxMap; 
+  multimap<StMuMcVertex*,KFParticle*>         mMcVx2KFVxMap; 
+  multimap<Int_t,StMuTrack *>                 mIdMc2RcTkMap; // Reconstucted Track to IdTruth
+  map<Int_t,Int_t>                            mIdGlobalId2IdPrimaryTrackMap; // Primary track Id to Global Track Id
+  map<Int_t,Int_t>                            mIdGlobal2IdPrimaryTrackMap; // Primary track Id to Global Track Id
+  multimap<Int_t,Int_t>                       mIdMc2IdRcTracksMap; // Primary track Id to Global Track Id
+  multimap<Int_t,Int_t>                       mIdMc2IdRcVerticesMap; // 
+  multimap<StMuMcTrack*,StMuTrack *>          mMcTrack2GlobalTrackMap; 
+  multimap<StMuMcTrack*,StMuTrack *>          mMcTrack2PrimaryTrackMap; 
+  multimap<StMuMcTrack*,KFParticle *>         mMcTrack2KFParticleMap; 
+  vector<StMuPrimaryVertex *>                 mRcVxsVec;  // All accepted RcVx
+  vector<StMuPrimaryVertex *>                 mRecoVxVec;  //  1 to 1 Mc to Rc match
+  vector<StMuPrimaryVertex *>                 mCloneVxVec; //  1 to many (>1) Mc to Rc match
+  vector<StMuPrimaryVertex *>                 mGhostVxVec; //  no Mc match
+  vector<StMuMcVertex *>                      mLostVxVec;  //  no Rc match
+  map<Int_t,Int_t>                            mIdGlTk2IndxMap;
+  map<Int_t,Int_t>                            mIdPrTk2IndxMap;
+  map<Int_t,Int_t>                            mIdPrVx2IndxMap;
+  map<Int_t,Int_t>                            mIdKFTk2IndxMap;
+  map<Int_t,Int_t>                            mIdKFVx2IndxMap;
+ public:
+  Bool_t selectVertex();
+  static void setVtxMode(const PicoVtxMode vtxMode) { instance()->mVtxMode = vtxMode;}
+  static void SetMaxTrackDca(Double_t cut = 50);
+  static void SetMaxVertexTransError(Double_t cut = 0.0050);
+  static void SetVxXYrange(Double_t xmin = -0.3, Double_t xmax = 0., Double_t ymin = -0.27, Double_t ymax = -0.13);
+  static void SetVxZrange(Double_t zmin = -70, Double_t zmax = 70.);
+  static void SetVxRmax(Double_t rmax = 2);
+  static void SetTpcVpdVzDiffCut(Float_t cut = 3) { instance()->mTpcVpdVzDiffCut = cut;}
+  
+  /// Increment this by 1 every time the class structure is changed
+  ClassDef(StMuDst,7)
 };
-#endif /* ! __TFG__VERSION__ */
+
 #endif
 
 /***************************************************************************
@@ -571,6 +705,8 @@ public:
  *
  * Revision 1.47  2013/04/10 19:28:35  jeromel
  * Step back to 04/04 version (van aware) - previous changes may be recoverred
+ * Revision 1.46  2013/04/08 18:07:55  fisyak
+ * Add branches for KFParticles, fix problem with zero cov. matrix for primary tracks
  *
  * Revision 1.45  2012/11/26 23:14:32  fisyak
  * Replace GetEntries() by GetEntriesFast(), fix print outs

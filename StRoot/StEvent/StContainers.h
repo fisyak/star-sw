@@ -163,6 +163,9 @@ class StFgtStrip;
 class StFmsCluster;
 class StFmsHit;
 class StFmsPoint;
+class StRHICfRawHit;
+class StRHICfHit;
+class StRHICfPoint;
 class StFpsSlat;
 class StFtpcHit;
 class StHit;
@@ -243,6 +246,9 @@ StCollectionDef(FtsStgcHit)
 StCollectionDef(FmsCluster)
 StCollectionDef(FmsHit)
 StCollectionDef(FmsPoint)
+StCollectionDef(RHICfRawHit)
+StCollectionDef(RHICfHit)
+StCollectionDef(RHICfPoint)
 StCollectionDef(FpsSlat)
 StCollectionDef(FtpcHit)
 StCollectionDef(Hit)

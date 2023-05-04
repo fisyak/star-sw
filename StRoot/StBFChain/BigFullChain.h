@@ -1451,6 +1451,7 @@ Bfc_st BFC[] = { // standard chains
   {"EmcUtil"     ,""  ,"","emc_T,geomT,StDbT",""                      ,"StEmcUtil","Load StEmcUtil",kFALSE},
   {"EEmcUtil"    ,""  ,"","",""                                     ,"StEEmcUtil","Load StEEmcUtil",kFALSE},
   {"FmsUtil"     ,""  ,"","",""                             ,"StFmsUtil,libMinuit","Load StFmsUtil",kFALSE},
+  {"RhicfUtil"   ,""  ,"","",""                       ,"StRHICfUtil,libSpectrum","Load StRHICfUtil",kFALSE},
   {"FgtUtil"     ,""  ,"","",""                                       ,"StFgtUtil","Load StFgtUtil",kFALSE},
   {"GmtUtil"     ,""  ,"","",""                                       ,"StGmtUtil","Load StGmtUtil",kFALSE},
   {"l3Util"      ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
@@ -1510,6 +1511,7 @@ Bfc_st BFC[] = { // standard chains
   {"sstDb"      ,"sstDb","","tpcDb,SstUtil","StSstDbMaker","StSsdDbMaker","Load and run SstDbMaker",kFALSE},
   {"eemcDb"      ,"eeDb" ,"","db,EEmcUtil",      "StEEmcDbMaker","StEEmcDbMaker","Load EEmcDbMaker",kFALSE},
   {"fmsDb"       ,"fmsDb","","db,fmsutil",          "StFmsDbMaker","StFmsDbMaker","Load FmsDbMaker",kFALSE},
+  {"rhicfDb"     ,"rhicfDb","","db",          "StRHICfDbMaker","StRHICfDbMaker","Load RHICfDbMaker",kFALSE},
   {"fcsDb"       ,"fcsDbMkr","","",                 "StFcsDbMaker","StFcsDbMaker","Load FcsDbMaker",kFALSE},
   {"fttDb"       ,"fttDbMkr","","",                 "StFttDbMaker","StFttDbMaker","Load FttDbMaker",kFALSE},
   {"fgtDb"       ,"fgtDb","","db,fgtutil",          "StFgtDbMaker","StFgtDbMaker","Load FgtDbMaker",kFALSE},
@@ -1828,6 +1830,9 @@ Bfc_st BFC[] = { // standard chains
    "StFmsPointMaker","StFmsPointMaker","Fill FMS clusters and points",                              kFALSE},
   {"fmsfps"   ,"","", "event,fmsDb",
    "StFmsFpsMaker","StFmsFpsMaker","Fill FPS association in FMS points",                            kFALSE},
+  // RHICf
+  {"rhicfDat" ,"","", "StEvent,RhicfUtil,rhicfdb"
+  ,                                 "StRHICfRawHitMaker","StRHICfRawHitMaker","Fill RHICf raw data",kFALSE},
   // FCS
   {"fcs","fcsChain","","fcsDat,fcsWFF,fcsCluster,fcsPoint",         "StMaker","StChain","FCS chain",kFALSE},
   {"fcsSim",""    ,"fcsChain","StEvent,fcsDb",

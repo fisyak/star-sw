@@ -67,6 +67,7 @@ const char* DetectorName(int id) {
         DetectorNames[kRpsId      ] = "Rps";
         DetectorNames[kMtdId      ] = "Mtd";
         DetectorNames[kGmtId      ] = "Gmt";
+        DetectorNames[kRHICfId    ] = "RHICf";
     }
     
     if (id < kMaxDetectorId)
