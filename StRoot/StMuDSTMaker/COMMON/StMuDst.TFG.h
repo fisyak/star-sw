@@ -671,7 +671,7 @@ public:
   static void SetTpcVpdVzDiffCut(Float_t cut = 3) { instance()->mTpcVpdVzDiffCut = cut;}
   
   /// Increment this by 1 every time the class structure is changed
-  ClassDef(StMuDst,7)
+  ClassDef(StMuDst,8)
 };
 
 #endif
