@@ -1247,9 +1247,10 @@ int itpc_fcf_c::do_blobs_stage2(int row)
 
 			int ix = *d++ ;
 
+#ifdef DO_DBG1
 
 			int b_ix = blob_ix[ix] ;
-#ifdef DO_DBG1
+
 			LOG(TERR,"  using bix %d %d",ix,b_ix) ;
 			if(b_ix != ix) {
 				LOG(WARN,"Can't be: %d %d, RP %d:%d",b_ix,ix,row,p) ;

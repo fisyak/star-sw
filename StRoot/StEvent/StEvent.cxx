@@ -267,6 +267,8 @@
 #include "StTrackNode.h"
 #include "StTrack.h"
 #include "Stiostream.h"
+#include "StFwdTrackCollection.h"
+
 #ifndef ST_NO_NAMESPACES
 using std::swap;
 #endif
@@ -1029,6 +1031,22 @@ StEvent::trackDetectorInfo() const
     return *info;
 }
 
+StFwdTrackCollection*
+StEvent::fwdTrackCollection()
+{
+    StFwdTrackCollection *fwdTracks = 0;
+    _lookup(fwdTracks, mContent);
+    return fwdTracks;
+}
+
+const StFwdTrackCollection*
+StEvent::fwdTrackCollection() const
+{
+    StFwdTrackCollection *fwdTrack = 0;
+    _lookup(fwdTrack, mContent);
+    return fwdTrack;
+}
+
 StSPtrVecTrackNode&
 StEvent::trackNodes()
 {
@@ -1497,6 +1515,12 @@ StEvent::setFstEvtCollection(StFstEvtCollection* val)
 
 void
 StEvent::setFstHitCollection(StFstHitCollection* val)
+{
+    _lookupAndSet(val, mContent);
+}
+
+void
+StEvent::setFwdTrackCollection(StFwdTrackCollection* val)
 {
     _lookupAndSet(val, mContent);
 }
