@@ -1888,7 +1888,7 @@ Bfc_st BFC[] = { // standard chains
   {"CtbMatchVtx"    ,""  ,"","VFMinuit",""              ,"","... CTB Matching ON in Vertex Finding",kFALSE},
   {"VFMinuit2"      ,""  ,"","VFMinuit","","","... Generic VF will use Minuit method w/rank mode 2",kFALSE},
   {"VFMinuit3"      ,""  ,"","VFMinuit","","","... Generic VF will use Minuit method w/rank mode 3",kFALSE},
-  {"VFFV"           ,""  ,"","genvtx,MC"                         ,"","","... Fixed dummy VF method",kFALSE},
+  {"VFFV"           ,""  ,"","genvtx,MC" ,"",""                        ,"... Fixed dummy VF method",kFALSE},
   {"VFMCE"          ,""  ,"","genvtx,MC"                     ,"","","... Fixed vertex from MCEvent",kFALSE},
   {"VFppLMV"        ,""  ,"","genvtx"                ,"","","... VertexMaker will use ppLMV method",kFALSE},
   {"VFppLMV5"       ,""  ,"","VFppLMV"       ,"","","... VertexMaker will use ppLMV method (tuned)",kFALSE},
