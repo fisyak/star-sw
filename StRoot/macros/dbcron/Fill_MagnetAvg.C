@@ -67,11 +67,17 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
   //    db = TSQLServer::Connect("mysql://heston.star.bnl.gov:3502/Conditions_rhic","","");
   //    database = OnDb(year,"dev_mainMagnet2,cdev_mainMagnetm");
   //    db = TSQLServer::Connect("mysql://dbbak.starp.bnl.gov:3411/mq_collector_Conditions_rhic","","");
+  if (_debug) {
+    cout << "TSQLServer::Connect(\"" << database_mq_collector_Conditions_rhic.Data() << "\",\"\",\"\")" << endl;
+  }
   db = TSQLServer::Connect(database_mq_collector_Conditions_rhic.Data(),"","");
   sprintf(query,
 	  //	  "select UNIX_TIMESTAMP(beginTime),mainMagnetCurrent,mainMagnetStatus from starMagnet where beginTime <= from_unixtime(%u) order by 1 desc limit 1",startRunTime);
-	  "select UNIX_TIMESTAMP(beginTime),cdev_mainMagnet2,cdev_mainMagnetm,beginTime  from starMagnet where beginTime >= from_unixtime(%u) and beginTime <=  from_unixtime(%u) and cdev_mainMagnetB != ''",startRunTime,endRunTime);
-  //  cout << query << endl;
+	  //	  "select UNIX_TIMESTAMP(beginTime),cdev_mainMagnet2,cdev_mainMagnetm,beginTime  from starMagnet where beginTime >= from_unixtime(%u) and beginTime <=  from_unixtime(%u) and cdev_mainMagnetB != ''",startRunTime,endRunTime);
+	  //	  //SELECT UNIX_TIMESTAMP(beginTime), `wfgRamp.mainMagnet.readbackM[1]` AS mainMagnetCurrent, `psctrl.mainMagnet.statusM` AS mainMagnetStatus FROMstarMagnetCurrentFull ORDER BY beginTime desc limit 1;
+	  //	  "select UNIX_TIMESTAMP(beginTime),cdev_mainMagnet2,cdev_mainMagnetm,beginTime  from starMagnet where beginTime >= from_u           nixtime(%u) and beginTime <=  from_unixtime(%u) and cdev_mainMagnetB != ''",startRunTime,endRunTime);
+	  "select UNIX_TIMESTAMP(beginTime),`wfgRamp.mainMagnet.readbackM[1]` AS mainMagnetCurrent, `psctrl.mainMagnet.statusM` AS mainMagnetStatus,beginTime  from starMagnetCurrentFull where beginTime >= from_unixtime(%u) and beginTime <=  from_unixtime(%u)",startRunTime,endRunTime);
+  if (_debug ) { cout << query << endl;}
   // new source of magnet data:
   // wfgRamp.mainMagnet.wM,wfgRamp.pttEast.wM,wfgRamp.pttWest.wM,wfgRamp.trimEast.wM,wfgRamp.trimWest.wM
   
@@ -107,7 +113,8 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
       // cdev_mainMagnetm = 32778 => 100012
       //                    32768 => 100000
       tempStatus = atoul(row->GetField(2));
-      if( bitMask & tempStatus )  // If 16th bit is set, then current is negative
+      //      if( bitMask & tempStatus )  // If 16th bit is set, then current is negative
+      if ( ! (bitMask & tempStatus) )  // If 16th bit is not set, then current is negative
 	tempCurrent *= -1;
       if (RMS < 10) RMS = 10;
       if (n == 1) {
@@ -170,7 +177,7 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
 }
 
 // Will Fill Tables for all Runs not filled in yet
-void Fill_MagnetAvg(Int_t year=2021){
+void Fill_MagnetAvg(Int_t year=2023){
 #if 0
   loadLibs();
 #endif    
@@ -223,8 +230,10 @@ void Fill_MagnetAvg(Int_t year=2021){
     cout << "max runNumber is " << maxRunNumber << endl;
 #endif
     database_mq_collector_Conditions_rhic = "mysql://";
-    database_mq_collector_Conditions_rhic += OnDb(year, "mq_collector_Conditions_rhic");
-    database_mq_collector_Conditions_rhic += "/"; database_mq_collector_Conditions_rhic += "mq_collector_Conditions_rhic";
+    //    database_mq_collector_Conditions_rhic += OnDb(year, "mq_collector_Conditions_rhic");
+    //    database_mq_collector_Conditions_rhic += "/"; database_mq_collector_Conditions_rhic += "mq_collector_Conditions_rhic";
+    database_mq_collector_Conditions_rhic += OnDb(year, "mq_collector_Conditions_cdev");
+    database_mq_collector_Conditions_rhic += "/"; database_mq_collector_Conditions_rhic += "mq_collector_Conditions_cdev";
     // Get DATABASE RUNLOG
     //  db = TSQLServer::Connect("mysql://heston.star.bnl.gov:3501/RunLog","","");
     //  db = TSQLServer::Connect("mysql://dbbak.starp.bnl.gov:3411/RunLog","","");

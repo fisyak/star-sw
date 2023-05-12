@@ -2460,6 +2460,7 @@ Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 &
   Float_t QtAlpha[2];
   KFParticle::GetArmenterosPodolanski(posDaughter, negDaughter, QtAlpha );
   histo[k]->Fill(QtAlpha[1],QtAlpha[0],1);
+#if 0
   // Use exact mass to estimate fitted daughter momenta
   TLorentzVector Mother, Neg, Pos;
   auto M =  TDatabasePDG::Instance()->GetParticle(TempParticle.GetPDG())->Mass();
@@ -2483,6 +2484,7 @@ Bool_t StKFParticleInterface::PidQArmerteros(KFParticle TempParticle, TVector3 &
   Pos.Boost(beta);
   neg = Neg.Vect();
   pos = Pos.Vect();
+#endif
   
   ok = kTRUE;
   if ((parents[k].pdgParent ==  2212 && QtAlpha[0] <  0.2) ||
@@ -2562,9 +2564,11 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst) {
       StPidStatus PiD1(gTrack1, fUsedx2); 
       if (PiD1.PiDStatus < 0) continue;
       FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
+#if 0
       StPidStatus PiD2(gTrack1, fUsedx2, &negpos[np] ); 
       if (PiD2.PiDStatus < 0) continue;
       FillPidQA(&PiD2, p1.GetPDG(), particle->GetPDG(), 1);
+#endif
     }
   }
   return kTRUE;
@@ -2667,12 +2671,12 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[2][Ndecays+1][Nparticles][9] = {0};
+  static TH2F *hist[1][Ndecays+1][Nparticles][9] = {0}; // set always 1
   if (! hist[0][0][0][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
     TDirectory *PiDQA = top->GetDirectory("PiDQA");
-    for (Int_t s = 0; s < 2; s++) {// from Dst and from Fit
+    for (Int_t s = 0; s < 1; s++) { // 2; s++) {// from Dst and from Fit
       Int_t d1 = 0;
       if (s) d1 = 1;
       for (Int_t d = d1; d <= Ndecays; d++) {
@@ -2724,7 +2728,7 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
     }
   } 
   Int_t s = 0;
-  if (set) s = 1;
+  //  if (set) s = 1;
   if (d >= 0) {
     for (Int_t p = 0; p < Nparticles; p++) {
       if (pdg != particles[p].pdg) continue;

@@ -27,7 +27,7 @@ class StdEdxModel {
   static Double_t      gausexp(Double_t *x, Double_t *p); // versus mu, sigma, k 
   static Double_t      gausexpD(Double_t *x, Double_t *p, Double_t *der = 0); // versus mu, sigma, k 
   Double_t             dNdx(Double_t poverm, Double_t charge = 1.0);								      
-  Double_t     	       dNdxEff(Double_t poverm, Double_t charge = 1.0, Double_t mass = 0);
+  Double_t     	       dNdxEff(Double_t poverm, Double_t charge = 1.0, Double_t mass = 0.13956995, Double_t *pullCor = 0);
   static Double_t      saturationFunc(Double_t *x, Double_t *p); // nP saturation versus beta*gamma from TpcRS (nP/dX - dN/dx_model) 
   TF1          	      *GGaus() {return fGGaus;}										      
   TF1          	      *GausExp() {return fGausExp;}										      

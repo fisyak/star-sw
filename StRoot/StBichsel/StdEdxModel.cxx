@@ -668,50 +668,50 @@ Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
   return eff->Interpolate(bgL10);
 }
 //________________________________________________________________________________
-Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass) {
+Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, Double_t *pullCor) {
   if (!fgStdEdxModel) instance();
+  static Double_t pionM   = 0.13956995;
+  static Double_t protonM = 0.9382723;
   Double_t bgMC = bgCorrected(poverm); 
   Double_t dNdxMC = dNdx(bgMC, charge);
   Double_t dNdx = dNdxMC*NpCorrection(poverm); 
   // Modification to dN/dx from analysis of daughter tracks of unique reconstructed strange particle V0 decays and gamma conversions. OO200GeV_2021 samples
   Double_t dNdxCor = 0;
-#if 0
   Double_t bgL10 = TMath::Log10(poverm);
-  static TF1 *elCor = 0;
   static TF1 *piCor = 0;
-#if 0
-  if (bgL10 > 2.3) {
-    if (bgL10 > 3.5) bgL10 = 3.5;
-    if (! elCor) {elCor = new TF1("dNdxElCor","pol2",2.3,3.5); elCor->SetParameters(-0.66617,    0.42779,  -0.059554);}
-    dNdxCor = elCor->Eval(bgL10);
-  } 
-  if (bgL10 > 2.1 && bgL10 < 2.55) {
-    static TF1 *elCor2 = 0;
-    if (! elCor2) {elCor2 = new TF1("dNdxElCor2","pol7",2.1,2.55); elCor2->SetParameters(  123.04,    -102.77,    -4.7415,     12.443,     4.1275,   -0.88384,    -1.0646,    0.25247);}
-    dNdxCor += elCor2->Eval(bgL10);
+  if (bgL10 > 2.1) {
+    if (bgL10 < 2.53) {
+      static TF1 *elCor = 0;
+      if (! elCor) {elCor = new TF1("dNdxElCor1","pol3",2.1,2.53); elCor->SetParameters(   41.831,    -56.469,     25.148,    -3.6987);
+	dNdxCor += elCor->Eval(bgL10);
+      } 
+    } else {
+      static TF1 *elCor = 0;
+      if (! elCor) {elCor = new TF1("dNdxElCor2","pol3",2.53,3.8); elCor->SetParameters(    -2.731,     2.4716,   -0.72926,   0.072831);
+	dNdxCor += elCor->Eval(bgL10);
+      }
+    } 
+  } else if (mass >= pionM) {
+    Double_t dNdxCorPion = 0;
+    Double_t dNdxCorProton = 0;
+    if (bgL10 > -0.25) {
+      if (! piCor) {piCor = new TF1("dNdxPionCor","pol5",-0.25,1.4); piCor->SetParameters( -0.028596,  -0.059996,    0.76111,    -1.4182,     1.0432,   -0.27111);} //pion
+      if (bgL10 > 1.4)  bgL10 = 1.4;
+      dNdxCorPion = piCor->Eval(bgL10);
+    }
+    if (bgL10 > -0.9) {
+      static TF1 *protonCor = 0;
+      if (! protonCor) {protonCor = new TF1("dNdxPionCor","pol5",-0.8,0.8); protonCor->SetParameters(-0.0032707,    0.05787,    0.21255,   -0.31159,   -0.29291,    0.46841);} //proton
+      if (bgL10 < -0.8) bgL10 = - 0.8;
+      if (bgL10 >  0.8) bgL10 =   0.8;
+      dNdxCorProton = protonCor->Eval(bgL10);
+    } 
+    static Double_t mPionL10   = TMath::Log10(pionM);
+    static Double_t mProtonL10 = TMath::Log10(protonM);
+    static Double_t dML10      = mProtonL10 - mPionL10;
+    Double_t mL10 = TMath::Log10(mass);
+    dNdxCor = dNdxCorPion + (dNdxCorProton - dNdxCorPion)*(mL10 - mPionL10)/dML10;
   }
-  if (bgL10 < 2) {
-    if (bgL10 < -0.6) bgL10 = -0.6;
-    if (bgL10 >  1.0) bgL10 =  1.0;
-    if (! piCor) {piCor = new TF1("dNdxPionCor","pol6",0.6,1.0); piCor->SetParameters( -0.026971,  -0.015765,    0.19093, -0.00048008,   -0.24187,  -0.072279,    0.17227);}
-    dNdxCor = piCor->Eval(bgL10);
-  }
-#else /* dEdxBTof */
-  if (bgL10 > 2.3) {
-    if (! elCor) {elCor = new TF1("dNdxElCor","pol3",2.3,3.5); elCor->SetParameters(   -2.5497,     2.2386,   -0.64123,   0.062087);}
-    dNdxCor = elCor->Eval(bgL10);
-  } else if (bgL10 > -0.1) {
-    if (! piCor) {piCor = new TF1("dNdxPionCor","pol4",-0.1,1.5); piCor->SetParameters( -0.071804,    0.19103,  -0.061166,   -0.14009,   0.080874);}
-    if (bgL10 > 1.2)  bgL10 = 1.2;
-    dNdxCor = piCor->Eval(bgL10);
-  } else {
-    static TF1 *protonCor = 0;
-    if (! protonCor) {protonCor = new TF1("dNdxPionCor","pol4",-0.7,0.5); protonCor->SetParameters( -0.028427,   0.040952,    0.23372,   -0.16693,   -0.31934);}
-    if (bgL10 > 0.5)  bgL10 = 0.5;
-    dNdxCor = protonCor->Eval(bgL10);
-  } 
-#endif
-#endif
   return dNdx*TMath::Exp(dNdxCor);
 }
 //________________________________________________________________________________
