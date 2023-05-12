@@ -1,22 +1,6 @@
 #!/bin/csh
-
-set tt=`echo $1 | sed "s/-.*//"`
-if ( "$tt" != "$1") then
-    set vr=$tt
-    set cf=`echo $1 | sed "s/$vr-//"`
-else
-    set vr=$1
-    set cf="$2"
-endif
-
-# verify STAR enviroment
-set i = `echo $vr | awk '{printf("%1.1s\n",$1)}'`
-if ("$i" == "9" || "$i" == "0") then
-  setenv STAR_LEVEL SL$vr
-else
-  setenv STAR_LEVEL $vr
-endif
-
+# Set up STAR enviroment
+setenv STAR_LEVEL $1
 if ( -e $GROUP_DIR/group_env.csh ) then
 unsetenv GROUP_PATH
 unsetenv STAR_PATH
@@ -32,37 +16,7 @@ unsetenv CERN_LEVEL
 	    endif
 	endif
 	#echo "$STAR"
-	#echo "$STAR_LEVEL"	#echo "$LD_LIBRARY_PATH"
+	#echo "$STAR_LEVEL"
+	#echo "$LD_LIBRARY_PATH"
 endif
-
-# once we have loaded the env, we could check for cf
-unsetenv STAR_CONFIG
-unsetenv STAR_CONFIGP
-#echo "Checking $cf"
-if ( "$cf" != "") then
-    # always search for a local path
-    if ( -e "mgr/$cf.config") then
-	setenv STAR_CONFIG  "$cf"
-	setenv STAR_CONFIGP "`pwd`/mgr/$cf.config"
-    else if ( -e "$STAR/mgr/$cf.config" ) then
-	setenv STAR_CONFIG  "$cf"
-	setenv STAR_CONFIGP "$STAR/mgr/$cf.config"
-    endif
-else 
-    if ( -e "$STAR/mgr/default.config" ) then
-	setenv STAR_CONFIG  "default"
-	setenv STAR_CONFIGP "$STAR/mgr/default.config"
-    endif
-endif
-# check again 
-if ( $?STAR_CONFIG ) then
-    #echo "--- yo $ECHO"
-    if ($?DECHO) echo "starver :: Loading configuration $cf ($STAR_CONFIGP)"
-    source $STAR_CONFIGP
-else
-    if ($?DECHO && "$cf" != "") then
-	echo "starver :: Post-config $cf.config does not exist"
-    endif
-endif
-
 
