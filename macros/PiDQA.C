@@ -26,7 +26,7 @@ TMultiGraph *mgPion = 0;
 TMultiGraph *sgPion = 0;
 TMultiGraph *mgProton = 0;
 TMultiGraph *sgProton = 0;
-void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
+void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "") {
   TString xTitle = "log_{10} (#beta #gamma)";
   if (! bg) xTitle = "log_{10} (p [GeV/c])";
   const Int_t N = 8;
@@ -65,12 +65,14 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
   TPaveLabel pl;
   Float_t x1=0.3, y1=0.8, x2=0.75, y2=0.85;
   for (Int_t i = 0; i < N; i++) {
-    if (! gDirectory->cd(Particles[i].dir)) continue;
-    TCanvas *c1 = new TCanvas(Form("c%i",i),Particles[i].dir);
+    TString dir(Particles[i].dir);
+    dir += opt;
+    if (! gDirectory->cd(dir)) continue;
+    TCanvas *c1 = new TCanvas(Form("c%i",i),dir);
     c1->SetLogz(1);
     TString name(histN);
     TH2F *h2 = (TH2F *) gDirectory->Get(name);
-    cout << "Histmogram " << Particles[i].dir << "/" << name.Data();
+    cout << "Histmogram " << dir << "/" << name.Data();
     if (! h2) {
       cout  << " has not been found" << endl;
       continue;
@@ -85,7 +87,7 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
     TH1D *sigma = (TH1D *) arr->At(2);
     if (mu && sigma) {
       h2->Draw("colz");
-      //      pl.DrawPaveLabel(x1,y1,x2,y2,Particles[i].dir,"brNDC");
+      //      pl.DrawPaveLabel(x1,y1,x2,y2,dir,"brNDC");
       pl.DrawPaveLabel(x1,y1,x2,y2,gDirectory->GetPath(),"brNDC");
       //      c1->Update();
       mu->Draw("same");
@@ -119,25 +121,25 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
       grsigma[i] = new TGraphErrors(np, x, s, 0, se);
       grsigma[i]->SetLineColor(i+1);
       grsigma[i]->SetMarkerColor(i+1);
-      TString Dir(Particles[i].dir);
+      TString Dir(dir);
       Int_t marker = 20;
       if (Dir.EndsWith("e+") || Dir.EndsWith("e-")) marker = 21;
       if (Dir.EndsWith("p") || Dir.EndsWith("p-")) marker = 22;
       grmu[i]->SetMarkerStyle(marker);
       mg->Add(grmu[i]);
-      l->AddEntry(grmu[i],Particles[i].dir,"p");
+      l->AddEntry(grmu[i],dir,"p");
       grsigma[i]->SetMarkerStyle(marker);
       sg->Add(grsigma[i]);
-      ls->AddEntry(grsigma[i],Particles[i].dir,"p");
-      if      (TString(Particles[i].dir).Contains("gamma/e"))  {mgE->Add(grmu[i]);      sgE->Add(grsigma[i]);}
-      else if (TString(Particles[i].dir).Contains("/pi"))      {mgPion->Add(grmu[i]);   sgPion->Add(grsigma[i]);}
-      else if (TString(Particles[i].dir).Contains("/p"))       {mgProton->Add(grmu[i]); sgProton->Add(grsigma[i]);}
+      ls->AddEntry(grsigma[i],dir,"p");
+      if      (dir.Contains("gamma/e"))  {mgE->Add(grmu[i]);      sgE->Add(grsigma[i]);}
+      else if (dir.Contains("/pi")    )  {mgPion->Add(grmu[i]);   sgPion->Add(grsigma[i]);}
+      else if (dir.Contains("/p")     )  {mgProton->Add(grmu[i]); sgProton->Add(grsigma[i]);}
     }
     if (! gROOT->IsBatch() && Ask()) return;
   }
   if (! mg->GetListOfGraphs()) return;
   if (mg->GetListOfGraphs()->GetSize() <= 0) return;
-  TString ctitle(Form("mu%s",histN));
+  TString ctitle(Form("mu%s%s",histN,opt));
   if (bg) ctitle += "bg";
   TCanvas *cr = new TCanvas(ctitle,ctitle,200,100,1600,800);
   mg->Draw("ap");
@@ -147,10 +149,11 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
   cr->Update();
   TString File;
   if (bg) File += "bg";
-  File += gFile->GetName();
+  File += gSystem->BaseName(gFile->GetName());
   File.ReplaceAll(".root",".png");
-  cr->SaveAs(ctitle+File);
-  ctitle = Form("sigma%s",histN);
+  TString pngFile = ctitle + File;
+  cr->SaveAs(pngFile);
+  ctitle = Form("sigma%s%s",histN,opt);
   if (bg) ctitle += "bg";
   TCanvas *csigma = new TCanvas(ctitle,ctitle,200,1000,1600,800);
   sg->Draw("axp");
@@ -158,8 +161,8 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE) {
   sg->Draw("axp");
   ls->Draw();
   csigma->Update();
-  ctitle = Form("sigma%s",histN);
-  csigma->SaveAs(ctitle+File);
+  pngFile = ctitle + File;
+  csigma->SaveAs(pngFile);
 }
 //________________________________________________________________________________
 void PlotArmeteros() {
