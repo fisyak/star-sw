@@ -64,6 +64,7 @@ class StdEdxModel {
   void     	       SetScale(Double_t scale = 1.0) {fScale = scale;}								       
   Double_t 	       dNdxScale() {return fScale;}											       
   static Double_t      zMP(Double_t *x, Double_t *p); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx, p[1] =  charge, and p[2] = mass
+  static Double_t      zMP(Double_t *x, Double_t *p, Double_t *sigmaCor); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx, p[1] =  charge, and p[2] = mass
   TF1     	      *ZMP(Double_t log2dx = 1, Double_t charge = 1, Double_t mass = 0);                                                                                           
   // from 100 keV Tcut (GEXNor.C)
   void InitPar();

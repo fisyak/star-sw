@@ -297,6 +297,7 @@ void StPidStatus::Set() {
   fStatus[kWeightedTruncatedMeanId] = fFitU  ;
   fStatus[kOtherMethodId]           = fdNdx  ;
   fStatus[kOtherMethodId2]          = fdNdxU ;
+  Double_t sigmaCor = 1;
   for (l = kPidElectron; l < KPidParticles; l++) {
     Int_t charge = StProbPidTraits::mPidParticleDefinitions[l]->charge();
     Double_t mass   = StProbPidTraits::mPidParticleDefinitions[l]->mass();
@@ -311,12 +312,12 @@ void StPidStatus::Set() {
       if (fUsedx2) 
 	fStatus[k]->Pred[l] = StdEdxPull::EvalPred2(betagamma, fStatus[k]->log2dX(), fit, charge);
       else 
-	fStatus[k]->Pred[l] = StdEdxPull::EvalPred(betagamma, fit, charge);
+	fStatus[k]->Pred[l] = StdEdxPull::EvalPred(betagamma, fit, charge, mass, &sigmaCor);
       if (fStatus[k]->I() > 0) {
 	fStatus[k]->dev[l] = TMath::Log(fStatus[k]->I()/fStatus[k]->Pred[l]);
 	fStatus[k]->devS[l] = -999;
 	if (fStatus[k]->D() > 0) {
-	  fStatus[k]->devS[l] = fStatus[k]->dev[l]/fStatus[k]->D();
+	  fStatus[k]->devS[l] = fStatus[k]->dev[l]/(fStatus[k]->D()*sigmaCor);
 	}
       }
       if (fStatus[k]->Pred[l] < PredBMN[0]) PredBMN[0] = fStatus[k]->Pred[l];

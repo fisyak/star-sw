@@ -68,8 +68,8 @@ StdEdxModel::StdEdxModel() : mdNdx(0), fScale(1)
   // Set normalization point the same as for I70 (increase energy per conduction electron from 20 eB to 52 eV)
   Double_t dEdxMIPLog = TMath::Log(2.62463815285237434); //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
-  //                  log2dx, charge mass
-  Double_t pars[4] = {   1.0,     1.0, 0.};
+  //                  log2dx,  charge        mass
+  Double_t pars[4] = {   1.0,     1.0, 0.13956995};
   Double_t dEdxLog = zMP(&MIPBetaGamma10, pars);
   fLogkeVperElectron = dEdxMIPLog - dEdxLog;
   cout << "StdEdxModel:: set scale = " << Form("%5.1f",1e3*keVperElectron()) << " eV/electron" << endl;
@@ -499,13 +499,17 @@ Double_t StdEdxModel::ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
+  return zMP(x,p, 0);
+}
+//________________________________________________________________________________
+Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log(keV/cm)
   Double_t log10bg = x[0];
   Double_t pOverMRC  = TMath::Power(10., log10bg);
   Double_t log2dx  = p[0];
   Double_t charge  = p[1];
   Double_t mass    = p[2];
   Double_t dx      = TMath::Power( 2., log2dx);
-  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge, mass); // */dNdxVsBgC*.root [-1.5,5]
+  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge, mass, sigmaCor); // */dNdxVsBgC*.root [-1.5,5]
   Double_t Np = dNdx*dx;
   //  Double_t NpLog = TMath::Log(Np);
   //  Double_t mu    = instance()->Parameter(Np, 0);

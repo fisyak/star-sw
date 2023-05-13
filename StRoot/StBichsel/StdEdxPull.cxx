@@ -2,7 +2,7 @@
 #include "StdEdxModel.h"
 #include "StdEdxPull.h"
 //________________________________________________________________________________
-Double_t StdEdxPull::EvalPred(Double_t betagamma, UChar_t fit, Int_t charge, Double_t mass) {
+Double_t StdEdxPull::EvalPred(Double_t betagamma, UChar_t fit, Int_t charge, Double_t mass, Double_t *sigmaCor) {
   Double_t dedx_expected;
   Double_t dx2 = 1;
   if (TMath::Abs(charge) > 1) dx2 = TMath::Log2(5.);
@@ -11,7 +11,7 @@ Double_t StdEdxPull::EvalPred(Double_t betagamma, UChar_t fit, Int_t charge, Dou
   } else if ( fit == 1) {     // Ifit
     //    dedx_expected = 1.e-6*charge*charge*TMath::Exp(Bichsel::Instance()->GetMostProbableZ(TMath::Log10(betagamma),dx2));
     Double_t par[4] = {TMath::Log10(betagamma), 1., (Double_t) charge, mass};
-    dedx_expected = 1.e-6*TMath::Exp(StdEdxModel::instance()->zMP(par,&par[1]));
+    dedx_expected = 1.e-6*TMath::Exp(StdEdxModel::instance()->zMP(par,&par[1], sigmaCor));
   } else {     // dNdx_eff
     //    dedx_expected = StdEdxModel::instance()->dNdx(betagamma,charge);
     dedx_expected = StdEdxModel::instance()->dNdxEff(betagamma,charge, mass);
@@ -19,8 +19,8 @@ Double_t StdEdxPull::EvalPred(Double_t betagamma, UChar_t fit, Int_t charge, Dou
   return dedx_expected;
 }
 //________________________________________________________________________________
-Double_t StdEdxPull::EvalDeV(Double_t dEdx, Double_t betagamma, UChar_t fit, Int_t charge, Double_t mass) {
-  return TMath::Log(dEdx/EvalPred(betagamma, fit, charge, mass));
+Double_t StdEdxPull::EvalDeV(Double_t dEdx, Double_t betagamma, UChar_t fit, Int_t charge, Double_t mass, Double_t *sigmaCor) {
+  return TMath::Log(dEdx/EvalPred(betagamma, fit, charge, mass, sigmaCor));
 }
 //________________________________________________________________________________
 Double_t StdEdxPull::Eval(Double_t dEdx, Double_t dEdxError, Double_t betagamma, UChar_t fit, Int_t charge, Double_t mass) {
