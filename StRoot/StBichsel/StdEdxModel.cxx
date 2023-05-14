@@ -686,14 +686,12 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, D
   if (bgL10 > 2.1) {
     if (bgL10 < 2.53) {
       static TF1 *elCor = 0;
-      if (! elCor) {elCor = new TF1("dNdxElCor1","pol3",2.1,2.53); elCor->SetParameters(   41.831,    -56.469,     25.148,    -3.6987);
-	dNdxCor += elCor->Eval(bgL10);
-      } 
+      if (! elCor) {elCor = new TF1("dNdxElCor1","pol3",2.1,2.53); elCor->SetParameters(   41.831,    -56.469,     25.148,    -3.6987);}
+      dNdxCor += elCor->Eval(bgL10);
     } else {
       static TF1 *elCor = 0;
-      if (! elCor) {elCor = new TF1("dNdxElCor2","pol3",2.53,3.8); elCor->SetParameters(    -2.731,     2.4716,   -0.72926,   0.072831);
-	dNdxCor += elCor->Eval(bgL10);
-      }
+      if (! elCor) {elCor = new TF1("dNdxElCor2","pol3",2.53,3.8); elCor->SetParameters(    -2.731,     2.4716,   -0.72926,   0.072831);}
+      dNdxCor += elCor->Eval(bgL10);
     } 
   } else if (mass >= pionM) {
     Double_t dNdxCorPion = 0;
