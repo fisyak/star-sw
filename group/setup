@@ -47,10 +47,12 @@ set location = 0;
 if ( $#argv > 0 ) set version  = $1
 if ( $#argv > 1 ) set location = $2
 #echo "==================== setup $pkg $version $location ===================="
-if ($?STAR_HOST_SYS != 0) setenv oldSTAR_HOST_SYS $STAR_HOST_SYS
-
-source $GROUP_DIR/unix_programs.csh
-
+if ($?STAR_HOST_SYS != 0) then
+  setenv oldSTAR_HOST_SYS $STAR_HOST_SYS
+endif
+if (! $?GROUP_DIR != 0) then
+  source $GROUP_DIR/unix_programs.csh
+endif
 switch ($pkg)
     case "spack":
     case "SPACK":
@@ -99,7 +101,9 @@ switch ($pkg)
       breaksw
     case "cvmfs":
     case "afs":
-      if ($?STAR_LEVEL) setenv LEVEL_STAR ${STAR_LEVEL}
+      if ($?STAR_LEVEL) then
+        setenv LEVEL_STAR ${STAR_LEVEL}
+      endif
       unsetenv AFS_RHIC      ; if ($?DECHO) echo "unsetenv AFS_RHIC"
       unsetenv STAR*         ; if ($?DECHO) echo "unsetenv STAR*"
       unsetenv ROOT*         ; if ($?DECHO) echo "unsetenv ROOT*"
@@ -124,7 +128,9 @@ switch ($pkg)
       if ($?CLHEP_ROOT) then
         unsetenv CLHEP*        ; if ($?DECHO) echo "unsetenv CLHEP*"
       endif
-      if ($?LEVEL_STAR) setenv STAR_LEVEL ${LEVEL_STAR}
+      if ($?LEVEL_STAR) then
+        setenv STAR_LEVEL ${LEVEL_STAR}
+      endif
       if ( $pkg == "cvmfs") then
 	 setenv    USE_CVMFS 1
          if ($?TFG_STAR) then
@@ -150,6 +156,7 @@ switch ($pkg)
       else                                     
          setenv GROUP_DIR  ${AFS_RHIC}/group
       endif
+      if ($?DECHO) echo "GROUP_DIR = ${GROUP_DIR}"
       setenv STAR_ROOT ${AFS_RHIC}
 #      echo "GROUP_DIR = ${GROUP_DIR}"
 
