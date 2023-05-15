@@ -682,37 +682,50 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, D
   // Modification to dN/dx from analysis of daughter tracks of unique reconstructed strange particle V0 decays and gamma conversions. OO200GeV_2021 samples
   Double_t dNdxCor = 0;
   Double_t bgL10 = TMath::Log10(poverm);
-  static TF1 *piCor = 0;
   if (bgL10 > 2.1) {
+    dNdxCor = 1.99428e-02;
     if (bgL10 < 2.53) {
-      static TF1 *elCor = 0;
-      if (! elCor) {elCor = new TF1("dNdxElCor1","pol3",2.1,2.53); elCor->SetParameters(   41.831,    -56.469,     25.148,    -3.6987);}
-      dNdxCor += elCor->Eval(bgL10);
+      static TF1 *elCor1 = 0;
+      if (! elCor1) {elCor1 = new TF1("dNdxElCor1","pol3",2.1,2.53); elCor1->SetParameters(   41.831,    -56.469,     25.148,    -3.6987);}
+      dNdxCor += elCor1->Eval(bgL10);
     } else {
-      static TF1 *elCor = 0;
-      if (! elCor) {elCor = new TF1("dNdxElCor2","pol3",2.53,3.8); elCor->SetParameters(    -2.731,     2.4716,   -0.72926,   0.072831);}
-      dNdxCor += elCor->Eval(bgL10);
+      static TF1 *elCor2 = 0;
+      if (! elCor2) {elCor2 = new TF1("dNdxElCor2","pol3",2.53,3.8); elCor2->SetParameters(    -2.731,     2.4716,   -0.72926,   0.072831);}
+      dNdxCor += elCor2->Eval(bgL10);
     } 
+    static TF1 *elCor3 = 0;
+    if (! elCor3) {elCor3 = new TF1("dNdxElCor2","pol2",2.1,3.8); elCor3->SetParameters( -0.10288,   0.069275, -0.0075113);} //electron3 dEdxW
+    dNdxCor += elCor3->Eval(bgL10);
   } else if (mass >= pionM) {
+    dNdxCor = 1.70682e-02;
     Double_t dNdxCorPion = 0;
     Double_t dNdxCorProton = 0;
     if (bgL10 > -0.25) {
-      if (! piCor) {piCor = new TF1("dNdxPionCor","pol5",-0.25,1.4); piCor->SetParameters( -0.028596,  -0.059996,    0.76111,    -1.4182,     1.0432,   -0.27111);} //pion
-      if (bgL10 > 1.4)  bgL10 = 1.4;
-      dNdxCorPion = piCor->Eval(bgL10);
+      static TF1 *piCor1 = 0;
+      if (! piCor1) {piCor1 = new TF1("dNdxPionCor1","pol5",-0.25,1.4); piCor1->SetParameters( -0.028596,  -0.059996,    0.76111,    -1.4182,     1.0432,   -0.27111);} //pion
+      Double_t bg10 = bgL10;
+      if (bg10 > 1.4)  bg10 = 1.4;
+      dNdxCorPion += piCor1->Eval(bg10);
+      static TF1 *piCor2 = 0;
+      if (! piCor2) {piCor2 = new TF1("dNdxPionCor2","pol2",-0.25,1.8); piCor2->SetParameters( 0.010076,   0.017224, -0.0089511); }//pion dEdxW
+      dNdxCorPion += piCor2->Eval(bgL10);
     }
     if (bgL10 > -0.9) {
-      static TF1 *protonCor = 0;
-      if (! protonCor) {protonCor = new TF1("dNdxPionCor","pol5",-0.8,0.8); protonCor->SetParameters(-0.0032707,    0.05787,    0.21255,   -0.31159,   -0.29291,    0.46841);} //proton
-      if (bgL10 < -0.8) bgL10 = - 0.8;
-      if (bgL10 >  0.8) bgL10 =   0.8;
-      dNdxCorProton = protonCor->Eval(bgL10);
+      static TF1 *protonCor1 = 0;
+      if (! protonCor1) {protonCor1 = new TF1("dNdxPionCor1","pol5",-0.8,0.8); protonCor1->SetParameters(-0.0032707,    0.05787,    0.21255,   -0.31159,   -0.29291,    0.46841);} //proton
+      Double_t bg10 = bgL10;
+      if (bg10 < -0.8) bg10 = - 0.8;
+      if (bg10 >  0.8) bg10 =   0.8;
+      dNdxCorProton += protonCor1->Eval(bg10);
+      static TF1 *protonCor2 = 0;
+      if (! protonCor2) {protonCor2 = new TF1("dNdxPionCor2","pol3",-0.8,0.8); protonCor2->SetParameters(0.013012,   0.011326,   0.025536,  -0.046068);} //proton dEdxW
+      dNdxCorProton += protonCor2->Eval(bgL10);
     } 
     static Double_t mPionL10   = TMath::Log10(pionM);
     static Double_t mProtonL10 = TMath::Log10(protonM);
     static Double_t dML10      = mProtonL10 - mPionL10;
     Double_t mL10 = TMath::Log10(mass);
-    dNdxCor = dNdxCorPion + (dNdxCorProton - dNdxCorPion)*(mL10 - mPionL10)/dML10;
+    dNdxCor += dNdxCorPion + (dNdxCorProton - dNdxCorPion)*(mL10 - mPionL10)/dML10;
   }
   return dNdx*TMath::Exp(dNdxCor);
 }
