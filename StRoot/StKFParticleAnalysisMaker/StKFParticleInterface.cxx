@@ -1426,6 +1426,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
         StPicoPhysicalHelix innerHelix = gTrack->helix(picoEvent->bField());
         double lengthTof = fabs( innerHelix.pathLength( tofPoint ));
 	double betaTof = lengthTof/timeTof/29.9792458;
+	btofPid->setBeta(betaTof);
         betaTof2 = betaTof*betaTof;
       }
 #endif /* __TFG__VERSION__ */
@@ -1436,20 +1437,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	  fm2TofArray[index] = m2tof;
 	  isTofm2 = true;
 	}
-//       else
-//       {
-//         const TVector3 & tofPoint  = btofPid->btofHitPos();
-//         StPicoPhysicalHelix innerHelix = gTrack->helix(picoEvent->bField());
-//         double lengthTof = fabs( innerHelix.pathLength( tofPoint ));
-//         
-//         double timeTof = btofPid->btof();
-//         if(timeTof > 0. && lengthTof > 0.)
-//         {
-//           m2tof = track.GetP()*track.GetP()*(1./((lengthTof/timeTof/29.9792458)*(lengthTof/timeTof/29.9792458))-1.);
-//           isTofm2 = true;
-//         }
-//       }
-      
       if(fCollectTrackHistograms)
       {
 #ifndef __TFG__VERSION__
@@ -1774,28 +1761,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
     const StMuBTofPidTraits &btofPid = gTrack->btofPidTraits();
     double timeTof = btofPid.timeOfFlight();
     double lengthTof = btofPid.pathLength();
-//     if(lengthTof < 0.)
-//     {
-//       const StThreeVectorF & tofPoint  = btofPid.position();
-//       const StThreeVectorF & dcaPoint  = gTrack->dca(bestPV);
-//       StPhysicalHelixD innerHelix = gTrack->helix();
-//       double dlDCA = fabs( innerHelix.pathLength( StThreeVector<double>(dcaPoint.x(), dcaPoint.y(), dcaPoint.z()) ) );
-//       StPhysicalHelixD outerHelix = gTrack->outerHelix();
-//       double dlTOF = fabs( outerHelix.pathLength( StThreeVector<double>(tofPoint.x(), tofPoint.y(), tofPoint.z()) ) );
-//       
-//       double l = gTrack->length();
-//       lengthTof = l + dlDCA + dlTOF;
-//     }
-//     if(lengthTof < 0.)
-//     {
-//       const StThreeVectorF & tofPoint  = btofPid.position();
-//       StPhysicalHelixD innerHelix = dcaG->helix();
-//       StMuPrimaryVertex *pv = muDst->primaryVertex(bestPV);
-//       lengthTof = fabs( innerHelix.pathLength( StThreeVector<double>(tofPoint.x(), tofPoint.y(), tofPoint.z()) ) ) + 
-//                   fabs( innerHelix.pathLength( StThreeVector<double>(pv->position().x(), 
-//                                                                      pv->position().y(), 
-//                                                                      pv->position().z()) ) );
-//     }
     double m2tof = -1.e6;
     bool isTofm2 = false;
     if(timeTof > 0)
@@ -1811,10 +1776,15 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 	
 	double l = gTrack->length();
 	lengthTof = l + dlDCA + dlTOF;
+	double betaTof = lengthTof/timeTof/29.9792458;
+	btofPid.setPathLength(lengthTof);
+	btofPid.setBeta(betaTof);
       }
 #endif /* __TFG__VERSION__ */
-      if(lengthTof > 0.) {
-	m2tof = track.GetP()*track.GetP()*(1./((lengthTof/timeTof/29.9792458)*(lengthTof/timeTof/29.9792458))-1.);
+      Double_t beta = btofPid.beta();
+      Double_t beta2 = beta*beta;
+      if(beta2 > 1e-6) {
+	m2tof = track.GetP()*track.GetP()*(1./beta2 - 1.);
 	isTofm2 = true;
       }
 #ifndef __TFG__VERSION__
