@@ -1,0 +1,8 @@
+# Check field
+touch  Field.list
+foreach r (`ls -1d */2*`)
+  set f = `ls -1d ${r}/hlt*.log | head -1`
+  if (${f} == "") continue;
+  echo "Run = $r" | tee -a   Field.list
+  grep 'Magnetic Field scale factor is' ${f} | tee -a Field.list
+end
