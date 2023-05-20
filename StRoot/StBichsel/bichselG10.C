@@ -85,9 +85,26 @@
 #include "StBichsel/StdEdxPull.h"
 #include "TLegend.h"
 #include "TROOT.h"
+#include "TString.h"
 #else 
 class Bichsel;
 #endif
+// function object (functor) 
+struct MyDerivFunc { 
+   MyDerivFunc(TF1 * f): fFunc(f) {}
+   double operator() (double *x, double * )  const { 
+      return fFunc->Derivative(*x);
+   }
+   TF1 * fFunc; 
+};
+//________________________________________________________________________________
+TF1 *Derivative(TF1 *f1) {
+  MyDerivFunc * deriv = new MyDerivFunc(f1);
+  TString name("der_");
+  name += f1->GetName();
+  TF1 * f2 = new TF1(name,deriv, f1->GetXmin(), f1->GetXmax(), 0, "MyDerivFunc"); 
+  return f2;
+}
 //Bichsel *m_Bichsel = 0;
 const Int_t NMasses = 20;
 const Double_t kAu2Gev=0.9314943228;
