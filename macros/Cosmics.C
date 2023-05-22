@@ -46,6 +46,7 @@
    CosmicT->Draw("zK:TMath::Log10(bgK)>>dEdxbg(50,0,5.,100,-.5,0.5)","noFitpK>15&&noFitpL>15&&zK>-1&&chi2<200","colz")
 
    foreach d (`ls -1d ???`)
+   foreach d (`ls -1d ??/Cosmic/???`) 
      cd ${d}
      if (! -r Cosmics.root) then
         ln -s ~/macros/.sl* .

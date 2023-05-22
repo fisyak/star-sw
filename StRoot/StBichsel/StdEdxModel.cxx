@@ -30,36 +30,54 @@ StdEdxModel* StdEdxModel::instance() {
   return fgStdEdxModel;
 }
 //________________________________________________________________________________
-StdEdxModel::StdEdxModel() : mdNdx(0), fScale(1)
+StdEdxModel::StdEdxModel() : fScale(1)
 			   , fTmaxL10eV(5) // Tcut = 100 keV
-			   , fGGaus(0), fGausExp(0)
-			   , fpol2F(0), fpol5F(0), fpol6F(0), fpol7F(0)
-			   , fLogkeVperElectron(0)
 {
   //  LOG_INFO << "StdEdxModel:: use StTpcRSMaker model for dE/dx calculations" << endm;
   cout << "StdEdxModel:: use StTpcRSMaker model for dE/dx calculations" << endl;
-  if (! fgStdEdxModel) {
-    TDirectory *dir = gDirectory;
-    fgStdEdxModel = this;
-    const Char_t *path  = ".:./StarDb/dEdxModel:$STAR/StarDb/dEdxModel";
-    const Char_t *Files[1] = {"dNdx_Bichsel.root"};
-    for (Int_t i = 0; i < 1; i++) { // files
-      Char_t *file = gSystem->Which(path,Files[i],kReadPermission);
-      if (! file) Fatal("StdEdxModel","File %s has not been found in path %s",Files[i],path);
-      else        Warning("StdEdxModel","File %s has been found as %s",Files[i],file);
-      TFile       *pFile = new TFile(file);
-      mdNdx    = (TH1D *)         pFile->Get("dNdx");     if (mdNdx)    mdNdx->SetDirectory(0);
-      assert(mdNdx);
-      delete pFile;
-      delete [] file;
+  memset(beg, 0, end-beg+1);
+  
+  TDirectory *dir = gDirectory;
+  fgStdEdxModel = this;
+  const Char_t *path  = ".:./StarDb/dEdxModel:$STAR/StarDb/dEdxModel";
+#ifndef __HEED__
+  const Char_t *Files[2] = {"dNdE_Bichsel.root","dNdx_Bichsel.root"};
+#else
+  const Char_t *Files[2] = {"dNdx_Heed.root","dNdx_Heed.root"};
+#endif
+#define __Warn_Hist__(__HIST__) {m ## __HIST__ = (TH1D *)     pFile->Get(#__HIST__); \
+    if (m ## __HIST__)     {Warning("StdEdxModel","Histogram %s/%s has been found",m ## __HIST__->GetName(),m ## __HIST__->GetTitle()); m ## __HIST__->SetDirectory(0);}}
+  for (Int_t i = 0; i < 2; i++) { // files
+    Char_t *file = gSystem->Which(path,Files[i],kReadPermission);
+    if (! file) Fatal("StdEdxModel","File %s has not been found in path %s",Files[i],path);
+    else        Warning("StdEdxModel","File %s has been found as %s",Files[i],file);
+    TFile       *pFile = new TFile(file);
+    if (i == 1) {
+      __Warn_Hist__(dNdx);
+      __Warn_Hist__(dNdxL10);
+      __Warn_Hist__(LndNdxL10);
+      __Warn_Hist__(LndNdxL10Smooth);
+#if 0
+      mdNdx         = (TH1D *)     pFile->Get("dNdx");         if (mdNdx)     {Warning("StdEdxModel","Histogram %s has been",mdNdx->GetName(),mdNdx->GetTitle()); mdNdx->SetDirectory(0);}
+      mdNdxL10      = (TH1D *)     pFile->Get("dNdxL10");      if (mdNdxL10)   mdNdxL10->SetDirectory(0);
+      mLndNdxL10    = (TH1D *)     pFile->Get("LndNdxL10");    if (mLndNdxL10) mLndNdxL10->SetDirectory(0);
+      mLndNdxL10Smooth = (TH1D *)  pFile->Get("LndNdxL10Smooth");    if (mLndNdxL10Smooth) mLndNdxL10->SetDirectory(0);
+#endif
+      mLndNdxL10Spline5 = (TSpline5 *) pFile->Get("LndNdxL10Spline5"); if (mLndNdxL10Spline5) {Warning("StdEdxModel","TSpline5 %s has been found",mLndNdxL10Smooth->GetName());}
+      assert(mdNdx || mdNdxL10);
+    } else {
+      mdNdEL10 = (TH1D *) pFile->Get("dNdEL10"); assert(mdNdEL10); Warning("StdEdxModel","Histogram %s/%s has been found",mdNdEL10->GetName(),mdNdEL10->GetTitle()); mdNdEL10->SetDirectory(0);  
     }
-    dir->cd();
+    delete pFile;
+    delete [] file;
   }
+#undef __Warn_Hist__
+  dir->cd();
   fGGaus = new TF1("GGaus",ggaus, -1., 5., 5);
   fGGaus->SetParNames("NormL","mu","sigma","alpha","k");
   fGGaus->SetParameters(0,0,0.3,0.1,0);
   fGGaus->FixParameter(4,0.0);
-
+  
   fGausExp = new TF1("GausExp",gausexp, -5., 5., 5);
   fGausExp->SetParNames("NormL","mu","sigma","k","l");
   fGausExp->SetParameters(0,0,0.3,5.,0);
@@ -69,7 +87,7 @@ StdEdxModel::StdEdxModel() : mdNdx(0), fScale(1)
   Double_t dEdxMIPLog = TMath::Log(2.62463815285237434); //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
   //                  log2dx,  charge        mass
-  Double_t pars[4] = {   1.0,     1.0, 0.13956995};
+  Double_t pars[3] = {   1.0,     1.0, 0.13956995};
   Double_t dEdxLog = zMP(&MIPBetaGamma10, pars);
   fLogkeVperElectron = dEdxMIPLog - dEdxLog;
   cout << "StdEdxModel:: set scale = " << Form("%5.1f",1e3*keVperElectron()) << " eV/electron" << endl;
@@ -78,7 +96,16 @@ StdEdxModel::StdEdxModel() : mdNdx(0), fScale(1)
 StdEdxModel::~StdEdxModel() {
   fgStdEdxModel = 0;
   SafeDelete(mdNdx);
+  SafeDelete(mdNdxL10);
+  SafeDelete(mLndNdxL10);
+  SafeDelete(mLndNdxL10Smooth);
+  SafeDelete(mLndNdxL10Spline5);
   SafeDelete(fGGaus);
+  SafeDelete(fGausExp);
+  SafeDelete(fpol2F);
+  SafeDelete(fpol5F);
+  SafeDelete(fpol6F);
+  SafeDelete(fpol7F);
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::dNdx(Double_t poverm, Double_t charge) {
@@ -93,11 +120,36 @@ Double_t StdEdxModel::dNdx(Double_t poverm, Double_t charge) {
     Double_t w3 = 121.4139*w2 + 0.0378*TMath::Sin(190.7165*w2);
     Q_eff      *= 1. -w1*TMath::Exp(-w3);
   }
-  if (mdNdx)    {
-    Double_t dNdx = fScale*Q_eff*Q_eff*mdNdx->Interpolate(poverm);
-    return dNdx;
+  Double_t dNdx = 0;
+  if (mLndNdxL10Spline5) {
+    dNdx = TMath::Exp(mLndNdxL10Spline5->Eval(TMath::Log10(poverm)));
+  } else if (mLndNdxL10Smooth) {
+    dNdx = TMath::Exp(mLndNdxL10Smooth->Interpolate(TMath::Log10(poverm)));
+  } else if (mLndNdxL10) {
+    dNdx = TMath::Exp(mLndNdxL10->Interpolate(TMath::Log10(poverm)));
+  } else if (mdNdxL10) {
+    dNdx = mdNdxL10->Interpolate(TMath::Log10(poverm));
+  } else if (mdNdx) {
+    dNdx = mdNdx->Interpolate(poverm);
   }
-  return 0;
+  return fScale*Q_eff*Q_eff*dNdx;
+}
+//________________________________________________________________________________
+Double_t StdEdxModel::dNdxL10func(Double_t *x, Double_t *p) {
+  Double_t bgL10 = x[0];
+  Double_t bg    = TMath::Power(10., bgL10);
+  return instance()->dNdx(bg, 1.);
+}							     
+//________________________________________________________________________________
+TF1 *StdEdxModel::dNdxL10F() {
+  TF1 *f = new TF1("dNdxL10F",dNdxL10func,-2,5,0);
+  return f;
+}
+//________________________________________________________________________________
+Double_t StdEdxModel::dNdE() {
+  static Double_t cLog10 = TMath::Log(10.);
+  Double_t dE = TMath::Exp(cLog10*mdNdEL10->GetRandom());
+  return dE;
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::gausw(Double_t *x, Double_t *p) {
@@ -503,8 +555,9 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log(keV/cm)
-  Double_t log10bg = x[0];
-  Double_t pOverMRC  = TMath::Power(10., log10bg);
+  Double_t bgL10 = x[0];
+  Double_t pOverMRC  = TMath::Power(10., bgL10);
+  //  Double_t bgL10 = TMath::Log10(pOverM);
   Double_t log2dx  = p[0];
   Double_t charge  = p[1];
   Double_t mass    = p[2];
@@ -518,7 +571,89 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
   //  Double_t dEkeVLog = NpLog + mu -3.13746587897608142e+00 +1.78334647296254700e-01;// + 7.02725079814016507e+00;// - 3.13746587897608142e+00;// 43.4 eV/conducting electron 
   Double_t dEkeVLog = instance()->MukeV(Np); // Parameter(Np, 0); 
   Double_t dEdxLog  = dEkeVLog - TMath::Log(dx);
-  return   dEdxLog;
+  Double_t dEdxCor = 0;
+#if 0
+  static Double_t pionM   = 0.13956995;
+  static Double_t protonM = 0.9382723;
+  if (bgL10 > 2.1) {
+//  dEdxCor = 1.99428e-02;
+    if (bgL10 < 2.53) {
+      static TF1 *elCor1 = 0;
+      if (! elCor1) {
+ 	elCor1 = new TF1("dEdxElCor1","pol3",2.1,2.53); 
+// 	elCor1->SetParameters( 41.831,    -56.469,     25.148,    -3.6987);
+	elCor1->SetParameters( 41.74457,  -56.35932,   25.10145,  -3.692111); //electron [2.1, 2.53] 
+      }
+      dEdxCor += elCor1->Eval(bgL10);
+    } else {
+      static TF1 *elCor2 = 0;
+      if (! elCor2) {
+ 	elCor2 = new TF1("dEdxElCor2","pol3",2.53,3.8); 
+// 	elCor2->SetParameters( -2.731,     2.4716,   -0.72926,   0.072831);
+	elCor2->SetParameters( -2.737329,   2.478179, -0.7315187, 0.07308995); //electron [2.53, 3.8]
+      }
+      dEdxCor += elCor2->Eval(bgL10);
+    } 
+    static TF1 *elCor3 = 0;
+//     if (! elCor3) elCor3 = new TF1("dEdxElCor3","pol2",2.1,3.8); 
+//     elCor3->SetParameters( -0.10288,   0.069275, -0.0075113);} //electron3 dEdxW
+    if (! elCor3) elCor3 = new TF1("dEdxElCor3","pol3",2.1,3.8); 
+    elCor3->SetParameters(0.5620587,  0.5180025, -0.1532196, 0.01594563); //electrons dEdxZ1
+    dEdxCor += elCor3->Eval(bgL10);
+  } else if (mass >= pionM) {// pion - proton interpolation 
+//   dEdxCor = 1.70682e-02;
+    Double_t dEdxCorPion = 0;
+    Double_t dEdxCorProton = 0;
+    if (bgL10 > -0.25) {
+      static TF1 *piCor1 = 0;
+      if (! piCor1) {
+	piCor1 = new TF1("dEdxPionCor1","pol5",-0.25,1.4); 
+// 	piCor1->SetParameters( -0.028596,  -0.059996,    0.76111,    -1.4182,     1.0432,   -0.27111); //pion
+	piCor1->SetParameters( -0.02858281, -0.06182446,  0.7740628,  -1.449529,   1.074141, -0.2817786); //pion [-0.25,1.4]
+      }
+      Double_t bg10 = bgL10;
+      if (bg10 > 1.4)  bg10 = 1.4;
+      dEdxCorPion += piCor1->Eval(bg10);
+    }
+    if (bgL10 > -0.9) {
+//       static TF1 *piCor2 = 0;
+//       if (! piCor2) {piCor2 = new TF1("dEdxPionCor2","pol2",-0.25,1.8); piCor2->SetParameters( 0.010076,   0.017224, -0.0089511); }//pion dEdxW
+//       dEdxCorPion += piCor2->Eval(bgL10);
+      static TF1 *piCor2 = 0;
+//       if (! piCor2) {piCor2 = new TF1("dEdxPionCor2","pol2",-0.25,1.8); piCor2->SetParameters( 0.010076,   0.017224, -0.0089511); }//pion dEdxW
+      if (! piCor2) {
+	piCor2 = new TF1("dEdxPionCor2","pol3",-0.9,1.8); 
+	piCor2->SetParameters(.002942473, 0.03780509, -0.02876538, 0.007570987); //pion [-0.9.1.8] dEdxZ1
+      }
+      dEdxCorPion += piCor2->Eval(bgL10);
+      static TF1 *protonCor1 = 0;
+      if (! protonCor1) {
+	protonCor1 = new TF1("dEdxProtonCor1","pol5",-0.8,0.8); 
+// 	protonCor1->SetParameters(-0.0032707,    0.05787,    0.21255,   -0.31159,   -0.29291,    0.46841); //proton
+	protonCor1->SetParameters(-0.003288208, 0.05832488,  0.2136313,  -0.320121,   -0.29685,  0.4929125); //proton [-0.8,0.8]
+      }
+      Double_t bg10 = bgL10;
+      if (bg10 < -0.8) bg10 = - 0.8;
+      if (bg10 >  0.8) bg10 =   0.8;
+      dEdxCorProton += protonCor1->Eval(bg10);
+//       static TF1 *protonCor2 = 0;
+//       if (! protonCor2) {protonCor2 = new TF1("dEdxProtonCor2","pol3",-0.8,0.8); protonCor2->SetParameters(0.013012,   0.011326,   0.025536,  -0.046068);} //proton dEdxW
+//       dEdxCorProton += protonCor2->Eval(bgL10);
+      static TF1 *protonCor2 = 0;
+      if (! protonCor2) {
+	protonCor2 = new TF1("dEdxProtonCor2","pol3",-0.8,0.8); 
+	protonCor2->SetParameters(0.01103451, 0.01698264, 0.03980511, -0.06281128); //proton [-0.9.1.8] dEdxZ1
+      }
+      dEdxCorProton += protonCor2->Eval(bgL10);
+    } 
+    static Double_t mPionL10   = TMath::Log10(pionM);
+    static Double_t mProtonL10 = TMath::Log10(protonM);
+    static Double_t dML10      = mProtonL10 - mPionL10;
+    Double_t mL10 = TMath::Log10(mass);
+    dEdxCor += dEdxCorPion + (dEdxCorProton - dEdxCorPion)*(mL10 - mPionL10)/dML10;
+  }
+#endif
+  return   dEdxLog + dEdxCor;
 }
 //________________________________________________________________________________
 TF1 *StdEdxModel::ZMP(Double_t log2dx, Double_t charge, Double_t mass) {
@@ -665,7 +800,7 @@ TH1D *StdEdxModel::protonEff() {
 //________________________________________________________________________________
 Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
   Double_t bgL10 = TMath::Log10(betagamma);
-  bgL10 = TMath::Max(-2.0, TMath::Min(1.0,bgL10));
+  bgL10 = TMath::Max(-2.0, TMath::Min(-1e-3,bgL10));
   static TH1D *eff = 0;
   if (! eff) eff = protonEff();
   //  return 1.03*eff->Interpolate(bgL10);
@@ -674,60 +809,21 @@ Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
 //________________________________________________________________________________
 Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, Double_t *pullCor) {
   if (!fgStdEdxModel) instance();
-  static Double_t pionM   = 0.13956995;
-  static Double_t protonM = 0.9382723;
   Double_t bgMC = bgCorrected(poverm); 
   Double_t dNdxMC = dNdx(bgMC, charge);
   Double_t dNdx = dNdxMC*NpCorrection(poverm); 
   // Modification to dN/dx from analysis of daughter tracks of unique reconstructed strange particle V0 decays and gamma conversions. OO200GeV_2021 samples
-  Double_t dNdxCor = 0;
-  Double_t bgL10 = TMath::Log10(poverm);
-  if (bgL10 > 2.1) {
-    dNdxCor = 1.99428e-02;
-    if (bgL10 < 2.53) {
-      static TF1 *elCor1 = 0;
-      if (! elCor1) {elCor1 = new TF1("dNdxElCor1","pol3",2.1,2.53); elCor1->SetParameters(   41.831,    -56.469,     25.148,    -3.6987);}
-      dNdxCor += elCor1->Eval(bgL10);
-    } else {
-      static TF1 *elCor2 = 0;
-      if (! elCor2) {elCor2 = new TF1("dNdxElCor2","pol3",2.53,3.8); elCor2->SetParameters(    -2.731,     2.4716,   -0.72926,   0.072831);}
-      dNdxCor += elCor2->Eval(bgL10);
-    } 
-    static TF1 *elCor3 = 0;
-    if (! elCor3) {elCor3 = new TF1("dNdxElCor2","pol2",2.1,3.8); elCor3->SetParameters( -0.10288,   0.069275, -0.0075113);} //electron3 dEdxW
-    dNdxCor += elCor3->Eval(bgL10);
-  } else if (mass >= pionM) {
-    dNdxCor = 1.70682e-02;
-    Double_t dNdxCorPion = 0;
-    Double_t dNdxCorProton = 0;
-    if (bgL10 > -0.25) {
-      static TF1 *piCor1 = 0;
-      if (! piCor1) {piCor1 = new TF1("dNdxPionCor1","pol5",-0.25,1.4); piCor1->SetParameters( -0.028596,  -0.059996,    0.76111,    -1.4182,     1.0432,   -0.27111);} //pion
-      Double_t bg10 = bgL10;
-      if (bg10 > 1.4)  bg10 = 1.4;
-      dNdxCorPion += piCor1->Eval(bg10);
-      static TF1 *piCor2 = 0;
-      if (! piCor2) {piCor2 = new TF1("dNdxPionCor2","pol2",-0.25,1.8); piCor2->SetParameters( 0.010076,   0.017224, -0.0089511); }//pion dEdxW
-      dNdxCorPion += piCor2->Eval(bgL10);
-    }
-    if (bgL10 > -0.9) {
-      static TF1 *protonCor1 = 0;
-      if (! protonCor1) {protonCor1 = new TF1("dNdxPionCor1","pol5",-0.8,0.8); protonCor1->SetParameters(-0.0032707,    0.05787,    0.21255,   -0.31159,   -0.29291,    0.46841);} //proton
-      Double_t bg10 = bgL10;
-      if (bg10 < -0.8) bg10 = - 0.8;
-      if (bg10 >  0.8) bg10 =   0.8;
-      dNdxCorProton += protonCor1->Eval(bg10);
-      static TF1 *protonCor2 = 0;
-      if (! protonCor2) {protonCor2 = new TF1("dNdxPionCor2","pol3",-0.8,0.8); protonCor2->SetParameters(0.013012,   0.011326,   0.025536,  -0.046068);} //proton dEdxW
-      dNdxCorProton += protonCor2->Eval(bgL10);
-    } 
-    static Double_t mPionL10   = TMath::Log10(pionM);
-    static Double_t mProtonL10 = TMath::Log10(protonM);
-    static Double_t dML10      = mProtonL10 - mPionL10;
-    Double_t mL10 = TMath::Log10(mass);
-    dNdxCor += dNdxCorPion + (dNdxCorProton - dNdxCorPion)*(mL10 - mPionL10)/dML10;
-  }
-  return dNdx*TMath::Exp(dNdxCor);
+  return dNdx;
+}
+//________________________________________________________________________________
+Double_t StdEdxModel::dNdxEffL10func(Double_t *x, Double_t *p) {
+  Double_t bg = TMath::Power(10., x[0]);
+  return instance()->dNdxEff(bg, 1.,  0.13956995, 0);
+}
+//________________________________________________________________________________
+TF1 *StdEdxModel::dNdxEffL10F() {
+  TF1 *f = new TF1("dNdxEffL10F",dNdxEffL10func,-2,5,0);
+  return f;
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::extremevalueG(Double_t *x, Double_t *p) {

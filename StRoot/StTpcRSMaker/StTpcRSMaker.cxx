@@ -58,6 +58,7 @@
 #include "Altro.h"
 #include "TRVector.h"
 #include "StBichsel/Bichsel.h"
+#include "StBichsel/StdEdxModel.h"
 #include "StdEdxY2Maker/StTpcdEdxCorrection.h"
 // g2t tables
 #include "tables/St_g2t_track_Table.h"
@@ -146,9 +147,6 @@ StTpcRSMaker::~StTpcRSMaker() {
 Int_t StTpcRSMaker::Finish() {
   //  SafeDelete(fTree);
   if (m_SignalSum) {free(m_SignalSum); m_SignalSum = 0;}
-  SafeDelete(mdNdx);
-  SafeDelete(mdNdxL10);
-  SafeDelete(mdNdEL10);
   for (Int_t io = 0; io < 2; io++) {// Inner/Outer
     for (Int_t sec = 0; sec < NoOfSectors; sec++) {
       if (mShaperResponses[io][sec]     && !mShaperResponses[io][sec]->TestBit(kNotDeleted))     {SafeDelete(mShaperResponses[io][sec]);}
@@ -179,23 +177,6 @@ Int_t StTpcRSMaker::InitRun(Int_t /* runnumber */) {
     mCutEle = 1e-4;
     LOG_ERROR << "StTpcRSMaker::InitRun: mCutEle has not been found in GEANT3 for \"" << TpcMedium.Data() << "\" parameters." 
 	      << "Probably due to missing  Set it to default " << mCutEle << endm;
-  }
-  LOG_INFO << "StTpcRSMaker:: use H.Bichsel model for dE/dx simulation" << endm;
-  if (! mdNdEL10 || ! mdNdx) {
-    const Char_t *path  = ".:./StarDb/dEdxModel:./StarDb/global/dEdx"
-      ":./StRoot/StBichsel:$STAR/StarDb/dEdxModel:$STAR/StarDb/global/dEdx:$STAR/StRoot/StBichsel";
-    const Char_t *Files[2] = {"dNdE_Bichsel.root","dNdx_Bichsel.root"};
-    for (Int_t i = 0; i < 2; i++) { // Inner/Outer
-      Char_t *file = gSystem->Which(path,Files[i],kReadPermission);
-      if (! file) Fatal("StTpcRSMaker::Init","File %s has not been found in path %s",Files[i],path);
-      else        Warning("StTpcRSMaker::Init","File %s has been found as %s",Files[i],file);
-      TFile       *pFile = new TFile(file);
-      if (i == 0) {mdNdEL10 = (TH1D *) pFile->Get("dNdEL10"); assert(mdNdEL10);   mdNdEL10->SetDirectory(0);}
-      if (i == 1) {mdNdx = (TH1D *) pFile->Get("dNdx"); assert(mdNdx);   mdNdx->SetDirectory(0);}
-      delete pFile;
-      delete [] file;
-    }
-    assert(mdNdEL10 && mdNdx);
   }
   // Distortions
   if (TESTBIT(m_Mode,kdEdxCorr)) {
@@ -817,9 +798,6 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	  continue;
 	}
       } // special treatment for electron/positron 
-      Int_t qcharge  = charge;
-      if (ipart == 2) qcharge =  101;
-      if (ipart == 3) qcharge = -101;
       // Track segment to propagate
       enum {NoMaxTrackSegmentHits = 100};
       static HitPoint_t TrackSegmentHits[NoMaxTrackSegmentHits];
@@ -1038,14 +1016,7 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	mGainLocal = Gain/dEdxCor/NoElPerAdc; // Account dE/dx calibration
 	// end of dE/dx correction
 	// generate electrons: No. of primary clusters per cm
-	if (mdNdx || mdNdxL10) {
-	  NP = GetNoPrimaryClusters(betaGamma,qcharge); // per cm
-#ifdef __DEBUG__
-	  if (NP <= 0.0) {
-	    iBreak++; continue;
-	  }
-#endif
-	}
+	NP = StdEdxModel::instance()->dNdx(betaGamma,charge); // per cm
 	if (ClusterProfile) {
 	  checkList[io][7]->Fill(TrackSegmentHits[iSegHits].xyzG.position().z(),NP);
 	}
@@ -1057,12 +1028,9 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	  Float_t dS = 0;
 	  Float_t dE = 0;
 	  NP = tpc_hitC->dNdx;
-	  static Double_t cLog10 = TMath::Log(10.);
 	  if (charge) {
 	    dS = zIntDr/NP;
-	    if (mdNdEL10) dE = TMath::Exp(cLog10*mdNdEL10->GetRandom());
-	    else          dE = St_TpcResponseSimulatorC::instance()->W()*
-			      gRandom->Poisson(St_TpcResponseSimulatorC::instance()->Cluster());
+	    dE = StdEdxModel::instance()->dNdE();
 	  } else { // charge == 0 geantino
 	    // for Laserino assume dE/dx = 25 keV/cm;
 	    dE = 10; // eV
@@ -1275,37 +1243,6 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
     }
   }
   return kStOK;
-}
-//________________________________________________________________________________
-Double_t StTpcRSMaker::GetNoPrimaryClusters(Double_t betaGamma, Int_t charge) {
-  Double_t beta = betaGamma/TMath::Sqrt(1.0 + betaGamma*betaGamma);
-#if defined(Old_dNdx_Table) 
-  Double_t dNdx = 1.21773e+01*Bichsel::Instance()->GetI70M(TMath::Log10(betaGamma));
-#else
-#if defined(ElectronHack) 
-  Int_t elepos = charge/100;
-  Double_t dNdx = 0;
-  if      (mdNdx   ) dNdx = mdNdx->Interpolate(betaGamma);
-  else if (mdNdxL10) dNdx = mdNdxL10->Interpolate(TMath::Log10(betaGamma));
-  if (elepos) {
-    dNdx += 1.21773e+01*Bichsel::Instance()->GetI70M(TMath::Log10(betaGamma));
-    dNdx /= 2;
-  }  
-#else /* new H.Bichsel dNdx table 09/12/11 */
-  Double_t dNdx = 0;
-  if      (mdNdx   ) dNdx = mdNdx->Interpolate(betaGamma);
-  else if (mdNdxL10) dNdx = mdNdxL10->Interpolate(TMath::Log10(betaGamma));
-#endif /* Old_dNdx_Table || ElectronHack */
-#endif
-  Double_t Q_eff = TMath::Abs(charge%100);
-  if (Q_eff > 1)   {
-    // Effective charge from GEANT gthion.F
-    Double_t w1 = 1.034 - 0.1777*TMath::Exp(-0.08114*Q_eff);
-    Double_t w2 = beta*TMath::Power(Q_eff,-2./3.);
-    Double_t w3 = 121.4139*w2 + 0.0378*TMath::Sin(190.7165*w2);
-    Q_eff      *= 1. -w1*TMath::Exp(-w3);
-  }
-  return Q_eff*Q_eff*dNdx;
 }
 //________________________________________________________________________________
 Double_t StTpcRSMaker::ShaperFunc(Double_t *x, Double_t *par) {
