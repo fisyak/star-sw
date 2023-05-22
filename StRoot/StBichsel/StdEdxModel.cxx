@@ -40,37 +40,44 @@ StdEdxModel::StdEdxModel() : fScale(1)
   TDirectory *dir = gDirectory;
   fgStdEdxModel = this;
   const Char_t *path  = ".:./StarDb/dEdxModel:$STAR/StarDb/dEdxModel";
-#if 1
+#ifndef __HEED__
   const Char_t *Files[2] = {"dNdE_Bichsel.root","dNdx_Bichsel.root"};
 #else
   const Char_t *Files[2] = {"dNdx_Heed.root","dNdx_Heed.root"};
 #endif
+#define __Warn_Hist__(__HIST__) {m ## __HIST__ = (TH1D *)     pFile->Get(#__HIST__); \
+    if (m ## __HIST__)     {Warning("StdEdxModel","Histogram %s/%s has been found",m ## __HIST__->GetName(),m ## __HIST__->GetTitle()); m ## __HIST__->SetDirectory(0);}}
   for (Int_t i = 0; i < 2; i++) { // files
     Char_t *file = gSystem->Which(path,Files[i],kReadPermission);
     if (! file) Fatal("StdEdxModel","File %s has not been found in path %s",Files[i],path);
     else        Warning("StdEdxModel","File %s has been found as %s",Files[i],file);
     TFile       *pFile = new TFile(file);
     if (i == 1) {
-      mdNdx         = (TH1D *)     pFile->Get("dNdx");         if (mdNdx)      mdNdx->SetDirectory(0);
-      mdNdxL10      = (TH1D *)     pFile->Get("dNdxL10");      if (mdNdxL10)   mdNdxL10->SetDirectory(0);
-      mdNdxL10Smoth = (TH1D *)     pFile->Get("dNdxL10Smoth"); if (mdNdxL10Smoth)   mdNdxL10Smoth->SetDirectory(0);
+      __Warn_Hist__(dNdx);
+      __Warn_Hist__(dNdxL10);
+      __Warn_Hist__(LndNdxL10);
+      __Warn_Hist__(LndNdxL10Smooth);
 #if 0
-      mdNdxGr    = (TGraph *)      pFile->Get("dNdxGr");   
-      mdNdxL10Gr = (TGraph *)      pFile->Get("dNdxL10Gr");
+      mdNdx         = (TH1D *)     pFile->Get("dNdx");         if (mdNdx)     {Warning("StdEdxModel","Histogram %s has been",mdNdx->GetName(),mdNdx->GetTitle()); mdNdx->SetDirectory(0);}
+      mdNdxL10      = (TH1D *)     pFile->Get("dNdxL10");      if (mdNdxL10)   mdNdxL10->SetDirectory(0);
+      mLndNdxL10    = (TH1D *)     pFile->Get("LndNdxL10");    if (mLndNdxL10) mLndNdxL10->SetDirectory(0);
+      mLndNdxL10Smooth = (TH1D *)  pFile->Get("LndNdxL10Smooth");    if (mLndNdxL10Smooth) mLndNdxL10->SetDirectory(0);
 #endif
+      mLndNdxL10Spline5 = (TSpline5 *) pFile->Get("LndNdxL10Spline5"); if (mLndNdxL10Spline5) {Warning("StdEdxModel","TSpline5 %s has been found",mLndNdxL10Smooth->GetName());}
       assert(mdNdx || mdNdxL10);
     } else {
-      mdNdEL10 = (TH1D *) pFile->Get("dNdEL10"); assert(mdNdEL10);   mdNdEL10->SetDirectory(0);
+      mdNdEL10 = (TH1D *) pFile->Get("dNdEL10"); assert(mdNdEL10); Warning("StdEdxModel","Histogram %s/%s has been found",mdNdEL10->GetName(),mdNdEL10->GetTitle()); mdNdEL10->SetDirectory(0);  
     }
     delete pFile;
     delete [] file;
   }
+#undef __Warn_Hist__
   dir->cd();
   fGGaus = new TF1("GGaus",ggaus, -1., 5., 5);
   fGGaus->SetParNames("NormL","mu","sigma","alpha","k");
   fGGaus->SetParameters(0,0,0.3,0.1,0);
   fGGaus->FixParameter(4,0.0);
-
+  
   fGausExp = new TF1("GausExp",gausexp, -5., 5., 5);
   fGausExp->SetParNames("NormL","mu","sigma","k","l");
   fGausExp->SetParameters(0,0,0.3,5.,0);
@@ -89,7 +96,16 @@ StdEdxModel::StdEdxModel() : fScale(1)
 StdEdxModel::~StdEdxModel() {
   fgStdEdxModel = 0;
   SafeDelete(mdNdx);
+  SafeDelete(mdNdxL10);
+  SafeDelete(mLndNdxL10);
+  SafeDelete(mLndNdxL10Smooth);
+  SafeDelete(mLndNdxL10Spline5);
   SafeDelete(fGGaus);
+  SafeDelete(fGausExp);
+  SafeDelete(fpol2F);
+  SafeDelete(fpol5F);
+  SafeDelete(fpol6F);
+  SafeDelete(fpol7F);
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::dNdx(Double_t poverm, Double_t charge) {
@@ -105,18 +121,14 @@ Double_t StdEdxModel::dNdx(Double_t poverm, Double_t charge) {
     Q_eff      *= 1. -w1*TMath::Exp(-w3);
   }
   Double_t dNdx = 0;
-  if (mdNdxL10Smoth) {
-    dNdx = mdNdxL10Smoth->Interpolate(TMath::Log10(poverm));
-#if 0
-  } else if (mdNdxL10Gr)    {
-    dNdx = mdNdxL10Gr->Eval(TMath::Log10(poverm));
-#endif
+  if (mLndNdxL10Spline5) {
+    dNdx = TMath::Exp(mLndNdxL10Spline5->Eval(TMath::Log10(poverm)));
+  } else if (mLndNdxL10Smooth) {
+    dNdx = TMath::Exp(mLndNdxL10Smooth->Interpolate(TMath::Log10(poverm)));
+  } else if (mLndNdxL10) {
+    dNdx = TMath::Exp(mLndNdxL10->Interpolate(TMath::Log10(poverm)));
   } else if (mdNdxL10) {
     dNdx = mdNdxL10->Interpolate(TMath::Log10(poverm));
-#if 0
-  } else if (mdNdxGr)    {
-    dNdx = mdNdxGr->Eval(poverm);
-#endif
   } else if (mdNdx) {
     dNdx = mdNdx->Interpolate(poverm);
   }
@@ -560,7 +572,7 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
   Double_t dEkeVLog = instance()->MukeV(Np); // Parameter(Np, 0); 
   Double_t dEdxLog  = dEkeVLog - TMath::Log(dx);
   Double_t dEdxCor = 0;
-#if 1
+#if 0
   static Double_t pionM   = 0.13956995;
   static Double_t protonM = 0.9382723;
   if (bgL10 > 2.1) {

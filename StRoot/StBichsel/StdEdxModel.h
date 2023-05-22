@@ -10,7 +10,7 @@
 #include "TFile.h"
 #include "TString.h"
 #include "TF1.h"
-#include "TGraph.h"
+#include "TSpline.h"
 class StdEdxParamerization {
 };
 class StdEdxModel {
@@ -83,23 +83,21 @@ class StdEdxModel {
   static Int_t  _debug;
   Double_t      fScale;
   Double_t      fTmaxL10eV;
-  Char_t   beg[1];                    //!
-  TH1D*    mdNdx;                     //!
-  TH1D*    mdNdxL10;                  //!
-  TH1D*    mdNdxL10Smoth;             //!
-#if 0
-  TGraph*  mdNdxGr;                   //!
-  TGraph*  mdNdxL10Gr;                //!
-#endif
-  TH1D*    mdNdEL10;                  //!
-  TF1          *fGGaus;        
-  TF1          *fGausExp;        
-  TF1          *fpol2F;
-  TF1          *fpol5F;
-  TF1          *fpol6F;
-  TF1          *fpol7F;
   Double_t      fLogkeVperElectron;
-  Char_t end[1];                      //!
+  Char_t        beg[1];                    //!
+  TH1D         *mdNdx;                     //!
+  TH1D         *mdNdxL10;                  //!
+  TH1D         *mLndNdxL10;                //!
+  TH1D         *mLndNdxL10Smooth;          //!
+  TSpline5     *mLndNdxL10Spline5;         //!
+  TH1D         *mdNdEL10;                  //!
+  TF1          *fGGaus;                    //!
+  TF1          *fGausExp;        	   //!
+  TF1          *fpol2F;			   //!
+  TF1          *fpol5F;			   //!
+  TF1          *fpol6F;			   //!
+  TF1          *fpol7F;			   //!
+  Char_t        end[1];                    //!
   ClassDef(StdEdxModel,0)
 };
 #endif
