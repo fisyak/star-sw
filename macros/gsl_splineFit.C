@@ -8,20 +8,6 @@
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_statistics.h>
-#ifndef __ROOT__
-
-/* number of data points to fit */
-#define N        200
-
-/* number of fit coefficients */
-#define NCOEFFS  12
-
-/* nbreak = ncoeffs + 2 - k = ncoeffs - 2 since k = 4 */
-#define NBREAK   (NCOEFFS - 2)
-
-int
-main (void)
-#else
 #include "Riostream.h"
 #include "TMath.h"
 #include "TGraph.h"
@@ -31,12 +17,9 @@ main (void)
 #include "TSpline.h"
 #include "TArrayD.h"
 void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
-#endif /* ! __ROOT__ */
 {
-#ifdef __ROOT__
   Int_t K = 4;
   Int_t NBREAK =  NCOEFFS + 2 - K;
-#endif /* __ROOT__ */
   const size_t n = N;
   const size_t ncoeffs = NCOEFFS;
   const size_t nbreak = NBREAK;
@@ -67,17 +50,14 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
   mw = gsl_multifit_linear_alloc(n, ncoeffs);
 
   /* this is the data to be fitted */
-#ifdef __ROOT__
   TGraphErrors *data = new TGraphErrors();
   TF1 *F = new TF1("F","TMath::Cos(x) * TMath::Exp(-0.1 * x)", 0., 15.);
   F->Draw();
-#endif
   for (i = 0; i < n; ++i)
     {
       double sigma;
       double xi = (15.0 / (N - 1)) * i;
-      double yi = cos(xi) * exp(-0.1 * xi);
-
+      Double_t yi = F->Eval(xi);
       sigma = 0.1 * yi;
       dy = gsl_ran_gaussian(r, sigma);
       yi += dy;
@@ -85,16 +65,10 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
       gsl_vector_set(x, i, xi);
       gsl_vector_set(y, i, yi);
       gsl_vector_set(w, i, 1.0 / (sigma * sigma));
-#ifndef __ROOT__
-      printf("%f %f\n", xi, yi);
-#else
       data->SetPoint(i,xi,yi);
       data->SetPointError(i, 0, sigma);
-#endif
     }
-#ifdef __ROOT__
   data->Draw("p");
-#endif
 #if 0
   /* use uniform breakpoints on [0, 15] */
   gsl_bspline_knots_uniform(0.0, 15.0, bw);
@@ -139,25 +113,18 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
   /* output the smoothed curve */
   {
     double xi, yi, yerr;
-#ifdef __ROOT__
     TGraph *smooth = new TGraph();
     smooth->SetLineColor(2);
     smooth->SetLineWidth(4);
     Int_t npoints = 0;
-#endif
 
     for (xi = 0.0; xi < 15.0; xi += 0.1)
       {
         gsl_bspline_eval(xi, B, bw);
         gsl_multifit_linear_est(B, c, cov, &yi, &yerr);
-#ifdef __ROOT__
 	smooth->SetPoint(npoints, xi, yi);
 	npoints++;
-#else
-        printf("%f %f\n", xi, yi);
-#endif
       }
-#ifdef __ROOT__
     smooth->Draw("l");
     TArrayD XS(nbreak);
     TArrayD YS(nbreak);
@@ -176,7 +143,6 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
     spline->SetMarkerSize(2);
     spline->Draw("samelP");
 
-#endif
   }
 
   gsl_rng_free(r);
@@ -189,7 +155,5 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
   gsl_vector_free(w);
   gsl_matrix_free(cov);
   gsl_multifit_linear_free(mw);
-#ifndef __ROOT__
-  return 0;
-#endif
-} /* main() */
+} 
+//________________________________________________________________________________
