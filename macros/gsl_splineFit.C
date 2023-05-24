@@ -16,10 +16,12 @@
 #include "TF1.h"
 #include "TSpline.h"
 #include "TArrayD.h"
-void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
+#include "TRandom.h"
+#include "TCanvas.h"
+#include "TROOT.h"
+void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t *xKnot, Int_t K = 4, Int_t N = 200, Int_t NBREAK = 10)
 {
-  Int_t K = 4;
-  Int_t NBREAK =  NCOEFFS + 2 - K;
+  Int_t NCOEFFS = NBREAK - 2 + K;
   const size_t n = N;
   const size_t ncoeffs = NCOEFFS;
   const size_t nbreak = NBREAK;
@@ -50,38 +52,15 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
   mw = gsl_multifit_linear_alloc(n, ncoeffs);
 
   /* this is the data to be fitted */
-  TGraphErrors *data = new TGraphErrors();
-  TF1 *F = new TF1("F","TMath::Cos(x) * TMath::Exp(-0.1 * x)", 0., 15.);
-  F->Draw();
   for (i = 0; i < n; ++i)
     {
-      double sigma;
-      double xi = (15.0 / (N - 1)) * i;
-      Double_t yi = F->Eval(xi);
-      sigma = 0.1 * yi;
-      dy = gsl_ran_gaussian(r, sigma);
-      yi += dy;
-
-      gsl_vector_set(x, i, xi);
-      gsl_vector_set(y, i, yi);
-      gsl_vector_set(w, i, 1.0 / (sigma * sigma));
-      data->SetPoint(i,xi,yi);
-      data->SetPointError(i, 0, sigma);
+      gsl_vector_set(x, i, xData[i]);
+      gsl_vector_set(y, i, yData[i]);
+      gsl_vector_set(w, i, 1.0 / (eData[i] * eData[i]));
     }
-  data->Draw("p");
-#if 0
-  /* use uniform breakpoints on [0, 15] */
-  gsl_bspline_knots_uniform(0.0, 15.0, bw);
-#else
-  TArrayD xKnot(nbreak);
-  Double_t a = 0;
-  Double_t b = 15;
-  Double_t d = (b - a)/(nbreak - 1);
-  for (UInt_t i = 0; i < nbreak; i++) xKnot[i] = a + i*d;
   gsl_vector *breakpts = gsl_vector_alloc(nbreak);
   for (UInt_t i = 0; i < nbreak; i++) gsl_vector_set(breakpts, i, xKnot[i]);
   gsl_bspline_knots(breakpts, bw);
-#endif
   /* construct the fit matrix X */
   for (i = 0; i < n; ++i)
     {
@@ -157,3 +136,34 @@ void gsl_splineFit(Int_t N = 200, Int_t NCOEFFS = 12)
   gsl_multifit_linear_free(mw);
 } 
 //________________________________________________________________________________
+void gsl_splineFit(Int_t K = 4, Int_t n = 200, Int_t nbreak = 10) {
+  TF1 *F = new TF1("F","TMath::Cos(x) * TMath::Exp(-0.1 * x)", 0., 15.);
+  F->Draw();
+
+  //  if (! gRandom) gRandom = new TRandom3();
+  TArrayD xData(n);
+  TArrayD yData(n);
+  TArrayD eData(n);
+  for (Int_t i = 0; i < n; ++i)
+    {
+      double sigma;
+      double xi = (15.0 / (n - 1)) * i;
+      Double_t yi = F->Eval(xi);
+      sigma = 0.1 * yi;
+      eData[i] = sigma;
+      yi = gRandom->Gaus(yi, sigma);
+      xData[i] = xi;
+      yData[i] = yi;
+      eData[i] = sigma;
+    }
+  TGraphErrors *data = new TGraphErrors(n, xData.GetArray(), yData.GetArray(), 0, eData.GetArray());
+  data->Draw("p");
+  TArrayD xKnot(nbreak);
+  Double_t a = 0;
+  Double_t b = 15;
+  Double_t d = (b - a)/(nbreak - 1);
+  for (Int_t i = 0; i < nbreak; i++) xKnot[i] = a + i*d;
+  
+  gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnot.GetArray() , K, n, nbreak);
+
+}
