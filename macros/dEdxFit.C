@@ -1656,7 +1656,9 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
   if (! proj) return 0;
   Double_t params[9];
   Int_t binMin = proj->GetXaxis()->FindBin(zmin);
+  if (binMin < 1) binMin = 1;
   Int_t binMax = proj->GetXaxis()->FindBin(zmax);
+  if (binMax > proj->GetNbinsX()) binMax = proj->GetNbinsX();
   proj->GetXaxis()->SetRange(binMin,binMax);
   Int_t peak = proj->GetMaximumBin();
   Double_t peakX = proj->GetBinCenter(peak);

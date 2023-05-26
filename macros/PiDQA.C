@@ -81,8 +81,8 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = ""
     TObjArray *arr = new TObjArray(4);
     TH1D *h1 = h2->ProjectionX();
     Double_t ymax = h1->GetMaximum();
-    //    h2->FitSlicesY(0,0,-1,0,"qeg3s",arr);
-    h2->FitSlicesY(0,0,-1,0,"qe",arr);
+    h2->FitSlicesY(0,0,-1,200,"qeg5s",arr);
+    // h2->FitSlicesY(0,0,-1,0,"qe",arr);
     TH1D *mu = (TH1D *) arr->At(1);
     TH1D *sigma = (TH1D *) arr->At(2);
     if (mu && sigma) {
