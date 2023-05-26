@@ -811,8 +811,8 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
     //correct for the charge of ions
     const int index2[9] = { 6,7,8, 10,11,12, 15,16,17 };
     const int index4[6] = { 9, 13,14, 18,19,20 };
+#ifdef __MagFieldCorrection__
 //TODO remove coefficient !!!!
-#if 1
     {
       trackPDG.SetPx( trackPDG.GetPx()*0.998f );
       trackPDG.SetPy( trackPDG.GetPy()*0.998f );
@@ -965,6 +965,7 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
 #endif /* __TFG__VERSION__ */
 {
   float momentum = gTrack->gPtot();
+  if (pdgVector.size() == 1 && pdgVector[0] == -1) return;
   for(unsigned int iPdg = 0; iPdg<pdgVector.size(); iPdg++)
   {
     int pdg = pdgVector[iPdg];
@@ -1917,8 +1918,12 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 //   if( fCleanLowPVTrackEvents && fabs(primaryVertex.Z()) > 75. ) return 0;
   }
 
+#ifdef __MagFieldCorrection__
   //TODO remove coefficient !!!!
   const Double_t field = muDst->event()->magneticField() * 0.998f;
+#else
+  const Double_t field = muDst->event()->magneticField();
+#endif
   SetField(field);
 
   CleanPV();
@@ -2641,7 +2646,7 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[1][Ndecays+1][Nparticles][9] = {0}; // set always 1
+  static TH2F *hist[1][Ndecays+1][Nparticles][12] = {0}; // set always 1
   if (! hist[0][0][0][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
@@ -2670,17 +2675,20 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
 	  TDirectory *dir3 = dir1->GetDirectory(name);
 	  dir3->cd();
 	  if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	  hist[s][d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,200,-0.5,0.5);
-	  hist[s][d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",280,-1,4,200,-0.5,0.5);
-	  hist[s][d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
-	  hist[s][d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",280,-1,4,200,-0.2,0.2);
-	  hist[s][d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
-	  hist[s][d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",280,-1,4,200,-0.5,0.5);
-	  hist[s][d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
-	  hist[s][d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",280,-1,4,500,-5,5);
-	  hist[s][d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
-	  //	hist[s][d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",280,-1,4,500,-5,5);
-	  for (Int_t k = 0; k < 9; k++) {
+	  hist[s][d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
+	  hist[s][d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
+	  hist[s][d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,200,-0.2,0.2);
+	  hist[s][d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,200,-0.2,0.2);
+	  hist[s][d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
+	  hist[s][d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
+	  hist[s][d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	  hist[s][d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,600,-3,3);
+	  hist[s][d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	  //	hist[s][d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	  hist[s][d][p][10] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	  //	hist[s][d][p][11] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	  for (Int_t k = 0; k < 12; k++) {
+	    if (!  hist[s][d][p][k]) continue;
 	    hist[s][d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
 	  }
 	}
@@ -2720,7 +2728,7 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
 #endif
       hist[s][d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
       hist[s][d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
-      if (sigmaTof < 3) {
+      if (TMath::Abs(sigmaTof) < 3) {
 	hist[s][d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
 	hist[s][d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
       }
@@ -2734,15 +2742,25 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
 	if (beta > 0 && beta < 2) {
 	  Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
 	  hist[s][d][p][2]->Fill(bgL10, dM2);
+	  if (TMath::Abs(sigmaTof) < 100) {
+	    Double_t sigmadM2 = p2*2./beta*sigmaTof;
+	    if (sigmadM2 > 0)  hist[s][d][p][10]->Fill(bgL10, dM2/sigmadM2);
+	  }
 	}
       }
+#if 0
       if (PiD->fETof) {
 	Float_t beta = PiD->fETof->beta();
 	if (beta > 0 && beta < 2) {
 	  Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
 	  hist[s][d][p][3]->Fill(bgL10, dM2);
+	  if (TMath::Abs(sigmaTof) < 100) {
+	    Double_t sigmadM2 = p2*2./beta*sigmaTof;
+	    if (sigmadM2 > 0)  hist[s][d][p][11]->Fill(bgL10, dM2/sigmadM2);
+	  }
 	}
       }
+#endif
     }
   } 
   return kTRUE;
