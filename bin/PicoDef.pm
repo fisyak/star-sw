@@ -115,6 +115,7 @@
 '' =>                                              'production_OO_200GeV_2021/*/DEV',
 '2021/OO_200GeV_2021.P23ia_calib' =>		   'production_OO_200GeV_2021/*/P23ia_calib',
 '2021/OO_200GeV_2021.P23ib' =>		           'production_OO_200GeV_2021/*/P23ib',
+'2021/OO_200GeV_2021.P23ic' =>		           'production_OO_200GeV_2021/*/P23ic',
 '' =>						   'production_OO_fcsTiming/*/dev',
 '2021/p7p7_21_DEV_calib' =>			   '',
 '' =>                                              'production_pp500_2022/*/dev',

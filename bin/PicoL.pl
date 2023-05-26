@@ -110,11 +110,14 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
 #   elsif ($pwd =~ /2019\/AuAu200/)             {$glob = "/reco/production_AuAu200_2019/ReversedFullField/P22ia/2019"; $DST = "MuDst";}
   foreach my $key (sort keys %$def ) {
     if (! $key) {next;}
-    print "key { |$key| }\t=> |$def->{$key}|\n" if ($debug);
+    print "key { |$key| }\t=> |$def->{$key}| pwd = |$pwd|\n" if ($debug);
     if (! $def->{$key}) {next;}
     print "    { |$key| }\t=> |$def->{$key}|\n" if ($debug);
     if ($pwd =~ /$key/) {
       $glob = "/reco/" . $def->{$key}; print "pwd = $pwd, => key => $key, glob = $glob\n" if ($debug);
+#       if ($key =~ /P23ib/) {
+# 	$PICOPATH = "/sdcc/lustre02/star/data102"; print "PICOPATH = $PICOPATH\n" if ($debug);
+#       }
       last;
     }
   }
@@ -206,7 +209,10 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
   elsif ($pwd =~ /2021\/70GeV_fixedTarget_2021/)   {$glob = "/2021/RF/TFG21e/70GeV_fixedTarget_2021";}
   elsif ($pwd =~ /2021\/ps_OO_200GeV_2021/)        {$glob = "/2021/RF/TFG21e/ps_OO_200GeV_2021";}
   elsif ($pwd =~ /2021\/OO_200GeV_2021/)           {$glob = "/2021/RF/TFG21e/OO_200GeV_2021";}
-  elsif ($pwd =~ /2021\/FF_OO_200GeV_2021f/)       {$glob = "/2021/FF/TFG21f/FF_OO_200GeV_2021";}
+  elsif ($pwd =~ /2021\/FF_OO_200GeV_2021f/)       {#
+    $glob = "/2021/FF/TFG21f/FF_OO_200GeV_2021";
+#    $glob = "get_file_list.pl -keys 'path,filename' -cond 'production=P23ib,trgsetupname=production_OO_200GeV_2021,filetype=daq_reco_picoDst,filename~st_physics,library=SL23b,storage!=hpss' -limit 0 -delim / -distinct";
+  }
   elsif ($pwd =~ /2021\/FF_OO_200GeV_2022g/)       {$glob = "/2021/FF/TFG22g/FF_OO_200GeV_2021";}
   elsif ($pwd =~ /2021\/FF_OO_200GeV_2021/)        {$glob = "/2021/FF/TFG21e/FF_OO_200GeV_2021";}
   elsif ($pwd =~ /2021\/17p3GeV_2021/)             {$glob = "/2021/RF/TFG21e/17p3GeV_2021";}
@@ -220,7 +226,9 @@ print "PICOPATH = $PICOPATH; days = $dayMin  - $dayMax : glob = $glob\n" if ($de
 if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
+
 my $GLOB = $PICOPATH . $glob . "/*/???/*";
+print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);
 my %Runs= ();

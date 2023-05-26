@@ -2022,6 +2022,10 @@ my $step = 0;
 #$hist = "Run331"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P20ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 07/08/20 check dev  
 #                                           /gpfs01/star/data100/reco/production_19GeV_2019/ReversedFullField/P21ia_calib/2019
 #$hist = "RunXIX01"; $NEvents = 2000; $disk = "data*/"; $RECO = "/reco/production_19GeV_2019/ReversedFullField";  $Production = "/P21ia_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/18/21 Test production with alignment from Run XX
+#$hist = "RunXIX401"; $NEvents = 2000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/23 Test with new dE/dx model
+#$hist = "RunXIX402"; $NEvents = 2000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23c"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/23 Test with new dE/dx model & SL23c
+$hist = "RunXIX403"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/23 new TpcZCorrectionC
+
 ################## Run XX ##############################################################
 # 11p5GeV                 20191208.100905, 20191221.190032, 20200210.220428, 20200214.143742, 20200214.143742
 # 5p75GeV_fixedTarget     20191221.154021, 
@@ -2333,7 +2337,7 @@ my $step = 0;
 #$hist = "RunXIX82"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/15/22 switch to TpcAdcCorrection3MDF
 #$hist = "RunXIX83"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/16/22 TpcSecRowB.20190225.230026.root
 #$hist = "RunXIX84"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/17/22 TpcZCorrectionC.20190225.0230005.C
-#$hist = "RunXIX85"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/18/22 TpcZCorrectionC.20190225.0230005.C -> TpcZCorrectionC.19GeV_2019.C
+#$hist = "nxXRunXIX85"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/18/22 TpcZCorrectionC.20190225.0230005.C -> TpcZCorrectionC.19GeV_2019.C
 #$hist = "RunXIX86"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/18/22 TpcZCorrectionC.20190225.0230005.C -> TpcZCorrectionC.19GeV_2019.C reduce Z range Inner [25,207], Outer [22,207]
 #$hist = "RunXIX87"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/19/22 TpcSecRowB.20190225.230028.root
 #$hist = "RunXIX88"; $NEvents = 1000;  $disk = "data*/"; $RECO = "reco/production_19GeV_2019/ReversedFullField";  $Production = "/P2*calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/19/22 TpcLengthCorrectionMD2.20190225.230026.C -> TpcLengthCorrectionMD2.19GeV_2019.C
@@ -2447,7 +2451,7 @@ my $step = 0;
 #$hist = "RunXXI224"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO*/*FullField/";  $Production = "P23ia_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  03/13/2023  new TpcLengthCorrectionMDN
 #$hist = "RunXXI225"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO*/*FullField/";  $Production = "P23ia_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  03/14/2023  check with MySQL
 #$hist = "RunXXI226"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO*/*FullField/";  $Production = "P23ia_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  03/18/2023  check with dev
-$hist = "RunXXI227"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO*/*FullField/";  $Production = "P23ia_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  03/18/2023  check .DEV2 timing
+#$hist = "RunXXI227"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO*/*FullField/";  $Production = "P23ia_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  03/18/2023  check .DEV2 timing
 ################################################################################
 # Run XXII pp510_2022
 # $hist = "RunXXII00"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/2022/RF"; $Production = "/.DEV2"; $year = "/pp500_2022/*/*/*"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  01/16/22 Check
@@ -2587,7 +2591,7 @@ $hist = "RunXXI227"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/productio
 #$hist = "RunXIX_XXII_110"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/2020/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/21/2023 mess with 2020 
 #$hist = "RunXIX_XXII_111"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/2020/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/22/2023 mess with 2020 
 #$hist = "RunXIX_XXII_111"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/22/2023 mess with 2020 
-$hist = "RunXIX_XXII_112"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/23/2023 check problem runs
+#$hist = "RunXIX_XXII_112"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/23/2023 check problem runs
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2670,6 +2674,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     if ($dd !~ /GeV/ && $dd !~ /AuAu200/) {
       $dd = $words[7];
     }
+    $dd =~ s/reco_//;
     $dd =~ s/production_//;
     $dd =~ s/_ReversedFullField//;
     $dd =~ s/_FullField//;
