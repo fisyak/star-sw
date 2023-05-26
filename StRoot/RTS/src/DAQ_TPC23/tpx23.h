@@ -16,7 +16,7 @@ public:
 	int from22to23(char *c_addr, int words) ;
 
 	u_int get_token_s(char *c_addr, int words) ;
-	void set_rdo(int s, int r) ;
+	u_int set_rdo(int s, int r) ;
 
 	static class tpxPed *peds ;
 

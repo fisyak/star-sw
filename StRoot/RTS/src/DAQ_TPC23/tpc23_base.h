@@ -12,7 +12,7 @@ public:
 	virtual ~tpc23_base() ;
 
 	static const int ROW_MAX = 45 ;
-	static const int PAD_MAX = 144 ;
+	static const int PAD_MAX = 182 ;
 	static const int SEQ_MAX = 64 ;
 	static const int SIM_FIFOS = 64 ;
 
@@ -71,8 +71,8 @@ public:
 	} ;
 
 
-	static short bad_fee_cou[24][6] ;
-	static short bad_fee[24][6][36] ; 
+	static short bad_fee_cou[24][46] ;
+	static short bad_fee[24][46][36] ; 
 
 	struct row_pad_t (*rp_gain)[ROW_MAX+1][PAD_MAX+1] ;	// max for both dets; all sectors
 
@@ -94,7 +94,7 @@ public:
 	} sim_dta[SIM_FIFOS] ;
 
 	int load_replay(const char *fname, int sec_soft) ;
-	virtual inline void set_rdo(int sec, int rdo) { return ; } ;
+	virtual u_int set_rdo(int sec, int rdo) { return 0 ; } ;
 
 
 	// simulation
