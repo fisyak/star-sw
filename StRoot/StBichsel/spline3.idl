@@ -1,0 +1,16 @@
+/*    spine3.idl
+*
+*  Table: spine3
+*
+*       description: keep parameters and knots for TSpline3 creation
+*/ 
+
+
+struct spline3 { 
+  long   nknots;     /* no. of knots <= 50 */
+  double Xknots[50]; /* X of knots */
+  double Yknots[50]; /* Y of knots */
+  double ValBeg;
+  double ValEnd;
+  octet  option[8];  /* option for boundary condition */
+ };  
