@@ -33,9 +33,8 @@ sub PrintHash($$) {
   }
 }
 sub GoodRun($$) {
-  my $env = shift;
-  my $run = shift;
-  print "GoodRun:: run = $run" if $debug;
+  my ($env,$run) = @_;
+  print "GoodRun: run = $run\n" if $debug;
   foreach my $key (sort keys %$env ) {
 #    if ( $env->{$key}->{first} < 23001000) {next;}
     my $trig = $env->{$key}->{trig};
@@ -69,7 +68,7 @@ foreach my $run (@runs) {
 #  if ($r < 21040001) {next;}
 #  if ($r < 21042001) {next;} # exclude 9p2GeV
   my $glob = $run . "/hlt*.daq";
-  my @daqfiles = glob $glob;
+  my @daqfiles = glob $glob; print "$glob => @daqfiles\n";
   if ($#daqfiles < 0) {next;}
   my $day = sprintf("%03i",(int ($r/1000))%1000); print "ru = $r => day = $day\n" if ($debug);
   my $dir = $day . "/" . $r;
