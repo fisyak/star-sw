@@ -14,13 +14,20 @@
 #include "TGraphErrors.h"
 #include "TPolyMarker.h"
 #include "TF1.h"
+#include "TH1.h"
 #include "TSpline.h"
 #include "TArrayD.h"
 #include "TRandom.h"
 #include "TCanvas.h"
 #include "TROOT.h"
-void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t *xKnot, Int_t K = 4, Int_t N = 200, Int_t NBREAK = 10)
+#include "TFile.h"
+TSpline3 *spline = 0;
+TCanvas  *c1 = 0;
+TString  Option; 
+//TSpline5 *spline = 0;
+void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t *xKnot, Int_t K = 4, Int_t N = 200, Int_t NBREAK = 10, Option_t *opt = "b1e1")
 {
+  Option = opt;
   Int_t NCOEFFS = NBREAK - 2 + K;
   const size_t n = N;
   const size_t ncoeffs = NCOEFFS;
@@ -96,7 +103,7 @@ void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t 
     smooth->SetLineColor(2);
     smooth->SetLineWidth(4);
     Int_t npoints = 0;
-
+#if 0
     for (xi = 0.0; xi < 15.0; xi += 0.1)
       {
         gsl_bspline_eval(xi, B, bw);
@@ -104,7 +111,17 @@ void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t 
 	smooth->SetPoint(npoints, xi, yi);
 	npoints++;
       }
-    smooth->Draw("l");
+#else
+    for (i = 0; i < n; i++)
+      {
+	xi = xData[i];
+        gsl_bspline_eval(xi, B, bw);
+        gsl_multifit_linear_est(B, c, cov, &yi, &yerr);
+	smooth->SetPoint(npoints, xi, yi);
+	npoints++;
+      }
+#endif
+    smooth->Draw("l"); if (c1) c1->Update();
     TArrayD XS(nbreak);
     TArrayD YS(nbreak);
     TArrayD ES(nbreak);
@@ -115,12 +132,13 @@ void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t 
       gsl_multifit_linear_est(B, c, cov, &yi, &yerr);
       YS[i] = yi;
     }
-    TSpline3 *spline = new TSpline3("TSpline3 smoothing", XS.GetArray(), YS.GetArray(), nbreak);
+    spline = new TSpline3("TSpline3 smoothing", XS.GetArray(), YS.GetArray(), nbreak,opt);
+    //    spline = new TSpline5("TSpline5 smoothing", XS.GetArray(), YS.GetArray(), nbreak); //,"b1e1");
     spline->SetLineColor(4);
     spline->SetLineWidth(4);
     spline->SetMarkerColor(4);
     spline->SetMarkerSize(2);
-    spline->Draw("samelP");
+    spline->Draw("samelP");  if (c1) c1->Update();
 
   }
 
@@ -136,9 +154,9 @@ void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t 
   gsl_multifit_linear_free(mw);
 } 
 //________________________________________________________________________________
-void gsl_splineFit(Int_t K = 4, Int_t n = 200, Int_t nbreak = 10) {
+void gsl_splineFit(Int_t K, Int_t n, Int_t nbreak) {
   TF1 *F = new TF1("F","TMath::Cos(x) * TMath::Exp(-0.1 * x)", 0., 15.);
-  F->Draw();
+  F->Draw();  if (c1) c1->Update();
 
   //  if (! gRandom) gRandom = new TRandom3();
   TArrayD xData(n);
@@ -157,7 +175,8 @@ void gsl_splineFit(Int_t K = 4, Int_t n = 200, Int_t nbreak = 10) {
       eData[i] = sigma;
     }
   TGraphErrors *data = new TGraphErrors(n, xData.GetArray(), yData.GetArray(), 0, eData.GetArray());
-  data->Draw("p");
+  data->Draw("p");  if (c1) c1->Update();
+#if 0
   TArrayD xKnot(nbreak);
   Double_t a = 0;
   Double_t b = 15;
@@ -165,5 +184,118 @@ void gsl_splineFit(Int_t K = 4, Int_t n = 200, Int_t nbreak = 10) {
   for (Int_t i = 0; i < nbreak; i++) xKnot[i] = a + i*d;
   
   gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnot.GetArray() , K, n, nbreak);
-
+#else 
+  Int_t nknots = 12;
+  Double_t xKnots[12] = { 0, 0.5, 1.55, 3.1, 4.75, 6.2, 7.75, 9.5, 11.,  12.5, 14., 15.};
+  gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnots , K, n, nknots);
+#endif
+}
+//________________________________________________________________________________
+struct MyDerivSpline { 
+   MyDerivSpline(TSpline3 * f): fSpline(f) {}
+   double operator() (double *x, double * )  const { 
+      return fSpline->Derivative(*x);
+   }
+   TSpline3 * fSpline; 
+};
+//________________________________________________________________________________
+TF1 *Derivative(TSpline3 *f1) {
+  MyDerivSpline * deriv = new MyDerivSpline(f1);
+  TString name("der_");
+  name += f1->GetName();
+  TF1 * f2 = new TF1(name,deriv, f1->GetXmin(), f1->GetXmax(), 0, "MyDerivSpline"); 
+  return f2;
+}
+//________________________________________________________________________________
+void MakeCintFile(const Char_t *tableName = "spline3dNdx") {
+  TString fOut =  Form("%s.C", tableName);
+  ofstream out;
+  cout << "Create " << fOut.Data() << endl;
+  out.open(fOut.Data());
+  out << "TDataSet *CreateTable() {" << endl;
+  out << "  if (!gROOT->GetClass(\"St_spline3\")) return 0;" << endl;
+  out << "  Int_t nrows = 1;" << endl;
+  out << "  St_spline3 *tableSet = new St_spline3(\"" << tableName << "\",nrows);" << endl;
+  out << "  spline3_st row;" << endl; 
+  out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
+  Int_t nknots = spline->GetNp();
+  out << "  row.nknots = " << nknots << ";" << endl;
+  TArrayD X(nknots), Y(nknots); 
+  Double_t *x = X.GetArray();
+  Double_t *y = Y.GetArray();
+  for (Int_t i = 0; i < nknots; i++) {
+    spline->GetKnot(i, x[i], y[i]);
+  }
+  out << "  Double_t X[" << nknots << "] = {";
+  for (Int_t i = 0; i < nknots; i++) {
+    out << x[i];
+    if (i < nknots - 1) out << ",";
+    else                out << "};" << endl;
+  }
+  out << "  Double_t Y[" << nknots << "] = {";
+  for (Int_t i = 0; i < nknots; i++) {
+    out << y[i];
+    if (i < nknots - 1) out << ",";
+    else                out << "};" << endl;
+  }
+  out << "  for (Int_t i = 0; i < " << nknots << "; i++) {row.Xknots[i] = X[i]; row.Yknots[i] = Y[i];}" << endl;
+  if (Option.Length() > 0) out << "  memcpy(&row.option,\"" << Option.Data() << "\"," << Option.Length() << ");" << endl;
+  out << "  tableSet->AddAt(&row);" << endl;
+  out << "  return (TDataSet *)tableSet;" << endl;
+  out << "}" << endl;
+  out.close(); 
+}
+//________________________________________________________________________________
+void LndNdxL10Fit() {
+  const Int_t K = 4;
+  TFile *_file0 = TFile::Open("$STAR/StarDb/dEdxModel/dNdx_Bichsel.root");
+  if (!_file0) return;
+  TH1D *LndNdxL10 = (TH1D *) _file0->Get("LndNdxL10");
+  if (! LndNdxL10) return;
+  LndNdxL10->Draw(); if (c1) c1->Update();
+  Int_t n = LndNdxL10->GetNbinsX();
+  TArrayD xData(n);
+  TArrayD yData(n);
+  TArrayD eData(n);
+  for (Int_t i = 0; i < n; i++) {
+    xData[i] = LndNdxL10->GetBinCenter(i+1);
+    yData[i] = LndNdxL10->GetBinContent(i+1);
+    eData[i] = 2e-3;
+  }  
+  Double_t a = LndNdxL10->GetXaxis()->GetXmin();
+  Double_t b = LndNdxL10->GetXaxis()->GetXmax();
+#if 0  
+  Int_t nknots = 24; // chisq/dof = 8.295837e-02, Rsq = 1.00000
+  TArrayD xKnot(nknots);
+  Double_t d = (b - a)/(nknots - 1);
+  for (Int_t i = 0; i < nknots; i++) xKnot[i] = a + i*d;
+#else
+#if 0
+  Double_t xKnots[] = { a, -1.5, -1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 3.00, 4.00, b};
+  Int_t nknots = sizeof(xKnots)/sizeof(Double_t); cout << "nknots = " << nknots << endl; // nknots = 18, chisq/dof = 1.728774e-01, Rsq = 1.00000
+#else
+#if 0
+  Double_t xKnots[] = { a, -1.5, -1.0, -0.50, 0.0, 0.25, 0.5, 0.75, 1.00, 1.50, 2.00, 4.00, b};
+  Int_t nknots = sizeof(xKnots)/sizeof(Double_t); cout << "nknots = " << nknots << endl; // nknots = 13, chisq/dof = 2.023867e+00, Rsq = 0.999998
+#else
+  Double_t xKnots[] = { a, -1.5, -1.0, -0.50, 0.0, 0.25, 0.5, 0.75, 1.00, 1.50, 2.00, 3.00, 4.00, b};
+  Int_t nknots = sizeof(xKnots)/sizeof(Double_t); cout << "nknots = " << nknots << endl; // nknots = 14, chisq/dof = 9.453211e-01, Rsq = 0.999999
+#endif
+#endif
+  gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnots, K, n, nknots, "");
+#endif  
+  MakeCintFile("spline3LndNdxL10");
+}
+//________________________________________________________________________________
+void gsl_splineFit(Int_t k = 1) {
+  c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  if (c1) c1->Clear();
+  else    c1 = new TCanvas("c1","c1",600,600);
+  if (k == 0) {
+  // Test 
+    gsl_splineFit(4,200,10);
+  } else if (k == 1) {
+    // LndNdxLoh10
+    LndNdxL10Fit();
+  }
 }

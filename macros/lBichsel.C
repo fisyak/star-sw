@@ -4,6 +4,7 @@ void lBichsel() {
     //    gSystem->Load("libTable");
     gSystem->Load("St_base");
     gSystem->Load("StarClassLibrary");
+    gSystem->Load("libStBichsel_Tables");
     gSystem->Load("StBichsel");
     //    m_Bichsel = Bichsel::Instance();
   // Look up for the logger option
