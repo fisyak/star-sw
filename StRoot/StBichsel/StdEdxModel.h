@@ -83,8 +83,8 @@ class StdEdxModel {
   static Int_t  _debug;
   Double_t      fScale;
   Double_t      fTmaxL10eV;
-  Double_t      fLogkeVperElectron;
   Char_t        beg[1];                    //!
+  Double_t      fLogkeVperElectron;
   TH1D         *mdNdx;                     //!
   TH1D         *mdNdxL10;                  //!
   TH1D         *mLndNdxL10;                //!

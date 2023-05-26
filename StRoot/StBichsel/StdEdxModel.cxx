@@ -36,7 +36,6 @@ StdEdxModel::StdEdxModel() : fScale(1)
   //  LOG_INFO << "StdEdxModel:: use StTpcRSMaker model for dE/dx calculations" << endm;
   cout << "StdEdxModel:: use StTpcRSMaker model for dE/dx calculations" << endl;
   memset(beg, 0, end-beg+1);
-  
   TDirectory *dir = gDirectory;
   fgStdEdxModel = this;
   const Char_t *path  = ".:./StarDb/dEdxModel:$STAR/StarDb/dEdxModel";
