@@ -1,5 +1,10 @@
 #include "Riostream.h"
 #include "TMath.h"
+#ifdef __CLING__
+#include "StarVMC/StarVMCApplication/StarVMCApplication.h"
+#include "StarVMC/StarVMCApplication/StarMCPrimaryGenerator.h"
+#include "StarVMC/StarVMCApplication/StarMCSimplePrimaryGenerator.h"
+#endif
 TDataSet *CreateTable() {
   Int_t    iD     =   6; 
   Double_t pTlow  =   1;

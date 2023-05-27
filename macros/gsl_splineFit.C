@@ -12,7 +12,7 @@
 #include "TMath.h"
 #include "TGraph.h"
 #include "TGraphErrors.h"
-#include "TPolyMarker.h"
+#include "TMultiGraph.h"
 #include "TF1.h"
 #include "TH1.h"
 #include "TSpline.h"
@@ -99,9 +99,11 @@ void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t 
   /* output the smoothed curve */
   {
     double xi, yi, yerr;
+#if 0
     TGraph *smooth = new TGraph();
     smooth->SetLineColor(2);
     smooth->SetLineWidth(4);
+#endif
     Int_t npoints = 0;
 #if 0
     for (xi = 0.0; xi < 15.0; xi += 0.1)
@@ -117,11 +119,15 @@ void gsl_splineFit(Double_t *xData, Double_t *yData,  Double_t *eData, Double_t 
 	xi = xData[i];
         gsl_bspline_eval(xi, B, bw);
         gsl_multifit_linear_est(B, c, cov, &yi, &yerr);
+#if 0
 	smooth->SetPoint(npoints, xi, yi);
+#endif
 	npoints++;
       }
 #endif
+#if 0
     smooth->Draw("l"); if (c1) c1->Update();
+#endif
     TArrayD XS(nbreak);
     TArrayD YS(nbreak);
     TArrayD ES(nbreak);
@@ -285,6 +291,73 @@ void LndNdxL10Fit() {
   gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnots, K, n, nknots, "");
 #endif  
   MakeCintFile("spline3LndNdxL10");
+}
+//________________________________________________________________________________
+void gsl_splineFit(TMultiGraph *mg) {
+  const Int_t K = 4;
+  if (! mg) return;
+  mg->Draw("axp"); if (c1) c1->Update();
+  Int_t n = 5000;
+  TArrayD xData(n);
+  TArrayD yData(n);
+  TArrayD eData(n);
+  TIter next(mg->GetListOfGraphs());
+  TGraphErrors *g = 0;
+  Int_t np = 0;
+  Double_t a = 9999;
+  Double_t b =-9999;
+  while ((g = (TGraphErrors *) next())) {
+    Int_t N = g->GetN();
+    Double_t *x = g->GetX();
+    Double_t *y = g->GetY();
+    Double_t *e = g->GetEY();
+    for (Int_t i = 0; i < N; i++) {
+      xData[np] = x[i];
+      if (x[i] < a) a = x[i];
+      if (x[i] > b) b = x[i];
+      yData[np] = y[i];
+      eData[np] = e[i];
+      np++;
+    }
+  }
+#if 1 
+#if 0 // Electrons
+  // Electorns: chisq/dof = 2.600738e+00, Rsq = 0.999662
+  Int_t nknots = 24; // chisq/dof = 2.600738e+00, Rsq = 0.999662
+#else
+#if 0 // Pions
+  // Int_t nknots = 24; // Pions: chisq/dof = 4.852640e+02, Rsq = 0.962264
+  // Int_t nknots = 12; // Pions chisq/dof = 4.884465e+02, Rsq = 0.961617
+  Int_t nknots = 16; // Pions chisq/dof = 4.828386e+02, Rsq = 0.962190
+#else // Proton
+  //  Int_t nknots = 24; // Protons: chisq/dof = 2.794028e+00, Rsq = 0.998888
+  //  Int_t nknots = 12; // chisq/dof = 9.333136e+00, Rsq = 0.996176
+  Int_t nknots = 16; // chisq/dof = 4.222781e+00, Rsq = 0.998286
+#endif 
+#endif
+  TArrayD xKnot(nknots);
+  Double_t d = (b - a)/(nknots - 1);
+  for (Int_t i = 0; i < nknots; i++) xKnot[i] = a + i*d;
+  Double_t *xKnots = xKnot.GetArray();
+#else //
+#if 0 // Electorn 
+  //  Int_t nknots = 24;                                       // chisq/dof = 8.295837e-02, Rsq = 1.00000
+  //  Double_t xKnots[] = { a, 2.2, 2.3, 2.45, 2.55,  2.8, b}; //  nknots= 7,  chisq/dof = 2.874107e+01, Rsq = 0.996137
+  //  Double_t xKnots[] = { a, 2.1, 2.2, 2.3, 2.4, 2.45, 2.55,  2.8, 3.0, 3.2, b}; // nknots = 11 chisq/dof = 6.072608e+00, Rsq = 0.999190
+  //  Double_t xKnots[] = { a, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.55,  2.8, 3.0, 3.2, 3.25, b}; // nknots = 14 chisq/dof = 5.763840e+00, Rsq = 0.999235
+  //  Double_t xKnots[] = { a, 2.12, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.55,  2.8, 3.0, 3.2, 3.25, b}; // nknots = 15 chisq/dof = 5.774668e+00, Rsq = 0.999235
+  //  Double_t xKnots[] = { a, 2.15, 2.2, 2.25, 2.3, 2.35, 2.4, 2.45, 2.50, 2.55, 2.60,  2.8, 2.90, 3.0, 3.2, 3.45, b}; // nknots = 17 chisq/dof = 3.076374e+00, Rsq = 0.999594
+  //  Double_t xKnots[] = { a, 2.15, 2.20, 2.25, 2.30, 2.35, 2.40, 2.45, 2.50, 2.55, 2.60, 2.70, 2.80, 2.90, 3.0, 3.20, 3.30, 3.40, b}; // nknots = 19 chisq/dof = 2.629976e+00, Rsq = 0.999654
+  Double_t xKnots[] = { a, 2.12, 2.15, 2.20, 2.25, 2.30, 2.35, 2.40, 2.45, 2.50, 2.55, 2.60, 2.70, 2.80, 2.90, 3.0, 3.20, 3.30, 3.40, b}; // nknots = 20 chisq/dof = 2.634199e+00, Rsq = 0.999655
+#else // Pions 
+  //  Double_t xKnots[] = { a, -0.20, -0.10, 0.05, 0.15, 0.50, 1.0, b};
+  //  Double_t xKnots[] = { a, a+0.05, -0.20,-0.15,  -0.10, 0.05, 0.15, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 1.0, b}; // nknots = 15 chisq/dof = 4.842658e+02, Rsq = 0.962045
+  Double_t xKnots[] = { a, a+0.02, -0.20,-0.15,  -0.10, 0.05, 0.15, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 1.00, 1.20,1.40, b}; // nknots = 17 chisq/dof = 4.835079e+02, Rsq = 0.962170
+  Int_t nknots = sizeof(xKnots)/sizeof(Double_t); cout << "nknots = " << nknots << endl; 
+#endif
+#endif
+  gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnots, K, np, nknots, "");
+  MakeCintFile(mg->GetName());
 }
 //________________________________________________________________________________
 void gsl_splineFit(Int_t k = 1) {

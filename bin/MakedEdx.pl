@@ -2593,6 +2593,8 @@ $hist = "RunXIX404"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/produc
 #$hist = "RunXIX_XXII_111"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/2020/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/22/2023 mess with 2020 
 #$hist = "RunXIX_XXII_111"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/22/2023 mess with 2020 
 #$hist = "RunXIX_XXII_112"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/23/2023 check problem runs
+################################## RunXXIII ##############################################
+$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_2023/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  05/26/2023 the first pass
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2623,8 +2625,8 @@ $script = $prod;# . "O";
 #my $SCR = "/star/data05/scratch/fisyak/dEdx/";
 my $SCR = "/gpfs01/star/subsys-tpc/fisyak/dEdx/";
 if (! -r $SCR) {
-#  $SCR = "/net/l404/data/fisyak/dEdx/";
-  $SCR = "/hlt/cephfs/fisyak/dEdx/";
+  $SCR = "/net/l404/data/fisyak/dEdx/";
+#  $SCR = "/hlt/cephfs/fisyak/dEdx/";
 }
 my @ProdFiles = ();
 my $hostname = `hostname`; chomp($hostname);
