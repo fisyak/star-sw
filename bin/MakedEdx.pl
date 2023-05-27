@@ -2024,7 +2024,7 @@ my $step = 0;
 #$hist = "RunXIX01"; $NEvents = 2000; $disk = "data*/"; $RECO = "/reco/production_19GeV_2019/ReversedFullField";  $Production = "/P21ia_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/18/21 Test production with alignment from Run XX
 #$hist = "RunXIX401"; $NEvents = 2000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/23 Test with new dE/dx model
 #$hist = "RunXIX402"; $NEvents = 2000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23c"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/23 Test with new dE/dx model & SL23c
-$hist = "RunXIX403"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/23 new TpcZCorrectionC
+#$hist = "RunXIX403"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/23 new TpcZCorrectionC
 
 ################## Run XX ##############################################################
 # 11p5GeV                 20191208.100905, 20191221.190032, 20200210.220428, 20200214.143742, 20200214.143742
@@ -2592,6 +2592,8 @@ $hist = "RunXIX403"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/produc
 #$hist = "RunXIX_XXII_111"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/2020/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/22/2023 mess with 2020 
 #$hist = "RunXIX_XXII_111"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/22/2023 mess with 2020 
 #$hist = "RunXIX_XXII_112"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/23/2023 check problem runs
+################################## RunXXIII ##############################################
+$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_2023/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  05/26/2023 the first pass
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2622,8 +2624,8 @@ $script = $prod;# . "O";
 #my $SCR = "/star/data05/scratch/fisyak/dEdx/";
 my $SCR = "/gpfs01/star/subsys-tpc/fisyak/dEdx/";
 if (! -r $SCR) {
-#  $SCR = "/net/l404/data/fisyak/dEdx/";
-  $SCR = "/hlt/cephfs/fisyak/dEdx/";
+  $SCR = "/net/l404/data/fisyak/dEdx/";
+#  $SCR = "/hlt/cephfs/fisyak/dEdx/";
 }
 my @ProdFiles = ();
 my $hostname = `hostname`; chomp($hostname);

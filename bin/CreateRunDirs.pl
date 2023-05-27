@@ -68,7 +68,7 @@ foreach my $run (@runs) {
 #  if ($r < 21040001) {next;}
 #  if ($r < 21042001) {next;} # exclude 9p2GeV
   my $glob = $run . "/hlt*.daq";
-  my @daqfiles = glob $glob; print "$glob => @daqfiles\n";
+  my @daqfiles = glob $glob; print "$glob => @daqfiles\n" if ($debug);
   if ($#daqfiles < 0) {next;}
   my $day = sprintf("%03i",(int ($r/1000))%1000); print "ru = $r => day = $day\n" if ($debug);
   my $dir = $day . "/" . $r;
