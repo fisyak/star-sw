@@ -47,7 +47,9 @@ St_spline3C::St_spline3C(St_spline3 *table) : TChair(table), fSpline(0), fFunc(0
   if (table) {
     fSpline = new TSpline3("Spline3", Xknots(), Yknots(), nknots(), option(), ValBeg(), ValEnd());               
     fSpline->SetLineColor(2);
-    fFunc   = new TF1(GetName(), this, Xknots()[0], Xknots()[nknots()-1], 0, "St_spline3C"); 
+    fXmin = Xknots()[0];
+    fXmax = Xknots()[nknots()-1];
+    fFunc   = new TF1(GetName(), this, fXmin, fXmax, 0, "St_spline3C"); 
     fFunc->SetNpx(100);
     fFunc->Save(Xknots()[0], Xknots()[nknots()-1], 0., 0., 0., 0.);
   } else {
