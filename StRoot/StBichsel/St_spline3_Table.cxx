@@ -1,5 +1,5 @@
 
-#include "tables/St_spline3_Table.h"
+#include "St_spline3_Table.h"
 /////////////////////////////////////////////////////////////////////////
 //
 //  Class St_spline3 wraps the STAF table spline3
