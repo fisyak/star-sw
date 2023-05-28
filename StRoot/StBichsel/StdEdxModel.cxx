@@ -739,7 +739,7 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, D
   Double_t dNdxCorL = 0;
   Double_t bgL10 = TMath::Log10(poverm);
   if (mass < 0.01) {
-    if ( StElectonsDEV_dEdx::instance() && StElectonsDEV_dEdx::instance()->IsValid()) {
+    if ( StElectonsDEV_dEdx::instance() && StElectonsDEV_dEdx::instance()->IsValid() && StPionDEV_dEdx::instance()->InRange(bgL10)) {
       dNdxCorL = StElectonsDEV_dEdx::instance()->Func()->Eval(bgL10);
     }
   } else { // pions and protons 
@@ -751,10 +751,10 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, D
     static Double_t dML10      = mProtonL10 - mPionL10;
     Double_t dNdxCorLPion = 0;
     Double_t dNdxCorLProton = 0;
-    if ( StPionDEV_dEdx::instance() && StPionDEV_dEdx::instance()->IsValid()) {
+    if ( StPionDEV_dEdx::instance() && StPionDEV_dEdx::instance()->IsValid() && StPionDEV_dEdx::instance()->InRange(bgL10)) {
       dNdxCorLPion = StPionDEV_dEdx::instance()->Func()->Eval(bgL10);
     }
-    if ( StProtonDEV_dEdx::instance() && StProtonDEV_dEdx::instance()->IsValid()) {
+    if ( StProtonDEV_dEdx::instance() && StProtonDEV_dEdx::instance()->IsValid() && StPionDEV_dEdx::instance()->InRange(bgL10)) {
       dNdxCorLProton = StPionDEV_dEdx::instance()->Func()->Eval(bgL10);
     }
     Double_t mL10 = TMath::Log10(mass);

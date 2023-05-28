@@ -24,10 +24,13 @@ class St_spline3C : public TChair {
   TF1*          Func() {return fFunc;}
   Bool_t        IsValid() {return fValid;}
   static        St_spline3  *Open(const Char_t *path);
+  Bool_t        InRange(Double_t x) {return fXmin <= x && x <= fXmax;}
  private:
   TSpline3*     fSpline;
   TF1*          fFunc;
   Bool_t        fValid;
+  Double_t      fXmin;
+  Double_t      fXmax;
   ClassDefChair(St_spline3, spline3_st )
   ClassDef(St_spline3C,1) //C++ TChair for spline3 table class
 };
