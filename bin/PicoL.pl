@@ -40,7 +40,8 @@ my $dayMax =  0;
 my $year = "y2020";
 my $Njobs = 0;
 my $DST = "picoDst";
-if    ($pwd =~ /2022/) { $year = "y2022";}
+if    ($pwd =~ /2023/) { $year = "y2023";}
+elsif ($pwd =~ /2022/) { $year = "y2022";}
 elsif ($pwd =~ /2021/) { $year = "y2021";}
 elsif ($pwd =~ /2020/) { $year = "y2020";}
 elsif ($pwd =~ /2019/) { $year = "y2019";} 
@@ -216,8 +217,9 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
   elsif ($pwd =~ /2021\/FF_OO_200GeV_2022g/)       {$glob = "/2021/FF/TFG22g/FF_OO_200GeV_2021";}
   elsif ($pwd =~ /2021\/FF_OO_200GeV_2021/)        {$glob = "/2021/FF/TFG21e/FF_OO_200GeV_2021";}
   elsif ($pwd =~ /2021\/17p3GeV_2021/)             {$glob = "/2021/RF/TFG21e/17p3GeV_2021";}
-  elsif ($pwd =~ /2021\/26p5GeV/)                 {$glob = "/2021/RF/TFG21g.B/26p5GeV_fixedTarget_2021/";}
+  elsif ($pwd =~ /2021\/26p5GeV/)                  {$glob = "/2021/RF/TFG21g.B/26p5GeV_fixedTarget_2021/";}
   elsif ($pwd =~ /2022\/pp500_2022/)               {$glob = "/2022/RF/pp500_2022/";}
+  elsif ($pwd =~ /2023\/AuAu200_2023/)             {$glob = "/2023/RF/TFG/AuAu_2023/";}
 }
 #  /star/data*/reco/production_11p5GeV_2020/*/P23ia/*/???
 #  /star/data*/reco/production_11p5GeV_2020/*/P23ia/*/??? 
@@ -227,7 +229,8 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-my $GLOB = $PICOPATH . $glob . "/*/???/*";
+#my $GLOB = $PICOPATH . $glob . "/*/???/*";
+my $GLOB = $PICOPATH . $glob . "???/*";
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);
