@@ -155,6 +155,7 @@ class StKFParticleInterface: public TObject
   void              SetFixedTarget2018(Bool_t k=kTRUE) {fIsFixedTarget2018 = k;}
   Bool_t            IsFixedTarget2018()        {return fIsFixedTarget2018;}
   void              SetUseTof(Bool_t k = kTRUE) {fUseTof = k;}
+  void              SetMagScaleFactor(Double_t scale = 1.0);
 #endif /* __TFG__VERSION__ */
  private:
   
@@ -162,7 +163,7 @@ class StKFParticleInterface: public TObject
   bool IsGoodPV(const KFVertex& pv);
   bool GetTrack(const StDcaGeometry& dcaG, KFPTrack& track, int q, int index);
   std::vector<int> GetTofPID(double m2, double p, int q, const int trackId);
-  std::vector<int> GetPID(double m2, double p, int q, double dEdX, double dEdXPull[8], bool isTofm2, const int trackId);
+  std::vector<int> GetPID(double m2, double p, int q, double dEdX, double dEdXPull[12], bool isTofm2, const int trackId);
 #ifndef __TFG__VERSION__
   void AddTrackToParticleList(const KFPTrack& track, int nHftHitsInTrack, int index, const std::vector<int>& totalPDG, KFVertex& pv, std::vector<int>& primaryTrackList,
                               std::vector<int>& nHftHits, std::vector<int>& particlesPdg, std::vector<KFParticle>& particles, int& nPartSaved,
@@ -216,7 +217,7 @@ class StKFParticleInterface: public TObject
   TH2F* fPVHistograms2D[4];
   
   //PID histograms
-  static const int NTrackHistoFolders = 26;
+  static const int NTrackHistoFolders = 27; // +0 for pdg = -1 "Uknown"
   TH2F* fHistodEdXTracks[NTrackHistoFolders];
   TH2F* fHistodEdXwithTofTracks[NTrackHistoFolders];
 #ifndef __TFG__VERSION__
@@ -263,6 +264,7 @@ class StKFParticleInterface: public TObject
   Bool_t            fUseTof;
   std::vector<float> fm2TofArray;
   std::vector<int>   ftrackIdToI; // [trackId] => track index on [Mu|Pico]Dst track array
+  static Double_t   fMagScaleFactor;
 #endif /* __TFG__VERSION__ */
   ClassDef(StKFParticleInterface,1)
 };

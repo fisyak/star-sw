@@ -73,6 +73,26 @@ static Int_t _debug = 0;
     hist->SetXTitle("log_{10}P");					\
     hist->SetYTitle("log_{10}dN/dx");					\
   } 
+#define __dEdXPull__ \
+  double dEdXPull[12] = {						\
+    /* 0 - e */     fabs(gTrack->dEdxPull(5.109989461E-04, fdEdXMode, 1)),  \
+    /* 1 - mu */    fabs(gTrack->dEdxPull(0.1056583745, fdEdXMode, 1)),	\
+    /* 2 - pi */    fabs(gTrack->dEdxPull(0.139570, fdEdXMode, 1)),     \
+    /* 3 - K */     fabs(gTrack->dEdxPull(0.493677, fdEdXMode, 1)),	\
+    /* 4 - p */     fabs(gTrack->dEdxPull(0.938272, fdEdXMode, 1)),	\
+    /* 5 - d */     fabs(gTrack->dEdxPull(1.876124, fdEdXMode, 1)),	\
+    /* 6 - t */     fabs(gTrack->dEdxPull(2.809432, fdEdXMode, 1)),	\
+    /* 7 - He3 */   fabs(gTrack->dEdxPull(2.809413, fdEdXMode, 2)),	\
+    /* 8 - He4 */   fabs(gTrack->dEdxPull(3.728400, fdEdXMode, 2)),	\
+    /* 9 - Sigma */ fabs(gTrack->dEdxPull(1.197449, fdEdXMode, 1)),	\
+    /* 10- Xi */    fabs(gTrack->dEdxPull(1.32171, fdEdXMode, 1)),		\
+    /* 11- Omega */ fabs(gTrack->dEdxPull(1.67245, fdEdXMode, 1))};
+
+Double_t StKFParticleInterface::fMagScaleFactor = 1;
+void StKFParticleInterface::SetMagScaleFactor(Double_t scale) {
+  fMagScaleFactor = scale;
+  std::cout << " StKFParticleInterface::SetMagScaleFactor to " << fMagScaleFactor << std::endl;
+}
 #endif /* __TFG__VERSION__ */
 
 ClassImp(StKFParticleInterface);
@@ -405,16 +425,18 @@ void StKFParticleInterface::CollectPIDHistograms()
   dirs[1] = dirs[0]->GetDirectory("Tracks"); assert(dirs[1]);
   dirs[1]->cd();
   
-  int pdgTrackHisto[NTrackHistoFolders] = { 11, -11, 13, -13, 211, -211, 321, -321, 2212, -2212, 
+  int pdgTrackHisto[NTrackHistoFolders] = { -1,
+					    11, -11, 13, -13, 211, -211, 321, -321, 2212, -2212, 
                                             1000010020, -1000010020, 1000010030, -1000010030, 
                                             1000020030, -1000020030, 1000020040, -1000020040,
                                             1000020060, -1000020060, 1000030060, -1000030060,
                                             1000030070, -1000030070, 1000040070, -1000040070 };
-  TString trackFolderName[NTrackHistoFolders] = {"e-", "e+", "mu-", "mu+", "pi+", "pi-", "K+", "K-", "p", "p-", 
-                                                 "d", "d-", "t", "t-", "He3", "He3-", "He4", "He4-", 
-                                                 "He6", "He6-", "Li6", "Li6-", "Li7", "Li7-", "Be7", "Be7-"};
+  TString trackFolderName[NTrackHistoFolders] = {"Uknown",
+						 "e-", "e+", "mu-", "mu+", "pi+", "pi-", "K+", "K-", "p", "p-", 
+						 "d", "d-", "t", "t-", "He3", "He3-", "He4", "He4-", 
+						 "He6", "He6-", "Li6", "Li6-", "Li7", "Li7-", "Be7", "Be7-"};
                     
-  for(int iTrackHisto=0; iTrackHisto<NTrackHistoFolders; iTrackHisto++)
+  for(int iTrackHisto=1; iTrackHisto<NTrackHistoFolders; iTrackHisto++)
   {
     if (!dirs[1]->GetDirectory(trackFolderName[iTrackHisto].Data()))
       dirs[1]->mkdir(trackFolderName[iTrackHisto].Data());
@@ -713,7 +735,7 @@ std::vector<int> StKFParticleInterface::GetTofPID(double m2, double p, int q, co
 }
 
 
-std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, double dEdX, double dEdXPull[8], bool isTofm2, const int trackId)
+std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, double dEdX, double dEdXPull[12], bool isTofm2, const int trackId)
 {
   vector<int> TofPDG;
   if(isTofm2 && fUseTof)
@@ -731,12 +753,16 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
     if(abs(TofPDG[iTofPDG]) == 321)
       checkKHasTof = 1;
 #endif
+  if(dEdXPull[0] < nSigmaCut)                                           dEdXPDG.push_back(-11*q);
   if(dEdXPull[2] < nSigmaCut)                                           dEdXPDG.push_back(211*q);  
   //  if(dEdXPull[3] < 2.f && ((checkKTof && checkKHasTof) || !checkKTof) ) dEdXPDG.push_back(321*q);
   if(dEdXPull[3] < nSigmaCut )                                          dEdXPDG.push_back(321*q);
   if(dEdXPull[4] < nSigmaCut)                                           dEdXPDG.push_back(2212*q); 
       
   vector<int> totalPDG;
+#if 1
+  totalPDG = dEdXPDG;
+#else 
   if(!isTofm2 || ! fUseTof)
     totalPDG = dEdXPDG;
   else
@@ -747,7 +773,6 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
           totalPDG.push_back(TofPDG[iTofPDG]);        
   }
 
-  if(dEdXPull[0] < nSigmaCut)  totalPDG.push_back(-11*q);
   if(dEdXPull[1] < nSigmaCut)  totalPDG.push_back(-13*q);
   if(dEdXPull[9] < nSigmaCut  || 
      dEdXPull[10] < nSigmaCut ||
@@ -755,7 +780,7 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
   {
     totalPDG.push_back(2000003112*q);
   }
-  
+#endif  
 #if defined(PID_2018) // staryj
 #include "PID2018.h"
 #elif  defined(PID_MAY) // Mai
@@ -814,16 +839,16 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
 #ifdef __MagFieldCorrection__
 //TODO remove coefficient !!!!
     {
-      trackPDG.SetPx( trackPDG.GetPx()*0.998f );
-      trackPDG.SetPy( trackPDG.GetPy()*0.998f );
-      trackPDG.SetPz( trackPDG.GetPz()*0.998f );
+      trackPDG.SetPx( trackPDG.GetPx() * fMagScaleFactor );
+      trackPDG.SetPy( trackPDG.GetPy() * fMagScaleFactor );
+      trackPDG.SetPz( trackPDG.GetPz() * fMagScaleFactor );
       for(int iIndex=0; iIndex<9; iIndex++){
         const int iC = index2[iIndex];
-        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC)*0.998f );
+        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fMagScaleFactor );
       }
       for(int iIndex=0; iIndex<6; iIndex++){
         const int iC = index4[iIndex];
-        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC)*0.998f*0.998f );
+        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fMagScaleFactor * fMagScaleFactor );
       }
     }
 #endif
@@ -970,7 +995,7 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
   {
     int pdg = pdgVector[iPdg];
     const int iTrackHisto = fTrackPdgToHistoIndex[pdg];
-    if( ! (iTrackHisto < 0 || iTrackHisto >= NTrackHistoFolders) )
+    if( ! (iTrackHisto <= 0 || iTrackHisto >= NTrackHistoFolders) )
     {
 #ifndef __TFG__VERSION__
       fHistoMomentumTracks[iTrackHisto] -> Fill(momentum);
@@ -1023,7 +1048,7 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
           
           betaGamma = TMath::Log10(momentum/5.485799e-4);
           z = gTrack->dEdxPullElectron(fdEdXMode)*gTrack->dEdxError(fdEdXMode);
-          fHistodEdXZ[0]->Fill(betaGamma, z);
+          fHistodEdXZ[1]->Fill(betaGamma, z);
         }
         if(abs(pdg)==321)
         {
@@ -1140,7 +1165,7 @@ void StKFParticleInterface::FillPIDHistograms(StMuTrack *gTrack, const std::vect
   {
     int pdg = pdgVector[iPdg];
     const int iTrackHisto = fTrackPdgToHistoIndex[pdg];
-    if( ! (iTrackHisto < 0 || iTrackHisto >= NTrackHistoFolders) )
+    if( ! (iTrackHisto <= 0 || iTrackHisto >= NTrackHistoFolders) )
     {
       fHistoMomentumTracks[iTrackHisto] -> Fill(momentum);
       fHistodEdXTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx()*1.e6);
@@ -1482,19 +1507,8 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	fTrackHistograms2D[8]->Fill(gTrack->dEdx(), m2tof);
 #endif /* __TFG__VERSION__ */
       }
-    double dEdXPull[12] = { fabs(gTrack->dEdxPull(5.109989461E-04, fdEdXMode, 1)), //0 - e
-                            fabs(gTrack->dEdxPull(0.1056583745, fdEdXMode, 1)),    //1 - mu
-                            fabs(gTrack->dEdxPull(0.139570, fdEdXMode, 1)),        //2 - pi
-                            fabs(gTrack->dEdxPull(0.493677, fdEdXMode, 1)),        //3 - K
-                            fabs(gTrack->dEdxPull(0.938272, fdEdXMode, 1)),        //4 - p
-                            fabs(gTrack->dEdxPull(1.876124, fdEdXMode, 1)),        //5 - d
-                            fabs(gTrack->dEdxPull(2.809432, fdEdXMode, 1)),        //6 - t
-                            fabs(gTrack->dEdxPull(2.809413, fdEdXMode, 2)),        //7 - He3
-                            fabs(gTrack->dEdxPull(3.728400, fdEdXMode, 2)),        //8 - He4
-                            fabs(gTrack->dEdxPull(1.197449, fdEdXMode, 1)),        //9 - Sigma
-                            fabs(gTrack->dEdxPull(1.32171, fdEdXMode, 1)),         //10- Xi
-                            fabs(gTrack->dEdxPull(1.67245, fdEdXMode, 1))};        //11- Omega
-#ifndef __TFG__VERSION__
+
+__dEdXPull__
     if(fCollectTrackHistograms && (isTofm2 || isETofm2))
       {
 	Double_t pL10 = (track.GetP() > 0) ? TMath::Log10(track.GetP()) : -2;
@@ -1511,8 +1525,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	}
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
     }
-    
-#endif /* __TFG__VERSION__ */
     
     vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx(), dEdXPull, isTofm2, index);
     
@@ -1839,19 +1851,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
       }
 #endif /* __TFG__VERSION__ */
-    double dEdXPull[12] = { fabs(gTrack->dEdxPullElectron(fdEdXMode)),          //0 - e
-                            fabs(gTrack->dEdxPull(0.1056583745, fdEdXMode, 1)), //1 - mu
-                            fabs(gTrack->dEdxPullPion(fdEdXMode)),              //2 - pi
-                            fabs(gTrack->dEdxPullKaon(fdEdXMode)),              //3 - K
-                            fabs(gTrack->dEdxPullProton(fdEdXMode)),            //4 - p
-                            fabs(gTrack->dEdxPull(1.876124, fdEdXMode, 1)),     //5 - d
-                            fabs(gTrack->dEdxPull(2.809432, fdEdXMode, 1)),     //6 - t
-                            fabs(gTrack->dEdxPull(2.809413, fdEdXMode, 2)),     //7 - He3
-                            fabs(gTrack->dEdxPull(3.728400, fdEdXMode, 2)),     //8 - He4
-                            fabs(gTrack->dEdxPull(1.197449, fdEdXMode, 1)),     //9 - Sigma
-                            fabs(gTrack->dEdxPull(1.32171, fdEdXMode, 1)),      //10- Xi
-                            fabs(gTrack->dEdxPull(1.67245, fdEdXMode, 1))       //11- Omega
-    };    
+__dEdXPull__
     vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx()*1.e6, dEdXPull, isTofm2, index);
     
     int nPartSaved0 = nPartSaved;
@@ -1920,7 +1920,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 
 #ifdef __MagFieldCorrection__
   //TODO remove coefficient !!!!
-  const Double_t field = muDst->event()->magneticField() * 0.998f;
+  const Double_t field = muDst->event()->magneticField() *  fMagScaleFactor;
 #else
   const Double_t field = muDst->event()->magneticField();
 #endif
@@ -2214,7 +2214,7 @@ bool StKFParticleInterface::FindFixedTargetPV(StPicoDst* picoDst, KFVertex& pv, 
 //     constexpr int index2[9] = { 6,7,8, 10,11,12, 15,16,17 };
 //     constexpr int index4[6] = { 9, 13,14, 18,19,20 };
 // 
-//     constexpr float MFScale = 0.998f;
+//     constexpr float MFScale =  fMagScaleFactor;
 //     track.SetPx( track.GetPx()*MFScale );
 //     track.SetPy( track.GetPy()*MFScale );
 //     track.SetPz( track.GetPz()*MFScale );
@@ -2599,13 +2599,13 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst) {
   return kTRUE;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgParent, Int_t set) {
+Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGParent, Int_t set) {
   struct Particle_t {
     Int_t pdg;
     const Char_t *name;
     Int_t code;
   };
-  enum {Nparticles = 18, Ndecays = 4};
+  enum {Nparticles = 18, NparticlesA = 10,  Ndecays = 4};
   static Particle_t particles[26] = {
     {         11,  "e-",   kPidElectron},
     { 	     -11,  "e+",   kPidElectron},	 
@@ -2677,8 +2677,8 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
 	  if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
 	  hist[s][d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
 	  hist[s][d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
-	  hist[s][d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,200,-0.2,0.2);
-	  hist[s][d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,200,-0.2,0.2);
+	  hist[s][d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
+	  hist[s][d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
 	  hist[s][d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
 	  hist[s][d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
 	  hist[s][d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
@@ -2695,87 +2695,94 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t pdg, Int_t pdgPa
       }
     }
   }
+  if (! PiD->fFit) return kFALSE;
   Double_t pMom = PiD->g3.Mag();
-  Double_t M_e = StProbPidTraits::mPidParticleDefinitions[kPidElectron]->mass();
-  Double_t bg = pMom/M_e; 
-  Double_t b_e = bg/TMath::Sqrt(1. + bg*bg);
   Double_t beta = -999;
   Double_t sigmaInvBeta = -999;
   Double_t sigmaTof = -999;
   Int_t d = 0;
-  if (pdgParent) {
+  if (PDGParent) {
     d = -1;
     for (Int_t dau = 0; dau < Ndecays; dau++) {
-      if (pdgParent != parents[dau].pdgParent) continue;
-      if (pdg != parents[dau].pdg1 && pdg != parents[dau].pdg2) continue;
+      if (PDGParent != parents[dau].pdgParent) continue;
+      if (PDG != parents[dau].pdg1 && PDG != parents[dau].pdg2) continue;
       d = dau + 1;
       break;
     }
   } 
   Int_t s = 0;
   //  if (set) s = 1;
-  if (d >= 0) {
-    for (Int_t p = 0; p < Nparticles; p++) {
-      Int_t l = particles[p].code;
-      Double_t sigmaTof = 999;
-      Double_t M = StProbPidTraits::mPidParticleDefinitions[l]->mass();
-      if (p == 0) {
-	if (PiD->fBTof) {
-	  beta = PiD->fBTof->beta();
-	  // 	              sigmae = (Float_t)(L*(1./beta-1./b_e)/res_c);
-	  sigmaTof = PiD->fBTof->Sigma(l);
-	  sigmaInvBeta = (1./beta - 1/b_e) * sigmaTof;
-	}
-      }
-      if (pdg != particles[p].pdg) continue;
-      if (! PiD->fFit) continue;
-      Double_t p2 = pMom*pMom/TMath::Power(StProbPidTraits::mPidParticleDefinitions[l]->charge(),2);
-      Double_t M2 = M*M;
-      Double_t bgL10 = PiD->bghyp[l];
-      if (sigmaInvBeta > 0) {
-	hist[s][d][p][8]->Fill(bgL10, sigmaTof);
-      }
-#if 0
-      if (PiD->fETof) {
-	sigmaTof = PiD->fETof->Sigma(l);
-	hist[s][d][p][9]->Fill(bgL10, sigmaTof);
-      }
-#endif
-      hist[s][d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
-      hist[s][d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
-      if (TMath::Abs(sigmaTof) < 3) {
-	hist[s][d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
-	hist[s][d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
-      }
-      if (PiD->fdNdx) {
-	hist[s][d][p][1]->Fill(bgL10, PiD->fdNdx->dev[l]);
-	if (sigmaTof < 3) hist[s][d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
-      }
-
-      if (sigmaInvBeta > 0) {
-	Float_t beta = PiD->fBTof->beta();
-	if (beta > 0 && beta < 2) {
-	  Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
-	  hist[s][d][p][2]->Fill(bgL10, dM2);
-	  Double_t sigmadM2 = 2*p2/beta*sigmaInvBeta;
-	  if (sigmadM2 > 0)  hist[s][d][p][10]->Fill(bgL10, dM2/sigmadM2);
-	}
-      }
-#if 0
-      if (PiD->fETof) {
-	Float_t beta = PiD->fETof->beta();
-	if (beta > 0 && beta < 2) {
-	  Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
-	  hist[s][d][p][3]->Fill(bgL10, dM2);
-	  if (TMath::Abs(sigmaTof) < 100) {
-	    Double_t sigmadM2 = p2*2./beta*sigmaTof;
-	    if (sigmadM2 > 0)  hist[s][d][p][11]->Fill(bgL10, dM2/sigmadM2);
-	  }
-	}
-      }
-#endif
+  if (d < 0) return kFALSE;
+  if (PiD->fBTof) {
+    beta = PiD->fBTof->beta();
+    Int_t p = 8;
+    Int_t l = particles[p].code;
+    Int_t pdg = particles[p].pdg;
+    Double_t sigmaTof = 999;
+    auto M =  TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
+    Double_t bg = pMom/M; 
+    Double_t b_P = bg/TMath::Sqrt(1. + bg*bg);
+    sigmaTof = PiD->fBTof->Sigma(l);
+    Double_t dBeta = (1./beta - 1/b_P);
+    if (TMath::Abs(dBeta) < 5e-5) dBeta = 5e-5;
+    // sigmaTof = dBeta/sigmaInvBeta
+    sigmaInvBeta = 1e-7;
+    if (TMath::Abs(sigmaTof) > 1e-7)    sigmaInvBeta = dBeta / sigmaTof;
+  }
+  for (Int_t p = 0; p < NparticlesA; p++) {
+    if (PDG != particles[p].pdg) continue;
+    Int_t l = particles[p].code;
+    Int_t pdg = particles[p].pdg;
+    //      Double_t M = StProbPidTraits::mPidParticleDefinitions[l]->mass();
+    auto M =  TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
+    auto q =  TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/3.;
+    auto pMomOverQ = pMom/q;
+    Double_t p2 = pMomOverQ*pMomOverQ;
+    Double_t M2 = M*M;
+    Double_t bgL10 = PiD->bghyp[l];
+    if (sigmaInvBeta > 0) {
+      hist[s][d][p][8]->Fill(bgL10, sigmaTof);
     }
-  } 
+#if 0
+    if (PiD->fETof) {
+      sigmaTof = PiD->fETof->Sigma(l);
+      hist[s][d][p][9]->Fill(bgL10, sigmaTof);
+    }
+#endif
+    hist[s][d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
+    hist[s][d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
+    if (TMath::Abs(sigmaTof) < 3) {
+      hist[s][d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
+      hist[s][d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
+    }
+    if (PiD->fdNdx) {
+      hist[s][d][p][1]->Fill(bgL10, PiD->fdNdx->dev[l]);
+      if (sigmaTof < 3) hist[s][d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
+    }
+    
+    if (sigmaInvBeta > 0) {
+      Float_t beta = PiD->fBTof->beta();
+      if (beta > 0 && beta < 2) {
+	Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
+	hist[s][d][p][2]->Fill(bgL10, dM2);
+	Double_t sigmadM2 = 2*p2/beta*sigmaInvBeta;
+	if (sigmadM2 > 0)  hist[s][d][p][10]->Fill(bgL10, dM2/sigmadM2);
+      }
+    }
+#if 0
+    if (PiD->fETof) {
+      Float_t beta = PiD->fETof->beta();
+      if (beta > 0 && beta < 2) {
+	Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
+	hist[s][d][p][3]->Fill(bgL10, dM2);
+	if (TMath::Abs(sigmaTof) < 100) {
+	  Double_t sigmadM2 = p2*2./beta*sigmaTof;
+	  if (sigmadM2 > 0)  hist[s][d][p][11]->Fill(bgL10, dM2/sigmadM2);
+	}
+      }
+    }
+#endif
+  }
   return kTRUE;
 }
 #endif /* __TFG__VERSION__ */
