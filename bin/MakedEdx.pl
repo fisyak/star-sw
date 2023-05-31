@@ -2025,7 +2025,7 @@ my $step = 0;
 #$hist = "RunXIX401"; $NEvents = 2000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/23 Test with new dE/dx model
 #$hist = "RunXIX402"; $NEvents = 2000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23c"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/23 Test with new dE/dx model & SL23c
 #$hist = "RunXIX403"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/23 new TpcZCorrectionC
-$hist = "RunXIX404"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23c"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/23 new TpcSecRowB
+#$hist = "RunXIX404"; $NEvents = 10000; $disk = "data106/"; $RECO = "/reco/production_*GeV_2019/ReversedFullField";  $Production = "/P23ic_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23c"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/23 new TpcSecRowB
 
 ################## Run XX ##############################################################
 # 11p5GeV                 20191208.100905, 20191221.190032, 20200210.220428, 20200214.143742, 20200214.143742
