@@ -82,7 +82,7 @@ StdEdxModel::StdEdxModel() : fScale(1)
   fGausExp->FixParameter(4,0.0);
   InitPar();
   // Set normalization point the same as for I70 (increase energy per conduction electron from 20 eB to 52 eV)
-  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434); //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
+  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434) + 0.0174824; ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
   //                  log2dx,  charge        mass
   Double_t pars[3] = {   1.0,     1.0, 0.13956995};
@@ -574,6 +574,53 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
   Double_t dEkeVLog = instance()->MukeV(Np); // Parameter(Np, 0); 
   Double_t dEdxLog  = dEkeVLog - TMath::Log(dx);
   Double_t dEdxCor = 0;
+#if 1
+  StElectonsDEV_dEdx *EL = StElectonsDEV_dEdx::instance();
+  if ( EL && EL->IsValid() && EL->InRange(bgL10)) {
+    dEdxCor = StElectonsDEV_dEdx::instance()->Func()->Eval(bgL10);
+    static TF1 *elCor1 = 0;
+    if (! elCor1) {
+      Double_t pars1[4] = {-0.2100929,  0.1500455, -0.02743834, 0.001894849};  //electrons [2.1,3.3]
+      Double_t pars2[4] = {-0.04352509, 0.03437069, -0.002851349, -0.0003568138}; //electornsD
+      Double_t pars[4] = {0};
+      for (Int_t i = 0; i < 4; i++) pars[i] = pars1[i] + pars2[i];
+      elCor1 = new TF1("dEdxElCor1","pol3",2.0,3.5); elCor1->SetParameters(pars);
+    }
+    dEdxCor += elCor1->Eval(bgL10);
+  } else { // pions and protons 
+    static Double_t pionM   = 0.13956995;
+    static Double_t protonM = 0.9382723;
+    static Double_t mPionL10   = TMath::Log10(pionM);
+    static Double_t mProtonL10 = TMath::Log10(protonM);
+    static Double_t dML10      = mProtonL10 - mPionL10;
+    Double_t dEdxCorPion = 0;
+    Double_t dEdxCorProton = 0;
+    StPionDEV_dEdx *PI =  StPionDEV_dEdx::instance();
+    if ( PI && PI->IsValid() && PI->InRange(bgL10)) {
+      dEdxCorPion = PI->Func()->Eval(bgL10);
+      static TF1 *piCor1 = 0;
+      if (! piCor1) {
+	Double_t pars[4] = {0.008567411, 0.01817216, -0.004932309, -0.001434306}; //pionD
+	piCor1 = new TF1("dEdxPiCor1","pol3",-0.2,1.6); piCor1->SetParameters(pars);
+      }
+      dEdxCorPion += piCor1->Eval(bgL10);
+    }
+    StProtonDEV_dEdx *P = StProtonDEV_dEdx::instance();
+    if (P &&P->IsValid() &&P->InRange(bgL10)) {
+      dEdxCorProton = P->Func()->Eval(bgL10);
+      static TF1 *protonCor1 = 0;
+      if (! protonCor1) {
+	Double_t pars[6] = {0.01745018, 0.005726225, 0.004416636, -0.02814983,  0.1824491, -0.2114645}; //protonD
+	protonCor1 = new TF1("dEdxProtonCor1","pol5",-0.5,0.8); protonCor1->SetParameters(pars);
+      }
+      dEdxCorProton += protonCor1->Eval(bgL10);
+    }
+    Double_t mL10 = TMath::Log10(mass);
+    dEdxCor += dEdxCorPion + (dEdxCorProton - dEdxCorPion)*(mL10 - mPionL10)/dML10;
+  }
+#endif
+  //  dEdxCor =  1.66944e-02;
+  //  dEdxCor += 0.0174824;
   return   dEdxLog + dEdxCor;
 }
 //________________________________________________________________________________
@@ -733,35 +780,7 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, D
   Double_t bgMC = bgCorrected(poverm); 
   Double_t dNdxMC = dNdx(bgMC, charge);
   Double_t dNdx = dNdxMC*NpCorrection(poverm); 
-  if (mass < 1e-7) return dNdx;
-  // Modification to dN/dx from analysis of daughter tracks of unique reconstructed strange particle V0 decays and gamma conversions. OO200GeV_2021 samples
-#if 1
-  Double_t dNdxCorL = 0;
-  Double_t bgL10 = TMath::Log10(poverm);
-  if (mass < 0.01) {
-    if ( StElectonsDEV_dEdx::instance() && StElectonsDEV_dEdx::instance()->IsValid() && StPionDEV_dEdx::instance()->InRange(bgL10)) {
-      dNdxCorL = StElectonsDEV_dEdx::instance()->Func()->Eval(bgL10);
-    }
-  } else { // pions and protons 
-    //   dNdxCor = 1.70682e-02;
-    static Double_t pionM   = 0.13956995;
-    static Double_t protonM = 0.9382723;
-    static Double_t mPionL10   = TMath::Log10(pionM);
-    static Double_t mProtonL10 = TMath::Log10(protonM);
-    static Double_t dML10      = mProtonL10 - mPionL10;
-    Double_t dNdxCorLPion = 0;
-    Double_t dNdxCorLProton = 0;
-    if ( StPionDEV_dEdx::instance() && StPionDEV_dEdx::instance()->IsValid() && StPionDEV_dEdx::instance()->InRange(bgL10)) {
-      dNdxCorLPion = StPionDEV_dEdx::instance()->Func()->Eval(bgL10);
-    }
-    if ( StProtonDEV_dEdx::instance() && StProtonDEV_dEdx::instance()->IsValid() && StPionDEV_dEdx::instance()->InRange(bgL10)) {
-      dNdxCorLProton = StPionDEV_dEdx::instance()->Func()->Eval(bgL10);
-    }
-    Double_t mL10 = TMath::Log10(mass);
-    dNdxCorL = dNdxCorLPion + (dNdxCorLProton - dNdxCorLPion)*(mL10 - mPionL10)/dML10;
-  }
-#endif
-  return dNdx*TMath::Exp(dNdxCorL);
+  return dNdx;
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::dNdxEffL10func(Double_t *x, Double_t *p) {
