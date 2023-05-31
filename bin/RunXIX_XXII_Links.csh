@@ -1,8 +1,8 @@
 #! /usr/local/bin/tcsh -f
 #set list = "TpcSecRowB TpcAccumulatedQ TpcZCorrectionC TpcPadCorrectionMDF TpcLengthCorrectionMDN"
 #set list = "TpcdXCorrectionB"
-set list = "TpcSecRowB"
-#set list = "TpcLengthCorrectionMDN"
+#set list = "TpcSecRowB"
+set list = "TpcLengthCorrectionMDN"
 #set list = "TpcZCorrectionC"
 foreach p (${list})
  set ext = C
