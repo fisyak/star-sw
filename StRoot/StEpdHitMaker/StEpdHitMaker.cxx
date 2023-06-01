@@ -194,7 +194,7 @@ void StEpdHitMaker::FillStEpdData(){
 	    double gain = mEpdDbMaker->GetMip(ew,PP,TT);
 	    if (gain<=0.0) gain = 1.0;  // not yet calibrated.  Give it a gain of unity
 	  
-	    float nMIP = (ADC + mEpdDbMaker->GetOffset(ew,PP,TT)) / mEpdDbMaker->GetMip(ew,PP,TT);
+	    float nMIP = (ADC + mEpdDbMaker->GetOffset(ew,PP,TT)) / gain;
 
 	    int truthId=0;  // this is for simulation
 
