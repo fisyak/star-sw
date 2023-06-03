@@ -58,6 +58,10 @@ while ($line = <>) {
   $trig =~ s/LocalClock//;
   $trig =~ s/production_//;
   $trig =~ s/_2020//;
+  $trig =~ s/_FieldOn//;
+  $trig =~ s/_FieldOff//;
+  $trig =~ s/_ZeroField//;
+  $trig =~ s/_HalfField//;
 #  print "run = $run, trig = $trig, date = $date, time = $time\n";
 #  print "trigOld = $trigOld\n";
   $timeMax = $time;
