@@ -26,7 +26,8 @@ TMultiGraph *mgPion = 0;
 TMultiGraph *sgPion = 0;
 TMultiGraph *mgProton = 0;
 TMultiGraph *sgProton = 0;
-void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "") {
+TFile *fOut = 0;
+void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "qeg3s") {
   TString xTitle = "log_{10} (#beta #gamma)";
   if (! bg) xTitle = "log_{10} (p [GeV/c])";
   const Int_t N = 8;
@@ -44,12 +45,20 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = ""
     {"/PiDQA/Lambda/p",    0.9382723},
     {"/PiDQA/Lambdab/p-",  0.9382723}
   };
-#if 0
+#if 1
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
   if (c1) c1->Clear();
   else    c1 = new TCanvas("c1","c1",600,600);
   c1->SetLogz(1);
 #endif
+  TDirectory *current = gFile; //gDirectory->cd("/");
+  TString FOutName("Graph_");
+  if (bg) FOutName += "bg";
+  else    FOutName += "p";
+  FOutName += Form("%s_%s",histN,gSystem->BaseName(current->GetName()));
+  if (fOut) {delete fOut;}
+  fOut = new TFile(FOutName,"recreate");
+  gDirectory = current;
   TGraphErrors *grmu[N] = {0};
   TGraphErrors *grsigma[N] = {0};
   mg = new TMultiGraph(Form("DEV_%s",histN),Form("#mu for %s",histN));
@@ -66,9 +75,11 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = ""
   Float_t x1=0.3, y1=0.8, x2=0.75, y2=0.85;
   for (Int_t i = 0; i < N; i++) {
     TString dir(Particles[i].dir);
-    dir += opt;
+    //    dir += opt;
     if (! gDirectory->cd(dir)) continue;
-    TCanvas *c1 = new TCanvas(Form("c%i",i),dir);
+    //    TCanvas *c1 = new TCanvas(Form("c%i",i),dir);
+    c1->Clear();
+    c1->SetTitle(dir);
     c1->SetLogz(1);
     TString name(histN);
     TH2F *h2 = (TH2F *) gDirectory->Get(name);
@@ -81,7 +92,9 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = ""
     TObjArray *arr = new TObjArray(4);
     TH1D *h1 = h2->ProjectionX();
     Double_t ymax = h1->GetMaximum();
-    h2->FitSlicesY(0,0,-1,200,"imqeg5s",arr);
+    //    h2->FitSlicesY(0,0,-1,200,"iqeg5s",arr);
+    //    h2->FitSlicesY(0,0,-1,200,opt,arr);
+    h2->FitSlicesY(0,0,-1,0,opt,arr);
     // h2->FitSlicesY(0,0,-1,0,"qe",arr);
     TH1D *mu = (TH1D *) arr->At(1);
     TH1D *sigma = (TH1D *) arr->At(2);
@@ -147,9 +160,22 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = ""
   mg->Draw("p");
   l->Draw();
   cr->Update();
+  if (fOut) {
+    fOut->cd(); 
+    mg->Write(); 
+    sg->Write();
+    mgE->Write(); 
+    sgE->Write();
+    mgPion->Write(); 
+    sgPion->Write();
+    mgProton->Write(); 
+    sgProton->Write();
+  }
+  gDirectory = current;
   TString File;
   if (bg) File += "bg";
-  File += gSystem->BaseName(gFile->GetName());
+  //  File += gSystem->BaseName(gFile->GetName());
+  File += FOutName;
   File.ReplaceAll(".root",".png");
   TString pngFile = ctitle + File;
   cr->SaveAs(pngFile);
