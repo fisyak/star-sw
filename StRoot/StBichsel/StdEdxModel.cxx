@@ -82,7 +82,8 @@ StdEdxModel::StdEdxModel() : fScale(1)
   fGausExp->FixParameter(4,0.0);
   InitPar();
   // Set normalization point the same as for I70 (increase energy per conduction electron from 20 eB to 52 eV)
-  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434) + 0.0174824; ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
+  //  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434) + 0.0174824 + 3.57110e-03; ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
+  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434) + 4.87e-03; ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
   //                  log2dx,  charge        mass
   Double_t pars[3] = {   1.0,     1.0, 0.13956995};
@@ -574,7 +575,7 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
   Double_t dEkeVLog = instance()->MukeV(Np); // Parameter(Np, 0); 
   Double_t dEdxLog  = dEkeVLog - TMath::Log(dx);
   Double_t dEdxCor = 0;
-#if 1
+#if 0
   StElectonsDEV_dEdx *EL = StElectonsDEV_dEdx::instance();
   if ( EL && EL->IsValid() && EL->InRange(bgL10)) {
     dEdxCor = StElectonsDEV_dEdx::instance()->Func()->Eval(bgL10);
@@ -587,6 +588,7 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
       elCor1 = new TF1("dEdxElCor1","pol3",2.0,3.5); elCor1->SetParameters(pars);
     }
     dEdxCor += elCor1->Eval(bgL10);
+    dEdxCor += -7.63891e-03 - 3.57110e-03 ;
   } else { // pions and protons 
     static Double_t pionM   = 0.13956995;
     static Double_t protonM = 0.9382723;
@@ -610,7 +612,8 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
       dEdxCorProton = P->Func()->Eval(bgL10);
       static TF1 *protonCor1 = 0;
       if (! protonCor1) {
-	Double_t pars[6] = {0.01745018, 0.005726225, 0.004416636, -0.02814983,  0.1824491, -0.2114645}; //protonD
+	Double_t pars[6] = {0.01745018 + 0.005654033 - 3.57110e-03 , 0.005726225  -0.00228347, 0.004416636, -0.02814983,  0.1824491, -0.2114645}; //protonD
+	//	Double_t pars2[2] = {0.005654033, -0.00228347}; //proton dEdxG
 	protonCor1 = new TF1("dEdxProtonCor1","pol5",-0.5,0.8); protonCor1->SetParameters(pars);
       }
       dEdxCorProton += protonCor1->Eval(bgL10);
@@ -618,9 +621,9 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
     Double_t mL10 = TMath::Log10(mass);
     dEdxCor += dEdxCorPion + (dEdxCorProton - dEdxCorPion)*(mL10 - mPionL10)/dML10;
   }
-#endif
   //  dEdxCor =  1.66944e-02;
   //  dEdxCor += 0.0174824;
+#endif
   return   dEdxLog + dEdxCor;
 }
 //________________________________________________________________________________

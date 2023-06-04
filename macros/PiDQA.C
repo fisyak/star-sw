@@ -109,7 +109,7 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = ""
 	//	x[np] = mu->GetBinCenter(j);
 	x[np] = mu->GetBinCenter(j); 
 	if (! bg) x[np] +=  TMath::Log10(Particles[i].mass);
-	y[np] = mu->GetBinContent(j);
+	y[np] = mu->GetBinContent(j) + 1.6185e-02 ;
 	e[np] = err;
 	s[np] = sigma->GetBinContent(j);
 	se[np] = sigma->GetBinError(j);
