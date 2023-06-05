@@ -83,9 +83,6 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
   
   res = db->Query(query);
   nrows = res->GetRowCount();
-  if (_debug) {
-    cout << "runNumber = " << runNumber << "\tnrows = " << nrows << endl;
-  }
   if(nrows==0)
     {
       delete row;
@@ -94,6 +91,9 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
       //	  cout << "No entries before.. Kinda Weird! " << endl;
       return -1;
     }
+  //  if (_debug) {
+    cout << "runNumber = " << runNumber << "\tnrows = " << nrows << endl;
+    //  }
   double tempCurrent = 0;
   unsigned int tempStatus = 0;
   unsigned int tempTime = 0;
@@ -161,7 +161,7 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
     out << "}" << endl;
     out.close();
   } else {
-    cout << "skip " << Out.Data() << "with N = " << N << " and RMS = " << RMS << endl;
+    cout << "skip " << Out.Data() << "with N = " << N << " and RMS = " << RMS << " for run = " << runNumber <<endl;
   }
   // write values in
   int value = write(writeFields,runNumber,startRunTime,time,current);

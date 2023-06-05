@@ -42,11 +42,11 @@
     if (-r ${bla}) continue;
     touch ${bla}
     set input = ${evtsFile};
-#  @ n =  $JOBINDEX % 20
+  @ n =  $JOBINDEX % 20  # 05/29/2023
 #  @ n =  $JOBINDEX % 100
-#   set evout = "-evout";
-#   if ($n == 4) set evout = "evout";
-   set evout = "evout";
+   set evout = "-evout";
+   if ($n == 4) set evout = "evout";
+#   set evout = "evout";
 #root.exe -q -b 'bfc.C(100000,"P2022a,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
 #   root.exe -q -b 'bfc.C(100000,"pp2022,StiCA,BEmcChkStat,evout","'${input}'")' &gt;&amp; ${logFile}
 #   root.exe -q -b 'bfc.C(100000,"pp2022,StiCA,BEmcChkStat,'${evout}',NoHistos,noTags,noRunco","'${input}'")' &gt;&amp; ${logFile}

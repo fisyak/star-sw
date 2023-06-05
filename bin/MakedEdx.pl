@@ -2674,23 +2674,28 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, $atime, $mtime, $ctime, $blksize, $blocks ) = stat $file;
     my $dt = $now - $ctime;
     print "$file dt = $dt\n";
-    my @words = split '/', $file;# for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}
+    my @words = split '/', $file; # for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}
     my $dd = $words[4] . '_' . $words[5];
-    if ($dd !~ /GeV/ && $dd !~ /AuAu200/) {
+    if ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
       $dd = $words[7];
+#      print "words[5] = $words[5]\n";
+      if ($words[5] ne 'RF') {
+	$dd .= "_" . $words[5]; #print "dd = $dd\n";
+      }
     }
     $dd =~ s/reco_//;
     $dd =~ s/production_//;
     $dd =~ s/_ReversedFullField//;
     $dd =~ s/_FullField//;
     $ProdFiles{$dd} .= " " . $file;  
+#    print "$dd => $ProdFiles{$dd}\n";
   }
   foreach my $dd (keys %ProdFiles) {
     my $countperdd = 0;
     my @FilesRun = split " ", $ProdFiles{$dd};# print "$dd => $#FielsRun ================================================================================\n";
     if ($#FilesRun < 0) {next;}
 #    print "$dd => @FilesRun\n";
-    my $scrr = $scr . $dd . "/"; #print "scrr = $scrr\n";
+    my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
     print XML '<?xml version="1.0" encoding="utf-8" ?> 

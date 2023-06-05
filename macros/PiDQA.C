@@ -73,6 +73,9 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
   TLegend *ls = new TLegend(0.6,0.6,0.9,0.9);
   TPaveLabel pl;
   Float_t x1=0.3, y1=0.8, x2=0.75, y2=0.85;
+  TString HistName(histN);
+  Bool_t idEdx = HistName.Contains("dEdx");
+  Bool_t iBTof = HistName.Contains("BTof");
   for (Int_t i = 0; i < N; i++) {
     TString dir(Particles[i].dir);
     //    dir += opt;
@@ -89,6 +92,12 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
       continue;
     }
     cout << " has been found" << endl;
+    if (iBTof && dir.Contains("Lambdab/pi+")) {
+      cout << "restrict y range for " <<  dir.Data() << endl;
+      Int_t ny = h2->GetNbinsY();
+      Int_t iy = h2->GetYaxis()->FindBin(-0.1);
+      h2->GetYaxis()->SetRange(iy,ny);
+    }
     TObjArray *arr = new TObjArray(4);
     TH1D *h1 = h2->ProjectionX();
     Double_t ymax = h1->GetMaximum();
@@ -118,11 +127,14 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
 	//	if (h1->GetBinContent(j) < 0.25*ymax) continue;
 	if (sigma->GetBinContent(j) <= 0.0 || sigma->GetBinContent(j) > 3) continue;
 	Double_t err = mu->GetBinError(j);
+	Double_t yyy = mu->GetBinContent(j);
+	if (idEdx) yyy += 1.6185e-02 ;
 	if (err <= 0.0 || err > 0.02) continue;
+	if (TMath::Abs(yyy) > 1.0) continue;
 	//	x[np] = mu->GetBinCenter(j);
 	x[np] = mu->GetBinCenter(j); 
 	if (! bg) x[np] +=  TMath::Log10(Particles[i].mass);
-	y[np] = mu->GetBinContent(j) + 1.6185e-02 ;
+	y[np] = yyy;
 	e[np] = err;
 	s[np] = sigma->GetBinContent(j);
 	se[np] = sigma->GetBinError(j);

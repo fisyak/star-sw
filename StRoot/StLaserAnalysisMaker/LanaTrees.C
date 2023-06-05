@@ -150,8 +150,8 @@ void MakeTable() {
   Double_t dvEast  =  DVAll[0][2]; 
   Double_t ddvEast = dDVAll[0][2]; 
   Run.ok = 0; // ok == 0 => use both: west and east; ok == 1 => use averaged drift velocities; ok > 1 ==> no. acceptable drift velocities
-  if (dvWest < 5.3 || dvWest > 5.9 || ddvWest <= 0 || ddvWest>sigmaAcceptedDV ||
-      dvEast < 5.3 || dvEast > 5.9 || ddvEast <= 0 || ddvEast>sigmaAcceptedDV) {
+  if (dvWest < 5.0 || dvWest > 6.0 || ddvWest <= 0 || ddvWest>sigmaAcceptedDV ||
+      dvEast < 5.0 || dvEast > 6.0 || ddvEast <= 0 || ddvEast>sigmaAcceptedDV) {
     //  if (! (dvWest < 5.3 && dvWest > 5.9 && ddvWest < 0 && ddvWest>sigmaAcceptedDV) ||
     //      ! (dvEast < 5.3 && dvEast > 5.9 && ddvEast < 0 && ddvEast>sigmaAcceptedDV)) {
     cout << "Run " << run << " fails ============================= to make separated East and West drift velocities" << endl;
@@ -163,7 +163,7 @@ void MakeTable() {
   Run.ok = 1;
 #endif
   //  if (ok == 1 && ! (dv > 5.3 && dv < 5.9 && ddv > 0 && ddv<sigmaAcceptedDV)) {
-  if (Run.ok == 1 && (dv < 5.3 || dv > 5.9 || ddv <= 0 || ddv >sigmaAcceptedDV)) {
+  if (Run.ok == 1 && (dv < 5.0 || dv > 6.0 || ddv <= 0 || ddv >sigmaAcceptedDV)) {
     cout << "Run " << run << " fails ============================= to make averaged drift velocities" << endl;
     cout << "v = " << dv << " +/- " << ddv << endl;
     Run.ok = 2;
@@ -380,7 +380,7 @@ void LanaTrees(const Char_t *files="./st_laser_*.laser.root", const Char_t *Out 
 	dv = new TH2D(Form("DV%i",event->GetHeader()->fRun%1000000),Form("Drift Velocity for run %i",event->GetHeader()->fRun%1000000),12,1,25,400,1,-1);
 	dv->SetBuffer(100000);
 #else
-	dv = new TH2D(Form("DV%i",event->GetHeader()->fRun%1000000),Form("Drift Velocity for run %i",event->GetHeader()->fRun%1000000),12,1,25,2000,5.3,5.9);
+	dv = new TH2D(Form("DV%i",event->GetHeader()->fRun%1000000),Form("Drift Velocity for run %i",event->GetHeader()->fRun%1000000),12,1,25,4000,5.0,6.0);
 #endif
 	dv->SetXTitle("Sector");
 	dv->SetYTitle("Drift Velocity ");
