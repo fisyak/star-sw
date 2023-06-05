@@ -229,8 +229,8 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-#my $GLOB = $PICOPATH . $glob . "/*/???/*";
-my $GLOB = $PICOPATH . $glob . "???/*";
+my $GLOB = $PICOPATH . $glob . "/*/???/*";
+#my $GLOB = $PICOPATH . $glob . "???/*";
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);
