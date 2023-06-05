@@ -2684,9 +2684,9 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	  hist[s][d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
 	  hist[s][d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,600,-3,3);
 	  hist[s][d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	  //	hist[s][d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	  //	  hist[s][d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
 	  hist[s][d][p][10] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
-	  //	hist[s][d][p][11] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	  hist[s][d][p][11] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
 	  for (Int_t k = 0; k < 12; k++) {
 	    if (!  hist[s][d][p][k]) continue;
 	    hist[s][d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
@@ -2695,10 +2695,9 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
       }
     }
   }
-  if (! PiD->fFit) return kFALSE;
+  if (! PiD->fFit()) return kFALSE;
   Double_t pMom = PiD->g3.Mag();
   Double_t beta = -999;
-  Double_t sigmaInvBeta = -999;
   Double_t sigmaTof = -999;
   Int_t d = 0;
   if (PDGParent) {
@@ -2713,22 +2712,6 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
   Int_t s = 0;
   //  if (set) s = 1;
   if (d < 0) return kFALSE;
-  if (PiD->fBTof) {
-    beta = PiD->fBTof->beta();
-    Int_t p = 8;
-    Int_t l = particles[p].code;
-    Int_t pdg = particles[p].pdg;
-    Double_t sigmaTof = 999;
-    auto M =  TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
-    Double_t bg = pMom/M; 
-    Double_t b_P = bg/TMath::Sqrt(1. + bg*bg);
-    sigmaTof = PiD->fBTof->Sigma(l);
-    Double_t dBeta = (1./beta - 1/b_P);
-    if (TMath::Abs(dBeta) < 5e-5) dBeta = 5e-5;
-    // sigmaTof = dBeta/sigmaInvBeta
-    sigmaInvBeta = 1e-7;
-    if (TMath::Abs(sigmaTof) > 1e-7)    sigmaInvBeta = dBeta / sigmaTof;
-  }
   for (Int_t p = 0; p < NparticlesA; p++) {
     if (PDG != particles[p].pdg) continue;
     Int_t l = particles[p].code;
@@ -2736,52 +2719,42 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     //      Double_t M = StProbPidTraits::mPidParticleDefinitions[l]->mass();
     auto M =  TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
     auto q =  TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/3.;
-    auto pMomOverQ = pMom/q;
-    Double_t p2 = pMomOverQ*pMomOverQ;
-    Double_t M2 = M*M;
     Double_t bgL10 = PiD->bghyp[l];
-    if (sigmaInvBeta > 0) {
+    if (PiD->fBTof()) {
+      sigmaTof = PiD->fBTof()->Sigma(l);
       hist[s][d][p][8]->Fill(bgL10, sigmaTof);
     }
 #if 0
-    if (PiD->fETof) {
-      sigmaTof = PiD->fETof->Sigma(l);
+    if (PiD->fETof()) {
+      sigmaTof = PiD->fETof()->Sigma(l);
       hist[s][d][p][9]->Fill(bgL10, sigmaTof);
     }
 #endif
-    hist[s][d][p][0]->Fill(bgL10, PiD->fFit->dev[l]);
-    hist[s][d][p][6]->Fill(bgL10, PiD->fFit->devS[l]);
+    hist[s][d][p][0]->Fill(bgL10, PiD->fFit()->dev[l]);
+    hist[s][d][p][6]->Fill(bgL10, PiD->fFit()->devS[l]);
     if (TMath::Abs(sigmaTof) < 3) {
-      hist[s][d][p][4]->Fill(bgL10, PiD->fFit->dev[l]);
-      hist[s][d][p][7]->Fill(bgL10, PiD->fFit->devS[l]);
+      hist[s][d][p][4]->Fill(bgL10, PiD->fFit()->dev[l]);
+      hist[s][d][p][7]->Fill(bgL10, PiD->fFit()->devS[l]);
     }
-    if (PiD->fdNdx) {
-      hist[s][d][p][1]->Fill(bgL10, PiD->fdNdx->dev[l]);
-      if (sigmaTof < 3) hist[s][d][p][5]->Fill(bgL10, PiD->fdNdx->dev[l]);
+    if (PiD->fdNdx()) {
+      hist[s][d][p][1]->Fill(bgL10, PiD->fdNdx()->dev[l]);
+      if (sigmaTof < 3) hist[s][d][p][5]->Fill(bgL10, PiD->fdNdx()->dev[l]);
     }
     
-    if (sigmaInvBeta > 0) {
-      Float_t beta = PiD->fBTof->beta();
+    if (PiD->fBTof()) {
+      Float_t beta = PiD->fBTof()->beta();
       if (beta > 0 && beta < 2) {
-	Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
-	hist[s][d][p][2]->Fill(bgL10, dM2);
-	Double_t sigmadM2 = 2*p2/beta*sigmaInvBeta;
-	if (sigmadM2 > 0)  hist[s][d][p][10]->Fill(bgL10, dM2/sigmadM2);
+	hist[s][d][p][2]->Fill(bgL10, PiD->fBTof()->dev[l]);
+	hist[s][d][p][10]->Fill(bgL10, PiD->fBTof()->devS[l]);
       }
     }
-#if 0
-    if (PiD->fETof) {
-      Float_t beta = PiD->fETof->beta();
+    if (PiD->fETof()) {
+      Float_t beta = PiD->fETof()->beta();
       if (beta > 0 && beta < 2) {
-	Double_t dM2 = p2*(1./(beta*beta) - 1.) - M2;
-	hist[s][d][p][3]->Fill(bgL10, dM2);
-	if (TMath::Abs(sigmaTof) < 100) {
-	  Double_t sigmadM2 = p2*2./beta*sigmaTof;
-	  if (sigmadM2 > 0)  hist[s][d][p][11]->Fill(bgL10, dM2/sigmadM2);
-	}
+	hist[s][d][p][3]->Fill(bgL10, PiD->fETof()->dev[l]);
+	hist[s][d][p][11]->Fill(bgL10, PiD->fETof()->devS[l]);
       }
     }
-#endif
   }
   return kTRUE;
 }

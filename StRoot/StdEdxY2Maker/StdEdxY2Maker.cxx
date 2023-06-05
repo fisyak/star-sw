@@ -1200,19 +1200,14 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
   StDedxMethod kMethod;
 #ifdef  __FIT_PULLS__
   // Pulls
-  Int_t k = PiD.PiDkeyU3;
   Int_t l;
   for (Int_t m = 0; m < kNPulls; m++) {// I70, Ifit, dNdx
     if (! PullH[m].histograms) continue;
     if (! PiD.fStatus[PullH[m].kPid]) continue;
     for (l = kPidElectron; l < KPidParticles; l++) {
-      if (PiD.fI70 && PiD.fI70->fPiD) {
+      if (PiD.fI70() && PiD.fI70()->fPiD) {
 	PullH[m].histograms->dev[l][sCharge]->Fill(PiD.bghyp[l], PiD.fStatus[PullH[m].kPid]->dev[l]);
 	PullH[m].histograms->dev[l][      2]->Fill(PiD.bghyp[l], PiD.fStatus[PullH[m].kPid]->dev[l]);
-	if (k >= 0) {
-	  PullH[m].histograms->devT[l][sCharge]->Fill(PiD.bghyp[l], PiD.fStatus[PullH[m].kPid]->dev[l]);
-	  PullH[m].histograms->devT[l][      2]->Fill(PiD.bghyp[l], PiD.fStatus[PullH[m].kPid]->dev[l]);
-	}
       }
     }
   }

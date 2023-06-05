@@ -1,5 +1,6 @@
 #ifndef __StPidStatus_h__
 #define __StPidStatus_h__
+#include "StEnumerations.h"
 #include "StProbPidTraits.h"
 #include "StBTofPidTraits.h"
 #include "StETofPidTraits.h"
@@ -16,7 +17,20 @@
 #include "StPicoEvent/StPicoMtdPidTraits.h"
 #endif /* __TFG__VERSION__ */
 class StGlobalTrack;
-class StdEdxStatus {
+class StTrackPiD {
+ public:
+ StTrackPiD() {Clear();}
+  virtual ~StTrackPiD() {}
+  void Clear() {memset(mBeg,0,mEnd-mBeg+1);}
+  void Print(Option_t *option = "") const;
+  Double_t Pull(Int_t k = 0)  {return devS[k];}
+  Char_t                mBeg[1];                   //!
+  Double_t Pred[KPidParticles];
+  Double_t dev[KPidParticles];
+  Double_t devS[KPidParticles];         // Pull
+  Char_t                mEnd[1];        //!
+};
+class StdEdxStatus : public StTrackPiD {
  public:
  StdEdxStatus(StDedxPidTraits *pid = 0) : fPiD(pid) {Clear();}
   virtual ~StdEdxStatus() {}
@@ -26,15 +40,9 @@ class StdEdxStatus {
   Double_t TrackLength() const {return (fPiD) ? fPiD->length() : 0;}
   Double_t log2dX() const {return (fPiD) ? fPiD->log2dX() : 0;}
   Int_t    N() const {return (fPiD) ? fPiD->numberOfPoints() : 0;}
-  void Clear() {memset(mBeg,0,mEnd-mBeg+1);}
   void Print(Option_t *option = "") const;
-  Char_t                mBeg[1];                   //!
-  Double_t Pred[KPidParticles];
-  Double_t dev[KPidParticles];
-  Double_t devS[KPidParticles];
-  Char_t                mEnd[1];        //!
 };
-class StBTofStatus {
+class StBTofStatus  : public StTrackPiD {
  public:
   StBTofStatus(StBTofPidTraits *pid ) { fPiD = (TMath::Abs(pid->yLocal()) < 1.8) ? pid : 0;}
   virtual ~StBTofStatus() {}
@@ -59,7 +67,7 @@ class StBTofStatus {
     return 999.;
   }
 };
-class StETofStatus {
+class StETofStatus  : public StTrackPiD {
  public:
   StETofStatus(StETofPidTraits *pid = 0) { fPiD = (pid && pid->matchFlag()) ? pid : 0;}
   virtual ~StETofStatus() {}
@@ -67,7 +75,7 @@ class StETofStatus {
   StETofPidTraits *fPiD; //!
   Float_t beta() {return fPiD ? fPiD->beta() : -999;}
 };
-class StMtdStatus {
+class StMtdStatus  : public StTrackPiD {
  public:
   StMtdStatus(StMtdPidTraits *pid = 0) { fPiD = (pid && pid->matchFlag()) ? pid : 0;}
   virtual ~StMtdStatus() {}
@@ -79,7 +87,14 @@ class StMtdStatus {
 class StPidStatus {
  public:
   enum PiDStatusIDs {
-    kI70,   kFit,   kI70U,   kFitU,   kdNdx,   kdNdxU,  kBTof,   kETof,   kMtd, kTotal
+    kUndef = kUndefinedMethodId,
+    kI70   = kTruncatedMeanId,        
+    kI70U  = kEnsembleTruncatedMeanId,
+    kFit   = kLikelihoodFitId,        
+    kFitU  = kWeightedTruncatedMeanId,
+    kdNdx  = kOtherMethodId,          
+    kdNdxU = kOtherMethodId2,         
+    kBTof,   kETof,   kMtd, kTotal
   };
   StPidStatus(StGlobalTrack *gTrack = 0, Bool_t Usedx2 = kTRUE);
   StPidStatus(StMuTrack *muTrack = 0, Bool_t Usedx2 = kTRUE, TVector3 *g3KFP = 0);
@@ -87,20 +102,12 @@ class StPidStatus {
   StPidStatus(StPicoTrack *picoTrack = 0, Bool_t Usedx2 = kFALSE, TVector3 *g3KFP = 0);
 #endif /* __TFG__VERSION__ */
   virtual ~StPidStatus() {
-    SafeDelete(fProb); 
-    SafeDelete(fI70); 
-    SafeDelete(fFit); 
-    SafeDelete(fI70U); 
-    SafeDelete(fFitU); 
-    SafeDelete(fdNdx); 
-    SafeDelete(fdNdxU);
-    SafeDelete(fBTof); 
-    SafeDelete(fETof); 
-    SafeDelete(fMtd); 
+    for (Int_t k = kI70; k < kTotal; k++) {SafeDelete(fStatus[k]);}
+    fProb = 0;
   }
   void Clear() {memset(mBeg,0,mEnd-mBeg+1);}
   Int_t Status() {return PiDStatus;}
-  StdEdxStatus   *dEdxStatus(StDedxMethod k) {return fStatus[k];}
+  StdEdxStatus   *dEdxStatus(Int_t k) {return ( StdEdxStatus   *)  fStatus[k];}
   StBTofPidTraits SetBTofPidTraits(const StMuBTofPidTraits &pid);
   StETofPidTraits SetETofPidTraits(const StMuETofPidTraits &pid);
   StMtdPidTraits  SetMtdPidTraits(const StMuMtdPidTraits &pid);
@@ -117,27 +124,25 @@ class StPidStatus {
   TVector3 g3; //!
   Bool_t fUsedx2;
   Char_t                mBeg[1];                   //!
-  StProbPidTraits *fProb; //!
-  StdEdxStatus *fStatus[kOtherMethodId2+1];
-  StdEdxStatus *fI70;
-  StdEdxStatus *fFit; //!
-  StdEdxStatus *fI70U; //!
-  StdEdxStatus *fFitU; //!
-  StdEdxStatus *fdNdx; //!
-  StdEdxStatus *fdNdxU;//!
-  StBTofStatus *fBTof; //!
-  StETofStatus *fETof; //!
-  StMtdStatus  *fMtd; //!
-  Double_t devTof[KPidParticles];
-  Int_t  PiDkey;    //! best
-  Int_t  PiDkeyU;   //! only one with devZs<3, 
-  Int_t  PiDkeyU3;  //! -"- and devZs > 5 for all others 
-  Int_t  lBest;     //!
-  Double_t dNdx[KPidParticles]; // no. of primary clusters per 1cm
+  StTrackPiD *fStatus[kTotal];
   Double_t PredBMN[2], Pred70BMN[2]; //!
   Double_t bghyp[KPidParticles]; //! log10(bg)
   Double_t bgs[KPidParticles]; //! bg
+  StProbPidTraits       *fProb;
   Char_t                mEnd[1];        //!
+  StdEdxStatus    *fI70	   () {return (StdEdxStatus    *) fStatus[kI70  ];} 
+  StdEdxStatus 	  *fFit    () {return (StdEdxStatus    *) fStatus[kFit  ];} 
+  StdEdxStatus 	  *fI70U   () {return (StdEdxStatus    *) fStatus[kI70U ];}  
+  StdEdxStatus 	  *fFitU   () {return (StdEdxStatus    *) fStatus[kFitU ];}  
+  StdEdxStatus 	  *fdNdx   () {return (StdEdxStatus    *) fStatus[kdNdx ];}  
+  StdEdxStatus 	  *fdNdxU  () {return (StdEdxStatus    *) fStatus[kdNdxU];}  
+  StBTofStatus 	  *fBTof   () {return (StBTofStatus    *) fStatus[kBTof ];}  
+  StETofStatus 	  *fETof   () {return (StETofStatus    *) fStatus[kETof ];}  
+  StMtdStatus  	  *fMtd    () {return (StMtdStatus     *) fStatus[kMtd  ];} 
+  static Double_t dEdxCorr(Double_t bgL10, Int_t code);
+  static Double_t M2BTofCorr(Double_t pL10, Int_t code);
+  static Double_t dEdxSigma(Double_t bgL10, Int_t code);
+  static Double_t M2BTofSigma(Double_t pL10, Int_t code);
 };
 
 #endif 

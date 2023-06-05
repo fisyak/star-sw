@@ -13,21 +13,21 @@ St_spline3  *St_spline3C::Open(const Char_t *path) {
   TString pathF(".:./StarDb/"); pathF +=  Dir + ":$STAR/StarDb/" + Dir;
   Char_t *file = gSystem->Which(pathF,File,kReadPermission);		
   if (! file) {
-    std::cout << Form("Fatal::St_spline3C::Open   \tFile %s has not been found in path %s",File.Data(),pathF.Data()) << std::end;
+    std::cout << Form("Fatal::St_spline3C::Open   \tFile %s has not been found in path %s",File.Data(),pathF.Data()) << std::endl;
     return table;
   } else   {
-    std::cout << Form("Warning::St_spline3C::Open \tFile %s has been found as %s",File.Data(),file) << std::end;
+    std::cout << Form("Warning::St_spline3C::Open \tFile %s has been found as %s",File.Data(),file) << std::endl;
   }
   TString command(".L "); command += file; TInterpreter::EErrorCode ee; 
   gInterpreter->ProcessLine(command,&ee);				
   if (ee) { //assert(!ee);							
-    std::cout << Form("Fatal::St_spline3C::Open has failed to read  \tFile %s",file) << std::end;
+    std::cout << Form("Fatal::St_spline3C::Open has failed to read  \tFile %s",file) << std::endl;
     delete [] file;
     return table;
   }
   table = (St_spline3 *) gInterpreter->Calc("CreateTable()",&ee); 
   if (! table) {//assert(table);	  
-    std::cout << Form("Fatal::St_spline3C::Open has failed to load  \tFile %s",file) << std::end;
+    std::cout << Form("Fatal::St_spline3C::Open has failed to load  \tFile %s",file) << std::endl;
     delete [] file;
     return table;
   }
@@ -35,7 +35,7 @@ St_spline3  *St_spline3C::Open(const Char_t *path) {
   command.ReplaceAll(".L ",".U ");
   gInterpreter->ProcessLine(command,&ee);	
   if (ee) { // assert(!ee);				
-    std::cout << Form("Fatal::St_spline3C::Open has failed to unload  \tFile %s",file) << std::end;
+    std::cout << Form("Fatal::St_spline3C::Open has failed to unload  \tFile %s",file) << std::endl;
     delete [] file;
     SafeDelete(table);
     return table;
