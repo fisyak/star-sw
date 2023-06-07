@@ -76,6 +76,7 @@
 #include "StarGenerator/BASE/StarPrimaryMaker.h"
 #include "St_g2t_Chair.h"
 #include "tables/St_g2t_vertex_Table.h"
+#include "StTree.h"
 ClassImp(StVMCMaker);
 
 StarVMCApplication* StVMCMaker::fgStarVMCApplication = 0;
@@ -108,24 +109,44 @@ Int_t StVMCMaker::Init() {
 	  CintF = "20Muons.C"; // default
 	}
 	if (CintF != "") {
+	  CintF.ReplaceAll(".C",".root");
 	  static const Char_t *path  = ".:./StarDb/Generators:$STAR/StarDb/Generators";
 	  Char_t *file = gSystem->Which(path,CintF,kReadPermission);
-	  if (! file) Fatal("StVMCMaker::Init","File %s has not been found in path %s",CintF.Data(),path);
-	  else        Warning("StVMCMaker::Init","File %s has been found as %s",CintF.Data(),file);
-	  TString command(Form(".L %s",file));
-	  TInterpreter::EErrorCode ee;
-	  gInterpreter->ProcessLine(command,&ee);
-	  assert(!ee);
-	  TDataSet *d = (TDataSet *) gInterpreter->Calc("CreateTable()",&ee);
-	  assert(!ee);
-	  assert(d);
-	  AddConst(d);
+	  if (file) {
+	    TFile *tf = new TFile(file);
+	    TObject *to = StIO::Read (tf, "*");
+	    delete tf;
+	    if (to) {
+	      if (GetDebug()) printf("Load TFile:   %s\n",(const char*)file);
+	      if (strcmp(to->ClassName(),"StIOEvent")==0) to = ((StIOEvent*)to)->fObj;
+	      TDataSet *newdat = 0;
+	      if (to->InheritsFrom(TDataSet::Class()))  {
+		newdat = (TDataSet*)to;
+	      } else                                    {
+		newdat = new TObjectSet(to->GetName());
+		newdat->SetObject(to);
+	      }
+	    }
+	  } else {
+	    CintF.ReplaceAll(".root",".C");
+	    file = gSystem->Which(path,CintF,kReadPermission);
+	    if (! file) Fatal("StVMCMaker::Init","File %s has not been found in path %s",CintF.Data(),path);
+	    else        Warning("StVMCMaker::Init","File %s has been found as %s",CintF.Data(),file);
+	    TString command(Form(".L %s",file));
+	    TInterpreter::EErrorCode ee;
+	    gInterpreter->ProcessLine(command,&ee);
+	    assert(!ee);
+	    TDataSet *d = (TDataSet *) gInterpreter->Calc("CreateTable()",&ee);
+	    assert(!ee);
+	    assert(d);
+	    AddConst(d);
 #if  ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)
-	  /* Don' do this beacuse root will try to unload shared libraries in the macro */
-	  command.ReplaceAll(".L ",".U ");
-	  gInterpreter->ProcessLine(command,&ee);
-	  assert(!ee);
+	    /* Don' do this beacuse root will try to unload shared libraries in the macro */
+	    command.ReplaceAll(".L ",".U ");
+	    gInterpreter->ProcessLine(command,&ee);
+	    assert(!ee);
 #endif
+	  }
 	}
       } 
     }
