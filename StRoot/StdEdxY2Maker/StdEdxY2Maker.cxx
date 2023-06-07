@@ -229,6 +229,7 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
       LOG_WARN << "NOT to USE";
     }
     LOG_WARN << " dx2L in dE/dx predictions "<< endm;
+    StPidStatus::SetUsedx2(fUsedx2);
   }
   return kStOK;
 }
@@ -1171,8 +1172,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
   StThreeVectorD g3 = gTrack->geometry()->momentum(); // p of global track
   Double_t pMomentum = g3.mag();
   Double_t etaG = g3.pseudoRapidity();
-  StPidStatus PiDs[2] = {StPidStatus(gTrack, kTRUE), StPidStatus(gTrack, kFALSE)} ; 
-  StPidStatus &PiD = fUsedx2 ? *&PiDs[0] :  *&PiDs[1];
+  StPidStatus PiD = StPidStatus(gTrack);
   if (PiD.PiDStatus < 0) return;
   //  Double_t bg = TMath::Log10(pMomentum/StProbPidTraits::mPidParticleDefinitions[kPidPion]->mass());
   Int_t sCharge = 0;                                 // positive
@@ -1215,9 +1215,9 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
   for (Int_t j = 0; j < kTotalMethods; j++) {
     kMethod = kTPoints[j];
     if (pMomentum > 0.4) {
-      if (PiDs[1].dEdxStatus(kMethod)) {
-	TPoints[sCharge][j]->Fill(PiDs[1].dEdxStatus(kMethod)->TrackLength(),PiDs[1].dEdxStatus(kMethod)->log2dX(),PiDs[1].dEdxStatus(kMethod)->dev[kPidPion]);
-	NPoints[sCharge][j]->Fill(PiDs[1].dEdxStatus(kMethod)->N(), etaG, PiDs[1].dEdxStatus(kMethod)->dev[kPidPion]);
+      if (PiD.dEdxStatus(kMethod)) {
+	TPoints[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->TrackLength(),PiD.dEdxStatus(kMethod)->log2dX(),PiD.dEdxStatus(kMethod)->dev[kPidPion]);
+	NPoints[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->N(), etaG, PiD.dEdxStatus(kMethod)->dev[kPidPion]);
 #if 1
 	if (Debug() > 100) {
 	  gTrack->Print();

@@ -64,7 +64,6 @@ class StKFParticleInterface: public TObject
   
   void SetField(float field);
   void SetBeamLine(KFParticle& p);
-  void SetUsedx2(Bool_t k = kFALSE) { fUsedx2 = k;}
   void CleanPV();
   void AddPV(const KFVertex &pv, const std::vector<int> &tracks);
   void AddPV(const KFVertex &pv);
@@ -83,7 +82,7 @@ class StKFParticleInterface: public TObject
   Bool_t FindUnique(const KFParticle *particle, vector<const KFParticle *> Vec4Cfit, Int_t indxnp[2]);
   Bool_t PidQA(StPicoDst* picoDst);
   Bool_t PidQA(StMuDst* muDst);
-  Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0, Int_t set = 0); 
+  Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0); 
   Bool_t PidQArmerteros(KFParticle TempPart, TVector3 &negative, TVector3 &positive ); 
 #endif /* _TFG__VERSION__ */
   bool OpenCharmTrigger();
@@ -154,7 +153,8 @@ class StKFParticleInterface: public TObject
   Bool_t            IsFixedTarget()        {return fIsFixedTarget;}
   void              SetFixedTarget2018(Bool_t k=kTRUE) {fIsFixedTarget2018 = k;}
   Bool_t            IsFixedTarget2018()        {return fIsFixedTarget2018;}
-  void              SetUseTof(Bool_t k = kTRUE) {fUseTof = k;}
+  static void       SetUsedx2(Bool_t k = kTRUE);
+  static void       SetUseTof(Bool_t k = kTRUE);
   void              SetMagScaleFactor(Double_t scale = 1.0);
 #endif /* __TFG__VERSION__ */
  private:
@@ -162,8 +162,10 @@ class StKFParticleInterface: public TObject
   double InversedChi2Prob(double p, int ndf) const;
   bool IsGoodPV(const KFVertex& pv);
   bool GetTrack(const StDcaGeometry& dcaG, KFPTrack& track, int q, int index);
+#if 0
   std::vector<int> GetTofPID(double m2, double p, int q, const int trackId);
   std::vector<int> GetPID(double m2, double p, int q, double dEdX, double dEdXPull[12], bool isTofm2, const int trackId);
+#endif
 #ifndef __TFG__VERSION__
   void AddTrackToParticleList(const KFPTrack& track, int nHftHitsInTrack, int index, const std::vector<int>& totalPDG, KFVertex& pv, std::vector<int>& primaryTrackList,
                               std::vector<int>& nHftHits, std::vector<int>& particlesPdg, std::vector<KFParticle>& particles, int& nPartSaved,
@@ -260,11 +262,11 @@ class StKFParticleInterface: public TObject
   Bool_t            fIsFixedTarget;
   Bool_t            fIsFixedTarget2018;
   Bool_t            fPidQA;
-  Bool_t            fUsedx2; //! flag for StPiDStatus to absord log2(dx) dependence into TpcLengthCorrectionMD2
-  Bool_t            fUseTof;
+  static Double_t   fgMagScaleFactor;
+  static Bool_t     fgUsedx2; //! flag for StPiDStatus to absord log2(dx) dependence into TpcLengthCorrectionMD2
+  static Bool_t     fgUseTof;
   std::vector<float> fm2TofArray;
   std::vector<int>   ftrackIdToI; // [trackId] => track index on [Mu|Pico]Dst track array
-  static Double_t   fMagScaleFactor;
 #endif /* __TFG__VERSION__ */
   ClassDef(StKFParticleInterface,1)
 };

@@ -14,6 +14,7 @@
 #include "StPicoEvent/StPicoDst.h"
 #include "StPicoEvent/StPicoEvent.h"
 #include "StPicoEvent/StPicoTrack.h"
+#include "StPicoEvent/StPicoTrackCovMatrix.h"
 #include "StPicoEvent/StPicoBTofPidTraits.h"
 #ifdef __TFG__VERSION__
 #include "StPicoEvent/StPicoETofPidTraits.h"
@@ -88,11 +89,13 @@ static Int_t _debug = 0;
     /* 10- Xi */    fabs(gTrack->dEdxPull(1.32171, fdEdXMode, 1)),		\
     /* 11- Omega */ fabs(gTrack->dEdxPull(1.67245, fdEdXMode, 1))};
 
-Double_t StKFParticleInterface::fMagScaleFactor = 1;
+Double_t StKFParticleInterface::fgMagScaleFactor = 1;
 void StKFParticleInterface::SetMagScaleFactor(Double_t scale) {
-  fMagScaleFactor = scale;
-  std::cout << " StKFParticleInterface::SetMagScaleFactor to " << fMagScaleFactor << std::endl;
+  fgMagScaleFactor = scale;
+  std::cout << " StKFParticleInterface::SetMagScaleFactor to " << fgMagScaleFactor << std::endl;
 }
+Bool_t StKFParticleInterface::fgUsedx2 = kFALSE;
+Bool_t StKFParticleInterface::fgUseTof = kFALSE;
 #endif /* __TFG__VERSION__ */
 
 ClassImp(StKFParticleInterface);
@@ -103,15 +106,20 @@ StKFParticleInterface::StKFParticleInterface():
   fStrictTofPID(true), fCleanKaonsWitTof(true), fdEdXMode(1), fTriggerMode(false),
   fChiPrimaryCut(18.6f), fChiPrimaryCutFragments(0.f), fChiPrimaryMaxCut(2e4f), fCleanLowPVTrackEvents(false), fUseHFTTracksOnly(false)
 #ifdef __TFG__VERSION__
-  , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE), fUsedx2(kFALSE), fUseTof(kFALSE)
+  , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE)
 #endif /* _TFG__VERSION__ */
 
 {
   fKFParticleTopoReconstructor = new KFParticleTopoReconstructor();
   fgStKFParticleInterface = this;
+  StPidStatus::SetUsedx2(fgUsedx2);
+  StPidStatus::SetUseTof(fgUseTof);
   // set default cuts
   SetPrimaryProbCut(0.0001); // 0.01% to consider primary track as a secondary;
+  
 }
+void StKFParticleInterface::SetUsedx2(Bool_t k) {fgUsedx2 = k; StPidStatus::SetUsedx2(fgUsedx2);}
+void StKFParticleInterface::SetUseTof(Bool_t k) {fgUseTof = k; StPidStatus::SetUseTof(fgUseTof);}
 
 StKFParticleInterface::~StKFParticleInterface()
 {  
@@ -667,7 +675,7 @@ bool StKFParticleInterface::GetTrack(const StDcaGeometry& dcaG, KFPTrack& track,
   track.SetCharge(q);
   return true;
 }
-
+#if 0
 std::vector<int> StKFParticleInterface::GetTofPID(double m2, double p, int q, const int trackId)
 {
   static const int order = 4;
@@ -738,7 +746,7 @@ std::vector<int> StKFParticleInterface::GetTofPID(double m2, double p, int q, co
 std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, double dEdX, double dEdXPull[12], bool isTofm2, const int trackId)
 {
   vector<int> TofPDG;
-  if(isTofm2 && fUseTof)
+  if(isTofm2 && fgUseTof)
     TofPDG = GetTofPID(m2, p, q, trackId);
   
   for(int iPdg=0; iPdg<3; iPdg++)
@@ -763,7 +771,7 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
 #if 1
   totalPDG = dEdXPDG;
 #else 
-  if(!isTofm2 || ! fUseTof)
+  if(!isTofm2 || ! fgUseTof)
     totalPDG = dEdXPDG;
   else
   {
@@ -794,7 +802,7 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
   
   return totalPDG;
 }
-
+#endif
 void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nHftHitsInTrack, int index, const std::vector<int>& totalPDG, KFVertex& pv, 
   std::vector<int>& primaryTrackList, std::vector<int>& nHftHits, std::vector<int>& particlesPdg, std::vector<KFParticle>& particles, int& nPartSaved,
   const KFPTrack* trackAtLastHit, std::vector<KFParticle>* particlesAtLastHit
@@ -839,16 +847,16 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
 #ifdef __MagFieldCorrection__
 //TODO remove coefficient !!!!
     {
-      trackPDG.SetPx( trackPDG.GetPx() * fMagScaleFactor );
-      trackPDG.SetPy( trackPDG.GetPy() * fMagScaleFactor );
-      trackPDG.SetPz( trackPDG.GetPz() * fMagScaleFactor );
+      trackPDG.SetPx( trackPDG.GetPx() * fgMagScaleFactor );
+      trackPDG.SetPy( trackPDG.GetPy() * fgMagScaleFactor );
+      trackPDG.SetPz( trackPDG.GetPz() * fgMagScaleFactor );
       for(int iIndex=0; iIndex<9; iIndex++){
         const int iC = index2[iIndex];
-        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fMagScaleFactor );
+        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fgMagScaleFactor );
       }
       for(int iIndex=0; iIndex<6; iIndex++){
         const int iC = index4[iIndex];
-        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fMagScaleFactor * fMagScaleFactor );
+        trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fgMagScaleFactor * fgMagScaleFactor );
       }
     }
 #endif
@@ -1445,6 +1453,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     {
       const StPicoBTofPidTraits* btofPid = picoDst->btofPidTraits(gTrack->bTofPidTraitsIndex());
       double betaTof2 = btofPid->btofBeta() * btofPid->btofBeta();
+#if 0
 #ifdef __TFG__VERSION__
       double timeTof = btofPid->btof();
       if(fabs(betaTof2) < 1.e-6 && timeTof > 0) {
@@ -1456,6 +1465,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
         betaTof2 = betaTof*betaTof;
       }
 #endif /* __TFG__VERSION__ */
+#endif
       if(fabs(betaTof2) > 1.e-6)
 	{
 	  m2tof = track.GetP()*track.GetP()*(1./betaTof2 - 1.);
@@ -1525,9 +1535,12 @@ __dEdXPull__
 	}
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
     }
-    
+#if 0    
     vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx(), dEdXPull, isTofm2, index);
-    
+#else
+    StPidStatus PiD(gTrack);
+    vector<int> totalPDG = PiD.GetPDG();
+#endif    
     int nPartSaved0 = nPartSaved;
     unsigned int nPrimaryTracks = primaryTrackList.size();
 #ifndef __TFG__VERSION__
@@ -1852,8 +1865,12 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
       }
 #endif /* __TFG__VERSION__ */
 __dEdXPull__
+#if 0
     vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx()*1.e6, dEdXPull, isTofm2, index);
-    
+#else
+    StPidStatus PiD(gTrack);
+    vector<int> totalPDG = PiD.GetPDG();
+#endif    
     int nPartSaved0 = nPartSaved;
     unsigned int nPrimaryTracks = primaryTrackList.size();
 #ifndef __TFG__VERSION__
@@ -1920,7 +1937,7 @@ __dEdXPull__
 
 #ifdef __MagFieldCorrection__
   //TODO remove coefficient !!!!
-  const Double_t field = muDst->event()->magneticField() *  fMagScaleFactor;
+  const Double_t field = muDst->event()->magneticField() *  fgMagScaleFactor;
 #else
   const Double_t field = muDst->event()->magneticField();
 #endif
@@ -2214,7 +2231,7 @@ bool StKFParticleInterface::FindFixedTargetPV(StPicoDst* picoDst, KFVertex& pv, 
 //     constexpr int index2[9] = { 6,7,8, 10,11,12, 15,16,17 };
 //     constexpr int index4[6] = { 9, 13,14, 18,19,20 };
 // 
-//     constexpr float MFScale =  fMagScaleFactor;
+//     constexpr float MFScale =  fgMagScaleFactor;
 //     track.SetPx( track.GetPx()*MFScale );
 //     track.SetPy( track.GetPy()*MFScale );
 //     track.SetPz( track.GetPz()*MFScale );
@@ -2514,7 +2531,7 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst) {
 	const StDcaGeometry dca = cov->dcaGeometry();
 	KFParticle p = dca.Particle(index,particle.GetPDG()); PrPO(p);
       }
-      StPidStatus PiD(gTrack, fUsedx2); 
+      StPidStatus PiD(gTrack); 
       if (PiD.PiDStatus < 0) continue;
       FillPidQA(&PiD, particle.GetPDG(), 0);
     }
@@ -2536,14 +2553,9 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst) {
 	const StDcaGeometry dca = cov->dcaGeometry();
 	KFParticle p = dca.Particle(p1.Id(),p1.GetPDG()); PrPO(p);
       }
-      StPidStatus PiD1(gTrack1, fUsedx2); 
+      StPidStatus PiD1(gTrack1); 
       if (PiD1.PiDStatus < 0) continue;
       FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
-#if 0
-      StPidStatus PiD2(gTrack1, fUsedx2, &negpos[np] ); 
-      if (PiD2.PiDStatus < 0) continue;
-      FillPidQA(&PiD2, p1.GetPDG(), particle->GetPDG(), 1);
-#endif
     }
   }
   return kTRUE;
@@ -2568,7 +2580,7 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst) {
 	const StDcaGeometry* dca = gTrack->dcaGeom();
 	KFParticle p = dca->Particle(index,particle.GetPDG()); PrPO(p);
       }
-      StPidStatus PiD(gTrack, fUsedx2); 
+      StPidStatus PiD(gTrack); 
       if (PiD.PiDStatus < 0) continue;
       FillPidQA(&PiD, particle.GetPDG(), 0);
     }
@@ -2588,18 +2600,15 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst) {
 	const StDcaGeometry* dca = gTrack1->dcaGeom();
 	KFParticle p = dca->Particle(index1,p1.GetPDG());      PrPO(p);
       }
-      StPidStatus PiD1(gTrack1, fUsedx2); 
+      StPidStatus PiD1(gTrack1); 
       if (PiD1.PiDStatus < 0) continue;
       FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
-      StPidStatus PiD2(gTrack1, fUsedx2, &negpos[np] ); 
-      if (PiD2.PiDStatus < 0) continue;
-      FillPidQA(&PiD2, p1.GetPDG(), particle->GetPDG(), 1);
     }
   }
   return kTRUE;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGParent, Int_t set) {
+Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGParent) {
   struct Particle_t {
     Int_t pdg;
     const Char_t *name;
@@ -2646,51 +2655,47 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[1][Ndecays+1][Nparticles][12] = {0}; // set always 1
-  if (! hist[0][0][0][0]) {
+  static TH2F *hist[Ndecays+1][Nparticles][12] = {0}; // set always 1
+  if (! hist[0][0][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
     TDirectory *PiDQA = top->GetDirectory("PiDQA");
-    for (Int_t s = 0; s < 1; s++) { // 2; s++) {// from Dst and from Fit
-      Int_t d1 = 0;
-      if (s) d1 = 1;
-      for (Int_t d = d1; d <= Ndecays; d++) {
-	for (Int_t p = 0; p < Nparticles; p++) {
-	  PiDQA->cd();
-	  if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	  TDirectory *dir1 = PiDQA;
-	  if (d > 0 && (particles[p].pdg != parents[d-1].pdg1 && particles[p].pdg != parents[d-1].pdg2)) continue;
-	  if (d) {
-	    TDirectory *dir2 = dir1->GetDirectory(parents[d-1].name);
-	    if (! dir2) {
-	      dir1->mkdir(parents[d-1].name); 
-	      dir2 = dir1->GetDirectory(parents[d-1].name); 
-	    }
-	    dir2->cd(); dir1 = dir2;
-	    if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
+    Int_t d1 = 0;
+    for (Int_t d = d1; d <= Ndecays; d++) {
+      for (Int_t p = 0; p < Nparticles; p++) {
+	PiDQA->cd();
+	if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
+	TDirectory *dir1 = PiDQA;
+	if (d > 0 && (particles[p].pdg != parents[d-1].pdg1 && particles[p].pdg != parents[d-1].pdg2)) continue;
+	if (d) {
+	  TDirectory *dir2 = dir1->GetDirectory(parents[d-1].name);
+	  if (! dir2) {
+	    dir1->mkdir(parents[d-1].name); 
+	    dir2 = dir1->GetDirectory(parents[d-1].name); 
 	  }
-	  TString name(particles[p].name);
-	  if (s) name += "C";
-	  dir1->mkdir(name);
-	  TDirectory *dir3 = dir1->GetDirectory(name);
-	  dir3->cd();
+	  dir2->cd(); dir1 = dir2;
 	  if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	  hist[s][d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
-	  hist[s][d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
-	  hist[s][d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
-	  hist[s][d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
-	  hist[s][d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
-	  hist[s][d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
-	  hist[s][d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	  hist[s][d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,600,-3,3);
-	  hist[s][d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	  //	  hist[s][d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	  hist[s][d][p][10] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
-	  hist[s][d][p][11] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
-	  for (Int_t k = 0; k < 12; k++) {
-	    if (!  hist[s][d][p][k]) continue;
-	    hist[s][d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
-	  }
+	}
+	TString name(particles[p].name);
+	dir1->mkdir(name);
+	TDirectory *dir3 = dir1->GetDirectory(name);
+	dir3->cd();
+	if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
+	hist[d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
+	hist[d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
+	hist[d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
+	hist[d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
+	hist[d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
+	hist[d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
+	hist[d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	hist[d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,600,-3,3);
+	hist[d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	//	  hist[d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
+	hist[d][p][10] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	hist[d][p][11] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	for (Int_t k = 0; k < 12; k++) {
+	  if (!  hist[d][p][k]) continue;
+	  hist[d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
 	}
       }
     }
@@ -2722,37 +2727,37 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     Double_t bgL10 = PiD->bghyp[l];
     if (PiD->fBTof()) {
       sigmaTof = PiD->fBTof()->Sigma(l);
-      hist[s][d][p][8]->Fill(bgL10, sigmaTof);
+      hist[d][p][8]->Fill(bgL10, sigmaTof);
     }
 #if 0
     if (PiD->fETof()) {
       sigmaTof = PiD->fETof()->Sigma(l);
-      hist[s][d][p][9]->Fill(bgL10, sigmaTof);
+      hist[d][p][9]->Fill(bgL10, sigmaTof);
     }
 #endif
-    hist[s][d][p][0]->Fill(bgL10, PiD->fFit()->dev[l]);
-    hist[s][d][p][6]->Fill(bgL10, PiD->fFit()->devS[l]);
+    hist[d][p][0]->Fill(bgL10, PiD->fFit()->dev[l]);
+    hist[d][p][6]->Fill(bgL10, PiD->fFit()->devS[l]);
     if (TMath::Abs(sigmaTof) < 3) {
-      hist[s][d][p][4]->Fill(bgL10, PiD->fFit()->dev[l]);
-      hist[s][d][p][7]->Fill(bgL10, PiD->fFit()->devS[l]);
+      hist[d][p][4]->Fill(bgL10, PiD->fFit()->dev[l]);
+      hist[d][p][7]->Fill(bgL10, PiD->fFit()->devS[l]);
     }
     if (PiD->fdNdx()) {
-      hist[s][d][p][1]->Fill(bgL10, PiD->fdNdx()->dev[l]);
-      if (sigmaTof < 3) hist[s][d][p][5]->Fill(bgL10, PiD->fdNdx()->dev[l]);
+      hist[d][p][1]->Fill(bgL10, PiD->fdNdx()->dev[l]);
+      if (sigmaTof < 3) hist[d][p][5]->Fill(bgL10, PiD->fdNdx()->dev[l]);
     }
     
     if (PiD->fBTof()) {
       Float_t beta = PiD->fBTof()->beta();
       if (beta > 0 && beta < 2) {
-	hist[s][d][p][2]->Fill(bgL10, PiD->fBTof()->dev[l]);
-	hist[s][d][p][10]->Fill(bgL10, PiD->fBTof()->devS[l]);
+	hist[d][p][2]->Fill(bgL10, PiD->fBTof()->dev[l]);
+	hist[d][p][10]->Fill(bgL10, PiD->fBTof()->devS[l]);
       }
     }
     if (PiD->fETof()) {
       Float_t beta = PiD->fETof()->beta();
       if (beta > 0 && beta < 2) {
-	hist[s][d][p][3]->Fill(bgL10, PiD->fETof()->dev[l]);
-	hist[s][d][p][11]->Fill(bgL10, PiD->fETof()->devS[l]);
+	hist[d][p][3]->Fill(bgL10, PiD->fETof()->dev[l]);
+	hist[d][p][11]->Fill(bgL10, PiD->fETof()->devS[l]);
       }
     }
   }
