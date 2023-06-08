@@ -554,10 +554,6 @@ Double_t StdEdxModel::ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)
-  return zMP(x,p, 0);
-}
-//________________________________________________________________________________
-Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log(keV/cm)
   Double_t bgL10 = x[0];
   Double_t pOverMRC  = TMath::Power(10., bgL10);
   //  Double_t bgL10 = TMath::Log10(pOverM);
@@ -565,7 +561,7 @@ Double_t StdEdxModel::zMP(Double_t *x, Double_t *p, Double_t *sigmaCor) { // log
   Double_t charge  = p[1];
   Double_t mass    = p[2];
   Double_t dx      = TMath::Power( 2., log2dx);
-  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge, mass, sigmaCor); // */dNdxVsBgC*.root [-1.5,5]
+  Double_t dNdx = StdEdxModel::instance()->dNdxEff(pOverMRC, charge, mass); // */dNdxVsBgC*.root [-1.5,5]
   Double_t Np = dNdx*dx;
   //  Double_t NpLog = TMath::Log(Np);
   //  Double_t mu    = instance()->Parameter(Np, 0);
@@ -778,7 +774,7 @@ Double_t StdEdxModel::NpCorrection(Double_t betagamma) {
   return eff->Interpolate(bgL10);
 }
 //________________________________________________________________________________
-Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, Double_t *pullCor) {
+Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass) {
   if (!fgStdEdxModel) instance();
   Double_t bgMC = bgCorrected(poverm); 
   Double_t dNdxMC = dNdx(bgMC, charge);
@@ -788,7 +784,7 @@ Double_t StdEdxModel::dNdxEff(Double_t poverm, Double_t charge, Double_t mass, D
 //________________________________________________________________________________
 Double_t StdEdxModel::dNdxEffL10func(Double_t *x, Double_t *p) {
   Double_t bg = TMath::Power(10., x[0]);
-  return instance()->dNdxEff(bg, 1.,  0.13956995, 0);
+  return instance()->dNdxEff(bg, 1.,  0.13956995);
 }
 //________________________________________________________________________________
 TF1 *StdEdxModel::dNdxEffL10F() {

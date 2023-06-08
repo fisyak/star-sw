@@ -6,6 +6,7 @@
 #include "StPicoDst.h"
 #if defined (__TFG__VERSION__)
 #include "StEvent/StDcaGeometry.h"
+#include "KFParticle/KFParticle.h"
 #endif /* __TFG__VERSION__ */
 
 //_________________
@@ -59,6 +60,7 @@ class StPicoTrackCovMatrix : public TObject {
 #if defined (__TFG__VERSION__)
   /// DCA geometry
   StDcaGeometry &dcaGeometry() const;
+  KFParticle    &Particle(Int_t kg = 0, Int_t pdg = 0)  const {return dcaGeometry().Particle(kg,pdg);}
 #endif /* __TFG__VERSION__ */
 
   //

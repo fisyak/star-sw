@@ -29,7 +29,7 @@ class StdEdxModel {
   Double_t             dNdx(Double_t poverm, Double_t charge = 1.0);
   TF1                 *dNdxL10F();
   static Double_t      dNdxL10func(Double_t *x, Double_t *p);
-  Double_t     	       dNdxEff(Double_t poverm, Double_t charge = 1.0, Double_t mass = 0.13956995, Double_t *pullCor = 0);
+  Double_t     	       dNdxEff(Double_t poverm, Double_t charge = 1.0, Double_t mass = 0.13956995);
   static Double_t      dNdxEffL10func(Double_t *x, Double_t *p);
   TF1                 *dNdxEffL10F();
   Double_t             dNdE();
@@ -69,7 +69,6 @@ class StdEdxModel {
   void     	       SetScale(Double_t scale = 1.0) {fScale = scale;}								       
   Double_t 	       dNdxScale() {return fScale;}											       
   static Double_t      zMP(Double_t *x, Double_t *p); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx, p[1] =  charge, and p[2] = mass
-  static Double_t      zMP(Double_t *x, Double_t *p, Double_t *sigmaCor); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx, p[1] =  charge, and p[2] = mass
   TF1     	      *ZMP(Double_t log2dx = 1, Double_t charge = 1, Double_t mass = 0.1395699);                                                                                           
   // from 100 keV Tcut (GEXNor.C)
   void InitPar();

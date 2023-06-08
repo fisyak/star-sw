@@ -26,14 +26,7 @@
 #include "StPicoDst.h"
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/PhysicalConstants.h"
-#if defined(__TFG__VERSION__)
-#include "StPicoTrackCovMatrix.h"
-#endif /* __TFG__VERSION__ */
 #endif
-
-#if defined (__TFG__VERSION__)
-#include "StPicoTrackCovMatrix.h"
-#endif /* __TFG__VERSION__ */
 
 //_________________
 class StPicoTrack : public TObject {
