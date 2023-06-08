@@ -16,13 +16,11 @@
 #include "StPicoEvent/StPicoTrack.h"
 #include "StPicoEvent/StPicoTrackCovMatrix.h"
 #include "StPicoEvent/StPicoBTofPidTraits.h"
-#ifdef __TFG__VERSION__
 #include "StPicoEvent/StPicoETofPidTraits.h"
 #include "StdEdxY2Maker/StPidStatus.h"
 #include "StMaker.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "THelixTrack.h" 
-#endif /* __TFG__VERSION__ */
 #include "StBichsel/Bichsel.h"
 #include "StBichsel/StdEdxModel.h"
 #include "StProbPidTraits.h"
@@ -33,25 +31,12 @@
 #include "TDatabasePDG.h"
 #include <ctime>
 #include <algorithm>
-
-//   #define USETOF
-
-#ifndef __TFG__VERSION__
-// #define FXT
-
-// #define FXT2018
-#define IsFixeTarget() kFALSE
-#define IsFixeTarget2018() kFALSE
-#define PID_2018
-#else /* __TFG__VERSION__ */
 //#define PID_2018
 // #define PID_MAY
 // #if ! defined(PID_2018) && ! defined( PID_MAY)
 // #define PID_JUNE
 // #endif
-#endif /* ! __TFG__VERSION__ */
 
-#ifdef __TFG__VERSION__
 static Int_t _debug = 0;
 #define PrPP(A) if (_debug) {std::cout << (#A) << "\t"; A->Print();}
 #define PrPO(A) if (_debug) {std::cout << (#A) << "\t"; A.Print();}
@@ -74,21 +59,6 @@ static Int_t _debug = 0;
     hist->SetXTitle("log_{10}P");					\
     hist->SetYTitle("log_{10}dN/dx");					\
   } 
-#define __dEdXPull__ \
-  double dEdXPull[12] = {						\
-    /* 0 - e */     fabs(gTrack->dEdxPull(5.109989461E-04, fdEdXMode, 1)),  \
-    /* 1 - mu */    fabs(gTrack->dEdxPull(0.1056583745, fdEdXMode, 1)),	\
-    /* 2 - pi */    fabs(gTrack->dEdxPull(0.139570, fdEdXMode, 1)),     \
-    /* 3 - K */     fabs(gTrack->dEdxPull(0.493677, fdEdXMode, 1)),	\
-    /* 4 - p */     fabs(gTrack->dEdxPull(0.938272, fdEdXMode, 1)),	\
-    /* 5 - d */     fabs(gTrack->dEdxPull(1.876124, fdEdXMode, 1)),	\
-    /* 6 - t */     fabs(gTrack->dEdxPull(2.809432, fdEdXMode, 1)),	\
-    /* 7 - He3 */   fabs(gTrack->dEdxPull(2.809413, fdEdXMode, 2)),	\
-    /* 8 - He4 */   fabs(gTrack->dEdxPull(3.728400, fdEdXMode, 2)),	\
-    /* 9 - Sigma */ fabs(gTrack->dEdxPull(1.197449, fdEdXMode, 1)),	\
-    /* 10- Xi */    fabs(gTrack->dEdxPull(1.32171, fdEdXMode, 1)),		\
-    /* 11- Omega */ fabs(gTrack->dEdxPull(1.67245, fdEdXMode, 1))};
-
 Double_t StKFParticleInterface::fgMagScaleFactor = 1;
 void StKFParticleInterface::SetMagScaleFactor(Double_t scale) {
   fgMagScaleFactor = scale;
@@ -96,7 +66,6 @@ void StKFParticleInterface::SetMagScaleFactor(Double_t scale) {
 }
 Bool_t StKFParticleInterface::fgUsedx2 = kFALSE;
 Bool_t StKFParticleInterface::fgUseTof = kFALSE;
-#endif /* __TFG__VERSION__ */
 
 ClassImp(StKFParticleInterface);
 StKFParticleInterface *StKFParticleInterface::fgStKFParticleInterface = 0;
@@ -105,9 +74,7 @@ StKFParticleInterface::StKFParticleInterface():
   fCollectTrackHistograms(false), fCollectPIDHistograms(false), fCollectPVHistograms(false),
   fStrictTofPID(true), fCleanKaonsWitTof(true), fdEdXMode(1), fTriggerMode(false),
   fChiPrimaryCut(18.6f), fChiPrimaryCutFragments(0.f), fChiPrimaryMaxCut(2e4f), fCleanLowPVTrackEvents(false), fUseHFTTracksOnly(false)
-#ifdef __TFG__VERSION__
   , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE)
-#endif /* _TFG__VERSION__ */
 
 {
   fKFParticleTopoReconstructor = new KFParticleTopoReconstructor();
@@ -272,12 +239,10 @@ void StKFParticleInterface::SetChi2CutCharmManybodyDecays(float cut)     { GetKF
 void StKFParticleInterface::SetLdLCutCharm2D(float cut)                  { GetKFParticleFinder()->SetLdLCutCharm2D(cut); }
 void StKFParticleInterface::SetChi2TopoCutCharm2D(float cut)             { GetKFParticleFinder()->SetChi2TopoCutCharm2D(cut); }
 void StKFParticleInterface::SetChi2CutCharm2D(float cut)                 { GetKFParticleFinder()->SetChi2CutCharm2D(cut); }
-#ifdef __TFG__VERSION__
 void StKFParticleInterface::SetSecondaryCuts(const float sigmaMass, const float chi2Topo, const float ldl)                 
 { 
   GetKFParticleFinder()->SetSecondaryCuts(sigmaMass, chi2Topo, ldl); 
 }
-#endif /* __TFG__VERSION__ */
   
 double StKFParticleInterface::InversedChi2Prob(double p, int ndf) const
 {
@@ -324,32 +289,12 @@ void StKFParticleInterface::CollectTrackHistograms()
   }
   dirs[1] = dirs[0]->GetDirectory("Tracks"); assert(dirs[1]);
   dirs[1]->cd();
-#ifndef __TFG__VERSION__
-  
-  fTrackHistograms2D[0] = (TH2F *)   dirs[1]->Get("hdEdX");
-  if (! fTrackHistograms2D[0]) fTrackHistograms2D[0] = new TH2F("hdEdX", "hdEdX", 1000, 0, 10, 200, 0, 200);
-
-  fTrackHistograms2D[1] = (TH2F *)   dirs[1]->Get("hdEdXPos");
-  if (! fTrackHistograms2D[1]) fTrackHistograms2D[1] = new TH2F("hdEdXPos", "hdEdXPos", 1000, 0, 10, 200, 0, 200);
-  
-  fTrackHistograms2D[2] = (TH2F *)   dirs[1]->Get("hdEdXNeg");
-  if (! fTrackHistograms2D[2]) fTrackHistograms2D[2] = new TH2F("hdEdXNeg", "hdEdXNeg", 1000, 0, 10, 200, 0, 200);
-  
-  fTrackHistograms2D[3] = (TH2F *)   dirs[1]->Get("hdEdXwithTof");
-  if (! fTrackHistograms2D[3]) fTrackHistograms2D[3] = new TH2F("hdEdXwithTof", "hdEdXwithTof", 1000, 0, 10, 200, 0, 200);
-  
-#else /* __TFG__VERSION__ */
   const Char_t *chargeName[4] = {"","Pos","Neg","withTof"};
   for (Int_t i = 0; i < 4; i++) {
     __BOOK_hdEdx__(dirs[1],fTrackHistograms2D[i]  , Form("hdEdX%s",chargeName[i]),  Form("hdEdX%s",chargeName[i]));
     __BOOK_hdNdx__(dirs[1],fTrackHistograms2D[i+9], Form("hdNdX%s",chargeName[i]),  Form("hdNdX%s",chargeName[i]));
   }
-#endif /* __TFG__VERSION__ */
   fTrackHistograms2D[4] = (TH2F *)   dirs[1]->Get("hTofPID");
-#ifndef __TFG__VERSION__
-  if (! fTrackHistograms2D[4]) fTrackHistograms2D[4] = new TH2F("hTofPID", "hTofPID", 300, 0, 15, 1100, -1, 10);
-
-#else /* __TFG__VERSION__ */
   if (! fTrackHistograms2D[4]) {
     fTrackHistograms2D[4] = new TH2F("hTofPID", "hTofPID", 200, -1, 1, 1100, -1, 10);
     fTrackHistograms2D[4]->SetXTitle("log_{10}P");
@@ -365,7 +310,6 @@ void StKFParticleInterface::CollectTrackHistograms()
     fTrackHistograms2D[14] = new TH2F("hETofPID", "hETofPID", 300, -2, 2, 1100, -1, 10);
     fTrackHistograms2D[14]->SetXTitle("log_{10}P");
   }
-#endif /* __TFG__VERSION__ */
 #ifdef __USE_HFT__
   fTrackHistograms[0] = (TH1F *)   dirs[1]->Get("hNHFTHits");
   if (! fTrackHistograms[0]) fTrackHistograms[0] = new TH1F("hNHFTHits", "hNHFTHits",11, -0.5, 10.5);
@@ -375,40 +319,18 @@ void StKFParticleInterface::CollectTrackHistograms()
   if (! fTrackHistograms[1]) fTrackHistograms[1] = new TH1F("hPVError", "hPVError", 10000, 0, 1);
 
   fTrackHistograms2D[5] = (TH2F *)   dirs[1]->Get("hPVErrorVsNTracks");
-#ifndef __TFG__VERSION__
-  if (! fTrackHistograms2D[5]) fTrackHistograms2D[5] = new TH2F("hPVErrorVsNTracks", "hPVErrorVsNTracks", 1000, 0, 1000, 1000, 0, 0.5);
-
-#else /* __TFG__VERSION__ */
   if (! fTrackHistograms2D[5]) {
     fTrackHistograms2D[5] = new TH2F("hPVErrorVsNTracks", "hPVErrorVsNTracks", 3000, 0.5, 3.5, 5000, 0, 0.5);
     fTrackHistograms2D[5]->SetXTitle("log_{10} No. Global Tracks");
   }
-#endif /* __TFG__VERSION__ */
   fTrackHistograms2D[6] = (TH2F *)   dirs[1]->Get("hPVErrorVsNPVTracks");
-#ifndef __TFG__VERSION__
-  if (! fTrackHistograms2D[6]) fTrackHistograms2D[6] = new TH2F("hPVErrorVsNPVTracks", "hPVErrorVsNPVTracks", 1000, 0, 1000, 1000, 0, 0.5);
-#else /* __TFG__VERSION__ */
   if (! fTrackHistograms2D[6]) {
     fTrackHistograms2D[6] = new TH2F("hPVErrorVsNPVTracks", "hPVErrorVsNPVTracks", 3000, 0.5, 3.5, 5000, 0, 0.5);
     fTrackHistograms2D[6]->SetXTitle("log_{10} No. Primary Tracks ");
   }
-#endif /* __TFG__VERSION__ */
   fTrackHistograms[2] = (TH1F *)   dirs[1]->Get("hPrimaryRatio");
   if (! fTrackHistograms[2]) fTrackHistograms[2] = new TH1F("hPrimaryRatio", "hPrimaryRatio", 100, 0, 1);
   
-#ifndef __TFG__VERSION__
-  fTrackHistograms2D[7] = (TH2F *)   dirs[1]->Get("hSecondaryVsPrimaryTracks");
-  if (! fTrackHistograms2D[7]) fTrackHistograms2D[7] = new TH2F("hSecondaryVsPrimaryTracks", "hSecondaryVsPrimaryTracks", 200, 0, 1000, 200, 0, 1000);
-
-  fTrackHistograms2D[8] = (TH2F *)   dirs[1]->Get("hdEdXTofPID");
-  if (! fTrackHistograms2D[8]) fTrackHistograms2D[8] = new TH2F("hdEdXTofPID", "hdEdXTofPID", 200, 0, 200, 1100, -1, 10);
-
-  fTrackHistograms2D[9] = (TH2F *)   dirs[1]->Get("hETofPID");
-  if (! fTrackHistograms2D[9]) fTrackHistograms2D[9] = new TH2F("hETofPID", "ETofPID", 300, 0, 15, 1100, -1, 10);
-
-  fTrackHistograms2D[10] = (TH2F *)   dirs[1]->Get("hdEdXETofPID");
-  if (! fTrackHistograms2D[10]) fTrackHistograms2D[10] = new TH2F("hdEdXETofPID", "hdEdXETofPID", 200, 0, 200, 1100, -1, 10);
-#else /* __TFG__VERSION__ */
   fTrackHistograms2D[7] = (TH2F *)   dirs[1]->Get("hGlobalVsPrimaryTracks");
   if (! fTrackHistograms2D[7]) fTrackHistograms2D[7] = new TH2F("hGlobalVsPrimaryTracks", "Log_{10} No. Global vs Log_{10} No. Primary Tracks", 350, 0.0, 3.5, 350, 0, 3.5);
   fTrackHistograms2D[8] = (TH2F *)   dirs[1]->Get("EtaVspT");
@@ -416,7 +338,6 @@ void StKFParticleInterface::CollectTrackHistograms()
   fTrackHistograms2D[13] = (TH2F *)   dirs[1]->Get("EtaVspTAll");
   if (! fTrackHistograms2D[13]) fTrackHistograms2D[13] = new TH2F("EtaVspTAll", "Eta vs Log_{10}p_{T} for All tracks", 350, -2, 1.5, 600, -3.0, 3.0);
   
-#endif /* __TFG__VERSION__ */
   dirs[0]->cd();
   
   fCollectTrackHistograms = true;
@@ -453,27 +374,12 @@ void StKFParticleInterface::CollectPIDHistograms()
     dirs[2]->cd();
     
     fTrackPdgToHistoIndex[ pdgTrackHisto[iTrackHisto] ] = iTrackHisto;
-#ifndef __TFG__VERSION__
-    
-    fHistodEdXTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdX");
-    if (! fHistodEdXTracks[iTrackHisto]) fHistodEdXTracks[iTrackHisto] = new TH2F("hdEdX", "hdEdX", 1000, 0, 10, 200, 0, 200);
-
-    fHistodEdXwithTofTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXwithTof");
-    if (! fHistodEdXwithTofTracks[iTrackHisto]) fHistodEdXwithTofTracks[iTrackHisto] = new TH2F("hdEdXwithTof", "hdEdXwithTof", 1000, 0, 10, 200, 0, 200);
-
-    fHistoTofPIDTracks[iTrackHisto] = (TH2F *)   dirs[2]->Get("hTofPID");
-    if (! fHistoTofPIDTracks[iTrackHisto]) fHistoTofPIDTracks[iTrackHisto] = new TH2F("hTofPID", "hTofPID", 300, 0, 15, 1100, -1, 10);
-#else /* __TFG__VERSION__ */
     __BOOK_hdEdx__(dirs[2],fHistodEdXTracks[iTrackHisto], "hdEdX", "hdEdX");
     __BOOK_hdEdx__(dirs[2],fHistodEdXwithTofTracks[iTrackHisto], "hdEdXwithTof", "hdEdXwithTof");
     __BOOK_hdNdx__(dirs[2],fHistodNdXTracks[iTrackHisto], "hdNdX", "hdNdX");
     __BOOK_hdNdx__(dirs[2],fHistodNdXwithTofTracks[iTrackHisto], "hdNdXwithTof", "hdNdXwithTof");
-#endif /* __TFG__VERSION__ */
   
     fHistoTofPIDTracks[iTrackHisto][0] = (TH2F *)   dirs[2]->Get("hTofPID");
-#ifndef __TFG__VERSION__
-    if (! fHistoTofPIDTracks[iTrackHisto][0]) fHistoTofPIDTracks[iTrackHisto][0] = new TH2F("hTofPID", "hTofPID", 300, 0, 15, 1100, -1, 10);
-#else /* __TFG__VERSION__ */
     if (! fHistoTofPIDTracks[iTrackHisto][0]) {
       fHistoTofPIDTracks[iTrackHisto][0] = new TH2F("hTofPID", "hTofPID", 200, -1, 1, 1100, -1, 10);
       fHistoTofPIDTracks[iTrackHisto][0]->SetXTitle("log_{10}P");
@@ -489,36 +395,18 @@ void StKFParticleInterface::CollectPIDHistograms()
       fHistoETofPIDTracks[iTrackHisto] = new TH2F("hETofPID", "hETofPID", 200, -1, 1, 1100, -1, 10);
       fHistoETofPIDTracks[iTrackHisto]->SetXTitle("log_{10}P");
     }
-#endif /* __TFG__VERSION__ */
   
     fHistoMomentumTracks[iTrackHisto] = (TH1F *)   dirs[2]->Get("hMomentum");
-#ifndef __TFG__VERSION__
-    if (! fHistoMomentumTracks[iTrackHisto]) fHistoMomentumTracks[iTrackHisto] = new TH1F("hMomentum", "hMomentum", 1000, 0, 10);
-#else /* __TFG__VERSION__ */
     if (! fHistoMomentumTracks[iTrackHisto]) fHistoMomentumTracks[iTrackHisto] = new TH1F("hMomentum", "log_{10} p", 1000, -2, 2);
-#endif /* __TFG__VERSION__ */
     
     fHistodEdXPull[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXPull");
-#ifndef __TFG__VERSION__
-    if (! fHistodEdXPull[iTrackHisto]) fHistodEdXPull[iTrackHisto] = new TH2F("hdEdXPull", "hdEdXPull", 500, 0, 10, 300, -30, 30);
-#else /* __TFG__VERSION__ */
     if (! fHistodEdXPull[iTrackHisto]) fHistodEdXPull[iTrackHisto] = new TH2F("hdEdXPull", "hdEdXPull", 2000, -5, 5, 120, -6, 6);
-#endif /* __TFG__VERSION__ */
 
     fHistodEdXnSigma[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXnSigma");
-#ifndef __TFG__VERSION__
-    if (! fHistodEdXnSigma[iTrackHisto]) fHistodEdXnSigma[iTrackHisto] = new TH2F("hdEdXnSigma", "hdEdXnSigma", 500, 0, 10, 300, -30, 30);
-#else /* __TFG__VERSION__ */
     if (! fHistodEdXnSigma[iTrackHisto]) fHistodEdXnSigma[iTrackHisto] = new TH2F("hdEdXnSigma", "hdEdXnSigma", 2000, -5, 5, 120, -6, 6);
-#endif /* __TFG__VERSION__ */
     
     fHistodEdXZ[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXZ");
-#ifndef __TFG__VERSION__
-    if (! fHistodEdXZ[iTrackHisto]) fHistodEdXZ[iTrackHisto] = new TH2F("hdEdXZ", "hdEdXZ", 500, -5, 5, 140, -1, 6);
-#else /* __TFG__VERSION__ */
     if (! fHistodEdXZ[iTrackHisto]) fHistodEdXZ[iTrackHisto] = new TH2F("hdEdXZ", "hdEdXZ", 2000, -2, 2, 280, -1, 6);
-#endif /* !__TFG__VERSION__ */
-#ifdef __TFG__VERSION__
     fHistodEdXPull[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdEdXPull");
     if (! fHistodEdXPull[iTrackHisto]) fHistodEdXPull[iTrackHisto] = new TH2F("hdEdXPull", "hdEdXPull", 2000, -2, 2, 120, -6, 6);
 
@@ -527,7 +415,6 @@ void StKFParticleInterface::CollectPIDHistograms()
     
     //    fHistodNdXZ[iTrackHisto] = (TH2F *)   dirs[2]->Get("hdNdXZ");
     //    if (! fHistodNdXZ[iTrackHisto]) fHistodNdXZ[iTrackHisto] = new TH2F("hdNdXZ", "hdNdXZ", 2000, -5, 5, 280, -1, 6);
-#endif /* __TFG__VERSION__ */
     
     dirs[1]->cd();
   }
@@ -806,9 +693,7 @@ std::vector<int> StKFParticleInterface::GetPID(double m2, double p, int q, doubl
 void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nHftHitsInTrack, int index, const std::vector<int>& totalPDG, KFVertex& pv, 
   std::vector<int>& primaryTrackList, std::vector<int>& nHftHits, std::vector<int>& particlesPdg, std::vector<KFParticle>& particles, int& nPartSaved,
   const KFPTrack* trackAtLastHit, std::vector<KFParticle>* particlesAtLastHit
-#ifdef __TFG__VERSION__
 						   , Float_t chi2, Int_t NDF
-#endif /* ! __TFG__VERSION__ */
 						   )
 {
   for(unsigned int iPDG=0; iPDG<totalPDG.size(); iPDG++)
@@ -819,17 +704,6 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
     
     KFPTrack trackPDG = track;
 
-#ifndef __TFG__VERSION__
-    float r = sqrt(trackPDG.GetX()*trackPDG.GetX() + trackPDG.GetY()*trackPDG.GetY());
-    float dx = (trackPDG.GetX() - pv.X());
-    float dy = (trackPDG.GetY() - pv.Y());
-    float dz = (trackPDG.GetZ() - pv.Z());
-    float l = sqrt(dx*dx + dy*dy + dz*dz);
-    //TODO uncomment!!!
-//     if((abs(pdg) > 1000000000) && (!(r<5. && l<10.))) continue;
-//     if((abs(pdg) > 1000) && (!(r<5. && l<10.))) continue;
-
-#else /* __TFG__VERSION__ */
     //    if(abs(pdg) == 1000020060 || abs(pdg) == 1000030060)
     //    {
 #if 0
@@ -840,7 +714,6 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
       float l = sqrt(dx*dx + dy*dy + dz*dz);
 //       if(!(r<2. && l<2.)) continue;
 #endif
-#endif /* __TFG__VERSION__ */
     //correct for the charge of ions
     const int index2[9] = { 6,7,8, 10,11,12, 15,16,17 };
     const int index4[6] = { 9, 13,14, 18,19,20 };
@@ -914,10 +787,8 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
     nHftHits[nPartSaved] = 0;
     
     KFParticle particle(trackPDG, pdg);
-#ifdef __TFG__VERSION__
     particle.Chi2() = chi2;
     particle.NDF()  = NDF;
-#endif /* __TFG__VERSION__ */
     float chiPrim = particle.GetDeviationFromVertex(pv);
     if( (chiPrim < fChiPrimaryCut && pdg < 1000000000) ||
         (chiPrim < fChiPrimaryCutFragments && pdg >= 1000000000))
@@ -932,7 +803,6 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
     particle.SetId(index);
     particles[nPartSaved] = particle;
 
-#ifndef __TFG__VERSION__
 #ifdef __kfpAtFirstHit__
     if(trackAtLastHit && particlesAtLastHit){
       KFPTrack trackPDGAtLastHit = *trackAtLastHit;
@@ -984,18 +854,13 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
       particlesAtLastHit->at(nPartSaved).SetId(index);
     }
 #endif /* __kfpAtFirstHit__ */
-#endif /* ! __TFG__VERSION__ */
     particlesPdg[nPartSaved] = pdg;
 
     nPartSaved++;
   }
 }
 
-#ifndef __TFG__VERSION__
-void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::vector<int>& pdgVector, const bool isTofm2, float m2tof)
-#else /* __TFG__VERSION__ */
 void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::vector<int>& pdgVector, const bool isTofm2, float m2tof,  const bool isETofm2, float m2Etof)
-#endif /* __TFG__VERSION__ */
 {
   float momentum = gTrack->gPtot();
   if (pdgVector.size() == 1 && pdgVector[0] == -1) return;
@@ -1005,11 +870,6 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
     const int iTrackHisto = fTrackPdgToHistoIndex[pdg];
     if( ! (iTrackHisto <= 0 || iTrackHisto >= NTrackHistoFolders) )
     {
-#ifndef __TFG__VERSION__
-      fHistoMomentumTracks[iTrackHisto] -> Fill(momentum);
-      fHistodEdXTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx());
-      if(isTofm2)
-#else /* __TFG__VERSION__ */
       fHistoMomentumTracks[iTrackHisto] -> Fill(TMath::Log10(momentum));
       Double_t pL10 = TMath::Log10(momentum);
       Double_t dEdxL10 = (gTrack->dEdx() > 0) ? TMath::Log10(gTrack->dEdx()) : dEdxL10min;
@@ -1020,12 +880,7 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
       fHistodEdXTracks[iTrackHisto] -> Fill(pL10, dEdxL10);
       fHistodNdXTracks[iTrackHisto] -> Fill(pL10, dNdxL10);
       if(isTofm2 || isETofm2)
-#endif /* __TFG__VERSION__ */
       {
-#ifndef __TFG__VERSION__
-        fHistodEdXwithTofTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx());
-        fHistoTofPIDTracks[iTrackHisto] -> Fill(momentum, m2tof);
-#else /* __TFG__VERSION__ */
         fHistodEdXwithTofTracks[iTrackHisto] -> Fill(pL10, dEdxL10);
         if (isTofm2) {
 	  fHistoTofPIDTracks[iTrackHisto][0] -> Fill(pL10, m2tof);
@@ -1035,7 +890,6 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
 #endif /* __ETAPN_TOF_PLOTS__ */
 	}
         if (isETofm2) fHistoETofPIDTracks[iTrackHisto] -> Fill(pL10, m2Etof);
-#endif /* __TFG__VERSION__ */
         
         if(abs(pdg)==11)
         {
@@ -1044,12 +898,8 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
         if(abs(pdg)==211)
         {
           fHistodEdXnSigma[iTrackHisto] -> Fill(momentum, gTrack->nSigmaPion());
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(0.139570, fdEdXMode, 1));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(0.139570, 1, 1));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(0.139570, 2, 1));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/0.139570);
           float z = gTrack->dEdxPull(0.139570, fdEdXMode, 1)*gTrack->dEdxError(fdEdXMode);
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
@@ -1061,99 +911,51 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
         if(abs(pdg)==321)
         {
           fHistodEdXnSigma[iTrackHisto] -> Fill(momentum, gTrack->nSigmaKaon());
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(0.493677, fdEdXMode, 1));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(0.493677, 1, 1));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(0.493677, 2, 1));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/0.493677);
-#ifndef __TFG__VERSION__
-          float z = gTrack->dEdxPull(0.493677, fdEdXMode, 1)*gTrack->dEdxError(fdEdXMode);
-#else /* __TFG__VERSION__ */
           float z = gTrack->dEdxPull(0.493677, 1, 1)*gTrack->dEdxError();
-#endif /* __TFG__VERSION__ */
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
         }
         if(abs(pdg)==2212)
         {
           fHistodEdXnSigma[iTrackHisto] -> Fill(momentum, gTrack->nSigmaProton());
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(0.938272, fdEdXMode, 1));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(0.938272, 1, 1));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(0.938272, 2, 1));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/0.938272);
-#ifndef __TFG__VERSION__
-          float z = gTrack->dEdxPull(0.938272, fdEdXMode, 1)*gTrack->dEdxError();
-#else /* __TFG__VERSION__ */
           float z = gTrack->dEdxPull(0.938272, 1, 1)*gTrack->dEdxError();
-#endif /* __TFG__VERSION__ */
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
         }
         if(abs(pdg)==1000010020)
         {
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(1.876124, fdEdXMode, 1));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(1.876124, 1, 1));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(1.876124, 2, 1));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/1.876124);
-#ifndef __TFG__VERSION__
-          float z = gTrack->dEdxPull(1.876124, fdEdXMode, 1)*gTrack->dEdxError();
-#else /* __TFG__VERSION__ */
           float z = gTrack->dEdxPull(1.876124, 1, 1)*gTrack->dEdxError();
-#endif /* __TFG__VERSION__ */
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
         }
         if(abs(pdg)==1000010030)
         {
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(2.809432, fdEdXMode, 1));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(2.809432, 1, 1));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(2.809432, 2, 1));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/2.809432);
-#ifndef __TFG__VERSION__
-          float z = gTrack->dEdxPull(2.809432, fdEdXMode, 1)*gTrack->dEdxError();
-#else /* __TFG__VERSION__ */
           float z = gTrack->dEdxPull(2.809432, 1, 1)*gTrack->dEdxError();
-#endif /* __TFG__VERSION__ */
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
         }
         if(abs(pdg)==1000020030)
         {
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(2.809413, fdEdXMode, 2));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(2.809413, 1, 2));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(2.809413, 2, 2));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/2.809413);
-#ifndef __TFG__VERSION__
-          float z = gTrack->dEdxPull(2.809413, fdEdXMode, 2)*gTrack->dEdxError();
-#else /* __TFG__VERSION__ */
           float z = gTrack->dEdxPull(2.809413, 1, 2)*gTrack->dEdxError();
-#endif /* __TFG__VERSION__ */
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
         }
         if(abs(pdg)==1000020040)
         {
-#ifndef __TFG__VERSION__
-          fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(3.728400, fdEdXMode, 2));
-#else /* __TFG__VERSION__ */
           fHistodEdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(3.728400, 1, 2));
           fHistodNdXPull[iTrackHisto] -> Fill(pL10, gTrack->dEdxPull(3.728400, 2, 2));
-#endif /* __TFG__VERSION__ */
           float betaGamma = TMath::Log10(momentum/3.728400);
-#ifndef __TFG__VERSION__
-          float z = gTrack->dEdxPull(3.728400, fdEdXMode, 2)*gTrack->dEdxError();
-#else /* __TFG__VERSION__ */
           float z = gTrack->dEdxPull(3.728400, 1, 2)*gTrack->dEdxError();
-#endif /* __TFG__VERSION__ */
           fHistodEdXZ[iTrackHisto]->Fill(betaGamma, z);
         }
       }
@@ -1161,11 +963,7 @@ void StKFParticleInterface::FillPIDHistograms(StPicoTrack *gTrack, const std::ve
   }
 }
 
-#ifndef __TFG__VERSION__
-void StKFParticleInterface::FillPIDHistograms(StMuTrack *gTrack, const std::vector<int>& pdgVector, const bool isTofm2, float m2tof)
-#else /* __TFG__VERSION__ */
 void StKFParticleInterface::FillPIDHistograms(StMuTrack *gTrack, const std::vector<int>& pdgVector, const bool isTofm2, float m2tof, const bool isETofm2, float m2Etof)
-#endif /* __TFG__VERSION__ */
 {
   float momentum = gTrack->p().mag();
   Double_t pL10 = TMath::Log10(momentum);
@@ -1180,11 +978,7 @@ void StKFParticleInterface::FillPIDHistograms(StMuTrack *gTrack, const std::vect
       if(isTofm2)
       {
         fHistodEdXwithTofTracks[iTrackHisto] -> Fill(momentum, gTrack->dEdx()*1.e6);
-#ifndef __TFG__VERSION__	
-        fHistoTofPIDTracks[iTrackHisto] -> Fill(momentum, m2tof);
-#else /* __TFG__VERSION__ */
         fHistoTofPIDTracks[iTrackHisto][0] -> Fill(pL10, m2tof);
-#endif /* __TFG__VERSION__ */  
         if(abs(pdg)==211)
           fHistodEdXPull[iTrackHisto] -> Fill(momentum, gTrack->dEdxPull(0.139570, fdEdXMode, 1));
         if(abs(pdg)==321)
@@ -1390,7 +1184,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 #endif /*  __USE_HFT__ */        
     StPicoTrackCovMatrix *cov = picoDst->trackCovMatrix(iTrack);
     const StDcaGeometry &dcaG = cov->dcaGeometry();
-#if defined(__TFG__VERSION__)
     if (StMuDst::dca3Dmax() > 0) {
       // Cut large Dca
       THelixTrack t = dcaG.thelix();
@@ -1398,7 +1191,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
       Double_t dca3D = t.Dca(xyz);
       if (dca3D > StMuDst::dca3Dmax()) continue;
     }
-#endif /* __TFG__VERSION__ */
     Int_t q = 1; if (gTrack->charge() < 0) q = -1;
     KFPTrack track;
     if( !GetTrack(dcaG, track, q, index) ) continue;
@@ -1415,21 +1207,14 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 //     const float ccc2 = ppp.GetDeviationFromVertex(myPV);
 //     if(ccc2 < 18) ipv3++;
     
-#ifdef __TFG__VERSION__
     Double_t pL10 = (track.GetP() > 0) ? TMath::Log10(track.GetP()) : -2;
     Double_t dEdxL10 = (gTrack->dEdx() > 0) ? TMath::Log10(gTrack->dEdx()) : dEdxL10min;
     Double_t dNdxL10 = (gTrack->dNdx() > 0) ? TMath::Log10(gTrack->dNdx()) : dNdxL10min;
 #ifdef __ETAPN_TOF_PLOTS__
     Double_t eta = gTrack->gMom().Eta();
 #endif /* __ETAPN_TOF_PLOTS__ */
-#endif /* __TFG__VERSION__ */    
     if(fCollectTrackHistograms)
     {
-#ifndef __TFG__VERSION__
-      fTrackHistograms2D[0]->Fill(track.GetP(), gTrack->dEdx());
-      if(q>0) fTrackHistograms2D[1]->Fill(track.GetP(), gTrack->dEdx());
-      else    fTrackHistograms2D[2]->Fill(track.GetP(), gTrack->dEdx());  
-#else /* __TFG__VERSION__ */
       fTrackHistograms2D[0]->Fill(pL10, dEdxL10);
       if(q>0) fTrackHistograms2D[1]->Fill(pL10, dEdxL10);
       else    fTrackHistograms2D[2]->Fill(pL10, dEdxL10);  
@@ -1440,32 +1225,16 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
       if (gTrack->isPrimary())
 	fTrackHistograms2D[8]->Fill(TMath::Log10(t.Perp()), t.PseudoRapidity());
       fTrackHistograms2D[13]->Fill(TMath::Log10(t.Perp()), t.PseudoRapidity());
-#endif /* __TFG__VERSION__ */
     }
     
     double m2tof = -1.e6;
     bool isTofm2 = false;
-#ifdef __TFG__VERSION__
     double m2Etof = -1.e6;
     bool isETofm2 = false;
-#endif /* __TFG__VERSION__ */
     if(gTrack->bTofPidTraitsIndex() >= 0)
     {
       const StPicoBTofPidTraits* btofPid = picoDst->btofPidTraits(gTrack->bTofPidTraitsIndex());
       double betaTof2 = btofPid->btofBeta() * btofPid->btofBeta();
-#if 0
-#ifdef __TFG__VERSION__
-      double timeTof = btofPid->btof();
-      if(fabs(betaTof2) < 1.e-6 && timeTof > 0) {
-        const TVector3 & tofPoint  = btofPid->btofHitPos();
-        StPicoPhysicalHelix innerHelix = gTrack->helix(picoEvent->bField());
-        double lengthTof = fabs( innerHelix.pathLength( tofPoint ));
-	double betaTof = lengthTof/timeTof/29.9792458;
-	btofPid->setBeta(betaTof);
-        betaTof2 = betaTof*betaTof;
-      }
-#endif /* __TFG__VERSION__ */
-#endif
       if(fabs(betaTof2) > 1.e-6)
 	{
 	  m2tof = track.GetP()*track.GetP()*(1./betaTof2 - 1.);
@@ -1475,10 +1244,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	}
       if(fCollectTrackHistograms)
       {
-#ifndef __TFG__VERSION__
-        fTrackHistograms2D[3]->Fill(track.GetP(), gTrack->dEdx());
-        fTrackHistograms2D[4]->Fill(track.GetP(), m2tof);
-#else /* __TFG__VERSION__ */
         fTrackHistograms2D[3]->Fill(pL10, dEdxL10);
         fTrackHistograms2D[12]->Fill(pL10, dNdxL10);
 	fTrackHistograms2D[4]->Fill(pL10, m2tof);
@@ -1486,7 +1251,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	if (eta > 0) fTrackHistograms2D[15]->Fill(pL10, m2tof);
 	else         fTrackHistograms2D[16]->Fill(pL10, m2tof);
 #endif /* __ETAPN_TOF_PLOTS__ */
-#endif /* ! __TFG__VERSION__ */
       }
     }
 
@@ -1509,16 +1273,10 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     }
       if(fCollectTrackHistograms && isETofm2) 
 	{
-#ifdef __TFG__VERSION__
         fTrackHistograms2D[3]->Fill(pL10, dEdxL10);
         fTrackHistograms2D[12]->Fill(pL10, dNdxL10);
         fTrackHistograms2D[14]->Fill(pL10, m2Etof);
-#else /* !__TFG__VERSION__ */
-	fTrackHistograms2D[8]->Fill(gTrack->dEdx(), m2tof);
-#endif /* __TFG__VERSION__ */
       }
-
-__dEdXPull__
     if(fCollectTrackHistograms && (isTofm2 || isETofm2))
       {
 	Double_t pL10 = (track.GetP() > 0) ? TMath::Log10(track.GetP()) : -2;
@@ -1543,13 +1301,9 @@ __dEdXPull__
 #endif    
     int nPartSaved0 = nPartSaved;
     unsigned int nPrimaryTracks = primaryTrackList.size();
-#ifndef __TFG__VERSION__
-    AddTrackToParticleList(track, nHftHitsInTrack, index, totalPDG, primaryVertex, primaryTrackList, fNHftHits, fParticlesPdg, fParticles, nPartSaved); 
-#else /* __TFG__VERSION__ */
     Int_t NDF = 2*gTrack->nHitsFit() - 5;
     Float_t Chi2 = gTrack->chi2()*NDF;
     AddTrackToParticleList(track, nHftHitsInTrack, index, totalPDG, primaryVertex, primaryTrackList, fNHftHits, fParticlesPdg, fParticles, nPartSaved, 0, 0, Chi2, NDF); 
-#endif /* __TFG__VERSION__ */
     
     if(nPartSaved > nPartSaved0) 
       triggeredTracks.push_back(iTrack);
@@ -1561,11 +1315,7 @@ __dEdXPull__
       vector<int> selectedPdg;
       for(int iPdg = nPartSaved0; iPdg<nPartSaved; iPdg++)
         selectedPdg.push_back(fParticlesPdg[iPdg]);
-#ifndef __TFG__VERSION__
-      FillPIDHistograms(gTrack, selectedPdg, isTofm2, m2tof);
-#else /* __TFG__VERSION__ */
       FillPIDHistograms(gTrack, selectedPdg, isTofm2, m2tof, isETofm2, m2Etof);
-#endif /* __TFG__VERSION__ */
     }
 
     nUsedTracks++;
@@ -1581,13 +1331,9 @@ __dEdXPull__
   {
     fTrackHistograms[2]->Fill( double(nPrimary)/double(nUsedTracks) );
     fTrackHistograms2D[7]->Fill( nPrimary, (nUsedTracks - nPrimary) );
-#ifndef __TFG__VERSION__
-    fTrackHistograms[2]->Fill( double(primaryTrackList.size())/double(nUsedTracks) );
-#else /* __TFG__VERSION__ */
     Double_t nPL10 = (primaryTrackList.size() > 0) ? TMath::Log10(primaryTrackList.size()) : -1;
     Double_t nGL10 = (nUsedTracks > 0) ? TMath::Log10(nUsedTracks) : -1;
     fTrackHistograms2D[7]->Fill( nGL10, nPL10);
-#endif /* __TFG__VERSION__ */
   }
   
 //   std::cout << "n star primary " << nPrimary << "     " << ipv2 << "   " << ipv3 << std::endl;
@@ -1605,7 +1351,6 @@ __dEdXPull__
   } else {
     if( fCleanLowPVTrackEvents && primaryVertex.GetR() > 2.5 ) return 0;
   }
-#ifdef __TFG__VERSION__
   if (! IsFixedTarget()) {
     if( fCleanLowPVTrackEvents && primaryVertex.GetR() > 1.5 ) return 0;
     //   14 GeV
@@ -1618,7 +1363,6 @@ __dEdXPull__
     if( fCleanLowPVTrackEvents && !(primaryVertex.X() > -2.5 && primaryVertex.X() < 2.  ) ) return 0;
     if( fCleanLowPVTrackEvents && !(primaryVertex.Y() > -4.  && primaryVertex.Y() < 0.  ) ) return 0;
   }
-#endif /* __TFG__VERSION__ */
   const Double_t field = picoEvent->bField();  
   SetField(field);
   
@@ -1632,24 +1376,17 @@ __dEdXPull__
   if(fCollectTrackHistograms)
     {
     fTrackHistograms[1]->Fill(sqrt(dx*dx + dy*dy));
-#ifndef __TFG__VERSION__
-    fTrackHistograms2D[5]->Fill( nPartSaved, sqrt(dx*dx + dy*dy) );
-    fTrackHistograms2D[6]->Fill( primaryTrackList.size(), sqrt(dx*dx + dy*dy) );
-#else /* __TFG__VERSION__ */
     Double_t nL10 = (nPartSaved > 0) ? TMath::Log10(nPartSaved) : -1;
     fTrackHistograms2D[5]->Fill( nL10, sqrt(dx*dx + dy*dy) );
     Double_t npL10 = (primaryTrackList.size()) ? TMath::Log10(primaryTrackList.size()) : -1;
     fTrackHistograms2D[6]->Fill( npL10, sqrt(dx*dx + dy*dy) );
-#endif /* __TFG__VERSION__ */
     }  
   //reconstruct short-lived particles
   ReconstructParticles();
 
-#ifdef __TFG__VERSION__
   if (fPidQA) {
     PidQA(picoDst);
   }
-#endif /* __TFG__VERSION__ */
   return 1;
 }
 
@@ -1717,13 +1454,9 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
     if (  gTrack->flag() < 100 ||  gTrack->flag()%100 == 11) continue; // bad fit or short track pointing to EEMC
     if (  gTrack->flag() > 1000) continue;  // pile up track in TPC
     if (  gTrack->nHitsFit() < 15) continue;
-#ifndef __TFG__VERSION__
-    if (  gTrack->probPidTraits().dEdxErrorFit() < 0.04 || gTrack->probPidTraits().dEdxErrorFit() > 0.12 ) continue;
-#else /*     __TFG__VERSION__ */
     //PiDCUT    if (  gTrack->probPidTraits().dEdxErrorFit() < 0.04 || gTrack->probPidTraits().dEdxErrorFit() > 0.12 ) continue;
     //    if (  gTrack->probPidTraits().dEdxErrorFit() < 0.01 || gTrack->probPidTraits().dEdxErrorFit() > 0.25 ) continue;
     if (  gTrack->probPidTraits().dEdxErrorFit() < 0.01 || gTrack->probPidTraits().dEdxErrorFit() > 0.16 ) continue;
-#endif /* !  __TFG__VERSION__ */
     int nHftHitsInTrack = gTrack->nHitsFit(kIstId) + gTrack->nHitsFit(kSsdId) + gTrack->nHitsFit(kPxlId);
 #ifdef __USE_HFT__
     if(fCollectTrackHistograms) fTrackHistograms[0]->Fill(nHftHitsInTrack);
@@ -1751,7 +1484,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
     if (dcaGeometryIndex < 0) continue;
     StDcaGeometry *dcaG = StMuDst::instance()->covGlobTracks(dcaGeometryIndex);
     if (! dcaG) continue;
-#if defined(__TFG__VERSION__)
     if (StMuDst::dca3Dmax() > 0) {
       // Cut large Dca
       THelixTrack t = dcaG->thelix();
@@ -1759,7 +1491,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
       Double_t dca3D = t.Dca(xyz);
       if (dca3D > StMuDst::dca3Dmax()) continue;
     }
-#endif /* __TFG__VERSION__ */
       
     KFPTrack track;
     if( !GetTrack(*dcaG, track, q, index) ) continue;
@@ -1767,11 +1498,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 
     if(fCollectTrackHistograms)
     {
-#ifndef __TFG__VERSION__
-      fTrackHistograms2D[0]->Fill(track.GetP(), gTrack->dEdx()*1.e6);
-      if(q>0) fTrackHistograms2D[1]->Fill(track.GetP(), gTrack->dEdx()*1.e6);
-      else    fTrackHistograms2D[2]->Fill(track.GetP(), gTrack->dEdx()*1.e6);  
-#else /* __TFG__VERSION__ */
       Double_t pL10 = (track.GetP() > 0) ? TMath::Log10(track.GetP()) : -2;
       Double_t dEdxL10 = (gTrack->dEdx() > 0) ? TMath::Log10(gTrack->dEdx()*1e6) : 0.0;
       Double_t dNdxL10 = (gTrack->probPidTraits().dNdxFit() > 0) ? TMath::Log10(gTrack->probPidTraits().dNdxFit()*1e6) : 0.5;
@@ -1781,47 +1507,21 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
       fTrackHistograms2D[9]->Fill(pL10, dNdxL10);
       if(q>0) fTrackHistograms2D[10]->Fill(pL10, dNdxL10);
       else    fTrackHistograms2D[11]->Fill(pL10, dNdxL10);
-#endif /* __TFG__VERSION__ */
     }
     
     const StMuBTofPidTraits &btofPid = gTrack->btofPidTraits();
     double timeTof = btofPid.timeOfFlight();
-    double lengthTof = btofPid.pathLength();
     double m2tof = -1.e6;
     bool isTofm2 = false;
     if(timeTof > 0)
     {
-#ifdef __TFG__VERSION__
-      if(lengthTof < 0.) {
-	const StThreeVectorF & tofPoint  = btofPid.position();
-	const StThreeVectorF & dcaPoint  = gTrack->dca(bestPV);
-	StPhysicalHelixD innerHelix = gTrack->helix();
-	double dlDCA = fabs( innerHelix.pathLength( StThreeVector<double>(dcaPoint.x(), dcaPoint.y(), dcaPoint.z()) ) );
-	StPhysicalHelixD outerHelix = gTrack->outerHelix();
-	double dlTOF = fabs( outerHelix.pathLength( StThreeVector<double>(tofPoint.x(), tofPoint.y(), tofPoint.z()) ) );
-	
-	double l = gTrack->length();
-	lengthTof = l + dlDCA + dlTOF;
-	double betaTof = lengthTof/timeTof/29.9792458;
-	btofPid.setPathLength(lengthTof);
-	btofPid.setBeta(betaTof);
-      }
-#endif /* __TFG__VERSION__ */
       Double_t beta = btofPid.beta();
       Double_t beta2 = beta*beta;
       if(beta2 > 1e-6) {
 	m2tof = track.GetP()*track.GetP()*(1./beta2 - 1.);
 	isTofm2 = true;
       }
-#ifndef __TFG__VERSION__
-      if(fCollectTrackHistograms)
-	{
-	  fTrackHistograms2D[3]->Fill(track.GetP(), gTrack->dEdx()*1.e6);
-	  fTrackHistograms2D[4]->Fill(track.GetP(), m2tof);
-	}
-#endif /* ! __TFG__VERSION__ */
     }
-#ifdef __TFG__VERSION__
     double m2Etof = -1.e6;
     bool isETofm2 = false;
 #ifdef __ETAPN_TOF_PLOTS__
@@ -1863,28 +1563,17 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
 	}
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
       }
-#endif /* __TFG__VERSION__ */
-__dEdXPull__
-#if 0
-    vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx()*1.e6, dEdXPull, isTofm2, index);
-#else
     StPidStatus PiD(gTrack);
     vector<int> totalPDG = PiD.GetPDG();
-#endif    
     int nPartSaved0 = nPartSaved;
     unsigned int nPrimaryTracks = primaryTrackList.size();
-#ifndef __TFG__VERSION__
 #ifdef __kfpAtFirstHit__
     AddTrackToParticleList(track, nHftHitsInTrack, index, totalPDG, primaryVertex, primaryTrackList, fNHftHits, fParticlesPdg, fParticles, nPartSaved, &trackAtLastHit, &fParticlesAtLastHit);
 #else
-    AddTrackToParticleList(track, nHftHitsInTrack, index, totalPDG, primaryVertex, primaryTrackList, fNHftHits, fParticlesPdg, fParticles, nPartSaved);
-#endif
-
-#else /* __TFG__VERSION__ */
     Int_t NDF = 2*gTrack->nHitsFit() - 5;
     Float_t Chi2 = gTrack->chi2()*NDF;
     AddTrackToParticleList(track, nHftHitsInTrack, index, totalPDG, primaryVertex, primaryTrackList, fNHftHits, fParticlesPdg, fParticles, nPartSaved, 0, 0, Chi2, NDF);         
-#endif /* __TFG__VERSION__ */
+#endif
     
     if(nPartSaved > nPartSaved0)
       mcIndices[index] = mcIndex;
@@ -1917,11 +1606,7 @@ __dEdXPull__
     fTrackHistograms2D[7]->Fill( nPrimary, (nUsedTracks - nPrimary) );
   }
   
-#ifndef __TFG__VERSION__
-  if( fCleanLowPVTrackEvents && ( 10*nPrimary < (nUsedTracks - nPrimary) ) ) return 0;  
-#else /* __TFG__VERSION__ */
   if( fCleanLowPVTrackEvents && ( 10*primaryTrackList.size() < (nUsedTracks - primaryTrackList.size()) ) ) return 0;
-#endif /* __TFG__VERSION__ */
   if( fCleanLowPVTrackEvents && sqrt(dx*dx + dy*dy) > 0.45 ) return 0;
   if (IsFixedTarget()) {
     if( fCleanLowPVTrackEvents && !(primaryVertex.Z() > 196. && primaryVertex.Z() < 204.) ) return 0;
@@ -1955,19 +1640,13 @@ __dEdXPull__
   if(fCollectTrackHistograms)
   {
     fTrackHistograms[1]->Fill(sqrt(dx*dx + dy*dy));
-#ifndef __TFG__VERSION__
-    fTrackHistograms2D[5]->Fill( nPartSaved, sqrt(dx*dx + dy*dy) );
-    fTrackHistograms2D[6]->Fill( primaryTrackList.size(), sqrt(dx*dx + dy*dy) );
-#else /* __TFG__VERSION__ */
     Double_t ngL10 = (nPartSaved > 0) ? TMath::Log10(nPartSaved) : -1;
     fTrackHistograms2D[5]->Fill( ngL10, sqrt(dx*dx + dy*dy) );
     Double_t npL10 = (nPartSaved > 0) ? TMath::Log10(primaryTrackList.size()) : -1;
     fTrackHistograms2D[6]->Fill( npL10, sqrt(dx*dx + dy*dy) );
-#endif /* __TFG__VERSION__ */
   }  
   //reconstruct short-lived particles
   ReconstructParticles();
-#ifdef __TFG__VERSION__
   const int nCandidates = GetParticles().size();
   for(int iParticle=0; iParticle<nCandidates; iParticle++) {
     const KFParticle particle = GetParticles()[iParticle];
@@ -2039,12 +1718,9 @@ __dEdXPull__
     }
     
   }
-#endif /* __TFG__VERSION__ */
-#ifdef __TFG__VERSION__
   if (fPidQA) {
     PidQA(muDst);
   }
-#endif /* __TFG__VERSION__ */
   return 1;
 }
 
@@ -2342,7 +2018,6 @@ bool StKFParticleInterface::FindFixedTargetPV(StPicoDst* picoDst, KFVertex& pv, 
   return isPVFound;
 }
 
-#ifdef __TFG__VERSION__
 //________________________________________________________________________________
 vector<const KFParticle *> StKFParticleInterface::Vec4Cfits() {
   vector<const KFParticle *> Vec4Cfit;
@@ -2655,8 +2330,8 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[Ndecays+1][Nparticles][12] = {0}; // set always 1
-  if (! hist[0][0][0]) {
+  static TH2F *hist[Ndecays+1][Nparticles][StPidStatus::kTotal+1][5] = {0}; // kTotal for Tpc & BTof
+  if (! hist[0][0][StPidStatus::kFit][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
     TDirectory *PiDQA = top->GetDirectory("PiDQA");
@@ -2681,29 +2356,45 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	TDirectory *dir3 = dir1->GetDirectory(name);
 	dir3->cd();
 	if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	hist[d][p][0] = new TH2F("dEdx","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
-	hist[d][p][1] = new TH2F("dNdx","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma)",1000,-1,4,500,-0.5,0.5);
-	hist[d][p][2] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
-	hist[d][p][3] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,2000,-0.2,0.2);
-	hist[d][p][4] = new TH2F("dEdxBTof","dE/dx_{fit} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
-	hist[d][p][5] = new TH2F("dNdxBTof","dN/dx_{fit} / dN/dx_{predicted} for N/dx versus log_{10}(#beta #gamma) with |sigmaBTOF| < 3)",1000,-1,4,500,-0.5,0.5);
-	hist[d][p][6] = new TH2F("PulldEdx","(dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	hist[d][p][7] = new TH2F("PulldEdxBTof","dE/dx_{fit} / dEdModel)/#sigma prediction for I_{fit} versus log_{10}(#beta #gamma with |sigmaBTOF| < 3)",1000,-1,4,600,-3,3);
-	hist[d][p][8] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	//	  hist[d][p][9] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-3,3);
-	hist[d][p][10] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
-	hist[d][p][11] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
-	for (Int_t k = 0; k < 12; k++) {
-	  if (!  hist[d][p][k]) continue;
-	  hist[d][p][k]->SetXTitle("log_{10}(#beta #gamma)");
+	for (Int_t k = 1; k < StPidStatus::kTotal + 1; k++) {
+	  if (k == StPidStatus::kFit) {
+	    hist[d][p][k][0] = new TH2F("dEdx",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][1] = new TH2F("PulldEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("PullCdEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
+	    for (Int_t i = 0; i < 3; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
+	  } else if (k == StPidStatus::kTotal) {
+	    hist[d][p][k][0] = new TH2F("dEdxBTof",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][1] = new TH2F("PulldEdxBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("PullCdEdxBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
+	    for (Int_t i = 0; i < 3; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
+	  } else if (k == StPidStatus::kBTof) {
+	    hist[d][p][k][0] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,20000,-0.2,0.2);
+	    hist[d][p][k][1] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)"           ,1000,-1,4,600,-6.0,6.0);
+	    hist[d][p][k][2] = new TH2F("dM2BTofPullC","dM^{2}/#sigma dM^ {2} corrected from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	    hist[d][p][k][3] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
+	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
+	  } else if (k == StPidStatus::kETof) {
+#if 0
+	    hist[d][p][k][0] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,20000,-0.2,0.2);
+	    hist[d][p][k][1] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)"           ,1000,-1,4,600,-6.0,6.0);
+	    hist[d][p][k][2] = new TH2F("dM2ETofPullC","dM^{2}/#sigma dM^ {2} corrected from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	    hist[d][p][k][3] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
+	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
+#endif
+	  } else if (k == StPidStatus::kBEmc) {
+	    hist[d][p][k][0] = new TH2F("BemcEoverP","E/P in BEMC versus log_{10} P"                                            ,100,-1,4,100,0.0,5.0);
+	    hist[d][p][k][0]->SetXTitle("log_{10}P");
+	  } else if (k == StPidStatus::kMtd) {
+	    hist[d][p][k][0] = new TH2F("MtdYdZ","Mtd dY vesus dZ"                                            ,100,-50,50,100,-50,50);
+	    hist[d][p][k][1] = new TH2F("MtdTP","Mtd dT vesus log{10} P"                                      ,100,-1.,5.,400,-2000,2000);
+	  }
 	}
       }
     }
   }
   if (! PiD->fFit()) return kFALSE;
   Double_t pMom = PiD->g3.Mag();
-  Double_t beta = -999;
-  Double_t sigmaTof = -999;
+  Double_t pL10 = TMath::Log10(pMom);
   Int_t d = 0;
   if (PDGParent) {
     d = -1;
@@ -2714,53 +2405,44 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
       break;
     }
   } 
-  Int_t s = 0;
-  //  if (set) s = 1;
   if (d < 0) return kFALSE;
   for (Int_t p = 0; p < NparticlesA; p++) {
     if (PDG != particles[p].pdg) continue;
     Int_t l = particles[p].code;
+#if 0
     Int_t pdg = particles[p].pdg;
     //      Double_t M = StProbPidTraits::mPidParticleDefinitions[l]->mass();
     auto M =  TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
     auto q =  TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/3.;
-    Double_t bgL10 = PiD->bghyp[l];
-    if (PiD->fBTof()) {
-      sigmaTof = PiD->fBTof()->Sigma(l);
-      hist[d][p][8]->Fill(bgL10, sigmaTof);
-    }
-#if 0
-    if (PiD->fETof()) {
-      sigmaTof = PiD->fETof()->Sigma(l);
-      hist[d][p][9]->Fill(bgL10, sigmaTof);
-    }
 #endif
-    hist[d][p][0]->Fill(bgL10, PiD->fFit()->dev[l]);
-    hist[d][p][6]->Fill(bgL10, PiD->fFit()->devS[l]);
-    if (TMath::Abs(sigmaTof) < 3) {
-      hist[d][p][4]->Fill(bgL10, PiD->fFit()->dev[l]);
-      hist[d][p][7]->Fill(bgL10, PiD->fFit()->devS[l]);
-    }
-    if (PiD->fdNdx()) {
-      hist[d][p][1]->Fill(bgL10, PiD->fdNdx()->dev[l]);
-      if (sigmaTof < 3) hist[d][p][5]->Fill(bgL10, PiD->fdNdx()->dev[l]);
-    }
-    
-    if (PiD->fBTof()) {
-      Float_t beta = PiD->fBTof()->beta();
-      if (beta > 0 && beta < 2) {
-	hist[d][p][2]->Fill(bgL10, PiD->fBTof()->dev[l]);
-	hist[d][p][10]->Fill(bgL10, PiD->fBTof()->devS[l]);
+    Double_t bgL10 = PiD->bghyp[l];
+    for (Int_t k = 1; k < StPidStatus::kTotal + 1; k++) {
+      if (! hist[d][p][k][0]) continue;
+      if (k < StPidStatus::kTotal) {
+	if (! PiD->Status(k)) continue;
+      } else {
+	if (! PiD->Status(StPidStatus::kBTof)) continue; 
       }
-    }
-    if (PiD->fETof()) {
-      Float_t beta = PiD->fETof()->beta();
-      if (beta > 0 && beta < 2) {
-	hist[d][p][3]->Fill(bgL10, PiD->fETof()->dev[l]);
-	hist[d][p][11]->Fill(bgL10, PiD->fETof()->devS[l]);
+      if (k == StPidStatus::kBEmc) {
+	hist[d][p][k][0]->Fill(TMath::Log10(pMom), PiD->fBEmc()->bemcE()/pMom);
+      } else if (k == StPidStatus::kMtd) {
+	hist[d][p][k][0]->Fill(PiD->fMtd()->PiD()->deltaZ(), PiD->fMtd()->PiD()->deltaY());
+	hist[d][p][k][1]->Fill(pL10, PiD->fMtd()->deltaTimeOfFlight());
+      } else if (k == StPidStatus::kTotal) {
+	if (TMath::Abs(PiD->Status(StPidStatus::kBTof)->PullC[l]) < StPidStatus::fgSigmaCut) {
+	  hist[d][p][k][0]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->dev[l]);
+	  hist[d][p][k][1]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->devS[l]);
+	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->PullC[l]);
+	}
+      } else {
+	hist[d][p][k][0]->Fill(bgL10, PiD->Status(k)->dev[l]);
+	hist[d][p][k][1]->Fill(bgL10, PiD->Status(k)->devS[l]);
+	hist[d][p][k][2]->Fill(bgL10, PiD->Status(k)->PullC[l]);
+	if (k == StPidStatus::kBTof) {
+	  hist[d][p][k][3]->Fill(bgL10, PiD->fBTof()->Sigma(l));
+	}
       }
     }
   }
   return kTRUE;
 }
-#endif /* __TFG__VERSION__ */

@@ -8,7 +8,7 @@
 #include "StBichsel/StdEdxPull.h"
 #include "StGlobalTrack.h"
 #include "StTrackGeometry.h"
-
+#include "StThreeVector.hh"
 #include "TMath.h"
 #include "TVector3.h"
 Double_t StPidStatus::fgSigmaCut = 3.0;
@@ -48,6 +48,11 @@ Particle_t StPidStatus::fgParticles[34] = {
   { 1000050110,  "B11", 10.2666,         5,  kPidB11},	 
   {-1000050110,  "B11-",10.2666,        -5,  kPidB11}
 };
+const Char_t *StPidStatus::fgPiDStatusNames[kTotal+1] = {
+  "Undef",     "I70",     "I70U",     "Fit",     "FitU",     "dNdx",     "dNdxU", 
+  "BTof",      "ETof",    "Mtd",      "BEmc",    "dEdx & BTof"
+};
+
 Int_t StPidStatus::fgl2p[KPidParticles] = {0};
 Bool_t StPidStatus::fgUsedx2 = kFALSE;
 Bool_t StPidStatus::fgUseTof = kFALSE;
@@ -61,6 +66,24 @@ StBTofPidTraits StPidStatus::SetBTofPidTraits(const StMuBTofPidTraits &pid) {
   btofPidTraits.setTimeOfFlight (pid.timeOfFlight());
   btofPidTraits.setPathLength   (pid.pathLength());
   btofPidTraits.setBeta         (pid.beta());
+  double lengthTof = pid.pathLength();
+  if(lengthTof <= 0.) {
+#if 0
+    double timeTof = pid.timeOfFlight();
+    const StThreeVectorF & tofPoint  = pid.position();
+    const StThreeVectorF & dcaPoint  = gTrack->dca(bestPV);
+    StPhysicalHelixD innerHelix = gTrack->helix();
+    double dlDCA = fabs( innerHelix.pathLength( StThreeVector<double>(dcaPoint.x(), dcaPoint.y(), dcaPoint.z()) ) );
+    StPhysicalHelixD outerHelix = gTrack->outerHelix();
+    double dlTOF = fabs( outerHelix.pathLength( StThreeVector<double>(tofPoint.x(), tofPoint.y(), tofPoint.z()) ) );
+    
+    double l = gTrack->length();
+    lengthTof = l + dlDCA + dlTOF;
+    double betaTof = lengthTof/timeTof/29.9792458;
+    btofPidTraits.setPathLength(lengthTof);
+    btofPidTraits.setBeta(betaTof);
+#endif
+  }
 
   btofPidTraits.setPosition     (pid.position());
 
@@ -147,8 +170,8 @@ StMtdPidTraits StPidStatus::SetMtdPidTraits(const StPicoMtdPidTraits &pid) {
   mtdPidTraits.setDeltaY         (pid.deltaY());
   mtdPidTraits.setDeltaZ         (pid.deltaZ());
   //  mtdPidTraits.setThetaLocal     (pid.thetaLocal());
-  //  mtdPidTraits.setTimeOfFlight   (pid.timeOfFlight());
-  //  mtdPidTraits.setExpTimeOfFlight(pid.expTimeOfFlight());
+  mtdPidTraits.setTimeOfFlight   (pid.deltaTimeOfFlight());
+  mtdPidTraits.setExpTimeOfFlight(0);
   //  mtdPidTraits.setPathLength     (pid.pathLength());
   mtdPidTraits.setBeta           (pid.beta());
   //  mtdPidTraits.setPosition       (pid.position());
@@ -262,7 +285,9 @@ StPidStatus::StPidStatus(StMuTrack *muTrack, TVector3 *g3KFP) : PiDStatus(-1) {
   if (btofPidTraits.matchFlag()) {
     static StBTofPidTraits btof;
     btof= SetBTofPidTraits(muTrack->btofPidTraits());
-    fStatus[kBTof] = new StBTofStatus(&btof);
+    if (btof.beta() > 0 && btof.beta() < 2) {
+      fStatus[kBTof] = new StBTofStatus(&btof);
+    }
   }
   if (etofPidTraits.matchFlag()) {
     static StETofPidTraits etof;
@@ -320,15 +345,17 @@ StPidStatus::StPidStatus(StPicoTrack *picoTrack, TVector3 *g3KFP) : PiDStatus(-1
   }
   Int_t ibtof = picoTrack->bTofPidTraitsIndex();
   if (ibtof >= 0) {
-    static StBTofPidTraits pidBTof;
-    pidBTof = SetBTofPidTraits(*StPicoDst::instance()->btofPidTraits(ibtof));
-    fStatus[kBTof] = new StBTofStatus(&pidBTof);
+    static StBTofPidTraits btof;
+    btof = SetBTofPidTraits(*StPicoDst::instance()->btofPidTraits(ibtof), picoTrack);
+    if (btof.beta() > 0 && btof.beta() < 2) {
+      fStatus[kBTof] = new StBTofStatus(&btof);
+    }
   }
   Int_t ietof = picoTrack->eTofPidTraitsIndex();
   if (ietof >= 0) {
-    static StETofPidTraits pidETof;
-    pidETof = SetETofPidTraits(*StPicoDst::instance()->etofPidTraits(ietof));
-    fStatus[kETof] = new StETofStatus(&pidETof);
+    static StETofPidTraits etof;
+    etof = SetETofPidTraits(*StPicoDst::instance()->etofPidTraits(ietof));
+    fStatus[kETof] = new StETofStatus(&etof);
   }
   Int_t imtd = picoTrack->mtdPidTraitsIndex();
   if (imtd >= 0) {
@@ -366,8 +393,12 @@ void StPidStatus::Set() {
   PredBMN[1] = Pred70BMN[1] = -1;
   // Set up Tof
   Float_t betaTof = -999;
+  if (fBTof()) {
+    betaTof = fBTof()->beta();
+  } else if (fETof()) {
+    betaTof = fETof()->beta();
+  }
 #if 0
-  Double_t sigmaTof = -999;
   Double_t sigmaInvBeta = -999;
   if (fBTof() || fETof()) {
     Int_t l = kPidProton;
@@ -376,13 +407,6 @@ void StPidStatus::Set() {
     Double_t bg = pMomentum/mass; 
     Double_t b_P = bg/TMath::Sqrt(1. + bg*bg);
     sigmaTof = dBeta/sigmaInvBeta
-    if (fBTof()) {
-      betaTof = fBTof()->beta();
-      sigmaTof = fBTof()->Sigma(l);
-    } else if (fETof()) {
-      betaTof = fETof()->beta();
-      //      sigmaTof = fETof()->Sigma(l);
-    }
     if (betaTof > 0 && betaTof < 2) {
        sigmaInvBeta = 1e-7;
       Double_t dBeta = (1./betaTof - 1/b_P);
@@ -401,9 +425,9 @@ void StPidStatus::Set() {
     bgs[l] = betagamma;
     bghyp[l] = TMath::Log10(bgs[l]);
     for (Int_t k = kI70; k <= kOtherMethodId2; k++) {
+      if (! fStatus[k]) continue;
       fStatus[k]->devS[l] = -999;
       fStatus[k]->PullC[l] = -999;
-      if (! fStatus[k]) continue;
       if (dEdxStatus(k)->I() > 0 && dEdxStatus(k)->D() > 0.01 && dEdxStatus(k)->D() < 0.15) {
 	UChar_t fit = 0;
 	if (k == kLikelihoodFitId || k == kWeightedTruncatedMeanId) fit = 1;
@@ -427,6 +451,8 @@ void StPidStatus::Set() {
       if (! fStatus[k]) continue;
       fStatus[k]->devS[l] = -999;
       fStatus[k]->PullC[l] = -999;
+      Double_t sigmaTof = -999;
+      if (k == kBTof) sigmaTof = fBTof()->Sigma(l);
       if (betaTof > 0 && betaTof < 2) {
 	Double_t sigmadM2 = -999;
 	Double_t dM2 = p2*(1./(betaTof*betaTof) - 1.) - M2;
@@ -434,8 +460,12 @@ void StPidStatus::Set() {
 	fStatus[k]->dev[l] = dM2;
 	sigmadM2 = M2BTofSigma(pL10, l);
 	if (sigmadM2 > 0) {
-	  fStatus[k]->devS[l] = fStatus[k]->dev[l]/sigmadM2;
-	  fStatus[k]->PullC[l] = fStatus[k]->devS[l];
+	  fStatus[k]->PullC[l] = fStatus[k]->dev[l]/sigmadM2;
+	  if (k == kBTof) {
+	    Double_t sigma = fBTof()->Sigma(l);
+	    if (TMath::Abs(sigma) < 100) fStatus[k]->devS[l] = sigma;
+	    else                         fStatus[k]->devS[l] = fStatus[k]->PullC[l];
+	  }
 	}
       }
     }

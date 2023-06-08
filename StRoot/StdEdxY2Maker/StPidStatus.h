@@ -90,6 +90,7 @@ class StMtdStatus  : public StTrackPiD {
   StMtdPidTraits *PiD() {return fPiD;}
   StMtdPidTraits *fPiD; //!
   Float_t beta() {return fPiD ? fPiD->beta() : -999;}
+  Float_t deltaTimeOfFlight() {return fPiD->timeOfFlight() - fPiD->expTimeOfFlight();}
 };
 //________________________________________________________________________________
 class StBEmcStatus  : public StTrackPiD {
@@ -98,6 +99,7 @@ class StBEmcStatus  : public StTrackPiD {
   virtual ~StBEmcStatus() {}
   StPicoBEmcPidTraits *PiD() {return fPiD;}
   StPicoBEmcPidTraits *fPiD; //!
+  Double_t bemcE() {return fPiD->bemcE();}
 };
 //________________________________________________________________________________
 struct Particle_t {
@@ -132,6 +134,7 @@ class StPidStatus {
   }
   void Clear() {memset(mBeg,0,mEnd-mBeg+1);}
   Int_t Status() {return PiDStatus;}
+  StTrackPiD     *Status(Int_t k) {return fStatus[k];}
   StdEdxStatus   *dEdxStatus(Int_t k) {return ( StdEdxStatus   *)  fStatus[k];}
   StBTofPidTraits SetBTofPidTraits(const StMuBTofPidTraits &pid);
   StETofPidTraits SetETofPidTraits(const StMuETofPidTraits &pid);
@@ -181,6 +184,7 @@ class StPidStatus {
   static Double_t  fgSigmaCut;
   static Int_t     fgl2p[KPidParticles];
   static Particle_t fgParticles[34];
+  static const Char_t *fgPiDStatusNames[kTotal+1];
  private:
   std::vector<Int_t> fTPCPDG;
   std::vector<Int_t> fTofPDG;
