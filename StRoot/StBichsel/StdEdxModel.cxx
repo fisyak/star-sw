@@ -83,7 +83,7 @@ StdEdxModel::StdEdxModel() : fScale(1)
   InitPar();
   // Set normalization point the same as for I70 (increase energy per conduction electron from 20 eB to 52 eV)
   //  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434) + 0.0174824 + 3.57110e-03; ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
-  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434) + 4.87e-03; ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
+  Double_t dEdxMIPLog = TMath::Log(2.62463815285237434); ; //TMath::Log(2.39761562607903311); // [keV/cm] for dX = 2 cm
   Double_t MIPBetaGamma10 = TMath::Log10(4.);
   //                  log2dx,  charge        mass
   Double_t pars[3] = {   1.0,     1.0, 0.13956995};
