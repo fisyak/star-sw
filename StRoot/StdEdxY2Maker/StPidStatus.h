@@ -7,6 +7,7 @@
 #include "StETofPidTraits.h"
 #include "StMtdPidTraits.h"
 #include "StDedxPidTraits.h"
+#include "StPidParticleDefinition.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuBTofPidTraits.h"
 #include "StMuDSTMaker/COMMON/StMuETofPidTraits.h"
@@ -29,6 +30,7 @@ class StTrackPiD {
   Double_t Pull(Int_t k = 0)  {return devS[k];}
   Char_t                mBeg[1];                   //!
   Double_t Pred[KPidParticles];
+  Double_t PredC[KPidParticles];
   Double_t dev[KPidParticles];
   Double_t devS[KPidParticles];         // Pull
   Double_t PullC[KPidParticles];        // Pull Corrected
@@ -37,7 +39,7 @@ class StTrackPiD {
 //________________________________________________________________________________
 class StdEdxStatus : public StTrackPiD {
  public:
- StdEdxStatus(StDedxPidTraits *pid = 0) : fPiD(pid) {Clear();}
+  StdEdxStatus(StDedxPidTraits *pid = 0) : fPiD(pid) {}
   virtual ~StdEdxStatus() {}
   StDedxPidTraits *fPiD; //!
   Double_t I() const {return (fPiD) ? fPiD->mean() : 0;}
@@ -50,12 +52,12 @@ class StdEdxStatus : public StTrackPiD {
 //________________________________________________________________________________
 class StBTofStatus  : public StTrackPiD {
  public:
-  StBTofStatus(StBTofPidTraits *pid ) { fPiD = (TMath::Abs(pid->yLocal()) < 1.8) ? pid : 0;}
+  StBTofStatus(StBTofPidTraits *pid = 0);
   virtual ~StBTofStatus() {}
-  StBTofPidTraits *fPiD; //!
-  StBTofPidTraits *PiD() {return fPiD;}
-  Float_t beta() {return fPiD ? fPiD->beta() : -999;}
-  Double_t Sigma(Int_t l) {
+  StBTofPidTraits *fPiD; //
+  StBTofPidTraits *PiD() const  {return fPiD;}
+  Float_t beta() const {return fPiD ? fPiD->beta() : -999;}
+  Double_t Sigma(Int_t l) const {
     if (fPiD) {
       switch (l) {
       case kPidElectron:
@@ -78,26 +80,26 @@ class StETofStatus  : public StTrackPiD {
  public:
   StETofStatus(StETofPidTraits *pid = 0) { fPiD = (pid && pid->matchFlag()) ? pid : 0;}
   virtual ~StETofStatus() {}
-  StETofPidTraits *PiD() {return fPiD;}
+  StETofPidTraits *PiD() const  {return fPiD;}
   StETofPidTraits *fPiD; //!
-  Float_t beta() {return fPiD ? fPiD->beta() : -999;}
+  Float_t beta() const {return fPiD ? fPiD->beta() : -999;}
 };
 //________________________________________________________________________________
 class StMtdStatus  : public StTrackPiD {
  public:
   StMtdStatus(StMtdPidTraits *pid = 0) { fPiD = (pid && pid->matchFlag()) ? pid : 0;}
   virtual ~StMtdStatus() {}
-  StMtdPidTraits *PiD() {return fPiD;}
+  StMtdPidTraits *PiD() const  {return fPiD;}
   StMtdPidTraits *fPiD; //!
-  Float_t beta() {return fPiD ? fPiD->beta() : -999;}
-  Float_t deltaTimeOfFlight() {return fPiD->timeOfFlight() - fPiD->expTimeOfFlight();}
+  Float_t beta()              const {return fPiD ? fPiD->beta() : -999;}
+  Float_t deltaTimeOfFlight() const {return fPiD->timeOfFlight() - fPiD->expTimeOfFlight();}
 };
 //________________________________________________________________________________
 class StBEmcStatus  : public StTrackPiD {
  public:
  StBEmcStatus(StPicoBEmcPidTraits *pid = 0) : StTrackPiD(), fPiD(pid) {}
   virtual ~StBEmcStatus() {}
-  StPicoBEmcPidTraits *PiD() {return fPiD;}
+  StPicoBEmcPidTraits *PiD() const  {return fPiD;}
   StPicoBEmcPidTraits *fPiD; //!
   Double_t bemcE() {return fPiD->bemcE();}
 };
@@ -122,8 +124,7 @@ class StPidStatus {
     kdNdxU = kOtherMethodId2,         
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
-  enum {Nparticles = 18, NparticlesA = 10,  Ndecays = 4};
-    StPidStatus(StGlobalTrack *gTrack = 0);
+  StPidStatus(StGlobalTrack *gTrack = 0);
   StPidStatus(StMuTrack *muTrack = 0, TVector3 *g3KFP = 0);
 #ifdef __TFG__VERSION__
   StPidStatus(StPicoTrack *picoTrack = 0, TVector3 *g3KFP = 0);
@@ -154,6 +155,8 @@ class StPidStatus {
   void SetPDGfromTof();
   static void SetUsedx2(Bool_t k = kTRUE) {fgUsedx2 = k;}
   static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
+  static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
+  static Int_t Nparticles() {return fgNparticles;}
   Int_t       PiDStatus; //!
   void        Print(Option_t *option="") const;
   //  StGlobalTrack *gTrack; //!
@@ -166,18 +169,17 @@ class StPidStatus {
   Double_t bgs[KPidParticles]; //! bg
   StProbPidTraits       *fProb;
   Char_t                mEnd[1];        //!
-  StdEdxStatus    *fI70	   () {return (StdEdxStatus    *) fStatus[kI70  ];} 
-  StdEdxStatus 	  *fFit    () {return (StdEdxStatus    *) fStatus[kFit  ];} 
-  StdEdxStatus 	  *fI70U   () {return (StdEdxStatus    *) fStatus[kI70U ];}  
-  StdEdxStatus 	  *fFitU   () {return (StdEdxStatus    *) fStatus[kFitU ];}  
-  StdEdxStatus 	  *fdNdx   () {return (StdEdxStatus    *) fStatus[kdNdx ];}  
-  StdEdxStatus 	  *fdNdxU  () {return (StdEdxStatus    *) fStatus[kdNdxU];}  
-  StBTofStatus 	  *fBTof   () {return (StBTofStatus    *) fStatus[kBTof ];}  
-  StETofStatus 	  *fETof   () {return (StETofStatus    *) fStatus[kETof ];}  
-  StMtdStatus  	  *fMtd    () {return (StMtdStatus     *) fStatus[kMtd  ];} 
-  StBEmcStatus    *fBEmc    () {return (StBEmcStatus     *) fStatus[kBEmc  ];} 
+  const StdEdxStatus    *fI70	 () const  {return (const StdEdxStatus    *) fStatus[kI70  ];} 
+  const StdEdxStatus 	*fFit    () const  {return (const StdEdxStatus    *) fStatus[kFit  ];} 
+  const StdEdxStatus 	*fI70U   () const  {return (const StdEdxStatus    *) fStatus[kI70U ];}  
+  const StdEdxStatus 	*fFitU   () const  {return (const StdEdxStatus    *) fStatus[kFitU ];}  
+  const StdEdxStatus 	*fdNdx   () const  {return (const StdEdxStatus    *) fStatus[kdNdx ];}  
+  const StdEdxStatus 	*fdNdxU  () const  {return (const StdEdxStatus    *) fStatus[kdNdxU];}  
+  const StBTofStatus 	*fBTof   () const  {return (const StBTofStatus    *) fStatus[kBTof ];}  
+  const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
+  const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
+  const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus     *) fStatus[kBEmc  ];} 
   static Double_t  dEdxCorr(Double_t bgL10, Int_t code);
-  static Double_t  dEdxSigma(Double_t bgL10, Int_t code);
   static Double_t  dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t code);
   static Double_t  M2BTofCorr(Double_t pL10, Int_t code);
   static Double_t  M2BTofSigma(Double_t pL10, Int_t code);
@@ -185,12 +187,15 @@ class StPidStatus {
   static Int_t     fgl2p[KPidParticles];
   static Particle_t fgParticles[34];
   static const Char_t *fgPiDStatusNames[kTotal+1];
+  static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
  private:
   std::vector<Int_t> fTPCPDG;
   std::vector<Int_t> fTofPDG;
   std::vector<Int_t> fPDGList;
   static Bool_t fgUsedx2;
   static Bool_t fgUseTof;
+  static Int_t  fgDebug;
+  static Int_t  fgNparticles;
 };
 
 #endif 

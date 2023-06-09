@@ -53,9 +53,16 @@ const Char_t *StPidStatus::fgPiDStatusNames[kTotal+1] = {
   "BTof",      "ETof",    "Mtd",      "BEmc",    "dEdx & BTof"
 };
 
-Int_t StPidStatus::fgl2p[KPidParticles] = {0};
+Int_t  StPidStatus::fgl2p[KPidParticles] = {0};
 Bool_t StPidStatus::fgUsedx2 = kFALSE;
 Bool_t StPidStatus::fgUseTof = kFALSE;
+Int_t  StPidStatus::fgDebug = 0;
+Int_t  StPidStatus::fgNparticles = KPidParticles;
+
+//________________________________________________________________________________
+StBTofStatus::StBTofStatus(StBTofPidTraits *pid) : fPiD(0) {
+  if (pid && TMath::Abs(pid->yLocal()) < 1.8) fPiD = pid;
+}
 //________________________________________________________________________________
 StBTofPidTraits StPidStatus::SetBTofPidTraits(const StMuBTofPidTraits &pid) {
   StBTofPidTraits btofPidTraits;
@@ -216,10 +223,12 @@ StPidStatus::StPidStatus(StGlobalTrack *gTrack) : PiDStatus(-1) {// , gTrack(Tra
     if (id == kBTofId) {
       StBTofPidTraits* pid = dynamic_cast<StBTofPidTraits*>(trait);
       if (! pid) continue;
+      if (pid->beta() <= 0.0 || pid->beta() > 2) continue;
       if (TMath::Abs(pid->yLocal()) < 1.8) fStatus[kBTof] = new StBTofStatus(pid);
     } else if (id == kETofId) {
       StETofPidTraits* pid = dynamic_cast<StETofPidTraits*>(trait);
       if (! pid) continue;
+      if (pid->beta() <= 0.0 || pid->beta() > 2) continue;
       fStatus[kETof] = new StETofStatus(pid);
     } else if (id == kMtdId) {
       StMtdPidTraits* pid = dynamic_cast<StMtdPidTraits*>(trait);
@@ -229,11 +238,11 @@ StPidStatus::StPidStatus(StGlobalTrack *gTrack) : PiDStatus(-1) {// , gTrack(Tra
       StDedxPidTraits* pid = dynamic_cast<StDedxPidTraits*>(trait);
       if (pid) {
 	switch (pid->method()) {
-	case kTruncatedMeanId: fStatus[kI70] = new StdEdxStatus(pid); break;
-	case kLikelihoodFitId: fStatus[kFit] = new StdEdxStatus(pid); break;
-	case kEnsembleTruncatedMeanId: fStatus[kI70U] = new StdEdxStatus(pid); break;// == kTruncatedMeanId+1 uncorrected
-	case kWeightedTruncatedMeanId: fStatus[kFitU] = new StdEdxStatus(pid); break;  // == kLikelihoodFitId+1; uncorrected
-	case kOtherMethodId:           fStatus[kdNdx] = new StdEdxStatus(pid); break;
+	case kTruncatedMeanId:         fStatus[kI70]   = new StdEdxStatus(pid); break;
+	case kLikelihoodFitId:         fStatus[kFit]   = new StdEdxStatus(pid); break;
+	case kEnsembleTruncatedMeanId: fStatus[kI70U]  = new StdEdxStatus(pid); break;// == kTruncatedMeanId+1 uncorrected
+	case kWeightedTruncatedMeanId: fStatus[kFitU]  = new StdEdxStatus(pid); break;  // == kLikelihoodFitId+1; uncorrected
+	case kOtherMethodId:           fStatus[kdNdx]  = new StdEdxStatus(pid); break;
 	case kOtherMethodId2:          fStatus[kdNdxU] = new StdEdxStatus(pid); break;
 	default: break;
 	}
@@ -374,7 +383,7 @@ StPidStatus::StPidStatus(StPicoTrack *picoTrack, TVector3 *g3KFP) : PiDStatus(-1
 //________________________________________________________________________________
 void StPidStatus::Set() {
   if (! fgl2p[3]) {
-    for (Int_t l = kPidElectron; l < KPidParticles; l++) {
+    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       for (Int_t p = 0; p < 34; p++) {
 	if (fgParticles[p].code == l) {
 	  fgl2p[l] = p;
@@ -387,7 +396,6 @@ void StPidStatus::Set() {
   PiDStatus = 0;
   Double_t pMomentum = g3.Mag();
   Double_t pL10 = TMath::Log10(pMomentum);
-  Double_t p2 = pMomentum*pMomentum;
   //  Double_t bg = TMath::Log10(pMomentum/StProbPidTraits::mPidParticleDefinitions[kPidPion]->mass());
   PredBMN[0] = Pred70BMN[0] =  1;
   PredBMN[1] = Pred70BMN[1] = -1;
@@ -406,7 +414,7 @@ void StPidStatus::Set() {
     Double_t mass = fgParticles[p].mass;
     Double_t bg = pMomentum/mass; 
     Double_t b_P = bg/TMath::Sqrt(1. + bg*bg);
-    sigmaTof = dBeta/sigmaInvBeta
+   sigmaTof = dBeta/sigmaInvBeta
     if (betaTof > 0 && betaTof < 2) {
        sigmaInvBeta = 1e-7;
       Double_t dBeta = (1./betaTof - 1/b_P);
@@ -415,28 +423,35 @@ void StPidStatus::Set() {
     }
   }
 #endif    
-  for (Int_t l = kPidElectron; l < KPidParticles; l++) {
+  for (Int_t l = kPidElectron; l < fgNparticles; l++) {
     Int_t p = fgl2p[l];
     Int_t charge  = fgParticles[p].charge;
     Double_t mass = fgParticles[p].mass;
-    Double_t M2 = mass*mass;
+    Double_t pOverQ = pMomentum/charge;
+    Double_t p2OverQ2 = pOverQ*pOverQ;
+    Double_t M2overQ2 = mass*mass/(charge*charge);
     Double_t betagamma = pMomentum*TMath::Abs(charge)/mass;
     //    Double_t beta = betagamma/TMath::Sqrt(1. + betagamma*betagamma);
     bgs[l] = betagamma;
     bghyp[l] = TMath::Log10(bgs[l]);
     for (Int_t k = kI70; k <= kOtherMethodId2; k++) {
       if (! fStatus[k]) continue;
+      fStatus[k]->dev[l] = -999;
       fStatus[k]->devS[l] = -999;
       fStatus[k]->PullC[l] = -999;
       if (dEdxStatus(k)->I() > 0 && dEdxStatus(k)->D() > 0.01 && dEdxStatus(k)->D() < 0.15) {
 	UChar_t fit = 0;
 	if (k == kLikelihoodFitId || k == kWeightedTruncatedMeanId) fit = 1;
 	else if (k == kOtherMethodId || k == kOtherMethodId2) fit = 2;
-	if (fgUsedx2) 
+	if (fgUsedx2) {
 	  fStatus[k]->Pred[l] = StdEdxPull::EvalPred2(betagamma, dEdxStatus(k)->log2dX(), fit, charge);
-	else {
-	  fStatus[k]->Pred[l] = StdEdxPull::EvalPred(betagamma, fit, charge, mass) * dEdxCorr(bghyp[l], l);
+	  fStatus[k]->PredC[l] = fStatus[k]->Pred[l];
 	}
+	else {
+	  fStatus[k]->Pred[l] = StdEdxPull::EvalPred(betagamma, fit, charge, mass);
+	  fStatus[k]->PredC[l] = fStatus[k]->Pred[l]  * dEdxCorr(bghyp[l], l)*TMath::Exp(4.87e-03);
+	}
+
 	fStatus[k]->dev[l] = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->Pred[l]);
 	fStatus[k]->devS[l] = fStatus[k]->dev[l]/(dEdxStatus(k)->D());
         if (fit == 1 && ! fgUsedx2) {
@@ -449,24 +464,28 @@ void StPidStatus::Set() {
     // ToF
     for (Int_t k = kBTof; k <= kETof; k++) {
       if (! fStatus[k]) continue;
+      fStatus[k]->Pred[l] = M2overQ2;
+      fStatus[k]->PredC[l] = fStatus[k]->Pred[l] ;
+      fStatus[k]->dev[l] = -999;
       fStatus[k]->devS[l] = -999;
       fStatus[k]->PullC[l] = -999;
-      Double_t sigmaTof = -999;
-      if (k == kBTof) sigmaTof = fBTof()->Sigma(l);
       if (betaTof > 0 && betaTof < 2) {
 	Double_t sigmadM2 = -999;
-	Double_t dM2 = p2*(1./(betaTof*betaTof) - 1.) - M2;
+	Double_t dM2 = p2OverQ2*(1./(betaTof*betaTof) - 1.) - fStatus[k]->PredC[l];
 	dM2 -= M2BTofCorr(pL10, l);
 	fStatus[k]->dev[l] = dM2;
 	sigmadM2 = M2BTofSigma(pL10, l);
 	if (sigmadM2 > 0) {
 	  fStatus[k]->PullC[l] = fStatus[k]->dev[l]/sigmadM2;
-	  if (k == kBTof) {
-	    Double_t sigma = fBTof()->Sigma(l);
-	    if (TMath::Abs(sigma) < 100) fStatus[k]->devS[l] = sigma;
-	    else                         fStatus[k]->devS[l] = fStatus[k]->PullC[l];
-	  }
 	}
+	if (k == kBTof) {
+	  Double_t sigma = fBTof()->Sigma(l);
+	  if (TMath::Abs(sigma) < 100) fStatus[k]->devS[l] = sigma;
+	  else                         fStatus[k]->devS[l] = fStatus[k]->PullC[l];
+	}
+      } else if (fgDebug) {
+	cout << fgPiDStatusNames[k] << " beta = " << betaTof << " out of range. Skipped " << endl;
+	continue;
       }
     }
   }
@@ -474,15 +493,18 @@ void StPidStatus::Set() {
 }
 //________________________________________________________________________________
 void StPidStatus::Print(Option_t *opt) const {
-  for (Int_t k = 1; k <= kOtherMethodId2; k++) {
+  for (Int_t k = 1; k < kTotal; k++) {
     if (! fStatus[k]) continue;
-    if      (k == kUndefinedMethodId)         cout << "UndefinedMethod       ";
-    else if (k == kTruncatedMeanId)           cout << "TruncatedMean         ";
-    else if (k == kEnsembleTruncatedMeanId)   cout << "EnsembleTruncatedMean ";
-    else if (k == kLikelihoodFitId)           cout << "LikelihoodFit         ";
-    else if (k == kWeightedTruncatedMeanId)   cout << "WeightedTruncatedMean ";
-    else if (k == kOtherMethodId)             cout << "OtherMethod           "; 
-    else if (k == kOtherMethodId2)            cout << "OtherMethodIdentifier2";
+    cout << fgPiDStatusNames[k];
+    if        (k == kUndefinedMethodId) {cout << "UndefinedMethod       " << endl; continue;
+    } else if (k <= kdNdxU) {((StdEdxStatus *) fStatus[k])->Print(); continue;
+    } else if (k == kBTof)  {cout << " beta = " << fBTof()->beta();
+    } else if (k == kETof)  {cout << " beta = " << fETof()->beta();
+    } else if (k == kMtd)   {cout << " beta = " << fMtd()->beta() << "\tdetaY = " << fMtd()->PiD()->deltaY() << "\tdetaZ = " << fMtd()->PiD()->deltaZ() 
+				  << "\tdT = " << fMtd()->PiD()->timeOfFlight() - fMtd()->PiD()->expTimeOfFlight();
+    } else if (k == kBEmc)  {cout << " bemcR = " << fBEmc()->PiD()->bemcE();
+    }
+    cout << endl;
     fStatus[k]->Print();
   }
 }
@@ -490,23 +512,18 @@ void StPidStatus::Print(Option_t *opt) const {
 void StdEdxStatus::Print(Option_t *option) const {
   if (! fPiD) {cout << "\tEmpty" << endl;}
   else {
-    static Double_t scale = 1;
-    if (I() < 10) cout << "\tI = " << scale*I() << "keV";
-    else          cout << "\tI = " << I();
-    cout << " +/- " << 100*D() << "%";
+    cout << Form("\tI = %8.3f keV +/- %8.3f %% ",1e6*I(), 100*D()) << endl;
     StTrackPiD::Print(option);
   }
 }
 //________________________________________________________________________________
 void StTrackPiD::Print(Option_t *option) const {
-  static Double_t scale = 1;
-  cout << "\tPred: ";
-  for (Int_t l = kPidElectron; l <= kPidPion; l++) {cout << "\t" << scale*Pred[l];}
-  cout << "\tdev:";
-  for (Int_t l = kPidElectron; l <= kPidPion; l++) {cout << "\t" << dev[l];}
-  cout << "\tdevS:";
-  for (Int_t l = kPidElectron; l <= kPidPion; l++) {cout << "\t" << devS[l];}
-  cout << endl;
+  cout << "Part: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10s", StPidStatus::l2par(l).name);} cout << endl;
+  cout << "Pred: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",Pred[l]);} cout << endl;
+  cout << "PredC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",PredC[l]);} cout << endl;
+  cout << "dev:  "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",dev[l]);} cout << endl;
+  cout << "Pull: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",devS[l]);} cout << endl;
+  cout << "PullC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",PullC[l]);} cout << endl;
 }
 //________________________________________________________________________________
 Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
@@ -571,17 +588,6 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
     CorrL = Proton1->Eval(bg10);
   }
   return TMath::Exp(CorrL);
-}
-//________________________________________________________________________________
-Double_t StPidStatus::dEdxSigma(Double_t bgL10, Int_t code)  {
-  Double_t SigmaC = 1;
-#if 0
-  if (code == kPidElectron) {
-  } else if (code == kPidPion || code == kPidMuon || code == kPidKaon) {
-  } else if (code == kPidProton || code >= kPidDeuteron) {
-  }
-#endif
-  return SigmaC;
 }
 //________________________________________________________________________________
 Double_t StPidStatus::dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t code)  {
@@ -712,7 +718,7 @@ Double_t StPidStatus::M2BTofSigma(Double_t pL10, Int_t code)  {
 void StPidStatus::SetPDGfromTPC() {
   for (Int_t k = kI70; k <= kOtherMethodId2; k++) {
     if (! fStatus[k]) continue;
-    for (Int_t l = kPidElectron; l < KPidParticles; l++) {
+    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       if (TMath::Abs(fStatus[k]->PullC[l]) < fgSigmaCut) {
 	Int_t p = fgl2p[l];
 	fTPCPDG.push_back(fQ*fgParticles[p].pdg);
@@ -724,7 +730,7 @@ void StPidStatus::SetPDGfromTPC() {
 void StPidStatus::SetPDGfromTof() {
   for (Int_t k = kBTof; k <= kETof; k++) {
     if (! fStatus[k]) continue;
-    for (Int_t l = kPidElectron; l < KPidParticles; l++) {
+    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       if (TMath::Abs(fStatus[k]->PullC[l]) < fgSigmaCut) {
 	Int_t p = fgl2p[l];
 	fTofPDG.push_back(fQ*fgParticles[p].pdg);

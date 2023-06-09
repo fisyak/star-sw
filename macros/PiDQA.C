@@ -27,10 +27,10 @@ TMultiGraph *sgPion = 0;
 TMultiGraph *mgProton = 0;
 TMultiGraph *sgProton = 0;
 TFile *fOut = 0;
-void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "qeg3s") {
+void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "qeg3s") {
   TString xTitle = "log_{10} (#beta #gamma)";
   if (! bg) xTitle = "log_{10} (p [GeV/c])";
-  const Int_t N = 8;
+  const Int_t N = 18;
   struct Part_t {
     const Char_t *dir;
     Double_t      mass;
@@ -43,7 +43,17 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
     {"/PiDQA/Lambdab/pi+", 0.1395699},
     {"/PiDQA/Lambda/pi-",  0.1395699},
     {"/PiDQA/Lambda/p",    0.9382723},
-    {"/PiDQA/Lambdab/p-",  0.9382723}
+    {"/PiDQA/Lambdab/p-",  0.9382723}, // 8
+    {"/PiDQA/e+",          0.51099907e-3},   
+    {"/PiDQA/e-",          0.51099907e-3},
+    {"/PiDQA/pi+",         0.1395699},    
+    {"/PiDQA/pi-",         0.1395699},    
+    {"/PiDQA/K+",          0.493677},
+    {"/PiDQA/K-",          0.493677},
+    {"/PiDQA/p",           0.9382723},
+    {"/PiDQA/p-",          0.9382723},
+    {"/PiDQA/d",           1.875613},
+    {"/PiDQA/d-",          1.875613}
   };
 #if 1
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
@@ -76,7 +86,8 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
   TString HistName(histN);
   Bool_t idEdx = HistName.Contains("dEdx");
   Bool_t iBTof = HistName.Contains("BTof");
-  for (Int_t i = 0; i < N; i++) {
+  if (NN < 0 || NN > N) NN = N;
+  for (Int_t i = 0; i < NN; i++) {
     TString dir(Particles[i].dir);
     //    dir += opt;
     if (! gDirectory->cd(dir)) continue;
@@ -92,12 +103,19 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
       continue;
     }
     cout << " has been found" << endl;
+    Double_t sum = h2->GetEntries();
+    if (sum < 1e3) {
+      cout << h2->GetName() << " has only " << sum << " entries. Skipped !" << endl;
+      continue;
+    }
+#if 0
     if (iBTof && dir.Contains("Lambdab/pi+")) {
       cout << "restrict y range for " <<  dir.Data() << endl;
       Int_t ny = h2->GetNbinsY();
       Int_t iy = h2->GetYaxis()->FindBin(-0.1);
       h2->GetYaxis()->SetRange(iy,ny);
     }
+#endif
     TObjArray *arr = new TObjArray(4);
     TH1D *h1 = h2->ProjectionX();
     Double_t ymax = h1->GetMaximum();
@@ -128,7 +146,7 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
 	if (sigma->GetBinContent(j) <= 0.0 || sigma->GetBinContent(j) > 3) continue;
 	Double_t err = mu->GetBinError(j);
 	Double_t yyy = mu->GetBinContent(j);
-	if (idEdx) yyy += 1.6185e-02 ;
+	//	if (idEdx) yyy += 1.6185e-02 ;
 	if (err <= 0.0 || err > 0.02) continue;
 	if (TMath::Abs(yyy) > 1.0) continue;
 	//	x[np] = mu->GetBinCenter(j);
@@ -141,11 +159,12 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
 	np++;
       }
       grmu[i] = new TGraphErrors(np, x, y, 0, e);
-      grmu[i]->SetLineColor(i+1);
-      grmu[i]->SetMarkerColor(i+1);
+      Int_t color = i%8 + 1;
+      grmu[i]->SetLineColor(color);
+      grmu[i]->SetMarkerColor(color);
       grsigma[i] = new TGraphErrors(np, x, s, 0, se);
-      grsigma[i]->SetLineColor(i+1);
-      grsigma[i]->SetMarkerColor(i+1);
+      grsigma[i]->SetLineColor(color);
+      grsigma[i]->SetMarkerColor(color);
       TString Dir(dir);
       Int_t marker = 20;
       if (Dir.EndsWith("e+") || Dir.EndsWith("e-")) marker = 21;
@@ -156,7 +175,7 @@ void PiDQA(const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "q
       grsigma[i]->SetMarkerStyle(marker);
       sg->Add(grsigma[i]);
       ls->AddEntry(grsigma[i],dir,"p");
-      if      (dir.Contains("gamma/e"))  {mgE->Add(grmu[i]);      sgE->Add(grsigma[i]);}
+      if      (dir.Contains("/e")     )  {mgE->Add(grmu[i]);      sgE->Add(grsigma[i]);}
       else if (dir.Contains("/pi")    )  {mgPion->Add(grmu[i]);   sgPion->Add(grsigma[i]);}
       else if (dir.Contains("/p")     )  {mgProton->Add(grmu[i]); sgProton->Add(grsigma[i]);}
     }
