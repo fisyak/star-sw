@@ -2364,18 +2364,21 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	  if (k == StPidStatus::kFit) {
 	    hist[d][p][k][0] = new TH2F("dEdx",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
 	    hist[d][p][k][1] = new TH2F("PulldEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
-	    hist[d][p][k][2] = new TH2F("PullCdEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("dEdxC",Form("dE/dx_{%s} / dEdModel prediction Corrected for I_{fit} versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][3] = new TH2F("PullCdEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 3; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
 	  } else if (k == StPidStatus::kTotal) {
 	    hist[d][p][k][0] = new TH2F("dEdxBTof",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
 	    hist[d][p][k][1] = new TH2F("PulldEdxBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
-	    hist[d][p][k][2] = new TH2F("PullCdEdxBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("dEdxCBTof",Form("dE/dx_{%s} / dEdModel corrected prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][3] = new TH2F("PullCdEdxCBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 3; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
 	  } else if (k == StPidStatus::kBTof) {
 	    hist[d][p][k][0] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,400,-0.2,0.2);
 	    hist[d][p][k][1] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)"           ,1000,-1,4,600,-6.0,6.0);
-	    hist[d][p][k][2] = new TH2F("dM2BTofPullC","dM^{2}/#sigma dM^ {2} corrected from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
-	    hist[d][p][k][3] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("dM2CBTof","dM^{2} Corrrected from BTof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,400,-0.2,0.2);
+	    hist[d][p][k][3] = new TH2F("dM2BTofPullC","dM^{2}/#sigma dM^ {2} corrected from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
+	    hist[d][p][k][4] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
 	  } else if (k == StPidStatus::kETof) {
 #if 0
@@ -2386,11 +2389,11 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
 #endif
 	  } else if (k == StPidStatus::kBEmc) {
-	    hist[d][p][k][0] = new TH2F("BemcEoverP","E/P in BEMC versus log_{10} P"                                            ,100,-0.25,1.75,100,0.0,10.0);
+	    hist[d][p][k][0] = new TH2F("BemcEoverP","E/P in BEMC versus log_{10} P"                                            ,250,-0.75,1.75,100,0.0,10.0);
 	    hist[d][p][k][0]->SetXTitle("log_{10}P");
 	  } else if (k == StPidStatus::kMtd) {
 	    hist[d][p][k][0] = new TH2F("MtdYdZ","Mtd dY vesus dZ"                                            ,100,-50,50,100,-100,100);
-	    hist[d][p][k][1] = new TH2F("MtdTP","Mtd dT vesus log{10} P"                                      ,100,-1.,5.,400,-2000,2000);
+	    hist[d][p][k][1] = new TH2F("MtddT","Mtd dT vesus log{10} P"                                      ,100,-1.,5.,400,-2000,2000); // ??
 	  }
 	}
       }
@@ -2436,14 +2439,16 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	if (TMath::Abs(PiD->Status(StPidStatus::kBTof)->PullC[l]) < StPidStatus::fgSigmaCut) {
 	  hist[d][p][k][0]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->dev[l]);
 	  hist[d][p][k][1]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->devS[l]);
-	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->PullC[l]);
+	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->devC[l]);
+	  hist[d][p][k][3]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->PullC[l]);
 	}
       } else {
 	hist[d][p][k][0]->Fill(bgL10, PiD->Status(k)->dev[l]);
 	hist[d][p][k][1]->Fill(bgL10, PiD->Status(k)->devS[l]);
-	hist[d][p][k][2]->Fill(bgL10, PiD->Status(k)->PullC[l]);
+	hist[d][p][k][2]->Fill(bgL10, PiD->Status(k)->devC[l]);
+	hist[d][p][k][3]->Fill(bgL10, PiD->Status(k)->PullC[l]);
 	if (k == StPidStatus::kBTof) {
-	  hist[d][p][k][3]->Fill(bgL10, PiD->fBTof()->Sigma(l));
+	  hist[d][p][k][4]->Fill(bgL10, PiD->fBTof()->Sigma(l));
 	}
       }
     }

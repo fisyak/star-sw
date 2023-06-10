@@ -53,7 +53,7 @@ const Char_t *StPidStatus::fgPiDStatusNames[kTotal+1] = {
   "BTof",      "ETof",    "Mtd",      "BEmc",    "dEdx & BTof"
 };
 
-Int_t  StPidStatus::fgl2p[KPidParticles] = {0};
+Int_t  StPidStatus::fgl2p[KPidAllParticles] = {0};
 Bool_t StPidStatus::fgUsedx2 = kFALSE;
 Bool_t StPidStatus::fgUseTof = kFALSE;
 Int_t  StPidStatus::fgDebug = 0;
@@ -437,6 +437,7 @@ void StPidStatus::Set() {
     for (Int_t k = kI70; k <= kOtherMethodId2; k++) {
       if (! fStatus[k]) continue;
       fStatus[k]->dev[l] = -999;
+      fStatus[k]->devC[l] = -999;
       fStatus[k]->devS[l] = -999;
       fStatus[k]->PullC[l] = -999;
       if (dEdxStatus(k)->I() > 0 && dEdxStatus(k)->D() > 0.01 && dEdxStatus(k)->D() < 0.15) {
@@ -454,8 +455,12 @@ void StPidStatus::Set() {
 
 	fStatus[k]->dev[l] = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->Pred[l]);
 	fStatus[k]->devS[l] = fStatus[k]->dev[l]/(dEdxStatus(k)->D());
+	fStatus[k]->devC[l] = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->PredC[l]);
         if (fit == 1 && ! fgUsedx2) {
-	  fStatus[k]->PullC[l] = dEdxPullCorrection(fStatus[k]->devS[l], bghyp[l], l);
+	  Double_t pullC = fStatus[k]->devC[l]/dEdxStatus(k)->D();
+	  fStatus[k]->PullC[l] = dEdxPullCorrection(pullC, bghyp[l], l);
+	} else {
+	  fStatus[k]->PullC[l] = fStatus[k]->devS[l];
 	}
 	if (fStatus[k]->Pred[l] < PredBMN[0]) PredBMN[0] = fStatus[k]->Pred[l];
 	if (fStatus[k]->Pred[l] > PredBMN[1]) PredBMN[1] = fStatus[k]->Pred[l];
@@ -467,16 +472,18 @@ void StPidStatus::Set() {
       fStatus[k]->Pred[l] = M2overQ2;
       fStatus[k]->PredC[l] = fStatus[k]->Pred[l] ;
       fStatus[k]->dev[l] = -999;
+      fStatus[k]->devC[l] = -999;
       fStatus[k]->devS[l] = -999;
       fStatus[k]->PullC[l] = -999;
       if (betaTof > 0 && betaTof < 2) {
 	Double_t sigmadM2 = -999;
 	Double_t dM2 = p2OverQ2*(1./(betaTof*betaTof) - 1.) - fStatus[k]->PredC[l];
-	dM2 -= M2BTofCorr(pL10, l);
 	fStatus[k]->dev[l] = dM2;
+	dM2 -= M2BTofCorr(pL10, l);
+	fStatus[k]->devC[l] = dM2;
 	sigmadM2 = M2BTofSigma(pL10, l);
 	if (sigmadM2 > 0) {
-	  fStatus[k]->PullC[l] = fStatus[k]->dev[l]/sigmadM2;
+	  fStatus[k]->PullC[l] = fStatus[k]->devC[l]/sigmadM2;
 	}
 	if (k == kBTof) {
 	  Double_t sigma = fBTof()->Sigma(l);
@@ -519,11 +526,12 @@ void StdEdxStatus::Print(Option_t *option) const {
 //________________________________________________________________________________
 void StTrackPiD::Print(Option_t *option) const {
   cout << "Part: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10s", StPidStatus::l2par(l).name);} cout << endl;
-  cout << "Pred: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",Pred[l]);} cout << endl;
-  cout << "PredC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",PredC[l]);} cout << endl;
-  cout << "dev:  "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",dev[l]);} cout << endl;
-  cout << "Pull: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",devS[l]);} cout << endl;
-  cout << "PullC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5f",PullC[l]);} cout << endl;
+  cout << "Pred: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",1e6*Pred[l]);} cout << endl;
+  cout << "PredC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",1e6*PredC[l]);} cout << endl;
+  cout << "dev:  "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",dev[l]);} cout << endl;
+  cout << "devC: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",devC[l]);} cout << endl;
+  cout << "Pull: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",devS[l]);} cout << endl;
+  cout << "PullC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",PullC[l]);} cout << endl;
 }
 //________________________________________________________________________________
 Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {

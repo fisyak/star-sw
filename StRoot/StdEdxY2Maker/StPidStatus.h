@@ -29,11 +29,12 @@ class StTrackPiD {
   void Print(Option_t *option = "") const;
   Double_t Pull(Int_t k = 0)  {return devS[k];}
   Char_t                mBeg[1];                   //!
-  Double_t Pred[KPidParticles];
-  Double_t PredC[KPidParticles];
-  Double_t dev[KPidParticles];
-  Double_t devS[KPidParticles];         // Pull
-  Double_t PullC[KPidParticles];        // Pull Corrected
+  Double_t Pred[KPidAllParticles];
+  Double_t PredC[KPidAllParticles];
+  Double_t dev[KPidAllParticles];          // residual
+  Double_t devC[KPidAllParticles];         // residual wrt PredC
+  Double_t devS[KPidAllParticles];         // Pull
+  Double_t PullC[KPidAllParticles];        // Pull Corrected
   Char_t                mEnd[1];        //!
 };
 //________________________________________________________________________________
@@ -165,8 +166,8 @@ class StPidStatus {
   Char_t                mBeg[1];                   //!
   StTrackPiD *fStatus[kTotal];
   Double_t PredBMN[2], Pred70BMN[2]; //!
-  Double_t bghyp[KPidParticles]; //! log10(bg)
-  Double_t bgs[KPidParticles]; //! bg
+  Double_t bghyp[kTotal]; //! log10(bg)
+  Double_t bgs[kTotal]; //! bg
   StProbPidTraits       *fProb;
   Char_t                mEnd[1];        //!
   const StdEdxStatus    *fI70	 () const  {return (const StdEdxStatus    *) fStatus[kI70  ];} 
@@ -184,7 +185,7 @@ class StPidStatus {
   static Double_t  M2BTofCorr(Double_t pL10, Int_t code);
   static Double_t  M2BTofSigma(Double_t pL10, Int_t code);
   static Double_t  fgSigmaCut;
-  static Int_t     fgl2p[KPidParticles];
+  static Int_t     fgl2p[KPidAllParticles];
   static Particle_t fgParticles[34];
   static const Char_t *fgPiDStatusNames[kTotal+1];
   static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
