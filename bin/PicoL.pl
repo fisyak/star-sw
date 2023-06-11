@@ -229,8 +229,8 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-#my $GLOB = $PICOPATH . $glob . "/*/???/*";
-my $GLOB = $PICOPATH . $glob . "???/*";
+my $GLOB = $PICOPATH . $glob . "/*/???/*";
+#my $GLOB = $PICOPATH . $glob . "???/*";
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);
@@ -248,7 +248,7 @@ foreach my $run (@Files) {
 #  my $glb = $run . "/*/*" . $DST . ".root"; # per day
   my @files =  glob $glb; print "glb = $glb, no. files = $#files\n" if ($debug);
   my $NF = $#files + 1;
-  my $step = 20;
+  my $step = 10;
   for (my $i = 0; $i < $NF; $i += $step) {
     my @list = ();
     my @listB = ();

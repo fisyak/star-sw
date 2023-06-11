@@ -556,6 +556,13 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
       }
       CorrL = E2->Eval(bg10);
     }
+    static TF1 *E3 = 0;
+    if (! E3) {
+      Double_t pars[2] = {-0.03429437, 0.02038976}; //e
+      E3 = new TF1("dEdxE3","pol1",2.1,3.8);
+      E3->SetParameters(pars);
+    }
+    CorrL += E3->Eval(bgL10);
   } else if (code == kPidPion || code == kPidMuon || code == kPidKaon) {
     if (bgL10 < -0.25) bg10 = 0.25;
     if (bgL10 < 0.05) {
@@ -584,6 +591,13 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
       if (bgL10 > 1.7) bg10 = 1.7;
       CorrL = Pi3->Eval(bg10);
     }
+    static TF1 *Pi4 = 0;
+    if (! Pi4) {
+      Double_t pars[8] = {0.005057659, -0.05614078,  0.4202523, -0.9288579,  0.9325692, -0.3811554, 0.008754178, 0.02183855}; //pi
+      Pi4 = new TF1("dEdxPi4","pol7",-0.25,1.70);
+      Pi4->SetParameters(pars);
+    }
+    CorrL += Pi4->Eval(bgL10);
   } else if (code == kPidProton || code >= kPidDeuteron) {
     if (bgL10 < -0.8) bg10 = -0.8;
     if (bgL10 >  0.8) bg10 =  0.8;
@@ -594,12 +608,20 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
       Proton1->SetParameters(pars);
     }
     CorrL = Proton1->Eval(bg10);
+    static TF1 *Proton2 = 0;
+    if (! Proton2) {
+      Double_t pars[4] = {0.01299427, 0.01952912, 0.03317554, -0.02754662}; //p
+      Proton2 = new TF1("dEdxProton2","pol3",-0.80,0.80);
+      Proton2->SetParameters(pars);
+    }
+    CorrL += Proton2->Eval(bg10);
   }
   return TMath::Exp(CorrL);
 }
 //________________________________________________________________________________
 Double_t StPidStatus::dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t code)  {
   Double_t Pull = pull;
+#if 0
   Double_t bg10 = bgL10;
   if (code == kPidElectron) {
     Pull += -0.0761419;
@@ -646,6 +668,7 @@ Double_t StPidStatus::dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t co
        Pull /= (pars[0] + pars[1]*bg10);
     }
   }
+#endif
   return Pull;
 }
 //________________________________________________________________________________
