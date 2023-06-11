@@ -248,7 +248,7 @@ foreach my $run (@Files) {
 #  my $glb = $run . "/*/*" . $DST . ".root"; # per day
   my @files =  glob $glb; print "glb = $glb, no. files = $#files\n" if ($debug);
   my $NF = $#files + 1;
-  my $step = 20;
+  my $step = 10;
   for (my $i = 0; $i < $NF; $i += $step) {
     my @list = ();
     my @listB = ();
