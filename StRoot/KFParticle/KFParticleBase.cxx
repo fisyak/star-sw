@@ -3705,4 +3705,152 @@ void KFParticleBase::MultQSQt( const float Q[], const float S[], float SOut[], c
 
 // 72-charachters line to define the printer border
 //3456789012345678901234567890123456789012345678901234567890123456789012
+#ifdef __TFG__VERSION__
+//________________________________________________________________________________
 
+int KFParticleBase::SqEqu(double *cba, double *sol)
+{
+//	
+//	made from fortran routine GVPSQR (Geant320)
+/*
+************************************************************************
+*                                                                      *
+*     SUBROUTINE GVPSQR (CBA,SOL,NSOL)             870924  VP          *
+*                                                                      *
+*       SOLVE  QUADRATIC  EQUATION                                     *
+*                                                                      *
+*   ARGUMENTS:                                                         *
+*       CBA     Array of coeff's A0 + A1*x + A2*x**2                   *
+*       SOL     Solutions                                              *
+*       NSOL    Number of solutions :                                  *
+*               if zero - SOL[0]= extremum                             *
+*               if -ve  - No solution at all                           *
+*                                                                      *
+************************************************************************
+*/
+  const double zero2=1.e-12;
+  double swap,a,b,c,amx,dis,bdis;
+  int nsol;
+/*--------------------------------------------------------------------*/
+
+  a = cba[2]; b = cba[1]*0.5; c = cba[0];
+  if (b < 0.) {a = -a; b = -b; c = -c;}
+  amx = fabs(a); if (amx<b) amx = b; if (amx<fabs(c)) amx = fabs(c);
+  if (amx <= 0.) return -1;
+  a = a/amx; b = b/amx; c = c/amx;
+
+  dis = b*b - a*c;
+  nsol = 1;
+  if (fabs(dis) <= zero2)  dis = 0;
+  if (dis < 0.) { nsol = 0; dis  = 0.;}
+
+  dis = ::sqrt(dis); bdis = b + dis;
+  if (fabs(c) > 1.e+10*bdis)	return -1;
+  sol[0] = 0.;
+  if (fabs(bdis) <= 0.)      	return nsol;
+  sol[0] = (-c/bdis);		
+  if (dis <= 0.)            	return nsol;
+  if (bdis >= 1.e+10*fabs(a))   return nsol;    
+  nsol   = 2; sol[1] = (-bdis/a);
+  if (sol[0] > sol[1]) { swap = sol[0]; sol[0] = sol[1]; sol[1] = swap;}
+  return nsol;
+}
+//_____________________________________________________________________________
+// from THelixTrack::Step(double stmin,double stmax, const double *s, int nsurf, double *xyz, double *dir, int nearest) const
+Float_t KFParticleBase::GetDStoSurfaceBz(Float_t B,double stmin,double stmax, const double *s, int nsurf, Int_t nearest) //, Float_t dsdr[6], KFParticle *particle) 
+{
+  static Float_t kClight = 1e-12*TMath::C(); // EC=2.99792458E-4 = 0.000299792458f; [CM/S] [kG] [GeV/c]
+  int ix,jx,nx,ip,jp;
+  double poly[4][3],tri[3],sol[2],cos1t,f1,f2,step,ss;
+  const double *sp[4][4] = {{s+0,s+1,s+2,s+3}, {s+1,s+4,s+7,s+9}, 
+                            {s+2,s+7,s+5,s+8}, {s+3,s+9,s+8,s+6}}; 
+  TVector3 P(&fP[4]);
+  Double_t pMom = P.Mag();
+  Double_t fRho = - GetQ()*B*kClight/pMom;
+  TVector3 fDir = P.Unit();
+  Double_t fCosL = fDir.Perp();
+  double myMax = 1./(fabs(fRho*fCosL)+1.e-10);
+  cos1t = 0.5*fRho*fCosL;
+  double totStep=0;
+  while (2005) {
+    double hXp[3]={-fDir.Py(),fDir.Px(),0};
+    poly[0][0]=1.;poly[0][1]=0.;poly[0][2]=0.;
+    tri[0]=tri[1]=tri[2]=0;
+    for(ix=1;ix<4;ix++) {
+      poly[ix][0] =GetParameter(ix-1);
+      poly[ix][1] =fDir  [ix-1]; 
+      poly[ix][2] =hXp[ix-1]*cos1t;
+    }
+
+    nx = (nsurf<=4) ? 1:4;
+    for(ix=0;ix<nx;ix++) {
+      for(jx=ix;jx<4;jx++) {  
+	ss = *sp[ix][jx]; if(!ss) 	continue;
+	for (ip=0;ip<3;ip++) {
+          f1 = poly[ix][ip]; if(!f1) 	continue;
+          f1 *=ss;
+          for (jp=0;jp+ip<3;jp++) {
+            f2 = poly[jx][jp]; if(!f2) 	continue;
+            tri[ip+jp] += f1*f2;
+    } } } }
+
+    int nsol = SqEqu(tri,sol);
+    step = 1.e+12;
+    if (nsol<0) 	return step;
+    if (nsol == 2) {
+      if (sol[1] < stmin || sol[1] > stmax) nsol = 1;
+    }
+    if (nsol == 2) {
+      if (sol[0] < stmin || sol[0] > stmax) {nsol = 1; sol[0] = sol[1];}
+    }
+    if (nsol == 1) {
+      if (sol[0] < stmin || sol[0] > stmax) nsol = 0; 
+    }
+    if (nearest && nsol>1) {
+      if(fabs(sol[0])>fabs(sol[1])) sol[0]=sol[1];
+      nsol = 1;
+    }
+    if (nsol <= 0) return step;
+    if (nsol) step = sol[0];
+    if (step < stmin && nsol > 1) step = sol[1];
+    if (step < stmin || step > stmax) 	{
+      nsol = 0; 
+      if (step>0) {step = stmax; stmin+=myMax/2;}
+      else        {step = stmin; stmax-=myMax/2;}}
+
+    if (!nsol && fabs(step) < 0.1*myMax) return 1.e+12;
+    if (fabs(step)>myMax) {step = (step<0)? -myMax:myMax; nsol=0;}
+
+    //    th.Step(step,x,d);
+    //    Float_t  P[8], C[36], dsdr1[6], F[36], F1[36];
+    //    TransportBz(B,step/pMom, dsdr, P, C); //, dsdr1, F, F1, kFALSE);
+    Float_t dsdr[6] = {0};
+    //    cout << "before\t"; Print();
+    TransportToDS(step/pMom, dsdr);
+    //    cout << "after \t"; Print();
+    const Float_t *x = &X();
+    if (nsol) {//test it
+      ss = s[0]+s[1]*x[0]+s[2]*x[1]+s[3]*x[2];
+      if (nsurf > 4) ss += s[4]*x[0]*x[0]+s[5]*x[1]*x[1]+s[6]*x[2]*x[2];
+      if (nsurf > 7) ss += s[7]*x[0]*x[1]+s[8]*x[1]*x[2]+s[9]*x[2]*x[0];
+      if (fabs(ss)<1.e-3 || TMath::Abs(step) < 1e-3) {
+	return (totStep+step)/pMom;
+    } }
+
+    stmax -=step; stmin -=step;
+    if (stmin>=stmax) return 1.e+12;
+    totStep+=step;
+    //    th.Move(step);
+    //    fgmParticle.TransportBz(B,step/pMom, dsdr, P, C, dsdr1, F, F1, kFALSE);
+//     cout << "before\t"; fgmParticle.Print();
+//     fgmParticle.TransportToDS(step/pMom, dsdr);
+//     cout << "after \t"; fgmParticle.Print();
+  }
+}
+//________________________________________________________________________________
+Float_t KFParticleBase::GetDStoR(Float_t BZ, Double_t R, Double_t stmin, Double_t stmax) {
+  Double_t cyl[6] = { -R*R , 0, 0, 0, 1, 1};
+  //  Float_t dsdr[6] = {0};
+  return GetDStoSurfaceBz(BZ, stmin, stmax, cyl, 6, 1); //, dsdr);
+}
+#endif /* __TFG__VERSION__ */

@@ -208,7 +208,11 @@ class KFParticleBase :public TObject {
   float GetDistanceFromVertex( const float vtx[] ) const;
   float GetDistanceFromVertex( const KFParticleBase &Vtx ) const;
   float GetDistanceFromParticle( const KFParticleBase &p ) const;
-
+#ifdef __TFG__VERSION__
+  Float_t GetDStoSurface(const double *surf, int nsurf, float dsdr[6] ) const;
+  Float_t GetDStoR(Float_t BZ, Double_t R, double stmin,double stmax);
+  Float_t GetDStoSurfaceBz(Float_t B, double stmin,double stmax, const double *s, int nsurf, Int_t nearest); //, Float_t dsdr[6], KFParticle *particle = 0);
+#endif
   //* Calculate sqrt(Chi2/ndf) deviation from vertex
   //* v = [xyz], Cv=[Cxx,Cxy,Cyy,Cxz,Cyz,Czz]-covariance matrix
 
@@ -293,7 +297,9 @@ class KFParticleBase :public TObject {
    ** 2) if particle is constructed from other particles - indices of these particles in the same array.
    **/
   std::vector<int> fDaughtersIds;
- 
+#ifdef __TFG__VERSION__
+  static Int_t  SqEqu(double *, double *);
+#endif
 #ifndef KFParticleStandalone
   ClassDef( KFParticleBase, 3 )
 #endif
