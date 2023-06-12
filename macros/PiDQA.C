@@ -27,6 +27,7 @@ TMultiGraph *sgPion = 0;
 TMultiGraph *mgProton = 0;
 TMultiGraph *sgProton = 0;
 TFile *fOut = 0;
+TFile *_file0 = 0;
 void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "qeg3s") {
   TString xTitle = "log_{10} (#beta #gamma)";
   if (! bg) xTitle = "log_{10} (p [GeV/c])";
@@ -61,14 +62,15 @@ void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Ch
   else    c1 = new TCanvas("c1","c1",600,600);
   c1->SetLogz(1);
 #endif
-  TDirectory *current = gFile; //gDirectory->cd("/");
+  if (! _file0) _file0 = gFile;
+  _file0->cd();
   TString FOutName("Graph_");
   if (bg) FOutName += "bg";
   else    FOutName += "p";
-  FOutName += Form("%s_%s",histN,gSystem->BaseName(current->GetName()));
+  FOutName += Form("%s_%s",histN,gSystem->BaseName(_file0->GetName()));
   if (fOut) {delete fOut;}
   fOut = new TFile(FOutName,"recreate");
-  gDirectory = current;
+  _file0->cd();
   TGraphErrors *grmu[N] = {0};
   TGraphErrors *grsigma[N] = {0};
   mg = new TMultiGraph(Form("DEV_%s",histN),Form("#mu for %s",histN));
@@ -201,8 +203,8 @@ void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Ch
     sgPion->Write();
     mgProton->Write(); 
     sgProton->Write();
+    _file0->cd();
   }
-  gDirectory = current;
   TString File;
   if (bg) File += "bg";
   //  File += gSystem->BaseName(gFile->GetName());
