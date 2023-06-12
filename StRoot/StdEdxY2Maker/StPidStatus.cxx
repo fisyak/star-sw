@@ -450,7 +450,7 @@ void StPidStatus::Set() {
 	}
 	else {
 	  fStatus[k]->Pred[l] = StdEdxPull::EvalPred(betagamma, fit, charge, mass);
-	  fStatus[k]->PredC[l] = fStatus[k]->Pred[l]  * dEdxCorr(bghyp[l], l)*TMath::Exp(4.87e-03);
+	  fStatus[k]->PredC[l] = fStatus[k]->Pred[l]  * dEdxCorr(bghyp[l], l);
 	}
 
 	fStatus[k]->dev[l] = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->Pred[l]);
@@ -520,22 +520,28 @@ void StdEdxStatus::Print(Option_t *option) const {
   if (! fPiD) {cout << "\tEmpty" << endl;}
   else {
     cout << Form("\tI = %8.3f keV +/- %8.3f %% ",1e6*I(), 100*D()) << endl;
-    StTrackPiD::Print(option);
+    cout << "Part: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10s", StPidStatus::l2par(l).name);} cout << endl;
+    cout << "Pred: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",1e6*Pred[l]);} cout << endl;
+    cout << "PredC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",1e6*PredC[l]);} cout << endl;
+    cout << "dev:  "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",dev[l]);} cout << endl;
+    cout << "devC: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",devC[l]);} cout << endl;
+    cout << "Pull: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",devS[l]);} cout << endl;
+    cout << "PullC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",PullC[l]);} cout << endl;
   }
 }
 //________________________________________________________________________________
 void StTrackPiD::Print(Option_t *option) const {
   cout << "Part: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10s", StPidStatus::l2par(l).name);} cout << endl;
-  cout << "Pred: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",1e6*Pred[l]);} cout << endl;
-  cout << "PredC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",1e6*PredC[l]);} cout << endl;
-  cout << "dev:  "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",dev[l]);} cout << endl;
-  cout << "devC: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",devC[l]);} cout << endl;
-  cout << "Pull: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",devS[l]);} cout << endl;
-  cout << "PullC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.5g",PullC[l]);} cout << endl;
+  cout << "Pred: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",Pred[l]);} cout << endl;
+  cout << "PredC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",PredC[l]);} cout << endl;
+  cout << "dev:  "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",dev[l]);} cout << endl;
+  cout << "devC: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",devC[l]);} cout << endl;
+  cout << "Pull: "; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",devS[l]);} cout << endl;
+  cout << "PullC:"; for (Int_t l = kPidElectron; l < StPidStatus::Nparticles(); l++) {cout << Form("%10.4g",PullC[l]);} cout << endl;
 }
 //________________________________________________________________________________
 Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
-  Double_t CorrL = 0;
+  Double_t CorrL = 4.87e-03;
   Double_t bg10 = bgL10;
   if (code == kPidElectron) {
     if (bgL10 < 2.15) bg10 = 2.15;
@@ -546,7 +552,7 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
 	E1 = new TF1("dEdxE1","pol6",2.15,2.50);
 	E1->SetParameters(pars);
       }
-      CorrL = E1->Eval(bg10);
+      CorrL += E1->Eval(bg10);
     } else {
       static TF1 *E2 = 0;
       if (! E2) {
@@ -554,7 +560,7 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
 	E2 = new TF1("dEdxE2","pol6",2.50,3.80);
 	E2->SetParameters(pars);
       }
-      CorrL = E2->Eval(bg10);
+      CorrL += E2->Eval(bg10);
     }
     static TF1 *E3 = 0;
     if (! E3) {
@@ -572,7 +578,7 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
 	Pi1 = new TF1("dEdxPi1","pol4",-0.25,0.05);
 	Pi1->SetParameters(pars);
       }
-      CorrL = Pi1->Eval(bg10);
+      CorrL += Pi1->Eval(bg10);
     } else if (bgL10 < 0.55) {
       static TF1 *Pi2 = 0;
       if (! Pi2) {
@@ -580,7 +586,7 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
 	Pi2 = new TF1("dEdxPi2","pol4",0.02,0.55);
 	Pi2->SetParameters(pars);
       }
-      CorrL = Pi2->Eval(bg10);
+      CorrL += Pi2->Eval(bg10);
     } else {
       static TF1 *Pi3 = 0;
       if (! Pi3) {
@@ -589,7 +595,7 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
 	Pi3->SetParameters(pars);
       }
       if (bgL10 > 1.7) bg10 = 1.7;
-      CorrL = Pi3->Eval(bg10);
+      CorrL += Pi3->Eval(bg10);
     }
     static TF1 *Pi4 = 0;
     if (! Pi4) {
@@ -607,14 +613,14 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
       Proton1 = new TF1("dEdxProton1","pol9",-0.80,0.80);
       Proton1->SetParameters(pars);
     }
-    CorrL = Proton1->Eval(bg10);
+    CorrL += Proton1->Eval(bg10);
     static TF1 *Proton2 = 0;
     if (! Proton2) {
       Double_t pars[4] = {0.01299427, 0.01952912, 0.03317554, -0.02754662}; //p
       Proton2 = new TF1("dEdxProton2","pol3",-0.80,0.80);
       Proton2->SetParameters(pars);
     }
-    CorrL += Proton2->Eval(bg10);
+    CorrL += Proton2->Eval(bgL10);
   }
   return TMath::Exp(CorrL);
 }

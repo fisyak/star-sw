@@ -1231,7 +1231,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     bool isTofm2 = false;
     double m2Etof = -1.e6;
     bool isETofm2 = false;
-#if 0 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     if(gTrack->bTofPidTraitsIndex() >= 0)
     {
       const StPicoBTofPidTraits* btofPid = picoDst->btofPidTraits(gTrack->bTofPidTraitsIndex());
@@ -1294,7 +1293,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	}
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
     }
-#endif // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 #if 0    
     vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx(), dEdXPull, isTofm2, index);
 #else
@@ -2413,7 +2411,7 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     }
   } 
   if (d < 0) return kFALSE;
-  for (Int_t p = 0; p < NparticlesA; p++) {
+  for (Int_t p = 0; p < Nparticles; p++) {
     if (PDG != particles[p].pdg) continue;
     Int_t l = particles[p].code;
 #if 0
@@ -2430,23 +2428,18 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
       } else {
 	if (! PiD->Status(StPidStatus::kBTof)) continue; 
       }
+      Int_t kd = k;
+      if (k == StPidStatus::kTotal) kd = StPidStatus::kFit;
       if (k == StPidStatus::kBEmc) {
 	hist[d][p][k][0]->Fill(TMath::Log10(pMom), PiD->fBEmc()->bemcE()/pMom);
       } else if (k == StPidStatus::kMtd) {
 	hist[d][p][k][0]->Fill(PiD->fMtd()->PiD()->deltaZ(), PiD->fMtd()->PiD()->deltaY());
 	hist[d][p][k][1]->Fill(pL10, PiD->fMtd()->deltaTimeOfFlight());
-      } else if (k == StPidStatus::kTotal) {
-	if (TMath::Abs(PiD->Status(StPidStatus::kBTof)->PullC[l]) < StPidStatus::fgSigmaCut) {
-	  hist[d][p][k][0]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->dev[l]);
-	  hist[d][p][k][1]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->devS[l]);
-	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->devC[l]);
-	  hist[d][p][k][3]->Fill(bgL10, PiD->Status(StPidStatus::kFit)->PullC[l]);
-	}
       } else {
-	hist[d][p][k][0]->Fill(bgL10, PiD->Status(k)->dev[l]);
-	hist[d][p][k][1]->Fill(bgL10, PiD->Status(k)->devS[l]);
-	hist[d][p][k][2]->Fill(bgL10, PiD->Status(k)->devC[l]);
-	hist[d][p][k][3]->Fill(bgL10, PiD->Status(k)->PullC[l]);
+	hist[d][p][k][0]->Fill(bgL10, PiD->Status(kd)->dev[l]);
+	hist[d][p][k][1]->Fill(bgL10, PiD->Status(kd)->devS[l]);
+	hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->devC[l]);
+	hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->PullC[l]);
 	if (k == StPidStatus::kBTof) {
 	  hist[d][p][k][4]->Fill(bgL10, PiD->fBTof()->Sigma(l));
 	}
