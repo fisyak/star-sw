@@ -73,6 +73,7 @@ StBTofPidTraits StPidStatus::SetBTofPidTraits(const StMuBTofPidTraits &pid) {
   btofPidTraits.setTimeOfFlight (pid.timeOfFlight());
   btofPidTraits.setPathLength   (pid.pathLength());
   btofPidTraits.setBeta         (pid.beta());
+  btofPidTraits.setPosition     (pid.position());
   double lengthTof = pid.pathLength();
   if(lengthTof <= 0.) {
 #if 0
@@ -111,6 +112,7 @@ StBTofPidTraits StPidStatus::SetBTofPidTraits(const StPicoBTofPidTraits &pid, St
   btofPidTraits.setMatchFlag    (pid.btofMatchFlag());
   btofPidTraits.setYLocal       (pid.btofYLocal());
   btofPidTraits.setZLocal       (pid.btofZLocal());
+  btofPidTraits.setPosition     (StThreeVectorF(pid.btofHitPosX(),pid.btofHitPosY(),pid.btofHitPosZ());
   //  btofPidTraits.setThetaLocal   (pid.btofThetaLocal());
   btofPidTraits.setTimeOfFlight (pid.btof());
   //  btofPidTraits.setPathLength   (pid.btofPathLength());
