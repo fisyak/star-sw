@@ -112,7 +112,7 @@ StBTofPidTraits StPidStatus::SetBTofPidTraits(const StPicoBTofPidTraits &pid, St
   btofPidTraits.setMatchFlag    (pid.btofMatchFlag());
   btofPidTraits.setYLocal       (pid.btofYLocal());
   btofPidTraits.setZLocal       (pid.btofZLocal());
-  btofPidTraits.setPosition     (StThreeVectorF(pid.btofHitPosX(),pid.btofHitPosY(),pid.btofHitPosZ());
+  btofPidTraits.setPosition     (StThreeVectorF(pid.btofHitPosX(),pid.btofHitPosY(),pid.btofHitPosZ()));
   //  btofPidTraits.setThetaLocal   (pid.btofThetaLocal());
   btofPidTraits.setTimeOfFlight (pid.btof());
   //  btofPidTraits.setPathLength   (pid.btofPathLength());
@@ -562,8 +562,7 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
     if (! E3) {
       Double_t pars[2] = {-0.03429437, 0.02038976}; //e
       Double_t parb[2] = {-0.03751737, 0.01611591}; //E4 ???
-      pars[0] += parb[0];
-      pars[1] += parb[1];
+      for (Int_t i = 0; i < 2; i++) pars[i] += parb[i];
       E3 = new TF1("dEdxE3","pol1",2.1,3.8);
       E3->SetParameters(pars);
     }
@@ -639,7 +638,7 @@ Double_t StPidStatus::dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t co
     if (bg10 > 2.3) {
       static TF1 *E1S = 0;
       if (! E1S) {
-	 Double_t pars[4] = {  9.759174,  -7.884564,   2.321952, -0.2280004}; //e [2.3,3.6]
+	Double_t pars[4] = {  9.759174,  -7.884564,   2.321952, -0.2280004}; //e [2.3,3.6]
 	E1S = new TF1("dEdxSigmaE1","pol3",2.3,3.6);
 	E1S->SetParameters(pars);
       }
@@ -689,6 +688,8 @@ Double_t StPidStatus::M2BTofCorr(Double_t pL10, Int_t code)  {
     if (! E1) {
     //Double_t pars[5] = { 0.01265596, -0.02078762, -0.04596959, -0.04943213, -0.02199248}; //e
       Double_t pars[5] = {-0.00352904, -0.02078762, -0.04596959, -0.04943213, -0.02199248}; //e
+      Double_t parb[5] = {-0.003455332, -0.02078977, -0.04685939, -0.05109632, -0.02288036}; //e dEdxP
+      for (Int_t i = 0; i < 5; i++) pars[i] += parb[i];
       E1 = new TF1("M2BTofE1","pol4",-0.85,0.28);
       E1->SetParameters(pars);
     }
@@ -697,6 +698,8 @@ Double_t StPidStatus::M2BTofCorr(Double_t pL10, Int_t code)  {
     static TF1 *Pion1 = 0;
     if (! Pion1) {
       Double_t pars[8] = {0.005495614, 0.00672486, -0.001912834, -0.01906281, -0.07363129,   -0.20461, -0.2838375,  -0.144034}; //pion
+      Double_t parb[7] = {0.005508667, 0.006677259, -0.008315284, -0.05185988, -0.1001799, -0.08455071, -0.02629651}; //pion dEdxP
+      for (Int_t i = 0; i < 7; i++) pars[i] += parb[i];
       Pion1 = new TF1("M2BTofPion1","pol7",-0.90,0.60);
       Pion1->SetParameters(pars);
     }
@@ -706,7 +709,9 @@ Double_t StPidStatus::M2BTofCorr(Double_t pL10, Int_t code)  {
     if (! Proton1) {
       //      Double_t pars[2] = {0.01191059, 0.02612714}; //proton
       Double_t pars[2] = {-0.004274406, 0.02612714}; //proton
-      Proton1 = new TF1("M2BTofProton1","pol1",-0.50,0.50);
+      Double_t parb[2] = {-0.004009571, 0.01519456}; //proton dEdxP
+      for (Int_t i = 0; i < 2; i++) pars[i] += parb[i];
+      Proton1 = new TF1("M2BTofProton1","pol1",-0.50,0.60);
       Proton1->SetParameters(pars);
     }
     Corr = Proton1->Eval(p10);
