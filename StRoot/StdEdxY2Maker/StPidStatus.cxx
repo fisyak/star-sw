@@ -398,9 +398,6 @@ void StPidStatus::Set() {
   PiDStatus = 0;
   Double_t pMomentum = g3.Mag();
   Double_t pL10 = TMath::Log10(pMomentum);
-  //  Double_t bg = TMath::Log10(pMomentum/StProbPidTraits::mPidParticleDefinitions[kPidPion]->mass());
-  PredBMN[0] = Pred70BMN[0] =  1;
-  PredBMN[1] = Pred70BMN[1] = -1;
   // Set up Tof
   Float_t betaTof = -999;
   if (fBTof()) {
@@ -447,25 +444,22 @@ void StPidStatus::Set() {
 	if (k == kLikelihoodFitId || k == kWeightedTruncatedMeanId) fit = 1;
 	else if (k == kOtherMethodId || k == kOtherMethodId2) fit = 2;
 	if (fgUsedx2) {
-	  fStatus[k]->Pred[l] = StdEdxPull::EvalPred2(betagamma, dEdxStatus(k)->log2dX(), fit, charge);
+	  fStatus[k]->Pred[l]  = StdEdxPull::EvalPred2(betagamma, dEdxStatus(k)->log2dX(), fit, charge);
 	  fStatus[k]->PredC[l] = fStatus[k]->Pred[l];
 	}
 	else {
-	  fStatus[k]->Pred[l] = StdEdxPull::EvalPred(betagamma, fit, charge, mass);
+	  fStatus[k]->Pred[l]  = StdEdxPull::EvalPred(betagamma, fit, charge, mass);
 	  fStatus[k]->PredC[l] = fStatus[k]->Pred[l]  * dEdxCorr(bghyp[l], l);
 	}
-
-	fStatus[k]->dev[l] = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->Pred[l]);
+	fStatus[k]->dev[l]  = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->Pred[l]);
 	fStatus[k]->devS[l] = fStatus[k]->dev[l]/(dEdxStatus(k)->D());
 	fStatus[k]->devC[l] = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->PredC[l]);
-        if (fit == 1 && ! fgUsedx2) {
+        if (fgUsedx2) {
+	  fStatus[k]->PullC[l] = fStatus[k]->devS[l];
+	} else {
 	  Double_t pullC = fStatus[k]->devC[l]/dEdxStatus(k)->D();
 	  fStatus[k]->PullC[l] = dEdxPullCorrection(pullC, bghyp[l], l);
-	} else {
-	  fStatus[k]->PullC[l] = fStatus[k]->devS[l];
 	}
-	if (fStatus[k]->Pred[l] < PredBMN[0]) PredBMN[0] = fStatus[k]->Pred[l];
-	if (fStatus[k]->Pred[l] > PredBMN[1]) PredBMN[1] = fStatus[k]->Pred[l];
       }
     }
     // ToF
@@ -567,6 +561,9 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
     static TF1 *E3 = 0;
     if (! E3) {
       Double_t pars[2] = {-0.03429437, 0.02038976}; //e
+      Double_t parb[2] = {-0.03751737, 0.01611591}; //E4 ???
+      pars[0] += parb[0];
+      pars[1] += parb[1];
       E3 = new TF1("dEdxE3","pol1",2.1,3.8);
       E3->SetParameters(pars);
     }
@@ -602,6 +599,8 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
     static TF1 *Pi4 = 0;
     if (! Pi4) {
       Double_t pars[8] = {0.005057659, -0.05614078,  0.4202523, -0.9288579,  0.9325692, -0.3811554, 0.008754178, 0.02183855}; //pi
+      Double_t parb[5] = {-0.003534838,  0.0238152, -0.04105992, 0.03616169, -0.01032226}; //pion b
+      for (Int_t i = 0; i < 5; i++) pars[i] += parb[i];
       Pi4 = new TF1("dEdxPi4","pol7",-0.25,1.70);
       Pi4->SetParameters(pars);
     }
@@ -619,6 +618,8 @@ Double_t StPidStatus::dEdxCorr(Double_t bgL10, Int_t code)  {
     static TF1 *Proton2 = 0;
     if (! Proton2) {
       Double_t pars[4] = {0.01299427, 0.01952912, 0.03317554, -0.02754662}; //p
+      Double_t parb[2] = {0.002984208, 0.007781605}; //proton b
+      for (Int_t i = 0; i < 2; i++) pars[i] += parb[i];
       Proton2 = new TF1("dEdxProton2","pol3",-0.80,0.80);
       Proton2->SetParameters(pars);
     }
