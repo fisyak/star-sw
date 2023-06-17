@@ -81,8 +81,14 @@ void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Ch
   sgPion = new TMultiGraph(Form("PionSigmaV_%s",histN),Form("#sigma for %s",histN));
   mgProton = new TMultiGraph(Form("ProtonDEV_%s",histN),Form("#mu for %s",histN));
   sgProton = new TMultiGraph(Form("ProtonSigmaV_%s",histN),Form("#sigma for %s",histN));
-  TLegend *l = new TLegend(0.6,0.6,0.9,0.9);
-  TLegend *ls = new TLegend(0.6,0.6,0.9,0.9);
+  TLegend *l, *ls;
+  if (! bg) {
+      l = new TLegend(0.6,0.6,0.9,0.9);
+      ls = new TLegend(0.6,0.6,0.9,0.9);
+    } else {
+      l = new TLegend(0.4,0.6,0.7,0.9);
+      ls = new TLegend(0.4,0.6,0.7,0.9);
+    }
   TPaveLabel pl;
   Float_t x1=0.3, y1=0.8, x2=0.75, y2=0.85;
   TString HistName(histN);
@@ -150,7 +156,7 @@ void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Ch
 	Double_t yyy = mu->GetBinContent(j);
 	//	if (idEdx) yyy += 1.6185e-02 ;
 	if (err <= 0.0 || err > 0.02) continue;
-	if (TMath::Abs(yyy) > 1.0) continue;
+	if (TMath::Abs(yyy) > 10.0) continue;
 	//	x[np] = mu->GetBinCenter(j);
 	x[np] = mu->GetBinCenter(j); 
 	if (! bg) x[np] +=  TMath::Log10(Particles[i].mass);
@@ -186,7 +192,6 @@ void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Ch
   if (! mg->GetListOfGraphs()) return;
   if (mg->GetListOfGraphs()->GetSize() <= 0) return;
   TString ctitle(Form("mu%s%s",histN,opt));
-  if (bg) ctitle += "bg";
   TCanvas *cr = new TCanvas(ctitle,ctitle,200,100,1600,800);
   mg->Draw("ap");
   mg->GetHistogram()->SetXTitle(xTitle);
@@ -206,7 +211,6 @@ void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Ch
     _file0->cd();
   }
   TString File;
-  if (bg) File += "bg";
   //  File += gSystem->BaseName(gFile->GetName());
   File += FOutName;
   File.ReplaceAll(".root",".png");

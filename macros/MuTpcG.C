@@ -4,11 +4,13 @@
    root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
    foreach d (`ls -1d ???/2*`)
      cd ${d}
+if (! -r MuTpcG.root) then
      ln -s ../../.sl* .
      root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
      cd -
+endif
    end
-   foreach d (`ls -1d ???`)
+   foreach d (`ls -1d ??[0-9]`)
      cd ${d}
      ln -s ../.sl* .
      root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
@@ -160,7 +162,7 @@ struct Val_t {
   Double_t valError;
   Int_t    iFlag;
 };
-//________________________________________________________________________________
+//________________________________________________________________________________23
 static Int_t _debug = 0;
 #define PrPP(B)  if (_debug)   {cout << (#B) << " = \t" << (B) << endl;}
 #define PrPP2(B) if (_debug>1) {cout << (#B) << " = \t" << (B) << endl;}
@@ -307,28 +309,28 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     pTSP = new TH2F("pTSP","pT versus sector for positive primary tracks",24,0.5,24.5,100,0.0,5.0);
     pTSN = new TH2F("pTSN","pT versus sector for negative primary tracks",24,0.5,24.5,100,0.0,5.0);
     Zchisq = new TH2F("Zchisq","chisq between the highest rank vertex and this one", 100,-25,25,500,0,500);
-    dXS = new TH3F("dXS","dX in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,500,-1.0,1.0);
-    dYS = new TH3F("dYS","dY in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,500,-1.0,1.0);
-    dZS = new TH3F("dZS","dZ in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,500,-1.0,1.0);
-    dXTpcS = new TH3F("dXTpcS","dX in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,500,-1.0,1.0);
-    dYTpcS = new TH3F("dYTpcS","dY in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,500,-1.0,1.0);
-    dZTpcS = new TH3F("dZTpcS","dZ in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,500,-1.0,1.0);
+    dXS = new TH3F("dXS","dX in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dYS = new TH3F("dYS","dY in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dZS = new TH3F("dZS","dZ in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dXTpcS = new TH3F("dXTpcS","dX in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dYTpcS = new TH3F("dYTpcS","dY in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dZTpcS = new TH3F("dZTpcS","dZ in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dXYS   = new TH3F("dXYS","X and Y versus sector",24,0.5,24.5,100,-1.0,1.0,100,-1.0,1.0);
-    dXSPhi = new TH3F("dXSPhi","dX in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,500,-1.0,1.0);
-    dYSPhi = new TH3F("dYSPhi","dY in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,500,-1.0,1.0);
-    dZSPhi = new TH3F("dZSPhi","dZ in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,500,-1.0,1.0);
-    dXSDip = new TH3F("dXSDip","dX in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,500,-1.0,1.0);
-    dYSDip = new TH3F("dYSDip","dY in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,500,-1.0,1.0);
-    dZSDip = new TH3F("dZSDip","dZ in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,500,-1.0,1.0);
+    dXSPhi = new TH3F("dXSPhi","dX in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
+    dYSPhi = new TH3F("dYSPhi","dY in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
+    dZSPhi = new TH3F("dZSPhi","dZ in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
+    dXSDip = new TH3F("dXSDip","dX in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,1000,-2.0,2.0);
+    dYSDip = new TH3F("dYSDip","dY in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,1000,-2.0,2.0);
+    dZSDip = new TH3F("dZSDip","dZ in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,1000,-2.0,2.0);
     plots3D = new TH3F**[3];
 
-    dXS2P = new TH2F("dXS2P","dX in SCS versus sector (positive)",24,0.5,24.5,500,-1.0,1.0);
-    dYS2P = new TH2F("dYS2P","dY in SCS versus sector (positive)",24,0.5,24.5,500,-1.0,1.0);
-    dZS2P = new TH2F("dZS2P","dZ in SCS versus sector (positive)",24,0.5,24.5,500,-1.0,1.0);
+    dXS2P = new TH2F("dXS2P","dX in SCS versus sector (positive)",24,0.5,24.5,1000,-2.0,2.0);
+    dYS2P = new TH2F("dYS2P","dY in SCS versus sector (positive)",24,0.5,24.5,1000,-2.0,2.0);
+    dZS2P = new TH2F("dZS2P","dZ in SCS versus sector (positive)",24,0.5,24.5,1000,-2.0,2.0);
 
-    dXS2N = new TH2F("dXS2N","dX in SCS versus sector (negative)",24,0.5,24.5,500,-1.0,1.0);
-    dYS2N = new TH2F("dYS2N","dY in SCS versus sector (negative)",24,0.5,24.5,500,-1.0,1.0);
-    dZS2N = new TH2F("dZS2N","dZ in SCS versus sector (negative)",24,0.5,24.5,500,-1.0,1.0);
+    dXS2N = new TH2F("dXS2N","dX in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
+    dYS2N = new TH2F("dYS2N","dY in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
+    dZS2N = new TH2F("dZS2N","dZ in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
 
     for (Int_t charge = 0; charge < 3; charge++) {
       plots3D[charge] = new TH3F*[NPlots];
@@ -686,7 +688,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     Glob2SupS(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
     Glob2SupSVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
     StThreeVectorD d = xS - vS; if (Debug() > 1) cout << "sector:" << sector << "\td: " << d << endl;
-    if (d.perp() > 1.0) continue;
+    if (d.perp() > 2.0) continue;
     StThreeVectorD n = pS.unit();
     Double_t Phi = TMath::ATan2(pS.y(),pS.x());
     Double_t Dip = TMath::ATan2(pS.z(),pS.perp());
