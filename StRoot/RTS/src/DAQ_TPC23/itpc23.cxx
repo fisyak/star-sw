@@ -755,7 +755,7 @@ u_int *itpc23::fee_scan(u_int *start)
 	u_int *d_save = start ;
 
 	bx_count = -1 ;
-	fee_errs = 0 ;
+//	fee_errs = 0 ;
 	fee_evt_type = 0 ;
 	fee_pp = 0 ;
 
@@ -1274,6 +1274,7 @@ itpc23::itpc23()
 
 	data_c = 0 ;
 
+	fee_errs = 0 ;	// just in case
 
 	fmt = 0 ;
 

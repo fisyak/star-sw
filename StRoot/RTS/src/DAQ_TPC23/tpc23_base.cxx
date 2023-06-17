@@ -1340,7 +1340,7 @@ int tpc23_base::run_start()
 			s1_bytes = (ROW_MAX*PAD_MAX)*512*2 ;
 		}
 
-		LOG(INFO,"%d: allocing %d s1_bytes, s1_t %d, blobs %d",id,s1_bytes,sizeof(s1),sizeof(blob)) ;
+		if(online) LOG(INFO,"%d: allocing %d s1_bytes, s1_t %d, blobs %d",id,s1_bytes,sizeof(s1),sizeof(blob)) ;
 
 		s1_dta = (u_short *) malloc(s1_bytes) ;
 	}
@@ -1353,6 +1353,7 @@ int tpc23_base::run_start()
 	evt_trgd = 0 ;
 
 	run_errors = 0 ;
+	fee_errs = 0 ;
 
 	return 0 ;
 
