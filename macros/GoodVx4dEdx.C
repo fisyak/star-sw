@@ -21,7 +21,7 @@ void GoodVx4dEdx() {
       ax->SetRange(nb/2+1,nb);
       Npos = aTdEdxF->ProjectionX()->GetEntries();
     }
-    cout << Form("%-30s:\tNo. of Prinmary Vertices = %10.5gM,\tGood = %10.5gM,\tNo. positve tracks = %10.5gM,\tnegative tracks = %10.5gM",
+    cout << Form("%-30s:\tNo. of Primary Vertices = %10.5gM,\tGood = %10.5gM,\tNo. positive tracks = %10.5gM,\tnegative tracks = %10.5gM",
 		 F.Data(),  NV/1e6, NC/1e6, Npos/1e6, Nneg/1e6) << endl;
   }
 }
