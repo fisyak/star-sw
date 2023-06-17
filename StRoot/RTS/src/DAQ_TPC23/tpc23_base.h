@@ -24,7 +24,9 @@ public:
 
 	virtual int rdo_scan(char *mem, int words) ;
 	virtual int from22to23(char *dta, int words) ;	// rewrite the old FY22 raw data foramt to FY23
-	
+
+	int fee_errs ;
+
 	u_char rts_id ;	// tpx, itpc
 	u_char fmt ;	// 22: old data format, 23: FY23 data format
 	u_char online ;	// 1:running online, 0:offline with quality and track_id stuff

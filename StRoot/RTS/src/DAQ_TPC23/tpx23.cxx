@@ -19,6 +19,8 @@
 #include <DAQ_TPX/tpxPed.h>
 #include <DAQ_TPX/tpxGain.h>
 
+#include <DAQ_ITPC/itpcPed.h>	// only for itpcData!
+
 #ifdef THREAD_DBG_USE
 
 #include <MISC_LIBS/thread_dbg.h>
@@ -52,11 +54,14 @@ inline u_int tpx23::set_rdo(int s, int r)
 	return 0 ;	// should be fee_mask
 }
 
-u_int *tpx23::fee_scan() 
+int tpx23::fee_scan() 
 {
 	u_int *h ;
-//	int fee_wds ;
+	err = 0 ;	// in class
 
+//	u_char altro_present[256][16] ;
+
+	
 	get_token((char *)d_start,words) ;
 
 	TLOG() ;
@@ -81,27 +86,10 @@ u_int *tpx23::fee_scan()
 	h = d_end ;
 
 
+//	memset(altro_present,0,sizeof(altro_present)) ;
 	if(hdr_version) {
-#if 0
-		fee_wds = (d_end+1) - (d_start+2) ;
+		
 
-		LOG(WARN,"Evt %d: S%02d:%d: T %d, trg %d, daq %d: fee words %d vs %d",evt_trgd,
-		    sector1,rdo1,
-		    token,trg_cmd,daq_cmd,
-		    fee_wds,words) ;
-		LOG(WARN,"   first altro words 0x%08X last, 0x%08X before last",h[0],h[-1]) ;
-#if 0
-		u_int *d = (u_int *)d_start ;
-//		printf("first h words: 0x%08X last, 0x%08X before-last\n",h[0],h[-1]) ;
-		for(int i=0;i<words;i++) {
-			printf("%d: 0x%08X\n",i,*d) ;
-			d++ ;
-		}
-#endif
-
-		LOG(ERR,"fmt %d: not yet done",fmt) ;
-#endif
-		//goto done ;
 	}
 
 	TLOG() ;
@@ -115,7 +103,9 @@ u_int *tpx23::fee_scan()
 		lo = *h-- ;
 		hi = *h-- ;
 
-
+		// for intermediate hdr version
+		lo &= 0xFFFFF ;
+		hi &= 0xFFFFF ;
 
 		int wc = ((hi&0x3F)<<4)|((lo&0xF0000)>>16) ;    // altro's word count
 		if(wc==0) continue ;
@@ -152,8 +142,12 @@ u_int *tpx23::fee_scan()
 		int flags = flags_row_pad(id,ch,row,pad) ;
 
 		if(wc>530) {	// garbage in the event... and now what???
-			LOG(ERR,"S%02d:%d: rp %d:%d (aid %d:%d) : wc %d",sector1,rdo1,row,pad,id,ch,wc) ;
-			break ;
+			run_errors++ ;
+			if(run_errors<10) {
+				if(online) LOG(ERR,"S%02d:%d: rp %d:%d (aid %d:%d) : wc %d",sector1,rdo1,row,pad,id,ch,wc) ;
+			}
+			//err |= 0x10000 ;	// signal an error because I am breaking out
+			break ;	
 		}
 
 		while(wc%4) wc++ ;
@@ -167,6 +161,20 @@ u_int *tpx23::fee_scan()
 			h -= wc/2 ;
 			continue ;
 		}
+
+#if 0
+		// fixing a bug in fee_23a FY23 version!
+		altro_present[id][ch]++ ;
+
+		if(altro_present[id][ch]>1) {
+			run_errors++ ;
+			if(run_errors<20) {
+				if(online) LOG(ERR,"S%02:%d: AID %d:%d already present %d",sector1,rdo1,id,ch,altro_present[id][ch]) ;
+			}
+			h -= wc/2 ;
+			continue ;
+		}
+#endif
 
 		u_short *d = s1_dta + last_ix ;	// this is where the raw data goes...
 		//u_short d[512] ;
@@ -183,6 +191,9 @@ u_int *tpx23::fee_scan()
 		for(int i=0;i<wc;) {	// NOTE: no increment!
 			lo = *h-- ;
 			hi = *h-- ;
+
+			//lo &= 0xFFFFF ;
+			//hi &= 0xFFFFF ;
 
 			if(ix==0) {	// see if I need to skip the first dummies!!!
 				u_short dd[4] ;
@@ -246,11 +257,19 @@ u_int *tpx23::fee_scan()
 			t_lo = t_hi - t_len + 1 ;
 
 			if(t_len>440 || t_hi>440 || t_lo>440) {
-				LOG(ERR,"S%02d:%d: rp %d:%d, t_len %d, t_lo %d, t_hi %d",sector1,rdo1,row,pad,
-				    t_len,t_lo,t_hi) ;
-				if(t_len>510) break ;
-				if(t_hi>510) break ;
-				if(t_lo>510) break ;
+				run_errors++ ;
+				if(run_errors<20) {
+					if(online) LOG(ERR,"S%02d:%d: rp %d:%d (aid %d:%d), t_len %d, t_lo %d, t_hi %d",sector1,rdo1,row,pad,
+					    id,ch,
+					    t_len,t_lo,t_hi) ;
+				}
+				if(t_len>510 || t_hi>510 || t_lo>510) {
+					//err |= 0x20000 ; 
+					break ;
+				}
+
+				//if(t_hi>510) break ;
+				//if(t_lo>510) break ;
 			}
 
 			//printf("rp %d:%d: seq %d: t_len %d, t_lo:hi %d:%d\n",row,pad,seq_ix,t_len,t_lo,t_hi) ;
@@ -304,6 +323,40 @@ u_int *tpx23::fee_scan()
 				peds->accum(&a) ;
 			}
 		
+		}
+		else if(tpx_d) {
+			tpx_d->sector = sector1 ;
+			tpx_d->rdo = rdo1 ;
+			tpx_d->row = row ;
+			tpx_d->pad = pad ;
+			tpx_d->altro = id ;
+
+			//LOG(TERR,"%d:%d %d:%d %d:%d",sector1,rdo1,row,pad,id,ch) ;
+
+			tpx_d->ch_start(ch) ;	// sets tpx_d->ch within
+
+			for(int i=(seq_ix-1);i>=0;i--) {
+				int t_len = sseq[i].t_hi - sseq[i].t_lo + 1 ;
+
+				int ii = 0 ;
+				for(int j=(t_len-1);j>=0;j--) {
+					int adc = sseq[i].d[j] ;
+					int tb ;
+
+
+					//a.adc[aix] = adc ;
+
+					tb = sseq[i].t_lo + ii ;
+					//a.tb[aix] = sseq[i].t_lo + ii ;
+					ii++ ;
+					//aix++ ;
+
+					tpx_d->accum(tb,adc) ;
+				}
+
+			}
+
+			tpx_d->ch_done() ;
 		}
 
 		
@@ -373,7 +426,7 @@ u_int *tpx23::fee_scan()
 
 	TLOG() ;
 
-	return 0 ;
+	return err ;
 }
 
 /*
@@ -483,7 +536,7 @@ u_int tpx23::get_token(char *c_addr, int wds)
 
 	d_first = d ;
 
-
+	err = 0 ;
 
 
 //	LOG(TERR,"get_token %u",d[1]) ;
@@ -516,15 +569,19 @@ u_int tpx23::get_token(char *c_addr, int wds)
 
 		
 		u_int evt_err = d[-1] ;
-		if(evt_err) {
+		if(evt_err & 0xFF000000) {
 			int cou ;
 
 			if(wds>20) cou = 20 ;
 			else cou = wds ;
 
-			LOG(ERR,"evt_err %d:%d: 0x%08X: 0x%08X, wds %u",evt,rdo1,d_first[0],evt_err,wds) ;
-			for(int i=0;i<cou;i++) {
-				LOG(TERR,"  %d: 0x%08X",i,d_first[i]) ;
+			err |= 0x1 ;
+
+			if(online) {
+				LOG(ERR,"evt_err %d:%d: 0x%08X: 0x%08X, wds %u",evt,rdo1,d_first[0],evt_err,wds) ;
+				for(int i=0;i<cou;i++) {
+					LOG(TERR,"  %d: 0x%08X",i,d_first[i]) ;
+				}
 			}
 		}
 		
@@ -607,7 +664,7 @@ int tpx23::msc_dump(char *c_addr, int wds)
 	// modify tpx_show_status to have a pointer to the data instead of this thread-unsafe tpx_rdo static!
 	err = tpx_show_status(sector1,1<<(rdo1-1),0) ;
 	if(err) {
-		LOG(ERR,"S%02d:%d: tpx_show_status %d",sector1,rdo1,err) ;
+		if(online) LOG(ERR,"S%02d:%d: tpx_show_status %d",sector1,rdo1,err) ;
 	}
 
 	return err ;
@@ -898,7 +955,7 @@ int tpx23::rdo_scan(char *c_addr, int wds)
 	default :	// ALTRO data -- and we're off
 		evt_trgd++ ;
 		TLOG() ;
-		fee_scan() ;
+		ret = fee_scan() ;
 		TLOG() ;
 		break ;
 	}
@@ -940,7 +997,8 @@ tpx23::tpx23()
 	for(int row=1;row<=45;row++) rowlen[row] = tpc_rowlen[row] ;
 
 	hdr_version = 0 ;	// 0:pre FY23
-	
+
+	tpx_d = 0 ;
 }
 
 
