@@ -68,6 +68,7 @@ void MakeTpcZCorrection1() {
   fileIn.ReplaceAll("Z3G4EY","");
 
   fileIn.ReplaceAll(".root","");
+  cout << "File: " << fileIn.Data() << endl;
   TString fOut =  Form("%s.%s.C", tableName, fileIn.Data());
   TF1* f[2] = {(TF1 *) gROOT->GetFunction("pol2"), (TF1 *) gROOT->GetFunction("pol5")};
   Int_t nrows = 4; // for separate West and East
@@ -79,7 +80,7 @@ void MakeTpcZCorrection1() {
   Double_t maxOuter = 208.0;
   Double_t minInner =  16.5;
   Double_t maxInner = 208.0;
-#if 1
+#if 0
   if      (fileIn == "")                                  {nrows = 0;}
   else if (fileIn.Contains("100GeV_fixedTarget_2021"))    {nrows = 0;} // np = 3; npO = 3;} 
   else if (fileIn.Contains("13p5GeV_fixedTarget_2020"))   {nrows = 0;} // np = 3; npO = 3;} 
