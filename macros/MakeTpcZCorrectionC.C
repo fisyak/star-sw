@@ -62,6 +62,7 @@ void MakeTpcZCorrection1() {
   if (! fileIn.BeginsWith("Z3")) return;
   TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
   if (! FitP) return;
+  cout << "File: " << fileIn.Data() << endl;
   fileIn.ReplaceAll("Z3C+Z3PCG4EY","");
   fileIn.ReplaceAll("Z3+Z3PG4EY","");
   fileIn.ReplaceAll("Z3CG4EY","");
@@ -79,7 +80,7 @@ void MakeTpcZCorrection1() {
   Double_t maxOuter = 208.0;
   Double_t minInner =  16.5;
   Double_t maxInner = 208.0;
-#if 1
+#if 0
   if      (fileIn == "")                                  {nrows = 0;}
   else if (fileIn.Contains("100GeV_fixedTarget_2021"))    {nrows = 0;} // np = 3; npO = 3;} 
   else if (fileIn.Contains("13p5GeV_fixedTarget_2020"))   {nrows = 0;} // np = 3; npO = 3;} 

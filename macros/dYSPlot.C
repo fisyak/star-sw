@@ -1,5 +1,5 @@
 #if 0
-  root.exe MuTpcG.root dYS.C
+  root.exe MuTpcG.root dYSPlot.C
 foreach f (`ls -1d  */*/*/picoTpcG.root`)
   set d = `dirname ${f}`;
   cd ${d}
@@ -7,7 +7,7 @@ foreach f (`ls -1d  */*/*/picoTpcG.root`)
   cd -
 end
 #endif
-void dYS() {
+void dYSPlot() {
   TH3F *h3 = (TH3F*) gDirectory->Get("dYS");
   if (! h3) return;
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");

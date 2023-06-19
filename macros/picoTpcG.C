@@ -2,7 +2,7 @@
    FPE_OFF
    setup debug
    root.exe -q -b 'lMuDst.C(-1,"*/*/*picoDst.root","RpicoDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","picoTpcG.root")'  picoTpcG.C+ >& picoTpcG.log &
-   foreach d (`ls -1d ???/2*`)
+   foreach d (`ls -1d */2*`)
      cd ${d}
      ln -s ../../.sl* .
      root.exe -q -b 'lMuDst.C(-1,"*picoDst.root","RpicoDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","picoTpcG.root")'  picoTpcG.C+ >& picoTpcG.log &
