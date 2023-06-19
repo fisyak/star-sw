@@ -2601,7 +2601,8 @@ my $step = 0;
 #$hist = "RunXIX_XXII_112"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG22g"; $year = "/*GeV*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  04/23/2023 check problem runs
 ################################## RunXXIII ##############################################
 #$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_2023/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  05/26/2023 the first pass
-$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_2023/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  06/12/2023 the first pass
+#$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_2023/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  06/12/2023 the first pass
+$hist = "RunXIX_XXFXT01"; $NEvents = 20000; $disk = "data1??"; $RECO = "/reco/production_*_fixedTarget_20*/*Field";  $Production = "/P23ic_calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  06/15/23 check
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();

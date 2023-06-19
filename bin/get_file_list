@@ -5,3 +5,5 @@ get_file_list.pl -keys  path,filename,size -cond  trgsetupname=production_7p7GeV
 get_file_list.pl -keys 'path,filename' -cond 'production=P16id,trgsetupname=production_pAu200_2015,filetype=daq_reco_picoDst,filename~st_physics,library=SL20a,storage!=hpss' -limit 0 -delim / -distinct > pico_pAu2015.list
 get_file_list.pl -keys 'path,filename' -cond 'production=P23ib,trgsetupname=production_OO_200GeV_2021,filetype=daq_reco_picoDst,filename~st_physics,library=SL23b,storage!=hpss' -limit 0 -delim / -distinct > pico_OO200_2021.list
 get_file_list.pl -debug -keys 'path,filename' -cond 'production=P23ib,trgsetupname=production_OO_200GeV_2021,filetype=daq_reco_picoDst,filename~st_physics,library=SL23b,storage!=hpss' -limit 10 -delim / -distinct > pico_OO200_2021.list
+get_file_list.pl -coffee -keys 'path,filename' -cond 'production=P23ib,trgsetupname=production_OO_200GeV_2021,filetype=daq_reco_picoDst,filename~st_physics,library=SL23b,storage!=hpss' -limit 10 -delim / -distinct > pico_OO200_2021.list
+

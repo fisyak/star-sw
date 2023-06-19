@@ -62,6 +62,7 @@ void MakeTpcZCorrection1() {
   if (! fileIn.BeginsWith("Z3")) return;
   TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
   if (! FitP) return;
+  cout << "File: " << fileIn.Data() << endl;
   fileIn.ReplaceAll("Z3C+Z3PCG4EY","");
   fileIn.ReplaceAll("Z3+Z3PG4EY","");
   fileIn.ReplaceAll("Z3CG4EY","");
