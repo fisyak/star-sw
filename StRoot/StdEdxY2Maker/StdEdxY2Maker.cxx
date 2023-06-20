@@ -1965,8 +1965,8 @@ void StdEdxY2Maker::DoFitN(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ){
   m_Minuit->mnexcm("SET GRAD",arglist,1,ierflg);
   arglist[0] = 500;
   arglist[1] = 1.;
-  //    m_Minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
-  m_Minuit->mnexcm("MINIMIZE", arglist ,2,ierflg);
+  m_Minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+  //  m_Minuit->mnexcm("MINIMIZE", arglist ,2,ierflg);
   m_Minuit->mnexcm("HESSE  ",arglist,0,ierflg);
   arglist[0] = 3.0;
   m_Minuit->mnexcm("CALLfcn", arglist ,1,ierflg);
