@@ -1,4 +1,12 @@
+load (f90) $
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+/* debugmode(true) $ */
+
 /*
+   DCA: mImp, mZ, mPsi, mPti, mTan, mCurv
+   Tof: Res (60 ps)
    dX = X_hit - X_vertex
    dY = Y_hit - Y_vertex
    dZ = Z_hit - Z_vertex
@@ -11,152 +19,71 @@
 
    dS = atan2( abq, pt2 + bq*(dy*px -dx*py) )/bq;
    Hz = kCLight * B
-   curvature  = Hz / pT 
-
+   curvature  = Hz q / pT 
+   Hz = 1e-15 * b [kG] * CLight[cm/sec] = 2.99792458e-4
+   q  = - sign(1, mPti)
 	
-
 */
-load (f90) $
-:lisp (setq *f90-output-line-length-max* 1000000000)
-stardisp: true$
-simplified_output: true$
-debugmode(true);
-v(pT) := 1/pT;
-p2(pT) := pT*pT + pZ*pZ;
-curvature(pT) := Hz * v(pT);
-R(pT) := 1/curvature(pT);
-C = sqrt(dX*dX + dY*dY);
-s_perp(pT) := 2*R(pT) * asin(C/(2*R(pT)));
-pathlength(pT) := sqrt(s_perp(pT)*s_perp(pT) + dZ*dZ);
-beta(pT,tof) := pathlength(pT)/(tof*kCLight);
-dM2(pT,tof) := p2(pT)/(q*q)*(1/(beta(pT,tof)*beta(pT,tof)) - 1) - M2;
-betaI(pT,tof) := 1/beta(pT,tof);
-F : jacobian([  dM2(pT,tof) ], [pT, tof]);
-simplify;
-trigsimp(F);
-f90(F);
-with_stdout ("F.txt",  f90(F));
+/* -------------------------------------------------------------------------------- */
+/* Mq := M/q; */
+pT(mPti) := -q/mPti;               /* q - is particle charge, mPti = -q/pT - measurement from Sti, pTq  = q*pT */
+pZ(mPti,mTan) := mTan*pT(mPti);
+p2(mPti,mTan) := (pT(mPti)**2 + pZ(mPti,mTan)**2);
+p2q2(mPti,mTan) := p2(mPti,mTan)/q**2;
 
-T: jacobian([  betaI(pT,tof) ], [pT, tof]);
-simplify;
-trigsimp(T);
-f90(T);
-with_stdout ("T.txt",  f90(T));
+curvature(mPti) := Hz * mPti;
+R(mPti) := 1/curvature(mPti);
+/* dX = X2 - X1;
+   dY = Y2 - Y1;
+   R1 = sqrt(X1**2 + Y1**2)
+   R2 = sqrt(X2**2 + Y2**2)
+   C = sqrt(dX**2 + dY**2) 
+*/
+Phi(mPti,C) := asin(C/(2*R(mPti)));
+s_perp(mPti,C) := 2*R(mPti) * Phi(mPti,C); 
+pathlength(mPti,C,dZ) := sqrt(s_perp(mPti,C)**2 + dZ**2);
+length(tof) := tof*kCLight;
 
+betaV(mPti,C,dZ,tof) := length(tof)/pathlength(mPti, C, dZ);
+dM2(pPti,mTan,C,dZ,tof) := p2(mPtin,mTan)*(betaV(mPti,C,dZ,tof)**1 - 1) - M2;
+dM2q2(pPti,mTan,C,dZ,tof) := p2q2(mPti,mTan)*(betaV(mPti,C,dZ,tof)**1 - 1) - M2/q**2;
+
+JbetaVdM2q2D : jacobian([ betaV(mPti,C,dZ,tof), dM2q2(pPti,mTan,C,dZ,tof)], [mPti, mTan, C, dZ, tof] );
 /*
-                           2    2   2        2        2     2 C*Hz       2
-(%o19) matrix([- (sqrt(4*pT  - C *Hz )*((8*Hz *kCLight *asin (----)*pT*pZ
-                                                              2*pT
-       4   2        2        2          4 C*Hz    5
- - 2*Hz *dZ *kCLight *pT)*tof  + 32*asin (----)*pT
-                                          2*pT
-        2   2     2 C*Hz    3       4   4
- + 16*Hz *dZ *asin (----)*pT  + 2*Hz *dZ *pT)
-                    2*pT
-             3        2      C*Hz            2
- + ((- 8*C*Hz *kCLight *asin(----)*abs(pT)*pZ )
-                             2*pT
-         3        2      C*Hz    2             2
- - 8*C*Hz *kCLight *asin(----)*pT *abs(pT))*tof )
-                         2*pT
-           2    2   2          4 C*Hz    4       2   2     2 C*Hz    2
-/(sqrt(4*pT  - C *Hz )*(16*asin (----)*pT  + 8*Hz *dZ *asin (----)*pT
-                                 2*pT                        2*pT
-                      2        2   2       2        2   2
-     4   4   2   (2*Hz *kCLight *pZ  + 2*Hz *kCLight *pT )*tof
- + Hz *dZ )*q ), ---------------------------------------------])
-                              2 C*Hz    2     2   2   2
-                       (4*asin (----)*pT  + Hz *dZ )*q
-                                2*pT
-_
-
-(%i20) f90(F)
-F(1,1) = (2*pT*((kCLight**2*tof**2)/((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)-1))/q**2-(kCLight**2*((8*asin(((C*Hz)/pT)/2.d+0)**2*pT)/Hz**2-(4*C*asin(((C*Hz)/pT)/2.d+0))/(Hz*sqrt(1-((C**2*Hz**2)/pT**2)/4.d+0)))*(pZ**2+pT**2)*tof**2)/(((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)**2*q**2)
-F(1,2) = (2*kCLight**2*(pZ**2+pT**2)*tof)/(((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)*q**2)
-
---------------------------------------------------------------------------------
-(%i18) trigsimp(F)
-                           2    2   2        2        2     2 C*Hz       2
-(%o18) matrix([- (sqrt(4*pT  - C *Hz )*((8*Hz *kCLight *asin (----)*pT*pZ
-                                                              2*pT
-       4   2        2        2          4 C*Hz    5
- - 2*Hz *dZ *kCLight *pT)*tof  + 32*asin (----)*pT
-                                          2*pT
-        2   2     2 C*Hz    3       4   4
- + 16*Hz *dZ *asin (----)*pT  + 2*Hz *dZ *pT)
-                    2*pT
-             3        2      C*Hz            2
- + ((- 8*C*Hz *kCLight *asin(----)*abs(pT)*pZ )
-                             2*pT
-         3        2      C*Hz    2             2
- - 8*C*Hz *kCLight *asin(----)*pT *abs(pT))*tof )
-                         2*pT
-           2    2   2          4 C*Hz    4       2   2     2 C*Hz    2
-/(sqrt(4*pT  - C *Hz )*(16*asin (----)*pT  + 8*Hz *dZ *asin (----)*pT
-                                 2*pT                        2*pT
-                      2        2   2       2        2   2
-     4   4   2   (2*Hz *kCLight *pZ  + 2*Hz *kCLight *pT )*tof
- + Hz *dZ )*q ), ---------------------------------------------])
-                              2 C*Hz    2     2   2   2
-                       (4*asin (----)*pT  + Hz *dZ )*q
-                                2*pT
-
-(%i19) f90(F)
-F(1,1) = (2*pT*((kCLight**2*tof**2)/((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)-1))/q**2-(kCLight**2*((8*asin(((C*Hz)/pT)/2.d+0)**2*pT)/Hz**2-(4*C*asin(((C*Hz)/pT)/2.d+0))/(Hz*sqrt(1-((C**2*Hz**2)/pT**2)/4.d+0)))*(pZ**2+pT**2)*tof**2)/(((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)**2*q**2)
-F(1,2) = (2*kCLight**2*(pZ**2+pT**2)*tof)/(((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)*q**2)
-
-
-(%i21) T:jacobian([betaI(pT,tof)],[pT,tof])
-                [                  2 C*Hz                  C*Hz          ]
-                [            8*asin (----)*pT     4*C*asin(----)         ]
-                [                    2*pT                  2*pT          ]
-                [   kCLight*(---------------- - -------------------)*tof ]
-                [                    2                       2   2       ]
-                [                  Hz                       C *Hz        ]
-                [                               Hz*sqrt(1 - ------)      ]
-(%o21)  Col 1 = [                                               2        ]
-                [                                           4*pT         ]
-                [ - ---------------------------------------------------- ]
-                [                       2 C*Hz    2                      ]
-                [                 4*asin (----)*pT                       ]
-                [                         2*pT          2 3/2            ]
-                [              2*(----------------- + dZ )               ]
-                [                          2                             ]
-                [                        Hz                              ]
-                                              [            kCLight            ]
-                                              [ ----------------------------- ]
-                                              [            2 C*Hz    2        ]
-                                      Col 2 = [      4*asin (----)*pT         ]
-                                              [              2*pT          2  ]
-                                              [ sqrt(----------------- + dZ ) ]
-                                              [               2               ]
-                                              [             Hz                ]
-_
-
-(%i22) simplify
-(%o22)                             simplify
-_
-
-(%i23) trigsimp(T)
-                                        2 C*Hz              2    2   2
-(%o23) matrix([- (4*abs(Hz)*kCLight*asin (----)*pT*sqrt(4*pT  - C *Hz )*tof
-                                          2*pT
-                               C*Hz
- - 4*C*Hz*abs(Hz)*kCLight*asin(----)*abs(pT)*tof)
-                               2*pT
-           2    2   2         2 C*Hz    2     2   2 3/2
-/(sqrt(4*pT  - C *Hz )*(4*asin (----)*pT  + Hz *dZ )   ), 
-                                2*pT
-         abs(Hz)*kCLight
----------------------------------])
-           2 C*Hz    2     2   2
-sqrt(4*asin (----)*pT  + Hz *dZ )
-             2*pT
-_
-
-(%i24) f90(T)
-T(1,1) = -(kCLight*((8*asin(((C*Hz)/pT)/2.d+0)**2*pT)/Hz**2-(4*C*asin(((C*Hz)/pT)/2.d+0))/(Hz*sqrt(1-((C**2*Hz**2)/pT**2)/4.d+0)))*((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)**((-3.d+0)/2.d+0)*tof)/2.d+0
-T(1,2) = kCLight/sqrt((4*asin(((C*Hz)/pT)/2.d+0)**2*pT**2)/Hz**2+dZ**2)
-(%o24)                               false
-_
+(%i32) f90(JbetaVdM2q2D)
+JbetaVdM2q2D(1,1) = -(kCLight*((4*C*asin((C*Hz*mPti)/2.d+0))/(Hz*mPti**2*sqrt(1-(C**2*Hz**2*mPti**2)/4.d+0))-(8*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**3))*((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*tof)/2.d+0
+JbetaVdM2q2D(1,2) = 0
+JbetaVdM2q2D(1,3) = -(2*kCLight*asin((C*Hz*mPti)/2.d+0)*((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*tof)/(Hz*mPti*sqrt(1-(C**2*Hz**2*mPti**2)/4.d+0))
+JbetaVdM2q2D(1,4) = -dZ*kCLight*((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*tof
+JbetaVdM2q2D(1,5) = kCLight/sqrt((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)
+JbetaVdM2q2D(2,1) = (((-(2*mTan**2*q**2)/mPti**3)-(2*q**2)/mPti**3)*((kCLight*tof)/sqrt((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)-1))/q**2-((kCLight*((4*C*asin((C*Hz*mPti)/2.d+0))/(Hz*mPti**2*sqrt(1-(C**2*Hz**2*mPti**2)/4.d+0))-(8*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**3))*((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/q**2)/2.d+0
+JbetaVdM2q2D(2,2) = (2*mTan*((kCLight*tof)/sqrt((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)-1))/mPti**2
+JbetaVdM2q2D(2,3) = -(2*kCLight*asin((C*Hz*mPti)/2.d+0)*((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/(Hz*mPti*sqrt(1-(C**2*Hz**2*mPti**2)/4.d+0)*q**2)
+JbetaVdM2q2D(2,4) = -(dZ*kCLight*((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/q**2
+JbetaVdM2q2D(2,5) = (kCLight*((mTan**2*q**2)/mPti**2+q**2/mPti**2))/(sqrt((4*asin((C*Hz*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)*q**2)
 */
+
+trigsimp(JbetaVdM2q2D);
+
+f90(JbetaVdM2q2D);
+with_stdout ("JbetaVdM2q2D.txt",  f90(JbetaVdM2q2D));
+/* subst(pow,"^",`dd); */
+
+dZ(mZ) := mZ; /* + (R2 - R1)*mTan  */
+JVarsD : jacobian([mPti, mTan, C, dZ(mZ), tof], [mImp, mZ, mPsi, mPti, mTan, tof] );
+/*
+(%i35) JVarsD:jacobian([mPti,mTan,C,dZ(mZ),tof],[mImp,mZ,mPsi,mPti,mTan,tof])
+                             [ 0  0  0  1  0  0 ]
+                             [                  ]
+                             [ 0  0  0  0  1  0 ]
+                             [                  ]
+(%o35)                       [ 0  0  0  0  0  0 ]
+                             [                  ]
+                             [ 0  1  0  0  0  0 ]
+                             [                  ]
+                             [ 0  0  0  0  0  1 ]
+*/
+trigsimp(JVarsD);
+
+f90(JVarsD);
+with_stdout ("JVarsD.txt",  f90(JVarsD));
