@@ -1363,7 +1363,7 @@ St_tpcRDOMasksC *St_tpcRDOMasksC::instance() {
   }
   if (needReorder) {
     LOG_WARN << "St_tpcRDOMasksC::instance RunLog/onl/tpcRDOMasks has to be reordered" << endm;
-    tpcRDOMasks_st rows[12];
+    tpcRDOMasks_st rows[12] = {0};
     Int_t OldRun = -1;
     for (UInt_t i = 0; i < N; i++) {
       if ((row+i)->sector == 2*i + 1) {
