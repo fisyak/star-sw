@@ -1,0 +1,115 @@
+load (f90) $
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+/* debugmode(true) $ */
+
+/*
+   DCA: mImp, mZ, mPsi, mPti, mTan, mCurv
+   Tof: Res (60 ps)
+   dX = X_hit - X_vertex
+   dY = Y_hit - Y_vertex
+   dZ = Z_hit - Z_vertex
+   s_perp = sqrt(dX*dX + dY*dY); 	
+   kCLight = 0.000299792458f;
+   bq = B*fQ*kCLight;	
+   a = dx*px+dy*py;
+   abq = bq*a;
+   dS = (a + dz*pz)/p2;
+
+   dS = atan2( abq, pt2 + bq*(dy*px -dx*py) )/bq;
+   Hz = kCLight * B
+   curvature  = Hz q / pT 
+   Hz = 1e-15 * b [kG] * CLight[cm/sec] = 2.99792458e-4
+   q  = - sign(1, mPti)
+	
+*/
+/* -------------------------------------------------------------------------------- */
+/* Mq := M/q; */
+/*
+pT(mPti) := -q/mPti;               /* q - is particle charge, mPti = -q/pT - measurement from Sti, pTq  = q*pT */
+pZ(mPti,mTan) := mTan*pT(mPti);
+p2(mPti,mTan) := (pT(mPti)**2 + pZ(mPti,mTan)**2);
+p2q2(mPti,mTan) := p2(mPti,mTan)/q**2;
+curvature(mPti) := Hz * mPti;
+R(mPti) := 1/curvature(mPti);
+*/
+/* dX = X2 - X1;
+   dY = Y2 - Y1;
+   R1 = sqrt(X1**2 + Y1**2)
+   R2 = sqrt(X2**2 + Y2**2)
+   dXY = sqrt(dX**2 + dY**2) 
+*/
+/* 0
+Phi(mPti,dXY) := asin(dXY/(2*R(mPti)));
+s_perp(mPti,dXY) := 2*R(mPti) * Phi(mPti,dXY); 
+pathlength(mPti,dXY,dZ) := sqrt(s_perp(mPti,dXY)**2 + dZ**2);
+length(tof) := tof*kCLight;
+
+betaV(mPti,dXY,dZ,tof) := length(tof)/pathlength(mPti, dXY, dZ);
+dM2(pPti,mTan,dXY,dZ,tof) := p2(mPtin,mTan)*(betaV(mPti,dXY,dZ,tof)**1 - 1) - M2;
+dM2q2(pPti,mTan,dXY,dZ,tof) := p2q2(mPti,mTan)*(betaV(mPti,dXY,dZ,tof)**1 - 1) - M2/q**2;
+
+JbetaVdM2q2D : jacobian([ betaV(mPti,dXY,dZ,tof), dM2q2(pPti,mTan,dXY,dZ,tof)], [mPti, mTan, dXY, dZ, tof] );
+*/
+/*`-------------------------------------------------------------------------------- */
+pT(mPti) := -q/mPti;               /* q - is particle charge, mPti = -q/pT - measurement from Sti, pTq  = q*pT */
+pZ(mPti,mTan) := mTan*pT(mPti);
+p2(mPti,mTan) := (pT(mPti)**2 + pZ(mPti,mTan)**2);
+p2q2(mPti,mTan) := p2(mPti,mTan)/q**2;
+R(mCurv) := 1/mCurv;
+Phi(mCurv,dXY) := asin(dXY/(2*R(mCurv)));
+s_perp(mCurv,dXY) := 2*R(mCurv) * Phi(mCurv,dXY); 
+pathlength(mCurv,dXY,dZ) := sqrt(s_perp(mCurv,dXY)**2 + dZ**2);
+length(tof) := tof*kCLight;
+
+betaV(mCurv,dXY,dZ,tof) := length(tof)/pathlength(mCurv, dXY, dZ);
+dM2(pPti,mTan,mCurv,dXY,dZ,tof) := p2(mPtin,mTan)*(betaV(mCurv,dXY,dZ,tof)**1 - 1) - M2;
+dM2q2(pPti,mTan,mCurv,dXY,dZ,tof) := p2q2(mPti,mTan)*(betaV(mCurv,dXY,dZ,tof)**1 - 1) - M2/q**2;
+
+JbetaVdM2q2D : jacobian([ betaV(mCurv,dXY,dZ,tof), dM2q2(pPti,mTan,mCurv,dXY,dZ,tof)], [mPti, mTan, mCurv, dXY, dZ, tof] );
+
+/*
+JbetaVdM2q2D(1,1) = 0
+JbetaVdM2q2D(1,2) = 0
+JbetaVdM2q2D(1,3) = -(kCLight*((4*C*asin((C*mCurv)/2.d+0))/(mCurv**2*sqrt(1-(C**2*mCurv**2)/4.d+0))-(8*asin((C*mCurv)/2.d+0)**2)/mCurv**3)*((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)**((-3.d+0)/2.d+0)*tof)/2.d+0
+JbetaVdM2q2D(1,4) = -(2*kCLight*asin((C*mCurv)/2.d+0)*((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)**((-3.d+0)/2.d+0)*tof)/(mCurv*sqrt(1-(C**2*mCurv**2)/4.d+0))
+JbetaVdM2q2D(1,5) = -dZ*kCLight*((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)**((-3.d+0)/2.d+0)*tof
+JbetaVdM2q2D(1,6) = kCLight/sqrt((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)
+JbetaVdM2q2D(2,1) = (((-(2*mTan**2*q**2)/mPti**3)-(2*q**2)/mPti**3)*((kCLight*tof)/sqrt((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)-1))/q**2
+JbetaVdM2q2D(2,2) = (2*mTan*((kCLight*tof)/sqrt((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)-1))/mPti**2
+JbetaVdM2q2D(2,3) = -((kCLight*((4*C*asin((C*mCurv)/2.d+0))/(mCurv**2*sqrt(1-(C**2*mCurv**2)/4.d+0))-(8*asin((C*mCurv)/2.d+0)**2)/mCurv**3)*((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)**((-3.d+0)/2.d+0)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/q**2)/2.d+0
+JbetaVdM2q2D(2,4) = -(2*kCLight*asin((C*mCurv)/2.d+0)*((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)**((-3.d+0)/2.d+0)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/(mCurv*sqrt(1-(C**2*mCurv**2)/4.d+0)*q**2)
+JbetaVdM2q2D(2,5) = -(dZ*kCLight*((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)**((-3.d+0)/2.d+0)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/q**2
+JbetaVdM2q2D(2,6) = (kCLight*((mTan**2*q**2)/mPti**2+q**2/mPti**2))/(sqrt((4*asin((C*mCurv)/2.d+0)**2)/mCurv**2+dZ**2)*q**2)
+*/
+
+trigsimp(JbetaVdM2q2D);
+
+f90(JbetaVdM2q2D);
+with_stdout ("JbetaVdM2q2D.txt",  f90(JbetaVdM2q2D));
+/* subst(pow,"^",`dd); */
+
+dZ(mZ) := mZ; /* + (R2 - R1)*mTan  */
+mCurv(mPti) := Hz*mPti;
+JVarsD : jacobian([mPti, mTan, mCurv(mPti), dXY, dZ(mZ), tof], [mImp, mZ, mPsi, mPti, mTan, tof] );
+/*
+(%i171) JVarsD:jacobian([mPti,mTan,mCurv(mPti),dXY,dZ(mZ),tof],
+                        [mImp,mZ,mPsi,mPti,mTan,tof])
+_
+                             [ 0  0  0  1   0  0 ]
+                             [                   ]
+                             [ 0  0  0  0   1  0 ]
+                             [                   ]
+                             [ 0  0  0  Hz  0  0 ]
+(%o196)                      [                   ]
+                             [ 0  0  0  0   0  0 ]
+                             [                   ]
+                             [ 0  1  0  0   0  0 ]
+                             [                   ]
+                             [ 0  0  0  0   0  1 ]
+*/
+trigsimp(JVarsD);
+
+f90(JVarsD);
+with_stdout ("JVarsD.txt",  f90(JVarsD));
