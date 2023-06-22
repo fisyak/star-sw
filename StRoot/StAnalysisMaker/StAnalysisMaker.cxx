@@ -79,7 +79,7 @@ StAnalysisMaker *StAnalysisMaker::fgMaker = 0;
 StAnalysisMaker::StAnalysisMaker(const Char_t *name) : StMaker(name)
 {
   fgMaker = this;
-    mEventCounter = 0;
+  mEventCounter = 0;
 }
 Int_t StAnalysisMaker::Finish() {
     //
