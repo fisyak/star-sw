@@ -1,14 +1,15 @@
 #! /usr/bin/env perl
 use File::Basename;
 use Cwd;
+my %runs = ();
+my $debug = 0;
+my $noRuns = 0;
+# mv `grep 'Laser Run' tpc*ofl | awk '{print "LaserPlots.*"$6".root"}' | sort -u | xargs | sed -e 's/\w/\|/'` Done/
 #my @list = glob "*.laser.root";
 #my @list = glob "/star/data9*/reco/AuAu_200_production_2014/*/P15ib_TPC/2014/*/*/*.laser.root";
 #my @list = glob "~/work/Tpc/Laser/LANA.2014/021315/*.laser.root";
 #my @list = glob "/gpfs01/star/subsys-tpc/fisyak/Tpc/Laser/LANA.2014/laser/*.laser.root";
-my @list = glob "./*.laser.root";
-my %runs = ();
-my $debug = 0;
-my $noRuns = 0;
+my @list = glob "./*.laser.root"; print "list = @list\n" if ($debug);
 foreach my $file (@list) {
   my $run = File::Basename::basename($file,".laser.root");
   my $dir = File::Basename::dirname($file);
@@ -19,8 +20,13 @@ foreach my $file (@list) {
   my $r = $words[0];
   print "$file => $r\n" if ($debug);
   my $outfile = "LaserPlots." . $r . ".root";
+  my $outfileDone = "./Done/" . $outfile;
   if (-r $outfile) {
-    print "\t$outfile is Done\n" if ($debug);
+    print "\t$outfile is Done $outfile \n" if ($debug);
+    next;
+  }
+  if (-r $outfileDone) {
+    print "\t$outfile is Done $outfileDone \n" if ($debug);
     next;
   }
   if ($runs{$r}) {next;}
@@ -29,6 +35,7 @@ foreach my $file (@list) {
   $noRuns++;
 }
 print "noRuns = $noRuns\n" if ($debug);
+#die;
 my $Njobs = 0;
 my $now = time();
 foreach my $key ( sort keys %runs ) {
@@ -42,8 +49,8 @@ foreach my $key ( sort keys %runs ) {
      if ($dt < $dtmin) {$dtmin = $dt;}
      print "$file dt = $dt  dtmin = $dtmin\n" if ($debug);
   }
-#  if ($dtmin > 600) {
-  if ($dtmin > 0) {
+  if ($dtmin > 600) {
+#  if ($dtmin > 0) {
     print "string:$key:$runs{$key}\n";
     $Njobs++;
   }
