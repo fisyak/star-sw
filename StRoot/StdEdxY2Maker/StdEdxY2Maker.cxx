@@ -231,6 +231,8 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
     LOG_WARN << " dx2L in dE/dx predictions "<< endm;
     StPidStatus::SetUsedx2(fUsedx2);
   }
+  St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
+  St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
   return kStOK;
 }
 //_______________________________________________________________________________
