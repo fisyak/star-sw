@@ -134,7 +134,7 @@ StEventMaker::Make()
     //  Setup the event (StEvent and all subclasses)
     //
     Int_t status = makeEvent();
-    if (status != kStOK)
+    if (status != kStOK && status != kStSkip)
         gMessMgr->Warning() << "StEventMaker::Make(): error in makeEvent(), no StEvent object created." << endm;
 
     mEventManager->closeEvent();
@@ -451,12 +451,30 @@ StEventMaker::makeEvent()
 		static Int_t goodIds[5] = {9200,9201,310811,310812,310813};
 		const StTriggerId *nominal = triggerIdColl->nominal();
 		TriggerId = 0;
-		if (nominal && nominal->triggerIds().size()) {
-		  for (Int_t i = 0; i < 5; i++) {
-		    if (nominal->isTrigger(goodIds[i])) {TriggerId = goodIds[i]; break;}
+		StTpcDb::instance()->SetTriggerId(TriggerId);
+		if (IAttr("laserIT")) {
+		  static Int_t mEventCounter = 0;
+		  mEventCounter++;
+		  if (nominal && nominal->triggerIds().size()) {
+		    for (Int_t i = 0; i < 2; i++) {
+		      if (nominal->isTrigger(goodIds[i])) {TriggerId = goodIds[i]; break;}
+		    }
+		    StTpcDb::instance()->SetTriggerId(TriggerId);
+		    if (! TriggerId && IAttr("laserIT")) {
+		      if (Debug()) {
+			UInt_t maxTriggers = nominal->maxTriggerIds();
+			TString trigC("TriggerIds:");
+			for (UInt_t i = 0; i < maxTriggers; i++) if (nominal->triggerId(i)) {trigC += "|"; trigC += nominal->triggerId(i);}
+			LOG_WARN << "StEventMaker::makeEvent, Event: " << mEventCounter
+				 << "  Type: " << mCurrentEvent->type()
+				 << "  Run: " << mCurrentEvent->runId() 
+				 << "  EventId: " << mCurrentEvent->id()
+				 << "  due to " << trigC.Data() 
+			       << " is skipped." << endm;
+		      }
+		      return kStSkip;
+		    }
 		  }
-		  gStTpcDb->SetTriggerId(TriggerId);
-		  if (! TriggerId && IAttr("laserIT")) return kStSkip;
 		}
 	      }
 	    }
