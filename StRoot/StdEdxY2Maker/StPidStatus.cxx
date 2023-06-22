@@ -11,6 +11,15 @@
 #include "StThreeVector.hh"
 #include "TMath.h"
 #include "TVector3.h"
+#include "TCallf77.h"
+#ifndef WIN32
+#define btofDeriv btofderiv_
+#else
+#define btofDeriv BTOFDERIV
+#endif
+extern "C" {
+  void type_of_call btofDeriv(Float_t *dcaPars, Float_t tof, Double_t *xyzV, Double_t *xyzH, Double_t &betaV, Double_t &M2q2, Double_t *Deriv);
+};
 Double_t StPidStatus::fgSigmaCut = 3.0;
 Particle_t StPidStatus::fgParticles[34] = {
   {         11,  "e-",   0.51099907e-3, -1,  kPidElectron},  
@@ -210,7 +219,7 @@ StMtdPidTraits StPidStatus::SetMtdPidTraits(const StMuMtdPidTraits &pid) {
   return mtdPidTraits;
 }
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StGlobalTrack *gTrack) : PiDStatus(-1) {// , gTrack(Track) {
+StPidStatus::StPidStatus(StGlobalTrack *gTrack, StVertex *bestVx) : PiDStatus(-1) {// , gTrack(Track) {
   Clear();
   if (! gTrack) return;
   fQ = gTrack->geometry()->charge();
@@ -257,7 +266,7 @@ StPidStatus::StPidStatus(StGlobalTrack *gTrack) : PiDStatus(-1) {// , gTrack(Tra
   Set();
 }
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StMuTrack *muTrack, TVector3 *g3KFP) : PiDStatus(-1) {
+StPidStatus::StPidStatus(StMuTrack *muTrack, TVector3 *g3KFP,  StMuPrimaryVertex *bestVx) : PiDStatus(-1) {
   Clear();
   if (! muTrack) return;
   fQ = muTrack->charge();
@@ -320,7 +329,10 @@ StPidStatus::StPidStatus(StMuTrack *muTrack, TVector3 *g3KFP) : PiDStatus(-1) {
 }
 #ifdef __TFG__VERSION__
 //________________________________________________________________________________
-StPidStatus::StPidStatus(StPicoTrack *picoTrack, TVector3 *g3KFP) : PiDStatus(-1) {
+StPidStatus::StPidStatus(StMuDst *muTrack, Int_t iTrack) : PiDStatus(-1) {
+}
+//________________________________________________________________________________
+StPidStatus::StPidStatus(StPicoTrack *picoTrack, TVector3 *g3KFP, TVector3 *bestVx) : PiDStatus(-1) {
   Clear();
   if (! picoTrack) return;
   fQ = picoTrack->charge();
@@ -382,6 +394,9 @@ StPidStatus::StPidStatus(StPicoTrack *picoTrack, TVector3 *g3KFP) : PiDStatus(-1
   Set();
 }
 #endif /* __TFG__VERSION__ */
+//________________________________________________________________________________
+StPidStatus::StPidStatus(StPicoDst *pico, Int_t iTrack) : PiDStatus(-1) {
+}
 //________________________________________________________________________________
 void StPidStatus::Set() {
   if (! fgl2p[3]) {

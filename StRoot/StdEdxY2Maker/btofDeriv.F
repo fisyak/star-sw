@@ -1,61 +1,101 @@
-      subroutine btofDeriv(par, Deriv)
+      subroutine btofDeriv(dcaPars, tof, xyzV, xyzH,  betaV, M2q2, Deriv)
       implicit none
-      real par(10)
-      real pars(10)! , mImp, mZ, mPsi, mPti, mTan, mCurv, tof, C, dZ
-      real Deriv(2,6)
+      real dcaPars(6)
+      real xyzV(3), xyzH(3);
+      real betaV, M2q2
+      real Deriv(2,6) ! d(1/beta,M2/q2) / d (mImp, mZ, mPsi, mPti, mTan, tof)
+      real mImp, mZ, mPsi, mPti, mTan, mCurv, tof, dXY, dZ, R1, R2
+      real Phi, length, p2q, path, s_perp, pTq, pZq, R
       real Hz
-      equivalence (pars(1), mImp), (pars(2), mZ), (pars(3), mPsi), (pars(4), mPti),
-     &            (pars(5), mTan), (pars(6), mCurv), (pars(7), tof), (pars(8), dXY),
-     &            (pars(9), dZ), (pars(10), kCLight)
-      real JbetaVdM2q2D(2,6), JVarsD(6,6)
+      real d2d(2,6), JVarsD(6,6)
+      real kCLight / 0.000299792458 / ! [cm/nsec]
       integer i,j,k
-      do i = 1, 10
-         pars(i) = par(i);
-      enddo
-      Hz = mCurv/mPti;
-c     JbetaVdM2q2D : jacobian([ betaV(mCurv,C,dZ,tof), dM2q2(pPti,mTan,mCurv,C,dZ,tof)], [mPti, mTan, mCurv, dXY, dZ, tof] );    
-      JbetaVdM2q2D(1,1) = 0
-      JbetaVdM2q2D(1,2) = 0
-      JbetaVdM2q2D(1,3) = -(kCLight*((4*dXY*asin((dXY*mCurv)/2.))/
-     &(mCurv**2*sqrt(1-(dXY**2*mCurv**2)/4.))-(8*asin((dXY*mCurv)/2.)**2)
-     &/mCurv**3)*((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)**((-3.)/2.)*tof)/2.
-      JbetaVdM2q2D(1,4) = -(2*kCLight*asin((dXY*mCurv)/2.)*
-     &((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)**((-3.)/2.)*tof)
-     &/(mCurv*sqrt(1-(dXY**2*mCurv**2)/4.))
-      JbetaVdM2q2D(1,5) = -dZ*kCLight*((4*asin((dXY*mCurv)/2.)**2)/
-     &mCurv**2+dZ**2)**((-3.)/2.)*tof
-      JbetaVdM2q2D(1,6) = kCLight/sqrt((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)
-      JbetaVdM2q2D(2,1) = (((-(2*mTan**2*q**2)/mPti**3)-(2*q**2)/mPti**3)
-     &*((kCLight*tof)/sqrt((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)-1))/q**2
-      JbetaVdM2q2D(2,2) = (2*mTan*((kCLight*tof)/sqrt((4*asin((dXY*mCurv)/2.)**2)/
-     &mCurv**2+dZ**2)-1))/mPti**2
-      JbetaVdM2q2D(2,3) = -((kCLight*((4*C*asin((dXY*mCurv)/2.))/(mCurv**2*sqrt(1-(dXY**2*mCurv**2)/4.))
-     &-(8*asin((dXY*mCurv)/2.)**2)/mCurv**3)*((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)**((-3.)/2.)*
-     &((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/q**2)/2.
-      JbetaVdM2q2D(2,4) = -(2*kCLight*asin((dXY*mCurv)/2.)*((4*asin((dXY*mCurv)/2.)**2)
-     &/mCurv**2+dZ**2)**((-3.)/2.)*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/
-     &(mCurv*sqrt(1-(dXY**2*mCurv**2)/4.)*q**2)
-      JbetaVdM2q2D(2,5) = -(dZ*kCLight*((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)**((-3.)/2.)
-     &*((mTan**2*q**2)/mPti**2+q**2/mPti**2)*tof)/q**2
-      JbetaVdM2q2D(2,6) = (kCLight*((mTan**2*q**2)/mPti**2+q**2/mPti**2))/
-     &(sqrt((4*asin((dXY*mCurv)/2.)**2)/mCurv**2+dZ**2)*q**2)
-c     JVarsD:jacobian([mPti,mTan,mCurv(mPti),C,dZ(mZ),tof], [mImp,mZ,mPsi,mPti,mTan,tof])
-      
-      do i = 1, 6
-        do j = 1, 6
-           JVarsD(i,j) = 0
-        enddo
-      enddo
+*
+      mImp  = dcaPars(1) 
+      mZ    = dcaPars(2) 
+      mPsi  = dcaPars(3)  
+      mPti  = dcaPars(4) 
+      mTan  = dcaPars(5) 
+      mCurv = dcaPars(6) 
+      Hz    = mCurv/mPti;
+      dXY   = sqrt((xyzH(1) - xyzV(1))**2 + (xyzH(2) - xyzV(2))**2)
+      dZ    = xyzH(3) - xyzV(3);
+      R1    = sqrt(xyzV(1)**2 + xyzV(2)**2)
+      R2    = sqrt(xyzH(1)**2 + xyzH(2)**2)
+      pTq   = -1./mPti
+      pZq   =  pTq*mTan
+      p2q   = pTq**2 + pZq**2
+      R     = 1./mCurv
+      Phi   = asin(dXY/(2*R))
+      s_perp= 2*R*Phi
+      path  = sqrt(s_perp**2 + dZ**2)
+      length= tof*kCLight
+      betaV = length/path
+      M2q2  = p2q*(betaV**1 - 1)
+c     d2d : jacobian( [betaV(mPti,dXY,dZ,tof), dM2q2(mPti,mTan,dXY,dZ,tof) ], [mPti, mTan, dXY, dZ, tof] );
+      d2d(1,1) = -(kCLight*((4*dXY*asin((Hz*dXY*mPti)/2.d+0))/(Hz*mPti**
+     &2*sqrt(1-(Hz**2*dXY**2*mPti**2)/4.d+0))-(8*asin((Hz*dXY*mPti)/2.d+
+     &0)**2)/(Hz**2*mPti**3))*((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*m
+     &Pti**2)+dZ**2)**((-3.d+0)/2.d+0)*tof)/2.d+0
+      d2d(1,2) = 0
+      d2d(1,3) = -(2*kCLight*asin((Hz*dXY*mPti)/2.d+0)*((4*asin((Hz*dXY*
+     &mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**((-3.d+0)/2.d+0)*tof)/(Hz
+     &*mPti*sqrt(1-(Hz**2*dXY**2*mPti**2)/4.d+0))
+      d2d(1,4) = -dZ*kCLight*((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mP
+     &ti**2)+dZ**2)**((-3.d+0)/2.d+0)*tof
+      d2d(1,5) = kCLight/sqrt((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mP
+     &ti**2)+dZ**2)
+      d2d(2,1) = ((-(2*mTan**2)/mPti**3)-2/mPti**3)*((kCLight**2*tof**2)
+     &/((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)-1)-(kCLi
+     &ght**2*((4*dXY*asin((Hz*dXY*mPti)/2.d+0))/(Hz*mPti**2*sqrt(1-(Hz**
+     &2*dXY**2*mPti**2)/4.d+0))-(8*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*
+     &mPti**3))*(mTan**2/mPti**2+1/mPti**2)*tof**2)/((4*asin((Hz*dXY*mPt
+     &i)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**2
+      d2d(2,2) = (2*mTan*((kCLight**2*tof**2)/((4*asin((Hz*dXY*mPti)/2.d
+     &+0)**2)/(Hz**2*mPti**2)+dZ**2)-1))/mPti**2
+      d2d(2,3) = -(4*kCLight**2*asin((Hz*dXY*mPti)/2.d+0)*(mTan**2/mPti*
+     &*2+1/mPti**2)*tof**2)/(Hz*mPti*sqrt(1-(Hz**2*dXY**2*mPti**2)/4.d+0
+     &)*((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**2)
+      d2d(2,4) = -(2*dZ*kCLight**2*(mTan**2/mPti**2+1/mPti**2)*tof**2)/(
+     &(4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)**2
+      d2d(2,5) = (2*kCLight**2*(mTan**2/mPti**2+1/mPti**2)*tof)/((4*asin
+     &((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)
+c     JVarsD:jacobian([mPti,mTan,dXY(mImp),dZ(mZ,mTan),tof],  [mImp,mZ,mPsi,mPti,mTan,tof])  
+      JVarsD(1,1) = 0
+      JVarsD(1,2) = 0
+      JVarsD(1,3) = 0
       JVarsD(1,4) = 1
+      JVarsD(1,5) = 0
+      JVarsD(1,6) = 0
+      JVarsD(2,1) = 0
+      JVarsD(2,2) = 0
+      JVarsD(2,3) = 0
+      JVarsD(2,4) = 0
       JVarsD(2,5) = 1
-      JVarsD(3,4) = -1/(Hz*mPti**2)
-      JVarsD(5,2) = 1
-      JVarsD(6,6) = 1
+      JVarsD(2,6) = 0
+      JVarsD(3,1) = 1
+      JVarsD(3,2) = 0
+      JVarsD(3,3) = 0
+      JVarsD(3,4) = 0
+      JVarsD(3,5) = 0
+      JVarsD(3,6) = 0
+      JVarsD(4,1) = 0
+      JVarsD(4,2) = 1
+      JVarsD(4,3) = 0
+      JVarsD(4,4) = 0
+      JVarsD(4,5) = R2-R1
+      JVarsD(4,6) = 0
+      JVarsD(5,1) = 0
+      JVarsD(5,2) = 0
+      JVarsD(5,3) = 0
+      JVarsD(5,4) = 0
+      JVarsD(5,5) = 0
+      JVarsD(5,6) = 1
       do i = 1, 2
         do j = 1, 6
            Deriv(i,j) = 0;
            do k = 1, 6
-              Deriv(i,j) = Deriv(i,j) + JbetaVdM2q2D(i,k) * JVarsD(k, j)
+              Deriv(i,j) = Deriv(i,j) + d2d(i,k) * JVarsD(k, j)
            enddo
         enddo
       enddo

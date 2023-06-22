@@ -8,11 +8,13 @@
 #include "StMtdPidTraits.h"
 #include "StDedxPidTraits.h"
 #include "StPidParticleDefinition.h"
+#include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuBTofPidTraits.h"
 #include "StMuDSTMaker/COMMON/StMuETofPidTraits.h"
 #include "StMuDSTMaker/COMMON/StMuMtdPidTraits.h"
 #ifdef __TFG__VERSION__
+#include "StPicoEvent/StPicoDst.h"
 #include "StPicoEvent/StPicoTrack.h"
 #include "StPicoEvent/StPicoBTofPidTraits.h"
 #include "StPicoEvent/StPicoETofPidTraits.h"
@@ -58,6 +60,8 @@ class StBTofStatus  : public StTrackPiD {
   StBTofPidTraits *fPiD; //
   StBTofPidTraits *PiD() const  {return fPiD;}
   Float_t beta() const {return fPiD ? fPiD->beta() : -999;}
+  Double_t fBetaV; // Inverse beta measured
+  Double_t fSigmaBetaV; // Estimated errors in BetaV
   Double_t Sigma(Int_t l) const {
     if (fPiD) {
       switch (l) {
@@ -125,10 +129,12 @@ class StPidStatus {
     kdNdxU = kOtherMethodId2,         
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
-  StPidStatus(StGlobalTrack *gTrack = 0);
-  StPidStatus(StMuTrack *muTrack = 0, TVector3 *g3KFP = 0);
+  StPidStatus(StGlobalTrack *gTrack = 0, StVertex *bestVx = 0);
+  StPidStatus(StMuTrack *muTrack = 0, TVector3 *g3KFP = 0, StMuPrimaryVertex *bestVx = 0);
+  StPidStatus(StMuDst *muDst, Int_t iTrack);
 #ifdef __TFG__VERSION__
-  StPidStatus(StPicoTrack *picoTrack = 0, TVector3 *g3KFP = 0);
+  StPidStatus(StPicoTrack *picoTrack = 0, TVector3 *g3KFP = 0, TVector3 *bestVx = 0);
+  StPidStatus(StPicoDst *picoDst, Int_t iTrack);
 #endif /* __TFG__VERSION__ */
   virtual ~StPidStatus() {
     for (Int_t k = kI70; k < kTotal; k++) {SafeDelete(fStatus[k]);}
