@@ -229,9 +229,12 @@
 #include "StDbUtilities/StTpcPadCoordinate.hh"
 #include "StDbUtilities/StMagUtilities.h"
 #include "StarMagField.h"
-#include "math_constants.h"
+#include "StTriggerIdCollection.h"
+#include "StTriggerData.h"
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
 #include "StDetectorDbMaker/StDetectorDbMagnet.h"
+#include "StDetectorDbMaker/St_trgTimeOffsetC.h"
+#include "StDetectorDbMaker/St_tpcChargeEventC.h"
 #include "StDetectorDbMaker/St_tpcAnodeHVavgC.h"
 #include "StDetectorDbMaker/St_tpcChargeEventC.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
@@ -360,35 +363,6 @@ Int_t StTpcDbMaker::Make(){
     return kStEOF;
   }
   StTpcDb::instance()->SetDriftVelocity();
-#if 0
-  if (IAttr("laserIT")) {
-    St_trgTimeOffsetC::instance()->SetLaser(kFALSE);
-    StEvent* pEvent = dynamic_cast<StEvent*> (GetInputDS("StEvent"));
-    if (pEvent) {
-      const StTriggerIdCollection* trig = pEvent->triggerIdCollection();
-      if (trig) {
-	const StTriggerId *nominal = trig->nominal();
-	if (nominal) {
-	  Int_t TriggerId = 0;
-	  StTpcDb::instance()->SetTriggerId(TriggerId);
-	  static Int_t goodIds[2] = {9200,9201}; // Laser trigger IDs
-	  for (Int_t i = 0; i < 2; i++) {
-	    if (nominal->isTrigger(goodIds[i])) {TriggerId = goodIds[i]; break;}
-	  }
-	  if (TriggerId) {
-	    St_trgTimeOffsetC::instance()->SetLaser(kTRUE);
-	    StTpcDb::instance()->SetTriggerId(TriggerId);
-	  }
-	}
-      }
-      if (IAttr("OAbortGap")) {
-        StTriggerData* trg = pEvent->triggerData();
-        if (trg) St_tpcChargeEventC::instance()->findChargeTimes(trg->bunchCounter());
-      }
-    }
-    if (! St_trgTimeOffsetC::instance()->IsLaser()) return kStSkip;
-  }
-#endif
   //  SetTpcRotations();
   return kStOK;
 }
