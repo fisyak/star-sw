@@ -1,6 +1,6 @@
 #ifndef ST_FSS_SECTOR_READER_HH
 #define ST_FSS_SECTOR_READER_HH
-
+#include <cstdint>
 #include "StDaqLib/GENERIC/EventReader.hh"
 #include "StDaqLib/GENERIC/RecHeaderFormats.hh"
 
