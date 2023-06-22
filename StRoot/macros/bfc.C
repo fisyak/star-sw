@@ -282,6 +282,8 @@ StBFChain *bfc(Int_t First, Int_t Last,
   if (Last < 0) return chain;
   StMaker *dbMk = chain->GetMaker("db");
   if (dbMk) dbMk->SetDebug(1);
+  StMaker *EventMk = chain->GetMaker("0Event");
+  if (EventMk) EventMk->SetDebug(1);
   StMaker *sti  = chain->GetMaker("Sti");
   if (sti) sti->SetAttr("useTiming",1);
 #if 0
