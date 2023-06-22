@@ -307,9 +307,11 @@ Int_t Track::Matched() {
 #if 1
   if ( TMath::Abs(dPhi) > 0.020)  status |= 1 << 9;
 #endif
+#if 0
   static const Double_t pTInv0 = 4.78815e-03;
   static const Double_t DpTInv0 = 9.75313e-03;
   if (TMath::Abs(fpTInv - pTInv0) > 3.0*DpTInv0) status |= 1 << 10;
+#endif
   return iok + 10*status;
 }
 //________________________________________________________________________________
