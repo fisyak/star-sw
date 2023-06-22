@@ -81,8 +81,8 @@ void MakeTpcZCorrection1() {
   Double_t maxOuter = 208.0;
   Double_t minInner =  16.5;
   Double_t maxInner = 208.0;
-#if 0
   if      (fileIn == "")                                  {nrows = 0;}
+#if 0
   else if (fileIn.Contains("100GeV_fixedTarget_2021"))    {nrows = 0;} // np = 3; npO = 3;} 
   else if (fileIn.Contains("13p5GeV_fixedTarget_2020"))   {nrows = 0;} // np = 3; npO = 3;} 
   else if (fileIn.Contains("19p5GeV_fixedTarget_2020"))   {nrows = 0;} // np = 3; npO = 3;} 
