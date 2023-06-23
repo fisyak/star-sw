@@ -1,61 +1,41 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="xrootd" simulateSubmission ="false" copyInputLocally="false"> -->
-<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+<!-- <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false"> -->
+<job maxFilesPerProcess="10" fileListSyntax="xrootd" simulateSubmission ="true" copyInputLocally="true">
         <command>
- set CURRENT_DIR = `pwd`
-#C       cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
   setup debug
-#  setenv NODEBUG yes
-#  setenv StarEndMakerShell
-#  starver TFG21d
-#  set split = (${INPUTFILE0}:as|/| |)
- set inputDIR     = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
- set outputb      = `echo $INPUTFILE0 | awk -F\: '{print $2}'`
- set year         = `echo $INPUTFILE0 | awk -F\: '{print $3}'`
- set dstype       = `echo $INPUTFILE0 | awk -F\: '{print $4}'`
- set filelist     = `echo $INPUTFILE0 | awk -F\: '{print $5}'`
- echo ${filelist}
-   set filel = `basename ${outputb} .root`;
-   set logb = ${filel}B.log
-   set log  = ${SUBMITTINGDIRECTORY}/${logb}
-  set output  =  ${SUBMITTINGDIRECTORY}/${outputb};
-  if (-r ${output}) continue
-#  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
-#  if (-r ${bla}) continue;
-#  touch ${bla}
-  if ("${filelist}" != "") then
-    foreach f (${filelist}) 
-      if (${SITE} == "HLT") then
-        ln -s  ${inputDIR}/${f} .
-      else 
-        rsync  ${inputDIR}/${f} .
-      endif
-    end
-  else 
-      if (${SITE} == "HLT") then
-        ln -s  ${inputDIR}.root .
-      else 
-        rsync  ${inputDIR}  .
-      endif
+  set CURRENT_DIR = `pwd`
+#  cd ${SUBMITTINGDIRECTORY}
+#  cp ${SUBMITTINGDIRECTORY}/lMuDst.C .
+#  cp ${SUBMITTINGDIRECTORY}/picoTpcG.C .
+foreach item (`cat $FILELIST`)
+  if (${item} =~ *.root) then
+    set input  = `echo ${item} | awk '{print $1}'`
+    ln ${input} .
   endif
-#  set idNdx = kFALSE;
-#  echo ${SUBMITTINGDIRECTORY} | grep dNdx 
-#  if (! $? )  set idNdx = kTRUE;
-#    root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&amp; ${log}
-    root.exe -q -b 'lMuDst.C(-1,"./*.'${dstype}'.root","RpicoDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","'${output}'")' picoTpcG.C+  &gt;&amp; ${log} 
-  rm -rf ${CURRENT_DIR}
+end
+#  set input  = `echo ${item} | awk '{print $1}'`
+  set file   = `echo ${input} | sed -e '#/root://xrdstar.rcf.bnl.gov:1095/##'`
+  set filel  = `basename ${file} .picoDst.root`;
+  set log    = ${filel}B.log
+  set output = ${filel}.root
+  set logF   = ${SUBMITTINGDIRECTORY}/${filel}B.log
+  set outputF =  ${SUBMITTINGDIRECTORY}/${filel}.root
+  set bla     =  ${SUBMITTINGDIRECTORY}/${filel}.bla
+  #if (-r $bla) continue;
+  if (-r ${logF}) exit 0;
+  if (-r ${outputF}) exit 0;
+  #touch ${bla}
+  set idNdx = kFALSE;
+
+    root.exe -q -b 'lMuDst.C(-1,"*.picoDst.root","RpicoDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","'${output}'")' picoTpcG.C+  &gt;&amp; ${log} 
+  mv ${log} ${output}  ${SUBMITTINGDIRECTORY}/
+
+  rm -rf ${CURRENT_DIR}/*.root
         </command>
-<!--
-    <ResourceUsage>
-      <Priority>1</Priority>
-    <Memory>
-      <MinMemory>3500</MinMemory>
-    </Memory>
-    </ResourceUsage>
--->
     <stdout URL="file:./sched$JOBID.log" />
     <stderr URL="file:./sched$JOBID.err" />
-     <input URL="command:PicoL.pl" /> 
+<!--  <input URL="command:PicoL.pl" />  -->
+     <input URL="catalog:star.bnl.gov?filename~st_physics,trgsetupname=&TRG;,storage!=HPSS,filetype=daq_reco_picoDst,magscale=&MAG;" nFiles="100" /> 
 </job>
 
