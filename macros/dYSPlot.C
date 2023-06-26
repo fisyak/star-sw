@@ -39,4 +39,8 @@ void dYSPlot() {
   l->AddEntry(FE,Form("East: %5.2f + %5.2f*cos(30*sector)",FE->GetParameter(0), FE->GetParameter(1)));
   l->Draw();
   c1->SaveAs("dYS.png");
+
+  std::ofstream file_("dYS.txt");
+  file_ << FW->GetParameter(0) << "," << FW->GetParameter(1) << "," << FE->GetParameter(0) << "," << FE->GetParameter(1) << std::endl;
+  file_.close();
 }

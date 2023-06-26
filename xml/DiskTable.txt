@@ -1,0 +1,75 @@
+AuAu200_production_2011 auau200 year2011        P11id   SL19c   49078   
+AuAu_200_production_low_2014    auau200 year2014        P15ie   SL22c   47537   
+AuAu_200_production_high_2014   auau200 year2014        P15ic   SL18f   46856   
+AuAu_200_production_high_2014   auau200 year2014        P18ih   SL20d   43987   
+AuAu54_production_2017  auau54  year2017        P18ic   SL18c   40603   
+AuAu_200_production_2014        auau200 year2014        P15ie   SL22c   31697   
+production_pAu200_2015  pAu200  year2015        P18ih   SL18h   30828   
+production_isobar_2018  ZrZr/RuRu200    year2018        P22ia   SL22a   30367   
+production_ps_OO_200GeV_2021    OO      year2021        P23ib   SL23b   28015   
+production_3p85GeV_fixedTarget_2018     Au3.85  year2018        P19ie   SL20d   27367   
+AuAu200_production      auau200 year2010        P10ik   SL10k   25721   
+pp200_production_2012   pp200   year2012        P12id   SL18f   25625   
+production_AuAu200_2019 auau200 year2019        P22ia   SL22a   24036   
+production_isobar_2018  ZrZr/RuRu200    year2018        P21id   SL21d   23733   
+production_OO_200GeV_2021       OO      year2021        P23ic   SL23c   22957   
+AuAu_200_production_2016        auau200 year2016        P16ij   SL16j   22048   
+production_9p2GeV_2020c p       year2020        P23ia   SL23a   20297   
+production_pp200long_2015       pp200   year2015        P16id   SL19c   19951   
+AuAu_200_production_mid_2014    auau200 year2014        P18ih   SL20d   19945   
+production_pAl200_2015  pAl200  year2015        P18ih   SL18h   18333   
+AuAu62_production       auau62  year2010        P10ik   SL23a   17799   
+production_pAu200_2015  pAu200  year2015        P16id   SL18f   16199   
+dAu200_production_2016  dau200  year2016        P17id   SL17d   14957   
+production_4p59GeV_fixedTarget_2019     Au4.59  year2019        P21id   SL21d   13406   
+AuAu39_production       auau39  year2010        P10ik   SL23a   13076   
+dAu39_production_2016   dau39   year2016        P17id   SL18f   12531   
+dAu62_production_2016   dau62   year2016        P17id   SL18f   12448   
+production_26p5GeV_fixedTarget_2018     Au26.5  year2018        P19ie   SL20d   11820   
+production_OO_200GeV_2021       OO      year2021        P23ib   SL23b   11691   
+production_9p2GeV_2020b p       year2020        P23ia   SL23a   11495   
+AuAu_200_production_low_2014    auau200 year2014        P18ih   SL20d   11360   
+AuAu27_production_2011  auau27  year2011        P11id   SL23a   8670    
+dAu200_production_2016  dau200  year2016        P17id   SL18b   8276    
+AuAu_200_production_2014        auau200 year2014        P18ih   SL20d   8199    
+production_9p2GeV_2020  p       year2020        P23ia   SL23a   7656    
+production_9p8GeV_fixedTarget_2020      p       year2020        P21id   SL21d   6557    
+dAu20_production_2016   dau20   year2016        P17id   SL18f   5776    
+production_19p5GeV_fixedTarget_2020     p       year2020        P21id   SL21d   5486    
+production_31p2GeV_fixedTarget_2020     p       year2020        P21id   SL21d   5258    
+AuAu_200_production_2014        auau200 year2014        P18ih   SL20a   5213    
+production_31GeV_fixedTarget_2019       Au31    year2019        P21id   SL21d   5030    
+production_7p3GeV_fixedTarget_2020      p       year2020        P21id   SL21d   4794    
+production_13p5GeV_fixedTarget_2020     p       year2020        P21id   SL21d   4706    
+AuAu19_production       auau19.6        year2011        P11id   SL23a   4592    
+production_7.3GeV_fixedTarget_2019      p       year2019        P21id   SL21d   4568    
+AuAu_200_production_2014        auau200 year2014        P18ih   SL18h   4498    
+production_5p75GeV_fixedTarget_2020     p       year2020        P21id   SL21d   3849    
+pp500_production_2017   pp510   year2017        P20ic   SL21d   3632    
+AuAu11_production       auau11.5        year2010        P10ih   SL23a   1752    
+AuAu_200_production_high_2014   auau200 year2014        P16ig   SL19a   1696    
+pp500_production_2017   pp510   year2017        P18if   SL18f   1534    
+cuProductionMinBias     cucu200 year2005        P17ii   SL18b   1031    
+AuAu7_production        auau7.7 year2010        P10ih   SL23a   936     
+AuAu_200_production_mid_2014    auau200 year2014        P16ig   SL19a   773     
+cuProductionHighTower   cucu200 year2005        P17ii   SL18b   576     
+cu62productionMinBias   cucu62  year2005        P17ii   SL18b   485     
+AuAu_200_production_low_2014    auau200 year2014        P16ig   SL19a   458     
+production_pp200long3_2015      pp200   year2015        P16id   SL19c   285     
+production_3p85GeV_fixedTarget_2019     Au3.85  year2019        P21id   SL21d   244     
+AuAu_200_production_2014        auau200 year2014        P16ig   SL19a   142     
+production_AuAu200_2019 auau200 year2019        P21id   SL21d   77.5    
+cu22ProductionMinBias   cucu22  year2005        P17ii   SL18b   37.1    
+pp500_production_rhicf_2017     pp510   year2017        P18if   SL18f   1.04    
+cuProductionMinBias     cucu200 year2005        P06ib   SL17d   0.94    
+pp500_production_2017   pp510   year2017        P18ic   SL18c   0.61    
+production_27GeV_fixedTarget_2018       Au27    year2018        P19ie   SL19e   0.2     
+AuAu200_production2_2016        auau200 year2016        P16ij   SL16j   0.02    
+AuAu11_production       NaN     year2010        P10ih   SL23a   NaN     /gpfs01/star/subsys-tpc/fisyak/reco/SL/2010/11GeV
+AuAu200_production      NaN     year2010        P10ik   SL21c   NaN     /gpfs01/star/subsys-tpc/fisyak/reco/SL/2010/AuAu200 /gpfs01/star/subsys-tpc/fisyak/reco/SL/2010/FF_AuAu200
+AuAu200_production_2011 NaN     year2011        P11id   SL19c   NaN     /gpfs01/star/subsys-tpc/fisyak/reco/SL/2011/AuAu200 /gpfs01/star/subsys-tpc/fisyak/reco/SL/2011/FF_AuAu200
+production_7p7GeV_2021  NaN     year2021        P22ib   NaN     NaN     /gpfs01/star/subsys-tpc/fisyak/reco/SL/2021/7p7GeV /gpfs01/star/subsys-tpc/fisyak/reco/SL/2021/FF_7p7GeV
+production_dAu200_2021  NaN     year2021        DEV     NaN     NaN     /gpfs01/star/subsys-tpc/fisyak/reco/SL/2021/dAu200
+production_OO_200GeV_2021       NaN     year2021        P23ic   NaN     NaN     /gpfs01/star/subsys-tpc/fisyak/reco/SL/2021/OO_200GeV_2021.P23ic 
+production_FF_OO_200GeV_2021    OO      year2021        P23ib   SL23b   3252   NaN /gpfs01/star/subsys-tpc/fisyak/reco/SL/2021/FF_OO_200GeV_2021.P23ic
+production_17p3GeV_2021 NaN     year2021        DEV     NaN     NaN     /star/u/fisyak/work/reco/TFG/2021/17p3GeV_2021

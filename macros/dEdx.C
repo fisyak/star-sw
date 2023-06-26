@@ -82,7 +82,7 @@ void dEdx(Int_t First, Int_t Last,
     //    Chain += ",ForcedX";
     if (mode == 2) Chain += ",dEdxCalib"; //,DbV20211017"; // !!!!!!!!!!!!   check DbV
   } else {
-    Chain += ",CalcdNdx";
+    Chain += ",mysql,CalcdNdx";
   }
   Chain += opt;
   //  Chain += ",CMuDst,picoWrite,noHistos,noRunco,-evout"; // For PicoDst

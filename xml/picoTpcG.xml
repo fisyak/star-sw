@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false"> -->
+<job maxFilesPerProcess="10" fileListSyntax="xrootd" simulateSubmission ="true" copyInputLocally="true">
+        <command>
+  setenv STARFPE NO
+  setup debug
+  set CURRENT_DIR = `pwd`
+#  cd ${SUBMITTINGDIRECTORY}
+#  cp ${SUBMITTINGDIRECTORY}/lMuDst.C .
+#  cp ${SUBMITTINGDIRECTORY}/picoTpcG.C .
+foreach item (`cat $FILELIST`)
+  if (${item} =~ *.root) then
+    set input  = `echo ${item} | awk '{print $1}'`
+    ln ${input} .
+  endif
+end
+#  set input  = `echo ${item} | awk '{print $1}'`
+  set file   = `echo ${input} | sed -e '#/root://xrdstar.rcf.bnl.gov:1095/##'`
+  set filel  = `basename ${file} .picoDst.root`;
+  set log    = ${filel}B.log
+  set output = ${filel}.root
+  set logF   = ${SUBMITTINGDIRECTORY}/${filel}B.log
+  set outputF =  ${SUBMITTINGDIRECTORY}/${filel}.root
+  set bla     =  ${SUBMITTINGDIRECTORY}/${filel}.bla
+  #if (-r $bla) continue;
+  if (-r ${logF}) exit 0;
+  if (-r ${outputF}) exit 0;
+  #touch ${bla}
+  set idNdx = kFALSE;
+
+    root.exe -q -b 'lMuDst.C(-1,"*.picoDst.root","RpicoDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","'${output}'")' picoTpcG.C+  &gt;&amp; ${log} 
+  mv ${log} ${output}  ${SUBMITTINGDIRECTORY}/
+
+  rm -rf ${CURRENT_DIR}/*.root
+        </command>
+    <stdout URL="file:./sched$JOBID.log" />
+    <stderr URL="file:./sched$JOBID.err" />
+<!--  <input URL="command:PicoL.pl" />  -->
+     <input URL="catalog:star.bnl.gov?filename~st_physics,trgsetupname=&TRG;,storage!=HPSS,filetype=daq_reco_picoDst,magscale=&MAG;" nFiles="100" /> 
+</job>
+
