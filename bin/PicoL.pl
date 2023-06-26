@@ -109,12 +109,26 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
 #   elsif ($pwd =~ /2021\/26p5GeV/)             {$glob = "/reco/production_26p5GeV_fixedTarget_2021/ReversedFullField/dev/2021/";}
 #   elsif ($pwd =~ /2018\/isobar/)              {$glob = "/reco/production_isobar_2018/ReversedFullField/P21id/2018/"; $DST = "MuDst";}
 #   elsif ($pwd =~ /2019\/AuAu200/)             {$glob = "/reco/production_AuAu200_2019/ReversedFullField/P22ia/2019"; $DST = "MuDst";}
+  my @words = split("/",$pwd);
+  my $tag = "";
+  if ($debug) {
+    for (my $i = 0; $i <= $#words; $i++) {
+      print "words[$i] = $words[$i] \n"
+    }
+  }
+  if ($words[$#words] =~ /dEdx/) { 
+    $tag = $words[$#words-2] . "/" . $words[$#words-1];
+  } else {
+    $tag = $words[$#words-1] . "/" . $words[$#words];
+  }
+  print "tag = $tag\n" if ($debug);
   foreach my $key (sort keys %$def ) {
     if (! $key) {next;}
     print "key { |$key| }\t=> |$def->{$key}| pwd = |$pwd|\n" if ($debug);
     if (! $def->{$key}) {next;}
     print "    { |$key| }\t=> |$def->{$key}|\n" if ($debug);
-    if ($pwd =~ /$key/) {
+#    if ($pwd =~ /$key/) {
+    if ($tag eq $key) {
       $glob = "/reco/" . $def->{$key}; print "pwd = $pwd, => key => $key, glob = $glob\n" if ($debug);
 #       if ($key =~ /P23ib/) {
 # 	$PICOPATH = "/sdcc/lustre02/star/data102"; print "PICOPATH = $PICOPATH\n" if ($debug);
