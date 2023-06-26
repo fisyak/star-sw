@@ -63,6 +63,7 @@
 '2018/3p85GeV_fixedTarget.xrootd3' =>		  '',
 '2018/isobar_2018_P21id' =>		          'production_isobar_2018/ReversedFullField/P22ia',
 '2019/14p5GeV' =>	        		  'production_14p5GeV_2019/ReversedFullField/P21ic',
+'2019/19GeV_2019_P23id' =>			  'production_19GeV_2019/ReversedFullField/P23id',
 '2019/19GeV_2019b' =>				  'production_19GeV_2019b/ReversedFullField/P21ic',
 '2019/19GeV_2019' =>				  'production_19GeV_2019/ReversedFullField/P21ic',
 '2019/19GeV_2019_TFG19e' =>			  '',

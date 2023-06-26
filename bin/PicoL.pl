@@ -3,6 +3,7 @@
 # dir -ltrd /star/data*/reco/productio*/*/*
 # dir -ltrd /star/data*/reco/productio*/*/* | awk -F\/ '{print $5"/"$7}' | sort -u
 # dir -ltrd dir -ltrd /hlt/cephfs/reco/Pico/20*/*GeV* /hlt/cephfs/reco/Pico/20*/*/*GeV* /hlt/cephfs/reco/Pico/20*/*/*/*GeV*
+# dir -ltrd /star/data1??/reco/production_*/*FullField/*/*
 use File::Basename;
 use Cwd;
 use File::stat;
@@ -109,6 +110,12 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
 #   elsif ($pwd =~ /2021\/26p5GeV/)             {$glob = "/reco/production_26p5GeV_fixedTarget_2021/ReversedFullField/dev/2021/";}
 #   elsif ($pwd =~ /2018\/isobar/)              {$glob = "/reco/production_isobar_2018/ReversedFullField/P21id/2018/"; $DST = "MuDst";}
 #   elsif ($pwd =~ /2019\/AuAu200/)             {$glob = "/reco/production_AuAu200_2019/ReversedFullField/P22ia/2019"; $DST = "MuDst";}
+  my @words = split("/",$pwd);
+  if ($debug) {
+    for (my $i = 0; $i <= $#words; $i++) {
+      print "words[$i] = $words[$i] \n"
+    }
+  }
   foreach my $key (sort keys %$def ) {
     if (! $key) {next;}
     print "key { |$key| }\t=> |$def->{$key}| pwd = |$pwd|\n" if ($debug);
