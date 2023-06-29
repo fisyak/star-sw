@@ -1,5 +1,5 @@
-#ifndef __StPidStatus_h__
-#define __StPidStatus_h__
+#ifndef __StTrackCombPiD_h__
+#define __StTrackCombPiD_h__
 #include <vector>
 #include "StEnumerations.h"
 #include "StProbPidTraits.h"
@@ -20,6 +20,7 @@
 #include "StPicoEvent/StPicoETofPidTraits.h"
 #include "StPicoEvent/StPicoMtdPidTraits.h"
 #include "StPicoEvent/StPicoBEmcPidTraits.h"
+#include "KFParticle/KFVertex.h"
 #endif /* __TFG__VERSION__ */
 class StGlobalTrack;
 //________________________________________________________________________________
@@ -27,17 +28,29 @@ class StTrackPiD {
  public:
  StTrackPiD() {Clear();}
   virtual ~StTrackPiD() {}
-  void Clear() {memset(mBeg,0,mEnd-mBeg+1);}
+  void Clear() {memset(mBeg,0,mEnd-mBeg+1); for (Int_t l = 0; l < KPidAllParticles; l++) fPred[l] = fPredC[l] = fdev[l] = fPull[l] = fPullC[l] = -999;}
   void Print(Option_t *option = "") const;
-  Double_t Pull(Int_t k = 0)  {return devS[k];}
-  Char_t                mBeg[1];                   //!
-  Double_t Pred[KPidAllParticles];
-  Double_t PredC[KPidAllParticles];
-  Double_t dev[KPidAllParticles];          // residual
-  Double_t devC[KPidAllParticles];         // residual wrt PredC
-  Double_t devS[KPidAllParticles];         // Pull
-  Double_t PullC[KPidAllParticles];        // Pull Corrected
-  Char_t                mEnd[1];        //!
+  Double_t pred(Int_t  k = 0)       const {return fPred[k];}
+  double_t residual(Int_t   k = 0)  const {return fdev[k];}
+  double_t pull(Int_t  k = 0)       const {return fPull[k];}
+  double_t predC(Int_t k = 0)       const {return fPredC[k];}
+  double_t residualC(Int_t  k = 0)  const {return fdevC[k];}
+  double_t pullC(Int_t k = 0)       const {return fPullC[k];}
+  Double_t &Pred(Int_t  k = 0)       {return fPred[k];}
+  Double_t &Residual(Int_t   k = 0)  {return fdev[k];}
+  Double_t &Pull(Int_t  k = 0)       {return fPull[k];}
+  Double_t &PredC(Int_t k = 0)       {return fPredC[k];}
+  Double_t &ResidualC(Int_t  k = 0)  {return fdevC[k];}
+  Double_t &PullC(Int_t k = 0)       {return fPullC[k];}
+ private:
+  Char_t                  mBeg[1];                   //!
+  Double_t fPred[KPidAllParticles];
+  Double_t fPredC[KPidAllParticles];
+  Double_t fdev[KPidAllParticles];          // residual
+  Double_t fdevC[KPidAllParticles];         // residual wrt PredC
+  Double_t fPull[KPidAllParticles];         // Pull
+  Double_t fPullC[KPidAllParticles];        // Pull Corrected
+  Char_t                   mEnd[1];        //!
 };
 //________________________________________________________________________________
 class StdEdxStatus : public StTrackPiD {
@@ -117,7 +130,7 @@ struct Particle_t {
   Int_t code;
 };
 //________________________________________________________________________________
-class StPidStatus {
+class StTrackCombPiD {
  public:
   enum PiDStatusIDs {
     kUndef = kUndefinedMethodId,
@@ -129,19 +142,20 @@ class StPidStatus {
     kdNdxU = kOtherMethodId2,         
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
-  StPidStatus(StGlobalTrack *gTrack = 0, StVertex *bestVx = 0);
-  StPidStatus(StMuTrack *muTrack = 0, TVector3 *g3KFP = 0, StMuPrimaryVertex *bestVx = 0);
-  StPidStatus(StMuDst *muDst, Int_t iTrack);
+  StTrackCombPiD();
+  StTrackCombPiD(StGlobalTrack *gTrack, StVertex *bestVx = 0);
+  StTrackCombPiD(StMuTrack *muTrack, TVector3 *g3KFP = 0, StMuPrimaryVertex *bestVx = 0);
+  StTrackCombPiD(StMuDst *muDst, Int_t iTrack);
 #ifdef __TFG__VERSION__
-  StPidStatus(StPicoTrack *picoTrack = 0, TVector3 *g3KFP = 0, TVector3 *bestVx = 0);
-  StPidStatus(StPicoDst *picoDst, Int_t iTrack);
+  StTrackCombPiD(StPicoTrack *picoTrack, TVector3 *g3KFP = 0, TVector3 *bestVx = 0);
+  StTrackCombPiD(StPicoDst *picoDst, Int_t iTrack);
 #endif /* __TFG__VERSION__ */
-  virtual ~StPidStatus() {
+  virtual ~StTrackCombPiD() {
     for (Int_t k = kI70; k < kTotal; k++) {SafeDelete(fStatus[k]);}
     fProb = 0;
   }
   void Clear() {memset(mBeg,0,mEnd-mBeg+1);}
-  Int_t Status() {return PiDStatus;}
+  Int_t Status() {return fPiDStatus;}
   StTrackPiD     *Status(Int_t k) {return fStatus[k];}
   StdEdxStatus   *dEdxStatus(Int_t k) {return ( StdEdxStatus   *)  fStatus[k];}
   StBTofPidTraits SetBTofPidTraits(const StMuBTofPidTraits &pid);
@@ -164,18 +178,10 @@ class StPidStatus {
   static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
   static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
   static Int_t Nparticles() {return fgNparticles;}
-  Int_t       PiDStatus; //!
+  Double_t bghyp(Int_t l) {return fbghyp[l];}
+  Double_t pMomentum() {return fg3.Mag();}
+  // ________________________________________________________________________________
   void        Print(Option_t *option="") const;
-  //  StGlobalTrack *gTrack; //!
-  TVector3 g3; //!
-  Int_t    fQ; // charge
-  Char_t                mBeg[1];                   //!
-  StTrackPiD *fStatus[kTotal];
-  Double_t PredBMN[2], Pred70BMN[2]; //!
-  Double_t bghyp[kTotal]; //! log10(bg)
-  Double_t bgs[kTotal]; //! bg
-  StProbPidTraits       *fProb;
-  Char_t                mEnd[1];        //!
   const StdEdxStatus    *fI70	 () const  {return (const StdEdxStatus    *) fStatus[kI70  ];} 
   const StdEdxStatus 	*fFit    () const  {return (const StdEdxStatus    *) fStatus[kFit  ];} 
   const StdEdxStatus 	*fI70U   () const  {return (const StdEdxStatus    *) fStatus[kI70U ];}  
@@ -195,6 +201,14 @@ class StPidStatus {
   static Particle_t fgParticles[34];
   static const Char_t *fgPiDStatusNames[kTotal+1];
   static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
+  static const KFVertex &BestVX() {return fgBestVx;}
+  static void SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
+  static void SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
+  static void SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]);
+  static void SetBestVx(const StVertex *bestVx);
+  static void SetBestVx(const StMuPrimaryVertex *bestVx);
+  static void SetBestVx(const StPicoEvent *event);
+  static void ResetSetBestVx() {fgBestVx.SetId(0);}
  private:
   std::vector<Int_t> fTPCPDG;
   std::vector<Int_t> fTofPDG;
@@ -203,6 +217,16 @@ class StPidStatus {
   static Bool_t fgUseTof;
   static Int_t  fgDebug;
   static Int_t  fgNparticles;
+  static KFVertex fgBestVx;
+  Char_t           mBeg[1];                   //!
+  Int_t            fPiDStatus; //
+  Int_t            fQ; // charge
+  StTrackPiD      *fStatus[kTotal];
+  Double_t         fbghyp[kTotal]; //! log10(bg)
+  Double_t         fbgs[kTotal]; //! bg
+  StProbPidTraits *fProb;
+  Char_t            mEnd[1];        //!
+  TVector3 fg3; //!
 };
 
 #endif 

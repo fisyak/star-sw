@@ -82,14 +82,14 @@ using namespace units;
 #include "StDetectorDbMaker/St_TpcAvgPowerSupplyC.h"
 #include "StDetectorDbMaker/St_trigDetSumsC.h"
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
-#include "StPidStatus.h"
+#include "StTrackCombPiD.h"
 #include "dEdxHist.h"
 #if defined(__CHECK_LargedEdx__) || defined( __DEBUG_dEdx__) || defined( __DEBUG_dNdx__)
 #include "tables/St_g2t_track_Table.h" 
 #endif
 const static Int_t tZero= 19950101;
 static Int_t tMin = 20000101;
-static Int_t tMax = 20220101;
+static Int_t tMax = 20240101;
 const static TDatime t0(tZero,0);
 const static Int_t timeOffSet = t0.Convert();
 static Double_t tpcTime = -1;
@@ -229,7 +229,7 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
       LOG_WARN << "NOT to USE";
     }
     LOG_WARN << " dx2L in dE/dx predictions "<< endm;
-    StPidStatus::SetUsedx2(fUsedx2);
+    StTrackCombPiD::SetUsedx2(fUsedx2);
   }
   St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
   St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
@@ -1056,13 +1056,13 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
   static TH2F *nPulls[2][kTotalMethods] = {0};
   enum {kNPulls = 3};
   struct PullH_t {
-    StPidStatus::PiDStatusIDs kPid;
+    StTrackCombPiD::PiDStatusIDs kPid;
     Hists2D* histograms;
   };
   static PullH_t PullH[kNPulls] = {
-    { StPidStatus::kI70,  new Hists2D("I70")},
-    { StPidStatus::kFit,  new Hists2D("fitZ")},
-    { StPidStatus::kdNdx, 0}
+    { StTrackCombPiD::kI70,  new Hists2D("I70")},
+    { StTrackCombPiD::kFit,  new Hists2D("fitZ")},
+    { StTrackCombPiD::kdNdx, 0}
   };
   static Bool_t NotYetDone = kTRUE;
   if (NotYetDone) {
@@ -1174,8 +1174,8 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
   StThreeVectorD g3 = gTrack->geometry()->momentum(); // p of global track
   Double_t pMomentum = g3.mag();
   Double_t etaG = g3.pseudoRapidity();
-  StPidStatus PiD = StPidStatus(gTrack);
-  if (PiD.PiDStatus < 0) return;
+  StTrackCombPiD PiD = StTrackCombPiD(gTrack);
+  if (PiD.Status() < 0) return;
   //  Double_t bg = TMath::Log10(pMomentum/StProbPidTraits::mPidParticleDefinitions[kPidPion]->mass());
   Int_t sCharge = 0;                                 // positive
   if (gTrack->geometry()->charge() < 0) sCharge = 1; // negative
@@ -1205,11 +1205,11 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
   Int_t l;
   for (Int_t m = 0; m < kNPulls; m++) {// I70, Ifit, dNdx
     if (! PullH[m].histograms) continue;
-    if (! PiD.fStatus[PullH[m].kPid]) continue;
+    if (! PiD.Status(PullH[m].kPid)) continue;
     for (l = kPidElectron; l < KPidParticles; l++) {
       if (PiD.fI70() && PiD.fI70()->fPiD) {
-	PullH[m].histograms->dev[l][sCharge]->Fill(PiD.bghyp[l], PiD.fStatus[PullH[m].kPid]->dev[l]);
-	PullH[m].histograms->dev[l][      2]->Fill(PiD.bghyp[l], PiD.fStatus[PullH[m].kPid]->dev[l]);
+	PullH[m].histograms->dev[l][sCharge]->Fill(PiD.bghyp(l), PiD.Status(PullH[m].kPid)->Residual(l));
+	PullH[m].histograms->dev[l][      2]->Fill(PiD.bghyp(l), PiD.Status(PullH[m].kPid)->Residual(l));
       }
     }
   }
@@ -1218,8 +1218,8 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
     kMethod = kTPoints[j];
     if (pMomentum > 0.4) {
       if (PiD.dEdxStatus(kMethod)) {
-	TPoints[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->TrackLength(),PiD.dEdxStatus(kMethod)->log2dX(),PiD.dEdxStatus(kMethod)->dev[kPidPion]);
-	NPoints[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->N(), etaG, PiD.dEdxStatus(kMethod)->dev[kPidPion]);
+	TPoints[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->TrackLength(),PiD.dEdxStatus(kMethod)->log2dX(),PiD.dEdxStatus(kMethod)->Residual(kPidPion));
+	NPoints[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->N(), etaG, PiD.dEdxStatus(kMethod)->Residual(kPidPion));
 #if 1
 	if (Debug() > 100) {
 	  gTrack->Print();
@@ -1230,8 +1230,8 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
     }
     if (PiD.dEdxStatus(kMethod)) {
 #ifdef  __FIT_PULLS__
-      Pulls[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->TrackLength(),PiD.dEdxStatus(kMethod)->devS[kPidPion]);
-      nPulls[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->N(),PiD.dEdxStatus(kMethod)->devS[kPidPion]);
+      Pulls[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->TrackLength(),PiD.dEdxStatus(kMethod)->Pull(kPidPion));
+      nPulls[sCharge][j]->Fill(PiD.dEdxStatus(kMethod)->N(),PiD.dEdxStatus(kMethod)->Pull(kPidPion));
 #endif /*  __FIT_PULLS__ */
 #ifdef __ETA_PLOTS__
       if (j < 2 && PiD.dEdxStatus(kMethod)->TrackLength() > 40) {
@@ -1243,7 +1243,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	    if (TMath::Abs(primVx->position().z()) < 10) {
 	      StThreeVectorD P = pTrack->geometry()->helix().momentum(bField);
 	      Double_t eta = P.pseudoRapidity();
-	      Eta[j]->Fill(eta,PiD.dEdxStatus(kMethod)->dev[kPidPion]);
+	      Eta[j]->Fill(eta,PiD.dEdxStatus(kMethod)->Residual(kPidPion));
 	    }
 	  }
 	}
@@ -1274,7 +1274,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 #else
 #if 0
       if (! PiD.fdNdx)  continue; // 
-      Double_t n_P = FdEdx[k].dxC*PiD.fdNdx->Pred[kPidPion];
+      Double_t n_P = FdEdx[k].dxC*PiD.fdNdx->Pred(kPidPion);
       //      Double_t zdEMPV = StdEdxModel::instance()->LogdEMPVGeV(n_P);//LogdEMPV(n_P) - Bichsel::Instance()->Parameterization()->MostProbableZShift(); 
 #else
       Double_t n_P = FdEdx[k].dxC*StdEdxModel::instance()->dNdxEff(betagamma);
@@ -1323,7 +1323,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	Double_t dEN = 0;
 	Double_t zdEMPV = 0;
 	if (PiD.fdNdx) {
-	  Double_t n_P = FdEdx[k].dxC*PiD.fdNdx->Pred[kPidPion];
+	  Double_t n_P = FdEdx[k].dxC*PiD.fdNdx->Pred(kPidPion);
 	  dEN = TMath::Log(FdEdx[k].F.dE); // scale to <dE/dx>_MIP = 2.4 keV/cm
 	  zdEMPV = StdEdxModel::instance()->LogdEMPV(n_P); // ? Check dx
 	  Vars[2] = dEN - zdEMPV;

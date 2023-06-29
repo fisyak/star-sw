@@ -37,6 +37,19 @@ R(mPti) := 1/mCurv(mPti);
 Phi(mPti,dXY) := asin(dXY/(2*R(mPti)));
 s_perp(mPti,dXY) := 2*R(mPti) * Phi(mPti,dXY); 
 pathlength(mPti,dXY,dZ) := sqrt(s_perp(mPti,dXY)**2 + dZ**2);
+/*
+logpath(mPti,dXY,dZ) := log(pathlength(mPti,dXY,dZ));
+dPathd : jacobian ( [logpath(mPti,dXY,dZ)], [mPti, dXY, dZ]); */
+
+dPathd : jacobian ( [pathlength(mPti,dXY,dZ)], [mPti, dXY, dZ]);
+f90(dPathd);
+with_stdout ("dPathd.txt",  f90(dPathd));
+/*
+(%i25) f90(dPathd)
+dPathd(1,1) = (((4*dXY*asin((Hz*dXY*mPti)/2.d+0))/(Hz*mPti**2*sqrt(1-(Hz**2*dXY**2*mPti**2)/4.d+0))-(8*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**3))/sqrt((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2))/2.d+0
+dPathd(1,2) = (2*asin((Hz*dXY*mPti)/2.d+0))/(Hz*mPti*sqrt(1-(Hz**2*dXY**2*mPti**2)/4.d+0)*sqrt((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2))
+dPathd(1,3) = dZ/sqrt((4*asin((Hz*dXY*mPti)/2.d+0)**2)/(Hz**2*mPti**2)+dZ**2)
+*/
 length(tof) := tof*kCLight;
 
 betaV(mPti,dXY,dZ,tof) := length(tof)/pathlength(mPti, dXY, dZ);
