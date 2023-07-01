@@ -2,8 +2,9 @@
 # /star/data14/GRID/NFS_FileList
 # dir -ltrd /star/data*/reco/productio*/*/*
 # dir -ltrd /star/data*/reco/productio*/*/* | awk -F\/ '{print $5"/"$7}' | sort -u
-# dir -ltrd dir -ltrd /hlt/cephfs/reco/Pico/20*/*GeV* /hlt/cephfs/reco/Pico/20*/*/*GeV* /hlt/cephfs/reco/Pico/20*/*/*/*GeV*
+# dir -ltrd /hlt/cephfs/reco/Pico/20*/*GeV* /hlt/cephfs/reco/Pico/20*/*/*GeV* /hlt/cephfs/reco/Pico/20*/*/*/*GeV*
 # dir -ltrd /star/data1??/reco/production_*/*FullField/*/*
+# dir -ltrd /star/data*/reco/production_*/*Field/*/*
 use File::Basename;
 use Cwd;
 use File::stat;

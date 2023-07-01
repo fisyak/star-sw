@@ -1,3 +1,6 @@
+/*
+  root.exe lMudst.C MuCov.C+
+ */
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include "Riostream.h"
 #include <stdio.h>
@@ -18,7 +21,7 @@
 #include "TTreeIter.h"
 #endif
 //________________________________________________________________________________
-void MuCov(Char_t *files = "*.MuDst.root",const Char_t *out = "") {
+void MuCov(const Char_t *files = "*.MuDst.root",const Char_t *out = "") {
   TDirIter Dir(files);
   Char_t *file = 0;
   Int_t NFiles = 0;
@@ -66,7 +69,7 @@ void MuCov(Char_t *files = "*.MuDst.root",const Char_t *out = "") {
 	Int_t nx = 100;
 	Double_t xmin = 0;
 	Double_t xmax = 10;                   // pT
-	if (m == 1) {nx = 50; xmax = 50;}              //No. fit points
+	if (m == 1) {nx = 100; xmax = 100;}              //No. fit points
 	if (m == 2) {xmin = -5.; xmax = 5.;}  // Eta
 	if (m == 3) {xmax = TMath::Pi(); xmin = - xmax;} // Phi
 	Double_t ymax = 0.10;       // dpT/pT

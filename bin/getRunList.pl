@@ -18,6 +18,7 @@ foreach my $file (@files) {
   $run =~ s/_.*//; #print "$file => $run\n";
   if ($run < $run1 || $run > $run2) {next;}
 #  $List .= " *GeV*/" . $run . "*.root";
-  $List .= " */" . $run . "*.root";
+#  $List .= " */" . $run . "*.root";
+  $List .= " " . $file; # */" . $run . "*.root";
 }
 print "root.exe $List 'CheckPads.C+(1)'\n";

@@ -1,5 +1,4 @@
 /*
-  root.exe Z3GF*.root MakeTpcZCorrectionC.C+
   root.exe Z3G4E*.root MakeTpcZCorrectionC.C+
 */
 #if !defined(__CINT__)
