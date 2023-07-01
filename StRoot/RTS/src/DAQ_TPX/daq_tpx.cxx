@@ -125,7 +125,7 @@ daq_tpx::daq_tpx(daqReader *rts_caller)
 		fcf_2d_algo[i] = 0 ;
 	}
 	fcf_tmp_storage = 0 ;
-	
+
 	fcf_afterburner_disable = 0 ;
 	fcf_run_compatibility = 9 ;		// FY09 default, for now...
 	fcf_do_cuts = 2 ;		// run09 default
@@ -1834,7 +1834,6 @@ daq_dta *daq_tpx::handle_cld_2d_sim(int sec, int row)
 			fcf_2d_algo[sim->sec] = new tpxFCF_2D ;
 			fcf_2d_algo[sim->sec]->set_id(sim->sec) ;
 			fcf_2d_algo[sim->sec]->fcf_style = 2 ;
-			//yf			fcf_2d_algo[sim->sec]->fcf_style = fcf_style ;
 
 			fcf_2d_algo[sim->sec]->run_compatibility = fcf_run_compatibility ;
 			fcf_2d_algo[sim->sec]->do_cuts = fcf_do_cuts ;
@@ -1857,7 +1856,7 @@ daq_dta *daq_tpx::handle_cld_2d_sim(int sec, int row)
 			fcf_2d_algo[sim->sec]->start_evt_2d(sim->sec,0) ;
 		}
 
-		//int track_id[512] ;
+		//u_short track_id[512] ;
 		tpx_altro_struct a ;
 
 		a.row = sim->row ;
@@ -2001,45 +2000,20 @@ daq_dta *daq_tpx::handle_cld_sim(int sec, int row)
 		if(fcf_algo[sim->sec]==0) {
 			LOG(NOTE,"No algo assigned for sector %d -- creating one!",sim->sec) ;
 			fcf_algo[sim->sec] = new tpxFCF ;
-			//#define __FCF_STYLE2__
-#ifndef  __FCF_STYLE2__
 			fcf_algo[sim->sec]->config(0x3F,1,sim_row_count,sim_tpx_rowlen) ;	// assume all 6 RDOs; extra data + annotations
-#else /*  __FCF_STYLE2__ */
-			fcf_algo[sim->sec]->set_id(sim->sec) ;
-			fcf_algo[sim->sec]->fcf_style = fcf_style ;
-#endif /* !  __FCF_STYLE2__ */
 			fcf_algo[sim->sec]->run_compatibility = fcf_run_compatibility ;
 			fcf_algo[sim->sec]->do_cuts = fcf_do_cuts ;
 
-#ifndef  __FCF_STYLE2__
 			fcf_algo[sim->sec]->apply_gains(sim->sec,gain_algo) ;
 
 			fcf_algo[sim->sec]->start_evt() ;
 
 			if(fcf_tmp_storage==0) {
 				fcf_tmp_storage = (u_int *)valloc(FCF_TMP_BYTES) ;
-#else /*  __FCF_STYLE2__ */
-			if (! fcf_style) {
-			  fcf_algo[sim->sec]->apply_gains(sim->sec,gain_algo) ;
-			  if(fcf_tmp_storage==0) {
-			    fcf_tmp_storage = (u_int *)valloc(FCF_TMP_BYTES) ;
-			  }
-			  fcf_algo[sim->sec]->start_evt() ;
-			} else {
-
-			  for(int r=1;r<=6;r++) {
-			    fcf_algo[sim->sec]->config2(sim->sec,r,1,sim_row_count,sim_tpx_rowlen) ;
-			  }
-			  fcf_algo[sim->sec]->apply_gains2(gain_algo) ;
-			  if(fcf_tmp_storage==0) {
-			    fcf_tmp_storage = (u_int *)valloc(FCF_TMP_BYTES) ;
-			  }
-			  fcf_algo[sim->sec]->start_evt2(sim->sec,0) ;
-#endif /* !  __FCF_STYLE2__ */
 			}
 		}
 
-		//int track_id[512] ;
+		//u_short track_id[512] ;
 		tpx_altro_struct a ;
 
 		a.row = sim->row ;
