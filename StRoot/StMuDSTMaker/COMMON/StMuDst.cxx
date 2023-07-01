@@ -2053,6 +2053,8 @@ TClonesArray* StMuDst::rhicfArray(Int_t type) { return instance()->rhicfArrays[t
 TClonesArray* StMuDst::fcsArray(int type) { return instance()->fcsArrays[type]; }
 // returns pointer to the n-th TClonesArray from the ftt arrays
 TClonesArray* StMuDst::fttArray(int type) { return instance()->fttArrays[type]; }
+// returns pointer to the n-th TClonesArray from the fst arrays
+TClonesArray* StMuDst::fstArray(int type) { return instance()->fstArrays[type]; }
 // returns pointer to the n-th TClonesArray from the pmd arrays
 TClonesArray* StMuDst::pmdArray(Int_t type) { return instance()->pmdArrays[type]; }
   // returns pointer to the n-th TClonesArray from the tof arrays

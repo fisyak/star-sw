@@ -43,6 +43,7 @@ class StMuFcsCollection;
 class StMuFttCollection;
 class StMuFstCollection;
 class StMuPmdCollection;
+
 class StEvent;
 class StTriggerData;
 class StTrack;
@@ -155,7 +156,7 @@ public:
   /// checks and if necessary corrects the indecies of elements pointing to each other (e.g., a primary track's index to the corresponding global track)
   static void fixTrackIndices(TClonesArray* primary, TClonesArray* global);
   /// checks and if necessary corrects the indecies of elements pointing to each other (e.g., a primary track's index to the corresponding global track)
-  static void fixTrackIndices();
+  void fixTrackIndices();
   //fills gloabl track's mIndex2Global with the index to the respective primary track
   static void fixTrackIndicesG(int mult=1);
   /// creates a StEvent from the StMuDst (this) and returns a pointer to it. (This function is not yet finished)  
@@ -301,6 +302,8 @@ public:
   static TClonesArray* fcsArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the ftt arrays
   static TClonesArray* fttArray(int type) ;
+  /// returns pointer to the n-th TClonesArray from the fst arrays
+  static TClonesArray* fstArray(int type);
   /// returns pointer to the n-th TClonesArray from the pmd arrays
   static TClonesArray* pmdArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the tof arrays
