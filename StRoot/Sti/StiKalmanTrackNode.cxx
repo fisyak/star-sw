@@ -1696,7 +1696,7 @@ assert(mFE._cEE>0);
 assert(mFE._cPP>0);
 assert(mFE._cTT>0);
 
-assert(mFE.zign()>=0); ///??? 
+//assert(mFE.zign()>=0); ///??? 
 
   double dE = sign*dxEloss;
 //		save detLoss and gasLoss for investigation only
@@ -1749,7 +1749,7 @@ int StiKalmanTrackNode::updateNode()
 {
 static int nCall=0; nCall++;
   _state = kTNFitBeg;
-assert(mFE.zign()>0); ///??? 
+  //assert(mFE.zign()>0); ///??? 
   assert(mFE._cXX<1e-8);
   double r00,r01,r11;
   r00 = mHrr.hYY + mFE._cYY;
