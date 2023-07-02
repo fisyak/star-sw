@@ -1,14 +1,15 @@
       subroutine btofDeriv(dcaPars, tof, xyzV, xyzH,  betaV, M2q2, Deriv)
       implicit none
-      real dcaPars(6)
-      real xyzV(3), xyzH(3);
-      real betaV, M2q2
-      real Deriv(2,6) ! d(1/beta,M2/q2) / d (mImp, mZ, mPsi, mPti, mTan, tof)
-      real mImp, mZ, mPsi, mPti, mTan, mCurv, tof, dXY, dZ, R1, R2
-      real Phi, length, p2q, path, s_perp, pTq, pZq, R
-      real Hz
-      real d2d(2,6), JVarsD(6,6)
-      real kCLight / 0.000299792458 / ! [cm/nsec]
+      real   dcaPars(6)
+      real   xyzV(3), xyzH(3);
+      real*8 betaV, M2q2
+      real*8 Deriv(2,6) ! d(1/beta,M2/q2) / d (mImp, mZ, mPsi, mPti, mTan, tof)
+      real*8 mImp, mZ, mPsi, mPti, mTan, mCurv
+      real*8 tof, dXY, dZ, R1, R2
+      real   Phi, length, p2q, path, s_perp, pTq, pZq, R
+      real*8 Hz
+      real*8 d2d(2,6), JVarsD(6,6)
+      real*8 kCLight / 29.9792458 / ! [cm/nsec]
       integer i,j,k
 *
       mImp  = dcaPars(1) 

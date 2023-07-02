@@ -22,7 +22,7 @@ class KFPTrackVector;
 class TH1F;
 class TH2F;
 
-class StPidStatus;
+class StTrackCombPiD;
 class StKFParticleInterface: public TObject
 {
  public:
@@ -79,7 +79,7 @@ class StKFParticleInterface: public TObject
   Bool_t FindUnique(const KFParticle *particle, vector<const KFParticle *> Vec4Cfit, Int_t indxnp[2]);
   Bool_t PidQA(StPicoDst* picoDst);
   Bool_t PidQA(StMuDst* muDst);
-  Bool_t FillPidQA(StPidStatus* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0); 
+  Bool_t FillPidQA(StTrackCombPiD* PiD = 0, Int_t pdg = 0, Int_t pdgParent = 0); 
   Bool_t PidQArmerteros(KFParticle TempPart, TVector3 &negative, TVector3 &positive ); 
   bool OpenCharmTrigger();
   void OpenCharmTriggerCompression(int nTracksTriggered, int nTracksInEvent, bool triggerDMesons);

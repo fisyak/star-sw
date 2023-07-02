@@ -231,8 +231,11 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
     LOG_WARN << " dx2L in dE/dx predictions "<< endm;
     StTrackCombPiD::SetUsedx2(fUsedx2);
   }
+  StTrackCombPiD::SetPiDCorrection(0);
+#ifdef __CHECK_RDOMAP_AND_VOLTAGE__
   St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
   St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
+#endif /*  __CHECK_RDOMAP_AND_VOLTAGE__ */
   return kStOK;
 }
 //_______________________________________________________________________________
@@ -311,9 +314,9 @@ Int_t StdEdxY2Maker::Make(){
   if (TMath::Abs(bField) < 1.e-5*kilogauss) return kStOK;
   UInt_t NoPV = pEvent->numberOfPrimaryVertices();
   if (! NoPV)  return kStOK;
+  StPrimaryVertex *pVbest = pEvent->primaryVertex();
 #ifdef __BEST_VERTEX__
   const StBTofCollection* tof = pEvent->btofCollection();
-  StPrimaryVertex *pVbest  =  pEvent->primaryVertex(0);
   Double_t VpdZ = -300;
   if (tof) {
     if (tof->tofHeader()) VpdZ = tof->tofHeader()->vpdVz();
@@ -334,6 +337,7 @@ Int_t StdEdxY2Maker::Make(){
     }
   }
   if (dZbest < 999 && dZbest > 3.0) pVbest = 0;
+  StTrackCombPiD::SetBestVx(pVbest);
   if (pVbest &&PVxyzC) PVxyzC->Fill( pVbest->position().x(),  pVbest->position().y(), pVbest->position().z());
 #endif /* __BEST_VERTEX__ */
   // no of tpc hits
@@ -1126,7 +1130,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	             	      190,10,200., Nlog2dx, log2dxLow, log2dxHigh, 500,-1.,4.);
 	NPoints[s][t]   = new TH3F(Form("NPoints%s%s",N[t],NS[s]),
 				      Form("%s versus no. dEdx points in Tpc and #eta_{G} for %s p > 0.4 GeV/c",T[t],TS[s]),
-				      100,0.5,100.5, 40, -2, 2, 500,-1.,4.);
+				      100,0.5,100.5, 50, -3, 2, 500,-1.,4.);
 #ifdef  __FIT_PULLS__
 	Pulls[s][t] = new TH2F(Form("Pull%s%s",N[t],NS[s]),
 			       Form("Pull %s versus Length in TPC %s",T[t],TS[s]),

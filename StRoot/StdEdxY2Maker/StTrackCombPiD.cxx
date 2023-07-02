@@ -13,13 +13,16 @@
 #include "TMath.h"
 #include "TVector3.h"
 #include "TCallf77.h"
+#include "StarRoot/TRMatrix.h"
+#include "StarRoot/TRSymMatrix.h"
+#include "StDetectorDbMaker/St_tofSimResParamsC.h"
 #ifndef WIN32
 #define btofDeriv btofderiv_
 #else
 #define btofDeriv BTOFDERIV
 #endif
 extern "C" {
-  void type_of_call btofDeriv(Float_t *dcaPars, Float_t tof, Double_t *xyzV, Double_t *xyzH, Double_t &betaV, Double_t &M2q2, Double_t *Deriv);
+  void type_of_call btofDeriv(Float_t *dcaPars, Double_t &tof, Float_t *xyzV, Float_t *xyzH, Double_t &betaV, Double_t &M2q2, Double_t *Deriv);
 };
 KFVertex StTrackCombPiD::fgBestVx;
 Double_t StTrackCombPiD::fgSigmaCut = 3.0;
@@ -69,10 +72,35 @@ Bool_t StTrackCombPiD::fgUsedx2 = kFALSE;
 Bool_t StTrackCombPiD::fgUseTof = kFALSE;
 Int_t  StTrackCombPiD::fgDebug = 0;
 Int_t  StTrackCombPiD::fgNparticles = KPidParticles;
+Int_t  StTrackCombPiD::fgUsePiDCorrection = 1;
+#define PrPP(A,B) if (StTrackCombPiD::Debug()) {std::cout << "StTrackCombPiD::" << (#A) << "\t" << (#B) << " = \t" << (B) << std::endl;}
 
 //________________________________________________________________________________
 StBTofStatus::StBTofStatus(StBTofPidTraits *pid) : fPiD(0) {
-  if (pid && TMath::Abs(pid->yLocal()) < 1.8) fPiD = pid;
+  memset(mBeg,0,mEnd-mBeg+1);
+  if (pid && TMath::Abs(pid->yLocal()) < 1.8 && pid->timeOfFlight() > 0 && pid->timeOfFlight() < 100) {
+    fPiD = pid;
+  }
+}
+//________________________________________________________________________________
+void StBTofStatus::Set(StDcaGeometry &dcaG, KFVertex &bestVx) {
+  Double_t timeTof = PiD()->timeOfFlight();
+  Double_t lengthTof = PiD()->pathLength();
+  static TRMatrix F(2,6);
+  if(lengthTof > 0.) fIsPrimary = 1;
+  Float_t xyzV[3] = {bestVx.GetX(), bestVx.GetY(), bestVx.GetZ()};
+  btofDeriv(dcaG.params(), timeTof, xyzV, fPiD->position().xyz(), fBetaV, fM2q2, F.GetArray()); PrPP(StBTofStatus::Set,F);
+  TRSymMatrix  Cov(6, dcaG.errMatrix());                                                        PrPP(StBTofStatus::Set,Cov);
+  Double_t sigmaTime = St_tofSimResParamsC::instance()->average_timeres_tof()*1e-3; // in nses
+  for (Int_t i = 0; i < 5; i++) Cov[5*6/2+i] = 0;                                               PrPP(StBTofStatus::Set,Cov);
+  Cov[5*6/2+5] = sigmaTime*sigmaTime;  
+  TRSymMatrix Bcov(F, TRArray::kAxSxAT, Cov);                                                   PrPP(StBTofStatus::Set,Cov);
+  fSigmaBetaV = TMath::Sqrt(Bcov[0]);
+  fSigmaM2q2  = TMath::Sqrt(Bcov[2]);
+  if (StTrackCombPiD::Debug()) {
+    cout << "StBTofStatus::Set\t1/beta = " << fBetaV << " +/- " << fSigmaBetaV
+	 << "\tM2/q2 = " << fM2q2 << " +/- " <<  fSigmaM2q2 << endl;
+  }
 }
 //________________________________________________________________________________
 StBTofPidTraits StTrackCombPiD::SetBTofPidTraits(const StMuBTofPidTraits &pid) {
@@ -85,35 +113,10 @@ StBTofPidTraits StTrackCombPiD::SetBTofPidTraits(const StMuBTofPidTraits &pid) {
   btofPidTraits.setPathLength   (pid.pathLength());
   btofPidTraits.setBeta         (pid.beta());
   btofPidTraits.setPosition     (pid.position());
-  double lengthTof = pid.pathLength();
-  if(lengthTof <= 0.) {
-#if 0
-    double timeTof = pid.timeOfFlight();
-    const StThreeVectorF & tofPoint  = pid.position();
-    const StThreeVectorF & dcaPoint  = gTrack->dca(bestPV);
-    StPhysicalHelixD innerHelix = gTrack->helix();
-    double dlDCA = fabs( innerHelix.pathLength( StThreeVector<double>(dcaPoint.x(), dcaPoint.y(), dcaPoint.z()) ) );
-    StPhysicalHelixD outerHelix = gTrack->outerHelix();
-    double dlTOF = fabs( outerHelix.pathLength( StThreeVector<double>(tofPoint.x(), tofPoint.y(), tofPoint.z()) ) );
-    
-    double l = gTrack->length();
-    lengthTof = l + dlDCA + dlTOF;
-    double betaTof = lengthTof/timeTof/29.9792458;
-    btofPidTraits.setPathLength(lengthTof);
-    btofPidTraits.setBeta(betaTof);
-#endif
-  }
-
-  btofPidTraits.setPosition     (pid.position());
-
   btofPidTraits.setSigmaElectron(pid.sigmaElectron()); 
   btofPidTraits.setSigmaPion    (pid.sigmaPion()); 
   btofPidTraits.setSigmaKaon    (pid.sigmaKaon()); 
   btofPidTraits.setSigmaProton  (pid.sigmaProton());  
-  btofPidTraits.setProbElectron (pid.probElectron()); 
-  btofPidTraits.setProbPion     (pid.probPion()); 
-  btofPidTraits.setProbKaon     (pid.probKaon()); 
-  btofPidTraits.setProbProton   (pid.probProton());  
   return btofPidTraits;
 }
 #ifdef __TFG__VERSION__
@@ -127,26 +130,11 @@ StBTofPidTraits StTrackCombPiD::SetBTofPidTraits(const StPicoBTofPidTraits &pid,
   //  btofPidTraits.setThetaLocal   (pid.btofThetaLocal());
   btofPidTraits.setTimeOfFlight (pid.btof());
   //  btofPidTraits.setPathLength   (pid.btofPathLength());
-  double timeTof = pid.btof();
-  double betaTof = pid.btofBeta();
-  if(fabs(betaTof) < 1.e-6 && timeTof > 0 && gTrack) {
-    const TVector3 & tofPoint  = pid.btofHitPos();
-    StPicoPhysicalHelix innerHelix = gTrack->helix(StPicoDst::instance()->event()->bField());
-    double lengthTof = fabs( innerHelix.pathLength( tofPoint ));
-    betaTof = lengthTof/timeTof/29.9792458;
-  }
-  btofPidTraits.setBeta         (betaTof);
-  btofPidTraits.setPosition     (StThreeVectorF(pid.btofHitPosX(),pid.btofHitPosY(),pid.btofHitPosZ()));
-				      
+  btofPidTraits.setBeta         (pid.btofBeta());
   btofPidTraits.setSigmaElectron(pid.nSigmaElectron()); 
   btofPidTraits.setSigmaPion    (pid.nSigmaPion()); 
   btofPidTraits.setSigmaKaon    (pid.nSigmaKaon()); 
   btofPidTraits.setSigmaProton  (pid.nSigmaProton());  
-  //  btofPidTraits.setProbElectron (pid.btofProbElectron()); 
-  //  btofPidTraits.setProbPion     (pid.btofProbPion()); 
-  //  btofPidTraits.setProbKaon     (pid.btofProbKaon()); 
-  //  btofPidTraits.setProbProton   (pid.btofProbProton());  
-  
   return btofPidTraits;
 }
 #endif /*  __TFG__VERSION__ */				      
@@ -221,14 +209,17 @@ StMtdPidTraits StTrackCombPiD::SetMtdPidTraits(const StMuMtdPidTraits &pid) {
   return mtdPidTraits;
 }
 //________________________________________________________________________________
-StTrackCombPiD::StTrackCombPiD() : fPiDStatus(-1), fg3(), fQ(0) {
+StTrackCombPiD::StTrackCombPiD() : fg3(), fPiDStatus(-1) {
   Clear();
 }
 //________________________________________________________________________________
-StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack, StVertex *bestVx) : StTrackCombPiD() {
+StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack) : StTrackCombPiD() {
   if (! gTrack) return;
-  fQ = gTrack->geometry()->charge();
-  fg3 = TVector3(gTrack->geometry()->momentum().xyz()); // p of global track
+  if (gTrack->dcaGeometry()) return;
+  fValidDca = kTRUE;
+  fDca = *(gTrack->dcaGeometry());
+  fParticle = fDca.Particle(gTrack->key());
+  fg3 = TVector3(fParticle.GetPx(),fParticle.GetPy(),fParticle.GetPz());
   StSPtrVecTrackPidTraits &traits = gTrack->pidTraits();
   if (! traits.size()) return;
   for (UInt_t i = 0; i < traits.size(); i++) {
@@ -237,10 +228,13 @@ StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack, StVertex *bestVx) : StTrac
     if ( trait->IsZombie()) continue;
     Short_t id = trait->detector()%100;
     if (id == kBTofId) {
-      StBTofPidTraits* pid = dynamic_cast<StBTofPidTraits*>(trait);
-      if (! pid) continue;
-      if (pid->beta() <= 0.0 || pid->beta() > 2) continue;
-      if (TMath::Abs(pid->yLocal()) < 1.8) fStatus[kBTof] = new StBTofStatus(pid);
+      StBTofPidTraits* btof = dynamic_cast<StBTofPidTraits*>(trait);
+      if (! btof) continue;
+      StBTofStatus * btofSt =  new StBTofStatus(btof);
+      if (btofSt->PiD()) {
+	btofSt->Set(fDca, fgBestVx);
+	fStatus[kBTof] = btofSt;
+      }
     } else if (id == kETofId) {
       StETofPidTraits* pid = dynamic_cast<StETofPidTraits*>(trait);
       if (! pid) continue;
@@ -271,18 +265,20 @@ StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack, StVertex *bestVx) : StTrac
   Set();
 }
 //________________________________________________________________________________
-StTrackCombPiD::StTrackCombPiD(StMuTrack *muTrack, TVector3 *g3KFP,  StMuPrimaryVertex *bestVx) : StTrackCombPiD() {
+StTrackCombPiD::StTrackCombPiD(StMuTrack *gTrack) : StTrackCombPiD() {
   Clear();
-  if (! muTrack) return;
-  fQ = muTrack->charge();
-  const StMuProbPidTraits &probPidTraits = muTrack->probPidTraits();
-  const StMuBTofPidTraits &btofPidTraits = muTrack->btofPidTraits();
-  const StMuETofPidTraits &etofPidTraits = muTrack->etofPidTraits();
-  const StMuMtdPidTraits  &mtdPidTraits = muTrack->mtdPidTraits();
-  if (! g3KFP) 
-    fg3 = TVector3(muTrack->p().xyz()); // p of global track
-  else 
-    fg3 = *g3KFP;
+  if (! gTrack) return;
+  Int_t dcaGeometryIndex = gTrack->index2Cov();
+  if (dcaGeometryIndex < 0) return;
+  fValidDca = kTRUE;
+  fDca = *StMuDst::instance()->covGlobTracks(dcaGeometryIndex);
+  fParticle = fDca.Particle(gTrack->id());
+  fg3 = TVector3(fParticle.GetPx(),fParticle.GetPy(),fParticle.GetPz());
+  const StMuProbPidTraits &probPidTraits = gTrack->probPidTraits();
+  const StMuBTofPidTraits &btofPidTraits = gTrack->btofPidTraits();
+  const StMuETofPidTraits &etofPidTraits = gTrack->etofPidTraits();
+  const StMuMtdPidTraits  &mtdPidTraits = gTrack->mtdPidTraits();
+  fg3 = TVector3(gTrack->p().xyz()); // p of global track
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
@@ -293,58 +289,67 @@ StTrackCombPiD::StTrackCombPiD(StMuTrack *muTrack, TVector3 *g3KFP,  StMuPrimary
   static StETofPidTraits pidETof; //!
   static StMtdPidTraits  pidMtd; //!
   if (probPidTraits.dEdxTruncated() > 0) {
-    pidI70 = StDedxPidTraits(kTpcId, kTruncatedMeanId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + muTrack->nHitsDedx(), 
+    pidI70 = StDedxPidTraits(kTpcId, kTruncatedMeanId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + gTrack->nHitsDedx(), 
 			     probPidTraits.dEdxTruncated(), probPidTraits.dEdxErrorTruncated(),probPidTraits.log2dX());
     fStatus[kI70] = new StdEdxStatus(&pidI70);
   } 
   if (probPidTraits.dEdxFit() > 0) {
-    pidFit = StDedxPidTraits(kTpcId, kLikelihoodFitId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + muTrack->nHitsDedx(), 
+    pidFit = StDedxPidTraits(kTpcId, kLikelihoodFitId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + gTrack->nHitsDedx(), 
 			     probPidTraits.dEdxFit(), probPidTraits.dEdxErrorFit(),probPidTraits.log2dX());
     fStatus[kFit] = new StdEdxStatus(&pidFit);
   }
   if (probPidTraits.dNdxFit() > 0) {
-    pidNdx = StDedxPidTraits(kTpcId, kOtherMethodId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + muTrack->nHitsDedx(), 
+    pidNdx = StDedxPidTraits(kTpcId, kOtherMethodId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + gTrack->nHitsDedx(), 
 			     probPidTraits.dNdxFit(), probPidTraits.dNdxErrorFit(),probPidTraits.log2dX());
     fStatus[kdNdx] = new StdEdxStatus(&pidNdx);
   }
   if (btofPidTraits.matchFlag()) {
     static StBTofPidTraits btof;
-    btof= SetBTofPidTraits(muTrack->btofPidTraits());
+    btof= SetBTofPidTraits(gTrack->btofPidTraits());
     if (btof.beta() > 0 && btof.beta() < 2) {
-      fStatus[kBTof] = new StBTofStatus(&btof);
+      StBTofStatus * btofSt =  new StBTofStatus(&btof);
+      if (btofSt->PiD()) {
+	btofSt->Set(fDca, fgBestVx);
+	fStatus[kBTof] = btofSt;
+      }
     }
   }
   if (etofPidTraits.matchFlag()) {
     static StETofPidTraits etof;
-    etof = SetETofPidTraits(muTrack->etofPidTraits());
+    etof = SetETofPidTraits(gTrack->etofPidTraits());
     fStatus[kETof] = new StETofStatus(&etof);
   }
   if (mtdPidTraits.matchFlag()) {
     StMtdPidTraits mtd;
-    mtd = SetMtdPidTraits(muTrack->mtdPidTraits());
+    mtd = SetMtdPidTraits(gTrack->mtdPidTraits());
     fStatus[kMtd] = new StMtdStatus(&mtd);
   }
   if (mtdPidTraits.matchFlag()) {
     StMtdPidTraits mtd;
-    mtd = SetMtdPidTraits(muTrack->mtdPidTraits());
+    mtd = SetMtdPidTraits(gTrack->mtdPidTraits());
     fStatus[kMtd] = new StMtdStatus(&mtd);
   }
 
   Set();
 }
+//________________________________________________________________________________
+StTrackCombPiD::StTrackCombPiD(StMuDst *muDst, Int_t iTrack) : StTrackCombPiD(muDst->globalTracks(iTrack)) {}
+//________________________________________________________________________________
 #ifdef __TFG__VERSION__
 //________________________________________________________________________________
-StTrackCombPiD::StTrackCombPiD(StMuDst *muTrack, Int_t iTrack) : StTrackCombPiD() {
-}
-//________________________________________________________________________________
-StTrackCombPiD::StTrackCombPiD(StPicoTrack *picoTrack, TVector3 *g3KFP, TVector3 *bestVx) : StTrackCombPiD() {
-  Clear();
-  if (! picoTrack) return;
-  fQ = picoTrack->charge();
-  if (! g3KFP) {
-    fg3 = picoTrack->gMom();
+StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) : StTrackCombPiD() {
+  if (! gTrack) return;
+  if (! gTrack->charge())  return;
+  if (  gTrack->nHitsFit() < 15) return;
+  if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.15 ) return;
+  const UInt_t index = gTrack->id();
+  fg3 = gTrack->gMom();
+  if (cov) {
+    fValidDca = kTRUE;
+    fDca = cov->dcaGeometry();
+    fParticle = cov->Particle(index,0);
   } else {
-    fg3 = *g3KFP;
+    cout << "StTrackCombPiD::StTrackCombPiD(StPicoTrack " << gTrack << ", StPicoTrackCovMatrix *" << cov << ")   Not valid DCA" << endl; 
   }
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
@@ -356,52 +361,52 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *picoTrack, TVector3 *g3KFP, TVector3
   static StETofPidTraits pidETof; //!
   static StMtdPidTraits  pidMtd; //!
   static StPicoBEmcPidTraits pidBEmc; //!
-  if (picoTrack->dEdx() > 0) {
+  if (gTrack->dEdx() > 0) {
 #if 0 /* no I70 on picoDst */
-    pidI70 = StDedxPidTraits(kTpcId, kTruncatedMeanId, picoTrack->nHitsDedx(), 
-			     1e-6*picoTrack->dEdx(), picoTrack->dEdxError());
+    pidI70 = StDedxPidTraits(kTpcId, kTruncatedMeanId, gTrack->nHitsDedx(), 
+			     1e-6*gTrack->dEdx(), gTrack->dEdxError());
     fStatus[kI70] = new StdEdxStatus(&pidI70);
 #endif
-    pidFit = StDedxPidTraits(kTpcId, kLikelihoodFitId, picoTrack->nHitsDedx(), 
-			     1e-6*picoTrack->dEdx(), picoTrack->dEdxError());
+    pidFit = StDedxPidTraits(kTpcId, kLikelihoodFitId, gTrack->nHitsDedx(), 
+			     1e-6*gTrack->dEdx(), gTrack->dEdxError());
     fStatus[kFit] = new StdEdxStatus(&pidFit);
   }
-  if (picoTrack->dNdx() > 0) {
-    pidNdx = StDedxPidTraits(kTpcId, kOtherMethodId, picoTrack->nHitsDedx(),
-			     picoTrack->dNdx(), picoTrack->dNdxError());
+  if (gTrack->dNdx() > 0) {
+    pidNdx = StDedxPidTraits(kTpcId, kOtherMethodId, gTrack->nHitsDedx(),
+			     gTrack->dNdx(), gTrack->dNdxError());
     fStatus[kdNdx] = new StdEdxStatus(&pidNdx);
   }
-  Int_t ibtof = picoTrack->bTofPidTraitsIndex();
+  Int_t ibtof = gTrack->bTofPidTraitsIndex();
   if (ibtof >= 0) {
     static StBTofPidTraits btof;
-    btof = SetBTofPidTraits(*StPicoDst::instance()->btofPidTraits(ibtof), picoTrack);
-    if (btof.beta() > 0 && btof.beta() < 2) {
-      fStatus[kBTof] = new StBTofStatus(&btof);
+    btof = SetBTofPidTraits(*StPicoDst::instance()->btofPidTraits(ibtof), gTrack);
+    StBTofStatus * btofSt =  new StBTofStatus(&btof);
+    if (btofSt->PiD()) {
+      btofSt->Set(fDca, fgBestVx);
+      fStatus[kBTof] = btofSt;
     }
   }
-  Int_t ietof = picoTrack->eTofPidTraitsIndex();
+  Int_t ietof = gTrack->eTofPidTraitsIndex();
   if (ietof >= 0) {
     static StETofPidTraits etof;
     etof = SetETofPidTraits(*StPicoDst::instance()->etofPidTraits(ietof));
     fStatus[kETof] = new StETofStatus(&etof);
   }
-  Int_t imtd = picoTrack->mtdPidTraitsIndex();
+  Int_t imtd = gTrack->mtdPidTraitsIndex();
   if (imtd >= 0) {
     static StMtdPidTraits pidMtd;
     pidMtd = SetMtdPidTraits(*StPicoDst::instance()->mtdPidTraits(imtd));
     fStatus[kMtd] = new StMtdStatus(&pidMtd);
   }
-  Int_t ibemc = picoTrack->bemcPidTraitsIndex();
+  Int_t ibemc = gTrack->bemcPidTraitsIndex();
   if (ibemc >= 0) {
     fStatus[kBEmc] = new StBEmcStatus(StPicoDst::instance()->bemcPidTraits(ibemc));
   }
-
   Set();
 }
 #endif /* __TFG__VERSION__ */
 //________________________________________________________________________________
-StTrackCombPiD::StTrackCombPiD(StPicoDst *pico, Int_t iTrack) : StTrackCombPiD() {
-}
+StTrackCombPiD::StTrackCombPiD(StPicoDst *pico, Int_t iTrack) : StTrackCombPiD(pico->track(iTrack), pico->trackCovMatrix(iTrack)) {}
 //________________________________________________________________________________
 void StTrackCombPiD::Set() {
   if (! fgl2p[3]) {
@@ -417,7 +422,7 @@ void StTrackCombPiD::Set() {
   if (! fStatus[kI70] && ! fStatus[kFit] && ! fStatus[kdNdx]) return;
   fPiDStatus = 0;
   Double_t pMomentum = fg3.Mag();
-  Double_t pL10 = TMath::Log10(pMomentum);
+  fpL10 = TMath::Log10(pMomentum);
   // Set up Tof
   Float_t betaTof = -999;
   if (fBTof()) {
@@ -465,7 +470,11 @@ void StTrackCombPiD::Set() {
 	}
 	else {
 	  fStatus[k]->Pred(l)  = StdEdxPull::EvalPred(betagamma, fit, charge, mass);
-	  fStatus[k]->PredC(l) = fStatus[k]->Pred(l)  * dEdxCorr(fbghyp[l], l);
+	  if (PiDCorrection()) {
+	    fStatus[k]->PredC(l) = fStatus[k]->Pred(l)  * dEdxCorr(fbghyp[l], l);
+	  } else {
+	    fStatus[k]->PredC(l) = fStatus[k]->Pred(l);
+	  }
 	}
 	fStatus[k]->Residual(l)  = TMath::Log(dEdxStatus(k)->I()/fStatus[k]->Pred(l));
 	fStatus[k]->Pull(l) = fStatus[k]->Residual(l)/(dEdxStatus(k)->D());
@@ -474,7 +483,11 @@ void StTrackCombPiD::Set() {
 	  fStatus[k]->PullC(l) = fStatus[k]->Pull(l);
 	} else {
 	  Double_t pullC = fStatus[k]->ResidualC(l)/dEdxStatus(k)->D();
-	  fStatus[k]->PullC(l) = dEdxPullCorrection(pullC, fbghyp[l], l);
+	  if (PiDCorrection()) {
+	    fStatus[k]->PullC(l) = dEdxPullCorrection(pullC, fbghyp[l], l);
+	  } else {
+	    fStatus[k]->PullC(l) = pullC;
+	  }
 	}
       }
     }
@@ -487,12 +500,14 @@ void StTrackCombPiD::Set() {
 	Double_t sigmadM2 = -999;
 	Double_t dM2 = p2OverQ2*(1./(betaTof*betaTof) - 1.) - fStatus[k]->PredC(l);
 	fStatus[k]->Residual(l) = dM2;
-	dM2 -= M2BTofCorr(pL10, l);
+#if 0
+	dM2 -= M2BTofCorr(fpL10, l);
 	fStatus[k]->ResidualC(l) = dM2;
-	sigmadM2 = M2BTofSigma(pL10, l);
+	sigmadM2 = M2BTofSigma(fpL10, l);
 	if (sigmadM2 > 0) {
 	  fStatus[k]->PullC(l) = fStatus[k]->ResidualC(l)/sigmadM2;
 	}
+#endif
 	if (k == kBTof) {
 	  Double_t sigma = fBTof()->Sigma(l);
 	  if (TMath::Abs(sigma) < 100) fStatus[k]->Pull(l) = sigma;
@@ -501,6 +516,15 @@ void StTrackCombPiD::Set() {
       } else if (fgDebug) {
 	cout << fgPiDStatusNames[k] << " beta = " << betaTof << " out of range. Skipped " << endl;
 	continue;
+      }
+      if (k == kBTof) {
+	Double_t M2q2 = fBTof()->M2q2();
+	if (M2q2 > 0) {
+	  Double_t SigmaM2q2 = fBTof()->SigmaM2q2();
+	  Double_t dM2q = M2q2 - M2overQ2;
+	  fStatus[k]->ResidualC(l) = dM2q;
+	  fStatus[k]->PullC(l) = fStatus[k]->ResidualC(l)/SigmaM2q2;
+	}
       }
     }
   }
@@ -513,7 +537,8 @@ void StTrackCombPiD::Print(Option_t *opt) const {
     cout << fgPiDStatusNames[k];
     if        (k == kUndefinedMethodId) {cout << "UndefinedMethod       " << endl; continue;
     } else if (k <= kdNdxU) {((StdEdxStatus *) fStatus[k])->Print(); continue;
-    } else if (k == kBTof)  {cout << " beta = " << fBTof()->beta();
+    } else if (k == kBTof)  {cout << " beta = " << fBTof()->beta() << "\t1/beta = " 
+				  << fBTof()->BetaV() << " +/- " << fBTof()->SigmaBetaV() << "\tM2/q2 = " << fBTof()->M2q2() << " +/- " <<  fBTof()->SigmaM2q2();
     } else if (k == kETof)  {cout << " beta = " << fETof()->beta();
     } else if (k == kMtd)   {cout << " beta = " << fMtd()->beta() << "\tdetaY = " << fMtd()->PiD()->deltaY() << "\tdetaZ = " << fMtd()->PiD()->deltaZ() 
 				  << "\tdT = " << fMtd()->PiD()->timeOfFlight() - fMtd()->PiD()->expTimeOfFlight();
@@ -778,7 +803,7 @@ void StTrackCombPiD::SetPDGfromTPC() {
     for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
 	Int_t p = fgl2p[l];
-	fTPCPDG.push_back(fQ*fgParticles[p].pdg);
+	fTPCPDG.push_back(GetQ()*fgParticles[p].pdg);
       }
     }
   }
@@ -790,7 +815,7 @@ void StTrackCombPiD::SetPDGfromTof() {
     for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
 	Int_t p = fgl2p[l];
-	fTofPDG.push_back(fQ*fgParticles[p].pdg);
+	fTofPDG.push_back(GetQ()*fgParticles[p].pdg);
       }
     }
   }
@@ -815,12 +840,22 @@ void StTrackCombPiD::SetPDG() {
   if (! fPDGList.size()) {fPDGList.push_back(-1);}
 }
 //________________________________________________________________________________
+void StTrackCombPiD::ResetBestVx() {
+  Float_t param[6] = {0};
+  Float_t Cov[21] = {0};
+  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
+  ((KFParticleBase *) &fgBestVx)->SetId(0);
+}
+//________________________________________________________________________________
 void StTrackCombPiD::SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]) {
+  if (! xyz) {ResetBestVx(); return;}
   Float_t param[6] = {0};
   Float_t Cov[21] = {0};
   for (Int_t i = 0; i < 3; i++) {
     param[i] = xyz[i];
-    Cov[KFParticleBase::IJ(i,i)] = xyzErrors[i]*xyzErrors[i];
+    if (! xyzErrors) {
+      Cov[KFParticleBase::IJ(i,i)] = xyzErrors[i]*xyzErrors[i];
+    }
   }
   ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
   ((KFParticleBase *) &fgBestVx)->SetId(1);
@@ -829,6 +864,8 @@ void StTrackCombPiD::SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3])
 void StTrackCombPiD::SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]) {
   Float_t param[6] = {0};
   Float_t Cov[21] = {0};
+  if (! xyz) {ResetBestVx(); return;}
+  
   for (Int_t i = 0; i < 3; i++) {
     param[i] = xyz[i];
     Cov[KFParticleBase::IJ(i,i)] = xyzErrors[i]*xyzErrors[i];
@@ -849,12 +886,17 @@ void StTrackCombPiD::SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]) 
 void StTrackCombPiD::SetBestVx(const StVertex *bestVx) {
   if (bestVx) {
     SetBestVxCov(bestVx->position().xyz(), bestVx->covariance());
+    ((KFParticleBase *) &fgBestVx)->SetId(bestVx->key());
+  } else {
+    ResetBestVx();
   }
 }
 //________________________________________________________________________________
 void StTrackCombPiD::SetBestVx(const StMuPrimaryVertex *bestVx) {
   if (bestVx) {
     SetBestVx(bestVx->position().xyz(), bestVx->posError().xyz());
+  } else {
+    ResetBestVx();
   }
 }
 //________________________________________________________________________________
@@ -866,3 +908,5 @@ void StTrackCombPiD::SetBestVx(const StPicoEvent *event) {
     SetBestVx(xyz, xyzError);
   }
 }
+//_________________________________________________________________________________
+#undef PrPP

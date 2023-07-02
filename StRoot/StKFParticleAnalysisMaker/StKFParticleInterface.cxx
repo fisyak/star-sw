@@ -17,7 +17,7 @@
 #include "StPicoEvent/StPicoTrackCovMatrix.h"
 #include "StPicoEvent/StPicoBTofPidTraits.h"
 #include "StPicoEvent/StPicoETofPidTraits.h"
-#include "StdEdxY2Maker/StPidStatus.h"
+#include "StdEdxY2Maker/StTrackCombPiD.h"
 #include "StMaker.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "THelixTrack.h" 
@@ -79,14 +79,14 @@ StKFParticleInterface::StKFParticleInterface():
 {
   fKFParticleTopoReconstructor = new KFParticleTopoReconstructor();
   fgStKFParticleInterface = this;
-  StPidStatus::SetUsedx2(fgUsedx2);
-  StPidStatus::SetUseTof(fgUseTof);
+  StTrackCombPiD::SetUsedx2(fgUsedx2);
+  StTrackCombPiD::SetUseTof(fgUseTof);
   // set default cuts
   SetPrimaryProbCut(0.0001); // 0.01% to consider primary track as a secondary;
   
 }
-void StKFParticleInterface::SetUsedx2(Bool_t k) {fgUsedx2 = k; StPidStatus::SetUsedx2(fgUsedx2);}
-void StKFParticleInterface::SetUseTof(Bool_t k) {fgUseTof = k; StPidStatus::SetUseTof(fgUseTof);}
+void StKFParticleInterface::SetUsedx2(Bool_t k) {fgUsedx2 = k; StTrackCombPiD::SetUsedx2(fgUsedx2);}
+void StKFParticleInterface::SetUseTof(Bool_t k) {fgUseTof = k; StTrackCombPiD::SetUseTof(fgUseTof);}
 
 StKFParticleInterface::~StKFParticleInterface()
 {  
@@ -1072,7 +1072,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   
   const TVector3 picoPV = picoEvent->primaryVertex();
   const TVector3 picoPVError = picoEvent->primaryVertexError();
-  
+  StTrackCombPiD::SetBestVx(picoEvent);
   KFPVertex primVtx_tmp;
   primVtx_tmp.SetXYZ(picoPV.x(), picoPV.y(), picoPV.z());
   double dx = picoPVError.x();
@@ -1296,7 +1296,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 #if 0    
     vector<int> totalPDG = GetPID(m2tof, track.GetP(), q, gTrack->dEdx(), dEdXPull, isTofm2, index);
 #else
-    StPidStatus PiD(gTrack);
+    StTrackCombPiD PiD(picoDst,iTrack);
     vector<int> totalPDG = PiD.GetPDG();
 #endif    
     int nPartSaved0 = nPartSaved;
@@ -1418,7 +1418,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
       bestPV = iPV;
     }
     else continue;
-    
+    StTrackCombPiD::SetBestVx(muDst->primaryVertex(bestPV));
     //convert StMuPrimaryVertex to KFVertex
     KFPVertex kfVertex;
     kfVertex.SetXYZ(Vtx->position().x(), Vtx->position().y(), Vtx->position().z());
@@ -1564,7 +1564,7 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
         if (isETofm2) fTrackHistograms2D[14]->Fill(pL10, m2Etof);
       }
 #endif // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    StPidStatus PiD(gTrack);
+    StTrackCombPiD PiD(gTrack);
     vector<int> totalPDG = PiD.GetPDG();
     int nPartSaved0 = nPartSaved;
     unsigned int nPrimaryTracks = primaryTrackList.size();
@@ -2208,8 +2208,8 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst) {
 	const StDcaGeometry dca = cov->dcaGeometry();
 	KFParticle p = dca.Particle(index,particle.GetPDG()); PrPO(p);
       }
-      StPidStatus PiD(gTrack); 
-      if (PiD.PiDStatus < 0) continue;
+      StTrackCombPiD PiD(picoDst,index); 
+      if (PiD.Status() < 0) continue;
       FillPidQA(&PiD, particle.GetPDG(), 0);
     }
   }
@@ -2230,8 +2230,8 @@ Bool_t StKFParticleInterface::PidQA(StPicoDst* picoDst) {
 	const StDcaGeometry dca = cov->dcaGeometry();
 	KFParticle p = dca.Particle(p1.Id(),p1.GetPDG()); PrPO(p);
       }
-      StPidStatus PiD1(gTrack1); 
-      if (PiD1.PiDStatus < 0) continue;
+      StTrackCombPiD PiD1(picoDst, index1); // gTrack1); 
+      if (PiD1.Status() < 0) continue;
       FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
     }
   }
@@ -2257,8 +2257,8 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst) {
 	const StDcaGeometry* dca = gTrack->dcaGeom();
 	KFParticle p = dca->Particle(index,particle.GetPDG()); PrPO(p);
       }
-      StPidStatus PiD(gTrack); 
-      if (PiD.PiDStatus < 0) continue;
+      StTrackCombPiD PiD(gTrack); 
+      if (PiD.Status() < 0) continue;
       FillPidQA(&PiD, particle.GetPDG(), 0);
     }
   }
@@ -2277,15 +2277,15 @@ Bool_t StKFParticleInterface::PidQA(StMuDst* muDst) {
 	const StDcaGeometry* dca = gTrack1->dcaGeom();
 	KFParticle p = dca->Particle(index1,p1.GetPDG());      PrPO(p);
       }
-      StPidStatus PiD1(gTrack1); 
-      if (PiD1.PiDStatus < 0) continue;
+      StTrackCombPiD PiD1(gTrack1); 
+      if (PiD1.Status() < 0) continue;
       FillPidQA(&PiD1, p1.GetPDG(), particle->GetPDG());
     }
   }
   return kTRUE;
 }
 //________________________________________________________________________________
-Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGParent) {
+Bool_t StKFParticleInterface::FillPidQA(StTrackCombPiD* PiD, Int_t PDG, Int_t PDGParent) {
   struct Particle_t {
     Int_t pdg;
     const Char_t *name;
@@ -2332,8 +2332,8 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     { -3122, "Lambdab",    -2212,  211},
     {    22, "gamma",         11,  -11}
   }; 
-  static TH2F *hist[Ndecays+1][Nparticles][StPidStatus::kTotal+1][5] = {0}; // kTotal for Tpc & BTof
-  if (! hist[0][0][StPidStatus::kFit][0]) {
+  static TH2F *hist[Ndecays+1][Nparticles][StTrackCombPiD::kTotal+1][5] = {0}; // kTotal for Tpc & BTof
+  if (! hist[0][0][StTrackCombPiD::kFit][0]) {
     TDirectory *top = StMaker::GetTopChain()->GetTFile();
     top->mkdir("PiDQA");
     TDirectory *PiDQA = top->GetDirectory("PiDQA");
@@ -2358,27 +2358,27 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	TDirectory *dir3 = dir1->GetDirectory(name);
 	dir3->cd();
 	if (_debug) cout << "d = " << d << "\tp = " << p << "\t" <<  gDirectory->GetPath() << endl;
-	for (Int_t k = 1; k < StPidStatus::kTotal + 1; k++) {
-	  if (k == StPidStatus::kFit) {
-	    hist[d][p][k][0] = new TH2F("dEdx",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
-	    hist[d][p][k][1] = new TH2F("PulldEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
-	    hist[d][p][k][2] = new TH2F("dEdxC",Form("dE/dx_{%s} / dEdModel prediction Corrected for I_{fit} versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
-	    hist[d][p][k][3] = new TH2F("PullCdEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
+	for (Int_t k = 1; k < StTrackCombPiD::kTotal + 1; k++) {
+	  if (k == StTrackCombPiD::kFit) {
+	    hist[d][p][k][0] = new TH2F("dEdx",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)",StTrackCombPiD::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][1] = new TH2F("PulldEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)",StTrackCombPiD::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("dEdxC",Form("dE/dx_{%s} / dEdModel prediction Corrected for I_{fit} versus log_{10}(#beta #gamma)",StTrackCombPiD::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][3] = new TH2F("PullCdEdx",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)",StTrackCombPiD::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 3; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
-	  } else if (k == StPidStatus::kTotal) {
-	    hist[d][p][k][0] = new TH2F("dEdxBTof",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
-	    hist[d][p][k][1] = new TH2F("PulldEdxBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
-	    hist[d][p][k][2] = new TH2F("dEdxCBTof",Form("dE/dx_{%s} / dEdModel corrected prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
-	    hist[d][p][k][3] = new TH2F("PullCdEdxCBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StPidStatus::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
+	  } else if (k == StTrackCombPiD::kTotal) {
+	    hist[d][p][k][0] = new TH2F("dEdxBTof",Form("dE/dx_{%s} / dEdModel prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StTrackCombPiD::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][1] = new TH2F("PulldEdxBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma  versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StTrackCombPiD::fgPiDStatusNames[k]),          1000,-1,4,600,-3,3);
+	    hist[d][p][k][2] = new TH2F("dEdxCBTof",Form("dE/dx_{%s} / dEdModel corrected prediction for I_{fit} versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StTrackCombPiD::fgPiDStatusNames[k]), 1000,-1,4,500,-0.5,0.5);
+	    hist[d][p][k][3] = new TH2F("PullCdEdxCBTof",Form("(dE/dx_{%s} / dEdModel)/#sigma Corrected versus log_{10}(#beta #gamma)a with |sigmaBTOF| < 3",StTrackCombPiD::fgPiDStatusNames[k]),1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 3; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
-	  } else if (k == StPidStatus::kBTof) {
+	  } else if (k == StTrackCombPiD::kBTof) {
 	    hist[d][p][k][0] = new TH2F("dM2BTof","dM^{2} from BTof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,400,-0.2,0.2);
 	    hist[d][p][k][1] = new TH2F("dM2BTofPull","dM^{2}/#sigma dM^ {2} from BTof versus log_{10}(#beta #gamma)"           ,1000,-1,4,600,-6.0,6.0);
 	    hist[d][p][k][2] = new TH2F("dM2CBTof","dM^{2} Corrrected from BTof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,400,-0.2,0.2);
 	    hist[d][p][k][3] = new TH2F("dM2BTofPullC","dM^{2}/#sigma dM^ {2} corrected from BTof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
 	    hist[d][p][k][4] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
-	  } else if (k == StPidStatus::kETof) {
+	  } else if (k == StTrackCombPiD::kETof) {
 #if 0
 	    hist[d][p][k][0] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,400,-0.2,0.2);
 	    hist[d][p][k][1] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)"           ,1000,-1,4,600,-6.0,6.0);
@@ -2386,10 +2386,10 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
 	    hist[d][p][k][3] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
 #endif
-	  } else if (k == StPidStatus::kBEmc) {
+	  } else if (k == StTrackCombPiD::kBEmc) {
 	    hist[d][p][k][0] = new TH2F("BemcEoverP","E/P in BEMC versus log_{10} P"                                            ,250,-0.75,1.75,100,0.0,10.0);
 	    hist[d][p][k][0]->SetXTitle("log_{10}P");
-	  } else if (k == StPidStatus::kMtd) {
+	  } else if (k == StTrackCombPiD::kMtd) {
 	    hist[d][p][k][0] = new TH2F("MtdYdZ","Mtd dY vesus dZ"                                            ,100,-50,50,100,-100,100);
 	    hist[d][p][k][1] = new TH2F("MtddT","Mtd dT vesus log{10} P"                                      ,100,-1.,5.,400,-2000,2000); // ??
 	  }
@@ -2398,7 +2398,7 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     }
   }
   if (! PiD->fFit()) return kFALSE;
-  Double_t pMom = PiD->g3.Mag();
+  Double_t pMom = PiD->pMomentum();
   Double_t pL10 = TMath::Log10(pMom);
   Int_t d = 0;
   if (PDGParent) {
@@ -2420,28 +2420,33 @@ Bool_t StKFParticleInterface::FillPidQA(StPidStatus* PiD, Int_t PDG, Int_t PDGPa
     auto M =  TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
     auto q =  TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/3.;
 #endif
-    Double_t bgL10 = PiD->bghyp[l];
-    for (Int_t k = 1; k < StPidStatus::kTotal + 1; k++) {
+    Double_t bgL10 = PiD->bghyp(l);
+    for (Int_t k = 1; k < StTrackCombPiD::kTotal + 1; k++) {
       if (! hist[d][p][k][0]) continue;
-      if (k < StPidStatus::kTotal) {
+      if (k < StTrackCombPiD::kTotal) {
 	if (! PiD->Status(k)) continue;
       } else {
-	if (! PiD->Status(StPidStatus::kBTof)) continue; 
+	if (! PiD->Status(StTrackCombPiD::kBTof)) continue; 
       }
       Int_t kd = k;
-      if (k == StPidStatus::kTotal) kd = StPidStatus::kFit;
-      if (k == StPidStatus::kBEmc) {
+      if (k == StTrackCombPiD::kTotal) kd = StTrackCombPiD::kFit;
+      if (k == StTrackCombPiD::kBEmc) {
 	hist[d][p][k][0]->Fill(TMath::Log10(pMom), PiD->fBEmc()->bemcE()/pMom);
-      } else if (k == StPidStatus::kMtd) {
+      } else if (k == StTrackCombPiD::kMtd) {
 	hist[d][p][k][0]->Fill(PiD->fMtd()->PiD()->deltaZ(), PiD->fMtd()->PiD()->deltaY());
 	hist[d][p][k][1]->Fill(pL10, PiD->fMtd()->deltaTimeOfFlight());
       } else {
-	hist[d][p][k][0]->Fill(bgL10, PiD->Status(kd)->dev[l]);
-	hist[d][p][k][1]->Fill(bgL10, PiD->Status(kd)->devS[l]);
-	hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->devC[l]);
-	hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->PullC[l]);
-	if (k == StPidStatus::kBTof) {
+	hist[d][p][k][0]->Fill(bgL10, PiD->Status(kd)->Residual(l));
+	hist[d][p][k][1]->Fill(bgL10, PiD->Status(kd)->Pull(l));
+	if (k != StTrackCombPiD::kBTof) {
+	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->Residual(l));
+	  hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->PullC(l));
+	} else {
 	  hist[d][p][k][4]->Fill(bgL10, PiD->fBTof()->Sigma(l));
+	  if (PiD->fBTof()->M2q2() > 0) {
+	    hist[d][p][k][2]->Fill(bgL10, PiD->fBTof()->Residual(l));
+	    hist[d][p][k][3]->Fill(bgL10, PiD->fBTof()->PullC(l));
+	  }
 	}
       }
     }
