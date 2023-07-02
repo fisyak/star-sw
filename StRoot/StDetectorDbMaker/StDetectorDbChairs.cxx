@@ -12,6 +12,7 @@ using namespace ROOT::Math;
 #include "St_db_Maker/St_db_Maker.h"
 #if 0
 #include "tables/St_tpcCorrection_Table.h"
+#include "tables/St_pidCorrection_Table.h"
 #include "tables/St_tpcSectorT0offset_Table.h"
 #include "tables/St_tofTrayConfig_Table.h"
 #define DEBUGTABLED(STRUCT) PrintTable(#STRUCT,table )
@@ -36,9 +37,13 @@ void PrintTable(const Char_t *str, TTable *table) {
   DEBUGTABLE(str);
   Bool_t iprt = kTRUE;
   if (St_db_Maker::GetValidity(table,t) > 0) {
-    if (table->InheritsFrom("St_tpcCorrection")) {
+    if (table->InheritsFrom("St_tpcCorrection") ) {
       St_tpcCorrection *tt = (St_tpcCorrection *) table;
       tpcCorrection_st *s = tt->GetTable(); Nrows = s->nrows;}
+  } else if (table->InheritsFrom("St_pidCorrection") ) {
+      St_pidCorrection *tt = (St_pidCorrection *) table;
+      pidCorrection_st *s = tt->GetTable(); Nrows = s->nrows;}
+  }
     if (Nrows > 10) Nrows = 10;
     CHECKTABLE(tpcCorrection);
     CHECKTABLE(tpcHVPlanes);
@@ -349,6 +354,98 @@ Int_t St_tpcCorrectionC::IsActiveChair() const {
     }
   }
   return npar;
+}
+#include "St_pidCorrectionC.h"
+MakeChairInstance2(pidCorrection,St_pidCorrectionC,dEdxModel/pid/pidCorrection);
+//________________________________________________________________________________
+Double_t St_pidCorrectionC::CalcCorrection(Int_t i, Double_t x, Double_t z, Int_t NparMax) const {
+  pidCorrection_st *cor =  ((St_pidCorrection *) Table())->GetTable() + i;
+  return SumSeries(cor, x, z, NparMax);
+}
+//________________________________________________________________________________
+Double_t St_pidCorrectionC::SumSeries(pidCorrection_st *cor,  Double_t x, Double_t z, Int_t NparMax) const {
+  Double_t Sum = 0;
+  if (! cor) return Sum;
+  Int_t N = TMath::Abs(cor->npar)%100;
+  if (N == 0) return Sum;
+  if (NparMax > 0) N = NparMax;
+  Double_t X = x;
+  if (X < cor->min) return Sum;
+  if (X > cor->max) return Sum;
+  Double_t T0, T1, T2;
+  switch (cor->type) {
+  case 1: // Tchebyshev [-1,1]
+    if (cor->min < cor->max)   X = -1 + 2*TMath::Max(0.,TMath::Min(1.,(X - cor->min)/( cor->max - cor->min)));
+    T0 = 1;
+    Sum = cor->a[0]*T0;
+    if (N == 1) break;
+    T1 = X;
+    Sum += cor->a[1]*T1;
+    for (int n = 2; n <= N; n++) {
+      T2 = 2*X*T1 - T0;
+      Sum += cor->a[n]*T2;
+      T0 = T1;
+      T1 = T2;
+    }
+    break;
+  case 2: // Shifted TChebyshev [0,1]
+    if (cor->min < cor->max)   X = TMath::Max(0.,TMath::Min(1.,(X - cor->min)/( cor->max - cor->min)));
+    T0 = 1;
+    Sum = cor->a[0]*T0;
+    if (N == 1) break;
+    T1 = 2*X - 1;
+    Sum += cor->a[1]*T1;
+    for (int n = 2; n <= N; n++) {
+      T2 = 2*(2*X - 1)*T1 - T0;
+      Sum += cor->a[n]*T2;
+      T0 = T1;
+      T1 = T2;
+    }
+    break;
+  default: // polynomials
+    Sum = cor->a[N-1];
+    for (int n = N-2; n>=0; n--) Sum = X*Sum + cor->a[n];
+    break;
+  }
+  return Sum;
+}
+//________________________________________________________________________________
+Int_t St_pidCorrectionC::IsActiveChair() const {
+  const St_pidCorrection  *tableC = (const St_pidCorrection  *) Table();
+  Int_t npar = 0;
+  if (! tableC) return npar;
+  pidCorrection_st *cor = tableC->GetTable();
+  Int_t N = tableC->GetNRows();
+  if (! cor || ! N) {
+    return npar;
+  }
+  N = cor->nrows;
+  for (Int_t i = 0; i < N; i++, cor++) {
+    if (cor->nrows == 0 && cor->idx == 0) continue;
+    if (TMath::Abs(cor->npar) > 0       ||
+	TMath::Abs(cor->OffSet) > 1.e-7 ||
+	TMath::Abs(cor->min)    > 1.e-7 ||
+	TMath::Abs(cor->max)    > 1.e-7) {
+      npar++;
+    }
+  }
+  return npar;
+}
+//________________________________________________________________________________
+Double_t St_pidCorrectionC::Correction(Double_t X, Int_t part, Int_t det, Int_t charge, Int_t pull, Int_t varT) {
+  Int_t N = nrows();
+  Double_t Correction = 0;
+  for (Int_t l = 0; l < N; l++) {
+    pidCorrection_st *row = Struct(l);
+    if (part != row->particle) continue;
+    if (det  != row->det) continue;
+    if (pull != row->pull) continue;
+    if (varT != row->var) continue;
+    if (row->charge != 0 && charge != row->charge) continue;
+    if (X < row->min || X > row->max) continue;
+    Correction += CalcCorrection(l, X);
+  }
+  return Correction;
 }
 #include "St_TpcRowQC.h"
 MakeChairInstance2(tpcCorrection,St_TpcRowQC,Calibrations/tpc/TpcRowQ);
