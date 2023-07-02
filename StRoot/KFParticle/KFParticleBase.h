@@ -257,11 +257,12 @@ class KFParticleBase :public TObject {
   void GetDistanceToVertexLine( const KFParticleBase &Vertex, float &l, float &dl) const;
   void GetDistanceToVertexLineWithDirection( const KFParticleBase &Vertex, float &l, float &dl) const;
 
- protected:
   /** Converts a pair of indices {i,j} of the covariance matrix to one index corresponding to the triangular form. */
   static Int_t IJ( Int_t i, Int_t j ){ 
     return ( j<=i ) ? i*(i+1)/2+j :j*(j+1)/2+i;
   }
+
+ protected:
   /** Return an element of the covariance matrix with {i,j} indices. */
   float & Cij( Int_t i, Int_t j ){ return fC[IJ(i,j)]; }
   void TransportLine( float S, const float* dsdr, float P[], float C[], float* dsdr1, float* F, float* F1 ) const ;
