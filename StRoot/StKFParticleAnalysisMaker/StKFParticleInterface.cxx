@@ -2436,16 +2436,16 @@ Bool_t StKFParticleInterface::FillPidQA(StTrackCombPiD* PiD, Int_t PDG, Int_t PD
 	hist[d][p][k][0]->Fill(PiD->fMtd()->PiD()->deltaZ(), PiD->fMtd()->PiD()->deltaY());
 	hist[d][p][k][1]->Fill(pL10, PiD->fMtd()->deltaTimeOfFlight());
       } else {
-	hist[d][p][k][0]->Fill(bgL10, PiD->Status(kd)->Residual(l));
-	hist[d][p][k][1]->Fill(bgL10, PiD->Status(kd)->Pull(l));
+	hist[d][p][k][0]->Fill(bgL10, PiD->Status(kd)->residual(l));
+	hist[d][p][k][1]->Fill(bgL10, PiD->Status(kd)->pull(l));
 	if (k != StTrackCombPiD::kBTof) {
-	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->Residual(l));
-	  hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->PullC(l));
+	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->residual(l));
+	  hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->pullC(l));
 	} else {
 	  hist[d][p][k][4]->Fill(bgL10, PiD->fBTof()->Sigma(l));
 	  if (PiD->fBTof()->M2q2() > 0) {
-	    hist[d][p][k][2]->Fill(bgL10, PiD->fBTof()->Residual(l));
-	    hist[d][p][k][3]->Fill(bgL10, PiD->fBTof()->PullC(l));
+	    hist[d][p][k][2]->Fill(bgL10, PiD->fBTof()->residual(l));
+	    hist[d][p][k][3]->Fill(bgL10, PiD->fBTof()->pullC(l));
 	  }
 	}
       }
