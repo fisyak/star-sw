@@ -5,6 +5,7 @@
 #include "tables/St_pidCorrection_Table.h"
 #include "StEvent/StPidParticleDefinition.h"
 #include "StEvent/StEnumerations.h"
+#include "TF1.h"
 class St_pidCorrectionC : public TChair {
  public:
  enum PiDStatusIDs { // from StdEdxY2Maker/StTrackCombPiD.h
@@ -36,9 +37,12 @@ class St_pidCorrectionC : public TChair {
   Double_t      min(Int_t i = 0)        const {return Struct(i)->min;}	    // fit range
   Double_t      max(Int_t i = 0)        const {return Struct(i)->max;}	    // 
   Double_t*     a(Int_t i = 0)  const {return Struct(i)->a;}		    // a[npar]
+  Char_t*       comment(Int_t i = 0)    const {return Struct(i)->comment;}
   Double_t      CalcCorrection(Int_t i, Double_t x, Double_t z = 0, Int_t NparMax = -1) const;
   Double_t      SumSeries(pidCorrection_st *cor, Double_t x, Double_t z = 0, Int_t NparMax = -1) const;
   Double_t      Correction(Double_t X, Int_t part = kPidPion, Int_t det = kFit, Int_t charge = 0, Int_t pull = 0, Int_t varT = 0);
+  static Double_t func(Double_t *x, Double_t *p);
+  TF1*          Func(Int_t part = kPidPion, Int_t det = kFit, Int_t charge = 0, Int_t pull = 0, Int_t varT = 0);
   Int_t         IsActiveChair() const;
  protected:
   St_pidCorrectionC(St_pidCorrection *table=0) : TChair(table) {}

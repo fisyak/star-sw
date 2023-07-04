@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <string.h>
 #include "StDetectorDbMaker.h"
+#include "TROOT.h"
 #include "TEnv.h"
 #include "TF1.h"
 #include "TMath.h"
@@ -356,7 +357,7 @@ Int_t St_tpcCorrectionC::IsActiveChair() const {
   return npar;
 }
 #include "St_pidCorrectionC.h"
-MakeChairInstance2(pidCorrection,St_pidCorrectionC,dEdxModel/pid/pidCorrection);
+MakeChairInstance2(pidCorrection,St_pidCorrectionC,dEdxModel/PiDC/pidCorrection);
 //________________________________________________________________________________
 Double_t St_pidCorrectionC::CalcCorrection(Int_t i, Double_t x, Double_t z, Int_t NparMax) const {
   pidCorrection_st *cor =  ((St_pidCorrection *) Table())->GetTable() + i;
@@ -442,10 +443,38 @@ Double_t St_pidCorrectionC::Correction(Double_t X, Int_t part, Int_t det, Int_t 
     if (pull != row->pull) continue;
     if (varT != row->var) continue;
     if (row->charge != 0 && charge != row->charge) continue;
-    if (X < row->min || X > row->max) continue;
-    Correction += CalcCorrection(l, X);
+    if (row->min < row->max && (X < row->min || X > row->max)) continue;
+    //    Correction += CalcCorrection(l, X);
+    Correction += SumSeries(row, X);
   }
-  return Correction;
+  return TMath::Exp(Correction);
+}
+//________________________________________________________________________________
+Double_t St_pidCorrectionC::func(Double_t *x, Double_t *p) {
+  Int_t part   = p[0];
+  Int_t det    = p[1];
+  Int_t charge = p[2];
+  Int_t pull   = p[3];
+  Int_t varT   = p[4];
+  return TMath::Log(St_pidCorrectionC::instance()->Correction(x[0],part,det,charge,pull,varT));
+}
+//________________________________________________________________________________
+TF1 *St_pidCorrectionC::Func(Int_t part, Int_t det, Int_t charge, Int_t pull, Int_t varT) {
+  TString fName(Form("pidCor_p%i_d%i_c%i_p%i_v%i",part,det,charge,pull,varT));
+  TF1 *f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(fName);
+  if (! f) {
+    f = new TF1(fName, St_pidCorrectionC::func, -1.2, 0.9, 5); 
+    if (! varT) 
+      f->GetXaxis()->SetTitle("log_{10} P [GeV/c]");
+    else 
+      f->GetXaxis()->SetTitle("log_{10} P/M");
+    f->FixParameter(0, part);
+    f->FixParameter(1, det);
+    f->FixParameter(2, charge);
+    f->FixParameter(3, pull);
+    f->FixParameter(4, varT);
+  }
+  return f;
 }
 #include "St_TpcRowQC.h"
 MakeChairInstance2(tpcCorrection,St_TpcRowQC,Calibrations/tpc/TpcRowQ);

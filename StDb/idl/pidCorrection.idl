@@ -22,4 +22,5 @@ struct pidCorrection {
   double min;      // fit range
   double max;      // 
   double a[10];    // a[npar]
+  char   comment[32];
 };

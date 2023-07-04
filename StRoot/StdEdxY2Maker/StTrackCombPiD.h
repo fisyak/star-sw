@@ -8,6 +8,7 @@
 #include "StMtdPidTraits.h"
 #include "StDedxPidTraits.h"
 #include "StPidParticleDefinition.h"
+#include "StDcaGeometry.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StMuDSTMaker/COMMON/StMuBTofPidTraits.h"
@@ -21,6 +22,7 @@
 #include "StPicoEvent/StPicoETofPidTraits.h"
 #include "StPicoEvent/StPicoMtdPidTraits.h"
 #include "StPicoEvent/StPicoBEmcPidTraits.h"
+#include "KFParticle/KFParticle.h"
 #include "KFParticle/KFVertex.h"
 #endif /* __TFG__VERSION__ */
 class StGlobalTrack;
@@ -95,7 +97,8 @@ class StBTofStatus  : public StTrackPiD {
     }
     return 999.;
   }
-  void Set(StDcaGeometry &dcaG, KFVertex &bestVx);
+  void Set(const StDcaGeometry &dcaG, const KFVertex &bestVx);
+  void Set(const KFParticle &particle, const KFVertex &bestVx);
  private:
   Char_t                  mBeg[1];                   //!
   StBTofPidTraits *fPiD; //
@@ -180,7 +183,7 @@ class StTrackCombPiD : public TObject {
   StMtdPidTraits  SetMtdPidTraits(const StPicoMtdPidTraits &pid);
   StPicoBEmcPidTraits  SetBEmcPidTraits(const StPicoBEmcPidTraits &pid);
 #endif /* __TFG__VERSION__ */
-  void Set();
+  void SetCombPiD();
   const std::vector<Int_t> &GetPDG()        {return *&fPDGList;}
   const std::vector<Int_t> &GetPDGfromTPC() {return *&fTPCPDG;}
   const std::vector<Int_t> &GetPDGfromTof() {return *&fTofPDG;}
@@ -191,7 +194,7 @@ class StTrackCombPiD : public TObject {
   void SetPDG();
   void SetPDGfromTPC();
   void SetPDGfromTof();
-  Bool_t IsValidDca() {return fValidDca;}
+  Int_t Id() {return fId;}
   static void SetUsedx2(Bool_t k = kTRUE) {fgUsedx2 = k;}
   static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
   static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
@@ -210,47 +213,48 @@ class StTrackCombPiD : public TObject {
   const StBTofStatus 	*fBTof   () const  {return (const StBTofStatus    *) fStatus[kBTof ];}  
   const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
   const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
-  const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus     *) fStatus[kBEmc  ];} 
+  const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus    *) fStatus[kBEmc ];} 
+#if 0
   static Double_t  dEdxCorr(Double_t bgL10, Int_t code);
   static Double_t  dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t code);
   static Double_t  M2BTofCorr(Double_t pL10, Int_t code);
   static Double_t  M2BTofSigma(Double_t pL10, Int_t code);
+#endif
   static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
   static const KFVertex &BestVX() {return fgBestVx;}
-  static void SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
-  static void SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
-  static void SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]);
-  static void SetBestVx(const StVertex *bestVx);
-  static void SetBestVx(const StMuPrimaryVertex *bestVx);
-  static void SetBestVx(const StPicoEvent *event);
-  static void SetPiDCorrection(Int_t k = 1) {fgUsePiDCorrection = k;}
+  static void  SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
+  static void  SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
+  static void  SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]);
+  static void  SetBestVx(const StVertex *bestVx);
+  static void  SetBestVx(const StMuPrimaryVertex *bestVx);
+  static void  SetBestVx(const StPicoEvent *event);
+  static void  SetPiDCorrection(Int_t k = 1) {fgUsePiDCorrection = k;}
   static Int_t PiDCorrection() {return fgUsePiDCorrection;}
-  static void ResetBestVx();
+  static void  ResetBestVx();
   static Int_t Debug() {return fgDebug;}
   static const Char_t *fgPiDStatusNames[kTotal+1];
  private:
-  static Int_t fgDebug;
-  static Double_t  fgSigmaCut;
-  static Int_t     fgl2p[KPidAllParticles];
-  static Particle_t fgParticles[34];
+  static Int_t       fgDebug;
+  static Double_t    fgSigmaCut;
+  static Int_t       fgl2p[KPidAllParticles];
+  static Particle_t  fgParticles[34];
   std::vector<Int_t> fTPCPDG;
   std::vector<Int_t> fTofPDG;
   std::vector<Int_t> fPDGList;
-  static Bool_t fgUsedx2;
-  static Bool_t fgUseTof;
-  static Int_t  fgNparticles;
-  static Int_t  fgUsePiDCorrection;
-  static KFVertex fgBestVx;
+  static Bool_t      fgUsedx2;
+  static Bool_t      fgUseTof;
+  static Int_t       fgNparticles;
+  static Int_t       fgUsePiDCorrection;
+  static KFVertex    fgBestVx;
   TVector3 fg3; //!
-  Char_t           mBeg[1];                   //!
-  Int_t            fPiDStatus; //
-  Int_t            fId; // Track Id
+  Char_t           mBeg[1];        //!
+  Int_t            fPiDStatus;     //
+  Int_t            fId;            // Track Id > 0
   StTrackPiD      *fStatus[kTotal];
   Double_t         fpL10;
   Double_t         fbghyp[kTotal]; //! log10(bg)
-  Double_t         fbgs[kTotal]; //! bg
+  Double_t         fbgs[kTotal];   //! bg
   StProbPidTraits *fProb;
-  Bool_t           fValidDca;
   Char_t           mEnd[1];        //!
   StDcaGeometry    fDca;
   KFParticle       fParticle;

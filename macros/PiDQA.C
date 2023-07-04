@@ -28,7 +28,7 @@ TMultiGraph *mgProton = 0;
 TMultiGraph *sgProton = 0;
 TFile *fOut = 0;
 TFile *_file0 = 0;
-void PiDQA(Int_t NN = 8, const Char_t *histN="dEdx", Bool_t bg = kTRUE, const Char_t *opt = "qeg3s") {
+void PiDQA(const Char_t *histN="dEdx", Int_t NN = 8, Bool_t bg = kFALSE, const Char_t *opt = "qeg3s") {
   TString xTitle = "log_{10} (#beta #gamma)";
   if (! bg) xTitle = "log_{10} (p [GeV/c])";
   const Int_t N = 18;
