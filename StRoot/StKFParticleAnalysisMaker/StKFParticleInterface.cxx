@@ -2379,13 +2379,11 @@ Bool_t StKFParticleInterface::FillPidQA(StTrackCombPiD* PiD, Int_t PDG, Int_t PD
 	    hist[d][p][k][4] = new TH2F("PullBTof","nSigma BTof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
 	  } else if (k == StTrackCombPiD::kETof) {
-#if 0
 	    hist[d][p][k][0] = new TH2F("dM2ETof","dM^{2} from ETof versus log_{10}(#beta #gamma)"                              ,1000,-1,4,400,-0.2,0.2);
 	    hist[d][p][k][1] = new TH2F("dM2ETofPull","dM^{2}/#sigma dM^ {2} from ETof versus log_{10}(#beta #gamma)"           ,1000,-1,4,600,-6.0,6.0);
 	    hist[d][p][k][2] = new TH2F("dM2ETofPullC","dM^{2}/#sigma dM^ {2} corrected from ETof versus log_{10}(#beta #gamma)",1000,-1,4,600,-6.0,6.0);
 	    hist[d][p][k][3] = new TH2F("PullETof","nSigma ETof versus log_{10}(#beta #gamma)"                                  ,1000,-1,4,600,-3,3);
 	    for (Int_t i = 0; i < 4; i++) hist[d][p][k][i]->SetXTitle("log_{10}(#beta #gamma)");
-#endif
 	  } else if (k == StTrackCombPiD::kBEmc) {
 	    hist[d][p][k][0] = new TH2F("BemcEoverP","E/P in BEMC versus log_{10} P"                                            ,250,-0.75,1.75,100,0.0,10.0);
 	    hist[d][p][k][0]->SetXTitle("log_{10}P");
@@ -2438,15 +2436,10 @@ Bool_t StKFParticleInterface::FillPidQA(StTrackCombPiD* PiD, Int_t PDG, Int_t PD
       } else {
 	hist[d][p][k][0]->Fill(bgL10, PiD->Status(kd)->residual(l));
 	hist[d][p][k][1]->Fill(bgL10, PiD->Status(kd)->pull(l));
-	if (k != StTrackCombPiD::kBTof) {
-	  hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->residual(l));
-	  hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->pullC(l));
-	} else {
+	hist[d][p][k][2]->Fill(bgL10, PiD->Status(kd)->residualC(l));
+	hist[d][p][k][3]->Fill(bgL10, PiD->Status(kd)->pullC(l));
+	if (k == StTrackCombPiD::kBTof) {
 	  hist[d][p][k][4]->Fill(bgL10, PiD->fBTof()->Sigma(l));
-	  if (PiD->fBTof()->M2q2() > 0) {
-	    hist[d][p][k][2]->Fill(bgL10, PiD->fBTof()->residual(l));
-	    hist[d][p][k][3]->Fill(bgL10, PiD->fBTof()->pullC(l));
-	  }
 	}
       }
     }

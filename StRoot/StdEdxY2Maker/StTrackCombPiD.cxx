@@ -74,58 +74,53 @@ Bool_t StTrackCombPiD::fgUseTof = kFALSE;
 Int_t  StTrackCombPiD::fgDebug = 0;
 Int_t  StTrackCombPiD::fgNparticles = KPidParticles;
 Int_t  StTrackCombPiD::fgUsePiDCorrection = 1;
+StThreeVectorF StTofStatus::zeroP;
 #define PrPP(A,B) if (StTrackCombPiD::Debug()) {std::cout << "StTrackCombPiD::" << (#A) << "\t" << (#B) << " = \t" << (B) << std::endl;}
 #define PrPT(A,B) if (StTrackCombPiD::Debug()) {std::cout << "StTrackCombPiD::" << (#A) << "\t" << (#B) << " = \t" << (B);}
 
 //________________________________________________________________________________
-StBTofStatus::StBTofStatus(StBTofPidTraits *pid) : fPiD(0) {
-  memset(mBeg,0,mEnd-mBeg+1);
+StBTofStatus::StBTofStatus(StBTofPidTraits *pid) : StTofStatus() {
   if (pid && TMath::Abs(pid->yLocal()) < 1.8 && pid->timeOfFlight() > 0 && pid->timeOfFlight() < 100) {
     fPiD = pid;
   } else {
     if (StTrackCombPiD::Debug() > 0) {
       cout << "StBTofStatus::StBTofStatus reject yLocal = " << pid->yLocal() << "\tzLocal = " << pid->zLocal() << "\ttimeOfFlight = " << pid->timeOfFlight() <<endl;
     }
+    fPiD = 0;
   }
 }
 //________________________________________________________________________________
-void StBTofStatus::Set(const StDcaGeometry &dcaG, const KFVertex &bestVx) {
-  Double_t timeTof = PiD()->timeOfFlight();
-  Double_t lengthTof = PiD()->pathLength();
-  Double_t sigmaTime = St_tofSimResParamsC::instance()->average_timeres_tof()*1e-3; // in nses
-  static TRMatrix F(2,6);
-  if(lengthTof > 0.) fIsPrimary = 1;
-  Float_t xyzV[3] = {bestVx.GetX(), bestVx.GetY(), bestVx.GetZ()};
-  btofDeriv(dcaG.params(), timeTof, xyzV, fPiD->position().xyz(), fBetaV, fM2q2, F.GetArray()); PrPT(StBTofStatus::Set,F);
-  TRSymMatrix  Cov(6, dcaG.errMatrix());                                                        PrPT(StBTofStatus::Set,Cov);
-  for (Int_t i = 0; i < 5; i++) Cov[5*6/2+i] = 0;                                               PrPT(StBTofStatus::Set,Cov);
-  Cov[5*6/2+5] = sigmaTime*sigmaTime;  
-  TRSymMatrix Bcov(F, TRArray::kAxSxAT, Cov);                                                   PrPT(StBTofStatus::Set,Bcov);
-  fSigmaBetaV = TMath::Sqrt(Bcov[0]);
-  fSigmaM2q2  = TMath::Sqrt(Bcov[2]);
-  if (StTrackCombPiD::Debug()) {
-    cout << "StBTofStatus::Set\t1/beta = " << fBetaV << " +/- " << fSigmaBetaV
-	 << "\tM2/q2 = " << fM2q2 << " +/- " <<  fSigmaM2q2 << endl;
+StETofStatus::StETofStatus(StETofPidTraits *pid) : StTofStatus() {
+  if (pid && // TMath::Abs(pid->localX()) < 1.8 && 
+      pid->timeOfFlight() > 0 && pid->timeOfFlight() < 100) {
+    fPiD = pid;
+  } else {
+    if (StTrackCombPiD::Debug() > 0) {
+      cout << "StETofStatus::StETofStatus reject localX = " << pid->localX() << "\tlocalY = " << pid->localY() 
+	   << "\tdX = " << pid->deltaX() << "\tdY = " << pid->deltaY() 
+	   << "\ttimeOfFlight = " << pid->timeOfFlight() <<endl;
+    }
+    fPiD = 0;
   }
 }
 //________________________________________________________________________________
-void StBTofStatus::Set(const KFParticle &particle, const KFVertex &bestVx) {
+void StTofStatus::Set(const KFParticle &particle, const KFVertex &bestVx) {
   static Double_t kClight = 1e-9*TMath::Ccgs(); // cm/nsec
-  Double_t timeTof = PiD()->timeOfFlight(); PrPP(StBTofStatus::Set, timeTof);
-  Double_t lengthTof = PiD()->pathLength(); PrPP(StBTofStatus::Set, lengthTof);
+  Double_t timeTof  = timeOfFlight(); PrPP(StBTofStatus::Set, timeTof);
+  Double_t lengthTof = pathLength(); PrPP(StBTofStatus::Set, lengthTof);
   Double_t sigmaTime = St_tofSimResParamsC::instance()->average_timeres_tof()*1e-3; // in nses
   if (StTrackCombPiD::Debug()) {
-    cout << "StBTofStatus::Set particle\t"; particle.Print();
-    cout << "StBTofStatus::Set bestVx  \t"; bestVx.Print();
+    cout << "StTofStatus::Set particle\t"; particle.Print();
+    cout << "StTofStatus::Set bestVx  \t"; bestVx.Print();
   }
   KFParticle atVx(particle);
   //  atVx.Covariance(35) = -1.; // non decay Vertex
   atVx.SetProductionVertex(bestVx);
   if (StTrackCombPiD::Debug()) {
-    cout << "StBTofStatus::Set atVx    \t"; atVx.Print();
+    cout << "StTofStatus::Set atVx    \t"; atVx.Print();
   }
   Float_t dsdr[6] = {0};
-  Float_t ds = atVx.GetDStoPoint(fPiD->position().xyz(), dsdr);
+  Float_t ds = atVx.GetDStoPoint(position().xyz(), dsdr);
   TRMatrix F(1,6, dsdr);                         PrPT(StBTofStatus::Set,F);
   TRSymMatrix Cov(6, &atVx.Covariance(0)); PrPT(StBTofStatus::Set,Cov);
   TRSymMatrix Bcov(F, TRArray::kAxSxAT, Cov);    PrPT(StBTofStatus::Set,Bcov);
@@ -142,9 +137,10 @@ void StBTofStatus::Set(const KFParticle &particle, const KFVertex &bestVx) {
   fM2q2 =  p2p2*(fBetaV*fBetaV - 1);
   fSigmaM2q2 = fM2q2*TMath::Sqrt(TMath::Power(dp2q2/p2p2,2) + TMath::Power((2*fSigmaBetaV*fBetaV)/(fBetaV*fBetaV - 1), 2));
   if (StTrackCombPiD::Debug()) {
-    cout << "StBTofStatus::Set\t1/beta = " << fBetaV << " +/- " << fSigmaBetaV
+    cout << "StTofStatus::Set\t1/beta = " << fBetaV << " +/- " << fSigmaBetaV
 	 << "\tM2/q2 = " << fM2q2 << " +/- " <<  fSigmaM2q2 << endl;
   }
+  return;
 }
 //________________________________________________________________________________
 StBTofPidTraits StTrackCombPiD::SetBTofPidTraits(const StMuBTofPidTraits &pid) {
@@ -274,14 +270,20 @@ StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack) : StTrackCombPiD() {
       StBTofPidTraits* btof = dynamic_cast<StBTofPidTraits*>(trait);
       if (! btof) continue;
       StBTofStatus * btofSt =  new StBTofStatus(btof);
-      if (btofSt->PiD()) {
+      if (btofSt->IsFailed()) {
+	delete btofSt;
+      } else {
 	fStatus[kBTof] = btofSt;
       }
     } else if (id == kETofId) {
-      StETofPidTraits* pid = dynamic_cast<StETofPidTraits*>(trait);
-      if (! pid) continue;
-      if (pid->beta() <= 0.0 || pid->beta() > 2) continue;
-      fStatus[kETof] = new StETofStatus(pid);
+      StETofPidTraits* etof = dynamic_cast<StETofPidTraits*>(trait);
+      if (! etof) continue;
+      StETofStatus * etofSt =  new StETofStatus(etof);
+      if (etofSt->IsFailed()) {
+	delete etofSt;
+      } else {
+	fStatus[kETof] = etofSt;
+      }
     } else if (id == kMtdId) {
       StMtdPidTraits* pid = dynamic_cast<StMtdPidTraits*>(trait);
       if (! pid) continue;
@@ -348,14 +350,21 @@ StTrackCombPiD::StTrackCombPiD(StMuTrack *gTrack) : StTrackCombPiD() {
     static StBTofPidTraits btof;
     btof= SetBTofPidTraits(gTrack->btofPidTraits());
     StBTofStatus * btofSt =  new StBTofStatus(&btof);
-    if (btofSt->PiD()) {
+    if (btofSt->IsFailed()) {
+      delete btofSt;
+    } else {
       fStatus[kBTof] = btofSt;
     }
   }
   if (etofPidTraits.matchFlag()) {
     static StETofPidTraits etof;
     etof = SetETofPidTraits(gTrack->etofPidTraits());
-    fStatus[kETof] = new StETofStatus(&etof);
+    StETofStatus *etofSt = new StETofStatus(&etof);
+    if (etofSt->IsFailed()) {
+      delete etofSt;
+    } else {
+      fStatus[kETof] = etofSt;
+    }
   }
   if (mtdPidTraits.matchFlag()) {
     StMtdPidTraits mtd;
@@ -419,7 +428,9 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) 
     static StBTofPidTraits btof;
     btof = SetBTofPidTraits(*StPicoDst::instance()->btofPidTraits(ibtof), gTrack);
     StBTofStatus * btofSt =  new StBTofStatus(&btof);
-    if (btofSt->PiD()) {
+    if (btofSt->IsFailed()) {
+      delete btofSt;
+    } else {
       fStatus[kBTof] = btofSt;
     }
   }
@@ -427,7 +438,12 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) 
   if (ietof >= 0) {
     static StETofPidTraits etof;
     etof = SetETofPidTraits(*StPicoDst::instance()->etofPidTraits(ietof));
-    fStatus[kETof] = new StETofStatus(&etof);
+    StETofStatus *etofSt = new StETofStatus(&etof);
+    if (etofSt->IsFailed()) {
+      delete etofSt;
+    } else {
+      fStatus[kETof] = etofSt;
+    }
   }
   Int_t imtd = gTrack->mtdPidTraitsIndex();
   if (imtd >= 0) {
@@ -469,26 +485,17 @@ void StTrackCombPiD::SetCombPiD() {
     StBTofStatus    *BTofSt = (StBTofStatus    *) fStatus[kBTof ]; 
     betaTof = BTofSt->beta();
     BTofSt->Set(fParticle, fgBestVx); //     BTofSt->Set(fDca, fgBestVx);
-  } else if (fETof()) {
-    betaTof = fETof()->beta();
-  }
-#if 0
-  Double_t sigmaInvBeta = -999;
-  if (fBTof() || fETof()) {
-    Int_t l = kPidProton;
-    Int_t p = fgl2p[l];
-    Double_t mass = fgParticles[p].mass;
-    Double_t bg = pMomentum/mass; 
-    Double_t b_P = bg/TMath::Sqrt(1. + bg*bg);
-   sigmaTof = dBeta/sigmaInvBeta
-    if (betaTof > 0 && betaTof < 2) {
-       sigmaInvBeta = 1e-7;
-      Double_t dBeta = (1./betaTof - 1/b_P);
-      if (TMath::Abs(dBeta) < 5e-5) dBeta = 5e-5;
-      if (TMath::Abs(sigmaTof) > 1e-7)    sigmaInvBeta = dBeta / sigmaTof;
+    if (BTofSt->BetaV() < 0.5) {
+      SafeDelete(fStatus[kBTof ]); 
+    }
+  } else if (fETof() && fETof()->PiD()) {
+    StETofStatus    *ETofSt = (StETofStatus    *) fStatus[kETof ]; 
+    betaTof = ETofSt->beta();
+    ETofSt->Set(fParticle, fgBestVx); //     ETofSt->Set(fDca, fgBestVx);
+    if (ETofSt->BetaV() < 0.5) {
+      SafeDelete(fStatus[kETof ]); 
     }
   }
-#endif    
   for (Int_t l = kPidElectron; l < fgNparticles; l++) {
     Int_t p = fgl2p[l];
     Int_t charge  = fgParticles[p].charge;
@@ -533,32 +540,30 @@ void StTrackCombPiD::SetCombPiD() {
 	    fStatus[k]->PullC(l) = pullC;
 	  }
 	}
+      } else {
+	SafeDelete(fStatus[k]);
       }
     }
     // ToF
     for (Int_t k = kBTof; k <= kETof; k++) {
       if (! fStatus[k]) continue;
-      fStatus[k]->Pred(l) = M2overQ2;
-      fStatus[k]->PredC(l) = fStatus[k]->Pred(l) ;
-      if (betaTof > 0 && betaTof < 2) {
-	Double_t dM2 = p2OverQ2*(1./(betaTof*betaTof) - 1.) - fStatus[k]->PredC(l);
-	fStatus[k]->Residual(l) = dM2;
-	if (k == kBTof) {
-	  Double_t sigma = fBTof()->Sigma(l);
-	  if (TMath::Abs(sigma) < 100) fStatus[k]->Pull(l) = sigma;
-	  else                         fStatus[k]->Pull(l) = fStatus[k]->PullC(l);
-	}
-      } else if (fgDebug) {
-	cout << fgPiDStatusNames[k] << " beta = " << betaTof << " out of range. Skipped " << endl;
+      if (fStatus[k]->IsFailed()) {
+	SafeDelete(fStatus[k]);
+	continue;
       }
-      if (k == kBTof) {
-	Double_t M2q2 = fBTof()->M2q2();
-	if (M2q2 > 0) {
-	  Double_t SigmaM2q2 = fBTof()->SigmaM2q2();
-	  Double_t dM2q = M2q2 - M2overQ2;
-	  fStatus[k]->ResidualC(l) = dM2q;
-	  fStatus[k]->PullC(l) = fStatus[k]->ResidualC(l)/SigmaM2q2;
-	}
+      StTofStatus *tofSt = (StTofStatus *) Status(k);
+      tofSt->Pred(l)  = M2overQ2;
+      tofSt->PredC(l) = tofSt->Pred(l) ;
+      Double_t M2q2   = tofSt->M2q2();
+      Double_t SigmaM2q2 = tofSt->SigmaM2q2();
+      Double_t dM2q = M2q2 - M2overQ2;
+      tofSt->ResidualC(l) = dM2q;
+      tofSt->PullC(l) = tofSt->ResidualC(l)/SigmaM2q2;
+      Double_t sigma = tofSt->Sigma(l);
+      if (TMath::Abs(sigma) < 100 && betaTof > 0 && betaTof < 2) {
+	Double_t dM2 = p2OverQ2*(1./(betaTof*betaTof) - 1.) - tofSt->Pred(l);
+	tofSt->Residual(l) = dM2;
+	tofSt->Pull(l) = sigma;
       }
     }
   }
@@ -576,7 +581,8 @@ void StTrackCombPiD::Print(Option_t *opt) const {
     } else if (k <= kdNdxU) {((StdEdxStatus *) fStatus[k])->Print(); continue;
     } else if (k == kBTof)  {cout << " beta = " << fBTof()->beta() << "\t1/beta = " 
 				  << fBTof()->BetaV() << " +/- " << fBTof()->SigmaBetaV() << "\tM2/q2 = " << fBTof()->M2q2() << " +/- " <<  fBTof()->SigmaM2q2();
-    } else if (k == kETof)  {cout << " beta = " << fETof()->beta();
+    } else if (k == kETof)  {cout << " beta = " << fETof()->beta() << "\t1/beta = " 
+				  << fETof()->BetaV() << " +/- " << fETof()->SigmaBetaV() << "\tM2/q2 = " << fETof()->M2q2() << " +/- " <<  fETof()->SigmaM2q2();
     } else if (k == kMtd)   {cout << " beta = " << fMtd()->beta() << "\tdetaY = " << fMtd()->PiD()->deltaY() << "\tdetaZ = " << fMtd()->PiD()->deltaZ() 
 				  << "\tdT = " << fMtd()->PiD()->timeOfFlight() - fMtd()->PiD()->expTimeOfFlight();
     } else if (k == kBEmc)  {cout << " bemcR = " << fBEmc()->PiD()->bemcE();
@@ -587,7 +593,7 @@ void StTrackCombPiD::Print(Option_t *opt) const {
   if (fTPCPDG.size())  {cout << "TPC: "; for (auto pdg :  fTPCPDG) cout << "\t" << pdg; cout << endl;}
   if (fTofPDG.size())  {cout << "Tof: "; for (auto pdg :  fTofPDG) cout << "\t" << pdg; cout << endl;}
   if (fPDGList.size()) {cout << "All: "; for (auto pdg : fPDGList) cout << "\t" << pdg; cout << endl;}
-  if (fStatus[kBTof]) {
+  if (fStatus[kBTof] || fStatus[kETof]) {
     cout << "have ToF" << endl;
   }
 }

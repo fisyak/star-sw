@@ -33,18 +33,19 @@ class StTrackPiD {
   virtual ~StTrackPiD() {}
   void Clear(Option_t * /*option*/ ="") {memset(mBeg,0,mEnd-mBeg+1); for (Int_t l = 0; l < KPidAllParticles; l++) fPred[l] = fPredC[l] = fdev[l] = fPull[l] = fPullC[l] = -999;}
   void Print(Option_t *option = "") const;
-  Double_t pred(Int_t  k = 0)       const {return fPred[k];}
-  double_t residual(Int_t   k = 0)  const {return fdev[k];}
-  double_t pull(Int_t  k = 0)       const {return fPull[k];}
-  double_t predC(Int_t k = 0)       const {return fPredC[k];}
-  double_t residualC(Int_t  k = 0)  const {return fdevC[k];}
-  double_t pullC(Int_t k = 0)       const {return fPullC[k];}
-  Double_t &Pred(Int_t  k = 0)       {return fPred[k];}
-  Double_t &Residual(Int_t   k = 0)  {return fdev[k];}
-  Double_t &Pull(Int_t  k = 0)       {return fPull[k];}
-  Double_t &PredC(Int_t k = 0)       {return fPredC[k];}
-  Double_t &ResidualC(Int_t  k = 0)  {return fdevC[k];}
-  Double_t &PullC(Int_t k = 0)       {return fPullC[k];}
+  Double_t  pred(Int_t  k = 0)      const {return fPred[k];}
+  double_t  residual(Int_t   k = 0) const {return fdev[k];}
+  double_t  pull(Int_t  k = 0)      const {return fPull[k];}
+  double_t  predC(Int_t k = 0)      const {return fPredC[k];}
+  double_t  residualC(Int_t  k = 0) const {return fdevC[k];}
+  double_t  pullC(Int_t k = 0)      const {return fPullC[k];}
+  Double_t &Pred(Int_t  k = 0)            {return fPred[k];}
+  Double_t &Residual(Int_t   k = 0)       {return fdev[k];}
+  Double_t &Pull(Int_t  k = 0)            {return fPull[k];}
+  Double_t &PredC(Int_t k = 0)            {return fPredC[k];}
+  Double_t &ResidualC(Int_t  k = 0)       {return fdevC[k];}
+  Double_t &PullC(Int_t k = 0)            {return fPullC[k];}
+  virtual Bool_t IsFailed()         const {return kTRUE;}
  private:
   Char_t                  mBeg[1];                   //!
   Double_t fPred[KPidAllParticles];
@@ -66,20 +67,46 @@ class StdEdxStatus : public StTrackPiD {
   Double_t TrackLength() const {return (fPiD) ? fPiD->length() : 0;}
   Double_t log2dX() const {return (fPiD) ? fPiD->log2dX() : 0;}
   Int_t    N() const {return (fPiD) ? fPiD->numberOfPoints() : 0;}
+  StDedxPidTraits *PiD() const {return fPiD;}
+  Bool_t IsFailed()      const {return fPiD == 0;}
   void Print(Option_t *option = "") const;
 };
 //________________________________________________________________________________
-class StBTofStatus  : public StTrackPiD {
+class StTofStatus  : public StTrackPiD {
  public:
-  StBTofStatus(StBTofPidTraits *pid = 0);
-  virtual ~StBTofStatus() {}
-  StBTofPidTraits *PiD()  const {return fPiD;}
-  Float_t  beta()         const {return fPiD ? fPiD->beta() : -999;}
+  StTofStatus() {memset(mBeg,0,mEnd-mBeg+1);}  
+  virtual ~StTofStatus() {}
+  virtual  Double_t timeOfFlight() const {return  0;}
+  virtual  Double_t pathLength()   const {return  0;}
+  virtual  StThreeVectorF  &position()   const {return  zeroP;}
   Double_t BetaV()        const {return fBetaV;}
   Double_t SigmaBetaV()   const {return fSigmaBetaV;}
   Double_t M2q2()         const {return fM2q2;}
   Double_t SigmaM2q2()    const {return fSigmaM2q2;}
   Int_t    IsPrimary()    const {return fIsPrimary;}
+  virtual Double_t Sigma(Int_t l) const {return 999.;}
+  void Set(const StDcaGeometry &dcaG, const KFVertex &bestVx);
+  void Set(const KFParticle &particle, const KFVertex &bestVx);
+ private:
+  Char_t                  mBeg[1];                   //!
+  Double_t fBetaV;      // Inverse beta measured
+  Double_t fSigmaBetaV; // Estimated errors in BetaV
+  Double_t fM2q2;        // Esimated M**2/q**2
+  Double_t fSigmaM2q2;   // Estimated errors in M2
+  Int_t    fIsPrimary;  // Is length have been calcualed in reconstruction 
+  Char_t                   mEnd[1];        //!
+  static StThreeVectorF zeroP;
+};
+//________________________________________________________________________________
+class StBTofStatus : public StTofStatus {
+ public:
+  StBTofStatus(StBTofPidTraits *pid = 0);
+  virtual ~StBTofStatus() {}
+  Double_t timeOfFlight() const {return  fPiD->timeOfFlight();}
+  Double_t beta()         const {return  fPiD->beta();}
+  Double_t pathLength()   const {return  fPiD->pathLength();}
+  StBTofPidTraits *PiD()  const {return  fPiD;}
+  StThreeVectorF &position() const {return  fPiD->position();}
   Double_t Sigma(Int_t l) const {
     if (fPiD) {
       switch (l) {
@@ -97,26 +124,23 @@ class StBTofStatus  : public StTrackPiD {
     }
     return 999.;
   }
-  void Set(const StDcaGeometry &dcaG, const KFVertex &bestVx);
-  void Set(const KFParticle &particle, const KFVertex &bestVx);
+  Bool_t IsFailed()      const {return fPiD == 0;}
  private:
-  Char_t                  mBeg[1];                   //!
-  StBTofPidTraits *fPiD; //
-  Double_t fBetaV;      // Inverse beta measured
-  Double_t fSigmaBetaV; // Estimated errors in BetaV
-  Double_t fM2q2;        // Esimated M**2/q**2
-  Double_t fSigmaM2q2;   // Estimated errors in M2
-  Int_t    fIsPrimary;  // Is length have been calcualed in reconstruction 
-  Char_t                   mEnd[1];        //!
+  StBTofPidTraits *fPiD; //!
 };
 //________________________________________________________________________________
-class StETofStatus  : public StTrackPiD {
+class StETofStatus : public StTofStatus  {
  public:
-  StETofStatus(StETofPidTraits *pid = 0) { fPiD = (pid && pid->matchFlag()) ? pid : 0;}
+  StETofStatus(StETofPidTraits *pid = 0);
   virtual ~StETofStatus() {}
-  StETofPidTraits *PiD() const  {return fPiD;}
+  Double_t beta()         const {return  fPiD->beta();}
+  Double_t timeOfFlight() const {return  fPiD->timeOfFlight();}
+  Double_t pathLength()   const {return  fPiD->pathLength();}
+  StThreeVectorF &position() const {return  fPiD->position();}
+  StETofPidTraits *PiD()  const {return  fPiD;}
+  Bool_t IsFailed()       const {return fPiD == 0;}
+ private: 
   StETofPidTraits *fPiD; //!
-  Float_t beta() const {return fPiD ? fPiD->beta() : -999;}
 };
 //________________________________________________________________________________
 class StMtdStatus  : public StTrackPiD {
@@ -127,6 +151,7 @@ class StMtdStatus  : public StTrackPiD {
   StMtdPidTraits *fPiD; //!
   Float_t beta()              const {return fPiD ? fPiD->beta() : -999;}
   Float_t deltaTimeOfFlight() const {return fPiD->timeOfFlight() - fPiD->expTimeOfFlight();}
+  Bool_t IsFailed()           const {return fPiD == 0;}
 };
 //________________________________________________________________________________
 class StBEmcStatus  : public StTrackPiD {
@@ -136,6 +161,7 @@ class StBEmcStatus  : public StTrackPiD {
   StPicoBEmcPidTraits *PiD() const  {return fPiD;}
   StPicoBEmcPidTraits *fPiD; //!
   Double_t bemcE() const {return fPiD->bemcE();}
+  Bool_t IsFailed()       const {return fPiD == 0;}
 };
 //________________________________________________________________________________
 struct Particle_t {
@@ -214,12 +240,6 @@ class StTrackCombPiD : public TObject {
   const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
   const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
   const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus    *) fStatus[kBEmc ];} 
-#if 0
-  static Double_t  dEdxCorr(Double_t bgL10, Int_t code);
-  static Double_t  dEdxPullCorrection(Double_t pull, Double_t bgL10, Int_t code);
-  static Double_t  M2BTofCorr(Double_t pL10, Int_t code);
-  static Double_t  M2BTofSigma(Double_t pL10, Int_t code);
-#endif
   static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
   static const KFVertex &BestVX() {return fgBestVx;}
   static void  SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
