@@ -90,7 +90,8 @@ void Load(const Char_t *options="");
 //TString defChain("MC.2017,sdt20170621.104909,StiCA,20Muons,vmc,Rung.1,UseCAVxFinder");
 //TString defChain("MC.2019,StiCA,20Muons,vmc,Rung.1"); //,AgML");
 //TString defChain("MC.2019,StiCA,20Muons,vmc,Rung.1,dEdxCalib,McTpcAna"); //,AgML");
-TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib"); //,AgML");
+//TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib"); //,AgML");
+TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
 		const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
 StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,

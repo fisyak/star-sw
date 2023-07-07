@@ -95,7 +95,7 @@ class StPicoDstMaker : public StMaker {
   enum PicoVtxMode {NotSet=0, Default=1, Vpd=2, VpdOrDefault=3, Mtd=4, FXT=5};
 #endif /* ! __TFG__VERSION__ */
   /// Write or not write covariance matrix: 0-skip, 1-write
-  enum PicoCovMtxMode {Skip=0, Write=1};
+  enum PicoCovMtxMode {CovSkip=0, CovWrite=1};
   /// Write or not write the BEmc SMD hits associated with a BHT2/3 trigger: 0-skip, 1-write
   enum PicoBEmcSmdMode {SmdSkip=0, SmdWrite=1};
 
@@ -156,6 +156,7 @@ class StPicoDstMaker : public StMaker {
   void SetVxRmax(Double_t rmax = 2)     { StMuDst::instance()->SetVxRmax(rmax); }
   static StPicoDstMaker *instance()     { return fgPicoDstMaker; }
   TClonesArray** picoArrays()           { return mPicoArrays; }
+  virtual Int_t        Skip(Int_t nskip) {mEventCounter = nskip; return mEventCounter;}     //Skip events
 #else /* ! __TFG__VERSION__ */
 
   /// Set vertex selection mode
