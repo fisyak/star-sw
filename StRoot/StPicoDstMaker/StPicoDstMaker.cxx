@@ -127,7 +127,7 @@ StPicoDstMaker::StPicoDstMaker(char const* name) :
 #if !defined (__TFG__VERSION__)
   mVtxMode(PicoVtxMode::NotSet), // This should always be ::NotSet, do not change it, see ::Init()
 #endif /* !__TFG__VERSION__ */
-  mCovMtxMode(PicoCovMtxMode::Skip),
+  mCovMtxMode(PicoCovMtxMode::CovSkip),
   mBEmcSmdMode(PicoBEmcSmdMode::SmdSkip),
   mInputFileName(), mOutputFileName(), mOutputFile(nullptr),
   mChain(nullptr), mTTree(nullptr), mEventCounter(0), mSplit(99), mCompression(9), mBufferSize(65536 * 4),
@@ -403,24 +403,24 @@ Int_t StPicoDstMaker::setCovMtxModeAttr() {
   // Choose the writing method: skip - do not write; write - write
 
   if (strcasecmp(SAttr("PicoCovMtxMode"), "PicoCovMtxWrite") == 0) {
-    setCovMtxMode(PicoCovMtxMode::Write);
+    setCovMtxMode(PicoCovMtxMode::CovWrite);
     LOG_INFO << " PicoCovMtxWrite is being used " << endm;
     return kStOK;
   }
   else if ( (strcasecmp(SAttr("PicoCovMtxMode"), "") == 0) ||
 	    (strcasecmp(SAttr("PicoCovMtxMode"), "PicoCovMtxSkip") == 0) ){
-    setCovMtxMode(PicoCovMtxMode::Skip);
+    setCovMtxMode(PicoCovMtxMode::CovSkip);
     LOG_INFO << " PicoCovMtxSkip is being used " << endm;
     return kStOK;
   }
   /*
   if (strcasecmp(SAttr("PicoCovMtxMode"), "PicoCovMtxSkip") == 0) {
-    setCovMtxMode(PicoCovMtxMode::Skip);
+    setCovMtxMode(PicoCovMtxMode::CovSkip);
     LOG_INFO << " PicoCovMtxSkip is being used " << endm;
     return kStOK;
   }
   else if (strcasecmp(SAttr("PicoCovMtxMode"), "PicoCovMtxWrite") == 0) {
-    setCovMtxMode(PicoCovMtxMode::Write);
+    setCovMtxMode(PicoCovMtxMode::CovWrite);
     LOG_INFO << " PicoCovMtxWrite is being used " << endm;
     return kStOK;
   }
@@ -1310,7 +1310,7 @@ void StPicoDstMaker::fillTracks() {
     picoTrk->setMcTruth( gTrk->idTruth(), gTrk->qaTruth() );
 
     // Fill covariance matrix. Fill it only if the flag was set up
-    if( mCovMtxMode == PicoCovMtxMode::Write ) {
+    if( mCovMtxMode == PicoCovMtxMode::CovWrite ) {
 
       // Retrieve index in the PicoTrackCovMatrix pico array
       Int_t cov_index = mPicoArrays[StPicoArrays::TrackCovMatrix]->GetEntries();
