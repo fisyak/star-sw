@@ -3,9 +3,10 @@
         <command>
   cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
-  set input        = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
+#  set input        = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
+  set input        = $INPUTFILE0
   set Routput      =  R${input}.root
-  if (! -r ${Routput})   hadd ${Routput} ${input}_*.root &gt;&amp; R${input}.log
+  if (! -r ${Routput})   hadd ${Routput} *${input}*.root &gt;&amp; R${input}.log
 #  set output       = D${input}.root
 #  set log          = D${input}.log
 #  if (-r ${output}) exit 0;
