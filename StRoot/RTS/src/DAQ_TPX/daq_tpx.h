@@ -79,6 +79,8 @@ private:
 
 	tpx23 *t23 ;
 
+
+
 protected:
 
 public:
@@ -91,6 +93,9 @@ public:
 	char fcf_run_compatibility ;
 	char fcf_do_cuts ;
 	int fcf_style ;	// new for FY13!  from online/RTS/src/ESB/tpx.C
+
+	u_char mode ;
+
 	// for use by simulation
 	int sim_row_count ;
 	unsigned char *sim_tpx_rowlen ;
