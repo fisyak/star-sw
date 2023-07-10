@@ -12,6 +12,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TString.h"
+class StEvent;
 class StSPtrVecTrackNode;
 class StTpcHitCollection;
 class StTrack;
@@ -145,7 +146,7 @@ class StTbyTMaker : public StMaker {
   void    checkConsistency(Track2TrackMap &Track1ToTrack2, Track2TrackMap &Track2ToTrack1);
   Bool_t  GoodTrack(StTrack* trk);
   Bool_t  GoodMatch(StTrack* trk1, StTrack* trk2, UInt_t NPings);
-  TrackParameters TrackParametersFill(const StGlobalTrack *gTrack = 0);
+  TrackParameters TrackParametersFill(const StGlobalTrack *gTrack = 0, Int_t vertexId = -1);
   HitParameters HitParametersFill(const StTpcHit *tpcHit = 0);
  private:
   void FillMatch(const StGlobalTrack* trk1, const StGlobalTrack* trk2 = 0);
@@ -156,6 +157,9 @@ class StTbyTMaker : public StMaker {
   TTree* hitTree;
   TBranch* hitBr;
   HitMatch *fHitMatch;
+  StEvent* fEvent1;
+  StEvent* fEvent2;
+ 
   virtual const char *GetCVS() const {
     static const char cvs[]= "Tag $Name:  $ $Id: StTbyTMaker.h,v 1.2 2009/11/10 20:57:28 fisyak Exp $ built __DATE__ __TIME__" ; 
     return cvs;
