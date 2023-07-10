@@ -68,6 +68,7 @@ void StiCATpcTrackerInterface::SetNewEvent() {
 	fVertexZPlots[i]->SetLineColor(i+2); 
 	fVertexXYPlots[i]->SetMarkerColor(i+2); 
 	fVertexXYPlots[i]->SetLineColor(i+2); 
+	fVertexXYPlots[i]->SetLineWidth(4);
       }
     }
     fSpectrum = new TSpectrum(npeaks);

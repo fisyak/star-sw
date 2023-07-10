@@ -251,6 +251,7 @@ print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);
 my %Runs= ();
+my $ana = "";
 foreach my $run (@Files) { 
   print "run = $run\n" if ($debug);
   my $f = File::Basename::basename($run);
@@ -264,7 +265,8 @@ foreach my $run (@Files) {
 #  my $glb = $run . "/*/*" . $DST . ".root"; # per day
   my @files =  glob $glb; print "glb = $glb, no. files = $#files\n" if ($debug);
   my $NF = $#files + 1;
-  my $step = 10;
+#  my $step = 10;
+  my $step = 1;
   for (my $i = 0; $i < $NF; $i += $step) {
     my @list = ();
     my @listB = ();
@@ -279,7 +281,13 @@ foreach my $run (@Files) {
       } 
     }
     $Runs{$f}++;
-    my $ana = $f . "_" . $Runs{$f} . ".root"; print "ana = $ana\n" if ($debug);
+    if ($step <= 1) {
+      	push @list, $files[$i];
+	$ana = $listB[0];
+	$ana =~ s/.picoDst//;
+    } else {
+      $ana = $f . "_" . $Runs{$f} . ".root"; print "ana = $ana\n" if ($debug);
+    }
     if ( -r $ana) {
       my $mtime = stat($ana)->mtime;
       my $Mtime = ctime($mtime);

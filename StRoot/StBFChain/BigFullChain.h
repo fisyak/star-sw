@@ -1607,8 +1607,8 @@ Bfc_st BFC[] = { // standard chains
 #else
   {"Trs","","","TpcRS"                                                                    ,"","","",kFALSE},
 #endif
-  {"TpcRS","","tpcChain","scl,tpcDB,-Trs,-EmbeddingShortCut,TTreeFile","StTpcRSMaker"
-   ,"libMathMore,StPicoEvent,StdEdxY2Maker,StTpcRSMaker",              "New Tpc Response Simulator",kFALSE},
+  {"TpcRS","","tpcChain","scl,tpcDB,-Trs,-EmbeddingShortCut,TTreeFile,ldEdxY2","StTpcRSMaker"
+   ,"libMathMore,StPicoEvent,StTpcRSMaker",                            "New Tpc Response Simulator",kFALSE},
   {"tfs"     ,"","","TpcFastSim" ,"","","WARNING *** Option is OBSOLETE *** use TpcFastSim instead",kFALSE},
   {"TpcFastSim"  ,"tpc_hits","tpcChain","MakeEvent,Simu,-trs,-TpcRS,-tcl,-tpxclu,-fcf,-tpc_daq,StEvent,"
    "-TpcHitMover,EmbeddingShortCut" ,"StTpcFastSimMaker","St_tcl_Maker","use tfs (no Trs or TpcRS)",kFALSE},
@@ -1930,7 +1930,7 @@ Bfc_st BFC[] = { // standard chains
    ,"StiMaker",                               "StiUtilities,StKFVertexMaker,StiMaker","Sti tracker",kFALSE},
   {"Stx","","","VMCAppl,TPCCA" ,"StxMaker",       "libEve,GenFit,StxMaker","eXpress Reconstruction",kFALSE},
   {"StxCA","","","Stx"                                 ,"","","eXpress Reconstruction with CA only",kFALSE},
-  {"UseCAVxFinder","","",""     ,"","","Use CA Vertex reconstruction for West and East oart of TPC",kFALSE},
+  {"UseCAVxFinder","","",""    ,"","","Use CA Vertex reconstruction for West and East parts of TPC",kFALSE},
   {"KFVertex",""  ,"Stx","-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2,TMVARank"
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
@@ -1963,7 +1963,8 @@ Bfc_st BFC[] = { // standard chains
   {"Cosmics"  ,"","","","","","Ignore events without recostructed tracks, only hits with |z|<150cm",kFALSE},
   {"StiPulls" ,"","","",                                         "","", "Request to make Sti Pulls",kFALSE},
   {"BeamBack" ,"","","StEvent",                          "","","WARNING *** Option is OBSOLETE ***",kFALSE},
-  {"LdEdxY2"     ,"","","tpcDb,StEvent", "","libMinuit,StPicoEvent,StdEdxY2Maker","Load dEdx Maker",kFALSE},
+  {"LdEdxY2"  ,"","","tpcDb,StEvent,MuDSTDeps", "","libMinuit,StPicoEvent,StdEdxY2Maker"
+   ,                                                                              "Load dEdx Maker",kFALSE},
   {"dEdxY2"       ,"dEdxY2","","LdEdxY2","StdEdxY2Maker","",         "Bichsel method used for dEdx",kFALSE},
   {"dEdxCalib"    ,"","","dEdxY2,TTreeFile",""          ,"","switch on dEdx calibration histograms",kFALSE},
   {"ForcedX"     ,"","","dEdxY2","",                      "Force recalculation of dX using Helices",kFALSE},

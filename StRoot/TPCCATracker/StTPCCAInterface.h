@@ -29,6 +29,7 @@ class StTPCCAInterface {
   static  TH1F*    VertexZPlot(Int_t  i = 2) {return fVertexZPlots[i];}
   static  TH2F*    VertexXYPlot(Int_t i = 2) {return fVertexXYPlots[i];}
   void FillZHist(TH1F *hist, Double_t Z, Double_t sigmaZ);
+  static void SetSigmaSmooth(Double_t x = 5.0) {fSigmaSmooth = x;}
  protected:
   virtual void MakeSettings(); // fill fCaParam
   virtual void MakeHits() {cout << "Dummy StTPCCAInterface::;MakeHits is called" << endl;}
@@ -44,5 +45,6 @@ class StTPCCAInterface {
   static TH1F *fVertexZPlots[3];
   static TH2F *fVertexXYPlots[3];
   static TSpectrum *fSpectrum;
+  static Double_t fSigmaSmooth;
 };
 #endif //  __StTPCCAInterface_h__

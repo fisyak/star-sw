@@ -1,15 +1,15 @@
 //
 // $Id: StTbyTMaker.cxx,v 1.4 2013/01/16 21:56:45 fisyak Exp $
 //
-#define __HIT_MATCH__
+//#define __HIT_MATCH__
 #include <iostream>
 #include <algorithm>
 #include <set>
 
 #include "StTbyTMaker.h"
+#include "StEvent.h"
 #include "StContainers.h"
 #include "StTpcHitCollection.h"
-#include "StEvent.h"
 #include "StPrimaryVertex.h"
 #include "StTrackNode.h"
 #include "StPrimaryTrack.h"
@@ -23,6 +23,7 @@
 #include "StMessMgr.h"
 #include "StDbUtilities/StTpcCoordinateTransform.hh"
 #include "StDbUtilities/StCoordinates.hh" 
+#define __REQUIRE_PRIMARY_VERTEX__
 #define __DEBUG__
 #if defined(__DEBUG__)
 #define PrPP(A,B) if (Debug()%10 > 2) {LOG_INFO << "StTrackMaterMaker::" << (#A) << "\t" << (#B) << " = \t" << (B) << endm;}
@@ -104,53 +105,59 @@ Bool_t StTbyTMaker::GoodMatch(StTrack* trk1, StTrack* trk2, UInt_t NPings) {
 //________________________________________________________________________________
 Int_t StTbyTMaker::Make(){
   LOG_INFO << "In StTbyTMaker::Make " << endm;
-  StEvent* rEvent1 = 0;
-  StEvent* rEvent2 = 0;
-  
-  
-  rEvent1 = (StEvent*) GetDataSet("IO1/.make/IO1_Root/.data/bfcTree/eventBranch/StEvent");
-  rEvent2 = (StEvent*) GetDataSet("IO2/.make/IO2_Root/.data/bfcTree/eventBranch/StEvent");
+  fEvent1 = (StEvent*) GetDataSet("IO1/.make/IO1_Root/.data/bfcTree/eventBranch/StEvent");
+  fEvent2 = (StEvent*) GetDataSet("IO2/.make/IO2_Root/.data/bfcTree/eventBranch/StEvent");
   
   LOG_INFO << "Pointers obtained from GetDataSet" << endm;
-  LOG_INFO << "Event1 At: " << rEvent1 << endm;
-  LOG_INFO << "Event2 At: " << rEvent2 << endm;
+  LOG_INFO << "Event1 At: " << fEvent1 << endm;
+  LOG_INFO << "Event2 At: " << fEvent2 << endm;
   
-  if (!rEvent1 || !rEvent2) {
+  if (!fEvent1 || !fEvent2) {
     LOG_WARN << "Bailing out! One of the StEvent's is missing!" << endm;
     return kStWarn;
   }
   LOG_INFO << "Run # and Event #, should be the same for both StEvents" << endm;
-  LOG_INFO << "Event1: Run "<< rEvent1->runId() << " Event1 No: " << rEvent1->id() << endm;
-  LOG_INFO << "Event2: Run "<< rEvent2->runId() << " Event2 No: " << rEvent2->id() << endm;
-  assert (rEvent1->runId() == rEvent2->runId() && rEvent1->id() == rEvent2->id());
+  LOG_INFO << "Event1: Run "<< fEvent1->runId() << " Event1 No: " << fEvent1->id() << endm;
+  LOG_INFO << "Event2: Run "<< fEvent2->runId() << " Event2 No: " << fEvent2->id() << endm;
+  assert (fEvent1->runId() == fEvent2->runId() && fEvent1->id() == fEvent2->id());
   LOG_INFO << "Vertex Positions" << endm;
-  if (rEvent1->primaryVertex() ) {
-    LOG_INFO << "Event1: Vertex Position " << rEvent1->primaryVertex()->position() << endm;
+  if (fEvent1->primaryVertex() ) {
+    LOG_INFO << "Event1: Vertex Position " << fEvent1->primaryVertex()->position() << endm;
   }
   else {
+#ifndef  __REQUIRE_PRIMARY_VERTEX__
     LOG_INFO << "Event1: Vertex Not Found" << endm;
+#else /*      __REQUIRE_PRIMARY_VERTEX__ */
+    LOG_INFO << "Event1: Vertex Not Found. Skipped" << endm;
+    return kStWarn;
+#endif /*  __REQUIRE_PRIMARY_VERTEX__ */
   }
-  if (rEvent2->primaryVertex() ) {
-    LOG_INFO << "Event2: Vertex Position " << rEvent2->primaryVertex()->position() << endm;
+  if (fEvent2->primaryVertex() ) {
+    LOG_INFO << "Event2: Vertex Position " << fEvent2->primaryVertex()->position() << endm;
   }
   else {
+#ifndef  __REQUIRE_PRIMARY_VERTEX__
     LOG_INFO << "Event2: Vertex Not Found" << endm;
+#else /*      __REQUIRE_PRIMARY_VERTEX__ */
+    LOG_INFO << "Event2: Vertex Not Found. Skipped" << endm;
+    return kStWarn;
+#endif /*  __REQUIRE_PRIMARY_VERTEX__ */
   }
   LOG_INFO << "Size of track containers";
-  const StSPtrVecTrackNode& trackNodes1 = rEvent1->trackNodes();
+  const StSPtrVecTrackNode& trackNodes1 = fEvent1->trackNodes();
   LOG_INFO << "\tEvent1: Track Nodes " << trackNodes1.size();
   
-  const StSPtrVecTrackNode& trackNodes2 = rEvent2->trackNodes();
+  const StSPtrVecTrackNode& trackNodes2 = fEvent2->trackNodes();
   LOG_INFO << "\tEvent2: Track Nodes " << trackNodes2.size() << endm;
   if (! trackNodes1.size() || ! trackNodes2.size()) return kStWarn;
   //eventwise info
-  //  evOutput[0] = uncorrectedNumberOfPrimaries(*rEvent2);
+  //  evOutput[0] = uncorrectedNumberOfPrimaries(*fEvent2);
   //eventBr->Fill();
   // Note:
   // For StTpcHits: sector = [1-24], padrow = [1-72]
   // For StTpcHitCollections: sector [0-23], padrow = [0,71]
-  const StTpcHitCollection* tpchitcoll1 = rEvent1->tpcHitCollection();
-  const StTpcHitCollection* tpchitcoll2 = rEvent2->tpcHitCollection();
+  const StTpcHitCollection* tpchitcoll1 = fEvent1->tpcHitCollection();
+  const StTpcHitCollection* tpchitcoll2 = fEvent2->tpcHitCollection();
   if (! tpchitcoll1 || ! tpchitcoll2) {
     LOG_WARN << "Empty tpc hit collection in one of the events" << endm;
     return kStWarn;
@@ -262,8 +269,13 @@ Int_t StTbyTMaker::Make(){
 //________________________________________________________________________________
 void StTbyTMaker::FillMatch(const StGlobalTrack* trk1, const StGlobalTrack* trk2) {
   fTrackMatch->event = GetEventNumber();
+#ifndef __REQUIRE_PRIMARY_VERTEX__
   fTrackMatch->oldP = TrackParametersFill(trk1);
   fTrackMatch->newP = TrackParametersFill(trk2);
+#else /*  __REQUIRE_PRIMARY_VERTEX__ */
+  fTrackMatch->oldP = TrackParametersFill(trk1, fEvent1->primaryVertex()->key());
+  fTrackMatch->newP = TrackParametersFill(trk2, fEvent2->primaryVertex()->key());
+#endif /*  __REQUIRE_PRIMARY_VERTEX__ */
   trackTree->Fill();
 }
 //________________________________________________________________________________
@@ -527,13 +539,23 @@ HitParameters StTbyTMaker::HitParametersFill(const StTpcHit *tpcHit) {
   return P;
 }
 //________________________________________________________________________________
-TrackParameters StTbyTMaker::TrackParametersFill(const StGlobalTrack *gTrack) {
+TrackParameters StTbyTMaker::TrackParametersFill(const StGlobalTrack *gTrack, Int_t vertexId) {
   TrackParameters par;
   if (! gTrack) return par;
   par.set();
   if (! gTrack) return par;
   par.Id = gTrack->key();
   StPrimaryTrack* pTrack = (StPrimaryTrack*) gTrack->node()->track(primary);
+#ifdef  __REQUIRE_PRIMARY_VERTEX__
+  if (pTrack) {
+    const StVertex *vtx = pTrack->vertex();
+    if (! vtx) {
+      pTrack = 0;
+    } else if (vertexId >= 0 && vtx->key() != vertexId) {
+      pTrack = 0;
+    }
+  }
+#endif /*  __REQUIRE_PRIMARY_VERTEX__ */
   par.MatchStatus = gTrack->flagExtension() + 1;
   ((StGlobalTrack *)gTrack)->setFlagExtension(par.MatchStatus);
   const StTrackDetectorInfo *det = gTrack->detectorInfo();
