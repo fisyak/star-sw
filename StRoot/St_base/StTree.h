@@ -28,7 +28,9 @@ class StIO
  static TFile   *Open     (const char *name, Option_t *option="",const char *title="",Int_t compress=1);
  static Int_t    IfExi(const char *file);
  static void    SetDebug(Int_t dblev=1){fgDebug=dblev;}
+ static void    SetDontSort(Bool_t k=kFALSE) {fgDontSort = k;}
  static Int_t   fgDebug;
+ static Bool_t  fgDontSort;
 };
 
 class StTree;
