@@ -2163,6 +2163,7 @@ Bfc_st BFC[] = { // standard chains
    ,"StAnalysisMaker",                                                        "Example of Analysis",kFALSE},
   {"NewTpcAlignment","","",""                           ,"","","Switch on new Tpc Alignment schema",kFALSE},
   {"quiet","","","","","",                                                      "make chain quiet", kFALSE},
+  {"DontSort","","","","","",                  "Disable sorting over StEvent files during reading", kFALSE},
   {"empty","","","","","",                                                          "place holder", kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"Aliased     ","time stamps","-----------","------------------------------------------","","","",kFALSE},

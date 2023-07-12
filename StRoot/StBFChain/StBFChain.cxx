@@ -234,6 +234,7 @@ Int_t StBFChain::Instantiate()
   Long64_t maxsize = kMaxLong64;
   TTree::SetMaxTreeSize(maxsize);
   if (GetOption("quiet")) gEnv->SetValue("quiet", 1); 
+  if (GetOption("DontSort")) StIO::SetDontSort(kTRUE);
   St_db_Maker* dbMk = 0;
   for (i = 1; i< fNoChainOptions; i++) {// Instantiate Makers if any
     if (! fBFC[i].Flag) continue;

@@ -22,7 +22,7 @@ const char  RWU[] = "0rwu0rnu0rcu";
 char IOMODE[] = "0";
 
 Int_t StIO::fgDebug = 0;
-
+Bool_t StIO::fgDontSort = kFALSE;
 static inline Int_t IntOMode(char ciomode)
 {
 char *c=(char *)strchr(RWU,tolower(ciomode));
@@ -153,6 +153,7 @@ Int_t StIO::GetNextKey(TFile *file, StUKey &ukey,ULong_t &handle)
   const char* prevkey = (const char*)tk;
   int lname = strlen(ukey.GetName())+1;
 
+  if (! fgDontSort) {
   lk = file->GetListOfKeys();  if(!lk) return 1;
   if (!lk->TestBit(kSorted)) {lk->Sort(); lk->SetBit(kSorted);handle = 0;}
 
@@ -181,6 +182,16 @@ Int_t StIO::GetNextKey(TFile *file, StUKey &ukey,ULong_t &handle)
   if (!lnk) return 1;
   ukey.SetKey(kname);
   handle = (ULong_t)lnk;
+  } else {
+    static TListIter next( file->GetListOfKeys() );
+    while ((obj = next())) {
+      kname = obj->GetName();
+      if (strncmp(prevkey,kname,lname)) return 1;
+      ukey.SetKey(kname);
+      return 0;
+    }
+    return 1;
+  }
   return 0;
 }
 //_______________________________________________________________________________
