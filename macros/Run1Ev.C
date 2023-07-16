@@ -1,4 +1,4 @@
-void Run1Ev(Int_t NEvents=1, Int_t iD = 46, 
+void Run1Ev(Int_t NEvents=1, Int_t iD = 5, 
 #if 0
 	    Double_t pTlow=1.0,Double_t pThigh=1.0, // Double_t pTlow=1,Double_t pThigh=1,
 	    Double_t Ylow=0.1, Double_t Yhigh=0.1,
@@ -11,11 +11,18 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 46,
 #endif
 #else
 	    Double_t pTlow=1,Double_t pThigh=1,
-	    Double_t Ylow=0.0, Double_t Yhigh=0.0,
-	    Double_t Philow=0, Double_t Phihigh=0,
-	    Double_t Zlow=209, Double_t Zhigh=209, Int_t Npart = 1, const Char_t *opt = "G") 
+	    Double_t Ylow=-1.0, Double_t Yhigh=-1.0,
+	    Double_t Philow=-TMath::DegToRad()*15, Double_t Phihigh=TMath::DegToRad()*15,
+	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 5, const Char_t *opt = "G") 
 #endif
 {
+  cout << "Run1Ev(NEvents=" << NEvents 
+       << ",iD=" << iD 
+       << ",pTlow=" << pTlow  << ",pThigh=" << pThigh
+       << ",Ylow=" << Ylow  << ",Yhigh=" << Yhigh
+       << ",Philow=" << Philow  << ",Phihigh=" << Phihigh
+       << ",Zlow=" << Zlow  << ",Zhigh=" << Zhigh
+       << ",Npart=" << Npart << ",opt=\"" << opt << "\")" << endl;
   if ( gClassTable->GetID("TGiant3") >= 0) { // root4star
     if (gClassTable->GetID("St_geant_Maker") < 0) {
       cout << "You have to use root4star with St_geant_Maker already loaded" << endl; 

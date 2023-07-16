@@ -1,7 +1,5 @@
 /* 
-   root.exe lMuDst.C Mu.C+
-   root.exe lMuDst.C Mu.root
->> .L Mumc.C+;  Init(0); DrawEff(); DrawQA();
+   root.exe lMuDst.C MuL3Vx.C+
 */
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <assert.h>
@@ -85,6 +83,16 @@ void MuL4Vx(Long64_t nevent = 9999999,
 	const  char* outFile="MuL4Vx.root") {
 #if 1
   TFile *fOut = new TFile(outFile,"recreate");
+  TH1F  *zVxAll = new TH1F("zVXAll","Z of all reconstructed vertices",210,-210,210);
+  TH1F  *zVxAll1 = new TH1F("zVXAll1","Z of the highest rank vertex",210,-210,210);
+  TH1F  *zVxAllF = new TH1F("zVXAllF","Z of the highest rank vertex",100,198,202);
+  TH1F  *noTracks = new TH1F("noTracks", "no. of tracks in a vertex",100,0,250); 
+  TH1F  *noTracks1 = new TH1F("noTracks1", "no. of tracks in the highest rang vertrex",100,0,250); 
+  TH1F  *noTracksF = new TH1F("noTracksF", "no. of tracks in the highest rang vertrex with |Z-200| < 5 cm",100,0,250); 
+  TH2F  *ZnoTracksF = new TH2F("ZnoTracksF", "(Z-200) versus no. of tracks in the highest rang vertrex with |Z-200| < 2 cm",100,0,250,100,-2,2); 
+  TH2F  *CAnWestEast = new TH2F("CAnWestEast","no. of tracks West versus East",150,0,150,50,0,50);
+  TH2   *CAZvxZ  = new TH2F("CAZvsZ","Z All from CA vesrsus Z > 10 tracks", 100, 199,201, 100, 197, 202);
+  TH2   *CAZWestVsEast  = new TH2F("CAZWestVsEast","ZWest -ZAll vs ZEast - ZAll", 100, -2, 2, 100, -5, 5);
 #endif
   StMuDebug::setLevel(0);  
   maker = new StMuDstMaker(0,0,"",file,filter,1e9);   // set up maker in read mode
@@ -142,7 +150,22 @@ void MuL4Vx(Long64_t nevent = 9999999,
 #endif
     for (Int_t l = 0; l < NoPrimaryVertices; l++) {
       StMuPrimaryVertex *Vtx = (StMuPrimaryVertex *) PrimaryVertices->UncheckedAt(l);
+      if (! Vtx) continue;
+      Int_t NTracks = Vtx->noTracks();
+      Double_t Z = Vtx->position().z();
+      zVxAll->Fill(Z);
+      noTracks->Fill(NTracks);
       if (l) continue;
+      zVxAll1->Fill(Z);
+      noTracks1->Fill(NTracks);
+      if (TMath::Abs(Vtx->position().z() - 200) > 2) continue;
+      zVxAllF->Fill(Z);
+      noTracksF->Fill(NTracks);
+      ZnoTracksF->Fill(NTracks, Z - 200);
+      CAnWestEast->Fill(L4VxEast.Const,L4VxWest.Const);
+      if (L4Vx.Const < 10) continue;
+      CAZvxZ->Fill(Z, L4Vx.Mu);
+      CAZWestVsEast->Fill(L4VxEast.Mu -  L4Vx.Mu, L4VxWest.Mu -  L4Vx.Mu);
     }
   }
 #if 1
