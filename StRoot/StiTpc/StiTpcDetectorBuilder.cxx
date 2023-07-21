@@ -108,7 +108,6 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
     Int_t sectorE = 24-(StiSector)%12;
     Int_t nRowsW = St_tpcPadConfigC::instance()->numberOfRows(sectorW);
     Int_t nRowsE = St_tpcPadConfigC::instance()->numberOfRows(sectorE);
-    Int_t nRowsWE[2] = {nRowsW, nRowsE};
     nRows = TMath::Max(nRowsW, nRowsE);
     for(Int_t rowW = nRowsW, rowE = nRowsE; rowW > 0 || rowE > 0; rowW--, rowE--) {
       Int_t StiRowW = StiRow(sectorW,rowW);
@@ -124,16 +123,6 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	Int_t StiRow = StiRows[k];
 	row = rows[k];
 	assert(row > 0);
-	Int_t NROWS = nRowsWE[k];
-#if 0
-	if (StiRow-1 < (Int_t) _detectors.size()) {
-	  if (_detectors[StiRow-1].size() && _detectors[StiRow-1][StiSector-1]) {
-	    static Int_t skipped = 0;
-	    skipped++;
-	    continue;
-	  }
-	}
-#endif
 	//Nominal pad row information.
 	// create properties shared by all sectors in this padrow
 	float fRadius = St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,row);
@@ -213,22 +202,18 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	StiDetector *pDetector = _detectorFactory->getInstance();
 	pDetector->setName(name.Data());
 	pDetector->setIsOn(kTRUE);
-	Bool_t west = kTRUE;
-	Bool_t east = kTRUE;
-	if (NROWS == 45) { // ! iTpx
-	  Bool_t west = s_pRdoMasks->isRowOn(sector, row);
-	  Bool_t east = s_pRdoMasks->isRowOn( 24-(sector)%12, row);
-	  if (west) {
-	    Int_t sec = sector;
-	    west = St_tpcAnodeHVavgC::instance()->livePadrow(sec,row) &&
-	      St_tpcPadGainT0BC::instance()->livePadrow(sec,row);
-	  }
-	  if (east) {
-	    Int_t sec = 24-(sector)%12;
-	    east = St_tpcAnodeHVavgC::instance()->livePadrow(sec,row) &&
-	      St_tpcPadGainT0BC::instance()->livePadrow(sec,row);
-	  }
+	Bool_t west = s_pRdoMasks->isRowOn(sector, row);
+	Bool_t east = s_pRdoMasks->isRowOn( 24-(sector)%12, row);
+	if (west) {
+	  Int_t sec = sector;
+	  west = St_tpcAnodeHVavgC::instance()->livePadrow(sec,row) &&
+	    St_tpcPadGainT0BC::instance()->livePadrow(sec,row);
 	}
+	if (east) {
+	  Int_t sec = 24-(sector)%12;
+	  east = St_tpcAnodeHVavgC::instance()->livePadrow(sec,row) &&
+	    St_tpcPadGainT0BC::instance()->livePadrow(sec,row);
+	  }
 	pDetector->setIsActive(new StiTpcIsActiveFunctor(_active,west,east));
 	pDetector->setIsContinuousMedium(kTRUE);
 	pDetector->setIsDiscreteScatterer(kFALSE);

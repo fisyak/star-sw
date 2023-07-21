@@ -129,13 +129,14 @@ public:
   void getMomentum(double p[3], double e[6]=0) const;
   /// Calculates and returns the tangent of the track pitch angle at this node.
   double getCurvature() const {return mFP.curv();}
-  void getXYZ(Double_t xyzp[6], Double_t CovXyzp[21]) const;
+  static void getXYZ(const StiNodePars &pars, const StiNodeErrs &errs, Float_t alpha, Double_t xyzp[6], Double_t CovXyzp[21]);
+  void getXYZ(Double_t xyzp[6], Double_t CovXyzp[21]) const {getXYZ(fitPars(), fitErrs(), getAlpha(), xyzp, CovXyzp);}
   void setCurvature(double curvature) {mFP.curv()=curvature;}
   double getDipAngle() const {return atan(mFP.tanl());}
   double getTanL() const {return mFP.tanl();}
   /// Calculates and returns the transverse momentum of the track at this node.
     double getPt() const;
-  /// Calculates and returns the momentum of the track at this node.
+  /// Calculates and rex1turns the momentum of the track at this node.
     double getP() const {return (getPt()*::sqrt(1.+mFP.tanl()*mFP.tanl()));}
   /// Calculates and returns the Z mag field in the current point.
   /// units: PGeV = Hz*Radcurv_in_CM

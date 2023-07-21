@@ -166,6 +166,11 @@ void StxCAInterface::MakeSettings() {
     
     fCaParam.push_back(SlicePar);
   } // for iSlice
+  sort(fCaParam.begin(), fCaParam.end(), 
+       [](const AliHLTTPCCAParam & a, const AliHLTTPCCAParam & b)
+       { 
+	 return a.ISlice() < b.ISlice();
+       });
 } // void StTPCCAInterface::MakeSettings()
 //________________________________________________________________________________
 void StxCAInterface::MakeHits() {
@@ -178,9 +183,9 @@ void StxCAInterface::MakeHits() {
     StTpcSectorHitCollection* sectorCollection = TpcHitCollection->sector(i);
     Int_t numberOfPadrows = sectorCollection->numberOfPadrows();
     Int_t sector = i + 1;
-    Double_t beta = (sector <= 12) ? (60 - 30*(sector - 1)) : (120 + 30 *(sector - 13));
-    Double_t cb   = TMath::Cos(TMath::DegToRad()*beta);
-    Double_t sb   = TMath::Sin(TMath::DegToRad()*beta);
+    Double_t beta = fCaParam[sector-1].Alpha();
+    Double_t cb   = TMath::Cos(beta);
+    Double_t sb   = TMath::Sin(beta);
     if (sectorCollection) {
       for (int j = 0; j< numberOfPadrows; j++) {
 	StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(j);
@@ -210,7 +215,7 @@ void StxCAInterface::MakeHits() {
 	    AliHLTTPCCAGBHit caHit;
 	    Double_t xL =  cb*glob.x() + sb*glob.y();
 	    Double_t yL = -sb*glob.x() + cb*glob.y();
-	    Double_t zL =                  glob.z();
+	    Double_t zL =                   glob.z();
             caHit.SetX(   xL);
 	    caHit.SetY( - yL);
 	    caHit.SetZ( - zL);

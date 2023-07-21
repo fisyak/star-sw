@@ -2416,13 +2416,13 @@ static const double surf[6] = {-Radius*Radius, 0, 0, 0, 1, 1};
   return time;
 }
 //________________________________________________________________________________
-void StiKalmanTrackNode::getXYZ(Double_t xyzp[6], Double_t CovXyzp[21]) const {
+void StiKalmanTrackNode::getXYZ(const StiNodePars &pars, const StiNodeErrs &errs, Float_t alpha, Double_t xyzp[6], Double_t CovXyzp[21]) {
   //  static const Float_t one = 1;
-  const StiNodePars &pars = fitPars(); 
-  const StiNodeErrs &errs = fitErrs();
-  Float_t alpha = getAlpha();
-  Double_t ca = cos(_alpha);
-  Double_t sa = sin(_alpha);
+//   const StiNodePars &pars = fitPars(); 
+//   const StiNodeErrs &errs = fitErrs();
+//  Float_t alpha = getAlpha();
+  Double_t ca = cos(alpha);
+  Double_t sa = sin(alpha);
   xyzp[0] = ca*pars.x() - sa*pars.y(); 
   xyzp[1] = sa*pars.x() + ca*pars.y(); 
   xyzp[2] =  pars.z();
