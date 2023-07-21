@@ -719,6 +719,9 @@ void AliHLTTPCCAMerger::UnpackSlices()
         // if chi2 per degree of freedom > 3. sigma - mark track with 0
       fitted &= vStartPoint.Chi2() < 9.f*static_cast<float_v>(vStartPoint.NDF());
 #endif
+#ifdef CALC_DCA_ON
+      point_3d dcaV[float_v::Size];
+#endif /* CALC_DCA_ON */
       for( unsigned int iV=0; iV<float_v::Size; iV++ ) {
         if(!fitted[iV]) continue;
           // if the track fitted correctly store the track
@@ -729,11 +732,42 @@ void AliHLTTPCCAMerger::UnpackSlices()
         track.SetInnerParam( inTrPar );
         point_3d dca;
         inTrPar.GetDCAPoint( 0.f, 0.f, 0.f, dca.x, dca.y, dca.z, fSliceParam.cBz( ) );
-        if( inTrPar.GetZ() < 0 ) dca_left.push_back(dca);
-        else dca_right.push_back(dca);
+	Bool_t alreadyOn = kFALSE;
+	for (unsigned int iv = 0; iv < iV; iv++) {
+	  float diff2 = 
+	    (dca.x - dcaV[iv].x)*(dca.x - dcaV[iv].x) +
+	    (dca.y - dcaV[iv].y)*(dca.y - dcaV[iv].y) +
+	    (dca.z - dcaV[iv].z)*(dca.z - dcaV[iv].z);
+	  if (diff2 < 1e-7) {
+	    alreadyOn = kTRUE;
+	  }
+	}
+	dcaV[iV] = dca;
+	if (! alreadyOn) {
+#if 0
+        if( inTrPar.GetZ() > 0 ) {dca_left.push_back(dca); leftTracks.push_back(inTrPar);   alpha_left.push(vStartAlpha[iV]);}
+        else                     {dca_right.push_back(dca); rightTracks.push_back(inTrPar); alpha_right.push(vStartAlpha[iV]);}
 #else
-        track.SetInnerParam( AliHLTTPCCATrackParam( vStartPoint, iV ) );
+	trackInSector TrackSector;
+	TrackSector.x = dca.x;
+	TrackSector.y = dca.y;
+	TrackSector.z = dca.z;
+	TrackSector.x = dca.x;
+	TrackSector.sector = iSlice+1;
+	TrackSector.alpha = vStartAlpha[iV];
+	TrackSector.Track = inTrPar;
+#if 0
+        if( inTrPar.GetZ() > 0 ) {left.push_back(TrackSector);}
+        else                     {right.push_back(TrackSector);}
+#else
+	if (TrackSector.sector > 12) {left.push_back(TrackSector);}
+	else                         {right.push_back(TrackSector);}
 #endif
+#endif 
+	}
+#else   /* ! CALC_DCA_ON */
+        track.SetInnerParam( AliHLTTPCCATrackParam( vStartPoint, iV ) );
+#endif /* CALC_DCA_ON */
         track.SetInnerAlpha( vStartAlpha[iV] );
         track.SetOuterParam( AliHLTTPCCATrackParam( vEndPoint,   iV ) );
         track.SetOuterAlpha( vEndAlpha[iV] );

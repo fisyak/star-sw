@@ -28,6 +28,7 @@
 
 #include "AliHLTTPCCADef.h"
 #include "AliHLTTPCCATrackParam.h"
+#include "StTrackSegment.h"
 
 namespace std
 {

@@ -123,8 +123,17 @@ class AliHLTTPCCAGBTracker
     int  GetHitsSize() const {return fHits.Size();}
 
 #ifdef CALC_DCA_ON
+#if 0
   vector<point_3d>& GetLeftDCA() { return dca_left; }
   vector<point_3d>& GetRightDCA() { return dca_right; }
+  vector<AliHLTTPCCATrackParam> &GetLeftTracks() { return leftTracks;}
+  vector<AliHLTTPCCATrackParam> &GetRightTracks(){ return rightTracks;}
+  vector<float>& GetLeftAlpha() { return alpha_left; }
+  vector<float>& GetRightAlpha() { return alpha_right; }
+#else
+  vector<trackInSector>& GetLeft()  { return left; }
+  vector<trackInSector>& GetRight() { return right; }
+#endif
 #endif
 
       /// Try to group close hits in row formed by one track. After sort hits.
@@ -143,8 +152,17 @@ class AliHLTTPCCAGBTracker
     int fNTracks;              //* N tracks
     AliHLTTPCCAMerger *fMerger;  //* global merger
 #ifdef CALC_DCA_ON
+#if 0
     vector<point_3d> dca_left;
     vector<point_3d> dca_right;
+    vector<AliHLTTPCCATrackParam> leftTracks;
+    vector<AliHLTTPCCATrackParam> rightTracks;
+    vector<float> alpha_left;
+    vector<float> alpha_right;
+#else
+  vector<trackInSector> left; 
+  vector<trackInSector> right; 
+#endif
 #endif
 
     AliHLTResizableArray<AliHLTTPCCAClusterData, 1, AliHLTFullyCacheLineAligned> fClusterData;
