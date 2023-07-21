@@ -207,6 +207,9 @@ public:
   /** Sets a field coefficient with index "i". \param[in] c - value to be set \param[in] i - index of the element */
   void SetFieldCoeff(float c, int i) { fieldRegion[i] = c; } 
 #endif
+#ifdef __ROOT__ //for the STAR experiment
+  virtual void Print(Option_t *opt="") const;
+#endif
  private:
 
   float fP[6];  ///< Parameters of the track: { X, Y, Z, Px, Py, Pz }.
@@ -226,5 +229,8 @@ public:
   ClassDef(KFPTrack,1)
 #endif
 };
+#ifdef __ROOT__ //for the STAR experiment
+std::ostream&  operator<<(std::ostream& os, KFPTrack const & track);
+#endif
 
 #endif

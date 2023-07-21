@@ -311,6 +311,7 @@ class KFParticle :public KFParticleBase
 
   //* Method to access ALICE field 
 #ifdef HomogeneousField
+  public:
   static float GetFieldAlice();
 #endif
   

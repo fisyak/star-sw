@@ -23,7 +23,7 @@
 
 #include "KFTopoPerformance.h"
 
-#ifdef KFPWITHTRACKER
+#ifdef KFPWITHTRACKER_1
 #ifdef MAIN_DRAW
 #include "AliHLTTPCCADisplay.h"
 #endif //DRAW
@@ -104,7 +104,7 @@ void KFTopoPerformance::Set3DEfficiency(TString fileName = "")
   gDirectory = curdir; 
 }
 
-#ifdef KFPWITHTRACKER
+#ifdef KFPWITHTRACKER_1
 void KFTopoPerformance::SetNewEvent(
                             const AliHLTTPCCAGBTracker * const tracker,
                             AliHLTResizableArray<AliHLTTPCCAHitLabel> *hitLabels,
@@ -1018,7 +1018,7 @@ void KFTopoPerformance::MatchTracks()
 {
   if(!fStoreMCHistograms) return;
   /** Runs reading of Monte Carlo particles and vertices, their matching, calculation of efficiency. */
-#ifdef KFPWITHTRACKER
+#ifdef KFPWITHTRACKER_1
   for(int iTr=0; iTr<vMCTracks.size(); iTr++)
   {
     if( (AliHLTTPCCAPerformance::Instance().GetSubPerformance("Global Performance")->GetMCData())[iTr].IsReconstructed() )

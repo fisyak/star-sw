@@ -34,13 +34,19 @@
 #ifdef USE_TIMERS
 #ifndef HLTCA_STANDALONE
 #include "TStopwatch.h"
+#define _Stopwatch
 typedef TStopwatch Stopwatch;
 #else
 #include "Stopwatch.h"
 #endif
 #endif
-
+#define KFPWITHTRACKER
 #ifdef KFPWITHTRACKER
+#include "TPCCATracker/AliHLTTPCCADef.h"
+#include "TPCCATracker/Stopwatch.h"
+#include "TPCCATracker/AliHLTTPCCAGBTracker.h"
+#include "TPCCATracker/StTrackSegment.h"
+#else
 class AliHLTTPCCAGBTracker;
 #endif
 
@@ -89,6 +95,7 @@ class KFParticleTopoReconstructor{
    ** "-1" is set as the pdg hypothesis for all tracks
    **/
   void Init(AliHLTTPCCAGBTracker* tracker, std::vector<int>* pdg=0); // init array of particles
+  void Init(std::vector<trackInSector> Tracks, std::vector<int>* pdg=0); // init array of particles
 #endif
   /** Copies provided particles to the vector KFParticleTopoReconstructor::fTracks
    ** assuming a given PDG hypothesis for each particle. If pointer to pdg-vector is not provided

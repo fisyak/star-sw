@@ -63,7 +63,7 @@ class KFTopoPerformance: public KFParticlePerformanceBase
   
   KFTopoPerformance();
   virtual ~KFTopoPerformance();
-#ifdef KFPWITHTRACKER
+#ifdef KFPWITHTRACKER_1
   virtual void SetNewEvent(
     const AliHLTTPCCAGBTracker * const Tracker,
     AliHLTResizableArray<AliHLTTPCCAHitLabel> *hitLabels,
