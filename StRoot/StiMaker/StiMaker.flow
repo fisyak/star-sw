@@ -1,11 +1,14 @@
-							_x;   /// local X-coordinate of this track (reference plane)
-y(x) = y_0 - (1 - (C*x - eta)**2)**1/2/C 		_p0;  /// local Y-coordinate of this track (reference plane)	
-z(x) = z_0 - tan(lambda)/C*arcsin(C*x - eta)		_p1;  /// local Z-coordinate of this track (reference plane)
-//eta  = C*x_0                                          _p2;  /// (signed curvature)*(local X-coordinate of helix axis)
-eta  = C*(x_0-x) = -sin(Psi)                            _p2;  /// (signed curvature)*(local X-coordinate of helix axis)
-C							_p3;  /// signed curvature [sign = sign(-qB)]
-tan(lambda)						_p4;  /// tangent of the track momentum dip angle
-
+                                                       P[8]
+_x                                                      _p0;  kX/// local X-coordinate of this track (reference plane)
+y(x) = y_0 - (1 - (C*x - eta)**2)**1/2/C 		_p1;  kY/// local Y-coordinate of this track (reference plane)	
+z(x) = z_0 - tan(lambda)/C*arcsin(C*x - eta)		_p2;  kZ/// local Z-coordinate of this track (reference plane)
+eta  = C*(x_0-x) = -sin(Psi)                            _p3;  kPhi/// (signed curvature)*(local X-coordinate of helix axis)
+pTin                                                    _p4;  kPtin
+tan(lambda)						_p5;  kTan  /// tangent of the track momentum dip angle
+C							_p6;  kCurv /// signed curvature [sign = sign(-qB)]
+Hz                                                      _p7;  kHz
+_cosCA=cos(P[kPhi]);
+_sinCA=sin(P[kPhi]);
   /// covariance matrix of the track parameters	
   ///       y     z   eta     C  tan(lambda)
   double _c00;                       
