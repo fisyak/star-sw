@@ -1,3 +1,4 @@
+#include "Riostream.h"
 #ifdef __TFG__VERSION__
 #include "StPicoEvent/StPicoDst.h"
 #include "StPicoEvent/StPicoEvent.h"
