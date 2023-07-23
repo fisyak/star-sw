@@ -53,6 +53,7 @@
 #include "TString.h"
 #include "TArrayF.h"
 #include "TArrayL.h"
+#include "KFVertex.h"
 class L4CAVertex {
  public:
   Float_t Const, dConst;
@@ -156,7 +157,9 @@ protected:
     L4CAVertex L4Vx;
     L4CAVertex L4VxWest;
     L4CAVertex L4VxEast;
-    ClassDef(StEventSummary,3)
+    KFVertex   KFVxWest;
+    KFVertex   KFVxEast;
+    ClassDef(StEventSummary,4)
 };
 
 #endif
