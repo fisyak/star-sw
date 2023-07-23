@@ -1,5 +1,5 @@
 /* 
-   root.exe lMuDst.C MuL3Vx.C+
+   root.exe lMuDst.C MuL4Vx.C+
 */
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <assert.h>
@@ -90,7 +90,7 @@ void MuL4Vx(Long64_t nevent = 9999999,
   TH1F  *noTracks1 = new TH1F("noTracks1", "no. of tracks in the highest rang vertrex",100,0,250); 
   TH1F  *noTracksF = new TH1F("noTracksF", "no. of tracks in the highest rang vertrex with |Z-200| < 5 cm",100,0,250); 
   TH2F  *ZnoTracksF = new TH2F("ZnoTracksF", "(Z-200) versus no. of tracks in the highest rang vertrex with |Z-200| < 2 cm",100,0,250,100,-2,2); 
-  TH2F  *CAnWestEast = new TH2F("CAnWestEast","no. of tracks West versus East",150,0,150,50,0,50);
+  TH2F  *CAnWestEast = new TH2F("CAnWestEast","no. of tracks West versus East",150,0,150,150,0,150);
   TH2   *CAZvxZ  = new TH2F("CAZvsZ","Z All from CA vesrsus Z > 10 tracks", 100, 199,201, 100, 197, 202);
   TH2   *CAZWestVsEast  = new TH2F("CAZWestVsEast","ZWest -ZAll vs ZEast - ZAll", 100, -2, 2, 100, -5, 5);
 #endif
