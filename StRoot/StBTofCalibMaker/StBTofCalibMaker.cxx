@@ -372,9 +372,10 @@ Int_t StBTofCalibMaker::InitRun(int runnumber)
     mVpdResConfig = new StVpdSimConfig;
     mVpdResConfig->loadVpdSimParams(); // do i really need this?
     mVpdRes = mVpdResConfig->getParams();
+#ifndef __TFG__VERSION__
     mBTofRes = new StBTofSimResParams;
     mBTofRes->loadParams(runnumber); //zaochen
-
+#endif /* !__TFG__VERSION__ */
 
     if(vpdCalib) {
         mUseVpdStart = vpdCalib->useVpdStart();
@@ -1000,8 +1001,9 @@ Int_t StBTofCalibMaker::FinishRun(int runnumber)
 {
     if(mBeamHelix) delete mBeamHelix;
     mBeamHelix = 0;
-
+#ifndef __TFG__VERSION__
     if (mBTofRes){delete mBTofRes; mBTofRes = 0;}
+#endif /* __TFG__VERSION__ */
     if (mVpdResConfig) {delete mVpdResConfig;  mVpdResConfig = 0;}
 
     return kStOK;
@@ -2938,8 +2940,11 @@ float StBTofCalibMaker::tofCellResolution(const Int_t itray, const Int_t iModule
  int module = iModuleChan/6 + 1;
  int cell   = iModuleChan%6 + 1;
  // mBTofRes::timeres_tof() reports in picoseconds
+#ifndef __TFG__VERSION__
  float stop_resolution  = mBTofRes->timeres_tof(itray, module, cell)/1000.;
-
+#else /* __TFG__VERSION__ */
+ float stop_resolution  = St_tofSimResParamsC::instance()->timeres_tof(itray, module, cell)/1000.;
+#endif /* __TFG__VERSION__ */
 float start_resolution(0);
  if (mUseVpdStart){
 
@@ -2957,7 +2962,11 @@ float start_resolution(0);
    // more sophisticated: figure out what BTOF cells actually went into the NT0 count.
 
    // mBTofRes::timeres_tof() reports in picoseconds
+#ifndef __TFG__VERSION__
    start_resolution = mBTofRes->average_timeres_tof()/sqrt(mNTzero)/1000.;
+#else /* __TFG__VERSION__ */
+   start_resolution = St_tofSimResParamsC::instance()->average_timeres_tof()/sqrt(mNTzero)/1000.;
+#endif /* __TFG__VERSION__ */
    resolution = sqrt(stop_resolution*stop_resolution + start_resolution*start_resolution);
  }
  return resolution;

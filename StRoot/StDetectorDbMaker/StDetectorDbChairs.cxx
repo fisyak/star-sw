@@ -16,51 +16,56 @@ using namespace ROOT::Math;
 #include "tables/St_pidCorrection_Table.h"
 #include "tables/St_tpcSectorT0offset_Table.h"
 #include "tables/St_tofTrayConfig_Table.h"
-#define DEBUGTABLED(STRUCT) PrintTable(#STRUCT,table )
-#define makeString(PATH) # PATH
-#define CHECKTABLED(C_STRUCT) \
-  if (table->InheritsFrom("St_" makeSTRING(C_STRUCT))) {	  \
+#define makeSTRING(PATH) # PATH
+#define CHECKTABLED(C_STRUCT)			  \
+  if (table->InheritsFrom("St_" # C_STRUCT)) {		      \
     St_ ## C_STRUCT  *t = (St_ ## C_STRUCT  *) table ;	      \
-    ## C_STRUCT ## _st *s = t->GetTable(); Nrows = s->nrows;    \
-    ## C_STRUCT ## _st def = {0};				      \
+    C_STRUCT ## _st *s = t->GetTable(); Nrows = s->nrows;     \
+    C_STRUCT ## _st def = {0};				      \
     iprt = kFALSE;					      \
-    Int_t shift = 0; \
-    Int_t NrowSize = t->GetRowSize(); \
-    if (! strcmp(makeSTRING(C_STRUCT),"Survey")) {shift = 4; NrowSize = 12*8;}\
-    if (! strcmp(makeSTRING(C_STRUCT),"tpcSectorT0offset")) {for (Int_t i = 0; i < 24; i++) def->t0[i] = -22.257;} \
-    if (! strcmp(makeSTRING(C_STRUCT),"tofTrayConfig")) {def->entries = 120; for (Int_t i = 0; i < 120; i++) {def->iTray[i] = i+1; def->nModules[i] = 32;} \
-    for (Int_t i = 0; i < table->GetNRows(); i++, s++) {	      \
-      if (memcmp(&def+shift, s+shift,  NrowSize)) {iprt = kTRUE; break;}   \
-    }								      \
+    Int_t shift = 0;							\
+    Int_t NrowSize = t->GetRowSize();					\
+    if (! strcmp(makeSTRING(C_STRUCT),"Survey")) {shift = 4; NrowSize = 12*8;} \
+    if (! strcmp(makeSTRING(C_STRUCT),"tpcSectorT0offset")) {for (Int_t i = 0; i < 24; i++) def.t0[i] = -22.257;} \
+    if (! strcmp(makeSTRING(C_STRUCT),"tofTrayConfig")) {def.entries = 120; for (Int_t i = 0; i < 120; i++) {def.iTray[i] = i+1; def.nModules[i] = 32;} \
+      for (Int_t i = 0; i < table->GetNRows(); i++, s++) {		\
+	if (memcmp(&def+shift, s+shift,  NrowSize)) {iprt = kTRUE; break;} \
+      }									\
+    }
+}
+#define  DEBUGTABLE(STRUCT)				\
+  TDatime t[2];						\
+  Bool_t iprt = kTRUE;					\
+  Int_t Nrows = -1;						\
+  if (St_db_Maker::GetValidity(table,t) > 0) {			\
+    if (table->InheritsFrom("St_tpcCorrection") ) {		\
+      St_tpcCorrection *tt = (St_tpcCorrection *) table;	\
+      tpcCorrection_st *s = tt->GetTable(); Nrows = s->nrows;	\
+    } else if (table->InheritsFrom("St_pidCorrection") ) {	\
+      St_pidCorrection *tt = (St_pidCorrection *) table;	\
+      pidCorrection_st *s = tt->GetTable(); Nrows = s->nrows;		\
+    }									\
+    LOG_WARN << "St_" << makeSTRING(STRUCT) << "C::instance found table " << table->GetName() \
+	     << " with NRows = " << Nrows << " in db"			\
+	     << "\tValidity:" << t[0].GetDate() << "/" << t[0].GetTime() \
+	     << " - " << t[1].GetDate() << "/" << t[1].GetTime() << endm; \
+    if (Nrows > 10) Nrows = 10;						\
+    CHECKTABLED(tpcCorrection);						\
+    CHECKTABLED(tpcHVPlanes);						\
+    CHECKTABLED(Survey);						\
+    CHECKTABLED(tpcSectorT0offset);					\
+    CHECKTABLED(tofTrayConfig);						\
+    if (iprt) {								\
+      if (table->GetRowSize() < 512) table->Print(0,Nrows);		\
+    } else {								\
+      LOG_WARN << "Default table" << endm;				\
+    }									\
   }
 //___________________Debug Print out  _____________________________________________________________
-void PrintTable(const Char_t *str, TTable *table) {
-  DEBUGTABLE(str);
-  Bool_t iprt = kTRUE;
-  if (St_db_Maker::GetValidity(table,t) > 0) {
-    if (table->InheritsFrom("St_tpcCorrection") ) {
-      St_tpcCorrection *tt = (St_tpcCorrection *) table;
-      tpcCorrection_st *s = tt->GetTable(); Nrows = s->nrows;}
-  } else if (table->InheritsFrom("St_pidCorrection") ) {
-      St_pidCorrection *tt = (St_pidCorrection *) table;
-      pidCorrection_st *s = tt->GetTable(); Nrows = s->nrows;}
-  }
-    if (Nrows > 10) Nrows = 10;
-    CHECKTABLE(tpcCorrection);
-    CHECKTABLE(tpcHVPlanes);
-    CHECKTABLE(Survey);
-    CHECKTABLE(tpcSectorT0offset);
-    CHECKTABLE(tofTrayConfig);
-    if (iprt) {
-      if (table->GetRowSize() < 512) table->Print(0,Nrows);
-    } else {
-      LOG_WARN << "Default table" << endm;
-    }
-  }
-}
 #endif
 #include "StarChairDefs.h"
 static Int_t _debug = 0;
+
 //___________________Calibrations/ftpc_____________________________________________________________
 #include "StDetectorDbFTPCGas.h"
 StDetectorDbFTPCGas* StDetectorDbFTPCGas::fgInstance = 0;
@@ -3152,12 +3157,17 @@ St_tofSimResParamsC *St_tofSimResParamsC::instance() {
   DEBUGTABLE(tofSimResParams);							
   fgInstance = new St_tofSimResParamsC(table);				
   mAverageTimeResTof=0;
-  for ( int i = 0; i < 120; i++ ){ //  nTrays
-    for ( int j = 0; j < 192; j++ ){
-      size_t index = i * 120 + j;
-      params[i][j] = St_tofSimResParamsC::instance()->resolution()[index];
-      mAverageTimeResTof+=params[i][j];
-      LOG_DEBUG << "tray:" << i << ", mod cell:" << j << " = " << St_tofSimResParamsC::instance()->resolution()[index] << " == " << params[i][j] << endm;
+  const tofSimResParams_st *row = fgInstance->Struct(0);
+  for ( Int_t  i = 0; i < 120; i++ ){ //  nTrays
+    for ( Int_t  j = 0; j < 192; j++ ){
+      Int_t index = i * 120 + j;
+      params[i][j] = row->resolution[index];
+      mAverageTimeResTof += params[i][j];
+#if 0
+      if (_debug) {
+	LOG_DEBUG << "tray:" << i << ", mod cell:" << j << " = " << row->resolution[index] << " == " << params[i][j] << endm;
+      }
+#endif
     }
   }
   mAverageTimeResTof=mAverageTimeResTof/(120*192);
@@ -3176,11 +3186,8 @@ Double_t St_tofSimResParamsC::timeres_tof(UInt_t itray, UInt_t imodule, UInt_t i
    * then returns a single vertex resolution (in ps) for use in embedding w/ vpdStart
    */
   Double_t result = 8.5e-11;
-  if ( itray > 120 || imodule > 32 || icell > 6 )
-    return result;
-  
+  if ( itray > 120 || imodule > 32 || icell > 6 )    return result;
   return params[ itray ][ imodule * 6 + icell ];
-  
 }
 #include "St_vpdDelayC.h"
 MakeChairInstance(vpdDelay,Calibrations/tof/vpdDelay);

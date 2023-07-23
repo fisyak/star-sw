@@ -89,7 +89,9 @@ protected:
 
 
     StTofSimParam*      mSimDb;          //!<
+#ifndef __TFG__VERSION__
     StBTofSimResParams* mSimResDb;
+#endif /* !__TFG__VERSION__ */
     StBTofDaqMap*       mDaqMap;         //!< Tof Daq map
     StMcBTofHitCollection *mMcBTofHitCollection; //!< barrel tof hit
 
