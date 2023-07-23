@@ -379,10 +379,24 @@ void AliHLTTPCCAGBTracker::Merge()
     fStatTime[13+i] = merger.Timer(i);
   }
 #ifdef CALC_DCA_ON
+#if 0
   dca_left.clear();
   dca_right.clear();
   dca_left = std::move( merger.GetLeftDCA() );
   dca_right = std::move( merger.GetRightDCA() );
+  leftTracks.clear();
+  rightTracks.clear();
+  leftTracks = std::move( merger.GetLeftTracks() );
+  rightTracks = std::move( merger.GetRightTracks() );
+  alpha_left.clear();
+  alpha_right.clear();
+  alpha_left = std::move( merger.GetLeftAlpha() );
+  alpha_right = std::move( merger.GetRightAlpha() );
+#else
+  left.clear();  left  = std::move( merger.GetLeft() );
+  right.clear(); right = std::move( merger.GetRight() );
+  
+#endif
 #endif
 
 ///mvz end

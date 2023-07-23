@@ -331,8 +331,9 @@ private:
 
     StVpdSimConfig*     mVpdResConfig; //! database access VPD resolutions
     std::map<int, StVpdSimConfig::SingleTubeParams>     mVpdRes;
+#ifndef __TFG__VERSION__
     StBTofSimResParams* mBTofRes; //! database access BTOF resolutions
-
+#endif /* !__TFG__VERSION__ */
     Bool_t            mPPPAMode = kFALSE; //! pp and pA Mode
     Bool_t            mPPPAPionSel = kFALSE; //! Only use the particle selection cuts from pppAMode
     Bool_t            mPPPAOutlierRej = kFALSE; //! Only use the outlier rejection algorithm from pppAMode

@@ -987,7 +987,7 @@ void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
   // Histograms
   static THnSparseF *Time = 0, *TimeC = 0; // , *TimeP = 0
   Int_t NoRows = St_tpcPadConfigC::instance()->numberOfRows(20);
-  //  static Hists3D PressureT("PressureT","log(dE/dx)","row","Log(Pressure*298.2/inputGasTemperature)",-NoRows,150, 6.84, 6.99);
+  //  static Hists3D PressureT("PressureT","log(dE/dx)","row","Log(Pressure*298.2/outputGasTemperature)",-NoRows,150, 6.84, 6.99);
   
   //  static Hists3D Volt("Volt","log(dE/dx)","Sector*Channels","Voltage", numberOfSectors*NumberOfChannels,410,990.,1400.);
 
@@ -1019,8 +1019,9 @@ void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
 #define __BOOK__VARS__(SIGN,NEGPOS) \
   static Hists3D SecRow3 ## SIGN ("SecRow3" MakeString(SIGN) ,"<log(dEdx/Pion)>"  MakeString(NEGPOS) ,"sector","row",numberOfSectors,NoRows); \
   static Hists3D Pressure ## SIGN ("Pressure" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"row","Log(Pressure)",-NoRows,150, 6.84, 6.99); \
+  static Hists3D Temperature ## SIGN ("Temperature" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"row","outputTemperature (T5)",-NoRows,60, 294,300); \
   static Hists3D Voltage ## SIGN ("Voltage" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"Sector*Channels","Voltage - Voltage_{nominal}", numberOfSectors*NumberOfChannels,22,-210,10); \
-  static Hists3D Z3 ## SIGN ("Z3" MakeString(SIGN) ,"<log(dEdx/Pion)>" MakeString(NEGPOS) ,"row","Drift Distance",-NoRows,220,-5,215); \
+  static Hists3D Z3 ## SIGN ("Z3" MakeString(SIGN) ,"<log(dEdx/Pion)>" MakeString(NEGPOS) ,"row","Drift Distance",-NoRows,220,-5,2215); \
   static Hists3D G3 ## SIGN ("G3" MakeString(SIGN) ,"<log(dEdx/Pion)>" MakeString(NEGPOS) ,"row","drift time to Gating Grid (us)",-NoRows,100,-5,15); \
   static Hists3D xyPad3 ## SIGN ("xyPad3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"sector+yrow[-0.5,0.5] and xpad [-1,1]"," xpad",numberOfSectors*20, 32,-1,1, 200, -5., 5., 0.5, 24.5); \
   static Hists3D dX3 ## SIGN ("dX3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"row","log2(dX)",-NoRows,40,-0.5,7.5); \
@@ -1337,6 +1338,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	Double_t V = FdEdx[k].Voltage;
 	Double_t VN = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? V - 1170 : V - 1390;
 	Double_t press = 0;
+	Double_t temp  = 0;
 	// ADC3 
 	if (FdEdx[k].adc > 0) {
 	  Double_t ADCL = TMath::Log(FdEdx[k].adc);
@@ -1348,6 +1350,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	  if (p > 0) {
 	    press = TMath::Log(p);
 	  }
+	  temp = tpcGas->outputGasTemperature;
 	  Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].dEdxN;
 	  Qcm.Fill(cs,FdEdx[k].Qcm,Vars);
 	  Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].dEdxN;
@@ -1396,6 +1399,8 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	EtaB3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars);	\
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcPressure].dEdxN;   \
 	Pressure ## SIGN.Fill(rowS,press,Vars); \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcGasTemperature].dEdxN;   \
+	Temperature ## SIGN.Fill(rowS,temp,Vars); \
 __FILL__VARS__dZdY(SIGN) \
 __FILL__VARS__PadTmbk(SIGN) 
 #if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
@@ -1578,7 +1583,7 @@ void StdEdxY2Maker::DoFitZ(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ){
 //________________________________________________________________________________
 void StdEdxY2Maker::TrigHistos(Int_t iok) {
   static TProfile *BarPressure = 0, *inputTPCGasPressure = 0;
-  static TProfile *nitrogenPressure = 0, *gasPressureDiff = 0, *inputGasTemperature = 0;
+  static TProfile *nitrogenPressure = 0, *gasPressureDiff = 0, *outputGasTemperature = 0;
   static TProfile *flowRateArgon1 = 0, *flowRateArgon2 = 0, *flowRateMethane = 0;
   static TProfile *percentMethaneIn = 0, *ppmOxygenIn = 0, *flowRateExhaust = 0;
   static TProfile *ppmWaterOut = 0, *ppmOxygenOut = 0, *flowRateRecirculation = 0;
@@ -1596,7 +1601,7 @@ void StdEdxY2Maker::TrigHistos(Int_t iok) {
     inputTPCGasPressure   = new TProfile("inputTPCGasPressure","inputTPCGasPressure (mbar) versus time",Nt,i1,i2);           
     nitrogenPressure      = new TProfile("nitrogenPressure","nitrogenPressure (mbar) versus time",Nt,i1,i2);                 
     gasPressureDiff       = new TProfile("gasPressureDiff","gasPressureDiff (mbar) versus time",Nt,i1,i2);                   
-    inputGasTemperature   = new TProfile("inputGasTemperature","inputGasTemperature (degrees K) versus time",Nt,i1,i2);      
+    outputGasTemperature   = new TProfile("outputGasTemperature","outputGasTemperature (degrees K) versus time",Nt,i1,i2);      
     flowRateArgon1        = new TProfile("flowRateArgon1","flowRateArgon1 (liters/min) versus time",Nt,i1,i2);               
     flowRateArgon2        = new TProfile("flowRateArgon2","flowRateArgon2 (liters/min) versus time",Nt,i1,i2);               
     flowRateMethane       = new TProfile("flowRateMethane","flowRateMethane (liters/min) versus time",Nt,i1,i2);             
@@ -1621,7 +1626,7 @@ void StdEdxY2Maker::TrigHistos(Int_t iok) {
       if (inputTPCGasPressure)   inputTPCGasPressure->Fill(tpcTime,tpcgas->inputTPCGasPressure);    
       if (nitrogenPressure)      nitrogenPressure->Fill(tpcTime,tpcgas->nitrogenPressure);          
       if (gasPressureDiff)       gasPressureDiff->Fill(tpcTime,tpcgas->gasPressureDiff);            
-      if (inputGasTemperature)   inputGasTemperature->Fill(tpcTime,tpcgas->inputGasTemperature);    
+      if (outputGasTemperature)  outputGasTemperature->Fill(tpcTime,tpcgas->outputGasTemperature);    
       if (flowRateArgon1)        flowRateArgon1->Fill(tpcTime,tpcgas->flowRateArgon1);              
       if (flowRateArgon2)        flowRateArgon2->Fill(tpcTime,tpcgas->flowRateArgon2);              
       if (flowRateMethane)       flowRateMethane->Fill(tpcTime,tpcgas->flowRateMethane);            

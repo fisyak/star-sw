@@ -233,6 +233,7 @@ private:
     StPhysicalHelixD * physicalHelix;
     StTrack2FastDetectorMatcher *mFastDetectorMatcher;
     static StiStEventFiller* fgStiStEventFiller;
+    static Int_t _debug;
 };
 
 #endif

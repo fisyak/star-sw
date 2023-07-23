@@ -122,7 +122,7 @@ void StTofStatus::Set(const KFParticle &particle, const KFVertex &bestVx) {
   Float_t dsdr[6] = {0};
   Float_t ds = atVx.GetDStoPoint(position().xyz(), dsdr);
   TRMatrix F(1,6, dsdr);                         PrPT(StBTofStatus::Set,F);
-  TRSymMatrix Cov(6, &atVx.Covariance(0)); PrPT(StBTofStatus::Set,Cov);
+  TRSymMatrix Cov(6, &atVx.Covariance(0));       PrPT(StBTofStatus::Set,Cov);
   TRSymMatrix Bcov(F, TRArray::kAxSxAT, Cov);    PrPT(StBTofStatus::Set,Bcov);
   Double_t dds = TMath::Sqrt(Bcov[0]);
   Float_t pq, dpq;
@@ -255,10 +255,11 @@ StTrackCombPiD::StTrackCombPiD() : fg3(), fPiDStatus(-1) {
 //________________________________________________________________________________
 StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack) : StTrackCombPiD() {
   if (! gTrack) return;
-  if (gTrack->dcaGeometry()) return;
+  StDcaGeometry *dca = gTrack->dcaGeometry();
+  if (! dca) return;
   if (fgDebug) gTrack->Print();
   fId = gTrack->key();
-  fDca = *(gTrack->dcaGeometry());
+  fDca = *dca;
   StSPtrVecTrackPidTraits &traits = gTrack->pidTraits();
   if (! traits.size()) return;
   for (UInt_t i = 0; i < traits.size(); i++) {
@@ -472,7 +473,7 @@ void StTrackCombPiD::SetCombPiD() {
       }
     }
   }
-  if (! fStatus[kI70] && ! fStatus[kFit] && ! fStatus[kdNdx]) return;
+  if (! (fStatus[kI70] || fStatus[kFit])) return;
   if (fId <= 0) return;
   fParticle = fDca.Particle(fId);
   fg3 = TVector3(fParticle.GetPx(),fParticle.GetPy(),fParticle.GetPz());

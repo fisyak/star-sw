@@ -46,4 +46,8 @@ TString OnDb(Int_t year = 2014, const Char_t *dataset="Conditions_daq") {
 /* magent 
    mysql mq_collector_Conditions_rhic -h onldb[2-4].starp.bnl.gov -P 3606
    mysql mq_collector_Conditions_rhic -h heston.star.bnl.gov --port=3606 -u "" -p""  only from RCF
+   
+   mysql -h onldb3.starp.bnl.gov --port 3606   mq_collector_Conditions_cdev
+   MySQL [mq_collector_Conditions_cdev]> explain starMagnetCurrentFull;
+
  */

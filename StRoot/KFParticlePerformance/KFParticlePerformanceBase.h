@@ -24,7 +24,7 @@
 #ifndef KFParticlePERFORMANCEBASE_H
 #define KFParticlePERFORMANCEBASE_H
 
-#ifdef KFPWITHTRACKER
+#ifdef KFPWITHTRACKER_1
 #include "AliHLTTPCCounters.h"
 
 #include "AliHLTTPCPerformanceBase.h"
@@ -68,7 +68,7 @@ class KFParticle;
  ** another primary vertex; efficiency.
  **/
 class KFParticlePerformanceBase
-#ifdef KFPWITHTRACKER
+#ifdef KFPWITHTRACKER_1
 : public AliHLTTPCPerformanceBase
 #endif
 {

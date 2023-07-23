@@ -823,13 +823,15 @@ void StBTofGeometry::Init(StMaker *maker, TVolume *starHall, TGeoManager* geoMan
        mTrayZ0[i] = -z0[i];  // thus z0 will be the distance between the tray end to the TPC central membrane
      }
 
-     if(maker->Debug()) {
 #ifndef __TFG__VERSION__
+     if(maker->Debug()) {
        LOG_DEBUG << " Tray # = " << i+1 << " Align parameters " << mTrayX0[i] << " " << mTrayY0[i] << " " << mTrayZ0[i] << endm;
-#else /* __TFG__VERSION__ */
-       LOG_INFO << " Tray # = " << i+1 << " Align parameters " << mTrayX0[i] << " " << mTrayY0[i] << " " << mTrayZ0[i] << endm;
-#endif /* __TFG__VERSION__ */
      }
+#else /* __TFG__VERSION__ */
+     if(maker->Debug() > 1) {
+       LOG_INFO << " Tray # = " << i+1 << " Align parameters " << mTrayX0[i] << " " << mTrayY0[i] << " " << mTrayZ0[i] << endm;
+     }
+#endif /* __TFG__VERSION__ */
    }
 
 /* GEM trays appear in Runs13+

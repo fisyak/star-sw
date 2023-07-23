@@ -84,6 +84,7 @@ ostream&  operator<<(ostream& os,  const StGlobalTrack& track) {
     if (track.idTruth())
         os << Form(" IdT: %4i Q: %4i", track.idTruth(), track.qaTruth());
 #endif
+    os << endl << dca->Particle(track.key(),dca->charge()*211);
     return os;
 }
 //________________________________________________________________________________

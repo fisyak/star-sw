@@ -106,7 +106,7 @@ void dEdx(Int_t First, Int_t Last,
       if (Year.Contains(Y)) {
 	tMin = 10000*(y-1) + 1101;
 	tMax = 10000* y    + 1031;
-	//	cout << "Year for year " << Y.Data() << "\ttMin = " << tMin << "\ttMax = " << tMax << endl;
+	cout << "Year for year " << Y.Data() << "\ttMin = " << tMin << "\ttMax = " << tMax << endl;
 	dEdxY2->RemAttr("tMin"); dEdxY2->SetAttr("tMin",tMin);
 	dEdxY2->RemAttr("tMax"); dEdxY2->SetAttr("tMax",tMax);
 	dEdxY2->PrintAttr();

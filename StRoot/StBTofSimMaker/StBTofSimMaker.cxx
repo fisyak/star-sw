@@ -52,7 +52,12 @@
 #include "StChain/StChainOpt.h"
 #include "StVpdSimMaker/StVpdSimMaker.h"
 #include "StVpdCalibMaker/StVpdCalibMaker.h"
+#ifndef __TFG__VERSION__
 #include "StBTofUtil/StBTofSimResParams.h"
+#else /* __TFG__VERSION__ */
+#include "StDetectorDbMaker/St_tofTOffsetC.h"
+#include "StDetectorDbMaker/St_tofSimResParamsC.h"
+#endif /* ! __TFG__VERSION__ */
 
 static RanluxEngine engine;
 static RandGauss ranGauss(engine);
@@ -130,8 +135,10 @@ int StBTofSimMaker::InitRun(int runnumber)
 	mDaqMap = new StBTofDaqMap();
 	mDaqMap->Init(this);
 	mSimDb = new StTofSimParam();
+#ifndef __TFG__VERSION__
 	mSimResDb = new StBTofSimResParams();
 	mSimResDb->loadParams();
+#endif /* !__TFG__VERSION__ */
 	//mSimDb->init();   // Only enable to pull calibration values from db
 	if (Debug()) mSimDb->print();
 	StVpdSimMaker *vpdSim = (StVpdSimMaker *)GetMaker("VpdSim");
@@ -157,7 +164,9 @@ int StBTofSimMaker::FinishRun(int runnumber)
 	LOG_INFO << "StBTofSimMaker::FinishRun -- cleaning up BTOF DAQ map --" << endm;
 	if (mDaqMap){delete mDaqMap; mDaqMap = 0;}
 	if (mSimDb){delete mSimDb; mSimDb = 0;}
+#ifndef __TFG__VERSION__
 	if (mSimResDb){delete mSimResDb; mSimResDb = 0;}
+#endif /* !__TFG__VERSION__ */
 	if (mVpdSimConfig){delete mVpdSimConfig; mVpdSimConfig = 0;}
 	return kStOk;
 }
@@ -820,14 +829,16 @@ int StBTofSimMaker::FastCellResponse(g2t_ctf_hit_st* tofHitsFromGeant, StBTofCol
 	double pathL = tofHitsFromGeant->s_track;
 	double q = 0.;
 
-#ifndef __TFG__VERSION__
 	double Rawtof = tofHitsFromGeant->tof*1000./nanosecond;
 	float Rawbeta=pathL/Rawtof/3e-2;
 	double momentum=partnerTrk->momentum().mag();
 	double mass=partnerTrk->fourMomentum().m();
 	double calcTof=pathL/(3e-2)/sqrt(1 - mass*mass/(momentum*momentum + mass*mass));
-#endif /* ! __TFG__VERSION__ */
+#ifndef __TFG__VERSION__
 	double time_blur = ranGauss.shoot()*mSimResDb->timeres_tof(itray, imodule, icell)*1e-9/nanosecond;
+#else /* __TFG__VERSION__ */
+	double time_blur = ranGauss.shoot()*St_tofSimResParamsC::instance()->timeres_tof(itray, imodule, icell)*1e-9/nanosecond;
+#endif /* ! __TFG__VERSION__ */
 	double tof = tofHitsFromGeant->tof*1000./nanosecond + time_blur;    //! 85ps per channel
 
 	if ( mVpdSim ) {    // VpdSimMaker present, assume vpdstart
@@ -870,7 +881,11 @@ int StBTofSimMaker::FastCellResponse(g2t_ctf_hit_st* tofHitsFromGeant, StBTofCol
 	///
 	/// X talk signal
 	///
+#ifndef __TFG__VERSION__
 	time_blur = ranGauss.shoot()*mSimResDb->timeres_tof(itray, imodule, icell)*1e-9/nanosecond;
+#else /* __TFG__VERSION__ */
+	time_blur = ranGauss.shoot()*St_tofSimResParamsC::instance()->timeres_tof(itray, imodule, icell)*1e-9/nanosecond;
+#endif /* ! __TFG__VERSION__ */
 	double tofx = tofHitsFromGeant->tof*1000./nanosecond + time_blur;    //! 85ps per channel
 	double dex = tofHitsFromGeant->de * (1. - wt);
 	double qx = 0.*(1.-wt);

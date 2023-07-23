@@ -30,7 +30,7 @@
 #include "AliHLTTPCCATrackParam.h"
 #include "AliHLTTPCCASliceTrack.h"
 #include "AliHLTTPCCASliceTrackVector.h"
-
+#include "StTrackSegment.h"
 #include "AliHLTTPCCATrackParamVector.h"
 
 #include <vector>
@@ -121,8 +121,17 @@ class AliHLTTPCCAMerger
   void UnpackSlices();
   void Reconstruct();
 #ifdef CALC_DCA_ON
+#if 0
   vector<point_3d>& GetLeftDCA() { return dca_left; }
   vector<point_3d>& GetRightDCA() { return dca_right; }
+  vector<AliHLTTPCCATrackParam> &GetLeftTracks() { return leftTracks;}
+  vector<AliHLTTPCCATrackParam> &GetRightTracks(){ return rightTracks;}
+  vector<float>& GetLeftAlpha()  { return alpha_left; }
+  vector<float>& GetRightAlpha() { return alpha_right; }
+#else
+  vector<trackInSector> GetLeft()  { return left; }
+  vector<trackInSector> GetRight() { return right;}
+#endif
 #endif
  private:
   void FindNeighbourTracks(int number=0);
@@ -261,8 +270,17 @@ class AliHLTTPCCAMerger
 #endif
 
 #ifdef CALC_DCA_ON
+#if 0
   std::vector<point_3d> dca_left;
   std::vector<point_3d> dca_right;
+  std::vector<AliHLTTPCCATrackParam> leftTracks;
+  std::vector<AliHLTTPCCATrackParam> rightTracks;
+  std::vector<float> alpha_left;
+  std::vector<float> alpha_right;
+#else
+  vector<trackInSector> left; 
+  vector<trackInSector> right;
+#endif  
 #endif
 
   int fNMergedSegments;

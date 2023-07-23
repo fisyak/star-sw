@@ -1,4 +1,4 @@
-#define __TPCCA_TIMING__
+//#define __TPCCA_TIMING__
 #include "StTPCCAInterface.h"
 #include "TPCCATracker/AliHLTTPCCAGBHit.h"
 #include "TPCCATracker/AliHLTTPCCAGBTrack.h"
@@ -30,11 +30,10 @@
 #include <vector>
 #include <algorithm>
 using std::vector;
-Double_t StTPCCAInterface::fSigmaSmooth = 5;
-TH1F *StTPCCAInterface::fVertexZPlots[3] = {0};
+Double_t StTPCCAInterface::fSigmaSmooth = 1;
+TH1F *StTPCCAInterface::fVertexZPlots[5] = {0};
 TH2F *StTPCCAInterface::fVertexXYPlots[3] = {0};
 TSpectrum *StTPCCAInterface::fSpectrum = 0;
-static Int_t _debug = 0;
 //________________________________________________________________________________
 void StTPCCAInterface::FillZHist(TH1F *hist, Double_t Z, Double_t sigmaZ) {
   static Double_t fzWindow = 2.0;
@@ -47,7 +46,8 @@ void StTPCCAInterface::FillZHist(TH1F *hist, Double_t Z, Double_t sigmaZ) {
   if (bin2 > NzBins) bin2 = NzBins;
   Double_t z = hist->GetBinCenter(bin1);
   for (Int_t bin = bin1; bin <= bin2; bin++, z += dZ) {
-    hist->Fill(z,(TMath::Erfc((z - Z - fzWindow)/SigmaZ) - TMath::Erfc((z - Z + fzWindow)/SigmaZ))/2.);
+    //    hist->Fill(z,(TMath::Erfc((z - Z - fzWindow)/SigmaZ) - TMath::Erfc((z - Z + fzWindow)/SigmaZ))/2.);
+    hist->Fill(z,(TMath::Erfc((z - Z - fzWindow)/SigmaZ) - TMath::Erfc((z - Z + fzWindow)/SigmaZ)));
   }
 }
 //________________________________________________________________________________
@@ -75,121 +75,9 @@ void StTPCCAInterface::Run()
   timer.Stop();
   fPreparationTime_real = timer.RealTime();
   fPreparationTime_cpu = timer.CpuTime();  
-  TCanvas *c1 = 0;
   std::cout<<" - CA FindTracks() start -\n";
   fTracker->FindTracks();
   std::cout<<" - fTracker->NTracks(): "<<fTracker->NTracks()<<"\n";
-  if (fSpectrum) {
-    // --- DCA test ---
-    std::cout<<" ------- FindTracks - done - dca test -------\n";
-    auto dca_left = fTracker->GetLeftDCA();	// dca_right, GetRightDCA
-    std::cout<<" - sca_left.size: "<<dca_left.size()<<"\n";
-    for( UInt_t i = 0; i < dca_left.size(); i++ ) {
-      if (_debug) {
-	std::cout<<" - > i: "<<i<<"; x: "<<dca_left[i].x<<"; y: "<< -dca_left[i].y<<"; z: "<< -dca_left[i].z<<"\n";
-      }
-      if (TMath::Sqrt(dca_left[i].x*dca_left[i].x + dca_left[i].y*dca_left[i].y) > 4.0) continue;
-      FillZHist(fVertexZPlots[0],-dca_left[i].z, fSigmaSmooth);
-      FillZHist(fVertexZPlots[2],-dca_left[i].z, fSigmaSmooth);
-    }
-    auto dca_right = fTracker->GetRightDCA();
-    std::cout<<" - sca_right.size: "<<dca_right.size()<<"\n";
-    for( UInt_t i = 0; i < dca_right.size(); i++ ) {
-      if (_debug) {
-	std::cout<<" - > i: "<<i<<"; x: "<<dca_right[i].x<<"; y: "<<-dca_right[i].y<<"; z: "<< -dca_right[i].z<<"\n";
-      }
-      if (TMath::Sqrt(dca_right[i].x*dca_right[i].x + dca_right[i].y*dca_right[i].y) > 4.0) continue;
-      FillZHist(fVertexZPlots[1],-dca_right[i].z, fSigmaSmooth);
-      FillZHist(fVertexZPlots[2],-dca_right[i].z, fSigmaSmooth);
-    }
-    // --- Find Z of primary vertex
-    TString opt("new");
-    if (gROOT->IsBatch())  opt = "goff";
-    else {
-      c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("UseCAVxFinder");
-      if (c1) c1->Clear();
-      else  c1 = new TCanvas("UseCAVxFinder","Fit results for Vertex Z from All, only West and Only East CA racks", 100,100,1000,600);
-    }
-    Double_t zmax =  250;
-    Double_t zmin = -250;
-    if ( St_beamInfoC::instance()->IsFixedTarget()) {
-      zmax = 220;
-      zmin = 180;
-    }
-    for (Int_t i = 2; i >= 0; i--) {
-      if (c1) c1->Clear();
-      Int_t nfound = fSpectrum->Search(fVertexZPlots[i],-1,opt,0.1); //TMath::Min(0.1,5./nAccepted));
-      if (nfound > 0) {
-	LOG_INFO << "Found in " << fVertexZPlots[i]->GetName() << "\t" << nfound  << " peaks" << endm;
-	Double_t *zOfPeaks = new Double_t[nfound];
-	Int_t npeaks = 0;
-#if  ROOT_VERSION_CODE < 395523
-	Float_t *xpeaks = fSpectrum->GetPositionX();
-	Float_t xp = 0;
-#else
-	Double_t *xpeaks = fSpectrum->GetPositionX();
-	Double_t xp = 0;
-#endif
-	for (Int_t p = 0; p < nfound; p++) {
-	  xp = xpeaks[p];
-	  Int_t bin = fVertexZPlots[i]->GetXaxis()->FindBin(xp);
-	  Double_t yp = fVertexZPlots[i]->GetBinContent(bin);
-	  Double_t ep = fVertexZPlots[i]->GetBinError(bin);
-	  if (xp < zmin || xp > zmax) continue;
-	  if (yp-1.25*ep < 0) continue;
-	  zOfPeaks[npeaks] = xp;
-	  LOG_INFO << "z = " << xp << " with " << yp << " +/- " << ep << endm;
-	  npeaks++;
-	}
-	if (npeaks > 0) {
-	  Double_t rms = fVertexZPlots[i]->GetRMS();
-	  if (rms > 3) rms = 3;
-	  fVertexZPlots[i]->Fit("gaus","er","",zOfPeaks[0]-3*rms,zOfPeaks[0]+3*rms);
-	  TF1 *gaus = (TF1 *) fVertexZPlots[i]->GetListOfFunctions()->FindObject("gaus");
-	  if (gaus) {
-	    if (i == 2) gaus->SetLineColor(1);
-	    else        gaus->SetLineColor(2+i);
-	    Double_t mu = gaus->GetParameter(1);
-	    Double_t sigma = gaus->GetParameter(2);
-	    fVertexZPlots[i]->Fit(gaus,"er","",mu-3*sigma,mu+3*sigma);
-	    if (c1) {
-	      c1->Update();
-	      TPaveStats *ps2 = (TPaveStats*)fVertexZPlots[i]->GetListOfFunctions()->FindObject("stats");
-	      if (ps2) {
-		if (i < 2) ps2->SetTextColor(2+i);
-		ps2->SetX1NDC(0.1+0.2*i); ps2->SetX2NDC(0.3+0.2*i);
-		ps2->SetY1NDC(0.70); ps2->SetY2NDC(0.90);
-	      }
-	    }
-	    mu = gaus->GetParameter(1);
-	    sigma = gaus->GetParameter(2);
-	    if (i == 0 || i == 2) {
-	      for( UInt_t j = 0; j < dca_left.size(); j++ ) {
-		Double_t z = -dca_left[j].z;
-		if (TMath::Abs(z - mu) < 3*sigma) {
-		  fVertexXYPlots[i]->Fill(dca_left[j].x,dca_left[j].y);
-		}
-	      }
-	    }
-	    if (i == 1 || i == 2) {
-	      for( UInt_t j = 0; j < dca_right.size(); j++ ) {
-		Double_t z = -dca_right[j].z;
-		if (TMath::Abs(z - mu) < 3*sigma) {
-		  fVertexXYPlots[i]->Fill(dca_right[j].x,dca_right[j].y);
-		}
-	      }
-	    }
-	  }
-	}
-      }
-    }
-    if (c1) {
-      fVertexZPlots[2]->Draw();
-      fVertexZPlots[0]->Draw("][sames");
-      fVertexZPlots[1]->Draw("][sames");
-      c1->Update();
-    }
-  } // end of CA Vertex
 #ifdef __TPCCA_TIMING__
   timer.Start();
   // --- Tracking time ---
@@ -354,9 +242,7 @@ void StTPCCAInterface::MakeSettings()
     SlicePar.SetNRows ( NRows ); 
     SlicePar.SetNInnerRows ( NoOfInnerRows ); 
     SlicePar.SetNTpcRows ( NRows ); 
-    Double_t beta = 0;
-    if (sector > 12) beta = (24-sector)*2.*TMath::Pi()/12.;
-    else             beta =     sector *2.*TMath::Pi()/12.;
+    Double_t beta = Beta(sector);
     SlicePar.SetAlpha  ( beta );
     SlicePar.SetDAlpha  ( 30*TMath::DegToRad() );                        //TODO initialize from StRoot
     SlicePar.SetCosAlpha ( TMath::Cos(SlicePar.Alpha()) );
@@ -434,4 +320,9 @@ void StTPCCAInterface::MakeSettings()
     
     fCaParam.push_back(SlicePar);
   } // for iSlice
+  sort(fCaParam.begin(), fCaParam.end(), 
+       [](const AliHLTTPCCAParam & a, const AliHLTTPCCAParam & b)
+       { 
+	 return a.ISlice() < b.ISlice();
+       });
 } // void StTPCCAInterface::MakeSettings()

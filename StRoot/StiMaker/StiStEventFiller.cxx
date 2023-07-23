@@ -590,7 +590,7 @@ using namespace std;
 map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::mTrkNodeMap;
 map<StTrackNode*, StiKalmanTrack*> StiStEventFiller::mNodeTrkMap;
 StiStEventFiller *StiStEventFiller::fgStiStEventFiller = 0;
-static Int_t _debug = 0;
+Int_t StiStEventFiller::_debug = 0;
 #define PrPP(A,B) if (_debug) {LOG_INFO << "StiStEventFiller::" << (#A) << "\t" << (#B) << " = \t" << (B) << endm;}
 //_____________________________________________________________________________
 StiStEventFiller::StiStEventFiller() : mEvent(0), mTrackStore(0), mFastDetectorMatcher(0)
@@ -1048,6 +1048,12 @@ void StiStEventFiller::fillGeometry(StTrack* gTrack, StiKalmanTrack* track, bool
   KFPTrackAtHit->SetCovarianceMatrix(CovXyzp);
   if (outer) gTrack->setKFPTrackatLastHit(KFPTrackAtHit);
   else       gTrack->setKFPTrackatFirstHit(KFPTrackAtHit);
+  if (_debug) {
+    if (outer) cout << "outer";
+    else       cout << "inner";
+    cout << " node: alpha = " << node->getAlpha() << "\t" << node->fitPars() << endl;
+    cout << *KFPTrackAtHit << endl;
+  }
 #endif
   return;
 }

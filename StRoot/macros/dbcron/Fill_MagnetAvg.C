@@ -77,12 +77,13 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
 	  //	  //SELECT UNIX_TIMESTAMP(beginTime), `wfgRamp.mainMagnet.readbackM[1]` AS mainMagnetCurrent, `psctrl.mainMagnet.statusM` AS mainMagnetStatus FROMstarMagnetCurrentFull ORDER BY beginTime desc limit 1;
 	  //	  "select UNIX_TIMESTAMP(beginTime),cdev_mainMagnet2,cdev_mainMagnetm,beginTime  from starMagnet where beginTime >= from_u           nixtime(%u) and beginTime <=  from_unixtime(%u) and cdev_mainMagnetB != ''",startRunTime,endRunTime);
 	  "select UNIX_TIMESTAMP(beginTime),`wfgRamp.mainMagnet.readbackM[1]` AS mainMagnetCurrent, `psctrl.mainMagnet.statusM` AS mainMagnetStatus,beginTime  from starMagnetCurrentFull where beginTime >= from_unixtime(%u) and beginTime <=  from_unixtime(%u)",startRunTime,endRunTime);
-  if (_debug ) { cout << query << endl;}
+  if (_debug )     { cout << query << endl;}
   // new source of magnet data:
   // wfgRamp.mainMagnet.wM,wfgRamp.pttEast.wM,wfgRamp.pttWest.wM,wfgRamp.trimEast.wM,wfgRamp.trimWest.wM
   
   res = db->Query(query);
   nrows = res->GetRowCount();
+  if (_debug) cout << "runNumber = " << runNumber << "\tnrows = " << nrows << endl;
   if(nrows==0)
     {
       delete row;
@@ -91,9 +92,6 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
       //	  cout << "No entries before.. Kinda Weird! " << endl;
       return -1;
     }
-  //  if (_debug) {
-    cout << "runNumber = " << runNumber << "\tnrows = " << nrows << endl;
-    //  }
   double tempCurrent = 0;
   unsigned int tempStatus = 0;
   unsigned int tempTime = 0;
@@ -177,7 +175,8 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
 }
 
 // Will Fill Tables for all Runs not filled in yet
-void Fill_MagnetAvg(Int_t year=2023){
+void Fill_MagnetAvg(Int_t year=2023, Int_t debug = 0){
+  _debug = debug;
 #if 0
   loadLibs();
 #endif    
@@ -266,7 +265,12 @@ void Fill_MagnetAvg(Int_t year=2023){
       TString Out(Form("starMagAvg.%8i.%06i.C",tGMT.GetDate(),tGMT.GetTime()));
       TString OutH = Out;
       OutH += ".HOLD.ofl";
-      if (gSystem->AccessPathName(Out) && gSystem->AccessPathName(OutH)) {
+      if (! gSystem->AccessPathName(Out)) {
+	if (_debug) cout << "runNumber = " << runNumber << " has made as " << Out.Data() << endl;
+      } else if (! gSystem->AccessPathName(OutH)) {
+	if (_debug) cout << "runNumber = " << runNumber << " has made as " << OutH.Data() << endl;
+      } else {
+	if (_debug) cout << "runNumber = " << runNumber << " run MagnetAvg(" << runNumber << "," << startRunTime << "," << endRunTime << ",\"" << Out.Data() << "\")" << endl;
 	Fill_MagnetAvg(runNumber,startRunTime,endRunTime,Out);
       }
       delete row;

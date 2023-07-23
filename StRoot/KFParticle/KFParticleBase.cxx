@@ -720,7 +720,7 @@ void KFParticleBase::AddDaughterWithEnergyFit( const KFParticleBase &Daughter )
 	fC[k] = fC[k] - (k0[i]*mCHt0[j] + k1[i]*mCHt1[j] + k2[i]*mCHt2[j] );
       }
     }
-
+    // Maksym's anti corrrelation correction.
     float K2[3][3];
     for(int i=0; i<3; i++)
     {
@@ -757,7 +757,6 @@ void KFParticleBase::AddDaughterWithEnergyFit( const KFParticleBase &Daughter )
     fC[3] += M[0][2] + M[2][0];
     fC[4] += M[1][2] + M[2][1];
     fC[5] += 2*M[2][2];
-  
     //* Calculate Chi^2 
 
     fNDF  += 2;

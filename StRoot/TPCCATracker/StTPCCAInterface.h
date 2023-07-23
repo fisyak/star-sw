@@ -3,8 +3,8 @@
 #include "Riostream.h"
 #include "TPCCATracker/AliHLTTPCCAGBTracker.h"
 #include "TPCCATracker/AliHLTTPCCAGBTracker.h"
-
 #include "Sti/StiTrackContainer.h"
+#include "TMath.h"
 #include "TVector3.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -30,6 +30,13 @@ class StTPCCAInterface {
   static  TH2F*    VertexXYPlot(Int_t i = 2) {return fVertexXYPlots[i];}
   void FillZHist(TH1F *hist, Double_t Z, Double_t sigmaZ);
   static void SetSigmaSmooth(Double_t x = 5.0) {fSigmaSmooth = x;}
+  static Double_t Beta(Int_t sector) {
+    Double_t beta = (Double_t)  ((sector <= 12) ? 
+				 ((360 + 90 - 30* sector      )%360) :
+				 ((      90 + 30*(sector - 12))%360));
+    beta *= TMath::DegToRad();
+    return beta;
+  }
  protected:
   virtual void MakeSettings(); // fill fCaParam
   virtual void MakeHits() {cout << "Dummy StTPCCAInterface::;MakeHits is called" << endl;}
@@ -42,9 +49,10 @@ class StTPCCAInterface {
   double fPreparationTime_real, fPreparationTime_cpu; // time for coping data and performance
   TVector3 fVertexCA[3]; // Estimated from CA primary vertex position, 0 -> east, 1 -> west, 2 -> total 
   TVector3 fVertexCAError[3];
-  static TH1F *fVertexZPlots[3];
+  static TH1F *fVertexZPlots[5];
   static TH2F *fVertexXYPlots[3];
   static TSpectrum *fSpectrum;
   static Double_t fSigmaSmooth;
+
 };
 #endif //  __StTPCCAInterface_h__

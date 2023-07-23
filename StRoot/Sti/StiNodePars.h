@@ -1,7 +1,7 @@
 #ifndef __StiNodePars_h_
 #define __StiNodePars_h_
 #include "Rtypes.h"
-
+#include "TMath.h"
 #define kEC       2.99792458e-4
 #define kZEROHZ   2e-6			//minimal/zero mag field
 #define kZEROPTI  1e-3			//minimal/zero 1/pt
@@ -15,7 +15,7 @@ class StiNodePars {
   enum {kX=0,kY=1,kZ=2,kPhi=3,kPtin=4,kTan=5,kCurv=6,kHz=7};
   void reset(){memset(this,0,sizeof(StiNodePars));_cosCA=1;}
   void ready();
-   int isZeroH() const { return fabs(P[kHz]) <= kZEROHZ;}
+   int isZeroH() const { return TMath::Abs(P[kHz]) <= kZEROHZ;}
   StiNodePars &merge(double wt,StiNodePars &other);
   StiNodePars &operator=(const StiNodePars& fr);
   void rotate(double alfa);
@@ -62,12 +62,12 @@ float mELoss,mLen,mDens,mX0;
 inline void StiNodePars::ready()
 {
 _cosCA=cos(P[kPhi]);_sinCA=sin(P[kPhi]); 
- if (fabs(P[kHz])<= kZEROHZ) {
+ if (TMath::Abs(P[kHz])<= kZEROHZ) {
    P[kCurv] =  kZEROCURV; P[kPtin]= kZEROPTI;
  } else {
    P[kCurv]  = P[kHz]*P[kPtin];
  }
 }
 
-
+std::ostream&  operator<<(std::ostream& os, StiNodePars const & pars);
 #endif
