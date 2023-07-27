@@ -2199,8 +2199,6 @@ StMuFcsCollection* StMuDst::muFcsCollection() { return instance()->mMuFcsCollect
 StMuFttCollection* StMuDst::muFttCollection() { return instance()->mMuFttCollection; }
    // returns pointer to current StMuFttCollection
 StMuFstCollection* StMuDst::muFstCollection() { return instance()->mMuFstCollection; }
-  // returns pointer to current StMuPmdCollection
-StMuPmdCollection* StMuDst::pmdCollection() { if (instance()->mMuPmdCollectionArray)  return (StMuPmdCollection*) instance()->mMuPmdCollectionArray->UncheckedAt(0); else return instance()->mMuPmdCollection; }
   // returns pointer to current StEmcCollection
 StEmcCollection* StMuDst::emcCollection() {  return instance()->mEmcCollection; }
   // returns pointer to current StFmsCollection
