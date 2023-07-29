@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="xrootd" simulateSubmission ="false" copyInputLocally="false"> -->
-<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+<job maxFilesPerProcess="10" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
         <command>
  set CURRENT_DIR = `pwd`
 #C       cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
+  set idNdx = kFALSE;
+  echo ${SUBMITTINGDIRECTORY} | grep dNdx 
+  if (! $? )  set idNdx = kTRUE;
 #  setup debug
 #  setenv NODEBUG yes
 #  setenv StarEndMakerShell
 #  starver TFG21d
 #  set split = (${INPUTFILE0}:as|/| |)
- set inputDIR     = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
- set outputb      = `echo $INPUTFILE0 | awk -F\: '{print $2}'`
- set year         = `echo $INPUTFILE0 | awk -F\: '{print $3}'`
- set dstype       = `echo $INPUTFILE0 | awk -F\: '{print $4}'`
- set filelist     = `echo $INPUTFILE0 | awk -F\: '{print $5}'`
- echo ${filelist}
-   set filel = `basename ${outputb} .root`;
-   set logb = ${filel}B.log
-   set log  = ${SUBMITTINGDIRECTORY}/${logb}
+foreach  evtsFile(`cat $FILELIST`)
+#  set evtsFile = $INPUTFILE0;
+  echo "${evtsFile}"
+  set inputDIR     = `echo ${evtsFile} | awk -F\: '{print $1}'`
+  set outputb      = `echo ${evtsFile} | awk -F\: '{print $2}'`
+  set year         = `echo ${evtsFile} | awk -F\: '{print $3}'`
+  set dstype       = `echo ${evtsFile} | awk -F\: '{print $4}'`
+  set filelist     = `echo ${evtsFile} | awk -F\: '{print $5}'`
+  echo ${filelist}
+  set filel = `basename ${outputb} .root`;
+  set logb = ${filel}B.log
+  set log  = ${SUBMITTINGDIRECTORY}/${logb}
   set output  =  ${SUBMITTINGDIRECTORY}/${outputb};
   if (-r ${output}) continue
 #  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
@@ -39,11 +45,10 @@
         rsync  ${inputDIR}  .
       endif
   endif
-  set idNdx = kFALSE;
-  echo ${SUBMITTINGDIRECTORY} | grep dNdx 
-  if (! $? )  set idNdx = kTRUE;
-    root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&amp; ${log}
-  rm -rf ${CURRENT_DIR}
+  root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&amp; ${log}
+  rm ./*.${dstype}.root
+end 
+ rm -rf ${CURRENT_DIR}
         </command>
 <!--
     <ResourceUsage>
