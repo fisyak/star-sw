@@ -357,6 +357,10 @@ void StiCATpcTrackerInterface::MakeParticles(std::vector<trackInSector> Tracks, 
 } // void KFParticleTopoReconstructor::Init(std::vector<AliHLTTPCCATrackParam> tracks, std::vector<int>* pdg=0); // init array of particles
 //________________________________________________________________________________
 void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt Trigger
+  if (! gROOT->IsBatch()) {
+    TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("UseCAVxFinder");
+    if (c1) c1->Clear();
+  }
   KFParticle::SetField(- fTracker->Slice(0).Param().Bz() );
   KFParticleSIMD::SetField(- fTracker->Slice(0).Param().Bz() );
   FindCAWEPrimaryVertices();
