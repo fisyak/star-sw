@@ -80,6 +80,7 @@ if ($all) {
 			      xyPad3+xyPad3P xyPad3C+xyPad3PC
 			      xyPad3 xyPad3P xyPad3C xyPad3PC 
 			      Pressure PressureP Pressure+PressureP PressureC PressurePC PressureC+PressurePC
+			      Temperature TemperatureP Temperature+TemperatureP TemperatureC TemperaturePC TemperatureC+TemperaturePC
 			      dX3 dx3C
 			   );
 #   push  @{ $Opts{G4EG} }, qw(
