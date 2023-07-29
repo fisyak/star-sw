@@ -6,7 +6,7 @@ TDataSet *CreateTable() {
   gEnv->SetValue("FixedSigmaY", 0.0250);
   gEnv->SetValue("FixedSigmaZ", 0.0250);
   StarMCTTreePrimaryGenerator *gener = (StarMCTTreePrimaryGenerator *) StarVMCApplication::Instance()->GetPrimaryGenerator();
-  if ( gener && ! gener->IsA()->InheritsFrom( "StarMCTTreePrimaryGenerator" ) ) {
+  if ( gener && ! gener->IsA()->InheritsFrom( "StarMCPrimaryGenerator" ) ) {
     delete gener; gener = 0;
   }
   if (! gener) gener =  new 		 StarMCTTreePrimaryGenerator();

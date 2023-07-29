@@ -29,12 +29,12 @@ class StarMCTTreePrimaryGenerator : public StarMCPrimaryGenerator  {
   virtual void GeneratePrimaries();
   virtual void GeneratePrimaries(const TVector3& v);
   virtual void SetGenerator(TString mode="pp:W:510", Int_t tune=320);
-  void SetSpread(Double_t xs = 0.15, Double_t ys = 0.15, Double_t zs = 42.0) { gSpreadX = xs; gSpreadY = ys; gSpreadZ = zs;}
+  virtual void SetSpread(Double_t xs = 0.15, Double_t ys = 0.15, Double_t zs = 42.0) { gSpreadX = xs; gSpreadY = ys; gSpreadZ = zs;}
  private:
   TTreeIter *fTreeIter;
   TTree     *fTree;
-  void GeneratePrimary();
-  void PreSet();
+  virtual void GeneratePrimary();
+  virtual void PreSet();
   TH1 *fPVX, *fPVY, *fPVZ, *fPVxyError; 
   Double_t gSpreadX, gSpreadY, gSpreadZ;
   ClassDef(StarMCTTreePrimaryGenerator,1)  //StarMCTTreePrimaryGenerator

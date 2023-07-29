@@ -284,10 +284,15 @@ foreach my $run (@Files) {
     if ($step <= 1) {
       	push @list, $files[$i];
 	$ana = $listB[0];
+	if (! -d $f) {`mkdir $f`;}
 	$ana =~ s/.picoDst//;
+	$ana = $f . "/" . $ana;
     } else {
-      $ana = $f . "_" . $Runs{$f} . ".root"; print "ana = $ana\n" if ($debug);
+      $ana = $f . "_" . $Runs{$f} . ".root"; 
     }
+    print "f = $f , ana = $ana\n" if ($debug);
+#    die;
+
     if ( -r $ana) {
       my $mtime = stat($ana)->mtime;
       my $Mtime = ctime($mtime);

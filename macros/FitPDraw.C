@@ -451,14 +451,23 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
     } else if (Opt == "O") {
       MuDraw(muPlot.Data(),"xyO", 24*32,   0.5, 24.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(x-TMath::Nint(x))>0)", "prof", -0.45,  0.15, "Outer", "xy", "#mu versus sector phi");
     }
-  } else if (Name.BeginsWith("Pressure"))      {
+  } else if (Name.BeginsWith("Pressure")) {
     muPlot += ":y";
     if (Opt == "I") {
-      MuDraw(muPlot.Data(),"PI", nx, xMin, xMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PI",150, 6.84, 6.99, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
     } else if (Opt == "O") {
-      MuDraw(muPlot.Data(),"PO", nx, xMin, xMax, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PO",150, 6.84, 6.99, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
     } else if (Opt == "IJ") {
-      MuDraw(muPlot.Data(),"PI", nx, xMin, xMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PI",150, 6.84, 6.99, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
+    }
+  } else if (Name.BeginsWith("Temperature")) {
+    muPlot += ":y";
+    if (Opt == "I") {
+      MuDraw(muPlot.Data(),"PI", 60, 294,300, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
+    } else if (Opt == "O") {
+      MuDraw(muPlot.Data(),"PO", 60, 294,300, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
+    } else if (Opt == "IJ") {
+      MuDraw(muPlot.Data(),"PI", 60, 294,300, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
     }
   } else if (Name.BeginsWith("neP"))      {
     if (plot == "sigma") {

@@ -1,4 +1,10 @@
-void Hijing(Int_t NoEvents = 1000, Int_t runG = 1, const Char_t *frame = "CMS", Float_t rootS = 200,
+void Hijing(Int_t NoEvents = 1000, Int_t runG = 1, 
+#if 0
+	    const Char_t *frame = "CMS", Float_t rootS = 200,
+#else
+	    //	    const Char_t *frame = "FIXT", Float_t rootS =  -3, // 3.85 GeV FixedTarget
+	    const Char_t *frame = "CMS", Float_t rootS =   3, // 3.85 GeV FixedTarget
+#endif
 	    const Char_t *aIn = "Au", const Char_t *bIn = "Au", 
 	    Float_t bmin = 0, Float_t bmax = 30) {
   gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");

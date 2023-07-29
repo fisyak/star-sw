@@ -2544,8 +2544,13 @@ Float_t        St_beamInfoC::GammaBlue() {
   return gamma;
 }
 //________________________________________________________________________________
-Float_t        St_beamInfoC::Gamma() {
-  return GammaYellow();
+Float_t        St_beamInfoC::GammaCMS() {
+  Double_t eBlue   = kProtonMass*GammaBlue(); 
+  Double_t eYellow = kProtonMass*GammaYellow();
+  Double_t Etot    = eBlue + eYellow;
+  Double_t Ecm     = SqrtS();
+  Double_t gammaCM = Etot/Ecm;
+  return gammaCM;
 }
 //________________________________________________________________________________
 Float_t        St_beamInfoC::BetaBlue() {
@@ -2558,8 +2563,12 @@ Float_t        St_beamInfoC::BetaYellow() {
   return -TMath::Sqrt(1 - 1./(gamma*gamma));
 }
 //________________________________________________________________________________
-Float_t        St_beamInfoC::Beta() {
-  return -BetaBlue();
+Float_t        St_beamInfoC::BetaCMS() {
+  Double_t eBlue   = kProtonMass*GammaBlue(); 
+  Double_t eYellow = kProtonMass*GammaYellow();
+  Double_t Etot    = eBlue + eYellow;
+  Double_t betaCM  = (eBlue*BetaBlue() + eYellow*BetaYellow())/Etot;
+  return betaCM;
 }
 //________________________________________________________________________________
 Float_t        St_beamInfoC::SqrtS() {
@@ -2570,12 +2579,8 @@ Float_t        St_beamInfoC::SqrtS() {
 }
 //________________________________________________________________________________
 Float_t        St_beamInfoC::Ycms() {
-  Double_t eBlue   = kProtonMass*GammaBlue(); 
-  Double_t eYellow = kProtonMass*GammaYellow();
-  Double_t Etot    = eBlue + eYellow;
-  Double_t Ecm     = SqrtS();
-  Double_t gammaCM = Etot/Ecm;
-  Double_t betaCM  = (eBlue*BetaBlue() + eYellow*BetaYellow())/Etot;
+  Double_t gammaCM = GammaCMS();
+  Double_t betaCM  = BetaCMS();
   Double_t yCM  = TMath::Log(gammaCM*(1 + betaCM));
   return yCM;
 }
@@ -2583,7 +2588,7 @@ Float_t        St_beamInfoC::Ycms() {
 Float_t        St_beamInfoC::Frequency() {
   static Double_t l       = 3833.845*9.99999253982746361e-01;// *9.99988614393081399e-01;// *9.99998896969437556e-01;  // RHIC perimetr
   static Double_t NB = 120;      // no. of buches, can be changed
-  Double_t frequency = 1e-6*NB*Beta()*TMath::C()/l;
+  Double_t frequency = 1e-6*NB*BetaYellow()*TMath::C()/l;
   return TMath::Abs(frequency);
 }
 //________________________________________________________________________________

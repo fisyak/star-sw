@@ -5,6 +5,7 @@
 <stderr URL="file:./$JOBID.err" />
 <command> 
   cd ${SUBMITTINGDIRECTORY}  
+  setup debug
 #  setenv NODEBUG yes
 #  starver .DEV2 
   set file = $INPUTFILE0;
@@ -19,6 +20,6 @@
     root.exe -q -b -x 'Hijing.C('${l}','${rung}')' &gt;&amp; ${logName}
   endif
 </command>
-<input URL="command:RunId.pl 1 100 1000 hijingAuAu200" />
+<input URL="command:RunId.pl 3 100 1000 hijingAuAu200" />
 </job>
 
