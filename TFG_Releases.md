@@ -93,5 +93,6 @@
 <li> TFG23a Tune TpcRS for y2009 & y2021                                 2023-02-05 12:38:48 -0500  (HEAD -> TFG, tag: TFG23a_4, origin/TFG)
 <li> TFG23b RunXIX_XXII dE/dx calibration                                2023-03-17 10:59:25 -0400  (HEAD -> TFG, tag: TFG23b_4)
 <li> TFG23c Freeze tpcExtraGainCorrection, StKFParticleAnalysis          2023-04-30 11:53:11 -0400  (HEAD -> TFG, tag: TFG23c)
+<li> TFG23d Freeze CA, StKFParticle, StdEdxY2Maker,...                   2023-08-01 11:53:11 -0400  (HEAD -> TFG, tag: TFG23d)
 <li>.DEV2   head of TFG git repository
 </ul>
