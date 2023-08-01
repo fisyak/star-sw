@@ -985,9 +985,9 @@ void StdEdxY2Maker::SortdEdx() {
 //________________________________________________________________________________
 void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
   // Histograms
-  static THnSparseF *Time = 0, *TimeC = 0; // , *TimeP = 0
+  static THnSparseF *Time = 0, *TimeC = 0, *TimeF[2] = {0};
   Int_t NoRows = St_tpcPadConfigC::instance()->numberOfRows(20);
-  //  static Hists3D PressureT("PressureT","log(dE/dx)","row","Log(Pressure*298.2/outputGasTemperature)",-NoRows,150, 6.84, 6.99);
+  static TH3F *PressureT[2] = {0};
   
   //  static Hists3D Volt("Volt","log(dE/dx)","Sector*Channels","Voltage", numberOfSectors*NumberOfChannels,410,990.,1400.);
 
@@ -1162,6 +1162,10 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
     Double_t xMax[2] = {(Double_t ) i2, ZdEdxMax};
     Time   = new THnSparseF("Time","log(dE/dx)_{uncorrected} - log(I(pi)) versus Date& Time", 2, nBins, xMin, xMax); f->Add(Time);
     TimeC  = new THnSparseF("TimeC","log(dE/dx)_{corrected} - log(I(pi)) versus Date& Time after correction", 2, nBins, xMin, xMax); f->Add(TimeC);
+    TimeF[0]  = new THnSparseF("TimeFP","log(dE/dx)_{trackF} positive - log(I(pi)) versus Date& Time after correction", 2, nBins, xMin, xMax); f->Add(TimeF[0]);
+    TimeF[1]  = new THnSparseF("TimeF","log(dE/dx)_{trackF} negative - log(I(pi)) versus Date& Time after correction", 2, nBins, xMin, xMax); f->Add(TimeF[1]);
+    PressureT[0] = new TH3F("PressureTP","log(dE/dx) (positive) versus Log(Pressure*298.2/outputGasTemperature)",2*NoRows+1, -NoRows-0.5, NoRows+0.5,200, 6.82, 7.02, 200, -5, 5);
+    PressureT[1] = new TH3F("PressureT","log(dE/dx) (negative) versus Log(Pressure*298.2/outputGasTemperature)",2*NoRows+1, -NoRows-0.5, NoRows+0.5,200, 6.82, 7.02, 200, -5, 5);
     //    TimeP  = new THnSparseF("TimeP","log(dE/dx)_{after pressure correction} - log(I(pi)) versus Date& Time",  2, nBins, xMin, xMax); f->Add(TimeP);
     TH1::SetDefaultSumw2(fSetDefaultSumw2);
 #ifdef __TEST_DX__
@@ -1204,7 +1208,11 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
     
   }
 #endif /* __TEST_DX__ */
-  StDedxMethod kMethod;
+  StDedxMethod kMethod = kLikelihoodFitId;
+  if ( PiD.dEdxStatus(kMethod)) {
+    Double_t tvars[2] = {tpcTime,  PiD.dEdxStatus(kMethod)->Residual(kPidPion)}; 
+    TimeF[sCharge]->Fill(tvars);
+  }
 #ifdef  __FIT_PULLS__
   // Pulls
   Int_t l;
@@ -1338,6 +1346,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	Double_t V = FdEdx[k].Voltage;
 	Double_t VN = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? V - 1170 : V - 1390;
 	Double_t press = 0;
+	Double_t pressT = 0;
 	Double_t temp  = 0;
 	// ADC3 
 	if (FdEdx[k].adc > 0) {
@@ -1347,10 +1356,14 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	  
 	if (tpcGas) {
 	  Double_t p     = tpcGas->barometricPressure;
+	  temp = tpcGas->outputGasTemperature;
 	  if (p > 0) {
 	    press = TMath::Log(p);
+	    if (temp > 0 &&PressureT[sCharge] ) {
+	      pressT = TMath::Log(p*298.2/temp);
+	      PressureT[sCharge]->Fill(rowS, pressT, FdEdx[k].F.dEdxN);
+	    }
 	  }
-	  temp = tpcGas->outputGasTemperature;
 	  Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].dEdxN;
 	  Qcm.Fill(cs,FdEdx[k].Qcm,Vars);
 	  Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].dEdxN;
