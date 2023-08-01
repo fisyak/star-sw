@@ -1,8 +1,8 @@
 #ifndef __StTrackSegment__
 #define __StTrackSegment__
+#include "Riostream.h"
 #include "AliHLTTPCCADef.h"
 #ifdef CALC_DCA_ON
-#include "Riostream.h"
 #include "AliHLTTPCCATrackParam.h"
 class trackInSector {// Inner parameters for track segment reconstruceted in a sector;
  public:
@@ -11,6 +11,6 @@ class trackInSector {// Inner parameters for track segment reconstruceted in a s
   float                 alpha;
   AliHLTTPCCATrackParam Track;
 };
-ostream&  operator<<(ostream& os, const trackInSector& v);
+std::ostream&  operator<<(std::ostream& os, const trackInSector& v);
 #endif /* CALC_DCA_ON */
 #endif /* __StTrackSegment__ */
