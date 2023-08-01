@@ -5,6 +5,7 @@
 #include "StMaker.h"
 #include "StEvtHddr.h"
 #include "TDatabasePDG.h"
+#include "StDetectorDbMaker/St_beamInfoC.h"
 Bool_t    StarMuEventReader::fgUseOnlyPrimaries = kTRUE;
 //________________________________________________________________________________
 void StarMuEventReader::SetMuDstFile(const Char_t *muDstFile) {
@@ -94,12 +95,18 @@ Int_t StarMuEventReader::ReadEvent(Int_t N)
   Double_t e, mass;
   Int_t t = 3;
   Int_t pdg = 0;
+  static Bool_t IsFXT = St_beamInfoC::instance()->IsFixedTarget();
   Double_t nSigmaMin = 1e9;
   for (Int_t l = 0; l < NoPrimaryVertices; l++) {
-    if (l) continue; // only 1st primary vertex
     vx = PrimaryVertices_mPosition_mX1[l];
     vy = PrimaryVertices_mPosition_mX2[l];
     vz = PrimaryVertices_mPosition_mX3[l];
+    if (! IsFXT) {
+      if (l) continue; // only 1st primary vertex
+    } else {
+      if (TMath::Abs(vz - 200) > 2) continue;
+      vz = 200;
+    }
     nvtx++;
     for (Int_t k = 0; k < NoPrimaryTracks; k++) {
       if (l != PrimaryTracks_mVertexIndex[k]) continue;
@@ -174,8 +181,8 @@ Int_t StarMuEventReader::ReadEvent(Int_t N)
     continue;
   }
   }
-  if ( Debug() ) fStarStack->Print();
   if (! ntrack) goto NEXT;
+  if ( Debug() ) fStarStack->Print();
   return kStOK;
 };
 //________________________________________________________________________________
