@@ -30,7 +30,7 @@
 #include "AliHLTTPCCATrackletSelector.h"
 #include "AliHLTTPCCASliceOutput.h"
 
-#include "Stopwatch.h"
+#include "TStopwatch.h"
 #include "tsc.h"
 
 // ---
@@ -99,7 +99,7 @@ int AliHLTTPCCATracker::Reconstructor::execute()
   }
 
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   TimeStampCounter tsc;
 #endif // USE_TIMERS
 

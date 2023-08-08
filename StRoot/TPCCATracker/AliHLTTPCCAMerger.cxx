@@ -31,7 +31,7 @@
 #include "AliHLTTPCCAMerger.h"
 
 #include "AliHLTTPCCAMath.h"
-#include "Stopwatch.h"
+#include "TStopwatch.h"
 
 #include "AliHLTTPCCATrackParam.h"
 #include "AliHLTTPCCASliceTrack.h"
@@ -153,7 +153,7 @@ void AliHLTTPCCAMerger::Reconstruct()
 {
   //* Main merging routine. Consist of 3 steps:
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   timer.Start();
 #endif // USE_TIMERS
 
@@ -1690,7 +1690,7 @@ void AliHLTTPCCAMerger::MergeBorderTracks( AliHLTTPCCABorderTrack B1[], int N1, 
 void AliHLTTPCCAMerger::FindNeighbourTracks(int number)
 {
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   timer.Start();
 #endif // USE_TIMERS
 
@@ -1825,7 +1825,7 @@ void AliHLTTPCCAMerger::FindNeighbourTracks(int number)
 void AliHLTTPCCAMerger::MergingPTmultimap()
 {
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   timer.Start();
 #endif // USE_TIMERS
   int nOutTracks = 0;
@@ -2044,7 +2044,7 @@ fitted = fitted_tmp;
 void AliHLTTPCCAMerger::MergingPT(int number)
 {
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   timer.Start();
 #endif // USE_TIMERS
 
@@ -2574,7 +2574,7 @@ trIds[nTracksVector] = unmergedTrList[iTr].trId;
 void AliHLTTPCCAMerger::Merging(int number)
 {
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   timer.Start();
 #endif // USE_TIMERS
 

@@ -25,7 +25,6 @@
 #include "AliHLTTPCCALooperMerger.h"
 
 #include "AliHLTTPCCAMath.h"
-#include "Stopwatch.h"
 
 #include "AliHLTTPCCAMergedTrack.h"
 #include "AliHLTTPCCAMergerOutput.h"
