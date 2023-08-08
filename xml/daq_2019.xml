@@ -21,7 +21,7 @@
   set output  = ${filel}.event.root
   if (! -r ${evtsFile}) exit 1;
   set logFile  = ${filel}B.log
-  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
+#  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
 #  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
@@ -53,10 +53,17 @@
 #           root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
 #           root.exe -b -q  'bfc.C(1000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,StiPulls,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
 # 07/06/2023
-  set PicoMode = "PicoVtxVpdOrDefault"
+  set PicoMode = ",PicoVtxVpdOrDefault"
   echo ${SUBMITTINGDIRECTORY} | grep fixed
-  if ($? == 0) set PicoMode = "PicoVtxFXT"
-           root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
+  if ($? == 0) set PicoMode = ",PicoVtxFXT"
+# 08/04/2023
+  set WestEastOff = ""
+  echo ${SUBMITTINGDIRECTORY} | grep WestOff
+  if ($? == 0) set WestEastOff = ",WestOff"
+  echo ${SUBMITTINGDIRECTORY} | grep EastOff
+  if ($? == 0) set WestEastOff = ",EastOff"
+#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
 #   rm ${bla}
         </command>
@@ -72,6 +79,7 @@
 <input URL="command:daq_2019T.pl" />
 <input URL="file:/star/data03/daq/2020/005/21005010/st_physics_*.daq" /> 
 <input URL="file:/gpfs01/star/daq/2019/087/20087007/st_physics_2*.daq" /> 
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_2016002*.daq" />
 -->
-<input URL="file:/star/data03/daq/2019/160/*/st_physics_20160*.daq" />
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_adc_2016002*.daq" />
 </job>
