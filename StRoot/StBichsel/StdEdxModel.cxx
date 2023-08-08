@@ -247,7 +247,7 @@ Double_t StdEdxModel::ggaus(Double_t *x, Double_t *p) {
     ksi = mu - w*m_0;
     //    Double_t mean = ksi + w * muz;
   }
-  Double_t par[4] = {NormL, ksi, w, alpha};
+  Double_t par[5] = {NormL, ksi, w, alpha, 0};
   Double_t V = gausw(x, par);
   if (der) {
 #if 0 /* Derivatives */
@@ -456,7 +456,7 @@ TF1 *StdEdxModel::FParam(Int_t l) {
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::Prob(Double_t /* log(nE/Np) */ ee, Double_t Np, Double_t *der) { // GG: ggaus
-  Double_t params[4] = {0};
+  Double_t params[5] = {0};
   Double_t V = 0;
   if (! der) {
     Parameters(Np, &params[1]);
@@ -531,7 +531,7 @@ TF1 *StdEdxModel::FProbDer() {
 #if 0
 //________________________________________________________________________________
 Double_t StdEdxModel::ProbEx(Double_t /* log(nE/Np) */ ee, Double_t Np, Double_t *der) { // GEX : gausexp
-  Double_t params[4] = {0};
+  Double_t params[5] = {0};
   Double_t V = 0;
   if (! der) {
     Parameters(Np, &params[1]);
