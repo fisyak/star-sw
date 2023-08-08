@@ -932,7 +932,7 @@ void StTrackCombPiD::SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]) 
   Float_t Cov[21] = {0};
   std::copy(xyz, xyz+3, param);
   std::copy(covVx, covVx+6, Cov);
-  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
+  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 1.f);
   ((KFParticleBase *) &fgBestVx)->SetId(1);
 }
 //________________________________________________________________________________
