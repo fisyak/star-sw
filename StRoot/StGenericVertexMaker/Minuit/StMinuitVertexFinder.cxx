@@ -26,8 +26,10 @@
 #include "StGenericVertexMaker/Minuit/St_VertexCutsC.h"
 #include "StGenericVertexMaker/StCtbMatcher.h"
 #include "St_base/StMessMgr.h"
-
-
+#ifdef __TFG__VERSION__
+#include "StDetectorDbMaker/St_beamInfoC.h"
+#include "TMath.h"
+#endif /*  __TFG__VERSION__ */
 std::vector<StPhysicalHelixD>   StMinuitVertexFinder::mHelices;
 std::vector<UShort_t>           StMinuitVertexFinder::mHelixFlags;
 std::vector<Double_t >          StMinuitVertexFinder::mZImpact;
@@ -361,7 +363,10 @@ void StMinuitVertexFinder::calculateRanks() {
       primV->setRanking(rank_cross+rank_bemc+rank_avg_dip-3); 
     else
       primV->setRanking(rank_cross+rank_bemc+rank_avg_dip); 
-
+#ifdef __TFG__VERSION__
+    static Bool_t FXT =  St_beamInfoC::instance()->IsFixedTarget();
+    if (FXT && TMath::Abs(primV->position().z() - 200) < 2) primV->setRanking(primV->ranking() + 10000.);
+#endif /*  __TFG__VERSION__ */
     if (primV->ranking() > mBestRank) {
       mBestRank = primV->ranking();
       mBestVtx = primV;
