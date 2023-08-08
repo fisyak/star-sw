@@ -1,8 +1,8 @@
 /local/bin/tcsh -f
 #set list = "TpcSecRowB TpcAccumulatedQ TpcZCorrectionC TpcPadCorrectionMDF TpcLengthCorrectionMDN"
 #set list = "TpcdXCorrectionB"
-#set list = "TpcSecRowB"
-set list = "TpcLengthCorrectionMDN"
+set list = "TpcSecRowB"
+#set list = "TpcLengthCorrectionMDN"
 #set list = "TpcZCorrectionC"
 #set list = "starTriggerDelay"
 foreach p (${list})
@@ -75,22 +75,22 @@ foreach p (${list})
 # ln -sf ${p}.OO_200GeV_2021.${ext}                          ${p}.20210514.150243.${ext} # ${p}.20210514.150240.${ext}
 # ln -sf ${p}.ps_OO_200GeV_2021.${ext}                       ${p}.20210516.112018.${ext} # ${p}.20210516.112015.${ext}
 # ln -sf ${p}.FF_OO_200GeV_2021.${ext}                       ${p}.20210522.023645.${ext} # ${p}.20210522.023642.${ext}
- ln -sf ${p}.17p3GeV_2021.${ext}                            ${p}.20210525.113238.${ext} # ${p}.20210525.113236.${ext}
+ ln -sf ${p}.17p3GeV_2021.${ext}                            ${p}.20210525.113239.${ext} # ${p}.20210525.113236.${ext}
 # ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210604.023047.${ext} # ${p}.20210604.023045.${ext}
- ln -sf ${p}.17p3GeV_2021.${ext}                            ${p}.20210604.081457.${ext} # ${p}.20210604.081455.${ext}
+ ln -sf ${p}.17p3GeV_2021.${ext}                            ${p}.20210604.081458.${ext} # ${p}.20210604.081455.${ext}
 # ln -sf ${p}.3p85GeV_fixedTarget_2021.${ext}                ${p}.20210608.004953.${ext} # ${p}.20210608.004951.${ext}
 # ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210617.222552.${ext} # ${p}.20210617.222550.${ext}
 # ln -sf ${p}.3p85GeV_fixedTarget_2021.${ext}                ${p}.20210618.040937.${ext} # ${p}.20210618.040935.${ext}
 # ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210627.152749.${ext} # ${p}.20210627.152747.${ext}
 # ln -sf ${p}.3p85GeV_fixedTarget_2021.${ext}                ${p}.20210628.115430.${ext} # ${p}.20210628.115428.${ext}
 # ln -sf ${p}.dAu200GeV_2021.${ext}                          ${p}.20210630.022851.${ext} # ${p}.20210630.022849.${ext}
- ln -sf ${p}.dAu200_2021.${ext}                          ${p}.20210630.022851.${ext} # ${p}.20210630.022849.${ext} 
+ ln -sf ${p}.dAu200_2021.${ext}                          ${p}.20210630.022852.${ext} # ${p}.20210630.022849.${ext} 
 # ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210703.010652.${ext} # ${p}.20210703.010650.${ext}
 # ln -sf ${p}.dAu200GeV_2021.${ext}                          ${p}.20210703.053035.${ext} # ${p}.20210703.053033.${ext}
- ln -sf ${p}.dAu200_2021.${ext}                          ${p}.20210703.053035.${ext} # ${p}.20210703.053033.${ext}
+ ln -sf ${p}.dAu200_2021.${ext}                          ${p}.20210703.053036.${ext} # ${p}.20210703.053033.${ext}
 # ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210703.230659.${ext} # ${p}.20210703.230657.${ext}
 # ln -sf ${p}.dAu200GeV_2021.${ext}                          ${p}.20210704.034048.${ext} # ${p}.20210704.034046.${ext}
- ln -sf ${p}.dAu200_2021.${ext}                          ${p}.20210704.034048.${ext} # ${p}.20210704.034046.${ext}
+ ln -sf ${p}.dAu200_2021.${ext}                          ${p}.20210704.034049.${ext} # ${p}.20210704.034046.${ext}
 # ln -sf ${p}.pp500GeV_2022.${ext}                           ${p}.20211215.081704.${ext} # ${p}.20211215.081702.${ext}
 # ln -sf ${p}.pp500GeV_2022.${ext}                           ${p}.20220208.033749.${ext} # ${p}.20220208.033747.${ext}
 # ln -sf ${p}.pp500GeV_2022.${ext}                           ${p}.20220210.112621.${ext} # ${p}.20220210.112619.${ext}
