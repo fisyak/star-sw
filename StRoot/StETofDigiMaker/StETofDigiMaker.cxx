@@ -321,13 +321,13 @@ StETofDigiMaker::processEvent( uint64_t* messageBuffer, size_t nFullMessagesToRe
 						 if ( mGet4ActiveMap.count( 10*get4Id ) ){ 
 							 std::vector< unsigned int > geomVec;
 							 mHwMap->mapToGeom( rocId, get4Id, 0, geomVec );
-
+							 if (mDebug) {
 							 LOG_INFO << " "<< sector << endm;
 							 LOG_INFO << "-----------------------------"<< sector << endm;
 							 LOG_INFO << "FOUND ACTIVE PATTERN! Sector: "<< sector << endm;
 							 LOG_INFO << "-----------------------------"<< sector << endm;
 							 LOG_INFO << " "<< sector << endm;
-
+							 }
 							 if( geomVec.size() < 5 ) {
 								  LOG_WARN << "geometry vector has wrong size !!! --> skip message. size: "<< geomVec.size() << endm;
 								  continue;
