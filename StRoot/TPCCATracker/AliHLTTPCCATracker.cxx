@@ -33,7 +33,7 @@
 #include "Reconstructor.h"
 #include "MemoryAssignmentHelpers.h"
 
-#include "Stopwatch.h"
+#include "TStopwatch.h"
 #include "AliHLTTPCCASliceOutput.h"
 #include "AliHLTTPCCADataCompressor.h"
 #include "AliHLTTPCCAClusterData.h"
@@ -188,7 +188,7 @@ void AliHLTTPCCATracker::WriteOutput()
 {
   // write output
 #ifdef USE_TIMERS
-  Stopwatch timer;
+  TStopwatch timer;
   timer.Start();
 #endif // USE_TIMERS
 

@@ -210,6 +210,7 @@ Bool_t AcceptFile(const TString &File) {
        File.Contains("Adc") ||
        File.Contains("etofSim") ||
        File.Contains("picoDst") ||
+       File.Contains("Mu") ||
        File.Contains("MuDst.root"))) ok = kFALSE;
 #if 1
   cout << File.Data();
@@ -4908,32 +4909,55 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "") {
   }
   cout << "Output for " << output << endl;
   if (! fOut) fOut = new TFile(output,"recreate");
-  TH2D *T[2] = {
-    new TH2D("TI","time bucket difference for Inner sector versus Z",210,-210,210,800,-2,2),
-    new TH2D("TO","time bucket difference for Outer sector versus Z",210,-210,210,800,-2,2)
+  TH2F *T[2] = {
+    new TH2F("TI","time bucket difference for Inner sector versus Z",210,-210,210,800,-2,2),
+    new TH2F("TO","time bucket difference for Outer sector versus Z",210,-210,210,800,-2,2)
   };
-  TH2D *TR = new TH2D("TR","time bucket difference versus row",72,0.5,72.5,800,-2,2);
-  TH2D *TC[2] = {
-    new TH2D("TIC","time bucket after correction difference for Inner sector versus Z",210,-210,210,800,-2,2),
-    new TH2D("TOC","time bucket after correction difference for Outer sector versus Z",210,-210,210,800,-2,2)
+  TH2F *N[2] = {
+    new TH2F("NI","no. of time buckets for Inner sector versus Z",210,-210,210, 32,0.5,32.5),
+    new TH2F("NO","no. of time buckets for Outer sector versus Z",210,-210,210, 32,0.5,32.5)
   };
-  TH2D *D[2] = {
-    new TH2D("DI","time bucket difference for Inner sector versus tanL",200,-2,2,800,-2,2),
-    new TH2D("DO","time bucket difference for Outer sector versus tanL",200,-2,2,800,-2,2)
+  TH3F *TN[2] = {
+    new TH3F("TNI","time bucket difference for Inner sector versus Z and No.time buckets",105,-210,210, 32,0.5,32.5,800,-2,2),
+    new TH3F("TNO","time bucket difference for Outer sector versus Z and No.time buckets",105,-210,210, 32,0.5,32.5,800,-2,2)
   };
-  TH2D *B[3][2] = {
-    {new TH2D("BI","time bucket difference for Inner sector versus no. of time buckets (tpcTimeBucketCor)",50,0.5,50.5,800,-2,2),
-     new TH2D("BO","time bucket difference for Outer sector versus no. of time buckets (tpcTimeBucketCor)",50,0.5,50.5,800,-2,2)},
-    {new TH2D("BIW","time bucket difference for Inner sector versus no. of time buckets (tpcTimeBucketCor) Z > 0",50,0.5,50.5,800,-2,2),
-     new TH2D("BOW","time bucket difference for Outer sector versus no. of time buckets (tpcTimeBucketCor) Z > 0",50,0.5,50.5,800,-2,2)},
-    {new TH2D("BIE","time bucket difference for Inner sector versus no. of time buckets (tpcTimeBucketCor) Z < 0",50,0.5,50.5,800,-2,2),
-     new TH2D("BOE","time bucket difference for Outer sector versus no. of time buckets (tpcTimeBucketCor) Z < 0",50,0.5,50.5,800,-2,2)},
+  TH2F *TR = new TH2F("TR","time bucket difference versus row",72,0.5,72.5,800,-2,2);
+  TH2F *TC[2] = {
+    new TH2F("TIC","time bucket after correction difference for Inner sector versus Z",210,-210,210,800,-2,2),
+    new TH2F("TOC","time bucket after correction difference for Outer sector versus Z",210,-210,210,800,-2,2)
   };
-  TH2D *Z[2] = {
-    new TH2D("ZI","Z difference for Inner sector versus Z",210,-210,210,800,-2,2),
-    new TH2D("ZO","Z difference for Outer sector versus Z",210,-210,210,800,-2,2)
+  TH2F *D[2] = {
+    new TH2F("DI","time bucket difference for Inner sector versus tanL",200,-2,2,800,-2,2),
+    new TH2F("DO","time bucket difference for Outer sector versus tanL",200,-2,2,800,-2,2)
   };
-  TH2D *ZR = new TH2D("ZRI","Z difference fversus row",72,0.5,72.5,800,-2,2);
+  TH2F *B[3][2] = {
+    {new TH2F("BI","time bucket difference for Inner sector versus no. of time buckets before (tpcTimeBucketCor)",50,0.5,50.5,800,-2,2),
+     new TH2F("BO","time bucket difference for Outer sector versus no. of time buckets before (tpcTimeBucketCor)",50,0.5,50.5,800,-2,2)},
+    {new TH2F("BIW","time bucket difference for Inner sector versus no. of time buckets before (tpcTimeBucketCor) Z > 0",50,0.5,50.5,800,-2,2),
+     new TH2F("BOW","time bucket difference for Outer sector versus no. of time buckets before (tpcTimeBucketCor) Z > 0",50,0.5,50.5,800,-2,2)},
+    {new TH2F("BIE","time bucket difference for Inner sector versus no. of time buckets before (tpcTimeBucketCor) Z < 0",50,0.5,50.5,800,-2,2),
+     new TH2F("BOE","time bucket difference for Outer sector versus no. of time buckets before (tpcTimeBucketCor) Z < 0",50,0.5,50.5,800,-2,2)},
+  };
+  TH2F *BC[3][2] = {
+    {new TH2F("BCI","time bucket difference for Inner sector versus no. of time buckets after (tpcTimeBucketCor)",50,0.5,50.5,800,-2,2),
+     new TH2F("BCO","time bucket difference for Outer sector versus no. of time buckets after (tpcTimeBucketCor)",50,0.5,50.5,800,-2,2)},
+    {new TH2F("BCIW","time bucket difference for Inner sector versus no. of time buckets after (tpcTimeBucketCor) Z > 0",50,0.5,50.5,800,-2,2),
+     new TH2F("BCOW","time bucket difference for Outer sector versus no. of time buckets after (tpcTimeBucketCor) Z > 0",50,0.5,50.5,800,-2,2)},
+    {new TH2F("BCIE","time bucket difference for Inner sector versus no. of time buckets after (tpcTimeBucketCor) Z < 0",50,0.5,50.5,800,-2,2),
+     new TH2F("BCOE","time bucket difference for Outer sector versus no. of time buckets after (tpcTimeBucketCor) Z < 0",50,0.5,50.5,800,-2,2)},
+  };
+  for (Int_t i = 0; i < 3; i++)
+    for (Int_t j = 0; j < 2; j++) {
+      B[i][j]->SetXTitle("no. time buckets");
+      BC[i][j]->SetXTitle("no. time buckets");
+      B[i][j]->SetYTitle("dT");
+      BC[i][j]->SetYTitle("dT");
+    }
+  TH2F *Z[2] = {
+    new TH2F("ZI","Z difference for Inner sector versus Z",210,-210,210,800,-2,2),
+    new TH2F("ZO","Z difference for Outer sector versus Z",210,-210,210,800,-2,2)
+  };
+  TH2F *ZR = new TH2F("ZRI","Z difference fversus row",72,0.5,72.5,800,-2,2);
   // TpcT->Draw("fMcHit.mMcl_t+0.165*Frequency-fRcHit.mMcl_t/64:fMcHit.mPosition.mX3>>TI(210,-210,210,100,-2,3)","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mQuality>90&&fMcHit.mVolumeId%100<=13","colz"); TI->FitSlicesY(); TI_1->Fit("pol2","er","",-100,100);
   // TpcT->Draw("fMcHit.mMcl_t+0.165*Frequency-fRcHit.mMcl_t/64:fMcHit.mPosition.mX3>>TO(210,-210,210,100,-2,3)","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mQuality>90&&fMcHit.mVolumeId%100>13","colz"); TO->FitSlicesY(); TO_1->Fit("pol2","er","",-100,100);
   const Int_t&       fRun                                     = iter("fRun");
@@ -4956,6 +4980,10 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "") {
   const UShort_t*&   fRcHit_mQuality                          = iter("fRcHit.mQuality");
   const Float_t*&    fRcHit_mPosition_mX3                     = iter("fRcHit.mPosition.mX3");
   const Int_t&       fNoRcTrack                               = iter("fNoRcTrack");
+  const Int_t*&      fRcTrack_fNfitpoints                     = iter("fRcTrack.fNfitpoints");
+#ifdef __ONLY_PRIMARY_TRACKS__
+  const Int_t*&      fRcTrack_fifPrim                         = iter("fRcTrack.fifPrim");
+#endif
   const Float_t*&    fRcTrack_fpx                             = iter("fRcTrack.fpx");
   const Float_t*&    fRcTrack_fpy                             = iter("fRcTrack.fpy");
   const Float_t*&    fRcTrack_fpz                             = iter("fRcTrack.fpz");
@@ -4964,6 +4992,9 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "") {
   while (iter.Next()) {
     Int_t year = fRun/1e6 - 1; //  20.332.022
     if (fNoMcHit != 1 || fNoRcHit !=1 ) continue;
+#ifdef __ONLY_PRIMARY_TRACKS__
+    if (fRcTrack_fifPrim[0] != 1) continue;
+#endif
     for (Int_t l = 0; l < fNoRcHit; l++) {
       Int_t IdTruth = fRcHit_mIdTruth[l];
       Int_t row = padrow(fRcHit_mHardwarePosition[l]);
@@ -4999,10 +5030,14 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "") {
       TR->Fill(row,dT);
       ZR->Fill(row,dZ);
       Int_t ntbk = fRcHit_mMaxtmbk[l] + fRcHit_mMintmbk[l] + 1;
+      N[io]->Fill(fMcHit_mPosition_mX3[k],ntbk);
+      TN[io]->Fill(fMcHit_mPosition_mX3[k],ntbk, dT);
       B[0][io]->Fill(ntbk,dT);
+      BC[0][io]->Fill(ntbk,dTC);
       Int_t side = 1;
       if (fMcHit_mPosition_mX3[k] < 0) side = 2;
       B[side][io]->Fill(ntbk,dT);
+      BC[side][io]->Fill(ntbk,dTC);
       Double_t pT = TMath::Sqrt(fMcHit_mLocalMomentum_mX1[k]*fMcHit_mLocalMomentum_mX1[k] + fMcHit_mLocalMomentum_mX2[k]*fMcHit_mLocalMomentum_mX2[k]);
       if (pT < 0.1) continue;
       Double_t tanL = fMcHit_mLocalMomentum_mX3[k]/pT;

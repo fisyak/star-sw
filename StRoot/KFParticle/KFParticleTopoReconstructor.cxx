@@ -411,7 +411,7 @@ void KFParticleTopoReconstructor::Init(std::vector<trackInSector> Tracks, std::v
   fStatTime[0] = timer.RealTime();
 #endif // USE_TIMERS
 } // void KFParticleTopoReconstructor::Init(std::vector<AliHLTTPCCATrackParam> tracks, std::vector<int>* pdg=0); // init array of particles
-#endif
+#endif /*  KFPWITHTRACKER */
 
 void KFParticleTopoReconstructor::Init(vector<KFParticle> &particles, vector<int>* pdg, vector<int>* nPixelHits, bool initPVTracks)
 {

@@ -31,23 +31,16 @@
 #include "KFPTrackVector.h"
 #include "KFParticleSIMD.h"
 
-#ifdef USE_TIMERS
-#ifndef HLTCA_STANDALONE
-#include "TStopwatch.h"
-#define _Stopwatch
-typedef TStopwatch Stopwatch;
-#else
-#include "Stopwatch.h"
-#endif
-#endif
-#define KFPWITHTRACKER
+//#define KFPWITHTRACKER
 #ifdef KFPWITHTRACKER
 #include "TPCCATracker/AliHLTTPCCADef.h"
-#include "TPCCATracker/Stopwatch.h"
 #include "TPCCATracker/AliHLTTPCCAGBTracker.h"
 #include "TPCCATracker/StTrackSegment.h"
-#else
+#else /* ! KFPWITHTRACKER */
 class AliHLTTPCCAGBTracker;
+#endif /* KFPWITHTRACKER */
+#ifdef USE_TIMERS
+#include "TStopwatch.h"
 #endif
 
 #ifdef WITHSCIF
@@ -96,7 +89,7 @@ class KFParticleTopoReconstructor{
    **/
   void Init(AliHLTTPCCAGBTracker* tracker, std::vector<int>* pdg=0); // init array of particles
   void Init(std::vector<trackInSector> Tracks, std::vector<int>* pdg=0); // init array of particles
-#endif
+#endif /* KFPWITHTRACKER */
   /** Copies provided particles to the vector KFParticleTopoReconstructor::fTracks
    ** assuming a given PDG hypothesis for each particle. If pointer to pdg-vector is not provided
    ** "-1" PDG is assigned to each input particle. If pointer to number of precise measurements
@@ -282,7 +275,7 @@ class KFParticleTopoReconstructor{
   /** \brief Execution time of different parts of the code: initialisation, reconstruction of primary vertices, 
    ** sorting of input particles, reconstruction of short-lived particles. */ 
   double fStatTime[fNTimers];
-  Stopwatch timer; ///< Timer.
+  TStopwatch timer; ///< Timer.
 #endif // USE_TIMERS
 
 }__attribute__((aligned(sizeof(float_v)))); // class KFParticleTopoReconstructor

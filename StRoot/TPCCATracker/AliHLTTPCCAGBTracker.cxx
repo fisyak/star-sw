@@ -37,7 +37,7 @@
 #include "AliHLTTPCCAMath.h"
 #include "AliHLTTPCCATrackLinearisation.h"
 #include "AliHLTTPCCAClusterData.h"
-#include "Stopwatch.h"
+#include "TStopwatch.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -174,7 +174,7 @@ class ReconstructSliceTracks
     inline void operator()( const tbb::blocked_range<int> &r ) const {
       for ( int iSlice = r.begin(); iSlice < r.end(); ++iSlice ) {
 #ifdef USE_TIMERS
-        Stopwatch timer;
+        TStopwatch timer;
 #endif // USE_TIMERS
         AliHLTTPCCATracker &slice = fSlices[iSlice];
         slice.Reconstruct();
@@ -224,8 +224,8 @@ void AliHLTTPCCAGBTracker::FindTracks()
 #undef NUM_THREADS
 #endif //USE_TBB
 
-  Stopwatch timer1;
-  Stopwatch timer2;
+  TStopwatch timer1;
+  TStopwatch timer2;
 
 #ifdef USE_TBB
   tbb::parallel_sort( fHits.Data(), fHits.Data() + fNHits, AliHLTTPCCAGBHit::Compare );
@@ -296,7 +296,7 @@ void AliHLTTPCCAGBTracker::FindTracks()
       ReconstructSliceTracks( fSlices, fStatTime, mutex ) );
 #else //USE_TBB
   for ( int iSlice = 0; iSlice < fSlices.Size(); ++iSlice ) {
-    Stopwatch timer;
+    TStopwatch timer;
     AliHLTTPCCATracker &slice = fSlices[iSlice];
     slice.Reconstruct();
     timer.Stop();
@@ -316,7 +316,7 @@ void AliHLTTPCCAGBTracker::FindTracks()
   fSliceTrackerTime = timer2.RealTime();
   fSliceTrackerCpuTime = timer2.CpuTime();
 
-  Stopwatch timerMerge;
+  TStopwatch timerMerge;
   Merge();
   timerMerge.Stop();
   timer1.Stop();

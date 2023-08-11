@@ -896,7 +896,7 @@ void StTrackCombPiD::SetPDG() {
 void StTrackCombPiD::ResetBestVx() {
   Float_t param[6] = {0};
   Float_t Cov[21] = {0};
-  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
+  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 1.f);
   ((KFParticleBase *) &fgBestVx)->SetId(0);
 }
 //________________________________________________________________________________
@@ -910,7 +910,7 @@ void StTrackCombPiD::SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3])
       Cov[KFParticleBase::IJ(i,i)] = xyzErrors[i]*xyzErrors[i];
     }
   }
-  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
+  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 1.f);
   ((KFParticleBase *) &fgBestVx)->SetId(1);
 }
 //________________________________________________________________________________
@@ -923,7 +923,7 @@ void StTrackCombPiD::SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3
     param[i] = xyz[i];
     Cov[KFParticleBase::IJ(i,i)] = xyzErrors[i]*xyzErrors[i];
   }
-  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
+  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 1.f);
   ((KFParticleBase *) &fgBestVx)->SetId(1);
 }
 //________________________________________________________________________________
@@ -932,7 +932,7 @@ void StTrackCombPiD::SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]) 
   Float_t Cov[21] = {0};
   std::copy(xyz, xyz+3, param);
   std::copy(covVx, covVx+6, Cov);
-  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 0.f);
+  ((KFParticleBase *) &fgBestVx)->Initialize(param,Cov, 0, 1.f);
   ((KFParticleBase *) &fgBestVx)->SetId(1);
 }
 //________________________________________________________________________________

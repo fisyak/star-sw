@@ -262,8 +262,8 @@ void Process1Event(StPicoDst* picoDst = 0, Long64_t ev = 0) {
       Zmin = -210;
       Zmax =  210;
     }
-    Int_t nT = 200;
-    Double_t dTmax = 0.1;
+    Int_t nT = 500;
+    Double_t dTmax = 0.25;
     zZ       = new TH2F("zZ","zTpc - zVpd versus zTpc for highest rank vertex", 210, -210, 210, 100, -50, 50);
     NPART = new TH1D("npart","no accepted particles",500,0,5000);
     dZ = new TH2F("dZ","dZ (W - E)/2 versus Z",nZ,Zmin,Zmax,400,-2.,2.);

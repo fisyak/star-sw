@@ -272,9 +272,9 @@ void LndNdxL10Fit() {
   Double_t b = LndNdxL10->GetXaxis()->GetXmax();
 #if 0  
   Int_t nknots = 24; // chisq/dof = 8.295837e-02, Rsq = 1.00000
-  TArrayD xKnot(nknots);
+  TArrayD xKnots(nknots);
   Double_t d = (b - a)/(nknots - 1);
-  for (Int_t i = 0; i < nknots; i++) xKnot[i] = a + i*d;
+  for (Int_t i = 0; i < nknots; i++) xKnots[i] = a + i*d;
 #else
 #if 0
   Double_t xKnots[] = { a, -1.5, -1.0, -0.75, -0.50, -0.25, 0.0, 0.25, 0.5, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 3.00, 4.00, b};
@@ -371,4 +371,35 @@ void gsl_splineFit(Int_t k = 1) {
     // LndNdxLoh10
     LndNdxL10Fit();
   }
+}
+//________________________________________________________________________________
+void HistFit(TH1 *hist = 0) {
+  if (! hist) return;
+  const Int_t K = 4;
+  hist->Draw(); if (c1) c1->Update();
+  Int_t n = hist->GetNbinsX();
+  TArrayD xData(n);
+  TArrayD yData(n);
+  TArrayD eData(n);
+  Int_t i1 = 9999;
+  Int_t i2 = -1;
+  Double_t a = 0, b = 0;
+  Int_t np = 0;
+  TAxis *ax = hist->GetXaxis();
+  for (Int_t i = 1; i <= n; i++) {
+    Double_t e = hist->GetBinError(i);
+    if (e <= 0) continue;
+    eData[np] = e;
+    xData[np] = hist->GetBinCenter(i);
+    yData[np] = hist->GetBinContent(i);
+    np++;
+    if (i1 > i) {i1 = i; a = ax->GetBinLowEdge(i1);}
+    if (i2 < i) {i2 = i; b = ax->GetBinUpEdge(i2);}
+  }  
+  Int_t nknots = 4; // chisq/dof = 8.295837e-02, Rsq = 1.00000
+  TArrayD xKnots(nknots);
+  Double_t d = (b - a)/(nknots - 1);
+  for (Int_t i = 0; i < nknots; i++) xKnots[i] = a + i*d;
+  gsl_splineFit(xData.GetArray(), yData.GetArray(), eData.GetArray(), xKnots.GetArray(), K, n, nknots, "");
+  //  MakeCintFile("spline3hist");
 }
