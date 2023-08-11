@@ -66,12 +66,12 @@
 <input URL="file:/hlt/cephfs/daq/2019/054/20054064/hlt*.daq" />
 <input URL="command:daq_2019byRun.pl" />
 <input URL="file:/gpfs01/star/daq/2019/066/20066003/*.daq" />
-<input URL="command:daq_2019T.pl" />
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_20160*.daq" />
 <input URL="file:/gpfs01/star/embed/daq/2014/auau200_vpdmb_chop_added/st_physics_adc*.daq" />
 <input URL="file:/gpfs01/star/daq/2017/*/*/st_W_*.daq" />
 <input URL="command:daq_2019T.pl" />
 <input URL="file:/star/data03/daq/2020/005/21005010/st_physics_*.daq" /> 
 <input URL="file:/gpfs01/star/daq/2019/087/20087007/st_physics_2*.daq" /> 
 -->
-<input URL="file:/star/data03/daq/2019/160/*/st_physics_20160*.daq" />
+<input URL="command:daq_2019T.pl" />
 </job>
