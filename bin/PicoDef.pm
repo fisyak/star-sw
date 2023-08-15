@@ -40,7 +40,15 @@
 ## production_pp500_2022
 ## production_AuAu_2023
 ## production_AuAu_HalfField_2023
-## production_AuAu_ZeroField_2023
+## trgsetupname= production_3p85GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_4p59GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_7.3GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_31GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_5p75GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_7p3GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_9p8GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_31p2GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
+# production_AuAu_ZeroField_2023
 
 
 @PicoDefs= (
@@ -62,10 +70,12 @@
 '2018/3p85GeV_fixedTarget' =>			  '',
 '2018/3p85GeV_fixedTarget.xrootd3' =>		  '',
 '2018/isobar_2018_P21id' =>		          'production_isobar_2018/ReversedFullField/P22ia',
-'2019/3p85GeV_fixedTarget_P23id' =>                    'production_3p85GeV_fixedTarget_2019/ReversedFullField/P23id', 
-'2019/4p59GeV_fixedTarget_P23id' =>			  'production_4p59GeV_fixedTarget_2019/ReversedFullField/P23id', 
-'2019/7.3GeV_fixedTarget_P23id'  =>			  'production_7.3GeV_fixedTarget_2019/ReversedFullField/P23id',  
-'2019/31GeV_fixedTarget_P23id'   => 			  'production_31GeV_fixedTarget_2019/ReversedFullField/P23id',   
+
+'2019/3p85GeV_fixedTarget_P23id'               => 'production_3p85GeV_fixedTarget_2019/ReversedFullField/P23id',    
+'2019/4p59GeV_fixedTarget_P23id'       	       => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P23id',    
+'2019/7.3GeV_fixedTarget_P23id'		       => 'production_7.3GeV_fixedTarget_2019/ReversedFullField/P23id',     
+'2019/31GeV_fixedTarget_P23id' 		       => 'production_31GeV_fixedTarget_2019/ReversedFullField/P23id',      
+
 '2019/14p5GeV' =>	        		  'production_14p5GeV_2019/ReversedFullField/P21ic',
 '2019/19GeV_2019_P23id' =>			  'production_19GeV_2019/ReversedFullField/P23id',
 '2019/19GeV_2019b' =>				  'production_19GeV_2019b/ReversedFullField/P21ic',
@@ -80,7 +90,13 @@
 '2019/7p7GeV' =>				  '',
 '2019/9p2GeV' =>				  '',
 '2019/AuAu200' =>				  'production_AuAu200_2019/ReversedFullField/P22ia',
-'2020/11p5GeV' =>                                 'production_11p5GeV_2020/ReversedFullField/P23ia',
+
+'2020/5p75GeV_fixedTarget_P23id'       	       => 'production_5p75GeV_fixedTarget_2020/ReversedFullField/P23id',    
+'2020/7p3GeV_fixedTarget_P23id'		       => 'production_7p3GeV_fixedTarget_2020/ReversedFullField/P23id',     
+'2020/9p8GeV_fixedTarget_P23id'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P23id',     
+'2020/31p2GeV_fixedTarget_P23id'	       => 'production_31p2GeV_fixedTarget_2020/ReversedFullField/P23id',    
+
+'2020/11p5GeV' =>              		                          'production_11p5GeV_2020/ReversedFullField/P23ia', 
 '2020/11p5GeV.B' =>				  '',
 '2020/11p5GeV.C' =>				  '',
 '2020/11p5GeV.C.dev' =>				  '',
