@@ -54,7 +54,7 @@ static Int_t _debug = 0;
 #define PrPP2(B)  if (_debug)   {cout << (#B) << " = \t" << (*B) << endl;}
 #define PrPP3(A,B)  if (_debug)   {cout << (#A) << " = \t" << (A) << "\t" << (#B) << " = \t" << (B) << endl;}
 #define PrPP4(A,B)  if (_debug)   {cout << (#A) << " = \t" << (A) << "\t" << (#B) << " = \t" << (*B) << endl;}
-Double_t StiCATpcTrackerInterface::fgzFXT = 199.63; // RF/TFG/3p85GeV_fixedTarget_2019B/MuL4Vx.root
+Double_t StiCATpcTrackerInterface::fgzFXT = 199.983; // xyzW_z Fit 3p85GeV_fixedTarget_2019P6 
 //________________________________________________________________________________
 StiCATpcTrackerInterface &StiCATpcTrackerInterface::Instance() {
   if (! fgStiCATpcTrackerInterface) fgStiCATpcTrackerInterface = new StiCATpcTrackerInterface(); 
