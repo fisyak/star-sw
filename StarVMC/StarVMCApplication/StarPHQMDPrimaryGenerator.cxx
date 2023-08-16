@@ -63,60 +63,45 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
   // Track ID (filled by stack)
   // Option: to be tracked
   TTreeIter &iter = *fTreeIter;
-#if 0
-  static const Int_t&      nTracks                                 = iter("mNumParticles");
-  static const Int_t*&     particles_id                            = iter("mParticles.mId");
-  static const Float_t*&   particles_px                            = iter("mParticles.mPx");
-  static const Float_t*&   particles_py                            = iter("mParticles.mPy");
-  static const Float_t*&   particles_pz                            = iter("mParticles.mPz");
-  static const Float_t*&   particles_E                             = iter("mParticles.mEnergy");
-#endif
-  static const Int_t&       nTracks                                  = iter("fNpa");
-  static const Int_t*&      particles_id                             = iter("fParticles.fPdg");
-#if 0
-  static const Int_t*&      fParticles_fStatus                       = iter("fParticles.fStatus");
-  static const Int_t*&      fParticles_fParent                       = iter("fParticles.fParent");
-  static const Int_t*&      fParticles_fParentDecay                  = iter("fParticles.fParentDecay");
-  static const Int_t*&      fParticles_fMate                         = iter("fParticles.fMate");
-  static const Int_t*&      fParticles_fDecay                        = iter("fParticles.fDecay");
-  static const Int_t*&      fParticles_fChild                        = iter("fParticles.fChild[2]");
-#endif
-  static const Double32_t*& particles_px                           = iter("fParticles.fPx");
-  static const Double32_t*& particles_py                           = iter("fParticles.fPy");
-  static const Double32_t*& particles_pz                           = iter("fParticles.fPz");
-  static const Double32_t*& particles_E                            = iter("fParticles.fE");
-#if 0
-  static const Double32_t*& fParticles_fX                            = iter("fParticles.fX");
-  static const Double32_t*& fParticles_fY                            = iter("fParticles.fY");
-  static const Double32_t*& fParticles_fZ                            = iter("fParticles.fZ");
-  static const Double32_t*& fParticles_fT                            = iter("fParticles.fT");
-  static const Double32_t*& fParticles_fWeight                       = iter("fParticles.fWeight");
-#endif
-
+  static const Int_t&       fNpart                                   = iter("fNpart");
+  //  static const Int_t&       fNparticipants                           = iter("fNparticipants");
+  //  static const Float_t*&    fPsi                                     = iter("fPsi[4]");
+  //  static const Float_t*&    fEcc                                     = iter("fEcc[4]");
+  //  static const Int_t&       fParticles_                              = iter("fParticles");
+  //  static const Int_t*&      fParticles_fId                           = iter("fParticles.fId");
+  static const Int_t*&      fParticles_fPDG                          = iter("fParticles.fPDG");
+  //  static const Int_t*&      fParticles_fCharge                       = iter("fParticles.fCharge");
+  //  static const Int_t*&      fParticles_fChannel                      = iter("fParticles.fChannel");
+  static const Float_t*&    fParticles_fPx                           = iter("fParticles.fPx");
+  static const Float_t*&    fParticles_fPy                           = iter("fParticles.fPy");
+  static const Float_t*&    fParticles_fPz                           = iter("fParticles.fPz");
+  static const Float_t*&    fParticles_fE                            = iter("fParticles.fE");
+  //  static const Bool_t*&     fParticles_fIsInMST                      = iter("fParticles.fIsInMST");
+  //  static const Bool_t*&     fParticles_fIsInSACA                     = iter("fParticles.fIsInSACA");
 
  NEXT:
   if (! iter.Next()) {fStatus =  kStEOF; return;}
-  if (! nTracks ) goto NEXT;
+  if (! fNpart ) goto NEXT;
   Int_t toBeDone = 1; 
   Double_t polx = 0.; 
   Double_t poly = 0.; 
   Double_t polz = 0.; 
   Int_t ntr = 0;
-  Int_t N = nTracks;
+  Int_t N = fNpart;
   for (Int_t i = 0; i < N; i++) {
-    if (TMath::Abs(particles_id[i]) < 10) continue;
-    if (! TDatabasePDG::Instance()->GetParticle(particles_id[i])) continue;
-    TLorentzVector P(   particles_px[i], 
-			particles_py[i], 
-			particles_pz[i], 
-			particles_E[i]);
+    if (TMath::Abs(fParticles_fPDG[i]) < 10) continue;
+    if (! TDatabasePDG::Instance()->GetParticle(fParticles_fPDG[i])) continue;
+    TLorentzVector P(  fParticles_fPx[i], 
+			fParticles_fPy[i], 
+			fParticles_fPz[i], 
+			fParticles_fE[i]);
     static Double_t beta = St_beamInfoC::instance()->BetaCMS();
     if (TMath::Abs(beta) > 1e-7) {
       P.Boost(0, 0, beta);
     }
     // Add particle to stack 
     fStarStack->PushTrack(toBeDone, -1, 
-			  particles_id[i], 
+			  fParticles_fPDG[i], 
 			  P.Px(), 
 			  P.Py(),
 			  P.Pz(),
