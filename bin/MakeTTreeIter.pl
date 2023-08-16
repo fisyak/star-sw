@@ -56,7 +56,7 @@ close (In);
 open (Out, ">$Output") or die "Can't open output $Output";
 foreach my $rec (@LoH) {
   next if ! $rec->{Branch};
-  printf     "\tconst %-12s %-40s = iter(\"%s\");\n", $rec->{type}, $rec->{Variable}, $rec->{Branch};
-  printf Out "\tconst %-12s %-40s = iter(\"%s\");\n", $rec->{type}, $rec->{Variable}, $rec->{Branch};
+  printf     "\tstatic const %-12s %-40s = iter(\"%s\");\n", $rec->{type}, $rec->{Variable}, $rec->{Branch};
+  printf Out "\tstatic const %-12s %-40s = iter(\"%s\");\n", $rec->{type}, $rec->{Variable}, $rec->{Branch};
 }
 close(Out);
