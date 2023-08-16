@@ -1,4 +1,4 @@
-/local/bin/tcsh -f
+#! /usr/local/bin/tcsh -f
 #set list = "TpcSecRowB TpcAccumulatedQ TpcZCorrectionC TpcPadCorrectionMDF TpcLengthCorrectionMDN"
 #set list = "TpcdXCorrectionB"
 set list = "TpcSecRowB"
