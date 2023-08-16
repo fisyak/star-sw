@@ -54,7 +54,8 @@ static Int_t _debug = 0;
 #define PrPP2(B)  if (_debug)   {cout << (#B) << " = \t" << (*B) << endl;}
 #define PrPP3(A,B)  if (_debug)   {cout << (#A) << " = \t" << (A) << "\t" << (#B) << " = \t" << (B) << endl;}
 #define PrPP4(A,B)  if (_debug)   {cout << (#A) << " = \t" << (A) << "\t" << (#B) << " = \t" << (*B) << endl;}
-Double_t StiCATpcTrackerInterface::fgzFXT = 199.63; // RF/TFG/3p85GeV_fixedTarget_2019B/MuL4Vx.root
+//Double_t StiCATpcTrackerInterface::fgzFXT =  199.983; // xyzW_z Fit 3p85GeV_fixedTarget_2019P6; 199.63; // RF/TFG/3p85GeV_fixedTarget_2019B/MuL4Vx.root
+Double_t StiCATpcTrackerInterface::fgzFXT =  199.9875; // = (200. - 0.025/2);
 //________________________________________________________________________________
 StiCATpcTrackerInterface &StiCATpcTrackerInterface::Instance() {
   if (! fgStiCATpcTrackerInterface) fgStiCATpcTrackerInterface = new StiCATpcTrackerInterface(); 
@@ -461,7 +462,7 @@ void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt
   }
   // Trigger stuff
   Int_t NoTrigDet = 0;
-  enum {kvpd = 0, kbbc, kepd, kzdc, kTAC, kCAV, kTrgTotal};
+  enum {kvpd = 0, kbbc, kepd, kzdc, kTAC, kCAV, kZwKFXT, kTrgTotal};
   Double_t trgV[kTrgTotal][2] = {0};
   Double_t trgSum[kTrgTotal] = {0};
   StTriggerData *trigger = pEvent->triggerData();
@@ -486,14 +487,24 @@ void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt
     L4CAVertex &L4VxWest = summary->L4VxWest;
     L4CAVertex &L4VxEast = summary->L4VxEast;
     trgSum[kCAV] = -1e9;
+    Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
     Double_t dCAVz[2] = { L4VxEast.dMu,  L4VxWest.dMu};
     if (dCAVz[0] < 1e-7 || dCAVz[0] > 0.3) dCAVz[0] = -1e9;
     if (dCAVz[1] < 1e-7 || dCAVz[1] > 0.3) dCAVz[1] = -1e9;
     if (dCAVz[0] > 0 && dCAVz[1] > 0) {
       trgV[kCAV][east] =                   L4VxEast.Mu; trgV[kCAV][west] =                   L4VxWest.Mu;
-      Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
       trgSum[kCAV] = 0.5*(- trgV[kCAV][east] + trgV[kCAV][west])/driftVel; // in usec, for CAV use difference instead of sum
       NoTrigDet++;
+    }
+    // KF CA
+    KFVertex &PVkfW = summary->KFVxWest; PrPP(PVkfW);
+    if (PVkfW.GetNDF() > 10) {
+      Double_t dZ = PVkfW.GetZ() - fgzFXT;
+      Double_t ddZ = TMath::Sqrt(PVkfW.GetCovariance(2,2));
+      if (ddZ > 0 && ddZ < 1.0) { //0.5 && TMath::Abs(dZ/ddZ) > 1.0) {
+	trgSum[kZwKFXT] = dZ/driftVel;
+	NoTrigDet++;
+      }
     }
     if (NoTrigDet) {
       Double_t T0 = - St_tpcT0BXC::instance()->getT0(trgSum);
