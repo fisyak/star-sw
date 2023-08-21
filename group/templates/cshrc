@@ -16,7 +16,7 @@
 # no messages at all) by uncommenting the next line
 
 # setenv  SILENT 1
-setenv GROUP_DIR /afs/rhic.bnl.gov/rhstar/group
+if (! $?GROUP_DIR ) setenv GROUP_DIR /afs/rhic.bnl.gov/rhstar/group
 if ( -r  $GROUP_DIR/star_cshrc.csh ) then
         source $GROUP_DIR/star_cshrc.csh 
 endif
