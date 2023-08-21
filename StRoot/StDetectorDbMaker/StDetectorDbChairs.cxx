@@ -2338,14 +2338,15 @@ double StTpcBXT0CorrEPDC::getCorrection (double epdTAC, double driftVelocity, do
 }
 #include "St_tpcT0BXC.h"
 MakeChairInstance(tpcT0BX,Calibrations/tpc/tpcT0BX);
-Double_t St_tpcT0BXC::getT0(Double_t values[6]) const { // xxxEarliestTDC (W+E)/2 variables for "vpd","bbc","epd","zdc", "TAC", "CAVdt"
+Double_t St_tpcT0BXC::getT0(Double_t values[7]) const { // xxxEarliestTDC (W+E)/2 variables for "vpd","bbc","epd","zdc", "TAC", "CAVdt"
   Double_t T0 = 0;
   Double_t T0W = 0, T0WW = 0;
   static Int_t __debug = 0;
   if (__debug > 0) {
+    if (__debug > 1) Table()->Print(0,10);
     LOG_INFO << "St_tpcT0BXC::getT0:";
   }
-  for (Int_t i = 0; i < 6; i++) {
+  for (Int_t i = 0; i < 7; i++) {
     if (values[i] < xmin(i) || values[i] > xmax(i)) continue;
     if (detId(i) < 0) continue;
     //    if (detId(i) != 6 && (CountPs(i) < 10 || CountPs(i) > 100)) continue;
