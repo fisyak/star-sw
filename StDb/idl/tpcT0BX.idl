@@ -1,10 +1,10 @@
 //:Description: correction to interaction time from Trigger detectors
 struct tpcT0BX {
-  long   detId;   //   1,   2,   3,   4,   5,     6; < 0 if disabled
-  char   name[6]; // vpd, bbc, epd, zdc, TAC, CAVdT
+  long   detId;   //   1,   2,   3,   4,   5,     6,     7; < 0 if disabled
+  char   name[12];// vpd, bbc, epd, zdc, TAC, CAVdT, ZwKFX
   float  xmin;    // acceptable range
   float  xmax;    //
-  float  tMean;   // CA (West - East)/2 mean offset
+  float  tMean;   // CA (West - East)/2 mean offset, ZwKFX = (West - fgzFXT)/DV
   float  vMean;   // detector mean value
   float  toff;    // fitted value of (tMean + toff) + slope * (v - vMean);
   float  dtoff;   // fitted error of toff
