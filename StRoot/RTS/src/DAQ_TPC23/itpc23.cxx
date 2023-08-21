@@ -747,6 +747,7 @@ u_int *itpc23::fee_non_trgd(u_int *start)
 		//2: shorts fee_id
 		//3: shorts for_me(WTF)
 		int rdo_port = d[1]&0xFFFF ;
+		int fee_id = d[2]&0xFFFF ;
 
 		d += 4 ;	// skip blabbler
 
@@ -788,8 +789,13 @@ u_int *itpc23::fee_non_trgd(u_int *start)
 		char s_all[64] ;
 		strcpy(s_all,hwicap_version(v_all)) ;
 
-		LOG(INFO,"FEE %2d[%02d]: v_all 0x%08X[%s], v_bit 0x%08X[%s], wire1 0x%08llX, padplane %02d",fee_ix,rdo_port,
+		LOG(INFO,"%d: FEE %2d[%02d,%d]: v_all 0x%08X[%s], v_bit 0x%08X[%s], wire1 0x%08llX, padplane %02d",rdo1,fee_ix,rdo_port,fee_id,
 		    v_all,s_all,v_bit,hwicap_version(v_bit),wire1,fee_pp) ;
+
+
+		if(fee_ix!=rdo_port || fee_pp!=fee_id) {
+			LOG(ERR,"%d: fee_ix %d but read %d (fee_pp expect %d, read %d)",rdo1,fee_ix,rdo_port,fee_pp,fee_id) ;
+		}
 
 		LOG(NOTE,"   regs 0x%08X 0x%08X",reg[0],reg[1]) ;	// don't care that much
 
@@ -853,7 +859,7 @@ u_int *itpc23::fee_scan(u_int *start)
 		}
 	}
 	else {	// non-physics trigger... typically send_config stuff
-		LOG(WARN,"%d: non-physics",rdo1) ;
+		LOG(WARN,"%d: non-physics fee_ix %d, padplane %d",rdo1,fee_ix,fee_pp) ;
 		d = fee_non_trgd(d) ;
 	}
 	
