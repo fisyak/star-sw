@@ -15,12 +15,16 @@ my $pwd = cwd();
 my $Day =  "*"; # File::Basename::basename($pwd);
 print "Day = $Day\n" if ($debug);
 my $glob;
+if (-r "/hlt/cephfs/daq/2019/") {
+#  @globs = ("/hlt/cephfs/daq/2019B/" . $Day . "/*/*.daq", );  print "globs = @globs\n" if ($debug);
+  @globs = ("/hlt/cephfs/daq/2019/" . $Day . "/*/*.daq", );  print "globs = @globs\n" if ($debug);
+}
 if (-r "/hlt/cephfs/daq/2019B/") {
 #  @globs = ("/hlt/cephfs/daq/2019B/" . $Day . "/*/*.daq", );  print "globs = @globs\n" if ($debug);
   @globs = ("/hlt/cephfs/daq/2019B/" . $Day . "/*/*.daq", );  print "globs = @globs\n" if ($debug);
 }
 if (-r "/gpfs01/star/daq/2019/") {
-#  @globs = ("/gpfs01/star/daq/2019/*/*/st_physics_adc*.daq");  print "globs = @globs\n" if ($debug);
+#  @globs = ("/gpfs01/star/daq/2019/*/*/st_physics_adc*.daq");  print "globs = @globs\n" if ($debug);11
   @globs = ("/gpfs01/star/daq/2019/*/*/st_physics*.daq");  print "globs = @globs\n" if ($debug);
 }
 sub PrintHash($$) {
@@ -40,7 +44,8 @@ sub GoodRun($$) {
 #    if ($pwd !~ /$env->{$key}->{field}/) {print ", rejected by field\n" if ($debug); next;}
     if ($run < $env->{$key}->{first})     {print ", rejected run $run by first\n" if ($debug); next;}
     if ($run > $env->{$key}->{last})      {print ", rejected run $run by last\n"  if ($debug); next;}
-    print " accepted\n" if ($debug);
+#    print "$pwd, trig = $env->{$key}->{trig}, field = $env->{$key}->{field}; first = $env->{$key}->{first}, last = $env->{$key}->{last} accepted\n";
+    print " accepted\n" if ($debug); 
     return $run;
   }
   print " rejected\n" if ($debug);
@@ -49,7 +54,6 @@ sub GoodRun($$) {
 my $def = {@Runs};# print "Runs = @Runs\n";
 #PrintHash($def,"Runs") if ($debug);
 #die;
-my $fNo = 0;
 my %Runs = ();
 foreach my $glob (@globs) {
   my @files = glob $glob; print "files = @files\n" if ($debug);
@@ -64,6 +68,7 @@ foreach my $glob (@globs) {
 }
 #____________________________________________________________
 my @list = ();
+my $Numbers = 0;
 foreach my $run (sort keys %Runs) {
   my $r = File::Basename::basename($run);
   if (GoodRun($def,$r) < 0) {next;}
@@ -71,7 +76,7 @@ foreach my $run (sort keys %Runs) {
   foreach my $file (@ListAll) {
     print "run = $run. $file\n" if ($debug);
     my $b = File::Basename::basename($file,".daq");
-    #    print "$b\n" if ($debug);
+    print "$b\n" if ($debug);
     my $evfile = $b . ".event.root";
     if (-r $evfile) {next;}
     my $mufile = $b . ".MuDst.root";
@@ -81,24 +86,23 @@ foreach my $run (sort keys %Runs) {
     my $blafile = $b . ".bla.root";
     if (-r $blafile) {next;}
     push @list, $file;
-#    print "string:$file\n";
-      $fNo++;
-#    if ($fNo > 20) {last;}
+    $Numbers++;
+    print "string:$file\n";
   }
-#    if ($fNo > 20) {last;}
 }
-if (! $fNo) {die "Don't have input files\n";}
-my $N = $#list;
-my $NT = 20;
-my $step = int ($N / $NT) + 1; 
-$NT = int ($N / $step);
-print "N = $N, NT = $NT, step = $step\n" if ($debug);
-my $i = 0;
-$fNo = 0;
-foreach my $file (@list) {
-  $i++;
-  if ($i % $step != 1) {next}
-  print "string:$file\n";
-  $fNo++;
-}
-if (! $fNo) {die "Don't have input files\n";}
+#print "Numbers = $Numbers\n";
+die "Don't have input files = $Numbers\n" if (! $Numbers);
+# my $N = $#list;
+# my $NT = 20;
+# my $step = int ($N / $NT) + 1; 
+# $NT = int ($N / $step);
+# print "N = $N, NT = $NT, step = $step\n" if ($debug);
+# my $i = 0;
+# $Numbers = 0;
+# foreach my $file (@list) {
+#   $i++;
+#   if ($i % $step != 1) {next}
+#   print "string:$file\n";
+#   $Numbers++;
+# }
+# if (! $Numbers) {die "Don't have input files\n";}

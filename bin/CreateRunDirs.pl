@@ -45,7 +45,7 @@ sub GoodRun($$) {
     if ($pwd !~ /$env->{$key}->{field}/) {print ", $run rejected by field\n" if ($debug); next;}
     if ($run < $env->{$key}->{first})    {print ", $run rejected by first\n" if ($debug); next;}
     if ($run > $env->{$key}->{last})     {print ", $run rejected by last\n"  if ($debug); next;}
-    print " accepted\n" if ($debug);
+    print "run = $run  accepted\n" if ($debug);
     return $run;
   }
   print "\t$run  rejected\n" if ($debug);
