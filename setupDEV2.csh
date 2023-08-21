@@ -25,7 +25,7 @@ unsetenv QTDIR
 unsetenv SITE
 unsetenv *DEBUG
 	unsetenv XROOTDSYS XrdSecPWDALOGFILE XrdSecPWDSRVPUK
-
+setenv USE_TFG 
 if (-d /net/l402/data/fisyak/STAR) then
   setenv AFS_RHIC  /net/l402/data/fisyak/STAR
     setenv SITE "HLT"
@@ -41,6 +41,7 @@ setenv STAR_ROOT ${AFS_RHIC}
 setenv OPTSTAR   ${STAR_ROOT}/opt
 setenv GROUP_DIR ${STAR_ROOT}/packages/.DEV2/group
 #unsetenv STAR
+setenv TFG_STAR 1
 source ${GROUP_DIR}/group_env.csh
 #source ${GROUP_DIR}/setup    gcc482
 #if (-d /net/l402/data/fisyak/STAR) then

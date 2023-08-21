@@ -1,9 +1,11 @@
+unsetenv  TFG_STAR
 setenv MANPATH `dropit subsys -p $MANPATH`
 setenv LD_LIBRARY_PATH `dropit subsys -p $LD_LIBRARY_PATH`
 setenv GROUPPATH `dropit subsys -p $GROUPPATH`
 setenv PYTHONPATH `dropit subsys -p $PYTHONPATH`
 setenv PATH `dropit subsys`
 setenv AFS_RHIC /afs/rhic.bnl.gov
+setenv STAR_BASE_PATH
 unsetenv CINTSYSDIR
 unsetenv CLHEP_BASE_DIR
 unsetenv DB_SERVER_LOCAL_CONFIG
