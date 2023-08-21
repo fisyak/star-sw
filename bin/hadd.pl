@@ -92,18 +92,16 @@ my $Out = $ARG{Out}; print "Out = $Out\n";
 my @Files = glob "$glob"; 
 print "no of files : $#Files\n"; 
 if ($#Files < 0) {die "No files fond";}
-my $fno = 0;
-
 #my @runXIbadList  = qw (
 #12111020 12111021 12111023 
 #);
-foreach my $file (@Files) { 
+foreach my $file (@Files) { print "file = $file\n" if ($ARG{debug});
   my ($dev,$ino,$mode,$nlink,$uid,$gid,$dev, $size, $atime, 
       $mtim, $ctime, $blksize,$blocks) = stat($file );
   next if $size < 500000; # 0.5 MB limit
-  my $f = File::Basename::basename($file);# print "$file";
-  my $dir = File::Basename::dirname($file);# print "$file";
-  next if ($f =~ /^($tags)/);
+  my $f = File::Basename::basename($file); print "$file = $f"  if ($ARG{debug});
+  my $dir = File::Basename::dirname($file); print "$file = $dir"  if ($ARG{debug});
+  next if ($f =~ /^($tags)/ and $dir eq '.');
   $f =~ s/\.root//g;
   $f =~ s/adc_//g;
   $f =~ s/st_//;
