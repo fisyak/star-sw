@@ -45,7 +45,7 @@ void dEdx(Int_t First, Int_t Last,
 	  const char* rootFile="", Int_t mode = 2, const Char_t *year = "", const Char_t *opt = "") {
   TString Year(year);
   if (Year == "") {
-    Year = "y2021";
+    Year = "y2019";
     TString input(gSystem->BaseName(MainFile));
     TObjArray *obj = input.Tokenize("_");
     Int_t n = obj->GetSize();

@@ -20,5 +20,12 @@ void writeMuDst(Int_t nevents  = 10000000,
  root.exe -q -b 'writeMuDst.C(10000,"'${b}'.event.root")' >& ${b}.writeMuDst.log 
  cd -
  end
-
- */
+q
+ 
+ foreach f ( `ls -1d *.geant.root` )
+   set b = `basename ${f} .event.root`
+   if (-r ${b}.MuDst.root) continue;
+   echo "${b}"
+   root.exe -q -b 'writeMuDst.C(10000,"'${f}'")' >& ${b}.writeMuDst.log 
+ end  
+*/

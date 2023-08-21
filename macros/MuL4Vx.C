@@ -89,7 +89,10 @@ void MuL4Vx(Long64_t nevent = 9999999,
   TFile *fOut = new TFile(outFile,"recreate");
   TH1F  *zVxAll = new TH1F("zVXAll","Z of all reconstructed vertices",210,-210,210);
   TH1F  *zVxAll1 = new TH1F("zVXAll1","Z of the highest rank vertex",210,-210,210);
-  TH1F  *zVxAllF = new TH1F("zVXAllF","Z of the highest rank vertex",100,198,202);
+  TH1F  *zVxMc = new TH1F("zVxMc","Z of the 1st simulated vertex",400,198,202);
+  TH1F  *zVxAllF = new TH1F("zVXAllF","Z of the highest rank vertex",400,198,202);
+  TH1F  *zVxAllE = new TH1F("zVXAllE","Z of the highest rank vertex with KF East fit",400,198,202);
+  TH1F  *zVxAllW = new TH1F("zVXAllW","Z of the highest rank vertex with KF West fit",400,198,202);
   TH2F  *xyVxAllF = new TH2F("xyVXAllF","Y vs X  of the highest rank vertex",100,-2 - fgyFXT, 2 -fgyFXT, 100, -2, 2);
   TH1F  *noTracks = new TH1F("noTracks", "no. of tracks in a vertex",100,0,250); 
   TH1F  *noTracks1 = new TH1F("noTracks1", "no. of tracks in the highest rang vertrex",100,0,250); 
@@ -196,6 +199,10 @@ void MuL4Vx(Long64_t nevent = 9999999,
     TClonesArray *CovPrimTrack     = mu->covPrimTrack();          if (Debug()) {cout << "\tCovPrimTrack " << CovPrimTrack->GetEntriesFast();}
     TClonesArray *CovGlobTrack     = mu->covGlobTrack();          if (Debug()) {cout << "\tCovGlobTrack " << CovGlobTrack->GetEntriesFast();}
 #endif
+    StMuMcVertex *muMcVx = mu->MCvertex(0);
+    if (muMcVx) {
+      zVxMc->Fill(muMcVx->XyzV().z());
+    }
     for (Int_t l = 0; l < NoPrimaryVertices; l++) {
       StMuPrimaryVertex *Vtx = (StMuPrimaryVertex *) PrimaryVertices->UncheckedAt(l);
       if (! Vtx) continue;
@@ -237,8 +244,8 @@ void MuL4Vx(Long64_t nevent = 9999999,
 	ZdZ[s]->Fill(ndf, (z - fgzFXT)/dz);
 	deltaZ[s]->Fill(ndf, (z - fgzFXT));
       }
-      if (KFVxWest.GetNDF() > 10 && KFVxEast.GetNDF() > 10)  kfHist[0][0]->Fill(KFVxWest.GetX(), KFVxWest.GetY(), KFVxWest.GetZ());
-      if (KFVxEast.GetNDF() > 10 && KFVxEast.GetNDF() > 10)  kfHist[0][1]->Fill(KFVxEast.GetX(), KFVxEast.GetY(), KFVxEast.GetZ());
+      if (KFVxEast.GetNDF() > 10) {zVxAllE->Fill(Z);kfHist[0][0]->Fill(KFVxEast.GetX(), KFVxEast.GetY(), KFVxEast.GetZ());}
+      if (KFVxWest.GetNDF() > 10) {zVxAllW->Fill(Z);kfHist[0][1]->Fill(KFVxWest.GetX(), KFVxWest.GetY(), KFVxWest.GetZ());}
       if (! (KFVxWest.GetNDF() > 10 && KFVxEast.GetNDF() > 10 && KFVxEast.GetNDF() > 10 && KFVxEast.GetNDF() > 10)) continue;
       KFZEastVsWest->Fill(KFVxWest.GetZ(),KFVxEast.GetZ());
       kfHist[0][2]->Fill(0.5*(KFVxWest.GetX()+KFVxEast.GetX()), 0.5*(KFVxWest.GetY()+KFVxEast.GetY()), 0.5*(KFVxWest.GetZ()+KFVxEast.GetZ()));
@@ -258,7 +265,7 @@ void MuL4Vx(Long64_t nevent = 9999999,
       kfHist[0][5]->Fill(xyz[1][0], xyz[1][1], xyz[1][2]);
     }
   }
-#if 1
+#if 0
   if (fOut) fOut->Write();
 #endif
 }

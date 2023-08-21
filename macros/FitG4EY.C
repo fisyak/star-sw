@@ -52,7 +52,7 @@ Double_t gf4EYFunc(Double_t *x, Double_t *par) {
   frac[6] = ff[1]*ff[6];
   frac[7] = ff[1]*ff[7];
   frac[8] = ff[1]*ff[8];
-  if (frac[0] < 0.1) return 0;
+  if (frac[0] + frac[1] < 0.1) return 0;
   if (frac[0] < 0.4 && frac[1] < 0.4) return 0;
 #if 0
   // 11/03/2022 /hlt/cephfs/fisyak/TpcRS_2021.COL/dEdx/Fit/FiTGG
@@ -799,7 +799,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
     g2 = new TF1("G4EY",gf4EYFunc, -5, 5, 16);
 #endif
     g2->SetParName(0,"norm");      g2->SetParLimits(0,-0.6,0.6); // g2->FixParameter(0,0.0); // 
-    g2->SetParName(1,"mu");        g2->SetParLimits(1,-1.2,0.4);				     
+    g2->SetParName(1,"mu");        g2->SetParLimits(1,-1.2,1.6);				     
     g2->SetParName(2,"Sigma");     g2->FixParameter(2,0.0); // g2->SetParLimits(2,-0.1,0.1);	     
     g2->SetParName(3,"P");         g2->SetParLimits(3,0.0,1.2); // TMath::Pi()/2);		     
     g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,1.0); // TMath::Pi()/2); 	     
@@ -825,7 +825,10 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
   }
   PreSetParametersY(proj, g2);
   //  g2->ReleaseParameter(2);  g2->SetParLimits(2,-0.1,0.1);
-  g2->ReleaseParameter(3);  g2->SetParLimits(3,0.0,TMath::Pi()/2);
+  //#define PIONS_ONLY
+#ifndef PIONS_ONLY
+  g2->ReleaseParameter(3); // g2->SetParLimits(3,0.0,TMath::Pi()/2);
+#endif
   g2->FixParameter(4,0.01); 
   g2->FixParameter(5,0.01);
   g2->FixParameter(6,0.00);
@@ -841,7 +844,8 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
   g2->FixParameter(16,0.0);
 #endif
   //  Fit pion + proton 
-  proj->Fit(g2,Opt.Data());
+  Int_t iok = proj->Fit(g2,Opt.Data());
+#ifndef PIONS_ONLY
   //  g2->ReleaseParameter(2);
   g2->ReleaseParameter(4);     g2->SetParLimits(4,0.0,TMath::Pi()/2); 
   g2->ReleaseParameter(5);     g2->SetParLimits(5,0.0,TMath::Pi()/2);	
@@ -849,7 +853,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
     g2->ReleaseParameter(6);     g2->SetParLimits(6,0.0,TMath::Pi()/2);
   }
   //  Fit pion + proton + K + e + d
-  Int_t iok = proj->Fit(g2,Opt.Data());
+  iok = proj->Fit(g2,Opt.Data());
   if ( iok < 0) {
     cout << g2->GetName() << " fit has failed with " << iok << " for " 
 	 << proj->GetName() << "/" << proj->GetTitle() << " Try one again" << endl; 
@@ -873,6 +877,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
 	 << proj->GetName() << "/" << proj->GetTitle() << " Try one again" << endl; 
     proj->Fit(g2,Opt.Data());
   }
+#endif /* ! PIONS_ONLY */
   Opt += "m";
   iok = proj->Fit(g2,Opt.Data());
   if (iok < 0 ) return 0;

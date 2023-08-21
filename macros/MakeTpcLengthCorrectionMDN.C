@@ -26,7 +26,7 @@
   end 
   dir TpcSec*.20*root | awk -F\. '{printf("ln -s TpcLengthCorrectionMDN.%s.C TpcLengthCorrectionMDN.%s.%s.C\n",$5,$2,$3)}'
 
-  foreach b (17p3GeV_2021 dAu200_2021)
+  foreach b (17p3GeV_2021 dAu200_2021 dAu200_2021A dAu200_2021B )
     echo "${b}"
     root.exe -q -b NPoints*U+*${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
   end   

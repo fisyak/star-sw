@@ -1,5 +1,9 @@
 #include "TMath.h"
 #include "TF1.h"
+#include "Riostream.h"
+#include "TString.h"
+#include "TSystem.h"
+#include "TFile.h"
 TF1 *gg = 0;
 Double_t gaus2(Double_t *x, Double_t *p) {
   Double_t NormL = p[0];
@@ -23,11 +27,19 @@ TF1 *FXTGausZ() {
   f->SetParName(3,"phiP");  f->SetParLimits(3, 0.0,TMath::Pi()/2);
   f->SetParName(4,"muP");
   f->SetParName(5,"sigmaP");
-  f->SetParameters( 10, 200.0, 0.2, 0., 1.);
+  f->SetParameters( 10, 200.0, 0.2, 0.5, 0.0, 5.0);
+#if 0
   f->FixParameter(3,0);
   f->FixParameter(4,0);
   f->FixParameter(5,5);
+#endif
   gg = f;
   return f;
 }
 //________________________________________________________________________________
+void PrintGG() {
+  cout << Form("%-50s",gSystem->DirName(gDirectory->GetName()));
+  for (Int_t p = 0; p < 6; p++) 
+    cout << Form(" | %8.4f +/- %6.4f",gg->GetParameter(p), gg->GetParError(p));
+  cout << " |" << endl;
+}
