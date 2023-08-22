@@ -24,6 +24,7 @@ void StarMCPythia6PrimaryGenerator::PreSet() {
   fOption = "";
   fOrigin = TVector3(0,0,0);
   fPVX = fPVY = fPVZ = fPVxyError = 0;
+  fCurOrigin = fOrigin;
   fPythia6 = 0;
   SetSpread(0.15, 0.15, 42.0);
 }
@@ -97,7 +98,7 @@ void StarMCPythia6PrimaryGenerator::GeneratePrimary() {
     if (! p) continue;
     // Add particle to stack 
     fStarStack->PushTrack(toBeDone, -1, p->GetPdgCode(), p->Px(), p->Py(), p->Pz(), p->Energy(), 
-			  p->Vx() + fOrigin.X(), p->Vy() + fOrigin.Y(), p->Vz() + fOrigin.Z(), p->T(),  
+			  p->Vx() + fCurOrigin.X(), p->Vy() + fCurOrigin.Y(), p->Vz() + fCurOrigin.Z(), p->T(),  
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
     fNofPrimaries++;
   }
@@ -106,9 +107,9 @@ void StarMCPythia6PrimaryGenerator::GeneratePrimary() {
 void StarMCPythia6PrimaryGenerator::GeneratePrimaries() {
   if (! fSetVertex) {
     if (fPVX && fPVY && fPVZ) {
-      fOrigin.SetX(fPVX->GetRandom());
-      fOrigin.SetY(fPVY->GetRandom());
-      fOrigin.SetZ(fPVZ->GetRandom());
+      fCurOrigin.SetX(fPVX->GetRandom());
+      fCurOrigin.SetY(fPVY->GetRandom());
+      fCurOrigin.SetZ(fPVZ->GetRandom());
       if (fPVxyError) {
 	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
 	gEnv->SetValue("FixedSigmaX", dxy);
@@ -135,12 +136,14 @@ void StarMCPythia6PrimaryGenerator::GeneratePrimaries() {
       Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
       Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
       TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-      fOrigin = origin + dR;
+      fCurOrigin = origin + dR;
 #endif
-      fOrigin.SetX(gRandom->Gaus(0,gSpreadX));
-      fOrigin.SetY(gRandom->Gaus(0,gSpreadY));
-      fOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
+      fCurOrigin.SetX(fOrigin.X() + gRandom->Gaus(0,gSpreadX));
+      fCurOrigin.SetY(fOrigin.Y() + gRandom->Gaus(0,gSpreadY));
+      fCurOrigin.SetZ(fOrigin.Z() + gRandom->Gaus(0,gSpreadZ));
     }
+  } else {
+    fCurOrigin = fOrigin;
   }
   GeneratePrimary();
 }

@@ -61,6 +61,7 @@ class StarMCPrimaryGenerator : public TObject {
   Int_t Debug()                               { return fDebug;}
   Int_t Status()                              { return fStatus;}
   TVector3 &GetOrigin()                       { return fOrigin;}
+  TVector3 &GetCurOrigin()                    { return fCurOrigin;}
   TVector3 &GetSigmasOrigin()                 { return fSigmasOrigin;}
   virtual void GeneratePrimaries() {}
   virtual void Print(Option_t *option="") const;
@@ -74,6 +75,7 @@ class StarMCPrimaryGenerator : public TObject {
   Int_t             fId;
   TVector3          fOrigin;
   TVector3          fSigmasOrigin;
+  TVector3          fCurOrigin; // Currrent origin
   Bool_t            fSetVertex;
   Bool_t            fUseBeamLine;
   Int_t             fStatus;

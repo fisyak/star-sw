@@ -12,7 +12,7 @@ class StarPHQMDPrimaryGenerator : public StarMCPrimaryGenerator  {
   
   static StarPHQMDPrimaryGenerator* Instance() {return (StarPHQMDPrimaryGenerator*) StarMCPrimaryGenerator::Instance();}
   virtual void GeneratePrimaries();
-  virtual void GeneratePrimaries(const TVector3& v);
+  virtual void GeneratePrimaries(const TVector3 v);
   virtual void SetGenerator(TString mode="pp:W:510", Int_t tune=320);
   virtual void SetSpread(Double_t xs = 0.15, Double_t ys = 0.15, Double_t zs = 42.0) { gSpreadX = xs; gSpreadY = ys; gSpreadZ = zs;}
  private:

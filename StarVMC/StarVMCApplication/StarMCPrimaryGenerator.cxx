@@ -16,7 +16,8 @@ StarMCPrimaryGenerator *StarMCPrimaryGenerator::fgInstance = 0;
 ClassImp(StarMCPrimaryGenerator);
 //________________________________________________________________________________
 StarMCPrimaryGenerator::StarMCPrimaryGenerator() : TObject(), fStarStack(0), fIsRandom(false), fNofPrimaries(0), 
-    fOption(""), fDebug(0), fId(0), fOrigin(), fSigmasOrigin(), fSetVertex(kFALSE), fUseBeamLine(kFALSE), fStatus(kStOK)  {
+						   fOption(""), fDebug(0), fId(0), fOrigin(), 
+						   fSigmasOrigin(), fCurOrigin(), fSetVertex(kFALSE), fUseBeamLine(kFALSE), fStatus(kStOK)  {
   fgInstance = this;
   if (! fStarStack) fStarStack = StarVMCApplication::Instance()->GetStack();
 }

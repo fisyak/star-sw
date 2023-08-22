@@ -27,6 +27,7 @@ void StarGenPrimaryGenerator::PreSet() {
   fPVX = fPVY = fPVZ = fPVxyError = 0;
   fTree = 0;
   SetSpread(0.15, 0.15, 42.0);
+  fCurOrigin = fOrigin;
   const StChainOpt *opt = StMaker::GetTopChain()->GetChainOpt();
   assert(opt);
   const TString inputfile = opt->GetFileIn();
@@ -96,9 +97,9 @@ void StarGenPrimaryGenerator::GeneratePrimary() {
 			  P.Py(),
 			  P.Pz(),
 			  P.E(),
-			  fOrigin.X(), 
-			  fOrigin.Y(), 
-			  fOrigin.Z(), 
+			  fCurOrigin.X(), 
+			  fCurOrigin.Y(), 
+			  fCurOrigin.Z(), 
 			  0,
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
   }
@@ -106,33 +107,31 @@ void StarGenPrimaryGenerator::GeneratePrimary() {
 }
 //_____________________________________________________________________________
 void StarGenPrimaryGenerator::GeneratePrimaries(const TVector3& origin) {    
-  // Fill the user stack (derived from TVirtualMCStack) with primary particles.
-  // ---
-  Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
-  Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
-  Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
-  TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-  fOrigin = origin + dR;
-  GeneratePrimary();  
-  fStarStack->SetNprimaries(fNofPrimaries);
 }
 //_____________________________________________________________________________
 void StarGenPrimaryGenerator::GeneratePrimaries() {
   if (! fSetVertex) {
     if (fPVX && fPVY && fPVZ) {
-      fOrigin.SetX(fPVX->GetRandom());
-      fOrigin.SetY(fPVY->GetRandom());
-      fOrigin.SetZ(fPVZ->GetRandom());
+      fCurOrigin.SetX(fPVX->GetRandom());
+      fCurOrigin.SetY(fPVY->GetRandom());
+      fCurOrigin.SetZ(fPVZ->GetRandom());
       if (fPVxyError) {
 	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
 	gEnv->SetValue("FixedSigmaX", dxy);
 	gEnv->SetValue("FixedSigmaY", dxy);
       }
     } else {
-      fOrigin.SetX(gRandom->Gaus(0,gSpreadX));
-      fOrigin.SetY(gRandom->Gaus(0,gSpreadY));
-      fOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
+      fCurOrigin.SetX(gRandom->Gaus(0,gSpreadX));
+      fCurOrigin.SetY(gRandom->Gaus(0,gSpreadY));
+      fCurOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
     }
+  } else {
+    Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
+    Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
+    Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
+    TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
+    fCurOrigin = fOrigin + dR;
   }
-  GeneratePrimaries(fOrigin);
+  GeneratePrimary();  
+  fStarStack->SetNprimaries(fNofPrimaries);
 }

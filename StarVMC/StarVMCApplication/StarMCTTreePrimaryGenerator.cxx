@@ -28,6 +28,7 @@ void StarMCTTreePrimaryGenerator::PreSet() {
   fPVX = fPVY = fPVZ = fPVxyError = 0;
   fTree = 0;
   SetSpread(0.15, 0.15, 42.0);
+  fCurOrigin = fOrigin;
   const StChainOpt *opt = StMaker::GetTopChain()->GetChainOpt();
   assert(opt);
   const TString inputfile = opt->GetFileIn();
@@ -90,42 +91,36 @@ void StarMCTTreePrimaryGenerator::GeneratePrimary() {
 			  particles_py[i], 
 			  particles_pz[i], 
 			  particles_E[i], 
-			  particles_xv[i] + fOrigin.X(), 
-			  particles_yv[i] + fOrigin.Y(), 
-			  particles_zv[i] + fOrigin.Z(), 
+			  particles_xv[i] + fCurOrigin.X(), 
+			  particles_yv[i] + fCurOrigin.Y(), 
+			  particles_zv[i] + fCurOrigin.Z(), 
 			  0,
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
   }
 }
 //_____________________________________________________________________________
 void StarMCTTreePrimaryGenerator::GeneratePrimaries(const TVector3& origin) {    
-  // Fill the user stack (derived from TVirtualMCStack) with primary particles.
-  // ---
-  Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
-  Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
-  Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
-  TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-  fOrigin = origin + dR;
-  GeneratePrimary();  
-  fStarStack->SetNprimaries(fNofPrimaries);
 }
 //_____________________________________________________________________________
 void StarMCTTreePrimaryGenerator::GeneratePrimaries() {
   if (! fSetVertex) {
     if (fPVX && fPVY && fPVZ) {
-      fOrigin.SetX(fPVX->GetRandom());
-      fOrigin.SetY(fPVY->GetRandom());
-      fOrigin.SetZ(fPVZ->GetRandom());
+      fCurOrigin.SetX(fPVX->GetRandom());
+      fCurOrigin.SetY(fPVY->GetRandom());
+      fCurOrigin.SetZ(fPVZ->GetRandom());
       if (fPVxyError) {
 	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
 	gEnv->SetValue("FixedSigmaX", dxy);
 	gEnv->SetValue("FixedSigmaY", dxy);
       }
     } else {
-      fOrigin.SetX(gRandom->Gaus(0,gSpreadX));
-      fOrigin.SetY(gRandom->Gaus(0,gSpreadY));
-      fOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
+      fCurOrigin.SetX(gRandom->Gaus(0,gSpreadX));
+      fCurOrigin.SetY(gRandom->Gaus(0,gSpreadY));
+      fCurOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
     }
+  } else {
+    fCurOrigin = fOrigin;
   }
-  GeneratePrimaries(fOrigin);
+  GeneratePrimary();  
+  fStarStack->SetNprimaries(fNofPrimaries);
 }

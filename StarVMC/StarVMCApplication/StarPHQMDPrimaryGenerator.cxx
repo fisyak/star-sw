@@ -27,14 +27,20 @@ void StarPHQMDPrimaryGenerator::PreSet() {
   fPVX = fPVY = fPVZ = fPVxyError = 0;
   fTree = 0;
   SetSpread(0.15, 0.15, 42.0);
+  fCurOrigin = fOrigin;
   const StChainOpt *opt = StMaker::GetTopChain()->GetChainOpt();
   assert(opt);
   const TString inputfile = opt->GetFileIn();
   TFile *f = new TFile(inputfile);
   assert(f);
-  fTree = (TTree *) f->Get("PHQMDtree");
+#ifdef __PHQMDtree__
+  const Char_t *treeName = "PHQMDtree";
+#else
+  const Char_t *treeName = "events";
+#endif  
+  fTree = (TTree *) f->Get(treeName);
   assert(fTree);
-  fTreeIter = new TTreeIter("PHQMDtree");
+  fTreeIter = new TTreeIter(treeName);
   fTreeIter->AddFile(inputfile);
 }
 //_____________________________________________________________________________
@@ -63,6 +69,7 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
   // Track ID (filled by stack)
   // Option: to be tracked
   TTreeIter &iter = *fTreeIter;
+#ifdef __PHQMDtree__
   static const Int_t&       fNpart                                   = iter("fNpart");
   //  static const Int_t&       fNparticipants                           = iter("fNparticipants");
   //  static const Float_t*&    fPsi                                     = iter("fPsi[4]");
@@ -78,7 +85,42 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
   static const Float_t*&    fParticles_fE                            = iter("fParticles.fE");
   //  static const Bool_t*&     fParticles_fIsInMST                      = iter("fParticles.fIsInMST");
   //  static const Bool_t*&     fParticles_fIsInSACA                     = iter("fParticles.fIsInSACA");
-
+#else
+#if 0
+        static const Int_t&       fEventNr                                 = iter("fEventNr");
+        static const Double_t&    fB                                       = iter("fB");
+        static const Double_t&    fPhi                                     = iter("fPhi");
+        static const Int_t&       fNes                                     = iter("fNes");
+        static const Int_t&       fStepNr                                  = iter("fStepNr");
+        static const Double_t&    fStepT                                   = iter("fStepT");
+#endif
+        static const Int_t&       fNpart                                   = iter("fNpa");
+#if 0
+        static const TString&     fComment                                 = iter("fComment");
+        static const Int_t&       fParticles_                              = iter("fParticles");
+        static const Int_t*&      fParticles_fIndex                        = iter("fParticles.fIndex");
+#endif
+        static const Int_t*&      fParticles_fPDG                          = iter("fParticles.fPdg");
+#if 0
+        static const Int_t*&      fParticles_fStatus                       = iter("fParticles.fStatus");
+        static const Int_t*&      fParticles_fParent                       = iter("fParticles.fParent");
+        static const Int_t*&      fParticles_fParentDecay                  = iter("fParticles.fParentDecay");
+        static const Int_t*&      fParticles_fMate                         = iter("fParticles.fMate");
+        static const Int_t*&      fParticles_fDecay                        = iter("fParticles.fDecay");
+        static const Int_t*&      fParticles_fChild                        = iter("fParticles.fChild[2]");
+#endif
+        static const Double32_t*& fParticles_fPx                           = iter("fParticles.fPx");
+        static const Double32_t*& fParticles_fPy                           = iter("fParticles.fPy");
+        static const Double32_t*& fParticles_fPz                           = iter("fParticles.fPz");
+        static const Double32_t*& fParticles_fE                            = iter("fParticles.fE");
+#if 0
+        static const Double32_t*& fParticles_fX                            = iter("fParticles.fX");
+        static const Double32_t*& fParticles_fY                            = iter("fParticles.fY");
+        static const Double32_t*& fParticles_fZ                            = iter("fParticles.fZ");
+        static const Double32_t*& fParticles_fT                            = iter("fParticles.fT");
+        static const Double32_t*& fParticles_fWeight                       = iter("fParticles.fWeight");
+#endif
+#endif
  NEXT:
   if (! iter.Next()) {fStatus =  kStEOF; return;}
   if (! fNpart ) goto NEXT;
@@ -106,43 +148,36 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
 			  P.Py(),
 			  P.Pz(),
 			  P.E(),
-			  fOrigin.X(), 
-			  fOrigin.Y(), 
-			  fOrigin.Z(), 
+			  fCurOrigin.X(), 
+			  fCurOrigin.Y(), 
+			  fCurOrigin.Z(), 
 			  0,
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
   }
   if (! ntr) goto NEXT; 
 }
 //_____________________________________________________________________________
-void StarPHQMDPrimaryGenerator::GeneratePrimaries(const TVector3& origin) {    
-  // Fill the user stack (derived from TVirtualMCStack) with primary particles.
-  // ---
-  Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
-  Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
-  Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
-  TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-  fOrigin = origin + dR;
-  GeneratePrimary();  
-  fStarStack->SetNprimaries(fNofPrimaries);
+void StarPHQMDPrimaryGenerator::GeneratePrimaries(const TVector3 origin) {    
 }
 //_____________________________________________________________________________
 void StarPHQMDPrimaryGenerator::GeneratePrimaries() {
   if (! fSetVertex) {
     if (fPVX && fPVY && fPVZ) {
-      fOrigin.SetX(fPVX->GetRandom());
-      fOrigin.SetY(fPVY->GetRandom());
-      fOrigin.SetZ(fPVZ->GetRandom());
+      fCurOrigin.SetX(fPVX->GetRandom());
+      fCurOrigin.SetY(fPVY->GetRandom());
+      fCurOrigin.SetZ(fPVZ->GetRandom());
       if (fPVxyError) {
 	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
 	gEnv->SetValue("FixedSigmaX", dxy);
 	gEnv->SetValue("FixedSigmaY", dxy);
       }
     } else {
-      fOrigin.SetX(gRandom->Gaus(0,gSpreadX));
-      fOrigin.SetY(gRandom->Gaus(0,gSpreadY));
-      fOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
+      fCurOrigin.SetX(fOrigin.X() + gRandom->Gaus(0,gSpreadX));
+      fCurOrigin.SetY(fOrigin.Y() + gRandom->Gaus(0,gSpreadY));
+      fCurOrigin.SetZ(fOrigin.Z() + gRandom->Gaus(0,gSpreadZ));
     }
   }
-  GeneratePrimaries(fOrigin);
+  GeneratePrimary();  
+  fStarStack->SetNprimaries(fNofPrimaries);
+  GeneratePrimaries(fCurOrigin);
 }

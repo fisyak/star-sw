@@ -32,6 +32,7 @@ void StarMCSimplePrimaryGenerator::PreSet() {
   fpT_min = 0; fpT_max = 0; fEta_min = 0; fEta_max = 0; fPhi_min = 0; fPhi_max = 0; fZ_min = 0; fZ_max = 0;
   fOption = "";
   fOrigin = TVector3(0,0,0);
+  fCurOrigin = fOrigin;
   fGun = kFALSE;
   fGunpX = fGunpY = fGunpZ = fGunX = fGunY = fGunZ = 0;
   fGunId = 0;
@@ -149,9 +150,9 @@ void StarMCSimplePrimaryGenerator::GeneratePrimary() {
       px = fGunpX; py = fGunpY; pz = fGunpZ; vx = fGunX; vy = fGunY; vz = fGunZ; 
     } else {
       // Position
-      vx  = fOrigin.X(); 
-      vy  = fOrigin.Y(); 
-      vz =  fOrigin.Z(); 
+      vx  = fCurOrigin.X(); 
+      vy  = fCurOrigin.Y(); 
+      vz =  fCurOrigin.Z(); 
       // Energy (in GeV)
       Double_t eta       = fEta_min + (fEta_max - fEta_min)*gRandom->Rndm();
       Double_t phi       = fPhi_min + (fPhi_max - fPhi_min)*gRandom->Rndm();
@@ -219,7 +220,7 @@ void StarMCSimplePrimaryGenerator::GeneratePrimaries(const TVector3& origin) {
   Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
   Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
   TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-  fOrigin = origin + dR;
+  fCurOrigin = origin + dR;
   for (Int_t i=0; i<fNofPrimaries; i++) GeneratePrimary();  
   fStarStack->SetNprimaries(fNofPrimaries);
 }
