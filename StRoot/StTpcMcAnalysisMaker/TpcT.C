@@ -212,9 +212,9 @@ Bool_t AcceptFile(const TString &File) {
        File.Contains("picoDst") ||
        File.Contains("Mu") ||
        File.Contains("MuDst.root"))) ok = kFALSE;
-#if 1
   cout << File.Data();
   if (ok) cout << "\tAccepted" << endl;
+#if 0
   else    cout << "\tRejectted" << endl;
 #endif  
   return ok;
