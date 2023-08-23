@@ -55,6 +55,7 @@ my $def = {@Runs};# print "Runs = @Runs\n";
 #PrintHash($def,"Runs") if ($debug);
 #die;
 my %Runs = ();
+my $adc_only = $pwd =~ /adc/;
 foreach my $glob (@globs) {
   my @files = glob $glob; print "files = @files\n" if ($debug);
   foreach my $file (@files) {# print "file = $file\n";
@@ -63,6 +64,7 @@ foreach my $glob (@globs) {
     print "$b\n" if ($debug);
     my $picofile = $b . ".picoDst.root";
     if (-r $picofile) {next;}
+    if ($adc_only and $b !~ /adc/) {next;}
     $Runs{$run} .= " " . $file; print "Runs{$run} = $Runs{$run}\n" if ($debug);
   }
 }
