@@ -16,17 +16,23 @@
   set PicoMode = ",PicoVtxVpdOrDefault"
   echo ${SUBMITTINGDIRECTORY} | grep fixed
   if ($? == 0) set PicoMode = ",PicoVtxFXT"
+  set TPXMODE = ""
+  echo ${SUBMITTINGDIRECTORY} | grep adc
+  if ($? == 0) set TPXMODE = ",TpxRaw,TpxClu,McTpcAna"
 # 08/04/2023
   set WestEastOff = ""
   echo ${SUBMITTINGDIRECTORY} | grep WestOff
   if ($? == 0) set WestEastOff = ",WestOff"
   echo ${SUBMITTINGDIRECTORY} | grep EastOff
   if ($? == 0) set WestEastOff = ",EastOff"
+  
 #  root.exe -b -q  'bfc.C(500,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(500,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(500,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT,UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
-  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,FXT,UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,FXT,UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(10000,"P2019a,McTpcAna,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noRunco,evout,FXT,UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(10000,"P2019a,'${TPXMODE}',CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noRunco,evout,FXT,UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
 #   rm ${bla}
         </command>
