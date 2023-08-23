@@ -156,9 +156,13 @@ Int_t StTpcHitMover::Make() {
 		  Float_t pad  = tpcHit->pad();
 		  Float_t time = tpcHit->timeBucket();
 		  if (! StTpcDb::IsOldScheme()) {
-		    if (St_tpcTimeBucketCorC::instance()->getNumRows()) {
+		    if (TMath::Abs(209.4 - TMath::Abs(tpcHit->position().z())) < 3.0) {
+		      // Don't touch prompt hits
+		    } else if (St_tpcTimeBucketCorC::instance()->getNumRows()) {
 		      Double_t noTmbks = tpcHit->maxTmbk() - tpcHit->minTmbk() + 1;
-		      time += St_tpcTimeBucketCorC::instance()->CalcCorrection(io, noTmbks);
+		      Int_t iowe = io;
+		      if (sector > 12 && St_tpcTimeBucketCorC::instance()->nrows() >= 4) iowe += 2;
+		      time += St_tpcTimeBucketCorC::instance()->CalcCorrection(iowe, noTmbks);
 		    }
 		  }
 //		THIS IS A BLOCK TO CORRECT TIMING IN FXT MODE FOR DATA
