@@ -15,7 +15,7 @@
 void ppbarM2() {
   TCanvas *c2 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c2");
   if (c2) c2->Clear();
-  else    c2 = new TCanvas("c2","ppbarM2",10,510,700,500);
+  else    c2 = new TCanvas("c2","ppbarM2",10,550,700,500);
   //  gStyle->SetOptStat(0);
   TF1 *func = new TF1("func","[0]*(1+[1]+[2]*x)",-0.5,0.5);
   Double_t m2P = 0.9382723*0.9382723;
