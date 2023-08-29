@@ -30,6 +30,7 @@
 #include "StDetectorDbMaker/St_tpcStatusC.h"
 #include "StDetectorDbMaker/StPath2tpxGain.h"
 #include "StDetectorDbMaker/StPath2itpcGain.h"
+#include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StMessMgr.h" 
 #include "StDAQMaker/StDAQReader.h"
 #include "StRtsTable.h"
@@ -162,6 +163,7 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
     fTpx23->log_level = log_level ;
     if (fTpx23->gains_from_cache(fnameTPX) < 0 || fnameTPX == "none") {	// REQUIRED even if no gain correction
       // Tpx Load gains from Db
+      Int_t NoPadsWithLoadedGain = 0;
       for(Int_t sector=1;sector<=24;sector++) {
 	Int_t rowMin = 1;
 	if (St_tpcPadConfigC::instance()->iTPC(sector)) rowMin = 14; 
@@ -176,10 +178,12 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
 	      if (St_tpcPadGainT0C::instance()->Gain(sector,rowO,pad) <= 0) continue;
 	      fTpx23->rp_gain[sector-1][rowO][pad].gain = St_tpcPadGainT0C::instance()->Gain(sector,rowO,pad);
 	      fTpx23->rp_gain[sector-1][rowO][pad].t0   = St_tpcPadGainT0C::instance()->T0(sector,rowO,pad);
+	      NoPadsWithLoadedGain++;
 	    }
 	  }
 	}
       }
+      LOG_INFO << "StTpcRTSHitMaker::InitRun:: loaded gains for " << NoPadsWithLoadedGain << " pads in TPX23" << endm;
     }
     fTpx23->run_start() ;
     // iTPC23
@@ -189,6 +193,7 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
     fiTpc23->log_level = log_level ;
     Int_t ok = fiTpc23->gains_from_cache(fnameITPC);
     if (ok < 0 || fnameITPC == "none") {	// REQUIRED even if no gain correction
+      Int_t NoPadsWithLoadedGain = 0;
       for(Int_t sector=1;sector<=24;sector++) {
 	if (! St_tpcPadConfigC::instance()->iTPC(sector)) continue;
 	for(Int_t row = 1; row <= 40; row++) {
@@ -204,9 +209,11 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
 #ifdef __DEBUG_GAIN__
 	    cout << Form("Gain/T0 s/r/p %3i/%3i/%3i %7.2f %7.2f",sector,row,pad,fiTpc23->rp_gain[sector-1][row][pad].gain,fiTpc23->rp_gain[sector-1][row][pad].t0) << endl;
 #endif /* __DEBUG_GAIN__ */
+	    NoPadsWithLoadedGain++;
 	  }
 	}
       }
+      LOG_INFO << "StTpcRTSHitMaker::InitRun:: loaded gains for " << NoPadsWithLoadedGain << " pads in iTPC23" << endm;
     }
     fiTpc23->run_start() ;
   } else {
@@ -976,7 +983,9 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
     plot->Reset(); 
     plot->SetTitle(Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i",sec,row, pEvent->id()));
   } else {
-    plot = new TH2F(PlotName,Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i",sec,row, pEvent->id()), 512,-0.5,511.5,144,0.5,144.5);
+    Int_t npad = St_tpcPadConfigC::instance()->padsPerRow(sec,row);
+    plot = new TH2F(PlotName,Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i",sec,row, pEvent->id()), 360,-0.5,359.5,npad,0.5,npad+0.5);
+    plot->SetStats(1);
   }
   TDataSet*  tpcRawEvent = StMaker::GetChain()->GetInputDS("Event");
   if (! tpcRawEvent) {
@@ -992,7 +1001,6 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
       } else {
 	Int_t Npads = digitalSector->numberOfPadsInRow(row);
 	for(Int_t pad = 1; pad <= Npads; pad++) {
-	  UInt_t ntimebins = digitalSector->numberOfTimeBins(row,pad);
 	  static Short_t ADCs[__MaxNumberOfTimeBins__];
 #ifdef __TFG__VERSION__
 	  static Int_t IDTs[__MaxNumberOfTimeBins__];
@@ -1012,16 +1020,17 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
   for (Long64_t k = 0; k < NoHits; k++) {
     const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
     Int_t color = 1;
-    Int_t style = 20;
+    Int_t style = 25;
     Double_t offset = 0.0;
     Int_t flag = tpcHit->flag();
-    if (flag & 256) {color = 2; style = 21; offset = 0.1; flag &= ~0x100;}
+    if (flag & 256) {color = 2; style = 29; offset = 0.1; flag &= ~0x100;} // online kTpxO
     if (flags > -1 && flag < flags) continue;
     Double_t tb = tpcHit->timeBucket();
     Double_t pad = tpcHit->pad();
     TPolyMarker *pm = new TPolyMarker(1,&tb, &pad);
     pm->SetMarkerStyle(style);
     pm->SetMarkerColor(color);
+    pm->SetMarkerSize(2);
     plot->GetListOfFunctions()->Add(pm);
     TBox *box = new TBox(tpcHit->minTmbk()-0.5 + offset,tpcHit->minPad()-0.5 + offset, tpcHit->maxTmbk()+0.5 + offset,tpcHit->maxPad()+0.5 + offset); 
     box->SetLineWidth(4);
