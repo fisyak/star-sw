@@ -128,13 +128,16 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
     if (! $key) {next;}
     print "key { |$key| }\t=> |$def->{$key}| pwd = |$pwd|\n" if ($debug);
     if (! $def->{$key}) {next;}
-    print "    { |$key| }\t=> |$def->{$key}|\n" if ($debug);
+    print "tag = |$tag|    { |$key| }\t=> |$def->{$key}|\n" if ($debug);
 #    if ($pwd =~ /$key/) {
     if ($tag eq $key) {
       $glob = "/reco/" . $def->{$key}; print "pwd = $pwd, => key => $key, glob = $glob\n" if ($debug);
 #       if ($key =~ /P23ib/) {
 # 	$PICOPATH = "/sdcc/lustre02/star/data102"; print "PICOPATH = $PICOPATH\n" if ($debug);
 #       }
+      if ($key =~ '2021/3p85GeV_fixedTarget_2021a') {$dayMin = 122; $dayMax = 125;}
+      if ($key =~ '2021/3p85GeV_fixedTarget_2021b') {$dayMin = 158; $dayMax = 179;}
+       print "dayMin = $dayMin, dayMax = $dayMax \n" if ($debug);
       last;
     }
   }

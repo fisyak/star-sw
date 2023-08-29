@@ -2474,7 +2474,6 @@ my $step = 0;
 #$hist = "RunXXI306"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_dAu200_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/03/2023  check MySQL
 #$hist = "RunXXI307"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_17p3GeV_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/06/2023  new TpcSecRowB
 #$hist = "RunXXI307"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_dAu200_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#   08/06/2023  new TpcSecRowB
-=======
 #$hist = "RunXXI307"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_17p3GeV_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/06/2023  new TpcSecRowB missed new correction
 #$hist = "RunXXI307"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_dAu200_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#   08/06/2023  new TpcSecRowB missednew Correction
 #$hist = "RunXXI308"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_17p3GeV_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/09/2023  new TpcSecRowB 
@@ -2638,8 +2637,11 @@ my $step = 0;
 #$hist = "RunXIX_XXFXT08"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/production_*_fixedTarget_20*/*Field";  $Production = "/P23ic_calib"; $year = "/20*/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  05/25/23 test with MySQL and SL23d
 ################################## RunXXIII ##############################################
 #$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  05/26/2023 the first pass
-$hist = "RunXXIII002"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/01/2023 the reduced sample new Histograms for temperature and time
+#$hist = "RunXXIII002"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/01/2023 the reduced sample new Histograms for temperature and time
 ################################################################################
+#$hist = "RunXXIFXT01"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/25/2023 check status of old calibration
+#$hist = "RunXXIFXT02"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/27/2023 fix bug with Z3 histograms
+$hist = "RunXXIFXT03"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/28/2023 new TpcZCorrectionC
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
