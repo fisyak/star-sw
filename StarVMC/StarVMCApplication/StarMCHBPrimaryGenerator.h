@@ -26,15 +26,13 @@ class StarMCHBPrimaryGenerator : public StarMCPrimaryGenerator {
   virtual ~StarMCHBPrimaryGenerator() {SafeDelete(fHBTree); SafeDelete(fHBFile);}
   
   static StarMCHBPrimaryGenerator* Instance() {return (StarMCHBPrimaryGenerator*) StarMCPrimaryGenerator::Instance();}
-  virtual void  GeneratePrimaries();
-  virtual void GeneratePrimaries(const TVector3& origin) {}
   void  SetHbtId(Int_t m = 999)               { fHbtId = m;}
   void  SetHBFileName(const Char_t *name)     { fHBFileName = name;}
   TString *HBFileName()                       { return &fHBFileName;}
   TTree *HBTree()                             { return fHBTree;}
   TFile *HBFile()                             { return fHBFile;}
  private:
-  void GeneratePrimary(const TVector3& origin);
+  void GeneratePrimary();
   TString           fHBFileName;
   TTree       *fHBTree;
   TFile       *fHBFile;

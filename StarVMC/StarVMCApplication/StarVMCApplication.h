@@ -65,7 +65,7 @@ class StarVMCApplication : public TVirtualMCApplication {
     
   virtual Double_t                 TrackingRmax() const { return 1.e4; }		  
   virtual Double_t 		   TrackingZmax() const { return 1.e5; } 		  
-  virtual void     		   SetDebug(Int_t m);
+  virtual void     		   SetDebug(Int_t m = 1);
   virtual Int_t    		   Debug() {return fDebug;}				  
   virtual void     		   DoMisAlignment(Bool_t m = kTRUE) {fAlignment = m;}	  
   virtual Bool_t   		   MisalignGeometry();					  

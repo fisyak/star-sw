@@ -19,47 +19,7 @@ StarMCHBPrimaryGenerator::StarMCHBPrimaryGenerator(const Char_t *HbFile, TDataSe
   if (Debug()) fHBFile->ls();
 }
 //_____________________________________________________________________________
-void StarMCHBPrimaryGenerator::GeneratePrimary(const TVector3& origin) {     
-#if 0
-  // Add one primary particle to the user stack (derived from TVirtualMCStack).
- // Track ID (filled by stack)
- Int_t ntr;
- 
- // Option: to be tracked
- Int_t toBeDone = 1; 
- 
- // Particle type
- Int_t pdg  = fId;
- 
- // Polarization
- Double_t polx = 0.; 
- Double_t poly = 0.; 
- Double_t polz = 0.; 
-
- // Position
- Double_t vx  = origin.X(); 
- Double_t vy  = origin.Y(); 
- Double_t vz =  origin.Z(); 
- Double_t tof = 0.;
- // Energy (in GeV)
- Double_t pT        = fpT_min + (fpT_max - fpT_min)*gRandom->Rndm();
- Double_t eta       = fEta_min + (fEta_max - fEta_min)*gRandom->Rndm();
- Double_t phi       = fPhi_min + (fPhi_max - fPhi_min)*gRandom->Rndm();
- // Particle momentum
- Double_t px, py, pz;
- px = pT*TMath::Cos(phi); 
- py = pT*TMath::Sin(phi);
- pz = pT*TMath::SinH(eta);
- // Double_t kinEnergy = 0.050;  
- Double_t mass = TDatabasePDG::Instance()->GetParticle(fId)->Mass();
- Double_t e  = TMath::Sqrt(mass*mass + pz*pz + pT*pT);
- // Add particle to stack 
- fStarStack->PushTrack(toBeDone, -1, pdg, px, py, pz, e, vx, vy, vz, tof, polx, poly, polz, 
-                  kPPrimary, ntr, 1., 2);
-#endif
-}
-//_____________________________________________________________________________
-void StarMCHBPrimaryGenerator::GeneratePrimaries() {// generate primaries from HBOOK NTuple
+void StarMCHBPrimaryGenerator::GeneratePrimary() {// generate primaries from HBOOK NTuple
   static HepEvent_t event;
   static Int_t   &itrac = *(&event.itrac);
   static Int_t   &ip    = *(&event.itrac);
@@ -167,9 +127,9 @@ void StarMCHBPrimaryGenerator::GeneratePrimaries() {// generate primaries from H
 	fStarStack->PushTrack(toBeDone, parent, event.p.idhep, 
 				event.p.phep[0], event.p.phep[1], 
 				event.p.phep[2], event.p.phep[3],// px, py, pz, e, 
-				fOrigin.x()+event.p.vhep[0]/10, 
-				fOrigin.y()+event.p.vhep[1]/10, 
-				fOrigin.z()+event.p.vhep[2]/10, 
+				fCurOrigin.x()+event.p.vhep[0]/10, 
+				fCurOrigin.y()+event.p.vhep[1]/10, 
+				fCurOrigin.z()+event.p.vhep[2]/10, 
 				event.p.vhep[3]/ct,//vx, vy, vz, tof, (mm->cm) 
 				polx, poly, polz, 
 				kPPrimary, ntr, 1., 2); // mech, &ntr, weight, status

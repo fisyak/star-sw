@@ -23,8 +23,6 @@ class StarCosmicRaysGenerator : public StarMCPrimaryGenerator  {
   virtual ~StarCosmicRaysGenerator() {}
   
   static StarCosmicRaysGenerator* Instance() {return (StarCosmicRaysGenerator*) StarMCPrimaryGenerator::Instance();}
-  virtual void GeneratePrimaries();
-  virtual void GeneratePrimaries(const TVector3& /* origin */) {}
  private:
   void GeneratePrimary();
   ClassDef(StarCosmicRaysGenerator,1)  //StarCosmicRaysGenerator

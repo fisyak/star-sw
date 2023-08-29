@@ -10,14 +10,12 @@
 #include "TMCParticle.h"
 #include "StDetectorDbMaker/St_vertexSeedC.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
-#include "StMessMgr.h" 
 #include "StMaker.h"
 #include "StChainOpt.h"
 ClassImp(StarPHQMDPrimaryGenerator);
 //_____________________________________________________________________________
 StarPHQMDPrimaryGenerator::StarPHQMDPrimaryGenerator(TString mode, Int_t tune) : StarMCPrimaryGenerator() {
   PreSet(); 
-  SetGenerator(mode,tune);
 }
 //_____________________________________________________________________________
 void StarPHQMDPrimaryGenerator::PreSet() {
@@ -42,26 +40,6 @@ void StarPHQMDPrimaryGenerator::PreSet() {
   assert(fTree);
   fTreeIter = new TTreeIter(treeName);
   fTreeIter->AddFile(inputfile);
-}
-//_____________________________________________________________________________
-void StarPHQMDPrimaryGenerator::SetGenerator(TString mode, Int_t tune) {
-  TString path(".");
-  TString File("PVxyz.root");
-  Char_t *file = gSystem->Which(path,File,kReadPermission);
-  if (file) {
-    TFile *PVfile = TFile::Open(file);
-    if (PVfile) {
-      fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
-      fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
-      fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
-      fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
-      delete PVfile;
-      LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
-      if (fPVxyError) LOG_WARN << " hPVError histogram will be used for transverse PV error." << endm;
-    }
-    delete [] file;
-  }
-  fgInstance = this;
 }
 //_____________________________________________________________________________
 void StarPHQMDPrimaryGenerator::GeneratePrimary() {     
@@ -141,7 +119,7 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
     if (TMath::Abs(beta) > 1e-7) {
       P.Boost(0, 0, beta);
     }
-    // Add particle to stack 
+    // Add particle to stackx2 
     fStarStack->PushTrack(toBeDone, -1, 
 			  fParticles_fPDG[i], 
 			  P.Px(), 
@@ -155,29 +133,4 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
   }
   if (! ntr) goto NEXT; 
-}
-//_____________________________________________________________________________
-void StarPHQMDPrimaryGenerator::GeneratePrimaries(const TVector3 origin) {    
-}
-//_____________________________________________________________________________
-void StarPHQMDPrimaryGenerator::GeneratePrimaries() {
-  if (! fSetVertex) {
-    if (fPVX && fPVY && fPVZ) {
-      fCurOrigin.SetX(fPVX->GetRandom());
-      fCurOrigin.SetY(fPVY->GetRandom());
-      fCurOrigin.SetZ(fPVZ->GetRandom());
-      if (fPVxyError) {
-	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
-	gEnv->SetValue("FixedSigmaX", dxy);
-	gEnv->SetValue("FixedSigmaY", dxy);
-      }
-    } else {
-      fCurOrigin.SetX(fOrigin.X() + gRandom->Gaus(0,gSpreadX));
-      fCurOrigin.SetY(fOrigin.Y() + gRandom->Gaus(0,gSpreadY));
-      fCurOrigin.SetZ(fOrigin.Z() + gRandom->Gaus(0,gSpreadZ));
-    }
-  }
-  GeneratePrimary();  
-  fStarStack->SetNprimaries(fNofPrimaries);
-  GeneratePrimaries(fCurOrigin);
 }
