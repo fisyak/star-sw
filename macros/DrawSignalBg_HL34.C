@@ -114,8 +114,8 @@ void DrawSignalBg_HL34(TString nSt="") {
 
 
 
-  TH1D *hPart[NParticles];
-  TF1  *fPart[NParticles];
+  TH1D **hPart = new TH1*[NParticles];
+  TF1  **fPart = new TF1*[NParticles];
 #if 0
   TH1D *hPart[NParticles], *hPartCT_SR[NParticles], *hPartCT_BGR[NParticles], *hPartCT_S[NParticles], *hPartCT_SCorr[NParticles];
 #endif
@@ -246,7 +246,7 @@ void DrawSignalBg_HL34(TString nSt="") {
 
     hPart[i] -> Fit(sPartFit[i].data(),"","",bbb[i].binStart,bbb[i].binEnd);
   }
-
+  if (! hPart[0] || ! hPart[1]) return;
   TF1 *fSInt[NParticles];
   TF1 *fBInt[NParticles];
   float sigB[NParticles];

@@ -72,16 +72,17 @@ void MakeTpcZCorrection1() {
   TString fOut =  Form("%s.%s.C", tableName, fileIn.Data());
   TF1* f[2] = {(TF1 *) gROOT->GetFunction("pol2"), (TF1 *) gROOT->GetFunction("pol5")};
   Int_t nrows = 4; // for separate West and East
-  Int_t np = 5;
+  Int_t np = 4;
   Int_t npO = -1;
   Double_t min      =  15.0;
   Double_t max      = 210.0;
   Double_t minOuter =  22.5;
   Double_t maxOuter = 208.0;
-  Double_t minInner =  16.5;
+  Double_t minInner =  20.5;
   Double_t maxInner = 208.0;
   if      (fileIn == "")                                  {nrows = 0;}
 #if 0
+  else if (fileIn.Contains("44p5GeV_fixedTarget_2021"))   {nrows = 0;} // 
   else if (fileIn.Contains("100GeV_fixedTarget_2021"))    {nrows = 0;} // np = 3; npO = 3;} 
   else if (fileIn.Contains("13p5GeV_fixedTarget_2020"))   {nrows = 0;} // np = 3; npO = 3;} 
   else if (fileIn.Contains("19p5GeV_fixedTarget_2020"))   {nrows = 0;} // np = 3; npO = 3;} 
@@ -91,7 +92,6 @@ void MakeTpcZCorrection1() {
   else if (fileIn.Contains("31p2GeV_fixedTarget_2020"))   {nrows = 0;}
   else if (fileIn.Contains("3p85GeV_fixedTarget_2019"))   {nrows = 0;} //
   else if (fileIn.Contains("3p85GeV_fixedTarget_2021"))   {nrows = 0;} //
-  else if (fileIn.Contains("44p5GeV_fixedTarget_2021"))   {nrows = 0;} // 
   else if (fileIn.Contains("4p59GeV_fixedTarget_2019"))   {nrows = 0;} // 
   else if (fileIn.Contains("5p75GeV_fixedTarget_2020"))   {nrows = 0;} // 
   else if (fileIn.Contains("70GeV_fixedTarget_2021"))     {nrows = 0;}              
