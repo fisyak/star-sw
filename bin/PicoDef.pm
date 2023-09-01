@@ -78,6 +78,8 @@
 '2019/31GeV_fixedTarget_P23id' 		       => 'production_31GeV_fixedTarget_2019/ReversedFullField/P23id',      
 
 '2019/14p5GeV' =>	        		  'production_14p5GeV_2019/ReversedFullField/P21ic',
+'2019/14p5GeV_2019_P21ic' =>			  'production_14p5GeV_2019/ReversedFullField/P21ic',
+'2019/14p5GeV_2019_P23id' =>			  'production_14p5GeV_2019/ReversedFullField/P23id',
 '2019/19GeV_2019_P23id' =>			  'production_19GeV_2019/ReversedFullField/P23id',
 '2019/19GeV_2019b' =>				  'production_19GeV_2019b/ReversedFullField/P21ic',
 '2019/19GeV_2019' =>				  'production_19GeV_2019/ReversedFullField/P21ic',
