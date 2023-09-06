@@ -2641,7 +2641,10 @@ my $step = 0;
 ################################################################################
 #$hist = "RunXXIFXT01"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/25/2023 check status of old calibration
 #$hist = "RunXXIFXT02"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/27/2023 fix bug with Z3 histograms
-$hist = "RunXXIFXT03"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/28/2023 new TpcZCorrectionC
+#$hist = "RunXXIFXT03"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/28/2023 new TpcZCorrectionC
+#$hist = "RunXXIFXT04"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/29/2023 step back: remove TpcZCorrectionC, update TpcSecRowB from  RunXXIFXT02
+#$hist = "RunXXIFXT05"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/01/2023 new TpcZCorrectionC
+$hist = "RunXXIFXT06"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/03/2023 clean up MySQL, new TpcZCorrectionC, no muJ
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
