@@ -47,8 +47,8 @@ using namespace ROOT::Math;
     }									\
     LOG_WARN << "St_" << makeSTRING(STRUCT) << "C::instance found table " << table->GetName() \
 	     << " with NRows = " << Nrows << " in db"			\
-	     << "\tValidity:" << t[0].GetDate() << "/" << t[0].GetTime() \
-	     << " - " << t[1].GetDate() << "/" << t[1].GetTime() << endm; \
+	     << Form("\tValidity:%8i.%06i",t[0].GetDate(),t[0].GetTime()) \
+	     << Form(" - %8i.%06i",t[1].GetDate(),t[1].GetTime()) << endm; \
     if (Nrows > 10) Nrows = 10;						\
     CHECKTABLED(tpcCorrection);						\
     CHECKTABLED(tpcHVPlanes);						\
