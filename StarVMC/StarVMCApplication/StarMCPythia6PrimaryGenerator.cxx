@@ -16,36 +16,6 @@ ClassImp(StarMCPythia6PrimaryGenerator);
 //_____________________________________________________________________________
 StarMCPythia6PrimaryGenerator::StarMCPythia6PrimaryGenerator(TString mode, Int_t tune) : StarMCPrimaryGenerator() {
   PreSet(); 
-  SetGenerator(mode,tune);
-}
-//_____________________________________________________________________________
-void StarMCPythia6PrimaryGenerator::PreSet() {
-  fNofPrimaries = 0; fId = 0;
-  fOption = "";
-  fOrigin = TVector3(0,0,0);
-  fPVX = fPVY = fPVZ = fPVxyError = 0;
-  fCurOrigin = fOrigin;
-  fPythia6 = 0;
-  SetSpread(0.15, 0.15, 42.0);
-}
-//_____________________________________________________________________________
-void StarMCPythia6PrimaryGenerator::SetGenerator(TString mode, Int_t tune) {
-  TString path(".");
-  TString File("PVxyz.root");
-  Char_t *file = gSystem->Which(path,File,kReadPermission);
-  if (file) {
-    TFile *PVfile = TFile::Open(file);
-    if (PVfile) {
-      fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
-      fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
-      fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
-      fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
-      delete PVfile;
-      LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
-      if (fPVxyError) LOG_WARN << " hPVError histogram will be used for transverse PV error." << endm;
-    }
-    delete [] file;
-  }
   fPythia6 = new TPythia6;
   TString blue("p");
   TString yellow("p");
@@ -79,6 +49,16 @@ void StarMCPythia6PrimaryGenerator::SetGenerator(TString mode, Int_t tune) {
   fgInstance = this;
 }
 //_____________________________________________________________________________
+void StarMCPythia6PrimaryGenerator::PreSet() {
+  fNofPrimaries = 0; fId = 0;
+  fOption = "";
+  fOrigin = TVector3(0,0,0);
+  fPVX = fPVY = fPVZ = fPVxyError = 0;
+  fCurOrigin = fOrigin;
+  fPythia6 = 0;
+  SetSpread(0.15, 0.15, 42.0);
+}
+//_____________________________________________________________________________
 void StarMCPythia6PrimaryGenerator::GeneratePrimary() {     
   // Add one primary particle to the user stack (derived from TVirtualMCStack).
   // Track ID (filled by stack)
@@ -102,48 +82,4 @@ void StarMCPythia6PrimaryGenerator::GeneratePrimary() {
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
     fNofPrimaries++;
   }
-}
-//_____________________________________________________________________________
-void StarMCPythia6PrimaryGenerator::GeneratePrimaries() {
-  if (! fSetVertex) {
-    if (fPVX && fPVY && fPVZ) {
-      fCurOrigin.SetX(fPVX->GetRandom());
-      fCurOrigin.SetY(fPVY->GetRandom());
-      fCurOrigin.SetZ(fPVZ->GetRandom());
-      if (fPVxyError) {
-	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
-	gEnv->SetValue("FixedSigmaX", dxy);
-	gEnv->SetValue("FixedSigmaY", dxy);
-      }
-#if 0
-    } else if (fUseBeamLine) {
-      St_vertexSeedC* vSeed = St_vertexSeedC::instance();
-      if (vSeed) {
-	Double_t x0   = vSeed->x0()  ;// Double_t err_x0   = vSeed->err_x0();
-	Double_t y0   = vSeed->y0()  ;// Double_t err_y0   = vSeed->err_y0();
-	//	Double_t z0   = 0            ;// Double_t err_z0   = 60; 
-	Double_t dxdz = vSeed->dxdz();
-	Double_t dydz = vSeed->dydz(); 
-	Double_t z    = fZ_min + (fZ_max-fZ_min)*gRandom->Rndm();
-	SetOrigin(x0 + dxdz*z, y0 + dydz*z, z);
-      } else {
-	LOG_WARN << "Warning : Requested Beam Line, but there is no beam line" << endm;
-      }
-#endif
-    } else {
-#if 0
-      Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
-      Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
-      Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
-      TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-      fCurOrigin = origin + dR;
-#endif
-      fCurOrigin.SetX(fOrigin.X() + gRandom->Gaus(0,gSpreadX));
-      fCurOrigin.SetY(fOrigin.Y() + gRandom->Gaus(0,gSpreadY));
-      fCurOrigin.SetZ(fOrigin.Z() + gRandom->Gaus(0,gSpreadZ));
-    }
-  } else {
-    fCurOrigin = fOrigin;
-  }
-  GeneratePrimary();
 }

@@ -60,7 +60,7 @@
 #include "StMaker.h"
 TableClassImpl(St_VMCPath2Detector,VMCPath2Detector_st);
 ClassImp(StarVMCApplication);
-#define PrPV(B)      if (Debug())                {std::cout << (#B) << " = \t"; (B).Print();} 
+#define PrPV(B)      if (Debug() > 1)                {std::cout << (#B) << " = \t"; (B).Print();} 
 static const TString separator("/_"); 
 Bool_t StarVMCApplication::flux = kFALSE;
 TGeant3TGeo *StarVMCApplication::fgGeant3 = 0;
@@ -114,7 +114,7 @@ void StarVMCApplication::ConstructGeometry() {    // Initialize geometry
 void StarVMCApplication::InitGeometry() {    
   assert(gGeoManager); 
   fgGeant3->SetRootGeometry();
-  if (Debug()) {
+  if (Debug() > 1) {
     fgGeant3->Gprint("mate");
     fgGeant3->Gprint("tmed");
   }
@@ -133,6 +133,7 @@ void StarVMCApplication::GeneratePrimaries() {
     fStatus = StarMCPrimaryGenerator::Instance()->Status();
   } 
   if (fStatus == kStEOF) {fgGeant3->StopRun();}
+  if (Debug()) fStarStack->Print();
   if (fMcHits) {
     fMcHits->BeginEvent();
   }
@@ -176,9 +177,6 @@ void StarVMCApplication::FinishEvent() {    // User actions after finishing of a
   if (TString(fgGeant3->GetName()) == "TGeant3") {
     // add scale (1.4)
   }  
-  if (Debug()) {
-    fStarStack->Print();
-  }
   if (fMcHits) fMcHits->FinishEvent(); // add kine info
 } 
 //________________________________________________________________________________
@@ -527,11 +525,11 @@ Ist: SensorGlobal = TpcOnGlobal * IdsOnTpc * PstOnIds * IstOnPst * LadderOnIst[l
       else {
 	rotm = new TGeoHMatrix(rotA);
 	St_SurveyC::Normalize(*rotm);
-	if (Debug()) {
-	  if (Debug() > 1) {
+	if (Debug() > 1) {
+	  if (Debug() > 2) {
 	    cout << "Id : " << Id << "\tBefore\t" << nodeP->GetName() << "\t"; nodeP->GetMatrix()->Print();
-	    //	if (Debug() > 1) cout << "Old Local:\t"; nodeP->GetNode()->GetMatrix()->Print();
-	    if (Debug() > 2) nodeP->Print();
+	    //	if (Debug() > 2) cout << "Old Local:\t"; nodeP->GetNode()->GetMatrix()->Print();
+	    if (Debug() > 3) nodeP->Print();
 	  }
 	  cout << "========================================" << endl;
 	  cout << "rotL:"; rotL.Print();
@@ -554,9 +552,9 @@ Ist: SensorGlobal = TpcOnGlobal * IdsOnTpc * PstOnIds * IstOnPst * LadderOnIst[l
 	}
 	nodeP->Align(rotm);
 	gGeoManager->GetParallelWorld()->AddNode(nodeP->GetName());
-	if (Debug() > 1) {
+	if (Debug() > 2) {
 	  cout << "Id : " << Id << "\tAfter\t" << nodeP->GetName() << "\t"; nodeP->GetMatrix()->Print();
-	  if (Debug() > 2) {
+	  if (Debug() > 3) {
 	    nodeP->Print();
 #define __CHECK_NODE__
 #ifdef __CHECK_NODE__
@@ -698,7 +696,7 @@ Ist: SensorGlobal = TpcOnGlobal * IdsOnTpc * PstOnIds * IstOnPst * LadderOnIst[l
       cout << "++++++++++++++++++++++++++++++++++++++++" << endl;
       iBreak++;
     }
-    if (Debug() && NoPerfMatch) {
+    if (Debug() > 1 && NoPerfMatch) {
       cout << "++++++++++++++++++++++++++++++++++ Check Node " <<  listOfDet2Align[i].Name << "\tNo. Perfect Match = " << NoPerfMatch << endl;
       iBreak++;
     }
@@ -725,7 +723,7 @@ Ist: SensorGlobal = TpcOnGlobal * IdsOnTpc * PstOnIds * IstOnPst * LadderOnIst[l
 //________________________________________________________________________________
 void StarVMCApplication::SetDebug(Int_t m) {
   fDebug = m;
-  if (fDebug > 1) {
+  if (fDebug > 2) {
     Gcflag_t* cflag = fgGeant3->Gcflag();
     cflag->idebug = fDebug;
     cflag->idemin =     1;

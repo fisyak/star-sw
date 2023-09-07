@@ -81,6 +81,7 @@ using namespace units;
 #include "StDetectorDbMaker/St_TpcAvgCurrentC.h"
 #include "StDetectorDbMaker/St_TpcAvgPowerSupplyC.h"
 #include "StDetectorDbMaker/St_trigDetSumsC.h"
+#include "StDetectorDbMaker/St_TpcSecRowBC.h"
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
 #include "StTrackCombPiD.h"
 #include "dEdxHist.h"
@@ -127,6 +128,7 @@ static TH2F *AdcSC = 0, *AdcOnTrack = 0, *dEOnTrack = 0;
 #endif
 #ifdef __CHECK_RDOMAP_AND_VOLTAGE__
 static TH3F *AlivePads = 0;
+static TH3F *AlivePadsdEdx = 0;
 static TProfile3D *ActivePads = 0;
 #endif /* __CHECK_RDOMAP_AND_VOLTAGE__ */
 #ifdef __BEST_VERTEX__
@@ -907,6 +909,7 @@ Int_t StdEdxY2Maker::Make(){
       Int_t nrows = St_tpcPadConfigC::instance()->numberOfRows(20);
       if (GetTFile()) GetTFile()->cd();
       AlivePads = new TH3F("AlivePads","Active pads from RDO map, tpcGainPadT0,  and Tpc Anode Voltage:sector:row:pad",24,0.5,24.5,nrows,0.5,nrows+.5,NoOfPads,0.5,NoOfPads+0.5);
+      AlivePadsdEdx = new TH3F("AlivePadsdEdx","Active pads from RDO map, tpcGainPadT0, Tpc Anode Voltage:secto, and dEdx TpcSecRow tabler:row:pad",24,0.5,24.5,nrows,0.5,nrows+.5,NoOfPads,0.5,NoOfPads+0.5);
       for (Int_t sector = 1; sector <= 24; sector++) {
 	for(Int_t row = 1; row <= St_tpcPadConfigC::instance()->numberOfRows(sector); row++) {
 	  Int_t noOfPadsAtRow = St_tpcPadConfigC::instance()->numberOfPadsAtRow(sector,row); 
@@ -917,6 +920,9 @@ Int_t StdEdxY2Maker::Make(){
 	    Double_t gain = St_tpcPadGainT0BC::instance()->Gain(sector,row,pad);
 	    if (gain <= 0.0) continue;
 	    AlivePads->Fill(sector, row, pad, gain);
+	    Double_t gainScale = St_TpcSecRowBC::instance()->GainScale(sector-1)[row-1];
+	    if (gainScale <= 0.0) continue;
+	    AlivePadsdEdx->Fill(sector, row, pad, gainScale);
 	  }
 	}
       }

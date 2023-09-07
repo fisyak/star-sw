@@ -77,6 +77,7 @@
  **************************************************************************/
 #include "StTpcRawData.h"
 #include "Riostream.h"
+#include "TError.h"
 #include <assert.h>
 #include "TMath.h"
 #include "StDaqLib/TPC/trans_table.hh"
@@ -311,6 +312,10 @@ Int_t StTpcDigitalSector::getTimeAdc(Int_t row, Int_t pad,
   StDigitalTimeBins &trsPadData = *TrsPadData;
   nTimeSeqs = trsPadData.size();
   if (! nTimeSeqs) return nTimeSeqs;
+  if (nTimeSeqs > 511) {
+    Error("StTpcDigitalSector::getTimeAdc","row = %i, pad = %i has corrupted nTimeSeqs = %i", row, pad, nTimeSeqs);
+    return 0;
+  }
 #if 0
   for (UInt_t i = 0; i < nTimeSeqs; i++) {
     StDigitalPair &digPair = trsPadData[i];
@@ -344,6 +349,10 @@ Int_t StTpcDigitalSector::getTimeAdc(Int_t row, Int_t pad,
   StDigitalTimeBins &trsPadData = *TrsPadData;
   nTimeSeqs = trsPadData.size();
   if (! nTimeSeqs) return nTimeSeqs;
+  if (nTimeSeqs > 511) {
+    Error("StTpcDigitalSector::getTimeAdc","row = %i, pad = %i has corrupted nTimeSeqs = %i", row, pad, nTimeSeqs);
+    return 0;
+  }
 #if 0
   for (UInt_t i = 0; i < nTimeSeqs; i++) {
     StDigitalPair &digPair = trsPadData[i];

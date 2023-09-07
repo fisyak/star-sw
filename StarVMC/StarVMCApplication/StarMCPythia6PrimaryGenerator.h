@@ -24,17 +24,11 @@ class StarMCPythia6PrimaryGenerator : public StarMCPrimaryGenerator  {
  public:
   StarMCPythia6PrimaryGenerator(TString mode="pp:W:510", Int_t tune=320);
   virtual ~StarMCPythia6PrimaryGenerator() {}
-  
   static StarMCPythia6PrimaryGenerator* Instance() {return (StarMCPythia6PrimaryGenerator*) StarMCPrimaryGenerator::Instance();}
-  virtual void GeneratePrimaries();
-  virtual void SetGenerator(TString mode="pp:W:510", Int_t tune=320);
-  void SetSpread(Double_t xs = 0.15, Double_t ys = 0.15, Double_t zs = 42.0) { gSpreadX = xs; gSpreadY = ys; gSpreadZ = zs;}
  private:
   TPythia6 *fPythia6;
   void GeneratePrimary();
   void PreSet();
-  TH1 *fPVX, *fPVY, *fPVZ, *fPVxyError; 
-  Double_t gSpreadX, gSpreadY, gSpreadZ;
   ClassDef(StarMCPythia6PrimaryGenerator,1)  //StarMCPythia6PrimaryGenerator
 };
 #endif //StarMCPythia6PrimaryGenerator_h

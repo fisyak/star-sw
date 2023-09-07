@@ -45,8 +45,3 @@ void StarCosmicRaysGenerator::GeneratePrimary() {
                   kPPrimary, ntr, 1., 2);
  fNofPrimaries = 1;
 }
-//_____________________________________________________________________________
-void StarCosmicRaysGenerator::GeneratePrimaries() {
-  GeneratePrimary();  
-  fStarStack->SetNprimaries(fNofPrimaries);
-}

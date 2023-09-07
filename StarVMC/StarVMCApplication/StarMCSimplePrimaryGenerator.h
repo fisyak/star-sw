@@ -16,43 +16,21 @@
 #ifndef StarMCSimplePrimaryGenerator_h
 #define StarMCSimplePrimaryGenerator_h
 #include "StarMCPrimaryGenerator.h"
-#include "TH1.h"
-#include "TH2.h"
-#include <vector>
 class StarMCSimplePrimaryGenerator : public StarMCPrimaryGenerator  {
  public:
   StarMCSimplePrimaryGenerator(StarStack* stack) : StarMCPrimaryGenerator() { PreSet(); fStarStack = stack; }
-  StarMCSimplePrimaryGenerator(Int_t    nprim=1,     Int_t    Id=6, 
-			       Double_t pT_min =  0, Double_t pT_max = 10,
-			       Double_t Eta_min=-10, Double_t Eta_max=10, 
-			       Double_t Phi_min = 0, Double_t Phi_max= 2*TMath::Pi(), 
-			       Double_t Z_min=0,     Double_t Z_max=0, 
-			       const Char_t *option = "G");
+  StarMCSimplePrimaryGenerator(Int_t    nprim,   Int_t    Id, 
+			       Double_t pT_min , Double_t pT_max,
+			       Double_t Eta_min, Double_t Eta_max, 
+			       Double_t Phi_min, Double_t Phi_max, 
+			       Double_t Z_min,   Double_t Z_max, 
+			       const Char_t *option);
   virtual ~StarMCSimplePrimaryGenerator() {}
   
   static StarMCSimplePrimaryGenerator* Instance() {return (StarMCSimplePrimaryGenerator*) StarMCPrimaryGenerator::Instance();}
-  static Double_t Temperature() {return fTemperature;}
-  void static SetTemperature(Double_t T) {fTemperature = T;}
-  virtual void GeneratePrimaries();
-  virtual void GeneratePrimaries(const TVector3& v);
-  virtual void SetGenerator(Int_t nprim=1, Int_t Id=6, 
-			    Double_t pT_min = 0,Double_t pT_max = 1000,
-			    Double_t Eta_min=-10, Double_t Eta_max=10, 
-			    Double_t Phi_min = 0, Double_t Phi_max= 2*TMath::Pi(), 
-			    Double_t Z_min=0, Double_t Z_max=0, const Char_t *option = "G");
-  virtual void SetGun(Int_t Id=6, 
-		      Double_t px = -0.185378, Double_t py = -0.982667, Double_t pz = 1.166532,
-		      Double_t x = 0, Double_t y = 0, Double_t z = -1.65956, const Char_t *option = "G");
  private:
   void GeneratePrimary();
   void PreSet();
-  Double_t fpT_min, fpT_max, fEta_min, fEta_max, fPhi_min, fPhi_max, fZ_min, fZ_max;
-  Bool_t fGun;
-  Double_t fGunpX, fGunpY, fGunpZ, fGunX, fGunY, fGunZ;
-  Int_t    fGunId;
-  TH1 *fPVX, *fPVY, *fPVZ, *fPVxyError; 
-  TH2 *fPVxy;
-  static Double_t fTemperature;
   vector<Int_t> fGunIds;
   ClassDef(StarMCSimplePrimaryGenerator,1)  //StarMCSimplePrimaryGenerator
 };

@@ -118,7 +118,8 @@ void MuL4Vx(Long64_t nevent = 9999999,
   TH2F *dZ[2] = {0};
   TH2F *deltaZ[2] = {0};
   for (Int_t v = 0; v < 1; v++) {
-    for (Int_t k = 0; k < 6; k++) {
+    Int_t k = 0;
+    for (; k < 6; k++) {
       Name = vName[v]; Title = vTitle[v]; 
       Name += kName[k]; Title += " "; Title += kTitle[k];
       if (k < 4) 
@@ -251,7 +252,8 @@ void MuL4Vx(Long64_t nevent = 9999999,
       kfHist[0][2]->Fill(0.5*(KFVxWest.GetX()+KFVxEast.GetX()), 0.5*(KFVxWest.GetY()+KFVxEast.GetY()), 0.5*(KFVxWest.GetZ()+KFVxEast.GetZ()));
       kfHist[0][4]->Fill(0.5*(KFVxWest.GetX()-KFVxEast.GetX()), 0.5*(KFVxWest.GetY()-KFVxEast.GetY()), 0.5*(KFVxWest.GetZ()-KFVxEast.GetZ()));
       Double_t xyz[2][3] = {0};
-      for (Int_t p = 0; p < 3; p++) {
+      Int_t p = 0;
+      for (; p < 3; p++) {
 	Double_t w[2] = {0};
 	Double_t var[2] = {0};
  	for (Int_t s = 0; s < 2; s++) {

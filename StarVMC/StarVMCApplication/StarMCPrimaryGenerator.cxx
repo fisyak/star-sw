@@ -11,8 +11,8 @@
 #include "TRandom.h"
 #include "Stiostream.h"
 #include "StarMCPrimaryGenerator.h"
-#include "Stypes.h"
 StarMCPrimaryGenerator *StarMCPrimaryGenerator::fgInstance = 0;
+Double_t StarMCPrimaryGenerator::fTemperature = 0.457;; // GeV/c
 ClassImp(StarMCPrimaryGenerator);
 //________________________________________________________________________________
 StarMCPrimaryGenerator::StarMCPrimaryGenerator() : TObject(), fStarStack(0), fIsRandom(false), fNofPrimaries(0), 
@@ -20,6 +20,105 @@ StarMCPrimaryGenerator::StarMCPrimaryGenerator() : TObject(), fStarStack(0), fIs
 						   fSigmasOrigin(), fCurOrigin(), fSetVertex(kFALSE), fUseBeamLine(kFALSE), fStatus(kStOK)  {
   fgInstance = this;
   if (! fStarStack) fStarStack = StarVMCApplication::Instance()->GetStack();
+  TString path(".");
+  TString File("PVxyz.root");
+  Char_t *file = gSystem->Which(path,File,kReadPermission);
+  if (file) {
+    TFile *PVfile = TFile::Open(file);
+    if (PVfile) {
+      fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
+      fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
+      fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
+      fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
+      delete PVfile;
+      LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
+      if (fPVxyError) LOG_WARN << " hPVError histogram will be used for transverse PV error." << endm;
+    }
+    delete [] file;
+  }
+}
+//_____________________________________________________________________________
+void StarMCPrimaryGenerator::SetGenerator(Int_t nprim, Int_t Id, 
+					  Double_t pT_min,Double_t pT_max,
+					  Double_t Eta_min, Double_t Eta_max, 
+					  Double_t Phi_min, Double_t Phi_max, 
+					  Double_t Z_min, Double_t Z_max, const Char_t *option) {
+  fGun = kFALSE;
+  fNofPrimaries = nprim; 
+  fpT_min = pT_min; 
+  fpT_max = pT_max; 
+  fEta_min = Eta_min; 
+  fEta_max = Eta_max; 
+  fPhi_min = Phi_min; 
+  fPhi_max = Phi_max; 
+  fZ_min = Z_min; 
+  fZ_max = Z_max; 
+  fOption = option; 
+  fGunIds.clear();
+  if (fOption.Contains("G",TString::kIgnoreCase)) {
+    while (Id > 0) {
+      Int_t id = Id%1000;
+      Id /= 1000;
+      fId = ((TGeant3* ) TVirtualMC::GetMC())->PDGFromId(id);
+      fGunIds.push_back(fId);
+    }
+  } else {
+    fGunIds.push_back(Id);
+  }
+  assert(fGunIds.size());
+  LOG_INFO << "Generate " << fNofPrimaries << " primary tracks with option :" << fOption.Data() << " of type ";
+  for (auto xId : fGunIds) {
+    LOG_INFO << "\t"<< xId;
+  }
+  LOG_INFO << " in ";
+  if (! fOption.Contains("BL",TString::kIgnoreCase)) {
+    LOG_INFO << fpT_min << " <  pT < " << fpT_max << " with " <<  fOption.Data() <<  endm;
+  } else {
+    LOG_INFO << fpT_min << " <  log10(beta*gamma) < " << fpT_max << " with " <<  fOption.Data() <<  endm;
+  }
+  if (fOption.Contains("mtsq",TString::kIgnoreCase)) {
+    LOG_INFO << "Use dN/dmT^2 = exp(-mT/T) pT generation with T = " << Temperature() << " GeV/c" << endm;
+  }  
+  if (fOption.Contains("sw",TString::kIgnoreCase)) {
+    LOG_INFO << "Use randomly switch particle <=> antipartilce " << endm;
+  } else if (fOption.Contains("mt",TString::kIgnoreCase)) {
+    LOG_INFO << "Use dN/dmT = exp(-mT/T) pT generation with T = " << Temperature() << " GeV/c" << endm;
+  }
+  if ( fOption.Contains("y",TString::kIgnoreCase)) {
+    if ( St_beamInfoC::instance()->IsFixedTarget()) {
+      fEta_min =  St_beamInfoC::instance()->Ycms();
+      fEta_max = 0.5;
+    }
+    LOG_INFO << "Rapidity is Gaussian with mean =  " << fEta_min  << " and sigma = " << fEta_max << endm;
+  } else {
+    LOG_INFO << fEta_min  << " < eta < " << fEta_max  << endm;
+  }
+  LOG_INFO << fPhi_min<< " < phi < " << fPhi_max<< endm;
+  LOG_INFO << fZ_min  << " < zVer< " << fZ_max  << endm;
+  
+  TString path(".");
+  TString File("PVxyz.root");
+  Char_t *file = gSystem->Which(path,File,kReadPermission);
+  if (file) {
+    TFile *PVfile = TFile::Open(file);
+    if (PVfile) {
+      fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
+      fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
+      fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
+      fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
+      fPVxy = (TH2 *) PVfile->Get("xy"); 
+      if (fPVxy) {
+	fPVxy->SetDirectory(0);
+	LOG_WARN << "PVxyz.root with xy and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
+      } else {
+	LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
+      }
+      if (fPVxyError) LOG_WARN << " hPVError histogram will be used for transverse PV error." << endm;
+    }
+    delete PVfile;
+    delete [] file;
+  }
+  fgInstance = this;
 }
 //________________________________________________________________________________
 Int_t StarMCPrimaryGenerator::Skip(Int_t nskip) {
@@ -72,4 +171,47 @@ void StarMCPrimaryGenerator::SetStack(StarParticleStack *stack) {
 			  part->Vx(), part->Vy(), part->Vz(), part->T(), polx, poly, polz, 
 			  kPPrimary, ntr, weight,  part->GetStatusCode());
   }
+}
+//_____________________________________________________________________________
+void StarMCPrimaryGenerator::GeneratePrimaries() {
+  if (! fSetVertex) {
+    if (fPVX && fPVY && fPVZ) {
+      fCurOrigin.SetX(fPVX->GetRandom());
+      fCurOrigin.SetY(fPVY->GetRandom());
+      fCurOrigin.SetZ(fPVZ->GetRandom());
+      if (fPVxyError) {
+	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
+	gEnv->SetValue("FixedSigmaX", dxy);
+	gEnv->SetValue("FixedSigmaY", dxy);
+      }
+    } else {
+      fCurOrigin.SetX(gRandom->Gaus(0,gSpreadX));
+      fCurOrigin.SetY(gRandom->Gaus(0,gSpreadY));
+      fCurOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
+    }
+  } else {
+    Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
+    Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
+    Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
+    TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
+    fCurOrigin = fOrigin + dR;
+  }
+  GeneratePrimary();  
+  fStarStack->SetNprimaries(fNofPrimaries);
+}
+//________________________________________________________________________________
+void StarMCPrimaryGenerator::SetGun(Int_t Id, 
+				    Double_t px, Double_t py, Double_t pz,
+				    Double_t x, Double_t y, Double_t z, const Char_t *option) {
+  fGun = kTRUE;
+  fGunpX = px; fGunpY = py; fGunpZ = pz; fGunX = x; fGunY = y; fGunZ = z; 
+  fOption = option;
+  if (fOption.Contains("G",TString::kIgnoreCase)) {
+    fGunId = ((TGeant3* ) TVirtualMC::GetMC())->PDGFromId(Id);
+  } else {
+    fGunId = Id;
+  }
+  LOG_INFO << "StarMCSimplePrimaryGenerator::SetGun\tid = " << fGunId 
+       << "\tpxyz = (" << fGunpX << "," << fGunpY << "," << fGunpZ
+       << ")\txyz = (" << fGunX << "," << fGunY << "," << fGunZ << ")" << endm;
 }

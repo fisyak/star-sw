@@ -40,26 +40,6 @@ void StarMCTTreePrimaryGenerator::PreSet() {
   fTreeIter->AddFile(inputfile);
 }
 //_____________________________________________________________________________
-void StarMCTTreePrimaryGenerator::SetGenerator(TString mode, Int_t tune) {
-  TString path(".");
-  TString File("PVxyz.root");
-  Char_t *file = gSystem->Which(path,File,kReadPermission);
-  if (file) {
-    TFile *PVfile = TFile::Open(file);
-    if (PVfile) {
-      fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
-      fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
-      fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
-      fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
-      delete PVfile;
-      LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
-      if (fPVxyError) LOG_WARN << " hPVError histogram will be used for transverse PV error." << endm;
-    }
-    delete [] file;
-  }
-  fgInstance = this;
-}
-//_____________________________________________________________________________
 void StarMCTTreePrimaryGenerator::GeneratePrimary() {     
   // Add one primary particle to the user stack (derived from TVirtualMCStack).
   // Track ID (filled by stack)
@@ -97,30 +77,4 @@ void StarMCTTreePrimaryGenerator::GeneratePrimary() {
 			  0,
 			  polx, poly, polz, kPPrimary, ntr, 1., 2);
   }
-}
-//_____________________________________________________________________________
-void StarMCTTreePrimaryGenerator::GeneratePrimaries(const TVector3& origin) {    
-}
-//_____________________________________________________________________________
-void StarMCTTreePrimaryGenerator::GeneratePrimaries() {
-  if (! fSetVertex) {
-    if (fPVX && fPVY && fPVZ) {
-      fCurOrigin.SetX(fPVX->GetRandom());
-      fCurOrigin.SetY(fPVY->GetRandom());
-      fCurOrigin.SetZ(fPVZ->GetRandom());
-      if (fPVxyError) {
-	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
-	gEnv->SetValue("FixedSigmaX", dxy);
-	gEnv->SetValue("FixedSigmaY", dxy);
-      }
-    } else {
-      fCurOrigin.SetX(gRandom->Gaus(0,gSpreadX));
-      fCurOrigin.SetY(gRandom->Gaus(0,gSpreadY));
-      fCurOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
-    }
-  } else {
-    fCurOrigin = fOrigin;
-  }
-  GeneratePrimary();  
-  fStarStack->SetNprimaries(fNofPrimaries);
 }

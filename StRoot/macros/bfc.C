@@ -175,34 +175,9 @@ void Load(const Char_t *options)
   //  gSystem->Load("libHtml");
   gSystem->Load("libStChain");                                        //  StMemStat::PrintMem("load StChain");
   gSystem->Load("libStUtilities");                                    //  StMemStat::PrintMem("load StUtilities");
-#if 0
-  gSystem->Load( "libVMC.so");
-  gSystem->Load( "libsim_Tables");
-  gSystem->Load( "libgen_Tables");
-  gSystem->Load( "StarGeneratorUtil.so" );
-  gSystem->Load( "StarGeneratorEvent.so" );
-  gSystem->Load( "StarGeneratorBase.so" );
-
-  gSystem->Load( "libMathMore.so"   );  
-  gSystem->Load( "libStarGenEventReader.so" );
-#endif  
   gSystem->Load("libStBFChain");                                      //  StMemStat::PrintMem("load StBFChain");
   cout << endl;
 }
-#ifndef __CLING__
-//#define __V0Filter__
-#ifdef __V0Filter__
-//_____________________________________________________________________
-void V0Filter() {
-  St_geant_Maker *geant = (St_geant_Maker *) chain->Maker("geant");
-  if (geant) {
-    // Filter
-    //    geant->Do("gfilter v0");
-    geant->Do("gfilter example");
-  }
-}
-#endif /* __V0Filter__ */
-#endif
 //_____________________________________________________________________
 StBFChain *bfc(Int_t First, Int_t Last,
 	       const Char_t *Chain,
@@ -276,9 +251,6 @@ StBFChain *bfc(Int_t First, Int_t Last,
 #endif
     gSystem->Exit(1);
   }
-#ifdef __V0Filter__
-  gSystem->Load("StMCFilter");
-#endif
   StMaker::lsMakers(chain);
   if (Last < 0) return chain;
   StMaker *dbMk = chain->GetMaker("db");
@@ -354,9 +326,9 @@ StBFChain *bfc(Int_t First, Int_t Last,
   Int_t iInit = chain->Init();
   if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return chain;}
   if (Last == 0) return chain;
-#ifdef __V0Filter__
-  V0Filter();
-#endif
+  if ( gROOT->GetClass("StarVMCApplication")) {
+    StarVMCApplication::Instance()->SetDebug(1);
+  }
   StEvtHddr *hd = (StEvtHddr*)chain->GetDataSet("EvtHddr");
   if (hd) hd->SetRunNumber(-2); // to be sure that InitRun calls at least once
     // skip if any

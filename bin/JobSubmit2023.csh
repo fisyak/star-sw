@@ -1,7 +1,7 @@
 #! /bin/tcsh -f
-cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIIIDefs.pm
-git diff RunXXIIDefs.pm
-git ci -m "Update" RunXXIIIDefs.pm
+#cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIIIDefs.pm
+#git diff RunXXIIDefs.pm
+#git ci -m "Update" RunXXIIIDefs.pm
 #cd ~/reco/2020/TFG19m/RF/11p5GeV.B
 #cd CreateRunDirs.pl/net/l401/data/scratch2/reco/2020/TFG20a/RF/31p2GeV_fixedTarget
 #cd /net/l401/data/scratch2/reco/2020/TFG20a/RF/9p8GeV_fixedTarget
@@ -14,7 +14,8 @@ git ci -m "Update" RunXXIIIDefs.pm
 #cd /hlt/cephfs/reco/2022/RF/pp500_2022
 #cd /hlt/cephfs/reco/2022/RF/TFG22g/pp500_2022
 #cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
-cd /hlt/cephfs/reco/2023/RHF/TFG/AuAu_2023
+#cd /hlt/cephfs/reco/2023/RHF/TFG/AuAu_2023
+cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
 CreateRunDirs.pl
 foreach d (`ls -1d ???/24*`)
   cd $d;

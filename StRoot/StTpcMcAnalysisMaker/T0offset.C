@@ -32,12 +32,18 @@ void DrawdT(Int_t k = 0, Int_t group = 3) {
      {"BCIW",  "BCOW"},
      {"BCIE",  "BCOE"}}
   };
-  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  TString cname("c1"); 
+  TString ctitle("dT");
+  if (k) {cname += k; ctitle += " Corrected";}
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(cname);
   if (c1) c1->Clear();
-  else    c1 = new TCanvas("c1","dT");
-  TCanvas *c2 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c2");
+  else    c1 = new TCanvas(cname,ctitle);
+  cname = "c2";
+  ctitle = "NoTbks";
+  if (k) {cname += k; ctitle += " Corrected";}
+  TCanvas *c2 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(cname);
   if (c2) c2->Clear();
-  else    c2 = new TCanvas("c2","NoTbks",10,510,700,500);
+  else    c2 = new TCanvas(cname,ctitle,10,510,700,500);
   TString same1, same2;
   TObjArray *arr = new TObjArray(4);
   const Char_t *COR[2] {"","Corr"};
