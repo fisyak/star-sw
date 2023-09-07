@@ -32,6 +32,7 @@ if ($#argv == 0 || $#argv > 3 || "$1" == "help" || "$1" == "-h") then
 
    parasoft|PARASOFT|insure|ISURE   load the Insure++ toolkit environment
    gcc           {version}          set environment to use gcc (or alternative version)
+   gcc/{version}                    set environment to use gcc (or alternative version) from cvmfs/sft.cern.ch/lcg/releases/gcc
    icc|ifc|ifort {version}          set environment to use Intel compilers
    PGI|pgi                          set PGI path for using its compiler
 
