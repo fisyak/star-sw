@@ -521,5 +521,9 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
     MuDraw(muPlot,"P", 100, 0, 100, "i&&j&&dmu<0.01&&dsigma<0.01", "profg", min,  max, "All", "No. dE/dx points",muTitle);
   } else if (Name.BeginsWith("Time"))      {
     MuDraw("mu:x","T", 280, 7.6e8, 9.0e8, "(i&&j&&dmu>0&&dmu<0.01)", "profg", -0.4,  1.4, "All", "Time","#mu");
+  } else if (Name.BeginsWith("DT") && Name.Contains("tan"))     {
+    TString var("tan(#lambda)");
+    if (Name.Contains("tanP")) var = "tan(#psi)";
+    MuDraw("mu:x","T", 100, -6, 4., "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", -0.5,  0.1, "All", var,"#mu");
   }
 }
