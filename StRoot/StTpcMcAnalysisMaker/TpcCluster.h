@@ -34,7 +34,7 @@ class TpcTrack : public TObject {
   Int_t   fNpoints;
   Int_t   fNfitpoints;
   Int_t   fifPrim;
-  Float_t fpx;
+  Float_t fpx; // Local Sector 
   Float_t fpy;
   Float_t fpz;
   Float_t fdEdx;
