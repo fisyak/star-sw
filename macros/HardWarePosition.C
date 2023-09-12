@@ -120,6 +120,8 @@ Double_t Eta(Double_t px, Double_t py, Double_t pz) {
   return xyz.PseudoRapidity();
 }
 //________________________________________________________________________________
+Double_t sectorMC(Int_t volid) {return (volid/100)%100;}
+//________________________________________________________________________________
 Double_t LocalPhi(Double_t px, Double_t py, Int_t volid) {
   Int_t sec = volid;
   if (sec > 100) {
@@ -131,6 +133,8 @@ Double_t LocalPhi(Double_t px, Double_t py, Int_t volid) {
   Double_t dphi = phi0 - phi;
   if (dphi >  180) dphi -= 360;
   if (dphi < -180) dphi += 360;
+  if (dphi >   90) dphi -= 180;
+  if (dphi <  -90) dphi += 180;
   return dphi;
 }
 //________________________________________________________________________________

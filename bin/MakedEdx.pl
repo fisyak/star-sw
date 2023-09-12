@@ -2638,10 +2638,13 @@ my $step = 0;
 ################################## RunXXIII ##############################################
 #$hist = "RunXXIII001"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  05/26/2023 the first pass
 #$hist = "RunXXIII002"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/01/2023 the reduced sample new Histograms for temperature and time
+#$hist = "RunXXIII003"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/07/2023 after reproduction of RF
+#$hist = "RunXXIII004"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/09/2023 reset TpcSecRowB, TpcZCorrectionC, TpcLengthCorrectionMDN
+$hist = "RunXXIII005"; $NEvents = 1000; $disk = "/hlt/cephfs/";  $RECO = "reco/20*/*F"; $Production = "/TFG"; $year = "/AuAu_*2023*/*/*/*"; $FILE = ""; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/10/2023 new TpcSecRowB, TpcLengthCorrectionMDN
 ################################################################################
 #$hist = "RunXXIFXT01"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/25/2023 check status of old calibration
 #$hist = "RunXXIFXT02"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/27/2023 fix bug with Z3 histograms
-$hist = "RunXXIFXT03"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/28/2023 new TpcZCorrectionC
+#$hist = "RunXXIFXT03"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/28/2023 new TpcZCorrectionC
 my $Year = $year;
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();

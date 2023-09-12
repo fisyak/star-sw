@@ -383,6 +383,7 @@ void FitPMu(const Char_t *draw="mu",
 //________________________________________________________________________________
 void FitPDraw(TString Opt = "I", TString plot = "") {
   if (! gDirectory) {return;}
+  gStyle->SetOptStat(0);
   Int_t nx = 0;
   Int_t ny = 0;
   Double_t xMin = 0;
@@ -521,9 +522,17 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
     MuDraw(muPlot,"P", 100, 0, 100, "i&&j&&dmu<0.01&&dsigma<0.01", "profg", min,  max, "All", "No. dE/dx points",muTitle);
   } else if (Name.BeginsWith("Time"))      {
     MuDraw("mu:x","T", 280, 7.6e8, 9.0e8, "(i&&j&&dmu>0&&dmu<0.01)", "profg", -0.4,  1.4, "All", "Time","#mu");
-  } else if (Name.BeginsWith("DT") && Name.Contains("tan"))     {
-    TString var("tan(#lambda)");
-    if (Name.Contains("tanP")) var = "tan(#psi)";
-    MuDraw("mu:x","T", 100, -6, 4., "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", -0.5,  0.1, "All", var,"#mu");
+  } else if (Name.BeginsWith("DT",TString::kIgnoreCase) || Name.BeginsWith("DP",TString::kIgnoreCase)) {
+    TString var("log(Adc)");
+    if (Name.Contains("tan",TString::kIgnoreCase))     {
+      var = "tan(#lambda)";
+      if (Name.Contains("tanP",TString::kIgnoreCase)) {var = "tan(#psi)"; nx = 30; xMin = -2.0; xMax = 2.0;}
+    }
+    TString muPlot = plot;
+    if (plot == "") {muPlot = "mu:x"; }
+    Double_t zMin = -0.5, zMax = 0.1;
+    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 0.5;}
+    if (muPlot.Contains(":x",TString::kIgnoreCase)) MuDraw(muPlot,"T", nx, xMin, xMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, "All", var,muPlot);
+    else if (muPlot.Contains(":y",TString::kIgnoreCase)) MuDraw(muPlot,"T", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, "All", "Z",muPlot);
   }
 }

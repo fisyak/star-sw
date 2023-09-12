@@ -516,7 +516,7 @@ void TpcPrompt(Int_t Nevents = 1000000,
   if (TString(daqfile).Contains("daq")) {
     Chain += ",tpx";
   }
-  Chain += ",TpcHitMover,StEvent,tpcDb,detDb,CorrY,OSpaceZ2,OGridLeakFull,quiet,analysis,mysql,NoDefault";
+  Chain += ",TpcHitMover,StEvent,tpcDb,detDb,CorrY,quiet,analysis,mysql,NoDefault";
   //  TString Chain("in,StEvent,tpcDb,analysis,magF,NoDefault,tpcHitMover,OSpaceZ2,OGridLeakFull,CorrX");
   TString TreeFile(treefile);
   if (TreeFile == "") {
