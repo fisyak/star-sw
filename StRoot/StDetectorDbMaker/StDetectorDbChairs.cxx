@@ -87,7 +87,11 @@ MakeChairInstance(tpcGridLeak,Calibrations/tpc/tpcGridLeak);
 #include "St_tpcOmegaTauC.h"
 MakeChairInstance(tpcOmegaTau,Calibrations/tpc/tpcOmegaTau);
 #include "St_tpcDriftVelocityC.h"
+#include "St_starClockOnlC.h"
 MakeChairInstance(tpcDriftVelocity,Calibrations/tpc/tpcDriftVelocity);
+Float_t  St_tpcDriftVelocityC::timeBucketPitch(Int_t i) {
+  return laserDriftVelocityEast(i)/St_starClockOnlC::instance()->Frequency()*1e6; // cm
+}
 #include "St_TpcSecRowCorC.h"
 ClassImp(St_TpcSecRowCorC);
 #include "St_TpcSecRowBC.h"
@@ -2484,7 +2488,6 @@ MakeChairInstance2(spaceChargeCor,St_spaceChargeCorR2C,Calibrations/rich/spaceCh
 #include "St_MagFactorC.h"
 MakeChairInstance(MagFactor,RunLog/MagFactor);
 //_________________RunLog/onl_______________________________________________________________
-#include "St_starClockOnlC.h"
 MakeChairInstance(starClockOnl,RunLog/onl/starClockOnl);
 //________________________________________________________________________________
 starClockOnl_st *St_starClockOnlC::Struct(Int_t i) {

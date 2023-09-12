@@ -224,6 +224,7 @@ class StTrackCombPiD : public TObject {
   static void SetUsedx2(Bool_t k = kTRUE) {fgUsedx2 = k;}
   static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
   static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
+  static void SetCalibrationMode(Bool_t k = kTRUE) {fCalibrationMode = k;}
   static Int_t Nparticles() {return fgNparticles;}
   Double_t bghyp(Int_t l) {return fbghyp[l];}
   Double_t pMomentum() {return fg3.Mag();}
@@ -263,6 +264,7 @@ class StTrackCombPiD : public TObject {
   std::vector<Int_t> fPDGList;
   static Bool_t      fgUsedx2;
   static Bool_t      fgUseTof;
+  static Bool_t      fCalibrationMode;
   static Int_t       fgNparticles;
   static Int_t       fgUsePiDCorrection;
   static KFVertex    fgBestVx;

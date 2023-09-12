@@ -234,6 +234,7 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
     StTrackCombPiD::SetUsedx2(fUsedx2);
   }
   StTrackCombPiD::SetPiDCorrection(0);
+  StTrackCombPiD::SetCalibrationMode(TESTBIT(m_Mode, kCalibration));
 #ifdef __CHECK_RDOMAP_AND_VOLTAGE__
   St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
   St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
@@ -785,7 +786,7 @@ Int_t StdEdxY2Maker::Make(){
 	  if ((TESTBIT(m_Mode, kCalibration)))  // uncorrected dEdx
 	    AddEdxTraits(tracks, dedx);
 	  if (! TESTBIT(m_Mode, kDoNotCorrectdEdx)) { 
-	  dedx.det_id    = kTpcId;    // TPC track
+	    dedx.det_id    = kTpcId;    // TPC track
  	    m_TpcdEdxCorrection->dEdxTrackCorrection(2,dedx, etaG); 
 	    dedx.det_id    = kTpcId;    // TPC track 
 	    dedx.method    = kLikelihoodFitId;

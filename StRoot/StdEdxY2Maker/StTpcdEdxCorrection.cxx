@@ -752,6 +752,7 @@ Int_t StTpcdEdxCorrection::dEdxTrackCorrection(EOptions opt, Int_t type, dst_ded
   if (! m_Corrections[k].Chair) return 0;
   Int_t l = 2*type;
   Int_t nrows = 0;
+  Double_t        dEdxError = 0;
   const St_tpcCorrectionC *chairC = dynamic_cast<const St_tpcCorrectionC *>(m_Corrections[k].Chair);
   switch (k) {
   case kTpcLengthCorrection:
@@ -762,7 +763,8 @@ Int_t StTpcdEdxCorrection::dEdxTrackCorrection(EOptions opt, Int_t type, dst_ded
     case 2: // fit
       if (nrows > l+1) {
 	dedx.dedx[0]   *= TMath::Exp(-chairC->CalcCorrection(  l,LogTrackLength));
-	dedx.dedx[1]    =             chairC->CalcCorrection(l+1,LogTrackLength);
+	dEdxError = chairC->CalcCorrection(l+1,LogTrackLength);
+	if (dEdxError > 0) dedx.dedx[1]    = dEdxError; 
       }
       if (nrows > l+6) {
 	dedx.dedx[0]   *= TMath::Exp(-chairC->CalcCorrection(l+6,LogTrackLength));
@@ -783,7 +785,8 @@ Int_t StTpcdEdxCorrection::dEdxTrackCorrection(EOptions opt, Int_t type, dst_ded
     case 2: // fit
       if (nrows > l+1) {
 	dedx.dedx[0]   *= TMath::Exp(-((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(  l,xx));
-	dedx.dedx[1]    =             ((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l+1,xx);
+	dEdxError = ((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l+1,xx);
+	if (dEdxError > 0) dedx.dedx[1]    = dEdxError; 
       }
       break;
     default:

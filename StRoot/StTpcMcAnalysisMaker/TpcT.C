@@ -4802,7 +4802,7 @@ void MDFerrorParameterization2(const Char_t *treeName = "FitP", Int_t iXZ = 0, I
 #endif
 }
 //________________________________________________________________________________
-void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA2") {
+void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA3") {
   TDirIter Dir(files);
   Char_t *file = 0;
   Char_t *file1 = 0;
@@ -4956,6 +4956,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA2") {
   Int_t ev = 0;
   while (iter.Next()) {
     Int_t year = fRun/1e6 - 1; //  20.332.022
+    if (year < 0) year = 19;
     if (fNoMcHit != 1 || fNoRcHit !=1 ) continue;
 #ifdef __ONLY_PRIMARY_TRACKS__
     if (fRcTrack_fifPrim[0] != 1) continue;
@@ -4990,13 +4991,16 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA2") {
       Double_t pT = TMath::Sqrt(fMcHit_mLocalMomentum_mX1[k]*fMcHit_mLocalMomentum_mX1[k] + fMcHit_mLocalMomentum_mX2[k]*fMcHit_mLocalMomentum_mX2[k]);
       if (pT < 0.1) continue;
       Double_t tanL = fMcHit_mLocalMomentum_mX3[k]/pT;
-      Double_t psi  = TMath::ATan2(fRcTrack_fpy[l], fRcTrack_fpx[k]);
+      //      Double_t psi  = TMath::ATan2(fRcTrack_fpy[l], fRcTrack_fpx[k]);
+      Double_t psi  = TMath::ATan2(fMcHit_mLocalMomentum_mX2[k], fMcHit_mLocalMomentum_mX1[k]);
       Int_t sector = fMcHit_mVolumeId[k]/100;
       if (sector <= 0 || sector > 24) continue;
       Int_t iphi = 0;
       if (sector <= 12) {iphi = (360 + 90 - 30* sector      )%360;}
       else              {iphi = (      90 + 30*(sector - 12))%360;}
       psi -= TMath::DegToRad()*iphi;
+      if (psi >   TMath::Pi()/2) psi -= TMath::Pi();
+      if (psi < - TMath::Pi()/2) psi += TMath::Pi();
       Double_t ZMC  = fMcHit_mPosition_mX3[k];
       Double_t tanP = TMath::Tan(psi);
       Double_t AdcL = TMath::Log(fRcHit_mAdc[k]);

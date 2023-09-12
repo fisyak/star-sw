@@ -75,6 +75,8 @@ Bool_t StTrackCombPiD::fgUseTof = kFALSE;
 Int_t  StTrackCombPiD::fgDebug = 0;
 Int_t  StTrackCombPiD::fgNparticles = KPidParticles;
 Int_t  StTrackCombPiD::fgUsePiDCorrection = 1;
+Bool_t StTrackCombPiD::fCalibrationMode = kFALSE;
+
 StThreeVectorF StTofStatus::zeroP;
 #define PrPP(A,B) if (StTrackCombPiD::Debug()) {std::cout << "StTrackCombPiD::" << (#A) << "\t" << (#B) << " = \t" << (B) << std::endl;}
 #define PrPT(A,B) if (StTrackCombPiD::Debug()) {std::cout << "StTrackCombPiD::" << (#A) << "\t" << (#B) << " = \t" << (B);}
@@ -392,7 +394,7 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) 
   if (fgDebug) gTrack->Print();
   if (! gTrack->charge())  return;
   if (  gTrack->nHitsFit() < 15) return;
-  if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.15 ) return;
+  if ( ! fCalibrationMode && ( gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.15 )) return;
   if (cov) {
     fId = gTrack->id();
     fDca = cov->dcaGeometry();

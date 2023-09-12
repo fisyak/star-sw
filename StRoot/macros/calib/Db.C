@@ -47,24 +47,6 @@
 #include "TKey.h"
 #include "TLegend.h"
 #include "TClassTable.h"
-#ifdef __USE_ROOFIT__
-#include "RooRealVar.h"
-#include "RooDataSet.h"
-#include "RooGaussian.h"
-#include "RooFFTConvPdf.h"
-#include "RooPlot.h"
-#include "RooCFunction1Binding.h" 
-#include "RooCFunction3Binding.h"
-#include "RooTFnBinding.h" 
-#include "RooDataHist.h"
-#include "RooAbsPdf.h"
-#include "RooRealProxy.h"
-#include "RooFit.h"
-#include "RooRandom.h"
-#include "RooFitResult.h"
-#include "RooWorkspace.h"
-using namespace RooFit ;
-#endif /* __USE_ROOFIT__ */
 #include "TObjectTable.h"
 #include "StBFChain/StBFChain.h"
 #include "St_db_Maker/St_db_Maker.h"
@@ -111,14 +93,10 @@ void DbLoad() {
 }
 //________________________________________________________________________________
 //void Db(const Char_t *tabNam  = "Calibrations/tpc/noiseElim", 
-void Db(const Char_t *tabNam  = 
-	//	"Geometry/tpc/tpcPadConfig",
-	"Geometry/tpc/itpcPadPlanes",
-	Int_t date = -1, Int_t time = 0,
-	Int_t debugL = 1,
-	const Char_t *flavor="sim+ofl+laserDV+TFG+FXT",
-	Int_t run = 0
-	){ 
+void Db(const Char_t *tabNam  = 	"Geometry/tpc/tpcPadConfig",  Int_t date, Int_t time) {
+  Int_t debugL = 1;
+  const Char_t *flavor="sim+ofl+laserDV+TFG+FXT";
+  Int_t run = 0;
   if (dbMk == 0) DbLoad();
   dbMk->SetDebug(debugL);
   Int_t D = date;
@@ -188,9 +166,15 @@ void Db(const Char_t *tabNam  =
   else cout << "Table:" << tabNam << " has not been found" << endl;
 }
 //________________________________________________________________________________
-void Db(const Char_t *tabNam,  const Char_t *tag){ 
-  cout << "Db(" << tabNam << "," << tag << ")" << endl;
-  Int_t date = StMaker::AliasDate(tag);
-  Int_t time = StMaker::AliasTime(tag);
+void Db(const Char_t *tabNam="Geometry/tpc/tpcPadConfig", const Char_t *tag="3p85GeV_fixedTarget_2019"){ 
+  cout << "Db(\"" << tabNam << "\",\"" << tag << "\")" << endl;
+  if (dbMk == 0) DbLoad();
+  Int_t date = -1;
+  Int_t time =  0;
+  TString Tag(tag);
+  if (Tag != "") {
+    date = StMaker::AliasDate(tag);
+    time = StMaker::AliasTime(tag);
+  }
   Db(tabNam,date,time);
 }
