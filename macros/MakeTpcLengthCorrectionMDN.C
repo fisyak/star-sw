@@ -16,7 +16,7 @@
  dir TpcZCorrectionB.20*.C | grep GeV | grep fixed | sed 's/TpcZCorrectionB/TpcLengthCorrectionMDN/g' | awk '{print "ln -s TpcLengthCorrectionMDN.FXT.C "$9}'
  dir TpcZCorrectionB.20*.C | grep GeV | grep -v fixed | sed 's/TpcZCorrectionB/TpcLengthCorrectionMDN/g' | awk '{print "ln -s TpcLengthCorrectionMDN.COL.C "$9}'
 
-  foreach b (`ls -1d NPoints*U+*.root | sed -e 's/.*GP//' -e 's/.root//'`)
+  foreach b (`ls -1d NPoints*U+*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
   echo "${b}"
   root.exe -q -b NPoints*U+*${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
   end 
@@ -26,7 +26,8 @@
   end 
   dir TpcSec*.20*root | awk -F\. '{printf("ln -s TpcLengthCorrectionMDN.%s.C TpcLengthCorrectionMDN.%s.%s.C\n",$5,$2,$3)}'
 
-  foreach b (17p3GeV_2021 dAu200_2021 dAu200_2021A dAu200_2021B )
+#  foreach b (17p3GeV_2021 dAu200_2021 dAu200_2021A dAu200_2021B )
+  foreach b (`ls -1d NPoints*U+*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
     echo "${b}"
     root.exe -q -b NPoints*U+*${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
   end   
@@ -165,7 +166,7 @@ Int_t h2mdf(const Char_t  *total = "mu") {
   //  fit = new TMultiDimFit(nVars, TMultiDimFit::kMonomials,"vk");
   fit = new TMultiDimFit(nVars, type,"vk");
 
-  Int_t mPowers[]   = {3, 5};
+  Int_t mPowers[]   = {6, 8};
   fit->SetMaxPowers(mPowers);
   fit->SetMaxFunctions(1000);
   fit->SetMaxStudy(1000);

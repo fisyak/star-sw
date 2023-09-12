@@ -6,7 +6,7 @@ if (! -d ${dist}) mkdir ${dist}
 foreach d (`ls -1d *GeV* AuAu_* dAu* | sort -u`)
   if (-r ${dist}/${d}.root) continue;
   cd ${d}
-  ls -1d All*.root 2> /dev/null
+  ls -1d All*.root 
   if ($?) then
     cd -
   else   
