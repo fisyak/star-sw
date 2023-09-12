@@ -1,1 +1,0 @@
-tpcT0BX.FXT_2019.C
