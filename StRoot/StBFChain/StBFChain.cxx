@@ -102,7 +102,10 @@ void StBFChain::Setup(Int_t mode) {
   const DbAlias_t *DbAlias = GetDbAliases();
   Bfc_st row = {"","","","db,detDb","","","",kFALSE};
   for (Int_t i = 0; DbAlias[i].tag; i++) {
-    for (Int_t r = 0; r < 2; r++) {
+    Int_t Nr = 2;
+    TString Tag(DbAlias[i].tag);
+    if (!Tag.BeginsWith("y")) Nr = 1; 
+    for (Int_t r = 0; r < Nr; r++) {
       TString dbTag("");
       if (r) dbTag += "r";
       dbTag += DbAlias[i].tag;
