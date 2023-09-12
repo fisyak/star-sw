@@ -6,11 +6,16 @@ if (! -d ${dist}) mkdir ${dist}
 foreach d (`ls -1d *GeV* AuAu_* dAu* | sort -u`)
   if (-r ${dist}/${d}.root) continue;
   cd ${d}
+  ls -1d All*.root 
+  if ($?) then
+    cd -
+  else   
   ls -1d All*_2.root
   if (! $?) then
     hadd ${dist}/${d}.root All*.root >& hadd.log &
   else
     cp -p  All*_1.root ${dist}/${d}.root
+  endif
   endif
   cd -;
 end

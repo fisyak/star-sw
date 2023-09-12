@@ -2,8 +2,8 @@
 set list = "TpcSecRowB TpcAccumulatedQ TpcZCorrectionC TpcPadCorrectionMDF TpcLengthCorrectionMDN"
 #set list = "TpcdXCorrectionB"
 #set list = "TpcSecRowB"
-#set list = "TpcLengthCorrectionMDN"
-set list = "TpcZCorrectionC"
+set list = "TpcLengthCorrectionMDN"
+#set list = "TpcZCorrectionC"
 #set list = "starTriggerDelay"
 #set  list = "tpcT0BX"
 #set list = "tpcTimeBucketCor"
@@ -61,7 +61,7 @@ foreach p (${list})
  ln -sf ${p}.7p7GeV_2021.${ext}                             ${p}.20210131.193346.${ext}
  ln -sf ${p}.3p85GeV_fixedTarget_2021a.${ext}               ${p}.20210501.165439.${ext} #${p}.20210501.165437.${ext}
  ln -sf ${p}.44p5GeV_fixedTarget_2021.${ext}                ${p}.20210506.070148.${ext} #${p}.20210506.070146.${ext}
- ln -sf ${p}.70GeV_fixedTarget_2021.${ext}                  ${p}.20210507.031641.${ext} #${p}.20210507.031639.${ext}
+ ln -sf ${p}.70GeV_fixedTarget_2021.${ext}                  ${p}.20210507.031640.${ext} #${p}.20210507.031639.${ext}
  ln -sf ${p}.100GeV_fixedTarget_2021.${ext}                 ${p}.20210508.041528.${ext} #${p}.20210508.041526.${ext} 
  ln -sf ${p}.OO_200GeV_2021.${ext}                          ${p}.20210510.134726.${ext}
  ln -sf ${p}.ps_OO_200GeV_2021.${ext}                       ${p}.20210513.083120.${ext}
@@ -73,7 +73,7 @@ foreach p (${list})
  ln -sf ${p}.ps_OO_200GeV_2021.${ext}                       ${p}.20210516.112015.${ext}
  ln -sf ${p}.FF_OO_200GeV_2021.${ext}                       ${p}.20210522.023642.${ext}
  ln -sf ${p}.17p3GeV_2021.${ext}                            ${p}.20210525.113236.${ext}
- ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210604.023047.${ext} #${p}.20210604.023045.${ext}
+ ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210604.023046.${ext} #${p}.20210604.023045.${ext}
  ln -sf ${p}.17p3GeV_2021.${ext}                            ${p}.20210604.081455.${ext}
  ln -sf ${p}.3p85GeV_fixedTarget_2021b.${ext}               ${p}.20210608.004953.${ext} #${p}.20210608.004951.${ext}
  ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210617.222552.${ext} #${p}.20210617.222550.${ext}
@@ -81,7 +81,7 @@ foreach p (${list})
  ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210627.152749.${ext} #${p}.20210627.152747.${ext}
  ln -sf ${p}.3p85GeV_fixedTarget_2021b.${ext}               ${p}.20210628.115430.${ext} #${p}.20210628.115428.${ext}
  ln -sf ${p}.dAu200_2021.${ext}                             ${p}.20210630.022849.${ext}
- ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210703.010652.${ext} #${p}.20210703.010650.${ext}
+ ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210703.010651.${ext} #${p}.20210703.010650.${ext}
  ln -sf ${p}.dAu200_2021.${ext}                             ${p}.20210703.053033.${ext}
  ln -sf ${p}.26p5GeV_fixedTarget_2021.${ext}                ${p}.20210703.230659.${ext} #${p}.20210703.230657.${ext}
  ln -sf ${p}.dAu200_2021.${ext}                             ${p}.20210704.034046.${ext}
