@@ -1,7 +1,6 @@
 //
 // $Id: StTbyTMaker.cxx,v 1.4 2013/01/16 21:56:45 fisyak Exp $
 //
-#define __HIT_MATCH__
 #include <iostream>
 #include <algorithm>
 #include <set>
@@ -50,6 +49,7 @@ bool compStTrackPing(const StTrackPing& rhs, const StTrackPing& lhs){
 
 static const char rcsid[] = "$Id: StTbyTMaker.cxx,v 1.4 2013/01/16 21:56:45 fisyak Exp $";
 ClassImp(StTbyTMaker);
+Bool_t StTbyTMaker::fgHitMatch = kFALSE;
 //________________________________________________________________________________
 Int_t StTbyTMaker::Init() {
   TFile *f = GetTFile();
@@ -60,11 +60,12 @@ Int_t StTbyTMaker::Init() {
   trackTree = new TTree("trackMateComp","trackMateComp");
   fTrackMatch = new TrackMatch;
   trackBr = trackTree->Branch("TrackMatch",&fTrackMatch);
-#ifdef __HIT_MATCH__
-  hitTree = new TTree("hitMateComp","hitMateComp");
-  fHitMatch = new HitMatch;
-  hitBr = hitTree->Branch("HitMatch",&fHitMatch);
-#endif /* __HIT_MATCH__ */
+  if (fgHitMatch) {
+    hitTree = new TTree("hitMateComp","hitMateComp");
+    fHitMatch = new HitMatch;
+    hitBr = hitTree->Branch("HitMatch",&fHitMatch);
+    LOG_INFO << "StTbyTMaker::Init() - use HitMatch" << endm;
+  }
   LOG_INFO << "StTbyTMaker::Init() - successful" << endm;
   
   return StMaker::Init();
@@ -365,28 +366,28 @@ void StTbyTMaker::buildHit2HitMaps(const StTpcHitCollection *tpchitcoll1, const 
 	  }
 	} // hit2 loop
       } // hit1 loop
-#ifdef __HIT_MATCH__
-      for (UInt_t it1 = 0; it1 < N1; it1++) {
-	const StTpcHit *hit1 = hits1[it1];
-	if (! hit1) continue;
-	//	if (hit1->flag()) continue;
-	const StTpcHit *hit2 = Hit1ToHit2[hit1];
-	FillMatch(hit1, hit2);
+      if (fgHitMatch) {
+	for (UInt_t it1 = 0; it1 < N1; it1++) {
+	  const StTpcHit *hit1 = hits1[it1];
+	  if (! hit1) continue;
+	  //	if (hit1->flag()) continue;
+	  const StTpcHit *hit2 = Hit1ToHit2[hit1];
+	  FillMatch(hit1, hit2);
+	}
+	for (UInt_t it2 = 0; it2 < N2; it2++) {
+	  const StTpcHit *hit2 = hits2[it2];
+	  if (! hit2) continue;
+	  //	if (hit2->flag()) continue;
+	  const StTpcHit *hit1 = Hit2ToHit1[hit2];
+	  if (hit1) continue;
+	  FillMatch(hit1, hit2);
+	}
       }
-      for (UInt_t it2 = 0; it2 < N2; it2++) {
-	const StTpcHit *hit2 = hits2[it2];
-	if (! hit2) continue;
-	//	if (hit2->flag()) continue;
-	const StTpcHit *hit1 = Hit2ToHit1[hit2];
-	if (hit1) continue;
-	FillMatch(hit1, hit2);
-      }
-#endif /* __HIT_MATCH__ */
     } // row loop
   } // sector loop
 }
 //________________________________________________________________________________
-void    StTbyTMaker::buildTrack2TrackMap(const StSPtrVecTrackNode &trackNodes1, 
+void StTbyTMaker::buildTrack2TrackMap(const StSPtrVecTrackNode &trackNodes1, 
 					      const StSPtrVecTrackNode &trackNodes2, 
 					      Hit2HitMap &Hit1ToHit2, 
 					      Hit2TrackMap &hitTrackMap2,
