@@ -4,7 +4,10 @@
   root.exe ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
   root.exe ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
   root.exe ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
+__CHECK__
+  root.exe 'lDb.C("y2019",0)'  ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
 */
+#define __CHECK__
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,9 +32,6 @@
 #include "TCanvas.h"
 #include "TChain.h"
 #include "TDirectory.h"
-#if 0
-#include "StDetectorDbMaker/St_TpcAdcCorrection4MDF.h"
-#endif
 #if 0
 class TMultiDimFit;
 enum EMDFPolyType {
@@ -300,6 +300,7 @@ Int_t FitPS::Cut(Long64_t entry)
   if (dsigma > 0.05) return -1;
   if (TMath::Abs(x) < 2) return -1;
   fxx[0] = 1. - TMath::Abs(x)/207.707; // Z
+  if (fxx[0] < 0.0) return -1;
   fxx[1] = y*y; // tanP**2
   fxx[2] = z0*z0; // tanL**2
   fxx[3] = z1;  // AdcL
@@ -314,21 +315,22 @@ Int_t FitPS::Cut(Long64_t entry)
   return 1;
 }
 Int_t FitPS::fgCase = 0;
-#if 0
-//--------------------------------------------------------------------------------
-Double_t mdf4(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
-  return St_TpcAdcCorrection4MDF::instance()->Eval(k,z0,z1,z2,z3);
-}
-#else
+#ifdef __CHECK__
+#include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
+#endif
 Double_t mdf4(Double_t xx[4]) {
+#ifndef __CHECK__
   Double_t val = fit->Eval(xx);
+#else
+  Int_t k = FitPS::fgCase;
+  Double_t val = StiTpcHitErrorMDF4::instance()->Eval(k,xx);
+#endif
   if (FitPS::fgCase%2 == 0) {
     if (val < 0) val = 0;
     val = TMath::Sqrt(val);
   }
   return val;
 }
-#endif
 
 void FitPS::Loop2()
 {
@@ -356,7 +358,6 @@ void FitPS::Loop2()
   //    fChain->GetEntry(jentry);       //read all branches
   //by  b_branchname->GetEntry(ientry); //read only this branch
   if (! fChain) return;
-  if (! fit)    return;
   struct Plot_t {
     const Char_t *vName;
     Int_t nx;
@@ -519,39 +520,6 @@ void mdf4Fit(FitPS &t) {
   
   // Print coefficents 
   fit->Print("rc");
-#if 0
-  Int_t i, j;
-  // Assignment to coefficients vector.
-  cout << "  row.PolyType = \t"      << fit->GetPolyType() << ";" << endl;
-  cout << "  row.NVariables = \t"    << fit->GetNVariables() << ";" << endl;
-  cout << "  row.NCoefficients = \t" << fit->GetNCoefficients() << ";" << endl;
-  for (i = 0; i < fit->GetNVariables(); i++) {
-    cout << Form("  row.XMin[%2i] = %10.5g;", i,fit->GetMinVariables()->operator()(i));
-  }
-  cout << endl;
-  for (i = 0; i < fit->GetNVariables(); i++) {
-    cout << Form("  row.XMax[%2i] = %10.5g;", i,fit->GetMaxVariables()->operator()(i));
-  }
-  cout << endl;
-  for (i = 0; i < fit->GetNCoefficients(); i++) {
-    for (j = 0; j < fit->GetNVariables(); j++) {
-      cout << Form("  row.Power[%2i] = %2i;",i * fit->GetNVariables() + j,
-		   fit->GetPowers()[fit->GetPowerIndex()[i] * fit->GetNVariables() + j]);
-    }
-    cout << endl;
-  }
-  cout << "  row.DMean = \t"          << fit->GetMeanQuantity() << ";" << endl;
-  for (i = 0; i < fit->GetNCoefficients(); i++) {
-    cout << Form("  row.Coefficients[%2i]    = %15.5g;", i, fit->GetCoefficients()->operator()(i));
-    if ((i+1) %2 == 0) cout << endl;
-  }
-  if (fit->GetNCoefficients()%2) cout << endl;
-  for (i = 0; i < fit->GetNCoefficients(); i++) {
-    cout << Form("  row.CoefficientsRMS[%2i] = %15.5g;", i, fit->GetCoefficientsRMS()->operator()(i));
-    if ((i+1) %2 == 0) cout << endl;
-  }
-  if (fit->GetNCoefficients()%2) cout << endl;
-#endif
 }
 //________________________________________________________________________________
 void mdf4HitError(TChain *tChain = 0) {
@@ -573,24 +541,26 @@ void mdf4HitError(TChain *tChain = 0) {
   TFile *fOut = new TFile(Form("%smdf4HitError.root",Sets[ki]),"recreate");
   TDirectory *cdir = fOut->mkdir(Sets[ki]);
   if (! cdir) return;
+#ifndef __CHECK__
   TString tableName("StiTpcHitErrorMDF4");
   TString cOut =  Form("%s%s.y2019.C", tableName.Data(), Sets[ki]);
-  TCanvas *c1 = new TCanvas(Form("c%s",Sets[ki]),Sets[ki], 1200, 1600);
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection4\")) return 0;" << endl;
   out << "  MDFCorrection4_st row;" << endl;
   out << "  St_MDFCorrection4 *tableSet = new St_MDFCorrection4(\"" << tableName.Data() << "\"," << nrows << ");" << endl;
+#endif
+  TCanvas *c1 = new TCanvas(Form("c%s",Sets[ki]),Sets[ki], 1200, 1600);
   c1->Divide(Nkase,4);
   Int_t ix = 0;
   for (t.fgCase = kase; t.fgCase < kase + Nkase; t.fgCase++) {
     TString VarName("Sigma");
     if (t.fgCase != kase) VarName = "Mu";
     cdir->mkdir(VarName)->cd();
-    mdf4Fit(t);
-    t.Loop2();
     Int_t k = t.fgCase;
+#ifndef __CHECK__
+    mdf4Fit(t);
     Int_t idx = k;
     out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
     out << "  row.nrows =  " << nrows << "; //" << Sets[ki] << "\t" << fName.Data() << endl;
@@ -598,19 +568,25 @@ void mdf4HitError(TChain *tChain = 0) {
     cout << *fit;
     out << *fit;
     out << "  tableSet->AddAt(&row," << idx << ");" << endl;
+#endif
     ix++;
+    t.Loop2();
     for (Int_t j = 0; j < kVar; j++) {
       c1->cd(Nkase*j+ix);
-      prof[k][j]->SetMinimum(-0.1);
-      prof[k][j]->Draw();
-      profC[k][j]->Draw("samel");
-      profD[k][j]->Draw("same");
+      if (prof[k][j]) {
+	prof[k][j]->SetMinimum(-0.1);
+	prof[k][j]->Draw();
+	profC[k][j]->Draw("samel");
+	profD[k][j]->Draw("same");
+      }
       c1->Update();
     }
   }
   c1->SaveAs(".png");
+#ifndef __CHECK__
   out << "  return (TDataSet *)tableSet;" << endl;
   out << "}" << endl;
+#endif
   out.close();
   fOut->Write();
 }
