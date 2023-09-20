@@ -1,35 +1,8 @@
 // @(#)root/main:$Name:  $:$Id: h2mdf.C,v 1.3 2014/12/22 23:50:53 fisyak Exp $
 /*
-  rcd("NPoints2BUGPRunXII19pp510P13ia_dEdx")
-  .x h2mdf.C("mu",5,1,20)
-  .x h2mdf.C("sigma",5,1,20)
-  root.exe NPoints2*U+*.root  MakeTpcLengthCorrectionMDN.C+
-
-  foreach d (`ls -1d [0-9]*GeV*.root pp500GeV*.root`)
-     set b = `basename ${d} .root`;
-     root.exe -q -b NPoints2*U*${d}  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
-  end 
-  foreach d (FF_OO_200GeV_2021  OO_200GeV_2021  ps_OO_200GeV_2021)
-     set b = `basename ${d} .root`;
-     root.exe -q -b NPoints*UGP${d}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
-  end 
- dir TpcZCorrectionB.20*.C | grep GeV | grep fixed | sed 's/TpcZCorrectionB/TpcLengthCorrectionMDN/g' | awk '{print "ln -s TpcLengthCorrectionMDN.FXT.C "$9}'
- dir TpcZCorrectionB.20*.C | grep GeV | grep -v fixed | sed 's/TpcZCorrectionB/TpcLengthCorrectionMDN/g' | awk '{print "ln -s TpcLengthCorrectionMDN.COL.C "$9}'
-
-  foreach b (`ls -1d NPoints*U+*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
-  echo "${b}"
-  root.exe -q -b NPoints*U+*${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
-  end 
-  foreach b (`ls -1d NPoints*UGP*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u `)
-  echo "${b}"
-  root.exe -q -b NPoints*UGP${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
-  end 
-  dir TpcSec*.20*root | awk -F\. '{printf("ln -s TpcLengthCorrectionMDN.%s.C TpcLengthCorrectionMDN.%s.%s.C\n",$5,$2,$3)}'
-
-#  foreach b (17p3GeV_2021 dAu200_2021 dAu200_2021A dAu200_2021B )
-  foreach b (`ls -1d NPoints*U+*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
+  foreach b (`ls -1d NPoints*UGP*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
     echo "${b}"
-    root.exe -q -b NPoints*U+*${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
+    root.exe -q -b NPoints*UGP${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
   end   
 */
 #ifndef __CINT__
