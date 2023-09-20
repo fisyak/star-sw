@@ -15,7 +15,7 @@ StarMCPrimaryGenerator *StarMCPrimaryGenerator::fgInstance = 0;
 Double_t StarMCPrimaryGenerator::fTemperature = 0.457;; // GeV/c
 ClassImp(StarMCPrimaryGenerator);
 //________________________________________________________________________________
-StarMCPrimaryGenerator::StarMCPrimaryGenerator() : TObject(), fStarStack(0), fIsRandom(false), fNofPrimaries(0), 
+StarMCPrimaryGenerator::StarMCPrimaryGenerator() : TObject(), fStarStack(0), fIsRandom(kFALSE), fSimpleKine(kFALSE), fNofPrimaries(0), 
 						   fOption(""), fDebug(0), fId(0), fOrigin(), 
 						   fSigmasOrigin(), fCurOrigin(), fSetVertex(kFALSE), fUseBeamLine(kFALSE), fStatus(kStOK)  {
   fgInstance = this;
@@ -44,6 +44,7 @@ void StarMCPrimaryGenerator::SetGenerator(Int_t nprim, Int_t Id,
 					  Double_t Phi_min, Double_t Phi_max, 
 					  Double_t Z_min, Double_t Z_max, const Char_t *option) {
   fGun = kFALSE;
+  fSimpleKine = kTRUE;
   fNofPrimaries = nprim; 
   fpT_min = pT_min; 
   fpT_max = pT_max; 
@@ -96,28 +97,6 @@ void StarMCPrimaryGenerator::SetGenerator(Int_t nprim, Int_t Id,
   LOG_INFO << fPhi_min<< " < phi < " << fPhi_max<< endm;
   LOG_INFO << fZ_min  << " < zVer< " << fZ_max  << endm;
   
-  TString path(".");
-  TString File("PVxyz.root");
-  Char_t *file = gSystem->Which(path,File,kReadPermission);
-  if (file) {
-    TFile *PVfile = TFile::Open(file);
-    if (PVfile) {
-      fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
-      fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
-      fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
-      fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
-      fPVxy = (TH2 *) PVfile->Get("xy"); 
-      if (fPVxy) {
-	fPVxy->SetDirectory(0);
-	LOG_WARN << "PVxyz.root with xy and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
-      } else {
-	LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
-      }
-      if (fPVxyError) LOG_WARN << " hPVError histogram will be used for transverse PV error." << endm;
-    }
-    delete PVfile;
-    delete [] file;
-  }
   fgInstance = this;
 }
 //________________________________________________________________________________
@@ -174,27 +153,28 @@ void StarMCPrimaryGenerator::SetStack(StarParticleStack *stack) {
 }
 //_____________________________________________________________________________
 void StarMCPrimaryGenerator::GeneratePrimaries() {
-  if (! fSetVertex) {
-    if (fPVX && fPVY && fPVZ) {
-      fCurOrigin.SetX(fPVX->GetRandom());
-      fCurOrigin.SetY(fPVY->GetRandom());
-      fCurOrigin.SetZ(fPVZ->GetRandom());
-      if (fPVxyError) {
-	Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
-	gEnv->SetValue("FixedSigmaX", dxy);
-	gEnv->SetValue("FixedSigmaY", dxy);
-      }
-    } else {
-      fCurOrigin.SetX(gRandom->Gaus(0,gSpreadX));
-      fCurOrigin.SetY(gRandom->Gaus(0,gSpreadY));
-      fCurOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
-    }
-  } else {
-    Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
-    Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
-    Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
+  static Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
+  static Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
+  static Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
+  if (fSetVertex) {
     TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
     fCurOrigin = fOrigin + dR;
+  } else  if (fSimpleKine) {
+    TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), fZ_min + (fZ_max - fZ_min)*gRandom->Rndm());
+    fCurOrigin = fOrigin + dR;
+  } else if (fPVX && fPVY && fPVZ) {
+    fCurOrigin.SetX(fPVX->GetRandom());
+    fCurOrigin.SetY(fPVY->GetRandom());
+    fCurOrigin.SetZ(fPVZ->GetRandom());
+    if (fPVxyError) {
+      Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
+      gEnv->SetValue("FixedSigmaX", dxy);
+      gEnv->SetValue("FixedSigmaY", dxy);
+    }
+  } else {
+    fCurOrigin.SetX(gRandom->Gaus(0,gSpreadX));
+    fCurOrigin.SetY(gRandom->Gaus(0,gSpreadY));
+    fCurOrigin.SetZ(gRandom->Gaus(0,gSpreadZ));
   }
   GeneratePrimary();  
   fStarStack->SetNprimaries(fNofPrimaries);

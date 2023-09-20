@@ -22,6 +22,12 @@
 #include "TString.h"
 #include "TSystem.h"
 #include "Ask.h"
+#include "TH2.h"
+#include "TStyle.h"
+#include "TCanvas.h"
+#include "TROOT.h"
+#include "TChain.h"
+#include "TFile.h"
 #else
 class TMultiDimFit;
 #endif
@@ -41,9 +47,6 @@ ofstream out;
 #ifndef FitP_h
 #define FitP_h
 
-#include <TROOT.h>
-#include <TChain.h>
-#include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
 
@@ -177,9 +180,6 @@ public :
 
 #endif
 #define FitP_cxx
-#include <TH2.h>
-#include <TStyle.h>
-#include <TCanvas.h>
 TCanvas *c1 = 0;
 void FitP::Loop()
 {
@@ -552,7 +552,7 @@ void MDFitP(TChain *tChain, Int_t max=2, Int_t maxTerm = 20) { //, Int_t date = 
   t.fTag = fName(0,index);
   TString tableName;
   if (*(t.fTag.Data()+2) == 'I') tableName = "iTPCHitErrorMDF";
-  else                           tableName = "tpcOuterHitErrorMDF";
+  else                           tableName = "TpxHitErrorMDF";
   Int_t nrows = 8;
   Int_t offset = 0;
   if      (t.fTag.BeginsWith("DP") && t.fTag.Contains("tanP")) {offset = 0;}
@@ -569,7 +569,7 @@ void MDFitP(TChain *tChain, Int_t max=2, Int_t maxTerm = 20) { //, Int_t date = 
   out << "  St_MDFCorrection *tableSet = new St_MDFCorrection(\"" << tableName.Data() << "\"," << nrows << ");" << endl;
   for (t.fCase = 0; t.fCase < 2; t.fCase++) {
     Int_t idx = t.fCase + 1 + offset;
-    const Char_t *var = (t.fCase == 0) ? "sigma" : "mu";
+    const Char_t *var xs= (t.fCase == 0) ? "sigma" : "mu";
     cout << "Fit for " << var << "\tcase = " << t.fCase << endl;
     out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
     out << "  row.nrows =  " << nrows << "; //" << var << "\t" << t.fTag.Data() << endl;

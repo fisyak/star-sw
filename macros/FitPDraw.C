@@ -252,10 +252,17 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       TString ddir(gSystem->DirName(gDirectory->GetName()));
       TString dir(gSystem->BaseName(ddir));
       if (dir == "./") dir = "";
+      if (dir == ".") dir = "";
       TString name = gSystem->BaseName(gDirectory->GetName());
       name.ReplaceAll(".root","");
+      name.ReplaceAll("DP","");
+      name.ReplaceAll("DT","");
+      name.ReplaceAll("GP"," ");
+      name.ReplaceAll("tanL","");// tan(#lambda)");
+      name.ReplaceAll("tanP","");// tan(#psi)");
+      name.ReplaceAll("I","Inner ");
+      name.ReplaceAll("O","Outer ");
 #if 0
-      name.ReplaceAll("SecRow3C+SecRow3PC","cor");
       name.ReplaceAll("SecRow3+SecRow3P","");
       name.ReplaceAll("SecRow3C","");
       name.ReplaceAll("SecRow3","");
@@ -381,7 +388,7 @@ void FitPMu(const Char_t *draw="mu",
   leg->Draw();
 }
 //________________________________________________________________________________
-void FitPDraw(TString Opt = "I", TString plot = "") {
+void FitPDraw(TString Opt = "I", TString plot = "", TString Title = "All") {
   if (! gDirectory) {return;}
   gStyle->SetOptStat(0);
   Int_t nx = 0;
@@ -406,11 +413,11 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
   TString muPlot("mu-muJ");
   if (plot.Contains("nomuJ",TString::kIgnoreCase)) muPlot = "mu";
   if        (Name.BeginsWith("SecRow3")) { 
-    MuDraw("mu:rowsigned(y,x)", "P", 2*nx+1, -yMax, yMax, "(i&&j&&abs(mu)<1&&dmu>0&&dmu<0.02)", "prof", -1, 1, "All", "sector&side", "#mu versus pad row");
+    MuDraw("mu:rowsigned(y,x)", "P", 2*nx+1, -yMax, yMax, "(i&&j&&abs(mu)<1&&dmu>0&&dmu<0.02)", "prof", -1, 1, Title, "sector&side", "#mu versus pad row");
   } else if (Name.BeginsWith("Z3"))      {
     muPlot += ":TMath::Sign(208.707-y,x)";
     if (Opt == "") {
-      MuDraw(muPlot.Data(),"ZI", 2*ny, -yMax, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "All", "Z", "#mu versus Z");
+      MuDraw(muPlot.Data(),"ZI", 2*ny, -yMax, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, Title, "Z", "#mu versus Z");
     } else if (Opt == "I") {
       MuDraw(muPlot.Data(),"ZI", 2*ny, -yMax, yMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "Z", "#mu versus Z");
     } else {
@@ -419,7 +426,7 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
   } else if (Name.BeginsWith("dX3"))      {
     muPlot += ":TMath::Sign(y,x)";
     if (Opt == "") {
-      MuDraw(muPlot.Data(),"dXI", 2*ny, -yMax, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "All", "dX", "#mu versus log2(dX)");
+      MuDraw(muPlot.Data(),"dXI", 2*ny, -yMax, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, Title, "dX", "#mu versus log2(dX)");
     } else if (Opt == "I") {
       MuDraw(muPlot.Data(),"dXI", 2*ny, -yMax, yMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "dX", "#mu versus log2(dX)");
     } else {
@@ -428,7 +435,7 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
   } else if (Name.BeginsWith("Eta3") || Name.BeginsWith("EtaB3" ))      {
     muPlot += ":y";
     if (Opt == "") {
-      MuDraw(muPlot.Data(),"EtaI", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "All", "Eta", "#mu versus #eta");
+      MuDraw(muPlot.Data(),"EtaI", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, Title, "Eta", "#mu versus #eta");
     } else if (Opt == "I") {
       MuDraw(muPlot.Data(),"EtaI", ny, yMin, yMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "Eta", "#mu versus #eta");
     } else {
@@ -437,7 +444,7 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
   } else if (Name.BeginsWith("xyPad3qB"))      {
     muPlot += ":0.5*y+TMath::Nint(x)";
     if (Opt == "") {
-      MuDraw(muPlot.Data(),"xy", 48*32,   0.5, 48.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.45,  0.15, "All", "xy", "#mu versus sector phi");
+      MuDraw(muPlot.Data(),"xy", 48*32,   0.5, 48.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.45,  0.15, Title, "xy", "#mu versus sector phi");
     } else if (Opt == "I") {
       MuDraw(muPlot.Data(),"xyI", 48*32,   0.5, 48.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(x-TMath::Nint(x))<0)", "prof", -0.45,  0.15, "Inner", "xy", "#mu versus sector phi");
     } else if (Opt == "O") {
@@ -446,7 +453,7 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
   } else if (Name.BeginsWith("xyPad3"))      {
     muPlot += ":0.5*y+TMath::Nint(x)";
     if (Opt == "") {
-      MuDraw(muPlot.Data(),"xy", 24*32,   0.5, 24.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.45,  0.15, "All", "xy", "#mu versus sector phi");
+      MuDraw(muPlot.Data(),"xy", 24*32,   0.5, 24.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.45,  0.15, Title, "xy", "#mu versus sector phi");
     } else if (Opt == "I") {
       MuDraw(muPlot.Data(),"xyI", 24*32,   0.5, 24.5, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(x-TMath::Nint(x))<0)", "prof", -0.45,  0.15, "Inner", "xy", "#mu versus sector phi");
     } else if (Opt == "O") {
@@ -472,45 +479,45 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
     }
   } else if (Name.BeginsWith("neP"))      {
     if (plot == "sigma") {
-      MuDraw("sigma:x","S", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  0.6, "All", "neP","#sigma versus log(nP)");
+      MuDraw("sigma:x","S", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  0.6, Title, "neP","#sigma versus log(nP)");
     }  else if (plot == "alpha") {
-      MuDraw("p3:x","A", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", -3.0,  4.0, "All", "neP","#sigma versus log(nP)");
+      MuDraw("p3:x","A", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", -3.0,  4.0, Title, "neP","#sigma versus log(nP)");
     } else {
-      MuDraw("mu:x","M", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  1.0, "All", "neP","#mu versus log(nP)");
+      MuDraw("mu:x","M", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  1.0, Title, "neP","#mu versus log(nP)");
     }
   } else if (Name.BeginsWith("Adcne"))      {
     if (plot == "sigma") {
-      MuDraw("sigma:x","S", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  0.6, "All", "neP","#sigma versus log(nP)");
+      MuDraw("sigma:x","S", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  0.6, Title, "neP","#sigma versus log(nP)");
     }  else if (plot == "alpha") {
-      MuDraw("p3:x","A", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", -3.0,  4.0, "All", "neP","#sigma versus log(nP)");
+      MuDraw("p3:x","A", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", -3.0,  4.0, Title, "neP","#sigma versus log(nP)");
     } else {
-      MuDraw("mu:x","M", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  1.0, "All", "neP","#mu versus log(nP)");
+      MuDraw("mu:x","M", 35,   3.0,  10.0, "(i&&j&&mu>0&&dmu>0&&dmu<0.01)", "prof", 0.0,  1.0, Title, "neP","#mu versus log(nP)");
     }
   } else if (Name.BeginsWith("neN"))      {
-    MuDraw("mu:x","PI", nx, xMin, xMax, "(i&&j&&dmu<0.1&&dsigma<0.04&&dp3<1&&mu<1&&p3>0)", "prof", 0.5,  1.0, "All", "neN","#mu versus log(nP)");
+    MuDraw("mu:x","PI", nx, xMin, xMax, "(i&&j&&dmu<0.1&&dsigma<0.04&&dp3<1&&mu<1&&p3>0)", "prof", 0.5,  1.0, Title, "neN","#mu versus log(nP)");
   } else if (Name.Contains("GEX"))      {
     if (Opt == "sigma") {
-      MuDraw("sigma:x","znpL",nx, xMin, xMax, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "prof", 0.0,  1.0, "All", "npL","#mu versus Log(n_{P}");
+      MuDraw("sigma:x","znpL",nx, xMin, xMax, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "prof", 0.0,  1.0, Title, "npL","#mu versus Log(n_{P}");
     } else if (Opt == "k") {
-      MuDraw("a0:x","znpL",nx, xMin, xMax, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "prof", -10.0,  10.0, "All", "npL","#mu versus Log(n_{P})");
+      MuDraw("a0:x","znpL",nx, xMin, xMax, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "prof", -10.0,  10.0, Title, "npL","#mu versus Log(n_{P})");
     } else {
       if (plot == "") {
-	MuDraw("mu:x","znpL",nx, xMin, xMax, "(i&&dmu>0&&dmu<2e-2&&dsigma<2e-2&&da0<1)", "prof", -0.4,  1.6, "All", "npL","#mu versus Log(n_{P})");
+	MuDraw("mu:x","znpL",nx, xMin, xMax, "(i&&dmu>0&&dmu<2e-2&&dsigma<2e-2&&da0<1)", "prof", -0.4,  1.6, Title, "npL","#mu versus Log(n_{P})");
       } else {
 	if (plot.Contains("sigma")) 
-	  MuDraw(plot.Data(),"znpL", 75,   3.0, 10.5, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "", 0.0,  0.6, "All", "npL","#mu versus Log(n_{P})");
+	  MuDraw(plot.Data(),"znpL", 75,   3.0, 10.5, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "", 0.0,  0.6, Title, "npL","#mu versus Log(n_{P})");
 	else if (plot.Contains("a0")) 
-	  MuDraw(plot.Data(),"znpL", 75,   3.0, 10.5, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "", -10.,  10., "All", "npL","#mu versus Log(n_{P})");
+	  MuDraw(plot.Data(),"znpL", 75,   3.0, 10.5, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "", -10.,  10., Title, "npL","#mu versus Log(n_{P})");
 	else 
-	  MuDraw(plot.Data(),"znpL", 75,   3.0, 10.5, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "", -0.4,  6.2, "All", "npL","#mu versus Log(n_{P})");
+	  MuDraw(plot.Data(),"znpL", 75,   3.0, 10.5, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "", -0.4,  6.2, Title, "npL","#mu versus Log(n_{P})");
       }
     }
   } else if (Name.BeginsWith("dNdxVsBg"))      {
-    MuDraw("mu:x","PI", 60, -2, 5, "(i&&j&&dmu>0&&dmu<0.01&&dsigma<0.01&&mu<0)", "prof", -0.5,  0.0, "All", "neN","#mu versus log_{10}(#beta #gamma)");
+    MuDraw("mu:x","PI", 60, -2, 5, "(i&&j&&dmu>0&&dmu<0.01&&dsigma<0.01&&mu<0)", "prof", -0.5,  0.0, Title, "neN","#mu versus log_{10}(#beta #gamma)");
   } else if (Name.BeginsWith("NpdN"))      {
-    MuDraw("mu:x","PI", 70, 3, 10, "(i&&j&&dmu>0&&dmu<0.01&&dsigma<0.01)", "prof", -0.1,  0.6, "All", "log(nP)","#mu of log(((dN/dx)*dX)/(nP)) versus log(nP)");
+    MuDraw("mu:x","PI", 70, 3, 10, "(i&&j&&dmu>0&&dmu<0.01&&dsigma<0.01)", "prof", -0.1,  0.6, Title, "log(nP)","#mu of log(((dN/dx)*dX)/(nP)) versus log(nP)");
   } else if (Name.BeginsWith("dNNp"))      {
-    MuDraw("mu:x","PI", 120, 4, 10, "(i&&j&&dmu>0&&dmu<0.01&&dsigma<0.01)/dmu**2", "profg", -0.2,  -0.05, "All", "log(dN/dx*dx)","#mu of log(Np/(dN/dx*dx)) versus log((dN/dx)*dX))");
+    MuDraw("mu:x","PI", 120, 4, 10, "(i&&j&&dmu>0&&dmu<0.01&&dsigma<0.01)/dmu**2", "profg", -0.2,  -0.05, Title, "log(dN/dx*dx)","#mu of log(Np/(dN/dx*dx)) versus log((dN/dx)*dX))");
   } else if (Name.BeginsWith("NPoin"))      {
     muPlot = "mu"; 
     TString muTitle = "#mu versus ";
@@ -519,9 +526,9 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
     if (plot.Contains("sigma",TString::kIgnoreCase)) {muPlot = "sigma"; muTitle = "#sigma versus "; min = 0;}
     if (plot.Contains("y",TString::kIgnoreCase)) {muPlot += ":y"; muTitle += "#eta";}
     else                                         {muPlot += ":x"; muTitle += "No. dEdx Points";}
-    MuDraw(muPlot,"P", 100, 0, 100, "i&&j&&dmu<0.01&&dsigma<0.01", "profg", min,  max, "All", "No. dE/dx points",muTitle);
+    MuDraw(muPlot,"P", 100, 0, 100, "i&&j&&dmu<0.01&&dsigma<0.01", "profg", min,  max, Title, "No. dE/dx points",muTitle);
   } else if (Name.BeginsWith("Time"))      {
-    MuDraw("mu:x","T", 280, 7.6e8, 9.0e8, "(i&&j&&dmu>0&&dmu<0.01)", "profg", -0.4,  1.4, "All", "Time","#mu");
+    MuDraw("mu:x","T", 280, 7.6e8, 9.0e8, "(i&&j&&dmu>0&&dmu<0.01)", "profg", -0.4,  1.4, Title, "Time","#mu");
   } else if (Name.BeginsWith("DT",TString::kIgnoreCase) || Name.BeginsWith("DP",TString::kIgnoreCase)) {
     TString var("log(Adc)");
     if (Name.Contains("tan",TString::kIgnoreCase))     {
@@ -532,7 +539,7 @@ void FitPDraw(TString Opt = "I", TString plot = "") {
     if (plot == "") {muPlot = "mu:x"; }
     Double_t zMin = -0.5, zMax = 0.1;
     if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 0.5;}
-    if (muPlot.Contains(":x",TString::kIgnoreCase)) MuDraw(muPlot,"T", nx, xMin, xMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, "All", var,muPlot);
-    else if (muPlot.Contains(":y",TString::kIgnoreCase)) MuDraw(muPlot,"T", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, "All", "Z",muPlot);
+    if (muPlot.Contains(":x",TString::kIgnoreCase)) MuDraw(muPlot,"T", nx, xMin, xMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, Title, var,muPlot);
+    else if (muPlot.Contains(":y",TString::kIgnoreCase)) MuDraw(muPlot,"T", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, Title, "Z",muPlot);
   }
 }

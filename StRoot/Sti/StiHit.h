@@ -67,8 +67,8 @@ public:
     const Float_t &x() const {return mx;}
     const Float_t &y() const {return my;}
     const Float_t &z() const {return mz;}
-    const Float_t  y(Float_t time) const {return my + _vy*time;}
-    const Float_t  z(Float_t time) const {return mz + _vz*time;}
+    const Float_t  y(Float_t time) const {return my + _vy*time + _dY;}
+    const Float_t  z(Float_t time) const {return mz + _vz*time + _dZ;}
     ///Return the global x, y, z values.
     Float_t x_g() const {return _xg;}
     Float_t y_g() const {return _yg;}
@@ -148,6 +148,8 @@ public:
     int  isUsed() const {return mTimesUsed>=mMaxTimes;}
     void setVz(Float_t vz) {_vz = vz;}
     void setVy(Float_t vy) {_vy = vy;}
+    void setdY(Float_t dY) {_dY = dY;}
+    void setdZ(Float_t dZ) {_dZ = dZ;}
     void reset();
     void unset(){;}
     void rotate(double angle);
@@ -181,6 +183,7 @@ protected:
     Float_t _energy;
     // drift velocities cm/mksec( 0 for non driting )
     Float_t _vy, _vz;
+    Float_t _dY, _dZ; // track parameter dependent systematics in pad and time direction (TPC)
     char  mEnd[1];
 public:
     Int_t mCount;

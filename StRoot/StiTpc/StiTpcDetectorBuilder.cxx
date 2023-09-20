@@ -17,6 +17,7 @@
 #include "Rtypes.h"
 #include "Stiostream.h"
 #include "Sti/StiNeverActiveFunctor.h"
+#include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
 #include "StDetectorDbMaker/StiTpcInnerHitErrorCalculator.h"
 #include "StDetectorDbMaker/StiTpcOuterHitErrorCalculator.h"
 #include "StDetectorDbMaker/StiTPCHitErrorCalculator.h"
@@ -226,9 +227,15 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	  if (! St_tpcPadConfigC::instance()->iTPC(sector)) {
 	    pDetector->setHitErrorCalculator(StiTpcInnerHitErrorCalculator::instance());
 	  } else {
+#ifdef StiTpcHitErrorMDF4_h
+	    pDetector->setHitErrorCalculatorMDF4(StiTpcInnerHitErrorMDF4::instance());
+#endif
 	    pDetector->setHitErrorCalculator(StiTPCHitErrorCalculator::instance());
 	  }
 	} else {
+#ifdef StiTpcHitErrorMDF4_h
+	  pDetector->setHitErrorCalculatorMDF4(StiTpcOuterHitErrorMDF4::instance());
+#endif
 	  pDetector->setHitErrorCalculator(StiTpcOuterHitErrorCalculator::instance());
 	}
 	//      pDetector->setElossCalculator(gasElossCalculator);

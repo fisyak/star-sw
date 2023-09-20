@@ -1,7 +1,7 @@
 /* 
    root.exe -q -b lBichsel.C pionMIP.root 'dEdxFit.C+("SecRow3C","GF")'
 
-# Fit Sparse : use ~/bin/SpareSubmit.csh to fit it in parallel  
+# Fit Sparse : use ~/bin/SparseSubmit.csh to fit it in parallel  
 @ count = 0
 while  (1)
     root.exe -q -b AdcSparseD3.root lBichsel.C 'dEdxFit.C+("Sparse","GP","R",'${count}')' >& X${count}.log &
@@ -4916,7 +4916,7 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
       if (! hist) {hist = (TH1 *) obj; hist->SetName(HistName);}
       else        {hist->Add((TH1 *) obj);}
     } else if (obj->IsA()->InheritsFrom( "THnSparse" )) {
-      if (TString(histName).Contains("Time")) {
+      if (TString(histName) == "Time" || TString(histName) == "TimeC") {
 	if (! hist) hist = ((THnSparse *) obj)->Projection(1,0); 
 	else        hist->Add(((THnSparse *) obj)->Projection(1,0));
       } else {

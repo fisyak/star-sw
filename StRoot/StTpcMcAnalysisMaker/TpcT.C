@@ -4802,7 +4802,7 @@ void MDFerrorParameterization2(const Char_t *treeName = "FitP", Int_t iXZ = 0, I
 #endif
 }
 //________________________________________________________________________________
-void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA3") {
+void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA5") {
   TDirIter Dir(files);
   Char_t *file = 0;
   Char_t *file1 = 0;
@@ -4904,11 +4904,15 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA3") {
       Int_t nx = 140;
       Double_t xmin = -7.0;
       Double_t xmax =  7.0;
-      Int_t ny = 210;
+      Int_t ny = 105;
       Double_t ymin = -210;
       Double_t ymax =  210;
-      if (k == 2) {
-	nx = 100;
+      if        (k == 1) {
+	nx =     40;
+	xmin =  -2.;
+	xmax =   2.;
+      } else if (k == 2) {
+	nx   =  20;
 	xmin =  2.;
 	xmax = 12.;
       }
@@ -4917,7 +4921,27 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA3") {
       title = Form("dT in time buckets for %s : %s : Z",tIO[i],nVar[k]);
       DT[i][k] = new TH3F(name,title,nx,xmin,xmax,ny,ymin,ymax,200,-2.0,2.0);
     }
-
+#define __SPARSED__
+#ifdef __SPARSED__
+    struct VarS_t {
+      Double_t      Z;
+      Double_t   tanP; // tan(Psi) 
+      Double_t   tanL; // tan(lambda)
+      Double_t   AdcL; // log(Adc)
+      Double_t     dX; // dPad ot Dtime
+    };
+    const static Int_t NoDim = sizeof(VarS_t)/sizeof(Double_t);
+    const Char_t *NameV[NoDim] = {  "Z", "tanP", "tanL", "AdcL", "dX"};
+    const Int_t  nBins[NoDim]  = {  105,     40,    140,     20,  200};
+    const VarS_t  xMin         = { -210,     -2,     -7,      2,   -2};
+    const VarS_t  xMax         = {  210,      2,      7,     12,    2};
+    THnSparse  *dPadI = new THnSparseF("dPadI",  "dPad for iTPC : Z : tanP : tanL : AdcL : dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dPadO = new THnSparseF("dPadO",  "dPad for  Tpx : Z : tanP : tanL : AdcL : dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dTimeI = new THnSparseF("dTimeI",  "dTime for iTPC : Z : tanP : tanL : AdcL : dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dTimeO = new THnSparseF("dTimeO",  "dTime for  Tpx : Z : tanP : tanL : AdcL : dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dPadIO[2]  = { dPadI,  dPadO};
+    THnSparse  *dTimeIO[2] = {dTimeI, dTimeO};
+#endif
 	   
   // TpcT->Draw("fMcHit.mMcl_t+0.165*Frequency-fRcHit.mMcl_t/64:fMcHit.mPosition.mX3>>TI(210,-210,210,100,-2,3)","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mQuality>90&&fMcHit.mVolumeId%100<=13","colz"); TI->FitSlicesY(); TI_1->Fit("pol2","er","",-100,100);
   // TpcT->Draw("fMcHit.mMcl_t+0.165*Frequency-fRcHit.mMcl_t/64:fMcHit.mPosition.mX3>>TO(210,-210,210,100,-2,3)","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mQuality>90&&fMcHit.mVolumeId%100>13","colz"); TO->FitSlicesY(); TO_1->Fit("pol2","er","",-100,100);
@@ -5034,6 +5058,17 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA3") {
 	DP[io][v]->Fill(Vars[v],ZMC,dPad);
 	DT[io][v]->Fill(Vars[v],ZMC,dT);
       }
+#ifdef __SPARSED__
+      static VarS_t VV;
+      VV.Z = ZMC;
+      VV.tanP = tanP;
+      VV.tanL = tanL;
+      VV.AdcL = AdcL;
+      VV.dX   = dPad;
+      dPadIO[io]->Fill(&VV.Z);
+      VV.dX = dT;
+      dTimeIO[io]->Fill(&VV.Z);
+#endif
       if (! ev%1000) cout << "Processed event " << ev << endl;
       ev++;
     }
@@ -5057,6 +5092,12 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA3") {
     TC1[io]->Fit("pol2","er","",-100,100);
   }
   fOut->Write();
+#ifdef __SPARSED__
+  for (Int_t io = 0; io < 2; io++) {
+    dPadIO[io]->Write();
+    dTimeIO[io]->Write();
+  }
+#endif
 }
 //________________________________________________________________________________
 void TpcTQA(const Char_t *files="*.root", const Char_t *Out = "QA.root") {

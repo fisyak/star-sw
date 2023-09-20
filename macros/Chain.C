@@ -9,12 +9,12 @@ TChain *Chain(const Char_t *TreeName = "FitP") {
   Int_t NFiles = 0;
   ULong64_t nEvents = 0;
   ULong64_t nEvTot = 0;
-  Float_t   TotSize = 0;
+  Double_t   TotSize = 0;
   while ( (f = (TFile *) next()) ) {   
     TTree *tree = (TTree *) f->Get(TreeName);
     cout << "#\t" << NFiles << "\t" << f->GetName() << "\t" << f->GetSize();// << endl;
-    TotSize += f->GetSize();
     if (tree) {
+      TotSize += (Double_t) f->GetSize();
       NFiles++;
       nEvents = tree->GetEntries();
       cout << "\t" << nEvents << endl;
@@ -44,7 +44,7 @@ TChain *Chain(const Char_t *files = "./*.MuDst.root",const Char_t *TreeName = "M
   //  iter.AddFile(files);
   TFile *f = 0;
   tChain = new TChain(TreeName);
-  Float_t   TotSize = 0;
+  Double_t  TotSize = 0;
   Int_t NFiles = 0;
   ULong64_t nEvents = 0;
   ULong64_t nEvTot = 0;
@@ -58,7 +58,7 @@ TChain *Chain(const Char_t *files = "./*.MuDst.root",const Char_t *TreeName = "M
       NFiles++;
       nEvents = tree->GetEntries();
       cout  << "\tsize = " << f->GetSize();
-      TotSize += f->GetSize();
+      TotSize += (Double_t) f->GetSize();
       cout << "\tNo.Events = " << nEvents << endl;
       nEvTot += nEvents;
       tChain->Add(f->GetName());

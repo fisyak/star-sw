@@ -94,5 +94,6 @@
 <li> TFG23b RunXIX_XXII dE/dx calibration                                2023-03-17 10:59:25 -0400  (HEAD -> TFG, tag: TFG23b_4)
 <li> TFG23c Freeze tpcExtraGainCorrection, StKFParticleAnalysis          2023-04-30 11:53:11 -0400  (HEAD -> TFG, tag: TFG23c)
 <li> TFG23d Freeze CA, StKFParticle, StdEdxY2Maker,...                   2023-08-01 09:55:16 -0400  (HEAD -> TFG, tag: TFG23d)
+<li> TFG23e Introduce MDF4 Tpc Hit Errors                                2023-09-19 20:21:49 -0400  (HEAD -> TFG, tag: TFG23e)
 <li>.DEV2   head of TFG git repository
 </ul>

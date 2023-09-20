@@ -22,10 +22,6 @@
 #include "TEnv.h"
 #include "TLegend.h"
 #include "THStack.h"
-//to obtain error coefficients
-#include "StDetectorDbMaker/StiTpcInnerHitErrorCalculator.h"
-#include "StDetectorDbMaker/StiTpcOuterHitErrorCalculator.h"
-#include "StDetectorDbMaker/StiTPCHitErrorCalculator.h"
 #include "StDetectorDbMaker/St_tpcT0BXC.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
 #include "StEvent/StTriggerData.h"
@@ -83,20 +79,29 @@ void StiCATpcTrackerInterface::SetNewEvent() {
     const Char_t *side[5] = {"East","West","All","EastX","WestX"};
     for (Int_t i = 0; i < 5; i++) {
       if (i > 2) {
-	fVertexZPlots[i] = new TH1F(Form("VertexZPlot%s",side[i]),Form("z-dca from KFParticle - <Z>  distribution for side = %s",side[i]),400,-20,20);
-	fVertexZPlots[i]->SetDirectory(f);
-	fVertexZPlots[i]->SetMarkerColor(i-1); 
-	fVertexZPlots[i]->SetLineColor(i-1); 
-	fVertexZPlots[i]->SetLineWidth(4);
+	if (fVertexZPlots[i]) {
+	  fVertexZPlots[i]->Reset();
+	} else {
+	  fVertexZPlots[i] = new TH1F(Form("VertexZPlot%s",side[i]),Form("z-dca from KFParticle - <Z>  distribution for side = %s",side[i]),400,-20,20);
+	  fVertexZPlots[i]->SetDirectory(f);
+	  fVertexZPlots[i]->SetMarkerColor(i-1); 
+	  fVertexZPlots[i]->SetLineColor(i-1); 
+	  fVertexZPlots[i]->SetLineWidth(4);
+	}
 	continue;
       }
-      fVertexZPlots[i] = new TH1F(Form("VertexZPlot%s",side[i]),Form("z-dca distribution for side = %s",side[i]),NzBins,zmin,zmax);
-      fVertexZPlots[i]->SetDirectory(f);
-
-      fVertexZPlots[i] = new TH1F(Form("VertexZPlot%s",side[i]),Form("z-dca distribution for side = %s",side[i]),NzBins,zmin,zmax);
-      fVertexZPlots[i]->SetDirectory(f);
-      fVertexXYPlots[i] = new TH2F(Form("VertexXYPlot%s",side[i]),Form("xy-dca distribution for side = %s at Z +/- 10 cm of the 1st peak",side[i]),100,-5,5,100,-5,5);
-      fVertexXYPlots[i]->SetDirectory(f);
+      if (fVertexZPlots[i]) {
+	fVertexZPlots[i]->Reset();
+      } else {
+	fVertexZPlots[i] = new TH1F(Form("VertexZPlot%s",side[i]),Form("z-dca distribution for side = %s",side[i]),NzBins,zmin,zmax);
+	fVertexZPlots[i]->SetDirectory(f);
+      }
+      if (fVertexXYPlots[i]) {
+	fVertexXYPlots[i]->Reset();
+      } else {
+	fVertexXYPlots[i] = new TH2F(Form("VertexXYPlot%s",side[i]),Form("xy-dca distribution for side = %s at Z +/- 10 cm of the 1st peak",side[i]),100,-5,5,100,-5,5);
+	fVertexXYPlots[i]->SetDirectory(f);
+      }
       if (i != 2) {
 	fVertexZPlots[i]->SetMarkerColor(i+2); 
 	fVertexZPlots[i]->SetLineColor(i+2); 
