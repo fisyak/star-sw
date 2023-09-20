@@ -3,8 +3,11 @@
 #include "StiUtilities/StiDebug.h"
 #include "StiTrackNodeHelper.h"
 #include "StiElossCalculator.h"
+#include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
 #include "StDetectorDbMaker/StiHitErrorCalculator.h"
-#include "StEvent/StHit.h"
+#include "StDetectorDbMaker/StiHitErrorCalculator.h"
+#include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
+#include "StEvent/StTpcHit.h"
 #include "StEvent/StEnumerations.h"
 #include "StMessMgr.h"
 #include "TArrayD.h"
@@ -1110,18 +1113,28 @@ int StiTrackNodeHelper::getHitErrors(const StiHit *hit,const StiNodePars *pars,S
 {
   hrr->reset();
   const StiDetector *det = hit->detector();
-  const StiHitErrorCalculator *calc = (det)? det->getHitErrorCalculator():0;
-  if (calc) {//calculate it
+  const StiTpcHitErrorMDF4 *calcMDF4 = (det)? det->getHitErrorCalculatorMDF4() : 0;
+  const StiHitErrorCalculator  *calc = (det)? det->getHitErrorCalculator()     : 0;
+  if (calc || calcMDF4) {//calculate it
     Double_t fudgeFactor = 1;
-    StHit *sthit = (StHit*) hit->stHit();
-    if (sthit) {
-      if ((sthit->detector() == kTpcId || sthit->detector() == kiTpcId)) {
-	if (sthit->flag() == 2) {
+    StTpcHit *tpcHit = (StTpcHit*) hit->stHit();
+    if (tpcHit) {
+      if ((tpcHit->detector() == kTpcId || tpcHit->detector() == kiTpcId)) {
+	if (tpcHit->flag() == 2) {
 	  fudgeFactor = 16.;
 	}
       }
     }
-    calc->calculateError(pars,hrr->hYY,hrr->hZZ, fudgeFactor);
+    if (calcMDF4) {
+      Double_t Adc = tpcHit->adc();
+      Double_t AdcL = 5.5;
+      if (Adc > 0) AdcL = TMath::Log(Adc);
+      Double_t dZ;
+      calcMDF4->calculateError(pars,hrr->hYY,hrr->hZZ, fudgeFactor, AdcL, &dZ);
+      ((StiHit *) hit)->setdZ(dZ);
+    } else {
+      calc->calculateError(pars,hrr->hYY,hrr->hZZ, fudgeFactor);
+    }
   } else    {//get from hit
     const float *ermx = hit->errMtx();    
     for (int i=0;i<6;i++){hrr->G()[i]=ermx[i];}

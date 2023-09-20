@@ -10,14 +10,13 @@ using std::string;
 #include "StiIsActiveFunctor.h"
 #include "StDetectorDbMaker/StiTrackingParameters.h"
 #include "TString.h"
-
 class StiMaterial;
 class StiShape;
 template<class T> class StiCompositeTreeNode;
 class StiHitErrorCalculator;
 class StiElossCalculator;
 class StiDetector;
-
+class StiTpcHitErrorMDF4;
 typedef std::vector<StiDetector*> StiDetVect;
 
 
@@ -84,8 +83,10 @@ public:
     void setTreeNode( StiCompositeTreeNode<StiDetector> * val) {mNode=val;}
     StiCompositeTreeNode<StiDetector> * getTreeNode() const {return mNode;}
     
-    void setHitErrorCalculator(const StiHitErrorCalculator * calculator) {_hitErrorCalculator = calculator;}
-    const StiHitErrorCalculator * getHitErrorCalculator() const {return _hitErrorCalculator;}
+    void setHitErrorCalculator    (const StiHitErrorCalculator * calculator) {_hitErrorCalculator     = calculator;}
+    void setHitErrorCalculatorMDF4(const StiTpcHitErrorMDF4    * calculator) {_hitErrorCalculatorMDF4 = calculator;}
+    const StiHitErrorCalculator * getHitErrorCalculator()     const {return _hitErrorCalculator;}
+    const StiTpcHitErrorMDF4    * getHitErrorCalculatorMDF4() const {return _hitErrorCalculatorMDF4;}
 
     void setGroupId(int id) {  _groupId = id;}
     int  getGroupId() const {return _groupId;}
@@ -115,8 +116,8 @@ public:
  StiIsActiveFunctor *isActiveFunctor; 
 
     /// Hit Error Calculator for this detector
-    const StiHitErrorCalculator * _hitErrorCalculator;
-    
+    const StiHitErrorCalculator     *_hitErrorCalculator;
+    const StiTpcHitErrorMDF4        *_hitErrorCalculatorMDF4;
     /// Continuous scatter attributes.
     StiMaterial *gas;         
     /// Discrete scatterer attributes

@@ -2,8 +2,6 @@
 #include "StarChairDefs.h"
 #include "St_db_Maker/St_db_Maker.h"
 #include "StDetectorDbMaker/StiHitErrorCalculator.h"
-//________________________________________________________________________________
-#include "StiHitErrorCalculator.h"
 ClassImp(StiHitErrorCalculator);
 //________________________________________________________________________________
 void StiHitErrorCalculator::calculateError(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t &ecross, Double_t &edip, Double_t fudgeCactor) const {
@@ -52,7 +50,6 @@ MakeChairInstance2(KalmanTrackFitterParameters,StiKalmanTrackFitterParameters,Ca
 #include "StiKalmanTrackFinderParameters.h"
 MakeChairInstance2(KalmanTrackFinderParameters,StiKalmanTrackFinderParameters,Calibrations/tracker/KalmanTrackFinderParameters);
 #include "StiTpcHitErrorMDF4.h"
-MakeChairInstance2(MDFCorrection4,StiTpcHitErrorMDF4,Calibrations/tracker/StiTpcHitErrorMDF4);
 //________________________________________________________________________________
 void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) {
   fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
@@ -61,47 +58,38 @@ void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Do
   fxx[2] = _tanl*_tanl; // tanL**2
   fxx[3] = AdcL;  // AdcL
 }
-#include "StDetectorDbMaker/St_tpcPadConfigC.h"
-#include "StDetectorDbMaker/St_tpcDriftVelocityC.h"
 //________________________________________________________________________________
-void StiTpcHitErrorMDF4::calculateiTPCError(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL, 
-					    Double_t &ecross, Double_t &edip, Double_t fudgeFactor, 
-					    Double_t *dZ, Double_t *dX) const {
-  static Double_t padPitch = St_tpcPadConfigC::instance()->innerSectorPadPitch();
-  static Double_t timePitch = St_tpcDriftVelocityC::instance()->timeBucketPitch();
+void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _tanl, 
+					Double_t &ecross, Double_t &edip, 
+					Double_t fudgeFactor, Double_t AdcL, 
+					Double_t *dZ, Double_t *dX) {
+  static const Double_t tenMicrons = 1e-3;
+  static const Double_t min2Err = tenMicrons*tenMicrons;
+  static const Double_t max2Err = 1.;
   convert(_z, _eta, _tanl, AdcL);
-  Int_t k = 0;
-  Double_t dPadSigmaSQ  = Eval(k  , fxx);
-  Double_t dTimeSigmaSQ = Eval(k+4, fxx);
-  ecross = padPitch *padPitch *dPadSigmaSQ  * fudgeFactor;
-  edip   = timePitch*timePitch*dTimeSigmaSQ * fudgeFactor;
+  Double_t dPadSigmaSQ  = Eval(  0, fxx);
+  Double_t dTimeSigmaSQ = Eval(  2, fxx);
+  ecross = padPitch() *padPitch() *dPadSigmaSQ  * fudgeFactor;
+  edip   = timePitch()*timePitch()*dTimeSigmaSQ * fudgeFactor;
+  Int_t fail = 0;
+  if (ecross< min2Err) {ecross = min2Err; fail++;}
+  if (ecross> max2Err) {ecross = max2Err; fail++;}
+  if (edip< min2Err)   {edip   = min2Err; fail++;} 
+  if (edip> max2Err)   {edip   = max2Err; fail++;}
   if (dZ) {
-    Double_t dTime        = Eval(k+5, fxx);
-    *dZ = timePitch*dTime;
+    if (fail) *dZ = 0;
+    else {
+      Double_t dTime        = Eval( 3, fxx);
+      *dZ = timePitch()*dTime * TMath::Sign(1., _z);
+    }
   }
   if (dX) {
-    Double_t dPad         = Eval(k+1, fxx);
-    *dX = padPitch*dPad;
+    if (fail) *dX = 0;
+    else {
+      Double_t dPad         = Eval( 1, fxx);
+      *dX = padPitch()*dPad;
+    }
   }
 }
-//________________________________________________________________________________
-void StiTpcHitErrorMDF4::calculateTpxError(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL, 
-					   Double_t &ecross, Double_t &edip, Double_t fudgeFactor, 
-					   Double_t *dZ, Double_t *dX) const {
-  static Double_t padPitch = St_tpcPadConfigC::instance()->outerSectorPadPitch();
-  static Double_t timePitch = St_tpcDriftVelocityC::instance()->timeBucketPitch();
-  convert(_z, _eta, _tanl, AdcL);
-  Int_t k = 2;
-  Double_t dPadSigmaSQ  = Eval(k  , fxx);
-  Double_t dTimeSigmaSQ = Eval(k+4, fxx);
-  ecross = padPitch *padPitch *dPadSigmaSQ  * fudgeFactor;
-  edip   = timePitch*timePitch*dTimeSigmaSQ * fudgeFactor;
-  if (dZ) {
-    Double_t dTime        = Eval(k+5, fxx);
-    *dZ = timePitch*dTime;
-  }
-  if (dX) {
-    Double_t dPad         = Eval(k+1, fxx);
-    *dX = padPitch*dPad;
-  }
-}
+MakeChairInstance2(MDFCorrection4,StiTpcInnerHitErrorMDF4,Calibrations/tracker/TpcInnerHitErrorMDF4);
+MakeChairInstance2(MDFCorrection4,StiTpcOuterHitErrorMDF4,Calibrations/tracker/TpcOuterHitErrorMDF4);

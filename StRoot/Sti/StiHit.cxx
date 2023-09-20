@@ -148,7 +148,7 @@ static int nCall =0; nCall++;
       mz = gz;
       double dd[3]={mx,my,mz};
 
-//		Special TPC case. Paylap tracks could be very far
+//		Special TPC case. Pileup tracks could be very far
 //              from volume in Z for splitted sectors
       int mask = 7;
       if (detector->getGroupId()==kTpcId) mask = 3;
