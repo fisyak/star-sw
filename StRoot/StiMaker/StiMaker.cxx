@@ -350,7 +350,7 @@ Int_t StiMaker::InitRun(int run)
           TString seedFinders = SAttr("seedFinders");
 
 // 		Return without changing anything if attribute's value is empty
-  	  if (seedFinders.Length()) {	//found list of ssedfinders
+  	  if (seedFinders.Length()) {	//found list of seedfinders
 
             TObjArray *sub_strings = seedFinders.Tokenize(" .,");
 
