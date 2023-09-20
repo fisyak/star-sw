@@ -155,7 +155,7 @@ public :
   TBranch        *b_dmuJ;   //!
   
   Double_t fxx[4];
-  static Int_t    fgCase; // (fgCase%2) : 0 => sigma**2, 1 => mu, (fgCase/2)%2  : 0 = I; 1 => 0; (fgCase/4)%2 : 0 =>  Pad, 1 => Time
+  static Int_t    fgCase; // (fgCase%2) : 0 => sigma**2, 1 => mu, (fgCase/4)%2  : 0 = I; 1 => 0; (fgCase/2)%2 : 0 =>  Pad, 1 => Time
   Double_t fval;
   Double_t fdval;
   Double_t fvalA;
@@ -322,8 +322,10 @@ Double_t mdf4(Double_t xx[4]) {
 #ifndef __CHECK__
   Double_t val = fit->Eval(xx);
 #else
-  Int_t k = FitPS::fgCase;
-  Double_t val = StiTpcHitErrorMDF4::instance()->Eval(k,xx);
+  Int_t k = FitPS::fgCase%4;
+  Double_t val = 0;
+  if (FitPS::fgCase < 4) val = StiTpcInnerHitErrorMDF4::instance()->Eval(k,xx);
+  else                   val = StiTpcOuterHitErrorMDF4::instance()->Eval(k,xx);
 #endif
   if (FitPS::fgCase%2 == 0) {
     if (val < 0) val = 0;
@@ -373,8 +375,8 @@ void FitPS::Loop2()
   Int_t io = 1;
   TString Var("mu");
   if (( fgCase   %2) == 0) Var = "sigma";
-  if (((fgCase/2)%2) == 0) io = 0;
-  if (((fgCase/4)%2) == 0) Var += "Pad";
+  if (((fgCase/4)%2) == 0) io = 0;
+  if (((fgCase/2)%2) == 0) Var += "Pad";
   else                  Var += "Time";
   const Char_t *IO[kTPC] = {"I","O"};
   Var += IO[io];
@@ -528,8 +530,8 @@ void mdf4HitError(TChain *tChain = 0) {
   TString fName(gSystem->BaseName(tChain->GetFile()->GetName()));
   Int_t kase = 0;
   Int_t Nkase = 2;
-  Int_t nrows = 8;
-  const Char_t *Sets[4] = {"dPadI","dPadO","dTimeI","dTimeO"}; 
+  Int_t nrows = 4;
+  const Char_t *Sets[4] = {"dPadI","dTimeI","dPadO","dTimeO"}; 
   Int_t ki = -1;
   for (Int_t k = 0; k < 4; k++) {
     if (! fName.BeginsWith(Sets[k]) ) continue;
@@ -542,8 +544,10 @@ void mdf4HitError(TChain *tChain = 0) {
   TDirectory *cdir = fOut->mkdir(Sets[ki]);
   if (! cdir) return;
 #ifndef __CHECK__
-  TString tableName("StiTpcHitErrorMDF4");
-  TString cOut =  Form("%s%s.y2019.C", tableName.Data(), Sets[ki]);
+  TString tableName;
+  if (ki < 2) tableName = "TpcInnerHitErrorMDF4";
+  else        tableName = "TpcOuterHitErrorMDF4";
+  TString cOut =  Form("%s%s.C", tableName.Data(), Sets[ki]);
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
   out << "TDataSet *CreateTable() {" << endl;
@@ -561,13 +565,13 @@ void mdf4HitError(TChain *tChain = 0) {
     Int_t k = t.fgCase;
 #ifndef __CHECK__
     mdf4Fit(t);
-    Int_t idx = k;
+    Int_t idx = k%4;
     out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
     out << "  row.nrows =  " << nrows << "; //" << Sets[ki] << "\t" << fName.Data() << endl;
     out << "  row.idx   = " << Form("%2i", idx + 1) << ";//\t" << VarName.Data() <<  endl;
     cout << *fit;
     out << *fit;
-    out << "  tableSet->AddAt(&row," << idx << ");" << endl;
+    out << "  tableSet->AddAt(&row); // idx = " << idx + 1  << endl;
 #endif
     ix++;
     t.Loop2();
