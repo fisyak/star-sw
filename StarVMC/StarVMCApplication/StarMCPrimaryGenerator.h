@@ -93,6 +93,7 @@ class StarMCPrimaryGenerator : public TObject {
   static StarMCPrimaryGenerator *fgInstance;
   StarStack        *fStarStack;    
   Bool_t            fIsRandom;
+  Bool_t            fSimpleKine;
   Int_t             fNofPrimaries;
   TString           fOption;  
   Int_t             fDebug;

@@ -31,7 +31,6 @@ class StarMCSimplePrimaryGenerator : public StarMCPrimaryGenerator  {
  private:
   void GeneratePrimary();
   void PreSet();
-  vector<Int_t> fGunIds;
   ClassDef(StarMCSimplePrimaryGenerator,1)  //StarMCSimplePrimaryGenerator
 };
 #endif //StarMCSimplePrimaryGenerator_h
