@@ -148,7 +148,7 @@ class StTbyTMaker : public StMaker {
   Bool_t  GoodMatch(StTrack* trk1, StTrack* trk2, UInt_t NPings);
   TrackParameters TrackParametersFill(const StGlobalTrack *gTrack = 0, Int_t vertexId = -1);
   HitParameters HitParametersFill(const StTpcHit *tpcHit = 0);
-  void SetHitMatch(Bool_t k = kTRUE) {fgHitMatch = k;}
+  static void SetHitMatch(Bool_t k = kTRUE) {fgHitMatch = k;}
   static Bool_t fgHitMatch;
  private:
   void FillMatch(const StGlobalTrack* trk1, const StGlobalTrack* trk2 = 0);

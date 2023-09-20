@@ -227,8 +227,8 @@ void DrawFitPnts(Int_t ping=0) {
   TProfile *pfx = fitPtsHist->ProfileX("_pfx",2,-1,"e"); pfx->Draw("same");
   fitPtsHist->SetMarkerColor(0);
   TProfile *pfy = fitPtsHist->ProfileY("_pfy",2,-1,"e"); pfy->Draw("same");
-  leg2->AddEntry(pfy,Form("profY, <fit points. %s> = %7.2f for NFP >= %i",New.Data(),meanX,effNFP));
-  leg2->AddEntry(pfx,Form("profX, <fit points. %s> = %7.2f for NFP >= %i",Old.Data(),meanY,effNFP));
+  leg2->AddEntry(pfy,Form("profY, <fit points. %s> = %7.2f for NFP >= %i",New.Data(),meanY,effNFP));
+  leg2->AddEntry(pfx,Form("profX, <fit points. %s> = %7.2f for NFP >= %i",Old.Data(),meanX,effNFP));
   leg2->Draw();
   fitPtsHist->SetMarkerColor(1);
   DrawPng(c1);
@@ -711,7 +711,7 @@ void TbyTPlots(const Char_t *file = 0, Int_t Nentries=0) {
   TH1D *DifPvX = new TH1D("DifPvX",Form("Difference in X for %s - %s positions",New.Data(),Old.Data()),100,-1.00,1.00);
   TH1D *DifPvY = new TH1D("DifPvY",Form("Difference in Y for %s - %s positions",New.Data(),Old.Data()),100,-1.00,1.00);
   TH1D *DifPvZ = new TH1D("DifPvZ",Form("Difference in Z for %s - %s positions",New.Data(),Old.Data()),100,-1.00,1.00);
-  TH2D *Charge = new TH2D("Charge",Form("Charge flip between %s and %s for all primaries",New.Data(),Old.Data()),3,-1.5,1.5,3,-1.5,1.5);
+  TH2D *Charge = new TH2D("Charge",Form("Charge flip between new (%s) vs old(%s) for all primaries",New.Data(),Old.Data()),3,-1.5,1.5,3,-1.5,1.5);
   Charge->SetXTitle(Form("%s charge",Old.Data()));
   Charge->SetYTitle(Form("%s charge",New.Data()));
   //________________________________________________________________________________
@@ -719,8 +719,8 @@ void TbyTPlots(const Char_t *file = 0, Int_t Nentries=0) {
   //________________________________________________________________________________
   Name = "fitPtsHist", Title = Form("Fit Pts %s vs %s",Old.Data(), New.Data());
   TH2D* fitPtsHist = new TH2D(Name,Title,101,effNFP-0.5,100+effNFP+0.5,101,effNFP-0.5,100+effNFP+0.5);
-  fitPtsHist->SetXTitle(Form("fit points, %s",New.Data()));
-  fitPtsHist->SetYTitle(Form("fit points, %s",Old.Data()));
+  fitPtsHist->SetYTitle(Form("fit points, %s",New.Data()));
+  fitPtsHist->SetXTitle(Form("fit points, %s",Old.Data()));
   //________________________________________________________________________________
   // Relative Momentum Difference, vs fit pts
   //________________________________________________________________________________
@@ -882,7 +882,7 @@ void TbyTPlots(const Char_t *file = 0, Int_t Nentries=0) {
       if ((T->oldP.Charge && T->oldP.Charge < 0) ||
 	  (T->newP.Charge && T->newP.Charge < 0)) chsign = 1;
       if (gp == 0) {
-	Charge->Fill(T->newP.Charge,T->oldP.Charge);
+	Charge->Fill(T->oldP.Charge,T->newP.Charge);
 	pTDifNFP[0][chsign]->Fill(T->oldP.FitPtsGl,pTdiffR); 
 	if (Vars[knew][kEta] > 0.5)  pTDifNFP5[0][chsign]->Fill(T->oldP.FitPtsGl,pTdiffR); 
       }
