@@ -443,7 +443,9 @@
  
  $ROOTSRC = $ROOTSYS . "/include";
  
- $CERNINO = "#asps/Simulation/geant321/include" . $main::PATH_SEPARATOR . $CERN_ROOT . "/include";
+# $CERNINO = "#asps/Simulation/geant321/include" . 
+# $CERNINO =  $main::PATH_SEPARATOR . $CERN_ROOT . "/include";
+ $CERNINO =  $CERN_ROOT . "/include";
  if ($CPPPATH) {$CPPPATH .= $main::PATH_SEPARATOR;}
  $CPPPATH .= "#".  $main::PATH_SEPARATOR . "#StRoot" .  $main::PATH_SEPARATOR . $INCLUDE;# . $main::PATH_SEPARATOR . $ROOTSRC;# . $main::PATH_SEPARATOR . "#";
  $CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";
