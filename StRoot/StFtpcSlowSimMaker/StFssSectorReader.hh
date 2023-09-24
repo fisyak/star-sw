@@ -1,6 +1,6 @@
 #ifndef ST_FSS_SECTOR_READER_HH
 #define ST_FSS_SECTOR_READER_HH
-#include <cstdint>
+#include "Rtypes.h"
 #include "StDaqLib/GENERIC/EventReader.hh"
 #include "StDaqLib/GENERIC/RecHeaderFormats.hh"
 
@@ -22,7 +22,7 @@ private:
   int m_numSqndx, m_numAdc;
   struct Pad Pad_array[FTP_PADROWS][FTP_MAXPADS];
   struct PadRow Row_array[FTP_PADROWS];
-  uint8_t padlist[FTP_PADROWS][FTP_MAXPADS];
+  UChar_t padlist[FTP_PADROWS][FTP_MAXPADS];
 
 };
 
