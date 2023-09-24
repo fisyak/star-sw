@@ -8,7 +8,7 @@ void StiHitErrorCalculator::calculateError(Double_t _z,  Double_t _eta, Double_t
   static const Double_t tenMicrons = 1e-3;
   static const Double_t min2Err = tenMicrons*tenMicrons;
   static const Double_t max2Err = 1.;
-  static const Double_t scale = 2.;
+  static const Double_t scale = 1.;
   const Double_t *Coeff = ((StiHitErrorCalculator *) this)->coeff();
 #if 0
   Double_t dz = (200.-TMath::Abs(_z+100))/100.; // Local z
@@ -67,11 +67,12 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   static const Double_t tenMicrons = 1e-3;
   static const Double_t min2Err = tenMicrons*tenMicrons;
   static const Double_t max2Err = 1.;
+  static const Double_t scale = 2.;
   convert(_z, _eta, _tanl, AdcL);
   Double_t dPadSigmaSQ  = Eval(  0, fxx);
   Double_t dTimeSigmaSQ = Eval(  2, fxx);
-  ecross = padPitch() *padPitch() *dPadSigmaSQ  * fudgeFactor;
-  edip   = timePitch()*timePitch()*dTimeSigmaSQ * fudgeFactor;
+  ecross = scale*padPitch() *padPitch() *dPadSigmaSQ  * fudgeFactor;
+  edip   = scale*timePitch()*timePitch()*dTimeSigmaSQ * fudgeFactor;
   Int_t fail = 0;
   if (ecross< min2Err) {ecross = min2Err; fail++;}
   if (ecross> max2Err) {ecross = max2Err; fail++;}
