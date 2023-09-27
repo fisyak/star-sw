@@ -100,13 +100,13 @@
 #include "StPicoEvent/StPicoArrays.h"
 #include "StPicoEvent/StPicoDst.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
+#include "TSystem.h"
 #if defined (__TFG__VERSION__)
 #include "StarRoot/TDirIter.h"
 #include "StarRoot/TUnixTime.h"
 #include "StMuDSTMaker/COMMON/StMuMcTrack.h"
 #include "StMuDSTMaker/COMMON/StMuMcVertex.h"
 #include "StMuDSTMaker/COMMON/StMuProbPidTraits.h"
-#include "TSystem.h"
 #include "TH1.h"
 #include "TH2.h"
 static Int_t _debug = 0;
@@ -276,59 +276,59 @@ Int_t StPicoDstMaker::Init() {
   case PicoIoMode::IoWrite:
     
 #if defined (__TFG__VERSION__)
-    if (StMuDst::vtxMode() == PicoVtxMode::NotSet) {
+    if (StMuDst::vtxMode() == PicoVtxMode::NotSet) 
 #else /* ! __TFG__VERSION__ */
-    if (mVtxMode == PicoVtxMode::NotSet) {
+    if (mVtxMode == PicoVtxMode::NotSet) 
 #endif /* __TFG__VERSION__ */
-      
-      if (setVtxModeAttr() != kStOK) {
-	LOG_ERROR << "Pico Vertex Mode is not set ... " << endm;
-	return kStErr;
+      {
+        if (setVtxModeAttr() != kStOK) {
+	  LOG_ERROR << "Pico Vertex Mode is not set ... " << endm;
+	  return kStFatal;
+	}
+
+	// To write or not to write covariance matrices into the branch
+	if (setCovMtxModeAttr() != kStOK) {
+	  LOG_ERROR << "Pico covariance matrix I/O mode is not set ..." << endm;
+	  return kStFatal;
+	}
+      } //if (mVtxMode == PicoVtxMode::NotSet)
+
+      // To write or not to write BEmc Smd hits into the branch
+      if (setBEmcSmdModeAttr() != kStOk) {
+	LOG_ERROR << "Pico BEmc Smd I/O mode is not set ..." << endm;
+	return kStFatal;
       }
-    } //if (mVtxMode == PicoVtxMode::NotSet)
-
-    // To write or not to write covariance matrices into the branch
-    if (setCovMtxModeAttr() != kStOK) {
-      LOG_ERROR << "Pico covariance matrix I/O mode is not set ..." << endm;
-      return kStErr;
-    }
-
-    // To write or not to write BEmc Smd hits into the branch
-    if (setBEmcSmdModeAttr() != kStOk) {
-      LOG_ERROR << "Pico BEmc Smd I/O mode is not set ..." << endm;
-      return kStErr;
-    }
 
 #if !defined (__TFG__VERSION__)
 
-    if (mInputFileName.Length() == 0) {
-      // No input file
-      mOutputFileName = GetChainOpt()->GetFileOut();
-      mOutputFileName.ReplaceAll(".root", ".picoDst.root");
-    }
-    else {
-      mInputFileName = mInputFileName(mInputFileName.Index("st_"), mInputFileName.Length());
-      mOutputFileName = mInputFileName;
-      mOutputFileName.ReplaceAll("MuDst.root", "picoDst.root");
-
-      if (mOutputFileName == mInputFileName) {
-	LOG_ERROR << "Input file is not a MuDst ... " << endm;
-	return kStErr;
+      if (mInputFileName.Length() == 0) {
+	// No input file
+	mOutputFileName = GetChainOpt()->GetFileOut();
+	mOutputFileName.ReplaceAll(".root", ".picoDst.root");
       }
-    }
+      else {
+	mInputFileName = gSystem->BaseName(mInputFileName);
+	mOutputFileName = mInputFileName;
+	mOutputFileName.ReplaceAll("MuDst.root", "picoDst.root");
+
+	if (mOutputFileName == mInputFileName) {
+	  LOG_ERROR << "Input file is not a MuDst ... " << endm;
+	  return kStFatal;
+	}
+      }
 #else /* __TFG__VERSION__ */
-    if (mInputFileName.Length() == 0) mInputFileName = GetChainOpt()->GetFileOut();
-    file = gSystem->BaseName(mInputFileName);
-    l = file.Index(".");
-    if (l < 0) l = file.Length();
-    mInputFileName = mInputFileName(mInputFileName.Index("st_"), mInputFileName.Length());
-    mOutputFileName = TString(file.Data(),l);
-    mOutputFileName += ".picoDst.root";
+      if (mInputFileName.Length() == 0) mInputFileName = GetChainOpt()->GetFileOut();
+      file = gSystem->BaseName(mInputFileName);
+      l = file.Index(".");
+      if (l < 0) l = file.Length();
+      mInputFileName = mInputFileName(mInputFileName.Index("st_"), mInputFileName.Length());
+      mOutputFileName = TString(file.Data(),l);
+      mOutputFileName += ".picoDst.root";
 #endif /* __TFG__VERSION__ */
 
-    openWrite();
-    initEmc();
-    break;
+      openWrite();
+      initEmc();
+      break;
 
   case PicoIoMode::IoRead:
     openRead();
