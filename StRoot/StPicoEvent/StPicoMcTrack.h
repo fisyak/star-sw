@@ -41,12 +41,13 @@ class StPicoMcTrack : public TObject {
   virtual ~StPicoMcTrack();
   /// Print MC track parameters
   virtual void Print(const Char_t *option = "") const;
-
-  /// Detector names
-  enum EHIT {ktpc, ksvt, kssd, kctb, keem, kemc, kesm, 
-             kftp, kgem, khpd, kist, kigt, kfst, kfgt, 
-             kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, 
-             kvpd, ktot};
+  enum EHIT {ktpc, ksvt, kssd,
+	     kctb, keem, kemc, kesm, kftp, kgem, khpd, kist, kigt, kfst, 
+#ifndef __TFG__VERSION__
+	     kfgt, kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, kvpd, ktot};
+#else /* __TFG__VERSION__ */
+	     kfgt, kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, kvpd, ketr, khca, kfts, keto, kepd, kstg, kwca, ktpcR, ktot};
+#endif /* __TFG__VERSION__ */
 
   //
   // Getters
