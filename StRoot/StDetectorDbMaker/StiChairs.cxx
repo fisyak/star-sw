@@ -67,7 +67,7 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   static const Double_t tenMicrons = 1e-3;
   static const Double_t min2Err = tenMicrons*tenMicrons;
   static const Double_t max2Err = 1.;
-  static const Double_t scale = 2.;
+  static const Double_t scale = 1.;
   convert(_z, _eta, _tanl, AdcL);
   Double_t dPadSigmaSQ  = Eval(  0, fxx);
   Double_t dTimeSigmaSQ = Eval(  2, fxx);
@@ -82,14 +82,14 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
     if (fail) *dZ = 0;
     else {
       Double_t dTime        = Eval( 3, fxx);
-      *dZ = timePitch()*dTime * TMath::Sign(1., _z);
+      *dZ = - timePitch()*dTime * TMath::Sign(1., _z);
     }
   }
   if (dX) {
     if (fail) *dX = 0;
     else {
       Double_t dPad         = Eval( 1, fxx);
-      *dX = padPitch()*dPad;
+      *dX = - padPitch()*dPad;
     }
   }
 }
