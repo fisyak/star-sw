@@ -320,7 +320,13 @@ int StiHit::qaTruth() const
   if (!stHit) return 0;
   return stHit->qaTruth();
 }
-
-
+//________________________________________________________________________________
+const Float_t   StiHit::y(Float_t time) const {
+  return my + _vy*time + _dY;
+}
+//________________________________________________________________________________
+const Float_t   StiHit::z(Float_t time) const {
+  return mz + _vz*time + _dZ;
+}
 
 

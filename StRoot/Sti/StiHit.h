@@ -67,8 +67,8 @@ public:
     const Float_t &x() const {return mx;}
     const Float_t &y() const {return my;}
     const Float_t &z() const {return mz;}
-    const Float_t  y(Float_t time) const {return my + _vy*time + _dY;}
-    const Float_t  z(Float_t time) const {return mz + _vz*time + _dZ;}
+    const Float_t  y(Float_t time) const; // {return my + _vy*time + _dY;}
+    const Float_t  z(Float_t time) const; // {return mz + _vz*time + _dZ;}
     ///Return the global x, y, z values.
     Float_t x_g() const {return _xg;}
     Float_t y_g() const {return _yg;}
