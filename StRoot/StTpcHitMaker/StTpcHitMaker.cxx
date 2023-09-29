@@ -780,10 +780,14 @@ StTpcHit *StTpcHitMaker::CreateTpcHit(const daq_cld &cluster, Int_t sector, Int_
 #else /* used in TFG till 07/31/20 */
   Double_t q = 0; 
 #endif
-
-  // Correct for slewing (needs corrected q, and time in microsec)
-  Double_t freq = gStTpcDb->Electronics()->samplingFrequency();
-  time = freq * St_tpcSlewingC::instance()->correctedT(sector,row,q,time/freq);
+  // Check that slewing is active
+  static St_tpcSlewingC *tpcSlewing = St_tpcSlewingC::instance();
+  if (tpcSlewing && tpcSlewing->type() != 1001) tpcSlewing = 0;
+  if (tpcSlewing) {
+    // Correct for slewing (needs corrected q, and time in microsec)
+    Double_t freq = gStTpcDb->Electronics()->samplingFrequency();
+    time = freq * tpcSlewing->correctedT(sector,row,q,time/freq);
+  }
   static StTpcCoordinateTransform transform(gStTpcDb);
   static StTpcLocalSectorCoordinate local;
   static StTpcLocalCoordinate global;

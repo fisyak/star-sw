@@ -1020,7 +1020,7 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
   for (Long64_t k = 0; k < NoHits; k++) {
     const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
     Int_t color = 1;
-    Int_t style = 25;
+    Int_t style = 43;
     Double_t offset = 0.0;
     Int_t flag = tpcHit->flag();
     if (flag & 256) {color = 2; style = 29; offset = 0.1; flag &= ~0x100;} // online kTpxO

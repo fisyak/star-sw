@@ -49,6 +49,8 @@ Int_t StTpcHitMover::Make() {
     return kStSkip;
   }
   static StGlobalCoordinate    coorG;
+  static St_tpcTimeBucketCorC *tpcTimeBucketCor = St_tpcTimeBucketCorC::instance();
+  if (tpcTimeBucketCor && (tpcTimeBucketCor->nrows() == 0 || StTpcDb::IsOldScheme())) tpcTimeBucketCor = 0;
   Bool_t EmbeddingShortCut = IAttr("EmbeddingShortCut");
   StEvent* pEvent = dynamic_cast<StEvent*> (GetInputDS("StEvent"));
   Double_t triggerOffset = 0;
@@ -155,14 +157,14 @@ Int_t StTpcHitMover::Make() {
 		} else { //  transform from original pad and time bucket measurements
 		  Float_t pad  = tpcHit->pad();
 		  Float_t time = tpcHit->timeBucket();
-		  if (! StTpcDb::IsOldScheme()) {
+		  if (tpcTimeBucketCor) {
 		    if (TMath::Abs(209.4 - TMath::Abs(tpcHit->position().z())) < 3.0) {
 		      // Don't touch prompt hits
-		    } else if (St_tpcTimeBucketCorC::instance()->getNumRows()) {
+		    } else if (tpcTimeBucketCor) {
 		      Double_t noTmbks = tpcHit->maxTmbk() - tpcHit->minTmbk() + 1;
 		      Int_t iowe = io;
-		      if (sector > 12 && St_tpcTimeBucketCorC::instance()->nrows() >= 4) iowe += 2;
-		      time += St_tpcTimeBucketCorC::instance()->CalcCorrection(iowe, noTmbks);
+		      if (sector > 12 && tpcTimeBucketCor->nrows() >= 4) iowe += 2;
+		      time += tpcTimeBucketCor->CalcCorrection(iowe, noTmbks);
 		    }
 		  }
 //		THIS IS A BLOCK TO CORRECT TIMING IN FXT MODE FOR DATA
