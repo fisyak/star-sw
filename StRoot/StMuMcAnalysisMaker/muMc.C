@@ -23,7 +23,7 @@ void muMc(Int_t N = 1000000,
     if (muMc) {cout << "MuMcAnalysis has been found" << endl;}
     muMc->SetAttr("TrackPlots",1);
     muMc->SetAttr("PiDPlots",1);
-    //    muMc->SetAttr("VertexPlots",1);
+    muMc->SetAttr("VertexPlots",1);
     //    muMc->SetAttr("StoreCutNTuples",1);
     chain->Init();
     if (N <= 0) return;
