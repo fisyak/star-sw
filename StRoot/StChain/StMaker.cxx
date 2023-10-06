@@ -1714,9 +1714,10 @@ Int_t StMaker::AliasDate(const Char_t *alias)
 
 {
 
-  Int_t n = strcspn(alias," ."); if (n<3) return 0;
+  //yf  Int_t n = strcspn(alias," ."); if (n<3) return 0;
   Int_t i;
-  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  //yf  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+    for (i=0;fDbAlias[i].tag && strcmp(alias,fDbAlias[i].tag);i++) {} 
   return fDbAlias[i].date;
 }
 //_____________________________________________________________________________
@@ -1724,9 +1725,10 @@ Int_t StMaker::AliasTime(const Char_t *alias)
 
 {
 
-  Int_t n = strcspn(alias," ."); if (n<3) return 0;
+  //yf  Int_t n = strcspn(alias," ."); if (n<3) return 0;
   Int_t i;
-  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  //yf  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  for (i=0;fDbAlias[i].tag && strcmp(alias,fDbAlias[i].tag);i++) {} 
   return fDbAlias[i].time;
 }
 //_____________________________________________________________________________
@@ -1734,9 +1736,10 @@ const Char_t *StMaker::AliasGeometry(const Char_t *alias)
 
 {
 
-  Int_t n = strcspn(alias," ."); if (n<3) return 0;
+  //yf  Int_t n = strcspn(alias," ."); if (n<3) return 0;
   Int_t i;
-  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  //yf  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  for (i=0;fDbAlias[i].tag && strcmp(alias,fDbAlias[i].tag);i++) {} 
   return fDbAlias[i].geometry;
 }
 //_____________________________________________________________________________
