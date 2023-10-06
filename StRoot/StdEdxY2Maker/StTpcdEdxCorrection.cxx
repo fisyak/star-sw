@@ -31,7 +31,6 @@
 #include "StDetectorDbMaker/St_tpcPressureBC.h"
 #include "StDetectorDbMaker/St_TpcDriftDistOxygenC.h"
 #include "StDetectorDbMaker/St_TpcMultiplicityC.h"
-#include "StDetectorDbMaker/St_GatingGridC.h"
 #include "StDetectorDbMaker/St_GatingGridBC.h"
 #include "StDetectorDbMaker/St_TpcZCorrectionBC.h"
 #include "StDetectorDbMaker/St_TpcZCorrectionCC.h"
@@ -138,7 +137,6 @@ void StTpcdEdxCorrection::ReSetCorrections() {
     assert(tpcGas);
   }
   SettpcGas(tpcGas);
-  memset (m_Corrections, 0, sizeof(m_Corrections));
   mTimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency();
   mInnerSectorzOffset = StTpcDb::instance()->Dimensions()->zInnerOffset();
   mOuterSectorzOffset = StTpcDb::instance()->Dimensions()->zOuterOffset();
@@ -157,9 +155,11 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kAdcCorrectionC        ] = dEdxCorrection_t("TpcAdcCorrectionC"   ,"alternative ADC/Clustering nonlinearity correction"			,St_TpcAdcCorrectionCC::instance());	     
   m_Corrections[kEdge                  ] = dEdxCorrection_t("TpcEdge"             ,"Gain on distance from Chamber edge"                                 ,St_TpcEdgeC::instance());		     
   m_Corrections[kAdcCorrectionMDF      ] = dEdxCorrection_t("TpcAdcCorrectionMDF" ,"ADC/Clustering nonlinearity correction MDF"				,St_TpcAdcCorrectionMDF::instance());	     
+  /* used only for tests
   m_Corrections[kAdcCorrection3MDF     ] = dEdxCorrection_t("TpcAdcCorrection3MDF","ADC/Clustering nonlinearity correction MDF 3D"			,St_TpcAdcCorrection3MDF::instance());	     
   m_Corrections[kAdcCorrection4MDF     ] = dEdxCorrection_t("TpcAdcCorrection4MDF","ADC/Clustering nonlinearity correction MDF 4D"			,St_TpcAdcCorrection4MDF::instance());	     
   m_Corrections[kAdcCorrection5MDF     ] = dEdxCorrection_t("TpcAdcCorrection5MDF","ADC/Clustering nonlinearity correction MDF+4D"			,St_TpcAdcCorrection5MDF::instance());	     
+  */
   m_Corrections[kAdcCorrection6MDF     ] = dEdxCorrection_t("TpcAdcCorrection6MDF","alternative ADC/Clustering nonlinearity correction MDF+4D"		,St_TpcAdcCorrection6MDF::instance());	     
   m_Corrections[kTpcdCharge            ] = dEdxCorrection_t("TpcdCharge"          ,"ADC/Clustering undershoot correction"				,St_TpcdChargeC::instance());		     
   m_Corrections[kTpcrCharge            ] = dEdxCorrection_t("TpcrCharge"          ,"ADC/Clustering rounding correction"					,St_TpcrChargeC::instance());		     
@@ -189,11 +189,15 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kTpcZDC                ] = dEdxCorrection_t("TpcZDC"        	  ,"Gain on Zdc CoincidenceRate"				        ,St_TpcZDCC::instance());		     
   m_Corrections[kTpcPadMDF             ] = dEdxCorrection_t("TpcPadCorrectionMDF" ,"Gain Variation along the anode wire"                                ,St_TpcPadCorrectionMDF::instance());         
   m_Corrections[kTpcPadMDC             ] = dEdxCorrection_t("TpcPadCorrectionMDC" ,"Gain Variation along the anode wire with track curvature"           ,St_TpcPadCorrectionMDC::instance());         
+  /*
   m_Corrections[kAdcI                  ] = dEdxCorrection_t("TpcAdcI"             ,"Gain on Accumulated Adc on a socket)"			        ,St_TpcAdcIC::instance());		     
   m_Corrections[knPad                  ] = dEdxCorrection_t("TpcnPad"             ,"Gain on cluster length in pads"					,St_TpcnPadC::instance());		     
+  */
   m_Corrections[knTbk                  ] = dEdxCorrection_t("TpcnTbk"             ,"Gain on cluster length i time buckets"				,St_TpcnTbkC::instance());		     
+  /*
   m_Corrections[kdZdY                  ] = dEdxCorrection_t("TpcdZdY"             ,"Gain on track dZ/dY"		  		                ,St_TpcdZdYC::instance());		     
   m_Corrections[kdXdY                  ] = dEdxCorrection_t("TpcdXdY"             ,"Gain on track dX/dY"				                ,St_TpcdXdYC::instance());		     
+  */
   m_Corrections[kTpcLast               ] = dEdxCorrection_t("Final"        	  ,""								        ,0);					     
   m_Corrections[kTpcLengthCorrection   ] = dEdxCorrection_t("TpcLengthCorrectionB"  ,"Variation vs Track length and relative error in Ionization"	,St_TpcLengthCorrectionBC::instance());     
   m_Corrections[kTpcLengthCorrectionMDF] = dEdxCorrection_t("TpcLengthCorrectionMDF","Variation vs Track length and <log2(dX)> and rel. error in dE/dx" ,St_TpcLengthCorrectionMDF::instance());         
@@ -262,7 +266,13 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   }
   // Check consistency of active chairs
   if ( m_Corrections[kzCorrectionC].Chair) { // if kzCorrectionC is already active
-    vector<Int_t> kvect = {kzCorrection, kGatingGrid};
+    vector<Int_t> kvect = {kzCorrection}; // , kGatingGrid};
+    // Check that kzCorrectionC has grid
+    const tpcCorrection_st *cor = ((St_tpcCorrection *) m_Corrections[kGatingGrid].Chair->Table())->GetTable();
+    Int_t np = TMath::Abs(cor->npar)%100;
+    if (cor && cor->nrows > 0 && cor->type == 20  && TMath::Abs(cor->a[np]) > 1e-7) {// extra exponent 
+      kvect.push_back(kGatingGrid);
+    }
     for (auto k : kvect) {
       if (m_Corrections[k].Chair) {
 	LOG_WARN << m_Corrections[kzCorrectionC].Name << " is already active => disable " << m_Corrections[k].Name << endm;
@@ -388,19 +398,16 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 #endif
 #endif  
   Double_t ZdriftDistance = CdEdx.ZdriftDistance;
-  Double_t driftDistance2GG = ZdriftDistance;
   ESector kTpcOutIn = kTpcOuter;
   Float_t gasGain = 1;
   Float_t gainNominal = 0;
   St_tss_tssparC *tsspar = St_tss_tssparC::instance();
   if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) {
     kTpcOutIn = kTpcInner;
-    driftDistance2GG += mInnerSectorzOffset;
     gainNominal = tsspar->gain_in()*tsspar->wire_coupling_in();
     gasGain = tsspar->gain_in(sector,row) *tsspar->wire_coupling_in();
   } else {
     kTpcOutIn = kTpcOuter;
-    driftDistance2GG += mOuterSectorzOffset;
     gainNominal = tsspar->gain_out()*tsspar->wire_coupling_out();
     gasGain = tsspar->gain_out(sector,row)*tsspar->wire_coupling_out();
   }
@@ -409,7 +416,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
     iok = 1;
     return iok;
   }
-  CdEdx.driftTime = driftDistance2GG/gStTpcDb->DriftVelocity(sector)*1e6 - m_TrigT0;// musec
+  CdEdx.driftTime = ZdriftDistance/gStTpcDb->DriftVelocity(sector)*1e6 - m_TrigT0;// musec
   //  Double_t gainAVcorr = gasGain/gainNominal;
   mAdc2GeV = tsspar->ave_ion_pot() * tsspar->scale()/gainNominal;
   Double_t Adc2GeVReal = tsspar->ave_ion_pot() * tsspar->scale()/gasGain;
@@ -452,6 +459,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
   VarXs[kEtaCorrectionB]       = CdEdx.etaG;
   Int_t NLoops = 0;
   Int_t m = 0;
+  Double_t Correction = 0;
   for (Int_t k = kUncorrected; k <= kTpcLast; k++) {
     Int_t l = 0;
     tpcCorrection_st *cor = 0;
@@ -469,7 +477,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       if (! table) goto ENDL;
       const TpcSecRowCor_st *gain = table->GetTable() + sector - 1;
       gc =  gain->GainScale[row-1];
-      //      gcRMS = gain->GainRms[row-1];
+      //      gcRMS = gain->GainRms[row-1];1
       //      if (gc <= 0.0 || gcRMS <= 0.0) {
       if (gc <= 0.0) {
 	return k;
@@ -542,18 +550,6 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
     } else if (k == kAdcCorrection6MDF) { 
       goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
     }
-#if 0
-    if (k == kGatingGrid)  {
-      // Take care about prompt hits and Gating Grid region in Simulation
-      if (ZdriftDistance <= 0.0) goto ENDL; // prompt hits 
-      Double_t dEcor = ((St_GatingGridC *)m_Corrections[k].Chair)->CalcCorrection(l,VarXs[kGatingGrid]);
-      if (dEcor < -9.9) {
-	return k;
-      }
-      dE *= TMath::Exp(-dEcor);
-      goto ENDL;
-    }
-#endif
     cor = ((St_tpcCorrection *) m_Corrections[k].Chair->Table())->GetTable();
     if (! cor) goto ENDL;
     NLoops = cor->type/100000 + 1;
@@ -636,8 +632,11 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 	    return k;
 	  }
 	}
-	if (VarXs[k] < 0) {// prompt hits
+	if (ZdriftDistance < -0.6) {// prompt hits after cathode wire plane 
 	  dE *= TMath::Exp(1.2);
+	  goto ENDL;
+	} else if (VarXs[k] < 0.0) {// hits after Gating Grid and before cathode wire plane 
+	  return k;
 	}
 	if (k == kzCorrectionC && corl->type == 20) {
 	  Int_t np = TMath::Abs(corl->npar)%100;
@@ -671,27 +670,18 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 	  return k;
 	}
       }
-    }
-    if (corl->npar%100) {
-      Double_t dECor = 0; 
-      if (k == kGatingGrid) {
-	dECor = TMath::Exp(-((St_GatingGridBC *)m_Corrections[k].Chair)->CalcCorrection(l,VarXs[k]));
-      } else {
-	dECor = TMath::Exp(-chairC->CalcCorrection(l,VarXs[k]));
+      if (corl->npar%100) {
+	Double_t dECor = 0; 
+	if (k == kGatingGrid) {
+	  if (ZdriftDistance < -0.6) goto ENDL; // prompt hits
+	  Correction = ((St_GatingGridBC *)m_Corrections[k].Chair)->CalcCorrection(l,VarXs[k]);
+	  if (Correction < -9) return k;
+	  dECor = TMath::Exp(-Correction);
+	} else {
+	  dECor = TMath::Exp(-chairC->CalcCorrection(l,VarXs[k]));
+	}
+	dE *= dECor;
       }
-#if 0
-      if (TMath::IsNaN(dECor)) {
-	static Int_t iBreak = 0;
-	iBreak++;
-      }
-#endif
-      dE *= dECor;
-#if 0
-      if (TMath::IsNaN(dE)) {
-	static Int_t iBreak = 0;
-	iBreak++;
-      }
-#endif
     } else  { // repeatable 
       for (m = 0; m < NLoops; m++, l += nrows) {
 	corl = cor + l;

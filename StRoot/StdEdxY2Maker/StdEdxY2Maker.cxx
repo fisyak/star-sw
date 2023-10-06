@@ -697,8 +697,8 @@ Int_t StdEdxY2Maker::Make(){
 	} 
 	if (fZOfGoodHits) fZOfGoodHits->Fill(tpcHit->position().z());
 	if (fPhiOfGoodHits!= 0) fPhiOfGoodHits->Fill(TMath::ATan2(tpcHit->position().y(),tpcHit->position().x()));
+	tpcHit->setCharge(CdEdx[NdEdx].F.dE);
 	if (NdEdx < kNdEdxMax) {
-	  tpcHit->setCharge(CdEdx[NdEdx].F.dE);
 	  TrackLength         += CdEdx[NdEdx].F.dx;
 	  NdEdx++; 
 	  NoOfTpcHitsUsed++; 	
