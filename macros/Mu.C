@@ -125,6 +125,12 @@ void Mu(Long64_t nevent = 9999999,
     hpT[s] = new TH1F(Form("pT%s",NameCharge[s]),Form("pT for %s",TitleCharge[s]),200,0,200);
     hpTES[s] = new TH3F(Form("pTES%s",NameCharge[s]),Form("pT and #eta versus sector for %s",TitleCharge[s]),24,0.5,24.5,200,0.,2.0,50,-2.5,2.5);
   }
+  TH2F *RZF = new TH2F("RZF","R vesus Z of the first global track point",210,-210,210,210,0,210);
+  RZF->SetXTitle("Z of first hit on global track");
+  RZF->SetYTitle("R of first hit on global track");
+  TH2F *RZL = new TH2F("RZL","R vesus Z of the last global track point",210,-210,210,210,0,210);
+  RZL->SetXTitle("Z of last hit on global track");
+  RZL->SetYTitle("R of last hit on global track");
 #endif
   StMuDebug::setLevel(0);  
   maker = new StMuDstMaker(0,0,"",file,filter,1e9);   // set up maker in read mode
@@ -182,6 +188,11 @@ void Mu(Long64_t nevent = 9999999,
 #if 0
       cout << *Vtx << endl;
 #endif
+      for (Int_t k = 0; k < NoGlobalTracks; k++) {
+	StMuTrack *gTrack = (StMuTrack *) GlobalTracks->UncheckedAt(k);
+	RZF->Fill(gTrack->firstPoint().z(), gTrack->firstPoint().perp());
+	RZL->Fill(gTrack->lastPoint().z(), gTrack->lastPoint().perp());
+      }
       for (Int_t k = 0; k < NoPrimaryTracks; k++) {
 	StMuTrack *pTrack = (StMuTrack *) PrimaryTracks->UncheckedAt(k);
 	if (! pTrack) continue;
