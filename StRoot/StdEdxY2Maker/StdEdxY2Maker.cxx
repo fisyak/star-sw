@@ -316,7 +316,6 @@ Int_t StdEdxY2Maker::Make(){
   if (pEvent->runInfo()) bField = pEvent->runInfo()->magneticField()*kilogauss;
   if (TMath::Abs(bField) < 1.e-5*kilogauss) return kStOK;
   UInt_t NoPV = pEvent->numberOfPrimaryVertices();
-  if (! NoPV)  return kStOK;
   StPrimaryVertex *pVbest = pEvent->primaryVertex();
 #ifdef __BEST_VERTEX__
   const StBTofCollection* tof = pEvent->btofCollection();

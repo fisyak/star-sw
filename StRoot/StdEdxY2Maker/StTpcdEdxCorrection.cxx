@@ -31,7 +31,6 @@
 #include "StDetectorDbMaker/St_tpcPressureBC.h"
 #include "StDetectorDbMaker/St_TpcDriftDistOxygenC.h"
 #include "StDetectorDbMaker/St_TpcMultiplicityC.h"
-#include "StDetectorDbMaker/St_GatingGridBC.h"
 #include "StDetectorDbMaker/St_TpcZCorrectionBC.h"
 #include "StDetectorDbMaker/St_TpcZCorrectionCC.h"
 #include "StDetectorDbMaker/St_tpcMethaneInC.h"
@@ -162,23 +161,30 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   */
   m_Corrections[kAdcCorrection6MDF     ] = dEdxCorrection_t("TpcAdcCorrection6MDF","alternative ADC/Clustering nonlinearity correction MDF+4D"		,St_TpcAdcCorrection6MDF::instance());	     
   m_Corrections[kTpcdCharge            ] = dEdxCorrection_t("TpcdCharge"          ,"ADC/Clustering undershoot correction"				,St_TpcdChargeC::instance());		     
+  /*
   m_Corrections[kTpcrCharge            ] = dEdxCorrection_t("TpcrCharge"          ,"ADC/Clustering rounding correction"					,St_TpcrChargeC::instance());		     
+  */
   m_Corrections[kTpcCurrentCorrection  ] = dEdxCorrection_t("TpcCurrentCorrection","Correction due to sagg of Voltage due to anode current"		,St_TpcCurrentCorrectionC::instance());     
   m_Corrections[kTpcRowQ               ] = dEdxCorrection_t("TpcRowQ"             ,"Gas gain correction for row versus accumulated charge,"             ,St_TpcRowQC::instance());
   m_Corrections[kTpcAccumulatedQ       ] = dEdxCorrection_t("TpcAccumulatedQ"     ,"Gas gain correction for HV channel versus accumulated charge,"      ,St_TpcAccumulatedQC::instance());
   m_Corrections[kTpcSecRowB            ] = dEdxCorrection_t("TpcSecRowB"          ,"Gas gain correction for sector/row"					,St_TpcSecRowBC::instance());		     
+  /*
   m_Corrections[kTpcSecRowC            ] = dEdxCorrection_t("TpcSecRowC"          ,"Additional Gas gain correction for sector/row"			,St_TpcSecRowCC::instance());		     
+  */
   m_Corrections[ktpcPressure           ] = dEdxCorrection_t("tpcPressureB"        ,"Gain on Gas Density due to Pressure"			        ,St_tpcPressureBC::instance());	     
   m_Corrections[ktpcTime               ] = dEdxCorrection_t("tpcTime"       	  ,"Unregognized time dependce"						,St_tpcTimeDependenceC::instance()); 
   m_Corrections[kDrift                 ] = dEdxCorrection_t("TpcDriftDistOxygen"  ,"Correction for Electron Attachment due to O2"			,St_TpcDriftDistOxygenC::instance());	     
   m_Corrections[kMultiplicity          ] = dEdxCorrection_t("TpcMultiplicity"     ,"Global track multiplicity dependence"				,St_TpcMultiplicityC::instance());	     
-  m_Corrections[kGatingGrid            ] = dEdxCorrection_t("GatingGrid"          ,"Variation due to Gating Grid transperancy"				,St_GatingGridBC::instance());	     
   m_Corrections[kzCorrectionC          ] = dEdxCorrection_t("TpcZCorrectionC"     ,"Variation on drift distance with Gating Grid one"			,St_TpcZCorrectionCC::instance());	     
   m_Corrections[kzCorrection           ] = dEdxCorrection_t("TpcZCorrectionB"     ,"Variation on drift distance without Gating Gird one"		,St_TpcZCorrectionBC::instance());	     
+  /*  Deactivated
   m_Corrections[ktpcMethaneIn          ] = dEdxCorrection_t("tpcMethaneIn"        ,"Gain on Methane content"					        ,St_tpcMethaneInC::instance());	     
+  */
   m_Corrections[ktpcGasTemperature     ] = dEdxCorrection_t("tpcGasTemperature"   ,"Gain on Gas Dens. due to Output (T5) Temperature"			,St_tpcGasTemperatureC::instance());	         
+  /* Deactivated
   m_Corrections[ktpcWaterOut           ] = dEdxCorrection_t("tpcWaterOut"         ,"Gain on Water content"					        ,St_tpcWaterOutC::instance());		     
   m_Corrections[kSpaceCharge           ] = dEdxCorrection_t("TpcSpaceCharge"      ,"Gain on space charge near the wire"			                ,St_TpcSpaceChargeC::instance());	     
+  */
   m_Corrections[kPhiDirection          ] = dEdxCorrection_t("TpcPhiDirection"     ,"Gain on interception angle"				                ,St_TpcPhiDirectionC::instance());	     
   m_Corrections[kTanL                  ] = dEdxCorrection_t("TpcTanL"             ,"Gain on Tan(lambda)"					        ,St_TpcTanLC::instance());		     
   m_Corrections[kdXCorrection          ] = dEdxCorrection_t("TpcdXCorrectionB"    ,"dX correction"							,St_TpcdXCorrectionBC::instance());	     
@@ -267,12 +273,6 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   // Check consistency of active chairs
   if ( m_Corrections[kzCorrectionC].Chair) { // if kzCorrectionC is already active
     vector<Int_t> kvect = {kzCorrection}; // , kGatingGrid};
-    // Check that kzCorrectionC has grid
-    const tpcCorrection_st *cor = ((St_tpcCorrection *) m_Corrections[kGatingGrid].Chair->Table())->GetTable();
-    Int_t np = TMath::Abs(cor->npar)%100;
-    if (cor && cor->nrows > 0 && cor->type == 20  && TMath::Abs(cor->a[np]) > 1e-7) {// extra exponent 
-      kvect.push_back(kGatingGrid);
-    }
     for (auto k : kvect) {
       if (m_Corrections[k].Chair) {
 	LOG_WARN << m_Corrections[kzCorrectionC].Name << " is already active => disable " << m_Corrections[k].Name << endm;
@@ -459,7 +459,6 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
   VarXs[kEtaCorrectionB]       = CdEdx.etaG;
   Int_t NLoops = 0;
   Int_t m = 0;
-  Double_t Correction = 0;
   for (Int_t k = kUncorrected; k <= kTpcLast; k++) {
     Int_t l = 0;
     tpcCorrection_st *cor = 0;
@@ -671,15 +670,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 	}
       }
       if (corl->npar%100) {
-	Double_t dECor = 0; 
-	if (k == kGatingGrid) {
-	  if (ZdriftDistance < -0.6) goto ENDL; // prompt hits
-	  Correction = ((St_GatingGridBC *)m_Corrections[k].Chair)->CalcCorrection(l,VarXs[k]);
-	  if (Correction < -9) return k;
-	  dECor = TMath::Exp(-Correction);
-	} else {
-	  dECor = TMath::Exp(-chairC->CalcCorrection(l,VarXs[k]));
-	}
+	Double_t dECor = TMath::Exp(-chairC->CalcCorrection(l,VarXs[k]));
 	dE *= dECor;
       }
     } else  { // repeatable 
