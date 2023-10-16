@@ -572,7 +572,7 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
     }
   }
   McRcHit = (TH2F *)   dirs[1]->Get("McRcHit");
-  if (! McRcHit) McRcHit = new TH2F("McRcHit","No. RC hits in TPC versus No. MC ones",80,-0.5,79.5,80,-0.5,79.5);
+  if (! McRcHit) McRcHit = new TH2F("McRcHit","No. RC hits in TPC versus No. MC ones",80,-0.5,79.5,120,-0.5,119.5);
   
   hdEdX = (TH2F *)   dirs[1]->Get("hdEdX");
   if (! hdEdX) hdEdX = new TH2F("hdEdX", "hdEdX", 1000, 0, 5, 1000, 0, 10);
