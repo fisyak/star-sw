@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcAnodeHVavg_Table.h"
+#endif
 
 TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_tpcAnodeHVavg")) return 0;

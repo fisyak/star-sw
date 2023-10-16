@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_emc_egrid_par_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

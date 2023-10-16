@@ -529,8 +529,8 @@ void TpcPrompt(Int_t Nevents = 1000000,
   for (Int_t ev = 0; ev < Nevents; ev++) {
     Int_t iMake = chain->MakeEvent();
     if (iMake%10 == kStEOF || iMake%10==kStFatal)	break;
-    StAnalysisMaker::PrintTpcHits(0,0,2);
-    //    StAnalysisMaker::PrintTpcHits(0,0,1);
+    //    StAnalysisMaker::PrintTpcHits(0,0,2);
+    StAnalysisMaker::PrintTpcHits(0,0,1);
   }
 }
 #endif 

@@ -117,7 +117,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"y2012c",      20111215,     3, "y2012c",   "y2012 geometry, now with MTD, Extended Cave and tunnel, new TPC,xgeometry"},
   {"r2012",       20111220,     0, "y2012c",   "y2012 geometry, now with MTD, Extended Cave and tunnel, new TPC,xgeometry"},
 
-//{"y2013",       20121215,     0, "y2013_1", "y2013 first cut geometry,AgML,xgeometry"},
+  {"y2013",       20121215,     0, "y2013_1", "y2013 first cut geometry,AgML,xgeometry"},
 //{"y2013_1",     20121215,     1, "y2013_1", "y2013 first cut geometry with pixel,AgML,xgeometry"},
 //{"y2013_2",     20121215,  1001, "y2013_2", "y2013 first cut geometry sans pixel,AgML,xgeometry"},
 
@@ -221,7 +221,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"4p59GeV_fixedTarget_2019",               20190629,  32834, "y2019", "4p59GeV_fixedTarget_2019"  },
   {"9p2GeV_2019b",                           20190702, 144151, "y2019", "9p2GeV_2019"               },
   {"31GeV_fixedTarget_2019",                 20190709,  32312, "y2019", "31GeV_fixedTarget_2019"    },
-  {"AuAu200_2019",                           20190710, 110157, "y2019", "AuAu200_2019"              },
+  {"AuAu200GeV_2019",                        20190710, 110157, "y2019", "AuAu200GeV_2019"           },
   {"9p2GeV_2019",                            20190715,  85141, "y2019", "9p2GeV_2019"               },
   {"11p5GeV_2020",                           20191208,  91308, "y2019", "11p5GeV_2020"              },
   {"5p75GeV_fixedTarget_2020",               20191221, 154021, "y2019", "5p75GeV_fixedTarget_2020"  },
@@ -289,6 +289,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"pp500_2022c",                            20220305,  42126, "y2019", "pp500_2022"                },
   {"zeroFieldAligment_2022",                 20220313,  51859, "y2019", "zeroFieldAligment_2022"    },
   {"pp500_2022d",                            20220313, 141508, "y2019", "pp500_2022"                },
+  {"AuAu_2023",                              20230520,  23250, "y2019", "AuAu_2023"                 },
   {0,                    0,     0,        0,    0}
 };
 #endif /*  __GeometryDbAliases__ */

@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_emc_calib_header_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

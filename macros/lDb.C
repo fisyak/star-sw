@@ -18,6 +18,6 @@ void lDb(const Char_t *date = 0, Int_t N = -1) {
   gROOT->LoadMacro("bfc.C");
 #endif
   TString Chain("mysql,tpcDb,detDb,magF,TpcHitMover,CorrY,LaserIT,nodefault");
-  if (date) {Chain += ","; Chain += date;}
+  if (date) {Chain += ",simu,"; Chain += date;}
   bfc(N,Chain.Data());
 }

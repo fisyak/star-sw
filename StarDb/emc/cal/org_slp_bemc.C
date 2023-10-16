@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_emc_adcslope_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

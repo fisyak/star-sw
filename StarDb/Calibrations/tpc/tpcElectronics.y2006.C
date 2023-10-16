@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcElectronics_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   if (!TClass::GetClass("St_tpcElectronics")) return 0;

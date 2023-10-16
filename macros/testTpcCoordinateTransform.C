@@ -1,37 +1,8 @@
-class StChain;
-class St_db_Maker;
-St_db_Maker *dbMk = 0;
-class TTable;
-TTable *table = 0;
+/*
+  root.exe 'lDb.C("r2019",0)'  testTpcCoordinateTransform.C
+*/
 class StTpcCoordinateTransform;
 StTpcCoordinateTransform *transform = 0;
-//________________________________________________________________________________
-void Load() {
-  if (gClassTable->GetID("TTable") < 0) {
-    gSystem->Load("libTable");
-  }
-#if 1
-  if (gClassTable->GetID("StDbManager") < 0) {
-    gROOT->LoadMacro("bfc.C");
-    TString Chain("r2019,db,tpcDb,mysql,NoDefault");
-    bfc(-1,Chain.Data(),0,0,0);
-    dbMk = (St_db_Maker *)chain->GetMaker("db");
-    dbMk->SetDebug(1);
-    dbMk->SetFlavor("ofl+sim");
-  }
-#else
-  // rootmap version
-  gSystem->Load("libSt_base");
-  gSystem->Load("libStChain");
-  gSystem->Load("libStUtilities");
-  StChain *chain = new StChain();
-  St_db_Maker *dbMk = new St_db_Maker("db","MySQL:StarDb","$STAR/StarDb","$PWD/StarDb");
-  StTpcDbMaker *tpcDb = new StTpcDbMaker();
-  dbMk->SetDebug(1);
-  dbMk->SetFlavor("ofl+sim");
-#endif
-}
-
 //________________________________________________________________________________
 void Print(Int_t sector = 1, Int_t row = 24, Int_t pad = 1, Int_t time = 1, 
 	   Double_t rx=0, Double_t ry=1, Double_t rz=0) {
@@ -74,9 +45,11 @@ void PrintPad(Int_t sector = 3, Int_t row = 24, Int_t pad = 1, Int_t time = 0) {
   StTpcLocalSectorCoordinate  coorLS;
   StTpcLocalSectorCoordinate  coorLST;
   StTpcLocalSectorCoordinate  coorLSF;
-  transform->operator()(coorP,coorLS ,kFALSE, kTRUE);  cout << "Cluster without T0, with    tau\t" << coorLS << endl;
+  StGlobalCoordinate   coorG;
+  transform->operator()(coorP,coorLS ,kFALSE, kTRUE);  cout << "Cluster without T0, with    tau\t" << coorLS  << endl;
   transform->operator()(coorP,coorLST,kFALSE,kFALSE);  cout << "Pixel   with    T0, without tau\t" << coorLST << endl;
-  transform->operator()(coorP,coorLST, kTRUE,kFALSE);  cout << "Pixel   withot  T0, without tau\t" << coorLST << endl;
+  transform->operator()(coorP,coorLST, kTRUE,kFALSE);  cout << "Pixel   without T0, without tau\t" << coorLST << endl;
+  transform->operator()(coorP,coorG, kTRUE,kFALSE);    cout << "Pixel   without T0, without tau\t" << coorG   << endl;
 }
 //________________________________________________________________________________
 void PrintXYZ(Double_t x = 59.3696, Double_t y = 0.871471, Double_t z = 208.707) {
@@ -88,15 +61,34 @@ void PrintXYZ(Double_t x = 59.3696, Double_t y = 0.871471, Double_t z = 208.707)
   transform->operator()(coorL,coorLS);  cout << "Cluster without T0, with    tau\t" << coorLS << endl;
 }
 //________________________________________________________________________________
-void testTpcCoordinateTransform(Int_t d = 20190307, Int_t t = 54036) {
-  if (dbMk == 0) Load();
-  dbMk->SetDateTime(d,t); 
-  chain->Init();
-  chain->Make();
-  if (! gStTpcDb) return;
-  transform = new StTpcCoordinateTransform(gStTpcDb);
+void testTpcCoordinateTransform() {
+  //  if (dbMk == 0) Load(d,t);
+  StTpcDb::instance()->SetDriftVelocity();
+  StTpcDb::instance()->SetTpcRotations();
+  transform = new StTpcCoordinateTransform(StTpcDb::instance());
   Int_t sector = 12;
   Int_t row    = 45;
   //  Print(sector,row);
   PrintPad(3,24);
+}
+//________________________________________________________________________________
+void testDerivatives() {
+  //  if (dbMk == 0)  Load(d,t);
+  StTpcDb::instance()->SetDriftVelocity();
+  StTpcDb::instance()->SetTpcRotations();
+  transform = new StTpcCoordinateTransform(StTpcDb::instance());
+  Double_t pad = 10, dpad = 0.5;
+  Double_t  time = 100, dtime = 0.5;
+  Int_t row = 45;
+  StTpcLocalCoordinate   coorG, coorGd;
+  for (Int_t sector = 1; sector <= 24; sector++) {
+    StTpcPadCoordinate coorP(sector, row, pad, time);             cout << "coorP " << coorP  << endl;
+    transform->operator()(coorP,coorG, kTRUE,kFALSE);             cout << "coorG " << coorG  << endl;
+    StTpcPadCoordinate coorP(sector, row, pad+dpad, time+dtime);  cout << "coorPd" << coorP  << endl;
+    transform->operator()(coorP,coorGd, kTRUE,kFALSE);            cout << "coorGd" << coorGd << endl;
+    Double_t dX = (coorGd.position().x() - coorG.position().x())/dpad;
+    Double_t dY = (coorGd.position().y() - coorG.position().y())/dpad;
+    Double_t dZ = (coorGd.position().z() - coorG.position().z())/dtime;
+    cout << "sector = " << sector << "\tdX = " << dX << "\tdY = " << dY << "\tdZ = " << dZ << endl;
+  }
 }

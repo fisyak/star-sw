@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tcl_tpc_index_type_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

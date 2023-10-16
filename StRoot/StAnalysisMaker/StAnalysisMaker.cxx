@@ -312,7 +312,7 @@ void StAnalysisMaker::PrintVertex(Int_t ivx) {
 //________________________________________________________________________________
 void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t IdTruth) {
   // plot = 1 => All hits;
-  // plot = 2 => prompt hits only |z| > 190
+  // plot = 2 => prompt hits only |z| > 175
   struct BPoint_t {
     Int_t    sector, row, rdo;
     Float_t  x,y,z,q,adc,pad,timebucket,IdTruth,npads,ntbks,xL,yL,zL,dX;
@@ -397,7 +397,7 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 		else {
 		  if (Nt) {
 		    const StThreeVectorF& xyz = tpcHit->position();
-		    if (plot == 2 && (TMath::Abs(xyz.z()) > 15.0) && TMath::Abs(xyz.z()) < 190.0) continue;
+		    if (plot == 2 && (TMath::Abs(xyz.z()) > 25.0) && TMath::Abs(xyz.z()) < 175.0) continue;
 #ifdef __TPC_LOCAL_COORDINATES__
 		    StTpcCoordinateTransform tran;
 		    StGlobalCoordinate glob(xyz);

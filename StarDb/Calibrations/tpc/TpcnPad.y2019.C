@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcCorrection_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   if (!gROOT->GetClass("St_tpcCorrection")) return 0;
