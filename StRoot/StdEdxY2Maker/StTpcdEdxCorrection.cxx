@@ -197,9 +197,9 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kTpcPadMDC             ] = dEdxCorrection_t("TpcPadCorrectionMDC" ,"Gain Variation along the anode wire with track curvature"           ,St_TpcPadCorrectionMDC::instance());         
   /*
   m_Corrections[kAdcI                  ] = dEdxCorrection_t("TpcAdcI"             ,"Gain on Accumulated Adc on a socket)"			        ,St_TpcAdcIC::instance());		     
-  m_Corrections[knPad                  ] = dEdxCorrection_t("TpcnPad"             ,"Gain on cluster length in pads"					,St_TpcnPadC::instance());		     
   */
-  m_Corrections[knTbk                  ] = dEdxCorrection_t("TpcnTbk"             ,"Gain on cluster length i time buckets"				,St_TpcnTbkC::instance());		     
+  m_Corrections[knPad                  ] = dEdxCorrection_t("TpcnPad"             ,"Gain on cluster length in pads"					,St_TpcnPadC::instance());		     
+  m_Corrections[knTbk                  ] = dEdxCorrection_t("TpcnTbk"             ,"Gain on cluster length in  time buckets"				,St_TpcnTbkC::instance());		     
   /*
   m_Corrections[kdZdY                  ] = dEdxCorrection_t("TpcdZdY"             ,"Gain on track dZ/dY"		  		                ,St_TpcdZdYC::instance());		     
   m_Corrections[kdXdY                  ] = dEdxCorrection_t("TpcdXdY"             ,"Gain on track dX/dY"				                ,St_TpcdXdYC::instance());		     
