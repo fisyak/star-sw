@@ -12,12 +12,7 @@ class St_starTriggerDelayC : public TChair {
   Float_t 	clocks(Int_t i = 0) 	const {return Struct(i)->clocks;}
   Float_t 	tZero(Int_t i = 0) 	const {return Struct(i)->tZero;}
   Float_t       TrigT0(Int_t i = 0)     const; // usec
-  Float_t       TrigT0GG(Int_t io = 0, Int_t i = 0)   const {
-    Float_t delay = TrigT0(i) + 0.236; // usec add Gating Grid cable length ~40 m
-    if (io == 0) delay += -.877*1.06383193753263966e-01; // Inner
-    else         delay += -.448*1.06383193753263966e-01; // Outer
-    return delay;
-  } 
+  Float_t       TrigT0GG(Int_t io = 0, Int_t i = 0)   const; // usec add cables 
  protected:
   St_starTriggerDelayC(St_starTriggerDelay *table=0) : TChair(table) {}
   virtual ~St_starTriggerDelayC() {if (Table()->IsMarked()) delete GetThisTable(); fgInstance = 0;}
