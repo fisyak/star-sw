@@ -2393,15 +2393,6 @@ Float_t St_starTriggerDelayC::TrigT0GG(Int_t io, Int_t i)   const {
   delay += 0.150; // length 30 m, delay 150ns for both Inner and Outer sectors, measured by A.Lebedev 10/13/2023
   if (! io) delay += -0.123;
   else      delay += -0.502;
-#if 0
-  delay += 0.104;
-  if (! io) delay += 0.14270;// 1.06383193753263966e-01
-  else      delay += -.25964;; // 0.18834;
-#if 0
-  if (io == 0) delay += 0.236 -.877*1.06383193753263966e-01; // Inner
-  else         delay += 0.236 -.448*1.06383193753263966e-01; // Outer
-#endif
-#endif
   return delay;
 }
 //__________________Calibrations/trg______________________________________________________________
