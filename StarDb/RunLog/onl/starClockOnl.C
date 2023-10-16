@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_starClockOnl_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   if (!TClass::GetClass("St_starClockOnl")) return 0;

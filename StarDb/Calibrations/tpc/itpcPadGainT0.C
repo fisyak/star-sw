@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_itpcPadGainT0_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   if (!gROOT->GetClass("St_itpcPadGainT0")) return 0;

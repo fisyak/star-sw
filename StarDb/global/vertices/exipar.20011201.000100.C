@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_exi_exipar_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_ctg_slat_eta_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

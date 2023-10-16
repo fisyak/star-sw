@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_cts_mpara_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

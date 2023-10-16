@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcSlewing_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   if (!TClass::GetClass("St_tpcSlewing")) return 0;

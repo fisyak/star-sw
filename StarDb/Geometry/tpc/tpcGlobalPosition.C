@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcGlobalPosition_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   if (!TClass::GetClass("St_tpcGlobalPosition")) return 0;

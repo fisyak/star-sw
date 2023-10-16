@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_svg_config_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

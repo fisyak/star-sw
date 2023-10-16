@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_ev0_ev0par2_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tfc_fmtpar_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

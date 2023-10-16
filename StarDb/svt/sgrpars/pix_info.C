@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_sgr_pixmap_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

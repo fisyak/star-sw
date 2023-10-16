@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcAvCurrent_Table.h"
+#endif
 
 TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_tpcAvCurrent")) return 0;
