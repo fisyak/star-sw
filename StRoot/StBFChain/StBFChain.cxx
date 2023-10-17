@@ -584,12 +584,7 @@ Int_t StBFChain::Instantiate()
     if (maker == "StxMaker" && GetOption("StxCA")) {
       mk->SetAttr("Undefined", kTRUE); // switch off Fit
     }
-    if (maker == "StiMaker" || maker == "StvMaker" || maker == "StxMaker") {
-      if ( maker == "StvMaker" &&  GetOption("StvCA")) {
-	//      mk->SetAttr("seedFinders","CA","Stv");              // for CA seed finder
-	mk->SetAttr("seedFinders","CA,Default","Stv");      // for CA + Default seed finders
-      }
-      
+    if (maker == "StiMaker" || maker == "StxMaker") {
       // When StiCA library is requested CA will be used as seed finder in StiMaker
       if ( GetOption("StiCA") ) {
 	mk->SetAttr("seedFinders", "CA DEF");
@@ -669,8 +664,7 @@ Int_t StBFChain::Instantiate()
 	mk->SetAttr("activeBTof" ,kTRUE);
       }
       
-      if (GetOption("StiPulls") || 
-	  GetOption("StvPulls"))  mk->SetAttr("makePulls"  ,kTRUE);
+      if (GetOption("StiPulls"))  mk->SetAttr("makePulls"  ,kTRUE);
       if (GetOption("skip1row"))  mk->SetAttr("skip1row"   ,kTRUE);
       if (GetOption("EastOff"))   mk->SetAttr("EastOff"    ,kTRUE);
       if (GetOption("WestOff"))   mk->SetAttr("WestOff"    ,kTRUE);
@@ -686,14 +680,14 @@ Int_t StBFChain::Instantiate()
     //		Sti(ITTF) end
     if (maker=="StGenericVertexMaker") {
       // VertexFinder methods
-      if (GetOption("Sti") || GetOption("StiCA") || GetOption("Stv") || 
+      if (GetOption("Sti") || GetOption("StiCA") || 
 	  GetOption("Stx")         ) mk->SetAttr("ITTF"         , kTRUE);
       if (GetOption("VFMinuit"   ) ) mk->SetAttr("VFMinuit"   	, kTRUE);
       if (GetOption("VFMinuitX"  ) ) mk->SetAttr("VFMinuitX"  	, kTRUE);
       if (GetOption("VFppLMV"    ) ) mk->SetAttr("VFppLMV"    	, kTRUE);
       if (GetOption("VFppLMV5"   ) ) mk->SetAttr("VFppLMV5"   	, kTRUE);
       if (GetOption("VFPPV"      ) ) mk->SetAttr("VFPPV"      	, kTRUE);
-      if ((GetOption("VFPPV") && GetOption("Stv")) || GetOption("VFPPVEv") ) {
+      if (GetOption("VFPPVEv") ) {
 	gSystem->Load("StBTofUtil.so");
 	mk->SetAttr("VFPPVEv"      , kTRUE);
       } else if (GetOption("VFPPV") && GetOption("Sti")) mk->SetAttr(    "VFPPV", kTRUE);
@@ -1127,8 +1121,6 @@ Int_t StBFChain::Instantiate()
   
   if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"Sti");
   if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"StiCA");
-  if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"Stv");
-  if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"Stx");
   
   gMessMgr->QAInfo() << "+++ Setting attribute " << Gproperty.Data() << " = " << Gvalue.Data() << endm;
   SetAttr(Gproperty.Data(),Gvalue.Data(),Gpattern.Data());
@@ -1180,7 +1172,6 @@ Int_t StBFChain::Init() {
     // force load of geometry for VMC and Sti
     
     if (GetOption("Sti") || GetOption("StiCA") || 
-	GetOption("Stv") || 
 	GetOption("Stx") || 
 	GetOption("VMC") || 
 	GetOption("VMCPassive")) {
@@ -1740,7 +1731,7 @@ void StBFChain::SetFlags(const Char_t *Chain)
 	gMessMgr->Error() << "Option ntin cannot be used in root.exe. Use root4star" << endm;
 	abort();
       }
-      if (! (GetOption("Stv") || GetOption("Stx") )) {
+      if (! (GetOption("Stx") )) {
 	if (GetOption("gstar") || GetOption("pythia")) {
 	  SetOption("VMC","Default,-TGiant3,gstar");
 	  SetOption("-gstar","Default,-TGiant3");
@@ -1765,20 +1756,10 @@ void StBFChain::SetFlags(const Char_t *Chain)
       //yf	SetOption("minicern","Default,-TGiant3");
       //      if (GetOption("Stx") && ! GetOption("simu")) SetOption("VmcPassive","Stx,-simu");
     }
-    if (GetOption("ITTF") && ! (GetOption("Sti") || GetOption("StiCA")  || GetOption("Stv") || 
-				GetOption("Stx"))) {
+    if (GetOption("ITTF") && ! (GetOption("Sti") || GetOption("StiCA") || GetOption("Stx"))) {
       TString STAR_LEVEL(gSystem->Getenv("STAR_LEVEL"));
       if (STAR_LEVEL == ".DEV2")  SetOption("StiCA","Default,ITTF");
       else                        SetOption("Sti"  ,"Default,ITTF");
-    }  
-    if (GetOption("Stv")) {
-      SetOption("-TpcIT","Default,Stv");
-      SetOption("-SvtIT","Default,Stv");
-      SetOption("-SsdIT","Default,Stv");
-      SetOption("-HpdIT","Default,Stv");
-      SetOption("-BTofIT","Default,Stv");
-      SetOption("-PxlIT","Default,Stv");
-      SetOption("-IstIT","Default,Stv");
     }  
 #if 0
     if (TString(SAttr("GeneratorFile")) != "") {
