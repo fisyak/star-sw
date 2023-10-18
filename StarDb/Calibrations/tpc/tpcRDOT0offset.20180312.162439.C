@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcRDOT0offset_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   // ------  Test whether this table share library was loaded ------

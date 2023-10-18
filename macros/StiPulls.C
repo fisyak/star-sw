@@ -277,7 +277,7 @@ void StiTpcPulls() {
   fOut->Write();  
 }
 //________________________________________________________________________________
-void StiPulls(Int_t NoEvents = 99999999, const Char_t *files = "*.stipull.root") {
+void StiPulls(Int_t NoEvents = 99999999, const Char_t *files = "*.root") {
   if (gClassTable->GetID("StiPullEvent") < 0) {gSystem->Load("StiUtilities");}
 #if 0
   tree = (TTree *) gDirectory->Get("StiPulls");

@@ -9,16 +9,17 @@
 //////////////////////////////////////////////////////////////////////////
 class StBFChain;        
 class StMessMgr;
-#if !defined(__CINT__) || defined(__MAKECINT__)
-#include "St_base/Stiostream.h"
-
 #if defined(__CLING__)
 #pragma cling load("StarRoot")
 #pragma cling load("St_base")
 #pragma cling load("StChain")
 #pragma cling load("StUtilities")
 #pragma cling load("StBFChain")
+#include "Rtypes.h"
+#include "Ttypes.h"
 #endif /* __CLING__ */
+
+#if !(defined(__CINT__) || defined(__CLING__)) || defined(__MAKECINT__)
 
 #include "Stiostream.h"
 #include "TSystem.h"
@@ -31,7 +32,6 @@ class StMessMgr;
 #include "StarRoot/TAttr.h"
 #include "TROOT.h"
 #include "TAttr.h"
-#include "Rtypes.h"
 #endif
 
 #if !defined(__CINT__) || defined(__CLING__)
@@ -91,7 +91,8 @@ void Load(const Char_t *options="");
 //TString defChain("MC.2019,StiCA,20Muons,vmc,Rung.1"); //,AgML");
 //TString defChain("MC.2019,StiCA,20Muons,vmc,Rung.1,dEdxCalib,McTpcAna"); //,AgML");
 //TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib"); //,AgML");
-TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
+//TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
+TString defChain("MC.2021,3p85GeV_fixedTarget_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
 		const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
 StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,

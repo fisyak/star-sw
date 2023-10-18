@@ -2162,8 +2162,8 @@ void StBFChain::SetDbOptions(StMaker *mk){
 	Int_t map = 2;
 	if (GetOption("ConstantField")) map = 1;
 	TString cmd =
-	  Form("if (!StarMagField::Instance()) new StarMagField(%i, %f, kTRUE);",
-	       map, FieldOptions[k].scale);
+	  Form("if (!StarMagField::Instance()) new StarMagField( StarMagField::EBField::kMapped, %f, kTRUE);",
+	       FieldOptions[k].scale);
 	ProcessLine(cmd);
 	if (GetOption("ConstBz")) {cmd = "StarMagField::Instance()->setConstBz(kTRUE);"; ProcessLine(cmd);}
       }

@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_TpcResponseSimulator_Table.h"
+#endif
 
 // $Id: TpcResponseSimulator.20180531.071410.C,v 1.1 2021/05/10 21:02:56 fisyak Exp $
 // $Log: TpcResponseSimulator.20180531.071410.C,v $

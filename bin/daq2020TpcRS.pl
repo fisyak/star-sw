@@ -3,6 +3,9 @@ use File::Basename;
 use Cwd;
 use Env;
 my $debug = 0;
+if ($#ARGV >= 0) {
+  $debug = $ARGV[0];
+}
 my $pwd = cwd();
 #my $Trigger =  File::Basename::basename($pwd); $Trigger =~ s/daq_//;
 #my $Trigger =  File::Basename::basename($pwd); $Trigger =~ s/TpcRS_/daq_/; $Trigger =~ s/\..*//; print "Trigger = $Trigger\n" if ($debug);

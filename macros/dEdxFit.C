@@ -1364,7 +1364,6 @@ TH2F *ProjectX(TH3F *hist, const Char_t *Name="_yz",const Int_t binx1=0,const In
 } 
 //________________________________________________________________________________
 Double_t funFreq(Double_t *x, Double_t *par) {
-  Double_t value = 0;
   return par[3] + TMath::Exp(par[0])*TMath::Freq(-(x[0]-par[1])*par[2]);
 }
 //________________________________________________________________________________
@@ -1377,6 +1376,25 @@ TF1 *FunFreq() {
     f->SetParLimits(0,-10,20);
     f->SetParLimits(1,-1000,1000);
     //    f->SetParLimits(2,0,10);
+  }
+  return f;
+}
+//________________________________________________________________________________
+Double_t funPstep(Double_t *x, Double_t *par) {
+  Double_t value = par[3];
+  if (par[2] > 0) {
+    Double_t t = (x[0] - par[1])/par[2];
+    if (t > 0) value += TMath::Exp(par[0])*(1 - TMath::Exp(-t));
+  }
+  return value;
+}
+//________________________________________________________________________________
+TF1 *FunPStep() {
+  TF1 *f = (TF1*) gROOT->GetFunction("FunPstep");
+  if (! f) {
+    f = new TF1("FunPstep",funPstep,-1000,1000,4);
+    f->SetParNames("NormL","t_{0}","#tau","grass");
+    f->SetParameters(0,26,1.,0);
   }
   return f;
 }

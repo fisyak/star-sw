@@ -563,13 +563,19 @@ Double_t St_GatingGridC::CalcCorrection(Int_t i, Double_t x) {// drift time in m
 MakeChairInstance2(tpcCorrection,St_GatingGridBC,Calibrations/tpc/GatingGridB);
 //________________________________________________________________________________
 Double_t St_GatingGridBC::CalcCorrection(Int_t i, Double_t x) {// drift time in microseconds
-  Double_t value = -10;
-  if (x <= t0(i)) return value;
-  Double_t corD = 1. - TMath::Exp(-(x-t0(i))/(settingTime(i)/4.6));
-  if (corD < 1e-4) return value;
-  return TMath::Log(corD);
+  const tpcCorrection_st *s = Struct(i);
+  Double_t T0 = s->a[0];
+  Double_t SettingTime = s->a[1];
+  //  Double_t tau = (x-t0(i))/(settingTime(i)/4.6);
+  Double_t tau = (x - T0)/(SettingTime/4.6);
+  if (tau >  10) return   0;
+  if (tau >  0) {
+    Double_t corD = 1. - TMath::Exp(-tau);
+    return TMath::Log(corD);
+  } else {
+    return -10;
+  }
 }
-
 #include "St_TpcCurrentCorrectionC.h"
 //MakeChairInstance2(tpcCorrection,St_TpcCurrentCorrectionC,Calibrations/tpc/TpcCurrentCorrection);
 ClassImp(St_TpcCurrentCorrectionC);
@@ -2377,6 +2383,18 @@ Double_t St_tpcT0BXC::getT0(Double_t values[7]) const { // xxxEarliestTDC (W+E)/
 }
 #include "St_starTriggerDelayC.h"
 MakeChairOptionalInstance2(starTriggerDelay,St_starTriggerDelayC,Calibrations/tpc/starTriggerDelay);
+//________________________________________________________________________________
+Float_t St_starTriggerDelayC::TrigT0(Int_t i) const {
+  return clocks(i)/(1e-6*St_starClockOnlC::instance()->CurrentFrequency()) + tZero(i);
+}
+//________________________________________________________________________________
+Float_t St_starTriggerDelayC::TrigT0GG(Int_t io, Int_t i)   const {
+  Float_t delay = TrigT0(i); // usec add Gating Grid cable 
+  delay += 0.150; // length 30 m, delay 150ns for both Inner and Outer sectors, measured by A.Lebedev 10/13/2023
+  if (! io) delay += -0.123;
+  else      delay += -0.502;
+  return delay;
+}
 //__________________Calibrations/trg______________________________________________________________
 #include "St_defaultTrgLvlC.h"
 MakeChairInstance(defaultTrgLvl,Calibrations/trg/defaultTrgLvl);

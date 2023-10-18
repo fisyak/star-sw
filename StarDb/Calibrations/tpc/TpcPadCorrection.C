@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_TpcPadCorrection_Table.h"
+#endif
 
 // $Id: TpcPadCorrection.C,v 1.1 2010/08/31 21:56:32 fisyak Exp $
 TDataSet *CreateTable() { 

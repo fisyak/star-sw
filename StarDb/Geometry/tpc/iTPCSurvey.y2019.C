@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_iTPCSurvey_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
   /* Shanmuganathan Prashanth <sprashan@kent.edu>  11/14/18

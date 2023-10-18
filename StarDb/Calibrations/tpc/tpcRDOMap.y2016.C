@@ -1,5 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_tpcRDOMap_Table.h"
-
+#endif
 TDataSet *CreateTable() { 
   // ------  Test whether this table share library was loaded ------
   if (!gROOT->GetClass("St_tpcRDOMap")) return 0;

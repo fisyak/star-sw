@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_ftpcClusterGeom_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------

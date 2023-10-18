@@ -1,4 +1,6 @@
+#ifndef __CINT__
 #include "tables/St_HitError_Table.h"
+#endif
 
 TDataSet *CreateTable() { 
 // -----------------------------------------------------------------
