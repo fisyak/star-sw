@@ -50,6 +50,9 @@
 # trgsetupname= production_31p2GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
 # production_AuAu_ZeroField_2023
 #production_17p3GeV_2021_P23id_picodst.txt
+# trgsetupname= production_5p75GeV_fixedTarget_2020,production=P23ie,library=SL23e,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_7p3GeV_fixedTarget_2020,production=P23ie,library=SL23e,filetype=daq_reco_picodst,storage!=hpss
+# trgsetupname= production_9p8GeV_fixedTarget_2020,production=P23ie,library=SL23e,filetype=daq_reco_picodst,storage!=hpss
 
 
 @PicoDefs= (
@@ -95,8 +98,11 @@
 '2019/AuAu200' =>				  'production_AuAu200_2019/ReversedFullField/P22ia',
 
 '2020/5p75GeV_fixedTarget_P23id'       	       => 'production_5p75GeV_fixedTarget_2020/ReversedFullField/P23id',    
+'2020/5p75GeV_fixedTarget_P23ie'       	       => 'production_5p75GeV_fixedTarget_2020/ReversedFullField/P23ie',    
 '2020/7p3GeV_fixedTarget_P23id'		       => 'production_7p3GeV_fixedTarget_2020/ReversedFullField/P23id',     
+'2020/7p3GeV_fixedTarget_P23ie'		       => 'production_7p3GeV_fixedTarget_2020/ReversedFullField/P23ie',     
 '2020/9p8GeV_fixedTarget_P23id'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P23id',     
+'2020/9p8GeV_fixedTarget_P23ie'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P23ie',     
 '2020/31p2GeV_fixedTarget_P23id'	       => 'production_31p2GeV_fixedTarget_2020/ReversedFullField/P23id',    
 
 '2020/11p5GeV' =>              		                          'production_11p5GeV_2020/ReversedFullField/P23ia', 
@@ -140,6 +146,7 @@
 
 '2021/FF_7p7GeV' =>			           'production_7p7GeV_2021/FullField/P22ib',
 '2021/7p7GeV' =>			           'production_7p7GeV_2021/ReversedFullField/P22ib',
+'2021/dAu200_P23id' =>				   'production_dAu200_2021/ReversedFullField/P23id',
 '2021/dAu200' =>				   'production_dAu200_2021/ReversedFullField/DEV',
 '2021/FF_OO_200GeV_2021.P23ic' =>		   'production_FF_OO_200GeV_2021/ReversedFullField/P23ic',
 '2021/ps_OO_200GeV_2021.P23ic' =>		   'production_ps_OO_200GeV_2021/ReversedFullField/P23ic',

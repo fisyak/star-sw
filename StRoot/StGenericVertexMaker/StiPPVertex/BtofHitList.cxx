@@ -14,6 +14,8 @@
 #include "StBTofUtil/StBTofTables.h"
 #include "StEvent/StBTofCollection.h"
 
+#include "TGeoManager.h"
+
 
 //==========================================================
 //==========================================================
@@ -44,6 +46,7 @@ BtofHitList::initRun(St_db_Maker* db_maker) {
 
   // Initialize BTOF geometry
   TObjectSet *geom = (TObjectSet *) db_maker->GetDataSet("btofGeometry");
+  geometry = 0;
   if (geom)   geometry = (StBTofGeometry *) geom->GetObject();
   if (geometry) {
     LOG_INFO << " Found btofGeometry ... " << endm;
@@ -55,8 +58,8 @@ BtofHitList::initRun(St_db_Maker* db_maker) {
   } 
   if(geometry && !geometry->IsInitDone()) {
     LOG_INFO << " BTofGeometry initialization ... " << endm;
-    TVolume *starHall = (TVolume *)db_maker->GetDataSet("HALL");
-    geometry->Init(db_maker, starHall);
+    TVolume *starHall = gGeoManager ? nullptr : (TVolume *) (db_maker->GetDataSet("HALL"));
+    geometry->Init(db_maker, starHall, gGeoManager);
   }
 
 
