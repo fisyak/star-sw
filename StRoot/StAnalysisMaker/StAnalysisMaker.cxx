@@ -50,6 +50,7 @@
 #endif /* __TPC_LOCAL_COORDINATES__ */
 #include "StDetectorDbMaker/St_tpcRDOMapC.h"
 #include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
+#include "StG2TrackVertexMap.h"
 //
 //  The following line defines a static string. Currently it contains
 //  the cvs Id. The compiler will put the string (literally) in the
@@ -315,12 +316,24 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
   // plot = 2 => prompt hits only |z| > 175
   struct BPoint_t {
     Int_t    sector, row, rdo;
-    Float_t  x,y,z,q,adc,pad,timebucket,IdTruth,npads,ntbks,xL,yL,zL,dX;
+    Float_t  x,y,z,q,adc,pad,timebucket;
+    Int_t    IdTruth,npads,ntbks;
+    Float_t   xL,yL,zL,dX;
     Int_t    trigId, us,fl;
     Float_t  time, timeb;
     Float_t  vpdE, vpdW;
+    Int_t    eg_pid, ge_pid;
+    Float_t  pT, eta;
   };
-  static const Char_t *vname = "sector/I:row/I:rdo/I:x:y:z:q:adc:pad:timebucket:IdTruth:npads:ntbks:xL:yL:zL:dX:trigId/I:us/I:fl/I:time:timeb:vpdE:vpdW";
+  Int_t No_g2t_tracks = 0;
+  StG2TrackVertexMap *g2tMap = 0;
+  St_g2t_track  *g2t_track  = (St_g2t_track  *) StMaker::GetTopChain()->GetDataSet("geant/g2t_track");  
+  if (g2t_track) {
+    No_g2t_tracks = g2t_track->GetNRows();
+    St_g2t_vertex *g2t_vertex = (St_g2t_vertex *) StMaker::GetTopChain()->GetDataSet("geant/g2t_vertex"); 
+    if (g2t_track && g2t_vertex) g2tMap = StG2TrackVertexMap::instance(g2t_track,g2t_vertex);
+  }
+  static const Char_t *vname = "sector/I:row/I:rdo/I:x:y:z:q:adc:pad:timebucket:IdTruth/I:npads/I:ntbks/I:xL:yL:zL:dX:trigId/I:us/I:fl/I:time:timeb:vpdE:vpdW:eg_pid/I:ge_pid/I:pT:eta";
   BPoint_t BPoint;
   BPoint.vpdE = BPoint.vpdW = 0;
   StEvent* pEvent = (StEvent*) StMaker::GetChain()->GetInputDS("StEvent");
@@ -393,8 +406,16 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 		if (mOnlyIdT && tpcHit->idTruth() <= 0) continue;
 		if (IdTruth >= 0 && tpcHit->idTruth() != IdTruth) continue;
 		//		if (tpcHit->flag() & FCF_CHOPPED || tpcHit->flag() & FCF_SANITY)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
-		if (! plot) 		tpcHit->Print();
-		else {
+		g2t_track_st *g2t = 0;
+		if (tpcHit->idTruth() > 0 && tpcHit->idTruth() <= No_g2t_tracks && g2tMap) {
+		  g2t = g2tMap->Tracks()->GetTable() + tpcHit->idTruth() - 1;
+		  if (g2t && g2t->id != tpcHit->idTruth() ) g2t = 0;
+		}
+		if (! plot) {
+		  if (g2t) cout << Form("ge = %2i\t",g2t->ge_pid);
+		  else     cout << "       \t";
+		  tpcHit->Print();
+		} else {
 		  if (Nt) {
 		    const StThreeVectorF& xyz = tpcHit->position();
 		    if (plot == 2 && (TMath::Abs(xyz.z()) > 25.0) && TMath::Abs(xyz.z()) < 175.0) continue;
@@ -435,8 +456,18 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 		    BPoint.trigId  = 0;
 		    BPoint.us      = tpcHit->usedInFit();
 		    BPoint.fl      = tpcHit->flag();
+		    // g2t info 
+		    BPoint.eg_pid = 0, BPoint.ge_pid = -1;
+		    BPoint.pT = 0, BPoint.eta = 0;
+		    if (g2t) {
+		      BPoint.eg_pid = g2t->eg_pid;
+		      BPoint.ge_pid = g2t->ge_pid;
+		      BPoint.pT     = g2t->pt;
+		      BPoint.eta    = g2t->eta;
+		    }
+#ifndef __TRIGGER_ID__
 		    Nt->Fill((Float_t  *) &BPoint.sector);
-#ifdef __TRIGGER_ID__
+#else /* __TRIGGER_ID__ */
 		    if (nominal) {
 		      UInt_t maxTriggers = nominal->maxTriggerIds();
 		      for (UInt_t i = 0; i < maxTriggers; i++) {
