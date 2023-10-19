@@ -913,7 +913,12 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	  checkList[io][3]->Fill(TrackSegmentHits[iSegHits].xyzG.position().z(),Gain);
 	}
 	// dE/dx correction
-	Double_t dEdxCor = dEdxCorrection(TrackSegmentHits[iSegHits]);
+	Double_t dEdxCor = 1.0;
+	if (TrackSegmentHits[iSegHits].coorLS.position().z() < -0.6) {// prompt hist
+	  dEdxCor = 1.0;
+	} else {
+	  dEdxCor = dEdxCorrection(TrackSegmentHits[iSegHits]);
+	}
 #ifdef __DEBUG__
 	if (TMath::IsNaN(dEdxCor)) {
 	  iBreak++;
@@ -1120,12 +1125,6 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	    if (zGG > -0.6) { // non Prompt hits before  Cathode wire plane 
 	      Double_t driftTime = 1e6*zGG/driftVelocity; // usec
 	      driftTime -= St_starTriggerDelayC::instance()->TrigT0GG(io); // trigger delay + Gating Grid cables
-#ifdef __DEBUG__
-	      static Int_t iBreak = 0;
-	      if (TrackSegmentHits[iSegHits].Pad.row() > 40 && TrackSegmentHits[iSegHits].Pad.timeBucket() > 25 && TrackSegmentHits[iSegHits].Pad.timeBucket() < 32) {
-		iBreak++;
-	      }
-#endif
 	      Double_t lGGTransperency = St_GatingGridBC::instance()->CalcCorrection(0,driftTime);
 	      if (lGGTransperency < -9) continue;
 	      GGTransperency = TMath::Exp(lGGTransperency);
