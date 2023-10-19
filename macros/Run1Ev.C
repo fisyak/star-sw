@@ -1,4 +1,4 @@
-void Run1Ev(Int_t NEvents=1, Int_t iD = 5, 
+void Run1Ev(Int_t NEvents=1, Int_t iD = 14, 
 	    //	    Double_t pTlow=1.0,Double_t pThigh=1.0, // Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=0.1, Double_t Yhigh=0.1,
 	    //	    Double_t Philow=0, Double_t Phihigh=0,	    Double_t Zlow=100, Double_t Zhigh=100.0, Int_t Npart = 1, const Char_t *opt = "G" 
 	    //	    Double_t Philow=-TMath::DegToRad()*35, Double_t Phihigh=-TMath::DegToRad()*35,	    Double_t Zlow=10, Double_t Zhigh=10, Int_t Npart = 1, const Char_t *opt = "G" 
@@ -6,7 +6,7 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 5,
 	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=0, Double_t Phihigh=0,	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
 	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=TMath::PiOver2(), Double_t Phihigh=TMath::PiOver2(),	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
 	    //      Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3,	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow= 0.15, Double_t Yhigh=0.15, Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3, Double_t Zlow=170, Double_t Zhigh=170, Int_t Npart = 1, const Char_t *opt = "G" 
+	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow= 0.25, Double_t Yhigh=0.25, Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3, Double_t Zlow=170, Double_t Zhigh=170, Int_t Npart = 1, const Char_t *opt = "G" 
 	    )
 {
   cout << "Run1Ev(NEvents=" << NEvents 

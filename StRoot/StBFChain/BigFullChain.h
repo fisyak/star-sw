@@ -952,10 +952,6 @@ Bfc_st BFC[] = { // standard chains
    ,                                                       "/star/rcf/simu/rcf9066_20_1000evts.fzd",kFALSE},
   {"eval_Sti_pp200.MC.y2008","","","MC.y2008,Sti,fzin,MiniMcMk","",""
    ,                                                       "/star/rcf/simu/rcf9992_01_1000evts.fzd",kFALSE},
-  {"eval_StvCA_dau200.MC.Stv.y2008","","","MC.in.y2008,StvPulls,StvCA,in,MiniMcMk","",""
-   ,                                              "/star/rcf/simu/rcf11025_2040_100evts.event.root",kFALSE},
-  {"eval_Stv_dau200.MC.y2008","","","MC.in.y2008,Stv,StvPulls,in,MiniMcMk","",""
-   ,                                              "/star/rcf/simu/rcf11025_2040_100evts.event.root",kFALSE},
   {"eval_Sti.AgML_pp500.MC.y2009","","","MC.y2009a,Sti,AgML,fzin,MiniMcMk","",""
    ,                                                       "/star/rcf/simu/rcf9994_01_1000evts.fzd",kFALSE},
   {"eval_StiCA_pp200.MC.y2009","","","MC.y2009a,StiCA,fzin,MiniMcMk","",""
@@ -966,10 +962,6 @@ Bfc_st BFC[] = { // standard chains
    ,                                                       "/star/rcf/simu/rcf9993_01_1000evts.fzd",kFALSE},
   {"eval_Sti_pp500.MC.y2009","","","MC.y2009a,Sti,fzin,MiniMcMk","",""
    ,                                                       "/star/rcf/simu/rcf9994_01_1000evts.fzd",kFALSE},
-  {"eval_StvCA_pp500.MC.y2009","","","MC.in.y2009,StvPulls,StvCA,in,MiniMcMk","",""
-   ,                                        "/star/rcf/simu/rcf11026_1020_50evts_pileup.event.root",kFALSE},
-  {"eval_Stv_pp500.MC.y2009","","","MC.in.y2009,Stv,StvPulls,in,MiniMcMk","",""
-   ,                                        "/star/rcf/simu/rcf11026_1020_50evts_pileup.event.root",kFALSE},
   {"eval_Sti.AgML_auau11.MC.y2010","","","MC.y2010a,Sti,AgML,fzin,MiniMcMk","",""
    ,                                                        "/star/rcf/simu/rcf10031_1_100evts.fzd",kFALSE},
   {"eval_Sti.AgML_auau200.MC.y2010","","","MC.y2010,Sti,AgML,fzin,MiniMcMk","",""
@@ -994,16 +986,6 @@ Bfc_st BFC[] = { // standard chains
    ,                                                        "/star/rcf/simu/rcf10033_1_100evts.fzd",kFALSE},
   {"eval_StiCA_auau7.MC.y2010","","","MC.y2010a,StiCA,fzin,MiniMcMk","",""
    ,                                                        "/star/rcf/simu/rcf10030_1_100evts.fzd",kFALSE},
-  {"eval_Stv_auau200.MC.y2010","","","MC.in.y2010,Stv,StvPulls,in,MiniMcMk","",""
-   ,                                               "/star/rcf/simu/rcf11022_2241_50evts.event.root",kFALSE},
-  {"eval_StvCA_auau200.MC.y2010","","","MC.in.y2010,StvPulls,StvCA,in,MiniMcMk","",""
-   ,                                               "/star/rcf/simu/rcf11022_2241_50evts.event.root",kFALSE},
-  {"eval_StvCA_auau39.MC.y2010","","","MC.y2010a,StvCA","",""
-   ,                                                        "/star/rcf/simu/rcf10032_1_100evts.fzd",kFALSE},
-  {"eval_StvCA_auau62.MC.y2010","","","MC.y2010a,StvCA","",""
-   ,                                                        "/star/rcf/simu/rcf10033_1_100evts.fzd",kFALSE},
-  {"eval_StvCA_auau7.MC.y2010","","","MC.y2010a,StvCA","",""
-   ,                                                        "/star/rcf/simu/rcf10030_1_100evts.fzd",kFALSE},
   {"eval_Sti.AgML_auau200.MC.y2011","","","MC.y2011,Sti,AgML,fzin,MiniMcMk","",""
    ,                                                      "/star/rcf/simu/rcf11023_2060_25evts.fzd",kFALSE},
   {"eval_Sti.AgML_pp500.MC.y2011","","","MC.fast.y2011,AgML,Sti,fzin,MiniMcMk","",""
@@ -1022,10 +1004,6 @@ Bfc_st BFC[] = { // standard chains
    ,"/star/rcf/simu/pp500/pythia/pileup/rcf10100_90_200evts_Wplus_enu.fzd\n"
    " gfile b /star/rcf/simu/pp500/pythia/pileup/rcf10100_90_4000evts_minb.fzd\n"
    " mode TPCE back 4001400\n gback 400 400 0.1 106.6"                                             ,kFALSE},
-  {"eval_Stv_auau200.MC.y2011","","","MC.in.y2011,Stv,StvPulls,in,MiniMcMk","",""
-   ,                                               "/star/rcf/simu/rcf11023_2060_25evts.event.root",kFALSE},
-  {"eval_StvCA_auau200.MC.y2011","","","MC.in.y2011,StvPulls,StvCA,in,MiniMcMk","",""
-   ,                                               "/star/rcf/simu/rcf11023_2060_25evts.event.root",kFALSE},
   {"eval_Sti.AgML_CuAu200.MC.y2012","","","MC.y2012,Sti,AgML,fzin,MiniMcMk","",""
    ,                                                        "/star/rcf/simu/rcf12003_1_100evts.fzd",kFALSE},
   {"eval_Sti.AgML_pp200.MC.y2012","","","MC.y2012,Sti,AgML,fzin,MiniMcMk","",""
@@ -1050,12 +1028,6 @@ Bfc_st BFC[] = { // standard chains
    ,                       "/star/rcf/test/daq/2007/112/8112052/st_physics_8112052_raw_1020010.daq",kFALSE},
   {"eval_Sti.RC.auau200.MB.y2007","","","RC.y2007,pmdReco,ITTF,Sti","",""
    ,                       "/star/rcf/test/daq/2007/113/8113044/st_physics_8113044_raw_1040042.daq",kFALSE},
-  {"eval_Stv.AgML.RC.auau200.MB.y2007","","","RC.y2007,Stv,AgML","",""
-   ,                       "/star/rcf/test/daq/2007/113/8113044/st_physics_8113044_raw_1040042.daq",kFALSE},
-  {"eval_StvCA.RC.auau200.MB.y2007","","","RC.y2007.NoSvt,StvCA","",""
-   ,                       "/star/rcf/test/daq/2007/113/8113044/st_physics_8113044_raw_1040042.daq",kFALSE},
-  {"eval_Stv.RC.auau200.MB.y2007","","","RC.y2007.NoSvt,Stv","",""
-   ,                       "/star/rcf/test/daq/2007/113/8113044/st_physics_8113044_raw_1040042.daq",kFALSE},
   {"eval_Sti.AgML.RC.dau200.y2008","","","RC.y2008,ITTF,AgML,Sti","",""
    ,                               "/star/rcf/test/daq/2007/352/st_physics_8352025_raw_1030011.daq",kFALSE},
   {"eval_StiCA.RC.dau200.y2008","","","RC.y2008,StiCA","",""
@@ -1066,16 +1038,6 @@ Bfc_st BFC[] = { // standard chains
    ,                               "/star/rcf/test/daq/2007/352/st_physics_8352025_raw_1030011.daq",kFALSE},
   {"eval_Sti.RC.pp200.y2008","","","RC.pp.y2008,ITTF,Sti","",""
    ,                               "/star/rcf/test/daq/2008/043/st_physics_9043046_raw_2030002.daq",kFALSE},
-  {"eval_Stv.AgML.RC.dau200.y2008","","","RC.y2008.notof,Stv,AgML","",""
-   ,                               "/star/rcf/test/daq/2007/352/st_physics_8352025_raw_1030011.daq",kFALSE},
-  {"eval_StvCA.RC.dau200.y2008","","","RC.y2008.notof,StvCA","",""
-   ,                               "/star/rcf/test/daq/2007/352/st_physics_8352025_raw_1030011.daq",kFALSE},
-  {"eval_StvCA.RC.pp200.y2008","","","RC.pp.y2008.Minuit,StvCA","",""
-   ,                               "/star/rcf/test/daq/2008/043/st_physics_9043046_raw_2030002.daq",kFALSE},
-  {"eval_Stv.RC.dau200.y2008","","","RC.y2008.notof,Stv","",""
-   ,                               "/star/rcf/test/daq/2007/352/st_physics_8352025_raw_1030011.daq",kFALSE},
-  {"eval_Stv.RC.pp200.y2008","","","RC.pp.y2008.Minuit,Stv","",""
-   ,                               "/star/rcf/test/daq/2008/043/st_physics_9043046_raw_2030002.daq",kFALSE},
   {"eval_Sti.AgML.RC.pp500.y2009","","","RC.pp.y2009.VFPP,ITTF,Sti","",""
    ,                              "/star/rcf/test/daq/2009/085/st_physics_10085024_raw_2020001.daq",kFALSE},
   {"eval_StiCA.RC.pp200.y2009","","","RC.pp.y2009.VFPP,StiCA","",""
@@ -1085,16 +1047,6 @@ Bfc_st BFC[] = { // standard chains
   {"eval_Sti.RC.pp200.y2009","","","RC.pp.y2009.VFPP,ITTF,Sti","",""
    ,                              "/star/rcf/test/daq/2009/115/st_physics_10115020_raw_5020001.daq",kFALSE},
   {"eval_Sti.RC.pp500.y2009","","","RC.pp.y2009.VFPP,ITTF,Sti","",""
-   ,                              "/star/rcf/test/daq/2009/085/st_physics_10085024_raw_2020001.daq",kFALSE},
-  {"eval_Stv.AgML.RC.pp500.y2009","","","RC.pp.y2009,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2009/085/st_physics_10085024_raw_2020001.daq",kFALSE},
-  {"eval_StvCA.RC.pp200.y2009","","","RC.pp.y2009,StvCA","",""
-   ,                              "/star/rcf/test/daq/2009/115/st_physics_10115020_raw_5020001.daq",kFALSE},
-  {"eval_StvCA.RC.pp500.y2009","","","RC.pp.y2009,StvCA","",""
-   ,                              "/star/rcf/test/daq/2009/085/st_physics_10085024_raw_2020001.daq",kFALSE},
-  {"eval_Stv.RC.pp200.y2009","","","RC.pp.y2009,Stv","",""
-   ,                              "/star/rcf/test/daq/2009/115/st_physics_10115020_raw_5020001.daq",kFALSE},
-  {"eval_Stv.RC.pp500.y2009","","","RC.pp.y2009,Stv","",""
    ,                              "/star/rcf/test/daq/2009/085/st_physics_10085024_raw_2020001.daq",kFALSE},
   {"eval_Sti.AgML.RC.auau200.y2010","","","RC.y2010.notof,AgML,Sti","",""
    ,                              "/star/rcf/test/daq/2010/029/st_physics_11029020_raw_1030002.daq",kFALSE},
@@ -1115,26 +1067,6 @@ Bfc_st BFC[] = { // standard chains
   {"eval_Sti.RC.auau39.y2010","","","RC.y2010,Sti","",""
    ,                              "/star/rcf/test/daq/2010/100/st_physics_11100070_raw_1030001.daq",kFALSE},
   {"eval_Sti.RC.auau62.y2010","","","RC.y2010,Sti","",""
-   ,                              "/star/rcf/test/daq/2010/098/st_physics_11098050_raw_3020001.daq",kFALSE},
-  {"eval_Stv.AgML.RC.auau200.y2010","","","RC.y2010.notof,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2010/029/st_physics_11029020_raw_1030002.daq",kFALSE},
-  {"eval_Stv.AgML.RC.auau39.y2010","","","RC.y2010.notof,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2010/100/st_physics_11100070_raw_1030001.daq",kFALSE},
-  {"eval_StvCA.RC.auau11.y2010","","","RC.y2010.notof,StvCA","",""
-   ,                              "/star/rcf/test/daq/2010/157/st_physics_11157020_raw_2030001.daq",kFALSE},
-  {"eval_StvCA.RC.auau200.y2010","","","RC.y2010.notof,StvCA","",""
-   ,                              "/star/rcf/test/daq/2010/029/st_physics_11029020_raw_1030002.daq",kFALSE},
-  {"eval_StvCA.RC.auau39.y2010","","","RC.y2010.notof,StvCA","",""
-   ,                              "/star/rcf/test/daq/2010/100/st_physics_11100070_raw_1030001.daq",kFALSE},
-  {"eval_StvCA.RC.auau62.y2010","","","RC.y2010.notof,StvCA","",""
-   ,                              "/star/rcf/test/daq/2010/098/st_physics_11098050_raw_3020001.daq",kFALSE},
-  {"eval_Stv.RC.auau11.y2010","","","RC.y2010.notof,Stv","",""
-   ,                              "/star/rcf/test/daq/2010/157/st_physics_11157020_raw_2030001.daq",kFALSE},
-  {"eval_Stv.RC.auau200.y2010","","","RC.y2010.notof,Stv","",""
-   ,                              "/star/rcf/test/daq/2010/029/st_physics_11029020_raw_1030002.daq",kFALSE},
-  {"eval_Stv.RC.auau39.y2010","","","RC.y2010.notof,Stv","",""
-   ,                              "/star/rcf/test/daq/2010/100/st_physics_11100070_raw_1030001.daq",kFALSE},
-  {"eval_Stv.RC.auau62.y2010","","","RC.y2010.notof,Stv","",""
    ,                              "/star/rcf/test/daq/2010/098/st_physics_11098050_raw_3020001.daq",kFALSE},
   {"eval_Sti.AgML.RC.auau200.y2011","","","RC.y2011,AgML,Sti","",""
    ,                              "/star/rcf/test/daq/2011/130/st_physics_12130084_raw_5020002.daq",kFALSE},
@@ -1158,26 +1090,6 @@ Bfc_st BFC[] = { // standard chains
    ,                              "/star/rcf/test/daq/2011/174/st_physics_12174106_raw_2040001.daq",kFALSE},
   {"eval_Sti.RC.pp500.y2011","","","RC.pp.y2011.VFPPV,pmdReco,mtdDat,Sti","",""
    ,                              "/star/rcf/test/daq/2011/059/st_physics_12059038_raw_2030002.daq",kFALSE},
-  {"eval_Stv.AgML.RC.auau200.y2011","","","RC.y2011,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2011/130/st_physics_12130084_raw_5020002.daq",kFALSE},
-  {"eval_Stv.AgML.RC.auau20.y2011","","","RC.y2011,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2011/122/st_physics_12122018_raw_2010002.daq",kFALSE},
-  {"eval_StvCA.RC.auau200.y2011","","","RC.y2011,StvCA","",""
-   ,                              "/star/rcf/test/daq/2011/130/st_physics_12130084_raw_5020002.daq",kFALSE},
-  {"eval_StvCA.RC.auau20.y2011","","","RC.y2011,StvCA","",""
-   ,                              "/star/rcf/test/daq/2011/122/st_physics_12122018_raw_2010002.daq",kFALSE},
-  {"eval_StvCA.RC.auau27.y2011","","","RC.y2011,StvCA","",""
-   ,                              "/star/rcf/test/daq/2011/174/st_physics_12174106_raw_2040001.daq",kFALSE},
-  {"eval_StvCA.RC.pp500.y2011","","","RC.pp.y2011,pmdReco,mtdDat,StvCA","",""
-   ,                              "/star/rcf/test/daq/2011/059/st_physics_12059038_raw_2030002.daq",kFALSE},
-  {"eval_Stv.RC.auau200.y2011","","","RC.y2011,Stv","",""
-   ,                              "/star/rcf/test/daq/2011/130/st_physics_12130084_raw_5020002.daq",kFALSE},
-  {"eval_Stv.RC.auau20.y2011","","","RC.y2011,Stv","",""
-   ,                              "/star/rcf/test/daq/2011/122/st_physics_12122018_raw_2010002.daq",kFALSE},
-  {"eval_Stv.RC.auau27.y2011","","","RC.y2011,Stv","",""
-   ,                              "/star/rcf/test/daq/2011/174/st_physics_12174106_raw_2040001.daq",kFALSE},
-  {"eval_Stv.RC.pp500.y2011","","","RC.pp.y2011,pmdReco,mtdDat,Stv","",""
-   ,                              "/star/rcf/test/daq/2011/059/st_physics_12059038_raw_2030002.daq",kFALSE},
   {"eval_Sti.AgML.RC.pp200.y2012","","","RC.pp.y2012,AgML,Sti","",""
    ,                              "/star/rcf/test/daq/2012/044/st_physics_13044030_raw_2010001.daq",kFALSE},
   {"eval_Sti.AgML.RC.pp500.y2012","","","RC.pp.y2012,AgML,Sti","",""
@@ -1191,30 +1103,6 @@ Bfc_st BFC[] = { // standard chains
   {"eval_Sti.RC.pp500.y2012","","","RC.pp.y2012,Sti","",""
    ,                              "/star/rcf/test/daq/2012/082/st_physics_13082004_raw_1020004.daq",kFALSE},
   {"eval_Sti.RC.UU193.y2012","","","RC.y2012,Sti","",""
-   ,                              "/star/rcf/test/daq/2012/115/st_physics_13115004_raw_2010002.daq",kFALSE},
-  {"eval_Stv.AgML.RC.cuAu200.y2012","","","RC.y2012b.notof,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2012/143/st_physics_13143018_raw_3020009.daq",kFALSE},
-  {"eval_Stv.AgML.RC.pp200.y2012","","","RC.pp.y2012.notofMin,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2012/044/st_physics_13044030_raw_2010001.daq",kFALSE},
-  {"eval_Stv.AgML.RC.pp500.y2012","","","RC.pp.y2012.notofMin,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2012/082/st_physics_13082004_raw_1020004.daq",kFALSE},
-  {"eval_Stv.AgML.RC.UU193.y2012","","","RC.y2012b.notof,Stv,AgML","",""
-   ,                              "/star/rcf/test/daq/2012/115/st_physics_13115004_raw_2010002.daq",kFALSE},
-  {"eval_StvCA.RC.cuAu200.y2012","","","RC.y2012b.notof,StvCA","",""
-   ,                              "/star/rcf/test/daq/2012/143/st_physics_13143018_raw_3020009.daq",kFALSE},
-  {"eval_StvCA.RC.pp200.y2012","","","RC.pp.y2012.notofMin,StvCA","",""
-   ,                              "/star/rcf/test/daq/2012/044/st_physics_13044030_raw_2010001.daq",kFALSE},
-  {"eval_StvCA.RC.pp500.y2012","","","RC.pp.y2012.notofMin,StvCA","",""
-   ,                              "/star/rcf/test/daq/2012/082/st_physics_13082004_raw_1020004.daq",kFALSE},
-  {"eval_StvCA.RC.UU193.y2012","","","RC.y2012b.notof,StvCA","",""
-   ,                              "/star/rcf/test/daq/2012/115/st_physics_13115004_raw_2010002.daq",kFALSE},
-  {"eval_Stv.RC.cuAu200.y2012","","","RC.y2012b.notof,Stv","",""
-   ,                              "/star/rcf/test/daq/2012/143/st_physics_13143018_raw_3020009.daq",kFALSE},
-  {"eval_Stv.RC.pp200.y2012","","","RC.pp.y2012.notofMin,Stv","",""
-   ,                              "/star/rcf/test/daq/2012/044/st_physics_13044030_raw_2010001.daq",kFALSE},
-  {"eval_Stv.RC.pp500.y2012","","","RC.pp.y2012.notofMin,Stv","",""
-   ,                              "/star/rcf/test/daq/2012/082/st_physics_13082004_raw_1020004.daq",kFALSE},
-  {"eval_Stv.RC.UU193.y2012","","","RC.y2012b.notof,Stv","",""
    ,                              "/star/rcf/test/daq/2012/115/st_physics_13115004_raw_2010002.daq",kFALSE},
   {"doEvents"    ,""  ,"","in,StEvent,analysis,NoDb"                                      ,"","","",kFALSE},
   {"MakeMuDst","","","in,StEvent,CMuDST,Tree,nodefault,NoHistos,ReadAll","",""  ,"StEvent => MuDst",kFALSE},
@@ -1269,7 +1157,7 @@ Bfc_st BFC[] = { // standard chains
   {"Idst"        ,""  ,"",                  "event,compend,EventQA"   ,"","","Turn on DST for ITTF",kFALSE},
   {"IAna"    ,""  ,"","dEdxY2,Kink2,xi2,CMuDst,analysis","",""  ,"Turn on Xi, Kink, dEdx and MuDst",kFALSE},
   {"BAna"    ,""  ,"","dEdxY2,CMuDst,analysis"          ,"",""            ,"Turn on dEdx and MuDst",kFALSE},
-  {"ITTF"      ,"","","","","","request to use one of Sti(default), StiCA, Stv,StvCA, ... trackers",kFALSE},
+  {"ITTF"      ,"","","","","",           "request to use one of Sti(default), StiCA, ... trackers",kFALSE},
   {"NoHits"      ,""  ,"",""                           ,"","","Don\'t write hits into Event.Branch",kFALSE},
   {"Kalman"      ,""  ,"",""                            ,"","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"Eval"        ,""  ,"","","",""                ,"Turn on evaluation switch for different makers",kFALSE},
@@ -1897,7 +1785,6 @@ Bfc_st BFC[] = { // standard chains
 
   // Sti options
   {"StiPulls" ,"","",""                                         ,"","", "Request to make Sti Pulls",kFALSE},
-  {"StvPulls" ,"","",""                                         ,"","", "Request to make Stv Pulls",kFALSE},
   {"StiLib"   ,"","",""                                           ,"","Sti,StiUtilities","Load Sti",kFALSE},
   {"KeepStiLib"   ,"","",""                                                  ,"","","Keep Sti Libs",kFALSE},
   {"TPCCA"   ,"","",""                                     ,"","Spectrum,TPCCATracker","Load TPCCA",kFALSE},
@@ -1923,7 +1810,7 @@ Bfc_st BFC[] = { // standard chains
   {"VFPPVEv"    ,""     ,""	,"eemcDb"	,"StGenericVertexMaker"
    ,                        "Minui,StGenericVertexMaker"          ,"... StEvent based VFPPV, noCTB",kFALSE},
   {"VFPPVEvNoBtof"     	,""  ,""	,"VFPPVEv"	,""	     ,"","...VFPPVEv with no Btof ",kFALSE},
-  // Sti/Stv chains
+  // Sti chains
   {"StiCAPerf","","","TPCCA","",                        "TPCCATrackerPerformance", "CA Performance",kFALSE},
   {"StiCA"    ,"","","Sti,StiCALib",                                    "","libEG","Sti+CA tracker",kFALSE},
   {"Sti"      ,"Sti","","StiLib,StiLibs,SCL,Stu,StEvent,StDbT,TpcIT,compend,sim_T,tbutil,EmcUtil,TMVARank"
@@ -1937,10 +1824,6 @@ Bfc_st BFC[] = { // standard chains
   {"StiKFVertex","StiKFVertex"  ,"Sti","StiLibs,-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2"
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker,StiMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
-  {"Stv","Stv","","-xgeometry,-Sti,-StiTpc,-StiSsd,-StiSvt,-StiPxl,-StiSsd,-StiSst,-StiIst,-StiLibs,-StiLibsHft"
-   ,"StvMaker","libHist,libHistPainter,libVMC,geant3,GeoTestMaker,StvUtil,Stv,StvSeed,StvMaker,StEventUtilities,"
-   ,"Stv"                                                                                          ,kFALSE},
-  {"StvCA"    ,"StvCA","","Stv","",""                                                      ,"StvCA",kFALSE},
   {"laserIT"  ,"","","","",                              "TpcIT","use Sti for laser reconstruction",kFALSE},
   {"TpcIT"    ,"","","ITTF"                                              ,"","","Sti tracking: TPC",kFALSE},
   {"SvtIT"    ,"","","ITTF"                                              ,"","","Sti tracking: SVT",kFALSE},
