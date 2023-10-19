@@ -12,7 +12,7 @@ my $pwd = cwd();
 #my $glob = "/net/l401/data/scratch1/daq/2020/" . $Trigger . "/st_physics_adc*.daq";  print "glob = $glob\n" if ($debug);
 #my $glob = "/net/l401/data/scratch1/fisyak/Tpc/TpcRS/" . $Trigger . "/st_physics_adc*.MuDst.root";  print "glob = $glob\n" if ($debug);
 my $locdir  = File::Basename::basename($pwd);
-$locdir =~ s/TpcRS_//; print "locdir = $locdir\n" if ($debug);
+$locdir =~ s/TpcRS_//; $locdir =~ s/\..*//; print "locdir = $locdir\n" if ($debug);
 my $glob = "";
 if (-d "../" . $locdir) {$glob = "../" . $locdir . "/*.MuDst.root"; print "glob = $glob\n" if ($debug);}
 else {
