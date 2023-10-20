@@ -242,6 +242,7 @@ echo "EXTRA_FLAGS = $EXTRA_FLAGS"
     --enable-builtin_pcre       \
     --enable-builtin_zlib       \
     --enable-builtin_lzma       \
+    --enable-opengl \
     --with-gsl-incdir=$GSL_DIR/include \
     --with-gsl-libdir=$GSL_DIR/lib \
     --with-pythia6-libdir=$XOPTSTAR/lib \
