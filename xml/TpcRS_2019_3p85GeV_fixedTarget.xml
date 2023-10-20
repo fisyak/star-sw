@@ -68,6 +68,6 @@
 <!-- <input URL="file:/gpfs01/star/subsys-tpc/fisyak/Tpc/TpcRS/daq_2018_fxt3p85_phys/*.MuDst.root" /> -->
 <!-- <input URL="file:/star/data1*/reco/production_3p85GeV_fixedTarget_2019/ReversedFullField/P23id/2019/*/*/*MuDst.root" /> -->
 <!-- <input URL="command:daq4TpcRS.pl '/star/data1*/reco/production_3p85GeV_fixedTarget_2019/ReversedFullField/P23id/2019/*/*/*MuDst.root' 1 200 20 " /> -->
-<input URL="command:daq2020TpcRS.pl" />
+<input URL="command:daq4TpcRS.pl" />
 </job>
 
