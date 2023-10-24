@@ -1,3 +1,6 @@
+#ifndef __CINT__
+#include "include/tables/St_spline3_Table.h"
+#endif
 TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_spline3")) return 0;
   Int_t nrows = 1;
