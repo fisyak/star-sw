@@ -190,6 +190,7 @@ void Mu(Long64_t nevent = 9999999,
 #endif
       for (Int_t k = 0; k < NoGlobalTracks; k++) {
 	StMuTrack *gTrack = (StMuTrack *) GlobalTracks->UncheckedAt(k);
+	cout << &gTrack << endl;
 	RZF->Fill(gTrack->firstPoint().z(), gTrack->firstPoint().perp());
 	RZL->Fill(gTrack->lastPoint().z(), gTrack->lastPoint().perp());
       }
