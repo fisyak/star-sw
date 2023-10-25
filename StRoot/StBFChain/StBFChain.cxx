@@ -663,7 +663,7 @@ Int_t StBFChain::Instantiate()
 	mk->SetAttr("useBTof"    ,kTRUE);
 	mk->SetAttr("activeBTof" ,kTRUE);
       }
-      
+
       if (GetOption("StiPulls"))  mk->SetAttr("makePulls"  ,kTRUE);
       if (GetOption("skip1row"))  mk->SetAttr("skip1row"   ,kTRUE);
       if (GetOption("EastOff"))   mk->SetAttr("EastOff"    ,kTRUE);
@@ -686,11 +686,11 @@ Int_t StBFChain::Instantiate()
       if (GetOption("VFMinuitX"  ) ) mk->SetAttr("VFMinuitX"  	, kTRUE);
       if (GetOption("VFppLMV"    ) ) mk->SetAttr("VFppLMV"    	, kTRUE);
       if (GetOption("VFppLMV5"   ) ) mk->SetAttr("VFppLMV5"   	, kTRUE);
-      if (GetOption("VFPPV"      ) ) mk->SetAttr("VFPPV"      	, kTRUE);
-      if (GetOption("VFPPVEv") ) {
-	gSystem->Load("StBTofUtil.so");
-	mk->SetAttr("VFPPVEv"      , kTRUE);
-      } else if (GetOption("VFPPV") && GetOption("Sti")) mk->SetAttr(    "VFPPV", kTRUE);
+      if ( GetOption("VFPPVEv") ) {
+        gSystem->Load("StBTofUtil.so");
+        mk->SetAttr("VFPPVEv"      , kTRUE);
+      } 
+      else if (GetOption("VFPPV") && GetOption("Sti")) mk->SetAttr(    "VFPPV", kTRUE);
       if (GetOption("VFPPVEvNoBtof")){
 	gSystem->Load("StBTofUtil.so"); //Not used but loaded to avoid fail
 	mk->SetAttr("VFPPVEvNoBtof", kTRUE);
@@ -1121,10 +1121,25 @@ Int_t StBFChain::Instantiate()
   
   if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"Sti");
   if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"StiCA");
+#ifdef __TFG__VERSION__
   
   gMessMgr->QAInfo() << "+++ Setting attribute " << Gproperty.Data() << " = " << Gvalue.Data() << endm;
   SetAttr(Gproperty.Data(),Gvalue.Data(),Gpattern.Data());
   
+#else /* ! __TFG__VERSION__ */
+  if (GetOption("svt1hit"))  SetAttr("minPrecHits",1,"StiVMC");
+
+  for ( unsigned int n=0 ; n < Gproperty.size() ; n++ ){
+    gMessMgr->QAInfo() << "+++ Setting attribute "
+		       << (Gproperty.at(n)).Data() << " = " << (Gvalue.at(n)).Data() << " for "
+		       << (Gpattern.at(n).Data())  << endm;
+
+    SetAttr( (Gproperty.at(n)).Data(),
+	     (Gvalue.at(n)).Data(),
+	     (Gpattern.at(n)).Data()    );
+  }
+
+#endif /* __TFG__VERSION__ */
   return status;
 }
 //_____________________________________________________________________
@@ -1738,6 +1753,7 @@ void StBFChain::SetFlags(const Char_t *Chain)
 	  SetOption("-pythia","Default,-TGiant3");
 	}
       }
+
       SetOption("-geant","Default,-TGiant3");
       SetOption("-geantL","Default,-TGiant3");
       SetOption("-geometry","Default,-TGiant3");
