@@ -19,10 +19,15 @@
 #include "StGenericVertexMaker/StGenericVertexMaker.h"
 #include "StGenericVertexMaker/StiPPVertex/StPPVertexFinder.h"
 #include "StGenericVertexMaker/StppLMVVertexFinder.h"
-#include "StGenericVertexMaker/StvPPVertex/StPPVertexFinder.h"
 #include "St_base/StMessMgr.h"
 #include "St_db_Maker/St_db_Maker.h"
 #include "tables/St_g2t_vertex_Table.h"
+
+// Historical Note 10/17/23.  Jason Webb
+// -------------------------------------
+// The StvPPVertex appears to be an equivalent set of vertex
+// finding algorithms using tracks from the StEvent data model 
+// rather than the internal data structures of the Sti tracker.
 
 class StMuDst;
 class TClonesArray;
@@ -139,14 +144,6 @@ Int_t StGenericVertexMaker::Init()
       ((StPPVertexFinder*)theFinder)->UseBTOFmatchOnly();
       useBTOF = 1;
     }
-
-  } else if ( IAttr("VFPPVEv") ||  IAttr("VFPPVEvNoBTof")
-           ||(IAttr("VFPPV")   &&  IAttr("Stv"))        )  { // 2 version of PPV w/ & w/o Btof
-      LOG_INFO << "StGenericVertexMaker::Init: uses StvPPVertex finder(StEvent based)"<<  endm;
-      LOG_INFO << "StPPVertexFinder::StPPVertexFinder is in use" << endm;
-
-      theFinder= new StEvPPV::StPPVertexFinder();
-      useBTOF = (IAttr("VFPPVEvNoBTof"))? 0:1;
 
   } else if ( IAttr("VFFV") || IAttr("VFMCE")) {
       theFinder = new StFixedVertexFinder();
