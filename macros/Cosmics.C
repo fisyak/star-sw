@@ -139,6 +139,7 @@ Bichsel *m_Bichsel = 0;
 #if 0
 #ifndef StTrackPidTraits_hh
 #define StTrackPidTraits_hh
+//________________________________________________________________________________
 class StDedxPidTraits : public TObject {
 public:
   StDedxPidTraits(StDetectorId det=kUnknownId, short meth=0,
@@ -151,15 +152,18 @@ protected:
   Float_t  mDedx;
   Float_t  mSigma;
   ClassDef(StDedxPidTraits,9)
-};
+    };
 #endif
 #else
 #include "StTrackPidTraits.h"
 #include "StDedxPidTraits.h"
 #endif
+//________________________________________________________________________________
 class CosmicTracks : public TNamed {
 public:
   CosmicTracks() : TNamed("","") {}
+  Int_t kg;
+  Int_t lg;
   Int_t noFitpK;
   Int_t noFitpL;
   Double_t chi2;
@@ -178,6 +182,16 @@ public:
   Double_t bichK, bichL;
   Double_t zK, zL;
   Double_t zFitK, zFitL;
+  virtual void        Print(Option_t *option="") const {
+    cout << "K\t" << kg << " NF=" << noFitpK << "\t" << K; 
+    cout << Form("\tF: %7.2f  %7.2f  %7.2f\t", xyzK[0][0], xyzK[0][1], xyzK[0][2]);
+    cout << Form(  "L: %7.2f  %7.2f  %7.2f\t", xyzK[1][0], xyzK[1][1], xyzK[1][2]);
+    cout << Form("S: %3i", sectorK) << endl;
+    cout << "L\t" << lg << " NF=" << noFitpL << "\t" << L; 
+    cout << Form("\tF: %7.2f  %7.2f  %7.2f\t", xyzL[0][0], xyzL[0][1], xyzL[0][2]);
+    cout << Form(  "L: %7.2f  %7.2f  %7.2f\t", xyzL[1][0], xyzL[1][1], xyzL[1][2]);
+    cout << Form("S: %3i", sectorL) << endl;
+  }
   ClassDef(CosmicTracks,3)
 };
 ClassImp(StDedxPidTraits);
@@ -220,12 +234,6 @@ void PrintDCA(TRVector Par, TRSymMatrix Cov) {
 	       pt,    100*TMath::Sqrt(errMx[9])*TMath::Abs(pt),
 	       par[4],    (errMx[14] >= 0) ? TMath::Sqrt(errMx[14]): -13) << endl;
 }
-//________________________________________________________________________________
-void PrintxyzFLS(Float_t xyzF[3], Float_t xyzL[3], Int_t sector) {
-  cout << Form("\tF: %7.2f  %7.2f  %7.2f\t", xyzF[0], xyzF[1], xyzF[2]);
-  cout << Form("L: %7.2f  %7.2f  %7.2f\t", xyzL[0], xyzL[1], xyzL[2]);
-  cout << Form("S: %3i", sector) << endl;
-} 
 //________________________________________________________________________________
 void Cosmics(TString files = "",
 	     const Char_t *Out = "Cosmics.root"
@@ -279,7 +287,7 @@ void Cosmics(TString files = "",
     Int_t k = -1; 
     Int_t l = -1;
     for (Int_t kg = 0; kg < NoGlobalTracks; kg++) {
-      Double_t Chi2Old = 1.e3;
+      Double_t Chi2Old = 1.e4;
       TRVector ParK(5);
       TRSymMatrix CovK(5);
       TRVector ParL(5);
@@ -337,7 +345,7 @@ void Cosmics(TString files = "",
 	  T  = t;
 	}
       }
-      if (k < 0 || l < 0  ||  Chi2Old >= 1e3) continue;
+      if (k < 0 || l < 0  ||  Chi2Old >= 1e4) continue;
       PrP(TK);
       PrP(TL);
       PrP(T);
@@ -345,6 +353,8 @@ void Cosmics(TString files = "",
       tracks.noFitpK = GlobalTracks_mNHits[kg];
       tracks.noFitpL = GlobalTracks_mNHits[lg];
       tracks.chi2 = Chi2Old;
+      tracks.kg = kg;
+      tracks.lg = lg;
       tracks.K = TK;
       tracks.L = TL;
       tracks.T = T;
@@ -369,8 +379,7 @@ void Cosmics(TString files = "",
       Npairs++;
       if (Npairs%100000 == 1 || tracks.sectorK == tracks.sectorL) {
 	cout << "Run " << MuEvent_mRunInfo_mRunId[0] << " Event " << MuEvent_mEventInfo_mId[0] << "====================" << endl;
-	cout << "K\t" << kg << "\t" << TK; PrintxyzFLS(tracks.xyzK[0], tracks.xyzK[1], tracks.sectorK);
-	cout << "L\t" << lg << "\t" << TL; PrintxyzFLS(tracks.xyzL[0], tracks.xyzL[1], tracks.sectorL);
+	tracks.Print();
 	cout << "T\t" << Npairs/100000 << "0k\t" << T << "\tchi2 = " << tracks.chi2 << endl;
       }
       tracks.K70 = StDedxPidTraits(kTpcId, kTruncatedMeanId, 
