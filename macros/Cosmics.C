@@ -46,7 +46,7 @@
    CosmicT->Draw("zK:-TMath::Log10(TMath::Abs(K.mPti-L.mPti)/2.)>>dEdx(30,-1,2,100,-0.25,0.25)","noFitpK>15&&noFitpL>15&&zK>-1","colz")
    CosmicT->Draw("zK:TMath::Log10(bgK)>>dEdxbg(50,0,5.,100,-.5,0.5)","noFitpK>15&&noFitpL>15&&zK>-1&&chi2<200","colz")
    foreach f (`ls -1d ???/*.root`)
-     mv ${f} ${f}.HOLD3
+     mv ${f} ${f}.HOLD4
    end
    foreach d (`ls -1d ???`)
      cd ${d}
@@ -139,6 +139,7 @@ Bichsel *m_Bichsel = 0;
 #if 0
 #ifndef StTrackPidTraits_hh
 #define StTrackPidTraits_hh
+static Int_t _debug = 0;
 //________________________________________________________________________________
 class StDedxPidTraits : public TObject {
 public:
@@ -377,7 +378,7 @@ void Cosmics(TString files = "",
       tracks.xyzL[1][1] = GlobalTracks_mLastPoint_mX2[lg];
       tracks.xyzL[1][2] = GlobalTracks_mLastPoint_mX3[lg];
       Npairs++;
-      if (Npairs%100000 == 1 || tracks.sectorK == tracks.sectorL) {
+      if (_debug || Npairs%100000 == 1 || tracks.sectorK == tracks.sectorL) {
 	cout << "Run " << MuEvent_mRunInfo_mRunId[0] << " Event " << MuEvent_mEventInfo_mId[0] << "====================" << endl;
 	tracks.Print();
 	cout << "T\t" << Npairs/100000 << "0k\t" << T << "\tchi2 = " << tracks.chi2 << endl;
