@@ -1374,6 +1374,35 @@ Bfc_st BFC[] = { // standard chains
   {"flux"        ,"","","simu"                               ,"","flux","Load flux lib for starsim",kFALSE},
   {"fluxVMC"     ,"","","simu"                                ,"","","Set Flux flag for StVMCMaker",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
+  {"Generators  ","-----------","-----------","------------------------------------------","","","",kFALSE},
+  {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
+  {"stargen",     "","", "gen_T,sim_T"/*+++*/,                     "", 
+   "libVMC.so,libStarGeneratorUtil.so,libStarGeneratorEvent.so,libStarGeneratorBase.so,"
+   "libStarGeneratorFilt.so,libMathMore.so"
+   ,                                                                          "STAR Generator BASE",kFALSE},
+  {"pythia8.1.86","","","stargen", "", "Pythia8_1_86.so",           "Load Pythia 8.1.86 generator", kFALSE},
+  {"pythia8.2.35","","","stargen", "", "Pythia8_2_35.so",           "Load Pythia 8.1.86 generator", kFALSE},
+  {"hijing1.383" ,"","","stargen", "", "Hijing1_383.so",            "Load Hijing  1.383 generator", kFALSE},
+  {"kinematics"  ,"","","stargen", "", "Kinematics.so",                   "Load STAR Particle Gun", kFALSE},
+  {"genreader"   ,"","","stargen", "", "StarGenEventReader.so",       "Load STAR Gen Event Reader", kFALSE},
+
+
+  {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
+  {"GEANT4 Libs ","-----------","-----------","------------------------------------------","","","",kFALSE},
+  {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
+
+  {"g4interfaces","", "", "",                     "", 
+   "libG4clhep.so,libG4global.so,libG4intercoms.so,libG4interfaces.so,libG4modeling.so,libG4vis_management.so"
+   ,                                                                                 "Load G4 libs",kFALSE},
+  {"g4physics",   "", "", "",                     ""
+   , "libG4materials.so,libG4graphics_reps.so,libG4geometry.so,libG4particles.so,libG4track.so,libG4zlib.so,"
+   "libG4digits_hits.so,libG4processes.so,libG4tracking.so,libG4event.so,libG4run.so,libG4physicslists.so"
+   ,                                                                                      "Load G4",kFALSE},
+  {"g4geant3",    "", "", "",                          "", "libG3toG4.so", "Load g3 to g4 support", kFALSE},
+  {"geant4",      "", "", "g4physics,g4interfaces","",""                           ,"Load G4 libs", kFALSE},
+
+
+  {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"I/O Makers  ","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"tdaq"        ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE}, 
