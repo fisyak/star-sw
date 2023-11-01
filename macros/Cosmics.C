@@ -130,6 +130,7 @@ class TTreeIter;
 #endif
 Bichsel *m_Bichsel = 0;
 //#define __DEBUG__
+static Int_t _debug = 0;
 #ifdef __DEBUG__
 #define PrP(A) {cout <<  (#A) << " = \t" << (A) << endl;}
 #else
@@ -139,7 +140,6 @@ Bichsel *m_Bichsel = 0;
 #if 0
 #ifndef StTrackPidTraits_hh
 #define StTrackPidTraits_hh
-static Int_t _debug = 0;
 //________________________________________________________________________________
 class StDedxPidTraits : public TObject {
 public:
@@ -443,7 +443,7 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
     Double_t pullDeltaPsi;
   };
   VarPr_t V;
-  enum {kTotal=12, kAll, kCharge = 12};
+  enum {kTotal=12, kAll=14, NC = 4, NDCA = 3, kCharge = NC*NDCA};
   Double_t pL10min = -1.5;
   Double_t pL10max =  2.0;
   Int_t Np = 70;
@@ -460,13 +460,15 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
     {"PullTan" ,   "pull of #Delta Tan(#lambda) from cosmics muons; Log_{10}(p_{TAv}) ; pull Tan(#lambda)",	    Np,  pL10min, pL10max, 500, -5.0, 5.0}, 
     {"DelPsi"  ,   "#Delta #psi from cosmics muons                ; Log_{10}(p_{TAv}) ; #psi",                      Np,  pL10min, pL10max, 500, -0.1, 0.1},	   
     {"PullPsi" ,   "pull of #Delta #psi from cosmics muons        ; Log_{10}(p_{TAv}) ; pull #psi ",                Np,  pL10min, pL10max, 500, -5.0, 5.0},	   
-    {"sKsL"    ,   "sector L versus sector K                      ; secotr K ; Sector L",                           49,    -24.5,    24.5,  49,-24.5,24.5}      
+    {"sKsL"    ,   "sector L versus sector K                      ; secotr K ; Sector L",                           49,    -24.5,    24.5,  49,-24.5,24.5},      
+    {"fKfL"    ,   "no. fit points L versus no. fit point K       ; no.fit point K ; no. fit points  L",           100,     -0.5,    99.5, 100, -0.5,99.5}  
   };
-  const Char_t *nCharge[4] = {"All","Pos","Neg","Loop"};
-  const Char_t *nDCA[3] = {"","C","P"};
-  const Char_t *tDCA[3] = {"All","DCA_{xy}  <= 50 cm", "DCA_{xy}  >  50 cm"};
-  //             d  c
-  TH2D *H2[kAll][3][4] = {0};
+  const Char_t *nCharge[NC] = {"All","Pos","Neg","Loop"};
+  const Char_t *tCharge[NC] = {"","Positive","Negative","Looppers"};
+  const Char_t *NameDCA[NDCA] = {"","C","P"};
+  const Char_t *tDCA[NDCA] = {"","DCA_{xy}  <= 50 cm", "DCA_{xy}  >  50 cm"};
+  //                d   c
+  TH2D *H2[kAll][NDCA][NC] = {0};
   //  Char_t *file = gSystem->Which(".",Out,kReadPermission);
   Char_t *file = 0;
   TFile *fOut = 0;
@@ -475,9 +477,9 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
     fOut = new TFile(file);
     delete [] file;
     for (Int_t k = 0; k < kAll; k++) {
-      for (Int_t d = 0; d < 3; d++) { 
-	for (Int_t c = 0; c < 3; c++) {
-	  TString Name(Form("%s%s%s",plot[k].Name,nCharge[c],nDCA[d]));
+      for (Int_t d = 0; d < NDCA; d++) { 
+	for (Int_t c = 0; c < NC; c++) {
+	  TString Name(Form("%s%s%s",plot[k].Name,nCharge[c],NameDCA[d]));
 	  H2[k][d][c] = (TH2D *) fOut->Get(Name);
 	}
       }
@@ -486,18 +488,15 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
     RePlotOnly = kFALSE;
     fOut = new TFile(Out,"recreate");
     for (Int_t k = 0; k < kAll; k++) {
-      for (Int_t d = 0; d < 3; d++) { 
-	for (Int_t c = 0; c < 4; c++) {
-	  TString Name(Form("%s%s%s",plot[k].Name,nCharge[c],nDCA[d]));
-	  TString Title(Form("%s %s %s",plot[k].Title,nCharge[c],tDCA[d]));
+      for (Int_t d = 0; d < NDCA; d++) { 
+	for (Int_t c = 0; c < NC; c++) {
+	  TString Name(Form("%s%s%s",plot[k].Name,nCharge[c],NameDCA[d]));
+	  TString Title(Form("%s %s %s",tCharge[c],plot[k].Title,tDCA[d]));
 	  H2[k][d][c] = new TH2D(Name,Title,plot[k].nx,plot[k].xmin,plot[k].xmax,plot[k].ny,plot[k].ymin,plot[k].ymax);
 	}
       }
     }
   }
-  Int_t Npads = kCharge*kAll;
-  TLegend **leg = new TLegend*[Npads]; memset(leg, 0, Npads*sizeof(TLegend *)); 
-  Int_t color = 0;
   TF1 *dpTOverpT = new TF1("dpTOverpT","TMath::Sqrt(2*([0]*[0]+[1]*[1]*TMath::Power(10.,2*x)))",pL10min,pL10max);
   dpTOverpT->SetParameters(1e-2,1e-2);
   dpTOverpT->SetLineColor(3);
@@ -507,8 +506,6 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
   CosmicTracks tracks;
   CosmicTracks *ftrack = &tracks;
   TFile *f = 0;
-  TCanvas *c1 = new TCanvas("c1","c1",2,10,1200,1200);
-  c1->Divide(12,kAll);
   TH1F *frame = 0;
   if (! RePlotOnly) {
     Int_t nn = files->GetSize();
@@ -536,6 +533,7 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
 	tree->LoadTree(ev);  //this call is required when using the cache
 	tree->GetEntry(ev);   
 	if (ev > 0 && ! (ev%100000)) cout << "Read event " << ev << endl;
+	H2[kTotal+1][0][0]->Fill(tracks.noFitpK, tracks.noFitpL);
 	if (tracks.noFitpK < 30 || tracks.noFitpL < 30) continue;
 	StDcaGeometry &K = *&tracks.K;
 	StDcaGeometry &L = *&tracks.L;
@@ -586,6 +584,10 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
 	H2[kTotal][0][c]->Fill(sectorK, sectorL);
 	H2[kTotal][d][0]->Fill(sectorK, sectorL);
 	H2[kTotal][d][c]->Fill(sectorK, sectorL);
+
+	H2[kTotal+1][0][c]->Fill(tracks.noFitpK, tracks.noFitpL);
+	H2[kTotal+1][d][0]->Fill(tracks.noFitpK, tracks.noFitpL);
+	H2[kTotal+1][d][c]->Fill(tracks.noFitpK, tracks.noFitpL);
       }
     }
   }
@@ -594,55 +596,66 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
   TString pwd(gSystem->WorkingDirectory());
   if (pwd.Contains("FF")) Field = "FF";
   if (pwd.Contains("RF")) Field = "RF";
+  Int_t nC = 3; // NC;
+  Int_t nDCA = 1; // NDCA;
+  Int_t Npads = nC*nDCA*kAll;
+  TLegend **leg = new TLegend*[Npads];  memset(leg,  0, Npads*sizeof(TLegend *)); 
+  TLegend **leg2 = new TLegend*[Npads]; memset(leg2, 0, Npads*sizeof(TLegend *)); 
+  Int_t color = 0;
+  TCanvas *c1 = new TCanvas("c1","c1",10,10,200*nC*nDCA,100*kAll);
+  c1->Divide(nC*nDCA,kAll);
   color++;
   if (color == 2) color = 4;
   for (Int_t k = 0; k < kAll; k++) {
-    for (Int_t d = 0; d < 3; d++) {
-      for (Int_t c = 0; c < 4; c++) {
-	Int_t pad = 4*(3*k + d) + c + 1;
+    for (Int_t d = 0; d < nDCA; d++) {
+      for (Int_t c = 0; c < nC; c++) {
+	Int_t pad = nC*(nDCA*k + d) + c + 1;
 	c1->cd(pad)->SetLogz(1);
 	TH2D *h2 = H2[k][d][c];
 	if (! h2) continue;
 	h2->Draw("colz");
-	if (k == kAll -1) continue;
-	if (! leg[pad-1]) {
-	  leg[pad-1] = new TLegend(0.3,0.7,0.7,0.9);
-	  //	  h2->SetStats(0);
-	  leg[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
-	  leg[pad-1]->Draw();
-	}
+	if (k >= kTotal) continue;
 	h2->FitSlicesY();
 	TH1D *h_1 = (TH1D *) gDirectory->Get(Form("%s_1",H2[k][d][c]->GetName()));
 	TH1D *h_2 = (TH1D *) gDirectory->Get(Form("%s_2",H2[k][d][c]->GetName()));
 	Double_t mu = 0, sigma = 0;
-	if (h_1) {
+	if (h_1 && h_2) {
 	  h_1->SetMarkerStyle(20); h_1->SetMarkerColor(color);
 	  h_1->Fit("pol0","er","same",pL10min, pL10max);
 	  TF1 *pol0 = (TF1 *) h_1->GetListOfFunctions()->FindObject("pol0");
 	  if (pol0) {
 	    mu = pol0->GetParameter(0);
 	    h_1->Draw("same");
-	    h_2->SetMarkerStyle(21); h_2->SetMarkerColor(color);
-	    h_2->Fit("pol0","er","same",pL10min, pL10max);
-	    }
-	  if (h_2) {
-	    pol0 = (TF1 *) h_2->GetListOfFunctions()->FindObject("pol0");
-	    if (pol0) {
-	      sigma = pol0->GetParameter(0);
-	      //	  h_2->Draw("same");
-	      leg[pad-1]->AddEntry(h_1,Form("%s #mu = %6.3f, #sigma =  %6.3f",Field.Data(),mu,sigma));
+	  }
+	  h_2->SetMarkerStyle(21); h_2->SetMarkerColor(color);
+	  h_2->Fit("pol0","er","same",pL10min, pL10max);
+	  pol0 = (TF1 *) h_2->GetListOfFunctions()->FindObject("pol0");
+	  if (pol0) {
+	    sigma = pol0->GetParameter(0);
+	  }
+	  if (TMath::Abs(mu) > 1e-7 && TMath::Abs(sigma) > 1e-7) {
+	    if (! leg[pad-1]) {
+	      leg[pad-1] = new TLegend(0.3,0.8,0.7,0.9);
 	      leg[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
+	      leg[pad-1]->AddEntry(h_1,Form("%s #mu = %6.3f, #sigma =  %6.3f",Field.Data(),mu,sigma));
+	      leg[pad-1]->Draw();
 	    }
+	  }
+	  if (k == 0 || k == 2) {
+	    leg2[pad-1] = new TLegend(0.12,0.12,0.88,0.22);
+	    leg2[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
 	    if (k == 2) { // DelpTR
 	      dpTOverpT->SetParameters(1e-2,1e-2);
 	      h_2->Fit(dpTOverpT,"e+");
-		leg[pad-1]->AddEntry(dpTOverpT,Form("#sigma(#Delta pT)) = %5.2f %% #oplus %5.2f %% #times pT",Field.Data(),100*dpTOverpT->GetParameter(0),100*dpTOverpT->GetParameter(1)));
-	    } else if (k == 0) { { // DelpTI
-		dpTI->SetParameters(1e-2,1e-2);
-		h_2->Fit(dpTI,"e+");
-		leg[pad-1]->AddEntry(dpTI,Form("#sigma(#Delta(1/pT)) = (%5.2f%% #oplus %5.2f %% #times pT)/pT",Field.Data(),100*dpTI->GetParameter(0),100*dpTI->GetParameter(1)));
-	      }
+	      leg2[pad-1]->AddEntry(dpTOverpT,Form("#sigma(#DeltapT)) = %5.2f%% #oplus %5.2f%% #times pT => #sigma(#DeltapT/pT) = %5.2f%%(@1GeV/c)",
+						   Field.Data(),100*dpTOverpT->GetParameter(0),100*dpTOverpT->GetParameter(1), 100*dpTOverpT->Eval(0.)/TMath::Sqrt(2.)));
+	    } else if (k == 0) { // DelpTI
+	      dpTI->SetParameters(1e-2,1e-2);
+	      h_2->Fit(dpTI,"e+");
+	      leg2[pad-1]->AddEntry(dpTI,Form("#sigma(#Delta(1/pT)) = (%5.2f%% #oplus %5.2f%% #times pT)/pT => #sigma(#DeltapT/pT) = %5.2f%%(@1GeV/c)",
+					      Field.Data(),100*dpTI->GetParameter(0),100*dpTI->GetParameter(1),100*dpTI->Eval(0.)/TMath::Sqrt(2.)));
 	    }
+	    leg2[pad-1]->Draw();
 	  }
 	}
 	c1->Update();
