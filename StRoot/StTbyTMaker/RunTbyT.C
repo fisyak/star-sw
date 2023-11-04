@@ -13,7 +13,7 @@ void RunTbyT(Int_t nevents=999,
   TString Chain("StEvent,StiLib,detDb,tpcDb,mysql,nodefault");
   bfc(-1,Chain.Data(),0,0,tFile);
   gSystem->Load("StTbyTMaker");
-  // StTbyTMaker::SetHitMatch(kTRUE);
+  StTbyTMaker::SetHitMatch(kTRUE);
   cout << "Job will run on    File: " << eventFile1 << endl;
   cout << "Correspondibg new  File: " << eventFile2 << endl;
   gSystem->Load("StIOMaker");

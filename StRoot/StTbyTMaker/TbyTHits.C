@@ -540,6 +540,7 @@ void DrawPad(Int_t s = 1) {
   c1->cd(2); PadN->Draw("colz");
   c1->cd(3); PadO->Draw("colz");
   c1->Update();
+  c1->SaveAs(Form("Pad%i.png",s));
 }
 //________________________________________________________________________________
 void TbyTHits() {
