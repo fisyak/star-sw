@@ -9,5 +9,5 @@
 struct tpcPadGainT0 { 
   long run;                   /* pulser run number used */
   float  Gain[24][45][182];   /* Gains per pad*/
-  float  T0[24][45][182];     /* T9 per pad*/
+  float  T0[24][45][182];     /* T0 per pad*/
  };  
