@@ -958,7 +958,7 @@ void StiStEventFiller::fillDetectorInfo(StTrackDetectorInfo* detInfo, StiKalmanT
       StHit *hh = (StHit*)stiHit->stHit();
       if (!hh) 			continue;
       assert(detector->getGroupId()==hh->detector());
-#if 0
+#if 1
 // 	Fill StHit errors for Gene
       FillStHitErr(hh,node);
 #endif      
@@ -1521,6 +1521,16 @@ void StiStEventFiller::FillStHitErr(StHit *hh,const StiKalmanTrackNode *node)
   TCL::trasat(T[0],stiErr,stErr,3,3);
   StThreeVectorF f3(sqrt(stErr[0]),sqrt(stErr[2]),sqrt(stErr[5]));
   hh->setPositionError(f3);
+#ifdef __TFG__VERSION__
+  const StiHit *hit = node->getHit();
+  if (hit) {
+    StTpcHit *tpcHit = dynamic_cast<StTpcHit*>(hh);
+    if (tpcHit) {
+      tpcHit->setdY(hit->dY());
+      tpcHit->setdZ(hit->dZ());
+    }
+  }
+#endif  
 }
 //_____________________________________________________________________________
 void StiStEventFiller::fillPulls(StiKalmanTrack* track,const StGlobalTrack *gTrack, int gloPri) 
