@@ -119,7 +119,7 @@
 class StTpcHit : public StHit {
   
  public:
- StTpcHit() : StHit() {mMinpad = mMaxpad = mMintmbk = mMaxtmbk = 0; mMcl_x = mMcl_t = 0; mAdc =0; mChargeModified = 0; mdX = 0;}
+ StTpcHit() : StHit() {mMinpad = mMaxpad = mMintmbk = mMaxtmbk = 0; mMcl_x = mMcl_t = 0; mAdc =0; mChargeModified = mdX = mdY = mdZ = 0;}
  StTpcHit(const StThreeVectorF& p,
 	  const StThreeVectorF& e,
 	  UInt_t hw, float q, UChar_t c = 0,
@@ -128,7 +128,9 @@ class StTpcHit : public StHit {
 	  Short_t mnpad=0, Short_t mxpad=0, Short_t mntmbk=0,
 	  Short_t mxtmbk=0, Float_t cl_x = 0, Float_t cl_t = 0, UShort_t Adc = 0) 
    :  StHit(p, e, hw, q, c, IdTruth, quality, Id), mAdc(Adc) {
-    setExtends(cl_x, cl_t, mnpad, mxpad, mntmbk, mxtmbk); mChargeModified = 0; mdX = 0; mTimeBucket = 0;}
+    mChargeModified = mdX = mdY = mdZ = 0;
+    setExtends(cl_x, cl_t, mnpad, mxpad, mntmbk, mxtmbk); 
+  }
   ~StTpcHit() {}
     
   StDetectorId   detector() const;
@@ -142,6 +144,8 @@ class StTpcHit : public StHit {
     void     setExtends(Float_t cl_x, Float_t cl_t, Short_t mnpad, Short_t mxpad, Short_t mntmbk, Short_t mxtmbk);
     void     setAdc(UShort_t Adc = 0) {mAdc = Adc;}
     void     setdX(Float_t dX) {mdX = dX;}
+    void     setdY(Float_t dY) {mdY = dY;}
+    void     setdZ(Float_t dZ) {mdZ = dZ;}
     UInt_t   sector() const {return bits(4, 5);}   // bits 4-8  -> 1-24
     UInt_t   padrow() const {return bits(9, 7);}   // bits 9-15 -> 1-128
     UInt_t   padsInHit()   const {return maxPad() - minPad() + 1;}
@@ -158,6 +162,8 @@ class StTpcHit : public StHit {
     UShort_t adc() const {return mAdc;}
     Float_t  chargeModified() const {return mChargeModified;}
     Float_t  dX() const {return mdX;}
+    Float_t  dY() const {return mdY;}
+    Float_t  dZ() const {return mdZ;}
     void     Print(Option_t *option="") const;
     virtual Bool_t   IsSortable() const { return kTRUE; }
     virtual Int_t    Compare(const TObject *obj) const {
@@ -189,8 +195,10 @@ protected:
     StThreeVectorF mPositionL;  //  lower position = y_local - padlength/2.
     Float_t        mdX;         //  estimated dX from StdEdxY2Maker
     Float_t        mTimeBucket; // average timebucket corrected
+    Float_t        mdY;         // Z correction from Hit error parameterization
+    Float_t        mdZ;         // Z correction from Hit error parameterization
     static TString fgFMT;        
-    ClassDef(StTpcHit,12)
+    ClassDef(StTpcHit,13)
 };
 ostream&              operator<<(ostream& os, StTpcHit const & v);
 
