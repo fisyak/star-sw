@@ -182,7 +182,15 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
       for(Int_t sector=1;sector<=24;sector++) {
 	Int_t rowMin = 1;
 	if (St_tpcPadConfigC::instance()->iTPC(sector)) rowMin = 14; 
-	for(Int_t rowO = 1; rowO <= 45; rowO++) {
+	for(Int_t rowO = 1; rowO < rowMin; rowO++) {	
+	  Int_t Npads = St_tpcPadPlanesC::instance()->padsPerRow(rowO);
+	  for(Int_t pad = 0; pad <= Npads; pad++) {
+	    fTpx23->rp_gain[sector-1][rowO][pad].gain  =    0.; // be sure that dead pads are killed
+	    fTpx23->rp_gain[sector-1][rowO][pad].t0    = -9.99;
+	    fTpx23->rp_gain[sector-1][rowO][pad].flags =    64;
+	  }
+	}
+	for(Int_t rowO = rowMin; rowO <= 45; rowO++) {
 	  Int_t Npads = St_tpcPadPlanesC::instance()->padsPerRow(rowO);
 	  Int_t padMin = 1;
 	  Int_t padMax = Npads;
@@ -212,7 +220,7 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
     for(Int_t sector=1;sector<=24;sector++) {
       for(Int_t rowO = 1; rowO <= 45; rowO++) {
 	Int_t Npads = St_tpcPadPlanesC::instance()->padsPerRow(rowO);
-	for(Int_t pad = 0; pad <= Npads; pad++) {
+	for(Int_t pad = 1; pad <= Npads; pad++) {
 	  cout << Form("Gain/T0 s/r/p %3i/%3i/%3i %7.3f %7.3f %i",sector,rowO,pad,fTpx23->rp_gain[sector-1][rowO][pad].gain,fTpx23->rp_gain[sector-1][rowO][pad].t0,fTpx23->rp_gain[sector-1][rowO][pad].flags) << endl;
 	}
       }
@@ -255,7 +263,7 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
     for(Int_t sector=1;sector<=24;sector++) {
       for(Int_t row = 1; row <= 40; row++) {
 	Int_t Npads = St_itpcPadPlanesC::instance()->padsPerRow(row);
-	for(Int_t pad = 0; pad <= Npads; pad++) {
+	for(Int_t pad = 1; pad <= Npads; pad++) {
 	  cout << Form("Gain/T0 s/r/p %3i/%3i/%3i %7.3f %7.3f %i",sector,row,pad,fiTpc23->rp_gain[sector-1][row][pad].gain,fiTpc23->rp_gain[sector-1][row][pad].t0,fiTpc23->rp_gain[sector-1][row][pad].flags) << endl;
 	}
       }
