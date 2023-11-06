@@ -3,8 +3,6 @@
 #include "StiUtilities/StiDebug.h"
 #include "StiTrackNodeHelper.h"
 #include "StiElossCalculator.h"
-#include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
-#include "StDetectorDbMaker/StiHitErrorCalculator.h"
 #include "StDetectorDbMaker/StiHitErrorCalculator.h"
 #include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
 #include "StEvent/StTpcHit.h"

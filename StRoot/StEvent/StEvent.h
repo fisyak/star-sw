@@ -421,14 +421,20 @@ public:
     void addDetectorState(StDetectorState*);
     void addPsd(StPsd*);
     void removePsd(StPsd*);
+#ifndef __CINT__
     void addHitCollection(StSPtrVecHit* p, const Char_t *name);
+#endif
     void removeHitCollection(const Char_t *name);
     void setGmtCollection(StGmtCollection*);
     
     virtual Bool_t Notify();
     
 protected:
+#ifndef __CINT__
     mutable StSPtrVecObject  mContent;
+#else
+    TObject  mContent;
+#endif
     static  TString          mCvsTag;
     void    Split();
      int    IsMain() const 	{return 1;}

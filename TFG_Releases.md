@@ -95,5 +95,6 @@
 <li> TFG23c Freeze tpcExtraGainCorrection, StKFParticleAnalysis          2023-04-30 11:53:11 -0400  (HEAD -> TFG, tag: TFG23c)
 <li> TFG23d Freeze CA, StKFParticle, StdEdxY2Maker,...                   2023-08-01 09:55:16 -0400  (HEAD -> TFG, tag: TFG23d)
 <li> TFG23e Introduce MDF4 Tpc Hit Errors, Cons tuning                   2023-09-23 15:53:14 -0400  (HEAD -> TFG, tag: TFG23e_1)
+<li> TFG23f Freeze daq5k modification in StTpcHitMaker                   2023-11-04 13:15:47 -0400  (HEAD -> TFG, tag: TFG23f)
 <li>.DEV2   head of TFG git repository
 </ul>
