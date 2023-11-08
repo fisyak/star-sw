@@ -1100,7 +1100,11 @@ public:
    Trcom3_t *fTrcom3;   //! TRCOM3 common structure
 
 private:
-   Int_t ConvertVolumePathString(const TString &volumeName, Int_t **lnam, Int_t **lnum);
+  Int_t ConvertVolumePathString(const TString &volumeName,Int_t **lnam,
+                                Int_t **lnum);
+  virtual void ProcessEvent(Int_t);
+  virtual void ProcessEvent(Int_t, Bool_t);
+
 
 protected:
    Int_t fNextVol;  // Iterator for GeomIter
