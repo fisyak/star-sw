@@ -1082,7 +1082,7 @@ public:
    virtual void ProcessEvent();
    virtual void ProcessEvent(Int_t eventId, Bool_t isInterruptible = kFALSE);
    virtual Bool_t ProcessRun(Int_t nevent);
-  virtual void AddParticlesToPdgDataBase();
+   virtual void AddParticlesToPdgDataBase();
    virtual void SetCollectTracks(Bool_t) {}
    Bool_t IsCollectTracks() const { return kFALSE; }
 
@@ -1102,9 +1102,6 @@ public:
 private:
   Int_t ConvertVolumePathString(const TString &volumeName,Int_t **lnam,
                                 Int_t **lnum);
-  virtual void ProcessEvent(Int_t);
-  virtual void ProcessEvent(Int_t, Bool_t);
-
 
 protected:
    Int_t fNextVol;  // Iterator for GeomIter
