@@ -178,9 +178,9 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"r2018",       20171220,     0, "y2018",    "y2018, no HFT,xgeometry"}, // 
 
   {"y2019",       20181215,     0, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
-  {"y2019a",      20181215,     1, "y2019",    "y2019a first production release geometry, AgML,xgeometry"},   
-  {"y2019b",      20181215,     2, "y2019",    "y2019a production geometry (FXT @ 200.7cm), AgML,xgeometry"},   
   {"r2019",       20181220,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
+  {"y2019a",      20181215,     1, "y2019a",   "y2019a first production release geometry, AgML,xgeometry"},   
+  {"y2019b",      20181215,     1, "y2019b",   "y2019a production geometry (FXT @ 200.7cm), AgML,xgeometry"},   
 
   {"y2020",       20191115,     0, "y2019",    "y2020 development geometry, AgML,xgeometry"},   
   {"y2020a",      20191115,     1, "y2019",    "y2020 fast-offline geometry, AgML,xgeometry"},   
@@ -203,6 +203,8 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"r2023",       20221225,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
   {"y2023a",      20221215,     1, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
   {"r2023a",      20221225,     1, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
+  {"y2024",       20231210,     0, "y2024",    "y2024 first cut geometry, AgML,xgeometry"},    
+  {"y2024a",      20231210,     1, "y2024a",   "y2024a production geometry, AgML,xgeometry"},    
   // Production runs
   {"19GeV_2019",                             20190225, 202320, "y2019", "19GeV_2019"                },
   {"14p5GeV_2019",                           20190404,  94405, "y2019", "14p5GeV_2019"              },

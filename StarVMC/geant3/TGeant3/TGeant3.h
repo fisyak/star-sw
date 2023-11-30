@@ -1082,7 +1082,7 @@ public:
    virtual void ProcessEvent();
    virtual void ProcessEvent(Int_t eventId, Bool_t isInterruptible = kFALSE);
    virtual Bool_t ProcessRun(Int_t nevent);
-  virtual void AddParticlesToPdgDataBase();
+   virtual void AddParticlesToPdgDataBase();
    virtual void SetCollectTracks(Bool_t) {}
    Bool_t IsCollectTracks() const { return kFALSE; }
 
@@ -1100,7 +1100,8 @@ public:
    Trcom3_t *fTrcom3;   //! TRCOM3 common structure
 
 private:
-   Int_t ConvertVolumePathString(const TString &volumeName, Int_t **lnam, Int_t **lnum);
+  Int_t ConvertVolumePathString(const TString &volumeName,Int_t **lnam,
+                                Int_t **lnum);
 
 protected:
    Int_t fNextVol;  // Iterator for GeomIter

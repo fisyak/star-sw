@@ -99,7 +99,7 @@ $env = new cons(
 );
 
 $GITINFO = $LIB . "/etc/gitinfo.txt";
-if (-d .git) {
+if (-d ".git") {
 #  my $opt = "'+%b %d %Y, %H:%M:%S";
   my @DEPS = ();
   my @gitFiles = qw(.git/HEAD .git/FETCH_HEAD .git/ORIG_HEAD .git/COMMIT_EDITMSG .git/logs/HEAD);
