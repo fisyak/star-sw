@@ -1,26 +1,4 @@
 #!/bin/csh
-
-# echo "We are here"
-if ( $?DECHO ) echo "$0 :: receiving argument [$*]"
-
-# need to protect against random argument
-set tt=`echo $1 | sed "s/-.*//"`
-if ( "$tt" != "$1") then
-    set vr=$tt
-    set cf=`echo $1 | sed "s/$vr-//"`
-else
-    set vr=$1
-    set cf="$2"
-endif
-if ($?TFG_STAR) unset cf
-# verify STAR enviroment
-set i = `echo $vr | awk '{printf("%1.1s\n",$1)}'`
-if ("$i" == "9" || "$i" == "0") then
-  setenv STAR_LEVEL SL$vr
-else
-  setenv STAR_LEVEL $vr
-endif
-
 # Set up STAR enviroment
 setenv STAR_LEVEL $1
 if ( -e $GROUP_DIR/group_env.csh ) then
@@ -42,55 +20,3 @@ unsetenv CERN_LEVEL
 	#echo "$LD_LIBRARY_PATH"
 endif
 
-
-if ( $?DECHO ) echo "$0 :: Verifying config"
-
-# once we have loaded the env, we could check for cf
-unsetenv STAR_CONFIG
-unsetenv STAR_CONFIGP
-#echo "Checking $cf"
-CFGCHK:
-if ( $?cf) then
-if ( "$cf" != "") then
-    # always search for a local path
-    if ( -e "mgr/$cf.config") then
-	setenv STAR_CONFIG  "$cf"
-	setenv STAR_CONFIGP "`pwd`/mgr/$cf.config"
-    else if ( -e "$STAR/mgr/$cf.config" ) then
-	setenv STAR_CONFIG  "$cf"
-	setenv STAR_CONFIGP "$STAR/mgr/$cf.config"
-    else 
-	# we found nothing and need to revert to default
-	set cf=""
-	goto CFGCHK
-    endif
-else 
-    if ( -e "$STAR/mgr/default.config" ) then
-	setenv STAR_CONFIG  "default"
-	setenv STAR_CONFIGP "$STAR/mgr/default.config"
-    endif
-    # superseed if an arch dependent config exists
-    if ( $USE_64BITS == 1 &&  -e "$STAR/mgr/default.64b.config" ) then
-	setenv STAR_CONFIG  "default.64b"
-	setenv STAR_CONFIGP "$STAR/mgr/default.64b.config"
-    endif
-    if ( $USE_64BITS == 0 &&  -e "$STAR/mgr/default.32b.config" ) then
-	setenv STAR_CONFIG  "default.32b"
-	setenv STAR_CONFIGP "$STAR/mgr/default.32b.config"
-    endif
-endif
-if ( $?DECHO && $?STAR_CONFIG ) then
-    echo "$0 :: Config is now $STAR_CONFIG"
-endif
-
-# check again 
-if ( $?STAR_CONFIG ) then
-    #echo "--- yo $ECHO" 
-    if ($?DECHO) echo "starver :: Loading configuration $cf ($STAR_CONFIGP)"
-    source $STAR_CONFIGP
-else
-    if ($?DECHO && "$cf" != "") then
-	echo "starver :: Post-config $cf.config does not exist"
-    endif
-endif
-endif
