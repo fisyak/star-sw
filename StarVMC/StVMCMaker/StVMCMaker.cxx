@@ -77,6 +77,7 @@
 #include "St_g2t_Chair.h"
 #include "tables/St_g2t_vertex_Table.h"
 #include "StTree.h"
+#include "TGeoMedium.h"
 ClassImp(StVMCMaker);
 
 StarVMCApplication* StVMCMaker::fgStarVMCApplication = 0;
@@ -195,7 +196,15 @@ Int_t StVMCMaker::InitRun  (Int_t runumber){
 	     << ",Rescale: " << StarMagField::Instance()->GetRescale() <<endm;
     fgGeant3->SetMagField(StarMagField::Instance());
   } else {
+    LOG_INFO << "StVMCMaker::InitRun SetMagField set for " <<  gGeoManager->GetName() << endm;
     fgGeant3->SetMagField(MARCOMagField::Instance());
+    LOG_INFO << "StVMCMaker::InitRun set TMED field parameters  " <<  endm;
+    TIter next(gGeoManager->GetListOfMedia());
+    TGeoMedium *media = 0;
+    while ((media = (TGeoMedium *) next())) {
+      media->SetParam("IFIELD",  1.);
+      media->SetParam("FIELDM", 20.);
+    }
   }
   if (IAttr("VMCPassive"))  {LOG_INFO << "StVMCMaker::InitRun Passive   mode" << endm;} 
   else                      {LOG_INFO << "StVMCMaker::InitRun Active    mode" << endm;
