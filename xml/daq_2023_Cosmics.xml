@@ -7,6 +7,7 @@
 #   setup 64b
 #   starver TFG21c
 #   starver TFG21h
+#   starver TFG23e
 #  echo $INPUTFILE0 | grep ':'
 #  if (! $?) then
 #    set evtsFile = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
@@ -40,7 +41,8 @@
       rm ${SUBMITTINGDIRECTORY}/Submitted
     endif
     set input = ${evtsFile};
-root.exe -q -b 'bfc.C(100000,"P2023a,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+    root.exe -q -b 'bfc.C(100000,"P2023a,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+#   root.exe -q -b 'bfc.C(100000,"P2022a,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
 #    cp -p ${logFile} ${SUBMITTINGDIRECTORY}/
 #    cp -p ${bf}*.root ${SUBMITTINGDIRECTORY}/
     rm ${SUBMITTINGDIRECTORY}/${bf}.bla.root

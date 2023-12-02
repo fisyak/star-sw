@@ -5,6 +5,9 @@ use Env;
 use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";#$ENV{ConstructLocation}; 
 use RunXXIDefs;
 my $debug = 0;
+if ($#ARGV >= 0) {
+  $debug = $ARGV[0];
+}
 my $pwd = cwd();
 my $Day = File::Basename::basename(File::Basename::dirname($pwd));
 my $Run =  File::Basename::basename($pwd);
@@ -36,8 +39,10 @@ sub GoodRun($$) {
   print "GoodRun:: run = $run" if $debug;
   foreach my $key (sort keys %$env ) {
     print "$pwd, trig = $env->{$key}->{trig}, field = $env->{$key}->{field}; first = $env->{$key}->{first}, last = $env->{$key}->{last}" if ($debug);
-    if ($pwd !~ /$env->{$key}->{trig}/)  {print ", rejected by trig\n"  if ($debug); next;}
-    if ($pwd !~ /$env->{$key}->{field}/) {print ", rejected by field\n" if ($debug); next;}
+    my $trig = $env->{$key}->{trig};
+    if ($trig =~ /Cosmic_/) {$trig = "Cosmic";}
+    if ($pwd !~ /$trig/)                  {print ", rejected by trig\n"  if ($debug); next;}
+    if ($pwd !~ /$env->{$key}->{field}/)  {print ", rejected by field\n" if ($debug); next;}
     if ($run < $env->{$key}->{first})     {print ", rejected by first\n" if ($debug); next;}
     if ($run > $env->{$key}->{last})      {print ", rejected by last\n"  if ($debug); next;}
     print " accepted\n" if ($debug);
@@ -59,7 +64,7 @@ foreach my $run (@runs) {
   if (GoodRun($def,$r) < 0) {next;}
 #  foreach my $tag (qw(st_physics_2 hlt)) {
   foreach my $tag (qw(hlt)) {
-    my @files = glob $run . "/" . $tag . "*.daq";#print "files = @files\n" if ($debug);
+    my @files = glob $run . "/" . $tag . "*.daq"; print "files = @files\n" if ($debug);
     if ($#files < 0) {next;}
     #  print "files = @files\n";
     #    my $day = int ($r/1000 - 20000); #print "ru = $r => day = $day\n";

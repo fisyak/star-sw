@@ -50,12 +50,13 @@ my $def = {@Runs};# print "Runs = @Runs\n";
 PrintHash($def,"Runs") if ($debug);
 #die;
 #my  @runs  = glob "/hlt/cephfs/daq/2019/???/* /hlt/cephfs/daq/2019/???/*";  print "runs = @runs\n" if ($debug);
-my @runs = ("/hlt/cephfs/daq/2019B/" . $Day . "/" .  $Run);
+#my @runs = ("/hlt/cephfs/daq/2019B/" . $Day . "/" .  $Run);
+my @runs = ("/hlt/cephfs/daq/2019/" . $Day . "/" .  $Run);
 print "runs = @runs\n" if ($debug);
 foreach my $run (@runs) {
   my $r = File::Basename::basename($run);
   if (GoodRun($def,$r) < 0) {next;}
-  foreach my $tag (qw(st_physics hlt)) {
+  foreach my $tag (qw(st hlt)) {
     my @files = glob $run . "/" . $tag . "*.daq";#print "files = @files\n" if ($debug);
     if ($#files < 0) {next;}
     #  print "files = @files\n";

@@ -1,7 +1,7 @@
 #! /bin/tcsh -f
 #cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIDefs.pm
 #git diff .
-git ci -m "Update" .
+#git ci -m "Update" .
 #cd ~/reco/2020/TFG19m/RF/11p5GeV.B
 #cd CreateRunDirs.pl/net/l401/data/scratch2/reco/2020/TFG20a/RF/31p2GeV_fixedTarget
 #cd /net/l401/data/scratch2/reco/2020/TFG20a/RF/9p8GeV_fixedTarget
@@ -11,7 +11,7 @@ git ci -m "Update" .
 #foreach D (`ls -d /hlt/cephfs/reco/2021/FF/TFG21h/Cosmic*`)
 #foreach D (`ls -d /hlt/cephfs/reco/2021/RF/TFG21h/Cosmic*`)
 #  cd ${D}
-  CreateRunDirs.pl
+  CreateRunDirs2021.pl
   foreach d (`ls -1dr ???/2*`)
     cd $d;
     if (-r Done || -r Submitted) then
@@ -48,7 +48,7 @@ foreach done (`ls -1d ???/*/Done`)
     ln -s ~/macros/.sl73_* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
     @ count++;  echo "count $count";
-    if ($count > 40) then 
+    if ($count > 120) then 
         cd -
 	break;
     endif

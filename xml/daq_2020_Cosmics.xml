@@ -35,6 +35,9 @@
     set bla = ${SUBMITTINGDIRECTORY}/${bf}.bla.root
     if (-r ${bla}) continue;
     touch ${bla}
+    if (-r ${SUBMITTINGDIRECTORY}/Submitted) then 
+      rm ${SUBMITTINGDIRECTORY}/Submitted
+    endif
     set input = ${evtsFile};
 #root.exe -q -b 'bfc.C(1000,"P2014,TpxRaw,TpxClu2D,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,CorrX,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,McTpcAna","'${input}'","'$output'","'${bf}.root'")' &gt;&amp; ${logFile}
 #root.exe -q -b 'bfc.C(1000,"P2018,TpxRaw,TpxClu,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,CorrX,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,McTpcAna","'${input}'","'$output'","'${bf}.root'")' &gt;&amp; ${logFile}
@@ -61,7 +64,8 @@ root.exe -q -b 'bfc.C(100000,"P2020a,gmt,-l3onl,-fpd,mtd,btof,evout,NoHistos,noT
 <!-- <input URL="file:/net/l401/data/scratch1/daq/2019/019/*/st_cosmic_*.daq" /> -->
 <!-- <input URL="file:/hlt/cephfs/daq/2019/*/*/st_cosmic_*.daq" /> -->
 <!-- <input URL="command:2020Cosmic.pl" /> -->
-<input URL="command:daq_2020.pl" />
+<!-- <input URL="command:daq_2020.pl" /> -->
+<input URL="command:daq_2020dR.pl" />
 <!-- <output fromScratch="*.root" toURL="file./"/> -->
 <!-- <output fromScratch="*B.log" toURL="file:./"/> -->
  <ResourceUsage>
