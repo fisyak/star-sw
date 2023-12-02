@@ -178,6 +178,7 @@ void StarMCPrimaryGenerator::GeneratePrimaries() {
   }
   GeneratePrimary();  
   fStarStack->SetNprimaries(fNofPrimaries);
+  if (fDebug) Print();
 }
 //________________________________________________________________________________
 void StarMCPrimaryGenerator::SetGun(Int_t Id, 
