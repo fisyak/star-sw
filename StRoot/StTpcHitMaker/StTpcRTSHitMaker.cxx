@@ -221,9 +221,11 @@ Int_t StTpcRTSHitMaker::InitRun(Int_t runnumber) {
       for(Int_t rowO = 1; rowO <= 45; rowO++) {
 	Int_t Npads = St_tpcPadPlanesC::instance()->padsPerRow(rowO);
 	for(Int_t pad = 1; pad <= Npads; pad++) {
-	  cout << Form("Gain/T0 s/r/p %3i/%3i/%3i %7.3f %7.3f %i",sector,rowO,pad,fTpx23->rp_gain[sector-1][rowO][pad].gain,fTpx23->rp_gain[sector-1][rowO][pad].t0,fTpx23->rp_gain[sector-1][rowO][pad].flags) << endl;
+	  LOG_INFO << Form("Gain/T0 s/r/p %3i/%3i/%3i %7.3f %7.3f %i",sector,rowO,pad,fTpx23->rp_gain[sector-1][rowO][pad].gain,fTpx23->rp_gain[sector-1][rowO][pad].t0,fTpx23->rp_gain[sector-1][rowO][pad].flags) << endm;
 	}
       }
+      LOG_INFO << "StTpcRTSHitMaker::InitRun:: loaded gains for " << NoPadsWithLoadedGain << " pads in TPX23" << endm;
+      
     }
 #endif /* __DEBUG_GAIN__ */
     fTpx23->run_start() ;
@@ -739,7 +741,11 @@ Int_t StTpcRTSHitMaker::Make23() {
     return kStOK;
   }
   static Short_t ADCs[__MaxNumberOfTimeBins__];
+#ifdef __TFG__VERSION__
   static Int_t IDTs[__MaxNumberOfTimeBins__];
+#else
+  static UShort_t IDTs[__MaxNumberOfTimeBins__];
+#endif
   static StTpcCoordinateTransform transform;
   static StThreeVectorF hard_coded_errors;
   StEvent*   rEvent      = (StEvent*)    GetInputDS("StEvent");
@@ -798,6 +804,10 @@ Int_t StTpcRTSHitMaker::Make23() {
 	tpc23 = fTpx23;
       }
       if (! tpc23) continue;
+#ifndef __TFG__VERSION__
+      Double_t ADC2GeV = 0;
+      Int_t rowOld = -1;
+#endif /* ! __TFG__VERSION__ */
       for (Int_t row = row1; row <= row2; row++) {
 	if (! St_tpcPadGainT0BC::instance()->livePadrow(sector,row)) continue;
 	tpc23->sim_evt_start(sector) ;	// prepare start of event
@@ -820,16 +830,19 @@ Int_t StTpcRTSHitMaker::Make23() {
 	  UInt_t l = 0;
 	  static UShort_t adcs[__MaxNumberOfTimeBins__];
 	  memset(adcs, 0, sizeof(adcs));
+	  static Int_t idts[__MaxNumberOfTimeBins__];
+	  memset(idts, 0, sizeof(idts));
 	  for (UInt_t k = 0; k < __MaxNumberOfTimeBins__; k++) {
 	    if (ADCs[k]) {
 	      adcs[k] = ADCs[k];
+	      idts[k] = IDTs[k];
 	      l++;
 	    }
 	  }
 	  if (l > 0) {
 	    Int_t padrow = rowO;
 	    //	    tpc23->sim_do_pad(padrow,pad,ADCs,IDTs) ;
-	    tpc23->do_ch_sim(padrow,pad,adcs,IDTs) ;
+	    tpc23->do_ch_sim(padrow,pad,adcs,idts) ;
 	    NoAdcs += l;
 	  }
 	} // pad loop
@@ -954,6 +967,17 @@ Int_t StTpcRTSHitMaker::Make23() {
 	    hw += sector << 4;     // (row/100 << 4);   // sector
 	    hw += row  << 9;       // (row%100 << 9);   // row
 #ifndef __TFG__VERSION__
+	    if (row != rowOld) {
+	      rowOld = row;
+	      Double_t gain = St_tpcPadConfigC::instance()->IsRowInner(sector,row) ? 
+		St_tss_tssparC::instance()->gain_in() : 
+		St_tss_tssparC::instance()->gain_out();
+	      Double_t wire_coupling = St_tpcPadConfigC::instance()->IsRowInner(sector,row) ? 
+		St_tss_tssparC::instance()->wire_coupling_in() : 
+		St_tss_tssparC::instance()->wire_coupling_out();
+	      ADC2GeV = ((Double_t) St_tss_tssparC::instance()->ave_ion_pot() * 
+			 (Double_t) St_tss_tssparC::instance()->scale())/(gain*wire_coupling) ;
+	    }
 	    Double_t q = ADC2GeV*dc.cld.charge;
 #else /* used in TFG till 07/31/20 */
 	    Double_t q = 0; 
