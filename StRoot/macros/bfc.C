@@ -92,7 +92,8 @@ void Load(const Char_t *options="");
 //TString defChain("MC.2019,StiCA,20Muons,vmc,Rung.1,dEdxCalib,McTpcAna"); //,AgML");
 //TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib"); //,AgML");
 //TString defChain("MC.7p7GeV_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
-TString defChain("MC.2021,3p85GeV_fixedTarget_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
+//TString defChain("MC.2021,3p85GeV_fixedTarget_2021,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,,20Muons,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
 		const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
 StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,
@@ -327,12 +328,13 @@ StBFChain *bfc(Int_t First, Int_t Last,
   Int_t iInit = chain->Init();
   if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return chain;}
   if (Last == 0) return chain;
-  if ( gROOT->GetClass("StarVMCApplication")) {
-    StarVMCApplication::Instance()->SetDebug(1);
-  }
   StEvtHddr *hd = (StEvtHddr*)chain->GetDataSet("EvtHddr");
   if (hd) hd->SetRunNumber(-2); // to be sure that InitRun calls at least once
-    // skip if any
+  if (TClass::GetClass("StarMCPrimaryGenerator")) { // Print list of input  particles
+    if (StarMCPrimaryGenerator::Instance()) {
+      StarMCPrimaryGenerator::Instance()->SetDebug(1);
+    }
+  }
   chain->EventLoop(First,Last,0);
 #ifndef __CLING__
   gMessMgr->QAInfo() << "Run completed " << endm;
