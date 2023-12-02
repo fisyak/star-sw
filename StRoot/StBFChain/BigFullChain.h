@@ -44,6 +44,8 @@ y2019      tpx    btow    bsmd    etow    esmd    tof    mtd   	etof   gmt    vp
 y2020      tpx    btow    bsmd    etow    esmd    tof    mtd   	etof   gmt    vpd    epd           rp?   fps bbc  fms          vpd | -"-
 ______________________________________________________________________________________________________________     
 y2021      tpx    btow    bsmd    etow    esmd    tof    mtd   	etof   gmt    vpd    epd           rp?       bbc               vpd   fcs fst sTGC | -"-
+y2022      tpx    btow    bsmd    etow    esmd    tof    mtd   	etof   gmt    vpd    epd           rp?       bbc               vpd   fcs fst sTGC | -"-
+y2023      tpx    btow    bsmd    etow    esmd    tof    mtd   	etof   gmt    vpd    epd           rp?       bbc               vpd   fcs fst sTGC | daq5k
  */
 #endif
 #define STAR_CHAIN_OBSOLETE "WARNING *** Option is OBSOLETE ***"
@@ -1557,7 +1559,7 @@ Bfc_st BFC[] = { // standard chains
   {"TpxClu","tpc_hits","tpcChain","rts,tpcDb,detDb,-tpx,-tpc_daq,-fcf,MakeEvent","StTpcRTSHitMaker"
    ,"StTpcHitMaker",                                                    "RTS(online) cluster maker",kFALSE},
   {"TpxClu2D"    ,"","","TpxClu","","",                              "RTS(online) 2D-cluster maker",kFALSE},
-  {"TPC23"       ,"","","TpxClu","","",                           "RTS(online) tpc23-cluster maker",kFALSE},
+  {"TPC23"       ,"","","TpxClu","","",                    "RTS(online, daq5k) tpc23-cluster maker",kFALSE},
   {"USE_GAIN_FROM_FILE","","","TpxClu","","","RTS(online) force use gain from Tonko's online files",kFALSE},
   {"NoiTPCLu"    ,"","","TpxClu","","",                "RTS(online) use 1+1D cluster find for iTPC",kFALSE},
   {"NoTpxAfterBurner","","","","","",       "Switch off AfterBurner for RTS(online) cluster makers",kFALSE},
