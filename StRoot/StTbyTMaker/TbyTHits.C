@@ -64,6 +64,7 @@
 #include "TLegend.h"
 #include "TPaletteAxis.h"
 #include "TDirIter.h"
+#include "TSystem.h"
 #include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
 #endif
 #define __FLAG0_ONLY__
@@ -534,13 +535,17 @@ void DrawPad(Int_t s = 1) {
   cout << Form("sector %2i : extra new  = %5.2f %%, extra old = %5.2f %%", s, 100*effN, 100*effO) << endl;
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
   if (c1) c1->Clear();
-  else    c1 = new TCanvas("c1","c1",600,1200);
+  else    c1 = new TCanvas("c1",gSystem->BaseName(gSystem->WorkingDirectory()),600,1200);
   c1->Divide(1,3);
-  c1->cd(1); Pad->Draw("colz");
-  c1->cd(2); PadN->Draw("colz");
-  c1->cd(3); PadO->Draw("colz");
+  c1->cd(1)->SetLogz(1); Pad->Draw("colz");
+  c1->cd(2)->SetLogz(1); PadN->Draw("colz");
+  c1->cd(3)->SetLogz(1); PadO->Draw("colz");
   c1->Update();
   c1->SaveAs(Form("Pad%i.png",s));
+}
+//________________________________________________________________________________
+void DrawPads() {
+  for (Int_t s = 1; s <= 24; s++) DrawPad(s);
 }
 //________________________________________________________________________________
 void TbyTHits() {
