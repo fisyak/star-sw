@@ -253,6 +253,7 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       TString dir(gSystem->BaseName(ddir));
       if (dir == "./") dir = "";
       if (dir == ".") dir = "";
+      dir.ReplaceAll("ZTMfl0T","");
       TString name = gSystem->BaseName(gDirectory->GetName());
       name.ReplaceAll(".root","");
       name.ReplaceAll("DP","");
@@ -384,6 +385,114 @@ void FitPMu(const Char_t *draw="mu",
     name.ReplaceAll("xyPad3CGF","");
     TH1 *hist = (TH1 *) gDirectory->Get("Mu");
     leg->AddEntry(hist,name.Data());
+  }
+  leg->Draw();
+}
+//________________________________________________________________________________
+void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)", 
+	     const Char_t *ext = "P",
+	     Int_t    nx = 0,   // 45,
+	     Double_t xMin = 0, //  0.5,
+	     Double_t xMax = 0, // 45.5,
+	     const Char_t *cut = "(i&&j&&abs(mu)<1&&dmu>0&&dmu<0.02)", // "(i&&j&&abs(mu)<1)/(dmu**2)", 
+	     const Char_t *opt = "", // "profg",
+	     Int_t  ny     = 120,
+	     Double_t yMin =   2,
+	     Double_t yMax =  14,
+	     const Char_t *side = "",
+	     const Char_t *var  = "row", // log_{10}(#Sigma Adc)"
+	     const Char_t *title = "#mu versus pad row"
+	    ) {
+  cout << "Mu2Draw(\"" << draw << "\",\"" << ext << "\"," << nx << "," << xMin << "," << xMax << ",\"" << cut << ",\"" << opt << "\"," << " ny = " << ny << "," << yMin << "," << yMax 
+       << ",\"" <<  side << "\",\"" << var << "\",\"" << title << "\")" << endl;
+  TCanvas *c1 = (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c1");
+  if (! c1)  c1 = new TCanvas("c1","c1",1400,1200);
+  else       c1->Clear();
+  Int_t NF = SetFileList();  
+  if (! NF) return;
+  TString Current(gDirectory->GetName());
+  //  gStyle->SetOptStat(0);
+  Int_t icol = 0;
+  TLegend *leg = new TLegend(0.1,0.1,0.5,0.5);
+  //  gStyle->SetMarkerSize(0.4);
+  for (Int_t k = 0; k < NF; k++) {
+    if (! F[k]) continue;
+    F[k]->cd();
+    TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
+    if (! FitP) continue;
+    icol = k + 1;
+    Int_t kM = 20;
+    if (icol == 3) kM = 24;
+    if      (icol == 1) kM = 20;
+    else if (icol == 5) kM = 20;
+    else if (icol >  7) {kM = 27; icol -= 6;}
+    FitP->SetMarkerStyle(kM);
+    FitP->SetMarkerColor(icol);
+    FitP->SetLineColor(icol);
+    FitP->SetMarkerSize(1);
+    TString same(opt);
+    if (k != 0) same += "same";
+    TString Draw(draw);
+    TString histN(ext); histN += k;
+    TString Drawh(Draw);
+    Drawh += " >> "; Drawh += histN;
+    TH2F *p = new TH2F(histN,title,nx, xMin, xMax, ny, yMin, yMax);
+    if (p) {
+      p->SetMarkerColor(icol);
+      p->SetLineColor(icol);
+      p->SetMarkerStyle(kM);
+      p->SetMarkerSize(1);
+    }
+#if 1
+    cout << Form("%2i %-52s\t", k, F[k]->GetName()); //  << endl;
+    cout << "FitP->Draw(\"" << Drawh << "\",\"" << cut << "\",\"" << same << "\")" << "\t"; //  endl;
+#endif
+    FitP->Draw("mu>>muH",cut,"goff");
+    TH1 *muH = (TH1 *) gDirectory->Get("muH");
+    Double_t RMS = -99;
+    if (muH) RMS = 100*muH->GetRMS();
+    c1->cd();
+    FitP->Draw(Drawh,cut,same);
+    TH1 *hist = (TH1 *) gDirectory->Get(histN);
+    if (hist) {
+      //      TString name(gSystem->BaseName(gDirectory->GetName()));
+      TString ddir(gSystem->DirName(gDirectory->GetName()));
+      TString dir1(gSystem->BaseName(ddir));
+      TString dir(gSystem->BaseName(dir1));
+      if (dir == "./") dir = "";
+      if (dir == ".") dir = "";
+      TString name = gSystem->BaseName(gDirectory->GetName());
+      name.ReplaceAll(".root","");
+      name.ReplaceAll("DP","");
+      name.ReplaceAll("DT","");
+      name.ReplaceAll("GP"," ");
+      name.ReplaceAll("tanL","");// tan(#lambda)");
+      name.ReplaceAll("tanP","");// tan(#psi)");
+      name.ReplaceAll("I","Inner ");
+      name.ReplaceAll("O","Outer ");
+#if 0
+      name.ReplaceAll("SecRow3+SecRow3P","");
+      name.ReplaceAll("SecRow3C","");
+      name.ReplaceAll("SecRow3","");
+      name.ReplaceAll("Z3C+Z3PC","");
+      name.ReplaceAll("Z3+Z3P","cor");
+      name.ReplaceAll("Z3C","");
+      name.ReplaceAll("Z3","");
+      name.ReplaceAll("xyPad3C+xyPad3PC","cor");
+      name.ReplaceAll("xyPad3+xyPad3P","");
+      name.ReplaceAll("xyPad3C","");
+      name.ReplaceAll("xyPad3","");
+      name.ReplaceAll("_y3","");
+      name.ReplaceAll("G4E","");
+#endif
+      leg->AddEntry(hist,Form("%s",dir.Data()));
+      hist->SetTitle(Form("%s : %s",hist->GetTitle(), side));
+      hist->SetXTitle(var);
+      //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;
+      TString nn(name);
+      cout << Form("%3i %-45s%4s: min/max = %7.2f/%7.2f rms %7.2f (\%)", k, nn.Data(), side, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS) << endl;
+      if (yMin < yMax) {hist->SetMinimum(yMin); hist->SetMaximum(yMax);}
+    }
   }
   leg->Draw();
 }
@@ -541,5 +650,11 @@ void FitPDraw(TString Opt = "I", TString plot = "", TString Title = "All") {
     if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 0.5;}
     if (muPlot.Contains(":x",TString::kIgnoreCase)) MuDraw(muPlot,"T", nx, xMin, xMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, Title, var,muPlot);
     else if (muPlot.Contains(":y",TString::kIgnoreCase)) MuDraw(muPlot,"T", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.5)", "prof", zMin, zMax, Title, "Z",muPlot);
+  } else if (Name.BeginsWith("ZTMfl0T"))      {
+    if (Opt == "R") {
+      Mu2Draw("mu:row","R", 72, 0.5, 72.5, "(dmu>0&&dmu<0.1)", "", 120, 2.0,  14.0, "", "row","#mu");
+    } else  {
+      Mu2Draw("mu:sector","S", 24, 0.5, 24.5, "(dmu>0&&dmu<0.1)", "", 1200, 2.0,  14.0, "", "sector","#mu");
+    }
   }
 }
