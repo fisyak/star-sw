@@ -8,7 +8,7 @@ void PrintPars(Int_t N, Double_t *pars, const Char_t *title = "") {
   }
 }
 //________________________________________________________________________________
-void PrintPars(TF1 *f, const Char_t *title = "") {
+void PrintPars(TF1 *f = 0, const Char_t *title = "") {
   if (! f) return;
   Int_t nPar = f->GetNpar();
   TArrayD pars(nPar);

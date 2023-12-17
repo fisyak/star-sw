@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Mar  8 11:54:26 2021 by ROOT version 5.34/39
+// Sun Dec 10 12:16:57 2023 by ROOT version 5.34/39
 // from TTree TpcHit/TpcHit
-// found on file: hlt_22065028_11_01_000.root
+// found on file: 057/20057003/st_physics_adc_20057003_raw_4000002.root
 //////////////////////////////////////////////////////////
 
 #ifndef TpcHit_h
@@ -46,6 +46,10 @@ public :
    Float_t         timeb;
    Float_t         vpdE;
    Float_t         vpdW;
+   Int_t           eg_pid;
+   Int_t           ge_pid;
+   Float_t         pT;
+   Float_t         eta;
 
    // List of branches
    TBranch        *b_sector;   //!
@@ -72,6 +76,10 @@ public :
    TBranch        *b_timeb;   //!
    TBranch        *b_vpdE;   //!
    TBranch        *b_vpdW;   //!
+   TBranch        *b_eg_pid;   //!
+   TBranch        *b_ge_pid;   //!
+   TBranch        *b_pT;   //!
+   TBranch        *b_eta;   //!
 
    TpcHit(TTree *tree=0);
    virtual ~TpcHit();
@@ -93,9 +101,9 @@ TpcHit::TpcHit(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("hlt_22065028_11_01_000.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("057/20057003/st_physics_adc_20057003_raw_4000002.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("hlt_22065028_11_01_000.root");
+         f = new TFile("057/20057003/st_physics_adc_20057003_raw_4000002.root");
       }
       f->GetObject("TpcHit",tree);
 
@@ -155,9 +163,9 @@ void TpcHit::Init(TTree *tree)
    fChain->SetBranchAddress("adc", &adc, &b_adc);
    fChain->SetBranchAddress("pad", &pad, &b_pad);
    fChain->SetBranchAddress("timebucket", &timebucket, &b_timebucket);
-   fChain->SetBranchAddress("IdTruth", &IdTruth, &b_IdTruth);
-   fChain->SetBranchAddress("npads", &npads, &b_npads);
-   fChain->SetBranchAddress("ntbks", &ntbks, &b_ntbks);
+   fChain->SetBranchAddress("IdTruth/I", &IdTruth, &b_IdTruth);
+   fChain->SetBranchAddress("npads/I", &npads, &b_npads);
+   fChain->SetBranchAddress("ntbks/I", &ntbks, &b_ntbks);
    fChain->SetBranchAddress("xL", &xL, &b_xL);
    fChain->SetBranchAddress("yL", &yL, &b_yL);
    fChain->SetBranchAddress("zL", &zL, &b_zL);
@@ -169,6 +177,10 @@ void TpcHit::Init(TTree *tree)
    fChain->SetBranchAddress("timeb", &timeb, &b_timeb);
    fChain->SetBranchAddress("vpdE", &vpdE, &b_vpdE);
    fChain->SetBranchAddress("vpdW", &vpdW, &b_vpdW);
+   fChain->SetBranchAddress("eg_pid/I", &eg_pid, &b_eg_pid);
+   fChain->SetBranchAddress("ge_pid/I", &ge_pid, &b_ge_pid);
+   fChain->SetBranchAddress("pT", &pT, &b_pT);
+   fChain->SetBranchAddress("eta", &eta, &b_eta);
    Notify();
 }
 

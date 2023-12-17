@@ -292,7 +292,7 @@ void T0Fit(TChain *tree) {
     TString Out(gSystem->BaseName(gDirectory->GetName()));
     Out.ReplaceAll(".root",".Fit.root");
     TFile *fOut = new TFile(Out,"recreate");
-    TH2D *D = new TH2D("D","z of Cluster versus row",91,-45.5,45.5,300,0.5,15.5);
+    TH2D *D = new TH2D("D","z of Cluster versus row",145,-72.5,72.5,300,0.5,15.5);
     tree->Draw("timebucket:(sector <= 12) ? row : -row >> D","trigId==0","colz");
     fOut->Write();
   }
@@ -358,7 +358,7 @@ void T0Fit(TChain *tree) {
   TH1D *mu = hist[1];
   if (! mu) return;
   TF1 *pol0 = 0;
-  Double_t xmx[6] = {-45.5, -13.5, -0.5, 0.5, 13.5, 45.5};
+  Double_t xmx[6] = {-72.5, -40.5, -0.5, 0.5, 40.5, 72.5};
   Double_t t0[4], dt0[4], w[4];
   for (Int_t i = 0; i < 4; i++) {
     Int_t i1 = i;
@@ -465,7 +465,7 @@ void T0Fit(TH3F *D = 0, Int_t iX = 0, Int_t iY = 0) {
   TH2D *mu = hist[1];
   if (! mu) return;
   TF1 *pol0 = 0;
-  Double_t xmx[6] = {-45.5, -13.5, -0.5, 0.5, 13.5, 45.5};
+  Double_t xmx[6] = {-72.5, -40.5, -0.5, 0.5, 40.5, 72.5};
   Double_t t0[4], dt0[4], w[4];
   for (Int_t i = 0; i < 4; i++) {
     Int_t i1 = i;
@@ -558,4 +558,5 @@ FitP->Draw("((mu-208.707)-(-4.34622712046779991e-01))/208.07:y>>zO(72,0.5,72.5)"
 TProfile *z = new TProfile(*zI)
 z->Add(zO)
 z->Fit("pol2","e")
+
  */

@@ -89,12 +89,13 @@ void TpcAligner(Int_t First, Int_t Last,
     rFile += "Aligner.root";
   }
   bfc(-1,Chain.Data(),MainFile,0,rFile.Data());
-  if (Last < First) return;
+  if (Last < 0) return;
   //  StTpcAlignerMaker *aligner = (StTpcAlignerMaker *) chain->Maker("TpcAligner");
   //  aligner->SetMode(2); // take out misalignment
   //  aligner->SetDebug(12);
   //  if (First >= Last)  
   chain->Init();
+  if (Last == 0) return;
 //   StIOMaker *inMk = (StIOMaker *) chain->GetMaker("inputStream");
 //   if (inMk) {
 //     inMk->SetIOMode("r");
