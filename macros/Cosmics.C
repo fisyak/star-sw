@@ -50,7 +50,8 @@
    end
    foreach d (`ls -1d ???`)
      cd ${d}
-     if (! -r Cosmics.root) then
+     ls -ltr | tail -1 | grep Cosmic.root
+     if ($?) then
         echo "$PWD"
         ln -s ~/macros/.sl* .
         root.exe -q -b lMuDst.C 'Cosmics.C+("*\/*MuDst.root")' > & Cosmics.log &
@@ -58,6 +59,14 @@
      cd -
    end
 
+   root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
+   foreach d (`ls -1d 20??/?F`) 
+     cd ${d}
+     pwd
+     mkdir Pictures
+     root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
+     cd -
+   end
 */
 #endif
 //#define __PrimaryVertices__
