@@ -86,45 +86,52 @@ enum EPlotType {
   NHYPS = 18, NHypTypes = NHYPS/2, 
   kVariables = 2                                                         // x = 0 vs No. fit and No. bad points, x = 1 vs Eta and pT 
 };
+struct Var_t {
+  Double_t ChiSqXY;
+  Double_t ChiSqZ;
+  Double_t dDcaXY; 
+  Double_t dDcaZ;  
+  Double_t dPsi;   
+  Double_t dPti;  
+  Double_t dPtiR; 
+  Double_t dTanL;  
+  Double_t deta;  
+  Double_t pDcaXY; 
+  Double_t pDcaZ;  
+  Double_t pPsi;   
+  Double_t pPti;  
+  Double_t pPtiR; 
+  Double_t pTanL;  
+  Double_t peta;  
+  Double_t Phi; // degree
+};
+struct PlotName_t {
+  TrackMatchType    k;
+  const Char_t *Name;
+  const Char_t *Title;
+};
+struct VarName_t {
+  const Char_t *Name;
+  const Char_t *Title;
+  Int_t nx;
+  Double_t xmin, xmax;
+  Int_t ny;
+  Double_t ymin, ymax;
+  Int_t nz;
+  Double_t zmin, zmax;
+  Double_t  min,  max; // min and max for plots
+  Int_t    GlobalOnly; // = 1: only global, -1: only primary, 0: both
+};
+struct Eff_t {
+  const Char_t *Name;
+  const Char_t *Title;
+  TrackMatchType kDividend;
+  TrackMatchType kDivider;
+  Double_t min, max;
+};
 
 class StMuMcAnalysisMaker : public StMaker {
  private:
-  struct Var_t {
-    Double_t ChiSqXY;
-    Double_t ChiSqZ;
-    Double_t dDcaXY; 
-    Double_t dDcaZ;  
-    Double_t dPsi;   
-    Double_t dPti;  
-    Double_t dPtiR; 
-    Double_t dTanL;  
-    Double_t deta;  
-    Double_t pDcaXY; 
-    Double_t pDcaZ;  
-    Double_t pPsi;   
-    Double_t pPti;  
-    Double_t pPtiR; 
-    Double_t pTanL;  
-    Double_t peta;  
-    Double_t Phi; // degree
-  };
-  struct PlotName_t {
-    TrackMatchType    k;
-    const Char_t *Name;
-    const Char_t *Title;
-  };
-  struct VarName_t {
-    const Char_t *Name;
-    const Char_t *Title;
-    Int_t nx;
-    Double_t xmin, xmax;
-    Int_t ny;
-    Double_t ymin, ymax;
-    Int_t nz;
-    Double_t zmin, zmax;
-    Double_t  min,  max; // min and max for plots
-    Int_t    GlobalOnly; // = 1: only global, -1: only primary, 0: both
-  };
 
   static const int fNNTuples = 4;
   TNtuple* fCutsNTuple[fNNTuples];
@@ -176,6 +183,7 @@ class StMuMcAnalysisMaker : public StMaker {
   static void    EndTable();
   static void    SetGEANTLabels(TAxis *x);
   static void    PrintMem(const Char_t *opt = "");
+  const Char_t  *MakeTitle( Int_t gp, Int_t type, Int_t particle, Int_t pm, Int_t x, Int_t i);
   static StMuMcAnalysisMaker *instance() {return fgStMuMcAnalysisMaker;}
   virtual const char *GetCVS() const {
     static const char cvs[]="Tag $Name:  $ $Id: StMuMcAnalysisMaker.h,v 1.16 2014/08/06 11:43:53 jeromel Exp $ built " __DATE__ " " __TIME__ ; 

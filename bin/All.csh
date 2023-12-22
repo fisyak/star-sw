@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-set GLOB = ' AuAu_* *GeV* dAu*'
+set GLOB = ' AuAu* *GeV* dAu*'
 if ($#argv > 0)   set GLOB = "$argv";
 # foreach d (`ls -1d *`)
 foreach d (`ls -1dtr ${GLOB}| sort -u`)

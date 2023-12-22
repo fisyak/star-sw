@@ -74,7 +74,7 @@ if ($all) {
 #  push  @{ $Opts{GG} }, qw(dNdxVsBgC dNdxVsBgCI dNdxVsBgCO); 
   push  @{ $Opts{G4EY} }, qw(
 			      SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
-			      Z3 Z3P  Z3+Z3P  Z3C+Z3P 
+			      Z3 Z3P  Z3+Z3P
 			      Z3C Z3PC Z3C+Z3PC 
 			      xyPad3qB xyPad3qBC
 			      xyPad3+xyPad3P xyPad3C+xyPad3PC

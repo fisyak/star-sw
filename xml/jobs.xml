@@ -19,4 +19,10 @@ if ($?INPUTFILE9) csh -x $INPUTFILE9
 <!-- <stdout URL="file:./sched$JOBID.log" /> -->
 <stdout URL="file:./sched$JOBID.log" />
 <input URL="command:lscsh" />
+<!--
+   <ResourceUsage>
+      <Priority>99</Priority>
+<CPUModelNumber>106</CPUModelNumber>
+    </ResourceUsage>
+-->
 </job>
