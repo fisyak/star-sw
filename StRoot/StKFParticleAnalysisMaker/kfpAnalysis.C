@@ -15,7 +15,7 @@ class StGoodTrigger;
 //void kfpAnalysis(Int_t N = 10000000, const Char_t *input = "./*.picoDst.root", const Char_t *output = "Ana.root", const Char_t *triggerSet = "y2022", Bool_t idNdx = kFALSE) {
 void kfpAnalysis(Int_t N = 10000000, 
 		 //		 const Char_t *input = "/star/data102/reco/production_OO_200GeV_2021/ReversedFullField/P23ib/2021/136/22136010/st_physics_22136010_raw_1500002.picoDst.root", 
-		 const Char_t *input = "st_physics_22136010_raw_1500002.picoDst.root", 
+		 const Char_t *input = "*.picoDst.root", 
 		 const Char_t *output = "Ana.root", const Char_t *triggerSet = "y2021", Bool_t idNdx = kFALSE) {
 #if !defined(__CINT__)
   std::cout << "This code cannot be compiled" << std::endl;
