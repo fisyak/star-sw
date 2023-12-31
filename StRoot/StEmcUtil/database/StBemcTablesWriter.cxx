@@ -12,7 +12,7 @@
 #include "TDatime.h"
 
 #include "TUnixTime.h"
-#include "StDaqLib/EMC/StEmcDecoder.h"
+#include "StEmcDecoder.h"
 #include "StMessMgr.h"
 
 #include "StEmcRawMaker/defines.h"

@@ -8,7 +8,7 @@
 #include "StEvent/StEventTypes.h"
 #include "StEmcUtil/geometry/StEmcGeom.h"
 #include "StarRoot/TUnixTime.h"
-#include "StDaqLib/EMC/StEmcDecoder.h"
+#include "StEmcDecoder.h"
 #include "Stiostream.h"
 #include "St_db_Maker/St_db_Maker.h"
 #include "tables/St_emcPed_Table.h"

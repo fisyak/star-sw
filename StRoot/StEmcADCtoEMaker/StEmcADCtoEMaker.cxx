@@ -11,7 +11,7 @@
 #include "StDaqLib/GENERIC/EventReader.hh"
 #include "StDaqLib/EMC/EMC_Reader.hh"
 #include "StDAQMaker/StDAQReader.h"
-#include "StDaqLib/EMC/StEmcDecoder.h"
+#include "StEmcDecoder.h"
 #include "StMessMgr.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuDebug.h"

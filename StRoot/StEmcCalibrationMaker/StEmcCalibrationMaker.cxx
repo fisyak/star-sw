@@ -23,7 +23,7 @@
 #include "StDbLib/StDbManager.hh"
 #include "StDbLib/StDbTable.h"
 #include "StDbLib/StDbConfigNode.hh"
-#include "StDaqLib/EMC/StEmcDecoder.h"
+#include "StEmcDecoder.h"
 
 #define CAP1 124
 #define CAP2 125

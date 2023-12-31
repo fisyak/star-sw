@@ -3,19 +3,19 @@
 #include <fstream>
 using namespace std;
 
-#include <TFile.h>
-#include <TROOT.h>
-#include <TF1.h>
+#include "TFile.h"
+#include "TROOT.h"
+#include "TF1.h"
 
-#include <StEventTypes.h>
-#include <StEvent.h>
-#include <StEmcUtil/geometry/StEmcGeom.h>
-#include <StDbLib/StDbManager.hh>
-#include <StDbLib/StDbTable.h>
-#include <StDbLib/StDbConfigNode.hh>
-#include <tables/St_emcPed_Table.h>
-#include <tables/St_smdPed_Table.h>
-#include <StDaqLib/EMC/StEmcDecoder.h>
+#include "StEventTypes.h"
+#include "StEvent.h"
+#include "StEmcUtil/geometry/StEmcGeom.h"
+#include "StDbLib/StDbManager.hh"
+#include "StDbLib/StDbTable.h"
+#include "StDbLib/StDbConfigNode.hh"
+#include "tables/St_emcPed_Table.h"
+#include "tables/St_smdPed_Table.h"
+#include "StEmcDecoder.h"
 
 ClassImp(StEmcPedestalMaker)
 

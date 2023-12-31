@@ -9,7 +9,7 @@
 #include "StBemcTables.h"
 #include "Stiostream.h"
 #include "StEmcUtil/others/emcDetectorName.h"
-#include "StDaqLib/EMC/StEmcDecoder.h"
+#include "StEmcDecoder.h"
 #include "StMaker.h"
 #include "St_db_Maker/St_db_Maker.h"
 #include "StEmcRawMaker/defines.h"

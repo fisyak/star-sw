@@ -28,7 +28,7 @@
 #include "StEvent/StEvent.h"
 #include "StEvent/StEventTypes.h"
 #include "StEmcUtil/database/StBemcTables.h"
-#include "StDaqLib/EMC/StEmcDecoder.h"
+#include "StEmcDecoder.h"
 
 #include "StEmcTriggerMaker.h"
 
