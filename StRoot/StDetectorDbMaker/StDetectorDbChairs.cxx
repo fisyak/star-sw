@@ -17,6 +17,8 @@ using namespace ROOT::Math;
 #include "tables/St_tpcSectorT0offset_Table.h"
 #include "tables/St_tofTrayConfig_Table.h"
 #define makeSTRING(PATH) # PATH
+//     if (! strcmp(makeSTRING(C_STRUCT),"tpcSectorT0offset")) {for (Int_t i = 0; i < 24; i++) def.t0[i] = -22.257;} 
+
 #define CHECKTABLED(C_STRUCT)			  \
   if (table->InheritsFrom("St_" # C_STRUCT)) {		      \
     St_ ## C_STRUCT  *t = (St_ ## C_STRUCT  *) table ;	      \
@@ -26,7 +28,6 @@ using namespace ROOT::Math;
     Int_t shift = 0;							\
     Int_t NrowSize = t->GetRowSize();					\
     if (! strcmp(makeSTRING(C_STRUCT),"Survey")) {shift = 4; NrowSize = 12*8;} \
-    if (! strcmp(makeSTRING(C_STRUCT),"tpcSectorT0offset")) {for (Int_t i = 0; i < 24; i++) def.t0[i] = -22.257;} \
     if (! strcmp(makeSTRING(C_STRUCT),"tofTrayConfig")) {def.entries = 120; for (Int_t i = 0; i < 120; i++) {def.iTray[i] = i+1; def.nModules[i] = 32;} \
       for (Int_t i = 0; i < table->GetNRows(); i++, s++) {		\
 	if (memcmp(&def+shift, s+shift,  NrowSize)) {iprt = kTRUE; break;} \
