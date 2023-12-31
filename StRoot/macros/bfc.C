@@ -13,31 +13,12 @@ class StMessMgr;
 #pragma cling load("StarRoot")
 #pragma cling load("St_base")
 #pragma cling load("StChain")
+#pragma cling load("libStDbLib")
 #pragma cling load("StUtilities")
 #pragma cling load("StBFChain")
-#include "Rtypes.h"
-#include "Ttypes.h"
 #endif /* __CLING__ */
 
-#if !(defined(__CINT__) || defined(__CLING__)) || defined(__MAKECINT__)
-
-#include "Stiostream.h"
-#include "TSystem.h"
-#include "TClassTable.h"
-#include "TApplication.h"
-#include "TInterpreter.h"
-#include "StBFChain.h"
-#include "StMessMgr.h"
-#include "StStarLogger/StLoggerManager.h"
-#include "StarRoot/TAttr.h"
-#include "TROOT.h"
-#include "TAttr.h"
-#endif
-
-#if !defined(__CINT__) || defined(__CLING__)
-// 'chain' is defined in StBFChain library (see StRoot/StBFChain.cxx)
-extern StBFChain* chain;
-#else
+#if defined(__CINT__)
 StBFChain* chain = 0;
 #endif
 
@@ -160,8 +141,8 @@ void Load(const Char_t *options)
     }
     cout << endl;
   }
-  gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
 #ifndef __CLING__1
+  gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   // Look up for the logger option
   Bool_t needLogger  = kFALSE;
   if (gSystem->Load("liblog4cxx") >=  0) {             //  StMemStat::PrintMem("load log4cxx");
@@ -199,7 +180,7 @@ StBFChain *bfc(Int_t First, Int_t Last,
   TString tChain(Chain);
   if (tChain == "") {
     if (Last == -2 && tChain.CompareTo("ittf",TString::kIgnoreCase)) Usage();
-    return chain;
+    return 0;
   } else {
 #if 0
     // Predefined test chains
@@ -221,8 +202,12 @@ StBFChain *bfc(Int_t First, Int_t Last,
     }
 #endif
   }
+#ifndef __CLING__
   if (gClassTable->GetID("StBFChain") < 0) Load(tChain.Data());
   chain = (StBFChain *) StMaker::New("StBFChain", chainName);
+#else
+  StBFChain *chain = new StBFChain;
+#endif
   cout << "Create chain " << chain->GetName() << endl;
   chain->cd();
   chain->SetDebug(1);
@@ -254,9 +239,9 @@ StBFChain *bfc(Int_t First, Int_t Last,
     gSystem->Exit(1);
   }
   StMaker::lsMakers(chain);
-  if (Last < 0) return chain;
   StMaker *dbMk = chain->GetMaker("db");
   if (dbMk) dbMk->SetDebug(1);
+  if (Last < 0) return chain;
   StMaker *EventMk = chain->GetMaker("0Event");
   if (EventMk) EventMk->SetDebug(1);
   StMaker *sti  = chain->GetMaker("Sti");
@@ -330,11 +315,13 @@ StBFChain *bfc(Int_t First, Int_t Last,
   if (Last == 0) return chain;
   StEvtHddr *hd = (StEvtHddr*)chain->GetDataSet("EvtHddr");
   if (hd) hd->SetRunNumber(-2); // to be sure that InitRun calls at least once
+#if defined(__CINT__) && !defined(__MAKECINT__)
   if (TClass::GetClass("StarMCPrimaryGenerator")) { // Print list of input  particles
     if (StarMCPrimaryGenerator::Instance()) {
       StarMCPrimaryGenerator::Instance()->SetDebug(1);
     }
   }
+#endif
   chain->EventLoop(First,Last,0);
 #ifndef __CLING__
   gMessMgr->QAInfo() << "Run completed " << endm;
