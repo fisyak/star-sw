@@ -651,6 +651,9 @@ if(mlogTime)mqueryLog.start();
 
 
 //int status=mysql_real_query(&mData,mQuery,mQueryLen);
+#ifdef __TFG__VERSION__
+//  cout << "MysqlDb::ExecQuery: " << mQ.c_str() << endl;
+#endif /* __TFG__VERSION__ */
   int status=mysql_real_query(&mData,mQ.c_str(), mQ.size());
 
   if( (status!=0) && ( mysql_errno(&mData)==CR_SERVER_GONE_ERROR || mysql_errno(&mData)==CR_SERVER_LOST ) ){
