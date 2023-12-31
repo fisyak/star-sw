@@ -371,6 +371,7 @@ St_db_Maker::St_db_Maker(const char *name
 )
 :StMaker(name)
 {
+  SetDebug(1);
    for (int i=0;i<5;i++) {fTimer[i].Stop();}
    fTimer[5].Start(0);
 
