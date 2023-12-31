@@ -720,8 +720,8 @@ Int_t StBFChain::Instantiate()
       if (GetOption("VFMCE"      ) ) mk->SetAttr("VFMCE"      	, kTRUE);
       if (GetOption("VFMinuitX"  ) ) mk->SetAttr("VFMinuitX"  	, kTRUE);
     }
+#if  ROOT_VERSION_CODE < ROOT_VERSION(6,0,0)
     if (maker=="StAssociationMaker") {
-      
       LOG_QA << "StBFChain::Instantiate Setting the Parameters for the Association Maker" << endm;
       
       TString cmd("");
@@ -751,6 +751,7 @@ Int_t StBFChain::Instantiate()
       if (GetOption("IdTruth")) cmd += Form("((StAssociationMaker *) %p)->useIdAssoc();",mk);
       ProcessLine(cmd);
     }
+#endif /*  ROOT_VERSION_CODE < ROOT_VERSION(6,0,0) */
     if (maker == "StMiniMcMaker" && GetOption("IdTruth") && ! GetOption("OldMiniMc")) {
       mk->SetMode(1);
       gMessMgr->QAInfo() << "StBFChain::Instantiate create simplified MiniMcTree in " << maker  << endm;
