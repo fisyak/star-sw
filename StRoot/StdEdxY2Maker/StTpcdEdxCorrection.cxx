@@ -355,7 +355,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
   Int_t qB                = CdEdx.qB;    
   Double_t adcCF = CdEdx.adc;
   Int_t iok = 0;
-  if (dxC <= 0 || (dEU <= 0 && adcCF <= 0)) {
+  if (dxC <= 0 || dEU <= 0) {
     iok = 1;
     return iok;
   }
