@@ -33,6 +33,7 @@
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2022_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2021_Cosmics.xml
     /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2023_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2023_Cosmics.xml
     touch Submitted
     cd -
   end
@@ -59,6 +60,6 @@ foreach done (`ls -1d ???/*/Done`)
   cd -;
 end
 if ($count > 0) then
-  sleep 60; 
+  sleep 10; 
   touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
 endif

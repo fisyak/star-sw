@@ -14,6 +14,7 @@ foreach my $f (@files) {
   $run =~ s/adc_//; #print "$run\n";
   $run =~ s/gmt_//; # print "$run\n";
   $run =~ s/hltcosmic_//;
+  $run =~ s/cosmic_//;
   $run =~ s/hlt_//;
   my ($r) = split '_', $run; print "r = $r\n" if ($debug);
 #  $run =~ s/hltcosmic_//; print "$run\n";

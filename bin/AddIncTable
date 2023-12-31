@@ -1,0 +1,63 @@
+#! /usr/bin/env perl
+#
+#print "no. of ARGV = $#ARGV\n";
+if ($#ARGV < 0) {
+  print "Usage: subst \'\*.c\' \'pattern\'=\'replacement\'\n";
+  exit 1;
+}
+#my $glob = shift @ARGV; print "glob = $glob\n";
+my %HoC = ();	     
+my @files = ();
+while (@ARGV) {
+  $_ = shift @ARGV;
+  if (/=/) {
+    my($var, $val) = /([^=]*)=(.*)/;
+#    $var =~ s/\\//g;
+    $val =~ s/\\//g;
+    $HoC{$var} = $val; print "Set regexp \'$var\' replacement with \'$val\'\n";
+  }
+  else {
+    my @ff = glob $_;
+    foreach my $f (@ff) {
+      push @files, $f;
+    }
+  }
+}
+#die;
+#for my $key (sort  keys %HoC) {
+#  next if ! $key;
+#  print "HoC{\'$key\'} = \'$HoC{$key}\'\n";
+#}
+#my @files = glob $glob; 
+print "files = @files\n";
+foreach my $file (@files) {
+  if (-l $file) {next;}
+  my $found  = 0;
+  open (INPUT, $file) || die "Cannot open $file";
+  while ($line = <INPUT>) {
+    if ($line =~ /__CINT__/) {$found++; last;}
+  }  
+ ENDF:
+  close (INPUT);
+  if ($found) {next;}
+  my $newfile = $file . ".BAK";
+  rename $file, $newfile or die "Can't rename $file to $newfile";
+  open (INPUT, "$newfile") or die "Can't open $newfile";
+  open (OUTPUT, ">$file") or die "Can't overwrite $file";
+  print "--- $newfile\n+++ $file\n";
+#include "tables/St_FilePath_Table.h"
+#include "tables/St_tpcAltroParams_Table.h" 
+#include "tables/St_tpcExtraGainCorrection_Table.h"
+#include "tables/St_MDFCorrection_Table.h"
+ print OUTPUT
+'#ifndef __CINT__
+#include "tables/St_tpcSectorT0offset_Table.h"
+#endif
+';
+  while ($lineo = <INPUT>) {
+    my $line = $lineo;
+    print OUTPUT $line;  #print $line;
+  }
+  close (INPUT);
+  close (OUTPUT);
+}
