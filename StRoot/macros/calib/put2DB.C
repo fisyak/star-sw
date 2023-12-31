@@ -33,8 +33,8 @@ void put2DB(const Char_t* files="$STAR/StarDb/Geometry/svt/svtWafersPosition.200
     Int_t indx = bName.Index(".");
     TString TName(bName.Data(),indx);  cout << "Table name " << TName << endl;
     TString Time(bName.Data()+indx+1); 
-    Time.ReplaceAll("C","");
-    Time.ReplaceAll("root","");//  cout << "Time " << Time << endl;
+    Time.ReplaceAll(".C","");
+    Time.ReplaceAll(".root","");//  cout << "Time " << Time << endl;
     //  1996-12-01 23:59:59
     //  Int_t d=19960101;
     Int_t d=20000101;

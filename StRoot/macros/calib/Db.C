@@ -93,9 +93,8 @@ void DbLoad() {
 }
 //________________________________________________________________________________
 //void Db(const Char_t *tabNam  = "Calibrations/tpc/noiseElim", 
-void Db(const Char_t *tabNam  = 	"Geometry/tpc/tpcPadConfig",  Int_t date, Int_t time) {
+void Db(const Char_t *tabNam  = 	"Geometry/tpc/tpcPadConfig",  Int_t date, Int_t time, const Char_t *flavor="sim+ofl+laserDV+TFG+FXT") {
   Int_t debugL = 1;
-  const Char_t *flavor="sim+ofl+laserDV+TFG+FXT";
   Int_t run = 0;
   if (dbMk == 0) DbLoad();
   dbMk->SetDebug(debugL);
@@ -166,7 +165,7 @@ void Db(const Char_t *tabNam  = 	"Geometry/tpc/tpcPadConfig",  Int_t date, Int_t
   else cout << "Table:" << tabNam << " has not been found" << endl;
 }
 //________________________________________________________________________________
-void Db(const Char_t *tabNam="Geometry/tpc/tpcPadConfig", const Char_t *tag="3p85GeV_fixedTarget_2019"){ 
+void Db(const Char_t *tabNam="Geometry/tpc/tpcPadConfig", const Char_t *tag="3p85GeV_fixedTarget_2019", const Char_t *flavor="sim+ofl+laserDV+TFG+FXT"){ 
   cout << "Db(\"" << tabNam << "\",\"" << tag << "\")" << endl;
   if (dbMk == 0) DbLoad();
   Int_t date = -1;
@@ -176,5 +175,5 @@ void Db(const Char_t *tabNam="Geometry/tpc/tpcPadConfig", const Char_t *tag="3p8
     date = StMaker::AliasDate(tag);
     time = StMaker::AliasTime(tag);
   }
-  Db(tabNam,date,time);
+  Db(tabNam,date,time,flavor);
 }
