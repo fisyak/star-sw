@@ -57,10 +57,10 @@ StMeasuredPoint::position() const { return mPosition; }
 
 ostream&  operator<<(ostream& os, const StMeasuredPoint& v)
 {
-  return os << Form("xyz:%10.3f%10.3f%10.3f",
-                    v.position().x(),
-                    v.position().y(),
-                    v.position().z());
+  return os << Form("xyz:%10.3f +/- %4.3f%10.3f +/- %4.3f%10.3f +/- %4.3f",
+                    v.position().x(),v.positionError().x(),
+                    v.position().y(),v.positionError().y(),
+                    v.position().z(),v.positionError().z());
 }
 
 void StMeasuredPoint::Print(Option_t *option) const {cout << *this << endl;}
