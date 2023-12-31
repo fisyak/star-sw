@@ -324,6 +324,7 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
     Float_t  vpdE, vpdW;
     Int_t    eg_pid, ge_pid;
     Float_t  pT, eta;
+    Float_t  sigmaX, sigmaY, sigmaZ;
   };
   Int_t No_g2t_tracks = 0;
   StG2TrackVertexMap *g2tMap = 0;
@@ -333,7 +334,7 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
     St_g2t_vertex *g2t_vertex = (St_g2t_vertex *) StMaker::GetTopChain()->GetDataSet("geant/g2t_vertex"); 
     if (g2t_track && g2t_vertex) g2tMap = StG2TrackVertexMap::instance(g2t_track,g2t_vertex);
   }
-  static const Char_t *vname = "sector/I:row/I:rdo/I:x:y:z:q:adc:pad:timebucket:IdTruth/I:npads/I:ntbks/I:xL:yL:zL:dX:trigId/I:us/I:fl/I:time:timeb:vpdE:vpdW:eg_pid/I:ge_pid/I:pT:eta";
+  static const Char_t *vname = "sector/I:row/I:rdo/I:x:y:z:q:adc:pad:timebucket:IdTruth/I:npads/I:ntbks/I:xL:yL:zL:dX:trigId/I:us/I:fl/I:time:timeb:vpdE:vpdW:eg_pid/I:ge_pid/I:pT:eta:sigmaX:sigmaY:sigmaZ";
   BPoint_t BPoint;
   BPoint.vpdE = BPoint.vpdW = 0;
   StEvent* pEvent = (StEvent*) StMaker::GetChain()->GetInputDS("StEvent");
@@ -459,6 +460,10 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 		    // g2t info 
 		    BPoint.eg_pid = 0, BPoint.ge_pid = -1;
 		    BPoint.pT = 0, BPoint.eta = 0;
+
+		    BPoint.sigmaX = tpcHit->positionError().x();
+		    BPoint.sigmaY = tpcHit->positionError().y();
+		    BPoint.sigmaZ = tpcHit->positionError().z();
 		    if (g2t) {
 		      BPoint.eg_pid = g2t->eg_pid;
 		      BPoint.ge_pid = g2t->ge_pid;
