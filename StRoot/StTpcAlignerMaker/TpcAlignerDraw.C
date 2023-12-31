@@ -1,7 +1,7 @@
 /*
   ln -s ~/macros/.sl* .
-  root.exe -q -b TpcAlignerDraw.C+ >& TpcAlignerDraw.log &
-  root.exe -q -b 'TpcAlignerDraw.C+(1)' > & TpcAlignerDraw1.log &
+  root.exe -q -b TpcAlignerDraw.C+ 'TpcAlignerDraw.C+(2)'>& TpcAlignerDraw.log &
+  root.exe -q -b 'TpcAlignerDraw.C+(1)' 'TpcAlignerDraw.C+(3)'> & TpcAlignerDraw1.log &
 foreach f (`ls -1d 2014*.root`)
 set b = `basename ${f} .root`; root.exe -q -b 'TpcAlignerDraw.C+(0,"'${f}'")' >& ${b}.log &
 end
@@ -131,7 +131,7 @@ const  PlotName_t plotNameWS[NwsPlots] = {// plots for drift
   { "dnZ"      ,"dnZ versus Z",                                                   100, -10,  200,100, -0.005, 0.005}  //40
 };
 //________________________________________________________________________________
-void TpcAlignerDrawIO(const Char_t *files = "*.root", Bool_t laser = kFALSE) {
+void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) {
   TDirIter Dir(files);
   Char_t *file = 0;
   Int_t NFiles = 0;
@@ -218,7 +218,8 @@ void TpcAlignerDrawIO(const Char_t *files = "*.root", Bool_t laser = kFALSE) {
   }
   TH1D *dv = new TH1D("DV","pc Drift Velocisies", 100, 5, 6);
   TH1D *LSF[24];
-  for (Int_t sec = 1; sec <= 24; sec++) LSF[sec-1] = new TH1D(Form("LSF_%02i",sec),Form("Matrix and right part for Least Squared Fit for sector = %02i",sec),28,0,28.);
+  //  Increase hitogram by 2 bins in order to account underfloaw and overflow 
+  for (Int_t sec = 1; sec <= 24; sec++) LSF[sec-1] = new TH1D(Form("LSF_%02i",sec),Form("Matrix and right part for Least Squared Fit for sector = %02i",sec),30,0,30.);
   Int_t Ntracks = 0;
   while (iter.Next()) {
 #if 0
@@ -303,7 +304,7 @@ dnZ[ 0, 0, 0,     -nyW, nxW,         0,  0,0,     nyW,-nxW,        0] */
     TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
     TRSymMatrix SX(A,TRArray::kATxSxA,G);   PrPP(SX);
     Int_t sec = sector-1;
-    Double_t *array = LSF[sec]->GetArray();
+    Double_t *array = LSF[sec]->GetArray() + 1; // move under flow up
     Double_t *amX = AmX.GetArray();
     Double_t *sX  = SX.GetArray();
     array[0]++;
@@ -430,7 +431,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   Int_t NP  = 6*24; // Total no. of parameters
   Int_t NPP = NP*(NP+1)/2; // size of matrix
   Int_t NT  = NP + NPP; // bin0 -> no. of entries; bin_NT+1 = chi2
-  TH1D *LSF = new TH1D("LSF","Matrix and right part for Least Squared Fit ",NT,0,NT);
+  TH1D *LSF = new TH1D("LSF","Matrix and right part for Least Squared Fit ",NT+2,0,NT + 2);
   Int_t Ntracks = 0;
   while (iter.Next()) {
     Int_t w = HelixU_sector;
@@ -565,7 +566,7 @@ dn[        0.,         0.,         0.,                 r33*nyW-r32*nzW,         
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
     TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
     TRSymMatrix SX(A,TRArray::kATxSxA,G);   PrPP(SX);
-    Double_t *array = LSF->GetArray();
+    Double_t *array = LSF->GetArray() + 1;
     Double_t *amX = AmX.GetArray();
     Double_t *sX  = SX.GetArray();
     array[0]++;
@@ -711,12 +712,17 @@ void TDrawIO() {
       out  <<  "| x mkm         | y mkm         | z mkm         |alpha mrad     |beta mrad      |gamma mrad     |Comment" << endl;
       cout <<  "_______________________________________________________________________________________________________"  << endl;
       cout <<  "| x mkm         | y mkm         | z mkm         |alpha mrad     |beta mrad      |gamma mrad     |Comment" << endl;
+#if 0
       outC << "struct data_t {" << endl;
       outC << "\tInt_t sector;" << endl;
       outC << "\tDouble_t x, Dx, y, Dy, z, Dz, alpha, Dalpha, beta, Dbeta, gamma, Dgamma;" << endl;
       outC << "\tconst Char_t *Comment;" << endl;
       outC << "};" << endl;
       outC << "data_t Data[] = {" << endl;
+#else
+      outC << "  {20190101,    1, \"" << gSystem->WorkingDirectory() << "\", //" << endl;
+      outC << "{" << endl;
+#endif
     }
     head++;
     Int_t sector = i;
@@ -725,7 +731,7 @@ void TDrawIO() {
     TH1D *LSF = (TH1D *) gDirectory->Get(Form("LSF_%02i",sector));
     Val_t ValA[7]; memset (ValA, 0, sizeof(ValA));
     if (LSF) {
-      Double_t *array = LSF->GetArray();
+      Double_t *array = LSF->GetArray() + 1;
       Int_t NP = array[0];
       if (NP > 0) {
 	Double_t yTy = array[28];
@@ -973,6 +979,9 @@ void TDrawIO() {
   }
   cout << line << endl;
   out << line << endl;
+  outC << "    }" << endl;
+  outC << "  }," << endl;
+
   out.close();
   outC.close();
 }
@@ -1029,7 +1038,7 @@ void TDrawW2S() {
   if (gSystem->AccessPathName(Out)) outC.open(Out, ios::out); //"Results.list",ios::out | ios::app);
   else                              outC.open(Out, ios::app);
   TH1D *LSF = (TH1D *) gDirectory->Get("LSF");
-  Double_t *array = LSF->GetArray();
+  Double_t *array = LSF->GetArray() + 1;
   Int_t NEntries = array[0];
   if (NEntries  < 1000) return;
   Int_t NP  = 6*24; // Total no. of parameters
@@ -1073,12 +1082,16 @@ void TDrawW2S() {
       out  <<  "| x mkm           | y mkm           | z mkm           |alpha mrad     |beta mrad      |gamma mrad     |Comment" << endl;
       cout <<  "_____________________________________________________________________________________________________________"  << endl;
       cout <<  "| x mkm           | y mkm           | z mkm           |alpha mrad     |beta mrad      |gamma mrad     |Comment" << endl;
+#if 0
       outC << "struct data_t {" << endl;
       outC << "\tInt_t sector;" << endl;
       outC << "\tDouble_t x, Dx, y, Dy, z, Dz, alpha, Dalpha, beta, Dbeta, gamma, Dgamma;" << endl;
       outC << "\tconst Char_t *Comment;" << endl;
       outC << "};" << endl;
       outC << "data_t Data[] = {" << endl;
+#else
+      outC << "{" << endl;
+#endif
     }
     head++;
     out  << "__________________________________________________________________________________________________ " << sector << endl;
@@ -1299,11 +1312,13 @@ void TDrawW2S() {
     out << line << endl;
     outC << lineC << endl;
   }
+  out << "  }" << endl << "};" << endl;
+  //  out << "};" << endl << "const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);" << endl << "#endif" << endl;
   out.close();
   outC.close();
 }
 //________________________________________________________________________________
-void TpcAlignerDraw(Int_t jcase = 0, const Char_t *files = "*Aligner.root") {
+void TpcAlignerDraw(Int_t jcase = 0, const Char_t *files = "../*Aligner.root") {
   switch (jcase) {
   case 0: TpcAlignerDrawIO(files);  break;
   case 1: TpcAlignerDrawW2S(files); break;

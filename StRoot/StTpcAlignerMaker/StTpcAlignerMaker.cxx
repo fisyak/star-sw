@@ -493,8 +493,8 @@ Int_t StTpcAlignerMaker::Make(){
 	tpcHits[N].row    = row;
 	if (_debug) {
 	  if (Debug()%10 > 5)    
-	    cout << Form("sector = %2i row = %2i N =%2i %8.3f %8.3f %8.3f",sector,row,N,
-			 tpcHits[N].x,tpcHits[N].y,tpcHits[N].z) << endl;
+	    cout << Form("sector = %2i row = %2i N =%2i x = %8.3f +/- %8.3f y = %8.3fz = %8.3f +/- %8.3f",sector,row,N,
+			 tpcHits[N].x,TMath::Sqrt(tpcHits[N].err2xy),tpcHits[N].y,tpcHits[N].z,TMath::Sqrt(tpcHits[N].err2z)) << endl;
 	}
 	if (N < kMaxHits) N++;
       }

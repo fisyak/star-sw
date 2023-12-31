@@ -1,7 +1,7 @@
 /*
   root.exe MakeInnerOuterSector.C
 */
-#define __TpcInnerSector__ 
+//#define __TpcInnerSector__ 
 class St_db_Maker;
 class TTable;
 St_db_Maker *dbMk = 0;
@@ -64,8 +64,8 @@ void MakeInnerOuterSector(const Char_t *opt = 0){
 	  val = 0.50*(X0[2*i] + X1[2*i]);
 	  dal = 0.50*(X0[2*i] - X1[2*i]);
 #if 1
-	  val /= 4; // 2;
-	  dal /= 4; //2;
+	  val /= 2; // 2;
+	  dal /= 2; //2;
 	  //	  dal = 0.25*(X0[2*i] - X1[2*i]);
 	  //	  dal = 0.125*(X0[2*i] - X1[2*i]);
 #endif
@@ -136,11 +136,11 @@ void MakeInnerOuterSector(const Char_t *opt = 0){
 	     << "\ty " << Pass[r].Data[i].y << "+/-" <<Pass[r].Data[i].Dy
 	     << "\tz " << Pass[r].Data[i].z << "+/-" <<Pass[r].Data[i].Dz << endl;
 	Double_t xyz[3] = {0, 0, 0};
-#if 0 /* alpha, beta rotations */
+#if 1 /* alpha, beta gamma rotations */
 	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
 	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
-#endif /* no beta rotation */
 	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
+#endif /* no beta rotation */
 	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  1e-4*Pass[r].Data[i].x;
 	if (Pass[r].Data[i].Dy >= 0) xyz[1] =  1e-4*Pass[r].Data[i].y;
 	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  1e-4*Pass[r].Data[i].z;
@@ -175,10 +175,15 @@ void MakeInnerOuterSector(const Char_t *opt = 0){
       TpcSectorPositionB->AddAt(&row);
     }
   }
+  TpcSectorPositionB->Print(0,48);
   TString fOut =  Form("%s.%8i.%06i.C",TpcSectorPositionB->GetName(),Pass[0].date,Pass[0].time);
   ofstream out;
   cout << "Create " << fOut << endl;
   out.open(fOut.Data());
+  out << "#ifndef __CINT__" << endl;
+  out << "#include \"tables/St_Survey_Table.h\"" << endl;
+  out << "#endif" << endl;
+
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_Survey\")) return 0;" << endl;
   out << "  Survey_st row[" << NR*NoSectors << "] = {" << endl; 
