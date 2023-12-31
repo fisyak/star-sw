@@ -96,6 +96,16 @@ void TpcAligner(Int_t First, Int_t Last,
   //  if (First >= Last)  
   chain->Init();
   if (Last == 0) return;
+  StMaker *dbMk = chain->GetMaker("db");
+  if (dbMk) {
+    dbMk->SetDebug(1);
+    dbMk->SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
+    dbMk->SetFlavor("TFG","TpcPosition"); // disable MySQL 
+    dbMk->SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
+    dbMk->SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
+    dbMk->SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
+    dbMk->SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
+  }
 //   StIOMaker *inMk = (StIOMaker *) chain->GetMaker("inputStream");
 //   if (inMk) {
 //     inMk->SetIOMode("r");

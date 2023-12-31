@@ -2,6 +2,7 @@
    root.exe st*IO*.root dT.C
 */
 #include "Ask.h"
+#include "PrintTH1.C"
 void dT() {
   Int_t NF = 0;
   TSeqCollection *files = gROOT->GetListOfFiles();
@@ -26,17 +27,23 @@ void dT() {
     c1->Update();
     dT_zx->FitSlicesY();
     TH1 *dT_zx_1 = (TH1 *) gDirectory->Get("dT_zx_1");
-    if (! dT_zx_1) continue;
+    TH1 *dT_zx_2 = (TH1 *) gDirectory->Get("dT_zx_2");
+    if (! dT_zx_1 || ! dT_zx_2 ) continue;
     dT_zx_1->Draw("same");
     c1->Update();
-    cout << F.Data() << "\tmean = " << dT_zx->GetMean(2) << "\tRMS = " << dT_zx->GetRMS(2);
+#if 0
+    cout << F.Data() << Form("\tmean = %7.2f\tRMS = %7.2f",dT_zx->GetMean(2), dT_zx->GetRMS(2)) << endl;
     for (Int_t sector = 1; sector <= 24; sector++) {
       Double_t v = dT_zx_1->GetBinContent(sector);
-      if (TMath::Abs(v) < 0.1) continue;
       Double_t dv = dT_zx_1->GetBinError(sector);
-      cout << "\tsector  " << sector << "\tdT = " << v << " +/- " << dv;
+      //      Double_t dv = dT_zx_2->GetBinContent(sector);
+      if (TMath::Abs(v) < 2*dv) continue;
+      cout << "\tsector  " << sector << "\tdT = " << v << " +/- " << dv << endl;
     }
-    cout << endl;
-    if (! Ask()) continue;
+    //    PrintTH1(dT_zx_1,dT_zx_2);
+#endif
+    cout << F.Data() << Form("\tmean = %7.2f\tRMS = %7.2f",dT_zx->GetMean(2), dT_zx->GetRMS(2));
+    PrintTH1(dT_zx_1);
+    if (Ask()) break;
   }
 }

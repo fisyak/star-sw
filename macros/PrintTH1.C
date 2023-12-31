@@ -1,16 +1,22 @@
-void PrintTH1(const TH1 *hist=0) {
+void PrintTH1(const TH1 *hist = 0, const TH1 *histe = 0) {
   if (! hist) return;
   Int_t nx = hist->GetNbinsX();
 #ifndef __SUMMARY_ONLY__
   cout << "\tDouble_t corr[" << nx << "] = {";
   for (Int_t ix = 1; ix <= nx; ix++) {
     Double_t cont = hist->GetBinContent(ix);
-    cout << Form("%7.4f",cont);
+    Double_t error = hist->GetBinError(ix);
+    if (histe) {
+      error = histe->GetBinContent(ix);
+    }
+    if (TMath::Abs(cont) < 2*error) cont = 0;
+    //    cout << Form("%7.4f",cont);
+    cout << Form("%5.2f",cont);
     if (ix != nx) cout << ",";
     //    if (ix == 12) cout << endl << "\t";
   }
   cout << "};" << endl;
-#endif
+#else
   if (nx == 24) {
     for (Int_t we = 0; we <2 ; we++) {
       hist->Fit("pol0","erq","",12*we+0.5,12*(we+1)+0.5); 
@@ -22,5 +28,7 @@ void PrintTH1(const TH1 *hist=0) {
       }
     }
     cout << endl;
+
   }
+#endif
 }

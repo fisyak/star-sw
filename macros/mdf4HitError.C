@@ -1,11 +1,11 @@
 /*
-  ~/work/Tpc/Alignment/T05 $ root.exe dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
-  root.exe ../dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
-  root.exe ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
-  root.exe ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
-  root.exe ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
+  ~/work/Tpc/Alignment/T05 $ root.exe  'lDb.C("y2019",0)' dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C("y2019",0)' ../dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C("y2019",0)' ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C("y2019",0)' ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C("y2019",0)' ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
 __CHECK__
-  root.exe 'lDb.C("y2019",0)'  ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C("y2019",0)' ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
 */
 #define __CHECK__
 #include <assert.h>

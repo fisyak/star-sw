@@ -1,5 +1,5 @@
 /*
-   root.exe TpcPromptHitsUU2012.root FitPromptT0.C+
+   root.exe TpcPromptHitsUU2012.root lDb.C FitPromptT0.C+
 */
 
 #if !defined(__CINT__)
@@ -34,7 +34,7 @@ void FitPromptT0() {
   TString Out(gSystem->BaseName(gDirectory->GetName()));
   Out.ReplaceAll(".root",".Fit.root");
   TFile *fOut = new TFile(Out,"recreate");
-  TH3D *TB = new TH3D("TB","prompt hit time bucket  versus sector row",45,0.5,45.5,24,0.5,24.5,100,0,10);
+  TH3D *TB = new TH3D("TB","prompt hit time bucket  versus sector row",72,0.5,72.5,24,0.5,24.5,100,2,12);
   TpcHit->Draw("timebucket:sector:row >> TB","","goff");
   cout << "get TB with " << TB->GetEntries() << " entries" << endl;
   Int_t nx = TB->GetXaxis()->GetNbins(); // row
@@ -92,14 +92,14 @@ void MaketpcPadrowT0() {
   TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
   if (! FitP) return;
   if (gClassTable->GetID("St_TpcSecRowCor") < 0) gSystem->Load("libStDb_Tables");
-  FitP->Draw("row:sec>>Mu(24,0.5,24.5,45,0.5,45.5)","-MuRow(mu,row)/9.393","colz");
+  FitP->Draw("row:sec>>Mu(24,0.5,24.5,72,0.5,72.5)","-MuRow(mu,row)/9.393","colz");
   TH2 *Mu = (TH2*) gDirectory->Get("Mu");
   if (! Mu) return;
   St_tpcPadrowT0 *T0 = new St_tpcPadrowT0("tpcPadrowT0",24);
   tpcPadrowT0_st row;
   for (Int_t i = 1; i <= 24; i++) {
     memset(&row, 0, T0->GetRowSize());
-    for (Int_t j = 1; j <= 45; j++) {
+    for (Int_t j = 1; j <= 72; j++) {
       row.T0[j-1] = Mu->GetBinContent(i,j);
     }
     T0->AddAt(&row);
@@ -108,3 +108,9 @@ void MaketpcPadrowT0() {
   TFile *fOut = new TFile("tpcPadrowT0.20120202.000102.root","recreate");
   T0->Write();
 }
+#if 0
+ /hlt/cephfs/reco/TpcPrompt $ dir -d */*/*/*T.root
+ foreach f(`ls -1d  */*/*/*T.root`)
+   root.exe ${f} ZTMfl0T.C
+ end
+#endif
