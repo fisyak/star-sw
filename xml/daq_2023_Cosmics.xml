@@ -3,7 +3,7 @@
         <command>
          cd ${SUBMITTINGDIRECTORY}
    setenv STARFPE NO
-#   setenv NODEBUG yes
+#    setenv NODEBUG yes
 #   setup 64b
 #   starver TFG21c
 #   starver TFG21h
@@ -25,9 +25,9 @@
     set bf           = `basename $filel .root`
     set output  = ${bf}.event.root
     set logFile  = ${bf}B.log
-    if ( -r $logFile) continue;
+#    if ( -r $logFile) continue;
     set llogFile = log/${logFile}
-    if ( -r $llogFile) continue;
+#    if ( -r $llogFile) continue;
     set muFile = ${SUBMITTINGDIRECTORY}/${bf}.MuDst.root
    if (-r $muFile) continue;
     set mmuFile = ${SUBMITTINGDIRECTORY}/MuDst/${bf}.MuDst.root

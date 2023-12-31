@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
         <command>
-#         cd ${SUBMITTINGDIRECTORY}
+         cd ${SUBMITTINGDIRECTORY}
    setenv STARFPE NO
 #   setenv NODEBUG yes
 #   setup 64b
@@ -23,13 +23,14 @@
     set bf           = `basename $filel .root`
     set output  = ${bf}.event.root
     set logFile  = ${bf}B.log
-    if ( -r $logFile) continue;
-    set llogFile = log/${logFile}
-    if ( -r $llogFile) continue;
+#   if ( -r $logFile) continue;
+#    set llogFile = log/${logFile}
+#   if ( -r $llogFile) continue;
+    if (-r $output) continue;
     set muFile = ${SUBMITTINGDIRECTORY}/${bf}.MuDst.root
-   if (-r $muFile) continue;
+    if (-r $muFile) continue;
     set mmuFile = ${SUBMITTINGDIRECTORY}/MuDst/${bf}.MuDst.root
-   if (-r $mmuFile) continue;
+    if (-r $mmuFile) continue;
 #   cp ${evtsFile} ${SCRATCH}/
 #   set input = ${SCRATCH}/${bf}.daq
     set bla = ${SUBMITTINGDIRECTORY}/${bf}.bla.root

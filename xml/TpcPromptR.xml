@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- <job  name="TpcPrompt" maxFilesPerProcess="10"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false"> -->
+<job  name="TpcPrompt" maxFilesPerProcess="50"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<stdout URL="file:./sched$JOBID.log" />
+<stderr URL="file:./sched$JOBID.err" />
+<command> 
+   cd ${SUBMITTINGDIRECTORY}  
+   setenv STARFPE NO
+#   setenv NODEBUG yes
+#   setup 64b
+#   starver TFG19d
+#   staver .DEV2 
+  foreach  evtsFile(`cat $FILELIST`) 
+  set file2 = `basename ${evtsFile} .event.root`;
+  set file = `basename ${file2} .daq`;
+  echo "${file}"
+  set logFile  = ${file}B.log
+  set f=`find . -maxdepth 1 -type f -name "*${file}*.root"`
+  if ("${f}" == "") then
+#    root.exe -x -q -b 'TpcPrompt.C(1000000,"'${evtsFile}'","'${file}'.root")' &gt;&amp; ${logFile}
+    root.exe -x -q -b 'TpcPrompt.C(500,"'${evtsFile}'","'${file}'.root")' &gt;&amp; ${logFile}
+  endif
+  end
+</command>
+<input URL="command:getDaqList.pl" />
+</job>

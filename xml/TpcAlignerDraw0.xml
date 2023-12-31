@@ -13,7 +13,8 @@
   set fileF = `echo $evtsFile | awk -F\: '{print $2}'`  
   set file  = `basename ${fileF} .root`;
   set logFile  = ${file}B.log
-  if ( -r $logFile) continue;
+  set output   = ${run}Aligner_IO.root
+  if ( -r $output) continue;
   ln -s ~/macros/.sl* .
   root.exe -q -b 'TpcAlignerDraw.C+(0,"../*'${run}'*Aligner.root")' &gt;&amp;  ${logFile}
   end

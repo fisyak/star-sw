@@ -18,8 +18,8 @@
   set dir      = `dirname  $evtsFile`;          
   set logFile  = ${file}B.log
   if ( -r ${SUBMITTINGDIRECTORY}/$logFile) continue;
-#  root.exe -q -b 'TpcAligner.C(9999999,"'${evtsFile}'")' &gt;&amp;  ${logFile}
-  root.exe -q -b 'TpcAligner.C(9999999,"'${evtsFile}'",",-OSectorAlign")' &gt;&amp;  ${logFile}
+   root.exe -q -b 'TpcAligner.C(9999999,"'${evtsFile}'")' &gt;&amp;  ${logFile}
+#  root.exe -q -b 'TpcAligner.C(9999999,"'${evtsFile}'",",-OSectorAlign")' &gt;&amp;  ${logFile}
 #  mv ${file}* ${SUBMITTINGDIRECTORY}/
   end
 
