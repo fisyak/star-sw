@@ -1,3 +1,6 @@
+#ifndef __CINT__
+#include "tables/St_FilePath_Table.h"
+#endif
 TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_FilePath")) return 0;
   St_FilePath *tableSet = new St_FilePath("Path2tpxGain",1);
