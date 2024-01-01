@@ -1,1 +1,0 @@
-starTriggerDelay.19GeV_2019.C
