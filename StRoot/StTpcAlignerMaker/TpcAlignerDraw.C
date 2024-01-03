@@ -1037,6 +1037,12 @@ void TDrawW2S() {
   Out += ".h";
   if (gSystem->AccessPathName(Out)) outC.open(Out, ios::out); //"Results.list",ios::out | ios::app);
   else                              outC.open(Out, ios::app);
+  struct Val_t {
+    Double_t val;
+    Double_t valError;
+    Int_t    iFlag;
+  };
+  Val_t ValG[7]; memset (ValG, 0, sizeof(ValG));
   TH1D *LSF = (TH1D *) gDirectory->Get("LSF");
   Double_t *array = LSF->GetArray() + 1;
   Int_t NEntries = array[0];
@@ -1090,6 +1096,7 @@ void TDrawW2S() {
       outC << "};" << endl;
       outC << "data_t Data[] = {" << endl;
 #else
+      outC << "  {20190101,    1, \"" << gSystem->WorkingDirectory() << "\", //" << endl;
       outC << "{" << endl;
 #endif
     }
@@ -1294,6 +1301,13 @@ void TDrawW2S() {
 	  line  += Form("|%8.2f+-%6.2f ", TMath::Max(-9999.99,TMath::Min( 9999.99,ValA[m].val)),TMath::Min(999.99,ValA[m].valError)); 
 	  lineC += Form(",%8.2f,%6.2f", ValA[m].val,TMath::Min(999.99,ValA[m].valError)); 
 	}
+	Double_t w0 = 1./(ValA[m].valError*ValA[m].valError);
+	Double_t w1 = 0;
+	if (ValG[m].valError > 0) 
+	  w1 = 1./(ValG[m].valError*ValG[m].valError);
+	ValG[m].val = (w0*ValA[m].val + w1*ValG[m].val)/(w0 + w1);
+	ValG[m].valError = 1./TMath::Sqrt(w0 + w1);
+	ValG[m].iFlag++;
       }
     }
 #ifdef __AVERAGE_WS__
@@ -1312,10 +1326,31 @@ void TDrawW2S() {
     out << line << endl;
     outC << lineC << endl;
   }
-  out << "  }" << endl << "};" << endl;
-  //  out << "};" << endl << "const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);" << endl << "#endif" << endl;
-  out.close();
+  outC << "    }" << endl;
+  outC << "  }," << endl;
   outC.close();
+  //  out << "};" << endl << "const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);" << endl << "#endif" << endl;
+  line = ""; 
+  lineC = "";
+  for (Int_t m = 0; m < 6; m++) {
+    if (! ValG[m].iFlag 
+#ifdef   FREEZE_BETA  
+	|| (m == 4) 
+#endif
+#ifdef   FREEZE_ALPHA_BETA  
+	|| (m == 3 || m == 4) 
+#endif
+	) {
+      line  += "|               ";
+      lineC += ",      0,-9.99";
+    } else {
+      line  += Form("|%7.2f+-%5.2f ", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
+      lineC += Form(",%7.2f,%5.2f", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
+    }
+  }
+  cout << line << endl;
+  out << line << endl;
+  out.close();
 }
 //________________________________________________________________________________
 void TpcAlignerDraw(Int_t jcase = 0, const Char_t *files = "../*Aligner.root") {
