@@ -83,6 +83,20 @@ TRSymMatrix::TRSymMatrix(const TRSymMatrix& S,ETRMatrixCreatorsOp kop) {
     Set(fNrows*(fNrows+1)/2);
     fValid = ! TrsInv(S.GetArray(),fArray, fNrows);
     break;
+  case kSCor:
+    fNrows = S.GetNcols();
+    Set(fNrows*(fNrows+1)/2);
+    for (Int_t i = 0; i < fNrows; i++) {
+      Int_t ii = i*(i+1)/2 + i;
+      Double_t sigmaI = TMath::Sqrt(TMath::Abs(S[ii]));
+      fArray[ii] = sigmaI*TMath::Sign(1., S[ii]);
+      for (Int_t j = 0; j < i; j++) {
+	Int_t jj = j*(j+1)/2 + j;
+	Int_t ij = i*(i+1)/2 + j;
+	fArray[ij] = S[ij]/(fArray[ii]*fArray[jj]);
+      }
+    }
+    break;
   default:
     Error("TRSymMatrix(ETRMatrixCreatorsOp)", "operation %d not yet implemented", kop);
   }
