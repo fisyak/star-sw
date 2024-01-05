@@ -141,7 +141,6 @@ void Load(const Char_t *options)
     }
     cout << endl;
   }
-#ifndef __CLING__1
   gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   // Look up for the logger option
   Bool_t needLogger  = kFALSE;
@@ -154,7 +153,6 @@ void Load(const Char_t *options)
       if (gROOT->IsBatch())  StLoggerManager::setColorEnabled(kFALSE);
     }
   }
-#endif
   //  gSystem->Load("libHtml");
   gSystem->Load("libStChain");                                        //  StMemStat::PrintMem("load StChain");
   gSystem->Load("libStUtilities");                                    //  StMemStat::PrintMem("load StUtilities");
@@ -240,7 +238,18 @@ StBFChain *bfc(Int_t First, Int_t Last,
   }
   StMaker::lsMakers(chain);
   StMaker *dbMk = chain->GetMaker("db");
-  if (dbMk) dbMk->SetDebug(1);
+  if (dbMk) {
+    dbMk->SetDebug(1);
+    if (tChain.Contains("Cosmics",TString::kIgnoreCase)) {
+      cout << "Disable MySQL for TPC alignment parameters" << endl;
+      dbMk->SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
+      dbMk->SetFlavor("TFG","TpcPosition"); // disable MySQL 
+      dbMk->SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
+      dbMk->SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
+      dbMk->SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
+      dbMk->SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
+    }
+  }
   if (Last < 0) return chain;
   StMaker *EventMk = chain->GetMaker("0Event");
   if (EventMk) EventMk->SetDebug(1);

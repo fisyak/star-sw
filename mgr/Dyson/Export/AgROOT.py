@@ -712,7 +712,8 @@ class StarGeometry(Handler):
         document.head(header)
 
         implement1 = """
-#include "StarVMC/StarGeometry/StarGeo.h"        
+//#include "StarVMC/StarGeometry/StarGeo.h"        
+#include "StarGeo.h"        
 #include "TObjectSet.h"
 #include "TGeoManager.h"        
 #include <string>

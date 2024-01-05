@@ -23,7 +23,7 @@ The list of stable releases can be found TFG_Releases.md
 <li>  <b>starver _desired_TFG_version__</b>, from TFG16a  to TFG21n, .DEV2 == TFG is check out HEAD from TFG repository, it could be unstable.
 <li>  switch between ROOT5 and ROOT6: 
 <ul>
-  <li> setup root6
+  <li> setup root6 (6.30.00)
   <li> setup root5
 </ul> 
 </ul>

@@ -537,6 +537,41 @@ StSPtrVecObject& V = ev->content();
     StObject *to = V[i];
     if (!to) continue;
     if (!strstr(to->ClassName(),className)) continue;
+    if  (strstr(to->ClassName(),"StSPtrVecTrackNode")) {
+    // Clean assoicated track
+      static const Char_t *ClassWithAssoiatedTracks[] = {"StRichPidTraits","StMtdHit","StTofSlat","StTofCell","StTofHit","StBTofHit","StETofHit","StETofDigi"};
+      //      if (event->richCollection() && event->richCollection()->getRichHits().size()) {}
+      const StMtdCollection* mtd = ev->mtdCollection();
+      if (mtd) {
+	const StSPtrVecMtdHit& mtdHits = mtd->mtdHits();
+	Int_t n = mtdHits.size();
+	if (n) {
+	  for(Int_t i=0;i<n;i++) { //loop on hits in modules
+	    StMtdHit *aHit = mtdHits[i];
+	    if(!aHit) continue;
+	    aHit->setAssociatedTrack(0);
+	    }
+	}
+      }
+      const StBTofCollection* btof = ev->btofCollection();
+      if (btof) {
+	const StSPtrVecBTofHit& tofHits = btof->tofHits();
+	for(size_t i=0;i<tofHits.size();i++) { //loop on hits in modules
+	  StBTofHit *aHit = tofHits[i];
+	  if(!aHit) continue;
+	  aHit->setAssociatedTrack(0);
+	}
+      }
+      const StETofCollection* etof = ev->etofCollection();
+      if (etof) {
+	const StSPtrVecETofHit& etofHits = etof->etofHits();
+	for(size_t i=0;i<etofHits.size();i++) { //loop on hits in modules
+	  StETofHit *aHit = etofHits[i];
+	  if(!aHit) continue;
+	  aHit->setAssociatedTrack(0);
+	}
+      }
+    }
     V[i] = 0; delete to;
   }
 }  

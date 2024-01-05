@@ -941,6 +941,12 @@ if (-r ${HOME}/bin/.${STAR_HOST_SYS}) setenv PATH ${HOME}/bin/.${STAR_HOST_SYS}:
 if (-r ${STAR}/scripts/RCF)           setenv PATH ${PATH}:${STAR}/scripts/RCF
 if (-r ${STAR}/bin)                   setenv PATH ${PATH}:${STAR}/bin
 if (-x ${GROUP_DIR}/dropit)           setenv PATH `${GROUP_DIR}/dropit`
+setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/include:${STAR}:${STAR}/StRoot:${STAR}/.${STAR_HOST_SYS}/include"
+#:$STAR/StRoot/StStarLogger:$STAR/StRoot/StEmcRawMake"
+#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH};$STAR/StRoot/StEmcUtil/database:$STAR/StRoot/StEmcUtil/filters:$STAR/StRoot/StEmcUtil/geometry:$STAR/StRoot/StEmcUtil/others:$STAR/StRoot/StEmcUtil/projection:$STAR/StRoot/StEmcUtil/voltageCalib"
+#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StEEmcUtil/EEevent:$STAR/StRoot/StEEmcUtil/database:$STAR/StRoot/StEEmcUtil/EEevent:$STAR/StRoot/StEEmcUtil/EEfeeRaw:$STAR/StRoot/StEEmcUtil/EEmcGeom:$STAR/StRoot/StEEmcUtil/EEmcMC"
+#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StEEmcUtil/EEmcSmdMap:$STAR/StRoot/StEEmcUtil/StEEmcSmd"
+#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StMuDSTMaker/COMMON"
 
 #
 # Uncomment to get statistics on version used at

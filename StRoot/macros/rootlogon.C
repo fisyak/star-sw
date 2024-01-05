@@ -177,10 +177,10 @@
       FILE *fp = fopen(GITINFO.Data(), "r");
       if (fp) {
 	//	cout << "Found file " << GITINFO.Data() << "\t" << STAR_GIT_VERSION.Data() << endl;
-	TString S;
-	S.Gets(fp); STAR_GIT_VERSION += S;// cout << STAR_GIT_VERSION.Data() << endl;
+	TString tempString;
+	tempString.Gets(fp); STAR_GIT_VERSION += tempString;// cout << STAR_GIT_VERSION.Data() << endl;
 	STAR_GIT_VERSION += ",tag:";
-	S.Gets(fp); STAR_GIT_VERSION += S;// cout << STAR_GIT_VERSION.Data() << endl;
+	tempString.Gets(fp); STAR_GIT_VERSION += tempString;// cout << STAR_GIT_VERSION.Data() << endl;
 	fclose(fp);
       } else {
 	//	cout << "Not found file " << GITINFO.Data() << endl;

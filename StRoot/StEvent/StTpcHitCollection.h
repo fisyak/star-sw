@@ -65,7 +65,22 @@ public:
     const StSPtrVecTpcHit* hits(int sectorId, int padrowId) const;
 
     /// An iterator over StTpcHits in a StTpcHitCollection
-    class StTpcHitIter : public std::iterator<std::input_iterator_tag, StTpcHit*>
+      /*
+StRoot/StEvent/StTpcHitCollection.h:68:38: warning: 'template<class _Category, class _Tp, class _Distance, class _Pointer, class _Reference> struct std::iterator' is deprecated [-Wdeprecated-declarations]
+
+   template<typename _Category, typename _Tp, typename _Distance = ptrdiff_t,
+           typename _Pointer = _Tp*, typename _Reference = _Tp&>
+    struct _GLIBCXX17_DEPRECATED iterator
+ 
+    class iterator : public std::iterator<
+                                std::input_iterator_tag, // iterator_category
+                                long,                    // value_type
+                                long,                    // difference_type
+                                const long*,             // pointer
+                                long                     // reference
+                            > {
+     */
+      class StTpcHitIter : public std::iterator<std::input_iterator_tag, long, long,StTpcHit*, long>
     {
     public:
       static StTpcHitIter begin(StTpcHitCollection& c);

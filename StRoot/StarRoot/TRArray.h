@@ -35,7 +35,8 @@ class TRArray : public TArrayD {
 			     kAxBxAT, kATxBxA, 
 			     kSxA, kAxS, kSxAT, kATxS,
 			     kAxAT, kATxA,
-			     kAxSxAT, kATxSxA, kRxSxR
+			     kAxSxAT, kATxSxA, kRxSxR,
+			     kSCor
   };
   TRArray(Int_t N=0):  TArrayD(N), fValid(kTRUE), fIsNotOwn(kFALSE) {}
   //  TRArray(Int_t N,Double_t scalar):  TArrayD(N) {if (scalar != 0) Reset(scalar);}
