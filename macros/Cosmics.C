@@ -139,7 +139,7 @@ class TDirIter;
 class TTreeIter;
 #endif
 Bichsel *m_Bichsel = 0;
-#define __DEBUG__
+//#define __DEBUG__
 static Int_t _debug = 0;
 #ifdef __DEBUG__
 #define PrP(A) {cout <<  (#A) << " = \t" << (A) << endl;}
@@ -384,7 +384,7 @@ void Cosmics(TString files = "",
 	  T  = t;
 	}
       }
-      if (k < 0 || l < 0  ||  Chi2Old >= 1e4) continue;
+      if (k < 0 || l < 0  ||  Chi2Old >= 1e2) continue;
       PrP(TK);
       PrP(TL);
       PrP(T);
