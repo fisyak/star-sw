@@ -31,14 +31,14 @@ void StarPHQMDPrimaryGenerator::PreSet() {
   const TString inputfile = opt->GetFileIn();
   TFile *f = new TFile(inputfile);
   assert(f);
-#ifdef __PHQMDtree__
-  const Char_t *treeName = "PHQMDtree";
-#else
-  const Char_t *treeName = "events";
-#endif  
-  fTree = (TTree *) f->Get(treeName);
+  const Char_t *treeNames[2] = {"PHQMDtree", "events"};
+  Int_t i = 0;
+  for (; i < 2; i++) {
+    fTree = (TTree *) f->Get(treeNames[i]);
+    if (fTree) break;
+  }
   assert(fTree);
-  fTreeIter = new TTreeIter(treeName);
+  fTreeIter = new TTreeIter(treeNames[i]);
   fTreeIter->AddFile(inputfile);
 }
 //_____________________________________________________________________________
