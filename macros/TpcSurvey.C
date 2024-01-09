@@ -1,3 +1,6 @@
+/*
+  root.exe TpcSurvey.C+
+ */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
 #else
@@ -47,10 +50,11 @@ const Char_t *vFitP = "set/I:side/I:sector/I:io/I:row/I:ndf/I:z:dz:alpha:dalpha:
 struct SurveyData_t {
   TString system;
   TString target;
-  Double_t XSurvey, YSurvey, ZSurvey; // (X, Z, Y)
+  Double_t XSurvey, YSurvey, ZSurvey; // (X, Z, Y)_star
   Double_t dXSurvey, dYSurvey, dZSurvey;
   const Char_t *comment;
 };
+#include "Survey_01_08_2024.h"
 #include "Survey_01_13_2023.h"
 #include "Survey_02_01_2013.h"
 #include "Survey_06_02_2022.h"
@@ -59,7 +63,8 @@ struct SurveyData_t {
 //                 MagCS       : MagCS => SurCS, survey coordinate system => magnet, index l : 0 => 2003, 1 => 2004, 2 => 2013 data
 //                 TpcCS       : Tpc as Whole SurCS; TpcCS => SurCS = (MagCS => SurCS) * (survTpc == TpcCS => MagCS) =  MagCS * survTpc
 //                 WheelCS[2]  : Wheel in Tpc  (0 => West, 1 => East) : (MagCS => SurCS) * (TpcCS => MagCS) * (survWheelW == WheelCS => TpcCS) = TpcCS * survWheelW
-static TGeoHMatrix MagCS[5], TpcCS[5], WheelCS[2][5];
+enum {kSurveySets = 6};
+static TGeoHMatrix MagCS[kSurveySets], TpcCS[kSurveySets], WheelCS[2][kSurveySets];
 using namespace std;
 TLinearFitter *lf = 0;
 static Int_t _debug = 0; 
@@ -130,9 +135,15 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
   } else if (y == 2023) {
     scale = 2.54; // inches
     year = "2023";
-    cout << "This file contains the last survey for TPC (01/13/2023)" << endl;
+    cout << "This file contains the survey for TPC (01/13/2023)" << endl;
     N = sizeof(Survey_01_13_2023)/sizeof(SurveyData_t);
     surv = &Survey_01_13_2023[0];
+  } else if (y == 2024) {
+    scale = 0.10; // mm
+    year = "2024";
+    cout << "This file contains the last survey for TPC (01/08/2024)" << endl;
+    N = sizeof(Survey_01_08_2024)/sizeof(SurveyData_t);
+    surv = &Survey_01_08_2024[0];
   } else {
     cout << "There is no survey for year " << y << endl;
     return 0;
@@ -157,7 +168,7 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
       survey[i].ZSurvey *=  scale; survey[i].dZSurvey *= scale; 
       // rename to STAR Eest TPC sector notation
       Int_t sector, row;
-      if (y == 2023 && survey[i].system.Contains("Tpc") ) {
+      if ((y == 2023 || y == 2024) && survey[i].system.Contains("Tpc") ) {
 	if (TString(survey[i].target).BeginsWith("ETPC")) {
 	  sscanf(survey[i].target,"ETPC%i_%i",&sector,&row);
 	  if (sector > 0 && sector <= 12) {
@@ -194,7 +205,7 @@ void PrintSurvey(Int_t year = 2022) {
 }
 //________________________________________________________________________________
 Bool_t InitMatrices(Int_t y = 0) {
-  static Bool_t fInitMatrices[5] = {0};
+  static Bool_t fInitMatrices[kSurveySets] = {0};
   /*
     MagCS[ly]                                   : Survey to Magnet
     TpcCS[ly] = MagCS[ly] * survTpc;            : Survey to Tpc
@@ -202,9 +213,9 @@ Bool_t InitMatrices(Int_t y = 0) {
 
     xyzG => xyzL: WheelCS[side][l].MasterToLocal(xyzG,xyzL);
    */
-  Int_t years[5] = {2003,2004,2013,2022,2023};
+  Int_t years[kSurveySets] = {2003,2004,2013,2022,2023,2024};
   Int_t ly = -1;
-  for (Int_t lY = 0; lY < 5; lY++) {
+  for (Int_t lY = 0; lY < kSurveySets; lY++) {
     if (y == years[lY]) {
       ly = lY;
       break;
@@ -219,7 +230,7 @@ Bool_t InitMatrices(Int_t y = 0) {
 #define __Mag2Surv__
 #define __IDEAL__
 #ifdef  __Mag2Surv__
-    Double_t survMagnetZabg[5][2][6] = { // Survey => Magnet
+    Double_t survMagnetZabg[kSurveySets][2][6] = { // Survey => Magnet
       /*x  y      z(cm)  alpha,    beta, gamma [mrad] */
       {{0., 0., 362.5027, 0, 0, 0},  // 2003,WF 1-8
        {0., 0.,-362.5545, 0, 0, 0}}, // 2003,EF 1-8
@@ -232,6 +243,8 @@ Bool_t InitMatrices(Int_t y = 0) {
        {0, 0, 0, 0, 0, 0}}, // y2022e
       {{0, 0, 0, 0, 0, 0},  // y2023w 
        {0, 0, 0, 0, 0, 0}}, // y2023e
+      {{0, 0, 0, 0, 0, 0},  // y2024w 
+       {0, 0, 0, 0, 0, 0}}, // y2024e
 #else
 //       {{0, 0, 0.7795, 0, 0, 0},  // y2023w Coordinates are in STAR magent system << 2013
 //        {0, 0, 0.7791, 0, 0, 0}}  // y2023e
@@ -254,6 +267,8 @@ dz = (zW+zE)/2 =                                      0.9074                    
        {0, 0, 0, 0, 0, 0}}, // y2022e
       {{0, 0, 0.9074, 0, 0.86, 0},  // y2023w 
        {0, 0, 0.9074, 0, 0.86, 0}}, // y2023e
+      {{0, 0, 0, 0, 0, 0},  // y2024w 
+       {0, 0, 0, 0, 0, 0}}, // y2024e
       /*
 MakeGraph(2023,"Magnet","^W",   10,  500)       z = 365.0539 +/- 0.0402 (cm) alpha = -0.03 +/- 0.18 [mrad] beta = -0.01 +/- 0.07 [mrad] chi2/ndf        0.59/   2 res. =  -0.0 +/-  86.9 (mkm)
 MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alpha =  0.19 +/- 0.16 [mrad] beta =  0.02 +/- 0.07 [mrad] chi2/ndf        0.03/   2 res. =   0.0 +/-  19.4 (mkm)
@@ -281,7 +296,7 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
     TGeoHMatrix survTpc;
 #define __Tpc2Mag__
 #ifdef  __Tpc2Mag__  /* East Wheel for TPC  */
-    Double_t Tpcxyzabg[5][6] = {
+    Double_t Tpcxyzabg[kSurveySets][6] = {
       {-0.2287 -0.0445+0.0046,  -0.1745 +0.0169-0.0014, -231.6913+0.0258,-0.04, -0.46, 0.36}, //  2003,"Tpc","^E..."
       {-0.2287 +0.0094-0.0162,  -0.1745 +0.0370+     0, -231.6945+0.0269, 0.10, -0.55, 0.52}, //  2004,"Tpc","^E..."
       {-0.2287 -0.0095-0.0001,  -0.1745 +0.0013+     0, -231.7106+0.0269, 0.10, -0.48, 0.36}, //  2013,"Tpc","^E..."
@@ -289,14 +304,16 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 #ifdef __IDEAL__1
       {0,   0, 0, 0, 0, 0}, //  2022,"Tpc","^E..." 
 //       {0,   0, 0.771450, 0, 0.61, 0}  //  2023,"Tpc","^E..." 
-      {0,   0, 0, 0, 0, 0}  //  2023,"Tpc","^E..." 
+      {0,   0, 0, 0, 0, 0},  //  2023,"Tpc","^E..." 
+      {0,   0, 0, 0, 0, 0}  //  2024,"Tpc","^E..." 
 #else
 //       {0,   0, 0, 0, 0.00, 0}  //  2023,"Tpc","^E..."  2023
 //       {0,   0, 0, 1.6277, 0.00, 0}  //  2023,"Tpc","^E..."  2023
 //       {0,   0, 0, 0, 0.55, 0}  //  2023,"Tpc","^E..."  2023
 //      {-0.1734,   0, 0, 0, 0.55, 0}  //  2023,"Tpc","^E..."  2023
 //      {0,   0, 0, 0, 0, 0}  //  2023,"Tpc","^E..." 
-      {0,   0, -0.2784, 0, -0.31, 0}  //  MakeGraph(2023,"Tpc","^E", -500,  -10)  z =  -0.2784 +/- 0.0046 (cm) alpha = -0.03 +/- 0.06 [mrad] beta = -0.31 +/- 0.05 [mrad] chi2/ndf       27.24/  31 res. =  71.9 +/- 485.4 (mkm)
+      {0,   0, -0.2784, 0, -0.31, 0},  //  MakeGraph(2023,"Tpc","^E", -500,  -10)  z =  -0.2784 +/- 0.0046 (cm) alpha = -0.03 +/- 0.06 [mrad] beta = -0.31 +/- 0.05 [mrad] chi2/ndf       27.24/  31 res. =  71.9 +/- 485.4 (mkm)
+      {0,   0, 0, 0, 0, 0}  //  2024,"Tpc","^E..." 
 
 #endif
     };
@@ -329,7 +346,7 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 #define __Wheel2Tpc__ 
 #ifdef  __Wheel2Tpc__
       const Char_t *sideName[2] = {"west","east"};
-      Double_t survWheelZabg[5][2][6] = { // Survey => Tpc == average Wheel => Wheel
+      Double_t survWheelZabg[kSurveySets][2][6] = { // Survey => Tpc == average Wheel => Wheel
 	{{ 0.0393, -0.0305, 231.4759,  0.13,  0.12, -0.35-0.04},  //  MakeGraph(2003,"Tpc","^W...")
 	 { 0.    ,  0.    ,-231.4880, -0.00, -0.00,  0.04     }}, //  MakeGraph(2003,"Tpc","^E...")
 	{{ 0.0330, -0.0092, 231.4805,  0.08,  0.10, -0.34-0.03},  //  MakeGraph(2004,"Tpc","^W...")            	  
@@ -598,6 +615,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
   if (iY == 2013) l = 2;
   if (iY == 2022) l = 3;
   if (iY == 2023) l = 4;
+  if (iY == 2024) l = 5;
   if (l < 0) {
     cout << "Illegal year" << endl;
     return 0;
@@ -918,6 +936,7 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
   if (iY == 2013) l = 2;
   if (iY == 2022) l = 3;
   if (iY == 2023) l = 4;
+  if (iY == 2024) l = 5;
   if (l < 0) {
     cout << "Illegal year" << endl;
     return 0;
@@ -1068,6 +1087,7 @@ void TpcSurveyAll(Int_t d0 = -1, Int_t l0 = -1) {
   //                                    2 -> 2013
   //                                    3 -> 2022
   //                                    4 -> 2023
+  //                                    5 -> 2024
   memset(graphs, 0, sizeof(graphs));
   const Char_t *systems[5] = {"Magnet","Tpc" ,"AO", "BO","DO"};
   const Char_t *site[5][2] = 
@@ -1077,10 +1097,10 @@ void TpcSurveyAll(Int_t d0 = -1, Int_t l0 = -1) {
      {"^WAO"    ,"^EAO"     },
      {"^WBO"    ,"^EBO"     },
      {"^WDO"    ,"^EDO"     }};
-  const Int_t ys[5] = {2003, 2004, 2013, 2022, 2023};
+  const Int_t ys[kSurveySets] = {2003, 2004, 2013, 2022, 2023, 2024};
   InitMatrices();
   Int_t d1 = 0, d2 = 5;
-  Int_t l1 = 0, l2 = 4;
+  Int_t l1 = 0, l2 =kSurveySets - 1 ;
   if (d0 > -1) {d1 = d2 = d0;}
   if (l0 > -1) {l1 = l2 = l0;}
   for (Int_t d = d1; d <= d2; d++) {// detectors: Magnet, Tpc, TpcR
@@ -1182,9 +1202,10 @@ void y2014M() {
 }
 //________________________________________________________________________________
 void Print(Int_t y=2023) {
+  if (y==2023) {
   MakeGraph(y,"Magnet","^E.*");
   MakeGraph(y,"Magnet","^W.*");
-
+  }
   MakeGraph(y,"Tpc","^E.*");
   MakeGraph(y,"Tpc","^W.*");
 }
