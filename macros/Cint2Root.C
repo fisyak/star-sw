@@ -1,6 +1,6 @@
 /* 
    cd StarDb
-   root.exe 'bfc.C(-1)' Cint2Root.C
+   root.exe 'bfc.C(0)' Cint2Root.C
 */
 void Cint2Root(TString topDir = ".") {
   // set loop optimization level 

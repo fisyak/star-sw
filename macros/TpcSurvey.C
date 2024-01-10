@@ -73,7 +73,8 @@ TGraph2DErrors *graphs[2][3][3];
 TGraphErrors *graphfit = 0;
 TH2          *h2fit = 0;
 TGraph2DErrors *graph = 0;
-//TMultiGraph    *mg = 0;
+TMultiGraph    *mgPhi = 0;
+TMultiGraph    *mgR = 0;
 TProfile2D *prof2D = 0;
 TProfile2D *prof2DRphi = 0;
 TH1D       *zPlot = 0;
@@ -154,9 +155,15 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
   survey = new SurveyData_t[N];
   for (Int_t i = 0; i < N; i++) {
     survey[i] = surv[i];
-    if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.01;
-    if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.01;
-    if (survey[i].dZSurvey < 1e-10) survey[i].dZSurvey = 0.01;
+    if (y < 2024) {
+      if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.01;
+      if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.01;
+      if (survey[i].dZSurvey < 1e-10) survey[i].dZSurvey = 0.01;
+    } else {
+      if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.10;
+      if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.10;
+      if (survey[i].dZSurvey < 1e-10) survey[i].dZSurvey = 0.10;
+    }
     if (y < 2022) {
       survey[i].XSurvey *=  scale; survey[i].dXSurvey *= scale; 
       survey[i].YSurvey *=  scale; survey[i].dYSurvey *= scale; 
@@ -164,7 +171,7 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
       continue;
     } else {
       survey[i].XSurvey *=  scale; survey[i].dXSurvey *= scale; 
-      survey[i].YSurvey *= -scale; survey[i].dYSurvey *= scale; // old survey was done in left handed coordinate system
+      survey[i].YSurvey *= -scale; survey[i].dYSurvey *= scale; // old survey was done in left handed coordinate system (x,y,z)_survey => (x,-z,y)_star
       survey[i].ZSurvey *=  scale; survey[i].dZSurvey *= scale; 
       // rename to STAR Eest TPC sector notation
       Int_t sector, row;
@@ -228,7 +235,7 @@ Bool_t InitMatrices(Int_t y = 0) {
     Int_t l = ly;
     //    if (ly > 2) l = 2;
 #define __Mag2Surv__
-#define __IDEAL__
+    //#define __IDEAL__
 #ifdef  __Mag2Surv__
     Double_t survMagnetZabg[kSurveySets][2][6] = { // Survey => Magnet
       /*x  y      z(cm)  alpha,    beta, gamma [mrad] */
@@ -238,7 +245,7 @@ Bool_t InitMatrices(Int_t y = 0) {
        {0., 0.,-362.5550, 0, 0, 0}}, // 2004,EF 1-8
       {{0., 0., 362.5011, 0, 0, 0},  // y2013w Coordinates are in STAR magent system
        {0., 0.,-362.5550, 0, 0, 0}}, // y2013e
-#ifdef __IDEAL__1
+#ifdef __IDEAL__
       {{0, 0, 0, 0, 0, 0},  // y2022w Coordinates are in STAR magent system << 2013
        {0, 0, 0, 0, 0, 0}}, // y2022e
       {{0, 0, 0, 0, 0, 0},  // y2023w 
@@ -246,34 +253,19 @@ Bool_t InitMatrices(Int_t y = 0) {
       {{0, 0, 0, 0, 0, 0},  // y2024w 
        {0, 0, 0, 0, 0, 0}}, // y2024e
 #else
-//       {{0, 0, 0.7795, 0, 0, 0},  // y2023w Coordinates are in STAR magent system << 2013
-//        {0, 0, 0.7791, 0, 0, 0}}  // y2023e
-//       {{0, 0, -0.7795, 0, 0, 0},  // y2023w Coordinates are in STAR magent system << 2013
-//        {0, 0, -0.7791, 0, 0, 0}}  // y2023e
-//       {{0, 0, -0.7795, 0, 0, 0},  // y2023w Coordinates are in STAR magent system << 2013
-//        {0, 0,  0.7791, 0, 0, 0}}  // y2023e
-//       {{0, 0, -0.8483, 0, 0, 0},  // y2023w 
-//        {0, 0,  2.4072, 0, 0, 0}}, // y2023e
-//       {{0, 0, -0.8483-1.6279, 0, 0, 0},  // y2023w 
-//        {0, 0,  2.4072+1.6275, 0, 0, 0}}, // y2023e
-//       {{0, 0, 0, 0, 0, 0},  // y2023w 
-//        {0, 0, 0, 0, 0, 0}}, // y2023e
+      {{0, 0, 0, 0, 0, 0},  // y2022w Coordinates are in STAR magent system << 2013
+       {0, 0, 0, 0, 0, 0}}, // y2022e
 /*
 MakeGraph(2023,"Magnet","^W",   10,  500)       z = 365.9615 +/- 0.0402 (cm) alpha = -0.03 +/- 0.18 [mrad] beta =  0.85 +/- 0.07 [mrad] chi2/ndf        0.59/   2 res. =  -0.0 +/-  86.9 (mkm)
 MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-364.1466 +/- 0.0349 (cm) alpha =  0.19 +/- 0.16 [mrad] beta =  0.88 +/- 0.07 [mrad] chi2/ndf        0.03/   2 res. =   0.0 +/-  19.4 (mkm)
 dz = (zW+zE)/2 =                                      0.9074                                                       0.86
-*/
-      {{0, 0, 0, 0, 0, 0},  // y2022w Coordinates are in STAR magent system << 2013
-       {0, 0, 0, 0, 0, 0}}, // y2022e
-      {{0, 0, 0.9074, 0, 0.86, 0},  // y2023w 
-       {0, 0, 0.9074, 0, 0.86, 0}}, // y2023e
-      {{0, 0, 0, 0, 0, 0},  // y2024w 
-       {0, 0, 0, 0, 0, 0}}, // y2024e
-      /*
 MakeGraph(2023,"Magnet","^W",   10,  500)       z = 365.0539 +/- 0.0402 (cm) alpha = -0.03 +/- 0.18 [mrad] beta = -0.01 +/- 0.07 [mrad] chi2/ndf        0.59/   2 res. =  -0.0 +/-  86.9 (mkm)
 MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alpha =  0.19 +/- 0.16 [mrad] beta =  0.02 +/- 0.07 [mrad] chi2/ndf        0.03/   2 res. =   0.0 +/-  19.4 (mkm)
-
-       */
+*/
+      {{0, 0, 0.9074, 0, 0.86, 0},  // y2023w 
+       {0, 0, 0.9074, 0, 0.86, 0}}, // y2023e
+      {{0, 0, 0, 0, 0, 0},  // y2024w, y2024 measurements are in STAR magnet Coordinate system
+       {0, 0, 0, 0, 0, 0}}, // y2024e
 #endif
     };
     
@@ -301,7 +293,7 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
       {-0.2287 +0.0094-0.0162,  -0.1745 +0.0370+     0, -231.6945+0.0269, 0.10, -0.55, 0.52}, //  2004,"Tpc","^E..."
       {-0.2287 -0.0095-0.0001,  -0.1745 +0.0013+     0, -231.7106+0.0269, 0.10, -0.48, 0.36}, //  2013,"Tpc","^E..."
       {0,   0, 0.785340, 0, 0.61, 0}, //  2022,"Tpc","^E..." 
-#ifdef __IDEAL__1
+#ifdef __IDEAL__
       {0,   0, 0, 0, 0, 0}, //  2022,"Tpc","^E..." 
 //       {0,   0, 0.771450, 0, 0.61, 0}  //  2023,"Tpc","^E..." 
       {0,   0, 0, 0, 0, 0},  //  2023,"Tpc","^E..." 
@@ -312,9 +304,12 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 //       {0,   0, 0, 0, 0.55, 0}  //  2023,"Tpc","^E..."  2023
 //      {-0.1734,   0, 0, 0, 0.55, 0}  //  2023,"Tpc","^E..."  2023
 //      {0,   0, 0, 0, 0, 0}  //  2023,"Tpc","^E..." 
-      {0,   0, -0.2784, 0, -0.31, 0},  //  MakeGraph(2023,"Tpc","^E", -500,  -10)  z =  -0.2784 +/- 0.0046 (cm) alpha = -0.03 +/- 0.06 [mrad] beta = -0.31 +/- 0.05 [mrad] chi2/ndf       27.24/  31 res. =  71.9 +/- 485.4 (mkm)
-      {0,   0, 0, 0, 0, 0}  //  2024,"Tpc","^E..." 
-
+//  MakeGraph(2023,"Tpc","^E", -500,  -10)  z =  -0.2784 +/- 0.0046 (cm) alpha = -0.03 +/- 0.06 [mrad] beta = -0.31 +/- 0.05 [mrad] chi2/ndf       27.24/  31 res. =  71.9 +/- 485.4 (mkm)
+      {0,   0, -0.2784, 0, -0.31, 0},  
+      //      {0,   0, 0, 0, 0, 0},  
+//  MakeGraph(2024,"Tpc","^E")      z =  -0.3062 +/- 0.0002 (cm) alpha = -0.14 +/- 0.00 [mrad] beta = -0.37 +/- 0.00 [mrad] chi2/ndf    16011.70/  31 res. =  73.3 +/- 473.1 (mkm)
+//      {0,   0, -0.3062, 0, -0.37 , 0} //  MakeGraph(2024,"Tpc","^E")      z =   0.0000 +/- 0.0002 (cm) alpha = -0.14 +/- 0.00 [mrad] beta =  0.00 +/- 0.00 [mrad] chi2/ndf    16011.70/  31 res. =  73.3 +/- 473.1 (mkm)
+      { -0.1100, -0.2881, -0.3062, -0.14, -0.37 ,  0.37 } //  From East Wheel
 #endif
     };
     Double_t transTpc[3]  = {Tpcxyzabg[ly][0], Tpcxyzabg[ly][1], Tpcxyzabg[ly][2]}; // 3-rd iteration
@@ -354,10 +349,12 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 
 	{{ 0.0193, -0.0133, 231.4724,  0.16,  0.11, -0.36-0.03},  //  MakeGraph(2013,"Tpc","^W...")       
 	 { 0.    , 0.     ,-231.4880, -0.00, -0.00,  0.03-0.02+0.06-0.03-0.01}}, //  MakeGraph(2013,"Tpc","^E...")
-#ifdef __IDEAL__1
+#ifdef __IDEAL__
 	{{ 0, 0,   (zWeel+1.7780+30.033+ 0.7784-0.0184), 0.47, 0, 0},  //2022  Alexei: 30.033 cm + 0.7784 => 30.7930 cm
 	 { 0, 0,  -(zWeel+1.7780+30.033+ 0.7784-0.0184), 0.15, 0, 0}}, //2022
-	{{ 0, 0,   (zWeel+27.007), 0, 0, 0},  //0  Alexei: 27.007 cm          => 25.3791 cm
+	{{ 0, 0,   (zWeel+27.007), 0, 0, 0},  //0 2023  Alexei: 27.007 cm          => 25.3791 cm
+	 { 0, 0,  -(zWeel+27.007), 0, 0, 0}}, //0 
+	{{ 0, 0,   (zWeel+27.007), 0, 0, 0},  //0 2024
 	 { 0, 0,  -(zWeel+27.007), 0, 0, 0}}  //0 
 #else
 // 	{{ 0, 0,   (zWeel+1.7780+27.007), 0.00, 0, 0},  //0  Alexei: 27.007 cm          => 25.3791 cm
@@ -376,8 +373,23 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 // 	 { -0.1490,  0.0564,  -(zWeel+27.007)       , 0   , 0, 0.52}}  //0 		      MakeRGraph
 	{{ 0, 0,   (zWeel+1.7780+30.033), 0, 0, 0},  //2022  Alexei: 30.033 cm + 0.7784 => 30.7930 cm
 	 { 0, 0,  -(zWeel+1.7780+30.033), 0, 0, 0}}, //2022
-	{{ -0.1976, -0.0594,   (zWeel+27.007)+0.3005, 0.24, 0, 0.17+0.022},  //0  Alexei: 27.007 cm MakeRGraph
-	 { -0.1490,  0.0564,  -(zWeel+27.007)       , 0   , 0, 0.52+0.074}}  //0 		      MakeRGraph
+	{{ -0.1976, -0.0594,   (zWeel+27.007)+0.3005, 0.24, 0, 0.17+0.022},   //0 2023W  Alexei: 27.007 cm MakeRGraph
+	 { -0.1490,  0.0564,  -(zWeel+27.007)       , 0   , 0, 0.52+0.074}},  //0 2023E 	           MakeRGraph
+#ifdef __IDEAL__
+	{{ 0, 0,   (zWeel+27.007), 0, 0, 0},  //0 2024 
+	 { 0, 0,  -(zWeel+27.007), 0, 0, 0}}  //0 
+#else /* Averaged */ 
+// 	{{ -0.1767, -0.3501,   (zWeel+27.007), 0, 0, 0    },  //2024  West <x0>= -0.1767 +/-  0.0022;<y0>=-0.3501 +/-  0.0026; N/A               ;   <gamma>=  0.02+/- 0.11
+// 	 { -0.1100, -0.2881,  -(zWeel+27.007), 0, 0, 0.37}}   //      East <x0>= -0.1100 +/-  0.0022;<y0>=-0.2881 +/-  0.0025; N/A               ;   <gamma>=  0.37 +/- 0.08
+// 	{{ -0.1767, -0.3501,   (zWeel+27.007) +  0.2886,  0.21, 0,    0},  //2024  West Add z and alpha 
+// 	 { -0.1100, -0.2881,  -(zWeel+27.007)          , -0.14, 0, 0.37}}  //      East 
+// 	{{ -0.0639, -0.0978,   (zWeel+27.007) + 0.2886, 0, 0, -0.31},  //0 2024 wrt East
+// 	 {       0,       0,  -(zWeel+27.007)         , 0, 0,     0}}  //0 
+// 	{{ -0.0639, -0.0978,   (zWeel+27.007) + 0.2886, 0.35, -0.03, -0.31},  //0 2024 wrt East
+// 	 {       0,       0,  -(zWeel+27.007)         ,    0,     0,     0}}  //0 
+	{{ -0.0639, -0.0978,   (zWeel+27.007) + 0.2886, 0.35, -0.03, -0.31},  //0 2024 wrt East
+	 {       0,  0.0355,  -(zWeel+27.007)         ,    0,     0,     0}}  //0 add shift in Y 
+#endif
 #endif
       };
       cout << Form("%4i,Wheel xyz (cm) = %8.4f %8.4f %8.4f abg[mrad] = %6.2f  %6.2f  %6.2f",
@@ -602,7 +614,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
     return 0;
   }
   Double_t zmin = 0, zmax = 0;
-  if (side == 0) {zmin =   10; zmax = 500;}
+  if (side == 0) {zmin =   10; zmax = 500;} // west
   if (side == 1) {zmin = -500; zmax = -10;}
   TString System(system);
   Int_t N = 0;
@@ -928,6 +940,27 @@ void fitEllipse(TGraphErrors *graph) {
 //________________________________________________________________________________
 TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t ellipse = kFALSE) {
   InitMatrices(iY);
+  if (! mgPhi) mgPhi = new TMultiGraph("dPhi","dPhi (mrad) : sector");
+  if (! mgR  ) mgR   = new TMultiGraph("dR","dR (#mum): sector");
+  TString Letter(pattern+2,1);
+  TString dPhiName = Form("dPhi_%1s",Letter.Data());
+  TString dRName = Form("dR_%1s",Letter.Data());
+  Int_t color = 1;
+  if (Letter == "B") color = 2;
+  else if (Letter == "C") color = 3;
+  else if (Letter == "D") color = 4;
+  TGraph *dPhi = 0;
+  if ( mgPhi->GetListOfGraphs()) dPhi = (TGraph *) mgPhi->GetListOfGraphs()->FindObject(dPhiName);
+  if (! dPhi) {
+    dPhi = new TGraph(); dPhi->SetName(dPhiName); dPhi->SetMarkerColor(color); dPhi->SetMarkerStyle(20);
+    mgPhi->Add(dPhi);
+  }
+  TGraph *dR = 0;
+  if ( mgR->GetListOfGraphs())  dR = (TGraph *) mgR->GetListOfGraphs()->FindObject(dRName);
+  if (! dR) {
+    dR = new TGraph(); dR->SetName(dRName); dR->SetMarkerColor(color); dR->SetMarkerStyle(20);
+    mgR->Add(dR);
+  }
   Double_t rmin = 0;
   Double_t rmax = 200;
   Int_t l = -1;
@@ -979,7 +1012,7 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
     Double_t xyzL[3];
     WheelCS[side][l].MasterToLocal(xyzG,xyzL);
     if (_debug) {
-      cout << "WheelCS[" << side << "][" << l << "]\t"; WheelCS[side][l].Print();
+      cout << endl << "WheelCS[" << side << "][" << l << "]\t"; WheelCS[side][l].Print();
       cout << Form("xyzG: %8.3f  %8.3f  %8.3f => xyzL:  %8.3f  %8.3f  %8.3f",xyzG[0],xyzG[1],xyzG[2],xyzL[0],xyzL[1],xyzL[2]) << endl;
       
     }
@@ -1015,6 +1048,7 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
   if (! fitter) return graph;
   Double_t x0 = fitter->GetParameter(0);
   Double_t y0 = fitter->GetParameter(1);
+  Double_t rFit = fitter->GetParameter(2);
   Double_t gamma = 0;
   Double_t gamma2 = 0;
   n = 0;
@@ -1049,18 +1083,25 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
     Double_t diff = angle-phiSec;
     if (diff < -TMath::Pi()) diff += TMath::TwoPi();
     if (diff >  TMath::Pi()) diff -= TMath::TwoPi();
-    cout << Form(" R =%6.2f phi = %8.3f sec %8.3f diff %8.3f",r,angle,phiSec,1e3*diff);
+    Double_t dr = r - rFit;
+    cout << Form(" R =%6.2f phi = %8.3f sec %2i %8.3f diff %8.3f (mrad) rFit = %8.3f",r, TMath::RadToDeg()*angle,sec, TMath::RadToDeg()*phiSec,1e3*diff, rFit);
     cout << endl;
     gamPlot->Fill(sec,1e3*diff);
     gamma += diff;
     gamma2 += diff*diff;
     n++;
+    Int_t N = dPhi->GetN();
+    if (N < 0) N = 0;
+    dPhi->SetPoint(N, sec, 1e3*diff);
+    N = dR->GetN();
+    if (N < 0) N = 0;
+    dR->SetPoint(N, sec, 1e4*dr);
   }
   n++;
   gamma /= n;
   gamma2 /= n;
   Double_t dgam = TMath::Sqrt(gamma2 - gamma*gamma)/TMath::Sqrt(n-1);
-  TString Line(Form("%40s",graph->GetTitle())); 
+  TString Line(Form("%-40s",graph->GetTitle())); 
   Line += Form(" x0 =%8.4f +/- %7.4f y0 =%8.4f +/- %7.4f R =%8.4f +/- %7.4f gamma =%6.2f +/- %5.2f", 
 	       fitter->GetParameter(0),fitter->GetParError(0),
 	       fitter->GetParameter(1),fitter->GetParError(1),
@@ -1208,4 +1249,15 @@ void Print(Int_t y=2023) {
   }
   MakeGraph(y,"Tpc","^E.*");
   MakeGraph(y,"Tpc","^W.*");
+}
+//________________________________________________________________________________
+void PlotAllR() {
+  MakeRGraph(2024,"^WAO");
+  MakeRGraph(2024,"^WBO");
+  MakeRGraph(2024,"^WCO");
+  MakeRGraph(2024,"^WDO");
+  MakeRGraph(2024,"^EAO");
+  MakeRGraph(2024,"^EBO");
+  MakeRGraph(2024,"^ECO");
+  MakeRGraph(2024,"^EDO");
 }
