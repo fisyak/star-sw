@@ -57,12 +57,15 @@
      if ($?) then
         echo "$PWD"
         ln -s ~/macros/.sl* .
-        root.exe -q -b lMuDst.C 'Cosmics.C+("*\/*MuDst.root")' > & Cosmics.log &
+*/
+//        root.exe -q -b lMuDst.C 'Cosmics.C+("*\/*MuDst.root")' > & Cosmics.log &
+/*
      endif
      cd -
    end
-
-   root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
+*/
+//   root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
+/*
    foreach d (`ls -1d 20??/?F`) 
      cd ${d}
      pwd
