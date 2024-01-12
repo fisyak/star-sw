@@ -48,6 +48,9 @@
    foreach f (`ls -1d ???/*.root`)
      mv ${f} ${f}.HOLD4
    end
+*/
+//   foreach d (`ls -1d */?R`) 
+/* 
    foreach d (`ls -1d ???`)
      cd ${d}
      ls -ltr | tail -1 | grep Cosmic.root
@@ -63,7 +66,8 @@
    foreach d (`ls -1d 20??/?F`) 
      cd ${d}
      pwd
-     mkdir Pictures
+     if (-d Picures) mv Pictures Pictures15
+     if (! -d Picures) mkdir Pictures
      ln -s ~/macros/.sl* .
      root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
      cd -
@@ -178,6 +182,7 @@ public:
   Int_t noFitpK;
   Int_t noFitpL;
   Double_t chi2;
+  Double_t chi2D;
   Int_t   sectorK;
   Int_t   sectorL;
   Float_t xyzK[2][3]; // first[0], last[1] potin of K track
@@ -203,7 +208,7 @@ public:
     cout << Form(  "L: %7.2f  %7.2f  %7.2f\t", xyzL[1][0], xyzL[1][1], xyzL[1][2]);
     cout << Form("S: %3i", sectorL) << endl;
   }
-  ClassDef(CosmicTracks,3)
+  ClassDef(CosmicTracks,4)
 };
 ClassImp(StDedxPidTraits);
 ClassImp(CosmicTracks);
@@ -298,7 +303,8 @@ void Cosmics(TString files = "",
     Int_t k = -1; 
     Int_t l = -1;
     for (Int_t kg = 0; kg < NoGlobalTracks; kg++) {
-      Double_t Chi2Old = 1.e4;
+      Double_t Chi2OldDD = 1.e4;
+      Double_t Chi2Old   = 1.e4;
       TRVector ParK(5);
       TRSymMatrix CovK(5);
       TRVector ParL(5);
@@ -355,14 +361,11 @@ void Cosmics(TString files = "",
 	TRSymMatrix Cov(CovL);
 	Cov += CovK;
 	t.set(Par.GetArray(), Cov.GetArray()); PrP(t);
-#define __IGNORE_CORRELATIONS__	
-#ifndef __IGNORE_CORRELATIONS__
 	TRSymMatrix G(Cov,TRArray::kInverted);
 	TRVector ParS(Par);
 	ParS[3] = 0; // ignore difference in q/pT
         Double_t chi2 = G.Product(ParS,TRArray::kATxSxA);	PrP(chi2);
-#else
-#ifdef __DEBUG__
+#if __DEBUG__
 	TRSymMatrix Cor(Cov,TRArray::kSCor); PrP(Cor);
 #endif
 	Double_t covD[15] = {Cov[0],
@@ -372,11 +375,10 @@ void Cosmics(TString files = "",
 			     0.,     0,       0,      0, Cov[14]};
 	TRSymMatrix CovD(5, covD); PrP(CovD);
 	TRSymMatrix GD(CovD,TRArray::kInverted); PrP(GD);
-	Double_t chi2DD = GD.Product(Par,TRArray::kATxSxA);	PrP(chi2DD);
-	Double_t chi2 = chi2DD;
-#endif
-	if (chi2 < Chi2Old) {
-	  Chi2Old = chi2;
+	Double_t chi2D = GD.Product(Par,TRArray::kATxSxA);	PrP(chi2D);
+	if (chi2D < Chi2OldDD) {
+	  Chi2OldDD = chi2D;
+	  Chi2Old   = chi2;
 	  k = kg;
 	  l = lg;
 	  TK = tk;
@@ -384,7 +386,7 @@ void Cosmics(TString files = "",
 	  T  = t;
 	}
       }
-      if (k < 0 || l < 0  ||  Chi2Old >= 1e2) continue;
+      if (k < 0 || l < 0  ||  Chi2OldDD >= 1e2) continue;
       PrP(TK);
       PrP(TL);
       PrP(T);
@@ -392,6 +394,7 @@ void Cosmics(TString files = "",
       tracks.noFitpK = GlobalTracks_mNHits[kg];
       tracks.noFitpL = GlobalTracks_mNHits[lg];
       tracks.chi2 = Chi2Old;
+      tracks.chi2D = Chi2OldDD;
       tracks.kg = kg;
       tracks.lg = lg;
       tracks.K = TK;
@@ -419,8 +422,9 @@ void Cosmics(TString files = "",
       if (_debug || Npairs%100000 == 1 || tracks.sectorK == tracks.sectorL) {
 	cout << "Run " << MuEvent_mRunInfo_mRunId[0] << " Event " << MuEvent_mEventInfo_mId[0] << "====================" << endl;
 	tracks.Print();
-	cout << "T\t" << Npairs/100000 << "0k\t" << T << "\tchi2 = " << tracks.chi2 << endl;
+	cout << "T\t" << Npairs/100000 << "0k\t" << T << "\tchi2 = " << tracks.chi2 << "\tchi2D = " << tracks.chi2D << endl;
       }
+#if 1
       tracks.K70 = StDedxPidTraits(kTpcId, kTruncatedMeanId, 
 				   100*((Int_t) GlobalTracks_mProbPidTraits_mdEdxTrackLength[kg])+GlobalTracks_mNHitsDedx[kg],
 				   GlobalTracks_mProbPidTraits_mdEdxTruncated[kg],GlobalTracks_mProbPidTraits_mdEdxErrorTruncated[kg]);
@@ -449,6 +453,7 @@ void Cosmics(TString files = "",
       if (tracks.Kfit.mean() > 0) tracks.zFitK = TMath::Log(tracks.Kfit.mean()/tracks.bichK);
       tracks.zFitL = -999;
       if (tracks.Lfit.mean() > 0) tracks.zFitL = TMath::Log(tracks.Lfit.mean()/tracks.bichL);
+#endif
       ftree->Fill();
       netries++;
     }
@@ -572,8 +577,9 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
 	tree->GetEntry(ev);   
 	if (ev > 0 && ! (ev%100000)) cout << "Read event " << ev << endl;
 	H2[kTotal+1][0][0]->Fill(tracks.noFitpK, tracks.noFitpL);
-	if (tracks.chi2 > 100) continue;
-	if (tracks.noFitpK < 15 || tracks.noFitpL < 15) continue;
+	if (tracks.chi2D > 100) continue;
+	//	if (tracks.noFitpK < 15 || tracks.noFitpL < 15) continue;
+	if (tracks.noFitpK < 30 || tracks.noFitpL < 30) continue;
 	StDcaGeometry &K = *&tracks.K;
 	StDcaGeometry &L = *&tracks.L;
 	StDcaGeometry &T = *&tracks.T;
@@ -591,7 +597,7 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
 	Int_t d = 1;
 	if (TMath::Abs(K.params()[kImp] - L.params()[kImp])/2 > 50.0) d = 2;
 	pTAVL10 = TMath::Log10(pTAV);
-	V.DeltapTI = T.params()[kPti];  // delta (1/pT) / (1/pT);
+	V.DeltapTI = T.params()[kPti];  // delta (1/pT) => delta(pT)/(pT**2);
 	V.pullDeltapTI = V.DeltapTI/sigmapTI;
 	V.DeltapTR = V.DeltapTI*pTAV;
 	Double_t sigmapTR = pTAV*sigmapTI;
