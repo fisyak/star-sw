@@ -71,6 +71,7 @@ cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD
 -DCMAKE_C_FLAGS="-fdiagnostics-color=always -msse4.2" \
 -Dmathmore=ON \
 -Dtable=ON \
--Dvmc=ON 
+-Dvmc=ON \
+-Droot7=ON
 #-DCMAKE_VERBOSE_MAKEFILE=ON \
 #cmake --build . -- install -j8
