@@ -1,9 +1,13 @@
 #include "Riostream.h"
 #include "TMath.h"
-#ifdef __CLING__
-#include "StarVMC/StarVMCApplication/StarVMCApplication.h"
-#include "StarVMC/StarVMCApplication/StarMCPrimaryGenerator.h"
-#include "StarVMC/StarVMCApplication/StarMCSimplePrimaryGenerator.h"
+#ifndef __CINT__
+// #include "StarVMC/geant3/TGeant3/TGeant3f77.h"
+// #include "StarVMC/geant3/TGeant3/TGeant3TGeo.h"
+// #include "StarVMC/geant3/TGeant3/TGeant3.h"
+// #include "StarVMC/StVMCMaker/StVMCMaker.h"
+// #include "StarVMC/StarVMCApplication/StarVMCApplication.h"
+// #include "StarVMC/StarVMCApplication/StarMCPrimaryGenerator.h"
+// #include "StarVMC/StarVMCApplication/StarMCSimplePrimaryGenerator.h"
 #endif
 TDataSet *CreateTable() {
   Int_t    iD     =   6; 
@@ -16,7 +20,7 @@ TDataSet *CreateTable() {
   Double_t Zlow   =  -10; 
   Double_t Zhigh  =   10; 
   Int_t    Npart  =  20;
-#ifndef __CLING__
+#ifdef __CINT__
   if ( gClassTable->GetID("TGiant3") >= 0) { // root4star
     if (gClassTable->GetID("St_geant_Maker") < 0) {
       cout << "You have to use root4star with St_geant_Maker already loaded" << endl; 

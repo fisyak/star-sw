@@ -3,8 +3,8 @@ Abriviations:
 
 README
 
-20Muons.C                     : 20 muon- with pT = 1 GeV/c, |eta| < 1, |Z| < 10 cm, sigma_X = sigma_Y = 0.015, sigma_Z = 42
-20MuonsFlatpT3GeV.C
+Muons20.C                     : 20 muon- with pT = 1 GeV/c, |eta| < 1, |Z| < 10 cm, sigma_X = sigma_Y = 0.015, sigma_Z = 42
+Muons20FlatpT3GeV.C
 antiprotonmTsq5PerCentZ6cm.C
 AuAu200StarLight_rho.C
 CosmicRays.C
@@ -17,7 +17,7 @@ DK2pimTsq.C
 DsK0sK0spimTsq.C
 DsK0sKmTsq.C
 DsKKpimTsq.C
-Flat20MuonspT0-3GeV.C
+FlatMuons20pT0-3GeV.C
 Flat20PionpT0-3GeV.C
 KNmTsq5PerCentZ6cm.C
 KPmTsq5PerCentZ6cm.C
