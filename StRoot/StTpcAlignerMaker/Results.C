@@ -35,7 +35,16 @@
 //#include "IOSectorParPass7.h"
 //#include "IOSectorParPass8.h"
 //#include "IOSectorParPass9.h"
-#include "IOSectorParPass10.h"
+//#include "IOSectorParPass10.h"
+//#include "IOSectorParPass11.h" /* BackToIrakliParameters */
+//#include "IOSectorParPass12.h" /* Repeat with Pass8 */
+//#include "IOSectorParPass13.h"   /* TpcSurver_2024 */
+//#include "IOSectorParPass14.h"   /* TpcSurver_2024 TpcOuterSectorPositionB_from_Pass13 */
+//#include "IOSectorParPass15.h"   /* TpcSurver_2024 TpcOuterSectorPositionB_from_Pass14 no 1 mrad rotation for RunXXI */
+//#include "IOSectorParPass16.h"   /* TpcSurver_2024 Ideal */
+//#include "IOSectorParPass17.h"   
+//#include "IOSectorParPass18.h"   /* Half step */
+#include "IOSectorParPass19.h"   /* Half step, no angles, from Pass16 */
 #include "THStack.h"
 #endif
 //#define __DB__
@@ -169,6 +178,9 @@ void Results(const Char_t *opt="") {
 	if (TString(Passes[k].PassName).Contains("RF")) {
 	  color++;
 	  dath[k][i]->SetMarkerStyle(23);
+	} else if (TString(Passes[k].PassName).Contains("FF.1mrad")) {
+	  color++;
+	  dath[k][i]->SetMarkerStyle(24);
 	}
       } else       if (k >= NP && NH == NP + 2)  {
 	Int_t c = 1;

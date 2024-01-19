@@ -1,5 +1,11 @@
 /*
   root.exe MakeInnerOuterSector.C
+
+root.exe Results.C+
+root.exe Results.root DumpRes2Par.C
+Results.h to IOSectorPar.h
+
+ root.exe MakeInnerOuterSector.C
 */
 //#define __TpcInnerSector__ 
 class St_db_Maker;
@@ -136,7 +142,7 @@ void MakeInnerOuterSector(const Char_t *opt = 0){
 	     << "\ty " << Pass[r].Data[i].y << "+/-" <<Pass[r].Data[i].Dy
 	     << "\tz " << Pass[r].Data[i].z << "+/-" <<Pass[r].Data[i].Dz << endl;
 	Double_t xyz[3] = {0, 0, 0};
-#if 1 /* alpha, beta gamma rotations */
+#if 0 /* alpha, beta gamma rotations */
 	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
 	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
 	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
