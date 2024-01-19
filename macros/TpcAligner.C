@@ -69,6 +69,7 @@ void TpcAligner(Int_t First, Int_t Last,
   //  Chain += "P2019a";
   //  Chain += ",AgML,NoHistos,noTags,noRunco,NoDefault";
   Chain += ",NoHistos,noTags,noRunco,NoDefault,-evout,-hitfilt";
+  //  Chain += ",NoHistos,noTags,noRunco,NoDefault,evout";
   if (TString(MainFile).Contains("daq")) Chain += ",Tpx";
   if (TString(MainFile).Contains("laser")) Chain += ",LaserIT";
   TString rFile(output);

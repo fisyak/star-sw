@@ -111,6 +111,7 @@
 #include "TRandom.h"
 #include "TFractionFitter.h"
 #include "TLegend.h"
+#include "TLegendEntry.h"
 #include "TRVector.h"
 #include "TRSymMatrix.h"
 #include "StDcaGeometry.h"
@@ -513,10 +514,12 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
   const Char_t *tCharge[NC] = {"","Positive","Negative","Looppers"};
   const Char_t *NameDCA[NDCA] = {"","C","P"};
   const Char_t *tDCA[NDCA] = {"","DCA_{xy}  <= 50 cm", "DCA_{xy}  >  50 cm"};
-  //                d   c
-  TH2D *H2[kAll][NDCA][NC] = {0};
-  //  Char_t *file = gSystem->Which(".",Out,kReadPermission);
-  Char_t *file = 0;
+  const Char_t *nChi2[2] = {"","T"}; 
+  const Char_t *tChi2[2] = {"","Total chi2 Cut"};
+ //                d   c  ch2/D
+  TH2D *H2[kAll][NDCA][NC][2] = {0};
+  Char_t *file = gSystem->Which(".",Out,kReadPermission);
+  //  Char_t *file = 0;
   TFile *fOut = 0;
   Bool_t RePlotOnly = kTRUE;
   if (file) {
@@ -525,8 +528,10 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
     for (Int_t k = 0; k < kAll; k++) {
       for (Int_t d = 0; d < NDCA; d++) { 
 	for (Int_t c = 0; c < NC; c++) {
-	  TString Name(Form("%s%s%s",plot[k].Name,nCharge[c],NameDCA[d]));
-	  H2[k][d][c] = (TH2D *) fOut->Get(Name);
+	  for (Int_t c2 = 0; c2 < 2; c2++) { 
+	    TString Name(Form("%s%s%s%s",plot[k].Name,nCharge[c],NameDCA[d],nChi2[c2]));
+	    H2[k][d][c][c2] = (TH2D *) fOut->Get(Name);
+	  }
 	}
       }
     }
@@ -536,9 +541,11 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
     for (Int_t k = 0; k < kAll; k++) {
       for (Int_t d = 0; d < NDCA; d++) { 
 	for (Int_t c = 0; c < NC; c++) {
-	  TString Name(Form("%s%s%s",plot[k].Name,nCharge[c],NameDCA[d]));
-	  TString Title(Form("%s %s %s",tCharge[c],plot[k].Title,tDCA[d]));
-	  H2[k][d][c] = new TH2D(Name,Title,plot[k].nx,plot[k].xmin,plot[k].xmax,plot[k].ny,plot[k].ymin,plot[k].ymax);
+	  for (Int_t c2 = 0; c2 < 2; c2++) { 
+	    TString Name(Form("%s%s%s%s",plot[k].Name,nCharge[c],NameDCA[d],nChi2[c2]));
+	    TString Title(Form("%s %s %s %s",tCharge[c],plot[k].Title,tDCA[d],tChi2[c2]));
+	    H2[k][d][c][c2] = new TH2D(Name,Title,plot[k].nx,plot[k].xmin,plot[k].xmax,plot[k].ny,plot[k].ymin,plot[k].ymax);
+	  }
 	}
       }
     }
@@ -579,8 +586,13 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
 	tree->LoadTree(ev);  //this call is required when using the cache
 	tree->GetEntry(ev);   
 	if (ev > 0 && ! (ev%100000)) cout << "Read event " << ev << endl;
-	H2[kTotal+1][0][0]->Fill(tracks.noFitpK, tracks.noFitpL);
+	H2[kTotal+1][0][0][0]->Fill(tracks.noFitpK, tracks.noFitpL);
 	if (tracks.chi2D > 100) continue;
+	Int_t nc2 = 1;
+	if (tracks.chi2 < 200) {
+	  nc2 = 2;
+	  H2[kTotal+1][0][0][1]->Fill(tracks.noFitpK, tracks.noFitpL);
+	}
 	//	if (tracks.noFitpK < 15 || tracks.noFitpL < 15) continue;
 	if (tracks.noFitpK < 30 || tracks.noFitpL < 30) continue;
 	StDcaGeometry &K = *&tracks.K;
@@ -620,22 +632,23 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
 	V.DeltaPsi = T.params()[kPsi];
 	Double_t sigmaPsi = TMath::Sqrt(T.errMatrix()[kPsiPsi]);
 	V.pullDeltaPsi = V.DeltaPsi/sigmaPsi;
-	
 	Double_t *Y = &V.DeltapTI;
-	for (Int_t k = 0; k < kTotal; k++) {
-	  H2[k][0][0]->Fill(pTAVL10, Y[k]);
-	  H2[k][0][c]->Fill(pTAVL10, Y[k]);
-	  H2[k][d][0]->Fill(pTAVL10, Y[k]);
-	  H2[k][d][c]->Fill(pTAVL10, Y[k]);
+	for (Int_t c2 = 0; c2 < nc2; c2++) {
+	  for (Int_t k = 0; k < kTotal; k++) {
+	    H2[k][0][0][c2]->Fill(pTAVL10, Y[k]);
+	    H2[k][0][c][c2]->Fill(pTAVL10, Y[k]);
+	    H2[k][d][0][c2]->Fill(pTAVL10, Y[k]);
+	    H2[k][d][c][c2]->Fill(pTAVL10, Y[k]);
+	  }
+	  H2[kTotal][0][0][c2]->Fill(sectorK, sectorL);
+	  H2[kTotal][0][c][c2]->Fill(sectorK, sectorL);
+	  H2[kTotal][d][0][c2]->Fill(sectorK, sectorL);
+	  H2[kTotal][d][c][c2]->Fill(sectorK, sectorL);
+	  
+	  H2[kTotal+1][0][c][c2]->Fill(tracks.noFitpK, tracks.noFitpL);
+	  H2[kTotal+1][d][0][c2]->Fill(tracks.noFitpK, tracks.noFitpL);
+	  H2[kTotal+1][d][c][c2]->Fill(tracks.noFitpK, tracks.noFitpL);
 	}
-	H2[kTotal][0][0]->Fill(sectorK, sectorL);
-	H2[kTotal][0][c]->Fill(sectorK, sectorL);
-	H2[kTotal][d][0]->Fill(sectorK, sectorL);
-	H2[kTotal][d][c]->Fill(sectorK, sectorL);
-
-	H2[kTotal+1][0][c]->Fill(tracks.noFitpK, tracks.noFitpL);
-	H2[kTotal+1][d][0]->Fill(tracks.noFitpK, tracks.noFitpL);
-	H2[kTotal+1][d][c]->Fill(tracks.noFitpK, tracks.noFitpL);
       }
     }
   }
@@ -646,67 +659,90 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
   if (pwd.Contains("RF")) Field = "RF";
   Int_t nC = 3; // NC;
   Int_t nDCA = 1; // NDCA;
-  Int_t Npads = nC*nDCA*kAll;
+  Int_t Npads = 2*nC*nDCA*kAll;
   TLegend **leg = new TLegend*[Npads];  memset(leg,  0, Npads*sizeof(TLegend *)); 
   TLegend **leg2 = new TLegend*[Npads]; memset(leg2, 0, Npads*sizeof(TLegend *)); 
   Int_t color = 0;
-  TCanvas *c1 = new TCanvas("c1","c1",10,10,200*nC*nDCA,100*kAll);
-  c1->Divide(nC*nDCA,kAll);
+  TCanvas *c1 = new TCanvas("c1","c1",10,10,200*2*nC*nDCA,100*kAll);
+  c1->Divide(2*nC*nDCA,kAll);
   color++;
   if (color == 2) color = 4;
-  for (Int_t k = 0; k < kAll; k++) {
-    for (Int_t d = 0; d < nDCA; d++) {
-      for (Int_t c = 0; c < nC; c++) {
-	Int_t pad = nC*(nDCA*k + d) + c + 1;
-	c1->cd(pad)->SetLogz(1);
-	TH2D *h2 = H2[k][d][c];
-	if (! h2) continue;
-	h2->Draw("colz");
-	if (k >= kTotal) continue;
-	h2->FitSlicesY();
-	TH1D *h_1 = (TH1D *) gDirectory->Get(Form("%s_1",H2[k][d][c]->GetName()));
-	TH1D *h_2 = (TH1D *) gDirectory->Get(Form("%s_2",H2[k][d][c]->GetName()));
-	Double_t mu = 0, sigma = 0;
-	if (h_1 && h_2) {
-	  h_1->SetMarkerStyle(20); h_1->SetMarkerColor(color);
-	  h_1->Fit("pol0","er","same",pL10min, pL10max);
-	  TF1 *pol0 = (TF1 *) h_1->GetListOfFunctions()->FindObject("pol0");
-	  if (pol0) {
-	    mu = pol0->GetParameter(0);
-	    h_1->Draw("same");
-	  }
-	  h_2->SetMarkerStyle(21); h_2->SetMarkerColor(color);
-	  h_2->Fit("pol0","er","same",pL10min, pL10max);
-	  pol0 = (TF1 *) h_2->GetListOfFunctions()->FindObject("pol0");
-	  if (pol0) {
-	    sigma = pol0->GetParameter(0);
-	  }
-	  if (TMath::Abs(mu) > 1e-7 && TMath::Abs(sigma) > 1e-7) {
-	    if (! leg[pad-1]) {
-	      leg[pad-1] = new TLegend(0.3,0.8,0.7,0.9);
-	      leg[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
-	      leg[pad-1]->AddEntry(h_1,Form("%s #mu = %6.3f, #sigma =  %6.3f",Field.Data(),mu,sigma));
-	      leg[pad-1]->Draw();
+  for (Int_t k = 0; k < kAll; k++) { // Vars
+    for (Int_t d = 0; d < nDCA; d++) {// {"","DCA_{xy}  <= 50 cm", "DCA_{xy}  >  50 cm"};
+      for (Int_t c2 = 0; c2 < 2; c2++) { // {"","Total chi2 Cut"};
+	for (Int_t c = 0; c < nC; c++) { // "All","Pos","Neg","Loop"};
+	  TH2D *h2 = H2[k][d][c][c2];
+	  if (! h2) continue;
+	  Int_t pad = nC*(2*(nDCA*k + d) + c2) + c + 1;
+	  c1->cd(pad)->SetLogz(1);
+	  h2->Draw("colz");
+	  if (k >= kTotal) continue;
+	  h2->FitSlicesY();
+	  TH1D *h_1 = (TH1D *) gDirectory->Get(Form("%s_1",H2[k][d][c][c2]->GetName()));
+	  TH1D *h_2 = (TH1D *) gDirectory->Get(Form("%s_2",H2[k][d][c][c2]->GetName()));
+	  Double_t mu = 0, sigma = 0;
+	  if (h_1 && h_2) {
+	    h_1->SetMarkerStyle(20); h_1->SetMarkerColor(color);
+	    h_1->Fit("pol0","er","same",pL10min, pL10max);
+	    TF1 *pol0 = (TF1 *) h_1->GetListOfFunctions()->FindObject("pol0");
+	    if (pol0) {
+	      mu = pol0->GetParameter(0);
+	      h_1->Draw("same");
+	    }
+	    h_2->SetMarkerStyle(21); h_2->SetMarkerColor(color);
+	    h_2->Fit("pol0","er","same",pL10min, pL10max);
+	    pol0 = (TF1 *) h_2->GetListOfFunctions()->FindObject("pol0");
+	    if (pol0) {
+	      sigma = pol0->GetParameter(0);
+	    }
+	    if (TMath::Abs(mu) > 1e-7 && TMath::Abs(sigma) > 1e-7) {
+	      if (! leg[pad-1]) {
+		leg[pad-1] = new TLegend(0.3,0.8,0.7,0.9);
+		leg[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
+		leg[pad-1]->AddEntry(h_1,Form("%s #mu = %6.3f, #sigma =  %6.3f",Field.Data(),mu,sigma));
+		leg[pad-1]->Draw();
+	      }
+	    }
+	    if (k == 0 || k == 2) {
+	      leg2[pad-1] = new TLegend(0.12,0.12,0.88,0.22);
+	      leg2[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
+	      if (k == 2) { // DelpTR
+		dpTOverpT->SetParameters(1e-2,1e-2);
+		h_2->Fit(dpTOverpT,"e+");
+		leg2[pad-1]->AddEntry(dpTOverpT,Form("#sigma(#DeltapT)) = %5.2f%% #oplus %5.2f%% #times pT => #sigma(#DeltapT/pT) = %5.2f%%(@1GeV/c)",
+						     Field.Data(),100*dpTOverpT->GetParameter(0),100*dpTOverpT->GetParameter(1), 100*dpTOverpT->Eval(0.)/TMath::Sqrt(2.)));
+	      } else if (k == 0) { // DelpTI
+		dpTI->SetParameters(1e-2,1e-2);
+		h_2->Fit(dpTI,"e+");
+		leg2[pad-1]->AddEntry(dpTI,Form("#sigma(#Delta(1/pT)) = (%5.2f%% #oplus %5.2f%% #times pT)/pT => #sigma(#DeltapT/pT) = %5.2f%%(@1GeV/c)",
+						Field.Data(),100*dpTI->GetParameter(0),100*dpTI->GetParameter(1),100*dpTI->Eval(0.)/TMath::Sqrt(2.)));
+	      }
+	      leg2[pad-1]->Draw();
+	      TList *list = leg2[pad-1]->GetListOfPrimitives();
+	      if (list) {
+		TString OutC(Out);
+		OutC.ReplaceAll(".root",".data");
+		ofstream outC;
+		if (gSystem->AccessPathName(OutC)) outC.open(OutC, ios::out); //"Results.list",ios::out | ios::app);
+		else                               outC.open(OutC, ios::app);
+		//		TString Line(gSystem->BaseName(gSystem->WorkingDirectory()));
+		TString Line;
+		TIter next(list);
+		TLegendEntry *entry =  0;
+		while ((entry = (TLegendEntry *) next())) {
+		  Line += "\t";
+		  Line += h2->GetName();
+		  Line += Form("\t%5.2fM\t", 1e-6*h2->GetEntries());
+		  Line += entry->GetLabel();
+		}		
+		cout << Line.Data() << endl;
+		outC << Line.Data() << endl;
+		outC.close();
+	      }
 	    }
 	  }
-	  if (k == 0 || k == 2) {
-	    leg2[pad-1] = new TLegend(0.12,0.12,0.88,0.22);
-	    leg2[pad-1]->SetFillColor(gStyle->GetLegendFillColor());
-	    if (k == 2) { // DelpTR
-	      dpTOverpT->SetParameters(1e-2,1e-2);
-	      h_2->Fit(dpTOverpT,"e+");
-	      leg2[pad-1]->AddEntry(dpTOverpT,Form("#sigma(#DeltapT)) = %5.2f%% #oplus %5.2f%% #times pT => #sigma(#DeltapT/pT) = %5.2f%%(@1GeV/c)",
-						   Field.Data(),100*dpTOverpT->GetParameter(0),100*dpTOverpT->GetParameter(1), 100*dpTOverpT->Eval(0.)/TMath::Sqrt(2.)));
-	    } else if (k == 0) { // DelpTI
-	      dpTI->SetParameters(1e-2,1e-2);
-	      h_2->Fit(dpTI,"e+");
-	      leg2[pad-1]->AddEntry(dpTI,Form("#sigma(#Delta(1/pT)) = (%5.2f%% #oplus %5.2f%% #times pT)/pT => #sigma(#DeltapT/pT) = %5.2f%%(@1GeV/c)",
-					      Field.Data(),100*dpTI->GetParameter(0),100*dpTI->GetParameter(1),100*dpTI->Eval(0.)/TMath::Sqrt(2.)));
-	    }
-	    leg2[pad-1]->Draw();
-	  }
+	  c1->Update();
 	}
-	c1->Update();
       }
     }
   }
