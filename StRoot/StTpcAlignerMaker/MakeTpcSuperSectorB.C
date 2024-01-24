@@ -13,20 +13,21 @@
 #endif
 //________________________________________________________________________________
 #if !defined(__CINT__) || defined(__MAKECINT__)
+#include <stdio.h>
+#include <string.h>
 #include "Riostream.h"
+#include "TString.h"
+#include "TMath.h"
 #include "TROOT.h"
 #include "TSystem.h"
-#include "TMath.h"
 #include "TH1.h"
 #include "TStyle.h"
 #include "TGraph.h"
 #include "TNtuple.h"
 #include "TCanvas.h"
-#include "TString.h"
 #include "TLegend.h"
 #include "TFile.h"
 #include "TNamed.h"
-#include "SuperSectorPar.h"
 #include "THStack.h"
 #include "StChain.h"
 #include "tables/St_Survey_Table.h"
@@ -35,10 +36,92 @@
 #include "StEvent/StEnumerations.h"
 #include "StDetectorDbMaker/StTpcSurveyC.h"
 #endif
+//________________________________________________________________________________
+class data_t {
+ public:
+  Int_t sector;
+  Double_t x, Dx, y, Dy, z, Dz, alpha, Dalpha, beta, Dbeta, gamma, Dgamma;
+  Char_t Comment[256];
+  void Print() {
+    cout << Form("%2i %8.2f %5.2f %8.2f %5.2f %8.2f %5.2f",sector, x, Dx, y, Dy, z, Dz)
+	 << Form(" %8.2f %5.2f %8.2f %5.2f %8.2f %5.2f %s", alpha, Dalpha, beta, Dbeta, gamma, Dgamma, Comment) << endl;
+  }
+  data_t &operator+= (data_t &v) {
+    Double_t *X0 = &x;
+    Double_t *X1 = &v.x;
+    for (Int_t i = 0; i < 6; i++) {
+      if (X0[2*i+1] >= 0 /* && X0[2*i+1] < 99 */ &&
+	  X1[2*i+1] >= 0 /* && X1[2*i+1] < 99 */) {
+	Double_t val = 0.5*(X0[2*i] + X1[2*i]);
+	Double_t err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
+	X0[2*i  ] = val;
+	X0[2*i+1] = err;
+      }
+    }
+    Char_t temp[256];
+    sprintf(temp,"(%s+%s)/2",Comment,v.Comment);
+    strcpy(Comment,temp);
+  }
+  data_t &operator-= (data_t &v) {
+    Double_t *X0 = &x;
+    Double_t *X1 = &v.x;
+    for (Int_t i = 0; i < 6; i++) {
+      if (X0[2*i+1] >= 0 /* && X0[2*i+1] < 99 */ &&
+	  X1[2*i+1] >= 0 /* && X1[2*i+1] < 99 */) {
+	Double_t val = 0.5*(X0[2*i] - X1[2*i]);
+	Double_t err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
+	X0[2*i  ] = val;
+	X0[2*i+1] = err;
+      }
+    }
+    Char_t temp[256];
+    sprintf(temp,"(%s-%s)/2",Comment,v.Comment);
+    strcpy(Comment,temp);
+  }
+};
+class SurveyPass_t {
+ public:
+  Int_t date, time;
+  Char_t PassName[256];
+  data_t Data[24];
+#if 0
+  SurveyPass_t &operator=(Int_t d, Int_t t, const Char_t *Pass, data_t data[24]) {
+    date = d; time = t; PassName = Pass;
+    for (Int_t i = 0; i < 24; i++) Data[i] = data[i];
+    return *this;
+  }
+#endif
+  void Print() {
+    cout << Form("%8i %6i %s",date,time,PassName) << endl;
+    for (Int_t i = 0; i < 24; i++) {
+      Data[i].Print();
+    }
+  }
+  SurveyPass_t operator+= (SurveyPass_t &v) {
+    for (Int_t i = 0; i < 24; i++) Data[i] += v.Data[i];
+    Char_t temp[256];
+    sprintf(temp,"(%s+%s)/2",PassName,v.PassName);
+    strcpy(PassName,temp);
+  }
+  SurveyPass_t operator-= (SurveyPass_t &v) {
+    for (Int_t i = 0; i < 24; i++) Data[i] -= v.Data[i];
+    Char_t temp[256];
+    sprintf(temp,"(%s-%s)/2",PassName,v.PassName);
+    strcpy(PassName,temp);
+  }
+};
+const Int_t N = 24;
+SurveyPass_t Passes[] = {
+#include  "StTpcAlignerMaker/W2S_Old.h"
+};
+const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
+  
+//________________________________________________________________________________
+
 TCanvas *c1 = 0;
 StMaker *db = 0;
 StChain *chain = 0;
-static THStack *hs[6];
+THStack *hs[6];
 static TLegend *leg[6];
 static const Double_t scale = 1.0;
 static TGeoHMatrix dR[24], dRC[24];
@@ -275,7 +358,8 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass){
     for (Int_t j =  9; j < 12; j++) out << Form("%8.4f,",r[j]); 
     cout << " ";
     for (Int_t j = 12; j < 18; j++) out << Form("%8.5f,",r[j]);
-    out << "\"" << Pass.PassName << "\"}";
+    //    out << "\"" << Pass.PassName << "\"}";
+    out << "\"" << Pass.Data[i].Comment << "\"}";
     if (i != 23) out << ",";
     out << endl;
   }
@@ -315,6 +399,7 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   TFile *fOut = new TFile("MakeTpcSuperSectorB.root","recreate");
   for (Int_t i = 0; i < 6; i++) {
     hs[i] = new THStack(nameK[i],names[i]);
+    fOut->Add(hs[i]);
 #if 0
     if (i < 3) hs[i]->SetYTitle(Form("%s (#mum)",names[i]));
     else       hs[i]->SetYTitle(Form("%s (mrad)",names[i]));
@@ -377,7 +462,6 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
       dath[k][i]->SetXTitle("sector");
       if (i < 3) dath[k][i]->SetYTitle(Form("%s (#mum)",names[i]));
       else       dath[k][i]->SetYTitle(Form("%s (mrad)",names[i]));
-      
       for (Int_t l = 0; l < 24; l++) {
 	Double_t val, err;
 	Double_t *X = &currPass->Data[l].x;
@@ -431,6 +515,6 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
     if (leg[i]) leg[i]->Draw();
   }
   c1->Update();
-  //  MakeSuperSectorPositionBTable(PassSum);
   fOut->Write();
+  //  MakeSuperSectorPositionBTable(PassSum);
 }
