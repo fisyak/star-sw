@@ -1344,8 +1344,13 @@ void TDrawW2S() {
       line  += "|               ";
       lineC += ",      0,-9.99";
     } else {
-      line  += Form("|%7.2f+-%5.2f ", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
-      lineC += Form(",%7.2f,%5.2f", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
+      if (m > 2) {
+	line  += Form("|%7.2f+-%5.2f ", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
+	lineC += Form(",%7.2f,%5.2f", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
+      } else {
+	line  += Form("|%8.2f+-%6.2f ", TMath::Max(-9999.99,TMath::Min( 9999.99,ValG[m].val)),TMath::Min(999.99,ValG[m].valError)); 
+	lineC += Form(",%8.2f,%6.2f", ValG[m].val,TMath::Min(999.99,ValG[m].valError)); 
+      }
     }
   }
   cout << line << endl;

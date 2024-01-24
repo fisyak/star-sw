@@ -44,7 +44,10 @@
 //#include "IOSectorParPass16.h"   /* TpcSurver_2024 Ideal */
 //#include "IOSectorParPass17.h"   
 //#include "IOSectorParPass18.h"   /* Half step */
-#include "IOSectorParPass19.h"   /* Half step, no angles, from Pass16 */
+//#include "IOSectorParPass19.h"   /* Half step, no angles, from Pass16 */
+//#include "IOSectorParPass20.h"   /* Half step, no angles, from Pass19 */
+//#include "IOSectorParPass21.h"   /* Half step, with angles, from Pass20 */
+#include "IOSectorParPass22.h"   /* Half step, with angles, from Pass21 */
 #include "THStack.h"
 #endif
 //#define __DB__

@@ -1,6 +1,7 @@
 // Dump Resuls.root histogram to SurveyPass_t
 /* 
    root.exe Results.root DumpRes2Par.C
+   root.exe ResultsW2S.root DumpRes2Par.C
 */
 void DumpRes2Par() {
   TH1D *hist[2][6] = {0};
@@ -16,8 +17,10 @@ void DumpRes2Par() {
 	cout << "Hisogram " << Name.Data() << " is loaded" << endl;
       }
     }
+  TString Out(gSystem->BaseName(gDirectory->GetName()));
+  Out.ReplaceAll(".root",".h");
   ofstream outC;
-  outC.open("Results.h", ios::out);
+  outC.open(Out.Data(), ios::out);
   for (Int_t f = 0; f < 2; f++) {
     outC << "  {20190101,    1, \"" << gSystem->BaseName(gSystem->WorkingDirectory()) << "/" << RF[f] <<  "\", //" << endl;
     outC << "{" << endl;
