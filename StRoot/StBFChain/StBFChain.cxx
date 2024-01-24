@@ -669,7 +669,9 @@ Int_t StBFChain::Instantiate()
       if (GetOption("EastOff"))   mk->SetAttr("EastOff"    ,kTRUE);
       if (GetOption("WestOff"))   mk->SetAttr("WestOff"    ,kTRUE);
       if (GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
+#if 0
       if (GetOption("Alignment")) mk->SetAttr("Alignment"  ,kTRUE);
+#endif
       if (GetOption("Cosmics"))   mk->SetAttr("Cosmics"    ,kTRUE);
       mk->PrintAttr();
     }
@@ -973,7 +975,9 @@ Int_t StBFChain::Instantiate()
 	SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS);
 	SETBIT(Mode,StdEdxY2Maker::kPadSelection); 
 	SETBIT(Mode,StdEdxY2Maker::kPadSelection);
+#if 0
 	SETBIT(Mode,StdEdxY2Maker::kAlignment);
+#endif
 	LOG_INFO << " set dEdxY2 Mode " << Mode << " =======================================" << endm;
 	mk->SetMode(Mode);
       } 

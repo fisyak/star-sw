@@ -594,6 +594,7 @@ assert(direction || leadNode==track->getLastNode());
           if (status)		continue;
 	  chi2 = testNode.evaluateChi2(stiHit);
 	  if (chi2>maxChi2) 	continue;
+#if 0
 	  // Aligment part
 	  if (DoAlignment()) {
 	    UInt_t sector = track->getTpcSector();
@@ -602,6 +603,7 @@ assert(direction || leadNode==track->getLastNode());
 	      if (tpcHit && tpcHit->sector() != sector) continue;
 	    }
 	  }
+#endif
 	  hitCont.add(stiHit,chi2,testNode.getDeterm());
 	  if (debug() > 2) cout << " hit selected"<<endl;
 	}// for (hitIter)
