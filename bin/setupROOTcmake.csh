@@ -25,6 +25,22 @@ setenv QT_LIBRARY_DIR ${QTDIR}/lib
 setenv QT_INCLUDE_DIR ${QTDIR}/include
 setenv QT_MOC_EXECUTABLE ${QTDIR}/bin/moc
 setenv Qt4 ${QTDIR}
+switch ( $STAR_HOST_SYS )  
+    case *gcc6*: # does not work with ROOT >+ 6.30.00
+    setenv EXTRA_OFF " -Dtbb=OFF"
+    setenv CMAKE_CXX_FLAGS " -std=c++17 -fdiagnostics-color=always -msse4.2"
+    setenv CMAKE_C_FLAGS " -fdiagnostics-color=always -msse4.2"
+    breaksw
+    default:
+#     exit 1
+    setenv EXTRA_OFF ""
+    setenv CMAKE_CXX_FLAGS " -fdiagnostics-color=always -msse4.2"
+    setenv CMAKE_C_FLAGS " -fdiagnostics-color=always -msse4.2"
+ endsw  
+# Find and then delete all files under current directory (.) that:
+#  1. contains "cmake" (case-&insensitive) in its path (wholename)
+#  2. name is not CMakeLists.txt
+find . -iwholename '*cmake*' -not -name CMakeLists.txt -delete
 rm -f CMakeCache.txt
 #cmake cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD_TYPE=Debug -Dall=ON -Dcxx11=ON -Dlibcxx=ON -Dcacoa=ON -Dgdml=ON -Dgsl_shared=ON -Dminuit2=ON -Dqt=ON -Drootfit=ON -Dtable=ON -Dvc=ON 
 #cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD_TYPE="${ROOT_BUILD}" -Wno-dev \
@@ -63,15 +79,16 @@ rm -f CMakeCache.txt
 #-Dbuiltin_cfitsio=On -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -msse -msse2 -msse3 -msse4.1 -mssse3" \
 #-DCMAKE_C_FLAGS="-fdiagnostics-color=always -msse -msse2 -msse3 -msse4.1 -mssse3" \
 # cmake --build . -- install -j8
+echo "EXTRA_OFF = ${EXTRA_OFF}, CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}, CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}"
 cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD_TYPE="${ROOT_BUILD}" \
 -DCMAKE_C_COMPILER="${CC}" -DCMAKE_CXX_COMPILER="${CXX}" -DCMAKE_Fortran_COMPILER="${FC}" -Dfortran=ON \
 -Dpythia6=ON  -Dpythia8=ON \
 -DXROOTD_ROOT_DIR="${XOPTSTAR}" \
--DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -msse4.2" \
--DCMAKE_C_FLAGS="-fdiagnostics-color=always -msse4.2" \
+-DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS}" -DCMAKE_C_FLAGS="${CMAKE_C_FLAGS}" \
 -Dmathmore=ON \
 -Dtable=ON \
 -Dvmc=ON \
--Droot7=ON
+-Droot7=ON \
+${EXTRA_OFF}
 #-DCMAKE_VERBOSE_MAKEFILE=ON \
 #cmake --build . -- install -j8
