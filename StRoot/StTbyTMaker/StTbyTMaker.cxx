@@ -22,7 +22,7 @@
 #include "StMessMgr.h"
 #include "StDbUtilities/StTpcCoordinateTransform.hh"
 #include "StDbUtilities/StCoordinates.hh" 
-#define __REQUIRE_PRIMARY_VERTEX__
+//#define __REQUIRE_PRIMARY_VERTEX__
 #define __DEBUG__
 #if defined(__DEBUG__)
 #define PrPP(A,B) if (Debug()%10 > 2) {LOG_INFO << "StTrackMaterMaker::" << (#A) << "\t" << (#B) << " = \t" << (B) << endm;}
@@ -530,6 +530,12 @@ HitParameters StTbyTMaker::HitParametersFill(const StTpcHit *tpcHit) {
   P.trigId  = 0;
   P.us      = tpcHit->usedInFit();
   P.fl      = tpcHit->flag();
+  P.dX      = tpcHit->dX();
+  P.dY      = tpcHit->dY();
+  P.dZ      = tpcHit->dZ();
+  P.sigmaX  = tpcHit->positionError().x();
+  P.sigmaY  = tpcHit->positionError().y();
+  P.sigmaZ  = tpcHit->positionError().z();
   if (Debug()) {
     cout << "P\t"; P.Print();
     if (P.sector <= 0 || P.sector > 24) {

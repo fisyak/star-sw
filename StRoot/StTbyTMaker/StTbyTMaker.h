@@ -95,9 +95,11 @@ class HitParameters : public TObject {
   Float_t pad,timebucket;
   Int_t    npads, ntbks, IdTruth;
   Int_t    pmin, pmax, tmin, tmax;
-  Float_t  xL,yL,zL,dX;
+  Float_t  xL,yL,zL;
   Int_t    trigId, us,fl;
   Float_t  time, timeb;
+  Float_t  dX, dY, dZ;
+  Float_t  sigmaX, sigmaY, sigmaZ;
   Char_t end;
   virtual void Print(Option_t *option="") const {
     cout << Form("HitP s/r %3i/%3i ",sector,row);
