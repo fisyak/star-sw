@@ -72,7 +72,7 @@
      if (-d Picures) mv Pictures Pictures15
      if (! -d Picures) mkdir Pictures
      ln -s ~/macros/.sl* .
-     root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
+     root.exe lMuDst.C Cosmics.C+ IO/Cosmics.root PlotCosmics.C
      cd -
    end
 */

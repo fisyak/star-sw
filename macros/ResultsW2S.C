@@ -24,7 +24,9 @@
 #include "TString.h"
 #include "TLegend.h"
 #include "TFile.h"
-#include "W2SSectorParPass9.h"
+//#include "W2SSectorParPass9.h"
+//#include "W2SSectorParPass20.h"
+#include "W2SSectorPar.h"
 #include "THStack.h"
 #endif
 TCanvas *c1 = 0;

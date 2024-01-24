@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/MakeTpcSuperSector.C
