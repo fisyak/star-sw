@@ -55,6 +55,13 @@ if (! $?GROUP_DIR != 0) then
   source $GROUP_DIR/unix_programs.csh
 endif
 switch ($pkg)
+    case "spackTFG":
+    case "SPACKTFG":
+      set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup.csh"
+      if ( -e $SPACK_SETUP ) then
+       source $SPACK_SETUP 
+      endif
+        breaksw
     case "spack":
     case "SPACK":
       set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
