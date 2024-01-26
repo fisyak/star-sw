@@ -157,7 +157,7 @@ my @packages = ();
 my @subdirs = ();
 #if ($env->{ENV}->{ROOT_LEVEL} !~ /^6/) {
 # install includes
-my @DirsWithIncludes = glob "asps/*/.includes_for_export.flg asps/*/*/.includes_for_export.flg StDb/*/.includes_for_export.flg StarVMC/*/.includes_for_export.flg StarVMC/*/*/.includes_for_export.flg OnlTools/*/.includes_for_export.flg OnlTools/*/*/.includes_for_export.flg StRoot/*/.includes_for_export.flg StRoot/*/*/.includes_for_export.flg StRoot/StRTSClient/include/.includes_for_export.flg  StRoot/RTS/src/RTS_READER/.includes_for_export.flg";
+my @DirsWithIncludes = glob "asps/rexe/TGeant3/.includes_for_export.flg StarVMC/*/.includes_for_export.flg StarVMC/geant3/TGeant3/.includes_for_export.flg StRoot/*/.includes_for_export.flg StRoot/*/*/.includes_for_export.flg StRoot/RTS/src/RTS_READER/.includes_for_export.flg ";
 @DirsWithIncludes = map File::Basename::dirname($_), @DirsWithIncludes;
 
 my @DirsIdlInc = glob "pams/*/idl pams/*/inc";
