@@ -1,5 +1,5 @@
-/*  Tpc Super Sector Position based on MuTpcG.C
-    root.exe 'lDb.C(0,0)' MakeTpcSuperSectorB.C+
+/*  Tpc Super Sector Position based on MuTpcG.C.check TFGflag in lDb.C
+    root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+
     > MakeSuperSectorPositionB()
 */
 #if !defined(__CINT__)
@@ -35,93 +35,24 @@
 #include "StTpcDb/StTpcDb.h"
 #include "StEvent/StEnumerations.h"
 #include "StDetectorDbMaker/StTpcSurveyC.h"
+#include "TGraphErrors.h"
+#include "TMultiGraph.h"
 #endif
-//________________________________________________________________________________
-class data_t {
- public:
-  Int_t sector;
-  Double_t x, Dx, y, Dy, z, Dz, alpha, Dalpha, beta, Dbeta, gamma, Dgamma;
-  Char_t Comment[256];
-  void Print() {
-    cout << Form("%2i %8.2f %5.2f %8.2f %5.2f %8.2f %5.2f",sector, x, Dx, y, Dy, z, Dz)
-	 << Form(" %8.2f %5.2f %8.2f %5.2f %8.2f %5.2f %s", alpha, Dalpha, beta, Dbeta, gamma, Dgamma, Comment) << endl;
-  }
-  data_t &operator+= (data_t &v) {
-    Double_t *X0 = &x;
-    Double_t *X1 = &v.x;
-    for (Int_t i = 0; i < 6; i++) {
-      if (X0[2*i+1] >= 0 /* && X0[2*i+1] < 99 */ &&
-	  X1[2*i+1] >= 0 /* && X1[2*i+1] < 99 */) {
-	Double_t val = 0.5*(X0[2*i] + X1[2*i]);
-	Double_t err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
-	X0[2*i  ] = val;
-	X0[2*i+1] = err;
-      }
-    }
-    Char_t temp[256];
-    sprintf(temp,"(%s+%s)/2",Comment,v.Comment);
-    strcpy(Comment,temp);
-  }
-  data_t &operator-= (data_t &v) {
-    Double_t *X0 = &x;
-    Double_t *X1 = &v.x;
-    for (Int_t i = 0; i < 6; i++) {
-      if (X0[2*i+1] >= 0 /* && X0[2*i+1] < 99 */ &&
-	  X1[2*i+1] >= 0 /* && X1[2*i+1] < 99 */) {
-	Double_t val = 0.5*(X0[2*i] - X1[2*i]);
-	Double_t err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
-	X0[2*i  ] = val;
-	X0[2*i+1] = err;
-      }
-    }
-    Char_t temp[256];
-    sprintf(temp,"(%s-%s)/2",Comment,v.Comment);
-    strcpy(Comment,temp);
-  }
-};
-class SurveyPass_t {
- public:
-  Int_t date, time;
-  Char_t PassName[256];
-  data_t Data[24];
-#if 0
-  SurveyPass_t &operator=(Int_t d, Int_t t, const Char_t *Pass, data_t data[24]) {
-    date = d; time = t; PassName = Pass;
-    for (Int_t i = 0; i < 24; i++) Data[i] = data[i];
-    return *this;
-  }
-#endif
-  void Print() {
-    cout << Form("%8i %6i %s",date,time,PassName) << endl;
-    for (Int_t i = 0; i < 24; i++) {
-      Data[i].Print();
-    }
-  }
-  SurveyPass_t operator+= (SurveyPass_t &v) {
-    for (Int_t i = 0; i < 24; i++) Data[i] += v.Data[i];
-    Char_t temp[256];
-    sprintf(temp,"(%s+%s)/2",PassName,v.PassName);
-    strcpy(PassName,temp);
-  }
-  SurveyPass_t operator-= (SurveyPass_t &v) {
-    for (Int_t i = 0; i < 24; i++) Data[i] -= v.Data[i];
-    Char_t temp[256];
-    sprintf(temp,"(%s-%s)/2",PassName,v.PassName);
-    strcpy(PassName,temp);
-  }
-};
+#include "StTpcAlignerMaker/SurveyPass.h"
 const Int_t N = 24;
 SurveyPass_t Passes[] = {
-#include  "StTpcAlignerMaker/W2S_Old.h"
+  //#include  "StTpcAlignerMaker/W2S_Pass28_Avg.h"
+  //#include  "W2S_Pass30_Avg.h"
+#include  "W2S_Pass32_Avg.h"
 };
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   
 //________________________________________________________________________________
 
 TCanvas *c1 = 0;
-StMaker *db = 0;
+StMaker *dbMk = 0;
 StChain *chain = 0;
-THStack *hs[6];
+static THStack *hs[6];
 static TLegend *leg[6];
 static const Double_t scale = 1.0;
 static TGeoHMatrix dR[24], dRC[24];
@@ -177,11 +108,6 @@ Euler Rotation in Tait-Bryan angles
     A    = <T * dR * C * T^-1>; dR * C = 
     D    =  T * dR;  D * A^-1 = T * dR * A^-1 = T * dR *  
    */
-  Int_t date = Pass.date;
-  Int_t time = Pass.time;
-  if (! db) return;
-  db->SetDateTime(date,time);
-  chain->MakeEvent();
   // Calculate average shift and rotation for each half of TPC and overall TPC
   Double_t phi[24] = {0};
   Double_t theta[24] = {0};
@@ -202,13 +128,14 @@ Euler Rotation in Tait-Bryan angles
     xyz[0] = 1e-4*Pass.Data[i].x*scale;
     xyz[1] = 1e-4*Pass.Data[i].y*scale;
     xyz[2] = 1e-4*Pass.Data[i].z*scale;
-#define __SWAP_SIGNS__  /* Pass 508 */
+    //#define __SWAP_SIGNS__  /* Pass 508 */
 #ifdef __SWAP_SIGNS__
     Pass.Data[i].alpha *= -1.;
     Pass.Data[i].beta  *= -1.;
     Pass.Data[i].gamma *= -1.;
 #endif
-    //#define __ROTATION__
+    dR[i] = TGeoHMatrix();
+#define __ROTATION__
 #ifdef __ROTATION__
 #if 1
     dR[i].RotateX( TMath::RadToDeg()*Pass.Data[i].alpha*1e-3*scale);
@@ -220,7 +147,7 @@ Euler Rotation in Tait-Bryan angles
     Rideal[i]     = StTpcDb::instance()->SupS2Glob(i+1); PrPI(i,Rideal[i]); // cout << "Ideal:"; Rideal[i].Print();
     RidealI[i]    = Rideal[i].Inverse();                 PrPI(i,RidealI[i]); //cout << "Inverse:"; RidealI[i].Print();
     TGeoHMatrix Rreal      = StTpcDb::instance()->SupS2Glob(i+1)*dR[i];  PrPP(Rreal); //cout << "Real:"; Rreal.Print();
-    TGeoHMatrix R = Rreal * Rideal[i].Inverse();         PrPP(R); // cout <<"Diff:"; R.Print();
+    TGeoHMatrix R = Rreal * RidealI[i];         PrPP(R); // cout <<"Diff:"; R.Print();
     const Double_t *xyzR = R.GetTranslation();
     for (Int_t j = 0; j < 3; j++) tra[i][j] = xyzR[j];
 #if 0
@@ -294,10 +221,13 @@ Euler Rotation in Tait-Bryan angles
 }
 //________________________________________________________________________________
 void MakeSuperSectorPositionBTable(SurveyPass_t Pass){
+  RemoveOverAllShift(Pass);
   const Char_t *plots[3] = {"dXS","dYS","dZS"};
+#if 0  
   for (Int_t j = 1; j <= 24; j++) {
     cout << Form("%2i ",j); Pass.Data[j-1].Print();
   }
+#endif
   //  St_Survey *TpcSuperSectorPositionB = (St_Survey *) chain->GetDataBase("Geometry/tpc/TpcSuperSectorPositionB");
   St_Survey *TpcSuperSectorPositionB = (St_Survey *) StTpcSuperSectorPosition::instance()->Table(); //chain->GetDataBase("Geometry/tpc/TpcSuperSectorPositionB");
   if (! TpcSuperSectorPositionB)  {cout << "TpcSuperSectorPositionB has not been found"  << endl; return;}
@@ -349,7 +279,7 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass){
   out << "  if (!gROOT->GetClass(\"St_Survey\")) return 0;" << endl;
   out << "  Survey_st row[24] = {" << endl; 
   out << "    //             -gamma     beta    gamma            -alpha    -beta    alpha                x0       y0       z0" << endl;
-  for (Int_t i = 0; i < 24; i++) {
+    for (Int_t i = 0; i < 24; i++) {
     out << "    {" << Form("%2i",i+1) << ","; 
     Double_t *r = &(row[i].r00);
     //    cout << " ";
@@ -375,9 +305,9 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass){
 void MakeTpcSuperSectorB(const Char_t *opt="") {
   chain = (StChain *) StChain::GetChain();
   if (! chain) return;
-  db = chain->Maker("db");
-  if (! db) return;
-  db->SetDebug(1);
+  dbMk = chain->Maker("db");
+  if (! dbMk) return;
+  dbMk->SetDebug(1);
 #if 0
   static Bool_t InitDone = kFALSE;
   if (! InitDone) {
@@ -412,24 +342,33 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   TH1::SetDefaultSumw2(kTRUE);
   for (Int_t k = 0; k < NP; k++) {
     cout << "Passes[" << k << "] before removing offset" << endl;
-    Passes[k].Print();
+    if (_debug) {Passes[k].Print();}
+    Int_t date = Passes[k].date;
+    Int_t time = Passes[k].time;
+    if (! dbMk) return;
+    dbMk->SetDateTime(date,time);
 #if 0
     RemoveOverAllShift(Passes[0]);
     cout << "Passes[" << k << "] after removing offset" << endl;
     Passes[k].Print();
 #endif
+    chain->MakeEvent();
   }
   SurveyPass_t PassSum(Passes[0]);
   SurveyPass_t PassDif(Passes[0]);
   if (NP > 1) {
     PassSum += Passes[1];
-    cout << "PassSum" << endl;
-    PassSum.Print();
+    if (_debug) {
+      cout << "PassSum" << endl;
+      PassSum.Print();
+    }
     PassDif -= Passes[1];
-    cout << "PassDif" << endl;
-    PassDif.Print();
+    if (_debug) {
+      cout << "PassDif" << endl;
+      PassDif.Print();
+    }
   }
-  TCanvas *c0 = new TCanvas("c0","");
+  //  TCanvas *c0 = new TCanvas("c0","");
   for (Int_t k = 0; k < NH; k++) {
     SurveyPass_t *currPass = 0;
     Int_t color = k+1;
@@ -477,10 +416,12 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
 	if (ymax < val + err) ymax = val + err;
       }
       hs[i]->Add(dath[k][i]);
+#if 0
       c0->cd();
       c0->SetTitle(Title);
       dath[k][i]->Draw();
       c0->Update();
+#endif
       if (leg[i]) {
 	if      (k < NP)      leg[i]->AddEntry(dath[k][i],currPass->PassName);
 	else if (k == NP)     leg[i]->AddEntry(dath[k][i],"(FF+RF)/2");
@@ -516,5 +457,5 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   }
   c1->Update();
   fOut->Write();
-  //  MakeSuperSectorPositionBTable(PassSum);
+  MakeSuperSectorPositionBTable(PassSum);
 }

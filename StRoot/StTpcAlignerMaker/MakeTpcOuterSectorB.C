@@ -1,5 +1,5 @@
-/*
-  root.exe MakeTpcOuterSectorB.C
+/*  check TFGflag in LDb.C  
+  root.exe 'lDb.C(0)' MakeTpcOuterSectorB.C+
 
 root.exe Results.C+
 root.exe Results.root DumpRes2Par.C
@@ -8,13 +8,49 @@ Results.h to IOSectorPar.h
  root.exe MakeTpcOuterSectorB.C
 */
 //#define __TpcInnerSector__ 
+#if !defined(__CINT__) || defined(__MAKECINT__)
+#include <stdio.h>
+#include <string.h>
+#include "Riostream.h"
+#include "TString.h"
+#include "TMath.h"
+#include "TROOT.h"
+#include "TSystem.h"
+#include "TH1.h"
+#include "TStyle.h"
+#include "TGraph.h"
+#include "TNtuple.h"
+#include "TCanvas.h"
+#include "TLegend.h"
+#include "TFile.h"
+#include "TNamed.h"
+#include "THStack.h"
+#include "StChain.h"
+#include "tables/St_Survey_Table.h"
+#include "TGeoMatrix.h"
+#include "StTpcDb/StTpcDb.h"
+#include "StEvent/StEnumerations.h"
+#include "StDetectorDbMaker/StTpcSurveyC.h"
+#include "TGraphErrors.h"
+#include "TMultiGraph.h"
+#endif
+//#include "StTpcAlignerMaker/IOSectorPar.h"
+#include "StTpcAlignerMaker/SurveyPass.h"
+const Int_t N = 24;
+SurveyPass_t Passes[] = {
+  //#include "IOSectorParPass30_Avg.h"
+  //#include "IOSectorParPass31_Avg.h"
+#include "IOSectorParPass32_Avg.h"
+};
+const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
 class TTable;
+StChain *chain = 0;
 St_db_Maker *dbMk = 0;
 TTable *table = 0;
+static Int_t _debug = 0;
 //________________________________________________________________________________
 void MakeTpcOuterSectorB(const Char_t *opt = 0){
-  gROOT->LoadMacro("IOSectorPar.h+");
   cout << "NP = " << NP << endl;
   SurveyPass_t Pass[2];// 0 => half sum, 1 => half diff
   Int_t kPass = NP - 1;
@@ -35,63 +71,25 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       return;
     }
   } else { //default average for two last passes
-    if (kPass < 0) return;
-    Int_t kP0 = kPass - 1;
-    Int_t kP1 = kPass;
-    if (kP0 < 0) kP0 = 0;
-    Passes[kP0].Print();
-    Passes[kP1].Print();
-    Pass[0] = Passes[kP0]; 
-    Pass[1] = Passes[kP1];
+    if (NP != 2) return;
+    Passes[0].Print();
+    Passes[1].Print();
+    Pass[0] = Passes[0];
+    Pass[1] = Passes[0];
+    Pass[0] += Passes[1];
+    Pass[1] -= Passes[1];
     NR = 2;
-    CS = "("; CS += Passes[kP0].PassName; CS += "+"; CS += Passes[kP1].PassName; CS += ")/2";
-    Pass[0].PassName = CS.Data();
-    CD = "("; CD += Passes[kP0].PassName; CD += "-"; CD += Passes[kP1].PassName; CD += ")/2";
-    Pass[1].PassName = CD.Data();
-    for (Int_t l = 0; l < 24; l++) {
-      Int_t secs;
-      Double_t val, dal, err;
-      Double_t *XS = &Pass[0].Data[l].x;       // 0.5*(+)
-      Double_t *XD = &Pass[1].Data[l].x;       // 0.5*(-)
-      Double_t *X0 = &Passes[kP0].Data[l].x; // FF
-      Double_t *X1 = &Passes[kP1].Data[l].x; // RF
-      for (Int_t i = 0; i < 6; i++) {
-	XS[2*i]   = 0;
-	XS[2*i+1] = 0;
-	XD[2*i]   = 0;
-	XD[2*i+1] = 0;
-	if ((i < 3 && 
-	     X0[2*i+1] >= 0 && X0[2*i+1] < 99 &&
-	     X1[2*i+1] >= 0 && X1[2*i+1] < 99) ||
-	    (i >= 3 && 
-	     X0[2*i+1] >= 0 && X0[2*i+1] < 0.1 &&
-	     X1[2*i+1] >= 0 && X1[2*i+1] < 0.1)
-	    )  {
-	  val = 0.50*(X0[2*i] + X1[2*i]);
-	  dal = 0.50*(X0[2*i] - X1[2*i]);
-#if 1
-	  val /= 2; // 2;
-	  dal /= 2; //2;
-	  //	  dal = 0.25*(X0[2*i] - X1[2*i]);
-	  //	  dal = 0.125*(X0[2*i] - X1[2*i]);
-#endif
-	  err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
-	  if (err < 0.001) err = 0.001;
-	  XS[2*i]   = val;
-	  XS[2*i+1] = err;
-	  XD[2*i]   = dal;
-	  XD[2*i+1] = err;
-	} else {
-	}
-      }
-    }
   }
   cout << "Pass for " << kPass << " has been found" << endl;
   if (! NR) return;
   Pass[0].Print();
   Pass[1].Print();
+#if 0
   gROOT->LoadMacro("bfc.C");
   bfc(0,"mysql,tpcDb,corrX,nodefault");
+#else
+  chain = (StChain *) StChain::GetChain();
+#endif
   StMaker *dbMk = chain->Maker("db");
   if (! dbMk) return;
   dbMk->SetDebug(1);
@@ -116,8 +114,8 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 #else /* __TpcInnerSector__ */
   St_Survey      *TpcSectorPositionB = new St_Survey("TpcInnerSectorPositionB",NR*NoSectors);
 #endif /* !  __TpcInnerSector__ */
-  TGeoHMatrix Flip  = StTpcDb::instance()->Flip(); cout << "Flip\t"; Flip.Print();
-  TGeoHMatrix FlipI = Flip.Inverse();              cout << "FlipI\t"; FlipI.Print();
+  TGeoHMatrix Flip  = StTpcDb::instance()->Flip(); if (_debug) {cout << "Flip\t"; Flip.Print();}
+  TGeoHMatrix FlipI = Flip.Inverse();              if (_debug) {cout << "FlipI\t"; FlipI.Print();}
   for (Int_t r = 0; r < NR; r++) { // half sum & half diff
     for (Int_t s = 0; s < NoSectors; s++) {
       TGeoHMatrix LSold, LS, dR;
@@ -126,7 +124,7 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       } else {
 	if (NoldRows > 24) LSold = TpcSectorPositionBOld->GetMatrix(s+24); 
       }
-      cout << "===================== Sector \t" << s+1 << endl; cout << "\tLSold\t"; LSold.Print();
+      if (_debug) {cout << "===================== Sector \t" << s+1 << endl; cout << "\tLSold\t"; LSold.Print();}
       Int_t i = -1; 
       for (Int_t k = 0; k < N; k++) {
 	if (TpcSectorPositionBOld->Id(s) ==Pass[r].Data[k].sector) {i = k; break;}
@@ -150,20 +148,20 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  1e-4*Pass[r].Data[i].x;
 	if (Pass[r].Data[i].Dy >= 0) xyz[1] =  1e-4*Pass[r].Data[i].y;
 	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  1e-4*Pass[r].Data[i].z;
-	dR.SetTranslation(xyz);           cout << "dR\t"; dR.Print();
+	dR.SetTranslation(xyz);           if (_debug) {cout << "dR\t"; dR.Print();}
       }
       //new:  global = Tpc2GlobalMatrix() * SupS2Tpc(sector) * StTpcSuperSectorPosition(sector) * Flip() * {StTpcInnerSectorPosition(sector)} | StTpcOuterSectorPosition(sector)}
       //      TGeoHMatrix dR1 = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dR1.Print();
-      TGeoHMatrix dRI = dR.Inverse(); cout << "dR^-1\t"; dRI.Print();
+      TGeoHMatrix dRI = dR.Inverse(); if (_debug) {cout << "dR^-1\t"; dRI.Print();}
       //      TGeoHMatrix dRT = FlipI * dRI * Flip; cout << "F^-1 dR^-1 F\t"; dRT.Print();
       //      TGeoHMatrix dRT = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dRT.Print();
       //      TGeoHMatrix dRI = dR1.Inverse(); cout << "dR^-1\t"; dRI.Print();
 #ifndef __TpcInnerSector__
-      LS = dR * LSold; cout << "LS_new\t"; LS.Print();
+      LS = dR * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
 #else /* __TpcInnerSector__ */
       //      TGeoHMatrix LSoldI = LSold.Inverse();
       //      LS = LSoldI * dRI; cout << "LS_new\t"; LS.Print();
-      LS = dRI * LSold; cout << "LS_new\t"; LS.Print();
+      LS = dRI * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
 #endif /* !  __TpcInnerSector__ */
       //      LS = dRT * LSold; cout << "LS_new\t"; LS.Print();
       Survey_st row; memset (&row, 0, sizeof(Survey_st));
