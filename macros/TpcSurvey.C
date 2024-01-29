@@ -1251,13 +1251,13 @@ void Print(Int_t y=2023) {
   MakeGraph(y,"Tpc","^W.*");
 }
 //________________________________________________________________________________
-void PlotAllR() {
-  MakeRGraph(2024,"^WAO");
-  MakeRGraph(2024,"^WBO");
-  MakeRGraph(2024,"^WCO");
-  MakeRGraph(2024,"^WDO");
-  MakeRGraph(2024,"^EAO");
-  MakeRGraph(2024,"^EBO");
-  MakeRGraph(2024,"^ECO");
-  MakeRGraph(2024,"^EDO");
+void PlotAllR(Int_t y = 2024) {
+  MakeRGraph(y,"^WAO");
+  MakeRGraph(y,"^WBO");
+  MakeRGraph(y,"^WCO");
+  MakeRGraph(y,"^WDO");
+  MakeRGraph(y,"^EAO");
+  MakeRGraph(y,"^EBO");
+  MakeRGraph(y,"^ECO");
+  MakeRGraph(y,"^EDO");
 }
