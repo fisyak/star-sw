@@ -26,7 +26,7 @@ if (! $FIELD) {die "Field is not defined";}
 #my $glob = "/hlt/cephfs/reco/" . $year . "/" . $FIELD . "/Cosmic/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
 #my $glob = "/hlt/cephfs/reco/" . $year . "/Cosmic/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
 #my $glob = "/hlt/cephfs/reco/Cosmics/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
-my $glob = "/hlt/cephfs/reco/CosmicsB/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
+#my $glob = "/hlt/cephfs/reco/CosmicsB/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
 my $glob = "/hlt/cephfs/reco/CosmicsC/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
 my @Files = glob $glob; print "Files = @Files\n" if $debug;
 my $n = 0;

@@ -67,9 +67,9 @@
 //   root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
 /*
    foreach d (`ls -1d 20??/?F`) 
+     if (-r  ${d}/CosmicPlots.data) continue
      cd ${d}
      pwd
-     if (-d Picures) mv Pictures Pictures15
      if (! -d Picures) mkdir Pictures
      ln -s ~/macros/.sl* .
      root.exe lMuDst.C Cosmics.C+ IO/Cosmics.root PlotCosmics.C

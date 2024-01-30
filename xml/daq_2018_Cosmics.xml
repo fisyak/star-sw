@@ -31,7 +31,7 @@
 #root.exe -q -b 'bfc.C(100000,"P2018a,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,useCDV,CorrX,-evout,NoHistos,noTags,noRunco,StiCA,KFVertex","'${evtsFile}'")' &gt;&amp; ${logFile}
 #root.exe -q -b 'bfc.C(100000,"P2018a,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,useCDV,CorrX,OPr40,-evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}  end
 #root.exe -q -b 'bfc.C(100000,"P2018a,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,-evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}  end
-root.exe -q -b 'bfc.C(100000,"P2018a,gmt,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,-evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${evtsFile}'")' &gt;&amp; ${logFile}  end
+root.exe -q -b 'bfc.C(100000,"P2018a,gmt,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,-evout,NoHistos,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${evtsFile}'")' &gt;&amp; ${logFile}  end
         </command>
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />

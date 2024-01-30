@@ -10,6 +10,7 @@
 #   starver TFG21c
 #   starver TFG21h
 #   starver TFG22h
+#    starver TFG24a
 #  echo $INPUTFILE0 | grep ':'
 #  if (! $?) then
 #    set evtsFile = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
@@ -43,7 +44,10 @@
       rm ${SUBMITTINGDIRECTORY}/Submitted
     endif
     set input = ${evtsFile};
-root.exe -q -b 'bfc.C(100000,"P2021a,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2021a,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2021a,-evout,TpcAligner,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+root.exe -q -b 'bfc.C(100000,"P2021a,evout,TpcAligner,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2021a,evout,TpcAligner,-Alignment,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
 #ifndef SUBMITTINGDIRECTORY
 #    cp -p ${logFile} ${SUBMITTINGDIRECTORY}/
 #    cp -p ${bf}*.root ${SUBMITTINGDIRECTORY}/

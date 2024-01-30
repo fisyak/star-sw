@@ -39,7 +39,7 @@
 #  root.exe -b -q 'bfc.C('${f}','${l}',"P2020a,StiCA,-evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q 'bfc.C('${f}','${l}',"P2020a,StiCA,-evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault","'${evtsFileB}'")' &gt;&amp; ${logFile}
 # Cosmic
-  root.exe -b -q 'bfc.C('${f}','${l}',"P2020a,StiCA,evout,NoHistos,noTags,noRunco,-picoWrite,-picoDst,Cosmics","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q 'bfc.C('${f}','${l}',"P2020a,StiCA,evout,NoHistos,noRunco,-picoWrite,-picoDst,Cosmics","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  cp  ${filel}*.picoDst.root ${logFile} ${SUBMITTINGDIRECTORY}
   cp  ${filel}* ${SUBMITTINGDIRECTORY}
   rm ${bla}
