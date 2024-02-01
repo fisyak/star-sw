@@ -1415,6 +1415,7 @@ tpc23_base::tpc23_base()
 	data_c = 0 ;
 
 	token = 1 ;	// for ease of simulation
+	store_track_id = 0; // initialize (YF)
 }
 
 tpc23_base::~tpc23_base()
@@ -1424,7 +1425,7 @@ tpc23_base::~tpc23_base()
 	if(s1_dta) free(s1_dta) ;
 	if(s1_track_id) free(s1_track_id) ;
 	if(s2_start) free(s2_start) ;
-	if(store_track_id) free(store_track_id) ;
+	if(store_track_id) {free(store_track_id) ; store_track_id = 0;} // reset pointer (YF)
 
 //	LOG(TERR,"des: %p %p",s1_dta,s2_start) ;
 
