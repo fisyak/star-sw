@@ -630,23 +630,6 @@ StiTrackFinder   * StiDefaultToolkit::getTrackSeedFinder()
   return mySeed;
 }
 //______________________________________________________________________________
-StiTrackFinder   * StiDefaultToolkit::getTrackSeedFinderKNN()
-{
-  auto *mySeed = (StiTrackFinder*)gROOT->ProcessLineFast("new StiKNNSeedFinder");
-  assert(mySeed);
-  return mySeed;
-}
-//______________________________________________________________________________
-StiTrackFinder   * StiDefaultToolkit::getTrackSeedFinderCA()
-{
-  gSystem->Load("TPCCATracker");
-  gSystem->Load("StiCA");
-  auto *mySeed = (StiTrackFinder*)gROOT->ProcessLineFast("StiCALoader::New()");
-  assert(mySeed);
-  return mySeed;
-}
-
-//______________________________________________________________________________
 StiTrackFinder       * StiDefaultToolkit::getTrackFinder()
 {
   if (_trackFinder)

@@ -76,8 +76,6 @@ public:
   
   // service and convenience class objects.
   virtual StiTrackFinder        * getTrackSeedFinder()=0;
-  virtual StiTrackFinder        * getTrackSeedFinderCA()=0;
-  virtual StiTrackFinder        * getTrackSeedFinderKNN()=0;
   virtual StiTrackFinder        * getTrackFinder()=0;
   virtual StiTrackFitter        * getTrackFitter()=0;
   virtual StiVertexFinder       * getVertexFinder()=0;

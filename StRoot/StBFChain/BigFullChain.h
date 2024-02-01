@@ -1282,6 +1282,7 @@ Bfc_st BFC[] = { // standard chains
   {"useLDV" ,""  ,"","",""                                   ,"","... uses laserDV database flavor",kFALSE},
   {"useCDV" ,""  ,"","",""                                       ,"","... uses ofl database flavor",kFALSE},
   {"useNewLDV" ,""  ,"","",""                                    ,"","... uses ofl database flavor",kFALSE},
+  {"TFGdbOpt" ,""  ,"","",""                ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"Tables      ","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
@@ -1856,7 +1857,7 @@ Bfc_st BFC[] = { // standard chains
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker,StiMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
   {"laserIT"  ,"","","","",                              "TpcIT","use Sti for laser reconstruction",kFALSE},
-  {"TpcIT"    ,"","","ITTF"                                              ,"","","Sti tracking: TPC",kFALSE},
+  {"TpcIT"    ,"","","ITTF"                             ,"","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"SvtIT"    ,"","","ITTF"                                              ,"","","Sti tracking: SVT",kFALSE},
   {"SsdIT"    ,"","","ITTF"                                              ,"","","Sti tracking: SSD",kFALSE},
   {"HpdIT"  ,""  ,"","ITTF",""                                         ,"","Sti tracking: Hpd geom",kFALSE},

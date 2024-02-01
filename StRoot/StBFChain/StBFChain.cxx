@@ -363,6 +363,15 @@ Int_t StBFChain::Instantiate()
 	  
 	  LOG_INFO << "Using DB flavors: " << flavors << endm;
 	  dbMk->SetFlavor(flavors.Data());
+	  if (GetOption("TFGdbOpt")) {
+	    LOG_INFO << "Disable MySQL for TPC alignment parameters" << endm;
+	    dbMk->SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
+	    dbMk->SetFlavor("TFG","TpcPosition"); // disable MySQL 
+	    dbMk->SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
+	    dbMk->SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
+	    dbMk->SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
+	    dbMk->SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
+	  }
 	  mk = dbMk;
 	}
 	if (GetOption("dbSnapshot")) dbMk->SetAttr("dbSnapshot","dbSnapshot.root",dbMk->GetName());
@@ -595,10 +604,6 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("hitreuseon") ){
 	mk->SetAttr("SetMaxTimes", 100); 
       }
-      
-      // By default iTpc hits are used in tracking
-      mk->SetAttr("activeiTpc", GetOption("iTpcIT") ? kTRUE : kFALSE);
-      
       // old logic for svt and ssd
       if (GetOption("NoSvtIT")){
 	mk->SetAttr("useSvt"	,kFALSE);
