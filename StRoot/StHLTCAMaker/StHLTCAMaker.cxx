@@ -23,7 +23,7 @@
 #include "StHLTCAMaker.h"
 #include "StHLTTPCCATrackerInterface.h"
 #include "Sti/StiHitContainer.h"
-#include "StiCA/StiCATpcSeedFinder.h"
+#include "Sti/StiCATpcSeedFinder.h"
 #include "Sti/StiKalmanTrackFinder.h"
 #include "Sti/StiKalmanTrack.h"
 #include "StEvent/StEvent.h"

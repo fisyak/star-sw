@@ -390,6 +390,7 @@
 #include "Sti/StiDefaultTrackFilter.h"
 #include "Sti/StiDetectorGroup.h"
 #include "Sti/StiDetectorGroups.h"
+#include "Sti/StiCATpcSeedFinder.h"
 #include "StDetectorDbMaker/StiHitErrorCalculator.h"
 #include "StiTpc/StiTpcHitLoader.h"
 #include "StiSvt/StiSvtHitLoader.h"

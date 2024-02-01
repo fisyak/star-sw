@@ -1817,10 +1817,9 @@ Bfc_st BFC[] = { // standard chains
 
   // Sti options
   {"StiPulls" ,"","",""                                         ,"","", "Request to make Sti Pulls",kFALSE},
-  {"StiLib"   ,"","",""                                           ,"","Sti,StiUtilities","Load Sti",kFALSE},
-  {"KeepStiLib"   ,"","",""                                                  ,"","","Keep Sti Libs",kFALSE},
   {"TPCCA"   ,"","",""                                     ,"","Spectrum,TPCCATracker","Load TPCCA",kFALSE},
-  {"StiCALib" ,"","","StiLib,TPCCA"                                       ,"","StiCA","Load Sti+CA",kFALSE},
+  {"StiLib"   ,"","","TPCCA"                                      ,"","Sti,StiUtilities","Load Sti",kFALSE},
+  {"KeepStiLib"   ,"","",""                                                  ,"","","Keep Sti Libs",kFALSE},
   {"StiTpc"   ,"","","TpcDb,tpc_T,dbutil,detDb,StarMagField,magF"        ,"","StiTpc","Load StiTpc",kFALSE},
   {"StiSvt"   ,"",""," "                  ,"","StSvtClassLibrary,StSvtDbMaker,StiSvt","Load StiSvt",kFALSE},
   {"StiSsd"   ,"","",""                           ,"","StSsdUtil,StSsdDbMaker,StiSsd","Load StiSsd",kFALSE},
@@ -1844,8 +1843,8 @@ Bfc_st BFC[] = { // standard chains
   {"VFPPVEvNoBtof"     	,""  ,""	,"VFPPVEv"	,""	     ,"","...VFPPVEv with no Btof ",kFALSE},
   // Sti chains
   {"StiCAPerf","","","TPCCA","",                        "TPCCATrackerPerformance", "CA Performance",kFALSE},
-  {"StiCA"    ,"","","Sti,StiCALib",                                    "","libEG","Sti+CA tracker",kFALSE},
-  {"Sti"      ,"Sti","","StiLib,StiLibs,SCL,Stu,StEvent,StDbT,TpcIT,compend,sim_T,tbutil,EmcUtil,TMVARank"
+  {"StiCA"    ,"","","Sti",                                             "","libEG","Sti+CA tracker",kFALSE},
+  {"Sti" ,"Sti","","StiLib,StiLibs,SCL,Stu,StEvent,StDbT,TpcIT,compend,sim_T,tbutil,EmcUtil,TMVARank"
    ,"StiMaker",                               "StiUtilities,StKFVertexMaker,StiMaker","Sti tracker",kFALSE},
   {"Stx","","","VMCAppl,TPCCA" ,"StxMaker",       "libEve,GenFit,StxMaker","eXpress Reconstruction",kFALSE},
   {"StxCA","","","Stx"                                 ,"","","eXpress Reconstruction with CA only",kFALSE},
