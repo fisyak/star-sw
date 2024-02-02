@@ -40,7 +40,12 @@ const Int_t N = 24;
 SurveyPass_t Passes[] = {
   //#include "IOSectorParPass30_Avg.h"
   //#include "IOSectorParPass31_Avg.h"
-#include "IOSectorParPass32_Avg.h"
+  //#include "IOSectorParPass32_Avg.h"
+  //#include "IOSectorParPass33_Avg.h"
+  //#include "IOSectorParPass34_Avg.h"
+  //#include "IOSectorParPass36_Avg.h"
+  //#include "IOSectorParPass37_Avg.h"
+#include "IOSectorParPass40_Avg.h"
 };
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
@@ -148,8 +153,9 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  1e-4*Pass[r].Data[i].x;
 	if (Pass[r].Data[i].Dy >= 0) xyz[1] =  1e-4*Pass[r].Data[i].y;
 	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  1e-4*Pass[r].Data[i].z;
-	dR.SetTranslation(xyz);           if (_debug) {cout << "dR\t"; dR.Print();}
+	dR.SetTranslation(xyz);          if (_debug) {	cout << "dR\t"; dR.Print();}
       }
+      // Flip has been accounted in StTpcAlignerMaker
       //new:  global = Tpc2GlobalMatrix() * SupS2Tpc(sector) * StTpcSuperSectorPosition(sector) * Flip() * {StTpcInnerSectorPosition(sector)} | StTpcOuterSectorPosition(sector)}
       //      TGeoHMatrix dR1 = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dR1.Print();
       TGeoHMatrix dRI = dR.Inverse(); if (_debug) {cout << "dR^-1\t"; dRI.Print();}
