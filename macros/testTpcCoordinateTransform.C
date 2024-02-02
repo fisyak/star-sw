@@ -1,5 +1,5 @@
 /*
-  root.exe 'lDb.C("r2019",0)'  testTpcCoordinateTransform.C
+  root.exe 'lDb.C(1,"r2019")'  testTpcCoordinateTransform.C
 */
 class StTpcCoordinateTransform;
 StTpcCoordinateTransform *transform = 0;
@@ -64,6 +64,8 @@ void PrintXYZ(Double_t x = 59.3696, Double_t y = 0.871471, Double_t z = 208.707)
 void testTpcCoordinateTransform() {
   //  if (dbMk == 0) Load(d,t);
   StTpcDb::instance()->SetDriftVelocity();
+
+
   StTpcDb::instance()->SetTpcRotations();
   transform = new StTpcCoordinateTransform(StTpcDb::instance());
   Int_t sector = 12;
