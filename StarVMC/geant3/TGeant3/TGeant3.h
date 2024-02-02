@@ -1080,7 +1080,8 @@ public:
    virtual void BuildPhysics();
    virtual void Init();
    virtual void ProcessEvent();
-   virtual void ProcessEvent(Int_t eventId, Bool_t isInterruptible = kFALSE);
+   virtual void ProcessEvent(Int_t eventId, Bool_t isInterruptible);
+   virtual void ProcessEvent(Int_t eventId) {ProcessEvent(eventId, kFALSE);}
    virtual Bool_t ProcessRun(Int_t nevent);
    virtual void AddParticlesToPdgDataBase();
    virtual void SetCollectTracks(Bool_t) {}
