@@ -32,6 +32,16 @@ class StTpcSuperSectorPosition : public St_SurveyC {// Extra rotation for whole 
   ClassDef(StTpcSuperSectorPosition,1) //C++ TChair for TpcSuperSectorPosition
 };
 
+class StTpcSuperSectorPositionD : public St_SurveyC {// Extra rotation for whole Super Sector to half Tpc, part depending on direction of Mag.field
+ public:
+  static StTpcSuperSectorPositionD* 	instance();
+  StTpcSuperSectorPositionD(St_Survey *table=0) : St_SurveyC(table) {}
+  virtual ~StTpcSuperSectorPositionD() {fgInstance = 0;}
+ private:
+  static StTpcSuperSectorPositionD* fgInstance;
+  ClassDef(StTpcSuperSectorPositionD,1) //C++ TChair for TpcSuperSectorPositionD
+};
+
 class StTpcHalfPosition : public St_SurveyC {// Extra rotation for half of Tpc  to Tpc
  public:
   static StTpcHalfPosition* 	instance();

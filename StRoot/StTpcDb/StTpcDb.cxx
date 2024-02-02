@@ -391,6 +391,7 @@ void StTpcDb::SetTpcRotations() {
     LOG_INFO << "StTpcDb::SetTpcRotations use old schema for Rotation matrices" << endm;
   }
   St_SurveyC *chair = 0;
+  St_SurveyC *chairD = 0;
   for (Int_t sector = 0; sector <= 24; sector++) {// loop over Tpc as whole, sectors, inner and outer subsectors
     Int_t k;
     Int_t k1 = kSupS2Tpc;
@@ -426,6 +427,8 @@ void StTpcDb::SetTpcRotations() {
 	if (sector <= 12) part = west;
 	switch (k) {
 	case kSupS2Tpc: // SupS => Tpc
+	  chair = StTpcSuperSectorPosition::instance();
+	  chairD = StTpcSuperSectorPositionD::instance();
 	  if (sector <= 12) {iphi = (360 + 90 - 30* sector      )%360; Rot = Form("R%03i",iphi);}
 	  else              {iphi = (      90 + 30*(sector - 12))%360; Rot = Form("Y%03i",iphi);}
 	  rotm = 0;
@@ -439,7 +442,14 @@ void StTpcDb::SetTpcRotations() {
 	    rotm->RotateZ(iphi);
 	  }
 	  rotA = (*mShift[part]) * (*mHalf[part]) * (*rotm);
-	  rotA *= StTpcSuperSectorPosition::instance()->GetMatrix(sector-1);
+	  rotA *= chair->GetMatrix(sector-1);
+	  if (chairD->getNumRows() == 24) {
+	    if (gFactor > 0.2) {
+	      rotA *= chairD->GetMatrix(sector-1);
+	    } else if (gFactor < -0.2) {
+	      rotA *= chairD->GetMatrix(sector-1).Inverse();
+	    }
+	  }
 	  if (gGeoManager) rotm->RegisterYourself();
 	  else             SafeDelete(rotm);
 	  break;
@@ -453,7 +463,7 @@ void StTpcDb::SetTpcRotations() {
 	  if (mOldScheme) {rotA = Flip() * StTpcOuterSectorPosition::instance()->GetMatrix(sector-1); break;}
 	  if (! chair) chair = StTpcOuterSectorPosition::instance();
 	  rotA = Flip() * chair->GetMatrix(sector-1); 
-	  if (chair->GetNRows() > 24) {
+	  if (chair->GetNRows() == 48) {
 	    if (gFactor > 0.2) {
 	      rotA *= chair->GetMatrix(sector-1+24);
 	    } else if (gFactor < -0.2) {
