@@ -107,7 +107,7 @@ Int_t StVMCMaker::Init() {
       if (! StarMCPrimaryGenerator::Instance()) {
 	TString CintF(SAttr("GeneratorFile"));
 	if (CintF == "" && fInputFile == "" ) {
-	  CintF = "20Muons.C"; // default
+	  CintF = "Muons20.C"; // default
 	}
 	if (CintF != "") {
 	  CintF.ReplaceAll(".C",".root");
