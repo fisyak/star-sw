@@ -57,11 +57,17 @@ endif
 switch ($pkg)
     case "spackTFG":
     case "SPACKTFG":
-      set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup.csh"
+      if (-e /cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup.csh) then
+        set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup.csh"
+      else 
+       if (-e "/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh") then
+         set SPACK_SETUP="/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh"
+       endif
+      endif 
       if ( -e $SPACK_SETUP ) then
        source $SPACK_SETUP 
       endif
-        breaksw
+      breaksw
     case "spack":
     case "SPACK":
       set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
