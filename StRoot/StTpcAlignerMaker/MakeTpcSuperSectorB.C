@@ -49,7 +49,9 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_Pass34_Avg.h"
   //#include  "W2S_Pass36_Avg.h"
   //#include  "W2S_Pass37_Avg.h"
-#include  "W2S_Pass40_Avg.h"
+  //#include  "W2S_Pass40_Avg.h"
+  //#include  "W2S_Pass41_Avg.h"
+#include  "W2S_Pass42_Avg.h"
 };
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   

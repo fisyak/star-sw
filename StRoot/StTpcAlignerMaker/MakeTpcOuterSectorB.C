@@ -5,7 +5,6 @@ root.exe Results.C+
 root.exe Results.root DumpRes2Par.C
 Results.h to IOSectorPar.h
 
- root.exe MakeTpcOuterSectorB.C
 */
 //#define __TpcInnerSector__ 
 #if !defined(__CINT__) || defined(__MAKECINT__)
@@ -45,7 +44,9 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass34_Avg.h"
   //#include "IOSectorParPass36_Avg.h"
   //#include "IOSectorParPass37_Avg.h"
-#include "IOSectorParPass40_Avg.h"
+  //#include "IOSectorParPass40_Avg.h"
+  //#include "IOSectorParPass41_Avg.h"
+#include "IOSectorParPass42_Avg.h"
 };
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
