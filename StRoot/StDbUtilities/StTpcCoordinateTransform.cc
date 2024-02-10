@@ -521,25 +521,81 @@ void  StTpcCoordinateTransform::operator()(const        StTpcLocalSectorCoordina
   Int_t row    = a.fromRow();
   Int_t sector = a.fromSector();
   if (row < 1 || row > St_tpcPadConfigC::instance()->numberOfRows(sector)) row    = rowFromLocal(a);
-  StTpcDb::instance()->Pad2Tpc(a.sector(),row).LocalToMasterVect(a.position().xyz(),xGG.xyz()); 
-  const Double_t *trans = StTpcDb::instance()->Pad2Tpc(sector,row).GetTranslation(); // 4
-  TGeoTranslation GG2TPC(trans[0],trans[1],trans[2]);
-  GG2TPC.LocalToMaster(xGG.xyz(), b.position().xyz());
-  b.setSector(a.sector()); b.setRow(row);
+  if (! StTpcDb::Alignment2024()) {
+    StTpcDb::instance()->Pad2Tpc(sector,row).LocalToMasterVect(a.position().xyz(),xGG.xyz()); 
+    const Double_t *trans = StTpcDb::instance()->Pad2Tpc(sector,row).GetTranslation(); // 4
+    TGeoTranslation GG2TPC(trans[0],trans[1],trans[2]);
+    GG2TPC.LocalToMaster(xGG.xyz(), b.position().xyz());
+    b.setSector(sector); b.setRow(row);
+  } else {// new alignment with drift along z in Super sector coordinate  system
+    StThreeVectorD xyzLS;
+    StTpcDb::instance()->SubS2Sup12S(sector,row).LocalToMaster(a.position().xyz(),xyzLS.xyz()); 
+    StTpcDb::instance()->Sup12S2Tpc(sector).LocalToMaster(xyzLS.xyz(),b.position().xyz()); 
+    b.setSector(sector); b.setRow(row);
+  }
 }
 //________________________________________________________________________________
 void  StTpcCoordinateTransform::operator()(const              StTpcLocalCoordinate& a, StTpcLocalSectorCoordinate& b     ) 
 { 
-  Int_t row    = a.fromRow();
   Int_t sector = a.fromSector();
+  if (! sector) sector = ((StTpcLocalCoordinate *) &a)->setSectorFromCoordinates();
+  Int_t row    = a.fromRow();
   if ( ! (row >= 1 && row <= St_tpcPadConfigC::instance()->numberOfRows(sector))) {
     StThreeVectorD xyzS;
     StTpcDb::instance()->SupS2Tpc(sector).MasterToLocalVect(a.position().xyz(),xyzS.xyz());
     row = rowFromLocalY(xyzS[0], sector);
   }
-  const Double_t *trans = StTpcDb::instance()->Pad2Tpc(a.sector(),row).GetTranslation(); // 4
-  TGeoTranslation GG2TPC(trans[0],trans[1],trans[2]);
   StThreeVectorD xGG;
-  GG2TPC.MasterToLocal(a.position().xyz(), xGG.xyz());
-  StTpcDb::instance()->Pad2Tpc(a.sector(),row).MasterToLocalVect(xGG.xyz(),b.position().xyz()); b.setSector(a.sector()); b.setRow(row);
+  if (! StTpcDb::Alignment2024()) {
+    const Double_t *trans = StTpcDb::instance()->Pad2Tpc(sector,row).GetTranslation(); // 4
+    TGeoTranslation GG2TPC(trans[0],trans[1],trans[2]);
+    GG2TPC.MasterToLocal(a.position().xyz(), xGG.xyz());
+    StTpcDb::instance()->Pad2Tpc(sector,row).MasterToLocalVect(xGG.xyz(),b.position().xyz()); b.setSector(sector); b.setRow(row);
+  } else {
+    StThreeVectorD xyzLS;
+    StTpcDb::instance()->SubS2Sup12S(sector,row).MasterToLocal(a.position().xyz(),xyzLS.xyz()); 
+    StTpcDb::instance()->Sup12S2Tpc(sector).MasterToLocal(xyzLS.xyz(),b.position().xyz()); 
+    b.setSector(sector); b.setRow(row);
+  }
+}
+//________________________________________________________________________________
+void StTpcCoordinateTransform::testTpcCoordinateTransform(Int_t sector, Int_t row, Int_t pad, Int_t time) {
+  StTpcDb::SetAlignment2024(kFALSE);
+#if 0
+  StTpcDb::instance()->SetDriftVelocity();
+  StTpcDb::instance()->SetTpcRotations();x2
+#endif
+  static StTpcCoordinateTransform transform(StTpcDb::instance());
+  cout << "Coordinates ============================" << endl;
+  StTpcPadCoordinate          coorP(sector, row, pad, time);             cout << coorP << endl; 
+  StTpcLocalSectorCoordinate  coorLS;
+  StTpcLocalSectorCoordinate  coorLST;
+  StTpcLocalSectorCoordinate  coorLSF;
+  StTpcLocalCoordinate        coorTPC;
+  StGlobalCoordinate          coorG;
+  StTpcPadCoordinate          coorP2;					   
+                                           cout << "coorP                          \t" << coorP   << endl;
+#if 0
+  transform(coorP,coorLS);                 cout << "Default                        \t" << coorLS  << endl;
+  transform(coorP,coorLS ,kFALSE, kTRUE);  cout << "Cluster without T0, with    tau\t" << coorLS  << endl;
+  transform(coorP,coorLST,kFALSE,kFALSE);  cout << "Pixel   with    T0, without tau\t" << coorLST << endl;
+  transform(coorP,coorLST, kTRUE,kFALSE);  cout << "Pixel   without T0, without tau\t" << coorLST << endl;
+  transform(coorP,coorG, kTRUE,kFALSE);    cout << "Pixel   without T0, without tau\t" << coorG   << endl;
+#endif
+  
+  cout << "coorP   input                  \t" << coorP   << endl;
+  for (Int_t k = 0; k < 2; k++) {
+    StTpcDb::SetAlignment2024(k);
+    if (! StTpcDb::Alignment2024() ) cout << "Tpc to Sub Sector ======= Old ========" << endl;
+    else                             cout << "Tpc to Sub Sector ======= New ========" << endl;
+    transform(coorP,coorLS);                 cout << "coorP => coorLS                       \t" << coorLS    << endl;
+    transform(coorLS, coorP2);               cout << "coorLS => coorP2                      \t" << coorP2    << endl; 
+    transform(coorLS, coorTPC);              cout << "coorLS => coorTPC                     \t" << coorTPC   << endl; 
+    transform(coorTPC, coorLS);              cout << "coorTPC => coorLS                     \t" << coorLS    << endl; 
+    transform(coorP,coorTPC);                cout << "coorP => coorTPC                      \t" << coorTPC   << endl;
+    transform(coorTPC,coorP2);               cout << "coorTPC => coorP2                     \t" << coorP2    << endl;
+    transform(coorP,coorG);                  cout << "coorP => coorG                        \t" << coorG     << endl;
+    transform(coorG,coorP2, sector, row);    cout << "coorG => coorP2                       \t" << coorP2    << endl;
+    transform(coorLS,coorP2);                cout << "coorLS => coorP2                      \t" << coorP2    << endl;
+  }
 }

@@ -168,10 +168,10 @@ class StTpcDb {
   // SecL     = sector -"- coordinate (y_p, x_p, DriftDistance - z_p);
   // Pad      = Pad -"- (x_p,y_p,z_p) (Sector12 coordinate system)
   // Tpc => Global is mTpc2GlobMatrix
-  // Pad => SecL   is internal Flip matrix
+  // Pad => SecL   is internal Flip matrix     Sup12 == Supersector 12 coordinate system x,y,z)_TPC => (-y,-x,drift = zGG - |z|), move Flip from Pad to Sup12 
   enum ETpcSectorRotationType {kUndefSector     =-2,
 			       kFlip            =-1, // Flip * Subs[io] => SupS
-			       kSupS2Tpc        = 0, // SupS => Tpc
+			       kSupS2Tpc        = 0, // SupS(sector) => Tpc, SupS(0) == mTpc2GlobMatrix
 			       kSupS2Glob       = 1, // SupS => Tpc => Glob; 
 			       kSubSInner2SupS  = 2, // Subs[io] => SupS
 			       kSubSOuter2SupS  = 3, // -"-
@@ -185,7 +185,15 @@ class StTpcDb {
 			       kPadOuter2Tpc    =11, // -"- 
 			       kPadInner2Glob   =12, // (Pad => SecL) => (SubS[io] => SupS => Tpc => Glob)
 			       kPadOuter2Glob   =13, // -"- 
-			       kTotalTpcSectorRotaions =14}; 
+			       
+			       kSup12S2Tpc        = 14, // Sup12S => Tpc
+			       kSup12S2Glob       = 15, // Sup12S => Tpc => Glob; 
+			       kSubSInner2Sup12S  = 16, // Subs[io] => Sup12S
+			       kSubSOuter2Sup12S  = 17, // -"-
+			       kPadInner2Sup12S   = 18, // (Pad => SecL) => (SubS[io] => Sup12S)
+			       kPadOuter2Sup12S   = 19, // -"- 
+
+			       kTotalTpcSectorRotaions =20}; 
  private:
   Char_t                mBeg[1];        //!
   Int_t                 m_Debug;        //!
@@ -200,6 +208,7 @@ class StTpcDb {
   Double_t              mzGG;           //! Gating Grid z
   Char_t                mEnd[1];        //!
   static Bool_t         mOldScheme;     //! switch between Old and New alignment scheme
+  static Bool_t         mAlignment2024; //! switch between Old and 2024 alignment scheme
  private:
   StTpcDb();
  public:
@@ -262,6 +271,22 @@ class StTpcDb {
   const TGeoHMatrix &Pad2SupS(Int_t sector = 1, Int_t row = 1)  const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2SupS: kPadOuter2SupS; return TpcRot(sector,k);}
   const TGeoHMatrix &Pad2Tpc(Int_t sector = 1, Int_t row = 1)   const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2Tpc: kPadOuter2Tpc; return TpcRot(sector,k);}
   const TGeoHMatrix &Pad2Glob(Int_t sector = 1, Int_t row = 1)  const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2Glob: kPadOuter2Glob; return TpcRot(sector,k);}
+  //--------------------------------------------------------------------------------
+  const TGeoHMatrix &Sup12S2Tpc(Int_t sector = 1)       const {return TpcRot(sector,kSup12S2Tpc);}
+  const TGeoHMatrix &Sup12S2Glob(Int_t sector = 1)      const {return TpcRot(sector,kSup12S2Glob);}
+  const TGeoHMatrix &SubSInner2Sup12S(Int_t sector = 1) const {return TpcRot(sector,kSubSInner2Sup12S);}
+  const TGeoHMatrix &SubSOuter2Sup12S(Int_t sector = 1) const {return TpcRot(sector,kSubSOuter2Sup12S);}
+
+  const TGeoHMatrix &PadInner2Sup12S(Int_t sector = 1)  const {return TpcRot(sector,kPadInner2Sup12S);}
+  const TGeoHMatrix &PadOuter2Sup12S(Int_t sector = 1)  const {return TpcRot(sector,kPadOuter2Sup12S);}
+
+  const TGeoHMatrix &SubS2Sup12S(Int_t sector = 1, Int_t row = 1) const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kSubSInner2Sup12S : kSubSOuter2Sup12S; return TpcRot(sector,k);}
+
+  const TGeoHMatrix &Pad2Sup12S(Int_t sector = 1, Int_t row = 1)  const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2Sup12S: kPadOuter2Sup12S; return TpcRot(sector,k);}
+
+
+  static void SetAlignment2024(Bool_t k = kFALSE) {mAlignment2024 = k;}
+  static Bool_t Alignment2024() {return mAlignment2024;}
   ClassDef(StTpcDb,0)
 };
 #endif
