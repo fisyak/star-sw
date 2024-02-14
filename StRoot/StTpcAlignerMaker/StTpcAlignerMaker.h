@@ -29,32 +29,40 @@
 #include "TNamed.h"
 #include "THelixTrack.h"
 #include "TGeoMatrix.h"
+class StEvent;
+class StPrimaryVertex;
 //________________________________________________________________________________
 class HelixPar_t : public TObject {
  public:
-  HelixPar_t() {Clear();}
-  virtual ~HelixPar_t() {}
   Char_t         beg[1]; // !
   Int_t          sector;
   Double_t       Rho; // curvature
   Double_t       x, y, z;
   Double_t       nx, ny, nz;
+  Double_t       xG, yG, zG;
+  Double_t       nxG, nyG, nzG;
   Double_t      dRho;
   //  StThreeVectorD pxyz; // Direction
   Double_t     *pxyz() {return &nx;}
   Double_t      *xyz() {return &x;}
+  Double_t     *pxyzG() {return &nxG;}
+  Double_t      *xyzG() {return &xG;}
   //  StThreeVectorD xyz;  // Coordinates
   Double_t       fCov[15];  // Covarianve matrix from Helix fit for (X,Z,dirX,dirY,dirZ);
   Double_t       Chi2;
   Int_t          Ndf;
   Int_t          Npoints;
   Int_t          Nused;
+  Double_t       DriftZ; // average drift distance for this track
+  Double_t       step;
+  Double_t RefSurficeG[4]; // Ref. surfice in GCS
   Char_t         end[1]; // !
+  void           Print(Option_t *opt = "") const; 
   void           Clear(Option_t *opt = 0) {if (opt); memset(beg, 0, end-beg);}
   HelixPar_t    &operator=(const THelixFitter &v);
-  ClassDef(HelixPar_t,1)
+  ClassDef(HelixPar_t, 1)
 };
-ostream&  operator<<(ostream& os, const HelixPar_t v);
+ostream&  operator<<(ostream& os, const HelixPar_t &v);
 //________________________________________________________________________________
 class StTpcInOutMatch : public TObject {
 public:
@@ -76,15 +84,17 @@ public:
   Char_t         end[1]; // !
   HelixPar_t In;
   HelixPar_t Out;
+#if 0
   HelixPar_t InAtVx;
   HelixPar_t OutAtVx;
+#endif
   void        Clear(Option_t *opt = 0) {if (opt); memset(beg, 0, end-beg); In.Clear(); Out.Clear();}
   ClassDef(StTpcInOutMatch,1)
 };
 //________________________________________________________________________________
 class SectorSegment : public TNamed {
  public: 
-  SectorSegment(Int_t s, Int_t t = 0) : fRowMin(99), fRowMax(-1), fSector(s), fStatus(-1) {SetName(Form("Sector_%02i_%i",fSector,t));}
+  SectorSegment(Int_t s, Int_t t = 0) : fRowMin(99), fSector(s), fStatus(-1) {SetName(Form("Sector_%02i_%i",fSector,t));}
   virtual ~SectorSegment() {}
   virtual Bool_t   IsSortable() const { return kTRUE; }
   Int_t   Sector() const {return fSector;}
@@ -99,12 +109,8 @@ class SectorSegment : public TNamed {
     return kFALSE;
   }
   virtual void  Print(Option_t *option="") const;
-  Int_t  fRowMin;
-  Int_t  fRowMax;
-  Double_t fXmin;
-  Double_t fXmax;
-  HelixPar_t     HelixSmin; // at fRowMin
-  HelixPar_t     HelixSmax; // at fRowMax
+  Int_t         fRowMin;
+  HelixPar_t    HlxPar; // at fRowMin
  private:
   Int_t fSector;
   TList fList;
@@ -119,19 +125,34 @@ class StTpcW2SMatch : public TObject {
   ~StTpcW2SMatch() {}
   Int_t          TriggerId;
   TGeoHMatrix    RW2S;      // W->S
-  HelixPar_t     HelixW; // parameters to used to predict
-  HelixPar_t     HelixU; // parameters to used to predict
-  HelixPar_t     HelixS; // -"- measurement
-  void        Clear(Option_t *opt = 0) {if (opt);  HelixW.Clear(); HelixS.Clear();}
+  HelixPar_t     HlxParW;    // parameters to used to predict
+  HelixPar_t     HlxParS;    // parameters to used to predict
+  HelixPar_t     HlxParW2S;  // W in S coordinate system
+  void           Clear(Option_t *opt = 0) {if (opt); HlxParW.Clear(); HlxParS.Clear(); HlxParW2S.Clear(); }
   ClassDef(StTpcW2SMatch,1)
+};
+//________________________________________________________________________________
+struct Hit_t { // : public TObject {
+  Int_t    row;
+  Double_t x, y, z;
+  Double_t err2xy[3], err2z;
+  Double_t driftZ;
 };
 //________________________________________________________________________________
 class StTpcAlignerMaker : public StMaker {
  public:
+  enum {kRejected                    = BIT(19),  // take out the track from analysis
+	kComingFromOutSide           = BIT(20),  // track is coming towards beam pipe
+	kComingFromInSideTofMatched  = BIT(21),  // track is coming from beam pipe
+        kNoToFDependece              = BIT(18)}; // Laser membrane tracks 
   StTpcAlignerMaker(const char *name="TpcAligner") : StMaker(name), fTpcInOutMatch(0) , fTpcW2SMatch(0){}
   virtual       ~StTpcAlignerMaker() {}
   virtual Int_t Init();
   virtual Int_t Make();
+  Int_t         MakeIO();
+  Int_t         MakeW2S();
+  static Double_t Project(const Double_t n[3], const Double_t x[3]);
+  static void CheckDirection(HelixPar_t *HlxPar); 
   static  TRMatrix GetSti2R(Double_t nx, Double_t ny, Double_t nz);
   virtual const char *GetCVS() const {
     static const char cvs[]="Tag $Name:  $ $Id: StTpcAlignerMaker.h,v 1.7 2014/09/10 13:54:58 fisyak Exp $ built " __DATE__ " " __TIME__ ; 
@@ -142,6 +163,12 @@ class StTpcAlignerMaker : public StMaker {
  private:
   StTpcInOutMatch *fTpcInOutMatch;
   StTpcW2SMatch *fTpcW2SMatch;
+  StEvent* pEvent;
+  Double_t bField;
+  Double_t driftVel;
+  Double_t freq;
+  Int_t TriggerId;
+  StPrimaryVertex *pVbest;
   ClassDef(StTpcAlignerMaker,0)
 };
 
