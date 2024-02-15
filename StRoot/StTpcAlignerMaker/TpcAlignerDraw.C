@@ -145,53 +145,69 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
     cout << "No input files have been found" << endl;
     return;
   }
-  const Double_t&    field                                    = iter("field");
-  const Double_t&    driftVel                                 = iter("driftVel"); // cm/mkmsec
-  const Double_t&    freq                                     = iter("freq");    // MHz
-#if 0
-  const Double_t&    charge                                   = iter("charge");
-  const Int_t&       NoFitPoints                              = iter("NoFitPoints");
-#endif
-  const Double_t&    pX                                       = iter("pX");
-  const Double_t&    pY                                       = iter("pY");
-  const Double_t&    pZ                                       = iter("pZ");
-  const Int_t&       TriggerId                                = iter("TriggerId");
-  const Int_t&       In_sector                                = iter("In.sector");
-  const Double_t&    In_Rho                                   = iter("In.Rho");
-#if 0
-  const Double_t&    In_dRho                                  = iter("In.dRho");
-#endif
-  const Double_t&    In_pxyz_mX1                              = iter("In.nx");
-  const Double_t&    In_pxyz_mX2                              = iter("In.ny");
-  const Double_t&    In_pxyz_mX3                              = iter("In.nz");
-  const Double_t&    In_xyz_mX1                               = iter("In.x");
-  const Double_t&    In_xyz_mX2                               = iter("In.y");
-  const Double_t&    In_xyz_mX3                               = iter("In.z");
-  const Double_t*&   In_fCov                                  = iter("In.fCov[15]");
-  const Double_t&    In_Chi2                                  = iter("In.Chi2");
-#if 0
-  const Int_t&       In_Ndf                                   = iter("In.Ndf");
-  const Int_t&       In_Npoints                               = iter("In.Npoints");
-  const Int_t&       In_Nused                                 = iter("In.Nused");
-#endif
-  const Int_t&       Out_sector                               = iter("Out.sector");
-  const Double_t&    Out_Rho                                  = iter("Out.Rho");
-#if 0
-  const Double_t&    Out_dRho                                 = iter("Out.dRho");
-#endif
-  const Double_t&    Out_pxyz_mX1                             = iter("Out.nx");
-  const Double_t&    Out_pxyz_mX2                             = iter("Out.ny");
-  const Double_t&    Out_pxyz_mX3                             = iter("Out.nz");
-  const Double_t&    Out_xyz_mX1                              = iter("Out.x");
-  const Double_t&    Out_xyz_mX2                              = iter("Out.y");
-  const Double_t&    Out_xyz_mX3                              = iter("Out.z");
-  const Double_t*&   Out_fCov                                 = iter("Out.fCov[15]");
-  const Double_t&    Out_Chi2                                 = iter("Out.Chi2");
-#if 0
-  const Int_t&       Out_Ndf                                  = iter("Out.Ndf");
-  const Int_t&       Out_Npoints                              = iter("Out.Npoints");
-  const Int_t&       Out_Nused                                = iter("Out.Nused");
-#endif
+	static const Int_t&       TriggerId                                = iter("TriggerId");
+	static const Double_t&    field                                    = iter("field");
+	static const Double_t&    driftVel                                 = iter("driftVel");
+	static const Double_t&    freq                                     = iter("freq");
+	static const Double_t&    charge                                   = iter("charge");
+	static const Int_t&       NoFitPoints                              = iter("NoFitPoints");
+	static const Double_t&    pX                                       = iter("pX");
+	static const Double_t&    pY                                       = iter("pY");
+	static const Double_t&    pZ                                       = iter("pZ");
+	static const Int_t&       iPV                                      = iter("iPV");
+	static const Double_t&    xPV                                      = iter("xPV");
+	static const Double_t&    yPV                                      = iter("yPV");
+	static const Double_t&    zPV                                      = iter("zPV");
+	static const UInt_t&      In_fUniqueID                             = iter("In.fUniqueID");
+	static const UInt_t&      In_fBits                                 = iter("In.fBits");
+	static const Int_t&       In_sector                                = iter("In.sector");
+	static const Double_t&    In_Rho                                   = iter("In.Rho");
+	static const Double_t&    In_x                                     = iter("In.x");
+	static const Double_t&    In_y                                     = iter("In.y");
+	static const Double_t&    In_z                                     = iter("In.z");
+	static const Double_t&    In_nx                                    = iter("In.nx");
+	static const Double_t&    In_ny                                    = iter("In.ny");
+	static const Double_t&    In_nz                                    = iter("In.nz");
+	static const Double_t&    In_xG                                    = iter("In.xG");
+	static const Double_t&    In_yG                                    = iter("In.yG");
+	static const Double_t&    In_zG                                    = iter("In.zG");
+	static const Double_t&    In_nxG                                   = iter("In.nxG");
+	static const Double_t&    In_nyG                                   = iter("In.nyG");
+	static const Double_t&    In_nzG                                   = iter("In.nzG");
+	static const Double_t&    In_dRho                                  = iter("In.dRho");
+	static const Double_t*&   In_fCov                                  = iter("In.fCov[15]");
+	static const Double_t&    In_Chi2                                  = iter("In.Chi2");
+	static const Int_t&       In_Ndf                                   = iter("In.Ndf");
+	static const Int_t&       In_Npoints                               = iter("In.Npoints");
+	static const Int_t&       In_Nused                                 = iter("In.Nused");
+	static const Double_t&    In_DriftZ                                = iter("In.DriftZ");
+	static const Double_t&    In_step                                  = iter("In.step");
+	static const Double_t*&   In_RefSurficeG                           = iter("In.RefSurficeG[4]");
+	static const UInt_t&      Out_fUniqueID                            = iter("Out.fUniqueID");
+	static const UInt_t&      Out_fBits                                = iter("Out.fBits");
+	static const Int_t&       Out_sector                               = iter("Out.sector");
+	static const Double_t&    Out_Rho                                  = iter("Out.Rho");
+	static const Double_t&    Out_x                                    = iter("Out.x");
+	static const Double_t&    Out_y                                    = iter("Out.y");
+	static const Double_t&    Out_z                                    = iter("Out.z");
+	static const Double_t&    Out_nx                                   = iter("Out.nx");
+	static const Double_t&    Out_ny                                   = iter("Out.ny");
+	static const Double_t&    Out_nz                                   = iter("Out.nz");
+	static const Double_t&    Out_xG                                   = iter("Out.xG");
+	static const Double_t&    Out_yG                                   = iter("Out.yG");
+	static const Double_t&    Out_zG                                   = iter("Out.zG");
+	static const Double_t&    Out_nxG                                  = iter("Out.nxG");
+	static const Double_t&    Out_nyG                                  = iter("Out.nyG");
+	static const Double_t&    Out_nzG                                  = iter("Out.nzG");
+	static const Double_t&    Out_dRho                                 = iter("Out.dRho");
+	static const Double_t*&   Out_fCov                                 = iter("Out.fCov[15]");
+	static const Double_t&    Out_Chi2                                 = iter("Out.Chi2");
+	static const Int_t&       Out_Ndf                                  = iter("Out.Ndf");
+	static const Int_t&       Out_Npoints                              = iter("Out.Npoints");
+	static const Int_t&       Out_Nused                                = iter("Out.Nused");
+	static const Double_t&    Out_DriftZ                               = iter("Out.DriftZ");
+	static const Double_t&    Out_step                                 = iter("Out.step");
+	static const Double_t*&   Out_RefSurficeG                          = iter("Out.RefSurficeG[4]");
   // Book Histograms
   TString Out(gSystem->BaseName(files)); 
   Out.ReplaceAll("st_","");
@@ -238,10 +254,10 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
     Int_t sector = In_sector;
     if (! sector) continue;
     if (! Out_sector) continue;
-    TVector3 pxyzIn(In_pxyz_mX1,In_pxyz_mX2,In_pxyz_mX3);  PrPP(pxyzIn);
-    TVector3 rI(In_xyz_mX1,In_xyz_mX2,In_xyz_mX3);         PrPP(rI);
-    TVector3 pxyzOut(Out_pxyz_mX1,Out_pxyz_mX2,Out_pxyz_mX3);   PrPP(pxyzOut);
-    TVector3 rO(Out_xyz_mX1,Out_xyz_mX2,Out_xyz_mX3); PrPP(rO);
+    TVector3 pxyzIn(In_nx,In_ny,In_nz);  PrPP(pxyzIn);
+    TVector3 rI(In_x,In_y,In_z);         PrPP(rI);
+    TVector3 pxyzOut(Out_nx,Out_ny,Out_nz);   PrPP(pxyzOut);
+    TVector3 rO(Out_x,Out_y,Out_z); PrPP(rO);
     Double_t dev = (TMath::Abs(In_Rho)-TMath::Abs(Out_Rho));
     //    if (TMath::Abs(dev) > 5e-4) continue;
     if (TMath::Abs(dev) > 6e-3) continue; // 3D distortions
@@ -359,56 +375,89 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     cout << "No input files have been found" << endl;
     return;
   }
-#if 0
-  const Int_t&       TriggerId                                = iter("TriggerId");
-  const Double_t*&   RW2S_fScale                              = iter("RW2S.fScale[3]");
-  const Int_t&       HelixW_sector                            = iter("HelixW.sector");
-  const Double_t&    HelixW_Rho                               = iter("HelixW.Rho");
-  const Double_t&    HelixW_dRho                              = iter("HelixW.dRho");
-  const Double_t*&   HelixW_fCov                              = iter("HelixW.fCov[15]");
-  const Double_t&    HelixW_Chi2                              = iter("HelixW.Chi2");
-  const Int_t&       HelixW_Ndf                               = iter("HelixW.Ndf");
-  const Int_t&       HelixW_Npoints                           = iter("HelixW.Npoints");
-  const Int_t&       HelixW_Nused                             = iter("HelixW.Nused");
-  const Double_t&    HelixU_dRho                              = iter("HelixU.dRho");
-  const Int_t&       HelixU_Npoints                           = iter("HelixU.Npoints");
-  const Int_t&       HelixU_Nused                             = iter("HelixU.Nused");
-  const Double_t&    HelixS_dRho                              = iter("HelixS.dRho");
-  const Int_t&       HelixS_Npoints                           = iter("HelixS.Npoints");
-  const Int_t&       HelixS_Nused                             = iter("HelixS.Nused");
-#endif
-  const Double_t*&   RW2S_fTranslation                        = iter("RW2S.fTranslation[3]");
-  const Double_t*&   RW2S_fRotationMatrix                     = iter("RW2S.fRotationMatrix[9]");
-  const Double_t&    XW                                       = iter("HelixW.x");
-  const Double_t&    YW                                       = iter("HelixW.y");
-  const Double_t&    ZW                                       = iter("HelixW.z");
-  const Double_t&    nxW                                      = iter("HelixW.nx");
-  const Double_t&    nyW                                      = iter("HelixW.ny");
-  const Double_t&    nzW                                      = iter("HelixW.nz");
-
-  const Int_t&       HelixU_sector                            = iter("HelixU.sector");
-  const Double_t&    HelixU_Rho                               = iter("HelixU.Rho");
-  const Double_t&    XU                                       = iter("HelixU.x");
-  const Double_t&    YU                                       = iter("HelixU.y");
-  const Double_t&    ZU                                       = iter("HelixU.z");
-  const Double_t&    nxU                                      = iter("HelixU.nx");
-  const Double_t&    nyU                                      = iter("HelixU.ny");
-  const Double_t&    nzU                                      = iter("HelixU.nz");
-  const Double_t*&   HelixU_fCov                              = iter("HelixU.fCov[15]");
-  const Double_t&    HelixU_Chi2                              = iter("HelixU.Chi2");
-  const Int_t&       HelixU_Ndf                               = iter("HelixU.Ndf");
-  
-  const Int_t&       HelixS_sector                            = iter("HelixS.sector");
-  const Double_t&    HelixS_Rho                               = iter("HelixS.Rho");
-  const Double_t&    XS                                       = iter("HelixS.x");
-  const Double_t&    YS                                       = iter("HelixS.y");
-  const Double_t&    ZS                                       = iter("HelixS.z");
-  const Double_t&    nxS                                      = iter("HelixS.nx");
-  const Double_t&    nyS                                      = iter("HelixS.ny");
-  const Double_t&    nzS                                      = iter("HelixS.nz");
-  const Double_t*&   HelixS_fCov                              = iter("HelixS.fCov[15]");
-  const Double_t&    HelixS_Chi2                              = iter("HelixS.Chi2");
-  const Int_t&       HelixS_Ndf                               = iter("HelixS.Ndf");
+	static const Int_t&       TriggerId                                = iter("TriggerId");
+	static const UInt_t&      RW2S_fUniqueID                           = iter("RW2S.fUniqueID");
+	static const UInt_t&      RW2S_fBits                               = iter("RW2S.fBits");
+	//	static const TString&     RW2S_fName                               = iter("RW2S.fName");
+	//	static const TString&     RW2S_fTitle                              = iter("RW2S.fTitle");
+	static const Double_t*&   RW2S_fTranslation                        = iter("RW2S.fTranslation[3]");
+	static const Double_t*&   RW2S_fRotationMatrix                     = iter("RW2S.fRotationMatrix[9]");
+	static const Double_t*&   RW2S_fScale                              = iter("RW2S.fScale[3]");
+	static const UInt_t&      HlxParW_fUniqueID                        = iter("HlxParW.fUniqueID");   
+	static const UInt_t&      HlxParW_fBits                            = iter("HlxParW.fBits");
+	static const Int_t&       w                                 = iter("HlxParW.sector"); // HlxParW_sector
+	static const Double_t&    HlxParW_Rho                              = iter("HlxParW.Rho");
+	static const Double_t&    XW                                = iter("HlxParW.x");  // HlxParW_x 
+	static const Double_t&    YW                                = iter("HlxParW.y");  // HlxParW_y 
+	static const Double_t&    ZW                                = iter("HlxParW.z");  // HlxParW_z 
+	static const Double_t&    nxW                               = iter("HlxParW.nx"); // HlxParW_nx
+	static const Double_t&    nyW                               = iter("HlxParW.ny"); // HlxParW_ny
+	static const Double_t&    nzW                               = iter("HlxParW.nz"); // HlxParW_nz
+	static const Double_t&    HlxParW_xG                               = iter("HlxParW.xG");
+	static const Double_t&    HlxParW_yG                               = iter("HlxParW.yG");
+	static const Double_t&    HlxParW_zG                               = iter("HlxParW.zG");
+	static const Double_t&    HlxParW_nxG                              = iter("HlxParW.nxG");
+	static const Double_t&    HlxParW_nyG                              = iter("HlxParW.nyG");
+	static const Double_t&    HlxParW_nzG                              = iter("HlxParW.nzG");
+	static const Double_t&    HlxParW_dRho                             = iter("HlxParW.dRho");
+	static const Double_t*&   HlxParW_fCov                             = iter("HlxParW.fCov[15]");
+	static const Double_t&    HlxParW_Chi2                             = iter("HlxParW.Chi2");
+	static const Int_t&       HlxParW_Ndf                              = iter("HlxParW.Ndf");
+	static const Int_t&       HlxParW_Npoints                          = iter("HlxParW.Npoints");
+	static const Int_t&       HlxParW_Nused                            = iter("HlxParW.Nused");
+	static const Double_t&    HlxParW_DriftZ                           = iter("HlxParW.DriftZ");
+	static const Double_t&    HlxParW_step                             = iter("HlxParW.step");
+	static const Double_t*&   HlxParW_RefSurficeG                      = iter("HlxParW.RefSurficeG[4]");
+	static const UInt_t&      HlxParS_fUniqueID                        = iter("HlxParS.fUniqueID");
+	static const UInt_t&      HlxParS_fBits                            = iter("HlxParS.fBits");
+	static const Int_t&       s                                  = iter("HlxParS.sector"); // HlxParS_sector
+	static const Double_t&    HlxParS_Rho                              = iter("HlxParS.Rho");
+	static const Double_t&    XS                                 = iter("HlxParS.x");  //  HlxParS_x 
+	static const Double_t&    YS                                 = iter("HlxParS.y");  //  HlxParS_y 
+	static const Double_t&    ZS                                 = iter("HlxParS.z");  //  HlxParS_z 
+	static const Double_t&    nxS                                = iter("HlxParS.nx"); //  HlxParS_nx
+	static const Double_t&    nyS                                = iter("HlxParS.ny"); //  HlxParS_ny
+	static const Double_t&    nzS                                = iter("HlxParS.nz"); //  HlxParS_nz
+	static const Double_t&    HlxParS_xG                               = iter("HlxParS.xG");
+	static const Double_t&    HlxParS_yG                               = iter("HlxParS.yG");
+	static const Double_t&    HlxParS_zG                               = iter("HlxParS.zG");
+	static const Double_t&    HlxParS_nxG                              = iter("HlxParS.nxG");
+	static const Double_t&    HlxParS_nyG                              = iter("HlxParS.nyG");
+	static const Double_t&    HlxParS_nzG                              = iter("HlxParS.nzG");
+	static const Double_t&    HlxParS_dRho                             = iter("HlxParS.dRho");
+	static const Double_t*&   HlxParS_fCov                             = iter("HlxParS.fCov[15]");
+	static const Double_t&    HlxParS_Chi2                             = iter("HlxParS.Chi2");
+	static const Int_t&       HlxParS_Ndf                              = iter("HlxParS.Ndf");
+	static const Int_t&       HlxParS_Npoints                          = iter("HlxParS.Npoints");
+	static const Int_t&       HlxParS_Nused                            = iter("HlxParS.Nused");
+	static const Double_t&    HlxParS_DriftZ                           = iter("HlxParS.DriftZ");
+	static const Double_t&    HlxParS_step                             = iter("HlxParS.step");
+	static const Double_t*&   HlxParS_RefSurficeG                      = iter("HlxParS.RefSurficeG[4]");
+	static const UInt_t&      HlxParW2S_fUniqueID                      = iter("HlxParW2S.fUniqueID");
+	static const UInt_t&      HlxParW2S_fBits                          = iter("HlxParW2S.fBits");
+	static const Int_t&       HlxParW2S_sector                         = iter("HlxParW2S.sector");
+	static const Double_t&    HlxParW2S_Rho                            = iter("HlxParW2S.Rho");
+	static const Double_t&    XU                               = iter("HlxParW2S.x");   // HlxParW2S_x 
+	static const Double_t&    YU                               = iter("HlxParW2S.y");   // HlxParW2S_y 
+	static const Double_t&    ZU                               = iter("HlxParW2S.z");   // HlxParW2S_z 
+	static const Double_t&    nxU                              = iter("HlxParW2S.nx");  // HlxParW2S_nx
+	static const Double_t&    nyU                              = iter("HlxParW2S.ny");  // HlxParW2S_ny
+	static const Double_t&    nzU                              = iter("HlxParW2S.nz");  // HlxParW2S_nz
+	static const Double_t&    HlxParW2S_xG                             = iter("HlxParW2S.xG");
+	static const Double_t&    HlxParW2S_yG                             = iter("HlxParW2S.yG");
+	static const Double_t&    HlxParW2S_zG                             = iter("HlxParW2S.zG");
+	static const Double_t&    HlxParW2S_nxG                            = iter("HlxParW2S.nxG");
+	static const Double_t&    HlxParW2S_nyG                            = iter("HlxParW2S.nyG");
+	static const Double_t&    HlxParW2S_nzG                            = iter("HlxParW2S.nzG");
+	static const Double_t&    HlxParW2S_dRho                           = iter("HlxParW2S.dRho");
+	static const Double_t*&   HlxParW2S_fCov                           = iter("HlxParW2S.fCov[15]");
+	static const Double_t&    HlxParW2S_Chi2                           = iter("HlxParW2S.Chi2");
+	static const Int_t&       HlxParW2S_Ndf                            = iter("HlxParW2S.Ndf");
+	static const Int_t&       HlxParW2S_Npoints                        = iter("HlxParW2S.Npoints");
+	static const Int_t&       HlxParW2S_Nused                          = iter("HlxParW2S.Nused");
+	static const Double_t&    HlxParW2S_DriftZ                         = iter("HlxParW2S.DriftZ");
+	static const Double_t&    HlxParW2S_step                           = iter("HlxParW2S.step");
+	static const Double_t*&   HlxParW2S_RefSurficeG                    = iter("HlxParW2S.RefSurficeG[4]");
   // Book Histograms
   TString Out(files); 
   Out.ReplaceAll(".root","W2S");
@@ -434,22 +483,20 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   TH1D *LSF = new TH1D("LSF","Matrix and right part for Least Squared Fit ",NT+2,0,NT + 2);
   Int_t Ntracks = 0;
   while (iter.Next()) {
-    Int_t w = HelixU_sector;
-    Int_t s = HelixS_sector;
     if (w < 1 || w > 24 ||
 	s < 1 || w > 24) continue;
-    if (HelixU_Ndf < 15 || HelixS_Ndf < 15) continue;
-    if (HelixU_Chi2/ HelixU_Ndf > 5 || HelixS_Chi2/HelixS_Ndf > 5) continue;
+    if (HlxParW2S_Ndf < 15 || HlxParS_Ndf < 15) continue;
+    if (HlxParW2S_Chi2/ HlxParW2S_Ndf > 5 || HlxParS_Chi2/HlxParS_Ndf > 5) continue;
     if (XS > 160 || XU > 160)               continue; // don't use end of tracks
 #if 1
-    Double_t RhoU = TMath::Abs(HelixU_Rho);
-    Double_t RhoS = TMath::Abs(HelixS_Rho);
+    Double_t RhoU = TMath::Abs(HlxParW2S_Rho);
+    Double_t RhoS = TMath::Abs(HlxParS_Rho);
     if (RhoU > 1.5e-3 || RhoS > 1.5e-3) continue; // 1GeV/c cut
     Double_t dRho = RhoU - RhoS;
     if (TMath::Abs(dRho) > 6e-3) continue; // 3D distortions
 #endif
-    TRSymMatrix CU(5,HelixU_fCov);                  PrPP(CU);
-    TRSymMatrix CS(5,HelixS_fCov);                  PrPP(CS);
+    TRSymMatrix CU(5,HlxParW2S_fCov);                  PrPP(CU);
+    TRSymMatrix CS(5,HlxParS_fCov);                  PrPP(CS);
     TRSymMatrix C(CU);
     C += CS;   PrPP(C);
 #if 0

@@ -46,8 +46,10 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass37_Avg.h"
   //#include "IOSectorParPass40_Avg.h"
   //#include "IOSectorParPass41_Avg.h"
-#include "IOSectorParPass42_Avg.h"
+  //#include "IOSectorParPass42_Avg.h"
+#include "IOSectorParPass46_Avg.h" // Global Transort use __No_alpha_beta__
 };
+#define __No_alpha_beta__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
 class TTable;
@@ -120,8 +122,10 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 #else /* __TpcInnerSector__ */
   St_Survey      *TpcSectorPositionB = new St_Survey("TpcInnerSectorPositionB",NR*NoSectors);
 #endif /* !  __TpcInnerSector__ */
+#if 0
   TGeoHMatrix Flip  = StTpcDb::instance()->Flip(); if (_debug) {cout << "Flip\t"; Flip.Print();}
   TGeoHMatrix FlipI = Flip.Inverse();              if (_debug) {cout << "FlipI\t"; FlipI.Print();}
+#endif
   for (Int_t r = 0; r < NR; r++) { // half sum & half diff
     for (Int_t s = 0; s < NoSectors; s++) {
       TGeoHMatrix LSold, LS, dR;
@@ -147,8 +151,10 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	     << "\tz " << Pass[r].Data[i].z << "+/-" <<Pass[r].Data[i].Dz << endl;
 	Double_t xyz[3] = {0, 0, 0};
 #if 1 /* alpha, beta gamma rotations */
+#ifndef __No_alpha_beta__
 	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
 	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
+#endif /* _No__alpha_beta__ */
 	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
 #endif /* no beta rotation */
 	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  1e-4*Pass[r].Data[i].x;

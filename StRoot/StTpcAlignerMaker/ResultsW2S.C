@@ -177,8 +177,16 @@ void ResultsW2S(const Char_t *opt="") {
       }
       hs[i]->Add(dath[k][i]);
       if (leg[i]) {
-	if (k < NP) leg[i]->AddEntry(dath[k][i],Passes[k].PassName);
-	else if (k == NP && NH == NP + 1)  leg[i]->AddEntry(dath[k][i],"sum");
+	if (k < NP) {
+	  Int_t indx = TString(Passes[k].PassName).Index("Pass");
+	  TString Label(Passes[k].PassName+indx);
+	  Label.ReplaceAll("/IO","");
+	  indx = Label.Index("/");
+	  leg[i]->AddEntry(dath[k][i],Label.Data()+indx+1);
+#if 0
+	  leg[i]->AddEntry(dath[k][i],Passes[k].PassName);
+#endif
+	} else if (k == NP && NH == NP + 1)  leg[i]->AddEntry(dath[k][i],"sum");
 	else {
 	  if (k == NP) leg[i]->AddEntry(dath[k][i],"sum over FF");
 	  else         leg[i]->AddEntry(dath[k][i],"sum over RF");

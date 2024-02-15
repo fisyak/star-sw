@@ -267,9 +267,10 @@ void Results(const Char_t *opt="") {
       hs[i]->Add(dath[k][i]);
       if (leg[i]) {
 	if (k < NP) {
-#if 0
+#if 1
 	  Int_t indx = TString(Passes[k].PassName).Index("Pass");
 	  TString Label(Passes[k].PassName+indx);
+	  Label.ReplaceAll("/IO","");
 	  indx = Label.Index("/");
 	  leg[i]->AddEntry(dath[k][i],Label.Data()+indx+1);
 #else
