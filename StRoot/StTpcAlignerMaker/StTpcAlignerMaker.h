@@ -173,23 +173,3 @@ class StTpcAlignerMaker : public StMaker {
 };
 
 #endif
-// $Log: StTpcAlignerMaker.h,v $
-// Revision 1.7  2014/09/10 13:54:58  fisyak
-// Freeze
-//
-// Revision 1.6  2011/12/16 20:35:23  fisyak
-// Freeze
-//
-// Revision 1.5  2011/08/23 20:29:06  fisyak
-// Add rejection for bad segments
-//
-// Revision 1.4  2011/08/22 13:37:25  fisyak
-// Freeze Super Sector version
-//
-// Revision 1.3  2011/06/08 21:52:47  fisyak
-// Freeze version with ToF
-//
-// Revision 1.2  2011/04/22 16:03:53  fisyak
-// Replace NTuple by TTree, use errors from THelixFit
-//
-// Revision 1.1.1.1  2004/10/28 00:26:46  fisyak

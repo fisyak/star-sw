@@ -1,69 +1,4 @@
 // Author : Yuri V. Fisyak 10/01/2004
-// $Id: StTpcAlignerMaker.cxx,v 1.23 2014/09/10 13:54:58 fisyak Exp $
-// $Log: StTpcAlignerMaker.cxx,v $
-// Revision 1.23  2014/09/10 13:54:58  fisyak
-// Freeze
-//
-// Revision 1.21  2014/04/30 22:09:23  fisyak
-// Freeze
-//
-// Revision 1.20  2014/04/24 21:48:17  fisyak
-// Freeze
-//
-// Revision 1.19  2011/12/16 20:35:23  fisyak
-// Freeze
-//
-// Revision 1.18  2011/08/24 23:52:20  hejdar
-// bug fix with segment status
-//
-// Revision 1.17  2011/08/24 22:19:18  hejdar
-// bug fix with segment status
-//
-// Revision 1.16  2011/08/23 20:29:06  fisyak
-// Add rejection for bad segments
-//
-// Revision 1.15  2011/08/23 19:47:48  fisyak
-// Add check for detectorInfo
-//
-// Revision 1.13  2011/08/22 13:37:25  fisyak
-// Freeze Super Sector version
-//
-// Revision 1.12  2011/08/09 17:31:23  fisyak
-// Freeze before fixing coordinamte swap for super sector alignemnt
-//
-// Revision 1.11  2011/06/29 15:04:44  fisyak
-// Freeze
-//
-// Revision 1.10  2011/06/08 21:52:47  fisyak
-// Freeze version with ToF
-//
-// Revision 1.9  2011/05/04 18:44:33  fisyak
-// Freeze
-//
-// Revision 1.8  2011/04/29 14:02:22  fisyak
-// Separate documentation from codes
-//
-// Revision 1.7  2011/04/25 20:56:07  fisyak
-// Freeze Pass N
-//
-// Revision 1.6  2011/04/22 16:03:53  fisyak
-// Replace NTuple by TTree, use errors from THelixFit
-//
-// Revision 1.5  2011/04/11 19:51:04  fisyak
-// Freeze
-//
-// Revision 1.4  2009/07/06 22:57:21  fisyak
-// switch from obsolete THelixTrack::Fit to THelixFitter::Fit
-//
-// Revision 1.3  2006/11/27 17:41:53  fisyak
-// Replace TCL.h => TCernLib.h
-//
-// Revision 1.2  2004/11/16 23:47:31  fisyak
-// Add histograms for residuals
-//
-// Revision 1.1.1.1  2004/10/28 00:26:46  fisyak
-//
-//
 //#define __TIME_CORRECTION__
 //#define __USE_LOCAL__
 #include <assert.h>
@@ -146,14 +81,6 @@ ostream&  operator<<(ostream& os, const HelixPar_t &v) {
   os << Form("<drift> %8.3f step %8.3f", v.DriftZ, v.step);
   os << Form(" ng: %8.3f %8.3f %8.3f", v.nxG, v.nyG, v.nzG);
   os << Form(" xyzG: %8.3f %8.3f %8.3f", v.xG, v.yG, v.zG);
-#if 0
-  os << "sector " << v.sector << " Rho = " << v.Rho << " +/- " << v.dRho
-     << " pxyz: " << v.nx << " " << v.ny << " " << v.nz
-     << " xyz: "  << v.x  << " " << v.y  << " " << v.z
-     << " <drift> " << v.DriftZ << " step " << v.step
-     << " pxyzG: " << v.nxG << " " << v.nyG << " " << v.nzG
-     << " xyzG: "  << v.xG  << " " << v.yG  << " " << v.zG;
-#endif
   if (_debug) {
     os << endl;
     TRSymMatrix C(5,v.fCov);
@@ -204,34 +131,26 @@ Int_t StTpcAlignerMaker::Init(){
   //   Int_t split  = -2;       // by default, split Event in sub branches << old style
   Int_t bufsize = 64000;
   if (split)  bufsize /= 4;
-#if 1
    Int_t branchStyle = 1; //new style by default
    if (split < 0) {branchStyle = 0; split = -1-split;}
    TTree::SetBranchStyle(branchStyle);
-#endif
   TpcInOutTree = new TTree("TpcInOutTree","the TPC residuals between Inner and Outer sub sectors");
   TpcInOutTree->SetAutoSave(1000000000); // autosave when 1 Gbyte written
   TpcInOutTree->SetCacheSize(10000000);  // set a 10 MBytes cache (useless when writing local files)
-#if  1 /* bug in TStreamerInfo*, fixed 09/05/14, ROOT_VERSION_CODE < ROOT_VERSION(5,34,20) */
   StTpcInOutMatch::Class()->IgnoreTObjectStreamer();
-  //  HelixPar_t::Class()->IgnoreTObjectStreamer();
+  HelixPar_t::Class()->IgnoreTObjectStreamer();
   StTpcW2SMatch::Class()->IgnoreTObjectStreamer();
-#endif
   fTpcInOutMatch = new StTpcInOutMatch();
   TBranch *branch = TpcInOutTree->Branch("StTpcInOutMatch","StTpcInOutMatch",&fTpcInOutMatch, bufsize,split);
-#if 1
-      branch->SetAutoDelete(kFALSE);
-      if(split >= 0 && branchStyle) TpcInOutTree->BranchRef();
-#endif
+  branch->SetAutoDelete(kFALSE);
+  if(split >= 0 && branchStyle) TpcInOutTree->BranchRef();
   fTpcW2SMatch = new StTpcW2SMatch();
   TpcW2STree = new TTree("TpcW2STree","the TPC residuals for prediction from sector W in sector S");
       TpcW2STree->SetAutoSave(1000000000); // autosave when 1 Gbyte written
       TpcW2STree->SetCacheSize(10000000);  // set a 10 MBytes cache (useless when writing local files)
   branch = TpcW2STree->Branch("StTpcW2SMatch","StTpcW2SMatch",&fTpcW2SMatch, bufsize,split);
   branch->SetAutoDelete(kFALSE);
-#if 1
-      if(split >= 0 && branchStyle) TpcW2STree->BranchRef();
-#endif
+  if(split >= 0 && branchStyle) TpcW2STree->BranchRef();
   return StMaker::Init();
 }
 //_____________________________________________________________________________
@@ -531,20 +450,14 @@ Int_t StTpcAlignerMaker::MakeIO() {
     Int_t NoIOHits[2] = {I123, N - I123};
     if (NoIOHits[0] < 5 || NoIOHits[1] < 5) continue;
     THelixFitter vHelices[2];
-    //      HelixPar_t *HlxPars[4] = {&fTpcInOutMatch->In, &fTpcInOutMatch->Out, &fTpcInOutMatch->InAtVx, &fTpcInOutMatch->OutAtVx};
     HelixPar_t *HlxPars[2] = {&fTpcInOutMatch->In, &fTpcInOutMatch->Out};
     for (Int_t io = 0; io < 2; io++) {// Inner / Outer Loop
       if (NoIOHits[io] < 5) continue;
       HlxPars[io]->sector = sectorWithMaxNoHits;
       Int_t i2 = N;
       Int_t ii = 1;
-#if 0
-      Int_t i1 = NoIOHits[0]-1;
-      ii = -1;
-#else
       Int_t i1 = 0;
       i2 = NoIOHits[0];
-#endif
       if (io) {i1 = NoIOHits[0]; ii = 1; i2 = N;}
       Int_t nn = 0;
       driftZ = 0;
@@ -577,12 +490,9 @@ Int_t StTpcAlignerMaker::MakeIO() {
       StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
       StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
       RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
-      //	step = vHelices[io].Step(stepMX, RefSurficeG, 4); //, HlxPars[io]->xyzG(), HlxPars[io]->pxyzG(), 1); 
       step = vHelices[io].Step(stepMX, RefSurficeG, 4, HlxPars[io]->xyzG(), HlxPars[io]->pxyzG(), 1); 
       if (TMath::Abs(step) >= stepMX) goto FAILED;;
-      //	vHelices[io].Move(step);
       HlxPars[io]->step = step; //{PrPP(Step,*HlxPars[io]);}
-      //	vHelices[io].Move(step);
       CheckDirection(HlxPars[io]);
       StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocalVect(HlxPars[io]->pxyzG(),HlxPars[io]->pxyz());
       StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(HlxPars[io]->xyzG(),HlxPars[io]->xyz());
@@ -716,7 +626,6 @@ Int_t StTpcAlignerMaker::MakeW2S() {
       Int_t sector = tpcHit->sector();
       Int_t row    = tpcHit->padrow();
       StThreeVectorD global(tpcHit->position());
-      //	transform(global,local,sector,row);
       StThreeVectorD xyz;
       StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(global.xyz(), xyz.xyz());
       ssegm->Helix().Add(global.xyz());
@@ -764,15 +673,10 @@ Int_t StTpcAlignerMaker::MakeW2S() {
       }
       cout << endl;
     }
-    //    step = helix.Step(stepMX, RefSurficeG, 4); //, HlxPars->xyzG(), HlxPars->pxyzG(),1);
     *HlxPars = helix;
     step = helix.Step(stepMX, RefSurficeG, 4, HlxPars->xyzG(), HlxPars->pxyzG(),1);
     if (TMath::Abs(step) >= stepMX) continue;
-    //    helix.Move(step);
-    //    helix.Move(step);
     HlxPars->step = step;
-    //    CheckDirection(HlxPars);
-    //    if (step < 0) {HlxPars->nxG *= -1; HlxPars->nyG *= -1; HlxPars->nzG *= -1;}
     HlxPars->Rho = helix.GetRho();
     HlxPars->dRho = helix.GetDRho();
     helix.StiEmx(StiErr);
@@ -831,54 +735,26 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	HlxParW2S = HlxParW;
 	HlxParW2S.sector = ssegS->Sector() + 100*ssegW->Sector();
 	PrPP(Before,HlxParW2S);
-	//	for (Int_t m = 0; m < 3; m++) HlxParW2S.pxyzG()[m] *= -1;
-	//	helixW2S.Backward();                     PrP2(MakeW2S,helixW2S);
-	//	HlxParW2S = helixW2S;
 	PrPP(After,HlxParW2S);
 	THelixTrack helixW2S(HlxParW2S.xyzG(),HlxParW2S.pxyzG(),HlxParW2S.Rho,HlxParW2S.dRho);  //=  ssegW->Helix(); 
-	//	step = helixW2S.Step(stepMX, HlxParS.RefSurficeG, 4); //, HlxParW2S.xyzG(), HlxParW2S.pxyzG(),1); 
 	if (Debug() > 2) {
 	  for (Int_t j = 0; j < 4; j++) {
 	    cout << "HlxParW.RefSurficeG[" << j << "] = " << HlxParW.RefSurficeG[j] 
 		 << "\tHlxParS.RefSurficeG[" << j << "] = " << HlxParS.RefSurficeG[j] << endl;
 	  }
 	}
-	//	helixW2S.Backward();
 	step = helixW2S.Step(stepMX, HlxParS.RefSurficeG, 4, HlxParW2S.xyzG(), HlxParW2S.pxyzG(),1); 
 	if (TMath::Abs(step) >= stepMX) continue;
 	CheckDirection(&HlxParW2S);
-	//	helixW2S.Move(step);
-	//	HlxParW2S = helixW2S;
-	//	CheckDirection(&HlxParW2S);
 	HlxParW2S.step = step;
 	HlxParW2S.Rho = helixW2S.GetRho();
 	HlxParW2S.dRho = helixW2S.GetDRho();
 	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(HlxParW2S.xyzG(), HlxParW2S.xyz());
 	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(HlxParW2S.pxyzG(), HlxParW2S.pxyz());
-#if 0
-	helixW2S.StiEmx(StiErr);
- 
-	TRSymMatrix StiMtx(6,StiErr);// PrPP(Make,StiMtx);
-	TRMatrix S2R = GetSti2R(HlxParW2S.nx, HlxParW2S.ny, HlxParW2S.nz);
-	TRSymMatrix Cov2(S2R,TRArray::kATxSxA,StiMtx);//  PrPP(Make,Cov2);
-	memcpy(HlxParW2S.fCov, Cov2.GetArray(), 15*sizeof(Double_t));
-#endif	  
 	PrPP(Make,HlxParW2S);
 	const Char_t * names[6] = {"x","y","z","nx","ny","nz"};
 	Double_t *s = HlxParS.xyz();
 	Double_t *w = HlxParW2S.xyz();
-#if 0
-	RW2S.LocalToMaster(HlxParW.xyz(),&w[0]);
-	RW2S.LocalToMasterVect(HlxParW.pxyz(),&w[3]);
-#endif
-#if 0
-	Double_t norm = w[3]*HlxParS->nx + w[4]*HlxParS->ny + w[5]*HlxParS->nz;
-	if (norm < 0) {
-	  TCL::vscale(HlxParW.pxyz(),-1.,HlxParW.pxyz(),3);
-	  //	    TCL::vscale(HlxParW2S.pxyz(),-1.,HlxParW2S.pxyz(),3);
-       	  RW2S.LocalToMasterVect(HlxParW.pxyz(),&w[3]);
-	}
-#endif
 	DEBUG_LEVEL {
 	  cout << "Matching segment  from sectorW " << sectorW << " to sectorS " << sectorS
 	       << " at step = " << step << endl;
