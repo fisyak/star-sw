@@ -418,7 +418,7 @@ Int_t StTpcAlignerMaker::MakeIO() {
 #endif /*  __USE_LOCAL__ */
       tpcHits[N].err2xy[0] = tpcHit->positionError().perp2();
       tpcHits[N].err2z  = tpcHit->positionError().z()*tpcHit->positionError().z();
-      if (tpcHits[N].err2xy > 0) {
+      if (tpcHits[N].err2xy[0] > 0.0) {
 	tpcHits[N].err2xy[0] = tpcHit->positionError().x()*tpcHit->positionError().x();
 	tpcHits[N].err2xy[1] = 0;
 	tpcHits[N].err2xy[2] = tpcHit->positionError().y()*tpcHit->positionError().y();

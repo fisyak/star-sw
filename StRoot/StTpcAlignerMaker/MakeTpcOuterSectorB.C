@@ -47,7 +47,11 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass40_Avg.h"
   //#include "IOSectorParPass41_Avg.h"
   //#include "IOSectorParPass42_Avg.h"
-#include "IOSectorParPass46_Avg.h" // Global Transort use __No_alpha_beta__
+  //#include "IOSectorParPass46_Avg.h" // Global Transort use __No_alpha_beta__
+  //#include "IOSectorParPass47_Avg.h" // Global Transort use __No_alpha_beta__, scale = 0.5
+  //#include "IOSectorParPass48_Avg.h" // Global Transort use __No_alpha_beta__, scale = 0.5
+  //#include "IOSectorParPass49_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+#include "IOSectorParPass50_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
 };
 #define __No_alpha_beta__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
@@ -150,16 +154,18 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	     << "\ty " << Pass[r].Data[i].y << "+/-" <<Pass[r].Data[i].Dy
 	     << "\tz " << Pass[r].Data[i].z << "+/-" <<Pass[r].Data[i].Dz << endl;
 	Double_t xyz[3] = {0, 0, 0};
+	//	Double_t scale = 0.5;
+	Double_t scale = 1.0;
 #if 1 /* alpha, beta gamma rotations */
 #ifndef __No_alpha_beta__
-	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
-	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
+	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(scale*TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
+	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(scale*TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
 #endif /* _No__alpha_beta__ */
-	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
+	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(scale*TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
 #endif /* no beta rotation */
-	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  1e-4*Pass[r].Data[i].x;
-	if (Pass[r].Data[i].Dy >= 0) xyz[1] =  1e-4*Pass[r].Data[i].y;
-	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  1e-4*Pass[r].Data[i].z;
+	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  scale*1e-4*Pass[r].Data[i].x;
+	if (Pass[r].Data[i].Dy >= 0) xyz[1] =  scale*1e-4*Pass[r].Data[i].y;
+	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  scale*1e-4*Pass[r].Data[i].z;
 	dR.SetTranslation(xyz);          if (_debug) {	cout << "dR\t"; dR.Print();}
       }
       // Flip has been accounted in StTpcAlignerMaker
