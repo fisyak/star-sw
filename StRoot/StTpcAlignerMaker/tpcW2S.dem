@@ -1,0 +1,82 @@
+load (f90) ;
+load ("eigen")$
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+debugmode(true) $ 
+/* ======================================================================== 
+  file: tpcS.dem  version Feb. 2024 
+  Tpc Super sector Alignment problems
+StTpcDb : W = kSubSOuter2Tpc(sectorW) * dRW
+          S = kSubSOuter2Tpc(sectorS) * dRS
+      W => S
+RW2S : kSup12S2Tpc(sectorS)^-1 * kSup12S2Tpc(sectorW)
+
+RW2ST : dRW^-1 * RW2S * dRS
+
+U : RW2S.W
+
+dev : dRS * S - dRW^-1 * U
+
+ ========================================================================  */
+RW2S: matrix([r11,r12,r13, tx],
+	     [r21,r22,r23, ty],
+             [r31,r32,r33, tz],
+             [  0,  0,  0,  1]); 
+
+dRW: matrix([ 1, -gW,  bW,  xW],
+	    [gW,   1, -aW,  yW],
+	    [bW,  aW,   1,  zW],
+	    [ 0,   0,   0,   1]);
+dRWI: matrix([  1, gW, -bW, -xW],
+	     [-gW,  1,  aW, -yW],
+	     [-bW,-aW,   1, -zW],
+	     [  0,  0,   0,   1]);
+/* sRWIxdRW: dRWI.dRW; */
+dRS: matrix([ 1, -gS,  bS,  xS],
+	    [gS,   1, -aS,  yS],
+	    [bS,  aS,   1,  zS],
+	    [ 0,   0,   0,   1]);
+ 
+nS: matrix([nXS],
+           [nYS],
+           [nZS],
+           [  0]);
+ S: matrix([XS], 
+           [YS], 
+           [ZS], 
+           [ 1]);
+nU: matrix([nXU],
+           [nYU],
+           [nZU],
+           [  0]);
+ U: matrix([XU], 
+           [YU], 
+           [ZU], 
+           [ 1]);
+
+devN: dRS.nS - dRWI.nU;
+devX: dRS.S  - dRWI.U;
+dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[2],devX[3]]);
+JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
+trigsimp(JW2S);
+f90(JW2S);
+with_stdout ("JW2S.txt",  f90(JW2S));
+/*
+JW2S(1,1) = matrix([[0],[0],[0],[1],[0],[0]])
+JW2S(1,2) = matrix([[0],[0],[0],[0],[1],[0]])
+JW2S(1,3) = matrix([[0],[0],[0],[0],[0],[1]])
+JW2S(1,4) = matrix([[0],[-nZS],[nYS],[0],[-ZS],[YS]])
+JW2S(1,5) = matrix([[nZS],[0],[nXS],[ZS],[0],[XS]])
+JW2S(1,6) = matrix([[-nYS],[nXS],[0],[-YS],[XS],[0]])
+JW2S(1,7) = matrix([[0],[0],[0],[1],[0],[0]])
+JW2S(1,8) = matrix([[0],[0],[0],[0],[1],[0]])
+JW2S(1,9) = matrix([[0],[0],[0],[0],[0],[1]])
+JW2S(1,10) = matrix([[0],[-nZU],[nYU],[0],[-ZU],[YU]])
+JW2S(1,11) = matrix([[nZU],[0],[nXU],[ZU],[0],[XU]])
+JW2S(1,12) = matrix([[-nYU],[nXU],[0],[-YU],[XU],[0]])
+*/
+JW2ST: transpose(JW2S);
+trigsimp(JW2ST);
+f90(JW2ST);
+with_stdout ("JW2ST.txt",  f90(JW2ST));
