@@ -63,7 +63,7 @@ struct PlotName_t {
   Int_t nz;
   Double_t zmin, zmax;
 };
-enum {NPlots = 21, NFPlots=14, NwsPlots=38, NwsFPlots=32};
+enum {NPlots = 21, NFPlots=14, NwsPlots=24, NwsFPlots=24};
 const  PlotName_t plotNameD[NPlots] = {// plots for drift
   {"dXdy"     ,"dX  versus  tX         =>  dy",    100,  -0.5,  0.5, 500, -1.000, 1.000}, // 0 -> <dx>, dy   
   {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,  -60.,  40., 500, -1.000, 1.000}, // 1 -> <dx>, alpha
@@ -88,47 +88,30 @@ const  PlotName_t plotNameD[NPlots] = {// plots for drift
   {"dT"       ,"dT (time buckets)  versus Z"     , 200,    10,  210, 500, -2.000, 2.000}  //20
 };
 const  PlotName_t plotNameWS[NwsPlots] = {// plots for drift
-  { "dYdxS", "ly => xS",							  100,-1.0,  1.0,100, -1.000, 1.000}, // 0
-  { "dYdaS", "r33*ZW+r32*YW+r31*XW+tz => aS",					  100,-210, -207,100, -1.000, 1.000}, // 1  empty
-  { "dYdbS", "ly*r33*ZW+ly*r32*YW+ly*r31*XW+ly*tz => bS",			  100,-100, 100.,100, -1.000, 1.000}, // 2
-  { "dYdgS", "(-ly*r23-r13)*ZW+(-ly*r22-r12)*YW+(-ly*r21-r11)*XW-ly*ty-tx => gS", 100, -65, -55.,100, -1.000, 1.000}, // 3
-  { "dZdxS", "lz => xS",							  100,-0.5,  0.5,100, -0.700, 0.700}, // 4
-  { "dZdaS", "-r23*ZW-r22*YW-r21*XW-ty => aS",					  100,-40.,  40.,100, -0.700, 0.700}, // 5
-  { "dZdbS", "(lz*r33+r13)*ZW+(lz*r32+r12)*YW+(lz*r31+r11)*XW+lz*tz+tx => bS",	  100, 20., 200.,100, -0.700, 0.700}, // 6
-  { "dZdgS", "-lz*r23*ZW-lz*r22*YW-lz*r21*XW-lz*ty => gS",			  100, -5.,   5.,100, -0.700, 0.700}, // 7
-  {"dnXdbS", "-r33*nzW-r32*nyW-r31*nxW => bS",					  100,-0.4,  0.6,100, -0.010, 0.010}, // 8
-  {"dnXdgS", "r23*nzW+r22*nyW+r21*nxW => gS",					  100,-0.3,  0.3,100, -0.010, 0.010}, // 9
-  {"dnYdaS", "r33*nzW+r32*nyW+r31*nxW => aS",					  100,-0.7,  0.4,100, -0.020, 0.020}, //10
-  {"dnYdgS", "-r13*nzW-r12*nyW-r11*nxW => gS",					  100,-1.0,  1.0,100, -0.020, 0.020}, //11
-  {"dnZdaS", "-r23*nzW-r22*nyW-r21*nxW => aS",					  100,-0.7,  0.7,100, -0.005, 0.005}, //12
-  {"dnZdbS", "r13*nzW+r12*nyW+r11*nxW => bS",					  100,-1.0,  1.0,100, -0.005, 0.005}, //13
-  { "dYdxW", "r21-ly*r11 => xW",						  100,-1.0,  1.0,100, -1.000, 1.000}, //14
-  { "dYdyW", "r22-ly*r12 => yW",						  100,-1.5,  1.5,100, -1.000, 1.000}, //15
-  //  { "dYdzW", "r23-ly*r13  => zW",						  100,-1.0,  1.0,100, -1.000, 1.000}, //16
-  { "dYdaW", "(ly*r12-r22)*ZW+(r23-ly*r13)*YW => aW",				  100,-210,  210,100, -1.000, 1.000}, //17
-  { "dYdbW", "(r21-ly*r11)*ZW+(ly*r13-r23)*XW  => bW",				  100, -80,   80,100, -1.000, 1.000}, //18
-  { "dYdgW", "(ly*r11-r21)*YW+(r22-ly*r12)*XW => gW",				  100,-125,  125,100, -1.000, 1.000}, //19
-  { "dZdxW", "r31-lz*r11 => xW",						  100,-0.3,  0.3,100, -0.700, 0.700}, //20
-  { "dZdyW", "r32-lz*r12 => yW",						  100,-0.5,  0.5,100, -0.700, 0.700}, //21
-  //  { "dZdzW", "r33-lz*r13  => zW",						  100,-1.0,  1.0,100, -0.700, 0.700}, //22
-  { "dZdaW", "(lz*r12-r32)*ZW+(r33-lz*r13)*YW => aW",				  100,-150,  150,100, -0.700, 0.700}, //23
-  { "dZdbW", "(r31-lz*r11)*ZW+(lz*r13-r33)*XW => bW",				  100,-200,  200,100, -0.700, 0.700}, //24
-  { "dZdgW", "(lz*r11-r31)*YW+(r32-lz*r12)*XW => gW",				  100, -10,   10,100, -0.700, 0.700}, //25
-  {"dnXdaW", "r13*nyW-r12*nzW => aW",						  100,-.05, 0.05,100, -0.010, 0.010}, //26
-  {"dnXdbW", "r11*nzW-r13*nxW => bW",						  100,-0.5,  0.5,100, -0.010, 0.010}, //27
-  {"dnXdgW", "r12*nxW-r11*nyW => gW",						  100,-0.4,  0.4,100, -0.010, 0.010}, //28
-  {"dnYdaW", "r23*nyW-r22*nzW => aW",						  100,-0.4,  0.0,100, -0.020, 0.020}, //29
-  {"dnYdbW", "r21*nzW-r23*nxW => bW",						  100,-.05, 0.05,100, -0.020, 0.020}, //30
-  {"dnYdgW", "r22*nxW-r21*nyW => gW",						  100,-1.0,  1.0,100, -0.020, 0.020}, //31
-  {"dnZdaW", "r33*nyW-r32*nzW => aW",						  100,-0.7,  0.7,100, -0.005, 0.005}, //32
-  {"dnZdbW", "r31*nzW-r33*nxW => bW",						  100,-1.0,  1.0,100, -0.005, 0.005}, //33
-  //  {"dnZdgW", "r32*nxW-r31*nyW => gW",						  100,-1.0,  1.0,100, -0.020, 0.020}, //34
-  { "dX"       ,"dX  versus Z",                   				  100, -10,  200,100, -0.050, 0.050}, //35
-  { "dY"       ,"dY  versus Z",                   				  100, -10,  200,100, -2.500, 2.500}, //36
-  { "dZ"       ,"dZ  versus Z",                   				  100, -10,  200,100, -0.700, 0.700}, //37
-  { "dnX"      ,"dnX versus Z",                   				  100, -10,  200,100, -0.010, 0.010}, //38
-  { "dnY"      ,"dnY versus Z",                                                   100, -10,  200,100, -0.020, 0.020}, //39
-  { "dnZ"      ,"dnZ versus Z",                                                   100, -10,  200,100, -0.005, 0.005}  //40
+/* mX(1), A( 3,1), ds, */ {"dnYdaS",       "nZS    => aS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 0
+/* mX(2), A( 3,2), ds, */ {"dnZdaS",       "-nYS   => aS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 1
+/* mX(4), A( 3,4), ds, */ {"dYdaS",        "ZS     => aS", 100, 0.000, 250.0,100,-1.000, 1.000}, // 2
+/* mX(5), A( 3,5), ds, */ {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-1.000, 1.000}, // 3
+/* mX(0), A( 4,0), ds, */ {"dnXdbS",       "-nZS   => bS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 4
+/* mX(2), A( 4,2), ds, */ {"dnZdbS",       "-nXS   => bS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 5
+/* mX(3), A( 4,3), ds, */ {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, // 6
+/* mX(5), A( 4,5), ds, */ {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, // 7
+/* mX(0), A( 5,0), ds, */ {"dnXdgS",       "nYS    => gS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 8
+/* mX(1), A( 5,1), ds, */ {"dnYdgS",       "-nXS   => gS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 9
+/* mX(3), A( 5,3), ds, */ {"dXdgS",        "YS     => gS", 100,-1.000, 1.000,100,-1.000, 1.000}, //10
+/* mX(4), A( 5,4), ds, */ {"dYdgS",        "-XS    => gS", 120, -60.0,  60.0,100,-1.000, 1.000}, //11
+/* mX(1), A( 9,1), dw, */ {"dnYdaW",       "nZU    => aW", 100,-1.000, 1.000,100,-0.005, 0.005}, //12
+/* mX(2), A( 9,2), dw, */ {"dnZdaW",       "-nYU   => aW", 100,-1.000, 1.000,100,-0.005, 0.005}, //13
+/* mX(4), A( 9,4), dw, */ {"dYdaW",        "ZU     => aW", 100, 0.000, 250.0,100,-1.000, 1.000}, //14
+/* mX(5), A( 9,5), dw, */ {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-1.000, 1.000}, //15
+/* mX(0), A(10,0), dw, */ {"dnXdbW",       "-nZU   => bW", 100,-1.000, 1.000,100,-0.005, 0.005}, //16
+/* mX(2), A(10,2), dw, */ {"dnZdbW",       "-nXU   => bW", 100,-1.000, 1.000,100,-0.005, 0.005}, //17
+/* mX(3), A(10,3), dw, */ {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //18
+/* mX(5), A(10,5), dw, */ {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}, //19
+/* mX(0), A(11,0), dw, */ {"dnXdgW",       "nYU    => gW", 100,-1.000, 1.000,100,-0.005, 0.005}, //20
+/* mX(1), A(11,1), dw, */ {"dnYdgW",       "-nXU   => gW", 100,-1.000, 1.000,100,-0.005, 0.005}, //21
+/* mX(3), A(11,3), dw, */ {"dXdgW",        "YU     => gW", 100,-1.000, 1.000,100,-1.000, 1.000}, //22
+/* mX(4), A(11,4), dw, */ {"dYdgW",        "-XU    => gW", 120, -60.0,  60.0,100,-1.000, 1.000}, //23
 };
 //________________________________________________________________________________
 void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) {
@@ -390,9 +373,9 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
 	static const Double_t&    XW                                = iter("HlxParW.x");  // HlxParW_x 
 	static const Double_t&    YW                                = iter("HlxParW.y");  // HlxParW_y 
 	static const Double_t&    ZW                                = iter("HlxParW.z");  // HlxParW_z 
-	static const Double_t&    nxW                               = iter("HlxParW.nx"); // HlxParW_nx
-	static const Double_t&    nyW                               = iter("HlxParW.ny"); // HlxParW_ny
-	static const Double_t&    nzW                               = iter("HlxParW.nz"); // HlxParW_nz
+	static const Double_t&    nXW                               = iter("HlxParW.nx"); // HlxParW_nx
+	static const Double_t&    nYW                               = iter("HlxParW.ny"); // HlxParW_ny
+	static const Double_t&    nZW                               = iter("HlxParW.nz"); // HlxParW_nz
 	static const Double_t&    HlxParW_xG                               = iter("HlxParW.xG");
 	static const Double_t&    HlxParW_yG                               = iter("HlxParW.yG");
 	static const Double_t&    HlxParW_zG                               = iter("HlxParW.zG");
@@ -415,9 +398,9 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
 	static const Double_t&    XS                                 = iter("HlxParS.x");  //  HlxParS_x 
 	static const Double_t&    YS                                 = iter("HlxParS.y");  //  HlxParS_y 
 	static const Double_t&    ZS                                 = iter("HlxParS.z");  //  HlxParS_z 
-	static const Double_t&    nxS                                = iter("HlxParS.nx"); //  HlxParS_nx
-	static const Double_t&    nyS                                = iter("HlxParS.ny"); //  HlxParS_ny
-	static const Double_t&    nzS                                = iter("HlxParS.nz"); //  HlxParS_nz
+	static const Double_t&    nXS                                = iter("HlxParS.nx"); //  HlxParS_nx
+	static const Double_t&    nYS                                = iter("HlxParS.ny"); //  HlxParS_ny
+	static const Double_t&    nZS                                = iter("HlxParS.nz"); //  HlxParS_nz
 	static const Double_t&    HlxParS_xG                               = iter("HlxParS.xG");
 	static const Double_t&    HlxParS_yG                               = iter("HlxParS.yG");
 	static const Double_t&    HlxParS_zG                               = iter("HlxParS.zG");
@@ -440,9 +423,9 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
 	static const Double_t&    XU                               = iter("HlxParW2S.x");   // HlxParW2S_x 
 	static const Double_t&    YU                               = iter("HlxParW2S.y");   // HlxParW2S_y 
 	static const Double_t&    ZU                               = iter("HlxParW2S.z");   // HlxParW2S_z 
-	static const Double_t&    nxU                              = iter("HlxParW2S.nx");  // HlxParW2S_nx
-	static const Double_t&    nyU                              = iter("HlxParW2S.ny");  // HlxParW2S_ny
-	static const Double_t&    nzU                              = iter("HlxParW2S.nz");  // HlxParW2S_nz
+	static const Double_t&    nXU                              = iter("HlxParW2S.nx");  // HlxParW2S_nx
+	static const Double_t&    nYU                              = iter("HlxParW2S.ny");  // HlxParW2S_ny
+	static const Double_t&    nZU                              = iter("HlxParW2S.nz");  // HlxParW2S_nz
 	static const Double_t&    HlxParW2S_xG                             = iter("HlxParW2S.xG");
 	static const Double_t&    HlxParW2S_yG                             = iter("HlxParW2S.yG");
 	static const Double_t&    HlxParW2S_zG                             = iter("HlxParW2S.zG");
@@ -467,17 +450,11 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   TFile *fOut = new TFile(Out,"recreate");
   TH3F *plots3D[NwsPlots];
   for (Int_t i = 0; i < NwsPlots; i++) {
-#if 1
     plots3D[i] = new TH3F(plotNameWS[i].Name, plotNameWS[i].Title, 24, 0.5, 24.5, 
 			  plotNameWS[i].nx, plotNameWS[i].xmin, plotNameWS[i].xmax,
 			  plotNameWS[i].nz, plotNameWS[i].zmin, plotNameWS[i].zmax);
-#else
-    plots3D[i] = new TH3F(plotNameWS[i].Name, plotNameWS[i].Title, 24, 0.5, 24.5, 
-			  plotNameWS[i].nx, 0.,0.,
-			  plotNameWS[i].nz, 0.,0.);
-#endif
   }
-  Int_t NP  = 6*24; // Total no. of parameters
+  Int_t NP  = 6; // Total no. of parameters per sector
   Int_t NPP = NP*(NP+1)/2; // size of matrix
   Int_t NT  = NP + NPP; // bin0 -> no. of entries; bin_NT+1 = chi2
   TH1D *LSF = new TH1D("LSF","Matrix and right part for Least Squared Fit ",NT+2,0,NT + 2);
@@ -487,132 +464,90 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
 	s < 1 || w > 24) continue;
     if (HlxParW2S_Ndf < 15 || HlxParS_Ndf < 15) continue;
     if (HlxParW2S_Chi2/ HlxParW2S_Ndf > 5 || HlxParS_Chi2/HlxParS_Ndf > 5) continue;
-    if (XS > 160 || XU > 160)               continue; // don't use end of tracks
+    if (ZS < 30 || ZU < 30)               continue; // don't use end of tracks
 #if 1
     Double_t RhoU = TMath::Abs(HlxParW2S_Rho);
     Double_t RhoS = TMath::Abs(HlxParS_Rho);
     if (RhoU > 1.5e-3 || RhoS > 1.5e-3) continue; // 1GeV/c cut
     Double_t dRho = RhoU - RhoS;
-    if (TMath::Abs(dRho) > 6e-3) continue; // 3D distortions
+    //    if (TMath::Abs(dRho) > 6e-3) continue; // 3D distortions
 #endif
+#if 0
     TRSymMatrix CU(5,HlxParW2S_fCov);                  PrPP(CU);
     TRSymMatrix CS(5,HlxParS_fCov);                  PrPP(CS);
     TRSymMatrix C(CU);
     C += CS;   PrPP(C);
-#if 0
-    static Double_t DY = 0.913;
-    static Double_t DZ = 0.2518;
-    static Double_t DnX = 3.431e-3;
-    static Double_t DnY = 6.446e-3;
-    static Double_t DnZ = 1.153e-3;
-    C(0,0) += DY*DY;
-    C(1,1) += DZ*DZ;
-    C(2,2) += DnX*DnX;
-    C(3,3) += DnY*DnY;
-    C(4,4) += DnZ*DnZ; PrPP(C);
-#endif
-#if 0
-#if 0
-    TRSymMatrix GI(C);
-    Int_t iFail = TRSymMatrix::TrchLU(C.GetArray(),GI.GetArray(),5);
-    if (iFail != 0) {
-      if (! _debug ) {
-	PrPP(CS); PrPP(CU); PrPP(C);
-      }
-      continue;
-    }
-#else
-    TRSymMatrix GI(5, 
-		   1.,
-		   0., 1.,
-		   0., 0., 1.,
-		   0., 0., 0., 1.,
-		   0., 0., 0., 0., 1.);
-#endif
+#else 
+    TRSymMatrix C(6);
+    for (Int_t i = 0; i < 6; i++) {
+      if (i < 3) 
+	C(i,i) = 1e-6;
+      else 
+	C(i,i) = 1e-2;
+    }       
+    PrPP(C);
 #endif
     TRSymMatrix G(C,TRArray::kInverted);              PrPP(G);
-    TVector3 nW(nxW,nyW,nzW);                         PrPP(nW);
-    TVector3 nU(nxU,nyU,nzU);                         PrPP(nU);
-    TVector3 nS(nxS,nyS,nzS);                         PrPP(nS);
+    TVector3 nW(nXW,nYW,nZW);                         PrPP(nW);
+    TVector3 nU(nXU,nYU,nZU);                         PrPP(nU);
+    TVector3 nS(nXS,nYS,nZS);                         PrPP(nS);
     TVector3 rW(XW,YW,ZW);                         PrPP(rW);
     TVector3 rU(XU,YU,ZU);                         PrPP(rU);
     TVector3 rS(XS,YS,ZS);                         PrPP(rS);
 
     TVector3 dn = nS - nU;                            PrPP(dn);
     TVector3 dr = rS - rU;                            PrPP(dr);
-    TRVector mX(5, dr.Y(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
-#if 1
-    Int_t iok = 0;
-    for (Int_t i = 0; i < 5; i++) {
-      if (mX(i) < plotNameWS[NwsPlots-5+i].zmin || mX(i) > plotNameWS[NwsPlots-5+i].zmax) {iok = -1 - i; break;}
-    }
-    if (iok) continue;
-#endif
-    const Double_t &r11 = *&RW2S_fRotationMatrix[0];
-    const Double_t &r12 = *&RW2S_fRotationMatrix[1];
-    const Double_t &r13 = *&RW2S_fRotationMatrix[2];
-    const Double_t &r21 = *&RW2S_fRotationMatrix[3];
-    const Double_t &r22 = *&RW2S_fRotationMatrix[4];
-    const Double_t &r23 = *&RW2S_fRotationMatrix[5];
-    const Double_t &r31 = *&RW2S_fRotationMatrix[6];
-    const Double_t &r32 = *&RW2S_fRotationMatrix[7];
-    const Double_t &r33 = *&RW2S_fRotationMatrix[8];
-    const Double_t &tx  = *&RW2S_fTranslation[0];
-    const Double_t &ty  = *&RW2S_fTranslation[1];
-    const Double_t &tz  = *&RW2S_fTranslation[2];
-    if (_debug) {
-      TGeoHMatrix T;
-      T.SetRotation(RW2S_fRotationMatrix);
-      T.SetTranslation(RW2S_fTranslation);
-      T.Print();
-      cout << r11 << "\t" << r12 << "\t" << r13 << "\t" << tx << endl;
-      cout << r21 << "\t" << r22 << "\t" << r23 << "\t" << ty << endl;
-      cout << r31 << "\t" << r32 << "\t" << r33 << "\t" << tz  <<endl;
-    }
-    const Double_t ly = nU.Y()/nU.X();
-    const Double_t lz = nU.Z()/nU.X();
-    /*============================== from maxima
-  [xS, yS, zS,                      aS,                                                      bS,                                                          gS],
-dY[ly,-1., 0., r33*ZW+r32*YW+r31*XW+tz,                     ly*r33*ZW+ly*r32*YW+ly*r31*XW+ly*tz, (-ly*r23-r13)*ZW+(-ly*r22-r12)*YW+(-ly*r21-r11)*XW-ly*ty-tx], 
-dZ[lz, 0.,-1.,-r23*ZW-r22*YW-r21*XW-ty,(lz*r33+r13)*ZW+(lz*r32+r12)*YW+(lz*r31+r11)*XW+lz*tz+tx,                        -lz*r23*ZW-lz*r22*YW-lz*r21*XW-lz*ty],
-dn[0., 0., 0.,                      0.,                                -r33*nzW-r32*nyW-r31*nxW,                                     r23*nzW+r22*nyW+r21*nxW],
-dn[0., 0., 0., r33*nzW+r32*nyW+r31*nxW,                                                      0.,                                    -r13*nzW-r12*nyW-r11*nxW],
-dn[0., 0., 0.,-r23*nzW-r22*nyW-r21*nxW,                                 r13*nzW+r12*nyW+r11*nxW,                                                          0.] 
-  [        xW,         yW,         zW,                              aW,                              bW,                              gW]   
-dY[r21-ly*r11, r22-ly*r12, r23-ly*r13, (ly*r12-r22)*ZW+(r23-ly*r13)*YW, (r21-ly*r11)*ZW+(ly*r13-r23)*XW, (ly*r11-r21)*YW+(r22-ly*r12)*XW],  
-dZ[r31-lz*r11, r32-lz*r12, r33-lz*r13, (lz*r12-r32)*ZW+(r33-lz*r13)*YW, (r31-lz*r11)*ZW+(lz*r13-r33)*XW, (lz*r11-r31)*YW+(r32-lz*r12)*XW],   
-dn[        0.,         0.,         0.,                 r13*nyW-r12*nzW,                 r11*nzW-r13*nxW,                 r12*nxW-r11*nyW],  
-dn[        0.,         0.,         0.,                 r23*nyW-r22*nzW,                 r21*nzW-r23*nxW,                 r22*nxW-r21*nyW], 
-dn[        0.,         0.,         0.,                 r33*nyW-r32*nzW,                 r31*nzW-r33*nxW,                 r32*nxW-r31*nyW]
-    */
-    TRMatrix A_ws(5,6,
-		  /*     xS, yS, zS,                      aS,                                                      bS,                                                          gS*/
-		  /*dY */ly,-1., 0., r33*ZW+r32*YW+r31*XW+tz,                     ly*r33*ZW+ly*r32*YW+ly*r31*XW+ly*tz, (-ly*r23-r13)*ZW+(-ly*r22-r12)*YW+(-ly*r21-r11)*XW-ly*ty-tx,
-		  /*dZ */lz, 0.,-1.,-r23*ZW-r22*YW-r21*XW-ty,(lz*r33+r13)*ZW+(lz*r32+r12)*YW+(lz*r31+r11)*XW+lz*tz+tx,                        -lz*r23*ZW-lz*r22*YW-lz*r21*XW-lz*ty,
-		  /*dnX*/0., 0., 0.,                      0.,                                -r33*nzW-r32*nyW-r31*nxW,                                     r23*nzW+r22*nyW+r21*nxW,
-		  /*dnY*/0., 0., 0., r33*nzW+r32*nyW+r31*nxW,                                                      0.,                                    -r13*nzW-r12*nyW-r11*nxW,
-		  /*dnZ*/0., 0., 0.,-r23*nzW-r22*nyW-r21*nxW,                                 r13*nzW+r12*nyW+r11*nxW,                                                          0.); 
-    PrPP(A_ws);
-    TRMatrix B_ws(5,6,
-		  /*             xW,         yW,         zW,                              aW,                              bW,                              gW*/
-		  /*dY */r21-ly*r11, r22-ly*r12, r23-ly*r13, (ly*r12-r22)*ZW+(r23-ly*r13)*YW, (r21-ly*r11)*ZW+(ly*r13-r23)*XW, (ly*r11-r21)*YW+(r22-ly*r12)*XW,
-		  /*dZ */r31-lz*r11, r32-lz*r12, r33-lz*r13, (lz*r12-r32)*ZW+(r33-lz*r13)*YW, (r31-lz*r11)*ZW+(lz*r13-r33)*XW, (lz*r11-r31)*YW+(r32-lz*r12)*XW,
-		  /*dnX*/        0.,         0.,         0.,                 r13*nyW-r12*nzW,                 r11*nzW-r13*nxW,                 r12*nxW-r11*nyW,
-		  /*dnY*/        0.,         0.,         0.,                 r23*nyW-r22*nzW,                 r21*nzW-r23*nxW,                 r22*nxW-r21*nyW,
-		  /*dnZ*/        0.,         0.,         0.,                 r33*nyW-r32*nzW,                 r31*nzW-r33*nxW,                 r32*nxW-r31*nyW);
-    PrPP(B_ws);
-    TRMatrix A(5,NP);
-    for (Int_t i = 0; i < 5; i++) 
-      for (Int_t j = 0; j < 6; j++) {
-	Int_t ks = 6*(s-1);
-	A(i,ks+j) = A_ws(i,j);
-	Int_t kw = 6*(w-1);
-	A(i,kw+j) = B_ws(i,j);
-      }
-    PrPP(A);
+    enum {kM = 6, kP = 12};
+    TRVector mX(kM, dn.X(), dn.Y(), dn.Z(), dr.X(), dr.Y(), dr.Z());  PrPP(mX);
+    /* from maxima 02/21/2024 
+ S - U = dU - dS 
+ Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
+ Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
+ Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
+ Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
+ Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
+ Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
+
+JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
+                  nX      nY       nZ     X      Y      Z     m/p
+ Col 1 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xS,
+ Col 2 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yS,
+ Col 3 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zS,
+ Col 4 = [ [     [0]   [nZS]  [- nYS]    [0]   [ZS] [- YS] ] ] aS,
+ Col 5 = [ [ [- nZS]     [0]  [- nXS] [- ZS]    [0] [- XS] ] ] bS,
+ Col 6 = [ [   [nYS] [- nXS]      [0]   [YS] [- XS]    [0] ] ] gS,
+ Col 7 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xW,
+ Col 8 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yW,
+ Col 9 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zW,
+ Col 10= [ [     [0]   [nZU]  [- nYU]    [0]   [ZU] [- YU] ] ] aW,
+ Col 11= [ [ [- nZU]     [0]  [- nXU] [- ZU]    [0] [- XU] ] ] bW,
+ Col 12= [ [   [nYU] [- nXU]      [0]   [YU] [- XU]    [0] ] ] gW,
+
+    chi2 = (X - A*p)  G (X - A*p)T
+    dchi2/dp = -A * G (X - A*p)T - (X - A*p) & G AT = 0
+                A * G * XT + A * G * AT * pT + X * G * AT -
+
+ `    */
+    Double_t a[kM*kP] = { // 6x12
+ //   0      1       2     3     4     5
+ //  nX     nY      nZ     X     Y     Z  
+      0,     0,      0,  - 1,    0,    0, // 0 xS,
+      0,     0,      0,    0,  - 1,    0, // 1 yS,
+      0,     0,      0,    0,    0,  - 1, // 2 zS,
+      0,   nZS,  - nYS,    0,   ZS, - YS, // 3 aS,
+  - nZS,     0,  - nXS, - ZS,    0, - XS, // 4 bS,
+    nYS, - nXS,      0,   YS, - XS,    0, // 5 gS,
+      0,     0,      0,  - 1,    0,    0, // 6 xW,
+      0,     0,      0,    0,  - 1,    0, // 7 yW,
+      0,     0,      0,    0,    0,  - 1, // 8 zW,
+      0,   nZU,  - nYU,    0,   ZU, - YU, // 9 aW,
+  - nZU,     0,  - nXU, - ZU,    0, - XU, //10 bW,
+    nYU, - nXU,      0,   YU, - XU,    0, //11 gW,
+    }; // A => AT
+    TRMatrix A(kP, kM, a); PrPP(A);
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
-    TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
-    TRSymMatrix SX(A,TRArray::kATxSxA,G);   PrPP(SX);
+    TRVector AmX(A,TRArray::kAxB,mGX);  PrPP(AmX);
+    TRSymMatrix SX(A,TRArray::kAxSxAT,G);   PrPP(SX);
     Double_t *array = LSF->GetArray() + 1;
     Double_t *amX = AmX.GetArray();
     Double_t *sX  = SX.GetArray();
@@ -627,47 +562,30 @@ dn[        0.,         0.,         0.,                 r33*nyW-r32*nzW,         
     Double_t dw = w;
     Double_t ds = s;
     TRMatrix V(NwsPlots,3,
-	       mX(0), A_ws(0,0), ds, //  "dYdxS", "ly => xS",								       
-	       mX(0), A_ws(0,3), ds, //  "dYdaS", "r33*ZW+r32*YW+r31*XW+tz => aS",
-	       mX(0), A_ws(0,4), ds, //  "dYdbS", "ly*r33*ZW+ly*r32*YW+ly*r31*XW+ly*tz => bS",
-	       mX(0), A_ws(0,5), ds, //  "dYdgS", "(-ly*r23-r13)*ZW+(-ly*r22-r12)*YW+(-ly*r21-r11)*XW-ly*ty-tx => gS",
-	       mX(1), A_ws(1,0), ds, //  "dZdxS", "lz => xS",								       
-	       mX(1), A_ws(1,3), ds, //  "dZdaS", "-r23*ZW-r22*YW-r21*XW-ty => aS",
-	       mX(1), A_ws(1,4), ds, //  "dZdbS", "(lz*r33+r13)*ZW+(lz*r32+r12)*YW+(lz*r31+r11)*XW+lz*tz+tx => bS",
-	       mX(1), A_ws(1,5), ds, //  "dZdgS", "-lz*r23*ZW-lz*r22*YW-lz*r21*XW-lz*ty => gS",				       
-	       mX(2), A_ws(2,4), ds, // "dnXdbS", "-r33*nzW-r32*nyW-r31*nxW => bS",					       
-	       mX(2), A_ws(2,5), ds, // "dnXdgS", "r23*nzW+r22*nyW+r21*nxW => gS",					       10
-	       mX(3), A_ws(3,3), ds, // "dnYdaS", "r33*nzW+r32*nyW+r31*nxW => aS",					       
-	       mX(3), A_ws(3,5), ds, // "dnYdgS", "-r13*nzW-r12*nyW-r11*nxW => gS",					       
-	       mX(4), A_ws(4,3), ds, // "dnZdaS", "-r23*nzW-r22*nyW-r21*nxW => aS",					       
-	       mX(4), A_ws(4,4), ds, // "dnZdbS", "r13*nzW+r12*nyW+r11*nxW => bS",					       
-	       mX(0), B_ws(0,0), dw, //  "dYdxW", "r21-ly*r11 => xW",							       
-	       mX(0), B_ws(0,1), dw, //  "dYdyW", "r22-ly*r12 => yW",							       
-	       //	       mX(0), B_ws(0,2), dw, //  "dYdzW", "r23-ly*r13  => zW",							       
-	       mX(0), B_ws(0,3), dw, //  "dYdaW", "(ly*r12-r22)*ZW+(r23-ly*r13)*YW => aW",				       
-	       mX(0), B_ws(0,4), dw, //  "dYdbW", "(r21-ly*r11)*ZW+(ly*r13-r23)*XW  => bW",				       
-	       mX(0), B_ws(0,5), dw, //  "dYdgW", "(ly*r11-r21)*YW+(r22-ly*r12)*XW => gW",				       20
-	       mX(1), B_ws(1,0), dw, //  "dZdxW", "r31-lz*r11 => xW",							       
-	       mX(1), B_ws(1,1), dw, //  "dZdyW", "r32-lz*r12 => yW",							       
-	       //	       mX(1), B_ws(1,2), dw, //  "dZdzW", "r33-lz*r13  => zW",							       
-	       mX(1), B_ws(1,3), dw, //  "dZdaW", "(lz*r12-r32)*ZW+(r33-lz*r13)*YW => aW",				       
-	       mX(1), B_ws(1,4), dw, //  "dZdbW", "(r31-lz*r11)*ZW+(lz*r13-r33)*XW => bW",				       
-	       mX(1), B_ws(1,5), dw, //  "dZdgW", "(lz*r11-r31)*YW+(r32-lz*r12)*XW => gW",				       
-	       mX(2), B_ws(2,3), dw, // "dnXdaW", "r13*nyW-r12*nzW => aW",						       
-	       mX(2), B_ws(2,4), dw, // "dnXdbW", "r11*nzW-r13*nxW => bW",						       
-	       mX(2), B_ws(2,5), dw, // "dnXdgW", "r12*nxW-r11*nyW => gW",						       
-	       mX(3), B_ws(3,3), dw, // "dnYdaW", "r23*nyW-r22*nzW => aW",						       
-	       mX(3), B_ws(3,4), dw, // "dnYdbW", "r21*nzW-r23*nxW => bW",						       
-	       mX(3), B_ws(3,5), dw, // "dnYdgW", "r22*nxW-r21*nyW => gW",						       
-	       mX(4), B_ws(4,3), dw, // "dnZdaW", "r33*nyW-r32*nzW => aW",						       
-	       mX(4), B_ws(4,4), dw, // "dnZdbW", "r31*nzW-r33*nxW => bW",						       
-	       //	       mX(4), B_ws(4,5), dw, // "dnZdgW", "r32*nxW-r31*nyW => gW",						       
-	       dr.X(),   rS.Z(),  ds, // "dX"       ,"dX  versus Z",                   					       
-	       mX(0),    rS.Z(),  ds, // "dY"       ,"dY  versus Z",                   					       
-	       mX(1) ,   rS.Z(),  ds, // "dZ"       ,"dZ  versus Z",                   					       
-	       mX(2) ,   rS.Z(),  ds, // "dnX"      ,"dnX versus Z",                   					       
-	       mX(3) ,   rS.Z(),  ds, // "dnY"      ,"dnY versus Z",                                                             
-	       mX(4) ,   rS.Z(),  ds  // "dnZ"      ,"dnZ versus Z",                                                           
+mX(1), A( 3,1), ds, // {"dnYdaS",       "nZS    => aS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 0
+mX(2), A( 3,2), ds, // {"dnZdaS",       "-nYS   => aS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 1
+mX(4), A( 3,4), ds, // {"dYdaS",        "ZS     => aS", 100, 0.000, 250.0,100,-1.000, 1.000}, // 2
+mX(5), A( 3,5), ds, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-1.000, 1.000}, // 3
+mX(0), A( 4,0), ds, // {"dnXdbS",       "-nZS   => bS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 4
+mX(2), A( 4,2), ds, // {"dnZdbS",       "-nXS   => bS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 5
+mX(3), A( 4,3), ds, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, // 6
+mX(5), A( 4,5), ds, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, // 7
+mX(0), A( 5,0), ds, // {"dnXdgS",       "nYS    => gS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 8
+mX(1), A( 5,1), ds, // {"dnYdgS",       "-nXS   => gS", 100,-1.000, 1.000,100,-0.005, 0.005}, // 9
+mX(3), A( 5,3), ds, // {"dXdgS",        "YS     => gS", 100,-1.000, 1.000,100,-1.000, 1.000}, //10
+mX(4), A( 5,4), ds, // {"dYdgS",        "-XS    => gS", 120, -60.0,  60.0,100,-1.000, 1.000}, //11
+mX(1), A( 9,1), dw, // {"dnYdaW",       "nZU    => aW", 100,-1.000, 1.000,100,-0.005, 0.005}, //12
+mX(2), A( 9,2), dw, // {"dnZdaW",       "-nYU   => aW", 100,-1.000, 1.000,100,-0.005, 0.005}, //13
+mX(4), A( 9,4), dw, // {"dYdaW",        "ZU     => aW", 100, 0.000, 250.0,100,-1.000, 1.000}, //14
+mX(5), A( 9,5), dw, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-1.000, 1.000}, //15
+mX(0), A(10,0), dw, // {"dnXdbW",       "-nZU   => bW", 100,-1.000, 1.000,100,-0.005, 0.005}, //16
+mX(2), A(10,2), dw, // {"dnZdbW",       "-nXU   => bW", 100,-1.000, 1.000,100,-0.005, 0.005}, //17
+mX(3), A(10,3), dw, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //18
+mX(5), A(10,5), dw, // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}, //19
+mX(0), A(11,0), dw, // {"dnXdgW",       "nYU    => gW", 100,-1.000, 1.000,100,-0.005, 0.005}, //20
+mX(1), A(11,1), dw, // {"dnYdgW",       "-nXU   => gW", 100,-1.000, 1.000,100,-0.005, 0.005}, //21
+mX(3), A(11,3), dw, // {"dXdgW",        "YU     => gW", 100,-1.000, 1.000,100,-1.000, 1.000}, //22
+mX(4), A(11,4), dw  // {"dYdgW",        "-XU    => gW", 120, -60.0,  60.0,100,-1.000, 1.000}, //23
 	       ); PrPP(V);
     for (Int_t i = 0; i < NwsPlots; i++) plots3D[i]->Fill(V(i,2), V(i,1), V(i,0));
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}

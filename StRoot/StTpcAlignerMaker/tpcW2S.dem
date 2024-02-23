@@ -3,6 +3,7 @@ load ("eigen")$
 :lisp (setq *f90-output-line-length-max* 1000000000) 
 stardisp: true$
 simplified_output: true$
+inflag : true$
 debugmode(true) $ 
 /* ======================================================================== 
   file: tpcS.dem  version Feb. 2024 
@@ -54,29 +55,57 @@ nU: matrix([nXU],
            [YU], 
            [ZU], 
            [ 1]);
-
-devN: dRS.nS - dRWI.nU;
-devX: dRS.S  - dRWI.U;
-dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[2],devX[3]]);
+/* d = (S + dS) - (U + dU) => S - U = dU - dS */
+devN: dRWI.nU - dRS.nS;
+devX: dRWI.U  - dRS.S ;
+/* dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[2],devX[3]]);  devX[2] is prediction plane */
+dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[3]]);
+/*
+ Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
+ Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
+ Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
+ Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
+ Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
+ Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
+*/
 JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
+/*         
+                  nX      nY       nZ     X      Y      Z
+ Col 1 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xS,
+ Col 2 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yS,
+ Col 3 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zS,
+ Col 4 = [ [     [0]   [nZS]  [- nYS]    [0]   [ZS] [- YS] ] ] aS,
+ Col 5 = [ [ [- nZS]     [0]  [- nXS] [- ZS]    [0] [- XS] ] ] bS,
+ Col 6 = [ [   [nYS] [- nXS]      [0]   [YS] [- XS]    [0] ] ] gS,
+ Col 7 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xW,
+ Col 8 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yW,
+ Col 9 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zW,
+ Col 10= [ [     [0]   [nZU]  [- nYU]    [0]   [ZU] [- YU] ] ] aW,
+ Col 11= [ [ [- nZU]     [0]  [- nXU] [- ZU]    [0] [- XU] ] ] bW,
+ Col 12= [ [   [nYU] [- nXU]      [0]   [YU] [- XU]    [0] ] ] gW,
+
+
+*/
 trigsimp(JW2S);
 f90(JW2S);
-with_stdout ("JW2S.txt",  f90(JW2S));
-/*
-JW2S(1,1) = matrix([[0],[0],[0],[1],[0],[0]])
-JW2S(1,2) = matrix([[0],[0],[0],[0],[1],[0]])
-JW2S(1,3) = matrix([[0],[0],[0],[0],[0],[1]])
-JW2S(1,4) = matrix([[0],[-nZS],[nYS],[0],[-ZS],[YS]])
-JW2S(1,5) = matrix([[nZS],[0],[nXS],[ZS],[0],[XS]])
-JW2S(1,6) = matrix([[-nYS],[nXS],[0],[-YS],[XS],[0]])
-JW2S(1,7) = matrix([[0],[0],[0],[1],[0],[0]])
-JW2S(1,8) = matrix([[0],[0],[0],[0],[1],[0]])
-JW2S(1,9) = matrix([[0],[0],[0],[0],[0],[1]])
-JW2S(1,10) = matrix([[0],[-nZU],[nYU],[0],[-ZU],[YU]])
-JW2S(1,11) = matrix([[nZU],[0],[nXU],[ZU],[0],[XU]])
-JW2S(1,12) = matrix([[-nYU],[nXU],[0],[-YU],[XU],[0]])
-*/
 JW2ST: transpose(JW2S);
+/*
 trigsimp(JW2ST);
 f90(JW2ST);
 with_stdout ("JW2ST.txt",  f90(JW2ST));
+*/
+/*
+//  nX     nY      nZ     X     Y     Z  
+     0,     0,      0,  - 1,    0,    0, // xS,
+     0,     0,      0,    0,  - 1,    0, // yS,
+     0,     0,      0,    0,    0,  - 1, // zS,
+     0,   nZS,  - nYS,    0,   ZS, - YS, // aS,
+ - nZS,     0,  - nXS, - ZS,    0, - XS, // bS,
+   nYS, - nXS,      0,   YS, - XS,    0, // gS,
+     0,     0,      0,  - 1,    0,    0, // xW,
+     0,     0,      0,    0,  - 1,    0, // yW,
+     0,     0,      0,    0,    0,  - 1, // zW,
+     0,   nZU,  - nYU,    0,   ZU, - YU, // aW,
+ - nZU,     0,  - nXU, - ZU,    0, - XU, // bW,
+   nYU, - nXU,      0,   YU, - XU,    0, // gW,
+*/
