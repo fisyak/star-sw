@@ -64,7 +64,8 @@ void TpcAligner(Int_t First, Int_t Last,
   //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,OSpaceZ2,TpcHitMover,StiCA,");// ,BAna,Tree,"); //StiCA,CMuDst,"); // No corrections
   //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,TpcHitMover,StiCA,");// ,BAna,Tree,"); //StiCA,CMuDst,"); // No corrections
   //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,TpcHitMover,StiCA,ReadAll,CMuDst"); // + MuDst
-  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,-OSectorAlign,TpcHitMover,StiCA,CMuDst"); // + MuDst
+  //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,-OSectorAlign,TpcHitMover,StiCA,CMuDst"); // + MuDst
+  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrZ,TpcHitMover,StiCA,CMuDst"); // + MuDst
   Chain += Tag;
   //  Chain += "P2019a";
   //  Chain += ",AgML,NoHistos,noTags,noRunco,NoDefault";
