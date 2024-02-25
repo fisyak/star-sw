@@ -26,8 +26,8 @@ struct BPoint_t {
 //________________________________________________________________________________
 								
 BPoint_t BPoint;
-static   Int_t Nsets = 9;
-static   TString sets[9]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF"};
+static   Int_t Nsets = 11;
+static   TString sets[11]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF", "2021/MF", "2023/ZF"};
 static   TString valC[12] = {// "DelpTRAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTIPosT", "DelpTINegT"};
     "DelpTIAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTINegT", "DelpTIPosT", "DelpTRAll", "DelpTRPos", "DelpTRNeg", "DelpTRAllT", "DelpTRPosT", "DelpTRNegT", 
   };
@@ -134,19 +134,24 @@ void Draw(Int_t var = 3, const Char_t *varName="pT") {
   TString VarName(varName);
   TH1F * frame = 0;
   if (VarName == "pT") {
-    frame =  c1->DrawFrame(-1,1.0,50,5.0);
+    frame =  c1->DrawFrame(-1,1.0,70,5.0);
     frame->SetTitle(valC[var] + " (@1GeV/c)");
     frame->SetYTitle("Resolutin(%)");
   } else if (VarName == "N") {
-    frame =  c1->DrawFrame(-1,0.0,50,5.0);
+    frame =  c1->DrawFrame(-1,0.0,70,5.0);
     frame->SetTitle("No. of matched pairs");
     frame->SetYTitle("N (M)");
   }
   frame->SetXTitle("Pass");
-  TLegend *l = new TLegend(0.7,0.7,0.8,0.9);
+  TLegend *l = new TLegend(0.7,0.5,0.8,0.9);
   for (Int_t set = 0; set < Nsets; set++) {
+    FitP->SetMarkerStyle(20);
     FitP->SetMarkerColor(set+1);
-    FitP->Draw(Form("%s:pass>>h%i(51,-0.5,50.5)",varName,set),Form("var==%i&&set==%i",var,set),"same");
+    if (set > 8) {
+      FitP->SetMarkerStyle(47);
+      FitP->SetMarkerColor(set-8);
+    }
+    FitP->Draw(Form("%s:pass>>h%i(71,-0.5,70.5)",varName,set),Form("var==%i&&set==%i",var,set),"same");
     TH1 *h = (TH1 *) gDirectory->Get(Form("h%i",set));
     if (h) l->AddEntry(h,sets[set]);
   }
