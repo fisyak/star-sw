@@ -1,6 +1,6 @@
 //  cat */*/IO/*IO.h > IO.h
 /*
-  root.exe Results.C+
+  root.exe ResultsIO.C+
  */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -110,7 +110,7 @@ TCanvas *c1 = 0;
 THStack *hs[6];
 TLegend *leg[6];
 //________________________________________________________________________________
-void Results(const Char_t *opt="") {
+void ResultsIO(const Char_t *opt="") {
   gStyle->SetMarkerStyle(20);
   gStyle->SetOptStat(0);
   cout << "NP \t" << NP << endl;
@@ -124,7 +124,7 @@ void Results(const Char_t *opt="") {
   for (Int_t p = 0; p < NH; p++) {dath[p] = new TH1D*[6]; memset(dath[p],0, 6*sizeof(TH1D*));}
   const Char_t *names[6] = {" #Deltax"," #Deltay"," #Deltaz"," #Delta #alpha"," #Delta #beta"," #Delta #gamma"};
   const Char_t *nameK[6] = {"Dx","Dy","Dz","Da",     "Db",    "Dg"};
-  TFile *fOut = new TFile("Results.root","recreate");
+  TFile *fOut = new TFile("ResultsIO.root","recreate");
 #ifdef __DB__
   TH1D *dbh[6]; memset(dbh, 0, sizeof(dbh));
   for (Int_t i = 0; i < 6; i++) {
@@ -203,6 +203,8 @@ void Results(const Char_t *opt="") {
 	if (TString(Passes[k].PassName).Contains("RF")) {
 	  color++;
 	  dath[k][i]->SetMarkerStyle(23);
+	} else if (TString(Passes[k].PassName).Contains("MF")) {
+	  dath[k][i]->SetMarkerStyle(21);
 	} else if (TString(Passes[k].PassName).Contains("FF.1mrad")) {
 	  color++;
 	  dath[k][i]->SetMarkerStyle(24);

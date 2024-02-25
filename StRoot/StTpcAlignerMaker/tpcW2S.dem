@@ -58,8 +58,8 @@ nU: matrix([nXU],
 /* d = (S + dS) - (U + dU) => S - U = dU - dS */
 devN: dRWI.nU - dRS.nS;
 devX: dRWI.U  - dRS.S ;
-/* dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[2],devX[3]]);  devX[2] is prediction plane */
-dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[3]]);
+dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[2],devX[3]]);  
+/* dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[3]]); devX[2] is prediction plane */
 /*
  Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
  Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]

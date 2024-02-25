@@ -117,6 +117,9 @@ void ResultsW2S(const Char_t *opt="") {
 	  color++;
 	  dath[k][i]->SetMarkerStyle(23);
 	}
+	if (TString(Passes[k].PassName).Contains("MF")) {
+	  dath[k][i]->SetMarkerStyle(21);
+	}
       } else       if (k >= NP && NH == NP + 2)  {
 	Int_t c = 1;
 	if (k == NP+1) c = 2;
