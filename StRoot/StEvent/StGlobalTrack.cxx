@@ -54,7 +54,7 @@
 #include "StVertex.h"
 #include "StDcaGeometry.h"
 #include "StParticleDefinition.hh"
-
+#include "StDedxPidTraits.h"
 ClassImp(StGlobalTrack)
 
 static const char rcsid[] = "$Id: StGlobalTrack.cxx,v 1.1.1.1 2013/07/23 14:13:30 fisyak Exp $";
@@ -84,7 +84,20 @@ ostream&  operator<<(ostream& os,  const StGlobalTrack& track) {
     if (track.idTruth())
         os << Form(" IdT: %4i Q: %4i", track.idTruth(), track.qaTruth());
 #endif
-    os << endl << dca->Particle(track.key(),dca->charge()*211);
+    const StSPtrVecTrackPidTraits &traits = track.pidTraits();
+    UInt_t size = traits.size();
+    if (size) {
+      for (UInt_t i = 0; i < size; i++) {
+	StDedxPidTraits *pid = dynamic_cast<StDedxPidTraits*>(traits[i]);
+	if (! pid) continue;
+	if (pid->detector() != kTpcId) continue;
+	if (pid->method() == kLikelihoodFitId) {
+	  os << Form(" NdEdx %2d %6.2f keV +/- %5.1f %%", pid->numberOfPoints(), 1e6*pid->mean(), 100*pid->errorOnMean());
+	}
+      }
+    }
+    if (dca) 
+      os << endl << dca->Particle(track.key(),dca->charge()*211);
     return os;
 }
 //________________________________________________________________________________
