@@ -60,7 +60,7 @@
 #include "StPrimaryTrack.h"
 #include "StPrimaryVertex.h"
 #include "StTrackGeometry.h"
-
+#include "StDedxPidTraits.h"
 ClassImp(StPrimaryTrack)
 
 static const char rcsid[] = "$Id: StPrimaryTrack.cxx,v 1.1.1.1 2013/07/23 14:13:30 fisyak Exp $";
@@ -106,6 +106,18 @@ ostream&  operator<<(ostream& os,  const StPrimaryTrack& track) {
     Double_t chi2_0 = track.fitTraits().chi2(0); if (chi2_0 > 9999.) chi2_0 = 9999.;
     Double_t chi2_1 = track.fitTraits().chi2(1); if (chi2_1 > 9999.) chi2_1 = 9999.;
     os << Form(" NF %2d chi2 %8.3f/%8.3f", track.fitTraits().numberOfFitPoints(),chi2_0,chi2_1);
+    const StSPtrVecTrackPidTraits &traits = track.pidTraits();
+    UInt_t size = traits.size();
+    if (size) {
+      for (UInt_t i = 0; i < size; i++) {
+	StDedxPidTraits *pid = dynamic_cast<StDedxPidTraits*>(traits[i]);
+	if (! pid) continue;
+	if (pid->detector() != kTpcId) continue;
+	if (pid->method() == kLikelihoodFitId) {
+	  os << Form(" NdEdx %2d %6.2f keV +/- %5.1f %%", pid->numberOfPoints(), 1e6*pid->mean(), 100*pid->errorOnMean());
+	}
+      }
+    }
 #if 0
     if (track.idTruth())
         os << Form(" IdT:%5i Q:%3i", track.idTruth(), track.qaTruth());
