@@ -359,6 +359,11 @@ Int_t StdEdxY2Maker::Make(){
     StGlobalTrack  *gTrack = dynamic_cast<StGlobalTrack *>(node->track(global));
     if (gTrack && gTrack->bad()) {gTrack = 0;}
     if (! gTrack ||  gTrack->flag() <= 0) continue;
+    static Int_t trackId = 361;
+    if (gTrack->key() == trackId) {
+      static Int_t iBreak = 0;
+      iBreak = gTrack->key();
+    }
     StPrimaryTrack *pTrack = 0;
     if (gTrack) {
       pTrack = static_cast<StPrimaryTrack*>(node->track(primary));
