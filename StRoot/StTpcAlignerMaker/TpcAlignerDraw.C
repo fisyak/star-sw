@@ -488,6 +488,10 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     TVector3 nW(nXW,nYW,nZW);                         PrPP(nW);
     TVector3 nU(nXU,nYU,nZU);                         PrPP(nU);
     TVector3 nS(nXS,nYS,nZS);                         PrPP(nS);
+    if (nS.Dot(nU) < 0) {
+      nU *= -1.0;
+      PrPP(nU);
+    }
     TVector3 rW(XW,YW,ZW);                         PrPP(rW);
     TVector3 rU(XU,YU,ZU);                         PrPP(rU);
     TVector3 rS(XS,YS,ZS);                         PrPP(rS);
