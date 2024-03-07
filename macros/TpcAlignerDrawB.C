@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/TpcAlignerDrawB.C
