@@ -1,5 +1,5 @@
 /*  Tpc Super Sector Position based on MuTpcG.C.check TFGflag in lDb.C
-    root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+__INVE
+    root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -55,10 +55,11 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_Pass51_Avg.h" /* __INVERSE_dR__ */
   //#include  "W2S_Pass60_Avg.h"   /* new transport Half step*/
   //#include  "W2S_Pass62_Avg.h"   /* new transport HalfStep*/
-#include  "W2S_Pass60_Avg.h"   /* new transport Half step dR^-1*/
+  //#include  "W2S_Pass60_Avg.h"   /* new transport Half step dR^-1*/
+#include  "W2S_Pass64_Avg.h"   /* new transport Half step dR^-1*/
 };
-#define __SCALEbyHalf__
-#define  __INVERSE_dR__
+//#define __SCALEbyHalf__
+//#define  __INVERSE_dR__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   
 //________________________________________________________________________________

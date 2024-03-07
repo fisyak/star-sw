@@ -3,6 +3,8 @@
 #include "TFile.h"
 #include "TH3.h"
 #include "TH2.h"
+#include "TH1.h"
+#include "TObjArray.h"
 #include "TCanvas.h"
 struct PlotName_t {
   const Char_t *Name;
@@ -85,14 +87,21 @@ void makeW2SHist() {
   cout << nh << " histograms" << endl;
 }
 //________________________________________________________________________________
-void CheckPlots() {
+void CheckPlots(const Char_t *opt = "zy") {
   TCanvas *c1 = new TCanvas("Tb","time buckets",1200,800);
   c1->Divide(5,4);
+  TObjArray *arr = new TObjArray(4);
   for (Int_t i = 0; i < NwsPlots; i++) {
     c1->cd(i+1)->SetLogz(1);
     TH3 *h3 = (TH3 *) gDirectory->Get(plotNameWS[i].Name);
     if (! h3) continue;
-    h3->Project3D("zy")->Draw("colz");
+    TH2D *h2zx = (TH2D *) h3->Project3D(opt);
+    h2zx->Draw("colz");
+    h2zx->FitSlicesY(0, 0, -1, 0, "QNR", arr);
+    TH1D *mu = (TH1D *) (*arr)[1];
+    TH1D *sigma = (TH1D *) (*arr)[2];
+    mu->Draw("sames");
+    sigma->Draw("sames");
   }
   c1->Update();
 };

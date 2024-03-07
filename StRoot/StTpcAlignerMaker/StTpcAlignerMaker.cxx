@@ -28,6 +28,7 @@
 	       // ROOT
 #include "TChain.h"
 #include "TFile.h"
+#include "TVector3.h"
 #if ROOT_VERSION_CODE < 331013
 #include "TCL.h"
 #else
@@ -49,6 +50,8 @@
 #define PrPP(A,B)
 #define PrP2(A,B)
 #endif
+#define __IN2OUT__
+#define __Sup12S__ /* use Sup12S for W2S */
 //________________________________________________________________________________
 ClassImp(SectorSegment);
 ClassImp(StTpcW2SMatch);
@@ -243,7 +246,6 @@ Int_t StTpcAlignerMaker::Make(){
       if (dZbest > 3.0) pVbest = 0;
     }
   }
-#define __IN2OUT__
 #ifdef __IN2OUT__
   MakeIO();
 #endif /* __IN2OUT__ */
@@ -282,7 +284,11 @@ Int_t StTpcAlignerMaker::MakeIO() {
   static Double_t stepMX = 1.e3;
   Double_t StiErr[21];
   Double_t step;
-  static StTpcLocalSectorCoordinate              local;
+  static StGlobalCoordinate              globalCoo;
+  static StTpcLocalSectorCoordinate      local;
+  static StGlobalDirection               globalDir;
+  static StTpcLocalSectorDirection       localDir;
+  static StTpcCoordinateTransform transform(StTpcDb::instance());
   static Double_t err2xy[3] = {0,0,0}, err2z = 0;
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
@@ -358,13 +364,12 @@ Int_t StTpcAlignerMaker::MakeIO() {
     static Int_t sectorOld = -1;
     if (pVbest && sector != sectorOld) {
       sectorOld = sector;
-      StThreeVectorD xyzG(pVbest->position());
-      StThreeVectorD xyzL;
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(xyzG.xyz(), xyzL.xyz());
+      StGlobalCoordinateD xyzG(pVbest->position());
+      StTpcLocalSectorCoordinate  xyzL;
+      //      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(xyzG.xyz(), xyzL.xyz());
+      transform(xyzG,xyzL,sector, 1);
       fTpcInOutMatch->iPV = 1;
-      fTpcInOutMatch->xPV =  xyzLPV.x();
-      fTpcInOutMatch->yPV =  xyzLPV.y();
-      fTpcInOutMatch->zPV =  xyzLPV.z();
+      TCL::ucopy(xyzL.posiition().xyz, &fTpcInOutMatch->xPV, 3);
     }
 #endif
     N = 0;
@@ -379,7 +384,7 @@ Int_t StTpcAlignerMaker::MakeIO() {
       if (St_tpcStatusC::instance()->status(sector,row)) continue;
       if (! tpcHit->usedInFit() || tpcHit->flag()) continue;
       if (sector != sectorWithMaxNoHits) continue;
-      StGlobalCoordinate global(tpcHit->position());
+      globalCoo = StGlobalCoordinate(tpcHit->position());
 #ifdef __TIME_CORRECTION__
       // Distance from Dca to the hit 
       StThreeVectorD dist = StThreeVectorD(tpcHit->position()) - origin;
@@ -397,10 +402,14 @@ Int_t StTpcAlignerMaker::MakeIO() {
       if (gTrack->TestBit(kComingFromOutSide)) time = - time;
       //	transform(global,local,sector,row);
 #endif
+#if 0
       StThreeVectorD xyzL;
       StThreeVectorD xyz;
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(global.position().xyz(), xyzL.xyz());
+      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(globalCoo.position().xyz(), xyzL.xyz());
       local = StTpcLocalSectorCoordinate(xyzL,sector,row);
+#else
+      transform(globalCoo, local, sector, row);
+#endif
 #ifdef __USE_LOCAL__
       tpcHits[N].x = local.position().x();
       tpcHits[N].y = local.position().y();
@@ -411,9 +420,9 @@ Int_t StTpcAlignerMaker::MakeIO() {
 #endif
       RIO[N]      = tpcHits[N].y;
 #else /* ! __USE_LOCAL__ */
-      tpcHits[N].x = global.position().x();
-      tpcHits[N].y = global.position().y();
-      tpcHits[N].z = global.position().z();
+      tpcHits[N].x = globalCoo.position().x();
+      tpcHits[N].y = globalCoo.position().y();
+      tpcHits[N].z = globalCoo.position().z();
       RIO[N]      = local.position().y();
 #endif /*  __USE_LOCAL__ */
       tpcHits[N].err2xy[0] = tpcHit->positionError().perp2();
@@ -485,17 +494,30 @@ Int_t StTpcAlignerMaker::MakeIO() {
       *HlxPars[io] = vHelices[io]; 
       static Double_t RefSurfice[4] = {-123, 0, 1, 0};
       Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
-      Double_t xyz123G[3];
       Double_t *RefSurficeG = HlxPars[io]->RefSurficeG;
+#ifdef __Sup12S__
+      Double_t xyz123G[3];
       StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
       StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
+#else
+      local = StTpcLocalSectorCoordinate(xyz123L, sector);
+      transform(local,globalCoo);
+      Double_t *xyz123G = globalCoo.position().xyz();
+#endif
       RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
       step = vHelices[io].Step(stepMX, RefSurficeG, 4, HlxPars[io]->xyzG(), HlxPars[io]->pxyzG(), 1); 
       if (TMath::Abs(step) >= stepMX) goto FAILED;;
       HlxPars[io]->step = step; //{PrPP(Step,*HlxPars[io]);}
       CheckDirection(HlxPars[io]);
+#ifdef __Sup12S__
       StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocalVect(HlxPars[io]->pxyzG(),HlxPars[io]->pxyz());
       StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(HlxPars[io]->xyzG(),HlxPars[io]->xyz());
+#else
+      globalCoo    = StGlobalCoordinate(HlxPars[io]->xyzG()); 
+      globalDir = StGlobalDirection(HlxPars[io]->pxyzG());
+      transform(globalCoo,    local, sector, 1); TCL::ucopy(local.position().xyz(), HlxPars[io]->xyz(), 3);
+      transform(globalDir, localDir, sector, 1); TCL::ucopy(localDir.position().xyz(), HlxPars[io]->pxyz(), 3);
+#endif
       HlxPars[io]->Rho = vHelices[io].GetRho();
       HlxPars[io]->dRho = vHelices[io].GetDRho();
       vHelices[io].StiEmx(StiErr);
@@ -513,7 +535,7 @@ Int_t StTpcAlignerMaker::MakeIO() {
 #if 0
       // To Primary Vertex
       if (fTpcInOutMatch->iPV) {
-	//	  step = vHelices[io].Step(stepMX, xyzLPV.xyz());
+	//	  step = vHelices[io].Step(stepMX, xyzL.position().xyz());
 	step = vHelices[io].Path(fTpcInOutMatch->xPV, fTpcInOutMatch->yPV);
 	if (TMath::Abs(step) >= stepMX) goto FAILED;;
 	vHelices[io].Move(step);
@@ -552,14 +574,17 @@ Int_t StTpcAlignerMaker::MakeIO() {
 //________________________________________________________________________________
 Int_t StTpcAlignerMaker::MakeW2S() {
   // Sector to Sector Alignment
+  static StGlobalCoordinate              globalCoo;
+  static StTpcLocalSectorCoordinate      local;
+  static StGlobalDirection               globalDir;
+  static StTpcLocalSectorDirection       localDir;
+  static StTpcCoordinateTransform transform(StTpcDb::instance());
   static StThreeVectorD XyzI, XyzO;
   static StThreeVectorD DirI, DirO;
   static Double_t stepMX = 1.e3;
   Double_t StiErr[21];
   Double_t step;
-  static StTpcLocalSectorCoordinate              local;
   static Double_t err2xy[3] = {0,0,0}, err2z = 0;
-  static StTpcCoordinateTransform transform(gStTpcDb);
   TList SegmentList; SegmentList.SetOwner(kTRUE);
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
@@ -625,10 +650,16 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     while ((tpcHit = (StTpcHit *) nextHit())) {
       Int_t sector = tpcHit->sector();
       Int_t row    = tpcHit->padrow();
-      StThreeVectorD global(tpcHit->position());
+      globalCoo = StGlobalCoordinate(tpcHit->position());
+#ifdef __Sup12S__
       StThreeVectorD xyz;
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(global.xyz(), xyz.xyz());
-      ssegm->Helix().Add(global.xyz());
+      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(globalCoo.position().xyz(), xyz.xyz());
+#else
+      transform(globalCoo, local, sector, row);
+      StThreeVectorD &xyz = local.position();
+#endif
+      
+      ssegm->Helix().Add(globalCoo.position().xyz());
       if (tpcHit->positionError().perp2() == 0 || tpcHit->positionError().z() == 0) {
 	if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) StiTpcInnerHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
 	else                                                           StiTpcOuterHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
@@ -645,7 +676,11 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	     << " err xy/z " << TMath::Sqrt(err2xy[0]) << " " << TMath::Sqrt(err2z) << endl;
       }
       if (row < ssegm->fRowMin) {ssegm->fRowMin = row;}
+#ifdef __Sup12S__
       driftZ += xyz.z();
+#else
+      driftZ += local.position().z();
+#endif
       nh++;
     }
     if (nh < 5) continue;
@@ -662,10 +697,19 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     Double_t Y = transform.yFromRow(sector, row);
     Double_t RefSurfice[4] = {- Y, 0, 1, 0};
     Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
-    Double_t xyz123G[3];
     Double_t *RefSurficeG = HlxPars->RefSurficeG;
+#ifdef __Sup12S__
+    Double_t xyz123G[3];
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
+#else
+    local = StTpcLocalSectorCoordinate(xyz123L, sector);
+    transform(local,globalCoo);
+    Double_t *xyz123G = globalCoo.position().xyz();
+    localDir = StTpcLocalSectorDirection(&RefSurfice[1], sector);
+    transform(localDir,globalDir);
+    TCL::ucopy(globalDir.position().xyz(), &RefSurficeG[1], 3);
+#endif
     RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
     if (Debug() > 2) {
       for (Int_t j = 0; j < 4; j++) {
@@ -680,8 +724,15 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     HlxPars->Rho = helix.GetRho();
     HlxPars->dRho = helix.GetDRho();
     helix.StiEmx(StiErr);
+#ifdef __Sup12S__
     StTpcDb::instance()->Sup12S2Glob(ssegm->Sector()).MasterToLocal(HlxPars->xyzG(), HlxPars->xyz());
     StTpcDb::instance()->Sup12S2Glob(ssegm->Sector()).MasterToLocalVect(HlxPars->pxyzG(), HlxPars->pxyz());
+#else
+    globalCoo    = StGlobalCoordinate(HlxPars->xyzG());
+    globalDir = StGlobalDirection(HlxPars->pxyzG());
+    transform(globalCoo,    local, sector, 1); TCL::ucopy(local.position().xyz(), HlxPars->xyz(), 3);
+    transform(globalDir, localDir, sector, 1); TCL::ucopy(localDir.position().xyz(), HlxPars->pxyz(), 3);
+#endif
     TRSymMatrix StiMtx(6,StiErr); // PrPP(Make,StiMtx);
     TRMatrix S2R = GetSti2R(HlxPars->nx, HlxPars->ny, HlxPars->nz);
     TRSymMatrix Cov2(S2R,TRArray::kATxSxA,StiMtx);// PrPP(Make,Cov2);
@@ -715,6 +766,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	//	HlxParS =  ssegS->Helix();
 	HlxParW =  ssegW->HlxPar;                PrP2(MakeW,HlxParW);
 	HlxParS =  ssegS->HlxPar;                PrP2(MakeS,HlxParS);
+	CheckDirection(&HlxParS);
 	DEBUG_LEVEL {
 	  cout << "ssegW\t"; ssegW->Print();
 	  cout << "ssegS\t"; ssegS->Print();
@@ -749,8 +801,15 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	HlxParW2S.step = step;
 	HlxParW2S.Rho = helixW2S.GetRho();
 	HlxParW2S.dRho = helixW2S.GetDRho();
+#ifdef __Sup12S__
 	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(HlxParW2S.xyzG(), HlxParW2S.xyz());
 	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(HlxParW2S.pxyzG(), HlxParW2S.pxyz());
+#else
+	globalCoo    = StGlobalCoordinate(HlxParW2S.xyzG());
+	globalDir = StGlobalDirection(HlxParW2S.pxyzG());
+	transform(globalCoo,    local, sectorS, 1); TCL::ucopy(local.position().xyz(),    HlxParW2S.xyz(), 3);
+	transform(globalDir, localDir, sectorS, 1); TCL::ucopy(localDir.position().xyz(), HlxParW2S.pxyz(), 3);
+#endif
 	PrPP(Make,HlxParW2S);
 	const Char_t * names[6] = {"x","y","z","nx","ny","nz"};
 	Double_t *s = HlxParS.xyz();
