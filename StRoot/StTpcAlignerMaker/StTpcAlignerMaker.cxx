@@ -300,11 +300,13 @@ Int_t StTpcAlignerMaker::MakeIO() {
     if (! gTrack ) continue;
     if (gTrack->flag() < 0) continue;
     if (! gTrack->detectorInfo()) continue;
+#if 0
     if (gTrack->TestBit(kRejected)) continue;
     if (TriggerId && btofcol &&
 	! gTrack->TestBit(kComingFromOutSide) &&
 	! gTrack->TestBit(kComingFromInSideTofMatched) &&
 	! gTrack->TestBit(kNoToFDependece)) continue;
+#endif
     const StDcaGeometry* dca = gTrack->dcaGeometry();
     if (! dca) continue;
     if (Debug()%10 > 5) {
@@ -596,11 +598,13 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     if (! gTrack ) continue;
     if (gTrack->flag() < 0) continue;
     if (! gTrack->detectorInfo()) continue;
+#if 0
     if (gTrack->TestBit(kRejected)) continue;
     if (TriggerId && btofcol &&
 	! gTrack->TestBit(kComingFromOutSide) &&
 	! gTrack->TestBit(kComingFromInSideTofMatched) &&
 	! gTrack->TestBit(kNoToFDependece)) continue;
+#endif
     const StThreeVectorF &pxyz = gTrack->geometry()->momentum();
     Double_t pMomentum = pxyz.mag();
     if (TMath::Abs(bField) < 0.01) pMomentum = 1000;

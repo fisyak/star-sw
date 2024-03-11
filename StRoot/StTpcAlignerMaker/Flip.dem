@@ -1,0 +1,42 @@
+load ("eigen");
+/*
+load (f90) $
+:lisp (setq *f90-output-line-length-max* 1000000000) $
+stardisp: true$
+simplified_output: true$
+inflag : true$
+*/
+F: matrix([ 0, 1,  0,  0],
+	  [ 1, 0,  0,  0],
+	  [ 0, 0, -1,  0],
+	  [ 0, 0,  0,  1]);
+
+dR: matrix([ 1, -g,  b,  x],
+	   [ g,  1, -a,  y],
+	   [ b,  a,  1,  z],
+	   [ 0,  0,  0,  1]);
+
+
+dRFFI : F . dR . F^^-1;
+dRFIF : F^^-1 . dR . F;
+/*
+
+(%i11) dRFFI:F . dR . F^^(-1)
+                            [  1    g    a    y  ]
+                            [                    ]
+                            [ - g   1   - b   x  ]
+(%o11)                      [                    ]
+                            [ - a  - b   1   - z ]
+                            [                    ]
+                            [  0    0    0    1  ]
+_
+
+(%i12) dRFIF:F^^(-1) . dR . F
+                            [  1    g    a    y  ]
+                            [                    ]
+                            [ - g   1   - b   x  ]
+(%o12)                      [                    ]
+                            [ - a  - b   1   - z ]
+                            [                    ]
+                            [  0    0    0    1  ]
+*/

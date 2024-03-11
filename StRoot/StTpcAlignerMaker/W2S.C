@@ -141,7 +141,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   TH1D *LSF = new TH1D("LSF","Matrix and right part for Least Squared Fit ",NT+2,0,NT + 2);
   Int_t Ntracks = 0;
   while (iter.Next()) {
-    if (u <= 0) continue;
+    if (u <= 100) continue;
     if (w < 1 || w > 24 ||
 	s < 1 || w > 24) continue;
     if (HlxParW2S_Ndf < 15 || HlxParS_Ndf < 15) continue;
@@ -174,34 +174,43 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     TRSymMatrix G(TRArray::kUnit, kM);
 #endif
 #endif
-    TVector3 nW(nXW,nYW,nZW);                         PrPP(nW);
-    TVector3 nU(nXU,nYU,nZU);                         PrPP(nU);
-    TVector3 nS(nXS,nYS,nZS);                         PrPP(nS);
+    TVector3 nW(nXW,nYW,nZW);                      PrPP(nW);
     TVector3 rW(XW,YW,ZW);                         PrPP(rW);
-    TVector3 rU(XU,YU,ZU);                         PrPP(rU);
+    Double_t projS = nXS*XS + nYS*YS;
+    TVector3 nS(nXS,nYS,nZS);                      PrPP(nS);
     TVector3 rS(XS,YS,ZS);                         PrPP(rS);
-#if 0
-    if (nS.Dot(rS) < 0) {
-      nS *= -1.0;
-      PrPP(nS);
+    Double_t projU = nXU*XU + nYU*YU;
+    TVector3 nU;
+    if (projS * projU > 0) {
+      nU = TVector3( nXU, nYU, nZU);  
+    } else {
+      nU = TVector3(-nXU,-nYU,-nZU);  
     }
-    if (nU.Dot(rU) < 0) {
-      nU *= -1.0;
-      PrPP(nU);
-    }
-#endif    
+    PrPP(nU);
+    TVector3 rU(XU,YU,ZU);                         PrPP(rU);
     TVector3 dn = nS - nU;                            PrPP(dn);
     TVector3 dr = rS - rU;                            PrPP(dr);
     TRVector mX(kM, dn.X(), dn.Y(), dn.Z(), dr.X(), dr.Y(), dr.Z());  PrPP(mX);
     Int_t ok = 0;
+    //                  nX  nY nZ  dX  dY  dZ
+    Int_t iHistV[kM] = { 0,  4, 8, 12, -1, 16}; 
     for (Int_t i = 0; i < kM; i++) {
-      if (i < 3) {
-	if (TMath::Abs(mX[i]) > 0.050) {ok = 1; break;}
+      Int_t h = iHistV[i];
+      if (h < 0) {
+	if (TMath::Abs(mX[i]) < 0.01) continue;
+	else {
+	  ok = i+1;
+	  break;
+	}
       } else {
-	if (TMath::Abs(mX[i]) > 10.00) {ok = 1; break;}
-      } 
+	if (plotNameWS[h].zmin < mX[i] && mX[i] < plotNameWS[h].zmax) continue;
+	ok = i+1;
+	break;
+      }
     }
-    if (! ok) continue;
+    if (ok) {
+      continue;
+    }
     /* from maxima 02/21/2024 
  S - U = dU - dS 
  Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
@@ -468,7 +477,10 @@ void TDrawW2S() {
 	  line  += Form("|%8.2f+-%6.2f ", TMath::Max(-9999.99,TMath::Min( 9999.99,ValA[m].val)),TMath::Min(999.99,ValA[m].valError)); 
 	else
 	  line  += Form("|%7.2f+-%5.2f ", ValA[m].val,TMath::Min(99.99,ValA[m].valError)); 
-	ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
+        if ((m <  3 && TMath::Abs(ValA[m].valError) > 99.9) ||
+	    (m >= 3 && TMath::Abs(ValA[m].valError) >  9.9)) {
+	  ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
+	}
       }
     }
     cout << line << endl;

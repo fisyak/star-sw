@@ -89,7 +89,7 @@ void makeW2SHist() {
 //________________________________________________________________________________
 void CheckPlots(const Char_t *opt = "zy") {
   TCanvas *c1 = new TCanvas("Tb","time buckets",1200,800);
-  c1->Divide(5,4);
+  c1->Divide(4,5);
   TObjArray *arr = new TObjArray(4);
   for (Int_t i = 0; i < NwsPlots; i++) {
     c1->cd(i+1)->SetLogz(1);

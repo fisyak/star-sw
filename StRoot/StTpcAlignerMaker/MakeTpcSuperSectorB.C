@@ -56,9 +56,13 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_Pass60_Avg.h"   /* new transport Half step*/
   //#include  "W2S_Pass62_Avg.h"   /* new transport HalfStep*/
   //#include  "W2S_Pass60_Avg.h"   /* new transport Half step dR^-1*/
-#include  "W2S_Pass64_Avg.h"   /* new transport Half step dR^-1*/
+  //#include  "W2S_Pass64_Avg.h"   /* new transport Half step dR^-1*/
+  //#include  "W2S_Pass68_Avg.h"   /* new transport dR^-1 * Flip^-1*/
+  //#include  "W2S_Pass71_Avg.h"   /* new transport dR^-1 * Flip^-1*/
+  //#include  "W2S_Pass68_Avg.h"   /* new transport dR * Flip^-1*/
+#include  "W2S_Pass73_Avg.h"   /* new transport dR * Flip^-1*/
 };
-//#define __SCALEbyHalf__
+#define __SCALEbyHalf__
 //#define  __INVERSE_dR__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   
@@ -298,10 +302,13 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
     dR[l].RotateZ( TMath::RadToDeg()*Pass.Data[i].gamma*1e-3*scale);  // swap sign 03/13/19
 #endif /* __ROTATION__ */
     dR[l].SetTranslation(xyz);
-#ifndef __INVERSE_dR__ /* try inverse for Rass 51 => Pass53 */
-    dRC[l] = dR[l];
+    //    dRC[l] = dR[l] * StTpcDb::instance()->Flip().Inverse();
+#ifndef __INVERSE_dR__
+    dRC[l] = StTpcDb::instance()->Flip() * dR[l] * StTpcDb::instance()->Flip().Inverse();
 #else
-    dRC[l] = dR[l].Inverse();
+    TGeoHMatrix dRI = dR[i].Inverse();
+    TGeoHMatrix FdRI = StTpcDb::instance()->Flip() * dRI;
+    dRC[l] = FdRI * StTpcDb::instance()->Flip().Inverse();
 #endif
     if (_debug) {
       cout << "Additional rotation for Super Sector\t"; dR[l].Print();
@@ -309,7 +316,7 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
       cout << "dRC" << i << ":"; dRC[l].Print("");
     }
     //    TGeoHMatrix dRC = dR[l]*RAvI[part]; cout << "dRC:"; dRC.Print("");
-    //    TGeoHMatrix GLnew = StTpcDb::instance()->Flip().Inverse()*dR[l]*StTpcDb::instance()->Flip()*GL; GLnew.Print(); // Flip 03/14/19
+    //    TGeoHMatrix GLnew = StTpcDb::instance()->FlipStTpcDb::instance()->Flip().Inverse() StTpcDb::instance()->FlipStTpcDb::instance()->Flip().Inverse()().Inverse()*dR[l]*StTpcDb::instance()->Flip()*GL; GLnew.Print(); // Flip 03/14/19
     //    TGeoHMatrix GLnew = GL*dR[l]; GLnew.Print(); // used till 03/13/19 and after 03/15/19
     TGeoHMatrix GLnew = GL*dRC[l]; GLnew.Print(); // used till 03/13/19 and after 03/15/19
     //    TGeoHMatrix GLnew = dR[l] * GL; GLnew.Print();
