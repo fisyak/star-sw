@@ -53,7 +53,8 @@ end
    TpcInOutTree->Draw("(abs(In.Rho)-abs(Out.Rho))/(abs(In.Rho)+abs(Out.Rho))>>dC(100,-2e-1,2e-1)") => 6.24288e-02
  */
 static Int_t _debug = 0;
-#define PrPP(B) if (_debug) {cout << (#B) << " = \t" << (B) << endl;}
+#define PrPP1(B) {cout << (#B) << " = \t" << (B) << endl;}
+#define PrPP(B) if (_debug) PrPP1(B)
 //________________________________________________________________________________
 struct PlotName_t {
   const Char_t *Name;
@@ -110,22 +111,6 @@ const  PlotName_t plotNameWS[NwsPlots] = {// plots for drift
 /* mX(5), A( 9,5), dw, */ {"dZdaW",        "-YU    => aW",  65,-185.0, -50.0,100,-1.000, 1.000}, //18
 /* mX(5), A(10,5), dw  */ {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
 };
-//________________________________________________________________________________
-Double_t g2g(Double_t *xx, Double_t *par) {
-  Double_t x = xx[0];
-  Double_t A = TMath::Exp(par[0]);
-  Double_t mu1  = par[1];
-  Double_t sig1 = par[2];
-  if (A < 1 && TMath::Abs(x -mu1) < 3*sig1) {TF1::RejectPoint(); return 0;}
-  Double_t B    = TMath::Exp(par[3]);
-  Double_t mu2  = par[4];
-  Double_t sig2 = par[5];
-  Double_t gra  = par[6];
-  Double_t dev1 = (x - mu1)/sig1;
-  Double_t dev2 = (x - mu2)/sig2;
-  Double_t value = A*TMath::Exp(-0.5*dev1*dev1) + B*TMath::Exp(-0.5*dev2*dev2) + gra;
-  return value;
-}
 //________________________________________________________________________________
 #include "StTpcAlignerMaker/IO.C"
 #include "StTpcAlignerMaker/W2S.C"

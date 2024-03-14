@@ -38,89 +38,89 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     cout << "No input files have been found" << endl;
     return;
   }
-	static const Int_t&       TriggerId                                = iter("TriggerId");
-	//	static const UInt_t&      RW2S_fUniqueID                           = iter("RW2S.fUniqueID");
-	//	static const UInt_t&      RW2S_fBits                               = iter("RW2S.fBits");
-	//	static const TString&     RW2S_fName                               = iter("RW2S.fName");
-	//	static const TString&     RW2S_fTitle                              = iter("RW2S.fTitle");
-	static const Double_t*&   RW2S_fTranslation                        = iter("RW2S.fTranslation[3]");
-	static const Double_t*&   RW2S_fRotationMatrix                     = iter("RW2S.fRotationMatrix[9]");
-	static const Double_t*&   RW2S_fScale                              = iter("RW2S.fScale[3]");
-	//	static const UInt_t&      HlxParW_fUniqueID                        = iter("HlxParW.fUniqueID");   
-	//	static const UInt_t&      HlxParW_fBits                            = iter("HlxParW.fBits");
-	static const Int_t&       w                                 = iter("HlxParW.sector"); // HlxParW_sector
-	static const Double_t&    HlxParW_Rho                              = iter("HlxParW.Rho");
-	static const Double_t&    XW                                = iter("HlxParW.x");  // HlxParW_x 
-	static const Double_t&    YW                                = iter("HlxParW.y");  // HlxParW_y 
-	static const Double_t&    ZW                                = iter("HlxParW.z");  // HlxParW_z 
-	static const Double_t&    nXW                               = iter("HlxParW.nx"); // HlxParW_nx
-	static const Double_t&    nYW                               = iter("HlxParW.ny"); // HlxParW_ny
-	static const Double_t&    nZW                               = iter("HlxParW.nz"); // HlxParW_nz
-	static const Double_t&    HlxParW_xG                               = iter("HlxParW.xG");
-	static const Double_t&    HlxParW_yG                               = iter("HlxParW.yG");
-	static const Double_t&    HlxParW_zG                               = iter("HlxParW.zG");
-	static const Double_t&    HlxParW_nxG                              = iter("HlxParW.nxG");
-	static const Double_t&    HlxParW_nyG                              = iter("HlxParW.nyG");
-	static const Double_t&    HlxParW_nzG                              = iter("HlxParW.nzG");
-	static const Double_t&    HlxParW_dRho                             = iter("HlxParW.dRho");
-	static const Double_t*&   HlxParW_fCov                             = iter("HlxParW.fCov[15]");
-	static const Double_t&    HlxParW_Chi2                             = iter("HlxParW.Chi2");
-	static const Int_t&       HlxParW_Ndf                              = iter("HlxParW.Ndf");
-	static const Int_t&       HlxParW_Npoints                          = iter("HlxParW.Npoints");
-	static const Int_t&       HlxParW_Nused                            = iter("HlxParW.Nused");
-	static const Double_t&    HlxParW_DriftZ                           = iter("HlxParW.DriftZ");
-	static const Double_t&    HlxParW_step                             = iter("HlxParW.step");
-	static const Double_t*&   HlxParW_RefSurficeG                      = iter("HlxParW.RefSurficeG[4]");
-	//	static const UInt_t&      HlxParS_fUniqueID                        = iter("HlxParS.fUniqueID");
-	//	static const UInt_t&      HlxParS_fBits                            = iter("HlxParS.fBits");
-	static const Int_t&       s                                  = iter("HlxParS.sector"); // HlxParS_sector
-	static const Double_t&    HlxParS_Rho                              = iter("HlxParS.Rho");
-	static const Double_t&    XS                                 = iter("HlxParS.x");  //  HlxParS_x 
-	static const Double_t&    YS                                 = iter("HlxParS.y");  //  HlxParS_y 
-	static const Double_t&    ZS                                 = iter("HlxParS.z");  //  HlxParS_z 
-	static const Double_t&    nXS                                = iter("HlxParS.nx"); //  HlxParS_nx
-	static const Double_t&    nYS                                = iter("HlxParS.ny"); //  HlxParS_ny
-	static const Double_t&    nZS                                = iter("HlxParS.nz"); //  HlxParS_nz
-	static const Double_t&    HlxParS_xG                               = iter("HlxParS.xG");
-	static const Double_t&    HlxParS_yG                               = iter("HlxParS.yG");
-	static const Double_t&    HlxParS_zG                               = iter("HlxParS.zG");
-	static const Double_t&    HlxParS_nxG                              = iter("HlxParS.nxG");
-	static const Double_t&    HlxParS_nyG                              = iter("HlxParS.nyG");
-	static const Double_t&    HlxParS_nzG                              = iter("HlxParS.nzG");
-	static const Double_t&    HlxParS_dRho                             = iter("HlxParS.dRho");
-	static const Double_t*&   HlxParS_fCov                             = iter("HlxParS.fCov[15]");
-	static const Double_t&    HlxParS_Chi2                             = iter("HlxParS.Chi2");
-	static const Int_t&       HlxParS_Ndf                              = iter("HlxParS.Ndf");
-	static const Int_t&       HlxParS_Npoints                          = iter("HlxParS.Npoints");
-	static const Int_t&       HlxParS_Nused                            = iter("HlxParS.Nused");
-	static const Double_t&    HlxParS_DriftZ                           = iter("HlxParS.DriftZ");
-	static const Double_t&    HlxParS_step                             = iter("HlxParS.step");
-	static const Double_t*&   HlxParS_RefSurficeG                      = iter("HlxParS.RefSurficeG[4]");
-	//	static const UInt_t&      HlxParW2S_fUniqueID                      = iter("HlxParW2S.fUniqueID");
-	//	static const UInt_t&      HlxParW2S_fBits                          = iter("HlxParW2S.fBits");
-	static const Int_t&       u                         = iter("HlxParW2S.sector");
-	static const Double_t&    HlxParW2S_Rho                            = iter("HlxParW2S.Rho");
-	static const Double_t&    XU                               = iter("HlxParW2S.x");   // HlxParW2S_x 
-	static const Double_t&    YU                               = iter("HlxParW2S.y");   // HlxParW2S_y 
-	static const Double_t&    ZU                               = iter("HlxParW2S.z");   // HlxParW2S_z 
-	static const Double_t&    nXU                              = iter("HlxParW2S.nx");  // HlxParW2S_nx
-	static const Double_t&    nYU                              = iter("HlxParW2S.ny");  // HlxParW2S_ny
-	static const Double_t&    nZU                              = iter("HlxParW2S.nz");  // HlxParW2S_nz
-	static const Double_t&    HlxParW2S_xG                             = iter("HlxParW2S.xG");
-	static const Double_t&    HlxParW2S_yG                             = iter("HlxParW2S.yG");
-	static const Double_t&    HlxParW2S_zG                             = iter("HlxParW2S.zG");
-	static const Double_t&    HlxParW2S_nxG                            = iter("HlxParW2S.nxG");
-	static const Double_t&    HlxParW2S_nyG                            = iter("HlxParW2S.nyG");
-	static const Double_t&    HlxParW2S_nzG                            = iter("HlxParW2S.nzG");
-	static const Double_t&    HlxParW2S_dRho                           = iter("HlxParW2S.dRho");
-	static const Double_t*&   HlxParW2S_fCov                           = iter("HlxParW2S.fCov[15]");
-	static const Double_t&    HlxParW2S_Chi2                           = iter("HlxParW2S.Chi2");
-	static const Int_t&       HlxParW2S_Ndf                            = iter("HlxParW2S.Ndf");
-	static const Int_t&       HlxParW2S_Npoints                        = iter("HlxParW2S.Npoints");
-	static const Int_t&       HlxParW2S_Nused                          = iter("HlxParW2S.Nused");
-	static const Double_t&    HlxParW2S_DriftZ                         = iter("HlxParW2S.DriftZ");
-	static const Double_t&    HlxParW2S_step                           = iter("HlxParW2S.step");
-	static const Double_t*&   HlxParW2S_RefSurficeG                    = iter("HlxParW2S.RefSurficeG[4]");
+  static const Int_t&       TriggerId                                = iter("TriggerId");
+  //	static const UInt_t&      RW2S_fUniqueID                           = iter("RW2S.fUniqueID");
+  //	static const UInt_t&      RW2S_fBits                               = iter("RW2S.fBits");
+  //	static const TString&     RW2S_fName                               = iter("RW2S.fName");
+  //	static const TString&     RW2S_fTitle                              = iter("RW2S.fTitle");
+  static const Double_t*&   RW2S_fTranslation                        = iter("RW2S.fTranslation[3]");
+  static const Double_t*&   RW2S_fRotationMatrix                     = iter("RW2S.fRotationMatrix[9]");
+  static const Double_t*&   RW2S_fScale                              = iter("RW2S.fScale[3]");
+  //	static const UInt_t&      HlxParW_fUniqueID                        = iter("HlxParW.fUniqueID");   
+  //	static const UInt_t&      HlxParW_fBits                            = iter("HlxParW.fBits");
+  static const Int_t&       w                                 = iter("HlxParW.sector"); // HlxParW_sector
+  static const Double_t&    HlxParW_Rho                              = iter("HlxParW.Rho");
+  static const Double_t&    XW                                = iter("HlxParW.x");  // HlxParW_x 
+  static const Double_t&    YW                                = iter("HlxParW.y");  // HlxParW_y 
+  static const Double_t&    ZW                                = iter("HlxParW.z");  // HlxParW_z 
+  static const Double_t&    nXW                               = iter("HlxParW.nx"); // HlxParW_nx
+  static const Double_t&    nYW                               = iter("HlxParW.ny"); // HlxParW_ny
+  static const Double_t&    nZW                               = iter("HlxParW.nz"); // HlxParW_nz
+  static const Double_t&    HlxParW_xG                               = iter("HlxParW.xG");
+  static const Double_t&    HlxParW_yG                               = iter("HlxParW.yG");
+  static const Double_t&    HlxParW_zG                               = iter("HlxParW.zG");
+  static const Double_t&    HlxParW_nxG                              = iter("HlxParW.nxG");
+  static const Double_t&    HlxParW_nyG                              = iter("HlxParW.nyG");
+  static const Double_t&    HlxParW_nzG                              = iter("HlxParW.nzG");
+  static const Double_t&    HlxParW_dRho                             = iter("HlxParW.dRho");
+  static const Double_t*&   HlxParW_fCov                             = iter("HlxParW.fCov[15]");
+  static const Double_t&    HlxParW_Chi2                             = iter("HlxParW.Chi2");
+  static const Int_t&       HlxParW_Ndf                              = iter("HlxParW.Ndf");
+  static const Int_t&       HlxParW_Npoints                          = iter("HlxParW.Npoints");
+  static const Int_t&       HlxParW_Nused                            = iter("HlxParW.Nused");
+  static const Double_t&    HlxParW_DriftZ                           = iter("HlxParW.DriftZ");
+  static const Double_t&    HlxParW_step                             = iter("HlxParW.step");
+  static const Double_t*&   HlxParW_RefSurficeG                      = iter("HlxParW.RefSurficeG[4]");
+  //	static const UInt_t&      HlxParS_fUniqueID                        = iter("HlxParS.fUniqueID");
+  //	static const UInt_t&      HlxParS_fBits                            = iter("HlxParS.fBits");
+  static const Int_t&       s                                  = iter("HlxParS.sector"); // HlxParS_sector
+  static const Double_t&    HlxParS_Rho                              = iter("HlxParS.Rho");
+  static const Double_t&    XS                                 = iter("HlxParS.x");  //  HlxParS_x 
+  static const Double_t&    YS                                 = iter("HlxParS.y");  //  HlxParS_y 
+  static const Double_t&    ZS                                 = iter("HlxParS.z");  //  HlxParS_z 
+  static const Double_t&    nXS                                = iter("HlxParS.nx"); //  HlxParS_nx
+  static const Double_t&    nYS                                = iter("HlxParS.ny"); //  HlxParS_ny
+  static const Double_t&    nZS                                = iter("HlxParS.nz"); //  HlxParS_nz
+  static const Double_t&    HlxParS_xG                               = iter("HlxParS.xG");
+  static const Double_t&    HlxParS_yG                               = iter("HlxParS.yG");
+  static const Double_t&    HlxParS_zG                               = iter("HlxParS.zG");
+  static const Double_t&    HlxParS_nxG                              = iter("HlxParS.nxG");
+  static const Double_t&    HlxParS_nyG                              = iter("HlxParS.nyG");
+  static const Double_t&    HlxParS_nzG                              = iter("HlxParS.nzG");
+  static const Double_t&    HlxParS_dRho                             = iter("HlxParS.dRho");
+  static const Double_t*&   HlxParS_fCov                             = iter("HlxParS.fCov[15]");
+  static const Double_t&    HlxParS_Chi2                             = iter("HlxParS.Chi2");
+  static const Int_t&       HlxParS_Ndf                              = iter("HlxParS.Ndf");
+  static const Int_t&       HlxParS_Npoints                          = iter("HlxParS.Npoints");
+  static const Int_t&       HlxParS_Nused                            = iter("HlxParS.Nused");
+  static const Double_t&    HlxParS_DriftZ                           = iter("HlxParS.DriftZ");
+  static const Double_t&    HlxParS_step                             = iter("HlxParS.step");
+  static const Double_t*&   HlxParS_RefSurficeG                      = iter("HlxParS.RefSurficeG[4]");
+  //	static const UInt_t&      HlxParW2S_fUniqueID                      = iter("HlxParW2S.fUniqueID");
+  //	static const UInt_t&      HlxParW2S_fBits                          = iter("HlxParW2S.fBits");
+  static const Int_t&       u                         = iter("HlxParW2S.sector");
+  static const Double_t&    HlxParW2S_Rho                            = iter("HlxParW2S.Rho");
+  static const Double_t&    XU                               = iter("HlxParW2S.x");   // HlxParW2S_x 
+  static const Double_t&    YU                               = iter("HlxParW2S.y");   // HlxParW2S_y 
+  static const Double_t&    ZU                               = iter("HlxParW2S.z");   // HlxParW2S_z 
+  static const Double_t&    nXU                              = iter("HlxParW2S.nx");  // HlxParW2S_nx
+  static const Double_t&    nYU                              = iter("HlxParW2S.ny");  // HlxParW2S_ny
+  static const Double_t&    nZU                              = iter("HlxParW2S.nz");  // HlxParW2S_nz
+  static const Double_t&    HlxParW2S_xG                             = iter("HlxParW2S.xG");
+  static const Double_t&    HlxParW2S_yG                             = iter("HlxParW2S.yG");
+  static const Double_t&    HlxParW2S_zG                             = iter("HlxParW2S.zG");
+  static const Double_t&    HlxParW2S_nxG                            = iter("HlxParW2S.nxG");
+  static const Double_t&    HlxParW2S_nyG                            = iter("HlxParW2S.nyG");
+  static const Double_t&    HlxParW2S_nzG                            = iter("HlxParW2S.nzG");
+  static const Double_t&    HlxParW2S_dRho                           = iter("HlxParW2S.dRho");
+  static const Double_t*&   HlxParW2S_fCov                           = iter("HlxParW2S.fCov[15]");
+  static const Double_t&    HlxParW2S_Chi2                           = iter("HlxParW2S.Chi2");
+  static const Int_t&       HlxParW2S_Ndf                            = iter("HlxParW2S.Ndf");
+  static const Int_t&       HlxParW2S_Npoints                        = iter("HlxParW2S.Npoints");
+  static const Int_t&       HlxParW2S_Nused                          = iter("HlxParW2S.Nused");
+  static const Double_t&    HlxParW2S_DriftZ                         = iter("HlxParW2S.DriftZ");
+  static const Double_t&    HlxParW2S_step                           = iter("HlxParW2S.step");
+  static const Double_t*&   HlxParW2S_RefSurficeG                    = iter("HlxParW2S.RefSurficeG[4]");
   // Book Histograms
   TString Out(files); 
   Out.ReplaceAll(".root","W2S");
@@ -161,7 +161,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     C += CS;   PrPP(C);
     TRSymMatrix G(C,TRArray::kInverted);              PrPP(G);
 #else 
-#if 0
+#if 1
     TRSymMatrix G(6);
     for (Int_t i = 0; i < 6; i++) {
       if (i < 3) 
@@ -212,51 +212,51 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
       continue;
     }
     /* from maxima 02/21/2024 
- S - U = dU - dS 
- Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
- Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
- Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
- Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
- Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
- Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
-
-JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
-                  nX      nY       nZ     X      Y      Z     m/p
- Col 1 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xS,
- Col 2 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yS,
- Col 3 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zS,
- Col 4 = [ [     [0]   [nZS]  [- nYS]    [0]   [ZS] [- YS] ] ] aS,
- Col 5 = [ [ [- nZS]     [0]  [- nXS] [- ZS]    [0] [- XS] ] ] bS,
- Col 6 = [ [   [nYS] [- nXS]      [0]   [YS] [- XS]    [0] ] ] gS,
- Col 7 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xW,
- Col 8 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yW,
- Col 9 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zW,
- Col 10= [ [     [0]   [nZU]  [- nYU]    [0]   [ZU] [- YU] ] ] aW,
- Col 11= [ [ [- nZU]     [0]  [- nXU] [- ZU]    [0] [- XU] ] ] bW,
- Col 12= [ [   [nYU] [- nXU]      [0]   [YU] [- XU]    [0] ] ] gW,
-
-    chi2 = (X[m] - A[m,p]*p[p]) *  G[m,m] * (X[m] - A[m,p]*p[p])T
-    dchi2/dp = -A * G (X - A*p)T - (X - A*p) * G AT = 0
-                A * G * XT - A * G * AT * pT + X * G * AT - A * p *G * AT = 0
-                A * G * AT * pT = A * G * xT
-                pT = (A * G * AT)^-1 (A * G * xT)
-
- `    */
+       S - U = dU - dS 
+       Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
+       Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
+       Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
+       Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
+       Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
+       Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
+       
+       JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
+       nX      nY       nZ     X      Y      Z     m/p
+       Col 1 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xS,
+       Col 2 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yS,
+       Col 3 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zS,
+       Col 4 = [ [     [0]   [nZS]  [- nYS]    [0]   [ZS] [- YS] ] ] aS,
+       Col 5 = [ [ [- nZS]     [0]  [- nXS] [- ZS]    [0] [- XS] ] ] bS,
+       Col 6 = [ [   [nYS] [- nXS]      [0]   [YS] [- XS]    [0] ] ] gS,
+       Col 7 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xW,
+       Col 8 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yW,
+       Col 9 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zW,
+       Col 10= [ [     [0]   [nZU]  [- nYU]    [0]   [ZU] [- YU] ] ] aW,
+       Col 11= [ [ [- nZU]     [0]  [- nXU] [- ZU]    [0] [- XU] ] ] bW,
+       Col 12= [ [   [nYU] [- nXU]      [0]   [YU] [- XU]    [0] ] ] gW,
+       
+       chi2 = (X[m] - A[m,p]*p[p]) *  G[m,m] * (X[m] - A[m,p]*p[p])T
+       dchi2/dp = -A * G (X - A*p)T - (X - A*p) * G AT = 0
+       A * G * XT - A * G * AT * pT + X * G * AT - A * p *G * AT = 0
+       A * G * AT * pT = A * G * xT
+       pT = (A * G * AT)^-1 (A * G * xT)
+       
+       `    */
     Double_t a[kM*2*kP] = { // 6x12
- //   0      1       2     3     4     5
- //  nX     nY      nZ     X     Y     Z  
+      //   0      1       2     3     4     5
+      //  nX     nY      nZ     X     Y     Z  
       0,     0,      0,  - 1,    0,    0, // 0 xS,
       0,     0,      0,    0,  - 1,    0, // 1 yS,
       0,     0,      0,    0,    0,  - 1, // 2 zS,
       0,   nZS,  - nYS,    0,   ZS, - YS, // 3 aS,
-  - nZS,     0,  - nXS, - ZS,    0, - XS, // 4 bS,
-    nYS, - nXS,      0,   YS, - XS,    0, // 5 gS,
+      - nZS,     0,  - nXS, - ZS,    0, - XS, // 4 bS,
+      nYS, - nXS,      0,   YS, - XS,    0, // 5 gS,
       0,     0,      0,  - 1,    0,    0, // 6 xW,
       0,     0,      0,    0,  - 1,    0, // 7 yW,
       0,     0,      0,    0,    0,  - 1, // 8 zW,
       0,   nZU,  - nYU,    0,   ZU, - YU, // 9 aW,
-  - nZU,     0,  - nXU, - ZU,    0, - XU, //10 bW,
-    nYU, - nXU,      0,   YU, - XU,    0, //11 gW,
+      - nZU,     0,  - nXU, - ZU,    0, - XU, //10 bW,
+      nYU, - nXU,      0,   YU, - XU,    0, //11 gW,
     }; // A => AT
     TRMatrix A(2*kP, kM, a); PrPP(A);
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
@@ -279,48 +279,48 @@ JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] );
     Double_t dw = w;
     Double_t ds = s;
     TRMatrix V(NwsPlots,3,
- mX(0), A( 4,0), ds, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 0
- mX(0), A( 5,0), ds, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 1
- mX(0), A(10,0), dw, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 2
- mX(0), A(11,0), dw, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 3
- mX(1), A( 3,1), ds, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 4
- mX(1), A( 5,1), ds, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 5
- mX(1), A( 9,1), dw, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 6
- mX(1), A(11,1), dw, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 7
- mX(2), A( 3,2), ds, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 8
- mX(2), A( 4,2), ds, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 9
- mX(2), A( 9,2), dw, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, //10
- mX(2), A(10,2), dw, // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, //11
- mX(3), A( 4,3), ds, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, //12
- mX(3), A( 5,3), ds, // {"dXdgS",        "YS     => gS", 110,-1.100, 1.100,100,-1.000, 1.000}, //13
- mX(3), A(10,3), dw, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //14
- mX(3), A(11,3), dw, // {"dXdgW",        "YU     => gW", 110,-1.100, 1.100,100,-1.000, 1.000}, //15
- mX(5), A( 3,5), ds, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-0.005, 0.005}, //16
- mX(5), A( 4,5), ds, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, //17
- mX(5), A( 9,5), dw, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-0.005, 0.005}, //18
- mX(5), A(10,5), dw  // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
-              ); PrPP(V);
+	       mX(0), A( 4,0), ds, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 0
+	       mX(0), A( 5,0), ds, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 1
+	       mX(0), A(10,0), dw, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 2
+	       mX(0), A(11,0), dw, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 3
+	       mX(1), A( 3,1), ds, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 4
+	       mX(1), A( 5,1), ds, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 5
+	       mX(1), A( 9,1), dw, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 6
+	       mX(1), A(11,1), dw, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 7
+	       mX(2), A( 3,2), ds, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 8
+	       mX(2), A( 4,2), ds, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 9
+	       mX(2), A( 9,2), dw, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, //10
+	       mX(2), A(10,2), dw, // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, //11
+	       mX(3), A( 4,3), ds, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, //12
+	       mX(3), A( 5,3), ds, // {"dXdgS",        "YS     => gS", 110,-1.100, 1.100,100,-1.000, 1.000}, //13
+	       mX(3), A(10,3), dw, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //14
+	       mX(3), A(11,3), dw, // {"dXdgW",        "YU     => gW", 110,-1.100, 1.100,100,-1.000, 1.000}, //15
+	       mX(5), A( 3,5), ds, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-0.005, 0.005}, //16
+	       mX(5), A( 4,5), ds, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, //17
+	       mX(5), A( 9,5), dw, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-0.005, 0.005}, //18
+	       mX(5), A(10,5), dw  // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
+	       ); PrPP(V);
     Double_t vv[20][3] = {
-       {mX(0), A( 4,0), ds}, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 0
-       {mX(0), A( 5,0), ds}, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 1
-       {mX(0), A(10,0), dw}, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 2
-       {mX(0), A(11,0), dw}, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 3
-       {mX(1), A( 3,1), ds}, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 4
-       {mX(1), A( 5,1), ds}, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 5
-       {mX(1), A( 9,1), dw}, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 6
-       {mX(1), A(11,1), dw}, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 7
-       {mX(2), A( 3,2), ds}, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 8
-       {mX(2), A( 4,2), ds}, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 9
-       {mX(2), A( 9,2), dw}, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, //10
-       {mX(2), A(10,2), dw}, // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, //11
-       {mX(3), A( 4,3), ds}, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, //12
-       {mX(3), A( 5,3), ds}, // {"dXdgS",        "YS     => gS", 110,-1.100, 1.100,100,-1.000, 1.000}, //13
-       {mX(3), A(10,3), dw}, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //14
-       {mX(3), A(11,3), dw}, // {"dXdgW",        "YU     => gW", 110,-1.100, 1.100,100,-1.000, 1.000}, //15
-       {mX(5), A( 3,5), ds}, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-0.005, 0.005}, //16
-       {mX(5), A( 4,5), ds}, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, //17
-       {mX(5), A( 9,5), dw}, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-0.005, 0.005}, //18
-       {mX(5), A(10,5), dw}  // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
+      {mX(0), A( 4,0), ds}, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 0
+      {mX(0), A( 5,0), ds}, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 1
+      {mX(0), A(10,0), dw}, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 2
+      {mX(0), A(11,0), dw}, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 3
+      {mX(1), A( 3,1), ds}, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 4
+      {mX(1), A( 5,1), ds}, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 5
+      {mX(1), A( 9,1), dw}, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 6
+      {mX(1), A(11,1), dw}, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 7
+      {mX(2), A( 3,2), ds}, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 8
+      {mX(2), A( 4,2), ds}, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 9
+      {mX(2), A( 9,2), dw}, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, //10
+      {mX(2), A(10,2), dw}, // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, //11
+      {mX(3), A( 4,3), ds}, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, //12
+      {mX(3), A( 5,3), ds}, // {"dXdgS",        "YS     => gS", 110,-1.100, 1.100,100,-1.000, 1.000}, //13
+      {mX(3), A(10,3), dw}, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //14
+      {mX(3), A(11,3), dw}, // {"dXdgW",        "YU     => gW", 110,-1.100, 1.100,100,-1.000, 1.000}, //15
+      {mX(5), A( 3,5), ds}, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-0.005, 0.005}, //16
+      {mX(5), A( 4,5), ds}, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, //17
+      {mX(5), A( 9,5), dw}, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-0.005, 0.005}, //18
+      {mX(5), A(10,5), dw}  // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
     };
     if (_debug) {
       TRMatrix Vtest(NwsPlots,3, &vv[0][0]); 
@@ -332,37 +332,25 @@ JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] );
     //    if (Ntracks > 100000) break;
   }
   fOut->Write();
-
+}
+//________________________________________________________________________________
+Double_t DoubleExp(Double_t *x, Double_t *p) {
+  Double_t A = p[0];
+  Double_t mu = p[1];
+  Double_t lambda = p[2];
+  Double_t val = A*lambda/2*TMath::Exp(-lambda*(TMath::Abs(x[0] - mu)));
+  return val;
 }
 //________________________________________________________________________________
 void TDrawW2S() {
   TMinuitMinimizer::UseStaticMinuit();
   if (! gMinuit) new TMinuit(10);
   gMinuit->SetPrintLevel(-2);
-#if 1
-  TF1 *gp = new TF1("gp",g2g,-100,100,7);
-  struct Par_t {
-    const Char_t *Name;
-    Double_t p, pmin, pmax;
-  };
-  const Par_t par[7] = {
-    {"logN1",    5.,    0.,   25.},
-    {"mu1",      0.,   -1.,    1.},
-    {"sigma1",0.01, 0.001,   0.10},
-    {"logN2",    1.,    0.,   25.},
-    {"mu2",      0.,   -1.,    1.},
-    {"sigma2", 0.10,  0.01,    1.},
-    {"grass",   0.0,  0.00,    1.}
-  };
-  for (Int_t i = 0; i < 7; i++) {
-    gp->SetParName(i,par[i].Name);
-    gp->SetParameter(i,par[i].p);
-    gp->SetParLimits(i,par[i].pmin, par[i].pmax);
-  }
-#else
-  TF1 *gp = new TF1("gp","gaus(0)",-100,100);
-  gp->SetParameters(100.,0.,1.);
-#endif
+  TF1 *gp = new TF1("gp",DoubleExp,-1,1, 3);
+  gp->SetLineColor(2);
+  gp->SetParLimits(2,1,1e5);
+  TF1 *gpp = new TF1("gpp","gaus(0)+pol2(3)");
+  gp->SetLineColor(4);
   Int_t nx = 24;
   Int_t ny = NwsFPlots;
   Int_t scaleX = 800/nx;
@@ -371,6 +359,7 @@ void TDrawW2S() {
   TCanvas *c1 = new TCanvas("TpcWS","Tpc Sector to Sector Alignment" ,10,10,10+scaleX*nx,10+scaleY*ny);
   cout << "nx/ny = " << nx << "/" << ny << endl;
   c1->Divide(ny,nx);
+  TCanvas *c2 = new TCanvas("c2","c2");
   TString line("");
   TString lTitle("");
   TString lineC("");
@@ -391,7 +380,7 @@ void TDrawW2S() {
     Double_t valError;
     Int_t    iFlag;
   };
-  Val_t ValG[7]; memset (ValG, 0, sizeof(ValG));
+  Val_t ValG[3][7]; memset (ValG, 0, sizeof(ValG)); // 0 => West, 1 => East, 2 => All
   TH1D *LSF = (TH1D *) gDirectory->Get("LSF");
   Double_t *array = LSF->GetArray() + 1;
   Int_t NEntries = array[0];
@@ -429,10 +418,12 @@ void TDrawW2S() {
 #endif
   TRVector  X(SInv,TRArray::kSxA,AmX);     PrPP(X);
   Double_t chi2 = yTy;
-  chi2 -= AmX*X; PrPP(chi2);
+  chi2 -= AmX*X; PrPP1(chi2);
   Int_t head = 0;
   for (Int_t i = 1; i <= nx; i++) {
     Int_t sector = i;
+    Int_t iwe = 0;
+    if (sector > 12) iwe = 1;
     if (! head) {
       out  <<  "_____________________________________________________________________________________________________________"  << endl;
       out  <<  "| x mkm           | y mkm           | z mkm           |alpha mrad     |beta mrad      |gamma mrad     |Comment" << endl;
@@ -477,8 +468,8 @@ void TDrawW2S() {
 	  line  += Form("|%8.2f+-%6.2f ", TMath::Max(-9999.99,TMath::Min( 9999.99,ValA[m].val)),TMath::Min(999.99,ValA[m].valError)); 
 	else
 	  line  += Form("|%7.2f+-%5.2f ", ValA[m].val,TMath::Min(99.99,ValA[m].valError)); 
-        if ((m <  3 && TMath::Abs(ValA[m].valError) > 99.9) ||
-	    (m >= 3 && TMath::Abs(ValA[m].valError) >  9.9)) {
+	if ((m <  3 && TMath::Abs(ValA[m].valError) > 299.9) ||
+	    (m >= 3 && TMath::Abs(ValA[m].valError) >  29.9)) {
 	  ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
 	}
       }
@@ -490,20 +481,36 @@ void TDrawW2S() {
       TH3 *h3 = (TH3 *) gDirectory->Get(plotNameWS[j].Name);
       if (! h3) continue;
       Int_t ij = j + 1 + ny*(i-1);
-      c1->cd(ij)->SetLogz(1);
       TH1 *fit = 0;
       h3->GetXaxis()->SetRange(sector,sector);
-      TH1 *sp = h3->Project3D("z");
+      TH1 *sp = h3->Project3D(Form("z_%02i",sector));
       if (sp->GetEntries() < 100) continue;
-      //      sp->Fit("gaus","qem");
-      sp->Fit("gaus","qem");
-      Double_t Mu = 0;
-      Double_t dMu = 0;
+      //
+      c2->cd();
+      TF1 *g = 0;
+      Double_t mean = sp->GetMean();
+      Double_t RMS  = sp->GetRMS();
+      sp->Fit("gaus","qemr","",mean-2*RMS, mean+2*RMS);
       TF1 *gaus = sp->GetFunction("gaus");
       if (gaus) {
-	Mu = gaus->GetParameter(1);
-	dMu = gaus->GetParError(1);
+	Double_t pars[6] = {0};
+	gaus->GetParameters(pars);
+	gpp->SetParameters(pars);
+	sp->Fit(gpp,"qem+r","",mean-2*RMS, mean+2*RMS);
+	g = gpp;
       }
+#if 0
+      Double_t params[3] = {sp->GetEntries(), mean, TMath::Sqrt(2.)/RMS};
+      gp->SetParameters(params);
+      sp->Fit(gp,"qemi+r","",mean-2*RMS, mean+2*RMS);
+      if (g && gp->GetChisquare() < g->GetChisquare()) {
+      } else {
+	g = gp;
+      }
+#endif
+      c2->Update();
+      Double_t Mu = g->GetParameter(1);
+      Double_t dMu = g->GetParError(1);
       TH2 *h = (TH2 *) h3->Project3D("zy");
       h->SetName(Form("%s_%i",h->GetName(),sector));
       h->FitSlicesY(0,0,-1,10,"qeg3s");
@@ -516,6 +523,7 @@ void TDrawW2S() {
       TLegend *leg = new TLegend(0.1,0.2,0.6,0.3,"");
       lTitle = "";
       leg->SetTextSize(0.025);
+      c1->cd(ij)->SetLogz(1);
       if (fit) {
 	fit->SetTitle(h->GetTitle());
 	fit->SetMarkerStyle(20);
@@ -603,7 +611,7 @@ void TDrawW2S() {
 	      line  += Form("|%8.2f+-%6.2f ", Vals[m].val,TMath::Min(999.99,Vals[m].valError)); 
 	      lineC += Form(",%8.2f,%6.2f", Vals[m].val,TMath::Min(999.99,Vals[m].valError)); 
 	    }
-#define __AVERAGE_WS__
+	    //#define __AVERAGE_WS__
 #ifdef  __AVERAGE_WS__
 	    if (ValA[m].iFlag) {
 	      Double_t w0 = 1./(Vals[m].valError*Vals[m].valError);
@@ -659,11 +667,16 @@ void TDrawW2S() {
 	}
 	Double_t w0 = 1./(ValA[m].valError*ValA[m].valError);
 	Double_t w1 = 0;
-	if (ValG[m].valError > 0) 
-	  w1 = 1./(ValG[m].valError*ValG[m].valError);
-	ValG[m].val = (w0*ValA[m].val + w1*ValG[m].val)/(w0 + w1);
-	ValG[m].valError = 1./TMath::Sqrt(w0 + w1);
-	ValG[m].iFlag++;
+	if (ValG[2][m].valError > 0) 
+	  w1 = 1./(ValG[2][m].valError*ValG[2][m].valError);
+	ValG[2][m].val = (w0*ValA[m].val + w1*ValG[2][m].val)/(w0 + w1);
+	ValG[2][m].valError = 1./TMath::Sqrt(w0 + w1);
+	ValG[2][m].iFlag++;
+	if (ValG[iwe][m].valError > 0) 
+	  w1 = 1./(ValG[iwe][m].valError*ValG[iwe][m].valError);
+	ValG[iwe][m].val = (w0*ValA[m].val + w1*ValG[iwe][m].val)/(w0 + w1);
+	ValG[iwe][m].valError = 1./TMath::Sqrt(w0 + w1);
+	ValG[iwe][m].iFlag++;
       }
     }
 #ifdef __AVERAGE_WS__
@@ -686,30 +699,35 @@ void TDrawW2S() {
   outC << "  }," << endl;
   outC.close();
   //  out << "};" << endl << "const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);" << endl << "#endif" << endl;
-  line = ""; 
   lineC = "";
-  for (Int_t m = 0; m < 6; m++) {
-    if (! ValG[m].iFlag 
+  for (Int_t jwe = 0; jwe < 3; jwe++) {
+    line = ""; 
+    for (Int_t m = 0; m < 6; m++) {
+      if (! ValG[jwe][m].iFlag 
 #ifdef   FREEZE_BETA  
-	|| (m == 4) 
+	  || (m == 4) 
 #endif
 #ifdef   FREEZE_ALPHA_BETA  
-	|| (m == 3 || m == 4) 
+	  || (m == 3 || m == 4) 
 #endif
-	) {
-      line  += "|               ";
-      lineC += ",      0,-9.99";
-    } else {
-      if (m > 2) {
-	line  += Form("|%7.2f+-%5.2f ", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
-	lineC += Form(",%7.2f,%5.2f", ValG[m].val,TMath::Min(99.99,ValG[m].valError)); 
+	  ) {
+	line  += "|                ";
+	lineC += ",      0,-9.99";
       } else {
-	line  += Form("|%8.2f+-%6.2f ", TMath::Max(-9999.99,TMath::Min( 9999.99,ValG[m].val)),TMath::Min(999.99,ValG[m].valError)); 
-	lineC += Form(",%8.2f,%6.2f", ValG[m].val,TMath::Min(999.99,ValG[m].valError)); 
+	if (m > 2) {
+	  line  += Form("|%7.2f+-%5.2f ", ValG[jwe][m].val,TMath::Min(99.99,ValG[jwe][m].valError)); 
+	  lineC += Form(",%7.2f,%5.2f", ValG[jwe][m].val,TMath::Min(99.99,ValG[jwe][m].valError)); 
+	} else {
+	  line  += Form("|%8.2f+-%6.2f ", TMath::Max(-9999.99,TMath::Min( 9999.99,ValG[jwe][m].val)),TMath::Min(999.99,ValG[jwe][m].valError)); 
+	  lineC += Form(",%8.2f,%6.2f", ValG[jwe][m].val,TMath::Min(999.99,ValG[jwe][m].valError)); 
+	}
       }
     }
+    if      (jwe == 0) line += " West";
+    else if (jwe == 1) line += " East";
+    else               line += " All";
+    cout << line << endl;
+    out << line << endl;
   }
-  cout << line << endl;
-  out << line << endl;
   out.close();
 }

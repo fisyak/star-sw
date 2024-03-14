@@ -233,30 +233,6 @@ void TDrawIO() {
   TMinuitMinimizer::UseStaticMinuit();
   if (! gMinuit) new TMinuit(10);
   gMinuit->SetPrintLevel(-2);
-#if 1
-  TF1 *gp = new TF1("gp",g2g,-100,100,7);
-  struct Par_t {
-    const Char_t *Name;
-    Double_t p, pmin, pmax;
-  };
-  const Par_t par[7] = {
-    {"logN1",    5.,    0.,   25.},
-    {"mu1",      0.,   -1.,    1.},
-    {"sigma1",0.01, 0.001,   0.10},
-    {"logN2",    1.,    0.,   25.},
-    {"mu2",      0.,   -1.,    1.},
-    {"sigma2", 0.10,  0.01,    1.},
-    {"grass",   0.0,  0.00,    1.}
-  };
-  for (Int_t i = 0; i < 7; i++) {
-    gp->SetParName(i,par[i].Name);
-    gp->SetParameter(i,par[i].p);
-    gp->SetParLimits(i,par[i].pmin, par[i].pmax);
-  }
-#else
-  TF1 *gp = new TF1("gp","gaus(0)",-100,100);
-  gp->SetParameters(100.,0.,1.);
-#endif
   Int_t nx = 24;
   Int_t ny = NFPlots;
   Int_t scaleX = 800/nx;

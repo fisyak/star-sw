@@ -1,5 +1,5 @@
 /*  Tpc Super Sector Position based on MuTpcG.C.check TFGflag in lDb.C
-    root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+
+    root.exe 'lDb.C(1,"r2020")' MakeTpcSuperSectorB.C+
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -60,7 +60,11 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_Pass68_Avg.h"   /* new transport dR^-1 * Flip^-1*/
   //#include  "W2S_Pass71_Avg.h"   /* new transport dR^-1 * Flip^-1*/
   //#include  "W2S_Pass68_Avg.h"   /* new transport dR * Flip^-1*/
-#include  "W2S_Pass73_Avg.h"   /* new transport dR * Flip^-1*/
+  //#include  "W2S_Pass73_Avg.h"   /* new transport dR * Flip^-1*/
+  //#include  "ResultsAlignerW2S.h"  /* Pass 68 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 75 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 78 LSF */
+#include  "ResultsAlignerW2S.h"  /* Pass 80 LSF */
 };
 #define __SCALEbyHalf__
 //#define  __INVERSE_dR__
