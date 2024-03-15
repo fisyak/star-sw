@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/IOSectorParPass5B.h

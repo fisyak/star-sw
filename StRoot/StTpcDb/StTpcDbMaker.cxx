@@ -347,6 +347,10 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
 #else
     new StMagUtilities(gStTpcDb, option);
 #endif
+    if( IAttr("Alignment2024")    ) {
+      StTpcDb::SetAlignment2024(kTRUE);
+      gMessMgr->Info() << "StTpcDbMaker::Use Alignment2024 " << endm;
+    }
   }
   StTpcDb::instance()->SetTpcRotations();
   if (  gROOT->GetClass("StTpcRTSHitMaker") || gROOT->GetClass("StiMaker")) {

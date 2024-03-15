@@ -1,6 +1,5 @@
 /*  Tpc Super Sector Position based on MuTpcG.C.check TFGflag in lDb.C
-    root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+
-    > MakeSuperSectorPositionB()
+    root.exe 'lDb.C(1,"r2020")' MakeTpcSuperSectorB.C+
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -49,8 +48,26 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_Pass34_Avg.h"
   //#include  "W2S_Pass36_Avg.h"
   //#include  "W2S_Pass37_Avg.h"
-#include  "W2S_Pass40_Avg.h"
+  //#include  "W2S_Pass40_Avg.h"
+  //#include  "W2S_Pass41_Avg.h"
+  //#include  "W2S_Pass42_Avg.h"
+  //#include  "W2S_Pass51_Avg.h"
+  //#include  "W2S_Pass51_Avg.h" /* __INVERSE_dR__ */
+  //#include  "W2S_Pass60_Avg.h"   /* new transport Half step*/
+  //#include  "W2S_Pass62_Avg.h"   /* new transport HalfStep*/
+  //#include  "W2S_Pass60_Avg.h"   /* new transport Half step dR^-1*/
+  //#include  "W2S_Pass64_Avg.h"   /* new transport Half step dR^-1*/
+  //#include  "W2S_Pass68_Avg.h"   /* new transport dR^-1 * Flip^-1*/
+  //#include  "W2S_Pass71_Avg.h"   /* new transport dR^-1 * Flip^-1*/
+  //#include  "W2S_Pass68_Avg.h"   /* new transport dR * Flip^-1*/
+  //#include  "W2S_Pass73_Avg.h"   /* new transport dR * Flip^-1*/
+  //#include  "ResultsAlignerW2S.h"  /* Pass 68 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 75 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 78 LSF */
+#include  "ResultsAlignerW2S.h"  /* Pass 80 LSF */
 };
+#define __SCALEbyHalf__
+//#define  __INVERSE_dR__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   
 //________________________________________________________________________________
@@ -60,7 +77,11 @@ StMaker *dbMk = 0;
 StChain *chain = 0;
 static THStack *hs[6];
 static TLegend *leg[6];
+#ifndef __SCALEbyHalf__
 static const Double_t scale = 1.0;
+#else
+static const Double_t scale = 0.5;
+#endif
 static TGeoHMatrix dR[48], dRC[48];
 static TGeoHMatrix Rideal[24], RidealI[24];
 static Int_t _debug = 0;
@@ -150,9 +171,9 @@ Euler Rotation in Tait-Bryan angles
     dR[i].RotateZ( TMath::RadToDeg()*Pass.Data[i].gamma*1e-3*scale);  // swap sign 03/13/19
 #endif /* __ROTATION__ */
     dR[i].SetTranslation(xyz);
-    Rideal[i]     = StTpcDb::instance()->SupS2Glob(i+1); PrPI(i,Rideal[i]); // cout << "Ideal:"; Rideal[i].Print();
+    Rideal[i]     = StTpcDb::instance()->Sup12S2Glob(i+1); PrPI(i,Rideal[i]); // cout << "Ideal:"; Rideal[i].Print();
     RidealI[i]    = Rideal[i].Inverse();                 PrPI(i,RidealI[i]); //cout << "Inverse:"; RidealI[i].Print();
-    TGeoHMatrix Rreal      = StTpcDb::instance()->SupS2Glob(i+1)*dR[i];  PrPP(Rreal); //cout << "Real:"; Rreal.Print();
+    TGeoHMatrix Rreal      = StTpcDb::instance()->Sup12S2Glob(i+1)*dR[i];  PrPP(Rreal); //cout << "Real:"; Rreal.Print();
     TGeoHMatrix R = Rreal * RidealI[i];         PrPP(R); // cout <<"Diff:"; R.Print();
     const Double_t *xyzR = R.GetTranslation();
     for (Int_t j = 0; j < 3; j++) tra[i][j] = xyzR[j];
@@ -226,17 +247,23 @@ Euler Rotation in Tait-Bryan angles
   }
 }
 //________________________________________________________________________________
-void MakeSuperSectorPositionBTable(SurveyPass_t Pass, const Char_t *opt = "B"){
-  RemoveOverAllShift(Pass);
+void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
+  //  RemoveOverAllShift(Pass);
   const Char_t *plots[3] = {"dXS","dYS","dZS"};
 #if 0  
   for (Int_t j = 1; j <= 24; j++) {
     cout << Form("%2i ",j); Pass.Data[j-1].Print();
   }
 #endif
-  //  St_Survey *TpcSuperSectorPositionB = (St_Survey *) chain->GetDataBase("Geometry/tpc/TpcSuperSectorPositionB");
-  St_Survey *TpcSuperSectorPositionB = (St_Survey *) StTpcSuperSectorPosition::instance()->Table(); //chain->GetDataBase("Geometry/tpc/TpcSuperSectorPositionB");
-  if (! TpcSuperSectorPositionB)  {cout << "TpcSuperSectorPositionB has not been found"  << endl; return;}
+  St_SurveyC   *chair = 0;
+  if      (opt == "B") chair = St_SurveyC::instance("TpcSuperSectorPosition");
+  else if (opt == "D") chair = St_SurveyC::instance("TpcSuperSectorPositionD");
+  if (! chair) {
+    cout << "chair for TpcSuperSectorPosition" << opt.Data() << " has not been found" << endl;
+    return;
+  }
+  St_Survey *TpcSuperSectorPositionB = (St_Survey *) chair->Table(); //chain->GetDataBase("Geometry/tpc/TpcSuperSectorPositionB");
+  if (! TpcSuperSectorPositionB)  {cout << "TpcSuperSectorPosition" << opt.Data() << "  has not been found"  << endl; return;}
   Int_t Nrows = TpcSuperSectorPositionB->GetNRows();
   TpcSuperSectorPositionB->Print(0,Nrows);
   TGeoHMatrix GL;
@@ -279,14 +306,21 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, const Char_t *opt = "B"){
     dR[l].RotateZ( TMath::RadToDeg()*Pass.Data[i].gamma*1e-3*scale);  // swap sign 03/13/19
 #endif /* __ROTATION__ */
     dR[l].SetTranslation(xyz);
-    dRC[l] = dR[l];
+    //    dRC[l] = dR[l] * StTpcDb::instance()->Flip().Inverse();
+#ifndef __INVERSE_dR__
+    dRC[l] = StTpcDb::instance()->Flip() * dR[l] * StTpcDb::instance()->Flip().Inverse();
+#else
+    TGeoHMatrix dRI = dR[i].Inverse();
+    TGeoHMatrix FdRI = StTpcDb::instance()->Flip() * dRI;
+    dRC[l] = FdRI * StTpcDb::instance()->Flip().Inverse();
+#endif
     if (_debug) {
       cout << "Additional rotation for Super Sector\t"; dR[l].Print();
       cout << "dR" << i << ":"; dR[l].Print("");
       cout << "dRC" << i << ":"; dRC[l].Print("");
     }
     //    TGeoHMatrix dRC = dR[l]*RAvI[part]; cout << "dRC:"; dRC.Print("");
-    //    TGeoHMatrix GLnew = StTpcDb::instance()->Flip().Inverse()*dR[l]*StTpcDb::instance()->Flip()*GL; GLnew.Print(); // Flip 03/14/19
+    //    TGeoHMatrix GLnew = StTpcDb::instance()->FlipStTpcDb::instance()->Flip().Inverse() StTpcDb::instance()->FlipStTpcDb::instance()->Flip().Inverse()().Inverse()*dR[l]*StTpcDb::instance()->Flip()*GL; GLnew.Print(); // Flip 03/14/19
     //    TGeoHMatrix GLnew = GL*dR[l]; GLnew.Print(); // used till 03/13/19 and after 03/15/19
     TGeoHMatrix GLnew = GL*dRC[l]; GLnew.Print(); // used till 03/13/19 and after 03/15/19
     //    TGeoHMatrix GLnew = dR[l] * GL; GLnew.Print();
@@ -297,7 +331,11 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, const Char_t *opt = "B"){
   }
   Int_t date = Pass.date;
   Int_t time = Pass.time;
-  TString fOut =  Form("TpcSuperSectorPosition%s.%8i.%06i.C", opt, date, time);
+#ifndef __INVERSE_dR__ /* try inverse for Rass 51 => Pass53 */
+  TString fOut =  Form("TpcSuperSectorPosition%s.%8i.%06i.C", opt.Data(), date, time);
+#else
+  TString fOut =  Form("TpcSuperSectorPosition%s.%8i.%06i.C.Inverse", opt.Data(), date, time);
+#endif
   ofstream out;
   cout << "Create " << fOut.Data() << endl;
   out.open(fOut.Data());
@@ -322,7 +360,7 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, const Char_t *opt = "B"){
   }
   cout << endl;
   out << "  };" << endl;
-  out << "  St_Survey *tableSet = new St_Survey(\"TpcSuperSectorPosition" << opt << "\",24);" << endl; 
+  out << "  St_Survey *tableSet = new St_Survey(\"TpcSuperSectorPosition" << opt.Data() << "\",24);" << endl; 
   out << "  for (Int_t i = 0; i < 24; i++) tableSet->AddAt(&row[i].Id);" << endl;
   out << "  return (TDataSet *)tableSet;" << endl;
   out << "}" << endl;

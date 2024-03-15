@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/W2S_Pass21.h

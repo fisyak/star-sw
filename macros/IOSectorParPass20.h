@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/IOSectorParPass20.h
