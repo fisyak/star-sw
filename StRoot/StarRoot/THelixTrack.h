@@ -343,6 +343,8 @@ public:
 int    Size() const 			{return fCircleFitter.Size();}
 int    Used() const 			{return fCircleFitter.Used();}
 void   Add (double x,double y,double z); 
+ void   Add (const double xyz[3]) {Add(xyz[0],xyz[1],xyz[2]);}
+ void   Add (const float  xyz[3]) {Add(xyz[0],xyz[1],xyz[2]);}
 void   AddErr(const double *err2xy,double err2z); 
 void   AddErr(double errhh,double errzz); 
 double Fit();   

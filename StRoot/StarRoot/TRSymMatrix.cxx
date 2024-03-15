@@ -19,7 +19,7 @@ TRSymMatrix::TRSymMatrix(Int_t nrows,const Double_t *Array) : TRArray() {
     Int_t ij;
     Int_t i = 0, j = 0;
     for (Int_t l = 0; l < fN; l++) {
-      ij = i*(i+1)/2 + j;
+      ij = IJ(i,j);
       fArray[ij] = Array[l];
       if (i < fNrows - 1) i++;
       else {
@@ -41,7 +41,7 @@ TRSymMatrix::TRSymMatrix(Int_t nrows,const Float_t *Array) : TRArray() {
     Int_t ij;
     Int_t i = 0, j = 0;
     for (Int_t l = 0; l < fN; l++) {
-      ij = i*(i+1)/2 + j;
+      ij = IJ(i,j);
       fArray[ij] = Array[l];
       if (i < fNrows - 1) i++;
       else {
@@ -91,8 +91,8 @@ TRSymMatrix::TRSymMatrix(const TRSymMatrix& S,ETRMatrixCreatorsOp kop) {
       Double_t sigmaI = TMath::Sqrt(TMath::Abs(S[ii]));
       fArray[ii] = sigmaI*TMath::Sign(1., S[ii]);
       for (Int_t j = 0; j < i; j++) {
-	Int_t jj = j*(j+1)/2 + j;
-	Int_t ij = i*(i+1)/2 + j;
+	Int_t jj = IJ(j,j);
+	Int_t ij = IJ(i,j);
 	fArray[ij] = S[ij]/(fArray[ii]*fArray[jj]);
       }
     }
@@ -182,13 +182,16 @@ ostream& operator<<(ostream& s,const TRSymMatrix &target) {
   Int_t Nrows = target.GetNrows();
   const Double_t *Array = target.GetArray();
   s << "Semi Positive DefinedSymMatrix Size \t[" 
-    << Nrows << "," << Nrows << "]" << endl;
+    << Nrows << "," << Nrows << "]";
+  s << endl;
   if (Array) {
     s.setf(std::ios::fixed,std::ios::scientific);
     s.setf(std::ios::showpos);
-    for (int i = 0; i< Nrows; i++) {
-      for (int j = 0; j <= i; j++)
-	s << std::setw(width) << std::setprecision(width-3) << Array[i*(i+1)/2 + j] << ":\t";
+    Int_t i1 = 0;
+    Int_t i2 = Nrows;
+    for (int i = i1; i< i2; i++) {
+      for (int j = i1; j <= i; j++)
+	s << std::setw(width) << std::setprecision(width-3) << target(i,j)  << ":\t";
       s << endl;
     }
     s.unsetf(std::ios::showpos);
@@ -197,7 +200,35 @@ ostream& operator<<(ostream& s,const TRSymMatrix &target) {
   return s;
 }
 //________________________________________________________________________________
-void TRSymMatrix::Print(Option_t *opt) const {if (opt) {}; cout << *this << endl;}
+void TRSymMatrix::Print(Option_t *opt) const {if (opt); cout << *this << endl;}
+//________________________________________________________________________________
+void TRSymMatrix::Print(Int_t I, Int_t N) const {
+  static const int width = 10;
+  Int_t Nrows = GetNrows();
+  const Double_t *Array = GetArray();
+  cout << "Semi Positive DefinedSymMatrix Size \t[" 
+       << Nrows << "," << Nrows << "]";
+  if (I >= 0) cout << " subset with I = " << I;
+  if (N >= 0) cout << " subset with N = " << N;
+  cout << endl;
+  if (Array) {
+    cout.setf(std::ios::fixed,std::ios::scientific);
+    cout.setf(std::ios::showpos);
+    Int_t i1 = 0;
+    if (I >= 0 && I < Nrows) i1 = I;
+    Int_t i2 = Nrows;
+    if (i1 + N < Nrows) i2 = i1 + N;
+    for (int i = i1; i< i2; i++) {
+      for (int j = i1; j <= i; j++)
+	cout << std::setw(width) << std::setprecision(width-3) << Array[IJ(i,j)] << ":\t";
+      cout << endl;
+    }
+    cout.unsetf(std::ios::showpos);
+  }
+  else cout << " Empty";   
+  cout << endl;
+  return;
+}
 //________________________________________________________________________________
 Int_t TRSymMatrix::SpmInv(const TRSymMatrix &S, TRVector *B) {
   if (&S != this) *this = S;
@@ -390,24 +421,3 @@ L42:
 Int_t TRSymMatrix::TrInv(const Double_t *g, Double_t *gi, Int_t n)  {TCL::trinv(g, gi, n); return 0;}
 //________________________________________________________________________________
 Int_t TRSymMatrix::TrsmUL(const Double_t *g, Double_t *gi, Int_t n) {TCL::trsmul(g, gi, n); return 0;}
-#if 0
-//________________________________________________________________________________
-Double_t &TRSymMatrix::operator()(Int_t i,Int_t j){
-  //  assert(! (j < 0 || j >= fNrows));
-  if (j < 0 || j >= fNrows) {
-    ::Error("TRSymMatrix::operator()", "index j %d out of bounds (size: %d, this: %p)", 
-	    j, fNrows, this); 
-    j = 0;
-  }
-  //  assert(! (i < 0 || i >= fNrows));
-  if (i < 0 || i >= fNrows) {
-    ::Error("TRSymMatrix::operator()", "index i %d out of bounds (size: %d, this: %p)", 
-	    i, fNrows, this); 
-    i = 0;
-  }
-  Int_t m = i;
-  Int_t l = j;
-  if (i > j) {m = j; l = i;}
-  return TArrayD::operator[](m + (l+1)*l/2);
-}
-#endif
