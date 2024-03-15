@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/IOSectorPar_t.h

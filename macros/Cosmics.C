@@ -66,7 +66,9 @@
 */
 //   root.exe lMuDst.C Cosmics.C+ */Cosmics.root PlotCosmics.C
 /*
-   foreach d (`ls -1d 20??/?F`) 
+   foreach f (`ls -1d 20??/?F/IO/Cosmics.root`) 
+     set dd = `dirname $f`;
+     set d = `dirname ${dd}`
      if (-r  ${d}/CosmicPlots.data) continue
      cd ${d}
      pwd

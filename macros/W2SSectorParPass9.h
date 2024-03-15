@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/W2SSectorParPass9.h

@@ -5,7 +5,7 @@
 TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_TpcAvgPowerSupply")) return 0;
   TpcAvgPowerSupply_st row;
-  memset(row, 0, sizeof(TpcAvgPowerSupply_st));
+  memset(&row, 0, sizeof(TpcAvgPowerSupply_st));
   St_TpcAvgPowerSupply *tableSet = new St_TpcAvgPowerSupply("TpcAvgPowerSupply",1);
   Int_t NUM_CARDS      = 12;
   Int_t NUM_CHANNELS   =  8;

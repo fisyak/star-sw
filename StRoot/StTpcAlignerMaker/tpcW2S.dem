@@ -1,0 +1,111 @@
+load (f90) ;
+load ("eigen")$
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+inflag : true$
+debugmode(true) $ 
+/* ======================================================================== 
+  file: tpcS.dem  version Feb. 2024 
+  Tpc Super sector Alignment problems
+StTpcDb : W = kSubSOuter2Tpc(sectorW) * dRW
+          S = kSubSOuter2Tpc(sectorS) * dRS
+      W => S
+RW2S : kSup12S2Tpc(sectorS)^-1 * kSup12S2Tpc(sectorW)
+
+RW2ST : dRW^-1 * RW2S * dRS
+
+U : RW2S.W
+
+dev : dRS * S - dRW^-1 * U
+
+ ========================================================================  */
+RW2S: matrix([r11,r12,r13, tx],
+	     [r21,r22,r23, ty],
+             [r31,r32,r33, tz],
+             [  0,  0,  0,  1]); 
+
+dRW: matrix([ 1, -gW,  bW,  xW],
+	    [gW,   1, -aW,  yW],
+	    [bW,  aW,   1,  zW],
+	    [ 0,   0,   0,   1]);
+dRWI: matrix([  1, gW, -bW, -xW],
+	     [-gW,  1,  aW, -yW],
+	     [-bW,-aW,   1, -zW],
+	     [  0,  0,   0,   1]);
+/* sRWIxdRW: dRWI.dRW; */
+dRS: matrix([ 1, -gS,  bS,  xS],
+	    [gS,   1, -aS,  yS],
+	    [bS,  aS,   1,  zS],
+	    [ 0,   0,   0,   1]);
+ 
+nS: matrix([nXS],
+           [nYS],
+           [nZS],
+           [  0]);
+ S: matrix([XS], 
+           [YS], 
+           [ZS], 
+           [ 1]);
+nU: matrix([nXU],
+           [nYU],
+           [nZU],
+           [  0]);
+ U: matrix([XU], 
+           [YU], 
+           [ZU], 
+           [ 1]);
+/* d = (S + dS) - (U + dU) => S - U = dU - dS */
+devN: dRWI.nU - dRS.nS;
+devX: dRWI.U  - dRS.S ;
+dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[2],devX[3]]);  
+/* dev: matrix([devN[1],devN[2],devN[3],devX[1],devX[3]]); devX[2] is prediction plane */
+/*
+ Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
+ Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
+ Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
+ Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
+ Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
+ Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
+*/
+JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
+/*         
+                  nX      nY       nZ     X      Y      Z
+ Col 1 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xS,
+ Col 2 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yS,
+ Col 3 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zS,
+ Col 4 = [ [     [0]   [nZS]  [- nYS]    [0]   [ZS] [- YS] ] ] aS,
+ Col 5 = [ [ [- nZS]     [0]  [- nXS] [- ZS]    [0] [- XS] ] ] bS,
+ Col 6 = [ [   [nYS] [- nXS]      [0]   [YS] [- XS]    [0] ] ] gS,
+ Col 7 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xW,
+ Col 8 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yW,
+ Col 9 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zW,
+ Col 10= [ [     [0]   [nZU]  [- nYU]    [0]   [ZU] [- YU] ] ] aW,
+ Col 11= [ [ [- nZU]     [0]  [- nXU] [- ZU]    [0] [- XU] ] ] bW,
+ Col 12= [ [   [nYU] [- nXU]      [0]   [YU] [- XU]    [0] ] ] gW,
+
+
+*/
+trigsimp(JW2S);
+f90(JW2S);
+JW2ST: transpose(JW2S);
+/*
+trigsimp(JW2ST);
+f90(JW2ST);
+with_stdout ("JW2ST.txt",  f90(JW2ST));
+*/
+/*
+//  nX     nY      nZ     X     Y     Z  
+     0,     0,      0,  - 1,    0,    0, // xS,
+     0,     0,      0,    0,  - 1,    0, // yS,
+     0,     0,      0,    0,    0,  - 1, // zS,
+     0,   nZS,  - nYS,    0,   ZS, - YS, // aS,
+ - nZS,     0,  - nXS, - ZS,    0, - XS, // bS,
+   nYS, - nXS,      0,   YS, - XS,    0, // gS,
+     0,     0,      0,  - 1,    0,    0, // xW,
+     0,     0,      0,    0,  - 1,    0, // yW,
+     0,     0,      0,    0,    0,  - 1, // zW,
+     0,   nZU,  - nYU,    0,   ZU, - YU, // aW,
+ - nZU,     0,  - nXU, - ZU,    0, - XU, // bW,
+   nYU, - nXU,      0,   YU, - XU,    0, // gW,
+*/

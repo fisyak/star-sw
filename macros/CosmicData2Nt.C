@@ -26,8 +26,8 @@ struct BPoint_t {
 //________________________________________________________________________________
 								
 BPoint_t BPoint;
-static   Int_t Nsets = 9;
-static   TString sets[9]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF"};
+static   Int_t Nsets = 11;
+static   TString sets[11]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF", "2021/F", "2023/ZF"};
 static   TString valC[12] = {// "DelpTRAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTIPosT", "DelpTINegT"};
     "DelpTIAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTINegT", "DelpTIPosT", "DelpTRAll", "DelpTRPos", "DelpTRNeg", "DelpTRAllT", "DelpTRPosT", "DelpTRNegT", 
   };
@@ -68,7 +68,7 @@ void CosmicData2Nt(const Char_t *FileName = "/star/u/fisyak/work/Tpc/Alignment/d
     N = -1;
     for (Int_t i = 0; i <= tokens->GetLast(); i++) {
       TString &token = ((TObjString*) ( tokens->At(i)))->String();
-      cout << "i = " << i << "\t|" << token.Data() << "|" << endl;
+      //      cout << "i = " << i << "\t|" << token.Data() << "|" << endl;
       if (i == 0) {
 	if (token == "P23ia") { 
 	  pass = 0;
@@ -131,15 +131,32 @@ void Draw(Int_t var = 3, const Char_t *varName="pT") {
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
   if (c1) c1->Clear();
   else    c1 = new TCanvas("c1");
-  TH1F *frame =  c1->DrawFrame(-1,1.0,50,5.0);
-  frame->SetTitle(valC[var] + " (@1GeV/c)");
+  TString VarName(varName);
+  TH1F * frame = 0;
+  if (VarName == "pT") {
+    frame =  c1->DrawFrame(-1,1.0,70,5.0);
+    frame->SetTitle(valC[var] + " (@1GeV/c)");
+    frame->SetYTitle("Resolutin(%)");
+  } else if (VarName == "N") {
+    frame =  c1->DrawFrame(-1,0.0,70,5.0);
+    frame->SetTitle("No. of matched pairs");
+    frame->SetYTitle("N (M)");
+  }
   frame->SetXTitle("Pass");
-  frame->SetYTitle("Resolutin(%)");
-  TLegend *l = new TLegend(0.7,0.7,0.8,0.9);
+  TLegend *l = new TLegend(0.7,0.5,0.8,0.9);
+  //    FitP->SetMarkerSize(2);
   for (Int_t set = 0; set < Nsets; set++) {
-    FitP->SetMarkerColor(set+1);
-    FitP->Draw(Form("%s:pass>>h%i(51,-0.5,50.5)",varName,set),Form("var==%i&&set==%i",var,set),"same");
+    FitP->Draw(Form("%s:pass>>h%i(71,-0.5,70.5)",varName,set),Form("var==%i&&set==%i",var,set),"goff");
     TH1 *h = (TH1 *) gDirectory->Get(Form("h%i",set));
+    if (! h) continue;
+    h->SetMarkerStyle(20);
+    h->SetMarkerColor(set+1);
+    if (set > 8) {
+      h->SetMarkerStyle(23);
+      h->SetMarkerColor(set-8);
+      h->SetMarkerSize(2);
+    }
+    h->Draw("same");
     if (h) l->AddEntry(h,sets[set]);
   }
   l->Draw();    

@@ -36,6 +36,7 @@ void lDb(Int_t N = -1, const Char_t *date = 0, Bool_t TFGflag = kTRUE) {
   if (N < 0) return;
   chain->Init();
   if (N == 0) return;
+#if 0
   TString Tag(date);
   Int_t D = 0, T = 0;
   if (Tag != "") {
@@ -50,5 +51,6 @@ void lDb(Int_t N = -1, const Char_t *date = 0, Bool_t TFGflag = kTRUE) {
   }
   cout << "date " << D << " time " << T << endl;
   dbMk->SetDateTime(D,T); 
+#endif
   chain->Make();
 }
