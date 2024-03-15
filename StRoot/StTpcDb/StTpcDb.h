@@ -136,7 +136,7 @@
 // This class implements to offline interface to the STAR database      //
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
-
+#include <assert.h>
 #include "StMessMgr.h"
 #include "StEnumerations.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
@@ -231,6 +231,13 @@ class StTpcDb {
   Bool_t                 IsLaser()               {return mTriggerId != 0;}
   static Bool_t          IsOldScheme()           {return mOldScheme;}
   Double_t               zGG() {return mzGG;}
+  static Int_t           SectorPhiDeg(Int_t sector) {// sector Phi degree
+    Int_t iphi = 0;
+    assert(sector >= 1 && sector <= 24);
+    if (sector <= 12) {iphi = (360 + 90 - 30* sector      )%360;}
+    else              {iphi = (      90 + 30*(sector - 12))%360;}
+    return iphi;
+  }
   //small pieces of data:
   void    SetDriftVelocity();
   Float_t DriftVelocity(Int_t sector=24) {return DriftVelocity(sector, 0);}

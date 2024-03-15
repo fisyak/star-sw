@@ -487,8 +487,9 @@ Revisit 03/05/2024
 	case kSup12S2Tpc: // Sup12S => Tpc
 	  chair = StTpcSuperSectorPosition::instance();
 	  chairD = StTpcSuperSectorPositionD::instance();
-	  if (sector <= 12) {iphi = (360 + 90 - 30* sector      )%360; Rot = Form("R%03i",iphi);}
-	  else              {iphi = (      90 + 30*(sector - 12))%360; Rot = Form("Y%03i",iphi);}
+	  iphi = SectorPhiDeg(sector);
+	  if (sector <= 12) {Rot = Form("R%03i",iphi);}
+	  else              {Rot = Form("Y%03i",iphi);}
 	  rotm = 0;
 	  if (gGeoManager) {
 	    listOfMatrices =  gGeoManager->GetListOfMatrices();
