@@ -2775,6 +2775,7 @@ MakeChairAltInstance2(Survey,StTpcOuterSectorPosition,Geometry/tpc/TpcOuterSecto
 MakeChairAltInstance2(Survey,StTpcSuperSectorPosition,Geometry/tpc/TpcSuperSectorPosition,Geometry/tpc/TpcSuperSectorPositionB,gEnv->GetValue("NewTpcAlignment",0));
 MakeChairInstance2(Survey,StTpcSuperSectorPositionD,Geometry/tpc/TpcSuperSectorPositionD);
 MakeChairInstance2(Survey,StTpcHalfPosition,Geometry/tpc/TpcHalfPosition);
+MakeChairInstance2(Survey,StTpcWheelPosition,Geometry/tpc/TpcWheelPosition);
 MakeChairInstance2(Survey,StTpcPosition,Geometry/tpc/TpcPosition);
 #include "St_iTPCSurveyC.h"
 MakeChairInstance(iTPCSurvey,Geometry/tpc/iTPCSurvey);
@@ -2903,7 +2904,7 @@ void St_SurveyC::Normalize(TGeoHMatrix &R) {
 //________________________________________________________________________________
 const TGeoHMatrix &St_SurveyC::GetMatrix(Int_t i) {
   static TGeoIdentity identity;
-  if (i > (Int_t) getNumRows()) return identity;
+  if (i > (Int_t) getNumRows()) return *&identity;
   assert(fRotations || fRotations[i]);
   assert(TMath::Abs(fRotations[i]->Determinant())-1 < 1.e-3);
   return *fRotations[i];
@@ -2972,6 +2973,7 @@ St_SurveyC   *St_SurveyC::instance(const Char_t *name) {
   if (Name == "TpcInnerSectorPosition") return (St_SurveyC   *) StTpcInnerSectorPosition::instance();
   if (Name == "TpcOuterSectorPosition") return (St_SurveyC   *) StTpcOuterSectorPosition::instance();
   if (Name == "TpcSuperSectorPosition") return (St_SurveyC   *) StTpcSuperSectorPosition::instance();
+  if (Name == "TpcSuperSectorPositionD")return (St_SurveyC   *) StTpcSuperSectorPositionD::instance();
   if (Name == "TpcHalfPosition")        return (St_SurveyC   *) StTpcHalfPosition::instance();
   if (Name == "idsOnTpc")               return (St_SurveyC   *) StidsOnTpc::instance();
   if (Name == "pstOnIds")        	return (St_SurveyC   *) StpstOnIds::instance();
