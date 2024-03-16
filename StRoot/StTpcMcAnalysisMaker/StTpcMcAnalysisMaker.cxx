@@ -407,8 +407,8 @@ Int_t StTpcMcAnalysisMaker::SingleCluster() {
       if (primVtx)
 	fCluster->SetXyzPV(primVtx->position().x(),primVtx->position().y(),primVtx->position().z());
       if (tpcRawData) {
-	Int_t kPadMin = rHit->minPad();
-	Int_t kPadMax = rHit->maxPad();
+	Int_t kPadMin = TMath::Max(1,TMath::Min(St_tpcPadConfigC::instance()->numberOfPadsAtRow(sector, row), rHit->minPad()));
+	Int_t kPadMax = TMath::Max(1,TMath::Min(St_tpcPadConfigC::instance()->numberOfPadsAtRow(sector, row), rHit->maxPad()));
 	Int_t kTbMin  = rHit->minTmbk();
 	Int_t kTbMax  = rHit->maxTmbk();
 	//?	if (kTbMax - rHit->timeBucket() >= 15) kTbMax += 10;
