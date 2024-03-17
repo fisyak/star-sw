@@ -3,53 +3,7 @@
  * $Id: StTpcRawData.h,v 2.14 2018/09/27 22:01:24 ullrich Exp $
  *
  * Author: Yuri Fisyak, Mar 2008
- ***************************************************************************
- *
- * Description:
- *
- ***************************************************************************
- *
- * $Log: StTpcRawData.h,v $
- * Revision 2.14  2018/09/27 22:01:24  ullrich
- * Added missing inheritance, SObject, for StDigitalPair
- *
- * Revision 2.13  2018/09/27 20:03:33  ullrich
- * Added ClassDef for StDigitalPair
- *
- * Revision 2.12  2018/04/05 03:16:20  smirnovd
- * Make StTpcDigitalSector compatible with iTPC
- *
- * Revision 2.11  2018/02/18 23:18:45  perev
- * Remove iTPC related update
- *
- * Revision 2.9  2012/05/07 14:41:59  fisyak
- * Remove hardcoded separation between Inner and Outer Sectors
- *
- * Revision 2.8  2011/03/31 19:27:47  fisyak
- * Add more safety for work with pixel data
- *
- * Revision 2.7  2009/11/23 22:20:51  ullrich
- * Minor cleanup performed, fixed compiler warnings.
- *
- * Revision 2.6  2009/10/12 23:52:32  fisyak
- * Fix relation npad from pad row
- *
- * Revision 2.5  2008/07/31 20:47:27  fisyak
- * Modify operator += and =
- *
- * Revision 2.4  2008/06/20 14:56:34  fisyak
- * Add protection for pad no.
- *
- * Revision 2.3  2008/05/27 14:40:08  fisyak
- * keep pixel raw data as short istead of uchar
- *
- * Revision 2.2  2008/04/24 16:06:25  fisyak
- * Clean up before next move
- *
- * Revision 2.1  2008/03/13 16:42:24  ullrich
- * Initial Revision
- *
- **************************************************************************/
+ ***************************************************************************/
 #ifndef StTpcRawData_h
 #define StTpcRawData_h
 
@@ -62,55 +16,24 @@
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StMemoryPool.hh"
 #define __MaxNumberOfTimeBins__ 512
-#if 0
-typedef std::vector<Short_t>  StVectorADC;
-typedef std::vector<Int_t> StVectorIDT;
-
-class StDigitalPair {
-public:
-    StDigitalPair(UShort_t time=0)      {mTime=time;}
-    virtual ~StDigitalPair() {}
-    void add(Short_t adc)               {mAdc.push_back(adc);}
-    void add(Short_t adc,Int_t idt)     {mAdc.push_back(adc); mIdt.push_back(idt);}
-    
-    Short_t* adc()   const {return (Short_t*)&mAdc[0];}			
-    Bool_t   isIdt() const {return mAdc.size() == mIdt.size();}
-    Int_t   *idt()   const {return (Int_t*)(isIdt() ? &mIdt[0] : 0);}			
-    Int_t    size()  const {return mAdc.size();}
-    UShort_t time()  const {return mTime;}
-
-private:
-    UShort_t    mTime;
-    StVectorADC mAdc;
-    StVectorIDT mIdt; 
-};
-
-typedef std::vector<StDigitalPair>           StDigitalTimeBins;
-typedef std::vector<StDigitalTimeBins>       StDigitalPadRow;
-typedef std::vector<StDigitalPadRow>         StDigitalSector;
-typedef std::vector<StDigitalPair>::iterator StDigitalTimeBinIterator;
-typedef StDigitalTimeBins::iterator          StDigitalTimeBinsIterator;
-typedef StDigitalPadRow::iterator            StDigitalPadRowIterator;
-typedef StDigitalSector::iterator            StDigitalRowIterator;
-
-#else
 class StDigitalPixel {
  public:
   StDigitalPixel(Short_t adc=0, Int_t Idt=0): mAdc(adc), mIdt(Idt) {}
   virtual ~StDigitalPixel() {}
   Short_t  adc()   const {return mAdc;}
   Int_t    idt()   const {return mIdt;}
+#if 1
   void* operator new(size_t) { return mPool.alloc(); }
   void  operator delete(void* p)  { mPool.free(p); }
+#endif
  private:
   Short_t  mAdc;
   Int_t    mIdt; 
   static StMemoryPool mPool;
 };
-typedef std::map<UShort_t,StDigitalPixel>           StDigitalTimeBins;
+typedef std::map<UShort_t,StDigitalPixel>    StDigitalTimeBins;
 typedef std::vector<StDigitalTimeBins>       StDigitalPadRow;
 typedef std::vector<StDigitalPadRow>         StDigitalSector;
-#endif
 typedef std::vector<StTpcPixel>              StVectPixel;
 typedef std::vector<StSequence>              StVecSequence;
 typedef std::vector<Int_t*>                  StVecIds;
@@ -134,10 +57,6 @@ public:
     
     // Adding
     void   assignTimeBins(Int_t row , Int_t pad, StDigitalTimeBins*);
-#if 0
-    Int_t  getSequences(Int_t row, Int_t pad, Int_t *nSeq, StSequence** seq, Int_t ***Ids);
-    Int_t  getPadList(Int_t row, UChar_t **padList);
-#endif
     Int_t  getTimeAdc(Int_t row, Int_t pad, Short_t ADCs[__MaxNumberOfTimeBins__], 
 		      Int_t IDTs[__MaxNumberOfTimeBins__]); // with  8 => 10 conversion
     Int_t  getTimeAdc(Int_t row, Int_t pad, UChar_t  ADCs[__MaxNumberOfTimeBins__], 
@@ -152,14 +71,12 @@ public:
     virtual void   Print(const Option_t *opt="") const;
     virtual Int_t  PrintTimeAdc(Int_t row, Int_t pad) const;
     StTpcDigitalSector &operator+= (StTpcDigitalSector& v);
-    Int_t numberOfPadsAtRow(Int_t row) {return (row > 0 && row <= mNoRows) ? St_tpcPadConfigC::instance()->padsPerRow(mSector, row) : 0;}
+    Int_t numberOfPadsAtRow(Int_t row) const {return (row > 0 && row <= mNoRows) ? St_tpcPadConfigC::instance()->padsPerRow(mSector, row) : 0;}
     StTpcDigitalSector& operator=(const StTpcDigitalSector&);
     Int_t sector() {return mSector;}
     Int_t NoRows() {return mNoRows;}
-private:
+ private:
     StTpcDigitalSector(const StTpcDigitalSector&);
-
-private:
     StDigitalSector       mData;
     Int_t                 mSector;
     StVecPads             mPadList;
@@ -169,7 +86,7 @@ private:
     ClassDef(StTpcDigitalSector,2)
 };
 class StTpcRawData : public StObject {
-public:
+ public:
     StTpcRawData(Int_t noSectors = 24) {setNoSectors(noSectors);}
     virtual ~StTpcRawData() {clear();}
     UInt_t size() {return mSectors.size();}
@@ -185,7 +102,7 @@ public:
     StTpcRawData &operator+= (StTpcRawData& v);
     virtual void Print(const Option_t *opt="") const; 
     const std::vector<StTpcDigitalSector*> &Sectors() {return *&mSectors;}
-private:
+ private:
     std::vector<StTpcDigitalSector*> mSectors;
     ClassDef(StTpcRawData,1)
  };

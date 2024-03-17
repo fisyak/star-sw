@@ -3,78 +3,7 @@
  * $Id: StTpcRawData.cxx,v 2.18 2018/04/10 11:32:08 smirnovd Exp $
  *
  * Author: Yuri Fisyak, Mar 2008
- ***************************************************************************
- *
- * Description:
- *
- ***************************************************************************
- *
- * $Log: StTpcRawData.cxx,v $
- * Revision 2.18  2018/04/10 11:32:08  smirnovd
- * Minor corrections across multiple files
- *
- * - Remove ClassImp macro
- * - Change white space
- * - Correct windows newlines to unix
- * - Remove unused debugging
- * - Correct StTpcRTSHitMaker header guard
- * - Remove unused preprocessor directives in StiCA
- * - Minor changes in status and debug print out
- * - Remove using std namespace from StiKalmanTrackFinder
- * - Remove includes for unused headers
- *
- * Revision 2.17  2018/04/07 03:32:06  smirnovd
- * Set default sector id to 20
- *
- * Is should not matter which sector to use for past data but 20 is the one with
- * iTPC in 2018
- *
- * Revision 2.16  2018/04/05 03:16:20  smirnovd
- * Make StTpcDigitalSector compatible with iTPC
- *
- * Revision 2.15  2018/02/18 23:04:49  perev
- * Put back iTPC update
- *
- * Revision 2.13  2012/10/23 20:15:57  fisyak
- * Don't add empty ADC
- *
- * Revision 2.12  2012/05/16 21:35:03  fisyak
- * replace StDigitalPair by its reference
- *
- * Revision 2.11  2012/05/07 14:41:59  fisyak
- * Remove hardcoded separation between Inner and Outer Sectors
- *
- * Revision 2.10  2011/03/31 19:27:47  fisyak
- * Add more safety for work with pixel data
- *
- * Revision 2.9  2009/11/23 22:20:51  ullrich
- * Minor cleanup performed, fixed compiler warnings.
- *
- * Revision 2.8  2009/11/23 16:34:07  fisyak
- * Cleanup, remove dependence on dst tables, clean up software monitors
- *
- * Revision 2.7  2009/10/12 23:52:32  fisyak
- * Fix relation npad from pad row
- *
- * Revision 2.6  2008/07/31 20:47:26  fisyak
- * Modify operator += and =
- *
- * Revision 2.5  2008/06/23 19:16:19  fisyak
- * fix memset size
- *
- * Revision 2.4  2008/06/20 14:56:34  fisyak
- * Add protection for pad no.
- *
- * Revision 2.3  2008/05/27 14:40:03  fisyak
- * keep pixel raw data as short istead of uchar
- *
- * Revision 2.2  2008/04/24 16:06:25  fisyak
- * Clean up before next move
- *
- * Revision 2.1  2008/03/13 16:42:24  ullrich
- * Initial Revision
- *
- **************************************************************************/
+  **************************************************************************/
 #include "StTpcRawData.h"
 #include "Riostream.h"
 #include "TError.h"
@@ -86,20 +15,11 @@ StMemoryPool StDigitalPixel::mPool(sizeof(StDigitalPixel));
 
 //________________________________________________________________________________
 StTpcDigitalSector::StTpcDigitalSector(Int_t sector) : mSector(sector) {
-#if 0
-  StDigitalTimeBins  timeBins;
-#endif
   mNoRows = St_tpcPadConfigC::instance()->padRows(sector);
   for(Int_t row=1; row <= mNoRows; row++) {
     StDigitalPadRow    padRow;
     Int_t NoPads = St_tpcPadConfigC::instance()->numberOfPadsAtRow(sector,row);
-#if 0
-    for (Int_t pad = 0; pad < NoPads; pad++) {
-      padRow.push_back( timeBins);
-    }
-#else
     padRow.resize(NoPads);
-#endif
     mData.push_back(padRow);
   }
 }
@@ -140,73 +60,11 @@ Int_t StTpcDigitalSector::cleanup() {
   if (numberOfEmptyRows==mData.size()) return 1;
   else return 0;
 }
-#if 0
-//________________________________________________________________________________
-Int_t StTpcDigitalSector::getSequences(Int_t row, Int_t pad, Int_t *nSeq, StSequence** Seq, Int_t ***Ids) {
-  *Seq=0;
-  if (Ids) *Ids=0;*nSeq=0;
-  mSequence.clear();
-  mIds.clear();
-  StDigitalTimeBins* TrsPadData = timeBinsOfRowAndPad(row,pad);
-  if (!TrsPadData) return 1;
-  StDigitalTimeBins &trsPadData = *TrsPadData;
-  Int_t nTimeBins = trsPadData.size();
-  if (!nTimeBins) return 2;
-  // Construct the sequences:
-  StSequence aSequence;
-#if 0
-  for (Int_t ibin=0;ibin<nTimeBins;ibin++)  {
-    aSequence.length       = trsPadData[ibin].size();
-    if (aSequence.length > 31) aSequence.length = 31;
-    aSequence.startTimeBin = trsPadData[ibin].time();
-    aSequence.firstAdc     = &ADCs[aSequence.startTimeBin];
-    mSequence.push_back(aSequence);
-    mIds.push_back(&IDTs[aSequence.startTimeBin]);
-  }
-#else
-  Int_t tbC = -999;
-  for (auto it =  trsPadData.cbegin(); it != trsPadData.cend(); ++it) {
-    Int_t tb = (*it).first;
-    Short_t adc = (*it).second.adc();
-    Int_t   idt = (*it).second.idt();
-    if (tbC > 0 
-  }
- 
-#endif
-  *nSeq = mSequence.size();
-  *Seq = &mSequence[0];
-  if (Ids) *Ids = &mIds[0];
-  return 0;
-}
-//________________________________________________________________________________
-Int_t StTpcDigitalSector::getPadList(Int_t row, UChar_t **padList) {
-  mPadList.clear();
-  assert( row>=1 && row <=mNoRows);
-  // Loop over all the pads:
-  for(Int_t ii = 1; ii <= numberOfPadsAtRow(row); ii++) {
-    if (numberOfTimeBins(row,ii) > 0) {
-      mPadList.push_back(ii);
-    }
-  }
-  *padList = &mPadList[0];
-  return mPadList.size();
-}
-#endif
 //________________________________________________________________________________
 Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, Short_t *ADCs, UShort_t *IDTs) {// 10 -> 8 conversion
   Int_t ntimebins = 0;
-  StDigitalTimeBins  digPadData;
-#if 0
-  Int_t tbC = -999;
-  for (Int_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
-    if (! ADCs[tb]) continue;
-    if (tb != tbC+1) digPadData.push_back(StDigitalPair(tb));
-    tbC = tb;
-    if (IDTs) digPadData.back().add(ADCs[tb],IDTs[tb]);
-    else      digPadData.back().add(ADCs[tb]);
-    ntimebins++;
-  }
-#else
+  static StDigitalTimeBins  digPadData;
+  digPadData.clear();
   for (Int_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
     if (! ADCs[tb]) continue;
     Int_t Idt = 0;
@@ -214,26 +72,14 @@ Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, Short_t *ADCs, UShort
     digPadData[tb] = StDigitalPixel(ADCs[tb], Idt);
     ntimebins++;
   }
-#endif
   if (ntimebins) assignTimeBins(row,pad,&digPadData);
   return ntimebins;
 }
 //________________________________________________________________________________
 Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, UChar_t *ADCs, UShort_t *IDTs) {// no conversion
   Int_t ntimebins = 0;
-  StDigitalTimeBins  digPadData;
-#if 0
-  Int_t tbC = -999;
-  for (Int_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
-    if (! ADCs[tb]) continue;
-    if (tb != tbC+1) digPadData.push_back(StDigitalPair(tb));
-    tbC = tb;
-    Short_t adc = log8to10_table[ADCs[tb]];
-    if (IDTs) digPadData.back().add(adc,IDTs[tb]);
-    else      digPadData.back().add(adc);
-    ntimebins++;
-  }
-#else
+  static StDigitalTimeBins  digPadData;
+  digPadData.clear();
   for (UShort_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
     if (! ADCs[tb]) continue;
     Int_t Idt = 0;
@@ -242,25 +88,14 @@ Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, UChar_t *ADCs, UShort
     digPadData[tb] = StDigitalPixel(adc, Idt);
     ntimebins++;
   }
-#endif
   assignTimeBins(row,pad,&digPadData);
   return ntimebins;
 }
 //________________________________________________________________________________
 Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, Short_t *ADCs, Int_t *IDTs) {// 10 -> 8 conversion
   Int_t ntimebins = 0;
-  StDigitalTimeBins  digPadData;
-#if 0
-  Int_t tbC = -999;
-  for (Int_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
-    if (! ADCs[tb]) continue;
-    if (tb != tbC+1) digPadData.push_back(StDigitalPair(tb));
-    tbC = tb;
-    if (IDTs) digPadData.back().add(ADCs[tb],IDTs[tb]);
-    else      digPadData.back().add(ADCs[tb]);
-    ntimebins++;
-  }
-#else
+  static StDigitalTimeBins  digPadData;
+  digPadData.clear();
   for (UShort_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
     if (! ADCs[tb]) continue;
     Int_t Idt = 0;
@@ -268,26 +103,14 @@ Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, Short_t *ADCs, Int_t 
     digPadData[tb] = StDigitalPixel(ADCs[tb], Idt);
     ntimebins++;
   }
-#endif
   if (ntimebins) assignTimeBins(row,pad,&digPadData);
   return ntimebins;
 }
 //________________________________________________________________________________
 Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, UChar_t *ADCs, Int_t *IDTs) {// no conversion
   Int_t ntimebins = 0;
-  StDigitalTimeBins  digPadData;
-#if 0
-  Int_t tbC = -999;
-  for (Int_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
-    if (! ADCs[tb]) continue;
-    if (tb != tbC+1) digPadData.push_back(StDigitalPair(tb));
-    tbC = tb;
-    Short_t adc = log8to10_table[ADCs[tb]];
-    if (IDTs) digPadData.back().add(adc,IDTs[tb]);
-    else      digPadData.back().add(adc);
-    ntimebins++;
-  }
-#else
+  static StDigitalTimeBins  digPadData;
+  digPadData.clear();
   for (UShort_t tb = 0; tb < __MaxNumberOfTimeBins__; tb++) {
     if (! ADCs[tb]) continue;
     Int_t Idt = 0;
@@ -295,7 +118,6 @@ Int_t StTpcDigitalSector::putTimeAdc(Int_t row, Int_t pad, UChar_t *ADCs, Int_t 
     digPadData[tb] = StDigitalPixel(ADCs[tb], Idt);
     ntimebins++;
   }
-#endif
   assignTimeBins(row,pad,&digPadData);
   return ntimebins;
 }
@@ -307,6 +129,8 @@ Int_t StTpcDigitalSector::getTimeAdc(Int_t row, Int_t pad,
   UInt_t nTimeSeqs = 0;
   memset (ADCs, 0, __MaxNumberOfTimeBins__*sizeof(Short_t));
   memset (IDTs, 0, __MaxNumberOfTimeBins__*sizeof(Int_t));
+  if ( ! ((row >= 1 && row <= mNoRows ) ||
+	  (pad >= 1 && pad <= numberOfPadsAtRow(row)))) return nTimeSeqs;
   StDigitalTimeBins* TrsPadData = timeBinsOfRowAndPad(row,pad);
   if (! TrsPadData) return nTimeSeqs;
   StDigitalTimeBins &trsPadData = *TrsPadData;
@@ -316,23 +140,10 @@ Int_t StTpcDigitalSector::getTimeAdc(Int_t row, Int_t pad,
     Error("StTpcDigitalSector::getTimeAdc","row = %i, pad = %i has corrupted nTimeSeqs = %i", row, pad, nTimeSeqs);
     return 0;
   }
-#if 0
-  for (UInt_t i = 0; i < nTimeSeqs; i++) {
-    StDigitalPair &digPair = trsPadData[i];
-    UInt_t ntbk = digPair.size();
-    UInt_t tb   = digPair.time();
-    UInt_t isIdt= digPair.isIdt();
-    for (UInt_t j = 0; j < ntbk; j++, tb++) {
-      ADCs[tb] = digPair.adc()[j];
-      if (isIdt) IDTs[tb] = digPair.idt()[j];
-    }
-  }
-#else
   for (auto it =  trsPadData.cbegin(); it != trsPadData.cend(); ++it) {
     ADCs[(*it).first] = (*it).second.adc();
     IDTs[(*it).first] = (*it).second.idt();
   }
-#endif
   return nTimeSeqs;
 }
 //________________________________________________________________________________
@@ -344,6 +155,8 @@ Int_t StTpcDigitalSector::getTimeAdc(Int_t row, Int_t pad,
   UInt_t nTimeSeqs = 0;
   memset (ADCs, 0, __MaxNumberOfTimeBins__*sizeof(UChar_t));
   memset (IDTs, 0, __MaxNumberOfTimeBins__*sizeof(Int_t));
+  if ( ! ((row >= 1 && row <= mNoRows ) ||
+	  (pad >= 1 && pad <= numberOfPadsAtRow(row)))) return nTimeSeqs;
   StDigitalTimeBins* TrsPadData = timeBinsOfRowAndPad(row,pad);
   if (! TrsPadData) return nTimeSeqs;
   StDigitalTimeBins &trsPadData = *TrsPadData;
@@ -353,50 +166,26 @@ Int_t StTpcDigitalSector::getTimeAdc(Int_t row, Int_t pad,
     Error("StTpcDigitalSector::getTimeAdc","row = %i, pad = %i has corrupted nTimeSeqs = %i", row, pad, nTimeSeqs);
     return 0;
   }
-#if 0
-  for (UInt_t i = 0; i < nTimeSeqs; i++) {
-    StDigitalPair &digPair = trsPadData[i];
-    UInt_t ntbk = digPair.size();
-    UInt_t tb   = digPair.time();
-    UInt_t isIdt= digPair.isIdt();
-    for (UInt_t j = 0; j < ntbk; j++, tb++) {
-      if (digPair.adc()[j] <= 0) continue;
-      ADCs[tb] = log10to8_table[digPair.adc()[j]];
-      if (isIdt) IDTs[tb] = digPair.idt()[j];
-    }
-  }
-#else
   for (auto it =  trsPadData.cbegin(); it != trsPadData.cend(); ++it) {
     ADCs[(*it).first] = (*it).second.adc();
     IDTs[(*it).first] = (*it).second.idt();
   }
-#endif
   return nTimeSeqs;
  }
 //________________________________________________________________________________
 Int_t StTpcDigitalSector::PrintTimeAdc(Int_t row, Int_t pad) const {
   UInt_t nTimeSeqs = 0;
+  if ( ! ((row >= 1 && row <= mNoRows ) ||
+	  (pad >= 1 && pad <= numberOfPadsAtRow(row)))) return nTimeSeqs;
   const StDigitalTimeBins* TrsPadData = timeBinsOfRowAndPad(row,pad);
   if (! TrsPadData) return nTimeSeqs;
   const StDigitalTimeBins &trsPadData = *TrsPadData;
   nTimeSeqs = trsPadData.size();
   if (! nTimeSeqs) return nTimeSeqs;
   cout << "Time/Adc/IdTruth for row " << row << "\tpad " << pad << endl;
-#if 0
-  for (UInt_t i = 0; i < nTimeSeqs; i++) {
-    StDigitalPair digPair = trsPadData[i];
-    UInt_t ntbk = digPair.size();
-    UInt_t tb   = digPair.time();
-    for (UInt_t j = 0; j < ntbk; j++, tb++) {
-      if (digPair.adc()[j] <= 0) continue;
-      cout << "\t" << tb << "\t" << digPair.adc()[j] << "\t" << digPair.idt()[j] << endl;
-    }
-  }
-#else
   for (auto it =  trsPadData.cbegin(); it != trsPadData.cend(); ++it) {
     cout << "\t" << (*it).first << "\t" << (*it).second.adc() << "\t" << (*it).second.idt() << endl;
   }
-#endif
   return nTimeSeqs;
  }
 //________________________________________________________________________________
