@@ -86,7 +86,7 @@ ostream&  operator<<(ostream& os, const HelixPar_t &v) {
   os << Form(" xyzG: %8.3f %8.3f %8.3f", v.xG, v.yG, v.zG);
   if (_debug) {
     os << endl;
-    TRSymMatrix C(5,v.fCov);
+    TRSymMatrix C(6,v.fCov);
     os << C << endl;
   }
   os << "\tPoints = " << v.Npoints << "\tused = " << v.Nused << "\tchi2/Ndf = " << v.Chi2 << "/" << v.Ndf;
@@ -116,6 +116,33 @@ void StTpcAlignerMaker::CheckDirection(HelixPar_t *HlxPar) {
   if (! HlxPar) return;
   Double_t proj = Project(HlxPar->pxyzG(), HlxPar->xyzG());
   if (proj < 0) {HlxPar->nxG *= -1; HlxPar->nyG *= -1; HlxPar->nzG *= -1;}
+}
+//________________________________________________________________________________
+void StTpcAlignerMaker::GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t &err2z) {
+  Int_t sector = tpcHit->sector();
+  Double_t alfa = TMath::DegToRad()*StTpcDb::SectorPhiDeg(sector);
+  Double_t c = cos(alfa);
+  Double_t s = sin(alfa);
+  Double_t sigma2Y = tpcHit->positionError().perp2();
+  err2z = tpcHit->positionError().z()*tpcHit->positionError().z();
+  if (sigma2Y == 0 || err2z == 0) {
+    Int_t row = tpcHit->padrow();
+    Int_t io = (row <= St_tpcPadConfigC::instance()->numberOfInnerRows(sector)) ? 0 : 1;
+    Double_t z = tpcHit->position().z();
+    if (! io) StiTpcInnerHitErrorCalculator::instance()->calculateError(200-z, 0., 0., sigma2Y, err2z);
+    else      StiTpcOuterHitErrorCalculator::instance()->calculateError(200-z, 0., 0., sigma2Y, err2z);
+  }
+  assert(sigma2Y > 0);
+  assert(err2z > 0);
+  err2xy[0] =  s*s * sigma2Y;
+  err2xy[1] = -s*c * sigma2Y;
+  err2xy[2] =  c*c * sigma2Y;
+#if 0
+  Double_t T[2][2]={{c,-s},
+		    {s, c}};
+  TCL::trasat(T[0],stiErr,err2xy,2,2);
+#endif
+  assert(err2xy[0] + err2xy[2] > 0 && err2z> 0);
 }
 //_____________________________________________________________________________
 Int_t StTpcAlignerMaker::Init(){
@@ -257,20 +284,80 @@ Int_t StTpcAlignerMaker::Make(){
   return kStOK;
 }
 //________________________________________________________________________________
-TRMatrix StTpcAlignerMaker::GetSti2R(Double_t nx, Double_t ny, Double_t nz) {
+TRMatrix StTpcAlignerMaker::GetSti2G(Double_t nx, Double_t ny, Double_t nz) {
+  /* StiKalmanTrackNode::getMomentum
+     _cosCA = cos(myNode.mFP.eta());
+  p[0] = pt*mFP._cosCA;
+  p[1] = pt*mFP._sinCA;
+  p[2] = pt*mFP.tanl();
+  Sti     Sup12S
+     x =  y
+     y =  x
+     z = -z
+   */
+/*
+X(y):= y;
+Y(x):= x;
+Z(z):= -z;
+cosT(Tan) := 1/sqrt(1 + Tan*Tan); 
+sinT(Tan) := Tan*cosT(Tan);
+nx(Phi,Tan) := cos(Phi)*cosT(Tan);
+ny(Phi,Tan) := sin(Phi)*cosT(Tan);
+nz(Tan)  := -sinT(Tan);
+Sti2G : jacobian([X(y), Y(x), Z(z), nx(Phi, Tan), ny(Phi,Tan), nz(Tan)], [x, y, z, Phi, Ptin, Tan]);
+(%i48) Sti2G:jacobian([X(y),Y(x),Z(z),nx(Phi,Tan),ny(Phi,Tan),nz(Tan)],
+                      [x,y,z,Phi,Ptin,Tan])
+       [ 0  1   0          0          0                0                ]
+       [                                                                ]
+       [ 1  0   0          0          0                0                ]
+       [                                                                ]
+       [ 0  0  - 1         0          0                0                ]
+       [                                                                ]
+       [                 sin(Phi)                 cos(Phi)*Tan          ]
+       [ 0  0   0   - --------------  0         - -------------         ]
+       [                      2                       2     3/2         ]
+       [              sqrt(Tan  + 1)              (Tan  + 1)            ]
+(%o48) [                                                                ]
+       [                cos(Phi)                  sin(Phi)*Tan          ]
+       [ 0  0   0    --------------   0         - -------------         ]
+       [                     2                        2     3/2         ]
+       [             sqrt(Tan  + 1)               (Tan  + 1)            ]
+       [                                                                ]
+       [                                        2                       ]
+       [                                     Tan               1        ]
+       [ 0  0   0          0          0  ------------- - -------------- ]
+       [                                     2     3/2           2      ]
+       [                                 (Tan  + 1)      sqrt(Tan  + 1) ]
+Sti2G[0][1] = 1
+Sti2G[1][0] = 1
+Sti2G[2][2] = -1
+Sti2G[3][3] = -sin(Phi)/sqrt(Tan**2+1)
+Sti2G[3][5] = -cos(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
+Sti2G[4][3] = cos(Phi)/sqrt(Tan**2+1)
+Sti2G[4][5] = -sin(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
+Sti2G[5][5] = Tan**2*(Tan**2+1)**((-3.d+0)/2.d+0)-1/sqrt(Tan**2+1)
+
+
+   nx = cosP * cosL;
+   ny = sinP * cosL;
+   nz =        sinL;
+*/
   Double_t dxy  = TMath::Sqrt(nx*nx + ny*ny);
   Double_t tanL = nz/dxy;
-  Double_t l2   = TMath::Sqrt(1+tanL*tanL);
-  Double_t l1l = tanL*l2;
-  Double_t Sti2R[30] = {
-    /*          y, z      nx,     ny,  nz,*/
-    /* x    */  0, 0,      0,      0,   0,  
-    /* y    */  1, 0,      0,      0,   0,  
-    /* z    */  0, 1,      0,      0,   0,  
-    /* eta  */  0, 0,    -ny,     nx,   0,
-    /* curv */  0, 0,      0,      0,   0,  
-    /* tanL */  0, 0, nx*l1l, ny*l1l, -l2};
-  return TRMatrix(6,5,Sti2R); 
+  Double_t cosL = 1./TMath::Sqrt(1+tanL*tanL); // cosL
+  Double_t sinL = tanL*cosL;
+  //  Double_t cosP = nx/cosL;
+  //  Double_t sinP = ny/cosL;
+  Double_t Sti2G[6][6] = {0};
+  Sti2G[0][1] =   1;
+  Sti2G[1][0] =   1;
+  Sti2G[2][2] =  -1;
+  Sti2G[3][3] = -ny;               // -sin(Phi)/sqrt(tanL**2+1) = -sin(Phi)*cosL = -ny;
+  Sti2G[3][5] = -nx * sinL * cosL; // -cos(Phi)*tanL*(tanL**2+1)**((-3.d+0)/2.d+0) = -cos(Phi)*sinL/cosL*cosL**3 = -cos(Phi)*sinL*cosL**2 = -= -nx * sinL * cosL
+  Sti2G[4][3] =  nx;               // cos(Phi)*cosL;
+  Sti2G[4][5] = -ny * sinL * cosL; // -sin(Phi)*tanL*TMath::Power(cosL,3) = -sin(Phi)*sinL * cosL**2 = -ny * sinL * cosL;
+  Sti2G[5][5] =  nz * cosL * cosL; // tanL**2*TMath::Power(cosL,3)-cosL = sinL/cosL *cosL**3 = sinL * cosL**2 = nz * cosL * cosL;
+  return TRMatrix(6,6,&Sti2G[0][0]); 
 }
 // ______________________________________________________________________________
 Int_t StTpcAlignerMaker::MakeIO() {
@@ -282,17 +369,17 @@ Int_t StTpcAlignerMaker::MakeIO() {
   static StThreeVectorD XyzI, XyzO;
   static StThreeVectorD DirI, DirO;
   static Double_t stepMX = 1.e3;
-  Double_t StiErr[21];
   Double_t step;
   static StGlobalCoordinate              globalCoo;
   static StTpcLocalSectorCoordinate      local;
   static StGlobalDirection               globalDir;
   static StTpcLocalSectorDirection       localDir;
   static StTpcCoordinateTransform transform(StTpcDb::instance());
-  static Double_t err2xy[3] = {0,0,0}, err2z = 0;
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
+#if 0
   StBTofCollection *btofcol = pEvent->btofCollection();
+#endif
   for (UInt_t t=0; t < nTracks; t++) {
     StTrackNode *node = trackNode[t]; 
     if (!node) continue;
@@ -427,6 +514,8 @@ Int_t StTpcAlignerMaker::MakeIO() {
       tpcHits[N].z = globalCoo.position().z();
       RIO[N]      = local.position().y();
 #endif /*  __USE_LOCAL__ */
+      GetTpcHitErrors(tpcHit,tpcHits[N].err2xy, tpcHits[N].err2z);
+#if 0
       tpcHits[N].err2xy[0] = tpcHit->positionError().perp2();
       tpcHits[N].err2z  = tpcHit->positionError().z()*tpcHit->positionError().z();
       if (tpcHits[N].err2xy[0] > 0.0) {
@@ -435,14 +524,17 @@ Int_t StTpcAlignerMaker::MakeIO() {
 	tpcHits[N].err2xy[2] = tpcHit->positionError().y()*tpcHit->positionError().y();
 	tpcHits[N].err2z = tpcHit->positionError().z()*tpcHit->positionError().z();
       }
+#endif
       tpcHits[N].row    = row;
       tpcHits[N].driftZ = local.position().z();
-      if (_debug) {
-	if (Debug()%10 > 5)    
-	  cout << Form("sector = %2i row = %2i N =%2i x = %8.3f +/- %8.3f y = %8.3f +/- %8.3f z = %8.3f +/- %8.3f, R = %8.3f",sector,row,N,
-		       tpcHits[N].x,TMath::Sqrt(tpcHits[N].err2xy[0]),
-		       tpcHits[N].y,TMath::Sqrt(tpcHits[N].err2xy[2]),
-		       tpcHits[N].z,TMath::Sqrt(tpcHits[N].err2z), RIO[N])<< endl;
+      if (Debug()%10 > 5) {
+	Double_t cor = 0;
+	if (tpcHits[N].err2xy[0] > 0 && tpcHits[N].err2xy[2] > 0) 
+	  cor = tpcHits[N].err2xy[1]/TMath::Sqrt(tpcHits[N].err2xy[0]*tpcHits[N].err2xy[2]);
+	cout << Form("sector = %2i row = %2i N =%2i x = %8.3f +/- %8.3f y = %8.3f +/- %8.3f cor = %8.3f z = %8.3f +/- %8.3f, R = %8.3f",sector,row,N,
+		     tpcHits[N].x,TMath::Sqrt(tpcHits[N].err2xy[0]),
+		     tpcHits[N].y,TMath::Sqrt(tpcHits[N].err2xy[2]), cor,
+		     tpcHits[N].z,TMath::Sqrt(tpcHits[N].err2z), RIO[N])<< endl;
       }
       if (N < kMaxHits) N++;
     }
@@ -464,7 +556,7 @@ Int_t StTpcAlignerMaker::MakeIO() {
     HelixPar_t *HlxPars[2] = {&fTpcInOutMatch->In, &fTpcInOutMatch->Out};
     for (Int_t io = 0; io < 2; io++) {// Inner / Outer Loop
       if (NoIOHits[io] < 5) continue;
-      HlxPars[io]->sector = sectorWithMaxNoHits;
+      HlxPars[io]->sector = 0;
       Int_t i2 = N;
       Int_t ii = 1;
       Int_t i1 = 0;
@@ -475,17 +567,7 @@ Int_t StTpcAlignerMaker::MakeIO() {
       for (i = i1, k = 0; i >= 0 && i < i2; i += ii, k++) {
 	Double_t *xyz = &tpcHits[idx[i]].x;
 	vHelices[io].Add(xyz);
-	if (tpcHits[idx[i]].err2xy[0] == 0 || tpcHits[idx[i]].err2z == 0) {
-	  if (! io) StiTpcInnerHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
-	  else      StiTpcOuterHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
-	  vHelices[io].AddErr(err2xy,err2z);
-	} else {
-	  vHelices[io].AddErr(tpcHits[idx[i]].err2xy, tpcHits[idx[i]].err2z);
-	}
-	if (TMath::IsNaN(err2xy[0]) || TMath::IsNaN(err2z)) {
-	  static Int_t iBreak = 0;
-	  iBreak++;
-	}
+	vHelices[io].AddErr(tpcHits[idx[i]].err2xy, tpcHits[idx[i]].err2z);
 	driftZ += tpcHits[idx[i]].driftZ;
 	nn++;
       }
@@ -522,11 +604,22 @@ Int_t StTpcAlignerMaker::MakeIO() {
 #endif
       HlxPars[io]->Rho = vHelices[io].GetRho();
       HlxPars[io]->dRho = vHelices[io].GetDRho();
-      vHelices[io].StiEmx(StiErr);
-      TRSymMatrix StiMtx(6,StiErr); //PrPP(Make,StiMtx);
-      TRMatrix S2R = GetSti2R(HlxPars[io]->nx, HlxPars[io]->ny, HlxPars[io]->nz);
-      TRSymMatrix Cov2(S2R,TRArray::kATxSxA,StiMtx);  if (_debug) {PrPP(Make,Cov2);}
-      memcpy(HlxPars[io]->fCov, Cov2.GetArray(), 15*sizeof(Double_t));
+      vHelices[io].Move(step);
+      Double_t cosL  = TMath::Sqrt(HlxPars[io]->nx*HlxPars[io]->nx+HlxPars[io]->ny*HlxPars[io]->ny);
+      Double_t cosCA = HlxPars[io]->ny/cosL;
+      TRSymMatrix StiErr(6);
+      vHelices[io].StiEmx(StiErr.GetArray(), cosCA, cosL);
+      TRMatrix S2R = GetSti2G(HlxPars[io]->nx, HlxPars[io]->ny, HlxPars[io]->nz);
+      TRSymMatrix Cov2(S2R,TRArray::kAxSxAT,StiErr);  if (_debug) {PrPP(Make,Cov2);}
+      HlxPars[io]->sector = 0;
+      if (TMath::Sqrt(Cov2(0,0)) > 0.2 || 
+	  TMath::Sqrt(Cov2(1,1)) > 0.2 || 
+	  TMath::Sqrt(Cov2(2,2)) > 0.2 || 
+	  TMath::Sqrt(Cov2(3,3)) > 0.01|| 
+	  TMath::Sqrt(Cov2(4,4)) > 0.01||
+	  TMath::Sqrt(Cov2(5,5)) > 0.01) continue; 
+      HlxPars[io]->sector = sectorWithMaxNoHits;
+      memcpy(HlxPars[io]->fCov, Cov2.GetArray(), 21*sizeof(Double_t));
       if (Debug()%10 > 5) {
 	if (! io) cout << "In:\t";
 	else      cout << "Out:\t"; 
@@ -534,32 +627,6 @@ Int_t StTpcAlignerMaker::MakeIO() {
 	//	  const THelixFitter &p = *&vHelices[io];
 	//	  p.Print("");
       }
-#if 0
-      // To Primary Vertex
-      if (fTpcInOutMatch->iPV) {
-	//	  step = vHelices[io].Step(stepMX, xyzL.position().xyz());
-	step = vHelices[io].Path(fTpcInOutMatch->xPV, fTpcInOutMatch->yPV);
-	if (TMath::Abs(step) >= stepMX) goto FAILED;;
-	vHelices[io].Move(step);
-	if (step < 0) {HlxPars[io+2]->nx *= -1; HlxPars[io+2]->ny *= -1; HlxPars[io+2]->nz *= -1;}
-	*HlxPars[io+2] = vHelices[io];
-	HlxPars[io+2]->sector = sector;
-	HlxPars[io+2]->Rho = vHelices[io].GetRho();
-	HlxPars[io+2]->dRho = vHelices[io].GetDRho();
-	vHelices[io].StiEmx(StiErr);
-	TRSymMatrix StiMtx(6,StiErr);// PrPP(Make,StiMtx);
-	TRMatrix S2R = GetSti2R(HlxPars[io]->nx, HlxPars[io+2]->ny, HlxPars[io+2]->nz);
-	TRSymMatrix Cov2(S2R,TRArray::kATxSxA,StiMtx);//  PrPP(Make,Cov2);
-	memcpy(HlxPars[io+2]->fCov, Cov2.GetArray(), 15*sizeof(Double_t));
-	if (Debug()%10 > 5) {
-	  if (! io) cout << "InAtVx:\t";
-	  else      cout << "OutAtVx:\t";
-	  //	    const THelixFitter &p2 = *&vHelices[io];
-	  //	    p2.Print("");
-	  cout << *HlxPars[io+2] << endl;
-	}
-      }
-#endif
     } // end loop over helices
     if (TpcInOutTree && HlxPars[0]->sector > 0 && HlxPars[0]->sector > 0 ) {
       if (Debug()) {
@@ -584,13 +651,14 @@ Int_t StTpcAlignerMaker::MakeW2S() {
   static StThreeVectorD XyzI, XyzO;
   static StThreeVectorD DirI, DirO;
   static Double_t stepMX = 1.e3;
-  Double_t StiErr[21];
   Double_t step;
   static Double_t err2xy[3] = {0,0,0}, err2z = 0;
   TList SegmentList; SegmentList.SetOwner(kTRUE);
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
+#if 0
   StBTofCollection *btofcol = pEvent->btofCollection();
+#endif
   for (UInt_t i=0; i < nTracks; i++) {
     StTrackNode *node = trackNode[i]; 
     if (!node) continue;
@@ -664,6 +732,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 #endif
       
       ssegm->Helix().Add(globalCoo.position().xyz());
+#if 0
       if (tpcHit->positionError().perp2() == 0 || tpcHit->positionError().z() == 0) {
 	if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) StiTpcInnerHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
 	else                                                           StiTpcOuterHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
@@ -673,11 +742,13 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	err2xy[2] = tpcHit->positionError().y()*tpcHit->positionError().y();
 	err2z     = tpcHit->positionError().z()*tpcHit->positionError().z();
       }
+#endif
+      GetTpcHitErrors(tpcHit,err2xy, err2z);
       ssegm->Helix().AddErr(err2xy,err2z);
       if (Debug()%10 > 5) {
 	cout << nh << "\t" << *tpcHit 
 	     << " loc " << xyz 
-	     << " err xy/z " << TMath::Sqrt(err2xy[0]) << " " << TMath::Sqrt(err2z) << endl;
+	     << " err xy/z " << TMath::Sqrt(err2xy[0]) << " " << TMath::Sqrt(err2xy[2]) << " "<< TMath::Sqrt(err2z) << endl;
       }
       if (row < ssegm->fRowMin) {ssegm->fRowMin = row;}
 #ifdef __Sup12S__
@@ -694,7 +765,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     ssegm->Helix().MakeErrs();
     ssegm->SetStatus(0);
     //    ssegm->Helix().Backward();
-    THelixFitter helix =  ssegm->Helix();
+    THelixFitter &helix =  ssegm->Helix();
     //      if (io) helix.Backward();
     Int_t sector = ssegm->Sector();
     Int_t row    = ssegm->fRowMin;
@@ -727,7 +798,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     HlxPars->step = step;
     HlxPars->Rho = helix.GetRho();
     HlxPars->dRho = helix.GetDRho();
-    helix.StiEmx(StiErr);
+    helix.Move(step);
 #ifdef __Sup12S__
     StTpcDb::instance()->Sup12S2Glob(ssegm->Sector()).MasterToLocal(HlxPars->xyzG(), HlxPars->xyz());
     StTpcDb::instance()->Sup12S2Glob(ssegm->Sector()).MasterToLocalVect(HlxPars->pxyzG(), HlxPars->pxyz());
@@ -737,10 +808,13 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     transform(globalCoo,    local, sector, 1); TCL::ucopy(local.position().xyz(), HlxPars->xyz(), 3);
     transform(globalDir, localDir, sector, 1); TCL::ucopy(localDir.position().xyz(), HlxPars->pxyz(), 3);
 #endif
-    TRSymMatrix StiMtx(6,StiErr); // PrPP(Make,StiMtx);
-    TRMatrix S2R = GetSti2R(HlxPars->nx, HlxPars->ny, HlxPars->nz);
-    TRSymMatrix Cov2(S2R,TRArray::kATxSxA,StiMtx);// PrPP(Make,Cov2);
-    memcpy(HlxPars->fCov, Cov2.GetArray(), 15*sizeof(Double_t));
+    Double_t cosL  = TMath::Sqrt(HlxPars->nx*HlxPars->nx+HlxPars->ny*HlxPars->ny);
+    Double_t cosCA = HlxPars->ny/cosL;
+    TRSymMatrix StiErr(6);
+    helix.StiEmx(StiErr.GetArray(), cosCA, cosL);
+    TRMatrix S2R = GetSti2G(HlxPars->nx, HlxPars->ny, HlxPars->nz);
+    TRSymMatrix Cov2(S2R,TRArray::kAxSxAT,StiErr);// PrPP(Make,Cov2);
+    memcpy(HlxPars->fCov, Cov2.GetArray(), 21*sizeof(Double_t));
     HlxPars->sector = ssegm->Sector();
     PrPP(Make,*HlxPars);
     if (Debug()%10 > 0) ssegm->Print();
@@ -792,7 +866,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	HlxParW2S.sector = ssegS->Sector() + 100*ssegW->Sector();
 	PrPP(Before,HlxParW2S);
 	PrPP(After,HlxParW2S);
-	THelixTrack helixW2S(HlxParW2S.xyzG(),HlxParW2S.pxyzG(),HlxParW2S.Rho,HlxParW2S.dRho);  //=  ssegW->Helix(); 
+	THelixFitter helixW2S = ssegW->Helix(); // helixW2S(HlxParW2S.xyzG(),HlxParW2S.pxyzG(),HlxParW2S.Rho,HlxParW2S.dRho);  //=  ssegW->Helix(); 
 	if (Debug() > 2) {
 	  for (Int_t j = 0; j < 4; j++) {
 	    cout << "HlxParW.RefSurficeG[" << j << "] = " << HlxParW.RefSurficeG[j] 
@@ -801,10 +875,25 @@ Int_t StTpcAlignerMaker::MakeW2S() {
 	}
 	step = helixW2S.Step(stepMX, HlxParS.RefSurficeG, 4, HlxParW2S.xyzG(), HlxParW2S.pxyzG(),1); 
 	if (TMath::Abs(step) >= stepMX) continue;
+	helixW2S.Move(step);
+	Double_t cosL  = TMath::Sqrt(HlxParW2S.nx*HlxParW2S.nx+HlxParW2S.ny*HlxParW2S.ny);
+	Double_t cosCA = HlxParW2S.ny/cosL;
+	TRSymMatrix StiErr(6);
+	helixW2S.StiEmx(StiErr.GetArray(), cosCA, cosL);
 	CheckDirection(&HlxParW2S);
 	HlxParW2S.step = step;
 	HlxParW2S.Rho = helixW2S.GetRho();
 	HlxParW2S.dRho = helixW2S.GetDRho();
+	TRMatrix S2R = GetSti2G(HlxParW2S.nx, HlxParW2S.ny, HlxParW2S.nz);
+	TRSymMatrix Cov2(S2R,TRArray::kAxSxAT,StiErr);// PrPP(Make,Cov2);
+	if (TMath::Sqrt(Cov2(0,0)) > 0.2 || 
+	    TMath::Sqrt(Cov2(1,1)) > 0.2 || 
+	    TMath::Sqrt(Cov2(2,2)) > 0.2 || 
+	    TMath::Sqrt(Cov2(3,3)) > 0.01|| 
+	    TMath::Sqrt(Cov2(4,4)) > 0.01||
+	    TMath::Sqrt(Cov2(5,5)) > 0.01) continue; 
+	memcpy(HlxParW2S.fCov, Cov2.GetArray(), 21*sizeof(Double_t));
+	
 #ifdef __Sup12S__
 	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(HlxParW2S.xyzG(), HlxParW2S.xyz());
 	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(HlxParW2S.pxyzG(), HlxParW2S.pxyz());

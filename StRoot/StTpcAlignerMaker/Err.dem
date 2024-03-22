@@ -1,0 +1,24 @@
+load ("eigen");
+/*
+load (f90) $
+:lisp (setq *f90-output-line-length-max* 1000000000) $
+stardisp: true$
+simplified_output: true$
+inflag : true$
+*/
+T: matrix([ c, -s],
+	  [ s,  c]
+	);	
+S: matrix([0, 0],
+          [0, sigma*sigma]);
+TT : transpose(T);
+M : T . S . TT;
+/* 
+(%i7) M:T . S . TT
+(%i25) M:T . S . TT
+                        [   2      2               2 ]
+                        [  s  sigma     - c s sigma  ]
+(%o25)                  [                            ]
+                        [            2    2      2   ]
+                        [ - c s sigma    c  sigma    ]
+*/

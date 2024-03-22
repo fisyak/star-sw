@@ -64,7 +64,10 @@ SurveyPass_t Passes[] = {
   //#include  "ResultsAlignerW2S.h"  /* Pass 68 LSF */
   //#include  "ResultsAlignerW2S.h"  /* Pass 75 LSF */
   //#include  "ResultsAlignerW2S.h"  /* Pass 78 LSF */
-#include  "ResultsAlignerW2S.h"  /* Pass 80 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 80 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 81 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 82 LSF */
+#include  "ResultsAlignerW2S.h"  /* Pass 83 LSF */
 };
 #define __SCALEbyHalf__
 //#define  __INVERSE_dR__

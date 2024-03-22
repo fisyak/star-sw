@@ -1,0 +1,95 @@
+load (f90) ;
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+debugmode(true) $ 
+/* 
+Sti: x, y, z, Phi, Ptin, Tan
+*/
+
+X(y):= y;
+Y(x):= x;
+Z(z):= -z;
+cosT(Tan) := 1/sqrt(1 + Tan*Tan); 
+sinT(Tan) := Tan*cosT(Tan);
+nx(Phi,Tan) := cos(Phi)*cosT(Tan);
+ny(Phi,Tan) := sin(Phi)*cosT(Tan);
+nz(Tan)  := -sinT(Tan);
+Sti2G : jacobian([X(y), Y(x), Z(z), nx(Phi, Tan), ny(Phi,Tan), nz(Tan)], [x, y, z, Phi, Ptin, Tan]);
+f90(Sti2G);
+with_stdout ("Sti2G.txt",  f90(Sti2G));
+/*
+(%i48) Sti2G:jacobian([X(y),Y(x),Z(z),nx(Phi,Tan),ny(Phi,Tan),nz(Tan)],
+                      [x,y,z,Phi,Ptin,Tan])
+       [ 0  1   0          0          0                0                ]
+       [                                                                ]
+       [ 1  0   0          0          0                0                ]
+       [                                                                ]
+       [ 0  0  - 1         0          0                0                ]
+       [                                                                ]
+       [                 sin(Phi)                 cos(Phi)*Tan          ]
+       [ 0  0   0   - --------------  0         - -------------         ]
+       [                      2                       2     3/2         ]
+       [              sqrt(Tan  + 1)              (Tan  + 1)            ]
+(%o48) [                                                                ]
+       [                cos(Phi)                  sin(Phi)*Tan          ]
+       [ 0  0   0    --------------   0         - -------------         ]
+       [                     2                        2     3/2         ]
+       [             sqrt(Tan  + 1)               (Tan  + 1)            ]
+       [                                                                ]
+       [                                        2                       ]
+       [                                     Tan               1        ]
+       [ 0  0   0          0          0  ------------- - -------------- ]
+       [                                     2     3/2           2      ]
+       [                                 (Tan  + 1)      sqrt(Tan  + 1) ]
+_
+
+(%i49) f90(Sti2G)
+Sti2G(1,1) = 0
+Sti2G(1,2) = 1
+Sti2G(1,3) = 0
+Sti2G(1,4) = 0
+Sti2G(1,5) = 0
+Sti2G(1,6) = 0
+Sti2G(2,1) = 1
+Sti2G(2,2) = 0
+Sti2G(2,3) = 0
+Sti2G(2,4) = 0
+Sti2G(2,5) = 0
+Sti2G(2,6) = 0
+Sti2G(3,1) = 0
+Sti2G(3,2) = 0
+Sti2G(3,3) = -1
+Sti2G(3,4) = 0
+Sti2G(3,5) = 0
+Sti2G(3,6) = 0
+Sti2G(4,1) = 0
+Sti2G(4,2) = 0
+Sti2G(4,3) = 0
+Sti2G(4,4) = -sin(Phi)/sqrt(Tan**2+1)
+Sti2G(4,5) = 0
+Sti2G(4,6) = -cos(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
+Sti2G(5,1) = 0
+Sti2G(5,2) = 0
+Sti2G(5,3) = 0
+Sti2G(5,4) = cos(Phi)/sqrt(Tan**2+1)
+Sti2G(5,5) = 0
+Sti2G(5,6) = -sin(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
+Sti2G(6,1) = 0
+Sti2G(6,2) = 0
+Sti2G(6,3) = 0
+Sti2G(6,4) = 0
+Sti2G(6,5) = 0
+Sti2G(6,6) = Tan**2*(Tan**2+1)**((-3.d+0)/2.d+0)-1/sqrt(Tan**2+1)
+(%o49)                               false
+(%i49) f90(Sti2G)
+Sti2G[0][1] = 1
+Sti2G[1][0] = 1
+Sti2G[2][2] = -1
+Sti2G[3][3] = -sin(Phi)/sqrt(Tan**2+1)
+Sti2G[3][5] = -cos(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
+Sti2G[4][3] = cos(Phi)/sqrt(Tan**2+1)
+Sti2G[4][5] = -sin(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
+Sti2G[5][5] = Tan**2*(Tan**2+1)**((-3.d+0)/2.d+0)-1/sqrt(Tan**2+1)
+
+*/

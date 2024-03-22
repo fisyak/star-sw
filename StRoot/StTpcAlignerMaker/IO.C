@@ -43,7 +43,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
 	static const Double_t&    In_nyG                                   = iter("In.nyG");
 	static const Double_t&    In_nzG                                   = iter("In.nzG");
 	static const Double_t&    In_dRho                                  = iter("In.dRho");
-	static const Double_t*&   In_fCov                                  = iter("In.fCov[15]");
+	static const Double_t*&   In_fCov                                  = iter("In.fCov[21]");
 	static const Double_t&    In_Chi2                                  = iter("In.Chi2");
 	static const Int_t&       In_Ndf                                   = iter("In.Ndf");
 	static const Int_t&       In_Npoints                               = iter("In.Npoints");
@@ -68,7 +68,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
 	static const Double_t&    Out_nyG                                  = iter("Out.nyG");
 	static const Double_t&    Out_nzG                                  = iter("Out.nzG");
 	static const Double_t&    Out_dRho                                 = iter("Out.dRho");
-	static const Double_t*&   Out_fCov                                 = iter("Out.fCov[15]");
+	static const Double_t*&   Out_fCov                                 = iter("Out.fCov[21]");
 	static const Double_t&    Out_Chi2                                 = iter("Out.Chi2");
 	static const Int_t&       Out_Ndf                                  = iter("Out.Ndf");
 	static const Int_t&       Out_Npoints                              = iter("Out.Npoints");
@@ -104,6 +104,14 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
   TH1D *LSF[24];
   //  Increase hitogram by 2 bins in order to account underfloaw and overflow 
   for (Int_t sec = 1; sec <= 24; sec++) LSF[sec-1] = new TH1D(Form("LSF_%02i",sec),Form("Matrix and right part for Least Squared Fit for sector = %02i",sec),30,0,30.);
+  enum {kM = 5, kP = 6, kPP = kP*(kP+1)/2};
+  Double_t t5x6[kM][kP] = {
+    {1, 0, 0, 0, 0, 0},
+    {0, 0, 1, 0, 0, 0},
+    {0, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 1, 0},
+    {0, 0, 0, 0, 0, 1}};
+  TRMatrix T5x6(kM, kP, &t5x6[0][0]);
   Int_t Ntracks = 0;
   while (iter.Next()) {
 #if 0
@@ -129,30 +137,18 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
     Double_t dev = (TMath::Abs(In_Rho)-TMath::Abs(Out_Rho));
     //    if (TMath::Abs(dev) > 5e-4) continue;
     if (TMath::Abs(dev) > 6e-3) continue; // 3D distortions
-    TRSymMatrix CIn(5,In_fCov);                       PrPP(CIn);
-    TRSymMatrix COut(5,Out_fCov);                     PrPP(COut);
+    TRSymMatrix CIn(kP,In_fCov);                       PrPP(CIn);
+    TRSymMatrix COut(kP,Out_fCov);                     PrPP(COut);
     TRSymMatrix C(CIn);
     C += COut;                                        PrPP(C);
-#if 1
+#if 0
     C(0,0) += 1./2.2e2; // 2e2
     C(1,1) += 1./2.2e2; // 2.1e2
     C(2,2) += 1./5.6e4; // 3.76e4
     C(3,3) += 1e-6;     // 5.9e5
     C(4,4) += 1./3.8e5; // 3e5                              PrPP(C);
 #endif
-    TRSymMatrix GI(C);
-    Int_t iFail = TRSymMatrix::TrchLU(C.GetArray(),GI.GetArray(),5);
-    if (iFail != 0) {
-      if (! _debug ) {
-	_debug = 1;
-	PrPP(pxyzIn);  PrPP(rI); PrPP(CIn);
-	PrPP(pxyzOut); PrPP(rO); PrPP(COut);
-	PrPP(C);
-	_debug = 0;
-      }
-      continue;
-    }
-    TRSymMatrix G(C,TRArray::kInverted);              PrPP(G);
+    TRSymMatrix C5x5(T5x6,TRArray::kAxSxAT,C);
     TVector3 nI = pxyzIn.Unit();                      PrPP(nI);
     TVector3 nO = pxyzOut.Unit();                     PrPP(nO);
     Double_t norm = nI*nO;
@@ -162,7 +158,31 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
     Double_t tX = nO.X()/nO.Y();
     Double_t tZ = nO.Z()/nO.Y();
     TRVector mX(5, dr.X(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
-#if 1
+    if (_debug) {
+      cout << "s = " << Out_sector;
+      for (Int_t m = 0; m < kM; m++) {
+	//	cout << "\t";	cout << mX(m) << " +/- " << TMath::Sqrt(C5x5(m,m)) << "(" << mX(m)/TMath::Sqrt(C5x5(m,m)) << ")";
+	cout << Form("\t%8.5f +/- %8.5f (%8.5f)", mX[m], TMath::Sqrt(C5x5(m,m)), mX(m)/TMath::Sqrt(C5x5(m,m)));
+      }
+      cout << endl;
+    }
+    if (TMath::Sqrt(C5x5(0,0)) > 0.2 || 
+	TMath::Sqrt(C5x5(1,1)) > 0.2 || 
+	TMath::Sqrt(C5x5(2,2)) > 0.01|| 
+	TMath::Sqrt(C5x5(3,3)) > 0.01|| 
+	TMath::Sqrt(C5x5(4,4)) > 0.01) continue;
+    TRSymMatrix GI(C5x5);
+    Int_t iFail = TRSymMatrix::TrchLU(C5x5.GetArray(),GI.GetArray(),5);
+    if (iFail != 0) {
+      if (! _debug ) {
+	PrPP(pxyzIn);  PrPP(rI); PrPP(CIn);
+	PrPP(pxyzOut); PrPP(rO); PrPP(COut);
+	PrPP(C);
+      }
+      continue;
+    }
+    TRSymMatrix G(C5x5,TRArray::kInverted);              PrPP(G);
+#if 0
     if (mX(0) < plotNameD[14].zmin || mX(0) > plotNameD[14].zmax) continue;
     if (mX(1) < plotNameD[16].zmin || mX(1) > plotNameD[16].zmax) continue;
     if (mX(2) < plotNameD[17].zmin || mX(2) > plotNameD[17].zmax) continue;
@@ -175,8 +195,28 @@ dX [-1,lx ,0,-lx*ZW   , -ZW,YW+lx*XW,1,-lx,0,lx*ZW   ,  ZW,-YW-lx*XW],
 dZ [ 0,lz,-1,-lz*ZW-YW,  XW,   lz*XW,0,-lz,1,lz*ZW+YW, -XW,   -lz*XW],
 dnX[ 0, 0, 0,        0,-nzW,       nyW,  0,0,       0,   0, nzW,-nyW],
 dnY[ 0, 0, 0,      nzW,   0,      -nxW,  0,0,    -nzW,   0,      nxW],
-dnZ[ 0, 0, 0,     -nyW, nxW,         0,  0,0,     nyW,-nxW,        0] */
-    TRMatrix A(5,6,
+dnZ[ 0, 0, 0,     -nyW, nxW,         0,  0,0,     nyW,-nxW,        0] 
+
+LSF: chi2 = (A*p - m)T * G (A*p - m) = pT * AT * G * A * p - pT * AT * G * m - mT * G * A * p + mT * G * m =
+                                       pT * A * p - pT * AT * G * m - mT * G * A * p + mT * G * m =
+                                       pT * A * p - pT * AT * G * m - mT * G * A * p + mT * G * m =
+                                       pT * AT * G * A * p - 2 * pT * AT * G * m + mT * G * m
+                                       pT * SX * p - 2 * pT * Amx  + mT * G * m
+d(chi2).dpT/2                   =           AT * G * A * p -          AT * G * m = 0
+                                       AT * G * A * p = AT * G * m
+                                       GX = G * m
+                                       AmX = AT * GX
+                                       SX  = AT * G * A
+                                       SX *p = AmX
+                                       W = SX^1;
+                                       z = AmX
+                                       p = W *Amx = W * z
+                     
+chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * WT * z + mT * G * m
+                                              = zT * WT  * z - 2 * zT * WT * z + mT * G * m 
+                                              = mT * G * m  - zT * WT  * z
+*/
+    TRMatrix A(kM,kP,
 	       //                 0    1    2                    3         4                   5
 	       //                dx   dy   dz                alpha      beta               gamma
 	       /* dX 0*/	-1.,  tX,  0.,         -tX*rO.Z() ,  -rO.Z(), rO.Y() + tX*rO.X(),
@@ -191,13 +231,23 @@ dnZ[ 0, 0, 0,     -nyW, nxW,         0,  0,0,     nyW,-nxW,        0] */
     Double_t *array = LSF[sec]->GetArray() + 1; // move under flow up
     Double_t *amX = AmX.GetArray();
     Double_t *sX  = SX.GetArray();
-    array[0]++;
     Int_t im = 1;
-    Int_t is = im + 6;
-    if (rO.Z() > 40 && rO.Z() < 200) {
-      TCL::vadd(amX,array+im,array+im,6); if (_debug) {TRVector XX(6,array+im);  PrPP(XX);}
-      TCL::vadd(sX,array+is,array+is,21); if (_debug) {TRSymMatrix S(6,array+is);  PrPP(S);}
-      array[28] += G.Product(mX);
+    Int_t is = im + kP;
+    if (_debug && array[0] > 0) {
+      cout << "sector = " << sector << "\tentry = " << array[0] << " yHy = " << array[28] << endl;
+      TRVector XX(6,array+im);  PrPP(XX);
+      TRSymMatrix S(6,array+is);  PrPP(S);
+      TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
+    }
+    array[0]++;
+    array[28] += G.Product(mX);          
+    TCL::vadd(amX,array+im,array+im,kP); 
+    TCL::vadd(sX,array+is,array+is,kPP); 
+    if (_debug) {
+      cout << "sector = " << sector << "\tentry = " << array[0] << " yHy = " << array[28] << endl;
+      TRVector XX(6,array+im);  PrPP(XX);
+      TRSymMatrix S(6,array+is);  PrPP(S);
+      TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
     TRMatrix V(NPlots,2,
 	       mX(0)  ,  A(0,1), // "dXdy"     ,"dX  versus  tX         =>  dy", 
@@ -221,10 +271,10 @@ dnZ[ 0, 0, 0,     -nyW, nxW,         0,  0,0,     nyW,-nxW,        0] */
 	       mX(3)  , rO.Z() , // "dnY"      ,"dnY versus Z"                   
 	       mX(4)  , rO.Z() , // "dnZ"      ,"dnZ versus Z"                        
 	       mX(1)/(driftVel/freq)  , rO.Z()  // "dT"       ,"dT  versus Z"
-	       ); PrPP(V);
+	       );// PrPP(V);
     for (Int_t i = 0; i < NPlots; i++) plots3D[i]->Fill(sector, V(i,1), V(i,0));
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}
-      Ntracks++;
+    Ntracks++;
   }
   fOut->Write();
 }
@@ -290,13 +340,17 @@ void TDrawIO() {
     Val_t ValA[7]; memset (ValA, 0, sizeof(ValA));
     if (LSF) {
       Double_t *array = LSF->GetArray() + 1;
-      Int_t NP = array[0];
+      Int_t NP = array[0];   PrPP(NP);
       if (NP > 0) {
-	Double_t yTy = array[28];
+	Double_t yTy = array[28]; PrPP(yTy);
 	Int_t im = 1;
 	Int_t is = im + 6;
-	TRVector AmX(6,array+im);  // cout << "AmX " << AmX << endl;
-	TRSymMatrix S(6,array+is); // cout << "S " << S << endl;
+	TRVector AmX(6,array+im);  PrPP(AmX);
+	TRSymMatrix S(6,array+is); PrPP(S);
+	TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
+	TRVector AmX5(5,array+im);  PrPP(AmX5);
+	TRSymMatrix S5(5,array+is); PrPP(S5);
+	TRSymMatrix Cor5(S5, TRArray::kSCor); PrPP(Cor5);
 	//#define FREEZE_ALPHA_BETA
 #ifdef  FREEZE_ALPHA_BETA
 	for (Int_t i = 3; i < 5; i++) {
@@ -320,8 +374,11 @@ void TDrawIO() {
 	// cout << "S " << S << endl;
 #endif /* FREEZE_BETA */
 #endif /* FREEZE_ALPHA_BETA */
-	TRSymMatrix SInv(S,TRArray::kInverted);  // cout << "SInv " << SInv << endl;
-	TRVector  X(SInv,TRArray::kSxA,AmX);     // cout << "X " << X << endl;
+	TRSymMatrix SInv5(S5,TRArray::kInverted);  PrPP(SInv5);
+	TRVector  X5(SInv5,TRArray::kSxA,AmX5);     PrPP(X5);
+
+	TRSymMatrix SInv(S,TRArray::kInverted);  PrPP(SInv);
+	TRVector  X(SInv,TRArray::kSxA,AmX);     PrPP(X);
 	Double_t chi2 = yTy;
 	chi2 -= AmX*X;
 	//	Double_t mSIm = SInv.Product(AmX); 
@@ -333,7 +390,12 @@ void TDrawIO() {
 	    if (m > 2) scale = 1e3; // => mrad
 	    ValA[m].val =  scale*X(m);
 	    ValA[m].valError = scale*TMath::Sqrt(SInv(m,m));
+#define __NO_LSF__
+#ifdef __NO_LSF__
+	    ValA[m].iFlag = 0;
+#else 
 	    ValA[m].iFlag = 1;
+#endif
 	  } else {
 	    ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
 	  }

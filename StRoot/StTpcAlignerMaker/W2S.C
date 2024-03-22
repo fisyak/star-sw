@@ -63,7 +63,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   static const Double_t&    HlxParW_nyG                              = iter("HlxParW.nyG");
   static const Double_t&    HlxParW_nzG                              = iter("HlxParW.nzG");
   static const Double_t&    HlxParW_dRho                             = iter("HlxParW.dRho");
-  static const Double_t*&   HlxParW_fCov                             = iter("HlxParW.fCov[15]");
+  static const Double_t*&   HlxParW_fCov                             = iter("HlxParW.fCov[21]");
   static const Double_t&    HlxParW_Chi2                             = iter("HlxParW.Chi2");
   static const Int_t&       HlxParW_Ndf                              = iter("HlxParW.Ndf");
   static const Int_t&       HlxParW_Npoints                          = iter("HlxParW.Npoints");
@@ -88,7 +88,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   static const Double_t&    HlxParS_nyG                              = iter("HlxParS.nyG");
   static const Double_t&    HlxParS_nzG                              = iter("HlxParS.nzG");
   static const Double_t&    HlxParS_dRho                             = iter("HlxParS.dRho");
-  static const Double_t*&   HlxParS_fCov                             = iter("HlxParS.fCov[15]");
+  static const Double_t*&   HlxParS_fCov                             = iter("HlxParS.fCov[21]");
   static const Double_t&    HlxParS_Chi2                             = iter("HlxParS.Chi2");
   static const Int_t&       HlxParS_Ndf                              = iter("HlxParS.Ndf");
   static const Int_t&       HlxParS_Npoints                          = iter("HlxParS.Npoints");
@@ -113,7 +113,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   static const Double_t&    HlxParW2S_nyG                            = iter("HlxParW2S.nyG");
   static const Double_t&    HlxParW2S_nzG                            = iter("HlxParW2S.nzG");
   static const Double_t&    HlxParW2S_dRho                           = iter("HlxParW2S.dRho");
-  static const Double_t*&   HlxParW2S_fCov                           = iter("HlxParW2S.fCov[15]");
+  static const Double_t*&   HlxParW2S_fCov                           = iter("HlxParW2S.fCov[21]");
   static const Double_t&    HlxParW2S_Chi2                           = iter("HlxParW2S.Chi2");
   static const Int_t&       HlxParW2S_Ndf                            = iter("HlxParW2S.Ndf");
   static const Int_t&       HlxParW2S_Npoints                        = iter("HlxParW2S.Npoints");
@@ -154,20 +154,27 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     Double_t dRho = RhoU - RhoS;
     //    if (TMath::Abs(dRho) > 6e-3) continue; // 3D distortions
 #endif
-#if 0
-    TRSymMatrix CU(5,HlxParW2S_fCov);                  PrPP(CU);
-    TRSymMatrix CS(5,HlxParS_fCov);                  PrPP(CS);
+#if 1
+    TRSymMatrix CU(kM,HlxParW2S_fCov);                  PrPP(CU);
+    TRSymMatrix CS(kM,HlxParS_fCov);                  PrPP(CS);
     TRSymMatrix C(CU);
     C += CS;   PrPP(C);
+    if (TMath::Sqrt(C(0,0)) > 0.2 || 
+	TMath::Sqrt(C(1,1)) > 0.2 || 
+	TMath::Sqrt(C(2,2)) > 0.2 || 
+	TMath::Sqrt(C(3,3)) > 0.01|| 
+	TMath::Sqrt(C(4,4)) > 0.01||
+	TMath::Sqrt(C(5,5)) > 0.01) continue; 
+
     TRSymMatrix G(C,TRArray::kInverted);              PrPP(G);
 #else 
 #if 1
-    TRSymMatrix G(6);
-    for (Int_t i = 0; i < 6; i++) {
+    TRSymMatrix G(kM);
+    for (Int_t i = 0; i < kM; i++) {
       if (i < 3) 
-	G(i,i) = 1e6;
-      else 
 	G(i,i) = 1e2;
+      else 
+	G(i,i) = 1e6;
     }       
     PrPP(G);
 #else
@@ -190,10 +197,25 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     TVector3 rU(XU,YU,ZU);                         PrPP(rU);
     TVector3 dn = nS - nU;                            PrPP(dn);
     TVector3 dr = rS - rU;                            PrPP(dr);
-    TRVector mX(kM, dn.X(), dn.Y(), dn.Z(), dr.X(), dr.Y(), dr.Z());  PrPP(mX);
+    //    TRVector mX(kM, dn.X(), dn.Y(), dn.Z(), dr.X(), dr.Y(), dr.Z());  PrPP(mX);
+    TRVector mX(kM, dr.X(), dr.Y(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
+    //                   dX  dY  dZ nX  nY nZ 
+    Int_t iHistV[kM] = { 12, -1, 16, 0,  4, 8}; 
+    if (_debug) {
+      cout << "w " << w << " => s " << s;
+      for (Int_t m = 0; m < kM; m++) {
+	cout << "\t";
+	cout << mX(m) << " +/- " << TMath::Sqrt(C(m,m));
+	Int_t h = iHistV[m];
+	if (h >= 0) {
+	  cout << "[" << plotNameWS[h].zmin << "," << plotNameWS[h].zmax << "]";
+	}
+	
+      }
+      cout << endl;
+    }
+#if 0
     Int_t ok = 0;
-    //                  nX  nY nZ  dX  dY  dZ
-    Int_t iHistV[kM] = { 0,  4, 8, 12, -1, 16}; 
     for (Int_t i = 0; i < kM; i++) {
       Int_t h = iHistV[i];
       if (h < 0) {
@@ -211,11 +233,12 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     if (ok) {
       continue;
     }
+#endif
     /* from maxima 02/21/2024 
        S - U = dU - dS 
        Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
        Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
-       Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
+xs1       Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
        Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
        Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
        Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
@@ -242,21 +265,24 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
        pT = (A * G * AT)^-1 (A * G * xT)
        
        `    */
-    Double_t a[kM*2*kP] = { // 6x12
-      //   0      1       2     3     4     5
-      //  nX     nY      nZ     X     Y     Z  
-      0,     0,      0,  - 1,    0,    0, // 0 xS,
-      0,     0,      0,    0,  - 1,    0, // 1 yS,
-      0,     0,      0,    0,    0,  - 1, // 2 zS,
-      0,   nZS,  - nYS,    0,   ZS, - YS, // 3 aS,
-      - nZS,     0,  - nXS, - ZS,    0, - XS, // 4 bS,
-      nYS, - nXS,      0,   YS, - XS,    0, // 5 gS,
-      0,     0,      0,  - 1,    0,    0, // 6 xW,
-      0,     0,      0,    0,  - 1,    0, // 7 yW,
-      0,     0,      0,    0,    0,  - 1, // 8 zW,
-      0,   nZU,  - nYU,    0,   ZU, - YU, // 9 aW,
-      - nZU,     0,  - nXU, - ZU,    0, - XU, //10 bW,
-      nYU, - nXU,      0,   YU, - XU,    0, //11 gW,
+    Double_t a[2*kP*kM] = { // 12x6
+//   0     1     2        3         4          5
+//   X     Y     Z       nX        nY         nZ   
+   - 1,    0,    0,       0,        0,         0,  // 0 xS,
+     0,  - 1,    0,       0,        0,         0,  // 1 yS,
+     0,    0,  - 1,       0,        0,         0,  // 2 zS,
+
+     0,   ZS, - YS,       0,   nS.z(),  - nS.y(),  // 3 aS,
+  - ZS,    0, - XS,- nS.z(),        0,  - nS.x(),  // 4 bS,
+    YS, - XS,    0,  nS.y(), - nS.x(),         0,  // 5 gS,
+
+   - 1,    0,    0,       0,        0,         0,  // 6 xW,
+     0,  - 1,    0,       0,        0,         0,  // 7 yW,
+     0,    0,  - 1,       0,        0,         0,  // 8 zW,
+
+     0,   ZU, - YU,       0,   nU.z(),  - nU.y(),  // 9 aW,
+  - ZU,    0, - XU,- nU.z(),        0,  - nU.x(),  //10 bW,
+    YU, - XU,    0,  nU.y(), - nU.x(),         0,  //11 gW,
     }; // A => AT
     TRMatrix A(2*kP, kM, a); PrPP(A);
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
@@ -279,54 +305,28 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
     Double_t dw = w;
     Double_t ds = s;
     TRMatrix V(NwsPlots,3,
-	       mX(0), A( 4,0), ds, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 0
-	       mX(0), A( 5,0), ds, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 1
-	       mX(0), A(10,0), dw, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 2
-	       mX(0), A(11,0), dw, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 3
-	       mX(1), A( 3,1), ds, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 4
-	       mX(1), A( 5,1), ds, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 5
-	       mX(1), A( 9,1), dw, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 6
-	       mX(1), A(11,1), dw, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 7
-	       mX(2), A( 3,2), ds, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 8
-	       mX(2), A( 4,2), ds, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 9
-	       mX(2), A( 9,2), dw, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, //10
-	       mX(2), A(10,2), dw, // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, //11
-	       mX(3), A( 4,3), ds, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, //12
-	       mX(3), A( 5,3), ds, // {"dXdgS",        "YS     => gS", 110,-1.100, 1.100,100,-1.000, 1.000}, //13
-	       mX(3), A(10,3), dw, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //14
-	       mX(3), A(11,3), dw, // {"dXdgW",        "YU     => gW", 110,-1.100, 1.100,100,-1.000, 1.000}, //15
-	       mX(5), A( 3,5), ds, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-0.005, 0.005}, //16
-	       mX(5), A( 4,5), ds, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, //17
-	       mX(5), A( 9,5), dw, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-0.005, 0.005}, //18
-	       mX(5), A(10,5), dw  // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
-	       ); PrPP(V);
-    Double_t vv[20][3] = {
-      {mX(0), A( 4,0), ds}, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 0
-      {mX(0), A( 5,0), ds}, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 1
-      {mX(0), A(10,0), dw}, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 2
-      {mX(0), A(11,0), dw}, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 3
-      {mX(1), A( 3,1), ds}, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 4
-      {mX(1), A( 5,1), ds}, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 5
-      {mX(1), A( 9,1), dw}, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 6
-      {mX(1), A(11,1), dw}, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,100,-0.005, 0.005}, // 7
-      {mX(2), A( 3,2), ds}, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 8
-      {mX(2), A( 4,2), ds}, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,100,-0.005, 0.005}, // 9
-      {mX(2), A( 9,2), dw}, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,100,-0.005, 0.005}, //10
-      {mX(2), A(10,2), dw}, // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,100,-0.005, 0.005}, //11
-      {mX(3), A( 4,3), ds}, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 9.999,100,-1.000, 1.000}, //12
-      {mX(3), A( 5,3), ds}, // {"dXdgS",        "YS     => gS", 110,-1.100, 1.100,100,-1.000, 1.000}, //13
-      {mX(3), A(10,3), dw}, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 9.999,100,-1.000, 1.000}, //14
-      {mX(3), A(11,3), dw}, // {"dXdgW",        "YU     => gW", 110,-1.100, 1.100,100,-1.000, 1.000}, //15
-      {mX(5), A( 3,5), ds}, // {"dZdaS",        "-YS    => aS", 120,-175.0, -55.0,100,-0.005, 0.005}, //16
-      {mX(5), A( 4,5), ds}, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,100,-1.000, 1.000}, //17
-      {mX(5), A( 9,5), dw}, // {"dZdaW",        "-YU    => aW", 120,-175.0, -55.0,100,-0.005, 0.005}, //18
-      {mX(5), A(10,5), dw}  // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,100,-1.000, 1.000}  //19
-    };
-    if (_debug) {
-      TRMatrix Vtest(NwsPlots,3, &vv[0][0]); 
-      PrPP(Vtest);
-    }
-    for (Int_t i = 0; i < NwsPlots; i++) plots3D[i]->Fill(vv[i][2], vv[i][1], vv[i][0]); // (V(i,2), V(i,1), V(i,0));
+mX(0), A( 4,0), ds, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 10.00,500,-1.000, 1.000}, // 0
+mX(0), A( 5,0), ds, // {"dXdgS",        "YS     => gS",  65,  50.0, 180.0,500,-1.000, 1.000}, // 1
+mX(0), A(10,0), dw, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 10.00,500,-1.000, 1.000}, // 2
+mX(0), A(11,0), dw, // {"dXdgW",        "YU     => gW",  65,  50.0, 180.0,500,-1.000, 1.000}, // 3
+mX(2), A( 3,2), ds, // {"dZdaS",        "-YS    => aS",  65,-180.0, -50.0,500,-1.000, 1.000}, // 4
+mX(2), A( 4,2), ds, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,500,-1.000, 1.000}, // 5
+mX(2), A( 9,2), dw, // {"dZdaW",        "-YU    => aW",  65,-180.0, -50.0,500,-1.000, 1.000}, // 6
+mX(2), A(10,2), dw, // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,500,-1.000, 1.000}, // 7
+mX(3), A( 4,3), ds, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,500,-0.050, 0.050}, // 8
+mX(3), A( 5,3), ds, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,500,-0.050, 0.050}, // 9
+mX(3), A(10,3), dw, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,500,-0.050, 0.050}, //10
+mX(3), A(11,3), dw, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,500,-0.050, 0.050}, //11
+mX(4), A( 3,4), ds, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,500,-0.020, 0.020}, //12
+mX(4), A( 5,4), ds, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,500,-0.020, 0.020}, //13
+mX(4), A( 9,4), dw, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,500,-0.020, 0.020}, //14
+mX(4), A(11,4), dw, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,500,-0.020, 0.020}, //15
+mX(5), A( 3,5), ds, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,500,-0.010, 0.010}, //16
+mX(5), A( 4,5), ds, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,500,-0.010, 0.010}, //17
+mX(5), A( 9,5), dw, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,500,-0.010, 0.010}, //18
+mX(5), A(10,5), dw  // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,500,-0.010, 0.010}, //19
+	       );
+    for (Int_t i = 0; i < NwsPlots; i++) plots3D[i]->Fill(V(i,2), V(i,1), V(i,0));
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}
     Ntracks++;
     //    if (Ntracks > 100000) break;
@@ -524,7 +524,7 @@ void TDrawW2S() {
       lTitle = "";
       leg->SetTextSize(0.025);
       c1->cd(ij)->SetLogz(1);
-      if (fit) {
+      if (fit && fit->GetEntries() > 2) {
 	fit->SetTitle(h->GetTitle());
 	fit->SetMarkerStyle(20);
 	fit->SetMarkerColor(1);
@@ -655,7 +655,7 @@ void TDrawW2S() {
 	if (m > 2) 
 	  line  += "|                ";
 	else 
-	  line  += "|                ";
+	  line  += "|                 ";
 	lineC += ",      0,-9.99";
       } else {
 	if (m > 2) {

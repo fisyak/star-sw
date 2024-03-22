@@ -31,6 +31,7 @@
 #include "TGeoMatrix.h"
 class StEvent;
 class StPrimaryVertex;
+class StTpcHit;
 //________________________________________________________________________________
 class HelixPar_t : public TObject {
  public:
@@ -48,7 +49,7 @@ class HelixPar_t : public TObject {
   Double_t     *pxyzG() {return &nxG;}
   Double_t      *xyzG() {return &xG;}
   //  StThreeVectorD xyz;  // Coordinates
-  Double_t       fCov[15];  // Covarianve matrix from Helix fit for (X,Z,dirX,dirY,dirZ);
+  Double_t       fCov[21];  // Covarianve matrix from Helix fit for (X,Y,Z,dirX,dirY,dirZ);
   Double_t       Chi2;
   Int_t          Ndf;
   Int_t          Npoints;
@@ -153,7 +154,8 @@ class StTpcAlignerMaker : public StMaker {
   Int_t         MakeW2S();
   static Double_t Project(const Double_t n[3], const Double_t x[3]);
   static void CheckDirection(HelixPar_t *HlxPar); 
-  static  TRMatrix GetSti2R(Double_t nx, Double_t ny, Double_t nz);
+  static  TRMatrix GetSti2G(Double_t nx, Double_t ny, Double_t nz);
+  void  GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t &err2z);
   virtual const char *GetCVS() const {
     static const char cvs[]="Tag $Name:  $ $Id: StTpcAlignerMaker.h,v 1.7 2014/09/10 13:54:58 fisyak Exp $ built " __DATE__ " " __TIME__ ; 
     return cvs;
