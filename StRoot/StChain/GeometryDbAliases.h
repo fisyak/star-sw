@@ -192,19 +192,21 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"y2021a",      20201215,     1, "y2019",    "y2019a first production release geometry, AgML,xgeometry"},   
   {"r2021",       20201220,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/216, no HFT,xgeometry"}, // 
   {"r2021a",      20201220,     1, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
-//{"dev2022",     20211210,     1, "dev2022",  "development geometry for 2022+ forward program,AgML,xgeometry"},
+
   {"y2022",       20211015,     0, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
-  {"r2022",       20211025,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
   {"y2022a",      20211015,     1, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
+  {"r2022",       20211025,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
   {"r2022a",      20211025,     1, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
-  {"athena",      20301220,     1, "",         "athena"}, // 
-  {"epic",        20301221,     1, "",         "epic"}, // 
+
   {"y2023",       20221215,     0, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
   {"r2023",       20221225,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
   {"y2023a",      20221215,     1, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
   {"r2023a",      20221225,     1, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
+
   {"y2024",       20231210,     0, "y2024",    "y2024 first cut geometry, AgML,xgeometry"},    
   {"y2024a",      20231210,     1, "y2024a",   "y2024a production geometry, AgML,xgeometry"},    
+  {"r2024",       20231220,     0, "y2024",    "y2024 first cut geometry, AgML,xgeometry"},    
+  {"r2024a",      20231220,     1, "y2024a",   "y2024a production geometry, AgML,xgeometry"},    
   // Production runs
   {"CosmicFF_2019",                          20190118, 210113, "y2019", "Cosmic FF_2019"            },
   {"CosmicRF_2019",                          20190204, 205949, "y2019", "Cosmic RF_2019"            },
@@ -297,6 +299,8 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"AuAu_2023",                              20230520,  23250, "y2019", "AuAu_2023"                 },
   {"AuAu200GeV_2023",                        20230520,  23250, "y2019", "AuAu_2023"                 },
   {"CosmicFF_2023",                          20230804, 153313, "y2019", "Cosmic FF_2023"            },
+  {"athena",      20301220,     1, "",         "athena"}, // 
+  {"epic",        20301221,     1, "",         "epic"}, // 
   {0,                    0,     0,        0,    0}
 };
 #endif /*  __GeometryDbAliases__ */
