@@ -305,7 +305,10 @@ int StBTofSimMaker::CellResponse(g2t_ctf_hit_st* tofHitsFromGeant,
 	g2t_track_st *tof_track = g2t_track->GetTable();
 	int no_tracks= g2t_track->GetNRows();
 
-	double beta;
+	// Initialize beta to be a large negative value. This is a flag in case the following if 
+	// condition is not satisfied and meaning there is something wrong with the beta value.
+	//
+	double beta = -999.;
 	int trackId = -1;
 	for(int j=0;j<no_tracks;j++){
 		if(tofHitsFromGeant->track_p==tof_track[j].id){
@@ -812,7 +815,11 @@ int StBTofSimMaker::FastCellResponse(g2t_ctf_hit_st* tofHitsFromGeant, StBTofCol
 	int no_tracks= g2t_track->GetNRows();
 
 	StMcTrack *partnerTrk = 0;
-	int partnerTrkId;
+
+	// Initialize partnerTrkId to be a negative value. This is a flag in case the following if 
+	// condition is not satisfied and meaning there is something wrong with the track ID.
+	//
+	int partnerTrkId = -1;
 	for(int j=0;j<no_tracks;j++){
 		if(tofHitsFromGeant->track_p==tof_track[j].id){
 			partnerTrk = new StMcTrack(&(tof_track[j]));
@@ -829,18 +836,12 @@ int StBTofSimMaker::FastCellResponse(g2t_ctf_hit_st* tofHitsFromGeant, StBTofCol
 	double pathL = tofHitsFromGeant->s_track;
 	double q = 0.;
 
-	double Rawtof = tofHitsFromGeant->tof*1000./nanosecond;
-	float Rawbeta=pathL/Rawtof/3e-2;
-	double momentum=partnerTrk->momentum().mag();
-	double mass=partnerTrk->fourMomentum().m();
-	double calcTof=pathL/(3e-2)/sqrt(1 - mass*mass/(momentum*momentum + mass*mass));
 #ifndef __TFG__VERSION__
 	double time_blur = ranGauss.shoot()*mSimResDb->timeres_tof(itray, imodule, icell)*1e-9/nanosecond;
 #else /* __TFG__VERSION__ */
 	double time_blur = ranGauss.shoot()*St_tofSimResParamsC::instance()->timeres_tof(itray, imodule, icell)*1e-9/nanosecond;
 #endif /* ! __TFG__VERSION__ */
 	double tof = tofHitsFromGeant->tof*1000./nanosecond + time_blur;    //! 85ps per channel
-
 	if ( mVpdSim ) {    // VpdSimMaker present, assume vpdstart
 		tof += mVpdSimConfig->getMcClock()*1000;
 	}
@@ -863,11 +864,10 @@ int StBTofSimMaker::FastCellResponse(g2t_ctf_hit_st* tofHitsFromGeant, StBTofCol
 		}
 	}
 
-	//    tof = tof - mSimDb->toffset();  // Apply offset correction.
+	// tof = tof - mSimDb->toffset();  // Apply offset correction.
 	double t0 = tofHitsFromGeant->tof*1000./nanosecond;
-#ifndef __TFG__VERSION__
-	float beta=pathL/tof/3e-2;
-#endif /* ! __TFG__VERSION__ */
+	// float beta=pathL/tof/3e-2;
+
 	StMcBTofHit *mcBTofHit = new StMcBTofHit(itray,imodule,icell,de,pathL,t0,tof,q);
 	mcBTofHit->setPosition(local);
 	mcBTofHit->setParentTrack(partnerTrk);

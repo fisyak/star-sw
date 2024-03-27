@@ -524,6 +524,14 @@ Bfc_st BFC[] = { // standard chains
   {"P2023a","" ,"",
    "B2023a,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
    ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
+  // 2024 initial chains
+  {"B2024a"  ,"","",
+   "ry2024a,in,tpcX,UseXgeom,iTpcIT,CorrY,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
+    "","",                                                     "Base chain for run 2024 data (tpc)",kFALSE},
+
+  {"pp2024a","" ,"",
+   "B2024a,ITTF,BAna,hitfilt,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
+      "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},
  
   
   {"Calibration chains","------------","-----------","-----------------------------------","","","",kFALSE},
@@ -1129,19 +1137,18 @@ Bfc_st BFC[] = { // standard chains
   {"C2003X"      ,""  ,"","y2003X,C3default"           ,"","","Turn on chain Y2003X (full B/E EMC)",kFALSE},
   // MDC / Sim chain agregates
   {"mdc3"        ,""  ,"","cy1h,GeantOut"                               ,"","","MDC3 default chain",kFALSE},
-  {"MDC4" ,"","","C2001,tpcRS,tpc_daq,Simu,srs,fss,rrs,big,GeantOut","","","Turn on chain for MDC4",kFALSE},
-  {"MDC4New"     ,""  ,"","y2001n,C2default,tpcRS,tpc_daq,Simu,srs,fss,rrs,big,GeantOut","",""
+  {"MDC4" ,""  ,"","C2001,trs,tpc_daq,Simu,srs,fss,rrs,big,GeantOut","","","Turn on chain for MDC4",kFALSE},
+  {"MDC4New"     ,""  ,"","y2001n,C2default,trs,tpc_daq,Simu,srs,fss,rrs,big,GeantOut","",""
    ,                                                 "Turn on chain for MDC4 (for after September)",kFALSE},
-  {"PostMDC4"    ,""  ,"","C2001,tpcRS,tpc_daq,Simu,sss,fss,rrs,big,GeantOut"
+  {"PostMDC4"    ,""  ,"","C2001,trs,tpc_daq,Simu,sss,fss,rrs,big,GeantOut"
    ,                                                                "","","Turn on Post MDC4 chain",kFALSE},
-  {"ppMDC4","","","ppOpt,C2001,mwc,tpcRS,tpc_daq,Simu,srs,rrs,big,GeantOut"
+  {"ppMDC4","","","ppOpt,C2001,mwc,trs,tpc_daq,Simu,srs,rrs,big,GeantOut"
    ,                                                                "","","Turn on chain for ppMDC",kFALSE},
-  {"dAuMDC"    ,"" ,"","ppOpt,C2003,tpcRS,tpc_daq,Simu,srs,fss,big,GeantOut","","","Chain for d+Au",kFALSE},
-  {"dAuMDCa","","","ppOpt,C2003,tpcRS,tpc_daq,Simu,srs,fss,big,GeantOut,est","","","Chain for d+Au",kFALSE},
+  {"dAuMDC"      ,"" ,"","ppOpt,C2003,trs,tpc_daq,Simu,srs,fss,big,GeantOut","","","Chain for d+Au",kFALSE},
+  {"dAuMDCa" ,"" ,"","ppOpt,C2003,trs,tpc_daq,Simu,srs,fss,big,GeantOut,est","","","Chain for d+Au",kFALSE},
   {"CComplete"   ,""  ,"","Complete,C2default"             ,"","","Turn on chain for Complete STAR",kFALSE},
   // Detector combined-chains
   {"SvtD"       ,"","","SvtCalDb,SvtSeqAdj,SvtClu,SvtCluAnal,SvtHit",    "","","SVT chain for Data",kFALSE},
-
   // Other chains/Calibration
   {"L3Counter","" ,"","db,detDb,in,l3count","","",                     "L3 Counter extraction pass",kFALSE},
   {"VtxSeedCal","","","ppOpt,ry2001,in,tpc_daq,tpc,globT,-Tree,Physics,-PreVtx,FindVtxSeed,NoEvent,Corr2"
