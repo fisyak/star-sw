@@ -53,7 +53,6 @@
 #define __IN2OUT__
 #define __Sup12S__ /* use Sup12S for W2S */
 //________________________________________________________________________________
-ClassImp(SectorSegment);
 ClassImp(StTpcW2SMatch);
 //ClassImp(HelixPar_t);
 //ClassImp(Hit_t);
@@ -63,87 +62,6 @@ ClassImp(StTpcAlignerMaker);
 static TTree* TpcInOutTree = 0;
 static TTree* TpcW2STree = 0;
 static Int_t _debug = 0;
-//________________________________________________________________________________
-void  SectorSegment::Print(Option_t */* option */) const {
-  cout << "Segment: " << GetName() << " for sector " << fSector << " rowMin " << fRowMin<< endl;
-  if (_debug) {
-    TIter next(&fList);
-    Int_t i = 0;
-    StTpcHit *tpcHit = 0;
-    while ((tpcHit = (StTpcHit *) next())) {
-      cout << i++ << "\t" << *tpcHit << endl;
-    }
-    fHelix.Print();
-  }
-  if (fSector > 0) cout << " HlxPar " << HlxPar << endl;
-}
-//________________________________________________________________________________
-ostream&  operator<<(ostream& os, const HelixPar_t &v) {
-  os << Form("sector %2i Rho = %10.3g +/- %10.3g",v.sector, v.Rho, v.dRho);
-  os << Form(" n: %8.3f %8.3f %8.3f xyz: %8.3f %8.3f %8.3f ", v.nx, v.ny, v.nz, v.x, v.y, v.z);
-  os << Form("<drift> %8.3f step %8.3f", v.DriftZ, v.step);
-  os << Form(" ng: %8.3f %8.3f %8.3f", v.nxG, v.nyG, v.nzG);
-  os << Form(" xyzG: %8.3f %8.3f %8.3f", v.xG, v.yG, v.zG);
-  if (_debug) {
-    os << endl;
-    TRSymMatrix C(6,v.fCov);
-    os << C << endl;
-  }
-  os << "\tPoints = " << v.Npoints << "\tused = " << v.Nused << "\tchi2/Ndf = " << v.Chi2 << "/" << v.Ndf;
-  return os;
-}
-//_____________________________________________________________________________
-HelixPar_t &HelixPar_t::operator=(const THelixFitter &helix) {
-  Chi2 = helix.Chi2();
-  Ndf  = helix.Ndf();
-  Npoints = helix.Size();
-  Nused   = helix.Used();
-  helix.Get(xyzG(),pxyzG(),Rho);
-  return *this;
-}
-//_____________________________________________________________________________
-void HelixPar_t::Print(Option_t *opt) const {
-  cout << *this << endl;
-}
-//________________________________________________________________________________
-Double_t StTpcAlignerMaker::Project(const Double_t n[3], const Double_t x[3]) {
-  StThreeVectorD G(x);
-  StThreeVectorD nG(n);
-  return  G.dot(nG);
-}
-//________________________________________________________________________________
-void StTpcAlignerMaker::CheckDirection(HelixPar_t *HlxPar) {
-  if (! HlxPar) return;
-  Double_t proj = Project(HlxPar->pxyzG(), HlxPar->xyzG());
-  if (proj < 0) {HlxPar->nxG *= -1; HlxPar->nyG *= -1; HlxPar->nzG *= -1;}
-}
-//________________________________________________________________________________
-void StTpcAlignerMaker::GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t &err2z) {
-  Int_t sector = tpcHit->sector();
-  Double_t alfa = TMath::DegToRad()*StTpcDb::SectorPhiDeg(sector);
-  Double_t c = cos(alfa);
-  Double_t s = sin(alfa);
-  Double_t sigma2Y = tpcHit->positionError().perp2();
-  err2z = tpcHit->positionError().z()*tpcHit->positionError().z();
-  if (sigma2Y == 0 || err2z == 0) {
-    Int_t row = tpcHit->padrow();
-    Int_t io = (row <= St_tpcPadConfigC::instance()->numberOfInnerRows(sector)) ? 0 : 1;
-    Double_t z = tpcHit->position().z();
-    if (! io) StiTpcInnerHitErrorCalculator::instance()->calculateError(200-z, 0., 0., sigma2Y, err2z);
-    else      StiTpcOuterHitErrorCalculator::instance()->calculateError(200-z, 0., 0., sigma2Y, err2z);
-  }
-  assert(sigma2Y > 0);
-  assert(err2z > 0);
-  err2xy[0] =  s*s * sigma2Y;
-  err2xy[1] = -s*c * sigma2Y;
-  err2xy[2] =  c*c * sigma2Y;
-#if 0
-  Double_t T[2][2]={{c,-s},
-		    {s, c}};
-  TCL::trasat(T[0],stiErr,err2xy,2,2);
-#endif
-  assert(err2xy[0] + err2xy[2] > 0 && err2z> 0);
-}
 //_____________________________________________________________________________
 Int_t StTpcAlignerMaker::Init(){
   StBFChain *chain = dynamic_cast<StBFChain*>(GetChain());
@@ -237,42 +155,7 @@ Int_t StTpcAlignerMaker::Make(){
   if (! nTracks) return kStOK;
   //  if (TriggerId > 310810 && nTracks > 5) return kStOK;
   // Check ToF to understand direction where muons a comint from
-  StBTofCollection *btofcol = pEvent->btofCollection();
-#if 0
-  Double_t tofMin = 1e9; 
-  Double_t tofMax =   0;
-  if (btofcol) {
-    StSPtrVecBTofHit &tofHits = btofcol->tofHits();
-    UInt_t nHits = tofHits.size();
-    for(UInt_t i=0; i < nHits; i++) {
-      StBTofHit *aHit = tofHits[i]; // aHit->tray(); 
-      if(!aHit) continue;
-      if (!aHit->associatedTrack()) continue;
-      if (Debug()%10 > 5) cout << "TofHit : " << i << *aHit << " Tpc sector " << TpcSectorFromBTofTray(aHit->tray()) << endl;
-      Double_t time = aHit->leadingEdgeTime();
-      if (time > tofMax) {tofMax = time;}
-      if (time < tofMin) {tofMin = time;}
-    }
-  }
-#endif
-  // Best PV
-  pVbest  = pEvent->primaryVertex();
-  if (btofcol) {
-    Double_t VpdZ = -300;
-    if (btofcol->tofHeader()) VpdZ = btofcol->tofHeader()->vpdVz();
-    if (TMath::Abs(VpdZ) < 200) {
-      Double_t dZbest = 999;
-      StPrimaryVertex *pVertex = 0;
-      for (Int_t ipr=0;(pVertex=pEvent->primaryVertex(ipr));ipr++) {
-	Double_t dZ = TMath::Abs(pVertex->position().z()-VpdZ);
-	if (dZ < dZbest) {
-	  dZbest = dZ;
-	  pVbest = pVertex;
-	}
-      }
-      if (dZbest > 3.0) pVbest = 0;
-    }
-  }
+  //  StBTofCollection *btofcol = pEvent->btofCollection();
 #ifdef __IN2OUT__
   MakeIO();
 #endif /* __IN2OUT__ */
@@ -283,93 +166,12 @@ Int_t StTpcAlignerMaker::Make(){
 #endif
   return kStOK;
 }
-//________________________________________________________________________________
-TRMatrix StTpcAlignerMaker::GetSti2G(Double_t nx, Double_t ny, Double_t nz) {
-  /* StiKalmanTrackNode::getMomentum
-     _cosCA = cos(myNode.mFP.eta());
-  p[0] = pt*mFP._cosCA;
-  p[1] = pt*mFP._sinCA;
-  p[2] = pt*mFP.tanl();
-  Sti     Sup12S
-     x =  y
-     y =  x
-     z = -z
-   */
-/*
-X(y):= y;
-Y(x):= x;
-Z(z):= -z;
-cosT(Tan) := 1/sqrt(1 + Tan*Tan); 
-sinT(Tan) := Tan*cosT(Tan);
-nx(Phi,Tan) := cos(Phi)*cosT(Tan);
-ny(Phi,Tan) := sin(Phi)*cosT(Tan);
-nz(Tan)  := -sinT(Tan);
-Sti2G : jacobian([X(y), Y(x), Z(z), nx(Phi, Tan), ny(Phi,Tan), nz(Tan)], [x, y, z, Phi, Ptin, Tan]);
-(%i48) Sti2G:jacobian([X(y),Y(x),Z(z),nx(Phi,Tan),ny(Phi,Tan),nz(Tan)],
-                      [x,y,z,Phi,Ptin,Tan])
-       [ 0  1   0          0          0                0                ]
-       [                                                                ]
-       [ 1  0   0          0          0                0                ]
-       [                                                                ]
-       [ 0  0  - 1         0          0                0                ]
-       [                                                                ]
-       [                 sin(Phi)                 cos(Phi)*Tan          ]
-       [ 0  0   0   - --------------  0         - -------------         ]
-       [                      2                       2     3/2         ]
-       [              sqrt(Tan  + 1)              (Tan  + 1)            ]
-(%o48) [                                                                ]
-       [                cos(Phi)                  sin(Phi)*Tan          ]
-       [ 0  0   0    --------------   0         - -------------         ]
-       [                     2                        2     3/2         ]
-       [             sqrt(Tan  + 1)               (Tan  + 1)            ]
-       [                                                                ]
-       [                                        2                       ]
-       [                                     Tan               1        ]
-       [ 0  0   0          0          0  ------------- - -------------- ]
-       [                                     2     3/2           2      ]
-       [                                 (Tan  + 1)      sqrt(Tan  + 1) ]
-Sti2G[0][1] = 1
-Sti2G[1][0] = 1
-Sti2G[2][2] = -1
-Sti2G[3][3] = -sin(Phi)/sqrt(Tan**2+1)
-Sti2G[3][5] = -cos(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
-Sti2G[4][3] = cos(Phi)/sqrt(Tan**2+1)
-Sti2G[4][5] = -sin(Phi)*Tan*(Tan**2+1)**((-3.d+0)/2.d+0)
-Sti2G[5][5] = Tan**2*(Tan**2+1)**((-3.d+0)/2.d+0)-1/sqrt(Tan**2+1)
-
-
-   nx = cosP * cosL;
-   ny = sinP * cosL;
-   nz =        sinL;
-*/
-  Double_t dxy  = TMath::Sqrt(nx*nx + ny*ny);
-  Double_t tanL = nz/dxy;
-  Double_t cosL = 1./TMath::Sqrt(1+tanL*tanL); // cosL
-  Double_t sinL = tanL*cosL;
-  //  Double_t cosP = nx/cosL;
-  //  Double_t sinP = ny/cosL;
-  Double_t Sti2G[6][6] = {0};
-  Sti2G[0][1] =   1;
-  Sti2G[1][0] =   1;
-  Sti2G[2][2] =  -1;
-  Sti2G[3][3] = -ny;               // -sin(Phi)/sqrt(tanL**2+1) = -sin(Phi)*cosL = -ny;
-  Sti2G[3][5] = -nx * sinL * cosL; // -cos(Phi)*tanL*(tanL**2+1)**((-3.d+0)/2.d+0) = -cos(Phi)*sinL/cosL*cosL**3 = -cos(Phi)*sinL*cosL**2 = -= -nx * sinL * cosL
-  Sti2G[4][3] =  nx;               // cos(Phi)*cosL;
-  Sti2G[4][5] = -ny * sinL * cosL; // -sin(Phi)*tanL*TMath::Power(cosL,3) = -sin(Phi)*sinL * cosL**2 = -ny * sinL * cosL;
-  Sti2G[5][5] =  nz * cosL * cosL; // tanL**2*TMath::Power(cosL,3)-cosL = sinL/cosL *cosL**3 = sinL * cosL**2 = nz * cosL * cosL;
-  return TRMatrix(6,6,&Sti2G[0][0]); 
-}
 // ______________________________________________________________________________
 Int_t StTpcAlignerMaker::MakeIO() {
   // Outer to Inner sector alignment
   enum {kMaxHits = 255};
-  static Hit_t tpcHits[kMaxHits+1];
-  static Double_t RIO[kMaxHits+1];
-  static Int_t idx[kMaxHits+1];
   static StThreeVectorD XyzI, XyzO;
   static StThreeVectorD DirI, DirO;
-  static Double_t stepMX = 1.e3;
-  Double_t step;
   static StGlobalCoordinate              globalCoo;
   static StTpcLocalSectorCoordinate      local;
   static StGlobalDirection               globalDir;
@@ -377,9 +179,6 @@ Int_t StTpcAlignerMaker::MakeIO() {
   static StTpcCoordinateTransform transform(StTpcDb::instance());
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
-#if 0
-  StBTofCollection *btofcol = pEvent->btofCollection();
-#endif
   for (UInt_t t=0; t < nTracks; t++) {
     StTrackNode *node = trackNode[t]; 
     if (!node) continue;
@@ -387,31 +186,12 @@ Int_t StTpcAlignerMaker::MakeIO() {
     if (! gTrack ) continue;
     if (gTrack->flag() < 0) continue;
     if (! gTrack->detectorInfo()) continue;
-#if 0
-    if (gTrack->TestBit(kRejected)) continue;
-    if (TriggerId && btofcol &&
-	! gTrack->TestBit(kComingFromOutSide) &&
-	! gTrack->TestBit(kComingFromInSideTofMatched) &&
-	! gTrack->TestBit(kNoToFDependece)) continue;
-#endif
     const StDcaGeometry* dca = gTrack->dcaGeometry();
     if (! dca) continue;
     if (Debug()%10 > 5) {
-      cout << "Track:" << t << *dca << endl;
+      cout << "Track: " << t << " " << *dca << endl;
     }
     const StThreeVectorF &pxyz = gTrack->geometry()->momentum();
-#ifdef __TIME_CORRECTION__
-    Double_t pMomentum = pxyz.mag();
-    if (TMath::Abs(bField) < 0.01) pMomentum = 1000;
-    StThreeVectorD origin    = dca->origin();
-    StThreeVectorD dir       = dca->momentum().unit();
-    //    Double_t       curvature = dca->curvature();
-    Double_t tanl  = dir.z()/dir.perp();
-    Double_t coslI = sqrt(1.+tanl*tanl);
-    static const Double_t M2muon = 0.1056584*0.1056584;
-    Double_t e = TMath::Sqrt(M2muon + pMomentum*pMomentum);
-    Double_t beta = pMomentum/e;
-#endif
     fTpcInOutMatch->Clear();
     fTpcInOutMatch->TriggerId = TriggerId;
     fTpcInOutMatch->field  = bField;
@@ -430,212 +210,86 @@ Int_t StTpcAlignerMaker::MakeIO() {
     Int_t NhitInSector[24]; memset(NhitInSector,0,sizeof(NhitInSector));
     // Find sector with maximum no. of hits
     //      UInt_t sectorWithMaxRowNo = 0;
-    for (UInt_t j=0; j<hvec.size(); j++) {// hit loop
+    UInt_t Nhits = hvec.size();
+    for (UInt_t j=0; j < Nhits; j++) {// hit loop
       if (! hvec[j]) continue;
       if (hvec[j]->detector() != kTpcId) continue;
       StTpcHit *tpcHit = (StTpcHit *) hvec[j];
-      if (_debug) tpcHit->Print("");
+      //      if (_debug) tpcHit->Print("");
+      if (! tpcHit->usedInFit() || tpcHit->flag()) continue;
       Int_t sector = tpcHit->sector();
       NhitInSector[sector-1]++;
     }	
-    Int_t sectorWithMaxNoHits = -1;
+    UInt_t sectorWithMaxNoHits = 0;
     Int_t N = 0;
     for (Int_t j = 0; j < 24; j++) {
+      if (NhitInSector[j] < 10) continue;
       if (NhitInSector[j] > N) {
 	sectorWithMaxNoHits = j+1;
 	N = NhitInSector[j];
       }
     }
-    if (sectorWithMaxNoHits < 0 || N < 10) continue;
-    static StThreeVectorD xyzLPV; // Primary vertex position in Tpc Sector Coordinate System
+    if (sectorWithMaxNoHits == 0) continue;
     Int_t sector = sectorWithMaxNoHits;
-#if 0
-    static Int_t sectorOld = -1;
-    if (pVbest && sector != sectorOld) {
-      sectorOld = sector;
-      StGlobalCoordinateD xyzG(pVbest->position());
-      StTpcLocalSectorCoordinate  xyzL;
-      //      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(xyzG.xyz(), xyzL.xyz());
-      transform(xyzG,xyzL,sector, 1);
-      fTpcInOutMatch->iPV = 1;
-      TCL::ucopy(xyzL.posiition().xyz, &fTpcInOutMatch->xPV, 3);
-    }
-#endif
     N = 0;
-    UInt_t Nhits = hvec.size();
-    Double_t driftZ = 0;
-    for (UInt_t j = 0; j < Nhits; j++) {// hit loop
+    SectorTrack ssegm[2]; // 0 => Inner, 1 => Outer
+    for (UInt_t j=0; j < Nhits; j++) {// hit loop
+      if (! hvec[j]) continue;
       if (hvec[j]->detector() != kTpcId) continue;
-      StTpcHit *tpcHit = static_cast<StTpcHit *> (hvec[j]);
-      if (! tpcHit) continue;
-      Int_t sector = tpcHit->sector();
-      Int_t row    = tpcHit->padrow();
-      if (St_tpcStatusC::instance()->status(sector,row)) continue;
+      StTpcHit *tpcHit = (StTpcHit *) hvec[j];
+      if (tpcHit->sector() != sectorWithMaxNoHits) continue;
       if (! tpcHit->usedInFit() || tpcHit->flag()) continue;
-      if (sector != sectorWithMaxNoHits) continue;
-      globalCoo = StGlobalCoordinate(tpcHit->position());
-#ifdef __TIME_CORRECTION__
-      // Distance from Dca to the hit 
-      StThreeVectorD dist = StThreeVectorD(tpcHit->position()) - origin;
-      Double_t d = dist.perp();
-      Double_t sn = 0;
-      if (d > 0) sn = TMath::Abs(dir.x()*dist.y() - dir.y()*dist.x())/d;
-      if (sn> 0.99) sn =  0.99;
-      if (sn<0.2) {
-	d *= (1.+sn*sn/6);
-      } else {
-	d *= TMath::ASin(sn)/sn;
-      }
-      d *= coslI;
-      Double_t time = d/(TMath::Ccgs()*beta*1e-6); // mksec  
-      if (gTrack->TestBit(kComingFromOutSide)) time = - time;
-      //	transform(global,local,sector,row);
-#endif
-#if 0
-      StThreeVectorD xyzL;
-      StThreeVectorD xyz;
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(globalCoo.position().xyz(), xyzL.xyz());
-      local = StTpcLocalSectorCoordinate(xyzL,sector,row);
-#else
-      transform(globalCoo, local, sector, row);
-#endif
-#ifdef __USE_LOCAL__
-      tpcHits[N].x = local.position().x();
-      tpcHits[N].y = local.position().y();
-#ifdef __TIME_CORRECTION__
-      tpcHits[N].z = local.position().z() - driftVel*time;
-#else
-      tpcHits[N].z = local.position().z();
-#endif
-      RIO[N]      = tpcHits[N].y;
-#else /* ! __USE_LOCAL__ */
-      tpcHits[N].x = globalCoo.position().x();
-      tpcHits[N].y = globalCoo.position().y();
-      tpcHits[N].z = globalCoo.position().z();
-      RIO[N]      = local.position().y();
-#endif /*  __USE_LOCAL__ */
-      GetTpcHitErrors(tpcHit,tpcHits[N].err2xy, tpcHits[N].err2z);
-#if 0
-      tpcHits[N].err2xy[0] = tpcHit->positionError().perp2();
-      tpcHits[N].err2z  = tpcHit->positionError().z()*tpcHit->positionError().z();
-      if (tpcHits[N].err2xy[0] > 0.0) {
-	tpcHits[N].err2xy[0] = tpcHit->positionError().x()*tpcHit->positionError().x();
-	tpcHits[N].err2xy[1] = 0;
-	tpcHits[N].err2xy[2] = tpcHit->positionError().y()*tpcHit->positionError().y();
-	tpcHits[N].err2z = tpcHit->positionError().z()*tpcHit->positionError().z();
-      }
-#endif
-      tpcHits[N].row    = row;
-      tpcHits[N].driftZ = local.position().z();
-      if (Debug()%10 > 5) {
-	Double_t cor = 0;
-	if (tpcHits[N].err2xy[0] > 0 && tpcHits[N].err2xy[2] > 0) 
-	  cor = tpcHits[N].err2xy[1]/TMath::Sqrt(tpcHits[N].err2xy[0]*tpcHits[N].err2xy[2]);
-	cout << Form("sector = %2i row = %2i N =%2i x = %8.3f +/- %8.3f y = %8.3f +/- %8.3f cor = %8.3f z = %8.3f +/- %8.3f, R = %8.3f",sector,row,N,
-		     tpcHits[N].x,TMath::Sqrt(tpcHits[N].err2xy[0]),
-		     tpcHits[N].y,TMath::Sqrt(tpcHits[N].err2xy[2]), cor,
-		     tpcHits[N].z,TMath::Sqrt(tpcHits[N].err2z), RIO[N])<< endl;
-      }
-      if (N < kMaxHits) N++;
+      if (_debug) tpcHit->Print("");
+      Int_t row = tpcHit->padrow();
+      if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ssegm[0].AddHit(tpcHit);
+      else                                                           ssegm[1].AddHit(tpcHit);
     }
-    if (N == 0) continue;
-    //      TArrayI idxT(N); Int_t *idx = idxT.GetArray();
-    TMath::Sort(N,RIO,idx,0);
-    Int_t I123 = 0;
-    Int_t i,k;
-    for (i = 0; i < N; i++) {
-      if (RIO[idx[i]] <= 123.0) {
-	I123++;
-      } else {
-	break;
-      }
+    if (ssegm[0].List()->GetSize() < 5 || ssegm[1].List()->GetSize() < 5) continue;
+    
+    static Double_t RefSurfice[4] = {-123, 0, 1, 0};
+    Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
+    Double_t RefSurficeG[4] = {0};
+#ifdef __Sup12S__
+    Double_t xyz123G[3];
+    StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
+    StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
+#else
+    local = StTpcLocalSectorCoordinate(xyz123L, sector);
+    transform(local,globalCoo);
+    Double_t *xyz123G = globalCoo.position().xyz();
+#endif
+    RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
+    if (ssegm[0].MakeTHelix(RefSurficeG)) continue;
+    if (ssegm[1].MakeTHelix(RefSurficeG)) continue;
+    for (Int_t io = 0; io < 2; io++) {
+      Double_t xyzG[3] = {0};
+      ssegm[io].fRG.GetXYZ(xyzG);
+      globalCoo = StGlobalCoordinate(xyzG);
+      transform(globalCoo,    local,ssegm[io].Sector(), ssegm[io].Row());
+      ssegm[io].fR = TVector3(local.position().xyz());
+      Double_t dirG[3] = {0};
+      ssegm[io].fNG.GetXYZ(dirG);
+      globalDir = StGlobalDirection(dirG);
+      transform(globalDir, localDir,ssegm[io].Sector(), ssegm[io].Row());
+      ssegm[io].fN = TVector3(localDir.position().xyz());
     }
-    Int_t NoIOHits[2] = {I123, N - I123};
-    if (NoIOHits[0] < 5 || NoIOHits[1] < 5) continue;
-    THelixFitter vHelices[2];
     HelixPar_t *HlxPars[2] = {&fTpcInOutMatch->In, &fTpcInOutMatch->Out};
-    for (Int_t io = 0; io < 2; io++) {// Inner / Outer Loop
-      if (NoIOHits[io] < 5) continue;
-      HlxPars[io]->sector = 0;
-      Int_t i2 = N;
-      Int_t ii = 1;
-      Int_t i1 = 0;
-      i2 = NoIOHits[0];
-      if (io) {i1 = NoIOHits[0]; ii = 1; i2 = N;}
-      Int_t nn = 0;
-      driftZ = 0;
-      for (i = i1, k = 0; i >= 0 && i < i2; i += ii, k++) {
-	Double_t *xyz = &tpcHits[idx[i]].x;
-	vHelices[io].Add(xyz);
-	vHelices[io].AddErr(tpcHits[idx[i]].err2xy, tpcHits[idx[i]].err2z);
-	driftZ += tpcHits[idx[i]].driftZ;
-	nn++;
-      }
-      HlxPars[io]->DriftZ = driftZ/nn;
-      vHelices[io].Fit();
-      vHelices[io].MakeErrs();
-      vHelices[io].Backward();
-      *HlxPars[io] = vHelices[io]; 
-      static Double_t RefSurfice[4] = {-123, 0, 1, 0};
-      Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
-      Double_t *RefSurficeG = HlxPars[io]->RefSurficeG;
-#ifdef __Sup12S__
-      Double_t xyz123G[3];
-      StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
-      StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
-#else
-      local = StTpcLocalSectorCoordinate(xyz123L, sector);
-      transform(local,globalCoo);
-      Double_t *xyz123G = globalCoo.position().xyz();
-#endif
-      RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
-      step = vHelices[io].Step(stepMX, RefSurficeG, 4, HlxPars[io]->xyzG(), HlxPars[io]->pxyzG(), 1); 
-      if (TMath::Abs(step) >= stepMX) goto FAILED;;
-      HlxPars[io]->step = step; //{PrPP(Step,*HlxPars[io]);}
-      CheckDirection(HlxPars[io]);
-#ifdef __Sup12S__
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocalVect(HlxPars[io]->pxyzG(),HlxPars[io]->pxyz());
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(HlxPars[io]->xyzG(),HlxPars[io]->xyz());
-#else
-      globalCoo    = StGlobalCoordinate(HlxPars[io]->xyzG()); 
-      globalDir = StGlobalDirection(HlxPars[io]->pxyzG());
-      transform(globalCoo,    local, sector, 1); TCL::ucopy(local.position().xyz(), HlxPars[io]->xyz(), 3);
-      transform(globalDir, localDir, sector, 1); TCL::ucopy(localDir.position().xyz(), HlxPars[io]->pxyz(), 3);
-#endif
-      HlxPars[io]->Rho = vHelices[io].GetRho();
-      HlxPars[io]->dRho = vHelices[io].GetDRho();
-      vHelices[io].Move(step);
-      Double_t cosL  = TMath::Sqrt(HlxPars[io]->nx*HlxPars[io]->nx+HlxPars[io]->ny*HlxPars[io]->ny);
-      Double_t cosCA = HlxPars[io]->ny/cosL;
-      TRSymMatrix StiErr(6);
-      vHelices[io].StiEmx(StiErr.GetArray(), cosCA, cosL);
-      TRMatrix S2R = GetSti2G(HlxPars[io]->nx, HlxPars[io]->ny, HlxPars[io]->nz);
-      TRSymMatrix Cov2(S2R,TRArray::kAxSxAT,StiErr);  if (_debug) {PrPP(Make,Cov2);}
-      HlxPars[io]->sector = 0;
-      if (TMath::Sqrt(Cov2(0,0)) > 0.2 || 
-	  TMath::Sqrt(Cov2(1,1)) > 0.2 || 
-	  TMath::Sqrt(Cov2(2,2)) > 0.2 || 
-	  TMath::Sqrt(Cov2(3,3)) > 0.01|| 
-	  TMath::Sqrt(Cov2(4,4)) > 0.01||
-	  TMath::Sqrt(Cov2(5,5)) > 0.01) continue; 
-      HlxPars[io]->sector = sectorWithMaxNoHits;
-      memcpy(HlxPars[io]->fCov, Cov2.GetArray(), 21*sizeof(Double_t));
-      if (Debug()%10 > 5) {
+    *HlxPars[0] = ssegm[0];
+    *HlxPars[1] = ssegm[1];
+    if (HlxPars[0]->sector <= 0 || HlxPars[1]->sector <= 0) continue;
+    if (Debug()) {
+      for (Int_t io = 0; io < 2; io++) {
 	if (! io) cout << "In:\t";
 	else      cout << "Out:\t"; 
 	cout << *HlxPars[io] << endl;
-	//	  const THelixFitter &p = *&vHelices[io];
-	//	  p.Print("");
       }
+      HelixPar_t diff = *HlxPars[1];
+      diff -= *HlxPars[0];
+      cout << "Diff:" << diff << endl;
     } // end loop over helices
-    if (TpcInOutTree && HlxPars[0]->sector > 0 && HlxPars[0]->sector > 0 ) {
-      if (Debug()) {
-	cout << "In:\t"  << *HlxPars[0] << endl;
-	cout << "Out:\t" << *HlxPars[1] << endl;
-      }
+    if (TpcInOutTree) {
       TpcInOutTree->Fill();
     }
-  FAILED:
     count++;
   } // loop over tracks
   return kStOK;
@@ -650,15 +304,9 @@ Int_t StTpcAlignerMaker::MakeW2S() {
   static StTpcCoordinateTransform transform(StTpcDb::instance());
   static StThreeVectorD XyzI, XyzO;
   static StThreeVectorD DirI, DirO;
-  static Double_t stepMX = 1.e3;
-  Double_t step;
-  static Double_t err2xy[3] = {0,0,0}, err2z = 0;
-  TList SegmentList; SegmentList.SetOwner(kTRUE);
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
-#if 0
-  StBTofCollection *btofcol = pEvent->btofCollection();
-#endif
+  TList SegmentList; SegmentList.SetOwner(kTRUE);
   for (UInt_t i=0; i < nTracks; i++) {
     StTrackNode *node = trackNode[i]; 
     if (!node) continue;
@@ -666,267 +314,119 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     if (! gTrack ) continue;
     if (gTrack->flag() < 0) continue;
     if (! gTrack->detectorInfo()) continue;
-#if 0
-    if (gTrack->TestBit(kRejected)) continue;
-    if (TriggerId && btofcol &&
-	! gTrack->TestBit(kComingFromOutSide) &&
-	! gTrack->TestBit(kComingFromInSideTofMatched) &&
-	! gTrack->TestBit(kNoToFDependece)) continue;
-#endif
+    if (gTrack->fitTraits().numberOfFitPoints(kTpcId) < 10) continue;
+    StPtrVecHit hvec   = gTrack->detectorInfo()->hits();
+    if (hvec.size() < 10) continue;
     const StThreeVectorF &pxyz = gTrack->geometry()->momentum();
     Double_t pMomentum = pxyz.mag();
     if (TMath::Abs(bField) < 0.01) pMomentum = 1000;
     if (pMomentum < 1.0) continue;
-    StPtrVecHit hvec   = gTrack->detectorInfo()->hits();
     StTpcHit *tpcHit = 0;
-    if (hvec.size()){
-      //      Int_t Id = gTrack->key();
-      if (gTrack->fitTraits().numberOfFitPoints(kTpcId) < 10) continue;
-      TList HitList;
-      PrPP(track,i);
-      for (UInt_t j=0; j<hvec.size(); j++) {// hit loop
-	if (! hvec[j]) continue;
-	if (hvec[j]->detector() != kTpcId) continue;
-	tpcHit = (StTpcHit *) hvec[j];
-	if (_debug) {
-	  PrPP(hit,*tpcHit);
-	}
-	HitList.Add(tpcHit);
-      }	
-      HitList.Sort();
-      TIter next(&HitList);
-      Int_t oldSect = -1;
-      SectorSegment *ssegm = 0;
-      while ((tpcHit = (StTpcHit *) next())) {
-	Int_t sector = tpcHit->sector();
-	if (!ssegm || sector != oldSect) {
-	  ssegm = new SectorSegment(sector);
-	  SegmentList.Add(ssegm);
-	  oldSect = sector;
-	}
-	ssegm->List()->Add(tpcHit); 
+    //      Int_t Id = gTrack->key();
+    PrPP(track,i);
+    Int_t oldSect = -1;
+    SectorTrack *ssegm = 0;
+    for (UInt_t j=0; j<hvec.size(); j++) {// hit loop
+      if (! hvec[j]) continue;
+      if (hvec[j]->detector() != kTpcId) continue;
+      tpcHit = (StTpcHit *) hvec[j];
+      if (! tpcHit->usedInFit() || tpcHit->flag()) continue;
+      Int_t sector = tpcHit->sector();
+      if (!ssegm || sector != oldSect) {
+	ssegm = new SectorTrack(sector);
+	SegmentList.Add(ssegm);
+	oldSect = sector;
       }
+      ssegm->AddHit(tpcHit); 
     }
   }
   if (SegmentList.GetSize() < 2) return kStOK;
   // Fit Segments
   SegmentList.Sort();
   TIter nextSegment(&SegmentList);
-  SectorSegment *ssegm = 0;
-  while ((ssegm = (SectorSegment *) nextSegment())) {
-    TIter nextHit(ssegm->List());
-    StTpcHit *tpcHit = 0;
-    Int_t nh = 0;
-    //    ssegm->Helix() = THelixFitter();
-    Double_t driftZ = 0;
-    while ((tpcHit = (StTpcHit *) nextHit())) {
-      Int_t sector = tpcHit->sector();
-      Int_t row    = tpcHit->padrow();
-      globalCoo = StGlobalCoordinate(tpcHit->position());
-#ifdef __Sup12S__
-      StThreeVectorD xyz;
-      StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(globalCoo.position().xyz(), xyz.xyz());
-#else
-      transform(globalCoo, local, sector, row);
-      StThreeVectorD &xyz = local.position();
-#endif
-      
-      ssegm->Helix().Add(globalCoo.position().xyz());
-#if 0
-      if (tpcHit->positionError().perp2() == 0 || tpcHit->positionError().z() == 0) {
-	if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) StiTpcInnerHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
-	else                                                           StiTpcOuterHitErrorCalculator::instance()->calculateError(200-xyz[2], 0., 0., err2xy[0], err2z);
-      } else {
-	err2xy[0] = tpcHit->positionError().x()*tpcHit->positionError().x();
-	err2xy[0] = 0;
-	err2xy[2] = tpcHit->positionError().y()*tpcHit->positionError().y();
-	err2z     = tpcHit->positionError().z()*tpcHit->positionError().z();
-      }
-#endif
-      GetTpcHitErrors(tpcHit,err2xy, err2z);
-      ssegm->Helix().AddErr(err2xy,err2z);
-      if (Debug()%10 > 5) {
-	cout << nh << "\t" << *tpcHit 
-	     << " loc " << xyz 
-	     << " err xy/z " << TMath::Sqrt(err2xy[0]) << " " << TMath::Sqrt(err2xy[2]) << " "<< TMath::Sqrt(err2z) << endl;
-      }
-      if (row < ssegm->fRowMin) {ssegm->fRowMin = row;}
-#ifdef __Sup12S__
-      driftZ += xyz.z();
-#else
-      driftZ += local.position().z();
-#endif
-      nh++;
-    }
-    if (nh < 5) continue;
-    HelixPar_t *HlxPars = &ssegm->HlxPar;
-    HlxPars->DriftZ = driftZ/nh;
-    ssegm->Helix().Fit();
-    ssegm->Helix().MakeErrs();
-    ssegm->SetStatus(0);
-    //    ssegm->Helix().Backward();
-    THelixFitter &helix =  ssegm->Helix();
-    //      if (io) helix.Backward();
-    Int_t sector = ssegm->Sector();
-    Int_t row    = ssegm->fRowMin;
+  SectorTrack *segm = 0;
+  while ((segm = (SectorTrack *) nextSegment())) {
+    if (segm->MakeTHelix()) continue;
+    StTpcHit *tpcHit = (StTpcHit *) segm->List()->First();
+    Int_t sector = tpcHit->sector();
+    assert(sector == segm->Sector());
+    Int_t row    = tpcHit->padrow();
     Double_t Y = transform.yFromRow(sector, row);
     Double_t RefSurfice[4] = {- Y, 0, 1, 0};
     Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
-    Double_t *RefSurficeG = HlxPars->RefSurficeG;
-#ifdef __Sup12S__
+    Double_t RefSurficeG[4] = {0};
     Double_t xyz123G[3];
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
-#else
-    local = StTpcLocalSectorCoordinate(xyz123L, sector);
-    transform(local,globalCoo);
-    Double_t *xyz123G = globalCoo.position().xyz();
-    localDir = StTpcLocalSectorDirection(&RefSurfice[1], sector);
-    transform(localDir,globalDir);
-    TCL::ucopy(globalDir.position().xyz(), &RefSurficeG[1], 3);
-#endif
     RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
     if (Debug() > 2) {
       for (Int_t j = 0; j < 4; j++) {
-	cout << "\tHlxPars->RefSurficeG[" << j << "] = " << HlxPars->RefSurficeG[j];
+	cout << "\tRefSurficeG[" << j << "] = " << RefSurficeG[j];
       }
       cout << endl;
     }
-    *HlxPars = helix;
-    step = helix.Step(stepMX, RefSurficeG, 4, HlxPars->xyzG(), HlxPars->pxyzG(),1);
-    if (TMath::Abs(step) >= stepMX) continue;
-    HlxPars->step = step;
-    HlxPars->Rho = helix.GetRho();
-    HlxPars->dRho = helix.GetDRho();
-    helix.Move(step);
-#ifdef __Sup12S__
-    StTpcDb::instance()->Sup12S2Glob(ssegm->Sector()).MasterToLocal(HlxPars->xyzG(), HlxPars->xyz());
-    StTpcDb::instance()->Sup12S2Glob(ssegm->Sector()).MasterToLocalVect(HlxPars->pxyzG(), HlxPars->pxyz());
-#else
-    globalCoo    = StGlobalCoordinate(HlxPars->xyzG());
-    globalDir = StGlobalDirection(HlxPars->pxyzG());
-    transform(globalCoo,    local, sector, 1); TCL::ucopy(local.position().xyz(), HlxPars->xyz(), 3);
-    transform(globalDir, localDir, sector, 1); TCL::ucopy(localDir.position().xyz(), HlxPars->pxyz(), 3);
-#endif
-    Double_t cosL  = TMath::Sqrt(HlxPars->nx*HlxPars->nx+HlxPars->ny*HlxPars->ny);
-    Double_t cosCA = HlxPars->ny/cosL;
-    TRSymMatrix StiErr(6);
-    helix.StiEmx(StiErr.GetArray(), cosCA, cosL);
-    TRMatrix S2R = GetSti2G(HlxPars->nx, HlxPars->ny, HlxPars->nz);
-    TRSymMatrix Cov2(S2R,TRArray::kAxSxAT,StiErr);// PrPP(Make,Cov2);
-    memcpy(HlxPars->fCov, Cov2.GetArray(), 21*sizeof(Double_t));
-    HlxPars->sector = ssegm->Sector();
-    PrPP(Make,*HlxPars);
-    if (Debug()%10 > 0) ssegm->Print();
+    if (! segm->Move(RefSurficeG)) continue;
+    if (Debug()%10 > 0) segm->Print();
   }
   Int_t NoSegm = SegmentList.GetSize();
-  if (NoSegm > 1) {
-    HelixPar_t    &HlxParW   = *&fTpcW2SMatch->HlxParW;
-    HelixPar_t    &HlxParS   = *&fTpcW2SMatch->HlxParS;
-    HelixPar_t    &HlxParW2S = *&fTpcW2SMatch->HlxParW2S;
-    TGeoHMatrix   &RW2S      = *&fTpcW2SMatch->RW2S;
-    for (Int_t k = 0; k < NoSegm; k++) { // W
-      if (! SegmentList.At(k)) continue;
-      SectorSegment *ssegW = (SectorSegment *)  SegmentList.At(k);
-      if (ssegW->Status()) continue;
-      Int_t sectorW = ssegW->Sector();
-      if (! sectorW) continue;
-      Int_t RowsW = ssegW->fRowMin;
-      for (Int_t l = 0; l < NoSegm; l++) { // S
-	fTpcW2SMatch->Clear();
-	if (l == k) continue;
-	if (! SegmentList.At(l)) continue;
-	SectorSegment *ssegS = (SectorSegment *)  SegmentList.At(l);
-	if (ssegS->Status()) continue;
-	Int_t sectorS = ssegS->Sector();
-	if (sectorW == sectorS) continue;
-	Int_t RowsS = ssegS->fRowMin;
-	//	HlxParS =  ssegS->Helix();
-	HlxParW =  ssegW->HlxPar;                PrP2(MakeW,HlxParW);
-	HlxParS =  ssegS->HlxPar;                PrP2(MakeS,HlxParS);
-	CheckDirection(&HlxParS);
-	DEBUG_LEVEL {
-	  cout << "ssegW\t"; ssegW->Print();
-	  cout << "ssegS\t"; ssegS->Print();
-	}
-	DEBUG_LEVEL {
-	  cout <<   "sectorW " << sectorW << "\tRowsW [" << RowsW << "]" 
-	       << "\tsectorS " << sectorS << "\tRowsS [" << RowsS << "]" << endl;
-	  if (_debug) {
-	    cout << "W: " << sectorW; StTpcDb::instance()->Sup12S2Tpc(sectorW).Print();
-	    cout << "S: " << sectorS; StTpcDb::instance()->Sup12S2Tpc(sectorS).Print();
-	    cout << "SI: " << sectorS; StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse().Print();
-	  }
-	}
-	RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
-	DEBUG_LEVEL {
-	  cout << "RW2S\t"; RW2S.Print();
-	}
-	HlxParW2S = HlxParW;
-	HlxParW2S.sector = ssegS->Sector() + 100*ssegW->Sector();
-	PrPP(Before,HlxParW2S);
-	PrPP(After,HlxParW2S);
-	THelixFitter helixW2S = ssegW->Helix(); // helixW2S(HlxParW2S.xyzG(),HlxParW2S.pxyzG(),HlxParW2S.Rho,HlxParW2S.dRho);  //=  ssegW->Helix(); 
-	if (Debug() > 2) {
-	  for (Int_t j = 0; j < 4; j++) {
-	    cout << "HlxParW.RefSurficeG[" << j << "] = " << HlxParW.RefSurficeG[j] 
-		 << "\tHlxParS.RefSurficeG[" << j << "] = " << HlxParS.RefSurficeG[j] << endl;
-	  }
-	}
-	step = helixW2S.Step(stepMX, HlxParS.RefSurficeG, 4, HlxParW2S.xyzG(), HlxParW2S.pxyzG(),1); 
-	if (TMath::Abs(step) >= stepMX) continue;
-	helixW2S.Move(step);
-	Double_t cosL  = TMath::Sqrt(HlxParW2S.nx*HlxParW2S.nx+HlxParW2S.ny*HlxParW2S.ny);
-	Double_t cosCA = HlxParW2S.ny/cosL;
-	TRSymMatrix StiErr(6);
-	helixW2S.StiEmx(StiErr.GetArray(), cosCA, cosL);
-	CheckDirection(&HlxParW2S);
-	HlxParW2S.step = step;
-	HlxParW2S.Rho = helixW2S.GetRho();
-	HlxParW2S.dRho = helixW2S.GetDRho();
-	TRMatrix S2R = GetSti2G(HlxParW2S.nx, HlxParW2S.ny, HlxParW2S.nz);
-	TRSymMatrix Cov2(S2R,TRArray::kAxSxAT,StiErr);// PrPP(Make,Cov2);
-	if (TMath::Sqrt(Cov2(0,0)) > 0.2 || 
-	    TMath::Sqrt(Cov2(1,1)) > 0.2 || 
-	    TMath::Sqrt(Cov2(2,2)) > 0.2 || 
-	    TMath::Sqrt(Cov2(3,3)) > 0.01|| 
-	    TMath::Sqrt(Cov2(4,4)) > 0.01||
-	    TMath::Sqrt(Cov2(5,5)) > 0.01) continue; 
-	memcpy(HlxParW2S.fCov, Cov2.GetArray(), 21*sizeof(Double_t));
-	
-#ifdef __Sup12S__
-	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(HlxParW2S.xyzG(), HlxParW2S.xyz());
-	StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(HlxParW2S.pxyzG(), HlxParW2S.pxyz());
-#else
-	globalCoo    = StGlobalCoordinate(HlxParW2S.xyzG());
-	globalDir = StGlobalDirection(HlxParW2S.pxyzG());
-	transform(globalCoo,    local, sectorS, 1); TCL::ucopy(local.position().xyz(),    HlxParW2S.xyz(), 3);
-	transform(globalDir, localDir, sectorS, 1); TCL::ucopy(localDir.position().xyz(), HlxParW2S.pxyz(), 3);
-#endif
-	PrPP(Make,HlxParW2S);
-	const Char_t * names[6] = {"x","y","z","nx","ny","nz"};
-	Double_t *s = HlxParS.xyz();
-	Double_t *w = HlxParW2S.xyz();
-	DEBUG_LEVEL {
-	  cout << "Matching segment  from sectorW " << sectorW << " to sectorS " << sectorS
-	       << " at step = " << step << endl;
-	  cout << "HlxParW\t"   << HlxParW << endl;
-	  cout << "HlxPaxS\t"   << HlxParS << endl;
-	  cout << "HlxParW2S\t" << HlxParW2S << endl;
-	}
-	Int_t reject = 0;
-	for (Int_t i = 0; i < 6; i++) {
-	  DEBUG_LEVEL {
-	    cout << names[i] << "\t" << s[i] << "\t" << w[i] << "\tDelta " << s[i] - w[i] << endl;
-	  }
-	  if (i < 3 && TMath::Abs(s[i] - w[i]) > 10) reject++;
-	}
-	DEBUG_LEVEL {
-	  if (reject) cout << "rejected" << endl;
-	}
-	if (reject) continue;
+  fTpcW2SMatch->TriggerId = TriggerId;
+  if (NoSegm <= 1) return kStOK;
+  HelixPar_t    &HlxParW   = *&fTpcW2SMatch->HlxParW;
+  HelixPar_t    &HlxParS   = *&fTpcW2SMatch->HlxParS;
+  HelixPar_t    &HlxParW2S = *&fTpcW2SMatch->HlxParW2S;
+  TGeoHMatrix   &RW2S      = *&fTpcW2SMatch->RW2S;
+  for (Int_t k = 0; k < NoSegm; k++) { // W
+    if (! SegmentList.At(k)) continue;
+    SectorTrack *segW = (SectorTrack *)  SegmentList.At(k);
+    if (segW->Status()) continue;
+    Int_t sectorW = segW->Sector();
+    if (! sectorW) continue;
+    for (Int_t l = 0; l < NoSegm; l++) { // S
+      fTpcW2SMatch->Clear();
+      if (l == k) continue;
+      if (! SegmentList.At(l)) continue;
+      SectorTrack *segS = (SectorTrack *)  SegmentList.At(l);
+      if (segS->Status()) continue;
+      Int_t sectorS = segS->Sector();
+      if (sectorW == sectorS) continue;
+      RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
+      SectorTrack segW2S = *segW;
+      if (segW2S.Move(segS->RefSurface())) continue;
+      segW2S.SetSector(100*sectorW + sectorS);
+      Double_t loc[3] = {0};
+      Double_t xyzG[3] = {0};
+      segW2S.fRG.GetXYZ(xyzG);
+      Double_t dirG[3] = {0};
+      segW2S.fNG.GetXYZ(dirG);
+      StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(xyzG, loc);
+      segW2S.fR = TVector3(loc);
+      StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(dirG, loc);
+      segW2S.fN = TVector3(loc);
+      HlxParS = *segS;
+      HlxParW = *segW;
+      HlxParW2S = segW2S;
+      PrPP(Make,HlxParW2S);
+      const Char_t * names[6] = {"x","y","z","nx","ny","nz"};
+      Double_t *s = HlxParS.xyz();
+      Double_t *w = HlxParW2S.xyz();
+      DEBUG_LEVEL {
+	cout << "Matching segment  from sectorW " << sectorW << " to sectorS " << sectorS
+	     << " at step = " << segW2S.Step() << endl;
+	cout << "HlxParW\t"   << HlxParW << endl;
+	cout << "HlxPaxS\t"   << HlxParS << endl;
+	cout << "HlxParW2S\t" << HlxParW2S << endl;
       }
-      fTpcW2SMatch->TriggerId = TriggerId;
+      Int_t reject = 0;
+      for (Int_t i = 0; i < 6; i++) {
+	DEBUG_LEVEL {
+	  cout << names[i] << "\t" << s[i] << "\t" << w[i] << "\tDelta " << s[i] - w[i] << endl;
+	}
+	if (i < 3 && TMath::Abs(s[i] - w[i]) > 10) reject++;
+      }
+      DEBUG_LEVEL {
+	if (reject) cout << "rejected" << endl;
+      }
+      if (reject) continue;
       TpcW2STree->Fill();
     }
   }

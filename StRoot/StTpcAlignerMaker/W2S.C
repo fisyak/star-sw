@@ -70,7 +70,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   static const Int_t&       HlxParW_Nused                            = iter("HlxParW.Nused");
   static const Double_t&    HlxParW_DriftZ                           = iter("HlxParW.DriftZ");
   static const Double_t&    HlxParW_step                             = iter("HlxParW.step");
-  static const Double_t*&   HlxParW_RefSurficeG                      = iter("HlxParW.RefSurficeG[4]");
+  //  static const Double_t*&   HlxParW_RefSurficeG                      = iter("HlxParW.RefSurficeG[4]");
   //	static const UInt_t&      HlxParS_fUniqueID                        = iter("HlxParS.fUniqueID");
   //	static const UInt_t&      HlxParS_fBits                            = iter("HlxParS.fBits");
   static const Int_t&       s                                  = iter("HlxParS.sector"); // HlxParS_sector
@@ -95,7 +95,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   static const Int_t&       HlxParS_Nused                            = iter("HlxParS.Nused");
   static const Double_t&    HlxParS_DriftZ                           = iter("HlxParS.DriftZ");
   static const Double_t&    HlxParS_step                             = iter("HlxParS.step");
-  static const Double_t*&   HlxParS_RefSurficeG                      = iter("HlxParS.RefSurficeG[4]");
+  //  static const Double_t*&   HlxParS_RefSurficeG                      = iter("HlxParS.RefSurficeG[4]");
   //	static const UInt_t&      HlxParW2S_fUniqueID                      = iter("HlxParW2S.fUniqueID");
   //	static const UInt_t&      HlxParW2S_fBits                          = iter("HlxParW2S.fBits");
   static const Int_t&       u                         = iter("HlxParW2S.sector");
@@ -120,7 +120,7 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root") {
   static const Int_t&       HlxParW2S_Nused                          = iter("HlxParW2S.Nused");
   static const Double_t&    HlxParW2S_DriftZ                         = iter("HlxParW2S.DriftZ");
   static const Double_t&    HlxParW2S_step                           = iter("HlxParW2S.step");
-  static const Double_t*&   HlxParW2S_RefSurficeG                    = iter("HlxParW2S.RefSurficeG[4]");
+  //  static const Double_t*&   HlxParW2S_RefSurficeG                    = iter("HlxParW2S.RefSurficeG[4]");
   // Book Histograms
   TString Out(files); 
   Out.ReplaceAll(".root","W2S");
@@ -394,18 +394,19 @@ void TDrawW2S() {
   Int_t is = im + NP;
   TRVector AmX(NP,array+im);  PrPP(AmX);
   TRSymMatrix S(NP,array+is); PrPP(S);
-#if 1
+  TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
   TRSymMatrix SInv(S);
-  Int_t iFail = TRSymMatrix::TrchLU(S.GetArray(),SInv.GetArray(),5);
+  Int_t iFail = TRSymMatrix::TrchLU(S.GetArray(),SInv.GetArray(),NP);
   if (iFail) {
     cout << "TRSymMatrix Invertion failed" << endl;
     SInv = TRSymMatrix(S,TRArray::kInvertedPosDef);  PrPP(SInv);
   } else {
     SInv = TRSymMatrix(S,TRArray::kInverted);  PrPP(SInv);
   }
-#else
-  TRSymMatrix SInv(S,TRArray::kInverted); PrPP(SInv);
-  if (_debug) {
+  TRVector  X(SInv,TRArray::kSxA,AmX);     PrPP(X);
+  Double_t chi2 = yTy;
+  chi2 -= AmX*X; PrPP1(chi2);
+  if (_debug > 2) {
     TRSymMatrix P(NP);
     for (Int_t i = 0; i < NP; i++)
       for (Int_t j = 0; j < NP; j++) {
@@ -415,10 +416,23 @@ void TDrawW2S() {
       }
     PrPP(P);
   }
+#define __FREEZEG__
+#ifdef __FREEZEG__
+  TRMatrix FreezeG(NP,NP);
+  for (Int_t i = 0; i < NP; i++) {
+    if (i%6 < 3) FreezeG(i,i) = 1;
+  }
+  PrPP(FreezeG);
+  TRVector AmX5(FreezeG, TRArray::kAxB, AmX); PrPP(AmX5);
+  TRSymMatrix S5(FreezeG, TRArray::kATxSxA, S); PrPP(S5);
+  TRSymMatrix S5Inv(S5, TRArray::kInverted);  PrPP(S5Inv);
+  TRVector  X5(S5Inv,TRArray::kSxA,AmX5);     PrPP(X5);
+  Double_t chi2x5 = yTy;
+  chi2x5 -= AmX5*X5; PrPP1(chi2x5);
+  chi2 = chi2x5;
+  X = X5;
+  SInv = S5Inv;
 #endif
-  TRVector  X(SInv,TRArray::kSxA,AmX);     PrPP(X);
-  Double_t chi2 = yTy;
-  chi2 -= AmX*X; PrPP1(chi2);
   Int_t head = 0;
   for (Int_t i = 1; i <= nx; i++) {
     Int_t sector = i;
@@ -450,6 +464,7 @@ void TDrawW2S() {
       Int_t    iFlag;
     };
     Val_t ValA[7]; memset (ValA, 0, sizeof(ValA));
+#define __AVERAGE_WS__
 #if 1
     if (LSF) {
       line = "";
@@ -460,7 +475,11 @@ void TDrawW2S() {
 	  if (m > 2) scale = 1e3; // => mrad
 	  ValA[m].val =  scale*X(l);
 	  ValA[m].valError = scale*TMath::Sqrt(SInv(l,l)); // scale by a factor of 5
+#ifndef __AVERAGE_WS__
 	  ValA[m].iFlag = 1; // 0, No LSF1;
+#else
+	  ValA[m].iFlag =  0; //  No LSF1;
+#endif
 	} else {
 	  ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
 	}
@@ -611,7 +630,6 @@ void TDrawW2S() {
 	      line  += Form("|%8.2f+-%6.2f ", Vals[m].val,TMath::Min(999.99,Vals[m].valError)); 
 	      lineC += Form(",%8.2f,%6.2f", Vals[m].val,TMath::Min(999.99,Vals[m].valError)); 
 	    }
-	    //#define __AVERAGE_WS__
 #ifdef  __AVERAGE_WS__
 	    if (ValA[m].iFlag) {
 	      Double_t w0 = 1./(Vals[m].valError*Vals[m].valError);
@@ -644,7 +662,7 @@ void TDrawW2S() {
     line = ""; 
     lineC = Form("\t{%2i",sector);
     for (Int_t m = 0; m < 6; m++) {
-      if (! ValA[m].iFlag 
+      if (! ValA[m].iFlag
 #ifdef   FREEZE_BETA  
 	  || (m == 4) 
 #endif
@@ -711,7 +729,7 @@ void TDrawW2S() {
 	  || (m == 3 || m == 4) 
 #endif
 	  ) {
-	line  += "|                ";
+	line  += "|                 ";
 	lineC += ",      0,-9.99";
       } else {
 	if (m > 2) {

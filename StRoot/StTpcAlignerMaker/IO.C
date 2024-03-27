@@ -50,7 +50,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
 	static const Int_t&       In_Nused                                 = iter("In.Nused");
 	static const Double_t&    In_DriftZ                                = iter("In.DriftZ");
 	static const Double_t&    In_step                                  = iter("In.step");
-	static const Double_t*&   In_RefSurficeG                           = iter("In.RefSurficeG[4]");
+	//	static const Double_t*&   In_RefSurficeG                           = iter("In.RefSurficeG[4]");
 	//	static const UInt_t&      Out_fUniqueID                            = iter("Out.fUniqueID");
 	//	static const UInt_t&      Out_fBits                                = iter("Out.fBits");
 	static const Int_t&       Out_sector                               = iter("Out.sector");
@@ -75,7 +75,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
 	static const Int_t&       Out_Nused                                = iter("Out.Nused");
 	static const Double_t&    Out_DriftZ                               = iter("Out.DriftZ");
 	static const Double_t&    Out_step                                 = iter("Out.step");
-	static const Double_t*&   Out_RefSurficeG                          = iter("Out.RefSurficeG[4]");
+	//	static const Double_t*&   Out_RefSurficeG                          = iter("Out.RefSurficeG[4]");
   // Book Histograms
   TString Out(gSystem->BaseName(files)); 
   Out.ReplaceAll("st_","");
@@ -399,7 +399,7 @@ void TDrawIO() {
 	  } else {
 	    ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
 	  }
-	  line  += Form("|%7.2f+-%5.2f ", ValA[m].val,TMath::Min(99.99,ValA[m].valError)); 
+	  line  += Form("|%7.2f+-%5.2f ",TMath::Max(-999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
 	}
       }
     }
