@@ -203,8 +203,10 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"r2023",       20221225,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
   {"y2023a",      20221215,     1, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
   {"r2023a",      20221225,     1, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
-  {"y2024",       20231210,     0, "y2024",    "y2024 first cut geometry, AgML,xgeometry"},    
-  {"y2024a",      20231210,     1, "y2024a",   "y2024a production geometry, AgML,xgeometry"},    
+  {"y2024",       20231210,     0, "y2019",    "y2019 first cut geometry, AgML,xgeometry"},    
+  {"y2024a",      20231210,     1, "y2019a",   "y2019a production geometry, AgML,xgeometry"},    
+  {"r2024",       20231225,     0, "y2019",    "y2019 first cut geometry, AgML,xgeometry"},    
+  {"r2024a",      20231225,     1, "y2019a",   "y2019a production geometry, AgML,xgeometry"},    
   // Production runs
   {"CosmicFF_2019",                          20190118, 210113, "y2019", "Cosmic FF_2019"            },
   {"CosmicRF_2019",                          20190204, 205949, "y2019", "Cosmic RF_2019"            },
