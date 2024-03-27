@@ -630,7 +630,6 @@ protected:
 #else /* ! __TFG__VERSION__ */
   ClassDef(StPicoEvent, 8)
 #endif /* __TFG__VERSION__ */
-#endif
 };
 
 #endif
