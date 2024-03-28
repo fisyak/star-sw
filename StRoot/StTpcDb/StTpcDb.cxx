@@ -228,7 +228,6 @@ StTpcDb::StTpcDb() {
   gStTpcDb = this;
 }
 //_____________________________________________________________________________
-//_____________________________________________________________________________
 StTpcDb::~StTpcDb() {
   for (Int_t i = 0;i<24;i++) {
     for (Int_t k = 0; k < kTotalTpcSectorRotaions; k++) 
@@ -262,7 +261,7 @@ float StTpcDb::DriftVelocity(Int_t sector, Int_t row) {
 void StTpcDb::SetDriftVelocity() {
   static UInt_t u0 = 0; // beginTime of current Table
   static UInt_t u1 = 0; // beginTime for next Table
-  static UInt_t umax = TUnixTime(20250101,0,1).GetUTime(); // maximum time allowed for next table
+  static UInt_t umax = TUnixTime(20310101,0,1).GetUTime(); // maximum time allowed for next table
   // for back compartiblity switch to separated West and East drift velocities after 2007
   static St_tpcDriftVelocity *dvel0 = 0;
   static St_tpcDriftVelocity *dvel1 = 0;
@@ -431,6 +430,10 @@ Revisit 03/05/2024
       kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *  GG(z) * WHEEL                    * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS --> * GG^-1(z) * dR
       kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *          Wheel            * GG(z) * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS --> * GG^-1(z) * dR
                                       Wheel =  GG(z) * WHEEL * GG^-1(z) = ((*rotm) * TpcSuperSectorPosition * dR * Flip)^-1 * W * ((*rotm) * TpcSuperSectorPosition * dR * Flip)
+Revist 03/23/2024 move Flip
+                                                                                                                       alpha = beta = 0
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *  GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * dR * GG^-1(z)
+                    <--                              Sup12S2Tpc                            ------>            <---                   Sub2SupS12                          --->
   */
   assert(Dimensions()->numberOfSectors() == 24);
   Float_t gFactor = StarMagField::Instance()->GetFactor();
@@ -502,6 +505,7 @@ Revisit 03/05/2024
 	    if (gGeoManager) rotm->RegisterYourself();
 	  }
 	  rotA = (*mShift[part]) * (*mHalf[part]) * (*rotm);
+	  if (k == kSup12S2Tpc) rotA *= Flip(); // new in 2024 schema
 	  rotA *= chair->GetMatrix(sector-1);
 	  if (chairD->getNumRows() == 24) {
 	    if (gFactor > 0.2) {
@@ -510,7 +514,7 @@ Revisit 03/05/2024
 	      rotA *= chairD->GetMatrix(sector-1).Inverse();
 	    }
 	  }
-	  if (k == kSup12S2Tpc) rotA *= Flip();
+	  //	  if (k == kSup12S2Tpc) rotA *= Flip();  // new in 2023 schema 
 	  if (! gGeoManager) SafeDelete(rotm);
 	  break;
 	case kSupS2Glob:      // SupS => Tpc => Glob
@@ -527,19 +531,24 @@ Revisit 03/05/2024
 	case kSubSOuter2Sup12S: 
 	  if (mOldScheme) {rotA = Flip() * StTpcOuterSectorPosition::instance()->GetMatrix(sector-1); break;}
 	  if (! chair) chair = StTpcOuterSectorPosition::instance();
-	  if (k == kSubSInner2SupS || k == kSubSOuter2SupS) rotA = Flip() * chair->GetMatrix(sector-1);  // to Sector 12 
-	  else                                              rotA =          chair->GetMatrix(sector-1);  // to Sector 12 
+	  //new 2024   Flip done in Sup12STpc
+	  //new 2024	  if (k == kSubSInner2SupS || k == kSubSOuter2SupS) rotA = Flip() * chair->GetMatrix(sector-1);  // to Sector 12 
+	  //new 2024	  else                                              rotA =          chair->GetMatrix(sector-1);  // to Sector 12 
+	  if (k == kSubSOuter2SupS) rotA = Flip() * chair->GetMatrix(sector-1);
+	  else                      rotA =          chair->GetMatrix(sector-1);  
 	  if (chair->GetNRows() == 48) {
 	    if (gFactor > 0.2) {
 	      rotA *= chair->GetMatrix(sector-1+24);
 	    } else if (gFactor < -0.2) {
 	      rotA *= chair->GetMatrix(sector-1+24).Inverse();
+#if 1
 	    } else if ( k == kSubSOuter2SupS ) {
 	      static  Double_t corrZ[24] = // /hlt/cephfs/reco/Pass48   extra correction for ZF2023 um
 		{ -739.29,-1245.76,-1673.18,-1766.18,-1746.37,-1840.42,-1717.83,-1584.91,-1643.17,-1752.01,-1579.27,-1771.68,
 		 -1757.73,-1714.33,-1678.68,-1684.40,-1617.86,-1874.44,-1736.24,-2155.39,-1645.03,-1771.64,-1841.34,-1532.64};
 	      Double_t Z = rotA.GetTranslation()[2] - 1e-4*corrZ[sector-1];
 	      rotA.SetDz(Z);
+#endif
 	    }
 	  }
 	  break;
