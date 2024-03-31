@@ -333,6 +333,12 @@ void THelixTrack::SetEmx(const double*  err)
 //_____________________________________________________________________________
 void THelixTrack::StiEmx(double err[21]) const
 {
+  double cosCA = fP[0]/fCosL;
+  StiEmx(err, cosCA, fCosL);
+}
+//_____________________________________________________________________________
+void THelixTrack::StiEmx(double err[21], Double_t cosCA, Double_t CosL) const
+{
 enum {kXX
      ,kYX,kYY                       
      ,kZX,kZY,kZZ                 
@@ -342,7 +348,6 @@ enum {kXX
      ,kLN
      };
    memset(err,0,sizeof(err[0])*kLN);
-   double cosCA = fP[0]/fCosL;
    err[kYY] = fEmx->mHH/(cosCA*cosCA);
    err[kZY] = fEmx->mHZ/(cosCA);
    err[kZZ] = fEmx->mZZ;
@@ -353,11 +358,11 @@ enum {kXX
    err[kPZ] = fEmx->mCZ;
    err[kPE] = fEmx->mAC;
    err[kPP] = fEmx->mCC;
-   err[kTY] = fEmx->mHL/(cosCA*fCosL*fCosL);
-   err[kTZ] = fEmx->mZL/(      fCosL*fCosL);
-   err[kTE] = fEmx->mAL/(      fCosL*fCosL);
-   err[kTP] = fEmx->mCL/(      fCosL*fCosL);
-   err[kTT] = fEmx->mLL/(      fCosL*fCosL*fCosL*fCosL);
+   err[kTY] = fEmx->mHL/(cosCA*CosL*CosL);
+   err[kTZ] = fEmx->mZL/(      CosL*CosL);
+   err[kTE] = fEmx->mAL/(      CosL*CosL);
+   err[kTP] = fEmx->mCL/(      CosL*CosL);
+   err[kTT] = fEmx->mLL/(      CosL*CosL*CosL*CosL);
 }
 //_____________________________________________________________________________
 void THelixTrack::Set(double rho,double drho)
@@ -1997,6 +2002,10 @@ static int nCall=0; nCall++;
 	   }
             default: assert(0);
 	}//end switch
+	if (TMath::IsNaN(wt)) {
+	  static Int_t iBreak = 0;
+	  iBreak++;
+	}
         aux[i].wt = wt;
         if (wt<0) continue;
 	fWtot += wt;
@@ -2165,7 +2174,7 @@ Bool_t TCircleFitter::TestCov() {
   return kTRUE;
 } 
 //______________________________________________________________________________
-void TCircleFitter::MakeErrs() 
+Int_t TCircleFitter::MakeErrs() 
 {
    fEmx->Clear();
    double F[3][3]; memset(F[0],0,sizeof(F));
@@ -2222,7 +2231,8 @@ void TCircleFitter::MakeErrs()
    TCL::vscale(fCov,myFact/fWtot,fCov,6);
    TCL::trasat(F[0],fCov,fEmx->Arr(),3,3); 
    if (fBack) {fEmx->mHA*=-1;fEmx->mAC*=-1;}
-   assert(TestCov());
+   if (! TestCov()) return -1;
+   return 0;
 }
 //______________________________________________________________________________
 double TCircleFitter::EvalChi2() 
@@ -2489,7 +2499,8 @@ static const int nEv = 100000;
             assert (!myKase || helx.GetCase()==myKase);
 
 	    nFit++;
-	    helx.MakeErrs();
+	    Int_t ok = helx.MakeErrs();
+	    assert (!ok);
             if ((isgn=helx.Emx()->Sign())<0) {
 	      ::Warning("Test1","Negative errmtx %d",isgn);continue;}
 
@@ -2651,7 +2662,8 @@ if ((sgn<0) && !(kase&8)) continue;
 	helx.Fit();
 if (!(helx.GetCase()&kase)) continue;
 	nFit++;
-	helx.MakeErrs();
+	Int_t ok = helx.MakeErrs();
+	assert(!ok);
         int iFix = 0;
         if (kase&16) iFix +=1;
         if (kase&32) iFix +=4;
@@ -2894,11 +2906,13 @@ void THelixFitter::Update(int kase)
   }
 }
 //______________________________________________________________________________
-void THelixFitter::MakeErrs()
+Int_t THelixFitter::MakeErrs()
 {
-  fCircleFitter.MakeErrs();
-  fPoli1Fitter.MakeErrs();
+  Int_t ok = fCircleFitter.MakeErrs();
+  if (ok) return ok;
+  ok = fPoli1Fitter.MakeErrs();
   Update(2);
+  return ok;
 }
 //______________________________________________________________________________
 double THelixFitter::EvalChi2() 
@@ -3032,7 +3046,8 @@ if(sgn<0 && !(kase&8)) continue;
 	double Xi2 =helx.Fit();
 if(!(kase&helx.GetCase())) continue; 
 
-	helx.MakeErrs();
+	Int_t ok = helx.MakeErrs();
+	assert(! ok);
         if ((isgn=helx.Emx()->Sign())<0) {
 	  ::Warning("Test1","Negative errmtx %d",isgn);continue;}
 	nFit++;

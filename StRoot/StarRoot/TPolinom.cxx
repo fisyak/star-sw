@@ -306,13 +306,14 @@ double TPoliFitter::Fit()
   return fChi2;
 }
 //_____________________________________________________________________________
-void   TPoliFitter::MakeErrs()
+Int_t   TPoliFitter::MakeErrs()
 {
   delete [] fEmx;
   int n = (fNP+1)*(fNP+2)/2;
   fEmx = new double[n];
   TCL::trsmul(fP,fEmx,fNP+1);
   TCL::vscale(fEmx,1./fWtot,fEmx,n);
+  return 0;
 }
 //_____________________________________________________________________________
 double TPoliFitter::EvalChi2() 

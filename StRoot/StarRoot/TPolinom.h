@@ -51,7 +51,7 @@ void   AddErr(double err2);
 const double *GetX(int i=0) const; 	
       double *GetX(int i=0); 		
 double Fit();   
-void   MakeErrs();
+Int_t  MakeErrs();
 double Chi2() const 			{return fChi2;}
 int    NPts() const 			{return fN/3 ;}
 int    Ndf()  const 			{return fNdf ;}

@@ -142,7 +142,7 @@ void   AddErr(const double *errs,double errz=0);
 void   AddErr(double errh,double errz=0); 
 void   AddZ(double z,double err2z=0);
 double Fit();   
-void   MakeErrs();
+Int_t  MakeErrs();
 double FixAt(const double vals[5],int flag); 
 void   Skip(int idx); 
 double GetZ0() const			{return fZ0    ;}
@@ -231,6 +231,7 @@ THelixTrack &operator=(const THelixTrack &from);
 	void SetEmx(const double*  err=0);
     THEmx_t *Emx() const			{return fEmx;}
 	void StiEmx(double emx[21]) const;
+	void StiEmx(double emx[21], Double_t CosCA, Double_t CosL) const;
         void GetSpot(const double axis[3][3],double emx[3]) const;
 	void Fill  (TCircle &circ) const;
 ///		Change direction
@@ -348,7 +349,7 @@ void   Add (double x,double y,double z);
 void   AddErr(const double *err2xy,double err2z); 
 void   AddErr(double errhh,double errzz); 
 double Fit();   
-void   MakeErrs();
+Int_t  MakeErrs();
 double FixAt(const double vals[5],int flag=1); 
 void   Skip(int idx); 
 void   SetCase(int kase=0) 		{fCircleFitter.SetCase(kase);}
