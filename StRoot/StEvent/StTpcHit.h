@@ -166,13 +166,7 @@ class StTpcHit : public StHit {
     Float_t  dZ() const {return mdZ;}
     void     Print(Option_t *option="") const;
     virtual Bool_t   IsSortable() const { return kTRUE; }
-    virtual Int_t    Compare(const TObject *obj) const {
-        StTpcHit *hit = (StTpcHit *) obj;
-        if (sector() > hit->sector()) return kTRUE;
-        if (padrow() > hit->padrow()) return kTRUE;
-        if (TMath::Abs(position().z()) > TMath::Abs(hit->position().z())) return kTRUE;
-        return kFALSE;
-    }
+    virtual Int_t    Compare(const TObject *obj) const;
     virtual const StThreeVectorF& positionU() const {return *&mPositionU;}
     virtual const StThreeVectorF& positionL() const {return *&mPositionL;}
     virtual void setPositionU(const StThreeVectorF& p) {mPositionU = p;}

@@ -135,3 +135,14 @@ const Char_t *StTpcHit::GetPath() const {
   path = FormPath(fgFMT,3,indx);
   return path.Data();
 }
+//________________________________________________________________________________
+Int_t StTpcHit:: Compare(const TObject *obj) const {
+  StTpcHit *hit = (StTpcHit *) obj;
+  if      (sector() < hit->sector()) return -1;
+  else if (sector() > hit->sector()) return  1;
+  if      (padrow() < hit->padrow()) return -1;
+  else if (padrow() > hit->padrow()) return  1;
+  if      (TMath::Abs(position().z()) < TMath::Abs(hit->position().z())) return -1;
+  else if (TMath::Abs(position().z()) > TMath::Abs(hit->position().z())) return  1;
+  return 0;
+}
