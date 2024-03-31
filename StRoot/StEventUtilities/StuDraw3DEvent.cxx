@@ -594,7 +594,7 @@ void StuDraw3DEvent::FtpcHits(const StEvent *event,EStuDraw3DEvent trackHitsOnly
           std::vector<float>::iterator xyz = hitPoints.begin();
           Points(hitPoints.size()/3,&*xyz,kUnusedHit);
           SetComment("Unused FTPC hits");
-          printf(" FTPC hits counter total : %d\n", hitPoints.size()/3);
+          printf(" FTPC hits counter total : %d\n", (Int_t) (hitPoints.size()/3.));
      }
   }
 }
