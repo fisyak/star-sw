@@ -1232,9 +1232,9 @@ Bfc_st BFC[] = { // standard chains
   {"CorrX"       ,"" ,"","ExB,OShortR,OBmap,OPr13,OIFC,OSectorAlign,NewTpcAlignment" // TPC Alignment
    ",-AlignSectors,-OBmap2D,-OClock,-OTwist"                             ,"","","New Tpc Alignment",kFALSE},
   {"CorrY"       ,"" ,"","ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
-   ",-AlignSectors,-OBmap2D,-OClock,-OTwist"                             ,"","","New Tpc Alignment",kFALSE},
-  {"CorrZ","" ,"","-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
-   ",-AlignSectors,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
+   ",-OBmap2D,-OClock,-OTwist"                                           ,"","","New Tpc Alignment",kFALSE},
+  {"CorrZ","" ,"","-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
+   ",-OBmap2D,-OClock,-OTwist,-OSectorAlign"                            ,"","","Tpc Alignment 2024",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
   {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
   {"EB2"         ,""  ,"","",""                                     ,"","Force ExB configuration 2",kFALSE},
