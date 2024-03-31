@@ -275,25 +275,15 @@ StTpcCoordinateTransform::StTpcCoordinateTransform(StTpcDb* /* globalDbPointer *
  {
     if (St_tpcPadConfigC::instance() 
 	&& StTpcDb::instance()->Electronics() 
-#if 0
-	&& StTpcDb::instance()->GlobalPosition()
-#endif
 	) {
 	mTimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency();
         mInnerSectorzOffset = StTpcDb::instance()->Dimensions()->zInnerOffset();
         mOuterSectorzOffset = StTpcDb::instance()->Dimensions()->zOuterOffset();
-#if 0
-        mInnerSectorzOffset_West = StTpcDb::instance()->Dimensions()->zInnerOffset_West();
-        mOuterSectorzOffset_West = StTpcDb::instance()->Dimensions()->zOuterOffset_West();
-#endif
     }
     else {
 	gMessMgr->Error() << "StTpcDb IS INCOMPLETE! Cannot contstruct Coordinate transformation." << endm;
 	assert(St_tpcPadConfigC::instance());
 	assert(StTpcDb::instance()->Electronics());
-#if 0
-        assert(StTpcDb::instance()->GlobalPosition());
-#endif
     }
 }
 //________________________________________________________________________________
@@ -311,9 +301,6 @@ void StTpcCoordinateTransform::operator()(const StTpcLocalSectorCoordinate& a, S
 #else
   Double_t                  zoffset = (row>St_tpcPadConfigC::instance()->innerPadRows(sector)) ? mOuterSectorzOffset :mInnerSectorzOffset;
 #endif /* Don't apply zOffSet for prompt hits */
-#if 0
-  if (sector <= 12)         zoffset+= (row>St_tpcPadConfigC::instance()->innerPadRows(sector)) ? mOuterSectorzOffset_West :mInnerSectorzOffset_West;
-#endif
   Double_t t0offset = (useT0 && sector>=1&&sector<=24) ? St_tpcPadGainT0BC::instance()->T0(sector,row,TMath::Nint (probablePad)) : 0;
   t0offset *= mTimeBinWidth;
   if (! useT0 && useTau) // for cluster
@@ -333,9 +320,6 @@ void StTpcCoordinateTransform::operator()(const StTpcPadCoordinate& a,  StTpcLoc
 #else
   Double_t                zoffset =  (a.row()>St_tpcPadConfigC::instance()->innerPadRows(sector)) ? mOuterSectorzOffset : mInnerSectorzOffset;
 #endif /* Don't apply zOffSet for prompt hits */
-#if 0
-  if (a.sector() <= 12)         zoffset+= (a.row() > St_tpcPadConfigC::instance()->innerPadRows(sector)) ? mOuterSectorzOffset_West :mInnerSectorzOffset_West;
-#endif
   Double_t t0offset = useT0 ? St_tpcPadGainT0BC::instance()->T0(a.sector(),a.row(),TMath::Nint(a.pad())) : 0;
   t0offset *= mTimeBinWidth;
   if (! useT0 && useTau) // for cluster
@@ -426,10 +410,6 @@ Double_t StTpcCoordinateTransform::zFromTB(Double_t tb, Int_t sector, Int_t row,
     elecT0 = St_starTriggerDelayC::instance()->tZero();
   } else { // old scheme 
     trigT0 = StTpcDb::instance()->triggerTimeOffset()*1e6;         // units are s
-#if 0
-    if ((sector <= 12 && tb <= 350) || // extra West laser off set, membrane cluster with time bucket > 350
-	(sector >  12 && tb >  350)) {trigT0 +=  StTpcDb::instance()->triggerTimeOffsetWest()*1e6;}
-#endif
     elecT0 = StTpcDb::instance()->Electronics()->tZero();          // units are us 
   }
   Double_t sectT0 = St_tpcPadrowT0C::instance()->T0(sector,row);// units are us 
@@ -454,10 +434,6 @@ Double_t StTpcCoordinateTransform::tBFromZ(Double_t z, Int_t sector, Int_t row, 
     elecT0 = St_starTriggerDelayC::instance()->tZero();
   } else { // old scheme 
     trigT0 = StTpcDb::instance()->triggerTimeOffset()*1e6;         // units are s
-#if 0
-    if ((sector <= 12 && z < 195) || // extra West laser off set, membrane cluster with time z < 195
-	(sector >  12 && z > 195)) {trigT0 +=  StTpcDb::instance()->triggerTimeOffsetWest()*1e6;}
-#endif
     elecT0 = StTpcDb::instance()->Electronics()->tZero();          // units are us 
   }
   Double_t sectT0 = St_tpcPadrowT0C::instance()->T0(sector,row);// units are us 
@@ -471,37 +447,19 @@ Double_t StTpcCoordinateTransform::tBFromZ(Double_t z, Int_t sector, Int_t row, 
 }
 //________________________________________________________________________________
 // FOR SECTOR 12 ONLY!!!! (Local coordinate);
+Int_t  StTpcCoordinateTransform::rowFromLocal(const StThreeVector<Double_t>& a, Int_t sector)            {
+  if (! StTpcDb::Alignment2024())  return rowFromLocalY(a.x(), sector);
+                                   return rowFromLocalY(a.y(), sector);
+}
 Int_t StTpcCoordinateTransform::rowFromLocalY(Double_t y, Int_t sector) {
-  static Int_t Nrows = 0;
+  static Int_t NrowsOld = 0;
   static Double_t *Radii = 0;
-#ifndef __OLD__
-  if (Nrows != St_tpcPadConfigC::instance()->padRows(sector)) {
-    Nrows = St_tpcPadConfigC::instance()->padRows(sector);
+  Int_t Nrows = St_tpcPadConfigC::instance()->numberOfRows(sector);
+  if (Nrows != NrowsOld) {
     if (Radii) delete [] Radii;
-    Radii = new Double_t[Nrows+1];
-    for (Int_t i = 1; i <= Nrows+1; i++) {
-      if (i == 1) {
-	Radii[i-1] =  (3*St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,i) 
-		       - St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,i+1))/2;
-      } else if (i == Nrows + 1) {
-	Radii[i-1] =  (3*St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,i-1) 
-		       - St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,i-2))/2;
-      } else {
-	Radii[i-1] = (St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,i-1) +
-		      St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,i))/2;
-      }
-    }
-  }
-  Long64_t row = TMath::BinarySearch(Nrows+1, Radii, y) + 1;
-  if (row <= 0) row = 1;
-  if (row > Nrows) row = Nrows;
-  return row;
-#else
-  if (! Nrows) {
-    Nrows = St_tpcPadPlanesC::instance()->padRows();
     Radii = new Double_t[Nrows];
     for (Int_t i = 1; i <= Nrows; i++) {
-      Radii[i-1] = St_tpcPadPlanesC::instance()->radialDistanceAtRow(i);
+      Radii[i-1] = St_tpcPadConfigC::instance()->radialDistanceAtRow(sector, i);
     }
   }
   if (y < Radii[0]) return 1;
@@ -512,7 +470,22 @@ Int_t StTpcCoordinateTransform::rowFromLocalY(Double_t y, Int_t sector) {
   }
   row++;
   return row;
-#endif
+}
+//________________________________________________________________________________
+void  StTpcCoordinateTransform::operator()(const        StTpcLocalSectorDirection&  a, StTpcLocalDirection&               b)
+{ 
+  Int_t sector = a.fromSector();
+  Int_t row    = a.fromRow();
+  if (! StTpcDb::Alignment2024()) {
+    StTpcDb::instance()->Pad2Tpc(sector,a.row()).LocalToMasterVect(a.position().xyz(),b.position().xyz()); 
+  } else {
+    StBeamDirection   part = east;
+    if (sector <= 12) part = west;
+    TGeoHMatrix rotA = StTpcDb::instance()->Sup12S2Tpc(sector)  * StTpcDb::instance()->Wheel(part) * StTpcDb::instance()->SubS2Sup12S(sector,row);
+    rotA.LocalToMasterVect(a.position().xyz(), b.position().xyz());
+  }
+  b.setSector(sector); 
+  b.setRow(row);
 }
 //________________________________________________________________________________
 void  StTpcCoordinateTransform::operator()(const        StTpcLocalSectorCoordinate& a, StTpcLocalCoordinate& b           )
@@ -528,11 +501,29 @@ void  StTpcCoordinateTransform::operator()(const        StTpcLocalSectorCoordina
     GG2TPC.LocalToMaster(xGG.xyz(), b.position().xyz());
     b.setSector(sector); b.setRow(row);
   } else {// new alignment with drift along z in Super sector coordinate  system
-    StThreeVectorD xyzLS;
-    StTpcDb::instance()->SubS2Sup12S(sector,row).LocalToMaster(a.position().xyz(),xyzLS.xyz()); 
-    StTpcDb::instance()->Sup12S2Tpc(sector).LocalToMaster(xyzLS.xyz(),b.position().xyz()); 
+    StBeamDirection   part = east;
+    if (sector <= 12) part = west;
+    TGeoTranslation GG(0, 0, - a.position().z());
+    TGeoHMatrix rotA = StTpcDb::instance()->Sup12S2Tpc(sector) * GG * StTpcDb::instance()->Wheel(part) * StTpcDb::instance()->SubS2Sup12S(sector,row) * GG.Inverse();
+    rotA.LocalToMaster(a.position().xyz(), b.position().xyz());
     b.setSector(sector); b.setRow(row);
   }
+}
+//________________________________________________________________________________
+void  StTpcCoordinateTransform::operator()(const        StTpcLocalDirection&  a, StTpcLocalSectorDirection& b      )
+{ 
+  Int_t sector = a.fromSector();
+  Int_t row    = a.fromRow();
+  if (! StTpcDb::Alignment2024())  {
+    StTpcDb::instance()->Pad2Tpc(sector,a.row()).MasterToLocalVect(a.position().xyz(),b.position().xyz()); 
+  } else {
+    StBeamDirection   part = east;
+    if (sector <= 12) part = west;
+    TGeoHMatrix rotA = StTpcDb::instance()->Sup12S2Tpc(sector)  * StTpcDb::instance()->Wheel(part) * StTpcDb::instance()->SubS2Sup12S(sector,row);
+    rotA.MasterToLocalVect(a.position().xyz(), b.position().xyz());
+  }
+  b.setSector(sector); 
+  b.setRow(row);
 }
 //________________________________________________________________________________
 void  StTpcCoordinateTransform::operator()(const              StTpcLocalCoordinate& a, StTpcLocalSectorCoordinate& b     ) 
@@ -540,31 +531,37 @@ void  StTpcCoordinateTransform::operator()(const              StTpcLocalCoordina
   Int_t sector = a.fromSector();
   if (! sector) sector = ((StTpcLocalCoordinate *) &a)->setSectorFromCoordinates();
   Int_t row    = a.fromRow();
-  if ( ! (row >= 1 && row <= St_tpcPadConfigC::instance()->numberOfRows(sector))) {
-    StThreeVectorD xyzS;
-    StTpcDb::instance()->SupS2Tpc(sector).MasterToLocalVect(a.position().xyz(),xyzS.xyz());
-    row = rowFromLocalY(xyzS[0], sector);
-  }
   StThreeVectorD xGG;
   if (! StTpcDb::Alignment2024()) {
+    if ( ! (row >= 1 && row <= St_tpcPadConfigC::instance()->numberOfRows(sector))) {
+      StThreeVectorD xyzS;
+      StTpcDb::instance()->SupS2Tpc(sector).MasterToLocalVect(a.position().xyz(),xyzS.xyz());
+      row = rowFromLocalY(xyzS[0], sector);
+    }
     const Double_t *trans = StTpcDb::instance()->Pad2Tpc(sector,row).GetTranslation(); // 4
     TGeoTranslation GG2TPC(trans[0],trans[1],trans[2]);
     GG2TPC.MasterToLocal(a.position().xyz(), xGG.xyz());
     StTpcDb::instance()->Pad2Tpc(sector,row).MasterToLocalVect(xGG.xyz(),b.position().xyz()); b.setSector(sector); b.setRow(row);
   } else {
+    if ( ! (row >= 1 && row <= St_tpcPadConfigC::instance()->numberOfRows(sector))) {
+      StThreeVectorD xyzS;
+      StTpcDb::instance()->Sup12S2Tpc(sector).MasterToLocalVect(a.position().xyz(),xyzS.xyz());
+      row = rowFromLocalY(xyzS[1], sector);
+    }
+    StBeamDirection   part = east;
+    if (sector <= 12) part = west;
     StThreeVectorD xyzLS;
-    StTpcDb::instance()->SubS2Sup12S(sector,row).MasterToLocal(a.position().xyz(),xyzLS.xyz()); 
-    StTpcDb::instance()->Sup12S2Tpc(sector).MasterToLocal(xyzLS.xyz(),b.position().xyz()); 
+    StTpcDb::instance()->Sup12S2Tpc(sector).MasterToLocal(a.position().xyz(),xyzLS.xyz()); 
+    Double_t driftZ = xyzLS.z();
+    TGeoTranslation GG(0, 0, -driftZ);
+    TGeoHMatrix rotA = StTpcDb::instance()->Sup12S2Tpc(sector) * GG * StTpcDb::instance()->Wheel(part) * StTpcDb::instance()->SubS2Sup12S(sector,row) * GG.Inverse();
+    rotA.MasterToLocal(a.position().xyz(), b.position().xyz());
     b.setSector(sector); b.setRow(row);
   }
 }
 //________________________________________________________________________________
 void StTpcCoordinateTransform::testTpcCoordinateTransform(Int_t sector, Int_t row, Int_t pad, Int_t time) {
   StTpcDb::SetAlignment2024(kFALSE);
-#if 0
-  StTpcDb::instance()->SetDriftVelocity();
-  StTpcDb::instance()->SetTpcRotations();x2
-#endif
   static StTpcCoordinateTransform transform(StTpcDb::instance());
   cout << "Coordinates ============================" << endl;
   StTpcPadCoordinate          coorP(sector, row, pad, time);             cout << coorP << endl; 

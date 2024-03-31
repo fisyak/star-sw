@@ -11,121 +11,7 @@
  *              the data, and returns the data to the user via simple
  *              interface classes.    
  *
- ***************************************************************************
- *
- * $Log: StTpcDb.h,v $
- * Revision 1.46  2021/03/26 20:26:48  fisyak
- * Synchronize with TFG version, new schema for Inner Sector alignment (thank to Hongwei)
- *
- * Revision 1.44  2018/06/21 01:47:16  perev
- * iTPCheckIn
- *
- * Revision 1.41.10.1  2018/02/16 22:14:59  perev
- * iTPC
- * Revision 1.43  2018/06/07 04:30:35  genevb
- * Remove unnecessary dependence on StMagUtilities.h
- *
- * Revision 1.42  2018/04/11 02:43:22  smirnovd
- * Enable TPC/iTPC switch via St_tpcPadConfig
- *
- * This is accomplished by substituting St_tpcPadPlanes with St_tpcPadConfig.
- * A sector ID is passed to St_tpcPadConfig in order to extract parameters for
- * either TPC or iTPC
- *
- * Revision 1.41  2014/06/27 14:04:25  fisyak
- * Add env. NewTpcAlignment to switch between new and old scheme
- *
- * Revision 1.40  2014/06/26 21:32:57  fisyak
- * New Tpc Alignment, v632
- *
- * Revision 1.39  2012/09/17 19:39:44  fisyak
- * Add rotation for Half Tpc's
- *
- * Revision 1.38  2012/05/03 23:56:48  fisyak
- * Set interpolation for one week only, fix sign of interpolation (thanks Gene), add TriggerId
- *
- * Revision 1.37  2011/07/21 16:48:53  fisyak
- * New schema for Sub Sector Alginement: SuperSectror position (defined by inner sub sector) and Outer sector position wrt SuperSectror position
- *
- * Revision 1.36  2011/01/18 14:39:43  fisyak
- * Clean up TpcDb interfaces and Tpc coordinate transformation
- *
- * Revision 1.35  2010/05/27 19:14:26  fisyak
- * Take out flavoring by 'sim' for tpcGlobalPosition,tpcSectorPosition and starClockOnl tables. remove usage tpcISTimeOffsets and tpcOSTimeOffsets tables
- *
- * Revision 1.34  2009/12/07 23:44:58  fisyak
- * Drop coordinate transformation for fortran, remove TpcHitErr
- *
- * Revision 1.33  2009/11/02 17:31:41  fisyak
- * use directly field from StarMagField, replace St_tpcGainC and St_tpcT0C by St_tpcPadGainT0C, add remove defaults in coordinate transformations
- *
- * Revision 1.32  2009/03/16 14:13:31  fisyak
- * Use StDetectorDb chairs for TpcGlobalPosition and TpcSectorPosition
- *
- * Revision 1.31  2008/09/10 15:46:36  fisyak
- * Recalculate Tpc drift velocity once per event, avoid expensive conversion to unix time
- *
- * Revision 1.30  2008/08/01 14:28:25  fisyak
- * Add new getT0, clean up
- *
- * Revision 1.29  2007/08/12 15:06:30  fisyak
- * Use separated East/West drift velocities only >= 2007, for back compartibility
- *
- * Revision 1.28  2007/07/12 20:21:09  fisyak
- * Drift velocity depends on TPC half, use online RHIC clock
- *
- * Revision 1.27  2007/03/21 17:27:01  fisyak
- * use TGeoHMatrix, change mode for switching drift velocities
- *
- * Revision 1.26  2004/10/27 21:44:28  fisyak
- * Add debug print for tables Validities, add access to ExB correction
- *
- * Revision 1.25  2004/02/23 00:35:00  fisyak
- * Add access to tpcPadResponse
- *
- * Revision 1.24  2004/01/14 22:54:30  fisyak
- * Add hooks for Pedestal and tpcGain
- *
- * Revision 1.23  2002/04/02 00:16:31  hardtke
- * New class that gets hit errors from database
- *
- * Revision 1.22  2002/02/06 18:39:13  hardtke
- * Add tpc Field Cage structure
- *
- * Revision 1.21  2001/08/14 18:18:03  hardtke
- * Add sector position structures
- *
- * Revision 1.20  2001/05/21 23:25:34  hardtke
- * Add tpcGlobalPosition to StTpcDb.  This includes the global position offset and the rotation w.r.t. the magnet
- *
- * Revision 1.19  2000/08/10 18:41:34  hardtke
- * only look for L0_trigger table once per event -- improves timing
- *
- * Revision 1.18  2000/08/09 14:54:54  hardtke
- * Add Clear option, set trigger table pointer to 0 after each event
- *
- * Revision 1.17  2000/08/08 19:15:23  hardtke
- * use correct trigger time offset in case of laser
- *
- * Revision 1.16  2000/05/11 17:17:27  hardtke
- * make trigger time offset available -- currently NOT different for beam and laser events
- *
- * Revision 1.15  2000/03/27 21:21:22  fine
- * Adjusted to ROOT 2.24
- *
- * Revision 1.14  2000/02/10 00:29:09  hardtke
- * Add tpg functions to StTpcDbMaker, fix a few bugs
- *
- * Revision 1.13  2000/01/25 16:01:10  fisyak
- * Devorce with StAF
- *
- * Revision 1.12  2000/01/11 15:49:52  hardtke
- * get Electronics table from Calibrations database, Fix error messages
- *
- * Revision 1.11  1999/12/16 22:00:53  hardtke
- * add CVS tags
- *
- **************************************************************************/
+ ***************************************************************************/
 #ifndef ClassStTpcDb
 #define ClassStTpcDb
 
@@ -170,29 +56,32 @@ class StTpcDb {
   // Pad      = Pad -"- (x_p,y_p,z_p) (Sector12 coordinate system)
   // Tpc => Global is mTpc2GlobMatrix
   // Pad => SecL   is internal Flip matrix     Sup12 == Supersector 12 coordinate system x,y,z)_TPC => (-y,-x,drift = zGG - |z|), move Flip from Pad to Sup12 
-  enum ETpcSectorRotationType {kUndefSector     =-2,
-			       kFlip            =-1, // Flip * Subs[io] => SupS
-			       kSupS2Tpc        = 0, // SupS(sector) => Tpc, SupS(0) == mTpc2GlobMatrix
-			       kSupS2Glob       = 1, // SupS => Tpc => Glob; 
-			       kSubSInner2SupS  = 2, // Subs[io] => SupS
-			       kSubSOuter2SupS  = 3, // -"-
-			       kSubSInner2Tpc   = 4, // (Subs[io] => SupS) => Tpc
-			       kSubSOuter2Tpc   = 5, // -"-
-			       kSubSInner2Glob  = 6, // (Subs[io] => SupS => Tpc) => Glob
-			       kSubSOuter2Glob  = 7, // -"-
-			       kPadInner2SupS   = 8, // (Pad => SecL) => (SubS[io] => SupS)
-			       kPadOuter2SupS   = 9, // -"- 
-			       kPadInner2Tpc    =10, // (Pad => SecL) => (SubS[io] => SupS => Tpc)
-			       kPadOuter2Tpc    =11, // -"- 
-			       kPadInner2Glob   =12, // (Pad => SecL) => (SubS[io] => SupS => Tpc => Glob)
-			       kPadOuter2Glob   =13, // -"- 
-			       
-			       kSup12S2Tpc        = 14, // Sup12S => Tpc
-			       kSup12S2Glob       = 15, // Sup12S => Tpc => Glob; 
-			       kSubSInner2Sup12S  = 16, // Subs[io] => Sup12S
-			       kSubSOuter2Sup12S  = 17, // -"-
-			       kPadInner2Sup12S   = 18, // (Pad => SecL) => (SubS[io] => Sup12S)
-			       kPadOuter2Sup12S   = 19, // -"- 
+  enum ETpcSectorRotationType {kUndefSector       = -2,							   
+			       kFlip              = -1, // Flip * Subs[io] => SupS			   
+						                                                            
+			       kSupS2Tpc          =  0, // SupS(sector) => Tpc, SupS(0) == mTpc2GlobMatrix  
+			       kSupS2Glob         =  1, // SupS => Tpc => Glob; 				   
+			       kSubSInner2SupS    =  2, // Subs[io] => SupS				   
+			       kSubSOuter2SupS    =  3, // -"-						   
+			       kPadInner2SupS     =  4, // (Pad => SecL) => (SubS[io] => SupS)		   
+			       kPadOuter2SupS     =  5, // -"-                                              
+
+			       kSup12S2Tpc        =  6, // Sup12S => Tpc
+			       kSup12S2Glob       =  7, // Sup12S => Tpc => Glob; 
+			       kSubSInner2Sup12S  =  8, // Subs[io] => Sup12S
+			       kSubSOuter2Sup12S  =  9, // -"-
+			       kPadInner2Sup12S   = 10, // (Pad => SecL) => (SubS[io] => Sup12S)
+			       kPadOuter2Sup12S   = 11, // -"- 
+
+			       kSubSInner2Tpc     = 12, // (Subs[io] => SupS) => Tpc			     
+			       kSubSOuter2Tpc     = 13, // -"-						     
+			       kSubSInner2Glob    = 14, // (Subs[io] => SupS => Tpc) => Glob		     
+			       kSubSOuter2Glob    = 15, // -"-						     
+			       kPadInner2Tpc      = 16, // (Pad => SecL) => (SubS[io] => SupS => Tpc)	     
+			       kPadOuter2Tpc      = 17, // -"- 						     
+			       kPadInner2Glob     = 18, // (Pad => SecL) => (SubS[io] => SupS => Tpc => Glob) 
+			       kPadOuter2Glob     = 19, // -"- 						    
+			       			                                                              
                                kWheel             = 20, // Account of Wheel rotation around X and Y axes at GG
 			       kTotalTpcSectorRotaions =21}; 
  private:
@@ -246,7 +135,7 @@ class StTpcDb {
   void SetTpc2GlobalMatrix(TGeoHMatrix *m) {SetTpcRotationMatrix(m);}
   void SetTpcRotationMatrix(TGeoHMatrix *m, Int_t sector = 0, Int_t k = kSupS2Tpc) {
     if (sector == 0)  {if (m) *mTpc2GlobMatrix = *m;}
-    else              {if (m) *mTpcSectorRotations[sector-1][k] = *m;}
+    else              {if (m)  mTpcSectorRotations[sector-1][k] = new TGeoHMatrix(*m);}
   }
   void  SetDebug(Int_t m) {m_Debug = m;}
   Int_t Debug() {return m_Debug;}
@@ -255,9 +144,9 @@ class StTpcDb {
   const TGeoHMatrix &Flip()                           const {return *mFlip;}
   const TGeoHMatrix &TpcHalf(StBeamDirection part)    const {return *mHalf[part];}
   const TGeoHMatrix &TpcWheel(StBeamDirection part)   const {return *mWheel[part];}   // Wheel Rotation in TPC coordinate system
-  const TGeoTranslation &Shift(StBeamDirection part)   const {return *mShift[part];}
+  const TGeoTranslation &Shift(StBeamDirection part)  const {return *mShift[part];}
   const TGeoHMatrix &Tpc2GlobalMatrix()               const {return *mTpc2GlobMatrix;}
-  const TGeoHMatrix &TpcRot(Int_t sector, Int_t k)    const {return *mTpcSectorRotations[sector-1][k];}
+  const TGeoHMatrix &TpcRot(Int_t sector, Int_t k)    const {assert(mTpcSectorRotations[sector-1][k]); return *mTpcSectorRotations[sector-1][k];}
   const TGeoHMatrix &SupS2Tpc(Int_t sector = 1)       const {return TpcRot(sector,kSupS2Tpc);}
   const TGeoHMatrix &SupS2Glob(Int_t sector = 1)      const {return TpcRot(sector,kSupS2Glob);}
   const TGeoHMatrix &SubSInner2SupS(Int_t sector = 1) const {return TpcRot(sector,kSubSInner2SupS);}

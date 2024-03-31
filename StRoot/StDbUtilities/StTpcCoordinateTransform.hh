@@ -196,16 +196,10 @@ public:
   // Tpc Local Sector <--> TPC Local
   void  operator()(const        StTpcLocalSectorCoordinate& a, StTpcLocalCoordinate& b           );
   void  operator()(const        StTpcLocalSectorCoordinate& a, StTpcLocalSectorAlignedCoordinate& b) {b = a;}
-  void  operator()(const        StTpcLocalSectorDirection&  a, StTpcLocalDirection&               b)
-  { StTpcDb::instance()->Pad2Tpc(a.sector(),a.row()).LocalToMasterVect(a.position().xyz(),b.position().xyz()); 
-    b.setSector(a.sector()); 
-    b.setRow(a.row());}
+  void  operator()(const        StTpcLocalSectorDirection&  a, StTpcLocalDirection&               b);
   void  operator()(const        StTpcLocalCoordinate& a, StTpcLocalSectorCoordinate& b     ); 
   void  operator()(const        StTpcLocalSectorDirection& a, StTpcLocalSectorAlignedDirection& b)   {b = a;}
-  void  operator()(const        StTpcLocalDirection&  a, StTpcLocalSectorDirection& b      )
-  { StTpcDb::instance()->Pad2Tpc(a.sector(),a.row()).MasterToLocalVect(a.position().xyz(),b.position().xyz()); 
-    b.setSector(a.sector()); 
-    b.setRow(a.row());}
+  void  operator()(const        StTpcLocalDirection&  a, StTpcLocalSectorDirection& b      );
   // Tpc Local Sector <--> Global
   void  operator()(const        StTpcLocalSectorCoordinate& a, StGlobalCoordinate& b)  
   { StTpcLocalCoordinate c;    this->operator()(a,c);    this->operator()(c,b);  }
@@ -217,7 +211,8 @@ public:
     this->operator()(c,b);
   }
   void  operator()(const        StGlobalDirection& a, StTpcLocalSectorDirection& b,Int_t sector, Int_t row)
-  { StTpcDb::instance()->Pad2Glob(sector,row).MasterToLocalVect(a.position().xyz(),b.position().xyz()); 
+  { 
+    StTpcDb::instance()->Pad2Glob(sector,row).MasterToLocalVect(a.position().xyz(),b.position().xyz()); 
     b.setSector(sector); 
     b.setRow(row);}
   // TpcCoordinate <-->  Global Coordinate
@@ -248,16 +243,16 @@ public:
   // Transformation Routines!!
   // Raw Data (pad row timebin or drift L From tpc local sector Coordinates
   static Int_t       rowFromLocalY(Double_t y, Int_t sector);
-  static Int_t       rowFromLocal(const StThreeVector<Double_t>& a, Int_t sector)            {return rowFromLocalY(a.y(), sector);}
+  static Int_t       rowFromLocal(const StThreeVector<Double_t>& a, Int_t sector);    
   Double_t    padFromLocal(const StThreeVector<Double_t>& a, Int_t sector, Int_t row)  const {return padFromX(a.x(), sector, row);}
   Double_t    padFromX(Double_t x, Int_t sector, Int_t row)                        const; 
   Int_t       rowFromLocal(const StTpcLocalSectorCoordinate& a)      const {return rowFromLocal(a.position(),a.sector());}
   Double_t    padFromLocal(const StTpcLocalSectorCoordinate& a)      const {return padFromLocal(a.position(),a.sector(),a.row());}
   // tpc local sector Coordinates from Raw Data
   StThreeVector<Double_t> xyFromRow(const StTpcPadCoordinate& a) {return StThreeVector<Double_t> (xFromPad(a.sector(),a.row(),a.pad()),yFromRow(a.sector(),a.row()),0);}
-  Double_t                yFromRow(Int_t sector, Int_t row)                        const {return (St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,row));}
-  Double_t                xFromPad(Int_t sector, Int_t row, Double_t pad)          const;
-  static void testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 24, Int_t pad = 1, Int_t time = 0);
+  Double_t         yFromRow(Int_t sector, Int_t row)                        const {return (St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,row));}
+  Double_t         xFromPad(Int_t sector, Int_t row, Double_t pad)          const;
+  static void             testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 24, Int_t pad = 1, Int_t time = 0);
 private:
   Double_t    mTimeBinWidth;
   Double_t    mInnerSectorzOffset; 

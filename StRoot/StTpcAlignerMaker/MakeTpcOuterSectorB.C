@@ -53,7 +53,8 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass49_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
   //#include "IOSectorParPass50_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
   //#include "IOSectorParPass51_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-#include "IOSectorParPass87_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+  //#include "IOSectorParPass87_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+#include "IOSectorParPass88_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
 };
 #define __No_alpha_beta__
 #define __NEW_SCHEMA__ 

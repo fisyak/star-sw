@@ -113,7 +113,7 @@ Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG) {
   }
   Double_t chisq = fHelix.Fit();
   if (chisq > 100.) return fStatus;
-  fHelix.MakeErrs();
+  if (fHelix.MakeErrs()) return fStatus;
   if (! RefSurfaceG) {fStatus = 0; return fStatus;}
   Move(RefSurfaceG);
   return fStatus;

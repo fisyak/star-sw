@@ -417,8 +417,11 @@ void TDrawIO() {
       sp->Fit("gaus","qem");
       Double_t Mu = 0;
       Double_t dMu = 0;
-      Mu = sp->GetFunction("gaus")->GetParameter(1);
-      dMu = sp->GetFunction("gaus")->GetParError(1);
+      TF1 *fun = sp->GetFunction("gaus");
+      if (fun) {
+	Mu = fun->GetParameter(1);
+	dMu = fun->GetParError(1);
+      }
       TH2 *h = (TH2 *) h3->Project3D("zy");
       h->SetName(Form("%s_%i",h->GetName(),sector));
       h->FitSlicesY(0,0,-1,10,"qeg3s");
