@@ -22,7 +22,7 @@
       gEnv->SetValue("Gui.Factory","qtgui");     
   }
   TString StarVersion(gSystem->Getenv("STAR_VERSION"));
-  rootlogon_fpe =StarVersion == ".DEV" ||StarVersion == "DEV2" ||StarVersion == "DEV6";
+  rootlogon_fpe =StarVersion == ".DEV" ||StarVersion == ".DEV2";
 #if 0
   if (! rootlogon_fpe && gClassTable->GetID("TGiant3") < 0) { // ! root4star
     rootlogon_fpe = StarVersion == ".DEV2";
