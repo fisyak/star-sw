@@ -60,7 +60,7 @@ TRSymMatrix::TRSymMatrix(ETRMatrixCreatorsOp kop,Int_t nrows) :
   case kZero:
     break;
   case kUnit:
-    for (int i=0; i<fNrows; i++) fArray[i*(i+1)/2+i] = 1;
+    for (int i=0; i<fNrows; i++) fArray[IJ(i,i)] = 1;
     break;
   default:
     Error("TRSymMatrix(ETRMatrixCreatorsOp)", "operation %d not yet implemented", kop);
@@ -87,14 +87,17 @@ TRSymMatrix::TRSymMatrix(const TRSymMatrix& S,ETRMatrixCreatorsOp kop) {
     fNrows = S.GetNcols();
     Set(fNrows*(fNrows+1)/2);
     for (Int_t i = 0; i < fNrows; i++) {
-      Int_t ii = i*(i+1)/2 + i;
+      Int_t ii = IJ(i,i);
       Double_t sigmaI = TMath::Sqrt(TMath::Abs(S[ii]));
       fArray[ii] = sigmaI*TMath::Sign(1., S[ii]);
       for (Int_t j = 0; j < i; j++) {
 	Int_t jj = IJ(j,j);
 	Int_t ij = IJ(i,j);
-	fArray[ij] = S[ij]/(fArray[ii]*fArray[jj]);
-      }
+	if (fArray[ii] > 0 && fArray[jj] > 0) 
+	  fArray[ij] = S[ij]/(fArray[ii]*fArray[jj]);
+	else 
+	  fArray[ij] = 0;
+    }
     }
     break;
   default:
@@ -183,16 +186,15 @@ ostream& operator<<(ostream& s,const TRSymMatrix &target) {
   const Double_t *Array = target.GetArray();
   s << "Semi Positive DefinedSymMatrix Size \t[" 
     << Nrows << "," << Nrows << "]";
-  s << endl;
   if (Array) {
     s.setf(std::ios::fixed,std::ios::scientific);
     s.setf(std::ios::showpos);
     Int_t i1 = 0;
     Int_t i2 = Nrows;
     for (int i = i1; i< i2; i++) {
+      s << endl;
       for (int j = i1; j <= i; j++)
 	s << std::setw(width) << std::setprecision(width-3) << target(i,j)  << ":\t";
-      s << endl;
     }
     s.unsetf(std::ios::showpos);
   }
@@ -406,10 +408,10 @@ L42:
          if (j != i__) b[kpiv] = sum * r__;
          else {
 	   if (sum > 0) dc = TMath::Sqrt(sum);
-	   else         dc = 0;
+	   else        {dc = 0; if (sum < 0) fail++;}
 	   b[kpiv] = dc;
 	   if (r__ > 0. && dc > 0)  r__ = (double)1. / dc;
-	   else                    {r__ = 0; fail++;}
+	   else                     r__ = 0; 
          }
          kpiv += j;
       }
