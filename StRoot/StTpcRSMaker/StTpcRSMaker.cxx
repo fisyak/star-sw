@@ -666,6 +666,16 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
 }
 //________________________________________________________________________________
 Int_t StTpcRSMaker::Make(){  //  PrintInfo();
+  // Check available memory
+#ifdef __DEBUG__
+  MemInfo_t meminfo;
+  gSystem->GetMemInfo(&meminfo);
+  LOG_INFO << "Available memory = " << meminfo.fMemFree << " MB" << endm; 
+  if (meminfo.fMemFree < 20) {
+    throw std::bad_alloc();
+    return kStFatal;
+  }
+#endif  
   static Int_t minSector = IAttr("minSector");
   static Int_t maxSector = IAttr("maxSector");
   static Int_t minRow    = IAttr("minRow");
@@ -1898,17 +1908,17 @@ Bool_t StTpcRSMaker::TrackSegment2Propagate(g2t_tpc_hit_st *tpc_hitC, g2t_vertex
   }
   Int_t volId = tpc_hitC->volume_id%10000;
   Int_t sector = volId/100;
-   static StGlobalCoordinate coorG;    // ideal 
-  TrackSegmentHits.xyzG = 
-    StGlobalCoordinate(tpc_hitC->x[0],tpc_hitC->x[1],tpc_hitC->x[2]);  PrPP(Make,TrackSegmentHits.xyzG);
+  Int_t row    = volId%100;
+  static StGlobalCoordinate coorG;    // ideal 
+  TrackSegmentHits.xyzG =StGlobalCoordinate(tpc_hitC->x[0],tpc_hitC->x[1],tpc_hitC->x[2]);  PrPP(Make,TrackSegmentHits.xyzG);
   coorG = TrackSegmentHits.xyzG;
   static StTpcLocalCoordinate  coorLT;  // before do distortions
   static StTpcLocalDirection  dirLT, BLT;
   // calculate row
   static StTpcLocalSectorCoordinate coorS;
   static StTpcCoordinateTransform transform(gStTpcDb);
-  transform(coorG, coorS,sector,0); PrPP(Make,coorS);
-  Int_t row = coorS.fromRow();
+  transform(coorG, coorS,sector,row); PrPP(Make,coorS);
+  //  Int_t row = coorS.fromRow();
   transform(coorG, coorLT,sector,row); PrPP(Make,coorLT);
   Int_t io = (row <= St_tpcPadConfigC::instance()->numberOfInnerRows(sector)) ? 0 : 1;
   TrackSegmentHits.TrackId    = Id;
