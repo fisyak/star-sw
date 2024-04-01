@@ -406,7 +406,7 @@ Revist 03/23/2024 move Flip
 	    } else if (gFactor < -0.2) {
 	      rotA *= chair->GetMatrix(sector-1+24).Inverse();
 #if 1
-	    } else if ( k == kSubSOuter2SupS ) {
+	    } else if ( k == kSubSOuter2Sup12S ) {
 	      static  Double_t corrZ[24] = // /hlt/cephfs/reco/Pass48   extra correction for ZF2023 um
 		{ -739.29,-1245.76,-1673.18,-1766.18,-1746.37,-1840.42,-1717.83,-1584.91,-1643.17,-1752.01,-1579.27,-1771.68,
 		 -1757.73,-1714.33,-1678.68,-1684.40,-1617.86,-1874.44,-1736.24,-2155.39,-1645.03,-1771.64,-1841.34,-1532.64};
