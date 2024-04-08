@@ -63,7 +63,6 @@ SurveyPass_t Passes[] = {
 #include "IOSectorParPass100_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid
 };
 #define __No_alpha_beta__
-#define __NEW_SCHEMA__ 
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
 class TTable;
@@ -199,7 +198,6 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       //      TGeoHMatrix dRT = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dRT.Print();
       //      TGeoHMatrix dRI = dR1.Inverse(); cout << "dR^-1\t"; dRI.Print();
 #endif
-#ifndef __NEW_SCHEMA__
 #ifndef __TpcInnerSector__
       LS = dR * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
 #else /* __TpcInnerSector__ */
@@ -208,16 +206,6 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       TGeoHMatrix dRI = dR.Inverse(); if (_debug) {cout << "dR^-1\t"; dRI.Print();}
       LS = dRI * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
 #endif /* !  __TpcInnerSector__ */
-#else /* __NEW_SCHEMA__ */
-#ifndef __TpcInnerSector__
-      LS =  LSold * dR; if (_debug) {cout << "LS_new\t"; LS.Print();}
-#else /* __TpcInnerSector__ */
-      //      TGeoHMatrix LSoldI = LSold.Inverse();
-      //      LS = LSoldI * dRI; cout << "LS_new\t"; LS.Print();
-      LS = dRI * LSoldI; if (_debug) {cout << "LS_new\t"; LS.Print();}
-#endif /* !  __TpcInnerSector__ */
-#endif /* ! __NEW_SCHEMA__ */
-      //      LS = dRT * LSold; cout << "LS_new\t"; LS.Print();
       Survey_st row; memset (&row, 0, sizeof(Survey_st));
       Double_t *rx = LS.GetRotationMatrix();
       memcpy(&row.r00, rx, 9*sizeof(Double_t));
