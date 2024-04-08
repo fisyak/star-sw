@@ -54,7 +54,13 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass50_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
   //#include "IOSectorParPass51_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
   //#include "IOSectorParPass87_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-#include "IOSectorParPass88_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+  //#include "IOSectorParPass88_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+  //#include "IOSectorParPass92_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0
+  //#include "IOSectorParPass96_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0
+  //#include "IOSectorParPass97_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+  //#include "IOSectorParPass98_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
+  //#include "IOSectorParPass99_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid
+#include "IOSectorParPass100_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid
 };
 #define __No_alpha_beta__
 #define __NEW_SCHEMA__ 
@@ -64,7 +70,7 @@ class TTable;
 StChain *chain = 0;
 St_db_Maker *dbMk = 0;
 TTable *table = 0;
-static Int_t _debug = 0;
+static Int_t _debug = 1;
 //________________________________________________________________________________
 void MakeTpcOuterSectorB(const Char_t *opt = 0){
   cout << "NP = " << NP << endl;
@@ -166,25 +172,40 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(scale*TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
 #endif /* _No__alpha_beta__ */
 	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(scale*TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
-#endif /* no beta rotation */
+#endif /* no alpha, beta gamma rotation */
 	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  scale*1e-4*Pass[r].Data[i].x;
 	if (Pass[r].Data[i].Dy >= 0) xyz[1] =  scale*1e-4*Pass[r].Data[i].y;
 	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  scale*1e-4*Pass[r].Data[i].z;
 	dR.SetTranslation(xyz);          if (_debug) {	cout << "dR\t"; dR.Print();}
       }
+      // Fit on Gating gGrid:  dR' * WHEEL =  WHEEL * dR";  dR" = WHEEL^-1 * dR'* WHEEL 
+      enum StBeamDirection {east   = 0,
+			    yellow = 0,    // yellow beam is going west -> east
+			    west   = 1,
+			    blue   = 1};   // blue beam is going east -> west
+      StBeamDirection   part = east;
+      Int_t sector = s + 1;
+      if (sector <= 12) part = west;
+      TGeoHMatrix Wheel = StTpcDb::instance()->Wheel(part);
+      TGeoHMatrix WheelI = Wheel.Inverse();
+      TGeoHMatrix rotA = WheelI * dR * Wheel;
+      dR = rotA; if (_debug) {	cout << "Moved to GG dR\t"; dR.Print();}
+      
+#if 0
       // Flip has been accounted in StTpcAlignerMaker
       //new:  global = Tpc2GlobalMatrix() * SupS2Tpc(sector) * StTpcSuperSectorPosition(sector) * Flip() * {StTpcInnerSectorPosition(sector)} | StTpcOuterSectorPosition(sector)}
       //      TGeoHMatrix dR1 = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dR1.Print();
-      TGeoHMatrix dRI = dR.Inverse(); if (_debug) {cout << "dR^-1\t"; dRI.Print();}
       //      TGeoHMatrix dRT = FlipI * dRI * Flip; cout << "F^-1 dR^-1 F\t"; dRT.Print();
       //      TGeoHMatrix dRT = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dRT.Print();
       //      TGeoHMatrix dRI = dR1.Inverse(); cout << "dR^-1\t"; dRI.Print();
+#endif
 #ifndef __NEW_SCHEMA__
 #ifndef __TpcInnerSector__
       LS = dR * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
 #else /* __TpcInnerSector__ */
       //      TGeoHMatrix LSoldI = LSold.Inverse();
       //      LS = LSoldI * dRI; cout << "LS_new\t"; LS.Print();
+      TGeoHMatrix dRI = dR.Inverse(); if (_debug) {cout << "dR^-1\t"; dRI.Print();}
       LS = dRI * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
 #endif /* !  __TpcInnerSector__ */
 #else /* __NEW_SCHEMA__ */
