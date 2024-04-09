@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<job  name="TpcRS" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<stdout URL="file:./sched$JOBID.log" />
+<stderr URL="file:./sched$JOBID.err" />
+<command> 
+  cd ${SUBMITTINGDIRECTORY}  
+setenv STARFPE NO
+#  setup gcc/12
+#  set debug
+  set file = $INPUTFILE0;
+  set rung = `echo $file | awk -F\: '{print $1}'`
+  set f    = `echo $file | awk -F\: '{print $2}'`
+  set l    = `echo $file | awk -F\: '{print $3}'`
+  set name = `echo $file | awk -F\: '{print $4}'`
+  echo "${name}"
+  set logFile  = ${name}_${rung}_${l}B.log
+  set fileB   = ${name}_${rung}_${l}.event.root
+  if (! -r ${fileB} ) then
+#root.exe -q -b 'bfc.C('${f}','${l}',"MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,CosmicRays,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout","'${evtsFile}'","'${fileB}'.root")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C('${f}','${l}',"MC,r2021a,P2021a,StiCA,-in,TpcRS,NoHistos,noTags,noRunco,TpxClu,bbcSim,btofsim,ETofSim,CosmicRays,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,Corrz,TpcAligner","","'${fileB}'.root")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C('${f}','${l}',"MC,r2021a,P2021a,StiCA,-in,TpcRS,NoHistos,noTags,noRunco,TpxClu,CosmicRays,vmc,Rung.'${rung}',evout,geantout,Corrz,TpcAligner","","'${fileB}'.root")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C('${f}','${l}',"MC.2019,y2019,NoHistos,noTags,noRunco,CosmicRays,vmc,Rung.'${rung}',evout,geantout,Corrz,TpcAligner","","'${fileB}'.root")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C('${f}','${l}',"MC.2019,y2019,NoHistos,noTags,noRunco,CosmicRays,vmc,Rung.'${rung}',evout,geantout,Corrz,TpcAligner","","'${fileB}'.root")' &gt;&amp; ${logFile}
+#root.exe -q -x -b 'bfc.C('${f}','${l}',"MC,P2019a,StiCA,-in,TpcRS,TpxClu,y2019,NoHistos,noTags,noRunco,CosmicRays,vmc,Rung.'${rung}',evout,geantout,Corrz,TpcAligner","","'${fileB}'")' &gt;&amp; ${logFile}
+root.exe -q -x -b 'bfc.C('${f}','${l}',"MC,tpcDb,TpcHitMover,BAna,StiCA,-in,TpcRS,TpxClu,y2019,NoHistos,noTags,noRunco,CosmicRays,vmc,Rung.'${rung}',evout,geantout,Corrz,TpcAligner","","'${fileB}'")' &gt;&amp; ${logFile}
+
+</command>
+<!-- <input URL="command:TpcRS_Part.pl" /> -->
+<!-- <input URL="command:daq2020TpcRS.pl" /> -->
+<!-- <input URL="command:TpcRS_Part.pl" />  -->
+<!-- <input URL="command:RunId.pl 1 500 1000 Cosmic" /> -->
+<input URL="command:RunId.pl 1 100 1000 Cosmic" />
+</job>
+
