@@ -96,8 +96,6 @@ public:
 
 	u_char mode ;
 
-	u_char mode ;
-
 	// for use by simulation
 	int sim_row_count ;
 	unsigned char *sim_tpx_rowlen ;

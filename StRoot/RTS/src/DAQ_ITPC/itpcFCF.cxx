@@ -1258,7 +1258,6 @@ int itpc_fcf_c::do_blobs_stage2(int row)
 			if(b_ix==0) {
 				LOG(ERR,"Can't be: %d %d, RP %d:%d",b_ix,ix,row,p) ;
 			}
-#endif
 			blob_t *bl = &(blob[b_ix]) ;
 			
 
