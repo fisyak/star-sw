@@ -1782,6 +1782,7 @@ Bfc_st BFC[] = { // standard chains
    "StFcsClusterMaker","StFcsClusterMaker","Fill FCS clusters",                                     kFALSE},
   {"fcsPoint"   ,"","fcsChain", "StEvent,fcsDb",
    "StFcsPointMaker","StFcsPointMaker,libMinuit","Fill FCS points",                                 kFALSE},
+  {"fcsPi0Libs","", "", "MuDst", "", "StFcsPi0FinderForEcal", "Libs for FCS Pi0 Finder",            kFALSE},
   // FTT
   {"ftt","fttChain","","FttDat,FttHitCalib,FttClu,FttPoint", "StMaker","StChain","FST chain"        ,kFALSE}, 
   {"FttDat","","fttChain","StEvent","StFttRawHitMaker","StFttRawHitMaker,StEvent",
@@ -2061,7 +2062,7 @@ Bfc_st BFC[] = { // standard chains
   {"ppDAQfilter1","","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"ppLPeval1"   ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"QA"     ,"","",                                   "","","","WARNING *** Option is OBSOLETE ***",kFALSE},
-  {"EventQA","EventQA","","StUtilities,QUtils,Event","StEventQAMaker"   
+  {"EventQA","EventQA","","StUtilities,QUtils,Event,fcsPi0Libs","StEventQAMaker"   
    ,                                                         "St_QA_Maker","Filling Y2/Y3 Qa histo",kFALSE},
   {"QAC"         ,"CosmicsQA","globT",""                    ,"StQACosmicMaker","StQACosmicMaker","",kFALSE},
   {"QAalltrigs"  ,"", "","",                                     "","","Analyze all triggers in QA",kFALSE},
