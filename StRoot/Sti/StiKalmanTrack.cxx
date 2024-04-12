@@ -1647,7 +1647,8 @@ static int nCall=0;nCall++;
 
   StiKTNIterator source;
   StiKalmanTrackNode *pNode = 0,*targetNode;
-  int iNode=0, status = 0,isStarted=0;
+  int iNode=0, status = 0;
+  bool isStarted=false;
   sTNH.setDir(1);
   for (source=rbegin();source!=rend();source++) {
     iNode++;
@@ -1658,15 +1659,15 @@ static int nCall=0;nCall++;
       if ( targetNode->getChi2()>1000) 	targetNode->setInvalid();
       if (!targetNode->isValid()) 	continue;
     }
-    isStarted++;
     sTNH.set(pNode,targetNode);
     status = sTNH.makeFit(0);
-    if (status) continue;
+    if (status) {targetNode->setInvalid();continue;}
     if (!targetNode->isValid()) 	continue;
+    isStarted = true;
     pNode = targetNode;
   }//end for of nodes
 
-    pNode = 0; iNode=0;isStarted=0;
+    pNode = 0; iNode=0;isStarted=false;
   sTNH.setDir(0);
   for (source=begin();source!=end();source++) {
     iNode++;
@@ -1676,11 +1677,11 @@ static int nCall=0;nCall++;
       if ( targetNode->getChi2()>1000) 	targetNode->setInvalid();
       if (!targetNode->isValid()) 	continue;
     }
-    isStarted++;
     sTNH.set(pNode,targetNode);
     status = sTNH.makeFit(1);
-    if (status) 			continue;
+    if (status) {targetNode->setInvalid();continue;}
     if (!targetNode->isValid()) 	continue;
+    isStarted = true;
     pNode = targetNode;
   }//end for of nodes
   return 0;
