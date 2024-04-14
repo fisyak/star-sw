@@ -126,11 +126,12 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
   print "tag = $tag\n" if ($debug);
   foreach my $key (sort keys %$def ) {
     if (! $key) {next;}
-    print "key { |$key| }\t=> |$def->{$key}| pwd = |$pwd|\n" if ($debug);
+#    print "key { |$key| }\t=> |$def->{$key}| pwd = |$pwd|\n" if ($debug);
     if (! $def->{$key}) {next;}
     print "tag = |$tag|    { |$key| }\t=> |$def->{$key}|\n" if ($debug);
 #    if ($pwd =~ /$key/) {
     if ($tag eq $key) {
+    print "found tag = |$tag| == key = |$key| ========================================\n" if ($debug);
       $glob = "/reco/" . $def->{$key}; print "pwd = $pwd, => key => $key, glob = $glob\n" if ($debug);
 #       if ($key =~ /P23ib/) {
 # 	$PICOPATH = "/sdcc/lustre02/star/data102"; print "PICOPATH = $PICOPATH\n" if ($debug);
