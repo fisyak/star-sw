@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-#cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIIIDefs.pm
+#cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
 #git diff .
 #git ci -m "Update" .
 #cd ~/reco/2020/TFG19m/RF/11p5GeV.B
@@ -13,7 +13,7 @@
 #  cd ${D}
 #  cd /hlt/cephfs/reco/2022/ZF/Cosmic
 setenv YEAR `GetYearFromPWD.pl`
-if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && $YEAR != "2023") exit 1;
+if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && $YEAR != "2023" && $YEAR != "2024") exit 1;
   CreateRunDirs${YEAR}.pl
   foreach d (`ls -1d ???/2*`)
     cd $d;
@@ -36,7 +36,7 @@ if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && 
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2021_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2023_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2019_Cosmics.xml
-    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  ~/xml/daq_${YEAR}_Cosmics.xml
+    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq_${YEAR}_Cosmics.xml
     touch Submitted
     cd -
   end

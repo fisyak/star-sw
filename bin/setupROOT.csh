@@ -150,6 +150,7 @@ switch ( $STAR_HOST_SYS )
 endsw
 switch ( $STAR_HOST_SYS )  
     case *gcc1*:
+     setenv DISABLE "--disable-xrootd --disable-pythia8"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
      breaksw
     case *gcc9*:
@@ -206,6 +207,7 @@ switch ( $STAR_HOST_SYS )
     setenv EXTRA_FLAGS " --cflags=-std=c++0x"
  endsw  
 echo "EXTRA_FLAGS = $EXTRA_FLAGS"
+echo "DISABLE = $DISABLE"
 #setenv libdir \$\(LD_LIBRARY_PATH\)
 #setenv macrodir \$HOME/macros:./StRoot/macros:./StRoot/macros/graphics:./StRoot/macros/analysis:./StRoot/macros/test:./StRoot/macros/examples:./StRoot/macros/html:./StRoot/macros/qa:./StRoot/macros/embedding:\$\(STAR\)/StRoot/macros:\$\(STAR\)/StRoot/macros/graphics:\$\(STAR\)/StRoot/macros/analysis:\$\(STAR\)/StRoot/macros/test:\$\(STAR\)/StRoot/macros/examples:\$\(STAR\)/StRoot/macros/html:\$\(STAR\)/StRoot/macros/qa:\$\(STAR\)/StRoot/macros/embedding:\$\(ROOTSYS\)/macros:\$\(ROOTSYS\)/tutorials
 #setenv plugindir \$STAR/plugins
@@ -248,11 +250,11 @@ echo "EXTRA_FLAGS = $EXTRA_FLAGS"
     --with-pythia6-libdir=$XOPTSTAR/lib \
     --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLCLILIB \
     --with-fftw3-incdir=$XOPTSTAR/include --with-fftw3-libdir=$XOPTSTAR/lib \
-    --with-xrootd=$XOPTSTAR \
     --with-f77=$F77 \
     --all \
     $DISABLE \
     $ENABLE_CXX11 $EXTRA_FLAGS
+#    --with-xrootd=$XOPTSTAR \
 #    --with-pythia8-libdir=$XOPTSTAR/lib \
 #    --with-pythia8-incdir=$XOPTSTAR/include \
 #unsetenv libdir 

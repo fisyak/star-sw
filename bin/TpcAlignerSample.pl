@@ -13,12 +13,14 @@ elsif ($pwd =~ /2020/) {$year = "2020";}
 elsif ($pwd =~ /2021/) {$year = "2021";}
 elsif ($pwd =~ /2022/) {$year = "2022";}
 elsif ($pwd =~ /2023/) {$year = "2023";}
+elsif ($pwd =~ /2024/) {$year = "2024";}
 if    ($pwd =~ /FFI/) {$FIELD = "FFI";}
 elsif ($pwd =~ /RFI/) {$FIELD = "RFI";}
 elsif ($pwd =~ /FF/) {$FIELD = "FF";}
 elsif ($pwd =~ /RF/) {$FIELD = "RF";}
 elsif ($pwd =~ /ZF/) {$FIELD = "ZF";}
-#print "FIELD = $FIELD\n";
+elsif ($pwd =~ /MF/) {$FIELD = "MF";}
+print "FIELD = $FIELD\n" if ($debug);
 if (! $FIELD) {die "Field is not defined";}
 #my $glob = "/hlt/cephfs/reco/2019/" . $FIELD . "/*.event.root"; #print "glob = $glob\n";
 #my $glob = "/net/l401/data/scratch1/reco/2019/" . $FIELD . "/*.event.root"; #print "glob = $glob\n";
@@ -27,7 +29,7 @@ if (! $FIELD) {die "Field is not defined";}
 #my $glob = "/hlt/cephfs/reco/" . $year . "/Cosmic/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
 #my $glob = "/hlt/cephfs/reco/Cosmics/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
 #my $glob = "/hlt/cephfs/reco/CosmicsB/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
-my $glob = "/hlt/cephfs/reco/CosmicsC/" . $year . "/" . $FIELD . "/*/*/*.event.root"; print "glob = $glob\n" if ($debug);
+my $glob = "/hlt/cephfs/reco/CosmicsC/" . $year . "/" . $FIELD . "/???/*/*.event.root"; print "glob = $glob\n" if ($debug);
 my @Files = glob $glob; print "Files = @Files\n" if $debug;
 my $n = 0;
 foreach my $file (@Files) {

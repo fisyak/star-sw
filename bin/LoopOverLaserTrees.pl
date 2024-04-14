@@ -20,13 +20,18 @@ foreach my $file (@list) {
   my $r = $words[0];
   print "$file => $r\n" if ($debug);
   my $outfile = "LaserPlots." . $r . ".root";
-  my $outfileDone = "./Done/" . $outfile;
   if (-r $outfile) {
     print "\t$outfile is Done $outfile \n" if ($debug);
     next;
   }
+  my $outfileDone = "./Done/" . $outfile;
   if (-r $outfileDone) {
     print "\t$outfile is Done $outfileDone \n" if ($debug);
+    next;
+  }
+  my $outfileFailed = "./Failed/" . $outfile;
+  if (-r $outfileFailed) {
+    print "\t$outfile is Failed $outfileFailed \n" if ($debug);
     next;
   }
   if ($runs{$r}) {next;}

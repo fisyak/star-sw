@@ -61,6 +61,9 @@ switch (${STAR_HOST_SYS})
         setenv F77 gfortran
         setenv FC gfortran
 endsw
+if ($#argv == 1) then
+  set list = $argv[1];
+else
 # 
 #set list = "libtool cmake-3.10.0-rc1 apr-1.5.2 apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3 fftw-3.3.5  texinfo-6.3  gsl   Python-2.7.12 pyparsing-1.5.7 xrootd-4.6.1 Coin-3.1.3 qt-everywhere-opensource-src-4.8.7 pythia6 pythia8230 eigen3 mercurial-4.4-rc coin soqt Coin3D-simage-cf953eacd849 Coin3D-soqt-483ecb26b30c boost_1_66_0";   Python-2.7.12 
 #set list = "cmake-3.11.4 apr-1.5.2 apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3 fftw-3.3.5  texinfo-6.3  gsl-2.1 pyparsing-1.5.7 xrootd-4.6.1 Coin-3.1.3 qt-everywhere-opensource-src-4.8.7 pythia6 pythia8230 eigen3 mercurial-4.4-rc coin soqt Coin3D-simage-cf953eacd849 Coin3D-soqt-483ecb26b30c boost_1_66_0";
@@ -99,7 +102,8 @@ endsw
 #set list = "apr-1.5.2 apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3 fftw-3.3.5  texinfo-6.3  gsl xrootd  pythia6 pythia8  eigen3  boost_1_66_0"
 set list = xrootd
 #set list = pythia8
-#if ($#argv != 0) set list = $argv[1];
+#if ($#argv != 0) set list2 = $argv[1];
+endif
 setenv DIR ~/sources/.${STAR_HOST_SYS}
 if ($?NODEBUG) setenv DIR ~/sources/.${STAR_HOST_SYS}_opt
 if (! -d ${DIR}) mkdir ${DIR}
@@ -311,6 +315,7 @@ EOF
           touch ../${pkg}.Done
           breaksw
 #      case "pythia8*":
+      case "Pythia8":
       case "pythia8":
 #          ./configure --prefix=$XOPTSTAR --enable-64bit  --enable-shared #--cxx-common=\'$CFLAGS\' 
           ./configure --prefix=$XOPTSTAR
