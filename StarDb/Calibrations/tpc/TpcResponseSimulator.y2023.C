@@ -126,8 +126,8 @@ TDataSet *CreateTable() {
   row.PolyaInner = 1.38;
   row.PolyaOuter = 1.38;
   row.T0offset   = 0.50 -1.43663e-01 -0.00932877 + 0.0416 + 0.0241 ;//g // 01/18/12 Xianglei Zhu from Run 11 AuAu 27 & 19.6 GeV embedding 
-  row.T0offsetI  =  0.0709683 -0.00865149 + 0.307; // TFG23a = 0
-  row.T0offsetO  = -0.0710492 -0.0159205  + 0.257; // TFG23a = 0
+  row.T0offsetI  =  0.0709683 -0.00865149 + 0.307 - 0.3255; // TFG23a = 0
+  row.T0offsetO  = -0.0710492 -0.0159205  + 0.257 - 0.2417; // TFG23a = 0
   row.tMaxI = row.tMaxO = 2e-5; // sec
   tableSet->AddAt(&row);
   // ----------------- end of code ---------------
