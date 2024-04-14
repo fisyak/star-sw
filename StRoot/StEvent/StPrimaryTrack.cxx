@@ -112,6 +112,7 @@ ostream&  operator<<(ostream& os,  const StPrimaryTrack& track) {
       for (UInt_t i = 0; i < size; i++) {
 	StDedxPidTraits *pid = dynamic_cast<StDedxPidTraits*>(traits[i]);
 	if (! pid) continue;
+	if (  pid->IsZombie()) continue;
 	if (pid->detector() != kTpcId) continue;
 	if (pid->method() == kLikelihoodFitId) {
 	  os << Form(" NdEdx %2d %6.2f keV +/- %5.1f %%", pid->numberOfPoints(), 1e6*pid->mean(), 100*pid->errorOnMean());
