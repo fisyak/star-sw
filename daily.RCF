@@ -606,3 +606,4 @@ MySQL [Calibrations_tpc]>  select entryTime,beginTime,flavor,deactive  from tpcS
 +---------------------+---------------------+--------+----------+
 14 rows in set (0.01 sec)
 
+Outer
