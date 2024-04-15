@@ -1164,7 +1164,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     //PiDCUT    if (  gTrack->dEdxError() < 0.04 || gTrack->dEdxError() > 0.12 ) continue;
     //    if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.25 ) continue;
     if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.16 ) continue;
-    if (  gTrack->status() && !gTrack->isPrimary()) continue;
     
     if(index >= ftrackIdToI.size()) ftrackIdToI.resize(index+1);
     ftrackIdToI[index] = iTrack;
