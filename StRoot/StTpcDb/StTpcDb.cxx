@@ -420,7 +420,7 @@ New
 	    }
 	  }
 	  //	  if (k == kSup12S2Tpc) rotA *= Flip();  // new in 2023 schema 
-	  // if (! gGeoManager) SafeDelete(rotm);
+	  if (! gGeoManager) SafeDelete(rotm);
 	  break;
 	case kSupS2Glob:      // SupS => Tpc => Glob
 	  rotA = Tpc2GlobalMatrix() * SupS2Tpc(sector); 
