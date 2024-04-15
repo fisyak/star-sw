@@ -347,10 +347,23 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
 #else
     new StMagUtilities(gStTpcDb, option);
 #endif
+    if (IAttr("TFGdbOpt")) {
+      LOG_INFO << "Disable MySQL for TPC alignment parameters" << endm;
+      SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
+      SetFlavor("TFG","TpcPosition"); // disable MySQL 
+      SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
+      SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
+      SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
+      SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
+    }
     if( IAttr("Alignment2024")    ) {
       StTpcDb::SetAlignment2024(kTRUE);
       gMessMgr->Info() << "StTpcDbMaker::Use Alignment2024 " << endm;
     }
+  }
+  if (IAttr("Cosmics")) {
+    StTpcDb::SetCosmics(kTRUE);
+    gMessMgr->Info() << "StTpcDbMaker::Use Cosmics " << endm;
   }
   StTpcDb::instance()->SetTpcRotations();
   if (  gROOT->GetClass("StTpcRTSHitMaker") || gROOT->GetClass("StiMaker")) {

@@ -100,10 +100,12 @@ class StTpcDb {
   Char_t                mEnd[1];        //!
   static Bool_t         mOldScheme;     //! switch between Old and New alignment scheme
   static Bool_t         mAlignment2024; //! switch between Old and 2024 alignment scheme
+  static Bool_t         mCosmics;       //! if cosmics 
  private:
   StTpcDb();
  public:
   virtual ~StTpcDb();
+  void                   Clear();
   St_tpcWirePlanesC     *WirePlaneGeometry() {return St_tpcWirePlanesC::instance();}
   St_tpcDimensionsC     *Dimensions() {return St_tpcDimensionsC::instance();}
   St_tpcSlowControlSimC *SlowControlSim() {return St_tpcSlowControlSimC::instance();}
@@ -185,8 +187,10 @@ class StTpcDb {
   const TGeoHMatrix &Pad2Sup12S(Int_t sector = 1, Int_t row = 1)  const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2Sup12S: kPadOuter2Sup12S; return TpcRot(sector,k);}
 
 
-  static void SetAlignment2024(Bool_t k = kFALSE) {mAlignment2024 = k;}
+  static void SetAlignment2024(Bool_t k = kFALSE);
   static Bool_t Alignment2024() {return mAlignment2024;}
+  static void   SetCosmics(Bool_t k = kFALSE) {mCosmics = k;}
+  static Bool_t IsCosmics() {return mCosmics;}
   ClassDef(StTpcDb,0)
 };
 #endif
