@@ -20,6 +20,7 @@ class SectorTrack : public TNamed {
   void    AddHit(StTpcHit *tpcHit);
   const THelixFitter &Helix() const {return *&fHelix;}
   void SetSector(Int_t s, Int_t t = 0) {fSector = s; SetName(Form("Sector_%02i_%i",fSector,t));}
+  void SetRow(Int_t row) {fRow = row;}
   void SetStatus(Int_t k) {fStatus = k;}
   Int_t Status() {return fStatus;}
   virtual Int_t    Compare(const  TObject *obj) const {
@@ -29,19 +30,28 @@ class SectorTrack : public TNamed {
     return 0;
   }
   void  GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t &err2z);
-  Int_t MakeTHelix(Double_t *RefSurfaceG = 0);
-  Int_t Move(Double_t *RefSurfaceG);
+  Int_t MakeTHelix(Double_t *RefSurfaceG = 0, Double_t y = 0);
+  Int_t Move(Double_t *RefSurfaceG, Double_t y = 0);
   static TRMatrix GetSti2G(Double_t nx, Double_t ny, Double_t nz);
   static TRMatrix GetSti2G(TVector3 N) {return GetSti2G(N.x(), N.y(), N.z());}
   virtual void  Print(Option_t *option="") const;
   Double_t     *RefSurface() {return fRefSurface;}
   Double_t      Step() const {return fStep;}
-  TVector3      fRG;
+  TVector3      fRG;    // Global
   TVector3      fNG;
-  TVector3      fR;
+  TVector3      fR;     // Local sector (12)
   TVector3      fN;
+  TVector3      fRTpc;  // Tpc
+  TVector3      fNTpc;
+  TVector3      fRHalf; // Half
+  TVector3      fNHalf;
+  TVector3      fRPad;  // SubS 
+  TVector3      fNPad;
+  TVector3      fRPadGG;  // SubS 
+  TVector3      fNPadGG;
   TRSymMatrix   fCov;
   Double_t      fRefSurface[4];
+  Double_t      fyRef;
   static Int_t _debug;
  private:
   Int_t fSector; // of the first hit

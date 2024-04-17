@@ -1,0 +1,371 @@
+load ("eigen")$
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+inflag : true$
+debugmode(true) $ 
+/*
+     Position of TPC as Whole in STAR Magnet coordinate system, Whole TPC = 0.5 * (West + East Wheel), direction === Center of East Hweel to Center of Whest Wheel) 
+     Global <=> TPCE =   StGlobalCoordinate <=> StTpcLocalCoordinate   
+                         StTpcDb::Tpc2GlobalMatrix() = StTpcPosition::instance()->GetMatrix();
+
+     TPCE <=> TPGV[2] => StTpcDb::TpcHalf(StBeamDirection part)
+                                                    mHalf[east} = StTpcHalfPosition::instance()->GetEastMatrix()
+                                                    mHalf[west] = StTpcHalfPosition::instance()->GetWestMatrix();   
+     TPCE <=> SubS||Pad  =     StTpcLocalCoordinate <=> StTpcLocalSectorCoordinate
+
+     
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                                                                                                     x =    <--                                                                  --> * xPadGG
+                                                                                                     x =    <--     dR' * Wheel                                                             --> * xPad
+                                                                                                                                                                                        xPadGG = GG^-1 * xPad
+  mShift[0] = new TGeoTranslation("Signed Drift distance to z for East", 0, 0, -mzGG);
+  mShift[1] = new TGeoTranslation("Signed Drift distance to z for West", 0, 0,  mzGG);
+
+*/
+iphi(sector) := block([i],
+    (if (sector <= 12) then i : (360 + 90 - 30* sector      )
+    else                    i : (      90 + 30*(sector - 12))),
+    if (i > 360) then i : i - 360,
+    if (i <   0) then i : i + 360,
+    return (i)
+)$
+RotateZ(sector) := block([rotA],
+  i   : iphi(sector),	
+  phi : %pi/180*i,
+  c   : cos(phi),
+  s   : sin(phi),
+  rotA: matrix([c, -s, 0, 0],
+	       [s,  c, 0, 0],
+               [0,  0, 1, 0],
+               [0,  0, 0, 1]),
+ return (rotA)
+);
+RotM(sector) := block([rotm],
+  if (sector <=12) then rotm : matrix([1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1])
+  else                  rotm : matrix([1, 0, 0, 0],[0,-1, 0, 0],[0, 0,-1, 0],[0, 0, 0, 1]),
+  return (rotm)
+);
+RotM(1);
+RotM(13);
+/* iphi(12); */
+Flip: matrix([ 0, 1,  0,  0],
+             [ 1, 0,  0,  0],
+             [ 0, 0, -1,  0],
+             [ 0, 0,  0,  1])$
+part(s) := if (s > 12) then 0 else 1$
+zGG(s) := block( if equal(part(s), 0) then -zG else zG);  /* zG = 208.707 cm distance to Gating Grid */
+zWW(s)  := block( if equal(part(s), 0) then -zW else zW); /* zW = 229.71 cm -"-      to Wheel */
+Shift(s) := matrix([1, 0, 0, 0],
+                   [0, 1, 0, 0],
+                   [0, 0, 1, zWW(s)],
+                   [0, 0, 0, 1])$            
+/* Shift(12);
+   Shift(24);
+*/
+/* dR(alpha,beta,gamma, x_0, y_0, z_0):= */
+Vlist : [a, b, g, x, y, z];
+
+dRE : matrix([     1,-gamma,   beta, x_0],
+	     [ gamma,      1,-alpha, y_0],
+             [ -beta, alpha,      1, z_0],
+             [     0,     0,      0,   1])$
+/* dRT(alpha,beta,gamma, x_0, y_0, z_0):=  */
+dRTE: matrix([     1, gamma,  -beta,-x_0],
+             [-gamma,      1, alpha,-y_0],
+             [  beta,-alpha,      1,-z_0],
+             [     0,     0,      0,   1])$
+
+
+define (dR( alpha,beta,gamma, x_0, y_0, z_0), dRE)$
+define (dRT( alpha,beta,gamma, x_0, y_0, z_0), dRTE)$
+
+/* Half(a_E, b_E, g_E, x_E, y_E, z_E,a_W, b_W, g_W, x_W, y_W, z_W, s) := block( */
+Half(s) := block(
+	if equal(part(s), 0) then dR(a_E, b_E, g_E, x_E, y_E, z_E)
+                             else dR(a_W, b_W, g_W, x_W, y_W, z_W)
+);
+/*
+Half(12);
+Half(24);
+Tpc2Glob : dR(aTpc,btpc,gTpc, xTpc, yTpc, zTpc);
+Tpc2GlobT : dR(aTpc,btpc,gTpc, xTpc, yTpc, zTpc);
+Sup12S(sector):  dR
+*/
+dRV(Vlist) := dR(Vlist[1], Vlist[2], Vlist[3], Vlist[4],Vlist[5], Vlist[6]);
+dRVT(Vlist) := dRT(Vlist[1], Vlist[2], Vlist[3], Vlist[4],Vlist[5], Vlist[6]);
+
+varTpc : makelist (concat (y, _Tpc), y, Vlist); /* [a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc] */
+Tpc2Glob(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc) := dR(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc);
+Tpc2GlobT(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc) := dRT(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc);
+Tpc2GlobV : dRV(varTpc); 
+
+varSup12S : makelist (concat (y, _s), y, Vlist); /* [a_s, b_s, g_s, x_s, y_s, z_s] */
+dvarSup12S : makelist (concat (d, y, _s), y, Vlist); /* [da_s, db_s, dg_s, dx_s, dy_s, dz_s] */
+
+Sup12S  : dRV(varSup12S);
+dSup12S  : dRV(dvarSup12S);
+
+varSup12W : makelist (concat (y, _w), y, Vlist); /* [a_w, b_w, g_w, x_w, y_w, z_w] */
+dvarSup12W : makelist (concat (d, y, _w), y, Vlist); /* [da_w, db_w, dg_w, dx_w, dy_w, dz_w] */
+
+Sup12W  : dRV(varSup12W);
+dSup12W  : dRV(dvarSup12W);
+
+ 
+/*
+Sup12S2Tpc(sector) := Shift(sector) . Half(sector) . RotM(sector) . Flip . dR(sector) . ddR(sector);
+*/
+rG: matrix([xG], [yG], [zG], [1]);    /* Global coordinates and direction */
+nG: matrix([nxG], [nyG], [nzG], [0]); 
+r: matrix([x], [y], [z], [1]);        /* Supersector coordinates and direction */
+n: matrix([nx], [ny], [nz], [0]); 
+/*  
+                             Outer to Inner 
+*/
+rI: matrix([xI], [yI], [zI], [1]);    /* Inner sector coordinates and direction */
+nI: matrix([nxI], [nyI], [nzI], [0]); 
+rO: matrix([xO], [yO], [zO], [1]);    /* Outer sector coordinates and direction */
+nO: matrix([nxO], [nyO], [nzO], [0]); 
+varI : makelist (concat (y, _I), y, Vlist); /* [a_I, b_I, g_I, x_I, y_I, z_I] */
+dvarI : makelist (concat (d, y, _I), y, Vlist); /* [da_I, db_I, dg_I, dx_I, dy_I, dz_I] */
+
+dRI : dRV(varI);
+ddRI : dRV(dvarI);
+dRIT : dRVT(varI);
+ddRIT : dRVT(dvarI);
+
+varO : makelist (concat (y, _O), y, Vlist);   /*  [a_O, b_O, g_O, x_O, y_O, z_O] */
+dvarO : makelist (concat (d, y, _O), y, Vlist); /* [da_O, db_O, dg_O, dx_O, dy_O, dz_O] */
+dRO : dRV(varO);
+ddRO : dRV(dvarO);
+
+dROT : dRVT(varO);
+ddROT : dRVT(dvarO);
+
+varWheel : makelist (concat (y, _Wheel), y, Vlist);
+Wheel : dRV(varWheel);
+WheelT : dRVT(varWheel);
+
+/* r = Sup12 = GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z) *(I|O)
+	dR" == ddR * dR
+   r = GG(z) *Wheel * ddRI * dRI * GG^-1(z) * rI
+   r = GG(z) *Wheel * ddRO * dRO * GG^-1(z) * rO
+   rI = (GG(z) *Wheel * ddRI * dRI * GG^-1(z))T * r =  (GG(z) * dRIT * ddRIT * WheelT * GGT(z)) * r = (GG(z) * WheelT * GGT(z)) * r
+   rO = (GG(z) *Wheel * ddRO * dRO * GG^-1(z))T * r =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r
+dR"_inner = ddRI * dRI == I
+dR"_Outer = ddRO * dRO
+   z = r[3];
+   rI =  (GG(z) * WheelT * GGT(z)) * r
+   rO =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r
+
+*/
+GG(z) := matrix([1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1,-z],
+                [0, 0, 0, 1])$            
+GGT(z):= matrix([1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, z],
+                [0, 0, 0, 1])$            
+
+/* RS2I : GG(z) . dRIT . dRIT . WheelT . GGT(z); */
+RS2I : GG(z) . WheelT . GGT(z); 
+/*
+(%i88) RS2I:GG(z) . WheelT . GGT(z)
+         [     1       g_Wheel   - b_Wheel  (- b_Wheel*z) - x_Wheel ]
+         [                                                          ]
+         [ - g_Wheel      1       a_Wheel     a_Wheel*z - y_Wheel   ]
+(%o88)   [                                                          ]
+         [  b_Wheel   - a_Wheel      1             - z_Wheel        ]
+         [                                                          ]
+         [     0          0          0                 1            ]
+*/
+RS2O : GG(z) . dROT . ddROT . WheelT . GGT(z); 
+/*
+(%i89) RS2O:GG(z) . dROT . ddROT . WheelT . GGT(z)
+(%o89) matrix([(- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1, 
+g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel)
+ + g_Wheel + dg_O + a_Wheel*db_O, (b_Wheel*dg_O + da_O + a_Wheel)*g_O
+ + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel, 
+(- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel)
+ - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel)
+ + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
+ - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - x_O
+ - dx_O], [(- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1))
+ + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O, 
+a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O)
+ - dg_O*g_Wheel - a_Wheel*da_O + 1, (- (a_Wheel*dg_O - db_O - b_Wheel)*g_O)
+ + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel, 
+a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel)
+ + z - dz_O) + da_O*(z - z_Wheel) - g_O
+*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel
+ - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - y_O - dy_O], 
+[b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel
+ - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel, 
+(- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1))
+ + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel, 
+(- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel)
+ - b_Wheel*db_O - a_Wheel*da_O + 1, (- z_Wheel)
+ + b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z
+ - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel)
+ + a_Wheel*z - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel)
+ - da_O*(a_Wheel*z - y_Wheel) - dz_O], [0, 0, 0, 1])
+*/
+rI : RS2I . r;
+/*
+                 [ (- 2*b_Wheel*z) + g_Wheel*y - x_Wheel + x ]
+                 [                                           ]
+                 [   2*a_Wheel*z - y_Wheel + y - g_Wheel*x   ]
+(%o90)           [                                           ]
+                 [  (- z_Wheel) + z - a_Wheel*y + b_Wheel*x  ]
+                 [                                           ]
+                 [                     1                     ]
+*/
+nI: RS2I . n;
+/*
+(%i91) nI:RS2I . n
+                     [ (- b_Wheel*nz) + g_Wheel*ny + nx ]
+                     [                                  ]
+                     [   a_Wheel*nz + ny - g_Wheel*nx   ]
+(%o91)               [                                  ]
+                     [   nz - a_Wheel*ny + b_Wheel*nx   ]
+                     [                                  ]
+                     [                0                 ]
+*/
+rO : RS2O . r;
+/*
+(%i92) rO:RS2O . r
+(%o92) matrix([(- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel)
+ - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel)
+ + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
+ - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel)
+ + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
+ - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z - b_Wheel*z
+ + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
+ - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y
+ - x_Wheel - x_O + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - dx_O], 
+[a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel)
+ + z - dz_O) + da_O*(z - z_Wheel) - g_O
+*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel
+ - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel)
+ + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O
+ + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z + a_Wheel*z
+ - y_Wheel - y_O + (a_O*(db_O*g_Wheel - da_O - a_Wheel)
+ - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y
+ + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1))
+ + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x
+ - dy_O], [(- z_Wheel) + b_O*((- db_O*(z - z_Wheel))
+ + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O)
+ - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
+ - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel)
+ - da_O*(a_Wheel*z - y_Wheel) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel))
+ + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z
+ + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1))
+ + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y
+ + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel
+ - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - dz_O], [1])
+*/
+nO: RS2O . n;
+/*
+(%i93) nO:RS2O . n
+(%o93) matrix([((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
+ - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz
+ + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
+ - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny
+ + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx], 
+[((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O
+ + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz
+ + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O)
+ - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O
+*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel)
+ - g_Wheel - dg_O + b_Wheel*da_O)*nx], 
+[((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel)
+ - b_Wheel*db_O - a_Wheel*da_O + 1)*nz + ((- a_O
+*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O)
+ + db_O*g_Wheel - da_O - a_Wheel)*ny + (b_O
+*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel
+ - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx], [0])
+*/
+
+drOI : rO - rI;
+/*
+(%i94) drOI:rO-rI
+(%o94) matrix(
+[(- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel) + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel) + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z + b_Wheel*z + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - g_Wheel*y - x_O + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - x - dx_O], 
+
+[a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - a_Wheel*z - y_O + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x + g_Wheel*x - dy_O], 
+
+[b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z - z + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y + a_Wheel*y + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - b_Wheel*x - dz_O], 
+[0]
+)
+*/
+dnOI : nO - nI;
+/*
+(%i95) dnOI:nO-nI
+(%o95) matrix(
+[((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz + b_Wheel*nz + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny - g_Wheel*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx - nx], 
+[((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz - a_Wheel*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny - ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx + g_Wheel*nx], 
+[((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz - nz + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny + a_Wheel*ny + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx - b_Wheel*nx], 
+[0])
+*/
+/*
+fdrOI(ddRO) := drOI;
+
+drOIdI :  jacobian(fdrIO(ddRO), ddRO ); 
+*/
+dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := (- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel) + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel) + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z + b_Wheel*z + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - g_Wheel*y - x_O + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - x - dx_O;
+dY(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - a_Wheel*z - y_O + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x + g_Wheel*x - dy_O;
+dZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z - z + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y + a_Wheel*y + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - b_Wheel*x - dz_O;
+dnX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz + b_Wheel*nz + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny - g_Wheel*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx - nx;
+dnY(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz - a_Wheel*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny - ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx + g_Wheel*nx;
+dnZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz - nz + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny + a_Wheel*ny + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx - b_Wheel*nx;
+
+dRdp : jacobian([dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dY(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O), 
+                 dnX(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dnY(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dnZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O)],
+                [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
+/*
+(%o146) matrix(
+[g_O*(z - z_Wheel) - b_O*(y_Wheel - a_Wheel*z) + (g_O + a_Wheel*b_O)*z + (b_O - a_Wheel*g_O)*y + (b_Wheel*g_O - b_O*g_Wheel)*x, 
+          z_Wheel - b_O*((- b_Wheel*z) - x_Wheel) + (b_O*b_Wheel - 1)*z - z + (a_Wheel - b_O*g_Wheel)*y + ((- b_Wheel) - b_O)*x, 
+g_O*(b_Wheel*z + x_Wheel) + (b_Wheel*g_O + a_Wheel)*z + a_Wheel*z - y_Wheel + (1 - g_O*g_Wheel)*y + ((- g_Wheel) - g_O)*x, 
+- 1,
+- g_O, 
+b_O
+], 
+[(- z_Wheel) + a_O*(y_Wheel - a_Wheel*z) + (1 - a_O*a_Wheel)*z + z + ((- a_Wheel) - a_O)*y + (a_O*g_Wheel + b_Wheel)*x, 
+(- g_O*(z_Wheel - z)) + a_O*((- b_Wheel*z) - x_Wheel) + (g_O - a_O*b_Wheel)*z + (a_O*g_Wheel - a_Wheel*g_O)*y + (b_Wheel*g_O + a_O)*x, 
+(- g_O*(a_Wheel*z - y_Wheel)) + (b_Wheel - a_Wheel*g_O)*z + b_Wheel*z + ((- g_Wheel) - g_O)*y + x_Wheel + (g_O*g_Wheel - 1)*x, 
+g_O,
+ - 1,
+ - a_O
+], 
+[(- a_O*(z - z_Wheel)) - a_Wheel*z + ((- a_Wheel) - a_O)*z + y_Wheel + (a_O*a_Wheel - 1)*y + (g_Wheel - a_O*b_Wheel)*x, 
+b_O*(z_Wheel - z) - b_Wheel*z + ((- b_Wheel) - b_O)*z + (g_Wheel + a_Wheel*b_O)*y - x_Wheel + (1 - b_O*b_Wheel)*x, 
+(- a_O*(b_Wheel*z + x_Wheel)) + b_O*(a_Wheel*z - y_Wheel) + (a_Wheel*b_O - a_O*b_Wheel)*z + (a_O*g_Wheel + b_O)*y + (a_O - b_O*g_Wheel)*x, 
+- b_O, 
+a_O, 
+- 1
+], 
+[(g_O + a_Wheel*b_O)*nz + (b_O - a_Wheel*g_O)*ny + (b_Wheel*g_O - b_O*g_Wheel)*nx, 
+(b_O*b_Wheel - 1)*nz + (a_Wheel - b_O*g_Wheel)*ny + ((- b_Wheel) - b_O)*nx, 
+(b_Wheel*g_O + a_Wheel)*nz + (1 - g_O*g_Wheel)*ny + ((- g_Wheel) - g_O)*nx, 
+0, 
+0, 
+0], 
+[(1 - a_O*a_Wheel)*nz + ((- a_Wheel) - a_O)*ny + (a_O*g_Wheel + b_Wheel)*nx, 
+(g_O - a_O*b_Wheel)*nz + (a_O*g_Wheel - a_Wheel*g_O)*ny + (b_Wheel*g_O + a_O)*nx, 
+(b_Wheel - a_Wheel*g_O)*nz + ((- g_Wheel) - g_O)*ny + (g_O*g_Wheel - 1)*nx, 
+0, 
+0, 
+0], 
+[((- a_Wheel) - a_O)*nz + (a_O*a_Wheel - 1)*ny + (g_Wheel - a_O*b_Wheel)*nx, 
+((- b_Wheel) - b_O)*nz + (g_Wheel + a_Wheel*b_O)*ny + (1 - b_O*b_Wheel)*nx, 
+(a_Wheel*b_O - a_O*b_Wheel)*nz + (a_O*g_Wheel + b_O)*ny + (a_O - b_O*g_Wheel)*nx, 
+0, 
+0, 
+0])
+*/

@@ -4,6 +4,7 @@
 #include "StTpcDb/StTpcDb.h"
 #include "StTpcHit.h"
 #include "StTpcDb/StTpcDb.h"
+#include "StDbUtilities/StTpcCoordinateTransform.hh"
 ClassImp(SectorTrack);
 Int_t SectorTrack::_debug = 0;
 #define PrPPS(B)  if (_debug) {cout  << "SectorTrack::" << (#B) << " = \t" << (B) << endl;}
@@ -11,10 +12,10 @@ Int_t SectorTrack::_debug = 0;
 SectorTrack::SectorTrack(const SectorTrack &v) {// skip TList
   SetName(v.GetName());
   SetTitle(v.GetTitle());
-  fRG  = v.fRG ;
-  fNG  = v.fNG ;
-  fR   = v.fR  ;
-  fN   = v.fN  ;
+  fRG  = v.fRG ;  fNG  = v.fNG ;
+  fR   = v.fR  ;  fN   = v.fN  ;
+  fRTpc  = v.fRTpc ;  fNTpc  = v.fNTpc ;
+  fRPad  = v.fRPad ;  fNPad  = v.fNPad ;
   fCov = v.fCov;
   memcpy(fRefSurface, v.fRefSurface, sizeof(fRefSurface));
   fSector = v.fSector;  // of the first hit
@@ -22,6 +23,7 @@ SectorTrack::SectorTrack(const SectorTrack &v) {// skip TList
   fStatus = v.fStatus; 
   fHelix  = v.fHelix;  
   fStep   = v.fStep; 
+  fyRef   = v.fyRef;
 }						
 //________________________________________________________________________________
 void  SectorTrack::AddHit(StTpcHit *tpcHit) {
@@ -33,7 +35,7 @@ void  SectorTrack::AddHit(StTpcHit *tpcHit) {
     fRow = row;
   } else {
     assert(fSector == sector);
-    if (row < fRow) fRow = row;
+    if (fRow < 0 || row < fRow) fRow = row;
   }
   List()->Add(tpcHit);
 }
@@ -81,7 +83,7 @@ void SectorTrack::GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t
   assert(err2xy[0] + err2xy[2] > 0 && err2z> 0);
 }
 //________________________________________________________________________________
-Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG) {
+Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG, Double_t y) {
   fStatus = -1;
   if (fList.GetSize() < 5) return fStatus;
   Int_t i = 0;
@@ -115,31 +117,61 @@ Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG) {
   if (chisq > 100.) return fStatus;
   if (fHelix.MakeErrs()) return fStatus;
   if (! RefSurfaceG) {fStatus = 0; return fStatus;}
-  Move(RefSurfaceG);
+  Move(RefSurfaceG, y);
   return fStatus;
 }
 //________________________________________________________________________________
-Int_t  SectorTrack::Move(Double_t *refSurfaceG) {
+Int_t  SectorTrack::Move(Double_t *refSurfaceG, Double_t y) {
   assert(refSurfaceG);
   static Double_t stepMX = 1.e3;
+  assert(fSector > 0);
+  assert(fRow > 0);
   fStatus = -1;
   memcpy(fRefSurface, refSurfaceG, sizeof(fRefSurface));
-  Double_t xyzG[3] = {0};
-  Double_t dirG[3] = {0};
-  fStep = fHelix.Step(stepMX, fRefSurface, 4, xyzG, dirG, 1);
+  fyRef = y;
+  //  fStep = fHelix.Step(stepMX, fRefSurface, 4, xyzG, dirG, 1);
+  fStep = fHelix.Step(stepMX, fRefSurface, 4, &fRG[0], &fNG[0], 1);
   if (TMath::Abs(fStep) >= stepMX) return fStatus;
   fHelix.Move(fStep);
   fRG = TVector3(fHelix.Pos());
   fNG = TVector3(fHelix.Dir());
   if (fRG.Dot(fNG) < 0) {fHelix.Backward(); fNG = TVector3(fHelix.Dir());}
-  Double_t loc[3] = {0};
-  fRG.GetXYZ(xyzG);
-  fNG.GetXYZ(dirG);
-  StTpcDb::instance()->Sup12S2Glob(fSector).MasterToLocal(xyzG, loc);
-  fR = TVector3(loc);
-  if (fR.z() < -10.0 || fR.z() > 220.0) return fStatus; // acceptable drift distance
-  StTpcDb::instance()->Sup12S2Glob(fSector).MasterToLocalVect(dirG, loc);  
-  fN = TVector3(loc);
+  // Tpc
+  StTpcDb::instance()->Tpc2GlobalMatrix().MasterToLocal(&fRG[0], &fRTpc[0]);
+  StTpcDb::instance()->Tpc2GlobalMatrix().MasterToLocalVect(&fNG[0], &fNTpc[0]);
+  // Half
+  Int_t sectorS = Sector()%100;
+  StBeamDirection     part = east;
+  if (sectorS <= 12) part = west;
+  StTpcDb::instance()->TpcHalf(part).MasterToLocal(&fRTpc[0], &fRHalf[0]);
+  StTpcDb::instance()->TpcHalf(part).MasterToLocalVect(&fNTpc[0], &fNHalf[0]);
+  // Sup12S
+  StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(&fRG[0], &fR[0]);
+  Double_t drift = fR.z();
+  if (drift < -10.0 || drift > 220.0) return fStatus; // acceptable drift distance
+  StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(&fNG[0], &fN[0]);  
+  // Pad (Subs)    
+  static StTpcCoordinateTransform transform(StTpcDb::instance());
+  StGlobalCoordinate              globalCoo(&fRG[0]);
+  StGlobalDirection               globalDir(&fNG[0]);
+  static StTpcLocalSectorCoordinate      local;
+  static StTpcLocalSectorDirection       localDir;
+  transform(globalCoo,    local, sectorS, Row());
+  fRPad = TVector3(local.position().xyz());
+  transform(globalDir, localDir, sectorS, Row());
+  fNPad = TVector3(localDir.position().xyz());
+  TGeoTranslation GG(0, 0, -drift);
+#if 0
+  //  GG.MasterToLocal(&fRPad[0],&fRPadGG[0]);
+  GG.LocalToMaster(&fRPad[0],&fRPadGG[0]);
+  fNPadGG = fNPad;
+#else
+  //    TGeoHMatrix rotA = StTpcDb::instance()->Sup12S2Tpc(sector) * GG.Inverse() * StTpcDb::instance()->Wheel(part) * StTpcDb::instance()->SubS2Sup12S(sector,row) * GG;
+  TGeoHMatrix GW = GG.Inverse() * StTpcDb::instance()->Wheel(part);
+  GW.MasterToLocal(&fR[0], &fRPadGG[0]);
+  GW.MasterToLocal(&fN[0], &fNPadGG[0]);
+#endif
+  // Errors 
   Double_t cosL  = fN.Perp()/fN.Mag();
   Double_t cosCA = fN.Y()/cosL; // Sup12S => Sti:  x <=>y, z => -z 
   TRSymMatrix StiErr(6);

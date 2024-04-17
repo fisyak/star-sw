@@ -118,7 +118,7 @@ void ResultsIO(const Char_t *opt="") {
   TString Opt(opt);
   if (Opt == "") {
     if (NH == 2) NH++; // make average if we have only FF + RF
-    else if (NP > 2) NH = NP + 2; // make average for FFF and RF
+    else if (NP > 2) NH = NP + 2; // make average for FF and RF
   }
   TH1D ***dath = new TH1D**[NH]; 
   for (Int_t p = 0; p < NH; p++) {dath[p] = new TH1D*[6]; memset(dath[p],0, 6*sizeof(TH1D*));}
@@ -160,10 +160,8 @@ void ResultsIO(const Char_t *opt="") {
     Double_t ymax = -1e10;
     TString Name;
     TString Title;
-    if (! i)     {
-      if (Opt == "") 	leg[i] = new TLegend(0.85,0.5-0.04*NH,0.98,0.5);
-      else              leg[i] = new TLegend(0.85,0.5-0.08,   0.98,0.5);
-    }     else         leg[i] = 0;
+    if (! i)     {leg[i] = new TLegend(0.85,0.7-0.04*NH,0.98,0.7);
+    }  else       leg[i] = 0;
     TString same("e");
     Int_t color = 1;
     TH1::SetDefaultSumw2(kTRUE);
@@ -195,15 +193,21 @@ void ResultsIO(const Char_t *opt="") {
       
       dath[k][i] = new TH1D(Name,Title, 24, 0.5, 24.5);
       //      cout << "Create: " << dath[k][i]->GetName() << "\t" << dath[k][i]->GetTitle() << endl;
+      if      (TString(Passes[k].PassName).Contains("2020")) color = 2;
+      else if (TString(Passes[k].PassName).Contains("2021")) color = 3;
+      else if (TString(Passes[k].PassName).Contains("2022")) color = 4;
+      else if (TString(Passes[k].PassName).Contains("2023")) color = 6;
+      else if (TString(Passes[k].PassName).Contains("2024")) color = 7;
       dath[k][i]->SetMarkerColor(color);
       dath[k][i]->SetLineColor(color);
       dath[k][i]->SetMarkerSize(2);
       dath[k][i]->SetMarkerStyle(22);
       if (k < NP) {
-	if (TString(Passes[k].PassName).Contains("RF")) {
-	  color++;
+	if (TString(Passes[k].PassName).Contains("RF") || 
+	    Opt != "" && TString(Passes[k].PassName).Contains(Opt)) {
 	  dath[k][i]->SetMarkerStyle(23);
-	} else if (TString(Passes[k].PassName).Contains("MF")) {
+	} else if (TString(Passes[k].PassName).Contains("MF") ||
+		   TString(Passes[k].PassName).Contains("ZF") ) {
 	  dath[k][i]->SetMarkerStyle(21);
 	} else if (TString(Passes[k].PassName).Contains("FF.1mrad")) {
 	  color++;
@@ -224,18 +228,19 @@ void ResultsIO(const Char_t *opt="") {
 	Int_t secs;
 	Double_t val = 0, err = 0;
 	if (k < NP) {
-	  Double_t *X = &Passes[k].Data[l].x;
 	  secs = Passes[k].Data[l].sector;
-	  if (X[2*i+1] >= 0 && X[2*i+1] < 99) {
+	  if (Passes[k].Data[l].X()[2*i+1] == 0.0) Passes[k].Data[l].X()[2*i+1] = 0.01;
+	  if (Passes[k].Data[l].GoodMeasurement(i)) {
+	    Double_t *X = Passes[k].Data[l].X();
 	    val = X[2*i];
 	    err = X[2*i+1];
 	  } else {continue;}
 	} else if (NP == 2 && k == NP && NH == NP + 1) { // Average FF+RF
-	  Double_t *X0 = &Passes[0].Data[l].x;
-	  Double_t *X1 = &Passes[1].Data[l].x;
-	  secs = Passes[0].Data[l].sector;
-	  if (X0[2*i+1] >= 0 && X0[2*i+1] < 99 &&
-	      X1[2*i+1] >= 0 && X1[2*i+1] < 99) {
+	  if (Passes[0].Data[l].GoodMeasurement(i) &&
+	      Passes[1].Data[l].GoodMeasurement(i)) {
+	    Double_t *X0 = Passes[0].Data[l].X();
+	    Double_t *X1 = Passes[1].Data[l].X();
+	    secs = Passes[0].Data[l].sector;
 	    val = 0.5*(X0[2*i] + X1[2*i]);
 	    dath[k][i]->SetBinContent(secs,val);
 	    err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
@@ -247,8 +252,8 @@ void ResultsIO(const Char_t *opt="") {
 	    TString RF((k == NP) ? "FF": "RF");
 	    TString Name(Passes[p].PassName);
 	    if (! Name.Contains(RF)) continue;
-	    Double_t *X = &Passes[p].Data[l].x;
-	    if (X[2*i+1] < 0 || X[2*i+1] > 99) continue;
+	    if (! Passes[p].Data[l].GoodMeasurement(i)) continue;
+	    Double_t *X = Passes[p].Data[l].X();
 	    val = X[2*i];
 	    err = X[2*i+1];
 	    if (err == 0.0) err = 0.01;

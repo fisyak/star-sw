@@ -68,29 +68,51 @@ struct PlotName_t {
   Int_t nz;
   Double_t zmin, zmax;
 };
-enum {NPlots = 21, NFPlots=14, NwsPlots=20, NwsFPlots=20};
+enum {NPlots = 21, NFPlots=14, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
 const  PlotName_t plotNameD[NPlots] = {// plots for drift
-  {"dXdy"     ,"dX  versus  tX         =>  dy",    100,  -0.5,  0.5, 500, -1.000, 1.000}, // 0 -> <dx>, dy   
-  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,  -60.,  40., 500, -1.000, 1.000}, // 1 -> <dx>, alpha
-  {"dXdbeta"  ,"dX  versus -zO         =>  beta",  100, -210., -10., 500, -1.000, 1.000}, // 2 -> <dx>, beta 
-  {"dXdgamma" ,"dX  versus  yO + tX*xO =>  gamma", 100,  118., 130., 500, -1.000, 1.000}, // 3 -> <dx>, gamma
-  {"dZdy"     ,"dZ  versus  tZ         =>  dy",    100, -0.8 ,  0.6, 500, -1.000, 1.000}, // 4 -> <dz>, dy   
-  {"dZdalpha" ,"dZ  versus -(yO+tZ*zO) =>  alpha", 100, -200., -50., 500, -1.000, 1.000}, // 5 -> <dz>, alpha
-  {"dZdbeta"  ,"dZ  versus  xO         =>  beta",  100,  -30.,  30., 500, -1.000, 1.000}, // 6 -> <dz>, beta 
-  {"dZdgamma" ,"dZ  versus  tZ*xO      =>  gamma", 100,  -10.,  10., 500, -1.000, 1.000}, // 7 -> <dz>, gamma
-  {"dnXdbeta" ,"dnX versus -nzO        =>  beta",  100,  -0.8,  0.8, 500, -0.025, 0.025}, // 8 ->       beta 
-  {"dnXdgamma","dnX versus  nyO        =>  gamma", 100,   0.7,  1.0, 500, -0.025, 0.025}, // 9 ->       gamma
-  {"dnYdalpha","dnY versus  nzO        =>  alpha", 100,  -0.8,  0.8, 500, -0.025, 0.025}, //10 ->       alpha 
-  {"dnYdgamma","dnY versus -nxO        =>  gamma", 100,   -.6,   .6, 500, -0.025, 0.025}, //11 ->       gamma
-  {"dnZdalpha","dnZ versus -nyO        =>  alpha", 100,  -1.0,  -.7, 500, -0.025, 0.025}, //12 ->       alpha
-  {"dnZdbeta" ,"dnZ versus  nxO        =>  beta" , 100,   -.6,   .6, 500, -0.025, 0.025}, //13 ->       beta
-  {"dX"       ,"dX  versus Z"                    , 200,    10,  210, 500, -1.000, 1.000}, //14
-  {"dY"       ,"dY  versus Z"                    , 200,    10,  210, 500, -0.001, 0.001}, //15
-  {"dZ"       ,"dZ  versus Z"                    , 200,    10,  210, 500, -1.000, 1.000}, //16
-  {"dnX"      ,"dnX versus Z"                    , 200,    10,  210, 500, -0.025, 0.025}, //17
-  {"dnY"      ,"dnY versus Z"                    , 200,    10,  210, 500, -0.025, 0.025}, //18
-  {"dnZ"      ,"dnZ versus Z"                    , 200,    10,  210, 500, -0.025, 0.025}, //19
-  {"dT"       ,"dT (time buckets)  versus Z"     , 200,    10,  210, 500, -2.000, 2.000}  //20
+  {"dXdy"     ,"dX  versus  tX         =>  dy",    100,  -1,      1, 500, -0.500, 0.500}, // 0 -> <dx>, dy    tX = nO.X()/nO.Y()
+#ifdef __PadGG__
+  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-1e-2,  1e-2, 500, -0.500, 0.500}, // 1 -> <dx>, alpha  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-1e-2,  1e-2, 500, -0.500, 0.500}, // 1 -> <dx>, alpha
+  {"dXdbeta"  ,"dX  versus -zO         =>  beta",  100,-5e-5, 15e-3, 500, -0.500, 0.500}, // 2 -> <dx>, beta 
+#else
+  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-150.,  150., 500, -0.500, 0.500}, // 1 -> <dx>, alpha  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-1e-2,  1e-2, 500, -0.500, 0.500}, // 1 -> <dx>, alpha
+  {"dXdbeta"  ,"dX  versus -zO         =>  beta",  100,-220.,  -20., 500, -0.500, 0.500}, // 2 -> <dx>, beta 
+#endif
+  {"dXdgamma" ,"dX  versus  yO + tX*xO =>  gamma", 100,  117,   136, 500, -0.500, 0.500}, // 3 -> <dx>, gamma
+#ifdef __PadGG__
+  {"dZdy"     ,"dZ  versus  tZ         =>  dy",    100, -300,     0, 500,  -1e-4,  1e-4}, // 4 -> <dz>, dy   
+  {"dZdalpha" ,"dZ  versus -(yO+tZ*zO) =>  alpha", 100, -127,  -122, 500,  -1e-4,  1e-4}, // 5 -> <dz>, alpha
+  {"dZdbeta"  ,"dZ  versus  xO         =>  beta",  100,  -30,    30, 500,  -1e-4,  1e-4}, // 6 -> <dz>, beta 
+  {"dZdgamma" ,"dZ  versus  tZ*xO      =>  gamma", 100, -6e3,   6e3, 500,  -1e-4,  1e-4}, // 7 -> <dz>, gamma
+
+  {"dnXdbeta" ,"dnX versus -nzO        =>  beta",  100,0.999,    1, 500, -3e-4, 6e-4 }, // 8 ->       beta 
+  {"dnXdgamma","dnX versus  nyO        =>  gamma", 100,    0, 0.04, 500, -3e-4, 6e-4 }, // 9 ->       gamma
+  {"dnYdalpha","dnY versus  nzO        =>  alpha", 100,   -1,-.999, 500, -3e-4, 3e-4 }, //10 ->       alpha 
+  {"dnYdgamma","dnY versus -nxO        =>  gamma", 100,-.015,0.015, 500, -3e-4, 3e-4 }, //11 ->       gamma
+
+  {"dnZdalpha","dnZ versus -nyO        =>  alpha", 100, -126.,  -122., 500,  -4e6, 1e-5 }, //12 ->       alpha
+  {"dnZdbeta" ,"dnZ versus  nxO        =>  beta" , 100, -30.0,   30.0, 500,  -4e6, 1e-5 }, //13 ->       beta
+#else
+  {"dZdy"     ,"dZ  versus  tZ         =>  dy",    100, -1.5,   1.5, 500,  -0.25,  0.25}, // 4 -> <dz>, dy   
+  {"dZdalpha" ,"dZ  versus -(yO+tZ*zO) =>  alpha", 100, -399,  -100, 500,  -0.25,  0.25}, // 5 -> <dz>, alpha
+  {"dZdbeta"  ,"dZ  versus  xO         =>  beta",  100,  -30,    30, 500,  -0.25,  0.25}, // 6 -> <dz>, beta 
+  {"dZdgamma" ,"dZ  versus  tZ*xO      =>  gamma", 100,  -25,    25, 500,  -0.25,  0.25}, // 7 -> <dz>, gamma
+
+  {"dnXdbeta" ,"dnX versus -nzO        =>  beta",  100, -0.9,   0.9, 500, -0.025,  0.025}, // 8 ->       beta 
+  {"dnXdgamma","dnX versus  nyO        =>  gamma", 100,  0.4,   1.0, 500, -0.025,  0.025}, // 9 ->       gamma
+  {"dnYdalpha","dnY versus  nzO        =>  alpha", 100,   -1,   1.0, 500, -0.003,  0.003}, //10 ->       alpha 
+  {"dnYdgamma","dnY versus -nxO        =>  gamma", 100, -0.7,   0.7, 500, -0.025,  0.025}, //11 ->       gamma
+
+  {"dnZdalpha","dnZ versus -nyO        =>  alpha", 100,  -1.,   0.8, 500, -0.015,  0.015}, //12 ->       alpha
+  {"dnZdbeta" ,"dnZ versus  nxO        =>  beta" , 100,  -.7,   0.7, 500, -0.015,  0.015 }, //13 ->       beta
+#endif
+  {"dX"       ,"dX  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //14
+  {"dY"       ,"dY  versus Z"                    , 200,    10,    210, 500,  -3e-2,  3e-2}, //15
+  {"dZ"       ,"dZ  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //16
+  {"dnX"      ,"dnX versus Z"                    , 200,    10,    210, 500, -0.020, 0.020}, //17
+  {"dnY"      ,"dnY versus Z"                    , 200,    10,    210, 500,  -2e-2,  2e-2}, //18
+  {"dnZ"      ,"dnZ versus Z"                    , 200,    10,    210, 500,  -1e-2,  1e-2}, //19
+  {"dT"       ,"dT (time buckets)  versus Z"     , 200,    10,    210, 500, -0.500, 0.500}  //20
 };
 const  PlotName_t plotNameWS[NwsPlots] = {// plots for drift
 #if 0
@@ -138,14 +160,31 @@ const  PlotName_t plotNameWS[NwsPlots] = {// plots for drift
 /* mX(5), A(10,5), dw  */ {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,500,-0.010, 0.010}, //19
 #endif
 };
+const  PlotName_t plotNameTpc[NwsPlotsTpc] = {
+  {"dXTpc"       ,"dX  versus Z"                    , 210,  -210,    210, 500, -1.000, 1.000}, // 0
+  {"dYTpc"       ,"dY  versus Z"                    , 210,  -210,    210, 500, -1.000, 1.000}, // 1
+  {"dZTpc"       ,"dZ  versus Z"                    , 210,  -210,    210, 500, -5.000, 5.000}, // 2
+  {"dnXTpc"      ,"dnX versus Z"                    , 210,  -210,    210, 500, -0.010, 0.010}, // 3
+  {"dnYTpc"      ,"dnY versus Z"                    , 210,  -210,    210, 500, -0.025, 0.025}, // 4
+  {"dnZTpc"      ,"dnZ versus Z"                    , 210,  -210,    210, 500, -0.010, 0.010}, // 5
+  {"dTTpc"       ,"dT (time buckets)  versus Z"     , 210,  -210,    210, 500, -5.000, 5.000}, // 6
+
+  {"dXG"         ,"dX  versus Z"                    , 210,  -210,    210, 500, -1.000, 1.000}, // 7
+  {"dYG"         ,"dY  versus Z"                    , 210,  -210,    210, 500, -1.000, 1.000}, // 8
+  {"dZG"         ,"dZ  versus Z"                    , 210,  -210,    210, 500, -5.000, 5.000}, // 9
+  {"dnXG"        ,"dnX versus Z"                    , 210,  -210,    210, 500, -0.010, 0.010}, //10
+  {"dnYG"        ,"dnY versus Z"                    , 210,  -210,    210, 500, -0.025, 0.025}, //11
+  {"dnZG"        ,"dnZ versus Z"                    , 210,  -210,    210, 500, -0.010, 0.010}, //12
+  {"dTG"         ,"dT (time buckets)  versus Z"     , 210,  -210,    210, 500, -5.000, 5.000}  //13
+};
 //________________________________________________________________________________
 #include "StTpcAlignerMaker/IO.C"
 #include "StTpcAlignerMaker/W2S.C"
 //________________________________________________________________________________
-void TpcAlignerDraw(Int_t jcase = 0, const Char_t *files = "../*Aligner.root") {
+void TpcAlignerDraw(Int_t jcase = 0, const Char_t *files = "../*Aligner.root", const Char_t *Out = "") {
   switch (jcase) {
-  case 0: TpcAlignerDrawIO(files);  break;
-  case 1: TpcAlignerDrawW2S(files); break;
+  case 0: TpcAlignerDrawIO(files, Out);  break;
+  case 1: TpcAlignerDrawW2S(files, Out); break;
   case 2: TDrawIO();                break;
   case 3: TDrawW2S();               break;
   default:

@@ -1,5 +1,5 @@
 //________________________________________________________________________________
-void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) {
+void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName = "", Bool_t laser = kFALSE) {
   TDirIter Dir(files);
   Char_t *file = 0;
   Int_t NFiles = 0;
@@ -13,6 +13,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
     cout << "No input files have been found" << endl;
     return;
   }
+#if 0
 	static const Int_t&       TriggerId                                = iter("TriggerId");
 	static const Double_t&    field                                    = iter("field");
 	static const Double_t&    driftVel                                 = iter("driftVel");
@@ -76,25 +77,135 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
 	static const Double_t&    Out_DriftZ                               = iter("Out.DriftZ");
 	static const Double_t&    Out_step                                 = iter("Out.step");
 	//	static const Double_t*&   Out_RefSurficeG                          = iter("Out.RefSurficeG[4]");
+#else
+	//	static const Int_t&       TriggerId                                = iter("TriggerId");
+	static const Double_t&    field                                    = iter("field");
+	static const Double_t&    driftVel                                 = iter("driftVel");
+	static const Double_t&    freq                                     = iter("freq");
+	static const Double_t&    charge                                   = iter("charge");
+	static const Int_t&       NoFitPoints                              = iter("NoFitPoints");
+	static const Double_t&    pX                                       = iter("pX");
+	static const Double_t&    pY                                       = iter("pY");
+	static const Double_t&    pZ                                       = iter("pZ");
+	static const Int_t&       iPV                                      = iter("iPV");
+	static const Double_t&    xPV                                      = iter("xPV");
+	static const Double_t&    yPV                                      = iter("yPV");
+	static const Double_t&    zPV                                      = iter("zPV");
+	static const Int_t&       In_sector                                = iter("In.sector");
+	static const Double_t&    In_Rho                                   = iter("In.Rho");
+	static const Double_t&    In_dRho                                  = iter("In.dRho");
+	static const Double_t&    In_x                                     = iter("In.x");
+	static const Double_t&    In_y                                     = iter("In.y");
+	static const Double_t&    In_z                                     = iter("In.z");
+	static const Double_t&    In_nx                                    = iter("In.nx");
+	static const Double_t&    In_ny                                    = iter("In.ny");
+	static const Double_t&    In_nz                                    = iter("In.nz");
+	static const Double_t&    In_xG                                    = iter("In.xG");
+	static const Double_t&    In_yG                                    = iter("In.yG");
+	static const Double_t&    In_zG                                    = iter("In.zG");
+	static const Double_t&    In_nxG                                   = iter("In.nxG");
+	static const Double_t&    In_nyG                                   = iter("In.nyG");
+	static const Double_t&    In_nzG                                   = iter("In.nzG");
+	static const Double_t&    In_xTpc                                  = iter("In.xTpc");
+	static const Double_t&    In_yTpc                                  = iter("In.yTpc");
+	static const Double_t&    In_zTpc                                  = iter("In.zTpc");
+	static const Double_t&    In_nxTpc                                 = iter("In.nxTpc");
+	static const Double_t&    In_nyTpc                                 = iter("In.nyTpc");
+	static const Double_t&    In_nzTpc                                 = iter("In.nzTpc");
+	static const Double_t&    In_xHalf                                 = iter("In.xHalf");
+	static const Double_t&    In_yHalf                                 = iter("In.yHalf");
+	static const Double_t&    In_zHalf                                 = iter("In.zHalf");
+	static const Double_t&    In_nxHalf                                = iter("In.nxHalf");
+	static const Double_t&    In_nyHalf                                = iter("In.nyHalf");
+	static const Double_t&    In_nzHalf                                = iter("In.nzHalf");
+	static const Double_t&    In_xPad                                  = iter("In.xPad");
+	static const Double_t&    In_yPad                                  = iter("In.yPad");
+	static const Double_t&    In_zPad                                  = iter("In.zPad");
+	static const Double_t&    In_nxPad                                 = iter("In.nxPad");
+	static const Double_t&    In_nyPad                                 = iter("In.nyPad");
+	static const Double_t&    In_nzPad                                 = iter("In.nzPad");
+	static const Double_t&    In_xPadGG                                = iter("In.xPadGG");
+	static const Double_t&    In_yPadGG                                = iter("In.yPadGG");
+	static const Double_t&    In_zPadGG                                = iter("In.zPadGG");
+	static const Double_t&    In_nxPadGG                               = iter("In.nxPadGG");
+	static const Double_t&    In_nyPadGG                               = iter("In.nyPadGG");
+	static const Double_t&    In_nzPadGG                               = iter("In.nzPadGG");
+	static const Double_t*&   In_fCov                                  = iter("In.fCov[21]");
+	static const Double_t&    In_Chi2                                  = iter("In.Chi2");
+	static const Int_t&       In_Ndf                                   = iter("In.Ndf");
+	static const Int_t&       In_Npoints                               = iter("In.Npoints");
+	static const Int_t&       In_Nused                                 = iter("In.Nused");
+	static const Double_t&    In_DriftZ                                = iter("In.DriftZ");
+	static const Double_t&    In_step                                  = iter("In.step");
+	static const Int_t&       Out_sector                               = iter("Out.sector");
+	static const Double_t&    Out_Rho                                  = iter("Out.Rho");
+	static const Double_t&    Out_dRho                                 = iter("Out.dRho");
+	static const Double_t&    Out_x                                    = iter("Out.x");
+	static const Double_t&    Out_y                                    = iter("Out.y");
+	static const Double_t&    Out_z                                    = iter("Out.z");
+	static const Double_t&    Out_nx                                   = iter("Out.nx");
+	static const Double_t&    Out_ny                                   = iter("Out.ny");
+	static const Double_t&    Out_nz                                   = iter("Out.nz");
+	static const Double_t&    Out_xG                                   = iter("Out.xG");
+	static const Double_t&    Out_yG                                   = iter("Out.yG");
+	static const Double_t&    Out_zG                                   = iter("Out.zG");
+	static const Double_t&    Out_nxG                                  = iter("Out.nxG");
+	static const Double_t&    Out_nyG                                  = iter("Out.nyG");
+	static const Double_t&    Out_nzG                                  = iter("Out.nzG");
+	static const Double_t&    Out_xTpc                                 = iter("Out.xTpc");
+	static const Double_t&    Out_yTpc                                 = iter("Out.yTpc");
+	static const Double_t&    Out_zTpc                                 = iter("Out.zTpc");
+	static const Double_t&    Out_nxTpc                                = iter("Out.nxTpc");
+	static const Double_t&    Out_nyTpc                                = iter("Out.nyTpc");
+	static const Double_t&    Out_nzTpc                                = iter("Out.nzTpc");
+	static const Double_t&    Out_xHalf                                = iter("Out.xHalf");
+	static const Double_t&    Out_yHalf                                = iter("Out.yHalf");
+	static const Double_t&    Out_zHalf                                = iter("Out.zHalf");
+	static const Double_t&    Out_nxHalf                               = iter("Out.nxHalf");
+	static const Double_t&    Out_nyHalf                               = iter("Out.nyHalf");
+	static const Double_t&    Out_nzHalf                               = iter("Out.nzHalf");
+	static const Double_t&    Out_xPad                                 = iter("Out.xPad");
+	static const Double_t&    Out_yPad                                 = iter("Out.yPad");
+	static const Double_t&    Out_zPad                                 = iter("Out.zPad");
+	static const Double_t&    Out_nxPad                                = iter("Out.nxPad");
+	static const Double_t&    Out_nyPad                                = iter("Out.nyPad");
+	static const Double_t&    Out_nzPad                                = iter("Out.nzPad");
+	static const Double_t&    Out_xPadGG                               = iter("Out.xPadGG");
+	static const Double_t&    Out_yPadGG                               = iter("Out.yPadGG");
+	static const Double_t&    Out_zPadGG                               = iter("Out.zPadGG");
+	static const Double_t&    Out_nxPadGG                              = iter("Out.nxPadGG");
+	static const Double_t&    Out_nyPadGG                              = iter("Out.nyPadGG");
+	static const Double_t&    Out_nzPadGG                              = iter("Out.nzPadGG");
+	static const Double_t*&   Out_fCov                                 = iter("Out.fCov[21]");
+	static const Double_t&    Out_Chi2                                 = iter("Out.Chi2");
+	static const Int_t&       Out_Ndf                                  = iter("Out.Ndf");
+	static const Int_t&       Out_Npoints                              = iter("Out.Npoints");
+	static const Int_t&       Out_Nused                                = iter("Out.Nused");
+	static const Double_t&    Out_DriftZ                               = iter("Out.DriftZ");
+	static const Double_t&    Out_step                                 = iter("Out.step");
+#endif
   // Book Histograms
-  TString Out(gSystem->BaseName(files)); 
-  Out.ReplaceAll("st_","");
-  Out.ReplaceAll(".root","");
-  Out.ReplaceAll("*","");
-  //  Out += ".2GeVC";
-  //  if (TMath::Abs(field) > 1)   Out += ".1GeVC";
-  if (laser) Out += ".Laser";
-  //  Out += ".Cut";
-  //  Out += ".Errors";
-  Out += "_IO.root";
+  TString Out(OutName);
+  if (Out == "") {
+    Out = gSystem->BaseName(files); 
+    Out.ReplaceAll("st_","");
+    Out.ReplaceAll(".root","");
+    Out.ReplaceAll("*","");
+    //  Out += ".2GeVC";
+    //  if (TMath::Abs(field) > 1)   Out += ".1GeVC";
+    if (laser) Out += ".Laser";
+    //  Out += ".Cut";
+    //  Out += ".Errors";
+    Out += "_IO.root";
+  }
   TFile *fOut = new TFile(Out,"recreate");
   TH3F *plots3D[NPlots];
   for (Int_t i = 0; i < NPlots; i++) {
-#if 1
+#ifdef  __PadGG__
     plots3D[i] = new TH3F(plotNameD[i].Name, plotNameD[i].Title, 24, 0.5, 24.5, 
 			  plotNameD[i].nx, plotNameD[i].xmin, plotNameD[i].xmax,
 			  plotNameD[i].nz, plotNameD[i].zmin, plotNameD[i].zmax);
-#else
+#else /* Pad */
     plots3D[i] = new TH3F(plotNameD[i].Name, plotNameD[i].Title, 24, 0.0, 0.0,
 			  plotNameD[i].nx, 0.0, 0.0, 
 			  plotNameD[i].nz, 0.0, 0.0);
@@ -130,10 +241,19 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", Bool_t laser = kFALSE) 
     Int_t sector = In_sector;
     if (! sector) continue;
     if (! Out_sector) continue;
-    TVector3 pxyzIn(In_nx,In_ny,In_nz);  PrPP(pxyzIn);
-    TVector3 rI(In_x,In_y,In_z);         PrPP(rI);
-    TVector3 pxyzOut(Out_nx,Out_ny,Out_nz);   PrPP(pxyzOut);
-    TVector3 rO(Out_x,Out_y,Out_z); PrPP(rO);
+#ifdef __PadGG__
+    TVector3 pxyzIn(In_nxPadGG,In_nyPadGG,In_nzPadGG);  PrPP(pxyzIn);
+    TVector3 rI(In_xPadGG,In_yPadGG,In_zPadGG);         PrPP(rI);
+    TVector3 pxyzOut(Out_nxPadGG,Out_nyPadGG,Out_nzPadGG);   PrPP(pxyzOut);
+    TVector3 rO(Out_xPadGG,Out_yPadGG,Out_zPadGG); PrPP(rO);
+    TVector3 rO12(Out_x,Out_y,Out_z); PrPP(rO12);
+#else
+    TVector3 pxyzIn(In_nxPad,In_nyPad,In_nzPad);  PrPP(pxyzIn);
+    TVector3 rI(In_xPad,In_yPad,In_zPad);         PrPP(rI);
+    TVector3 pxyzOut(Out_nxPad,Out_nyPad,Out_nzPad);   PrPP(pxyzOut);
+    TVector3 rO(Out_xPad,Out_yPad,Out_zPad); PrPP(rO);
+    TVector3 rO12(Out_x,Out_y,Out_z); PrPP(rO12);
+#endif
     Double_t dev = (TMath::Abs(In_Rho)-TMath::Abs(Out_Rho));
     //    if (TMath::Abs(dev) > 5e-4) continue;
     if (TMath::Abs(dev) > 6e-3) continue; // 3D distortions
@@ -264,13 +384,13 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
 	       mX(3)  ,  A(3,5), // "dnYdgamma","dnY versus -nxO        =>  gamma
 	       mX(4)  ,  A(4,3), // "dnZdalpha","dnZ versus -nyO        =>  alpha
 	       mX(4)  ,  A(4,4), // "dnZdbeta" ,"dnZ versus  nxO        =>  beta"
-	       mX(0)  , rO.Z() , // "dX"       ,"dX  versus Z"                   
-	       dr.Y() , rO.Z() , // "dY"       ,"dY  versus Z"                   
-	       mX(1)  , rO.Z() , // "dZ"       ,"dZ  versus Z"                   
-	       mX(2)  , rO.Z() , // "dnX"      ,"dnX versus Z"                   
-	       mX(3)  , rO.Z() , // "dnY"      ,"dnY versus Z"                   
-	       mX(4)  , rO.Z() , // "dnZ"      ,"dnZ versus Z"                        
-	       mX(1)/(driftVel/freq)  , rO.Z()  // "dT"       ,"dT  versus Z"
+	       mX(0)  , rO12.Z() , // "dX"       ,"dX  versus Z"                   
+	       dr.Y() , rO12.Z() , // "dY"       ,"dY  versus Z"                   
+	       mX(1)  , rO12.Z() , // "dZ"       ,"dZ  versus Z"                   
+	       mX(2)  , rO12.Z() , // "dnX"      ,"dnX versus Z"                   
+ 	       mX(3)  , rO12.Z() , // "dnY"      ,"dnY versus Z"                   
+	       mX(4)  , rO12.Z() , // "dnZ"      ,"dnZ versus Z"                        
+	       mX(1)/(driftVel/freq)  , rO12.Z()  // "dT"       ,"dT  versus Z"
 	       );// PrPP(V);
     for (Int_t i = 0; i < NPlots; i++) plots3D[i]->Fill(sector, V(i,1), V(i,0));
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}
@@ -390,16 +510,21 @@ void TDrawIO() {
 	    if (m > 2) scale = 1e3; // => mrad
 	    ValA[m].val =  scale*X(m);
 	    ValA[m].valError = scale*TMath::Sqrt(SInv(m,m));
-#define __NO_LSF__
+	    //#define __NO_LSF__
 #ifdef __NO_LSF__
 	    ValA[m].iFlag = 0;
 #else 
-	    ValA[m].iFlag = 1;
+	    if (m <= 2 && TMath::Abs(ValA[m].val) < 5000 ||
+		m >  2 && TMath::Abs(ValA[m].val) <    5) {
+	      ValA[m].iFlag = 1;
+	    } else {
+	      ValA[m].iFlag = 0;
+	    }
 #endif
 	  } else {
 	    ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
 	  }
-	  line  += Form("|%7.2f+-%5.2f ",TMath::Max(-999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
+	  line  += Form("|%7.2f+-%5.2f ",TMath::Max(-9999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
 	}
       }
     }
@@ -455,6 +580,7 @@ void TDrawIO() {
 	  slope  = pol1->GetParameter(1);
 	  dslope = pol1->GetParError(1);
 	  if (dslope > 99.99e-3) dslope = 99.99e-3;
+	  if (TMath::Abs(slope) > 0.1) dslope = 99.99e-3;
 	} else {
 	  Mu = slope = 0;
 	  dMu = dslope = 0;
@@ -483,7 +609,7 @@ void TDrawIO() {
 	}
 	static const Char_t *lvar[6] = {"dx","dy","dz","#alpha","#beta","#gamma"};
 	for (Int_t m = 0; m < 6; m++) {
-	  if (dslope <= 0) continue;
+	  if (dslope <= 1e-6 || slope >= 99e-3) continue;
 	  if (m == 1 && tag.Contains("dy") && dslope < 99.99e-4) {
 	    Vals[m].val =      1e4*slope;
 	    Vals[m].valError = 1e4*dslope;

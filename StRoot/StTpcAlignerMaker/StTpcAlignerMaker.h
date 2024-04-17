@@ -68,6 +68,9 @@ class StTpcW2SMatch : public TObject {
   StTpcW2SMatch() {}
   ~StTpcW2SMatch() {}
   Int_t          TriggerId;
+  Double_t field;
+  Double_t driftVel;
+  Double_t freq;
   TGeoHMatrix    RW2S;      // W->S
   HelixPar_t     HlxParW;    // parameters to used to predict
   HelixPar_t     HlxParS;    // parameters to used to predict

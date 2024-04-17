@@ -94,8 +94,8 @@ Int_t StTpcAlignerMaker::Init(){
   if(split >= 0 && branchStyle) TpcInOutTree->BranchRef();
   fTpcW2SMatch = new StTpcW2SMatch();
   TpcW2STree = new TTree("TpcW2STree","the TPC residuals for prediction from sector W in sector S");
-      TpcW2STree->SetAutoSave(1000000000); // autosave when 1 Gbyte written
-      TpcW2STree->SetCacheSize(10000000);  // set a 10 MBytes cache (useless when writing local files)
+  TpcW2STree->SetAutoSave(1000000000); // autosave when 1 Gbyte written
+  TpcW2STree->SetCacheSize(10000000);  // set a 10 MBytes cache (useless when writing local files)
   branch = TpcW2STree->Branch("StTpcW2SMatch","StTpcW2SMatch",&fTpcW2SMatch, bufsize,split);
   branch->SetAutoDelete(kFALSE);
   if(split >= 0 && branchStyle) TpcW2STree->BranchRef();
@@ -261,18 +261,6 @@ Int_t StTpcAlignerMaker::MakeIO() {
     RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
     if (ssegm[0].MakeTHelix(RefSurficeG)) continue;
     if (ssegm[1].MakeTHelix(RefSurficeG)) continue;
-    for (Int_t io = 0; io < 2; io++) {
-      Double_t xyzG[3] = {0};
-      ssegm[io].fRG.GetXYZ(xyzG);
-      globalCoo = StGlobalCoordinate(xyzG);
-      transform(globalCoo,    local,ssegm[io].Sector(), ssegm[io].Row());
-      ssegm[io].fR = TVector3(local.position().xyz());
-      Double_t dirG[3] = {0};
-      ssegm[io].fNG.GetXYZ(dirG);
-      globalDir = StGlobalDirection(dirG);
-      transform(globalDir, localDir,ssegm[io].Sector(), ssegm[io].Row());
-      ssegm[io].fN = TVector3(localDir.position().xyz());
-    }
     HelixPar_t *HlxPars[2] = {&fTpcInOutMatch->In, &fTpcInOutMatch->Out};
     *HlxPars[0] = ssegm[0];
     *HlxPars[1] = ssegm[1];
@@ -297,14 +285,12 @@ Int_t StTpcAlignerMaker::MakeIO() {
 //________________________________________________________________________________
 Int_t StTpcAlignerMaker::MakeW2S() {
   // Sector to Sector Alignment
-  static StGlobalCoordinate              globalCoo;
-  static StTpcLocalSectorCoordinate      local;
-  static StGlobalDirection               globalDir;
-  static StTpcLocalSectorDirection       localDir;
   static StTpcCoordinateTransform transform(StTpcDb::instance());
-  static StThreeVectorD XyzI, XyzO;
-  static StThreeVectorD DirI, DirO;
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
+  fTpcW2SMatch->TriggerId = TriggerId;
+  fTpcW2SMatch->field  = bField;
+  fTpcW2SMatch->driftVel = driftVel;
+  fTpcW2SMatch->freq      = freq;
   UInt_t nTracks = trackNode.size();
   TList SegmentList; SegmentList.SetOwner(kTRUE);
   for (UInt_t i=0; i < nTracks; i++) {
@@ -319,7 +305,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     if (hvec.size() < 10) continue;
     const StThreeVectorF &pxyz = gTrack->geometry()->momentum();
     Double_t pMomentum = pxyz.mag();
-    if (TMath::Abs(bField) < 0.01) pMomentum = 1000;
+    if (TMath::Abs(bField) < 0.10) pMomentum = 1000;
     if (pMomentum < 1.0) continue;
     StTpcHit *tpcHit = 0;
     //      Int_t Id = gTrack->key();
@@ -365,7 +351,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
       }
       cout << endl;
     }
-    if (! segm->Move(RefSurficeG)) continue;
+    if (segm->Move(RefSurficeG)) continue;
     if (Debug()%10 > 0) segm->Print();
   }
   Int_t NoSegm = SegmentList.GetSize();
@@ -391,24 +377,16 @@ Int_t StTpcAlignerMaker::MakeW2S() {
       if (sectorW == sectorS) continue;
       RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
       SectorTrack segW2S = *segW;
-      if (segW2S.Move(segS->RefSurface())) continue;
       segW2S.SetSector(100*sectorW + sectorS);
-      Double_t loc[3] = {0};
-      Double_t xyzG[3] = {0};
-      segW2S.fRG.GetXYZ(xyzG);
-      Double_t dirG[3] = {0};
-      segW2S.fNG.GetXYZ(dirG);
-      StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocal(xyzG, loc);
-      segW2S.fR = TVector3(loc);
-      StTpcDb::instance()->Sup12S2Glob(sectorS).MasterToLocalVect(dirG, loc);
-      segW2S.fN = TVector3(loc);
+      segW2S.SetRow(segS->Row());
+      if (segW2S.Move(segS->RefSurface())) continue;
       HlxParS = *segS;
       HlxParW = *segW;
       HlxParW2S = segW2S;
       PrPP(Make,HlxParW2S);
       const Char_t * names[6] = {"x","y","z","nx","ny","nz"};
-      Double_t *s = HlxParS.xyz();
-      Double_t *w = HlxParW2S.xyz();
+      Double_t *s = HlxParS.xyzG();
+      Double_t *w = HlxParW2S.xyzG();
       DEBUG_LEVEL {
 	cout << "Matching segment  from sectorW " << sectorW << " to sectorS " << sectorS
 	     << " at step = " << segW2S.Step() << endl;

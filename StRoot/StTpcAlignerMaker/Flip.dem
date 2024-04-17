@@ -1,4 +1,6 @@
-load ("eigen");
+load (f90) ;
+load ("eigen")$
+:lisp (setq *f90-output-line-length-max* 1000000000) 
 /*
 load (f90) $
 :lisp (setq *f90-output-line-length-max* 1000000000) $
@@ -16,9 +18,10 @@ dR: matrix([ 1, -g,  b,  x],
 	   [ b,  a,  1,  z],
 	   [ 0,  0,  0,  1]);
 
-
+/*
 dRFFI : F . dR . F^^-1;
 dRFIF : F^^-1 . dR . F;
+*/
 /*
 
 (%i11) dRFFI:F . dR . F^^(-1)
@@ -39,4 +42,123 @@ _
                             [ - a  - b   1   - z ]
                             [                    ]
                             [  0    0    0    1  ]
+*/
+/* Shift */
+GG: matrix([ 1, 0,  0,  0],
+	   [ 0, 1,  0,  0],
+	   [ 0, 0,  1,  D],
+	   [ 0, 0,  0,  1]);
+dRGGIGG : GG . dR . GG^^-1;
+
+/* SHIFT and WHEEL */
+WHEEL: matrix([  1, -gW,  bW,  xW],
+	      [ gW,   1, -aW,  yW],
+	      [ bW,  aW,   1,  zW],
+	      [  0,   0,   0,   1]);
+
+
+
+dR2 :  WHEEL^^-1 . GG^^-1 . dR . GG . WHEEL;
+/*
+                                     2
+                                   aW  + 1
+(%o48) matrix([-----------------------------------------------, 0, 0, 0], 
+                                                         2
+               bW (aW gW - bW) - ((- gW) - aW bW) gW + aW  + 1
+                              2
+                        1 - bW
+[0, -----------------------------------------------, 0, 0], 
+                                              2
+    bW (aW gW - bW) - ((- gW) - aW bW) gW + aW  + 1
+                             2
+                           gW  + 1
+[0, 0, -----------------------------------------------, 
+                                                 2
+       bW (aW gW - bW) - ((- gW) - aW bW) gW + aW  + 1
+   2
+  D  z zW ((- gW (gW zW - bW yW)) - zW + aW yW - (aW gW - bW) xW)
+- ---------------------------------------------------------------], 
+                                                    2
+          bW (aW gW - bW) - ((- gW) - aW bW) gW + aW  + 1
+                                                  2
+            bW (aW gW - bW) + gW (gW + aW bW) + aW  + 1
+[0, 0, 0, -----------------------------------------------])
+                                                    2
+          bW (aW gW - bW) - ((- gW) - aW bW) gW + aW  + 1
+
+
+
+
+
+                                    
+                
+(%o48) matrix([1, 0, 0,  0], 
+              [0, 1, 0,  0], 
+              [0, 0, 1, zW], 
+              [0, 0, 0,  1]
+*/
+trigsimp(dR2);
+f90(dR2);
+/*
+dR2(1,1) = ((aW**2+1)*((-g*gW)+b*bW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((a*gW+bW+b)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW+aW*bW)*(gW+g-a*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1) = 
+           ((      1)*((            1))/(             -(                      1)+(                     0)/(                                     1)+(                     0)/(                                     1) = -1 + 0 0 = -1
+dR2(1,2) = ((gW+aW*bW)*((-g*gW)-a*aW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*gW-bW)*((-b*gW)+aW+a))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*((-gW)-g+aW*b))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(1,3) = ((b*bW-a*aW+1)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*g-aW-a)*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*(aW*g+bW+b))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(1,4) = (gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*(b*(zW+D)-g*yW+xW+x))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW+aW*bW)*((-a*(zW+D))+yW+y+g*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*gW-bW)*(zW+z+a*yW+b*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(2,1) = (((-gW)-aW*bW)*((-g*gW)+b*bW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((a*gW+bW+b)*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((1-bW**2)*(gW+g-a*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(2,2) = ((1-bW**2)*((-g*gW)-a*aW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-b*gW)+aW+a)*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-gW)-aW*bW)*((-gW)-g+aW*b))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(2,3) = ((b*bW-a*aW+1)*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*g+bW+b)*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((1-bW**2)*(bW*g-aW-a))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(2,4) = ((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-gW)-aW*bW)*(b*(zW+D)-g*yW+xW+x))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((1-bW**2)*((-a*(zW+D))+yW+y+g*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*gW+aW)*(zW+z+a*yW+b*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(3,1) = ((aW*gW-bW)*((-g*gW)+b*bW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW+g-a*bW)*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((a*gW+bW+b)*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(3,2) = (((-bW*gW)-aW)*((-g*gW)-a*aW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-gW)-g+aW*b)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-b*gW)+aW+a)*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(3,3) = ((bW*g-aW-a)*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*g+bW+b)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((b*bW-a*aW+1)*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(3,4) = ((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*gW-bW)*(b*(zW+D)-g*yW+xW+x))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-bW*gW)-aW)*((-a*(zW+D))+yW+y+g*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW**2+1)*(zW+z+a*yW+b*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+dR2(4,1) = 0
+dR2(4,2) = 0
+dR2(4,3) = 0
+dR2(4,4) = (bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+*/
+WIRW :  WHEEL^^-1 . dR . WHEEL;
+trigsimp(WIRW);
+f90(WIRW);
+/*
+(%i31) f90(WIRW)
+WIRW(1,1) = ((aW**2+1)*((-g*gW)+b*bW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((a*gW+bW+b)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW+aW*bW)*(gW+g-a*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(1,2) = ((gW+aW*bW)*((-g*gW)-a*aW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*gW-bW)*((-b*gW)+aW+a))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*((-gW)-g+aW*b))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(1,3) = ((b*bW-a*aW+1)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*g-aW-a)*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*(aW*g+bW+b))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(1,4) = (gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*(b*zW-g*yW+xW+x))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW+aW*bW)*((-a*zW)+yW+y+g*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*gW-bW)*(zW+z+a*yW+b*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(2,1) = (((-gW)-aW*bW)*((-g*gW)+b*bW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((a*gW+bW+b)*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((1-bW**2)*(gW+g-a*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(2,2) = ((1-bW**2)*((-g*gW)-a*aW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-b*gW)+aW+a)*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-gW)-aW*bW)*((-gW)-g+aW*b))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(2,3) = ((b*bW-a*aW+1)*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*g+bW+b)*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((1-bW**2)*(bW*g-aW-a))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(2,4) = ((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-gW)-aW*bW)*(b*zW-g*yW+xW+x))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((1-bW**2)*((-a*zW)+yW+y+g*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*gW+aW)*(zW+z+a*yW+b*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(3,1) = ((aW*gW-bW)*((-g*gW)+b*bW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW+g-a*bW)*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((a*gW+bW+b)*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(3,2) = (((-bW*gW)-aW)*((-g*gW)-a*aW+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-gW)-g+aW*b)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-b*gW)+aW+a)*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(3,3) = ((bW*g-aW-a)*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*g+bW+b)*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((b*bW-a*aW+1)*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(3,4) = ((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW*gW-bW)*(b*zW-g*yW+xW+x))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(((-bW*gW)-aW)*((-a*zW)+yW+y+g*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((gW**2+1)*(zW+z+a*yW+b*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WIRW(4,1) = 0
+WIRW(4,2) = 0
+WIRW(4,3) = 0
+WIRW(4,4) = (bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+*/
+WRWI :  WHEEL . dR .  WHEEL^^-1 ;
+trigsimp(WRWI);
+f90(WRWI);
+/*
+(%i17) f90(WRWI)
+WRWI(1,1) = (-gW*((-(a*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+((-gW)-aW*bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*g)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)))+bW*((aW*gW-bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*b)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(b*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(g*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(aW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(1,2) = (-gW*((-(a*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(g*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(1-bW**2)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)))+bW*(((-bW*gW)-aW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*(1-bW**2))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(b*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW+aW*bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-((1-bW**2)*g)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(1,3) = bW*((a*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-gW*((bW*gW+aW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(a*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-(g*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(aW*gW-bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(1,4) = (-gW*((-(a*((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*y)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)))+bW*(((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*z)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(b*((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(g*((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*x)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(2,1) = gW*((b*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(g*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(aW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-aW*((aW*gW-bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*b)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-(a*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((-gW)-aW*bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*g)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(2,2) = gW*((b*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW+aW*bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-((1-bW**2)*g)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-aW*(((-bW*gW)-aW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*(1-bW**2))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-(a*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(1-bW**2)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(2,3) = gW*((-(g*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(aW*gW-bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-aW*((a*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(bW*gW+aW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(a*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(2,4) = gW*((b*((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(g*((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*x)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-aW*(((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*z)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))-(a*((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*yW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*y)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(3,1) = bW*((b*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(g*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(aW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+aW*((-(a*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+((-gW)-aW*bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*g)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(aW*gW-bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*((-gW)-aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((aW**2+1)*b)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(3,2) = bW*((b*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW+aW*bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-((1-bW**2)*g)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+aW*((-(a*((-bW*gW)-aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(g*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(1-bW**2)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+((-bW*gW)-aW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW+aW*bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*(1-bW**2))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(3,3) = bW*((-(g*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(aW*gW-bW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+aW*((bW*gW+aW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(a*(gW**2+1))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+(a*(bW*gW+aW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(aW*gW-bW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(3,4) = bW*((b*((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)-(g*((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*x)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+aW*((-(a*((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(g*(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*y)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1))+((-gW*(gW*zW-bW*yW))-zW+aW*yW-(aW*gW-bW)*xW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(a*((-bW*(gW*zW-bW*yW))-aW*zW-yW+(gW+aW*bW)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+(b*(gW*((-aW*zW)-yW)+bW*(zW-aW*yW)-(aW**2+1)*xW))/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*zW)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)+((bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)*z)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
+WRWI(4,1) = 0
+WRWI(4,2) = 0
+WRWI(4,3) = 0
+WRWI(4,4) = (bW*(aW*gW-bW)+gW*(gW+aW*bW)+aW**2+1)/(bW*(aW*gW-bW)-((-gW)-aW*bW)*gW+aW**2+1)
 */
