@@ -175,6 +175,7 @@
 #include "StTpcLocalSectorDirection.hh"
 #include "StTpcLocalSectorAlignedDirection.hh"
 #include "StGlobalDirection.hh"
+#include "TGeoMatrix.h"
   // pad              => sector12       =>   subsector => sector => tpc      => global
   // TpcPadCoordinate => TpcSectL => TpcSectLAligned => TpcLocal => Global
 class StTpcCoordinateTransform {//: public StObject {
@@ -252,8 +253,9 @@ public:
   StThreeVector<Double_t> xyFromRow(const StTpcPadCoordinate& a) {return StThreeVector<Double_t> (xFromPad(a.sector(),a.row(),a.pad()),yFromRow(a.sector(),a.row()),0);}
   Double_t         yFromRow(Int_t sector, Int_t row)                        const {return (St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,row));}
   Double_t         xFromPad(Int_t sector, Int_t row, Double_t pad)          const;
-  static void             testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 24, Int_t pad = 1, Int_t time = 0);
+  static void             testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 24, Int_t pad = 1, Int_t time = 0, Int_t kase = -1);
 private:
+  static      TGeoHMatrix &Sub2Tpc(Int_t sector, Int_t row, Double_t drift = 0);
   Double_t    mTimeBinWidth;
   Double_t    mInnerSectorzOffset; 
   Double_t    mOuterSectorzOffset; 
