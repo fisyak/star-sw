@@ -208,8 +208,6 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"r2024",       20231220,     0, "y2019",    "y2019 first cut geometry, AgML,xgeometry"},    
   {"r2024a",      20231220,     1, "y2019a",   "y2019a production geometry, AgML,xgeometry"},    
   // Production runs
-  {"CosmicFF_2019",                          20190118, 210113, "y2019", "Cosmic FF_2019"            },
-  {"CosmicRF_2019",                          20190204, 205949, "y2019", "Cosmic RF_2019"            },
   {"19GeV_2019",                             20190225, 202320, "y2019", "19GeV_2019"                },
   {"14p5GeV_2019",                           20190404,  94405, "y2019", "14p5GeV_2019"              },
   {"7.3GeV_fixedTarget_2019",                20190417, 133401, "y2019", "7.3GeV_fixedTarget_2019"   },
@@ -298,6 +296,9 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"pp500_2022d",                            20220313, 141508, "y2019", "pp500_2022"                },
   {"AuAu_2023",                              20230520,  23250, "y2019", "AuAu_2023"                 },
   {"AuAu200GeV_2023",                        20230520,  23250, "y2019", "AuAu_2023"                 },
+  {"CosmicFF_2019",                          20190118, 210113, "y2019", "Cosmic FF_2019"            },
+  {"CosmicRF_2019",                          20190204, 205949, "y2019", "Cosmic RF_2019"            },
+  {"CosmicZF_2023",                          20230507,  55732, "y2019", "Cosmic ZF_2023"            },
   {"CosmicFF_2023",                          20230804, 153313, "y2019", "Cosmic FF_2023"            },
   {"athena",      20301220,     1, "",         "athena"}, // 
   {"epic",        20301221,     1, "",         "epic"}, // 

@@ -925,12 +925,14 @@ Int_t StMaker::Make()
        run = hd->GetRunNumber();  
        if (Debug() && this == fgStChain && m_LastRun!=run){
          m_LastRun = run;
+	 if (run > 0) {
 #ifdef STAR_LOGGER     
-        LOG_INFO << " +++ New RunNumber found=" << run << " (previous = " << oldrun << ")" << endm;
+	   LOG_INFO << " +++ New RunNumber found=" << run << " (previous = " << oldrun << ")" << endm;
 #else
-        printf(" +++ New RunNumber found=%d (previous = %d)\n",run,oldrun);
+	   printf(" +++ New RunNumber found=%d (previous = %d)\n",run,oldrun);
 #endif                
-         hd->Print();
+	   hd->Print();
+	 }
        }
        maker->InitRun(run);
        maker->m_LastRun=run;
