@@ -299,6 +299,12 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
     SetFlavor("ofl+TFG+laserDV","tpcDriftVelocity");
     gMessMgr->Info() << "StTpcDbMaker::Using any drift velocity" << endm;
   }
+  if( IAttr("Alignment2024")    ) {
+    StTpcDb::SetAlignment2024(kTRUE);
+    gMessMgr->Info() << "StTpcDbMaker::Use Alignment2024 " << endm;
+  } else {
+    StTpcDb::SetAlignment2024(kFALSE);
+  }
   StTpcDb::instance()->SetDriftVelocity();
   
   if (IAttr("ExB")) { 
@@ -356,16 +362,11 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
       SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
       SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
     }
-    if( IAttr("Alignment2024")    ) {
-      StTpcDb::SetAlignment2024(kTRUE);
-      gMessMgr->Info() << "StTpcDbMaker::Use Alignment2024 " << endm;
-    }
   }
   if (IAttr("Cosmics")) {
     StTpcDb::SetCosmics(kTRUE);
     gMessMgr->Info() << "StTpcDbMaker::Use Cosmics " << endm;
   }
-  StTpcDb::instance()->SetTpcRotations();
   if (  gROOT->GetClass("StTpcRTSHitMaker") || gROOT->GetClass("StiMaker")) {
     St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
     St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC

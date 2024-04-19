@@ -85,11 +85,11 @@ class StTpcDb {
                                kWheel             = 20, // Account of Wheel rotation around X and Y axes at GG
 			       kTotalTpcSectorRotaions =21}; 
  private:
+  static TGeoHMatrix   *mTpc2GlobMatrix;//!
   Char_t                mBeg[1];        //!
   Int_t                 m_Debug;        //!
-  TGeoTranslation      *mShift[2];       //! 
+  TGeoTranslation      *mShift[2];      //! 
   TGeoHMatrix          *mFlip;          //!
-  TGeoHMatrix          *mTpc2GlobMatrix;//!
   TGeoHMatrix          *mHalf[2];       //!
   TGeoHMatrix          *mWheel[2];      //!
   TGeoHMatrix          *mTpcSectorRotations[24][kTotalTpcSectorRotaions]; //!
@@ -97,6 +97,7 @@ class StTpcDb {
   UInt_t                mUc;            //! time for which above mDriftVel have been calculated
   Int_t                 mTriggerId;     //! to distinguish local clock and RHIC clock
   Double_t              mzGG;           //! Gating Grid z
+  Double_t              mzWheel;        //! Wheel z
   Char_t                mEnd[1];        //!
   static Bool_t         mOldScheme;     //! switch between Old and New alignment scheme
   static Bool_t         mAlignment2024; //! switch between Old and 2024 alignment scheme
@@ -187,7 +188,7 @@ class StTpcDb {
   const TGeoHMatrix &Pad2Sup12S(Int_t sector = 1, Int_t row = 1)  const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2Sup12S: kPadOuter2Sup12S; return TpcRot(sector,k);}
 
 
-  static void SetAlignment2024(Bool_t k = kFALSE);
+  static void   SetAlignment2024(Bool_t k = kFALSE);
   static Bool_t Alignment2024() {return mAlignment2024;}
   static void   SetCosmics(Bool_t k = kFALSE) {mCosmics = k;}
   static Bool_t IsCosmics() {return mCosmics;}

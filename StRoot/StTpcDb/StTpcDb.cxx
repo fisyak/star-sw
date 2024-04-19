@@ -30,6 +30,7 @@ StTpcDb* gStTpcDb = 0;
 Bool_t StTpcDb::mOldScheme = kTRUE;
 Bool_t StTpcDb::mAlignment2024 = kFALSE;
 Bool_t StTpcDb::mCosmics = kFALSE;
+TGeoHMatrix   *StTpcDb::mTpc2GlobMatrix = 0;
 // C++ routines:
 //_____________________________________________________________________________
 ClassImp(StTpcDb);
@@ -47,7 +48,7 @@ void StTpcDb::Clear() {
 }
 //________________________________________________________________________________
 void StTpcDb::SetAlignment2024(Bool_t k) {
-  if (gStTpcDb && mAlignment2024 != k) {
+  if (gStTpcDb && (! mTpc2GlobMatrix || mAlignment2024 != k)) {
     if (k) {LOG_INFO << "StTpcDb::SetAlignment2024 switch to new schema for Rotation matrices" << endm;}
     else   {LOG_INFO << "StTpcDb::SetAlignment2024 switch to old schema for Rotation matrices" << endm;}
     mAlignment2024 = k;
@@ -62,6 +63,7 @@ StTpcDb::StTpcDb() {
   memset(mBeg,0,mEnd-mBeg+1);
   Clear();
   gStTpcDb = this;
+  SetAlignment2024(mAlignment2024);
 }
 //_____________________________________________________________________________
 StTpcDb::~StTpcDb() {
@@ -218,45 +220,7 @@ void StTpcDb::SetTpcRotations() {
 	kPadOuter2Tpc     := kSupS2Tpc * PadOuter2SupS  = kSupS2Tpc * kSubSOuter2SupS = kSubSOuter2Tpc				     
 	kPadInner2Glob    := kTpc2GlobalMatrix * kPadInner2Tpc = kTpc2GlobalMatrix * kSubSInner2Tpc				     
 	kPadOuter2Glob    := kTpc2GlobalMatrix * kPadOuter2Tpc = kTpc2GlobalMatrix * kSubSOuter2Tpc                                    
-   02/05/2024
-                         Rotations <=> TpcCoordinateTransform
-      Global <=> TPCE ==                                                                          StGlobalCoordinate <=> StTpcLocalCoordinate   
-                         StTpcDb::Tpc2GlobalMatrix() = StTpcPosition::instance()->GetMatrix();
-      TPCE   <=> TPSS ==                                                                          StTpcLocalCoordinate <=> StTpcLocalSectorCoordinnate
-         
-      SubS|Pad => Global                                                                                                                                                                         dR supersector                                                       dR_OI    
-           Tpc2GlobalMatrix * (*mShift[part]) * (*mHalf[part]) * (*rotm(sector)) * StTpcSuperSectorPosition::GetMatrix(sector-1) *  StTpcSuperSectorPositionD::GetMatrix(sector-1+24, gFactor) * dR * Flip * StTpc(Inner|Outer)SectorPositio::n>GetMatrix(sector-1) * dR^-1
-           Tpc2GlobalMatrix * <--         kSupS2Tpc                                                                                                                                        --> * dR * <--    kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS --> * dR
-           <--                            kSupS2Glob                                                                                                                                       --> * dR * <--    kSubS(Inner|Outer)2SupS                            -->
-           Tpc2GlobalMatrix * <--         kSubS(Inner|Outer)2Tpc || kPad(Inner|Outer)2Tpc                                                                                                                                                                  -->
-           <--                            kSubS(Inner|Outer)2Glob || kPad(Inner|Outer)2Glob                                                                                                                                                                -->
-
-           Tpc2GlobalMatrix * <--         kSup12S2Tpc                                                                                                                                              --> * dR *<-- kSubS(Inner|Outer)2Sup12S || kPad(Inner|Outer)2Sup12S -->
-           <--                            kSup12S2Glob                                                                                                                                             --> * dR *<-- kSubS(Inner|Outer)2Sup12S || kPad(Inner|Outer)2Sup12S -->
-Revisit 03/05/2024
-           kSup12S2Tpc  = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip 
-                                                                                               dR * Flip =
-                                                                                                    Flip * dR_superSector; 
-                                                                                               dR = Flip * dR_superSector *Flip^-1 
-											       
-      GG(z) - transport to GG ( drift = 0)   = trans[3] = (0, 0, -drift};   
-           Sup12S -> Subs = GG(z) * kSubS(Inner|Outer)2Sup12S^-1 * GG^-1(z)
-           Subs -> Sup12S = GG(z) * kSubS(Inner|Outer)2Sup12S * GG^-1(z) 
-                         
-  Wheel:   Tpc => Sup12S   : 
-                             
-      kSup12S2Tpc  = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *  GG(z) * WHEEL * GG^-1(z)
-                     *mShift[part]) * (*mHalf[part]) * W * (*rotm) * TpcSuperSectorPosition * dR * Flip  =  *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *  GG(z) * WHEEL * GG^-1(z)
-                                                       W * ((*rotm) * TpcSuperSectorPosition * dR * Flip)  =  ((*rotm) * TpcSuperSectorPosition * dR * Flip) *  GG(z) * WHEEL * GG^-1(z)
-                                                       ((*rotm) * TpcSuperSectorPosition * dR * Flip)^-1 * W * ((*rotm) * TpcSuperSectorPosition * dR * Flip)  =   GG(z) * WHEEL * GG^-1(z)
-                                      Wheel =  GG(z) * WHEEL * GG^-1(z) = ((*rotm) * TpcSuperSectorPosition * dR * Flip)^-1 * W * ((*rotm) * TpcSuperSectorPosition * dR * Flip)
-
-
-
-      kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *  GG(z) * WHEEL * GG^-1(z) * GG(z) * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS --> * GG^-1(z) * dR
-      kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *  GG(z) * WHEEL                    * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS --> * GG^-1(z) * dR
-      kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * TpcSuperSectorPosition * dR * Flip *          Wheel            * GG(z) * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS --> * GG^-1(z) * dR
-                                      Wheel =  GG(z) * WHEEL * GG^-1(z) = ((*rotm) * TpcSuperSectorPosition * dR * Flip)^-1 * W * ((*rotm) * TpcSuperSectorPosition * dR * Flip)
+================================================================================
 Revist 03/23/2024 move Flip
      kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *  GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * dR * GG^-1(z)
                     <--                              Sup12S2Tpc                            ------>            <---                   Sub2SupS12                          --->
@@ -282,12 +246,32 @@ New
                                                                                                      x =    <--     dR' * WHEEL                                                             --> * xPad
                                                                                                                                                                                         xPadGG = GG^-1 * xPad
    dR' * WHEEL =  WHEEL * dR";  dR" = WHEEL^-1 * dR'* WHEEL  
- */
+--------------------------------------------------------------------------------
+Revist 04/17/2024 modify Half (rotaion around Wheel position) and Flip (add shift before absorbed by mShift);
+                                                                                    add to flip shift to by zGG
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*mShift[part])^^-1 **rotm) * Flip * TpcSuperSectorPosition * dR * dR' *  GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                    <--                              Sup12S2Tpc                            ------>   <---                   Sub2SupS12                          --->
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR * dR' *  GG(z) * WHEEL * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR * dR' *  GG(z) * WHEEL       * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * WHEEL * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                    <--                              Sup12S2Tpc                            ------>          <---                                       Sub2SupS12                          --->
+                                                                                                     dR' *  GG(z) * WHEEL = GG(z) * WHEEL * dR"
+                                                                                                     dR" =  WHEEL^1 * GG(z)^-1 * dR' * GG(z) * WHEEL ~ dR'
+
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * dR" * GG^-1(z)
+                    <--                                                                        -->          <--                                                                             -->
+     xG           = <--                                                                        --> * x      <--                                                                             --> xPad
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * WHEEL * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                                                                                                     x =    <--                                                                  --> * xPadGG
+                                                                                                     x =    <--     dR' * WHEEL                                                             --> * xPad
+                                                                                                                                                                                        xPadGG = GG^-1 * xPad
+   dR' * WHEEL =  WHEEL * dR";  dR" = WHEEL^-1 * dR'* WHEEL  
+  */
   assert(Dimensions()->numberOfSectors() == 24);
   Float_t gFactor = StarMagField::Instance()->GetFactor();
   Double_t phi, theta, psi;
   Int_t iphi;
-  TGeoRotation *rotm = 0, *rotr = 0;
+  TGeoRotation *rotm = 0;
   TObjArray *listOfMatrices = 0;
   TString Rot;
   if (gEnv->GetValue("NewTpcAlignment",0) != 0) mOldScheme = kFALSE;
@@ -326,10 +310,19 @@ New
   Double_t Rotation[9] = {0, 1, 0, 
 			  1, 0, 0,
 			  0, 0,-1};
-  //  Double_t Translation[3] = {0, 0, mzGG};
-  mFlip->SetName("Flip"); mFlip->SetTitle("flip to Sector 12 local coordiname"); mFlip->SetRotation(Rotation);// mFlip->SetTranslation(Translation);
-  mShift[0] = new TGeoTranslation("Signed Drift distance to z for East", 0, 0, -mzGG);
-  mShift[1] = new TGeoTranslation("Signed Drift distance to z for West", 0, 0,  mzGG);
+  mFlip->SetName("Flip"); mFlip->SetTitle("flip to Sector 12 local coordiname"); mFlip->SetRotation(Rotation);
+  if (mAlignment2024) {
+    Double_t Translation[3] = {0, 0, mzGG};
+    mFlip->SetTranslation(Translation);
+  }
+  if (! mAlignment2024) {
+    mShift[0] = new TGeoTranslation("Signed Drift distance to z for East", 0, 0, -mzGG);
+    mShift[1] = new TGeoTranslation("Signed Drift distance to z for West", 0, 0,  mzGG);
+  } else {
+    mzWheel = 229.71;
+    mShift[0] = new TGeoTranslation("Signed Drift distance to z for East", 0, 0, -mzWheel);
+    mShift[1] = new TGeoTranslation("Signed Drift distance to z for West", 0, 0,  mzWheel);
+  }
   mHalf[0] = new TGeoHMatrix("Default for east part of TPC");
   mHalf[1] = new TGeoHMatrix("Default for west part of TPC");
   mWheel[0] = new TGeoHMatrix("Default for east wheel of TPC");
@@ -402,14 +395,12 @@ New
 	  }
 	  if (Debug()) {
 	    rotm->Print();
-	    if (gGeoManager) {
-	      listOfMatrices =  gGeoManager->GetListOfMatrices();
-	      rotr = (TGeoRotation *) listOfMatrices->FindObject(Rot);
-	      if (rotr) {cout << "Registered "; rotr->Print();}
-	      else      {cout << rotm->GetName() << " is not registered." << endl;}
-	    }
 	  }
-	  rotA = (*mShift[part]) * (*mHalf[part]) * (*rotm);
+	  if (! mAlignment2024) { 
+	    rotA = (*mShift[part]) * (*mHalf[part]) * (*rotm);
+	  } else {
+	    rotA = (*mShift[part]) * (*mHalf[part]) * (*mShift[part]).Inverse() * (*rotm);
+	  }
 	  if (k == kSup12S2Tpc) rotA *= Flip(); // new in 2024 schema
 	  rotA *= chair->GetMatrix(sector-1);
 	  if (chairD->getNumRows() == 24) {
