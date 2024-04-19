@@ -30,8 +30,8 @@ class SectorTrack : public TNamed {
     return 0;
   }
   void  GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t &err2z);
-  Int_t MakeTHelix(Double_t *RefSurfaceG = 0, Double_t y = 0);
-  Int_t Move(Double_t *RefSurfaceG, Double_t y = 0);
+  Int_t MakeTHelix(Double_t *RefSurfaceG = 0);
+  Int_t Move(Double_t *RefSurfaceG);
   static TRMatrix GetSti2G(Double_t nx, Double_t ny, Double_t nz);
   static TRMatrix GetSti2G(TVector3 N) {return GetSti2G(N.x(), N.y(), N.z());}
   virtual void  Print(Option_t *option="") const;

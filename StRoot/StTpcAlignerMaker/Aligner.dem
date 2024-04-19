@@ -15,10 +15,6 @@ debugmode(true) $
      TPCE <=> SubS||Pad  =     StTpcLocalCoordinate <=> StTpcLocalSectorCoordinate
 
      
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
-                                                                                                     x =    <--                                                                  --> * xPadGG
-                                                                                                     x =    <--     dR' * Wheel                                                             --> * xPad
-                                                                                                                                                                                        xPadGG = GG^-1 * xPad
   mShift[0] = new TGeoTranslation("Signed Drift distance to z for East", 0, 0, -mzGG);
   mShift[1] = new TGeoTranslation("Signed Drift distance to z for West", 0, 0,  mzGG);
 
@@ -81,6 +77,7 @@ define (dR( alpha,beta,gamma, x_0, y_0, z_0), dRE)$
 define (dRT( alpha,beta,gamma, x_0, y_0, z_0), dRTE)$
 
 /* Half(a_E, b_E, g_E, x_E, y_E, z_E,a_W, b_W, g_W, x_W, y_W, z_W, s) := block( */
+/*        a_E : 0; b_E : 0;          a_W : 0; b_W : 0;  */
 Half(s) := block(
 	if equal(part(s), 0) then dR(a_E, b_E, g_E, x_E, y_E, z_E)
                              else dR(a_W, b_W, g_W, x_W, y_W, z_W)
@@ -95,7 +92,7 @@ Sup12S(sector):  dR
 dRV(Vlist) := dR(Vlist[1], Vlist[2], Vlist[3], Vlist[4],Vlist[5], Vlist[6]);
 dRVT(Vlist) := dRT(Vlist[1], Vlist[2], Vlist[3], Vlist[4],Vlist[5], Vlist[6]);
 
-varTpc : makelist (concat (y, _Tpc), y, Vlist); /* [a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc] */
+varTpc : makelist (concat (y, _Tpc), y, Vlist); /* [a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc];  g_Tpc : 0; */
 Tpc2Glob(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc) := dR(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc);
 Tpc2GlobT(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc) := dRT(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc);
 Tpc2GlobV : dRV(varTpc); 
@@ -147,17 +144,22 @@ varWheel : makelist (concat (y, _Wheel), y, Vlist);
 Wheel : dRV(varWheel);
 WheelT : dRVT(varWheel);
 
-/* r = Sup12 = GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z) *(I|O)
-	dR" == ddR * dR
-   r = GG(z) *Wheel * ddRI * dRI * GG^-1(z) * rI
-   r = GG(z) *Wheel * ddRO * dRO * GG^-1(z) * rO
-   rI = (GG(z) *Wheel * ddRI * dRI * GG^-1(z))T * r =  (GG(z) * dRIT * ddRIT * WheelT * GGT(z)) * r = (GG(z) * WheelT * GGT(z)) * r
-   rO = (GG(z) *Wheel * ddRO * dRO * GG^-1(z))T * r =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r
-dR"_inner = ddRI * dRI == I
+/* 
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                                                          
+   r = Sup12 = GG(z) * Wheel * dRR * (kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS) * GG^-1(z) * r(I|O)
+	                dR" == ddR   <--                      dR                      -->
+   r = GG(z) * Wheel * ddRI * dRI * GG^-1(z) * rI
+   r = GG(z) * Wheel * ddRO * dRO * GG^-1(z) * rO
+   rI = (GG(z) * Wheel * ddRI * dRI * GG^-1(z))^-1 * r =  (GG(z) * dRIT * ddRIT * WheelT * GGT(z)) * r = (GG(z) * WheelT * GGT(z)) * r; at ddRI * dRI == I
+   rO = (GG(z) * Wheel * ddRO * dRO * GG^-1(z))^-1 * r =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r
 dR"_Outer = ddRO * dRO
    z = r[3];
-   rI =  (GG(z) * WheelT * GGT(z)) * r
-   rO =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r
+   rI =  (GG(z) * WheelT * GGT(z)) * r                    === fRPad
+   rO =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r     ===  -"-
+
+                  GW = GGT(z) * Wheel
+	fRPadGG = GW^-1 * r; On Wheel 
 
 */
 GG(z) := matrix([1, 0, 0, 0],

@@ -246,9 +246,10 @@ Int_t StTpcAlignerMaker::MakeIO() {
     }
     if (ssegm[0].List()->GetSize() < 5 || ssegm[1].List()->GetSize() < 5) continue;
     
-    static Double_t RefSurfice[4] = {-123, 0, 1, 0};
+    static Double_t yRef = 123;
+    static Double_t RefSurfice[5] = {-yRef, 0, 1, 0, yRef};
     Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
-    Double_t RefSurficeG[4] = {0};
+    Double_t RefSurficeG[5] = {0};
 #ifdef __Sup12S__
     Double_t xyz123G[3];
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
@@ -259,6 +260,7 @@ Int_t StTpcAlignerMaker::MakeIO() {
     Double_t *xyz123G = globalCoo.position().xyz();
 #endif
     RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
+    RefSurficeG[4] = RefSurfice[4];
     if (ssegm[0].MakeTHelix(RefSurficeG)) continue;
     if (ssegm[1].MakeTHelix(RefSurficeG)) continue;
     HelixPar_t *HlxPars[2] = {&fTpcInOutMatch->In, &fTpcInOutMatch->Out};
@@ -338,13 +340,14 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     assert(sector == segm->Sector());
     Int_t row    = tpcHit->padrow();
     Double_t Y = transform.yFromRow(sector, row);
-    Double_t RefSurfice[4] = {- Y, 0, 1, 0};
+    Double_t RefSurfice[5] = {- Y, 0, 1, 0, Y};
     Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
-    Double_t RefSurficeG[4] = {0};
+    Double_t RefSurficeG[5] = {0};
     Double_t xyz123G[3];
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMaster(xyz123L, xyz123G);
     StTpcDb::instance()->Sup12S2Glob(sector).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
     RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
+    RefSurficeG[4] = RefSurfice[4];
     if (Debug() > 2) {
       for (Int_t j = 0; j < 4; j++) {
 	cout << "\tRefSurficeG[" << j << "] = " << RefSurficeG[j];

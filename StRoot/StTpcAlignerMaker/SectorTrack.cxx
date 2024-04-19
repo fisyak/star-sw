@@ -18,12 +18,12 @@ SectorTrack::SectorTrack(const SectorTrack &v) {// skip TList
   fRPad  = v.fRPad ;  fNPad  = v.fNPad ;
   fCov = v.fCov;
   memcpy(fRefSurface, v.fRefSurface, sizeof(fRefSurface));
+  fyRef   = v.fyRef;
   fSector = v.fSector;  // of the first hit
   fRow    = v.fRow;      // -"-
   fStatus = v.fStatus; 
   fHelix  = v.fHelix;  
   fStep   = v.fStep; 
-  fyRef   = v.fyRef;
 }						
 //________________________________________________________________________________
 void  SectorTrack::AddHit(StTpcHit *tpcHit) {
@@ -83,7 +83,7 @@ void SectorTrack::GetTpcHitErrors(StTpcHit *tpcHit, Double_t err2xy[3], Double_t
   assert(err2xy[0] + err2xy[2] > 0 && err2z> 0);
 }
 //________________________________________________________________________________
-Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG, Double_t y) {
+Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG) {
   fStatus = -1;
   if (fList.GetSize() < 5) return fStatus;
   Int_t i = 0;
@@ -117,18 +117,18 @@ Int_t  SectorTrack::MakeTHelix(Double_t *RefSurfaceG, Double_t y) {
   if (chisq > 100.) return fStatus;
   if (fHelix.MakeErrs()) return fStatus;
   if (! RefSurfaceG) {fStatus = 0; return fStatus;}
-  Move(RefSurfaceG, y);
+  Move(RefSurfaceG);
   return fStatus;
 }
 //________________________________________________________________________________
-Int_t  SectorTrack::Move(Double_t *refSurfaceG, Double_t y) {
+Int_t  SectorTrack::Move(Double_t *refSurfaceG) {
   assert(refSurfaceG);
   static Double_t stepMX = 1.e3;
   assert(fSector > 0);
   assert(fRow > 0);
   fStatus = -1;
   memcpy(fRefSurface, refSurfaceG, sizeof(fRefSurface));
-  fyRef = y;
+  fyRef = refSurfaceG[4];
   //  fStep = fHelix.Step(stepMX, fRefSurface, 4, xyzG, dirG, 1);
   fStep = fHelix.Step(stepMX, fRefSurface, 4, &fRG[0], &fNG[0], 1);
   if (TMath::Abs(fStep) >= stepMX) return fStatus;
