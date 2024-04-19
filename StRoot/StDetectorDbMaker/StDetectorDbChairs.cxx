@@ -2396,6 +2396,8 @@ Float_t St_starTriggerDelayC::TrigT0GG(Int_t io, Int_t i)   const {
   else      delay += -0.502;
   return delay;
 }
+#include "St_CosmicsDelayC.h"
+MakeChairInstance2(starTriggerDelay,St_CosmicsDelayC,Calibrations/tpc/CosmicsDelay);
 //__________________Calibrations/trg______________________________________________________________
 #include "St_defaultTrgLvlC.h"
 MakeChairInstance(defaultTrgLvl,Calibrations/trg/defaultTrgLvl);
@@ -2903,8 +2905,10 @@ void St_SurveyC::Normalize(TGeoHMatrix &R) {
 }
 //________________________________________________________________________________
 const TGeoHMatrix &St_SurveyC::GetMatrix(Int_t i) {
+#if 0
   static TGeoIdentity identity;
   if (i > (Int_t) getNumRows()) return *&identity;
+#endif
   assert(fRotations || fRotations[i]);
   assert(TMath::Abs(fRotations[i]->Determinant())-1 < 1.e-3);
   return *fRotations[i];
