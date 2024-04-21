@@ -1,9 +1,18 @@
-      subroutine DerIO(xyz, nxyz, dRdpIOs, a_O, b_O, g_O, x_O, y_O, z_O, a_Wheel, b_Wheel)
+      subroutine DerIO(xyz, nxyz, parO, parWheel, dRdpIOs)
       implicit none
-      real*8 xyz(3), nxyz(3), dRdpIOs(6,6), x, y, z, nx, ny, nz
+      real*8 xyz(3), nxyz(3), parO(6), parWheel(6), dRdpIOs(6,6)
+      real*8 x, y, z, nx, ny, nz
       real*8 a_O, b_O, g_O, x_O, y_O, z_O
       real*8 a_Wheel, b_Wheel
       real*8 da_O, db_O, dg_O, dx_O, dy_O, dz_O
+      a_O = parO(1)
+      b_O = parO(2)
+      g_O = parO(3)
+      x_O = parO(4)
+      y_O = parO(5)
+      z_O = parO(6)
+      a_Wheel = parWheel(1)
+      b_Wheel = parWheel(2)
       da_O = 0
       db_O = 0
       dg_O = 0
