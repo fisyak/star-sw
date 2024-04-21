@@ -65,7 +65,7 @@ void TpcAligner(Int_t First, Int_t Last,
   //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,TpcHitMover,StiCA,");// ,BAna,Tree,"); //StiCA,CMuDst,"); // No corrections
   //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,TpcHitMover,StiCA,ReadAll,CMuDst"); // + MuDst
   //  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrY,-OSectorAlign,TpcHitMover,StiCA,CMuDst"); // + MuDst
-  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrZ,TpcHitMover,StiCA,CMuDst"); // + MuDst
+  TString Chain("in,StarMagField,mysql,tpcDb,detDb,StEvent,Event,Stu,analysis,TpcAligner,CorrZ,TpcHitMover,StiCA,CMuDst,Cosmics"); // + MuDst
   Chain += Tag;
   //  Chain += "P2019a";
   //  Chain += ",AgML,NoHistos,noTags,noRunco,NoDefault";
@@ -73,6 +73,7 @@ void TpcAligner(Int_t First, Int_t Last,
   //  Chain += ",NoHistos,noTags,noRunco,NoDefault,evout";
   if (TString(MainFile).Contains("daq")) Chain += ",Tpx";
   if (TString(MainFile).Contains("laser")) Chain += ",LaserIT";
+  Chain += ",TFGdbOpt";
   TString rFile(output);
   if (rFile == "") {
     rFile = gSystem->BaseName(MainFile);
@@ -99,17 +100,20 @@ void TpcAligner(Int_t First, Int_t Last,
   //  aligner->SetDebug(12);
   //  if (First >= Last)  
   chain->Init();
-  if (Last == 0) return;
+#if 0
   StMaker *dbMk = chain->GetMaker("db");
   if (dbMk) {
-    dbMk->SetDebug(1);
+    dbMk->SetDebug(3);
     dbMk->SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
     dbMk->SetFlavor("TFG","TpcPosition"); // disable MySQL 
     dbMk->SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
     dbMk->SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
     dbMk->SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
     dbMk->SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
+    dbMk->SetDebug(1);
   }
+#endif
+  if (Last == 0) return;
 //   StIOMaker *inMk = (StIOMaker *) chain->GetMaker("inputStream");
 //   if (inMk) {
 //     inMk->SetIOMode("r");

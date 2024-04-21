@@ -77,6 +77,17 @@
      root.exe lMuDst.C Cosmics.C+ IO/Cosmics.root PlotCosmics.C
      cd -
    end
+
+   foreach f (`ls -1d ???/Cosmics.root`) 
+     set d = `dirname $f`;
+     if (-r  ${d}/CosmicPlots.data) continue
+     cd ${d}
+     pwd
+     if (! -d Picures) mkdir Pictures
+     ln -s ~/macros/.sl* .
+     root.exe lMuDst.C Cosmics.C+ Cosmics.root PlotCosmics.C
+     cd -
+   end
 */
 #endif
 //#define __PrimaryVertices__
@@ -665,7 +676,7 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
   TLegend **leg = new TLegend*[Npads];  memset(leg,  0, Npads*sizeof(TLegend *)); 
   TLegend **leg2 = new TLegend*[Npads]; memset(leg2, 0, Npads*sizeof(TLegend *)); 
   Int_t color = 0;
-  TCanvas *c1 = new TCanvas("c1","c1",10,10,200*2*nC*nDCA,100*kAll);
+  TCanvas *c1 = new TCanvas("c1",gSystem->WorkingDirectory(),10,10,200*2*nC*nDCA,100*kAll);
   c1->Divide(2*nC*nDCA,kAll);
   color++;
   if (color == 2) color = 4;

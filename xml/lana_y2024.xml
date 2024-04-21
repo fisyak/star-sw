@@ -20,6 +20,7 @@
 #      root4star -q -b -x 'bfc.C(99999,"lana,B2021a,trgd,Tpx,LaserIT,StiCA,CorrY,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
 #      root.exe -q -b -x 'bfc.C(99999,"lana,B2022a,trgd,Tpx,LaserIT,StiCA,CorrY,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
       root.exe -q -b -x 'bfc.C(99999,"lana,B2023a,trgd,Tpx,LaserIT,StiCA,CorrY,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
+      gzip  ${logFile}
   endif
 </command>
 <!-- <input URL="file:/star/data03/daq/2018/*/*/st_laser_adc*.daq"/>  -->

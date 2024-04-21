@@ -16,6 +16,8 @@
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TLegend.h"
+#include "TGraphErrors.h"
+#include "TMultiGraph.h"
 #endif
 struct BPoint_t {
   Float_t set; // 2019/FF  2019/RF  2020/RF  2021/FF  2021/RF  2022/FF  2022/RF  2023/FF  2023/RF
@@ -26,8 +28,8 @@ struct BPoint_t {
 //________________________________________________________________________________
 								
 BPoint_t BPoint;
-static   Int_t Nsets = 11;
-static   TString sets[11]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF", "2021/F", "2023/ZF"};
+static   Int_t Nsets = 13;
+static   TString sets[11]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF", "2021/MF", "2023/ZF",  "2024/FF",  "2024/RF"};
 static   TString valC[12] = {// "DelpTRAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTIPosT", "DelpTINegT"};
     "DelpTIAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTINegT", "DelpTIPosT", "DelpTRAll", "DelpTRPos", "DelpTRNeg", "DelpTRAllT", "DelpTRPosT", "DelpTRNegT", 
   };
@@ -62,7 +64,7 @@ void CosmicData2Nt(const Char_t *FileName = "/star/u/fisyak/work/Tpc/Alignment/d
   while (fgets(&line[0],240,fp)) {
     //CosmicsC/2019/FF/CosmicPlots.data:      DelpTIAll        0.31M  #sigma(#Delta(1/pT)) = ( 1.35% #oplus  1.61% #times pT)/pT => #sigma(#DeltapT/pT) =  2.10%(@1GeV/c)
     TString Line(line);
-    cout << Line.Data() << endl;
+    cout << Line.Data();
     TObjArray *tokens = Line.Tokenize(" :\t/()%\nM");
     pass = -1;
     N = -1;
@@ -79,34 +81,35 @@ void CosmicData2Nt(const Char_t *FileName = "/star/u/fisyak/work/Tpc/Alignment/d
 	} else if (token.BeginsWith("Pass")) {
 	  token.ReplaceAll("Pass","");
 	  pass = token.Atoi();
-	  cout << "pass = " << pass << endl;
+	  cout << "pass = " << pass <<  "\t";
 	}
       } else if (i == 2) {
 	TString tag = ((TObjString*) ( tokens->At(i-1)))->String();
 	tag += "/";
-	tag += token;   cout << "tag = " << tag.Data() << endl;
+	tag += token;   cout << "tag = " << tag.Data() <<  "\t";
 	set = iucomp(tag, sets, Nsets);
-	cout << "set = " << set << endl;
+	cout << "set = " << set <<  "\t";
       } else if (i == 4) {
 	var = iucomp(token,valC,12);
-	cout << "var = " << var << endl;
+	cout << "var = " << var <<  "\t";
       } else if (i == 5) {
 	N = token.Atof();
-	cout << "N = " << N << endl;
+	cout << "N = " << N <<  "\t";
       } else if (i == 11) {
 	A = token.Atof();
-	cout << "A = " << A << endl;
+	cout << "A = " << A <<  "\t";
       } else if (i == 11) {
 	A = token.Atof();
-	cout << "A = " << A << endl;
+	cout << "A = " << A <<  "\t";
       } else if (i == 13) {
 	B = token.Atof();
-	cout << "B = " << B << endl;
+	cout << "B = " << B <<  "\t";
       } else if (i == 22) {
 	pT = token.Atof();
-	cout << "pT = " << pT << endl;
+	cout << "pT = " << pT <<  "\t";
       }
     }
+    cout << endl;
     delete tokens;
     BPoint.set = set;
     BPoint.var = var;
@@ -128,36 +131,43 @@ void CosmicData2Nt(const Char_t *FileName = "/star/u/fisyak/work/Tpc/Alignment/d
 void Draw(Int_t var = 3, const Char_t *varName="pT") {
   TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
   if (! FitP) return;
-  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  TString cname(varName); cname  += var;
+  TString tname("Variable "); tname += var; tname += " "; tname += varName;
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(cname);
   if (c1) c1->Clear();
-  else    c1 = new TCanvas("c1");
+  else    c1 = new TCanvas(cname, tname);
   TString VarName(varName);
   TH1F * frame = 0;
   if (VarName == "pT") {
-    frame =  c1->DrawFrame(-1,1.0,70,5.0);
+    frame =  c1->DrawFrame(-1,1.0,100,5.0);
     frame->SetTitle(valC[var] + " (@1GeV/c)");
     frame->SetYTitle("Resolutin(%)");
   } else if (VarName == "N") {
-    frame =  c1->DrawFrame(-1,0.0,70,5.0);
+    frame =  c1->DrawFrame(-1,0.0,100,10.0);
     frame->SetTitle("No. of matched pairs");
     frame->SetYTitle("N (M)");
   }
-  frame->SetXTitle("Pass");
+  if (frame) frame->SetXTitle("Pass");
   TLegend *l = new TLegend(0.7,0.5,0.8,0.9);
   //    FitP->SetMarkerSize(2);
+  TMultiGraph *mg = new TMultiGraph(cname+"Gr",tname);
   for (Int_t set = 0; set < Nsets; set++) {
-    FitP->Draw(Form("%s:pass>>h%i(71,-0.5,70.5)",varName,set),Form("var==%i&&set==%i",var,set),"goff");
-    TH1 *h = (TH1 *) gDirectory->Get(Form("h%i",set));
-    if (! h) continue;
-    h->SetMarkerStyle(20);
-    h->SetMarkerColor(set+1);
-    if (set > 8) {
-      h->SetMarkerStyle(23);
-      h->SetMarkerColor(set-8);
-      h->SetMarkerSize(2);
+    TString hname(Form("%s_s%i_v%i",varName,var,set));
+    cout << "FitP->Draw(\"" << Form("%s:pass>>%s(101,-0.5,100.5)",varName,hname.Data()) << "\",\"" << Form("var==%i&&set==%i",var,set) << "\",\"goff\");" << endl;
+    Int_t nfound = FitP->Draw(Form("%s:pass>>%s(101,-0.5,100.5,500,0,5)",varName,hname.Data()),Form("var==%i&&set==%i",var,set),"goff");
+    if (nfound > 0) {
+      TGraph *gr = new TGraph(nfound, FitP->GetV2(), FitP->GetV1());
+      gr->SetMarkerStyle(20);
+      gr->SetMarkerColor(set+1);
+      if (set > 8) {
+	gr->SetMarkerStyle(23);
+	gr->SetMarkerColor(set-8);
+	gr->SetMarkerSize(2);
+      }
+      mg->Add(gr);
+      l->AddEntry(gr,sets[set],"p");
     }
-    h->Draw("same");
-    if (h) l->AddEntry(h,sets[set]);
   }
+  mg->Draw("p");
   l->Draw();    
 } 

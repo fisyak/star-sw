@@ -76,17 +76,37 @@ void PrintXYZ(Double_t x = 59.3696, Double_t y = 0.871471, Double_t z = 208.707)
   transform(coorL,coorLS);  cout << "Cluster without T0, with    tau\t" << coorLS << endl;
 }
 //________________________________________________________________________________
-void testTpcCoordinateTransform() {
+void testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 10, Int_t pad = 30, Int_t time = 100) {
   //  if (dbMk == 0) Load(d,t);
   StTpcDb::instance()->SetDriftVelocity();
 
-
   StTpcDb::instance()->SetTpcRotations();
   transform = new StTpcCoordinateTransform(StTpcDb::instance());
-  Int_t sector = 12;
-  Int_t row    = 45;
-  //  Print(sector,row);
-  PrintPad(3,24);
+#if 0
+  Print(sector,row);
+#else
+  cout << "Coordinates ============================" << endl;
+  StTpcPadCoordinate          coorP(sector, row, pad, time);             cout << coorP << endl; 
+  StTpcLocalSectorCoordinate  coorLS;
+  StTpcLocalSectorCoordinate  coorLST;
+  StTpcLocalSectorCoordinate  coorLSF;
+  StTpcLocalCoordinate        coorTPC;
+  StGlobalCoordinate          coorG;
+  StTpcPadCoordinate          coorP2;					   
+                                           cout << "coorP                          \t" << coorP   << endl;
+					   //    if (! StTpcDb::Alignment2024() ) 
+      cout << "Tpc to Sub Sector ======= Old ========" << endl;
+      //    else                             cout << "Tpc to Sub Sector ======= New ========" << endl;
+    transform(coorP,coorLS);                 cout << "coorP => coorLS                       \t" << coorLS    << endl;
+    transform(coorLS, coorP2);               cout << "coorLS => coorP2                      \t" << coorP2    << endl; 
+    transform(coorLS, coorTPC);              cout << "coorLS => coorTPC                     \t" << coorTPC   << endl; 
+    transform(coorTPC, coorLS);              cout << "coorTPC => coorLS                     \t" << coorLS    << endl; 
+    transform(coorP,coorTPC);                cout << "coorP => coorTPC                      \t" << coorTPC   << endl;
+    transform(coorTPC,coorP2);               cout << "coorTPC => coorP2                     \t" << coorP2    << endl;
+    transform(coorP,coorG);                  cout << "coorP => coorG                        \t" << coorG     << endl;
+    transform(coorG,coorP2, sector, row);    cout << "coorG => coorP2                       \t" << coorP2    << endl;
+    transform(coorLS,coorP2);                cout << "coorLS => coorP2                      \t" << coorP2    << endl;
+#endif
 }
 //________________________________________________________________________________
 void testDerivatives() {
