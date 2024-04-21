@@ -15,9 +15,8 @@ StarMCPrimaryGenerator *StarMCPrimaryGenerator::fgInstance = 0;
 Double_t StarMCPrimaryGenerator::fTemperature = 0.457;; // GeV/c
 ClassImp(StarMCPrimaryGenerator);
 //________________________________________________________________________________
-StarMCPrimaryGenerator::StarMCPrimaryGenerator() : TObject(), fStarStack(0), fIsRandom(kFALSE), fSimpleKine(kFALSE), fNofPrimaries(0), 
-						   fOption(""), fDebug(0), fId(0), fOrigin(), 
-						   fSigmasOrigin(), fCurOrigin(), fSetVertex(kFALSE), fUseBeamLine(kFALSE), fStatus(kStOK)  {
+StarMCPrimaryGenerator::StarMCPrimaryGenerator() : fStatus(kStOK)  {
+  memset(mBeg,0,mEnd-mBeg+1);
   fgInstance = this;
   if (! fStarStack) fStarStack = StarVMCApplication::Instance()->GetStack();
   TString path(".");

@@ -86,24 +86,21 @@ class StarMCPrimaryGenerator : public TObject {
 			    Double_t Eta_min=-10, Double_t Eta_max=10, 
 			    Double_t Phi_min = 0, Double_t Phi_max= 2*TMath::Pi(), 
 			    Double_t Z_min=0, Double_t Z_max=0, const Char_t *option = "G"); 
+  virtual void SetGenerator(TString mode, Int_t tune) {}
   virtual void GeneratePrimaries();
   virtual void GeneratePrimary() {}
   virtual void Print(Option_t *option="") const;
  protected:
   static StarMCPrimaryGenerator *fgInstance;
+  Char_t                mBeg[1];        //!
   StarStack        *fStarStack;    
   Bool_t            fIsRandom;
   Bool_t            fSimpleKine;
   Int_t             fNofPrimaries;
-  TString           fOption;  
   Int_t             fDebug;
   Int_t             fId;
-  TVector3          fOrigin;
-  TVector3          fSigmasOrigin;
-  TVector3          fCurOrigin; // Currrent origin
   Bool_t            fSetVertex;
   Bool_t            fUseBeamLine;
-  Int_t             fStatus;
   TTreeIter        *fTreeIter;
   TTree            *fTree;
   TH1              *fPVX, *fPVY, *fPVZ, *fPVxyError; 
@@ -113,6 +110,12 @@ class StarMCPrimaryGenerator : public TObject {
   Bool_t            fGun;
   Double_t          fGunpX, fGunpY, fGunpZ, fGunX, fGunY, fGunZ;
   Int_t             fGunId;
+  Char_t                mEnd[1];        //!
+  Int_t             fStatus;
+  TString           fOption;  
+  TVector3          fOrigin;
+  TVector3          fSigmasOrigin;
+  TVector3          fCurOrigin; // Currrent origin
   vector<Int_t>     fGunIds;
   static Double_t fTemperature;
   ClassDef(StarMCPrimaryGenerator,1)  //StarMCPrimaryGenerator
