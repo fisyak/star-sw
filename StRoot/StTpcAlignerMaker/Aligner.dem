@@ -1,6 +1,8 @@
 load ("eigen")$
+load (f90)$
 :lisp (setq *f90-output-line-length-max* 1000000000) 
 stardisp: true$
+algebraic : true $
 simplified_output: true$
 inflag : true$
 debugmode(true) $ 
@@ -171,203 +173,528 @@ GGT(z):= matrix([1, 0, 0, 0],
                 [0, 0, 1, z],
                 [0, 0, 0, 1])$            
 
-/* RS2I : GG(z) . dRIT . dRIT . WheelT . GGT(z); */
-RS2I : GG(z) . WheelT . GGT(z); 
+RS2I : GG(z) . dRIT . ddRIT . WheelT . GGT(z);
+/* RS2I : GG(z) . WheelT . GGT(z); */
 /*
-(%i88) RS2I:GG(z) . WheelT . GGT(z)
-         [     1       g_Wheel   - b_Wheel  (- b_Wheel*z) - x_Wheel ]
-         [                                                          ]
-         [ - g_Wheel      1       a_Wheel     a_Wheel*z - y_Wheel   ]
-(%o88)   [                                                          ]
-         [  b_Wheel   - a_Wheel      1             - z_Wheel        ]
-         [                                                          ]
-         [     0          0          0                 1            ]
 */
+RS2ON : GG(z) . dROT . WheelT . GGT(z); 
 RS2O : GG(z) . dROT . ddROT . WheelT . GGT(z); 
 /*
 (%i89) RS2O:GG(z) . dROT . ddROT . WheelT . GGT(z)
-(%o89) matrix([(- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
- + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1, 
-g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel)
- + g_Wheel + dg_O + a_Wheel*db_O, (b_Wheel*dg_O + da_O + a_Wheel)*g_O
- + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel, 
-(- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel)
- - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel)
- + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
- - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - x_O
- - dx_O], [(- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1))
- + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O, 
-a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O)
- - dg_O*g_Wheel - a_Wheel*da_O + 1, (- (a_Wheel*dg_O - db_O - b_Wheel)*g_O)
- + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel, 
-a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel)
- + z - dz_O) + da_O*(z - z_Wheel) - g_O
-*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel
- - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - y_O - dy_O], 
-[b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel
- - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel, 
-(- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1))
- + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel, 
-(- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel)
- - b_Wheel*db_O - a_Wheel*da_O + 1, (- z_Wheel)
- + b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z
- - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel)
- + a_Wheel*z - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel)
- - da_O*(a_Wheel*z - y_Wheel) - dz_O], [0, 0, 0, 1])
 */
 rI : RS2I . r;
 /*
-                 [ (- 2*b_Wheel*z) + g_Wheel*y - x_Wheel + x ]
-                 [                                           ]
-                 [   2*a_Wheel*z - y_Wheel + y - g_Wheel*x   ]
-(%o90)           [                                           ]
-                 [  (- z_Wheel) + z - a_Wheel*y + b_Wheel*x  ]
-                 [                                           ]
-                 [                     1                     ]
 */
 nI: RS2I . n;
 /*
-(%i91) nI:RS2I . n
-                     [ (- b_Wheel*nz) + g_Wheel*ny + nx ]
-                     [                                  ]
-                     [   a_Wheel*nz + ny - g_Wheel*nx   ]
-(%o91)               [                                  ]
-                     [   nz - a_Wheel*ny + b_Wheel*nx   ]
-                     [                                  ]
-                     [                0                 ]
 */
-rO : RS2O . r;
-/*
-(%i92) rO:RS2O . r
-(%o92) matrix([(- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel)
- - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel)
- + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
- - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel)
- + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
- - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z - b_Wheel*z
- + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
- - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y
- - x_Wheel - x_O + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
- + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - dx_O], 
-[a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel)
- + z - dz_O) + da_O*(z - z_Wheel) - g_O
-*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel
- - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel)
- + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O
- + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z + a_Wheel*z
- - y_Wheel - y_O + (a_O*(db_O*g_Wheel - da_O - a_Wheel)
- - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y
- + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1))
- + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x
- - dy_O], [(- z_Wheel) + b_O*((- db_O*(z - z_Wheel))
- + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O)
- - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
- - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel)
- - da_O*(a_Wheel*z - y_Wheel) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel))
- + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z
- + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1))
- + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y
- + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel
- - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - dz_O], [1])
-*/
+rON : RS2ON . r; /* no update   ddRO */
+rOU : RS2O  . r; /* with update ddRO */
+/*  Freeze parameters */
+a_I : 0; b_I : 0; g_I : 0; x_I : 0; y_I : 0; z_I : 0;
+a_O : 0; b_O : 0;
+g_Wheel : 0; x_Wheel : 0; y_Wheel : 0; z_Wheel : 0;
+
+
 nO: RS2O . n;
+drO: rOU - rON;
 /*
-(%i93) nO:RS2O . n
-(%o93) matrix([((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
- - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz
- + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
- - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny
- + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
- + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx], 
-[((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O
- + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz
- + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O)
- - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O
-*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel)
- - g_Wheel - dg_O + b_Wheel*da_O)*nx], 
-[((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel)
- - b_Wheel*db_O - a_Wheel*da_O + 1)*nz + ((- a_O
-*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O)
- + db_O*g_Wheel - da_O - a_Wheel)*ny + (b_O
-*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel
- - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx], [0])
+drO(2) = 0 = rOU(2) - rON(2) = Step*nO(2);
+Step = (rOU(2) - rN(2))/nO(2];
+*/
+Step : drO[2]/nO[2];
+nS: matrix([Step*nO[1]],
+           [Step*nO[2]],
+           [Step*nO[3]],
+	            [1]);
+
+rO : rOU + nS;
+/*
 */
 
 drOI : rO - rI;
 /*
-(%i94) drOI:rO-rI
-(%o94) matrix(
-[(- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel) + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel) + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z + b_Wheel*z + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - g_Wheel*y - x_O + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - x - dx_O], 
-
-[a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - a_Wheel*z - y_O + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x + g_Wheel*x - dy_O], 
-
-[b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z - z + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y + a_Wheel*y + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - b_Wheel*x - dz_O], 
-[0]
+(%o163) matrix(
+[[b_I*((- z_Wheel) - z_I + b_I*((- b_Wheel*z) - x_Wheel) - a_I*(a_Wheel*z - y_Wheel) + z) - b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) - db_O*(z - z_Wheel) + b_I*(z - z_Wheel) + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx)*(a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - a_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) + g_O*((- b_Wheel*z) - x_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - (b_Wheel*g_O + a_Wheel + a_O)*z + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - dy_O))/(((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx) + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - g_I*(a_I*(z - z_Wheel) - g_I*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - y_I) - g_I*(a_Wheel*z - y_Wheel) + dg_O*(a_Wheel*z - y_Wheel) + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z - (g_I*(b_Wheel*g_I + a_Wheel + a_I) + a_Wheel*g_I - b_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) - b_Wheel - b_I)*z - (g_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1) - b_I*(b_I*g_Wheel - a_Wheel - a_I) + g_Wheel + g_I + a_Wheel*b_I)*y + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - x_O + 2*x_I + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - ((- b_I*(a_I*g_Wheel + b_Wheel + b_I)) - g_I*g_Wheel + g_I*((- g_Wheel) - g_I + a_I*b_Wheel) - b_I*b_Wheel + 1)*x - dx_O]], 
+[[(- a_I*((- z_Wheel) - z_I + b_I*((- b_Wheel*z) - x_Wheel) - a_I*(a_Wheel*z - y_Wheel) + z)) + 2*a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + 2*da_O*(z - z_Wheel) - a_O*(z - z_Wheel) - a_I*(z - z_Wheel) - 2*g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) + g_I*((- b_I*(z - z_Wheel)) + g_I*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - x_I) + g_O*((- b_Wheel*z) - x_Wheel) + g_I*((- b_Wheel*z) - x_Wheel) - 2*dg_O*((- b_Wheel*z) - x_Wheel) + 2*((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - (b_Wheel*g_O + a_Wheel + a_O)*z - ((- g_I*(a_Wheel*g_I - b_Wheel - b_I)) + b_Wheel*g_I + a_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) + a_Wheel + a_I)*z - y_O + 2*y_I + 2*(a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - (a_I*(b_I*g_Wheel - a_Wheel - a_I) - g_I*(g_Wheel + g_I + a_Wheel*b_I) - g_I*g_Wheel - a_I*a_Wheel + 1)*y - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y - ((- g_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1)) + a_I*(a_I*g_Wheel + b_Wheel + b_I) - g_Wheel - g_I + a_I*b_Wheel)*x + 2*((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - 2*dy_O]], 
+[[((((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx)*(a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - a_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) + g_O*((- b_Wheel*z) - x_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - (b_Wheel*g_O + a_Wheel + a_O)*z + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - dy_O))/(((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx) + b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - b_I*((- b_I*(z - z_Wheel)) + g_I*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - x_I) + a_I*(a_I*(z - z_Wheel) - g_I*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - y_I) - z_O + 2*z_I + db_O*((- b_Wheel*z) - x_Wheel) - b_I*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + a_I*(a_Wheel*z - y_Wheel) - ((- a_I*(b_Wheel*g_I + a_Wheel + a_I)) + b_I*(a_Wheel*g_I - b_Wheel - b_I) - b_I*b_Wheel - a_I*a_Wheel + 1)*z + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z - ((- a_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1)) + b_I*(g_Wheel + g_I + a_Wheel*b_I) + b_I*g_Wheel - a_Wheel - a_I)*y + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y - (b_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1) + a_I*g_Wheel - a_I*((- g_Wheel) - g_I + a_I*b_Wheel) + b_Wheel + b_I)*x + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - dz_O]], 
+[1]
 )
 */
 dnOI : nO - nI;
 /*
-(%i95) dnOI:nO-nI
-(%o95) matrix(
-[((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz + b_Wheel*nz + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny - g_Wheel*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx - nx], 
-[((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz - a_Wheel*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny - ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx + g_Wheel*nx], 
-[((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz - nz + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny + a_Wheel*ny + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx - b_Wheel*nx], 
-[0])
+(%o164) matrix(
+[((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz - (g_I*(b_Wheel*g_I + a_Wheel + a_I) + a_Wheel*g_I - b_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) - b_Wheel - b_I)*nz - (g_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1) - b_I*(b_I*g_Wheel - a_Wheel - a_I) + g_Wheel + g_I + a_Wheel*b_I)*ny + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx - ((- b_I*(a_I*g_Wheel + b_Wheel + b_I)) - g_I*g_Wheel + g_I*((- g_Wheel) - g_I + a_I*b_Wheel) - b_I*b_Wheel + 1)*nx], 
+[((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz - ((- g_I*(a_Wheel*g_I - b_Wheel - b_I)) + b_Wheel*g_I + a_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) + a_Wheel + a_I)*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny - (a_I*(b_I*g_Wheel - a_Wheel - a_I) - g_I*(g_Wheel + g_I + a_Wheel*b_I) - g_I*g_Wheel - a_I*a_Wheel + 1)*ny - ((- g_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1)) + a_I*(a_I*g_Wheel + b_Wheel + b_I) - g_Wheel - g_I + a_I*b_Wheel)*nx + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx], 
+[(- ((- a_I*(b_Wheel*g_I + a_Wheel + a_I)) + b_I*(a_Wheel*g_I - b_Wheel - b_I) - b_I*b_Wheel - a_I*a_Wheel + 1)*nz) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz - ((- a_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1)) + b_I*(g_Wheel + g_I + a_Wheel*b_I) + b_I*g_Wheel - a_Wheel - a_I)*ny + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny - (b_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1) + a_I*g_Wheel - a_I*((- g_Wheel) - g_I + a_I*b_Wheel) + b_Wheel + b_I)*nx + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx], 
+[0]
+)
 */
 /*
 fdrOI(ddRO) := drOI;
 
 drOIdI :  jacobian(fdrIO(ddRO), ddRO ); 
 */
-dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := (- b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O)) - db_O*(z - z_Wheel) + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) + dg_O*(a_Wheel*z - y_Wheel) + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z + b_Wheel*z + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - g_Wheel*y - x_O + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - x - dx_O;
-dY(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - a_Wheel*z - y_O + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x + g_Wheel*x - dy_O;
-dZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - z_O + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z - z + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y + a_Wheel*y + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - b_Wheel*x - dz_O;
-dnX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz + b_Wheel*nz + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny - g_Wheel*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx - nx;
-dnY(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz - a_Wheel*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny - ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx + g_Wheel*nx;
-dnZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz - nz + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny + a_Wheel*ny + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx - b_Wheel*nx;
 
-dRdp : jacobian([dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dY(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O), 
+dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+b_I*((- z_Wheel) - z_I + b_I*((- b_Wheel*z) - x_Wheel) - a_I*(a_Wheel*z - y_Wheel) + z) - b_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) - db_O*(z - z_Wheel) + b_I*(z - z_Wheel) + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx)*(a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - a_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) + g_O*((- b_Wheel*z) - x_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - (b_Wheel*g_O + a_Wheel + a_O)*z + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - dy_O))/(((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx) + g_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - g_I*(a_I*(z - z_Wheel) - g_I*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - y_I) - g_I*(a_Wheel*z - y_Wheel) + dg_O*(a_Wheel*z - y_Wheel) + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z - (g_I*(b_Wheel*g_I + a_Wheel + a_I) + a_Wheel*g_I - b_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) - b_Wheel - b_I)*z - (g_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1) - b_I*(b_I*g_Wheel - a_Wheel - a_I) + g_Wheel + g_I + a_Wheel*b_I)*y + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - x_O + 2*x_I + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x - ((- b_I*(a_I*g_Wheel + b_Wheel + b_I)) - g_I*g_Wheel + g_I*((- g_Wheel) - g_I + a_I*b_Wheel) - b_I*b_Wheel + 1)*x - dx_O;
+dY(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+(- a_I*((- z_Wheel) - z_I + b_I*((- b_Wheel*z) - x_Wheel) - a_I*(a_Wheel*z - y_Wheel) + z)) + 2*a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + 2*da_O*(z - z_Wheel) - a_O*(z - z_Wheel) - a_I*(z - z_Wheel) - 2*g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) + g_I*((- b_I*(z - z_Wheel)) + g_I*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - x_I) + g_O*((- b_Wheel*z) - x_Wheel) + g_I*((- b_Wheel*z) - x_Wheel) - 2*dg_O*((- b_Wheel*z) - x_Wheel) + 2*((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - (b_Wheel*g_O + a_Wheel + a_O)*z - ((- g_I*(a_Wheel*g_I - b_Wheel - b_I)) + b_Wheel*g_I + a_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) + a_Wheel + a_I)*z - y_O + 2*y_I + 2*(a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - (a_I*(b_I*g_Wheel - a_Wheel - a_I) - g_I*(g_Wheel + g_I + a_Wheel*b_I) - g_I*g_Wheel - a_I*a_Wheel + 1)*y - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y - ((- g_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1)) + a_I*(a_I*g_Wheel + b_Wheel + b_I) - g_Wheel - g_I + a_I*b_Wheel)*x + 2*((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - 2*dy_O;
+dZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+((((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx)*(a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel) - a_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) + g_O*((- b_Wheel*z) - x_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z - (b_Wheel*g_O + a_Wheel + a_O)*z + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - dy_O))/(((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx) + b_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - dx_O) - a_O*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - dy_O) - b_I*((- b_I*(z - z_Wheel)) + g_I*(a_Wheel*z - y_Wheel) - b_Wheel*z - x_Wheel - x_I) + a_I*(a_I*(z - z_Wheel) - g_I*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel - y_I) - z_O + 2*z_I + db_O*((- b_Wheel*z) - x_Wheel) - b_I*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + a_I*(a_Wheel*z - y_Wheel) - ((- a_I*(b_Wheel*g_I + a_Wheel + a_I)) + b_I*(a_Wheel*g_I - b_Wheel - b_I) - b_I*b_Wheel - a_I*a_Wheel + 1)*z + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*z - ((- a_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1)) + b_I*(g_Wheel + g_I + a_Wheel*b_I) + b_I*g_Wheel - a_Wheel - a_I)*y + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*y - (b_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1) + a_I*g_Wheel - a_I*((- g_Wheel) - g_I + a_I*b_Wheel) + b_Wheel + b_I)*x + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*x - dz_O;
+
+dnX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz - (g_I*(b_Wheel*g_I + a_Wheel + a_I) + a_Wheel*g_I - b_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) - b_Wheel - b_I)*nz - (g_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1) - b_I*(b_I*g_Wheel - a_Wheel - a_I) + g_Wheel + g_I + a_Wheel*b_I)*ny + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1) - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx - ((- b_I*(a_I*g_Wheel + b_Wheel + b_I)) - g_I*g_Wheel + g_I*((- g_Wheel) - g_I + a_I*b_Wheel) - b_I*b_Wheel + 1)*nx;
+dnY(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz - ((- g_I*(a_Wheel*g_I - b_Wheel - b_I)) + b_Wheel*g_I + a_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) + a_Wheel + a_I)*nz + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny - (a_I*(b_I*g_Wheel - a_Wheel - a_I) - g_I*(g_Wheel + g_I + a_Wheel*b_I) - g_I*g_Wheel - a_I*a_Wheel + 1)*ny - ((- g_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1)) + a_I*(a_I*g_Wheel + b_Wheel + b_I) - g_Wheel - g_I + a_I*b_Wheel)*nx + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*nx;
+dnZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O) :=  
+(- ((- a_I*(b_Wheel*g_I + a_Wheel + a_I)) + b_I*(a_Wheel*g_I - b_Wheel - b_I) - b_I*b_Wheel - a_I*a_Wheel + 1)*nz) + ((- a_O*(b_Wheel*dg_O + da_O + a_Wheel)) + b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1)*nz - ((- a_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1)) + b_I*(g_Wheel + g_I + a_Wheel*b_I) + b_I*g_Wheel - a_Wheel - a_I)*ny + ((- a_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)) + b_O*(g_Wheel + dg_O + a_Wheel*db_O) + db_O*g_Wheel - da_O - a_Wheel)*ny - (b_I*((- g_I*g_Wheel) - b_I*b_Wheel + 1) + a_I*g_Wheel - a_I*((- g_Wheel) - g_I + a_I*b_Wheel) + b_Wheel + b_I)*nx + (b_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1) + da_O*g_Wheel - a_O*((- g_Wheel) - dg_O + b_Wheel*da_O) + db_O + b_Wheel)*nx;
+
+dRdpIO : jacobian([dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dY(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O), 
                  dnX(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dnY(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dnZ(da_O, db_O, dg_O, dx_O, dy_O, dz_O)],
                 [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
+
 /*
-(%o146) matrix(
-[g_O*(z - z_Wheel) - b_O*(y_Wheel - a_Wheel*z) + (g_O + a_Wheel*b_O)*z + (b_O - a_Wheel*g_O)*y + (b_Wheel*g_O - b_O*g_Wheel)*x, 
-          z_Wheel - b_O*((- b_Wheel*z) - x_Wheel) + (b_O*b_Wheel - 1)*z - z + (a_Wheel - b_O*g_Wheel)*y + ((- b_Wheel) - b_O)*x, 
-g_O*(b_Wheel*z + x_Wheel) + (b_Wheel*g_O + a_Wheel)*z + a_Wheel*z - y_Wheel + (1 - g_O*g_Wheel)*y + ((- g_Wheel) - g_O)*x, 
-- 1,
-- g_O, 
-b_O
-], 
-[(- z_Wheel) + a_O*(y_Wheel - a_Wheel*z) + (1 - a_O*a_Wheel)*z + z + ((- a_Wheel) - a_O)*y + (a_O*g_Wheel + b_Wheel)*x, 
-(- g_O*(z_Wheel - z)) + a_O*((- b_Wheel*z) - x_Wheel) + (g_O - a_O*b_Wheel)*z + (a_O*g_Wheel - a_Wheel*g_O)*y + (b_Wheel*g_O + a_O)*x, 
-(- g_O*(a_Wheel*z - y_Wheel)) + (b_Wheel - a_Wheel*g_O)*z + b_Wheel*z + ((- g_Wheel) - g_O)*y + x_Wheel + (g_O*g_Wheel - 1)*x, 
-g_O,
- - 1,
- - a_O
-], 
-[(- a_O*(z - z_Wheel)) - a_Wheel*z + ((- a_Wheel) - a_O)*z + y_Wheel + (a_O*a_Wheel - 1)*y + (g_Wheel - a_O*b_Wheel)*x, 
-b_O*(z_Wheel - z) - b_Wheel*z + ((- b_Wheel) - b_O)*z + (g_Wheel + a_Wheel*b_O)*y - x_Wheel + (1 - b_O*b_Wheel)*x, 
-(- a_O*(b_Wheel*z + x_Wheel)) + b_O*(a_Wheel*z - y_Wheel) + (a_Wheel*b_O - a_O*b_Wheel)*z + (a_O*g_Wheel + b_O)*y + (a_O - b_O*g_Wheel)*x, 
-- b_O, 
-a_O, 
-- 1
-], 
-[(g_O + a_Wheel*b_O)*nz + (b_O - a_Wheel*g_O)*ny + (b_Wheel*g_O - b_O*g_Wheel)*nx, 
-(b_O*b_Wheel - 1)*nz + (a_Wheel - b_O*g_Wheel)*ny + ((- b_Wheel) - b_O)*nx, 
-(b_Wheel*g_O + a_Wheel)*nz + (1 - g_O*g_Wheel)*ny + ((- g_Wheel) - g_O)*nx, 
-0, 
-0, 
-0], 
-[(1 - a_O*a_Wheel)*nz + ((- a_Wheel) - a_O)*ny + (a_O*g_Wheel + b_Wheel)*nx, 
-(g_O - a_O*b_Wheel)*nz + (a_O*g_Wheel - a_Wheel*g_O)*ny + (b_Wheel*g_O + a_O)*nx, 
-(b_Wheel - a_Wheel*g_O)*nz + ((- g_Wheel) - g_O)*ny + (g_O*g_Wheel - 1)*nx, 
-0, 
-0, 
-0], 
-[((- a_Wheel) - a_O)*nz + (a_O*a_Wheel - 1)*ny + (g_Wheel - a_O*b_Wheel)*nx, 
-((- b_Wheel) - b_O)*nz + (g_Wheel + a_Wheel*b_O)*ny + (1 - b_O*b_Wheel)*nx, 
-(a_Wheel*b_O - a_O*b_Wheel)*nz + (a_O*g_Wheel + b_O)*ny + (a_O - b_O*g_Wheel)*nx, 
-0, 
-0, 
-0])
+da_I : 0; db_I : 0; dg_I : 0; dx_I : 0; dy_I : 0; dz_I : 0;
+da_O : 0; db_O : 0; dg_O : 0; dx_O : 0; dy_O : 0; dz_O : 0;
 */
+dRdpIOs: dRdpIO;
+ratsimp(dRdpIOs);
+trigsimp(dRdpIOs);
+
+f90(dRdpIOs);
+with_stdout ("dRdpIOs.txt",  f90(dRdpIOs));
+
+/*
+================================================================================
+dXdp : jacobian([dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O)],  [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
+ratsimp(dXdp);
+trigsimp(dXdp);
+
+*/
+
+/*
+(%o183) dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+b_I*((- z_Wheel) - z_I + b_I*((- b_Wheel*z) - x_Wheel)
+ - a_I*(a_Wheel*z - y_Wheel) + z) - b_O
+*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z
+ - dz_O) - db_O*(z - z_Wheel) + b_I*(z - z_Wheel)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
+ - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz
+ + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
+ - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny
+ + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx)
+*(a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel)
+ - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel)
+ - a_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel)
+ - b_Wheel*z - x_Wheel - dx_O) + g_O*((- b_Wheel*z) - x_Wheel)
+ - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O)
+ + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z
+ - (b_Wheel*g_O + a_Wheel + a_O)*z + (a_O*(db_O*g_Wheel - da_O - a_Wheel)
+ - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y
+ - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y
+ + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1))
+ + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x
+ - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - dy_O))
+/(((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O
+ + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz
+ + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O)
+ - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O
+*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel)
+ - g_Wheel - dg_O + b_Wheel*da_O)*nx) + g_O
+*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel
+ - dy_O) - g_I*(a_I*(z - z_Wheel) - g_I*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
+ - y_Wheel - y_I) - g_I*(a_Wheel*z - y_Wheel) + dg_O*(a_Wheel*z - y_Wheel)
+ + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
+ - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z
+ - (g_I*(b_Wheel*g_I + a_Wheel + a_I) + a_Wheel*g_I
+ - b_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) - b_Wheel - b_I)*z
+ - (g_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1) - b_I*(b_I*g_Wheel - a_Wheel - a_I)
+ + g_Wheel + g_I + a_Wheel*b_I)*y + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
+ - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - x_O
+ + 2*x_I + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x
+ - ((- b_I*(a_I*g_Wheel + b_Wheel + b_I)) - g_I*g_Wheel
+ + g_I*((- g_Wheel) - g_I + a_I*b_Wheel) - b_I*b_Wheel + 1)*x - dx_O
+
+
+(%o189) matrix(
+]((g_O*nz - a_Wheel*g_O*ny + b_Wheel*g_O*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((nz - a_Wheel*ny + b_Wheel*nx)*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O
+ + a_Wheel*dg_O - db_O - b_Wheel)*nz + ((1 - a_Wheel*da_O)*g_O + dg_O
+ + a_Wheel*db_O)*ny + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*(2*z - a_Wheel*y + b_Wheel*x))/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O
+ + b_Wheel*dg_O + da_O + a_Wheel)*nz + ((- (dg_O + a_Wheel*db_O)*g_O)
+ - a_Wheel*da_O + 1)*ny + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)
+*nx) + 2*g_O*z - a_Wheel*g_O*y + b_Wheel*g_O*x, 
+(((- nz) + a_Wheel*ny - b_Wheel*nx)*((- g_O
+*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((g_O*nz - a_Wheel*g_O*ny + b_Wheel*g_O*nx)
+*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*(2*g_O*z - a_Wheel*g_O*y + b_Wheel*g_O*x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx) - 2*z + a_Wheel*y
+ - b_Wheel*x, (((b_Wheel*g_O + a_Wheel)*nz + ny - g_O*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - (((b_Wheel - a_Wheel*g_O)*nz - g_O*ny - nx)
+*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((b_Wheel - a_Wheel*g_O)*z - a_Wheel*g_O*z + b_Wheel*z - g_O*y - x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ + (b_Wheel*g_O + a_Wheel)*z + b_Wheel*g_O*z + a_Wheel*z + y - g_O*x, 
+(g_O*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx) - 1, 
+(- (((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)) - g_O, 0], 
+[4*z - 2*a_Wheel*y + 2*b_Wheel*x, 4*g_O*z - 2*a_Wheel*g_O*y + 2*b_Wheel*g_O*x, 
+2*(b_Wheel - a_Wheel*g_O)*z - 2*a_Wheel*g_O*z + 2*b_Wheel*z - 2*g_O*y - 2*x, 
+2*g_O, - 2, 0], [(((- a_Wheel*nz) - ny)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((nz - a_Wheel*ny + b_Wheel*nx)*(((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz
+ + ((- da_O) - a_Wheel)*ny + (db_O + b_Wheel)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx)*(2*z - a_Wheel*y + b_Wheel*x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx) - 2*a_Wheel*z - y, 
+((nx - b_Wheel*nz)*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx)*(g_O*nz - a_Wheel*g_O*ny + b_Wheel*g_O*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx)*(2*g_O*z - a_Wheel*g_O*y + b_Wheel*g_O*x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx) - 2*b_Wheel*z + x, 
+((((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx)*((b_Wheel - a_Wheel*g_O)*z - a_Wheel*g_O*z + b_Wheel*z
+ - g_O*y - x))/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O
+ + a_Wheel)*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx)*((b_Wheel - a_Wheel*g_O)*nz - g_O*ny - nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2), 
+(g_O*(((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx))/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O
+ + b_Wheel*dg_O + da_O + a_Wheel)*nz + ((- (dg_O + a_Wheel*db_O)*g_O)
+ - a_Wheel*da_O + 1)*ny + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)
+*nx), - (((- b_Wheel*db_O) - a_Wheel*da_O + 1)*nz + ((- da_O) - a_Wheel)*ny
+ + (db_O + b_Wheel)*nx)/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O
+ + b_Wheel*dg_O + da_O + a_Wheel)*nz + ((- (dg_O + a_Wheel*db_O)*g_O)
+ - a_Wheel*da_O + 1)*ny + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)
+*nx), - 1], [g_O*nz - a_Wheel*g_O*ny + b_Wheel*g_O*nx, 
+(- nz) + a_Wheel*ny - b_Wheel*nx, (b_Wheel*g_O + a_Wheel)*nz + ny - g_O*nx, 0, 
+0, 0], [nz - a_Wheel*ny + b_Wheel*nx, g_O*nz - a_Wheel*g_O*ny
+ + b_Wheel*g_O*nx, (b_Wheel - a_Wheel*g_O)*nz - g_O*ny - nx, 0, 0, 0], 
+[(- a_Wheel*nz) - ny, nx - b_Wheel*nz, 0, 0, 0, 0])
+*/
+/*
+(%o90) dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := 
+b_I*((- z_Wheel) - z_I + b_I*((- b_Wheel*z) - x_Wheel)
+ - a_I*(a_Wheel*z - y_Wheel) + z) - b_O
+*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel) - da_O*(a_Wheel*z - y_Wheel) + z
+ - dz_O) - db_O*(z - z_Wheel) + b_I*(z - z_Wheel)
+
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
+ - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*nz
+ + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
+ - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*ny
+ + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*nx)
+*(a_O*((- z_Wheel) + db_O*((- b_Wheel*z) - x_Wheel)
+ - da_O*(a_Wheel*z - y_Wheel) + z - dz_O) + da_O*(z - z_Wheel)
+ - a_O*(z - z_Wheel) - g_O*((- db_O*(z - z_Wheel)) + dg_O*(a_Wheel*z - y_Wheel)
+ - b_Wheel*z - x_Wheel - dx_O) + g_O*((- b_Wheel*z) - x_Wheel)
+ - dg_O*((- b_Wheel*z) - x_Wheel) + ((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O)
+ + b_Wheel*dg_O + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*z
+ - (b_Wheel*g_O + a_Wheel + a_O)*z + (a_O*(db_O*g_Wheel - da_O - a_Wheel)
+ - g_O*(g_Wheel + dg_O + a_Wheel*db_O) - dg_O*g_Wheel - a_Wheel*da_O + 1)*y
+ - ((- g_O*g_Wheel) - a_O*a_Wheel + 1)*y
+ + ((- g_O*((- dg_O*g_Wheel) - b_Wheel*db_O + 1))
+ + a_O*(da_O*g_Wheel + db_O + b_Wheel) - g_Wheel - dg_O + b_Wheel*da_O)*x
+ - ((- g_Wheel) - g_O + a_O*b_Wheel)*x - dy_O))
+/(((- (a_Wheel*dg_O - db_O - b_Wheel)*g_O) + b_Wheel*dg_O
+ + a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel)*nz
+ + (a_O*(db_O*g_Wheel - da_O - a_Wheel) - g_O*(g_Wheel + dg_O + a_Wheel*db_O)
+ - dg_O*g_Wheel - a_Wheel*da_O + 1)*ny + ((- g_O
+*((- dg_O*g_Wheel) - b_Wheel*db_O + 1)) + a_O*(da_O*g_Wheel + db_O + b_Wheel)
+ - g_Wheel - dg_O + b_Wheel*da_O)*nx) + g_O
+*(da_O*(z - z_Wheel) - dg_O*((- b_Wheel*z) - x_Wheel) + a_Wheel*z - y_Wheel
+ - dy_O) - g_I*(a_I*(z - z_Wheel) - g_I*((- b_Wheel*z) - x_Wheel) + a_Wheel*z
+ - y_Wheel - y_I) - g_I*(a_Wheel*z - y_Wheel) + dg_O*(a_Wheel*z - y_Wheel)
+ + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O
+ - b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel)*z
+ - (g_I*(b_Wheel*g_I + a_Wheel + a_I) + a_Wheel*g_I
+ - b_I*((- b_I*b_Wheel) - a_I*a_Wheel + 1) - b_Wheel - b_I)*z
+ - (g_I*((- g_I*g_Wheel) - a_I*a_Wheel + 1) - b_I*(b_I*g_Wheel - a_Wheel - a_I)
+ + g_Wheel + g_I + a_Wheel*b_I)*y + (g_O*((- dg_O*g_Wheel) - a_Wheel*da_O + 1)
+ - b_O*(db_O*g_Wheel - da_O - a_Wheel) + g_Wheel + dg_O + a_Wheel*db_O)*y - x_O
+ + 2*x_I + ((- b_O*(da_O*g_Wheel + db_O + b_Wheel)) - dg_O*g_Wheel
+ + g_O*((- g_Wheel) - dg_O + b_Wheel*da_O) - b_Wheel*db_O + 1)*x
+ - ((- b_I*(a_I*g_Wheel + b_Wheel + b_I)) - g_I*g_Wheel
+ + g_I*((- g_Wheel) - g_I + a_I*b_Wheel) - b_I*b_Wheel + 1)*x - dx_O
+(%i96) dXdp:jacobian([dX(da_O,db_O,dg_O,dx_O,dy_O,dz_O)],
+                     [da_O,db_O,dg_O,dx_O,dy_O,dz_O])
+(%o96) matrix([((g_O*nz - a_Wheel*g_O*ny + b_Wheel*g_O*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((nz - a_Wheel*ny + b_Wheel*nx)*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O
+ + a_Wheel*dg_O - db_O - b_Wheel)*nz + ((1 - a_Wheel*da_O)*g_O + dg_O
+ + a_Wheel*db_O)*ny + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*(2*z - a_Wheel*y + b_Wheel*x))/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O
+ + b_Wheel*dg_O + da_O + a_Wheel)*nz + ((- (dg_O + a_Wheel*db_O)*g_O)
+ - a_Wheel*da_O + 1)*ny + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)
+*nx) + 2*g_O*z - a_Wheel*g_O*y + b_Wheel*g_O*x, 
+(((- nz) + a_Wheel*ny - b_Wheel*nx)*((- g_O
+*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - ((g_O*nz - a_Wheel*g_O*ny + b_Wheel*g_O*nx)
+*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*(2*g_O*z - a_Wheel*g_O*y + b_Wheel*g_O*x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx) - 2*z + a_Wheel*y
+ - b_Wheel*x, (((b_Wheel*g_O + a_Wheel)*nz + ny - g_O*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - (((b_Wheel - a_Wheel*g_O)*nz - g_O*ny - nx)
+*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((b_Wheel - a_Wheel*g_O)*z - a_Wheel*g_O*z + b_Wheel*z - g_O*y - x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ + (b_Wheel*g_O + a_Wheel)*z + b_Wheel*g_O*z + a_Wheel*z + y - g_O*x, 
+(g_O*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx) - 1, 
+(- (((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)) - g_O, 0])
+
+--------------------------------------------------------------------------------
+(dbm:2) DD :  dX(da_O, db_O, dg_O, dx_O, dy_O, dz_O);
+((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ + g_O*(b_Wheel*dg_O*z + da_O*z + a_Wheel*z - dy_O)
+ + ((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*z
+ + a_Wheel*dg_O*z - db_O*z + b_Wheel*z + ((1 - a_Wheel*da_O)*g_O + dg_O
+ + a_Wheel*db_O)*y - x_O + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*x - x
+ - dx_O
+
+remember fortran convention !!!!!!!
+
+(dbm:4) dXdp[1][3];
+(((b_Wheel*g_O + a_Wheel)*nz + ny - g_O*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ - (((b_Wheel - a_Wheel*g_O)*nz - g_O*ny - nx)
+*(((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((- g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O))
+ + (((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*z
+ + ((- b_Wheel*g_O) - a_Wheel)*z - b_Wheel*g_O*z + b_Wheel*dg_O*z + da_O*z
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*y - y
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*x + g_O*x - dy_O))
+/expt((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)
+*nz + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx, 2)
+ + ((((b_Wheel*dg_O + da_O + a_Wheel)*g_O + a_Wheel*dg_O - db_O - b_Wheel)*nz
+ + ((1 - a_Wheel*da_O)*g_O + dg_O + a_Wheel*db_O)*ny
+ + ((b_Wheel*da_O - dg_O)*g_O - b_Wheel*db_O + 1)*nx)
+*((b_Wheel - a_Wheel*g_O)*z - a_Wheel*g_O*z + b_Wheel*z - g_O*y - x))
+/((((- a_Wheel*dg_O) + db_O + b_Wheel)*g_O + b_Wheel*dg_O + da_O + a_Wheel)*nz
+ + ((- (dg_O + a_Wheel*db_O)*g_O) - a_Wheel*da_O + 1)*ny
+ + ((- (1 - b_Wheel*db_O)*g_O) - dg_O + b_Wheel*da_O)*nx)
+ + (b_Wheel*g_O + a_Wheel)*z + b_Wheel*g_O*z + a_Wheel*z + y - g_O*x
+
+*/
+
+
+
