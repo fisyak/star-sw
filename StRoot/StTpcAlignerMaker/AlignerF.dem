@@ -184,3 +184,12 @@ trigsimp(dRdpIOs);
 f90(dRdpIOs);
 with_stdout ("DerIO.txt",  f90(dRdpIOs));
 
+/* check ddX/dp */
+dXdpIO : jacobian([drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1]], 
+		                                          [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
+dXdpIOs: dXdpIO;
+ratsimp(dXdpIOs);
+trigsimp(dXdpIOs);
+
+f90(dXdpIOs);
+with_stdout ("dXdpIO.txt",  f90(dXdpIOs));
