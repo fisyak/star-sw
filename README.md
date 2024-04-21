@@ -8,7 +8,7 @@ in order to provide express calibration, express production, and express analysi
 <li>KFParticle, 
 <li>VMC simulation (based on ALICE geant3 version),
 <li>ROOT6 (6.27/01) used for TMVA related tasks, and
-<li>Support of gcc versions 4.8.5, 6.3.1, 10.3.0, 11.2.0.
+<li>Support of gcc versions 4.8.5, 6.3.1, 10.3.0, 11.2.0. 12.1.0, 13.1.0
 <li> ...
 </ol>
 
@@ -20,10 +20,10 @@ The list of stable releases can be found TFG_Releases.md
 <ul>
 <li>  <b>starver .DEV2</b>
 <li>  <b>source $STAR/setupDEV2.csh</b>
-<li>  <b>starver _desired_TFG_version__</b>, from TFG16a  to TFG21n, .DEV2 == TFG is check out HEAD from TFG repository, it could be unstable.
+<li>  <b>starver _desired_TFG_version__</b>, from TFG16a  to TFG24a, .DEV2 == TFG is check out HEAD from TFG repository, it could be unstable.
 <li>  switch between ROOT5 and ROOT6: 
 <ul>
-  <li> setup root6 (6.30.00)
+  <li> setup root6 (6.31.01)
   <li> setup root5
 </ul> 
 </ul>
