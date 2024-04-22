@@ -224,7 +224,7 @@ dRdpIO : jacobian([drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O,
                    dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1], 
                    drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2], 
                    drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[3]],
-		                                          [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
+		                                          [ dx_O, dy_O, dz_O, da_O, db_O, dg_O] );
 dRdpIOs: dRdpIO;
 ratsimp(dRdpIOs);
 trigsimp(dRdpIOs);
@@ -232,20 +232,22 @@ trigsimp(dRdpIOs);
 f90(dRdpIOs);
 with_stdout ("DerIO.txt",  f90(dRdpIOs));
 
-/* check ddX/dp */
+/* check ddX/dp 
 dXdpIO : jacobian([drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1]], 
-		                                          [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
+		                                          [ dx_O, dy_O, dz_O, da_O, db_O, dg_O] );
 dXdpIOs: dXdpIO;
 ratsimp(dXdpIOs);
 trigsimp(dXdpIOs);
 
 f90(dXdpIOs);
 with_stdout ("dXdpIO.txt",  f90(dXdpIOs));
-
+*/
 define(FuncdRdpIO(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dRdpIOs);
 
 FuncdRdpIOat0: FuncdRdpIO(0, 0, 0, 0, 0, 0);
-
+/*
+da_O : 0; db_O : 0; dg_O : 0; dx_O : 0; dy_O : 0; dz_O : 0;
+*/
 ratsimp(FuncdRdpIOat0);
 trigsimp(FuncdRdpIOat0);
 

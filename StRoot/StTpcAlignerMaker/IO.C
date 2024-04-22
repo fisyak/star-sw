@@ -13,71 +13,6 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     cout << "No input files have been found" << endl;
     return;
   }
-#if 0
-	static const Int_t&       TriggerId                                = iter("TriggerId");
-	static const Double_t&    field                                    = iter("field");
-	static const Double_t&    driftVel                                 = iter("driftVel");
-	static const Double_t&    freq                                     = iter("freq");
-	static const Double_t&    charge                                   = iter("charge");
-	static const Int_t&       NoFitPoints                              = iter("NoFitPoints");
-	static const Double_t&    pX                                       = iter("pX");
-	static const Double_t&    pY                                       = iter("pY");
-	static const Double_t&    pZ                                       = iter("pZ");
-	static const Int_t&       iPV                                      = iter("iPV");
-	static const Double_t&    xPV                                      = iter("xPV");
-	static const Double_t&    yPV                                      = iter("yPV");
-	static const Double_t&    zPV                                      = iter("zPV");
-	//	static const UInt_t&      In_fUniqueID                             = iter("In.fUniqueID");
-	//	static const UInt_t&      In_fBits                                 = iter("In.fBits");
-	static const Int_t&       In_sector                                = iter("In.sector");
-	static const Double_t&    In_Rho                                   = iter("In.Rho");
-	static const Double_t&    In_x                                     = iter("In.x");
-	static const Double_t&    In_y                                     = iter("In.y");
-	static const Double_t&    In_z                                     = iter("In.z");
-	static const Double_t&    In_nx                                    = iter("In.nx");
-	static const Double_t&    In_ny                                    = iter("In.ny");
-	static const Double_t&    In_nz                                    = iter("In.nz");
-	static const Double_t&    In_xG                                    = iter("In.xG");
-	static const Double_t&    In_yG                                    = iter("In.yG");
-	static const Double_t&    In_zG                                    = iter("In.zG");
-	static const Double_t&    In_nxG                                   = iter("In.nxG");
-	static const Double_t&    In_nyG                                   = iter("In.nyG");
-	static const Double_t&    In_nzG                                   = iter("In.nzG");
-	static const Double_t&    In_dRho                                  = iter("In.dRho");
-	static const Double_t*&   In_fCov                                  = iter("In.fCov[21]");
-	static const Double_t&    In_Chi2                                  = iter("In.Chi2");
-	static const Int_t&       In_Ndf                                   = iter("In.Ndf");
-	static const Int_t&       In_Npoints                               = iter("In.Npoints");
-	static const Int_t&       In_Nused                                 = iter("In.Nused");
-	static const Double_t&    In_DriftZ                                = iter("In.DriftZ");
-	static const Double_t&    In_step                                  = iter("In.step");
-	//	static const Double_t*&   In_RefSurficeG                           = iter("In.RefSurficeG[4]");
-	//	static const UInt_t&      Out_fUniqueID                            = iter("Out.fUniqueID");
-	//	static const UInt_t&      Out_fBits                                = iter("Out.fBits");
-	static const Int_t&       Out_sector                               = iter("Out.sector");
-	static const Double_t&    Out_Rho                                  = iter("Out.Rho");
-	static const Double_t&    Out_x                                    = iter("Out.x");
-	static const Double_t&    Out_y                                    = iter("Out.y");
-	static const Double_t&    Out_z                                    = iter("Out.z");
-	static const Double_t&    Out_nx                                   = iter("Out.nx");
-	static const Double_t&    Out_ny                                   = iter("Out.ny");
-	static const Double_t&    Out_nz                                   = iter("Out.nz");
-	static const Double_t&    Out_xG                                   = iter("Out.xG");
-	static const Double_t&    Out_yG                                   = iter("Out.yG");
-	static const Double_t&    Out_zG                                   = iter("Out.zG");
-	static const Double_t&    Out_nxG                                  = iter("Out.nxG");
-	static const Double_t&    Out_nyG                                  = iter("Out.nyG");
-	static const Double_t&    Out_nzG                                  = iter("Out.nzG");
-	static const Double_t&    Out_dRho                                 = iter("Out.dRho");
-	static const Double_t*&   Out_fCov                                 = iter("Out.fCov[21]");
-	static const Double_t&    Out_Chi2                                 = iter("Out.Chi2");
-	static const Int_t&       Out_Ndf                                  = iter("Out.Ndf");
-	static const Int_t&       Out_Npoints                              = iter("Out.Npoints");
-	static const Int_t&       Out_Nused                                = iter("Out.Nused");
-	static const Double_t&    Out_DriftZ                               = iter("Out.DriftZ");
-	static const Double_t&    Out_step                                 = iter("Out.step");
-	//	static const Double_t*&   Out_RefSurficeG                          = iter("Out.RefSurficeG[4]");
-#else
 	//	static const Int_t&       TriggerId                                = iter("TriggerId");
 	static const Double_t&    field                                    = iter("field");
 	static const Double_t&    driftVel                                 = iter("driftVel");
@@ -183,7 +118,6 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
 	static const Int_t&       Out_Nused                                = iter("Out.Nused");
 	static const Double_t&    Out_DriftZ                               = iter("Out.DriftZ");
 	static const Double_t&    Out_step                                 = iter("Out.step");
-#endif
   // Book Histograms
   TString Out(OutName);
   if (Out == "") {
@@ -201,7 +135,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
   TFile *fOut = new TFile(Out,"recreate");
   TH3F *plots3D[NPlots];
   for (Int_t i = 0; i < NPlots; i++) {
-#ifdef  __PadGG__
+#if 0
     plots3D[i] = new TH3F(plotNameD[i].Name, plotNameD[i].Title, 24, 0.5, 24.5, 
 			  plotNameD[i].nx, plotNameD[i].xmin, plotNameD[i].xmax,
 			  plotNameD[i].nz, plotNameD[i].zmin, plotNameD[i].zmax);
@@ -232,6 +166,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
 #endif
     //    if (TMath::Abs(field) < 1.0) continue;
     if (In_sector != Out_sector) continue;
+    
     if (In_Chi2 > 5.0 || Out_Chi2 > 5.0) continue;
     TVector3 pxyz(pX,pY,pZ);
     //    if (pxyz.Mag() < 2.0) continue;
@@ -240,20 +175,23 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     //    if (In_Ndf < 15 || Out_Ndf < 15) continue;
     Int_t sector = In_sector;
     if (! sector) continue;
-    if (! Out_sector) continue;
-#ifdef __PadGG__
-    TVector3 pxyzIn(In_nxPadGG,In_nyPadGG,In_nzPadGG);  PrPP(pxyzIn);
-    TVector3 rI(In_xPadGG,In_yPadGG,In_zPadGG);         PrPP(rI);
-    TVector3 pxyzOut(Out_nxPadGG,Out_nyPadGG,Out_nzPadGG);   PrPP(pxyzOut);
-    TVector3 rO(Out_xPadGG,Out_yPadGG,Out_zPadGG); PrPP(rO);
-    TVector3 rO12(Out_x,Out_y,Out_z); PrPP(rO12);
-#else
+    if ( Out_sector != sector) continue;
+    StBeamDirection part = StTpcDb::TpcPart(sector);
+    const TGeoHMatrix &Wheel = StTpcDb::instance()->TpcWheel(part);
+    const Double_t *rotWheel = Wheel.GetRotationMatrix();
+    const Double_t *traWheel = Wheel.GetTranslation();
+    //                          alpha        beta         gamma        x            y            z
+    Double_t abgxyz_Wheel[6] = {rotWheel[7], rotWheel[2], rotWheel[3], traWheel[0], traWheel[1], traWheel[2]};
+    const TGeoHMatrix &O = StTpcDb::instance()->SubSOuter2Sup12S(sector);
+    const Double_t *rotO = O.GetRotationMatrix();
+    const Double_t *traO = O.GetTranslation();
+    //                      alpha    beta     gamma    x         y         z
+    Double_t abgxyz_O[6] = {rotO[7], rotO[2], rotO[3], traO[0], traO[1], traO[2]};
     TVector3 pxyzIn(In_nxPad,In_nyPad,In_nzPad);  PrPP(pxyzIn);
     TVector3 rI(In_xPad,In_yPad,In_zPad);         PrPP(rI);
     TVector3 pxyzOut(Out_nxPad,Out_nyPad,Out_nzPad);   PrPP(pxyzOut);
     TVector3 rO(Out_xPad,Out_yPad,Out_zPad); PrPP(rO);
     TVector3 rO12(Out_x,Out_y,Out_z); PrPP(rO12);
-#endif
     Double_t dev = (TMath::Abs(In_Rho)-TMath::Abs(Out_Rho));
     //    if (TMath::Abs(dev) > 5e-4) continue;
     if (TMath::Abs(dev) > 6e-3) continue; // 3D distortions
@@ -261,13 +199,6 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     TRSymMatrix COut(kP,Out_fCov);                     PrPP(COut);
     TRSymMatrix C(CIn);
     C += COut;                                        PrPP(C);
-#if 0
-    C(0,0) += 1./2.2e2; // 2e2
-    C(1,1) += 1./2.2e2; // 2.1e2
-    C(2,2) += 1./5.6e4; // 3.76e4
-    C(3,3) += 1e-6;     // 5.9e5
-    C(4,4) += 1./3.8e5; // 3e5                              PrPP(C);
-#endif
     TRSymMatrix C5x5(T5x6,TRArray::kAxSxAT,C);
     TVector3 nI = pxyzIn.Unit();                      PrPP(nI);
     TVector3 nO = pxyzOut.Unit();                     PrPP(nO);
@@ -336,6 +267,7 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
                                               = zT * WT  * z - 2 * zT * WT * z + mT * G * m 
                                               = mT * G * m  - zT * WT  * z
 */
+#if 0
     TRMatrix A(kM,kP,
 	       //                 0    1    2                    3         4                   5
 	       //                dx   dy   dz                alpha      beta               gamma
@@ -344,6 +276,26 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
 	       /* nX 2*/         0.,  0.,  0.,                 0.0,  -nO.Z(),             nO.Y(),
 	       /* nY 3*/         0.,  0.,  0.,              nO.Z(),      0.0,            -nO.X(),
 	       /* nZ 4*/         0.,  0.,  0.,             -nO.Y(),   nO.X(),                0.0);  PrPP(A);
+#else 
+    TVector3 RIn(In_x, In_y, In_z);
+    TVector3 NIn(In_nx, In_ny, In_nz);
+    TVector3 ROut(Out_x, Out_y, Out_z);
+    TVector3 NOut(Out_nx, Out_ny, Out_nz);
+    TVector3 R = 0.5*(RIn + ROut);
+    TVector3 N = 0.5*(NIn + NOut);
+    Double_t a6x6[6][6];
+    StTpcUtil::IODer(&R[0], &N[0], abgxyz_O, abgxyz_Wheel, a6x6);
+    TRMatrix A6x6(6,6, &a6x6[0][0]);
+    // Convert from Fortran to C storage (row-wise without gaps, contrary to the Fortran convention)
+    TRMatrix A(kM,kP);
+    for (Int_t p = 0; p < kP; p++) {
+      for (Int_t m = 0; m < kM; m++) {
+	Int_t k = m;
+	if (m > 1) k += 1;
+	A(m,p) = A6x6(p,k);
+      }
+    }
+#endif
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
     TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
     TRSymMatrix SX(A,TRArray::kATxSxA,G);   PrPP(SX);
@@ -370,20 +322,33 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
     TRMatrix V(NPlots,2,
-	       mX(0)  ,  A(0,1), // "dXdy"     ,"dX  versus  tX         =>  dy", 
-	       mX(0)  ,  A(0,3), // "dXdalpha" ,"dX  versus -tX*zO      =>  alpha
-	       mX(0)  ,  A(0,4), // "dXdbeta"  ,"dX  versus -zO         =>  beta"
-	       mX(0)  ,  A(0,5), // "dXdgamma" ,"dX  versus  yO + tX*xO =>  gamma
-	       mX(1)  ,  A(1,1), // "dZdy"     ,"dZ  versus  tZ         =>  dy", 
-	       mX(1)  ,  A(1,3), // "dZdalpha" ,"dZ  versus -(yO+tZ*zO) =>  alpha
-	       mX(1)  ,  A(1,4), // "dZdbeta"  ,"dZ  versus  xO         =>  beta"
-	       mX(1)  ,  A(1,5), // "dZdgamma" ,"dZ  versus  tZ*xO      =>  gamma
-	       mX(2)  ,  A(2,4), // "dnXdbeta" ,"dnX versus -nzO        =>  beta"
-	       mX(2)  ,  A(2,5), // "dnXdgamma","dnX versus  nyO        =>  gamma
-	       mX(3)  ,  A(3,3), // "dnYdalpha","dnY versus  nzO        =>  alpha
-	       mX(3)  ,  A(3,5), // "dnYdgamma","dnY versus -nxO        =>  gamma
-	       mX(4)  ,  A(4,3), // "dnZdalpha","dnZ versus -nyO        =>  alpha
-	       mX(4)  ,  A(4,4), // "dnZdbeta" ,"dnZ versus  nxO        =>  beta"
+mX(0), A(0,0),// {"dXdalpha",        "dXdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 0
+mX(0), A(0,1),// {"dXdbeta",         "dXdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 1
+mX(0), A(0,2),// {"dXdgamma",        "dXdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 2
+mX(0), A(0,3),// {"dXdx",    "dXdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 3
+mX(0), A(0,4),// {"dXdy",    "dXdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 4
+mX(0), A(0,5),// {"dXdz",    "dXdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 5
+mX(1), A(1,0),// {"dZdalpha",        "dZdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 6
+mX(1), A(1,1),// {"dZdbeta",         "dZdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 7
+mX(1), A(1,2),// {"dZdgamma",        "dZdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 8
+mX(1), A(1,3),// {"dZdx",    "dZdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 9
+mX(1), A(1,4),// {"dZdy",    "dZdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //10
+mX(1), A(1,5),// {"dZdz",    "dZdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //11
+mX(2), A(2,0),// {"dnXdalpha",       "dnXdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //12
+mX(2), A(2,1),// {"dnXdbeta",        "dnXdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //13
+mX(2), A(2,2),// {"dnXdgamma",       "dnXdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //14
+mX(2), A(2,3),// {"dnXdx",   "dnXdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //15
+mX(2), A(2,4),// {"dnXdy",   "dnXdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //16
+mX(2), A(2,5),// {"dnXdz",   "dnXdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //17
+mX(3), A(3,0),// {"dnYdalpha",       "dnYdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //18
+mX(3), A(3,1),// {"dnYdbeta",        "dnYdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //19
+mX(3), A(3,2),// {"dnYdgamma",       "dnYdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //20
+mX(4), A(4,0),// {"dnZdalpha",       "dnZdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //21
+mX(4), A(4,1),// {"dnZdbeta",        "dnZdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //22
+mX(4), A(4,2),// {"dnZdgamma",       "dnZdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //23
+mX(4), A(4,3),// {"dnZdx",   "dnZdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //24
+mX(4), A(4,4),// {"dnZdy",   "dnZdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //25
+mX(4), A(4,5),// {"dnZdz",   "dnZdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //26                         
 	       mX(0)  , rO12.Z() , // "dX"       ,"dX  versus Z"                   
 	       dr.Y() , rO12.Z() , // "dY"       ,"dY  versus Z"                   
 	       mX(1)  , rO12.Z() , // "dZ"       ,"dZ  versus Z"                   

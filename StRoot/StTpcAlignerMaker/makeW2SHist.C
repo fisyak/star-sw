@@ -123,4 +123,26 @@ void CheckPlots(const Char_t *opt = "zy") {
   }
   c1->Update();
 };
- 
+//__________________________________________________________________________________________
+void makeIOHist() {
+  const Char_t *M[5] = { "X",  "Z", "nX", "nY", "nZ"};
+  const Char_t *P[6] = {"alpha","beta","gamma","x","y","z"};
+  TString Yaxis("110,-1.100, 1.100");
+  TString Zaxis("500,  -1.0,   1.0");
+  Int_t nh = 0;
+  for (Int_t m = 0; m < 5; m++) {
+    Int_t m1 = m + 1;
+    for (Int_t p = 0; p < 6; p++) {
+      Int_t p1 = p + 1;
+      /*
+      dRdpIOs(4,4) = 0
+      dRdpIOs(4,5) = 0
+      dRdpIOs(4,6) = 0
+      */
+      if (m1 == 4 && p1 >=4) continue;
+      cout << "mX(" << m << "), A(" << m << "," << p << "), , // {\"d" << M[m] << "d" << P[p] << "\", \t\"" << "d" << M[m] << "d" << P[p]  << " \t=> d" << P[p] << "\","  
+	   << "\t" << Yaxis.Data() << "," << Zaxis.Data()  << "}, //" << Form("%2i",nh) << endl;
+      nh++;
+    }
+  }
+}

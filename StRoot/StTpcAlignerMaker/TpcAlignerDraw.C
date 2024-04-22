@@ -19,7 +19,8 @@ foreach r (`ls -1d st_*.root | sed -e 's/st_//' -e 's/adc_//' -e 's/hltcosmic_//
     if ($count > 40) break;
 end
 
-
+    root.exe -q -b 'lDb.C(1,"Cosmic_2024/RF,FGdbOpt,CorrZ")' TpcAlignerDraw.C+ 'TpcAlignerDraw.C+(2)'>& TpcAlignerDraw.log &
+    root.exe -q -b 'lDb.C(1,"Cosmic_2024/RF,FGdbOpt,CorrZ")' T'pcAlignerDraw.C+(1)' 'TpcAlignerDraw.C+(3)'>& TpcAlignerDraw1.log &
 */
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include "Riostream.h"
@@ -47,6 +48,8 @@ end
 #include "TRVector.h"
 #include "TRMatrix.h"
 #include "TGeoMatrix.h"
+#include "StTpcDb/StTpcDb.h"
+#include "StTpcUtil/StTpcUtil.h"
 #endif
 /* 
    TpcW2STree->Draw("(abs(HelixU.Rho)-abs(HelixS.Rho))/(abs(HelixU.Rho)+abs(HelixS.Rho))>>dC(100,-2e-1,2e-1)") => sigma = 3.55241e-02
@@ -68,44 +71,35 @@ struct PlotName_t {
   Int_t nz;
   Double_t zmin, zmax;
 };
-enum {NPlots = 21, NFPlots=14, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
-const  PlotName_t plotNameD[NPlots] = {// plots for drift
-  {"dXdy"     ,"dX  versus  tX         =>  dy",    100,  -1,      1, 500, -0.500, 0.500}, // 0 -> <dx>, dy    tX = nO.X()/nO.Y()
-#ifdef __PadGG__
-  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-1e-2,  1e-2, 500, -0.500, 0.500}, // 1 -> <dx>, alpha  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-1e-2,  1e-2, 500, -0.500, 0.500}, // 1 -> <dx>, alpha
-  {"dXdbeta"  ,"dX  versus -zO         =>  beta",  100,-5e-5, 15e-3, 500, -0.500, 0.500}, // 2 -> <dx>, beta 
-#else
-  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-150.,  150., 500, -0.500, 0.500}, // 1 -> <dx>, alpha  {"dXdalpha" ,"dX  versus -tX*zO      =>  alpha", 100,-1e-2,  1e-2, 500, -0.500, 0.500}, // 1 -> <dx>, alpha
-  {"dXdbeta"  ,"dX  versus -zO         =>  beta",  100,-220.,  -20., 500, -0.500, 0.500}, // 2 -> <dx>, beta 
-#endif
-  {"dXdgamma" ,"dX  versus  yO + tX*xO =>  gamma", 100,  117,   136, 500, -0.500, 0.500}, // 3 -> <dx>, gamma
-#ifdef __PadGG__
-  {"dZdy"     ,"dZ  versus  tZ         =>  dy",    100, -300,     0, 500,  -1e-4,  1e-4}, // 4 -> <dz>, dy   
-  {"dZdalpha" ,"dZ  versus -(yO+tZ*zO) =>  alpha", 100, -127,  -122, 500,  -1e-4,  1e-4}, // 5 -> <dz>, alpha
-  {"dZdbeta"  ,"dZ  versus  xO         =>  beta",  100,  -30,    30, 500,  -1e-4,  1e-4}, // 6 -> <dz>, beta 
-  {"dZdgamma" ,"dZ  versus  tZ*xO      =>  gamma", 100, -6e3,   6e3, 500,  -1e-4,  1e-4}, // 7 -> <dz>, gamma
-
-  {"dnXdbeta" ,"dnX versus -nzO        =>  beta",  100,0.999,    1, 500, -3e-4, 6e-4 }, // 8 ->       beta 
-  {"dnXdgamma","dnX versus  nyO        =>  gamma", 100,    0, 0.04, 500, -3e-4, 6e-4 }, // 9 ->       gamma
-  {"dnYdalpha","dnY versus  nzO        =>  alpha", 100,   -1,-.999, 500, -3e-4, 3e-4 }, //10 ->       alpha 
-  {"dnYdgamma","dnY versus -nxO        =>  gamma", 100,-.015,0.015, 500, -3e-4, 3e-4 }, //11 ->       gamma
-
-  {"dnZdalpha","dnZ versus -nyO        =>  alpha", 100, -126.,  -122., 500,  -4e6, 1e-5 }, //12 ->       alpha
-  {"dnZdbeta" ,"dnZ versus  nxO        =>  beta" , 100, -30.0,   30.0, 500,  -4e6, 1e-5 }, //13 ->       beta
-#else
-  {"dZdy"     ,"dZ  versus  tZ         =>  dy",    100, -1.5,   1.5, 500,  -0.25,  0.25}, // 4 -> <dz>, dy   
-  {"dZdalpha" ,"dZ  versus -(yO+tZ*zO) =>  alpha", 100, -399,  -100, 500,  -0.25,  0.25}, // 5 -> <dz>, alpha
-  {"dZdbeta"  ,"dZ  versus  xO         =>  beta",  100,  -30,    30, 500,  -0.25,  0.25}, // 6 -> <dz>, beta 
-  {"dZdgamma" ,"dZ  versus  tZ*xO      =>  gamma", 100,  -25,    25, 500,  -0.25,  0.25}, // 7 -> <dz>, gamma
-
-  {"dnXdbeta" ,"dnX versus -nzO        =>  beta",  100, -0.9,   0.9, 500, -0.025,  0.025}, // 8 ->       beta 
-  {"dnXdgamma","dnX versus  nyO        =>  gamma", 100,  0.4,   1.0, 500, -0.025,  0.025}, // 9 ->       gamma
-  {"dnYdalpha","dnY versus  nzO        =>  alpha", 100,   -1,   1.0, 500, -0.003,  0.003}, //10 ->       alpha 
-  {"dnYdgamma","dnY versus -nxO        =>  gamma", 100, -0.7,   0.7, 500, -0.025,  0.025}, //11 ->       gamma
-
-  {"dnZdalpha","dnZ versus -nyO        =>  alpha", 100,  -1.,   0.8, 500, -0.015,  0.015}, //12 ->       alpha
-  {"dnZdbeta" ,"dnZ versus  nxO        =>  beta" , 100,  -.7,   0.7, 500, -0.015,  0.015 }, //13 ->       beta
-#endif
+enum {NPlots = 27, NFPlots=NPlots+7, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
+const  PlotName_t plotNameD[NFPlots] = {// plots for drift
+  {"dXdalpha",        "dXdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 0 
+  {"dXdbeta",         "dXdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 1 
+  {"dXdgamma",        "dXdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 2 
+  {"dXdx",    "dXdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 3			   
+  {"dXdy",    "dXdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 4			   
+  {"dXdz",    "dXdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 5			   
+  {"dZdalpha",        "dZdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 6 
+  {"dZdbeta",         "dZdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 7 
+  {"dZdgamma",        "dZdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 8 
+  {"dZdx",    "dZdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 9			   
+  {"dZdy",    "dZdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //10			   
+  {"dZdz",    "dZdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //11			   
+  {"dnXdalpha",       "dnXdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //12 
+  {"dnXdbeta",        "dnXdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //13 
+  {"dnXdgamma",       "dnXdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //14 
+  {"dnXdx",   "dnXdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //15			   
+  {"dnXdy",   "dnXdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //16			   
+  {"dnXdz",   "dnXdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //17			   
+  {"dnYdalpha",       "dnYdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //18 
+  {"dnYdbeta",        "dnYdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //19 
+  {"dnYdgamma",       "dnYdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //20 
+  {"dnZdalpha",       "dnZdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //21 
+  {"dnZdbeta",        "dnZdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //22 
+  {"dnZdgamma",       "dnZdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //23 
+  {"dnZdx",   "dnZdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //24			   
+  {"dnZdy",   "dnZdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //25			   
+  {"dnZdz",   "dnZdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //26                         
   {"dX"       ,"dX  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //14
   {"dY"       ,"dY  versus Z"                    , 200,    10,    210, 500,  -3e-2,  3e-2}, //15
   {"dZ"       ,"dZ  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //16

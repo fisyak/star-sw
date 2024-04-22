@@ -1,0 +1,18 @@
+drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := 
+matrix([z +  c_11*a_O + c_12* b_O + c_13* g_O + c_14* x_O + c_15* y_O + c_16* z_O + c_17* da_O + c_18* db_O + c_19* dg_O + c_110* dx_O + c_111* dy_O + c_112* dz_O + c_113* a_Wheel + c_115* b_Wheel],
+       [z +  c_21*a_O + c_22* b_O + c_23* g_O + c_24* x_O + c_25* y_O + c_26* z_O + c_27* da_O + c_28* db_O + c_29* dg_O + c_210* dx_O + c_211* dy_O + c_212* dz_O + c_213* a_Wheel + c_215* b_Wheel],
+       [z +  c_31*a_O + c_32* b_O + c_33* g_O + c_34* x_O + c_35* y_O + c_36* z_O + c_37* da_O + c_38* db_O + c_39* dg_O + c_310* dx_O + c_311* dy_O + c_312* dz_O + c_313* a_Wheel + c_315* b_Wheel]);
+dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := 
+matrix([z +  c_41*a_O + c_42* b_O + c_43* g_O + c_44* x_O + c_45* y_O + c_46* z_O + c_47* da_O + c_48* db_O + c_49* dg_O + c_410* dx_O + c_411* dy_O + c_412* dz_O + c_413* a_Wheel + c_415* b_Wheel],
+       [z +  c_51*a_O + c_52* b_O + c_53* g_O + c_54* x_O + c_55* y_O + c_56* z_O + c_57* da_O + c_58* db_O + c_59* dg_O + c_510* dx_O + c_511* dy_O + c_512* dz_O + c_513* a_Wheel + c_515* b_Wheel],
+       [z +  c_61*a_O + c_62* b_O + c_63* g_O + c_64* x_O + c_65* y_O + c_66* z_O + c_67* da_O + c_68* db_O + c_69* dg_O + c_610* dx_O + c_611* dy_O + c_612* dz_O + c_613* a_Wheel + c_615* b_Wheel]);
+
+
+
+dRdpIO : jacobian([drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1], 
+                   drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2], 
+                   drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[3], 
+                   dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1], 
+                   dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2], 
+                   dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[3]],
+		                                          [ da_O, db_O, dg_O, dx_O, dy_O, dz_O] );
