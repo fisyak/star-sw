@@ -4,6 +4,19 @@
 #include "TRArray.h"
 class TRSymMatrix;
 #include "TRSymMatrix.h"
+/*  Cernlib F110
+    The routines of MXPACK compute the product of two matrices or the product of their transposed matrices
+    and may add or subtract to the resultant matrix a third one, add or subtract one matrix from another, or
+    transfer a matrix, its negative, or a multiple of it, transpose a given matrix, build up a unit matrix, multiply
+    a matrix by a diagonal (from left or from right) and may add the result to another matrix, add to square
+    matrix the multiple of a diagonal matrix, compute the products X = ABA0 (A0 denotes the transpose of
+    A) and X = A0BA. It is assumed that matrices are stored ROW-WISE WITHOUT GAPS, CONTRARY to the Fortran
+    convention
+    Cernlib F112
+    A,B,C unpacked rectangular matrices (ROW-WISE STORAGE)
+    Q,R,S,T packed symmetric matrices
+    V,W packed lower triangular matrices
+*/
 class TRMatrix : public TRArray {
  public:
   TRMatrix(Int_t nrows=0,Int_t ncols=0) : TRArray(nrows*ncols), fNrows(nrows), fNcols(ncols) {}
