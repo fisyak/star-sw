@@ -130,6 +130,7 @@ class StTpcDb {
     else              {iphi = (      90 + 30*(sector - 12))%360;}
     return iphi;
   }
+  static StBeamDirection TpcPart(Int_t sector) {StBeamDirection part = east; if (sector <= 12) part = west; return part;}
   //small pieces of data:
   void    SetDriftVelocity();
   Float_t DriftVelocity(Int_t sector=24) {return DriftVelocity(sector, 0);}

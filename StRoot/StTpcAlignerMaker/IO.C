@@ -133,9 +133,9 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     Out += "_IO.root";
   }
   TFile *fOut = new TFile(Out,"recreate");
-  TH3F *plots3D[NPlots];
-  for (Int_t i = 0; i < NPlots; i++) {
-#if 0
+  TH3F *plots3D[NFPlots];
+  for (Int_t i = 0; i < NFPlots; i++) {
+#if 1
     plots3D[i] = new TH3F(plotNameD[i].Name, plotNameD[i].Title, 24, 0.5, 24.5, 
 			  plotNameD[i].nx, plotNameD[i].xmin, plotNameD[i].xmax,
 			  plotNameD[i].nz, plotNameD[i].zmin, plotNameD[i].zmax);
@@ -321,34 +321,21 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
       TRSymMatrix S(6,array+is);  PrPP(S);
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
-    TRMatrix V(NPlots,2,
-mX(0), A(0,0),// {"dXdalpha",        "dXdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 0
-mX(0), A(0,1),// {"dXdbeta",         "dXdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 1
-mX(0), A(0,2),// {"dXdgamma",        "dXdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 2
-mX(0), A(0,3),// {"dXdx",    "dXdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 3
-mX(0), A(0,4),// {"dXdy",    "dXdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 4
-mX(0), A(0,5),// {"dXdz",    "dXdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 5
-mX(1), A(1,0),// {"dZdalpha",        "dZdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 6
-mX(1), A(1,1),// {"dZdbeta",         "dZdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 7
-mX(1), A(1,2),// {"dZdgamma",        "dZdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 8
-mX(1), A(1,3),// {"dZdx",    "dZdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 9
-mX(1), A(1,4),// {"dZdy",    "dZdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //10
-mX(1), A(1,5),// {"dZdz",    "dZdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //11
-mX(2), A(2,0),// {"dnXdalpha",       "dnXdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //12
-mX(2), A(2,1),// {"dnXdbeta",        "dnXdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //13
-mX(2), A(2,2),// {"dnXdgamma",       "dnXdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //14
-mX(2), A(2,3),// {"dnXdx",   "dnXdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //15
-mX(2), A(2,4),// {"dnXdy",   "dnXdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //16
-mX(2), A(2,5),// {"dnXdz",   "dnXdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //17
-mX(3), A(3,0),// {"dnYdalpha",       "dnYdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //18
-mX(3), A(3,1),// {"dnYdbeta",        "dnYdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //19
-mX(3), A(3,2),// {"dnYdgamma",       "dnYdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //20
-mX(4), A(4,0),// {"dnZdalpha",       "dnZdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //21
-mX(4), A(4,1),// {"dnZdbeta",        "dnZdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //22
-mX(4), A(4,2),// {"dnZdgamma",       "dnZdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //23
-mX(4), A(4,3),// {"dnZdx",   "dnZdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //24
-mX(4), A(4,4),// {"dnZdy",   "dnZdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //25
-mX(4), A(4,5),// {"dnZdz",   "dnZdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //26                         
+    TRMatrix V(NFPlots,2,
+mX(0), A(0,1),   //  {"dXdy",           "dX versus dX/dy[1,2]   => dy", 110, -0.95,  0.95,500,-0.40, 0.40}, // 0
+mX(0), A(0,3),   //  {"dXdalpha",       "dX versus dX/dalpha[1,4]       => dalpha",     110, -300.,  300.,500,-0.40, 0.40}, // 1
+mX(0), A(0,4),   //  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,-450.0, -30.0,500,-0.40, 0.40}, // 2
+mX(0), A(0,5),   //  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110, 110.0, 130.0,500,-0.40, 0.40}, // 3
+mX(1), A(1,3),   //  {"dZdalpha",       "dZ versus dZ/dalpha[3,4]       => dalpha",     110, 50.00, 850.0,500,-0.40, 0.40}, // 4
+mX(1), A(1,4),   //  {"dZdbeta",        "dZ versus dZ/dbeta[3,5]        => dbeta",      110, -0.65,  0.60,500,-0.40, 0.40}, // 5
+mX(1), A(1,5),   //  {"dZdgamma",       "dZ versus dZ/dgamma[3,6]       => dgamma",     110,-60.00,  60.0,500,-0.40, 0.40}, // 6
+mX(2), A(2,4),   //  {"dnXdbeta",       "dnX versus dnX/dbeta[4,5]      => dbeta",      110, -0.85,  0.85,500,-0.03, 0.03}, // 7
+mX(2), A(2,5),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[4,6]     => dgamma",     110,  0.40,  1.00,500,-0.03, 0.03}, // 8
+mX(3), A(3,5),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[5,6]     => dgamma",     110, -0.65,  0.55,500,-0.02, 0.02}, // 9
+mX(4), A(4,1),   //  {"dnZdy",          "dnZ versus dnZ/dy[6,2]         => dy", 110, -1.50,  1.50,500,-0.01, 0.01}, //10
+mX(4), A(4,3),   //  {"dnZdalpha",      "dnZ versus dnZ/dalpha[6,4]     => dalpha",     110,-500.0, 300.0,500,-0.01, 0.01}, //11
+mX(4), A(4,4),   //  {"dnZdbeta",       "dnZ versus dnZ/dbeta[6,5]      => dbeta",      110, -30.0,  30.0,500,-0.01, 0.01}, //12
+mX(4), A(4,5),   //  {"dnZdgamma",      "dnZ versus dnZ/dgamma[6,6]     => dgamma",     110, -30.0,  30.0,500,-0.01, 0.01}, //13
 	       mX(0)  , rO12.Z() , // "dX"       ,"dX  versus Z"                   
 	       dr.Y() , rO12.Z() , // "dY"       ,"dY  versus Z"                   
 	       mX(1)  , rO12.Z() , // "dZ"       ,"dZ  versus Z"                   
@@ -357,7 +344,7 @@ mX(4), A(4,5),// {"dnZdz",   "dnZdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0
 	       mX(4)  , rO12.Z() , // "dnZ"      ,"dnZ versus Z"                        
 	       mX(1)/(driftVel/freq)  , rO12.Z()  // "dT"       ,"dT  versus Z"
 	       );// PrPP(V);
-    for (Int_t i = 0; i < NPlots; i++) plots3D[i]->Fill(sector, V(i,1), V(i,0));
+    for (Int_t i = 0; i < NFPlots; i++) plots3D[i]->Fill(sector, V(i,1), V(i,0));
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}
     Ntracks++;
   }
@@ -369,7 +356,7 @@ void TDrawIO() {
   if (! gMinuit) new TMinuit(10);
   gMinuit->SetPrintLevel(-2);
   Int_t nx = 24;
-  Int_t ny = NFPlots;
+  Int_t ny = NPlots; // NFPlots
   Int_t scaleX = 800/nx;
   Int_t scaleY = 600/ny;
   //  Int_t scale  = TMath::Min(scaleX,scaleY);
@@ -479,7 +466,7 @@ void TDrawIO() {
 #ifdef __NO_LSF__
 	    ValA[m].iFlag = 0;
 #else 
-	    if (m <= 2 && TMath::Abs(ValA[m].val) < 5000 ||
+	    if (m <= 2 && TMath::Abs(ValA[m].val) < 2000 ||
 		m >  2 && TMath::Abs(ValA[m].val) <    5) {
 	      ValA[m].iFlag = 1;
 	    } else {
@@ -495,7 +482,7 @@ void TDrawIO() {
     }
     cout << line << endl;
     out << line << endl;
-    for (Int_t j = 0; j < NFPlots; j++) {
+    for (Int_t j = 0; j < NPlots; j++) {
       TH3 *h3 = (TH3 *) gDirectory->Get(plotNameD[j].Name);
       if (! h3) continue;
       Int_t ij = j + 1 + ny*(i-1);

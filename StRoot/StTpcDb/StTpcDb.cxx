@@ -372,8 +372,7 @@ Revist 04/17/2024 modify Half (rotaion around Wheel position) and Flip (add shif
 	}
       } else {
 	Id = 10*sector + k;
-	StBeamDirection part = east;
-	if (sector <= 12) part = west;
+	StBeamDirection part = TpcPart(sector);
 	switch (k) {
 	case kSupS2Tpc: // SupS => Tpc
 	case kSup12S2Tpc: // Sup12S => Tpc

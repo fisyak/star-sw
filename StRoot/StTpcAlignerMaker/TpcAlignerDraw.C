@@ -71,35 +71,22 @@ struct PlotName_t {
   Int_t nz;
   Double_t zmin, zmax;
 };
-enum {NPlots = 27, NFPlots=NPlots+7, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
+enum {NPlots = 14, NFPlots=NPlots+7, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
 const  PlotName_t plotNameD[NFPlots] = {// plots for drift
-  {"dXdalpha",        "dXdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 0 
-  {"dXdbeta",         "dXdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 1 
-  {"dXdgamma",        "dXdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 2 
-  {"dXdx",    "dXdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 3			   
-  {"dXdy",    "dXdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 4			   
-  {"dXdz",    "dXdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 5			   
-  {"dZdalpha",        "dZdalpha       => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 6 
-  {"dZdbeta",         "dZdbeta        => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, // 7 
-  {"dZdgamma",        "dZdgamma       => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, // 8 
-  {"dZdx",    "dZdx   => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, // 9			   
-  {"dZdy",    "dZdy   => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //10			   
-  {"dZdz",    "dZdz   => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //11			   
-  {"dnXdalpha",       "dnXdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //12 
-  {"dnXdbeta",        "dnXdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //13 
-  {"dnXdgamma",       "dnXdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //14 
-  {"dnXdx",   "dnXdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //15			   
-  {"dnXdy",   "dnXdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //16			   
-  {"dnXdz",   "dnXdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //17			   
-  {"dnYdalpha",       "dnYdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //18 
-  {"dnYdbeta",        "dnYdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //19 
-  {"dnYdgamma",       "dnYdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //20 
-  {"dnZdalpha",       "dnZdalpha      => dalpha",     110,-1.100, 1.100,500,  -1.0,   1.0}, //21 
-  {"dnZdbeta",        "dnZdbeta       => dbeta",      110,-1.100, 1.100,500,  -1.0,   1.0}, //22 
-  {"dnZdgamma",       "dnZdgamma      => dgamma",     110,-1.100, 1.100,500,  -1.0,   1.0}, //23 
-  {"dnZdx",   "dnZdx  => dx", 110,-1.100, 1.100,500,  -1.0,   1.0}, //24			   
-  {"dnZdy",   "dnZdy  => dy", 110,-1.100, 1.100,500,  -1.0,   1.0}, //25			   
-  {"dnZdz",   "dnZdz  => dz", 110,-1.100, 1.100,500,  -1.0,   1.0}, //26                         
+  {"dXdy",           "dX versus dX/dy[1,2]   => dy", 110, -0.95,  0.95,500,-0.40, 0.40}, // 0
+  {"dXdalpha",       "dX versus dX/dalpha[1,4]       => dalpha",     110, -300.,  300.,500,-0.40, 0.40}, // 1
+  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,-450.0, -30.0,500,-0.40, 0.40}, // 2
+  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110, 110.0, 130.0,500,-0.40, 0.40}, // 3
+  {"dZdalpha",       "dZ versus dZ/dalpha[3,4]       => dalpha",     110, 50.00, 850.0,500,-0.40, 0.40}, // 4
+  {"dZdbeta",        "dZ versus dZ/dbeta[3,5]        => dbeta",      110, -0.65,  0.60,500,-0.40, 0.40}, // 5
+  {"dZdgamma",       "dZ versus dZ/dgamma[3,6]       => dgamma",     110,-60.00,  60.0,500,-0.40, 0.40}, // 6
+  {"dnXdbeta",       "dnX versus dnX/dbeta[4,5]      => dbeta",      110, -0.85,  0.85,500,-0.03, 0.03}, // 7
+  {"dnXdgamma",      "dnX versus dnX/dgamma[4,6]     => dgamma",     110,  0.40,  1.00,500,-0.03, 0.03}, // 8
+  {"dnYdgamma",      "dnY versus dnY/dgamma[5,6]     => dgamma",     110, -0.65,  0.55,500,-0.02, 0.02}, // 9
+  {"dnZdy",          "dnZ versus dnZ/dy[6,2]         => dy",         110, -1.50,  1.50,500,-0.01, 0.01}, //10
+  {"dnZdalpha",      "dnZ versus dnZ/dalpha[6,4]     => dalpha",     110,-500.0, 300.0,500,-0.01, 0.01}, //11
+  {"dnZdbeta",       "dnZ versus dnZ/dbeta[6,5]      => dbeta",      110, -30.0,  30.0,500,-0.01, 0.01}, //12
+  {"dnZdgamma",      "dnZ versus dnZ/dgamma[6,6]     => dgamma",     110, -30.0,  30.0,500,-0.01, 0.01}, //13
   {"dX"       ,"dX  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //14
   {"dY"       ,"dY  versus Z"                    , 200,    10,    210, 500,  -3e-2,  3e-2}, //15
   {"dZ"       ,"dZ  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //16

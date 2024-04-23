@@ -126,23 +126,84 @@ void CheckPlots(const Char_t *opt = "zy") {
 //__________________________________________________________________________________________
 void makeIOHist() {
   const Char_t *M[5] = { "X",  "Z", "nX", "nY", "nZ"};
-  const Char_t *P[6] = {"alpha","beta","gamma","x","y","z"};
-  TString Yaxis("110,-1.100, 1.100");
-  TString Zaxis("500,  -1.0,   1.0");
+  const Char_t *P[6] = {"x","y","z","alpha","beta","gamma"};
   Int_t nh = 0;
   for (Int_t m = 0; m < 5; m++) {
     Int_t m1 = m + 1;
+    if (m >= 1) m1 = m + 2; 
     for (Int_t p = 0; p < 6; p++) {
       Int_t p1 = p + 1;
       /*
-      dRdpIOs(4,4) = 0
-      dRdpIOs(4,5) = 0
-      dRdpIOs(4,6) = 0
+      dRdpIOs(2,1) = -2*g_O
+      dRdpIOs(2,2) = -2
+      dRdpIOs(2,3) = 2*a_O
+      dRdpIOs(4,1) = 0
+      dRdpIOs(4,2) = 0
+      dRdpIOs(4,3) = 0
+      dRdpIOs(5,1) = -2*g_O
+      dRdpIOs(5,2) = -2
+      dRdpIOs(5,3) = 2*a_O
       */
-      if (m1 == 4 && p1 >=4) continue;
-      cout << "mX(" << m << "), A(" << m << "," << p << "), , // {\"d" << M[m] << "d" << P[p] << "\", \t\"" << "d" << M[m] << "d" << P[p]  << " \t=> d" << P[p] << "\","  
+      if (m1 == 2 && p1 <= 3 ||
+	  m1 == 4 && p1 <= 3 ||
+	  m1 == 5 && p1 <= 3) continue;
+      if (m1 == 1 && p1 == 1 ||
+	  m1 == 1 && p1 == 3 ||
+	  m1 == 3 && p1 == 1 ||
+	  m1 == 3 && p1 == 2 ||
+	  m1 == 3 && p1 == 3 ||
+	  m1 == 4 && p1 == 4 ||
+          m1 == 5 && p1 == 4 ||
+          m1 == 5 && p1 == 5 ||
+	  m1 == 6 && p1 == 1 ||
+          m1 == 6 && p1 == 3) continue;
+      TString Yaxis("110,-0.95, 0.95");
+      TString Zaxis("500,-0.40, 0.40");
+      if (m1 == 4) Zaxis = "500,-0.03, 0.03";
+      if (m1 == 5) Zaxis = "500,-0.02, 0.02";
+      if (m1 == 6) Zaxis = "500,-0.01, 0.01";
+      if (m1 == 1 && p1 == 2) Yaxis = "110, -0.95,  0.95"; //dXdy            nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.95     max =  0.95      nz = 500        min = -0.40     max = 0.40
+      if (m1 == 1 && p1 == 3) Yaxis = "110, -0.25,  0.25"; //dXdz            nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.25     max =  0.25      nz = 500        min = -0.40     max = 0.40
+      if (m1 == 1 && p1 == 4) Yaxis = "110, -300.,  300."; //dXdalpha        nx = 24 min = 0.00      max = 26.00     ny = 110        min =-300.0     max = 300.0    nz = 500        min = -0.40     max = 0.40 
+      if (m1 == 1 && p1 == 5) Yaxis = "110,-450.0, -30.0"; //dXdbeta         nx = 24 min = 0.00      max = 26.00     ny = 110        min =-450.0     max = -30.0    nz = 500        min = -0.40     max = 0.40
+      if (m1 == 1 && p1 == 6) Yaxis = "110, 110.0, 130.0"; //dXdgamma        nx = 24 min = 0.00      max = 26.00     ny = 110        min = 110.0     max = 130.0       nz = 500        min = -0.40     max = 0.40
+      if (m1 == 3 && p1 == 3) Yaxis = "110, -0.60,  0.60"; //dZdz            nx = 24 min = 0.00      max = 26.00     ny =  12        min = -0.60     max =  0.60      nz = 500        min = -0.40     max = 0.40
+      if (m1 == 3 && p1 == 4) Yaxis = "110, 50.00, 850.0"; //dZdalpha        nx = 24 min = 0.00      max = 26.00     ny = 110        min = 50.00     max = 850.0    nz = 500        min = -0.40     max = 0.40
+      if (m1 == 3 && p1 == 5) Yaxis = "110, -0.65,  0.60"; //dZdbeta         nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.65     max =  0.60      nz = 500        min = -0.40     max = 0.40
+      if (m1 == 3 && p1 == 6) Yaxis = "110,-60.00,  60.0"; //dZdgamma        nx = 24 min = 0.00      max = 26.00     ny = 110        min =-60.00     max =  60.0     nz = 500        min = -0.40     max = 0.40
+      if (m1 == 4 && p1 == 4) Yaxis = "110, -0.60,  0.60"; //dnXdalpha       nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.60     max =  0.60     nz = 500        min = -0.03     max = 0.03
+      if (m1 == 4 && p1 == 5) Yaxis = "110, -0.85,  0.85"; //dnXdbeta        nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.85     max =  0.85      nz = 500        min = -0.03     max = 0.03
+      if (m1 == 4 && p1 == 6) Yaxis = "110,  0.40,  1.00"; //dnXdgamma       nx = 24 min = 0.00      max = 26.00     ny = 110        min =  0.40     max =  1.00      nz = 500        min = -0.03     max = 0.03
+      if (m1 == 5 && p1 == 6) Yaxis = "110, -0.65,  0.55"; //nYdgamma        nx = 24 min = 0.00      max = 26.00     ny =  12        min = -0.65     max =  0.55      nz = 500        min = -0.02     max = 0.02
+      if (m1 == 6 && p1 == 1) Yaxis = "110, -0.80,  0.80"; //dnZdx           nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.80     max =  0.80      nz = 500        min = -0.01     max = 0.01
+      if (m1 == 6 && p1 == 2) Yaxis = "110, -1.50,  1.50"; //dnZdy           nx = 24 min = 0.00      max = 26.00     ny = 110        min = -1.50     max =  1.50      nz = 500        min = -0.01     max = 0.01
+      if (m1 == 6 && p1 == 4) Yaxis = "110,-500.0, 300.0"; //dnZdalpha       nx = 24 min = 0.00      max = 26.00     ny = 110        min =-500.0     max = 300.0    nz = 500        min = -0.01     max = 0.01
+      if (m1 == 6 && p1 == 5) Yaxis = "110, -30.0,  30.0"; //dnZdbeta        nx = 24 min = 0.00      max = 26.00     ny = 110        min = -30.0     max =  30.0     nz = 500        min = -0.01     max = 0.01
+      if (m1 == 6 && p1 == 6) Yaxis = "110, -30.0,  30.0"; //dnZdgamma       nx = 24 min = 0.00      max = 26.00     ny = 110        min = -30.0     max =  30.0     nz = 500        min = -0.01     max = 0.01
+      
+      cout << "mX(" << m << "), A(" << m << "," << p << "),   //  {\"d" << M[m] << "d" << P[p] << "\", \t\"" << "d" << M[m] << " versus d" << M[m]  << "/d" << P[p]  << "[" << m1 << "," << p1 << "] \t=> d" << P[p] << "\","  
 	   << "\t" << Yaxis.Data() << "," << Zaxis.Data()  << "}, //" << Form("%2i",nh) << endl;
       nh++;
     }
   }
 }
+/*
+dXdy            nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.95     max = 0.95      nz = 500        min = -0.40     max = 0.40
+dXdz            nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.25     max = 0.25      nz = 500        min = -0.40     max = 0.40
+dXdalpha        nx = 24 min = 0.00      max = 26.00     ny = 110        min = -300.00   max = 300.00    nz = 500        min = -0.40     max = 0.40 
+dXdbeta         nx = 24 min = 0.00      max = 26.00     ny = 110        min = -450.00   max = -30.00    nz = 500        min = -0.40     max = 0.40
+dXdgamma        nx = 24 min = 0.00      max = 26.00     ny = 110        min = 110.0     max = 130       nz = 500        min = -0.40     max = 0.40
+dZdz            nx = 24 min = 0.00      max = 26.00     ny =  12        min = -0.60     max = 0.60      nz = 500        min = -0.40     max = 0.40
+dZdalpha        nx = 24 min = 0.00      max = 26.00     ny = 110        min = 50.00     max = 850.00    nz = 500        min = -0.40     max = 0.40
+dZdbeta         nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.65     max = 0.60      nz = 500        min = -0.40     max = 0.40
+dZdgamma        nx = 24 min = 0.00      max = 26.00     ny = 110        min = -60.00    max = 60.00     nz = 500        min = -0.40     max = 0.40
+dnXdalpha       nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.60     max = 0.600     nz = 500        min = -0.03     max = 0.03
+dnXdbeta        nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.85     max = 0.85      nz = 500        min = -0.03     max = 0.03
+dnXdgamma       nx = 24 min = 0.00      max = 26.00     ny = 110        min =  0.40     max = 1.00      nz = 500        min = -0.03     max = 0.03
+nYdgamma        nx = 24 min = 0.00      max = 26.00     ny =  12        min = -0.65     max = 0.55      nz = 500        min = -0.02     max = 0.02
+dnZdx           nx = 24 min = 0.00      max = 26.00     ny = 110        min = -0.80     max = 0.80      nz = 500        min = -0.01     max = 0.01
+dnZdy           nx = 24 min = 0.00      max = 26.00     ny = 110        min = -1.50     max = 1.50      nz = 500        min = -0.01     max = 0.01
+dnZdalpha       nx = 24 min = 0.00      max = 26.00     ny = 110        min = -500.00   max = 300.00    nz = 500        min = -0.01     max = 0.01
+dnZdbeta        nx = 24 min = 0.00      max = 26.00     ny = 110        min = -30.00    max = 30.00     nz = 500        min = -0.01     max = 0.01
+dnZdgamma       nx = 24 min = 0.00      max = 26.00     ny = 110        min = -30.00    max = 30.00     nz = 500        min = -0.01     max = 0.01
+ */
