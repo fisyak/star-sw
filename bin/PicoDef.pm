@@ -79,7 +79,7 @@
 # production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
 # production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
 # production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_9p8GeV_fixedTarget_c2020/ReversedFullField/P24ia
+# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
 
 # production_pp500_2022/ReversedFullField/P24ia
 
