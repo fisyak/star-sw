@@ -1,12 +1,14 @@
 #! /usr/bin/env perl
 use File::Basename;
 use Cwd;
+use Env;
 my $debug = 0;
 #my @list = ` condor_q -l -s fisyak | egrep '(GlobalJobId|NumCkpts_RAW|Iwd|ClusterId|RemoteUserCpu =)'`;
 #my @list = ` condor_q -global -l -s fisyak | egrep '(GlobalJobId|Iwd|RemoteUserCpu =|HoldReasonCode)'`;
 #my @list = ` condor_q -global -l -s fisyak | egrep '(Arguments|ClusterId|GlobalJobId|Iwd|RemoteUserCpu =|HoldReasonCode|WhenToTransferOutput)'`;  
 my @list = ();
-if ($domain = ~/l4/) { 
+# print "domain = $domain\n";
+if ($domain =~ /4/) { 
   @list = ` condor_q -global -l fisyak | egrep '(Arguments|ClusterId|GlobalJobId|Iwd|RemoteUserCpu =|HoldReasonCode|WhenToTransferOutput)'`;  
 } else {
   @list = ` condor_q -l fisyak | egrep '(Arguments|ClusterId|GlobalJobId|Iwd|RemoteUserCpu =|HoldReasonCode|WhenToTransferOutput)'`;  

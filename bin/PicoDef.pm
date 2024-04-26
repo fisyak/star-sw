@@ -67,6 +67,21 @@
 # production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
 # production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
 # production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
+# 04/26/2024  dir -ltrd /star/data1??/reco/production*/*/P24ia  | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
+# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_26p5GeV_fixedTarget_2020/ReversedFullField/P24ia
+
+# production_31GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_9p8GeV_fixedTarget_c2020/ReversedFullField/P24ia
+
+# production_pp500_2022/ReversedFullField/P24ia
 
 
 @PicoDefs= (
@@ -126,6 +141,7 @@
 '2020/9p8GeV_fixedTarget_P23id'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P23id',     
 '2020/9p8GeV_fixedTarget_P23ie'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P23ie',     
 '2020/9p8GeV_fixedTarget_P24ia'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia',     
+'2020/9p8GeV_fixedTarget_c_P24ia'		       => 'production_9p8GeV_fixedTarget_c2020/ReversedFullField/P24ia',     
 '2020/31p2GeV_fixedTarget_P23id'	       => 'production_31p2GeV_fixedTarget_2020/ReversedFullField/P23id',    
 '2020/31p2GeV_fixedTarget_P24ia'	       => 'production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia',    
 
@@ -142,11 +158,13 @@
 '' =>                                              'production_13p5GeV_fixedTarget_2020/ReversedFullField/P21id.SL22b',
 '' =>						   'production_13p5GeV_fixedTarget_2020/ReversedFullField/P21id.SL22c',
 '2020/19p5GeV_fixedTarget' =>                      'production_19p5GeV_fixedTarget_2020/ReversedFullField/P21id',
+'2020/19p5GeV_fixedTarget_P24ia' =>                'production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia',
 '' =>	                                           'production_19p5GeV_fixedTarget_2020/ReversedFullField/P21id',
 '' =>                                              'production_26p5GeV_fixedTarget_2020/ReversedFullField/DEV',
 '' =>						   'production_26p5GeV_fixedTarget_2020/ReversedFullField/P21ic_calib',
 '2020/26p5GeV_fixedTarget.dev' =>		   'production_26p5GeV_fixedTarget_2020/ReversedFullField/DEV', 
 '2020/26p5GeV_fixedTarget' =>			   'production_26p5GeV_fixedTarget_2020/ReversedFullField/P21ic_calib',
+'2020/26p5GeV_fixedTarget_P24ia' =>		   'production_26p5GeV_fixedTarget_2020/ReversedFullField/P24ia',
 '2020/31p2GeV_fixedTarget/' =>                     'production_31p2GeV_fixedTarget_2020/ReversedFullField/P21id',
 '2020/5p75GeV_fixedTarget' =>			   'production_5p75GeV_fixedTarget_2020/ReversedFullField/P21id',
 '2020/7p3GeV_fixedTarget' =>			   '',
