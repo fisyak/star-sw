@@ -68,7 +68,8 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dRI, add LSF
   //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dR, add LSF => Pass111
   //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-#include "IOSectorParPass114_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
+  //#include "IOSectorParPass114_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
+#include "IOSectorParPass115_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
 };
 #define __No_alpha_beta__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);

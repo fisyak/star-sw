@@ -263,7 +263,7 @@ d(chi2).dpT/2                   =           AT * G * A * p -          AT * G * m
                                        z = AmX
                                        p = W *Amx = W * z
                      
-chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * WT * z + mT * G * m
+chi2 = pT * SX * p - 2 * pT * z  + mT * G * m =,TFGdbOpt,CorrZ")' zT * WT * SX * W * z - 2 * zT * WT * z + mT * G * m
                                               = zT * WT  * z - 2 * zT * WT * z + mT * G * m 
                                               = mT * G * m  - zT * WT  * z
 */
@@ -283,18 +283,10 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
     TVector3 NOut(Out_nx, Out_ny, Out_nz);
     TVector3 R = 0.5*(RIn + ROut);
     TVector3 N = 0.5*(NIn + NOut);
-    Double_t a6x6[6][6];
-    StTpcUtil::IODer(&R[0], &N[0], abgxyz_O, abgxyz_Wheel, a6x6);
-    TRMatrix A6x6(6,6, &a6x6[0][0]);
+    Double_t a5x6[5][6];
+    StTpcUtil::IODer(&R[0], &N[0], abgxyz_O, abgxyz_Wheel, a5x6);
     // Convert from Fortran to C storage (row-wise without gaps, contrary to the Fortran convention)
-    TRMatrix A(kM,kP);
-    for (Int_t p = 0; p < kP; p++) {
-      for (Int_t m = 0; m < kM; m++) {
-	Int_t k = m;
-	if (m > 1) k += 1;
-	A(m,p) = A6x6(p,k);
-      }
-    }
+    TRMatrix A(kM,kP, &a5x6[0][0]);
 #endif
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
     TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
@@ -420,6 +412,25 @@ void TDrawIO() {
 	TRVector AmX(6,array+im);  PrPP(AmX);
 	TRSymMatrix S(6,array+is); PrPP(S);
 	TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
+#if 0
+	TRSymMatrix s(6);
+	TRVector   amX(6);
+	for (Int_t i1 = 0; i1 < 6; i1++) {
+	  Int_t ii = TRSymMatrix::IJ(i1,i1);
+	  amX(i1) = AmX(i1)/Cor(i1,i1);
+	  s(i1,i1) = 1.;
+	  for (Int_t j1 = 0; j1 < i1; j1++) {
+	    s(i1,j1) = Cor(i1,j1);
+	  }
+	}
+	TRSymMatrix sInv(s,TRArray::kInverted);  PrPP(sInv);
+	TRVector  xX(sInv,TRArray::kSxA,amX);
+	TRVector xXX(6);
+	for (Int_t i1 = 0; i1 < 6; i1++) {
+	  xXX(i1) = xX(i1)/Cor(i1,i1);
+	}	
+	PrPP(xXX);
+#endif
 	TRVector AmX5(5,array+im);  PrPP(AmX5);
 	TRSymMatrix S5(5,array+is); PrPP(S5);
 	TRSymMatrix Cor5(S5, TRArray::kSCor); PrPP(Cor5);
