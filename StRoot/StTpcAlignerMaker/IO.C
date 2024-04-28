@@ -187,10 +187,17 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     const Double_t *traO = O.GetTranslation();
     //                      alpha    beta     gamma    x         y         z
     Double_t abgxyz_O[6] = {rotO[7], rotO[2], rotO[3], traO[0], traO[1], traO[2]};
+#ifdef __Pad__
     TVector3 pxyzIn(In_nxPad,In_nyPad,In_nzPad);  PrPP(pxyzIn);
     TVector3 rI(In_xPad,In_yPad,In_zPad);         PrPP(rI);
     TVector3 pxyzOut(Out_nxPad,Out_nyPad,Out_nzPad);   PrPP(pxyzOut);
     TVector3 rO(Out_xPad,Out_yPad,Out_zPad); PrPP(rO);
+#else
+    TVector3 pxyzIn(In_nx,In_ny,In_nz);  PrPP(pxyzIn);
+    TVector3 rI(In_x,In_y,In_z);         PrPP(rI);
+    TVector3 pxyzOut(Out_nx,Out_ny,Out_nz);   PrPP(pxyzOut);
+    TVector3 rO(Out_x,Out_y,Out_z); PrPP(rO);
+#endif
     TVector3 rO12(Out_x,Out_y,Out_z); PrPP(rO12);
     Double_t dev = (TMath::Abs(In_Rho)-TMath::Abs(Out_Rho));
     //    if (TMath::Abs(dev) > 5e-4) continue;
@@ -277,14 +284,18 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m =,TFGdbOpt,CorrZ")' zT * WT * SX *
 	       /* nY 3*/         0.,  0.,  0.,              nO.Z(),      0.0,            -nO.X(),
 	       /* nZ 4*/         0.,  0.,  0.,             -nO.Y(),   nO.X(),                0.0);  PrPP(A);
 #else 
+    Double_t a5x6[5][6];
+#ifdef __Pad__
     TVector3 RIn(In_x, In_y, In_z);
     TVector3 NIn(In_nx, In_ny, In_nz);
     TVector3 ROut(Out_x, Out_y, Out_z);
     TVector3 NOut(Out_nx, Out_ny, Out_nz);
     TVector3 R = 0.5*(RIn + ROut);
     TVector3 N = 0.5*(NIn + NOut);
-    Double_t a5x6[5][6];
     StTpcUtil::IODer(&R[0], &N[0], abgxyz_O, abgxyz_Wheel, a5x6);
+#else
+    StTpcUtil::IODer(&rI[0], &nI[0], abgxyz_O, abgxyz_Wheel, a5x6);
+#endif
     // Convert from Fortran to C storage (row-wise without gaps, contrary to the Fortran convention)
     TRMatrix A(kM,kP, &a5x6[0][0]);
 #endif
@@ -314,20 +325,21 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m =,TFGdbOpt,CorrZ")' zT * WT * SX *
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
     TRMatrix V(NFPlots,2,
-mX(0), A(0,1),   //  {"dXdy",           "dX versus dX/dy[1,2]   => dy", 110, -0.95,  0.95,500,-0.40, 0.40}, // 0
-mX(0), A(0,3),   //  {"dXdalpha",       "dX versus dX/dalpha[1,4]       => dalpha",     110, -300.,  300.,500,-0.40, 0.40}, // 1
-mX(0), A(0,4),   //  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,-450.0, -30.0,500,-0.40, 0.40}, // 2
-mX(0), A(0,5),   //  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110, 110.0, 130.0,500,-0.40, 0.40}, // 3
-mX(1), A(1,3),   //  {"dZdalpha",       "dZ versus dZ/dalpha[3,4]       => dalpha",     110, 50.00, 850.0,500,-0.40, 0.40}, // 4
-mX(1), A(1,4),   //  {"dZdbeta",        "dZ versus dZ/dbeta[3,5]        => dbeta",      110, -0.65,  0.60,500,-0.40, 0.40}, // 5
-mX(1), A(1,5),   //  {"dZdgamma",       "dZ versus dZ/dgamma[3,6]       => dgamma",     110,-60.00,  60.0,500,-0.40, 0.40}, // 6
-mX(2), A(2,4),   //  {"dnXdbeta",       "dnX versus dnX/dbeta[4,5]      => dbeta",      110, -0.85,  0.85,500,-0.03, 0.03}, // 7
-mX(2), A(2,5),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[4,6]     => dgamma",     110,  0.40,  1.00,500,-0.03, 0.03}, // 8
-mX(3), A(3,5),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[5,6]     => dgamma",     110, -0.65,  0.55,500,-0.02, 0.02}, // 9
-mX(4), A(4,1),   //  {"dnZdy",          "dnZ versus dnZ/dy[6,2]         => dy", 110, -1.50,  1.50,500,-0.01, 0.01}, //10
-mX(4), A(4,3),   //  {"dnZdalpha",      "dnZ versus dnZ/dalpha[6,4]     => dalpha",     110,-500.0, 300.0,500,-0.01, 0.01}, //11
-mX(4), A(4,4),   //  {"dnZdbeta",       "dnZ versus dnZ/dbeta[6,5]      => dbeta",      110, -30.0,  30.0,500,-0.01, 0.01}, //12
-mX(4), A(4,5),   //  {"dnZdgamma",      "dnZ versus dnZ/dgamma[6,6]     => dgamma",     110, -30.0,  30.0,500,-0.01, 0.01}, //13
+mX(0), A(0,3),   //  {"dXdalpha",       "dX versus dX/dalpha[1,4]       => dalpha",     110,  -0.15,   0.15,500,-0.60, 0.60}, // 0
+mX(0), A(0,4),   //  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,  20.00, 210.00,500,-0.60, 0.60}, // 1
+mX(0), A(0,5),   //  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110,-123.10,-122.80,500,-0.60, 0.60}, // 2
+mX(1), A(1,3),   //  {"dZdalpha",       "dZ versus dZ/dalpha[2,4]       => dalpha",     110, 122.80, 123.10,500,-0.20, 0.20}, // 3
+mX(1), A(1,4),   //  {"dZdbeta",        "dZ versus dZ/dbeta[2,5]        => dbeta",      110, -30.00,  30.00,500,-0.20, 0.20}, // 4
+mX(1), A(1,5),   //  {"dZdgamma",       "dZ versus dZ/dgamma[2,6]       => dgamma",     110,  -0.01,   0.01,500,-0.20, 0.20}, // 5
+mX(2), A(2,3),   //  {"dnXdalpha",      "dnX versus dnX/dalpha[3,4]     => dalpha",     110,  -0.60,   0.60,500,-0.02, 0.02}, // 6
+mX(2), A(2,4),   //  {"dnXdbeta",       "dnX versus dnX/dbeta[3,5]      => dbeta",      110,  -0.80,   0.80,500,-0.02, 0.02}, // 7
+mX(2), A(2,5),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[3,6]     => dgamma",     110,  -1.00,  -0.50,500,-0.02, 0.02}, // 8
+mX(3), A(3,3),   //  {"dnYdalpha",      "dnY versus dnY/dalpha[4,4]     => dalpha",     110,  -0.80,   0.80,500,-0.01, 0.01}, // 9
+mX(3), A(3,4),   //  {"dnYdbeta",       "dnY versus dnY/dbeta[4,5]      => dbeta",      110,  -0.60,   0.60,500,-0.01, 0.01}, //10
+mX(3), A(3,5),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[4,6]     => dgamma",     110,  -0.70,   0.70,500,-0.01, 0.01}, //11
+mX(4), A(4,3),   //  {"dnZdalpha",      "dnZ versus dnZ/dalpha[5,4]     => dalpha",     110,   0.40,   1.00,500,-0.01, 0.01}, //12
+mX(4), A(4,4),   //  {"dnZdbeta",       "dnZ versus dnZ/dbeta[5,5]      => dbeta",      110,  -0.70,   0.70,500,-0.01, 0.01}, //13
+mX(4), A(4,5),   //  {"dnZdgamma",      "dnZ versus dnZ/dgamma[5,6]     => dgamma",     110,  -0.20,   0.20,500,-0.01, 0.01}, //14
 	       mX(0)  , rO12.Z() , // "dX"       ,"dX  versus Z"                   
 	       dr.Y() , rO12.Z() , // "dY"       ,"dY  versus Z"                   
 	       mX(1)  , rO12.Z() , // "dZ"       ,"dZ  versus Z"                   
