@@ -94,6 +94,12 @@ n: matrix([nx], [ny], [nz], [0]);
 /*  
                              Outer to Inner 
 */
+/*  Freeze parameters 
+g_Wheel : 0; x_Wheel : 0; y_Wheel : 0; z_Wheel : 0;
+a_I: 0; b_I: 0; g_I: 0; x_I: 0; y_I: 0; z_I: 0;
+a_O: 0; b_O: 0; g_O: 0; x_O: 0; y_O: 0; z_O: 0; a_Wheel: 0; b_Wheel: 0;
+*/ 
+
 rI: matrix([xI], [yI], [zI], [1]);    /* Inner sector coordinates and direction */
 nI: matrix([nxI], [nyI], [nzI], [0]); 
 rO: matrix([xO], [yO], [zO], [1]);    /* Outer sector coordinates and direction */
@@ -139,73 +145,53 @@ GGT(z):= matrix([1, 0, 0, 0],
                 [0, 0, 1, z],
                 [0, 0, 0, 1])$            
 
-RS2I(z, a_I, b_I, g_I, x_I, y_I, z_I, da_I, db_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel)  := GG(z) . dRI( a_I, b_I, g_I, x_I, y_I, z_I) . ddRIT(da_I, db_I, dg_I, dx_I, dy_I, dz_I) . WheelT( a_Wheel, b_Wheel) . GGT(z);
+RS2I(z, a_I, b_I, g_I, x_I, y_I, z_I, da_I, db_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel)  := GG(z) . dRIT( a_I, b_I, g_I, x_I, y_I, z_I) . ddRIT(da_I, db_I, dg_I, dx_I, dy_I, dz_I) . WheelT( a_Wheel, b_Wheel) . GGT(z);
+RS2IV : RS2I(z, a_I, b_I, g_I, x_I, y_I, z_I, da_I, db_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel);
 /*
-(%i53) RS2IC : RS2I(z, a_I, b_I, g_I, x_I, y_I, z_I, da_I, db_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel)  ;
-(%o53) matrix(
-[(- (b_Wheel*da_I - dg_I)*g_I) + b_I*(db_I + b_Wheel) - b_Wheel*db_I + 1, (- (1 - a_Wheel*da_I)*g_I) + dg_I + a_Wheel*db_I + b_I*((- da_I) - a_Wheel), (- (b_Wheel*dg_I + da_I + a_Wheel)*g_I) + a_Wheel*dg_I + b_I*((- b_Wheel*db_I) - a_Wheel*da_I + 1) - db_I - b_Wheel, 
-(- g_I*(b_Wheel*dg_I*z + da_I*z + a_Wheel*z - dy_I)) + b_I*((- b_Wheel*db_I*z) - a_Wheel*da_I*z + z - dz_I) + a_Wheel*dg_I*z - db_I*z - b_Wheel*z + x_I - dx_I], [(1 - b_Wheel*db_I)*g_I - dg_I - a_I*(db_I + b_Wheel) + b_Wheel*da_I, 
-(dg_I + a_Wheel*db_I)*g_I - a_Wheel*da_I - a_I*((- da_I) - a_Wheel) + 1, (a_Wheel*dg_I - db_I - b_Wheel)*g_I + b_Wheel*dg_I - a_I*((- b_Wheel*db_I) - a_Wheel*da_I + 1) + da_I + a_Wheel, 
-g_I*(a_Wheel*dg_I*z - db_I*z - b_Wheel*z - dx_I) - a_I*((- b_Wheel*db_I*z) - a_Wheel*da_I*z + z - dz_I) + b_Wheel*dg_I*z + da_I*z + a_Wheel*z + y_I - dy_I], [a_I*(b_Wheel*da_I - dg_I) - b_I*(1 - b_Wheel*db_I) + db_I + b_Wheel, 
-(- b_I*(dg_I + a_Wheel*db_I)) + a_I*(1 - a_Wheel*da_I) - da_I - a_Wheel, 
-a_I*(b_Wheel*dg_I + da_I + a_Wheel) - b_I*(a_Wheel*dg_I - db_I - b_Wheel) - b_Wheel*db_I - a_Wheel*da_I + 1, 
-z_I + a_I*(b_Wheel*dg_I*z + da_I*z + a_Wheel*z - dy_I) - b_I*(a_Wheel*dg_I*z - db_I*z - b_Wheel*z - dx_I) - b_Wheel*db_I*z - a_Wheel*da_I*z - dz_I], 
-[0, 0, 0, 1])
-
-(%i54) RS2IC : RS2I(z, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, a_Wheel, b_Wheel)  ;
-                [    1         0      - b_Wheel  - b_Wheel*z ]
-                [                                            ]
-                [    0         1       a_Wheel    a_Wheel*z  ]
-(%o54)          [                                            ]
-                [ b_Wheel  - a_Wheel      1           0      ]
-                [                                            ]
-                [    0         0          0           1      ]
 */
-RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)  := GG(z) . dRO( a_O, b_O, g_O, x_O, y_O, z_O) . ddROT(da_O, db_O, dg_O, dx_O, dy_O, dz_O) . WheelT( a_Wheel, b_Wheel) . GGT(z);
+RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)  := GG(z) . dROT( a_O, b_O, g_O, x_O, y_O, z_O) . ddROT(da_O, db_O, dg_O, dx_O, dy_O, dz_O) . WheelT( a_Wheel, b_Wheel) . GGT(z);
+RS2OV : RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel);
 /*
-(%i55) RS2OC : RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel);
-(%o55) matrix(
-[(- (b_Wheel*da_O - dg_O)*g_O) + b_O*(db_O + b_Wheel) - b_Wheel*db_O + 1,
- (- (1 - a_Wheel*da_O)*g_O) + dg_O + a_Wheel*db_O + b_O*((- da_O) - a_Wheel),
- (- (b_Wheel*dg_O + da_O + a_Wheel)*g_O) + a_Wheel*dg_O + b_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) - db_O - b_Wheel, 
-(- g_O*(b_Wheel*dg_O*z + da_O*z + a_Wheel*z - dy_O)) + b_O*((- b_Wheel*db_O*z) - a_Wheel*da_O*z + z - dz_O) + a_Wheel*dg_O*z - db_O*z - b_Wheel*z + x_O - dx_O
-], 
-[(1 - b_Wheel*db_O)*g_O - dg_O - a_O*(db_O + b_Wheel) + b_Wheel*da_O, 
-(dg_O + a_Wheel*db_O)*g_O - a_Wheel*da_O - a_O*((- da_O) - a_Wheel) + 1, 
-(a_Wheel*dg_O - db_O - b_Wheel)*g_O + b_Wheel*dg_O - a_O*((- b_Wheel*db_O) - a_Wheel*da_O + 1) + da_O + a_Wheel, 
-g_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O) - a_O*((- b_Wheel*db_O*z) - a_Wheel*da_O*z + z - dz_O) + b_Wheel*dg_O*z + da_O*z + a_Wheel*z + y_O - dy_O
-], 
-[a_O*(b_Wheel*da_O - dg_O) - b_O*(1 - b_Wheel*db_O) + db_O + b_Wheel, 
-(- b_O*(dg_O + a_Wheel*db_O)) + a_O*(1 - a_Wheel*da_O) - da_O - a_Wheel, 
-a_O*(b_Wheel*dg_O + da_O + a_Wheel) - b_O*(a_Wheel*dg_O - db_O - b_Wheel) - b_Wheel*db_O - a_Wheel*da_O + 1, 
-z_O + a_O*(b_Wheel*dg_O*z + da_O*z + a_Wheel*z - dy_O) - b_O*(a_Wheel*dg_O*z - db_O*z - b_Wheel*z - dx_O) - b_Wheel*db_O*z - a_Wheel*da_O*z - dz_O
-], 
-[0, 0, 0, 1])
-=>
-
-[1, (- g_O + dg_O - a_Wheel), - a_Wheel*da_O + 1 - db_O - b_Wheel,  - db_O*z - b_Wheel*z + x_O - dx_O], 
-[g_O - dg_O, 1,  - a_O + da_O + a_Wheel,  (- a_O  + da_O + a_Wheel)*z + y_O - dy_O], 
-[- b_O + db_O + b_Wheel, a_O - da_O - a_Wheel, 1, z_O  - dz_O], 
-[0, 0, 0, 1])
-
 */
 rIF(z, a_Wheel, b_Wheel) := RS2I(z,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, a_Wheel, b_Wheel) . r;
 nIF(z, a_Wheel, b_Wheel) := RS2I(z,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, a_Wheel, b_Wheel) . n;
 
-rON(z, a_O, b_O, g_O, x_O, y_O, z_O, a_Wheel, b_Wheel)                                     := RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, 0, 0, 0, 0, 0, 0, a_Wheel, b_Wheel)  . r; /* no update   ddRO */
+rON(z, a_O, b_O, g_O, x_O, y_O, z_O, a_Wheel, b_Wheel)                                     := RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O,    0,    0,    0,    0,    0,    0, a_Wheel, b_Wheel) . r; /* no update   ddRO */
 rOU(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) . r; /* with update ddRO */
-/*  Freeze parameters 
-a_I : 0; b_I : 0; g_I : 0; x_I : 0; y_I : 0; z_I : 0;
-a_O : 0; b_O : 0;
-g_Wheel : 0; x_Wheel : 0; y_Wheel : 0; z_Wheel : 0;
+
+rONV : rON(z, a_O, b_O, g_O, x_O, y_O, z_O, a_Wheel, b_Wheel) ;
+rOUV : rOU(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel);
+/*
+
+                 [   1      dg_O   - db_O  (- db_O*z) - dx_O ]   [ x ]   [ (- 2*db_O*z) + dg_O*y + x - dx_O ]
+                 [                                           ]	 [   ]	 [                                  ]
+                 [ - dg_O    1      da_O     da_O*z - dy_O   ]	 [ y ]	 [   2*da_O*z + y - dg_O*x - dy_O   ]
+(%o63)           [                                           ] * [   ] = [                                  ]
+                 [  db_O   - da_O    1          - dz_O       ]	 [ z ]	 [    z - da_O*y + db_O*x - dz_O    ]
+                 [                                           ]	 [   ]	 [                                  ]
+                 [   0       0       0             1         ]	 [ 1 ]	 [                1                 ]
+quit();
 */
+
 nOF(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)  := RS2O(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) . n;
 
-drO(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := rOU(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) - rON(z, a_O, b_O, g_O, x_O, y_O, z_O, a_Wheel, b_Wheel);
+drO(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := 
+rOU(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) - 
+rON(z, a_O, b_O, g_O, x_O, y_O, z_O,                                     a_Wheel, b_Wheel);
 
 Step(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := 
 drO(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2]/nOF(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2];
-
+drOV1: drO(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1];
+drOV2: drO(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2];
+drOV3: drO(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[3];
+nOFV: nOF(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2];
+StepV : Step(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) ;
+/*
+                           2*da_O*z - dg_O*x - dy_O
+(%o77)                    [------------------------]
+                            da_O*nz + ny - dg_O*nx
+quit();
+*/
 nS(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := 
 Step(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1] * 
 nOF(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel);
@@ -217,39 +203,45 @@ nS(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel,
 
 drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := rOF(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) - rIF(z, a_Wheel, b_Wheel);
 dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) := nOF(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) - nIF(z, a_Wheel, b_Wheel);
-
+/*                    drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2],
+                   drOI(z, 0, 0, 0, 0, 0, 0, da_O, db_O, dg_O, dx_O, dy_O, dz_O, 0, 0)[2], 
+*/
+/*
 dRdpIO : jacobian([drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1], 
-                   drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2], 
                    drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[3], 
                    dnOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1], 
                    drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[2], 
                    drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[3]],
 		                                          [ dx_O, dy_O, dz_O, da_O, db_O, dg_O] );
+*/
+dRdpIO : jacobian([drOI(z, 0, 0, 0, 0, 0, 0, da_O, db_O, dg_O, dx_O, dy_O, dz_O, 0, 0)[1], 
+                   drOI(z, 0, 0, 0, 0, 0, 0, da_O, db_O, dg_O, dx_O, dy_O, dz_O, 0, 0)[3], 
+                   dnOI(z, 0, 0, 0, 0, 0, 0, da_O, db_O, dg_O, dx_O, dy_O, dz_O, 0, 0)[1], 
+                   drOI(z, 0, 0, 0, 0, 0, 0, da_O, db_O, dg_O, dx_O, dy_O, dz_O, 0, 0)[2], 
+                   drOI(z, 0, 0, 0, 0, 0, 0, da_O, db_O, dg_O, dx_O, dy_O, dz_O, 0, 0)[3]],
+		                                          [ dx_O, dy_O, dz_O, da_O, db_O, dg_O] );
+
 dRdpIOs: dRdpIO;
+/*
 ratsimp(dRdpIOs);
 trigsimp(dRdpIOs);
-
 f90(dRdpIOs);
 with_stdout ("DerIO.txt",  f90(dRdpIOs));
-
-/* check ddX/dp 
-dXdpIO : jacobian([drOI(z, a_O, b_O, g_O, x_O, y_O, z_O, da_O, db_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)[1]], 
-		                                          [ dx_O, dy_O, dz_O, da_O, db_O, dg_O] );
-dXdpIOs: dXdpIO;
-ratsimp(dXdpIOs);
-trigsimp(dXdpIOs);
-
-f90(dXdpIOs);
-with_stdout ("dXdpIO.txt",  f90(dXdpIOs));
 */
 define(FuncdRdpIO(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dRdpIOs);
 
 FuncdRdpIOat0: FuncdRdpIO(0, 0, 0, 0, 0, 0);
-/*
-da_O : 0; db_O : 0; dg_O : 0; dx_O : 0; dy_O : 0; dz_O : 0;
-*/
 ratsimp(FuncdRdpIOat0);
 trigsimp(FuncdRdpIOat0);
+quit();
+dRdpIOsT: transpose(dRdpIOs); /* Fortran to C array transpose */
+define(FuncdRdpIOT(da_O, db_O, dg_O, dx_O, dy_O, dz_O), dRdpIOsT);
 
-f90(FuncdRdpIOat0);
-with_stdout ("FuncdRdpIOat0.txt",  f90(FuncdRdpIOat0));
+FuncdRdpIOat0T: FuncdRdpIOT(0, 0, 0, 0, 0, 0);
+
+ratsimp(FuncdRdpIOat0T);
+trigsimp(FuncdRdpIOat0T);
+
+f90(FuncdRdpIOat0T);
+with_stdout ("FuncdRdpIOat0T.txt",  f90(FuncdRdpIOat0T));
+

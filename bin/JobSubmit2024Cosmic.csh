@@ -1,7 +1,8 @@
 #! /bin/tcsh -f
- cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
-git diff . RunXXIVDefs.pm
-git ci -m "Update"  RunXXIVDefs.pm
+#cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
+#cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIIIDefs.pm
+#git diff .
+#git ci -m "Update" .
 #cd ~/reco/2020/TFG19m/RF/11p5GeV.B
 #cd /net/l401/data/scratch2/reco/2020/TFG20a/RF/31p2GeV_fixedTarget
 #cd /net/l401/data/scratch2/reco/2020/TFG20a/RF/9p8GeV_fixedTarget
@@ -12,19 +13,14 @@ git ci -m "Update"  RunXXIVDefs.pm
 #foreach D (`ls -d /hlt/cephfs/reco/2021/RF/TFG21h/Cosmic*`)
 #  cd ${D}
 #  cd /hlt/cephfs/reco/2022/ZF/Cosmic
-  cd /hlt/cephfs/reco/CosmicsC/2024/RF
-  CreateRunDirs2024.pl 
-setenv YEAR `GetYearFromPWD.pl`
-if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && $YEAR != "2023" && $YEAR != "2024") exit 1;
-  CreateRunDirs${YEAR}.pl
+  CreateRunDirs.pl
   foreach d (`ls -1d ???/2*`)
-    if (! -d ${d}) continue;
     cd $d;
     if (-r Done || -r Submitted) then
       cd -
      continue
     endif
-    daq_${YEAR}dR.pl
+    daq_2023dR.pl
     if ($?) then
       ls -1d *bla.root
       if ($?) then
@@ -38,8 +34,8 @@ if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && 
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2022_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2021_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2023_Cosmics.xml
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2019_Cosmics.xml
-    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq_${YEAR}_Cosmics.xml
+    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2024_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2023_Cosmics.xml
     touch Submitted
     cd -
   end
@@ -58,7 +54,7 @@ foreach done (`ls -1d ???/*/Done`)
     ln -s ~/macros/.sl73_* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
     @ count++;  echo "count $count";
-    if ($count > 120) then 
+    if ($count > 40) then 
         cd -
 	break;
     endif
