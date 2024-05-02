@@ -203,8 +203,7 @@ void ResultsIO(const Char_t *opt="") {
       dath[k][i]->SetMarkerSize(2);
       dath[k][i]->SetMarkerStyle(22);
       if (k < NP) {
-	if (TString(Passes[k].PassName).Contains("RF") || 
-	    Opt != "" && TString(Passes[k].PassName).Contains(Opt)) {
+	if (TString(Passes[k].PassName).Contains("RF") ) {
 	  dath[k][i]->SetMarkerStyle(23);
 	} else if (TString(Passes[k].PassName).Contains("MF") ||
 		   TString(Passes[k].PassName).Contains("ZF") ) {

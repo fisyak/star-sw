@@ -240,6 +240,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
       continue;
     }
     TRSymMatrix G(C5x5,TRArray::kInverted);              PrPP(G);
+    
 #if 0
     if (mX(0) < plotNameD[14].zmin || mX(0) > plotNameD[14].zmax) continue;
     if (mX(1) < plotNameD[16].zmin || mX(1) > plotNameD[16].zmax) continue;
@@ -314,8 +315,10 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m =,TFGdbOpt,CorrZ")' zT * WT * SX *
       TRSymMatrix S(6,array+is);  PrPP(S);
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
+    Double_t chi2 = G.Product(mX); PrPP(chi2);         
+    //    if (chi2 > 1000.0) continue;
+    array[28] += chi2;
     array[0]++;
-    array[28] += G.Product(mX);          
     TCL::vadd(amX,array+im,array+im,kP); 
     TCL::vadd(sX,array+is,array+is,kPP); 
     if (_debug) {
@@ -325,21 +328,16 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m =,TFGdbOpt,CorrZ")' zT * WT * SX *
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
     TRMatrix V(NFPlots,2,
-mX(0), A(0,3),   //  {"dXdalpha",       "dX versus dX/dalpha[1,4]       => dalpha",     110,  -0.15,   0.15,500,-0.60, 0.60}, // 0
-mX(0), A(0,4),   //  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,  20.00, 210.00,500,-0.60, 0.60}, // 1
-mX(0), A(0,5),   //  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110,-123.10,-122.80,500,-0.60, 0.60}, // 2
-mX(1), A(1,3),   //  {"dZdalpha",       "dZ versus dZ/dalpha[2,4]       => dalpha",     110, 122.80, 123.10,500,-0.20, 0.20}, // 3
-mX(1), A(1,4),   //  {"dZdbeta",        "dZ versus dZ/dbeta[2,5]        => dbeta",      110, -30.00,  30.00,500,-0.20, 0.20}, // 4
-mX(1), A(1,5),   //  {"dZdgamma",       "dZ versus dZ/dgamma[2,6]       => dgamma",     110,  -0.01,   0.01,500,-0.20, 0.20}, // 5
-mX(2), A(2,3),   //  {"dnXdalpha",      "dnX versus dnX/dalpha[3,4]     => dalpha",     110,  -0.60,   0.60,500,-0.02, 0.02}, // 6
-mX(2), A(2,4),   //  {"dnXdbeta",       "dnX versus dnX/dbeta[3,5]      => dbeta",      110,  -0.80,   0.80,500,-0.02, 0.02}, // 7
-mX(2), A(2,5),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[3,6]     => dgamma",     110,  -1.00,  -0.50,500,-0.02, 0.02}, // 8
-mX(3), A(3,3),   //  {"dnYdalpha",      "dnY versus dnY/dalpha[4,4]     => dalpha",     110,  -0.80,   0.80,500,-0.01, 0.01}, // 9
-mX(3), A(3,4),   //  {"dnYdbeta",       "dnY versus dnY/dbeta[4,5]      => dbeta",      110,  -0.60,   0.60,500,-0.01, 0.01}, //10
-mX(3), A(3,5),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[4,6]     => dgamma",     110,  -0.70,   0.70,500,-0.01, 0.01}, //11
-mX(4), A(4,3),   //  {"dnZdalpha",      "dnZ versus dnZ/dalpha[5,4]     => dalpha",     110,   0.40,   1.00,500,-0.01, 0.01}, //12
-mX(4), A(4,4),   //  {"dnZdbeta",       "dnZ versus dnZ/dbeta[5,5]      => dbeta",      110,  -0.70,   0.70,500,-0.01, 0.01}, //13
-mX(4), A(4,5),   //  {"dnZdgamma",      "dnZ versus dnZ/dgamma[5,6]     => dgamma",     110,  -0.20,   0.20,500,-0.01, 0.01}, //14
+mX(0), A(0,4),   //  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,  20.00, 210.00,500,-0.60, 0.60}, // 0
+mX(0), A(0,5),   //  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110,-123.10,-122.80,500,-0.60, 0.60}, // 1
+mX(1), A(1,3),   //  {"dZdalpha",       "dZ versus dZ/dalpha[2,4]       => dalpha",     110, 122.80, 123.10,500,-0.20, 0.20}, // 2
+mX(1), A(1,4),   //  {"dZdbeta",        "dZ versus dZ/dbeta[2,5]        => dbeta",      110, -30.00,  30.00,500,-0.20, 0.20}, // 3
+mX(2), A(2,4),   //  {"dnXdbeta",       "dnX versus dnX/dbeta[3,5]      => dbeta",      110,  -0.80,   0.80,500,-0.02, 0.02}, // 4
+mX(2), A(2,5),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[3,6]     => dgamma",     110,  -1.00,  -0.50,500,-0.02, 0.02}, // 5
+mX(3), A(3,3),   //  {"dnYdalpha",      "dnY versus dnY/dalpha[4,4]     => dalpha",     110,  -0.80,   0.80,500,-0.01, 0.01}, // 6
+mX(3), A(3,5),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[4,6]     => dgamma",     110,  -0.70,   0.70,500,-0.01, 0.01}, // 7
+mX(4), A(4,3),   //  {"dnZdalpha",      "dnZ versus dnZ/dalpha[5,4]     => dalpha",     110,   0.40,   1.00,500,-0.01, 0.01}, // 8
+mX(4), A(4,4),   //  {"dnZdbeta",       "dnZ versus dnZ/dbeta[5,5]      => dbeta",      110,  -0.70,   0.70,500,-0.01, 0.01}, // 9
 	       mX(0)  , rO12.Z() , // "dX"       ,"dX  versus Z"                   
 	       dr.Y() , rO12.Z() , // "dY"       ,"dY  versus Z"                   
 	       mX(1)  , rO12.Z() , // "dZ"       ,"dZ  versus Z"                   

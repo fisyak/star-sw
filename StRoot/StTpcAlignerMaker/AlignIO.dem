@@ -191,6 +191,18 @@ RS2I : GG . dRIT . ddRIT . WheelT . GGT;
 RI2O : RS2I . RO2S
        GG . dRIT . ddRIT . ddRO . dRO . GGT
 =>     GG . ddRO . dRO . GGT - GG . dRO . GGT = GG ( ddRO . dRO - dRO) . GGT
+
+Revision 04/28/2024 :  rSI => rsO
+  RSI2O : RO2S . RS2I
+          GG . Wheel . ddRO . dRO . GGT . GG . Wheel . ddRI . dRI . GGT 
+          GG . Wheel . ddRO . dRO . Wheel . ddRI . dRI . GGT 
+dRI == ddRI == I
+          GG . Wheel . ddRO . dRO . Wheel . GGT 
+
+rSO - rSI = GG . Wheel . ddRO . dRO . Wheel . GGT + GG . Wheel . ddRO . dRO .  . Wheel . GGT - 
+            GG . Wheel .        dRO . Wheel . GGT + GG . Wheel . ddRO . dRO .  . Wheel . GGT - I
+   
+
 */
 
 dRI2OB : ddRO(da_O, db_O, dg_O, dx_O, dy_O, dz_O) . dRO( a_O, b_O, g_O, x_O, y_O, z_O);

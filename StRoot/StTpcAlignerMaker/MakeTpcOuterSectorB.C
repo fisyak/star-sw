@@ -69,9 +69,11 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dR, add LSF => Pass111
   //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
   //#include "IOSectorParPass114_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-#include "IOSectorParPass115_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
+  //#include "IOSectorParPass115_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
+#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0, new derivatives
 };
-#define __No_alpha_beta__
+//#define __No_alpha_beta__
+#define __No_alpha_beta_gamma__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
 class TTable;
@@ -177,7 +179,7 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	Double_t xyz[3] = {0, 0, 0};
 	//	Double_t scale = 0.5;
 	Double_t scale = 1.0;
-#if 1 /* alpha, beta gamma rotations */
+#ifndef __No_alpha_beta_gamma__ /* alpha, beta gamma rotations */
 #ifndef __No_alpha_beta__
 	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(scale*TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
 	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(scale*TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
