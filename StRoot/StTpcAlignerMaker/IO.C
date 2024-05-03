@@ -271,7 +271,7 @@ d(chi2).dpT/2                   =           AT * G * A * p -          AT * G * m
                                        z = AmX
                                        p = W *Amx = W * z
                      
-chi2 = pT * SX * p - 2 * pT * z  + mT * G * m =,TFGdbOpt,CorrZ")' zT * WT * SX * W * z - 2 * zT * WT * z + mT * G * m
+chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * WT * z + mT * G * m
                                               = zT * WT  * z - 2 * zT * WT * z + mT * G * m 
                                               = mT * G * m  - zT * WT  * z
 */
