@@ -71,21 +71,17 @@ struct PlotName_t {
   Int_t nz;
   Double_t zmin, zmax;
 };
-enum {NPlots = 10, NFPlots=NPlots+7, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
+enum {NPlots = 6, NFPlots=NPlots+7, NwsPlots=20, NwsFPlots=20, NwsPlotsTpc=14};
 const  PlotName_t plotNameD[NFPlots] = {// plots for drift
-  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,  20.00, 210.00,500,-0.60, 0.60}, // 0
-  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110,-123.10,-122.80,500,-0.60, 0.60}, // 1
-  {"dZdalpha",       "dZ versus dZ/dalpha[2,4]       => dalpha",     110, 122.80, 123.10,500,-0.20, 0.20}, // 2
-  {"dZdbeta",        "dZ versus dZ/dbeta[2,5]        => dbeta",      110, -30.00,  30.00,500,-0.20, 0.20}, // 3
-  {"dnXdbeta",       "dnX versus dnX/dbeta[3,5]      => dbeta",      110,  -0.80,   0.80,500,-0.02, 0.02}, // 4
-  {"dnXdgamma",      "dnX versus dnX/dgamma[3,6]     => dgamma",     110,  -1.00,  -0.50,500,-0.02, 0.02}, // 5
-  {"dnYdalpha",      "dnY versus dnY/dalpha[4,4]     => dalpha",     110,  -0.80,   0.80,500,-0.01, 0.01}, // 6
-  {"dnYdgamma",      "dnY versus dnY/dgamma[4,6]     => dgamma",     110,  -0.70,   0.70,500,-0.01, 0.01}, // 7
-  {"dnZdalpha",      "dnZ versus dnZ/dalpha[5,4]     => dalpha",     110,   0.40,   1.00,500,-0.01, 0.01}, // 8
-  {"dnZdbeta",       "dnZ versus dnZ/dbeta[5,5]      => dbeta",      110,  -0.70,   0.70,500,-0.01, 0.01}, // 9
-  {"dX"       ,"dX  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //14
+  {"dXdy",   "dX versus dX/dy[1,2]   => dy",                         110,-0.95,  0.95,500,-0.30, 0.30}, // 0
+  {"dXdgamma",       "dX versus dX/dgamma[1,4]       => dgamma",     110,117.0, 137.0,500,-0.30, 0.30}, // 1
+  {"dZdy",   "dZ versus dZ/dy[2,2]   => dy", 110, -1.2,              1.0,500,-0.30, 0.30}, // 2
+  {"dZdgamma",       "dZ versus dZ/dgamma[2,4]       => dgamma",     110,-25.0, 25.0,500,-0.30, 0.30}, // 3
+  {"dnXdgamma",      "dnX versus dnX/dgamma[3,4]     => dgamma",     110,  0.4,  1.0,500,-0.02, 0.02}, // 4
+  {"dnYdgamma",      "dnY versus dnY/dgamma[4,4]     => dgamma",     110, -0.8,  0.8,500,-0.02, 0.02}, // 5
+  {"dX"       ,"dX  versus Z"                    , 200,    10,    210, 500, -0.300, 0.300}, //14
   {"dY"       ,"dY  versus Z"                    , 200,    10,    210, 500,  -3e-2,  3e-2}, //15
-  {"dZ"       ,"dZ  versus Z"                    , 200,    10,    210, 500, -0.500, 0.500}, //16
+  {"dZ"       ,"dZ  versus Z"                    , 200,    10,    210, 500, -0.300, 0.300}, //16
   {"dnX"      ,"dnX versus Z"                    , 200,    10,    210, 500, -0.020, 0.020}, //17
   {"dnY"      ,"dnY versus Z"                    , 200,    10,    210, 500,  -2e-2,  2e-2}, //18
   {"dnZ"      ,"dnZ versus Z"                    , 200,    10,    210, 500,  -1e-2,  1e-2}, //19

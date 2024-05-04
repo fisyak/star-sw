@@ -125,70 +125,30 @@ void CheckPlots(const Char_t *opt = "zy") {
 };
 //__________________________________________________________________________________________
 void makeIOHist() {
-  const Char_t *M[5] = { "X",  "Z", "nX", "nY", "nZ"};
-  const Char_t *P[6] = {"x","y","z","alpha","beta","gamma"};
+  enum {kM = 5, kP = 4};
+  const Char_t *M[kM] = { "X",  "Z", "nX", "nY", "nZ"};
+  const Char_t *P[kP] = {"x","y","z","gamma"};
   Int_t nh = 0;
-  for (Int_t m = 0; m < 5; m++) {
+  // AT(kP,kM) fortran
+  for (Int_t m = 0; m < kM; m++) {
     Int_t m1 = m + 1;
-    for (Int_t p = 0; p < 6; p++) {
+    for (Int_t p = 0; p < kP; p++) {
       Int_t p1 = p + 1;
-#if 0      
-    if (m >= 1) m1 = m + 2; 
-      /*
-      dRdpIOs(2,1) = -2*g_O
-      dRdpIOs(2,2) = -2
-      dRdpIOs(2,3) = 2*a_O
-      dRdpIOs(4,1) = 0
-      dRdpIOs(4,2) = 0
-      dRdpIOs(4,3) = 0
-      dRdpIOs(5,1) = -2*g_O
-      dRdpIOs(5,2) = -2
-      dRdpIOs(5,3) = 2*a_O
-      */
-      if (m1 == 2 && p1 <= 3 ||
-	  m1 == 4 && p1 <= 3 ||
-	  m1 == 5 && p1 <= 3) continue;
-      if (m1 == 1 && p1 == 1 ||
-	  m1 == 1 && p1 == 3 ||
-	  m1 == 3 && p1 == 1 ||
-	  m1 == 3 && p1 == 2 ||
-	  m1 == 3 && p1 == 3 ||
-	  m1 == 4 && p1 == 4 ||
-          m1 == 5 && p1 == 4 ||
-          m1 == 5 && p1 == 5 ||
-	  m1 == 6 && p1 == 1 ||
-          m1 == 6 && p1 == 3) continue;
-      if (m1 == 3 && p1 == 4) continue;
-      if (m1 == 4 && p1 == 5) continue;
-      if (m1 == 5 && p1 == 6) continue;
-      if (p1 <= 3) continue;
-#else /* fortran AT(p1,m1) */
-      if (p1 <= 3) continue;
-      if (p1 == 4 && (m1 == 1 || m1 == 3) ||
-	  p1 == 5 &&  m1 == 4 ||
-	  p1 == 6 && (m1 == 2 || m1 == 5)) continue;
-#endif
-      TString Yaxis("110,-0.95, 0.95");
-      TString Zaxis("500,-0.60, 0.60");
-      if (m1 == 2) Zaxis = "500,-0.20, 0.20";
-      if (m1 == 3) Zaxis = "500,-0.02, 0.02";
-      if (m1 == 4 ||
-	  m1 == 5) Zaxis = "500,-0.01, 0.01";
-      if (m1 == 1 && p1 == 4) Yaxis = "110,  -0.15,   0.15"; // dXdalpha    min = -320.00, 320.00 F
-      if (m1 == 1 && p1 == 5) Yaxis = "110,  20.00, 210.00"; // dXdbeta     min = -430.00, -30.00
-      if (m1 == 1 && p1 == 6) Yaxis = "110,-123.10,-122.80"; // dXdgamma    min =  110.00, 128.00
-      if (m1 == 2 && p1 == 4) Yaxis = "110, 122.80, 123.10"; // dZdalpha    min = -500.00, 200.00
-      if (m1 == 2 && p1 == 5) Yaxis = "110, -30.00,  30.00"; // dZdbeta     min =  -30.00,  30.00
-      if (m1 == 2 && p1 == 6) Yaxis = "110,  -0.01,   0.01"; // dZdgamma    min =  -25.00,  25.00
-      if (m1 == 3 && p1 == 4) Yaxis = "110,  -0.60,   0.60"; // dnXdalpha   min =   -0.60,   0.60
-      if (m1 == 3 && p1 == 5) Yaxis = "110,  -0.80,   0.80"; // dnXdbeta    min =   -0.80,   0.80
-      if (m1 == 3 && p1 == 6) Yaxis = "110,  -1.00,  -0.50"; // dnXdgamma   min =    0.40,   1.00
-      if (m1 == 4 && p1 == 4) Yaxis = "110,  -0.80,   0.80"; // dnYdalpha   min =  100.00, 900.00
-      if (m1 == 4 && p1 == 5) Yaxis = "110,  -0.60,   0.60"; // dnYdbeta    min =   -0.60,   0.60
-      if (m1 == 4 && p1 == 6) Yaxis = "110,  -0.70,   0.70"; // dnYdgamma   min =  -60.00,  60.00
-      if (m1 == 5 && p1 == 4) Yaxis = "110,   0.40,   1.00"; // dnZdalpha   min = -600.00, 200.00
-      if (m1 == 5 && p1 == 5) Yaxis = "110,  -0.70,   0.70"; // dnZdbeta    min =  -30.00,  30.00
-      if (m1 == 5 && p1 == 6) Yaxis = "110,  -0.20,   0.20"; // dnZdgamma   min =  -30.00,  30.00
+      if (p1 == 1 ||
+	  p1 == 2 && m1 > 2 ||
+	  p1 == 3 ||
+	  p1 == 4 && m1 == 5) continue;
+      TString       Zaxis("500,-0.30, 0.30");
+      if (m1 == 2) Zaxis= "500,-0.30, 0.30";
+      if (m1 == 3 || 
+	  m1 == 4) Zaxis= "500,-0.02, 0.02";
+      if (m1 == 5) Zaxis= "500,-0.01, 0.01";
+      TString      Yaxis  ("110,-0.95,  0.95");
+      if (p1 == 2 && m1 == 2) Yaxis = "110, -1.2,   1.0";
+      if (p1 == 4 && m1 == 1) Yaxis = "110,117.0, 137.0";
+      if (p1 == 4 && m1 == 2) Yaxis = "110,-25.0, 25.0";
+      if (p1 == 4 && m1 == 3) Yaxis = "110,  0.4,  1.0";
+      if (p1 == 4 && m1 == 4) Yaxis = "110, -0.8,  0.8";
       cout << "mX(" << m << "), A(" << m << "," << p << "),   //  {\"d" << M[m] << "d" << P[p] << "\", \t\"" << "d" << M[m] 
 	   << " versus d" << M[m]  << "/d" << P[p]  << "[" << m1 << "," << p1 << "] \t=> d" << P[p] << "\","  
 	   << "\t" << Yaxis.Data() << "," << Zaxis.Data()  << "}, //" << Form("%2i",nh) << endl;

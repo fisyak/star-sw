@@ -149,14 +149,14 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
   TH1D *LSF[24];
   //  Increase hitogram by 2 bins in order to account underfloaw and overflow 
   for (Int_t sec = 1; sec <= 24; sec++) LSF[sec-1] = new TH1D(Form("LSF_%02i",sec),Form("Matrix and right part for Least Squared Fit for sector = %02i",sec),30,0,30.);
-  enum {kM = 5, kP = 6, kPP = kP*(kP+1)/2};
-  Double_t t5x6[kM][kP] = {
+  enum {kM = 5, kP = 4, kPP = kP*(kP+1)/2};
+  Double_t tMx6[kM][6] = {
     {1, 0, 0, 0, 0, 0},
     {0, 0, 1, 0, 0, 0},
     {0, 0, 0, 1, 0, 0},
     {0, 0, 0, 0, 1, 0},
     {0, 0, 0, 0, 0, 1}};
-  TRMatrix T5x6(kM, kP, &t5x6[0][0]);
+  TRMatrix TMx6(kM, 6, &tMx6[0][0]);
   Int_t Ntracks = 0;
   while (iter.Next()) {
 #if 0
@@ -175,7 +175,6 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     //    if (In_Ndf < 15 || Out_Ndf < 15) continue;
     Int_t sector = In_sector;
     if (! sector) continue;
-    if ( Out_sector != sector) continue;
     StBeamDirection part = StTpcDb::TpcPart(sector);
     const TGeoHMatrix &Wheel = StTpcDb::instance()->TpcWheel(part);
     const Double_t *rotWheel = Wheel.GetRotationMatrix();
@@ -187,26 +186,23 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     const Double_t *traO = O.GetTranslation();
     //                      alpha    beta     gamma    x         y         z
     Double_t abgxyz_O[6] = {rotO[7], rotO[2], rotO[3], traO[0], traO[1], traO[2]};
-#ifdef __Pad__
-    TVector3 pxyzIn(In_nxPad,In_nyPad,In_nzPad);  PrPP(pxyzIn);
-    TVector3 rI(In_xPad,In_yPad,In_zPad);         PrPP(rI);
-    TVector3 pxyzOut(Out_nxPad,Out_nyPad,Out_nzPad);   PrPP(pxyzOut);
-    TVector3 rO(Out_xPad,Out_yPad,Out_zPad); PrPP(rO);
-#else
     TVector3 pxyzIn(In_nx,In_ny,In_nz);  PrPP(pxyzIn);
     TVector3 rI(In_x,In_y,In_z);         PrPP(rI);
     TVector3 pxyzOut(Out_nx,Out_ny,Out_nz);   PrPP(pxyzOut);
     TVector3 rO(Out_x,Out_y,Out_z); PrPP(rO);
-#endif
-    TVector3 rO12(Out_x,Out_y,Out_z); PrPP(rO12);
     Double_t dev = (TMath::Abs(In_Rho)-TMath::Abs(Out_Rho));
     //    if (TMath::Abs(dev) > 5e-4) continue;
     if (TMath::Abs(dev) > 6e-3) continue; // 3D distortions
-    TRSymMatrix CIn(kP,In_fCov);                       PrPP(CIn);
-    TRSymMatrix COut(kP,Out_fCov);                     PrPP(COut);
+    TRSymMatrix CIn(6,In_fCov);                       PrPP(CIn);
+    TRSymMatrix COut(6,Out_fCov);                     PrPP(COut);
     TRSymMatrix C(CIn);
     C += COut;                                        PrPP(C);
-    TRSymMatrix C5x5(T5x6,TRArray::kAxSxAT,C);
+    for (Int_t i = 0; i < 6; i++) {
+      if (i < 3) C(i,i) += 0.1*0.1;
+      else       C(i,i) += 0.001*0.001;
+    }
+    PrPP(C);
+    TRSymMatrix CMxM(TMx6,TRArray::kAxSxAT,C);        PrPP(CMxM);
     TVector3 nI = pxyzIn.Unit();                      PrPP(nI);
     TVector3 nO = pxyzOut.Unit();                     PrPP(nO);
     Double_t norm = nI*nO;
@@ -216,38 +212,8 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     Double_t tX = nO.X()/nO.Y();
     Double_t tZ = nO.Z()/nO.Y();
     TRVector mX(5, dr.X(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
-    if (_debug) {
-      cout << "s = " << Out_sector;
-      for (Int_t m = 0; m < kM; m++) {
-	//	cout << "\t";	cout << mX(m) << " +/- " << TMath::Sqrt(C5x5(m,m)) << "(" << mX(m)/TMath::Sqrt(C5x5(m,m)) << ")";
-	cout << Form("\t%8.5f +/- %8.5f (%8.5f)", mX[m], TMath::Sqrt(C5x5(m,m)), mX(m)/TMath::Sqrt(C5x5(m,m)));
-      }
-      cout << endl;
-    }
-    if (TMath::Sqrt(C5x5(0,0)) > 0.2 || 
-	TMath::Sqrt(C5x5(1,1)) > 0.2 || 
-	TMath::Sqrt(C5x5(2,2)) > 0.01|| 
-	TMath::Sqrt(C5x5(3,3)) > 0.01|| 
-	TMath::Sqrt(C5x5(4,4)) > 0.01) continue;
-    TRSymMatrix GI(C5x5);
-    Int_t iFail = TRSymMatrix::TrchLU(C5x5.GetArray(),GI.GetArray(),5);
-    if (iFail != 0) {
-      if (! _debug ) {
-	PrPP(pxyzIn);  PrPP(rI); PrPP(CIn);
-	PrPP(pxyzOut); PrPP(rO); PrPP(COut);
-	PrPP(C);
-      }
-      continue;
-    }
-    TRSymMatrix G(C5x5,TRArray::kInverted);              PrPP(G);
+    TRSymMatrix G(CMxM,TRArray::kInverted);              PrPP(G);
     
-#if 0
-    if (mX(0) < plotNameD[14].zmin || mX(0) > plotNameD[14].zmax) continue;
-    if (mX(1) < plotNameD[16].zmin || mX(1) > plotNameD[16].zmax) continue;
-    if (mX(2) < plotNameD[17].zmin || mX(2) > plotNameD[17].zmax) continue;
-    if (mX(3) < plotNameD[18].zmin || mX(3) > plotNameD[18].zmax) continue;
-    if (mX(4) < plotNameD[19].zmin || mX(4) > plotNameD[19].zmax) continue;
-#endif
 /*============================== from maxima
     xS yS zS         aS  bS      gS xW  yW zW      aW   bW        gW
 dX [-1,lx ,0,-lx*ZW   , -ZW,YW+lx*XW,1,-lx,0,lx*ZW   ,  ZW,-YW-lx*XW],
@@ -285,20 +251,10 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
 	       /* nY 3*/         0.,  0.,  0.,              nO.Z(),      0.0,            -nO.X(),
 	       /* nZ 4*/         0.,  0.,  0.,             -nO.Y(),   nO.X(),                0.0);  PrPP(A);
 #else 
-    Double_t a5x6[5][6];
-#ifdef __Pad__
-    TVector3 RIn(In_x, In_y, In_z);
-    TVector3 NIn(In_nx, In_ny, In_nz);
-    TVector3 ROut(Out_x, Out_y, Out_z);
-    TVector3 NOut(Out_nx, Out_ny, Out_nz);
-    TVector3 R = 0.5*(RIn + ROut);
-    TVector3 N = 0.5*(NIn + NOut);
-    StTpcUtil::IODer(&R[0], &N[0], abgxyz_O, abgxyz_Wheel, a5x6);
-#else
-    StTpcUtil::IODer(&rI[0], &nI[0], abgxyz_O, abgxyz_Wheel, a5x6);
-#endif
+    Double_t aMxP[kM][kP];
+    StTpcUtil::IODer(&rI[0], &nI[0], &rO[0], abgxyz_O, abgxyz_Wheel, aMxP);
     // Convert from Fortran to C storage (row-wise without gaps, contrary to the Fortran convention)
-    TRMatrix A(kM,kP, &a5x6[0][0]);
+    TRMatrix A(kM,kP, &aMxP[0][0]);
 #endif
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
     TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
@@ -311,8 +267,8 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
     Int_t is = im + kP;
     if (_debug && array[0] > 0) {
       cout << "sector = " << sector << "\tentry = " << array[0] << " yHy = " << array[28] << endl;
-      TRVector XX(6,array+im);  PrPP(XX);
-      TRSymMatrix S(6,array+is);  PrPP(S);
+      TRVector XX(kP,array+im);  PrPP(XX);
+      TRSymMatrix S(kP,array+is);  PrPP(S);
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
     Double_t chi2 = G.Product(mX); PrPP(chi2);         
@@ -323,28 +279,24 @@ chi2 = pT * SX * p - 2 * pT * z  + mT * G * m = zT * WT * SX * W * z - 2 * zT * 
     TCL::vadd(sX,array+is,array+is,kPP); 
     if (_debug) {
       cout << "sector = " << sector << "\tentry = " << array[0] << " yHy = " << array[28] << endl;
-      TRVector XX(6,array+im);  PrPP(XX);
-      TRSymMatrix S(6,array+is);  PrPP(S);
+      TRVector XX(kP,array+im);  PrPP(XX);
+      TRSymMatrix S(kP,array+is);  PrPP(S);
       TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
     }
     TRMatrix V(NFPlots,2,
-mX(0), A(0,4),   //  {"dXdbeta",        "dX versus dX/dbeta[1,5]        => dbeta",      110,  20.00, 210.00,500,-0.60, 0.60}, // 0
-mX(0), A(0,5),   //  {"dXdgamma",       "dX versus dX/dgamma[1,6]       => dgamma",     110,-123.10,-122.80,500,-0.60, 0.60}, // 1
-mX(1), A(1,3),   //  {"dZdalpha",       "dZ versus dZ/dalpha[2,4]       => dalpha",     110, 122.80, 123.10,500,-0.20, 0.20}, // 2
-mX(1), A(1,4),   //  {"dZdbeta",        "dZ versus dZ/dbeta[2,5]        => dbeta",      110, -30.00,  30.00,500,-0.20, 0.20}, // 3
-mX(2), A(2,4),   //  {"dnXdbeta",       "dnX versus dnX/dbeta[3,5]      => dbeta",      110,  -0.80,   0.80,500,-0.02, 0.02}, // 4
-mX(2), A(2,5),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[3,6]     => dgamma",     110,  -1.00,  -0.50,500,-0.02, 0.02}, // 5
-mX(3), A(3,3),   //  {"dnYdalpha",      "dnY versus dnY/dalpha[4,4]     => dalpha",     110,  -0.80,   0.80,500,-0.01, 0.01}, // 6
-mX(3), A(3,5),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[4,6]     => dgamma",     110,  -0.70,   0.70,500,-0.01, 0.01}, // 7
-mX(4), A(4,3),   //  {"dnZdalpha",      "dnZ versus dnZ/dalpha[5,4]     => dalpha",     110,   0.40,   1.00,500,-0.01, 0.01}, // 8
-mX(4), A(4,4),   //  {"dnZdbeta",       "dnZ versus dnZ/dbeta[5,5]      => dbeta",      110,  -0.70,   0.70,500,-0.01, 0.01}, // 9
-	       mX(0)  , rO12.Z() , // "dX"       ,"dX  versus Z"                   
-	       dr.Y() , rO12.Z() , // "dY"       ,"dY  versus Z"                   
-	       mX(1)  , rO12.Z() , // "dZ"       ,"dZ  versus Z"                   
-	       mX(2)  , rO12.Z() , // "dnX"      ,"dnX versus Z"                   
- 	       mX(3)  , rO12.Z() , // "dnY"      ,"dnY versus Z"                   
-	       mX(4)  , rO12.Z() , // "dnZ"      ,"dnZ versus Z"                        
-	       mX(1)/(driftVel/freq)  , rO12.Z()  // "dT"       ,"dT  versus Z"
+mX(0), A(0,1),   //  {"dXdy",   "dX versus dX/dy[1,2]   => dy", 110,-0.95,  0.95,500,-0.30, 0.30}, // 0
+mX(0), A(0,3),   //  {"dXdgamma",       "dX versus dX/dgamma[1,4]       => dgamma",     110,117.0, 137.0,500,-0.30, 0.30}, // 1
+mX(1), A(1,1),   //  {"dZdy",   "dZ versus dZ/dy[2,2]   => dy", 110, -1.2,   1.0,500,-0.30, 0.30}, // 2
+mX(1), A(1,3),   //  {"dZdgamma",       "dZ versus dZ/dgamma[2,4]       => dgamma",     110,-25.0, 25.0,500,-0.30, 0.30}, // 3
+mX(2), A(2,3),   //  {"dnXdgamma",      "dnX versus dnX/dgamma[3,4]     => dgamma",     110,  0.4,  1.0,500,-0.02, 0.02}, // 4
+mX(3), A(3,3),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[4,4]     => dgamma",     110, -0.8,  0.8,500,-0.02, 0.02}, // 5
+	       mX(0)  , rO.Z() , // "dX"       ,"dX  versus Z"                   
+	       dr.Y() , rO.Z() , // "dY"       ,"dY  versus Z"                   
+	       mX(1)  , rO.Z() , // "dZ"       ,"dZ  versus Z"                   
+	       mX(2)  , rO.Z() , // "dnX"      ,"dnX versus Z"                   
+ 	       mX(3)  , rO.Z() , // "dnY"      ,"dnY versus Z"                   
+	       mX(4)  , rO.Z() , // "dnZ"      ,"dnZ versus Z"                        
+	       mX(1)/(driftVel/freq)  , rO.Z()  // "dT"       ,"dT  versus Z"
 	       );// PrPP(V);
     for (Int_t i = 0; i < NFPlots; i++) plots3D[i]->Fill(sector, V(i,1), V(i,0));
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}
@@ -361,6 +313,7 @@ void TDrawIO() {
   Int_t ny = NPlots; // NFPlots
   Int_t scaleX = 800/nx;
   Int_t scaleY = 600/ny;
+  enum {kM = 5, kP = 4, kPP = kP*(kP+1)/2};
   //  Int_t scale  = TMath::Min(scaleX,scaleY);
   TCanvas *c1 = new TCanvas("TpcInOut","TpcInOut Alignment" ,10,10,10+scaleX*nx,10+scaleY*ny);
   cout << "nx/ny = " << nx << "/" << ny << endl;
@@ -419,57 +372,9 @@ void TDrawIO() {
 	Double_t yTy = array[28]; PrPP(yTy);
 	Int_t im = 1;
 	Int_t is = im + 6;
-	TRVector AmX(6,array+im);  PrPP(AmX);
-	TRSymMatrix S(6,array+is); PrPP(S);
+	TRVector AmX(kP,array+im);  PrPP(AmX);
+	TRSymMatrix S(kP,array+is); PrPP(S);
 	TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
-#if 0
-	TRSymMatrix s(6);
-	TRVector   amX(6);
-	for (Int_t i1 = 0; i1 < 6; i1++) {
-	  Int_t ii = TRSymMatrix::IJ(i1,i1);
-	  amX(i1) = AmX(i1)/Cor(i1,i1);
-	  s(i1,i1) = 1.;
-	  for (Int_t j1 = 0; j1 < i1; j1++) {
-	    s(i1,j1) = Cor(i1,j1);
-	  }
-	}
-	TRSymMatrix sInv(s,TRArray::kInverted);  PrPP(sInv);
-	TRVector  xX(sInv,TRArray::kSxA,amX);
-	TRVector xXX(6);
-	for (Int_t i1 = 0; i1 < 6; i1++) {
-	  xXX(i1) = xX(i1)/Cor(i1,i1);
-	}	
-	PrPP(xXX);
-#endif
-	TRVector AmX5(5,array+im);  PrPP(AmX5);
-	TRSymMatrix S5(5,array+is); PrPP(S5);
-	TRSymMatrix Cor5(S5, TRArray::kSCor); PrPP(Cor5);
-	//#define FREEZE_ALPHA_BETA
-#ifdef  FREEZE_ALPHA_BETA
-	for (Int_t i = 3; i < 5; i++) {
-	  AmX(i) = 0;
-	  for (Int_t j = 0; j < 5; j++) {
-	    S(j,i) = 0;
-	  }
-	}
-	// cout << "AmX " << AmX << endl;
-	// cout << "S " << S << endl;
-#else /* ! FREEZE_ALPHA_BETA */
-	//#define FREEZE_BETA
-#ifdef  FREEZE_BETA
-	for (Int_t i = 4; i < 5; i++) {
-	  AmX(i) = 0;
-	  for (Int_t j = 0; j < 5; j++) {
-	    S(j,i) = 0;
-	  }
-	}
-	// cout << "AmX " << AmX << endl;
-	// cout << "S " << S << endl;
-#endif /* FREEZE_BETA */
-#endif /* FREEZE_ALPHA_BETA */
-	TRSymMatrix SInv5(S5,TRArray::kInverted);  PrPP(SInv5);
-	TRVector  X5(SInv5,TRArray::kSxA,AmX5);     PrPP(X5);
-
 	TRSymMatrix SInv(S,TRArray::kInverted);  PrPP(SInv);
 	TRVector  X(SInv,TRArray::kSxA,AmX);     PrPP(X);
 	Double_t chi2 = yTy;
@@ -477,35 +382,40 @@ void TDrawIO() {
 	//	Double_t mSIm = SInv.Product(AmX); 
 	// cout << "chi2 = " << chi2 << "/ NDF = " << NP << " mS-1m " << mSIm << endl;
 	line = "";
-	for (Int_t m = 0; m < 6; m++) {
-	  if (SInv(m,m) > 0) {
+	for (Int_t p = 0; p < kP; p++) {
+	  Int_t m = p;
+	  if (p > 2) m = 5;
+	  if (SInv(p,p) > 0) {
 	    Double_t scale = 1e4;   // => mkm
 	    if (m > 2) scale = 1e3; // => mrad
-	    ValA[m].val =  scale*X(m);
-	    ValA[m].valError = scale*TMath::Sqrt(SInv(m,m));
-	    //#define __NO_LSF__
-#ifdef __NO_LSF__
-	    ValA[m].iFlag = 0;
-#else 
+	    ValA[m].val =  scale*X(p);
+	    ValA[m].valError = scale*TMath::Sqrt(SInv(p,p));
+	    //	    ValA[m].iFlag = 0;
 	    if (m <= 2 && TMath::Abs(ValA[m].val) < 2000 ||
 		m >  2 && TMath::Abs(ValA[m].val) <    5) {
 	      ValA[m].iFlag = 1;
 	    } else {
 	      ValA[m].iFlag = 0;
 	    }
-#endif
+	    if (p == kP - 1) {
+	      line  += "|               ";
+	      line  += "|               ";
+	    }
+	    line  += Form("|%7.2f+-%5.2f",TMath::Max(-9999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
 	  } else {
 	    ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
-	  }
-	  line  += Form("|%7.2f+-%5.2f ",TMath::Max(-9999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
+	    line  += "|               ";
+ 	  }
 	}
       }
     }
     cout << line << endl;
     out << line << endl;
-    for (Int_t j = 0; j < NPlots; j++) {
+    for (Int_t j = 0; j < NPlots+3; j++) {
       TH3 *h3 = (TH3 *) gDirectory->Get(plotNameD[j].Name);
       if (! h3) continue;
+      TString Name(h3->GetName());
+      TString Title(h3->GetTitle());
       Int_t ij = j + 1 + ny*(i-1);
       c1->cd(ij)->SetLogz(1);
       TH1 *fit = 0;
@@ -515,53 +425,64 @@ void TDrawIO() {
       sp->Fit("gaus","qem");
       Double_t Mu = 0;
       Double_t dMu = 0;
+      Double_t prob = 0;
       TF1 *fun = sp->GetFunction("gaus");
       if (fun) {
 	Mu = fun->GetParameter(1);
 	dMu = fun->GetParError(1);
       }
-      TH2 *h = (TH2 *) h3->Project3D("zy");
-      h->SetName(Form("%s_%i",h->GetName(),sector));
-      h->FitSlicesY(0,0,-1,10,"qeg3s");
-      //      SlicesYFit(h,0,0,10,"qnig3");
-      fit = (TH1 *) gDirectory->Get(Form("%s_1",h->GetName()));
-      //       TH1 *sig = (TH1 *) gDirectory->Get(Form("%s_2",h->GetName()));
-      //       TH1 *gra = (TH1 *) gDirectory->Get(Form("%s_3",h->GetName()));
       Double_t slope = 0;
       Double_t dslope = 0;
-      TLegend *leg = new TLegend(0.1,0.2,0.6,0.3,"");
-      lTitle = "";
-      leg->SetTextSize(0.025);
-      if (fit) {
-	fit->SetTitle(h->GetTitle());
-	fit->SetMarkerStyle(20);
-	fit->SetMarkerColor(1);
-	fit->SetMaximum(0.2);
-	fit->SetMinimum(-.2);
-	fit->SetStats(1);
-	fit->Fit("pol1","qe");
-	TF1 *pol1 = fit->GetFunction("pol1");
-	if (! pol1 ) goto endhLoop;
-	Double_t prob = pol1->GetProb();
-	if (prob >= 0) {
-#if 1
-	  Double_t xm = fit->GetMean();
-	  Mu     = pol1->Eval(xm);
-	  dMu    = TMath::Sqrt(pol1->GetParError(0)*pol1->GetParError(0) + (xm*pol1->GetParError(1))*(xm*pol1->GetParError(1)));
-	  if (dMu > 99.99e-4) dMu=  99.99e-4;
+      TF1 *pol1 = 0;
+      TH2 *h = 0;
+      TLegend *leg = 0;
+      Int_t index = Title.Index("=>");
+      TString tag("");
+      if (index >= 0) {
+	index = index+2;
+	static TString separator("[^ ;,]+");
+	TString t(Title.Data()+index);
+	TObjArray *array = t.Tokenize(separator);
+	tag = ((TObjString *) array->At(0))->GetString();
+	delete array;
+      }
+      if (tag != "") {
+	h = (TH2 *) h3->Project3D("zy");
+	h->SetName(Form("%s_%i",h->GetName(),sector));
+	h->FitSlicesY(0,0,-1,10,"qeg3s");
+	fit = (TH1 *) gDirectory->Get(Form("%s_1",h->GetName()));
+	leg = new TLegend(0.1,0.2,0.6,0.3,"");
+	lTitle = "";
+	leg->SetTextSize(0.025);
+	if (fit) {
+	  fit->SetTitle(h->GetTitle());
+	  fit->SetMarkerStyle(20);
+	  fit->SetMarkerColor(1);
+	  fit->SetMaximum(0.2);
+	  fit->SetMinimum(-.2);
+	  fit->SetStats(1);
+	  fit->Fit("pol1","qe");
+	  pol1 = fit->GetFunction("pol1");
+	  if (! pol1 ) goto endhLoop;
+	  prob = pol1->GetProb();
+	  if (prob >= 0) {
+#if 0
+	    Double_t xm = fit->GetMean();
+	    Mu     = pol1->Eval(xm);
+	    dMu    = TMath::Sqrt(pol1->GetParError(0)*pol1->GetParError(0) + (xm*pol1->GetParError(1))*(xm*pol1->GetParError(1)));
+	    if (dMu > 99.99e-4) dMu=  99.99e-4;
 #endif
-	  slope  = pol1->GetParameter(1);
-	  dslope = pol1->GetParError(1);
-	  if (dslope > 99.99e-3) dslope = 99.99e-3;
-	  if (TMath::Abs(slope) > 0.1) dslope = 99.99e-3;
-	} else {
-	  Mu = slope = 0;
-	  dMu = dslope = 0;
+	    slope  = pol1->GetParameter(1);
+	    dslope = pol1->GetParError(1);
+	    if (dslope > 99.99e-3) dslope = 99.99e-3;
+	    if (TMath::Abs(slope) > 0.1) dslope = 99.99e-3;
+	  } else {
+	    Mu = slope = 0;
+	    dMu = dslope = 0;
+	  }
 	}
 	Val_t Vals[6]; memset (Vals, 0, sizeof(Vals));
 	static const Char_t *dxv[3] = {"dX", "dY","dZ"};
-	TString Name(h->GetName());
-	TString Title(h->GetTitle());
 	for (Int_t m = 0; m < 3; m++) {
 	  if (Name.BeginsWith(dxv[m]) && dMu > 0 && dMu < 99.99e-4) {
 	    Vals[m].val =     -1e4*Mu;
@@ -570,16 +491,6 @@ void TDrawIO() {
 	    lTitle += Form(" %s = %7.2f+-%5.2f (#mum)", dxv[m],Vals[m].val,TMath::Min(99.99,Vals[m].valError)); 
 	  }
 	}	  
-	Int_t index = Title.Index("=>");
-	TString tag("");
-	if (index >= 0) {
-	  index = index+2;
-	  static TString separator("[^ ;,]+");
-	  TString t(Title.Data()+index);
-	  TObjArray *array = t.Tokenize(separator);
-	  tag = ((TObjString *) array->At(0))->GetString();
-	  delete array;
-	}
 	static const Char_t *lvar[6] = {"dx","dy","dz","#alpha","#beta","#gamma"};
 	for (Int_t m = 0; m < 6; m++) {
 	  if (dslope <= 1e-6 || slope >= 99e-3) continue;
@@ -633,10 +544,9 @@ void TDrawIO() {
       if (h) h->Draw("colz");
       if (fit) {
 	fit->Draw("same"); 
-	TF1 *pol1 = fit->GetFunction("pol1"); 
 	if (pol1) {pol1->SetLineColor(2); pol1->Draw("same");}
       }
-      leg->Draw();
+      if (leg) leg->Draw();
     }
     out  << "__________________________________________________________________________________________________ " << sector << endl;
     cout << "__________________________________________________________________________________________________ " << sector << endl;

@@ -138,12 +138,33 @@ TRSymMatrix::TRSymMatrix(const TRMatrix& A,ETRMatrixCreatorsOp kop,const TRSymMa
 }
 //________________________________________________________________________________
 TRSymMatrix::TRSymMatrix(const TRSymMatrix& Q,ETRMatrixCreatorsOp kop,const TRSymMatrix& T){
-  assert (kop == kRxSxR);
-  Int_t M = Q.GetNcols();
-  assert(M == T.GetNcols());
-  fNrows = M;
-  Set(fNrows*(fNrows+1)/2);
-  TCL::trqsq(Q.GetArray(),T.GetArray(),fArray,M);
+  Int_t M, i, j, k, ij;
+  switch (kop) {
+  case kRxSxR:
+    M = Q.GetNcols();
+    assert(M == T.GetNcols());
+    fNrows = M;
+    Set(fNrows*(fNrows+1)/2);
+    TCL::trqsq(Q.GetArray(),T.GetArray(),fArray,M);
+    break;
+  case kRxS:
+    M = Q.GetNcols();
+    assert(M == T.GetNcols());
+    fNrows = M;
+    Set(fNrows*(fNrows+1)/2);
+    for (i = 0; i < M; i++) 
+      for (j = 0; j <= i; j++) { 
+	ij = IJ(i,j);
+	fArray[ij] = 0;
+	for (k = 0; k < M; k++) {
+	  fArray[ij] += Q(i,k) * T (k,j);
+	}
+      }
+    break;
+  default:
+    Error("TRSymMatrix(ETRMatrixCreatorsOp)", "operation %d not yet implemented", kop);
+  }
+
 }
 //________________________________________________________________________________
 TRSymMatrix::TRSymMatrix(const TRMatrix& A,ETRMatrixCreatorsOp kop) {
