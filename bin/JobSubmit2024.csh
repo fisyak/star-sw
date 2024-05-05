@@ -17,7 +17,7 @@ cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
 #cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
 #cd /hlt/cephfs/reco/2023/RHF/TFG/AuAu_2023
 #cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
-cd /hlt/cephfs/reco/2024/RF/TFG/AuAu_2024
+cd /hlt/cephfs/reco/2024/RF/TFG24b/pp200_LowLuminosity
 CreateRunDirs.pl
 foreach d (`ls -1d ???/25*`)
   cd $d;
