@@ -912,7 +912,7 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("useLDV")    ) mk->SetAttr("useLDV",kTRUE) ;// uses laserDV database
       if ( GetOption("useCDV")    ) mk->SetAttr("useCDV",kTRUE) ;// uses ofl database
       if ( GetOption("useNewLDV") ) mk->SetAttr("useNewLDV",kTRUE);// uses new laserDV
-      if ( GetOption("CorrZ")     ) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
+      if ( GetOption("Alignment2024")     ) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
       if ( GetOption("Cosmics")   ) mk->SetAttr("Cosmics"    ,kTRUE);
       if (GetOption("ExB")){
 	mk->SetAttr("ExB", kTRUE);	// bit 0 is ExB ON or OFF
