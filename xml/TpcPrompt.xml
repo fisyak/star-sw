@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- <job  name="TpcPrompt" maxFilesPerProcess="10"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false"> -->
-<job  name="TpcPrompt" maxFilesPerProcess="50"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<job  name="TpcPrompt" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 <stdout URL="file:./sched$JOBID.log" />
 <stderr URL="file:./sched$JOBID.err" />
 <command> 
@@ -58,6 +58,10 @@
 <input URL="file:/hlt/cephfs/daq/2022/009/*/hlt*.daq" />
 <input URL="file:/hlt/cephfs/daq/2022/010/*/hlt*.daq" /> 
 <input URL="file:/hlt/cephfs/daq/2022/011/*/hlt*.daq" /> 
---> 
 <input URL="file:/hlt/cephfs/reco/2023/RF/TFG/AuAu_2023/*/*/*.event.root" /> 
+<input URL="file:/hlt/cephfs/daq/2024/119/25119106/*.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/121/25121083/*.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/123/25123012/*.daq" />
+--> 
+<input URL="file:/hlt/cephfs/daq/2024/123/*/*.daq" />
 </job>
