@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
+# cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
 #cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIIIDefs.pm
 #git diff RunXXIIDefs.pm
 #git ci -m "Update" RunXXIIIDefs.pm
@@ -18,7 +18,7 @@ cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
 #cd /hlt/cephfs/reco/2023/RHF/TFG/AuAu_2023
 #cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
 cd /hlt/cephfs/reco/2024/RF/TFG24b/pp200_LowLuminosity
-CreateRunDirs.pl
+CreateRunDirs2024.pl
 foreach d (`ls -1d ???/25*`)
   cd $d;
   if (-r Done || -r Submitted) then
