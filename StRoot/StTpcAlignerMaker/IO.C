@@ -149,13 +149,12 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
   TH1D *LSF[24];
   //  Increase hitogram by 2 bins in order to account underfloaw and overflow 
   for (Int_t sec = 1; sec <= 24; sec++) LSF[sec-1] = new TH1D(Form("LSF_%02i",sec),Form("Matrix and right part for Least Squared Fit for sector = %02i",sec),30,0,30.);
-  enum {kM = 5, kP = 4, kPP = kP*(kP+1)/2};
+  enum {kM = 4, kP = 4, kPP = kP*(kP+1)/2};
   Double_t tMx6[kM][6] = {
     {1, 0, 0, 0, 0, 0},
     {0, 0, 1, 0, 0, 0},
     {0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 1, 0},
-    {0, 0, 0, 0, 0, 1}};
+    {0, 0, 0, 0, 1, 0}};
   TRMatrix TMx6(kM, 6, &tMx6[0][0]);
   Int_t Ntracks = 0;
   while (iter.Next()) {
@@ -198,8 +197,8 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     TRSymMatrix C(CIn);
     C += COut;                                        PrPP(C);
     for (Int_t i = 0; i < 6; i++) {
-      if (i < 3) C(i,i) += 0.1*0.1;
-      else       C(i,i) += 0.001*0.001;
+      if (i < 3) C(i,i) += 0.1*0.1*0.1;
+      else       C(i,i) += 0.001*0.001*0.001;
     }
     PrPP(C);
     TRSymMatrix CMxM(TMx6,TRArray::kAxSxAT,C);        PrPP(CMxM);
@@ -211,7 +210,7 @@ void TpcAlignerDrawIO(const Char_t *files = "../*.root", const Char_t *OutName =
     TVector3 dr = rO - rI;                            PrPP(dr);
     Double_t tX = nO.X()/nO.Y();
     Double_t tZ = nO.Z()/nO.Y();
-    TRVector mX(5, dr.X(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
+    TRVector mX(kM, dr.X(), dr.Z(), dn.X(), dn.Y());  PrPP(mX);
     TRSymMatrix G(CMxM,TRArray::kInverted);              PrPP(G);
     
 /*============================== from maxima
@@ -295,7 +294,7 @@ mX(3), A(3,3),   //  {"dnYdgamma",      "dnY versus dnY/dgamma[4,4]     => dgamm
 	       mX(1)  , rO.Z() , // "dZ"       ,"dZ  versus Z"                   
 	       mX(2)  , rO.Z() , // "dnX"      ,"dnX versus Z"                   
  	       mX(3)  , rO.Z() , // "dnY"      ,"dnY versus Z"                   
-	       mX(4)  , rO.Z() , // "dnZ"      ,"dnZ versus Z"                        
+	       dr.Z() , rO.Z() , // "dnZ"      ,"dnZ versus Z"                        
 	       mX(1)/(driftVel/freq)  , rO.Z()  // "dT"       ,"dT  versus Z"
 	       );// PrPP(V);
     for (Int_t i = 0; i < NFPlots; i++) plots3D[i]->Fill(sector, V(i,1), V(i,0));
@@ -313,7 +312,7 @@ void TDrawIO() {
   Int_t ny = NPlots; // NFPlots
   Int_t scaleX = 800/nx;
   Int_t scaleY = 600/ny;
-  enum {kM = 5, kP = 4, kPP = kP*(kP+1)/2};
+  enum {kM = 4, kP = 4, kPP = kP*(kP+1)/2};
   //  Int_t scale  = TMath::Min(scaleX,scaleY);
   TCanvas *c1 = new TCanvas("TpcInOut","TpcInOut Alignment" ,10,10,10+scaleX*nx,10+scaleY*ny);
   cout << "nx/ny = " << nx << "/" << ny << endl;
@@ -371,7 +370,7 @@ void TDrawIO() {
       if (NP > 0) {
 	Double_t yTy = array[28]; PrPP(yTy);
 	Int_t im = 1;
-	Int_t is = im + 6;
+	Int_t is = im + kP;
 	TRVector AmX(kP,array+im);  PrPP(AmX);
 	TRSymMatrix S(kP,array+is); PrPP(S);
 	TRSymMatrix Cor(S, TRArray::kSCor); PrPP(Cor);
@@ -401,7 +400,7 @@ void TDrawIO() {
 	      line  += "|               ";
 	      line  += "|               ";
 	    }
-	    line  += Form("|%7.2f+-%5.2f",TMath::Max(-9999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
+	    line  += Form("|%7.2f+-%5.2f ",TMath::Max(-9999.99,TMath::Min(9999.99,ValA[m].val)),TMath::Min(99.99,ValA[m].valError)); 
 	  } else {
 	    ValA[m].val = ValA[m].valError = 0; ValA[m].iFlag = 0;
 	    line  += "|               ";

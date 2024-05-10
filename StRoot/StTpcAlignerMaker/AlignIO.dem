@@ -201,19 +201,34 @@ rO : matrix( [xO],  [yO], [zO],  [1]);    /* Outer sector coordinates and direct
 nO : matrix([nxO], [nyO], [nzO], [0]); 
 
 nI2O :  RI2OV . nI;
+/*
+(%i43) nI2O:RI2OV . nI
+(%o43) matrix(
+  [(a_Wheel*((- g_O) - dg_O) - b_Wheel)*nzI + ((- g_O) - dg_O)*nyI + nxI],
+  [(a_Wheel - b_Wheel*(g_O + dg_O))*nzI + nyI + (g_O + dg_O)*nxI], 
+  [nzI - a_Wheel*nyI + b_Wheel*nxI],
+  [0])
+*/
 rI2O :  RI2OV . rI;
 S :  (rO[2] - rI2O[2])/nI2O[2];
 rI2OC : rI2O + S[1] * nI2O; /* yO = rI2O[2] + nI2O[2]*S */
 drOI : rO - rI2OC;
 dnOI : nO - nI2O;
+/*
+(%i48) dnOI:nO-nI2O
+(%o48) matrix(
+  [(- (a_Wheel*((- g_O) - dg_O) - b_Wheel)*nzI) - ((- g_O) - dg_O)*nyI + nxO - nxI],
+  [(- (a_Wheel - b_Wheel*(g_O + dg_O))*nzI) + nyO - nyI - (g_O + dg_O)*nxI],
+  [nzO - nzI + a_Wheel*nyI - b_Wheel*nxI],
+  [0])
+*/
 define(drOIF(dg_O, dx_O, dy_O, dz_O), drOI);
 define(dnOIF(dg_O, dx_O, dy_O, dz_O), dnOI);
 
 dRdpIO : jacobian([drOIF(dg_O, dx_O, dy_O, dz_O)[1],
                    drOIF(dg_O, dx_O, dy_O, dz_O)[3],
                    dnOIF(dg_O, dx_O, dy_O, dz_O)[1],
-                   dnOIF(dg_O, dx_O, dy_O, dz_O)[2],
-                   dnOIF(dg_O, dx_O, dy_O, dz_O)[3]],
+                   dnOIF(dg_O, dx_O, dy_O, dz_O)[2]],
 		       [ dx_O, dy_O, dz_O, dg_O] );
 dRdpIOs: dRdpIO;
 define(FuncdRdpIO(dg_O, dx_O, dy_O, dz_O), dRdpIOs);
