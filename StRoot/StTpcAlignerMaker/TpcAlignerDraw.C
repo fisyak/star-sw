@@ -49,7 +49,7 @@ end
 #include "TRMatrix.h"
 #include "TGeoMatrix.h"
 #include "StTpcDb/StTpcDb.h"
-#include "StTpcUtil/StTpcUtil.h"
+#include "StBichsel/StTpcUtil.h"
 #endif
 /* 
    TpcW2STree->Draw("(abs(HelixU.Rho)-abs(HelixS.Rho))/(abs(HelixU.Rho)+abs(HelixS.Rho))>>dC(100,-2e-1,2e-1)") => sigma = 3.55241e-02
