@@ -70,10 +70,11 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
   //#include "IOSectorParPass114_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
   //#include "IOSectorParPass115_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0, new derivatives
+  //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0, new derivatives
+#include "IOSectorParPass118_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
 };
-//#define __No_alpha_beta__
-#define __No_alpha_beta_gamma__
+#define __No_alpha_beta__
+//#define __No_alpha_beta_gamma__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
 class TTable;
