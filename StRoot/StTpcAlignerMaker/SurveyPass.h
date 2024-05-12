@@ -19,7 +19,7 @@ class data_t {
     Double_t val = X()[2*i];
     Double_t err = X()[2*i+1];
     if (i < 3) {
-      if (TMath::Abs(val) < 2000.0 && err > 0 && err < 99.0) return kTRUE;
+      if (TMath::Abs(val) < 5000.0 && err > 0 && err < 99.0) return kTRUE;
     } else {
       if (TMath::Abs(val) <    5.0 && err > 0 && err < 0.99) return kTRUE;
     }
