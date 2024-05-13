@@ -135,7 +135,7 @@ GWheelTGT :  GG(z) . WheelT( a_Wheel, b_Wheel) . GGT(z);
 
 /* WW: GWheelGT . GWheelTGT; */
 /* 
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*mShift[part])^^-1 * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
                                                           
    r = Sup12 = GG(z) * Wheel * dRR * (kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS) * GG^-1(z) * r(I|O)
 	                dR" == ddR   <--                      dR                      -->
@@ -245,3 +245,9 @@ trigsimp(AT);
 
 f90(AT);
 with_stdout ("AT.txt",  f90(AT));
+/**********   W2S (== U) == prediction from sector W in sector S
+      RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
+
+      Sup12S2Tpc(sectorS) = *mShift[partS]) * (*mHalf[partS]) * (*mShift[partS])^^-1 **rotm) * Flip * TpcSuperSectorPosition * dR
+   
+**************/
