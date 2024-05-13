@@ -338,7 +338,7 @@ Int_t StdEdxY2Maker::Make(){
       }
     }
   }
-  if (dZbest < 999 && dZbest > 3.0) pVbest = 0;
+  if (dZbest >= 999 || dZbest > 3.0) pVbest = 0;
   StTrackCombPiD::SetBestVx(pVbest);
   if (pVbest &&PVxyzC) PVxyzC->Fill( pVbest->position().x(),  pVbest->position().y(), pVbest->position().z());
 #endif /* __BEST_VERTEX__ */
@@ -600,8 +600,6 @@ Int_t StdEdxY2Maker::Make(){
 	dx = tpcHit->dX();
 	if ((ForcedX || dX_TrackFit <= 0.0)) {
 	  if (dX_Helix <= 0.0) continue;
-	  if (Debug()) {
-	  }
 	  dx = dX_Helix;
 	  if (ForcedX) tpcHit->setdX(dx);
 	} else {
