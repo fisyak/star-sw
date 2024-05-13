@@ -10,7 +10,7 @@ void RunTbyT(Int_t nevents=999,
 	     //"./new/st_physics_11035026_raw_2010001_1_200.event.root",
 	     const char* tFile="TbyT.root") {
   gROOT->LoadMacro("bfc.C");
-  TString Chain("StEvent,StiLib,detDb,tpcDb,mysql,nodefault");
+  TString Chain("StEvent,StiLib,detDb,StarMagField,magF,tpcDb,mysql,nodefault");
   bfc(-1,Chain.Data(),0,0,tFile);
   gSystem->Load("StTbyTMaker");
   StTbyTMaker::SetHitMatch(kTRUE);
@@ -30,6 +30,7 @@ void RunTbyT(Int_t nevents=999,
   chain->PrintInfo();
   Int_t initStat = chain->Init(); // This should call the Init() method in ALL makers
   if (initStat) chain->Fatal(initStat, "during Init()");
+  chain->MakeEvent();
   //  if (nevents > 0) chain->EventLoop(1,nevents);
   Int_t iMake = 0;
   StIOMaker *makers[2]  = {ioMaker1, ioMaker2};
