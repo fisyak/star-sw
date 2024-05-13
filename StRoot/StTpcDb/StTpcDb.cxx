@@ -249,23 +249,8 @@ New
 --------------------------------------------------------------------------------
 Revist 04/17/2024 modify Half (rotaion around Wheel position) and Flip (add shift before absorbed by mShift);
                                                                                     add to flip shift to by zGG
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*mShift[part])^^-1 **rotm) * Flip * TpcSuperSectorPosition * dR * dR' *  GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
-                    <--                              Sup12S2Tpc                            ------>   <---                   Sub2SupS12                          --->
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR * dR' *  GG(z) * WHEEL * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR * dR' *  GG(z) * WHEEL       * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * WHEEL * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
-                    <--                              Sup12S2Tpc                            ------>          <---                                       Sub2SupS12                          --->
-                                                                                                     dR' *  GG(z) * WHEEL = GG(z) * WHEEL * dR"
-                                                                                                     dR" =  WHEEL^1 * GG(z)^-1 * dR' * GG(z) * WHEEL ~ dR'
-
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * dR" * GG^-1(z)
-                    <--                                                                        -->          <--                                                                             -->
-     xG           = <--                                                                        --> * x      <--                                                                             --> xPad
-     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * WHEEL * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
-                                                                                                     x =    <--                                                                  --> * xPadGG
-                                                                                                     x =    <--     dR' * WHEEL                                                             --> * xPad
-                                                                                                                                                                                        xPadGG = GG^-1 * xPad
-   dR' * WHEEL =  WHEEL * dR";  dR" = WHEEL^-1 * dR'* WHEEL  
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*mShift[part])^^-1 * rotm) * Flip * TpcSuperSectorPosition * ddRO * dRO *  GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                    <--                              Sup12S2Tpc                                           ------>   <---                     Sub2SupS12                                                    --->
   */
   assert(Dimensions()->numberOfSectors() == 24);
   Float_t gFactor = StarMagField::Instance()->GetFactor();
