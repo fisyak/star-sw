@@ -249,5 +249,81 @@ with_stdout ("AT.txt",  f90(AT));
       RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
 
       Sup12S2Tpc(sectorS) = *mShift[partS]) * (*mHalf[partS]) * (*mShift[partS])^^-1 **rotm) * Flip * TpcSuperSectorPosition * dR
-   
+
+      S2T(sectorS)  = S(partS) * Half(partS) ( S(partS)^^-1 * Rot(sectorS) * Flip * dR(sectorS);
+      xGW = Sup12S2Tpc(sectorW) * xSW
+      xU = xW2S =   Sup12S2Tpc(sectorS)^^-1 * xGW = Sup12S2Tpc(sectorS)^^-1 * Sup12S2Tpc(sectorW) * xSW
+
+      R(sectorS) = S(partS) * H(partS) * S(partS)^^-1 * Rot((sectoS) * Flip * dR(sectorS);
+      R(sectorW) = S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW);
+      R(sectorW) = S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW);
+      xGW = R(sectorW) * xW
+      xGS = R(sectorS) * xS
+
+      xW2S = xU = R(sectorS)^^-1 * xGS => R(sectorS)^^-1 * R(sectorW) * xW 
+
+      dR = xS - xU
+
+      R(sectorW) = S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW);
+      R(sectorS)^^-1 = dR(sectorS)^^-1 * Flip^^-1 * Rot(sectorS)^^-1 * S(partS) * H(partW)^^-1 * S(partW)^^-1
+
+      R(sectorS)^^-1 * R(sectorW) = dR(sectorS)^^-1 * Flip^^-1 * Rot(sectorS)^^-1 * S(partS) * H(partW)^^-1 * S(partW)^^-1 * S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW) =
+      RW2S(sectorW,sectorS) =  Flip^^-1 * Rot(sectorS)^^-1 * S(partS) * H(partW)^^-1 * S(partW)^^-1 * S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip =
+                            =  R(sectorS)^^-1                         * R(sectorW)
+      u = dR(sectorS)^^-1 * RW2S(sectorW,sectorS) * dR(sectorW) * w
+
+      d = s - u 
+
 **************/
+
+RW2S : matrix([r01, r02, r03, 0],
+              [r11, r12, r13, 0],
+              [r21, r22, r23, 0],
+              [  0,   0,   0, 1]); 
+dRST : dRT(a_S, b_S, g_S, x_S, y_S, z_S);
+dRW  :  dR(a_W, b_W, g_W, x_W, y_W, z_W);
+
+dRW2S : dRST . RW2S . dRW;
+
+rW   : matrix(  [xW],   [yW],   [zW], [1]);
+nW   : matrix( [nxW],  [nyW],  [nzW], [0]);
+/*
+rU   : matrix(  [xU],   [yU],   [zU], [1]);
+nU   : matrix( [nxU],  [nyU],  [nzU], [0]);
+*/
+rU   : dRW2S . rW;
+nU   : dRW2S . nW;
+rS   : matrix(  [xS],   [yS],   [zS], [1]);
+nS   : matrix( [nxS],  [nyS],  [nzS], [0]);
+/*
+  rS[2] = rU[2] + Step * nU[2];
+*/
+Step : (rS[2] - rU[2])/nU[2];
+
+
+dr   : rS - rU + Step[1]*nU;
+dn   : nS - nU;
+
+define(drW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W), dr);
+define(dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W), dn);
+dRdpW2S : jacobian([drW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[1],
+                    drW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[3],
+                    dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[1],
+                    dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[2],
+                    dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[3]],
+                    [x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W]);
+dRdpW2Ss: dRdpW2S;
+define(FuncdRdpW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W), dRdpW2Ss);
+FuncdRdpW2Sat0: FuncdRdpW2S(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+ratsimp(FuncdRdpW2Sat0);
+trigsimp(FuncdRdpW2Sat0);
+dRdpW2SsT: transpose(dRdpW2Ss); /* Fortran to C array transpose */
+define(FuncdRdpW2ST(dg_O, dx_O, dy_O, dz_O), dRdpW2SsT);
+
+W2ST: FuncdRdpW2ST(0, 0, 0, 0);
+
+ratsimp(W2ST);
+trigsimp(W2ST);
+
+f90(W2ST);
+with_stdout ("W2ST.txt",  f90(W2ST));

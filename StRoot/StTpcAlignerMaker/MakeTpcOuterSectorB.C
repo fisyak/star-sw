@@ -71,8 +71,11 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorParPass114_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
   //#include "IOSectorParPass115_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
   //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0, new derivatives
-#include "IOSectorParPass118_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
+  //#include "IOSectorParPass118_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
+  //#include "IOSectorParPass119_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives, reset dZ = 0;
+#include "IOSectorParPass120_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives, reset dZ = 0;
 };
+#define __ResetdZto0__
 #define __No_alpha_beta__
 //#define __No_alpha_beta_gamma__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
@@ -264,7 +267,13 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       out << "    {" << Form("%2i",TpcSectorPositionBOld->Id(i)); 
       Double_t *rx = &(SectorPositionBs->r00);
       for (Int_t j =  0; j <  9; j++) out << Form(",%9.6f",rx[j]);
+#ifndef __ResetdZto0__
       for (Int_t j =  9; j < 12; j++) out << Form(",%8.4f",rx[j]);
+#else
+      for (Int_t j =  9; j < 11; j++) out << Form(",%8.4f",rx[j]);
+      static Double_t zero = 0;
+      out << Form(",%8.4f",zero);
+#endif
       for (Int_t j = 12; j < 18; j++) out << Form(",%5.2f",TMath::Min(99.99,rx[j]));
       out << ",\"" <<Pass[r].PassName << "\"}";
       if (24*r + i != NR*NoSectors - 1) out << ",";
