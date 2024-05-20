@@ -6,7 +6,6 @@ root.exe Results.root DumpRes2Par.C
 Results.h to IOSectorPar.h
 
 */
-//#define __TpcInnerSector__ 
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <stdio.h>
 #include <string.h>
@@ -37,47 +36,15 @@ Results.h to IOSectorPar.h
 #include "StTpcAlignerMaker/SurveyPass.h"
 const Int_t N = 24;
 SurveyPass_t Passes[] = {
-  //#include "IOSectorParPass30_Avg.h"
-  //#include "IOSectorParPass31_Avg.h"
-  //#include "IOSectorParPass32_Avg.h"
-  //#include "IOSectorParPass33_Avg.h"
-  //#include "IOSectorParPass34_Avg.h"
-  //#include "IOSectorParPass36_Avg.h"
-  //#include "IOSectorParPass37_Avg.h"
-  //#include "IOSectorParPass40_Avg.h"
-  //#include "IOSectorParPass41_Avg.h"
-  //#include "IOSectorParPass42_Avg.h"
-  //#include "IOSectorParPass46_Avg.h" // Global Transort use __No_alpha_beta__
-  //#include "IOSectorParPass47_Avg.h" // Global Transort use __No_alpha_beta__, scale = 0.5
-  //#include "IOSectorParPass48_Avg.h" // Global Transort use __No_alpha_beta__, scale = 0.5
-  //#include "IOSectorParPass49_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass50_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass51_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass87_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass88_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass92_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0
-  //#include "IOSectorParPass96_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0
-  //#include "IOSectorParPass97_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass98_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0
-  //#include "IOSectorParPass99_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid
-  //#include "IOSectorParPass100_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid
-  //#include "IOSectorParPass104_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid
-  //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average
-  //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dRI
-  //#include "IOSectorParPass108_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dRI
-  //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dRI, add LSF
-  //#include "IOSectorParPass106_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, Fit on Gating Grid, only average, Scale = 0.5, use dR, add LSF => Pass111
-  //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-  //#include "IOSectorParPass114_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-  //#include "IOSectorParPass115_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-  //#include "IOSectorParPass113_Avg.h" // Global Transort use __No_alpha_beta_gamma__, scale = 1.0, new derivatives
-  //#include "IOSectorParPass118_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives
-  //#include "IOSectorParPass119_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives, reset dZ = 0;
-#include "IOSectorParPass120_Avg.h" // Global Transort use __No_alpha_beta__, scale = 1.0, new derivatives, reset dZ = 0;
+  //#include "IOSectorPar2019_2020_2021Pass121_Avg.h"
+  //#include "IOSectorPar2022Pass121_Avg.h"
+  //#include "IOSectorPar2023_2024Pass121_Avg.h"
+  //#include "IOSectorPar2019_2020_2021Pass123_Avg.h"
+#include "IOSectorPar2022Pass123_Avg.h"
+  //#include "IOSectorPar2023_2024Pass123_Avg.h"
 };
-#define __ResetdZto0__
-#define __No_alpha_beta__
-//#define __No_alpha_beta_gamma__
+//#define __ResetdZto0__
+//#define __No__gamma__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 class St_db_Maker;
 class TTable;
@@ -113,22 +80,17 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
     if (NP != 2) return;
     Passes[0].Print();
     Passes[1].Print();
-    Pass[0] = Passes[0];
-    Pass[1] = Passes[0];
-    Pass[0] += Passes[1];
-    Pass[1] -= Passes[1];
+    Pass[0] = Passes[0]; Pass[0].Print();
+    Pass[1] = Passes[0]; Pass[1].Print();
+    Pass[0].Add2(Passes[1]); Pass[0].Print();
+    Pass[1].Sub2(Passes[1]); Pass[1].Print();
     NR = 2;
   }
   cout << "Pass for " << kPass << " has been found" << endl;
   if (! NR) return;
   Pass[0].Print();
   Pass[1].Print();
-#if 0
-  gROOT->LoadMacro("bfc.C");
-  bfc(0,"mysql,tpcDb,corrX,nodefault");
-#else
   chain = (StChain *) StChain::GetChain();
-#endif
   StMaker *dbMk = chain->Maker("db");
   if (! dbMk) return;
   dbMk->SetDebug(1);
@@ -140,40 +102,24 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
   dbMk->SetDebug(2);
   dbMk->SetDateTime(Pass[0].date,Pass[0].time); 
   // Outer sector in Inner sector coordinate system
-#ifndef  __TpcInnerSector__ 
   St_SurveyC                 *TpcSectorPositionBOld = StTpcOuterSectorPosition::instance();
-#else /* __TpcInnerSector__ */
-  St_SurveyC                 *TpcSectorPositionBOld = StTpcInnerSectorPosition::instance();
-#endif /* !  __TpcInnerSector__ */
   if (! (TpcSectorPositionBOld)) return;
   Int_t NoldRows = TpcSectorPositionBOld->GetNRows();
   Int_t NoSectors = 24;
-#ifndef  __TpcInnerSector__ 
   St_Survey      *TpcSectorPositionB = new St_Survey("TpcOuterSectorPositionB",NR*NoSectors);
-#else /* __TpcInnerSector__ */
-  St_Survey      *TpcSectorPositionB = new St_Survey("TpcInnerSectorPositionB",NR*NoSectors);
-#endif /* !  __TpcInnerSector__ */
-#if 0
-  TGeoHMatrix Flip  = StTpcDb::instance()->Flip(); if (_debug) {cout << "Flip\t"; Flip.Print();}
-  TGeoHMatrix FlipI = Flip.Inverse();              if (_debug) {cout << "FlipI\t"; FlipI.Print();}
-#endif
   for (Int_t r = 0; r < NR; r++) { // half sum & half diff
     for (Int_t s = 0; s < NoSectors; s++) {
       TGeoHMatrix LSold, LS, dR;
-      if (r == 0 ) {
-	LSold = TpcSectorPositionBOld->GetMatrix(s);   
-      } else {
-	if (NoldRows > 24) LSold = TpcSectorPositionBOld->GetMatrix(s+24); 
-      }
+      LSold = TpcSectorPositionBOld->GetMatrix(24*r+s);   
       if (_debug) {cout << "===================== Sector \t" << s+1 << endl; cout << "\tLSold\t"; LSold.Print();}
       Int_t i = -1; 
       for (Int_t k = 0; k < N; k++) {
-	if (TpcSectorPositionBOld->Id(s) ==Pass[r].Data[k].sector) {i = k; break;}
+	if (TpcSectorPositionBOld->Id(24*r+s) == Pass[r].Data[k].sector) {i = k; break;}
       }
       if (i < 0) {
-	cout << "Correction for " << TpcSectorPositionBOld->Id(s) << " is not found" << endl;
+	cout << "Correction for " << TpcSectorPositionBOld->Id(24*r+s) << " is not found" << endl;
       } else {
-	cout << "Sector " << TpcSectorPositionBOld->Id(s) << "\ti " << i 
+	cout << "Sector " << TpcSectorPositionBOld->Id(24*r+s) << "\ti " << i 
 	     << "\talpha " << Pass[r].Data[i].alpha << "+/-" <<Pass[r].Data[i].Dalpha
 	     << "\tbeta "  << Pass[r].Data[i].beta  << "+/-" <<Pass[r].Data[i].Dbeta
 	     << "\tgamma " << Pass[r].Data[i].gamma << "+/-" <<Pass[r].Data[i].Dgamma
@@ -183,11 +129,7 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	Double_t xyz[3] = {0, 0, 0};
 	//	Double_t scale = 0.5;
 	Double_t scale = 1.0;
-#ifndef __No_alpha_beta_gamma__ /* alpha, beta gamma rotations */
-#ifndef __No_alpha_beta__
-	if (Pass[r].Data[i].Dalpha >= 0) dR.RotateX(scale*TMath::RadToDeg()*Pass[r].Data[i].alpha*1e-3);
-	if (Pass[r].Data[i].Dbeta  >= 0) dR.RotateY(scale*TMath::RadToDeg()*Pass[r].Data[i].beta *1e-3);
-#endif /* _No__alpha_beta__ */
+#ifndef __No__gamma__ /* alpha, beta gamma rotations */
 	if (Pass[r].Data[i].Dgamma >= 0) dR.RotateZ(scale*TMath::RadToDeg()*Pass[r].Data[i].gamma*1e-3);
 #endif /* no alpha, beta gamma rotation */
 	if (Pass[r].Data[i].Dx >= 0) xyz[0] =  scale*1e-4*Pass[r].Data[i].x;
@@ -195,44 +137,8 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
 	if (Pass[r].Data[i].Dz >= 0) xyz[2] =  scale*1e-4*Pass[r].Data[i].z;
 	dR.SetTranslation(xyz);          if (_debug) {	cout << "dR\t"; dR.Print();}
       }
-#if 0
-      // Fit on Gating gGrid:  dR' * WHEEL =  WHEEL * dR";  dR" = WHEEL^-1 * dR'* WHEEL 
-      enum StBeamDirection {east   = 0,
-			    yellow = 0,    // yellow beam is going west -> east
-			    west   = 1,
-			    blue   = 1};   // blue beam is going east -> west
-      StBeamDirection   part = east;
-      Int_t sector = s + 1;
-      if (sector <= 12) part = west;
-      TGeoHMatrix Wheel = StTpcDb::instance()->Wheel(part);
-      TGeoHMatrix WheelI = Wheel.Inverse();
-      TGeoHMatrix rotA = WheelI * dR * Wheel;
-      dR = rotA; if (_debug) {	cout << "Moved to GG dR\t"; dR.Print();}
-#endif      
-#if 0
-      // Flip has been accounted in StTpcAlignerMaker
-      //new:  global = Tpc2GlobalMatrix() * SupS2Tpc(sector) * StTpcSuperSectorPosition(sector) * Flip() * {StTpcInnerSectorPosition(sector)} | StTpcOuterSectorPosition(sector)}
-      //      TGeoHMatrix dR1 = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dR1.Print();
-      //      TGeoHMatrix dRT = FlipI * dRI * Flip; cout << "F^-1 dR^-1 F\t"; dRT.Print();
-      //      TGeoHMatrix dRT = FlipI * dR * Flip; cout << "F^-1 dR F\t"; dRT.Print();
-      //      TGeoHMatrix dRI = dR1.Inverse(); cout << "dR^-1\t"; dRI.Print();
-#endif
-      TGeoHMatrix dRI = dR.Inverse(); if (_debug) {cout << "dR^-1\t"; dRI.Print();}
-#ifndef __TpcInnerSector__
-#ifdef __dRInv__
-      LS = dRI * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
-#else
+
       LS = dR * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
-#endif
-#else /* __TpcInnerSector__ */
-      //      TGeoHMatrix LSoldI = LSold.Inverse();
-      //      LS = LSoldI * dRI; cout << "LS_new\t"; LS.Print();
-#ifdef __dRInv__
-      LS = dR * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
-#else
-      LS = dRI * LSold; if (_debug) {cout << "LS_new\t"; LS.Print();}
-#endif
-#endif /* !  __TpcInnerSector__ */
       Survey_st row; memset (&row, 0, sizeof(Survey_st));
       Double_t *rx = LS.GetRotationMatrix();
       memcpy(&row.r00, rx, 9*sizeof(Double_t));
@@ -242,9 +148,10 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       row.sigmaTrX  = Pass[r].Data[i].Dx;
       row.sigmaTrY  = Pass[r].Data[i].Dy;
       row.sigmaTrZ  = Pass[r].Data[i].Dz;
-      row.Id        = TpcSectorPositionBOld->Id(s);
+      row.Id        = TpcSectorPositionBOld->Id(24*r+s);
       Double_t *t   = LS.GetTranslation();
       memcpy(&row.t0, t, 3*sizeof(Double_t));
+      //      strcpy(&row.comment,Pass[r].Data[i].Comment);
       TpcSectorPositionB->AddAt(&row);
     }
   }
