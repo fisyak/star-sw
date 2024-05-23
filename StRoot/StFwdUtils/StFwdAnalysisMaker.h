@@ -4,7 +4,7 @@
 #include <map>
 
 #include "StChain/StMaker.h"
-
+#include "StMessMgr.h"
 
 class StFwdAnalysisMaker : public StMaker
 {
