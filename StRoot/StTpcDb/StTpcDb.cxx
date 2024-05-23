@@ -251,6 +251,24 @@ Revist 04/17/2024 modify Half (rotaion around Wheel position) and Flip (add shif
                                                                                     add to flip shift to by zGG
      kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*mShift[part])^^-1 * rotm) * Flip * TpcSuperSectorPosition * ddRO * dRO *  GG(z) * WHEEL * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
                     <--                              Sup12S2Tpc                                           ------>   <---                     Sub2SupS12                                                    --->
+
+Mag.Flip:        HS == Half sum; HD == Half dif
+FF: dRO = ROHS * dROHD
+RF: dRO = ROHS * dROHD^^-1
+dFF: dRO_new = ddROFF * ROHS * dROHD
+dRF: dRO_new = ddRORF * ROHS * dROHD^^-1
+      ddRO * dRO = FF ? ddROFF * dROHS * dROHD
+
+dR( alpha,beta,gamma, x_0, y_0, z_0) := 
+matrix([     1,-gamma,   beta, x_0],
+       [ gamma,      1,-alpha, y_0],
+       [ -beta, alpha,      1, z_0],
+       [     0,     0,      0,   1]);
+dRT( alpha,beta,gamma, x_0, y_0, z_0) :=  dR^-1
+matrix([     1, gamma,  -beta,-x_0],
+       [-gamma,      1, alpha,-y_0],
+       [  beta,-alpha,      1,-z_0],
+       [     0,     0,      0,   1]);
   */
   assert(Dimensions()->numberOfSectors() == 24);
   Float_t gFactor = StarMagField::Instance()->GetFactor();
@@ -422,15 +440,6 @@ Revist 04/17/2024 modify Half (rotaion around Wheel position) and Flip (add shif
 	      rotA *= chair->GetMatrix(sector-1+24);
 	    } else if (gFactor < -0.2) {
 	      rotA *= chair->GetMatrix(sector-1+24).Inverse();
-#if 0
-	    } else if ( k == kSubSOuter2Sup12S ) {
-	      static  Double_t corrZ[24] = // /hlt/cephfs/reco/Pass48   extra correction for ZF2023 um
-		{ -739.29,-1245.76,-1673.18,-1766.18,-1746.37,-1840.42,-1717.83,-1584.91,-1643.17,-1752.01,-1579.27,-1771.68,
-		 -1757.73,-1714.33,-1678.68,-1684.40,-1617.86,-1874.44,-1736.24,-2155.39,-1645.03,-1771.64,-1841.34,-1532.64};
-	      Double_t Z = rotA.GetTranslation()[2] - 1e-4*corrZ[sector-1];
-	      rotA.SetDz(Z);
-	      rotA.SetDy(0);
-#endif
 	    }
 	  }
 	  break;
