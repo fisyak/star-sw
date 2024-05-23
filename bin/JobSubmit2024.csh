@@ -17,7 +17,7 @@
 #cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
 #cd /hlt/cephfs/reco/2023/RHF/TFG/AuAu_2023
 #cd /hlt/cephfs/reco/2023/RF/TFG/AuAu_2023
-cd /hlt/cephfs/reco/2024/RF/TFG24b/pp200_LowLuminosity
+#cd /hlt/cephfs/reco/2024/RF/TFG24b/pp200_LowLuminosity
 CreateRunDirs2024.pl
 foreach d (`ls -1d ???/25*`)
   cd $d;

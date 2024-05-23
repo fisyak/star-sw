@@ -1,7 +1,7 @@
 #! /bin/tcsh -f
- cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
-git diff . RunXXIVDefs.pm
-git ci -m "Update"  RunXXIVDefs.pm
+# cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
+# git diff . RunXXIVDefs.pm
+# git ci -m "Update"  RunXXIVDefs.pm
 #cd ~/reco/2020/TFG19m/RF/11p5GeV.B
 #cd /net/l401/data/scratch2/reco/2020/TFG20a/RF/31p2GeV_fixedTarget
 #cd /net/l401/data/scratch2/reco/2020/TFG20a/RF/9p8GeV_fixedTarget
