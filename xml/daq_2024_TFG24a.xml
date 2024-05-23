@@ -3,7 +3,8 @@
         <command>
          cd ${SUBMITTINGDIRECTORY}
    setenv STARFPE NO
-   starver TFG24b
+#   starver TFG24b
+   starver TFG24a
 #  echo $INPUTFILE0 | grep ':'
 #  if (! $?) then
 #    set evtsFile = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
@@ -37,16 +38,15 @@
     if (-r ${bla}) continue;
     touch ${bla}
     set input = ${evtsFile};
-    set evout = "evout,-hitfilt";
+    set evout = "evout";
 #    if ($JOBINDEX > 2) then
 #      @ n =  $JOBINDEX % 20  # 05/29/2023
 ##     @ n =  $JOBINDEX % 100
 #      set evout = "-evout";
-#      if ($n == 4) set evout = "evout,-hitfilt";
-#      else         continue;
+#      if ($n == 4) set evout = "evout";
 #    endif
 #   set evout = "evout";
-root.exe -q -b 'bfc.C(1000,"pp2024a,StiCA,Agi,BEmcChkStat,'${evout}',NoHistos,noTags,noRunco","'${input}'")' &gt;&amp; ${logFile}
+root.exe -q -b 'bfc.C(1000,"P2023a,StiCA,Agi,BEmcChkStat,'${evout}',NoHistos,noTags,noRunco","'${input}'")' &gt;&amp; ${logFile}
    gzip ${logFile}
 #    cp -p ${logFile} ${SUBMITTINGDIRECTORY}/
 #    cp -p ${bf}*.root ${SUBMITTINGDIRECTORY}/
@@ -64,7 +64,14 @@ root.exe -q -b 'bfc.C(1000,"pp2024a,StiCA,Agi,BEmcChkStat,'${evout}',NoHistos,no
 <!-- <input URL="file:/hlt/cephfs/daq/2019/*/*/st_cosmic_*.daq" /> -->
 <!-- <input URL="command:2020Cosmic.pl" /> -->
 <!-- <input URL="command:daq_2022dR.pl" /> -->
-<input URL="command:daq_2024dR.pl" />
+<!-- <input URL="command:daq_2024dR.pl" /> -->
+<input URL="file:/hlt/cephfs/daq/2024/127/25127009/hlt_25127009_10_01_000.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/127/25127009/hlt_25127009_10_01_001.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/127/25127009/hlt_25127009_10_02_000.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/127/25127009/hlt_25127009_10_03_000.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/127/25127009/hlt_25127009_11_01_001.daq" />
+<input URL="file:/hlt/cephfs/daq/2024/127/25127009/hlt_25127009_13_01_000.daq" />
+
 <!-- <output fromScratch="*.root" toURL="file./"/> -->
 <!-- <output fromScratch="*B.log" toURL="file:./"/> -->
 <!--
