@@ -67,7 +67,8 @@ SurveyPass_t Passes[] = {
   //#include  "ResultsAlignerW2S.h"  /* Pass 80 LSF */
   //#include  "ResultsAlignerW2S.h"  /* Pass 81 LSF */
   //#include  "ResultsAlignerW2S.h"  /* Pass 82 LSF */
-#include  "ResultsAlignerW2S.h"  /* Pass 83 LSF */
+  //#include  "ResultsAlignerW2S.h"  /* Pass 83 LSF */
+#include  "W2S_Pass124_Avg.h" 
 };
 #define __SCALEbyHalf__
 //#define  __INVERSE_dR__
@@ -386,6 +387,9 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   gStyle->SetMarkerStyle(20);
   gStyle->SetOptStat(0);
   cout << "NP \t" << NP << endl;
+  for (Int_t k = 0; k < NP; k++) {
+    Passes[k].FixErrors();
+  }
   Int_t NH = NP;
   if (NH == 2) NH += 2; // make average if we have only (FF + RF)/2 for SuperSector, and (FF - RF) for Inner Sector
   TH1D ***dath = new TH1D**[NH]; 
@@ -425,12 +429,12 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   SurveyPass_t PassSum(Passes[0]);
   SurveyPass_t PassDif(Passes[0]);
   if (NP > 1) {
-    PassSum += Passes[1];
+    PassSum.Add2(Passes[1]);
     if (_debug) {
       cout << "PassSum" << endl;
       PassSum.Print();
     }
-    PassDif -= Passes[1];
+    PassDif.Sub2(Passes[1]);
     if (_debug) {
       cout << "PassDif" << endl;
       PassDif.Print();
@@ -455,41 +459,10 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
       currPass = &PassDif;
     }
     currPass->Print();
+    if (k < NP)     dath[k] = currPass->GetHist(names, nameK);
+    else            dath[k] = currPass->GetHist(names, nameK, k-NP+1, 21);
     for (Int_t i = 0; i < 6; i++) {
-      Name = Form("%s%s%s",currPass->PassName,nameK[i],NameO[m]);
-      Title = Form("Alignment fit for  %s %s %2",names[i],currPass->PassName,currPass->Data[0].Comment);
-#if 0
-      dath[k][i] = (TH1D *) gDirectory->Get(Name);
-      if (dath[k][i]) delete dath[k][i];
-#endif      
-      dath[k][i] = new TH1D(Name,Title, 24, 0.5, 24.5);
-      //      cout << "Create: " << dath[k][i]->GetName() << "\t" << dath[k][i]->GetTitle() << endl;
-      dath[k][i]->SetMarkerColor(color);
-      dath[k][i]->SetLineColor(color);
-      dath[k][i]->SetXTitle("sector");
-      if (i < 3) dath[k][i]->SetYTitle(Form("%s (#mum)",names[i]));
-      else       dath[k][i]->SetYTitle(Form("%s (mrad)",names[i]));
-      for (Int_t l = 0; l < 24; l++) {
-	Double_t val, err;
-	Double_t *X = &currPass->Data[l].x;
-	Double_t secs = currPass->Data[l].sector;
-	if (X[2*i+1] >= 0 /* && X[2*i+1] < 99 */) {
-	  val = X[2*i];
-	  err = X[2*i+1];
-	} else {continue;}
-	if (err < 0.001) err = 0.001;
-	dath[k][i]->SetBinContent(secs,val);
-	dath[k][i]->SetBinError(secs,err);
-	if (ymin > val - err) ymin = val - err;
-	if (ymax < val + err) ymax = val + err;
-      }
       hs[i]->Add(dath[k][i]);
-#if 0
-      c0->cd();
-      c0->SetTitle(Title);
-      dath[k][i]->Draw();
-      c0->Update();
-#endif
       if (leg[i]) {
 	if      (k < NP)      leg[i]->AddEntry(dath[k][i],currPass->PassName);
 	else if (k == NP)     leg[i]->AddEntry(dath[k][i],"(FF+RF)/2");

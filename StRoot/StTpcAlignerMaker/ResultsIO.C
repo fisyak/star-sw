@@ -175,7 +175,8 @@ void ResultsIO(const Char_t *opt="") {
   Out += ".root";
   TFile *fOut = new TFile(Out,"recreate");
   TH1::SetDefaultSumw2(kTRUE);
-  c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",1200,800);
+  //  c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",1200,800);
+  c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",1600,1200);
   c1->Divide(2,2);
   Int_t NH = NP;
   if (nFR[0] > 1) NH++;
