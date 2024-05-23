@@ -22,7 +22,9 @@ void lsH(const TString reg = "TdEdx*") {
       if (! gROOT->IsBatch() && Ask()) return;
     }
   } else {
+#if 0
     key->Print(); 
+#endif
   }
 #if 0
   TIter nextO(gDirectory->GetList()); 

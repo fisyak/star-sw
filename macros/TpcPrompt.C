@@ -6,17 +6,17 @@
    root.exe -q -b TpcHit.root TpcPrompt.C+
 Draw();
  ln -s ~/macros/.sl* .
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("Z","GP","R",-1,-1,1,1,10,1,206,212)' >& Z.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("ZL","GP","R",-1,-1,1,1,10,1,0,3.0)' >& ZL.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("T","GP","R",-1,-1,1,1,10,1,0,12.0)' >& T.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("ZLM","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& ZLMFreq.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("TM","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& TMFreq.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("Z","GP","R",-1,-1,1,1,10,1,206,212)' >& Z.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("ZL","GP","R",-1,-1,1,1,10,1,0,3.0)' >& ZL.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("T","GP","R",-1,-1,1,1,10,1,0,12.0)' >& T.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("ZLM","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& ZLMFreq.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("TM","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& TMFreq.log &
 
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("Z1400","GP","R",-1,-1,1,1,10,1,206,212)' >& Z.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("ZL1400","GP","R",-1,-1,1,1,10,1,0,3.0)' >& ZL.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("T1400","GP","R",-1,-1,1,1,10,1,0,12.0)' >& T.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("ZLM1400","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& ZLMFreq.log &
- root.exe -q -b lBichsel.C TpcHitZTMfl0.root  'dEdxFit.C+("TM1400","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& TMFreq.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("Z1400","GP","R",-1,-1,1,1,10,1,206,212)' >& Z.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("ZL1400","GP","R",-1,-1,1,1,10,1,0,3.0)' >& ZL.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("T1400","GP","R",-1,-1,1,1,10,1,0,12.0)' >& T.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("ZLM1400","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& ZLMFreq.log &
+ root.exe -q -b lBichsel.C ZTMfl0.root  'dEdxFit.C+("TM1400","Freq","R",-1,-1,1,1,10,1,200,220.0)' >& TMFreq.log &
 ================================================================================
 @ count = 0
 foreach d (` ls -1d hlt*.root | awk -F_ '{printf("%i\n",$2/1000)}' | sort -u `)

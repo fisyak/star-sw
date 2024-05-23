@@ -7,6 +7,7 @@ StBFChain *bfc(Int_t First, const Char_t *Chain = "MC2016,20Muons,vmc,Rung.1",
  	       const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName = "");
 #endif
 void lDb(Int_t N = -1, const Char_t *date = "r2024,TFGdbOpt,CorrZ") {
+  //void lDb(Int_t N = -1, const Char_t *date = "r2019,CorrY") {
 #ifdef __CLING__ 
   gSystem->Load("St_base");
   gSystem->Load("libmysqlclient");
@@ -18,7 +19,8 @@ void lDb(Int_t N = -1, const Char_t *date = "r2024,TFGdbOpt,CorrZ") {
   gROOT->LoadMacro("bfc.C");
 #endif
   //  TString Chain("mysql,tpcDb,detDb,magF,TpcHitMover,CorrY,LaserIT,nodefault");
-  TString Chain("mysql,tpcDb,detDb,TpcUtil,magF,CorrY,LaserIT,nodefault");
+  TString Chain("mysql,tpcDb,detDb,StBichsel,magF,ExB,LaserIT,nodefault");
+  // TString Chain("mysql,tpcDb,detDb,magF,ExB,LaserIT,nodefault");
   if (date) {Chain += ",simu,"; Chain += date;}
   bfc(-1,Chain.Data());
   StMaker *dbMk = chain->Maker("db");
