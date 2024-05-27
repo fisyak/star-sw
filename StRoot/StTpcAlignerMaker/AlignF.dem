@@ -289,7 +289,7 @@ with_stdout ("AT.txt",  f90(AT));
       u' = ddR(sectorS) * u
       w' = ddR(sectorW) * w
 
-      u' = ddR(sectorS) * u = ddR(sectorS) * RW2S * w'  = sectorS) * RW2S * ddR(sectorW) * w.
+      u' = ddR(sectorS) * u = ddR(sectorS) * RW2S * w'  = ddR(sectorS) * RW2S * ddR(sectorW) * w.
     
 
 **************/
