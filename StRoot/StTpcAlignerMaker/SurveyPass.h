@@ -66,6 +66,7 @@ class data_t {
     Char_t temp[256] = "Weighted Average";
     //    sprintf(temp,"(%s+%s)/2",Comment,v.Comment);
     strcpy(Comment,temp);
+    return *this;
   }
   data_t &Add2(data_t &v) {
     for (Int_t i = 0; i < 6; i++) {
@@ -93,6 +94,7 @@ class data_t {
     Char_t temp[256];
     sprintf(temp,"((%s)+(%s))/2",Comment,v.Comment);
     strcpy(Comment,temp);
+    return *this;
   }
   data_t &operator-= (data_t &v) {
     for (Int_t i = 0; i < 6; i++) {
@@ -119,6 +121,7 @@ class data_t {
     Char_t temp[256] = "weighted difference";
     //    sprintf(temp,"(%s-%s)/2",Comment,v.Comment);
     strcpy(Comment,temp);
+    return *this;
   }
   data_t &Sub2 (data_t &v) {
     for (Int_t i = 0; i < 6; i++) {
@@ -145,6 +148,7 @@ class data_t {
     Char_t temp[256];
     sprintf(temp,"((%s)-(%s))/2",Comment,v.Comment);
     strcpy(Comment,temp);
+    return *this;
   }
 };
 class SurveyPass_t {
@@ -170,8 +174,8 @@ class SurveyPass_t {
       Data[i].FixErrors();
     }
   }
-  const Char_t *StripPass() {
-    static TString Stripped;
+  TString StripPass() {
+    TString Stripped;
     TString Pass(PassName);
     if (Pass.Contains("/hlt/")) {
       Int_t index = Pass.Index("/20");
@@ -179,7 +183,7 @@ class SurveyPass_t {
     } else {
       Stripped = Pass;
     }
-    return Stripped.Data();
+    return Stripped;
   }
   SurveyPass_t operator+= (SurveyPass_t &v) {
     for (Int_t i = 0; i < 24; i++) Data[i] += v.Data[i];
@@ -187,24 +191,28 @@ class SurveyPass_t {
     temp += "+";
     temp += v.StripPass();
     strcpy(PassName,temp.Data());
+    return *this;
   }
   SurveyPass_t Add2(SurveyPass_t &v) {
     for (Int_t i = 0; i < 24; i++) Data[i].Add2(v.Data[i]);
     Char_t temp[256];
-    sprintf(temp,"((%s)+(%s))/2",StripPass(),v.StripPass());
+    sprintf(temp,"((%s)+(%s))/2",StripPass().Data(),v.StripPass().Data());
     strcpy(PassName,temp);
+    return *this;
   }
   SurveyPass_t operator-= (SurveyPass_t &v) {
     for (Int_t i = 0; i < 24; i++) Data[i] -= v.Data[i];
     Char_t temp[256];
     sprintf(temp,"((%s)-(%s))/2",PassName,v.PassName);
     strcpy(PassName,temp);
+    return *this;
   }
   SurveyPass_t Sub2(SurveyPass_t &v) {
     for (Int_t i = 0; i < 24; i++) Data[i].Sub2(v.Data[i]);
     Char_t temp[256];
-    sprintf(temp,"((%s)-(%s))/2",StripPass(),v.StripPass());
+    sprintf(temp,"((%s)-(%s))/2",StripPass().Data(),v.StripPass().Data());
     strcpy(PassName,temp);
+    return *this;
   }
   Int_t GetField() {
     Int_t k = 0; // ZF
@@ -227,7 +235,9 @@ class SurveyPass_t {
     }
     if (! style) {
       style = 22; // FF
-      if        (Pass.Contains("RF") ) {style = 23;
+      if        (Pass.Contains("RFA") ) {style = 28;
+      }	else if (Pass.Contains("RFB") ) {style = 30;
+      } else if (Pass.Contains("RF") )  {style = 23;
       } else if (Pass.Contains("MF") ||
 		 Pass.Contains("ZF") ) {
 	style = 21;
@@ -236,6 +246,7 @@ class SurveyPass_t {
     for (Int_t i = 0; i < 6; i++) {
       TString Name = Form("%s%s",nameK[i],Pass.Data());
       Name.ReplaceAll("/","_");
+      Name.ReplaceAll("+","_");
       TString Title = Form("Alignment fit for  %s %s",names[i],Pass.Data());
       hists[i] = (TH1D *) gDirectory->Get(Name);
       if (hists[i]) delete hists[i];

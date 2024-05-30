@@ -78,64 +78,9 @@ SurveyPass_t Passes[] = {
 };
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 TCanvas *c1 = 0;
-THStack *hs[6];
-TLegend *leg[6];
-TString OutputName;
-void DumpRes2Par(
-		 TString optFF = "2019_FF+2021_FF+2022_FF+2023_FF+2024_FF",
-		 TString optRF = "2019_RF+2020_RF+2021_RF+2022_RF+2023_RF+2024_RF") {
-		 
-  TH1D *hist[2][6] = {0};
-  TString RF[2] = {optFF, optRF};
-  RF[0].ReplaceAll("/","_");
-  RF[1].ReplaceAll("/","_");
-  const Char_t *nameK[6] = {"Dx","Dy","Dz","Da",     "Db",    "Dg"};
-  for (Int_t f = 0; f < 2; f++) 
-    for (Int_t k = 0; k < 6; k++) {
-      TString Name(Form("%s%s",nameK[k],RF[f].Data()));
-      hist[f][k] = (TH1D *) gDirectory->Get(Name);
-      if (! hist[f][k]) {
-	cout << "Hisogram " << Name.Data() << " is missing" << endl;
-	return;
-      } else {
-	cout << "Hisogram " << Name.Data() << " is loaded" << endl;
-      }
-    }
-  TString Out("IOSectorPar");
-  Out += OutputName;
-  Out += gSystem->BaseName(gSystem->WorkingDirectory());
-  Out += "_Avg.h";
-  ofstream outC;
-  outC.open(Out.Data(), ios::out);
-  Int_t d = 20190101;
-  Int_t t =        1;
-  if        (RF[0].BeginsWith("2019") || RF[1].BeginsWith("2019")) {
-  } else if (RF[0].BeginsWith("2020") || RF[1].BeginsWith("2020")) {d = 20191125; t = 202022;
-  } else if (RF[0].BeginsWith("2021") || RF[1].BeginsWith("2021")) {d = 20210129; t =  41915;
-  } else if (RF[0].BeginsWith("2022") || RF[1].BeginsWith("2022")) {d = 20211110; t = 215909;
-  } else if (RF[0].BeginsWith("2023") || RF[1].BeginsWith("2023")) {d = 20230507; t =  55732;
-  } else if (RF[0].BeginsWith("2024") || RF[1].BeginsWith("2024")) {d = 20240403; t =  20814;
-  }
-  for (Int_t f = 0; f < 2; f++) {
-    outC << Form("  {%8i,%6i",d,t) << ", \"" << gSystem->BaseName(gSystem->WorkingDirectory()) << "/" << RF[f].Data() <<  "\", //" << endl;
-    outC << "{" << endl;
-    for (Int_t sector = 1; sector <= 24; sector++) {
-      TString lineC("");
-      lineC = Form("\t{%2i",sector);
-      for (Int_t k = 0; k < 6; k++) {
-	TH1D *fit = hist[f][k];
-	Double_t val      = fit->GetBinContent(sector);
-	Double_t valError = fit->GetBinError(sector);
-	lineC += Form(",%8.2f,%5.2f", val,TMath::Min(99.99,valError)); 
-      }
-      lineC += ",\""; lineC += RF[f]; lineC += "\"},";
-      outC << lineC << endl;
-    }
-    outC << "    }" << endl;
-    outC << "  }," << endl;
-  }
-  outC.close();
-}
+THStack *hs[6] = {0};
+TLegend *leg[6] = {0};
+#include "DumpRes2Par.h"
 //________________________________________________________________________________
 void ResultsIO(const Char_t *opt="") {
   gStyle->SetMarkerStyle(20);
@@ -179,8 +124,8 @@ void ResultsIO(const Char_t *opt="") {
   c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",1600,1200);
   c1->Divide(2,2);
   Int_t NH = NP;
-  if (nFR[0] > 1) NH++;
-  if (nFR[1] > 1) NH++;
+  if (nFR[0] > 0) NH++;
+  if (nFR[1] > 0) NH++;
   TH1D ***dath = new TH1D**[NH]; 
   const Char_t *names[6] = {" #Deltax"," #Deltay"," #Deltaz"," #Delta #alpha"," #Delta #beta"," #Delta #gamma"};
   const Char_t *nameK[6] = {"Dx","Dy","Dz","Da",     "Db",    "Dg"};
@@ -192,7 +137,7 @@ void ResultsIO(const Char_t *opt="") {
       dath[k] = Passes[k].GetHist(names, nameK);
     } else {
       Pass[k-NP].Print();
-      dath[k] = Pass[k-NP].GetHist(names, nameK, k-NP+1, 24);
+      dath[k] = Pass[k-NP].GetHist(names, nameK, k-NP+1, 20);
     }
   }
   for (Int_t i = 0; i < 6; i++) {
@@ -231,9 +176,6 @@ void ResultsIO(const Char_t *opt="") {
     if (i > 2) kk = 4;
     c1->cd(kk);
     if (! hs[i]) continue;
-#if 0
-    hs[i]->Draw();
-#else
     ymax = hs[i]->GetMaximum("nostack");
     ymin = hs[i]->GetMinimum("nostack");
     TList *list = hs[i]->GetHists();
@@ -252,10 +194,9 @@ void ResultsIO(const Char_t *opt="") {
       else                                             h->Draw(same);
       same = "same";
     }
-#endif
     if (leg[i]) leg[i]->Draw();
   }
   c1->Update();
   fOut->Write();
-  DumpRes2Par(Pass[0].StripPass(), Pass[1].StripPass()); 
+  DumpRes2Par("IO_",Pass[0].StripPass(), Pass[1].StripPass()); 
 }

@@ -5,40 +5,40 @@
 #include "SectorTrack.h"
 Int_t HelixPar_t::_debug = 0;
 //________________________________________________________________________________
-ostream&  operator<<(ostream& os, const HelixPar_t &v) {
+std::ostream&  operator<<(std::ostream& os, const HelixPar_t &v) {
   os << Form("sector %2i Rho = %10.3g +/- %10.3g",v.sector, v.Rho, v.dRho);
   //  os << Form("<drift> %8.3f step %8.3f ", v.DriftZ, v.step);
-  os << Form(" step %8.3f", v.step) << endl;
+  os << Form(" step %8.3f", v.step) << std::endl;
   for (Int_t i = 0; i < 6; i++) {
     if      (i == 0) os << "xG:\t";
     else if (i == 3) os << " nG:\t";
     os << Form(" %8.3f",v.xyzG()[i]);
   }
-  os << endl;
+  os << std::endl;
   for (Int_t i = 0; i < 6; i++) {
     if      (i == 0) os << "xTpc:\t";
     else if (i == 3) os << " nTpc:\t";
     os << Form(" %8.3f",v.xyzTpc()[i]);
   }
-  os << endl;
+  os << std::endl;
   for (Int_t i = 0; i < 6; i++) {
     if      (i == 0) os << "xHalf:\t";
     else if (i == 3) os << " nHalf:\t";
     os << Form(" %8.3f",v.xyzHalf()[i]);
   }
-  os << endl;
+  os << std::endl;
   for (Int_t i = 0; i < 6; i++) {
     if      (i == 0) os << "xPad:\t";
     else if (i == 3) os << " nPad:\t";
     os << Form(" %8.3f",v.xyzPad()[i]);
   }
-  os << endl;
+  os << std::endl;
   for (Int_t i = 0; i < 6; i++) {
     if      (i == 0) os << "xPadGG:\t";
     else if (i == 3) os << " nPadGG:\t";
     os << Form(" %8.3f",v.xyzPadGG()[i]);
   }
-  os << endl;
+  os << std::endl;
   for (Int_t i = 0; i < 6; i++) {
     if      (i == 0) os << "x:\t";
     else if (i == 3) os << " n:\t";
@@ -47,11 +47,11 @@ ostream&  operator<<(ostream& os, const HelixPar_t &v) {
     if (v.fCov[ii] >= 0) err = TMath::Sqrt(v.fCov[ii]);
     os << Form(" %8.3f +/- %8.3f", v.xyz()[i], err);
   }
-  os << endl;
+  os << std::endl;
   if (HelixPar_t::_debug) {
     TRSymMatrix C(6,v.fCov);
     TRSymMatrix cor(C,TRArray::kSCor);
-    os << "Correlations: " << cor << endl;
+    os << "Correlations: " << cor << std::endl;
     os << "\tPoints = " << v.Npoints << "\tused = " << v.Nused << "\tchi2/Ndf = " << v.Chi2 << "/" << v.Ndf;
   }
   return os;
@@ -93,11 +93,11 @@ HelixPar_t &HelixPar_t::operator=(const SectorTrack &v) {
   v.fNPad.GetXYZ(pxyzPad());
   v.fRPadGG.GetXYZ(xyzPadGG());
   v.fNPadGG.GetXYZ(pxyzPadGG());
-  memcpy(fCov, v.fCov.GetArray(), 21*sizeof(Double_t));
+  if (v.fCov.GetSize()) memcpy(fCov, v.fCov.GetArray(), v.fCov.GetSize()*sizeof(Double_t));
   yRef = v.fyRef;
   return *this;
 }
 //_____________________________________________________________________________
 void HelixPar_t::Print(Option_t *opt) const {
-  cout << *this << endl;
+  std::cout << *this << std::endl;
 }

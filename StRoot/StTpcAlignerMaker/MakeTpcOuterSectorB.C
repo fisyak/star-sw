@@ -40,8 +40,13 @@ SurveyPass_t Passes[] = {
   //#include "IOSectorPar2022Pass121_Avg.h"
   //#include "IOSectorPar2023_2024Pass121_Avg.h"
   //#include "IOSectorPar2019_2020_2021Pass123_Avg.h"
-#include "IOSectorPar2022Pass123_Avg.h"
+  //#include "IOSectorPar2022Pass123_Avg.h"
   //#include "IOSectorPar2023_2024Pass123_Avg.h"
+  //#include "IO_2019_2020Pass129_Avg.h"
+  //#include "IO_2021Pass129_Avg.h"
+  //#include "IO_2022Pass129_Avg.h"
+  //#include "IO_2023Pass129_Avg.h"
+#include "IO_2024Pass129_Avg.h"
 };
 //#define __ResetdZto0__
 //#define __No__gamma__

@@ -30,6 +30,7 @@
 //#include "W2SSectorParPass20.h"
 //#include "W2SSectorPar.h"
 #include "THStack.h"
+#include "TPRegexp.h"
 #endif
 #include "StTpcAlignerMaker/SurveyPass.h"
 
@@ -44,140 +45,80 @@ const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 TCanvas *c1 = 0;
 THStack *hs[6];
 TLegend *leg[6];
+#include "DumpRes2Par.h"
 //________________________________________________________________________________
 void ResultsW2S(const Char_t *opt="") {
   gStyle->SetMarkerStyle(20);
   gStyle->SetOptStat(0);
   cout << "NP \t" << NP << endl;
-  Int_t NH = NP;
+  Int_t NPsel = 0;
+  SurveyPass_t Pass[2];// 0 => sum FF, 1 => sum RF
+  Int_t nFR[2] = {0};
   TString Opt(opt);
-  if (Opt == "") {
-    if (NH == 2) NH++; // make average if we have only FF + RF
-    else if (NP > 2) NH = NP + 2; // make average for FFF and RF
+  TPRegexp Reg(opt);
+  TArrayI PassFlag(NP+2);
+  for (Int_t k = 0; k < NP; k++) {
+    TString PassName(Passes[k].PassName);
+    PassFlag[k] = -1;
+    if (Opt != "" && Reg.MatchS(PassName)->GetLast() < 0) continue;
+    Passes[k].FixErrors();
+    PassFlag[k] = NPsel;
+    if (Passes[k].GetField() == 1) {
+      if (! nFR[0]) Pass[0]  = Passes[k];
+      else          Pass[0] += Passes[k];
+      nFR[0]++;
+    } else if (Passes[k].GetField() == -1) {
+      if (! nFR[1]) Pass[1]  = Passes[k];
+      else          Pass[1] += Passes[k];
+      nFR[1]++;
+    }
+    NPsel++;
   }
+  if (NPsel <= 0) {
+    cout << "No pass selected" << endl;
+    return;
+  }
+  TString Out("ResultsW2S.");
+  OutputName = Opt;
+  OutputName.ReplaceAll("|","_");
+  Out += OutputName;
+  Out += ".root";
+  TFile *fOut = new TFile(Out,"recreate");
+  TH1::SetDefaultSumw2(kTRUE);
+  c1 = new TCanvas("W2S","Tpc Sector to Sector alignment parameters",2400,1200);
+  c1->Divide(3,2);
+  Int_t NH = NP;
+  if (nFR[0] > 0) NH++;
+  if (nFR[1] > 0) NH++;
   TH1D ***dath = new TH1D**[NH]; 
-  for (Int_t p = 0; p < NH; p++) {dath[p] = new TH1D*[6]; memset(dath[p],0, 6*sizeof(TH1D*));}
   const Char_t *names[6] = {" #Deltax"," #Deltay"," #Deltaz"," #Delta #alpha"," #Delta #beta"," #Delta #gamma"};
   const Char_t *nameK[6] = {"Dx","Dy","Dz","Da",     "Db",    "Dg"};
-  TFile *fOut = new TFile("ResultsW2S.root","recreate");
-  c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",2400,1200);
-  c1->Divide(3,2);
+  for (Int_t k = 0; k < NH; k++) {
+    dath[k] = 0;
+    if (PassFlag[k] < 0) continue;
+    if (k < NP) {
+      Passes[k].Print();
+      dath[k] = Passes[k].GetHist(names, nameK);
+    } else {
+      Pass[k-NP].Print();
+      dath[k] = Pass[k-NP].GetHist(names, nameK, k-NP+1, 20);
+    }
+  }
   for (Int_t i = 0; i < 6; i++) {
     hs[i] = new THStack(nameK[i],names[i]);
-#if 0
-    if (i < 3) hs[i]->SetYTitle(Form("%s (#mum)",names[i]));
-    else       hs[i]->SetYTitle(Form("%s (mrad)",names[i]));
-    hs[i]->SetXTitle("sector");
-#endif
     Double_t ymin =  1e10;
     Double_t ymax = -1e10;
     TString Name;
     TString Title;
-    if (! i)     {
-      if (Opt == "") 	leg[i] = new TLegend(0.85,0.5-0.04*NH,0.98,0.5);
-      else              leg[i] = new TLegend(0.85,0.5-0.08,   0.98,0.5);
-    }     else         leg[i] = 0;
+    if (! i)     {leg[i] = new TLegend(0.85,0.7-0.04*NH,0.98,0.7);
+    }  else       leg[i] = 0;
     TString same("e");
     Int_t color = 1;
-    TH1::SetDefaultSumw2(kTRUE);
     Int_t nohist = 0;
     for (Int_t k = 0; k < NH; k++) {
-      if (k < NP) {
-	if (i == 0 && k < NP) Passes[k].Print();
-	Name = Form("%s%s",nameK[i],Passes[k].PassName);
-	Name.ReplaceAll("/","_");
-	if (Opt != "" && ! Name.Contains(Opt,TString::kIgnoreCase)) continue;
-	Title = Form("Alignment fit for  %s %s",names[i],Passes[k].PassName);
-	nohist++;
-      } else { // Average
-	if (NH == NP + 1) {
-	  Name = Form("%s_%s_%s",nameK[i],Passes[0].PassName,Passes[1].PassName);
-	  Name.ReplaceAll("/","_");
-	  if (Opt != "" && ! Name.Contains(Opt,TString::kIgnoreCase)) continue;
-	  Title = Form("Alignment fit for %s sum %s %s",names[i],Passes[0].PassName,Passes[1].PassName);
-	} else {
-	  TString RF((k == NP) ? "FF": "RF");
-	  Name = Form("%s%s",nameK[i],RF.Data());
-	  if (Opt != "" && ! Name.Contains(Opt,TString::kIgnoreCase)) continue;
-	  Title = Form("Alignment fit for %s sum over %s",names[i],RF.Data());
-	}
-      }
-      //      cout << Name.Data() << "\t" << Title.Data() << "\ti\t" << i << "\tk\t" << k << endl;
-      dath[k][i] = (TH1D *) gDirectory->Get(Name);
-      if (dath[k][i]) delete dath[k][i];
-      
-      dath[k][i] = new TH1D(Name,Title, 24, 0.5, 24.5);
-      //      cout << "Create: " << dath[k][i]->GetName() << "\t" << dath[k][i]->GetTitle() << endl;
-      dath[k][i]->SetMarkerColor(color);
-      dath[k][i]->SetLineColor(color);
-      dath[k][i]->SetMarkerSize(2);
-      dath[k][i]->SetMarkerStyle(22);
-      if (k < NP) {
-	if (TString(Passes[k].PassName).Contains("RF")) {
-	  color++;
-	  dath[k][i]->SetMarkerStyle(23);
-	}
-	if (TString(Passes[k].PassName).Contains("MF")) {
-	  dath[k][i]->SetMarkerStyle(21);
-	}
-      } else       if (k >= NP && NH == NP + 2)  {
-	Int_t c = 1;
-	if (k == NP+1) c = 2;
-	dath[k][i]->SetMarkerColor(c);
-	dath[k][i]->SetLineColor(c);
-	dath[k][i]->SetMarkerStyle(20);
-	//	dath[k][i]->SetMarkerSize(3);
-      }
-      dath[k][i]->SetXTitle("sector");
-      if (i < 3) dath[k][i]->SetYTitle(Form("%s (#mum)",names[i]));
-      else       dath[k][i]->SetYTitle(Form("%s (mrad)",names[i]));
-      for (Int_t l = 0; l < 24; l++) {
-	Int_t secs;
-	Double_t val = 0, err = 0;
-	if (k < NP) {
-	  Double_t *X = &Passes[k].Data[l].x;
-	  secs = Passes[k].Data[l].sector;
-	  if (X[2*i+1] >= 0 && X[2*i+1] < 99) {
-	    val = X[2*i];
-	    err = X[2*i+1];
-	  } else {continue;}
-	} else if (k == NP && NH == NP + 1) { // Average FF+RF
-	  Double_t *X0 = &Passes[0].Data[l].x;
-	  Double_t *X1 = &Passes[1].Data[l].x;
-	  secs = Passes[0].Data[l].sector;
-	  if (X0[2*i+1] >= 0 && X0[2*i+1] < 99 &&
-	      X1[2*i+1] >= 0 && X1[2*i+1] < 99) {
-	    val = 0.5*(X0[2*i] + X1[2*i]);
-	    dath[k][i]->SetBinContent(secs,val);
-	    err = TMath::Sqrt(X0[2*i+1]*X0[2*i+1]+X1[2*i+1]*X1[2*i+1])/2;
-	  } else {continue;}
-	} else {// Average of all FF and RF
-	  Double_t valW = 0, errW = 0;
-	  secs = Passes[0].Data[l].sector;
-	  for (Int_t p = 0; p < NP; p++) {
-	    TString RF((k == NP) ? "FF": "RF");
-	    TString Name(Passes[p].PassName);
-	    if (! Name.Contains(RF)) continue;
-	    Double_t *X = &Passes[p].Data[l].x;
-	    if (X[2*i+1] >= 0 && X[2*i+1] < 99) {
-	      val = X[2*i];
-	      err = X[2*i+1];
-	      if (err == 0.0) err = 0.01;
-	      Double_t err2 = err*err;
-	      valW += val/err2;
-	      errW +=  1./err2;
-	    } 
-	  }
-	  if (errW <= 0) continue;
-	  val = valW/errW;
-	  err = 1./TMath::Sqrt(errW);
-	} 
-	if (err < 0.001) err = 0.001;
-	dath[k][i]->SetBinContent(secs,val);
-	dath[k][i]->SetBinError(secs,err);
-	if (ymin > val - err) ymin = val - err;
-	if (ymax < val + err) ymax = val + err;
-      }
+      if (! dath[k]) continue;
+      if (! dath[k][i]) continue;
+      nohist++;
       hs[i]->Add(dath[k][i]);
       if (leg[i]) {
 	if (k < NP) {
@@ -186,9 +127,6 @@ void ResultsW2S(const Char_t *opt="") {
 	  Label.ReplaceAll("/IO","");
 	  indx = Label.Index("/");
 	  leg[i]->AddEntry(dath[k][i],Label.Data()+indx+1);
-#if 0
-	  leg[i]->AddEntry(dath[k][i],Passes[k].PassName);
-#endif
 	} else if (k == NP && NH == NP + 1)  leg[i]->AddEntry(dath[k][i],"sum");
 	else {
 	  if (k == NP) leg[i]->AddEntry(dath[k][i],"sum over FF");
@@ -196,14 +134,10 @@ void ResultsW2S(const Char_t *opt="") {
 	}
       }
     }
-#if 0
-    if (ymax > 0)     dath[kk][i]->SetMaximum(1.1*ymax);
-    else              dath[kk][i]->SetMaximum(0.9*ymax);
-    if (ymin < 0)     dath[kk][i]->SetMinimum(1.1*ymin);
-    else              dath[kk][i]->SetMinimum(0.9*ymin);
-#endif 
     c1->cd(i+1);
     if (! hs[i]) continue;
+    ymax = hs[i]->GetMaximum("nostack");
+    ymin = hs[i]->GetMinimum("nostack");
     TList *list = hs[i]->GetHists();
     TIter next(list);
     TH1 *h = 0;
@@ -224,44 +158,6 @@ void ResultsW2S(const Char_t *opt="") {
   }
   c1->Update();
   fOut->Write();
+  DumpRes2Par("W2S_",Pass[0].StripPass(), Pass[1].StripPass()); 
 }
-//________________________________________________________________________________
-void DumpRes2Par() {
-  TH1D *hist[2][6] = {0};
-  const Char_t *RF[2] = {"FF","RF"};
-  const Char_t *nameK[6] = {"Dx","Dy","Dz","Da",     "Db",    "Dg"};
-  for (Int_t f = 0; f < 2; f++) 
-    for (Int_t k = 0; k < 6; k++) {
-      TString Name(Form("%s%s",nameK[k],RF[f]));
-      hist[f][k] = (TH1D *) gDirectory->Get(Name);
-      if (! hist[f][k]) {
-	cout << "Hisogram " << Name.Data() << " is missing" << endl;
-      } else {
-	cout << "Hisogram " << Name.Data() << " is loaded" << endl;
-      }
-    }
-  TString Out("W2S_");
-  Out += gSystem->BaseName(gSystem->WorkingDirectory());
-  Out += "_Avg.h";
-  ofstream outC;
-  outC.open(Out.Data(), ios::out);
-  for (Int_t f = 0; f < 2; f++) {
-    outC << "  {20190101,    1, \"" << gSystem->BaseName(gSystem->WorkingDirectory()) << "/" << RF[f] <<  "\", //" << endl;
-    outC << "{" << endl;
-    for (Int_t sector = 1; sector <= 24; sector++) {
-      TString lineC("");
-      lineC = Form("\t{%2i",sector);
-      for (Int_t k = 0; k < 6; k++) {
-	TH1D *fit = hist[f][k];
-	Double_t val      = fit->GetBinContent(sector);
-	Double_t valError = fit->GetBinError(sector);
-	lineC += Form(",%8.2f,%5.2f", val,TMath::Min(99.99,valError)); 
-      }
-      lineC += ",\""; lineC += RF[f]; lineC += "\"},";
-      outC << lineC << endl;
-    }
-    outC << "    }" << endl;
-    outC << "  }," << endl;
-  }
-  outC.close();
-}
+

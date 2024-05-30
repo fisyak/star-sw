@@ -1,5 +1,5 @@
 /*  Tpc Super Sector Position based on MuTpcG.C.check TFGflag in lDb.C
-    root.exe 'lDb.C(1,"r2020")' MakeTpcSuperSectorB.C+
+    root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -68,9 +68,16 @@ SurveyPass_t Passes[] = {
   //#include  "ResultsAlignerW2S.h"  /* Pass 81 LSF */
   //#include  "ResultsAlignerW2S.h"  /* Pass 82 LSF */
   //#include  "ResultsAlignerW2S.h"  /* Pass 83 LSF */
-#include  "W2S_Pass124_Avg.h" 
+  //#include  "W2S_Pass124_Avg.h"  /* __SCALEbyHalf__ */
+  //#include  "W2S_Pass125_Avg.h" /* ! __SCALEbyHalf__ */
+  //#include  "W2S_Pass128_Avg.h"
+  //#include  "W2S_2019_2020Pass129_Avg.h"
+  //#include  "W2S_2021Pass129_Avg.h"
+  //#include  "W2S_2022Pass129_Avg.h"
+  //#include  "W2S_2023Pass129_Avg.h"
+#include  "W2S_2024Pass129_Avg.h"
 };
-#define __SCALEbyHalf__
+//#define __SCALEbyHalf__
 //#define  __INVERSE_dR__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   

@@ -15,12 +15,15 @@ SectorTrack::SectorTrack(const SectorTrack &v) {// skip TList
   fRG  = v.fRG ;  fNG  = v.fNG ;
   fR   = v.fR  ;  fN   = v.fN  ;
   fRTpc  = v.fRTpc ;  fNTpc  = v.fNTpc ;
+  fRHalf  = v.fRHalf ;  fNHalf  = v.fNHalf ;
   fRPad  = v.fRPad ;  fNPad  = v.fNPad ;
   fCov = v.fCov;
   memcpy(fRefSurface, v.fRefSurface, sizeof(fRefSurface));
   fyRef   = v.fyRef;
   fSector = v.fSector;  // of the first hit
   fRow    = v.fRow;      // -"-
+  fRowMin = v.fRowMin;      // -"-
+  fRowMax = v.fRowMax;      // -"-
   fStatus = v.fStatus; 
   fHelix  = v.fHelix;  
   fStep   = v.fStep; 
@@ -30,18 +33,21 @@ void  SectorTrack::AddHit(StTpcHit *tpcHit) {
   if (! tpcHit) return;
   Int_t sector = tpcHit->sector();
   Int_t row    = tpcHit->padrow();
-  if (fSector <= 0) {
+  if (fRow <= 0) {
     fSector = sector;
-    fRow = row;
+    fRow = fRowMin = fRowMax = row;
+    fXYZmax = fXYZmin = TVector3(tpcHit->position().xyz());
   } else {
     assert(fSector == sector);
-    if (fRow < 0 || row < fRow) fRow = row;
+    assert(fRow > 0);
+    if (row < fRowMin) {fRow = fRowMin = row; fXYZmin = TVector3(tpcHit->position().xyz());}
+    if (row > fRowMax) {       fRowMax = row; fXYZmax = TVector3(tpcHit->position().xyz());}
   }
   List()->Add(tpcHit);
 }
 //________________________________________________________________________________
 void  SectorTrack::Print(Option_t */* option */) const {
-  cout << "Segment: " << GetName() << " for sector " << fSector << " rowMin " << fRow<< endl;
+  cout << "Segment: " << GetName() << " for sector " << fSector << " rowMin = " << fRowMin << " rowMax = " << fRowMax << endl;
   if (_debug > 1) {
     TIter next(&fList);
     Int_t i = 0;

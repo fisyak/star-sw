@@ -1,5 +1,6 @@
 #ifndef __HelixPar_t_h
 #define __HelixPar_t_h
+#include "Riostream.h"
 #include "TObject.h"
 #include "SectorTrack.h"
 #include "THelixTrack.h"
@@ -53,5 +54,5 @@ class HelixPar_t : public TObject {
   static Int_t _debug;
   ClassDef(HelixPar_t, 1)
 };
-ostream&  operator<<(ostream& os, const HelixPar_t &v);
+std::ostream&  operator<<(std::ostream& os, const HelixPar_t &v);
 #endif /* __HelixPar_t_h */
