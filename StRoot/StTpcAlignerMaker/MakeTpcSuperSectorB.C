@@ -75,10 +75,17 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_2021Pass129_Avg.h"
   //#include  "W2S_2022Pass129_Avg.h"
   //#include  "W2S_2023Pass129_Avg.h"
-#include  "W2S_2024Pass129_Avg.h"
+  //#include  "W2S_2024Pass129_Avg.h"
+  //#include  "W2S_Pass131_Avg.h"
+  //#include  "W2S_Pass131_Avg.h" /* __INVERSE_dR__  */
+  //#include  "W2S_2019Pass131_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2020_2021Pass131_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2022Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2023Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+#include  "W2S_2024Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
 };
-//#define __SCALEbyHalf__
-//#define  __INVERSE_dR__
+#define __SCALEbyHalf__
+#define __INVERSE_dR__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   
 //________________________________________________________________________________
@@ -93,179 +100,12 @@ static const Double_t scale = 1.0;
 #else
 static const Double_t scale = 0.5;
 #endif
-static TGeoHMatrix dR[48], dRC[48];
-static TGeoHMatrix Rideal[24], RidealI[24];
-static Int_t _debug = 0;
+static Int_t _debug = 1;
 #define PrPP(B) if (_debug) {cout  << (#B) << " = \t";  (B).Print();}
 #define PrPI(i,B) if (_debug) {cout  << (#B) << "( i = " << i << ")  = \t";  (B).Print();}
-///________________________________________________________________________________
-void RemoveOverAllShift(SurveyPass_t &Pass) {
-#if 0
-  for (Int_t i = 0; i < 24; i++) {
-    cout << "dR[" << i << "]"; dR[i].Print();
-    cout << "dRC[" << i << "]"; dRC[i].Print();
-    cout << "Rideal[" << i << "]"; Rideal[i].Print();
-    cout << "RidealI[" << i << "]"; RidealI[i].Print();
-  }
-#endif
-  /* Euler angles: a = phi, b = theta, g = psi
-                  (  1 -(a+g)  0)   
-     R(a,b,g) =   (a+g      1 -b) = 
-                  (  0      b  1)
-   ( cospsi*cosphi - costhe*sinphi*sinpsi;   -sinpsi*cosphi - costhe*sinphi*cospsi;    sinthe*sinphi;)
-   ( cospsi*sinphi + costhe*cosphi*sinpsi;   -sinpsi*sinphi + costhe*cosphi*cospsi;   -sinthe*cosphi;) =
-   (                        sinpsi*sinthe;                           cospsi*sinthe;           costhe;) 
-
-   (       1; -psi-phi;    0;
-   ( phi+psi;        1; -the;) =  psi = 0
-   (       0;      the;    1;) 
-
-
-   (   1;  -(a+g);   0;)
-   ( a+g;      1;   -b;) =
-   (   0;;     b;    1;) 
-
-   Tait–Bryan angles:      dR.RotateX(a); dR.RotateY(b); dR.Rotate(g);
-
-                            ( 1  -g  b dx)       (nx)              (   nx +g*ny -b*nz)        (x)           (  x - g*y )
-      dR(a,b,g,dx,dy,dz) =  ( g   1 -a dy); n =  (ny);   dR x n =  (-g*nx +  ny +a*nz);   X = (y); dR x X = (dy)
-                            (-b   a  1 dz)       (nz)		   ( b*nx -a*ny +  nz)        (z)           (dz)
-		            ( 0   0  0  1)       ( 0) 		   ( 0               )        (1)           ( 1)
-
-			    Euler <=> Tait–Bryan : a+g <=> g; b <=> a; 0 <=> b;
-Euler Rotation in Tait-Bryan angles
-
-   (   1;  -g;   0;)
-   (   g;   1;  -a;) =
-   (   0;;  a;   1;) 
-=========              T = Sup2TPC; dRi = I, Rold 
-    dRAv = <dTPCreal * dTPCideal^-1> = <T * dRreal * T^-1> = <T *dRr * T^-1> = dRAv; 
-    Rtpc * dRAv^-1 = T * dRr * dRAv^-1
-    T^-1 * dRAv * T= dRr * dRi^-1 
-========
-    A    = <T * dR * C * T^-1>; dR * C = 
-    D    =  T * dR;  D * A^-1 = T * dR * A^-1 = T * dR *  
-   */
-  // Calculate average shift and rotation for each half of TPC and overall TPC
-  Double_t phi[24] = {0};
-  Double_t theta[24] = {0};
-  Double_t psi[24] = {0};
-  Double_t tra[24][3] = {0};
-  for (Int_t i = 0; i < 24; i++) {
-    /*
-      dR.RotateX(a); dR.RotateY(b); dR.Rotate(g);
-
-                            ( 1  -g  b dx)       (nx)              (   nx +g*ny -b*nz)        (x)           (  x - g*y )
-      dR(a,b,g,dx,dy,dz) =  ( g   1 -a dy); n =  (ny);   dR x n =  (-g*nx +  ny +a*nz);   X = (y); dR x X = (dy)
-                            (-b   a  1 dz)       (nz)		   ( b*nx -a*ny +  nz)        (z)           (dz)
-		            ( 0   0  0  1)       ( 0) 		   ( 0               )        (1)           ( 1)
-     */
-    StBeamDirection part = east;
-    if (i < 12) part = west;
-    Double_t xyz[3];
-    xyz[0] = 1e-4*Pass.Data[i].x*scale;
-    xyz[1] = 1e-4*Pass.Data[i].y*scale;
-    xyz[2] = 1e-4*Pass.Data[i].z*scale;
-    //#define __SWAP_SIGNS__  /* Pass 508 */
-#ifdef __SWAP_SIGNS__
-    Pass.Data[i].alpha *= -1.;
-    Pass.Data[i].beta  *= -1.;
-    Pass.Data[i].gamma *= -1.;
-#endif
-    dR[i] = TGeoHMatrix();
-#define __ROTATION__
-#ifdef __ROTATION__
-#if 1
-    dR[i].RotateX( TMath::RadToDeg()*Pass.Data[i].alpha*1e-3*scale);
-    dR[i].RotateY( TMath::RadToDeg()*Pass.Data[i].beta*1e-3*scale); 
-#endif
-    dR[i].RotateZ( TMath::RadToDeg()*Pass.Data[i].gamma*1e-3*scale);  // swap sign 03/13/19
-#endif /* __ROTATION__ */
-    dR[i].SetTranslation(xyz);
-    Rideal[i]     = StTpcDb::instance()->Sup12S2Glob(i+1); PrPI(i,Rideal[i]); // cout << "Ideal:"; Rideal[i].Print();
-    RidealI[i]    = Rideal[i].Inverse();                 PrPI(i,RidealI[i]); //cout << "Inverse:"; RidealI[i].Print();
-    TGeoHMatrix Rreal      = StTpcDb::instance()->Sup12S2Glob(i+1)*dR[i];  PrPP(Rreal); //cout << "Real:"; Rreal.Print();
-    TGeoHMatrix R = Rreal * RidealI[i];         PrPP(R); // cout <<"Diff:"; R.Print();
-    const Double_t *xyzR = R.GetTranslation();
-    for (Int_t j = 0; j < 3; j++) tra[i][j] = xyzR[j];
-#if 0
-    TGeoRotation RR(R);
-    RR.GetAngles(phi[i],theta[i],psi[i]); 
-#else
-    Double_t *m = R.GetRotationMatrix();
-    theta[i] = TMath::ACos(m[8])*TMath::RadToDeg();
-    phi[i]   = TMath::ATan2(-m[8]*m[1],m[0])*TMath::RadToDeg();
-    psi[i]   = 0.; // convention, phi+psi matters
-#endif
-    cout << " sec " << i+1 << " phi " << phi[i] << " theta " << theta[i] << " psi " << psi[i] << endl;
-  }
-  Double_t dphi[3] = {0}, dtheta[3] = {0}, dpsi[3] = {0}, dxyz[3][3] = {0};
-  TGeoHMatrix RAv[3], RAvI[3];
-  for (Int_t l = 0; l < 3; l++) {
-    Int_t i1 = 0, i2 = 24;
-    if      (l == 0) {i2 = 12;}
-    else if (l == 1) {i1 = 12;}
-    Int_t N = i2 - i1;
-    for (Int_t i = i1; i < i2; i++) {
-      dphi[l]   += phi[i]/N;
-      dtheta[l] += theta[i]/N;
-      dpsi[l]   += psi[i]/N;
-      for (Int_t j = 0; j < 3; j++)dxyz[l][j] += tra[i][j]/N;
-    }
-    TGeoRotation RR;
-    RR.SetAngles(dphi[l], dtheta[l], dpsi[l]);
-    RAv[l] = TGeoHMatrix();
-    RAv[l].SetRotation(RR.GetRotationMatrix());
-    RAv[l].SetTranslation(dxyz[l]);
-    if (l == east) cout << "east:";
-    else if (l == west) cout << "west:";
-    else                cout << "Tpc:";
-    PrPI(l,RAv[l]); // RAv[l].Print();
-    RAvI[l] = RAv[l].Inverse(); PrPI(l,RAvI[l]); // cout << "Inverse:"; RAvI[l].Print("");
-  }
-  for (Int_t i = 0; i < 24; i++) {
-    StBeamDirection part = east;
-    if (i < 12) part = west;
-    //    cout << "dR" << i << ":"; dR[i].Print("");
-    /*
-      RAV = <Rideal*dR*Rideal^1>; dRAv = Rideal
-      RA  = Rideal*dR
-      RA*dRAV^-1   = Rideal*dR*<Rideal*dR*Rideal^1>^-1 = Rideal*dR *(
-      T*dR * T^-1 * RAv^-1 * T
-
-      g = T * l;
-      A = g * T^-1 = T * l * T^-1
-      A = g * C^-1; g = A * C = 
-
-      
-     */
-    //#define __ACCOUNT_OFFSET__
-#ifdef __ACCOUNT_OFFSET__
-    TGeoHMatrix A = RidealI[i] * RAvI[part] * Rideal[i]; PrPP(A); // cout << "A\t:"; A.Print();
-    dRC[i] = dR[i]*A ; //cout << "dRC:"; dRC[i].Print("");
-    cout << "sec = " << i+1 << " before:"; Pass.Data[i].Print();
-    Pass.Data[i].x = dRC[i].GetTranslation()[0]*1e4/scale;
-    Pass.Data[i].y = dRC[i].GetTranslation()[1]*1e4/scale;
-    Pass.Data[i].z = dRC[i].GetTranslation()[2]*1e4/scale;
-    Pass.Data[i].alpha = -dRC[i].GetRotationMatrix()[5]*1e3/scale;
-    Pass.Data[i].beta  =  dRC[i].GetRotationMatrix()[2]*1e3/scale;
-    Pass.Data[i].gamma = -dRC[i].GetRotationMatrix()[1]*1e3/scale;
-    cout << "sec = " << i+1 << " after :"; Pass.Data[i].Print();
-    cout << "================================================================================" << endl;
-#else
-    dRC[i] = dR[i];
-#endif
-  }
-}
 //________________________________________________________________________________
 void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
-  //  RemoveOverAllShift(Pass);
   const Char_t *plots[3] = {"dXS","dYS","dZS"};
-#if 0  
-  for (Int_t j = 1; j <= 24; j++) {
-    cout << Form("%2i ",j); Pass.Data[j-1].Print();
-  }
-#endif
   St_SurveyC   *chair = 0;
   if      (opt == "B") chair = St_SurveyC::instance("TpcSuperSectorPosition");
   else if (opt == "D") chair = St_SurveyC::instance("TpcSuperSectorPositionD");
@@ -277,15 +117,12 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
   if (! TpcSuperSectorPositionB)  {cout << "TpcSuperSectorPosition" << opt.Data() << "  has not been found"  << endl; return;}
   Int_t Nrows = TpcSuperSectorPositionB->GetNRows();
   TpcSuperSectorPositionB->Print(0,Nrows);
-  TGeoHMatrix GL;
   Survey_st *TpcSuperSectorOld         = TpcSuperSectorPositionB->GetTable();        
   Survey_st row[24];
-  /* 
-     Rav = R * dR => R^-1 * Rav =  dR
-     
-   */
   for (Int_t i = 0; i < 24; i++) {
+    Int_t sector = i + 1;
     Int_t l = i;
+    TGeoHMatrix GL;
     StBeamDirection part = east;
     if (i < 12) part = west;
     if (l < Nrows) {
@@ -308,33 +145,22 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
     xyz[0] = 1e-4*Pass.Data[i].x*scale;
     xyz[1] = 1e-4*Pass.Data[i].y*scale;
     xyz[2] = 1e-4*Pass.Data[i].z*scale;
-    dR[l] = TGeoHMatrix();
+    TGeoHMatrix dR;
+#define __ROTATION__
 #ifdef __ROTATION__
-#if 1
-    dR[l].RotateX( TMath::RadToDeg()*Pass.Data[i].alpha*1e-3*scale);
-    dR[l].RotateY( TMath::RadToDeg()*Pass.Data[i].beta*1e-3*scale); 
-#endif
-    dR[l].RotateZ( TMath::RadToDeg()*Pass.Data[i].gamma*1e-3*scale);  // swap sign 03/13/19
+    dR.RotateX( TMath::RadToDeg()*Pass.Data[i].alpha*1e-3*scale);
+    dR.RotateY( TMath::RadToDeg()*Pass.Data[i].beta*1e-3*scale); 
+    dR.RotateZ( TMath::RadToDeg()*Pass.Data[i].gamma*1e-3*scale);
 #endif /* __ROTATION__ */
-    dR[l].SetTranslation(xyz);
-    //    dRC[l] = dR[l] * StTpcDb::instance()->Flip().Inverse();
-#ifndef __INVERSE_dR__
-    dRC[l] = StTpcDb::instance()->Flip() * dR[l] * StTpcDb::instance()->Flip().Inverse();
-#else
-    TGeoHMatrix dRI = dR[i].Inverse();
-    TGeoHMatrix FdRI = StTpcDb::instance()->Flip() * dRI;
-    dRC[l] = FdRI * StTpcDb::instance()->Flip().Inverse();
-#endif
+    dR.SetTranslation(xyz);
     if (_debug) {
-      cout << "Additional rotation for Super Sector\t"; dR[l].Print();
-      cout << "dR" << i << ":"; dR[l].Print("");
-      cout << "dRC" << i << ":"; dRC[l].Print("");
+      cout << "Additional rotation for Super Sector: dR\t"; dR.Print();
     }
-    //    TGeoHMatrix dRC = dR[l]*RAvI[part]; cout << "dRC:"; dRC.Print("");
-    //    TGeoHMatrix GLnew = StTpcDb::instance()->FlipStTpcDb::instance()->Flip().Inverse() StTpcDb::instance()->FlipStTpcDb::instance()->Flip().Inverse()().Inverse()*dR[l]*StTpcDb::instance()->Flip()*GL; GLnew.Print(); // Flip 03/14/19
-    //    TGeoHMatrix GLnew = GL*dR[l]; GLnew.Print(); // used till 03/13/19 and after 03/15/19
-    TGeoHMatrix GLnew = GL*dRC[l]; GLnew.Print(); // used till 03/13/19 and after 03/15/19
-    //    TGeoHMatrix GLnew = dR[l] * GL; GLnew.Print();
+#ifndef __INVERSE_dR__
+    TGeoHMatrix GLnew = GL*dR; cout << "GLNew = GL * dR "; GLnew.Print();
+#else
+    TGeoHMatrix GLnew = GL*dR.Inverse(); cout << "GLNew = Gl * dR^^-1 "; GLnew.Print();
+#endif
     Double_t *R = GLnew.GetRotationMatrix();
     memcpy(&row[l].r00, R, 9*sizeof(Double_t));
     Double_t *tr = GLnew.GetTranslation();
@@ -342,11 +168,7 @@ void MakeSuperSectorPositionBTable(SurveyPass_t Pass, TString opt = "B"){
   }
   Int_t date = Pass.date;
   Int_t time = Pass.time;
-#ifndef __INVERSE_dR__ /* try inverse for Rass 51 => Pass53 */
   TString fOut =  Form("TpcSuperSectorPosition%s.%8i.%06i.C", opt.Data(), date, time);
-#else
-  TString fOut =  Form("TpcSuperSectorPosition%s.%8i.%06i.C.Inverse", opt.Data(), date, time);
-#endif
   ofstream out;
   cout << "Create " << fOut.Data() << endl;
   out.open(fOut.Data());
@@ -384,13 +206,6 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   dbMk = chain->Maker("db");
   if (! dbMk) return;
   dbMk->SetDebug(1);
-#if 0
-  static Bool_t InitDone = kFALSE;
-  if (! InitDone) {
-    chain->Init();
-    InitDone = kTRUE;
-  }
-#endif
   gStyle->SetMarkerStyle(20);
   gStyle->SetOptStat(0);
   cout << "NP \t" << NP << endl;
@@ -420,17 +235,11 @@ void MakeTpcSuperSectorB(const Char_t *opt="") {
   TString same("e");
   TH1::SetDefaultSumw2(kTRUE);
   for (Int_t k = 0; k < NP; k++) {
-    cout << "Passes[" << k << "] before removing offset" << endl;
     if (_debug) {Passes[k].Print();}
     Int_t date = Passes[k].date;
     Int_t time = Passes[k].time;
     if (! dbMk) return;
     dbMk->SetDateTime(date,time);
-#if 0
-    RemoveOverAllShift(Passes[0]);
-    cout << "Passes[" << k << "] after removing offset" << endl;
-    Passes[k].Print();
-#endif
     chain->MakeEvent();
   }
   SurveyPass_t PassSum(Passes[0]);

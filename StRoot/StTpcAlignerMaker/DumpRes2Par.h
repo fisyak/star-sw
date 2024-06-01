@@ -1,5 +1,6 @@
 #ifndef __DumpRes2Par__
 #define __DumpRes2Par__
+#include "TF1.h"
 TString OutputName;
 //________________________________________________________________________________
 void DumpRes2Par(TString Out = "IOSectorPar",
@@ -44,13 +45,24 @@ void DumpRes2Par(TString Out = "IOSectorPar",
     for (Int_t sector = 1; sector <= 24; sector++) {
       TString lineC("");
       lineC = Form("\t{%2i",sector);
+      TString Fit;
       for (Int_t k = 0; k < 6; k++) {
-	TH1D *fit = hist[f][k];
-	Double_t val      = fit->GetBinContent(sector);
-	Double_t valError = fit->GetBinError(sector);
+	TH1D *h = hist[f][k];
+	TF1 *secW = (TF1 *) h->GetListOfFunctions()->FindObject("secW");
+	TF1 *secE = (TF1 *) h->GetListOfFunctions()->FindObject("secE");
+	Double_t val = 0;
+	if (secW && secE) {
+	  if (sector <= 12) val = secW->Eval(sector);
+	  else              val = secE->Eval(sector);
+	  Fit = " Fit";
+	} else {
+	  val      = h->GetBinContent(sector);
+	  Fit = "";
+	}
+	Double_t valError = h->GetBinError(sector);
 	lineC += Form(",%8.2f,%5.2f", val,TMath::Min(99.99,valError)); 
       }
-      lineC += ",\""; lineC += RF[f]; lineC += "\"},";
+      lineC += ",\""; lineC += RF[f]; lineC += Fit; lineC += "\"},";
       outC << lineC << endl;
     }
     outC << "    }" << endl;

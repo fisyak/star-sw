@@ -31,6 +31,7 @@
 //#include "W2SSectorPar.h"
 #include "THStack.h"
 #include "TPRegexp.h"
+#include "HardWarePosition.C"
 #endif
 #include "StTpcAlignerMaker/SurveyPass.h"
 
@@ -43,6 +44,7 @@ SurveyPass_t Passes[] = {
 };
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
 TCanvas *c1 = 0;
+TCanvas *c2 = 0;
 THStack *hs[6];
 TLegend *leg[6];
 #include "DumpRes2Par.h"
@@ -87,9 +89,12 @@ void ResultsW2S(const Char_t *opt="") {
   TH1::SetDefaultSumw2(kTRUE);
   c1 = new TCanvas("W2S","Tpc Sector to Sector alignment parameters",2400,1200);
   c1->Divide(3,2);
+  c2 = new TCanvas("Fit","cos fit");
   Int_t NH = NP;
   if (nFR[0] > 0) NH++;
   if (nFR[1] > 0) NH++;
+  TF1 *SW = CosSectorW();
+  TF1 *SE = CosSectorE();
   TH1D ***dath = new TH1D**[NH]; 
   const Char_t *names[6] = {" #Deltax"," #Deltay"," #Deltaz"," #Delta #alpha"," #Delta #beta"," #Delta #gamma"};
   const Char_t *nameK[6] = {"Dx","Dy","Dz","Da",     "Db",    "Dg"};
@@ -119,7 +124,14 @@ void ResultsW2S(const Char_t *opt="") {
       if (! dath[k]) continue;
       if (! dath[k][i]) continue;
       nohist++;
+      c2->cd();
       hs[i]->Add(dath[k][i]);
+      SW->SetLineColor(dath[k][i]->GetLineColor());
+      cout << "West " << dath[k][i]->GetName() << "\t" << dath[k][i]->GetTitle() << endl; 
+      dath[k][i]->Fit(SW,"r");
+      SE->SetLineColor(dath[k][i]->GetLineColor());
+      cout << "East " << dath[k][i]->GetName() << "\t" << dath[k][i]->GetTitle() << endl; 
+      dath[k][i]->Fit(SE,"r+");
       if (leg[i]) {
 	if (k < NP) {
 	  Int_t indx = TString(Passes[k].PassName).Index("Pass");
