@@ -82,7 +82,13 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_2020_2021Pass131_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
   //#include  "W2S_2022Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
   //#include  "W2S_2023Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
-#include  "W2S_2024Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2023Pass131_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+
+  //#include  "W2S_2019Pass137_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2020_2021Pass137_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2022Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2023Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+#include  "W2S_2024Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
 };
 #define __SCALEbyHalf__
 #define __INVERSE_dR__
