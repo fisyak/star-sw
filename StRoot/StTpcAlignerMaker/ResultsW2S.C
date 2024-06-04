@@ -47,6 +47,7 @@ TCanvas *c1 = 0;
 TCanvas *c2 = 0;
 THStack *hs[6];
 TLegend *leg[6];
+#define __DONTSMOOTH__
 #include "DumpRes2Par.h"
 //________________________________________________________________________________
 void ResultsW2S(const Char_t *opt="") {
@@ -87,7 +88,9 @@ void ResultsW2S(const Char_t *opt="") {
   Out += ".root";
   TFile *fOut = new TFile(Out,"recreate");
   TH1::SetDefaultSumw2(kTRUE);
-  c1 = new TCanvas("W2S","Tpc Sector to Sector alignment parameters",2400,1200);
+  TString Title("Tpc Sector to Sector alignment parameters: ");
+  Title += gSystem->BaseName(gSystem->WorkingDirectory());
+  c1 = new TCanvas("W2S",Title,2400,1200);
   c1->Divide(3,2);
   c2 = new TCanvas("Fit","cos fit");
   Int_t NH = NP;
@@ -114,7 +117,6 @@ void ResultsW2S(const Char_t *opt="") {
     Double_t ymin =  1e10;
     Double_t ymax = -1e10;
     TString Name;
-    TString Title;
     if (! i)     {leg[i] = new TLegend(0.85,0.7-0.04*NH,0.98,0.7);
     }  else       leg[i] = 0;
     TString same("e");

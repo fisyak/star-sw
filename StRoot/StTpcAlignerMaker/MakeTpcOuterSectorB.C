@@ -46,7 +46,14 @@ SurveyPass_t Passes[] = {
   //#include "IO_2021Pass129_Avg.h"
   //#include "IO_2022Pass129_Avg.h"
   //#include "IO_2023Pass129_Avg.h"
-#include "IO_2024Pass129_Avg.h"
+  //#include "IO_2024Pass129_Avg.h"
+
+  //#include "IO_2019Pass139_Avg.h"
+  //#include "IO_2020Pass139_Avg.h"
+  //#include "IO_2021Pass139_Avg.h"
+  //#include "IO_2022Pass139_Avg.h"
+  //#include "IO_2023Pass139_Avg.h"
+#include "IO_2024Pass139_Avg.h"
 };
 //#define __ResetdZto0__
 //#define __No__gamma__
@@ -82,13 +89,14 @@ void MakeTpcOuterSectorB(const Char_t *opt = 0){
       return;
     }
   } else { //default average for two last passes
-    if (NP != 2) return;
     Passes[0].Print();
-    Passes[1].Print();
     Pass[0] = Passes[0]; Pass[0].Print();
-    Pass[1] = Passes[0]; Pass[1].Print();
-    Pass[0].Add2(Passes[1]); Pass[0].Print();
-    Pass[1].Sub2(Passes[1]); Pass[1].Print();
+    if (NP == 2) {
+      Pass[1] = Passes[0]; Pass[1].Print();
+      Passes[1].Print();
+      Pass[0].Add2(Passes[1]); Pass[0].Print();
+      Pass[1].Sub2(Passes[1]); Pass[1].Print();
+    }
     NR = 2;
   }
   cout << "Pass for " << kPass << " has been found" << endl;

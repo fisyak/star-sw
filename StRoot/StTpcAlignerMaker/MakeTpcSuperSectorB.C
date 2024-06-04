@@ -2,6 +2,7 @@
     root.exe 'lDb.C(0)' MakeTpcSuperSectorB.C+
 */
 #if !defined(__CINT__)
+
 // code that should be seen ONLY by the compiler
 #else
 #if !defined(__CINT__) || defined(__MAKECINT__)
@@ -88,9 +89,21 @@ SurveyPass_t Passes[] = {
   //#include  "W2S_2020_2021Pass137_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
   //#include  "W2S_2022Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
   //#include  "W2S_2023Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
-#include  "W2S_2024Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2024Pass137_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+
+  //  #include  "W2S_2019Pass138_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2020_2021Pass138_Avg.h" /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2022Pass138_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2023Pass138_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+  //#include  "W2S_2024Pass138_Avg.h"  /* __INVERSE_dR__  __SCALEbyHalf__ */
+
+  //#include  "W2S_2019Pass139_Avg.h" /* __INVERSE_dR__ __DONTSMOOTH__ */
+  //#include  "W2S_2020_2021Pass139_Avg.h" /* __INVERSE_dR__ __DONTSMOOTH__ */
+  //#include  "W2S_2022Pass139_Avg.h" /* __INVERSE_dR__ __DONTSMOOTH__ */
+  //#include  "W2S_2023Pass139_Avg.h" /* __INVERSE_dR__ __DONTSMOOTH__ */
+#include  "W2S_2024Pass139_Avg.h" /* __INVERSE_dR__ __DONTSMOOTH__ */
 };
-#define __SCALEbyHalf__
+//#define __SCALEbyHalf__
 #define __INVERSE_dR__
 const  Int_t NP = sizeof(Passes)/sizeof(SurveyPass_t);
   

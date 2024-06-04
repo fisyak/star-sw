@@ -121,7 +121,9 @@ void ResultsIO(const Char_t *opt="") {
   TFile *fOut = new TFile(Out,"recreate");
   TH1::SetDefaultSumw2(kTRUE);
   //  c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",1200,800);
-  c1 = new TCanvas("IO","Tpc Outer to Inner alignment parameters",1600,1200);
+  TString Title("Tpc Outer to Inner alignment parameters: ");
+  Title += gSystem->BaseName(gSystem->WorkingDirectory());
+  c1 = new TCanvas("IO",Title,1600,1200);
   c1->Divide(2,2);
   Int_t NH = NP;
   if (nFR[0] > 0) NH++;
@@ -146,7 +148,6 @@ void ResultsIO(const Char_t *opt="") {
     Double_t ymin =  1e10;
     Double_t ymax = -1e10;
     TString Name;
-    TString Title;
     if (! i)     {leg[i] = new TLegend(0.85,0.7-0.04*NH,0.98,0.7);
     }  else       leg[i] = 0;
     TString same("e");
