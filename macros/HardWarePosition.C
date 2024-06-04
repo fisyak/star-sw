@@ -1,10 +1,9 @@
-#ifndef  __HardwarePosition__
-#define  __HardwarePosition__
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include "Riostream.h"
 #include "Rtypes.h"
 #include "TVector3.h"
 #include "TMath.h"
+#include "TF1.h"
 #endif
 //________________________________________________________________________________
 UInt_t bits(UInt_t mHardwarePosition, UInt_t bit, UInt_t nbits=1) {return (mHardwarePosition>>bit) & ~(~0UL<<nbits);};
@@ -145,8 +144,7 @@ Int_t secE2W(Int_t sector) {
   return secW;
 }
 //________________________________________________________________________________
-Int_t SectorNumber(Float_t x, Float_t y, Float_t z) {
-  Double_t phi = TMath::RadToDeg()*TMath::ATan2(y,x);
+Int_t SectorNumber(Float_t phi, Float_t z) {
   Int_t iphi = TMath::Nint(phi/30.);
   Int_t Sector;
   if (z > 0) {
@@ -157,6 +155,50 @@ Int_t SectorNumber(Float_t x, Float_t y, Float_t z) {
     if (Sector > 24) Sector -= 12;
   }
   return Sector;
+}
+//________________________________________________________________________________
+Int_t SectorNumber(Float_t x, Float_t y, Float_t z) {
+  Float_t phi = TMath::RadToDeg()*TMath::ATan2(y,x);
+  return SectorNumber(phi, z);
+}
+//________________________________________________________________________________
+Double_t SectorPhi(Int_t sector) {
+  Int_t iphi = sector - 3;
+  if (sector > 12) iphi = sector - 21;
+  if (iphi > 12) iphi -= 12;
+  if (iphi <  0) iphi += 12;
+  return 30.*iphi;
+}
+//________________________________________________________________________________
+Double_t SectorPhiRad(Int_t sector) {
+  Int_t iphi = sector - 3;
+  if (sector > 12) iphi = sector - 21;
+  if (iphi > 12) iphi -= 12;
+  if (iphi <  0) iphi += 12;
+  return 30.*iphi*TMath::DegToRad();
+}
+//________________________________________________________________________________
+Double_t CosSector(Double_t *x, Double_t *p) {
+  Int_t sector = TMath::Nint(x[0]);
+  return p[3] + p[0]*TMath::Cos(p[2]*TMath::DegToRad()*(SectorPhi(sector) - p[1]));
+}
+//________________________________________________________________________________
+TF1 *CosSectorW() {
+  static TF1 *f = 0;
+  if (! f) {
+    f = new TF1("secW",CosSector,0.5,12.5,4);
+    f->FixParameter(2,1.0);
+  }
+  return f;
+}
+//________________________________________________________________________________
+TF1 *CosSectorE() {
+  static TF1 *f = 0;
+  if (! f) {
+    f = new TF1("secE",CosSector,12.5,24.5,4);
+    f->FixParameter(2,1.0);
+  }
+  return f;
 }
 //________________________________________________________________________________
 Float_t PadRowRadius(Float_t x) {
@@ -229,4 +271,3 @@ Double_t xPad(Double_t pad, Int_t row) {
   }
   return x;
 }
-#endif
