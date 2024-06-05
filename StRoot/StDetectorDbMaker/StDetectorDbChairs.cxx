@@ -2995,7 +2995,8 @@ TGraphErrors **St_SurveyC::Graphs(St_Survey* table) {
   Int_t N = table->GetNRows();
   const Char_t *Names[6] = {"x","y","z","#alpha","#beta","gamma"};
   TArrayD S(N);
-  TArrayD X[6](N), eX[6](N);
+  TArrayD X[6], eX[6];
+  for (Int_t j = 0; j < 6; j++) X[j].Set(N);
   Survey_st *row = table->GetTable();
   for (Int_t i = 0; i < N; i++, row++) {
     S[i] = i + 1;
