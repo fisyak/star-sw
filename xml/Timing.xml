@@ -2,10 +2,13 @@
 <job name="Timing" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 <command>
 #  source ~/.tcshrc
+  FPE_OFF
   echo $INPUTFILE0
   set subdir = `basename ${INPUTFILE0} | sed -e 's/.sl73_//'` 
   if (! -d ${SUBMITTINGDIRECTORY}/${subdir}) mkdir ${SUBMITTINGDIRECTORY}/${subdir}
   cd ${SUBMITTINGDIRECTORY}/${subdir}
+  if (-r cpu_per_event) exit 0;
+  if (-r hlt_20192001_11_01_000.log) exit 0;
   switch (${subdir})
     case "*gcc631*":
       setup gcc631
