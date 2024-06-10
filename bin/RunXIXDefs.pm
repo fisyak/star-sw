@@ -1,4 +1,7 @@
-@Runs = ( # onl CURRENT | SortRun.pl 
+#!/usr/bin/perl
+use strict;
+use warnings;
+our @Runs = ( # onl CURRENT | SortRun.pl 
 '0000'=> {trig=>'Cosmic',             	field => 'ZF',	first=> '20009028',	 last => '20009028',	 list => '',  beginTime => '20190109.211356'}, # 	2019-01-09	21:13:56	2019-01-09	21:57:53
 '0001'=> {trig=>'Cosmic',             	field => 'ZF',	first=> '20009031',	 last => '20009031',	 list => '',  beginTime => '20190109.215753'}, # 	2019-01-09	21:57:53	2019-01-09	22:31:11
 '0002'=> {trig=>'Cosmic',             	field => 'ZF',	first=> '20009035',	 last => '20009047',	 list => '',  beginTime => '20190109.223111'}, # 	2019-01-09	22:31:11	2019-01-10	05:13:15

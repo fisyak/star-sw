@@ -1,8 +1,11 @@
 #! /usr/bin/env perl
 use File::Basename;
 use Cwd;
-use Env;
+#use Env;
 my $pwd = cwd(); #print "pwd = $pwd\n";
+if ($#ARGV >= 0) {
+  $pwd = $ARGV[0];
+}
 my $year  = "";
 my $FIELD = "";
 if    ($pwd =~ /2019/) {$year = "2019";}

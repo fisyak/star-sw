@@ -3,7 +3,7 @@ set D = `basename ${PWD}`
 set dist = ~/work/Histograms/${D}
 if (! -d ${dist}) mkdir ${dist}
 #foreach d (9p2GeVc_2020 9p8GeV_fixedTarget_2020 AuAu200GeV_2019 dAu200GeV_2021 OO_200GeV_2021 pp500GeV_2022 ps_OO_200GeV_2021)
-foreach d (`ls -1d *GeV* AuAu* dAu* | sort -u`)
+foreach d (`ls -1d *GeV* AuAu* dAu* pp* | sort -u`)
   if (-r ${dist}/${d}.root) continue;
   cd ${d}
   ls -1d All*.root 

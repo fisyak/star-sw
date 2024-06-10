@@ -24,7 +24,11 @@ sub SPrint ($$$$$$$$) {
   print "\tfield => \'$field\',\tfirst=> \'$runMin\',\t last => \'$runMax\',\t list => \'\',  beginTime => \'$dd.$tt\'}, \# \t$dateMin\t$timeMin\t$dateMax\t$timeMax\n";
   $N++;
 }
-print "\@Runs = ( # onl CURRENT | SortRun.pl \n";
+print "\#!/usr/bin/perl
+use strict;
+use warnings;
+";
+print "our \@Runs = ( # onl CURRENT | SortRun.pl \n";
 while ($line = <>) {
   if ($line =~ '^cmd' or $line =~ '^runNumber') {next;}
   my ($run,$trig,$date,$time,$scaleFactor,$rtsStatus,$shiftLeaderStatus,$destinationID) = split ' ', $line;

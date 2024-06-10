@@ -20,6 +20,7 @@ my $RECO = "/reco/*/*/";
 my $FILE = "/*/st_physics";
 my $NEvents = 100000;
 my $step = 0;
+my $debug = 0;
 #================================================================================
 #  dir -ltr /star/data14/GRID/NFS_FileList/
 #  dir /gpfs01/star/data*/reco/production_7p7GeV_2021/ReversedFullField/P22ia*/2021/*/*/*event.root
@@ -2668,7 +2669,8 @@ my $step = 0;
 ############################ RunXXIV ####################################################
 #$hist = "RunXXIV01"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2024 
 #$hist = "RunXXIV02"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/12/2024 
-$hist = "RunXXIV03"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+#$hist = "RunXXIV03"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+$hist = "RunXXIV04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2745,7 +2747,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, $atime, $mtime, $ctime, $blksize, $blocks ) = stat $file;
     my $dt = $now - $ctime;
     print "$file dt = $dt\n";
-    my @words = split '/', $file; # for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}
+    my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4] . '_' . $words[5];
     if ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
       $dd = $words[7];
@@ -2753,13 +2755,17 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
       if ($words[5] ne 'RF') {
 	$dd .= "_" . $words[5]; #print "dd = $dd\n";
       }
-    }
+    } elsif ($words[7] =~ /TFG24b/) {
+      $dd = $words[8];
+    } 
     $dd =~ s/reco_//;
     $dd =~ s/production_//;
     $dd =~ s/_ReversedFullField//;
+    $dd =~ s/_RF//;
     $dd =~ s/_FullField//;
+    $dd =~ s/_FF//;
     $ProdFiles{$dd} .= " " . $file;  
-#    print "$dd => $ProdFiles{$dd}\n";
+    if ($debug) {print "$dd => $ProdFiles{$dd}\n";}
   }
   foreach my $dd (keys %ProdFiles) {
     my $countperdd = 0;
@@ -2944,3 +2950,8 @@ foreach all (`ls -1d */All*.csh`)
   endif
   cd -;
 end
+
+
+cd ~/work/dEdx/RunXXIV0
+All.csh
+ MakedEdxHadd.csh
