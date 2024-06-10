@@ -28,8 +28,8 @@ struct BPoint_t {
 //________________________________________________________________________________
 								
 BPoint_t BPoint;
-static   Int_t Nsets = 13;
-static   TString sets[11]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF", "2021/MF", "2023/ZF",  "2024/FF",  "2024/RF"};
+enum {Nsets = 14, Npasses = 140};
+static   TString sets[Nsets]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF",  "2024/FF",  "2024/RF",  "2021/MF", "2023/ZF", "2024/ZF"};
 static   TString valC[12] = {// "DelpTRAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTIPosT", "DelpTINegT"};
     "DelpTIAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTINegT", "DelpTIPosT", "DelpTRAll", "DelpTRPos", "DelpTRNeg", "DelpTRAllT", "DelpTRPosT", "DelpTRNegT", 
   };
@@ -139,22 +139,27 @@ void Draw(Int_t var = 3, const Char_t *varName="pT") {
   TString VarName(varName);
   TH1F * frame = 0;
   if (VarName == "pT") {
-    frame =  c1->DrawFrame(-1,1.0,100,5.0);
+    frame =  c1->DrawFrame(-0.5, 1.0, Npasses + 0.5, 5.0);
     frame->SetTitle(valC[var] + " (@1GeV/c)");
     frame->SetYTitle("Resolutin(%)");
-  } else if (VarName == "N") {
-    frame =  c1->DrawFrame(-1,0.0,100,10.0);
-    frame->SetTitle("No. of matched pairs");
-    frame->SetYTitle("N (M)");
+  } else {
+    frame =  c1->DrawFrame(-0.5, ,0.0, Npasses + 0.5,10.0);
+    if (VarName == "N") {
+      frame->SetTitle("No. of matched pairs");
+      frame->SetYTitle("N (M)");
+    } else {
+      frame->SetTitle(varName);
+      frame->SetYTitle(Form("%s(%%)",varName));
+    }
   }
   if (frame) frame->SetXTitle("Pass");
   TLegend *l = new TLegend(0.7,0.5,0.8,0.9);
   //    FitP->SetMarkerSize(2);
   TMultiGraph *mg = new TMultiGraph(cname+"Gr",tname);
-  for (Int_t set = 0; set < Nsets; set++) {
+  for (Int_t set = 0; set < Nsets - 3; set++) {
     TString hname(Form("%s_s%i_v%i",varName,var,set));
-    cout << "FitP->Draw(\"" << Form("%s:pass>>%s(101,-0.5,100.5)",varName,hname.Data()) << "\",\"" << Form("var==%i&&set==%i",var,set) << "\",\"goff\");" << endl;
-    Int_t nfound = FitP->Draw(Form("%s:pass>>%s(101,-0.5,100.5,500,0,5)",varName,hname.Data()),Form("var==%i&&set==%i",var,set),"goff");
+    cout << "FitP->Draw(\"" << Form("%s:pass>>%s(141,-0.5,%f)",varName,hname.Data(),Npasses+0.5) << "\",\"" << Form("var==%i&&set==%i",var,set) << "\",\"goff\");" << endl;
+    Int_t nfound = FitP->Draw(Form("%s:pass>>%s(141,-0.5,%f,500,0,5)",varName,hname.Data(),Npasses+0.5),Form("var==%i&&set==%i",var,set),"goff");
     if (nfound > 0) {
       TGraph *gr = new TGraph(nfound, FitP->GetV2(), FitP->GetV1());
       gr->SetMarkerStyle(20);
@@ -162,7 +167,7 @@ void Draw(Int_t var = 3, const Char_t *varName="pT") {
       if (set > 8) {
 	gr->SetMarkerStyle(23);
 	gr->SetMarkerColor(set-8);
-	gr->SetMarkerSize(2);
+	//	gr->SetMarkerSize(2);
       }
       mg->Add(gr);
       l->AddEntry(gr,sets[set],"p");
