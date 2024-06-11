@@ -10,12 +10,14 @@ class StTpcHit;
 //________________________________________________________________________________
 class SectorTrack : public TNamed {
  public: 
- SectorTrack(Int_t s = -1, Int_t t = 0) : fSector(s), fRow(-1), fStatus(-1), fStep(1e12)  {if (s > 0) SetName(Form("Sector_%02i_%i",fSector,t));}
+ SectorTrack(Int_t s = -1, Int_t t = 0) : fSector(s), fRow(-1), fRowMin(-1), fRowMax(-1), fStatus(-1), fStep(1e12)  {if (s > 0) SetName(Form("Sector_%02i_%i",fSector,t));}
   SectorTrack(const SectorTrack &v);
   virtual ~SectorTrack() {}
   virtual Bool_t   IsSortable() const { return kTRUE; }
   Int_t   Sector() const {return fSector;}
   Int_t   Row() const {return fRow;}
+  Int_t   RowMin() const {return fRowMin;}
+  Int_t   RowMax() const {return fRowMax;}
   TList *List() {return &fList;}
   void    AddHit(StTpcHit *tpcHit);
   const THelixFitter &Helix() const {return *&fHelix;}
@@ -52,10 +54,15 @@ class SectorTrack : public TNamed {
   TRSymMatrix   fCov;
   Double_t      fRefSurface[4];
   Double_t      fyRef;
+  TVector3      fXYZmin; // @ fRowMin
+  TVector3      fXYZmax; // @ fRowMax
+  
   static Int_t _debug;
  private:
   Int_t fSector; // of the first hit
   Int_t fRow;    // -"-
+  Int_t fRowMin;
+  Int_t fRowMax;
   Int_t fStatus;
   TList fList;
   THelixFitter fHelix;

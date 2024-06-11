@@ -424,10 +424,13 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ct
   while ( (f = (TFile *) next()) ) { 
     f->cd();
     TString F(f->GetName()); cout << "File " << F << endl;
-    TList *listOfKeys = f->GetListOfKeys();
-    TList *listOfObjects = f->GetList();
     Int_t nh = 0;
-    if (! listOfObjects && ! listOfKeys) continue;
+    TList *listOfKeys = f->GetListOfKeys();
+    if (! listOfKeys) continue;
+#if 0
+    TList *listOfObjects = f->GetList();
+    if (! listOfObjects) continue;
+
     TIter nextobj(listOfObjects); 
     while ((obj = nextobj())) {
       TString Name(obj->GetName());
@@ -436,22 +439,26 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ct
 	  TH1 *hist = (TH1 *) obj;
 	  if (hist->GetEntries() <= 0) continue;
 	  nh++;
-	  if (! array.FindObject(obj->GetName())) array.Add(obj);
+	  array.Add(obj);
 	}
       }
     }
+#endif
     TIter nextkey(listOfKeys); 
+    TString oldName;
     while ((key = (TKey*) nextkey())) {
       TString Name(key->GetName());
       if (Name.Contains(reg)) {
+	if (Name == oldName) continue;
+	oldName = Name;
 	obj = key->ReadObj();
 	if (! obj) continue;
 	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
 	  TH1 *hist = (TH1 *) obj;
 	  if (hist->GetEntries() > 0) {
 	    nh++;
-	    if (array.FindObject(obj->GetName())) continue;
-	    array.Add(obj);
+	    //	    if (array.FindObject(obj->GetName())) continue;
+	    array.Add(obj); cout << "Add " << array.GetEntriesFast() << "\t" << hist->GetName() << "\t" << hist->GetDirectory()->GetName() << endl;
 	  }
 	}
       }
@@ -471,19 +478,22 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ct
     if (nx*ny != NF) nx++;
   }
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
-  TCanvas *c = new TCanvas(cTitle,cTitle);
+  TCanvas *c = new TCanvas(cTitle,cTitle,1200,1200);
   c->Divide(nx,ny);
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);
     c->cd(i+1);
     hist->Draw("colz");
+    TLegend *l = new TLegend(0.1,0.85,0.4,0.9);
+    l->AddEntry(hist, gSystem->DirName(hist->GetDirectory()->GetName()));
+    l->Draw();
   }
   c->Update();
-#if 0
+#if 1
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;
   //  zoomer->SetZoomFactor(zoom);
-  TQtCanvas2Html  TQtCanvas2Html(c,  900, 600, "./", zoomer);
+  TQtCanvas2Html  TQtCanvas2Html(c,  900, 900, "./", zoomer);
   //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
 #endif
 }

@@ -11,7 +11,7 @@ my $pwd = cwd();
 #my $day = File::Basename::basename(File::Basename::dirname($pwd));
 #my $run =  File::Basename::basename($pwd);
 #my @globs = ("/hlt/cephfs/daq/2020/" . $day . "/" . $run . "*/hlt*.daq");#  print "globs = @globs\n";
-my $debug = 0;
+my $debug = 0;;
 my $fNo = 0;
 # foreach my $glob (@globs) {
 #   my @files = glob $glob;

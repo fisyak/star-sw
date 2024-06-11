@@ -55,7 +55,7 @@ sub GoodRun($$) {
 my $def = {@Runs};# print "Runs = @Runs\n";
 #PrintHash($def,"Runs") if ($debug);
 #die;
-my  @runs  = glob "/hlt/cephfs/daq/2021/???/*";  print "runs = @runs\n" if ($debug);
+my  @runs  = glob "/hlt/cephfs/daq/2021/???/* /hlt/cephfs/daq/2022/???/*";  print "runs = @runs\n" if ($debug);
 #my  @runs  = glob "/hlt/cephfs/daq/2020/2??/*";  print "runs = @runs\n" if ($debug);
 #my  @runs  = glob "/hlt/cephfs/daq/2019/350/*";  print "runs = @runs\n" if ($debug);
 #my  @runs  = glob "/hlt/cephfs/daq/2020/012/2101202?";  print "runs = @runs\n" if ($debug);

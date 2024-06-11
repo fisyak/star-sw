@@ -335,6 +335,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
   SectorTrack *segm = 0;
   while ((segm = (SectorTrack *) nextSegment())) {
     if (segm->MakeTHelix()) continue;
+#if 0
     StTpcHit *tpcHit = (StTpcHit *) segm->List()->First();
     Int_t sector = tpcHit->sector();
     assert(sector == segm->Sector());
@@ -356,6 +357,7 @@ Int_t StTpcAlignerMaker::MakeW2S() {
     }
     if (segm->Move(RefSurficeG)) continue;
     if (Debug()%10 > 0) segm->Print();
+#endif
   }
   Int_t NoSegm = SegmentList.GetSize();
   fTpcW2SMatch->TriggerId = TriggerId;
@@ -378,13 +380,40 @@ Int_t StTpcAlignerMaker::MakeW2S() {
       if (segS->Status()) continue;
       Int_t sectorS = segS->Sector();
       if (sectorW == sectorS) continue;
+      // Find closest rows
+      TVector3 dXYZ[4] = {segS->fXYZmin - segW->fXYZmin, segS->fXYZmin - segW->fXYZmax, segS->fXYZmax - segW->fXYZmin, segS->fXYZmax - segW->fXYZmax};
+      Double_t distOld = 99999;
+      Int_t mOld = -1;
+      for (Int_t m = 0; m < 4; m++) {
+	Double_t dist = dXYZ[m].Mag();
+	if (dist < distOld) {
+	  mOld = m;
+	  distOld = dist;
+	}
+      } 
+      if (mOld < 0) continue;
+      Int_t rowS = segS->RowMin();
+      if (mOld > 1) rowS = segS->RowMax();
+      Double_t Y = transform.yFromRow(sectorS, rowS);
+      Double_t RefSurfice[5] = {- Y, 0, 1, 0, Y};
+      Double_t xyz123L[3] = {0, - RefSurfice[0], 0};
+      Double_t RefSurficeG[5] = {0};
+      Double_t xyz123G[3];
+      StTpcDb::instance()->Sup12S2Glob(sectorS).LocalToMaster(xyz123L, xyz123G);
+      StTpcDb::instance()->Sup12S2Glob(sectorS).LocalToMasterVect(&RefSurfice[1], &RefSurficeG[1]);
+      RefSurficeG[0] = - (xyz123G[0]*RefSurficeG[1] + xyz123G[1]*RefSurficeG[2] + xyz123G[2]*RefSurficeG[3]);
+      RefSurficeG[4] = RefSurfice[4];
       RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
-      SectorTrack segW2S = *segW;
+      SectorTrack segSS = *segS;
+      if (segSS.Move(RefSurficeG)) continue;
+      SectorTrack segWW = *segW;
+      if (segWW.Move(RefSurficeG)) continue;
+      SectorTrack segW2S = segWW;
       segW2S.SetSector(100*sectorW + sectorS);
-      segW2S.SetRow(segS->Row());
-      if (segW2S.Move(segS->RefSurface())) continue;
-      HlxParS = *segS;
-      HlxParW = *segW;
+      segW2S.SetRow(rowS);
+      if (segW2S.Move(RefSurficeG)) continue;
+      HlxParS   = segSS;
+      HlxParW   = segWW;
       HlxParW2S = segW2S;
       PrPP(Make,HlxParW2S);
       const Char_t * names[6] = {"x","y","z","nx","ny","nz"};

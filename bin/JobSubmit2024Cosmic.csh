@@ -13,14 +13,14 @@
 #foreach D (`ls -d /hlt/cephfs/reco/2021/RF/TFG21h/Cosmic*`)
 #  cd ${D}
 #  cd /hlt/cephfs/reco/2022/ZF/Cosmic
-  CreateRunDirs.pl
+  CreateRunDirs2024.pl
   foreach d (`ls -1d ???/2*`)
     cd $d;
     if (-r Done || -r Submitted) then
       cd -
      continue
     endif
-    daq_2023dR.pl
+    daq_2024dR.pl
     if ($?) then
       ls -1d *bla.root
       if ($?) then
@@ -34,7 +34,7 @@
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2022_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2021_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2023_Cosmics.xml
-    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2024_Cosmics.xml
+     /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2024_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2023_Cosmics.xml
     touch Submitted
     cd -

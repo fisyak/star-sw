@@ -335,3 +335,12 @@ rm */*/*event.root
 320G    RF/TFG21e/3p85GeV_fixedTarget_2021      
 2.4T    RF/TFG21g/3p85GeV_fixedTarget_2021
 1.2T    RF/TFG21g.B/3p85GeV_fixedTarget_2021
+================================================================================
+04/16/2024 
+Filesystem          Size  Used Avail Use% Mounted on
+l402:/data           11T  6.6T  3.1T  69% /net/l402/data
+l403:/data           11T  9.5T  229G  98% /net/l403/data
+l404:/data           11T  6.1T  3.7T  63% /net/l404/data
+172.17.27.2:6789:/  262T  202T   61T  77% /hlt/cephfs
+/dev/mapper/scientific-root   50G   19G   32G  37% /
+/dev/mapper/scientific-root   50G   19G   32G  37% /

@@ -428,7 +428,7 @@ Bfc_st BFC[] = { // standard chains
   {"B2019"  ,"","","r2019,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout,CorrY","",""
    ,                                                     "Production chain for run 2019 data (tpc)",kFALSE},
   {"P2019","" ,"",
-   "B2019,StiCA,UseXgeom,BAna,VFMinuit,btof,gmt,mtd,emcDY2,btof,mtd,epdHit,,trgd,ZDCvtx,analysis"
+   "B2019,StiCA,UseXgeom,BAna,VFMinuit,btof,gmt,mtd,emcDY2,btof,mtd,epdHit,trgd,ZDCvtx,analysis"
    ,                 "","","Production chain for year 2019 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   // 
   {"B2019a" ,"","","ry2019a,in,tpcX,UseXgeom,iTpcIT,CorrY,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite",
@@ -529,6 +529,9 @@ Bfc_st BFC[] = { // standard chains
    "ry2024a,in,tpcX,UseXgeom,iTpcIT,CorrY,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
     "","",                                                     "Base chain for run 2024 data (tpc)",kFALSE},
 
+  {"P2024a","" ,"",
+   "B2024a,ITTF,BAna,hitfilt,ppOpt,ImpBToFt0Mode,-beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
+      "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},
   {"pp2024a","" ,"",
    "B2024a,ITTF,BAna,hitfilt,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
       "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},

@@ -1,0 +1,345 @@
+/*
+   rmaxima -g -b AlignerF.dem
+*/
+
+load ("eigen")$
+load (f90)$
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+algebraic : true $
+simplified_output: true$
+inflag : true$
+debugmode(true) $ 
+/*
+     Position of TPC as Whole in STAR Magnet coordinate system, Whole TPC = 0.5 * (West + East Wheel), direction === Center of East Hweel to Center of Whest Wheel) 
+     Global <=> TPCE =   StGlobalCoordinate <=> StTpcLocalCoordinate   
+                         StTpcDb::Tpc2GlobalMatrix() = StTpcPosition::instance()->GetMatrix();
+
+     TPCE <=> TPGV[2] => StTpcDb::TpcHalf(StBeamDirection part)
+                                                    mHalf[east} = StTpcHalfPosition::instance()->GetEastMatrix()
+                                                    mHalf[west] = StTpcHalfPosition::instance()->GetWestMatrix();   
+     TPCE <=> SubS||Pad  =     StTpcLocalCoordinate <=> StTpcLocalSectorCoordinate
+
+     
+  mShift[0] = new TGeoTranslation("Signed Drift distance to z for East", 0, 0, -mzGG);
+  mShift[1] = new TGeoTranslation("Signed Drift distance to z for West", 0, 0,  mzGG);
+
+*/
+iphi(sector) := block([i],
+    (if (sector <= 12) then i : (360 + 90 - 30* sector      )
+    else                    i : (      90 + 30*(sector - 12))),
+    if (i > 360) then i : i - 360,
+    if (i <   0) then i : i + 360,
+    return (i)
+)$
+RotateZ(sector) := block([rotA],
+  i   : iphi(sector),	
+  phi : %pi/180*i,
+  c   : cos(phi),
+  s   : sin(phi),
+  rotA: matrix([c, -s, 0, 0],
+	       [s,  c, 0, 0],
+               [0,  0, 1, 0],
+               [0,  0, 0, 1]),
+ return (rotA)
+);
+RotM(sector) := block([rotmZ],
+  if (sector <=12) then rotm : matrix([1, 0, 0, 0],[0, 1, 0, 0],[0, 0, 1, 0],[0, 0, 0, 1])
+  else                  rotm : matrix([1, 0, 0, 0],[0,-1, 0, 0],[0, 0,-1, 0],[0, 0, 0, 1]),
+	rotmZ : rotm . RotateZ(sector),
+  return (rotmZ)
+);
+RotM(1);
+RotM(13);
+/* iphi(12); */
+Flip():= matrix([ 0, 1,  0,  0],
+              [ 1, 0,  0,  0],
+              [ 0, 0, -1,  0],
+              [ 0, 0,  0,  1])$
+part(s) := if (s > 12) then 0 else 1$
+zGG(s)  := block( if equal(part(s), 0) then -zG else zG);  /* zG = 208.707 cm distance to Gating Grid */
+zWW(s)  := block( if equal(part(s), 0) then -zW else zW); /* zW = 229.71 cm -"-      to Wheel */
+Shift(s) := matrix([1, 0, 0, 0],
+                   [0, 1, 0, 0],
+                   [0, 0, 1, zWW(s)],
+                   [0, 0, 0, 1])$            
+dR( alpha,beta,gamma, x_0, y_0, z_0) := 
+matrix([     1,-gamma,   beta, x_0],
+       [ gamma,      1,-alpha, y_0],
+       [ -beta, alpha,      1, z_0],
+       [     0,     0,      0,   1]);
+dRT( alpha,beta,gamma, x_0, y_0, z_0) := /* dR^-1 */
+matrix([     1, gamma,  -beta,-x_0],
+       [-gamma,      1, alpha,-y_0],
+       [  beta,-alpha,      1,-z_0],
+       [     0,     0,      0,   1]);
+Half(s,a_E, b_E, g_E, x_E, y_E, z_E,  z_W) := 
+block(
+	if equal(part(s), 0) then dR(a_E, b_E, g_E, x_E, y_E, z_E)
+                             else dR(a_W, b_W, g_W, x_W, y_W, z_W)
+);
+Tpc2Glob(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc) := dR(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc);
+Tpc2GlobT(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc) := dRT(a_Tpc, b_Tpc, g_Tpc, x_Tpc, y_Tpc, z_Tpc);
+
+Sup12ST(a_s, b_s, g_s, x_s, y_s, z_s)  :=  dRT(a_s, b_s, g_s, x_s, y_s, z_s);
+dSup12ST(da_s, db_s, dg_s, dx_s, dy_s, dz_s) := dRT(da_s, db_s, dg_s, dx_s, dy_s, dz_s);
+ 
+/*  
+                             Outer to Inner 
+dRI( a_I, b_I, g_I, x_I, y_I, z_I) := dR(a_I, b_I, g_I, x_I, y_I, z_I);
+ddRI(da_I, db_I, dg_I, dx_I, dy_I, dz_I) := dR(da_I, db_I, dg_I, dx_I, dy_I, dz_I);
+dRIT( a_I, b_I, g_I, x_I, y_I, z_I) := dRT(a_I, b_I, g_I, x_I, y_I, z_I);
+ddRIT(da_I, db_I, dg_I, dx_I, dy_I, dz_I) := dRT(da_I, db_I, dg_I, dx_I, dy_I, dz_I);
+
+dRO( a_O, b_O, g_O, x_O, y_O, z_O) := dR(a_O, b_O, g_O, x_O, y_O, z_O);
+ddRO(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := dR(da_O, db_O, dg_O, dx_O, dy_O, dz_O);
+dROT( a_O, b_O, g_O, x_O, y_O, z_O) := dRT(a_O, b_O, g_O, x_O, y_O, z_O);
+ddROT(da_O, db_O, dg_O, dx_O, dy_O, dz_O) := dRT(da_O, db_O, dg_O, dx_O, dy_O, dz_O);
+
+a_I = b_I = da_I = db_I = 0;
+a_O = b_O = da_O = db_O = 0;
+*/
+
+dRI(  g_I,  x_I,  y_I,  z_I) := dR(0, 0,  g_I,  x_I,  y_I,  z_I);
+ddRI(dg_I, dx_I, dy_I, dz_I) := dR(0, 0, dg_I, dx_I, dy_I, dz_I);
+/*
+ddRIdRI1(  g_I,  x_I,  y_I,  z_I, dg_I, dx_I, dy_I, dz_I) := ddRI(dg_I, dx_I, dy_I, dz_I) . dRI(  g_I,  x_I,  y_I,  z_I);
+ddRIdRI1V: ddRIdRI1(  g_I,  x_I,  y_I,  z_I, dg_I, dx_I, dy_I, dz_I);
+
+ddRdR (  g,  x,  y,  z, dg, dx, dy, dz) := dR(0, 0,  g + dg,  x + dx,  y + dy,  z + dx);
+
+ddRIdRIV: ddRIdRI (  g_I,  x_I,  y_I,  z_I, dg_I, dx_I, dy_I, dz_I);
+dRIT(  g_I,  x_I,  y_I,  z_I) := dRT(0, 0,  g_I,  x_I,  y_I,  z_I);
+ddRIT(dg_I, dx_I, dy_I, dz_I) := dRT(0, 0, dg_I, dx_I, dy_I, dz_I);
+
+dRTddRT (  g,  x,  y,  z, dg, dx, dy, dz) := dRT(0, 0,  g + dg,  x + dx,  y + dy,  z + dx);
+
+dRO(  g_O,  x_O,  y_O,  z_O) := dR(0, 0,  g_O,  x_O,  y_O,  z_O);
+ddRO(dg_O, dx_O, dy_O, dz_O) := dR(0, 0, dg_O, dx_O, dy_O, dz_O);
+dROT(  g_O,  x_O,  y_O,  z_O) := dRT(0, 0,  g_O,  x_O,  y_O,  z_O);
+ddROT(dg_O, dx_O, dy_O, dz_O) := dRT(0, 0, dg_O, dx_O, dy_O, dz_O);
+*/
+/* g_Wheel : 0; x_Wheel : 0; y_Wheel : 0; z_Wheel : 0; */
+GG(z) := matrix([1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1,-z],
+                [0, 0, 0, 1])$            
+GGT(z):= matrix([1, 0, 0, 0],
+                [0, 1, 0, 0],
+                [0, 0, 1, z],
+                [0, 0, 0, 1])$            
+Wheel( a_Wheel, b_Wheel) := dR(a_Wheel, b_Wheel, 0, 0, 0, 0);
+WheelT( a_Wheel, b_Wheel) := dRT(a_Wheel, b_Wheel,0, 0, 0, 0); 
+GWheelGT :  GG(z) . Wheel( a_Wheel, b_Wheel) . GGT(z);
+GWheelTGT :  GG(z) . WheelT( a_Wheel, b_Wheel) . GGT(z);
+
+/* WW: GWheelGT . GWheelTGT; */
+/* 
+     kSubs2Tpc    = *mShift[part]) * (*mHalf[part]) * (*mShift[part])^^-1 * (*rotm) * Flip * TpcSuperSectorPosition * dR *        GG(z) * Wheel * dR" * kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS * GG^-1(z)
+                                                          
+   r = Sup12 = GG(z) * Wheel * dRR * (kSubS(Inner|Outer)2SupS ||  kPad(Inner|Outer)2SupS) * GG^-1(z) * r(I|O)
+	                dR" == ddR   <--                      dR                      -->
+   r = GG(z) * Wheel * ddRI * dRI * GG^-1(z) * rI
+   r = GG(z) * Wheel * ddRO * dRO * GG^-1(z) * rO
+   rI = (GG(z) * Wheel * ddRI * dRI * GG^-1(z))^-1 * r =  (GG(z) * dRIT * ddRIT * WheelT * GGT(z)) * r = (GG(z) * WheelT * GGT(z)) * r; at ddRI * dRI == I
+   rO = (GG(z) * Wheel * ddRO * dRO * GG^-1(z))^-1 * r =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r
+dR"_Outer = ddRO * dRO
+   z = r[3];
+   rI =  (GG(z) * WheelT * GGT(z)) * r                    === fRPad
+   rO =  (GG(z) * dROT * ddROT * WheelT * GGT(z)) * r     ===  -"-
+
+                  GW = GGT(z) * Wheel
+	fRPadGG = GW^-1 * r; On Wheel 
+
+
+dRITddRIT :  dRIT( g_I,  x_I,  y_I,  z_I) . ddRIT( dg_I, dx_I, dy_I, dz_I);
+ddROdRO   : ddRO (dg_O, dx_O, dy_O, dz_O) .  dRO (  g_O,  x_O,  y_O,  z_O); 
+*/
+/*  Sup12S => Inner */
+/* (z, g_I, x_I, y_I, z_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel)  :=  */
+/* GG(z) . dRIT( g_I, x_I, y_I, z_I) . ddRIT( dg_I, dx_I, dy_I, dz_I) . WheelT( a_Wheel, b_Wheel) . GGT(z); */
+/* RS2IV: dRT( 0, 0, g_I + dg_I, x_I + dx_I, y_I + dy_I, z_I + dz_I) . GWheelTGT;*/ /* GG(z) . WheelT( a_Wheel, b_Wheel) . GGT(z); */
+RS2IV: GWheelTGT; /* GG(z) . WheelT( a_Wheel, b_Wheel) . GGT(z); */
+
+trigsimp(RS2IV);
+
+/* Outer <=> Sup12S */
+/*(z, g_O, x_O, y_O, z_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel)  := */
+/* GG(z) . Wheel( a_Wheel, b_Wheel) . ddRO(dg_O, dx_O, dy_O, dz_O) . dRO(g_O, x_O, y_O, z_O) . GGT(z); */
+/* GG(z) . Wheel( a_Wheel, b_Wheel) . GGT(z) */
+/* GWheelTGT . ddRO(dg_O, dx_O, dy_O, dz_O) . dRO(g_O, x_O, y_O, z_O); */
+/* RO2SV : GWheelGT . dR(0, 0, g_O + dg_O, x_O + dx_O, y_O + dy_O, z_O + dz_O); */
+RO2SV : dR(0, 0, g_O + dg_O, x_O + dx_O, y_O + dy_O, z_O + dz_O); 
+ratsimp(RO2SV);
+
+/* RI2O(z, g_I, x_I, y_I, z_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel,g_O, x_O, y_O, z_O, dg_O, dx_O, dy_O, dz_O) := */
+/* RO2S(z, g_O, x_O, y_O, z_O, dg_O, dx_O, dy_O, dz_O, a_Wheel, b_Wheel) . RS2I(z, g_I, x_I, y_I, z_I, dg_I, dx_I, dy_I, dz_I, a_Wheel, b_Wheel) =
+   GG(z) . Wheel( a_Wheel, b_Wheel) . GGT(z) . ddRO(dg_O, dx_O, dy_O, dz_O) . dRO(g_O, x_O, y_O, z_O) .
+   dRIT( g_I, x_I, y_I, z_I) . ddRIT( dg_I, dx_I, dy_I, dz_I) . GG(z) . WheelT( a_Wheel, b_Wheel) . GGT(z);
+*/
+
+ RI2OV : RO2SV . RS2IV; /* add Wheel */
+/* RI2OV : RO2SV; */
+/*
+%i38) RI2OV:RO2SV . RS2IV
+(%o38) matrix(
+  [b_Wheel**2  + 1, (- g_O) - dg_O - a_Wheel*b_Wheel, a_Wheel*((- g_O) - dg_O), b_Wheel*(z_O + dzO) + a_Wheel*((- g_O) - dg_O)*z + x_O + dx_O],
+  [g_O + dg_O - a_Wheel*b_Wheel, a_Wheel  + 1, - b_Wheel*(g_O + dg_O), (- a_Wheel*(z_O + dzO)) - b_Wheel*(g_O + dg_O)*z + y_O + dy_O],
+  [a_Wheel*(g_O + dg_O), - b_Wheel*((- g_O) - dg_O), (- b_Wheel*(a_Wheel*(g_O + dg_O) - b_Wheel)) + a_Wheel*(a_Wheel - b_Wheel*((- g_O) - dg_O)) + 1, z_O - b_Wheel*(a_Wheel*(g_O + dg_O) - b_Wheel)*z + a_Wheel*(a_Wheel - b_Wheel*((- g_O) - dg_O))*z + a_Wheel*(y_O + dy_O) - b_Wheel*(x_O + dx_O) + dzO],
+  [0, 0, 0, 1]) =
+  [1         , - g_O - dg_O,        0, x_O + dx_O],
+  [g_O + dg_O,            1,        0, y_O + dy_O],
+  [0         ,            0,        1, z_O + dz_O],
+  [0, 0, 0, 1]) =
+
+*/
+
+rI : matrix( [xI],  [yI],  [zI], [1]);    /* Inner sector coordinates and direction in Sup12S */
+nI : matrix([nxI], [nyI], [nzI], [0]); 
+
+rO : matrix( [xO],  [yO], [zO],  [1]);    /* Outer sector coordinates and direction in Sup12S */
+nO : matrix([nxO], [nyO], [nzO], [0]); 
+
+nI2O :  RI2OV . nI;
+/*
+(%i43) nI2O:RI2OV . nI
+(%o43) matrix(
+  [(a_Wheel*((- g_O) - dg_O) - b_Wheel)*nzI + ((- g_O) - dg_O)*nyI + nxI],
+  [(a_Wheel - b_Wheel*(g_O + dg_O))*nzI + nyI + (g_O + dg_O)*nxI], 
+  [nzI - a_Wheel*nyI + b_Wheel*nxI],
+  [0])
+*/
+rI2O :  RI2OV . rI;
+S :  (rO[2] - rI2O[2])/nI2O[2];
+rI2OC : rI2O + S[1] * nI2O; /* yO = rI2O[2] + nI2O[2]*S */
+drOI : rO - rI2OC;
+dnOI : nO - nI2O;
+/*
+(%i48) dnOI:nO-nI2O
+(%o48) matrix(
+  [(- (a_Wheel*((- g_O) - dg_O) - b_Wheel)*nzI) - ((- g_O) - dg_O)*nyI + nxO - nxI],
+  [(- (a_Wheel - b_Wheel*(g_O + dg_O))*nzI) + nyO - nyI - (g_O + dg_O)*nxI],
+  [nzO - nzI + a_Wheel*nyI - b_Wheel*nxI],
+  [0])
+*/
+define(drOIF(dg_O, dx_O, dy_O, dz_O), drOI);
+define(dnOIF(dg_O, dx_O, dy_O, dz_O), dnOI);
+
+dRdpIO : jacobian([drOIF(dg_O, dx_O, dy_O, dz_O)[1],
+                   drOIF(dg_O, dx_O, dy_O, dz_O)[3],
+                   dnOIF(dg_O, dx_O, dy_O, dz_O)[1],
+                   dnOIF(dg_O, dx_O, dy_O, dz_O)[2]],
+		       [ dx_O, dy_O, dz_O, dg_O] );
+dRdpIOs: dRdpIO;
+define(FuncdRdpIO(dg_O, dx_O, dy_O, dz_O), dRdpIOs);
+FuncdRdpIOat0: FuncdRdpIO(0, 0, 0, 0);
+ratsimp(FuncdRdpIOat0);
+trigsimp(FuncdRdpIOat0);
+dRdpIOsT: transpose(dRdpIOs); /* Fortran to C array transpose */
+define(FuncdRdpIOT(dg_O, dx_O, dy_O, dz_O), dRdpIOsT);
+
+AT: FuncdRdpIOT(0, 0, 0, 0);
+
+ratsimp(AT);
+trigsimp(AT);
+
+f90(AT);
+with_stdout ("AT.txt",  f90(AT));
+/**********   W2S (== U) == prediction from sector W in sector S
+      RW2S = StTpcDb::instance()->Sup12S2Tpc(sectorS).Inverse() * StTpcDb::instance()->Sup12S2Tpc(sectorW); 
+
+      Sup12S2Tpc(sectorS) = *mShift[partS]) * (*mHalf[partS]) * (*mShift[partS])^^-1 **rotm) * Flip * TpcSuperSectorPosition * dR
+
+      S2T(sectorS)  = S(partS) * Half(partS) ( S(partS)^^-1 * Rot(sectorS) * Flip * dR(sectorS);
+      xGW = Sup12S2Tpc(sectorW) * xSW
+      xU = xW2S =   Sup12S2Tpc(sectorS)^^-1 * xGW = Sup12S2Tpc(sectorS)^^-1 * Sup12S2Tpc(sectorW) * xSW
+
+      R(sectorS) = S(partS) * H(partS) * S(partS)^^-1 * Rot((sectoS) * Flip * dR(sectorS);
+      R(sectorW) = S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW);
+      R(sectorW) = S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW);
+      xGW = R(sectorW) * xW
+      xGS = R(sectorS) * xS
+
+      xW2S = xU = R(sectorS)^^-1 * xGS => R(sectorS)^^-1 * R(sectorW) * xW 
+
+      dR = xS - xU
+
+      R(sectorW) = S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW);
+      R(sectorS)^^-1 = dR(sectorS)^^-1 * Flip^^-1 * Rot(sectorS)^^-1 * S(partS) * H(partW)^^-1 * S(partW)^^-1
+
+      R(sectorS)^^-1 * R(sectorW) = dR(sectorS)^^-1 * Flip^^-1 * Rot(sectorS)^^-1 * S(partS) * H(partW)^^-1 * S(partW)^^-1 * S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW) =
+      RW2S(sectorW,sectorS) =  dR(sectorS)^^-1 * Flip^^-1 * Rot(sectorS)^^-1 * S(partS) * H(partW)^^-1 * S(partW)^^-1 * S(partW) * H(partW) * S(partW)^^-1 * Rot((sectoW) * Flip * dR(sectorW)
+                            =  R(sectorS)^^-1                         * R(sectorW)
+      u = RW2S(sectorW,sectorS) * w;
+
+      u =  ddR(sectorS)^^-1 * RW2S(sectorW,sectorS) * ddR(sectorW) * w;
+      ddR  = I + deR;
+      ddRT = I - deR;
+      deRS = deR(sectorS);
+      deRW = deR(sectorW);
+
+      u' = (I - deRS) * RW2S * (I + deRW) * w = u - deRS * RW2S * w + RW2S * deRW * w + deRS * RW2S * deRW =
+                                               (I - deRS) * u  
+
+                  v = RW2S * deRW * w; RW2S^^-1 * v = deRW *w
+
+      d = s - u
+      *********************
+      u  = RW2S * w
+      u' = ddR(sectorS) * u
+      w' = ddR(sectorW) * w
+
+      u' = ddR(sectorS) * u = ddR(sectorS) * RW2S * w'  = ddR(sectorS) * RW2S * ddR(sectorW) * w.
+    
+
+**************/
+
+RW2S : matrix([r0, r1, r2, t0],
+              [r3, r4, r5, t1],
+              [r6, r7, r8, t2],
+              [ 0,  0,  0, 1]); 
+RW2ST: matrix([r0, r3, r6, -t0*r0 - t1*r3 - t2*r6],
+              [r1, r4, r7, -t0*r1 - t1*r4 - t3*r7],
+              [r2, r5, r8, -t0*r2 - t1*r5 - t3*r8],
+              [ 0,  0,  0, 1]); 
+dRST : dRT(a_S, b_S, g_S, x_S, y_S, z_S);
+dRW  :  dR(a_W, b_W, g_W, x_W, y_W, z_W);
+
+dRW2S : dRST . RW2S . dRW;
+
+rW   : matrix(  [xW],   [yW],   [zW], [1]);
+nW   : matrix( [nxW],  [nyW],  [nzW], [0]);
+/*
+rU   : matrix(  [xU],   [yU],   [zU], [1]);
+nU   : matrix( [nxU],  [nyU],  [nzU], [0]);
+*/
+rU   : dRW2S . rW;
+nU   : dRW2S . nW;
+rS   : matrix(  [xS],   [yS],   [zS], [1]);
+nS   : matrix( [nxS],  [nyS],  [nzS], [0]);
+/*
+  rS[2] = rU[2] + Step * nU[2];
+*/
+SS : (rS[2] - rU[2])/nU[2];
+
+
+dr   : rS - rU + SS[1]*nU;
+dn   : nS - nU;
+
+define(drW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W), dr);
+define(dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W), dn);
+dRdpW2S : jacobian([drW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[1],
+                    drW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[3],
+                    dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[1],
+                    dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[2],
+                    dnW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W)[3]],
+                    [x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W]);
+dRdpW2Ss: dRdpW2S;
+define(FuncdRdpW2S(x_S, y_S, z_S, a_S, b_S, g_S, x_W, y_W, z_W, a_W, b_W, g_W), dRdpW2Ss);
+FuncdRdpW2Sat0: FuncdRdpW2S(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+W2ST: transpose(FuncdRdpW2Sat0); /* Fortran to C array transpose */
+ratsimp(W2ST);
+trigsimp(W2ST);
+
+f90(W2ST);
+with_stdout ("W2ST.txt",  f90(W2ST));

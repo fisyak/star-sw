@@ -37,13 +37,14 @@
     if (-r ${bla}) continue;
     touch ${bla}
     set input = ${evtsFile};
-    set evout = "evout";
-    if ($JOBINDEX > 2) then
-      @ n =  $JOBINDEX % 20  # 05/29/2023
-#     @ n =  $JOBINDEX % 100
-      set evout = "-evout";
-      if ($n == 4) set evout = "evout";
-    endif
+    set evout = "evout,-hitfilt";
+#    if ($JOBINDEX > 2) then
+#      @ n =  $JOBINDEX % 20  # 05/29/2023
+##     @ n =  $JOBINDEX % 100
+#      set evout = "-evout";
+#      if ($n == 4) set evout = "evout,-hitfilt";
+#      else         continue;
+#    endif
 #   set evout = "evout";
 root.exe -q -b 'bfc.C(1000,"pp2024a,StiCA,Agi,BEmcChkStat,'${evout}',NoHistos,noTags,noRunco","'${input}'")' &gt;&amp; ${logFile}
    gzip ${logFile}

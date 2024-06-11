@@ -1,4 +1,7 @@
-@Runs = ( # onl CURRENT | SortRun.pl 
+#!/usr/bin/perl
+use strict;
+use warnings;
+our @Runs = ( # onl CURRENT | SortRun.pl 
 '  0' => {trig=>'Cosmic',             	field => 'FF',	first=> '24127008',	 last => '24127012',	 list => '',  beginTime => '20230507.055732'}, # 	2023-05-07	05:57:32	2023-05-07	08:04:12
 '  1' => {trig=>'Cosmic',             	field => 'FF',	first=> '24127015',	 last => '24127019',	 list => '',  beginTime => '20230507.080412'}, # 	2023-05-07	08:04:12	2023-05-07	09:51:43
 '  2' => {trig=>'Cosmic',             	field => 'FF',	first=> '24127022',	 last => '24127026',	 list => '',  beginTime => '20230507.095143'}, # 	2023-05-07	09:51:43	2023-05-07	11:33:15

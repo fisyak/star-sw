@@ -31,6 +31,7 @@ Logger.Configuration        $STAR/Bfc.xml
 Logger.Color                yes
 #Root.Debug:                1
 Root.MemStat:               1
+Root.MemCheck:              1
 Root.ObjectStat:            1
 # Root.ErrorIgnoreLevel      Warning
 # Default Fitter (current choices are Minuit and Fumili).

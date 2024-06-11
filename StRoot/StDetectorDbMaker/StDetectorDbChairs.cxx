@@ -7,6 +7,7 @@
 #include "TMath.h"
 #include "TString.h"
 #include "Math/SMatrix.h"
+#include "TArrayD.h"
 using namespace ROOT::Math;
 
 #include "TCernLib.h"
@@ -2986,6 +2987,31 @@ St_SurveyC   *St_SurveyC::instance(const Char_t *name) {
   if (Name == "LadderOnShell")        	return (St_SurveyC   *) StSvtLadderOnShell::instance();
   if (Name == "istSensorOnLadder")      return (St_SurveyC   *) StistSensorOnLadder::instance();
   return 0;
+}
+//________________________________________________________________________________
+TGraphErrors **St_SurveyC::Graphs(St_Survey* table) {
+  static TGraphErrors* g[6] = {0};
+  if (! table) return &g[0];
+  Int_t N = table->GetNRows();
+  const Char_t *Names[6] = {"x","y","z","#alpha","#beta","gamma"};
+  TArrayD S(N);
+  TArrayD X[6], eX[6];
+  for (Int_t j = 0; j < 6; j++) X[j].Set(N);
+  Survey_st *row = table->GetTable();
+  for (Int_t i = 0; i < N; i++, row++) {
+    S[i] = i + 1;
+    X[0][i] = 1e4* row->t0;  eX[0][i] = row->sigmaTrX;
+    X[1][i] = 1e4* row->t1;  eX[1][i] = row->sigmaTrY;
+    X[2][i] = 1e4* row->t2;  eX[2][i] = row->sigmaTrZ;
+    X[3][i] = 1e3* row->r21; eX[3][i] = row->sigmaRotX;
+    X[4][i] = 1e3* row->r02; eX[4][i] = row->sigmaRotY;
+    X[5][i] = 1e3* row->r10; eX[5][i] = row->sigmaRotZ;
+  }
+  for (Int_t i = 0; i < 6; i++) {
+    if (g[i]) delete g[i];
+    g[i] = new TGraphErrors(N, S.GetArray(), 0, X[i].GetArray(), eX[i].GetArray()); g[i]->SetName(Names[i]);
+  }
+  return &g[0];
 }
 //__________________Calibrations/rhic______________________________________________________________
 #include "St_vertexSeedC.h"

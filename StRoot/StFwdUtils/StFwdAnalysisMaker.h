@@ -4,7 +4,7 @@
 #include <map>
 
 #include "StChain/StMaker.h"
-
+#include "StMessMgr.h"
 
 class StFwdAnalysisMaker : public StMaker
 {
@@ -41,7 +41,9 @@ class StFwdAnalysisMaker : public StMaker
     TH1* getHist( TString n ){
       if (mHists.count(n))
         return mHists[n];
+#ifdef LOG_ERROR 
       LOG_ERROR << "Attempting to access non-existing histogram" << endm;
+#endif
       return new TH1F( "NULL", "NULL", 1, 0, 1 ); // returning nullptr can lead to seg fault, this fails softly
     }
 

@@ -50,13 +50,13 @@ void CheckDistortion(const Char_t *opt="CorrY,OSpaceZ2,OGridLeakFull", const Cha
   }
   if (gClassTable->GetID("StMagUtilities") < 0) {
     gROOT->LoadMacro("bfc.C");
-    TString Chain("noinput,StarMagField,mysql,tpcDb,TpcHitMover,ExB,"); // 2D corrections
+    TString Chain("noinput,simu,StarMagField,mysql,tpcDb,TpcHitMover,ExB,"); // 2D corrections
     Chain += Opt;
     Chain += ",NoDefault";
-    bfc(0,Chain.Data());
+    bfc(1,Chain.Data());
     St_db_Maker *dbMk = (St_db_Maker *) chain->Maker("db");
     StTpcDbMaker *tpcDb = (StTpcDbMaker *) chain->Maker("tpcDB");
-    chain->MakeEvent();
+    //    chain->MakeEvent();
   }
   TString File(Out);
   TFile *fOut = new TFile(File,"recreate");
@@ -76,7 +76,8 @@ void CheckDistortion(const Char_t *opt="CorrY,OSpaceZ2,OGridLeakFull", const Cha
   }
   TString Name("dX");
   TString Opt(opt);
-  Int_t index = TMath::Min(Opt.Index(",New"),Opt.Index(",sdt"));
+  //  Int_t index = TMath::Min(Opt.Index(",New"),Opt.Index(",sdt"));
+  Int_t index = Opt.Index(",Cosmic_");
   TString Title("dX (cm) at X = 0 for ");
   Title += Opt(0,index); Title += " and "; Title += magF;
   //  TH2F *dX    = new TH2F(Name,  Title, nz, zmin, zmax, nr, Rmin, Rmax);
@@ -92,7 +93,8 @@ void CheckDistortion(const Char_t *opt="CorrY,OSpaceZ2,OGridLeakFull", const Cha
   dY->SetXTitle("Z (cm)");
   //  dY->SetYTitle("R (cm)");
   dY->SetYTitle("Y (cm)");
-#if 1
+  //#define __DZ__
+#ifdef __DZ__
   Name = "dZ";
   Title = "dZ (cm) at X = 0 for ";
   Title += Opt(0,index); Title += " and "; Title += magF;
@@ -100,7 +102,7 @@ void CheckDistortion(const Char_t *opt="CorrY,OSpaceZ2,OGridLeakFull", const Cha
   TH2F *DZ = new TH2F(Name,Title, nz, zmin, zmax, 2*nr+1, ybins);
   DZ->SetXTitle("Z (cm)");
   DZ->SetYTitle("Y (cm)");
-  StTpcCoordinateTransform transform;
+  StTpcCoordinateTransform transform(StTpcDb::instance());
   StGlobalCoordinate gC;
   StTpcLocalCoordinate locTpc;
   StTpcLocalCoordinate locTpcMoved;
@@ -125,14 +127,12 @@ void CheckDistortion(const Char_t *opt="CorrY,OSpaceZ2,OGridLeakFull", const Cha
       //      cout << "Y = " << xIn[1] << "\tZ = " << xIn[2] << "\t dX/dY/dZ = " << dx << " / " << dy << " / " << dz << endl;
       dX->Fill(xIn[2],xIn[1], dx);
       dY->Fill(xIn[2],xIn[1], dy);
-#if 1
+#ifdef __DZ__
       dZ->Fill(xIn[2],xIn[1], dz);
 #endif
     }
   }
   gStyle->SetOptStat(0);
-  Opt = opt;
-  index = Opt.Index(",sdt");
   TString cNameX("dX"); cNameX += Opt(0,index);
   TCanvas *c1dX = new TCanvas(cNameX,cNameX);
   //  c1dX->SetRightMargin(0.15);
@@ -145,11 +145,13 @@ void CheckDistortion(const Char_t *opt="CorrY,OSpaceZ2,OGridLeakFull", const Cha
   dY->Draw("colz");
   c1dY->Update();
   DrawPng(c1dY);
+#ifdef __DZ__
   TString cNameZ("dZ"); cNameZ += Opt(0,index);
   TCanvas *c1dZ = new TCanvas(cNameZ,cNameZ);
   //  c1dZ->SetRightMargin(0.2);
   dZ->Draw("colz");
   c1dZ->Update();
   DrawPng(c1dZ);
+#endif
   fOut->Write();
 }

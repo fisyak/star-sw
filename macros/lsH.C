@@ -15,14 +15,16 @@ void lsH(const TString reg = "TdEdx*") {
       c1->cd();
       h3->Project3D("zy")->Draw("colz");
       c1->Update();
-      cout << h3->GetName()
+      cout << h3->GetName() << "\t" << h3->GetTitle()
 	<< "\tnx = " << h3->GetXaxis()->GetNbins() <<  "\tmin = " << h3->GetXaxis()->GetXmin() << "\tmax = " << h3->GetXaxis()->GetXmax()
 	<< "\tny = " << h3->GetYaxis()->GetNbins() <<  "\tmin = " << h3->GetYaxis()->GetXmin() << "\tmax = " << h3->GetYaxis()->GetXmax()
 	<< "\tnz = " << h3->GetZaxis()->GetNbins() <<  "\tmin = " << h3->GetZaxis()->GetXmin() << "\tmax = " << h3->GetZaxis()->GetXmax() << endl;
       if (! gROOT->IsBatch() && Ask()) return;
     }
   } else {
+#if 0
     key->Print(); 
+#endif
   }
 #if 0
   TIter nextO(gDirectory->GetList()); 

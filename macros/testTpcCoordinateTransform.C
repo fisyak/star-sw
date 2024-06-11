@@ -81,6 +81,13 @@ void testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 10, Int_t pad = 30
   StTpcDb::instance()->SetDriftVelocity();
 
   StTpcDb::instance()->SetTpcRotations();
+  StTpcDb::instance()->Tpc2GlobalMatrix().Print();
+  Int_t part = 0;
+  if (sector <= 12) part = 1;
+  StTpcDb::instance()->TpcHalf(part).Print();
+  StTpcDb::instance()->SupS2Tpc(sector).Print();
+  StTpcDb::instance()->SubSInner2SupS(sector).Print();
+  StTpcDb::instance()->SubSOuter2SupS(sector).Print();
   transform = new StTpcCoordinateTransform(StTpcDb::instance());
 #if 0
   Print(sector,row);

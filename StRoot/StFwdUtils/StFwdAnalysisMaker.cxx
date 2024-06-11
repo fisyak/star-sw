@@ -28,6 +28,7 @@ StFwdAnalysisMaker::StFwdAnalysisMaker() : StMaker("fwdAna"){
 int StFwdAnalysisMaker::Finish() { 
     
     if ( mLocalOutputFile != "" ){
+#if ROOT_VERSION_CODE < 401153  /* (6,3,1) */
         auto prevDir = gDirectory;
         
         // output file name
@@ -40,8 +41,8 @@ int StFwdAnalysisMaker::Finish() {
 
         // restore previous directory
         gDirectory = prevDir;
-
         LOG_INFO << "Done writing StFwdAnalysisMaker output to local file : " << mLocalOutputFile << endm;
+#endif
     }
 
     return kStOk; 

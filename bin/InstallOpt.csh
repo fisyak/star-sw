@@ -100,8 +100,9 @@ else
 #set list = " gsl xrootd coin quarter  apr-1.5.2 apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3 fftw-3.3.5  texinfo-6.3   qt-everywhere-opensource-src-4.8.7 pythia6 pythia8  eigen3  boost_1_66_0"
 #set list = "qt-everywhere-opensource-src-4.8.7 coin quarter  apr-1.5.2 apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3 fftw-3.3.5  texinfo-6.3  gsl xrootd  pythia6 pythia8  eigen3  boost_1_66_0"
 #set list = "apr-1.5.2 apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3 fftw-3.3.5  texinfo-6.3  gsl xrootd  pythia6 pythia8  eigen3  boost_1_66_0"
-set list = xrootd
+#set list = xrootd
 #set list = pythia8
+set list = pythia6
 #if ($#argv != 0) set list2 = $argv[1];
 endif
 setenv DIR ~/sources/.${STAR_HOST_SYS}

@@ -206,6 +206,7 @@ StBFChain *bfc(Int_t First, Int_t Last,
   if (gClassTable->GetID("StBFChain") < 0) Load(tChain.Data());
   chain = (StBFChain *) StMaker::New("StBFChain", chainName);
 #else
+  Load(tChain.Data());
   StBFChain *chain = new StBFChain;
 #endif
   cout << "Create chain " << chain->GetName() << endl;

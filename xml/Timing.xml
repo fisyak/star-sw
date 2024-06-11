@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job name="Timing" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<command>
+#  source ~/.tcshrc
+  FPE_OFF
+  echo $INPUTFILE0
+  set subdir = `basename ${INPUTFILE0} | sed -e 's/.sl73_//'` 
+  if (! -d ${SUBMITTINGDIRECTORY}/${subdir}) mkdir ${SUBMITTINGDIRECTORY}/${subdir}
+  cd ${SUBMITTINGDIRECTORY}/${subdir}
+  if (-r cpu_per_event) exit 0;
+  if (-r hlt_20192001_11_01_000.log) exit 0;
+  switch (${subdir})
+    case "*gcc631*":
+      setup gcc631
+      breaksw
+    case "*gcc12*":
+      setup gcc/12
+      breaksw
+    case "*gcc13*":
+      setup gcc/13
+      breaksw
+    default:
+      setup gcc
+  endsw
+  switch (${subdir})
+    case "*opt*":
+    setup opt
+    breaksw
+    default:
+    setup debug
+  endsw
+  switch (${subdir})
+    case "*R6":
+    setup spackTFG
+    spack env activate x86_64_gcc12
+    spack env view enable
+    setup root6
+    breaksw
+    default:
+    setup root5
+  endsw
+  starver .DEV2
+  echo "STAR_LIB = ${STAR_LIB}"
+#  set exec = "root4star"
+  set exec = "root.exe"
+#  echo ${BITS} | grep '64\.'
+# if (! $?)  set exec = "root.exe"
+#  ${exec} -q -b 'bfc.C('$f','$l',"'$chain',Sti")' &gt;&amp; ${logFile}
+# ${exec} -q -b 'bfc.C(100,"P2010a,btof,BEmcChkStat,Corr4,OSpaceZ2,OGridLeakFull","/star/rcf/test/daq/2010/029/st_physics_11029020_raw_1030002.daq")' &gt;&amp; ${logFile}
+# ${exec} -q -b 'bfc.C(200,"P2018,McTpcAna,TpxRaw,TpxClu,-hitfilt,mtd,btof,BEmcChkStat,CorrX,OSpaceZ2,OGridLeakFull,evout,NoHistos,noRunco,StiCA,CorrX","/hlt/cephfs/daq/2018/152/19152033/st_physics_adc_19152033_raw_5000002.daq")'  &gt;&amp; ${logFile}
+# ${exec} -q -b 'bfc.C(200,"P2018,mtd,btof,BEmcChkStat,CorrX,OSpaceZ2,OGridLeakFull,evout,NoHistos,noRunco,StiCA,CorrX","/hlt/cephfs/daq/2018/152/19152033/st_physics_adc_19152033_raw_5000002.daq")'  &gt;&amp; ${logFile}
+# ${exec} -q -b 'bfc.C(200,"P2020a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault","/hlt/cephfs/daq/2019/355/20355004/hlt_20355004_10_01_000.daq")'  &gt;&amp; ${logFile}
+ ${exec} -q -b -x 'bfc.C(2000,"P2019a,mtd,btof,BEmcChkStat,CorrY,OSpaceZ2,OGridLeakFull,evout,NoHistos,noTags,noRunco,StiCA,picoWrite,PicoVtxVpdOrDefault","/hlt/cephfs/daq/2019/192/20192001/hlt_20192001_11_01_000.daq")'  &gt;&gt;&amp; hlt_20192001_11_01_000.log 
+</command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+<!-- <input URL="command:Nightlies.pl" /> -->
+<!-- <input URL="file:/gpfs01/star/subsys-tpc/fisyak/Nightlies/Test.MC.year_*.csh" /> -->
+<!-- <input URL="file:/gpfs01/star/subsys-tpc/fisyak/Nightlies/Test.MC.year_2005_cucu62_minbias.csh" /> -->
+<!-- <input URL="file:/gpfs01/star/subsys-tpc/fisyak/Nightlies/Test.MC.year_2009*.csh" /> -->
+<!-- <input URL="command:timing.pl" />-->
+<!-- <input URL="command:ls -1d $STAR/.sl*" /> -->
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_gcc485" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_gcc485_opt" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc1210" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc1210_opt" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc1210_opt_R6" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc1210_R6" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc1310" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc1310_opt" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc485" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc485_opt" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc631" />
+<input URL="file:/net/l402/data/fisyak/STAR/packages/.DEV2/.sl73_x8664_gcc631_opt" />
+</job>

@@ -20,6 +20,7 @@ my $RECO = "/reco/*/*/";
 my $FILE = "/*/st_physics";
 my $NEvents = 100000;
 my $step = 0;
+my $debug = 0;
 #================================================================================
 #  dir -ltr /star/data14/GRID/NFS_FileList/
 #  dir /gpfs01/star/data*/reco/production_7p7GeV_2021/ReversedFullField/P22ia*/2021/*/*/*event.root
@@ -2038,7 +2039,7 @@ my $step = 0;
 #$hist = "RunXIX502"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/production_AuAu200_2019/ReversedFullField";  $Production = "/P23ie_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/30/2023 new TpcZCorrectionC.AuAu200GeV_2019.C
 #$hist = "RunXIX503"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/production_AuAu200_2019/ReversedFullField";  $Production = "/P23ie_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/02/2023 new TpcSecRowB.AuAu200GeV_2019.root
 #$hist = "RunXIX504"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/production_AuAu200_2019/ReversedFullField";  $Production = "/P23ie_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/04/2023 new TpcLengthCorrectionMDN.AuAu200GeV_2019.C 
-$hist = "RunXIX505"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/production_AuAu200_2019/ReversedFullField";  $Production = "/P23ie_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/06/2023 check MySQL
+#$hist = "RunXIX505"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/production_AuAu200_2019/ReversedFullField";  $Production = "/P23ie_calib"; $year = "/2019/*/*/"; $FILE = "st_"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/06/2023 check MySQL
 ################## Run XX ##############################################################
 # 11p5GeV                 20191208.100905, 20191221.190032, 20200210.220428, 20200214.143742, 20200214.143742
 # 5p75GeV_fixedTarget     20191221.154021, 
@@ -2665,7 +2666,11 @@ $hist = "RunXIX505"; $NEvents = 10000; $disk = "data1??"; $RECO = "/reco/product
 #$hist = "RunXXIFXT12"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/13/2023 redo with .DEV2
 #$hist = "RunXXIFXT13"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/14/2023 new TpcLengthCorrectionMDN from  NPoints*UGP*.root (only "-")
 #$hist = "RunXXIFXT14"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/15/2023 check MySQL with SL23d, 5k
-my $Year = $year;
+############################ RunXXIV ####################################################
+#$hist = "RunXXIV01"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2024 
+#$hist = "RunXXIV02"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/12/2024 
+#$hist = "RunXXIV03"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+$hist = "RunXXIV04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2742,7 +2747,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, $atime, $mtime, $ctime, $blksize, $blocks ) = stat $file;
     my $dt = $now - $ctime;
     print "$file dt = $dt\n";
-    my @words = split '/', $file; # for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}
+    my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4] . '_' . $words[5];
     if ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
       $dd = $words[7];
@@ -2750,13 +2755,17 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
       if ($words[5] ne 'RF') {
 	$dd .= "_" . $words[5]; #print "dd = $dd\n";
       }
-    }
+    } elsif ($words[7] =~ /TFG24b/) {
+      $dd = $words[8];
+    } 
     $dd =~ s/reco_//;
     $dd =~ s/production_//;
     $dd =~ s/_ReversedFullField//;
+    $dd =~ s/_RF//;
     $dd =~ s/_FullField//;
+    $dd =~ s/_FF//;
     $ProdFiles{$dd} .= " " . $file;  
-#    print "$dd => $ProdFiles{$dd}\n";
+    if ($debug) {print "$dd => $ProdFiles{$dd}\n";}
   }
   foreach my $dd (keys %ProdFiles) {
     my $countperdd = 0;
@@ -2941,3 +2950,8 @@ foreach all (`ls -1d */All*.csh`)
   endif
   cd -;
 end
+
+
+cd ~/work/dEdx/RunXXIV0
+All.csh
+ MakedEdxHadd.csh

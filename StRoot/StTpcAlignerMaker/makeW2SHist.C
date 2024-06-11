@@ -39,66 +39,92 @@ const  PlotName_t plotNameWS[NwsPlots] = {// plots for drift
 };
 //________________________________________________________________________________
 void makeW2SHist() {
-  const Char_t *M[6] = { "X",  "Y",  "Z", "nX", "nY", "nZ"};
-  const Char_t *P[12] = {"xS","yS","zS","aS","bS","gS","xW","yW","zW","aW","bW","gW"};
+  enum {kM = 5, kP = 12};
+  const Char_t *M[kM] = { "X",  "Z", "nX", "nY", "nZ"};
+  const Char_t *P[kP] = {"xS","yS","zS","aS","bS","gS","xW","yW","zW","aW","bW","gW"};
   const Char_t *S[2] = {"ds", "dw"};
-  TString A[12][6] = { 
-    //     0      1      2      3       4        5
-#if 0
-    //     X      Y      Z     nX      nY       nZ   
-    {   "-1",   "0",   "0"    "0",    "0",     "0",}, // 0 xS",
-    {    "0",  "-1",   "0"    "0",    "0",     "0",}, // 1 yS",
-    {    "0",   "0",  "-1"    "0",    "0",     "0",}, // 2 zS",
-    {    "0",  "ZS", "-YS"    "0",  "nZS",  "-nYS",}, // 3 aS",
-    {  "-ZS",   "0", "-XS" "-nZS",    "0",  "-nXS",}, // 4 bS",
-    {   "YS", "-XS",   "0"  "nYS", "-nXS",     "0",}, // 5 gS",
-    {   "-1",   "0",   "0"    "0",    "0",     "0",}, // 6 xW",
-    {    "0",  "-1",   "0"    "0",    "0",     "0",}, // 7 yW",
-    {    "0",   "0",  "-1"    "0",    "0",     "0",}, // 8 zW",
-    {    "0",  "ZU", "-YU"    "0",  "nZU",  "-nYU",}, // 9 aW",
-    {  "-ZU",   "0", "-XU" "-nZU",    "0",  "-nXU",}, //10 bW",
-    {   "YU", "-XU",   "0"  "nYU", "-nXU",     "0",}  //11 gW",
-#else
-    //     X        Y        Z        nX        nY             nZ	  
-    {    "-1",     "0",     "0",      "0",      "0",	    "0"},  // xS,
-    {     "0",    "-1",     "0",      "0",      "0",	    "0"},  // yS,
-    {     "0",     "0",    "-1",      "0",      "0",	    "0"},  // zS,
-    {     "0",    "ZS",   "-YS",      "0",    "nZS",	 "-nYS"},  // aS,
-    {   "-ZS",     "0",   "-XS",   "-nZS",      "0",	 "-nXS"},  // bS,
-    {    "YS",   "-XS",     "0",    "nYS",   "-nXS",	    "0"},  // gS,
-    {    "-1",     "0",     "0",      "0",      "0",	    "0"},  // xW,
-    {     "0",    "-1",     "0",      "0",      "0",	    "0"},  // yW,
-    {     "0",     "0",    "-1",      "0",      "0",	    "0"},  // zW,
-    {     "0",    "ZU",   "-YU",      "0",    "nZU",	 "-nYU"},  // aW,
-    {   "-ZU",     "0",   "-XU",   "-nZU",      "0",	 "-nXU"},  // bW,
-    {    "YU",   "-XU",     "0",    "nYU",   "-nXU",	    "0"},  // gW,
-#endif
-  };
+  // AT[kP][kM] Fortran
   Int_t nh = 0;
-  for (Int_t m = 0; m < 6; m++) {
-    if (m == 1) continue;
-    for (Int_t p = 0; p < 12; p++) {
-    Int_t s = 0;
-    if (p > 6) s = 1;
-      TString Der(A[p][m]);
-      if (Der == "0") continue;
-      if (Der == "-1") continue;
-      TString Yaxis("110,-1.100, 1.100");
-      TString Zaxis("100,-250.0, 250.0");
+  for (Int_t m = 0; m < kM; m++) {
+    Int_t m1 = m + 1; // Fortran
+    for (Int_t p = 0; p < kP; p++) {
+      Int_t p1 = p + 1; // Fortran AT[p1][m1]
+      Int_t s = 0;
+      if (p > 6) s = 1;
+      if (p1 == 1 ||
+	  p1 == 2 && m1 > 2 ||
+	  p1 == 3 ||
+	  p1 == 4 && m1 == 3 ||
+	  p1 == 5 && m1 == 4 ||
+	  p1 == 6 && m1 == 5 ||
+          p1 == 7 && m1 >  2 ||
+	  p1 == 8 && m1 >  2 ||
+	  p1 == 9 && m1 >  2) continue;
+      if (p1 == 9 && m1 == 1) continue;
+      if (p1 == 9 && m1 == 2) continue;
+      if (p1 ==12 && m1 == 5) continue;
+
+      TString         Zaxis("500,-250.0, 250.0");
+      if (m1 == 1 ) Zaxis = "500,   -0.8,  0.8";
+      if (m1 == 2 ) Zaxis = "500,   -1.0,  1.0";
+      if (m1 == 3 ) Zaxis = "500,  -0.03, 0.03";
+      if (m1 == 4 ) Zaxis = "500,  -0.03, 0.03";
+      if (m1 == 5 ) Zaxis = "500,  -0.01, 0.01";
+      TString        Yaxis("110,-1.100, 1.100");
+      if (m1 == 1) {
+      if (p1 == 2 ) Yaxis ="110,-1.500, 1.500";
+      if (p1 == 4 ) Yaxis ="110,-300.0, 300.0";
+      if (p1 == 5 ) Yaxis ="110,  10.0, 220.0";
+      if (p1 == 6 ) Yaxis ="110,-200.0, -50.0";
+      if (p1 == 7 ) Yaxis ="110,-1.400, 1.400";
+      if (p1 == 8 ) Yaxis ="110,-1.800, 1.800";
+      if (p1 ==10 ) Yaxis ="110,-340.0, 340.0";
+      if (p1 ==11 ) Yaxis ="110,-240.0, 240.0";
+      if (p1 ==12 ) Yaxis ="110,-200.0, 200.0";
+      } else if (m1 == 2) {
+      if (p1 == 2 ) Yaxis ="110,-1.500, 1.500";
+      if (p1 == 4 ) Yaxis ="110,-200.0, 410.0";
+      if (p1 == 5 ) Yaxis ="110, -45.0,  45.0";
+      if (p1 == 6 ) Yaxis ="110, -50.0,  50.0";
+      if (p1 == 7 ) Yaxis ="110,-0.800, 0.800";
+      if (p1 == 8 ) Yaxis ="110,-1.500, 1.500";
+      if (p1 ==10 ) Yaxis ="110,-360.0, 420.0";
+      if (p1 ==11 ) Yaxis ="110,-175.0, 175.0";
+      if (p1 ==12 ) Yaxis ="110, -50.0,  50.0";
+      } else if (m1 == 3) {
+      if (p1 == 5 ) Yaxis ="110,-0.800, 0.800";
+      if (p1 == 6 ) Yaxis ="110,   -1.,  -0.4";
+      if (p1 == 7 ) Yaxis ="110,-0.400, 0.400";
+      if (p1 == 8 ) Yaxis ="110,-0.700, 0.700";
+      if (p1 ==10 ) Yaxis ="110,-0.400, 0.400";
+      if (p1 ==11 ) Yaxis ="110,-0.700, 0.700";
+      if (p1 ==12 ) Yaxis ="110,   -1.,    1.";
+      } else if (m1 == 4) {
+      if (p1 == 4 ) Yaxis ="110,-0.800, 0.800";
+      if (p1 == 6 ) Yaxis ="110,-0.800, 0.800";
+      if (p1 ==10 ) Yaxis ="110,-0.700, 0.700";
+      if (p1 ==11 ) Yaxis ="110,-0.400, 0.400";
+      if (p1 ==12 ) Yaxis ="110,-0.800, 0.800";
+      } else if (m1 == 5) {
+      if (p1 == 4 ) Yaxis ="110, 0.450, 1.000";
+      if (p1 == 5 ) Yaxis ="110,-0.800, 0.800";
+      if (p1 ==10 ) Yaxis ="110,-1.000, 1.000";
+      if (p1 ==11 ) Yaxis ="110,-1.000, 1.000";
+      }
+
       TString Meas(M[m]);
-      TString AA(A[p][m]);
-      if      (Meas.BeginsWith("nX")) {Zaxis = "500,-0.050, 0.050";}
-      else if (Meas.BeginsWith("nY")) {Zaxis = "500,-0.020, 0.020";}
-      else if (Meas.BeginsWith("nZ")) {Zaxis = "500,-0.010, 0.010";}
-      else                            {Zaxis = "500,-1.000, 1.000";}
-      if      (AA.BeginsWith("-Z"))   {Yaxis = "100,-250.0, 10.00";}
-      else if (AA.BeginsWith("Z"))    {Yaxis = "100,-10.00, 250.0";}
-      else if (AA.BeginsWith("-Y"))   {Yaxis = " 65,-180.0, -50.0";}
-      else if (AA.BeginsWith("Y"))    {Yaxis = " 65,  50.0, 180.0";}
-      else if (AA.BeginsWith("-X") ||
-	       AA.BeginsWith("X"))    {Yaxis = "120, -60.0,  60.0";}
-      cout << "mX(" << m << "), A(" << Form("%2i",p) << "," << m << "), " << S[s] << ", // {\"d" << M[m] << "d" << P[p] << "\", \t\"" << A[p][m] << " \t=> " << P[p] << "\","  
+#if 0
+      cout << "mX(" << m << "), A(" << m << "," << Form("%2i",p) << "), " << S[s] << ", //  {\"d" << M[m] << "d" << P[p] << "\", \t\"" 
+	//	   << A[p][m] 
+	 << "d" << M[m] 
+	   << " \t=> " << P[p] << "\","  
 	   << "\t" << Yaxis.Data() << "," << Zaxis.Data()  << "}, //" << Form("%2i",nh) << endl;
+#else
+      cout << "mX(" << m << "), A(" << m << "," <<  Form("%2i",p)  << "), " << S[s] << ", //  {\"d" 
+	   << M[m] << "d" << P[p] << "\", \t\"" << "d" << M[m] 
+	   << "\tversus d" << M[m]  << "/d" << P[p]  << "\t[" << m1 << "," <<  Form("%2i",p1) << "] \t=> d" << P[p] << "\","  
+	   << "\t" << Yaxis.Data() << "," << Zaxis.Data()  << "}, //" << Form("%2i",nh) << endl;
+#endif
       nh++;
     }
   }

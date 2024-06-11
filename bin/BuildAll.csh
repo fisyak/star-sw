@@ -2,6 +2,7 @@
 set list = "";
 set domain = `hostname -d`
 if (! $?ROOT_VERSION) setenv $ROOT_VERSION ""
+
 foreach root (root6 root5)
   switch ($domain) 
     case "*local":
@@ -32,6 +33,11 @@ foreach root (root6 root5)
 #        if ($optt == "opt3") setenv NODEBUG -O3 
         setup ${gcc}
 #        echo "setup gcc = $gcc, optt = $optt, bit = $bit"
+	if (${gcc} == "gcc/12") then
+    setup spackTFG
+    spack env activate x86_64_gcc12
+    spack env view enable
+        endif
         setup ${bit}
 #        echo "setup bit gcc = $gcc, optt = $optt, bit = $bit"
         setup ${root}

@@ -1,10 +1,6 @@
 #! /usr/bin/env perl
 use File::Basename;
 use Cwd;
-#my @DistortionSet = qw(Corr4 Corr3 OBmap2D OTwist OClock Opr13 OIFC OShortR OBmap OSectorAlign);
-my @DistortionSet = qw(CorrY OShortR OBmap  OPr40 OIFC OSectorAlign OSpaceZ2 OGridLeakFull);
-#my @DistortionSet = qw(OBMap); 
-print "DistortionSet = @DistortionSet\n";
 # my %dates   = (
 # 	       'pp500_2012'       => '20120324.042916',
 #  	       'pp500_2017'       => '20170423.040951',
@@ -66,25 +62,62 @@ print "DistortionSet = @DistortionSet\n";
 #      '7p7GeV_2021'      => '20210209',
 #      '7p7GeV_2021DbV'   => '20210209,DbV20210909',
 # );
-my %dates = (
-     'OO_200GeV_2021'      => '20210511.033917',
-     'FF_OO_200GeV_2021'   => '20210522.023642'
-);
-foreach $trig  (sort keys %dates) {
-  my $datetime = $dates{$trig};  print "$trig => $datetime\n";
-  if (! -d $trig) {mkdir $trig;}
+# my %dates = (
+#      'OO_200GeV_2021'      => '20210511.033917',
+#      'FF_OO_200GeV_2021'   => '20210522.023642'
+# my @dates = qw(
+# 		2019/FF
+# 		2019/RF
+# 		2020/RF
+# 		2021/FF
+# 		2021/RF
+# 		2022/FF
+# 		2022/RF
+# 		2023/FF
+# 		2023/RF
+# 		2023/ZF
+# 		2024/FF
+# 		2024/RF
+# 		2024/ZF
+# 	     );
+#my @DistortionSet = qw(Corr4 Corr3 OBmap2D OTwist OClock Opr13 OIFC OShortR OBmap OSectorAlign);
+#my @DistortionSet = qw(CorrY OShortR OBmap  OPr40 OIFC OSectorAlign OSpaceZ2 OGridLeakFull);
+# QA :INFO  - ==================                 CorrZ    is ON   : Tpc Alignment 2024
+# QA :INFO  - ==================                   ExB    is ON   : Activate ExB correction
+# QA :INFO  - ==================                 OBmap    is ON   : ExB shape correction
+# QA :INFO  - ==================                 OPr40    is ON   : PadRow 40 distortion
+# QA :INFO  - ==================                  OIFC    is ON   : Field Cage correction
+# QA :INFO  - ==================              OSpaceZ2    is ON   : Space Charge corrections R2
+# QA :INFO  - ==================               OShortR    is ON   : Shorted Ring correction
+# QA :INFO  - ==================         OGridLeakFull    is ON   : Full Grid Leak correction
+# QA :INFO  - ==================              TFGdbOpt    is ON   : ... uses TFG database flavor for alignemnt tables
+my @DistortionSet = qw( CorrZ OBmap  OPr40 OIFC OSpaceZ2 OShortR OGridLeakFull      );
+#my @DistortionSet = qw(OBMap); 
+print "DistortionSet = @DistortionSet\n";
+my @dates = qw(	2021/FF 2021/RF 2022/FF 2022/RF 2023/FF 2023/RF);
+#foreach $trig  (sort keys %dates) {
+my $pwd = cwd();
+foreach $trig  (@dates) {
+#  my $datetime = $dates{$trig};  print "$trig => $datetime\n";
+  my $datetime = $trig;  print "$trig => $datetime\n";
+  if (! -d $trig) {`mkdir -p $trig`;}
   chdir $trig;
   foreach my $corr (@DistortionSet) {
-    my $rootfile = $trig . $corr . "_" . $datetime . ".root";
-    my $log      = $trig . $corr . "_" . $datetime . ".log";
+#     my $rootfile = $trig . "/" . $corr . "_" . $datetime . ".root";
+#     my $log      = $trig . "/" . $corr . "_" . $datetime . ".log";
+    my $rootfile = $corr . ".root";
+    my $log      = $corr . ".log";
     my $Corr = $corr;
 #    if ($Corr eq 'OPr40' and $datetime < 20181101) {$Corr = "Opr13";}
     if (-r $rootfile) {next;}
 #    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",sdt" . $datetime . ",NewTpcAlignment\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
-    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",sdt" . $datetime . ",NewTpcAlignment\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
+#    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",sdt" . $datetime . ",NewTpcAlignment\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
+#    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",Cosmic_" . $datetime . ",Alignment2024,TFGdbOpt\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
+    my $cmd = "root.exe -q 'lDb.C(1,\"" . $Corr . ",Cosmic_" . $datetime . ",Alignment2024,TFGdbOpt\")' ";
+    $cmd .=  "'DistortionCheck.C+(\"" . $Corr . "\")' >& " . $log;
     print "cmd $cmd\n";
     my $flag = system($cmd);
     if ($flag) {print "flag = $flag\n"; die;}
   }
-  chdir "../";
+  chdir $pwd;
 }

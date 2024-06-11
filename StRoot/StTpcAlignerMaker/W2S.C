@@ -279,6 +279,13 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root", const Char_t *OutName = "
 	static const Double_t&    HlxParW2S_DriftZ                         = iter("HlxParW2S.DriftZ");
 	static const Double_t&    HlxParW2S_step                           = iter("HlxParW2S.step");
 #endif
+  enum {kM = 5, kP = 6};
+  Double_t tMx6[kM][6] = {
+    {1, 0, 0, 0, 0, 0},
+    {0, 0, 1, 0, 0, 0},
+    {0, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 1, 0}};
+  TRMatrix TMx6(kM, 6, &tMx6[0][0]);
   // Book Histograms
   TString Out(OutName);
   if (Out == "") {
@@ -290,18 +297,26 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root", const Char_t *OutName = "
   }
   TFile *fOut = new TFile(Out,"recreate");
   TH3F *plots3D[NwsPlots];
+
+#if 1
   for (Int_t i = 0; i < NwsPlots; i++) {
     plots3D[i] = new TH3F(plotNameWS[i].Name, plotNameWS[i].Title, 24, 0.5, 24.5, 
 			  plotNameWS[i].nx, plotNameWS[i].xmin, plotNameWS[i].xmax,
 			  plotNameWS[i].nz, plotNameWS[i].zmin, plotNameWS[i].zmax);
   }
+#else
+  for (Int_t i = 0; i < NwsPlots; i++) {
+    plots3D[i] = new TH3F(plotNameWS[i].Name, plotNameWS[i].Title, 24, 0.5, 24.5, 
+			  plotNameWS[i].nx, 0, 0,
+			  plotNameWS[i].nz, 0, 0);
+  }
+#endif
   TH3F *plots3DTpc[NwsPlotsTpc];
   for (Int_t i = 0; i < NwsPlotsTpc; i++) {
     plots3DTpc[i] = new TH3F(plotNameTpc[i].Name, plotNameTpc[i].Title, 24, 0.5, 24.5, 
 			     plotNameTpc[i].nx, plotNameTpc[i].xmin, plotNameTpc[i].xmax,
 			     plotNameTpc[i].nz, plotNameTpc[i].zmin, plotNameTpc[i].zmax);
   }
-  enum {kM = 6, kP = 6};
   Int_t NP  = kP*24; // Total no. of parameters per sector
   Int_t NPP = NP*(NP+1)/2; // size of matrix
   Int_t NT  = NP + NPP; // bin0 -> no. of entries; bin_NT+1 = chi2
@@ -321,57 +336,31 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root", const Char_t *OutName = "
     Double_t dRho = RhoU - RhoS;
     //    if (TMath::Abs(dRho) > 6e-3) continue; // 3D distortions
 #endif
-#if 1
-    TRSymMatrix CU(kM,HlxParW2S_fCov);                  PrPP(CU);
-    TRSymMatrix CS(kM,HlxParS_fCov);                  PrPP(CS);
+    TRSymMatrix CU(6,HlxParW2S_fCov);                  PrPP(CU);
+    TRSymMatrix CS(6,HlxParS_fCov);                  PrPP(CS);
     TRSymMatrix C(CU);
     C += CS;   PrPP(C);
-    if (TMath::Sqrt(C(0,0)) > 0.2 || 
-	TMath::Sqrt(C(1,1)) > 0.2 || 
-	TMath::Sqrt(C(2,2)) > 0.2 || 
-	TMath::Sqrt(C(3,3)) > 0.01|| 
-	TMath::Sqrt(C(4,4)) > 0.01||
-	TMath::Sqrt(C(5,5)) > 0.01) continue; 
-
-    TRSymMatrix G(C,TRArray::kInverted);              PrPP(G);
-#else 
-#if 1
-    TRSymMatrix G(kM);
-    for (Int_t i = 0; i < kM; i++) {
-      if (i < 3) 
-	G(i,i) = 1e2;
-      else 
-	G(i,i) = 1e6;
-    }       
-    PrPP(G);
-#else
-    TRSymMatrix G(TRArray::kUnit, kM);
-#endif
-#endif
+    for (Int_t i = 0; i < 6; i++) {
+      if (i < 3) C(i,i) += 0.1*0.1*0.1;
+      else       C(i,i) += 0.001*0.001*0.001;
+    }
+    TRSymMatrix CMxM(TMx6,TRArray::kAxSxAT,C);        PrPP(CMxM);
+    
+    TRSymMatrix G(CMxM,TRArray::kInverted);              PrPP(G);
     TVector3 nW(nXW,nYW,nZW);                      PrPP(nW);
     TVector3 rW(XW,YW,ZW);                         PrPP(rW);
     Double_t projS = nXS*XS + nYS*YS;
     TVector3 nS(nXS,nYS,nZS);                      PrPP(nS);
     TVector3 rS(XS,YS,ZS);                         PrPP(rS);
     Double_t projU = nXU*XU + nYU*YU;
-#if 0
-    TVector3 nU;
-    if (projS * projU > 0) {
-      nU = TVector3( nXU, nYU, nZU);  
-    } else {
-      nU = TVector3(-nXU,-nYU,-nZU);  
-    }
-#else
-    TVector3 nU = TVector3( nXU, nYU, nZU);  
-#endif
-    PrPP(nU);
+    TVector3 nU = TVector3( nXU, nYU, nZU);        PrPP(nU);
     TVector3 rU(XU,YU,ZU);                         PrPP(rU);
     TVector3 dn = nS - nU;                            PrPP(dn);
     TVector3 dr = rS - rU;                            PrPP(dr);
-    //    TRVector mX(kM, dn.X(), dn.Y(), dn.Z(), dr.X(), dr.Y(), dr.Z());  PrPP(mX);
-    TRVector mX(kM, dr.X(), dr.Y(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
-    //                   dX  dY  dZ nX  nY nZ 
-    Int_t iHistV[kM] = { 12, -1, 16, 0,  4, 8}; 
+    TRVector mX(kM, dr.X(), dr.Z(), dn.X(), dn.Y(), dn.Z());  PrPP(mX);
+#if 0
+    //                   dX  dZ nX  nY nZ 
+    Int_t iHistV[kM] = { 12, 16, 0,  4, 8}; 
     if (_debug) {
       cout << "w " << w << " => s " << s;
       for (Int_t m = 0; m < kM; m++) {
@@ -385,57 +374,13 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root", const Char_t *OutName = "
       }
       cout << endl;
     }
-    /* from maxima 02/21/2024 
-       S - U = dU - dS 
-       Col 1 = [ [(- bW*nZU) - bS*nZS + gW*nYU + gS*nYS + nXU - nXS] ]
-       Col 2 = [ [aW*nZU + aS*nZS + nYU - nYS - gW*nXU - gS*nXS] ]
-       Col 3 = [ [nZU - nZS - aW*nYU - aS*nYS - bW*nXU - bS*nXS] ]
-       Col 4 = [ [(- xW) - xS + YU*gW + YS*gS - ZU*bW - ZS*bS + XU - XS] ]
-       Col 5 = [ [(- yW) - yS - XU*gW - XS*gS + ZU*aW + ZS*aS + YU - YS] ]
-       Col 6 = [ [(- zW) - zS - XU*bW - XS*bS - YU*aW - YS*aS + ZU - ZS] ]
-       
-       JW2S : jacobian( [dev], [xS, yS, zS, aS, bS, gS, xW, yW, zW, aW, bW, gW] ); 
-       nX      nY       nZ     X      Y      Z     m/p
-       Col 1 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xS,
-       Col 2 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yS,
-       Col 3 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zS,
-       Col 4 = [ [     [0]   [nZS]  [- nYS]    [0]   [ZS] [- YS] ] ] aS,
-       Col 5 = [ [ [- nZS]     [0]  [- nXS] [- ZS]    [0] [- XS] ] ] bS,
-       Col 6 = [ [   [nYS] [- nXS]      [0]   [YS] [- XS]    [0] ] ] gS,
-       Col 7 = [ [     [0]     [0]      [0]  [- 1]    [0]    [0] ] ] xW,
-       Col 8 = [ [     [0]     [0]      [0]    [0]  [- 1]    [0] ] ] yW,
-       Col 9 = [ [     [0]     [0]      [0]    [0]    [0]  [- 1] ] ] zW,
-       Col 10= [ [     [0]   [nZU]  [- nYU]    [0]   [ZU] [- YU] ] ] aW,
-       Col 11= [ [ [- nZU]     [0]  [- nXU] [- ZU]    [0] [- XU] ] ] bW,
-       Col 12= [ [   [nYU] [- nXU]      [0]   [YU] [- XU]    [0] ] ] gW,
-       
-       chi2 = (X[m] - A[m,p]*p[p]) *  G[m,m] * (X[m] - A[m,p]*p[p])T
-       dchi2/dp = -A * G (X - A*p)T - (X - A*p) * G AT = 0
-       A * G * XT - A * G * AT * pT + X * G * AT - A * p *G * AT = 0
-       A * G * AT * pT = A * G * xT
-       pT = (A * G * AT)^-1 (A * G * xT)
-       
-       `    */
-    Double_t a[2*kP*kM] = { // 12x6
-//        0         1         2        3         4          5
-//        X         Y         Z       nX        nY         nZ   
-        - 1,        0,        0,       0,        0,         0,  // 0 xS,
-          0,      - 1,        0,       0,        0,         0,  // 1 yS,
-          0,        0,      - 1,       0,        0,         0,  // 2 zS,
-          0,   rS.z(), - rS.y(),       0,   nS.z(),  - nS.y(),  // 3 aS,
-   - rS.z(),        0, - rS.x(),- nS.z(),        0,  - nS.x(),  // 4 bS,
-     rS.y(), - rS.x(),        0,  nS.y(), - nS.x(),         0,  // 5 gS,
-        - 1,        0,        0,       0,        0,         0,  // 6 xW,
-          0,      - 1,        0,       0,        0,         0,  // 7 yW,
-          0,        0,      - 1,       0,        0,         0,  // 8 zW,
-          0,   rU.z(), - rU.y(),       0,   nU.z(),  - nU.y(),  // 9 aW,
-   - rU.z(),        0, - rU.x(),- nU.z(),        0,  - nU.x(),  //10 bW,
-     rU.y(), - rU.x(),        0,  nU.y(), - nU.x(),         0   //11 gW,
-    }; // A => AT
-    TRMatrix A(2*kP, kM, a); PrPP(A);
+#endif
+    Double_t aMx2P[kM][2*kP];
+    StTpcUtil::W2SDer(&rW[0], &nW[0], &rS[0], RW2S_fRotationMatrix, RW2S_fTranslation, aMx2P);
+    TRMatrix A(kM, 2*kP, &aMx2P[0][0]); PrPP(A);
     TRVector mGX(G,TRArray::kSxA,mX);  PrPP(mGX);
-    TRVector AmX(A,TRArray::kAxB,mGX);  PrPP(AmX);
-    TRSymMatrix SX(A,TRArray::kAxSxAT,G);   PrPP(SX);
+    TRVector AmX(A,TRArray::kATxB,mGX);  PrPP(AmX);
+    TRSymMatrix SX(A,TRArray::kATxSxA,G);   PrPP(SX);
     Double_t *array = LSF->GetArray() + 1;
     Double_t *amX = AmX.GetArray();
     Double_t *sX  = SX.GetArray();
@@ -453,27 +398,39 @@ void TpcAlignerDrawW2S(const Char_t *files = "*.root", const Char_t *OutName = "
     Double_t dw = w;
     Double_t ds = s;
     TRMatrix V(NwsPlots,3,
-mX(0), A( 4,0), ds, // {"dXdbS",        "-ZS    => bS", 100,-250.0, 10.00,500,-1.000, 1.000}, // 0
-mX(0), A( 5,0), ds, // {"dXdgS",        "YS     => gS",  65,  50.0, 180.0,500,-1.000, 1.000}, // 1
-mX(0), A(10,0), dw, // {"dXdbW",        "-ZU    => bW", 100,-250.0, 10.00,500,-1.000, 1.000}, // 2
-mX(0), A(11,0), dw, // {"dXdgW",        "YU     => gW",  65,  50.0, 180.0,500,-1.000, 1.000}, // 3
-mX(2), A( 3,2), ds, // {"dZdaS",        "-YS    => aS",  65,-180.0, -50.0,500,-1.000, 1.000}, // 4
-mX(2), A( 4,2), ds, // {"dZdbS",        "-XS    => bS", 120, -60.0,  60.0,500,-1.000, 1.000}, // 5
-mX(2), A( 9,2), dw, // {"dZdaW",        "-YU    => aW",  65,-180.0, -50.0,500,-1.000, 1.000}, // 6
-mX(2), A(10,2), dw, // {"dZdbW",        "-XU    => bW", 120, -60.0,  60.0,500,-1.000, 1.000}, // 7
-mX(3), A( 4,3), ds, // {"dnXdbS",       "-nZS   => bS", 110,-1.100, 1.100,500,-0.050, 0.050}, // 8
-mX(3), A( 5,3), ds, // {"dnXdgS",       "nYS    => gS", 110,-1.100, 1.100,500,-0.050, 0.050}, // 9
-mX(3), A(10,3), dw, // {"dnXdbW",       "-nZU   => bW", 110,-1.100, 1.100,500,-0.050, 0.050}, //10
-mX(3), A(11,3), dw, // {"dnXdgW",       "nYU    => gW", 110,-1.100, 1.100,500,-0.050, 0.050}, //11
-mX(4), A( 3,4), ds, // {"dnYdaS",       "nZS    => aS", 110,-1.100, 1.100,500,-0.020, 0.020}, //12
-mX(4), A( 5,4), ds, // {"dnYdgS",       "-nXS   => gS", 110,-1.100, 1.100,500,-0.020, 0.020}, //13
-mX(4), A( 9,4), dw, // {"dnYdaW",       "nZU    => aW", 110,-1.100, 1.100,500,-0.020, 0.020}, //14
-mX(4), A(11,4), dw, // {"dnYdgW",       "-nXU   => gW", 110,-1.100, 1.100,500,-0.020, 0.020}, //15
-mX(5), A( 3,5), ds, // {"dnZdaS",       "-nYS   => aS", 110,-1.100, 1.100,500,-0.010, 0.010}, //16
-mX(5), A( 4,5), ds, // {"dnZdbS",       "-nXS   => bS", 110,-1.100, 1.100,500,-0.010, 0.010}, //17
-mX(5), A( 9,5), dw, // {"dnZdaW",       "-nYU   => aW", 110,-1.100, 1.100,500,-0.010, 0.010}, //18
-mX(5), A(10,5), dw  // {"dnZdbW",       "-nXU   => bW", 110,-1.100, 1.100,500,-0.010, 0.010}, //19
-	       );
+mX(0), A(0, 1), ds, //  {"dXdyS",       "dX     versus dX/dyS   [1, 2]  => dyS",        110,-1.500, 1.500,500,   -0.8,  0.8}, // 0
+mX(0), A(0, 3), ds, //  {"dXdaS",       "dX     versus dX/daS   [1, 4]  => daS",        110,-300.0, 300.0,500,   -0.8,  0.8}, // 1
+mX(0), A(0, 4), ds, //  {"dXdbS",       "dX     versus dX/dbS   [1, 5]  => dbS",        110,  10.0, 220.0,500,   -0.8,  0.8}, // 2
+mX(0), A(0, 5), ds, //  {"dXdgS",       "dX     versus dX/dgS   [1, 6]  => dgS",        110,-200.0, -50.0,500,   -0.8,  0.8}, // 3
+mX(0), A(0, 6), ds, //  {"dXdxW",       "dX     versus dX/dxW   [1, 7]  => dxW",        110,-1.400, 1.400,500,   -0.8,  0.8}, // 4
+mX(0), A(0, 7), dw, //  {"dXdyW",       "dX     versus dX/dyW   [1, 8]  => dyW",        110,-1.800, 1.800,500,   -0.8,  0.8}, // 5
+mX(0), A(0, 9), dw, //  {"dXdaW",       "dX     versus dX/daW   [1,10]  => daW",        110,-340.0, 340.0,500,   -0.8,  0.8}, // 6
+mX(0), A(0,10), dw, //  {"dXdbW",       "dX     versus dX/dbW   [1,11]  => dbW",        110,-240.0, 240.0,500,   -0.8,  0.8}, // 7
+mX(0), A(0,11), dw, //  {"dXdgW",       "dX     versus dX/dgW   [1,12]  => dgW",        110,-200.0, 200.0,500,   -0.8,  0.8}, // 8
+mX(1), A(1, 1), ds, //  {"dZdyS",       "dZ     versus dZ/dyS   [2, 2]  => dyS",        110,-1.500, 1.500,500,   -1.0,  1.0}, // 9
+mX(1), A(1, 3), ds, //  {"dZdaS",       "dZ     versus dZ/daS   [2, 4]  => daS",        110,-200.0, 410.0,500,   -1.0,  1.0}, //10
+mX(1), A(1, 4), ds, //  {"dZdbS",       "dZ     versus dZ/dbS   [2, 5]  => dbS",        110, -45.0,  45.0,500,   -1.0,  1.0}, //11
+mX(1), A(1, 5), ds, //  {"dZdgS",       "dZ     versus dZ/dgS   [2, 6]  => dgS",        110, -50.0,  50.0,500,   -1.0,  1.0}, //12
+mX(1), A(1, 6), ds, //  {"dZdxW",       "dZ     versus dZ/dxW   [2, 7]  => dxW",        110,-0.800, 0.800,500,   -1.0,  1.0}, //13
+mX(1), A(1, 7), dw, //  {"dZdyW",       "dZ     versus dZ/dyW   [2, 8]  => dyW",        110,-1.500, 1.500,500,   -1.0,  1.0}, //14
+mX(1), A(1, 9), dw, //  {"dZdaW",       "dZ     versus dZ/daW   [2,10]  => daW",        110,-360.0, 420.0,500,   -1.0,  1.0}, //15
+mX(1), A(1,10), dw, //  {"dZdbW",       "dZ     versus dZ/dbW   [2,11]  => dbW",        110,-175.0, 175.0,500,   -1.0,  1.0}, //16
+mX(1), A(1,11), dw, //  {"dZdgW",       "dZ     versus dZ/dgW   [2,12]  => dgW",        110, -50.0,  50.0,500,   -1.0,  1.0}, //17
+mX(2), A(2, 4), ds, //  {"dnXdbS",      "dnX    versus dnX/dbS  [3, 5]  => dbS",        110,-0.800, 0.800,500,  -0.03, 0.03}, //18
+mX(2), A(2, 5), ds, //  {"dnXdgS",      "dnX    versus dnX/dgS  [3, 6]  => dgS",        110,   -1.,  -0.4,500,  -0.03, 0.03}, //19
+mX(2), A(2, 9), dw, //  {"dnXdaW",      "dnX    versus dnX/daW  [3,10]  => daW",        110,-0.400, 0.400,500,  -0.03, 0.03}, //20
+mX(2), A(2,10), dw, //  {"dnXdbW",      "dnX    versus dnX/dbW  [3,11]  => dbW",        110,-0.700, 0.700,500,  -0.03, 0.03}, //21
+mX(2), A(2,11), dw, //  {"dnXdgW",      "dnX    versus dnX/dgW  [3,12]  => dgW",        110,   -1.,    1.,500,  -0.03, 0.03}, //22
+mX(3), A(3, 3), ds, //  {"dnYdaS",      "dnY    versus dnY/daS  [4, 4]  => daS",        110,-0.800, 0.800,500,  -0.03, 0.03}, //23
+mX(3), A(3, 5), ds, //  {"dnYdgS",      "dnY    versus dnY/dgS  [4, 6]  => dgS",        110,-0.800, 0.800,500,  -0.03, 0.03}, //24
+mX(3), A(3, 9), dw, //  {"dnYdaW",      "dnY    versus dnY/daW  [4,10]  => daW",        110,-0.700, 0.700,500,  -0.03, 0.03}, //25
+mX(3), A(3,10), dw, //  {"dnYdbW",      "dnY    versus dnY/dbW  [4,11]  => dbW",        110,-0.400, 0.400,500,  -0.03, 0.03}, //26
+mX(3), A(3,11), dw, //  {"dnYdgW",      "dnY    versus dnY/dgW  [4,12]  => dgW",        110,-0.800, 0.800,500,  -0.03, 0.03}, //27
+mX(4), A(4, 3), ds, //  {"dnZdaS",      "dnZ    versus dnZ/daS  [5, 4]  => daS",        110, 0.450, 1.000,500,  -0.01, 0.01}, //28
+mX(4), A(4, 4), ds, //  {"dnZdbS",      "dnZ    versus dnZ/dbS  [5, 5]  => dbS",        110,-0.800, 0.800,500,  -0.01, 0.01}, //29
+mX(4), A(4, 9), dw, //  {"dnZdaW",      "dnZ    versus dnZ/daW  [5,10]  => daW",        110,-1.000, 1.000,500,  -0.01, 0.01}, //30
+mX(4), A(4,10), dw  //  {"dnZdbW",      "dnZ    versus dnZ/dbW  [5,11]  => dbW",        110,-1.000, 1.000,500,  -0.01, 0.01}, //31
+ 	       );
     for (Int_t i = 0; i < NwsPlots; i++) plots3D[i]->Fill(V(i,2), V(i,1), V(i,0));
     // Add plots for East and West Tpc halves in TPC and Global coordinate systems
     if (Ntracks%10000 == 0) {cout << "read track no\t" << Ntracks << endl;}
@@ -590,7 +547,7 @@ void TDrawW2S() {
       }
     PrPP(P);
   }
-#define __FREEZEG__
+  //#define __FREEZEG__
 #ifdef __FREEZEG__
   TRMatrix FreezeG(NP,NP);
   for (Int_t i = 0; i < NP; i++) {
@@ -734,12 +691,14 @@ void TDrawW2S() {
 	Double_t prob = pol1->GetProb();
 	if (prob >= 0) {
 #if 0
+#if 0
 	  Mu     = pol1->GetParameter(0);
 	  dMu    = pol1->GetParError(0);
 #else
 	  Double_t xm = fit->GetMean();
 	  Mu     = pol1->Eval(xm);
 	  dMu    = TMath::Sqrt(pol1->GetParError(0)*pol1->GetParError(0) + (xm*pol1->GetParError(1))*(xm*pol1->GetParError(1)));
+#endif
 #endif
 	  slope  = pol1->GetParameter(1);
 	  dslope = pol1->GetParError(1);
