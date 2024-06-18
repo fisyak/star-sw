@@ -498,6 +498,90 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ct
 #endif
 }
 //________________________________________________________________________________
+void DrawH3List(const Char_t *pattern = "T$", const Char_t * proj = "zx", const Char_t *ctitle = "", const Char_t *xTitle = "sector", const Char_t *yTitle = "time buckets", Int_t nx = 0, Int_t ny = 0) {
+  TString patt(pattern);
+  TPRegexp reg(pattern);
+  TString cTitle = patt;
+  cTitle += ctitle;
+  cTitle.ReplaceAll(".*","");
+  cTitle.ReplaceAll("^","");
+  cTitle.ReplaceAll("$","");
+  cTitle.ReplaceAll("*","");
+  Int_t NFiles = 0;
+  TSeqCollection *files = gROOT->GetListOfFiles();
+  if (! files) return;
+  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
+  if (! nn) return;
+  TFile **FitFiles = new TFile *[nn];
+  TIter next(files);
+  TFile *f = 0;
+  TObjArray array;
+  TObject *obj = 0;
+  TKey *key = 0;
+  while ( (f = (TFile *) next()) ) { 
+    f->cd();
+    TString F(f->GetName()); cout << "File " << F << endl;
+    Int_t nh = 0;
+    TList *listOfKeys = f->GetListOfKeys();
+    if (! listOfKeys) continue;
+    TIter nextkey(listOfKeys); 
+    TString oldName;
+    while ((key = (TKey*) nextkey())) {
+      TString Name(key->GetName());
+      if (Name.Contains(reg)) {
+	if (Name == oldName) continue;
+	oldName = Name;
+	obj = key->ReadObj();
+	if (! obj) continue;
+	if ( obj->IsA()->InheritsFrom( "TH3" ) ) {
+	  TH3 *hist = (TH3 *) obj;
+	  if (hist->GetEntries() > 0) {
+	    TH2D *h2 = (TH2D *) hist->Project3D(proj);
+	    h2->SetXTitle(xTitle);
+	    h2->SetYTitle(yTitle);
+	    nh++;
+	    //	    if (array.FindObject(obj->GetName())) continue;
+	    array.Add(h2); cout << "Add " << array.GetEntriesFast() << "\t" << hist->GetName() << "\t" << hist->GetDirectory()->GetName() << endl;
+	  }
+	}
+      }
+    }
+    if (nh) {
+      FitFiles[NFiles] = f; 
+      cout << "Add " << NFiles << "\t" << FitFiles[NFiles]->GetName() << "\t" << nh << endl;
+      NFiles++; 
+    }
+  }
+  //________________________________________________________________________________
+  Int_t NF = array.GetEntriesFast();
+  if (NF < 1) return;
+  if (! nx || ! ny) {
+    ny = (Int_t) TMath::Sqrt(NF);
+    nx = NF/ny;
+    if (nx*ny != NF) nx++;
+  }
+  cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
+  TCanvas *c = new TCanvas(cTitle,cTitle,1200,1200);
+  c->Divide(nx,ny);
+  for (Int_t i = 0; i < NF; i++) {
+    TH1 *hist = (TH1*) array.At(i);
+    c->cd(i+1)->SetLogz(1);
+    
+    hist->Draw("colz");
+    TLegend *l = new TLegend(0.1,0.80,0.8,0.9);
+    l->AddEntry(hist, gSystem->DirName(hist->GetDirectory()->GetName()));
+    l->Draw();
+  }
+  c->Update();
+#if 1
+  TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
+  //  Double_t zoom = 1.;
+  //  zoomer->SetZoomFactor(zoom);
+  TQtCanvas2Html  TQtCanvas2Html(c,  900, 900, "./", zoomer);
+  //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
+#endif
+}
+//________________________________________________________________________________
 void DrawF3List(const Char_t *pattern = "f7_7", const Char_t *ctitle = "c", Int_t nx = 0, Int_t ny = 0) {
   gStyle->SetOptStat(1000000001);
   gStyle->SetOptFit(0);

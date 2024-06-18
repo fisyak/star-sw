@@ -1,33 +1,33 @@
 #if 0
    FPE_OFF
    setup debug
-   root.exe -q -b 'lMuDst.C(-1,"\*/\*/\*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
+   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
    foreach d (`ls -1d ???/2*`)
      cd ${d}
-if (! -r MuTpcG.root) then
+if (! -r MuTpcG12.root) then
      ln -s ../../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
 endif
    end
    foreach d (`ls -1d ??[0-9]`)
      cd ${d}
      ln -s ../.sl* .
-     //     root.exe -q -b 'lMuDst.C(-1,"\*/\*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
+     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    foreach d (`ls -1d *`)
      cd ${d}
      ln -s ~/macros/.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
-   root.exe lMuDst.C MuTpcG.root
-   .L MuTpcG.C+
+   root.exe lMuDst.C MuTpcG12.root
+   .L MuTpcG12.C+
    Draw();
-   root.exe MuTpcG.root MuTpcGPrint.C
+   root.exe MuTpcG12.root MuTpcG12Print.C
    
-// #endif
+#endif
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <assert.h>
 #include <map>
@@ -291,7 +291,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     NPART = new TH1D("npart","no accepted particles",500,0,5000);
     dZ = new TH2F("dZ","dZ (W - E)/2 versus Z",nZ,Zmin,Zmax,400,-2.,2.);
     dT = new TH2F("dT","dT(#musec) (W - E)/2 versus Z",nZ,Zmin,Zmax,nT,-dTmax,dTmax);
-#if 0
+    //#define __DATE_DEP__
+#ifdef __DATE_DEP__
     const static Int_t tMin = 20190225;;
     const static Int_t tMax = 20140411;
     TDatime t1(tMin,0); // min Time and
@@ -566,11 +567,6 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     KFParticle particle(track, pdg);
     particle.SetId(id);
     particle.SetIdTruth(gTrack->idTruth(),gTrack->qaTruth());
-#if 0
-    StThreeVectorD firstPoint(gTrack->firstPoint()); PrPP3(firstPoint);
-    StThreeVectorD firstPointTpc;
-    Tpc2Global.MasterToLocal(firstPoint.xyz(), firstPointTpc.xyz()); PrPP3(firstPointTpc);
-#endif
     particle.SetIdParentMcVx(sector); PrPP3(particle);
     particle.S() = dcaG->curvature();
     particles[0].push_back(particle);
@@ -637,7 +633,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
 	  }
 	}
       }
-#if 0
+#ifdef __DATE_DEP__
       dZT->Fill(date,dif.z());
 #endif
       X->Fill(sum.z(),sum.x());
@@ -654,13 +650,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
       continue;
     }
     StThreeVectorD vxS;
-#if 0
-    const TGeoHMatrix &SupS2Tpc =  StTpcDb::instance()->SupS2Tpc(sector);
-    TGeoHMatrix SupS2Glob = Tpc2Global * SupS2Tpc;
-    TRMatrix RTR(3, 3, SupS2Glob.GetRotationMatrix());  PrPP3(RTR);
-#else
     TRMatrix RTR(3, 3, StTpcDb::instance()->SupS2Glob(sector).GetRotationMatrix());  PrPP3(RTR);
-#endif
     Glob2SupS(sector,VGlob.xyz(), vxS.xyz()); PrPP(vxS);
     StThreeVectorF vx(Vertex[0].GetX(), Vertex[0].GetY(), Vertex[0].GetZ()); PrPP(vx);
     TArrayF dsdr(6);
@@ -838,7 +828,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   }
 }
 //________________________________________________________________________________
-void MuTpcG(Long64_t nEvents = 10000000) {
+void MuTpcG12(Long64_t nEvents = 10000000) {
   StBFChain *chain = (StBFChain *) StMaker::GetTopChain();
   MuDstMaker = (StMuDstMaker *) chain->Maker("MuDst");
   if (! MuDstMaker) return;
@@ -1467,7 +1457,7 @@ for (int i = 1; i <= 24; i++) {TH1 *proj = pTSN->ProjectionY(Form("pTN%i",i),i,i
 
 
 03/19/22 OO200GeV RF and FF 2021 confirm https://www.star.bnl.gov/~fisyak/star/Tpc/Alignment/2021/dYvesrusSector.png 
-root.exe  *MuTpcG.root
+root.exe  *MuTpcG12.root
 _file1->cd();
 dYS->Project3D("zx")->Draw("colz"); 
 dYS_zx->FitSlicesY()
