@@ -422,19 +422,6 @@ Int_t StiMaker::Make()
   StEventHelper::Remove(event,"StSPtrVecV0Vertex");
   StEventHelper::Remove(event,"StSPtrVecXiVertex");
   StEventHelper::Remove(event,"StSPtrVecKinkVertex");
-#if 0
-  StBTofCollection *btofcol = event->btofCollection();
-  if (btofcol) {
-    StBTofHeader *btofHeader = btofcol->tofHeader();
-    if (btofHeader) {
-      Float_t vpdVz = btofHeader->vpdVz();
-      if (TMath::Abs(vpdVz) < 200) {
-	StiKalmanTrackNode::SetExternalZofPVX(vpdVz);
-	LOG_INFO << "Make:: Set external z of primary interaction " << vpdVz << endm;
-      }
-    }
-  }
-#endif
   St_g2t_track  *g2t_track  = (St_g2t_track  *) GetDataSet("geant/g2t_track");  
   St_g2t_vertex *g2t_vertex = (St_g2t_vertex *) GetDataSet("geant/g2t_vertex"); 
   StG2TrackVertexMap::instance(g2t_track,g2t_vertex);
