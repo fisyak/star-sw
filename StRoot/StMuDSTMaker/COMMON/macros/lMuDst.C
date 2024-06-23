@@ -1,9 +1,8 @@
-#include "Riostream.h"
 void lMuDst(Int_t opt = -2, const Char_t *input = "", const Char_t *copt = "StEvent,Stu,RMuDst,picoRead,mysql,tpcDb,magF,nodefault",const Char_t *tfile =  0,const Char_t *ofile =  0) {
 #if !defined(__CINT__)
   std::cout << "This code cannot be compiled" << std::endl;
 #else
-  cout << "copt\t" <<  copt << endl;
+  //  std::cout << "copt\t" <<  copt << std:::endl;
   gROOT->LoadMacro("bfc.C");
   TString Chain(copt);
   TString STAR_VERSION(gSystem->Getenv("STAR_VERSION"));
