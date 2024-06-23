@@ -416,11 +416,6 @@ Int_t StiMaker::Make()
   if (! _tracker) return kStWarn;
   StEvent   * event = dynamic_cast<StEvent*>( GetInputDS("StEvent") );
   if (!event) return kStWarn;
-  StEventHelper::Remove(event,"StRichCollection");
-  StEventHelper::Remove(event,"StMtdCollection");
-  StEventHelper::Remove(event,"StTofCollection");
-  StEventHelper::Remove(event,"StBTofCollection");
-  StEventHelper::Remove(event,"StETofCollection");
   StEventHelper::Remove(event,"StSPtrVecTrackDetectorInfo");
   StEventHelper::Remove(event,"StSPtrVecTrackNode");
   StEventHelper::Remove(event,"StSPtrVecPrimaryVertex");
