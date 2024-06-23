@@ -1,7 +1,7 @@
 #define __3D__
 //________________________________________________________________________________
 //void Agufld(const Char_t *sdt = "sdt20210303.052529", const Char_t *field="RF") {
-void Agufld(const Char_t *sdt = "sdt20210522.024326", const Char_t *field="FF") {
+void Agufld(const Char_t *sdt = "sdt20240624.024326", const Char_t *field="RF") {
 //void Agufld(const Char_t *sdt = "sdt20210510.134727", const Char_t *field="RF") {
 //   if ( gClassTable->GetID("TGiant3") >= 0) { // root4star
 //     gROOT->LoadMacro("bfc.C");
@@ -22,8 +22,10 @@ void Agufld(const Char_t *sdt = "sdt20210522.024326", const Char_t *field="FF") 
     }
 #endif
   }
-  Float_t X[3];
+  Float_t X[3] = {-6.0,  7.0, -130}; cout << "X = {" << X[0] << ", " << X[1] << ", " << X[2] << "};" << endl;
   Float_t B[3];
+  StarMagField::Instance()->BField(X,B); 
+  cout << "B = {" << B[0] << ", " << B[1] << ", " << B[2] << "}; |B| = " << TMath::Sqrt(B[0]*B[0] + B[1]*B[1] + B[2]*B[2])<< endl;
   Float_t Brpz[3];
   //  TString Mag(gSystem->Getenv("STAR_VERSION"));
   TString Mag(field);

@@ -21,7 +21,8 @@ foreach my $currentrun (@AllRuns) {
     my $r = File::Basename::basename($run); print "$run => run = $r\n" if ($debug);
     if (GoodRun($def,$r,$debug) < 0) {next;}
     print "$run Accepted\n" if ($debug);
-    foreach my $tag (qw(st hlt)) {
+#    foreach my $tag (qw(st hlt)) {
+    foreach my $tag (qw(hlt st_physics_)) { # st_physics_2
       my @files = glob $run . "/" . $tag . "*.daq"; print "files = @files\n" if ($debug);
       if ($#files < 0) {next;}
       #  print "files = @files\n";

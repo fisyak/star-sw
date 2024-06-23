@@ -1,31 +1,31 @@
 #if 0
    FPE_OFF
    setup debug
-   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
    foreach d (`ls -1d ???/2*`)
      cd ${d}
 if (! -r MuTpcG12.root) then
      ln -s ../../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
 endif
    end
    foreach d (`ls -1d ??[0-9]`)
      cd ${d}
      ln -s ../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    foreach d (`ls -1d *`)
      cd ${d}
      ln -s ~/macros/.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    root.exe lMuDst.C MuTpcG12.root
    .L MuTpcG12.C+
    Draw();
-   root.exe MuTpcG12.root MuTpcG12Print.C
+   root.exe MuTpcG12.root MuTpcGPrint.C
    
 #endif
 #if !defined(__CINT__) || defined(__MAKECINT__)
@@ -232,6 +232,19 @@ void Glob2SupSVect(Int_t sector, Double_t master[3], Double_t local[3]) {
   StTpcDb::instance()->SupS2Glob(sector).MasterToLocalVect(master,local);
 }
 //________________________________________________________________________________
+void Glob2Sup12S(Int_t sector, Double_t master[3], Double_t local[3]) {
+  // SupS2Glob = Tpc2Glob * Swap * Half * R_ideal (Ideal Phi) * dR ( StTpcSuperSectorPosition )
+  StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocal(master,local);
+  //#define __USE_ZGG__
+#ifdef __USE_ZGG__
+  local[2] += 208.707;
+#endif
+}
+//________________________________________________________________________________
+void Glob2Sup12SVect(Int_t sector, Double_t master[3], Double_t local[3]) {
+  StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocalVect(master,local);
+}
+//________________________________________________________________________________
 Double_t Chi2Vx(StMuPrimaryVertex *VtxH, StMuPrimaryVertex *Vtx) {
   if (! VtxH || ! Vtx) return 99999.;
   StThreeVectorF xyzH = VtxH->position();
@@ -247,7 +260,8 @@ Double_t Chi2Vx(StMuPrimaryVertex *VtxH, StMuPrimaryVertex *Vtx) {
 }
 //________________________________________________________________________________
 void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
-  static TH2F *dZ = 0,  *dX, *dY, *X, *Y,    *Zchisq, *dZT, *dT;
+  static TH2F *dZ = 0,  *dX, *dY, *X, *Y,    *Zchisq, *dZT, *dT, *dTB;
+  static TH1F *ZFXT;
   static TH3F *dXS,   *dYS,   *dZS, *dXYS, *dXTpcS,   *dYTpcS,   *dZTpcS;
   static TH2F *dXS2P,   *dYS2P,   *dZS2P;
   static TH2F *dXS2N,   *dYS2N,   *dZS2N;
@@ -291,6 +305,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     NPART = new TH1D("npart","no accepted particles",500,0,5000);
     dZ = new TH2F("dZ","dZ (W - E)/2 versus Z",nZ,Zmin,Zmax,400,-2.,2.);
     dT = new TH2F("dT","dT(#musec) (W - E)/2 versus Z",nZ,Zmin,Zmax,nT,-dTmax,dTmax);
+    dTB = new TH2F("dTB","dT(time buckets) (W - E)/2 versus Z",nZ,Zmin,Zmax,nT,-10*dTmax,10*dTmax);
+    ZFXT = new TH1F("ZFXT","The best primary vertex position (FXT)", 500, 198, 203.);
     //#define __DATE_DEP__
 #ifdef __DATE_DEP__
     const static Int_t tMin = 20190225;;
@@ -332,7 +348,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXS2N = new TH2F("dXS2N","dX in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
     dYS2N = new TH2F("dYS2N","dY in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
     dZS2N = new TH2F("dZS2N","dZ in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
-
+#ifdef __LSF_FIT__
     for (Int_t charge = 0; charge < 3; charge++) {
       plots3D[charge] = new TH3F*[NPlots];
       for (Int_t sec = 1; sec <= 24; sec++) 
@@ -354,6 +370,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
       }
       Chi2T[charge] = new TH1D(Form("Chi2T%s",NCharge[charge]), Form("Chi2 for %s",TCharge[charge]),2500,0.,2.5e4);
     }
+#endif /* __LSF_FIT__ */
     struct Hist_t {
       const Char_t *name;
       const Char_t *title;
@@ -415,11 +432,15 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   if (ev%1000 == 0) cout << "Read event\t" << ev << endl;
   StMuEvent* muEvent = mu->event(); // get a pointer to the class holding event-wise information
   Double_t Bz = muEvent->magneticField();
+  Double_t timeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency();
   Double_t vpdZ = muEvent->vpdVz();
+  if (muEvent->numberOfVpdEastHits() < 1 ||
+      muEvent->numberOfVpdWestHits() < 1) vpdZ = -999;
   Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
   // CA
   StEventSummary &summary = muEvent->eventSummary();
   Double_t zV  = summary.primaryVertexPosition().z();
+  ZFXT->Fill(zV);
   L4CAVertex &L4Vx = summary.L4Vx;
   L4CAVertex &L4VxWest = summary.L4VxWest;
   L4CAVertex &L4VxEast = summary.L4VxEast;
@@ -502,7 +523,6 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   Int_t NoKFVertices = KFVertices->GetEntriesFast();            PrPP( NoKFVertices);
   if (NoPrimaryVertices < 1) return;
   StMuPrimaryVertex *VtxH = 0;
-  vector<KFParticle> particles[3]; // 0 => All, 1 => West, 2 => East
   for (Int_t l = 0; l < NoPrimaryVertices; l++) {
     StMuPrimaryVertex *Vtx = (StMuPrimaryVertex *) PrimaryVertices->UncheckedAt(l);
     if (! AcceptVX(Vtx)) continue;
@@ -516,6 +536,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   const TGeoHMatrix &Tpc2Global = StTpcDb::instance()->Tpc2GlobalMatrix();
   StThreeVectorD VTpc;                                
   Tpc2Global.MasterToLocal(VGlob.xyz(), VTpc.xyz());            PrPP(VTpc);
+  vector<KFParticle> particles[3]; // 0 => All, 1 => West, 2 => East
   for (Int_t kg = 0; kg < NoGlobalTracks; kg++) {
     StMuTrack *gTrack = (StMuTrack *) GlobalTracks->UncheckedAt(kg);
     if (! gTrack) continue;
@@ -549,6 +570,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     Double_t dca[2], ermx[3];
     thelixK.Dca(VGlob.xyz(),dca[0],dca[1],ermx,2);
     if (TMath::Abs(dca[0]) > 2 || TMath::Abs(dca[1]) > 5) continue;
+#if 0
    // Create GL particle
     static KFPTrack track;
     track.SetParameters(xyzp);
@@ -556,16 +578,21 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     track.SetNDF(1);
     //    track.SetChi2(GlobalTracks_mChiSqXY[k]);
     track.SetId(id);
+#endif
     Int_t q   = 1;
     Int_t pdg = 211;
     if (dcaG->charge() < 0) {
       q = -1;
       pdg = -211;
     } 
+#if 0
     track.SetCharge(q);
     
     KFParticle particle(track, pdg);
     particle.SetId(id);
+#else
+    KFParticle particle = dcaG->Particle(kg, pdg);
+#endif
     particle.SetIdTruth(gTrack->idTruth(),gTrack->qaTruth());
     particle.SetIdParentMcVx(sector); PrPP3(particle);
     particle.S() = dcaG->curvature();
@@ -618,6 +645,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
       dZ->Fill(sum.z(),dif.z());
       Double_t dTWE = dif.z()/driftVel;
       dT->Fill(sum.z(),dTWE);
+      Double_t dTWEB = dTWE/timeBinWidth;
+      dTB->Fill(sum.z(),dTWEB);
       for (Int_t k = 0; k < kTrgTotal; k++) {
 	if (TMath::Abs(trgSum[k]) > 1e-7) {
 	  if (k < kCAV) {
@@ -650,8 +679,13 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
       continue;
     }
     StThreeVectorD vxS;
-    TRMatrix RTR(3, 3, StTpcDb::instance()->SupS2Glob(sector).GetRotationMatrix());  PrPP3(RTR);
-    Glob2SupS(sector,VGlob.xyz(), vxS.xyz()); PrPP(vxS);
+    TRMatrix RTR = (StTpcDb::Alignment2024()) ? 
+      TRMatrix(3, 3, StTpcDb::instance()->Sup12S2Glob(sector).GetRotationMatrix()) :
+      TRMatrix(3, 3, StTpcDb::instance()->SupS2Glob(sector).GetRotationMatrix()); 
+    PrPP3(RTR);
+    if (StTpcDb::Alignment2024()) Glob2Sup12S(sector,VGlob.xyz(), vxS.xyz());
+    else                          Glob2SupS(sector,VGlob.xyz(), vxS.xyz()); 
+    PrPP(vxS);
     StThreeVectorF vx(Vertex[0].GetX(), Vertex[0].GetY(), Vertex[0].GetZ()); PrPP(vx);
     TArrayF dsdr(6);
     Float_t ds = particle.GetDStoPoint(vx.xyz(),dsdr.GetArray());    PrPP3(ds);
@@ -672,11 +706,23 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     StThreeVectorD x(pars);   PrPP2(x);
     StThreeVectorD p(pars+3); PrPP2(p);
     StThreeVectorD vS, xS, pS; // in sector CS
-    //    StTpcDb::instance()->SupS2Tpc(sector).MasterToLocal(vx.xyz(),  vS.xyz());  PrPP2(vS);
     StThreeVectorD vxD = vx;
-    Glob2SupS(sector,vxD.xyz(), vS.xyz());    PrPP2(vS);
-    Glob2SupS(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
-    Glob2SupSVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
+    if (! StTpcDb::Alignment2024()) {
+      Glob2SupS(sector,vxD.xyz(), vS.xyz());    PrPP2(vS);
+      Glob2SupS(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
+      Glob2SupSVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
+    } else {
+      Glob2Sup12S(sector,vxD.xyz(), vS.xyz());    PrPP2(vS);
+      Glob2Sup12S(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
+      Glob2Sup12SVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
+    }
+    StThreeVectorD dG = x - vx; if (Debug() > 1) cout << "dG: " << dG << endl;
+    StThreeVectorD dS;
+    if (! StTpcDb::Alignment2024()) {
+      Glob2SupSVect(sector, dG.xyz(), dS.xyz()); PrPP2(dS);
+    } else {
+      Glob2Sup12SVect(sector, dG.xyz(), dS.xyz()); PrPP2(dS);
+    }
     StThreeVectorD d = xS - vS; if (Debug() > 1) cout << "sector:" << sector << "\td: " << d << endl;
     if (d.perp() > 2.0) continue;
     StThreeVectorD n = pS.unit();
@@ -708,6 +754,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dYTpcS->Fill(sector,x.z(),dTpc.y());
     dZTpcS->Fill(sector,x.z(),dTpc.z());
     dXYS->Fill(sector,d.x(),d.y());
+#ifdef __LSF_FIT__
     Double_t nX = n.x();
     Double_t nY = n.y();
     Double_t nZ = n.z();
@@ -722,6 +769,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     Double_t zV = vS.z();
     Double_t tY = nY/nX;
     Double_t tZ = nZ/nX;// + 0.01;
+
 #ifdef __2DCASE__
     TRVector mX(2, d.y(), d.z());  PrPP2(mX);
     TRMatrix A(2,6,//   x0  y0  z0           alpha                        beta                        gamma
@@ -825,6 +873,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
       TCL::vadd(sX,array+is,array+is,21); if (Debug()) {TRSymMatrix S(6,array+is);  PrPP2(S);}
       array[28] += Chi2t;
     }
+#endif /* __LSF_FIT__ */
   }
 }
 //________________________________________________________________________________

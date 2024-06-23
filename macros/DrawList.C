@@ -38,6 +38,48 @@
 #include "TPolynomial.h"
 #endif
 void DrawList() {} 
+//________________________________________________________________________________
+TObjArray  GetHistList(const Char_t *pattern = "OuterPadRcNoiseConv*") { 
+  TObjArray array;
+  TObject *obj = 0;
+  TKey *key = 0;
+  TSeqCollection *files = gROOT->GetListOfFiles();
+  if (! files) return array;
+  TPRegexp reg(pattern);
+  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
+  if (! nn) return array;
+  TIter next(files);
+  TFile *f = 0;
+  while ( (f = (TFile *) next()) ) { 
+    f->cd();
+    TString F(f->GetName()); cout << "File " << F << endl;
+    Int_t nh = 0;
+    TList *listOfKeys = f->GetListOfKeys();
+    if (! listOfKeys) continue;
+    TIter nextkey(listOfKeys); 
+    TString oldName;
+    while ((key = (TKey*) nextkey())) {
+      TString Name(key->GetName());
+      if (Name.Contains(reg)) {
+	if (Name == oldName) continue;
+	oldName = Name;
+	obj = key->ReadObj();
+	if (! obj) continue;
+	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
+	  TH1 *hist = (TH1 *) obj;
+	  if (hist->GetEntries() > 0) {
+	    nh++;
+	    //	    if (array.FindObject(obj->GetName())) continue;
+	    array.Add(obj); cout << "Add " << array.GetEntriesFast() << "\t" << hist->GetName() << "\t" << hist->GetDirectory()->GetName() << endl;
+	  }
+	}
+      }
+    }
+  }
+  return array;
+}
+//________________________________________________________________________________
+
 void DrawList(const Char_t *pattern, const Char_t *ctitle = "", 
 	      Int_t nx = 7, Int_t ny = 2, Int_t color = 0, Int_t iSlices=2, Double_t ymin=-0.4, Double_t ymax = 0.6, Int_t NparMax = 9, Bool_t zoom=kFALSE) {
 #ifdef __CINT__
@@ -401,74 +443,19 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 #endif
 }
 //________________________________________________________________________________
-void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
+void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *opt = "colz", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
   TString patt(pattern);
   TPRegexp reg(pattern);
   TString cTitle = patt;
+  TString Opt(opt);
   cTitle += ctitle;
   cTitle.ReplaceAll(".*","");
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll("*","");
-  Int_t NFiles = 0;
   TSeqCollection *files = gROOT->GetListOfFiles();
   if (! files) return;
-  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
-  if (! nn) return;
-  TFile **FitFiles = new TFile *[nn];
-  TIter next(files);
-  TFile *f = 0;
-  TObjArray array;
-  TObject *obj = 0;
-  TKey *key = 0;
-  while ( (f = (TFile *) next()) ) { 
-    f->cd();
-    TString F(f->GetName()); cout << "File " << F << endl;
-    Int_t nh = 0;
-    TList *listOfKeys = f->GetListOfKeys();
-    if (! listOfKeys) continue;
-#if 0
-    TList *listOfObjects = f->GetList();
-    if (! listOfObjects) continue;
-
-    TIter nextobj(listOfObjects); 
-    while ((obj = nextobj())) {
-      TString Name(obj->GetName());
-      if (Name.Contains(reg)) {
-	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	  TH1 *hist = (TH1 *) obj;
-	  if (hist->GetEntries() <= 0) continue;
-	  nh++;
-	  array.Add(obj);
-	}
-      }
-    }
-#endif
-    TIter nextkey(listOfKeys); 
-    TString oldName;
-    while ((key = (TKey*) nextkey())) {
-      TString Name(key->GetName());
-      if (Name.Contains(reg)) {
-	if (Name == oldName) continue;
-	oldName = Name;
-	obj = key->ReadObj();
-	if (! obj) continue;
-	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	  TH1 *hist = (TH1 *) obj;
-	  if (hist->GetEntries() > 0) {
-	    nh++;
-	    //	    if (array.FindObject(obj->GetName())) continue;
-	    array.Add(obj); cout << "Add " << array.GetEntriesFast() << "\t" << hist->GetName() << "\t" << hist->GetDirectory()->GetName() << endl;
-	  }
-	}
-      }
-    }
-    if (nh) {
-      FitFiles[NFiles] = f; 
-      cout << "Add " << NFiles << "\t" << FitFiles[NFiles]->GetName() << "\t" << nh << endl;
-      NFiles++; 
-    }
-  }
+  TObjArray array = GetHistList(pattern);
   //________________________________________________________________________________
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
@@ -482,10 +469,44 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ct
   c->Divide(nx,ny);
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);
-    c->cd(i+1);
-    hist->Draw("colz");
-    TLegend *l = new TLegend(0.1,0.85,0.4,0.9);
-    l->AddEntry(hist, gSystem->DirName(hist->GetDirectory()->GetName()));
+    hist->GetDirectory()->cd();
+    TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
+    dirName.ReplaceAll("../","");
+    c->cd(i+1)->SetLogz(1);
+    if (hist->GetDimension() == 3) {
+    } else if (hist->GetDimension() == 2) {
+      TH2 *h2 = (TH2 *) hist;
+      TF1 *gaus = 0;
+      if (Opt == "colz") {
+	h2->Draw(Opt);
+      } else if (Opt == "projy") {
+	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
+	proj->Fit("gaus");
+	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
+	cout << dirName.Data() << Form("\t%10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1));
+      } else if (Opt == "projx") {
+	TH1 *proj = h2->ProjectionX(Form("_px%i",i));
+	proj->Fit("gaus");
+	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
+	cout << dirName.Data() << Form("\t%10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1));
+      } else if (Opt == "slicey") {
+	h2->Draw("colz");
+	h2->FitSlicesY(0,0,-1,0,"QNRG5S");
+	TH1 *h1 = (TH1*) gDirectory->Get(Form("%s_1",h2->GetName()));
+	if (h1) {
+	  h1->Fit("pol2","q","same");
+	  TF1 *pol2 = (TF1 *) h1->GetListOfFunctions()->FindObject("pol2");
+	  if (pol2)
+	    cout << dirName.Data() << Form("\t%10.5f +/- %8.5f\n", pol2->GetParameter(0), pol2->GetParError(0));
+	}
+      } else {
+	hist->Draw("colz");
+      }
+    } else {
+      hist->Draw();
+    }
+    TLegend *l = new TLegend(0.1,0.90,0.7,0.95);
+    l->AddEntry(hist, dirName.Data());
     l->Draw();
   }
   c->Update();
@@ -565,11 +586,13 @@ void DrawH3List(const Char_t *pattern = "T$", const Char_t * proj = "zx", const 
   c->Divide(nx,ny);
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);
+    TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
+    dirName.ReplaceAll("../","");
     c->cd(i+1)->SetLogz(1);
     
     hist->Draw("colz");
     TLegend *l = new TLegend(0.1,0.80,0.8,0.9);
-    l->AddEntry(hist, gSystem->DirName(hist->GetDirectory()->GetName()));
+    l->AddEntry(hist, dirName.Data());
     l->Draw();
   }
   c->Update();

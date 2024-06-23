@@ -2,7 +2,7 @@
 # cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
 # git diff . RunXXIVDefs.pm
 # git ci -m "Update"  RunXXIVDefs.pm
-#CreateRunDirs.pl
+#CreateRunDirs.pl 0 100
 @ countJ = 0
 foreach d (`ls -1d ???/2*`)
   if (! -d ${d}) continue;
@@ -31,9 +31,9 @@ foreach d (`ls -1d ???/2*`)
   /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.DEV2.xml
 #  touch Submitted
   cd -
-  if ($countJ >= 40) then 
-	break;
-  endif
+#  if ($countJ >= 40) then 
+#	break;
+#  endif
 end
 #end
 #  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber63 ~/xml/daq_2021StiCA.Minuit.TFG19m.xml

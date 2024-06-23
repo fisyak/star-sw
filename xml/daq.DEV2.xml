@@ -67,16 +67,16 @@
   switch ($year)
     case "2019":
 #      Chain = "P2019a,CorrZ,TFGdbOpt,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt${PicoMode},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
-      set Chain = "P2019a,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA,${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
+      set Chain = "P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
     breaksw
     case "2020":
-      set Chain = "P2020a,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
+      set Chain = "P2020a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
     breaksw
     case "2021":
-      set Chain = "P2021a,CorrZ,TFGdbOpt,-beamLine3D,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
+      set Chain = "P2021a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-beamLine3D,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
     breaksw
     case "2022":
-      set Chain = "pp2022,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
+      set Chain = "pp2022,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
     breaksw
     case "2023:
       set Chain = "P2023,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco,-evout",
@@ -87,7 +87,9 @@
     default:
       exit 0;
   endsw
-  root.exe -b -q  'bfc.C(10000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(10000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(1000,"'${Chain}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
    rm ${bla}
   gzip ${logFile}
