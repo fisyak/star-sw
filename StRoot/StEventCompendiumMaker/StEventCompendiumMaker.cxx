@@ -94,8 +94,11 @@ void StEventCompendiumMaker::fillEventSummary(StEvent* e) {
     // If this is not true, then this number is incorrect.
     size_t nPileupVert = 0;
     for (size_t i=0; i<e->numberOfPrimaryVertices();++i) {
-	StVertexId vtx_id = e->primaryVertex(i)->type();
+      StPrimaryVertex *pVertex = e->primaryVertex(i);
+	StVertexId vtx_id = pVertex->type();
 	if(vtx_id == kOtherVtxId)  nPileupVert++ ;
+	Int_t key = pVertex->key();
+	if (key <= 0)  pVertex->setKey(i);
     }
     summary->setNumberOfPileupVertices(nPileupVert);   
     
