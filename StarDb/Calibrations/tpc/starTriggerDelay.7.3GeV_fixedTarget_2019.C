@@ -33,7 +33,7 @@ TDataSet *CreateTable() {
 //   Double_t dT = 0.07995; // +/-  0.00011      2019/RF/31GeV_fixedTarget          		
 //   Double_t dT = 0.07269; // +/-  0.00012      2019/RF/3p85GeV_fixedTarget        		
 //   Double_t dT = 0.08143; // +/-  0.00011      2019/RF/4p59GeV_fixedTarget        		
-//   Double_t dT = 0.07417; // +/-  0.00018      2019/RF/7.3GeV_fixedTarget         		
+  Double_t dT = 0.07417; // +/-  0.00018      2019/RF/7.3GeV_fixedTarget         		
 //   Double_t dT = 0.08074; // +/-  0.00009      2020/RF/13p5GeV_fixedTarget        		
 //   Double_t dT = 0.07929; // +/-  0.00007      2020/RF/19p5GeV_fixedTarget        		
 //   Double_t dT = 0.09336; // +/-  0.00007      2020/RF/26p5GeV_fixedTarget        		
@@ -48,7 +48,7 @@ TDataSet *CreateTable() {
 //   Double_t dT = 0.09676; // +/-  0.00015      2021/RF/70GeV_fixedTarget_2021     		
   memset(&row,0,tableSet->GetRowSize());	       ; //
   row.clocks     = 17; // from Run XIX + XX + XXI scan ; 
-  row.tZero	 = 0.435; // -"-
+  row.tZero	 = 0.435 + dT; // -"-
   tableSet->AddAt(&row);
   // ----------------- end of code ---------------
   return (TDataSet *)tableSet;

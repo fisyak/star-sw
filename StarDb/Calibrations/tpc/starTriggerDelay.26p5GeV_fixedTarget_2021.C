@@ -42,13 +42,13 @@ TDataSet *CreateTable() {
 //   Double_t dT = 0.08147; // +/-  0.00008      2020/RF/7p3GeV_fixedTarget         		
 //   Double_t dT = 0.08516; // +/-  0.00009      2020/RF/9p8GeV_fixedTarget         		
 //   Double_t dT = 0.09608; // +/-  0.00017      2021/RF/100GeV_fixedTarget_2021    		
-//   Double_t dT = 0.09591; // +/-  0.00032      2021/RF/26p5GeV_fixedTarget_2021           	
+  Double_t dT = 0.09591; // +/-  0.00032      2021/RF/26p5GeV_fixedTarget_2021           	
 //   Double_t dT = 0.08412; // +/-  0.00008      2021/RF/3p85GeV_fixedTarget_2021           	
 //   Double_t dT = 0.09159; // +/-  0.00013      2021/RF/44p5GeV_fixedTarget_2021           	
 //   Double_t dT = 0.09676; // +/-  0.00015      2021/RF/70GeV_fixedTarget_2021     		
   memset(&row,0,tableSet->GetRowSize());	       ; //
   row.clocks     = 17; // from Run XIX + XX + XXI scan ; 
-  row.tZero	 = 0.435; // -"-
+  row.tZero	 = 0.435 + dT; // -"-
   tableSet->AddAt(&row);
   // ----------------- end of code ---------------
   return (TDataSet *)tableSet;
