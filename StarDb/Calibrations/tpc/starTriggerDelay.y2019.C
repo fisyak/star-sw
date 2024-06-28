@@ -29,24 +29,24 @@ TDataSet *CreateTable() {
 //   Double_t dT = 0.05647; // +/-  0.00003       2021/RF/OO_200GeV_2021      	
 //   Double_t dT = 0.05627; // +/-  0.00002       2021/RF/ps_OO_200GeV_2021           
 //   Double_t dT = 0.00328; // +/-  0.01576       2022/RF/pp500_2022          	
-// 06/25/2024 
-//   Double_t dT = 0.07995; // +/-  0.00011      2019/RF/31GeV_fixedTarget          		
-//   Double_t dT = 0.07269; // +/-  0.00012      2019/RF/3p85GeV_fixedTarget        		
-//   Double_t dT = 0.08143; // +/-  0.00011      2019/RF/4p59GeV_fixedTarget        		
-//   Double_t dT = 0.07417; // +/-  0.00018      2019/RF/7.3GeV_fixedTarget         		
-//   Double_t dT = 0.08074; // +/-  0.00009      2020/RF/13p5GeV_fixedTarget        		
-//   Double_t dT = 0.07929; // +/-  0.00007      2020/RF/19p5GeV_fixedTarget        		
-//   Double_t dT = 0.09336; // +/-  0.00007      2020/RF/26p5GeV_fixedTarget        		
-//   Double_t dT = 0.08539; // +/-  0.00008      2020/RF/31p2GeV_fixedTarget        		
-//   Double_t dT = 0.07895; // +/-  0.00008      2020/RF/5p75GeV_fixedTarget        		
-//   Double_t dT = 0.08147; // +/-  0.00008      2020/RF/7p3GeV_fixedTarget         		
-//   Double_t dT = 0.08516; // +/-  0.00009      2020/RF/9p8GeV_fixedTarget         		
-//   Double_t dT = 0.09608; // +/-  0.00017      2021/RF/100GeV_fixedTarget_2021    		
-//   Double_t dT = 0.09591; // +/-  0.00032      2021/RF/26p5GeV_fixedTarget_2021           	
-//   Double_t dT = 0.08412; // +/-  0.00008      2021/RF/3p85GeV_fixedTarget_2021           	
-//   Double_t dT = 0.09159; // +/-  0.00013      2021/RF/44p5GeV_fixedTarget_2021           	
-//   Double_t dT = 0.09676; // +/-  0.00015      2021/RF/70GeV_fixedTarget_2021     		
-  memset(&row,0,tableSet->GetRowSize());	       ; //
+// 06/25/2024 + 06/26/2024
+//   Double_t dT = 0.07995 -0.01111*2./3.; // +/-  0.00012 +/-  0.00011      2019/RF/31GeV_fixedTarget          		
+//   Double_t dT = 0.07269 -0.00901*2./3.; // +/-  0.00013 +/-  0.00012      2019/RF/3p85GeV_fixedTarget        		
+//   Double_t dT = 0.08143 -0.00996*2./3.; // +/-  0.00011 +/-  0.00011      2019/RF/4p59GeV_fixedTarget        		
+//   Double_t dT = 0.07417 -0.00968*2./3.; // +/-  0.00019 +/-  0.00018      2019/RF/7.3GeV_fixedTarget         		
+//   Double_t dT = 0.08074 -0.01057*2./3.; // +/-  0.00009 +/-  0.00009      2020/RF/13p5GeV_fixedTarget        		
+//   Double_t dT = 0.07929 -0.01071*2./3.; // +/-  0.00008 +/-  0.00007      2020/RF/19p5GeV_fixedTarget        		
+//   Double_t dT = 0.09336 -0.01081*2./3.; // +/-  0.00007 +/-  0.00007      2020/RF/26p5GeV_fixedTarget        		
+//   Double_t dT = 0.08539 -0.01149*2./3.; // +/-  0.00008 +/-  0.00008      2020/RF/31p2GeV_fixedTarget        		
+//   Double_t dT = 0.07895 -0.01063*2./3.; // +/-  0.00008 +/-  0.00008      2020/RF/5p75GeV_fixedTarget        		
+//   Double_t dT = 0.08147 -0.01022*2./3.; // +/-  0.00008 +/-  0.00008      2020/RF/7p3GeV_fixedTarget         		
+//   Double_t dT = 0.08516 -0.01080*2./3.; // +/-  0.00010 +/-  0.00009      2020/RF/9p8GeV_fixedTarget         		
+//   Double_t dT = 0.09608 -0.01343*2./3.; // +/-  0.00017 +/-  0.00017      2021/RF/100GeV_fixedTarget_2021    		
+//   Double_t dT = 0.09591 -0.01132*2./3.; // +/-  0.00033 +/-  0.00032      2021/RF/26p5GeV_fixedTarget_2021           	
+//   Double_t dT = 0.08412 -0.01070*2./3.; // +/-  0.00008 +/-  0.00008      2021/RF/3p85GeV_fixedTarget_2021           	
+//   Double_t dT = 0.09159 -0.01249*2./3.; // +/-  0.00013 +/-  0.00013      2021/RF/44p5GeV_fixedTarget_2021           	
+//   Double_t dT = 0.09676 -0.01330*2./3.; // +/-  0.00015 +/-  0.00015      2021/RF/70GeV_fixedTarget_2021     		
+  memset(&row,0,tableSet->GetRowSize());
   row.clocks     = 17; // from Run XIX + XX + XXI scan ; 
   row.tZero	 = 0.435; // -"-
   tableSet->AddAt(&row);
