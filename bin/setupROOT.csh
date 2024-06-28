@@ -24,7 +24,7 @@ setenv SHIFTINCDIR ""#$CERN_ROOT/../../usr.local/include/shift
 setenv x11libdir /usr/X11R6/lib
 setenv xpmlibdir /usr/X11R6/lib
 setenv xftlibdir /usr/X11R6/lib
-setenv DISABLE "--disable-python --disable-qt --disable-qtgsi --disable-vc --disable-pythia8"
+setenv DISABLE "--disable-python --disable-qt --disable-qtgsi --disable-vc --disable-pythia8 --disable-xrootd"
 #setenv DISABLE "--disable-qt --disable-qtgsi --disable-vc"
 #setenv MYSQL /opt/star
 #setenv MYSQLINCDIR $MYSQL/include/mysql	
@@ -148,6 +148,7 @@ switch ( $STAR_HOST_SYS )
 	setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-msse4.2";
         breaksw
 endsw
+     echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
     case *gcc1*:
      setenv DISABLE "--disable-xrootd --disable-pythia8"
@@ -158,8 +159,12 @@ switch ( $STAR_HOST_SYS )
     case *gcc7*:
      setenv ENABLE_CXX11 "--enable-cxx17"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
+     breaksw 
+     case *gcc631:
+     echo "STAR_HOST_SYS = $STAR_HOST_SYS"
+     setenv DISABLE "--disable-xrootd --disable-pythia8"
      breaksw
-    case *_x8664_gcc6*:
+     case *_x8664_gcc6*:
      setenv ENABLE_CXX11 "--enable-cxx11"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=--std=c++14"
      breaksw
@@ -244,7 +249,6 @@ echo "DISABLE = $DISABLE"
     --enable-builtin_pcre       \
     --enable-builtin_zlib       \
     --enable-builtin_lzma       \
-    --enable-opengl \
     --with-gsl-incdir=$GSL_DIR/include \
     --with-gsl-libdir=$GSL_DIR/lib \
     --with-pythia6-libdir=$XOPTSTAR/lib \
@@ -254,6 +258,7 @@ echo "DISABLE = $DISABLE"
     --all \
     $DISABLE \
     $ENABLE_CXX11 $EXTRA_FLAGS
+#    --enable-opengl \
 #    --with-xrootd=$XOPTSTAR \
 #    --with-pythia8-libdir=$XOPTSTAR/lib \
 #    --with-pythia8-incdir=$XOPTSTAR/include \

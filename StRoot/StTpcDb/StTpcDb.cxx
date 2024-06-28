@@ -307,6 +307,7 @@ matrix([     1, gamma,  -beta,-x_0],
   names[kPadInner2Glob]     = "PadInner2Glob";   
   names[kPadOuter2Glob]     = "PadOuter2Glob";  
   names[kWheel]             = "Wheel";
+  names[kRotM]              = "RotM";
   mTpc2GlobMatrix = new TGeoHMatrix("Default Tpc2Glob"); 
   mFlip = new TGeoHMatrix;
   mzGG = Dimensions()->gatingGridZ(); // zGG
@@ -334,13 +335,14 @@ matrix([     1, gamma,  -beta,-x_0],
   St_SurveyC *chairD = 0;
   Int_t Id = 0;
   TGeoHMatrix rotA;
+  TGeoHMatrix dR;
   static Int_t newRotations[6] = {kSup12S2Tpc, kSup12S2Glob, kSubSInner2Sup12S, kSubSOuter2Sup12S, kPadInner2Sup12S, kPadOuter2Sup12S};
   static Int_t oldRotations[6] = {kSupS2Tpc  , kSupS2Glob  , kSubSInner2SupS  , kSubSOuter2SupS  , kPadInner2SupS  , kPadOuter2SupS  };
   for (Int_t sector = 0; sector <= 24; sector++) {// loop over Tpc as whole, sectors, inner and outer subsectors
     // Avoid mixure with Alignment2024
     Int_t k;
     Int_t k1 = kSupS2Tpc;
-    Int_t k2 = kTotalTpcSectorRotaions;
+    Int_t k2 = kTotalTpcSectorRotaions - 2; // - kRotM && dRS12
     if (sector == 0) {k2 = k1; k1 = kUndefSector;}
     for (k = k1; k < k2; k++) {
       if (! mAlignment2024) {
@@ -404,14 +406,17 @@ matrix([     1, gamma,  -beta,-x_0],
 	    rotA = (*mShift[part]) * (*mHalf[part]) * (*mShift[part]).Inverse() * (*rotm);
 	  }
 	  if (k == kSup12S2Tpc) rotA *= Flip(); // new in 2024 schema
-	  rotA *= chair->GetMatrix(sector-1);
+	  SetTpcRotationMatrix(&rotA,sector,kRotM);// Save ideal rotation
+	  dR = chair->GetMatrix(sector-1);
 	  if (chairD->getNumRows() == 24) {
 	    if (gFactor > 0.2) {
-	      rotA *= chairD->GetMatrix(sector-1);
+	      dR *= chairD->GetMatrix(sector-1);
 	    } else if (gFactor < -0.2) {
-	      rotA *= chairD->GetMatrix(sector-1).Inverse();
+	      dR *= chairD->GetMatrix(sector-1).Inverse();
 	    }
 	  }
+	  SetTpcRotationMatrix(&dR,sector,kdRS12);// Save correction
+	  rotA = TpcRot(sector, kRotM) * dR;
 	  //	  if (k == kSup12S2Tpc) rotA *= Flip();  // new in 2023 schema 
 	  if (! gGeoManager) SafeDelete(rotm);
 	  break;

@@ -485,7 +485,9 @@ Int_t StBFChain::Instantiate()
     }
     
     if (maker == "StTpcDbMaker" && GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
+#if 0
     if (maker == "StTpcDbMaker" && GetOption("TFGdbOpt"))  mk->SetAttr("TFGdbOpt"   ,kTRUE);
+#endif
     if (maker == "StDAQMaker") {
       if (GetOption("adcOnly")) mk->SetAttr("adcOnly",kTRUE);
       NoMakersWithInput++;
@@ -2189,6 +2191,14 @@ void StBFChain::SetDbOptions(StMaker *mk){
       if (GetMakerInheritsFrom(black_list[bl].maker)) continue;
       mk->SetAttr("blacklist",black_list[bl].system); 
       gMessMgr->QAInfo() << "blacklist " << black_list[bl].system  << endm;
+    }
+  }
+  if (GetOption("TFGdbOpt")) {
+    const Char_t *TFGTables[] = {"tpcSectorT0offset", "TpcPosition", "TpcHalfPosition", "TpcWheelPosition", "TpcSuperSectorPositionB", "TpcSuperSectorPositionD", "TpcInnerSectorPositionB", "TpcOuterSectorPositionB", "tpcBXT0CorrEPD", 0};
+    LOG_INFO << "TFG version for TPC alignment parameters" << endm;
+    for (Int_t i = 0; TFGTables[i]; i++) {
+      LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endm; 
+      mk->SetFlavor("TFG",TFGTables[i]);
     }
   }
 }

@@ -85,4 +85,18 @@ sub GetRuns($) {
   }
   return ($year,$FIELD,$runs,$def,$Day,$Run,$run2);
 }
+#__________________________________________________________________________________________
+sub GetHash() {
+  my $pwd = cwd(); print "pwd = $pwd\n";
+  my $year;
+  if    ($pwd =~ /2019/) {$year = "2019"; require RunXIXDefs;}
+  elsif ($pwd =~ /2020/) {$year = "2020"; require RunXXDefs;}
+  elsif ($pwd =~ /2021/) {$year = "2021"; require RunXXIDefs;}
+  elsif ($pwd =~ /2022/) {$year = "2022"; require RunXXIIDefs;}
+  elsif ($pwd =~ /2023/) {$year = "2023"; require RunXXIIIDefs;}
+  elsif ($pwd =~ /2024/) {$year = "2024"; require RunXXIVDefs;}
+  our @Runs;
+  my $def = {@Runs};
+  return ($def, $year);
+}
 1;

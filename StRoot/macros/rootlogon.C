@@ -15,11 +15,11 @@
   const Char_t *rootlogon_path  = ".:~";
   Int_t rootlogon_error = 0;
   // eliminate the need to provide the custom ".rootrc" to activate Qt-layer 
-  if (gSystem->Getenv("WITH_QT") && gSystem->Getenv("QTDIR")) 
+  if (! gSystem->DynamicPathName("libQtRoot",kTRUE)) 
   {
       // this allows to eliminate (or overwrite) the custom ".rootrc" file
-      gEnv->SetValue("Gui.Backend","qt");
-      gEnv->SetValue("Gui.Factory","qtgui");     
+      gEnv->SetValue("Gui.Backend","native");
+      gEnv->SetValue("Gui.Factory","native");     
   }
   TString StarVersion(gSystem->Getenv("STAR_VERSION"));
   rootlogon_fpe =StarVersion == ".DEV" ||StarVersion == ".DEV2";
@@ -166,30 +166,28 @@
   gEnv->SetValue("XNet.RedirDomainAllowRE","rcf.bnl.gov"); 
   gEnv->SetValue("XNet.ReconnectTimeout","5"); 
   //  Print version
-  {
-    TString STAR_GIT("$STAR/.git");            gSystem->ExpandPathName(STAR_GIT);
-    TString STAR_LEVEL("$STAR_LEVEL");         gSystem->ExpandPathName(STAR_LEVEL);
-    TString STAR_LIB("$STAR_LIB");             gSystem->ExpandPathName(STAR_LIB);
-    TString STAR_GIT_VERSION; 
-    if (! gSystem->AccessPathName(STAR_GIT,kReadPermission)) {
-      STAR_GIT_VERSION = ", git = ";
-      TString GITINFO(STAR_LIB); GITINFO += "/etc/gitinfo.txt";
-      FILE *fp = fopen(GITINFO.Data(), "r");
-      if (fp) {
-	//	cout << "Found file " << GITINFO.Data() << "\t" << STAR_GIT_VERSION.Data() << endl;
-	TString tempString;
-	tempString.Gets(fp); STAR_GIT_VERSION += tempString;// cout << STAR_GIT_VERSION.Data() << endl;
-	STAR_GIT_VERSION += ",tag:";
-	tempString.Gets(fp); STAR_GIT_VERSION += tempString;// cout << STAR_GIT_VERSION.Data() << endl;
-	fclose(fp);
-      } else {
-	//	cout << "Not found file " << GITINFO.Data() << endl;
-	STAR_GIT_VERSION += gSystem->GetFromPipe("git --git-dir=$STAR/.git describe --all"); 
-	STAR_GIT_VERSION += ",tag:";
-	STAR_GIT_VERSION += gSystem->GetFromPipe("git --git-dir=$STAR/.git describe --always"); 
-      }
-      gEnv->SetValue("STAR_GIT_VERSION", STAR_GIT_VERSION.Data());
+  TString STAR_GIT("$STAR/.git");            gSystem->ExpandPathName(STAR_GIT);
+  TString STAR_LEVEL("$STAR_LEVEL");         gSystem->ExpandPathName(STAR_LEVEL);
+  TString STAR_LIB("$STAR_LIB");             gSystem->ExpandPathName(STAR_LIB);
+  TString STAR_GIT_VERSION; 
+  if (! gSystem->AccessPathName(STAR_GIT,kReadPermission)) {
+    STAR_GIT_VERSION = ", git = ";
+    TString GITINFO(STAR_LIB); GITINFO += "/etc/gitinfo.txt";
+    FILE *fp = fopen(GITINFO.Data(), "r");
+    if (fp) {
+      //	cout << "Found file " << GITINFO.Data() << "\t" << STAR_GIT_VERSION.Data() << endl;
+      TString tempString;
+      tempString.Gets(fp); STAR_GIT_VERSION += tempString;// cout << STAR_GIT_VERSION.Data() << endl;
+      STAR_GIT_VERSION += ",tag:";
+      tempString.Gets(fp); STAR_GIT_VERSION += tempString;// cout << STAR_GIT_VERSION.Data() << endl;
+      fclose(fp);
+    } else {
+      //	cout << "Not found file " << GITINFO.Data() << endl;
+      STAR_GIT_VERSION += gSystem->GetFromPipe("git --git-dir=$STAR/.git describe --all"); 
+      STAR_GIT_VERSION += ",tag:";
+      STAR_GIT_VERSION += gSystem->GetFromPipe("git --git-dir=$STAR/.git describe --always"); 
     }
+    gEnv->SetValue("STAR_GIT_VERSION", STAR_GIT_VERSION.Data());
     TString ROOT_LEVEL("$ROOT_LEVEL");         gSystem->ExpandPathName(ROOT_LEVEL);
     TString GARFIELD_HOME("$GARFIELD_HOME");   gSystem->ExpandPathName(GARFIELD_HOME);
     TString OPTSTAR("$OPTSTAR");               gSystem->ExpandPathName(OPTSTAR);

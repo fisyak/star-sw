@@ -1,7 +1,7 @@
 #if 0
    FPE_OFF
    setup debug
-   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
+   root.exe -q -b 'lMuDst.C(-1,"\*/\*/\*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
    foreach d (`ls -1d ???/2*`)
      cd ${d}
 if (! -r MuTpcG.root) then
@@ -13,7 +13,7 @@ endif
    foreach d (`ls -1d ??[0-9]`)
      cd ${d}
      ln -s ../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
+     //     root.exe -q -b 'lMuDst.C(-1,"\*/\*MuDst.root","RMuDst,tpcDb,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG.root")'  MuTpcG.C+ >& MuTpcG.log &
      cd -
    end
    foreach d (`ls -1d *`)
@@ -27,7 +27,7 @@ endif
    Draw();
    root.exe MuTpcG.root MuTpcGPrint.C
    
-#endif
+// #endif
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <assert.h>
 #include <map>

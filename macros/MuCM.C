@@ -1,5 +1,5 @@
 /* Check Last Hit points near Central Membrane */
-//   root.exe lMuDst.C 'MuCM.C+(9999999,"*/*/*MuDst.root")'
+//   root.exe -q -b -x lMuDst.C 'MuCM.C+(9999999,"*/*/*MuDst.root")' >& MuCM2.log &
 #include "Rtypes.h"
 //#include "Riostream.h"
 #include "TROOT.h"

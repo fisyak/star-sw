@@ -2,7 +2,6 @@
 <job name="Timing" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 <command>
 #  source ~/.tcshrc
-  FPE_OFF
   echo $INPUTFILE0
   set subdir = `basename ${INPUTFILE0} | sed -e 's/.sl73_//'` 
   if (! -d ${SUBMITTINGDIRECTORY}/${subdir}) mkdir ${SUBMITTINGDIRECTORY}/${subdir}
@@ -45,6 +44,7 @@
   set exec = "root.exe"
 #  echo ${BITS} | grep '64\.'
 # if (! $?)  set exec = "root.exe"
+  o setenv STARFPE NO # FPE_OFF
 #  ${exec} -q -b 'bfc.C('$f','$l',"'$chain',Sti")' &gt;&amp; ${logFile}
 # ${exec} -q -b 'bfc.C(100,"P2010a,btof,BEmcChkStat,Corr4,OSpaceZ2,OGridLeakFull","/star/rcf/test/daq/2010/029/st_physics_11029020_raw_1030002.daq")' &gt;&amp; ${logFile}
 # ${exec} -q -b 'bfc.C(200,"P2018,McTpcAna,TpxRaw,TpxClu,-hitfilt,mtd,btof,BEmcChkStat,CorrX,OSpaceZ2,OGridLeakFull,evout,NoHistos,noRunco,StiCA,CorrX","/hlt/cephfs/daq/2018/152/19152033/st_physics_adc_19152033_raw_5000002.daq")'  &gt;&amp; ${logFile}

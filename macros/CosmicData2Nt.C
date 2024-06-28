@@ -28,7 +28,7 @@ struct BPoint_t {
 //________________________________________________________________________________
 								
 BPoint_t BPoint;
-enum {Nsets = 14, Npasses = 140};
+enum {Nsets = 14, Npasses = 141};
 static   TString sets[Nsets]  = {"2019/FF",  "2019/RF",  "2020/RF",  "2021/FF",  "2021/RF",  "2022/FF",  "2022/RF",  "2023/FF",  "2023/RF",  "2024/FF",  "2024/RF",  "2021/MF", "2023/ZF", "2024/ZF"};
 static   TString valC[12] = {// "DelpTRAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTIPosT", "DelpTINegT"};
     "DelpTIAll", "DelpTIPos", "DelpTINeg", "DelpTIAllT", "DelpTINegT", "DelpTIPosT", "DelpTRAll", "DelpTRPos", "DelpTRNeg", "DelpTRAllT", "DelpTRPosT", "DelpTRNegT", 
@@ -143,7 +143,7 @@ void Draw(Int_t var = 3, const Char_t *varName="pT") {
     frame->SetTitle(valC[var] + " (@1GeV/c)");
     frame->SetYTitle("Resolutin(%)");
   } else {
-    frame =  c1->DrawFrame(-0.5, ,0.0, Npasses + 0.5,10.0);
+    frame =  c1->DrawFrame(-0.5, 0.0, Npasses + 0.5,10.0);
     if (VarName == "N") {
       frame->SetTitle("No. of matched pairs");
       frame->SetYTitle("N (M)");

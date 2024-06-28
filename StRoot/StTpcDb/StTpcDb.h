@@ -83,7 +83,9 @@ class StTpcDb {
 			       kPadOuter2Glob     = 19, // -"- 						    
 			       			                                                              
                                kWheel             = 20, // Account of Wheel rotation around X and Y axes at GG
-			       kTotalTpcSectorRotaions =21}; 
+			       kRotM              = 21, // Ideal rotaion
+			       kdRS12             = 22, // Super Sector correction
+			       kTotalTpcSectorRotaions = 23};
  private:
   static TGeoHMatrix   *mTpc2GlobMatrix;//!
   Char_t                mBeg[1];        //!
