@@ -446,7 +446,8 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *opt = "colz", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
   TString patt(pattern);
   TPRegexp reg(pattern);
-  TString cTitle = patt;
+  TString cTitle("c");
+  cTitle += patt;
   TString Opt(opt);
   cTitle += ctitle;
   cTitle.ReplaceAll(".*","");
@@ -460,12 +461,12 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
   if (! nx || ! ny) {
-    ny = (Int_t) TMath::Sqrt(NF);
+    ny = TMath::Ceil(TMath::Sqrt(NF));
     nx = NF/ny;
     if (nx*ny != NF) nx++;
   }
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
-  TCanvas *c = new TCanvas(cTitle,cTitle,1200,1200);
+  TCanvas *c = new TCanvas(cTitle,cTitle,200*nx,200*ny);
   c->Divide(nx,ny);
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);
@@ -483,12 +484,13 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
 	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
 	proj->Fit("gaus");
 	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
-	cout << dirName.Data() << Form("\t%10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1));
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
       } else if (Opt == "projx") {
 	TH1 *proj = h2->ProjectionX(Form("_px%i",i));
 	proj->Fit("gaus");
 	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
-	cout << dirName.Data() << Form("\t%10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1));
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
+	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
       } else if (Opt == "slicey") {
 	h2->Draw("colz");
 	h2->FitSlicesY(0,0,-1,0,"QNRG5S");
@@ -502,10 +504,17 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
       } else {
 	hist->Draw("colz");
       }
-    } else {
-      hist->Draw();
+    } else {//  1D
+      if (Opt.Contains("gaus",TString::kIgnoreCase)) {
+	hist->Fit("gaus","iq","same");
+	TF1 *gaus = (TF1 *) hist->GetListOfFunctions()->FindObject("gaus");
+	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
+      } else {
+	hist->Draw();
+      }
     }
-    TLegend *l = new TLegend(0.1,0.90,0.7,0.95);
+    TLegend *l = new TLegend(0.1,0.85,0.7,0.90);
     l->AddEntry(hist, dirName.Data());
     l->Draw();
   }
@@ -648,7 +657,7 @@ void DrawF3List(const Char_t *pattern = "f7_7", const Char_t *ctitle = "c", Int_
     if (nx*ny != NF) nx++;
   }
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
-  TCanvas *c = new TCanvas(cTitle,cTitle, 900, 800);
+  TCanvas *c = new TCanvas(cTitle,cTitle, 200*nx, 200*ny);
   c->Divide(nx,ny);
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);

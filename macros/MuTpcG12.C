@@ -87,6 +87,7 @@ endif
 #include "TGeoMatrix.h"
 #include "TMinuit.h"
 #include "TMinuitMinimizer.h"
+#include "TGeoMatrix.h"
 //#include "StBichsel/Bichsel.h"
 #include "TArrayI.h"
 #define ClassStMessMgr
@@ -245,6 +246,25 @@ void Glob2Sup12SVect(Int_t sector, Double_t master[3], Double_t local[3]) {
   StTpcDb::instance()->Sup12S2Glob(sector).MasterToLocalVect(master,local);
 }
 //________________________________________________________________________________
+void Glob2Sup12SI(Int_t sector, Double_t master[3], Double_t local[3]) {
+  // SupS2Glob = Tpc2Glob * Swap * Half * R_ideal (Ideal Phi) * dR ( StTpcSuperSectorPosition ) * dR^-1 ( StTpcSuperSectorPosition )
+  const TGeoHMatrix &S2G = StTpcDb::instance()->Sup12S2Glob(sector);
+  const TGeoHMatrix &dR  = StTpcDb::instance()->TpcRot(sector, StTpcDb::kdRS12);
+  TGeoHMatrix rotA = S2G * dR.Inverse();
+  rotA.MasterToLocal(master,local);
+  //#define __USE_ZGG__
+#ifdef __USE_ZGG__
+  local[2] += 208.707;
+#endif
+}
+//________________________________________________________________________________
+void Glob2Sup12SIVect(Int_t sector, Double_t master[3], Double_t local[3]) {
+  const TGeoHMatrix &S2G = StTpcDb::instance()->Sup12S2Glob(sector);
+  const TGeoHMatrix &dR  = StTpcDb::instance()->TpcRot(sector, StTpcDb::kdRS12);
+  TGeoHMatrix rotA = S2G * dR.Inverse();
+  rotA.MasterToLocalVect(master,local);
+}
+//________________________________________________________________________________
 Double_t Chi2Vx(StMuPrimaryVertex *VtxH, StMuPrimaryVertex *Vtx) {
   if (! VtxH || ! Vtx) return 99999.;
   StThreeVectorF xyzH = VtxH->position();
@@ -260,16 +280,21 @@ Double_t Chi2Vx(StMuPrimaryVertex *VtxH, StMuPrimaryVertex *Vtx) {
 }
 //________________________________________________________________________________
 void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
-  static TH2F *dZ = 0,  *dX, *dY, *X, *Y,    *Zchisq, *dZT, *dT, *dTB;
-  static TH1F *ZFXT;
+  static TH2F *dZ = 0,  *dX, *dY, *X, *Y;
+  static TH2F *dZT, *dT, *dTB; // *Zchisq, 
+  static TH1F *ZFXT, *dTFXT;
   static TH3F *dXS,   *dYS,   *dZS, *dXYS, *dXTpcS,   *dYTpcS,   *dZTpcS;
+#if 0
   static TH2F *dXS2P,   *dYS2P,   *dZS2P;
   static TH2F *dXS2N,   *dYS2N,   *dZS2N;
-  static TH3F *dXSPhi,   *dYSPhi,   *dZSPhi, *dXSDip,   *dYSDip,   *dZSDip;
+  static TH2F *dXSPhi,   *dYSPhi,   *dZSPhi, *dXSDip,   *dYSDip,   *dZSDip;
   static TH2F *pTSP, *pTSN;
+#endif
+#ifdef __LSF_FIT__
   static TH3F ***plots3D;
   static TH1D *LSF[3][24];
   static TH1D *Chi2T[3];
+#endif /*  __LSF_FIT__ */
   static TH1D *NPART;
   //
   enum {kvpd = 0, kbbc, kepd, kzdc, kTAC, kCAV, kTrgTotal};
@@ -285,7 +310,10 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   static TH2F *dTtrgDif[6+1];
   static TH2F *dTCtrgDif[6+1];
   static TH2F *epdTAC[2];
-  
+        
+  static TH1F *NoPrimTr, *NoGlobTr, *ZLastHitP, *ZLastHitG;
+  static TH2F *XYLastHitP,  *XYLastHitG;
+    
   const static Int_t tZero= 19950101;
   const static TDatime t0(tZero,0);
   const static Int_t timeOffSet = t0.Convert();
@@ -307,6 +335,13 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dT = new TH2F("dT","dT(#musec) (W - E)/2 versus Z",nZ,Zmin,Zmax,nT,-dTmax,dTmax);
     dTB = new TH2F("dTB","dT(time buckets) (W - E)/2 versus Z",nZ,Zmin,Zmax,nT,-10*dTmax,10*dTmax);
     ZFXT = new TH1F("ZFXT","The best primary vertex position (FXT)", 500, 198, 203.);
+    dTFXT = new TH1F("dTFXT","Time difference (fixedTarget) between Z_{VTZ} - 200 (#musec)", 5*nT,-5*dTmax,5*dTmax);
+    NoPrimTr     = new TH1F("NoPrimTr", "no. of primary tracks",500,0.5,500.5);
+    NoGlobTr     = new TH1F("NoGlobTr", "no. of primary tracks",2000,-0.5,1999.5);
+    ZLastHitP    = new TH1F("ZLastHitP","Z of the last hit on primary track : Z",440,-220,220); 
+    ZLastHitG    = new TH1F("ZLastHitG","Z of the last hit on global track : Z",440,-220,220); 
+    XYLastHitP   = new TH2F("XYLastHitP","Y versus X for the last hit on primary track with |ZlastHit| < 3 : X : Y", 200, -200., 200., 200, -200., 200.);
+    XYLastHitG   = new TH2F("XYLastHitG","Y versus X for the last hit on global track with |ZlastHit| < 3 : X : Y",  200, -200., 200., 200, -200., 200.);
     //#define __DATE_DEP__
 #ifdef __DATE_DEP__
     const static Int_t tMin = 20190225;;
@@ -323,15 +358,18 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dY = new TH2F("dY","dY (W - E)/2 versus Z",nZ,Zmin,Zmax,400,-1.,1.);
     X = new TH2F("X","X (W + E)/2 versus Z",nZ,Zmin,Zmax,500,-5.,5.);
     Y = new TH2F("Y","Y (W + E)/2 versus Z",nZ,Zmin,Zmax,500,-5.,5.);
+#if 0
     pTSP = new TH2F("pTSP","pT versus sector for positive primary tracks",24,0.5,24.5,100,0.0,5.0);
     pTSN = new TH2F("pTSN","pT versus sector for negative primary tracks",24,0.5,24.5,100,0.0,5.0);
-    Zchisq = new TH2F("Zchisq","chisq between the highest rank vertex and this one", 100,-25,25,500,0,500);
+    //    Zchisq = new TH2F("Zchisq","chisq between the highest rank vertex and this one", 100,-25,25,500,0,500);
+#endif
     dXS = new TH3F("dXS","dX in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dYS = new TH3F("dYS","dY in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dZS = new TH3F("dZS","dZ in SCS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dXTpcS = new TH3F("dXTpcS","dX in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dYTpcS = new TH3F("dYTpcS","dY in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dZTpcS = new TH3F("dZTpcS","dZ in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+#if 0
     dXYS   = new TH3F("dXYS","X and Y versus sector",24,0.5,24.5,100,-1.0,1.0,100,-1.0,1.0);
     dXSPhi = new TH3F("dXSPhi","dX in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
     dYSPhi = new TH3F("dYSPhi","dY in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
@@ -339,7 +377,6 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXSDip = new TH3F("dXSDip","dX in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,1000,-2.0,2.0);
     dYSDip = new TH3F("dYSDip","dY in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,1000,-2.0,2.0);
     dZSDip = new TH3F("dZSDip","dZ in SCS versus sector and Dip",24,0.5,24.5,100,-0.2,1.2,1000,-2.0,2.0);
-    plots3D = new TH3F**[3];
 
     dXS2P = new TH2F("dXS2P","dX in SCS versus sector (positive)",24,0.5,24.5,1000,-2.0,2.0);
     dYS2P = new TH2F("dYS2P","dY in SCS versus sector (positive)",24,0.5,24.5,1000,-2.0,2.0);
@@ -348,7 +385,9 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXS2N = new TH2F("dXS2N","dX in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
     dYS2N = new TH2F("dYS2N","dY in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
     dZS2N = new TH2F("dZS2N","dZ in SCS versus sector (negative)",24,0.5,24.5,1000,-2.0,2.0);
+#endif
 #ifdef __LSF_FIT__
+    plots3D = new TH3F**[3];
     for (Int_t charge = 0; charge < 3; charge++) {
       plots3D[charge] = new TH3F*[NPlots];
       for (Int_t sec = 1; sec <= 24; sec++) 
@@ -441,6 +480,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   StEventSummary &summary = muEvent->eventSummary();
   Double_t zV  = summary.primaryVertexPosition().z();
   ZFXT->Fill(zV);
+  Double_t dTfxt = (zV - 200.)/driftVel;
+  dTFXT->Fill(dTfxt);
   L4CAVertex &L4Vx = summary.L4Vx;
   L4CAVertex &L4VxWest = summary.L4VxWest;
   L4CAVertex &L4VxEast = summary.L4VxEast;
@@ -521,6 +562,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   Int_t NoKFTracks = KFTracks->GetEntriesFast();                PrPP( NoKFTracks);
   TClonesArray *KFVertices = mu->KFVertices();
   Int_t NoKFVertices = KFVertices->GetEntriesFast();            PrPP( NoKFVertices);
+  NoPrimTr->Fill(NoPrimaryTracks);
+  NoGlobTr->Fill(NoGlobalTracks);
   if (NoPrimaryVertices < 1) return;
   StMuPrimaryVertex *VtxH = 0;
   for (Int_t l = 0; l < NoPrimaryVertices; l++) {
@@ -541,8 +584,10 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     StMuTrack *gTrack = (StMuTrack *) GlobalTracks->UncheckedAt(kg);
     if (! gTrack) continue;
     if (! Accept(gTrack)) continue;
+    const StThreeVectorF &xyzL = gTrack->lastPoint();
+    ZLastHitG->Fill(xyzL.z());
+    if (TMath::Abs(xyzL.z()) < 3.0) XYLastHitG->Fill(xyzL.x(),xyzL.y());
     Int_t sector = SectorNumber(gTrack->firstPoint()); PrPP3(sector);
-    if (SectorNumber(gTrack->lastPoint()) != sector) continue;
     PrPP3(*gTrack);
     StMuTrack *pTrack = 0;
     Int_t NPT = StMuDst::primaryTracks()->GetEntriesFast();
@@ -555,9 +600,15 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     }
     if (pTrack) {
       Double_t pT = pTrack->pt();
+#if 0
       if (pTrack->charge() > 0) pTSP->Fill(sector,pT);
-      else                                       pTSN->Fill(sector,pT);
+      else                      pTSN->Fill(sector,pT);
+#endif
+      const StThreeVectorF &xyzLP = pTrack->lastPoint();
+      ZLastHitP->Fill(xyzLP.z());
+      if (TMath::Abs(xyzLP.z()) < 3.0) XYLastHitP->Fill(xyzLP.x(),xyzLP.y());
     }
+    if (SectorNumber(xyzL) != sector) continue;
     Short_t id = gTrack->id();
     Int_t kgc = gTrack->index2Cov();
     if (kgc < 0) continue;
@@ -679,13 +730,15 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
       continue;
     }
     StThreeVectorD vxS;
+#if 0
     TRMatrix RTR = (StTpcDb::Alignment2024()) ? 
       TRMatrix(3, 3, StTpcDb::instance()->Sup12S2Glob(sector).GetRotationMatrix()) :
       TRMatrix(3, 3, StTpcDb::instance()->SupS2Glob(sector).GetRotationMatrix()); 
     PrPP3(RTR);
-    if (StTpcDb::Alignment2024()) Glob2Sup12S(sector,VGlob.xyz(), vxS.xyz());
+    if (StTpcDb::Alignment2024()) Glob2Sup12SI(sector,VGlob.xyz(), vxS.xyz());
     else                          Glob2SupS(sector,VGlob.xyz(), vxS.xyz()); 
     PrPP(vxS);
+#endif
     StThreeVectorF vx(Vertex[0].GetX(), Vertex[0].GetY(), Vertex[0].GetZ()); PrPP(vx);
     TArrayF dsdr(6);
     Float_t ds = particle.GetDStoPoint(vx.xyz(),dsdr.GetArray());    PrPP3(ds);
@@ -695,6 +748,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     Int_t charge = 1;
     if (q < 0) charge = 2;
     const Float_t *pars = &pb->Parameter(0);
+#if 0
     TRSymMatrix C(3,&pb->Covariance(0)); PrPP(C);
     C += CVx;   PrPP(C);
     //??    TRSymMatrix CL(RTR,TRArray::kAxSxAT,C); PrPP(CL);
@@ -703,27 +757,37 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     if (! GC.IsValid()) {
       continue;
     }
+#endif
     StThreeVectorD x(pars);   PrPP2(x);
     StThreeVectorD p(pars+3); PrPP2(p);
     StThreeVectorD vS, xS, pS; // in sector CS
     StThreeVectorD vxD = vx;
+    StThreeVectorD dG = x - vx; if (Debug() > 1) cout << "dG: " << dG << endl;
+#if 0
     if (! StTpcDb::Alignment2024()) {
       Glob2SupS(sector,vxD.xyz(), vS.xyz());    PrPP2(vS);
       Glob2SupS(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
       Glob2SupSVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
     } else {
-      Glob2Sup12S(sector,vxD.xyz(), vS.xyz());    PrPP2(vS);
-      Glob2Sup12S(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
-      Glob2Sup12SVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
+      Glob2Sup12SI(sector,vxD.xyz(), vS.xyz());    PrPP2(vS);
+      Glob2Sup12SI(sector,x.xyz(),  xS.xyz());     PrPP2(xS);
+      Glob2Sup12SIVect(sector, p.xyz(), pS.xyz()); PrPP2(pS);
     }
-    StThreeVectorD dG = x - vx; if (Debug() > 1) cout << "dG: " << dG << endl;
     StThreeVectorD dS;
     if (! StTpcDb::Alignment2024()) {
       Glob2SupSVect(sector, dG.xyz(), dS.xyz()); PrPP2(dS);
     } else {
-      Glob2Sup12SVect(sector, dG.xyz(), dS.xyz()); PrPP2(dS);
+      Glob2Sup12SIVect(sector, dG.xyz(), dS.xyz()); PrPP2(dS);
     }
     StThreeVectorD d = xS - vS; if (Debug() > 1) cout << "sector:" << sector << "\td: " << d << endl;
+#else
+    Int_t iPhi12 = 90 - StTpcDb::SectorPhiDeg(sector);
+    Double_t Phi12 = TMath::DegToRad()* iPhi12;
+    StThreeVectorD d = dG;
+    d.rotateZ(Phi12);
+    pS = p;
+    pS.rotateZ(Phi12);
+#endif
     if (d.perp() > 2.0) continue;
     StThreeVectorD n = pS.unit();
     Double_t Phi = TMath::ATan2(pS.y(),pS.x());
@@ -731,6 +795,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXS->Fill(sector,x.z(),d.x());
     dYS->Fill(sector,x.z(),d.y());
     dZS->Fill(sector,x.z(),d.z());
+#if 0
     if (charge == 1) {
       dXS2P->Fill(sector,d.x());
       dYS2P->Fill(sector,d.y());
@@ -746,6 +811,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXSDip->Fill(sector,Dip,d.x());
     dYSDip->Fill(sector,Dip,d.y());
     dZSDip->Fill(sector,Dip,d.z());
+#endif
     StThreeVectorD xTpc, vxTpc;
     Tpc2Global.MasterToLocal(x.xyz(),xTpc.xyz());
     Tpc2Global.MasterToLocal(vxD.xyz(),vxTpc.xyz());
@@ -753,7 +819,9 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXTpcS->Fill(sector,x.z(),dTpc.x());
     dYTpcS->Fill(sector,x.z(),dTpc.y());
     dZTpcS->Fill(sector,x.z(),dTpc.z());
+#if 0
     dXYS->Fill(sector,d.x(),d.y());
+#endif
 #ifdef __LSF_FIT__
     Double_t nX = n.x();
     Double_t nY = n.y();
