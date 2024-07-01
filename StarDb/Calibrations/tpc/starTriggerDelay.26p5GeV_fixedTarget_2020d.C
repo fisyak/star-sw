@@ -1,1 +1,1 @@
-starTriggerDelay.26p5GeV_fixedTarget_2020.C
+starTriggerDelay.C
