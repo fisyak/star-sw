@@ -317,6 +317,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   const static Int_t tZero= 19950101;
   const static TDatime t0(tZero,0);
   const static Int_t timeOffSet = t0.Convert();
+  // L4VX
+   
   if (! dZ) {
     StMaker::GetTopChain()->GetTFile()->cd();
     Bool_t IsFixedTarget = St_beamInfoC::instance()->IsFixedTarget();
@@ -587,7 +589,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     const StThreeVectorF &xyzL = gTrack->lastPoint();
     ZLastHitG->Fill(xyzL.z());
     if (TMath::Abs(xyzL.z()) < 3.0) XYLastHitG->Fill(xyzL.x(),xyzL.y());
-    Int_t sector = SectorNumber(gTrack->firstPoint()); PrPP3(sector);
+    Int_t sectorF = SectorNumber(gTrack->firstPoint()); PrPP3(sectorF);
+    Int_t sectorL = SectorNumber(gTrack->lastPoint()); PrPP3(sectorL);
     PrPP3(*gTrack);
     StMuTrack *pTrack = 0;
     Int_t NPT = StMuDst::primaryTracks()->GetEntriesFast();
@@ -601,14 +604,15 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     if (pTrack) {
       Double_t pT = pTrack->pt();
 #if 0
-      if (pTrack->charge() > 0) pTSP->Fill(sector,pT);
-      else                      pTSN->Fill(sector,pT);
+      if (sectorF == sectorL) {
+	if (pTrack->charge() > 0) pTSP->Fill(sectorF,pT);
+	else                      pTSN->Fill(sectorF,pT);
+      }
 #endif
       const StThreeVectorF &xyzLP = pTrack->lastPoint();
       ZLastHitP->Fill(xyzLP.z());
       if (TMath::Abs(xyzLP.z()) < 3.0) XYLastHitP->Fill(xyzLP.x(),xyzLP.y());
     }
-    if (SectorNumber(xyzL) != sector) continue;
     Short_t id = gTrack->id();
     Int_t kgc = gTrack->index2Cov();
     if (kgc < 0) continue;
@@ -645,11 +649,12 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     KFParticle particle = dcaG->Particle(kg, pdg);
 #endif
     particle.SetIdTruth(gTrack->idTruth(),gTrack->qaTruth());
+    Int_t sector = sectorF + 100*sectorL; 
     particle.SetIdParentMcVx(sector); PrPP3(particle);
     particle.S() = dcaG->curvature();
     particles[0].push_back(particle);
-    if (sector <= 12) particles[1].push_back(particle);
-    else              particles[2].push_back(particle);
+    if      (sectorF <= 12 && sectorL <= 12) particles[1].push_back(particle);
+    else if (sectorF >  12 && sectorL >  12) particles[2].push_back(particle);
   }
   UInt_t npart = particles[0].size();
   NPART->Fill(npart);
@@ -725,7 +730,10 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   TRSymMatrix CVx(3,&Cov); PrPP(CVx);
   for (UInt_t i = 0; i < npart; i++) {
     KFParticle particle = particles[0][i];          if (Debug() > 2) {cout << "Orig."; PrPP(particle);}
-    Int_t sector = particle.IdParentMcVx();
+    Int_t sectorF = particle.IdParentMcVx()%100;
+    Int_t sectorL = particle.IdParentMcVx()/100;
+    Int_t sector  = -1;
+    if (sectorF == sectorL) sector = sectorF;
     if (sector < 1 || sector > 24) {
       continue;
     }
@@ -740,6 +748,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     PrPP(vxS);
 #endif
     StThreeVectorF vx(Vertex[0].GetX(), Vertex[0].GetY(), Vertex[0].GetZ()); PrPP(vx);
+    //    StThreeVectorF vx = VtxH->position(); PrPP(vx);
     TArrayF dsdr(6);
     Float_t ds = particle.GetDStoPoint(vx.xyz(),dsdr.GetArray());    PrPP3(ds);
     particle.TransportToDS( ds,dsdr.GetArray() );                     if (Debug() > 2) {cout << "Trans."; PrPP(particle);}

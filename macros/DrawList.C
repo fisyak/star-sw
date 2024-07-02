@@ -472,7 +472,9 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     TH1 *hist = (TH1*) array.At(i);
     hist->GetDirectory()->cd();
     TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
+    if (dirName.EndsWith("F")) { dirName = hist->GetDirectory()->GetName();}
     dirName.ReplaceAll("../","");
+    dirName.ReplaceAll(".root","");
     c->cd(i+1)->SetLogz(1);
     if (hist->GetDimension() == 3) {
     } else if (hist->GetDimension() == 2) {
@@ -482,7 +484,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
 	h2->Draw(Opt);
       } else if (Opt == "projy") {
 	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
-	proj->Fit("gaus");
+	proj->Fit("gaus","q");
 	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
 	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
       } else if (Opt == "projx") {
