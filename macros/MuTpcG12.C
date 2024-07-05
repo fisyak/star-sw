@@ -281,6 +281,7 @@ Double_t Chi2Vx(StMuPrimaryVertex *VtxH, StMuPrimaryVertex *Vtx) {
 //________________________________________________________________________________
 void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   static TH2F *dZ = 0,  *dX, *dY, *X, *Y;
+  static TH3F *dcaXY = 0,  *dcaZ = 0;
   static TH2F *dZT, *dT, *dTB; // *Zchisq, 
   static TH1F *ZFXT, *dTFXT;
   static TH3F *dXS,   *dYS,   *dZS, *dXYS, *dXTpcS,   *dYTpcS,   *dZTpcS;
@@ -371,6 +372,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXTpcS = new TH3F("dXTpcS","dX in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dYTpcS = new TH3F("dYTpcS","dY in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dZTpcS = new TH3F("dZTpcS","dZ in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dcaXY =  new TH3F("dcaXY","dcaXY versus sector and q/pT; sector; q/pT; dcaXY",24,0.5,24.5, 100,-1.0, 1.0, 1000, -2.0, 2.0);
+    dcaZ  =  new TH3F("dcaZ","dcaZ versus sector and q/pT; sector; q/pT; dcaZ",24,0.5,24.5, 100, -1.0, 1.0, 1000, -5.0, 5.0);
 #if 0
     dXYS   = new TH3F("dXYS","X and Y versus sector",24,0.5,24.5,100,-1.0,1.0,100,-1.0,1.0);
     dXSPhi = new TH3F("dXSPhi","dX in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
@@ -625,6 +628,11 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     Double_t dca[2], ermx[3];
     thelixK.Dca(VGlob.xyz(),dca[0],dca[1],ermx,2);
     if (TMath::Abs(dca[0]) > 2 || TMath::Abs(dca[1]) > 5) continue;
+    if (sectorF == sectorL) {
+      Double_t qOverpT = dcaG->charge()/dcaG->pt();
+      dcaXY->Fill(sectorF, qOverpT, dca[0]);
+      dcaZ->Fill(sectorF, qOverpT, dca[1]);
+    }
 #if 0
    // Create GL particle
     static KFPTrack track;
