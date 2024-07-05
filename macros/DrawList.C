@@ -39,6 +39,30 @@
 #endif
 void DrawList() {} 
 //________________________________________________________________________________
+TF1 *GausP0(){
+  static TF1 *f = 0;
+  if (! f) {
+    f = new TF1("gauspol0","gaus(0)+pol0(3)",-1,1);
+  }
+  //  f->SetParLimits(0,10.,1e10);
+  f->SetParLimits(1,-0.5,0.5);
+  f->SetParLimits(2,0.01,5.0);
+  f->SetParameters(10., 0., 0.2, 0.);
+  return  f;
+}
+//________________________________________________________________________________
+TF1 *GausP2(){
+  static TF1 *f = 0;
+  if (! f) {
+    f = new TF1("gauspol2","gaus(0)+pol2(3)",-1,1);
+  }
+  //  f->SetParLimits(0,10.,1e10);
+  f->SetParLimits(1,-0.5,0.5);
+  f->SetParLimits(2,0.01,5.0);
+  f->SetParameters(10., 0., 0.2, 0., 0., 0.);
+  return  f;
+}
+//________________________________________________________________________________
 TObjArray  GetHistList(const Char_t *pattern = "OuterPadRcNoiseConv*") { 
   TObjArray array;
   TObject *obj = 0;
@@ -468,29 +492,60 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
   TCanvas *c = new TCanvas(cTitle,cTitle,200*nx,200*ny);
   c->Divide(nx,ny);
+  Int_t NFits[2] = {0}; // RF FF
+  Double_t XAV[2] = {0};
+  Double_t X2AV[2] = {0};
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);
     hist->GetDirectory()->cd();
     TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
+    if (dirName.EndsWith("F")) { dirName = hist->GetDirectory()->GetName();}
     dirName.ReplaceAll("../","");
+    dirName.ReplaceAll(".root","");
     c->cd(i+1)->SetLogz(1);
+    TF1 *gp = 0;
     if (hist->GetDimension() == 3) {
     } else if (hist->GetDimension() == 2) {
       TH2 *h2 = (TH2 *) hist;
-      TF1 *gaus = 0;
       if (Opt == "colz") {
 	h2->Draw(Opt);
       } else if (Opt == "projy") {
 	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
-	proj->Fit("gaus");
-	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
-	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
+	proj->Fit("gaus","q");
+	gp = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
+	cout << Form(" %8.3f %-30s", gp->GetParameter(1), dirName.Data());
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
+      } else if (Opt == "projygp0") {
+	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
+	gp = GausP0();
+#if 1
+	gp->FixParameter(3,0);
+	proj->Fit(gp,"qm");
+	gp->ReleaseParameter(3);
+#endif
+	proj->Fit(gp,"qm");
+	cout << Form(" %8.3f %-30s", gp->GetParameter(1), dirName.Data());
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
+      } else if (Opt == "projygp2") {
+	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
+	gp = GausP2();
+	gp->FixParameter(3,0);
+	gp->FixParameter(4,0);
+	gp->FixParameter(5,0);
+	proj->Fit(gp,"qm");
+	gp->ReleaseParameter(3);
+	gp->ReleaseParameter(4);
+	gp->ReleaseParameter(5);
+	proj->Fit(gp,"qm");
+
+	cout << Form(" %8.3f %-30s", gp->GetParameter(1), dirName.Data());
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
       } else if (Opt == "projx") {
 	TH1 *proj = h2->ProjectionX(Form("_px%i",i));
 	proj->Fit("gaus");
-	gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
-	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
-	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
+	gp = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
+	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
       } else if (Opt == "slicey") {
 	h2->Draw("colz");
 	h2->FitSlicesY(0,0,-1,0,"QNRG5S");
@@ -507,9 +562,9 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     } else {//  1D
       if (Opt.Contains("gaus",TString::kIgnoreCase)) {
 	hist->Fit("gaus","iq","same");
-	TF1 *gaus = (TF1 *) hist->GetListOfFunctions()->FindObject("gaus");
-	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
-	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gaus->GetParameter(1), gaus->GetParError(1), gaus->GetParameter(2), gaus->GetParError(2));
+	gp = (TF1 *) hist->GetListOfFunctions()->FindObject("gaus");
+	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
+	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
       } else {
 	hist->Draw();
       }
@@ -517,8 +572,24 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     TLegend *l = new TLegend(0.1,0.85,0.7,0.90);
     l->AddEntry(hist, dirName.Data());
     l->Draw();
+    if (gp) {
+      Int_t rf = 1;
+      if (dirName.Contains("RF")) rf = 0; 
+      NFits[rf]++;
+      XAV[rf] += gp->GetParameter(1);
+      X2AV[rf] += gp->GetParameter(1)*gp->GetParameter(1);
+    }
   }
   c->Update();
+  for (Int_t rf = 0; rf < 2; rf++) {
+    if (NFits[rf] > 1) {
+      XAV[rf] /= NFits[rf];
+      X2AV[rf] /= NFits[rf];
+      Double_t sigma = TMath::Sqrt(X2AV[rf] - XAV[rf]*XAV[rf]);
+      const Char_t *RF[2] = {"RF","FF"};
+      cout << Form("<%s> = %9.4f +/- %8.4f", RF[rf], XAV[rf], sigma/TMath::Sqrt(NFits[rf]-1)) << endl;
+    }
+  }
 #if 1
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;

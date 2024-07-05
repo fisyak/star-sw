@@ -94,7 +94,8 @@ use Cwd;
 my @DistortionSet = qw( CorrZ OBmap  OPr40 OIFC OSpaceZ2 OShortR OGridLeakFull      );
 #my @DistortionSet = qw(OBMap); 
 print "DistortionSet = @DistortionSet\n";
-my @dates = qw(	2021/FF 2021/RF 2022/FF 2022/RF 2023/FF 2023/RF);
+#my @dates = qw(	2021/FF 2021/RF 2022/FF 2022/RF 2023/FF 2023/RF);
+my @dates = qw(19GeV_2019 14p5GeV_2019);
 #foreach $trig  (sort keys %dates) {
 my $pwd = cwd();
 foreach $trig  (@dates) {
@@ -113,7 +114,8 @@ foreach $trig  (@dates) {
 #    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",sdt" . $datetime . ",NewTpcAlignment\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
 #    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",sdt" . $datetime . ",NewTpcAlignment\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
 #    my $cmd = "root.exe -q 'CheckDistortion.C(\"" . $Corr . ",Cosmic_" . $datetime . ",Alignment2024,TFGdbOpt\",\"" . $rootfile . "\",\"" . $trig . "\")' >& " . $log;
-    my $cmd = "root.exe -q 'lDb.C(1,\"" . $Corr . ",Cosmic_" . $datetime . ",Alignment2024,TFGdbOpt\")' ";
+#    my $cmd = "root.exe -q 'lDb.C(1,\"" . $Corr . ",Cosmic_" . $datetime . ",Alignment2024,TFGdbOpt\")' ";
+    my $cmd = "root.exe -q 'lDb.C(1,\"" . $Corr . "," . $datetime . ",TFGdbOpt\")' ";
     $cmd .=  "'DistortionCheck.C+(\"" . $Corr . "\")' >& " . $log;
     print "cmd $cmd\n";
     my $flag = system($cmd);
