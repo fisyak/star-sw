@@ -467,7 +467,7 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 #endif
 }
 //________________________________________________________________________________
-void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *opt = "colz", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
+void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *opt = "colz", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
   TString patt(pattern);
   TPRegexp reg(pattern);
   TString cTitle("c");
@@ -511,7 +511,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
 	h2->Draw(Opt);
       } else if (Opt == "projy") {
 	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
-	proj->Fit("gaus","q");
+	proj->Fit("gaus",fopt);
 	gp = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
 	cout << Form(" %8.3f %-30s", gp->GetParameter(1), dirName.Data());
 	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
@@ -520,10 +520,10 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
 	gp = GausP0();
 #if 1
 	gp->FixParameter(3,0);
-	proj->Fit(gp,"qm");
+	proj->Fit(gp,fopt);
 	gp->ReleaseParameter(3);
 #endif
-	proj->Fit(gp,"qm");
+	proj->Fit(gp,fopt);
 	cout << Form(" %8.3f %-30s", gp->GetParameter(1), dirName.Data());
 	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
       } else if (Opt == "projygp2") {
@@ -532,11 +532,11 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
 	gp->FixParameter(3,0);
 	gp->FixParameter(4,0);
 	gp->FixParameter(5,0);
-	proj->Fit(gp,"qm");
+	proj->Fit(gp,fopt);
 	gp->ReleaseParameter(3);
 	gp->ReleaseParameter(4);
 	gp->ReleaseParameter(5);
-	proj->Fit(gp,"qm");
+	proj->Fit(gp,fopt);
 
 	cout << Form(" %8.3f %-30s", gp->GetParameter(1), dirName.Data());
 	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
@@ -561,7 +561,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
       }
     } else {//  1D
       if (Opt.Contains("gaus",TString::kIgnoreCase)) {
-	hist->Fit("gaus","iq","same");
+	hist->Fit("gaus",fopt,"same");
 	gp = (TF1 *) hist->GetListOfFunctions()->FindObject("gaus");
 	//	cout << dirName.Data() << Form("\tmu = %10.5f +/- %8.5f sigma = %10.5f +/- %8.5f\n", gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
 	cout << Form("  {\"%s\",  %10.5f, %8.5f, %10.5f, %8.5f},\n", dirName.Data(), gp->GetParameter(1), gp->GetParError(1), gp->GetParameter(2), gp->GetParError(2));
