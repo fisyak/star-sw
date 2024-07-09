@@ -1,1 +1,1 @@
-starTriggerDelay.7.3GeV_fixedTarget_2019.C
+starTriggerDelay.C

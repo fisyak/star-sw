@@ -100,6 +100,24 @@
 # production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
 # production_pp500_2022/ReversedFullField/P24ia
 
+# 07/07/2024 dir -ltrd /star/data1??/reco/production*/*/P24ia | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
+# production_100GeV_fixedTarget_2021/ReversedFullField/P24ia
+# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_26p5GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_26p5GeV_fixedTarget_2021/ReversedFullField/P24ia
+# production_31GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_3p85GeV_fixedTarget_2021/ReversedFullField/P24ia
+# production_44p5GeV_fixedTarget_2021/ReversedFullField/P24ia
+# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_70GeV_fixedTarget_2021/ReversedFullField/P24ia
+# production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
+# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
+# production_pp500_2022/ReversedFullField/P24ia
 
 @PicoDefs= (
 '2010/11GeV' =>                                   'AuAu11_production/ReversedFullField/P10ih.SL23a',

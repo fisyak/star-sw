@@ -133,6 +133,8 @@
 //#include "StDedxPidTraits.h"
 #include "StEnumerations.h"
 #include "TCernLib.h"
+#include "TQtZoomPadWidget.h"
+#include "TQtCanvas2Html.h"
 #else
 class TSystem;
 class TMath;
@@ -759,6 +761,13 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
       }
     }
   }
+#if 1
+  TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
+  //  Double_t zoom = 1.;
+  //  zoomer->SetZoomFactor(zoom);
+  TQtCanvas2Html  TQtCanvas2Html(c1,  1200, 800, "./Pictures", zoomer);
+  //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
+#endif
 }
 //________________________________________________________________________________
 /*

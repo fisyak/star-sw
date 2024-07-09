@@ -4,8 +4,11 @@
   cd ${SUBMITTINGDIRECTORY}
 #setenv StarEndMakerShell
   setenv STARFPE NO
-  setenv NODEBUG yes
-  starver .DEV2
+#  setenv NODEBUG yes
+#  starver .DEV2
+#  setup cvmfs
+#  setup gcc
+#  starver TFG24c
   set evtsFile = $INPUTFILE0;
 #     set f        = 1
 #     set l        = 5000000
@@ -94,7 +97,8 @@
   if ($? == 0)  set WestEast = ",EastOff"
 #  root.exe -b -q  'bfc.C(10000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
-  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
    rm ${bla}
   gzip ${logFile}

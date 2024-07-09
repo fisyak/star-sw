@@ -1,25 +1,25 @@
 #if 0
    FPE_OFF
    setup debug
-   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
    foreach d (`ls -1d ???/2*`)
      cd ${d}
 if (! -r MuTpcG12.root) then
      ln -s ../../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
 endif
    end
    foreach d (`ls -1d ??[0-9]`)
      cd ${d}
      ln -s ../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    foreach d (`ls -1d *`)
      cd ${d}
      ln -s ~/macros/.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    root.exe lMuDst.C MuTpcG12.root
@@ -281,6 +281,7 @@ Double_t Chi2Vx(StMuPrimaryVertex *VtxH, StMuPrimaryVertex *Vtx) {
 //________________________________________________________________________________
 void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   static TH2F *dZ = 0,  *dX, *dY, *X, *Y;
+  static TH3F *dcaXY = 0,  *dcaZ = 0;
   static TH2F *dZT, *dT, *dTB; // *Zchisq, 
   static TH1F *ZFXT, *dTFXT;
   static TH3F *dXS,   *dYS,   *dZS, *dXYS, *dXTpcS,   *dYTpcS,   *dZTpcS;
@@ -317,6 +318,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   const static Int_t tZero= 19950101;
   const static TDatime t0(tZero,0);
   const static Int_t timeOffSet = t0.Convert();
+  // L4VX
+   
   if (! dZ) {
     StMaker::GetTopChain()->GetTFile()->cd();
     Bool_t IsFixedTarget = St_beamInfoC::instance()->IsFixedTarget();
@@ -369,6 +372,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     dXTpcS = new TH3F("dXTpcS","dX in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dYTpcS = new TH3F("dYTpcS","dY in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
     dZTpcS = new TH3F("dZTpcS","dZ in Tpc CS versus sector and Z",24,0.5,24.5,nZ,Zmin,Zmax,1000,-2.0,2.0);
+    dcaXY =  new TH3F("dcaXY","dcaXY versus sector and q/pT; sector; q/pT; dcaXY",24,0.5,24.5, 100,-1.0, 1.0, 1000, -2.0, 2.0);
+    dcaZ  =  new TH3F("dcaZ","dcaZ versus sector and q/pT; sector; q/pT; dcaZ",24,0.5,24.5, 100, -1.0, 1.0, 1000, -5.0, 5.0);
 #if 0
     dXYS   = new TH3F("dXYS","X and Y versus sector",24,0.5,24.5,100,-1.0,1.0,100,-1.0,1.0);
     dXSPhi = new TH3F("dXSPhi","dX in SCS versus sector and Phi",24,0.5,24.5,100,-0.5,0.5,1000,-2.0,2.0);
@@ -587,7 +592,8 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     const StThreeVectorF &xyzL = gTrack->lastPoint();
     ZLastHitG->Fill(xyzL.z());
     if (TMath::Abs(xyzL.z()) < 3.0) XYLastHitG->Fill(xyzL.x(),xyzL.y());
-    Int_t sector = SectorNumber(gTrack->firstPoint()); PrPP3(sector);
+    Int_t sectorF = SectorNumber(gTrack->firstPoint()); PrPP3(sectorF);
+    Int_t sectorL = SectorNumber(gTrack->lastPoint()); PrPP3(sectorL);
     PrPP3(*gTrack);
     StMuTrack *pTrack = 0;
     Int_t NPT = StMuDst::primaryTracks()->GetEntriesFast();
@@ -601,14 +607,15 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     if (pTrack) {
       Double_t pT = pTrack->pt();
 #if 0
-      if (pTrack->charge() > 0) pTSP->Fill(sector,pT);
-      else                      pTSN->Fill(sector,pT);
+      if (sectorF == sectorL) {
+	if (pTrack->charge() > 0) pTSP->Fill(sectorF,pT);
+	else                      pTSN->Fill(sectorF,pT);
+      }
 #endif
       const StThreeVectorF &xyzLP = pTrack->lastPoint();
       ZLastHitP->Fill(xyzLP.z());
       if (TMath::Abs(xyzLP.z()) < 3.0) XYLastHitP->Fill(xyzLP.x(),xyzLP.y());
     }
-    if (SectorNumber(xyzL) != sector) continue;
     Short_t id = gTrack->id();
     Int_t kgc = gTrack->index2Cov();
     if (kgc < 0) continue;
@@ -621,6 +628,11 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     Double_t dca[2], ermx[3];
     thelixK.Dca(VGlob.xyz(),dca[0],dca[1],ermx,2);
     if (TMath::Abs(dca[0]) > 2 || TMath::Abs(dca[1]) > 5) continue;
+    if (sectorF == sectorL) {
+      Double_t qOverpT = dcaG->charge()/dcaG->pt();
+      dcaXY->Fill(sectorF, qOverpT, dca[0]);
+      dcaZ->Fill(sectorF, qOverpT, dca[1]);
+    }
 #if 0
    // Create GL particle
     static KFPTrack track;
@@ -645,11 +657,12 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     KFParticle particle = dcaG->Particle(kg, pdg);
 #endif
     particle.SetIdTruth(gTrack->idTruth(),gTrack->qaTruth());
+    Int_t sector = sectorF + 100*sectorL; 
     particle.SetIdParentMcVx(sector); PrPP3(particle);
     particle.S() = dcaG->curvature();
     particles[0].push_back(particle);
-    if (sector <= 12) particles[1].push_back(particle);
-    else              particles[2].push_back(particle);
+    if      (sectorF <= 12 && sectorL <= 12) particles[1].push_back(particle);
+    else if (sectorF >  12 && sectorL >  12) particles[2].push_back(particle);
   }
   UInt_t npart = particles[0].size();
   NPART->Fill(npart);
@@ -725,7 +738,10 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
   TRSymMatrix CVx(3,&Cov); PrPP(CVx);
   for (UInt_t i = 0; i < npart; i++) {
     KFParticle particle = particles[0][i];          if (Debug() > 2) {cout << "Orig."; PrPP(particle);}
-    Int_t sector = particle.IdParentMcVx();
+    Int_t sectorF = particle.IdParentMcVx()%100;
+    Int_t sectorL = particle.IdParentMcVx()/100;
+    Int_t sector  = -1;
+    if (sectorF == sectorL) sector = sectorF;
     if (sector < 1 || sector > 24) {
       continue;
     }
@@ -740,6 +756,7 @@ void Process1Event(StMuDst* mu = 0, Long64_t ev = 0) {
     PrPP(vxS);
 #endif
     StThreeVectorF vx(Vertex[0].GetX(), Vertex[0].GetY(), Vertex[0].GetZ()); PrPP(vx);
+    //    StThreeVectorF vx = VtxH->position(); PrPP(vx);
     TArrayF dsdr(6);
     Float_t ds = particle.GetDStoPoint(vx.xyz(),dsdr.GetArray());    PrPP3(ds);
     particle.TransportToDS( ds,dsdr.GetArray() );                     if (Debug() > 2) {cout << "Trans."; PrPP(particle);}

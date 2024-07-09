@@ -1,1 +1,4 @@
-starTriggerDelay.y2019.C
+#include "starTriggerDelay.h"
+TDataSet *CreateTable() {
+  return CreateTable(__FILE__);
+}
