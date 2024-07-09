@@ -1,25 +1,25 @@
 #if 0
    FPE_OFF
    setup debug
-   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+   root.exe -q -b 'lMuDst.C(-1,"*/*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
    foreach d (`ls -1d ???/2*`)
      cd ${d}
 if (! -r MuTpcG12.root) then
      ln -s ../../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
 endif
    end
    foreach d (`ls -1d ??[0-9]`)
      cd ${d}
      ln -s ../.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*/*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    foreach d (`ls -1d *`)
      cd ${d}
      ln -s ~/macros/.sl* .
-     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,CorrY,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
+     root.exe -q -b 'lMuDst.C(-1,"*MuDst.root","RMuDst,tpcDb,CorrZ,TFGdbOpt,detDb,mysql,magF,nodefault,quiet","MuTpcG12.root")'  MuTpcG12.C+ >& MuTpcG12.log &
      cd -
    end
    root.exe lMuDst.C MuTpcG12.root
