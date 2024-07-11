@@ -71,17 +71,25 @@ sub GetRuns($) {
   elsif ($pwd =~ /ZF/) {$FIELD = "ZF";}
   #$ENV{YEAR} = $year;
   #$ENV{FIELD} = $FIELD;
-  my $runs = "/hlt/cephfs/daq/" . $year . "/" . $Day . "/" .  $Run;
+  my $DAQ_DIR = "";
+  if (-r "/hlt/cephfs/daq") {
+    $DAQ_DIR =  "/hlt/cephfs/daq";
+  } elsif (-r "/gpfs01/star/daq") {
+    $DAQ_DIR =  " /gpfs01/star/daq";
+  } else {
+    die "unknow $DAQ_DIR";
+  }
+  my $runs = $DAQ_DIR . "/" . $year . "/" . $Day . "/" .  $Run;
   my $run2 = "";
-  if ($year == "2020") {
-    $runs = "/hlt/cephfs/daq/2019/" . $Day . "/" .  $Run;
-    $run2 = "/hlt/cephfs/daq/2020/" . $Day . "/" .  $Run;
-  } elsif ($year == "2021") {
-    $runs = "/hlt/cephfs/daq/2020/" . $Day . "/" .  $Run;
-    $run2 = "/hlt/cephfs/daq/2021/" . $Day . "/" .  $Run;
-  } elsif ($year == "2022") {
-    $runs = "/hlt/cephfs/daq/2021/" . $Day . "/" .  $Run;
-    $run2 = "/hlt/cephfs/daq/2022/" . $Day . "/" .  $Run;
+  if ($year eq "2020") {
+    $runs = $DAQ_DIR . "/" . "2019/" . $Day . "/" .  $Run;
+    $run2 = $DAQ_DIR . "/" . "2020/" . $Day . "/" .  $Run;
+  } elsif ($year eq "2021") {
+    $runs = $DAQ_DIR . "/" . "2020/" . $Day . "/" .  $Run;
+    $run2 = $DAQ_DIR . "/" . "2021/" . $Day . "/" .  $Run;
+  } elsif ($year eq "2022") {
+    $runs = $DAQ_DIR . "/" . "2021/" . $Day . "/" .  $Run;
+    $run2 = $DAQ_DIR . "/" . "2022/" . $Day . "/" .  $Run;
   }
   return ($year,$FIELD,$runs,$def,$Day,$Run,$run2);
 }
