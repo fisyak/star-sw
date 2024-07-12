@@ -34,7 +34,7 @@ void put2DB(const Char_t* files="$STAR/StarDb/Geometry/svt/svtWafersPosition.200
     TString TName(bName.Data(),indx);  cout << "Table name " << TName << endl;
     TString Time(bName.Data()+indx+1); 
     Time.ReplaceAll(".C","");
-    Time.ReplaceAll(".root","");//  cout << "Time " << Time << endl;
+    Time.ReplaceAll(".root","");  cout << "Time " << Time << endl;
     //  1996-12-01 23:59:59
     //  Int_t d=19960101;
     Int_t d=20000101;
@@ -43,7 +43,7 @@ void put2DB(const Char_t* files="$STAR/StarDb/Geometry/svt/svtWafersPosition.200
     TString flavor(Flavor);
     Int_t n = sscanf(Time.Data(),"%d.%d",&d,&t);
     if (n != 2) {
-      Char_t tag[10];
+      Char_t tag[128];
       n = sscanf(Time.Data(),"%s",&tag);
       if (n == 1) {
 	TString Tag(tag);
