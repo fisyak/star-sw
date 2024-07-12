@@ -47,7 +47,9 @@ void put2DB(const Char_t* files="$STAR/StarDb/Geometry/svt/svtWafersPosition.200
       n = sscanf(Time.Data(),"%s",&tag);
       if (n == 1) {
 	TString Tag(tag);
-	if (Tag.BeginsWith("y") || Tag.BeginsWith("dev")) flavor = "sim";
+	if (flavor == "ofl") {
+	  if (Tag.BeginsWith("y") || Tag.BeginsWith("dev")) flavor = "sim";
+	}
 	d = StMaker::AliasDate(tag);
 	t = StMaker::AliasTime(tag);
 	cout << "n = " << n << " tag: " << tag << " d = " << d << " t = " 
