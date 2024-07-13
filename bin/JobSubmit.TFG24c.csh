@@ -12,7 +12,7 @@ foreach d (`ls -1d ???/2*`)
    continue
   endif
   @ countJ++;  
-  daqdR.pl
+  ~fisyak/bin/daqdR.pl
   if ($?) then
     ls -1d *bla.root
     if ($?) then
@@ -22,14 +22,15 @@ foreach d (`ls -1d ???/2*`)
     cd -;
     continue;
   endif
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2021_Cosmics.xml
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2022_Cosmics.xml
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/daq_2021_Cosmics.xml
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2023_Cosmics.xml
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2019_Cosmics.xml
-#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq_${YEAR}_Cosmics.xml
-#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.DEV2.xml
-    /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts/star-submit ~/xml/daq.TFG24c.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~fisyak/xml/daq_2021_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~fisyak/xml/daq_2022_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~fisyak/xml/daq_2021_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~fisyak/xml/daq_2023_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~fisyak/xml/daq_2019_Cosmics.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~fisyak/xml/daq_${YEAR}_Cosmics.xml
+#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~fisyak/xml/daq.DEV2.xml
+    /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts/star-submit ~fisyak/xml/daq.TFG24c.xml
+#    /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts/star-submit -p bnl_condor_production  ~fisyak/xml/daq.TFG24c.xml
   touch Submitted
   cd -
 #  if ($countJ >= 40) then 
@@ -37,9 +38,9 @@ foreach d (`ls -1d ???/2*`)
 #  endif
 end
 #end
-#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber63 ~/xml/daq_2021StiCA.Minuit.TFG19m.xml
-#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2021StiCA.Minuit.TFG20a.xml
-#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2021.xml
+#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber63 ~fisyak/xml/daq_2021StiCA.Minuit.TFG19m.xml
+#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~fisyak/xml/daq_2021StiCA.Minuit.TFG20a.xml
+#  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~fisyak/xml/daq_2021.xml
 #================================= Summurizing  ===============================================
 @ count = 0
 foreach done (`ls -1d ???/*/Done`)
@@ -48,7 +49,7 @@ foreach done (`ls -1d ???/*/Done`)
   ls -ltr | tail -1 | grep Chain	
   if ($?) then	
     rm -rf .sl*
-    ln -s ~/macros/.sl73_* .	
+    ln -s ~fisyak/macros/.sl73_* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
     @ count++;  echo "count $count";
     if ($count > 120) then 
