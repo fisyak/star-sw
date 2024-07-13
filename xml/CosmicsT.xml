@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+        <command>
+         cd ${SUBMITTINGDIRECTORY}
+   setenv STARFPE NO
+   setenv NODEBUG yes
+   echo $INPUTFILE0 | grep ':'
+   if (! $?) then
+     set dir      = `echo ${INPUTFILE0} | awk -F\: '{print $1}'`
+     set output   = `echo ${INPUTFILE0} | awk -F\: '{print $2}'`
+   else
+     set dir = ${IPUTFILE0};
+     set output   = `basename ${dir}`;
+   endif
+   if (-r ${output}.root) exit 0;
+   root.exe -q -b lMuDst.C 'Cosmics.C+("'${dir}'/*/*MuDst.root","'${output}'.root")'  &gt;&amp; ${output}.log
+        </command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+<!-- <input URL="command:ls -1d /star/data???/reco/CosmicLocalClock/*/P23ia/2019/???" /> -->
+<input URL="command:lsd2019Cosmics.csh" />
+</job>
