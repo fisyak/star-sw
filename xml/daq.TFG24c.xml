@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
         <command>
-  cd ${SUBMITTINGDIRECTORY}
+##  cd ${SUBMITTINGDIRECTORY}
 #setenv StarEndMakerShell
   setenv STARFPE NO
 #  setenv NODEBUG yes
@@ -11,14 +11,18 @@
   setup gcc
   starver TFG24c
   setup nodebug
-  set evtsFile = $INPUTFILE0;
+##
+  cp -p ${INPUTFILE0} .
+##  set evtsFile = ${INPUTFILE0};
+  set evtsFile = `basename ${INPUTFILE0}`;
+  echo "${evtsFile}"
+  if (! -r ${evtsFile}) exit 1;
 #     set f        = 1
 #     set l        = 5000000
-  echo "${evtsFile}"
   set filel    = `basename $evtsFile .daq`
   set output  = ${filel}.event.root
-  if (! -r ${evtsFile}) exit 1;
-  set logFile  = ${filel}B.log
+##  set logFile  = ${filel}B.log
+  set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
 #  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
@@ -62,7 +66,9 @@
 #  echo ${SUBMITTINGDIRECTORY} | grep EastOff
 #  if ($? == 0) set WestEastOff = ",EastOff"
 #  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
+  cd ${SUBMITTINGDIRECTORY}
   set year = `GetYearFromPWD.pl`
+  cd -
   echo ${year} | grep 20
   if ($? != 0) exit 0;
   set PicoMode = ",PicoVtxVpdOrDefault"
@@ -86,7 +92,7 @@
     case "2022":
       set Chain = "pp2022,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
     breaksw
-    case "2023:
+    case "2023":
       set Chain = "P2023,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
     breaksw
     case "2024":
@@ -112,9 +118,11 @@
 #   root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
   root.exe -b -q -x  'bfc.C(100000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
-#   cp  ${filel}* ${SUBMITTINGDIRECTORY}
+##
+##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
+   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
    rm ${bla}
-  gzip -f ${logFile}
+   gzip -f ${SUBMITTINGDIRECTORY}/${logFile}
         </command>
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />
