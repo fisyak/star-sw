@@ -3,8 +3,8 @@ use File::Basename;
 use Cwd;
 use Env;
 #print "$0\n";
-#use lib dirname $0; # 
-use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
+use lib dirname $0; # 
+#use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 my $debug = 0;
 if ($#ARGV >= 0) {
@@ -47,7 +47,7 @@ my ($k,$key) = nextkey($env,$k1);
 my $runMin =   $env->{$key}->{first};
 my $runMax =   $env->{$key}->{last};  print "k1 = $k1, k = $k, runMin = $runMin, runMax = $runMax\n" if ($debug);
 $k1 = $k + 1;
-my $list = "../../../" . $year . "daq.List";
+my $list = "../../../" . $year . "daq.list";
 open (In, $list) or die "Can't open $list";
 my $line;
 while ($line = <In>) {
@@ -73,5 +73,3 @@ while ($line = <In>) {
   }
 } 
 close(In);
-# 20002001
-  20179039 
