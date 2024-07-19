@@ -10,7 +10,21 @@
    root.exe 'lMuDst.C(-1,"root://xrdstar.rcf.bnl.gov:port//home/starlib/home/starreco/reco/AuAu62_production/ReversedFullField/P10ik/2010/078/11078018/st_physics_11078018_raw_5020001.MuDst.root","RMuDst,mysql,magF,nodefault,picoWrite,quiet,TTreeFile")' 'makePicoDst.C+("y2011")'
    root.exe 'lMuDst.C(-1,"root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starreco/reco/AuAu11_production/ReversedFullField/P10ih/2010/149/11149011/st_physics_11149011_raw_1010001.MuDst.root","RMuDst,mysql,magF,nodefault,picoWrite,PicoVtxDefault,quiet")' 'makePicoDst.C("y2010")'
    root.exe  'lMuDst.C(-1,"root://xrdstar.rcf.bnl.gov:1095//home/starlib/home/starreco/reco/AuAu7_production/ReversedFullField/P10ih/2010/114/11114040/st_physics_11114040_raw_1010001.MuDst.root","RMuDst,mysql,magF,nodefault,picoWrite,PicoVtxDefault,quiet")' 'makePicoDst.C("y2010")'
+
+,PicoVtxFXT,FXT
+root.exe 'lMuDst.C(-1,
 */
+// FPE_OFF
+// foreach f (`ls -1d */*/*MuDst.root`)
+/*
+  foreach f (`ls -1d *MuDst.root`)
+   set d = `dirname ${f}`; set b = `basename ${f} .MuDst.root`;
+   if (-r ${d}/${b}.picoDst.root) continue;
+   cd ${d}; pwd; echo "$b";
+   root.exe  -q -b -x 'lMuDst.C(-1,"'${b}'.MuDst.root","RMuDst,mysql,magF,nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y2019")' >& ${b}.log 
+   cd -
+   end
+ */
 #include "TSystem.h"
 #include "Riostream.h"
 #if !defined(__CINT__) &&  !defined(__CLING__)
@@ -32,6 +46,7 @@ void makePicoDst(TString triggerSet = "y2022") {
   Int_t nEvents = 10000000;
   StBFChain *chain = (StBFChain *) StMaker::GetTopChain();
   StMuDstMaker *MuDstMaker = (StMuDstMaker *) chain->Maker("MuDst");
+#if 0
   MuDstMaker->SetStatus("*",0);
   MuDstMaker->SetStatus("MuEvent",1);
   MuDstMaker->SetStatus("PrimaryVertices",1);
@@ -41,10 +56,8 @@ void makePicoDst(TString triggerSet = "y2022") {
   MuDstMaker->SetStatus("BTof*",1);
   MuDstMaker->SetStatus("Emc*",1);
   MuDstMaker->SetStatus("MTD*",1);
-#if 0
   MuDstMaker->SetStatus("StStMuMcVertex",1);
   MuDstMaker->SetStatus("StStMuMcTrack",1);
-#endif
   StMaker *detDb = chain->Maker("detDb");
   detDb->SetActive(kFALSE);
   StMaker *tpcDB = chain->Maker("tpcDB");
@@ -53,7 +66,6 @@ void makePicoDst(TString triggerSet = "y2022") {
   mk->SetMode(1);
   mk->SetAttr("PicoVtxMode", "PicoVtxVpdOrDefault");
   mk->SetAttr("PicoCovMtxMode", "PicoCovMtxWrite");
-#if 0
   if (triggerSet.Contains("y2014",TString::kIgnoreCase) || triggerSet.Contains("y2016",TString::kIgnoreCase)) {
     mk->SetVxZrange(-6,6);
     mk->SetVxRmax(2);
