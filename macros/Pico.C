@@ -25,6 +25,7 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TH3.h"
+#include "TLorentzVector.h"
 #include "TProfile.h"
 #include "TStyle.h"
 #include "TF1.h"
@@ -65,7 +66,9 @@
 #include "StProbPidTraits.h"
 #endif
 #include "StdEdxY2Maker/dEdxHist.h"
+#if 0
 #include "StdEdxY2Maker/StPidStatus.h"
+#endif
 #undef  StMessMgr
 #undef ClassStMessMgr
 #else
@@ -230,8 +233,9 @@ Int_t IndexH(const Char_t *name) {
   //  if (index >= 0) cout << "Found " << Name << "\t" << PidNames[index] << "\tindex\t" << index << endl;      
   return index;
 }
+#if 0
 //________________________________________________________________________________
-void Pico(const Char_t *files ="./*.picoDst.root",
+void Pico1(const Char_t *files ="./*.picoDst.root",
 	      const Char_t *Out = "Pico.root"){
 #ifndef __CINT__
   //  static const Double_t sigmaB[2] = {6.26273e-01, -5.80915e-01}; // Global Tracks, wrt Bichsel
@@ -486,9 +490,9 @@ void Pico(const Char_t *files ="./*.picoDst.root",
       Double_t zPred[3][KPidParticles];
       Double_t sPred[3][KPidParticles]; // errors versus bg10
 #ifdef __TFG__VERSION__
-      StdEdxStatus *PiDs[3] = { PiD.fFit, PiD.fI70, PiD.fdNdx};
+      StdEdxStatusO *PiDs[3] = { PiD.fFit, PiD.fI70, PiD.fdNdx};
 #else
-      StdEdxStatus *PiDs[3] = { 0};
+      StdEdxStatusO *PiDs[3] = { 0};
 #endif /*  __TFG__VERSION__ */
       Double_t dEdx[3] = {0};
       Double_t dEdxL[3] = {0};
@@ -607,4 +611,99 @@ void Pico(const Char_t *files ="./*.picoDst.root",
   } // event loop
   if (fOut) fOut->Write();
 #endif /* !__CINT__ */
+}
+#endif
+//________________________________________________________________________________
+void Pico(const Char_t *files ="./*.picoDst.root",
+	      const Char_t *Out = "Pico.root"){
+#ifndef __CINT__
+  maker = new StPicoDstMaker(StPicoDstMaker::IoRead,files);
+  maker->Init();
+#else
+  maker = (StPicoDstMaker *) StMaker::GetTopChain()->Maker("PicoDst");
+  if (! maker) return;
+#endif
+  maker->SetStatus("*",1);
+  //         Now iterations
+  Var_t Var;
+  TChain *tree = maker->chain();
+  Long64_t nentries = tree->GetEntries();
+  if (nentries <= 0) return;
+#ifdef DEBUG
+  Long64_t nevent = 9;
+#else
+  Long64_t nevent = 9999999;
+#endif
+  nevent = TMath::Min(nevent,nentries);
+  cout << nentries << " events in chain " << nevent << " will be read." << endl;
+  tree->SetCacheSize(-1);        //by setting the read cache to -1 we set it to the AutoFlush value when writing
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,34,0)
+  tree->SetCacheLearnEntries(1); //one entry is sufficient to learn
+  tree->SetCacheEntryRange(0,nevent);
+#endif
+  TFile *fOut = new TFile(Out,"recreate");
+  TH1D *mee = new TH1D("mee","effective mass e+e-",60,1.0,13.);
+  TH1D *meeS = new TH1D("meeS","effective mass e-e- + e+e+",60,1.0,13.);
+  for (Long64_t ev = 0; ev < nevent; ev++) {
+    if (maker->Make()) break;
+    // for Maxim ============================================================
+    StPicoDst* pico = maker->picoDst();   // get a pointer to the StPicoDst class, the class that points to all the data
+    if (ev%1000 == 0) cout << "Read event\t" << ev << endl;
+    StPicoEvent* picoEvent = pico->event(); // get a pointer to the class holding event-wise information
+    if (Debug()) {cout << " #" << ev;}
+    Int_t NoGlobalTracks = pico->numberOfTracks( );  if (Debug()) {cout << "\tGlobalTracks " << NoGlobalTracks;}
+    if (Debug())                                                               {cout << endl;}
+    // Count no. of good primary tracks
+    Int_t noGoodPrimTracks = 0;
+    for (Int_t k = 0; k < NoGlobalTracks; k++) {
+      StPicoTrack *gTrack = pico->track(k);
+      if (!gTrack) continue;
+      StPicoTrack *pTrack = gTrack;
+      if (!gTrack->isPrimary()) continue;
+      StPicoTrackCovMatrix *gCov = pico->trackCovMatrix(k);
+      if (! gCov) continue;
+      noGoodPrimTracks++;
+    }
+    Double_t me2 = 0.51099907e-3 * 0.51099907e-3 ;
+    for (Int_t k = 0; k < NoGlobalTracks; k++) {
+      StPicoTrack *gTrackK = pico->track(k);
+      if (!gTrackK) continue;
+      StPicoTrack *pTrackK = gTrackK;
+      if (!gTrackK->isPrimary()) continue;
+#if 0
+      StPicoTrackCovMatrix *gCovK = pico->trackCovMatrix(k);
+      if (! gCovK) continue;
+#endif
+      Int_t chargeK = gTrackK->charge();
+      //      if (chargeK < 0) continue;
+#if 0
+      if (pTrackK->gMom().Eta() > -2) continue;
+      if (pTrackK->gMom().Mag() <  2) continue;
+      if (gTrackK->dEdx() < 10) continue;
+      if (gTrackK->nHits() < 15) continue;
+      cout << "Run/Event " << picoEvent->runId() << " / " << picoEvent->eventId() << "\tpmom = " << pTrackK->gMom().Mag() 
+	   << "\tEta " << pTrackK->gMom().Eta() << "\tdEdx = " << gTrackK->dEdx() << "\tid = " << pTrackK->id() << endl;
+#endif															
+      TVector3 K = pTrackK->pMom();
+      TLorentzVector K4(K, TMath::Sqrt(K.Mag2() + me2));
+      for (Int_t l = 0; l < k; l++) {
+	StPicoTrack *gTrackL = pico->track(l);
+	if (!gTrackL) continue;
+	StPicoTrack *pTrackL = gTrackL;
+	if (!gTrackL->isPrimary()) continue;
+#if 0
+	StPicoTrackCovMatrix *gCovL = pico->trackCovMatrix(l);
+	if (! gCovL) continue;
+#endif
+	Int_t chargeL = gTrackL->charge();
+	//	if (chargeL > 0) continue;
+	TVector3 L = pTrackL->pMom();
+	TLorentzVector L4(L, TMath::Sqrt(L.Mag2() + me2));
+	TLorentzVector KL = K4 + L4;
+	if (chargeK+chargeL == 0) mee->Fill(KL.M());
+	else                      meeS->Fill(KL.M());
+      }
+    } // track loop
+  } // event loop
+  if (fOut) fOut->Write();
 }
