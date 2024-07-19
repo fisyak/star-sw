@@ -51,6 +51,7 @@ foreach done (`ls -1d ???/*/Done`)
     rm -rf .sl*
     ln -s ~fisyak/macros/.sl73_* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
+    root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
     @ count++;  echo "count $count";
     if ($count > 120) then 
         cd -

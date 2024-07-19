@@ -25,6 +25,7 @@ foreach my $currentrun (@AllRuns) {
 #    foreach my $tag (qw(st hlt)) {
     foreach my $tag (qw(hlt st_physics_)) { # st_physics_2
       my @files = glob $run . "/" . $tag . "*.daq"; print "files = @files\n" if ($debug);
+# get_file_list.pl -keys 'events' -cond 'filetype=online_daq,filename="st_physics_21044023_raw_2500001.daq"' -limit 1
       if ($#files < 0) {next;}
       #  print "files = @files\n";
       #    my $day = int ($r/1000 - 20000); #print "ru = $r => day = $day\n";

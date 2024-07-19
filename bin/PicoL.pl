@@ -56,9 +56,11 @@ elsif ($pwd =~ /2013/) { $year = "y2013";}
 elsif ($pwd =~ /2012/) { $year = "y2012";} 
 elsif ($pwd =~ /2011/) { $year = "y2011";} 
 elsif ($pwd =~ /2010/) { $year = "y2010";} 
-if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
+if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24c/) {
 #  $PICOPATH = "/gpfs01/star/data*"; print "PICOPATH = $PICOPATH \n" if ($debug);
-  $PICOPATH = "/star/data*"; print "PICOPATH = $PICOPATH \n" if ($debug);
+  if ($pwd =~ /TFG24c/) {$PICOPATH = "/gpfs01/star/subsysg/TFG/reco/TFG24c/";}
+  else                  {$PICOPATH = "/star/data*";}
+  print "PICOPATH = $PICOPATH \n" if ($debug);
 #   if    ($pwd =~ /2021\/p7p7_21_DEV_calib/)  {$PICOPATH = "/star/data*"; $glob = "/reco/production_7p7GeV_2021/ReversedFullField/p7p7_21_DEV_calib/2021/";}
 #   elsif ($pwd =~ /2021\/7p7GeV.P22ia_calib/)  {$glob = "/reco/production_7p7GeV_2021/ReversedFullField/P22ia_calib/2021/";}
 #   elsif ($pwd =~ /2020\/5p75GeV_fixedTarget_P21id/) {$glob = "/reco/production_5p75GeV_fixedTarget_2020/ReversedFullField/P21id/20*";}
@@ -132,7 +134,9 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/) {
 #    if ($pwd =~ /$key/) {
     if ($tag eq $key) {
     print "found tag = |$tag| == key = |$key| ========================================\n" if ($debug);
-      $glob = "/reco/" . $def->{$key}; print "pwd = $pwd, => key => $key, glob = $glob\n" if ($debug);
+    $glob = "";
+    if ($PICOPATH !~ /reco/) {$glob = "/reco/";}
+    $glob .= $def->{$key}; print "pwd = $pwd, => key => $key, glob = $glob\n" if ($debug);
 #       if ($key =~ /P23ib/) {
 # 	$PICOPATH = "/sdcc/lustre02/star/data102"; print "PICOPATH = $PICOPATH\n" if ($debug);
 #       }
@@ -249,8 +253,8 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-my $GLOB = $PICOPATH . $glob . "/*/???/*";
-#my $GLOB = $PICOPATH . $glob . "???/*";
+#my $GLOB = $PICOPATH . $glob . "/*/???/*";
+my $GLOB = $PICOPATH . $glob . "/???/*";
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);
