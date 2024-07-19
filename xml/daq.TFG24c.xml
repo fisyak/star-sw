@@ -117,12 +117,14 @@
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
-  root.exe -b -q -x  'bfc.C(100000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C(100000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C(20000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C(10000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 ##
 ##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
    mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
    rm ${bla}
-   gzip -f ${SUBMITTINGDIRECTORY}/${logFile}
+   gzip -f ${logFile}
         </command>
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />

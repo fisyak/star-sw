@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+        <command>
+cd ${SUBMITTINGDIRECTORY}
+setenv STARFPE NO
+setup nodebug
+set mu = ${INPUTFILE0} 
+if (-r  ${mu}.log) exit 0;
+root.exe -q -q -x lMuDst.C 'Recover.C("'${mu}'")' &gt;&amp; ${mu}.log
+        </command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+ 
+<input URL="command:Recover.csh" />
+</job>

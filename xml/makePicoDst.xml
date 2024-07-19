@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+        <command>
+cd ${SUBMITTINGDIRECTORY}
+setenv STARFPE NO
+setup nodebug
+set year = `GetYearFromPWD.pl`
+set mu = ${INPUTFILE0} 
+set dir = `dirname ${mu}`
+set muB = `basename ${mu}`
+cd ${dir}
+set picoD = `echo ${muB} | sed -e 's/Mu/pico/'`
+if (-r ${picoD}) exit 0;
+root.exe -q -q -x 'lMuDst.C(-1,"'${muB}'","RMuDst,mysql,magF,nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y'${year}'")' &gt;&amp; ${picoD}.log
+        </command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+ 
+<input URL="command:makePicoDst.pl" />
+</job>
