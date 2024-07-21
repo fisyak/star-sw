@@ -1,12 +1,14 @@
 #! /bin/tcsh -f
 @ countJ = 0
-foreach done (`ls -1d ???/*/*Done`)
-  set d = `dirname ${done}`
+foreach done (`ls -1d ???/*`)
+#  set d = `dirname ${done}`
+  set d = ${done}
   cd ${d}; pwd;
-  ls -ltr | tail -1 | grep Chain	
+#  ls -ltr | tail -1 | grep Chain	
+  ls -ltr Chain.log
   if ($?) then	
     @ count = `ps au | grep root.exe | wc -l`; # ++;  echo "count $count";
-    if ($count > 80) then 
+    if ($count > 40) then 
         cd -
 	break;
     endif

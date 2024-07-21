@@ -46,7 +46,7 @@ end
 foreach done (`ls -1d ???/*/Done`)
   set d = `dirname ${done}`
   cd ${d}; pwd;
-  ls -ltr | tail -1 | grep Chain	
+  ls -ltr | tail -1 | grep Chain.log	
   if ($?) then	
     rm -rf .sl*
     ln -s ~fisyak/macros/.sl73_* .	
