@@ -1850,20 +1850,28 @@ void StBFChain::SetInputFile (const Char_t *infile){
   if (fInFile == "") {SetOption("-in","No Input File"); SetOption("-InTree","NoInput File"); return;}
   if (!GetOption("fzin") && !GetOption("fzinSDT") &&!GetOption("ntin")) {
     fSetFiles= new StFile();
-    TObjArray Files;
-    ParseString(fInFile,Files);
-    TIter next(&Files);
-    TObjString *File;
-    while ((File = (TObjString *) next())) {
-      TString string = File->GetString();
-      if (!string.Contains("*") && ! string.BeginsWith("@") &&
-	  gSystem->AccessPathName(string.Data())) {// file does not exist
-	gMessMgr->Error() << "StBFChain::SetInputFile  *** NO FILE: " << string.Data() << ", exit!" << endm;
+    if (fInFile.Contains(",")) {// special case for splitting, ignore "'"
+      if ( gSystem->AccessPathName(fInFile)) {// file does not exist
+	gMessMgr->Error() << "StBFChain::SetInputFile  *** NO FILE: " << fInFile.Data() << ", exit!" << endm;
 	gSystem->Exit(1);
       }
-      else fSetFiles->AddFile(File->String().Data());
+      fSetFiles->AddFile(fInFile);
+    } else {
+      TObjArray Files;
+      ParseString(fInFile,Files);
+      TIter next(&Files);
+      TObjString *File;
+      while ((File = (TObjString *) next())) {
+	TString string = File->GetString();
+	if (!string.Contains("*") && ! string.BeginsWith("@") &&
+	    gSystem->AccessPathName(string.Data())) {// file does not exist
+	  gMessMgr->Error() << "StBFChain::SetInputFile  *** NO FILE: " << string.Data() << ", exit!" << endm;
+	  gSystem->Exit(1);
+	}
+	else fSetFiles->AddFile(File->String().Data());
+      }
+      Files.Delete();
     }
-    Files.Delete();
   }
 }
 //_____________________________________________________________________
