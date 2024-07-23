@@ -112,7 +112,9 @@ void kfpAnalysis(Int_t N = 10000000,
 #endif  
 
   StMaker *dbMk = chain->GetMaker("db");
-  if (dbMk) dbMk->SetDebug(1);
+  if (dbMk) {
+    dbMk->SetDebug(1);
+  }
   chain->Init();
   //   StKFParticleInterface::instance()->SetUsedx2(kTRUE); // old dE/dx calibration before SL
   //  if(isPico)
@@ -177,11 +179,15 @@ void kfpAnalysis(Int_t N = 10000000,
   }
   if (! tree ) {
     cout << "No MuDst/PicoDst tree. Exit." << endl;
+    return;
   }
   Long64_t nentries = tree->GetEntries();
-  cout << "no. events in tree " <<nentries << endl;
-#if 0
-  if (nentries <= 0) return;
+  cout << "no. events in tree. " <<nentries << endl;
+#if 1
+  if (nentries <= 0) {
+    cout << "Tree is empty. Exit" << endl;
+    return;
+  }
   Long64_t nevent = N;
   nevent = TMath::Min(nevent,nentries);
   cout << nentries << " events in chain " << nevent << " will be read." << endl;

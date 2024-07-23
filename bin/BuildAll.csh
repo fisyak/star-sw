@@ -3,7 +3,8 @@ set list = "";
 set domain = `hostname -d`
 if (! $?ROOT_VERSION) setenv $ROOT_VERSION ""
 
-foreach root (root6 root5)
+#foreach root (root6 root5)
+foreach root (root5)
   switch ($domain) 
     case "*local":
     case "*starp.bnl.gov":
@@ -12,7 +13,7 @@ foreach root (root6 root5)
     case "*bnl.gov":
     #    set list = "gcc482 gcc492 gcc/6.3 gcc/10";
 #	set list = "gcc" #  gcc/6.3  gcc/10.1.0"
-	set list = "gcc gcc/12 gcc/13" #  gcc/6.3  gcc/11"
+	set list = "gcc gcc/12"#  gcc/13" #  gcc/6.3  gcc/11"
     breaksw
   endsw
   set gcc_list = "${list}"

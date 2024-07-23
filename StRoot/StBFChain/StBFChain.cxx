@@ -869,8 +869,10 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("EastOff"))      mk->SetAttr("EastOff",kTRUE);
       if ( GetOption("WestOff"))      mk->SetAttr("WestOff",kTRUE);
     }
-    if (maker == "StEventQAMaker" && GetOption("QAalltrigs"))
-      ProcessLine(Form("((StEventQAMaker *) %p)->AllTriggers();",mk));
+    if (maker == "StEventQAMaker") {
+      if ( GetOption("QAalltrigs"))   mk->SetAttr("allTrigs",kTRUE);
+      if ( GetOption("QAallevents"))  mk->SetAttr("allEvents",kTRUE);
+    }
     //Special options for V0s and Xis using estGlobal tracks
     if(maker=="StV0FinderMaker" && Key=="v0svt"){
       TString cmd(Form("StV0FinderMaker *V0mk=(StV0FinderMaker*) %p;",mk));
@@ -1850,20 +1852,28 @@ void StBFChain::SetInputFile (const Char_t *infile){
   if (fInFile == "") {SetOption("-in","No Input File"); SetOption("-InTree","NoInput File"); return;}
   if (!GetOption("fzin") && !GetOption("fzinSDT") &&!GetOption("ntin")) {
     fSetFiles= new StFile();
-    TObjArray Files;
-    ParseString(fInFile,Files);
-    TIter next(&Files);
-    TObjString *File;
-    while ((File = (TObjString *) next())) {
-      TString string = File->GetString();
-      if (!string.Contains("*") && ! string.BeginsWith("@") &&
-	  gSystem->AccessPathName(string.Data())) {// file does not exist
-	gMessMgr->Error() << "StBFChain::SetInputFile  *** NO FILE: " << string.Data() << ", exit!" << endm;
+    if (fInFile.Contains(",")) {// special case for splitting, ignore "'"
+      if ( gSystem->AccessPathName(fInFile)) {// file does not exist
+	gMessMgr->Error() << "StBFChain::SetInputFile  *** NO FILE: " << fInFile.Data() << ", exit!" << endm;
 	gSystem->Exit(1);
       }
-      else fSetFiles->AddFile(File->String().Data());
+      fSetFiles->AddFile(fInFile);
+    } else {
+      TObjArray Files;
+      ParseString(fInFile,Files);
+      TIter next(&Files);
+      TObjString *File;
+      while ((File = (TObjString *) next())) {
+	TString string = File->GetString();
+	if (!string.Contains("*") && ! string.BeginsWith("@") &&
+	    gSystem->AccessPathName(string.Data())) {// file does not exist
+	  gMessMgr->Error() << "StBFChain::SetInputFile  *** NO FILE: " << string.Data() << ", exit!" << endm;
+	  gSystem->Exit(1);
+	}
+	else fSetFiles->AddFile(File->String().Data());
+      }
+      Files.Delete();
     }
-    Files.Delete();
   }
 }
 //_____________________________________________________________________

@@ -4,6 +4,7 @@
  set CURRENT_DIR = `pwd`
 #C       cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
+  setup nodebug
   set idNdx = kFALSE;
   echo ${SUBMITTINGDIRECTORY} | grep dNdx 
   if (! $? )  set idNdx = kTRUE;

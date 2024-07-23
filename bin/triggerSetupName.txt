@@ -1,0 +1,109 @@
+ProductionMinBias
+productionCentral
+productionCentralNoUPC
+productionCentral600
+productionCentral1200
+productionMinBiasHT
+productionHigh
+productionMid
+productionLow
+productionHalfHigh
+productionHalfLow
+production62GeV
+productionPP
+production_dAu2008
+production_mb2008
+production_PMD2008
+production2009_jeff
+production2009_500GeV
+productionZDCpolarimetry
+production2009_500Gev_b
+production2009_500Gev_c
+production2009_500Gev_25
+production2009_200Gev_Hi
+production2009_200Gev_Lo
+production2009_200Gev_Single
+production_15GeV_2014
+production_15GeV_2014_hft
+production_pp200long_2015
+production_pp200trans_2015
+production_fms_pp200trans_2015
+production_fms_pp200long2_2015
+production_pp200long2_2015
+production_pp200long3_2015
+production_pAu_2015
+production_pAu200_2015
+production_pAu200_fms_2015
+production_pAu_fms_2015
+production_pAl200_2015
+production_pAl200_fms_2015
+production_pAl200_2015_lowlumi
+production_isobar_2018
+production_27GeV_fixedTarget_2018
+production_3p85GeV_fixedTarget_2018
+production_26p5GeV_fixedTarget_2018
+production_19GeV_2019
+production_19GeV_bbcveto_2019
+production_14p5GeV_2019
+production_7.3GeV_fixedTarget_2019
+production_lzr_14p5GeV_2019
+production_7p7GeV_2019
+production_lzr_7p7GeV_2019
+production_3p85GeV_fixedTarget_2019
+production_7p7GeV_2019_opentac
+production_9p2GeV_2019
+production_4p59GeV_fixedTarget_2019
+production_31GeV_fixedTarget_2019
+production_AuAu200_2019
+production_11p5GeV_2020
+production_5p75GeV_fixedTarget_2020
+production_31p2GeV_fixedTarget_2020
+production_9p8GeV_fixedTarget_2020
+production_9p2GeV_2020
+production_19p5GeV_fixedTarget_2020
+production_13p5GeV_fixedTarget_2020
+production_7p3GeV_fixedTarget_2020
+production_9p2GeV_2020b
+production_9p2GeV_2020c
+production_26p5GeV_fixedTarget_2020
+production_7p7GeV_2020
+production_7p7GeV_2021
+production_3p85GeV_fixedTarget_2021
+production_44p5GeV_fixedTarget_2021
+production_100GeV_fixedTarget_2021
+production_70GeV_fixedTarget_2021
+production_OO_200GeV_2021
+production_ps_OO_200GeV_2021
+production_OO_fcsTiming
+production_FF_OO_200GeV_2021
+production_17p3GeV_2021
+production_26p5GeV_fixedTarget_2021
+production_dAu200_2021
+production_pp500_2022
+production_AuAu_2023
+production_AuAu_ZeroField_2023
+production_AuAu_HalfField_2023
+================================================================================
+Maksym's sets:
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_3p85GeV_fixedTarget_2018,production=P19ie,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_3p85GeV_fixedTarget_2019,production=P23id,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_4p59GeV_fixedTarget_2019,production=P23id,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_7.3GeV_fixedTarget_2019,production=P23id,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_31GeV_fixedTarget_2019,production=P23id,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_5p75GeV_fixedTarget_2020,production=P23ie,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_7p3GeV_fixedTarget_2020,production=P23ie,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_9p8GeV_fixedTarget_2020,production=P23ie,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_13p5GeV_fixedTarget_2020,production=P23ie,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_19p5GeV_fixedTarget_2020,production=P23ie,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_31p2GeV_fixedTarget_2020,production=P23id,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_3p85GeV_fixedTarget_2019,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_4p59GeV_fixedTarget_2019,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_7.3GeV_fixedTarget_2019,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_31GeV_fixedTarget_2019,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_5p75GeV_fixedTarget_2020,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_7p3GeV_fixedTarget_2020,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_9p8GeV_fixedTarget_2020,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_13p5GeV_fixedTarget_2020,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_19p5GeV_fixedTarget_2020,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<!-- <input URL="catalog:rhic.bnl.gov?trgsetupname=production_31p2GeV_fixedTarget_2020,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />
+<input URL="catalog:rhic.bnl.gov?trgsetupname=production_3p85GeV_fixedTarget_2021,production=P24ia,filename~st_physics,filetype=daq_reco_picoDst,storage!=hpss" nFiles="all" singleCopy="true" />

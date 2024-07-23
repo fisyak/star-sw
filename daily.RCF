@@ -607,3 +607,59 @@ MySQL [Calibrations_tpc]>  select entryTime,beginTime,flavor,deactive  from tpcS
 14 rows in set (0.01 sec)
 
 Outer
+================================================================================
+07/17/2024
+                             Processed  MuDst  picoDst     GB    GBP   kfp  All
+2019/RF/3p85GeV_fixedTarget          Y
+2019/RF/4p59GeV_fixedTarget          Y     ok       ok  53.0M 25.9M     +    + 4p59GeV_fixedTarget_TFG24c.dEdxB.root 5.41M
+2019/RF/7.3GeV_fixedTarget           Y   
+2020/RF/5p75GeV_fixedTarget          Y     ok     redo  15.2M  9.9M     +    
+2020/RF/7p3GeV_fixedTarget           Y     ok     redo   2.1   1.5     
+
+
+
+[cvmfswrite01] ~/TFG24c/2020/RF/5p75GeV_fixedTarget $ grep key  */*/Chain.log
+044/21044033/Chain.log:Error in <TFile::ReadKeys>: reading illegal key, exiting after 1 keys
+044/21044040/Chain.log:Error in <TFile::ReadKeys>: reading illegal key, exiting after 1 keys
+044/21044043/Chain.log:Error in <TFile::ReadKeys>: reading illegal key, exiting after 1 keys
+045/21045002/Chain.log:Error in <TFile::ReadKeys>: reading illegal key, exiting after 1 keys
+045/21045002/Chain.log:Error in <TFile::ReadKeys>: reading illegal key, exiting after 1 keys
+
+
+$ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+1
+
+grep 'Total events processed ' *B.log
+================================================================================
+07/18/2024
+                             Processed  MuDst  picoDst     GB    GBP   kfp  All
+2019/RF/3p85GeV_fixedTarget          Y     ok       ok   0.8M  0.3M     +   +   0.23M 
+2019/RF/4p59GeV_fixedTarget          y     ok       ok   9.4M  7.5M     +   +  12.8M
+2019/RF/7.3GeV_fixedTarget           y     ok       ok   6.96  5.1M     - 
+2020/RF/5p75GeV_fixedTarget          Y     ok       ok  22.6M 18.5M     +   +  11.4M
+2020/RF/7p3GeV_fixedTarget           Y     ok       ok   3.7   2.6      +   +   1.9M
+
+
+foreach f ( `grep -l 'segmentation violation' */*/*.picoDst.root.log` )
+  set d = `dirname ${f}`;
+  set b = `basename ${f} .picoDst.root.log`;
+  echo "${f} => ${d}/${b}"
+  rm  ${d}/${b}*
+end
+
+
+ grep -A 1 key */*/Chain.log
+mv st_physics_20158041_raw_0000001,1,6540,1,6540.event.root	  st_physics_20158041_raw_0000001,1,6540.event.root   
+mv st_physics_20158041_raw_0000001,1,6540,1,6540.log.gz	  st_physics_20158041_raw_0000001,1,6540.log.gz       
+mv st_physics_20158041_raw_0000001,1,6540,1,6540.MuDst.root	  st_physics_20158041_raw_0000001,1,6540.MuDst.root   
+mv st_physics_20158041_raw_0000001,1,6540,1,6540.picoDst.root st_physics_20158041_raw_0000001,1,6540.picoDst.root 
+
+
+~/TFG24c $ 
+foreach f (`ls -1d 2*/*/*/*/*/Chain.log`)
+ set d = `dirname ${f}`;
+ if (-r ${d}/mv.log) continue;	
+ cd ${d}; pwd;
+ AddEventNo.pl | tee mv.log
+ cd -
+end

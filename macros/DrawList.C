@@ -963,5 +963,25 @@ void DrawLaser(const Char_t *pattern = "^SL.*", const Char_t *ctitle = "",
   TQtCanvas2Html  TQtCanvas2Html(c,  900, 600, "./", zoomer);
   //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
 }
+//________________________________________________________________________________
+void PrintFList(const Char_t *name = "/Particles/KFParticlesFinder/PrimaryVertexQA/z") {
+  Int_t NFiles = 0;
+  TSeqCollection *files = gROOT->GetListOfFiles();
+  if (! files) return;
+  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
+  if (! nn) return;
+  TIter next(files);
+  TFile *f = 0;
+  while ( (f = (TFile *) next()) ) { 
+    f->cd();
+    cout << "File " << gDirectory->GetName();
+    TH1 *hist = (TH1 *) gDirectory->Get(name);
+    if (! hist) {
+      cout << "\t histogram " << name << " is not found" << endl;
+    } else {
+      cout << "\t histogram " << name << " has " << hist->GetEntries() << " entries" << endl;
+    }
+  }
+}
 
 

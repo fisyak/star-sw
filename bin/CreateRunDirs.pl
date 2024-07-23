@@ -3,8 +3,8 @@ use File::Basename;
 use Cwd;
 use Env;
 #print "$0\n";
-#use lib dirname $0; # 
-use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
+use lib dirname $0; # 
+#use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 my $debug = 0;
 if ($#ARGV >= 0) {
