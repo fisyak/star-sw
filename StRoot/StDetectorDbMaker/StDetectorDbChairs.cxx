@@ -2531,15 +2531,87 @@ static Double_t kProtonMass =  kuAtomicMassUnit*1.00727646662;
 //________________________________________________________________________________
 Bool_t        St_beamInfoC::IsFixedTarget() {
   Int_t run = runNumber();
-  Int_t year = run/10000 - 1;
-  if (year < 2019 || year > 2022) return kFALSE;
-  if (year == 2019 && (/* 2019: 0832 7.3GeV_fixedTarget  */ ( run >= 20107029 && run <= 20107029 ) ||
-		       /* 2019: 0865 7.3GeV_fixedTarget  */ ( run >= 20113042 && run <= 20113048 ) ||
-		       /* 2019: 1102 3p85GeV_fixedTarget */ ( run >= 20158041 && run <= 20158042 ) ||
-		       /* 2019: 1113 3p85GeV_fixedTarget */ ( run >= 20160023 && run <= 20160027 ) ||
-		       /* 2019: 1164 7.3GeV_fixedTarget  */ ( run >= 20169028 && run <= 20169055 ) ||
-		       /* 2019: 1206 4p59GeV_fixedTarget */ ( run >= 20179039 && run <= 20183025 ) ||
-		       /* 2019: 1261 31GeV_fixedTarget   */ ( run >= 20189035 && run <= 20190024)) ) return kTRUE;
+  Int_t year = 2000 + run/1000000 - 1;
+  if (year < 2018 || year > 2022) return kFALSE;
+  if (year == 2019 && (/* 27GeV_fixedTarget_2018 */ ( run >= 19138032 && run <= 19138036 ) ||
+		       /* 27GeV_fixedTarget_2018 */ ( run >= 19148036 && run <= 19148036 ) ||
+		       /* 27GeV_fixedTarget_2018 */ ( run >= 19148038 && run <= 19148047 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151029 && run <= 19151029 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151031 && run <= 19151031 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151034 && run <= 19151034 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151036 && run <= 19151036 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151039 && run <= 19151039 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151041 && run <= 19151041 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151043 && run <= 19151050 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151052 && run <= 19151056 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151066 && run <= 19151072 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19151082 && run <= 19151084 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152001 && run <= 19152003 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152008 && run <= 19152010 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152014 && run <= 19152014 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152016 && run <= 19152016 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152021 && run <= 19152021 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152023 && run <= 19152025 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152027 && run <= 19152046 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152048 && run <= 19152048 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152051 && run <= 19152055 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152071 && run <= 19152071 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152073 && run <= 19152076 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19152078 && run <= 19152081 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153001 && run <= 19153004 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153007 && run <= 19153007 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153009 && run <= 19153025 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153027 && run <= 19153029 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153031 && run <= 19153037 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153042 && run <= 19153044 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153050 && run <= 19153059 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19153061 && run <= 19153066 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154001 && run <= 19154002 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154005 && run <= 19154005 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154007 && run <= 19154007 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154012 && run <= 19154024 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154026 && run <= 19154032 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154036 && run <= 19154041 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154044 && run <= 19154049 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154051 && run <= 19154058 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154061 && run <= 19154061 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19154063 && run <= 19154067 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19155001 && run <= 19155001 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19155003 && run <= 19155006 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19155008 && run <= 19155011 ) ||
+		       /* 3p85GeV_fixedTarget_2018 */ ( run >= 19155016 && run <= 19155022 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19158057 && run <= 19158057 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19159043 && run <= 19159046 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19160032 && run <= 19160044 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19161001 && run <= 19161001 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19161020 && run <= 19161030 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19161034 && run <= 19161042 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19162033 && run <= 19162034 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19162043 && run <= 19162044 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19163001 && run <= 19163004 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19163024 && run <= 19163028 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19163032 && run <= 19163036 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19163042 && run <= 19163048 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19164001 && run <= 19164001 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19164022 && run <= 19164025 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19165030 && run <= 19165049 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19166001 && run <= 19166002 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19166004 && run <= 19166004 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19166019 && run <= 19166020 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19167001 && run <= 19167001 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19167050 && run <= 19167053 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19168004 && run <= 19168015 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19168017 && run <= 19168020 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19168041 && run <= 19168046 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19169001 && run <= 19169015 ) ||
+		       /* 26p5GeV_fixedTarget_2018 */ ( run >= 19169017 && run <= 19169017 ))           ) return kTRUE; 
+  else if (year == 2019 && (/* 2019: 0832 7.3GeV_fixedTarget  */ ( run >= 20107029 && run <= 20107029 ) ||
+			    /* 2019: 0865 7.3GeV_fixedTarget  */ ( run >= 20113042 && run <= 20113048 ) ||
+			    /* 2019: 1102 3p85GeV_fixedTarget */ ( run >= 20158041 && run <= 20158042 ) ||
+			    /* 2019: 1113 3p85GeV_fixedTarget */ ( run >= 20160023 && run <= 20160027 ) ||
+			    /* 2019: 1164 7.3GeV_fixedTarget  */ ( run >= 20169028 && run <= 20169055 ) ||
+			    /* 2019: 1206 4p59GeV_fixedTarget */ ( run >= 20179039 && run <= 20183025 ) ||
+			    /* 2019: 1261 31GeV_fixedTarget   */ ( run >= 20189035 && run <= 20190024)) ) return kTRUE;
   else if (year == 2020 && (/* 2020: 0161 5p75GeV_fixedTarget */ ( run >= 20355020 && run <= 20355021 ) ||
 			    /* 2020: 0363 31p2GeV_fixedTarget */ ( run >= 21028011 && run <= 21029036 ) ||
 			    /* 2020: 0374 9p8GeV_fixedTarget  */ ( run >= 21029051 && run <= 21032016 ) ||
