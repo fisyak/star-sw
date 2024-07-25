@@ -455,7 +455,22 @@ void StKFParticleInterface::CollectPVHistograms()
   // 3
   title = "Z";
   fPVHistograms[iHisto] = (TH1F*) pvDir->Get(title);
-  if (! fPVHistograms[iHisto]) fPVHistograms[iHisto] = new TH1F(title, title, 4400, -220, 220);
+  Double_t zMin  = -220, zMax  = 220, dZ  = 0.2;      // 0.20 cm
+  Double_t zMin1 =  195, zMax1 = 205, dZ1 = 0.0050;; // 0.005 cm
+  Int_t nbins = (zMax - zMin)/dZ + (zMax1 - zMin1)/dZ1 + 1;
+  TArrayD Z(nbins);
+  Double_t z = zMin;
+  Int_t i = 0;
+  while (z < zMax) {
+    Z[i] = z; i++;
+    if (z < zMin1 || z > zMax1) {
+      z += dZ;
+    } else {
+      z += dZ1;
+    }
+  }
+  //  if (! fPVHistograms[iHisto]) fPVHistograms[iHisto] = new TH1F(title, title, 4400, -220, 220);
+  if (! fPVHistograms[iHisto]) fPVHistograms[iHisto] = new TH1F(title, title, i-1, Z.GetArray());
   iHisto++;
 
   // 4

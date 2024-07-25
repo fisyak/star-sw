@@ -200,7 +200,7 @@ Int_t StBFChain::Load()
 	      LoadedLibs.Add(new TObjString(libN));
 	    }
 	  } else {
-#if 0
+#if 1
 	    if ( ! index(fBFC[i].Libs,',') || Debug() > 1 ) {
 	      LOG_WARN << "No path for Key=" << fBFC[i].Key << "-> Searched for [" << libL 
 		       << "] from Libs=" << fBFC[i].Libs << " (will proceed)" << endm;

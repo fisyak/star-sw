@@ -522,7 +522,11 @@ void FitPDraw(TString Opt = "I", TString plot = "", TString Title = "All") {
   TString muPlot("mu-muJ");
   if (plot.Contains("nomuJ",TString::kIgnoreCase)) muPlot = "mu";
   if        (Name.BeginsWith("SecRow3")) { 
-    MuDraw("mu:rowsigned(y,x)", "P", 2*nx+1, -yMax, yMax, "(i&&j&&abs(mu)<1&&dmu>0&&dmu<0.02)", "prof", -1, 1, Title, "sector&side", "#mu versus pad row");
+    if (plot.Contains("all",TString::kIgnoreCase)) {
+      MuDraw("mu:y", "P", ny, yMin-0.5, yMax+0.5, "(j&&abs(mu)<1&&dmu>0&&dmu<0.02)", "prof", -1, 1, Title, "", "#mu versus pad row");
+    } else {
+      MuDraw("mu:rowsigned(y,x)", "P", 2*nx+1, -yMax, yMax, "(i&&j&&abs(mu)<1&&dmu>0&&dmu<0.02)", "prof", -1, 1, Title, "sector&side", "#mu versus pad row");
+    }
   } else if (Name.BeginsWith("Z3"))      {
     muPlot += ":TMath::Sign(208.707-y,x)";
     if (Opt == "") {
