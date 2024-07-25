@@ -38,7 +38,7 @@ ClassImp(StKFParticleAnalysisMaker);
 
 //________________________________________________________________________________
 StKFParticleAnalysisMaker::StKFParticleAnalysisMaker(const char *name) : StMaker(name), fNTrackTMVACuts(0), fIsPicoAnalysis(true), fdEdXMode(1), 
-  fStoreTmvaNTuples(false), fProcessSignal(false), fCollectTrackHistograms(false), fCollectPIDHistograms(false),fCollectPVHistograms(false),fTMVAselection(false), 
+  fStoreTmvaNTuples(false), fProcessSignal(false), fCollectTrackHistograms(false), fCollectPIDHistograms(false),fCollectPVHistograms(true),fTMVAselection(false), 
   fFlowAnalysis(false), fFlowChain(NULL), fFlowRunId(-1), fFlowEventId(-1), fCentrality(-1), fFlowFiles(), fFlowMap(), 
   fRunCentralityAnalysis(0), fRefmultCorrUtil(0), fCentralityFile(""), fAnalyseDsPhiPi(false), fDecays(0), fIsProduce3DEfficiencyFile(false), f3DEfficiencyFile(""), 
   fStoreCandidates(false), fPartcileCandidate(), fIsStoreCandidate(KFPartEfficiencies::nParticles, false), fCandidateFile(nullptr), fCandidatesTree(nullptr)
