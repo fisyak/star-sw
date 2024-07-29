@@ -232,13 +232,13 @@ void StiKalmanTrackFinder::extendSeeds(double rMin)
       if (mTimg[kTrakTimg]) mTimg[kTrakTimg]->Start(0);
       Int_t errType = Fit(track,rMin);
       _seedFinders[isf]->FeedBack(errType == kNoErrors);
-      if (errType) {
+      if (errType || track->getChi2()>=1000) {
         BFactory::Free(track);
       }else        {
         nTOK++;
         int nHits = track->getFitPointCount(kTpcId);
         if (nHits>=15) nTok++;
-	assert(track->getChi2()<1000);
+	//	assert(track->getChi2()<1000);
       }
       if (mTimg[kTrakTimg]) mTimg[kTrakTimg]->Stop();
     } 
