@@ -1073,7 +1073,7 @@ Int_t StMuDstMaker::read(Int_t RunId, Int_t EventId){
   if (! mChain->GetTreeIndex()) {
     mChain->BuildIndex("MuEvent.mRunInfo.mRunId","MuEvent.mEventInfo.mId");
   }
-  if (mChain->GetEntryWithIndex(RunId,EventId) <= 0) return kStEOF;
+  if (mChain->GetEntryWithIndex(RunId,EventId) <= 0) return kStSkip;
   UpdateMuDst();
   return kStOK;
 }
