@@ -12,7 +12,7 @@ foreach d (`ls -1d ???/2*`)
    continue
   endif
   @ countJ++;  
-  daqdR.pl
+  daqdR.local.pl
   if ($?) then
     ls -1d *bla.root
     if ($?) then
