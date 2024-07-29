@@ -192,31 +192,31 @@ void StMuEvent::fill(const StEvent* event){
 
 unsigned short StMuEvent::refMultPos(int vtx_id) {
   // Check old format (no StMuPrimaryVertex stored)
-  if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
+  if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
      return mRefMultPos;
   if (vtx_id == -1)
-     vtx_id = StMuDst::currentVertexIndex();
+     vtx_id = StMuDst::instance()->currentVertexIndex();
 #ifndef __TFG__VERSION__
-  if (StMuDst::primaryVertex(vtx_id))
+  if (StMuDst::instance()->primaryVertex(vtx_id))
 #else /* __TFG__VERSION__ */
-  if (vtx_id >= 0 && StMuDst::primaryVertex(vtx_id))
+  if (vtx_id >= 0 && StMuDst::instance()->primaryVertex(vtx_id))
 #endif /* __TFG__VERSION__ */
-     return StMuDst::primaryVertex(vtx_id)->refMultPos();
+     return StMuDst::instance()->primaryVertex(vtx_id)->refMultPos();
   return 0;
 }
 
 unsigned short StMuEvent::refMultNeg(int vtx_id) {
   // Check old format (no StMuPrimaryVertex stored)
-  if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
+  if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
      return mRefMultNeg;
   if (vtx_id == -1)
-     vtx_id = StMuDst::currentVertexIndex();
+     vtx_id = StMuDst::instance()->currentVertexIndex();
 #ifndef __TFG__VERSION__
-  if (StMuDst::primaryVertex(vtx_id))
+  if (StMuDst::instance()->primaryVertex(vtx_id))
 #else /* __TFG__VERSION__ */
-  if (vtx_id >= 0 &&StMuDst::primaryVertex(vtx_id))
+  if (vtx_id >= 0 &&StMuDst::instance()->primaryVertex(vtx_id))
 #endif /* __TFG__VERSION__ */
-     return StMuDst::primaryVertex(vtx_id)->refMultNeg();
+     return StMuDst::instance()->primaryVertex(vtx_id)->refMultNeg();
   return 0;
 }
 
@@ -224,23 +224,23 @@ unsigned short StMuEvent::refMult(int vtx_id) {return refMultPos(vtx_id)+refMult
 
 unsigned short StMuEvent::refMultFtpcEast(int vtx_id) {
   // Check old format (no StMuPrimaryVertex stored)
-  if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
+  if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
      return mRefMultFtpcEast;
   if (vtx_id == -1)
-     vtx_id = StMuDst::currentVertexIndex();
-  if (StMuDst::primaryVertex(vtx_id))
-     return StMuDst::primaryVertex(vtx_id)->refMultFtpcEast();
+     vtx_id = StMuDst::instance()->currentVertexIndex();
+  if (StMuDst::instance()->primaryVertex(vtx_id))
+     return StMuDst::instance()->primaryVertex(vtx_id)->refMultFtpcEast();
   return 0;
 }
 
 unsigned short StMuEvent::refMultFtpcWest(int vtx_id) {
   // Check old format (no StMuPrimaryVertex stored)
-  if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
+  if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1))
      return mRefMultFtpcWest;
   if (vtx_id == -1)
-     vtx_id = StMuDst::currentVertexIndex();
-  if (StMuDst::primaryVertex(vtx_id))
-     return StMuDst::primaryVertex(vtx_id)->refMultFtpcWest();
+     vtx_id = StMuDst::instance()->currentVertexIndex();
+  if (StMuDst::instance()->primaryVertex(vtx_id))
+     return StMuDst::instance()->primaryVertex(vtx_id)->refMultFtpcWest();
   return 0;
 }
 
@@ -249,27 +249,27 @@ unsigned short StMuEvent::refMultFtpc(int vtx_id) {return refMultFtpcEast(vtx_id
 StThreeVectorF StMuEvent::primaryVertexPosition(int vtx_id) const {
 	StThreeVectorF vz(-999,-999,-999);
   // Check old format (no StMuPrimaryVertex stored)
-  if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1)){
+  if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1)){
 	 if(fabs(mEventSummary.primaryVertexPosition().x()) < 1.e-5 && fabs(mEventSummary.primaryVertexPosition().y()) < 1.e-5 && fabs(mEventSummary.primaryVertexPosition().z()) < 1.e-5) return vz;   
 	 else return mEventSummary.primaryVertexPosition();
 	}
   if (vtx_id == -1)
-     vtx_id = StMuDst::currentVertexIndex();
-  if (StMuDst::primaryVertex(vtx_id))
-     return StMuDst::primaryVertex(vtx_id)->position();
+     vtx_id = StMuDst::instance()->currentVertexIndex();
+  if (StMuDst::instance()->primaryVertex(vtx_id))
+     return StMuDst::instance()->primaryVertex(vtx_id)->position();
   return vz;
 }
 StThreeVectorF StMuEvent::primaryVertexErrors(int vtx_id) const {
 	StThreeVectorF vz(-999,-999,-999);
   // Check old format (no StMuPrimaryVertex stored)
-  if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1)){
+  if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1)){
 	 if(fabs(mEventSummary.primaryVertexPosition().x()) < 1.e-5 && fabs(mEventSummary.primaryVertexPosition().y()) < 1.e-5 && fabs(mEventSummary.primaryVertexPosition().z()) < 1.e-5) return vz;   
 	 else return mPrimaryVertexError;
 	}
   if (vtx_id == -1)
-     vtx_id = StMuDst::currentVertexIndex();
-  if (StMuDst::primaryVertex(vtx_id))
-     return StMuDst::primaryVertex(vtx_id)->posError();
+     vtx_id = StMuDst::instance()->currentVertexIndex();
+  if (StMuDst::instance()->primaryVertex(vtx_id))
+     return StMuDst::instance()->primaryVertex(vtx_id)->posError();
   return vz;
 }
 
@@ -277,10 +277,10 @@ unsigned short StMuEvent::grefmult(int vtx_id){
     unsigned short grefmult = 0;
 	StMuTrack *glob;
 	//For old MuDsts where there was one vertex per event
-	if (StMuDst::numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1)){
+	if (StMuDst::instance()->numberOfPrimaryVertices()==0 && (vtx_id == 0 || vtx_id == -1)){
 		if(!(fabs(mEventSummary.primaryVertexPosition().x()) < 1.e-5 && fabs(mEventSummary.primaryVertexPosition().y()) < 1.e-5 && fabs(mEventSummary.primaryVertexPosition().z()) < 1.e-5)){	
-			for (int i=0;i<StMuDst::globalTracks()->GetEntriesFast();i++){
-				glob = StMuDst::globalTracks(i);
+			for (int i=0;i<StMuDst::instance()->globalTracks()->GetEntriesFast();i++){
+				glob = StMuDst::instance()->globalTracks(i);
 				if (fabs(glob->eta()) <  0.5 && fabs(glob->dcaGlobal().mag()) < 3 && glob->nHitsFit(kTpcId) >= 10) grefmult++;            
 			}
 			return grefmult;
@@ -289,11 +289,11 @@ unsigned short StMuEvent::grefmult(int vtx_id){
 	}	
 
 	if (vtx_id == -1)
-		vtx_id = StMuDst::currentVertexIndex();
+		vtx_id = StMuDst::instance()->currentVertexIndex();
 
-	if (StMuDst::primaryVertex(vtx_id)){
-        for (int i=0;i<StMuDst::globalTracks()->GetEntriesFast();i++){
-			glob = StMuDst::globalTracks(i);
+	if (StMuDst::instance()->primaryVertex(vtx_id)){
+        for (int i=0;i<StMuDst::instance()->globalTracks()->GetEntriesFast();i++){
+			glob = StMuDst::instance()->globalTracks(i);
 			if (fabs(glob->eta()) <  0.5 && fabs(glob->dcaGlobal(vtx_id).mag()) < 3 && glob->nHitsFit(kTpcId) >= 10) grefmult++;            
         }
         return grefmult;
@@ -303,32 +303,32 @@ unsigned short StMuEvent::grefmult(int vtx_id){
 
 unsigned short StMuEvent::btofTrayMultiplicity(){
 
-	unsigned short btofmult = (unsigned short)StMuDst::numberOfBTofHit();
-	for(unsigned int i=0;i< StMuDst::numberOfBTofHit();i++) if(StMuDst::btofHit(i)->tray() > 120) btofmult--;
+	unsigned short btofmult = (unsigned short)StMuDst::instance()->numberOfBTofHit();
+	for(unsigned int i=0;i< StMuDst::instance()->numberOfBTofHit();i++) if(StMuDst::instance()->btofHit(i)->tray() > 120) btofmult--;
 	return btofmult;
 
 }
 
 unsigned short StMuEvent::etofHitMultiplicity(){
-  return (unsigned short) StMuDst::numberOfETofHit();
+  return (unsigned short) StMuDst::instance()->numberOfETofHit();
 }
 unsigned short StMuEvent::etofDigiMultiplicity(){
-  return (unsigned short) StMuDst::numberOfETofDigi();
+  return (unsigned short) StMuDst::instance()->numberOfETofDigi();
 }
 
 float StMuEvent::nearestVertexZ(int vtx_id){
 
 	float dz = 999.0;
 	//For old MuDsts where there was one vertex per event
-	if (StMuDst::numberOfPrimaryVertices()==0) return dz;
-	const int Nvert = StMuDst::primaryVertices()->GetEntriesFast();
+	if (StMuDst::instance()->numberOfPrimaryVertices()==0) return dz;
+	const int Nvert = StMuDst::instance()->primaryVertices()->GetEntriesFast();
 	if(Nvert < 2) return dz;
 	
-	if (vtx_id == -1) vtx_id = StMuDst::currentVertexIndex();	
+	if (vtx_id == -1) vtx_id = StMuDst::instance()->currentVertexIndex();	
 	float z =  primaryVertexPosition(vtx_id).z();
 	for(int i=0;i<Nvert;i++){
 		if(vtx_id!=i) {
-			if(fabs(z-StMuDst::primaryVertex(i)->position().z()) < dz) dz = fabs(z-StMuDst::primaryVertex(i)->position().z());
+			if(fabs(z-StMuDst::instance()->primaryVertex(i)->position().z()) < dz) dz = fabs(z-StMuDst::instance()->primaryVertex(i)->position().z());
 		}
 	}
 	return dz;
