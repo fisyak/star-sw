@@ -476,11 +476,11 @@ bool StTriggerSimuMaker::getTriggerThresholds(int runNumber)
   if (DB) {
     St_triggerThreshold* desc = dynamic_cast<St_triggerThreshold*>(DB->Find("triggerThreshold"));
     if (desc) {
-      LOG_INFO << "Using BEMC offline database for trigger thresholds" << endm;
+      LOG_DEBUG << "Using BEMC offline database for trigger thresholds" << endm;
       triggerThreshold_st* table = desc->GetTable();
-      LOG_INFO << Form("%s\n", table[0].comments) << endm;
+      LOG_DEBUG << Form("%s\n", table[0].comments) << endm;
 
-      LOG_INFO << setw(20) << "object"
+      LOG_DEBUG << setw(20) << "object"
 	       << setw(20) << "index"
 	       << setw(20) << "reg"
 	       << setw(20) << "label"
@@ -494,7 +494,7 @@ bool StTriggerSimuMaker::getTriggerThresholds(int runNumber)
       for (int i = 0; i < a->GetEntriesFast(); ++i) {
 	StTriggerThreshold* trigthr = dynamic_cast<StTriggerThreshold*>(a->At(i));
         if(!trigthr) continue;
-	LOG_INFO << setw(20) << trigthr->object
+	LOG_DEBUG << setw(20) << trigthr->object
 		 << setw(20) << trigthr->index
 		 << setw(20) << trigthr->reg
 		 << setw(20) << trigthr->label
@@ -571,7 +571,7 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
   login = getpwuid(geteuid());
   user =  login->pw_name;
 
-  LOG_INFO << Form("host=%s user=\"%s\" pass=\"%s\" port=%d database=%s",host,user,pass,port,database) << endm;
+  LOG_DEBUG << Form("host=%s user=\"%s\" pass=\"%s\" port=%d database=%s",host,user,pass,port,database) << endm;
 
   mysql_init(&mysql);
   
@@ -585,7 +585,7 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
   if (mMCflag == 1 || mMCflag == 2) {
     //query = Form("select idx_rn from triggers where beginTime >= '%s' limit 1",GetDBTime().AsSQLString());
     sprintf(query,"select max(idx_rn) from triggers where beginTime <= '%s'",GetDBTime().AsSQLString());
-    LOG_INFO << query << endm;
+    LOG_DEBUG << query << endm;
     mysql_query(&mysql,query);
 
     if (MYSQL_RES* result = mysql_store_result(&mysql)) {
@@ -593,19 +593,19 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
         runNumber = atoi(row[0]);
       }
     }
-    LOG_INFO << "DB Time = " << GetDBTime().AsSQLString() << endm;
-    LOG_INFO << "Run Number = " << runNumber << endm;
+    LOG_DEBUG << "DB Time = " << GetDBTime().AsSQLString() << endm;
+    LOG_DEBUG << "Run Number = " << runNumber << endm;
   }
 
-  LOG_INFO << "Using BEMC online database" << endm;
+  LOG_DEBUG << "Using BEMC online database" << endm;
 
   // object=DSM crate, idx=DSM board
   sprintf(query,"select object,idx,reg,label,value,defaultvalue from dict where hash=(select dicthash from run where idx_rn = %d)",runNumber);
-  LOG_INFO << query << endm;
+  LOG_DEBUG << query << endm;
   mysql_query(&mysql,query);
   
   if (MYSQL_RES* result = mysql_store_result(&mysql)) {
-    LOG_INFO << setw(10) << "object"
+    LOG_DEBUG << setw(10) << "object"
 	     << setw(10) << "idx"
 	     << setw(10) << "reg"
 	     << setw(30) << "label"
@@ -621,7 +621,7 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
       int value = atoi(row[4]);
       int defaultvalue = atoi(row[5]);
 
-      LOG_INFO << setw(10) << object
+      LOG_DEBUG << setw(10) << object
 	       << setw(10) << idx
 	       << setw(10) << reg
 	       << setw(30) << label
@@ -731,7 +731,7 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
   TriggerDefinition triggers[MAX_TRIGGERS];
   
   sprintf(query,"select idx_trigger,name,offlineBit from triggers where idx_rn = %d",runNumber);
-  LOG_INFO << query << endm;
+  LOG_DEBUG << query << endm;
   mysql_query(&mysql,query);
       
   if (MYSQL_RES* result = mysql_store_result(&mysql)) {
@@ -746,11 +746,11 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
   }
       
   sprintf(query,"select idx_idx,onbits,offbits,onbits1,onbits2,onbits3,offbits1,offbits2,offbits3 from pwc where idx_rn = %d",runNumber);
-  LOG_INFO << query << endm;
+  LOG_DEBUG << query << endm;
   mysql_query(&mysql,query);
   
   if (MYSQL_RES* result = mysql_store_result(&mysql)) {
-    LOG_INFO << setw(20) << "idx_trigger"
+    LOG_DEBUG << setw(20) << "idx_trigger"
 	     << setw(20) << "name"
 	     << setw(20) << "offlineBit"
 	     << setw(20) << "onbits"
@@ -780,7 +780,7 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
       if(row[7]) sscanf(row[7],"%ud",&triggers[idx_trigger].offbits2);
       if(row[8]) sscanf(row[8],"%ud",&triggers[idx_trigger].offbits3);
       
-      LOG_INFO << setw(20) << idx_trigger
+      LOG_DEBUG << setw(20) << idx_trigger
 	       << setw(20) << triggers[idx_trigger].name
 	       << setw(20) << triggers[idx_trigger].triggerId
 	       << setw(20) << Form("0x%08x",triggers[idx_trigger].onbits)
@@ -807,7 +807,7 @@ void StTriggerSimuMaker::overwrite2009DsmRegisters()
   for (int reg = 0; reg < 3; ++reg) {
     int value = mBarrelJetPatchTh[reg];
     if (value != -1) {
-      LOG_INFO << setw(20) << reg
+      LOG_DEBUG << setw(20) << reg
 	       << setw(30) << "BEMC-JP-th" << reg
 	       << setw(20) << value
 	       << endm;
@@ -818,7 +818,7 @@ void StTriggerSimuMaker::overwrite2009DsmRegisters()
   for (int reg = 0; reg < 4; ++reg) {
     int value = mBarrelHighTowerTh[reg];
     if (value != -1) {
-      LOG_INFO << setw(20) << reg
+      LOG_DEBUG << setw(20) << reg
 	       << setw(30) << "BEMC-HT-th" << reg
 	       << setw(20) << value
 	       << endm;
@@ -829,7 +829,7 @@ void StTriggerSimuMaker::overwrite2009DsmRegisters()
   for (int reg = 0; reg < 3; ++reg) {
     int value = mEndcapJetPatchTh[reg];
     if (value != -1) {
-      LOG_INFO << setw(20) << reg
+      LOG_DEBUG << setw(20) << reg
 	       << setw(30) << "EEMC-JP-th" << reg
 	       << setw(20) << value
 	       << endm;
@@ -840,7 +840,7 @@ void StTriggerSimuMaker::overwrite2009DsmRegisters()
   for (int reg = 0; reg < 2; ++reg) {
     int value = mEndcapHighTowerTh[reg];
     if (value != -1) {
-      LOG_INFO << setw(20) << reg
+      LOG_DEBUG << setw(20) << reg
 	       << setw(30) << "EEMC-HT-th" << reg
 	       << setw(20) << value
 	       << endm;
@@ -851,7 +851,7 @@ void StTriggerSimuMaker::overwrite2009DsmRegisters()
   for (int reg = 0; reg < 3; ++reg) {
     int value = mOverlapJetPatchTh[reg];
     if (value != -1) {
-      LOG_INFO << setw(20) << reg
+      LOG_DEBUG << setw(20) << reg
 	       << setw(30) << "BEMC-EEMC-overlap-JP-th" << reg
 	       << setw(20) << value
 	       << endm;
@@ -865,7 +865,7 @@ void StTriggerSimuMaker::changeJetPatchTh()
   for (int reg = 0; reg < 3; ++reg) {
     int value = bemc->get2009_DSMLayer1_Result()->getRegister(reg);
     value += mChangeJPThresh;
-    LOG_INFO << setw(20) << reg
+    LOG_DEBUG << setw(20) << reg
 	     << setw(30) << "BEMC-JP-th" << reg
 	     << setw(20) << value
 	     << endm;
@@ -875,7 +875,7 @@ void StTriggerSimuMaker::changeJetPatchTh()
   for (int reg = 0; reg < 3; ++reg) {
     int value = eemc->get2009_DSMLayer1_Result()->getRegister(reg);
     value += mChangeJPThresh;
-    LOG_INFO << setw(20) << reg
+    LOG_DEBUG << setw(20) << reg
 	     << setw(30) << "EEMC-JP-th" << reg
 	     << setw(20) << value
 	     << endm;
@@ -885,7 +885,7 @@ void StTriggerSimuMaker::changeJetPatchTh()
   for (int reg = 0; reg < 3; ++reg) {
     int value = emc->get2009_DSMLayer2_Result()->getRegister(reg);
     value += mChangeJPThresh;
-    LOG_INFO << setw(20) << reg
+    LOG_DEBUG << setw(20) << reg
 	     << setw(30) << "BEMC-EEMC-overlap-JP-th" << reg
 	     << setw(20) << value
 	     << endm;

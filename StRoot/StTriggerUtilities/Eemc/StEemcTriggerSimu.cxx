@@ -231,12 +231,12 @@ StEemcTriggerSimu::InitRun(int runnumber){
     break;
   }
 
-  LOG_INFO << "rdo\tcr\tchan\tsta\tped\tped4\tgain" << endm;
+  LOG_DEBUG << "rdo\tcr\tchan\tsta\tped\tped4\tgain" << endm;
 
   for (int crate = 1; crate <= mxCr; ++crate) {
     for (int chan = 0; chan < 120; ++chan) {
       int rdo = getRdo(crate,chan);
-      LOG_INFO << rdo << '\t' << crate << '\t' << chan << '\t' << feeMask[rdo] << '\t' << ped[rdo] << '\t' << feePed[rdo] << '\t' << gain[rdo] << endm;
+      LOG_DEBUG << rdo << '\t' << crate << '\t' << chan << '\t' << feeMask[rdo] << '\t' << ped[rdo] << '\t' << feePed[rdo] << '\t' << gain[rdo] << endm;
     }
   }
 
@@ -245,7 +245,7 @@ StEemcTriggerSimu::InitRun(int runnumber){
     if(!mExternDsmSetup) {
       EemcTrigUtil::getDsmThresholds( yyyymmdd, hhmmss, thresholds );
     }  else {
-      LOG_INFO<<Form("Eemc::InitRun() use externalDSM setup")<<endm;
+      LOG_DEBUG<<Form("Eemc::InitRun() use externalDSM setup")<<endm;
       int i;
       for(i=0;i<nThr;i++) thresholds.HT[i]=mExternDsmSetup[0+i];
       for(i=0;i<nThr;i++) thresholds.TP[i]=mExternDsmSetup[3+i];
@@ -259,11 +259,11 @@ StEemcTriggerSimu::InitRun(int runnumber){
       thresholds.EtotThr     =mExternDsmSetup[15];
     }
 
-    LOG_INFO<<Form("Eemc::DSM setup HTthr: %d, %d, %d",thresholds.HT[0],thresholds.HT[1],thresholds.HT[2])<<endm;
-    LOG_INFO<<Form("Eemc::DSM setup TPthr: %d, %d, %d",thresholds.TP[0],thresholds.TP[1],thresholds.TP[2])<<endm;
-    LOG_INFO<<Form("Eemc::DSM setup JPthr: %d, %d, %d",thresholds.JP[0],thresholds.JP[1],thresholds.JP[2])<<endm;
-    LOG_INFO<<Form("Eemc::DSM setup  BEsumthr=%d, EEsumthr=%d, EtotThr=%d",thresholds.BEsumthr,thresholds.EEsumthr,thresholds.EtotThr)<<endm;
-    LOG_INFO<<Form("Eemc::DSM setup TPthrSelc=%d, HTTPthrSelc=%d, JPSIthrSelc=%d, BarreSide=%d",thresholds.TPthrSelc,thresholds.HTTPselect,thresholds.JPSIthrSelc,thresholds.BarreSide)<<endm;
+    LOG_DEBUG<<Form("Eemc::DSM setup HTthr: %d, %d, %d",thresholds.HT[0],thresholds.HT[1],thresholds.HT[2])<<endm;
+    LOG_DEBUG<<Form("Eemc::DSM setup TPthr: %d, %d, %d",thresholds.TP[0],thresholds.TP[1],thresholds.TP[2])<<endm;
+    LOG_DEBUG<<Form("Eemc::DSM setup JPthr: %d, %d, %d",thresholds.JP[0],thresholds.JP[1],thresholds.JP[2])<<endm;
+    LOG_DEBUG<<Form("Eemc::DSM setup  BEsumthr=%d, EEsumthr=%d, EtotThr=%d",thresholds.BEsumthr,thresholds.EEsumthr,thresholds.EtotThr)<<endm;
+    LOG_DEBUG<<Form("Eemc::DSM setup TPthrSelc=%d, HTTPthrSelc=%d, JPSIthrSelc=%d, BarreSide=%d",thresholds.TPthrSelc,thresholds.HTTPselect,thresholds.JPSIthrSelc,thresholds.BarreSide)<<endm;
 
     dsm0TreeADC->setYear(mYear,thresholds.HT,thresholds.TP); 
     dsm0TreeTRG->setYear(mYear,thresholds.HT,thresholds.TP); 
