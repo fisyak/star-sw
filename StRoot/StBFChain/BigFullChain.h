@@ -1237,7 +1237,7 @@ Bfc_st BFC[] = { // standard chains
   {"CorrY"       ,"" ,"","ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
    ",-OBmap2D,-OClock,-OTwist"                                           ,"","","New Tpc Alignment",kFALSE},
   {"Alignment2024","" ,"","NewTpcAlignment"                         ,"","","Turn on Alignment 2024",kFALSE},
-  {"CorrZ","" ,"","Alignment2024,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
+  {"CorrZ","" ,"","Alignment2024,TFGdbOpt,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
    ",OGridLeakFull,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
   {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
