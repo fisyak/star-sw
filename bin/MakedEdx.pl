@@ -2670,7 +2670,9 @@ my $debug = 0;
 #$hist = "RunXXIV01"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2024 
 #$hist = "RunXXIV02"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/12/2024 
 #$hist = "RunXXIV03"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
-$hist = "RunXXIV04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+#$hist = "RunXXIV04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+#################################### TFG24c ############################################
+$hist = "RunTFG24c01"; $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/reco/TFG24c"; $RECO = "/";  $Production = "20*/RF/*GeV*/"; $year = "/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 07/21/2024 check old calibration with TFG24c production
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2757,6 +2759,8 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
       }
     } elsif ($words[7] =~ /TFG24b/) {
       $dd = $words[8];
+    } elsif ($words[6] =~ /TFG24c/) {
+      $dd = $words[9];
     } 
     $dd =~ s/reco_//;
     $dd =~ s/production_//;
