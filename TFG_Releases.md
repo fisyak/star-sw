@@ -98,6 +98,6 @@
 <li> TFG23f Freeze daq5k modification in StTpcHitMaker                   2023-11-04 13:15:47 -0400  (HEAD -> TFG, tag: TFG23f)
 <li> TFG24a Freeze ROOT 6.30.00                                          2024-01-07 10:15:24 -0500  (HEAD -> TFG, tag: TFG24a_3)
 <li> TFG24b Freeze for Run XXIV                                          2024-05-04 10:41:16 -0400  (HEAD -> TFG, tag: TFG24b)
-<li> TFG24c Freeze for fixed target reproduction                         2024-07-05 12:52:05 -0400  (HEAD -> TFG, tag: TFG24c)
+<li> TFG24c Freeze for fixed target reproduction                         2024-08-04 17:17:04 -0400  (HEAD -> TFG, tag: TFG24c_2)
 <li>.DEV2   head of TFG git repository
 </ul>
