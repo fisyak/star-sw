@@ -10,15 +10,26 @@ if ($#ARGV >= 0) {
   $debug = $ARGV[0];
 }
 #--------------------------------------------------------------------------------
-sub SPrint ($$$$) {
-  my $noEventsPerJob = 10000;
-  my ($line,$file,$f,$l) = @_;
+sub SPrint ($$$$$) {
+  my $noEventsPerJob = 5000; #10000;
+  my ($line,$file,$f,$l,$debug) = @_;
+#  print "line=$line,file=$file,f=$f,l=$l,debug=$debug\n";
   my $count = 0;
   if ($l - $f >= 0) {# Allow to have error in no. of events in FileCatalog
     my $rootf = $file . "," . $f . "," . $l . ".MuDst.root"; 
-    if (-r $rootf) {print "rootf = $rootf\n" if (debug); next;}
+    if (-r $rootf) {
+      if ($debug) {
+	print "rootf = $rootf\n";
+      }
+      next;
+    }
     my $blaf  = $file . "," . $f . "," . $l . ".bla.root";
-    if (-r $blaf) { print "$blaf\n" if (debug); next;}
+    if (-r $blaf) { 
+      if (debug > 0) { 
+	print "$blaf\n";
+      }  
+      next;
+    }
     my $f1 = $f;
     for (my $f1 = $f1; $f1 < $l; $f1 += $noEventsPerJob) {
       my $l1 = $f1 + $noEventsPerJob - 1;
@@ -31,11 +42,8 @@ sub SPrint ($$$$) {
 }
 #--------------------------------------------------------------------------------
 sub MuCount($$$$) {# daqName, first, last, 
-  my $line = shift; 
+  my ($line, $first, $last, $debug)  = @_;
   my $file = File::Basename::basename($line,".daq");
-  my $first = shift;
-  my $last = shift;           print "file = $file, first = $first, last = $last\n" if ($debug);
-  my $debug = shift;
   my $fileDaq = $file . ".daq";
   my $no = 0;
   my $fileN = $file . ".noeve";
@@ -44,6 +52,7 @@ sub MuCount($$$$) {# daqName, first, last,
     my $N = `$cmd`; chomp($N); 
   }
   my $N = `cat $fileN`;
+  chomp($N);
   print "$file N = $N\n" if ($debug);
   $last = $N;
   my $f = $first;
@@ -84,17 +93,17 @@ sub MuCount($$$$) {# daqName, first, last,
   if ($NoMuFiles <= 0) {
     $f = $first;
     $l = $last;
-    SPrint($line,$file,$f,$l); $coun++;
+    SPrint($line,$file,$f,$l,$debug); $no++;
   } else {
     if ($L[$NoMuFiles-1] < $N) {
       $f = $L[$NoMuFiles-1] + 1;
       $l = $N;
-      $no += SPrint($line,$file,$f,$l); 
+      $no += SPrint($line,$file,$f,$l,$debug); 
     } 
     if ($F[0] > $f) {
       $f = 1;
       $l = $F[0] - 1;
-      $no += SPrint($line,$file,$f,$l);
+      $no += SPrint($line,$file,$f,$l,$debug);
     } 
     for (my $i = 1; $i < $NoMuFiles; $i++) {
       #	print "$i  : $F[$i]  $L[$i]\n" if ($debug);
@@ -102,7 +111,7 @@ sub MuCount($$$$) {# daqName, first, last,
       my $l = $F[$i]-1;
       # print "f = $f l = $l\n" if ($debug);
       if ($f <= $l) {
-	SPrint($line,$file,$f,$l); $no++;
+	SPrint($line,$file,$f,$l,$debug); $no++;
       }
     }
   }
@@ -131,7 +140,7 @@ foreach my $currentrun (@AllRuns) {
       if ($#files < 0) {next;}
       my $NF = $#files + 1;
       my $step = 1; #(int $NF);
-      print "run = $run. files = $NF, step = $step\n" if ($debug);
+      print "run = $run, files = $NF, step = $step\n" if ($debug);
       if ($step < 1) {$step = 1;}
       print "run = $run. files = $NF, step = $step\n" if ($debug);
       for (my $i = 0; $i < $NF; $i = $i +  $step) {
