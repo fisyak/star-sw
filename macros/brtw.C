@@ -156,6 +156,10 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
   BRTW:: SperE = 0;
   BRTW:: Significance = -1;
   if (! hist) return 0;
+  TString Title = hist->GetTitle();
+  Title.ReplaceAll(">","gt");
+  Title.ReplaceAll(" ","_");
+  Title.ReplaceAll("#","");
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
   if (! c1) c1 = new TCanvas("c1","brtw");
   else      c1->Clear();
@@ -260,7 +264,9 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
   BRTW::S = Signal->Integral(params[1]-3*params[2],params[1]+3*params[2])/BRTW::binWidth;
   BRTW::B = Background->Integral(params[1]-2*params[2],params[1]+2*params[2])/BRTW::binWidth;
   BRTW::T = Total->Integral(params[1]-2*params[2],params[1]+2*params[2])/BRTW::binWidth;
-  TString Out("Title.txt");
+  TString Out("Title");
+  Out += Title;
+  Out += ".txt";
   ofstream out;
   out.open(Out.Data());
   cout << gSystem->BaseName(gDirectory->GetName()) << "\t";
@@ -304,7 +310,9 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
        << Form("\tW = %7.2f +/- %5.2f",1e3*Total->GetParameter(2),1e3*Total->GetParError(2)) 
        << " (MeV)" << endl;
   out.close();
-  c1->SaveAs("K0s.png");
+  TString png(Title);
+  png += ".png";
+  c1->SaveAs(png);
   return Total;
 }
 //________________________________________________________________________________

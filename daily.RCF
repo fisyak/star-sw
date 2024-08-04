@@ -787,3 +787,387 @@ TFG24c/2019/RF/7.3GeV_fixedTarget/  25.141M
 TFG24c/2020/RF/5p75GeV_fixedTarget/ 66.843M
 TFG24c/2020/RF/7p3GeV_fixedTarget/   6.520M
 TFG24c/2020/RF/7p3GeV_fixedTarget/   6.911M
+================================================================================
+07/26/2024
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180013
+-rw-r--r--  1 fisyak rhstar   87M Jul 26 08:54 st_physics_20180013_raw_2000007,21224,31223B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180014
+-rw-r--r--  1 fisyak rhstar   89M Jul 26 08:54 st_physics_20180014_raw_7500005,8432,18431B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180015
+-rw-r--r--  1 fisyak rhstar   80M Jul 26 08:54 st_physics_20180015_raw_4500009,1,10000B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180016
+-rw-r--r--  1 fisyak rhstar   90M Jul 26 08:55 st_physics_20180016_raw_1000002,20001,30000B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180017
+-rw-r--r--  1 fisyak rhstar   75M Jul 26 08:55 st_physics_20180017_raw_4500007,27676,37675B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180018
+-rw-r--r--  1 fisyak rhstar   78M Jul 26 08:55 st_physics_20180018_raw_3000009,18101,28100B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180020
+-rw-r--r--  1 fisyak rhstar   76M Jul 26 08:55 st_physics_20180020_raw_2000004,1,10000B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180021
+-rw-r--r--  1 fisyak rhstar   77M Jul 26 08:55 st_physics_20180021_raw_2000004,18825,28824B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180022
+-rw-r--r--  1 fisyak rhstar   81M Jul 26 08:55 st_physics_20180022_raw_3000006,1,10000B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180023
+-rw-r--r--  1 fisyak rhstar   89M Jul 26 08:55 st_physics_20180023_raw_4000006,18738,28737B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180024
+-rw-r--r--  1 fisyak rhstar   76M Jul 26 08:55 st_physics_20180024_raw_3000006,8687,18686B.log
+/star/u/fisyak/TFG24c/2019/RF/4p59GeV_fixedTarget/180/20180026
+-rw-r--r--  1 fisyak rhstar   58M Jul 26 08:55 st_physics_20180026_raw_7500005,10001,20000B.log
+StiMaker:INFO  - StiMasterHitLoader::loadEvent() - TpcHitLoader loaded 12370 hits
+root.exe: .sl73_x8664_gcc485_opt/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:241: void StiKalmanTrackFinder::extendSeeds(double): Assertion `track->getChi2()<1000' failed.
+[rcas6010] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ zgrep -m 1 Assertion */*/*.gz
+182/20182007/st_physics_20182007_raw_2500013,1,738.log.gz:root.exe: .sl73_x8664_gcc485_opt/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:241: void StiKalmanTrackFinder::extendSeeds(double): Assertion `track->getChi2()<1000' failed.
+
+
+run 20183003 event  1246798
+
+root.exe lMuDst.C Chain.C+
+
+tChain->Scan("MuEvent.mRunInfo.mRunId:MuEvent.mEventInfo.mId","MuEvent.mEventInfo.mId==1246798")
+root.exe [2] tChain->Scan("MuEvent.mRunInfo.mRunId:MuEvent.mEventInfo.mId","MuEvent.mEventInfo.mId==1246798")
+***********************************************
+*    Row   * Instance * MuEvent.m * MuEvent.m *
+***********************************************
+i= 14 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch= -1 adc=4095 tdc=  31 ffff! FFFF!
+i= 71 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch=  9 adc=4095 tdc=  31 ffff! FFFF!
+i= 20 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch=  0 adc=4095 tdc=  31 ffff! FFFF!
+*   301728 *        0 *  20183003 *   1246798 *
+i= 17 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch=  5 adc=4095 tdc=  31 ffff! FFFF!
+i= 57 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch= -1 adc=4095 tdc=  31 ffff! FFFF!
+i= 49 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch= -1 adc=4095 tdc=  31 ffff! FFFF!
+i= 33 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch= -1 adc=4095 tdc=  31 ffff! FFFF!
+i= 28 d=ffffffff crt=  7 adr=0x1c ch= 31 oldch= -1 adc=4095 tdc=  31 ffff! FFFF!
+***********************************************
+==> 1 selected entry
+(Long64_t)1
+tChain->Show(301728); >> Show.20183003.1246798
+ PrimaryVertices = 1
+ PrimaryVertices.fUniqueID = 0
+ PrimaryVertices.fBits = 33554432
+x2 PrimaryVertices.mType = 1
+ PrimaryVertices.mId = 0
+ PrimaryVertices.mFlag = 1
+ PrimaryVertices.mPosition.mX1 = -0.307444
+ PrimaryVertices.mPosition.mX2 = -2.167892
+ PrimaryVertices.mPosition.mX3 = 199.988037
+ PrimaryVertices.mPosError.mX1 = 0.019984
+ PrimaryVertices.mPosError.mX2 = 0.019879
+ PrimaryVertices.mPosError.mX3 = 0.023517
+ PrimaryVertices.mError = printing kAny case (62)
+ PrimaryVertices.mVertexFinderId = 4
+ PrimaryVertices.mRanking = -0.475019
+ PrimaryVertices.mNTracksUsed = 101
+ PrimaryVertices.mNBTOFMatch = 61
+ PrimaryVertices.mNCTBMatch = 0
+ PrimaryVertices.mNBEMCMatch = 35
+ PrimaryVertices.mNEEMCMatch = 0
+ PrimaryVertices.mNBTOFNotMatch = 20
+ PrimaryVertices.mNCTBNotMatch = 0
+ PrimaryVertices.mNBEMCNotMatch = 63
+ PrimaryVertices.mNEEMCNotMatch = 0
+ PrimaryVertices.mNCrossCentralMembrane = 75
+ PrimaryVertices.mNTracksWithPromptHit = 26
+ PrimaryVertices.mNPostXTracks = 0
+ PrimaryVertices.mSumTrackPt = 130.056381
+ PrimaryVertices.mMeanDip = -0.948300
+ PrimaryVertices.mChiSquared = 514.492188
+ PrimaryVertices.mNTracks = 193
+ PrimaryVertices.mNTpcWestOnly = 61
+ PrimaryVertices.mNTpcEastOnly = 31
+ PrimaryVertices.mRefMultNeg = 4
+ PrimaryVertices.mRefMultPos = 18
+ PrimaryVertices.mRefMultFtpcWest = 9999
+ PrimaryVertices.mRefMultFtpcEast = 9999
+ PrimaryVertices.mIdTruth = 0
+ PrimaryVertices.mQuality = 0
+ PrimaryVertices.mIdParent = 0
+ PrimaryTracks   = 193
+
+
+ root.exe lMuDst.C 'Chain.C+("*picoDst.root","PicoDst")'
+
+ tChain->Scan("Event.mRunId:Event.mEventId","Event.mEventId==1246798")
+***********************************************
+*    Row   * Instance * Event.mRu * Event.mEv *
+***********************************************
+*   239933 *        0 *  20183003 *   1246798 *
+PicoDst->Show(239933); >> PicoDst.20183003.1246798
+ Event           = 1
+ Event.mProductionVersion = , git = heads/TFG,tag:ed8f9e843a
+ Event.mRunId    = 20183003
+ Event.mEventId  = 1246798
+ Event.mFillId   = 24303
+...
+ Event.mPrimaryVertexX = -0.307444
+ Event.mPrimaryVertexY = -2.167892
+ Event.mPrimaryVertexZ = 199.988037
+...
+ Event.mNumberOfPrimaryTracks = 11
+...
+ ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir -Sr  183/20183003/P24ia/*picoDst.root
+-rw-r----- 1 fisyak rhstar 324M Jul 26 10:33 183/20183003/P24ia/st_physics_20183003_raw_6000011.picoDst.root
+-rw-r----- 1 fisyak rhstar 356M Jul 26 10:34 183/20183003/P24ia/st_physics_20183003_raw_1500008.picoDst.root
+-rw-r----- 1 fisyak rhstar 356M Jul 26 10:33 183/20183003/P24ia/st_physics_20183003_raw_1000009.picoDst.root
+-rw-r----- 1 fisyak rhstar 609M Jul 26 10:37 183/20183003/P24ia/st_physics_20183003_raw_3000009.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:52 183/20183003/P24ia/st_physics_20183003_raw_7500005.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:53 183/20183003/P24ia/st_physics_20183003_raw_5500005.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:29 183/20183003/P24ia/st_physics_20183003_raw_1000007.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 11:03 183/20183003/P24ia/st_physics_20183003_raw_3000006.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 11:01 183/20183003/P24ia/st_physics_20183003_raw_4000005.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:38 183/20183003/P24ia/st_physics_20183003_raw_4500007.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:26 183/20183003/P24ia/st_physics_20183003_raw_4500005.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:54 183/20183003/P24ia/st_physics_20183003_raw_2000006.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:41 183/20183003/P24ia/st_physics_20183003_raw_4500004.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:47 183/20183003/P24ia/st_physics_20183003_raw_6500004.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:46 183/20183003/P24ia/st_physics_20183003_raw_1000002.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:55 183/20183003/P24ia/st_physics_20183003_raw_3000001.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 11:01 183/20183003/P24ia/st_physics_20183003_raw_5500001.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:51 183/20183003/P24ia/st_physics_20183003_raw_5500004.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:52 183/20183003/P24ia/st_physics_20183003_raw_1500007.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:49 183/20183003/P24ia/st_physics_20183003_raw_7500001.picoDst.root
+[cvmfswrite02] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir 183/20183003/P24ia/*picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:46 183/20183003/P24ia/st_physics_20183003_raw_1000002.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:29 183/20183003/P24ia/st_physics_20183003_raw_1000007.picoDst.root
+-rw-r----- 1 fisyak rhstar 356M Jul 26 10:33 183/20183003/P24ia/st_physics_20183003_raw_1000009.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:52 183/20183003/P24ia/st_physics_20183003_raw_1500007.picoDst.root
+-rw-r----- 1 fisyak rhstar 356M Jul 26 10:34 183/20183003/P24ia/st_physics_20183003_raw_1500008.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:54 183/20183003/P24ia/st_physics_20183003_raw_2000006.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:55 183/20183003/P24ia/st_physics_20183003_raw_3000001.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 11:03 183/20183003/P24ia/st_physics_20183003_raw_3000006.picoDst.root
+-rw-r----- 1 fisyak rhstar 609M Jul 26 10:37 183/20183003/P24ia/st_physics_20183003_raw_3000009.picoDst.root 183/20183003/st_physics_20183003_raw_3000009,1,8497.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 11:01 183/20183003/P24ia/st_physics_20183003_raw_4000005.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:41 183/20183003/P24ia/st_physics_20183003_raw_4500004.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:26 183/20183003/P24ia/st_physics_20183003_raw_4500005.picoDst.root 183/20183003/st_physics_20183003_raw_4500005,1,8370.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:38 183/20183003/P24ia/st_physics_20183003_raw_4500007.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 11:01 183/20183003/P24ia/st_physics_20183003_raw_5500001.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:51 183/20183003/P24ia/st_physics_20183003_raw_5500004.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:53 183/20183003/P24ia/st_physics_20183003_raw_5500005.picoDst.root
+-rw-r----- 1 fisyak rhstar 324M Jul 26 10:33 183/20183003/P24ia/st_physics_20183003_raw_6000011.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:47 183/20183003/P24ia/st_physics_20183003_raw_6500004.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:49 183/20183003/P24ia/st_physics_20183003_raw_7500001.picoDst.root
+-rw-r----- 1 fisyak rhstar 1.1G Jul 26 10:52 183/20183003/P24ia/st_physics_20183003_raw_7500005.picoDst.root
+
+[cvmfswrite02] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir 183/20183003/*picoDst.root
+-rw-r--r-- 1 fisyak rhstar 189M Jul 12 15:32 183/20183003/st_physics_20183003_raw_1000005,1,7924.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 197M Jul 12 15:42 183/20183003/st_physics_20183003_raw_1000008,1,8197.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 207M Jul 12 17:02 183/20183003/st_physics_20183003_raw_1000009,1,8659.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 637M Jul 15 03:46 183/20183003/st_physics_20183003_raw_1500002,1,27028.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 220M Jul 18 13:23 183/20183003/st_physics_20183003_raw_1500007,1,9275.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 311M Jul 12 22:33 183/20183003/st_physics_20183003_raw_2000001,1,13062.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 251M Jul 12 19:47 183/20183003/st_physics_20183003_raw_2000005,1,10573.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 209M Jul 12 15:52 183/20183003/st_physics_20183003_raw_2500001,1,8801.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 208M Jul 12 18:57 183/20183003/st_physics_20183003_raw_3000005,1,8823.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 200M Jul 12 13:47 183/20183003/st_physics_20183003_raw_3000009,1,8497.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 663M Jul 15 03:45 183/20183003/st_physics_20183003_raw_3500007,1,27750.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 198M Jul 18 13:16 183/20183003/st_physics_20183003_raw_4000001,1,8381.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 201M Jul 12 16:06 183/20183003/st_physics_20183003_raw_4000003,1,8574.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 222M Jul 12 17:06 183/20183003/st_physics_20183003_raw_4000006,1,9378.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 664M Jul 15 03:45 183/20183003/st_physics_20183003_raw_4500001,1,28154.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 198M Jul 18 13:20 183/20183003/st_physics_20183003_raw_4500005,1,8370.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 311M Jul 18 13:24 183/20183003/st_physics_20183003_raw_5000001,1,13311.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 194M Jul 18 13:17 183/20183003/st_physics_20183003_raw_5000006,1,8160.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 651M Jul 15 03:45 183/20183003/st_physics_20183003_raw_5000007,1,27516.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 624M Jul 15 03:45 183/20183003/st_physics_20183003_raw_5500006,1,26447.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 203M Jul 12 14:36 183/20183003/st_physics_20183003_raw_6000001,1,8566.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 194M Jul 18 13:20 183/20183003/st_physics_20183003_raw_6000004,1,8296.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 212M Jul 12 17:36 183/20183003/st_physics_20183003_raw_6000005,1,8932.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 304M Jul 13 03:04 183/20183003/st_physics_20183003_raw_6000010,1,12612.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 598M Jul 14 22:32 183/20183003/st_physics_20183003_raw_6500001,1,25228.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 336M Jul 18 13:25 183/20183003/st_physics_20183003_raw_6500005,1,14200.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 703M Jul 15 01:15 183/20183003/st_physics_20183003_raw_6500008,1,29203.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 200M Jul 12 15:01 183/20183003/st_physics_20183003_raw_7000004,1,8486.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 200M Jul 12 13:26 183/20183003/st_physics_20183003_raw_7000006,1,8381.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 197M Jul 12 14:01 183/20183003/st_physics_20183003_raw_7500004,1,8234.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 240M Jul 20 14:45 183/20183003/st_physics_20183003_raw_7500007,10001,20000.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 239M Jul 20 14:12 183/20183003/st_physics_20183003_raw_7500007,1,10000.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 422M Jul 13 10:48 183/20183003/st_physics_20183003_raw_7500007,1,17673.picoDst.root
+-rw-r--r-- 1 fisyak rhstar 239M Jul 20 17:38 183/20183003/st_physics_20183003_raw_7500007,20001,30000.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  27M Jul 20 00:24 183/20183003/st_physics_20183003_raw_7500007,40001,41062.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  46M Jul 12 09:26 183/20183003/st_physics_adc_20183003_raw_1500003,1,1921.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  45M Jul 12 05:40 183/20183003/st_physics_adc_20183003_raw_2500002,1,1898.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  52M Jul 12 05:49 183/20183003/st_physics_adc_20183003_raw_3000002,1,2171.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  52M Jul 12 05:46 183/20183003/st_physics_adc_20183003_raw_4000002,1,2170.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  17M Jul 12 04:15 183/20183003/st_physics_adc_20183003_raw_4000009,1,665.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  47M Jul 12 06:25 183/20183003/st_physics_adc_20183003_raw_5000002,1,1936.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  53M Jul 12 06:06 183/20183003/st_physics_adc_20183003_raw_6000002,1,2163.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  45M Jul 12 06:22 183/20183003/st_physics_adc_20183003_raw_6500002,1,1868.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  47M Jul 12 05:49 183/20183003/st_physics_adc_20183003_raw_7000002,1,1904.picoDst.root
+-rw-r--r-- 1 fisyak rhstar  46M Jul 12 05:38 183/20183003/st_physics_adc_20183003_raw_7500002,1,1958.picoDst.root
+================================================================================
+07/27/2024
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+fisyak   183591  0.0  0.0 148932  1764 pts/0    R+   10:57   0:00 ps ux    									  
+[cvmfswrite02] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir */*/Chain.log    [cvmfswrite02] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir */*/Chain.log	      
+-rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:46 179/20179039/Chain.log	   -rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:46 179/20179039/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  42K Jul 23 10:49 179/20179040/Chain.log	   -rw-r--r-- 1 fisyak rhstar  42K Jul 23 10:49 179/20179040/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  63K Jul 26 08:37 179/20179041/Chain.log	   -rw-r--r-- 1 fisyak rhstar  63K Jul 26 08:37 179/20179041/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  71K Jul 26 08:37 180/20180001/Chain.log	   -rw-r--r-- 1 fisyak rhstar  71K Jul 26 08:37 180/20180001/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  76K Jul 26 08:37 180/20180002/Chain.log	   -rw-r--r-- 1 fisyak rhstar  76K Jul 26 08:37 180/20180002/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  66K Jul 26 08:37 180/20180003/Chain.log	   -rw-r--r-- 1 fisyak rhstar  66K Jul 26 08:37 180/20180003/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  18K Jul 26 08:35 180/20180004/Chain.log	   -rw-r--r-- 1 fisyak rhstar  18K Jul 26 08:35 180/20180004/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  77K Jul 26 08:37 180/20180007/Chain.log	   -rw-r--r-- 1 fisyak rhstar  77K Jul 26 08:37 180/20180007/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  61K Jul 26 08:37 180/20180008/Chain.log	   -rw-r--r-- 1 fisyak rhstar  61K Jul 26 08:37 180/20180008/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  38K Jul 26 08:36 180/20180009/Chain.log	   -rw-r--r-- 1 fisyak rhstar  38K Jul 26 08:36 180/20180009/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  20K Jul 26 08:35 180/20180010/Chain.log	   -rw-r--r-- 1 fisyak rhstar  20K Jul 26 08:35 180/20180010/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  67K Jul 26 08:37 180/20180011/Chain.log	   -rw-r--r-- 1 fisyak rhstar  67K Jul 26 08:37 180/20180011/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  55K Jul 26 08:37 180/20180012/Chain.log	   -rw-r--r-- 1 fisyak rhstar  55K Jul 26 08:37 180/20180012/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  53K Jul 26 14:59 180/20180013/Chain.log	   -rw-r--r-- 1 fisyak rhstar  53K Jul 26 14:59 180/20180013/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  49K Jul 27 10:25 180/20180014/Chain.log	   -rw-r--r-- 1 fisyak rhstar  49K Jul 27 10:25 180/20180014/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  48K Jul 27 10:25 180/20180015/Chain.log	   -rw-r--r-- 1 fisyak rhstar  48K Jul 27 10:25 180/20180015/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  52K Jul 27 10:25 180/20180016/Chain.log	   -rw-r--r-- 1 fisyak rhstar  52K Jul 27 10:25 180/20180016/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  52K Jul 27 10:26 180/20180017/Chain.log	   -rw-r--r-- 1 fisyak rhstar  52K Jul 27 10:26 180/20180017/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  56K Jul 27 10:26 180/20180018/Chain.log	   -rw-r--r-- 1 fisyak rhstar  56K Jul 27 10:26 180/20180018/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  50K Jul 27 10:25 180/20180020/Chain.log	   -rw-r--r-- 1 fisyak rhstar  50K Jul 27 10:25 180/20180020/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  35K Jul 27 10:21 180/20180021/Chain.log	   -rw-r--r-- 1 fisyak rhstar  35K Jul 27 10:21 180/20180021/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  67K Jul 27 10:26 180/20180022/Chain.log	   -rw-r--r-- 1 fisyak rhstar  67K Jul 27 10:26 180/20180022/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  56K Jul 27 10:26 180/20180023/Chain.log	   -rw-r--r-- 1 fisyak rhstar  56K Jul 27 10:26 180/20180023/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  46K Jul 27 10:24 180/20180024/Chain.log	   -rw-r--r-- 1 fisyak rhstar  46K Jul 27 10:24 180/20180024/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  52K Jul 27 10:25 180/20180026/Chain.log	   -rw-r--r-- 1 fisyak rhstar  52K Jul 27 10:25 180/20180026/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar 4.6K Jul 23 10:50 180/20180044/Chain.log	   -rw-r--r-- 1 fisyak rhstar 4.6K Jul 23 10:50 180/20180044/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  59K Jul 27 10:26 180/20180045/Chain.log	   -rw-r--r-- 1 fisyak rhstar  59K Jul 27 10:26 180/20180045/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  18K Jul 27 10:58 180/20180046/Chain.log	   -rw-r--r-- 1 fisyak rhstar  31K Jul 27 11:01 180/20180046/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  17K Jul 27 10:58 180/20180047/Chain.log	   -rw-r--r-- 1 fisyak rhstar  56K Jul 27 11:03 180/20180047/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  17K Jul 27 10:58 180/20180048/Chain.log	   -rw-r--r-- 1 fisyak rhstar  50K Jul 27 11:03 180/20180048/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar 4.6K Jul 23 10:50 181/20181001/Chain.log	   -rw-r--r-- 1 fisyak rhstar 4.6K Jul 23 10:50 181/20181001/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  19K Jul 27 10:58 181/20181002/Chain.log	   -rw-r--r-- 1 fisyak rhstar  37K Jul 27 11:02 181/20181002/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  19K Jul 23 10:52 181/20181003/Chain.log	   -rw-r--r-- 1 fisyak rhstar  19K Jul 23 10:52 181/20181003/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  14K Jul 23 10:51 181/20181004/Chain.log	   -rw-r--r-- 1 fisyak rhstar  14K Jul 23 10:51 181/20181004/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  13K Jul 23 10:51 181/20181005/Chain.log	   -rw-r--r-- 1 fisyak rhstar  13K Jul 23 10:51 181/20181005/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  16K Jul 23 10:51 181/20181006/Chain.log	   -rw-r--r-- 1 fisyak rhstar  16K Jul 23 10:51 181/20181006/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:52 181/20181007/Chain.log	   -rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:52 181/20181007/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  17K Jul 23 10:57 181/20181008/Chain.log	   -rw-r--r-- 1 fisyak rhstar  17K Jul 23 10:57 181/20181008/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  17K Jul 27 10:58 181/20181009/Chain.log	   -rw-r--r-- 1 fisyak rhstar  29K Jul 27 11:01 181/20181009/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:57 181/20181010/Chain.log	   -rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:57 181/20181010/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  14K Jul 27 10:58 181/20181011/Chain.log	   -rw-r--r-- 1 fisyak rhstar  32K Jul 27 11:02 181/20181011/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  14K Jul 27 10:58 181/20181012/Chain.log	   -rw-r--r-- 1 fisyak rhstar  29K Jul 27 11:02 181/20181012/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  14K Jul 27 10:58 181/20181013/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 27 11:01 181/20181013/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  12K Jul 27 10:58 181/20181017/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 27 11:01 181/20181017/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  14K Jul 27 10:58 181/20181018/Chain.log	   -rw-r--r-- 1 fisyak rhstar  28K Jul 27 11:01 181/20181018/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  21K Jul 23 10:57 181/20181019/Chain.log	   -rw-r--r-- 1 fisyak rhstar  21K Jul 23 10:57 181/20181019/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  12K Jul 23 10:56 181/20181040/Chain.log	   -rw-r--r-- 1 fisyak rhstar  12K Jul 23 10:56 181/20181040/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  13K Jul 27 10:37 181/20181041/Chain.log	   -rw-r--r-- 1 fisyak rhstar  13K Jul 27 10:37 181/20181041/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  19K Jul 23 10:57 181/20181042/Chain.log	   -rw-r--r-- 1 fisyak rhstar  19K Jul 23 10:57 181/20181042/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  23K Jul 23 10:57 181/20181043/Chain.log	   -rw-r--r-- 1 fisyak rhstar  23K Jul 23 10:57 181/20181043/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  13K Jul 27 10:58 181/20181044/Chain.log	   -rw-r--r-- 1 fisyak rhstar  32K Jul 27 11:02 181/20181044/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  13K Jul 27 10:58 181/20181045/Chain.log	   -rw-r--r-- 1 fisyak rhstar  13K Jul 27 10:58 181/20181045/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  19K Jul 23 10:57 182/20182006/Chain.log	   -rw-r--r-- 1 fisyak rhstar  19K Jul 23 10:57 182/20182006/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  21K Jul 23 10:57 182/20182007/Chain.log	   -rw-r--r-- 1 fisyak rhstar  21K Jul 23 10:57 182/20182007/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  11K Jul 27 10:58 182/20182008/Chain.log	   -rw-r--r-- 1 fisyak rhstar  29K Jul 27 11:01 182/20182008/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  27K Jul 23 10:58 182/20182009/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 23 10:58 182/20182009/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:57 182/20182010/Chain.log	   -rw-r--r-- 1 fisyak rhstar  18K Jul 23 10:57 182/20182010/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  12K Jul 27 10:58 182/20182011/Chain.log	   -rw-r--r-- 1 fisyak rhstar  32K Jul 27 11:02 182/20182011/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  11K Jul 27 10:58 182/20182012/Chain.log	   -rw-r--r-- 1 fisyak rhstar  37K Jul 27 11:03 182/20182012/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  27K Jul 23 11:02 182/20182013/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 23 11:02 182/20182013/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  38K Jul 23 11:03 182/20182014/Chain.log	   -rw-r--r-- 1 fisyak rhstar  38K Jul 23 11:03 182/20182014/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  11K Jul 27 10:58 182/20182015/Chain.log	   -rw-r--r-- 1 fisyak rhstar  29K Jul 27 11:02 182/20182015/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  11K Jul 27 10:58 182/20182016/Chain.log	   -rw-r--r-- 1 fisyak rhstar  22K Jul 27 11:00 182/20182016/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  11K Jul 27 10:58 182/20182017/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 27 11:02 182/20182017/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  12K Jul 27 10:58 182/20182018/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 27 11:02 182/20182018/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  11K Jul 27 10:58 182/20182035/Chain.log	   -rw-r--r-- 1 fisyak rhstar  19K Jul 27 11:00 182/20182035/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  19K Jul 23 11:01 183/20183002/Chain.log	   -rw-r--r-- 1 fisyak rhstar  19K Jul 23 11:01 183/20183002/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  19K Jul 23 11:01 183/20183003/Chain.log	   -rw-r--r-- 1 fisyak rhstar  19K Jul 23 11:01 183/20183003/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  25K Jul 23 11:02 183/20183004/Chain.log	   -rw-r--r-- 1 fisyak rhstar  25K Jul 23 11:02 183/20183004/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  27K Jul 23 11:02 183/20183005/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 23 11:02 183/20183005/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  29K Jul 23 11:03 183/20183008/Chain.log	   -rw-r--r-- 1 fisyak rhstar  29K Jul 23 11:03 183/20183008/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  27K Jul 23 11:03 183/20183009/Chain.log	   -rw-r--r-- 1 fisyak rhstar  27K Jul 23 11:03 183/20183009/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  32K Jul 23 11:03 183/20183010/Chain.log	   -rw-r--r-- 1 fisyak rhstar  32K Jul 23 11:03 183/20183010/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  30K Jul 23 11:03 183/20183011/Chain.log	   -rw-r--r-- 1 fisyak rhstar  30K Jul 23 11:03 183/20183011/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  24K Jul 23 11:02 183/20183012/Chain.log	   -rw-r--r-- 1 fisyak rhstar  24K Jul 23 11:02 183/20183012/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  31K Jul 23 11:03 183/20183015/Chain.log	   -rw-r--r-- 1 fisyak rhstar  31K Jul 23 11:03 183/20183015/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  28K Jul 23 11:02 183/20183016/Chain.log	   -rw-r--r-- 1 fisyak rhstar  28K Jul 23 11:02 183/20183016/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  29K Jul 23 11:06 183/20183017/Chain.log	   -rw-r--r-- 1 fisyak rhstar  29K Jul 23 11:06 183/20183017/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  21K Jul 23 11:05 183/20183018/Chain.log	   -rw-r--r-- 1 fisyak rhstar  21K Jul 23 11:05 183/20183018/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183020/Chain.log	   -rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183020/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183021/Chain.log	   -rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183021/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183022/Chain.log	   -rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183022/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  38K Jul 23 11:07 183/20183023/Chain.log	   -rw-r--r-- 1 fisyak rhstar  38K Jul 23 11:07 183/20183023/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  33K Jul 23 11:07 183/20183024/Chain.log	   -rw-r--r-- 1 fisyak rhstar  33K Jul 23 11:07 183/20183024/Chain.log	  
+-rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183025/Chain.log	   -rw-r--r-- 1 fisyak rhstar  35K Jul 23 11:07 183/20183025/Chain.log       
+================================================================================
+07/28/2024
+[rcas6010] /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget $ df -h /gpfs01/star/data2[4-7]
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   35T   17T  68% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   30T   22T  58% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   28T   24T  54% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   31T   21T  60% /gpfs/mnt/gpfs01
+[rcas6010] /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget $ df -h /gpfs01/star/subsysg/
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01  141T  140T  1.4T 100% /gpfs/mnt/gpfs01
+[rcas6010] /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir -d /gpfs01/star/data2[4-7]/TpcAlignment/*/*/*
+drwxrwsr-x+  3 fisyak rhstar  512 Jul 12 09:29 /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/
+drwxr-sr-x   2 fisyak rhstar  512 Jul 25 15:23 /gpfs01/star/data25/TpcAlignment/daq/2019/158/
+drwxr-sr-x   4 fisyak rhstar  512 Jul 25 15:23 /gpfs01/star/data25/TpcAlignment/daq/2019/160/
+drwxr-sr-x   5 fisyak rhstar  512 Jul 22 01:26 /gpfs01/star/data25/TpcAlignment/daq/2019/179/
+drwxr-sr-x  28 fisyak rhstar 256K Jul 25 15:23 /gpfs01/star/data25/TpcAlignment/daq/2019/180/
+drwxr-sr-x   2 fisyak rhstar  512 Jul 25 15:23 /gpfs01/star/data25/TpcAlignment/daq/2019/181/
+drwxrwsr--+  3 fisyak rhstar  512 Jul 12 20:05 /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/
+drwxrwsr--+  3 pkisel rhstar  512 Jul 14 10:16 /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/
+drwxrwsr-x+  3 fisyak rhstar  512 Jul 12 16:51 /gpfs01/star/data27/TpcAlignment/daq/2019/107/
+drwxrwsr-x+  6 fisyak rhstar  512 Jul 25 15:23 /gpfs01/star/data27/TpcAlignment/daq/2019/113/
+drwxrwsr-x+ 27 fisyak rhstar 256K Jul 25 15:23 /gpfs01/star/data27/TpcAlignment/daq/2019/169/
+drwxrwsr-x+  3 fisyak rhstar 256K Jul 25 15:10 /gpfs01/star/data27/TpcAlignment/daq/2020/035/
+drwxrwsr-x+  3 fisyak rhstar 256K Jul 25 15:10 /gpfs01/star/data27/TpcAlignment/daq/2020/036/
+
+[rcas6010] /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir -d /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*
+drwxrwsr-x+ 5 fisyak rhstar 8.0M Jul 24 09:10 /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+drwxrwsr--+ 5 fisyak rhstar 2.0M Jul 27 11:17 /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+drwxrwsr--+ 4 pkisel rhstar 256K Jul 24 08:51 /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+[rcas6010] /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir -d /gpfs01/star/data2[4-7]/TpcAlignment/daq/*
+drwxr-sr-x  7 fisyak rhstar 512 Jul 21 11:36 /gpfs01/star/data25/TpcAlignment/daq/2019/
+drwxrwxr-x+ 5 fisyak rhstar 512 Jul 12 17:02 /gpfs01/star/data27/TpcAlignment/daq/2019/
+drwxrwsr-x+ 4 fisyak rhstar 512 Jul 13 11:50 /gpfs01/star/data27/TpcAlignment/daq/2020/
+================================================================================
+07/28/2024
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+======================================================================
+07/29/2024
+[rcas6010] ~/TFG24c/2019/RF/3p85GeV_fixedTarget $ mysql -h heston.star.bnl.gov --port=3606 -u "" -p""  mq_collector_Conditions_cdev
+Enter password: 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 478824
+Server version: 5.7.24-log MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2016, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [mq_collector_Conditions_cdev]> select UNIX_TIMESTAMP(beginTime),`wfgRamp.mainMagnet.readbackM[1]` AS mainMagnetCurrent, `psctrl.mainMagnet.statusM` AS mainMagnetStatus,beginTime  from starMagnetCurrentFull where beginTime > "2024-07-27 23:15:00";
++---------------------------+-------------------+------------------+---------------------+
+| UNIX_TIMESTAMP(beginTime) | mainMagnetCurrent | mainMagnetStatus | beginTime           |
++---------------------------+-------------------+------------------+---------------------+
+|                1722122103 |           4506.66 |                8 | 2024-07-27 23:15:03 |
+|                1722122108 |           4505.56 |                8 | 2024-07-27 23:15:08 |
+|                1722122113 |           4508.49 |                8 | 2024-07-27 23:15:13 |
+|                1722122118 |           4506.29 |                8 | 2024-07-27 23:15:18 |
+|                1722122123 |           4506.11 |                8 | 2024-07-27 23:15:23 |
+|                1722122128 |           4508.67 |                8 | 2024-07-27 23:15:28 |
+|                1722122133 |           4510.51 |                8 | 2024-07-27 23:15:33 |
++---------------------------+-------------------+------------------+---------------------+
+7 rows in set (0.02 sec)
+
+================================================================================
+07/31/2024
+foreach d (`ls -1trd ~/work/kfp/*/*TFG24c/dEdxE`)
+   ls -ltr ${d}/../*.root
+   ls -ltr ${d}/*/*.root | tail -10
+   echo "===================="
+end
+================================================================================
+08/93/2024
+rm  `grep 'probably not closed' */*/Chain.log | awk '{print $5}' | sed -e 's/.MuDst.root/*/'`
+rm `grep missing */*/PChain.log | awk '{print $3}'
+rm `grep missing */*/PChain.log | awk '{print $3}' | awk -F'/[^/]*$' '{print $1"/*Chain.log"}' | sort`
+
+  touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
+  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
+df -h /gpfs01/star/data2[4-7]
+
+foreach f (`ls -1d */*/*.log.gz | grep -v B`)
+ set b = `echo ${f} | sed -e 's/.log.gz/B.log.gz/'`; mv ${f} ${b}
+end
+Clear daq files
+[rcas6007] ~ $ dir -d `ls -1d TFG24c/*/RF/*/*/*/Done | awk -F\/ '{print "/gpfs01/star/daq/"$2"/"$5"/"$6}'`

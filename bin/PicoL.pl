@@ -254,7 +254,7 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #per run 
 
 my $GLOB = $PICOPATH . $glob . "/*/???/*";
-#my $GLOB = $PICOPATH . $glob . "/???/*";
+if ($pwd =~ /TFG24c/) {$GLOB = $PICOPATH . $glob . "/???/*";}
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
 my @Files = glob $GLOB; print "$GLOB => found $#Files\n" if ($debug);

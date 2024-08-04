@@ -37,8 +37,9 @@ TChain *Chain(const Char_t *TreeName = "FitP") {
 #include "TFile.h"
 #include "TList.h"
 #include "TDirIter.h"
+#include "TSystem.h"
 TChain *tChain = 0;
-TChain *Chain(const Char_t *files = "./*.MuDst.root",const Char_t *TreeName = "MuDst") {
+TChain *Chain(const Char_t *files = "./*.MuDst.root",const Char_t *TreeName = "MuDst", Bool_t Checkgz = kFALSE) {
   TDirIter Dir(files);
   //  TTreeIter iter(TreeName);
   //  iter.AddFile(files);
@@ -50,6 +51,16 @@ TChain *Chain(const Char_t *files = "./*.MuDst.root",const Char_t *TreeName = "M
   ULong64_t nEvTot = 0;
   Char_t *file = 0;
   while ( (file = (Char_t *) Dir.NextFile()) ) {   
+    TString File(file);
+    if (Checkgz) {
+      Int_t index = File.Index(".");
+      TString gz(File,index);
+      gz += "B.log.gz";
+      if (! gSystem->Which(".",gz)) {
+	cout << "file " << gz.Data() << " does exist. Skip" << endl;
+	continue;
+      }
+    }
     f = new TFile(file);
     if (! f) {cout << "missing file " << file << endl; continue;}
     TTree *tree = (TTree *) f->Get(TreeName);
