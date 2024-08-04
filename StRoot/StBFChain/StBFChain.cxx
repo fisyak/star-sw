@@ -2204,7 +2204,11 @@ void StBFChain::SetDbOptions(StMaker *mk){
     }
   }
   if (GetOption("TFGdbOpt")) {
-    const Char_t *TFGTables[] = {"tpcSectorT0offset", "TpcPosition", "TpcHalfPosition", "TpcWheelPosition", "TpcSuperSectorPositionB", "TpcSuperSectorPositionD", "TpcInnerSectorPositionB", "TpcOuterSectorPositionB", "tpcBXT0CorrEPD", 0};
+    const Char_t *TFGTables[] = {"tpcSectorT0offset", "starTriggerDelay", 
+				 "TpcPosition", "TpcHalfPosition", "TpcWheelPosition", 
+				 "TpcSuperSectorPositionB", "TpcSuperSectorPositionD", 
+				 "TpcInnerSectorPositionB", "TpcOuterSectorPositionB", 
+				 "tpcBXT0CorrEPD", 0};
     LOG_INFO << "TFG version for TPC alignment parameters" << endm;
     for (Int_t i = 0; TFGTables[i]; i++) {
       LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endm; 

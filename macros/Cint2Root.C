@@ -19,6 +19,7 @@ void Cint2Root(TString topDir = ".") {
     if (title != "file") continue;
     if (! name.EndsWith(".C")) continue;
     if (path.Contains("hold",TString::kIgnoreCase)) continue;
+    //    if ( ! path.Contains("starTriggerDelay.")) continue;
     TString rootf(path);
     rootf.ReplaceAll(".C",".root");
 #if 1

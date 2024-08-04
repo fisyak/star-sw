@@ -868,9 +868,9 @@ void StBemcTriggerSimu::FEEini2009(int runNumber)
   const bool debug = false;
 
   mTables->getTriggerPedestalShift((int&)pedTargetValue);
-  LOG_INFO << "pedTargetValue\t" << pedTargetValue << endm;
+  LOG_DEBUG << "pedTargetValue\t" << pedTargetValue << endm;
   fill(numMaskTow,numMaskTow+kNPatches,0);
-  LOG_INFO << "towerId\ttriggerPatch\tcrate\tseq\tstatus\tpedestal\tFEEpedestal\tgain" << endm;
+  LOG_DEBUG << "towerId\ttriggerPatch\tcrate\tseq\tstatus\tpedestal\tFEEpedestal\tgain" << endm;
   for (int towerId = 1; towerId <= kNTowers; ++towerId) {
     int crate, seq, status, triggerPatch;
     float rms;
@@ -898,7 +898,7 @@ void StBemcTriggerSimu::FEEini2009(int runNumber)
     if (!TowerStatus[towerId-1]) ++numMaskTow[triggerPatch];
     FEEped[towerId-1] = getFEEpedestal(ped12[towerId-1],pedTargetValue,debug);
     mTables->getCalib(BTOW,towerId,1,TowerGain[towerId-1]);
-    LOG_INFO << Form("%d\t%d\t%d\t%d\t%d\t%.2f\t%d\t%.5f",towerId,triggerPatch,crate,seq,TowerStatus[towerId-1],ped12[towerId-1],FEEped[towerId-1],TowerGain[towerId-1]) << endm;
+    LOG_DEBUG << Form("%d\t%d\t%d\t%d\t%d\t%.2f\t%d\t%.5f",towerId,triggerPatch,crate,seq,TowerStatus[towerId-1],ped12[towerId-1],FEEped[towerId-1],TowerGain[towerId-1]) << endm;
   } // for towerId
 
   // These towers are swapped for Run 9
@@ -927,10 +927,10 @@ void StBemcTriggerSimu::FEEini2009(int runNumber)
   if (runNumber >= 10078075 && runNumber <= 10103042) TowerStatus[1433-1] = 0;
 
   //--zchang
-  LOG_INFO <<"LUT pedestal will be calculated by LUTped = LUTped (from database) + NumberOfMaskedOutTowers. --zchang"<<endm;
-  LOG_INFO <<"will set all trigger patch formula and bit conversion to 2 --zchang"<<endm;
+  LOG_DEBUG <<"LUT pedestal will be calculated by LUTped = LUTped (from database) + NumberOfMaskedOutTowers. --zchang"<<endm;
+  LOG_DEBUG <<"will set all trigger patch formula and bit conversion to 2 --zchang"<<endm;
 
-  LOG_INFO << "triggerPatch\tcrate\tseq\tHTsta\tTPsta\tbitConv\tformula\tLUTscale\tLUTped\tLUTsig\tLUTpow\tpar4\tpar5\tnumMaskTow" << endm;  
+  LOG_DEBUG << "triggerPatch\tcrate\tseq\tHTsta\tTPsta\tbitConv\tformula\tLUTscale\tLUTped\tLUTsig\tLUTpow\tpar4\tpar5\tnumMaskTow" << endm;  
   for (int crate = 1; crate <= kNCrates; ++crate) {
     for (int seq = 0; seq < kNSeq; ++seq) {
       int triggerPatch;
@@ -958,7 +958,7 @@ void StBemcTriggerSimu::FEEini2009(int runNumber)
 	LUTped[crate-1][seq] += numMaskTow[triggerPatch];
       }
       //end --zchang
-      LOG_INFO << Form("%d\t%d\t%d\t%d\t%d\t%ld\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d",triggerPatch,crate,seq,DSM_HTStatus[triggerPatch],DSM_TPStatus[triggerPatch],bitConvValue[triggerPatch],formula[crate-1][seq],LUTscale[crate-1][seq],LUTped[crate-1][seq],LUTsig[crate-1][seq],LUTpow[crate-1][seq],parameters[4],parameters[5],numMaskTow[triggerPatch]) << endm;
+      LOG_DEBUG << Form("%d\t%d\t%d\t%d\t%d\t%ld\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d",triggerPatch,crate,seq,DSM_HTStatus[triggerPatch],DSM_TPStatus[triggerPatch],bitConvValue[triggerPatch],formula[crate-1][seq],LUTscale[crate-1][seq],LUTped[crate-1][seq],LUTsig[crate-1][seq],LUTpow[crate-1][seq],parameters[4],parameters[5],numMaskTow[triggerPatch]) << endm;
     } // for seq
   } // for crate
 

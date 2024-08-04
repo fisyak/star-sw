@@ -155,8 +155,11 @@ class StMuDstMaker : public StIOInterFace {
   virtual int Init();
   virtual void Clear(Option_t *option="");
   virtual int  Make();
-  virtual  Int_t MakeRead(const StUKey &RunEvent);
+  virtual int  Make(Int_t RunId, Int_t EventId);
+  virtual Int_t MakeRead(const StUKey &RunEvent);
+  Int_t MakeRead(Int_t RunId, Int_t EventId);
   virtual  Int_t MakeRead();
+  virtual  void  UpdateMuDst();
   virtual  Int_t MakeWrite();
   virtual int  Finish();
           void printArrays();
@@ -323,6 +326,7 @@ virtual   void closeWrite();
 
 virtual   int openRead();
 virtual   Int_t read();
+ virtual   Int_t read(Int_t RunId, Int_t EventId);
 void setBranchAddresses();
 virtual   void closeRead();
 

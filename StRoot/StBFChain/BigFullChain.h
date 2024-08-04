@@ -1237,7 +1237,7 @@ Bfc_st BFC[] = { // standard chains
   {"CorrY"       ,"" ,"","ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
    ",-OBmap2D,-OClock,-OTwist"                                           ,"","","New Tpc Alignment",kFALSE},
   {"Alignment2024","" ,"","NewTpcAlignment"                         ,"","","Turn on Alignment 2024",kFALSE},
-  {"CorrZ","" ,"","Alignment2024,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
+  {"CorrZ","" ,"","Alignment2024,TFGdbOpt,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
    ",OGridLeakFull,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
   {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
@@ -1910,7 +1910,7 @@ Bfc_st BFC[] = { // standard chains
                                                                                  "ETOF match maker",kFALSE},
   {"ETofQa",     "",     "", "db, ETofUtil, muDst", "StETofQAMaker",    "StETofQAMaker",
                                                                                     "ETOF QA maker",kFALSE},
-  {"ETofA",  "",    "","etofdat,ETofCalib,etofhit,ETofMatch","","... ETOF chain options for data",  kFALSE},
+  {"ETofA",  "", "","etofdat,ETofCalib,etofhit,ETofMatch","","","... ETOF chain options for data",  kFALSE},
   // the below needs to be done earlier to save time - leaving here for documentation purposes as two
   // makers are part of the same library (let's not forget this)
   //{"mtdTrkMask"  ,"","","db",    "StMtdTrackingMaskMaker","StMtdEvtFilterMaker","MTD track masking",kFALSE},
@@ -1996,19 +1996,15 @@ Bfc_st BFC[] = { // standard chains
 #else /* ! __NoStrangeMuDst__  StMuDSTMaker has to be compiled with -D__NO_STRANGE_MUDST__ */
   {"CMuDST"    ,"","MuDSTChain","MuDst,Tree",               "StMuDstMaker","","Writes Common MuDST",kFALSE},
 #endif /* __NoStrangeMuDst__ */
+  {"trgSimu"        ,"","",""       ,"StTriggerSimuMaker","StTriggerUtilities","trigger simu maker",kFALSE},
   {"picoEvt"    ,"","","MuDSTDeps,StEvent,Stu","",  "StPicoEvent,StPicoDstMaker"
    ,                                                              "Load picoEvent and dependencies",kFALSE},
   {"picoDst"    ,"","","picoEvt,EmcUtil,TofUtil,BTofUtil,PmdUtil","StPicoDstMaker"
    ,                                                        "StPicoDstMaker","Load PicoDST library",kFALSE},
   {"RMuDST"    ,"","","CMuDST"   ,"","","reads Common MuDST, do not disactivate if no output files",kFALSE},
 
-  {"trgSimu"        ,"","",""       ,"StTriggerSimuMaker","StTriggerUtilities","trigger simu maker",kFALSE},
-#if 1 
-  {"picoWrite" ,"","","picoDst,PicoVtxDefault",""                       ,"","Writes picoDST format",kFALSE},
+  {"picoWrite" ,"","","trgSimu,picoDst,PicoVtxDefault",""               ,"","Writes picoDST format",kFALSE},
   {"picoRead"  ,"","","RpicoDST","",""                                 ,"WritesRead picoDST format",kFALSE},
-#else /* ?trgSimu */
-  {"picoRead"  ,"","PicoChain","picoDst","StPicoDstMaker",""           ,"WritesRead picoDST format",kFALSE},
-#endif
   {"PicoVtxDefault" ,"","",""                                       ,"" ,"","pico Vtx default mode",kFALSE},
   {"PicoVtxVpd"     ,"","","-PicoVtxDefault"             ,"" ,"","pico Vtx cut on Tof and VPD mode",kFALSE},
   {"PicoVtxVpdOrDefault","","","-PicoVtxDefault,-PicoVtxVpd"

@@ -102,12 +102,12 @@ class StMuTrack : public TObject {
     const StMuMtdHit* mtdHit() const;  /// Bingchu
     UShort_t nHits() const;     ///< Return total number of hits on track.
 #else /* __TFG__VERSION__ */
-    const StMuTrack*     globalTrack()  const {return (mIndex2Global      >= 0) ? (StMuTrack*)StMuDst::array(muGlobal)->At(mIndex2Global) : 0;}
+    const StMuTrack*     globalTrack()  const {return (mIndex2Global      >= 0) ? (StMuTrack*)StMuDst::instance()->array(muGlobal)->At(mIndex2Global) : 0;}
     const StMuTrack*     primaryTrack() const; ///< Returns pointer to associated primary track. Null pointer if no global track available.
-    const StRichSpectra* richSpectra()  const {return (mIndex2RichSpectra >= 0) ? (StRichSpectra*)StMuDst::array(muRich)->At(mIndex2RichSpectra) : 0;}
-    const StMuBTofHit*   tofHit()       const {return (mIndex2BTofHit     >= 0) ? (StMuBTofHit*)StMuDst::btofArray(muBTofHit)->At(mIndex2BTofHit) : 0;}
-    const StMuETofHit*  etofHit()       const {return (mIndex2ETofHit>=0) ? (StMuETofHit*)StMuDst::etofArray(muETofHit)->UncheckedAt(mIndex2ETofHit) :0;}
-    const StMuMtdHit*    mtdHit()       const {return (mIndex2MtdHit      >= 0) ? (StMuMtdHit*)StMuDst::mtdArray(muMTDHit)->At(mIndex2MtdHit) : 0;}
+    const StRichSpectra* richSpectra()  const {return (mIndex2RichSpectra >= 0) ? (StRichSpectra*)StMuDst::instance()->array(muRich)->At(mIndex2RichSpectra) : 0;}
+    const StMuBTofHit*   tofHit()       const {return (mIndex2BTofHit     >= 0) ? (StMuBTofHit*)StMuDst::instance()->btofArray(muBTofHit)->At(mIndex2BTofHit) : 0;}
+    const StMuETofHit*  etofHit()       const {return (mIndex2ETofHit>=0) ? (StMuETofHit*)StMuDst::instance()->etofArray(muETofHit)->UncheckedAt(mIndex2ETofHit) :0;}
+    const StMuMtdHit*    mtdHit()       const {return (mIndex2MtdHit      >= 0) ? (StMuMtdHit*)StMuDst::instance()->mtdArray(muMTDHit)->At(mIndex2MtdHit) : 0;}
     const StDcaGeometry* dcaGeom()      const {return (mIndex2Cov         >= 0) ? StMuDst::instance()->covGlobTracks(mIndex2Cov) : 0;}
     UShort_t nHits() const {return mNHits;}      ///< Return total number of hits on track.
 #endif /* __TFG__VERSION__ */
@@ -423,11 +423,11 @@ inline void StMuTrack::setProbabilityPidCentrality(Double_t cent) { mProbability
 inline void StMuTrack::setBTofPidTraits(const StMuBTofPidTraits& pid) { mBTofPidTraits = pid; }
 inline void StMuTrack::setETofPidTraits(const StMuETofPidTraits& pid) { mETofPidTraits = pid; }
 
-inline const StMuTrack* StMuTrack::globalTrack() const { return (mIndex2Global>=0) ? (StMuTrack*)StMuDst::array(muGlobal)->UncheckedAt(mIndex2Global) :0;}
-inline const StRichSpectra* StMuTrack::richSpectra() const { return (mIndex2RichSpectra>=0) ? (StRichSpectra*)StMuDst::array(muRich)->UncheckedAt(mIndex2RichSpectra) : 0;}
-inline const StMuBTofHit* StMuTrack::tofHit() const { return (mIndex2BTofHit>=0) ? (StMuBTofHit*)StMuDst::btofArray(muBTofHit)->UncheckedAt(mIndex2BTofHit) :0;} /// dongx
-inline const StMuETofHit* StMuTrack::etofHit() const { return (mIndex2ETofHit>=0) ? (StMuETofHit*)StMuDst::etofArray(muETofHit)->UncheckedAt(mIndex2ETofHit) :0;}
-inline const StMuMtdHit* StMuTrack::mtdHit() const { return (mIndex2MtdHit>=0) ? (StMuMtdHit*)StMuDst::mtdArray(muMTDHit)->UncheckedAt(mIndex2MtdHit) :0;} ///
+inline const StMuTrack* StMuTrack::globalTrack() const { return (mIndex2Global>=0) ? (StMuTrack*)StMuDst::instance()->array(muGlobal)->UncheckedAt(mIndex2Global) :0;}
+inline const StRichSpectra* StMuTrack::richSpectra() const { return (mIndex2RichSpectra>=0) ? (StRichSpectra*)StMuDst::instance()->array(muRich)->UncheckedAt(mIndex2RichSpectra) : 0;}
+inline const StMuBTofHit* StMuTrack::tofHit() const { return (mIndex2BTofHit>=0) ? (StMuBTofHit*)StMuDst::instance()->btofArray(muBTofHit)->UncheckedAt(mIndex2BTofHit) :0;} /// dongx
+inline const StMuETofHit* StMuTrack::etofHit() const { return (mIndex2ETofHit>=0) ? (StMuETofHit*)StMuDst::instance()->etofArray(muETofHit)->UncheckedAt(mIndex2ETofHit) :0;}
+inline const StMuMtdHit* StMuTrack::mtdHit() const { return (mIndex2MtdHit>=0) ? (StMuMtdHit*)StMuDst::instance()->mtdArray(muMTDHit)->UncheckedAt(mIndex2MtdHit) :0;} ///
 #endif /* ! __TFG__VERSION__ */
 ostream&              operator<<(ostream& os, StMuTrack const & v);
 #endif

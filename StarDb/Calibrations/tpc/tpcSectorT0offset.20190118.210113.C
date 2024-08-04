@@ -1,1 +1,0 @@
-tpcSectorT0offset.Cosmic_2019_FF.C

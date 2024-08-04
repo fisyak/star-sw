@@ -699,11 +699,58 @@ int StMuDstMaker::Make(){
 }
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
+/**
+   Depending on ioMode, calling Make() will initiate the StMuDstMaker to read or
+   write the next event. After the Make() function has finished,
+   a call to muDst() will return a pointer to an object od type StMuDst. This object
+   will hold the current event if the io was successful, or return a null pointer.
+*/
+int StMuDstMaker::Make(Int_t RunId, Int_t EventId){
+
+#ifdef __TFG__VERSION__
+  mStMuDst->SetInstance();
+#endif /* __TFG__VERSION__ */
+  DEBUGMESSAGE2("");
+  int returnStarCode = kStOK;
+  StTimer timer;
+  timer.start(); 
+  returnStarCode = MakeRead(RunId,EventId);
+  DEBUGVALUE2(timer.elapsedTime());
+  return returnStarCode;
+
+
+}
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 Int_t StMuDstMaker::MakeRead(const StUKey &RunEvent)
 {
    return MakeRead();
 }
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+Int_t StMuDstMaker::MakeRead(Int_t RunId, Int_t EventId)
+{
+   int returnStarCode = kStOK;
+   if (mIoMode == ioRead) {
+     try {
+       returnStarCode = read(RunId, EventId);
+#ifdef __TFG__VERSION__
+       if (! mStMuDst->IsGoodTrigger()) return kStSkip;
+#endif /* __TFG__VERSION__ */
+     }
+     catch(StMuExceptionEOF e) {
+       e.print();
+       returnStarCode = kStEOF;
+     }
+     catch(StMuException e) {
+        e.print();
+        returnStarCode = kStERR;
+     }
+  }
+  return returnStarCode;
+} 
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
@@ -1022,6 +1069,17 @@ int StMuDstMaker::openRead() {
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
+Int_t StMuDstMaker::read(Int_t RunId, Int_t EventId){
+  if (! mChain->GetTreeIndex()) {
+    mChain->BuildIndex("MuEvent.mRunInfo.mRunId","MuEvent.mEventInfo.mId");
+  }
+  if (mChain->GetEntryWithIndex(RunId,EventId) <= 0) return kStSkip;
+  UpdateMuDst();
+  return kStOK;
+}
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 Int_t StMuDstMaker::read(){
   if (!mChain){
     DEBUGMESSAGE2("ATTENTION: No StMuChain ... results won't be exciting (nothing to do)");
@@ -1042,8 +1100,7 @@ Int_t StMuDstMaker::read(){
       bytes = mChain->GetEntry(mEventCounter++);
       DEBUGVALUE3(bytes);
     }
-  }
-  else {
+  } else {
     int bytes = mChain->GetEntry( mEventList->GetEntry( mEventCounter++ ) );
     while ( bytes<=0 ) {
       DEBUGVALUE3(mEventCounter);
@@ -1052,6 +1109,11 @@ Int_t StMuDstMaker::read(){
       DEBUGVALUE3(bytes);
     }
   }
+  UpdateMuDst();
+  return kStOK;
+}
+//________________________________________________________________________________
+void StMuDstMaker::UpdateMuDst() {
   if (GetDebug()>1) printArrays();
   mStMuDst->set(this);
   fillHddr();
@@ -1060,7 +1122,6 @@ Int_t StMuDstMaker::read(){
 #ifdef __TFG__VERSION__
   mStMuDst->ResetMaps();
 #endif /* __TFG__VERSION__ */
-  return kStOK;
 }
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------

@@ -159,7 +159,11 @@ int Fill_MagnetAvg(unsigned int runNumber,unsigned int startRunTime,unsigned int
     out << "}" << endl;
     out.close();
   } else {
-    cout << "skip " << Out.Data() << "with N = " << N << " and RMS = " << RMS << " for run = " << runNumber <<endl;
+    cout << "skip " << Out.Data() << " with N = " << N << " and RMS = " << RMS << " for run = " << runNumber <<endl;
+    TString OutS(Out); OutS += ".HOLD.ofl";
+    ofstream out;
+    out.open(OutS, ios::out); 
+    out.close();
   }
   // write values in
   int value = write(writeFields,runNumber,startRunTime,time,current);

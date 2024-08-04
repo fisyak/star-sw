@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+#  /net/l402/data/fisyak/STAR/packages/.DEV2 $ put2DB.pl flavor=TFG  StarDb/Calibrations/tpc/tpcBXT0CorrEPD.y2019.C
 my %ARG = (flavor => 'ofl',
 	  );
 foreach my $opt (@ARGV) {

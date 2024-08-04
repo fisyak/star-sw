@@ -160,7 +160,7 @@ void StEmcTriggerSimu::defineTrigger(int triggerIndex, const char* name, int tri
   triggerDefinition.offbits1 = offbits1;
   triggerDefinition.offbits2 = offbits2;
   triggerDefinition.offbits3 = offbits3;
-  LOG_INFO <<"New Defined Trigger: "
+  LOG_DEBUG <<"New Defined Trigger: "
            << Form("triggerIndex=%d name=%s triggerId=%d onbits=0x%04x offbits=0x%04x onbit1=0x%04x onbits2=0x%04x onbits3=0x%04x offbits1=0x%04x offbits2=0x%04x offbits3=0x%04x\n", triggerDefinition.triggerIndex,triggerDefinition.name,triggerDefinition.triggerId,triggerDefinition.onbits, triggerDefinition.offbits, triggerDefinition.onbits1, triggerDefinition.onbits2, triggerDefinition.onbits3, triggerDefinition.offbits1, triggerDefinition.offbits2, triggerDefinition.offbits3) << endm;
 
   defineTrigger(triggerDefinition);
