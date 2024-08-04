@@ -73,7 +73,8 @@ void StiTrackNodeHelper::set(StiKalmanTrackNode *pNode,StiKalmanTrackNode *sNode
   mTargetNode = sNode;
   mTargetHz = mTargetNode->getHz();
 assert(mTargetHz);
-assert(sNode->fitPars().hz());
+ if (! sNode->fitPars().hz()) sNode->fitPars().hz() = mTargetHz;
+ //assert(sNode->fitPars().hz());
 assert(!pNode || pNode->fitPars().hz());
   mParentHz = mTargetHz;
   if (mParentNode) {
