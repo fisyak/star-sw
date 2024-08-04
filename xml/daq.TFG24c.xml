@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
         <command>
-##  cd ${SUBMITTINGDIRECTORY}
+  cd ${SUBMITTINGDIRECTORY}
 #setenv StarEndMakerShell
   setenv STARFPE NO
 #  setenv NODEBUG yes
@@ -24,15 +24,16 @@
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .
-  ln -s  ${evtsFileF} .
-##  set evtsFile = ${evtsFileF};
-  set evtsFile = `basename ${evtsFileF}`;
+#  ln -s  ${evtsFileF} .
+  set evtsFile = ${evtsFileF};
+#  set evtsFile = `basename ${evtsFileF}`;
   echo "${evtsFile}"
   set filel    = `basename $evtsFile .daq`,${f},${l}
   set output  = ${filel}.event.root
 ##  set logFile  = ${filel}B.log
-  set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
 #  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
+  set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
+#  if (-r $logFile) exit 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
   set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
@@ -132,7 +133,7 @@
   root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}'","'${evtsFile}'","'$output'")' &gt;&amp; ${logFile}
 ##
 ##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
-   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
+##   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
    rm ${bla}
    gzip -f ${logFile}
         </command>
