@@ -1,1 +1,0 @@
-../StRoot/StTpcAlignerMaker/DumpRes2Par.C
