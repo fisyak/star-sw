@@ -550,7 +550,7 @@ void DrawPads() {
 //________________________________________________________________________________
 void TbyTHits() {
   TChain *tChain = 0;
-  TDirIter Dir("trackMateFilest_physics_adc*.root");
+  TDirIter Dir("trackMateFilest_physics*.root");
   TFile *f = 0;
   const Char_t *TreeName = "hitMateComp";
   tChain = new TChain(TreeName);

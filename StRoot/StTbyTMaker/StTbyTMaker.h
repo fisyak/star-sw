@@ -132,9 +132,10 @@ bool compStTrackPing(const StTrackPing& rhs,const StTrackPing& lhs);
 class StTbyTMaker : public StMaker {
  public: 
  StTbyTMaker(const char *name="TrackMate") : StMaker(name),
-    trackTree(0), trackBr(0), fTrackMatch(0), hitTree(0), hitBr(0), fHitMatch(0)  {}
+    trackTree(0), trackBr(0), fTrackMatch(0), hitTree(0), hitBr(0), fHitMatch(0), fFXT(kFALSE)  {}
   ~StTbyTMaker() {}
   Int_t  Init();
+  Int_t InitRun(Int_t runumber);
   virtual void Clear(const char* opt="");
   Int_t  Make();
   size_t buildRecHitTrackMap(const StSPtrVecTrackNode& nodes,Hit2TrackMap& htMap);
@@ -163,7 +164,7 @@ class StTbyTMaker : public StMaker {
   HitMatch *fHitMatch;
   StEvent* fEvent1;
   StEvent* fEvent2;
- 
+  Bool_t   fFXT;
   virtual const char *GetCVS() const {
     static const char cvs[]= "Tag $Name:  $ $Id: StTbyTMaker.h,v 1.2 2009/11/10 20:57:28 fisyak Exp $ built __DATE__ __TIME__" ; 
     return cvs;

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <algorithm>
 #include <set>
-
+#include "TMath.h"
 #include "StTbyTMaker.h"
 #include "StEvent.h"
 #include "StContainers.h"
@@ -22,7 +22,8 @@
 #include "StMessMgr.h"
 #include "StDbUtilities/StTpcCoordinateTransform.hh"
 #include "StDbUtilities/StCoordinates.hh" 
-//#define __REQUIRE_PRIMARY_VERTEX__
+#include "StDetectorDbMaker/St_beamInfoC.h"
+#define __REQUIRE_PRIMARY_VERTEX__
 #define __DEBUG__
 #if defined(__DEBUG__)
 #define PrPP(A,B) if (Debug()%10 > 2) {LOG_INFO << "StTrackMaterMaker::" << (#A) << "\t" << (#B) << " = \t" << (B) << endm;}
@@ -69,6 +70,11 @@ Int_t StTbyTMaker::Init() {
   LOG_INFO << "StTbyTMaker::Init() - successful" << endm;
   
   return StMaker::Init();
+}
+//________________________________________________________________________________
+Int_t StTbyTMaker::InitRun  (Int_t runumber) {
+  fFXT = St_beamInfoC::instance()->IsFixedTarget();
+  return 0;
 }
 //________________________________________________________________________________
 void StTbyTMaker::Clear(const char* c)
@@ -144,6 +150,12 @@ Int_t StTbyTMaker::Make(){
     return kStWarn;
 #endif /*  __REQUIRE_PRIMARY_VERTEX__ */
   }
+#ifdef  __REQUIRE_PRIMARY_VERTEX__
+    if (fFXT) {// require FXT 
+      if (TMath::Abs(fEvent1->primaryVertex()->position().z() - 200) > 3.0) return kStWarn;
+      if (TMath::Abs(fEvent2->primaryVertex()->position().z() - 200) > 3.0) return kStWarn;
+    }
+#endif /*  __REQUIRE_PRIMARY_VERTEX__ */
   LOG_INFO << "Size of track containers";
   const StSPtrVecTrackNode& trackNodes1 = fEvent1->trackNodes();
   LOG_INFO << "\tEvent1: Track Nodes " << trackNodes1.size();
