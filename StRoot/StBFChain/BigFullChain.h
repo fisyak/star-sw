@@ -530,10 +530,10 @@ Bfc_st BFC[] = { // standard chains
     "","",                                                     "Base chain for run 2024 data (tpc)",kFALSE},
 
   {"P2024a","" ,"",
-   "B2024a,ITTF,BAna,hitfilt,ppOpt,ImpBToFt0Mode,-beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
+   "B2024a,ITTF,BAna,ppOpt,ImpBToFt0Mode,-beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
       "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},
   {"pp2024a","" ,"",
-   "B2024a,ITTF,BAna,hitfilt,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
+   "B2024a,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,l3onl,epdhit,btof,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
       "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},
  
   
