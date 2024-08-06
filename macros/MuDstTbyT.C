@@ -44,7 +44,7 @@ void MuDstTbyT(
   TH2D *dX = new TH2D("dX","dX (West - East) versus Z",420,-210,210,200,-1.,1.); 
   TH2D *dY = new TH2D("dY","dY (West - East) versus Z",420,-210,210,200,-1.,1.); 
   TH2D *dZ = new TH2D("dZ","dZ (West - East) versus Z",420,-210,210,200,-1.,1.); 
-  TH2D *dT = new TH2D("dT","dT(#musec) (West - East) versus Z",420,-210,210,200,-0.1,0.1); 
+  TH2D *dT = new TH2D("dT","dT(#musec) (West - East) versus Z",420,-210,210,1000,-0.5,0.5); 
 #if 0
   new St_db_Maker;
   new StMagFMaker;
@@ -52,9 +52,11 @@ void MuDstTbyT(
 #endif
   muDstMko = new StMuDstMaker(0,0,oldf,"","",99999,"MuDstOld"); // no East
   muDstMkn = new StMuDstMaker(0,0,newf,"","",99999,"MuDstNew"); // no West
+  StMaker::lsMakers();
   chain->AddBefore("db",muDstMko);
   chain->AddBefore("db",muDstMkn);
-  StMaker::lsMakers(chain);
+  chain->SetDEBUG(1);
+  StMaker::lsMakers();
   chain->Init();
   StMuDst *oldMuDst = 0;
   StMuDst *newMuDst = 0;
@@ -62,38 +64,53 @@ void MuDstTbyT(
   Int_t NoGTrkOld = 0, NoGTrkNew = 0;
   Int_t NoPvtxOld = 0, NoPvtxNew = 0;
   Int_t nev = 0;
-  Bool_t bothRead = kTRUE;
-  Int_t iok = chain->MakeEvent();
-  while (! iok) {
+  Int_t ok = chain->MakeEvent();
+  //  cout << "Start Loop" << endl;
+  while (! ok) {
+    //    cout << "Checks events " << endl;
     oldMuDst = muDstMko->muDst(); oldMuDst->SetInstance(); oldEv = oldMuDst->event(); NoGTrkOld = oldMuDst->numberOfGlobalTracks(); NoPvtxOld = oldMuDst->numberOfPrimaryVertices(); //cout << "old(West) N global " << NoGTrkOld << endl;
     newMuDst = muDstMkn->muDst(); newMuDst->SetInstance(); newEv = newMuDst->event(); NoGTrkNew = newMuDst->numberOfGlobalTracks(); NoPvtxNew = newMuDst->numberOfPrimaryVertices(); //cout << "new(East) N global " << NoGTrkNew << endl;
-    if (oldEv->runId() != newEv->runId()) break;
-    if (oldEv->eventId() == newEv->eventId()) {
-      nev++;
-      if (NoPvtxOld && NoPvtxNew) {
-	//      muTbyT(oldMuDst, newMuDst);
-	oldMuDst->SetInstance();
-	StThreeVectorF xyzW = oldEv->primaryVertexPosition(); //cout << "old(West) Vx " << xyzW << endl;
-	newMuDst->SetInstance();
-	StThreeVectorF xyzE = newEv->primaryVertexPosition(); //cout << "new(East) Vx " << xyzE << endl;
-	StThreeVectorF xyzD = (xyzW - xyzE)/2;
-	StThreeVectorF xyzA = (xyzW + xyzE)/2;
-	Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
-	dX->Fill(xyzA.z(),xyzD.x());
-	dY->Fill(xyzA.z(),xyzD.y());
-	dZ->Fill(xyzA.z(),xyzD.z());
-	dT->Fill(xyzA.z(),xyzD.z()/driftVel);
-      }
-      iok = chain->MakeEvent();
+    if (! oldEv && ! newEv) {
+      ok = chain->MakeEvent();
+    } else if ( ! oldEv) {
+      muDstMko->Clear(); ok = muDstMko->Make();
+      cout << "old event are 0 => ok " << ok << endl;
+    } else if ( ! newEv) {
+      muDstMkn->Clear(); ok = muDstMkn->Make();
+      cout << "new event are 0 => ok " << ok << endl;
     } else {
-      cout << "event " << nev << "\trun = " << oldEv->runId() << "\tevents Old = " << oldEv->eventId() << "\tnew = " << newEv->eventId() 
-	   << " has not matched" << endl;
-      if (oldEv->eventId() < newEv->eventId()) {
-        muDstMko->Clear(); iok = muDstMko->Make();
-	if (iok) break;
+      //    cout << "Old run = " << oldEv->runId() << "\tNew run " << newEv->runId() << endl;
+      if (oldEv->runId() == newEv->runId() && oldEv->eventId() == newEv->eventId()) {
+	nev++;
+	if (nev%1000 == 1) {
+	  cout << "event " << nev << "\trun = " << oldEv->runId() << "\tevents Old = " << oldEv->eventId() << "\tnew = " << newEv->eventId() 
+	       << " has matched" << endl;
+	}
+	if (NoPvtxOld && NoPvtxNew) {
+	  //      muTbyT(oldMuDst, newMuDst);
+	  oldMuDst->SetInstance();
+	  StThreeVectorF xyzW = oldEv->primaryVertexPosition(); //cout << "old(West) Vx " << xyzW << endl;
+	  newMuDst->SetInstance();
+	  StThreeVectorF xyzE = newEv->primaryVertexPosition(); //cout << "new(East) Vx " << xyzE << endl;
+	  StThreeVectorF xyzD = (xyzW - xyzE)/2;
+	  StThreeVectorF xyzA = (xyzW + xyzE)/2;
+	  Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
+	  dX->Fill(xyzA.z(),xyzD.x());
+	  dY->Fill(xyzA.z(),xyzD.y());
+	  dZ->Fill(xyzA.z(),xyzD.z());
+	  dT->Fill(xyzA.z(),xyzD.z()/driftVel);
+	}
+	ok = chain->MakeEvent();
       } else {
-	muDstMkn->Clear(); iok = muDstMkn->Make();
-	if (iok) break;
+	cout << "event " << nev << "\trun = " << oldEv->runId() << "\tevents Old = " << oldEv->eventId() << "\tnew = " << newEv->eventId() 
+	     << " has not matched" << endl;
+	if (oldEv->runId() < newEv->runId() || (oldEv->runId() == newEv->runId() & oldEv->eventId() < newEv->eventId())) {
+	  muDstMko->Clear(); ok = muDstMko->Make();
+	  continue;
+	} else {
+	  muDstMkn->Clear(); ok = muDstMkn->Make();
+	  continue;
+	}
       }
     }
   }
