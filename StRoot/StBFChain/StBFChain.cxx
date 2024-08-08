@@ -202,8 +202,8 @@ Int_t StBFChain::Load()
 	  } else {
 #if 1
 	    if ( ! index(fBFC[i].Libs,',') || Debug() > 1 ) {
-	      LOG_WARN << "No path for Key=" << fBFC[i].Key << "-> Searched for [" << libL 
-		       << "] from Libs=" << fBFC[i].Libs << " (will proceed)" << endm;
+	      LOG_ERROR << "No path for Key=" << fBFC[i].Key << "-> Searched for [" << libL 
+			<< "] from Libs=" << fBFC[i].Libs << " (will proceed)" << endm;
 	    }
 #endif
 	  }
