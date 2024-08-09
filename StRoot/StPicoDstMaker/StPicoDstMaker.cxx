@@ -2010,9 +2010,6 @@ void StPicoDstMaker::fillEmcTrigger() {
   if (!trigSimu) return;
   if (!trigSimu->bemc) return;
 
-#if defined(__TFG__VERSION__)
-  if (!trigSimu->bemc) return;
-#endif /* __TFG__VERSION__ */
   // BEMC High Tower trigger
   int bht0 = trigSimu->bemc->barrelHighTowerTh(0);
   int bht1 = trigSimu->bemc->barrelHighTowerTh(1);
