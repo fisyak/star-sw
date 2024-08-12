@@ -102,7 +102,7 @@ class StKFParticleInterface: public TObject
   void SetStrictTofPidMode() { fStrictTofPID = true;  }
   void SetSoftTofPidMode()   { fStrictTofPID = false; }
   void SetSoftKaonPIDMode()  { fCleanKaonsWitTof = false; }
-  void SetdEdXType(Int_t type = 1)  { fdEdXMode = type; } // type - 0 => I70, 1 => dEdxFit, 2 => dNdx
+  void SetdEdXType(Int_t type = 1);  // type - 0 => I70, 1 => dEdxFit, 2 => dNdx
   void UseCorrecteddEdX()    { SetdEdXType(2); }
   void SetTriggerMode()      { fTriggerMode = true; }
   //KF Particle Finder cuts

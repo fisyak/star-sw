@@ -40,6 +40,7 @@
 static Int_t _debug = 0;
 #define PrPP(A) if (_debug) {std::cout << (#A) << "\t"; A->Print();}
 #define PrPO(A) if (_debug) {std::cout << (#A) << "\t"; A.Print();}
+#define PrPOA(A,B) if (_debug) {std::cout << (#B) << "\t" << (#A) << "\t"; A.Print();}
 //    #define USEETOF
 //#define __USE_HFT__
 //#define __ETAPN_TOF_PLOTS__
@@ -69,6 +70,13 @@ Bool_t StKFParticleInterface::fgUseTof = kFALSE;
 
 ClassImp(StKFParticleInterface);
 StKFParticleInterface *StKFParticleInterface::fgStKFParticleInterface = 0;
+//________________________________________________________________________________
+void StKFParticleInterface::SetdEdXType(Int_t type)  { 
+  fdEdXMode = type; 
+  if (fdEdXMode == 2) StTrackCombPiD::SetUsedNdx(kTRUE);
+  else                StTrackCombPiD::SetUsedNdx(kFALSE);
+}
+//________________________________________________________________________________
 StKFParticleInterface::StKFParticleInterface(): 
   fKFParticleTopoReconstructor(0), fParticles(0), fParticlesPdg(0), fNHftHits(0),
   fCollectTrackHistograms(false), fCollectPIDHistograms(false), fCollectPVHistograms(false),
@@ -817,7 +825,7 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
 //     if( chiPrim > 1.e6 ) continue;
     particle.SetId(index);
     particles[nPartSaved] = particle;
-
+    PrPOA(particle,AddTrackToParticleList);
 #ifdef __kfpAtFirstHit__
     if(trackAtLastHit && particlesAtLastHit){
       KFPTrack trackPDGAtLastHit = *trackAtLastHit;
@@ -1095,6 +1103,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   double dz = picoPVError.z();
   primVtx_tmp.SetCovarianceMatrix( dx*dx, 0, dy*dy, 0, 0, dz*dz );
   primaryVertex = KFVertex(primVtx_tmp);
+#ifdef __FXT_PV_REFIT__
 //   if(!IsGoodPV(primaryVertex)) return 0;
   
   
@@ -1104,7 +1113,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   if(!FindFixedTargetPV(picoDst, myPV, isPileup)) return 0;
   primaryVertex = myPV;
   }
-  
 //   int nPileup = 0;
 //   for(unsigned int i=0; i<isPileup.size(); i++)
 //     nPileup += isPileup[i] ? 1 : 0;
@@ -1127,9 +1135,10 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 //   std::cout << "npv      " << (myPV.NDF()+3)/2 << std::endl;
 //   int ipv2 = 0;
 //   int ipv3 = 0;
+#endif /* __FXT_PV_REFIT__ */
   
   Int_t nGlobalTracks = picoDst->numberOfTracks( );
-  
+  if (_debug) {std::cout << "ProcessEventStPicoDst*) with " << nGlobalTracks << " global tracks" << std::endl;}
   fParticles.resize(nGlobalTracks*10);
   fNHftHits.resize(nGlobalTracks*10);
   fParticlesPdg.resize(nGlobalTracks*10);
@@ -1161,6 +1170,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 //     if ( (gTrack->status() != 0) && !(gTrack->isPrimary()) ) continue; //TODO
     
     if (! gTrack)            continue;
+    PrPP(gTrack);
     if (! gTrack->charge())  continue;
     if (  gTrack->nHitsFit() < 15) continue;
 //     if (  gTrack->nHitsFit() < 10) continue;
@@ -1172,10 +1182,12 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 //     if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.15 ) continue;
 //     if (  gTrack->dEdxError() < 0.04 || gTrack->dEdxError() > 0.25 ) continue;
     const UInt_t index = gTrack->id();
-    
+#ifdef __FXT_PV_REFIT__    
     if (IsFixedTarget()) {
       if(isPileup[index]) continue;
     }
+#endif /* __FXT_PV_REFIT__ */
+
     //PiDCUT    if (  gTrack->dEdxError() < 0.04 || gTrack->dEdxError() > 0.12 ) continue;
     //    if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.25 ) continue;
     if (  gTrack->dEdxError() < 0.01 || gTrack->dEdxError() > 0.16 ) continue;
@@ -1317,6 +1329,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     unsigned int nPrimaryTracks = primaryTrackList.size();
     Int_t NDF = 2*gTrack->nHitsFit() - 5;
     Float_t Chi2 = gTrack->chi2()*NDF;
+    PrPO(track);
     AddTrackToParticleList(track, nHftHitsInTrack, index, totalPDG, primaryVertex, primaryTrackList, fNHftHits, fParticlesPdg, fParticles, nPartSaved, 0, 0, Chi2, NDF); 
     
     if(nPartSaved > nPartSaved0) 

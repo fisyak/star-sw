@@ -483,6 +483,17 @@ switch ($pkg)
              spack env view enable
 #          endif
         endif
+      else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh) then
+        source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh
+	if ($pkg == "gcc/12") then
+#	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
+#             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
+#          else 
+	     setup spackTFG
+	     spack env activate x86_64_gcc12
+             spack env view enable
+#          endif
+        endif
       else 
 # specific compiler 
       switch ($pkg)

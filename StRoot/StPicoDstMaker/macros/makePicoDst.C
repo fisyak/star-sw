@@ -21,9 +21,13 @@ root.exe 'lMuDst.C(-1,
    set d = `dirname ${f}`; set b = `basename ${f} .MuDst.root`;
    if (-r ${d}/${b}.picoDst.root) continue;
    cd ${d}; pwd; echo "$b";
-   root.exe  -q -b -x 'lMuDst.C(-1,"'${b}'.MuDst.root","RMuDst,mysql,magF,nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y2019")' >& ${b}.log 
+   root.exe  -q -b -x 'lMuDst.C(-1,"'${b}'.MuDst.root","RMuDst,mysql,magF,eemcDb,emcAtoE,Epc,mtdMatch,mtdCalib, nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y2019")' >& ${b}.log 
    cd -
    end
+   root.exe 'lMuDst.C(-1,"st_physics_20180009_raw_1500003,1,4893.MuDst.root","RMuDst,mysql,magF,eemcDb,emcAtoE,Epc,mtdMatch,mtdCalib, nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y2019")'
+root.exe 'lMuDst.C(-1,"st_physics_20180009_raw_1500003,1,4893.MuDst.root","RMuDst,mysql,magF,eemcDb,emcAtoE,Epc,mtdMatch,mtdCalib, nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y2019")'
+
+root.exe 'lMuDst.C(-1,"st_physics_20180009_raw_1500003,1,4893.MuDst.root","RMuDst,mysql,magF,eemcDb,emcAtoE,Epc,nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y2019")'
  */
 #include "TSystem.h"
 #include "Riostream.h"
@@ -76,7 +80,29 @@ void makePicoDst(TString triggerSet = "y2022") {
   mk->SetMaxTrackDca(0);
 #endif
   chain->SetAttr(".Privilege",1,"StMuDstMaker::*");
+  StEmcADCtoEMaker* adc2e = (StEmcADCtoEMaker* ) chain->Maker("bemcA2E");
+  if (adc2e) {
+    //    adc2e->setPrint(false);
+    adc2e->saveAllStEvent(true);
+  }
+  StPreEclMaker* pre_ecl = new StPreEclMaker("preecl");
+  if (pre_ecl) {
+    //    pre_ecl->setPrint(kFALSE);
+    StEpcMaker* epc = new StEpcMaker();
+    epc->setPrint(kFALSE);
+  }
+  // Trigger simulator
+  StTriggerSimuMaker* trigSimu = (StTriggerSimuMaker*) chain->Maker("StarTrigSimu");
+  if (trigSimu) {
+    trigSimu->setMC(false);
+    trigSimu->useBemc();
+    trigSimu->useEemc();
+    trigSimu->useOfflineDB();
+    trigSimu->bemc->setConfig(StBemcTriggerSimu::kOffline);
+  }
+
   StGoodTrigger tiggers(triggerSet);
+
   chain->Init();
   chain->EventLoop(nEvents);
 }

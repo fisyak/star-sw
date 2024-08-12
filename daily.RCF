@@ -1171,3 +1171,384 @@ foreach f (`ls -1d */*/*.log.gz | grep -v B`)
 end
 Clear daq files
 [rcas6007] ~ $ dir -d `ls -1d TFG24c/*/RF/*/*/*/Done | awk -F\/ '{print "/gpfs01/star/daq/"$2"/"$5"/"$6}'`
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+
+================================================================================
+08/05/2024
+Processing bfc.C(9486,14485,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,-evout","/gpfs01/star/daq/2019/160/20160026/st_physics_20160026_raw_5000004.daq","st_phy
+sics_20160026_raw_5000004,9486,14485.event.root")...
+
+/gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/160/20160026 $ ztail -500 st_physics_20160026_raw_5000004,9486,14485B.log.gz
+QA :INFO  - +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+x]-+-+-+-
+QA :INFO  - StAnalysisMaker,  Reading Event: 40  Type: Collision  Run: 20160026  EventId: 365216 TriggerIds: 1|2|3|7|8|
+QA :INFO  - # track nodes:      502: good globals with NFitP>=15: 228
+QA :INFO  - : Short tracks pointing to ETOF : 25
+QA :INFO  - post (C)rossing tracks :63: (P)rompt:21: (X) membrane :33(T)of/ctb matches:24 :Emc matches(B/E): 12/0 :Only W:105 E:71: ZdcZ:  20.24
+QA :INFO  - #V[  0] :0/7/*/*/8/*/*  -0.651+/-0.038,  -2.256+/-0.043, 200.068+/-0.041, Prob/Chi2: 0.000/  71.68 Rank:      0.4 U/T/F/G:   34,  60,  59,  58
+QA :INFO  - #V[  1] :0/1/1/0/0/1/4  -0.795+/-0.987,  -1.005+/-1.679, -27.178+/-0.833, Prob/Chi2: 0.000/   0.58 Rank:     -2.1 U/T/G:    3,   7,   5
+QA :INFO  - #V[  2] :0/0/0/1/0/2/0   2.332+/-0.197,   1.755+/-1.813,  59.377+/-0.264, Prob/Chi2: 0.000/   3.85 Rank:     -2.2 U/T/G:    2,   2,   2
+QA :INFO  - #V[  3] :0/1/0/1/0/0/7  -2.781+/-0.445,   1.317+/-0.335,  27.550+/-0.384, Prob/Chi2: 0.000/   0.01 Rank:     -3.1 U/T/G:    2,   9,   7
+QA :INFO  - # TPC hits:          16577: Bad ones (! flag):     5307:    Used in Fit:      10555
+QA :INFO  - # EMC  points:   43: Adc(T/p/E/P)  402/   0/    0/    0: Cls(T/p/E/P)   43/   0/    0/    0
+QA :INFO  - # BTof hits:          46:   Bad ones (! flag):     0:        Matched with tracks:      21
+QA :INFO  - # ETof hits:          8:    Bad ones (! flag):     0:        Matched with tracks:      1
+QA :INFO  - # Epd  hits:          139:  Bad ones (! flag):     0:        Matched with tracks:      0
+QA :INFO  - *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+The lines below might hint at the cause of the crash.
+If they do not help you then please submit a bug report at
+http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#6  0x00002b1f970a46e8 in __memmove_ssse3 () from /usr/lib64/libc.so.6
+#7  0x00002b1f96238602 in TString::Replace (this=0x184b0010, pos=pos
+entry=0, n1=<optimized out>, cs=0xa70b518 "p25", n2=<optimized out>) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/core/base/src/TString.cxx:970
+#8  0x00002b1f96238760 in TString::operator= (this=<optimized out>, cs=<optimized out>) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/core/base/src/TString.cxx:264
+#9  0x00002b1fb3852c59 in TFumili::SetParameter (this=0x361e5c0, ipar=25, parname=<optimized out>, value=8.8712913319186608, verr=2.6613873995755983, vlow=0, vhigh=0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/math/fumili/src/TFumili.cxx:1657
+#10 0x00002b1fb3850a23 in TFumiliMinimizer::SetVariable (this=<optimized out>, ivar=25, name=..., val=<optimized out>, step=<optimized out>) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/math/fumili/src/TFumiliMinimizer.cxx:422
+#11 0x00002b1f98e6fbf0 in SetVariables<__gnu_cxx::__normal_iterator<ROOT::Fit::ParameterSettings*, std::vector<ROOT::Fit::ParameterSettings> > > (end=..., begin=..., this=0x1a342c30) at include/Math/Minimizer.h:152
+#12 ROOT::Fit::Fitter::DoInitMinimizer (this=this
+entry=0x19dbf1d0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/math/mathcore/src/Fitter.cxx:671
+#13 0x00002b1f98e703bc in ROOT::Fit::Fitter::DoMinimization (this=this
+entry=0x19dbf1d0, objFunc=..., chi2func=chi2func
+entry=0x0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/math/mathcore/src/Fitter.cxx:722
+#14 0x00002b1f98e70690 in ROOT::Fit::Fitter::DoLeastSquareFit (this=0x19dbf1d0, data=...) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/math/mathcore/src/Fitter.cxx:336
+#15 0x00002b1f9988f040 in Fit (data=..., this=<optimized out>) at include/Fit/Fitter.h:139
+#16 HFit::Fit<TH1> (h1=h1
+entry=0x779b870, f1=0x19900530, fitOption=..., minOption=..., goption=0x2b1faffd9129 "", range=...) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/hist/hist/src/HFitImpl.cxx:349
+#17 0x00002b1f9988bcd6 in ROOT::Fit::FitObject (h1=h1
+entry=0x779b870, f1=f1
+entry=0x19900530, foption=..., moption=..., goption=goption
+entry=0x2b1faffd9129 "", range=...) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/hist/hist/src/HFitImpl.cxx:882
+#18 0x00002b1f99854446 in TH1::Fit (this=0x779b870, f1=0x19900530, option=<optimized out>, goption=0x2b1faffd9129 "", xxmin=0, xxmax=<optimized out>) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/hist/hist/src/TH1.cxx:3864
+#19 0x00002b1faffd32d6 in StGmtClusterMaker::FindPeaks (this=this
+entry=0x3229e90, hist=0x779b870) at .sl73_x8664_gcc485_opt/obj/StRoot/StGmtClusterMaker/StGmtClusterMaker.cxx:87
+#20 0x00002b1faffd37eb in StGmtClusterMaker::ClusterBuilder (this=this
+entry=0x3229e90, events=40, module=module
+entry=3, strips=..., hits=...) at .sl73_x8664_gcc485_opt/obj/StRoot/StGmtClusterMaker/StGmtClusterMaker.cxx:150
+#21 0x00002b1faffd481f in StGmtClusterMaker::Make (this=0x3229e90) at .sl73_x8664_gcc485_opt/obj/StRoot/StGmtClusterMaker/StGmtClusterMaker.cxx:255
+#22 0x00002b1f9fd7f3bf in StMaker::Make (this=0x2ae1870) at .sl73_x8664_gcc485_opt/obj/StRoot/StChain/StMaker.cxx:944
+#23 0x00002b1f9fd78903 in StChain::EventLoop (this=0x2ae1870, jBeg=<optimized out>, jEnd=14485, outMk=0x0) at .sl73_x8664_gcc485_opt/obj/StRoot/StChain/StChain.cxx:234
+===========================================================
+root.exe: .sl73_x8664_gcc485_opt/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:241: void StiKalmanTrackFinder::extendSeeds(double): Assertion `track->getChi2()<1000' failed.
+ - CA FindTracks() start -
+ - fTracker->NTracks(): 492
+[rcas6007] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ zmore 182/20182007/st_physics_20182007_raw_2500013,739,5738B.log.gz
+------> 182/20182007/st_physics_20182007_raw_2500013,739,5738B.log.gz <------
+...
+Processing bfc.C(739,5738,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,-evout","/gpfs01/star/daq/2019/182/20182007/st_physics_20182007_raw_2500013.daq","st_physi
+cs_20182007_raw_2500013,739,5738.event.root")...
+...
+
+
+dir st_physics_20179040_raw_1500004*MuDst.root | sed -e 's/,/ /g' -e 's/.MuDst.root//' | awk '{print "*"$10","$11"*"}'
+
+
+
+[rcas6007] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ dir */*/Dead*
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 179/20179040/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 179/20179041/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180001/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180002/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180003/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180007/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180008/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180009/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180010/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:53 180/20180011/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180012/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180013/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180014/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180015/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180016/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180017/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180018/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180020/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180021/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:54 180/20180022/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180023/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180024/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180026/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180045/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180046/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180047/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 180/20180048/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 181/20181002/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:55 181/20181003/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181005/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181006/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181007/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181008/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181009/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181010/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181011/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181012/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181013/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181017/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181018/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:56 181/20181019/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 181/20181042/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 181/20181043/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 181/20181044/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182006/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182007/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182008/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182009/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182011/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182012/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182013/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182014/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182015/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182016/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182017/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182018/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 182/20182035/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 183/20183002/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 183/20183004/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 183/20183005/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 183/20183008/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:57 183/20183009/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183010/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183011/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183012/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183015/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183016/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183017/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183018/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183020/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183021/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183022/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183023/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183024/Dead
+-rw-r--r-- 1 fisyak rhstar 0 Aug  6 17:58 183/20183025/Dead
+
+
+cvmfswrite02] ~/TFG24c/2019/RF/4p59GeV_fixedTarget $ 
+foreach d ( `ls -d ???/2*` )
+  cd ${d}
+  daqdR.pl 1 | tee daqdR.log
+  cd -
+end
+================================================================================
+08/07/2024
+
+[rcas6007] ~/TFG24c/2019/RF/3p85GeV_fixedTarget $ df -h /gpfs01/star/data2[4-7]
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   34T   18T  67% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   30T   22T  58% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   43T  8.3T  84% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   45T  6.6T  88% /gpfs/mnt/gpfs01
+
+After clean up 
+[rcas6007] ~/TFG24c/2019/RF/3p85GeV_fixedTarget $ df -h /gpfs01/star/data2[4-7]
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   34T   18T  67% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   30T   22T  58% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   43T  8.9T  83% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   43T  8.3T  84% /gpfs/mnt/gpfs01
+
+
+rm  `grep 'probably not closed' */*/Chain.log | awk '{print $5}' | sed -e 's/.MuDst.root/*/'`
+rm `grep missing */*/PChain.log | awk '{print $3}'
+rm `grep missing */*/PChain.log | awk '{print $3}' | awk -F'/[^/]*$' '{print $1"/*Chain.log"}' | sort`
+
+  touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
+  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
+df -h /gpfs01/star/data2[4-7]
+
+foreach f (`ls -1d */*/*.log.gz | grep -v B`)
+ set b = `echo ${f} | sed -e 's/.log.gz/B.log.gz/'`; mv ${f} ${b}
+end
+Clear daq files
+[rcas6007] ~ $ dir -d `ls -1d TFG24c/*/RF/*/*/*/Done | awk -F\/ '{print "/gpfs01/star/daq/"$2"/"$5"/"$6}'`
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+
+foreach d ( `ls -d ???/2*` )
+  cd ${d}
+  daqdR.pl 1 | tee daqdR.log
+  cd -
+end
+
+
+foreach f (`ls -1d ???/2*/rm.csh`)
+  set d = `dirname ${f}`
+  cd ${d}
+  csh -x rm.csh
+  rm rm.csh
+  cd -
+end
+ 
+
+rm `grep missing */*/Chain.log | awk '{print $3}' | sed -e 's/.MuDst.root/*/'`
+
+
+foreach d (`ls -1d ???/2*`)
+  cd ${d}
+  daqdR.pl 1 | tee daqdR.log
+  cd -
+end
+
+
+
+UpdateEventNo.pl
+Warning in <TFile::Init>: file /gpfs/mnt/gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget/181/20181002/st_physics_20181002_raw_4000010,10001,15000.MuDst.root probably not closed, trying to recover           <
+Info in <TFile::Recover>: /gpfs/mnt/gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget/181/20181002/st_physics_20181002_raw_4000010,10001,15000.MuDst.root, recovered key TTree:MuDst at address 460369765       <
+Warning in <TFile::Init>: successfully recovered 1 keys                                                                                                                                                                       <
+#       290     /gpfs/mnt/gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget/181/20181002/st_physics_20181002_raw_4000010,10001,15000.MuDst.root   size = 462128814        No.Events = 3380                        
+#       290     /gpfs/mnt/gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget/181/20181002/st_physics_20181002_raw_4000010,10001,15000.MuDst.root   size = 462128814        No.Events = 3380
+
+
+~/TFG24c/2019/RF/4p59GeV_fixedTarget $ 
+foreach d ( `ls -1d */*/*MuDst.root.log | awk -F\/ '{print $1"/"$2}' | sort -u` )
+  cd ${d}
+  UpdateEventNo.pl
+  cd -
+end
+
+
+root.exe -q -b 'bfc.C(4001,5000,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","st_physics_20183025_raw_1000007.daq","st_physics_20183025_raw_1000007,4001,5000.event.root")' >& st_physics_20183025_raw_1000007,4001,5000.log &
+
+
+
+
+-rw-r--r-- 1 fisyak rhstar  11G Aug  2 13:33 ../old/st_physics_20183021_raw_1000005,1,10000.event.root
+-rw-r--r-- 1 fisyak rhstar 2.7G Aug  2 02:04 ../old/st_physics_20183021_raw_1500006,38677,41185.event.root
+-rw-r--r-- 1 fisyak rhstar 5.3G Aug  2 05:09 ../old/st_physics_20183021_raw_3000009,10001,14940.event.root
+-rw-r--r-- 1 fisyak rhstar 5.1G Aug  5 23:01 ../old/st_physics_20183021_raw_3500004,32923,37922.event.root
+-rw-r--r-- 1 fisyak rhstar  11G Aug  2 16:44 ../old/st_physics_20183021_raw_4000006,23767,33766.event.root
+-rw-r--r-- 1 fisyak rhstar 5.4G Aug  5 22:02 ../old/st_physics_20183021_raw_6000008,15001,20000.event.root
+-rw-r--r-- 1 fisyak rhstar 5.3G Aug  5 19:50 ../old/st_physics_20183021_raw_7500002,25001,30000.event.root
+-rw-r--r-- 1 fisyak rhstar 576M Aug  1 23:42 ../old/st_physics_adc_20183021_raw_3500009,1,522.event.root  
+^C
+[cvmfswrite02] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG.Export/TbyT_TFG24c_Export/Export $ zgrep -m 1 bfc `ls -1d ../old/*event.root | sed -e 's/.event.root/B.log.gz/'`
+
+root4star -b -x -q 'bfc.C(1,10000,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_1000005.daq","st_physics_20183021_raw_1000005,1,10000.event.root")' >&                                            st_physics_20183021_raw_1000005,1,10000B.log &	  
+root4star -b -x -q 'bfc.C(38677,41185,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_1500006.daq","st_physics_20183021_raw_1500006,38677,41185.event.root")' >& 				      st_physics_20183021_raw_1500006,38677,41185B.log &
+root4star -b -x -q 'bfc.C(10001,14940,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_3000009.daq","st_physics_20183021_raw_3000009,10001,14940.event.root")' >& 				      st_physics_20183021_raw_3000009,10001,14940B.log &
+root4star -b -x -q 'bfc.C(32923,37922,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021//gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_3500004.daq","st_physics_20183021_raw_3500004,32923,37922.event.root")' >& st_physics_20183021_raw_3500004,32923,37922B.log &
+root4star -b -x -q 'bfc.C(23767,33766,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_4000006.daq","st_physics_20183021_raw_4000006,23767,33766.event.root")' >& 				      st_physics_20183021_raw_4000006,23767,33766B.log &
+root4star -b -x -q 'bfc.C(15001,20000,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021//gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_6000008.daq","st_physics_20183021_raw_6000008,15001,20000.event.root")' >& st_physics_20183021_raw_6000008,15001,20000B.log &
+root4star -b -x -q 'bfc.C(25001,30000,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021//gpfs01/star/daq/2019/183/20183021/st_physics_20183021_raw_7500002.daq","st_physics_20183021_raw_7500002,25001,30000.event.root")' >& st_physics_20183021_raw_7500002,25001,30000B.log &
+root4star -b -x -q 'bfc.C(1,522,"P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,,PicoVtxFXT,FXT,BEmcChkStat,NoHistos,noTags,noRunco,evout","/gpfs01/star/daq/2019/183/20183021/st_physics_adc_20183021_raw_3500009.daq","st_physics_adc_20183021_raw_3500009,1,522.event.root")' >& 					      st_physics_adc_20183021_raw_3500009,1,522B.log &  
+
+================================================================================
+08/09/2024
+df -h /gpfs01/star/data2[4-7]
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   34T   18T  67% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   30T   22T  58% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   43T  8.9T  83% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   44T  7.9T  85% /gpfs/mnt/gpfs01
+rm  `grep 'probably not closed' */*/Chain.log | awk '{print $5}' | sed -e 's/.MuDst.root/*/'`
+rm `grep missing */*/PChain.log | awk '{print $3}'
+rm `grep missing */*/PChain.log | awk '{print $3}' | awk -F'/[^/]*$' '{print $1"/*Chain.log"}' | sort`
+
+  touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
+  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
+================================================================================
+08/09/2024
+rm `grep missing */*/Chain.log | awk '{print $3}' | awk -F'/[^/]*$' '{print $1"/*Chain.log"}' | sort`
+rm `grep missing */*/PChain.log | awk '{print $3}' | awk -F'/[^/]*$' '{print $1"/*Chain.log"}' | sort`
+
+
+ rm `grep missing */*/Chain.log | awk '{print $3}' | sed -e 's/.MuDst.root/*/'`
+  touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
+  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
+df -h /gpfs01/star/data2[4-7]
+181/20181005/PChain.log:#       524     /gpfs/mnt/gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget/181/20181005/st_physics_20181005_raw_7000004,20001,23096.picoDst.root TTree is missing
+
+
+~/TFG24c/2019/RF/4p59GeV_fixedTarget $ 
+foreach d ( `ls -1d */*/*MuDst.root.log | awk -F\/ '{print $1"/"$2}' | sort -u` )
+  cd ${d}
+  UpdateEventNo.pl
+  cd -
+end
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+
+================================================================================
+08/11/2024 
+[cvmfswrite02] ~/work/kfp/2019 $ difw380 -a  4p59GeV_fixedTarget_P24ia/dEdxB/Show1 4p59GeV_fixedTarget_TFG24c/dEdxF/Show1 | more
+...
+ Event.mPrimaryVertexX = -0.205332                                                                                                                                                           |  
+ Event.mPrimaryVertexX = -0.206269
+ Event.mPrimaryVertexY = -2.007657                                                                                                                                                           | 
+ Event.mPrimaryVertexY = -2.106394
+ Event.mPrimaryVertexZ = 200.068283                                                                                                                                                          | 
+ Event.mPrimaryVertexZ = 200.385941
+ Event.mPrimaryVertexErrorX = 0.132562                                                                                                                                                       |  
+ Event.mPrimaryVertexErrorX = 0.127263
+ Event.mPrimaryVertexErrorY = 0.119636                                                                                                                                                       |  
+ Event.mPrimaryVertexErrorY = 0.114082
+ Event.mPrimaryVertexErrorZ = 0.128764                                                                                                                                                       |  
+ Event.mPrimaryVertexErrorZ = 0.126576
+ Event.mRanking  = 0.371113                                                                                                                                                                  | 
+ Event.mRanking  = 0.366402
+>  Event.mPrimaryVertexCorr[3] = 0.000000 , 0.000000 , 0.000000 
+
+Event.mNVpdHit
+
+...
+ Event.mNumberOfPrimaryTracks = 9                                                                                                                                                            | 
+ Event.mNumberOfPrimaryTracks = 10
+
+--------------------------------------------------------------------------------
+P24a
+#1  0x00007fffd6025c34 in StKFParticleInterface::ProcessEvent (this=0x2c6a0e0, picoDst=0x1eae730, triggeredTracks=std::vector of length 0, capacity 0) at .sl73_x8664_gcc485/obj/StRoot/StKFParticleAnalysisMaker/StKFParticleInterface.cxx:1104
+1104      if(!FindFixedTargetPV(picoDst, myPV, isPileup)) return 0;
+(gdb) p picoPV.Print("")
+TVector3 A 3D physics vector (x,y,z)=(-0.205332,-2.007657,200.068283) (rho,theta,phi)=(200.078461,0.577935,-95.839603)
+$5 = void
+--(gdb) p ((KFParticle *) & prmaryVertex)->Print("")
+No symbol "prmaryVertex" in current context.
+(gdb) p ((KFParticle *) & primaryVertex)->Print("")
+p(  -1,   0,   0) x:  -0.205+/- 0.133 y:  -2.008+/- 0.120 z: 200.068+/- 0.129 M:   0.000 p:   0.000 pdg:    0 Q: 0  chi2/NDF :   -1.00/-3
+p(  -1,   0,   0) x:  -0.243+/- 0.138 y:  -1.950+/- 0.119 z: 200.065+/- 0.129 px:   0.263+/- 0.009 py:   0.053+/- 0.008 pz:  -1.602+/- 0.008 M:  -1.624 p:   1.624+/-  0.008 pdg:    0 Q: 3  chi2/NDF :   10.07/11 ND: 7:-1,-1,-1
+p(  -1,   0,   0) x:   0.797+/- 0.252 y:  -0.845+/- 0.253 z: 198.875+/- 0.475 px:   0.188+/- 0.003 py:   0.177+/- 0.003 pz:  -0.210+/- 0.003 M:   0.938+/-  0.000 p:   0.333+/-  0.003 pdg: 2212 Q: 1  chi2/NDF :   64.49/121
+------------------------------------------------------------------------------
+TFG24c
+(gdb)  p picoPV.Print("")
+TVector3 A 3D physics vector (x,y,z)=(-0.206269,-2.106394,200.385941) (rho,theta,phi)=(200.397117,0.605134,-95.592856)
+(gdb) p ((KFParticle *) & primaryVertex)->Print("")
+p(  -1,   0,   0) x:  -0.206+/- 0.127 y:  -2.106+/- 0.114 z: 200.386+/- 0.127 M:   0.000 p:   0.000 pdg:    0 Q: 0  chi2/NDF :   -1.00/-3
+p(  -1,   0,   0) x:  -0.148+/- 0.142 y:  -2.186+/- 0.113 z: 200.289+/- 0.131 px:   0.406+/- 0.009 py:  -0.019+/- 0.008 pz:  -2.095+/- 0.011 M:  -2.134 p:   2.134+/-  0.011 pdg:    0 Q: 1  chi2/NDF :    7.19/11 ND: 7:-1,-1,-1
+p(  -1,   0,   0) x:   0.514+/- 0.231 y:  -0.104+/- 0.050 z: 202.875+/- 0.361 px:  -0.076+/- 0.003 py:  -0.377+/- 0.004 pz:  -0.400+/- 0.004 M:   0.938 p:   0.555+/-  0.005 pdg: 2212 Q: 1  chi2/NDF :  179.20/137
+
+P: StKFParticleAnalysisMaker:INFO  - id: 1 chi2: 0.533     pMom: 0.189207 0.176879 -0.210237       gMom: 0.189327 0.175649 -0.210055       origin: -0.303106 -1.87456 200.091      nHitsFit: 63 nHitsdEdx: 63      nSigma pi/K/p/e: 32.767/19.27/0.79/28.526       Hit index in BEMC/BTof/MTD/ETof: -1/-1/-1/-1
+T: StKFParticleAnalysisMaker:INFO  - id: 1 chi2: 1.308     pMom: -0.0707158 -0.380903 -0.401304    gMom: -0.072783 -0.377326 -0.400469     origin: 0.077194 -2.3174 200.533        nHitsFit: 71 nHitsdEdx: 68      nSigma pi/K/p/e: 24.149/16.985/3.364/16.051     Hit index in BEMC/BTof/MTD/ETof: -1/0/-1/-1
+
+
+P: p(  -1,   0,   0) x:   0.797+/- 0.252 y:  -0.845+/- 0.253 z: 198.875+/- 0.475 px:   0.188+/- 0.003 py:   0.177+/- 0.003 pz:  -0.210+/- 0.003 M:   0.938+/-  0.000 p:   0.333+/-  0.003 pdg: 2212 Q: 1  chi2/NDF :   64.49/121
+T: p(  -1,   0,   0) x:   0.514+/- 0.231 y:  -0.104+/- 0.050 z: 202.875+/- 0.361 px:  -0.076+/- 0.003 py:  -0.377+/- 0.004 pz:  -0.400+/- 0.004 M:   0.938           p:   0.555+/-  0.005 pdg: 2212 Q: 1  chi2/NDF :  179.20/137
+
+
+StKFParticleInterface
+P: 1) x:   0.797+/- 0.252 y:  -0.845+/- 0.253 z: 198.875 px:   0.188+/- 0.003 py:   0.177 pz:  -0.210+/- 0.003 Q: 1  chi2/NDF :   -1.00/ 1
+P: t(   1) x:   0.797+/- 0.252 y:  -0.845+/- 0.253 z: 198.875 px:   0.188+/- 0.003 py:   0.177          pz:  -0.210+/- 0.003 Q: 1  chi2/NDF :   -1.00/ 1
+T: t(   1) x:   0.514+/- 0.231 y:  -0.104+/- 0.050 z: 202.875 px:  -0.076+/- 0.003 py:  -0.377+/- 0.023 pz:  -0.400+/- 0.004 Q: 1  chi2/NDF :   -1.00/ 1
+
+P: p ftrackIdToI $9 = std::vector of length 34, capacity 34 = {0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,  0, 11, 12, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+T; p ftrackIdToI$11 = std::vector of length 34, capacity 34 = {0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+================================================================================
+08/12/2024
+
+P; p fTopoReconstructor->GetParticles().size()       $10 = 14
+T: (gdb) p fTopoReconstructor->GetParticles().size() $16 = 28
+P:  p fParticles.size() $12 = 14
+T:  p fParticles.size()$19 = 28
+
+P: Breakpoint 4, StKFParticleInterface::AddTrackToParticleList (this=0x2c5bf90, track=..., nHftHitsInTrack=63, index=1, totalPDG=std::vector of length 1, capacity 1 = {...}, pv=..., primaryTrackList=std::vector of length 0, capacity 0, 
+    nHftHits=std::vector of length 170, capacity 170 = {...}, particlesPdg=std::vector of length 170, capacity 170 = {...}, particles=std::vector of length 170, capacity 170 = {...}, nPartSaved=@0x7ffffffe5a2c: 0, trackAtLastHit=0x0, particlesAtLastHit=0x0, 
+    chi2=64.4929962, NDF=121) at .sl73_x8664_gcc485/obj/StRoot/StKFParticleAnalysisMaker/StKFParticleInterface.cxx:714(gdb) p track.Print("")
+(gdb) p nGlobalTracks
+$2 = 17
+t(   1) x:   0.797+/- 0.252 y:  -0.845+/- 0.253 z: 198.875 px:   0.188+/- 0.003 py:   0.177 pz:  -0.210+/- 0.003 Q: 1  chi2/NDF :   -1.00/ 1
+$1 = void
+(gdb)  p particle.Print("")
+p(   1,   0,   0) x:   0.797+/- 0.252 y:  -0.845+/- 0.253 z: 198.875+/- 0.475 px:   0.188+/- 0.003 py:   0.177+/- 0.003 pz:  -0.210+/- 0.003 M:   0.938+/-  0.000 p:   0.333+/-  0.003 pdg: 2212 Q: 1  chi2/NDF :   64.49/121
+
+
+T: (gdb) p nGlobalTracks $1 = 17
+(gdb) p particle.Print("")
+p(   1,   0,   0) x:   0.514+/- 0.231 y:  -0.104+/- 0.050 z: 202.875+/- 0.361 px:  -0.076+/- 0.003 py:  -0.377+/- 0.004 pz:  -0.400+/- 0.004 M:   0.938 p:   0.555+/-  0.005 pdg: 2212 Q: 1  chi2/NDF :  179.20/137
+$9 = void

@@ -13,35 +13,38 @@ if ($#ARGV >= 0) {
 sub SPrint ($$$$$) {
   my $noEventsPerJob = 5000; #10000;
   my ($line,$file,$f,$l,$debug) = @_;
-#  print "line=$line,file=$file,f=$f,l=$l,debug=$debug\n";
+  if ($debug > 2) {print "line=$line,file=$file,f=$f,l=$l,debug=$debug\n";}
   my $count = 0;
   if ($l - $f >= 0) {# Allow to have error in no. of events in FileCatalog
     my $rootf = $file . "," . $f . "," . $l . ".MuDst.root"; 
     if (-r $rootf) {
       if ($debug) {
-	print "rootf = $rootf\n";
+	print "rootf = $rootf exists\n";
       }
-      next;
-    }
-    my $blaf  = $file . "," . $f . "," . $l . ".bla.root";
-    if (-r $blaf) { 
-      if (debug > 0) { 
-	print "$blaf\n";
-      }  
-      next;
-    }
-    my $f1 = $f;
-    for (my $f1 = $f1; $f1 < $l; $f1 += $noEventsPerJob) {
-      my $l1 = $f1 + $noEventsPerJob - 1;
-      if ($l1 > $l) {$l1 = $l;}
-      print "string:$line:$f1:$l1\n";
-      $count++;
+#      next;
+    } else {
+      my $blaf  = $file . "," . $f . "," . $l . ".bla.root";
+      if (-r $blaf) { 
+	if (debug > 0) { 
+	  print "$blaf exits\n";
+	}  
+#	next;
+      } else {
+	my $f1 = $f;
+	for (my $f1 = $f1; $f1 < $l; $f1 += $noEventsPerJob) {
+	  my $l1 = $f1 + $noEventsPerJob - 1;
+	  if ($l1 > $l) {$l1 = $l;}
+	  print "string:$line:$f1:$l1\n";
+	  $count++;
+	}
+      }
     }
   }
   return $count;
 }
 #--------------------------------------------------------------------------------
 sub MuCount($$$$) {# daqName, first, last, 
+  if ($debug) {print "================================================================================\n";}
   my ($line, $first, $last, $debug)  = @_;
   my $file = File::Basename::basename($line,".daq");
   my $fileDaq = $file . ".daq";
@@ -77,41 +80,84 @@ sub MuCount($$$$) {# daqName, first, last,
     push @L, $l1;
   }
   my $NoMuFiles = $#F + 1;
-  if ($debug) {
-    #      print "$NoMuFiles, @F, @L\n";
-    for (my $i = 0; $i < $NoMuFiles; $i++) {
-      #	print "$F[$i]  $L[$i]\n";
-      for (my $j = $i+1; $j < $NoMuFiles; $j++) {
-	if ($F[$i] >= $F[$j] && $F[$i] <= $L[$j] ||
-	    $L[$i] >= $F[$j] && $L[$i] <= $L[$j]) {
-	  print "[$F[$i],$L[$i]] overlap with $F[$j],$L[$j]]\n";
-	  die "died at $day/$run";
-	}
-      }
-    }
-  }
   if ($NoMuFiles <= 0) {
     $f = $first;
     $l = $last;
-    SPrint($line,$file,$f,$l,$debug); $no++;
-  } else {
-    if ($L[$NoMuFiles-1] < $N) {
-      $f = $L[$NoMuFiles-1] + 1;
-      $l = $N;
-      $no += SPrint($line,$file,$f,$l,$debug); 
-    } 
-    if ($F[0] > $f) {
-      $f = 1;
-      $l = $F[0] - 1;
+    $no += SPrint($line,$file,$f,$l,$debug);
+    return $no;
+  }
+# sort over first
+  if ($debug > 1) {print "NoMuFiles = $NoMuFiles\n";}
+  for (my $i = 0; $i < $NoMuFiles - 1; $i++) {
+    if ($debug > 1) {print "i = $i, [$F[$i],$L[$i]]\n";}
+    for (my $j = $i + 1; $j < $NoMuFiles; $j++) {
+      print "orig i = $i : [$F[$i],$L[$i]], j = $j : [$F[$j], $L[$j]]" if ($debug > 1);
+      if ($F[$i] > $F[$j]) {
+	my $tempF = $F[$i];
+	my $tempL = $L[$i];
+	$F[$i] = $F[$j]; $L[$i] = $L[$j];
+	$F[$j] = $tempF; $L[$j] = $tempL;
+	print "\tswap i = $i : [$F[$i],$L[$i]], j = $j : [$F[$j], $L[$j]]\n" if ($debug > 1);
+      } else {
+	print "\n" if ($debug > 1);
+      }
+    }
+  }
+  if ($debug > 1) {
+    print "Sorted MuDst files\n";
+    for (my $i = 0; $i < $NoMuFiles; $i++) {
+      printf("[%05i,%05i]\n", $F[$i], $L[$i]);
+    }
+  }
+  #      print "$NoMuFiles, @F, @L\n";
+  for (my $i = 0; $i < $NoMuFiles; $i++) {
+    print "sorted : $i $F[$i]  $L[$i]\n" if ($debug > 1);
+    if ($i == 0 && $F[$i] > 1) {
+      my $f = 1;
+      my $l = $F[$i] - 1;
       $no += SPrint($line,$file,$f,$l,$debug);
     } 
-    for (my $i = 1; $i < $NoMuFiles; $i++) {
-      #	print "$i  : $F[$i]  $L[$i]\n" if ($debug);
-      my $f = $L[$i-1]+1;
-      my $l = $F[$i]-1;
-      # print "f = $f l = $l\n" if ($debug);
-      if ($f <= $l) {
-	SPrint($line,$file,$f,$l,$debug); $no++;
+    if ($i ==  $NoMuFiles -1) {
+      if ($L[$i] < $N) {
+	my $f = $L[$i]+1;
+	my $l = $NN;
+	$no += SPrint($line,$file,$f,$l,$debug);
+      }
+    } else {
+      my $j =  $i + 1;
+      print "check limits: [$F[$i],$L[$i]] and  [$F[$j],$L[$j]]\n" if ($debug > 1);
+      if ($L[$i] >= $F[$j]) {
+	if ($debug) {
+	  my $rm = "rm";
+	  my $cmd = "ls  -1d  $file*MuDst.root";
+	  my @list = `$cmd`; print " @list";
+	  for (my $l = 0;  $l < $NoMuFiles; $l++) {
+	    for (my $k = 0; $k < $NoMuFiles; $k++) {
+	      if ($k == $l) {next;}
+	      if ($F[$l] != $F[$k] && $L[$l] != $L[$k]) {next;}
+	      my $lfl = $L[$l] - $F[$l];
+	      my $kfl = $L[$k] - $F[$k];
+#	      print "l = $l: $F[$l] $L[$l], k = $k : $F[$k] $L[$k], lfl = $lfl, kfl = $kfl\n";
+	      if ($lfl > $kfl) {
+		$rm .= " " . $file . ","  . $F[$k] . "," . $L[$k] . "*"; 
+	      }
+	    }
+	  }
+	  print "$rm\n";
+#	  die "died at $file*MuDst.root *$F[$i],$L[$i]* and   *$F[$j],$L[$j]*";
+	  open (Out, ">> rm.csh") or die "Can't open rm.csh";
+	  print Out "$rm\n";
+	  close(Out);
+	}
+	`touch Dead`;
+	die;
+	return 0;
+      } else {
+	$f = $L[$i] + 1;
+	$l = $F[$j] - 1;
+	if ($f < $l) {
+	  $no += SPrint($line,$file,$f,$l,$debug);
+	}
       }
     }
   }
@@ -122,7 +168,7 @@ my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug);
 print "Year = $year, Field = $FIELD, runs = $runs,  Day = $Day, Run = $Run, $run2\n" if ($debug);
 if (! $year || ! $FIELD) {die "wrong directory $pwd";}
 my $def = {@Runs};# print "Runs = @Runs\n";
-PrintHash($def,"Runs") if ($debug);
+PrintHash($def,"Runs") if ($debug > 1);
 my $fNo = 0;
 my @AllRuns = ($runs);
 if ($run2) {push @AllRuns, $run2;}

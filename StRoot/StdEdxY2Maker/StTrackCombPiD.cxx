@@ -72,6 +72,7 @@ const Char_t *StTrackCombPiD::fgPiDStatusNames[kTotal+1] = {
 Int_t  StTrackCombPiD::fgl2p[KPidAllParticles] = {0};
 Bool_t StTrackCombPiD::fgUsedx2 = kFALSE;
 Bool_t StTrackCombPiD::fgUseTof = kFALSE;
+Bool_t StTrackCombPiD::fgUsedNdx = kFALSE;
 Int_t  StTrackCombPiD::fgDebug = 0;
 Int_t  StTrackCombPiD::fgNparticles = KPidParticles;
 Int_t  StTrackCombPiD::fgUsePiDCorrection = 1;
@@ -582,7 +583,8 @@ void StTrackCombPiD::Print(Option_t *opt) const {
     if (! fStatus[k]) continue;
     cout << fgPiDStatusNames[k];
     if        (k == kUndefinedMethodId) {cout << "UndefinedMethod       " << endl; continue;
-    } else if (k <= kdNdxU) {((StdEdxStatus *) fStatus[k])->Print(); continue;
+    } else if (k <  kdNdx) {((StdEdxStatus *) fStatus[k])->Print(); continue;
+    } else if (k <= kdNdx) {((StdEdxStatus *) fStatus[k])->Print("dNdx"); continue;
     } else if (k == kBTof)  {cout << " beta = " << fBTof()->beta() << "\t1/beta = " 
 				  << fBTof()->BetaV() << " +/- " << fBTof()->SigmaBetaV() << "\tM2/q2 = " << fBTof()->M2q2() << " +/- " <<  fBTof()->SigmaM2q2();
     } else if (k == kETof)  {cout << " beta = " << fETof()->beta() << "\t1/beta = " 
@@ -603,14 +605,19 @@ void StTrackCombPiD::Print(Option_t *opt) const {
 }
 //________________________________________________________________________________
 void StdEdxStatus::Print(Option_t *option) const {
+  TString Option(option);
   if (! fPiD) {cout << "\tEmpty" << endl;}
   else {
-    cout << Form("\tI = %8.3f keV +/- %8.3f %% ",1e6*I(), 100*D()) << endl;
+    if (Option == "dNdx")  cout << Form("\tdN/dx = %8.3f +/- %8.3f %% ", I(), 100*D()) << endl;
+    else                   cout << Form("\tI = %8.3f keV +/- %8.3f %% ",1e6*I(), 100*D()) << endl;
     cout << "Part: "; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10s", StTrackCombPiD::l2par(l).name);} cout << endl;
-    cout << "Pred: "; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",1e6*pred(l));} cout << endl;
-    cout << "PredC:"; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",1e6*predC(l));} cout << endl;
+    if (Option == "dNdx") {
+    cout << "Pred: "; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",pred(l));} cout << endl;
+    cout << "PredC:"; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",predC(l));} cout << endl;
+    } else {
     cout << "Res.: "; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",residual(l));} cout << endl;
     cout << "Res.C:"; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",residualC(l));} cout << endl;
+    }
     cout << "Pull: "; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",pull(l));} cout << endl;
     cout << "PullC:"; for (Int_t l = kPidElectron; l < StTrackCombPiD::Nparticles(); l++) {cout << Form("%10.4g",pullC(l));} cout << endl;
   }
@@ -853,13 +860,12 @@ Double_t StTrackCombPiD::M2BTofSigma(Double_t pL10, Int_t code)  {
 #endif
 //________________________________________________________________________________
 void StTrackCombPiD::SetPDGfromTPC() {
-  for (Int_t k = kI70; k <= kOtherMethodId2; k++) {
-    if (! fStatus[k]) continue;
-    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
-      if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-	Int_t p = fgl2p[l];
-	fTPCPDG.push_back(GetQ()*fgParticles[p].pdg);
-      }
+  Int_t k = kFit;
+  if (! fStatus[k]) return;
+  for (Int_t l = kPidElectron; l < fgNparticles; l++) {
+    if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
+      Int_t p = fgl2p[l];
+      fTPCPDG.push_back(GetQ()*fgParticles[p].pdg);
     }
   }
 }
@@ -876,21 +882,41 @@ void StTrackCombPiD::SetPDGfromTof() {
   }
 }
 //________________________________________________________________________________
-void StTrackCombPiD::SetPDG() {
-  SetPDGfromTPC();
-  if (fgUseTof) {
-    SetPDGfromTof();
-  }
-  if (fTofPDG.size()) {
-    for (auto tpcPDG : fTPCPDG) {
-      for (auto tofPDG : fTofPDG) {
-	if (tpcPDG == tofPDG) {
-	  fPDGList.push_back(tpcPDG);
-	}
+void StTrackCombPiD::SetPDGfromdNdx() {
+  Int_t k = kdNdx;
+  if (fStatus[k]) {
+    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
+      if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
+	Int_t p = fgl2p[l];
+	fdNdxPDG.push_back(GetQ()*fgParticles[p].pdg);
       }
     }
+  }
+}
+//________________________________________________________________________________
+void StTrackCombPiD::SetPDG() {
+  std::vector<Int_t> PDG;
+  if (! fgUsedNdx) {
+    SetPDGfromTPC();
+    PDG = fTPCPDG;
   } else {
-    fPDGList = fTPCPDG;
+    SetPDGfromdNdx();
+    PDG = fdNdxPDG;
+  }
+  fPDGList = PDG;
+  if (fgUseTof) {
+    SetPDGfromTof();
+    if (! fTofPDG.size()) {
+      if (! fPDGList.size()) {fPDGList.push_back(-1);}
+      return;
+    } 
+  }
+  for (auto tpcPDG : PDG) {
+    for (auto tofPDG : fTofPDG) {
+      if (tpcPDG == tofPDG) {
+	fPDGList.push_back(tpcPDG);
+      }
+    }
   }
   if (! fPDGList.size()) {fPDGList.push_back(-1);}
 }
