@@ -4,7 +4,7 @@ foreach done (`ls -1d ???/*`)
 #  set d = `dirname ${done}`
   set d = ${done}
   cd ${d}; pwd;
-  ls -ltr *.root *.gz *Chain.log  | tail -1 | grep Chain	
+  ls -ltr *.root *.gz *B.log *Chain.log  | tail -1 | grep Chain	
 #  ls -ltr Chain.log
   if ($?) then	
     @ count = `ps au | grep root.exe | wc -l`; # ++;  echo "count $count";
@@ -17,8 +17,8 @@ foreach done (`ls -1d ???/*`)
     ln -s ~fisyak/macros/.sl73_* .	
 #    root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst",kTRUE)' >&  Chain.log  &
 #    root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst",kTRUE)' >&  PChain.log  &
-    root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
-    root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
+   root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
+   root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
     @ countJ++
   endif
   cd -;

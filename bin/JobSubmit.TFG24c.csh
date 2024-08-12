@@ -16,7 +16,7 @@ foreach d (`ls -1d ???/2*`)
   if ($?) then
     ls -1d *bla.root
     if ($?) then
-      rm sched* *xml;
+      rm sched*;
       touch Done
     endif
     cd -;
