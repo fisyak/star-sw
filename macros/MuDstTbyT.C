@@ -74,10 +74,10 @@ void MuDstTbyT(
       ok = chain->MakeEvent();
     } else if ( ! oldEv) {
       muDstMko->Clear(); ok = muDstMko->Make();
-      cout << "old event are 0 => ok " << ok << endl;
+      //      cout << "old event are 0 => ok " << ok << endl;
     } else if ( ! newEv) {
       muDstMkn->Clear(); ok = muDstMkn->Make();
-      cout << "new event are 0 => ok " << ok << endl;
+      //      cout << "new event are 0 => ok " << ok << endl;
     } else {
       //    cout << "Old run = " << oldEv->runId() << "\tNew run " << newEv->runId() << endl;
       if (oldEv->runId() == newEv->runId() && oldEv->eventId() == newEv->eventId()) {
@@ -86,19 +86,42 @@ void MuDstTbyT(
 	  cout << "event " << nev << "\trun = " << oldEv->runId() << "\tevents Old = " << oldEv->eventId() << "\tnew = " << newEv->eventId() 
 	       << " has matched" << endl;
 	}
+	// Require only one primary vertex in Z range [195,205];
+	StMuDstMaker *muDstMk[2] = {muDstMko, muDstMkn};
+	StMuDst *MuDst[2] = {oldMuDst, newMuDst};
+	StThreeVectorF xyz[2];
+	Int_t NoPvtx[2] = {NoPvtxOld, NoPvtxNew};
 	if (NoPvtxOld && NoPvtxNew) {
-	  //      muTbyT(oldMuDst, newMuDst);
-	  oldMuDst->SetInstance();
-	  StThreeVectorF xyzW = oldEv->primaryVertexPosition(); //cout << "old(West) Vx " << xyzW << endl;
-	  newMuDst->SetInstance();
-	  StThreeVectorF xyzE = newEv->primaryVertexPosition(); //cout << "new(East) Vx " << xyzE << endl;
-	  StThreeVectorF xyzD = (xyzW - xyzE)/2;
-	  StThreeVectorF xyzA = (xyzW + xyzE)/2;
-	  Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
-	  dX->Fill(xyzA.z(),xyzD.x());
-	  dY->Fill(xyzA.z(),xyzD.y());
-	  dZ->Fill(xyzA.z(),xyzD.z());
-	  dT->Fill(xyzA.z(),xyzD.z()/driftVel);
+	  Bool_t okVX = kTRUE;
+	  StMuPrimaryVertex *BestVtx[2] = {0,0};
+	  for (Int_t k = 0; k < 2; k++) {// old new 
+	    MuDst[k]->SetInstance();
+	    Int_t NPV = MuDst[k]->numberOfPrimaryVertices(); // cout << "k = " << k << " NPV = " << NPV << endl;
+	    for(UInt_t  iPV=0; iPV < NPV; iPV++) {
+	      StMuPrimaryVertex *Vtx = MuDst[k]->primaryVertex(iPV);
+	      if (TMath::Abs(Vtx->position().z() - 200) < 5.0) {
+		if (BestVtx[k]) {
+		  okVX = kFALSE;
+		  break;
+		}
+		// cout << k << "\t"; Vtx->Print();
+		BestVtx[k] = Vtx;
+		// cout << "xyz[" << k << "] = " << BestVtx[k]->position() << endl;
+	      }
+	    }
+	    if (! okVX) break;
+	  }
+	  if (BestVtx[0] &&  BestVtx[1]) {
+	    // cout << "0\t" << BestVtx[0]->position() << endl;
+	    // cout << "1\t" << BestVtx[1]->position() << endl;
+	    StThreeVectorF xyzD = (BestVtx[0]->position() - BestVtx[1]->position())/2; 
+	    StThreeVectorF xyzA = (BestVtx[0]->position() + BestVtx[1]->position())/2;
+	    Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
+	    dX->Fill(xyzA.z(),xyzD.x());
+	    dY->Fill(xyzA.z(),xyzD.y());
+	    dZ->Fill(xyzA.z(),xyzD.z());
+	    dT->Fill(xyzA.z(),xyzD.z()/driftVel);
+	  }
 	}
 	ok = chain->MakeEvent();
       } else {
