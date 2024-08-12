@@ -175,13 +175,13 @@ struct Particle_t {
 class StTrackCombPiD : public TObject {
  public:
   enum PiDStatusIDs {
-    kUndef = kUndefinedMethodId,
-    kI70   = kTruncatedMeanId,        
-    kI70U  = kEnsembleTruncatedMeanId,
-    kFit   = kLikelihoodFitId,        
-    kFitU  = kWeightedTruncatedMeanId,
-    kdNdx  = kOtherMethodId,          
-    kdNdxU = kOtherMethodId2,         
+    kUndef = kUndefinedMethodId,        // 0
+    kI70   = kTruncatedMeanId,          // 1
+    kI70U  = kEnsembleTruncatedMeanId,  // 2
+    kFit   = kLikelihoodFitId,          // 3
+    kFitU  = kWeightedTruncatedMeanId,  // 4
+    kdNdx  = kOtherMethodId,            // 5
+    kdNdxU = kOtherMethodId2,           // 6
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
   StTrackCombPiD();
@@ -212,6 +212,7 @@ class StTrackCombPiD : public TObject {
   void SetCombPiD();
   const std::vector<Int_t> &GetPDG()        {return *&fPDGList;}
   const std::vector<Int_t> &GetPDGfromTPC() {return *&fTPCPDG;}
+  const std::vector<Int_t> &GetPDGfromdNdx() {return *&fdNdxPDG;}
   const std::vector<Int_t> &GetPDGfromTof() {return *&fTofPDG;}
   StDcaGeometry& Dca() {return fDca;}
   KFParticle&    Particle()   {return fParticle;}
@@ -219,10 +220,12 @@ class StTrackCombPiD : public TObject {
   Int_t GetQ() {return fParticle.GetQ();}
   void SetPDG();
   void SetPDGfromTPC();
+  void SetPDGfromdNdx();
   void SetPDGfromTof();
   Int_t Id() {return fId;}
   static void SetUsedx2(Bool_t k = kTRUE) {fgUsedx2 = k;}
   static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
+  static void SetUsedNdx(Bool_t k = kTRUE) {fgUsedNdx = k;}
   static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
   static void SetCalibrationMode(Bool_t k = kTRUE) {fCalibrationMode = k;}
   static Int_t Nparticles() {return fgNparticles;}
@@ -260,10 +263,12 @@ class StTrackCombPiD : public TObject {
   static Int_t       fgl2p[KPidAllParticles];
   static Particle_t  fgParticles[34];
   std::vector<Int_t> fTPCPDG;
+  std::vector<Int_t> fdNdxPDG;
   std::vector<Int_t> fTofPDG;
   std::vector<Int_t> fPDGList;
   static Bool_t      fgUsedx2;
   static Bool_t      fgUseTof;
+  static Bool_t      fgUsedNdx;
   static Bool_t      fCalibrationMode;
   static Int_t       fgNparticles;
   static Int_t       fgUsePiDCorrection;
