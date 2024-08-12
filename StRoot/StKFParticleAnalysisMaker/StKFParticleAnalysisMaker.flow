@@ -1,4 +1,4 @@
-
+--------------------------------------------------------------------------------
  StKFParticleAnalysisMaker::Init
    StKFParticleAnalysisMaker::BookVertexPlots
      foreach decay in fDecays : StKFParticleInterface::AddDecayToReconstructionList
@@ -28,9 +28,11 @@
 
 
 
+--------------------------------------------------------------------------------
   StKFParticleAnalysisMaker::InitRun
      StKFParticleInterface::instance()->SetFixedTarget(St_beamInfoC::instance()->IsFixedTarget());
 
+--------------------------------------------------------------------------------
    StKFParticleAnalysisMaker::Make
      StKFParticleInterface::ProcessEvent(fPicoDst, triggeredTracks)
        if(fCollectTrackHistograms && (isTofm2 || isETofm2)
@@ -41,6 +43,7 @@
        SetField
        CleanPV
        InitParticles
+	
        AddPV
        if(fCollectTrackHistograms) 
 or
