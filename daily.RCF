@@ -1552,3 +1552,15 @@ T: (gdb) p nGlobalTracks $1 = 17
 (gdb) p particle.Print("")
 p(   1,   0,   0) x:   0.514+/- 0.231 y:  -0.104+/- 0.050 z: 202.875+/- 0.361 px:  -0.076+/- 0.003 py:  -0.377+/- 0.004 pz:  -0.400+/- 0.004 M:   0.938 p:   0.555+/-  0.005 pdg: 2212 Q: 1  chi2/NDF :  179.20/137
 $9 = void
+================================================================================
+08/13/2024
+ ~/TFG24c/2019/RF/7.3GeV_fixedTarget $ rm `grep missing */*/Chain.log | awk '{print $3}' | sed -e 's/.*fixedTarget\///' -e 's/.MuDst.root/*/'`
+
+
+
+4p59GeV_fixedTarget_P24ia.dEdxB2.root   M_BW     S = 3.15121e+06        B = 613793      S/B = 5.134     S/sqrt(T) = 1664.05     Significance = 1285.63  Signal per Event( 91.632M)  = 0.0343897 M =  497.74 +/-  0.00   W =    8.06 +/-  0.01 (MeV)
+4p59GeV_fixedTarget_P24ia.dEdxC.root    M_BW     S = 4.39715e+06        B = 1.27348e+06 S/B = 3.45286   S/sqrt(T) = 1888.56     Significance = 1417.33  Signal per Event(106.882M)  = 0.0411403 M =  497.72 +/-  0.00   W =    8.36 +/-  0.01 (MeV)
+
+
+4p59GeV_fixedTarget_TFG24c.dEdxF.root   M_BW     S = 1.49898e+07        B = 1.82859e+06 S/B = 8.19745   S/sqrt(T) = 3751.28     Significance = 3035.75  Signal per Event( 98.340M)  = 0.152429  M =  497.54 +/-  0.00   W =    7.14 +/-  0.00 (MeV)
+4p59GeV_fixedTarget_TFG24c.dEdxG.root   M_BW     S = 7.99901e+06        B = 1.52573e+06 S/B = 5.24273   S/sqrt(T) = 2655.94     Significance = 2087.49  Signal per Event(175.333M)  = 0.0456217 M =  497.49 +/-  0.00   W =    7.47 +/-  0.00 (MeV)
