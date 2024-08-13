@@ -1103,6 +1103,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   double dz = picoPVError.z();
   primVtx_tmp.SetCovarianceMatrix( dx*dx, 0, dy*dy, 0, 0, dz*dz );
   primaryVertex = KFVertex(primVtx_tmp);
+#define  __FXT_PV_REFIT__
 #ifdef __FXT_PV_REFIT__
 //   if(!IsGoodPV(primaryVertex)) return 0;
   
