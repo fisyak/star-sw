@@ -85,7 +85,7 @@ void makePicoDst(TString triggerSet = "y2022") {
     //    adc2e->setPrint(false);
     adc2e->saveAllStEvent(true);
   }
-  StPreEclMaker* pre_ecl = new StPreEclMaker("preecl");
+  StPreEclMaker* pre_ecl = (StPreEclMaker *) chain->Maker("preecl");
   if (pre_ecl) {
     //    pre_ecl->setPrint(kFALSE);
     StEpcMaker* epc = new StEpcMaker();
