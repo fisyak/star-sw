@@ -143,11 +143,13 @@ sub MuCount($$$$) {# daqName, first, last,
 	      }
 	    }
 	  }
-	  print "$rm\n";
-#	  die "died at $file*MuDst.root *$F[$i],$L[$i]* and   *$F[$j],$L[$j]*";
-	  open (Out, ">> rm.csh") or die "Can't open rm.csh";
-	  print Out "$rm\n";
-	  close(Out);
+	  if ($rm != "rm") {
+	    print "$rm\n";
+	    #	  die "died at $file*MuDst.root *$F[$i],$L[$i]* and   *$F[$j],$L[$j]*";
+	    open (Out, ">> rm.csh") or die "Can't open rm.csh";
+	    print Out "$rm\n";
+	    close(Out);
+	  }
 	}
 	`touch Dead`;
 	die;
