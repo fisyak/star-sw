@@ -29,7 +29,7 @@
 #include "TH3.h"
 #include "TProfile.h"
 #include "TProfile2D.h"
-
+#include "TArrayD.h"
 KFParticlePerformanceBase::KFParticlePerformanceBase():
   fParteff(), fPVeff(), fPVeffMCReconstructable(), outfileName(), histodir(0), fNEvents(0), fStoreMCHistograms(1), 
   fStorePrimSecHistograms(1), fStoreZRHistograms(1), fStore3DEfficiency(0), fHistoDir(0)
@@ -338,9 +338,24 @@ void KFParticlePerformanceBase::CreateHistos(std::string histoDir, TDirectory* o
       float xMin[nHistosPVParam] = {-10., -10., -160.,  0,   -0.5,    0.,   -0.5,    0., 0., -0.01, -0.01, -0.01, -0.01, -0.01, 0.};
       float xMax[nHistosPVParam] = { 10.,  10.,  230., 10, 1000.5, 1000., 1000.5, 1000., 1.,  1.01,  1.01,  1.01,  1.01,  1.01, 100.};
 #else /* __TFG__VERSION__ */
-      int nBins[nHistosPVParam] =  {1000, 1000,  840,1000,   1001, 10000,   1001, 10000,100,   102,   102,   102,   102,   102, 1000};
+      int nBins[nHistosPVParam] =  {1000, 1000,   -1,1000,   1001, 10000,   1001, 10000,100,   102,   102,   102,   102,   102, 1000};
       float xMin[nHistosPVParam] = {-2.5, -2.5, -200.,  0,   -0.5,    0.,   -0.5,    0., 0., -0.01, -0.01, -0.01, -0.01, -0.01,   0.};
       float xMax[nHistosPVParam] = { 2.5,  2.5,  220., 10, 1000.5, 1000., 1000.5, 1000., 1.,  1.01,  1.01,  1.01,  1.01,  1.01, 100.};
+      Int_t iHz = 2;
+      Double_t zMin  = xMin[iHz], zMax  = xMax[iHz], dZ  = 0.2;      // 0.20 cm
+      Double_t zMin1 =  195, zMax1 = 205, dZ1 = 0.0050;; // 0.005 cm
+      Int_t nbins = (zMax - zMin)/dZ + (zMax1 - zMin1)/dZ1 + 1;
+      TArrayD Z(nbins);
+      Double_t z = zMin;
+      Int_t i = 0;
+      while (z < zMax) {
+	Z[i] = z; i++;
+	if (z < zMin1 || z > zMax1) {
+	  z += dZ;
+	} else {
+	  z += dZ1;
+	}
+      }
 #endif /* __TFG__VERSION__ */
     
       TString parName2D[nHistosPVParam2D] = {"xy"};
@@ -362,8 +377,16 @@ void KFParticlePerformanceBase::CreateHistos(std::string histoDir, TDirectory* o
 #endif /* __TFG__VERSION__ */    
       for(int iH=0; iH<nHistosPVParam; iH++)
       {
-        hPVParam[iH]       = new TH1F(parName[iH].Data(),(GetDirectoryPath()+parName[iH]).Data(),
-                                        nBins[iH],xMin[iH],xMax[iH]);
+#ifdef __TFG__VERSION__
+	if (iH != iHz) 
+#endif /* __TFG__VERSION__ */    
+	  hPVParam[iH]       = new TH1F(parName[iH].Data(),(GetDirectoryPath()+parName[iH]).Data(),
+				      nBins[iH],xMin[iH],xMax[iH]);
+#ifdef __TFG__VERSION__
+	else 
+	  hPVParam[iH]       = new TH1F(parName[iH].Data(),(GetDirectoryPath()+parName[iH]).Data(),
+				      i-1, Z.GetArray());
+#endif /* __TFG__VERSION__ */ 
         hPVParam[iH]->GetXaxis()->SetTitle(parAxisName[iH].Data());
       }
 

@@ -15,7 +15,7 @@ set muB = `basename ${mu}`
 cd ${dir}
 set picoD = `echo ${muB} | sed -e 's/Mu/pico/'`
 if (-r ${picoD}) exit 0;
-root.exe -q -q -x 'lMuDst.C(-1,"'${muB}'","RMuDst,mysql,magF,nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y'${year}'")' &gt;&amp; ${picoD}.log
+root.exe -q -q -x 'lMuDst.C(-1,"'${muB}'","RMuDst,mysql,magF,eemcDb,emcAtoE,Epc,nodefault,picoWrite,PicoVtxDefault,quiet,PicoVtxFXT,FXT")'  'makePicoDst.C("y'${year}'")' &gt;&amp; ${picoD}.log
         </command>
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />

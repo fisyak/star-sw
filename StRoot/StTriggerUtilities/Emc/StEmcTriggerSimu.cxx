@@ -83,19 +83,19 @@ void StEmcTriggerSimu::Make()
     mEM201->run();
 
     if(mYear == 2013){
-      LOG_INFO << Form("EM201: BHT0=%d BHT1=%d BHT2=%d BHT3=%d EHT0=%d EHT1=%d JP1=%d JP2=%d BJP1=%d EEMCdijet=%d EJP1=%d JP1dijet=%d JP0dijet=%d BAJP=%d DAQ10k=%d JP0=%d",
+      LOG_DEBUG << Form("EM201: BHT0=%d BHT1=%d BHT2=%d BHT3=%d EHT0=%d EHT1=%d JP1=%d JP2=%d BJP1=%d EEMCdijet=%d EJP1=%d JP1dijet=%d JP0dijet=%d BAJP=%d DAQ10k=%d JP0=%d",
 		     BHT0(),BHT1(),BHT2(),BHT3(),EHT0(),EHT1(),JP1(),JP2(),BJP1(),EEMCdijet(),EJP1(),JP1dijet(),JP0dijet(),BAJP(),DAQ10k(),JP0()) << endm;
     }else if(mYear == 2015){
-      LOG_INFO << Form("EM201: BHT0=%d BHT1=%d BHT2=%d HTTP=%d EHT0=%d EHT1=%d JP1=%d JP2=%d BJP1=%d BJP2=%d EJP1=%d EJP2=%d AJP=%d BAJP=%d EB2B=%d JP0=%d",
+      LOG_DEBUG << Form("EM201: BHT0=%d BHT1=%d BHT2=%d HTTP=%d EHT0=%d EHT1=%d JP1=%d JP2=%d BJP1=%d BJP2=%d EJP1=%d EJP2=%d AJP=%d BAJP=%d EB2B=%d JP0=%d",
 		     BHT0(),BHT1(),BHT2(),HTTP(),EHT0(), EHT1(), JP1(), JP2(), BJP1(),BJP2(), EJP1(),EJP2(),AJP(), BAJP(), EB2B(), JP0()) << endm;
     }else if(mYear == 2016){
-      LOG_INFO << Form("EM201: BHT0=%d BHT1=%d BHT2=%d BHT3=%d BHT4=%d BHTUPC=%d BTP=%d BHTTP=%d BTPtopo=%d BHTTPtopo=%d BHT4topo=%d EHT0=%d EHT1=%d DAQ10k=%d",
+      LOG_DEBUG << Form("EM201: BHT0=%d BHT1=%d BHT2=%d BHT3=%d BHT4=%d BHTUPC=%d BTP=%d BHTTP=%d BTPtopo=%d BHTTPtopo=%d BHT4topo=%d EHT0=%d EHT1=%d DAQ10k=%d",
 		     BHT0(),BHT1(),BHT2(),BHT3(),BHT4(), BHTUPC(), BTP(), BHTTP(),BTPtopo(),BHTTPtopo(),BHT4topo(),EHT0_2014(),EHT1_2014(),DAQ10k_2014()) << endm;
     }else if(mYear == 2017){
-      LOG_INFO << Form("EM201: BHT1=%d BHT2=%d BHT3=%d HTTP=%d EHT0=%d EHT1=%d BJP1=%d BJP2=%d JP0=%d JP1=%d JP2=%d EJP1=%d EJP2=%d",
+      LOG_DEBUG << Form("EM201: BHT1=%d BHT2=%d BHT3=%d HTTP=%d EHT0=%d EHT1=%d BJP1=%d BJP2=%d JP0=%d JP1=%d JP2=%d EJP1=%d EJP2=%d",
 		     BHT1_2017(),BHT2_2017(),BHT3_2017(),HTTP(), EHT0(), EHT1(), BJP1_2017(),BJP2_2017(), JP0_2017(), JP1_2017(),JP2_2017(),EJP1_2017(), EJP2_2017()) << endm;
     }else{
-      LOG_INFO << Form("EM201: BHT0=%d BHT1=%d BHT2=%d BHT3=%d EHT0=%d EHT1=%d JP1=%d JP2=%d BJP1=%d BJP2=%d EJP1=%d EJP2=%d AJP=%d BAJP=%d EAJP=%d JP0=%d",
+      LOG_DEBUG << Form("EM201: BHT0=%d BHT1=%d BHT2=%d BHT3=%d EHT0=%d EHT1=%d JP1=%d JP2=%d BJP1=%d BJP2=%d EJP1=%d EJP2=%d AJP=%d BAJP=%d EAJP=%d JP0=%d",
 		     BHT0(),BHT1(),BHT2(),BHT3(),EHT0(),EHT1(),JP1(),JP2(),BJP1(),BJP2(),EJP1(),EJP2(),AJP(),BAJP(),EAJP(),JP0()) << endm;
     }
 
