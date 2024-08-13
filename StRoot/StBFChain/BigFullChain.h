@@ -1944,7 +1944,6 @@ Bfc_st BFC[] = { // standard chains
    ,"ClusterMaker for PMD"                                                                         ,kFALSE},
   {"pmdDis"    ,"pmdDis","pmdReco","PmdClust","StPmdDiscriminatorMaker"
    ,                                              "StPmdDiscriminatorMaker","Discriminator for PMD",kFALSE},
-  {"trgSim"    ,"StarTrigSimu","","","StTriggerSimuMaker" ,"StTriggerUtilities","Trigger Simulator",kFALSE},
 #ifndef __NoStrangeMuDst__
   {"Kink2"       ,"kink2","","db,MuDST,-kink","StKinkMaker","StSecondaryVertexMaker"
    ,                                                                      "Find Kinks from StEvent",kFALSE},
