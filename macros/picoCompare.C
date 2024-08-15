@@ -15,7 +15,7 @@
 //________________________________________________________________________________
 void picoCompare(
 		 //		 const Char_t *filesOld = "/./P24ia/*.picoDst.root",  const Char_t *filesNew = "./*picoDst.root",
-		 const Char_t *filesOld = "183/20183003/P24ia/st_physics_20183003_raw_3000009.picoDst.root", const Char_t *filesNew = "183/20183003/st_physics_20183003_raw_3000009,1,8497.picoDst.root",
+		 const Char_t *filesOld = "old.root", const Char_t *filesNew = "new.root",
 		 const Char_t *TreeName = "PicoDst", const Char_t *outHist = "Compare.root") {
   TDirIter DirOld(filesOld);
   TChain *Told = new TChain(TreeName);
