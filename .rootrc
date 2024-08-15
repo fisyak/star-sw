@@ -27,7 +27,7 @@ Plugin.TVirtualX            ^qt      TGQt          GQt          "TGQt(const char
 Plugin.TGuiFactory          ^qtgui   TQtGUIFactory  QtRootGui       "TQtGUIFactory()"
 #Plugin.TGuiFactory         ^qtgui    TQtRootGuiFactory QtRoot       "TQtRootGuiFactory()"
 
-Logger.Configuration        $STAR/Bfc.xml
+Logger.Configuration        $STAR/StRoot/StStarLogger/Bfc.xml
 Logger.Color                yes
 #Root.Debug:                1
 Root.MemStat:               1
