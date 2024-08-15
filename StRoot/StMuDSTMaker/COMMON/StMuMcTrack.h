@@ -10,11 +10,12 @@ class StMuMcTrack : public TObject {
  public:
   enum EHIT {ktpc, ksvt, kssd,
 	     kctb, keem, kemc, kesm, kftp, kgem, khpd, kist, kigt, kfst, 
-#ifndef __TFG__VERSION__
-	     kfgt, kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, kvpd, ktot};
-#else /* __TFG__VERSION__ */
-	     kfgt, kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, kvpd, ketr, khca, kfts, keto, kepd, kstg, kwca, ktpcR, ktot};
+	     kfgt, kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, kvpd, 
+       ketr, khca, kfts, keto, kstg, kwca, kpre, kepd,
+#ifdef __TFG__VERSION__
+       ktpcR, 
 #endif /* __TFG__VERSION__ */
+        ktot};
   StMuMcTrack(const g2t_track_st &t);
 #ifdef __TFG__VERSION__
   StMuMcTrack();
@@ -30,7 +31,9 @@ class StMuMcTrack : public TObject {
   Bool_t          	IsShower()     const {return mIsShower;} /* 1 if shower track, 0 if not */
 #ifndef __TFG__VERSION__
   Int_t                 NoHits()       const {Int_t n = 0; for (Int_t i = ktpc; i < ktot; i++) n+= NoHits(i); return n;}
-  UChar_t               NoHits(Int_t k)const {return mHits[k];}					   
+#else /* ! __TFG__VERSION__ */
+  Int_t                 NoHits()       const {Int_t n = No_tpc_hit(); for (Int_t i = ktpc + 1; i < ktpcR; i++) n+= NoHits(i); return n;}
+#endif /* __TFG__VERSION__ */
   UChar_t     		No_ctb_hit()   const {return NoHits(kctb);}   /* Nhits in ctb */			   
   UChar_t     		No_eem_hit()   const {return NoHits(keem);}   /* Nhits in eem (endcap em cal) */	   
   UChar_t     		No_emc_hit()   const {return NoHits(kemc);}   /* Nhits in emc */			   
@@ -51,42 +54,21 @@ class StMuMcTrack : public TObject {
   UChar_t     		No_svt_hit()   const {return NoHits(ksvt);}   /* Nhits in svt */			   
   UChar_t     		No_pix_hit()   const {return NoHits(kpix);}   /* Nhits in pix */			   
   UChar_t     		No_tof_hit()   const {return NoHits(ktof);}   /* Nhits in tof */			   
+#ifndef __TFG__VERSION__
   UChar_t     		No_tpc_hit()   const {return NoHits(ktpc);}   /* Nhits in tpc */			   
-  UChar_t     		No_vpd_hit()   const {return NoHits(kvpd);}   /* Nhits in vpd */                     
 #else /* __TFG__VERSION__ */
-  Int_t                 NoHits()       const {Int_t n = No_tpc_hit(); for (Int_t i = ktpc + 1; i < ktpcR; i++) n+= NoHits(i); return n;}
-  Int_t                 NoHits(Int_t k)const {return mHits[k];}					   
-  Int_t       		No_ctb_hit()   const {return NoHits(kctb);}   /* Nhits in ctb */			   
-  Int_t       		No_eem_hit()   const {return NoHits(keem);}   /* Nhits in eem (endcap em cal) */	   
-  Int_t       		No_emc_hit()   const {return NoHits(kemc);}   /* Nhits in emc */			   
-  Int_t       		No_esm_hit()   const {return NoHits(kesm);}   /* Nhits in esm (endcap shower max) */ 
-  Int_t       		No_ftp_hit()   const {return NoHits(kftp);}   /* Nhits in forward tpc */		   
-  Int_t       		No_gem_hit()   const {return NoHits(kgem);}   /* Nhits in gem barrel */		   
-  Int_t       		No_hpd_hit()   const {return NoHits(khpd);}   /* Nhits in hpd */			   
-  Int_t       		No_ist_hit()   const {return NoHits(kist);}   /* Nhits in ist */			   
-  Int_t       		No_igt_hit()   const {return NoHits(kigt);}   /* Nhits in igt */			   
-  Int_t       		No_fst_hit()   const {return NoHits(kfst);}   /* Nhits in fst */			   
-  Int_t       		No_fgt_hit()   const {return NoHits(kfgt);}   /* Nhits in fgt */			   
-  Int_t       		No_fpd_hit()   const {return NoHits(kfpd);}   /* Nhits in fpd */			   
-  Int_t       		No_mwc_hit()   const {return NoHits(kmwc);}   /* Nhits in mwc */			   
-  Int_t       		No_pgc_hit()   const {return NoHits(kpgc);}   /* Nhits in pgc  ???  */		   
-  Int_t       		No_pmd_hit()   const {return NoHits(kpmd);}   /* Nhits in pmd (PMD) */		   
-  Int_t       		No_smd_hit()   const {return NoHits(ksmd);}   /* number of hits in shower max */	   
-  Int_t       		No_ssd_hit()   const {return NoHits(kssd);}   /* Nhits in ssd */			   
-  Int_t       		No_svt_hit()   const {return NoHits(ksvt);}   /* Nhits in svt */			   
-  Int_t       		No_pix_hit()   const {return NoHits(kpix);}   /* Nhits in pix */			   
-  Int_t       		No_tof_hit()   const {return NoHits(ktof);}   /* Nhits in tof */			   
   Int_t       		No_tpc_hitA()  const {return NoHits(ktpc);}   /* Nhits in tpc */			   
   Int_t       		No_tpc_hit()   const {return NoHits(ktpcR);}  /* Nhits in tpc excluding pseudo pad rows*/			   
-  Int_t       		No_vpd_hit()   const {return NoHits(kvpd);}   /* Nhits in vpd */                     
-  Int_t       		No_etr_hit()   const {return NoHits(ketr);}   /* Nhits in etr */                     
-  Int_t       		No_hca_hit()   const {return NoHits(khca);}   /* Nhits in hca */                     
-  Int_t       		No_fts_hit()   const {return NoHits(kfts);}   /* Nhits in fts */                     
-  Int_t       		No_eto_hit()   const {return NoHits(keto);}   /* Nhits in eto */                     
-  Int_t       		No_epd_hit()   const {return NoHits(kepd);}   /* Nhits in epd */                     
-  Int_t       		No_stg_hit()   const {return NoHits(kstg);}   /* Nhits in stg */                     
-  Int_t       		No_wca_hit()   const {return NoHits(kwca);}   /* Nhits in wca */                             
 #endif /* __TFG__VERSION__ */
+  UChar_t     		No_vpd_hit()   const {return NoHits(kvpd);}   /* Nhits in vpd */   
+  UChar_t     		No_etr_hit()   const {return NoHits(ketr);}   /* Nhits in etr */
+  UChar_t     		No_hca_hit()   const {return NoHits(khca);}   /* Nhits in hca */
+  UChar_t     		No_fts_hit()   const {return NoHits(kfts);}   /* Nhits in fts (fst) */
+  UChar_t     		No_eto_hit()   const {return NoHits(keto);}   /* Nhits in eto */
+  UChar_t     		No_stg_hit()   const {return NoHits(kstg);}   /* Nhits in stgc (ftt) */
+  UChar_t     		No_wca_hit()   const {return NoHits(kwca);}   /* Nhits in wca */
+  UChar_t     		No_pre_hit()   const {return NoHits(kpre);}   /* Nhits in pre */
+  UChar_t     		No_epd_hit()   const {return NoHits(kepd);}   /* Nhits in epd */
   Int_t                 ItrmdVertex()  const {return mItrmdVertex;} /* First intermediate vertex */	   
   Int_t          	IdVx       ()  const {return mIdVx;       } /* Id of start vertex of track */	   
   Int_t          	IdVxEnd    ()  const {return mIdVxEnd;    } /* Id of stop vertex of this track */ 
@@ -132,11 +114,11 @@ class StMuMcTrack : public TObject {
   Float_t        mPtot;        /* Total momentum */
   Float_t        mRapidity;    /* Rapidity */
 #ifndef __TFG__VERSION__
-  ClassDef(StMuMcTrack,1)
+  ClassDef(StMuMcTrack,2)
 #else /* __TFG__VERSION__ */
   Char_t         mEnd[1];      //!
   StThreeVectorF mPxyz;        /* Momentum */
-  ClassDef(StMuMcTrack,5)
+  ClassDef(StMuMcTrack,6)
 #endif /* __TFG__VERSION__ */
 };
 ostream&              operator<<(ostream& os, StMuMcTrack const & v);
