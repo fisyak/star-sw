@@ -7,7 +7,7 @@ void lBichsel() {
     //    gSystem->Load("libStBichsel_Tables");
     gSystem->Load("StBichsel");
     //    m_Bichsel = Bichsel::Instance();
-  // Look up for the logger option
+    // Look up for the logger option
     Bool_t needLogger  = kFALSE;
     if (gSystem->Load("liblog4cxx") >=  0) {             //  StMemStat::PrintMem("load log4cxx");
       cout << " + liblog4cxx";
@@ -18,7 +18,8 @@ void lBichsel() {
 	if (gROOT->IsBatch())  StLoggerManager::setColorEnabled(kFALSE);
       }
       cout << endl;
-   }
+    }
+    gROOT->LoadMacro("bichselG10.C");
   }
 #else
   cout << "Please don't run it with AClick" << endl;
