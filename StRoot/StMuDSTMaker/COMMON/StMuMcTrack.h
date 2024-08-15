@@ -34,6 +34,7 @@ class StMuMcTrack : public TObject {
 #else /* ! __TFG__VERSION__ */
   Int_t                 NoHits()       const {Int_t n = No_tpc_hit(); for (Int_t i = ktpc + 1; i < ktpcR; i++) n+= NoHits(i); return n;}
 #endif /* __TFG__VERSION__ */
+  UChar_t               NoHits(Int_t k)const {return mHits[k];}      
   UChar_t     		No_ctb_hit()   const {return NoHits(kctb);}   /* Nhits in ctb */			   
   UChar_t     		No_eem_hit()   const {return NoHits(keem);}   /* Nhits in eem (endcap em cal) */	   
   UChar_t     		No_emc_hit()   const {return NoHits(kemc);}   /* Nhits in emc */			   
