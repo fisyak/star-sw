@@ -53,7 +53,7 @@ MakeChairInstance2(KalmanTrackFitterParameters,StiKalmanTrackFitterParameters,Ca
 MakeChairInstance2(KalmanTrackFinderParameters,StiKalmanTrackFinderParameters,Calibrations/tracker/KalmanTrackFinderParameters);
 #include "StiTpcHitErrorMDF4.h"
 //________________________________________________________________________________
-void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) {
+void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
   fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
   Double_t y = TMath::Tan(_eta);
   fxx[1] = y*y; // tanP**2
@@ -64,7 +64,7 @@ void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Do
 void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _tanl, 
 					Double_t &ecross, Double_t &edip, 
 					Double_t fudgeFactor, Double_t AdcL, 
-					Double_t *dZ, Double_t *dX) {
+					Double_t *dZ, Double_t *dX) const {
   static const Double_t hundredMicrons = 1e-2;
   static const Double_t min2Err = hundredMicrons*hundredMicrons;
   static const Double_t max2Err = 1.;
