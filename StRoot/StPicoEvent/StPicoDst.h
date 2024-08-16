@@ -60,7 +60,7 @@ class StPicoDst {
   /// Return pointer to the n-th TClonesArray
   TClonesArray* picoArray(Int_t type) { return picoArrays[type]; }
   /// Return pointer to current StPicoEvent (class holding the event wise information)
-  StPicoEvent* event() { return (StPicoEvent*)picoArrays[StPicoArrays::Event]->UncheckedAt(0); }
+  StPicoEvent* event() const { return (StPicoEvent*)picoArrays[StPicoArrays::Event]->UncheckedAt(0); }
   /// Return pointer to i-th track
   StPicoTrack* track(Int_t i) { return (StPicoTrack*)picoArrays[StPicoArrays::Track]->UncheckedAt(i); }
   /// Return pointer to i-th trigger data
