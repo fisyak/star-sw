@@ -8,14 +8,21 @@ foreach my $logfile (glob "b*.log") {
 #    if ($line !~ /unrecognized relocation (0x2a) in section/) {next;}
     if ($line !~ /unrecognized relocation/ &&
 	$line !~ /file not recognized/ &&
+	$line !~ /unable to initialize decompress status for section .debug_info/ &&
 	$line !~ /access beyond end of merged section/) {next;}
 							 #    print "$line\n";
+#    print "$line";
     my ($dummy,$lib) = split(":",$line);
 #    print "=> $lib\n";
-    my $pkg;
+    my $pkg = "";
     if ($lib =~ /\.a\(/) {$pkg = $lib; $pkg =~ s/a\(.*/a/;}
     else {    $pkg = File::Basename::dirname($lib);}
-    $ListOfBrokenLibraries .= " " . $pkg . "\n";
+    if ($pkg eq "\.") {
+    } else {
+#      print "pkg = |$pkg|\n";
+#      $ListOfBrokenLibraries .= " |" . $pkg . "|\n";
+      $ListOfBrokenLibraries .= " " . $pkg . "\n";
+    }
 #    last;
   }
   close(In);

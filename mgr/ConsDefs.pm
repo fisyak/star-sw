@@ -127,7 +127,7 @@
      $CXXFLAGS .= " -Wno-deprecated-declarations -Wno-memset-elt-size";
      if ($ROOT_LEVEL =~ /^5/) {$CXXFLAGS .= " -Wno-register";}
    }
-   if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
+#  if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
    if ($CXX_MAJOR > 6 or $CXX_MAJOR == 6 and $CXX_MINOR >= 3) {$CXXFLAGS .= " -Wno-misleading-indentation -Wno-ignored-attributes";}
 #   print "CXX_MAJOR = $CXX_MAJOR, CXX_MINOR = $CXX_MINOR => CXXFLAGS = $CXXFLAGS ==============\n";
  }
@@ -371,7 +371,7 @@
      if (-d "$FINK_DIR/lib") {$FINK_LDFLAGS = "-L$FINK_DIR/lib";}
    }
    if ($CXX eq 'g++') {
-     if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
+#     if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
 #      if ($CXX_MAJOR > 6 or $CXX_MAJOR == 6 and $CXX_MINOR >= 3) {$CXXFLAGS .= " -Wmisleading-indentation";}
 #      print "CXX_MAJOR = $CXX_MAJOR, CXX_MINOR = $CXX_MINOR => CXXFLAGS = $CXXFLAGS ==============\n";
    } else {# clang
@@ -705,7 +705,8 @@
  "%FC %FPPFLAGS %FFLAGS %EXTRA_FPPFLAGS %FDEBUG %_IFLAGS %EXTRA_FCPATH -c %< %Fout%>;";
  my $F90COM = 
  "cd %<:d; %FC %FPPFLAGS %FFLAGS %EXTRA_FPPFLAGS %FDEBUG %FEXTEND %_IFLAGS %EXTRA_FCPATH -c %<:f %Fout%>:f;";
-  my $FCviaAGETOFCOM
+  my $FCviaAGETOFCOM25
+
   = " test -f %>:b.g && rm %>:b.g; %FPP %FPPFLAGS %EXTRA_FPPFLAGS %_IFLAGS %EXTRA_FCPATH %<:b.F -o %>:b.g;"
   . "cd %>:d; test -f %>:F.for && rm %>:F.for; %AGETOF %AGETOFLAGS -V f %<:F.g -o %>:F.for; cd -;";
   $FCviaAGETOFCOM .= " if [ -f %>:b.for ]; then %FC %FFLAGS %EXTRA_FPPFLAGS %FDEBUG -c %>:b.for %Fout%>;";
@@ -720,6 +721,8 @@
 	       'Package'        => 'None',
 	       'CPP'            => $CPP,
 	       'FPP'            => $FPP,
+	       'CXX_MAJOR'      => $CXX_MAJOR,
+	       'CXX_MINOR'      => $CXX_MINOR,
 	       'CPPPATH'        => $CPPPATH,
 	       'EXTRA_CPPPATH'  => $EXTRA_CPPPATH,
 	       'CERNLIB_FPPFLAGS'  => $CERNLIB_FPPFLAGS,
