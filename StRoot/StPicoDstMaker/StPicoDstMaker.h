@@ -113,6 +113,7 @@ class StPicoDstMaker : public StMaker {
   virtual Int_t Init();
   /// Standard STAR Make() function called from StChain
   virtual Int_t Make();
+  virtual Int_t Make(Int_t RunId, Int_t EventId);
   /// Clear
   virtual void  Clear(Option_t* option = "");
   /// Standard STAR Finish() function called from StChain
@@ -182,6 +183,7 @@ class StPicoDstMaker : public StMaker {
   Int_t openRead();
   /// Read information
   void  read();
+  Int_t read(Int_t RunId, Int_t EventId);
   /// Close file which was read
   void closeRead();
   /// Set branch addresses
@@ -203,6 +205,7 @@ class StPicoDstMaker : public StMaker {
   void createArrays();
 
   Int_t MakeRead();
+  Int_t MakeRead(Int_t RunId, Int_t EventId);
   Int_t MakeWrite();
 
   /// Fill event header info

@@ -791,10 +791,17 @@ int StPicoDstMaker::Make() {
     if ( !mPicoDst->IsGoodTrigger()) return kStSkip;
 #endif /* __TFG__VERSION__ */
   }
-
+  
   return returnStarCode;
 }
-
+//_________________
+ int StPicoDstMaker::Make(Int_t RunId, Int_t EventId) {
+    int returnStarCode = MakeRead(RunId,EventId);
+#if defined(__TFG__VERSION__)
+    if ( !mPicoDst->IsGoodTrigger()) return kStSkip;
+#endif /* __TFG__VERSION__ */
+    return returnStarCode;
+ }
 //_________________
 Int_t StPicoDstMaker::MakeRead() {
 
@@ -818,6 +825,21 @@ Int_t StPicoDstMaker::MakeRead() {
 
   return kStOK;
 }
+//_________________
+Int_t StPicoDstMaker::MakeRead(Int_t RunId, Int_t EventId) {
+  
+  if (!mChain) {
+    LOG_WARN << " No input files ... ! EXIT" << endm;
+    return kStWarn;
+  }
+  
+  int bytes = mChain->GetEntryWithIndex(RunId,EventId);
+  if (bytes <= 0)  return kStEOF;
+  fillEventHeader();
+
+  return kStOK;
+}
+
 
 //_________________
 Int_t StPicoDstMaker::MakeWrite() {
