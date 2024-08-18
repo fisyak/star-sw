@@ -63,6 +63,7 @@ class StPicoDst {
   StPicoEvent* event() const { return (StPicoEvent*)picoArrays[StPicoArrays::Event]->UncheckedAt(0); }
   /// Return pointer to i-th track
   StPicoTrack* track(Int_t i) { return (StPicoTrack*)picoArrays[StPicoArrays::Track]->UncheckedAt(i); }
+  const StPicoTrack* track(Int_t i) const { return (StPicoTrack*)picoArrays[StPicoArrays::Track]->UncheckedAt(i); }
   /// Return pointer to i-th trigger data
   StPicoEmcTrigger* emcTrigger(Int_t i) { return (StPicoEmcTrigger*)picoArrays[StPicoArrays::EmcTrigger]->UncheckedAt(i); }
   /// Return pointer to i-th MTD trigger data
@@ -100,7 +101,7 @@ class StPicoDst {
   /// Return pointer to i-th MC track
   StPicoMcTrack* mcTrack(Int_t i) { return (StPicoMcTrack*)picoArrays[StPicoArrays::McTrack]->UncheckedAt(i); }
   /// Return number of tracks
-  UInt_t numberOfTracks() { return picoArrays[StPicoArrays::Track]->GetEntriesFast(); }
+  UInt_t numberOfTracks()const  { return picoArrays[StPicoArrays::Track]->GetEntriesFast(); }
   /// Return number of Emc triggers
   UInt_t numberOfEmcTriggers() { return picoArrays[StPicoArrays::EmcTrigger]->GetEntriesFast(); }
   /// Return number of MTD triggers
@@ -137,6 +138,7 @@ class StPicoDst {
   UInt_t numberOfMcVertices() { return picoArrays[StPicoArrays::McVertex]->GetEntriesFast(); }
   /// Return number of MC tracks
   UInt_t numberOfMcTracks() { return picoArrays[StPicoArrays::McTrack]->GetEntriesFast(); }
+  UShort_t numberOfPrimaryTracksRecorded() const;
 
   /// Print information
   void print() const;
