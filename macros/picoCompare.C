@@ -85,8 +85,8 @@ void picoCompare(
       cout << "no. Run = " << P24ia.Event_mRunId[0] << ", Event = " <<  P24ia.Event_mEventId[0] << " in TFG24c chain. Skip it." << endl;
       continue;
     }
-    cout << "P24ia run : " << P24ia.Event_mRunId[0] << ", event : " <<  P24ia.Event_mEventId[0] << " No.Primary trcsk = " << P24ia. Event_mNumberOfPrimaryTracks[0]
-	 << "\tTFG24c run : " << TFG24c.Event_mRunId[0] << ", event : " <<  TFG24c.Event_mEventId[0]<< " No.Primary trcsk = " << TFG24c.Event_mNumberOfPrimaryTracks[0] << endl;
+    cout << "P24ia run : " << P24ia.Event_mRunId[0] << ", event : " <<  P24ia.Event_mEventId[0] << " No.Primary tracks = " << P24ia. Event_mNumberOfPrimaryTracks[0]
+	 << "\tTFG24c run : " << TFG24c.Event_mRunId[0] << ", event : " <<  TFG24c.Event_mEventId[0]<< " No.Primary tracks = " << TFG24c.Event_mNumberOfPrimaryTracks[0] << endl;
     dZ->Fill(P24ia.Event_mPrimaryVertexZ[0] - TFG24c.Event_mPrimaryVertexZ[0]);
     dXY->Fill(P24ia.Event_mPrimaryVertexX[0] - TFG24c.Event_mPrimaryVertexX[0],P24ia.Event_mPrimaryVertexY[0] - TFG24c.Event_mPrimaryVertexY[0]);
     noPrim->Fill(P24ia.Event_mNumberOfPrimaryTracks[0], TFG24c.Event_mNumberOfPrimaryTracks[0]);
