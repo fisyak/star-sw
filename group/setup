@@ -473,8 +473,10 @@ switch ($pkg)
       if ( $?DECHO ) echo "setup:reset PATH = $PATH"
       if ( $?DECHO ) echo "setup:reset LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
       if ( $?DECHO ) echo "pkg = $pkg"
-      if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh) then
-        source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh
+# contrib => releases
+      if (-e /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh) then
+        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh"
+        source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh
 	if ($pkg == "gcc/12") then
 #	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
 #             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
@@ -485,6 +487,7 @@ switch ($pkg)
 #          endif
         endif
       else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh) then
+        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh"
         source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh
 	if ($pkg == "gcc/12") then
 #	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
