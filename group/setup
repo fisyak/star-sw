@@ -481,21 +481,21 @@ switch ($pkg)
 #	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
 #             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
 #          else 
-	     setup spackTFG
-	     spack env activate x86_64_gcc12
-             spack env view enable
+#	     setup spackTFG
+#	     spack env activate x86_64_gcc12
+#             spack env view enable
 #          endif
         endif
-      else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh) then
-        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh"
-        source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-el9/setup.csh
+      else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh) then
+        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh"
+        source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh
 	if ($pkg == "gcc/12") then
 #	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
 #             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
 #          else 
-	     setup spackTFG
-	     spack env activate x86_64_gcc12
-             spack env view enable
+#	     setup spackTFG
+#	     spack env activate x86_64_gcc12
+#             spack env view enable
 #          endif
         endif
       else 
