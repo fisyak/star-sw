@@ -215,18 +215,18 @@ Bfc_st BFC[] = { // standard chains
   {"B2007g","","","ry2007g,MakeEvent,in,tpc_daq,tpcI,UseXgeom,fcf,svt_daq,SvtD,ssddat,sptd,Idst,tags,Tree,evout"
    ,                                           "","","Base chain for 2007 ITTF geo g (tpc+svt+ssd)",kFALSE},
   {"P2007"       ,"" ,"",
-   "B2007,IAna,KeepSvtHit,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr5"
+   "B2007,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr5"
    ,                        "","","Production chain for 2007 data (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
 
   {"P2007g"      ,"" ,"",   // chain was set in 2008 to account for missing material
-   "B2007g,IAna,KeepSvtHit,VFMinuit2,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr5"
+   "B2007g,IAna,VFMinuit2,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr5"
    ,          "","","Production chain for 2007 data, revised 2008 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   // startup for calib
   {"P2007a"      ,"" ,"",
-   "B2007,IAna,KeepSvtHit,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr3"
+   "B2007,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr3"
    ,                  "","","Production chain for 2007 data Corr3 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   {"P2007b"      ,"" ,"",
-   "B2007,IAna,KeepSvtHit,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr4"
+   "B2007,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,ssdIT,Corr4"
    ,                  "","","Production chain for 2007 data Corr4 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   {"B2008" ,"","","ry2008,in,tpc_daq,tpcI,UseXgeom,fcf,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2008 ITTF (tpc)",kFALSE},
@@ -708,9 +708,9 @@ Bfc_st BFC[] = { // standard chains
   {"RC.y2005.nosvt" ,"","","P2005,tofDat,MakeEvent,pmdRaw,OShortR,OSpaceZ2",               "","","",kFALSE},
   {"RC.pp.y2005"     ,"","","pp2005a,tofdat,OSpaceZ2,OGridLeak3D"                         ,"","","",kFALSE},
   {"RC.pp.y2006"     ,"","","pp2006b,OSpaceZ2,OGridLeak3D"                                ,"","","",kFALSE},
-  {"RC.y2007"        ,"","","DbV20080418,B2007g,IAna,KeepSvtHit,VFMinuit3,emcDY2,ftpc,trgd,"
+  {"RC.y2007"        ,"","","DbV20080418,B2007g,IAna,VFMinuit3,emcDY2,ftpc,trgd,"
    "ZDCvtx,svtIT,ssdIT,Corr4,OSpaceZ2,OGridLeak3D"                                        ,"","","",kFALSE},
-  {"RC.y2007.NoSvt"  ,"","","DbV20080418,B2007g,IAna,KeepSvtHit,VFMinuit3,emcDY2,ftpc,"
+  {"RC.y2007.NoSvt"  ,"","","DbV20080418,B2007g,IAna,VFMinuit3,emcDY2,ftpc,"
    "trgd,ZDCvtx,Corr4,OSpaceZ2,OGridLeak3D"                                               ,"","","",kFALSE},
   {"RC.y2008"        ,"","","DbV20080712,P2008,OSpaceZ2,OGridLeak3D,beamLine"             ,"","","",kFALSE},
   {"RC.y2008.notof"  ,"","","DbV20080712,P2008,-ToF,-tofDat,-tofrMatch,-tofpMatch,-tofCalib,OSpaceZ2,"
