@@ -60,19 +60,23 @@ switch ($pkg)
     if ($?USE_CVMFS) then 
       if (-e /cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup-env.csh && $USE_CVMFS == 1) then
         set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup-env.csh"
+	if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
       endif 
     else 
       if (-e "/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh") then
         set SPACK_SETUP="/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh"
+	if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
     endif
-    if ( -e $SPACK_SETUP ) then
+    if ( -r $SPACK_SETUP ) then
       source $SPACK_SETUP 
+    else
+	if ($?DECHO) echo "SPACK_SETUP has not been set"
     endif
       breaksw
     case "spack":
     case "SPACK":
       set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
-      if ( -e $SPACK_SETUP && $?USE_CVMFS && $USE_CVMFS == 1)) then
+      if ( -e $SPACK_SETUP && $?USE_CVMFS && $USE_CVMFS == 1) then
        source $SPACK_SETUP 
       endif
         breaksw
