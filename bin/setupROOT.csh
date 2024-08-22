@@ -150,6 +150,10 @@ switch ( $STAR_HOST_SYS )
 endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
+    case *gcc12*:
+     setenv DISABLE "--disable-python --disable-xrootd --disable-pythia8"
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
+     breaksw
     case *gcc1*:
      setenv DISABLE "--disable-xrootd --disable-pythia8"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
