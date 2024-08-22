@@ -705,8 +705,7 @@
  "%FC %FPPFLAGS %FFLAGS %EXTRA_FPPFLAGS %FDEBUG %_IFLAGS %EXTRA_FCPATH -c %< %Fout%>;";
  my $F90COM = 
  "cd %<:d; %FC %FPPFLAGS %FFLAGS %EXTRA_FPPFLAGS %FDEBUG %FEXTEND %_IFLAGS %EXTRA_FCPATH -c %<:f %Fout%>:f;";
-  my $FCviaAGETOFCOM25
-
+  my $FCviaAGETOFCOM
   = " test -f %>:b.g && rm %>:b.g; %FPP %FPPFLAGS %EXTRA_FPPFLAGS %_IFLAGS %EXTRA_FCPATH %<:b.F -o %>:b.g;"
   . "cd %>:d; test -f %>:F.for && rm %>:F.for; %AGETOF %AGETOFLAGS -V f %<:F.g -o %>:F.for; cd -;";
   $FCviaAGETOFCOM .= " if [ -f %>:b.for ]; then %FC %FFLAGS %EXTRA_FPPFLAGS %FDEBUG -c %>:b.for %Fout%>;";
