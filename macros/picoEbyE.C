@@ -1,5 +1,5 @@
 //  root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault")' picoEbyE.C+
-
+//   root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault")' 'picoEbyE.C+("old/*picoDst.root","new/*picoDst.root")'
 #if ! defined(__CINT__) && ! defined(__CLING__)
 #include "StBFChain/StBFChain.h"
 #include "StPicoEvent/StPicoDst.h"
@@ -35,15 +35,15 @@ void picoEbyE(const Char_t *oldF = "old.root", const Char_t *newF = "new.root",
   TH2F *XON = new TH2F("XON","X (New vs Old)", 400,  -1.5,   0.5, 400,  -1.5,   0.5); 
   TH2F *YON = new TH2F("YON","Y (New vs Old)", 400,  -3.0,   1.0, 400,  -3.0,  -1.0); 
   TH2F *ZON = new TH2F("ZON","Z (New vs Old)", 400, 199.0, 201.0, 400, 199.0, 201.0); 
-  TH2F *noPTrkON = new TH2F("noPTrkON","No. primary tracks Old vs. New",500,0.5,500.5, 500, 0.5, 500.5);
-  TH2F *noPRTrkON = new TH2F("noPRTrkON","No. primary tracks recorded Old vs. New",500,0.5,500.5, 500, 0.5, 500.5);
+  TH2F *noPTrkON = new TH2F("noPTrkON","No. primary tracks New versus Old",500,0.5,500.5, 500, 0.5, 500.5);
+  TH2F *noPRTrkON = new TH2F("noPRTrkON","No. primary tracks recorded New versus Old",500,0.5,500.5, 500, 0.5, 500.5);
   TH2F *noPROld = new TH2F("noPROld","No. primary tracks recorded versus No. primary tracks Old",500,0.5,500.5, 500, 0.5, 500.5);
   TH2F *noPRNew = new TH2F("noPRNew","No. primary tracks recorded versus No. primary tracks New",500,0.5,500.5, 500, 0.5, 500.5);
   picoDstMko = new StPicoDstMaker(2,oldF); picoDstMko->SetName("rPicoOld"); 
   picoDstMkn = new StPicoDstMaker(2,newF); picoDstMkn->SetName("rPicoNew"); 
   TH2F *ypT[2];
-  ypT[0] = new TH2F("ypTO","pTL10 versus Ycms for negative particles (Old)", 40, -2.0, 2.0, 100, -2.0, 2.0); 
-  ypT[1] = new TH2F("ypTN","pTL10 versus Ycms for negative particles (New)", 40, -2.0, 2.0, 100, -2.0, 2.0); 
+  ypT[0] = new TH2F("ypTO","pTL10 versus Ycms for negative particles (Old)", 60, -1.5, 1.5, 100, -1.5, 1.0); 
+  ypT[1] = new TH2F("ypTN","pTL10 versus Ycms for negative particles (New)", 60, -1.5, 1.5, 100, -1.5, 1.0); 
   StBFChain *chain = (StBFChain *) StMaker::GetTopChain();
   chain->AddBefore("db",picoDstMko);
   chain->AddBefore("db",picoDstMkn);
