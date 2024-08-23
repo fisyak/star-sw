@@ -22,7 +22,7 @@ void StObjLink::Streamer(TBuffer &R__b)
      if (!ubj) 	return;
      StProxyUrr *urr = new StProxyUrr(&fLink);
      urr->push_back(ubj);
-     StXRefManager::fgManager->AddColl(urr);
+     if (StXRefManager::fgManager) StXRefManager::fgManager->AddColl(urr);
 
    } else {
 const static UInt_t kMustBeOne  = kIsOnHeap  | kNotDeleted;
@@ -185,7 +185,7 @@ void StRefArray::Streamer(TBuffer &R__b)
         for (Int_t i = 0; i < nobjects; i++) {
          R__b >> ubj ; urr->push_back(ubj);
         }
-        StXRefManager::fgManager->AddColl(urr);
+        if (StXRefManager::fgManager) StXRefManager::fgManager->AddColl(urr);
       }
 
    } else {
@@ -288,7 +288,7 @@ void StStrArray::Streamer(TBuffer &R__b)
    if (R__b.IsReading()) {
       Version_t R__v = R__b.ReadVersion(); if (R__v) { }
       StObjArray::Streamer(R__b);
-      if (R__v >=3) 
+      if (R__v >=3 && StXRefManager::fgManager) 
          StXRefManager::fgManager->AddColl(this);
    } else {
       R__b.WriteVersion(Class());
