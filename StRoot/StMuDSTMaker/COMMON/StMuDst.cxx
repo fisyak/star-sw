@@ -1116,17 +1116,15 @@ void StMuDst::Print(Option_t *option) const {
   } else {
     cout << "Current PrimaryVertex is not set" << endl;
   }
-  cout << "\tGlobalTracks "  << numberOfGlobalTracks();
-  cout << "\tCovPrimTrack "  << covPrimTrack()->GetEntriesFast();
-  cout << "\tCovGlobTrack "  << covGlobTrack()->GetEntriesFast();
-  cout << "\tKFVertices "    << KFVertices()->GetEntriesFast();
-  cout << "\tKFTracks "      << KFTracks()->GetEntriesFast();
-  cout << "\t" << StMuArrays::mcArrayTypes[0] << " " << mcVertices()->GetEntriesFast();
-  cout << "\t" << StMuArrays::mcArrayTypes[1] << " " << mcTracks()->GetEntriesFast();
-  cout << endl;
+  if (numberOfGlobalTracks())           cout << "\tGlobalTracks "  << numberOfGlobalTracks();
+  if (covPrimTrack()->GetEntriesFast()) cout << "\tCovPrimTrack "  << covPrimTrack()->GetEntriesFast();
+  if (covGlobTrack()->GetEntriesFast()) cout << "\tCovGlobTrack "  << covGlobTrack()->GetEntriesFast();
+  if (KFVertices()->GetEntriesFast())   cout << "\tKFVertices "    << KFVertices()->GetEntriesFast();
+  if (KFTracks()->GetEntriesFast())     cout << "\tKFTracks "      << KFTracks()->GetEntriesFast();
+  if (mcVertices()->GetEntriesFast())   cout << "\t" << StMuArrays::mcArrayTypes[0] << " " << mcVertices()->GetEntriesFast();
+  if (mcTracks()->GetEntriesFast())     cout << "\t" << StMuArrays::mcArrayTypes[1] << " " << mcTracks()->GetEntriesFast();
 #endif /* __TFG__VERSION__ */
-  if (mCurrVertexId != 0)
-    cout << "( note vtx_id " << mCurrVertexId << " ) " ; 
+  if (mCurrVertexId != 0)               cout << "( note vtx_id " << mCurrVertexId << " ) " ; 
 #ifndef __TFG__VERSION__
   cout << numberOfGlobalTracks() << " global " << endl;
 #endif /* ! __TFG__VERSION__ */
@@ -1172,7 +1170,8 @@ void StMuDst::Print(Option_t *option) const {
   if (muFmsCollection())    {cout << "\tFMS"; i++;}
   if (pmdCollection())      {cout << "\tPMD"; i++;}
   if (numberOfTofHit())     {cout << "\tTOF"; i++;}
-  if (i) cout <<  " data presen" << endl;
+  if (i) cout <<  " data present";
+  cout << endl;
 #endif /* __TFG__VERSION__ */
 }
 

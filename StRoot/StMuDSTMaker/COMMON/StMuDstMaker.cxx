@@ -740,11 +740,11 @@ Int_t StMuDstMaker::MakeRead(Int_t RunId, Int_t EventId)
        if (! mStMuDst->IsGoodTrigger()) return kStSkip;
 #endif /* __TFG__VERSION__ */
      }
-     catch(StMuExceptionEOF e) {
+     catch(StMuExceptionEOF &e) {
        e.print();
        returnStarCode = kStEOF;
      }
-     catch(StMuException e) {
+     catch(StMuException &e) {
         e.print();
         returnStarCode = kStERR;
      }
@@ -764,11 +764,11 @@ Int_t StMuDstMaker::MakeRead()
        if (! mStMuDst->IsGoodTrigger()) return kStSkip;
 #endif /* __TFG__VERSION__ */
      }
-     catch(StMuExceptionEOF e) {
+     catch(StMuExceptionEOF &e) {
        e.print();
        returnStarCode = kStEOF;
      }
-     catch(StMuException e) {
+     catch(StMuException &e) {
         e.print();
         returnStarCode = kStERR;
      }
@@ -785,11 +785,11 @@ Int_t StMuDstMaker::MakeWrite(){
      try {
        write();
      }
-     catch(StMuExceptionEOF e) {
+     catch(StMuExceptionEOF &e) {
        e.print();
        returnStarCode = kStEOF;
      }
-     catch(StMuException e) {
+     catch(StMuException &e) {
         e.print();
         returnStarCode = kStERR;
      }
@@ -815,7 +815,7 @@ void StMuDstMaker::fill(){
   try {
     fillTrees(mStEvent);
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -828,7 +828,7 @@ void StMuDstMaker::write(){
   try {
     fill();
   }
-  catch (StMuException e) {
+  catch (StMuException &e) {
     e.print();
     return;
   }
@@ -1073,7 +1073,10 @@ Int_t StMuDstMaker::read(Int_t RunId, Int_t EventId){
   if (! mChain->GetTreeIndex()) {
     mChain->BuildIndex("MuEvent.mRunInfo.mRunId","MuEvent.mEventInfo.mId");
   }
-  if (mChain->GetEntryWithIndex(RunId,EventId) <= 0) return kStSkip;
+  mEventCounter  = mChain->GetEntryNumberWithIndex(RunId, EventId);
+  if (mEventCounter < 0) return kStSkip;
+  int bytes = mChain->GetEntry(mEventCounter++);
+  if (bytes <= 0)  return kStEOF;
   UpdateMuDst();
   return kStOK;
 }
@@ -1217,7 +1220,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
   try {
     fillMC();
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -1242,7 +1245,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
     fillFgt(ev);
     fillEzt(ev);
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -1250,7 +1253,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
   try {
     fillVertices(ev);
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -1258,7 +1261,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
   try {
     fillpp2pp(ev);
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -1266,7 +1269,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
   try {
     fillTracks(ev,mTrackFilter);
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -1274,7 +1277,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
   try {
     fillL3Tracks(ev, mL3TrackFilter);
   }
-  catch(StMuException e) {
+  catch(StMuException &e) {
     e.print();
     throw e;
   }
@@ -1284,7 +1287,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
     try {
       fillStrange(mStStrangeMuDstMaker);
     }
-    catch(StMuException e) {
+    catch(StMuException &e) {
       e.print();
       throw e;
     }
@@ -1292,7 +1295,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
 #endif
 #ifndef __TFG__VERSION__
 
-  //catch(StMuException e) {
+  //catch(StMuException &e) {
   //  e.print();
   //  throw e;
   //}
@@ -2138,7 +2141,7 @@ int StMuDstMaker::addTrack(TClonesArray* tca, const StEvent*event, const StTrack
     }
     index = counter;
   }
-  catch (StMuException e) {
+  catch (StMuException &e) {
     IFDEBUG3(e.print());
   }
   return index;  /// return index to self if newly created, else return -1;

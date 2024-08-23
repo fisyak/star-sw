@@ -57,7 +57,7 @@ StMuEvent::StMuEvent(const StEvent* event) : mPrimaryVertexError(-999.,-999.,-99
   try {
     fill(event);
   }
-  catch (StMuException e) {
+  catch (StMuException &e) {
     throw e;
   }
 }
