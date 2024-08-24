@@ -30,14 +30,14 @@ void MuEbyE(
     fileO.ReplaceAll("MuDst.","");
   }
   TFile *fOut = new TFile(fileO,"recreate");
-  TH2D *dX = new TH2D("dX","dX (West - East) versus Z : dX : Z",420,-210,210,400,-2.,2.); 
-  TH2D *dY = new TH2D("dY","dY (West - East) versus Z : dY : Z",420,-210,210,400,-2.,2.); 
-  TH2D *dZ = new TH2D("dZ","dZ (West - East) versus Z : dZ : Z",420,-210,210,400,-2.,2.); 
-  TH2D *dT = new TH2D("dT","dT(#musec) (West - East) versus Z : dT : Z",420,-210,210,1000,-0.5,0.5); 
-  TH2D *dXY2[2] = {new TH2D("dXY2W","dY versus dX of the second vertex (West) : dX2 : dY2",400,-2,2,400,-2,2),
-		   new TH2D("dXY2E","dY versus dX of the second vertex (East) : dX2 : dY2",400,-2,2,400,-2,2)};
-  TH1D *dZ2[2] = {new TH1D("dZ2W","dZ of the second vertex (West) : dZ2",400,-2,2),
-		  new TH1D("dZ2E","dZ of the second vertex (East) : dZ2",400,-2,2)};
+  TH2D *dX = new TH2D("dX","dX (West - East) versus Z ; dX ; Z",420,-210,210,400,-2.,2.); 
+  TH2D *dY = new TH2D("dY","dY (West - East) versus Z ; dY ; Z",420,-210,210,400,-2.,2.); 
+  TH2D *dZ = new TH2D("dZ","dZ (West - East) versus Z ; dZ ; Z",420,-210,210,400,-2.,2.); 
+  TH2D *dT = new TH2D("dT","dT(#musec) (West - East) versus Z ; dT ; Z",420,-210,210,1000,-0.5,0.5); 
+  TH2D *dXY2[2] = {new TH2D("dXY2W","dY versus dX of the second vertex (West) ; dX2 ; dY2",400,-2,2,400,-2,2),
+		   new TH2D("dXY2E","dY versus dX of the second vertex (East) ; dX2 ; dY2",400,-2,2,400,-2,2)};
+  TH1D *dZ2[2] = {new TH1D("dZ2W","dZ of the second vertex (West) ; dZ2",400,-2,2),
+		  new TH1D("dZ2E","dZ of the second vertex (East) ; dZ2",400,-2,2)};
   muDstMko = new StMuDstMaker(0,0,oldf,"","",99999,"MuDstOld"); // no East
   muDstMkn = new StMuDstMaker(0,0,newf,"","",99999,"MuDstNew"); // no West
   StMuDstMaker *muDstMk[2] = {muDstMko, muDstMkn};
