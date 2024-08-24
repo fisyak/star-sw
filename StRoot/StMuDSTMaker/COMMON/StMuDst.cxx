@@ -110,7 +110,7 @@ Int_t StMuDst::mCurrVertexId                     = -2;
 TObjArray* StMuDst::mCurrPrimaryTracks           = 0;
 #else /* __TFG__VERSION__ */
 Int_t StMuDst::MinNoTpcMcHits = 10;
-Int_t StMuDst::MinNoTpcRcHits = 10xs;
+Int_t StMuDst::MinNoTpcRcHits = 10;
 Double_t StMuDst::fgerMax = 0;    // 50 um
 Double_t StMuDst::fgdca3Dmax = 0; // 50 cm
 Double_t StMuDst::fgVxXmin = 0, StMuDst::fgVxXmax = 0, StMuDst::fgVxYmin = 0, StMuDst::fgVxYmax = 0;
