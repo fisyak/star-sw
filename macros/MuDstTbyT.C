@@ -66,6 +66,7 @@ void MuDstTbyT(
   Int_t nev = 0;
   Int_t ok = chain->MakeEvent();
   //  cout << "Start Loop" << endl;
+  Bool_t FXT = St_beamInfoC::instance()->IsFixedTarget();
   while (! ok) {
     //    cout << "Checks events " << endl;
     oldMuDst = muDstMko->muDst(); oldMuDst->SetInstance(); oldEv = oldMuDst->event(); NoGTrkOld = oldMuDst->numberOfGlobalTracks(); NoPvtxOld = oldMuDst->numberOfPrimaryVertices(); //cout << "old(West) N global " << NoGTrkOld << endl;
@@ -89,7 +90,6 @@ void MuDstTbyT(
 	// Require only one primary vertex in Z range [195,205];
 	StMuDstMaker *muDstMk[2] = {muDstMko, muDstMkn};
 	StMuDst *MuDst[2] = {oldMuDst, newMuDst};
-	StThreeVectorF xyz[2];
 	Int_t NoPvtx[2] = {NoPvtxOld, NoPvtxNew};
 	if (NoPvtxOld && NoPvtxNew) {
 	  Bool_t okVX = kTRUE;
@@ -97,19 +97,25 @@ void MuDstTbyT(
 	  for (Int_t k = 0; k < 2; k++) {// old new 
 	    MuDst[k]->SetInstance();
 	    Int_t NPV = MuDst[k]->numberOfPrimaryVertices(); // cout << "k = " << k << " NPV = " << NPV << endl;
-	    for(UInt_t  iPV=0; iPV < NPV; iPV++) {
-	      StMuPrimaryVertex *Vtx = MuDst[k]->primaryVertex(iPV);
-	      if (TMath::Abs(Vtx->position().z() - 200) < 5.0) {
-		if (BestVtx[k]) {
-		  okVX = kFALSE;
-		  break;
+	    if (! FXT) {
+	      StMuPrimaryVertex *Vtx = MuDst[k]->primaryVertex(0);
+	      BestVtx[k] = Vtx;
+	      continue;
+	    } else {
+	      for(UInt_t  iPV=0; iPV < NPV; iPV++) {
+		StMuPrimaryVertex *Vtx = MuDst[k]->primaryVertex(iPV);
+		if (TMath::Abs(Vtx->position().z() - 200) < 5.0) {
+		  if (BestVtx[k]) {
+		    okVX = kFALSE;
+		    break;
+		  }
+		  // cout << k << "\t"; Vtx->Print();
+		  BestVtx[k] = Vtx;
+		  // cout << "xyz[" << k << "] = " << BestVtx[k]->position() << endl;
 		}
-		// cout << k << "\t"; Vtx->Print();
-		BestVtx[k] = Vtx;
-		// cout << "xyz[" << k << "] = " << BestVtx[k]->position() << endl;
 	      }
+	      if (! okVX) break;
 	    }
-	    if (! okVX) break;
 	  }
 	  if (BestVtx[0] &&  BestVtx[1]) {
 	    // cout << "0\t" << BestVtx[0]->position() << endl;
