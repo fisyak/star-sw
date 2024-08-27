@@ -24,6 +24,7 @@
 #include "SystemOfUnits.h"
 #include "StKFVertexMaker.h"
 #include "StDetectorDbMaker/St_vertexSeedC.h"
+#include "StDetectorDbMaker/St_beamInfoC.h"
 #include "TRMatrix.h"
 #include "TRSymMatrix.h"
 #include "TRVector.h"
@@ -230,9 +231,10 @@ void StKFVertexMaker::Clear(Option_t *option) {
   StMaker::Clear(option);
 }
 //_____________________________________________________________________________
-Int_t StKFVertexMaker::Init(){
+Int_t StKFVertexMaker::InitRun(Int_t runumber){
   mBeamLine = IAttr("beamLine");
-  return StMaker::Init();
+  StTMVARanking::SetFXT(St_beamInfoC::instance()->IsFixedTarget());
+  return kStOK;
 }
 //________________________________________________________________________________
 void StKFVertexMaker::Fit() {

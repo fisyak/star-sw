@@ -51,7 +51,7 @@ class StKFVertexMaker : public StMaker {
   void                           SimpleMindedRank(StPrimaryVertex *primV);	
   void                           TMVARank(StPrimaryVertex *primV);
   void           	 	 Clear(Option_t *option="");					  		   
-  virtual Int_t  	 	 Init();							  		   
+  virtual Int_t                  InitRun(Int_t runumber);
   void           	 	 Fit();							  		   
   virtual void                   ReFitToVertex();  
   virtual void                   ReFitToStVertex();  
