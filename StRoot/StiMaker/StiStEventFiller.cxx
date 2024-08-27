@@ -1631,7 +1631,7 @@ enum dcaEmx {kImpImp,
 // local HIT
   aux.mIdTruth = stHit->idTruth();
   aux.mQaTruth = stHit->qaTruth();
-
+  aux.AdcL     = stiHit->AdcL();
   aux.mVertex = (unsigned char)track->isPrimary();
   aux.nHitCand = node->getHitCand();
   aux.iHitCand = node->getIHitCand();
