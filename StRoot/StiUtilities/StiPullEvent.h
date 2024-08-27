@@ -168,6 +168,7 @@ float gPPulErr;			//  dPhi Pul err in global Sti frame
 float gZPulErr;			//  dZ   Pul err in global Sti frame
 float gPulEmx[3];			//  hit error mtx:PhiRPhiR,PhiRZ,ZZ
 
+float AdcL;                      // TPC log(ADC)
 float gPsi;			//  track Psi in global  Sti frame
 float gDip;			//  track Dip in global  Sti frame
 short int mIdTruth;
