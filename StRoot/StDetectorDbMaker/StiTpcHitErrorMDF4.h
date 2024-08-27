@@ -1,6 +1,5 @@
 #ifndef StiTpcHitErrorMDF4_h
 #define StiTpcHitErrorMDF4_h
-
 #include "Sti/StiNodePars.h"
 #include "St_MDFCorrection4C.h"
 #include "StDetectorDbMaker/St_tpcDriftVelocityC.h"
@@ -17,7 +16,7 @@ class StiTpcHitErrorMDF4 : public St_MDFCorrection4C {
     calculateError(pars->z(),  pars->eta(), pars->tanl(),  ecross, edip, fudgeFactor, AdcL, dZ, dX);
   }
  protected:
-  StiTpcHitErrorMDF4(St_MDFCorrection4 *table=0) : St_MDFCorrection4C(table) {}
+ StiTpcHitErrorMDF4(St_MDFCorrection4 *table=0) : St_MDFCorrection4C(table) {}
   virtual ~StiTpcHitErrorMDF4() {}
  private:
   void convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const;
@@ -48,7 +47,7 @@ class StiTpcOuterHitErrorMDF4 : public StiTpcHitErrorMDF4 {
   virtual ~StiTpcOuterHitErrorMDF4() {fgInstance = 0;}
  private:
   static StiTpcOuterHitErrorMDF4* fgInstance;
-  Double_t padPitch() const {return St_tpcPadConfigC::instance()->innerSectorPadPitch();}
+  Double_t padPitch() const {return St_tpcPadConfigC::instance()->outerSectorPadPitch();}
   ClassDef(StiTpcOuterHitErrorMDF4,1) //C++ TChair for MDFCorrection4 table class
 };
 

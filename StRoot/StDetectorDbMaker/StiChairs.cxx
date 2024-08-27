@@ -69,11 +69,15 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   static const Double_t min2Err = hundredMicrons*hundredMicrons;
   static const Double_t max2Err = 1.;
   static const Double_t scale = 1.;
+  static Double_t timeP = -1;
+  static Double_t padP  = -1;
+  timeP = timePitch();
+  padP  = padPitch();
   convert(_z, _eta, _tanl, AdcL);
   Double_t dPadSigmaSQ  = Eval(  0, fxx);
   Double_t dTimeSigmaSQ = Eval(  2, fxx);
-  ecross = scale*padPitch() *padPitch() *dPadSigmaSQ ;
-  edip   = scale*timePitch()*timePitch()*dTimeSigmaSQ;
+  ecross = scale*padP *padP *dPadSigmaSQ ;
+  edip   = scale*timeP*timeP*dTimeSigmaSQ;
   Int_t fail = 0;
   if (ecross< min2Err) {ecross = min2Err; fail++;}
   if (ecross> max2Err) {ecross = max2Err; fail++;}
@@ -83,14 +87,14 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
     if (fail) *dZ = 0;
     else {
       Double_t dTime        = Eval( 3, fxx);
-      *dZ = - timePitch()*dTime * TMath::Sign(1., _z);
+      *dZ = - timeP*dTime * TMath::Sign(1., _z);
     }
   }
   if (dX) {
     if (fail) *dX = 0;
     else {
       Double_t dPad         = Eval( 1, fxx);
-      *dX = - padPitch()*dPad;
+      *dX = - padP*dPad;
     }
   }
   if (fudgeFactor > 1.0) {
