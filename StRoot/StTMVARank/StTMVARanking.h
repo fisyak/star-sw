@@ -19,11 +19,14 @@ class StTMVARanking : public TObject {
   static Float_t         TMVARank(StMuPrimaryVertex *primV);
   static Float_t         SimpleMindedRank(StPrimaryVertex *primV);
   static Float_t         SimpleMindedRank(StMuPrimaryVertex *primV);
+  static void            SetFXT(Bool_t k = kFALSE) {fgFXT = k;}
+  static Bool_t          IsFXT() {return fgFXT;}
  private:
   static StTMVARanking* fgInstance;
   static TMVA::Reader  *fgReader;
   static TString        fMethod;
   static TString        fMethodE;
+  static Bool_t         fgFXT;
   ClassDef(StTMVARanking,1)
 };
 #endif /* __StTMVARanking_h__ */

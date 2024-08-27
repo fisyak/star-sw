@@ -40,6 +40,7 @@ StTMVARanking*  StTMVARanking::fgInstance = 0;
 TMVA::Reader*   StTMVARanking::fgReader = 0;
 TString         StTMVARanking::fMethod  = TString("");
 TString         StTMVARanking::fMethodE  = TString("Method");
+Bool_t          StTMVARanking::fgFXT = kFALSE;
 //________________________________________________________________________________
 StTMVARanking::StTMVARanking(const Char_t *listOfActiveVariable, const Char_t *weightfile, const Char_t *Method) {
   fMethod = Method;
@@ -719,6 +720,7 @@ Float_t StTMVARanking::SimpleMindedRank(StPrimaryVertex *primV) {
   rank -= Wveto*(primV->numNotMatchesWithBEMC() + primV->numNotMatchesWithEEMC());
   if (primV->numTracksTpcWestOnly() > 0 && primV->numTracksTpcEastOnly() > 0) 
     rank += Wmatch*TMath::Min(primV->numTracksTpcWestOnly(),primV->numTracksTpcEastOnly());
+  if (fgFXT && TMath::Abs(primV->position().z() - 200.0) < 5.0) rank += 100;
   return rank;
 }
 //________________________________________________________________________________
@@ -771,5 +773,6 @@ Float_t StTMVARanking::SimpleMindedRank(StMuPrimaryVertex *primV) {
   rank -= Wveto*(primV->numNotMatchesWithBEMC() + primV->numNotMatchesWithEEMC());
   if (primV->numTracksTpcWestOnly() > 0 && primV->numTracksTpcEastOnly() > 0) 
     rank += Wmatch*TMath::Min(primV->numTracksTpcWestOnly(),primV->numTracksTpcEastOnly());
+  if (fgFXT && TMath::Abs(primV->position().z() - 200.0) < 5.0) rank += 100;
   return rank;
 }
