@@ -311,6 +311,8 @@ public:
   static TClonesArray* fttArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the fst arrays
   static TClonesArray* fstArray(int type);
+  /// returns pointer to the n-th TClonesArray from the rhicf arrays 
+  static TClonesArray* fwdTrackArray(int type) { return instance()->fwdTrackArrays[type]; }
   /// returns pointer to the n-th TClonesArray from the pmd arrays
   static TClonesArray* pmdArray(int type) ;
   /// returns pointer to the n-th TClonesArray from the tof arrays
