@@ -151,6 +151,8 @@ public:
     void setVy(Float_t vy) {_vy = vy;}
     void setdY(Float_t dY) {_dY = dY;}
     void setdZ(Float_t dZ) {_dZ = dZ;}
+    void setAdcL(Float_t AdcL) {_AdcL = AdcL;}
+    float AdcL() const {return _AdcL;}
     void reset();
     void unset(){;}
     void rotate(double angle);
@@ -185,6 +187,7 @@ protected:
     // drift velocities cm/mksec( 0 for non driting )
     Float_t _vy, _vz;
     Float_t _dY, _dZ; // track parameter dependent systematics in pad and time direction (TPC)
+    Float_t _AdcL;    // log of ADC used for TPC errors calculation
     char  mEnd[1];
 public:
     Int_t mCount;
