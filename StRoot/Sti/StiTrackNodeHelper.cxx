@@ -1131,6 +1131,7 @@ int StiTrackNodeHelper::getHitErrors(const StiHit *hit,const StiNodePars *pars,S
       Double_t dZ;
       calcMDF4->calculateError(pars,hrr->hYY,hrr->hZZ, fudgeFactor, AdcL, &dZ);
       ((StiHit *) hit)->setdZ(dZ);
+      ((StiHit *) hit)->setAdcL(AdcL);
     } else {
       calc->calculateError(pars,hrr->hYY,hrr->hZZ, fudgeFactor);
     }
