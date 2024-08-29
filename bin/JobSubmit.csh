@@ -40,6 +40,7 @@ end
 #  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2021StiCA.Minuit.TFG20a.xml
 #  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2021.xml
 #================================= Summurizing  ===============================================
+exit 0;
 @ count = 0
 foreach done (`ls -1d ???/*/Done`)
   set d = `dirname ${done}`

@@ -18,7 +18,7 @@ foreach done (`ls -1d ???/*`)
 #    root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst",kTRUE)' >&  Chain.log  &
 #    root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst",kTRUE)' >&  PChain.log  &
    root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
-   root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
+#   root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
     @ countJ++
   endif
   cd -;
@@ -27,5 +27,5 @@ exit 0;
 if ($countJ > 0) then
   sleep 10; 
   touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
-  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
+#  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
 endif
