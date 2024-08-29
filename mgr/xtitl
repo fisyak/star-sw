@@ -11,11 +11,11 @@ if [ $# -eq 0 ]; then
  v=""
  c=""
  s=""
- if test ! "xUSE_CVMFS" = "x"; then
+ if test ! "x$USE_CVMFS" = "x"; then
      c="_cvmfs"
  fi
- if test ! "xSPACK_ROOT" = "x"; then
-     c="_spack"
+ if test ! "x$SPACK_ROOT" = "x"; then
+     s="_spack"
  fi
 # if test ! "x$ROOT_LEVEL" = "x"; then
 #  r=$ROOT_LEVEL
