@@ -6,10 +6,13 @@
   setenv STARFPE NO
 #  setenv NODEBUG yes
 #  starver .DEV2
+#   starver TFG24c
 #  setup cvmfs
 #  setup gcc
 #  starver TFG24c
-  set evtsFile = $INPUTFILE0;
+  set workdir = `dirname ${INPUTFILE0}`
+  cd ${workdir}
+  set evtsFile = `basename ${INPUTFILE0}`
 #     set f        = 1
 #     set l        = 5000000
   echo "${evtsFile}"
@@ -19,8 +22,10 @@
   set logFile  = ${filel}B.log
 #  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
   set muFile = ${filel}.MuDst.root
-  if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
-  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
+#  if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
+  if (-r $muFile) exit 0;
+#  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
+  set bla = ${filel}.bla.root
   if (-r ${bla}) exit 0;
   touch ${bla}
 # 2019    root4star -b -q 'bfc.C(1000,"P2019a,StiCA,PicoVtxDefault,BEmcChkStat,OSpaceZ2,OGridLeakFull,-OPr13,OPr40,-hitfilt,evout,-beamline3D","'${evtsFile}'")' &gt;&amp; ${logFile}
@@ -61,10 +66,10 @@
   echo ${year} | grep 20
   if ($? != 0) exit 0;
   set PicoMode = ",PicoVtxVpdOrDefault"
-  echo ${SUBMITTINGDIRECTORY} | grep fixed
+  echo ${PWD} | grep fixed
   if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT"
   set Cosmic = "";
-  echo ${SUBMITTINGDIRECTORY} | grep Cosmic
+  echo ${PWD} | grep Cosmic
   if ($? == 0) set Cosmic = ",Cosmic"
   set Chain = "";
   switch ($year)
@@ -91,9 +96,9 @@
       exit 0;
   endsw
   set WestEast = "";
-  echo "${SUBMITTINGDIRECTORY}" | grep -i WestOff
+  echo "${PWD}" | grep -i WestOff
   if ($? == 0) set WestEast = ",WestOff"
-  echo "${SUBMITTINGDIRECTORY}" | grep -i EastOff
+  echo "${PWD}" | grep -i EastOff
   if ($? == 0)  set WestEast = ",EastOff"
 #  set evout = ",evout";
 #  if ($JOBINDEX > 2) then
@@ -109,8 +114,9 @@ set evout = ",-evout";
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q -x  'bfc.C(100000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
-  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
-#  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder,StiKFVertex,-genvtx","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder,StiKFVertex,-genvtx,StiPulls","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder,StiPulls","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
    rm ${bla}
   gzip ${logFile}
@@ -130,5 +136,5 @@ set evout = ",-evout";
 <input URL="command:daq_2019T.pl" />
 <input URL="file:/star/data03/daq/2019/160/*/st_physics_adc_2016002*.daq" />
 -->
-<input URL="command:daqdR.local.pl" />
+<input URL="file:/hlt/cephfs/reco/Pulls.DEV2/*/*/*/*.daq" />
 </job>
