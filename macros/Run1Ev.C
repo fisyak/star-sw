@@ -109,7 +109,7 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 5,
 	StarVMCApplication::Instance()->SetPrimaryGenerator(gener);
 	cout << "Set StarMCSimplePrimaryGenerator" << endl;
 	//	gener->SetOrigin(1,-2,0);
-	gener->SetOrigin(0,190,100);
+	// gener->SetOrigin(0,190,100);
 	cout << "Set Origin "; gener->GetOrigin().Print();
       }
 #if 1

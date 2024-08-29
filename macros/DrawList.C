@@ -85,6 +85,7 @@ TObjArray  GetHistList(const Char_t *pattern = "OuterPadRcNoiseConv*") {
     while ((key = (TKey*) nextkey())) {
       TString Name(key->GetName());
       if (Name.Contains(reg)) {
+	if (Name.Contains("_")) continue;
 	if (Name == oldName) continue;
 	oldName = Name;
 	obj = key->ReadObj();
@@ -590,6 +591,80 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
       cout << Form("<%s> = %9.4f +/- %8.4f", RF[rf], XAV[rf], sigma/TMath::Sqrt(NFits[rf]-1)) << endl;
     }
   }
+#if 1
+  TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
+  //  Double_t zoom = 1.;
+  //  zoomer->SetZoomFactor(zoom);
+  TQtCanvas2Html  TQtCanvas2Html(c,  900, 900, "./", zoomer);
+  //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
+#endif
+}
+//________________________________________________________________________________ StiPulls
+void DrawP3List(const Char_t *pattern = "pullYGAvsZAdcL", const Char_t *proj = "zyW", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
+  TString patt(pattern);
+  TPRegexp reg(pattern);
+  TString cTitle("c");
+  TString Proj(proj);
+  cTitle += patt;
+  cTitle += ctitle;
+  cTitle.ReplaceAll(".*","");
+  cTitle.ReplaceAll("^","");
+  cTitle.ReplaceAll("$","");
+  cTitle.ReplaceAll("*","");
+  cTitle += proj;
+  TSeqCollection *files = gROOT->GetListOfFiles();
+  if (! files) return;
+  TObjArray array = GetHistList(pattern);
+  //________________________________________________________________________________
+  Int_t NF = array.GetEntriesFast();
+  if (NF < 1) return;
+  if (! nx || ! ny) {
+    ny = TMath::Ceil(TMath::Sqrt(NF));
+    nx = NF/ny;
+    if (nx*ny != NF) nx++;
+  }
+  cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
+  TCanvas *c = new TCanvas(cTitle,cTitle,200*nx,200*ny);
+  c->Divide(nx,ny);
+  TObjArray *arr = new TObjArray(4);
+  for (Int_t i = 0; i < NF; i++) {
+    TH1 *hist = (TH1*) array.At(i);
+    hist->GetDirectory()->cd();
+    //    TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
+    TString dirName(gSystem->BaseName(hist->GetDirectory()->GetName()));
+    if (dirName.EndsWith("F")) { dirName = hist->GetDirectory()->GetName();}
+    dirName.ReplaceAll("../","");
+    dirName.ReplaceAll(".root","");
+    dirName.ReplaceAll(".PullsH","");  cout << dirName.Data() << endl;
+    c->cd(i+1)->SetLogz(1);
+    TF1 *gp = 0;
+    if (hist->GetDimension() == 3) {
+      TH3 *h3 = (TH3*) hist;
+      TAxis *ax = h3->GetXaxis();
+      Int_t nxbins = ax->GetNbins();
+      Int_t ix1 = 0, ix2 = -1;
+      if (patt.Contains("vsrow")) {
+	if      (Proj.Contains("I")) {ix1 =  ax->FindBin(1.0); ix2 = ax->FindBin(40.);}
+	else if (Proj.Contains("O")) {ix1 =  ax->FindBin(41.0); ix2 = ax->FindBin(72.);}
+      } else if (patt.Contains("vsZ")) {
+	if      (Proj.Contains("E")) {ix1 =  1; ix2 = nxbins/2;}
+	else if (Proj.Contains("O")) {ix1 =  nxbins/2 + 1; ix2 = nxbins;}
+      }
+      ax->SetRange(ix1, ix2);
+      TH2 *h2 = (TH2 *) h3->Project3D(proj);
+      h2->SetName(Form("%s_%s",h3->GetName(), Proj.Data()));
+      h2->FitSlicesY(0, 0, -1, 0, "QNRg3s", arr);
+      TH1 *mu = (TH1 *) (*arr)[1];
+      TH1 *sigma = (TH1 *) (*arr)[2]; sigma->SetMarkerStyle(21);
+      h2->Draw("colz");
+      mu->Draw("sames");
+      sigma->Draw("sames");
+      TLegend *l = new TLegend(0.1,0.85,0.7,0.90);
+      l->AddEntry(h2, dirName.Data());
+      l->Draw();
+    }
+  }
+  c->Update();
 #if 1
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;
