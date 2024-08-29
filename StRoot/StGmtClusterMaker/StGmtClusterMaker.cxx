@@ -18,7 +18,7 @@ Int_t StGmtClusterMaker::gmtStat = 0;
 const UInt_t         CLUS_BINS = 128;
 const Double_t       CLUS_MIN  = 0.0;
 const Double_t       CLUS_MAX  = 128*0.08;
-const UInt_t         MAX_PEAKS = 20;
+const UInt_t         MAX_PEAKS = 8; // from TFumili default no. of parameters = 25
 //________________________________________________________________________________
 inline Double_t MyGaus(Double_t x, Double_t mean, Double_t sigma, Double_t delta) {
   return TMath::Freq((x-mean+delta/2)/sigma)-TMath::Freq((x-mean-delta/2)/sigma);
