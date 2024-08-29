@@ -65,9 +65,10 @@ switch ($pkg)
     else 
       if (-e "/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh") then
         set SPACK_SETUP="/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh"
-	if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
+      endif
     endif
     if ( -r $SPACK_SETUP ) then
+      if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
       source $SPACK_SETUP 
     else
 	if ($?DECHO) echo "SPACK_SETUP has not been set"
