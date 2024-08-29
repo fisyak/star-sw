@@ -9,6 +9,14 @@ if [ $# -eq 0 ]; then
  t=""
  d=""
  v=""
+ c=""
+ s=""
+ if test ! "xUSE_CVMFS" = "x"; then
+     c="_vmfs"
+ fi
+ if test ! "xSPACK_ROOT" = "x"; then
+     c="_spack"
+ fi
 # if test ! "x$ROOT_LEVEL" = "x"; then
 #  r=$ROOT_LEVEL
 # fi
@@ -26,7 +34,7 @@ if [ $# -eq 0 ]; then
  else 
   d=debug
  fi
- TNAME=`hostname -s`_${r}_${v}_${t}_${d}
+ TNAME=`hostname -s`_${r}_${v}_${t}_${d}${c}${s}
 else
  TNAME=$1
 fi
