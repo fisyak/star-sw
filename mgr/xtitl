@@ -34,7 +34,8 @@ if [ $# -eq 0 ]; then
  else 
   d=debug
  fi
- TNAME=`hostname -s`_${r}_${v}_${t}_${d}${c}${s}
+# TNAME=`hostname -s`_${r}_${v}_${t}_${d}${c}${s}
+ TNAME=${r}_${v}_${t}_${d}${c}${s}
 else
  TNAME=$1
 fi
