@@ -26,7 +26,6 @@
 #include "StEmcUtil/geometry/StEmcGeom.h"
 #include "StEmcUtil/others/StEmcMath.h"
 #include "StBichsel/Bichsel.h"
-#include "TMath.h"
 #include "StDetectorDbMaker/StDetectorDbTriggerID.h"
 
 #include "StPmdUtil/StPmdCollection.h"
@@ -1640,11 +1639,11 @@ void StEventQAMaker::MakeHistVertex() {
       
       if (aPrimVtx == primVtx) {
         hists->m_pv_vtxid->Fill(primVtx->type());
-	if (!TMath::IsNaN(double(pvert.x())))
+	if (!std::isnan(double(pvert.x())))
 	  hists->m_pv_x->Fill(pvert.x());
-	if (!TMath::IsNaN(double(pvert.y())))
+	if (!std::isnan(double(pvert.y())))
 	  hists->m_pv_y->Fill(pvert.y());
-	if (!TMath::IsNaN(double(pvert.z())))
+	if (!std::isnan(double(pvert.z())))
 	  hists->m_pv_z->Fill(pvert.z());
         hists->m_pv_pchi2->Fill(primVtx->chiSquared());
         hists->m_pv_r->Fill(pvert.x()*pvert.x() +
@@ -1653,11 +1652,11 @@ void StEventQAMaker::MakeHistVertex() {
       } else {
         StThreeVectorF apvert = aPrimVtx->position();
         hists->m_v_vtxid->Fill(aPrimVtx->type());
-	if (!TMath::IsNaN(double(apvert.x())))
+	if (!std::isnan(double(apvert.x())))
 	  hists->m_v_x->Fill(apvert.x());     
-	if (!TMath::IsNaN(double(apvert.y())))
+	if (!std::isnan(double(apvert.y())))
 	  hists->m_v_y->Fill(apvert.y());     
-	if (!TMath::IsNaN(double(apvert.z())))
+	if (!std::isnan(double(apvert.z())))
 	  hists->m_v_z->Fill(apvert.z());     
         hists->m_v_pchi2->Fill(aPrimVtx->chiSquared());
         hists->m_v_r->Fill(apvert.x()*apvert.x() +
@@ -1707,18 +1706,18 @@ void StEventQAMaker::MakeHistVertex() {
       hists->m_ev0_k0ma_hist->Fill(inv_mass_k0);
       
       hists->m_v_vtxid->Fill(v0->type());
-      if (!TMath::IsNaN(double(v0->position().x())))
+      if (!std::isnan(double(v0->position().x())))
         hists->m_v_x->Fill(v0->position().x());     
-      if (!TMath::IsNaN(double(v0->position().y())))
+      if (!std::isnan(double(v0->position().y())))
         hists->m_v_y->Fill(v0->position().y());     
-      if (!TMath::IsNaN(double(v0->position().z())))
+      if (!std::isnan(double(v0->position().z())))
         hists->m_v_z->Fill(v0->position().z());     
       hists->m_v_pchi2->Fill(v0->chiSquared());
       hists->m_v_r->Fill(v0->position().x()*v0->position().x() +
 			 v0->position().y()*v0->position().y());
       
-      if (!(TMath::IsNaN(double(v0->position().x())) ||
-            TMath::IsNaN(double(v0->position().y())))) {
+      if (!(std::isnan(double(v0->position().x())) ||
+            std::isnan(double(v0->position().y())))) {
         Float_t phi = atan2(v0->position().y() - pvert.y(),
 	                    v0->position().x() - pvert.x())
 	* 180./M_PI;
@@ -1757,11 +1756,11 @@ void StEventQAMaker::MakeHistVertex() {
       hists->m_xi_ma_hist->Fill(inv_mass_xi);
       
       hists->m_v_vtxid->Fill(xi->type());
-      if (!TMath::IsNaN(double(xi->position().x())))
+      if (!std::isnan(double(xi->position().x())))
         hists->m_v_x->Fill(xi->position().x());     
-      if (!TMath::IsNaN(double(xi->position().y())))
+      if (!std::isnan(double(xi->position().y())))
         hists->m_v_y->Fill(xi->position().y());     
-      if (!TMath::IsNaN(double(xi->position().z())))
+      if (!std::isnan(double(xi->position().z())))
         hists->m_v_z->Fill(xi->position().z());     
       hists->m_v_pchi2->Fill(xi->chiSquared());
       hists->m_v_r->Fill(xi->position().x()*xi->position().x() +
@@ -1782,11 +1781,11 @@ void StEventQAMaker::MakeHistVertex() {
     if (kink) {
       //hists->m_v_detid->Fill(kink->det_id); 
       hists->m_v_vtxid->Fill(kink->type());
-      if (!TMath::IsNaN(double(kink->position().x())))
+      if (!std::isnan(double(kink->position().x())))
         hists->m_v_x->Fill(kink->position().x());
-      if (!TMath::IsNaN(double(kink->position().y())))
+      if (!std::isnan(double(kink->position().y())))
         hists->m_v_y->Fill(kink->position().y());
-      if (!TMath::IsNaN(double(kink->position().z())))
+      if (!std::isnan(double(kink->position().z())))
         hists->m_v_z->Fill(kink->position().z());
       hists->m_v_pchi2->Fill(kink->chiSquared());
       hists->m_v_r->Fill(kink->position().x()*kink->position().x() +
@@ -2060,13 +2059,17 @@ void StEventQAMaker::MakeHistEMC() {
         if(module) {
           StSPtrVecEmcRawHit& rawHit=module->hits();
 	  
-          Int_t m,e,s,adc;
-          Float_t eta,phi,E;
+          Int_t m,e,s,adc,sId,stripInMod;
+          Float_t eta(0),phi(0),E(0);
           nh += rawHit.size();
           for(UInt_t k=0;k<rawHit.size();k++){
             m   = rawHit[k]->module();
             e   = rawHit[k]->eta();
             s   = rawHit[k]->sub();
+            emcGeom[i]->getId(m, e, s, sId); 
+            stripInMod = sId % 150;  // only used for BSMD
+	    if (stripInMod==0) stripInMod=150;
+	    //	    cout << "strip Id = " << sId << ", strip in Module = " << stripInMod << endl;
             if (s == -1) s = 1; // case of smde
             adc = rawHit[k]->adc();
             E   = rawHit[k]->energy();
@@ -2076,6 +2079,21 @@ void StEventQAMaker::MakeHistEMC() {
             hists->m_emc_energy2D[i]->Fill(eta,phi,E); 
             hists->m_emc_adc[i]->Fill(float(adc)); 
             hists->m_emc_energy[i]->Fill(E);
+	    
+	    if (i>1) { // BSMD module hists 
+
+	      Int_t modIndex = (m-1)/30;
+	      Int_t histIndex = modIndex;  
+	      if (i>2) histIndex = modIndex + 4;
+
+		hists->m_emc_hits_per_module[histIndex]->Fill(m); 
+		hists->m_emc_energy_per_module[histIndex]->Fill(m,E); 
+		hists->m_emc_strip_hits_per_module[histIndex]->Fill(m,stripInMod); 
+		hists->m_emc_strip_energy_per_module[histIndex]->Fill(m,stripInMod,E); 
+	      
+	    }
+
+	    
             energy += E;
           }
 	}
