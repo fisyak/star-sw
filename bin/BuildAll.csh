@@ -3,8 +3,7 @@ set list = "";
 set domain = `hostname -d`
 if (! $?ROOT_VERSION) setenv $ROOT_VERSION ""
 
-#foreach root (root6 root5)
-foreach root (root5)
+foreach root (root6 root5)
   switch ($domain) 
     case "*local":
     case "*starp.bnl.gov":
