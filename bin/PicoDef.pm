@@ -218,6 +218,7 @@
 '2020/9p8GeV_fixedTarget' =>			   'production_9p8GeV_fixedTarget_2020/ReversedFullField/P21id',
 
 '2021/17p3GeV_2021_P23id' =>                       'production_17p3GeV_2021/ReversedFullField/P23id',
+'2021/17p3GeV_2021_P24ia' =>                       'production_17p3GeV_2021/ReversedFullField/P24ia',
 
 '2021/100GeV_fixedTarget_2021_P23id_calib'      => 'production_100GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
 '2021/26p5GeV_fixedTarget_2021_P23id_calib'     => 'production_26p5GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
