@@ -227,15 +227,15 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	  if (! St_tpcPadConfigC::instance()->iTPC(sector)) {
 	    pDetector->setHitErrorCalculator(StiTpcInnerHitErrorCalculator::instance());
 	  } else {
-#ifdef StiTpcHitErrorMDF4_h
-	    pDetector->setHitErrorCalculatorMDF4(StiTpcInnerHitErrorMDF4::instance());
-#endif
+	    if (StTpcDb::Alignment2024()) {
+	      pDetector->setHitErrorCalculatorMDF4(StiTpcInnerHitErrorMDF4::instance());
+	    }
 	    pDetector->setHitErrorCalculator(StiTPCHitErrorCalculator::instance());
 	  }
 	} else {
-#ifdef StiTpcHitErrorMDF4_h
-	  pDetector->setHitErrorCalculatorMDF4(StiTpcOuterHitErrorMDF4::instance());
-#endif
+	  if (StTpcDb::Alignment2024()) {
+	    pDetector->setHitErrorCalculatorMDF4(StiTpcOuterHitErrorMDF4::instance());
+	  }
 	  pDetector->setHitErrorCalculator(StiTpcOuterHitErrorCalculator::instance());
 	}
 	//      pDetector->setElossCalculator(gasElossCalculator);
