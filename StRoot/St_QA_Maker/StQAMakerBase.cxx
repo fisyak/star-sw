@@ -181,6 +181,7 @@
 #include "QAH.h"
 #include "TList.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
+#include "StarRoot/TH1Helper.h"
 
 ClassImp(StQAMakerBase)
 
@@ -674,9 +675,7 @@ void StQAMakerBase::BookHistFMS(){
                        title.c_str(),
                        kNChannels, 0., kNChannels,  // Channel axis bins
                        200, 0., kNAdc);             // ADC axis bins
-#if  ROOT_VERSION_CODE < 395523
-    h->SetBit(TH1::kCanRebin);
-#endif
+    TH1Helper::SetCanRebin(h);
     h->SetXTitle("slot * 32 + channel");
     h->SetYTitle("ADC");
     // Store the histogram.
