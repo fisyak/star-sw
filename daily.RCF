@@ -1564,3 +1564,88 @@ $9 = void
 
 4p59GeV_fixedTarget_TFG24c.dEdxF.root   M_BW     S = 1.49898e+07        B = 1.82859e+06 S/B = 8.19745   S/sqrt(T) = 3751.28     Significance = 3035.75  Signal per Event( 98.340M)  = 0.152429  M =  497.54 +/-  0.00   W =    7.14 +/-  0.00 (MeV)
 4p59GeV_fixedTarget_TFG24c.dEdxG.root   M_BW     S = 7.99901e+06        B = 1.52573e+06 S/B = 5.24273   S/sqrt(T) = 2655.94     Significance = 2087.49  Signal per Event(175.333M)  = 0.0456217 M =  497.49 +/-  0.00   W =    7.47 +/-  0.00 (MeV)
+
+
+
+ grep to\ recov */All*.log
+mv `grep to\ recov */All*.log | awk '{print "*/"$5}'` Zombie/
+
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+
+
+2019/3p85GeV_fixedTarget_P24ia/dEdxH   
+2019/3p85GeV_fixedTarget_TFG24c/dEdxH
+2019/4p59GeV_fixedTarget_P24ia/dEdxH   add
+2019/4p59GeV_fixedTarget_TFG24c/dEdxH
+2019/7.3GeV_fixedTarget_P24ia/dEdxH
+2019/7.3GeV_fixedTarget_TFG24c/dEdxH
+2020/5p75GeV_fixedTarget_P24ia/dEdxH
+2020/5p75GeV_fixedTarget_TFG24c/dEdxH
+2020/7p3GeV_fixedTarget_P24ia/dEdxH
+2020/7p3GeV_fixedTarget_TFG24c/dEdxH
+
+TFG24c/2019/RF/4p59GeV_fixedTarget/ 224.276M_27509.165223GB
+TFG24c/2019/RF/7.3GeV_fixedTarget/   83.413M_12401.096111GB
+TFG24c/2020/RF/5p75GeV_fixedTarget/  66.837M_9383.720000GB
+TFG24c/2020/RF/7p3GeV_fixedTarget/    8.324M_1386.453130GB
+
+
+TFG24c/2019/RF/3p85GeV_fixedTarget/2.108M_60.552210GBP
+TFG24c/2019/RF/4p59GeV_fixedTarget/181.547M_5364.804547GBP
+TFG24c/2019/RF/7.3GeV_fixedTarget/54.370M_2074.308485GBP
+TFG24c/2020/RF/5p75GeV_fixedTarget/54.848M_1824.588970GBP
+TFG24c/2020/RF/7p3GeV_fixedTarget/5.976M_257.515299GBP
+
+
+TFG24c/2019/RF/3p85GeV_fixedTarget/3.032M
+TFG24c/2019/RF/4p59GeV_fixedTarget/224.276M
+TFG24c/2019/RF/7.3GeV_fixedTarget/83.413M
+TFG24c/2020/RF/5p75GeV_fixedTarget/66.837M
+TFG24c/2020/RF/7p3GeV_fixedTarget/8.324M
+
+
+TFG24c/2019/RF/3p85GeV_fixedTarget/2.108M
+TFG24c/2019/RF/4p59GeV_fixedTarget/181.547M
+TFG24c/2019/RF/7.3GeV_fixedTarget/54.370M
+TFG24c/2020/RF/5p75GeV_fixedTarget/54.848M
+TFG24c/2020/RF/7p3GeV_fixedTarget/5.976M
+
+--------------------------------------------------------------------------------
+                                       MuDst   picoDst    kfp P24ia(gpfs01)    TFG24c
+TFG24c/2019/RF/3p85GeV_fixedTarget/   3.032M    2.108M              3.048M        2.051M
+TFG24c/2019/RF/4p59GeV_fixedTarget/ 224.276M  181.547M             99.718M      174.104M 
+TFG24c/2019/RF/7.3GeV_fixedTarget/   51.505M   38.341M             31.458M       56.374M
+TFG24c/2020/RF/5p75GeV_fixedTarget/  66.837M   54.848M             89.081M       49.214M
+TFG24c/2020/RF/7p3GeV_fixedTarget/    8.324M    5.976M             53.120M        4.660M
+
+
+  touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
+  touch `grep total ???/2*/PChain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
+grep -l 'No.Events = 0' */*/PChain.log | awk '{print $3}'
+
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+
+ grep to\ recov */All*.log
+dir
+
+
+20180014/st_physics_20180014_raw_4000009,1,16234.root
+================================================================================
+08/15/2024
+df -h /gpfs01/star/data2[4-7]
+
+
+/star/u/fisyak/work/kfp/2019/3p85GeV_fixedTarget_P24ia/dEdxH
+/star/u/fisyak/work/kfp/2019/3p85GeV_fixedTarget_TFG24c/dEdxH
+
+/star/u/fisyak/work/kfp/2019/4p59GeV_fixedTarget_P24ia/dEdxH
+/star/u/fisyak/work/kfp/2019/4p59GeV_fixedTarget_TFG24c/dEdxH
+
+/star/u/fisyak/work/kfp/2019/7.3GeV_fixedTarget_P24ia/dEdxH
+/star/u/fisyak/work/kfp/2019/7.3GeV_fixedTarget_TFG24c/dEdxH  -
+
+/star/u/fisyak/work/kfp/2020/5p75GeV_fixedTarget_P24ia/dEdxH
+/star/u/fisyak/work/kfp/2020/5p75GeV_fixedTarget_TFG24c/dEdxH
+
+/star/u/fisyak/work/kfp/2020/7p3GeV_fixedTarget_P24ia/dEdxH
+/star/u/fisyak/work/kfp/2020/7p3GeV_fixedTarget_TFG24c/dEdxH
