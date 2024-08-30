@@ -34,17 +34,18 @@ if [ $# -eq 0 ]; then
  else 
   d=debug
  fi
-# TNAME=`hostname -s`_${r}_${v}_${t}_${d}${c}${s}
  TNAME=${r}_${v}_${t}_${d}${c}${s}
+ TNAMET=`hostname -s`_${TNAME}
 else
+ TNAMET=$1
  TNAME=$1
 fi
 
 # Begin source code.
 case $TERM in
  xterm|vt100|vt220|xterms|aixterm|xterm*)          # vt100 tool
- echo -ne "]1;${TNAME}"
- echo -ne "]0;${TNAME}"
+ echo -ne "]1;${TNAMET}"
+ echo -ne "]0;${TNAMET}"
  ;;
 
  *)
