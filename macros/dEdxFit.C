@@ -4748,8 +4748,8 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 	     Option_t *opt="R", 
 	     Int_t ix = -1, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
-	     Double_t nSigma=3, Int_t pow=0,
-	     Double_t zmin = -1, Double_t zmax = 2) {
+	     Double_t nSigma=-3, Int_t pow=0,
+	     Double_t zmin = -5, Double_t zmax = 5) {
   if (! hist) return;
   struct Fit_t {
     Float_t i;
@@ -4939,7 +4939,7 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
 	else        hist->Add(((THnSparse *) obj)->Projection(1,0));
       } else {
 	THnSparse *sparse = dynamic_cast<THnSparse *>(obj);
-	if (sparse) dEdxFitSparse(sparse, FitName,opt,ix);
+	if (sparse) dEdxFitSparse(sparse, FitName,opt,ix,jy,mergeX,mergeY,nSigma,pow,zmin,zmax);
 	return;
       }
     }

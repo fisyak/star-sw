@@ -189,12 +189,12 @@ void StiTpcPulls() {
     }
     Out = tt.Data() + dot;
   }
-  Out += ".PullsH.root";
+  Out += "GP.PullsH.root";
   if (! fOut) {
     fOut = new TFile(Out,"recreate");
     cout << "Open " << Out.Data() << endl;
     for (Int_t s = 0; s < NCharge; s++) {
-      for (Int_t l = 0; l < 1; l++) { // no. primary tracks l < NGP; l++) {
+      for (Int_t l = 0; l < NGP; l++) { // no. primary tracks l < NGP; l++) {
 	for (Int_t i = 0; i < NIO; i++) {
 	  for (Int_t t = 0; t < NPL; t++) {
 	    Int_t iz = xyzplots[t].z;
@@ -238,12 +238,17 @@ void StiTpcPulls() {
     const Int_t  nBins[NoDim]  = {  105,     40,    100,     35,  200};
     const VarS_t  xMin         = { -210,     -2,     -5,      3,   -5};
     const VarS_t  xMax         = {  210,      2,      5,     10,    5};
-    THnSparse  *pullYI = new THnSparseF("pullYI",  "pullY for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYI);
-    THnSparse  *pullYO = new THnSparseF("pullYO",  "pullY for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYO);
-    THnSparse  *pullZI = new THnSparseF("pullZI",  "pullZ for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZI);
-    THnSparse  *pullZO = new THnSparseF("pullZO",  "pullZ for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZO);
-    THnSparse  *pullYIO[2] = { pullYI,  pullYO};
-    THnSparse  *pullZIO[2] = {pullZI, pullZO};
+    THnSparse  *pullYI = new THnSparseF("pullYI",  "pullY Global tracks for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYI);
+    THnSparse  *pullYO = new THnSparseF("pullYO",  "pullY Global tracks for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYO);
+    THnSparse  *pullZI = new THnSparseF("pullZI",  "pullZ Global tracks for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZI);
+    THnSparse  *pullZO = new THnSparseF("pullZO",  "pullZ Global tracks for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZO);
+
+    THnSparse  *pullPYI = new THnSparseF("pullPYI",  "pullY Primary tracks for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPYI);
+    THnSparse  *pullPYO = new THnSparseF("pullPYO",  "pullY Primary tracks for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPYO);
+    THnSparse  *pullPZI = new THnSparseF("pullPZI",  "pullZ Primary tracks for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPZI);
+    THnSparse  *pullPZO = new THnSparseF("pullPZO",  "pullZ Primary tracks for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPZO);
+    THnSparse  *pullYIO[NGP][2] = {{ pullYI,  pullYO}, { pullPYI,  pullPYO}};
+    THnSparse  *pullZIO[NGP][2] = {{ pullZI,  pullZO}, { pullPZI,  pullPZO}};
 #endif
   // Loop
 #if __PRINT_FILE_NAME__
@@ -263,7 +268,7 @@ void StiTpcPulls() {
     cout << "Vtx:\t" << event->mVtx[0] << "\t" << event->mVtx[1] <<"\t" << event->mVtx[2] << endl;
 #endif
     TClonesArray *Hits = 0;
-    for (Int_t l = 0; l < 1; l++) { // no mHitsP ?
+    for (Int_t l = 0; l < NGP; l++) { // no mHitsP ?
       if (l == 0) Hits = &(event->mHitsG);
       else        Hits = &(event->mHitsP);
       if (! Hits) continue;
@@ -309,9 +314,9 @@ void StiTpcPulls() {
 #ifdef __SPARSED__
 	VarS_t S = {hit->gZHit, TMath::Tan(hit->lPsi), TMath::Tan(hit->lDip), hit->AdcL, 0};
 	S.dX = pullY;
-	pullYIO[io]->Fill(&S.Z);
+	pullYIO[l][io]->Fill(&S.Z);
 	S.dX = pullZ;
-	pullZIO[io]->Fill(&S.Z);
+	pullZIO[l][io]->Fill(&S.Z);
 #endif
 	Int_t s = 1;
 	if (q < 0) s = 2;
@@ -453,7 +458,7 @@ void Draw3D(const Char_t *histName="lYDifVsZAG", Int_t NF = 0, TFile **Files = 0
 	continue;
       }
       TString FT(f->GetName());
-      FT.ReplaceAll(".PullsH.root","");
+      FT.ReplaceAll("GP.PullsH.root","");
       f->cd();
       TH3F *h3 = (TH3F *) f->Get(histName);
       if (! h3) continue;
@@ -561,3 +566,4 @@ void LoopOverHistogr( const Char_t *pattern = "dYIPNvsrowpTinv") {
     Draw3D(F, NF, Files);
   }
 }
+//________________________________________________________________________________
