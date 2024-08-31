@@ -99,5 +99,6 @@
 <li> TFG24a Freeze ROOT 6.30.00                                          2024-01-07 10:15:24 -0500  (HEAD -> TFG, tag: TFG24a_3)
 <li> TFG24b Freeze for Run XXIV                                          2024-05-04 10:41:16 -0400  (HEAD -> TFG, tag: TFG24b)
 <li> TFG24c Freeze for fixed target reproduction                         2024-08-06 11:32:12 -0400  (HEAD -> TFG, tag: TFG24c_3)
+<li> TFG24d Freeze for fixed target reproduction                         2024-08-31 11:32:12 -0400  (HEAD -> TFG, tag: TFG24d)
 <li>.DEV2   head of TFG git repository
 </ul>
