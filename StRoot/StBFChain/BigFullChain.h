@@ -1871,7 +1871,7 @@ Bfc_st BFC[] = { // standard chains
   {"StiKFVertex","StiKFVertex","Sti","StiLibs,-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2,-genvtx"
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker,StiMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
-  {"laserIT"  ,"","","","",                              "TpcIT","use Sti for laser reconstruction",kFALSE},
+  {"laserIT"  ,"","","TpcIT","",                              "","use Sti for laser reconstruction",kFALSE},
   {"TpcIT"    ,"","","ITTF"                             ,"","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"SvtIT"    ,"","","ITTF"                                              ,"","","Sti tracking: SVT",kFALSE},
   {"SsdIT"    ,"","","ITTF"                                              ,"","","Sti tracking: SSD",kFALSE},
