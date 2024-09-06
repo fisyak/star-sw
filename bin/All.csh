@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-set GLOB = ' AuAu* *GeV* dAu* pp*'
+set GLOB = ' 2* AuAu* *GeV* dAu* pp*'
 if ($#argv > 0)   set GLOB = "$argv";
 # foreach d (`ls -1d *`)
 set domain = `hostname -d`

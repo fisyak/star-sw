@@ -1649,3 +1649,155 @@ df -h /gpfs01/star/data2[4-7]
 
 /star/u/fisyak/work/kfp/2020/7p3GeV_fixedTarget_P24ia/dEdxH
 /star/u/fisyak/work/kfp/2020/7p3GeV_fixedTarget_TFG24c/dEdxH
+
+======================================================================
+09/03/2024 
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+
+foreach d (`ls -1d 2*`)
+ foreach f (`grep Zombie -l  *${d}*B.log`) 
+   set r = `basename ${f} B.log`
+   mv ${f} ${d}/${r}.root Zombie
+ end
+end
+
+
+foreach d (`ls -1d 2*`)
+ grep recov  *${d}*B.log
+end
+
+df -h /gpfs01/star/data2[4-7]
+
+
+foreach d ( `ls -1d */*/*MuDst.root.log | awk -F\/ '{print $1"/"$2}' | sort -u` )
+  cd ${d}
+  UpdateEventNo.pl
+  cd -
+end
+[rcas6014] ~/TFG24d/2019/RF/4p59GeV_fixedTarget $ cond.pl
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180002 =      2 runs =      2/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180007 =      6 runs =      6/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180009 =      1 runs =      1/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180022 =      1 runs =      1/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180024 =      1 runs =      1/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180045 =     13 runs =     13/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181002 =      4 runs =      4/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181003 =      5 runs =      5/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181004 =     12 runs =     12/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181005 =    137 runs =    137/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181006 =     79 runs =     79/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181007 =     69 runs =     69/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181008 =    390 runs =    390/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181009 =    413 runs =    413/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181010 =    694 runs =    694/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181011 =    634 runs =    634/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181012 =    678 runs =    669/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181013 =    594 runs =    590/hold =      0
+
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181017 =    584 runs =    168/hold =      0
+
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181018 =    651 runs =      0/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181019 =    681 runs =      0/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181042 =    591 runs =      0/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181043 =    636 runs =      0/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181044 =    799 runs =      0/hold =      0
+
+
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180007 =      6 runs =      6/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180009 =      1 runs =      1/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180022 =      1 runs =      1/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180024 =      1 runs =      1/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/180/20180045 =     11 runs =     11/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181002 =      3 runs =      3/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181003 =      5 runs =      5/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181004 =     12 runs =     12/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181005 =    136 runs =    136/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181006 =     79 runs =     79/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181007 =     68 runs =     68/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181008 =    384 runs =    384/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181009 =    396 runs =    396/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181010 =    693 runs =    693/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181011 =    633 runs =    633/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181012 =    678 runs =    678/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181013 =    594 runs =    594/hold =      0
+rcas6014:/star/u/fisyak/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181017 =    200 runs =    177/hold =      0
+================================================================================
+09/-4/2024
+ cvmfswrite02.sdcc.bnl.gov with 40 Intel(R) Xeon(R) Gold 5115 CPU @ 2.40GHz
+ cvmfswrite01.sdcc.bnl.gov with 40 Intel(R) Xeon(R) Gold 5115 CPU @ 2.40GHz
+ rcas6008.rcf.bnl.gov with 8 AMD EPYC Processor (with IBPB)
+ rcas6014.rcf.bnl.gov with 8 AMD EPYC Processor (with IBPB)
+[rcas6014] ~/TFG24d/2019/RF/4p59GeV_fixedTarget $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+Illegal instruction
+
+
+[cvmfswrite02] ~ $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar: You must specify one of the '-Acdtrux', '--delete' or '--test-label' options
+Try
+'/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar
+--help' or
+'/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar
+--usage' for more information.
+
+
+[rcas6014] ~/TFG24d/2019/RF/4p59GeV_fixedTarget $ cd 
+[rcas6014] ~ $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+Illegal instruction
+
+
+ cvmfswrite02.sdcc.bnl.gov with 40 Intel(R) Xeon(R) Gold 5115 CPU @ 2.40GHz
+[cvmfswrite02] ~ $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar: You must specify one of the '-Acdtrux', '--delete' or '--test-label' options
+Try
+'/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar
+--help' or
+'/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar
+--usage' for more information.
+
+ rcas6014.rcf.bnl.gov with 8 AMD EPYC Processor (with IBPB)
+
+
+[rcas6014] ~ $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+Illegal instruction
+[cvmfswrite02] ~ $ grep flags /proc/cpuinfo
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb cat_l3 cdp_l3 invpcid_single intel_ppin intel_pt mba ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts pku ospke spec_ctrl intel_stibp
+[rcas6014] ~ $ grep flags /proc/cpuinfo
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm art rep_good nopl extd_apicid eagerfpu pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw retpoline_amd ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 virt_ssbd arat
+--------------------------------------------------------------------------------
+
+ 
+cvmfswrite02.sdcc.bnl.gov with 40 Intel(R) Xeon(R) Gold 5115 CPU @ 2.40GHz
+ 
+[cvmfswrite02] ~ $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar: You must specify one of the '-Acdtrux', '--delete' or '--test-label' options
+Try
+'/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar
+--help' or
+'/cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar
+--usage' for more information.
+[cvmfswrite02] ~ $ grep flags /proc/cpuinfo
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb cat_l3 cdp_l3 invpcid_single intel_ppin intel_pt mba ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts pku ospke spec_ctrl intel_stibp
+ 
+ 
+ 
+rcas6014.rcf.bnl.gov with 8 AMD EPYC Processor (with IBPB)
+ 
+ 
+[rcas6014] ~ $ /cvmfs/star.sdcc.bnl.gov/TFG/spack/var/spack/environments/x86_64_gcc12/.spack-env/view/bin/tar -h
+Illegal instruction
+ 
+[[rcas6014] ~ $ file /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-12.1.0/tar-1.34-cgflthioahps44vr77mm76ra52wadthx/bin/tar
+/cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-rhel7-skylake_avx512/gcc-12.1.0/tar-1.34-cgflthioahps44vr77mm76ra52wadthx/bin/tar: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), BuildID[sha1]=fb9d8489ad99826406fcc543dbbc541c6c71abb0, for GNU/Linux 2.6.32, not stripped
+ 
+[rcas6014] ~ $ grep flags /proc/cpuinfo
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm art rep_good nopl extd_apicid eagerfpu pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw retpoline_amd ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 virt_ssbd arat
+ 
+ 
+11
+
+
+ gcc -mno-avx512f also implies no other AVX512 extensions. AVX512F is the "foundation", and disabling it tells GCC the machine doesn't decode EVEX prefixes.
+
+Similarly, -mno-avx disables AVX2, FMA3, and so on because they all build off of AVX. (Because of the way GCC works, -mavx512f -mno-avx might even disable AVX512F as well.)
+
+e.g. gcc -march=icelake-client -mno-avx512f will reject intrinsics for AVX512DQ or AVX512VL instructions and so on, as well as not using them when auto-vectorizing.
