@@ -6,7 +6,8 @@ setenv STARFPE NO
 setup nodebug
 set mu = ${INPUTFILE0} 
 if (-r  ${mu}.log) exit 0;
-root.exe -q -q -x lMuDst.C 'Recover.C("'${mu}'")' &gt;&amp; ${mu}.log
+#root.exe -q -q -x lMuDst.C 'Recover.C("'${mu}'")' &gt;&amp; ${mu}.log
+root.exe -q -q -x 'Recover.C("'${mu}'")' &gt;&amp; ${mu}.log
         </command>
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />

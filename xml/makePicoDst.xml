@@ -6,8 +6,8 @@ setenv STARFPE NO
 setup nodebug
   source /afs/rhic.bnl.gov/star/packages/.DEV2/setupDEV2.csh 
   setup cvmfs
-  setup gcc
-  starver TFG24c
+  setup gcc/12
+  starver TFG24d
 set year = `GetYearFromPWD.pl`
 set mu = ${INPUTFILE0} 
 set dir = `dirname ${mu}`

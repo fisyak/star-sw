@@ -43,14 +43,14 @@ sub GetRuns($) {
   my @words = split('/',$pwd);
   my $nw = $#words;
   my $i1 = -1;
-   for (my $i = $nw; $i > 0; $i--) {
-     print "words[$i] = |$words[$i]|,\t" if ($debug);
-     if ($words[$i] =~ /\D/) {last;}
-     $i1 = $i;
-   }
-   print "i1 = $i1\n" if ($debug);
+  for (my $i = $nw; $i > 0; $i--) {
+    print "words[$i] = |$words[$i]|,\t" if ($debug);
+    if ($words[$i] =~ /\D/) {last;}
+    $i1 = $i;
+  }
+  print "i1 = $i1\n" if ($debug);
   
-#   die;
+  #   die;
   my $Day =   "[0-3]??";  my $Run = "[0-9]???????";
   if    ($i1 <  0)   {}
   elsif ($i1 == $nw) {$Day = $words[$i1];   $Run = "[0-9]???????";}
