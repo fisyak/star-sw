@@ -1684,7 +1684,8 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
   if (peakY <= 0.) return 0;
   params[0] = TMath::Log(peakY);
   params[1] = peakX; // proj->GetMean();
-  params[2] = 0.5*proj->GetRMS();
+  Double_t RMS = proj->GetRMS();
+  params[2] = 0.5*RMS;
   params[3] = 0;
   params[4] = 0;
   params[5] = 0;
@@ -1710,10 +1711,9 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
     }
     g->SetParameters(params);
     if (sigma > 0) {
-      g->SetRange(params[1]-sigma,params[1]+sigma);
-      g->SetRange(params[1]-sigma,params[1]+sigma);
+      g->SetRange(params[1]-sigma*RMS,params[1]+sigma*RMS);
       g->SetParLimits(1, params[1]-params[2], params[1]+params[2]);
-      g->SetParLimits(2, 1e-3, proj->GetRMS());
+      g->SetParLimits(2, 1e-3, RMS);
     }
     Bool_t res = proj->Fit(g,opt);
     if (g->GetProb() > 0.01) {
