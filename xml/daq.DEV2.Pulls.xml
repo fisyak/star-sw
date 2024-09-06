@@ -136,5 +136,5 @@ set evout = ",-evout";
 <input URL="command:daq_2019T.pl" />
 <input URL="file:/star/data03/daq/2019/160/*/st_physics_adc_2016002*.daq" />
 -->
-<input URL="file:/hlt/cephfs/reco/Pulls.DEV2/*/*/*/*.daq" />
+<input URL="file:/hlt/cephfs/reco/Pulls.DEV2B/*/*/*/*.daq" />
 </job>
