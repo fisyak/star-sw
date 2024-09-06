@@ -68,10 +68,12 @@ StMinuitVertexFinder::StMinuitVertexFinder(VertexFit_t fitMode) :
 
 StMinuitVertexFinder::~StMinuitVertexFinder()
 {
+#if 0
    LOG_DEBUG << "Skipping delete Minuit in StMinuitVertexFinder::~StMinuitVertexFinder()" << endm;
    mHelices.clear();
    mHelixFlags.clear();
    mZImpact.clear();
+#endif
 }
 //________________________________________________________________________________
 void StMinuitVertexFinder::InitRun(int run_number, const St_db_Maker* db_maker)
