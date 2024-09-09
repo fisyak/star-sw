@@ -14,9 +14,14 @@
      root.exe -q 'lDb.C(0,"y2019")' ${f}  mdf4Pull.C+ | tee ${f}.log
    end
 __CHECK__
-   root.exe  'lDb.C("y2019",0)' ../dPadIGP11p5GeV.root Chain.C 'mdf4Pull.C+(tChain)'
+   foreach f (`ls -1d  *COL.root`)
+     root.exe  -q 'lDb.C(1,"y2019")' ${f}  mdf4Pull.C+ | tee ${f}.log
+   end
+   foreach f (`ls -1d  *FXT.root`)
+     root.exe -q 'lDb.C(1,"4p59GeV_fixedTarget_2019")' ${f}  mdf4Pull.C+ | tee ${f}.log
+   end
 */
-//#define __CHECK__
+#define __CHECK__
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -333,10 +338,8 @@ Double_t mdf4(Double_t xx[4]) {
 #ifndef __CHECK__
   Double_t val = gFit->Eval(xx);
 #else
-  Int_t k = FitPS::fgCase%4;
-  Double_t val = 0;
-  if (FitPS::fgCase < 4) val = StiTpcPullMDF4::instance()->Eval(k,xx);
-  else                   val = StiTpcPullMDF4::instance()->Eval(k,xx);
+  Int_t k = FitPS::fgCase%8;
+  Double_t val = StiTpcPullMDF4::instance()->Eval(k,xx);
 #endif
   if (FitPS::fgCase%2 == 0) {
     if (val < 0) val = 0;
