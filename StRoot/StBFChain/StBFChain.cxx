@@ -344,7 +344,7 @@ Int_t StBFChain::Instantiate()
 	  TString flavors = "ofl"; // default flavor for offline
 
 	  // TFG specific Db tag
-	  if (! GetOption("NoTFGLDbTag")) flavors += "+TFG";
+	  if (GetOption("TFGDbTag")) flavors += "+TFG";
 	  // fixed target flavor
 	  if (GetOption("FXT")) flavors.Prepend("FXT+");
 
@@ -485,9 +485,6 @@ Int_t StBFChain::Instantiate()
     }
     
     if (maker == "StTpcDbMaker" && GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
-#if 0
-    if (maker == "StTpcDbMaker" && GetOption("TFGdbOpt"))  mk->SetAttr("TFGdbOpt"   ,kTRUE);
-#endif
     if (maker == "StDAQMaker") {
       if (GetOption("adcOnly")) mk->SetAttr("adcOnly",kTRUE);
       NoMakersWithInput++;
