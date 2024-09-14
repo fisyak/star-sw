@@ -41,7 +41,8 @@ void put2DB(const Char_t* files="$STAR/StarDb/Geometry/svt/svtWafersPosition.200
     Int_t t =      1;
     //  sscanf(Time.Data(),"%d",&d);
     TString flavor(Flavor);
-    Int_t n = sscanf(Time.Data(),"%d.%d",&d,&t);
+    Int_t n = 0;
+    if (! Time.Contains("GeV")) n = sscanf(Time.Data(),"%d.%d",&d,&t);
     if (n != 2) {
       Char_t tag[128];
       n = sscanf(Time.Data(),"%s",&tag);
