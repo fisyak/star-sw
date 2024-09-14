@@ -1,3 +1,6 @@
+/*
+  root.exe lMuDst.C checkStRefMultCorr.C
+ */
 // ROOT headers
 #include "TH1.h"
 #include "TChain.h"
@@ -11,9 +14,11 @@
 void checkStRefMultCorr(const char *inFileName = "/star/u/gnigmat/soft/u/prithwish/data/st_physics_adc_16064082_raw_5000007.MuDst.root",
                         const char *oFileName = "oFileForPrithwish.root") {
 
+#if 0
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
   loadSharedLibraries();
   gSystem->Load("StPicoEvent");
+#endif
   gSystem->Load("StRefMultCorr");
 
   std::cout << "Hi! Lets do some physics, Master!" << std::endl;
