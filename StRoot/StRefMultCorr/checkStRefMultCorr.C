@@ -11,9 +11,8 @@
 #include <iostream>
 
 // Macro name
-void checkStRefMultCorr(const char *inFileName = "/star/u/gnigmat/soft/u/prithwish/data/st_physics_adc_16064082_raw_5000007.MuDst.root",
-                        const char *oFileName = "oFileForPrithwish.root") {
-
+void checkStRefMultCorr(const char *inFileName = "/gpfs01/star/pwg/abelouso/STAR_31.2_fixed/auau_31.2GeV_fixedTarget_2020_00001.picoDst.root",
+                        const char *oFileName = "oFile.root") {
 #if 0
   gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
   loadSharedLibraries();
