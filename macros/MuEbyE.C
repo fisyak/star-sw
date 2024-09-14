@@ -6,15 +6,22 @@
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StTpcDb/StTpcDb.h"
+#include "TNtuple.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "StDetectorDbMaker/St_starTriggerDelayC.h"
 #else
 class StMuDstMaker;
 #endif
 StMuDstMaker *muDstMko = 0;
 StMuDstMaker *muDstMkn = 0;
 //void *muTbyT(StMuDst *oldMuDst, StMuDst *newMuDst);
+struct BPoint_t {
+  Float_t dT, freq, DV, run, trigOff, time;//
+};
+const Char_t *vName = "dT:freq:DV:run:trigOff: time";
+BPoint_t BPoint;
 void MuEbyE(
 #if 0
 	       const Char_t *oldf="/gpfs02/eic/ayk/STAR/reco/MuDst/AuAu_200_production_2016/ReversedFullField/P16ij/2016/125/17125034/st_physics_adc_17125034_raw_1000007.MuDst.root", 
@@ -30,10 +37,11 @@ void MuEbyE(
     fileO.ReplaceAll("MuDst.","");
   }
   TFile *fOut = new TFile(fileO,"recreate");
-  TH2D *dX = new TH2D("dX","dX (West - East) versus Z ; dX ; Z",420,-210,210,400,-2.,2.); 
-  TH2D *dY = new TH2D("dY","dY (West - East) versus Z ; dY ; Z",420,-210,210,400,-2.,2.); 
-  TH2D *dZ = new TH2D("dZ","dZ (West - East) versus Z ; dZ ; Z",420,-210,210,400,-2.,2.); 
-  TH2D *dT = new TH2D("dT","dT(#musec) (West - East) versus Z ; dT ; Z",420,-210,210,1000,-0.5,0.5); 
+  TNtuple *FitP = new TNtuple("FitP","dT versus run",vName);
+  TH2D *dX = new TH2D("dX","dX (West - East) versus Z; Z ; dX ",420,-210,210,400,-2.,2.); 
+  TH2D *dY = new TH2D("dY","dY (West - East) versus Z; Z ; dY ",420,-210,210,400,-2.,2.); 
+  TH2D *dZ = new TH2D("dZ","dZ (West - East) versus Z; Z ; dZ ",420,-210,210,400,-2.,2.); 
+  TH2D *dT = new TH2D("dT","dT(#musec) (West - East) versus Z ; Z ; dT",420,-210,210,1000,-0.5,0.5); 
   TH2D *dXY2[2] = {new TH2D("dXY2W","dY versus dX of the second vertex (West) ; dX2 ; dY2",400,-2,2,400,-2,2),
 		   new TH2D("dXY2E","dY versus dX of the second vertex (East) ; dX2 ; dY2",400,-2,2,400,-2,2)};
   TH1D *dZ2[2] = {new TH1D("dZ2W","dZ of the second vertex (West) ; dZ2",400,-2,2),
@@ -114,7 +122,14 @@ void MuEbyE(
 	dX->Fill(xyzA.z(),xyzD.x());
 	dY->Fill(xyzA.z(),xyzD.y());
 	dZ->Fill(xyzA.z(),xyzD.z());
-	dT->Fill(xyzA.z(),xyzD.z()/driftVel);
+	BPoint.dT = xyzD.z()/driftVel;
+	BPoint.freq = StTpcDb::instance()->Electronics()->samplingFrequency();
+	BPoint.DV = driftVel;
+	BPoint.trigOff = St_starTriggerDelayC::instance()->TrigT0();
+	BPoint.run = muDstMko->GetRunNumber();
+	BPoint.time = muDstMko->GetDateTime().Convert();
+	dT->Fill(xyzA.z(),BPoint.dT);
+	FitP->Fill(&BPoint.dT);
       }
     } else {
       cout << "event " << nev << "\trun = " << oldEv->runId() << "\tevents Old = " << oldEv->eventId() << "\tnew = " << newEv->eventId() 

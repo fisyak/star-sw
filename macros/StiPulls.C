@@ -268,17 +268,21 @@ void StiTpcPulls() {
     cout << "Vtx:\t" << event->mVtx[0] << "\t" << event->mVtx[1] <<"\t" << event->mVtx[2] << endl;
 #endif
     TClonesArray *Hits = 0;
+    TClonesArray *Tracks = 0;
     for (Int_t l = 0; l < NGP; l++) { // no mHitsP ?
-      if (l == 0) Hits = &(event->mHitsG);
-      else        Hits = &(event->mHitsP);
+      if (l == 0) {Hits = &(event->mHitsG); Tracks = &(event->mTrksG); }
+      else        {Hits = &(event->mHitsP); Tracks = &(event->mTrksP); }
+      Int_t nTrk = event->mNTrks[l];
       if (! Hits) continue;
       TClonesArray &HitsGP = *Hits; 
+      TClonesArray &TracksGP = *Tracks;
       Int_t nHit = HitsGP.GetEntriesFast();
       for (Int_t i = 0; i < nHit; i++) {
 	StiPullHit *hit =  (StiPullHit *) HitsGP.UncheckedAt(i);
 	if (! hit) continue;
 	Short_t TrackNumber = hit->mTrackNumber;
-	StiPullTrk *track = (StiPullTrk *) event->mTrksG.UncheckedAt(TrackNumber-1);
+	if (TrackNumber < 1 || TrackNumber > nTrk) continue;
+	StiPullTrk *track = (StiPullTrk *) TracksGP.UncheckedAt(TrackNumber-1);
 	if (! track) continue;
 	if (track->nTpcHits < 10) continue;
 	//	hit->Print();
@@ -558,6 +562,7 @@ void LoopOverHistogr( const Char_t *pattern = "dYIPNvsrowpTinv") {
   TList *keys = f->GetListOfKeys();
   if (! keys) return;
   keys->Sort();
+
   TIter nextk(keys);
   TKey *key = 0;
   while ((key = (TKey *) nextk())) {
