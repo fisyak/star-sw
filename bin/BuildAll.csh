@@ -27,7 +27,7 @@ foreach root (root6 root5)
       if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
 #      echo "gcc = $gcc, optt = $optt, bits = $bits"
       foreach bit (${bits})
-        echo "gcc = $gcc, optt = $optt, bit = $bit"
+        echo "root - $root, gcc = $gcc, optt = $optt, bit = $bit"
         unsetenv NODEBUG
 #        if ($optt == "opt")  setenv NODEBUG YES 
 #        if ($optt == "opt3") setenv NODEBUG -O3 
