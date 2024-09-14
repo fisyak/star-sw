@@ -1,25 +1,20 @@
 /*
-  root.exe lMuDst.C checkStRefMultCorr.C
+  root.exe lMuDst.C checkStRefMultCorr.C+
  */
 // ROOT headers
 #include "TH1.h"
 #include "TChain.h"
 #include "TSystem.h"
+#include "TH2.h"
 #include "TFile.h"
-
+#include "StPicoEvent/StPicoDstReader.h"
+#include "StRefMultCorr/StRefMultCorr.h"
 // C++ headers
 #include <iostream>
 
 // Macro name
-void checkStRefMultCorr(const char *inFileName = "/gpfs01/star/pwg/abelouso/STAR_31.2_fixed/auau_31.2GeV_fixedTarget_2020_00001.picoDst.root",
+void checkStRefMultCorr(const char *inFileName = "/gpfs01/star/data25/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget/181/20181011/st_physics_20181011_raw_7500008,37038,40000.picoDst.root",
                         const char *oFileName = "oFile.root") {
-#if 0
-  gROOT->LoadMacro("$STAR/StRoot/StMuDSTMaker/COMMON/macros/loadSharedLibraries.C");
-  loadSharedLibraries();
-  gSystem->Load("StPicoEvent");
-#endif
-  gSystem->Load("StRefMultCorr");
-
   std::cout << "Hi! Lets do some physics, Master!" << std::endl;
   
   StPicoDstReader* picoReader = new StPicoDstReader(inFileName);
