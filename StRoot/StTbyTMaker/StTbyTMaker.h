@@ -80,7 +80,7 @@ class TrackMatch : public TObject {
   Int_t event;
   TrackParameters newP;
   TrackParameters oldP;
-  ClassDef(TrackMatch,3)
+  ClassDef(TrackMatch,4)
 };
 
 class HitParameters : public TObject {
