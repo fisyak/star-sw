@@ -1936,3 +1936,7 @@ root.exe [2] StAnalysisMaker::instance()->PrintTpcHits(1,1)
         Tpc s/r   1/  1 id    18 xyz:    18.115 +/- 0.100    57.251 +/- 0.200    22.614 +/- 0.100 q(keV)   2.29 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max   6/ 13 np  8 tmin/max 316/322 nt  7 tm 318.39 pad  10.42 adc   454
         Tpc s/r   1/  1 id    19 xyz:    18.640 +/- 0.100    57.037 +/- 0.200    35.283 +/- 0.100 q(keV)   1.06 idT     0 qa   0 fl  2 us 1 dX  1.87 pmin/max  11/ 13 np  3 tmin/max 293/302 nt 10 tm 297.11 pad  11.86 adc   211
         Tpc s/r   1/  1 id    20 xyz:    18.430 +/- 0.100    57.192 +/- 0.200    40.220 +/- 0.100 q(keV)   1.14 idT     0 qa   0 fl  2 us 1 dX  1.59 pmin/max   9/ 13 np  5 tmin/max 287/291 nt  5 tm 288.64 pad  10.94 adc   227
+================================================================================
+09/15/2024
+rcas6005] ~/work/ComparSL24y_SL24a/TbyT_dev_gitdev $ difw380 -a /star/rcf/test/dev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016_64bit/st_physics_17078006_raw_1000030.log /star/rcf/test/gitdev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016_64bit/st_physics_17078006_raw_1000030.log | more
+  
