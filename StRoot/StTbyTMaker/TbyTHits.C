@@ -291,15 +291,18 @@ void hitMateComp::Loop()
    TH2F *timD = new TH2F("timD",Form("time diff. %s - %s versus row",New.Data(),Old.Data()),72,0.5,72.5,256,-2.0,2.0);
    TH2F *adcR = new TH2F("adcR",Form("log(adc_{%s}/adc_{%s} versus row",New.Data(),Old.Data()),72,0.5,72.5,256,-2.0,2.0);
    TH2F *PadRow[3][24] = {0}; 
+   TH3F *dXSR = new TH3F("dXSR","x_{new} - x_{old} versus sector and row ; sector ; row; dX ",24,0.5,24.5,72,0.5,72.5,1000,-0.1,0.1);
+   TH3F *dYSR = new TH3F("dYSR","y_{new} - y_{old} versus sector and row ; sector ; row; dY ",24,0.5,24.5,72,0.5,72.5,1000,-0.1,0.1);
+   TH3F *dZSR = new TH3F("dZSR","z_{new} - z_{old} versus sector and row ; sector ; row; dZ ",24,0.5,24.5,72,0.5,72.5,2000,-1.0,1.0);
+   TH2F *dZzI = new TH2F("dZzI","z_{new} - z_{old} versus Z inner ; Z; dZ ",4200,-210.0,210.0,2000,-1.0,1.0);
+   TH2F *dZzO = new TH2F("dZzO","z_{new} - z_{old} versus Z outer ; Z; dZ ",4200,-210.0,210.0,2000,-1.0,1.0);
    TString Title;
    for (Int_t k = 0; k < 3; k++) {
-     TString Title(Form("found by both %s && %s",Old.Data(), New.Data()));
-     if (k == 1) Title = Form("found only by %s", New.Data());
-     if (k == 2) Title = Form("found only by %s", Old.Data());
+     TString Title(Form("found by both %s && %s ; row ; pad",Old.Data(), New.Data()));
+     if (k == 1) Title = Form("found only by %s ; row ; pad", New.Data());
+     if (k == 2) Title = Form("found only by %s ; row ; pad", Old.Data());
      for (Int_t sec = 1; sec <= 24; sec++) {
        PadRow[k][sec-1] = new TH2F(Form("%s%i",Names[k].histName,sec),Title, 72,0.5,72.5,144,0.5,144.5);
-       PadRow[k][sec-1]->SetXTitle("row");
-       PadRow[k][sec-1]->SetYTitle("pad");
      }
    }
    Long64_t nentries = fChain->GetEntriesFast();
@@ -329,6 +332,15 @@ void hitMateComp::Loop()
 	padD->Fill(newP_row, newP_pad - oldP_pad);
 	timD->Fill(newP_row, newP_timebucket - oldP_timebucket);
 	if (newP_adc > 0 && oldP_adc > 0) adcR->Fill(newP_row, TMath::Log(newP_adc/oldP_adc));
+	dXSR->Fill(newP_sector, newP_row, newP_x - oldP_x);
+	dYSR->Fill(newP_sector, newP_row, newP_y - oldP_y);
+	dZSR->Fill(newP_sector, newP_row, newP_z - oldP_z);
+	if (newP_row <= 13) { // !!!!!!!!!! aware aout iTPC !!!!!!!!!!
+	  dZzI->Fill(newP_z,  newP_z - oldP_z);
+	} else {
+	  dZzO->Fill(newP_z,  newP_z - oldP_z);
+	} 
+	dZSR->Fill(newP_sector, newP_row, newP_z - oldP_z);
       } else if (oldP_sector <= 0) {
 	RN->Fill(newP_row);
 	Int_t s = newP_sector - 1;
