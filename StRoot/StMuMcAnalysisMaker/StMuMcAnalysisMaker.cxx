@@ -71,6 +71,7 @@ static TH2F* hPVErrorVsNPVTracks = 0;
 
 static const Char_t *TracksVertices[2] = {"Tracks","Vertices"};
 static const Char_t *TitleTrType[kTotalT] = {"Global", "Primary"};
+static const Char_t *TitleVxType[kTotalT] = {"Secondary", "Primary"};
 static const Char_t *TitlePiDtype[NoPiDs] = {"dEdxPiD", "ToFPiD"};
 static const Char_t *TitleCharge[kTotalSigns] = {"(+)", "(-)"};   
 static const Char_t *NamesF[NHYPS]    = {"electron","antiproton","kaon-","pion-","muon-","dbar","tbar","He3Bar","alphabar"
@@ -162,6 +163,24 @@ static const Eff_t eff[kEffTotal] = {
 };
 //                               Eta pT  Phi
 static  const Char_t *proj3[3] = {"x","y","z"};
+// Verices
+static const  PlotName_t plotNameMatchVx[kTotalVxTypes] = {
+  {kMcVx,       "Mc",        "Mc vertices All"},                        
+  {kRecoVx,     "Rec",       "Rc vertices matched with only Mc vertex"},                
+  {kCloneVx,    "Clone",     "Mc vertices matched with > 1 Rc verte (Clone)"},             
+  {kGhostVx,    "Ghost",     "Rc vertices without Mc partner"},                  
+  {kLostVx,     "Lost",      "Mc vertices without reconstructed one"}
+};
+static	const VarName_t plotVarVx[kTotalQAVx] = {    
+  /* 0 */  {"NT",        "No. of Tracks %s %s ; No. of Tracks",         100,       0, 500},
+  /* 1 */  {"XY",        "Vertex XY  %s %s ; X; Y",                     100,     -10,   10, 100, -10, 10},
+  /* 2 */  {"Z",         "Vertex  Z  %s %s ; Z",                         -1,      -1,   -1},
+  /* 3 */  {"dXY",       "Vertex dXY RC - MC %s %s ; dX; dY",           100,      -1,    1, 100, -1, 1},
+  /* 4 */  {"dZ",        "Vertex dZ RC - MC %s %s ; dZ",                100,      -5,    5},
+  /* 5 */  {"GiD",       "Parent track GiD  %s %s ; GiD",                50,     0.5, 50.5,  -1  -1,-1, -1, -1, -1, 0 }
+};
+//                   sp              k           l
+static TH1 *hVX[kTotalT][kTotalVxTypes][kTotalQAVx] = {0};
 //________________________________________________________________________________
 const Char_t *StMuMcAnalysisMaker::MakeTitle( Int_t gp, Int_t type, Int_t particle, Int_t pm, Int_t x, Int_t i) {
   Int_t t = -1;
@@ -387,7 +406,7 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
     dirs[2]->cd();
     PrintMem(dirs[2]->GetPath());
     for (Int_t t = kMcTk; t < kTotalTkTypes; t++) {
-      TrackMatchType type = plotNameMatch[t].k;
+      MatchType type = plotNameMatch[t].k;
       if (! dirs[2]->GetDirectory(plotNameMatch[t].Name)) {
 	dirs[2]->mkdir(plotNameMatch[t].Name);
       }
@@ -730,7 +749,7 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
 }
 //_____________________________________________________________________________
 void StMuMcAnalysisMaker::BookVertexPlots(){
-  TDirectory *dirs[2] = {0};
+  TDirectory *dirs[4] = {0};
   dirs[0] = TDirectory::CurrentDirectory(); assert(dirs[0]);
   dirs[0]->cd();
   if (! dirs[0]->GetDirectory(TracksVertices[1])) {
@@ -739,12 +758,84 @@ void StMuMcAnalysisMaker::BookVertexPlots(){
   dirs[1] = dirs[0]->GetDirectory(TracksVertices[1]); assert(dirs[1]);
   dirs[1]->cd();
   PrintMem(dirs[1]->GetPath());
+  for (Int_t sp = 0; sp < kTotalT; sp++) {// Secondary, Primary
+    if (! dirs[1]->GetDirectory(TitleVxType[sp])) {
+      dirs[1]->mkdir(TitleVxType[sp]);
+    }
+    dirs[2] = dirs[1]->GetDirectory(TitleVxType[sp]);
+    for (Int_t k = 0; k < kTotalVxTypes; k++) {
+      if (! dirs[2]->GetDirectory(plotNameMatchVx[k].Name)) {
+	dirs[2]->mkdir(plotNameMatchVx[k].Name);
+      }
+      dirs[3] = dirs[2]->GetDirectory(plotNameMatchVx[k].Name);
+      dirs[3]->cd();
+      for (Int_t l = 0; l < kTotalQAVx; l++) {
+	if (           k == kMcVx    && (l == 3 || l == 4)) continue;  // dXY, dZ
+	if (sp == 1                  &&  l == 5)            continue;  // GiD
+	if (           k == kGhostVx &&  l >= 3)            continue;  // dXY, dZ. GiD
+        if (           k == kLostVx  && (l == 3 || l == 4)) continue;  // dXY, dZ
+	TString name(plotVarVx[l].Name);
+	TString title(Form(plotVarVx[l].Title,TitleVxType[sp],plotNameMatchVx[k].Title));
+	hVX[sp][k][l] = (TH1 *)  dirs[3]->Get(name);
+	if (! hVX[sp][k][l]) {
+	  Int_t nx = plotVarVx[l].nx;
+	  Double_t xmin = plotVarVx[l].xmin;
+	  Double_t xmax = plotVarVx[l].xmax;
+	  if (nx < 0) {
+	    Double_t zMin  = -220, zMax  = 220, dZ  = 0.2;      // 0.20 cm
+	    Double_t zMin1 =  195, zMax1 = 205, dZ1 = 0.0050; // 0.005 cm
+	    Int_t nbins = (zMax - zMin)/dZ + (zMax1 - zMin1)/dZ1 + 1;
+	    TArrayD Z(nbins);
+	    Double_t z = zMin;
+	    Int_t i = 0;
+	    while (z < zMax) {
+	      Z[i] = z; i++;
+	      if (z < zMin1 || z > zMax1) {
+		z += dZ;
+	      } else {
+		z += dZ1;
+	      }
+	    }
+	    hVX[sp][k][l] = new TH1F(name,title, i-1, Z.GetArray());
+	    continue;
+	  } 
+	  Int_t ny = plotVarVx[l].ny;
+	  Double_t ymin = plotVarVx[l].ymin;
+	  Double_t ymax = plotVarVx[l].ymax;
+	  if (ny <= 0) {
+	    if (sp == 1 && (k == kMcVx || k == kLostVx)  && l == 0) {
+	      nx *= 10;
+	      xmax *= 10;
+	    }
+	    hVX[sp][k][l] = new TH1F(name,title, nx, xmin, xmax);
+	    continue;
+	  }
+	  Int_t nz = plotVarVx[l].nz;
+	  Double_t zmin = plotVarVx[l].zmin;
+	  Double_t zmax = plotVarVx[l].zmax;
+	  if (nz <= 0) {
+	    if (sp == 0 && l >= 1 && l < 5) {// Secondary vertex
+	      nx *= 10;
+	      xmin *= 10;
+	      xmax *= 10;
+	      ny *= 10;
+	      ymin *= 10;
+	      ymax *= 10;
+	    }
+	    hVX[sp][k][l] = new TH2F(name,title, nx, xmin, xmax, ny, ymin, ymax);
+	    continue;
+	  }
+	  hVX[sp][k][l] = new TH3F(name,title, nx, xmin, xmax, ny, ymin, ymax, nz, zmin, zmax);
+	}
+      }
+    }
+  }
+  dirs[0]->cd();
+  PrintMem(dirs[1]->GetPath());
 #if 0  
   mStKFParticleInterface = new StKFParticleInterface;
   mStKFParticlePerformanceInterface = new StKFParticlePerformanceInterface(mStKFParticleInterface->GetTopoReconstructor());
 #endif
-  dirs[0]->cd();
-  PrintMem(dirs[1]->GetPath());
 }
 //_____________________________________________________________________________
 Int_t StMuMcAnalysisMaker::Make(){
@@ -840,10 +931,10 @@ void StMuMcAnalysisMaker::FillTrackPlots()
       Int_t countToF = 0;
       Int_t countEToF = 0;
       StMuTrack *Track = 0;
-      TrackMatchType typeTpc = kNotDefined;
-      TrackMatchType typeHft = kNotDefined;
-      TrackMatchType typeToF = kNotDefined;
-      TrackMatchType typeEToF = kNotDefined;
+      MatchType typeTpc = kNotDefined;
+      MatchType typeHft = kNotDefined;
+      MatchType typeToF = kNotDefined;
+      MatchType typeEToF = kNotDefined;
       if (count) {
 	McTk2RcTk = (gp == kGlobal) ?
 	  muDst->McTrack2GlobalTrack().equal_range(mcTrack) :
@@ -1055,6 +1146,59 @@ void StMuMcAnalysisMaker::FillTrackPlots()
 #if 1
 //_____________________________________________________________________________
 void StMuMcAnalysisMaker::FillVertexPlots(){
+  Int_t NoMuMcVertices = StMuDst::instance()->numberOfMcVertices(); //if (_debugAsk) cout << "\t" << StMuArrays::mcArrayTypes[0] << " " << NoMuMcVertices << std::endl;
+  MatchType type = kMcVx;
+  for (Int_t iMcVx = 0; iMcVx < NoMuMcVertices; iMcVx++) {
+    StMuMcVertex* mcVx = StMuDst::instance()->MCvertex(iMcVx);
+    if (! mcVx) continue;
+    Int_t sp = 1;
+    if (mcVx->IdParTrk() > 0) sp = 0;
+    for (Int_t  l = 0; l < kTotalQAVx; l++) {
+      if (! hVX[sp][type][l]) continue;
+      if      (l == 0) hVX[sp][type][l]->Fill(mcVx->NoDaughters());
+      else if (l == 1) hVX[sp][type][l]->Fill(mcVx->XyzV().x(), mcVx->XyzV().y());
+      else if (l == 2) hVX[sp][type][l]->Fill(mcVx->XyzV().z());
+      else if (l == 5) hVX[sp][type][l]->Fill(StMuDst::instance()->MCtrack(mcVx->IdParTrk()-1)->GePid());
+    }
+  }
+  type = kLostVx;
+  for (auto mcVx:  StMuDst::instance()->LostVx()) {
+    if (! mcVx) continue;
+    Int_t sp = 1;
+    if (mcVx->IdParTrk() > 0) sp = 0;
+    for (Int_t  l = 0; l < kTotalQAVx; l++) {
+      if (! hVX[sp][type][l]) continue;
+      if      (l == 0) hVX[sp][type][l]->Fill(mcVx->NoDaughters());
+      else if (l == 1) hVX[sp][type][l]->Fill(mcVx->XyzV().x(), mcVx->XyzV().y());
+      else if (l == 2) hVX[sp][type][l]->Fill(mcVx->XyzV().z());
+      else if (l == 5) hVX[sp][type][l]->Fill(StMuDst::instance()->MCtrack(mcVx->IdParTrk()-1)->GePid());
+    }
+  }
+  map<StMuPrimaryVertex*,StMuMcVertex *>      &RcVx2McVx = StMuDst::instance()->RcVx2McVx();
+  for (Int_t t = kRecoVx; t < kLostVx; t++) {
+    vector<StMuPrimaryVertex *> *rcVertices = 0;
+    if      (t == kRecoVx)  rcVertices = &StMuDst::instance()->StMuDst::RecoVx();
+    else if (t == kCloneVx) rcVertices = &StMuDst::instance()->StMuDst::CloneVx();
+    else if (t == kGhostVx) rcVertices = &StMuDst::instance()->StMuDst::GhostVx();
+    if (! rcVertices) continue;
+    for (auto rcVx : *rcVertices)  {
+      StMuMcVertex *mcVx = RcVx2McVx[rcVx];
+      Int_t sp = 1;
+      if (mcVx && mcVx->IdParTrk() > 0) sp = 0;
+      for (Int_t  l = 0; l < kTotalQAVx; l++) {
+	if (! hVX[sp][t][l]) continue;
+	if      (l == 0) hVX[sp][t][l]->Fill(rcVx->noTracks());
+	else if (l == 1) hVX[sp][t][l]->Fill(rcVx->position().x(), rcVx->position().y());
+	else if (l == 2) hVX[sp][t][l]->Fill(rcVx->position().z());
+	else if (mcVx) {
+	  if      (l == 3) hVX[sp][t][l]->Fill(rcVx->position().x()-mcVx->XyzV().x(), rcVx->position().y()-mcVx->XyzV().y());
+	  else if (l == 4) hVX[sp][t][l]->Fill(rcVx->position().z()-mcVx->XyzV().z());
+	  else if (l == 5) hVX[sp][t][l]->Fill(StMuDst::instance()->MCtrack(mcVx->IdParTrk()-1)->GePid());
+	}
+      }
+    }
+  }
+  //________________________________________________________________________________
   if (mStKFParticleInterface) FillKFVertexPlots();
 }
 //_____________________________________________________________________________
@@ -1753,7 +1897,7 @@ void StMuMcAnalysisMaker::FillKFVertexPlots(){
 }
 #endif
 //________________________________________________________________________________
-void StMuMcAnalysisMaker::FillQAGl(TrackMatchType type,const StMuTrack *gTrack, const StMuMcTrack *mcTrack, const StDcaGeometry *dcaG, const StMuMcVertex *mcVertex) {
+void StMuMcAnalysisMaker::FillQAGl(MatchType type,const StMuTrack *gTrack, const StMuMcTrack *mcTrack, const StDcaGeometry *dcaG, const StMuMcVertex *mcVertex) {
 #if 1
   if (! gTrack || ! mcTrack) return;
   if (! dcaG   || ! mcVertex) return;
@@ -1819,7 +1963,7 @@ void StMuMcAnalysisMaker::FillQAGl(TrackMatchType type,const StMuTrack *gTrack, 
 #endif
 }
 //________________________________________________________________________________
-void StMuMcAnalysisMaker::FillQAPr(TrackMatchType type,const StMuTrack *pTrack, const StMuMcTrack *mcTrack, const StMuPrimaryTrackCovariance *cov) {
+void StMuMcAnalysisMaker::FillQAPr(MatchType type,const StMuTrack *pTrack, const StMuMcTrack *mcTrack, const StMuPrimaryTrackCovariance *cov) {
 #if 1
   if (! pTrack || ! mcTrack) return;
   if (! mcTrack->Charge()) return;
@@ -1868,7 +2012,7 @@ void StMuMcAnalysisMaker::FillQAPr(TrackMatchType type,const StMuTrack *pTrack, 
 #endif
 }
 //________________________________________________________________________________
-void StMuMcAnalysisMaker::FillQAPr(TrackMatchType type,const StMuTrack *pTrack, const StMuMcTrack *mcTrack, const KFParticle *particle) {
+void StMuMcAnalysisMaker::FillQAPr(MatchType type,const StMuTrack *pTrack, const StMuMcTrack *mcTrack, const KFParticle *particle) {
 #if 1
   if (! pTrack || ! mcTrack) return;
   if (! mcTrack->Charge()) return;
@@ -2212,7 +2356,7 @@ Bool_t StMuMcAnalysisMaker::Check() {
 //________________________________________________________________________________
 void StMuMcAnalysisMaker::DrawQA(Int_t gp, Int_t pp, Int_t xx, Int_t ii) {// versus Nhits
   Int_t animate = 0;
-  TrackMatchType type = kRecoTk;
+  MatchType type = kRecoTk;
   Int_t k1 = kGlobal, k2 = kPrimary;
   if (gp >= 0 && gp <= kPrimary) {k1 =  k2 = gp;}
   for (Int_t k = k2; k >= k1; k--) {
@@ -2289,8 +2433,8 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
     for (Int_t particle = 0; particle < kPartypeT; particle++) {
       Int_t subsection = 0;
       for (Int_t i = 0; i < kEffTotal; i++) {
-	//  TrackMatchType t1 = eff[i].kDividend;
-	//  TrackMatchType t2 = eff[i].kDivider;
+	//  MatchType t1 = eff[i].kDividend;
+	//  MatchType t2 = eff[i].kDivider;
 	TString h4line;
 	TString tag = TitleTrType[gp];
 	tag += " tracks. ";
@@ -2393,7 +2537,7 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
 	    }
 	    for (bin = heff[l]->GetXaxis()->GetFirst(); bin <= heff[l]->GetXaxis()->GetLast(); bin++) {
 	      val = heff[l]->GetBinContent(bin); Val += val;
-	      sum = temp->GetBinContent(bin);; Sum += sum;
+	      sum = temp->GetBinContent(bin); Sum += sum;
 	      err = 0;
 	      if      (sum < 1.e-7 && val < 1.e-7) {val =    0;}
 	      else if (val > sum)                  {val = 1.05;}

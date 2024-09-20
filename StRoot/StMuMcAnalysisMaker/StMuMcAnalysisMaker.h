@@ -64,14 +64,14 @@ class TNtuple;
 enum TrackType {
   kGlobal = 0, kPrimary, kTotalT  // switch between global and primary tracks
 };
-enum TrackMatchType {
+enum MatchType {
   kNotDefined = -1, kMcTk = 0, kMcTpcTk, kRecoTk   , kCloneTk   , kGhostTk   , kLostTk
   ,                            kMcToFTk, kRecoToFTk,              kGhostToFTk, kLostToFTk
   ,                            kMcEToFTk, kRecoEToFTk,            kGhostEToFTk, kLostEToFTk
   ,                            kMcHftTk, kRecoHftTk,              kGhostHftTk, kLostHftTk 
   ,                            kTotalTkTypes                       
-  ,                 kMcVx = 0, kMcTpcVx, kRecoVx   , kCloneVx   , kGhostVx   , kLostVx
-  ,                            kTotalVxTypes                       
+  , kMcVx = 0, kRecoVx, kCloneVx   , kGhostVx   , kLostVx
+  ,                                       kTotalVxTypes
 };
 enum EdEdx {NdEdxPiD = 3, NToFPiD = 2, NoPiDs = 2};
 enum EParticleType {
@@ -84,7 +84,8 @@ enum EPlotType {
   kTotalQA = 16, kTotalQAll,                                             // no. of plots for Global and Primary tracks
   noFit = 100,
   NHYPS = 18, NHypTypes = NHYPS/2, 
-  kVariables = 2                                                         // x = 0 vs No. fit and No. bad points, x = 1 vs Eta and pT 
+  kVariables = 2,                                                         // x = 0 vs No. fit and No. bad points, x = 1 vs Eta and pT 
+  kTotalQAVx = 6                      
 };
 struct Var_t {
   Double_t ChiSqXY;
@@ -106,7 +107,7 @@ struct Var_t {
   Double_t Phi; // degree
 };
 struct PlotName_t {
-  TrackMatchType    k;
+  MatchType    k;
   const Char_t *Name;
   const Char_t *Title;
 };
@@ -120,13 +121,13 @@ struct VarName_t {
   Int_t nz;
   Double_t zmin, zmax;
   Double_t  min,  max; // min and max for plots
-  Int_t    GlobalOnly; // = 1: only global, -1: only primary, 0: both
+  Int_t    GlobalOnly; // = 1: only global, -1: only primary, 0: both; for Vx : = 1: Secondary, -1: Primary; 0 : All
 };
 struct Eff_t {
   const Char_t *Name;
   const Char_t *Title;
-  TrackMatchType kDividend;
-  TrackMatchType kDivider;
+  MatchType kDividend;
+  MatchType kDivider;
   Double_t min, max;
 };
 
@@ -157,9 +158,9 @@ class StMuMcAnalysisMaker : public StMaker {
   void           BookVertexPlots();
   virtual Int_t  Make();
   void           FillTrackPlots();
-  void           FillQAGl(TrackMatchType type,const StMuTrack *gTrack = 0, const StMuMcTrack *mcTrack = 0, const StDcaGeometry *dcaG = 0, const StMuMcVertex *mcVertex = 0);
-  void           FillQAPr(TrackMatchType type,const StMuTrack *pTrack = 0, const StMuMcTrack *mcTrack = 0, const StMuPrimaryTrackCovariance *cov = 0); 
-  void           FillQAPr(TrackMatchType type,const StMuTrack *pTrack, const StMuMcTrack *mcTrack, const KFParticle *particle);
+  void           FillQAGl(MatchType type,const StMuTrack *gTrack = 0, const StMuMcTrack *mcTrack = 0, const StDcaGeometry *dcaG = 0, const StMuMcVertex *mcVertex = 0);
+  void           FillQAPr(MatchType type,const StMuTrack *pTrack = 0, const StMuMcTrack *mcTrack = 0, const StMuPrimaryTrackCovariance *cov = 0); 
+  void           FillQAPr(MatchType type,const StMuTrack *pTrack, const StMuMcTrack *mcTrack, const KFParticle *particle);
   void           ForceAnimate(unsigned int times=0, int msecDelay=0); 
   void           FillVertexPlots();
   void           FillKFVertexPlots();

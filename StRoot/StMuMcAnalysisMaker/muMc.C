@@ -11,7 +11,7 @@ void muMc(Int_t N = 1000000,
 #else
   //  gSystem->SetFPEMask(kInvalid | kDivByZero | kOverflow );
   gROOT->LoadMacro("lMuDst.C");
-#if 1 //=> 1 if you want to replot
+#if 0 //=> 1 if you want to replot
   Char_t *file = gSystem->Which("./",output,kReadPermission);
 #else
   Char_t *file = 0;
@@ -38,10 +38,11 @@ void muMc(Int_t N = 1000000,
     chain->SetTFile(f);
     StMuMcAnalysisMaker *muMc = StMuMcAnalysisMaker::instance();
     muMc->SetAttr("TrackPlots",1);
+    muMc->SetAttr("VertexPlots",1);
     chain->Init();
   }
   delete [] file;
-  StMuMcAnalysisMaker::instance()->Draw();
+  //  StMuMcAnalysisMaker::instance()->Draw();
 #endif
   
 }
