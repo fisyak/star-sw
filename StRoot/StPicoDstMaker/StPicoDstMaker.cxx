@@ -341,19 +341,6 @@ Int_t StPicoDstMaker::Init() {
     return kStErr;
   }
 
-#if defined (__TFG__VERSION__)
-#if defined (__HIST_PV__)
-  if (GetTFile()) {
-    GetTFile()->cd();
-    hists[0] = new TH1F("dca3D","global track dca3D wrt best Vx",2000,0,200);
-    hists[1] = new TH1F("dca3DLam","global track from Lambda",2000,0,200);
-    hists[2] = new TH1F("dca3DK0s","global track from K0s",2000,0,200);
-    pVrZ     = new TH2F("pVrZ","rho VS Z for primary Vertex",200,-20,20,100,0,2);
-    pVxy     = new TH2F("pVxy","Y Vs X for primary Vertex",2000,-2,2,2000,-2,2);
-  }
-#endif /* __HIST_PV__ */
-#endif /* __TFG__VERSION__ */    
-
   return kStOK;
 }
 //_________________
@@ -1115,45 +1102,9 @@ void StPicoDstMaker::fillTracks() {
       THelixTrack t = dcaG->thelix();
       StThreeVectorD V(mMuDst->primaryVertex()->position());
       Double_t dca3D = t.Dca(V.xyz());
-#if defined(__HIST_PV__)
-      if (hists[0]) {
-	hists[0]->Fill(dca3D);
-	Int_t IdMc = gTrk->idTruth();
-	if (IdMc) {
-	  StMuMcTrack *mcTrk = StMuDst::instance()->MCtrack(IdMc-1);
-	  assert(mcTrk);
-	  assert(IdMc == mcTrk->Id());
-	  Int_t IdVx = mcTrk->IdVx(); // parent vertex
-	  assert(IdVx);
-	  StMuMcVertex *MuVx = StMuDst::instance()->MCvertex(IdVx-1);
-	  assert(MuVx);
-	  Int_t IdParentTk = MuVx->IdParTrk();
-	  if (IdParentTk) {
-	    StMuMcTrack *mcParentTrk = StMuDst::instance()->MCtrack(IdParentTk-1);
-	    assert(mcParentTrk);
-#if 1
-	    Int_t pdg = mcParentTrk->Pdg();
-	    assert(pdg);
-	    if (TMath::Abs(pdg) ==  3122) {
-	      hists[1]->Fill(dca3D);
-	    } else if (pdg == 310) {
-	      hists[2]->Fill(dca3D);
-	    }
-#else
-	    Int_t gePid = mcParentTrk->GePid();
-	    if (gePid == 18 || gePid == 26) {
-	      hists[1]->Fill(dca3D);
-	    } else if (gePid == 16) {
-	      hists[2]->Fill(dca3D);
-	    }
-#endif
-	  }
-	}
-      }
-#endif /* __HIST_PV__ */
       if (dca3D > StMuDst::dca3Dmax()) continue;
-#endif /* __TFG__VERSION__ */
     }
+#endif /* __TFG__VERSION__ */
 
 #if defined(__TFG__VERSION__)
     if ( StMuDst::dca3Dmax()>0 ) {
@@ -1161,42 +1112,6 @@ void StPicoDstMaker::fillTracks() {
       THelixTrack t = dcaG->thelix();
       StThreeVectorD V(mMuDst->primaryVertex()->position());
       Double_t dca3D = t.Dca(V.xyz());
-#if defined(__HIST_PV__)
-      if (hists[0]) {
-	hists[0]->Fill(dca3D);
-	Int_t IdMc = gTrk->idTruth();
-	if (IdMc) {
-	  StMuMcTrack *mcTrk = StMuDst::instance()->MCtrack(IdMc-1);
-	  assert(mcTrk);
-	  assert(IdMc == mcTrk->Id());
-	  Int_t IdVx = mcTrk->IdVx(); // parent vertex
-	  assert(IdVx);
-	  StMuMcVertex *MuVx = StMuDst::instance()->MCvertex(IdVx-1);
-	  assert(MuVx);
-	  Int_t IdParentTk = MuVx->IdParTrk();
-	  if (IdParentTk) {
-	    StMuMcTrack *mcParentTrk = StMuDst::instance()->MCtrack(IdParentTk-1);
-	    assert(mcParentTrk);
-#if 1
-	    Int_t pdg = mcParentTrk->Pdg();
-	    assert(pdg);
-	    if (TMath::Abs(pdg) ==  3122) {
-	      hists[1]->Fill(dca3D);
-	    } else if (pdg == 310) {
-	      hists[2]->Fill(dca3D);
-	    }
-#else
-	    Int_t gePid = mcParentTrk->GePid();
-	    if (gePid == 18 || gePid == 26) {
-	      hists[1]->Fill(dca3D);
-	    } else if (gePid == 16) {
-	      hists[2]->Fill(dca3D);
-	    }
-#endif
-	  }
-	}
-      }
-#endif /* __HIST_PV__ */
       if (dca3D > StMuDst::dca3Dmax()) continue;
     }
 #endif /* __TFG__VERSION__ */
