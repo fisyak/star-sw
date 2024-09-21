@@ -98,20 +98,28 @@ void MuEbyE(
 	UInt_t NPV = MuDst[k]->numberOfPrimaryVertices();
 	if (! NPV) continue;
 	if (! MuDst[k]->primaryVertex(0)) continue;
-	Double_t Z_ref = MuDst[k]->primaryVertex(0)->position().z();
-	if (FXT) Z_ref = 200;
+	// Find vertex with highest multiplicity (ignore rank)
+	Int_t MaxnoTracks = 0;
 	for(UInt_t  iPV=0; iPV < NPV; iPV++) {
 	  StMuPrimaryVertex *Vtx = MuDst[k]->primaryVertex(iPV);
 	  if (! Vtx) continue;
-	  if (_debug) Vtx->Print();
-	  if (! BestVtx[k]) {
+	  Int_t noTracks = Vtx->noTracks();
+	  if (noTracks > MaxnoTracks) {
 	    BestVtx[k] = Vtx;
-	  } else {
-	    if (TMath::Abs(Vtx->position().z() - Z_ref) < 5.0) {
-	      dXY2[k]->Fill(Vtx->position().x() - BestVtx[k]->position().x(), Vtx->position().y() - BestVtx[k]->position().y());
-	      dZ2[k]->Fill(Vtx->position().z() - BestVtx[k]->position().z());
-	      okVX = kFALSE;
-	    }
+	    MaxnoTracks = noTracks;
+	  }
+	}
+	if (! BestVtx[k]) continue;
+	Double_t Z_ref = BestVtx[k]->position().z();
+	for(UInt_t  iPV=0; iPV < NPV; iPV++) {
+	  StMuPrimaryVertex *Vtx = MuDst[k]->primaryVertex(iPV);
+	  if (! Vtx) continue;
+	  if (Vtx == BestVtx[k]) continue;
+	  if (_debug) Vtx->Print();
+	  if (TMath::Abs(Vtx->position().z() - Z_ref) < 5.0) {
+	    dXY2[k]->Fill(Vtx->position().x() - BestVtx[k]->position().x(), Vtx->position().y() - BestVtx[k]->position().y());
+	    dZ2[k]->Fill(Vtx->position().z() - BestVtx[k]->position().z());
+	    okVX = kFALSE;
 	  }
 	}
       }
