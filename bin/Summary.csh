@@ -21,7 +21,7 @@ foreach done (`ls -1d ???/*`)
   endif
   cd -;
 end
-exit 0;
+#exit 0;
 if ($countJ > 0) then
   sleep 10; 
   touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
