@@ -2205,7 +2205,9 @@ void StBFChain::SetDbOptions(StMaker *mk){
 				 "TpcPosition", "TpcHalfPosition", "TpcWheelPosition", 
 				 "TpcSuperSectorPositionB", "TpcSuperSectorPositionD", 
 				 "TpcInnerSectorPositionB", "TpcOuterSectorPositionB", 
-				 "tpcBXT0CorrEPD", "tpcTimeBucketCor", 0};
+				 "tpcBXT0CorrEPD", "tpcTimeBucketCor", 
+				 "PrimaryVertexCuts",
+				 0};
     LOG_INFO << "TFG version for TPC alignment parameters" << endm;
     for (Int_t i = 0; TFGTables[i]; i++) {
       LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endm; 
