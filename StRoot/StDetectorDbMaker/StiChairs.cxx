@@ -52,6 +52,8 @@ MakeChairInstance2(KalmanTrackFitterParameters,StiKalmanTrackFitterParameters,Ca
 #include "StiKalmanTrackFinderParameters.h"
 MakeChairInstance2(KalmanTrackFinderParameters,StiKalmanTrackFinderParameters,Calibrations/tracker/KalmanTrackFinderParameters);
 #include "StiTpcHitErrorMDF4.h"
+#include "StiTpcPullMDF4.h"
+#include "StDetectorDbMaker/St_beamInfoC.h"
 //________________________________________________________________________________
 void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
   fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
@@ -78,6 +80,10 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   Double_t dTimeSigmaSQ = Eval(  2, fxx);
   ecross = scale*padP *padP *dPadSigmaSQ ;
   edip   = scale*timeP*timeP*dTimeSigmaSQ;
+  Double_t pulldYSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 0, _z, _eta, _tanl, AdcL);
+  Double_t pulldZSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 2, _z, _eta, _tanl, AdcL);
+  ecross *= pulldYSQ;
+  edip  *= pulldZSQ;
   Int_t fail = 0;
   if (ecross< min2Err) {ecross = min2Err; fail++;}
   if (ecross> max2Err) {ecross = max2Err; fail++;}
@@ -113,3 +119,46 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
 }
 MakeChairInstance2(MDFCorrection4,StiTpcInnerHitErrorMDF4,Calibrations/tracker/TpcInnerHitErrorMDF4);
 MakeChairInstance2(MDFCorrection4,StiTpcOuterHitErrorMDF4,Calibrations/tracker/TpcOuterHitErrorMDF4);
+//________________________________________________________________________________
+StiTpcPullMDF4 *StiTpcPullMDF4::fgInstance = 0;
+//________________________________________________________________________________
+StiTpcPullMDF4 *StiTpcPullMDF4::instance() {
+  if (fgInstance) return fgInstance;	
+  const Char_t *Pathes[2] {"Calibrations/tracker/TpcPullMDF4COL", "Calibrations/tracker/TpcPullMDF4FXT"};
+  Int_t i = 0;
+  if (St_beamInfoC::instance()->IsFixedTarget()) i = 1;
+  St_MDFCorrection4 *table = (St_MDFCorrection4 *) StMaker::GetChain()->GetDataBase(Pathes[i]);
+  assert(table);	  DEBUGTABLE(MDFCorrection4);
+  fgInstance = new StiTpcPullMDF4(table);
+  return fgInstance;
+}
+//________________________________________________________________________________
+void StiTpcPullMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
+  fxx[0] = _z;    // 1. - TMath::Abs(_z)/207.707; // Z
+  Double_t y = TMath::Tan(_eta);
+  fxx[1] = y;     // y*y; // tanP**2
+  fxx[2] = _tanl; // _tanl*_tanl; // tanL**2
+  fxx[3] = AdcL;   // AdcL
+}
+//________________________________________________________________________________
+void StiTpcPullMDF4::calculatePull(Double_t _z,  Double_t _eta, Double_t _tanl, Int_t io, 
+				   Double_t &dYPullSQ, Double_t &dZPullSQ, Double_t AdcL) const {
+  static const Double_t min2Pull = 0.25;
+  static const Double_t max2Pull = 25.0;
+  convert(_z, _eta, _tanl, AdcL);
+  dYPullSQ = Eval(  0, fxx);
+  dZPullSQ = Eval(  1, fxx);
+  Int_t fail = 0;
+  if (dYPullSQ< min2Pull) {dYPullSQ = min2Pull; fail++;}
+  if (dYPullSQ> max2Pull) {dYPullSQ = max2Pull; fail++;}
+  if (dZPullSQ< min2Pull) {dZPullSQ = min2Pull; fail++;} 
+  if (dZPullSQ> max2Pull) {dZPullSQ = max2Pull; fail++;}
+  static Int_t _debug = 0;
+  if (_debug) {
+    cout << "z = " << _z << " eta = " << _eta << " tanl = " << _tanl << " AdcL = " << AdcL 
+	 << ": dYPullSQ = " << dYPullSQ << " dZPullSQ = " << dZPullSQ;
+    cout << endl;
+    _debug++;
+  }
+}
+//--------------------------------------------------------------------------------
