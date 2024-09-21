@@ -44,5 +44,6 @@ Root.ObjectStat:            1
 # F: File browser E: Text Editor H: HTML browser
 # C: Canvas I: I/O redirection P: Proof G: GL viewer
 #Browser.Options:             CEI
+Browser.Name: TRootBrowser
 WebGui.CheckRemoteDisplay: no
 Canvas.Name: TRootCanvas
