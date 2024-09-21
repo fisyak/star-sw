@@ -624,10 +624,10 @@ void Draw(const Char_t *file="Plots.root") {
 #endif
 }
 //________________________________________________________________________________
-void TbyTPlots(const Char_t *file = 0, Int_t Nentries=0) {
+void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
   TString TreeName("trackMateComp");
   fChain = new TChain(TreeName);
-  TFileSet dir(".");
+  TFileSet dir(files);
   TDataSetIter next(&dir,0);
   TDataSet *set = 0;
   TFile *f = 0;
