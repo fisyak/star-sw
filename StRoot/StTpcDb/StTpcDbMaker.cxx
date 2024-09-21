@@ -260,17 +260,6 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
     gMessMgr->QAInfo() << "ReSet environment NewTpcAlignment (year >= 2013)  from " << iNewTpcAlignmentOld << " to " << iNewTpcAlignment << endm;
     gEnv->SetValue("NewTpcAlignment", iNewTpcAlignment);
   }
-#if 0 /* move to  StBFChain::SetDbOptions */
-  if (IAttr("TFGdbOpt")) {
-    LOG_INFO << "Disable MySQL for TPC alignment parameters" << endm;
-    SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
-    SetFlavor("TFG","TpcPosition"); // disable MySQL 
-    SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
-    SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
-    SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
-    SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
-  }
-#endif 
   // Create Needed Tables:    
   if (! IAttr("Simu")) {
     Float_t gFactor = StarMagField::Instance()->GetFactor();
