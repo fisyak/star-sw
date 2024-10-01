@@ -140,10 +140,12 @@ class StPicoTrack : public TObject {
   Float_t nSigmaElectron() const         { return (Float_t)mNSigmaElectron / 1000.f; }
 
   /// Return track topology map (return 0 in case when requested index is >1)
-  UInt_t  topologyMap(UInt_t idx) const  { return (idx>1) ? 0 : mTopologyMap[idx]; }
+  UInt_t  topologyMap(UInt_t idx) const  { return (idx>=eTopologyMap) ? 0 : mTopologyMap[idx]; }
 #if !defined (__TFG__VERSION__)
   /// Return topology map for iTPC
   ULong64_t iTpcTopologyMap() const      { return mTopoMap_iTpc; }
+#else /* __TFG__VERSION__ */
+  ULong64_t iTpcTopologyMap() const      { return topologyMap(2); }
 #endif
   
 
