@@ -102,15 +102,16 @@
 #    set evout = ",-evout";
 #    if ($n == 4) set evout = ",evout";
 #  endif
-#   set evout = ",evout";
-set evout = ",-evout";
+   set evout = ",evout";
+#set evout = ",-evout";
 #  root.exe -b -q  'bfc.C(10000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q -x  'bfc.C(100000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
-  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder,StiKFVertex,-genvtx","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(100000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
    rm ${bla}
   gzip ${logFile}
