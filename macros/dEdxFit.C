@@ -1711,7 +1711,8 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
     }
     g->SetParameters(params);
     if (sigma > 0) {
-      g->SetRange(params[1]-sigma*RMS,params[1]+sigma*RMS);
+      //      g->SetRange(params[1]-sigma*RMS,params[1]+sigma*RMS);
+      //      g->SetRange(params[1]-sigma,params[1]+sigma);
       g->SetParLimits(1, params[1]-params[2], params[1]+params[2]);
       g->SetParLimits(2, 1e-3, RMS);
     }
@@ -4748,8 +4749,14 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 	     Option_t *opt="R", 
 	     Int_t ix = -1, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
+#if 0
 	     Double_t nSigma=-3, Int_t pow=0,
-	     Double_t zmin = -5, Double_t zmax = 5) {
+	     Double_t zmin = -5, Double_t zmax = 5
+#else
+	     Double_t nSigma=3, Int_t pow=0,
+	     Double_t zmin = -1, Double_t zmax = 2
+#endif
+  ) {
   if (! hist) return;
   struct Fit_t {
     Float_t i;
