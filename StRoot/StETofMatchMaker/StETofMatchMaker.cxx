@@ -90,6 +90,7 @@
 
 #include "StETofMatchMaker.h"
 #include "StETofHitMaker/StETofHitMaker.h"
+#include "StETofCalibMaker/StETofCalibMaker.h"
 #include "StETofUtil/StETofGeometry.h"
 #include "StETofUtil/StETofConstants.h"
 
@@ -3306,13 +3307,24 @@ StETofMatchMaker::sortMatchCases( eTofHitVec inputVec ,  std::map< Int_t, eTofHi
 void 
 StETofMatchMaker::sortandcluster(eTofHitVec& matchCandVec , eTofHitVec& detectorHitVec , eTofHitVec& intersectionVec , eTofHitVec& finalMatchVec){
   
+  
+ //flag Overlap-Hits & jumped Hits  -------------------------------------------------------------------
 
- //flag Overlap-Hits -------------------------------------------------------------------
   std::map< Int_t, eTofHitVec >  overlapHitMap;
   eTofHitVec overlapHitVec;
   eTofHitVec tempVecOL        = matchCandVec;  
   eTofHitVecIter detHitIter;
   eTofHitVecIter detHitIter2;
+
+  std::map< int, bool >  jumpHitMap;
+
+  for(unsigned int i=0; i<matchCandVec.size();i++){
+    if(matchCandVec.at(i).clusterSize > 100){
+      jumpHitMap[matchCandVec.at(i).index2ETofHit] = true;
+    }else{
+      jumpHitMap[matchCandVec.at(i).index2ETofHit] = false;
+    }
+  }
   
   for( auto detHitIter = tempVecOL.begin(); detHitIter != tempVecOL.end(); ) {
     
@@ -3909,6 +3921,28 @@ StETofMatchMaker::sortandcluster(eTofHitVec& matchCandVec , eTofHitVec& detector
       }// loop over MMMap
   }//loop over counters
   
+  //set clustersize for jumped hits: +100 if early , +200 if late, + 300 if still jumped
+ 
+  for(unsigned int i=0;i<finalMatchVec.size();i++){
+
+    if(jumpHitMap.at(finalMatchVec.at(i).index2ETofHit)){
+      finalMatchVec.at(i).clusterSize += 300;
+    }
+   
+    StETofCalibMaker*  mETofCalibMaker;
+    mETofCalibMaker = ( StETofCalibMaker* ) GetMaker( "etofCalib" );
+
+    int keyGet4up   = 144 * ( finalMatchVec.at(i).sector - 13 ) + 48 * ( finalMatchVec.at(i).plane -1 ) + 16 * ( finalMatchVec.at(i).counter - 1 ) + 8 * ( 1 - 1 ) + ( ( finalMatchVec.at(i).strip - 1 ) / 4 );
+    int keyGet4down = 144 * ( finalMatchVec.at(i).sector - 13 ) + 48 * ( finalMatchVec.at(i).plane -1 ) + 16 * ( finalMatchVec.at(i).counter - 1 ) + 8 * ( 2 - 1 ) + ( ( finalMatchVec.at(i).strip - 1 ) / 4 );
+
+    if(mETofCalibMaker->GetState(keyGet4up) == 1 || mETofCalibMaker->GetState(keyGet4down) == 1){
+      finalMatchVec.at(i).clusterSize += 100;
+    }
+    if(mETofCalibMaker->GetState(keyGet4up) == 2 || mETofCalibMaker->GetState(keyGet4down) == 2 ){
+      finalMatchVec.at(i).clusterSize += 200;
+    }
+  }
+
   sortOutOlDoubles(finalMatchVec);
 }
 
@@ -4036,5 +4070,6 @@ StETofMatchMaker::sortOutOlDoubles(eTofHitVec& finalMatchVec){
     if(singlemixdouble == 9 || isOl == 9 || matchcase == 9) newFlag = 0;
 
     finalMatchVec.at(i).matchFlag = newFlag;
+
   }
 }
