@@ -38,7 +38,6 @@
  *
  *
  ***************************************************************************/
-#include <assert.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -53,7 +52,6 @@
 #include "TClass.h"
 #include "TObject.h"
 #include "TProfile.h"
-#include "TMath.h"
 
 #include "StChain/StChainOpt.h" // for renaming the histogram file
 
@@ -82,8 +80,8 @@
 #include "tables/St_etofResetTimeCorr_Table.h"
 #include "tables/St_etofPulserTotPeak_Table.h"
 #include "tables/St_etofPulserTimeDiffGbtx_Table.h"
-//#define __PRINT__   kv.second->Print(); assert(TMath::Finite( kv.second->GetSumOfWeights()));
-#define __PRINT__
+#include "tables/St_etofGet4State_Table.h"
+
 namespace etofSlewing {
     const unsigned int nTotBins = 30;
 
@@ -119,7 +117,18 @@ StETofCalibMaker::StETofCalibMaker( const char* name )
   mStrictPulserHandling( 0 ),
   mUsePulserGbtxDiff( true ),
   mDoQA( false ),
-  mHistFileName( "" )
+  mDebug( false ),
+  mHistFileName( "" ),
+  mFileNameGet4State(""),
+  mStateVec(),
+  mStartVec(),
+  mGet4StateMap(),
+  mStateMapStart(0),
+  mStateMapStop(0),
+  mDbEntryStart(0),
+  mDbEntryStop(0),
+  mGlobalCounter(1)
+  
 {
     /// default constructor
     LOG_DEBUG << "StETofCalibMaker::ctor"  << endm;
@@ -134,9 +143,9 @@ StETofCalibMaker::StETofCalibMaker( const char* name )
     mPulserPeakTot.clear();
     mPulserTimeDiff.clear();
     mPulserTimeDiffGbtx.clear();
-	 mNPulsersCounter.clear();
-	 mNStatusBitsCounter.clear();
-	 mPulserPresent.clear();
+    mNPulsersCounter.clear();
+    mNStatusBitsCounter.clear();
+    mPulserPresent.clear();
 
     mJumpingPulsers.clear();
 
@@ -163,7 +172,7 @@ StETofCalibMaker::Init()
 
     bookHistograms();
 
-    return StMaker::Init();
+    return kStOk;
 }
 
 
@@ -171,7 +180,7 @@ StETofCalibMaker::Init()
 Int_t
 StETofCalibMaker::InitRun( Int_t runnumber )
 {
-  mRunYear = GetDateTime().GetYear(); // ( runnumber + 727000 ) / 1000000 + 1999;
+    mRunYear = ( runnumber + 727000 ) / 1000000 + 1999;
     LOG_INFO << "runnumber: " << runnumber << "  --> year: " << mRunYear << endm;
 
     TDataSet* dbDataSet = nullptr;
@@ -179,6 +188,7 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
     // --------------------------------------------------------------------------------------------
     // initialize calibration parameters from parameter file (if filename is provided) or database:
+    // -- Get4 status map (Clock-Jump-Correction)
     // -- electronics-to-hardware map
     // -- status map
     // -- timing window
@@ -189,6 +199,10 @@ StETofCalibMaker::InitRun( Int_t runnumber )
     // -- slewing corrections
     // -- reset time correction
     // --------------------------------------------------------------------------------------------
+
+    //Get4 status map
+    
+    readGet4State(mGlobalCounter , 0);
 
     // electronics-to-hardware map
     if( mFileNameElectronicsMap.empty() ) {
@@ -260,11 +274,11 @@ StETofCalibMaker::InitRun( Int_t runnumber )
             mStatus[ channelToKey( i ) ] = status[ i ];
         }
     }
-    if (Debug()) {
+
     for( const auto& kv : mStatus ) {
-        LOG_INFO << "channel key: " << kv.first << " --> status = " << kv.second << endm;
+        LOG_DEBUG << "channel key: " << kv.first << " --> status = " << kv.second << endm;
     }
-    }
+
     // --------------------------------------------------------------------------------------------
 
     // timing window
@@ -343,13 +357,12 @@ StETofCalibMaker::InitRun( Int_t runnumber )
             return kStFatal;
         }
     }
-    if (Debug()) {
+
     for( const auto& kv : mTimingWindow ) {
-        LOG_INFO << "AFCK address: 0x" << std::hex << kv.first << std::dec << " --> timing window from " << kv.second.first << " to " << kv.second.second << " ns" << endm;
+        LOG_DEBUG << "AFCK address: 0x" << std::hex << kv.first << std::dec << " --> timing window from " << kv.second.first << " to " << kv.second.second << " ns" << endm;
     }
     for( const auto& kv : mPulserWindow ) {
-        LOG_INFO << "AFCK address: 0x" << std::hex << kv.first << std::dec << " --> pulser window from " << kv.second.first << " to " << kv.second.second << " ns" << endm;
-    }
+        LOG_DEBUG << "AFCK address: 0x" << std::hex << kv.first << std::dec << " --> pulser window from " << kv.second.first << " to " << kv.second.second << " ns" << endm;
     }
     LOG_DEBUG << "pulser time peak at " << mPulserPeakTime << " ns" << endm;
     // --------------------------------------------------------------------------------------------
@@ -478,11 +491,11 @@ StETofCalibMaker::InitRun( Int_t runnumber )
             }
         }
     }
-    if (Debug()) {
+
     for( const auto& kv : mSignalVelocity ) {
-        LOG_INFO << "counter key: " << kv.first << " --> signal velocity = " << kv.second << " cm / ns" << endm;
+        LOG_DEBUG << "counter key: " << kv.first << " --> signal velocity = " << kv.second << " cm / ns" << endm;
     }
-    }
+
     // --------------------------------------------------------------------------------------------
 
     // digi tot correction factor, time correction offset and slewing corrections
@@ -517,20 +530,18 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
             unsigned int strip = ( key % 1000 ) / 10;
             unsigned int side  = key % 10;
-            if( Debug() ) {
-                LOG_INFO << i << "  " << detector << "  " << strip << " " << side << "  " << digiTotCorrTable->totCorr[ i ] << endm;
-		//		assert(TMath::Finite(digiTotCorrTable->totCorr[ i ]));
+
+            if( mDebug ) {
+                LOG_DEBUG << i << "  " << detector << "  " << strip << " " << side << "  " << digiTotCorrTable->totCorr[ i ] << endm;
             }
-	    if (TMath::Finite(digiTotCorrTable->totCorr[ i ])) 
-	      mDigiTotCorr.at( detector )->SetBinContent( strip + eTofConst::nStrips * ( side - 1 ) , digiTotCorrTable->totCorr[ i ] );
-	    else {
-	      LOG_ERROR << i << "  " << detector << "  " << strip << " " << side << "  totCorr = " << digiTotCorrTable->totCorr[ i ] << endm;
-	    }
+
+            mDigiTotCorr.at( detector )->SetBinContent( strip + eTofConst::nStrips * ( side - 1 ) , digiTotCorrTable->totCorr[ i ] );
         }
 
         for( auto& kv : mDigiTotCorr ) {
-           __PRINT__  kv.second->SetDirectory( 0 );
+            kv.second->SetDirectory( 0 );
         }
+
 
         //-------------------
         // digi time corr
@@ -560,15 +571,15 @@ StETofCalibMaker::InitRun( Int_t runnumber )
             unsigned int strip = ( key % 1000 ) / 10;
             unsigned int side  = key % 10;
 
-            if( Debug() ) {
-                LOG_INFO << i << "  " << detector << "  " << strip << " " << side << "  " << digiTimeCorrTable->timeCorr[ i ] << endm;
+            if( mDebug ) {
+                LOG_DEBUG << i << "  " << detector << "  " << strip << " " << side << "  " << digiTimeCorrTable->timeCorr[ i ] << endm;
             }
 
             mDigiTimeCorr.at( detector )->SetBinContent( strip + eTofConst::nStrips * ( side - 1 ) , digiTimeCorrTable->timeCorr[ i ] );
         }
 
         for( auto& kv : mDigiTimeCorr ) {
-            __PRINT__ kv.second->SetDirectory( 0 );
+            kv.second->SetDirectory( 0 );
         }
 
 
@@ -621,9 +632,8 @@ StETofCalibMaker::InitRun( Int_t runnumber )
         }
 
         for( auto& kv : mDigiSlewCorr ) {
-            __PRINT__ kv.second->SetDirectory( 0 );
+            kv.second->SetDirectory( 0 );
         }
-
     }
     else {//input from file
         LOG_INFO << "etof calibration histograms: filename provided --> use parameter file: " << mFileNameCalibHistograms.c_str() << endm;
@@ -677,9 +687,9 @@ StETofCalibMaker::InitRun( Int_t runnumber )
                 for( unsigned int counter = eTofConst::counterStart; counter <= eTofConst::counterStop; counter++ ) {
 
                     unsigned int key = sector * 100 + zPlane * 10  + counter;
-		    if (Debug()) {
-                    LOG_INFO << "detectorId key: " << sector << " " << zPlane << " " << counter << endm;
-		    }
+
+                    LOG_DEBUG << "detectorId key: " << sector << " " << zPlane << " " << counter << endm;
+
                     TString hname;
                     TProfile* hProfile;
 
@@ -839,19 +849,18 @@ StETofCalibMaker::InitRun( Int_t runnumber )
         }
 
         for( auto& kv : mDigiTotCorr ) {
-            __PRINT__ kv.second->SetDirectory( 0 );
+            kv.second->SetDirectory( 0 );
         }
         for( auto& kv : mDigiTimeCorr ) {
-            __PRINT__ kv.second->SetDirectory( 0 );
+            kv.second->SetDirectory( 0 );
         }
         for( auto& kv : mDigiSlewCorr ) {
-            __PRINT__ kv.second->SetDirectory( 0 );
+            kv.second->SetDirectory( 0 );
         }
 
         histFile->Close();
         delete histFile;
         histFile = nullptr;
-
     }
 
     // --------------------------------------------------------------------------------------------
@@ -893,11 +902,11 @@ StETofCalibMaker::InitRun( Int_t runnumber )
         }
         
         paramFile.close();
-	if (Debug()) {
+
         for( const auto& kv : param ) {
-            LOG_INFO << "run: " << kv.first << " --> reset time corr = " << kv.second << " ns" << endm;
+            LOG_DEBUG << "run: " << kv.first << " --> reset time corr = " << kv.second << " ns" << endm;
         }
-	}
+
         if( param.count( runnumber ) ) {
             mResetTimeCorr = param.at( runnumber );
         }
@@ -959,11 +968,11 @@ StETofCalibMaker::InitRun( Int_t runnumber )
             }
         }
     }
-    if (Debug()) {
+
     for( const auto& kv : mPulserPeakTot ) {
-        LOG_INFO << "side key: " << kv.first << " --> pulser peak tot = " << kv.second << " (bin)" << endm;
+        LOG_DEBUG << "side key: " << kv.first << " --> pulser peak tot = " << kv.second << " (bin)" << endm;
     }
-    }
+
     // --------------------------------------------------------------------------------------------
 
     // pulser time difference (initialized to some useful value if pulser is not there for a whole run)
@@ -1034,7 +1043,7 @@ StETofCalibMaker::InitRun( Int_t runnumber )
     for( const auto& kv : mPulserTimeDiffGbtx ) {
         if( fabs( kv.second ) > 1e-4 ) allZero = false;
 
-        if( Debug() ) {
+        if( mDebug ) {
             LOG_INFO << "side key: " << kv.first << " --> pulser time diff inside Gbtx ( to counter 1 ) = " << kv.second << endm;
         }
     }
@@ -1087,6 +1096,11 @@ StETofCalibMaker::FinishRun( Int_t runnumber )
 
     mJumpingPulsers.clear();
 
+    mGet4StateMap.clear();
+    mGet4ZeroStateMap.clear();
+    mMasterStartVec.clear();
+   
+
     return kStOk;
 }
 
@@ -1112,6 +1126,35 @@ StETofCalibMaker::Make()
 
     mEvent = ( StEvent* ) GetInputDS( "StEvent" );
     //mEvent = NULL; //don't check for StEvent for genDst.C testing. PW
+
+    //check if get4 state map is still valid for this event
+
+    unsigned long int evtNr = GetEventNumber();
+    if(mFileNameGet4State.empty()){
+      //read from db
+
+     if( evtNr > mDbEntryStop ||  evtNr < mDbEntryStart) readGet4State(mGlobalCounter , 99);
+
+    }else{
+      //read from file
+      short cnt = 0;
+      while( evtNr > mDbEntryStop ||  evtNr < mDbEntryStart){
+
+	cnt++;
+	if(cnt > 99){
+	  LOG_ERROR << " Get4 State File for event Nr:" << GetEventNumber() << "not found" << endm;
+	  return kStFatal;
+	}
+ 
+	short forward = 1;
+	if(evtNr < mDbEntryStart) forward = -1;
+	readGet4State(mGlobalCounter , forward);
+      }
+
+
+    }
+    checkGet4State( evtNr );
+
 
     if ( mEvent ) {
         LOG_DEBUG << "Make(): running on StEvent" << endm;
@@ -1198,7 +1241,7 @@ StETofCalibMaker::processStEvent()
 		}*/
 
     size_t nDigis = etofDigis.size();
-    if( Debug() ) {
+    if( mDebug ) {
         LOG_INFO << "processStEvent() - # fired eTOF digis : " << nDigis << endm;
     }
 
@@ -1232,7 +1275,7 @@ StETofCalibMaker::processStEvent()
     }
 
            // LOG_INFO << "pulsers" << endm;
-    if( Debug() ) {
+    if( mDebug ) {
         LOG_INFO << "size of pulserCandMap: " << pulserCandMap.size() << endm;
     }
     calculatePulserOffsets( pulserCandMap );
@@ -1245,12 +1288,8 @@ StETofCalibMaker::processStEvent()
 		std::vector<bool> hasPulsersVec;
 		
 		//drag along pulser information
-		for( unsigned int iCounter = 0; iCounter < 108; iCounter++){
-		  if ( !(mNPulsersCounter.count(iCounter) ) ){
-		    hasPulsersVec.push_back(false);
-		  }else{	
-		    hasPulsersVec.push_back(mNPulsersCounter[iCounter] == 2);
-		  }		  
+		for( unsigned int iCounter = 0; iCounter < 108; iCounter++){	
+		hasPulsersVec.push_back((mNPulsersCounter.count(iCounter) > 0) && (mNPulsersCounter[iCounter] == 2));
 		}
 		if (hasPulsersVec.size() == 108){
 		  //etofHeader->setHasPulsersVec(hasPulsersVec);  // not working but not of relevance at the moment 
@@ -1287,7 +1326,7 @@ StETofCalibMaker::processStEvent()
         // ignore digis that were sent in bulk from the same channel with exactly the same tot and time due to stuck firmware
         auto it = std::find( mStuckFwDigi.begin(), mStuckFwDigi.end(), current );
         if( it != mStuckFwDigi.end() ) {
-            if( Debug() ) {
+            if( mDebug ) {
                 LOG_INFO << "digi from stuck firmware (s" << aDigi->sector() << " m" << aDigi->zPlane() << " c" << aDigi->counter() << ") --> ignore" << endm;
             }
 
@@ -1296,7 +1335,7 @@ StETofCalibMaker::processStEvent()
         }
         else if( current == prev ) {
             mStuckFwDigi.push_back( current );
-            resetToRaw( etofDigis[ i-1 ] );
+            resetToRaw( mMuDst->etofDigi( i-1 ) );
 
             nDuplicates++;
             continue;
@@ -1413,12 +1452,8 @@ StETofCalibMaker::processMuDst()
 		std::vector<bool> hasPulsersVec;//
 		
 		//drag along pulser information
-		for( unsigned int iCounter = 0; iCounter < 108; iCounter++){
-		  if ( !(mNPulsersCounter.count(iCounter) ) ){
-		    hasPulsersVec.push_back(false);
-		  }else{	
-		    hasPulsersVec.push_back(mNPulsersCounter[iCounter] == 2);
-		  }		  
+		for( unsigned int iCounter = 0; iCounter < 108; iCounter++){		
+		hasPulsersVec.push_back((mNPulsersCounter.count(iCounter) > 0) && (mNPulsersCounter[iCounter] == 2)); 			
 		}
 
 		if (hasPulsersVec.size() == 108){
@@ -1428,6 +1463,11 @@ StETofCalibMaker::processMuDst()
 		//fill good event flag into header
 		for( unsigned int iGet4 = 0; iGet4 < 1728; iGet4++){
 		  goodEventFlagVec.push_back(!etofHeader->missMatchFlagVec().at(iGet4));
+
+		  //flag jumpwise inconsistent events/get4s
+		  if(mGet4StateMap[iGet4] == 3){
+		    goodEventFlagVec.at(iGet4) = false;
+		  }
 		}		
 		
 	  	if (goodEventFlagVec.size() == 1728){
@@ -1455,7 +1495,7 @@ StETofCalibMaker::processMuDst()
         // ignore digis that were sent in bulk from the same channel with exactly the same tot and time due to stuck firmware
         auto it = std::find( mStuckFwDigi.begin(), mStuckFwDigi.end(), current );
         if( it != mStuckFwDigi.end() ) {
-            if( Debug() ) {
+            if( mDebug ) {
                 LOG_INFO << "digi from stuck firmware (s" << aDigi->sector() << " m" << aDigi->zPlane() << " c" << aDigi->counter() << ") --> ignore" << endm;
             }
 
@@ -1531,7 +1571,7 @@ StETofCalibMaker::applyMapping( StETofDigi* aDigi )
     mHwMap->mapToGeom( rocId, get4Id, elChan, geomVec );
 
     if( geomVec.size() < 5 ) {
-        if( Debug() ) {
+        if( mDebug ) {
             LOG_ERROR << "geometry vector has wrong size !!! --> skip digi" << endm;
         }
         return;
@@ -1543,19 +1583,19 @@ StETofCalibMaker::applyMapping( StETofDigi* aDigi )
     unsigned int strip   = geomVec.at( 3 );
     unsigned int side    = geomVec.at( 4 );
 
-    if( Debug() && ( sector == 0 || zplane == 0 || counter == 0 || strip == 0 || side == 0 ) ) {
+    if( mDebug && ( sector == 0 || zplane == 0 || counter == 0 || strip == 0 || side == 0 ) ) {
         LOG_ERROR << "geometry vector has entries equal to zero !!! --> skip digi" << endm;
     }
 
     aDigi->setGeoAddress( sector, zplane, counter, strip, side );
 
-    if( Debug() ) {
+    if( mDebug ) {
         // print out the new information
-        LOG_INFO << "sector, zplane, counter, strip, side: " << aDigi->sector() << ", ";
-        LOG_INFO << aDigi->zPlane()    << ", " << aDigi->counter()  << ", ";
-        LOG_INFO << aDigi->strip()     << ", " << aDigi->side()     << endm;
+        LOG_DEBUG << "sector, zplane, counter, strip, side: " << aDigi->sector() << ", ";
+        LOG_DEBUG << aDigi->zPlane()    << ", " << aDigi->counter()  << ", ";
+        LOG_DEBUG << aDigi->strip()     << ", " << aDigi->side()     << endm;
 
-        LOG_INFO << "continuous module number: " << mHwMap->module( aDigi->sector(), aDigi->zPlane() ) << endm;
+        LOG_DEBUG << "continuous module number: " << mHwMap->module( aDigi->sector(), aDigi->zPlane() ) << endm;
     }
 }
 
@@ -1580,14 +1620,11 @@ StETofCalibMaker::flagPulserDigis( StETofDigi* aDigi, unsigned int index, std::m
         float totToPeak     = aDigi->rawTot()  - mPulserPeakTot.at( key );
         float totToHalfPeak = aDigi->rawTot()  - mPulserPeakTot.at( key ) * 0.5;
 
-
-        if( timeToTrigger > mPulserWindow.at( aDigi->rocId() ).first  && timeToTrigger < mPulserWindow.at( aDigi->rocId() ).second  ) {
-            if( fabs( totToPeak ) < 25 || fabs( totToHalfPeak ) < 10 ) {
-                isPulserCand = true;
-            }
-        }
+	isPulserCand = ( timeToTrigger > mPulserWindow.at( aDigi->rocId() ).first &&
+         	         timeToTrigger < mPulserWindow.at( aDigi->rocId() ).second  &&
+          	       ( fabs( totToPeak ) < 25 || fabs( totToHalfPeak ) < 10 ) );
+	    
     }
-
 
     if( isPulserCand ) {
         pulserDigiMap[ key ].push_back( index );
@@ -1605,20 +1642,20 @@ StETofCalibMaker::flagPulserDigis( StETofDigi* aDigi, unsigned int index, std::m
 void
 StETofCalibMaker::calculatePulserOffsets( std::map< unsigned int, std::vector< unsigned int > >& pulserDigiMap )
 {
-    if( Debug() ) {
+    if( mDebug ) {
         for( auto it=pulserDigiMap.begin(); it!=pulserDigiMap.end(); it++ ) {
-            LOG_INFO << "channel: " << it->first << "   nCandidates: " << it->second.size() << endm;
+            LOG_DEBUG << "channel: " << it->first << "   nCandidates: " << it->second.size() << endm;
         }
     }
 
     if( mReferencePulserIndex == 0 ) {
-        if( Debug() ) {
+        if( mDebug ) {
             LOG_INFO << "reference pulser index is 0 --> pulser correction is turned off" << endm;
         }
         return;
     }
 
-    if( Debug() ) {
+    if( mDebug ) {
         LOG_INFO << "reference pulser index: " << mReferencePulserIndex << endm;
     }
 
@@ -1649,7 +1686,7 @@ StETofCalibMaker::calculatePulserOffsets( std::map< unsigned int, std::vector< u
             double timeToTrigger = pulserTime - mTriggerTime;
             double totToPeak     = pulserTot  - mPulserPeakTot.at( sideIndex );
 
-            if( Debug() && it->second.size() > 1 ) {
+            if( mDebug && it->second.size() > 1 ) {
                 LOG_INFO << it->second.size() <<  " pulsers @ " << sideIndex << " : timeToTrigger: " << timeToTrigger << "  tot: " << pulserTot << endm;
             }
             
@@ -1661,7 +1698,7 @@ StETofCalibMaker::calculatePulserOffsets( std::map< unsigned int, std::vector< u
             }
         }
 
-        if( Debug() && it->second.size() > 1 ) {
+        if( mDebug && it->second.size() > 1 ) {
             LOG_INFO << " --> selected CAND-INDEX: " << candIndex << endm;
         }
 
@@ -1700,7 +1737,7 @@ StETofCalibMaker::calculatePulserOffsets( std::map< unsigned int, std::vector< u
   if( pulserTimes.count( mReferencePulserIndex ) ) {
     referenceTime = pulserTimes.at( mReferencePulserIndex ); //only updated for QA?? needed to remove smeared pulsers
     if( mDoQA ) {
-            if( Debug() ) {
+            if( mDebug ) {
                 LOG_INFO << "preliminary reference time:" << referenceTime << endm;
             }
         }
@@ -2091,16 +2128,16 @@ StETofCalibMaker::applyCalibration( StETofDigi* aDigi, StETofHeader* etofHeader 
 {
     int key = aDigi->sector() * 100000 + aDigi->zPlane() * 10000  + aDigi->counter() * 1000 + aDigi->strip() * 10 + aDigi->side();
     if( !mStatus.count( key) || mStatus.at( key ) != 1 ) {
-        if( Debug() ) {
-            LOG_INFO << "status of channel with key " << key << " was not ok ---> skip calibrating this digi" << endm;
+        if( mDebug ) {
+            LOG_DEBUG << "status of channel with key " << key << " was not ok ---> skip calibrating this digi" << endm;
         }
         return;
     }
 
     // ignore digis flaged as pulsers ( calibTot = -999. )
-    if( TMath::Abs( aDigi->calibTot() + 999. ) < 1.e-5 ) {
-        if( Debug() ) {
-            LOG_INFO << "digi flaged as pulser --> skip" << endm;
+    if( fabs( aDigi->calibTot() + 999. ) < 1.e-5 ) {
+        if( mDebug ) {
+            LOG_DEBUG << "digi flaged as pulser --> skip" << endm;
         }
         return;
     }
@@ -2115,7 +2152,7 @@ StETofCalibMaker::applyCalibration( StETofDigi* aDigi, StETofHeader* etofHeader 
 			if( mStrictPulserHandling ){
          int PulserKey = aDigi->sector() * 1000 + aDigi->zPlane() * 100 + aDigi->side() + 10 * aDigi->counter();
 				if( !mPulserPresent.count( PulserKey ) ) {
-				  if( Debug() ) {
+				  if( mDebug ) {
 						LOG_DEBUG << "no pulser in the same event for this counter --> digi skipped due to strict pulser handling" << endm;
 				  }
 				  return;
@@ -2123,34 +2160,41 @@ StETofCalibMaker::applyCalibration( StETofDigi* aDigi, StETofHeader* etofHeader 
 			}
 
         double calibTot = aDigi->rawTot() * mGet4TotBinWidthNs * calibTotFactor( aDigi );
-        if( Debug() ) {
-	  LOG_INFO << "calibTot = " << calibTot << endm;
-	  static Int_t ibreak = 0;
-	  if (! TMath::Finite(calibTot)) {
-	    ibreak++;
-	  }
-        }
-	
+
         aDigi->setCalibTot( calibTot );
+
+	int get4Id = 144 * ( aDigi->sector() - 13 ) + 48 * ( aDigi->zPlane() -1 ) + 16 * ( aDigi->counter() - 1 ) + 8 * ( aDigi->side() - 1 ) + ( ( aDigi->strip() - 1 ) / 4 );
+
+	double stateCorr =0;
+	if(mGet4StateMap[get4Id] == 1) stateCorr =  6.25;
+	else if(mGet4StateMap[get4Id] == 2) stateCorr =  -6.25;
+	// else if(mGet4StateMap[get4Id] == 3) stateCorr =  0.0;
 
         double calibTime = aDigi->rawTime() - mResetTime
                                             - resetTimeCorr()
                                             - calibTimeOffset(   aDigi )
                                             - slewingTimeOffset( aDigi )
-                                            - applyPulserOffset( aDigi );
+                                            - applyPulserOffset( aDigi )
+	                                    + stateCorr;
+					    
+					    					
+	if(mGet4StateMap[get4Id] == 3){
+	  calibTime = 0; // mask digis with undefined state (e.g. one hit with jump and one without in same event)
+	  
+	}
 
-        aDigi->setCalibTime( calibTime );
-
-        if( Debug() ) {
+    aDigi->setCalibTime( calibTime );
+	
+        if( mDebug ) {
             // print out the new information
-            LOG_INFO << "raw Time, ToT: "        << aDigi->rawTime()   << ", " << aDigi->rawTot()   << endm;
-            LOG_INFO << "calibrated Time, ToT: " << aDigi->calibTime() << ", " << aDigi->calibTot() << endm;
+            LOG_DEBUG << "raw Time, ToT: "        << aDigi->rawTime()   << ", " << aDigi->rawTot()   << endm;
+            LOG_DEBUG << "calibrated Time, ToT: " << aDigi->calibTime() << ", " << aDigi->calibTot() << endm;
         }
 
     }
     else{
-        if( Debug() ) {
-            LOG_INFO << "digi is outside the timing window (time to trigger = " << timeToTrigger << ")  --> skip" << endm;
+        if( mDebug ) {
+            LOG_DEBUG << "digi is outside the timing window (time to trigger = " << timeToTrigger << ")  --> skip" << endm;
         }
     }
 }
@@ -2209,21 +2253,21 @@ StETofCalibMaker::calibTotFactor( StETofDigi* aDigi )
     if( mDigiTotCorr.count( key ) ) {
         float binContent = mDigiTotCorr.at( key )->GetBinContent( bin );
 
-        if( TMath::Abs( binContent ) > 1e-5 ) {
-            if( Debug() ) {
-                LOG_INFO << "calibTotFactor: histogram with key " << key << " at bin " << bin << " -> return bin content: " << binContent << endm;
+        if( fabs( binContent ) > 1e-5 ) {
+            if( mDebug ) {
+                LOG_DEBUG << "calibTotFactor: histogram with key " << key << " at bin " << bin << " -> return bin content: " << binContent << endm;
             }
             return (1.0/binContent); //invert here to get to fixed mean value!
         }
         else {
-            if( Debug() ) {
+            if( mDebug ) {
                 LOG_WARN << "calibTotFactor: histogram with key " << key << " at bin " << bin << " has content of 0 -> return 1" << endm;
             }
             return 1.;
         }
     }
     else {
-        if( Debug() ) {
+        if( mDebug ) {
             LOG_WARN << "calibTotFactor: required histogram with key " << key << " doesn't exist -> return 1" << endm;
         }
         return 1.;
@@ -2243,13 +2287,13 @@ StETofCalibMaker::calibTimeOffset( StETofDigi* aDigi )
 
     if( mDigiTimeCorr.count( key ) ) {
         float binContent = mDigiTimeCorr.at( key )->GetBinContent( bin );
-        if( Debug() ) {
-            LOG_INFO << "calibTimeOffset: histogram with key " << key << " at bin " << bin << " -> return bin content: " << binContent << endm;
+        if( mDebug ) {
+            LOG_DEBUG << "calibTimeOffset: histogram with key " << key << " at bin " << bin << " -> return bin content: " << binContent << endm;
         }
         return binContent;
     }
     else {
-        if( Debug() ) {
+        if( mDebug ) {
             LOG_WARN << "calibTimeOffset: required histogram with key " << key << " doesn't exist -> return 0" << endm;
         }
         return 0.;
@@ -2269,23 +2313,23 @@ StETofCalibMaker::slewingTimeOffset( StETofDigi* aDigi )
     if( mDigiSlewCorr.count( key ) ) {
 
         unsigned int totBin = mDigiSlewCorr.at( key )->FindBin( aDigi->rawTot() ); //adjusted. PW
-	//	mDebug = true;
+mDebug = true;
         if( mDigiSlewCorr.at( key )->GetBinEntries( totBin ) <= mMinDigisPerSlewBin && totBin < etofSlewing::nTotBins ) {
-            if( Debug() ) {
-                LOG_INFO << "slewingTimeOffset: insufficient statistics for slewing calibration in channel " << key << " at tot bin " << totBin << "  --> return 0" << endm;
+            if( mDebug ) {
+                LOG_DEBUG << "slewingTimeOffset: insufficient statistics for slewing calibration in channel " << key << " at tot bin " << totBin << "  --> return 0" << endm;
             }
             return 0.;
         }
 
         float val = mDigiSlewCorr.at( key )->Interpolate( aDigi->rawTot() ); //adjusted. PW
-        if( Debug() ) {
-            LOG_INFO << "slewingTimeOffset: histogram with key " << key << "  with calib TOT of " << aDigi->calibTot() << " --> interpolated correction: " << val << endm;
+        if( mDebug ) {
+            LOG_DEBUG << "slewingTimeOffset: histogram with key " << key << "  with calib TOT of " << aDigi->calibTot() << " --> interpolated correction: " << val << endm;
         }
         return val;
     }
     else {
-        if( Debug() ) {
-            LOG_INFO << "slewingTimeOffset: required histogram with key " << key << " doesn't exist -> return 0" << endm;
+        if( mDebug ) {
+            LOG_DEBUG << "slewingTimeOffset: required histogram with key " << key << " doesn't exist -> return 0" << endm;
         }
         return 0.;
     }
@@ -2320,10 +2364,10 @@ StETofCalibMaker::triggerTime( StETofHeader* header )
     double triggerTime = header->trgGdpbFullTime();
 
     // count the occurance of a given trigger time stamp in the GdbpTs map of the eTOF header
-    std::map< ULong64_t, short > countsGdpbTs;
+    std::map< uint64_t, short > countsGdpbTs;
     for( const auto& kv : header->rocGdpbTs() ) {
-        if( Debug() ) {
-            LOG_INFO << "triggerTime (" << std::hex << "Ox" << kv.first << std::dec << ")  " << kv.second * eTofConst::coarseClockCycle * 1.e-9 << endm; 
+        if( mDebug ) {
+            LOG_DEBUG << "triggerTime (" << std::hex << "Ox" << kv.first << std::dec << ")  " << kv.second * eTofConst::coarseClockCycle * 1.e-9 << endm;
         }
         ++countsGdpbTs[ kv.second ];
     }
@@ -2361,8 +2405,8 @@ StETofCalibMaker::triggerTime( StETofHeader* header )
         triggerTime = mostProbableTriggerTs * eTofConst::coarseClockCycle;
     }
 
-    if( Debug() ) {
-        LOG_INFO << "trigger TS: " << mostProbableTriggerTs << " -->  trigger time (ns): " << triggerTime << endm;
+    if( mDebug ) {
+        LOG_DEBUG << "trigger TS: " << mostProbableTriggerTs << " -->  trigger time (ns): " << triggerTime << endm;
     }
 
     return triggerTime;
@@ -2377,10 +2421,10 @@ double
 StETofCalibMaker::resetTime( StETofHeader* header )
 {
     // count the occurance of a given reset time stamp in the StarTs map of the eTOF header
-    std::map< ULong64_t, short > countsStarTsRaw;
+    std::map< uint64_t, short > countsStarTsRaw;
     for( const auto& kv : header->rocStarTs() ) {
-        if( Debug() ) {
-            LOG_INFO << "resetTime (" << std::hex << "Ox" << kv.first << std::dec << ")  " << kv.second * eTofConst::coarseClockCycle * 1.e-9 << endm; 
+        if( mDebug ) {
+            LOG_DEBUG << "resetTime (" << std::hex << "Ox" << kv.first << std::dec << ")  " << kv.second * eTofConst::coarseClockCycle * 1.e-9 << endm;
         }
 
         // in Run18 only one of the AFCKs was giving the correct reset time: 0x18e6
@@ -2438,7 +2482,7 @@ StETofCalibMaker::resetTime( StETofHeader* header )
 
     while( countsStarTs.size() > 0 ) {
         auto it = std::max_element( countsStarTs.begin(), countsStarTs.end(),
-                                    []( const pair< ULong64_t, short >& p1, const pair< ULong64_t, short >& p2 ) {
+                                    []( const pair< uint64_t, short >& p1, const pair< uint64_t, short >& p2 ) {
                                     return p1.second < p2.second; } );
 
         double resetTime = it->first * eTofConst::coarseClockCycle;
@@ -2457,7 +2501,7 @@ StETofCalibMaker::resetTime( StETofHeader* header )
         // Run19: trigger - reset time should be on the order of a few second up to 120 minutes (7.2*10^12 ns), i.e. max. run length
         // Run20: difference can be negative due to eTOF DAQ restarts at the beginning of runs while eTOF is put to "BUSY" in run control
         if( mTriggerTime - resetTime < 7.2e12 ) {
-            if( Debug() ) {
+            if( mDebug ) {
                 LOG_DEBUG << "reset time (ns): " << resetTime << " --> difference to trigger time in seconds: " << ( mTriggerTime - resetTime ) * 1.e-9 << endm;
             }
             LOG_DEBUG << "--> picked reset TS:" << mResetTs << endm;
@@ -2594,9 +2638,8 @@ StETofCalibMaker::bookHistograms()
     }
 
     for ( auto& kv : mHistograms ) {
-        __PRINT__ kv.second->SetDirectory( 0 );
+        kv.second->SetDirectory( 0 );
     }
-
 }
 
 //_____________________________________________________________
@@ -2623,4 +2666,280 @@ StETofCalibMaker::writeHistograms()
     else {
         LOG_INFO << "histogram file name is empty string --> cannot write histograms" << endm;
     }
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+
+void StETofCalibMaker::readGet4State(int fileNr, short forward){
+
+   bool fileZero = false;
+
+   //Clean up last entry first
+   for(int i =0; i< eTofConst::nGet4sInSystem; i++){
+     mStateVec[i].clear();
+     mStartVec[i].clear();
+     mGet4StateMap[i] = 0;
+   }
+   mStateMapStart=0;
+   mStateMapStop=0;
+   mDbEntryStop=0;
+   mMasterStartVec.clear();
+   mMasterStartVec.resize(0);
+
+   std::vector< unsigned long int > intVec;
+   
+   //first read
+    if(forward == 0) mGlobalCounter = 1;
+    //jump forward
+    else if(forward > 0) mGlobalCounter++;
+    //jump backward
+    else mGlobalCounter--; // forward < 0
+    
+    if(mGlobalCounter == 0){
+      mGlobalCounter++;
+      fileZero = true;
+    }
+    
+    if(mFileNameGet4State.empty()){
+         
+      TDataSet* dbDataSet = GetDataBase( "Calibrations/etof/etofGet4State" );
+      if( ! dbDataSet ) {
+	LOG_ERROR << "unable to get the get4 state map database" << endm;	  
+	return;
+      }
+      const int intsPerEntry = 1000000;
+      
+      St_etofGet4State* etofStateMap = static_cast< St_etofGet4State* > ( dbDataSet->Find( "etofGet4State" ) );
+      if( !etofStateMap ) {
+	LOG_ERROR << "unable to get the get4 state map from the database" << endm;	  
+	return;
+      }
+      
+      etofGet4State_st* stateMapTable = etofStateMap->GetTable();
+      
+      for( size_t i=0; i< intsPerEntry; i++ ) {
+	if(stateMapTable->etofGet4State[ i ] <= 0) break; 
+	intVec.push_back(  stateMapTable->etofGet4State[ i ]);
+      } 
+          
+    }else{
+           
+      std::ifstream paramFile;
+      
+      paramFile.open( mFileNameGet4State.c_str() );
+      
+      if( !paramFile.is_open() ) {
+	LOG_ERROR << "unable to get the 'Get4State' parameters from file --> file does not exist" << endm;
+       	return;
+      }
+      
+      unsigned long int temp;
+      while( paramFile >> temp ) {
+	intVec.push_back( temp );
+      }        
+    }
+    
+    std::vector<unsigned long int> startVec;
+    std::map<unsigned long int,vector<int>> stateVec;
+    std::map<unsigned long int ,vector<int>> get4IdVec;
+    
+    decodeInt(intVec , mGet4StateMap , mGet4ZeroStateMap , startVec , mMasterStartVec , stateVec , get4IdVec); 	
+
+   // fill stateMap & steering vecs with EvtZero entries: read in first 1728 states & times
+   for(int i = 0; i< eTofConst::nGet4sInSystem;i++){
+     
+     for(unsigned int j=0; j< startVec.size(); j++){
+       
+       unsigned long int key = startVec.at(j);
+       
+       for(unsigned int n =0; n < get4IdVec.at(key).size(); n++){
+	 
+	 //steering vecs
+	 if(i == get4IdVec.at(key).at(n)){ 
+	   mStateVec[i].push_back(stateVec.at(key).at(n));
+	   mStartVec[i].push_back(startVec.at(j));	   
+	 } 	 
+       }  
+     }
+   }
+   
+   //set map validity check evtids ... EvtZero states only valid to first change of state on any get4
+   mStateMapStart = 0 ;
+   mStateMapStop  = startVec.at(0);
+   mDbEntryStart   = startVec.at(0);
+   mDbEntryStop    = startVec.at((startVec.size()-1));
+
+
+   if(fileZero){
+     mDbEntryStart   = 0;
+   }
+  
+   sort( mMasterStartVec.begin(), mMasterStartVec.end() );
+   mMasterStartVec.erase( unique( mMasterStartVec.begin(), mMasterStartVec.end() ), mMasterStartVec.end() );
+
+ }
+
+// -------------------------------------------------------------------------------
+
+void StETofCalibMaker::checkGet4State(unsigned long int eventNr){
+
+  if(eventNr >= mStateMapStart && eventNr < mStateMapStop) {
+    return; // stateMap still valid 
+  }
+
+  unsigned long int closestStop  = 99999999;
+  unsigned long int closestStart = 0;
+
+  //loop over stateMap
+
+  for(unsigned int i =0; i< eTofConst::nGet4sInSystem; i++){
+
+    std::vector<unsigned long int> tmpStart = mStartVec[i];
+    std::vector<short>             tmpState = mStateVec[i];
+
+    //find closest evtNr & state for each Get4
+    unsigned int      indexStart = 0;
+    short             newState   = 0;
+
+    if (tmpStart.empty()) continue;
+    
+    auto lower = std::lower_bound(tmpStart.begin(), tmpStart.end(), eventNr);
+    indexStart = std::distance(tmpStart.begin(), lower);    
+    if(indexStart > 0) indexStart--;
+
+    //event past last change on get4 in entry -> keep last state in line
+    if(eventNr > tmpStart.at((tmpStart.size() -1))){
+      indexStart = (tmpStart.size() -1);
+    }
+
+    //if state change happens in this very event increase index by one to hit proper state 
+    if((indexStart < (tmpStart.size() -1 )) && eventNr == tmpStart.at(indexStart + 1)){
+	indexStart++;	
+    }
+    
+    //get new state and push to map
+    newState = tmpState.at(indexStart);
+
+    if(tmpStart.at(indexStart) > eventNr ) newState = mGet4ZeroStateMap[i];
+
+    mGet4StateMap[i] = newState;
+     
+  } //Get4 Loop
+
+  //  bool Found=false;
+    for(unsigned int z=0; z< mMasterStartVec.size();z++){
+
+      if(z == 0){ // first interval
+	closestStart = 0;
+	closestStop  = mMasterStartVec.at(z);
+
+      } else if(z == (mMasterStartVec.size()-1)){ // last interval
+        closestStart = mMasterStartVec.at(z);
+        closestStop  = 99999999;
+        // Found = true;
+
+      } else if(eventNr == mMasterStartVec.at(z) ||
+          (eventNr < mMasterStartVec.at(z+1) && eventNr > mMasterStartVec.at(z))){
+        closestStart = mMasterStartVec.at(z);
+        closestStop  = mMasterStartVec.at(z+1);
+        //  Found = true;
+        break;
+      }
+
+    }
+
+    mStateMapStart = closestStart;
+    mStateMapStop  = closestStop;
+    
+  if(mStateMapStart == mDbEntryStop) {
+    
+    mStateMapStop  = 99999999;
+  }
+
+}
+//-----------------------------------------------------
+void StETofCalibMaker::decodeInt( std::vector<unsigned long int> intVec ,std::map<int , short>& mGet4StateMap ,std::map<int , short>& mGet4ZeroStateMap ,std::vector<unsigned long int>& startVec ,std::vector<unsigned long int>& mMasterStartVec ,std::map<unsigned long int,vector<int>>& stateVec ,std::map<unsigned long int,vector<int>>& get4IdVec){
+
+  unsigned long int lastEvtId =0;
+    
+    for(unsigned int i = 0; i < intVec.size(); i++){
+      
+      	int tmp;
+	int stateInt1;
+	int stateInt2;
+	unsigned long int EvtId;
+	int Get4Id1;
+	int get4state1;
+	int Get4Id2;
+	int get4state2;
+
+      // decode nonZero/stateChange ints ( int = 42.xxx.xxx.xxx = 2 states only)
+	switch (intVec.at(i) / 100000000) {
+		
+	case 42	:	
+	tmp       = intVec.at(i) % 4200000000;
+	stateInt1 = tmp / 10000;
+        stateInt2 = tmp % 10000;
+	
+        Get4Id1 = -1;
+	get4state1 = -1;
+	Get4Id2 = -1;
+	get4state2 = -1;
+	
+	if(stateInt1 < 6912){
+	  Get4Id1 = stateInt1 % eTofConst::nGet4sInSystem;
+	  get4state1 = stateInt1 / eTofConst::nGet4sInSystem;
+	}
+	if(stateInt2 < 6912){
+	  Get4Id2 = stateInt2 % eTofConst::nGet4sInSystem;
+	  get4state2 = stateInt2 / eTofConst::nGet4sInSystem;
+	}
+	
+	if(i < 864){	  
+	  mGet4StateMap[Get4Id1] = get4state1;
+	  mGet4StateMap[Get4Id2] = get4state2;
+	  mGet4ZeroStateMap[Get4Id1] = get4state1;
+	  mGet4ZeroStateMap[Get4Id2] = get4state2;
+	}
+	stateVec[lastEvtId].push_back(get4state1);
+	get4IdVec[lastEvtId].push_back(Get4Id1);
+	stateVec[lastEvtId].push_back(get4state2);
+	get4IdVec[lastEvtId].push_back(Get4Id2);
+
+	break;
+		
+        //decode eventnumber ( int = 40.xxx.xxx.xxx = event number ) 
+	case 40:
+		
+        EvtId = intVec.at(i) % 4000000000;   
+
+	startVec.push_back(EvtId);
+	mMasterStartVec.push_back(EvtId);
+	
+	lastEvtId = EvtId;
+
+	break;		
+		
+        // decode nonZero/stateChange ints ( int = 41.xxx.x00.000 = 1 states only)
+	case 41:
+		
+	tmp       = intVec.at(i) % 4100000000;
+	stateInt1 = tmp / 10000;
+	Get4Id1 = -1;
+	get4state1 = -1;
+	
+	if(stateInt1 < 6912) {	 
+	  Get4Id1    = stateInt1 % eTofConst::nGet4sInSystem;
+	  get4state1 = stateInt1 / eTofConst::nGet4sInSystem;
+	}
+	
+	stateVec[lastEvtId].push_back(get4state1);
+	get4IdVec[lastEvtId].push_back(Get4Id1);
+
+	break;
+
+	default:
+	LOG_ERROR << "Get4 state not well defined -> Check db / state file !" << endm;	
+     }
+   }
 }
