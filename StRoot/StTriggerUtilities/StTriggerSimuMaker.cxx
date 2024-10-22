@@ -344,7 +344,7 @@ bool StTriggerSimuMaker::getTriggerDefinitions(int runNumber)
   TDataSet* DB = GetInputDB("Calibrations/trg");
   if (DB) {
     St_triggerDefinition* desc = dynamic_cast<St_triggerDefinition*>(DB->Find("triggerDefinition"));
-    if (desc) {
+    if (desc && Debug()) {
       LOG_INFO << "Using BEMC offline database for trigger definitions" << endm;
       triggerDefinition_st* table = desc->GetTable();
       LOG_INFO << Form("%s\n", table[0].comments) << endm;
