@@ -237,6 +237,7 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
   Float_t BFieldG[3]; 
   Float_t xyz[3] = {0,0,0};
   StMagF::Agufld(xyz,BFieldG);
+  St_TpcAvgPowerSupplyC::instance()->PrintC("V");
   // Shapers
   const Char_t *Names[2] = {"I","O"};
   Double_t CathodeAnodeGap[2] = {0.2, 0.4};
