@@ -215,7 +215,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"7.3GeV_fixedTarget_2019b",               20190423, 155418, "y2019", "7.3GeV_fixedTarget_2019"},
   {"14p5GeV_2019c",                          20190423, 181158, "y2019", "14p5GeV_2019"},
   {"7p7GeV_2019",                            20190603, 223655, "y2019", "7p7GeV_2019"},
-  {"3p85GeV_fixedTarget_2019",               20190607, 174702, "y2019", "3p85GeV_fixedTarget_2019"},
+  {"3p85GeV_fixedTarget_2019",               20190607, 174702, "y2019", "3p85GeV_fixedTarget_2019"}, // 20190607/174124  run = 20158040	3p85GeV_fixedTarget_2019  V1      1.388 
   {"7p7GeV_2019b",                           20190607, 202244, "y2019", "7p7GeV_2019"},
   {"3p85GeV_fixedTarget_2019b",              20190609, 124528, "y2019", "3p85GeV_fixedTarget_2019"},
   {"7p7GeV_2019c",                           20190610,  24109, "y2019", "7p7GeV_2019"},
@@ -227,12 +227,12 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"31GeV_fixedTarget_2019",                 20190709,  32312, "y2019", "31GeV_fixedTarget_2019"},
   {"AuAu200_2019",                           20190710, 110157, "y2019", "AuAu200GeV_2019"},
   {"AuAu200GeV_2019",                        20190710, 110157, "y2019", "AuAu200GeV_2019"},
-  {"9p2GeV_2019c",                           20190715,  85141, "y2019", "9p2GeV_2019"},
+  {"9p2GeV_2019c",                           20190715,  85141, "y2019", "9p2GeV_2019"},             //20190715/65240   run = 20196004	9p2GeV_2019c              V1      1.617 
   {"11p5GeV_2020",                           20191208,  91308, "y2019", "11p5GeV_2020"},
   {"5p75GeV_fixedTarget_2020",               20191221, 154021, "y2019", "5p75GeV_fixedTarget_2020"},
   {"11p5GeV_2020b",                          20191221, 190032, "y2019", "11p5GeV_2020"},
   {"31p2GeV_fixedTarget_2020",               20200128, 182912, "y2019", "31p2GeV_fixedTarget_2020"},
-  {"9p8GeV_fixedTarget_2020",                20200130,   5840, "y2019", "9p8GeV_fixedTarget_2020"},
+  {"9p8GeV_fixedTarget_2020",                20200130,   5840, "y2019", "9p8GeV_fixedTarget_2020"},//20200131/50328   run = 21031001	9p8GeV_fixedTarget_2020b  V1    866.170 
   {"9p2GeV_2020",                            20200131,  12112, "y2019", "9p2GeV_2020"},
   {"9p8GeV_fixedTarget_2020b",               20200131,  50328, "y2019", "9p8GeV_fixedTarget_2020"},
   {"19p5GeV_fixedTarget_2020",               20200201, 191904, "y2019", "19p5GeV_fixedTarget_2020"},
@@ -256,8 +256,8 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"7p7GeV_2020",                            20200902, 105440, "y2019", "7p7GeV_2020"},
   {"26p5GeV_fixedTarget_2020e",              20200907, 221141, "y2019", "26p5GeV_fixedTarget_2020"},
   {"7p7GeV_2020b",                           20200910,  41639, "y2019", "7p7GeV_2020"},
-  {"26p5GeV_fixedTarget_2020f",              20200912, 102033, "y2019", "26p5GeV_fixedTarget_2020"},
-  {"7p7GeV_2021",                            20210131, 193346, "y2019", "7p7GeV_2021"},
+  {"26p5GeV_fixedTarget_2020f",              20200912, 102033, "y2019", "26p5GeV_fixedTarget_2020"},//20200912/81816   run = 21256003	26p5GeV_fixedTarget_2020f V1      1.428 
+  {"7p7GeV_2021",                            20210131, 193346, "y2019", "7p7GeV_2021"}, 
   {"FF_7p7GeV_2021",                         20210303, 193715, "y2019", "7p7GeV_2021"               },
   {"7p7GeV_2021b",                           20210304, 213506, "y2019", "7p7GeV_2021"               },
   {"3p85GeV_fixedTarget_2021",               20210501, 165437, "y2019", "3p85GeV_fixedTarget_2021"},
@@ -274,9 +274,9 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"17p3GeV_2021",                           20210525, 113236, "y2019", "17p3GeV_2021"},
   {"26p5GeV_fixedTarget_2021",               20210604,  23045, "y2019", "26p5GeV_fixedTarget_2021"},
   {"17p3GeV_2021b",                          20210604,  81455, "y2019", "17p3GeV_2021"},
-  {"3p85GeV_fixedTarget_2021b",              20210608,   4951, "y2019", "3p85GeV_fixedTarget_2021"},
-  {"26p5GeV_fixedTarget_2021b",              20210617, 222550, "y2019", "26p5GeV_fixedTarget_2021"  },
-  {"3p85GeV_fixedTarget_2021c",              20210618,  40935, "y2019", "3p85GeV_fixedTarget_2021"  },
+  {"3p85GeV_fixedTarget_2021b",              20210608,  43503, "y2019", "3p85GeV_fixedTarget_2021"},//20210608/43159   run = 22159002	3p85GeV_fixedTarget_2021b V1     14.396 
+  {"26p5GeV_fixedTarget_2021b",              20210617, 222550, "y2019", "26p5GeV_fixedTarget_2021"},
+  {"3p85GeV_fixedTarget_2021c",              20210618,  40935, "y2019", "3p85GeV_fixedTarget_2021"},//20210618/40935   run = 22169001	3p85GeV_fixedTarget_2021c V1     27.581 
   {"26p5GeV_fixedTarget_2021c",              20210627, 152747, "y2019", "26p5GeV_fixedTarget_2021"},
   {"3p85GeV_fixedTarget_2021d",              20210628, 115428, "y2019", "3p85GeV_fixedTarget_2021"},
   {"dAu200_2021",                            20210630,  22849, "y2019", "dAu200GeV_2021"},
@@ -308,6 +308,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"pp200GeV_radial_d",                      20240616, 160307, "y2019", "pp200GeV_radial"},
   {"pp200GeV_unpolarized_c",                 20240801, 175519, "y2019", "pp200GeV_unpolarized"},
   {"pp200GeV_radial_e",                      20240802,  70216, "y2019", "pp200GeV_radial"},
+  {"AuAu_2024",                              20241006, 124742, "y2019", "AuAu_2024"},
 
   {"Cosmic_2019",  			     20190109, 211356, "y2019", "Cosmic_2019/ZF"}, 
   {"Cosmic_2019/ZF",  			     20190109, 211356, "y2019", "Cosmic_2019/ZF"}, 
