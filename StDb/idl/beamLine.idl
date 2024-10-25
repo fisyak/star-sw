@@ -1,0 +1,20 @@
+/*    beamLine.idl
+*
+*  Table: beamLine
+*
+*       description: *    provides a line in 3D to use as a seed for primary
+*/ 
+
+
+struct beamLine { 
+  float  X;             /* average X postion */	
+  float  sigma_X; 	/* sigma of X position */	
+  float  Y;       	/* average Y postion */	
+  float  sigma_Y; 	/* sigma of Y position */	
+  float  Z;       	/* average Z postion */	
+  float  sigma_Z; 	/* sigma of Z position */	
+  float  dXdZ;    	/* slope    of X vs Z line  */
+  float  sigma_dXdZ;    /* sigma of slope    of X vs Z line  */
+  float  dYdZ;    	/* slope    of Y vs Z line  */
+  float  sigma_dYdZ;    /* sigma of slope    of Y vs Z line  */
+ };  
