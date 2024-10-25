@@ -1940,3 +1940,13 @@ root.exe [2] StAnalysisMaker::instance()->PrintTpcHits(1,1)
 09/15/2024
 rcas6005] ~/work/ComparSL24y_SL24a/TbyT_dev_gitdev $ difw380 -a /star/rcf/test/dev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016_64bit/st_physics_17078006_raw_1000030.log /star/rcf/test/gitdev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016_64bit/st_physics_17078006_raw_1000030.log | more
   
+================================================================================
+09/17/2024 
+[rcas6005] ~/work/ComparSL24y_SL24a/TFG24c $ difw380 -a ../SL24yCorrZ/st_physics_22175004_raw_2000014B.log st_physics_22175004_raw_2000014B.log | more
+
+
+StMagUtilities::SpaceChargeR2 =  0 Coulombs/epsilon-nought  EWRatio = 1                                                                                                                      |  
+StMagUtilities::SpaceChargeR2 =  0.00591838 Coulombs/epsilon-nought  EWRatio = 1
+
+
+ tChain->Draw("GlobalTracks.mBTofPidTraits.mZLocal:TMath::RadToDeg()*TMath::ATan2(GlobalTracks.mBTofPidTraits.mPosition.mX2,GlobalTracks.mBTofPidTraits.mPosition.mX1)","GlobalTracks.mBTofPidTraits.mYLocal>-10","colz",10000)

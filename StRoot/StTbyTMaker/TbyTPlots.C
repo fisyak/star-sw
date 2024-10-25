@@ -665,14 +665,14 @@ void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
   tFile.ReplaceAll("5046043_raw_1010010_","");
   Out = tFile;
 #endif
-  TString Out(file);
+  TString Out;
   if (Out == "") {
     Out += "Plots.root";
   }
   TFile *fOut = new TFile(Out.Data(),"recreate");
   cout << "Opened " << Out << endl;
   // book
-  gTitle = file;
+  gTitle = ""; // file;
   if (gTitle != "") {
     TDirectory::CurrentDirectory() = new TFile(gTitle);
     //  gTitle.ReplaceAll(".Plots.root","");
