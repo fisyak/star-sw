@@ -3,6 +3,7 @@
 # git diff . RunXXIVDefs.pm
 # git ci -m "Update"  RunXXIVDefs.pm
 #CreateRunDirs.pl 0 100
+CreateRunDirs.pl
 @ countJ = 0
 foreach d (`ls -1d ???/2*`)
   if (! -d ${d}) continue;

@@ -34,16 +34,16 @@ bool EEmcDbItem::isTower() const{
 //--------------------------------------------------
 //--------------------------------------------------
 void EEmcDbItem::print() const{
-  LOG_INFO<<"EEmcDbItem::print() "<<endm;
+  LOG_DEBUG<<"EEmcDbItem::print() "<<endm;
 
   if(name[0]==0) {
     LOG_WARN<<" item not defined ???"<<endm;
     return;
   }
   if( isSMD() ) {
-    LOG_INFO<<Form("EEmcDbItem::SMD %s crate=%d chan=%3d sec=%2d plane=%c strip=%3d gain=%.3f  ped=%.2f sPed=%.2f ADC_thr=%.2f stat=0x%4.4x fail=0x%4.4x pix=%s key=%d\n",name,crate,chan,sec,plane,strip,gain,ped,sigPed,thr,stat,fail,tube,key)<<endm;
+    LOG_DEBUG<<Form("EEmcDbItem::SMD %s crate=%d chan=%3d sec=%2d plane=%c strip=%3d gain=%.3f  ped=%.2f sPed=%.2f ADC_thr=%.2f stat=0x%4.4x fail=0x%4.4x pix=%s key=%d\n",name,crate,chan,sec,plane,strip,gain,ped,sigPed,thr,stat,fail,tube,key)<<endm;
   } else {
-    LOG_INFO<<Form("EEmcDbItem::Tail %s crate=%d chan=%3d sec=%2d sub=%c eta=%2d gain=%.3f  ped=%.2f sPed=%.2f ADC_thr=%.2f stat=0x%4.4x fail=0x%4.4x tube=%s key=%d\n",name,crate,chan,sec,sub,eta,gain,ped,sigPed,thr,stat,fail,tube,key)<<endm;
+    LOG_DEBUG<<Form("EEmcDbItem::Tail %s crate=%d chan=%3d sec=%2d sub=%c eta=%2d gain=%.3f  ped=%.2f sPed=%.2f ADC_thr=%.2f stat=0x%4.4x fail=0x%4.4x tube=%s key=%d\n",name,crate,chan,sec,sub,eta,gain,ped,sigPed,thr,stat,fail,tube,key)<<endm;
   }
 }
 

@@ -9,13 +9,14 @@ foreach d (`ls -1d *GeV* AuAu* dAu* pp* | sort -u`)
   ls -1d All*.root 
   if ($?) then
     cd -
+    continue;
   else   
-  ls -1d All*_2.root
-  if (! $?) then
-    hadd ${dist}/${d}.root All*.root >& hadd.log &
-  else
-    cp -p  All*_1.root ${dist}/${d}.root
-  endif
+    ls -1d All*_2.root
+    if (! $?) then
+      hadd ${dist}/${d}.root All*.root >& hadd.log &
+    else
+      cp -p  All*_1.root ${dist}/${d}.root
+    endif
   endif
   cd -;
 end

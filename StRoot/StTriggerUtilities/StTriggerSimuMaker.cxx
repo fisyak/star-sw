@@ -133,7 +133,7 @@ void StTriggerSimuMaker::useL2(StGenericL2Emulator2009* L2Mk){
 }
 
 Int_t StTriggerSimuMaker::Init() {
-    LOG_INFO <<Form("StTriggerSimuMaker::Init(), MCflag=%d",mMCflag)<<endm;
+    LOG_DEBUG <<Form("StTriggerSimuMaker::Init(), MCflag=%d",mMCflag)<<endm;
 
     if (GetMode() == 10) {
       // Set parameters necessary for filling PicoDst in BFC
@@ -345,10 +345,10 @@ bool StTriggerSimuMaker::getTriggerDefinitions(int runNumber)
   if (DB) {
     St_triggerDefinition* desc = dynamic_cast<St_triggerDefinition*>(DB->Find("triggerDefinition"));
     if (desc) {
-      LOG_INFO << "Using BEMC offline database for trigger definitions" << endm;
+      LOG_DEBUG << "Using BEMC offline database for trigger definitions" << endm;
       triggerDefinition_st* table = desc->GetTable();
-      LOG_INFO << Form("%s\n", table[0].comments) << endm;
-      LOG_INFO << setw(20) << "triggerIndex"
+      LOG_DEBUG << Form("%s\n", table[0].comments) << endm;
+      LOG_DEBUG << setw(20) << "triggerIndex"
 	       << setw(20) << "name"
 	       << setw(20) << "triggerId"
 	       << setw(20) << "onbits"
@@ -367,7 +367,7 @@ bool StTriggerSimuMaker::getTriggerDefinitions(int runNumber)
       for (int i = 0; i < a->GetEntriesFast(); ++i) {
 	StTriggerDefinition* trigdef = dynamic_cast<StTriggerDefinition*>(a->At(i));
         if(!trigdef) continue;
-	LOG_INFO << setw(20) << trigdef->triggerIndex
+	LOG_DEBUG << setw(20) << trigdef->triggerIndex
 		 << setw(20) << trigdef->name
 		 << setw(20) << trigdef->triggerId
 		 << setw(20) << Form("0x%08x", trigdef->onbits)
@@ -402,11 +402,11 @@ bool StTriggerSimuMaker::getTriggerDefinitions(int runNumber)
 }
 void StTriggerSimuMaker::setTriggerThresholds2017()
 {
-  LOG_INFO<<"Resetting the following BEMC DSM thresholds for year 2017"<<endm;
-  LOG_INFO<<Form("BEMC-EEMC-overlap-JP-th0: %d", 30)<<endm;
-  LOG_INFO<<Form("BEMC-EEMC-overlap-JP-th1: %d", 43)<<endm;
-  LOG_INFO<<Form("BEMC-EEMC-overlap-JP-th2: %d", 66)<<endm;
-  LOG_INFO<<Form("EMC-HTTP-Sel: %d", 0)<<endm;
+  LOG_DEBUG<<"Resetting the following BEMC DSM thresholds for year 2017"<<endm;
+  LOG_DEBUG<<Form("BEMC-EEMC-overlap-JP-th0: %d", 30)<<endm;
+  LOG_DEBUG<<Form("BEMC-EEMC-overlap-JP-th1: %d", 43)<<endm;
+  LOG_DEBUG<<Form("BEMC-EEMC-overlap-JP-th2: %d", 66)<<endm;
+  LOG_DEBUG<<Form("EMC-HTTP-Sel: %d", 0)<<endm;
 
   //set BEMC EM201 registers
   emc->get2009_DSMLayer2_Result()->setRegister(0,30);
@@ -417,9 +417,9 @@ void StTriggerSimuMaker::setTriggerThresholds2017()
   //crateAt(1).boardAt(20<<24).registerAt((1%100)<<24) = 43;
   //crateAt(1).boardAt(20<<24).registerAt((2%100)<<24) = 66;
   //set EE101 and EE102 thresholds
-  LOG_INFO<<Form("EEMC-JP-th0: %d", 30)<<endm;
-  LOG_INFO<<Form("EEMC-JP-th1: %d", 43)<<endm;
-  LOG_INFO<<Form("EEMC-JP-th2: %d", 66)<<endm;
+  LOG_DEBUG<<Form("EEMC-JP-th0: %d", 30)<<endm;
+  LOG_DEBUG<<Form("EEMC-JP-th1: %d", 43)<<endm;
+  LOG_DEBUG<<Form("EEMC-JP-th2: %d", 66)<<endm;
   
   eemc->get2009_DSMLayer1_Result()->setRegister(0, 30);
   eemc->get2009_DSMLayer1_Result()->setRegister(1, 43);
@@ -430,11 +430,11 @@ void StTriggerSimuMaker::setTriggerThresholds2017()
   //crateAt(2).boardAt(22<<24).registerAt((0%100)<<24) = 30;
   //crateAt(2).boardAt(22<<24).registerAt((1%100)<<24) = 43;
   //crateAt(2).boardAt(22<<24).registerAt((2%100)<<24) = 66;
-  LOG_INFO<<Form("BEMC-HT-th1: %d", 18)<<endm;
-  LOG_INFO<<Form("BEMC-HT-th2: %d", 25)<<endm;
-  LOG_INFO<<Form("BEMC-HT-th3: %d", 31)<<endm;
-  LOG_INFO<<Form("BEMC-HT-UPC %d", 3)<<endm;
-  LOG_INFO<<Form("BEMC-TP-UPC: %d", 3)<<endm;
+  LOG_DEBUG<<Form("BEMC-HT-th1: %d", 18)<<endm;
+  LOG_DEBUG<<Form("BEMC-HT-th2: %d", 25)<<endm;
+  LOG_DEBUG<<Form("BEMC-HT-th3: %d", 31)<<endm;
+  LOG_DEBUG<<Form("BEMC-HT-UPC %d", 3)<<endm;
+  LOG_DEBUG<<Form("BEMC-TP-UPC: %d", 3)<<endm;
   //BEMC west
   for (int dsm = 0; dsm < 15; ++dsm){
     (*bemc->get2009_DSMLayer0_Result())[dsm].registers[0] = 18;
@@ -724,7 +724,7 @@ bool StTriggerSimuMaker::get2009DsmRegistersFromOnlineDatabase(int runNumber)
     mysql_free_result(result);
   }
   
-  //  LOG_INFO << "The following registers have new values:" << endm;
+  //  LOG_DEBUG << "The following registers have new values:" << endm;
 
   // Trigger definitions
   const int MAX_TRIGGERS = 64;

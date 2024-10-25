@@ -34,7 +34,8 @@
 #  if (! -r ${generF} ) then
 #    root.exe -q -b -x 'bfc.C(100,"hIn,P2019a,readAll,sdt20190311,StiCA,StiKFVertex,-hitfilt,-geantOut,-evout,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco","'${file}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(101,1000,"PHQMDFXT,vmc,MC.2019,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
-     root.exe -q -b -x 'bfc.C(250,"PHQMDFXT,vmc,MC.2021,3p85GeV_fixedTarget_2021a,StiPulls,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#     root.exe -q -b -x 'bfc.C(250,"PHQMDFXT,vmc,MC.2021,3p85GeV_fixedTarget_2021a,StiPulls,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+     root.exe -q -b -x 'bfc.C(100,"PHQMDFXT,vmc,MC.2021,3p85GeV_fixedTarget_2021,StiPulls,McTpcAna,-bbcSim,StiCA,geantOut,evout,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->

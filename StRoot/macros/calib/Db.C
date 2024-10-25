@@ -174,6 +174,7 @@ void Db(const Char_t *tabNam="Geometry/tpc/tpcPadConfig", const Char_t *tag="3p8
   if (Tag != "") {
     date = StMaker::AliasDate(tag);
     time = StMaker::AliasTime(tag);
+    cout << tag << " ==> date.time = " << date << "." << time << endl; 
   }
   Db(tabNam,date,time,flavor);
 }

@@ -1684,8 +1684,7 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
   if (peakY <= 0.) return 0;
   params[0] = TMath::Log(peakY);
   params[1] = peakX; // proj->GetMean();
-  Double_t RMS = proj->GetRMS();
-  params[2] = 0.5*RMS;
+  params[2] = 0.5*proj->GetRMS();
   params[3] = 0;
   params[4] = 0;
   params[5] = 0;
@@ -1711,9 +1710,10 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
     }
     g->SetParameters(params);
     if (sigma > 0) {
-      g->SetRange(params[1]-sigma*RMS,params[1]+sigma*RMS);
+      g->SetRange(params[1]-sigma,params[1]+sigma);
+      g->SetRange(params[1]-sigma,params[1]+sigma);
       g->SetParLimits(1, params[1]-params[2], params[1]+params[2]);
-      g->SetParLimits(2, 1e-3, RMS);
+      g->SetParLimits(2, 1e-3, proj->GetRMS());
     }
     Bool_t res = proj->Fit(g,opt);
     if (g->GetProb() > 0.01) {
@@ -4748,8 +4748,8 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 	     Option_t *opt="R", 
 	     Int_t ix = -1, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
-	     Double_t nSigma=-3, Int_t pow=0,
-	     Double_t zmin = -5, Double_t zmax = 5) {
+	     Double_t nSigma=3, Int_t pow=0,
+	     Double_t zmin = -1, Double_t zmax = 2) {
   if (! hist) return;
   struct Fit_t {
     Float_t i;
@@ -4939,7 +4939,7 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
 	else        hist->Add(((THnSparse *) obj)->Projection(1,0));
       } else {
 	THnSparse *sparse = dynamic_cast<THnSparse *>(obj);
-	if (sparse) dEdxFitSparse(sparse, FitName,opt,ix,jy,mergeX,mergeY,nSigma,pow,zmin,zmax);
+	if (sparse) dEdxFitSparse(sparse, FitName,opt,ix);
 	return;
       }
     }

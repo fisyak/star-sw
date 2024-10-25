@@ -786,7 +786,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '0781' => {trig=>'17p3GeV_2021',       	field => 'RF',	first=> '22158001',	 last => '22158015',	 list => '',  beginTime => '20210607.040709'}, # 	2021-06-07	04:07:09	2021-06-07	18:16:00
 '0782' => {trig=>'17p3GeV_2021',       	field => 'RF',	first=> '22158017',	 last => '22158019',	 list => '',  beginTime => '20210607.181600'}, # 	2021-06-07	18:16:00	2021-06-07	22:14:16
 '0783' => {trig=>'tune_3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22158025',	 last => '22158031',	 list => '',  beginTime => '20210607.221416'}, # 	2021-06-07	22:14:16	2021-06-08	00:49:51
-'0784' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22158032',	 last => '22158033',	 list => '',  beginTime => '20210608.004951'}, # 	2021-06-08	00:49:51	2021-06-08	01:28:10
+'0784' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22158032',	 last => '22158033',	 list => '',  beginTime => '20210608.005053'}, #4951'}, # 	2021-06-08	00:49:51	2021-06-08	01:28:10
 '0785' => {trig=>'tune_3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22158035',	 last => '22158035',	 list => '',  beginTime => '20210608.012810'}, # 	2021-06-08	01:28:10	2021-06-08	02:40:00
 '0786' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22158036',	 last => '22158036',	 list => '',  beginTime => '20210608.024000'}, # 	2021-06-08	02:40:00	2021-06-08	03:51:07
 '0787' => {trig=>'tune_3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22158037',	 last => '22158037',	 list => '',  beginTime => '20210608.035107'}, # 	2021-06-08	03:51:07	2021-06-08	04:01:04
@@ -846,7 +846,8 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '0841' => {trig=>'tune_26p5GeV_fixedTarget_2021',	field => 'RF',	first=> '22168028',	 last => '22168028',	 list => '',  beginTime => '20210617.212618'}, # 	2021-06-17	21:26:18	2021-06-17	22:25:50
 '0842' => {trig=>'26p5GeV_fixedTarget_2021',	field => 'RF',	first=> '22168037',	 last => '22168037',	 list => '',  beginTime => '20210617.222550'}, # 	2021-06-17	22:25:50	2021-06-17	22:45:33
 '0843' => {trig=>'26p5GeV_fixedTarget_2021',	field => 'RF',	first=> '22168039',	 last => '22168043',	 list => '',  beginTime => '20210617.224533'}, # 	2021-06-17	22:45:33	2021-06-18	04:09:35
-'0844' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22169001',	 last => '22169011',	 list => '',  beginTime => '20210618.040935'}, # 	2021-06-18	04:09:35	2021-06-19	03:06:21
+#'0844' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22169001',	 last => '22169011',	 list => '',  beginTime => '20210618.040935'}, # bad TPC anode Voltage  2021-06-18	04:09:35	2021-06-19	03:06:21
+'0844' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22169002',	 last => '22169011',	 list => '',  beginTime => '20210618.043503'}, # bad TPC anode Voltage  2021-06-18	04:09:35	2021-06-19	03:06:21
 '0845' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22169018',	 last => '22169018',	 list => '',  beginTime => '20210619.030621'}, # 	2021-06-19	03:06:21	2021-06-19	03:24:06
 '0846' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22169022',	 last => '22169023',	 list => '',  beginTime => '20210619.032406'}, # 	2021-06-19	03:24:06	2021-06-19	04:39:15
 '0847' => {trig=>'3p85GeV_fixedTarget_2021',	field => 'RF',	first=> '22170001',	 last => '22170009',	 list => '',  beginTime => '20210619.043915'}, # 	2021-06-19	04:39:15	2021-06-19	11:42:24

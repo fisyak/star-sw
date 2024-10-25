@@ -37,11 +37,11 @@ Double_t gf4EYFunc(Double_t *x, Double_t *par) {
   IO = TMath::Max(0, TMath::Min(1, IO));
   Int_t sign = par[15];
   Double_t frac[9];
+#if 0  
   Double_t ff[9] = {0};
   for (Int_t i = 1; i < Npart4EY; i++) {
     ff[i] = TMath::Sin(par[2+i]);
     ff[i] *= ff[i];
-  }
   frac[1] = ff[1];
   //  frac[0] = (1 - frac[1])/(1. + ff[2] + ff[3] + ff[4]);
   frac[0] = (1 - ff[1]*(1 + ff[4] + ff[6] + ff[7] + ff[8]))/(1 + ff[2] + ff[3] + ff[5]);
@@ -52,7 +52,15 @@ Double_t gf4EYFunc(Double_t *x, Double_t *par) {
   frac[6] = ff[1]*ff[6];
   frac[7] = ff[1]*ff[7];
   frac[8] = ff[1]*ff[8];
-  if (frac[0] + frac[1] < 0.1) return 0;
+#else
+  frac[0] = 1;
+  for (Int_t i = 1; i < Npart4EY; i++) {
+    frac[i] = TMath::Sin(par[2+i]);
+    frac[i] *= frac[i];
+    frac[0] -= frac[i];
+  }
+#endif
+  if (frac[0] + frac[1] < 0.5) return 0;
   if (frac[0] < 0.4 && frac[1] < 0.4) return 0;
 #if 0
   // 11/03/2022 /hlt/cephfs/fisyak/TpcRS_2021.COL/dEdx/Fit/FiTGG
@@ -799,10 +807,10 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
     g2 = new TF1("G4EY",gf4EYFunc, -5, 5, 16);
 #endif
     g2->SetParName(0,"norm");      g2->SetParLimits(0,-0.6,0.6); // g2->FixParameter(0,0.0); // 
-    g2->SetParName(1,"mu");        g2->SetParLimits(1,-1.2,1.6);				     
+    g2->SetParName(1,"mu");        g2->SetParLimits(1,-0.6,0.6); // g2->SetParLimits(1,-1.2,1.6);  				     
     g2->SetParName(2,"Sigma");     g2->FixParameter(2,0.0); // g2->SetParLimits(2,-0.1,0.1);	     
-    g2->SetParName(3,"P");         g2->SetParLimits(3,0.0,1.2); // TMath::Pi()/2);		     
-    g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,1.0); // TMath::Pi()/2); 	     
+    g2->SetParName(3,"P");         g2->SetParLimits(3,0.0,TMath::Pi()/2);		     
+    g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,TMath::Pi()/2); 	     
     g2->SetParName(5,"e");         g2->SetParLimits(5,0.0,TMath::Pi()/2);			     
     g2->SetParName(6,"d");         g2->FixParameter(6,0.0); //g2->SetParLimits(6,0.0, 1.0); // TMath::Pi()/2);             
     g2->SetParName(7,"muon");      g2->FixParameter(7,0.0); //g2->SetParLimits(7,0.0, 1.0); // TMath::Pi()/2);             
