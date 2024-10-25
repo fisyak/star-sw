@@ -28,9 +28,9 @@
 #include "St_base/StMessMgr.h"
 #ifdef __TFG__VERSION__
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "StDetectorDbMaker/St_beamLineC.h"
 #include "TMath.h"
 #endif /*  __TFG__VERSION__ */
-std::vector<StPhysicalHelixD>   StMinuitVertexFinder::mHelices;
 std::vector<UShort_t>           StMinuitVertexFinder::mHelixFlags;
 std::vector<Double_t >          StMinuitVertexFinder::mZImpact;
 Bool_t                     StMinuitVertexFinder::requireCTB;
@@ -70,7 +70,6 @@ StMinuitVertexFinder::~StMinuitVertexFinder()
 {
 #if 0
    LOG_DEBUG << "Skipping delete Minuit in StMinuitVertexFinder::~StMinuitVertexFinder()" << endm;
-   mHelices.clear();
    mHelixFlags.clear();
    mZImpact.clear();
 #endif
@@ -408,7 +407,6 @@ int StMinuitVertexFinder::fit(StEvent* event)
     // StMinuitVertexFinder::accept()). The helices and the sigma are used in
     // fcn to calculate the fit potential which gets minimized by Minuit.
     mDCAs.clear();
-    mHelices.clear();
     mHelixFlags.clear();
     mZImpact.clear();
 
@@ -417,20 +415,28 @@ int StMinuitVertexFinder::fit(StEvent* event)
     Int_t n_ctb_match_tot = 0;
     Int_t n_bemc_match_tot = 0;
     Int_t n_cross_tot = 0;
-
     for (const StTrackNode* stTrack : event->trackNodes())
     {
       StGlobalTrack* g = ( StGlobalTrack*) stTrack->track(global);
       if (!accept(g)) continue;
       StDcaGeometry* gDCA = g->dcaGeometry();
       if (! gDCA) continue;
+#ifndef __TFG__VERSION__ 
       if (TMath::Abs(gDCA->impact()) >  mRImpactMax) continue;
-      mDCAs.push_back(gDCA);
-      // 	  StPhysicalHelixD helix = gDCA->helix(); 
-      // 	  mHelices.push_back(helix);
-      mHelices.push_back(g->geometry()->helix());
-      mHelixFlags.push_back(1);
       Double_t z_lin = gDCA->z();
+#else /* __TFG__VERSION__ */ 
+      static Double_t xBeam = St_beamLineC::instance()->X();
+      static Double_t yBeam = St_beamLineC::instance()->Y();
+      THelixTrack thelix = gDCA->thelix();
+      Double_t step = thelix.Path(xBeam, yBeam);
+      Double_t xyz[3];
+      thelix.Eval(step, xyz);
+      Double_t dcaXY = TMath::Sqrt((xyz[0] - xBeam)*(xyz[0] - xBeam) + (xyz[1] - yBeam)*(xyz[1] - yBeam));
+      if (dcaXY  >  mRImpactMax) continue;
+      Double_t z_lin = xyz[2];
+#endif /* ! __TFG__VERSION__ */
+      mDCAs.push_back(gDCA);
+      mHelixFlags.push_back(1);
       mZImpact.push_back(z_lin);
 
       Bool_t shouldHitCTB = kFALSE;
@@ -457,13 +463,13 @@ int StMinuitVertexFinder::fit(StEvent* event)
     }
 
     // In case there are no tracks left we better quit
-    if (mHelices.empty()) {
+    if (mDCAs.empty()) {
 	LOG_WARN << "StMinuitVertexFinder::fit: no tracks to fit." << endm;
 	mStatusMin = -1;
 	return 0;
     }
 
-    LOG_INFO << "StMinuitVertexFinder::fit size of helix vector: " << mHelices.size() << endm;
+    LOG_INFO << "StMinuitVertexFinder::fit size of helix vector: " << mDCAs.size() << endm;
 
     // Set some global pars
     if (mRequireCTB) requireCTB = kTRUE;
@@ -522,7 +528,7 @@ int StMinuitVertexFinder::fit(StEvent* event)
       Int_t iter = 0;
 
       Int_t n_trk_vtx = 0;
-      Int_t n_helix = mHelices.size();
+      Int_t n_helix = mDCAs.size();
       do {  
 	// For most vertices one pass is fine, but multiple passes can be done
 	n_trk_vtx = 0;
@@ -662,8 +668,8 @@ int StMinuitVertexFinder::fit(StEvent* event)
 	  n_bemc_match++;
 	if (mHelixFlags[i] & kFlagCrossMembrane)
 	  n_cross++;
-	mean_dip += mHelices[i].dipAngle();
-	sum_pt += mHelices[i].momentum(0).perp();
+	mean_dip += mDCAs[i]->dipAngle();
+	sum_pt += mDCAs[i]->momentum().perp();
       }
       
       mean_dip /= n_trk_vtx;
