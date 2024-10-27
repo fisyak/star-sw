@@ -10,7 +10,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "Riostream.h"
-#include "Riostream.h"
 #include "TROOT.h"
 #include "TFile.h"
 #include "TDirectory.h"
