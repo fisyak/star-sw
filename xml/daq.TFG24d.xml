@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+        <command>
+  cd ${SUBMITTINGDIRECTORY}
+#setenv StarEndMakerShell
+  setenv STARFPE NO
+#  setenv NODEBUG yes
+#  starver .DEV2
+  source /afs/rhic.bnl.gov/star/packages/.DEV2/setupDEV2.csh 
+  setup cvmfs
+  setup gcc/12
+  setup spackTFG
+  spack env activate x86_64_gcc12
+  starver TFG24d
+  
+  setup nodebug
+##
+  echo $INPUTFILE0 | grep ':'
+  if (! $?) then
+    set evtsFileF = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
+    set f         = `echo $INPUTFILE0 | awk -F\: '{print $2}'`
+    set l         = `echo $INPUTFILE0 | awk -F\: '{print $3}'`
+  else
+    set evtsFileF = $INPUTFILE0;
+    set f         = 1
+    set l         = 10000
+  endif
+  if (! -r ${evtsFileF}) exit 1;
+#  cp -p ${evtsFileF} .
+#  ln -s  ${evtsFileF} .
+  set evtsFile = ${evtsFileF};
+#  set evtsFile = `basename ${evtsFileF}`;
+  echo "${evtsFile}"
+  set filel    = `basename $evtsFile .daq`,${f},${l}
+  set output  = ${filel}.event.root
+##  set logFile  = ${filel}B.log
+#  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
+  set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
+#  if (-r $logFile) exit 0;
+  set muFile = ${filel}.MuDst.root
+  if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
+  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
+  if (-r ${bla}) exit 0;
+  touch ${bla}
+  if (-r ${SUBMITTINGDIRECTORY}/Submitted) then 
+    rm ${SUBMITTINGDIRECTORY}/Submitted
+  endif
+# 2019    root4star -b -q 'bfc.C(1000,"P2019a,StiCA,PicoVtxDefault,BEmcChkStat,OSpaceZ2,OGridLeakFull,-OPr13,OPr40,-hitfilt,evout,-beamline3D","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 2014    root4star -b -q 'bfc.C(1000,"P2014a,StiCA,PicoVtxDefault,btof,mtd,mtdCalib,pxlHit,istHit,sstHit,BEmcChkStat,QAalltrigs,CorrX,OSpaceZ2,OGridLeak3D,-hitfilt,evout,","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 2015    root4star -b -q 'bfc.C(200,"P2015c,btof,mtd,pp2pp,pxlHit,istHit,sstHit,fmsDat,fmsPoint,fpsDat,fmsfps,BEmcChkStat,QAalltrigs,CorrX,OSpaceZ2,OGridLeak3D,-hitfilt,StiCA,PicoVtxDefault,evout,","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 2016    root4star -b -q 'bfc.C(200," P2016a,btof,mtd,pxlHit,istHit,sstHit,picoWrite,PicoVtxVpd,BEmcChkStat,QAalltrigs,CorrX,OSpaceZ2,OGridLeak3D,-hitfilt,StiCA,PicoVtxDefault,evout,","'${evtsFile}'")' &gt;&amp; ${logFile}x2
+# 2017    root4star -b -q 'bfc.C(2000,"pp2017,btof,mtd,pp2pp,fmsDat,fmsPoint,fpsDat,BEmcChkStat,QAalltrigs,CorrX,OSpaceZ2,OGridLeak3D,-hitfilt,StiCA,PicoVtxDefault,evout,","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 2019    root4star -b -q 'bfc.C(1000,"P2019a,StiCA,PicoVtxDefault,BEmcChkStat,OSpaceZ2,OGridLeakFull,-OPr13,OPr40,-hitfilt,evout,-beamline3D","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(1000,"P2019a,StiCA,PicoVtxDefault,BEmcChkStat,OSpaceZ2,OGridLeakFull,-OPr13,OPr40,-hitfilt,evout,-beamline3D","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,DbV20191031,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,DbV20191001,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,-beamLine3D,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-OGridLeakFull,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(5000,"P2019a,DbV20190430,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(500,"DbV20191001,P2019a,StiCA,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 2020    root4star -b -q 'bfc.C(6000,"P2020a,StiCA,btof,mtd,etofA,BEmcChkStat,picoVtxDefault,PicoCovMtxWrite,-hitfilt,QAalltrigs,evout,NoHistos,noTags,noRunco","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe  -b -q 'bfc.C(6000,"P2020a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault","'${evtsFile}'")' &gt;&amp; ${logFile}
+#           root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#           root.exe -b -q  'bfc.C(1000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,StiPulls,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 07/06/2023
+#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
+# 08/04/2023
+#  set WestEastOff = ""
+#  echo ${SUBMITTINGDIRECTORY} | grep WestOff
+#  if ($? == 0) set WestEastOff = ",WestOff"
+#  echo ${SUBMITTINGDIRECTORY} | grep EastOff
+#  if ($? == 0) set WestEastOff = ",EastOff"
+#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'","'${output}')' &gt;&amp; ${logFile}
+  cd ${SUBMITTINGDIRECTORY}
+  set year = `GetYearFromPWD.pl`
+  cd -
+  echo ${year} | grep 20
+  if ($? != 0) exit 0;
+  set PicoMode = ",PicoVtxVpdOrDefault"
+  echo ${SUBMITTINGDIRECTORY} | grep fixed
+  if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT"
+  set Cosmic = "";
+  echo ${SUBMITTINGDIRECTORY} | grep Cosmic
+  if ($? == 0) set Cosmic = ",Cosmic"
+  set Chain = "";
+  switch ($year)
+    case "2019":
+#      Chain = "P2019a,CorrZ,TFGdbOpt,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt${PicoMode},BEmcChkStat,NoHistos,noTags,noRunco";
+      set Chain = "P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+    breaksw
+    case "2020":
+      set Chain = "P2020a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+    breaksw
+    case "2021":
+      set Chain = "P2021a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-beamLine3D,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+    breaksw
+    case "2022":
+      set Chain = "pp2022,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+    breaksw
+    case "2023":
+      set Chain = "P2023,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+    breaksw
+    case "2024":
+      set Chain = "pp2024a,CorrZ,TFGdbOpt,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+    breaksw
+    default:
+      exit 0;
+  endsw
+  set WestEast = "";
+  echo "${SUBMITTINGDIRECTORY}" | grep -i WestOff
+  if ($? == 0) set WestEast = ",WestOff"
+  echo "${SUBMITTINGDIRECTORY}" | grep -i EastOff
+  if ($? == 0)  set WestEast = ",EastOff"
+  set evout = ",-evout";
+#  if ($JOBINDEX > 0) then
+#    @ n =  $JOBINDEX % 20  # 05/29/2023
+##   @ n =  $JOBINDEX % 100
+#    set evout = ",-evout";
+#    if ($n == 4) set evout = ",evout";
+#  endif
+#  root.exe -b -q  'bfc.C(10000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#   root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C(100000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C(20000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C(10000,"'${Chain}${evout}'","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}'","'${evtsFile}'","'$output'")' &gt;&amp; ${logFile}
+##
+##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
+##   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
+   rm ${bla}
+   gzip -f ${logFile}
+        </command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+<!-- 
+<input URL="file:/hlt/cephfs/daq/2019/054/20054064/hlt*.daq" />
+<input URL="file:/gpfs01/star/daq/2019/066/20066003/*.daq" />
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_20160*.daq" />
+<input URL="file:/gpfs01/star/embed/daq/2014/auau200_vpdmb_chop_added/st_physics_adc*.daq" />
+<input URL="file:/gpfs01/star/daq/2017/*/*/st_W_*.daq" />
+<input URL="command:daq_2019T.pl" />
+<input URL="file:/star/data03/daq/2020/005/21005010/st_physics_*.daq" /> 
+<input URL="file:/gpfs01/star/daq/2019/087/20087007/st_physics_2*.daq" /> 
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_2016002*.daq" />
+<input URL="command:daq_2019T.pl" />
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_adc_2016002*.daq" />
+-->
+<input URL="command:daqdR.pl" />
+</job>
