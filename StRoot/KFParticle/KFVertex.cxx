@@ -35,8 +35,6 @@ KFVertex::KFVertex( const KFPVertex &vertex ): fIsConstrained(0)
   fChi2 = vertex.GetChi2();  
   fNDF = 2*vertex.GetNContributors() - 3;
   fQ = 0;
-  fAtProductionVertex = 0;
-  fSFromDecay = 0;
 }
 
 void KFVertex::SetBeamConstraint( float x, float y, float z, 

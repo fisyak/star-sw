@@ -19,12 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifdef DO_TPCCATRACKER_EFF_PERFORMANCE
-
 #ifndef KFParticlePERFORMANCEBASE_H
 #define KFParticlePERFORMANCEBASE_H
 
-#ifdef KFPWITHTRACKER_1
+#ifdef KFPWITHTRACKER
 #include "AliHLTTPCCounters.h"
 
 #include "AliHLTTPCPerformanceBase.h"
@@ -68,17 +66,17 @@ class KFParticle;
  ** another primary vertex; efficiency.
  **/
 class KFParticlePerformanceBase
-#ifdef KFPWITHTRACKER_1
+#ifdef KFPWITHTRACKER
 : public AliHLTTPCPerformanceBase
 #endif
 {
  public:
 
   KFParticlePerformanceBase();
-  virtual ~KFParticlePerformanceBase(){};
+  ~KFParticlePerformanceBase(){}
     
     /// Histograms
-  virtual void CreateHistos(std::string histoDir = "", TDirectory* outFile = 0, std::map<int,bool> decays = std::map<int,bool>());
+  void CreateHistos(std::string histoDir = "", TDirectory* outFile = 0, std::map<int,bool> decays = std::map<int,bool>());
   TDirectory* GetHistosDirectory() { return fHistoDir; } ///< Returns pointer to the ROOT directory with created histograms.
 
   /** Switch off collection of histograms requiring Monte Carlo information. Not to allocate memory should be called 
@@ -141,7 +139,10 @@ class KFParticlePerformanceBase
   TH1F *hPartParamSecondary[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam]; ///< Parameters of secondary candidates.
   TH1F *hPartParamSecondaryMass[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam]; ///< Parameters of secondary candidates with mass constraint.
 
-  static const int nHistoPartParam2D = 4; ///< Number of 2D histograms: 0 - y-pt, 1 - z-r, 2 - armenteros, 3- y-mt.
+  TH2F* hPartDaughterPTheta[KFPartEfficiencies::nParticles][2];
+  TH1F* hPartDaughterPhi[KFPartEfficiencies::nParticles][2];
+
+  static const int nHistoPartParam2D = 7; ///< Number of 2D histograms: 0 - y-pt, 1 - z-r, 2 - armenteros, 3- y-mt, 4-6 dalitz
   TH2F *hPartParam2D[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D histograms for all candidates.
   TH2F *hPartParam2DPrimary[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D for primary candidates.
   TH2F *hPartParam2DPrimaryMass[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D for primary candidates with mass constraint.
@@ -150,16 +151,12 @@ class KFParticlePerformanceBase
   TH2F *hPartParam2DSecondary[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D for secondary candidates.
   TH2F *hPartParam2DSecondaryMass[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D for secondary candidates with mass constraint.
 
-#ifndef __TFG__VERSION__
   static const int nHistoPartParam3D = 12; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4
-#else /* __TFG__VERSION__ */
-  static const int nHistoPartParam3D = 14; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4, y-phi-M for pT > 1 GeV/c, y-pt-dM
-#endif /* __TFG__VERSION__ */
   TH3F *hPartParam3D[1][KFPartEfficiencies::nParticles][nHistoPartParam3D]; ///< 3D histograms.
 
   static const int nPartEfficiency = 9; ///< Number of efficiency plots for each decay: vs p, pt, y, z, c*tau, decay length, l, r, Mt.
   TProfile* hPartEfficiency[KFPartEfficiencies::nParticles][3][nPartEfficiency]; ///< Efficiency plots.
-  static const int nPartEfficiency2D = 2;  ///< Number of 2D efficiency plots for each decay: y-pt, y-mt.
+  static const int nPartEfficiency2D = 5;  ///< Number of 2D efficiency plots for each decay: y-pt, y-mt, 3 dalitz
   TProfile2D* hPartEfficiency2D[KFPartEfficiencies::nParticles][3][nPartEfficiency2D]; ///< 2D efficiency plots.
   THnSparseF* hPartEfficiencyMulti[KFPartEfficiencies::nParticles][4]; ///< Multidimensional efficiency: phi-theta-p-ctau-z, 0 - N reco, 1 - N mc
                                                                        ///< pt-y-p-ctau, 2 - N reco, 3 - N mc
@@ -202,7 +199,7 @@ class KFParticlePerformanceBase
   KFParticlePerformanceBase(const KFParticlePerformanceBase&); ///< Copying of objects of this class is forbidden.
   
   void CreateFitHistograms(TH1F* histo[nFitQA], int iPart);
-  void CreateEfficiencyHistograms(TProfile* histo[3][nPartEfficiency], TProfile2D* histo2[3][nPartEfficiency2D], THnSparseF* histoN[4]);
+  void CreateEfficiencyHistograms(TProfile* histo[3][nPartEfficiency], TProfile2D* histo2[3][nPartEfficiency2D], THnSparseF* histoN[4], int iPart);
   void CreateParameterHistograms(TH1F* histoParameters[KFPartEfficiencies::nParticles][nHistoPartParam],
                                  TH2F *histoParameters2D[KFPartEfficiencies::nParticles][nHistoPartParam2D],
                                  TH3F *histoParameters3D[KFPartEfficiencies::nParticles][nHistoPartParam3D],
@@ -213,10 +210,6 @@ class KFParticlePerformanceBase
                                 TH1F* histoFit[KFPartEfficiencies::nParticles][nFitQA], int iPart, bool withWrongPVHypothesis = 0);
   
   TString GetDirectoryPath();
-#ifdef __TFG__VERSION__
-  ClassDef(KFParticlePerformanceBase,0)
-#endif /* __TFG__VERSION__ */
 };
 
 #endif
-#endif //DO_TPCCATRACKER_EFF_PERFORMANCE

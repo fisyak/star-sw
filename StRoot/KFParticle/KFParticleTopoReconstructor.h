@@ -31,16 +31,17 @@
 #include "KFPTrackVector.h"
 #include "KFParticleSIMD.h"
 
-//#define KFPWITHTRACKER
-#ifdef KFPWITHTRACKER
-#include "TPCCATracker/AliHLTTPCCADef.h"
-#include "TPCCATracker/AliHLTTPCCAGBTracker.h"
-#include "TPCCATracker/StTrackSegment.h"
-#else /* ! KFPWITHTRACKER */
-class AliHLTTPCCAGBTracker;
-#endif /* KFPWITHTRACKER */
 #ifdef USE_TIMERS
+#ifndef HLTCA_STANDALONE
 #include "TStopwatch.h"
+typedef TStopwatch Stopwatch;
+#else
+#include "Stopwatch.h"
+#endif
+#endif
+
+#ifdef KFPWITHTRACKER
+class AliHLTTPCCAGBTracker;
 #endif
 
 #ifdef WITHSCIF
@@ -76,7 +77,7 @@ class KFParticleTopoReconstructor{
     fKFParticleFinder = new KFParticleFinder;
     fKFParticleFinder->SetNThreads(fNThreads);
   }
-  virtual ~KFParticleTopoReconstructor();
+  ~KFParticleTopoReconstructor();
 
 #ifdef KFPWITHTRACKER
   /** Copies tracks from the standalone CA track finder to the vector KFParticleTopoReconstructor::fTracks
@@ -88,8 +89,7 @@ class KFParticleTopoReconstructor{
    ** "-1" is set as the pdg hypothesis for all tracks
    **/
   void Init(AliHLTTPCCAGBTracker* tracker, std::vector<int>* pdg=0); // init array of particles
-  void Init(std::vector<trackInSector> Tracks, std::vector<int>* pdg=0); // init array of particles
-#endif /* KFPWITHTRACKER */
+#endif
   /** Copies provided particles to the vector KFParticleTopoReconstructor::fTracks
    ** assuming a given PDG hypothesis for each particle. If pointer to pdg-vector is not provided
    ** "-1" PDG is assigned to each input particle. If pointer to number of precise measurements
@@ -275,7 +275,7 @@ class KFParticleTopoReconstructor{
   /** \brief Execution time of different parts of the code: initialisation, reconstruction of primary vertices, 
    ** sorting of input particles, reconstruction of short-lived particles. */ 
   double fStatTime[fNTimers];
-  TStopwatch timer; ///< Timer.
+  Stopwatch timer; ///< Timer.
 #endif // USE_TIMERS
 
 }__attribute__((aligned(sizeof(float_v)))); // class KFParticleTopoReconstructor
