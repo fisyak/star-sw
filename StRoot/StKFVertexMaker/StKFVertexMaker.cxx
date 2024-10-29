@@ -25,6 +25,7 @@
 #include "StKFVertexMaker.h"
 #include "StDetectorDbMaker/St_vertexSeedC.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "StDetectorDbMaker/St_beamLineC.h"
 #include "TRMatrix.h"
 #include "TRSymMatrix.h"
 #include "TRVector.h"
@@ -234,6 +235,38 @@ void StKFVertexMaker::Clear(Option_t *option) {
 Int_t StKFVertexMaker::InitRun(Int_t runumber){
   mBeamLine = IAttr("beamLine");
   StTMVARanking::SetFXT(St_beamInfoC::instance()->IsFixedTarget());
+  Float_t xBeam = St_beamLineC::instance()->X();
+  Float_t yBeam = St_beamLineC::instance()->Y();
+  Float_t zBeam = St_beamLineC::instance()->Z();
+  Float_t sigma_XBeam = St_beamLineC::instance()->sigma_X();
+  Float_t sigma_YBeam = St_beamLineC::instance()->sigma_Y();
+  Float_t sigma_ZBeam = St_beamLineC::instance()->sigma_Z();
+  Float_t dXdZBeam = St_beamLineC::instance()->dXdZ();
+  Float_t sigma_dXdZBeam = St_beamLineC::instance()->sigma_dXdZ();
+  Float_t dYdZBeam = St_beamLineC::instance()->dYdZ();
+  Float_t sigma_dYdZBeam = St_beamLineC::instance()->sigma_dYdZ();
+  static Float_t pZ = 1000;
+  static KFPTrack track;
+  Float_t xyzPF[6] = {     xBeam,             yBeam, zBeam,
+			   pZ*dXdZBeam, pZ*dYdZBeam,    pZ};
+  Float_t CovXyzPF[21] = {
+    sigma_XBeam*sigma_XBeam,
+    0            ,sigma_YBeam*sigma_YBeam,
+    0            ,0              , sigma_ZBeam*sigma_ZBeam,
+    0            ,0              , 0, (sigma_dXdZBeam*pZ)*(sigma_dXdZBeam*pZ),
+    0            ,0              , 0, 0, (sigma_dYdZBeam*pZ)*(sigma_dYdZBeam*pZ),
+    0            ,0              , 0, 0,                            0, 0
+  };
+  track.SetParameters(xyzPF);
+  track.SetCovarianceMatrix(CovXyzPF);
+  track.SetNDF(1);
+  track.SetId(0);
+  track.SetCharge(1);
+  fKFPbeamLine = KFParticle(track, 2212);
+  fKFPbeamLine.SetId(0);
+  if (Debug()) {
+    LOG_INFO << Form("beam Line      ") << fKFPbeamLine << endm;
+  }
   return kStOK;
 }
 //________________________________________________________________________________

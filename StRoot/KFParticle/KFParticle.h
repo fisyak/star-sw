@@ -92,6 +92,7 @@ class KFParticle : public TObject
 
   void Initialize();
 
+  void Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass );
   //*
   //*  ACCESSORS
   //*
@@ -392,11 +393,12 @@ class KFParticle : public TObject
 
   static void MultQSQt( const float Q[], const float S[], float SOut[], const int kN );
 
-
+ public:
   /** Converts a pair of indices {i,j} of the covariance matrix to one index corresponding to the triangular form. */
   static Int_t IJ( Int_t i, Int_t j ){ 
     return ( j<=i ) ? i*(i+1)/2+j :j*(j+1)/2+i;
   }
+ protected:
   /** Return an element of the covariance matrix with {i,j} indices. */
   float & Cij( Int_t i, Int_t j ){ return fC[IJ(i,j)]; }
 

@@ -49,7 +49,7 @@ class KFMCParticle :public TObject
 {
  public:
   KFMCParticle();
-  ~KFMCParticle();
+  virtual ~KFMCParticle();
 
   void AddDaughter( int i ); ///< Adds an Id of the new particle to the list with Ids of daughter particles.
   int  NDaughters() const { return fDaughterIds.size(); } ///< Returns number of daughter particles.

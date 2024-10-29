@@ -55,6 +55,57 @@ KFParticle::KFParticle() :fChi2(0), SumDaughterMass(0), fMassHypo(-1), fNDF(-3),
   Clear();
 }
 
+void KFParticle::Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass )
+{
+  /** Sets the parameters of the particle:
+   **
+   ** \param[in] Param[6] = { X, Y, Z, Px, Py, Pz } - position and momentum
+   ** \param[in] Cov[21]  - lower-triangular part of the covariance matrix:@n
+   ** \verbatim
+             (  0  .  .  .  .  . )
+             (  1  2  .  .  .  . )
+   Cov[21] = (  3  4  5  .  .  . )
+             (  6  7  8  9  .  . )
+             ( 10 11 12 13 14  . )
+             ( 15 16 17 18 19 20 )
+   \endverbatim
+   ** \param[in] Charge - charge of the particle in elementary charge units
+   ** \param[in] mass - the mass hypothesis
+   **/
+
+
+  for( Int_t i=0; i<6 ; i++ ) fP[i] = Param[i];
+  for( Int_t i=0; i<21; i++ ) fC[i] = Cov[i];
+
+  float energy = sqrt( Mass*Mass + fP[3]*fP[3] + fP[4]*fP[4] + fP[5]*fP[5]);
+  fP[6] = energy;
+  fP[7] = 0;
+  fQ = Charge;
+  fNDF = 0;
+  fChi2 = 0;
+
+  float energyInv = 1./energy;
+  float 
+    h0 = fP[3]*energyInv,
+    h1 = fP[4]*energyInv,
+    h2 = fP[5]*energyInv;
+
+  fC[21] = h0*fC[ 6] + h1*fC[10] + h2*fC[15];
+  fC[22] = h0*fC[ 7] + h1*fC[11] + h2*fC[16];
+  fC[23] = h0*fC[ 8] + h1*fC[12] + h2*fC[17];
+  fC[24] = h0*fC[ 9] + h1*fC[13] + h2*fC[18];
+  fC[25] = h0*fC[13] + h1*fC[14] + h2*fC[19];
+  fC[26] = h0*fC[18] + h1*fC[19] + h2*fC[20];
+  fC[27] = ( h0*h0*fC[ 9] + h1*h1*fC[14] + h2*h2*fC[20] 
+	     + 2*(h0*h1*fC[13] + h0*h2*fC[18] + h1*h2*fC[19] ) );
+  for( Int_t i=28; i<36; i++ ) fC[i] = 0;
+  fC[35] = 1.;
+
+  SumDaughterMass = Mass;
+  fMassHypo = Mass;
+}
+
+
 void KFParticle::Clear(Option_t *option) {
   Initialize();
   fIdTruth = 0;

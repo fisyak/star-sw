@@ -86,7 +86,7 @@ class KFPInputData
   void operator delete[](void *ptr, size_t) { _mm_free(ptr); }                       ///< delete operator for the SIMD-alligned dynamic memory release
   
   KFPInputData():fPV(0),fBz(0.f) {};
-  virtual ~KFPInputData() {};
+  ~KFPInputData() {}
 
   bool ReadDataFromFile( std::string prefix )
   {
@@ -343,7 +343,7 @@ class KFPInputData
 
 struct KFPInputDataArray{
   KFPInputDataArray():fInput(0){};
-  virtual ~KFPInputDataArray() { if(fInput) delete [] fInput; }
+  ~KFPInputDataArray() { if(fInput) delete [] fInput; }
 
   KFPInputData *fInput; ///< Pointer to the array of the input data objects.
   

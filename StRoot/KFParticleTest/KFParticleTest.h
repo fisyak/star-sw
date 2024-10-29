@@ -30,7 +30,7 @@ class KFParticleTest
  public:
   
   KFParticleTest();
-  ~KFParticleTest();
+  virtual ~KFParticleTest();
   
   void PrintTutorial();
   void RunTest();

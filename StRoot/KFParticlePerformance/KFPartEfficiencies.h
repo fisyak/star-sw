@@ -448,7 +448,7 @@ class KFPartEfficiencies :public TObject
 //V0
       KFEfficiencyParticleInfo("V0",               "V0            ",  123456789, 0.3f, 1.3f, 0          , 0,          0, 0.0030)  //315
     };
-                                        
+
     int mPartMaxMult[nParticles];
     for(int i=0; i<nParticles; i++)
       mPartMaxMult[i] = 20;
@@ -1708,7 +1708,8 @@ class KFPartEfficiencies :public TObject
       fPdgToIndex[particleInfo[iP].PDG()] = iP;
   }
 
-  ~KFPartEfficiencies(){}
+  virtual ~KFPartEfficiencies(){}
+
  /** \brief Returns index of the decay with a given PDG code in the scheme of the KF Particle Finder. If it is not present there - returns "-1". */
   int GetParticleIndex(int pdg)
   {

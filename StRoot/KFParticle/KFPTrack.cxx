@@ -25,7 +25,6 @@
 #include "Riostream.h"
 #include "TString.h"
 #include "TMath.h"
-ClassImp(KFPTrack);
 #endif
 
 void KFPTrack::RotateXY( float alpha )

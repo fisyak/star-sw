@@ -17,7 +17,7 @@
 
 class StKFParticleInterface;
 class StKFParticlePerformanceInterface;
-//class KFParticle;
+// class KFParticle;
 class StPicoDst;
 class StMuDst;
 class TNtuple;
@@ -85,12 +85,11 @@ class StKFParticleAnalysisMaker : public StMaker {
   void SetTMVACentralityBins(int iReader, TString bins);
   void SetTMVAPtBins(int iReader, TString bins);
   void SetTMVABins(int iReader, TString centralityBins="-1:1000", TString ptBins="-1.:1000.");
-
-  void GetParticles(std::vector<KFParticle>* particles, const int pdg) const;
   
   bool fStoreCandidates;
   KFParticle fPartcileCandidate;
   std::vector<bool> fIsStoreCandidate;
+  TString fCandidateFileName;
   TFile* fCandidateFile;
   TTree* fCandidatesTree;
 
@@ -112,9 +111,9 @@ class StKFParticleAnalysisMaker : public StMaker {
   }
   void ProcessSignal() { fProcessSignal = true; }
   void StoreTMVANtuples() { fStoreTmvaNTuples = true; }
-  void CollectTrackHistograms(Bool_t k = kTRUE) { fCollectTrackHistograms = k; }
-  void CollectPIDHistograms(Bool_t k = kTRUE) { fCollectPIDHistograms = k; }
-  void CollectPVHistograms(Bool_t k = kTRUE) { fCollectPVHistograms = k; }
+  void CollectTrackHistograms() { fCollectTrackHistograms = true; }
+  void CollectPIDHistograms() { fCollectPIDHistograms = true; }
+  void CollectPVHistograms() { fCollectPVHistograms = true; }
   void UseTMVA() { fTMVAselection = true; }
   void SetTMVABinsD0   (TString centralityBins, TString ptBins) { SetTMVABins(0, centralityBins, ptBins); }
   void SetTMVABinsDPlus(TString centralityBins, TString ptBins) { SetTMVABins(1, centralityBins, ptBins); }
@@ -146,6 +145,7 @@ class StKFParticleAnalysisMaker : public StMaker {
   void Produce3DEfficiencyFile() { fIsProduce3DEfficiencyFile = true; }
   void Set3DEfficiency(TString fileName) { f3DEfficiencyFile = fileName; }
 
+  void SetCandidateFileName(TString name) { fCandidateFileName = name; }
   void AddCandidateToStore(int pdg);
   
   ClassDef(StKFParticleAnalysisMaker,0)   //

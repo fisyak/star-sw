@@ -147,8 +147,10 @@ void KFParticleTest::RunTestSingle()
   KFParticle p3(track2, 211); // PDG = 11
   std::cout << "Track Particle p3 " << std::endl <<"  "<< p3 << std::endl;
   
-  KFParticle p4; p4 += p2; p4 += p3;
-  std::cout << "Particle p4; p4 += p2; p4 += p3" << std::endl << "  " << p4 << std::endl;
+  KFParticle p4;
+  p4 += p2;
+  p4 += p3;
+  std::cout << "Particle p4(p2,p3)" << std::endl << "  " << p4 << std::endl;
 
   ///  *****************************************************************************************
   std::cout << std::endl << "4. Construction with constrained Mass or (and) vertex position values" << std::endl<< std::endl;
