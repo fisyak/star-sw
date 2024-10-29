@@ -1256,7 +1256,7 @@ void StMuDst::printGlobalTracks()  {
 void StMuDst::printKFVertices() {
   Int_t N = numberOfKFVertices();
   cout << "+++++++++ KF Vertices list ( " << N << " entries )" << endl << endl;
-  for (Int_t i = 0; i < N; i++) if (KFvertex(i)) cout << *((KFParticleBase*)KFvertex(i)) << endl;
+  for (Int_t i = 0; i < N; i++) if (KFvertex(i)) cout << *KFvertex(i) << endl;
 }
 //________________________________________________________________________________
 void StMuDst::printKFTracks() {
