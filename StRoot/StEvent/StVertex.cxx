@@ -307,7 +307,12 @@ ostream&  operator<<(ostream& os,  const StVertex& v) {
     const StTrackMassFit *mF = v.parent();
     if (mF && mF->kfParticle()) {
       KFParticle p = *mF->kfParticle();
-      if (p.GetParameter(7) != 0.0) p.TransportToDecayVertex();
+      if (p.GetParameter(7) != 0.0) {
+	//	p.TransportToDecayVertex();
+	/** Transports the particle to its decay vertex */
+	float dsdr[6] = {0.f};
+	p.TransportToDS( -p.GetParameter(7), dsdr );
+      }
       os << p;
     } 
     else {
