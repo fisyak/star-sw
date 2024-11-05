@@ -3,8 +3,9 @@ set GLOB = ' 2* AuAu* *GeV* dAu* pp*'
 if ($#argv > 0)   set GLOB = "$argv";
 # foreach d (`ls -1d *`)
 set domain = `hostname -d`
-foreach d (`ls -1dtr ${GLOB}| sort -u`)
-  cd ${d}
+#foreach d (`ls -1dtr ${GLOB}| sort -u`)
+foreach d (`ls -1d */*.root | sed -e 's#/.*##' | sort -u`)
+  cd ${d}; pwd;
   ls -ltr *.root | tail -1 | grep All
   if ($?) then
     echo "rm All*"

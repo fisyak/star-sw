@@ -57,10 +57,11 @@ elsif ($pwd =~ /2013/) { $year = "y2013";}
 elsif ($pwd =~ /2012/) { $year = "y2012";} 
 elsif ($pwd =~ /2011/) { $year = "y2011";} 
 elsif ($pwd =~ /2010/) { $year = "y2010";} 
-if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24c/ or $pwd =~ /TFG24d/) {
+if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24/) {
 #  $PICOPATH = "/gpfs01/star/data*"; print "PICOPATH = $PICOPATH \n" if ($debug);
   if    ($pwd =~ /TFG24c/) {$PICOPATH = "/gpfs01/star/subsysg/TFG/reco/TFG24c/";}
   elsif ($pwd =~ /TFG24d/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24d/";}
+  elsif ($pwd =~ /TFG24e/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24e/";}
   else                     {$PICOPATH = "/star/data*";}
   print "PICOPATH = $PICOPATH \n" if ($debug);
   my @words = split("/",$pwd);
