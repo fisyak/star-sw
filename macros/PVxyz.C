@@ -39,7 +39,7 @@ void PVxyz() {
   TString tag(gSystem->BaseName(dir->GetName()));
   fName += tag;
   tag.ReplaceAll(".root",".C");
-  TString cOut("beamLine.");
+  TString cOut("beamSpot.");
   cOut += tag;
   TFile *fOut = new TFile(fName,"recreate");
   TH1 *x = (TH1 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/x");
@@ -67,12 +67,12 @@ void PVxyz() {
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
   out << "#ifndef __CINT__" << endl;
-  out << "#include \"tables/St_beamLine_Table.h\"" << endl;
+  out << "#include \"tables/St_beamSpot_Table.h\"" << endl;
   out << "#endif" << endl;
   out << "TDataSet *CreateTable() {" << endl;
-  out << "  if (!gROOT->GetClass(\"St_beamLine\")) return 0;" << endl;
-  out << "  beamLine_st row;" << endl;
-  out << "  St_beamLine *tableSet = new St_beamLine(\"beamLine\",1);" << endl;
+  out << "  if (!gROOT->GetClass(\"St_beamSpot\")) return 0;" << endl;
+  out << "  beamSpot_st row;" << endl;
+  out << "  St_beamSpot *tableSet = new St_beamSpot(\"beamSpot\",1);" << endl;
   out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
   out << Form("  row.X = %10.3f; row.sigma_X = %10.3f;", X, sigma_X) << endl;
   out << Form("  row.Y = %10.3f; row.sigma_Y = %10.3f;", Y, sigma_Y) << endl;

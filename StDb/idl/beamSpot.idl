@@ -1,12 +1,12 @@
-/*    beamLine.idl
+/*    beamSpot.idl
 *
-*  Table: beamLine
+*  Table: beamSpot
 *
-*       description: *    provides a line in 3D to use as a seed for primary
+*       description: *    provides a beam spot
 */ 
 
 
-struct beamLine { 
+struct beamSpot { 
   float  X;             /* average X postion */	
   float  sigma_X; 	/* sigma of X position */	
   float  Y;       	/* average Y postion */	

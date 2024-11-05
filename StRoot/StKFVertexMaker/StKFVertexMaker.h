@@ -92,7 +92,7 @@ class StKFVertexMaker : public StMaker {
   TH1                           *fVertexZPlot;
   THStack                       *fStack;
   Bool_t                         mBeamLine;
-  KFParticle                     fKFPbeamLine;
+  KFParticle                     fKFPbeamSpot;
   StPrimaryVertexOrder           mVertexOrderMethod; // will default to 0 i.e. orderByNumberOfDaughters
   TCanvas                       *fc1;
   StEvent                       *pEvent;

@@ -1,13 +1,13 @@
-#ifndef St_beamLineC_h
-#define St_beamLineC_h
+#ifndef St_beamSpotC_h
+#define St_beamSpotC_h
 
 #include "TChair.h"
-#include "tables/St_beamLine_Table.h"
+#include "tables/St_beamSpot_Table.h"
 
-class St_beamLineC : public TChair {
+class St_beamSpotC : public TChair {
  public:
-  static St_beamLineC* 	instance();
-  beamLine_st 	*Struct(Int_t i = 0) 	const {return ((St_beamLine*) Table())->GetTable()+i;}
+  static St_beamSpotC* 	instance();
+  beamSpot_st 	*Struct(Int_t i = 0) 	const {return ((St_beamSpot*) Table())->GetTable()+i;}
   UInt_t     	getNumRows()                	const {return GetNRows();}
   Float_t 	X(Int_t i = 0) 	const {return Struct(i)->X;}
   Float_t 	sigma_X(Int_t i = 0) 	const {return Struct(i)->sigma_X;}
@@ -20,11 +20,11 @@ class St_beamLineC : public TChair {
   Float_t 	dYdZ(Int_t i = 0) 	const {return Struct(i)->dYdZ;}
   Float_t 	sigma_dYdZ(Int_t i = 0) 	const {return Struct(i)->sigma_dYdZ;}
  protected:
-  St_beamLineC(St_beamLine *table=0) : TChair(table) {}
-  virtual ~St_beamLineC() {fgInstance = 0;}
+  St_beamSpotC(St_beamSpot *table=0) : TChair(table) {}
+  virtual ~St_beamSpotC() {fgInstance = 0;}
  private:
-  static St_beamLineC* fgInstance;
-  ClassDefChair(St_beamLine, beamLine_st )
-  ClassDef(St_beamLineC,1) //C++ TChair for beamLine table class
+  static St_beamSpotC* fgInstance;
+  ClassDefChair(St_beamSpot, beamSpot_st )
+  ClassDef(St_beamSpotC,1) //C++ TChair for beamSpot table class
 };
 #endif

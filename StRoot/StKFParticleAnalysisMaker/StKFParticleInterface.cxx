@@ -32,7 +32,7 @@
 #include "StMuDSTMaker/COMMON/StMuMcTrack.h"
 #include "TLorentzVector.h"
 #include "TDatabasePDG.h"
-#include "StDetectorDbMaker/St_beamLineC.h"
+#include "StDetectorDbMaker/St_beamSpotC.h"
 
 #include <ctime>
 #include <algorithm>
@@ -113,12 +113,12 @@ void StKFParticleInterface::SetBeamSpot(const TString beamSpotMode)
 {
   fBeamSpot.NDF() = -1;
 
-  fBeamSpot.Covariance(0,0) = TMath::Power(St_beamLineC::instance()->sigma_X(), 2);
-  fBeamSpot.Covariance(1,1) = TMath::Power(St_beamLineC::instance()->sigma_Y(), 2);
-  fBeamSpot.Covariance(2,2) = TMath::Power(St_beamLineC::instance()->sigma_Z(), 2);
-  fBeamSpot.X() = St_beamLineC::instance()->X();
-  fBeamSpot.Y() = St_beamLineC::instance()->Y();
-  fBeamSpot.Z() = St_beamLineC::instance()->Z();
+  fBeamSpot.Covariance(0,0) = TMath::Power(St_beamSpotC::instance()->sigma_X(), 2);
+  fBeamSpot.Covariance(1,1) = TMath::Power(St_beamSpotC::instance()->sigma_Y(), 2);
+  fBeamSpot.Covariance(2,2) = TMath::Power(St_beamSpotC::instance()->sigma_Z(), 2);
+  fBeamSpot.X() = St_beamSpotC::instance()->X();
+  fBeamSpot.Y() = St_beamSpotC::instance()->Y();
+  fBeamSpot.Z() = St_beamSpotC::instance()->Z();
 }
 
 void StKFParticleInterface::InitParticles()
