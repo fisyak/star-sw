@@ -19,8 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifdef DO_TPCCATRACKER_EFF_PERFORMANCE
-
 #ifndef KFTOPOPERFORMANCE_H
 #define KFTOPOPERFORMANCE_H
 
@@ -62,9 +60,9 @@ class KFTopoPerformance: public KFParticlePerformanceBase
  public:
   
   KFTopoPerformance();
-  virtual ~KFTopoPerformance();
-#ifdef KFPWITHTRACKER_1
-  virtual void SetNewEvent(
+  ~KFTopoPerformance();
+#ifdef KFPWITHTRACKER
+  void SetNewEvent(
     const AliHLTTPCCAGBTracker * const Tracker,
     AliHLTResizableArray<AliHLTTPCCAHitLabel> *hitLabels,
     AliHLTResizableArray<AliHLTTPCCAMCTrack> *mcTracks,
@@ -74,9 +72,9 @@ class KFTopoPerformance: public KFParticlePerformanceBase
   const KFParticleTopoReconstructor * GetTopoReconstructor() const { return fTopoReconstructor; } ///< Returns pointer to the KFParticleTopoReconstructor object.
     
     // Check if MC track is reconstructable. Calculate set of MC track. Etc.
-  virtual void CheckMCTracks(); // fill mcData.
+  void CheckMCTracks(); // fill mcData.
     // Find reco-MCTracks correspondence
-  virtual void MatchTracks();   // fill recoData.
+  void MatchTracks();   // fill recoData.
     // Calculate efficiencies
   
   /// Histograms
@@ -175,10 +173,6 @@ class KFTopoPerformance: public KFParticlePerformanceBase
   std::vector<THnSparseF*> fAcceptanceMapMC;
   std::vector<THnSparseF*> fCutsEfficiencyMapReco;
   std::vector<THnSparseF*> fCutsEfficiencyMapMC;
-#ifdef __TFG__VERSION__
-  ClassDef(KFTopoPerformance,0)
-#endif /* __TFG__VERSION__ */
 };
 
 #endif
-#endif //DO_TPCCATRACKER_EFF_PERFORMANCE

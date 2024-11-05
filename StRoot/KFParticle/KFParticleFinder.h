@@ -49,7 +49,7 @@ class KFParticleFinder
  public:
 
   KFParticleFinder();
-  virtual ~KFParticleFinder() {};
+  ~KFParticleFinder() {}
   
   void Init(int nPV);
   void SetNThreads(short int n) { fNThreads = n;} ///< Sets the number of threads to by run in parallel. Currently not used.
@@ -84,6 +84,15 @@ class KFParticleFinder
                     std::vector<KFParticle>* vMotherSec = 0
                   ) __attribute__((always_inline));
   
+  void ConstructResonance(const std::vector<KFParticle>& particles1,
+                          const std::vector<KFParticle>& particles2,
+                          const int motherPdg,
+                          std::vector<KFParticle>& output);
+
+  void ConstructResonances2D(KFPTrackVector* vTracks,
+                             std::vector<KFParticle>& Particles,
+                             std::vector<KFParticleSIMD, KFPSimdAllocator<KFParticleSIMD> >& PrimVtx);
+
   void SaveV0PrimSecCand(KFParticleSIMD& mother,
                           int& NParticles,
                           KFParticle& mother_temp,
@@ -118,7 +127,11 @@ class KFParticleFinder
                           const float* secCuts,
                           std::vector< std::vector<KFParticle> >* vMotherPrim,
                           std::vector<KFParticle>* vMotherSec );
-  
+
+  void Find2DaughterDecayOneSign(KFPTrackVector& vTracks,
+                                 std::vector<KFParticle>& Particles,
+                                 std::vector<KFParticleSIMD, KFPSimdAllocator<KFParticleSIMD> >& PrimVtx);
+
   void ConstructPrimaryBG(KFPTrackVector* vTracks,
                           std::vector<KFParticle>& Particles,
                           std::vector<KFParticleSIMD, KFPSimdAllocator<KFParticleSIMD> >& PrimVtx,
@@ -142,6 +155,15 @@ class KFParticleFinder
                         kfvector_float* ChiToPrimVtx = 0,
                         std::vector< std::vector<KFParticle> >* vMotherPrim = 0,
                         std::vector<KFParticle>* vMotherSec = 0);
+
+  void FindLL(const int motherPDG,
+              const int correctTrackPDG,
+              const std::vector<KFParticle>& vParticles,
+              const KFPTrackVector& vTracks,
+              const int firstTrack,
+              const int lastTrack,
+              const KFParticleSIMD& PrimVtx,
+              std::vector<KFParticle>& Particles);
 
   void SelectParticles(std::vector<KFParticle>& Particles,
                        std::vector<KFParticle>& vCandidates,
@@ -438,8 +460,10 @@ class KFParticleFinder
   std::vector<KFParticle> fTPiBar;   ///< Temporary t- pi+ combinations
   std::vector<KFParticle> fHe3Pi;    ///< Temporary He3+ pi- combinations
   std::vector<KFParticle> fHe3PiBar; ///< Temporary He3- pi+ combinations
+  std::vector<KFParticle> fHe3PPi;   ///< Temporary He3+ p pi- combinations
   std::vector<KFParticle> fHe4Pi;    ///< Temporary He4+ pi- combinations
   std::vector<KFParticle> fHe4PiBar; ///< Temporary He4- pi+ combinations
+  std::vector<KFParticle> fHe4PPi;   ///< Temporary He4+ p pi- combinations
   std::vector<KFParticle> fHe4L;     ///< Vector with temporary He4_Lambda->He3 p pi- candidates
   std::vector<KFParticle> fHe5L;     ///< Vector with temporary He4_Lambda->He4 p pi- candidates
   std::vector<KFParticle> fLLn;      ///< Vector with temporary H3_Lambda pi- candidates

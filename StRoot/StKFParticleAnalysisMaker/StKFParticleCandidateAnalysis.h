@@ -18,9 +18,13 @@ class TH3D;
 class StKFParticleCandidateAnalysis: public TObject  {
  public:
   StKFParticleCandidateAnalysis(TString inputFile="candidates.root");
-  ~StKFParticleCandidateAnalysis() { if(fCandidate) delete fCandidate; }
+  virtual ~StKFParticleCandidateAnalysis() { if(fCandidate) delete fCandidate; }
 
   void Run();
+  void RunMixedEvent();
+  void RunRotatedBG();
+
+  void CheckMath();
 
  private:
   int ParticleIndex(int pdg) {
@@ -36,12 +40,12 @@ class StKFParticleCandidateAnalysis: public TObject  {
   
   TFile* fOutputHistoFile;
   TDirectory* fOutputHistoDir;
-  static const int NParticles = 21;
+  static const int NParticles = 26;
   static const int NSignalSets = 3; // total, signal and BG
   static const int NSets = 8;
-  static const int NHistos = 30;
+  static const int NHistos = 32;
   TH1D* fHistos[NParticles][NSignalSets][NSets][NHistos];
-  static const int NHistos2D = 1;
+  static const int NHistos2D = 4;
   TH2D* fHistos2D[NParticles][NHistos2D];
   static const int NHistos3D = 5;
   TH3D* fHistos3D[NParticles][NHistos3D];

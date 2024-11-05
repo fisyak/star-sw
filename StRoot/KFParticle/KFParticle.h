@@ -26,7 +26,17 @@
 #ifndef KFPARTICLE_H
 #define KFPARTICLE_H
 
-#include "KFParticleBase.h"
+#ifdef __ROOT__ //for the STAR experiment
+#define HomogeneousField
+#endif
+
+#ifdef HLTCA_STANDALONE
+#include "RootTypesDef.h"
+#else
+#include "TObject.h"
+#endif
+
+#include <vector>
 #include <cmath>
 
 class KFPTrack;
@@ -48,8 +58,7 @@ class KFPVertex;
  ** to transport particles, get parameters together with their errors, get distance 
  ** to other particles and vertices, get deviations from them in terms of errors, etc.
  **/
-
-class KFParticle :public KFParticleBase
+class KFParticle : public TObject
 {
   
  public:
@@ -64,27 +73,11 @@ class KFParticle :public KFParticleBase
 #endif
   //* Constructor (empty)
 
-  KFParticle():KFParticleBase(){ ; }
+  KFParticle();
 
   //* Destructor (empty)
 
-  virtual ~KFParticle(){ ; }
-
-  //* Construction of mother particle by its 2-3-4 daughters
-
-  KFParticle( const KFParticle &d1, const KFParticle &d2 );
-
-  KFParticle( const KFParticle &d1, const KFParticle &d2, 
-              const KFParticle &d3 );
-
-  KFParticle( const KFParticle &d1, const KFParticle &d2, 
-              const KFParticle &d3, const KFParticle &d4 );
- 
- //* Initialisation from "cartesian" coordinates ( X Y Z Px Py Pz )
- //* Parameters, covariance matrix, charge and PID hypothesis should be provided 
-
-  void Create( const float Param[], const float Cov[], Int_t Charge, float mass /*Int_t PID*/ );
-  void Create( const Double_t Param[], const Double_t Cov[], Int_t Charge, float mass /*Int_t PID*/ );
+  virtual ~KFParticle() {}
 
  //* Initialisation from ALICE track, PID hypothesis shoould be provided 
 
@@ -98,6 +91,7 @@ class KFParticle :public KFParticleBase
   //* Initialise covariance matrix and set current parameters to 0.0 
 
   void Initialize();
+  void Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass );
 
   //*
   //*  ACCESSORS
@@ -105,20 +99,17 @@ class KFParticle :public KFParticleBase
 
   //* Simple accessors 
 
-  float GetX    () const ; ///< Retruns X coordinate of the particle, fP[0].
-  float GetY    () const ; ///< Retruns Y coordinate of the particle, fP[1].
-  float GetZ    () const ; ///< Retruns Z coordinate of the particle, fP[2].
-  float GetPx   () const ; ///< Retruns X component of the momentum, fP[3].
-  float GetPy   () const ; ///< Retruns Y component of the momentum, fP[4].
-  float GetPz   () const ; ///< Retruns Z component of the momentum, fP[5].
-  float GetE    () const ; ///< Returns energy of the particle, fP[6].
-  float GetS    () const ; ///< Returns dS=l/p, l - decay length, fP[7], defined if production vertex is set.
-  char  GetQ    () const ; ///< Returns charge of the particle.
-  float GetChi2 () const ; ///< Returns Chi2 of the fit.
-  Int_t GetNDF  () const ; ///< Returns number of decrease of freedom.
-
-  Bool_t GetAtProductionVertex() const { return fAtProductionVertex; } ///< Returns a flag which shows if the particle is located at the production point
-  void SetAtProductionVertex(Bool_t b) { fAtProductionVertex = b; } ///< Set a flag that particle is at the production point
+  float GetX    () const { return fP[0]; } ///< Retruns X coordinate of the particle, fP[0].
+  float GetY    () const { return fP[1]; } ///< Retruns Y coordinate of the particle, fP[1].
+  float GetZ    () const { return fP[2]; } ///< Retruns Z coordinate of the particle, fP[2].
+  float GetPx   () const { return fP[3]; } ///< Retruns X component of the momentum, fP[3].
+  float GetPy   () const { return fP[4]; } ///< Retruns Y component of the momentum, fP[4].
+  float GetPz   () const { return fP[5]; } ///< Retruns Z component of the momentum, fP[5].
+  float GetE    () const { return fP[6]; } ///< Returns energy of the particle, fP[6].
+  float GetS    () const { return fP[7]; } ///< Returns dS=l/p, l - decay length, fP[7], defined if production vertex is set.
+  char  GetQ    () const { return fQ;    } ///< Returns charge of the particle.
+  float GetChi2 () const { return fChi2; } ///< Returns Chi2 of the fit.
+  Int_t GetNDF  () const { return fNDF;  } ///< Returns number of decrease of freedom.
 
 #ifdef NonhomogeneousField
   const float* GetFieldCoeff() const { return fieldRegion; } ///< Returns the field approximation for the current particle
@@ -137,9 +128,9 @@ class KFParticle :public KFParticleBase
   const float& Chi2 () const { return fChi2; } ///< Returns Chi2 of the fit.
   const Int_t& NDF  () const { return fNDF;  } ///< Returns number of decrease of freedom.
   
-  float GetParameter ( int i ) const ;        ///< Returns P[i] parameter.
-  float GetCovariance( int i ) const ;        ///< Returns C[i] element of the covariance matrix in the lower triangular form.
-  float GetCovariance( int i, int j ) const ; ///< Returns C[i,j] element of the covariance matrix.
+  float GetParameter ( int i )        const { return fP[i];       } ///< Returns P[i] parameter.
+  float GetCovariance( int i )        const { return fC[i];       } ///< Returns C[i] element of the covariance matrix in the lower triangular form.
+  float GetCovariance( int i, int j ) const { return fC[IJ(i,j)]; } ///< Returns C[i,j] element of the covariance matrix.
 
   //* Accessors with calculations, value returned w/o error flag
   
@@ -196,23 +187,30 @@ class KFParticle :public KFParticleBase
   //*  MODIFIERS
   //*
   
-  float & X    () ; ///< Modifier of X coordinate of the particle, fP[0].
-  float & Y    () ; ///< Modifier of Y coordinate of the particle, fP[1].
-  float & Z    () ; ///< Modifier of Z coordinate of the particle, fP[2].
-  float & Px   () ; ///< Modifier of X component of the momentum, fP[3].
-  float & Py   () ; ///< Modifier of Y component of the momentum, fP[4].
-  float & Pz   () ; ///< Modifier of Z component of the momentum, fP[5].
-  float & E    () ; ///< Modifier of energy of the particle, fP[6].
-  float & S    () ; ///< Modifier of dS=l/p, l - decay length, fP[7], defined if production vertex is set.
-  char  & Q    () ; ///< Modifier of charge of the particle.
-  float & Chi2 () ; ///< Modifier of Chi2 of the fit.
-  Int_t & NDF  () ; ///< Modifier of number of decrease of freedom.
+  float & X    () { return fP[0]; } ///< Modifier of X coordinate of the particle, fP[0].
+  float & Y    () { return fP[1]; } ///< Modifier of Y coordinate of the particle, fP[1].
+  float & Z    () { return fP[2]; } ///< Modifier of Z coordinate of the particle, fP[2].
+  float & Px   () { return fP[3]; } ///< Modifier of X component of the momentum, fP[3].
+  float & Py   () { return fP[4]; } ///< Modifier of Y component of the momentum, fP[4].
+  float & Pz   () { return fP[5]; } ///< Modifier of Z component of the momentum, fP[5].
+  float & E    () { return fP[6]; } ///< Modifier of energy of the particle, fP[6].
+  float & S    () { return fP[7]; } ///< Modifier of dS=l/p, l - decay length, fP[7], defined if production vertex is set.
+  char  & Q    () { return fQ;    } ///< Modifier of charge of the particle.
+  float & Chi2 () { return fChi2; } ///< Modifier of Chi2 of the fit.
+  Int_t & NDF  () { return fNDF;  } ///< Modifier of number of decrease of freedom.
 
-  float & Parameter ( int i ) ;        ///< Modifier of P[i] parameter.
-  float & Covariance( int i ) ;        ///< Modifier of C[i] element of the covariance matrix in the lower triangular form.
-  float & Covariance( int i, int j ) ; ///< Modifier of C[i,j] element of the covariance matrix.
-  float * Parameters () ;              ///< Returns pointer to the parameters fP
-  float * CovarianceMatrix() ;         ///< Returns pointer to the covariance matrix fC
+  float & Parameter ( int i )        { return fP[i];       }; ///< Modifier of P[i] parameter.
+  float & Covariance( int i )        { return fC[i];       }; ///< Modifier of C[i] element of the covariance matrix in the lower triangular form.
+  float & Covariance( int i, int j ) { return fC[IJ(i,j)]; }; ///< Modifier of C[i,j] element of the covariance matrix.
+
+  const float * Parameters ()      const { return fP;}            ///< Returns pointer to the parameters fP
+  const float * CovarianceMatrix() const { return fC;}            ///< Returns pointer to the covariance matrix fC
+
+  void SetConstructMethod(Int_t m) {fConstructMethod = m;} ///< Defines the construction method for the current particle (see description of fConstructMethod).
+  void SetMassHypo(float m) { fMassHypo = m;} ///< Sets the mass hypothesis to the particle, is used when fConstructMethod = 2.
+  const float& GetMassHypo() const { return fMassHypo; } ///< Returns the mass hypothesis.
+  const float& GetSumDaughterMass() const {return SumDaughterMass;} ///< Returns the sum of masses of the daughters.
+
 
   //* 
   //* CONSTRUCTION OF THE PARTICLE BY ITS DAUGHTERS AND MOTHER
@@ -221,12 +219,29 @@ class KFParticle :public KFParticleBase
 
 
   //* Add daughter to the particle 
+  bool GetMeasurement( const KFParticle& daughter, float m[], float V[], float D[3][3] ) ;
 
   void AddDaughter( const KFParticle &Daughter );
+  void SubtractDaughter( const KFParticle &Daughter );
+  void AddDaughterWithEnergyFit( const KFParticle &Daughter );
+  void AddDaughterWithEnergyFitMC( const KFParticle &Daughter );
+
+  void SubtractFromVertex( KFParticle &Vtx ) const;
+  void SubtractFromParticle( KFParticle &Vtx ) const;
 
   //* Add daughter via += operator: ex.{ D0; D0+=Pion; D0+= Kaon; }
 
   void operator +=( const KFParticle &Daughter );  
+
+  //* Set production vertex 
+
+  void SetProductionVertex( const KFParticle &Vtx );
+
+  //* Set mass constraint 
+
+  void SetNonlinearMassConstraint( float Mass );
+  void SetMassConstraint( float Mass, float SigmaMass = 0 );
+  void SetMassConstraint( float *mP, float *mC, float mJ[7][7], float mass );
 
   //* Everything in one go  
 
@@ -253,15 +268,50 @@ class KFParticle :public KFParticleBase
 
   //* Get dS to a certain space point 
   float GetDStoPoint( const float xyz[3], float dsdr[6] ) const ;
-  
+
+  float GetDStoPointLine( const float xyz[3], float dsdr[6] ) const;
+  float GetDStoPointBz( float B, const float xyz[3], float dsdr[6], const float* param=0) const;
+  float GetDStoPointBy( float By, const float xyz[3], float dsdr[6] ) const;
+  float GetDStoPointB( const float* B, const float xyz[3], float dsdr[6] ) const;
+  float GetDStoPointCBM( const float xyz[3], float dsdr[6] ) const;
+
   //* Get dS to other particle p (dSp for particle p also returned) 
-  void GetDStoParticle( const KFParticleBase &p, float dS[2], float dsdr[4][6] ) const ;
+  void GetDStoParticle( const KFParticle &p, float dS[2], float dsdr[4][6] ) const ;
   
-  
+  void GetDStoParticleLine( const KFParticle &p, float dS[2], float dsdr[4][6] ) const ;
+  void GetDStoParticleBz( float Bz, const KFParticle &p, float dS[2], float dsdr[4][6], const float* param1=0, const float* param2=0 ) const ;
+  void GetDStoParticleBy( float B,  const KFParticle &p, float dS[2], float dsdr[4][6] ) const ;
+  void GetDStoParticleCBM( const KFParticle &p, float dS[2], float dsdr[4][6] ) const ;
+
+  void GetDStoCylinderBz( const float B, const float R, float dS[2]) const;
+
+#ifdef HomogeneousField
+  //* Get dS to a certain space point 
+  void GetDStoCylinder( const float R, float dS[2]) const {
+    GetDStoCylinderBz( GetFieldAlice(), R, dS);
+  }
+#endif
+
   //* 
   //* OTHER UTILITIES
   //*
- 
+
+  //* Calculate distance from another object [cm]
+
+  void GetDistanceToVertexLine( const KFParticle &Vertex, float &l, float &dl) const;
+  void GetDistanceToVertexLineWithDirection( const KFParticle &Vertex, float &l, float &dl) const;
+
+  float GetDistanceFromVertex( const float vtx[] ) const;
+  float GetDistanceFromVertex( const KFParticle &Vtx ) const;
+  float GetDistanceFromParticle( const KFParticle &p ) const;
+
+  //* Calculate sqrt(Chi2/ndf) deviation from vertex
+  //* v = [xyz], Cv=[Cxx,Cxy,Cyy,Cxz,Cyz,Czz]-covariance matrix
+
+  float GetDeviationFromVertex( const float v[], const float Cv[]=0 ) const;
+  float GetDeviationFromVertex( const KFParticle &Vtx ) const;
+  float GetDeviationFromParticle( const KFParticle &p ) const; 
+
   //* Calculate distance from another object [cm] in XY-plane
 
   Bool_t GetDistanceFromVertexXY( const float vtx[], float &val, float &err ) const ;
@@ -303,19 +353,91 @@ class KFParticle :public KFParticleBase
 
   void Transport( float dS, const float* dsdr, float P[], float C[], float* dsdr1=0, float* F=0, float* F1=0, const bool fullC=true ) const ;
 
- protected: 
+  //Transport functions
+  void TransportToDS( float dS, const float* dsdr );
+  void TransportBz( float Bz, float dS, const float* dsdr, float P[], float C[], float* dsdr1=0, float* F=0, float* F1=0, const bool fullC=true ) const;
+  void TransportCBM( float dS, const float* dsdr, float P[], float C[], float* dsdr1=0, float* F=0, float* F1=0 ) const;  
+  void TransportLine( float S, const float* dsdr, float P[], float C[], float* dsdr1, float* F, float* F1 ) const ;
+
+
+  static void GetArmenterosPodolanski(const KFParticle& positive, const KFParticle& negative, float QtAlfa[2] );
+  void RotateXY(float angle, float Vtx[3]);
+  void Rotate(float angle, const KFParticle& axis);
+
+  int Id() const { return fId; } ///< Returns Id of the particle.
+  int NDaughters() const { return fDaughtersIds.size(); } ///< Returns number of daughter particles.
+  const std::vector<int>& DaughterIds() const { return fDaughtersIds; } ///< Returns the vector with the indices of daughter particles.
+  void CleanDaughtersId() { fDaughtersIds.clear(); } ///< Cleans the vector with the indices of daughter particles.
   
+  void SetId( int id ) { fId = id; } ///< Sets the Id of the particle. After the construction of a particle should be set by user.
+  void AddDaughterId( int id ) { fDaughtersIds.push_back(id); } ///< Adds index of the daughter particle. 
+
+  void SetPDG ( int pdg ) { fPDG = pdg; } ///< Sets the PDG hypothesis.
+  int GetPDG () const { return fPDG; } ///< Returns the PDG hypothesis.
+
+#ifdef __ROOT__ //for the STAR experiment
+  void  Print(Option_t *opt="") const;
+  Int_t IdTruth() const { return fIdTruth;}
+  Int_t QaTruth() const { return fQuality; }
+  Int_t IdParentMcVx() const {return fIdParentMcVx;}
+  Int_t IdParentVx()   const {return IdParentMcVx();}
+  void  SetParentID(Int_t id=0) {fParentID = id;}
+  Int_t GetParentID() const {return fParentID;}
+  void  SetIdParentMcVx(Int_t id) {fIdParentMcVx = id;}
+  void  SetIdTruth(Int_t idtru,Int_t qatru=0) {fIdTruth = (UShort_t) idtru; fQuality = (UShort_t) qatru;}
+  void  Clear(Option_t * /*option*/ ="");
+#endif
+
+  static void InvertCholetsky3(float a[6]);
+
+  /** Converts a pair of indices {i,j} of the covariance matrix to one index corresponding to the triangular form. */
+  static Int_t IJ( Int_t i, Int_t j ){ 
+    return ( j<=i ) ? i*(i+1)/2+j :j*(j+1)/2+i;
+  }
+
   //*
   //*  INTERNAL STUFF
   //* 
-
+ 
+ protected:
   //* Method to access ALICE field 
 #ifdef HomogeneousField
-  public:
   static float GetFieldAlice();
 #endif
+
+  static void MultQSQt( const float Q[], const float S[], float SOut[], const int kN );
+
+  /** Return an element of the covariance matrix with {i,j} indices. */
+  float & Cij( Int_t i, Int_t j ){ return fC[IJ(i,j)]; }
+
+  float fP[8];           ///< Particle parameters { X, Y, Z, Px, Py, Pz, E, S[=DecayLength/P]}.
+  float fC[36];          ///< Low-triangle covariance matrix of fP.
+  float fChi2;           ///< Chi^2.
+  float SumDaughterMass; ///< Sum of the daughter particles masses. Needed to set the constraint on the minimum mass during particle construction.
+  float fMassHypo;       ///< The mass hypothesis, used for the constraints during particle construction.
+  Int_t fNDF;            ///< Number of degrees of freedom.
+  int   fId;             ///< Id of the particle.
+#ifdef __ROOT__ //for the STAR experiment
+  Short_t    fParentID;     ///< Id of the parent particle.
+  Short_t    fIdTruth;      ///< MC track id.
+  Short_t    fQuality;      ///< quality of this information (percentage of hits coming from the above MC track).
+  Short_t    fIdParentMcVx; ///< for track and McTrack for vertex.
+#endif
+  char fQ; ///< The charge of the particle in the units of the elementary charge.
   
- private:
+  /** \brief Determines the method for the particle construction. \n
+   ** 0 - Energy considered as an independent veriable, fitted independently from momentum, without any constraints on mass \n
+   ** 2 - Energy considered as an independent variable, fitted independently from momentum, with constraints on mass of daughter particle
+   **/
+  char fConstructMethod; 
+  int fPDG; ///< The PDG hypothesis assigned to the particle.
+  
+  /** \brief A vector with ids of the daughter particles: \n
+   ** 1) if particle is created from a track - the index of the track, in this case the size of the vector is always equal to one; \n
+   ** 2) if particle is constructed from other particles - indices of these particles in the same array.
+   **/
+  std::vector<int> fDaughtersIds;
+
 #ifdef HomogeneousField
   static float fgBz;  ///< Bz compoment of the magnetic field (is defined in case of #ifdef HomogeneousField)
 #endif
@@ -327,9 +449,11 @@ class KFParticle :public KFParticleBase
 #endif
   
 #ifndef KFParticleStandalone
-  ClassDef( KFParticle, 3 )
+  ClassDef( KFParticle, 4 )
 #endif
 };
+
+
 
 
 
@@ -349,186 +473,143 @@ inline void KFParticle::SetField( float Bz )
 }
 #endif
 
-inline KFParticle::KFParticle( const KFParticle &d1, 
-                               const KFParticle &d2, 
-                               const KFParticle &d3 )
-{
-  /** Constructs a particle from three input daughter particles
-   ** \param[in] d1 - the first daughter particle
-   ** \param[in] d2 - the second daughter particle
-   ** \param[in] d3 - the third daughter particle
-   **/
-  KFParticle mother;
-  mother+= d1;
-  mother+= d2;
-  mother+= d3;
-  *this = mother;
-}
-
-inline KFParticle::KFParticle( const KFParticle &d1, 
-                               const KFParticle &d2, 
-                               const KFParticle &d3, 
-                               const KFParticle &d4 )
-{
-  /** Constructs a particle from four input daughter particles
-   ** \param[in] d1 - the first daughter particle
-   ** \param[in] d2 - the second daughter particle
-   ** \param[in] d3 - the third daughter particle
-   ** \param[in] d4 - the fourth daughter particle
-   **/
-  KFParticle mother;
-  mother+= d1;
-  mother+= d2;
-  mother+= d3;
-  mother+= d4;
-  *this = mother;
-}
-
-
 inline void KFParticle::Initialize()
 { 
-  /** Calls KFParticleBase::Initialize()*/
-  KFParticleBase::Initialize(); 
+  /** Initialises the parameters by default: \n
+   ** 1) all parameters are set to 0; \n
+   ** 2) all elements of the covariance matrix are set to 0 except Cxx=Cyy=Czz=100; \n
+   ** 3) Q = 0; \n
+   ** 4) chi2 is set to 0; \n
+   ** 5) NDF = -3, since 3 parameters should be fitted: X, Y, Z. 
+   **/
+
+  for( Int_t i=0; i<8; i++) fP[i] = 0;
+  for(Int_t i=0;i<36;++i) fC[i]=0.;
+  fC[0] = fC[2] = fC[5] = 100.;
+  fC[35] = 1.;
+  fNDF  = -3;
+  fChi2 =  0.;
+  fQ = 0;
+  SumDaughterMass = 0;
+  fMassHypo = -1;
 }
 
-inline float KFParticle::GetX    () const 
-{ 
-  return KFParticleBase::GetX();    
-}
+inline void KFParticle::Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass )
+{
+  /** Sets the parameters of the particle:
+   **
+   ** \param[in] Param[6] = { X, Y, Z, Px, Py, Pz } - position and momentum
+   ** \param[in] Cov[21]  - lower-triangular part of the covariance matrix:@n
+   ** \verbatim
+             (  0  .  .  .  .  . )
+             (  1  2  .  .  .  . )
+   Cov[21] = (  3  4  5  .  .  . )
+             (  6  7  8  9  .  . )
+             ( 10 11 12 13 14  . )
+             ( 15 16 17 18 19 20 )
+   \endverbatim
+   ** \param[in] Charge - charge of the particle in elementary charge units
+   ** \param[in] mass - the mass hypothesis
+   **/
 
-inline float KFParticle::GetY    () const 
-{ 
-  return KFParticleBase::GetY();    
-}
+  for( Int_t i=0; i<6 ; i++ ) fP[i] = Param[i];
+  for( Int_t i=0; i<21; i++ ) fC[i] = Cov[i];
 
-inline float KFParticle::GetZ    () const 
-{ 
-  return KFParticleBase::GetZ();    
-}
+  float energy = sqrt( Mass*Mass + fP[3]*fP[3] + fP[4]*fP[4] + fP[5]*fP[5]);
+  fP[6] = energy;
+  fP[7] = 0;
+  fQ = Charge;
+  fNDF = 0;
+  fChi2 = 0;
 
-inline float KFParticle::GetPx   () const 
-{ 
-  return KFParticleBase::GetPx();   
-}
+  float energyInv = 1./energy;
+  float 
+    h0 = fP[3]*energyInv,
+    h1 = fP[4]*energyInv,
+    h2 = fP[5]*energyInv;
 
-inline float KFParticle::GetPy   () const 
-{ 
-  return KFParticleBase::GetPy();   
-}
+  fC[21] = h0*fC[ 6] + h1*fC[10] + h2*fC[15];
+  fC[22] = h0*fC[ 7] + h1*fC[11] + h2*fC[16];
+  fC[23] = h0*fC[ 8] + h1*fC[12] + h2*fC[17];
+  fC[24] = h0*fC[ 9] + h1*fC[13] + h2*fC[18];
+  fC[25] = h0*fC[13] + h1*fC[14] + h2*fC[19];
+  fC[26] = h0*fC[18] + h1*fC[19] + h2*fC[20];
+  fC[27] = ( h0*h0*fC[ 9] + h1*h1*fC[14] + h2*h2*fC[20] 
+            + 2*(h0*h1*fC[13] + h0*h2*fC[18] + h1*h2*fC[19] ) );
+  for( Int_t i=28; i<36; i++ ) fC[i] = 0;
+  fC[35] = 1.;
 
-inline float KFParticle::GetPz   () const 
-{ 
-  return KFParticleBase::GetPz();   
+  SumDaughterMass = Mass;
+  fMassHypo = Mass;
 }
-
-inline float KFParticle::GetE    () const 
-{ 
-  return KFParticleBase::GetE();    
-}
-
-inline float KFParticle::GetS    () const 
-{ 
-  return KFParticleBase::GetS();    
-}
-
-inline char    KFParticle::GetQ    () const 
-{ 
-  return KFParticleBase::GetQ();    
-}
-
-inline float KFParticle::GetChi2 () const 
-{ 
-  return KFParticleBase::GetChi2(); 
-}
-
-inline Int_t    KFParticle::GetNDF  () const 
-{ 
-  return KFParticleBase::GetNDF();  
-}
-
-inline float KFParticle::GetParameter ( int i ) const 
-{ 
-  return KFParticleBase::GetParameter(i);  
-}
-
-inline float KFParticle::GetCovariance( int i ) const 
-{ 
-  return KFParticleBase::GetCovariance(i); 
-}
-
-inline float KFParticle::GetCovariance( int i, int j ) const 
-{ 
-  return KFParticleBase::GetCovariance(i,j);
-}
-
 
 inline float KFParticle::GetP    () const
 {
   float par, err;
-  if( KFParticleBase::GetMomentum( par, err ) ) return 0;
+  if( GetMomentum( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetPt   () const
 {
   float par, err;
-  if( KFParticleBase::GetPt( par, err ) ) return 0;
+  if( GetPt( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetEta   () const
 {
   float par, err;
-  if( KFParticleBase::GetEta( par, err ) ) return 0;
+  if( GetEta( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetPhi   () const
 {
   float par, err;
-  if( KFParticleBase::GetPhi( par, err ) ) return 0;
+  if( GetPhi( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetMomentum    () const
 {
   float par, err;
-  if( KFParticleBase::GetMomentum( par, err ) ) return 0;
+  if( GetMomentum( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetMass        () const
 {
   float par, err;
-  if( KFParticleBase::GetMass( par, err ) ) return 0;
+  if( GetMass( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetDecayLength () const
 {
   float par, err;
-  if( KFParticleBase::GetDecayLength( par, err ) ) return 0;
+  if( GetDecayLength( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetDecayLengthXY () const
 {
   float par, err;
-  if( KFParticleBase::GetDecayLengthXY( par, err ) ) return 0;
+  if( GetDecayLengthXY( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetLifeTime    () const
 {
   float par, err;
-  if( KFParticleBase::GetLifeTime( par, err ) ) return 0;
+  if( GetLifeTime( par, err ) ) return 0;
   else return par;
 }
 
 inline float KFParticle::GetR   () const
 {
   float par, err;
-  if( KFParticleBase::GetR( par, err ) ) return 0;
+  if( GetR( par, err ) ) return 0;
   else return par;
 }
 
@@ -575,70 +656,70 @@ inline float KFParticle::GetErrS           () const
 inline float KFParticle::GetErrP    () const
 {
   float par, err;
-  if( KFParticleBase::GetMomentum( par, err ) ) return 1.e10;
+  if( GetMomentum( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrPt    () const
 {
   float par, err;
-  if( KFParticleBase::GetPt( par, err ) ) return 1.e10;
+  if( GetPt( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrEta    () const
 {
   float par, err;
-  if( KFParticleBase::GetEta( par, err ) ) return 1.e10;
+  if( GetEta( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrPhi    () const
 {
   float par, err;
-  if( KFParticleBase::GetPhi( par, err ) ) return 1.e10;
+  if( GetPhi( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrMomentum    () const
 {
   float par, err;
-  if( KFParticleBase::GetMomentum( par, err ) ) return 1.e10;
+  if( GetMomentum( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrMass        () const
 {
   float par, err;
-  if( KFParticleBase::GetMass( par, err ) ) return 1.e10;
+  if( GetMass( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrDecayLength () const
 {
   float par, err;
-  if( KFParticleBase::GetDecayLength( par, err ) ) return 1.e10;
+  if( GetDecayLength( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrDecayLengthXY () const
 {
   float par, err;
-  if( KFParticleBase::GetDecayLengthXY( par, err ) ) return 1.e10;
+  if( GetDecayLengthXY( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrLifeTime    () const
 {
   float par, err;
-  if( KFParticleBase::GetLifeTime( par, err ) ) return 1.e10;
+  if( GetLifeTime( par, err ) ) return 1.e10;
   else return err;
 }
 
 inline float KFParticle::GetErrR    () const
 {
   float par, err;
-  if( KFParticleBase::GetR( par, err ) ) return 1.e10;
+  if( GetR( par, err ) ) return 1.e10;
   else return err;
 }
 
@@ -649,229 +730,7 @@ inline int KFParticle::GetP( float &P, float &SigmaP ) const
    ** \param[out] P - momentum of the particle
    ** \param[out] SigmaP - its error
    **/
-  return KFParticleBase::GetMomentum( P, SigmaP );
-}
-
-inline int KFParticle::GetPt( float &Pt, float &SigmaPt ) const 
-{
-  /** Calculates particle transverse  momentum and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] Pt - transverse momentum of the particle
-   ** \param[out] SigmaPt - its error
-   **/
-  return KFParticleBase::GetPt( Pt, SigmaPt );
-}
-
-inline int KFParticle::GetEta( float &Eta, float &SigmaEta ) const 
-{
-  /** Calculates particle pseudorapidity and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] Eta - pseudorapidity of the particle
-   ** \param[out] SigmaEta - its error
-   **/
-  return KFParticleBase::GetEta( Eta, SigmaEta );
-}
-
-inline int KFParticle::GetPhi( float &Phi, float &SigmaPhi ) const 
-{
-  /** Calculates particle polar angle at the current point and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] Phi - polar angle of the particle
-   ** \param[out] SigmaPhi - its error
-   **/
-  return KFParticleBase::GetPhi( Phi, SigmaPhi );
-}
-
-inline int KFParticle::GetMomentum( float &P, float &SigmaP ) const 
-{
-  /** Calculates particle momentum and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] P - momentum of the particle
-   ** \param[out] SigmaP - its error
-   **/
-  return KFParticleBase::GetMomentum( P, SigmaP );
-}
-
-inline int KFParticle::GetMass( float &M, float &SigmaM ) const 
-{
-  /** Calculates the mass of the particle and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] M - mass of the particle
-   ** \param[out] SigmaM - its error
-   **/
-  return KFParticleBase::GetMass( M, SigmaM );
-}
-
-inline int KFParticle::GetDecayLength( float &L, float &SigmaL ) const 
-{
-  /** Calculates the decay length of the particle in the laboratory system and its error. If they are well defined returns 0, otherwise 1.
-   ** The production point should be set before calling this function.
-   ** \param[out] L - the decay length
-   ** \param[out] SigmaL - its error
-   **/
-  return KFParticleBase::GetDecayLength( L, SigmaL );
-}
-
-inline int KFParticle::GetDecayLengthXY( float &L, float &SigmaL ) const 
-{
-  /** Calculates the projection in the XY plane of the decay length of the particle in the laboratory 
-   ** system and its error. If they are well defined returns 0, otherwise 1.
-   ** The production point should be set before calling this function.
-   ** \param[out] L - the decay length
-   ** \param[out] SigmaL - its error
-   **/
-  return KFParticleBase::GetDecayLengthXY( L, SigmaL );
-}
-
-inline int KFParticle::GetLifeTime( float &T, float &SigmaT ) const 
-{
-  /** Calculates the lifetime times speed of life (ctau) [cm] of the particle in the  
-   ** center of mass frame and its error. If they are well defined returns 0, otherwise 1.
-   ** The production point should be set before calling this function.
-   ** \param[out] T - lifetime of the particle [cm]
-   ** \param[out] SigmaT - its error
-   **/
-  return KFParticleBase::GetLifeTime( T, SigmaT );
-}
-
-inline int KFParticle::GetR( float &R, float &SigmaR ) const 
-{
-  /** Calculates the distance to the point {0,0,0} and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] R - polar angle of the particle
-   ** \param[out] SigmaR - its error
-   **/
-  return KFParticleBase::GetR( R, SigmaR );
-}
-
-inline float & KFParticle::X() 
-{ 
-  return KFParticleBase::X();    
-}
-
-inline float & KFParticle::Y()
-{ 
-  return KFParticleBase::Y();    
-}
-
-inline float & KFParticle::Z() 
-{ 
-  return KFParticleBase::Z();    
-}
-
-inline float & KFParticle::Px() 
-{ 
-  return KFParticleBase::Px();   
-}
-
-inline float & KFParticle::Py() 
-{ 
-  return KFParticleBase::Py();   
-}
-
-inline float & KFParticle::Pz() 
-{ 
-  return KFParticleBase::Pz();   
-}
-
-inline float & KFParticle::E() 
-{ 
-  return KFParticleBase::E();    
-}
-
-inline float & KFParticle::S() 
-{ 
-  return KFParticleBase::S();    
-}
-
-inline char    & KFParticle::Q() 
-{ 
-  return KFParticleBase::Q();    
-}
-
-inline float & KFParticle::Chi2() 
-{ 
-  return KFParticleBase::Chi2(); 
-}
-
-inline Int_t    & KFParticle::NDF() 
-{ 
-  return KFParticleBase::NDF();  
-}
-
-inline float & KFParticle::Parameter ( int i )        
-{ 
-  return KFParticleBase::Parameter(i);
-}
-
-inline float & KFParticle::Covariance( int i )        
-{ 
-  return KFParticleBase::Covariance(i);
-}
-
-inline float & KFParticle::Covariance( int i, int j ) 
-{ 
-  return KFParticleBase::Covariance(i,j); 
-}
-
-inline float * KFParticle::Parameters ()
-{
-  return fP;
-}
-
-inline float * KFParticle::CovarianceMatrix()
-{
-  return fC;
-}
-
-
-inline void KFParticle::operator +=( const KFParticle &Daughter )
-{
-  /** Operator to add daughter to the current particle. Calls AddDaughter() function.
-   ** \param[in] Daughter - the daughter particle
-   **/
-#ifdef NonhomogeneousField
-  for(int i=0; i<10; i++)
-    SetFieldCoeff(Daughter.GetFieldCoeff()[i], i);
-#endif
-  KFParticleBase::operator +=( Daughter );
-}
-  
-
-inline void KFParticle::AddDaughter( const KFParticle &Daughter )
-{
-  /** Adds daughter to the current particle. Depending on the selected construction method uses: \n
-   ** 1) Either simplifyed fast mathematics which consideres momentum and energy as
-   ** independent variables and thus ignores constraint on the fixed mass (fConstructMethod = 0).
-   ** In this case the mass of the daughter particle can be corrupted when the constructed vertex
-   ** is added as the measurement and the mass of the output short-lived particle can become 
-   ** unphysical - smaller then the threshold. Implemented in the 
-   ** AddDaughterWithEnergyFit() function \n
-   ** 2) Or slower but correct mathematics which requires that the masses of daughter particles 
-   ** stays fixed in the construction process (fConstructMethod = 2). Implemented in the
-   ** AddDaughterWithEnergyFitMC() function.
-   ** \param[in] Daughter - the daughter particle
-   **/
-#ifdef NonhomogeneousField
-  for(int i=0; i<10; i++)
-    SetFieldCoeff(Daughter.GetFieldCoeff()[i], i);
-#endif
-  KFParticleBase::AddDaughter( Daughter );
-}
-
-inline void KFParticle::Construct( const KFParticle *vDaughters[], int nDaughters, 
-                                   const KFParticle *ProdVtx,   float Mass )
-{    
-  /** Constructs a short-lived particle from a set of daughter particles:\n
-   ** 1) all parameters of the "this" objects are initialised;\n
-   ** 2) daughters are added one after another;\n
-   ** 3) if Parent pointer is not null, the production vertex is set to it;\n
-   ** 4) if Mass hypothesis >=0 the mass constraint is set.
-   ** \param[in] vDaughters - array of daughter particles
-   ** \param[in] nDaughters - number of daughter particles in the input array
-   ** \param[in] Parent - optional parrent particle
-   ** \param[in] Mass - optional mass hypothesis
-   **/  
-#ifdef NonhomogeneousField
-  for(int i=0; i<10; i++)
-    SetFieldCoeff(vDaughters[0]->GetFieldCoeff()[i], i);
-#endif
-  KFParticleBase::Construct( ( const KFParticleBase**)vDaughters, nDaughters, 
-                             ( const KFParticleBase*)ProdVtx, Mass );
+  return GetMomentum( P, SigmaP );
 }
 
 inline void KFParticle::TransportToPoint( const float xyz[] )
@@ -909,18 +768,18 @@ inline float KFParticle::GetDStoPoint( const float xyz[], float* dsdr ) const
    ** 1) l - signed distance to the DCA point with the input xyz point;\n
    ** 2) p - momentum of the particle; \n
    ** Also calculates partial derivatives dsdr of the parameter dS over the state vector of the current particle.
-   ** If "HomogeneousField" is defined KFParticleBase::GetDStoPointBz() is called,
-   ** if "NonhomogeneousField" is defined - KFParticleBase::GetDStoPointCBM()
+   ** If "HomogeneousField" is defined GetDStoPointBz() is called,
+   ** if "NonhomogeneousField" is defined - GetDStoPointCBM()
    ** \param[in] xyz[3] - point, to which particle should be transported
    ** \param[out] dsdr[6] = ds/dr partial derivatives of the parameter dS over the state vector of the current particle
    ** \param[in] param - optional parameter, is used in case if the parameters of the particle are rotated
    ** to other coordinate system (see GetDStoPointBy() function), otherwise fP are used
    **/
 #ifdef HomogeneousField
-  return KFParticleBase::GetDStoPointBz( GetFieldAlice(), xyz, dsdr );
+  return GetDStoPointBz( GetFieldAlice(), xyz, dsdr );
 #endif
 #ifdef NonhomogeneousField
-  return KFParticleBase::GetDStoPointCBM( xyz, dsdr );
+  return GetDStoPointCBM( xyz, dsdr );
 #endif
 }
 
@@ -964,7 +823,7 @@ inline void KFParticle::GetFieldValue( const float xyz[], float B[] ) const
 }
 #endif
 
-inline void KFParticle::GetDStoParticle( const KFParticleBase &p, float dS[2], float dsdr[4][6] ) const
+inline void KFParticle::GetDStoParticle( const KFParticle &p, float dS[2], float dsdr[4][6] ) const
 { 
   /** Calculates dS = l/p parameters for two particles, where \n
    ** 1) l - signed distance to the DCA point with the other particle;\n
@@ -976,17 +835,17 @@ inline void KFParticle::GetDStoParticle( const KFParticleBase &p, float dS[2], f
    ** 3) dsdr[2][6] = d(dS[1])/d(param1);\n
    ** 4) dsdr[3][6] = d(dS[1])/d(param2);\n
    ** where param1 are parameters of the current particle fP and
-   ** param2 are parameters of the second particle p.fP. If "HomogeneousField" is defined KFParticleBase::GetDStoParticleBz() is called,
-   ** if "NonhomogeneousField" is defined - KFParticleBase::GetDStoParticleCBM()
+   ** param2 are parameters of the second particle p.fP. If "HomogeneousField" is defined GetDStoParticleBz() is called,
+   ** if "NonhomogeneousField" is defined - GetDStoParticleCBM()
    ** \param[in] p - second particle
    ** \param[out] dS[2] - transport parameters dS for the current particle (dS[0]) and the second particle "p" (dS[1])
    ** \param[out] dsdr[4][6] - partial derivatives of the parameters dS[0] and dS[1] over the state vectors of the both particles
    **/
 #ifdef HomogeneousField
-  KFParticleBase::GetDStoParticleBz( GetFieldAlice(), p, dS, dsdr ) ;
+  GetDStoParticleBz( GetFieldAlice(), p, dS, dsdr ) ;
 #endif
 #ifdef NonhomogeneousField
-  KFParticleBase::GetDStoParticleCBM( p, dS, dsdr ) ;
+  GetDStoParticleCBM( p, dS, dsdr ) ;
 #endif
 }
 
@@ -994,8 +853,8 @@ inline void KFParticle::Transport( float dS, const float* dsdr, float P[], float
 {
   /** Transports the parameters and their covariance matrix of the current particle
    ** on a length defined by the transport parameter dS = l/p, where l is the signed distance and p is 
-   ** the momentum of the current particle. If "HomogeneousField" is defined KFParticleBase::TransportBz()
-   ** is called, if "NonhomogeneousField" - KFParticleBase::TransportCBM().
+   ** the momentum of the current particle. If "HomogeneousField" is defined TransportBz()
+   ** is called, if "NonhomogeneousField" - TransportCBM().
    ** The obtained parameters and covariance matrix are stored to the arrays P and 
    ** C respectively. P and C can be set to the parameters fP and covariance matrix fC of the current particle. In this
    ** case the particle parameters will be modified. Dependence of the transport parameter dS on the state vector of the
@@ -1015,11 +874,48 @@ inline void KFParticle::Transport( float dS, const float* dsdr, float P[], float
    ** with the state vector r1, to which the current particle is being transported, F1 = d(fP new)/d(r1)
    **/ 
 #ifdef HomogeneousField
-  KFParticleBase::TransportBz( GetFieldAlice(), dS, dsdr, P, C, dsdr1, F, F1, fullC );
+  TransportBz( GetFieldAlice(), dS, dsdr, P, C, dsdr1, F, F1, fullC );
 #endif
 #ifdef NonhomogeneousField
-  KFParticleBase::TransportCBM( dS, dsdr, P, C, dsdr1, F, F1 );
+  TransportCBM( dS, dsdr, P, C, dsdr1, F, F1 );
 #endif
 }
+
+#ifdef __ROOT__ //for the STAR experiment
+std::ostream&  operator<<(std::ostream& os, KFParticle const & particle);
+#endif
+
+inline void KFParticle::InvertCholetsky3(float a[6])
+{
+  /** Inverts symmetric 3x3 matrix a using modified Choletsky decomposition. The result is stored to the same matrix a.
+   ** \param[in,out] a - 3x3 symmetric matrix
+   **/
+
+  const float d0 = 1.f/a[0];
+  const float u01 = a[1]*d0;
+  const float u02 = a[3]*d0;
+  
+  const float d1 = 1.f/(a[2] - u01*a[1]);
+  const float u12_d = a[4] - u01*a[3];
+  const float u12 = d1*u12_d;  
+  const float d2 = 1.f/(a[5] - u02*a[3] - u12*u12_d);
+  
+  //find V = -U^-1
+  const float v02 = u02 - u01*u12;
+  
+  //find A^-1 = U^-1 D^-1 Ut^-1
+  a[5] =  d2;
+  a[4] = -d2*u12;
+  a[3] = -d2*v02;
+  const float d1u01 = -d1*u01;
+  a[2] = d1    - a[4]*u12;
+  a[1] = d1u01 - a[3]*u12;
+  a[0] = d0 - d1u01*u01 - a[3]*v02;
+}
+
+
+
+
+
 
 #endif 

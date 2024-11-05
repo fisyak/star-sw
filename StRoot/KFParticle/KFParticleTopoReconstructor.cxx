@@ -22,6 +22,9 @@
 
 #include "KFParticleTopoReconstructor.h"
 
+#ifdef KFPWITHTRACKER
+#include "AliHLTTPCCAGBTracker.h"
+#endif
 
 #include "KFParticleSIMD.h"
 #include "KFParticleDatabase.h"
@@ -244,174 +247,7 @@ void KFParticleTopoReconstructor::Init(AliHLTTPCCAGBTracker* tracker, vector<int
   fStatTime[0] = timer.RealTime();
 #endif // USE_TIMERS
 } // void KFParticleTopoReconstructor::Init(AliHLTTPCCAGBTracker* tracker)
-void KFParticleTopoReconstructor::Init(std::vector<trackInSector> Tracks, std::vector<int>* pdg) // init array of particles
-{
-  if(!fTracks) 
-    fTracks = new KFPTrackVector[NInputSets];
-
-  fTracks[0].Resize(0);
-  fTracks[1].Resize(0);
-  fTracks[2].Resize(0);
-  fTracks[3].Resize(0);
-  fTracks[4].Resize(0);
-  fTracks[5].Resize(0);
-  fTracks[6].Resize(0);
-  fTracks[7].Resize(0);
-  
-#ifdef USE_TIMERS
-  timer.Start();
-#endif // USE_TIMERS
-    // create and fill array of tracks to init KFParticleTopoReconstructor
-  const int nTracks = Tracks.size(); // tracker->NTracks();
-  fTracks[1].Resize( int(nTracks/float_vLen+1)*float_vLen );
-  fTracks[5].Resize( int(nTracks/float_vLen+1)*float_vLen );
-  fParticles.clear();
-  int iOTr = 0; // index in out array
-  
-  float_v alpha(Vc::Zero);
-  int nElements=0;
-  
-  for ( int iTr = 0; iTr < nTracks; iTr++ ) {
-      // get track params in local CS
-    AliHLTTPCCATrackParam trParam = Tracks[ iTr ].Track;
-    bool ok = true;
-    
-    const int q = -(trParam.QPt()>=0 ? 1 : -1);
-    int arrayIndex = -1;
-    arrayIndex = 1;
-          
-    const float x0 = 0;
-    trParam.TransportToXWithMaterial( x0, KFParticle::GetFieldAlice() );
-
-    // -- convert parameters
-    fTracks[arrayIndex].SetParameter(trParam.X(), 0, iOTr); // X
-    fTracks[arrayIndex].SetParameter(trParam.Y(), 1, iOTr); // Y
-    fTracks[arrayIndex].SetParameter(trParam.Z(), 2, iOTr); // Z
-
-    const float pt = CAMath::Abs( 1.f / trParam.QPt() );
-    //       const int q = -(trParam.QPt()>=0 ? 1 : -1);
-    //    if ( pt < 1 ) continue; // dbg
-    ok = ok && !( trParam.NDF() < 10); //if ( trParam.NDF() < 10 ) continue; // at least 10 hits in track
-    ok = ok && !( trParam.Chi2() > 10*trParam.NDF() ); //if ( trParam.Chi2() > 10*trParam.NDF() ) continue; // dbg
-    //    if ( iOTr >= 4 ) continue; // dbg
-
-    const float cosL = trParam.DzDs();
-    fTracks[arrayIndex].SetParameter(pt * trParam.GetCosPhi(), 3, iOTr); // Px
-    fTracks[arrayIndex].SetParameter(pt * trParam.SinPhi()   , 4, iOTr); // Py
-    fTracks[arrayIndex].SetParameter(pt * cosL               , 5, iOTr); // Pz
-    
-    // -- convert cov matrix
-    // get jacobian
-    float J[6][6];
-    for (int i = 0; i < 6; i++)
-      for (int j = 0; j < 6; j++)
-	J[i][j] = 0;
-    J[0][0] = 1; // x -> x
-    J[1][1] = 1; // y -> y
-    J[2][2] = 1; // z -> z
-    J[3][3] = -pt * trParam.SinPhi() / trParam.GetCosPhi();
-    J[3][5] = -q * pt * pt * trParam.GetCosPhi(); // q/pt -> px
-    J[4][3] = pt; // sinPhi -> py
-    J[4][5] = -q* pt * pt * trParam.SinPhi(); // q/pt -> py
-    J[5][4] = pt; // dz/ds -> pz
-    J[5][5] = -q* pt * pt * cosL; // q/pt -> pz
-    
-    float CovIn[6][6]; // triangular -> symmetric matrix
-    {
-      CovIn[0][0] = .001f*.001f; // dx. From nowhere. TODO
-      for (int i = 1; i < 6; i++) {
-	CovIn[i][0] = 0;
-	CovIn[0][i] = 0;
-      }
-      int k = 0;
-      for (int i = 1; i < 6; i++) {
-	for (int j = 1; j <= i; j++, k++) {
-	  CovIn[i][j] = trParam.Cov()[k];
-	  CovIn[j][i] = trParam.Cov()[k];
-	}
-      }
-    }
-    
-    float CovInJ[6][6];      // CovInJ = CovIn * J^t
-    for (int i = 0; i < 6; i++)
-      for (int j = 0; j < 6; j++) {
-	CovInJ[i][j] = 0;
-	for (int k = 0; k < 6; k++) {
-	  CovInJ[i][j] += CovIn[i][k] * J[j][k];
-	}
-      }
-    
-    float CovOut[6][6];      // CovOut = J * CovInJ
-    for (int i = 0; i < 6; i++)
-      for (int j = 0; j < 6; j++) {
-	CovOut[i][j] = 0;
-	for (int k = 0; k < 6; k++) {
-	  CovOut[i][j] += J[i][k] * CovInJ[k][j];
-	}
-      }
-    
-    float KFPCov[21]; // symmetric matrix -> triangular
-    {
-      int k = 0;
-      for (int i = 0; i < 6; i++) {
-	for (int j = 0; j <= i; j++, k++) {
-	  KFPCov[k] = CovOut[i][j];
-	  ASSERT( !CAMath::Finite(CovOut[i][j]) ||  CovOut[i][j] == 0 || fabs( 1. - CovOut[j][i]/CovOut[i][j] ) <= 0.05,
-		  "CovOut[" << i << "][" << j << "] == CovOut[" << j << "][" << i << "] : " << CovOut[i][j] << " == " << CovOut[j][i]);
-	}
-      }
-    }
-      
-    {   // check cov matrix
-      int k = 0;
-      for (int i = 0; i < 6; i++) {
-	for (int j = 0; j <= i; j++, k++) {
-	  ok &= CAMath::Finite( KFPCov[k] );
-	}
-	ok &= ( KFPCov[k-1] > 0 );
-      }
-    }
-    
-    if(ok)
-      {
-        int trackPDG = -1;  
-        if(pdg)
-          trackPDG = (*pdg)[iTr];
-	
-        for(int iC=0; iC<21; iC++)
-          fTracks[arrayIndex].SetCovariance( KFPCov[iC], iC, iOTr);
-        fTracks[arrayIndex].SetId(iTr, iOTr);
-        fTracks[arrayIndex].SetPDG(trackPDG, iOTr);
-        fTracks[arrayIndex].SetQ(q, iOTr);
-        fTracks[arrayIndex].SetPVIndex(-1, iOTr);
-      }
-    if (!ok) continue;
-    
-    iOTr++;
-  
-    // convert into Global CS. Can't be done erlier because in tracker X hasn't correspondent covMatrix elements.
-    alpha[nElements] = Tracks[ iTr ].alpha; 
-    nElements++;
-    if(nElements == float_vLen)
-      {
-	fTracks[1].RotateXY( alpha, iOTr-nElements);
-	nElements=0;
-      }
-    if(nElements>0)
-      {
-	fTracks[1].RotateXY( alpha, iOTr-nElements);
-      }
-    
-    fTracks[0].Resize(iOTr);
-    fTracks[0].Set(fTracks[1],iOTr,0);
-  }    
-  fKFParticlePVReconstructor->Init( &fTracks[0], iOTr );
-#ifdef USE_TIMERS
-  timer.Stop();
-  fStatTime[0] = timer.RealTime();
-#endif // USE_TIMERS
-} // void KFParticleTopoReconstructor::Init(std::vector<AliHLTTPCCATrackParam> tracks, std::vector<int>* pdg=0); // init array of particles
-#endif /*  KFPWITHTRACKER */
+#endif
 
 void KFParticleTopoReconstructor::Init(vector<KFParticle> &particles, vector<int>* pdg, vector<int>* nPixelHits, bool initPVTracks)
 {
@@ -825,7 +661,8 @@ bool UseParticleInCompetition(int PDG)
              (abs(PDG) == 3334) ||   //Omega
              (abs(PDG) == 3103) ||   //LambdaNN
              (abs(PDG) == 3203) ||   //LLn
-             (abs(PDG) >= 3003 && abs(PDG) <= 3027); //hypernuclei
+             (abs(PDG) >= 3003 && abs(PDG) <= 3040); //hypernuclei
+  use &= PDG != 3008;
   return use;
 }
 
@@ -861,7 +698,7 @@ void KFParticleTopoReconstructor::SelectParticleCandidates()
     {
       KFParticle tmp = fParticles[iParticle];
       tmp.SetProductionVertex(GetPrimVertex(iPV));
-      if(tmp.Chi2()/tmp.NDF()<3)
+      if(tmp.Chi2()/tmp.NDF()<3.)
         isSecondary=0;
     }
     if(isSecondary)

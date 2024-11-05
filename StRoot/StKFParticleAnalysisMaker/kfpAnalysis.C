@@ -117,6 +117,7 @@ void kfpAnalysis(Int_t N = 10000000,
     dbMk->SetDebug(1);
   }
   chain->Init();
+#if 0
   //   StKFParticleInterface::instance()->SetUsedx2(kTRUE); // old dE/dx calibration before SL
   //  if(isPico)
   //  {
@@ -150,7 +151,42 @@ void kfpAnalysis(Int_t N = 10000000,
   StKFParticleInterface::instance()->SetChi2CutCharmManybodyDecays(3);
   StKFParticleInterface::instance()->SetChi2TopoCutCharmManybodyDecays(3);
   StKFParticleInterface::instance()->SetLdLCutCharmManybodyDecays(5);
+#else /* Maksym   /gpfs01/star/pwg/mzyzak/kaons/Template/femtoAnalysis.C Oct 27 2024 */
+  if(isPico)
+  {
+    StKFParticleInterface::instance()->CleanLowPVTrackEvents();
+//     StKFParticleInterface::instance()->UseHFTTracksOnly();
+  }
   
+  StKFParticleInterface::instance()->SetSoftKaonPIDMode();
+  StKFParticleInterface::instance()->SetSoftTofPidMode();
+
+
+//   StKFParticleInterface::instance()->SetChiPrimaryMaxCut(5.e3);
+  StKFParticleInterface::instance()->SetChiPrimaryCut(18.f);
+  // StKFParticleInterface::instance()->SetChiPrimaryCutFragments(0.f); // TODO
+  StKFParticleInterface::instance()->SetChiPrimaryCutFragments(18.f);   // TODO
+  // StKFParticleInterface::instance()->SetSecondaryCuts(3.f, 5.f, 0.f);   // TODO
+
+  StKFParticleInterface::instance()->SetMaxDistanceBetweenParticlesCut(1);
+  StKFParticleInterface::instance()->SetLCut(0.f);
+  
+  StKFParticleInterface::instance()->SetChiPrimaryCut2D(0);
+  StKFParticleInterface::instance()->SetChi2Cut2D(3);
+  StKFParticleInterface::instance()->SetLdLCut2D(5.f); // TODO
+  // StKFParticleInterface::instance()->SetLdLCut2D(0); // TODO
+  
+  StKFParticleInterface::instance()->SetChi2CutXiOmega(3);
+  StKFParticleInterface::instance()->SetChi2TopoCutXiOmega(3);
+  StKFParticleInterface::instance()->SetLdLCutXiOmega(5);  
+  
+  StKFParticleInterface::instance()->SetChi2CutCharmManybodyDecays(3);
+  StKFParticleInterface::instance()->SetChi2TopoCutCharmManybodyDecays(3);
+  StKFParticleInterface::instance()->SetLdLCutCharmManybodyDecays(5);
+  const Char_t *beamSpotMode = "2019_4AGeV";
+  StKFParticleInterface::instance()->SetBeamSpot(beamSpotMode);
+  //  StKFParticleInterface::instance()->SetBeamSpot();
+#endif
   
 //   StKFParticleInterface::instance()->SetSecondaryCuts(3, 3, 5);
 //________________________________________________________________________________

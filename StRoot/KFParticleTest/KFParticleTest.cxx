@@ -33,7 +33,7 @@
 ClassImp(KFParticleTest)
 #endif
 
-std::ostream&  operator<<(std::ostream& os, const KFParticleBase& particle) {
+std::ostream&  operator<<(std::ostream& os, const KFParticle& particle) {
   static const char *vn[14] = {"x","y","z","px","py","pz","E","S","M","t","p","Q","Chi2","NDF"};
 
   for (Int_t i = 0; i < 8; i++) {
@@ -147,13 +147,15 @@ void KFParticleTest::RunTestSingle()
   KFParticle p3(track2, 211); // PDG = 11
   std::cout << "Track Particle p3 " << std::endl <<"  "<< p3 << std::endl;
   
-  KFParticle p4(p2, p3);
+  KFParticle p4;
+  p4 += p2;
+  p4 += p3;
   std::cout << "Particle p4(p2,p3)" << std::endl << "  " << p4 << std::endl;
 
   ///  *****************************************************************************************
   std::cout << std::endl << "4. Construction with constrained Mass or (and) vertex position values" << std::endl<< std::endl;
 
-/// This is the example of the KFParticleBase::Construct function usage.
+/// This is the example of the KFParticle::Construct function usage.
 /// parameter 1 - array of the daughter particles
 /// parameter 2 - number of the daughter particles
 /// parameter 3 - vertex (it should be the object of the KFParticle class)

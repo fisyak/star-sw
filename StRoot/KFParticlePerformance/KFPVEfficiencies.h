@@ -66,9 +66,9 @@ class KFPVEfficiencies: public TNamed
     AddCounter(Form("%s","PVpileup"), Form("%-*s",12,"PV pileup "));
   }
 
-  virtual ~KFPVEfficiencies(){};
+  ~KFPVEfficiencies(){}
 
-  virtual void AddCounter(TString shortname, TString name)
+  void AddCounter(TString shortname, TString name)
   {
     /** Adds a counter with the name defined by "name" to all counter
      ** objects. For easiness of operation with counters, a shortname is assigned

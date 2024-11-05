@@ -26,8 +26,6 @@
 #ifndef KFPARTICLESIMD_H
 #define KFPARTICLESIMD_H
 
-#include "KFParticleBaseSIMD.h"
-
 #include "KFPTrack.h"
 #include "KFPTrackVector.h"
 #include "KFPEmcCluster.h"
@@ -57,7 +55,7 @@ class KFParticle;
  ** to other particles and vertices, get deviations from them in terms of errors, etc.
  **/
 
-class KFParticleSIMD :public KFParticleBaseSIMD
+class KFParticleSIMD
 {
   
  public:
@@ -87,41 +85,36 @@ class KFParticleSIMD :public KFParticleBaseSIMD
 #endif
   //* Constructor (empty)
 
-  KFParticleSIMD():KFParticleBaseSIMD()
+  KFParticleSIMD(): fQ(0), fNDF(-3), fChi2(0.f), SumDaughterMass(0.f), fMassHypo(-1.f), fId(-1), fPDG(0), fConstructMethod(0), fDaughterIds()
 #ifdef NonhomogeneousField
   , fField() 
 #endif
-  { ; }
-
-  //* Destructor (empty)
-
-  virtual ~KFParticleSIMD(){ ; }
-
-  //* Construction of mother particle by its 2-3-4 daughters
-
-  KFParticleSIMD( const KFParticleSIMD &d1, const KFParticleSIMD &d2 );
-  KFParticleSIMD( const KFParticleSIMD &d1, const KFParticleSIMD &d2,  const KFParticleSIMD &d3 );
-  KFParticleSIMD( const KFParticleSIMD &d1, const KFParticleSIMD &d2, const KFParticleSIMD &d3, const KFParticleSIMD &d4 );
+  {
+    for( int i=0; i<8; i++) fP[i] = 0.f;
+    for(int i=0;i<36;++i) fC[i]=0.f;
+    fC[0] = fC[2] = fC[5] = 100.f;
+    fC[35] = 1.f;
+  }
 
  //* Initialisation from "cartesian" coordinates ( X Y Z Px Py Pz )
  //* Parameters, covariance matrix, charge and PID hypothesis should be provided 
 
-  void Create( const float_v Param[], const float_v Cov[], int_v Charge, float_v mass /*Int_t PID*/ );
+  void Create( const float_v Param[], const float_v Cov[], int_v Charge, float_v mass /*int PID*/ );
 
   void SetOneEntry(int iEntry, KFParticleSIMD& part, int iEntryPart);
 
-  KFParticleSIMD( const KFPTrack *track, Int_t PID );
-  KFParticleSIMD( KFPTrack* Track[], int NTracks, const Int_t *pdg=0 );
+  KFParticleSIMD( const KFPTrack *track, int PID );
+  KFParticleSIMD( KFPTrack* Track[], int NTracks, const int *pdg=0 );
   KFParticleSIMD( KFPTrackVector &track, uint_v& index, const int_v& pdg );
 
-  void Create(KFPTrack* Track[], int NTracks, const Int_t *pdg=0);
+  void Create(KFPTrack* Track[], int NTracks, const int *pdg=0);
   void Create(KFPTrackVector &track, uint_v& index, const int_v& pdg);
-  void Load(KFPTrackVector &track, int index, const int_v& pdg);
+  void Load(const KFPTrackVector &track, int index, const int_v& pdg);
   void Load(const KFPTrackVector &track, int index);
   void Rotate();
 
-  KFParticleSIMD(KFPTrack &Track, const Int_t *pdg=0);
-  KFParticleSIMD(KFPTrackVector &track, int n, const Int_t *pdg=0);
+  KFParticleSIMD(KFPTrack &Track, const int *pdg=0);
+  KFParticleSIMD(KFPTrackVector &track, int n, const int *pdg=0);
 
   KFParticleSIMD( KFPEmcCluster &track, uint_v& index, const KFParticleSIMD& vertexGuess );
   KFParticleSIMD( KFPEmcCluster &track, int index, const KFParticleSIMD& vertexGuess );
@@ -133,7 +126,7 @@ class KFParticleSIMD :public KFParticleBaseSIMD
 
   KFParticleSIMD( const KFPVertex &vertex );
   KFParticleSIMD( KFParticle* part[], const int nPart = 0 );
-  KFParticleSIMD( KFParticle &part );
+  KFParticleSIMD( const KFParticle &part );
 
   //*
   //*  ACCESSORS
@@ -141,19 +134,17 @@ class KFParticleSIMD :public KFParticleBaseSIMD
 
   //* Simple accessors 
 
-  float_v GetX    () const ; ///< Retruns X coordinate of the particle, fP[0].
-  float_v GetY    () const ; ///< Retruns Y coordinate of the particle, fP[1].
-  float_v GetZ    () const ; ///< Retruns Z coordinate of the particle, fP[2].
-  float_v GetPx   () const ; ///< Retruns X component of the momentum, fP[3].
-  float_v GetPy   () const ; ///< Retruns Y component of the momentum, fP[4].
-  float_v GetPz   () const ; ///< Retruns Z component of the momentum, fP[5].
-  float_v GetE    () const ; ///< Returns energy of the particle, fP[6].
-  float_v GetS    () const ; ///< Returns dS=l/p, l - decay length, fP[7], defined if production vertex is set.
-  int_v   GetQ    () const ; ///< Returns charge of the particle.
-  float_v GetChi2 () const ; ///< Returns Chi2 of the fit.
-  int_v   GetNDF  () const ; ///< Returns number of decrease of freedom.
-
-  Bool_t GetAtProductionVertex() const { return fAtProductionVertex; }  ///< Returns a flag which shows if the particle is located at the production point
+  float_v GetX    () const { return fP[0]; } ///< Returns the sum of masses of the daughters
+  float_v GetY    () const { return fP[1]; } ///< Returns the sum of masses of the daughters
+  float_v GetZ    () const { return fP[2]; } ///< Returns the sum of masses of the daughters
+  float_v GetPx   () const { return fP[3]; } ///< Returns the sum of masses of the daughters
+  float_v GetPy   () const { return fP[4]; } ///< Returns the sum of masses of the daughters
+  float_v GetPz   () const { return fP[5]; } ///< Returns the sum of masses of the daughters
+  float_v GetE    () const { return fP[6]; } ///< Returns the sum of masses of the daughters
+  float_v GetS    () const { return fP[7]; } ///< Returns the sum of masses of the daughters
+  int_v   GetQ    () const { return fQ;    } ///< Returns the sum of masses of the daughters
+  float_v GetChi2 () const { return fChi2; } ///< Returns the sum of masses of the daughters
+  int_v GetNDF    () const { return fNDF;  } ///< Returns the sum of masses of the daughters
 
   const float_v& X    () const { return fP[0]; } ///< Retruns X coordinate of the particle, fP[0].
   const float_v& Y    () const { return fP[1]; } ///< Retruns Y coordinate of the particle, fP[1].
@@ -163,13 +154,13 @@ class KFParticleSIMD :public KFParticleBaseSIMD
   const float_v& Pz   () const { return fP[5]; } ///< Retruns Z component of the momentum, fP[5].
   const float_v& E    () const { return fP[6]; } ///< Returns energy of the particle, fP[6].
   const float_v& S    () const { return fP[7]; } ///< Returns dS=l/p, l - decay length, fP[7], defined if production vertex is set.
-  const int_v  & Q    () const { return fQ;    } ///< Returns charge of the particle.
+  const int_v&   Q    () const { return fQ;    } ///< Returns charge of the particle.
   const float_v& Chi2 () const { return fChi2; } ///< Returns Chi2 of the fit.
-  const int_v& NDF  () const { return fNDF;  }   ///< Returns number of decrease of freedom.
+  const int_v& NDF    () const { return fNDF;  } ///< Returns number of decrease of freedom.
   
-  float_v GetParameter ( int i ) const ;        ///< Returns P[i] parameter.
-  float_v GetCovariance( int i ) const ;        ///< Returns C[i] element of the covariance matrix in the lower triangular form.
-  float_v GetCovariance( int i, int j ) const ; ///< Returns C[i,j] element of the covariance matrix.
+  float_v GetParameter ( int i ) const { return fP[i]; }        ///< Returns P[i] parameter.
+  float_v GetCovariance( int i ) const { return fC[i]; }        ///< Returns C[i] element of the covariance matrix in the lower triangular form.
+  float_v GetCovariance( int i, int j ) const { return Cij(i, j); } ///< Returns C[i,j] element of the covariance matrix.
 
   //* Accessors with calculations, value returned w/o error flag
   
@@ -220,28 +211,48 @@ class KFParticleSIMD :public KFParticleBaseSIMD
   float_m GetLifeTime    ( float_v &T, float_v &SigmaT ) const ;   //* life time
   float_m GetR           ( float_v &R, float_v &SigmaR ) const ; //* R
 
-
   //*
   //*  MODIFIERS
   //*
   
-  float_v & X    () ; ///< Modifier of X coordinate of the particle, fP[0].
-  float_v & Y    () ; ///< Modifier of Y coordinate of the particle, fP[1].
-  float_v & Z    () ; ///< Modifier of Z coordinate of the particle, fP[2].
-  float_v & Px   () ; ///< Modifier of X component of the momentum, fP[3].
-  float_v & Py   () ; ///< Modifier of Y component of the momentum, fP[4].
-  float_v & Pz   () ; ///< Modifier of Z component of the momentum, fP[5].
-  float_v & E    () ; ///< Modifier of energy of the particle, fP[6].
-  float_v & S    () ; ///< Modifier of dS=l/p, l - decay length, fP[7], defined if production vertex is set.
-  int_v   & Q    () ; ///< Modifier of charge of the particle.
-  float_v & Chi2 () ; ///< Modifier of Chi2 of the fit.
-  int_v & NDF  () ;   ///< Modifier of number of decrease of freedom.
+  float_v & X    () { return fP[0]; } ///< Modifier of X coordinate of the particle, fP[0].
+  float_v & Y    () { return fP[1]; } ///< Modifier of Y coordinate of the particle, fP[1].
+  float_v & Z    () { return fP[2]; } ///< Modifier of Z coordinate of the particle, fP[2].
+  float_v & Px   () { return fP[3]; } ///< Modifier of X component of the momentum, fP[3].
+  float_v & Py   () { return fP[4]; } ///< Modifier of Y component of the momentum, fP[4].
+  float_v & Pz   () { return fP[5]; } ///< Modifier of Z component of the momentum, fP[5].
+  float_v & E    () { return fP[6]; } ///< Modifier of energy of the particle, fP[6].
+  float_v & S    () { return fP[7]; } ///< Modifier of dS=l/p, l - decay length, fP[7], defined if production vertex is set.
+  int_v   & Q    () { return fQ;    } ///< Modifier of charge of the particle.
+  float_v & Chi2 () { return fChi2; } ///< Modifier of Chi2 of the fit.
+  int_v & NDF    () { return fNDF;  } ///< Modifier of number of decrease of freedom.
 
-  float_v & Parameter ( int i ) ;         ///< Modifier of P[i] parameter.
-  float_v & Covariance( int i ) ;         ///< Modifier of C[i] element of the covariance matrix in the lower triangular form.
-  float_v & Covariance( int i, int j ) ;  ///< Modifier of C[i,j] element of the covariance matrix.
-  float_v * Parameters () ;               ///< Returns pointer to the parameters fP
-  float_v * CovarianceMatrix() ;          ///< Returns pointer to the covariance matrix fC
+  float_v & Parameter ( int i )        { return fP[i];       } ///< Modifier of P[i] parameter.
+  float_v & Covariance( int i )        { return fC[i];       } ///< Modifier of C[i] element of the covariance matrix in the lower triangular form.
+  float_v & Covariance( int i, int j ) { return fC[IJ(i,j)]; } ///< Modifier of C[i,j] element of the covariance matrix.
+
+  const float_v * Parameters() const       { return fP; } ///< Returns pointer to the parameters fP
+  const float_v * CovarianceMatrix() const { return fC; } ///< Returns pointer to the covariance matrix fC
+
+  void SetConstructMethod(int m) {fConstructMethod = m;} ///< Defines the construction method for the current particle (see description of fConstructMethod).
+  void SetMassHypo(float_v m) { fMassHypo = m;} ///< Sets the mass hypothesis to the particle, is used when fConstructMethod = 2.
+  const float_v& GetMassHypo() const { return fMassHypo; } ///< Returns the mass hypothesis.
+  const float_v& GetSumDaughterMass() const {return SumDaughterMass;} ///< Returns the sum of masses of the daughters.
+
+  int_v Id() const { return fId; } ///< Returns Id of the particle.
+  int NDaughters() const { return fDaughterIds.size(); } ///< Returns number of daughter particles.
+  std::vector<int_v> & DaughterIds() { return fDaughterIds; } ///< Returns the vector with the indices of daughter particles.
+  int_v GetDaughterId(int iD) const { return fDaughterIds[iD]; } ///< Returns the daughter Id with the index iD.
+  
+  void SetId( int_v id ){ fId = id; } ///< Sets the Id of the particle. After the construction of a particle should be set by user.
+  void SetNDaughters( int n ) { fDaughterIds.reserve(n); } ///< Reserves the size of the vector with daughter Ids to n
+  void AddDaughterId( int_v id ){ fDaughterIds.push_back(id); } ///< Adds index of the daughter particle. 
+  void CleanDaughtersId() { fDaughterIds.clear(); } ///< Cleans the vector with the indices of daughter particles.
+
+  void SetPDG ( const int pdg ) { fPDG = pdg; } ///< Sets the PDG hypothesis common for all elements of the SIMD vector.
+  void SetPDG ( const int_v pdg ) { fPDG = pdg; } ///< Sets the PDG hypothesis individual for each entry of the SIMD vector.
+  const int_v& GetPDG () const { return fPDG; } ///< Returns the PDG hypothesis.
+  const int_v& PDG () const { return fPDG; } ///< Returns the PDG hypothesis.
 
   void GetKFParticle( KFParticle &Part, int iPart = 0);
   void GetKFParticle( KFParticle *Part, int nPart = 0);
@@ -251,19 +262,34 @@ class KFParticleSIMD :public KFParticleBaseSIMD
   //* USING THE KALMAN FILTER METHOD
   //*
 
-
-  //* Add daughter to the particle 
-
-  void AddDaughter( const KFParticleSIMD &Daughter );
-
-  //* Add daughter via += operator: ex.{ D0; D0+=Pion; D0+= Kaon; }
+  //* Simple way to add daughter ex. D0+= Pion; 
 
   void operator +=( const KFParticleSIMD &Daughter );  
 
+  //* Add daughter track to the particle 
+  void AddDaughter( const KFParticleSIMD &Daughter );
+  void SubtractDaughter( const KFParticleSIMD &Daughter );
+  void ReconstructMissingMass(const KFParticleSIMD &Daughter, KFParticleSIMD &MotherFiltered, KFParticleSIMD &cDaughterFiltered, float_v neutralmasshypo );
+
+  void AddDaughterWithEnergyFit( const KFParticleSIMD &Daughter );
+  void AddDaughterWithEnergyFitMC( const KFParticleSIMD &Daughter ); 
+
+  //* Subtract a particle from a vertex  
+  void SubtractFromVertex( KFParticleSIMD &Vtx ) const;
+  void SubtractFromParticle( KFParticleSIMD &Vtx ) const;
+
+  //* Set production vertex 
+
+  void SetProductionVertex( const KFParticleSIMD &Vtx );
+
+  //* Set mass constraint 
+
+  void SetNonlinearMassConstraint( float_v Mass );
+  void SetMassConstraint( float_v Mass, float_v SigmaMass = float_v(0.f) );
+
   //* Everything in one go  
 
-  void Construct( const KFParticleSIMD *vDaughters[], int nDaughters, 
-                  const KFParticleSIMD *ProdVtx=0,   Float_t Mass=-1 );
+  void Construct( const KFParticleSIMD *vDaughters[], int nDaughters, const KFParticleSIMD *ProdVtx=0,   Float_t Mass=-1 );
 
   //*
   //*                   TRANSPORT
@@ -284,18 +310,76 @@ class KFParticleSIMD :public KFParticleBaseSIMD
 
   void TransportToParticle( const KFParticleSIMD &p );
 
+  //* Transport the particle on dS parameter (SignedPath/Momentum) 
+
+  void TransportToDS( float_v dS, const float_v* dsdr );
+  void TransportToDSLine( float_v dS, const float_v* dsdr );
+  //* Particular extrapolators one can use 
+  void TransportBz( float_v Bz, float_v dS, const float_v* dsdr, float_v P[], float_v C[], float_v* dsdr1=0, float_v* F=0, float_v* F1=0, const bool fullC=true ) const;
+  void TransportBz( float_v Bz, float_v dS, float_v P[] ) const;
+  void TransportCBM( float_v dS, const float_v* dsdr, float_v P[], float_v C[], float_v* dsdr1=0, float_v* F=0, float_v* F1=0 ) const;
+  void TransportCBM( float_v dS, float_v P[] ) const;    
+
+  void TransportLine( float_v S, const float_v* dsdr, float_v P[], float_v C[], float_v* dsdr1=0, float_v* F=0, float_v* F1=0 ) const ;
+  void TransportLine( float_v S, float_v P[] ) const ;
+
   //* Get dS to a certain space point 
 
   float_v GetDStoPoint( const float_v xyz[3], float_v dsdr[6] ) const ;
-  
+  float_v GetDStoPointLine( const float_v xyz[3], float_v dsdr[6] ) const;
+  float_v GetDStoPointBz( float_v Bz, const float_v xyz[3], float_v dsdr[6], const float_v* param = 0 ) const;
+  float_v GetDStoPointBy( float_v By, const float_v xyz[3], float_v dsdr[6] ) const;
+  float_v GetDStoPointCBM( const float_v xyz[3], float_v dsdr[6] ) const;
+
+  float_v GetDStoPointXYBz( float_v B, const float_v xy[2] ) const;
+  float_v GetDStoPointZBz( const float_v z0 ) const;
+  void GetDStoCylinderBz( const float_v B, const float_v R, float_v dS[2] ) const;
+
+#ifdef HomogeneousField
+  float_v GetDStoPointXY( const float_v xyz[2] ) const {
+    return GetDStoPointXYBz( GetFieldAlice(), xyz );
+  }
+  //* Get dS to a certain space point 
+  void GetDStoCylinder( const float_v R, float_v dS[2] ) const {
+    GetDStoCylinderBz( GetFieldAlice(), R, dS );
+  }
+#endif
+
   //* Get dS to other particle p (dSp for particle p also returned) 
 
-  void GetDStoParticle( const KFParticleBaseSIMD &p, float_v dS[2], float_v dsdr[4][6] ) const ;
-  void GetDStoParticleFast( const KFParticleBaseSIMD &p, float_v dS[2] ) const ;
+  void GetDStoParticle( const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6] ) const ;
+  void GetDStoParticleFast( const KFParticleSIMD &p, float_v dS[2] ) const ;
+  void GetDStoParticleLine( const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6] ) const ;
+  void GetDStoParticleLine( const KFParticleSIMD &p, float_v dS[2]  ) const ;
+  void GetDStoParticleBz( float_v Bz, const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6], const float_v* param1 =0, const float_v* param2 =0  ) const ;
+  void GetDStoParticleBz( float_v Bz, const KFParticleSIMD &p, float_v dS[2], const float_v* param1 =0, const float_v* param2 =0  ) const ;
+  void GetDStoParticleBy( float_v B, const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6] ) const ;
+  void GetDStoParticleBy( float_v B, const KFParticleSIMD &p, float_v dS[2] ) const ;
+  void GetDStoParticleB( float_v B[3], const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6] ) const;
+  void GetDStoParticleB( float_v B[3], const KFParticleSIMD &p, float_v dS[2] ) const;
+  void GetDStoParticleCBM( const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6] ) const ;
+  void GetDStoParticleCBM( const KFParticleSIMD &p, float_v dS[2] ) const ;
+
+  void GetDistanceToVertexLine( const KFParticleSIMD &Vertex, float_v &l, float_v &dl, float_m *isParticleFromVertex = 0 ) const;
+
   //* 
   //* OTHER UTILITIES
   //*
- 
+
+  //* Calculate distance from another object [cm]
+
+  float_v GetDistanceFromVertex( const float_v vtx[] ) const;
+  float_v GetDistanceFromVertex( const KFParticleSIMD &Vtx ) const;
+  float_v GetDistanceFromParticle( const KFParticleSIMD &p ) const;
+
+  //* Calculate CAMath::Sqrt(Chi2/ndf) deviation from vertex
+  //* v = [xyz], Cv=[Cxx,Cxy,Cyy,Cxz,Cyz,Czz]-covariance matrix
+
+  float_v GetDeviationFromVertex( const float_v v[], 
+                                   const float_v Cv[]=0 ) const;
+  float_v GetDeviationFromVertex( const KFParticleSIMD &Vtx ) const;
+  float_v GetDeviationFromParticle( const KFParticleSIMD &p ) const;  
+
   //* Calculate distance from another object [cm] in XY-plane
 
   float_m GetDistanceFromVertexXY( const float_v vtx[], float_v &val, float_v &err ) const ;
@@ -339,17 +423,52 @@ class KFParticleSIMD :public KFParticleBaseSIMD
   void Transport( float_v dS, const float_v* dsdr, float_v P[], float_v C[], float_v* dsdr1=0, float_v* F=0, float_v* F1=0, const bool fullC=true ) const ;
   void TransportFast( float_v dS, float_v P[] ) const ;
   
- protected: 
-  
+  static void GetArmenterosPodolanski(KFParticleSIMD& positive, KFParticleSIMD& negative, float_v QtAlfa[2] );
+  void RotateXY(float_v angle, float_v Vtx[3]);
+  static void MultQSQt( const float_v Q[], const float_v S[], float_v SOut[], const int kN  );
+
+ private:
+  void GetMeasurement( const KFParticleSIMD& daughter, float_v m[], float_v V[], float_v D[3][3] ) ;
+  //* Mass constraint function. is needed for the nonlinear mass constraint and a fit with mass constraint
+  void SetMassConstraint( float_v *mP, float_v *mC, float_v mJ[7][7], float_v mass, float_m mask );
+
+  static void InvertCholetsky3(float_v a[6]);
+
   //*
   //*  INTERNAL STUFF
   //* 
+
+  /** Converts a pair of indices {i,j} of the covariance matrix to one index corresponding to the triangular form. */
+  static int IJ( int i, int j ){ 
+    return ( j<=i ) ? i*(i+1)/2+j :j*(j+1)/2+i;
+  }
+  /** Return an element of the covariance matrix with {i,j} indices. */
+  float_v Cij( int i, int j ) const { return fC[IJ(i,j)]; }
+
+  float_v fP[8];              ///< Particle parameters { X, Y, Z, Px, Py, Pz, E, S[=DecayLength/P]}.
+  float_v fC[36];             ///< Low-triangle covariance matrix of fP.
+  int_v fQ;                   ///< The charge of the particle in the units of the elementary charge.
+  int_v fNDF;                 ///< Number of degrees of freedom.
+  float_v fChi2;              ///< Chi^2.
+  float_v SumDaughterMass;    ///< Sum of the daughter particles masses. Needed to set the constraint on the minimum mass during particle construction.
+  float_v fMassHypo;          ///< The mass hypothesis, used for the constraints during particle construction.
+  int_v fId;                  ///< Id of the particle.
+  int_v fPDG;                 ///< The PDG hypothesis assigned to the particle.
+  /** \brief Determines the method for the particle construction. \n
+   ** 0 - Energy considered as an independent veriable, fitted independently from momentum, without any constraints on mass \n
+   ** 2 - Energy considered as an independent variable, fitted independently from momentum, with constraints on mass of daughter particle
+   **/
+  int fConstructMethod;
+  /** \brief A vector with ids of the daughter particles: \n
+   ** 1) if particle is created from a track - the index of the track, in this case the size of the vector is always equal to one; \n
+   ** 2) if particle is constructed from other particles - indices of these particles in the same array.
+   **/
+  std::vector<int_v> fDaughterIds; // id of particles it created from. if size == 1 then this is id of track.
 
   //* Method to access ALICE field 
 #ifdef HomogeneousField
   static float_v GetFieldAlice();
 #endif
-  //* Other methods required by the abstract KFParticleBaseSIMD class 
   
  private:
 #ifdef HomogeneousField
@@ -361,9 +480,35 @@ class KFParticleSIMD :public KFParticleBaseSIMD
    **/
   KFParticleFieldRegion fField;
 #endif
-};
+} __attribute__((aligned(sizeof(float_v))));
 
+inline void KFParticleSIMD::InvertCholetsky3(float_v a[6])
+{
+  /** Inverts symmetric 3x3 matrix a using modified Choletsky decomposition. The result is stored to the same matrix a.
+   ** \param[in,out] a - 3x3 symmetric matrix
+   **/
 
+  const float_v d0 = 1.f/a[0];
+  const float_v u01 = a[1]*d0;
+  const float_v u02 = a[3]*d0;
+  
+  const float_v d1 = 1.f/(a[2] - u01*a[1]);
+  const float_v u12_d = a[4] - u01*a[3];
+  const float_v u12 = d1*u12_d;  
+  const float_v d2 = 1.f/(a[5] - u02*a[3] - u12*u12_d);
+  
+  //find V = -U^-1
+  const float_v v02 = u02 - u01*u12;
+  
+  //find A^-1 = U^-1 D^-1 Ut^-1
+  a[5] =  d2;
+  a[4] = -d2*u12;
+  a[3] = -d2*v02;
+  const float_v d1u01 = -d1*u01;
+  a[2] = d1    - a[4]*u12;
+  a[1] = d1u01 - a[3]*u12;
+  a[0] = d0 - d1u01*u01 - a[3]*v02;
+}
 
 //---------------------------------------------------------------------
 //
@@ -381,138 +526,24 @@ inline void KFParticleSIMD::SetField( float_v Bz )
 }
 #endif
 
-inline KFParticleSIMD::KFParticleSIMD( const KFParticleSIMD &d1, 
-                                       const KFParticleSIMD &d2, 
-                                       const KFParticleSIMD &d3 ): KFParticleBaseSIMD()
-#ifdef NonhomogeneousField
-                                       , fField()
-#endif
-{
-  /** Constructs a particle from three input daughter particles
-   ** \param[in] d1 - the first daughter particle
-   ** \param[in] d2 - the second daughter particle
-   ** \param[in] d3 - the third daughter particle
-   **/
-    
-  KFParticleSIMD mother;
-  mother+= d1;
-  mother+= d2;
-  mother+= d3;
-  *this = mother;
-}
-
-inline KFParticleSIMD::KFParticleSIMD( const KFParticleSIMD &d1, 
-                               const KFParticleSIMD &d2, 
-                               const KFParticleSIMD &d3, 
-                               const KFParticleSIMD &d4 ): KFParticleBaseSIMD()
-#ifdef NonhomogeneousField
-                                                          , fField()
-#endif
-{
-  /** Constructs a particle from four input daughter particles
-   ** \param[in] d1 - the first daughter particle
-   ** \param[in] d2 - the second daughter particle
-   ** \param[in] d3 - the third daughter particle
-   ** \param[in] d4 - the fourth daughter particle
-   **/
-  
-  KFParticleSIMD mother;
-  mother+= d1;
-  mother+= d2;
-  mother+= d3;
-  mother+= d4;
-  *this = mother;
-}
-
-inline float_v KFParticleSIMD::GetX    () const 
-{ 
-  return KFParticleBaseSIMD::GetX();    
-}
-
-inline float_v KFParticleSIMD::GetY    () const 
-{ 
-  return KFParticleBaseSIMD::GetY();    
-}
-
-inline float_v KFParticleSIMD::GetZ    () const 
-{ 
-  return KFParticleBaseSIMD::GetZ();    
-}
-
-inline float_v KFParticleSIMD::GetPx   () const 
-{ 
-  return KFParticleBaseSIMD::GetPx();   
-}
-
-inline float_v KFParticleSIMD::GetPy   () const 
-{ 
-  return KFParticleBaseSIMD::GetPy();   
-}
-
-inline float_v KFParticleSIMD::GetPz   () const 
-{ 
-  return KFParticleBaseSIMD::GetPz();   
-}
-
-inline float_v KFParticleSIMD::GetE    () const 
-{ 
-  return KFParticleBaseSIMD::GetE();    
-}
-
-inline float_v KFParticleSIMD::GetS    () const 
-{ 
-  return KFParticleBaseSIMD::GetS();    
-}
-
-inline int_v    KFParticleSIMD::GetQ    () const 
-{ 
-  return KFParticleBaseSIMD::GetQ();    
-}
-
-inline float_v KFParticleSIMD::GetChi2 () const 
-{ 
-  return KFParticleBaseSIMD::GetChi2(); 
-}
-
-inline int_v    KFParticleSIMD::GetNDF  () const 
-{ 
-  return KFParticleBaseSIMD::GetNDF();  
-}
-
-inline float_v KFParticleSIMD::GetParameter ( int i ) const 
-{ 
-  return KFParticleBaseSIMD::GetParameter(i);  
-}
-
-inline float_v KFParticleSIMD::GetCovariance( int i ) const 
-{ 
-  return KFParticleBaseSIMD::GetCovariance(i); 
-}
-
-inline float_v KFParticleSIMD::GetCovariance( int i, int j ) const 
-{ 
-  return KFParticleBaseSIMD::GetCovariance(i,j);
-}
-
-
 inline float_v KFParticleSIMD::GetP    () const
 {
   float_v par, err;
-  KFParticleBaseSIMD::GetMomentum( par, err );
+  GetMomentum( par, err );
   return par;
 }
 
 inline float_v KFParticleSIMD::GetPt   () const
 {
   float_v par, err;
-  KFParticleBaseSIMD::GetPt( par, err ) ;
+  GetPt( par, err ) ;
   return par;
 }
 
 inline float_v KFParticleSIMD::GetEta   () const
 {
   float_v par, err;
-  KFParticleBaseSIMD::GetEta( par, err );
+  GetEta( par, err );
   return par;
 }
 
@@ -526,21 +557,21 @@ inline float_v KFParticleSIMD::GetPhi   () const
 inline float_v KFParticleSIMD::GetMomentum    () const
 {
   float_v par, err;
-  KFParticleSIMD::GetMomentum( par, err );
+  GetMomentum( par, err );
   return par;
 }
 
 inline float_v KFParticleSIMD::GetMass        () const
 {
   float_v par, err;
-  KFParticleSIMD::GetMass( par, err );
+  GetMass( par, err );
   return par;
 }
 
 inline float_v KFParticleSIMD::GetDecayLength () const
 {
   float_v par, err;
-  KFParticleSIMD::GetDecayLength( par, err );
+  GetDecayLength( par, err );
   return par;
 }
 
@@ -608,7 +639,7 @@ inline float_v KFParticleSIMD::GetErrS           () const
 inline float_v KFParticleSIMD::GetErrP    () const
 {
   float_v par, err;
-  float_m mask = KFParticleSIMD::GetMomentum( par, err );
+  float_m mask = GetMomentum( par, err );
   float_v ret(1.e10f);
   ret(!mask) = err;
   return ret;
@@ -617,7 +648,7 @@ inline float_v KFParticleSIMD::GetErrP    () const
 inline float_v KFParticleSIMD::GetErrPt    () const
 {
   float_v par, err;
-  float_m mask = KFParticleSIMD::GetPt( par, err );
+  float_m mask = GetPt( par, err );
   float_v ret(1.e10f);
   ret(!mask) = err;
   return ret;
@@ -626,7 +657,7 @@ inline float_v KFParticleSIMD::GetErrPt    () const
 inline float_v KFParticleSIMD::GetErrEta    () const
 {
   float_v par, err;
-  float_m mask = KFParticleSIMD::GetEta( par, err );
+  float_m mask = GetEta( par, err );
   float_v ret(1.e10f);
   ret(!mask) = err;
   return ret;
@@ -635,7 +666,7 @@ inline float_v KFParticleSIMD::GetErrEta    () const
 inline float_v KFParticleSIMD::GetErrPhi    () const
 {
   float_v par, err;
-  float_m mask = KFParticleSIMD::GetPhi( par, err );
+  float_m mask = GetPhi( par, err );
   float_v ret(1.e10f);
   ret(!mask) = err;
   return ret;
@@ -644,7 +675,7 @@ inline float_v KFParticleSIMD::GetErrPhi    () const
 inline float_v KFParticleSIMD::GetErrMomentum    () const
 {
   float_v par, err;
-  float_m mask = KFParticleSIMD::GetMomentum( par, err );
+  float_m mask = GetMomentum( par, err );
   float_v ret(1.e10f);
   ret(!mask) = err;
   return ret;
@@ -695,233 +726,13 @@ inline float_v KFParticleSIMD::GetErrR    () const
   return ret;
 }
 
-
 inline float_m KFParticleSIMD::GetP( float_v &P, float_v &SigmaP ) const 
 {
   /** Calculates particle momentum and its error. If they are well defined returns 0, otherwise 1.
    ** \param[out] P - momentum of the particle
    ** \param[out] SigmaP - its error
    **/
-  return KFParticleBaseSIMD::GetMomentum( P, SigmaP );
-}
-
-inline float_m KFParticleSIMD::GetPt( float_v &Pt, float_v &SigmaPt ) const 
-{
-  /** Calculates particle transverse  momentum and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] Pt - transverse momentum of the particle
-   ** \param[out] SigmaPt - its error
-   **/
-  return KFParticleBaseSIMD::GetPt( Pt, SigmaPt );
-}
-
-inline float_m KFParticleSIMD::GetEta( float_v &Eta, float_v &SigmaEta ) const 
-{
-  /** Calculates particle pseudorapidity and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] Eta - pseudorapidity of the particle
-   ** \param[out] SigmaEta - its error
-   **/
-  return KFParticleBaseSIMD::GetEta( Eta, SigmaEta );
-}
-
-inline float_m KFParticleSIMD::GetPhi( float_v &Phi, float_v &SigmaPhi ) const 
-{
-  /** Calculates particle polar angle at the current point and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] Phi - polar angle of the particle
-   ** \param[out] SigmaPhi - its error
-   **/
-  return KFParticleBaseSIMD::GetPhi( Phi, SigmaPhi );
-}
-
-inline float_m KFParticleSIMD::GetMomentum( float_v &P, float_v &SigmaP ) const 
-{
-  /** Calculates particle momentum and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] P - momentum of the particle
-   ** \param[out] SigmaP - its error
-   **/
-  return KFParticleBaseSIMD::GetMomentum( P, SigmaP );
-}
-
-inline float_m KFParticleSIMD::GetMass( float_v &M, float_v &SigmaM ) const 
-{
-  /** Calculates the mass of the particle and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] M - mass of the particle
-   ** \param[out] SigmaM - its error
-   **/
-  return KFParticleBaseSIMD::GetMass( M, SigmaM );
-}
-
-inline float_m KFParticleSIMD::GetDecayLength( float_v &L, float_v &SigmaL ) const 
-{
-  /** Calculates the decay length of the particle in the laboratory system and its error. If they are well defined returns 0, otherwise 1.
-   ** The production point should be set before calling this function.
-   ** \param[out] L - the decay length
-   ** \param[out] SigmaL - its error
-   **/
-  return KFParticleBaseSIMD::GetDecayLength( L, SigmaL );
-}
-
-inline float_m KFParticleSIMD::GetDecayLengthXY( float_v &L, float_v &SigmaL ) const 
-{
-  /** Calculates the projection in the XY plane of the decay length of the particle in the laboratory 
-   ** system and its error. If they are well defined returns 0, otherwise 1.
-   ** The production point should be set before calling this function.
-   ** \param[out] L - the decay length
-   ** \param[out] SigmaL - its error
-   **/
-  return KFParticleBaseSIMD::GetDecayLengthXY( L, SigmaL );
-}
-
-inline float_m KFParticleSIMD::GetLifeTime( float_v &T, float_v &SigmaT ) const 
-{
-  /** Calculates the lifetime times speed of life (ctau) [cm] of the particle in the  
-   ** center of mass frame and its error. If they are well defined returns 0, otherwise 1.
-   ** The production point should be set before calling this function.
-   ** \param[out] T - lifetime of the particle [cm]
-   ** \param[out] SigmaT - its error
-   **/
-  return KFParticleBaseSIMD::GetLifeTime( T, SigmaT );
-}
-
-inline float_m KFParticleSIMD::GetR( float_v &R, float_v &SigmaR ) const 
-{
-  /** Calculates the distance to the point {0,0,0} and its error. If they are well defined returns 0, otherwise 1.
-   ** \param[out] R - polar angle of the particle
-   ** \param[out] SigmaR - its error
-   **/
-  return KFParticleBaseSIMD::GetR( R, SigmaR );
-}
-
-inline float_v & KFParticleSIMD::X() 
-{ 
-  return KFParticleBaseSIMD::X();    
-}
-
-inline float_v & KFParticleSIMD::Y()
-{ 
-  return KFParticleBaseSIMD::Y();    
-}
-
-inline float_v & KFParticleSIMD::Z() 
-{ 
-  return KFParticleBaseSIMD::Z();    
-}
-
-inline float_v & KFParticleSIMD::Px() 
-{ 
-  return KFParticleBaseSIMD::Px();   
-}
-
-inline float_v & KFParticleSIMD::Py() 
-{ 
-  return KFParticleBaseSIMD::Py();   
-}
-
-inline float_v & KFParticleSIMD::Pz() 
-{ 
-  return KFParticleBaseSIMD::Pz();   
-}
-
-inline float_v & KFParticleSIMD::E() 
-{ 
-  return KFParticleBaseSIMD::E();    
-}
-
-inline float_v & KFParticleSIMD::S() 
-{ 
-  return KFParticleBaseSIMD::S();    
-}
-
-inline int_v    & KFParticleSIMD::Q() 
-{ 
-  return KFParticleBaseSIMD::Q();    
-}
-
-inline float_v & KFParticleSIMD::Chi2() 
-{ 
-  return KFParticleBaseSIMD::Chi2(); 
-}
-
-inline int_v    & KFParticleSIMD::NDF() 
-{ 
-  return KFParticleBaseSIMD::NDF();  
-}
-
-inline float_v & KFParticleSIMD::Parameter ( int i )        
-{ 
-  return KFParticleBaseSIMD::Parameter(i);
-}
-
-inline float_v & KFParticleSIMD::Covariance( int i )        
-{ 
-  return KFParticleBaseSIMD::Covariance(i);
-}
-
-inline float_v & KFParticleSIMD::Covariance( int i, int j ) 
-{ 
-  return KFParticleBaseSIMD::Covariance(i,j); 
-}
-
-inline float_v * KFParticleSIMD::Parameters ()
-{
-  return fP;
-}
-
-inline float_v * KFParticleSIMD::CovarianceMatrix()
-{
-  return fC;
-}
-
-
-inline void KFParticleSIMD::operator +=( const KFParticleSIMD &Daughter )
-{
-  /** Operator to add daughter to the current particle. Calls AddDaughter() function.
-   ** \param[in] Daughter - the daughter particle
-   **/
-#ifdef NonhomogeneousField
-  fField = Daughter.fField;
-#endif
-  KFParticleBaseSIMD::operator +=( Daughter );
-}
-  
-
-inline void KFParticleSIMD::AddDaughter( const KFParticleSIMD &Daughter )
-{
-  /** Adds daughter to the current particle. Depending on the selected construction method uses: \n
-   ** 1) Either simplifyed fast mathematics which consideres momentum and energy as
-   ** independent variables and thus ignores constraint on the fixed mass (fConstructMethod = 0).
-   ** In this case the mass of the daughter particle can be corrupted when the constructed vertex
-   ** is added as the measurement and the mass of the output short-lived particle can become 
-   ** unphysical - smaller then the threshold. Implemented in the 
-   ** AddDaughterWithEnergyFit() function \n
-   ** 2) Or slower but correct mathematics which requires that the masses of daughter particles 
-   ** stays fixed in the construction process (fConstructMethod = 2). Implemented in the
-   ** AddDaughterWithEnergyFitMC() function.
-   ** \param[in] Daughter - the daughter particle
-   **/
-#ifdef NonhomogeneousField
-  fField = Daughter.fField;
-#endif
-  KFParticleBaseSIMD::AddDaughter( Daughter );
-}
-
-inline void KFParticleSIMD::Construct( const KFParticleSIMD *vDaughters[], int nDaughters, 
-                                       const KFParticleSIMD *ProdVtx,   Float_t Mass )
-{
-  /** Constructs a short-lived particle from a set of daughter particles:\n
-   ** 1) all parameters of the "this" objects are initialised;\n
-   ** 2) daughters are added one after another;\n
-   ** 3) if Parent pointer is not null, the production vertex is set to it;\n
-   ** 4) if Mass hypothesis >=0 the mass constraint is set.
-   ** \param[in] vDaughters - array of daughter particles
-   ** \param[in] nDaughters - number of daughter particles in the input array
-   ** \param[in] Parent - optional parrent particle
-   ** \param[in] Mass - optional mass hypothesis
-   **/  
-#ifdef NonhomogeneousField
-  fField = vDaughters[0]->fField;
-#endif
-  KFParticleBaseSIMD::Construct( ( const KFParticleBaseSIMD**)vDaughters, nDaughters, 
-                                 ( const KFParticleBaseSIMD*)ProdVtx, Mass );
+  return GetMomentum( P, SigmaP );
 }
 
 inline void KFParticleSIMD::TransportToPoint( const float_v xyz[] )
@@ -960,21 +771,20 @@ inline float_v KFParticleSIMD::GetDStoPoint( const float_v xyz[3], float_v dsdr[
    ** 1) l - signed distance to the DCA point with the input xyz point;\n
    ** 2) p - momentum of the particle; \n
    ** Also calculates partial derivatives dsdr of the parameter dS over the state vector of the current particle.
-   ** If "HomogeneousField" is defined KFParticleBaseSIMD::GetDStoPointBz() is called,
-   ** if "NonhomogeneousField" is defined - KFParticleBaseSIMD::GetDStoPointCBM()
+   ** If "HomogeneousField" is defined GetDStoPointBz() is called,
+   ** if "NonhomogeneousField" is defined - GetDStoPointCBM()
    ** \param[in] xyz[3] - point, to which particle should be transported
    ** \param[out] dsdr[6] = ds/dr partial derivatives of the parameter dS over the state vector of the current particle
    ** \param[in] param - optional parameter, is used in case if the parameters of the particle are rotated
    ** to other coordinate system (see GetDStoPointBy() function), otherwise fP are used
    **/
 #ifdef HomogeneousField
-  return KFParticleBaseSIMD::GetDStoPointBz( GetFieldAlice(), xyz, dsdr );
+  return GetDStoPointBz( GetFieldAlice(), xyz, dsdr );
 #endif
 #ifdef NonhomogeneousField
-  return KFParticleBaseSIMD::GetDStoPointCBM( xyz, dsdr );
+  return GetDStoPointCBM( xyz, dsdr );
 #endif
 }
-
 
 #ifdef HomogeneousField
 inline float_v KFParticleSIMD::GetFieldAlice()
@@ -1012,7 +822,7 @@ inline void KFParticleSIMD::GetFieldValue( const float_v xyz[], float_v B[] ) co
 }
 #endif
 
-inline void KFParticleSIMD::GetDStoParticle( const KFParticleBaseSIMD &p, float_v dS[2], float_v dsdr[4][6] )const
+inline void KFParticleSIMD::GetDStoParticle( const KFParticleSIMD &p, float_v dS[2], float_v dsdr[4][6] )const
 {
   /** Calculates dS = l/p parameters for two particles, where \n
    ** 1) l - signed distance to the DCA point with the other particle;\n
@@ -1024,36 +834,36 @@ inline void KFParticleSIMD::GetDStoParticle( const KFParticleBaseSIMD &p, float_
    ** 3) dsdr[2][6] = d(dS[1])/d(param1);\n
    ** 4) dsdr[3][6] = d(dS[1])/d(param2);\n
    ** where param1 are parameters of the current particle fP and
-   ** param2 are parameters of the second particle p.fP. If "HomogeneousField" is defined KFParticleBaseSIMD::GetDStoParticleBz() is called,
-   ** if "NonhomogeneousField" is defined - KFParticleBaseSIMD::GetDStoParticleCBM()
+   ** param2 are parameters of the second particle p.fP. If "HomogeneousField" is defined GetDStoParticleBz() is called,
+   ** if "NonhomogeneousField" is defined - GetDStoParticleCBM()
    ** \param[in] p - second particle
    ** \param[out] dS[2] - transport parameters dS for the current particle (dS[0]) and the second particle "p" (dS[1])
    ** \param[out] dsdr[4][6] - partial derivatives of the parameters dS[0] and dS[1] over the state vectors of the both particles
    **/
 #ifdef HomogeneousField
-  KFParticleBaseSIMD::GetDStoParticleBz( GetFieldAlice(), p, dS, dsdr ) ;
+  GetDStoParticleBz( GetFieldAlice(), p, dS, dsdr ) ;
 #endif
 #ifdef NonhomogeneousField
-  KFParticleBaseSIMD::GetDStoParticleCBM( p, dS, dsdr ) ;
+  GetDStoParticleCBM( p, dS, dsdr ) ;
 #endif
 }
 
-inline void KFParticleSIMD::GetDStoParticleFast( const KFParticleBaseSIMD &p, float_v dS[2] )const
+inline void KFParticleSIMD::GetDStoParticleFast( const KFParticleSIMD &p, float_v dS[2] )const
 {
   /** Calculates dS = l/p parameters for two particles, where \n
    ** 1) l - signed distance to the DCA point with the other particle;\n
    ** 2) p - momentum of the particleю \n
    ** dS[0] is the transport parameter for the current particle, dS[1] - for the particle "p".
-   ** If "HomogeneousField" is defined KFParticleBaseSIMD::GetDStoParticleBz() is called,
-   ** if "NonhomogeneousField" is defined - KFParticleBaseSIMD::GetDStoParticleCBM()
+   ** If "HomogeneousField" is defined GetDStoParticleBz() is called,
+   ** if "NonhomogeneousField" is defined - GetDStoParticleCBM()
    ** \param[in] p - second particle
    ** \param[out] dS[2] - transport parameters dS for the current particle (dS[0]) and the second particle "p" (dS[1])
    **/
 #ifdef HomogeneousField
-  KFParticleBaseSIMD::GetDStoParticleBz( GetFieldAlice(), p, dS ) ;
+  GetDStoParticleBz( GetFieldAlice(), p, dS ) ;
 #endif
 #ifdef NonhomogeneousField
-  KFParticleBaseSIMD::GetDStoParticleCBM( p, dS ) ;
+  GetDStoParticleCBM( p, dS ) ;
 #endif
 }
 
@@ -1061,8 +871,8 @@ inline void KFParticleSIMD::Transport( float_v dS, const float_v* dsdr, float_v 
 {
   /** Transports the parameters and their covariance matrix of the current particle
    ** on a length defined by the transport parameter dS = l/p, where l is the signed distance and p is 
-   ** the momentum of the current particle. If "HomogeneousField" is defined KFParticleBaseSIMD::TransportBz()
-   ** is called, if "NonhomogeneousField" - KFParticleBaseSIMD::TransportCBM().
+   ** the momentum of the current particle. If "HomogeneousField" is defined TransportBz()
+   ** is called, if "NonhomogeneousField" - TransportCBM().
    ** The obtained parameters and covariance matrix are stored to the arrays P and 
    ** C respectively. P and C can be set to the parameters fP and covariance matrix fC of the current particle. In this
    ** case the particle parameters will be modified. Dependence of the transport parameter dS on the state vector of the
@@ -1082,10 +892,10 @@ inline void KFParticleSIMD::Transport( float_v dS, const float_v* dsdr, float_v 
    ** with the state vector r1, to which the current particle is being transported, F1 = d(fP new)/d(r1)
    **/ 
 #ifdef HomogeneousField
-  KFParticleBaseSIMD::TransportBz( GetFieldAlice(), dS, dsdr, P, C, dsdr1, F, F1, fullC );
+  TransportBz( GetFieldAlice(), dS, dsdr, P, C, dsdr1, F, F1, fullC );
 #endif
 #ifdef NonhomogeneousField
-  KFParticleBaseSIMD::TransportCBM( dS, dsdr, P, C, dsdr1, F, F1 );
+  TransportCBM( dS, dsdr, P, C, dsdr1, F, F1 );
 #endif
 }
 
@@ -1093,8 +903,8 @@ inline void KFParticleSIMD::TransportFast( float_v dS, float_v P[] ) const
 {
   /** Transports the parametersof the current particle
    ** on a length defined by the transport parameter dS = l/p, where l is the signed distance and p is 
-   ** the momentum of the current particle. If "HomogeneousField" is defined KFParticleBaseSIMD::TransportBz()
-   ** is called, if "NonhomogeneousField" - KFParticleBaseSIMD::TransportCBM().
+   ** the momentum of the current particle. If "HomogeneousField" is defined TransportBz()
+   ** is called, if "NonhomogeneousField" - TransportCBM().
    ** The obtained parameters are stored to the array P.
    ** P can be set to the parameters fP of the current particle. In this
    ** case the particle parameters will be modified. 
@@ -1102,14 +912,14 @@ inline void KFParticleSIMD::TransportFast( float_v dS, float_v P[] ) const
    ** \param[out] P[8] - array, where transported parameters should be stored
    **/ 
 #ifdef HomogeneousField
-  KFParticleBaseSIMD::TransportBz( GetFieldAlice(), dS, P );
+  TransportBz( GetFieldAlice(), dS, P );
 #endif
 #ifdef NonhomogeneousField
-  KFParticleBaseSIMD::TransportCBM( dS, P );
+  TransportCBM( dS, P );
 #endif
 }
 
-inline void KFParticleSIMD::Load(KFPTrackVector &track, int index, const int_v& pdg)
+inline void KFParticleSIMD::Load(const KFPTrackVector &track, int index, const int_v& pdg)
 {
   /** Create a particle from a set of consequetive tracks stored in the KFPTrackVector format
    ** starting from the index "index".
@@ -1162,8 +972,6 @@ inline void KFParticleSIMD::Load(KFPTrackVector &track, int index, const int_v& 
   fP[7] = 0;
   fNDF = 0;
   fChi2 = 0;
-  fAtProductionVertex = 0;
-  fSFromDecay = 0;
 
   float_v energyInv = 1.f/energy;
   float_v 
@@ -1179,7 +987,7 @@ inline void KFParticleSIMD::Load(KFPTrackVector &track, int index, const int_v& 
   fC[26] = h0*fC[18] + h1*fC[19] + h2*fC[20];
   fC[27] = ( h0*h0*fC[ 9] + h1*h1*fC[14] + h2*h2*fC[20] 
            + 2*(h0*h1*fC[13] + h0*h2*fC[18] + h1*h2*fC[19] ) );
-  for( Int_t i=28; i<36; i++ ) fC[i] = 0.f;
+  for( int i=28; i<36; i++ ) fC[i] = 0.f;
   fC[35] = 1.f;
 
   SumDaughterMass = mass;

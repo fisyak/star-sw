@@ -42,7 +42,7 @@ class KFParticleDatabase
  public:
   KFParticleDatabase();
 
-  virtual ~KFParticleDatabase() {};
+  ~KFParticleDatabase() {}
 
   float GetMass(const int pdg) const
   {

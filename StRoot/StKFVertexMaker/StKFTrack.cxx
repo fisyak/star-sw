@@ -78,7 +78,7 @@ void StKFTrack::ResetParticle() {
     cout << "StKFTrack::ResetParticle: T = " << T << " fW = " << fW << " fWeight = " << fWeight << " scale " << scale << endl;
     fParticle.Print("");
   }
-  Float_t *CovXyz  =  fParticle.CovarianceMatrix();
+  Float_t *CovXyz  = &fParticle.Covariance(0);
   //  for (Int_t j = 0; j < 21; j++) CovXyz[j] *= 1./fWeight;
   //  for (Int_t j = 0; j < 21; j++) CovXyz[j] *= 1./TMath::Sqrt(fW);
   //  for (Int_t j = 0; j < 21; j++) CovXyz[j] *= 1./(fW*fWeight);
