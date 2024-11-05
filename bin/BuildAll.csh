@@ -7,12 +7,12 @@ foreach root (root6 root5)
   switch ($domain) 
     case "*local":
     case "*starp.bnl.gov":
-	set list = "gcc gcc631  gcc/12 gcc/13"; # gcc531 gcc/6.3 gcc7 gcc8 gcc9 gcc/10.1.0";
+	set list = "gcc gcc631  gcc/11 gcc/12 gcc/13"; # gcc531 gcc/6.3 gcc7 gcc8 gcc9 gcc/10.1.0";
     breaksw
     case "*bnl.gov":
     #    set list = "gcc482 gcc492 gcc/6.3 gcc/10";
 #	set list = "gcc" #  gcc/6.3  gcc/10.1.0"
-	set list = "gcc gcc/12"#  gcc/13" #  gcc/6.3  gcc/11"
+	set list = "gcc gcc/11 gcc/12"#  gcc/13" #  gcc/6.3  gcc/11"
     breaksw
   endsw
   set gcc_list = "${list}"
