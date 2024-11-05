@@ -1,4 +1,4 @@
-//*-- Author : Yuri Fisyak 02/02/2016
+//*-- Author : Maksym Zyzak & Yuri Fisyak 02/02/2016
 #include "StKFParticleAnalysisMaker.h"
 #include "TDirectory.h"
 #include "TNtuple.h"
@@ -33,11 +33,12 @@
 //--- StRefMult class ---
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "StRefMultCorr/CentralityMaker.h"
+#include "StDetectorDbMaker/St_beamInfoC.h"
 ClassImp(StKFParticleAnalysisMaker);
 
 //________________________________________________________________________________
 StKFParticleAnalysisMaker::StKFParticleAnalysisMaker(const char *name) : StMaker(name), fNTrackTMVACuts(0), fIsPicoAnalysis(true), fdEdXMode(1), 
-  fStoreTmvaNTuples(false), fProcessSignal(false), fCollectTrackHistograms(false), fCollectPIDHistograms(false),fCollectPVHistograms(false),fTMVAselection(false), 
+  fStoreTmvaNTuples(false), fProcessSignal(false), fCollectTrackHistograms(false), fCollectPIDHistograms(false),fCollectPVHistograms(true),fTMVAselection(false), 
   fFlowAnalysis(false), fFlowChain(NULL), fFlowRunId(-1), fFlowEventId(-1), fCentrality(-1), fFlowFiles(), fFlowMap(), 
   fRunCentralityAnalysis(0), fRefmultCorrUtil(0), fCentralityFile(""), fAnalyseDsPhiPi(false), fDecays(0), fIsProduce3DEfficiencyFile(false), f3DEfficiencyFile(""), 
   fStoreCandidates(false), fPartcileCandidate(), fIsStoreCandidate(KFPartEfficiencies::nParticles, false), fCandidateFileName("candidates.root"), fCandidateFile(nullptr), fCandidatesTree(nullptr)
@@ -259,6 +260,10 @@ Int_t StKFParticleAnalysisMaker::InitRun(Int_t runumber)
 //     Int_t Nb = sizeof(ActiveBranches)/sizeof(Char_t *);
 //     for (Int_t i = 0; i < Nb; i++) StPicoDstMaker::instance()->SetStatus(ActiveBranches[i],1); // Set Active braches
 //   }
+  StKFParticleInterface::instance()->SetFixedTarget(St_beamInfoC::instance()->IsFixedTarget());
+  if (GetDateTime().GetYear() == 2018)
+  StKFParticleInterface::instance()->SetFixedTarget2018(St_beamInfoC::instance()->IsFixedTarget());
+  StKFParticleInterface::instance()->SetBeamSpot();
   return StMaker::InitRun(runumber);
 }
 //_____________________________________________________________________________
