@@ -2327,36 +2327,15 @@ float_v KFParticleSIMD::GetDStoPointZBz( const float_v z0 ) const
   return dS;
 }
 
-void KFParticleSIMD::GetDStoCylinderBz( const float_v B, const float_v R, 
-                                            float_v dS[2], const float_v* param ) const
+void KFParticleSIMD::GetDStoCylinderBz( const float_v B, const float_v R, float_v dS[2]) const
 { 
-  /** Calculates dS = l/p parameters for two particles, where \n
-   ** 1) l - signed distance to the DCA point with the other particle;\n
+  /** Calculates 2 dS = l/p parameters from a particle to a cylinder with a radius R and center at (0,0) \n
+   ** 1) l - signed distance to the cylinder; \n
    ** 2) p - momentum of the particle; \n
-   ** under the assumption of the constant homogeneous field Bz. dS[0] is the transport parameter for the current particle,
-   ** dS[1] - for the particle "p".
-   ** Also calculates partial derivatives dsdr of the parameters dS[0] and dS[1] over the state vectors of the particles:\n
-   ** 1) dsdr[0][6] = d(dS[0])/d(param1);\n
-   ** 2) dsdr[1][6] = d(dS[0])/d(param2);\n
-   ** 3) dsdr[2][6] = d(dS[1])/d(param1);\n
-   ** 4) dsdr[3][6] = d(dS[1])/d(param2);\n
-   ** where param1 are parameters of the current particle (if the pointer is not provided it is initialised with fP) and
-   ** param2 are parameters of the second particle "p" (if the pointer is not provided it is initialised with p.fP). Parameters
-   ** param1 and param2 should be either provided both or both set to null pointers.
    ** \param[in] B - magnetic field Bz
-   ** \param[in] p - second particle
-   ** \param[out] dS[2] - transport parameters dS for the current particle (dS[0]) and the second particle "p" (dS[1])
-   ** \param[out] dsdr[4][6] - partial derivatives of the parameters dS[0] and dS[1] over the state vectors of the both particles
-   ** \param[in] param1 - optional parameter, is used in case if the parameters of the current particles are rotated
-   ** to other coordinate system (see GetDStoParticleBy() function), otherwise fP are used
-   ** \param[in] param2 - optional parameter, is used in case if the parameters of the second particles are rotated
-   ** to other coordinate system (see GetDStoParticleBy() function), otherwise p.fP are used
+   ** \param[in] R - radius of the cylinder
+   ** \param[out] dS - l/p for two points of the closest approach with the cylinder
    **/
-  
-  if(!param)
-  {
-    param = fP;
-  }
 
   //* Get dS to another particle for Bz field
   const float_v kCLight = 0.000299792458f;
@@ -2368,8 +2347,8 @@ void KFParticleSIMD::GetDStoCylinderBz( const float_v B, const float_v R,
 
   const float_m& isStraight = abs(bq1) < float_v(1.e-8f);
   
-  const float_v& px1 = param[3];
-  const float_v& py1 = param[4];
+  const float_v& px1 = fP[3];
+  const float_v& py1 = fP[4];
 
   const float_v& px2 = R*bq2;
   const float_v& py2 = 0;
@@ -2377,8 +2356,8 @@ void KFParticleSIMD::GetDStoCylinderBz( const float_v B, const float_v R,
   const float_v& pt12 = px1*px1 + py1*py1;
   const float_v& pt22 = px2*px2 + py2*py2;
 
-  const float_v& x01 = param[0];
-  const float_v& y01 = param[1];
+  const float_v& x01 = fP[0];
+  const float_v& y01 = fP[1];
 
   const float_v& x02 = 0;
   const float_v& y02 = R;

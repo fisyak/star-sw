@@ -333,15 +333,15 @@ class KFParticleSIMD
 
   float_v GetDStoPointXYBz( float_v B, const float_v xy[2] ) const;
   float_v GetDStoPointZBz( const float_v z0 ) const;
-  void GetDStoCylinderBz( const float_v B, const float_v R, float_v dS[2], const float_v* param = 0 ) const;
+  void GetDStoCylinderBz( const float_v B, const float_v R, float_v dS[2] ) const;
 
 #ifdef HomogeneousField
   float_v GetDStoPointXY( const float_v xyz[2] ) const {
     return GetDStoPointXYBz( GetFieldAlice(), xyz );
   }
   //* Get dS to a certain space point 
-  void GetDStoCylinder( const float_v R, float_v dS[2], const float_v* param = 0 ) const {
-    GetDStoCylinderBz( GetFieldAlice(), R, dS, param );
+  void GetDStoCylinder( const float_v R, float_v dS[2] ) const {
+    GetDStoCylinderBz( GetFieldAlice(), R, dS );
   }
 #endif
 

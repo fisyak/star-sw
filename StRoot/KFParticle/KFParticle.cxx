@@ -55,57 +55,6 @@ KFParticle::KFParticle() :fChi2(0), SumDaughterMass(0), fMassHypo(-1), fNDF(-3),
   Clear();
 }
 
-void KFParticle::Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass )
-{
-  /** Sets the parameters of the particle:
-   **
-   ** \param[in] Param[6] = { X, Y, Z, Px, Py, Pz } - position and momentum
-   ** \param[in] Cov[21]  - lower-triangular part of the covariance matrix:@n
-   ** \verbatim
-             (  0  .  .  .  .  . )
-             (  1  2  .  .  .  . )
-   Cov[21] = (  3  4  5  .  .  . )
-             (  6  7  8  9  .  . )
-             ( 10 11 12 13 14  . )
-             ( 15 16 17 18 19 20 )
-   \endverbatim
-   ** \param[in] Charge - charge of the particle in elementary charge units
-   ** \param[in] mass - the mass hypothesis
-   **/
-
-
-  for( Int_t i=0; i<6 ; i++ ) fP[i] = Param[i];
-  for( Int_t i=0; i<21; i++ ) fC[i] = Cov[i];
-
-  float energy = sqrt( Mass*Mass + fP[3]*fP[3] + fP[4]*fP[4] + fP[5]*fP[5]);
-  fP[6] = energy;
-  fP[7] = 0;
-  fQ = Charge;
-  fNDF = 0;
-  fChi2 = 0;
-
-  float energyInv = 1./energy;
-  float 
-    h0 = fP[3]*energyInv,
-    h1 = fP[4]*energyInv,
-    h2 = fP[5]*energyInv;
-
-  fC[21] = h0*fC[ 6] + h1*fC[10] + h2*fC[15];
-  fC[22] = h0*fC[ 7] + h1*fC[11] + h2*fC[16];
-  fC[23] = h0*fC[ 8] + h1*fC[12] + h2*fC[17];
-  fC[24] = h0*fC[ 9] + h1*fC[13] + h2*fC[18];
-  fC[25] = h0*fC[13] + h1*fC[14] + h2*fC[19];
-  fC[26] = h0*fC[18] + h1*fC[19] + h2*fC[20];
-  fC[27] = ( h0*h0*fC[ 9] + h1*h1*fC[14] + h2*h2*fC[20] 
-	     + 2*(h0*h1*fC[13] + h0*h2*fC[18] + h1*h2*fC[19] ) );
-  for( Int_t i=28; i<36; i++ ) fC[i] = 0;
-  fC[35] = 1.;
-
-  SumDaughterMass = Mass;
-  fMassHypo = Mass;
-}
-
-
 void KFParticle::Clear(Option_t *option) {
   Initialize();
   fIdTruth = 0;
@@ -1750,6 +1699,74 @@ float KFParticle::GetDStoPointCBM( const float xyz[3], float dsdr[6] ) const
   dS = GetDStoPointBy( fld[1], xyz, dsdr );
   
   return dS;
+}
+
+void KFParticle::GetDStoCylinderBz( const float B, const float R, float dS[2]) const
+{ 
+  /** Calculates 2 dS = l/p parameters from a particle to a cylinder with a radius R and center at (0,0) \n
+   ** 1) l - signed distance to the cylinder; \n
+   ** 2) p - momentum of the particle; \n
+   ** \param[in] B - magnetic field Bz
+   ** \param[in] R - radius of the cylinder
+   ** \param[out] dS - l/p for two points of the closest approach with the cylinder
+   **/
+
+  //* Get dS to another particle for Bz field
+  const float kCLight = 0.000299792458f;
+
+  //in XY plane
+  //first root    
+  const float& bq1 = B*static_cast<float>(fQ)*kCLight;
+  const float& bq2 = B*kCLight;
+
+  const bool& isStraight = fabsf(bq1) < float(1.e-8f);
+  
+  const float& px1 = fP[3];
+  const float& py1 = fP[4];
+
+  const float& px2 = R*bq2;
+  const float& py2 = 0;
+
+  const float& pt12 = px1*px1 + py1*py1;
+  const float& pt22 = px2*px2 + py2*py2;
+
+  const float& x01 = fP[0];
+  const float& y01 = fP[1];
+
+  const float& x02 = 0;
+  const float& y02 = R;
+
+  const float& dx0 = (x01 - x02);
+  const float& dy0 = (y01 - y02);
+  const float& dr02 = dx0*dx0 + dy0*dy0;
+  const float& drp1  = dx0*px1 + dy0*py1;
+  const float& dxyp1 = dx0*py1 - dy0*px1;
+  const float& dxyp2 = dx0*py2 - dy0*px2;
+  const float& p1p2 = px1*px2 + py1*py2;
+  const float& dp1p2 = px1*py2 - px2*py1;
+  
+  const float& k11 = (bq2*drp1 - dp1p2);
+  const float& k21 = (bq1*(bq2*dxyp1 - p1p2) + bq2*pt12);
+  
+  const float& kp = (dxyp1*bq2 - dxyp2*bq1 - p1p2);
+  const float& kd = dr02/2.f*bq1*bq2 + kp;
+  const float& c1 = -(bq1*kd + pt12*bq2);
+  
+  float d1 = pt12*pt22 - kd*kd;
+  d1 = d1 < 0.f ? 0.f : d1;
+  d1 = sqrt( d1 );
+    
+  // find two points of closest approach in XY plane
+  if( ! isStraight )
+  {
+    dS[0] = std::atan2( (bq1*k11*c1 + k21*d1*bq1), (bq1*k11*d1*bq1 - k21*c1) )/bq1;
+    dS[1] = std::atan2( (bq1*k11*c1 - k21*d1*bq1), (-bq1*k11*d1*bq1 - k21*c1) )/bq1;    
+  }
+  else if(pt12>0.f)
+  {
+    dS[0] = (k11*c1 + k21*d1)/(- k21*c1);
+    dS[1] = (k11*c1 - k21*d1)/(- k21*c1);    
+  }
 }
 
 void KFParticle::GetDStoParticleBz( float Bz, const KFParticle &p, float dS[2], float dsdr[4][6], const float* param1, const float* param2 )  const

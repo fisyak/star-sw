@@ -91,8 +91,8 @@ class KFParticle : public TObject
   //* Initialise covariance matrix and set current parameters to 0.0 
 
   void Initialize();
-
   void Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass );
+
   //*
   //*  ACCESSORS
   //*
@@ -283,6 +283,15 @@ class KFParticle : public TObject
   void GetDStoParticleBy( float B,  const KFParticle &p, float dS[2], float dsdr[4][6] ) const ;
   void GetDStoParticleCBM( const KFParticle &p, float dS[2], float dsdr[4][6] ) const ;
 
+  void GetDStoCylinderBz( const float B, const float R, float dS[2]) const;
+
+#ifdef HomogeneousField
+  //* Get dS to a certain space point 
+  void GetDStoCylinder( const float R, float dS[2]) const {
+    GetDStoCylinderBz( GetFieldAlice(), R, dS);
+  }
+#endif
+
   //* 
   //* OTHER UTILITIES
   //*
@@ -381,6 +390,11 @@ class KFParticle : public TObject
 
   static void InvertCholetsky3(float a[6]);
 
+  /** Converts a pair of indices {i,j} of the covariance matrix to one index corresponding to the triangular form. */
+  static Int_t IJ( Int_t i, Int_t j ){ 
+    return ( j<=i ) ? i*(i+1)/2+j :j*(j+1)/2+i;
+  }
+
   //*
   //*  INTERNAL STUFF
   //* 
@@ -393,12 +407,6 @@ class KFParticle : public TObject
 
   static void MultQSQt( const float Q[], const float S[], float SOut[], const int kN );
 
- public:
-  /** Converts a pair of indices {i,j} of the covariance matrix to one index corresponding to the triangular form. */
-  static Int_t IJ( Int_t i, Int_t j ){ 
-    return ( j<=i ) ? i*(i+1)/2+j :j*(j+1)/2+i;
-  }
- protected:
   /** Return an element of the covariance matrix with {i,j} indices. */
   float & Cij( Int_t i, Int_t j ){ return fC[IJ(i,j)]; }
 
@@ -449,26 +457,6 @@ class KFParticle : public TObject
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //---------------------------------------------------------------------
 //
 //     Inline implementation of the KFParticle methods
@@ -504,6 +492,55 @@ inline void KFParticle::Initialize()
   fQ = 0;
   SumDaughterMass = 0;
   fMassHypo = -1;
+}
+
+inline void KFParticle::Initialize( const float Param[], const float Cov[], Int_t Charge, float Mass )
+{
+  /** Sets the parameters of the particle:
+   **
+   ** \param[in] Param[6] = { X, Y, Z, Px, Py, Pz } - position and momentum
+   ** \param[in] Cov[21]  - lower-triangular part of the covariance matrix:@n
+   ** \verbatim
+             (  0  .  .  .  .  . )
+             (  1  2  .  .  .  . )
+   Cov[21] = (  3  4  5  .  .  . )
+             (  6  7  8  9  .  . )
+             ( 10 11 12 13 14  . )
+             ( 15 16 17 18 19 20 )
+   \endverbatim
+   ** \param[in] Charge - charge of the particle in elementary charge units
+   ** \param[in] mass - the mass hypothesis
+   **/
+
+  for( Int_t i=0; i<6 ; i++ ) fP[i] = Param[i];
+  for( Int_t i=0; i<21; i++ ) fC[i] = Cov[i];
+
+  float energy = sqrt( Mass*Mass + fP[3]*fP[3] + fP[4]*fP[4] + fP[5]*fP[5]);
+  fP[6] = energy;
+  fP[7] = 0;
+  fQ = Charge;
+  fNDF = 0;
+  fChi2 = 0;
+
+  float energyInv = 1./energy;
+  float 
+    h0 = fP[3]*energyInv,
+    h1 = fP[4]*energyInv,
+    h2 = fP[5]*energyInv;
+
+  fC[21] = h0*fC[ 6] + h1*fC[10] + h2*fC[15];
+  fC[22] = h0*fC[ 7] + h1*fC[11] + h2*fC[16];
+  fC[23] = h0*fC[ 8] + h1*fC[12] + h2*fC[17];
+  fC[24] = h0*fC[ 9] + h1*fC[13] + h2*fC[18];
+  fC[25] = h0*fC[13] + h1*fC[14] + h2*fC[19];
+  fC[26] = h0*fC[18] + h1*fC[19] + h2*fC[20];
+  fC[27] = ( h0*h0*fC[ 9] + h1*h1*fC[14] + h2*h2*fC[20] 
+            + 2*(h0*h1*fC[13] + h0*h2*fC[18] + h1*h2*fC[19] ) );
+  for( Int_t i=28; i<36; i++ ) fC[i] = 0;
+  fC[35] = 1.;
+
+  SumDaughterMass = Mass;
+  fMassHypo = Mass;
 }
 
 inline float KFParticle::GetP    () const
