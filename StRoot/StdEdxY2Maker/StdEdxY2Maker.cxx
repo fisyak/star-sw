@@ -1108,22 +1108,22 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
     Bool_t fSetDefaultSumw2 = TH1::GetDefaultSumw2();
     TH1::SetDefaultSumw2(kFALSE);
 #ifdef __BEST_VERTEX__
-    PVxyz         = new TH3F("PVxyz","xyz for all primary vertices : x : y : z",100,-10,10,100,-10,10,210,-210,210); 
-    PVxyzC        = new TH3F("PVxyzC","xyz for the best primary vertex : x : y : z",100,-10,10,100,-10,10,210,-210,210); 
-    EtaVspT[0][0] = new TH2F("EtaVspTGlP","Eta vs Log_{10}p_{T} for All positive tracks : Log_{10}p_{T}:  #eta ", 350, -2, 1.5, 600, -3.0, 3.0);
-    EtaVspT[0][1] = new TH2F("EtaVspTGlN","Eta vs Log_{10}p_{T} for All negative tracks : Log_{10}p_{T}:  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
-    EtaVspT[1][0] = new TH2F("EtaVspTPrP","Eta vs Log_{10}p_{T} for All positive primary tracks : Log_{10}p_{T}:  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
-    EtaVspT[1][1] = new TH2F("EtaVspTPrN","Eta vs Log_{10}p_{T} for All negative primary tracks : Log_{10}p_{T}:  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
-    EtaVspTC[0]   = new TH2F("EtaVspTPC","Eta vs Log_{10}p_{T} for All positive global tracks used for calibration : Log_{10} p_{T} :  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
-    EtaVspTC[1]   = new TH2F("EtaVspTNC","Eta vs Log_{10}p_{T} for All negative global tracks used for calibration : Log_{10} p_{T} :  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
+    PVxyz         = new TH3F("PVxyz","xyz for all primary vertices ; x ; y ; z",100,-10,10,100,-10,10,210,-210,210); 
+    PVxyzC        = new TH3F("PVxyzC","xyz for the best primary vertex ; x ; y ; z",100,-10,10,100,-10,10,210,-210,210); 
+    EtaVspT[0][0] = new TH2F("EtaVspTGlP","Eta vs Log_{10}p_{T} for All positive tracks ; Log_{10}p_{T} ;  #eta ", 350, -2, 1.5, 600, -3.0, 3.0);
+    EtaVspT[0][1] = new TH2F("EtaVspTGlN","Eta vs Log_{10}p_{T} for All negative tracks ; Log_{10}p_{T} ;  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
+    EtaVspT[1][0] = new TH2F("EtaVspTPrP","Eta vs Log_{10}p_{T} for All positive primary tracks ; Log_{10}p_{T} ;  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
+    EtaVspT[1][1] = new TH2F("EtaVspTPrN","Eta vs Log_{10}p_{T} for All negative primary tracks ; Log_{10}p_{T} ;  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
+    EtaVspTC[0]   = new TH2F("EtaVspTPC","Eta vs Log_{10}p_{T} for All positive global tracks used for calibration ; Log_{10} p_{T} ;  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
+    EtaVspTC[1]   = new TH2F("EtaVspTNC","Eta vs Log_{10}p_{T} for All negative global tracks used for calibration ; Log_{10} p_{T} ;  #eta", 350, -2, 1.5, 600, -3.0, 3.0);
 #endif /* __BEST_VERTEX__ */
-    mHitsUsage  = new TH2F("HitsUsage","log10(No.of Used in dE/dx hits) versus log10(Total no. of Tpc Hits) : log10(Total no. of Tpc Hits) : log10(No.of Used in dE/dx hits)",
+    mHitsUsage  = new TH2F("HitsUsage","log10(No.of Used in dE/dx hits) versus log10(Total no. of Tpc Hits) ; log10(Total no. of Tpc Hits) ; log10(No.of Used in dE/dx hits)",
 			   80,0,8,60,0,6);
     Int_t      nZBins = 200;
     Double_t ZdEdxMin = -5;
     Double_t ZdEdxMax =  5;
-    ZdcCP  = new TH2F("ZdcCP","ZdcCoincidenceRate (log10) : ",100,0,10,nZBins,ZdEdxMin,ZdEdxMax);
-    BBCP   = new TH2F("BBCP","BbcCoincidenceRate (log10)",60,0,6,nZBins,ZdEdxMin,ZdEdxMax);
+    ZdcCP  = new TH2F("ZdcCP","ZdcCoincidenceRate :                log_{10} Zdc ",100,0,10,nZBins,ZdEdxMin,ZdEdxMax);
+    BBCP   = new TH2F("BBCP","BbcCoincidenceRate : log_{10} Bbc",60,0,6,nZBins,ZdEdxMin,ZdEdxMax);
     // TPoints block
     const Char_t *NS[2] = {"P",""};
     const Char_t *TS[2] = {"Positive","Negative"};
@@ -1138,23 +1138,23 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
       if (! fUsedNdx && t >= 4) continue;
       for (Int_t s = 0; s < 2; s++) {// charge 0 => "+", 1 => "-"
  	TPoints[s][t]   = new TH3F(Form("TPoints%s%s",N[t],NS[s]),
-				   Form("%s versus Length in Tpc and <log_{2}(dX)> in TPC - iTPC %s p > 0.4 GeV/c : length (cm) : log_{2}(dX) : %s",T[t],TS[s],T[t]),
+				   Form("%s versus Length in Tpc and <log_{2}(dX)> in TPC - iTPC %s p > 0.4 GeV/c ; length (cm) ; log_{2}(dX) ; %s",T[t],TS[s],T[t]),
 	             	      190,10,200., Nlog2dx, log2dxLow, log2dxHigh, 500,-1.,4.);
 	NPoints[s][t]   = new TH3F(Form("NPoints%s%s",N[t],NS[s]),
-				   Form("%s versus no. dEdx points in Tpc and #eta_{G} for %s p > 0.4 GeV/c : no. dEdx points : #eta_{G} : %s",T[t],TS[s],T[t]),
+				   Form("%s versus no. dEdx points in Tpc and #eta_{G} for %s p > 0.4 GeV/c ; no. dEdx points ; #eta_{G} ; %s",T[t],TS[s],T[t]),
 				      100,0.5,100.5, 50, -3, 2, 500,-1.,4.);
 #ifdef  __FIT_PULLS__
 	Pulls[s][t] = new TH2F(Form("Pull%s%s",N[t],NS[s]),
-			       Form("Pull %s versus Length in TPC %s : length (cm) : %s",T[t],TS[s],T[t]),
+			       Form("Pull %s versus Length in TPC %s ; length (cm) ; %s",T[t],TS[s],T[t]),
 			       190,10.,200,nZBins,ZdEdxMin,ZdEdxMax);
 	nPulls[s][t] = new TH2F(Form("nPull%s%s",N[t],NS[s]),
-				Form("Pull %s %s versus no. dEdx points in TPC : No. dEdx points : %s",T[t],TS[s],T[t]),
+				Form("Pull %s %s versus no. dEdx points in TPC ; No. dEdx points ; %s",T[t],TS[s],T[t]),
 			       100,0.5,100.5,nZBins,ZdEdxMin,ZdEdxMax);
 #endif /*  __FIT_PULLS__ */
 #ifdef __ETA_PLOTS__
 	if (s == 0 && t < 2) {
 	  Eta[t] = new TH2F(Form("Eta%s",N[t]),
-			    Form("%s for primary tracks versus Eta for |zPV| < 10cm and TpcLength > 40cm, TPC - iTPC : #eta : %s",T[t],T[t]),
+			    Form("%s for primary tracks versus Eta for |zPV| < 10cm and TpcLength > 40cm, TPC - iTPC ; #eta ; %s",T[t],T[t]),
 			    100,-2.5,2.5,500,-1.,4.);
 	}
 #endif /*  __ETA_PLOTS__ */
