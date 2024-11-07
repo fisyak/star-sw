@@ -16,7 +16,7 @@ ofstream out;
 TF1 *FitGaus(TH1 *hist) {
   TF1 *gaus = 0;
   if (! hist) return gaus;
-  Int_t iok = hist->Fit("gaus");
+  Int_t iok = hist->Fit("gaus","i");
   if (iok) return gaus;
   if (c1) c1->Update();
   if (Ask()) return gaus;
@@ -38,7 +38,7 @@ void PVxyz() {
   TDirectory *dir = gDirectory;
   TString tag(gSystem->BaseName(dir->GetName()));
   fName += tag;
-  tag.ReplaceAll(".root",".C");
+  tag.ReplaceAll(".root",".txt");
   TString cOut("beamSpot.");
   cOut += tag;
   TFile *fOut = new TFile(fName,"recreate");
