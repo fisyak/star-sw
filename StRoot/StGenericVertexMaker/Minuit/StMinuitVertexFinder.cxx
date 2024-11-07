@@ -28,7 +28,7 @@
 #include "St_base/StMessMgr.h"
 #ifdef __TFG__VERSION__
 #include "StDetectorDbMaker/St_beamInfoC.h"
-#include "StDetectorDbMaker/St_beamLineC.h"
+#include "StDetectorDbMaker/St_beamSpotC.h"
 #include "TMath.h"
 #endif /*  __TFG__VERSION__ */
 std::vector<UShort_t>           StMinuitVertexFinder::mHelixFlags;
@@ -425,8 +425,8 @@ int StMinuitVertexFinder::fit(StEvent* event)
       if (TMath::Abs(gDCA->impact()) >  mRImpactMax) continue;
       Double_t z_lin = gDCA->z();
 #else /* __TFG__VERSION__ */ 
-      static Double_t xBeam = St_beamLineC::instance()->X();
-      static Double_t yBeam = St_beamLineC::instance()->Y();
+      static Double_t xBeam = St_beamSpotC::instance()->X();
+      static Double_t yBeam = St_beamSpotC::instance()->Y();
       THelixTrack thelix = gDCA->thelix();
       Double_t step = thelix.Path(xBeam, yBeam);
       Double_t xyz[3];

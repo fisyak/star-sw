@@ -3237,8 +3237,8 @@ void St_SurveyC::GetGraphs(const St_Survey* table, TGraph* g[6]) {
 //__________________Calibrations/rhic______________________________________________________________
 #include "St_vertexSeedC.h"
 MakeChairInstance(vertexSeed,Calibrations/rhic/vertexSeed);
-#include "St_beamLineC.h"
-MakeChairInstance(beamLine,Calibrations/rhic/beamLine);
+#include "St_beamSpotC.h"
+MakeChairInstance(beamSpot,Calibrations/rhic/beamSpot);
 //__________________Calibrations/tof______________________________________________________________
 #include "St_tofCorrC.h"
 ClassImp(St_tofCorrC);
