@@ -24,6 +24,7 @@
 #include "PhysicalConstants.h"
 #else
 #include "StPicoDst.h"
+#include "StEvent/StEnumerations.h"
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/PhysicalConstants.h"
 #endif
@@ -53,6 +54,9 @@ class StPicoTrack : public TObject {
 
   /// Return unique Id of the track
   Int_t   id() const              { return mId; }
+#if defined (__TFG__VERSION__)
+  UInt_t  flagExtension() const { return mFlagExtension; }
+#endif /* __TFG__VERSION__ */
   /// Return chi2 of the track
   Float_t chi2() const            { return mChi2 / 1000.f; }
   /// Return momentum (GeV/c) of the primary track. Return (0,0,0) if not primary track
@@ -212,6 +216,32 @@ class StPicoTrack : public TObject {
 
   /// Set track ID
   void setId(Int_t id)                   { mId = (UShort_t)id; }
+#if defined (__TFG__VERSION__)
+  void  setFlagExtension(UInt_t k)       { mFlagExtension = k; }
+  Bool_t       testBit(UInt_t f) const { return (Bool_t) ((mFlagExtension & f) != 0); }
+  Bool_t       isCtbMatched()            const {return testBit(kCtbMatched);}   
+  Bool_t       isToFMatched()  	   const {return testBit(kToFMatched);}   
+  Bool_t       isBToFMatched()  	   const {return testBit(kToFMatched);}   
+  Bool_t       isBemcMatched() 	   const {return testBit(kBemcMatched);}  
+  Bool_t       isEemcMatched() 	   const {return testBit(kEemcMatched);}  
+  
+  Bool_t       isCtbNotMatched()         const {return testBit(kCtbNotMatched);}
+  Bool_t       isToFNotMatched()  	   const {return testBit(kToFNotMatched);}   
+  Bool_t       isBToFNotMatched()  	   const {return testBit(kToFNotMatched);}   
+  Bool_t       isBemcNotMatched() 	   const {return testBit(kBemcNotMatched);}  
+  Bool_t       isEemcNotMatched() 	   const {return testBit(kEemcNotMatched);}  
+  
+  Bool_t       isDecayTrack()  	   const {return testBit(kDecayTrack);}   
+  Bool_t       isPromptTrack() 	   const {return testBit(kPromptTrack);}       
+  Bool_t       isPostXTrack()            const {return testBit(kPostXTrack);} 
+  Bool_t       isMembraneCrossingTrack() const {return testBit(kXMembrane);} 
+  Bool_t       isShortTrack2EMC()        const {return testBit(kShortTrack2EMC);}
+  Bool_t       isRejected()              const {return testBit(kRejectedTrack);}
+  Bool_t       isWestTpcOnly()           const {return testBit(kWestTpcOnlyTrack);}
+  Bool_t       isEastTpcOnly()           const {return testBit(kEastTpcOnlyTrack);}
+#endif /* __TFG__VERSION__ */
+  /// Return chi2 of the track
+  
   /// Set chi2 of the track
   void setChi2(Float_t chi2);
   /// Set momentum of the primary track
@@ -297,6 +327,9 @@ class StPicoTrack : public TObject {
 
   /// Unique track ID
   UShort_t mId;
+#ifdef __TFG__VERSION__
+  UInt_t  mFlagExtension; // bit wise fast detector matching status
+#endif /* __TFG__VERSION__ */
   /// Chi2 of the track (encoding = chi2*1000)
   UShort_t mChi2;
   /// Px momentum (GeV/c) of the primary track ( 0 if not primary )
@@ -382,7 +415,7 @@ class StPicoTrack : public TObject {
 #if !defined (__TFG__VERSION__)
   ClassDef(StPicoTrack, 8)
 #else
-  ClassDef(StPicoTrack, 10)
+  ClassDef(StPicoTrack, 11)
 #endif
 };
 

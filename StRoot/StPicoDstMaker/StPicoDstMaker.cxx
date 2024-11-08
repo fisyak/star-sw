@@ -1128,6 +1128,9 @@ void StPicoDstMaker::fillTracks() {
 
     // Fill basic track information here
     picoTrk->setId( gTrk->id() );
+#if defined(__TFG__VERSION__)
+    picoTrk->setFlagExtension( gTrk->flagExtension());
+#endif /*  __TFG__VERSION__ */
     picoTrk->setChi2( gTrk->chi2() );
     // Store dE/dx in KeV/cm and its error. Next lines are needed
     // in order to store the values obrained with the same method:

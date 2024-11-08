@@ -26,7 +26,7 @@
 #include "StMuMtdPidTraits.h" /// Bingchu
 #include "StMuPrimaryTrackCovariance.h"
 
-
+#include "StEvent/StEnumerations.h"
 #include "StEvent/StTrackTopologyMap.h"
 #include "StEvent/StRunInfo.h"
 #include "StEvent/StDcaGeometry.h"
@@ -291,6 +291,27 @@ class StMuTrack : public TObject {
     KFPTrack       &kfpTrackAtLastHit()        {return mkfpTrackAtLastHit;}
     const KFPTrack &kfpTrackAtLastHit() const  {return mkfpTrackAtLastHit;}
 #endif
+    Bool_t       testBit(UInt_t f) const { return (Bool_t) ((mFlagExtension & f) != 0); }
+    Bool_t       isCtbMatched()            const {return testBit(kCtbMatched);}   
+    Bool_t       isToFMatched()  	   const {return testBit(kToFMatched);}   
+    Bool_t       isBToFMatched()  	   const {return testBit(kToFMatched);}   
+    Bool_t       isBemcMatched() 	   const {return testBit(kBemcMatched);}  
+    Bool_t       isEemcMatched() 	   const {return testBit(kEemcMatched);}  
+
+    Bool_t       isCtbNotMatched()         const {return testBit(kCtbNotMatched);}
+    Bool_t       isToFNotMatched()  	   const {return testBit(kToFNotMatched);}   
+    Bool_t       isBToFNotMatched()  	   const {return testBit(kToFNotMatched);}   
+    Bool_t       isBemcNotMatched() 	   const {return testBit(kBemcNotMatched);}  
+    Bool_t       isEemcNotMatched() 	   const {return testBit(kEemcNotMatched);}  
+
+    Bool_t       isDecayTrack()  	   const {return testBit(kDecayTrack);}   
+    Bool_t       isPromptTrack() 	   const {return testBit(kPromptTrack);}       
+    Bool_t       isPostXTrack()            const {return testBit(kPostXTrack);} 
+    Bool_t       isMembraneCrossingTrack() const {return testBit(kXMembrane);} 
+    Bool_t       isShortTrack2EMC()        const {return testBit(kShortTrack2EMC);}
+    Bool_t       isRejected()              const {return testBit(kRejectedTrack);}
+    Bool_t       isWestTpcOnly()           const {return testBit(kWestTpcOnlyTrack);}
+    Bool_t       isEastTpcOnly()           const {return testBit(kEastTpcOnlyTrack);}
 #endif /* __TFG__VERSION__ */
 protected:
   Int_t mId;

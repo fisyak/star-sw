@@ -31,7 +31,10 @@ ClassImp(StPicoTrack)
 
 //_________________
 StPicoTrack::StPicoTrack() : TObject(),
-  mId(0),
+  mId(0), 
+#if defined (__TFG__VERSION__)
+  mFlagExtension(0),
+#endif
   mChi2(std::numeric_limits<unsigned short>::max()),
   mPMomentumX(0), mPMomentumY(0), mPMomentumZ(0),
   mGMomentumX(0), mGMomentumY(0), mGMomentumZ(0),
@@ -60,6 +63,10 @@ StPicoTrack::StPicoTrack() : TObject(),
 StPicoTrack::StPicoTrack(const StPicoTrack &track) : TObject() {
 
   mId = track.mId;
+  mDedxError = track.mDedxError;
+#if defined (__TFG__VERSION__)
+  mFlagExtension = track.mFlagExtension;
+#endif
   mChi2 = track.mChi2;
   mPMomentumX = track.mPMomentumX;
   mPMomentumY = track.mPMomentumY;
