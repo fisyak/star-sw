@@ -40,6 +40,7 @@
 #else
 #include "TArrayL64.h"
 #endif
+#include "TEnv.h"
 #include "TClassTable.h"
 #include "TNtuple.h"
 #include "StThreeVectorF.hh"
@@ -99,6 +100,8 @@ Int_t StAnalysisMaker::Finish() {
  */
 Int_t StAnalysisMaker::Make() {
     mEventCounter++;  // increase counter
+    static Bool_t quiet = gEnv->GetValue("quiet", 0);
+    if (quiet) return kStOK;
 	
     //
     //	Get pointer to StEvent
