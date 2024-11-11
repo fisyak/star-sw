@@ -14,10 +14,13 @@ foreach done (`ls -1d ???/*`)
   ls -ltr *.root *.gz *B.log *Chain.log  | tail -1 | grep Chain	
   if ($?) then	
     rm -rf .sl*
-    ln -s ~fisyak/macros/.sl* .	
-   root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
-   root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
-    @ countJ++
+    set n = `ls -1d *MuDst.root | wc -l`
+    if ($n > 0) then
+      ln -s ~fisyak/macros/.sl* .	
+      root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
+      root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
+      @ countJ++
+    endif
   endif
   cd -;
 end

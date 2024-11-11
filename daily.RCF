@@ -1950,3 +1950,40 @@ StMagUtilities::SpaceChargeR2 =  0.00591838 Coulombs/epsilon-nought  EWRatio = 1
 
 
  tChain->Draw("GlobalTracks.mBTofPidTraits.mZLocal:TMath::RadToDeg()*TMath::ATan2(GlobalTracks.mBTofPidTraits.mPosition.mX2,GlobalTracks.mBTofPidTraits.mPosition.mX1)","GlobalTracks.mBTofPidTraits.mYLocal>-10","colz",10000)
+================================================================================
+11/02/2024
+ find . -name "*.root" -size -8983534c  -exec ls -lh {} \;
+================================================================================
+11/05/2024
+ find . -name "*.root" -size -8600k -exec ls -lh {} \;
+================================================================================
+11/08/2024
+cd ~/work/kfp
+foreach d (`ls -1d */*P24iy*`)
+ if (! -d ${d}/dEdx) mkdir  ${d}/dEdx
+ cd  ${d}/dEdx
+ lsf ~/xml/kfpAnalysis.TFG24e.xml
+ cd -
+end
+================================================================================
+11/09/2024
+cd ~/work/kfp
+foreach d (`ls -1d */*P24iy*/dEdx`)
+ cd  ${d}
+  lsf ~/xml/kfpAnalysis.TFG24e.xml
+ cd -
+end
+cd ~/work/kfp
+foreach d (`ls -1d */*P24iy*/dEdx`)
+ cd  ${d}
+   All.csh
+ cd -
+end
+================================================================================
+11/10/2024
+foreach d (`ls -1d */*P24iy*/dEdx`)
+ cd  ${d}
+ hadd.pl files='*/All*.root'
+ lsf hadd*.xml
+ cd -
+end

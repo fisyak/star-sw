@@ -1,4 +1,4 @@
-TH2D *GetEntries(TProfile2D *hist) {
+TH2D *GetEntriesTP(TProfile2D *hist) {// entries in TProfile2D
   if (! hist) return 0;
   Int_t nx = hist->GetNbinsX(); 
   Int_t ny = hist->GetNbinsY();
@@ -17,4 +17,17 @@ TH2D *GetEntries(TProfile2D *hist) {
     }
   }
   return newhist;
+}
+//`________________________________________________________________________________
+void GetEntries(const Char_t *histName = "PVxyzC") {
+  TSeqCollection *files = gROOT->GetListOfFiles();
+  if (! files) return;
+  TIter next(files);
+  TFile *f = 0;
+  while ( (f = (TFile *) next()) ) { 
+    TString F(f->GetName());
+    TH1 *h = (TH1 *) gDirectory->Get(histName);
+    if (! h) continue;
+    cout << F.Data() << " histogram " << histName << "\t has " << h->GetEntries() << " entries" << endl;
+  }
 }

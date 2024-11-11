@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job maxFilesPerProcess="25" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
         <command>
  set CURRENT_DIR = `pwd`
 #C       cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
   setup nodebug
   set idNdx = kFALSE;
+  starver TFG24e
   echo ${SUBMITTINGDIRECTORY} | grep dNdx 
   if (! $? )  set idNdx = kTRUE;
 #  setup debug
@@ -45,7 +46,7 @@ foreach  evtsFile(`cat $FILELIST`)
         rsync  ${inputDIR}  .
       endif
   endif
-  root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&amp; ${log}
+  root.exe -q -b -x  '$STAR/macros/kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&amp; ${log}
   rm ./*.${dstype}.root
 end 
  rm -rf ${CURRENT_DIR}

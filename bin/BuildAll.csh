@@ -27,7 +27,6 @@ foreach root (root6 root5)
       if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
 #      echo "gcc = $gcc, optt = $optt, bits = $bits"
       foreach bit (${bits})
-        echo "root - $root, gcc = $gcc, optt = $optt, bit = $bit"
         unsetenv NODEBUG
 #        if ($optt == "opt")  setenv NODEBUG YES 
 #        if ($optt == "opt3") setenv NODEBUG -O3 
@@ -51,6 +50,8 @@ foreach root (root6 root5)
         set log = build.${STAR_HOST_SYS}.${optt}.`date +%m%d%y:%H%M.`${HOST}.${root}.log;
 	echo "Build ${log}"
 #       printenv > ${log};
+        if ($optt == "opt")  setenv NODEBUG YES 
+        echo "root - $root, gcc = $gcc, optt = $optt, bit = $bit"
         time cons -k >& ${log} &
       end
     end
