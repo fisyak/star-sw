@@ -55,7 +55,25 @@ sub GetRuns($) {
   if    ($i1 <  0)   {}
   elsif ($i1 == $nw) {$Day = $words[$i1];   $Run = "[0-9]???????";}
   elsif ($i1 <  $nw) {$Day = $words[$nw-1]; $Run = $words[$nw];}
-  if    ($pwd =~ /2019/) {$year = "2019"; require RunXIXDefs;}
+  if    ($pwd =~ /2001/) {die;}
+  elsif ($pwd =~ /2002/) {die;}
+  elsif ($pwd =~ /2003/) {$year = "2003"; require RunIIIDefs; die;}
+  elsif ($pwd =~ /2004/) {$year = "2004"; require RunIVDefs;}
+  elsif ($pwd =~ /2005/) {$year = "2005"; require RunVDefs;}
+  elsif ($pwd =~ /2006/) {$year = "2006"; require RunVIDefs; die;}
+  elsif ($pwd =~ /2007/) {$year = "2007"; require RunVIIDefs; die;}
+  elsif ($pwd =~ /2008/) {$year = "2008"; require RunVIIIDefs;}
+  elsif ($pwd =~ /2009/) {$year = "2009"; require RunIXDefs;}
+  elsif ($pwd =~ /2010/) {$year = "2010"; require RunXDefs;}
+  elsif ($pwd =~ /2011/) {$year = "2011"; require RunXIDefs;}
+  elsif ($pwd =~ /2012/) {$year = "2012"; require RunXIIDefs;}
+  elsif ($pwd =~ /2013/) {$year = "2013"; require RunXIIIDefs;}
+  elsif ($pwd =~ /2014/) {$year = "2014"; require RunXIVDefs;}
+  elsif ($pwd =~ /2015/) {$year = "2015"; require RunXVDefs;}
+  elsif ($pwd =~ /2016/) {$year = "2016"; require RunXVIDefs;}
+  elsif ($pwd =~ /2017/) {$year = "2017"; require RunXVIIDefs;}
+  elsif ($pwd =~ /2018/) {$year = "2018"; require RunXVIIIDefs;}
+  elsif ($pwd =~ /2019/) {$year = "2019"; require RunXIXDefs;}
   elsif ($pwd =~ /2020/) {$year = "2020"; require RunXXDefs;}
   elsif ($pwd =~ /2021/) {$year = "2021"; require RunXXIDefs;}
   elsif ($pwd =~ /2022/) {$year = "2022"; require RunXXIIDefs;}

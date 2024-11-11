@@ -12,16 +12,27 @@ my $runMin = 0;
 my $runMax = 0;
 my $fieldOld = "";
 my $N = 0;
+my $trigNew = "";
+my $debug = 0;
+# if ($#ARGV >= 0) {
+#   $debug = $ARGV[0];
+# }
 #while ($line = <In>) {
 sub SPrint ($$$$$$$$) {
   my ($trigOld,$runMin,$runMax,$dateMin,$timeMin,$dateMax,$timeMax,$field) =  @_;
 #  print "\t\'$N\' => {tag =>";
   my $t = "'" . $trigOld . "',";
 #  printf("\'%i\' \t=> %s=> ",$N,$t);
-  printf("'%3i' => {trig=>%-22s",$N,$t);
+  printf("'%04i'=> {trig=>%-25s",$N,$t);
   my $dd = $dateMin; $dd =~ s/\-//g;
   my $tt = $timeMin; $tt =~ s/://g;
-  print "\tfield => \'$field\',\tfirst=> \'$runMin\',\t last => \'$runMax\',\t list => \'\',  beginTime => \'$dd.$tt\'}, \# \t$dateMin\t$timeMin\t$dateMax\t$timeMax\n";
+  print "\tfield => \'$field\',\tfirst=> \'$runMin\',\t last => \'$runMax\',\t list => \'\',  beginTime => \'$dd.$tt\'}, \# \t$dateMin\t$timeMin\t$dateMax\t$timeMax";
+  my $trigF = $trigOld ."_". $field;
+  if ($trigNew eq $trigF) {print "\n";}
+  else {
+    print "\ttimestamp = $trigF\n";
+    $trigNew = $trigF;
+  }
   $N++;
 }
 print "\#!/usr/bin/perl
@@ -32,27 +43,28 @@ print "our \@Runs = ( # onl CURRENT | SortRun.pl \n";
 while ($line = <>) {
   if ($line =~ '^cmd' or $line =~ '^runNumber') {next;}
   my ($run,$trig,$date,$time,$scaleFactor,$rtsStatus,$shiftLeaderStatus,$destinationID) = split ' ', $line;
-#  print "$run,$trig,$date,$time,$scaleFactor,$rtsStatus,$shiftLeaderStatus,$destinationID\n";
+  print "$run,$trig,$date,$time,$scaleFactor,$rtsStatus,$shiftLeaderStatus,$destinationID\n" if ($debug);
   if ($scaleFactor == 0 && $run >= 24127008 && $run <= 24128038) {$scaleFactor = 1;}
   my $field = "UF";
-  if    ($scaleFactor >-1.2 && $scaleFactor < -0.8) {$field = "RF";}
+  if    ($scaleFactor > -1.2 && $scaleFactor < -0.8) {$field = "RF";}
   elsif ($scaleFactor > -0.8 && $scaleFactor < -0.2) {$field = "RHF";}
   elsif ($scaleFactor > -0.2 && $scaleFactor <  0.2) {$field = "ZF";}
   elsif ($scaleFactor >  0.2 && $scaleFactor <  0.8) {$field = "FHF";}
   elsif ($scaleFactor >  0.8 && $scaleFactor <  1.2) {$field = "FF";}
-#  if ($rtsStatus != 0 || $shiftLeaderStatus != 0) {next;}
+  if ($rtsStatus != 0 || $shiftLeaderStatus != 0) {next;}
   if ($trig !~  /production/ and $trig !~  /^tune/ and $trig !~ /^Cosmic/ and $trig !~ /Aligment/) {next;}
    if ($trig =~ /^ped/) {next;}
    if ($trig =~ /^las/) {next;}
    if ($trig =~ /^jml/) {next;}
    if ($trig =~ /^chris/) {next;}
-#   if ($trig =~ /^tune/) {next;}
+   if ($trig =~ /^tune/) {next;}
    if ($trig =~ /^cal/) {next;}
    if ($trig =~ /^Jack/) {next;}
  # if ($trig =~ /^Cos/) {next;}
    if ($trig =~ /^straw/) {next;}
    if ($trig =~ /^Vern/) {next;}
    if ($trig =~ /^test/) {next;}
+   if ($trig =~ /_test$/) {next;}
    if ($trig =~ /^straw/) {next;}
   $trig =~ s/_bbcveto//;
   $trig =~ s/_lzr//;
@@ -61,34 +73,35 @@ while ($line = <>) {
   $trig =~ s/_GMT//;
   $trig =~ s/LocalClock//;
   $trig =~ s/production_//;
+  $trig =~ s/_production//;
   $trig =~ s/_2020//;
   $trig =~ s/_FieldOn//;
   $trig =~ s/_FieldOff//;
   $trig =~ s/_ZeroField//;
   $trig =~ s/_HalfField//;
-#  print "run = $run, trig = $trig, date = $date, time = $time\n";
-#  print "trigOld = $trigOld\n";
+  print "run = $run, trig = $trig, date = $date, time = $time\n"  if ($debug);
+ print "trigOld = $trigOld\n"  if ($debug);
   $timeMax = $time;
   $dateMax = $date;
   my $trigF = $trig . $field;
   if ($trigF eq $trigOldF && ($run - $runOld) <= 1) {
-#    print "runMax = $runMax, runOld = $runOld, run = $run\n";
+    print "runMax = $runMax, runOld = $runOld, run = $run\n"  if ($debug);
     $runOld = $run;
     $runMax = $run;
   } else {
-#    print "trigOld2 = $trigOld\n";
+    print "trigOld2 = $trigOld\n"  if ($debug);
     if ($trigOld ne '') {
       SPrint($trigOld,$runMin,$runMax,$dateMin,$timeMin,$dateMax,$timeMax,$fieldOld);
 #    die;
     }
-    $trigOld = $trig;# print "trig = $trig. trigOld = $trigOld\n";
+    $trigOld = $trig; print "trig = $trig. trigOld = $trigOld\n"  if ($debug);
     $trigOldF = $trigF;
     $fieldOld = $field;
     $runMin = $run; $runMax = $run;
     $runOld = $run;
     $dateMin = $date; 
     $timeMin = $time; 
-#    print "$trigOld\t$runMin\t$runMax\t$dateMin\t$timeMin\t$dateMax\t$timeMax\n";
+    print "$trigOld\t$runMin\t$runMax\t$dateMin\t$timeMin\t$dateMax\t$timeMax\n"  if ($debug);
   }
 #  if ($N > 20) {last;}
 }
