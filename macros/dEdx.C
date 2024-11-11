@@ -67,8 +67,8 @@ void dEdx(Int_t First, Int_t Last,
   }
   gROOT->LoadMacro("bfc.C");
   TString Chain("in,dEdxY2,magF,StEvent,mysql,NoDefault,analysis");//,SkipdNdx
-  if        (Year.Contains("2019")) { Chain += ",CorrY"; // ,analysis to add OPr40 for y2019
-  } else if (Year.Contains("202"))  { Chain += ",CorrY"; // ,analysis to add OPr40 for y2020
+  if        (Year.Contains("2019")) { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
+  } else if (Year.Contains("202"))  { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2020
   } else if (Year.Contains("2005")) { Chain += ",SCEbyE,OGridLeak,OShortR,OSpaceZ2,";
   } else                            { Chain += ",CorrX"; // ,analysis to add OPr40 for <= 2018
   }
@@ -78,7 +78,7 @@ void dEdx(Int_t First, Int_t Last,
   if (STAR_VERSION.BeginsWith("TFG") && ! STAR_VERSION.Contains("Export") || STAR_VERSION.Contains("DEV2")) {
     tfgV = kTRUE;
     // Chain += ",quiet,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
-    Chain += ",quiet,"; //,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
+    Chain += ",quiet"; //,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
     //    Chain += ",ForcedX";
     if (mode == 2) Chain += ",dEdxCalib, DontSort"; //,DbV20211017"; // !!!!!!!!!!!!   check DbV
   } else {
