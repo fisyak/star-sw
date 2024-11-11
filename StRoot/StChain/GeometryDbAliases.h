@@ -410,71 +410,51 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 //{"dAu200_2021",                            20210630,  22849, "y2019", "dAu200GeV_2021"},
 //{"dAu200GeV_2021",                         20210630,  22849, "y2019", "dAu200GeV_2021"},
   {"dAu200_2021",	                     20210630,  22849, "y2021", "dAu200_2021"}, // 1st run = 22180043			     
-  {"dAu200GeV_2021",	                     20210630,  22849, "y2021", "dAu200_2021"}, // 1st run = 22180043			     
-//{"26p5GeV_fixedTarget_2021d",              20210703,  10650, "y2019", "26p5GeV_fixedTarget_2021"},
+ //{"26p5GeV_fixedTarget_2021d",              20210703,  10650, "y2019", "26p5GeV_fixedTarget_2021"},
   {"26p5GeV_fixedTarget_2021d",	             20210703,  10650, "y2021", "26p5GeV_fixedTarget_2021"}, // 1st run = 22183024	     
 //{"dAu200GeV_2021b",                        20210703,  53033, "y2019", "dAu200GeV_2021"},
   {"dAu200_2021b",	                     20210703,  53033, "y2021", "dAu200_2021"}, // 1st run = 22184001			     
-  {"dAu200GeV_2021b",	                     20210703,  53033, "y2021", "dAu200_2021"}, // 1st run = 22184001			     
-//{"26p5GeV_fixedTarget_2021e",              20210703, 230657, "y2019", "26p5GeV_fixedTarget_2021"},
+ //{"26p5GeV_fixedTarget_2021e",              20210703, 230657, "y2019", "26p5GeV_fixedTarget_2021"},
   {"26p5GeV_fixedTarget_2021e",	             20210703, 230657, "y2021", "26p5GeV_fixedTarget_2021"}, // 1st run = 22184017	     
 //{"dAu200GeV_2021c",                        20210704,  34046, "y2019", "dAu200GeV_2021"},
   {"dAu200_2021c",	                     20210704,  34046, "y2021", "dAu200_2021"}, // 1st run = 22184023			     
-  {"dAu200GeV_2021c",	                     20210704,  34046, "y2021", "dAu200_2021"}, // 1st run = 22184023			     
-//{"pp500_2022",                             20211215,  81702, "y2019", "pp500_2022"},
+ //{"pp500_2022",                             20211215,  81702, "y2019", "pp500_2022"},
   {"pp500_2022",	                     20211215,  81702, "y2021", "pp500_2022"}, // 1st run = 22349011			     
 //{"AuAu_2023",                              20230520,  23250, "y2019", "AuAu_2023"},
 //{"AuAu200GeV_2023",                        20230520,  23250, "y2019", "AuAu200GeV_2023"},
   {"AuAu_2023",	                             20230520,  23250, "y2021", "AuAu_2023"}, // 1st run = 24139094			     
-  {"AuAu200GeV_2023",	                     20230520,  23250, "y2021", "AuAu_2023"}, // 1st run = 24139094			     
 //{"pp200_lowlumi",                          20240430,  70551, "y2019", "pp200_lowlumi"},
-//{"pp200GeV_lowlumi",                       20240430,  70551, "y2019", "pp200GeV_lowlumi"},
   {"pp200_lowlumi",	                     20240430,  70551, "y2021", "pp200_lowlumi"}, // 1st run = 25121013		     
-  {"pp200GeV_lowlumi",	                     20240430,  70551, "y2021", "pp200_lowlumi"}, // 1st run = 25121013		     
 //{"pp200_LowLuminosity",                    20240430,  74640, "y2019", "pp200_LowLuminosity"},
-//{"pp200GeV_LowLuminosity",                 20240430,  74640, "y2019", "pp200GeV_LowLuminosity"},
   {"pp200_LowLuminosity",	             20240430,  74640, "y2021", "pp200_LowLuminosity"}, // 1st run = 25121016		     
-  {"pp200GeV_LowLuminosity",	             20240430,  74640, "y2021", "pp200_LowLuminosity"}, // 1st run = 25121016		     
 //{"pp200_HighLuminosity",                   20240513, 163940, "y2019", "pp200_HighLuminosity"},
   {"pp200_HighLuminosity",	             20240513, 173321, "y2021", "pp200_HighLuminosity"}, // 1st run = 25134037		     
 //{"pp200GeV_LowLuminosity_b",               20240514,  11109, "y2019", "pp200GeV_LowLuminosity"},
   {"pp200_LowLuminosity_b",	             20240514,  11109, "y2021", "pp200_LowLuminosity"}, // 1st run = 25134054		     
-  {"pp200GeV_LowLuminosity_b",	             20240514,  11109, "y2021", "pp200_LowLuminosity"}, // 1st run = 25134054		     
 //{"pp200GeV_HighLuminosity_b",              20240517,  35506, "y2019", "pp200GeV_HighLuminosity"},
   {"pp200_HighLuminosity_b",	             20240517,  35506, "y2021", "pp200_HighLuminosity"}, // 1st run = 25137047		     
-  {"pp200GeV_HighLuminosity_b",	             20240517,  35506, "y2021", "pp200_HighLuminosity"}, // 1st run = 25137047		     
 //{"pp200_radial",                           20240517, 205711, "y2019", "pp200_radial"},
 //{"pp200GeV_radial",                        20240517, 205711, "y2019", "pp200GeV_radial"},
   {"pp200_radial",	                     20240517, 205711, "y2021", "pp200_radial"}, // 1st run = 25138053			     
-  {"pp200GeV_radial",	                     20240517, 205711, "y2021", "pp200_radial"}, // 1st run = 25138053			     
 //{"pp200GeV_HighLuminosity_c",              20240518,  52353, "y2019", "pp200GeV_HighLuminosity"},
   {"pp200_HighLuminosity_c",	             20240518,  52353, "y2021", "pp200_HighLuminosity"}, // 1st run = 25139005		     
-  {"pp200GeV_HighLuminosity_c",	             20240518,  52353, "y2021", "pp200_HighLuminosity"}, // 1st run = 25139005		     
 //{"pp200GeV_radial_a",                      20240520, 220203, "y2019", "pp200GeV_radial"},
   {"pp200_radial_a",	                     20240520, 220203, "y2021", "pp200_radial"}, // 1st run = 25141034			     
-  {"pp200GeV_radial_a",	                     20240520, 220203, "y2021", "pp200_radial"}, // 1st run = 25141034			     
 //{"pp200_unpolarized",                      20240529,  22850, "y2019", "pp200_unpolarized"},
-//{"pp200GeV_unpolarized",                   20240529,  22850, "y2019", "pp200GeV_unpolarized"},
   {"pp200_unpolarized",	                     20240529,  22850, "y2021", "pp200_unpolarized"}, // 1st run = 25149057		     
-  {"pp200GeV_unpolarized",	             20240529,  22850, "y2021", "pp200_unpolarized"}, // 1st run = 25149057		     
   {"pp200_HighLuminosity",	             20240607,  71454, "y2021", "pp200_HighLuminosity"}, // 1st run = 25159009		     
 //{"pp200GeV_radial_b",                      20240529, 231051, "y2019", "pp200GeV_radial"},
   {"pp200_radial_b",	                     20240607, 124232, "y2021", "pp200_radial"}, // 1st run = 25159020		 	     
-  {"pp200GeV_radial_b",	                     20240607, 124232, "y2021", "pp200_radial"}, // 1st run = 25159020		 	     
 //{"pp200GeV_HighLuminosity_d",              20240607,  71454, "y2019", "pp200GeV_HighLuminosity"},
 //{"pp200GeV_radial_c",                      20240607, 124232, "y2019", "pp200GeV_radial"},
 //{"pp200GeV_unpolarized_b",                 20240613,  42200, "y2019", "pp200GeV_unpolarized"},
   {"pp200_unpolarized_b",	             20240613,  42200, "y2021", "pp200_unpolarized"}, // 1st run = 25165001	 	     
-  {"pp200GeV_unpolarized_b",	             20240613,  42200, "y2021", "pp200_unpolarized"}, // 1st run = 25165001	 	     
 //{"pp200GeV_radial_d",                      20240616, 160307, "y2019", "pp200GeV_radial"},
   {"pp200_radial_d",	              	     20240616, 160307, "y2021", "pp200_radial"}, // 1st run = 25168022		 	     
-  {"pp200GeV_radial_d",	              	     20240616, 160307, "y2021", "pp200_radial"}, // 1st run = 25168022		 	     
 //{"pp200GeV_unpolarized_c",                 20240801, 175519, "y2019", "pp200GeV_unpolarized"},
   {"pp200_unpolarized_c",	             20240801, 175519, "y2021", "pp200_unpolarized"}, // 1st run = 25214020	 	     
-  {"pp200GeV_unpolarized_c",	             20240801, 175519, "y2021", "pp200_unpolarized"}, // 1st run = 25214020	 	     
 //{"pp200GeV_radial_e",                      20240802,  70216, "y2019", "pp200GeV_radial"},
   {"pp200_radial_e",	              	     20240802,  70632, "y2021", "pp200_radial"}, // 1st run = 25215009          	     
-  {"pp200GeV_radial_e",	              	     20240802,  70632, "y2021", "pp200_radial"}, // 1st run = 25215009          	     
 //{"AuAu_2024",                              20241006, 124742, "y2019", "AuAu_2024"},
   {"AuAu_2024",	                             20241006, 124742, "y2021", "AuAu_2024"}, // 1st run = 25280025                         
 
