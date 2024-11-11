@@ -10,7 +10,8 @@ use Cwd;
 use File::stat;
 use Time::localtime;
 use Env;
-use lib $STAR . "/bin";
+#use lib $STAR . "/bin";
+use lib "/star/u/fisyak/bin";
 use PicoDef;
 # dir -ltrd /gpfs01/star/data*/reco/production_*/*/*/*
 #my $timestamp = ctime(stat($fh)->mtime);
@@ -34,7 +35,7 @@ sub PrintHash($$) {
 }
 #____________________________________________________________
 my $def = {@PicoDefs}; #print "PicoDefs = @PicoDefs\n";
-#PrintHash($def,"PicoDefs") if ($debug);
+PrintHash($def,"PicoDefs") if ($debug);
 my $PICOPATH = "";
 my $pwd = Cwd::cwd(); print "pwd = $pwd\n" if ($debug);
 my $glob = "";

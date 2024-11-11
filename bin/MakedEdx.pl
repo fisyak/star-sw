@@ -2696,7 +2696,11 @@ my $debug = 0;
 #$hist = "RunXIX_XXI20"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/21/2024  TpcPadCorrectionMDC
 #$hist = "RunXIX_XXI21"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/22/2024  TpcSecRowB
 #$hist = "RunXIX_XXI22"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/23/2024  TpcLengthCorrectionMDN
-$hist = "RunXIX_XXI23"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
+#$hist = "RunXIX_XXI23"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
+#$hist = "RunXIX_XXI24"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*_fixedTarget*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
+#$hist = "RunXIX_XXI24"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
+#$hist = "RunXIX_XXI25"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/08/2024  test P24iy ? DEBUG ??
+$hist = "RunXIX_XXI26"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/11/2024  test P24iy ? DEBUG ??
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2879,7 +2883,8 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 	  }
 	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 	}  else {
-#	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
+	  print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
+	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 	}
 	print OUT "/usr/bin/test -d $scrr || mkdir -p $scrr;\n";
 	my $cmd = "/usr/bin/test ! -r " . $root . " && root.exe -q -b  '" . $macro;
