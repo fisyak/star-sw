@@ -1,3 +1,6 @@
+#ifndef __CINT__
+#include "tables/St_beamSpot_Table.h"
+#endif
 TDataSet *CreateTable() { // Simulation !
   // -----------------------------------------------------------------
   // db/.const/StarDb/Calibrations/rhic/.beamLine/beamLine Allocated rows: 1  Used rows: 1  Row size: 44 bytes
