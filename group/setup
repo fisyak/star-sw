@@ -126,7 +126,9 @@ switch ($pkg)
         setenv LEVEL_STAR ${STAR_LEVEL}
       endif
       unsetenv AFS_RHIC      ; if ($?DECHO) echo "unsetenv AFS_RHIC"
+      if (?$STARFPE) setenv xSTARFPE $STARFPE
       unsetenv STAR*         ; if ($?DECHO) echo "unsetenv STAR*"
+      if (?$xSTARFPE) setenv STARFPE $xSTARFPE
       unsetenv ROOT*         ; if ($?DECHO) echo "unsetenv ROOT*"
       if ($?GROUP_DIR) then
         unsetenv GROUP*      ; if ($?DECHO) echo "unsetenv GROUP*"
