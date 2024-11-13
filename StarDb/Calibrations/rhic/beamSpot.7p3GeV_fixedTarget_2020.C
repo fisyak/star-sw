@@ -1,11 +1,1 @@
-TDataSet *CreateTable() {
-  if (!gROOT->GetClass("St_beamLine")) return 0;
-  beamLine_st row;
-  St_beamLine *tableSet = new St_beamLine("beamLine",1);
-  memset(&row,0,tableSet->GetRowSize());
-  row.X =     -0.273; row.sigma_X =      0.147;
-  row.Y =     -2.233; row.sigma_Y =      0.078;
-  row.Z =    200.260; row.sigma_Z =      0.174;
-  tableSet->AddAt(&row);// PVxyz7p3GeV_fixedTarget_TFG24c.dEdx3.root
-  return (TDataSet *)tableSet;
-}
+beamSpot.C

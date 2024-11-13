@@ -1,0 +1,14 @@
+#ifndef __CINT__
+#include "tables/St_beamSpot_Table.h"
+#endif
+TDataSet *CreateTable() {
+  if (!gROOT->GetClass("St_beamSpot")) return 0;
+  beamSpot_st row;
+  St_beamSpot *tableSet = new St_beamSpot("beamSpot",1);
+  memset(&row,0,tableSet->GetRowSize());
+  row.X =     -0.362; row.sigma_X =      0.115;
+  row.Y =     -1.991; row.sigma_Y =      0.070;
+  row.Z =    200.506; row.sigma_Z =      0.297;
+  tableSet->AddAt(&row);// PVxyz70GeV_fixedTarget_2021_P23id_calib.dEdx.root
+  return (TDataSet *)tableSet;
+}

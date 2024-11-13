@@ -1,0 +1,14 @@
+#ifndef __CINT__
+#include "tables/St_beamSpot_Table.h"
+#endif
+TDataSet *CreateTable() {
+  if (!gROOT->GetClass("St_beamSpot")) return 0;
+  beamSpot_st row;
+  St_beamSpot *tableSet = new St_beamSpot("beamSpot",1);
+  memset(&row,0,tableSet->GetRowSize());
+  row.X =     -0.135; row.sigma_X =      0.041;
+  row.Y =     -0.137; row.sigma_Y =      0.040;
+  row.Z =     -0.177; row.sigma_Z =     11.372;
+  tableSet->AddAt(&row);// PVxyzps_OO_200GeV_2021.P23ic.dEdxJ.root
+  return (TDataSet *)tableSet;
+}

@@ -1,1 +1,1 @@
-beamLine.7.3GeV_fixedTarget_2019.C
+beamSpot.7.3GeV_fixedTarget_2019.C
