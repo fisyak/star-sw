@@ -6,9 +6,9 @@ TDataSet *CreateTable() {
   beamSpot_st row;
   St_beamSpot *tableSet = new St_beamSpot("beamSpot",1);
   memset(&row,0,tableSet->GetRowSize());
-  row.X =      0.390; row.sigma_X =      0.059;
-  row.Y =     -0.058; row.sigma_Y =      0.050;
-  row.Z =     -0.458; row.sigma_Z =     28.427;
-  tableSet->AddAt(&row);// PVxyzAuAu62_P10ik_SL23a.dEdx.root
+  row.X =      0.245; row.sigma_X =      0.172;
+  row.Y =     -0.171; row.sigma_Y =      0.217;
+  row.Z =     -3.539; row.sigma_Z =    101.552;
+  tableSet->AddAt(&row);// PVxyz7GeV.dEdxW.root
   return (TDataSet *)tableSet;
 }
