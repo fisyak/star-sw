@@ -282,7 +282,7 @@ void StKFParticleInterface::SetPrimaryProbCut(float prob)
 void StKFParticleInterface::CollectTrackHistograms()
 {
   TDirectory *dirs[7] = {0};
-  TDirectory::CurrentDirectory()->cd("/");
+  gDirectory->cd("/");
   dirs[0] = TDirectory::CurrentDirectory(); assert(dirs[0]);
   dirs[0]->cd();
   if (! dirs[0]->GetDirectory("Tracks")) {
@@ -354,7 +354,7 @@ void StKFParticleInterface::CollectTrackHistograms()
 void StKFParticleInterface::CollectPIDHistograms()
 {
   TDirectory *dirs[7] = {0};
-  TDirectory::CurrentDirectory()->cd("/");
+  gDirectory->cd("/");
   dirs[0] = TDirectory::CurrentDirectory(); assert(dirs[0]);
   dirs[0]->cd();
   if (! dirs[0]->GetDirectory("Tracks")) {
@@ -426,7 +426,7 @@ void StKFParticleInterface::CollectPIDHistograms()
 
 void StKFParticleInterface::CollectPVHistograms()
 {
-  TDirectory::CurrentDirectory()->cd("/");
+  gDirectory->cd("/");
   TDirectory* mainDir = TDirectory::CurrentDirectory(); assert(mainDir);
   if (! mainDir->GetDirectory("PrimaryVertices")) {
     mainDir->mkdir("PrimaryVertices");
