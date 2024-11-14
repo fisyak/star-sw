@@ -1,1 +1,1 @@
-beamSpot.C
+beamSpot.3p85GeV_fixedTarget.xrootd3.txt
