@@ -1377,6 +1377,14 @@ Float_t St_tpcAnodeHVC::voltagePadrow(Int_t sector, Int_t padrow) const {
 }
 MakeChairOptionalInstance(TpcAvgPowerSupply,Calibrations/tpc/TpcAvgPowerSupply);
 //________________________________________________________________________________
+Bool_t St_TpcAvgPowerSupplyC::tripped(Int_t /* sector */,  Int_t /* padrow */) const {
+  Int_t u = StMaker::GetChain()->GetDateTime().Convert();
+  // +/-15 seconds to account readout speed ( 30 secs) 
+  //  if (u < start_time() - 15 || u > stop_time() + 15) return kTRUE;
+  if (stop_time() > 0 && u > stop_time() + 15) return kTRUE;
+  return kFALSE;
+}
+//________________________________________________________________________________
 Float_t St_TpcAvgPowerSupplyC::voltagePadrow(Int_t sector, Int_t padrow) const {
   Int_t e1 = 0, e2 = 0;
   Float_t f2 = 0;
