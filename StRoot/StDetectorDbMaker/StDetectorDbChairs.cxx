@@ -1381,7 +1381,8 @@ Bool_t St_TpcAvgPowerSupplyC::tripped(Int_t /* sector */,  Int_t /* padrow */) c
   Int_t u = StMaker::GetChain()->GetDateTime().Convert();
   // +/-15 seconds to account readout speed ( 30 secs) 
   //  if (u < start_time() - 15 || u > stop_time() + 15) return kTRUE;
-  if (stop_time() > 0 && u > stop_time() + 15) return kTRUE;
+  Int_t stop = stop_time();
+  if (stop > 0 && u > stop + 15) return kTRUE;
   return kFALSE;
 }
 //________________________________________________________________________________
