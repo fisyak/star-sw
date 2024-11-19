@@ -77,10 +77,10 @@ void dEdx(Int_t First, Int_t Last,
   Bool_t tfgV = kFALSE;
   if (STAR_VERSION.BeginsWith("TFG") && ! STAR_VERSION.Contains("Export") || STAR_VERSION.Contains("DEV2")) {
     tfgV = kTRUE;
-    // Chain += ",quiet,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
+    //Chain += ",quiet,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
     Chain += ",quiet"; //,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
     //    Chain += ",ForcedX";
-    if (mode == 2) Chain += ",dEdxCalib, DontSort"; //,DbV20211017"; // !!!!!!!!!!!!   check DbV
+    if (mode == 2) Chain += ",dEdxCalib"; // , DontSort"; //,DbV20211017"; // !!!!!!!!!!!!   check DbV
   } else {
     Chain += ",mysql,CalcdNdx";
   }
