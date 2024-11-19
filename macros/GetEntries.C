@@ -26,7 +26,7 @@ void GetEntries(const Char_t *histName = "PVxyzC") {
   TFile *f = 0;
   while ( (f = (TFile *) next()) ) { 
     TString F(f->GetName());
-    TH1 *h = (TH1 *) gDirectory->Get(histName);
+    TH1 *h = (TH1 *) f->Get(histName);
     if (! h) continue;
     cout << F.Data() << " histogram " << histName << "\t has " << h->GetEntries() << " entries" << endl;
   }
