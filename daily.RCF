@@ -1987,3 +1987,20 @@ foreach d (`ls -1d */*P24iy*/dEdx`)
  lsf hadd*.xml
  cd -
 end
+================================================================================
+11/15/2024
+[rcas6005] ~/work/Histograms/RunXIX_XXI26 $ root.exe *.root GetEntries.C
+100GeV_fixedTarget_2021.root histogram PVxyzC    has 864638 entries
+13p5GeV_fixedTarget_2020.root histogram PVxyzC   has 229602 entries
+19p5GeV_fixedTarget_2020.root histogram PVxyzC   has 268023 entries
+26p5GeV_fixedTarget_2020.root histogram PVxyzC   has 857912 entries
+26p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.67752e+06 entries
+31GeV_fixedTarget_2019.root histogram PVxyzC     has 219275 entries
+31p2GeV_fixedTarget_2020.root histogram PVxyzC   has 313417 entries
+3p85GeV_fixedTarget_2019.root histogram PVxyzC   has 41051 entries       <<<<<<<<<<<<<<<<<
+44p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.29272e+06 entries
+4p59GeV_fixedTarget_2019.root histogram PVxyzC   has 848380 entries
+5p75GeV_fixedTarget_2020.root histogram PVxyzC   has 309967 entries
+70GeV_fixedTarget_2021.root histogram PVxyzC     has 964845 entries
+7p3GeV_fixedTarget_2020.root histogram PVxyzC    has 303952 entries
+9p8GeV_fixedTarget_2020.root histogram PVxyzC    has 401654 entries
