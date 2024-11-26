@@ -171,6 +171,7 @@
 '2019/4p59GeV_fixedTarget_TFG24c'              => '2019/RF/4p59GeV_fixedTarget',    
 '2019/4p59GeV_fixedTarget_TFG24d'              => '2019/RF/4p59GeV_fixedTarget',    
 '2019/4p59GeV_fixedTarget_TFG24e'              => '2019/RF/4p59GeV_fixedTarget',    
+'2019/4p59GeV_fixedTarget_TFG24eg'              => '2019/RF/4p59GeV_fixedTarget',    
 '2019/4p59GeV_fixedTarget_P24iy_calib'       	       => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_calib',    
 
 '2019/7.3GeV_fixedTarget' =>			  'production_7.3GeV_fixedTarget_2019/ReversedFullField/P21id',
