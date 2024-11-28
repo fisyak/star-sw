@@ -346,10 +346,11 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 //{"9p2GeVc_2020",                           20200617, 233208, "y2019", "9p2GeVc_2020"},
   {"9p2GeVc_2020",	              	     20200617, 233208, "y2020", "9p2GeVc"}, // 1st run = 21169035			     
 //{"26p5GeV_fixedTarget_2020",               20200730,  15354, "y2019", "26p5GeV_fixedTarget_2020"},
+  {"26p5GeV_fixedTarget_2020",               20200730,  15354, "y2019", "26p5GeV_fixedTarget_2020"}, // 1st run = 21211028
 //{"9p2GeVc_2020b",                          20200730,  42836, "y2019", "9p2GeVc_2020"},
   {"9p2GeVc_2020b",	                     20200730,  42836, "y2020", "9p2GeVc"}, // 1st run = 21212001			     
 //{"26p5GeV_fixedTarget_2020b",              20200813, 213251, "y2019", "26p5GeV_fixedTarget_2020"},
-  {"26p5GeV_fixedTarget_2020",	             20200813, 213251, "y2020", "26p5GeV_fixedTarget"}, // 1st run = 21226023		     
+  {"26p5GeV_fixedTarget_2020a",	             20200813, 213251, "y2020", "26p5GeV_fixedTarget"}, // 1st run = 21226023		     
 //{"9p2GeVc_2020c",                          20200814,  54357, "y2019", "9p2GeVc_2020"},
   {"9p2GeVc_2020c",	                     20200814,  54357, "y2020", "9p2GeVc"}, // 1st run = 21227004			     
 //{"26p5GeV_fixedTarget_2020c",              20200819, 192253, "y2019", "26p5GeV_fixedTarget_2020"},
