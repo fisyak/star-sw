@@ -192,6 +192,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"y2021a",      20201215,     1, "y2019",    "y2019a first production release geometry, AgML,xgeometry"},   
   {"r2021",       20201220,     0, "y2019",    "y2019, iTPC, Jim Thomas 05/31/216, no HFT,xgeometry"}, // 
   {"r2021a",      20201220,     1, "y2019",    "y2019, iTPC, Jim Thomas 05/31/16, no HFT,xgeometry"}, // 
+  {"y2021b",      20201215,     2, "y2021b",   "y2021 production geometry (FXT @ 200.7 cm), AgML,xgeometry"},   
 
   {"y2022",       20211015,     0, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
   {"y2022a",      20211015,     1, "y2019",    "y2019 development geometry, AgML,xgeometry"},   
@@ -345,10 +346,11 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 //{"9p2GeVc_2020",                           20200617, 233208, "y2019", "9p2GeVc_2020"},
   {"9p2GeVc_2020",	              	     20200617, 233208, "y2020", "9p2GeVc"}, // 1st run = 21169035			     
 //{"26p5GeV_fixedTarget_2020",               20200730,  15354, "y2019", "26p5GeV_fixedTarget_2020"},
+  {"26p5GeV_fixedTarget_2020",               20200730,  15354, "y2019", "26p5GeV_fixedTarget_2020"}, // 1st run = 21211028
 //{"9p2GeVc_2020b",                          20200730,  42836, "y2019", "9p2GeVc_2020"},
   {"9p2GeVc_2020b",	                     20200730,  42836, "y2020", "9p2GeVc"}, // 1st run = 21212001			     
 //{"26p5GeV_fixedTarget_2020b",              20200813, 213251, "y2019", "26p5GeV_fixedTarget_2020"},
-  {"26p5GeV_fixedTarget_2020",	             20200813, 213251, "y2020", "26p5GeV_fixedTarget"}, // 1st run = 21226023		     
+  {"26p5GeV_fixedTarget_2020a",	             20200813, 213251, "y2020", "26p5GeV_fixedTarget"}, // 1st run = 21226023		     
 //{"9p2GeVc_2020c",                          20200814,  54357, "y2019", "9p2GeVc_2020"},
   {"9p2GeVc_2020c",	                     20200814,  54357, "y2020", "9p2GeVc"}, // 1st run = 21227004			     
 //{"26p5GeV_fixedTarget_2020c",              20200819, 192253, "y2019", "26p5GeV_fixedTarget_2020"},
