@@ -118,6 +118,7 @@
  ($CXX_MAJOR,$CXX_MINOR) = split '\.', $CXX_VERSION;
  my $cxx_version = $CXX_MAJOR . ".". $CXX_MINOR;
  my $CXXFLAGS     = `root-config --auxcflags`; chomp($CXXFLAGS); #$CXXFLAGS  =~ s/-I.*//; 
+#  $CXXFLAGS       .= " -fno-omit-frame-pointer"; # for FlameGraph
 # print "CXXFLAGS = $CXXFLAGS\n";
  $CXXFLAGS    .= " -fPIC"; #$LDFLAGS;
 # $CXXFLAGS    .= " -Wall -Wextra -Wno-long-long  -Wabi"; # garfield
