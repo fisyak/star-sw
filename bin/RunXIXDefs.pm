@@ -1212,7 +1212,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1207'=> {trig=>'9p2GeV_2019',           	field => 'RF',	first=> '20179015',	 last => '20179020',	 list => '',  beginTime => '20190628.081931'}, # 	2019-06-28	08:19:31	2019-06-28	11:43:00	timestamp = 9p2GeV_2019_RF
 '1208'=> {trig=>'9p2GeV_2019',           	field => 'RF',	first=> '20179022',	 last => '20179026',	 list => '',  beginTime => '20190628.114300'}, # 	2019-06-28	11:43:00	2019-06-28	14:32:40
 '1209'=> {trig=>'9p2GeV_2019',           	field => 'RF',	first=> '20179028',	 last => '20179028',	 list => '',  beginTime => '20190628.143240'}, # 	2019-06-28	14:32:40	2019-06-29	03:28:34
-'1210'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20179039',	 last => '20179041',	 list => '',  beginTime => '20190629.032834'}, # 	2019-06-29	03:28:34	2019-06-29	04:38:17	timestamp = 4p59GeV_fixedTarget_2019_RF
+'1210'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20179040',	 last => '20179041',	 list => '',  beginTime => '20190629.034111'}, #  20190629.032834'}, # 	2019-06-29	03:28:34	2019-06-29	04:38:17	timestamp = 4p59GeV_fixedTarget_2019_RF
 '1211'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20180001',	 last => '20180004',	 list => '',  beginTime => '20190629.043817'}, # 	2019-06-29	04:38:17	2019-06-29	06:32:03
 '1212'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20180007',	 last => '20180018',	 list => '',  beginTime => '20190629.063203'}, # 	2019-06-29	06:32:03	2019-06-29	12:38:49
 '1213'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20180020',	 last => '20180024',	 list => '',  beginTime => '20190629.123849'}, # 	2019-06-29	12:38:49	2019-06-29	15:07:54
@@ -1224,7 +1224,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1219'=> {trig=>'Cosmic',                	field => 'RF',	first=> '20182001',	 last => '20182001',	 list => '',  beginTime => '20190701.052837'}, # 	2019-07-01	05:28:37	2019-07-01	06:08:21	timestamp = Cosmic_RF
 '1220'=> {trig=>'Cosmic',                	field => 'RF',	first=> '20182003',	 last => '20182005',	 list => '',  beginTime => '20190701.060821'}, # 	2019-07-01	06:08:21	2019-07-01	08:11:37
 '1221'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20182006',	 last => '20182018',	 list => '',  beginTime => '20190701.081137'}, # 	2019-07-01	08:11:37	2019-07-02	03:36:50	timestamp = 4p59GeV_fixedTarget_2019_RF
-'1222'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20182035',	 last => '20182035',	 list => '',  beginTime => '20190702.033650'}, # 	2019-07-02	03:36:50	2019-07-02	04:07:59
+'1222'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20182035',	 last => '20182035',	 list => '',  beginTime => '20190702.033650'}, # 	2019-07-02	03:36:50	2019-07-02	04:07:59xc
 '1223'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20183002',	 last => '20183005',	 list => '',  beginTime => '20190702.040759'}, # 	2019-07-02	04:07:59	2019-07-02	06:22:10
 '1224'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20183008',	 last => '20183012',	 list => '',  beginTime => '20190702.062210'}, # 	2019-07-02	06:22:10	2019-07-02	08:58:51
 '1225'=> {trig=>'4p59GeV_fixedTarget_2019',	field => 'RF',	first=> '20183015',	 last => '20183018',	 list => '',  beginTime => '20190702.085851'}, # 	2019-07-02	08:58:51	2019-07-02	10:32:43

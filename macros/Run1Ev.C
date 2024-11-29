@@ -161,8 +161,10 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 5,
     // Old Sti
     StiKalmanTrackNode::setDebug(8+32+16);
     StiKalmanTrackFinder::setDebug(2);
+    //    StiKalmanTrackFinder::setDebug(3);
     StiKalmanTrackFitter::setDebug(1);
-    StiKalmanTrack::setDebug(2);
+    //    StiKalmanTrack::setDebug(2);
+    StiKalmanTrack::setDebug(3);
     StiTrackNodeHelper::setDebug(8);
   }
   if (gClassTable->GetID("StiVMCMaker") >= 0) {

@@ -1,6 +1,6 @@
 /*
    cd ~/work/Tpc/Current/2019
-   root.exe -b -q  lmysql.C 'MakeTpcAvgPowerSupply.C+(2019)' >& MakeTpcAvgPowerSupply.`date +%m%d%y`.log &
+   root.exe -b -q  lDb.C 'MakeTpcAvgPowerSupply.C+(2019)' >& MakeTpcAvgPowerSupply.`date +%m%d%y`.log &
    mv MakeTpcAvgPowerSupply.2019.root MakeTpcAvgPowerSupply.2019.`date +%m%d%y`.root
    put2DB.pl 'StarDb/Calibrations/tpc/TpcAvg*.root' | tee put2DB.`date +%m%d%y`.log
    put2DB.pl 'StarDb/Calibrations/tpc/TpcAvg*.root'
@@ -44,8 +44,10 @@ for (Int_t s = 1; s <= 24; s++) {for (Int_t r = 1; r <=45; r++) {Double_t V = St
 #include <vector>
 #include "TObjectTable.h"
 #include "TDirIter.h"
+#include "TCanvas.h"
+TCanvas *c1 = 0;
 static TLinearFitter *lf = 0;
-static Int_t _debug = 1;
+static Int_t _debug = 1; // 1
 class Run_t {
 public:
   Run_t(Int_t r, const Char_t *Start,const Char_t *Stop) : run(r), start(Start), stop(Stop) {/* start.Print(); stop.Print(); */}
@@ -411,6 +413,7 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
     Int_t uBegin = runs[r]->start.Convert();
     Int_t uStop  = runs[r]->stop.Convert();
     Int_t uLast  = uStop;
+    Int_t duStopStart = uStop - uBegin;
     Int_t uTrip  = -1;
     Int_t uLastNonTrip = -1;
     if (uStop - uBegin < 10) {
@@ -424,13 +427,11 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
     avgT.run = runs[r]->run;
     vector<M_t> mXCV[24][8]; // [sector][channel];
 #if 0
-    if (avgC.run < 16166017) {
+    if (_debug > 2 && avgC.run != 22178033) {
       //      SafeDelete(runs[r]); 
       continue;
     };
 #endif
-    avgC.start_time = uBegin;
-    avgC.stop_time  = uStop;
     TCL::ucopy(avgI.Charge,avgC.Charge,192); 
     Double_t CurrentsSum = 0;
     Int_t NoRowsRead = 0;
@@ -439,6 +440,7 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
     Point.uBegin = uBegin;
     Point.uStop = uStop;
     Point.uEnd = uEnd;
+    TString Tripped;
     if (runs[r]) {
       //      TString Sql(Form("select UNIX_TIMESTAMP(beginTime),Voltages,Currents,Status,Reason from Conditions_daq.tpcPowerSupply%s ",IO[io]));
       TString Sql("select beginTime,VoltagesInner,VoltagesOuter,CurrentsInner,CurrentsOuter,Reason from Conditions_sc.tpcPowerSupply");
@@ -532,7 +534,49 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
     if (! NoRowsRead) {
       //      SafeDelete(runs[r]); 
       cout << "Skip run[" << r << "] = " << runs[r] << " with NoRowsRead = " << NoRowsRead << endl;
-      continue;
+      continue; 
+    }
+    // Check voltage drop
+    
+    for (Int_t sec = 1; sec <= 24; sec++) {
+      for (Int_t channel = 1; channel <= 8; channel++) {
+	UInt_t n = mXCV[sec-1][channel-1].size();
+	if (n < 3) continue;
+	TArrayD x(n), V(n);
+	double    xN = 0, x2N = 0;
+	double    RMS = 1e5;
+	double    RMSold = 1e5;
+	double    N = 0;
+	for (UInt_t j = 0; j < n; j++) {
+	  x[j] = mXCV[sec-1][channel-1][j]._x;
+	  if (x[j] > uLast) continue;
+	  V[j] = mXCV[sec-1][channel-1][j]._V;
+	  RMSold = RMS;
+	  if (RMS < 10) RMS = 10;
+	  if (j == 0) {
+	    xN = V[j];
+	    x2N = V[j]*V[j];
+	    N = 1;
+	  } else {
+	    if (TMath::Abs(xN - V[j]) < 3*RMS) {
+	      N++;
+	      xN  = (N-1)*xN/N  + V[j]/N;
+	      x2N = (N-1)*x2N/N + V[j]*V[j]/N;
+	      Double_t RMS2 = x2N - xN*xN;
+	      if (RMS2 < 0) RMS2 = 0;
+	      RMS = TMath::Sqrt(RMS2);
+	    } else {
+	      if (N > 5 && RMSold < 4.0) {
+		uLast = x[j-1];
+		cout << "Time : " << uLast << "\tCurrent = " << V[j] << "\txN = " << xN << "\tx2N = " << x2N << "\tRMS = " << RMS << endl;
+		RMS = RMSold;
+		Tripped = "Tripped";
+		break;
+	      }
+	    }
+	  }
+	}
+      }
     }
     // Fit
     Int_t failed = 0;
@@ -552,13 +596,14 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
 	  continue;
 	} 
 	TArrayD x(n), c(n), V(n);
+	// Current
 	Double_t xav = 0;
 	for (UInt_t j = 0; j < n; j++) {
 	  x[j] = mXCV[sec-1][channel-1][j]._x;
 	  xav += x[j];
 	  c[j] = mXCV[sec-1][channel-1][j]._C;
-	  V[j] = mXCV[sec-1][channel-1][j]._V;
 	}
+	if (n < 2) continue;
 	xav /= n;
 	for (UInt_t j = 0; j < n; j++) {
 	  x[j] -= xav;
@@ -583,17 +628,46 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
 	    Point.Cfit = avgC.Current[l];
 	  }
 	}
+	Double_t dC = 1e-6*avgC.Current[l]*duStopStart;
+	//	Double_t dC = 1e-6*avgC.Current[l]*(avgC.stop_time - avgC.start_time);
+	Point.Charge = dC;
+	if (! io) Point.AcChargeI =  AcCharge[io];
+	else      Point.AcChargeO =  AcCharge[io];
+	avgI.Charge[l] += dC;
+	AcCharge[io]   += dC;
+	CurrentsSum += avgC.Current[l];
 	delete graphC;
-	TGraph *graphV = new TGraph(n,x.GetArray(),V.GetArray());
+	// Voltages
+	xav = 0;
+	Int_t N = 0;
+	for (UInt_t j = 0; j < n; j++) {
+	  x[N] = mXCV[sec-1][channel-1][j]._x;
+	  if (x[N]  > uLast) continue;
+	  xav += x[N];
+	  V[N] = mXCV[sec-1][channel-1][j]._V;
+	  N++;
+	}
+	if (N < 2) continue;
+	xav /= N;
+	for (Int_t j = 0; j < N; j++) {
+	  x[j] -= xav;
+	}
+	TGraph *graphV = new TGraph(N,x.GetArray(),V.GetArray());
+	if (_debug > 2) {
+	  if (c1) c1->Clear();
+	  else    c1 = new TCanvas();
+	  graphV->Draw("axp");
+	  c1->Update();
+	}
 	Cut3Rms(graphV);
 	mean = graphV->GetMean(2);
 	rms    = graphV->GetRMS(2);
 	avgC.Voltage[l] = mean;
 	Point.meanV = mean;
 	Point.rmsV  = rms;
-	if (rms/(n-1) > 0.5) { // 0.5 V ignore as ramping
+	if (rms/(N-1) > 0.5) { // 0.5 V ignore as ramping
 	  failed++;
-	} else if (rms/(n-1) > 0.1) {  // 0.1V
+	} else if (rms/(N-1) > 0.1) {  // 0.1V
 	  iok1 = FitGraph(graphV,1);
 	  if (iok1 > 0 || ! lf) {
 	    failed++;
@@ -605,22 +679,18 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
 	  }
 	}
 	Point.FitStatus = failed;
+	Point.np    = N;
 	delete graphV;
 	if (failed) continue;
-	Double_t dC = 1e-6*avgC.Current[l]*(avgC.stop_time - avgC.start_time);
-	Point.Charge = dC;
-	if (! io) Point.AcChargeI =  AcCharge[io];
-	else      Point.AcChargeO =  AcCharge[io];
 	FitP->Fill(&Point.run);
-	avgI.Charge[l] += dC;
-	AcCharge[io]   += dC;
-	CurrentsSum += avgC.Current[l];
       }
     } // end of io loop
     if (CurrentsSum < 0.001) {
       if (IsBeenZeroSaved) continue;
       IsBeenZeroSaved = kTRUE;
     } else {IsBeenZeroSaved = kFALSE;}
+    avgC.start_time = uBegin;
+    avgC.stop_time  = uLast;
     St_TpcAvgPowerSupply *TpcAvgPowerSupply = new St_TpcAvgPowerSupply("TpcAvgPowerSupply",1);
     TpcAvgPowerSupply->AddAt(&avgC);// TpcAvgPowerSupply->Print(0,1);
     cout << "Run " << avgC.run << " Accumulated charge Inner = " << AcCharge[0] << " (C), Outer = " << AcCharge[1] << "(C)" << endl;
@@ -663,7 +733,7 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
       cout << "Skip run[" << r << "] = " << runs[r]->run << " with VoltagesI = " << VoltagesIO[0] << " and VoltagesO = " << VoltagesIO[1] << endl;
       continue;
     }
-    TString fOut =  Form("TpcAvgPowerSupply.%8i.%06i.root",runs[r]->start.GetDate(),runs[r]->start.GetTime());
+    TString fOut =  Form("TpcAvgPowerSupply.%8i.%06i.root%s",runs[r]->start.GetDate(),runs[r]->start.GetTime(),Tripped.Data());
     TFile *outf = new TFile(fOut.Data(),"recreate");
     TpcAvgPowerSupply->Write();
     delete outf;
