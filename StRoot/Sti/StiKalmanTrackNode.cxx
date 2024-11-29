@@ -2217,6 +2217,7 @@ void   StiKalmanTrackNode::PrintpT(const Char_t *opt) const {
   //       "B" at beam
   //       "R" at Radius
   //       "U" Updated
+  //       "r" rejected
   //       mFP fit parameters
   //       mFE fit errors
   //       _ext->mPP 
@@ -2224,7 +2225,7 @@ void   StiKalmanTrackNode::PrintpT(const Char_t *opt) const {
   //       _ext->mMtx
   Double_t dpTOverpT = 100*TMath::Sqrt(mFE._cPP/(mFP.ptin()*mFP.ptin()));
   if (dpTOverpT > 9999.9) dpTOverpT = 9999.9;
-  comment += ::Form(" %s pT %8.3f+-%6.1f sy %6.4f",opt,getPt(),dpTOverpT,TMath::Sqrt(mFE._cYY));
+  comment += ::Form(" %s pT %8.3f+-%6.1f, sy %6.4f, z = %8.3f",opt,getPt(),dpTOverpT,TMath::Sqrt(mFE._cYY), mFP.z());
 }
 //________________________________________________________________________________
 void StiKalmanTrackNode::PrintStep() {

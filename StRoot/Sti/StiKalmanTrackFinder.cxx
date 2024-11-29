@@ -53,7 +53,6 @@
 enum {kSeedTimg,kTrakTimg,kPrimTimg};
 enum {kMaxTrackPerm = 10000,kMaxEventPerm=10000000};
 
-static const double kRMinTpc =55;
 int StiKalmanTrackFinder::_debug = 0;
 
 //static void printIt(const StiKalmanTrack* trak,const StiKalmanTrackNode *node);
@@ -262,9 +261,10 @@ int StiKalmanTrackFinder::extendTrack(StiKalmanTrack *track,double rMin)
   // invoke tracker to find or extend this track
   //cout <<"StiKalmanTrack::find(int) -I- Outside-in"<<endl;
   {
-    if (debug()) cout << "StiKalmanTrack::find seed " << *((StiTrack *) track);
+    if (debug()) cout << "StiKalmanTrack::find kOutsideIn " << *((StiTrack *) track);
     trackExtended = find(track,kOutsideIn,rMin);
     if (trackExtended){/* in CA case not extended is ok*/}
+    if (debug()) cout << "StiKalmanTrack::refit " << endl;
     status = track->refit();
     if(status) return kNotRefitedIn;
 
@@ -279,9 +279,11 @@ int StiKalmanTrackFinder::extendTrack(StiKalmanTrack *track,double rMin)
   if (outerMostNode->getX() < kStarMaxTrackRangeR && 
       outerMostNode->getZ() > kStarMinTrackRangeZ &&
       outerMostNode->getZ() < kStarMaxTrackRangeZ) {// including BEMC and EEMC  
+    if (debug()) cout << "StiKalmanTrack::find  kInsideOut " << *((StiTrack *) track);
     trackExtendedOut= find(track,kInsideOut);
     if (!trackExtendedOut) return kExtended;
     status = track->refit();
+    if (debug()) cout << "StiKalmanTrack::refit " << endl;
     if(status) return kNotRefitedOut;
   }
   return kExtended;
@@ -368,7 +370,7 @@ double  sum()  const            {return mSum ;}        //summ of chi2
   void  setRMin(double rm)     {mRMin = rm  ;}
   void  addXi2(double Xi2)      {mSum += Xi2 ;}
   void  addHit(const StiHit *hit){mHits++; mQA=1;
-                                 if (hit->x() < kRMinTpc) { mSits++;
+                                 if (hit->x() < kMinRadTpc) { mSits++;
                                  mWits+=StiKalmanTrackFinderParameters::instance()->hitWeight((int)hit->x());}
                                 }
   
@@ -615,7 +617,7 @@ assert(direction || leadNode==track->getLastNode());
       if (direction) {
         nHits=1;
       } else {
-        int flg = (testNode.getX()< kRMinTpc)? mUseComb &3:mUseComb>>2;
+        int flg = (testNode.getX()< kMinRadTpc)? mUseComb &3:mUseComb>>2;
         if ((flg&2) || !nHits) 	nHits++;
         if ((flg&1)==0) 	nHits=1;
         
@@ -635,7 +637,7 @@ assert(direction || leadNode==track->getLastNode());
           status = node->updateNode();
           if (status)  break; 
 	  node->setChi2(hitCont.getChi2(jHit));
-          if (!direction && node->getX()< kRMinTpc) node->saveInfo(); //Save info for pulls 
+          if (!direction && node->getX()< kMinRadTpc) node->saveInfo(); //Save info for pulls 
 	  if (debug() > 0) {
 	  if (node->getDetector()) 
 	    StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));

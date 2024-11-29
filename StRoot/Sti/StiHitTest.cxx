@@ -89,7 +89,6 @@ void StiHftHits::hftHist(const char *name, const StiKalmanTrack* tk)
 //PXL 2 -- 7 < R < 9 cm
 //IST 3 -- 12 < R < 17 cm
 //SST 4 -- 21 < R < 28 cm 
-enum {kMinRadTpc = 50};
 if (StiDebug::Debug()<2) return;
 int nTpcHits = tk->getPointCount(kTpcId);
 if (nTpcHits<11) return;

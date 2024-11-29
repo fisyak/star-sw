@@ -304,6 +304,12 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
   } else {
     StTpcDb::SetAlignment2024(kFALSE);
   }
+  if( IAttr("TpcMDF4Error")    ) {
+    StTpcDb::SetTpcMDF4Error(kTRUE);
+    gMessMgr->Info() << "StTpcDbMaker::Use TpcMDF4Error " << endm;
+  } else {
+    StTpcDb::SetTpcMDF4Error(kFALSE);
+  }
   StTpcDb::instance()->SetDriftVelocity();
   
   if (IAttr("ExB")) { 

@@ -251,6 +251,11 @@ const StiNodeInf *getInfo() const 	{return _inf;}
   static void   SetLaser(Int_t m) {_laser = m;}
   static Int_t  IsLaser()         {return _laser;}
   void   PrintpT(const Char_t *opt="") const ;
+  void   PrintpTA(const Char_t *opt="") {
+    getDetector() ? ResetComment(::Form("%40s ",getDetector()->getName().c_str())) :ResetComment(); 
+    PrintpT(opt); 
+    if (getHit()) {comment += Form(" chi2 = %6.2f", getChi2());}
+    PrintStep();}
   int    getFlipFlop() const 			{return mFlipFlop;}
   static void   ResetComment(const Char_t *m = "") 	{comment = m; commentdEdx = "";}
   static const Char_t *Comment() 		{return comment.Data();}

@@ -288,8 +288,10 @@ class StiKalmanTrack : public StiTrack
   StiKalmanTrack &operator=(const StiKalmanTrack &tk);
   int rejectByHitSet()  const;
   int idTruth(int *qu=0) const;
-
- void test(const char *txt="Qwerty")  const;
+  static void SetChi2HitCut(Double_t chi2cut = 1000) {mChi2HitCut = chi2cut;}
+  static Double_t Chi2HitCut() {return mChi2HitCut;}
+  Int_t ClearWorstHits(Int_t max = 1);
+  void test(const char *txt="Qwerty")  const;
   
   typedef enum{ // type of return value for the refit() procedure
     kNoErrors = 0,
@@ -332,7 +334,7 @@ protected:
   int     mVertex;
   long    mFlag;         //A flag to pack w/ topo info
   double  _dca;
-
+  static Double_t mChi2HitCut; // accepted hit chis2 cut
  public:
   double _vChi2;//
   static int _debug; // Debug level

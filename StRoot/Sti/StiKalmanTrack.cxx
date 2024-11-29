@@ -570,6 +570,8 @@
  *
  */
 #include <assert.h>
+// #include <bits/stdc++.h> 
+// using namespace std; 
 //Std
 #include <stdexcept>
 #include <cmath>
@@ -618,6 +620,7 @@ enum {kMaxRefiter = 100};
 int StiKalmanTrack::mgMaxRefiter = kMaxRefiter;
 int StiKalmanTrack::_debug = 0;
 int debugCount=0;
+Double_t StiKalmanTrack::mChi2HitCut = 1000;
 
 StiTrackNodeHelper StiKalmanTrack::sTNH;
 
@@ -762,13 +765,13 @@ int StiKalmanTrack::getCharge() const
 /// Return the track chi2 per dof
 /// <p>
 /// The track chi2 is calculated from the incremental chi2 of all nodes carrying a hit that contributed to the fit of the track. 
-/// Note that a hit is not counted as contributing to the fit if its chi2 exceeds "StiKalmanTrackFitterParameters::instance()->getMaxChi2()"
+/// Note that a hit is not counted as contributing to the fit if its chi2 exceeds "StiKalmanTrackFitterParameters::instance()->getMaxChi2() == Chi2HitCut()"
 /// Note that this function returns "-1" if the number of fit points is smaller than 6
 double  StiKalmanTrack::getChi2() const
 {
   double fitHits   = 0;
   double trackChi2 = 0;
-  double maxChi2   = StiKalmanTrackFitterParameters::instance()->getMaxChi2();
+  double maxChi2   = Chi2HitCut();
   if (!firstNode) return 1.e+60;
   StiKTNIterator it;
   for (it=begin();it!=end();++it)  {
@@ -788,7 +791,7 @@ double  StiKalmanTrack::getChi2() const
 double  StiKalmanTrack::getChi2Max() const
 {
   double trackChi2 = 0;
-  double maxChi2   = StiKalmanTrackFitterParameters::instance()->getMaxChi2();
+  double maxChi2   = Chi2HitCut();
   if (!firstNode) return 1e11;
   for (auto it=begin();it!=end();++it)  {
     StiKalmanTrackNode *node = &(*it);
@@ -823,7 +826,7 @@ int StiKalmanTrack::getPointCount(int detectorId) const
     if (!node->getHit())	continue;
     detector = node->getDetector();  
     if (!detector) 		continue;
-    if (node->getChi2()>=1000)  continue;
+    if (node->getChi2()>Chi2HitCut()/0.03)  continue;
     if (detectorId && detector->getGroupId() != detectorId) 	continue;
     nPts++;
   }
@@ -1001,7 +1004,7 @@ double StiKalmanTrack::getTrackLength() const
   for (;(node=it());it++){
     if (!node->isValid()) 	continue;
     if (!node->getHit()) 	continue;
-    if ( node->getChi2()>10000.)continue;
+    if ( node->getChi2()>Chi2HitCut()/0.003)continue;
     x[1][0]=node->x_g();
     x[1][1]=node->y_g();
     x[1][2]=node->z_g();
@@ -1141,7 +1144,7 @@ StiKalmanTrackNode * StiKalmanTrack::getInnOutMostNode(int inot,int qua)  const
     if (!node->isValid()) 				continue;
     StiHit *hit = node->getHit();
     if (qua&kKeepHit) {if (!hit) continue;}
-    if (qua&kGoodHit) {if (!hit || node->getChi2()>10000.)continue;}
+    if (qua&kGoodHit) {if (!hit || node->getChi2()>Chi2HitCut()/0.003)continue;}
     return node;
   }
   return 0;
@@ -1176,7 +1179,6 @@ StiKalmanTrackNode * StiKalmanTrack::getInnerMostTPCHitNode(int qua)   const
    assert(0);
    //  throw runtime_error("StiKalmanTrack::getInnOutMostNode() -E- firstNode||lastNode==0");
  }
-
   StiKalmanTrackNode *node = 0;
   StiKalmanTrackNode* leaf = getLastNode();
   StiKTNForwardIterator it(leaf);
@@ -1185,10 +1187,10 @@ StiKalmanTrackNode * StiKalmanTrack::getInnerMostTPCHitNode(int qua)   const
   {
     StiKalmanTrackNode& node_t = *it;
     if (!node_t.isValid())		continue;
-    if (node_t.getChi2()>10000.) 	continue;
+    if (node_t.getChi2()>Chi2HitCut()/0.003) 	continue;
     StiHit* hit = node_t.getHit();
     if (!hit) 			continue;
-    if(hit->x()<58.f) continue;
+    if(hit->x()<kMinRadTpc) continue;
     node = &node_t;
     return node;
   }
@@ -1205,7 +1207,7 @@ StiKalmanTrackNode * StiKalmanTrack::getInnerMostDetHitNode(int detId)   const
   for (auto it=begin();(node=it());++it) 
   {
     if (!node->isValid())		continue;
-    if (node->getChi2()>10000.) 	continue;
+    if (node->getChi2()>Chi2HitCut()/0.003) 	continue;
     StiHit* hit = node->getHit();
     if (!hit) 				continue;
     auto *det = hit->detector();
@@ -1225,7 +1227,7 @@ int StiKalmanTrack::getNNodes(int qua)  const
     if (!node->isValid()) 				continue;
     StiHit *hit = node->getHit();
     if (qua&kKeepHit) { if (!hit) continue;} 			
-    if (qua&kGoodHit) { if (!hit || node->getChi2()>10000.) continue;}
+    if (qua&kGoodHit) { if (!hit || node->getChi2()>Chi2HitCut()/0.003) continue;}
     nn++;
   }
   return nn;
@@ -1259,7 +1261,7 @@ vector<const StMeasuredPoint*> StiKalmanTrack::stHits() const
   for (it=begin();it!=end();++it) {
     const StiKalmanTrackNode* node = &(*it);
     if (!node->isValid()) 	continue;
-    if (node->getChi2()>10000.) continue;
+    if (node->getChi2()>Chi2HitCut()/0.003) continue;
     const StiHit* hit = node->getHit();
     if (!hit) 			continue;
     if (!hit->detector())	continue;
@@ -1424,7 +1426,7 @@ vector<StiHit*> StiKalmanTrack::getHits()
     {
       const StiKalmanTrackNode& node = *it;
       if (!node.isValid())		continue;
-      if (node.getChi2()>10000.) 	continue;
+      if (node.getChi2()>Chi2HitCut()/0.003) 	continue;
       StiHit* hit = node.getHit();
       if (!hit) 			continue;
       hits.push_back(hit);
@@ -1564,7 +1566,8 @@ int StiKalmanTrack::refit()
     for (iter=0;iter<kMaxIter;iter++) {
       fail = 0;
       errType = kNoErrors;
-      sTNH.set(StiKalmanTrackFitterParameters::instance()->getMaxChi2()*10,StiKalmanTrackFitterParameters::instance()->getMaxChi2Vtx()*100,errConfidence,iter);
+      sTNH.set(Chi2HitCut()*10,StiKalmanTrackFitterParameters::instance()->getMaxChi2Vtx()*100,errConfidence,iter);
+      //YF      sTNH.set(Chi2HitCut(),StiKalmanTrackFitterParameters::instance()->getMaxChi2Vtx(),errConfidence,iter);
       pPrev = inn->fitPars();
       ePrev = inn->fitErrs(); 
       
@@ -1572,9 +1575,12 @@ int StiKalmanTrack::refit()
       if (status) 	{fail= 1;  errType = kRefitFail; break;}
       nNEnd = sTNH.getUsed();
       if ((nNEnd <=3))	{fail= 2;  errType = kNotEnoughUsed; break;}
-      if (!inn->isValid() || inn->getChi2()>1000) {
+      if (!inn->isValid() || inn->getChi2()>Chi2HitCut()/0.03) {
         inn = getInnerMostNode(3); fail=-1;  errType = kInNodeNotValid; continue;}	
       qA = StiKalmanTrack::diff(pPrev,ePrev,inn->fitPars(),inn->fitErrs(),igor);
+      if (debug()) {
+	cout << "StiKalmanTrack::refit iter = " << iter << " qA = " << qA << endl;
+      }
       static int oldRefit = StiDebug::iFlag("StiOldRefit");
       if (oldRefit) {
         if (qA>0.5)		{fail=-2;  errType = kBadQA;  continue;} 
@@ -1591,9 +1597,15 @@ int StiKalmanTrack::refit()
     if (fail>0) 						break;
       //		
     StiKalmanTrackNode *worstNode= sTNH.getWorst();
-    if (worstNode && worstNode->getChi2()>StiKalmanTrackFitterParameters::instance()->getMaxChi2())     
+    if (worstNode && worstNode->getChi2()>Chi2HitCut())     
     { //worstNode->getHit()->subTimesUsed();
-      worstNode->setHit(0); worstNode->setChi2(3e33); continue;}
+#if 0      
+      worstNode->setHit(0); worstNode->setChi2(3e33); 
+      continue;
+#else
+      if (ClearWorstHits(nNEnd/20+1)) continue;
+#endif
+    }
     if (rejectByHitSet()) { releaseHits()            ;continue;}
     
     if (!fail) 							break;
@@ -1632,7 +1644,7 @@ int StiKalmanTrack::refit()
       if (node == vertexNode)				continue;
       StiHit *hit = node->getHit();
       if(!hit) 						continue;
-      if (node->isValid() && node->getChi2()<10000. ) 	continue;
+      if (node->isValid() && node->getChi2()<Chi2HitCut()/0.003 ) 	continue;
       node->setHit(0);
     }
   }
@@ -1656,7 +1668,7 @@ static int nCall=0;nCall++;
 
     if (!isStarted) {
       if (!targetNode->getHit()) 	targetNode->setInvalid();		
-      if ( targetNode->getChi2()>1000) 	targetNode->setInvalid();
+      if ( targetNode->getChi2()>Chi2HitCut()/0.03) 	targetNode->setInvalid();
       if (!targetNode->isValid()) 	continue;
     }
     sTNH.set(pNode,targetNode);
@@ -1674,7 +1686,7 @@ static int nCall=0;nCall++;
     targetNode = &(*source);
     if (!isStarted) {
       if (!targetNode->getHit()) 	targetNode->setInvalid();		
-      if ( targetNode->getChi2()>1000) 	targetNode->setInvalid();
+      if ( targetNode->getChi2()>Chi2HitCut()/0.03) 	targetNode->setInvalid();
       if (!targetNode->isValid()) 	continue;
     }
     sTNH.set(pNode,targetNode);
@@ -1745,7 +1757,7 @@ double Xi2=0;
     if (!targetNode->isValid()) 	continue;
     const StiHit * hit = targetNode->getHit();
     if (!hit) 				continue;
-    if (targetNode->getChi2()>1000)	continue;
+    if (targetNode->getChi2()>Chi2HitCut()/0.03)	continue;
     if (zeroH<0) {//What kind of mag field ?
       double hz = targetNode->getHz();
       zeroH = fabs(hz)<=kZEROHZ;
@@ -1915,7 +1927,7 @@ int StiKalmanTrack::rejectByHitSet()  const
     StiHit *hit = node->getHit();
     if (!hit) 			continue;
     if (!hit->detector())	continue;
-    if (node->getChi2()>1000) 	continue;
+    if (node->getChi2()>Chi2HitCut()/0.03) 	continue;
     sum+= StiKalmanTrackFinderParameters::instance()->hitWeight(int(hit->x()));
   }
   if (!sum) return 0;
@@ -1927,15 +1939,61 @@ int StiKalmanTrack::releaseHits(double rMin,double rMax)
   StiKalmanTrackNode *node;
   int sum=0;
   for (StiKTNIterator it = rbegin();(node=it());it++){
+    if (!node->isValid()) 	continue;
     StiHit *hit = node->getHit();
     if (!hit) 			continue;
     if (!hit->detector())	continue;
-    if (hit->x()<rMin)		continue;
-    if (hit->x()>rMax)		break;
+    if (hit->x()<rMin)         continue;
+    if (hit->x()>rMax)         break;
     sum++;
     node->setHit(0);
   }
   return sum;
+}
+#if __GNUC__ <= 4
+Bool_t StiKalmanTrack_ClearWorstHits_comp(pair<StiKalmanTrackNode *, Double_t> a, pair<StiKalmanTrackNode *, Double_t> b) {  return a.second > b.second;}
+#endif
+//_____________________________________________________________________________
+Int_t StiKalmanTrack::ClearWorstHits(Int_t max) {
+  // Clear up to max hits with chi2 > Chi2HitCut()
+  Int_t noHits = 0;
+  // Declare vector of pairs 
+  vector<pair<StiKalmanTrackNode *, Double_t> > A; 
+  for (auto it = rbegin(); it != end(); it++){
+    StiKalmanTrackNode *node = &(*it);
+    if (!node->isValid()) 	continue;
+    StiHit *hit = node->getHit();
+    if (!hit) 			continue;
+    if (!hit->detector())	continue;
+    Double_t chi2 = node->getChi2();
+    if (chi2 > 1000) continue;
+    A.push_back(pair<StiKalmanTrackNode *, Double_t>(node,chi2));
+    noHits++;
+    if (debug() > 2) {
+      node->PrintpTA("A");
+    } 
+  }
+  // Sort using comparator function 
+#if __GNUC__ <= 4
+  sort(A.begin(), A.end(), StiKalmanTrack_ClearWorstHits_comp);
+#else
+  sort(A.begin(), A.end(), [] (pair<StiKalmanTrackNode *, Double_t>& a, pair<StiKalmanTrackNode *, Double_t>& b) { return a.second > b.second;});
+#endif
+  // Print the sorted value 
+  //  UInt_t NoHits = A.size();
+  Int_t NoRejected = 0;
+  if (debug()) {LOG_INFO << "StiKalmanTrack::ClearWorstHits(" << max << ")" << endm;}
+  for (auto& it : A) { 
+    auto node = it.first;
+    if (it.second > Chi2HitCut() && NoRejected < max) {
+      if (debug()) {
+	node->PrintpTA("r");
+      } 
+      NoRejected++;
+      node->setHit(0); node->setChi2(3e33); 
+    } 
+  } 
+  return NoRejected;
 }
 //_____________________________________________________________________________
 void StiKalmanTrack::test(const char *txt) const

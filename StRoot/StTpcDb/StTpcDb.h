@@ -103,6 +103,7 @@ class StTpcDb {
   Char_t                mEnd[1];        //!
   static Bool_t         mOldScheme;     //! switch between Old and New alignment scheme
   static Bool_t         mAlignment2024; //! switch between Old and 2024 alignment scheme
+  static Bool_t         mTpcMDF4Error;  //! switch between Old and MDF4 TPC error parameterization
   static Bool_t         mCosmics;       //! if cosmics 
  private:
   StTpcDb();
@@ -193,6 +194,8 @@ class StTpcDb {
 
   static void   SetAlignment2024(Bool_t k = kFALSE);
   static Bool_t Alignment2024() {return mAlignment2024;}
+  static void   SetTpcMDF4Error(Bool_t k = kFALSE) {mTpcMDF4Error = k;}
+  static Bool_t TpcMDF4Error() {return mTpcMDF4Error;}
   static void   SetCosmics(Bool_t k = kFALSE) {mCosmics = k;}
   static Bool_t IsCosmics() {return mCosmics;}
   ClassDef(StTpcDb,0)
