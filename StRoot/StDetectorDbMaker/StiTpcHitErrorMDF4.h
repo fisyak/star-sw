@@ -18,7 +18,7 @@ class StiTpcHitErrorMDF4 : public St_MDFCorrection4C {
   Int_t IO() const {return fio;}
  protected:
  StiTpcHitErrorMDF4(St_MDFCorrection4 *table=0, Int_t io = -1) : St_MDFCorrection4C(table), fio(io) {}
-  virtual ~StiTpcHitErrorMDF4() {}
+  virtual ~StiTpcHitErrorMDF4();
   Int_t fio; // => 0 iTPC, 1 => Tpx, -1 -> Undefined
   Bool_t fifFXT;
  private:
