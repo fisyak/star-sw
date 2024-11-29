@@ -483,8 +483,8 @@ enum StEmcCrateStatus {crateUnknown       = 0,
 // maximal sizes of tracking part of STAR in cm (Victor)
 enum StarMaxTrackRangeSize {kStarMaxTrackRangeR =  500, // including MTD
                             kStarMaxTrackRangeZ =  500,
-                            kStarMinTrackRangeZ = -kStarMaxTrackRangeZ};
-
+                            kStarMinTrackRangeZ = -kStarMaxTrackRangeZ,
+                            kMinRadTpc          = 55};
 /*!
  * \enum StVertexFinderId
  */
