@@ -403,8 +403,8 @@ Int_t StiMaker::InitRun(int run)
     _tracker->clear();
   }
   _initialized=true;
+  if (StTpcDb::Alignment2024())  StiKalmanTrack::SetChi2HitCut(StiKalmanTrackFitterParameters::instance()->getMaxChi2());
   LOG_INFO << "InitRun(): Initialization Segment Completed"<<endm;
-  
   return StMaker::InitRun(run);
 }
 

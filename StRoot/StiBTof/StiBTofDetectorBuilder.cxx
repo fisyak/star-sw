@@ -29,7 +29,7 @@
 #include "StEventTypes.h"
 #include "StBTofHit.h"
 /// Build all detector components of the BTof detector.
-static Int_t _debug = 0;
+//static Int_t _debug = 0;
 THashList *StiBTofDetectorBuilder::fRotList = 0;
 //________________________________________________________________________________
 void StiBTofDetectorBuilder::buildDetectors(StMaker &source) {
@@ -45,7 +45,6 @@ void StiBTofDetectorBuilder::useVMCGeometry() {
   LOG_INFO << "StiBTofDetectorBuilder::buildDetectors() -I- Use VMC geometry" 
        << endm;
   SetCurrentDetectorBuilder(this);
-
   // Build materials. In the BTof detector we have two: Air for the mother volume,
   // silicon for both the detector and the ladder support. This will be updated with
   // more detailed support structures at the appropriate time.
@@ -58,7 +57,9 @@ void StiBTofDetectorBuilder::useVMCGeometry() {
     {"BTOF_RPCG", &_fcMaterial} 
   };
   Int_t M = sizeof(map)/sizeof(Material_t);
+#if 0
   StiElossCalculator *ElossCalculator= 0;
+#endif
   StiMaterial *matS = 0;
   for (Int_t i = 0; i < M; i++)     {
     const TGeoMaterial *mat =  gGeoManager->GetMaterial(map[i].name); 
@@ -71,12 +72,14 @@ void StiBTofDetectorBuilder::useVMCGeometry() {
 				    mat->GetDensity()*mat->GetRadLen(),
 				    PotI));
     matS = *map[i].p;
+#if 0
     Double_t ionization = matS->getIonization();
     ElossCalculator = new StiElossCalculator(matS->getZOverA(), 
 					     ionization*ionization, 
 					     matS->getA(), 
 					     matS->getZ(),
 					     matS->getDensity());
+#endif
   }
   //
   // Build volumes. Will be done from GEANT tables.
@@ -159,7 +162,9 @@ void StiBTofDetectorBuilder::useVMCGeometry() {
     det->setGas(GetCurrentDetectorBuilder()->getGasMat());
     if(!det->getGas()) LOG_ERROR <<"gas not there!"<<endm;
     det->setMaterial(matS);
-    //    det->setElossCalculator(ElossCalculator);
+#if 0
+    det->setElossCalculator(ElossCalculator);
+#endif
     det->setHitErrorCalculator(StiBTofHitErrorCalculator::instance());
     // Adding detector, not sure if setKey is necessary  
     //if(ActiveVolume){
