@@ -29,6 +29,7 @@
 StTpcDb* gStTpcDb = 0;
 Bool_t StTpcDb::mOldScheme = kTRUE;
 Bool_t StTpcDb::mAlignment2024 = kFALSE;
+Bool_t StTpcDb::mTpcMDF4Error = kFALSE;
 Bool_t StTpcDb::mCosmics = kFALSE;
 TGeoHMatrix   *StTpcDb::mTpc2GlobMatrix = 0;
 // C++ routines:

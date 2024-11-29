@@ -144,7 +144,7 @@ switch ($pkg)
         unsetenv QTDIR       ; if ($?DECHO) echo "unsetenv QTDIR"
       endif
       unsetenv SITE          ; if ($?DECHO) echo "unsetenv SITE"
-      unsetenv *DEBUG        ; if ($?DECHO) echo "unsetenv *DEBUG"
+#     unsetenv *DEBUG        ; if ($?DECHO) echo "unsetenv *DEBUG"
 #     unsetenv XROOTDSYS XrdSecPWDALOGFILE XrdSecPWDSRVPUK
       unsetenv star*         ; if ($?DECHO) echo "unsetenv star*"
       if ($?CERN_ROOT) then 

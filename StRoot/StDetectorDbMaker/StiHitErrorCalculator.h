@@ -16,7 +16,7 @@ class StiHitErrorCalculator : public TChair {
   }
  protected:
   StiHitErrorCalculator(St_HitError *table=0) : TChair(table) {}
-  virtual ~StiHitErrorCalculator() {}
+    virtual ~StiHitErrorCalculator();
  private:
   ClassDefineChair(StiHitErrorCalculator,St_HitError, HitError_st )
   ClassDef(StiHitErrorCalculator,1) //C++ TChair for HitError table class

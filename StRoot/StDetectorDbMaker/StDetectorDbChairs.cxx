@@ -1382,7 +1382,12 @@ Bool_t St_TpcAvgPowerSupplyC::tripped(Int_t /* sector */,  Int_t /* padrow */) c
   // +/-15 seconds to account readout speed ( 30 secs) 
   //  if (u < start_time() - 15 || u > stop_time() + 15) return kTRUE;
   Int_t stop = stop_time();
-  if (stop > 0 && u > stop + 15) return kTRUE;
+  if (stop > 0 && u > stop + 15) {
+    TDatime tmax; tmax.Set(stop + 15);
+    LOG_WARN << "St_TpcAvgPowerSupplyC::tripped\t Current time = " << StMaker::GetChain()->GetDateTime().AsString() << "\tEnd time = " << tmax.AsString() << " for run = " << run() << endm;
+    PrintC("V");
+    return kTRUE;
+  }
   return kFALSE;
 }
 //________________________________________________________________________________
@@ -1426,7 +1431,10 @@ void St_TpcAvgPowerSupplyC::PrintC(Option_t *opt) const {
   const St_TpcAvgPowerSupply *TpcAvgPowerSupply = (St_TpcAvgPowerSupply *) GetThisTable();
   const TpcAvgPowerSupply_st &avgC = *TpcAvgPowerSupply->GetTable();
   Double_t AcCharge[2] = {0, 0};
-  cout << "TpcAvgPowerSupply for run = " << avgC.run << endl;
+  TDatime t[2];
+  t[0].Set(start_time());
+  t[1].Set(stop_time());
+  cout << "TpcAvgPowerSupply for run = " << avgC.run << "\tstart_time: " << t[0].AsString() << "\tstop_time " <<  t[1].AsString() << endl;
   for (Int_t sec = 1; sec <= 24; sec++) {
     cout << "Voltage " << sec;
     for (Int_t socket = 1; socket <= 8; socket++) cout << "\t" << Form("%10.3f",avgC.Voltage[8*(sec-1)+socket-1]);

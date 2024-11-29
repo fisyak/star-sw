@@ -28,15 +28,19 @@
 #  set sdt = "";
 #  echo $Name | grep -i Ideal
 #  if ($?) set sdt = ",sdt20160301";
-   set sdt = ",sdt20190629.032834"; # 4p59GeV_fixedTarget
+  set sdt = ",sdt20190629.034111"; #20190629.032834"; # 4p59GeV_fixedTarget
   set KFVertex = "";
   echo $Name | grep -i KFV
   if (! $?) set KFVertex = ",StiKFVertex";
+  set noMDF4 = "";
+  echo $Name | grep -i noMDF4
+  if (! $?) set noMDF4 = ",-TpcMDF4Error";
 #  if (! -r ${generF} ) then
 #    root.exe -q -b -x 'bfc.C(100,"hIn,P2019a,readAll,sdt20190311,StiCA,StiKFVertex,-hitfilt,-geantOut,-evout,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco","'${file}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(101,1000,"PHQMDFXT,vmc,MC.2019,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,vmc,MC.2019,StiPulls,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
-     root.exe -q -b -x 'bfc.C(100,"PHQMDFXT,vmc,MC.2019'${KFVertex}${sdt}',McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrZ,StiPulls,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#     root.exe -q -b -x 'bfc.C(100,"PHQMDFXT,vmc,MC.2019'${KFVertex}${sdt}',McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrZ,StiPulls,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+     root.exe -q -b -x 'bfc.C(100,"PHQMDFXT,vmc,MC.2019'${KFVertex}${noMDF4}${sdt}',McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrZ,StiPulls,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->

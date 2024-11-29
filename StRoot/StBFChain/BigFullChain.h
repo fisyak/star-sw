@@ -116,7 +116,7 @@ Bfc_st BFC[] = { // standard chains
   {"Calibration chains","------------","-----------","-----------------------------------","","","",kFALSE},
   {"LanaDV",   "","","LanaDVtpx","",""                                                   ,"get LDV",kFALSE},
   {"LanaDVtpx","","","MakeEvent,trgd,in,tpx,TpcHitMover,LaserIT,VFMinuit,Lana,Analysis,Corr4,"
-   "NosvtIT,NossdIT,NosstIT", "",""                                             ,"get LDV with TPX",kFALSE},
+   "NosvtIT,NossdIT", "",""                                                     ,"get LDV with TPX",kFALSE},
   //  {"LaserDV.Chain","","","in,LaserCal,fcf,TpcHitMover,OGridLeak3D,OShortR,OSpaceZ2","","","get LDV",kFALSE},
   {"MC----------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"MC.y2000","","","MC,DQ.2000,RC.2000,geant,evout,IdTruth,tags,GeantOut,big"            ,"","","",kFALSE},
@@ -268,13 +268,12 @@ Bfc_st BFC[] = { // standard chains
   {"XC2020",      "","","y2020,XC,sdt20200229",                                            "","","",kFALSE},
   {"XC2020I",     "","","y2020,XC",                                                        "","","",kFALSE},
   {"RC----------","-----------","-----------","------------------------------------------","","","",kFALSE},
-  {"RC.y2000"        ,"","","p2000,VFMinuit,CMuDst,NosvtIT,NossdIT,NosstIT"               ,"","","",kFALSE},
-  {"RC.y2001"        ,"","","P2001a,VFMinuit,ZDCvtx,CMuDst,NosvtIT,NossdIT,NosstIT"       ,"","","",kFALSE},
-  {"RC.pp.y2001"     ,"","","pp2001a,VFMinuit,CMuDst,NossdIT,NosstIT"                     ,"","","",kFALSE},
-  {"RC.pp.y2001.ppv" ,"","","pp2001a,VFPPV,beamLine,CMuDst,NossdIT,NosstIT"               ,"","","",kFALSE},
-  {"RC.y2003"        ,"","","DbV20040520,dau2003i,in,-SvtIT,NossdIT,NosstIT"              ,"","","",kFALSE},
-  {"RC.pp.y2003.VFPPV"    ,"","","pp2003,VFPPV,beamLine,CMuDst,-svtIT,NossdIT,NosstIT,Corr2,v0,xi",""
-   ,                                                                                          "","",kFALSE},
+  {"RC.y2000"        ,"","","p2000,VFMinuit,CMuDst,NosvtIT,NossdIT"                       ,"","","",kFALSE},
+  {"RC.y2001"        ,"","","P2001a,VFMinuit,ZDCvtx,CMuDst,NosvtIT,NossdIT"       	  ,"","","",kFALSE},
+  {"RC.pp.y2001"     ,"","","pp2001a,VFMinuit,CMuDst,NossdIT"                     	  ,"","","",kFALSE},
+  {"RC.pp.y2001.ppv" ,"","","pp2001a,VFPPV,beamLine,CMuDst,NossdIT"               	  ,"","","",kFALSE},
+  {"RC.y2003"        ,"","","DbV20040520,dau2003i,in,-SvtIT,NossdIT"              	  ,"","","",kFALSE},
+  {"RC.pp.y2003.VFPPV"    ,"","","pp2003,VFPPV,beamLine,CMuDst,-svtIT,NossdIT,Corr2,v0,xi","","","",kFALSE},
   {"RC.y2004"        ,"","","P2004,DbV20041213"                                           ,"","","",kFALSE},
   {"RC.y2004.NoSvt"  ,"","","P2004,DbV20041213,-SsdIt,-SvtIt,pmdRaw"                      ,"","","",kFALSE},
   {"RC.y2004.NoSvt.pmd"    ,"","","P2004,DbV20041213,pmdRaw,-SvtIT,-SsdIT"                ,"","","",kFALSE},
@@ -731,7 +730,7 @@ Bfc_st BFC[] = { // standard chains
    ,                                                        "Production chain for summer 2000 data",kFALSE},
   {"P2000"       ,""  ,"","ry2000,in,tpc_daq,tpc,rich,Physics,Cdst,Kalman,tags,Tree,evout,ExB,NoHits","",""
    ,                                                        "Production chain for summer 2000 data",kFALSE},
-  {"B2000" ,"","","ry2000,in,tpc_daq,tpc,rich,Physics,Cdst,Kalman,tags,Tree,evout,NosvtIT,NossdIT,NosstIT","",""
+  {"B2000" ,"","","ry2000,in,tpc_daq,tpc,rich,Physics,Cdst,Kalman,tags,Tree,evout,NosvtIT,NossdIT","",""
    ,                                                               "Base chain for 2001 (tpc+rhic)",kFALSE},
   {"P2000a"      ,""  ,"","B2000,Corr1","",""              ,"Production chain for summer 2000 data",kFALSE},
   // Year 2 chains.
@@ -849,27 +848,27 @@ Bfc_st BFC[] = { // standard chains
    ,                                                           "Base chain for 2008 ITTF (tpc+tof)",kFALSE},
   // startup for calib
   {"P2008a"       ,"" ,"",
-   "B2008,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr3,analysis"
+   "B2008,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr3,analysis"
    ,                  "","","Production chain for 2008 data Corr3 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   {"P2008b"       ,"" ,"",
-   "B2008,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr4,analysis"
+   "B2008,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr4,analysis"
    ,                  "","","Production chain for 2008 data Corr4 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   // or VFPPVnoCTB
   {"pp2008a"      ,"" ,"",
-   "B2008,IAna,ppOpt,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr4,analysis"
+   "B2008,IAna,ppOpt,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr4,analysis"
    ,                  "","","Production chain for 2008 data Corr3 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   {"P2008c"       ,"" ,"",   // ATTENTION: the below chain was used for preliminary results on low energy
-   "B2008,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr4,analysis"
+   "B2008,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr4,analysis"
    ,                        "","","Production chain for 2008 data (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   {"pp2008c"      ,"" ,"",  // Note: this chain was not used and may be removed
-   "B2008,IAna,ppOpt,Minuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr4,analysis"
+   "B2008,IAna,ppOpt,Minuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr4,analysis"
    ,                  "","","Production chain for 2008 data Corr4 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   // convergence chains
   {"pp2008"     ,"" ,"",   // VFPPV was chosen for p+p as final production chain
-   "B2008a,IAna,ppOpt,VFPPV,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr4,analysis"
+   "B2008a,IAna,ppOpt,VFPPV,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr4,analysis"
    ,                  "","","Production chain for 2008 data Corr3 (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   {"P2008"       ,"" ,"",  // this one is final and official production ready, June 2008
-   "B2008a,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,Corr4,analysis"
+   "B2008a,IAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,Corr4,analysis"
    ,                        "","","Production chain for 2008 data (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   // Chains for 2009 run p+p essentially
   // Note that we always need to start with VFMinuit as VFPPV is full of asserts
@@ -881,16 +880,16 @@ Bfc_st BFC[] = { // standard chains
    ,                                                               "Base chain for 2009 ITTF (tpc)",kFALSE},
 
   {"pp2009a"      ,"" ,"",
-   "B2009.1,IAna,ppOpt,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2009.1,IAna,ppOpt,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                   "","","Production chain for 2009 data - no Corr (+     ftpc, e/b-emc, trgd)",kFALSE},
   {"pp2009b"      ,"" ,"",
-   "B2009.1,IAna,ppOpt,VFMinuit,emcDY2,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2009.1,IAna,ppOpt,VFMinuit,emcDY2,ftpc,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,             "","","Production chain for 2009 data - no Corr (+     ftpc, e/b-emc, no trigger)",kFALSE},
   {"pp2009c"      ,"" ,"",
-   "B2009.2,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis","",""
+   "B2009.2,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,analysis","",""
    ,                   "Production chain for 2009 data - no Corr, no VF (+    ftpc, e/b-emc, trig)",kFALSE},
   {"pp2009d"      ,"" ,"",
-   "B2009.3,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis","",""
+   "B2009.3,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,analysis","",""
    ,                   "Production chain for 2009 data - no Corr, no VF (+    ftpc, e/b-emc, trig)",kFALSE},
   // chains for year 10
   {"B2010","","","ry2010,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
@@ -898,44 +897,44 @@ Bfc_st BFC[] = { // standard chains
   {"B2010c","","","ry2010c,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2010 ITTF (tpc)",kFALSE},
   {"P2010a","" ,"",  // initial chain - Add some to all of BEmcChkStat,QAalltrigs,trgd,btof,Corr3
-   "B2010,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                         "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc)",kFALSE},
   {"pp2010a","" ,"", // initial chain - Add some to all of BEmcChkStat,QAalltrigs,trgd,btof,Corr3,VFPPVnoCTB
-   "B2010,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                  "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc, no VF)",kFALSE},
   {"P2010c","" ,"",  // use of y2010c geometry
-   "B2010c,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010c,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                         "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc)",kFALSE},
   {"pp2010c","" ,"", // use of y2010c geometry
-   "B2010c,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010c,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                  "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc, no VF)",kFALSE},
   // chains for year 11
   {"B2011","","","ry2011,in,tpcX,UseXgeom,ftpc,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2011 ITTF (tpc)",kFALSE},
   {"P2011a","" ,"",  // initial chain - Add some to all of BEmcChkStat,QAalltrigs,trgd,btof,Corr3
-   "B2011,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2011,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                               "","","Production chain for 2011 data - no Corr (+     e/b-emc)",kFALSE},
   {"pp2011a","" ,"", // initial chain - Add some to all of BEmcChkStat,QAalltrigs,btof,Corr3,VFPPVnoCTB
-   "B2011,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2011,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                        "","","Production chain for 2011 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   // chains for year 12
   {"B2012","","","ry2012,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2012 ITTF (tpc)",kFALSE},
-  {"pp2012a","" ,"","B2012,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+  {"pp2012a","" ,"","B2012,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,        "","",                "Production chain for 2012 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"P2012a","" ,"",
-   "B2012,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2012,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                               "","","Production chain for 2011 data - no Corr (+     e/b-emc)",kFALSE},
   {"B2012b","","","ry2012a,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2012 ITTF (tpc)",kFALSE},
   {"pp2012b","" ,"",
-   "B2012b,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2012b,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,        "","",                "Production chain for 2012 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"P2012b","" ,"",
-   "B2012b,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2012b,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,                               "","","Production chain for 2011 data - no Corr (+     e/b-emc)",kFALSE},
   // Year 13 chains
-  {"B2013","","","in,tpcX,UseXgeom,ITTF,NosvtIT,NossdIT,NosstIT,tpcDB,TpcHitMover,Idst,tags,Tree,evout,"
+  {"B2013","","","in,tpcX,UseXgeom,ITTF,NosvtIT,NossdIT,tpcDB,TpcHitMover,Idst,tags,Tree,evout,"
    "btof,mtd,BAna,emcDY2,trgd,ZDCvtx","","",                       "Base chain for 2013 ITTF (tpc)",kFALSE},
   {"B2013x","","","ry2013_1x,B2013","","",                         "Base chain for 2013 ITTF (tpc)",kFALSE},
   {"pp2013x","","","B2013x,BAna,emcDY2,trgd,ZDCvtx" //
@@ -946,14 +945,14 @@ Bfc_st BFC[] = { // standard chains
   {"B2013_c1","","","ry2013_1c,in,tpcX,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2013 ITTF (tpc)",kFALSE},
   {"pp2013a","" ,"",
-   "B2013_c2,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis",
+   "B2013_c2,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis",
    "","",                         "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"pp2013b","" ,"",
-   "B2013_c1,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2013_c1,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,        "","",                "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   // option is bare, no tracker and no Geom
   {"pp2013","" ,"",
-   "BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,analysis"
    ,        "","",                "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   // Year 14 chains
   {"B2014"  ,"","","ry2014,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
@@ -1243,8 +1242,9 @@ Bfc_st BFC[] = { // standard chains
   {"CorrY"       ,"" ,"","ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
    ",-OBmap2D,-OClock,-OTwist"                                           ,"","","New Tpc Alignment",kFALSE},
   {"Alignment2024","" ,"","NewTpcAlignment"                         ,"","","Turn on Alignment 2024",kFALSE},
-  {"CorrZ","" ,"","Alignment2024,TFGdbOpt,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
+  {"CorrZ","" ,"","Alignment2024,TFGdbOpt,TpcMDF4Error,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
    ",OGridLeakFull,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
+  {"TpcMDF4Error"   ,"" ,"",""                                     ,"","","Turn on Tpc MDF4 errors",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
   {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
   {"EB2"         ,""  ,"","",""                                     ,"","Force ExB configuration 2",kFALSE},

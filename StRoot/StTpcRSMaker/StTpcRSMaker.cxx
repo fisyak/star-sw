@@ -686,7 +686,7 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
   static Int_t iBreak = 0;
 #ifdef __DEBUG__
   if (Debug()%10) {
-    gBenchmark->Reset();
+    //    gBenchmark->Reset();
     gBenchmark->Start("TpcRS");
     LOG_INFO << "\n -- Begin TpcRS Processing -- \n";
   }

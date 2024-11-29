@@ -300,7 +300,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 //{"9p2GeV_2019",                            20190628,  81931, "y2019", "9p2GeV_2019"},
   {"9p2GeV_2019",	              	     20190628,  81931, "y2019", "9p2GeV_2019"}, // 1st run = 20179015			 
 //{"4p59GeV_fixedTarget_2019",               20190629,  32834, "y2019", "4p59GeV_fixedTarget_2019"},
-  {"4p59GeV_fixedTarget_2019",	      	     20190629,  32834, "y2019", "4p59GeV_fixedTarget_2019"}, // 1st run = 20179039	 
+  {"4p59GeV_fixedTarget_2019",	      	     20190629,  34111, "y2019", "4p59GeV_fixedTarget_2019"}, // 1st run = 20179039 tripped (noTpc) => 20179040	 
 //{"9p2GeV_2019b",                           20190702, 144151, "y2019", "9p2GeV_2019"},
   {"9p2GeV_2019b",	              	     20190704, 210347, "y2019", "9p2GeV_2019"}, // 1st run = 20185031			 
 //{"31GeV_fixedTarget_2019",                 20190709,  32312, "y2019", "31GeV_fixedTarget_2019"},
