@@ -557,10 +557,14 @@ void StTrackCombPiD::SetCombPiD() {
 	continue;
       }
       StTofStatus *tofSt = (StTofStatus *) Status(k);
+      Double_t SigmaM2q2 = tofSt->SigmaM2q2();
+      if (SigmaM2q2 <= 0.0) {
+	SafeDelete(fStatus[k]);
+	continue;
+      }
       tofSt->Pred(l)  = M2overQ2;
       tofSt->PredC(l) = tofSt->Pred(l) ;
       Double_t M2q2   = tofSt->M2q2();
-      Double_t SigmaM2q2 = tofSt->SigmaM2q2();
       Double_t dM2q = M2q2 - M2overQ2;
       tofSt->ResidualC(l) = dM2q;
       tofSt->PullC(l) = tofSt->ResidualC(l)/SigmaM2q2;

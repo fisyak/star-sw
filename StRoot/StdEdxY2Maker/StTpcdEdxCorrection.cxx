@@ -116,14 +116,18 @@ StTpcdEdxCorrection::StTpcdEdxCorrection(Int_t option, Int_t debug) :
 				      "TpcdEdxCor"};
   static Int_t NT = sizeof(FXTtables)/sizeof(const Char_t *);
   m_isFixedTarget = St_beamInfoC::instance()->IsFixedTarget();
-  TString flavor("sim+ofl");
+  if (m_isFixedTarget) {
+    TString flavor("sim+ofl+FXT");
 #ifdef __TFG__VERSION__
-  flavor += "+TFG";
+    flavor += "+TFG";
 #endif
-  if (m_isFixedTarget) flavor += "+FXT";
-  St_db_Maker *dbMk = (St_db_Maker *) StMaker::GetTopChain()->Maker("db");
-  for (Int_t i = 0; i < NT; i++) {
-    dbMk->SetFlavor(flavor, FXTtables[i]);
+    St_db_Maker *dbMk = (St_db_Maker *) StMaker::GetTopChain()->Maker("db");
+    TDataSet *flaDir = dbMk->Find(".flavor");
+    for (Int_t i = 0; i < NT; i++) {
+      // Don't touch tables with set flavor
+      if (flaDir && flaDir->Find(FXTtables[i])) continue;
+      dbMk->SetFlavor(flavor, FXTtables[i]);
+    }
   }
   ReSetCorrections();
 }
