@@ -560,6 +560,8 @@ int tpc23_base::row_stage2(int row)
 #endif
 			
 //		if(peaks_cou<=1) {	// not that it could have been 0 in some patho cases
+		sim_quality = 0 ;
+		sim_track_id = 0;
 		if(one_peak) {	// not that it could have been 0 in some patho cases
 			double f_charge = 0.0 ;
 			double f_t_ave = 0.0 ;
@@ -625,13 +627,13 @@ int tpc23_base::row_stage2(int row)
 				sim_track_id = tr[max_p][max_t] ;
 				
 				int sim_all = 0 ;
-				sim_quality = 0 ;
 				for(int p=0;p<pd;p++) {
 					for(int t=0;t<td;t++) {
+					        if(! store[p][t]) continue;
+						sim_all += store[p][t];
 						if(tr[p][t]==sim_track_id) {
-							sim_quality++ ;
+							sim_quality += store[p][t];
 						}
-						if(store[p][t]) sim_all++ ;
 					}
 				}
 
@@ -871,10 +873,11 @@ int tpc23_base::row_stage2(int row)
 					sim_quality = 0 ;
 					for(int p=ip1;p<=ip2;p++) {
 						for(int t=it1;t<=it2;t++) {
+						        if(! store[p][t]) continue;
+							sim_all += store[p][t];
 							if(tr[p][t]==sim_track_id) {
-								sim_quality++ ;
+								sim_quality += store[p][t];
 							}
-							if(store[p][t]) sim_all++ ;
 						}
 					}
 
