@@ -54,6 +54,7 @@ endif
 if (! $?GROUP_DIR != 0) then
   source $GROUP_DIR/unix_programs.csh
 endif
+      if ($?DECHO) echo "setup ${pkg}"
 switch ($pkg)
     case "spackTFG":
     case "SPACKTFG":
@@ -357,6 +358,7 @@ switch ($pkg)
     # CERN in case of alternate CERN_ROOT
     case "CERN":
     case "cern":
+      if ($?DECHO) echo "${pkg} => CERN"
 #    echo "CERN in case of alternate CERN_ROOT"
 	if ( $location != 0 ) then
 	    # use the specified location, no double check
@@ -371,10 +373,11 @@ switch ($pkg)
 	    if ( ! $?CERN ) then
 		# Define one value - some of the path below are historical
 		if ( $USE_64BITS == 1) then
-		    set x="/cern64 /cern ${AFS_RHIC}/asis/@sys/cern64 ${AFS_RHIC}/asis/@sys/cern /usr/local/cern64 /usr/local/cern /common/star/cern64 /common/star/cern /software/fisyak/STAR/cern64"
+		    set x="/cern64 /cern ${AFS_RHIC}/asis/@sys/cern64 ${AFS_RHIC}/asis/@sys/cern /usr/local/cern64 /usr/local/cern /common/star/cern64 /common/star/cern /software/fisyak/STAR/cern64  $AFS_RHIC/cern64"
 		else
-		    set x="/cern ${AFS_RHIC}/asis/@sys/cern /usr/local/cern /common/star/cern /software/fisyak/STAR/cern"
+		    set x="/cern ${AFS_RHIC}/asis/@sys/cern /usr/local/cern /common/star/cern /software/fisyak/STAR/cern $AFS_RHIC/cern"
 		endif
+                if ($?DECHO) echo "CERN earch list: ${x}"
             else
 		# Either it was set before by the search above or there is an 
 		# external definition. In all cases, if it ends by 64, set as-is
@@ -397,7 +400,9 @@ switch ($pkg)
 	    # But this odditiy is needed to deal with the 64 bits convention
 	    # ${CERN} ${CERN}64
 	    foreach d ($x)
+                if ($?DECHO) echo "d = ${d}"
 		if ( -r  $d ) then
+                    if ($?DECHO) echo "${d} is readble"
 		    setenv CERN $d
 		    break
 		endif
