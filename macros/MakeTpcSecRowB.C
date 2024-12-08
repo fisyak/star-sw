@@ -19,13 +19,13 @@
 #include "TCanvas.h"
 #include "tables/St_TpcSecRowCor_Table.h"
 #endif
-//#define __RECOVER__
+#define __RECOVER__
 #define __NO_TpcRowQ__
 //________________________________________________________________________________
 void MakeTpcSecRowB(TH1 *hist, TH1 *histSigma = 0,
 		    Int_t d = 20070321, Int_t t = 58, 
 		    const Char_t *TableName = "TpcSecRowB",
-		    const Char_t *TpcRowQ = 0){
+		    const Char_t *TpcRowQ = 0, TH1 *entries=0){
   if (gClassTable->GetID("TTable") < 0) gSystem->Load("libTable");
   if (gClassTable->GetID("St_TpcSecRowCor") < 0) gSystem->Load("libStDb_Tables");
   St_TpcSecRowCor *secrowold = (St_TpcSecRowCor *) gDirectory->Get(TableName);
@@ -74,12 +74,18 @@ void MakeTpcSecRowB(TH1 *hist, TH1 *histSigma = 0,
 	       << row.GainScale[j-1] << "\tdevD =" << devD << endl;
 	} else {	
 #ifdef __RECOVER__
-	  row.GainScale[j-1] = 1; // <<<<<<<
-	  cout << "Reset Sector \t" << i << "\tRow\t" << j;
+	  if (entries && entries->GetBinContent(i,j) > 1) {
+	    row.GainScale[j-1] = 1; // <<<<<<<
+	    cout << "Reset Sector \t" << i << "\tRow\t" << j;
+	  } else {
+	    row.GainScale[j-1] = 0;
+	    cout << "Skip Sector \t" << i << "\tRow\t" << j;
+	  }
 #else
 	  row.GainScale[j-1] = 0;
 	  cout << "Skip Sector \t" << i << "\tRow\t" << j;
 #endif
+	  cout << "\ti/j\t" << i << "/" << j << " is empty. Reset to "<<  row.GainScale[j-1]  << endl;
 	  row.GainRms[j-1]   = 0;
 	  cout << "\tdev " << dev << "\tdevD " << devD
 	       << "\twith correction\t" << hist->GetBinContent(i,j) << "\tError\t" << err << endl;
@@ -87,13 +93,20 @@ void MakeTpcSecRowB(TH1 *hist, TH1 *histSigma = 0,
 	}
       }  else  {
 	if ( hist->GetBinError(i,j) <= 0) {
-#ifndef __RECOVER__
-	  cout << "i/j\t" << i << "/" << j << " is empty. Skipped !" << endl;
+#ifdef __RECOVER__
+	  if (entries && entries->GetBinContent(i,j) > 1) {
+	    row.GainScale[j-1] = 1; // <<<<<<<
+	    cout << "Reset Sector \t" << i << "\tRow\t" << j;
+	  } else {
+	    row.GainScale[j-1] = 0;
+	    cout << "Skip Sector \t" << i << "\tRow\t" << j;
+	  }
 #else
-	  cout << "i/j\t" << i << "/" << j << " is empty. Reset to 1 !" << endl;
-	  row.GainScale[j-1] = 1;
+	  row.GainScale[j-1] = 0;
 	  row.GainRms[j-1]   = 0;
+	  cout << "Skip Sector \t" << i << "\tRow\t" << j;
 #endif
+	  cout << "\ti/j\t" << i << "/" << j << " is empty. Reset to "<<  row.GainScale[j-1]  << endl;
 	} else {
 	  row.GainScale[j-1] = TMath::Exp(-dev);
 // 	  if (i == 20) {
@@ -193,7 +206,7 @@ void MakeTpcSecRowB(TH1 *hist, TH1 *histSigma = 0,
 }
 //________________________________________________________________________________
 void MakeTpcSecRowB(Int_t d=20060210,Int_t t= 80000, const Char_t *TableName = "TpcSecRowB", const Char_t *TpcRowQ = 0){
-  TH1 *mu = 0, *sigma = 0;
+  TH1 *mu = 0, *sigma = 0, *entries = 0;
   TFile *calib = 0;
   TSeqCollection   *files = gROOT->GetListOfFiles();
   if (! files) return;
@@ -214,10 +227,14 @@ void MakeTpcSecRowB(Int_t d=20060210,Int_t t= 80000, const Char_t *TableName = "
     if (sigma) {
       cout << "found histogram " << sigma->GetName() << " in file " << f->GetName()  << endl;
     }
+    entries = (TH1 *) f->Get("entries");
+    if (entries) {
+      cout << "found histogram " << entries->GetName() << " in file " << f->GetName()  << endl;
+    }
   }
   if (mu) {
     if (calib) calib->cd();
-    MakeTpcSecRowB(mu,sigma,d,t,TableName,TpcRowQ);
+    MakeTpcSecRowB(mu,sigma,d,t,TableName,TpcRowQ, entries);
   } else {
     if (! mu) cout << "Histogram was not found" << endl;
     if (! calib) cout << "file with " << TableName << " was not found" << endl;

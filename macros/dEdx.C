@@ -142,18 +142,18 @@ void dEdx(Int_t First, Int_t Last,
     dEdxY2->SetMode(Mode); 
   }
   if (! gROOT->IsBatch()) dEdxY2->SetDebug(1);
-  StMaker *db = chain->Maker("db");
+  if (Last >= 0)   chain->Init();
+  St_db_Maker *db = (St_db_Maker *) chain->Maker("db");
   if (db) {
     db->SetDebug(1);
-#if 0 /* disable MySQl for tables under calibration */
-    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC", "TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
+#if 1 /* disable MySQl for tables under calibration */
+    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC", 0, 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
     for (Int_t i = 0; TFGTables[i]; i++) {
       cout << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endl; 
       db->SetFlavor("TFG",TFGTables[i]);
     }
 #endif
   }
-  if (Last >= 0)   chain->Init();
   StIOMaker *inMk = (StIOMaker *) chain->GetMaker("inputStream");
   if (inMk) {
     inMk->SetIOMode("r");

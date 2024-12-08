@@ -83,7 +83,7 @@ void MakeTpcZCorrection1() {
   const Char_t *histN[] = {"OW", "IW", "OE", "IE"};
   Int_t    nWEOI[4] = {0};
   if      (fileIn == "")                                 {nrows = 0;}
-#if 1
+#if 0 /* ~/work/Histograms/RunXIX_XXI26 $ root.exe Z3G4E*.root MakeTpcZCorrectionC.C+ */
   else if (fileIn.Contains("100GeV_fixedTarget_2021"))   {nWEOI[0] = nWEOI[2] = nWEOI[3] = 2;} //
   else if (fileIn.Contains("13p5GeV_fixedTarget_2020"))  {} // {nrows = 0;}
   else if (fileIn.Contains("19p5GeV_fixedTarget_2020"))  {} // {nrows = 0;}
