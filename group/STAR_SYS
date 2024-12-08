@@ -4,7 +4,7 @@
 # Determine STAR_SYS and STAR_HOST_SYS variables.
 # History at the end of this script
 #
-setenv STAR_SYS ""
+if (! $?STAR_SYS) setenv STAR_SYS ""
 source $GROUP_DIR/unix_programs.csh
 if ( $?self ) then
     set STAR_SYS_pself=${self}
@@ -139,6 +139,7 @@ endif
 	# Note that only partial enabling is made (there is a lack
 	# of conistency ; should all go through STARCMPL
 	switch ($STAR_SYS)
+	    case "*Darwin*"
 	    case "*darwin*"
 		set rhflavor = ""
 		set rhmajor  = `uname -s | tr '[A-Z]' '[a-z]'`
@@ -207,6 +208,7 @@ endif
        if ($redhat != 72) then
 	if ("$vers" != "" ) then
 	    switch ($STAR_SYS)
+		case "*Darwin*": 
 		case "*darwin*": 
 		    setenv STAR_HOST_SYS ${STAR_SYS}_${xSTARCMPL}
 		    breaksw
