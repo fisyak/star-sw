@@ -2004,3 +2004,642 @@ end
 70GeV_fixedTarget_2021.root histogram PVxyzC     has 964845 entries
 7p3GeV_fixedTarget_2020.root histogram PVxyzC    has 303952 entries
 9p8GeV_fixedTarget_2020.root histogram PVxyzC    has 401654 entries
+--------------------------------------------------------------------------------
+11/29/2024
+[rcas6005] ~/work/Histograms/RunXIX_XXI27 $ root.exe SecRow3CG*.root FitPDraw.C+
+ 0 SecRow3CG4EY100GeV_fixedTarget_2021.root             FitP->Draw("mu:rowsigned(y,x) >> P0","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","prof")       0 SecRow3CG4EY100GeV_fixedTarget_2021           All: min/max =   -2.47/   0.92 rms    2.28 (%)
+ 1 SecRow3CG4EY13p5GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P1","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   1 SecRow3CG4EY13p5GeV_fixedTarget_2020          All: min/max =   -3.10/   0.81 rms    2.31 (%)
+
+ 2 SecRow3CG4EY19GeV_2019.root                          FitP->Draw("mu:rowsigned(y,x) >> P2","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   2 SecRow3CG4EY19GeV_2019                        All: min/max =   -0.62/   0.68 rms    0.49 (%)
+ 3 SecRow3CG4EY19GeVa_2019.root                         FitP->Draw("mu:rowsigned(y,x) >> P3","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   3 SecRow3CG4EY19GeVa_2019                       All: min/max =   -1.63/   1.07 rms    0.96 (%)
+ 4 SecRow3CG4EY19GeVb_2019.root                         FitP->Draw("mu:rowsigned(y,x) >> P4","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   4 SecRow3CG4EY19GeVb_2019                       All: min/max =   -0.40/   2.35 rms    0.72 (%)
+
+ 5 SecRow3CG4EY19p5GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P5","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   5 SecRow3CG4EY19p5GeV_fixedTarget_2020          All: min/max =   -3.24/   0.61 rms    2.32 (%)
+
+ 6 SecRow3CG4EY26p5GeV_fixedTarget_2020a.root           FitP->Draw("mu:rowsigned(y,x) >> P6","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   6 SecRow3CG4EY26p5GeV_fixedTarget_2020a         All: min/max =   -4.20/   0.74 rms    2.43 (%)
+ 7 SecRow3CG4EY26p5GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P7","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   7 SecRow3CG4EY26p5GeV_fixedTarget_2020          All: min/max =   -3.57/   1.36 rms    2.40 (%)
+
+ 8 SecRow3CG4EY26p5GeV_fixedTarget_2021.root            FitP->Draw("mu:rowsigned(y,x) >> P8","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   8 SecRow3CG4EY26p5GeV_fixedTarget_2021          All: min/max =   -3.02/   2.03 rms    2.41 (%)
+
+ 9 SecRow3CG4EY31GeV_fixedTarget_2019.root              FitP->Draw("mu:rowsigned(y,x) >> P9","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   9 SecRow3CG4EY31GeV_fixedTarget_2019            All: min/max =   -1.37/   2.59 rms    1.57 (%)
+10 SecRow3CG4EY31p2GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P10","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         10 SecRow3CG4EY31p2GeV_fixedTarget_2020          All: min/max =   -3.20/   0.69 rms    2.28 (%)
+11 SecRow3CG4EY44p5GeV_fixedTarget_2021.root            FitP->Draw("mu:rowsigned(y,x) >> P11","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         11 SecRow3CG4EY44p5GeV_fixedTarget_2021          All: min/max =   -6.76/   0.44 rms    2.30 (%)
+12 SecRow3CG4EY4p59GeV_fixedTarget_2019.root            FitP->Draw("mu:rowsigned(y,x) >> P12","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         12 SecRow3CG4EY4p59GeV_fixedTarget_2019          All: min/max =   -1.42/   0.55 rms    0.85 (%)
+13 SecRow3CG4EY5p75GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P13","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         13 SecRow3CG4EY5p75GeV_fixedTarget_2020          All: min/max =   -3.42/   0.71 rms    2.27 (%)
+14 SecRow3CG4EY70GeV_fixedTarget_2021.root              FitP->Draw("mu:rowsigned(y,x) >> P14","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         14 SecRow3CG4EY70GeV_fixedTarget_2021            All: min/max =   -2.37/   0.95 rms    1.95 (%)
+15 SecRow3CG4EY7p3GeV_fixedTarget_2020.root             FitP->Draw("mu:rowsigned(y,x) >> P15","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         15 SecRow3CG4EY7p3GeV_fixedTarget_2020           All: min/max =   -2.40/   1.01 rms    2.02 (%)
+16 SecRow3CG4EY9p8GeV_fixedTarget_2020.root             FitP->Draw("mu:rowsigned(y,x) >> P16","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         16 SecRow3CG4EY9p8GeV_fixedTarget_2020           All: min/max =   -3.20/   0.75 rms    2.24 (%)
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI27 $ root.exe Z3CG*2019*.root FitPDraw.c
+ 0 Z3CG4EY19GeV_2019.root                               FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI0","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY19GeV_2019                            Inner: min/max =  -12.75/   1.25 rms    1.69 (%)
+ 1 Z3CG4EY19GeVa_2019.root                              FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI1","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY19GeVa_2019                           Inner: min/max =  -15.02/   3.04 rms    2.19 (%)
+ 2 Z3CG4EY19GeVb_2019.root                              FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI2","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY19GeVb_2019                           Inner: min/max =  -13.69/   2.31 rms    1.86 (%)
+ 3 Z3CG4EY31GeV_fixedTarget_2019.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI3","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY31GeV_fixedTarget_2019                Inner: min/max =  -32.98/   2.92 rms    3.36 (%)
+ 4 Z3CG4EY4p59GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI4","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY4p59GeV_fixedTarget_2019              Inner: min/max =  -36.90/   1.17 rms    2.31 (%)
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI27 $ root.exe Z3CG*2020*.root FitPDraw.C+
+ 0 Z3CG4EY13p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI0","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY13p5GeV_fixedTarget_2020              Inner: min/max =  -35.64/   1.21 rms    3.44 (%)
+ 1 Z3CG4EY19p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI1","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY19p5GeV_fixedTarget_2020              Inner: min/max =  -37.10/   1.77 rms    3.01 (%)
+
+ 2 Z3CG4EY26p5GeV_fixedTarget_2020a.root                FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI2","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY26p5GeV_fixedTarget_2020a             Inner: min/max =  -31.73/   1.07 rms    3.06 (%)
+ 3 Z3CG4EY26p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI3","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY26p5GeV_fixedTarget_2020              Inner: min/max =  -32.84/   2.36 rms    3.22 (%)
+
+ 4 Z3CG4EY31p2GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI4","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY31p2GeV_fixedTarget_2020              Inner: min/max =  -37.60/   1.64 rms    3.40 (%)
+ 5 Z3CG4EY5p75GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI5","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    5 Z3CG4EY5p75GeV_fixedTarget_2020              Inner: min/max =  -35.69/   1.13 rms    2.79 (%)
+ 6 Z3CG4EY7p3GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI6","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    6 Z3CG4EY7p3GeV_fixedTarget_2020               Inner: min/max =  -37.79/   1.70 rms    2.88 (%)
+ 7 Z3CG4EY9p8GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI7","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    7 Z3CG4EY9p8GeV_fixedTarget_2020               Inner: min/max =  -34.49/   1.37 rms    3.00 (%)
+root.exe [9] .x FitPDraw.C+("O")
+ 0 Z3CG4EY13p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO0","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY13p5GeV_fixedTarget_2020              Outer: min/max =  -23.43/   1.24 rms    2.63 (%)
+ 1 Z3CG4EY19p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO1","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY19p5GeV_fixedTarget_2020              Outer: min/max =  -25.98/   1.17 rms    2.68 (%)
+ 2 Z3CG4EY26p5GeV_fixedTarget_2020a.root                FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO2","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY26p5GeV_fixedTarget_2020a             Outer: min/max =  -20.41/   1.10 rms    2.58 (%)
+ 3 Z3CG4EY26p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO3","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY26p5GeV_fixedTarget_2020              Outer: min/max =  -20.55/   0.80 rms    2.69 (%)
+ 4 Z3CG4EY31p2GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO4","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY31p2GeV_fixedTarget_2020              Outer: min/max =  -26.44/   1.20 rms    2.75 (%)
+ 5 Z3CG4EY5p75GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO5","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    5 Z3CG4EY5p75GeV_fixedTarget_2020              Outer: min/max =  -24.02/   1.21 rms    2.59 (%)
+ 6 Z3CG4EY7p3GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO6","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    6 Z3CG4EY7p3GeV_fixedTarget_2020               Outer: min/max =  -25.37/   1.13 rms    2.56 (%)
+ 7 Z3CG4EY9p8GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO7","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    7 Z3CG4EY9p8GeV_fixedTarget_2020               Outer: min/max =  -25.73/   1.34 rms    2.36 (%)
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI27 $ root.exe Z3CG*2021*.root FitPDraw.C+
+ 0 Z3CG4EY100GeV_fixedTarget_2021.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI0","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY100GeV_fixedTarget_2021               Inner: min/max =  -36.11/   1.64 rms    2.34 (%)
+ 1 Z3CG4EY26p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI1","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY26p5GeV_fixedTarget_2021              Inner: min/max =  -35.03/   1.47 rms    2.90 (%)
+ 2 Z3CG4EY44p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI2","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY44p5GeV_fixedTarget_2021              Inner: min/max =  -34.36/   1.83 rms    2.85 (%)
+ 3 Z3CG4EY70GeV_fixedTarget_2021.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI3","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY70GeV_fixedTarget_2021                Inner: min/max =  -33.91/   0.98 rms    3.75 (%)
+root.exe [5] .x FitPDraw.C+("O")
+ 0 Z3CG4EY100GeV_fixedTarget_2021.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO0","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY100GeV_fixedTarget_2021               Outer: min/max =  -25.23/   1.60 rms    2.38 (%)
+ 1 Z3CG4EY26p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO1","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY26p5GeV_fixedTarget_2021              Outer: min/max =  -22.85/   1.53 rms    2.26 (%)
+ 2 Z3CG4EY44p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO2","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY44p5GeV_fixedTarget_2021              Outer: min/max =  -26.87/   1.21 rms    2.38 (%)
+ 3 Z3CG4EY70GeV_fixedTarget_2021.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO3","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY70GeV_fixedTarget_2021                Outer: min/max =  -25.25/   0.49 rms    2.31 (%)
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI27 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  5.30% for F-9p8GeV_fixedTarget_2020  #mu = -0.37% for F-9p8GeV_fixedTarget_2020  
+#sigma(@61 npts) =  5.38% for F-100GeV_fixedTarget_2021	 #mu = -0.36% for F-100GeV_fixedTarget_2021  
+#sigma(@61 npts) =  5.35% for F-13p5GeV_fixedTarget_2020 #mu = -0.34% for F-13p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.33% for F-19p5GeV_fixedTarget_2020 #mu = -0.53% for F-19p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.96% for F-26p5GeV_fixedTarget_2021 #mu = -0.69% for F-26p5GeV_fixedTarget_2021 <<<<<<<<<<
+#sigma(@61 npts) =  5.48% for F-31GeV_fixedTarget_2019	 #mu = -0.03% for F-31GeV_fixedTarget_2019   
+#sigma(@61 npts) =  5.36% for F-31p2GeV_fixedTarget_2020 #mu = -0.49% for F-31p2GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.15% for F-3p85GeV_fixedTarget_2019 #mu =  0.86% for F-3p85GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu = -0.98% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.28% for F-4p59GeV_fixedTarget_2019 #mu = -0.41% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.46% for F-5p75GeV_fixedTarget_2020 #mu = -0.44% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.45% for F-70GeV_fixedTarget_2021	 #mu = -0.21% for F-70GeV_fixedTarget_2021   
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu = -0.27% for F-7p3GeV_fixedTarget_2020  
+#sigma(@61 npts) =  5.30% for F-9p8GeV_fixedTarget_2020	 #mu = -0.37% for F-9p8GeV_fixedTarget_2020  
+
+Copy links fromTpcZCorrectionC.*.C TpcSecRowB
+
+foreach f (`ls -1d TpcZCorrectionC.*.C`)
+ set t = `echo ${f} | sed -e 's/TpcZCorrectionC/TpcSecRowB/' -e 's/.C$/.root/'`
+ ln -s TpcSecRowB.root ${t}
+end
+
+dirc TpcZCorrectionC.* | grep '\->' | awk -F\. '{print "ln -sf TpcSecRowB."$4".root TpcSecRowB."$2".root"}'
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI27/TpcSecRowB.*.root`)
+  set b = `basename ${f}`
+  ls -l ${b}
+  if ( ! $?) echo "rm ${b}"
+  echo "cp -p ${f} ${b}"
+end
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI27/TpcSecRowB.*.root`)
+  set b = `basename ${f}`
+  ls ${b}
+  if (! $?) rm ${b}
+  cp -p ${f} ${b}
+end
+
+foreach f (`ls -1d job*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+
+cmd (normal)= rootcint -f /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx -c -DROOT_CINT -D__ROOT__  -I.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker -IStRoot/StEEmcPool/StEEmcClusterMaker -IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__  StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcGenericClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcSmdCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StMyClusterMaker.h  LinkDef.h
+Error: class,struct,union or type {int__val[2];} not defined  /usr/include/bits/typesizes.h:74:
+Error: class,struct,union or type __DEV_T_TYPE not defined  /usr/include/bits/types.h:145:
+Error: class,struct,union or type __INO_T_TYPE not defined  /usr/include/bits/types.h:148:
+Error: class,struct,union or type __INO64_T_TYPE not defined  /usr/include/bits/types.h:149:
+Error: class,struct,union or type __NLINK_T_TYPE not defined  /usr/include/bits/types.h:151:
+Error: class,struct,union or type __OFF_T_TYPE not defined  /usr/include/bits/types.h:152:
+Error: class,struct,union or type __OFF64_T_TYPE not defined  /usr/include/bits/types.h:153:
+Error: class,struct,union or type __CLOCK_T_TYPE not defined  /usr/include/bits/types.h:156:
+Error: class,struct,union or type __RLIM_T_TYPE not defined  /usr/include/bits/types.h:157:
+Error: class,struct,union or type __RLIM64_T_TYPE not defined  /usr/include/bits/types.h:158:
+Error: class,struct,union or type __TIME_T_TYPE not defined  /usr/include/bits/types.h:160:
+Error: class,struct,union or type __SUSECONDS_T_TYPE not defined  /usr/include/bits/types.h:162:
+Error: class,struct,union or type __SUSECONDS64_T_TYPE not defined  /usr/include/bits/types.h:163:
+Error: class,struct,union or type __TIMER_T_TYPE not defined  /usr/include/bits/types.h:172:
+Error: class,struct,union or type __BLKSIZE_T_TYPE not defined  /usr/include/bits/types.h:175:
+Error: class,struct,union or type __BLKCNT_T_TYPE not defined  /usr/include/bits/types.h:180:
+Error: class,struct,union or type __BLKCNT64_T_TYPE not defined  /usr/include/bits/types.h:181:
+Error: class,struct,union or type __FSBLKCNT_T_TYPE not defined  /usr/include/bits/types.h:184:
+Error: class,struct,union or type __FSBLKCNT64_T_TYPE not defined  /usr/include/bits/types.h:185:
+Error: class,struct,union or type __FSFILCNT_T_TYPE not defined  /usr/include/bits/types.h:188:
+Error: class,struct,union or type __FSFILCNT64_T_TYPE not defined  /usr/include/bits/types.h:189:
+Error: class,struct,union or type __FSWORD_T_TYPE not defined  /usr/include/bits/types.h:192:
+Error: class,struct,union or type __SSIZE_T_TYPE not defined  /usr/include/bits/types.h:194:
+Error: class,struct,union or type __SYSCALL_SLONG_TYPE not defined  /usr/include/bits/types.h:197:
+Error: class,struct,union or type __SYSCALL_ULONG_TYPE not defined  /usr/include/bits/types.h:199:
+Error: class,struct,union or type __SWORD_TYPE not defined  /usr/include/bits/types.h:207:
+Warning: Error occurred during reading source files
+Warning: Error occurred during dictionary source generation
+!!!Removing /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.h !!!
+Error: rootcint: error loading headers...
+cons: *** [.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx] Error 2
+cons: errors constructing .al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.h
+
+
+
+
+
+rootcint -f /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx -c -DROOT_CINT -D__ROOT__  -I.al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker -IStRoot/StEEmcPool/StEEmcClusterMaker -IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__  StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcGenericClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcSmdCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StMyClusterMaker.h  LinkDef.h
+
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/mgr/RootCint.pl ".al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx" "StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcGenericClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcSmdCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StMyClusterMaker.h" "-IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__"
+
+
+RootCint.pl ".al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx" "StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcGenericClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcSmdCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StMyClusterMaker.h" "-IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__"
+
+RootCint.pl ".al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx" "StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h  "-IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__"
+
+
+starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2 $ RootCint.pl ".al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx" "StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h" "-IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__"
+
+starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2 $ RootCint.pl ".al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx" "StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h" "-IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__"
+
+================================================================================
+12/01/2024
+g++ -g -m64 -rdynamic -shared -Wl,-Bdynamic -o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StStarLogger.so .al92_x8664_gcc11/obj/StRoot/StStarLogger/MySQLAppender.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StLoggerManager.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StUCMAppender.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StWsAppender.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StWsLogger.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StarOptionFilter.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/FieldList.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/Main.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/RecordList.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StDataException.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StDbFieldI.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StDbFieldIIterator.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StRecord.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StRecordIterator.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUCMException.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUcmEvent.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUcmEvents.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUcmJob.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUcmJobs.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUcmTask.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/StUcmTasks.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/TxEventLog.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/TxEventLogCollector.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/TxEventLogFactory.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/TxEventLogFile.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/TxEventLogWeb.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/logging/TxUCMCollector.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/reports/TxUcmlog.o .al92_x8664_gcc11/obj/StRoot/StStarLogger/StStarLogger_Cint.o 
+-L.al92_x8664_gcc11/lib 
+-L/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/lib 
+-L/lib 
+-L/usr/lib64/mysql 
+-L/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/sources/spack/var/spack/environments/linux-almalinux9-x86_64_v4/.spack-env/view/lib -llog4c
+/usr/bin/ld: skipping incompatible /lib/libm.so when searching for -lm
+/usr/bin/ld: skipping incompatible /lib/libc.so when searching for -lc
+================================================================================
+12/02/2024
+~/work/dEdx/RunXIX_XXI27 $ grep -B 1 'found table TpcZCorrectionC' *fixed*/*.log | tee TpcZCorrectionC
+[rcas6005] ~/work/dEdx/RunXIX_XXI29 $ grep LoadTable TpcZCorrectionC | awk -F\/ '{print $1" "$13}' | sort -u
+100GeV_fixedTarget_2021 TpcZCorrectionC.100GeV_fixedTarget_2021.C
+13p5GeV_fixedTarget_2020 TpcZCorrectionC.13p5GeV_fixedTarget_2020.C
+19p5GeV_fixedTarget_2020 TpcZCorrectionC.19p5GeV_fixedTarget_2020.C
+
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020a.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020b.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020c.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020d.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020e.C
+
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021b.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021c.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021d.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021e.C
+
+31GeV_fixedTarget_2019 TpcZCorrectionC.31GeV_fixedTarget_2019.C
+31p2GeV_fixedTarget_2020 TpcZCorrectionC.31p2GeV_fixedTarget_2020.C
+
+3p85GeV_fixedTarget_2019 TpcZCorrectionC.3p85GeV_fixedTarget_2019b.C
+3p85GeV_fixedTarget_2019 TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+
+44p5GeV_fixedTarget_2021 TpcZCorrectionC.44p5GeV_fixedTarget_2021.C
+4p59GeV_fixedTarget_2019 TpcZCorrectionC.4p59GeV_fixedTarget_2019.C
+
+5p75GeV_fixedTarget_2020 TpcZCorrectionC.5p75GeV_fixedTarget_2020b.C
+5p75GeV_fixedTarget_2020 TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+
+70GeV_fixedTarget_2021 TpcZCorrectionC.70GeV_fixedTarget_2021.C
+7p3GeV_fixedTarget_2020 TpcZCorrectionC.7p3GeV_fixedTarget_2020.C
+
+9p8GeV_fixedTarget_2020 TpcZCorrectionC.9p8GeV_fixedTarget_2020b.C
+9p8GeV_fixedTarget_2020 TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+
+
+
+--------------------------------------------------------------------------------
+grep -B 1 'found table TpcZCorrectionC' */*.log | tee TpcZCorrectionC
+grep LoadTable TpcZCorrectionC | awk -F\/ '{print $1" "$13}' | sort -u
+100GeV_fixedTarget_2021 TpcZCorrectionC.100GeV_fixedTarget_2021.C
+13p5GeV_fixedTarget_2020 TpcZCorrectionC.13p5GeV_fixedTarget_2020.C
+19GeV_2019 TpcZCorrectionC.19GeV_2019.C
+19p5GeV_fixedTarget_2020 TpcZCorrectionC.19p5GeV_fixedTarget_2020.C
+
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020a.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020b.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020c.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020d.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020e.C
+
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021b.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021c.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021d.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021e.C
+
+31GeV_fixedTarget_2019 TpcZCorrectionC.31GeV_fixedTarget_2019.C
+31p2GeV_fixedTarget_2020 TpcZCorrectionC.31p2GeV_fixedTarget_2020.C
+
+3p85GeV_fixedTarget_2019 TpcZCorrectionC.3p85GeV_fixedTarget_2019b.C
+3p85GeV_fixedTarget_2019 TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+
+44p5GeV_fixedTarget_2021 TpcZCorrectionC.44p5GeV_fixedTarget_2021.C
+4p59GeV_fixedTarget_2019 TpcZCorrectionC.4p59GeV_fixedTarget_2019.C
+
+5p75GeV_fixedTarget_2020 TpcZCorrectionC.5p75GeV_fixedTarget_2020b.C
+5p75GeV_fixedTarget_2020 TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+
+70GeV_fixedTarget_2021 TpcZCorrectionC.70GeV_fixedTarget_2021.C
+7p3GeV_fixedTarget_2020 TpcZCorrectionC.7p3GeV_fixedTarget_2020.C
+
+9p8GeV_fixedTarget_2020 TpcZCorrectionC.9p8GeV_fixedTarget_2020b.C
+9p8GeV_fixedTarget_2020 TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+--------------------------------------------------------------------------------
+grep -B 1 'found table TpcSecRowB' */*.log | tee TpcSecRowB
+sed -e '/Validity:/\//' TpcSecRowB grep  TpcSecRowB | awk -F\/ '{print $1" "$13}' | sort -u
+ grep Validity TpcSecRowB | sed -e 's/Validity:/\//' | awk -F\/ '{print $1" "$3"."$4}' | awk -F\- '{print $1}' | sort -u
+
+100GeV_fixedTarget_2021 20210508.41526 
+13p5GeV_fixedTarget_2020 20200202.160409 
+
+19GeV_2019 20190225.202320 
+
+19p5GeV_fixedTarget_2020 20200201.191904 
+
+26p5GeV_fixedTarget_2020 20200730.15354 
+
+26p5GeV_fixedTarget_2020 20200813.213251 
+26p5GeV_fixedTarget_2020 20200819.192253 
+26p5GeV_fixedTarget_2020 20200827.143507 
+26p5GeV_fixedTarget_2020 20200907.221141 
+26p5GeV_fixedTarget_2020 20200912.102033 
+
+26p5GeV_fixedTarget_2021 20210604.23045 
+26p5GeV_fixedTarget_2021 20210617.222550 
+26p5GeV_fixedTarget_2021 20210627.152747 
+26p5GeV_fixedTarget_2021 20210703.10650 
+26p5GeV_fixedTarget_2021 20210703.230657 
+
+31GeV_fixedTarget_2019 20190709.32312 
+31p2GeV_fixedTarget_2020 20200128.182912 
+3p85GeV_fixedTarget_2019 20190607.174702 
+3p85GeV_fixedTarget_2019 20190609.124528 
+44p5GeV_fixedTarget_2021 20210506.70146 
+4p59GeV_fixedTarget_2019 20190629.32834 
+5p75GeV_fixedTarget_2020 20191221.154021 
+5p75GeV_fixedTarget_2020 20200213.152339 
+70GeV_fixedTarget_2021 20210507.31639 
+7p3GeV_fixedTarget_2020 20200204.53518 
+9p8GeV_fixedTarget_2020 20200130.5840 
+9p8GeV_fixedTarget_2020 20200131.50328 
+--------------------------------------------------------------------------------
+100GeV_fixedTarget_2021  sector = 13 - 24, row = 1 - 10
+26p5GeV_fixedTarget_2020 sector = 13 - 14, row = 1 - 10;
+31GeV_fixedTarget_2019   sector = 13 - 24, row = 1 -  5;
+31p2GeV_fixedTarget_2020 sector = 13 - 24, row = 1 -  2;
+3p85GeV_fixedTarget_2019 sector =  1 - 12, row = 45 - 70, sector 13 - 24, row =  1 - 40
+44p5GeV_fixedTarget_2021 sector = 13 - 24, row = 1  -  5;
+70GeV_fixedTarget_2021   sector = 13 - 24, row = 1 - 10
+
+foreach f (`ls -1d job*fixed*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+12/03/2024
+root.exe [15] PicoDst->Show(0)
+======> EVENT:0
+ Event           = 1
+ Event.mProductionVersion = , git = tags/TFG24e_1,tag:11aade7b8a
+ Event.mRunId    = 20180048
+ Event.mEventId  = 2478278
+root.exe [16] PicoDst->Show(1)
+======> EVENT:1
+ Event           = 1
+ Event.mProductionVersion = , git = tags/TFG24e_1,tag:11aade7b8a
+ Event.mRunId    = 20180048
+ Event.mEventId  = 2479404
+root.exe [17] PicoDst->Show(2)
+======> EVENT:2
+ Event           = 1
+ Event.mProductionVersion = , git = tags/TFG24e_1,tag:11aade7b8a
+ Event.mRunId    = 20180048
+ Event.mEventId  = 2480742
+
+root.exe [18] PicoDst->BuildIndex("Event.mRunId","Event.mEventId")
+root.exe [14] PicoDst->GetTreeIndex()->Print("all")
+
+*****************************************************************
+*    Index of Tree: PicoDst/StPicoDst
+*****************************************************************
+  serial :     Event.mRunId :   Event.mEventId :     entry number
+*****************************************************************
+       0 :         20180048 :          2478278 :                0
+       1 :         20180048 :          2479404 :                1
+       2 :         20180048 :          2480742 :                2
+       3 :         20180048 :          2481724 :                3
+       4 :         20180048 :          2482850 :                4
+       5 :         20180048 :          2484189 :                5
+..
+================================================================================
+12/04/2024 
+[rcas6005] ~/work/Histograms/RunXIX_XXI30 $ root.exe [0-9]*.root GetEntries.C
+100GeV_fixedTarget_2021.root histogram PVxyzC    has 825987 entries
+13p5GeV_fixedTarget_2020.root histogram PVxyzC   has 214188 entries
+19GeV_2019.root histogram PVxyzC                 has 3.03008e+06 entries
+19p5GeV_fixedTarget_2020.root histogram PVxyzC   has 255180 entries
+26p5GeV_fixedTarget_2020.root histogram PVxyzC   has 723794 entries
+26p5GeV_fixedTarget_2021.root histogram PVxyzC   has 804424 entries
+31GeV_fixedTarget_2019.root histogram PVxyzC     has 219275 entries
+31p2GeV_fixedTarget_2020.root histogram PVxyzC   has 313417 entries
+3p85GeV_fixedTarget_2019.root histogram PVxyzC   has 514486 entries
+44p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.24916e+06 entries
+4p59GeV_fixedTarget_2019.root histogram PVxyzC   has 848380 entries
+5p75GeV_fixedTarget_2020.root histogram PVxyzC   has 355209 entries
+70GeV_fixedTarget_2021.root histogram PVxyzC     has 881449 entries
+7p3GeV_fixedTarget_2020.root histogram PVxyzC    has 293348 entries
+9p8GeV_fixedTarget_2020.root histogram PVxyzC    has 380071 entries
+
+--------------------------------------------------------------------------------
+
+100GeV_fixedTarget_2021.root histogram PVxyzC    has 845163 entries
+13p5GeV_fixedTarget_2020.root histogram PVxyzC   has 224670 entries
+19GeV_2019.root histogram PVxyzC         has 3.03008e+06 entries
+19p5GeV_fixedTarget_2020.root histogram PVxyzC   has 255180 entries
+26p5GeV_fixedTarget_2020.root histogram PVxyzC   has 857199 entries
+26p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.67594e+06 entries
+31GeV_fixedTarget_2019.root histogram PVxyzC     has 219275 entries
+31p2GeV_fixedTarget_2020.root histogram PVxyzC   has 313417 entries
+3p85GeV_fixedTarget_2019.root histogram PVxyzC   has 514486 entries
+44p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.29272e+06 entries
+4p59GeV_fixedTarget_2019.root histogram PVxyzC   has 848380 entries
+5p75GeV_fixedTarget_2020.root histogram PVxyzC   has 355209 entries
+70GeV_fixedTarget_2021.root histogram PVxyzC     has 918409 entries
+7p3GeV_fixedTarget_2020.root histogram PVxyzC    has 303952 entries
+9p8GeV_fixedTarget_2020.root histogram PVxyzC    has 388819 entries
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI31 $  root.exe [0-9]*.root GetEntries.C
+100GeV_fixedTarget_2021.root histogram PVxyzC    has 844664 entries
+13p5GeV_fixedTarget_2020.root histogram PVxyzC   has 224670 entries
+19GeV_2019.root histogram PVxyzC         has 484370 entries
+19p5GeV_fixedTarget_2020.root histogram PVxyzC   has 255180 entries
+26p5GeV_fixedTarget_2020.root histogram PVxyzC   has 857199 entries
+26p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.67752e+06 entries
+31GeV_fixedTarget_2019.root histogram PVxyzC     has 219275 entries
+31p2GeV_fixedTarget_2020.root histogram PVxyzC   has 313417 entries
+3p85GeV_fixedTarget_2019.root histogram PVxyzC   has 514486 entries
+44p5GeV_fixedTarget_2021.root histogram PVxyzC   has 1.25021e+06 entries
+4p59GeV_fixedTarget_2019.root histogram PVxyzC   has 848380 entries
+5p75GeV_fixedTarget_2020.root histogram PVxyzC   has 269946 entries
+70GeV_fixedTarget_2021.root histogram PVxyzC     has 847376 entries
+7p3GeV_fixedTarget_2020.root histogram PVxyzC    has 303952 entries
+9p8GeV_fixedTarget_2020.root histogram PVxyzC    has 388819 entries                      
+
+
+
+
+--------------------------------------------------------------------------------
+
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/mgr/RootCint.pl ".al92_x8664_gcc11/obj/StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker_Cint.cxx" "StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcGenericClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcSmdCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StMyClusterMaker.h" "-IStRoot/StEEmcPool/StEEmcClusterMaker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -D__ROOT__ -D__TFG__VERSION__"
+
+
+StRoot/StEEmcPool/StEEmcClusterMaker/StEEmc2x2ClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcBaseCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcGenericClusterMaker.h StRoot/StEEmcPool/StEEmcClusterMaker/StEEmcSmdCluster.h StRoot/StEEmcPool/StEEmcClusterMaker/StMyClusterMaker.h
+
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI30/TpcSecRowB.*.root`)
+  set b = `basename ${f}`
+  ls ${b}
+  if (! $?) rm ${b}
+  cp -p ${f} ${b}
+end
+
+foreach f (`ls -1d job*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+--------------------------------------------------------------------------------
+/usr/bin/ld: cannot find -lnsl
+.al92_x8664_gcc11/obj/StRoot/GenFit/EigenMatrixTypedefs.h:3:10: fatal error: eigen3/Eigen/Dense: No such file or directory
+    3 | #include <eigen3/Eigen/Dense>
+!!!Removing /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/obj/StRoot/StBTofSimMaker/StBTofSimMaker_Cint.cxx /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/obj/StRoot/StBTofSimMaker/StBTofSimMaker_C
+
+gcc -g -m64 -rdynamic .al92_x8664_gcc11/obj/asps/staf/sdd/src/idl-yacc.o .al92_x8664_gcc11/obj/asps/staf/sdd/src/templateStuff.o -L/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/sources/spack/var/spack/environments/linux-almalinux9-x86_64_v4/.spack-env/view/lib64 -ll -o .al92_x8664_gcc11/obj/asps/staf/sdd/stic
+/usr/bin/ld: cannot find -ll
+collect2: error: ld returned 1 exit status
+cons: *** [.al92_x8664_gcc11/obj/asps/staf/sdd/stic] Error 1
+
+================================================================================
+12/06/2024
+grep -B 1 'found table TpcSecRowB' */*.log | tee TpcSecRowB
+ grep Validity TpcSecRowB | sed -e 's/Validity:/\//' | awk -F\/ '{print $1" "$3"."$4}' | awk -F\- '{print $1}' | sort -u
+
+100GeV_fixedTarget_2021  20210508.41526 
+13p5GeV_fixedTarget_2020 20200202.160409 
+19GeV_2019               20190225.202320 
+19p5GeV_fixedTarget_2020 20200201.191904 
+26p5GeV_fixedTarget_2020 20200730.15354 
+26p5GeV_fixedTarget_2020 20200813.213251 
+26p5GeV_fixedTarget_2020 20200819.192253 
+26p5GeV_fixedTarget_2020 20200827.143507 
+26p5GeV_fixedTarget_2020 20200907.221141 
+26p5GeV_fixedTarget_2020 20200912.102033 
+26p5GeV_fixedTarget_2021 20210604.23045 
+26p5GeV_fixedTarget_2021 20210617.224533 
+26p5GeV_fixedTarget_2021 20210627.152747 
+26p5GeV_fixedTarget_2021 20210703.10650 
+26p5GeV_fixedTarget_2021 20210703.230657 
+31GeV_fixedTarget_2019   20190709.32312 
+31p2GeV_fixedTarget_2020 20200128.185958 
+3p85GeV_fixedTarget_2019 20190607.174702 
+3p85GeV_fixedTarget_2019 20190609.130005 
+44p5GeV_fixedTarget_2021 20210506.70146 
+4p59GeV_fixedTarget_2019 20190629.34111 
+5p75GeV_fixedTarget_2020 20191221.154021 
+5p75GeV_fixedTarget_2020 20200213.152339 
+70GeV_fixedTarget_2021   20210507.31639 
+7p3GeV_fixedTarget_2020  20200204.53518 
+9p8GeV_fixedTarget_2020  20200130.5840 
+9p8GeV_fixedTarget_2020  20200131.50328 
+
+
+grep -B 1 'found table TpcZCorrectionC' */*.log | tee TpcZCorrectionC
+grep LoadTable TpcZCorrectionC | awk -F\/ '{print $1" "$13}' | sort -u
+
+
+100GeV_fixedTarget_2021  TpcZCorrectionC.100GeV_fixedTarget_2021.C
+13p5GeV_fixedTarget_2020 TpcZCorrectionC.13p5GeV_fixedTarget_2020.C
+19GeV_2019               TpcZCorrectionC.19GeV_2019.C
+19p5GeV_fixedTarget_2020 TpcZCorrectionC.19p5GeV_fixedTarget_2020.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020a.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020b.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020c.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020d.C
+26p5GeV_fixedTarget_2020 TpcZCorrectionC.26p5GeV_fixedTarget_2020e.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021b.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021c.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021d.C
+26p5GeV_fixedTarget_2021 TpcZCorrectionC.26p5GeV_fixedTarget_2021e.C
+31GeV_fixedTarget_2019   TpcZCorrectionC.31GeV_fixedTarget_2019.C
+31p2GeV_fixedTarget_2020 TpcZCorrectionC.31p2GeV_fixedTarget_2020.C
+3p85GeV_fixedTarget_2019 TpcZCorrectionC.3p85GeV_fixedTarget_2019b.C
+3p85GeV_fixedTarget_2019 TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+44p5GeV_fixedTarget_2021 TpcZCorrectionC.44p5GeV_fixedTarget_2021.C
+4p59GeV_fixedTarget_2019 TpcZCorrectionC.4p59GeV_fixedTarget_2019.C
+5p75GeV_fixedTarget_2020 TpcZCorrectionC.5p75GeV_fixedTarget_2020b.C
+5p75GeV_fixedTarget_2020 TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+70GeV_fixedTarget_2021   TpcZCorrectionC.70GeV_fixedTarget_2021.C
+7p3GeV_fixedTarget_2020  TpcZCorrectionC.7p3GeV_fixedTarget_2020.C
+9p8GeV_fixedTarget_2020  TpcZCorrectionC.9p8GeV_fixedTarget_2020b.C
+9p8GeV_fixedTarget_2020  TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI31 $ root.exe Z3CG4E*.root MakeTpcZCorrectionC.C+
+problem TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+
+[rcas6005] ~/work/Histograms/RunXIX_XXI31 $ root.exe Z3CG4E*.root FitPDraw.C+
+ 0 Z3CG4EY100GeV_fixedTarget_2021.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI0","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY100GeV_fixedTarget_2021               Inner: min/max =  -37.82/   2.27 rms    2.56 (%)
+ 1 Z3CG4EY13p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI1","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY13p5GeV_fixedTarget_2020              Inner: min/max =  -32.37/   2.00 rms    3.51 (%)
+ 2 Z3CG4EY19GeV_2019.root                               FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI2","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY19GeV_2019                            Inner: min/max =  -14.30/   1.25 rms    1.66 (%)
+ 3 Z3CG4EY19p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI3","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY19p5GeV_fixedTarget_2020              Inner: min/max =  -35.15/   2.41 rms    3.20 (%)
+ 4 Z3CG4EY26p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI4","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY26p5GeV_fixedTarget_2020              Inner: min/max =  -33.46/   1.76 rms    3.25 (%)
+ 5 Z3CG4EY26p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI5","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    5 Z3CG4EY26p5GeV_fixedTarget_2021              Inner: min/max =  -34.07/   1.81 rms    2.80 (%)
+ 6 Z3CG4EY31GeV_fixedTarget_2019.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI6","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    6 Z3CG4EY31GeV_fixedTarget_2019                Inner: min/max =  -33.03/   3.69 rms    3.35 (%)
+ 7 Z3CG4EY31p2GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI7","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    7 Z3CG4EY31p2GeV_fixedTarget_2020              Inner: min/max =  -34.17/   2.89 rms    3.46 (%)
+ 8 Z3CG4EY3p85GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI8","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    8 Z3CG4EY3p85GeV_fixedTarget_2019              Inner: min/max =  -37.52/   3.77 rms    3.03 (%)
+ 9 Z3CG4EY44p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI9","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    9 Z3CG4EY44p5GeV_fixedTarget_2021              Inner: min/max =  -35.63/   2.66 rms    2.91 (%)
+10 Z3CG4EY4p59GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI10","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  10 Z3CG4EY4p59GeV_fixedTarget_2019              Inner: min/max =  -33.23/   1.93 rms    2.44 (%)
+11 Z3CG4EY5p75GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI11","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  11 Z3CG4EY5p75GeV_fixedTarget_2020              Inner: min/max =  -34.94/   3.16 rms    3.07 (%)
+12 Z3CG4EY70GeV_fixedTarget_2021.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI12","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  12 Z3CG4EY70GeV_fixedTarget_2021                Inner: min/max =  -32.33/   3.95 rms    4.33 (%)
+13 Z3CG4EY7p3GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI13","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  13 Z3CG4EY7p3GeV_fixedTarget_2020               Inner: min/max =  -32.99/   2.77 rms    2.95 (%)
+14 Z3CG4EY9p8GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI14","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  14 Z3CG4EY9p8GeV_fixedTarget_2020               Inner: min/max =  -31.91/   1.85 rms    3.06 (%)
+root.exe [16] .x FitPDraw.C+("O")
+ 0 Z3CG4EY100GeV_fixedTarget_2021.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO0","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY100GeV_fixedTarget_2021               Outer: min/max =  -25.44/   1.83 rms    2.39 (%)
+ 1 Z3CG4EY13p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO1","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY13p5GeV_fixedTarget_2020              Outer: min/max =  -23.80/   0.99 rms    2.58 (%)
+ 2 Z3CG4EY19GeV_2019.root                               FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO2","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY19GeV_2019                            Outer: min/max =   -2.11/   0.69 rms    0.38 (%)
+ 3 Z3CG4EY19p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO3","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY19p5GeV_fixedTarget_2020              Outer: min/max =  -24.77/   0.77 rms    2.77 (%)
+ 4 Z3CG4EY26p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO4","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY26p5GeV_fixedTarget_2020              Outer: min/max =  -20.97/   1.59 rms    2.63 (%)
+ 5 Z3CG4EY26p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO5","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    5 Z3CG4EY26p5GeV_fixedTarget_2021              Outer: min/max =  -24.67/   1.24 rms    2.32 (%)
+ 6 Z3CG4EY31GeV_fixedTarget_2019.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO6","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    6 Z3CG4EY31GeV_fixedTarget_2019                Outer: min/max =  -23.19/   1.18 rms    2.39 (%)
+ 7 Z3CG4EY31p2GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO7","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    7 Z3CG4EY31p2GeV_fixedTarget_2020              Outer: min/max =  -27.66/   1.10 rms    2.76 (%)
+ 8 Z3CG4EY3p85GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO8","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    8 Z3CG4EY3p85GeV_fixedTarget_2019              Outer: min/max =  -23.27/   2.44 rms    3.14 (%)
+ 9 Z3CG4EY44p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO9","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    9 Z3CG4EY44p5GeV_fixedTarget_2021              Outer: min/max =  -26.92/   1.58 rms    2.35 (%)
+10 Z3CG4EY4p59GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO10","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  10 Z3CG4EY4p59GeV_fixedTarget_2019              Outer: min/max =  -25.85/   1.16 rms    2.15 (%)
+11 Z3CG4EY5p75GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO11","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  11 Z3CG4EY5p75GeV_fixedTarget_2020              Outer: min/max =  -22.81/   1.38 rms    2.82 (%)
+12 Z3CG4EY70GeV_fixedTarget_2021.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO12","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  12 Z3CG4EY70GeV_fixedTarget_2021                Outer: min/max =  -23.97/   1.11 rms    2.33 (%)
+13 Z3CG4EY7p3GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO13","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  13 Z3CG4EY7p3GeV_fixedTarget_2020               Outer: min/max =  -26.76/   0.80 rms    2.64 (%)
+14 Z3CG4EY9p8GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO14","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  14 Z3CG4EY9p8GeV_fixedTarget_2020               Outer: min/max =  -26.35/   1.28 rms    2.37 (%)
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI31/TpcZ*.C`)
+  set b = `basename ${f}`
+  ls ${b}
+  if (! $?) rm ${b}
+  cp -p ${f} ${b}
+end
+
+
+
+[rcas6005] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ dirc -ltr TpcZCo*
+-rw-r--r-- 1 fisyak rhstar  517 Nov 20 11:03 TpcZCorrectionB.C
+-rw-r--r-- 1 fisyak rhstar  586 Nov 20 11:03 TpcZCorrectionC.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.100GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.5K Nov 25 09:32 TpcZCorrectionC.13p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.19GeV_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.19p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.7K Nov 25 09:32 TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.31GeV_fixedTarget_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.31p2GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:32 TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:33 TpcZCorrectionC.44p5GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.7K Nov 25 09:33 TpcZCorrectionC.4p59GeV_fixedTarget_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:33 TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:33 TpcZCorrectionC.70GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:33 TpcZCorrectionC.7p3GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Nov 25 09:33 TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020b.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020c.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020d.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020e.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021b.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021c.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021d.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021e.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.3p85GeV_fixedTarget_2019b.C -> TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.5p75GeV_fixedTarget_2020b.C -> TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   41 Nov 25 09:56 TpcZCorrectionC.9p8GeV_fixedTarget_2020b.C -> TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 28 09:35 TpcZCorrectionC.26p5GeV_fixedTarget_2020a.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+[rcas6005] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI31/TpcZ*.C`)
+foreach?   set b = `basename ${f}`
+foreach?   ls ${b}
+foreach?   if (! $?) rm ${b}
+foreach?   cp -p ${f} ${b}
+foreach? end
+TpcZCorrectionC.100GeV_fixedTarget_2021.C
+TpcZCorrectionC.13p5GeV_fixedTarget_2020.C
+TpcZCorrectionC.19GeV_2019.C
+TpcZCorrectionC.19p5GeV_fixedTarget_2020.C
+TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+TpcZCorrectionC.31GeV_fixedTarget_2019.C
+TpcZCorrectionC.31p2GeV_fixedTarget_2020.C
+TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+TpcZCorrectionC.44p5GeV_fixedTarget_2021.C
+TpcZCorrectionC.4p59GeV_fixedTarget_2019.C
+TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+TpcZCorrectionC.70GeV_fixedTarget_2021.C
+TpcZCorrectionC.7p3GeV_fixedTarget_2020.C
+TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+[rcas6005] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ 
+[rcas6005] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ dirc -ltr TpcZCo*
+-rw-r--r-- 1 fisyak rhstar  517 Nov 20 11:03 TpcZCorrectionB.C
+-rw-r--r-- 1 fisyak rhstar  586 Nov 20 11:03 TpcZCorrectionC.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020b.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020c.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020d.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2020e.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021b.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021c.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021d.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.26p5GeV_fixedTarget_2021e.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.3p85GeV_fixedTarget_2019b.C -> TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 25 09:56 TpcZCorrectionC.5p75GeV_fixedTarget_2020b.C -> TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   41 Nov 25 09:56 TpcZCorrectionC.9p8GeV_fixedTarget_2020b.C -> TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+lrwxrwxrwx 1 fisyak rhstar   42 Nov 28 09:35 TpcZCorrectionC.26p5GeV_fixedTarget_2020a.C -> TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:28 TpcZCorrectionC.100GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.5K Dec  6 09:28 TpcZCorrectionC.13p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:28 TpcZCorrectionC.19GeV_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:29 TpcZCorrectionC.19p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.5K Dec  6 09:29 TpcZCorrectionC.26p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.7K Dec  6 09:29 TpcZCorrectionC.26p5GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:29 TpcZCorrectionC.31GeV_fixedTarget_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:29 TpcZCorrectionC.31p2GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:29 TpcZCorrectionC.3p85GeV_fixedTarget_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:29 TpcZCorrectionC.44p5GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.7K Dec  6 09:30 TpcZCorrectionC.4p59GeV_fixedTarget_2019.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:30 TpcZCorrectionC.5p75GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.5K Dec  6 09:30 TpcZCorrectionC.70GeV_fixedTarget_2021.C
+-rw-r--r-- 1 fisyak rhstar 1.6K Dec  6 09:30 TpcZCorrectionC.7p3GeV_fixedTarget_2020.C
+-rw-r--r-- 1 fisyak rhstar 1.7K Dec  6 09:30 TpcZCorrectionC.9p8GeV_fixedTarget_2020.C
+
+foreach f (`ls -1d job*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+12/07/2024
+g++  -v -pthread -m64 -fdiagnostics-color=always -msse4.2 -fPIC -Wno-misleading-indentation -Wno-ignored-attributes -Wall -Woverloaded-virtual -Wcast-align -fno-threadsafe-statics -DNVALGRIND -DSTAR_STANDALONE -Wno-parentheses -Wno-unused-function -DNODEBUG -Wno-pragmas -g -D__ROOT__ -D__TFG__VERSION__ -DDO_TPCCATRACKER_EFF_PERFORMANCE -I.al92_x8664_gcc11/obj/StRoot/TPCCATracker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -I/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/sources/spack/var/spack/environments/linux-almalinux9-x86_64_v4/.spack-env/view/include -c .al92_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx -o .al92_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.o
