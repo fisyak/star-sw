@@ -103,6 +103,7 @@ else
 #set list = xrootd
 #set list = pythia8
 set list = pythia6
+#set list = "perl-5.34.0"
 #if ($#argv != 0) set list2 = $argv[1];
 endif
 setenv DIR ~/sources/.${STAR_HOST_SYS}
@@ -121,7 +122,8 @@ setenv CFLAGSd   "$cflags"
 #    if (! -r ${pkg}) then
       if ($pkg != "xrootd" && $pkg != "xrootd-4.4.1" && $pkg != "xrootd-4.5.0-rc1" && $pkg != "Coin-3.1.3" && $pkg != "eigen3" && $pkg != "VecGeom" && pkg != "tbb") then
         if (-r ~/sources/${pkg}) then
-          dirsync  ~/sources/${pkg} ${pkg}
+#          dirsync  ~/sources/${pkg} ${pkg}
+          cp -r  ~/sources/${pkg} ${pkg}
         else 
           if (-r ~/sources/${pkg}.tar.gz) then
             gunzip ~/sources/${pkg}.tar.gz
@@ -142,7 +144,8 @@ setenv CFLAGSd   "$cflags"
               endif
             endif
           endif
-	  dirsync  ../${pkg} ${pkg}
+#	  dirsync  ../${pkg} ${pkg}
+	  cp -r  ../${pkg} ${pkg}
         endif
       else 
         mkdir ${pkg}
@@ -221,7 +224,8 @@ setenv CFLAGSd   "$cflags"
           touch ../${pkg}.Done
           breaksw
       case "apache-log4cxx-0.10.0.CVS":
-          dirsync  ~/sources/${pkg} .
+#          dirsync  ~/sources/${pkg} .
+          cp -r  ~/sources/${pkg} .
 #	  unsetenv CXXFLAGS  # ${CXXFLAGS} -Wnonarrowing"
 #	  unsetenv CFLAGS    # ${CFLAGS} -Wnonarrowing"
 #          ./configure --prefix=$XOPTSTAR --with-apr=$XOPTSTAR --with-apr-util=$XOPTSTAR --disable-libtool --with-tags=$LDFLAGS
