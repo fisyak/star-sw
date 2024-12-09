@@ -4,7 +4,7 @@
 # Determine STAR_SYS and STAR_HOST_SYS variables.
 # History at the end of this script
 #
-if (! $?STAR_SYS) setenv STAR_SYS ""
+setenv STAR_SYS ""
 source $GROUP_DIR/unix_programs.csh
 if ( $?self ) then
     set STAR_SYS_pself=${self}
@@ -139,7 +139,6 @@ endif
 	# Note that only partial enabling is made (there is a lack
 	# of conistency ; should all go through STARCMPL
 	switch ($STAR_SYS)
-	    case "*Darwin*"
 	    case "*darwin*"
 		set rhflavor = ""
 		set rhmajor  = `uname -s | tr '[A-Z]' '[a-z]'`
@@ -208,7 +207,6 @@ endif
        if ($redhat != 72) then
 	if ("$vers" != "" ) then
 	    switch ($STAR_SYS)
-		case "*Darwin*": 
 		case "*darwin*": 
 		    setenv STAR_HOST_SYS ${STAR_SYS}_${xSTARCMPL}
 		    breaksw
@@ -236,7 +234,7 @@ endif
 # trick to handle non STAR nodes
 if ("${STAR_SYS}" == "sl64_gcc447"      ) setenv STAR_HOST_SYS sl64_gcc482
 if ("${STAR_SYS}" == "sl64_x8664_gcc447") setenv STAR_HOST_SYS sl64_x8664_gcc482
-echo $STAR_LEVEL | egrep '(.DEV2|TFG|TFGA|TFG22[d-z]|TFG2[3-9]|TFG.star)' > /dev/null
+echo $STAR_LEVEL | egrep '(.DEV2|TFG22[d-z]|TFG2[3-9]|TFG.star)' > /dev/null
 if ($?) then 
   if ($?STAR_NEW_ENVIRONMENT) unsetenv STAR_NEW_ENVIRONMENT
   if ($?STAR_HOST_SYS_OPT)    unsetenv STAR_HOST_SYS_OPT
