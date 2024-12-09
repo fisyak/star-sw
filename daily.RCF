@@ -2643,3 +2643,63 @@ end
 ================================================================================
 12/07/2024
 g++  -v -pthread -m64 -fdiagnostics-color=always -msse4.2 -fPIC -Wno-misleading-indentation -Wno-ignored-attributes -Wall -Woverloaded-virtual -Wcast-align -fno-threadsafe-statics -DNVALGRIND -DSTAR_STANDALONE -Wno-parentheses -Wno-unused-function -DNODEBUG -Wno-pragmas -g -D__ROOT__ -D__TFG__VERSION__ -DDO_TPCCATRACKER_EFF_PERFORMANCE -I.al92_x8664_gcc11/obj/StRoot/TPCCATracker -I. -IStRoot -I.al92_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include -I/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/sources/spack/var/spack/environments/linux-almalinux9-x86_64_v4/.spack-env/view/include -c .al92_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx -o .al92_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.o
+
+================================================================================
+12/08/2024
+Copy links fromTpcZCorrectionC.*.C TpcLengthCorrectionMDN
+
+foreach f (`ls -1d TpcZCorrectionC.*.C`)
+ set t = `echo ${f} | sed -e 's/TpcZCorrectionC/TpcLengthCorrectionMDN/'`
+ echo "$t"
+ ln -s TpcLengthCorrectionMDN.C ${t}
+end
+[cvmfswrite02] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ dir TpcZCorrection*GeV* | grep '>' | sed -e 's/TpcZCorrectionC/TpcLengthCorrectionMDN/g' | awk '{print "ln -sf "$11" "$9}'
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020a.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020b.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020c.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020d.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2020e.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021b.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021c.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021d.C
+ln -sf TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021.C TpcLengthCorrectionMDN.26p5GeV_fixedTarget_2021e.C
+ln -sf TpcLengthCorrectionMDN.3p85GeV_fixedTarget_2019.C TpcLengthCorrectionMDN.3p85GeV_fixedTarget_2019b.C
+ln -sf TpcLengthCorrectionMDN.5p75GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.5p75GeV_fixedTarget_2020b.C
+ln -sf TpcLengthCorrectionMDN.9p8GeV_fixedTarget_2020.C TpcLengthCorrectionMDN.9p8GeV_fixedTarget_2020b.C
+
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI32/TpcZ*.C`)
+   set b = `basename ${f}`
+   ls ${b}foreach f (`ls -1d job*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+
+   if (! $?) rm ${b}
+   cp -p ${f} ${b}
+end
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI32/TpcSecRowB*.root`)
+   set b = `basename ${f}`
+   ls ${b}
+   if (! $?) rm ${b}
+   cp -p ${f} ${b}
+end
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI32/TpcLengthCorrectionMDN*.C`)
+   set b = `basename ${f}`
+   ls ${b}
+   if (! $?) rm ${b}
+   cp -p ${f} ${b}
+end
+
+foreach f (`ls -1d job*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
