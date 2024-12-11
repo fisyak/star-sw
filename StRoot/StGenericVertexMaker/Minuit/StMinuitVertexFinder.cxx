@@ -366,8 +366,8 @@ void StMinuitVertexFinder::calculateRanks() {
     else
       primV->setRanking(rank_cross+rank_bemc+rank_avg_dip); 
 #ifdef __TFG__VERSION__
-    static Bool_t FXT =  St_beamInfoC::instance()->IsFixedTarget();
-    if (FXT && TMath::Abs(primV->position().z() - 200) < 2) primV->setRanking(primV->ranking() + 10000.);
+    //    static Bool_t FXT =  St_beamInfoC::instance()->IsFixedTarget();
+    if (mFXT && TMath::Abs(primV->position().z() - 200) < 2) primV->setRanking(primV->ranking() + 10000.);
 #endif /*  __TFG__VERSION__ */
     if (primV->ranking() > mBestRank) {
       mBestRank = primV->ranking();
