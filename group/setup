@@ -73,6 +73,12 @@ switch ($pkg)
     if ( -r $SPACK_SETUP ) then
       if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
       source $SPACK_SETUP 
+      if ($?CMAKE_PREFIX_PATH) thne
+        if ($?USE_64BITS && $USE_64BITS == 1) then
+	  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64
+        endif
+	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib
+      endif
     else
 	if ($?DECHO) echo "SPACK_SETUP has not been set"
     endif
@@ -82,6 +88,7 @@ switch ($pkg)
       set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
       if ( -e $SPACK_SETUP && $?USE_CVMFS && $USE_CVMFS == 1) then
        source $SPACK_SETUP 
+       if ($?
       endif
         breaksw
     case "NEW_ENV*":
@@ -491,15 +498,6 @@ switch ($pkg)
       if (-e /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh) then
         if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh"
         source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh
-	if ($pkg == "gcc/12") then
-#	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
-#             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
-#          else 
-#	     setup spackTFG
-#	     spack env activate x86_64_gcc12
-#             spack env view enable
-#          endif
-        endif
       else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh) then
         if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh"
         source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh
