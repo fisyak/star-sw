@@ -2703,3 +2703,455 @@ foreach f (`ls -1d job*.xml`)
  lsf ../${f}
  cd -
 end
+================================================================================
+12/09/2024
+
+MySQL [Calibrations_tpc]> select entryTime,elementID,beginTime,flavor,deactive,run,start_time,stop_time,from_unixtime(start_time),from_unixtime(stop_time)  from TpcAvgPowerSupply where run>=21034001 order by beginTime limit 10;
++---------------------+-----------+---------------------+--------+------------+----------+------------+------------+---------------------------+--------------------------+
+| entryTime           | elementID | beginTime           | flavor | deactive   | run      | start_time | stop_time  | from_unixtime(start_time) | from_unixtime(stop_time) |
++---------------------+-----------+---------------------+--------+------------+----------+------------+------------+---------------------------+--------------------------+
+| 2020-02-03 06:09:42 |         0 | 2020-02-03 05:25:49 | ofl    |          0 | 21034001 | 1580725549 | 1580725700 | 2020-02-03 10:25:49       | 2020-02-03 10:28:20      |
+| 2020-02-03 06:09:42 |         0 | 2020-02-03 05:29:19 | ofl    |          0 | 21034002 | 1580725759 | 1580725912 | 2020-02-03 10:29:19       | 2020-02-03 10:31:52      |
+| 2020-02-03 07:09:41 |         0 | 2020-02-03 05:54:56 | ofl    | 1731873900 | 21034003 | 1580727296 | 1580727887 | 2020-02-03 10:54:56       | 2020-02-03 11:04:47      |
+| 2024-11-17 20:49:04 |         0 | 2020-02-03 05:54:56 | ofl    |          0 | 21034003 | 1580727296 | 1580727547 | 2020-02-03 10:54:56       | 2020-02-03 10:59:07      |
+| 2020-02-03 08:09:59 |         0 | 2020-02-03 06:05:46 | ofl    |          0 | 21034004 | 1580727946 | 1580731636 | 2020-02-03 11:05:46       | 2020-02-03 12:07:16      |
+
+| 2020-02-03 09:09:56 |         0 | 2020-02-03 07:08:14 | ofl    |          0 | 21034005 | 1580731694 | 1580735287 | 2020-02-03 12:08:14       | 2020-02-03 13:08:07      |
+
+| 2020-02-03 10:09:41 |         0 | 2020-02-03 08:23:42 | ofl    |          0 | 21034008 | 1580736222 | 1580739787 | 2020-02-03 13:23:42       | 2020-02-03 14:23:07      |
+| 2020-02-03 11:09:48 |         0 | 2020-02-03 09:25:46 | ofl    |          0 | 21034010 | 1580739946 | 1580743548 | 2020-02-03 14:25:46       | 2020-02-03 15:25:48      |
+| 2020-02-03 12:09:31 |         0 | 2020-02-03 10:26:47 | ofl    |          0 | 21034011 | 1580743607 | 1580747156 | 2020-02-03 15:26:47       | 2020-02-03 16:25:56      |
+| 2020-02-03 13:09:36 |         0 | 2020-02-03 11:27:00 | ofl    |          0 | 21034012 | 1580747220 | 1580750837 | 2020-02-03 16:27:00       | 2020-02-03 17:27:17      |
++---------------------+-----------+---------------------+--------+------------+----------+------------+------------+---------------------------+--------------------------+
+TpcAvgPowerSupply for run = 21034005    start_time: Mon Feb  3 07:08:14 2020    stop_time Mon Feb  3 07:08:14 2020
+(gdb) p this->GetDate()
+$7 = 20200203
+(gdb) p this->GetTime()
+$8 = 81946
+ 2020-02-03 08:19:46
+================================================================================
+12/11/2024
+[rcas6005] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ dir -ltr TpcSecRowB.*
+lrwxr-xr-x 1 fisyak rhstar   12 Nov 20 10:51 TpcSecRowB.r2021.C -> TpcSecRowB.C
+lrwxr-xr-x 1 fisyak rhstar   12 Nov 20 10:51 TpcSecRowB.r2020.C -> TpcSecRowB.C
+-rw-r--r-- 1 fisyak rhstar  863 Nov 20 11:03 TpcSecRowB.y2019.C
+-rw-r--r-- 1 fisyak rhstar  863 Nov 20 11:03 TpcSecRowB.y2018.C
+-rw-r--r-- 1 fisyak rhstar 7.5K Nov 20 11:03 TpcSecRowB.RunXXIV02B.root
+lrwxr-xr-x 1 fisyak rhstar   12 Nov 20 11:03 TpcSecRowB.r2023.C -> TpcSecRowB.C
+-rw-r--r-- 1 fisyak rhstar  865 Nov 20 11:03 TpcSecRowB.C
+-rw-r--r-- 1 fisyak rhstar 7.6K Nov 20 11:03 TpcSecRowB.AuAu_2023.root
+lrwxr-xr-x 1 fisyak rhstar   26 Nov 20 11:03 TpcSecRowB.20240430.000000.root -> TpcSecRowB.RunXXIV02B.root
+lrwxr-xr-x 1 fisyak rhstar   25 Nov 20 11:03 TpcSecRowB.20230519.000001.root -> TpcSecRowB.AuAu_2023.root
+lrwxr-xr-x 1 fisyak rhstar   39 Nov 29 17:25 TpcSecRowB.9p8GeV_fixedTarget_2020b.root -> TpcSecRowB.9p8GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.5p75GeV_fixedTarget_2020b.root -> TpcSecRowB.5p75GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021e.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021d.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021c.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021b.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020e.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020d.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020c.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020b.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020a.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Dec  4 19:48 TpcSecRowB.3p85GeV_fixedTarget_2019b.root -> TpcSecRowB.3p85GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec  8 17:17 TpcSecRowB.100GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.13p5GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.19GeV_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.19p5GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec  8 17:17 TpcSecRowB.26p5GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.26p5GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.31GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.31p2GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.3p85GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec  8 17:17 TpcSecRowB.44p5GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.4p59GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec  8 17:17 TpcSecRowB.5p75GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec  8 17:17 TpcSecRowB.70GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec  8 17:18 TpcSecRowB.7p3GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec  8 17:18 TpcSecRowB.9p8GeV_fixedTarget_2020.root
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI33/TpcSecRowB*.root`)
+   set b = `basename ${f}`
+   ls ${b}
+   if (! $?) rm ${b}
+   cp -p ${f} ${b}
+end
+[rcas6005] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ dir -ltr TpcSecRowB.*
+lrwxr-xr-x 1 fisyak rhstar   12 Nov 20 10:51 TpcSecRowB.r2021.C -> TpcSecRowB.C
+lrwxr-xr-x 1 fisyak rhstar   12 Nov 20 10:51 TpcSecRowB.r2020.C -> TpcSecRowB.C
+-rw-r--r-- 1 fisyak rhstar  863 Nov 20 11:03 TpcSecRowB.y2019.C
+-rw-r--r-- 1 fisyak rhstar  863 Nov 20 11:03 TpcSecRowB.y2018.C
+-rw-r--r-- 1 fisyak rhstar 7.5K Nov 20 11:03 TpcSecRowB.RunXXIV02B.root
+lrwxr-xr-x 1 fisyak rhstar   12 Nov 20 11:03 TpcSecRowB.r2023.C -> TpcSecRowB.C
+-rw-r--r-- 1 fisyak rhstar  865 Nov 20 11:03 TpcSecRowB.C
+-rw-r--r-- 1 fisyak rhstar 7.6K Nov 20 11:03 TpcSecRowB.AuAu_2023.root
+lrwxr-xr-x 1 fisyak rhstar   26 Nov 20 11:03 TpcSecRowB.20240430.000000.root -> TpcSecRowB.RunXXIV02B.root
+lrwxr-xr-x 1 fisyak rhstar   25 Nov 20 11:03 TpcSecRowB.20230519.000001.root -> TpcSecRowB.AuAu_2023.root
+lrwxr-xr-x 1 fisyak rhstar   39 Nov 29 17:25 TpcSecRowB.9p8GeV_fixedTarget_2020b.root -> TpcSecRowB.9p8GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.5p75GeV_fixedTarget_2020b.root -> TpcSecRowB.5p75GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021e.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021d.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021c.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2021b.root -> TpcSecRowB.26p5GeV_fixedTarget_2021.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020e.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020d.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020c.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020b.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Nov 29 17:25 TpcSecRowB.26p5GeV_fixedTarget_2020a.root -> TpcSecRowB.26p5GeV_fixedTarget_2020.root
+lrwxr-xr-x 1 fisyak rhstar   40 Dec  4 19:48 TpcSecRowB.3p85GeV_fixedTarget_2019b.root -> TpcSecRowB.3p85GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.3K Dec 11 10:29 TpcSecRowB.100GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:29 TpcSecRowB.13p5GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec 11 10:29 TpcSecRowB.19GeV_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec 11 10:29 TpcSecRowB.19p5GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec 11 10:29 TpcSecRowB.26p5GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:29 TpcSecRowB.26p5GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:29 TpcSecRowB.31GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:30 TpcSecRowB.31p2GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:30 TpcSecRowB.3p85GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec 11 10:30 TpcSecRowB.44p5GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:30 TpcSecRowB.4p59GeV_fixedTarget_2019.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec 11 10:30 TpcSecRowB.5p75GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.4K Dec 11 10:30 TpcSecRowB.70GeV_fixedTarget_2021.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:30 TpcSecRowB.7p3GeV_fixedTarget_2020.root
+-rw-r--r-- 1 fisyak rhstar 7.5K Dec 11 10:30 TpcSecRowB.9p8GeV_fixedTarget_2020.root
+
+
+foreach f (`ls -1d job*.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+12/13/2024
+[l409] ~/work/Histograms/RunXIX_XXI34 $ root.exe SecRow3CG*.root FitPDraw.C+
+ 0 SecRow3CG4EY100GeV_fixedTarget_2021.root             FitP->Draw("mu:rowsigned(y,x) >> P0","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","prof")       0 SecRow3CG4EY100GeV_fixedTarget_2021           All: min/max =   -7.66/   0.03 rms    2.84 (%)
+ 1 SecRow3CG4EY13p5GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P1","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   1 SecRow3CG4EY13p5GeV_fixedTarget_2020          All: min/max =   -3.44/   0.12 rms    2.07 (%)
+ 2 SecRow3CG4EY19GeV_2019.root                          FitP->Draw("mu:rowsigned(y,x) >> P2","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   2 SecRow3CG4EY19GeV_2019                        All: min/max =   -0.01/   0.01 rms    0.01 (%)
+ 3 SecRow3CG4EY19p5GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P3","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   3 SecRow3CG4EY19p5GeV_fixedTarget_2020          All: min/max =   -3.32/   0.05 rms    2.08 (%)
+ 4 SecRow3CG4EY26p5GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P4","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   4 SecRow3CG4EY26p5GeV_fixedTarget_2020          All: min/max =   -3.26/   0.04 rms    2.20 (%)
+ 5 SecRow3CG4EY26p5GeV_fixedTarget_2021.root            FitP->Draw("mu:rowsigned(y,x) >> P5","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   5 SecRow3CG4EY26p5GeV_fixedTarget_2021          All: min/max =   -3.26/   0.05 rms    2.01 (%)
+ 6 SecRow3CG4EY31GeV_fixedTarget_2019.root              FitP->Draw("mu:rowsigned(y,x) >> P6","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   6 SecRow3CG4EY31GeV_fixedTarget_2019            All: min/max =   -0.07/   0.10 rms    0.18 (%)
+ 7 SecRow3CG4EY31p2GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P7","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   7 SecRow3CG4EY31p2GeV_fixedTarget_2020          All: min/max =   -3.33/   0.06 rms    2.17 (%)
+ 8 SecRow3CG4EY3p85GeV_fixedTarget_2019.root            FitP->Draw("mu:rowsigned(y,x) >> P8","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   8 SecRow3CG4EY3p85GeV_fixedTarget_2019          All: min/max =   -0.77/   0.06 rms    0.35 (%)
+ 9 SecRow3CG4EY44p5GeV_fixedTarget_2021.root            FitP->Draw("mu:rowsigned(y,x) >> P9","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")   9 SecRow3CG4EY44p5GeV_fixedTarget_2021          All: min/max =   -3.18/   0.02 rms    2.13 (%)
+10 SecRow3CG4EY4p59GeV_fixedTarget_2019.root            FitP->Draw("mu:rowsigned(y,x) >> P10","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         10 SecRow3CG4EY4p59GeV_fixedTarget_2019          All: min/max =   -0.63/   0.02 rms    0.24 (%)
+11 SecRow3CG4EY5p75GeV_fixedTarget_2020.root            FitP->Draw("mu:rowsigned(y,x) >> P11","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         11 SecRow3CG4EY5p75GeV_fixedTarget_2020          All: min/max =   -3.32/   0.10 rms    2.12 (%)
+12 SecRow3CG4EY70GeV_fixedTarget_2021.root              FitP->Draw("mu:rowsigned(y,x) >> P12","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         12 SecRow3CG4EY70GeV_fixedTarget_2021            All: min/max =   -5.55/   0.02 rms    2.44 (%) <<<
+13 SecRow3CG4EY7p3GeV_fixedTarget_2020.root             FitP->Draw("mu:rowsigned(y,x) >> P13","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         13 SecRow3CG4EY7p3GeV_fixedTarget_2020           All: min/max =   -3.33/   0.11 rms    2.21 (%)
+14 SecRow3CG4EY9p8GeV_fixedTarget_2020.root             FitP->Draw("mu:rowsigned(y,x) >> P14","(i&&j&&abs(mu)<1.0&&dmu>0&&dmu<0.02)","profsame")         14 SecRow3CG4EY9p8GeV_fixedTarget_2020           All: min/max =   -3.32/   0.04 rms    2.07 (%)
+
+[l409] ~/work/Histograms/RunXIX_XXI34 $ root.exe Z3CG*.root FitPDraw.C+
+ 0 Z3CG4EY100GeV_fixedTarget_2021.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI0","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY100GeV_fixedTarget_2021               Inner: min/max =  -35.03/   2.42 rms    2.67 (%)
+ 1 Z3CG4EY13p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI1","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY13p5GeV_fixedTarget_2020              Inner: min/max =  -33.06/   2.05 rms    3.57 (%)
+ 2 Z3CG4EY19GeV_2019.root                               FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI2","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY19GeV_2019                            Inner: min/max =  -13.24/   1.12 rms    1.61 (%)
+ 3 Z3CG4EY19p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI3","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY19p5GeV_fixedTarget_2020              Inner: min/max =  -33.75/   2.50 rms    3.18 (%)
+ 4 Z3CG4EY26p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI4","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY26p5GeV_fixedTarget_2020              Inner: min/max =  -32.13/   1.76 rms    3.20 (%)
+ 5 Z3CG4EY26p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI5","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    5 Z3CG4EY26p5GeV_fixedTarget_2021              Inner: min/max =  -35.93/   1.88 rms    2.90 (%)
+ 6 Z3CG4EY31GeV_fixedTarget_2019.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI6","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    6 Z3CG4EY31GeV_fixedTarget_2019                Inner: min/max =  -35.92/   4.01 rms    3.31 (%)
+ 7 Z3CG4EY31p2GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI7","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    7 Z3CG4EY31p2GeV_fixedTarget_2020              Inner: min/max =  -30.84/   2.87 rms    3.39 (%)
+ 8 Z3CG4EY3p85GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI8","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    8 Z3CG4EY3p85GeV_fixedTarget_2019              Inner: min/max =  -37.26/   2.03 rms    2.39 (%)
+ 9 Z3CG4EY44p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI9","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    9 Z3CG4EY44p5GeV_fixedTarget_2021              Inner: min/max =  -34.33/   2.82 rms    3.02 (%)
+10 Z3CG4EY4p59GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI10","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  10 Z3CG4EY4p59GeV_fixedTarget_2019              Inner: min/max =  -34.14/   1.81 rms    2.25 (%)
+11 Z3CG4EY5p75GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI11","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  11 Z3CG4EY5p75GeV_fixedTarget_2020              Inner: min/max =  -35.07/   1.83 rms    2.83 (%)
+12 Z3CG4EY70GeV_fixedTarget_2021.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI12","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  12 Z3CG4EY70GeV_fixedTarget_2021                Inner: min/max =  -35.17/   3.40 rms    4.21 (%)
+13 Z3CG4EY7p3GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI13","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  13 Z3CG4EY7p3GeV_fixedTarget_2020               Inner: min/max =  -35.43/   2.87 rms    2.86 (%)
+14 Z3CG4EY9p8GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZI14","(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  14 Z3CG4EY9p8GeV_fixedTarget_2020               Inner: min/max =  -30.52/   1.94 rms    3.08 (%)
+root.exe [16] .x FitPDraw.C+("O")
+ 0 Z3CG4EY100GeV_fixedTarget_2021.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO0","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","prof")        0 Z3CG4EY100GeV_fixedTarget_2021               Outer: min/max =  -24.94/   1.78 rms    2.32 (%)
+ 1 Z3CG4EY13p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO1","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    1 Z3CG4EY13p5GeV_fixedTarget_2020              Outer: min/max =  -24.49/   1.07 rms    2.64 (%)
+ 2 Z3CG4EY19GeV_2019.root                               FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO2","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    2 Z3CG4EY19GeV_2019                            Outer: min/max =   -2.10/   0.72 rms    0.38 (%)
+ 3 Z3CG4EY19p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO3","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    3 Z3CG4EY19p5GeV_fixedTarget_2020              Outer: min/max =  -24.03/   0.88 rms    2.75 (%)
+ 4 Z3CG4EY26p5GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO4","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    4 Z3CG4EY26p5GeV_fixedTarget_2020              Outer: min/max =  -20.56/   1.43 rms    2.63 (%)
+ 5 Z3CG4EY26p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO5","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    5 Z3CG4EY26p5GeV_fixedTarget_2021              Outer: min/max =  -24.23/   1.23 rms    2.27 (%)
+ 6 Z3CG4EY31GeV_fixedTarget_2019.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO6","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    6 Z3CG4EY31GeV_fixedTarget_2019                Outer: min/max =  -22.49/   1.90 rms    2.39 (%)
+ 7 Z3CG4EY31p2GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO7","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    7 Z3CG4EY31p2GeV_fixedTarget_2020              Outer: min/max =  -26.72/   1.28 rms    2.75 (%)
+ 8 Z3CG4EY3p85GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO8","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    8 Z3CG4EY3p85GeV_fixedTarget_2019              Outer: min/max =  -23.77/   1.82 rms    2.49 (%)
+ 9 Z3CG4EY44p5GeV_fixedTarget_2021.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO9","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")    9 Z3CG4EY44p5GeV_fixedTarget_2021              Outer: min/max =  -26.10/   1.54 rms    2.31 (%)
+10 Z3CG4EY4p59GeV_fixedTarget_2019.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO10","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  10 Z3CG4EY4p59GeV_fixedTarget_2019              Outer: min/max =  -26.52/   1.33 rms    1.95 (%)
+11 Z3CG4EY5p75GeV_fixedTarget_2020.root                 FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO11","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  11 Z3CG4EY5p75GeV_fixedTarget_2020              Outer: min/max =  -25.33/   1.63 rms    2.67 (%)
+12 Z3CG4EY70GeV_fixedTarget_2021.root                   FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO12","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  12 Z3CG4EY70GeV_fixedTarget_2021                Outer: min/max =  -25.82/   1.12 rms    2.34 (%)
+13 Z3CG4EY7p3GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO13","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  13 Z3CG4EY7p3GeV_fixedTarget_2020               Outer: min/max =  -26.07/   0.73 rms    2.62 (%)
+14 Z3CG4EY9p8GeV_fixedTarget_2020.root                  FitP->Draw("mu:TMath::Sign(208.707-y,x) >> ZO14","(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)","profsame")  14 Z3CG4EY9p8GeV_fixedTarget_2020               Outer: min/max =  -26.05/   1.10 rms    2.41 (%)
+[l409] ~/work/Histograms/RunXIX_XXI34 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020
+#sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021
+#sigma(@61 npts) =  5.36% for F-13p5GeV_fixedTarget_2020
+#sigma(@61 npts) =  5.98% for F-19GeV_2019                 <<<<<<<<
+#sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020
+#sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020
+#sigma(@61 npts) =  5.94% for F-26p5GeV_fixedTarget_2021   <<<<<<<<
+#sigma(@61 npts) =  5.48% for F-31GeV_fixedTarget_2019
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020
+#sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019
+#sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019
+#sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020
+#sigma(@41 npts) =  6.43% for F-70GeV_fixedTarget_2021     <<<<<<<< <<<<<<<<<<<<<
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020
+Mu
+
+#mu =  0.23% for F-9p8GeV_fixedTarget_2020
+#mu =  0.40% for F-100GeV_fixedTarget_2021
+#mu =  0.28% for F-13p5GeV_fixedTarget_2020
+#mu =  0.20% for F-19GeV_2019
+#mu =  0.37% for F-19p5GeV_fixedTarget_2020
+#mu =  0.37% for F-26p5GeV_fixedTarget_2020
+#mu =  0.06% for F-26p5GeV_fixedTarget_2021
+#mu =  0.25% for F-31GeV_fixedTarget_2019
+#mu =  0.42% for F-31p2GeV_fixedTarget_2020
+#mu =  0.17% for F-3p85GeV_fixedTarget_2019
+#mu =  0.48% for F-44p5GeV_fixedTarget_2021
+#mu =  0.35% for F-4p59GeV_fixedTarget_2019
+#mu =  0.34% for F-5p75GeV_fixedTarget_2020
+#mu =  0.39% for F-70GeV_fixedTarget_2021
+#mu =  0.26% for F-7p3GeV_fixedTarget_2020
+
+
+Copy links fromTpcZCorrectionC.*.C tpcTimeDependence
+
+foreach f (`ls -1d TpcZCorrectionC.*.C`)
+ set t = `echo ${f} | sed -e 's/TpcZCorrectionC/tpcTimeDependence/'`
+ echo "$t"
+ ln -s tpcTimeDependence.C ${t}
+end
+[cvmfswrite02] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc $ dir TpcZCorrection*GeV* | grep '>' | sed -e 's/TpcZCorrectionC/tpcTimeDependence/g' | awk '{print "ln -sf "$11" "$9}'
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2020.C tpcTimeDependence.26p5GeV_fixedTarget_2020a.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2020.C tpcTimeDependence.26p5GeV_fixedTarget_2020b.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2020.C tpcTimeDependence.26p5GeV_fixedTarget_2020c.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2020.C tpcTimeDependence.26p5GeV_fixedTarget_2020d.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2020.C tpcTimeDependence.26p5GeV_fixedTarget_2020e.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2021.C tpcTimeDependence.26p5GeV_fixedTarget_2021b.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2021.C tpcTimeDependence.26p5GeV_fixedTarget_2021c.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2021.C tpcTimeDependence.26p5GeV_fixedTarget_2021d.C
+ln -sf tpcTimeDependence.26p5GeV_fixedTarget_2021.C tpcTimeDependence.26p5GeV_fixedTarget_2021e.C
+ln -sf tpcTimeDependence.3p85GeV_fixedTarget_2019.C tpcTimeDependence.3p85GeV_fixedTarget_2019b.C
+ln -sf tpcTimeDependence.5p75GeV_fixedTarget_2020.C tpcTimeDependence.5p75GeV_fixedTarget_2020b.C
+ln -sf tpcTimeDependence.9p8GeV_fixedTarget_2020.C tpcTimeDependence.9p8GeV_fixedTarget_2020b.C
+
+
+-rw-r--r-- 1 fisyak rhstar 590 Dec 13 18:50 tpcTimeDependence.100GeV_fixedTarget_2021.C    ignore 
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:51 tpcTimeDependence.13p5GeV_fixedTarget_2020.C   ok
+-rw-r--r-- 1 fisyak rhstar 577 Dec 13 18:52 tpcTimeDependence.19GeV_2019.C                 ignore 
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:52 tpcTimeDependence.19p5GeV_fixedTarget_2020.C   ok
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:52 tpcTimeDependence.26p5GeV_fixedTarget_2020.C   ignore 
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:52 tpcTimeDependence.26p5GeV_fixedTarget_2021.C   ok
+-rw-r--r-- 1 fisyak rhstar 589 Dec 13 18:52 tpcTimeDependence.31GeV_fixedTarget_2019.C     ok ?
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:52 tpcTimeDependence.31p2GeV_fixedTarget_2020.C   ok
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:52 tpcTimeDependence.3p85GeV_fixedTarget_2019.C   ignore 
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:53 tpcTimeDependence.44p5GeV_fixedTarget_2021.C   ignore 
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:53 tpcTimeDependence.4p59GeV_fixedTarget_2019.C   ignore 
+-rw-r--r-- 1 fisyak rhstar 591 Dec 13 18:53 tpcTimeDependence.5p75GeV_fixedTarget_2020.C   ignore 
+-rw-r--r-- 1 fisyak rhstar 589 Dec 13 18:53 tpcTimeDependence.70GeV_fixedTarget_2021.C     ok
+-rw-r--r-- 1 fisyak rhstar 590 Dec 13 18:53 tpcTimeDependence.7p3GeV_fixedTarget_2020.C    ignore 
+-rw-r--r-- 1 fisyak rhstar 590 Dec 13 18:53 tpcTimeDependence.9p8GeV_fixedTarget_2020.C    ignore
+
+
+[cvmfswrite02] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2 $ grep tpcTimeDependence daily.RCF | grep ignore | awk '{print $9}' | xargs 
+tpcTimeDependence.100GeV_fixedTarget_2021.C tpcTimeDependence.19GeV_2019.C tpcTimeDependence.26p5GeV_fixedTarget_2020.C tpcTimeDependence.3p85GeV_fixedTarget_2019.C tpcTimeDependence.44p5GeV_fixedTarget_2021.C tpcTimeDependence.4p59GeV_fixedTarget_2019.C tpcTimeDependence.5p75GeV_fixedTarget_2020.C tpcTimeDependence.7p3GeV_fixedTarget_2020.C tpcTimeDependence.9p8GeV_fixedTarget_2020.C
+
+
+foreach f (`ls -1d  ~/work/Histograms/RunXIX_XXI34/tpcTimeDependence*.C`)
+   set b = `basename ${f}`
+   ls ${b}
+   if (! $?) rm ${b}
+   cp -p ${f} ${b}
+end
+[l409] /afs/rhic.bnl.gov/star/packages/.DEV2/StarDb/Calibrations/tpc $ dirc -ltr tpcTime*
+-rw-r--r-- 1 2764 rhstar 1.1K Oct 18  2023 tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.r2023.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.9p8GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.7p3GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.70GeV_fixedTarget_2021.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.5p75GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.4p59GeV_fixedTarget_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.44p5GeV_fixedTarget_2021.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.3p85GeV_fixedTarget_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.31p2GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.31GeV_fixedTarget_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.19p5GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.19GeV_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.13p5GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.100GeV_fixedTarget_2021.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   43 Dec 13 19:01 tpcTimeDependence.9p8GeV_fixedTarget_2020b.C -> tpcTimeDependence.9p8GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.5p75GeV_fixedTarget_2020b.C -> tpcTimeDependence.5p75GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.3p85GeV_fixedTarget_2019b.C -> tpcTimeDependence.3p85GeV_fixedTarget_2019.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021e.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021d.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021c.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021b.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020e.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020d.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020c.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020b.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020a.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+
+
+[l409] /afs/rhic.bnl.gov/star/packages/.DEV2/StarDb/Calibrations/tpc $ dirc -ltr tpcTime*
+-rw-r--r-- 1 2764 rhstar 1.1K Oct 18  2023 tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.r2023.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.9p8GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.7p3GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.5p75GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.4p59GeV_fixedTarget_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.44p5GeV_fixedTarget_2021.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.3p85GeV_fixedTarget_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.19GeV_2019.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   19 Dec 13 19:01 tpcTimeDependence.100GeV_fixedTarget_2021.C -> tpcTimeDependence.C
+lrwxr-xr-x 1 2764 rhstar   43 Dec 13 19:01 tpcTimeDependence.9p8GeV_fixedTarget_2020b.C -> tpcTimeDependence.9p8GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.5p75GeV_fixedTarget_2020b.C -> tpcTimeDependence.5p75GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.3p85GeV_fixedTarget_2019b.C -> tpcTimeDependence.3p85GeV_fixedTarget_2019.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021e.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021d.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021c.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2021b.C -> tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020e.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020d.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020c.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020b.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+lrwxr-xr-x 1 2764 rhstar   44 Dec 13 19:01 tpcTimeDependence.26p5GeV_fixedTarget_2020a.C -> tpcTimeDependence.26p5GeV_fixedTarget_2020.C
+
+-rw-r--r-- 1 2764 rhstar  591 Dec 13 19:05 tpcTimeDependence.13p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 2764 rhstar  591 Dec 13 19:06 tpcTimeDependence.19p5GeV_fixedTarget_2020.C
+-rw-r--r-- 1 2764 rhstar  591 Dec 13 19:06 tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+-rw-r--r-- 1 2764 rhstar  589 Dec 13 19:06 tpcTimeDependence.31GeV_fixedTarget_2019.C
+-rw-r--r-- 1 2764 rhstar  591 Dec 13 19:07 tpcTimeDependence.31p2GeV_fixedTarget_2020.C
+-rw-r--r-- 1 2764 rhstar  589 Dec 13 19:09 tpcTimeDependence.70GeV_fixedTarget_2021.C
+
+ *13p5GeV_fixedTarget_2020* *19p5GeV_fixedTarget_2020* *26p5GeV_fixedTarget_2021* *31GeV_fixedTarget_2019* *31p2GeV_fixedTarget_2020* *70GeV_fixedTarget_2021*
+
+foreach f (j*13p5GeV_fixedTarget_2020* j*19p5GeV_fixedTarget_2020* j*26p5GeV_fixedTarget_2021* j*31GeV_fixedTarget_2019* j*31p2GeV_fixedTarget_2020* j*70GeV_fixedTarget_2021*)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ if (! -d ${d})  mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+12/14/2024
+Before tpcTimeDependence                                                                              After tpcTimeDependence	RunXIX_XXI35
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020  #mu =  0.23% for F-9p8GeV_fixedTarget_2020   #sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020  #mu =  0.23% for F-9p8GeV_fixedTarget_2020	  
+#sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021	 #mu =  0.40% for F-100GeV_fixedTarget_2021   #sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021	 #mu =  0.40% for F-100GeV_fixedTarget_2021	  
+#sigma(@61 npts) =  5.36% for F-13p5GeV_fixedTarget_2020 #mu =  0.28% for F-13p5GeV_fixedTarget_2020        
+#sigma(@61 npts) =  5.98% for F-19GeV_2019		 #mu =  0.20% for F-19GeV_2019		      #sigma(@61 npts) =  5.98% for F-19GeV_2019		 #mu =  0.20% for F-19GeV_2019		          
+#sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.37% for F-19p5GeV_fixedTarget_2020         
+#sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020 #mu =  0.37% for F-26p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020 #mu =  0.37% for F-26p5GeV_fixedTarget_2020        
+#sigma(@61 npts) =  5.94% for F-26p5GeV_fixedTarget_2021 #mu =  0.06% for F-26p5GeV_fixedTarget_2021         
+#sigma(@61 npts) =  5.48% for F-31GeV_fixedTarget_2019	 #mu =  0.25% for F-31GeV_fixedTarget_2019           
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.42% for F-31p2GeV_fixedTarget_2020         
+#sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019 #mu =  0.17% for F-3p85GeV_fixedTarget_2019  #sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019 #mu =  0.17% for F-3p85GeV_fixedTarget_2019  
+#sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu =  0.48% for F-44p5GeV_fixedTarget_2021  #sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu =  0.48% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.35% for F-4p59GeV_fixedTarget_2019  #sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.35% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020 #mu =  0.34% for F-5p75GeV_fixedTarget_2020  #sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020 #mu =  0.34% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.43% for F-70GeV_fixedTarget_2021	 #mu =  0.39% for F-70GeV_fixedTarget_2021    
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.26% for F-7p3GeV_fixedTarget_2020   #sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.26% for F-7p3GeV_fixedTarget_2020
+
+
+mysql -h star-db04.rcf.bnl.gov --port=3316 -u "" --password="" Calibrations_tpc
+[spoolsub01] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG $ mysql -h star-db04.rcf.bnl.gov --port=3316 -u "" --password="" Calibrations_tpc
+
+
+grep -B 1 'found table tpcTimeDependence' */*.log | tee tpcTimeDependenceC
+grep LoadTable tpcTimeDependenceC | awk -F\/ '{print $1" "$13}' | sort -u
+13p5GeV_fixedTarget_2020 tpcTimeDependence.13p5GeV_fixedTarget_2020.C
+19p5GeV_fixedTarget_2020 tpcTimeDependence.19p5GeV_fixedTarget_2020.C
+26p5GeV_fixedTarget_2021 tpcTimeDependence.26p5GeV_fixedTarget_2021b.C
+26p5GeV_fixedTarget_2021 tpcTimeDependence.26p5GeV_fixedTarget_2021.C
+26p5GeV_fixedTarget_2021 tpcTimeDependence.26p5GeV_fixedTarget_2021c.C
+26p5GeV_fixedTarget_2021 tpcTimeDependence.26p5GeV_fixedTarget_2021d.C
+26p5GeV_fixedTarget_2021 tpcTimeDependence.26p5GeV_fixedTarget_2021e.C
+31GeV_fixedTarget_2019 tpcTimeDependence.31GeV_fixedTarget_2019.C
+31p2GeV_fixedTarget_2020 tpcTimeDependence.31p2GeV_fixedTarget_2020.C
+70GeV_fixedTarget_2021 tpcTimeDependence.70GeV_fixedTarget_2021.C
+1
+FPE_OFF
+foreach f (j*13p5GeV_fixedTarget_2020* j*19p5GeV_fixedTarget_2020* j*26p5GeV_fixedTarget_2021* j*31GeV_fixedTarget_2019* j*31p2GeV_fixedTarget_2020* j*70GeV_fixedTarget_2021*)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ if (! -d ${d})  mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+12/15/2024
+*13p5GeV_fixedTarget_2020* *19p5GeV_fixedTarget_2020* *26p5GeV_fixedTarget_2021* *31GeV_fixedTarget_2019* *31p2GeV_fixedTarget_2020* *70GeV_fixedTarget_2021*
+def 
+[spoolsub01] ~ $ showpath
+ : -1
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/bin
+/star/u/fisyak/bin/.al92_x8664_gcc11
+~/bin
+/star/u/fisyak/bin/.al92_x8664_gcc11
+~/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/group
+.
+/star/u/fisyak/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/qt4/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/mgr
+.al92_x8664_gcc11_opt/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11_opt/bin
+/usr/local/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/root/bin
+/usr/bin
+/usr/local/sbin
+/usr/sbin
+/opt/puppetlabs/bin
+/usr/lpp/mmfs/bin/
+/gpfs01/star/subsys-tpc/fisyak/STAR/cern64/pro/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/scripts/RCF
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/scripts/RCF
+
+after setup opt
+[starsub01] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG $ showpath 
+ : -1
+/star/u/fisyak/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/qt4/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/group
+mgr
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/mgr
+.al92_x8664_gcc11/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/bin
+/usr/local/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/bin
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/bin
+.
+/usr/bin
+/usr/local/sbin
+/usr/sbin
+/opt/puppetlabs/bin
+/usr/lpp/mmfs/bin/
+/gpfs01/star/subsys-tpc/fisyak/STAR/cern64/pro/bin
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/scripts/RCF
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/bin
+--------------------------------------------------------------------------------
+default 
+[spoolsub01] ~ $ showpath $LD_LIBRARY_PATH 
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/qt4/lib:.al92_x8664_gcc11_opt/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11_opt/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/root/lib:/usr/lib64:/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib64:/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib : 0
+
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/lib
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/qt4/lib
+.al92_x8664_gcc11_opt/lib
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11_opt/lib
+/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/root/lib
+/usr/lib64      <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib64
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib
+
+after setup opt
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/qt4/lib:.al92_x8664_gcc11/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/lib:/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib64:/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib:/usr/lib64:/usr/lib64/mysql : 0
+
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/lib
+/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/qt4/lib
+.al92_x8664_gcc11/lib
+/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al92_x8664_gcc11/lib
+/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/lib
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib64
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib
+/usr/lib64
+/usr/lib64/mysql

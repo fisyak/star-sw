@@ -2709,7 +2709,9 @@ my $debug = 0;
 #$hist = "RunXIX_XXI30"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/02/2024 use TFG flavor, reset TpcSecRowB only fixed Target
 #$hist = "RunXIX_XXI31"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/04/2024 use TFG flavor, new TpcSecRowB 
 #$hist = "RunXIX_XXI32"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/06/2024 TpcZCorrectionC
-$hist = "RunXIX_XXI33"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/08/2024 TpcZCorrectionC + TpcSecRowB + TpcLengthCorrectionMDN
+#$hist = "RunXIX_XXI33"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/08/2024 TpcZCorrectionC + TpcSecRowB + TpcLengthCorrectionMDN
+#$hist = "RunXIX_XXI34"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/11/2024 TpcSecRowB
+$hist = "RunXIX_XXI35"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/13/2024 tpcTimeDependence for *13p5GeV_fixedTarget_2020* *19p5GeV_fixedTarget_2020* *26p5GeV_fixedTarget_2021* *31GeV_fixedTarget_2019* *31p2GeV_fixedTarget_2020* *70GeV_fixedTarget_2021*
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2819,9 +2821,9 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
+#<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">
-	 <command>
+<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">	 <command>
          cd ${SUBMITTINGDIRECTORY}
 if ($?INPUTFILE0) csh -x $INPUTFILE0
          </command>
@@ -2885,14 +2887,12 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 	print XML "<input URL=\"file:" . $DIR . "/" .  $SCRIPT ."\" />\n";
 	open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
 	print OUT "#! /usr/local/bin/tcsh -f\n";
-	if ($STAR_LEVEL ne "\.DEV2") {
-	  if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
-	    print OUT "source ${GROUP_DIR}/setup gcc;\n";
-	    print OUT "/afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh";  
-	  }
+	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
+	if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
+	  print OUT "source ${GROUP_DIR}/setup gcc;\n";
+	  print OUT "/afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh";  
 	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
-	}  else {
-	  print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
+	} elsif ($STAR_LEVEL !~ "^\.DEV2") {
 	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 	}
 	print OUT "/usr/bin/test -d $scrr || mkdir -p $scrr;\n";

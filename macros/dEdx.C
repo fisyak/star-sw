@@ -147,7 +147,7 @@ void dEdx(Int_t First, Int_t Last,
   if (db) {
     db->SetDebug(1);
 #if 1 /* disable MySQl for tables under calibration */
-    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
+    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC", "tpcTimeDependence", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
     for (Int_t i = 0; TFGTables[i]; i++) {
       cout << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endl; 
       db->SetFlavor("TFG",TFGTables[i]);
