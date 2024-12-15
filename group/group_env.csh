@@ -449,12 +449,12 @@ endif
 if ( $?DECHO ) echo "$self :: Paths alteration for STAR_MGR, STAR_SCRIPTS STAR_CGI etc ... begins"
 if ( -x ${GROUP_DIR}/dropit) then
     setenv GROUPPATH `${GROUP_DIR}/dropit -p ${GROUP_DIR} -p mgr -p ${STAR_MGR}  -p mgr/bin -p ${STAR_MGR}/bin -p ${STAR_SCRIPTS} -p ${STAR_CGI} -p ${MINE_BIN} -p ${STAR_BIN}` # -p ${STAF}/mgr -p ${STAF_BIN}`
-    setenv PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/bin -p ${OPTSTAR}/bin -p $PATH`
-    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib -p ${OPTSTAR}/lib -p $LD_LIBRARY_PATH`
+    setenv PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/bin -p $PATH`
+    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib -p $LD_LIBRARY_PATH`
 else
     setenv GROUPPATH ${GROUP_DIR}:mgr:${STAR_MGR}:mgr/bin:${STAR_MGR}/bin:${STAR_SCRIPTS}:${STAR_CGI}:${MINE_BIN}:${STAR_BIN} #:${STAF}/mgr:${STAF_BIN}
-    setenv PATH  ${XOPTSTAR}/bin:${OPTSTAR}/bin:$PATH
-    setenv LD_LIBRARY_PATH ${XOPTSTAR}/lib:${OPTSTAR}/lib:${LD_LIBRARY_PATH}
+    setenv PATH  ${XOPTSTAR}/bin:$PATH
+    setenv LD_LIBRARY_PATH ${XOPTSTAR}/lib:${LD_LIBRARY_PATH}
 endif
  
 # test return value of PTEST from dropit
@@ -491,8 +491,8 @@ if ( -x ${GROUP_DIR}/dropit) then
   setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p "${LD_LIBRARY_PATH}" ${STAR_PATH}`
   if ($?SHLIB_PATH == 1)      setenv SHLIB_PATH      `${GROUP_DIR}/dropit -p ${SHLIB_PATH} ${STAR_PATH}`
 
-  setenv PATH `${GROUP_DIR}/dropit -p ${GROUPPATH} -p /usr/afsws/bin -p /usr/afsws/etc -p ${XOPTSTAR}/bin -p ${OPTSTAR}/bin -p /usr/sue/bin -p /usr/local/bin -p ${PATH}`
-  setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib -p ${OPTSTAR}/lib -p $LD_LIBRARY_PATH`
+  setenv PATH `${GROUP_DIR}/dropit -p ${GROUPPATH} -p /usr/afsws/bin -p /usr/afsws/etc -p ${XOPTSTAR}/bin -p /usr/sue/bin -p /usr/local/bin -p ${PATH}`
+  setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib -p $LD_LIBRARY_PATH`
 else
   if ( $?DECHO ) echo "$self ::  ${GROUP_DIR}/dropit is not -x"
 endif
@@ -866,8 +866,8 @@ if ( -x ${GROUP_DIR}/dropit) then
 	setenv PATH  `${GROUP_DIR}/dropit cern`
 	setenv PATH `${GROUP_DIR}/dropit -p ${PATH} -p ${CERN_ROOT}/bin`
     endif
-    setenv PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/bin -p ${OPTSTAR}/bin -p ${PATH}`
-    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib -p ${OPTSTAR}/lib -p $LD_LIBRARY_PATH`
+    setenv PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/bin -p ${PATH}`
+    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib -p $LD_LIBRARY_PATH`
 # Note from 2011/10 - Unofrtunately, MySQL has not been there for a while
     if ( -d ${XOPTSTAR}/lib/mysql ) then
       setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${LD_LIBRARY_PATH} -p ${XOPTSTAR}/lib/mysql`
@@ -885,13 +885,13 @@ endif
 # Display this message as it is likely the environment is
 # screwed up if this happens.
 #
-if ( "$OPTSTAR" == "") then
+if ( "$XOPTSTAR" == "") then
     if ($ECHO) then
 	    echo ""
 	    echo "          ########################################"
 	    echo "          ########################################"
 	    echo "          ##                                    ##"
-	    echo "          ## /!\  OPTSTAR is undefined  /!\     ##"
+	    echo "          ## /!\  XOPTSTAR is undefined  /!\     ##"
 	    echo "          ##                                    ##"
 	    echo "          ## NO local or AFS based installation ##"
 	    echo "          ##                                    ##"

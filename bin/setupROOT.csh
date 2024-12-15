@@ -6,6 +6,20 @@ if (! $?NODEBUG) then
 else
     set ROOTBUILD="opt"
 endif
+set PYTHIA6=""
+if (-r $STAR_LIB/libPythia6.so) then
+ set  PYTHIA6 =  $STAR_LIB
+else if (-r $XOPTSTAR/lib/libPythia6.so) then
+ set PYTHIA6 =  $XOPTSTAR/lib
+else if (-r $CMAKE_PREFIX_PATH/lib/libPythia6.so) then
+ set PYTHIA6 = $CMAKE_PREFIX_PATH/lib
+endif
+setenv DISABLE ""
+setenv ENABLE ""
+if ($PYTHIA6 != "") then
+    setenv ENABLE "--with-pythia6-libdir=$PYTHIA6"
+endif
+unset PYTHIA6
 #setenv PYTHIA /afs/rhic.bnl.gov/star/ROOT/XNew/.$STAR_HOST_SYS/root
 #setenv PYTHIA6 /afs/rhic.bnl.gov/star/ROOT/XNew/.$STAR_HOST_SYS/root
 #setenv VENUS /afs/rhic.bnl.gov/star/ROOT/XNew/.$STAR_HOST_SYS/root
@@ -24,7 +38,7 @@ setenv SHIFTINCDIR ""#$CERN_ROOT/../../usr.local/include/shift
 setenv x11libdir /usr/X11R6/lib
 setenv xpmlibdir /usr/X11R6/lib
 setenv xftlibdir /usr/X11R6/lib
-setenv DISABLE "--disable-python --disable-qt --disable-qtgsi --disable-vc --disable-pythia8 --disable-xrootd"
+setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --disable-vc --disable-pythia8 --disable-xrootd"
 #setenv DISABLE "--disable-qt --disable-qtgsi --disable-vc"
 #setenv MYSQL /opt/star
 #setenv MYSQLINCDIR $MYSQL/include/mysql	
@@ -150,12 +164,15 @@ switch ( $STAR_HOST_SYS )
 endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
+    case *al92_x8664_*:
+	setenv DISABLE "$DISABLE --disable-memstat"
+    breaksw
     case *gcc12*:
-     setenv DISABLE "--disable-python --disable-xrootd --disable-pythia8"
+     setenv DISABLE "$DISABLE --disable-python --disable-xrootd --disable-pythia8"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
      breaksw
     case *gcc1*:
-     setenv DISABLE "--disable-xrootd --disable-pythia8"
+     setenv DISABLE "$DISABLE --disable-xrootd --disable-pythia8"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
      breaksw
     case *gcc9*:
@@ -166,7 +183,7 @@ switch ( $STAR_HOST_SYS )
      breaksw 
      case *gcc631:
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
-     setenv DISABLE "--disable-xrootd --disable-pythia8"
+     setenv DISABLE "$DISABLE --disable-xrootd --disable-pythia8"
      breaksw
      case *_x8664_gcc6*:
      setenv ENABLE_CXX11 "--enable-cxx11"
@@ -201,7 +218,7 @@ switch ( $STAR_HOST_SYS )
      case *gcc447*:
      setenv ENABLE_CXX11 ""
      setenv EXTRA_FLAGS ""
-     setenv DISABLE "--disable-python --disable-qt --disable-qtgsi --enable-vc"
+     setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --enable-vc"
      breaksw	
      case *x8664*icc*:
      case *icc*:
@@ -255,13 +272,14 @@ echo "DISABLE = $DISABLE"
     --enable-builtin_lzma       \
     --with-gsl-incdir=$GSL_DIR/include \
     --with-gsl-libdir=$GSL_DIR/lib \
-    --with-pythia6-libdir=$XOPTSTAR/lib \
     --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLCLILIB \
     --with-fftw3-incdir=$XOPTSTAR/include --with-fftw3-libdir=$XOPTSTAR/lib \
     --with-f77=$F77 \
     --all \
     $DISABLE \
+    $ENABLE \
     $ENABLE_CXX11 $EXTRA_FLAGS
+#    --with-pythia6-libdir=$XOPTSTAR/lib \
 #    --enable-opengl \
 #    --with-xrootd=$XOPTSTAR \
 #    --with-pythia8-libdir=$XOPTSTAR/lib \

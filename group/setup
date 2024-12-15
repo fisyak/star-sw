@@ -54,6 +54,7 @@ endif
 if (! $?GROUP_DIR != 0) then
   source $GROUP_DIR/unix_programs.csh
 endif
+      if ($?DECHO) echo "setup ${pkg}"
 switch ($pkg)
     case "spackTFG":
     case "SPACKTFG":
@@ -72,6 +73,12 @@ switch ($pkg)
     if ( -r $SPACK_SETUP ) then
       if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
       source $SPACK_SETUP 
+      if ($?CMAKE_PREFIX_PATH) then
+        if ($?USE_64BITS && $USE_64BITS == 1) then
+	  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64
+        endif
+	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib
+      endif
     else
 	if ($?DECHO) echo "SPACK_SETUP has not been set"
     endif
@@ -81,6 +88,7 @@ switch ($pkg)
       set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
       if ( -e $SPACK_SETUP && $?USE_CVMFS && $USE_CVMFS == 1) then
        source $SPACK_SETUP 
+       if ($?
       endif
         breaksw
     case "NEW_ENV*":
@@ -357,6 +365,7 @@ switch ($pkg)
     # CERN in case of alternate CERN_ROOT
     case "CERN":
     case "cern":
+      if ($?DECHO) echo "${pkg} => CERN"
 #    echo "CERN in case of alternate CERN_ROOT"
 	if ( $location != 0 ) then
 	    # use the specified location, no double check
@@ -371,10 +380,11 @@ switch ($pkg)
 	    if ( ! $?CERN ) then
 		# Define one value - some of the path below are historical
 		if ( $USE_64BITS == 1) then
-		    set x="/cern64 /cern ${AFS_RHIC}/asis/@sys/cern64 ${AFS_RHIC}/asis/@sys/cern /usr/local/cern64 /usr/local/cern /common/star/cern64 /common/star/cern /software/fisyak/STAR/cern64"
+		    set x="/cern64 /cern ${AFS_RHIC}/asis/@sys/cern64 ${AFS_RHIC}/asis/@sys/cern /usr/local/cern64 /usr/local/cern /common/star/cern64 /common/star/cern /software/fisyak/STAR/cern64  $AFS_RHIC/cern64"
 		else
-		    set x="/cern ${AFS_RHIC}/asis/@sys/cern /usr/local/cern /common/star/cern /software/fisyak/STAR/cern"
+		    set x="/cern ${AFS_RHIC}/asis/@sys/cern /usr/local/cern /common/star/cern /software/fisyak/STAR/cern $AFS_RHIC/cern"
 		endif
+                if ($?DECHO) echo "CERN earch list: ${x}"
             else
 		# Either it was set before by the search above or there is an 
 		# external definition. In all cases, if it ends by 64, set as-is
@@ -397,7 +407,9 @@ switch ($pkg)
 	    # But this odditiy is needed to deal with the 64 bits convention
 	    # ${CERN} ${CERN}64
 	    foreach d ($x)
+                if ($?DECHO) echo "d = ${d}"
 		if ( -r  $d ) then
+                    if ($?DECHO) echo "${d} is readble"
 		    setenv CERN $d
 		    break
 		endif
@@ -486,15 +498,6 @@ switch ($pkg)
       if (-e /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh) then
         if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh"
         source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh
-	if ($pkg == "gcc/12") then
-#	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
-#             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
-#          else 
-#	     setup spackTFG
-#	     spack env activate x86_64_gcc12
-#             spack env view enable
-#          endif
-        endif
       else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh) then
         if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh"
         source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh

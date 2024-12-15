@@ -1,4 +1,4 @@
-#!/opt/usatlas/bin/perl -w
+#!/usr/bin/env perl 
 use strict;
 use CPAN;
 my $file = $ARGV[0];
