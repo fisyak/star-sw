@@ -57,6 +57,7 @@ StMinuitVertexFinder::StMinuitVertexFinder(VertexFit_t fitMode) :
   mExternalSeedPresent = kFALSE;
   mRequireCTB        = kFALSE;
   requireCTB         = kFALSE;
+  mFXT               = kFALSE;
   mUseITTF           = kFALSE;
   mUseOldBEMCRank    = kFALSE;
   mLowerSplitVtxRank = kFALSE;
@@ -365,8 +366,8 @@ void StMinuitVertexFinder::calculateRanks() {
     else
       primV->setRanking(rank_cross+rank_bemc+rank_avg_dip); 
 #ifdef __TFG__VERSION__
-    static Bool_t FXT =  St_beamInfoC::instance()->IsFixedTarget();
-    if (FXT && TMath::Abs(primV->position().z() - 200) < 2) primV->setRanking(primV->ranking() + 10000.);
+    //    static Bool_t FXT =  St_beamInfoC::instance()->IsFixedTarget();
+    if (mFXT && TMath::Abs(primV->position().z() - 200) < 2) primV->setRanking(primV->ranking() + 10000.);
 #endif /*  __TFG__VERSION__ */
     if (primV->ranking() > mBestRank) {
       mBestRank = primV->ranking();
@@ -415,6 +416,16 @@ int StMinuitVertexFinder::fit(StEvent* event)
     Int_t n_ctb_match_tot = 0;
     Int_t n_bemc_match_tot = 0;
     Int_t n_cross_tot = 0;
+#ifndef __TFG__VERSION__ 
+
+    // In FXT mode, we want to have a bias = -2 cm below the z-axis
+    //   for the approximate physical target location. This could
+    //   potentially be a database table (PrimaryVertexCuts) parameter,
+    //   but the bias is approximate and highly unlikely to change/finetune.
+    StThreeVectorD beamAxis(0.0, mFXT ? -2.0 : 0.0, 0.0);
+    double RImpactMax2 = mRImpactMax*mRImpactMax;
+
+#endif /* ! __TFG__VERSION__ */
     for (const StTrackNode* stTrack : event->trackNodes())
     {
       StGlobalTrack* g = ( StGlobalTrack*) stTrack->track(global);
@@ -423,7 +434,11 @@ int StMinuitVertexFinder::fit(StEvent* event)
       if (! gDCA) continue;
 #ifndef __TFG__VERSION__ 
       if (TMath::Abs(gDCA->impact()) >  mRImpactMax) continue;
-      Double_t z_lin = gDCA->z();
+      StPhysicalHelixD gHelix = gDCA->helix();
+      StThreeVectorD DCAPosition = gHelix.at(gHelix.pathLength(beamAxis.x(),beamAxis.y())) - beamAxis;
+      double RImpact2 = DCAPosition.perp2();
+      if (RImpact2 > RImpactMax2) continue; // calculate square once instead of sqrt N times
+      Double_t z_lin = DCAPosition.z();
 #else /* __TFG__VERSION__ */ 
       static Double_t xBeam = St_beamSpotC::instance()->X();
       static Double_t yBeam = St_beamSpotC::instance()->Y();
