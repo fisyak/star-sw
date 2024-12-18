@@ -52,9 +52,9 @@ alias setup      'source ${GROUP_DIR}/setup'
 alias starsetup  'source ${GROUP_DIR}/setup'
 
 # Alias replacement
-if ( -e $STAR/.$STAR_HOST_SYS/bin/starsim ) then
-    alias paw        '${STAR}/.${STAR_HOST_SYS}/bin/starsim'
-endif
+#if ($?STAR_HOST_SYS &&  -e $STAR/.$STAR_HOST_SYS/bin/starsim ) then
+#    alias paw        '${STAR}/.${STAR_HOST_SYS}/bin/starsim'
+#endif
 
 
 if ($?SILENT == 1) then

@@ -153,7 +153,7 @@ void MakeTpcZCorrection1() {
     if (! c2 ) c2 =  new TCanvas("cTemp","cTemp");
     c2->cd(); 
     c2->Clear();
-    //#define __muJ__
+#define __muJ__
 #ifdef __muJ__
     cout << "FitP->Draw(\"" << Form("mu-muJ:y>>%s(105,0,210)\"",histN[idx-1]) << ",\"" << cut << "\",\"" << prof << "\");" << endl;
     FitP->Draw(Form("mu-muJ:y>>%s(110,0,220)",histN[idx-1]),cut,prof);

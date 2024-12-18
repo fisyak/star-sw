@@ -795,8 +795,8 @@ if ($?DECHO) echo "begin of setup IVROOT =======================================
 unsetenv IVROOT
 #if ( -d $XOPTSTAR/include/Inventor ) setenv IVROOT $XOPTSTAR
 if ( -r $XOPTSTAR/include/simage.h ) setenv IVROOT $XOPTSTAR
-if ($?IVROOT == 0 && $?STAR) then
-   if (-r ${STAR}/QtRoot/qtgl/qtcoin/setup.csh) source ${STAR}/QtRoot/qtgl/qtcoin/setup.csh 
+if ($?IVROOT == 0 && $?STAR && $?STAR_HOST_SYS ) then
+   if ( -r ${STAR}/QtRoot/qtgl/qtcoin/setup.csh) source ${STAR}/QtRoot/qtgl/qtcoin/setup.csh 
 endif
 if ($?DECHO) echo "end of setup IVROOT ================================================================================"
 

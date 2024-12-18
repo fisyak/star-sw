@@ -70,6 +70,7 @@ StTpcdEdxCorrection::StTpcdEdxCorrection(Int_t option, Int_t debug) :
 {
   assert(gStTpcDb);
   if (!m_Mask) m_Mask = -1;
+#if 0
   static const Char_t *FXTtables[] = {"TpcAdcCorrectionB",         
 				      "TpcAdcCorrectionC",         
 				      "TpcEdge",            
@@ -129,6 +130,7 @@ StTpcdEdxCorrection::StTpcdEdxCorrection(Int_t option, Int_t debug) :
       dbMk->SetFlavor(flavor, FXTtables[i]);
     }
   }
+#endif
   ReSetCorrections();
 }
 //________________________________________________________________________________
