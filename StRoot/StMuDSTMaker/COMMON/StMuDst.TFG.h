@@ -7,7 +7,7 @@
 
 #ifndef StMuDst_TFG_h
 #define StMuDst_TFG_h
-#include <stdint.h>       // for uint64_t
+#include <stdint.h>       // for ULong64_t
 #include "TObject.h"
 #include "TClonesArray.h"
 

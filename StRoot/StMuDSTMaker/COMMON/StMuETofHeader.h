@@ -45,18 +45,18 @@ public:
      /** 
      ** @brief default constructor for pre-2020 data. No missmatch information available. Used in StEtofDigiMaker to initialise the header.
      **/
-    StMuETofHeader( const double&, const double&, const std::map< unsigned int, uint64_t >&, const std::map< unsigned int, uint64_t >& ,
-                    const unsigned int&, const unsigned int&, const unsigned int&, const uint64_t& );
+    StMuETofHeader( const double&, const double&, const std::map< unsigned int, ULong64_t >&, const std::map< unsigned int, ULong64_t >& ,
+                    const unsigned int&, const unsigned int&, const unsigned int&, const ULong64_t& );
      /** 
      ** @brief default constructor for post-2020 data. Include missmatch information from FEE. Used in StEtofDigiMaker to initialise the header.
      **/                
-    StMuETofHeader( const double&, const double&, const std::map< unsigned int, uint64_t >&, const std::map< unsigned int, uint64_t >& ,
-                    const unsigned int&, const unsigned int&, const unsigned int&, const uint64_t&, const std::vector< Bool_t >& );
+    StMuETofHeader( const double&, const double&, const std::map< unsigned int, ULong64_t >&, const std::map< unsigned int, ULong64_t >& ,
+                    const unsigned int&, const unsigned int&, const unsigned int&, const ULong64_t&, const std::vector< Bool_t >& );
      /** 
      ** @brief Full constructor including goodEventFlag, which is normally set in calibrations only.
      **/                
-    StMuETofHeader( const double&, const double&, const std::map< unsigned int, uint64_t >&, const std::map< unsigned int, uint64_t >& ,
-                  const unsigned int&, const unsigned int&, const unsigned int&, const uint64_t&, const std::vector<bool>&, 
+    StMuETofHeader( const double&, const double&, const std::map< unsigned int, ULong64_t >&, const std::map< unsigned int, ULong64_t >& ,
+                  const unsigned int&, const unsigned int&, const unsigned int&, const ULong64_t&, const std::vector<bool>&, 
                   const std::vector<bool>&  );                     
 
     ~StMuETofHeader();
@@ -74,13 +74,13 @@ public:
     double    trgGdpbFullTime()   const;
     double    trgStarFullTime()   const;
 
-    std::map< unsigned int, uint64_t > rocGdpbTs()  const;
-    std::map< unsigned int, uint64_t > rocStarTs()  const;
+    std::map< unsigned int, ULong64_t > rocGdpbTs()  const;
+    std::map< unsigned int, ULong64_t > rocStarTs()  const;
 
     unsigned int      starToken()         const;
     unsigned int      starDaqCmdIn()      const;
     unsigned int      starTrgCmdIn()      const;
-    uint64_t          eventStatusFlag()   const;
+    ULong64_t          eventStatusFlag()   const;
     /** 
      ** @brief Flag for each Get4 TDC to mark if it is available in this event.
      **/     
@@ -95,14 +95,14 @@ public:
     void    setTrgGdpbFullTime( const double& gdpbFullTime );
     void    setTrgStarFullTime( const double& starFullTime );
 
-    void    setRocGdpbTs( const std::map< unsigned int, uint64_t >& gdpbTs );
-    void    setRocStarTs( const std::map< unsigned int, uint64_t >& starTs );
+    void    setRocGdpbTs( const std::map< unsigned int, ULong64_t >& gdpbTs );
+    void    setRocStarTs( const std::map< unsigned int, ULong64_t >& starTs );
 
     void    setStarToken(    const unsigned int& token    );
     void    setStarDaqCmdIn( const unsigned int& daqCmdIn );
     void    setStarTrgCmdIn( const unsigned int& trgCmdIn );
 
-    void    setEventStatusFlag( const uint64_t& statusFlag );
+    void    setEventStatusFlag( const ULong64_t& statusFlag );
     void    setGoodEventFlagVec( const std::vector<bool>& FlagVec );
     void    setHasPulsersVec( const std::vector<bool>& PulserVec );
 
