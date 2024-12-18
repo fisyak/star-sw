@@ -2,7 +2,7 @@
  *
  * $Id: MysqlDb.cc,v 1.72 2017/01/04 19:10:09 dmitry Exp $
  *
- * Author: Laurent Conin
+ * Author: Laurent Conin0
  ***************************************************************************
  *
  * Description: Mysql - SQL Query handler
@@ -401,7 +401,7 @@ bool MysqlDb::reConnect(){
 
   bool connected=false;
   unsigned int timeOutConnect=mtimeout;
-  my_bool auto_reconnect = 1;
+  bool auto_reconnect = 1;
 
   while(!connected && timeOutConnect<600){ 
     mysql_options(&mData,MYSQL_OPT_CONNECT_TIMEOUT,(const char*)&timeOutConnect);
