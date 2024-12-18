@@ -70,7 +70,7 @@ class KFPTrackVector
   
   void Resize(const int n);
   void Set(KFPTrackVector& v, int vSize, int offset);
-  void SetTracks(const KFPTrackVector& track, const kfvector_uint& trackIndex, const int nIndexes);
+  void SetTracks(const KFPTrackVector& track, const kfvector_int& trackIndex, const int nIndexes);
   void GetTrack(KFPTrack& track, const int n);
   
   const kfvector_float& X()  const { return fP[0]; } ///< Returns constant reference to the vector with X coordinates.
@@ -99,8 +99,8 @@ class KFPTrackVector
   void SetParameter (float value, int iP, int iTr) { fP[iP][iTr] = value; } ///< Sets the "value" of the parameter "iP" of the track with index "iTr".
   void SetCovariance(float value, int iC, int iTr) { fC[iC][iTr] = value; } ///< Sets the "value" of the element of covariance matrix "iC" of the track with index "iTr".
   
-  void SetParameter (const float_v& value, int iP, int iTr);
-  void SetCovariance(const float_v& value, int iC, int iTr);
+  void SetParameter (const float32_v& value, int iP, int iTr);
+  void SetCovariance(const float32_v& value, int iC, int iTr);
   
 #ifdef NonhomogeneousField
   void SetFieldCoefficient(float value, int iP, int iTr) { fField[iP][iTr] = value; } ///< Sets the "value" of the field coefficient "iP" of the track with index "iTr".
@@ -163,43 +163,43 @@ class KFPTrackVector
   int FirstElectron()  { return 0; } ///< Returns index of the first electron.
   const int& LastElectron()  const { return fNE; } ///< Returns index of the last electron.
   int NElectrons() { return fNE; } ///< Returns number of electrons.
-  int FirstMuon()  { return int(fNE/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first muon.
+  int FirstMuon()  { return int(fNE/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first muon.
   const int& LastMuon()  const { return fNMu; } ///< Returns index of the last muon.
   int NMuons() { return fNMu - fNE; } ///< Returns number of muons.
-  int FirstPion()  { return int(fNMu/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first pion.
+  int FirstPion()  { return int(fNMu/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first pion.
   const int& LastPion()  const { return fNPi; } ///< Returns index of the last pion.
   int NPions() { return fNPi - fNMu; } ///< Returns number of pions.
-  int FirstKaon()  { return int(fNPi/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first kaon.
+  int FirstKaon()  { return int(fNPi/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first kaon.
   const int& LastKaon()  const { return fNK; } ///< Returns index of the last kaon.
   int NKaons() { return fNK - fNPi; } ///< Returns number of kaons.
-  int FirstProton()  { return int(fNK/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first proton.
+  int FirstProton()  { return int(fNK/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first proton.
   const int& LastProton()  const { return fNP; } ///< Returns index of the last proton.
   int NProtons() { return fNP - fNK; } ///< Returns number of protons.
-  int FirstDeuteron()  { return int(fNP/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first deuteron.
+  int FirstDeuteron()  { return int(fNP/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first deuteron.
   const int& LastDeuteron()  const { return fND; } ///< Returns index of the last deuteron.
   int NDeuterons() { return fND - fNP; } ///< Returns number of deuterons.
-  int FirstTritium()  { return int(fND/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first triton.
+  int FirstTritium()  { return int(fND/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first triton.
   const int& LastTritium()  const { return fNT; } ///< Returns index of the last triton.
   int NTritiums() { return fNT - fND; } ///< Returns number of tritons.
-  int FirstHe3()  { return int(fNT/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first He3.
+  int FirstHe3()  { return int(fNT/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first He3.
   const int& LastHe3()  const { return fNHe3; } ///< Returns index of the last He3.
   int NHe3s() { return fNHe3 - fNT; } ///< Returns number of He3 tracks.
-  int FirstHe4()  { return int(fNHe3/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first He4.
+  int FirstHe4()  { return int(fNHe3/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first He4.
   const int& LastHe4()  const { return fNHe4; } ///< Returns index of the last He4.
   int NHe4s() { return fNHe4 - fNHe3; } ///< Returns number of He4 tracks.
-  int FirstHe6()  { return int(fNHe4/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first He6.
+  int FirstHe6()  { return int(fNHe4/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first He6.
   const int& LastHe6()  const { return fNHe6; } ///< Returns index of the last He6.
   int NHe6s() { return fNHe6 - fNHe4; } ///< Returns number of He6 tracks.
-  int FirstLi6()  { return int(fNHe6/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first Li6.
+  int FirstLi6()  { return int(fNHe6/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first Li6.
   const int& LastLi6()  const { return fNLi6; } ///< Returns index of the last Li6.
   int NLi6s() { return fNLi6 - fNHe6; } ///< Returns number of Li6 tracks.
-  int FirstLi7()  { return int(fNLi6/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first Li7.
+  int FirstLi7()  { return int(fNLi6/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first Li7.
   const int& LastLi7()  const { return fNLi7; } ///< Returns index of the last Li7.
   int NLi7s() { return fNLi7 - fNLi6; } ///< Returns number of Li7 tracks.
-  int FirstBe7()  { return int(fNLi7/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first Be7.
+  int FirstBe7()  { return int(fNLi7/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first Be7.
   const int& LastBe7()  const { return fNBe7; } ///< Returns index of the last Be7.
   int NBe7s() { return fNBe7 - fNLi7; } ///< Returns number of Be7 tracks.
-  int FirstSigma()  { return int(fNBe7/float_vLen)*float_vLen; } ///< Returns index of the first element of the SIMD vector with the first Sigma.
+  int FirstSigma()  { return int(fNBe7/SimdLen)*SimdLen; } ///< Returns index of the first element of the SIMD vector with the first Sigma.
   const int& LastSigma()  const { return fNSigma; } ///< Returns index of the last Sigma.
   int NSigmas() { return fNSigma - fNBe7; } ///< Returns number of Sigma tracks.
   
@@ -218,7 +218,7 @@ class KFPTrackVector
   void AddBe7()      {fNBe7++;}   ///< Increases by one index of the last Be7.
   void AddSigma()    {fNSigma++;} ///< Increases by one index of the last Sigma.
   
-  void RotateXY( float_v alpha, int firstElement );
+  void RotateXY( float32_v alpha, int firstElement );
   
   void PrintTrack(int n);
   void Print();
@@ -411,8 +411,8 @@ class KFPTrackVector
     fNSigma = data[offset]; offset++;
   }
   
-  void *operator new(size_t size) { return _mm_malloc(size, sizeof(float_v)); }     ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
-  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(float_v)); }   ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new(size_t size) { return _mm_malloc(size, sizeof(float32_v)); }     ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(float32_v)); }   ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new(size_t size, void *ptr) { return ::operator new(size, ptr);}   ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new[](size_t size, void *ptr) { return ::operator new(size, ptr);} ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void operator delete(void *ptr, size_t) { _mm_free(ptr); }                        ///< delete operator for the SIMD-alligned dynamic memory release
@@ -455,10 +455,10 @@ class KFPTrackVector
   int fNLi7;   ///< Index of the last Li7.
   int fNBe7;   ///< Index of the last Be7.
   int fNSigma; ///< Index of the last Sigma.
-} __attribute__((aligned(sizeof(float_v))));
+} __attribute__((aligned(sizeof(float32_v))));
 
 
-inline void KFPTrackVector::SetParameter(const float_v& value, int iP, int iTr)
+inline void KFPTrackVector::SetParameter(const float32_v& value, int iP, int iTr)
 { 
   /** Copies the SIMD vector "value" to the parameter vector KFPTrackVector::fP[iP]
    ** starting at the position "iTr".
@@ -466,26 +466,19 @@ inline void KFPTrackVector::SetParameter(const float_v& value, int iP, int iTr)
    ** \param[in] iP - number of the parameter vector
    ** \param[in] iTr - starting position in the parameter vector where the values should be stored
    **/
-// gather caused errors at XeonPhi, temporarly replaced with the simple copying
-//   if( (iTr+float_vLen) < Size())
-//     reinterpret_cast<float_v&>(fP[iP][iTr]) = value;
-//   else
-//   {
-//     const uint_v index(uint_v::IndexesFromZero());
-//     (reinterpret_cast<float_v&>(fP[iP][iTr])).gather(reinterpret_cast<const float*>(&value), index, float_m(index<(Size() - iTr)));
-//   }
-  
-  if( (iTr+float_vLen) < Size())
-    reinterpret_cast<float_v&>(fP[iP][iTr]) = value;
+
+  // gather caused errors at XeonPhi, temporarly replaced with the simple copying
+  if( (iTr+SimdLen) < Size())
+    reinterpret_cast<float32_v&>(fP[iP][iTr]) = value;
   else
-    for(int i=0; i<int(float_v::Size); i++)
+    for(int i=0; i<SimdLen; i++)
     {
       if(iTr + i >= Size()) continue;
       fP[iP][iTr+i] = value[i];
     } 
 }
 
-inline void KFPTrackVector::SetCovariance(const float_v& value, int iC, int iTr) 
+inline void KFPTrackVector::SetCovariance(const float32_v& value, int iC, int iTr) 
 { 
   /** Copies the SIMD vector "value" to the element of the covariance matrix vector KFPTrackVector::fC[iC]
    ** starting at the position "iTr".
@@ -493,19 +486,12 @@ inline void KFPTrackVector::SetCovariance(const float_v& value, int iC, int iTr)
    ** \param[in] iC - number of the element of the covariance matrix
    ** \param[in] iTr - starting position in the parameter vector where the values should be stored
    **/
-// gather caused errors at XeonPhi, temporarly replaced with the simple copying
-//   if( (iTr+float_vLen) < Size())
-//     reinterpret_cast<float_v&>(fC[iC][iTr]) = value;
-//   else
-//   {
-//     const uint_v index(uint_v::IndexesFromZero());
-//     (reinterpret_cast<float_v&>(fC[iC][iTr])).gather(reinterpret_cast<const float*>(&value), index, float_m(index<(Size() - iTr)));
-//   }
-  
-  if( (iTr+float_vLen) < Size())
-    reinterpret_cast<float_v&>(fC[iC][iTr]) = value;
+
+  // gather caused errors at XeonPhi, temporarly replaced with the simple copying
+  if( (iTr+SimdLen) < Size())
+    reinterpret_cast<float32_v&>(fC[iC][iTr]) = value;
   else
-    for(int i=0; i<int(float_v::Size); i++)
+    for(int i=0; i<SimdLen; i++)
     {
       if(iTr + i >= Size()) continue;
       fC[iC][iTr+i] = value[i];

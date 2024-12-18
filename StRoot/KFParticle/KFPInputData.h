@@ -78,8 +78,8 @@ class KFPInputData
 {
  public:
    
-  void *operator new(size_t size) { return _mm_malloc(size, sizeof(float_v)); }      ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
-  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(float_v)); }    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new(size_t size) { return _mm_malloc(size, sizeof(float32_v)); }      ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(float32_v)); }    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new(size_t size, void *ptr) { return ::operator new(size, ptr);}    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new[](size_t size, void *ptr) { return ::operator new(size, ptr);}  ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void operator delete(void *ptr, size_t) { _mm_free(ptr); }                         ///< delete operator for the SIMD-alligned dynamic memory release
@@ -326,10 +326,10 @@ class KFPInputData
    ** 7 - positive primary tracks stored at the last point.
    ** \see KFPTrackVector for documentation.
    **/
-  KFPTrackVector fTracks[NInputSets]__attribute__((aligned(sizeof(float_v)))); 
+  KFPTrackVector fTracks[NInputSets]__attribute__((aligned(sizeof(float32_v)))); 
   std::vector<KFParticle> fPV; ///< Vector with primary vertices.
   float fBz; ///< Constant homogenious one-component magnetic field Bz.
-} __attribute__((aligned(sizeof(float_v))));
+} __attribute__((aligned(sizeof(float32_v))));
 
 /** @class KFPInputDataArray
  ** @brief Structure with the set of the input data for KF Particle Finder.
@@ -366,15 +366,15 @@ struct KFPInputDataArray{
 
 struct KFPLinkedList
 {
-  void *operator new(size_t size) { return _mm_malloc(size, sizeof(float_v)); }      ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
-  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(float_v)); }    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new(size_t size) { return _mm_malloc(size, sizeof(float32_v)); }      ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(float32_v)); }    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new(size_t size, void *ptr) { return ::operator new(size, ptr);}    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new[](size_t size, void *ptr) { return ::operator new(size, ptr);}  ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void operator delete(void *ptr, size_t) { _mm_free(ptr); }                         ///< delete operator for the SIMD-alligned dynamic memory release
   void operator delete[](void *ptr, size_t) { _mm_free(ptr); }                       ///< delete operator for the SIMD-alligned dynamic memory release
   
-  KFPInputData data __attribute__((aligned(sizeof(float_v)))); ///< Input data for KF Particle Finder \see KFPInputData.
+  KFPInputData data __attribute__((aligned(sizeof(float32_v)))); ///< Input data for KF Particle Finder \see KFPInputData.
   KFPLinkedList* next; ///< Link to the nex object in the linked list.
-} __attribute__((aligned(sizeof(float_v))));
+} __attribute__((aligned(sizeof(float32_v))));
 
 #endif

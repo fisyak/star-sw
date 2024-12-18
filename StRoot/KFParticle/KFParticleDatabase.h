@@ -23,7 +23,7 @@
 #ifndef KFParticleDatabase_H
 #define KFParticleDatabase_H
 
-#include "Vc/Vc"
+#include "KFParticleDef.h"
 
 /** @class KFParticleDatabase
  ** @brief The class stores information about particle masses and expected width of the peacks.
@@ -77,36 +77,37 @@ class KFParticleDatabase
     return fMass[pdgIndex];
   }
 
-  Vc::float_v GetMass(const Vc::int_v& pdg) const
+  float32_v GetMass(const int32_v& pdg) const
   {
     /** Returns vector float variable with the mass of the stable particles with the given PDG codes.
      ** If the given PDG code is not in the list of the current database mass of the pion is returned.
      ** \param[in] pdg - the input PDG codes of a set of particles in the SIMD-vector format
      **/
-    Vc::int_v pdgIndex(2);
-    pdgIndex(Vc::abs(pdg) ==         11) = 0;    
-    pdgIndex(Vc::abs(pdg) ==         13) = 1;
-    pdgIndex(Vc::abs(pdg) ==         19) = 1;
-    pdgIndex(Vc::abs(pdg) ==        211) = 2;
-    pdgIndex(Vc::abs(pdg) ==        321) = 3;
-    pdgIndex(Vc::abs(pdg) ==       2212) = 4;
-    pdgIndex(Vc::abs(pdg) == 1000010020) = 5;
-    pdgIndex(Vc::abs(pdg) == 1000010030) = 6;
-    pdgIndex(Vc::abs(pdg) == 1000020030) = 7;
-    pdgIndex(Vc::abs(pdg) == 1000020040) = 8;
-    pdgIndex(Vc::abs(pdg) == 1000020060) = 9;
-    pdgIndex(Vc::abs(pdg) == 1000030060) = 10;
-    pdgIndex(Vc::abs(pdg) == 1000030070) = 11;
-    pdgIndex(Vc::abs(pdg) == 1000040070) = 12;
-    pdgIndex(Vc::abs(pdg) ==       3112) = 13;
-    pdgIndex(Vc::abs(pdg) ==       3222) = 14;
-    pdgIndex(Vc::abs(pdg) ==       3312) = 15;
-    pdgIndex(Vc::abs(pdg) ==       3334) = 16;
-    Vc::float_v mass(fMass, pdgIndex);
+    int32_v pdgIndex(2);
+    pdgIndex = select(abs(pdg) ==         11, 0, pdgIndex);
+    pdgIndex = select(abs(pdg) ==         13, 1, pdgIndex);
+    pdgIndex = select(abs(pdg) ==         19, 1, pdgIndex);
+    pdgIndex = select(abs(pdg) ==        211, 2, pdgIndex);
+    pdgIndex = select(abs(pdg) ==        321, 3, pdgIndex);
+    pdgIndex = select(abs(pdg) ==       2212, 4, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000010020, 5, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000010030, 6, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000020030, 7, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000020040, 8, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000020060, 9, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000030060, 10, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000030070, 11, pdgIndex);
+    pdgIndex = select(abs(pdg) == 1000040070, 12, pdgIndex);
+    pdgIndex = select(abs(pdg) ==       3112, 13, pdgIndex);
+    pdgIndex = select(abs(pdg) ==       3222, 14, pdgIndex);
+    pdgIndex = select(abs(pdg) ==       3312, 15, pdgIndex);
+    pdgIndex = select(abs(pdg) ==       3334, 16, pdgIndex);
+    float32_v mass;
+    mass.gather(fMass, pdgIndex);
     return mass;
   }
 
-  void GetMotherMass(const Vc::int_v& pdg, Vc::float_v& massMotherPDG, Vc::float_v& massMotherPDGSigma) const
+  void GetMotherMass(const int32_v& pdg, float32_v& massMotherPDG, float32_v& massMotherPDGSigma) const
   {
     /** Returns vector float variable with the mass of the short-lived particles with the given PDG codes
      ** and the expected widths of the corresponding peaks.
@@ -116,15 +117,15 @@ class KFParticleDatabase
      ** \param[out] massMotherPDGSigma - expected width of the corresponding peak
      **/
     
-    Vc::int_v pdgIndex(0);
-    pdgIndex(pdg ==  310) = 0;    
-    pdgIndex(Vc::abs(pdg) == 3122) = 1;
-    pdgIndex(Vc::abs(pdg) == 3312) = 2;
-    pdgIndex(pdg == 22) = 3;
-    pdgIndex(Vc::abs(pdg) == 3334) = 4;
-    pdgIndex(Vc::abs(pdg) == 3004) = 5;
-    pdgIndex(Vc::abs(pdg) == 3006) = 6;
-    pdgIndex(Vc::abs(pdg) == 3007) = 7;
+    int32_v pdgIndex(0);
+    // pdgIndex = select(pdg ==  310     , 0, pdgIndex);
+    pdgIndex = select(abs(pdg) == 3122, 1, pdgIndex);
+    pdgIndex = select(abs(pdg) == 3312, 2, pdgIndex);
+    pdgIndex = select(pdg == 22       , 3, pdgIndex);
+    pdgIndex = select(abs(pdg) == 3334, 4, pdgIndex);
+    pdgIndex = select(abs(pdg) == 3004, 5, pdgIndex);
+    pdgIndex = select(abs(pdg) == 3006, 6, pdgIndex);
+    pdgIndex = select(abs(pdg) == 3007, 7, pdgIndex);
         
     massMotherPDG.gather(fMassSecPDG, pdgIndex);
     massMotherPDGSigma.gather(fMassSecPDGSigma, pdgIndex);

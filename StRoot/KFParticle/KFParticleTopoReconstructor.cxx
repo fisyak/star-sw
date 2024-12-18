@@ -79,12 +79,12 @@ void KFParticleTopoReconstructor::Init(AliHLTTPCCAGBTracker* tracker, vector<int
 
     // create and fill array of tracks to init KFParticleTopoReconstructor
   const int nTracks = tracker->NTracks();
-  fTracks[1].Resize( int(nTracks/float_vLen+1)*float_vLen );
-  fTracks[5].Resize( int(nTracks/float_vLen+1)*float_vLen );
+  fTracks[1].Resize( int(nTracks/SimdLen+1)*SimdLen );
+  fTracks[5].Resize( int(nTracks/SimdLen+1)*SimdLen );
   fParticles.clear();
   int iOTr = 0; // index in out array
   
-  float_v alpha(Vc::Zero);
+  float32_v alpha(Vc::Zero);
   int nElements=0;
   
   for ( int iTr = 0; iTr < nTracks; iTr++ ) {
@@ -184,7 +184,7 @@ void KFParticleTopoReconstructor::Init(AliHLTTPCCAGBTracker* tracker, vector<int
         for (int i = 0; i < 6; i++) {
           for (int j = 0; j <= i; j++, k++) {
             KFPCov[k] = CovOut[i][j];
-            ASSERT( !CAMath::Finite(CovOut[i][j]) ||  CovOut[i][j] == 0 || fabs( 1. - CovOut[j][i]/CovOut[i][j] ) <= 0.05,
+            ASSERT( !isFinite(CovOut[i][j]) ||  CovOut[i][j] == 0 || fabs( 1. - CovOut[j][i]/CovOut[i][j] ) <= 0.05,
               "CovOut[" << i << "][" << j << "] == CovOut[" << j << "][" << i << "] : " << CovOut[i][j] << " == " << CovOut[j][i]);
           }
         }
@@ -195,7 +195,7 @@ void KFParticleTopoReconstructor::Init(AliHLTTPCCAGBTracker* tracker, vector<int
         int k = 0;
         for (int i = 0; i < 6; i++) {
           for (int j = 0; j <= i; j++, k++) {
-            ok &= CAMath::Finite( KFPCov[k] );
+            ok &= isFinite( KFPCov[k] );
           }
           ok &= ( KFPCov[k-1] > 0 );
         }
@@ -222,7 +222,7 @@ void KFParticleTopoReconstructor::Init(AliHLTTPCCAGBTracker* tracker, vector<int
     // convert into Global CS. Can't be done erlier because in tracker X hasn't correspondent covMatrix elements.
     alpha[nElements] = tracker->Tracks()[ iTr ].Alpha();
     nElements++;
-    if(nElements == float_vLen)
+    if(nElements == SimdLen)
     {
       fTracks[1].RotateXY( alpha, iOTr-nElements);
       fTracks[5].RotateXY( alpha, iOTr-nElements);
@@ -454,7 +454,7 @@ void KFParticleTopoReconstructor::SortTracks()
     int Size = fTracks[0].Size();
     
     vector<KFPTrackIndex> sortedTracks(Size);
-    kfvector_uint trackIndex[4];
+    kfvector_int trackIndex[4];
     for(int iTV=0; iTV<4; iTV++)
       trackIndex[iTV].resize(Size);
     int nTracks[4] = {0,0,0,0};
@@ -559,28 +559,32 @@ void KFParticleTopoReconstructor::TransportPVTracksToPrimVertex()
    ** for the primary vertex, are transported to the DCA point to the corresponding
    ** primary vertex.
    **/
-  float_v point[3];
+  alignas(SimdSize) float pointArray[3][SimdLen];
+  float32_v point[3];
   KFParticleSIMD tmpPart;
   
   for(int iTV=2; iTV<4; iTV++)
   {
     unsigned int NTr = fTracks[iTV].Size(); 
-    for(unsigned int iTr=0; iTr < NTr; iTr += float_vLen) 
+    for(unsigned int iTr=0; iTr < NTr; iTr += SimdLen) 
     { 
-      const int_v& pdg = reinterpret_cast<const int_v&>(fTracks[iTV].PDG()[iTr]);
-      const int_v& pvIndex = reinterpret_cast<const int_v&>(fTracks[iTV].PVIndex()[iTr]);
+      const int32_v& pdg = reinterpret_cast<const int32_v&>(fTracks[iTV].PDG()[iTr]);
+      const int32_v& pvIndex = reinterpret_cast<const int32_v&>(fTracks[iTV].PVIndex()[iTr]);
       
       tmpPart.Load(fTracks[iTV], iTr, pdg);
       
-      for(unsigned int iV=0; iV < (unsigned int)float_vLen; iV++)
+      for(unsigned int iV=0; iV < (unsigned int)SimdLen; iV++)
       {
         if(iV+iTr >= NTr) continue;
         
         int iPV = pvIndex[iV];
-        point[0][iV] = fPV[iPV].X()[0];
-        point[1][iV] = fPV[iPV].Y()[0];
-        point[2][iV] = fPV[iPV].Z()[0];     
+        pointArray[0][iV] = fPV[iPV].X()[0];
+        pointArray[1][iV] = fPV[iPV].Y()[0];
+        pointArray[2][iV] = fPV[iPV].Z()[0];     
       }
+      point[0].load(pointArray[0]);
+      point[1].load(pointArray[1]);
+      point[2].load(pointArray[2]);
       
       tmpPart.TransportToPoint(point);
       
@@ -604,21 +608,21 @@ void KFParticleTopoReconstructor::GetChiToPrimVertex(KFParticleSIMD* pv, const i
   for(int iTV=0; iTV<2; iTV++)
   {
     unsigned int NTr = fTracks[iTV].Size();
-    for(unsigned int iTr=0; iTr < NTr; iTr += float_vLen) 
+    for(unsigned int iTr=0; iTr < NTr; iTr += SimdLen) 
     { 
-      uint_v trackIndex = iTr + uint_v::IndexesFromZero();
-      const int_v& pdg = reinterpret_cast<const int_v&>(fTracks[iTV].PDG()[iTr]);
+      int32_v trackIndex = int32_v::indicesSequence(iTr);
+      const int32_v& pdg = reinterpret_cast<const int32_v&>(fTracks[iTV].PDG()[iTr]);
       tmpPart.Create(fTracks[iTV],trackIndex, pdg);
       
-      float_v& chi2 = reinterpret_cast<float_v&>(fChiToPrimVtx[iTV][iTr]);
-      chi2(simd_cast<float_m>(trackIndex<NTr)) = 10000.f;
+      float32_v& chi2 = reinterpret_cast<float32_v&>(fChiToPrimVtx[iTV][iTr]);
+      chi2 = select(trackIndex<NTr, 10000.f, chi2);
 
       for(int iPV=0; iPV<nPV; iPV++)
       {
-        const float_v point[3] = {pv[iPV].X(), pv[iPV].Y(), pv[iPV].Z()};
+        const float32_v point[3] = {pv[iPV].X(), pv[iPV].Y(), pv[iPV].Z()};
         tmpPart.TransportToPoint(point);
-        const float_v& chiVec = tmpPart.GetDeviationFromVertex(pv[iPV]);
-        chi2( (chi2>chiVec) && simd_cast<float_m>(trackIndex<NTr) ) = chiVec;
+        const float32_v& chiVec = tmpPart.GetDeviationFromVertex(pv[iPV]);
+        chi2 = select( (chi2>chiVec) && (trackIndex<NTr), chiVec, chi2 );
       }
     } 
   }

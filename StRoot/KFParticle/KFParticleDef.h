@@ -35,23 +35,27 @@
 
 #define NInputSets 8
 
-#include <Vc/Vc>
-#include <Vc/version.h>
-#include <Vc/limits>
-using ::Vc::float_v;
-using ::Vc::double_v;
-using ::Vc::float_v;
-using ::Vc::int_v;
-using ::Vc::uint_v;
-using ::Vc::VectorAlignment;
-using ::Vc::double_m;
-using ::Vc::float_m;
-using ::Vc::int_m;
-using ::Vc::uint_m;
-using ::Vc::atan2;
-using ::Vc::asin;
-using ::Vc::round;
-using ::Vc::isfinite;
+#include <../KFPSimd/simd.h>
+
+using float32_v = KFP::SIMD::simd_float;
+using int32_v = KFP::SIMD::simd_int;
+using mask32_v = KFP::SIMD::simd_mask;
+using KFP::SIMD::SimdLen;
+using KFP::SIMD::SimdSize;
+
+// using ::Vc::float32_v;
+// using ::Vc::double_v;
+// using ::Vc::float32_v;
+// using ::Vc::int32_v;
+// using ::Vc::VectorAlignment;
+// using ::Vc::double_m;
+// using ::Vc::float_m;
+// using ::Vc::int_m;
+// using ::Vc::uint_m;
+// using ::Vc::atan2;
+// using ::Vc::asin;
+// using ::Vc::round;
+// using ::Vc::isfinite;
 
 #ifdef VC_VERSION_NUMBER
 #if VC_VERSION_NUMBER < VC_VERSION_CHECK(1,0,0)
@@ -63,8 +67,6 @@ template <typename To, typename From> To simd_cast(From &&x) { return static_cas
 #endif
 #endif
 
-const int float_vLen = float_v::Size;
-
 #if defined(HLTCA_STANDALONE)
 typedef unsigned char UChar_t;
 typedef UChar_t Byte_t;
@@ -75,38 +77,9 @@ typedef double Double_t;
 #endif
 
 #include "KFPSimdAllocator.h"    
-typedef std::vector<float_v, KFPSimdAllocator<float_v> > kfvector_floatv;
+typedef std::vector<float32_v, KFPSimdAllocator<float32_v> > kfvector_floatv;
 
 typedef std::vector<float, KFPSimdAllocator<float> > kfvector_float;
 typedef std::vector<int, KFPSimdAllocator<int> > kfvector_int;
-typedef std::vector<unsigned int, KFPSimdAllocator<unsigned int> > kfvector_uint;
-
-namespace KFPMath
-{
-  static inline __attribute__((always_inline)) float_v Sin  ( const float_v &phi ) 
-  {
-    const float_v pi(3.1415926535897932f);
-    const float_v nTurnsF = (phi + pi) / (float_v(2.f)*pi);
-    int_v nTurns = simd_cast<int_v>( nTurnsF );
-    nTurns( (nTurns<=int_v(Vc::Zero)) && simd_cast<int_m>(phi<-pi)) -= 1;
-    
-    const float_v& x = phi - simd_cast<float_v>(nTurns)*(float_v(2.f)*pi);
-    
-    const float_v& B = 4.f/pi;
-    const float_v& C = -B/pi;
-
-    float_v y = (B + C * Vc::abs(x)) * x;
-
-    const float_v& P = 0.218f;
-    y = P * (y * Vc::abs(y) - y) + y;
-    
-    return y;    
-  }
-  static inline __attribute__((always_inline)) float_v Cos  ( const float_v &phi )
-  {     
-    return Sin( phi + 1.570796326795f ); //x + pi/2
-  }
-
-}
 
 #endif 
