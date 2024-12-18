@@ -12,6 +12,7 @@
 
 #include <vector>
 #include <iostream>
+#include <iomanip>
 
 #include "KFParticleSIMD.h"
 
@@ -832,9 +833,9 @@ void StKFParticleCandidateAnalysis::RunMixedEvent() {
                 isOk &= part00.Chi2()[0] > 0.f;
                 isOk &= std::isfinite(part00.Chi2()[0]);
 
-                float_v lv(1.e8f);
-                float_v dlv(1.e8f);
-                float_m isParticleFromVertex(false);
+                float32_v lv(1.e8f);
+                float32_v dlv(1.e8f);
+                mask32_v isParticleFromVertex;
                 part00.GetDistanceToVertexLine(pvS, lv, dlv, &isParticleFromVertex);
                 isOk &= (lv[0] < 200.f);
 

@@ -1286,7 +1286,7 @@ bool StKFParticleInterface::OpenCharmTrigger()
         abs(particle.GetPDG()) == 426 )
     {
       KFParticleSIMD tempSIMDPart(particle);
-      float_v l,dl;
+      float32_v l,dl;
       KFParticleSIMD pv(fKFParticleTopoReconstructor->GetPrimVertex());
       tempSIMDPart.GetDistanceToVertexLine(pv, l, dl);
       
@@ -1825,13 +1825,13 @@ bool StKFParticleInterface::FitPV(KFVertex& pv, bool isFirstSeed, const KFPTrack
 
   KFParticleSIMD trackSIMD;
   KFParticleSIMD pvSIMD(pv);
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
 
     trackSIMD.Load(tracks, iTrack);
    
-    const float_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
+    const float32_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
     
-    for(int iV=0; iV<float_vLen; iV++){
+    for(int iV=0; iV<SimdLen; iV++){
       const int iTr = iTrack + iV;
       if(iTr >= tracks.Size()) break;
       
@@ -1899,12 +1899,12 @@ bool StKFParticleInterface::FitPV(KFVertex& pv, bool isFirstSeed, const KFPTrack
 
     pvSIMD = KFParticleSIMD(pv);
 
-    for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+    for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
       trackSIMD.Load(tracks, iTrack);
     
-      const float_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
+      const float32_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
       
-      for(int iV=0; iV<float_vLen; iV++){
+      for(int iV=0; iV<SimdLen; iV++){
         const int iTr = iTrack + iV;
         if(iTr >= tracks.Size()) break;
       
@@ -2137,13 +2137,13 @@ template<> void getPoints<Point3D>(
   std::vector<KFParticle>& points, std::vector<Position>& zHisto)
 {
   KFParticleSIMD trackSIMD;
-  const float_v beamXY[2]{beamPosition.X(), beamPosition.Y()};
+  const float32_v beamXY[2]{beamPosition.X(), beamPosition.Y()};
 
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
     trackSIMD.Load(tracks, iTrack);
     
-    const float_v ds = trackSIMD.GetDStoPointXY(beamXY);
-    float_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
+    const float32_v ds = trackSIMD.GetDStoPointXY(beamXY);
+    float32_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
     trackSIMD.TransportToDS(ds, dsdr);
     
     for(int iV=0; iV<4; iV++) {
@@ -2171,17 +2171,17 @@ template<> void getPoints<PointPhiZ>(
   std::vector<KFParticle>& points, std::vector<Position>& zHisto)
 {
   KFParticleSIMD trackSIMD;
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
     trackSIMD.Load(tracks, iTrack);
     KFParticleSIMD p1 = trackSIMD;
     KFParticleSIMD p2 = trackSIMD;
-    float_v ds[2]{0.f, 0.f};
+    float32_v ds[2]{0.f, 0.f};
     p1.GetDStoCylinder(R, ds);
-    float_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
+    float32_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
     p1.TransportToDS(ds[0], dsdr);
     p2.TransportToDS(ds[1], dsdr);
     
-    const float_m saveFirstPoint = (p1.GetR() > R-dR) && (p1.GetR() < R+dR) && (p1.Z() > -200.f);
+    const mask32_v saveFirstPoint = (p1.GetR() > R-dR) && (p1.GetR() < R+dR) && (p1.Z() > -200.f);
     for(int iV=0; iV<4; iV++) {
       if(!saveFirstPoint[iV]) continue;
       if(iTrack + iV >= tracks.Size()) continue;
@@ -2193,7 +2193,7 @@ template<> void getPoints<PointPhiZ>(
       zHisto.push_back(Position(zHisto.size(), tmp.Z(), tmp.GetCovariance(2,2)));
       points.push_back(tmp);
     }
-    const float_m saveSecondPoint = (p2.GetR() > R-dR) && (p2.GetR() < R+dR) && (p2.Z() > -200.f) &&
+    const mask32_v saveSecondPoint = (p2.GetR() > R-dR) && (p2.GetR() < R+dR) && (p2.Z() > -200.f) &&
                                     (abs(p1.Z() - p2.Z()) > 1.e-4f);
     for(int iV=0; iV<4; iV++) {
       if(!saveSecondPoint[iV]) continue;
@@ -2215,11 +2215,11 @@ template<> void getPoints<PointXY>(
 {
   KFParticleSIMD trackSIMD;
 
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
     trackSIMD.Load(tracks, iTrack);
     
-    const float_v ds = trackSIMD.GetDStoPointZBz(Z);
-    float_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
+    const float32_v ds = trackSIMD.GetDStoPointZBz(Z);
+    float32_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
     trackSIMD.TransportToDS(ds, dsdr);
     
     for(int iV=0; iV<4; iV++) {
@@ -2430,10 +2430,10 @@ void StKFParticleInterface::FindPileup(const KFPTrackVector& tracks, const KFVer
     
     KFParticleSIMD trackSIMD;
     KFParticleSIMD pvSIMD(vertex);
-    for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+    for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
       trackSIMD.Load(tracks, iTrack);
-      const float_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
-      for(int iV=0; iV<float_vLen; iV++){
+      const float32_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
+      for(int iV=0; iV<SimdLen; iV++){
         const int iTr = iTrack + iV;
         if(isUsed[iTr]) continue;
         if(iTr >= tracks.Size()) break;

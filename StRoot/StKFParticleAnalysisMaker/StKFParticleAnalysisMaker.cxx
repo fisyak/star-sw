@@ -672,7 +672,7 @@ void StKFParticleAnalysisMaker::GetDaughterParameters(const int iReader, int& iD
     fTMVAParticleParameters[iReader][fDaughterNames[iReader].size()*fNTrackTMVACuts + iDaughterParticle*3] = particle.Chi2()/particle.NDF();  
     
     KFParticleSIMD tempSIMDParticle(particle);
-    float_v l,dl;
+    float32_v l,dl;
     KFParticleSIMD pv(fStKFParticleInterface->GetTopoReconstructor()->GetPrimVertex());
     tempSIMDParticle.GetDistanceToVertexLine(pv, l, dl);
     fTMVAParticleParameters[iReader][fDaughterNames[iReader].size()*fNTrackTMVACuts + iDaughterParticle*3 + 1] = l[0]/dl[0];
@@ -701,7 +701,7 @@ void StKFParticleAnalysisMaker::GetParticleParameters(const int iReader, KFParti
   fTMVAParticleParameters[iReader][nDaughterParticleCut]   = particle.Chi2()/particle.NDF();  
   
   KFParticleSIMD tempSIMDParticle(particle);
-  float_v l,dl;
+  float32_v l,dl;
   KFParticleSIMD pv(fStKFParticleInterface->GetTopoReconstructor()->GetPrimVertex());
   tempSIMDParticle.GetDistanceToVertexLine(pv, l, dl);
   fTMVAParticleParameters[iReader][nDaughterParticleCut + 1] = l[0]/dl[0];
