@@ -223,22 +223,22 @@ namespace gdpbv100 {
          inline void setMessageType(uint8_t v) { setField(0, 3, v); }
 
          // ---------- Get4 gDPB 24b/32b ALL access methods ------------------------
-         inline uint16_t getGdpbGenGdpbId()      const { return getField( 48, 16); }
+         inline UShort_t getGdpbGenGdpbId()      const { return getField( 48, 16); }
          inline void     setGdpbGenGdpbId(uint32_t v)   { setField(48, 16, v); }
-         inline uint16_t getGdpbGenChipId()      const { return getField( 40,  8); }
+         inline UShort_t getGdpbGenChipId()      const { return getField( 40,  8); }
          inline void     setGdpbGenChipId(uint32_t v)   { setField(40, 8, v); }
 
          // ---------- Get4 gDPB 24b/32b Hit access methods ------------------------
-         inline uint16_t getGdpbHitIs24b()       const { return getBit(   39    ); }
-         inline uint16_t getGdpbHitChanId()      const { return getField( 32,  2); }
+         inline UShort_t getGdpbHitIs24b()       const { return getBit(   39    ); }
+         inline UShort_t getGdpbHitChanId()      const { return getField( 32,  2); }
          inline uint32_t getGdpbHitFullTs()      const { return getField( 13, 19); }
-         inline uint16_t getGdpbHitCoarse()      const { return getField( 20, 12); }
-         inline uint16_t getGdpbHitFineTs()      const { return getField( 13,  7); }
+         inline UShort_t getGdpbHitCoarse()      const { return getField( 20, 12); }
+         inline UShort_t getGdpbHitFineTs()      const { return getField( 13,  7); }
          // ---------- Get4 gDPB 24b Hit access methods ----------------------------
          inline bool     getGdpbHit24Edge()      const { return getBit(   34    ); }
          // ---------- Get4 gDPB 32b Hit access methods ----------------------------
          inline bool     getGdpbHit32DllLck()    const { return getBit(   12    ); }
-         inline uint16_t getGdpbHit32Tot()       const { return getField(  4,  8); }
+         inline UShort_t getGdpbHit32Tot()       const { return getField(  4,  8); }
 
          // ---------- Get4 gDPB 24b/32b Epoch access methods ----------------------
          inline bool     getGdpbEpLinkId()       const { return getBit(   39    ); }
@@ -256,26 +256,26 @@ namespace gdpbv100 {
          inline uint32_t getGdpbSlcData()        const { return getField(  4, 24); }
 
          // ---------- Get4 gDPB System Msg access methods -------------------------
-         inline uint16_t getGdpbSysSubType()     const { return getField( 38,  2); }
+         inline UShort_t getGdpbSysSubType()     const { return getField( 38,  2); }
          inline bool     getGdpbSysLinkId()      const { return getBit(   37    ); }
          // ---------- Get4 gDPB 24b/32b Errors access methods ---------------------
          inline bool     getGdpbSysErrRoType()   const { return getBit(   36    ); }
-         inline uint16_t getGdpbSysErrUnused()   const { return getField( 32,  4); }
-         inline uint16_t getGdpbSysErrInfo()     const { return getField( 11, 21); }
-         inline uint16_t getGdpbSysErrChanId()   const { return getField( 12,  2); }
+         inline UShort_t getGdpbSysErrUnused()   const { return getField( 32,  4); }
+         inline UShort_t getGdpbSysErrInfo()     const { return getField( 11, 21); }
+         inline UShort_t getGdpbSysErrChanId()   const { return getField( 12,  2); }
          inline bool     getGdpbSysErrEdge()     const { return getBit(   11    ); }
-         inline uint16_t getGdpbSysErrData()     const { return getField(  4,  7); }
+         inline UShort_t getGdpbSysErrData()     const { return getField(  4,  7); }
          // ---------- Get4 gDPB unknown msg type access methods -------------------
          inline uint32_t getGdpbSysUnkwData()    const { return getField(  4, 32); }
          // ---------- FW error msg type access methods ----------------------------
          inline uint32_t getGdpbSysFwErrResync() const { return getBit(   36    ); }
          // ---------- ASIC Pattern messages access methods ------------------------
-         inline uint16_t getGdpbSysPattType()    const { return getField( 46,  2 ); }
-         inline uint16_t getGdpbSysPattIndex()   const { return getField( 40,  4 ); }
+         inline UShort_t getGdpbSysPattType()    const { return getField( 46,  2 ); }
+         inline UShort_t getGdpbSysPattIndex()   const { return getField( 40,  4 ); }
          inline uint32_t getGdpbSysPattPattern() const { return getField(  4, 32 ); }
 
          // ---------- STAR Trigger messages access methods ------------------------
-         inline uint16_t getStarTrigMsgIndex() const { return getField(      0,  2 ); }
+         inline UShort_t getStarTrigMsgIndex() const { return getField(      0,  2 ); }
          //++++//
          inline ULong64_t getGdpbTsMsbStarA()   const { return getFieldLong(  4, 40 ); }
          //++++//
@@ -295,10 +295,10 @@ namespace gdpbv100 {
          inline void setGdpbEpEpochNb( uint32_t v )   { setField(  8, 31, v ); }
          
          // ---------- Get4 gDPB System Msg access methods -------------------------
-         inline void setGdpbSysSubType( uint16_t v )     { setField( 38,  2, v); }
+         inline void setGdpbSysSubType( UShort_t v )     { setField( 38,  2, v); }
          // ---------- ASIC Pattern messages access methods ------------------------
-         inline void setGdpbSysPattType(    uint16_t v ) { setField( 46,  2, v ); }
-         inline void setGdpbSysPattIndex(   uint16_t v ) { setField( 40,  4, v ); }
+         inline void setGdpbSysPattType(    UShort_t v ) { setField( 46,  2, v ); }
+         inline void setGdpbSysPattIndex(   UShort_t v ) { setField( 40,  4, v ); }
          inline void setGdpbSysPattPattern( uint32_t v ) { setField(  4, 32, v ); }
 
          // ---------- STAR Trigger messages setter methods ------------------------
@@ -316,7 +316,7 @@ namespace gdpbv100 {
          inline void setStarFillerD()                 { setField(     24, 12, 0 ); } // Should be always 0
          inline void setStarTrigCmdStarD( uint8_t v ) { setField(     20,  4, v ); }
          inline void setStarDaqCmdStarD( uint8_t v )  { setField(     16,  4, v ); }
-         inline void setStarTokenStarD( uint16_t v )  { setField(      4, 12, v ); }
+         inline void setStarTokenStarD( UShort_t v )  { setField(      4, 12, v ); }
 
          // ---------- Common functions -----------------------
          //! Returns \a true is message type is #MSG_HIT (Get4 hit data)
@@ -618,13 +618,13 @@ namespace gdpb {
           * The field has full 16 bits and allows to aggregate data of up to 64K ROC's
           * in one message stream.
           */
-         inline uint16_t getRocNumber() const { return getField(48, 16); }
+         inline UShort_t getRocNumber() const { return getField(48, 16); }
 
          //! Sets the message type field in the current message
          inline void setMessageType(uint8_t v) { setField(0, 4, v); }
 
          //! Sets the ROC number field in the current message
-         inline void setRocNumber(uint16_t v) { setField(48, 16, v); }
+         inline void setRocNumber(UShort_t v) { setField(48, 16, v); }
 
          // ---------- Epoch2 marker access methods ------------
 
@@ -738,25 +738,25 @@ namespace gdpb {
          inline void setSysMesData(uint32_t v) { setField(16, 32, v); }
 
          // ---------- Get4 gDPB 24b/32b ALL access methods ------------------------
-         inline uint16_t getGdpbGenChipId()      const { return getField( 42,  6); }
+         inline UShort_t getGdpbGenChipId()      const { return getField( 42,  6); }
          inline void     setGdpbGenChipId(uint32_t v)   { setField(42, 6, v); }
 
          // ---------- Get4 gDPB 24b/32b Hit access methods ------------------------
-         inline uint16_t getGdpbHitChanId()      const { return getField( 40,  2); }
+         inline UShort_t getGdpbHitChanId()      const { return getField( 40,  2); }
          inline uint32_t getGdpbHitFullTs()      const { return getField( 21, 19); }
-         inline uint16_t getGdpbHitCrc()         const { return getField(  4,  8); }
-         inline uint16_t getGdpbHitCoarse()      const { return getField( 28, 12); }
-         inline uint16_t getGdpbHitFineTs()      const { return getField( 21,  7); }
+         inline UShort_t getGdpbHitCrc()         const { return getField(  4,  8); }
+         inline UShort_t getGdpbHitCoarse()      const { return getField( 28, 12); }
+         inline UShort_t getGdpbHitFineTs()      const { return getField( 21,  7); }
          // ---------- Get4 gDPB 24b Hit access methods ----------------------------
          inline bool     getGdpbHit24Edge()      const { return getBit(   20    ); }
          // ---------- Get4 gDPB 32b Hit access methods ----------------------------
          inline bool     getGdpbHit32DllLck()    const { return getBit(   20    ); }
-         inline uint16_t getGdpbHit32Tot()       const { return getField( 12,  8); }
+         inline UShort_t getGdpbHit32Tot()       const { return getField( 12,  8); }
 
          // ---------- Get4 gDPB 24b/32b Epoch access methods ----------------------
          inline bool     getGdpbEpLinkId()       const { return getBit(   41    ); }
          inline uint32_t getGdpbEpEpochNb()      const { return getField( 10, 31); }
-         inline uint16_t getGdpbEpStampTs()      const { return getField(  8,  2); }
+         inline UShort_t getGdpbEpStampTs()      const { return getField(  8,  2); }
          inline bool     getGdpbEpSync()         const { return getBit(    7    ); }
          inline bool     getGdpbEpDataLoss()     const { return getBit(    6    ); }
          inline bool     getGdpbEpEpochLoss()    const { return getBit(    5    ); }
@@ -768,22 +768,22 @@ namespace gdpb {
          inline uint32_t getGdpbSlcType()        const { return getField( 36,  2); }
          inline uint32_t getGdpbSlcEdge()        const { return getBit(   38    ); }
          inline uint32_t getGdpbSlcChan()        const { return getField( 39,  2); }
-         inline uint16_t getGdpbSlcCrc()         const { return getField(  4,  8); }
+         inline UShort_t getGdpbSlcCrc()         const { return getField(  4,  8); }
 
          // ---------- Get4 gDPB System Msg access methods -------------------------
          inline bool     getGdpbSysLinkId()      const { return getBit(   41    ); }
-         inline uint16_t getGdpbSysSubType()     const { return getField( 37,  4); }
+         inline UShort_t getGdpbSysSubType()     const { return getField( 37,  4); }
          // ---------- Get4 gDPB 24b/32b Errors access methods ---------------------
          inline bool     getGdpbSysErrRoType()   const { return getBit(   36    ); }
-         inline uint16_t getGdpbSysErrUnused()   const { return getField( 14,  22); }
-         inline uint16_t getGdpbSysErrChanId()   const { return getField( 12,  2); }
+         inline UShort_t getGdpbSysErrUnused()   const { return getField( 14,  22); }
+         inline UShort_t getGdpbSysErrChanId()   const { return getField( 12,  2); }
          inline bool     getGdpbSysErrEdge()     const { return getBit(   11    ); }
-         inline uint16_t getGdpbSysErrData()     const { return getField(  4,  7); }
+         inline UShort_t getGdpbSysErrData()     const { return getField(  4,  7); }
          // ---------- Get4 gDPB unknown msg type access methods -------------------
          inline uint32_t getGdpbSysUnkwData()    const { return getField(  4, 32); }
 
          // ---------- STAR Trigger messages access methods ------------------------
-         inline uint16_t getStarTrigMsgIndex() const { return getField(      4,  4 ); }
+         inline UShort_t getStarTrigMsgIndex() const { return getField(      4,  4 ); }
          //++++//
          inline ULong64_t getGdpbTsMsbStarA()   const { return getFieldLong(  8, 40 ); }
          //++++//
@@ -812,7 +812,7 @@ namespace gdpb {
          inline void setStarTsLsbStarD( ULong64_t fullStarTs ) { setFieldLong( 40,  8, ( fullStarTs       ) ); }
          /// 12 bits in between are set to 0
          inline void setStarFillerD()                 { setField(     28, 12, 0 ); } // Should be always 0
-         inline void setStarTokenStarD( uint16_t v )  { setField(      8, 12, v ); }
+         inline void setStarTokenStarD( UShort_t v )  { setField(      8, 12, v ); }
          inline void setStarDaqCmdStarD( uint8_t v )  { setField(     20,  4, v ); }
          inline void setStarTrigCmdStarD( uint8_t v ) { setField(     24,  4, v ); }
 

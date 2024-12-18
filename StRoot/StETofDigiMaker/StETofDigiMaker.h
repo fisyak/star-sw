@@ -63,25 +63,25 @@ public:
 
 
     // methods for processing the data in 2019+
-    void   processEvent( uint64_t* messageBuffer, size_t nFullMessagesToRead );
+    void   processEvent( ULong64_t* messageBuffer, size_t nFullMessagesToRead );
     
     void   convertTriggerMessages( vector< gdpbv100::FullMessage >& triggerMessages,
-                                   map< unsigned int, uint64_t >& gdpbTs,
-                                   map< unsigned int, uint64_t >& starTs );
+                                   map< unsigned int, ULong64_t >& gdpbTs,
+                                   map< unsigned int, ULong64_t >& starTs );
 
-    void   fillETofHeader( uint64_t* messageBuff, vector< gdpbv100::FullMessage >& triggerMessages );
+    void   fillETofHeader( ULong64_t* messageBuff, vector< gdpbv100::FullMessage >& triggerMessages );
     void   fillETofDigi( gdpbv100::FullMessage& mess );
 
     void setFileNameElectronicsMap(     const char* fileName );
 
     // methods for processing the data in 2018
-    void   processEvent2018( uint64_t* messageBuffer, size_t nFullMessagesToRead );
+    void   processEvent2018( ULong64_t* messageBuffer, size_t nFullMessagesToRead );
 
     void   convertTriggerMessages( vector< gdpb::FullMessage >& triggerMessages,
-                                   map< unsigned int, uint64_t >& gdpbTs,
-                                   map< unsigned int, uint64_t >& starTs );
+                                   map< unsigned int, ULong64_t >& gdpbTs,
+                                   map< unsigned int, ULong64_t >& starTs );
 
-    void   fillETofHeader( uint64_t* messageBuff, vector< gdpb::FullMessage >& triggerMessages );
+    void   fillETofHeader( ULong64_t* messageBuff, vector< gdpb::FullMessage >& triggerMessages );
     void   fillETofDigi( gdpb::FullMessage& mess );
 
 

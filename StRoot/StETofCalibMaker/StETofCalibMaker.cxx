@@ -2364,7 +2364,7 @@ StETofCalibMaker::triggerTime( StETofHeader* header )
     double triggerTime = header->trgGdpbFullTime();
 
     // count the occurance of a given trigger time stamp in the GdbpTs map of the eTOF header
-    std::map< uint64_t, short > countsGdpbTs;
+    std::map< ULong64_t, short > countsGdpbTs;
     for( const auto& kv : header->rocGdpbTs() ) {
         if( mDebug ) {
             LOG_DEBUG << "triggerTime (" << std::hex << "Ox" << kv.first << std::dec << ")  " << kv.second * eTofConst::coarseClockCycle * 1.e-9 << endm;
@@ -2376,7 +2376,7 @@ StETofCalibMaker::triggerTime( StETofHeader* header )
     // take the trigger Ts that occured most often in the combined counting map
     short    maxCount = 0;
     short    accCount = 0;
-    uint64_t mostProbableTriggerTs = 0;
+    ULong64_t mostProbableTriggerTs = 0;
 
     for( auto it = countsGdpbTs.begin(); it != countsGdpbTs.end(); it++ ) {
         auto next = std::next( it, 1 );
@@ -2421,7 +2421,7 @@ double
 StETofCalibMaker::resetTime( StETofHeader* header )
 {
     // count the occurance of a given reset time stamp in the StarTs map of the eTOF header
-    std::map< uint64_t, short > countsStarTsRaw;
+    std::map< ULong64_t, short > countsStarTsRaw;
     for( const auto& kv : header->rocStarTs() ) {
         if( mDebug ) {
             LOG_DEBUG << "resetTime (" << std::hex << "Ox" << kv.first << std::dec << ")  " << kv.second * eTofConst::coarseClockCycle * 1.e-9 << endm;
@@ -2437,7 +2437,7 @@ StETofCalibMaker::resetTime( StETofHeader* header )
 
 
     // combine adjacent reset time values with the earlier one
-    std::map< uint64_t, short > countsStarTs;
+    std::map< ULong64_t, short > countsStarTs;
     for( auto it = countsStarTsRaw.begin(); it != countsStarTsRaw.end(); it++ ) {
         auto next = std::next( it, 1 );
 
@@ -2482,7 +2482,7 @@ StETofCalibMaker::resetTime( StETofHeader* header )
 
     while( countsStarTs.size() > 0 ) {
         auto it = std::max_element( countsStarTs.begin(), countsStarTs.end(),
-                                    []( const pair< uint64_t, short >& p1, const pair< uint64_t, short >& p2 ) {
+                                    []( const pair< ULong64_t, short >& p1, const pair< ULong64_t, short >& p2 ) {
                                     return p1.second < p2.second; } );
 
         double resetTime = it->first * eTofConst::coarseClockCycle;
@@ -2510,7 +2510,7 @@ StETofCalibMaker::resetTime( StETofHeader* header )
                 mHistograms.at( "resetTimeCand_picked" )->Fill( it->second );
 
                 auto rawIt = std::max_element( countsStarTsRaw.begin(), countsStarTsRaw.end(),
-                                               []( const pair< uint64_t, short >& p1, const pair< uint64_t, short >& p2 ) {
+                                               []( const pair< ULong64_t, short >& p1, const pair< ULong64_t, short >& p2 ) {
                                                return p1.second < p2.second; } );
 
                 mHistograms.at( "resetTimeCand_compare" )->Fill( ( int64_t ) mResetTs - ( int64_t ) rawIt->first );

@@ -47,9 +47,9 @@ StETofHeader::StETofHeader()
 
 
 StETofHeader::StETofHeader( const double& trgGdpbTime, const double& trgStarTime,
-                            const map< unsigned int, uint64_t >& gdpbTs, const map< unsigned int, uint64_t >& starTs,
+                            const map< unsigned int, ULong64_t >& gdpbTs, const map< unsigned int, ULong64_t >& starTs,
                             const unsigned int& starToken, const unsigned int& starDaqCmdIn, const unsigned int& starTrgCmdIn,
-                            const uint64_t& eventStatusFlag )
+                            const ULong64_t& eventStatusFlag )
 : mTrgGdpbFullTime( trgGdpbTime ),
   mTrgStarFullTime( trgStarTime ),
   mStarToken( starToken ),
@@ -65,9 +65,9 @@ StETofHeader::StETofHeader( const double& trgGdpbTime, const double& trgStarTime
 }
 
 StETofHeader::StETofHeader( const double& trgGdpbTime, const double& trgStarTime,
-                            const map< unsigned int, uint64_t >& gdpbTs, const map< unsigned int, uint64_t >& starTs,
+                            const map< unsigned int, ULong64_t >& gdpbTs, const map< unsigned int, ULong64_t >& starTs,
                             const unsigned int& starToken, const unsigned int& starDaqCmdIn, const unsigned int& starTrgCmdIn,
-                            const uint64_t& eventStatusFlag, const std::vector<bool>& MissMatchFlagVec )
+                            const ULong64_t& eventStatusFlag, const std::vector<bool>& MissMatchFlagVec )
 : mTrgGdpbFullTime( trgGdpbTime ),
   mTrgStarFullTime( trgStarTime ),
   mStarToken( starToken ),
@@ -83,9 +83,9 @@ StETofHeader::StETofHeader( const double& trgGdpbTime, const double& trgStarTime
 }
 
 StETofHeader::StETofHeader( const double& trgGdpbTime, const double& trgStarTime,
-                            const map< unsigned int, uint64_t >& gdpbTs, const map< unsigned int, uint64_t >& starTs,
+                            const map< unsigned int, ULong64_t >& gdpbTs, const map< unsigned int, ULong64_t >& starTs,
                             const unsigned int& starToken, const unsigned int& starDaqCmdIn, const unsigned int& starTrgCmdIn,
-                            const uint64_t& eventStatusFlag, const std::vector<bool>& MissMatchFlagVec, const std::vector<bool>& GoodEventFlagVec, const std::vector<bool>& HasPulsersVec   )
+                            const ULong64_t& eventStatusFlag, const std::vector<bool>& MissMatchFlagVec, const std::vector<bool>& GoodEventFlagVec, const std::vector<bool>& HasPulsersVec   )
 : mTrgGdpbFullTime( trgGdpbTime ),
   mTrgStarFullTime( trgStarTime ),
   mStarToken( starToken ),
@@ -117,19 +117,19 @@ StETofHeader::trgStarFullTime() const
 }
 
 
-map< unsigned int, uint64_t >
+map< unsigned int, ULong64_t >
 StETofHeader::rocGdpbTs() const
 {
-    map< unsigned int, uint64_t > map_root_type( mRocGdpbTs.begin(), mRocGdpbTs.end() );
+    map< unsigned int, ULong64_t > map_root_type( mRocGdpbTs.begin(), mRocGdpbTs.end() );
 
     return map_root_type;
 }
 
 
-map< unsigned int, uint64_t >
+map< unsigned int, ULong64_t >
 StETofHeader::rocStarTs() const
 {
-    map< unsigned int, uint64_t > map_root_type( mRocStarTs.begin(), mRocStarTs.end() );
+    map< unsigned int, ULong64_t > map_root_type( mRocStarTs.begin(), mRocStarTs.end() );
 
     return map_root_type;
 }
@@ -156,7 +156,7 @@ StETofHeader::starTrgCmdIn() const
 }
 
 
-uint64_t
+ULong64_t
 StETofHeader::eventStatusFlag() const
 {
     return mEventStatusFlag;
@@ -194,14 +194,14 @@ StETofHeader::setTrgStarFullTime( const double& starFullTime )
 
 
 void
-StETofHeader::setRocGdpbTs( const map< unsigned int, uint64_t >& gdpbTs )
+StETofHeader::setRocGdpbTs( const map< unsigned int, ULong64_t >& gdpbTs )
 {
     mRocGdpbTs.insert( gdpbTs.begin(), gdpbTs.end() );
 }
 
 
 void
-StETofHeader::setRocStarTs( const map< unsigned int, uint64_t >& starTs )
+StETofHeader::setRocStarTs( const map< unsigned int, ULong64_t >& starTs )
 {
     mRocStarTs.insert( starTs.begin(), starTs.end() );
 }
@@ -229,7 +229,7 @@ StETofHeader::setStarTrgCmdIn( const unsigned int& trgCmdIn )
 
 
 void
-StETofHeader::setEventStatusFlag( const uint64_t& statusFlag )
+StETofHeader::setEventStatusFlag( const ULong64_t& statusFlag )
 {
     mEventStatusFlag = statusFlag;
 }
