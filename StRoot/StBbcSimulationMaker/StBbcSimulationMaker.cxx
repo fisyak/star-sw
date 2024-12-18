@@ -57,6 +57,31 @@ static const Float_t SinglePhotoElectronResolution = 0.3; // according to Les Bl
 /* Numbering: the real PMT numbering (used in the map) starts from 1.
 ALL OTHERS start from 0 !
  */
+
+
+// Note: BBC new factors are calibrated by 2017 p+p runs
+const short ADCBin = 4096;
+
+const float LightFactor[NPMT2] = {1., 1., 0.95, 0.92, 1., 1., 1., 1., 0.9, 0.96, 0.95, 1., 0.95, 0.97, 1., 1.,    // East small 
+                                  0.33, 0.298, 0.25, 0.26, 0.22, 0.4, 0.24, 0.26,                                 // East large
+                                  1.2, 0.9, 1., 0.6, 1., 1., 1.2, 1.2, 1.25, 0.4, 1., 1., 0.95, 0.95, 0.94, 0.95, // West small
+                                  0., 0.243, 0., 0.2, 0.24, 0.18, 0.19, 0.2};                                     // West large
+
+const float TileResolution[NPMT2] = {0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, // East small
+                                     0.6, 0.6, 0.4, 0.5, 0.5, 0.6, 0.4, 0.5,                                         // East large
+                                     0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.5, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, // West small
+                                     0., 0.5, 0., 0.5, 0.6, 0.6, 0.4, 0.65};                                         // West large
+
+const float pC_per_ADCBins[NPMT2] = {0.03, 0.03, 0.033, 0.033, 0.03, 0.03, 0.022, 0.03, 0.021, 0.022, 0.024, 0.03, 0.024, 0.024, 0.025, 0.027, // East small
+                                     0.0226, 0.028, 0.021, 0.023, 0.014,  0.0125, 0.012, 0.0125,                                               // East large
+                                     0.031, 0.03, 0.03, 0.018, 0.03, 0.03, 0.023, 0.024, 0.028, 0.005, 0.03, 0.03, 0.028, 0.023, 0.022, 0.028, // West small
+                                     0., 0.027, 0., 0.06, 0.013, 0.014, 0.0129, 0.02};                                                         // West large
+
+const int shift_ADC0[NPMT2] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   // East small
+                               0, 0, 0, 0, -15, 0, -15, 0,                       // East large
+                               0, 0, 0, 0, 0, 0, 0, 0, 0, -60, 0, 0, 0, 0, 0, 0, // West small
+                               0, 0, 0, 0, -10, -7, -15, -10};                   // West large
+
 //____________________________________________________________________________
 
 bool IsSmall(Short_t iPMT)
@@ -125,27 +150,25 @@ public:
   ~BbcDE(){};
   void AddDE(UShort_t ipmt, Float_t de)
   {
-    if (!IsSmall(ipmt)) {de *= OuterFactor;}
+    de *= LightFactor[ipmt];
     dE[ipmt] += de;
   }
   Float_t GetDE(UShort_t ipmt)
   {
     /// returns DE in pC of PMT signal
-
-    Float_t PoissonMean = dE[ipmt]/dE_1MIP*NPhotoelectrons_1MIP;
-    Short_t NPhotoelectrons = BbcRndm.Poisson(PoissonMean);
-    Float_t Q = pC_per_Photoelectron*
-      (1+BbcRndm.Gaus(0.,SinglePhotoElectronResolution))*
-       NPhotoelectrons;
+    float PoissonMean = dE[ipmt]/dE_1MIP*NPhotoelectrons_1MIP;
+    short NPhotoelectrons = BbcRndm.Poisson(PoissonMean);
+    float Q = pC_per_Photoelectron*
+      (1+BbcRndm.Gaus(0.,TileResolution[ipmt]))*NPhotoelectrons;
     return Q;
   }
   Short_t GetADC(UShort_t ipmt)
   {
     /// returns digitized (ADC) amplitude
-    Float_t A = this->GetDE(ipmt);
-    if (A<ADC0) {return 0;}
-    Short_t N = (short)((A-ADC0)/pC_perADCbin);
-    if (N>=NADCbins) {return NADCbins-1;}
+    float A = this->GetDE(ipmt);
+    short N = (short)(A/pC_per_ADCBins[ipmt] + shift_ADC0[ipmt]);
+    if (N>=ADCBin) {return ADCBin-1;}
+    if (N<0){return 0;}
     return N;
   }
 };
