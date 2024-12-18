@@ -103,6 +103,6 @@
 <li> TFG24e Freeze for fixed target reproduction, add beamLine           2024-10-27 13:33:51 -0400  (HEAD -> TFG, tag: TFG24e_1)
 <li> TFG24f Maksym's version KFParticle without Base from 10/29/2024     2024-11-05 12:01:17 -0500  (HEAD -> TFG, tag: TFG24f_1)
 <li> TFG24g Modified wrt Maxym's StKFParticleAnalysis, add beamSpot      2024-11-14 15:19:30 -0500  (HEAD -> TFG, tag: TFG24g)
-<li> TFG24h Maksym's version KFParticle no Vc from 11/21/2024 (TFG24f)   2024-12-18 15:01:17 -0500  (HEAD -> TFG, tag: TFG24h)
+<li> TFG24h Maksym's version KFParticle no Vc from 11/21/2024 (TFG24f)   2024-12-18 16:22:45 -0500  (HEAD -> TFG24h, tag: TFG23h)
 <li>.DEV2   head of TFG git repository
 </ul>
