@@ -184,7 +184,7 @@ void kfpAnalysis(Int_t N = 10000000,
   StKFParticleInterface::instance()->SetChi2TopoCutCharmManybodyDecays(3);
   StKFParticleInterface::instance()->SetLdLCutCharmManybodyDecays(5);
 
-  //  StKFParticleInterface::instance()->SetBeamSpot(beamSpotMode);
+  StKFParticleInterface::instance()->SetBeamSpot("2020_5AGeV");
   //  StKFParticleInterface::instance()->SetBeamSpot();
 #endif
   
