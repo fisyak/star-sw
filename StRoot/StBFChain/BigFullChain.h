@@ -1481,8 +1481,6 @@ Bfc_st BFC[] = { // standard chains
   {"VMCAppl"     ,"","","geomT,gen_t,sim_T,tpcDB,RootVMC","",
    ",MathMore,StarGeneratorUtil,StarGeneratorEvent,StarGeneratorBase,StSsdDbMaker,StIstDbMaker,StPxlDbMaker"
    ",StarVMCApplication"                                                                  ,"VMC G3",kFALSE},
-  {"VMC"         ,"geant","","Simu,VMCAppl,-geant","StVMCMaker",           "StVMCMaker","VMC Maker",kFALSE},
-  {"VMCPassive"  ,"geant","","VMCAppl",       "StVMCMaker","StVMCMaker","VMC Maker in Passive Mode",kFALSE},
   // for simulation on fly Event time stamp is set outside of the simulation makers
   {"gstar"       ,"geant"  ,"","-fzin,-ntin,-geant,-in,Simu,geantL","St_geant_Maker"
    ,                                        "","gstar for 20 muon tracks with pT = 1GeV in |eta|<4",kFALSE},
@@ -1512,6 +1510,8 @@ Bfc_st BFC[] = { // standard chains
    ,                                 "StarFilterMaker","StarGeneratorFilt","Filt generated events", kFALSE},
   {"AgStar","","","Generators,geant,-gstar,-in,-gstarLib",""
    ,                                                     "AgStar","Utility to feed St_geant_Maker", kFALSE},
+  {"VMC"         ,"geant","","Simu,VMCAppl,-geant","StVMCMaker",           "StVMCMaker","VMC Maker",kFALSE},
+  {"VMCPassive"  ,"geant","","VMCAppl",       "StVMCMaker","StVMCMaker","VMC Maker in Passive Mode",kFALSE},
   {"geantEmb"    ,"geant","","geantL"                   ,"St_geant_Maker","","GEANT embedding mode",kFALSE},
   {"RootVMC","","","-geant,-fzin,-ntin,StarMagField,-geantL,-geometry,-geomNoField,geant3","","","",kFALSE},
   {"VMCAlignment","","","","","",                                                   "VMC Alignment",kFALSE},
