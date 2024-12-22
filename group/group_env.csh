@@ -14,6 +14,7 @@
 # our individual .login files.
 #
 #
+if ( $?DECHO ) echo "======================================== start group_env.csh $1"
 set ECHO = 1;
 set FAIL = "";
 
@@ -963,3 +964,4 @@ setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/incl
 #echo "$LD_LIBRARY_PATH"
 which xtitl >& /dev/null
 if (! $?) xtitl
+if ( $?DECHO ) echo "======================================== end group_env.csh $1"

@@ -4,6 +4,7 @@
 # Determine STAR_SYS and STAR_HOST_SYS variables.
 # History at the end of this script
 #
+if ( $?DECHO ) echo "======================================== start of STAR_SYS"
 setenv STAR_SYS ""
 source $GROUP_DIR/unix_programs.csh
 if ( $?self ) then
@@ -254,6 +255,7 @@ else
   unset R
   if ($?DECHO) echo "STAR_SYS = ${STAR_SYS}, STAR_HOST_SYS = ${STAR_HOST_SYS}, STAR_HOST_SYS = ${STAR_HOST_SYS}, STAR_HOST_SYS_OPT = ${STAR_HOST_SYS_OPT}"
 endif
+if ( $?DECHO ) echo "======================================== end of STAR_SYS"
 #  $Log: STAR_SYS,v $
 #  Revision 1.61  2019/04/08 20:26:59  jeromel
 #  Adjust
