@@ -2699,7 +2699,7 @@ my $debug = 0;
 #$hist = "RunXIX_XXI22"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/23/2024  TpcLengthCorrectionMDN
 #$hist = "RunXIX_XXI23"; $NEvents = 500000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2*/RF/*fixed*/*/"; $FILE = "*/"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
 #$hist = "RunXIX_XXI24"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*_fixedTarget*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
-#$hist = "RunXIX_XXI24"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
+#$hist = "RunXIX_XXI24"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calix1b"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/24/2024  MySQL
 #$hist = "RunXIX_XXI25"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/08/2024  test P24iy ? DEBUG ??
 #$hist = "RunXIX_XXI26"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/11/2024  test P24iy ? DEBUG ??
 #$hist = "RunXIX_XXI27"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/25/2024  TpcZCorrectionC
@@ -2711,7 +2711,10 @@ my $debug = 0;
 #$hist = "RunXIX_XXI32"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/06/2024 TpcZCorrectionC
 #$hist = "RunXIX_XXI33"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/08/2024 TpcZCorrectionC + TpcSecRowB + TpcLengthCorrectionMDN
 #$hist = "RunXIX_XXI34"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/11/2024 TpcSecRowB
-$hist = "RunXIX_XXI35"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/13/2024 tpcTimeDependence for *13p5GeV_fixedTarget_2020* *19p5GeV_fixedTarget_2020* *26p5GeV_fixedTarget_2021* *31GeV_fixedTarget_2019* *31p2GeV_fixedTarget_2020* *70GeV_fixedTarget_2021*
+#$hist = "RunXIX_XXI35"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/13/2024 tpcTimeDependence for *13p5GeV_fixedTarget_2020* *19p5GeV_fixedTarget_2020* *26p5GeV_fixedTarget_2021* *31GeV_fixedTarget_2019* *31p2GeV_fixedTarget_2020* *70GeV_fixedTarget_2021*
+$hist = "RunXIX_XXI36SL24y"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "SL24y"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/15/2024 test with MySQL
+#$hist = "RunXIX_XXI37"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/15/2024 test with MySQL with AL92
+#$hist = "RunXIX_XXI38"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_*/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/15/2024 test with MySQL with AL92
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2821,13 +2824,21 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
-#<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">
+    if ($STAR_LEVEL eq "TFG") {
+    print XML '<?xml version="1.0" encoding="utf-8" ?> 
+<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">	 <command>
+         cd ${SUBMITTINGDIRECTORY}
+if ($?INPUTFILE0) csh -x $INPUTFILE0
+         </command>
+';
+  } else {
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
 <job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">	 <command>
          cd ${SUBMITTINGDIRECTORY}
 if ($?INPUTFILE0) csh -x $INPUTFILE0
          </command>
 ';
+  }
     foreach my $file (@FilesRun) {
       my $dir = File::Basename::dirname($file);
       my $fff = File::Basename::basename($file);
@@ -2886,14 +2897,16 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 	print "Create $SCRIPT\n";
 	print XML "<input URL=\"file:" . $DIR . "/" .  $SCRIPT ."\" />\n";
 	open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
-	print OUT "#! /usr/local/bin/tcsh -f\n";
+#	print OUT "#! /usr/local/bin/tcsh -f\n";
+	print OUT "#! /usr/bin/tcsh -f\n";
 	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
 	if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
 	  print OUT "source ${GROUP_DIR}/setup gcc;\n";
-	  print OUT "/afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh";  
+	  print OUT "source /afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh;\n";  
 	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
-	} elsif ($STAR_LEVEL !~ "^\.DEV2") {
-	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
+#	  print OUT "setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib;\n";
+	} else {
+#	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 	}
 	print OUT "/usr/bin/test -d $scrr || mkdir -p $scrr;\n";
 	my $cmd = "/usr/bin/test ! -r " . $root . " && root.exe -q -b  '" . $macro;
