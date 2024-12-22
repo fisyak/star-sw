@@ -40,6 +40,7 @@
 # remove frozen
 #
 # Aliases to switch between different STAR Library levels
+if ( $?DECHO ) echo "======================================== start of group_aliases.csh"
 alias starold    'source ${GROUP_DIR}/.starold'
 alias starpro    'source ${GROUP_DIR}/.starpro'
 alias starnew    'source ${GROUP_DIR}/.starnew'
@@ -57,11 +58,12 @@ alias starsetup  'source ${GROUP_DIR}/setup'
 #endif
 
 
-if ($?SILENT == 1) then
-  alias makes      'gmake --silent -f ${STAR}/mgr/MakePam.mk'
-  alias makel      'gmake --silent -f ${STAR}/mgr/Makeloop.mk'
-else
-  alias makes      'gmake -f ${STAR}/mgr/MakePam.mk'
-  alias makel      'gmake -f ${STAR}/mgr/Makeloop.mk'
-endif
+#if ($?SILENT == 1) then
+#  alias makes      'gmake --silent -f ${STAR}/mgr/MakePam.mk'
+#  alias makel      'gmake --silent -f ${STAR}/mgr/Makeloop.mk'
+#else
+#  alias makes      'gmake -f ${STAR}/mgr/MakePam.mk'
+#  alias makel      'gmake -f ${STAR}/mgr/Makeloop.mk'
+#endif
+if ( $?DECHO ) echo "======================================== end of group_aliases.csh"
 # last line
