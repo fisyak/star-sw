@@ -41,6 +41,7 @@
 #include "TKey.h"
 #include "TLegend.h"
 #include "TStyle.h"
+#include "TDatime.h"
 #endif
 #define __RunXIX_RunXII__
 #ifdef __RunXIX_RunXII__
@@ -152,6 +153,9 @@ static const Char_t *Names[9] = {
 #endif
 #endif
 TFile *F[100]  = {0};
+static Int_t fnx = 0, fny = 0;
+static Double_t fxMin = 1e9, fxMax = -1e9,  fyMin = 1e9, fyMax = -1e9;
+Int_t NF = 0;
 //________________________________________________________________________________
 Double_t rowsigned(Int_t row, Int_t sector) {
   Double_t y = row;
@@ -161,7 +165,7 @@ Double_t rowsigned(Int_t row, Int_t sector) {
 //________________________________________________________________________________
 Int_t SetFileList() {
   TSeqCollection *fs = gROOT->GetListOfFiles();
-  Int_t NF = fs->GetEntries();
+  NF = fs->GetEntries();
   if (! fs) {
     cout << "No root files " << endl; 
     return NF;
@@ -172,13 +176,51 @@ Int_t SetFileList() {
   TFile *f = 0;  
   TIter  iter(fs);
   Int_t k = 0;
+  Double_t dX = -1;;
   while ((f = (TFile *) iter())) {
     TNtuple *FitP = (TNtuple *) f->Get("FitP");
     if (! FitP) continue;
     F[k] = f;
     cout << k << "\tAdd " << F[k]->GetName() << endl;
     k++;
+    TH2 *mu = (TH2 *) f->Get("mu");
+    if (mu) {
+      Int_t nx = mu->GetXaxis()->GetNbins();
+      Double_t xMin = mu->GetXaxis()->GetXmin();
+      Double_t xMax = mu->GetXaxis()->GetXmax();
+      if (dX < 0 && nx > 0) {
+	dX = (xMax - xMin)/nx;
+	fnx = nx;
+      }
+      fxMin = TMath::Min(fxMin, xMin);
+      fxMax = TMath::Min(fxMax, xMax);
+      if (mu->GetDimension() == 2) {
+	Int_t ny = mu->GetYaxis()->GetNbins();
+	Double_t yMin = mu->GetYaxis()->GetXmin();
+	Double_t yMax = mu->GetYaxis()->GetXmax();
+	fny = ny;
+	fyMin = TMath::Min(fyMin, yMin);
+	fyMax = TMath::Min(fyMax, yMax);
+      }
+    } else {
+      if (fnx > 0) continue;
+      // Preset limits for Time 
+      Int_t tZero= 19950101;
+      Int_t tMin = 20000101;
+      Int_t tMax = 20240101;
+      TDatime t0(tZero,0);
+      Int_t timeOffSet = t0.Convert();
+      TDatime t1(tMin,0); // min Time and
+      TDatime t2(tMax,0); // max 
+      UInt_t i1 = t1.Convert() - timeOffSet;
+      UInt_t i2 = t2.Convert() - timeOffSet;
+      Int_t Nt = (i2 - i1)/(3600); // each hour 
+      fnx = Nt;
+      fxMin = i1;
+      fxMax = i2;
+    }
   }
+  if (dX > 0) fnx = (fxMax - fxMin)/dX;
   if (NF != k) {cout << "NF = " << NF << " k = " << k << " mismatched" << endl;}
   return NF;
 }
@@ -201,7 +243,6 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
   TCanvas *c1 = (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c1");
   if (! c1)  c1 = new TCanvas("c1","c1",1400,1200);
   else       c1->Clear();
-  Int_t NF = SetFileList();  
   if (! NF) return;
   TString Current(gDirectory->GetName());
   //  gStyle->SetOptStat(0);
@@ -350,7 +391,6 @@ void FitPMu(const Char_t *draw="mu",
 // 	      Double_t ymin = -1,
 // 	      Double_t ymax =  1
 	    ) {
-  Int_t NF = SetFileList();
   if (! NF) return;
   TString Current(gDirectory->GetName());
   //  gStyle->SetOptStat(0);
@@ -408,7 +448,6 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
   TCanvas *c1 = (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c1");
   if (! c1)  c1 = new TCanvas("c1","c1",1400,1200);
   else       c1->Clear();
-  Int_t NF = SetFileList();  
   if (! NF) return;
   TString Current(gDirectory->GetName());
   //  gStyle->SetOptStat(0);
@@ -499,6 +538,7 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
 //________________________________________________________________________________
 void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") {
   if (! gDirectory) {return;}
+  NF = SetFileList();  
   gStyle->SetOptStat(0);
   Int_t nx = 0;
   Int_t ny = 0;
@@ -507,15 +547,20 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   Double_t yMin = -1;
   Double_t yMax = 1;
   TH2 *mu = (TH2 *) gDirectory->Get("mu");
-  if (mu) {
-    nx = mu->GetXaxis()->GetNbins();
-    xMin = mu->GetXaxis()->GetXmin();
-    xMax = mu->GetXaxis()->GetXmax();
-    if (mu->GetDimension() == 2) {
-      ny = mu->GetYaxis()->GetNbins();
-      yMin = mu->GetYaxis()->GetXmin();
-      yMax = mu->GetYaxis()->GetXmax();
+  if (fnx <= 0) {
+    if (mu) {
+      nx = mu->GetXaxis()->GetNbins();
+      xMin = mu->GetXaxis()->GetXmin();
+      xMax = mu->GetXaxis()->GetXmax();
+      if (mu->GetDimension() == 2) {
+	ny = mu->GetYaxis()->GetNbins();
+	yMin = mu->GetYaxis()->GetXmin();
+	yMax = mu->GetYaxis()->GetXmax();
+      }
     }
+  } else {
+    nx = fnx; xMin = fxMin; xMax = fxMax;
+    ny = fny; yMin = fyMin; yMax = fyMax;
   }
   TString Name(gSystem->BaseName(gDirectory->GetName()));
   cout << Name << "\t";
@@ -608,6 +653,12 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     }
   } else if (Name.BeginsWith("neN"))      {
     MuDraw("mu:x","PI", nx, xMin, xMax, "(i&&j&&dmu<0.1&&dsigma<0.04&&dp3<1&&mu<1&&p3>0)", "prof", 0.5,  1.0, Title, "neN","#mu versus log(nP)");
+  } else if (Name.Contains("Time"))      {
+      if (plot == "sigma") {
+	MuDraw("sigma:x","TimeL",nx, xMin, xMax, "(i&&dmu>0&&dmu<2e-2&&dsigma<2e-2)", "prof", -0.4,  0.4, Title, "Time","#sigma vsu Time)");
+      } else {
+	MuDraw("mu:x","TimeL",nx, xMin, xMax, "(i&&dmu>0&&dmu<2e-2&&dsigma<2e-2)", "prof", -0.4,  0.4, Title, "TimeL","#mu Time)");
+      }
   } else if (Name.Contains("GEX"))      {
     if (Opt == "sigma") {
       MuDraw("sigma:x","znpL",nx, xMin, xMax, "(i&&dmu<2e-2&&dsigma<2e-2&&da0<1&&x>3)", "prof", 0.0,  1.0, Title, "npL","#mu versus Log(n_{P}");

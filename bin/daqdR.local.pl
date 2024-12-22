@@ -23,7 +23,7 @@ foreach my $currentrun (@AllRuns) {
     print "$run Accepted\n" if ($debug);
 #    foreach my $tag (qw(st hlt)) {
     foreach my $tag (qw(hlt st_physics_)) { # st_physics_2
-      my @files = glob $run . "/" . $tag . "*.daq"; print "files = @files\n" if ($debug);
+      my @files = glob $run . "/" . $tag . "*.daq"; print "files ($tag) = @files\n" if ($debug);
       if ($#files < 0) {next;}
       #  print "files = @files\n";
       #    my $day = int ($r/1000 - 20000); #print "ru = $r => day = $day\n";
@@ -39,14 +39,14 @@ foreach my $currentrun (@AllRuns) {
 	print "i = $i, step = $step \n" if ($debug);
 	my $file = $files[$i];
 	my $b = File::Basename::basename($file,".daq");
-	#    print "$b\n" if ($debug);
-	my $evfile = $b . ".event.root";
-	if (-r $evfile) {next;}
-	my $mufile = $b . ".MuDst.root";
-	if (-r $mufile) {next;}
-	my $pifile = $b . ".picoDst.root";
-	if (-r $pifile) {next;}
-	my $blafile = $b . ".bla.root";
+	print "$b\n" if ($debug);
+	my $evfile = $b . ",1,10000.event.root"  ; print "evfile = $evfile \n"   if ($debug);
+	if (-r $evfile) {next;}			         		                   
+	my $mufile = $b . ",1,10000.MuDst.root"  ; print "mufile = $mufile \n"   if ($debug);
+	if (-r $mufile) {next;}			         		                   
+	my $pifile = $b . ",1,10000.picoDst.root"; print "pifile = $pifile \n"   if ($debug);
+	if (-r $pifile) {next;}			         		                   
+	my $blafile = $b . ",1,10000.bla.root"   ; print "blafile = $blafile \n" if ($debug);
 	if (-r $blafile) {next;}
 	print "string:$file\n";
 	$fNo++;
