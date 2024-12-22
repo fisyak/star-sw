@@ -1,5 +1,6 @@
 #!/bin/csh
 # Set up STAR enviroment
+if ( $?DECHO ) echo "======================================== .starver $1"
 setenv STAR_LEVEL $1
 if ( -e $GROUP_DIR/group_env.csh ) then
 unsetenv GROUP_PATH
@@ -19,4 +20,5 @@ unsetenv CERN_LEVEL
 	#echo "$STAR_LEVEL"
 	#echo "$LD_LIBRARY_PATH"
 endif
+if ( $?DECHO ) echo "======================================== .exit starver"
 
