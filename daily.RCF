@@ -3229,3 +3229,240 @@ after setup opt
 /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/lib
 /usr/lib64
 /usr/lib64/mysql
+--------------------------------------------------------------------------------
+Before tpcTimeDependence                                                                              After tpcTimeDependence	RunXIX_XXI35
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020  #mu =  0.23% for F-9p8GeV_fixedTarget_2020   #sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020  #mu =  0.23% for F-9p8GeV_fixedTarget_2020        
+#sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021	 #mu =  0.40% for F-100GeV_fixedTarget_2021   #sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021  #mu =  0.40% for F-100GeV_fixedTarget_2021      
+#sigma(@61 npts) =  5.36% for F-13p5GeV_fixedTarget_2020 #mu =  0.28% for F-13p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.34% for F-13p5GeV_fixedTarget_2020 #mu =  0.12% for F-13p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.98% for F-19GeV_2019		 #mu =  0.20% for F-19GeV_2019		      #sigma(@61 npts) =  5.98% for F-19GeV_2019	       #mu =  0.20% for F-19GeV_2019		           
+#sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.37% for F-19p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.13% for F-19p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020 #mu =  0.37% for F-26p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020 #mu =  0.37% for F-26p5GeV_fixedTarget_2020       
+#sigma(@61 npts) =  5.94% for F-26p5GeV_fixedTarget_2021 #mu =  0.06% for F-26p5GeV_fixedTarget_2021  #sigma(@61 npts) =  5.56% for F-26p5GeV_fixedTarget_2021 #mu =  0.38% for F-26p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.48% for F-31GeV_fixedTarget_2019	 #mu =  0.25% for F-31GeV_fixedTarget_2019    #sigma(@61 npts) =  5.42% for F-31GeV_fixedTarget_2019   #mu =  0.18% for F-31GeV_fixedTarget_2019   
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.42% for F-31p2GeV_fixedTarget_2020  #sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019 #mu =  0.17% for F-3p85GeV_fixedTarget_2019  #sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019 #mu =  0.17% for F-3p85GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu =  0.48% for F-44p5GeV_fixedTarget_2021  #sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu =  0.48% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.35% for F-4p59GeV_fixedTarget_2019  #sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.35% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020 #mu =  0.34% for F-5p75GeV_fixedTarget_2020  #sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020 #mu =  0.34% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.43% for F-70GeV_fixedTarget_2021	 #mu =  0.39% for F-70GeV_fixedTarget_2021    #sigma(@41 npts) =  6.42% for F-70GeV_fixedTarget_2021   #mu =  0.03% for F-70GeV_fixedTarget_2021   
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.26% for F-7p3GeV_fixedTarget_2020   #sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020  #mu =  0.26% for F-7p3GeV_fixedTarget_2020  
+
+
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020  #mu =  0.23% for F-9p8GeV_fixedTarget_2020  
+#sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021	 #mu =  0.40% for F-100GeV_fixedTarget_2021  
+#sigma(@61 npts) =  5.34% for F-13p5GeV_fixedTarget_2020 #mu =  0.12% for F-13p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.98% for F-19GeV_2019		 #mu =  0.20% for F-19GeV_2019		    
+#sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.13% for F-19p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020 #mu =  0.37% for F-26p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.56% for F-26p5GeV_fixedTarget_2021 #mu =  0.38% for F-26p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.42% for F-31GeV_fixedTarget_2019	 #mu =  0.18% for F-31GeV_fixedTarget_2019   
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019 #mu =  0.17% for F-3p85GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu =  0.48% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.35% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020 #mu =  0.34% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.42% for F-70GeV_fixedTarget_2021	 #mu =  0.03% for F-70GeV_fixedTarget_2021   
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.26% for F-7p3GeV_fixedTarget_2020  
+foreach f (`ls -1d *.xml`)
+ set d = `echo ${f} |sed -e 's/jobs.//' -e 's/.xml//'`
+ if (! -d ${d})  mkdir ${d}
+ cd ${d}
+ lsf ../${f}
+ cd -
+end
+================================================================================
+12/17/2024
+[spoolsub01] ~/work/dEdx/jobs $ 
+foreach f ( `ls -1d */*condor` )
+ set d = `dirname ${f}`; set b = `basename ${f}`;
+ cd ${d}
+ condor_submit ${b}
+ cd -
+end
+
+setenv LD_LIBRARY_PATH /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_gcc485/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_gcc485/qt4/lib:.sl73_gcc485_opt/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/.sl73_gcc485_opt/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.sl73_gcc485/root/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_x8664_gcc485/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_x8664_gcc485/qt4/lib:.sl73_x8664_gcc485_opt/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.sl73_x8664_gcc485/root/lib:/usr/lib:/usr/lib/mysql:/usr/lib64:/usr/lib/usr/bin/test -d /gpfs01/star/subsys-tpc/fisyak/dEdx/RunXIX_XXI36SL24y/100GeV_fixedTarget_2021/ || mkdir -p /gpfs01/star/subsys-tpc/fisyak/dEdx/RunXIX_XXI36SL24y/100GeV_fixedTarget_2021/;
+================================================================================
+12/18/2024
+[l409] ~/work/Histograms/RunXIX_XXI35 $ root.exe NPointsFG*.root Res.C                                [l409] ~/work/Histograms/RunXIX_XXI37 $ root.exe NPointsFG*.root Res.					
+#sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021  #mu =  0.40% for F-100GeV_fixedTarget_2021   #sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021  #mu =  0.40% for F-100GeV_fixedTarget_2021  	
+#sigma(@61 npts) =  5.34% for F-13p5GeV_fixedTarget_2020 #mu =  0.12% for F-13p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.34% for F-13p5GeV_fixedTarget_2020 #mu =  0.12% for F-13p5GeV_fixedTarget_2020 	
+#sigma(@61 npts) =  5.98% for F-19GeV_2019		 #mu =  0.20% for F-19GeV_2019		      #sigma(@61 npts) =  6.02% for F-19GeV_2019		 #mu = -0.33% for F-19GeV_2019		     <<<
+#sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.13% for F-19p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.14% for F-19p5GeV_fixedTarget_2020 	
+#sigma(@61 npts) =  5.34% for F-26p5GeV_fixedTarget_2020 #mu =  0.37% for F-26p5GeV_fixedTarget_2020  #sigma(@61 npts) =  5.32% for F-26p5GeV_fixedTarget_2020 #mu =  0.57% for F-26p5GeV_fixedTarget_2020 <<<
+#sigma(@61 npts) =  5.56% for F-26p5GeV_fixedTarget_2021 #mu =  0.38% for F-26p5GeV_fixedTarget_2021  #sigma(@61 npts) =  5.50% for F-26p5GeV_fixedTarget_2021 #mu =  0.23% for F-26p5GeV_fixedTarget_2021 	
+#sigma(@61 npts) =  5.42% for F-31GeV_fixedTarget_2019	 #mu =  0.18% for F-31GeV_fixedTarget_2019    #sigma(@61 npts) =  5.42% for F-31GeV_fixedTarget_2019	 #mu =  0.18% for F-31GeV_fixedTarget_2019   	
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020  #sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020 	
+#sigma(@61 npts) =  5.34% for F-3p85GeV_fixedTarget_2019 #mu =  0.17% for F-3p85GeV_fixedTarget_2019  #sigma(@61 npts) =  5.33% for F-3p85GeV_fixedTarget_2019 #mu =  0.11% for F-3p85GeV_fixedTarget_2019 	
+#sigma(@61 npts) =  5.42% for F-44p5GeV_fixedTarget_2021 #mu =  0.48% for F-44p5GeV_fixedTarget_2021  #sigma(@61 npts) =  5.43% for F-44p5GeV_fixedTarget_2021 #mu =  0.47% for F-44p5GeV_fixedTarget_2021 	
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.35% for F-4p59GeV_fixedTarget_2019  #sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.32% for F-4p59GeV_fixedTarget_2019 	
+#sigma(@61 npts) =  5.41% for F-5p75GeV_fixedTarget_2020 #mu =  0.34% for F-5p75GeV_fixedTarget_2020  #sigma(@61 npts) =  5.45% for F-5p75GeV_fixedTarget_2020 #mu =  0.41% for F-5p75GeV_fixedTarget_2020 	
+#sigma(@41 npts) =  6.42% for F-70GeV_fixedTarget_2021	 #mu =  0.03% for F-70GeV_fixedTarget_2021    #sigma(@41 npts) =  6.43% for F-70GeV_fixedTarget_2021	 #mu =  0.03% for F-70GeV_fixedTarget_2021   	
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.26% for F-7p3GeV_fixedTarget_2020   #sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.27% for F-7p3GeV_fixedTarget_2020  	
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020	 #mu =  0.23% for F-9p8GeV_fixedTarget_2020   #sigma(@61 npts) =  5.29% for F-9p8GeV_fixedTarget_2020	 #mu =  0.47% for F-9p8GeV_fixedTarget_2020     
+
+
+[l409] ~/work/Histograms/RunXIX_XXI37 $ root.exe NPointsFG*.root Res.
+#sigma(@61 npts) =  5.40% for F-100GeV_fixedTarget_2021  #mu =  0.40% for F-100GeV_fixedTarget_2021  
+#sigma(@61 npts) =  5.34% for F-13p5GeV_fixedTarget_2020 #mu =  0.12% for F-13p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  6.02% for F-19GeV_2019		 #mu = -0.33% for F-19GeV_2019		     <<<
+#sigma(@61 npts) =  5.34% for F-19p5GeV_fixedTarget_2020 #mu =  0.14% for F-19p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.32% for F-26p5GeV_fixedTarget_2020 #mu =  0.57% for F-26p5GeV_fixedTarget_2020 <<<
+#sigma(@61 npts) =  5.50% for F-26p5GeV_fixedTarget_2021 #mu =  0.23% for F-26p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.42% for F-31GeV_fixedTarget_2019	 #mu =  0.18% for F-31GeV_fixedTarget_2019   
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.33% for F-3p85GeV_fixedTarget_2019 #mu =  0.11% for F-3p85GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.43% for F-44p5GeV_fixedTarget_2021 #mu =  0.47% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.32% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.45% for F-5p75GeV_fixedTarget_2020 #mu =  0.41% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.43% for F-70GeV_fixedTarget_2021	 #mu =  0.03% for F-70GeV_fixedTarget_2021   
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.27% for F-7p3GeV_fixedTarget_2020  
+#sigma(@61 npts) =  5.29% for F-9p8GeV_fixedTarget_2020	 #mu =  0.47% for F-9p8GeV_fixedTarget_2020          
+================================================================================
+12/19/2024
+https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
+Requirements = (Microarch >= "x86_64-v4")
+================================================================================
+12/21/2024
+setenv STARFPE NO; setenv NODEBUG yes
+source /afs/rhic.bnl.gov/rhstar/group/setup gcc;
+source /afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh;
+source /afs/rhic.bnl.gov/rhstar/group/.starver SL24y;
+================================================================================
+12/22/2024
+ ~/work/Histograms/RunXIX_XXI36SL24y $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  5.39% for F-100GeV_fixedTarget_2021  #mu =  0.41% for F-100GeV_fixedTarget_2021  
+#sigma(@61 npts) =  5.37% for F-13p5GeV_fixedTarget_2020 #mu =  0.22% for F-13p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  6.00% for F-19GeV_2019		 #mu = -0.42% for F-19GeV_2019		      <<<<
+#sigma(@61 npts) =  5.37% for F-19p5GeV_fixedTarget_2020 #mu =  0.29% for F-19p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.35% for F-26p5GeV_fixedTarget_2020 #mu =  0.36% for F-26p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.56% for F-26p5GeV_fixedTarget_2021 #mu =  0.38% for F-26p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.41% for F-31GeV_fixedTarget_2019	 #mu =  0.19% for F-31GeV_fixedTarget_2019   
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.35% for F-3p85GeV_fixedTarget_2019 #mu =  0.16% for F-3p85GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.41% for F-44p5GeV_fixedTarget_2021 #mu =  0.47% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.38% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.42% for F-5p75GeV_fixedTarget_2020 #mu =  0.44% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.44% for F-70GeV_fixedTarget_2021	 #mu =  0.04% for F-70GeV_fixedTarget_2021   <<<< ?
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.27% for F-7p3GeV_fixedTarget_2020  
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020	 #mu =  0.29% for F-9p8GeV_fixedTarget_2020  
+
+======================================================================
+12/23/2024
+[l409] ~/work/Histograms/RunXIX_XXI36SL24y $ root.exe NPointsFG*.root Res.C
+
+
+
+
+#sigma(@61 npts) =  5.39% for F-100GeV_fixedTarget_2021  #mu =  0.41% for F-100GeV_fixedTarget_2021  
+#sigma(@61 npts) =  5.37% for F-13p5GeV_fixedTarget_2020 #mu =  0.22% for F-13p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  6.00% for F-19GeV_2019		 #mu = -0.42% for F-19GeV_2019		    
+#sigma(@61 npts) =  5.37% for F-19p5GeV_fixedTarget_2020 #mu =  0.29% for F-19p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.35% for F-26p5GeV_fixedTarget_2020 #mu =  0.36% for F-26p5GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.56% for F-26p5GeV_fixedTarget_2021 #mu =  0.38% for F-26p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.41% for F-31GeV_fixedTarget_2019	 #mu =  0.19% for F-31GeV_fixedTarget_2019   
+#sigma(@61 npts) =  5.37% for F-31p2GeV_fixedTarget_2020 #mu =  0.10% for F-31p2GeV_fixedTarget_2020 
+#sigma(@61 npts) =  5.35% for F-3p85GeV_fixedTarget_2019 #mu =  0.16% for F-3p85GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.41% for F-44p5GeV_fixedTarget_2021 #mu =  0.47% for F-44p5GeV_fixedTarget_2021 
+#sigma(@61 npts) =  5.29% for F-4p59GeV_fixedTarget_2019 #mu =  0.38% for F-4p59GeV_fixedTarget_2019 
+#sigma(@61 npts) =  5.42% for F-5p75GeV_fixedTarget_2020 #mu =  0.44% for F-5p75GeV_fixedTarget_2020 
+#sigma(@41 npts) =  6.44% for F-70GeV_fixedTarget_2021	 #mu =  0.03% for F-70GeV_fixedTarget_2021    <<<<<<<<<<<
+#sigma(@61 npts) =  5.37% for F-7p3GeV_fixedTarget_2020	 #mu =  0.27% for F-7p3GeV_fixedTarget_2020  
+#sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020	 #mu =  0.29% for F-9p8GeV_fixedTarget_2020  
+
+
+--------------------------------------------------------------------------------
+
+
+
+
+ [cvmfswrite02] ~/work/dEdx $ difw RunXIX_XXI34/19GeV_2019/20092007_1000008_1_500000.log RunXIX_XXI36SL24y/19GeV_2019/20092007_1000008_1_500000.log | more
+---------------------------------------------------------------------------------------                                                                         ---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20190201.000   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20190201.000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230
+
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20190225.202 | StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20190225.202
+
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20190225.230   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20190225.230
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20190225.202 | StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20190225.202
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20190225.202   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20190225.202
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20190225.202   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20190225.202
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202   StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20180518.000 | StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20180518.000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20190225.202 | StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20190225.202
+StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB                                                                        StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB
+StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF                                                                StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF
+StdEdxY2Maker:WARN  - With TpcPadCorrectionMDC activated => Deactivate TpcPadCorrectionMDF                                                                      StdEdxY2Maker:WARN  - With TpcPadCorrectionMDC activated => Deactivate TpcPadCorrectionMDF
+StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions                                                                         StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions 
+LoadTable: .L /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2019.C                                       | LoadTable: .L /afs/rhic.bnl.gov/star/packages/SL24y/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2019.C
+StdEdxY2Maker:WARN  - St_tpcExtraGainCorrectionC::instance found table tpcExtraGainCorrection with NRows = 24 in db     Validity:20181215/0 - 20191115/0      | StdEdxY2Maker:WARN  - St_tpcExtraGainCorrectionC::instance found table tpcExtraGainCorrection with NRows = 24 in db
+                                                                                                                                                              > StdEdxY2Maker:WARN  - Validity:20181215/0 -----   20191120/0
+
+ ---------------------------------------------------------------------------------------                                                                         ---------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20190201.000813 --- 20201220.000000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20190201.000813 --- 20201220.000000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000
+
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20190225.202320 --- 20190607.174702         |  
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20190225.202320 --- 20190404.094405
+
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20190225.230021 --- 20190404.000021            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20190225.230021 --- 20190404.000021
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230049 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230049 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20190225.202320 --- 20190607.174702         |  
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20190225.202320 --- 20190404.094405
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20190225.202320 --- 20190404.094405            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20190225.202320 --- 20190404.094405
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20190225.202320 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20190225.202320 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202321 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202321 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20180518.000150 --- 20191115.000000         |  
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20180518.000150 --- 20191120.000000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20190225.202320 --- 20190607.174702         |  
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20190225.202322 --- 20190404.094405
+StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB                                                                                                        StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB
+StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF                                                                                                StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF
+StdEdxY2Maker:WARN  - With TpcPadCorrectionMDC activated => Deactivate TpcPadCorrectionMDF                                                                                                      StdEdxY2Maker:WARN  - With TpcPadCorrectionMDC activated => Deactivate TpcPadCorrectionMDF
+StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions                                                                                                         StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions 
+LoadTable: .L /gpfs01/star/subsys-tpc/fisyak/STAR/packages/.DEV2/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2019.C                                                                      |  LoadTable: .L /afs/rhic.bnl.gov/star/packages/SL24y/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2019.C
+StdEdxY2Maker:WARN  - St_tpcExtraGainCorrectionC::instance found table tpcExtraGainCorrection with NRows = 24 in db     Validity:20181215/0 - 20191115/0                                     |  
+StdEdxY2Maker:WARN  - St_tpcExtraGainCorrectionC::instance found table tpcExtraGainCorrection with NRows = 24 in db
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - Validity:20181215/0 -----   20191120/0
+
+ ---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+
+
+
+
+
+
+g++ -pthread -std=c++11 -Wno-deprecated-declarations -m64 -fdiagnostics-color=always -msse4.2 --std=c++11 -fPIC -Wall -Woverloaded-virtual -Wcast-align -fno-threadsafe-statics -DNVALGRIND -DSTAR_STANDALONE -Wno-parentheses -Wno-unused-function -DNODEBUG -Wno-pragmas -g -D__ROOT__ -D__TFG__VERSION__ -DDO_TPCCATRACKER_EFF_PERFORMANCE 
+-I. -IStRoot -I.sl73_x8664_gcc485/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.sl73_x8664_gcc485/rootdeb/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_x8664_gcc485/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_x8664_gcc485/include 
+-c .sl73_x8664_gcc485/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx -o .sl73_x8664_gcc485/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.o
+In file included from .sl73_x8664_gcc485/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:33:0:
+
+
+
+g++ -pthread -m64 -fdiagnostics-color=always -msse4.2 -fPIC -Wno-misleading-indentation -Wno-ignored-attributes -Wall -Woverloaded-virtual -Wcast-align -fno-threadsafe-statics -DNVALGRIND -DSTAR_STANDALONE -Wno-parentheses -Wno-unused-function -DNODEBUG -Wno-pragmas -g -D__ROOT__ -D__TFG__VERSION__ -DDO_TPCCATRACKER_EFF_PERFORMANCE 
+-I.al92_x8664_gcc11/obj/StRoot/TPCCATracker 
+-I. -IStRoot -I.al92_x8664_gcc11/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/5.99.99/.al92_x8664_gcc11/rootdeb/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/include 
+-I/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/include 
+-c .al92_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx -o .al92_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.o
+
+
+
+
+
+
