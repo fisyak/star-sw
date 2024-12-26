@@ -21,8 +21,8 @@
 
 #ifndef KFPSimdAllocator_H
 #define KFPSimdAllocator_H
-
-#include <Vc/Vc>
+#include <limits>
+//#include <Vc/Vc>
 
 /** @class KFPSimdAllocator
  ** @brief Allocator which is needed to allocate memory in std::vector aligned by the size of SIMD vectors.
@@ -110,8 +110,8 @@ class KFPSimdAllocator {
 
   void *operator new(size_t size, void *ptr) { return ::operator new(size, ptr);}      ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void *operator new[](size_t size, void *ptr) { return ::operator new(size, ptr);}    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
-  void *operator new(size_t size) { return _mm_malloc(size, sizeof(Vc::float_v)); }    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
-  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(Vc::float_v)); }  ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new(size_t size) { return _mm_malloc(size, sizeof(KFP::SIMD::SimdSize)); }    ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
+  void *operator new[](size_t size) { return _mm_malloc(size, sizeof(KFP::SIMD::SimdSize)); }  ///< new operator for allocation of the SIMD-alligned dynamic memory allocation
   void operator delete(void *ptr, size_t) { _mm_free(ptr); }                           ///< delete operator for the SIMD-alligned dynamic memory release
   void operator delete[](void *ptr, size_t) { _mm_free(ptr); }                         ///< delete operator for the SIMD-alligned dynamic memory release
 }; // KFPSimdAllocator

@@ -73,7 +73,8 @@ void KFPTrackVector::Set(KFPTrackVector& v, int vSize, int offset)
   }
 }
 
-void KFPTrackVector::SetTracks(const KFPTrackVector& track, const kfvector_uint& trackIndex, const int nIndexes)
+#if 0
+void KFPTrackVector::SetTracks(const KFPTrackVector& track, const kfvector_int& trackIndex, const int nIndexes)
 {
   /** The current object is resised to "nIndexes", tracks with indices "trackIndex" are copied to the current object.
    ** \param[in] track - input vector of tracks
@@ -87,108 +88,173 @@ void KFPTrackVector::SetTracks(const KFPTrackVector& track, const kfvector_uint&
   for(int iP=0; iP<6; iP++)
   {
     int iElement = 0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      float_v& vec = reinterpret_cast<float_v&>(fP[iP][iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      float32_v& vec = reinterpret_cast<float32_v&>(fP[iP][iElement]);
       vec.gather(&(track.fP[iP][0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    float_v& vec = reinterpret_cast<float_v&>(fP[iP][iElement]);
-    vec.gather(&(track.fP[iP][0]), index, simd_cast<float_m>(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    float32_v& vec = reinterpret_cast<float32_v&>(fP[iP][iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fP[iP][0]), correctedIndices);
     
   }
   for(int iC=0; iC<21; iC++)
   {
     int iElement=0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      float_v& vec = reinterpret_cast<float_v&>(fC[iC][iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      float32_v& vec = reinterpret_cast<float32_v&>(fC[iC][iElement]);
       vec.gather(&(track.fC[iC][0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    float_v& vec = reinterpret_cast<float_v&>(fC[iC][iElement]);
-    vec.gather(&(track.fC[iC][0]), index, simd_cast<float_m>(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    float32_v& vec = reinterpret_cast<float32_v&>(fC[iC][iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fC[iC][0]), correctedIndices);
   }
 #ifdef NonhomogeneousField
   for(int iP=0; iP<10; iP++)
   {
     int iElement = 0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      float_v& vec = reinterpret_cast<float_v&>(fField[iP][iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      float32_v& vec = reinterpret_cast<float32_v&>(fField[iP][iElement]);
       vec.gather(&(track.fField[iP][0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    float_v& vec = reinterpret_cast<float_v&>(fField[iP][iElement]);
-    vec.gather(&(track.fField[iP][0]), index, simd_cast<float_m>(iElement+uint_v::IndexesFromZero()<nIndexes)); 
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    float32_v& vec = reinterpret_cast<float32_v&>(fField[iP][iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fField[iP][0]), correctedIndices); 
   }
 #endif
   {
     int iElement=0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      int_v& vec = reinterpret_cast<int_v&>(fId[iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      int32_v& vec = reinterpret_cast<int32_v&>(fId[iElement]);
       vec.gather(&(track.fId[0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    int_v& vec = reinterpret_cast<int_v&>(fId[iElement]);
-    vec.gather(&(track.fId[0]), index, int_m(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    int32_v& vec = reinterpret_cast<int32_v&>(fId[iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fId[0]), correctedIndices);
   }
   {
     int iElement=0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      int_v& vec = reinterpret_cast<int_v&>(fPDG[iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      int32_v& vec = reinterpret_cast<int32_v&>(fPDG[iElement]);
       vec.gather(&(track.fPDG[0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    int_v& vec = reinterpret_cast<int_v&>(fPDG[iElement]);
-    vec.gather(&(track.fPDG[0]), index, int_m(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    int32_v& vec = reinterpret_cast<int32_v&>(fPDG[iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fPDG[0]), correctedIndices);
   }
   {
     int iElement=0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      int_v& vec = reinterpret_cast<int_v&>(fQ[iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      int32_v& vec = reinterpret_cast<int32_v&>(fQ[iElement]);
       vec.gather(&(track.fQ[0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    int_v& vec = reinterpret_cast<int_v&>(fQ[iElement]);
-    vec.gather(&(track.fQ[0]), index, int_m(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    int32_v& vec = reinterpret_cast<int32_v&>(fQ[iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fQ[0]), correctedIndices);
   }
   {
     int iElement=0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      int_v& vec = reinterpret_cast<int_v&>(fPVIndex[iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      int32_v& vec = reinterpret_cast<int32_v&>(fPVIndex[iElement]);
       vec.gather(&(track.fPVIndex[0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    int_v& vec = reinterpret_cast<int_v&>(fPVIndex[iElement]);
-    vec.gather(&(track.fPVIndex[0]), index, int_m(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    int32_v& vec = reinterpret_cast<int32_v&>(fPVIndex[iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fPVIndex[0]), correctedIndices);
   }
   {
     int iElement=0;
-    for(iElement=0; iElement<nIndexes-float_vLen; iElement += float_vLen)
+    for(iElement=0; iElement<nIndexes-SimdLen; iElement += SimdLen)
     {
-      const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-      int_v& vec = reinterpret_cast<int_v&>(fNPixelHits[iElement]);
+      const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+      int32_v& vec = reinterpret_cast<int32_v&>(fNPixelHits[iElement]);
       vec.gather(&(track.fNPixelHits[0]), index);
     }
-    const uint_v& index = reinterpret_cast<const uint_v&>(trackIndex[iElement]);
-    int_v& vec = reinterpret_cast<int_v&>(fNPixelHits[iElement]);
-    vec.gather(&(track.fNPixelHits[0]), index, int_m(iElement+uint_v::IndexesFromZero()<nIndexes));
+    const int32_v& index = reinterpret_cast<const int32_v&>(trackIndex[iElement]);
+    int32_v& vec = reinterpret_cast<int32_v&>(fNPixelHits[iElement]);
+    const int32_v correctedIndices = select(int32_v::indicesSequence(iElement)<nIndexes, index, 0);
+    vec.gather(&(track.fNPixelHits[0]), correctedIndices);
   }
 }
+#else
+void KFPTrackVector::SetTracks(const KFPTrackVector& track, const kfvector_int& trackIndex, const int nIndexes)
+{
+  /** The current object is resised to "nIndexes", tracks with indices "trackIndex" are copied to the current object.
+   ** \param[in] track - input vector of tracks
+   ** \param[in] trackIndex - indices of tracks in a vector "track", which should be stored to the current object
+   ** \param[in] nIndexes - number of tracks to be copied, defines the new size of the current object
+   **/
+  if(nIndexes == 0) return;
+  
+  Resize(nIndexes);
 
-void KFPTrackVector::RotateXY( float_v alpha, int firstElement )
+  for(int iP=0; iP<6; iP++)
+  {
+    for(int iElement=0; iElement<nIndexes; iElement++)
+    {
+      fP[iP][iElement] = track.fP[iP][trackIndex[iElement]];
+    }
+  }
+  for(int iC=0; iC<21; iC++)
+  {
+    for(int iElement=0; iElement<nIndexes; iElement++)
+    {
+      fC[iC][iElement] = track.fC[iC][trackIndex[iElement]];
+    }
+  }
+#ifdef NonhomogeneousField
+  for(int iF=0; iF<10; iF++)
+  {
+    for(int iElement=0; iElement<nIndexes; iElement++)
+    {
+      fField[iF][iElement] = track.fField[iF][trackIndex[iElement]];
+    }
+  }
+#endif
+  for(int iElement=0; iElement<nIndexes; iElement++)
+  {
+    fId[iElement] = track.fId[trackIndex[iElement]];
+  }
+  for(int iElement=0; iElement<nIndexes; iElement++)
+  {
+    fPDG[iElement] = track.fPDG[trackIndex[iElement]];
+  }
+  for(int iElement=0; iElement<nIndexes; iElement++)
+  {
+    fQ[iElement] = track.fQ[trackIndex[iElement]];
+  }
+  for(int iElement=0; iElement<nIndexes; iElement++)
+  {
+    fPVIndex[iElement] = track.fPVIndex[trackIndex[iElement]];
+  }
+  for(int iElement=0; iElement<nIndexes; iElement++)
+  {
+    fNPixelHits[iElement] = track.fNPixelHits[trackIndex[iElement]];
+  }
+}
+#endif
+
+void KFPTrackVector::RotateXY( float32_v alpha, int firstElement )
 {
   /** Rotates SIMD vector of tracks starting from the position "firstElement" onto the angles "alpha" in the XY plane.
    ** Rotation matrix is:
@@ -204,57 +270,57 @@ void KFPTrackVector::RotateXY( float_v alpha, int firstElement )
    ** \param[in] firstElement - track index, starting from which SIMD vector of tracks will be rotated
    **/
   
-  float_v cA, sA;
+  float32_v cA, sA;
   KFPMath::sincos(alpha, sA, cA);
 
-  const float_v xInit = reinterpret_cast<const float_v&>(fP[0][firstElement]);
-  const float_v yInit = reinterpret_cast<const float_v&>(fP[1][firstElement]);
+  const float32_v xInit = reinterpret_cast<const float32_v&>(fP[0][firstElement]);
+  const float32_v yInit = reinterpret_cast<const float32_v&>(fP[1][firstElement]);
 
-  float_v& x = reinterpret_cast<float_v&>(fP[0][firstElement]);
-  float_v& y = reinterpret_cast<float_v&>(fP[1][firstElement]);
+  float32_v& x = reinterpret_cast<float32_v&>(fP[0][firstElement]);
+  float32_v& y = reinterpret_cast<float32_v&>(fP[1][firstElement]);
   
   x = -(xInit*sA +  yInit*cA);
   y = xInit*cA -  yInit*sA;
 
-  const float_v pxInit = reinterpret_cast<const float_v&>(fP[3][firstElement]);
-  const float_v pyInit = reinterpret_cast<const float_v&>(fP[4][firstElement]);
+  const float32_v pxInit = reinterpret_cast<const float32_v&>(fP[3][firstElement]);
+  const float32_v pyInit = reinterpret_cast<const float32_v&>(fP[4][firstElement]);
 
-  float_v& px = reinterpret_cast<float_v&>(fP[3][firstElement]);
-  float_v& py = reinterpret_cast<float_v&>(fP[4][firstElement]);
+  float32_v& px = reinterpret_cast<float32_v&>(fP[3][firstElement]);
+  float32_v& py = reinterpret_cast<float32_v&>(fP[4][firstElement]);
   
   px = -(pxInit*sA +  pyInit*cA);
   py = pxInit*cA -  pyInit*sA;
 
-  float_v cov[21];
+  float32_v cov[21];
   for(int iC=0; iC<21; iC++)
-    cov[iC] = reinterpret_cast<const float_v&>(fC[iC][firstElement]);
+    cov[iC] = reinterpret_cast<const float32_v&>(fC[iC][firstElement]);
 
-  reinterpret_cast<float_v&>(fC[0][firstElement]) = cA*cA*  cov[2] + 2* cA* cov[1]* sA + cov[0]*sA* sA;
+  reinterpret_cast<float32_v&>(fC[0][firstElement]) = cA*cA*  cov[2] + 2* cA* cov[1]* sA + cov[0]*sA* sA;
   
-  reinterpret_cast<float_v&>(fC[1][firstElement]) = -(cA*cA * cov[1]) + cA* (-cov[0] + cov[2])* sA + cov[1]*sA* sA;
-  reinterpret_cast<float_v&>(fC[2][firstElement]) = cA*cA*  cov[0] - 2* cA* cov[1]* sA + cov[2]*sA* sA; 
+  reinterpret_cast<float32_v&>(fC[1][firstElement]) = -(cA*cA * cov[1]) + cA* (-cov[0] + cov[2])* sA + cov[1]*sA* sA;
+  reinterpret_cast<float32_v&>(fC[2][firstElement]) = cA*cA*  cov[0] - 2* cA* cov[1]* sA + cov[2]*sA* sA; 
   
-  reinterpret_cast<float_v&>(fC[3][firstElement]) = -(cA* cov[4]) - cov[3]* sA;
-  reinterpret_cast<float_v&>(fC[4][firstElement]) = cA* cov[3] - cov[4]* sA;
-//  reinterpret_cast<float_v&>(fC[5][firstElement]) = cov[5]; 
+  reinterpret_cast<float32_v&>(fC[3][firstElement]) = -(cA* cov[4]) - cov[3]* sA;
+  reinterpret_cast<float32_v&>(fC[4][firstElement]) = cA* cov[3] - cov[4]* sA;
+//  reinterpret_cast<float32_v&>(fC[5][firstElement]) = cov[5]; 
   
-  reinterpret_cast<float_v&>(fC[6][firstElement]) = cA*cA*  cov[11] + cA *(cov[10] + cov[7])* sA + cov[6]*sA* sA;
-  reinterpret_cast<float_v&>(fC[7][firstElement]) = -(cA*cA * cov[10]) + cA* (cov[11] - cov[6])* sA + cov[7] *sA*sA;
-  reinterpret_cast<float_v&>(fC[8][firstElement]) = -(cA *cov[12]) - cov[8] *sA;
-  reinterpret_cast<float_v&>(fC[9][firstElement]) = cA*cA*  cov[14] + 2 *cA* cov[13]* sA + cov[9]* sA*sA;
+  reinterpret_cast<float32_v&>(fC[6][firstElement]) = cA*cA*  cov[11] + cA *(cov[10] + cov[7])* sA + cov[6]*sA* sA;
+  reinterpret_cast<float32_v&>(fC[7][firstElement]) = -(cA*cA * cov[10]) + cA* (cov[11] - cov[6])* sA + cov[7] *sA*sA;
+  reinterpret_cast<float32_v&>(fC[8][firstElement]) = -(cA *cov[12]) - cov[8] *sA;
+  reinterpret_cast<float32_v&>(fC[9][firstElement]) = cA*cA*  cov[14] + 2 *cA* cov[13]* sA + cov[9]* sA*sA;
 
-  reinterpret_cast<float_v&>(fC[10][firstElement]) = -(cA*cA*  cov[7]) + cA* (cov[11] - cov[6])* sA + cov[10]*sA* sA; 
-  reinterpret_cast<float_v&>(fC[11][firstElement]) = cA*cA*  cov[6] - cA* (cov[10] + cov[7]) *sA + cov[11]*sA* sA;
-  reinterpret_cast<float_v&>(fC[12][firstElement]) = cA* cov[8] - cov[12]* sA; 
-  reinterpret_cast<float_v&>(fC[13][firstElement]) = -(cA*cA*  cov[13]) + cA* (cov[14] - cov[9])* sA + cov[13]* sA*sA;
-  reinterpret_cast<float_v&>(fC[14][firstElement]) = cA*cA*  cov[9] - 2* cA* cov[13]* sA + cov[14]* sA*sA;
+  reinterpret_cast<float32_v&>(fC[10][firstElement]) = -(cA*cA*  cov[7]) + cA* (cov[11] - cov[6])* sA + cov[10]*sA* sA; 
+  reinterpret_cast<float32_v&>(fC[11][firstElement]) = cA*cA*  cov[6] - cA* (cov[10] + cov[7]) *sA + cov[11]*sA* sA;
+  reinterpret_cast<float32_v&>(fC[12][firstElement]) = cA* cov[8] - cov[12]* sA; 
+  reinterpret_cast<float32_v&>(fC[13][firstElement]) = -(cA*cA*  cov[13]) + cA* (cov[14] - cov[9])* sA + cov[13]* sA*sA;
+  reinterpret_cast<float32_v&>(fC[14][firstElement]) = cA*cA*  cov[9] - 2* cA* cov[13]* sA + cov[14]* sA*sA;
   
-  reinterpret_cast<float_v&>(fC[15][firstElement]) = -(cA* cov[16]) - cov[15]* sA;
-  reinterpret_cast<float_v&>(fC[16][firstElement]) = cA* cov[15] - cov[16]* sA;
-//  reinterpret_cast<float_v&>(fC[17][firstElement]) = cov[17]; 
-  reinterpret_cast<float_v&>(fC[18][firstElement]) = -(cA* cov[19]) - cov[18]* sA;
-  reinterpret_cast<float_v&>(fC[19][firstElement]) = cA* cov[18] - cov[19]* sA;
-//  reinterpret_cast<float_v&>(fC[20][firstElement]) = cov[20];
+  reinterpret_cast<float32_v&>(fC[15][firstElement]) = -(cA* cov[16]) - cov[15]* sA;
+  reinterpret_cast<float32_v&>(fC[16][firstElement]) = cA* cov[15] - cov[16]* sA;
+//  reinterpret_cast<float32_v&>(fC[17][firstElement]) = cov[17]; 
+  reinterpret_cast<float32_v&>(fC[18][firstElement]) = -(cA* cov[19]) - cov[18]* sA;
+  reinterpret_cast<float32_v&>(fC[19][firstElement]) = cA* cov[18] - cov[19]* sA;
+//  reinterpret_cast<float32_v&>(fC[20][firstElement]) = cov[20];
 } // RotateXY
 
 

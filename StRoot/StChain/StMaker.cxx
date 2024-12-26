@@ -25,6 +25,7 @@
 
 #include "TROOT.h"
 #include "TError.h"
+#include "TEnv.h"
 #if 0
 #include "THtml.h"
 #endif

@@ -39,12 +39,9 @@
 #include <stdio.h>
 #include "TROOT.h"
 #include "TError.h"
+#include "TEnv.h"
 #include "TBrowser.h"
 #include "TBenchmark.h"
-#if 0
-#include <sys/times.h>
-#include <time.h>
-#endif
 #include "TSystem.h"
 #include "StChain.h"
 #include "StEvtHddr.h"
