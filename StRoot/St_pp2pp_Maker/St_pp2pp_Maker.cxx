@@ -751,15 +751,15 @@ Int_t St_pp2pp_Maker::MakeClusters() {
       if(trg_p){ 
 
 	if ( mVersion == 1 ) {  // 2009
-	  pp2ppColl->romanPot(i)->setAdc((uint32_t) trg_p->pp2ppADC( (StBeamDirection) EW[i],VH[i],UDOI[i],0),/// uint16_t -> uint32_t
+	  pp2ppColl->romanPot(i)->setAdc((uint32_t) trg_p->pp2ppADC( (StBeamDirection) EW[i],VH[i],UDOI[i],0),/// UShort_t -> uint32_t
 					 (uint32_t) trg_p->pp2ppADC( (StBeamDirection) EW[i],VH[i],UDOI[i],1) ); 
-	  pp2ppColl->romanPot(i)->setTac((uint32_t) trg_p->pp2ppTAC( (StBeamDirection) EW[i],VH[i],UDOI[i],0),/// uint16_t -> uint32_t
+	  pp2ppColl->romanPot(i)->setTac((uint32_t) trg_p->pp2ppTAC( (StBeamDirection) EW[i],VH[i],UDOI[i],0),/// UShort_t -> uint32_t
 					 (uint32_t) trg_p->pp2ppTAC( (StBeamDirection) EW[i],VH[i],UDOI[i],1) ); 
 	}
 	else { // >= 2015
-	  pp2ppColl->romanPot(i)->setAdc((uint32_t) trg_p->pp2ppADC( (StBeamDirection) EW[i],VH[i],UD[i],0),/// uint16_t -> uint32_t
+	  pp2ppColl->romanPot(i)->setAdc((uint32_t) trg_p->pp2ppADC( (StBeamDirection) EW[i],VH[i],UD[i],0),/// UShort_t -> uint32_t
 					 (uint32_t) trg_p->pp2ppADC( (StBeamDirection) EW[i],VH[i],UD[i],1) ); 
-	  pp2ppColl->romanPot(i)->setTac((uint32_t) trg_p->pp2ppTAC( (StBeamDirection) EW[i],VH[i],UD[i],0),/// uint16_t -> uint32_t
+	  pp2ppColl->romanPot(i)->setTac((uint32_t) trg_p->pp2ppTAC( (StBeamDirection) EW[i],VH[i],UD[i],0),/// UShort_t -> uint32_t
 					 (uint32_t) trg_p->pp2ppTAC( (StBeamDirection) EW[i],VH[i],UD[i],1) ); 	  
 	}
 

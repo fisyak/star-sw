@@ -51,7 +51,7 @@ public:
     
     const char* getTriggerName(int i){return mTrgIdName[i].Data();}
 
-    template<typename T>  void feedADC(T* hit, int ns, int ehp, uint16_t data_array[]);
+    template<typename T>  void feedADC(T* hit, int ns, int ehp, UShort_t data_array[]);
 
     //this is for just running stage2 from macro
     void runStage2(link_t ecal[], link_t hcal[], link_t pres[], geom_t &geo, link_t output[], unsigned short& dsm,

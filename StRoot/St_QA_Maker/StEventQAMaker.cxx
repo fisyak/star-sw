@@ -188,7 +188,7 @@ Int_t StEventQAMaker::Make() {
     }
     BookHistTrigger();
   }
-  uint64_t tword = 0;
+  ULong64_t tword = 0;
   Bool_t doEvent = kTRUE;
   Int_t evClasses[32];
   memset(evClasses,0,32*sizeof(Int_t));

@@ -65,7 +65,7 @@ namespace {
   uint32_t fcs_trg_sim_adc[kMaxNS][kMaxDet][kMaxDep][kMaxCh] ;
   float    fcs_trg_pt_correction[kMaxNS][kMaxDet][kMaxDep][kMaxCh];
   float    fcs_trg_gain_correction[kMaxNS][kMaxDet][kMaxDep][kMaxCh];
-  uint16_t fcs_trg_pedestal[kMaxNS][kMaxDet][kMaxDep][kMaxCh] ;
+  UShort_t fcs_trg_pedestal[kMaxNS][kMaxDet][kMaxDep][kMaxCh] ;
 
   static const int mNTRG=21;
   static const char* ctrg[mNTRG]={"JP2", "JPA1", "JPA0", "JPBC1", "JPBC0", "JPDE1", "JPDE0",
@@ -306,7 +306,7 @@ int StFcsTriggerSimMaker::Make(){
     mTrgSim->start_event();
 
     //Feed ADC
-    static uint16_t data[8]; 
+    static UShort_t data[8]; 
     memset(data,0,sizeof(data)) ;
     memset(fcs_trg_sim_adc,0,sizeof(fcs_trg_sim_adc));
     int n=0;
@@ -350,7 +350,7 @@ int StFcsTriggerSimMaker::Make(){
     LOG_INFO << Form("StFcsTriggerSimMaker feeded %d hits",n) << endm;;
 
     //Run Trigger Simulation
-    //   uint16_t dsm_out = fcs_trg_run(mTrgSelect, mDebug);
+    //   UShort_t dsm_out = fcs_trg_run(mTrgSelect, mDebug);
     uint32_t dsm_out = mTrgSim->end_event();
     LOG_INFO << Form("AAA dsmout=%08x",dsm_out)<<endm;
   
@@ -759,7 +759,7 @@ void StFcsTriggerSimMaker::readThresholdDb(){
   //to be implemented before run22 online DB moves to offline  
 }
 
-template<typename T> void StFcsTriggerSimMaker::feedADC(T* hit, int ns, int ehp, uint16_t data_array[]){
+template<typename T> void StFcsTriggerSimMaker::feedADC(T* hit, int ns, int ehp, UShort_t data_array[]){
     
     unsigned short dep = hit->dep();
     unsigned short ch  = hit->channel();
