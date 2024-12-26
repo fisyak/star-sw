@@ -349,6 +349,9 @@
  $CERNLIBS =~ s/$strip//g     if ($strip ne "");
  #	$CERNLIBS =~ s/lib /lib64 /g if ($USE_64BITS);
  chop($CERNLIBS);
+ if ( $STAR_HOST_SYS =~ /al92/ ) {
+   $CERNLIBS =~ s#-lnsl##;
+ }
  if ( $STAR_HOST_SYS !~ /darwin/ ) {
    $CERNLIBS =~ s#lX11#L/usr/X11R6/$LLIB -lX11#;
  }
@@ -453,13 +456,13 @@
  $CERNINO =  $CERN_ROOT . "/include";
  if ($CPPPATH) {$CPPPATH .= $main::PATH_SEPARATOR;}
  $CPPPATH .= "#".  $main::PATH_SEPARATOR . "#StRoot" .  $main::PATH_SEPARATOR . $INCLUDE;# . $main::PATH_SEPARATOR . $ROOTSRC;# . $main::PATH_SEPARATOR . "#";
- $CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";
- if ($XOPTSTAR ne $OPTSTAR) {
-   $CPPPATH .= $main::PATH_SEPARATOR . $OPTSTAR . "/include";
- }
  $CPPPATH .= $main::PATH_SEPARATOR . $ROOTSRC;
+ if (-r $XOPTSTAR . "/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";}
+#  if ($XOPTSTAR ne $OPTSTAR) {
+#    $CPPPATH .= $main::PATH_SEPARATOR . $OPTSTAR . "/include";
+#  }
  #    $CPPPATH .= $main::PATH_SEPARATOR ."#";# . $CERNINO;
- 
+ if (-r $XOPTSTAR . "/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";}
  my $pwd = cwd();
  my $path2bin = $pwd . "/." . $STAR_HOST_SYS . "/bin";
  if ($PATH !~ /$STAR_BIN/) {$PATH = $STAR_BIN . ":" . $PATH;}
@@ -625,27 +628,37 @@
    }
  }
  # spack
- $spack_Dir = $SPACK_ENV . "/.spack-env/view";
- $spackINCDIR = "";
- $spackLIBDIR = "";
- $spackLIBS = "";
- if (-d $spack_Dir) {
-   $spackINCDIR = $spack_Dir . "/include";
-   $spackLIBDIR = $spack_Dir . "/lib";
-   $spackLIBS   = "";
+ my $SPACK_PREFIX = $CMAKE_PREFIX_PATH;
+ my $spackINCDIR  = ""; 
+ my $spackLIBDIR  = ""; 
+ my $spackBINDIR  = ""; 
+ if ( $SPACK_PREFIX) {
+   if (-r $SPACK_PREFIX . "/include") {$spackINCDIR  = $SPACK_PREFIX . "/include";}  
+   if (-r $SPACK_PREFIX . "/lib64")   {$spackLIBDIR  = $SPACK_PREFIX . "/lib64" . $main::PATH_SEPARATOR . $SPACK_PREFIX . "/lib";
+#   print "============================================================ spackLIBDIR = $spackLIBDIR\n";
+   } elsif (-r $SPACK_PREFIX . "/lib")     {$spackLIBDIR  = $SPACK_PREFIX . "/lib";}	  
+   if (-r $SPACK_PREFIX . "/bin")     {$spackBINDIR  = $SPACK_PREFIX . "/bin";}      
+   if ($spackINCDIR) {$CPPPATH .= $main::PATH_SEPARATOR . $spackINCDIR;}
+#   print "`============================================================ spackLIBDIR = $spackLIBDIR\n";
  }
  # Logger
- $LoggerDir = $XOPTSTAR . "/include/log4cxx";
+# $LoggerDir = $XOPTSTAR . "/include/log4cxx";
+ my ($LoggerLIBDIR, $LoggerLIBS, $LoggerDir, $LoggerINCDIR) = script::find_lib_bin_inc($XOPTSTAR . " " . $SPACK_PREFIX, "liblog4cxx");
  if (-d $LoggerDir) {
-   $LoggerINCDIR = $XOPTSTAR . "/include";
-   $LoggerLIBDIR = $XOPTSTAR . "/lib";
-   $LoggerLIBS   = "-llog4cxx";
+#    $LoggerINCDIR = $XOPTSTAR . "/include";
+#    $LoggerLIBDIR = $XOPTSTAR . "/lib";
+#    $LoggerLIBS   = "-llog4cxx";
+   $LoggerINCDIR .= "/log4cxx";
    if ($STAR_HOST_SYS =~ /darwin/) {$LoggerLIBS .= " -lstdc++";}
    print
      "Use Logger  ",
        "LIBDIR = $LoggerLIBDIR \tLoggerINCDIR = $LoggerINCDIR \tLoggerLIBS = $LoggerLIBS\n"
 	 if $LoggerLIBDIR && ! $param::quiet;
  }
+ # Vc
+ my ($VcLIBDIR, $VcLIBS, $VcDir, $VcINCDIR) = script::find_lib_bin_inc($XOPTSTAR . " " . $SPACK_PREFIX . " " . $ROOTSYS, "libVc");
+ # fastjet
+ my ($fastjetLIBDIR, $fastjetLIBS, $fastjetDir, $fastjetINCDIR) = script::find_lib_bin_inc($XOPTSTAR . " " . $SPACK_PREFIX, "libfastjet");
  # xml2
  my  ($XMLINCDIR,$XMLLIBDIR,$XMLLIBS) = ("","","");
  my ($xml) =  script::find_lib($XOPTSTAR . "/bin /usr/bin",
@@ -784,9 +797,9 @@
 	       'LIBS'           => $LIBS,
 	       'LD'             => $LD,
 	       'LDFLAGS'        => $LDFLAGS,
-	      'LDEXPORT'       => $LDEXPORT,
-	      'LDALL'	   => $LDALL,
-	       'LDNONE'	   => $LDNONE,
+  	       'LDEXPORT'       => $LDEXPORT,
+	       'LDALL'	        => $LDALL,
+	       'LDNONE'	        => $LDNONE,
 	       'EXTRA_LDFLAGS'  => $EXTRA_LDFLAGS,
 	       'F77LD'          => $F77LD,
 	       'F77LDFLAGS'     => $F77LDFLAGS,
@@ -923,10 +936,21 @@
 					   'LIBDIR'=> $LoggerLIBDIR,
 					   'LIBS'  => $LoggerLIBS
 					   },
+			      'Vc' => {
+					   'INCDIR'=> $VcINCDIR,
+					   'LIBDIR'=> $VcLIBDIR,
+					   'LIBS'  => $VcLIBS
+					  },
+			      'fastjet' => {
+					   'INCDIR'=> $fastjetINCDIR,
+					   'LIBDIR'=> $fastjetLIBDIR,
+					   'LIBS'  => $fastjetLIBS
+					  },
 			      'spack' => {
+					   'PREFIX'=> $SPACK_PREFIX,
 					   'INCDIR'=> $spackINCDIR,
 					   'LIBDIR'=> $spackLIBDIR,
-					   'LIBS'  => $spackLIBS
+					   'BINDIR'=> $spackBINDIR
 					  },
 			     }
 	      );
@@ -950,6 +974,45 @@ sub find_lib {
 	$k =~ s/^lib/-l/;
 	$k =~ s/\.(so|lib|a)$//;
 	return ($i,$k);
+      }
+    }
+  }
+  print "Can't find @libs in @libsdirs\n";
+}
+#________________________________________________________________________________
+sub find_lib_bin_inc {
+  my $debug = 0;
+  my @libsdirs = split ' ',shift;  print "libsdirs: @libsdirs\n" if ($debug);
+  my @libs     = split ' ',shift;  print "libs: @libs\n" if ($debug);
+  my @libexts  = ("",".so", ".sl", ".a", ".lib");
+  my $incdir  = "";
+  my $libdir  = "";
+  my $bindir  = "";
+  my $lib     = "";
+  foreach my $prefix (@libsdirs) {
+    print "prefix = $prefix" if ($debug);
+    if (! -r $prefix) {print " is not readble\n" if $debug; next;}
+    print " is readble\n" if $debug;
+    my $l = $prefix . "/lib";
+    if (! -r $l) {print "$l is not readble\n" if $debug; next;}
+    print "$l is readble\n" if $debug;
+    $libdir = $l;
+    $l = $prefix . "/bin";
+    if (! -r $l) {print "$l is not readble\n" if $debug;}
+    else {$bindir = $l;}
+    $l = $prefix . "/include";
+    if (! -r $l) {print "$l is not readble\n" if $debug;}
+    else {$incdir = $l;}
+    foreach my $j (@libs) {
+      foreach my $ext (@libexts) {
+	$l = $libdir . "/" . $j . $ext;;# print "l = $l\n";
+	if (! -r $l) { print "$l is not readble\n" if $debug; next;}
+	print "$l is readble\n" if $debug;
+	my $lib = $j;
+	$lib =~ s/^lib/-l/;
+	$lib =~ s/\.(so|lib|a)$//;
+	print "return (libdir = $libdir,\n lib = $lib,\n prefix = $prefix,\n incdir = $incdir,\n bindir = $bindir)\n" if $debug;
+	return ($libdir,$lib,$prefix,$incdir,$bindir);
       }
     }
   }
