@@ -51,9 +51,9 @@ public:
   static size_t uuid( StFttCluster * c ) ;
 
   // HARDWARE Mapping StFttRawHits
-    uint16_t packKey( int feb, int vmm, int ch ) const;
+    UShort_t packKey( int feb, int vmm, int ch ) const;
     void unpackKey( int key, int &feb, int &vmm, int &ch ) const;
-    uint16_t packVal( int row, int strip ) const;
+    UShort_t packVal( int row, int strip ) const;
     void unpackVal( int val, int &row, int &strip ) const;
     void loadHardwareMapFromFile( std::string fn );
     void loadHardwareMapFromDb( St_fttHardwareMap * );
@@ -152,10 +152,10 @@ public:
   TimeCutMode mTimeCutMode;
   int mTimeCutLow, mTimeCutHigh;
 
-    std :: map< uint16_t , uint16_t > mMap;
-    std :: map< uint16_t , uint16_t > rMap; // reverse map 
+    std :: map< UShort_t , UShort_t > mMap;
+    std :: map< UShort_t , UShort_t > rMap; // reverse map 
 
-    std :: map< uint16_t , FttDataWindow > dwMap;
+    std :: map< UShort_t , FttDataWindow > dwMap;
 
   ClassDef(StFttDb,1)   //StAF chain virtual base class for Makers        
 };

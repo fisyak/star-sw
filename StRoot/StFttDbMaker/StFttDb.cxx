@@ -73,7 +73,7 @@ size_t StFttDb::uuid( StFttCluster * c ) {
 }
 
 
-uint16_t StFttDb::packKey( int feb, int vmm, int ch ) const{
+UShort_t StFttDb::packKey( int feb, int vmm, int ch ) const{
     // feb = [1 - 6] = 3 bits
     // vmm = [1 - 4] = 3 bits
     // ch  = [1 - 64] = 7 bits
@@ -85,7 +85,7 @@ void StFttDb::unpackKey( int key, int &feb, int &vmm, int &ch ) const{
     ch  = (key >> 6) & 0b1111111;
     return;
 }
-uint16_t StFttDb::packVal( int row, int strip ) const{
+UShort_t StFttDb::packVal( int row, int strip ) const{
     // row = [1 - 4] = 3 bits
     // strip = [1 - 152] = 8 bits
     return row + ( strip << 3 );
@@ -110,8 +110,8 @@ void StFttDb::loadDataWindowsFromDb( St_fttDataWindows * dataset ) {
                 // printf( "[feb=%d, vmm=%d, ch=%d] ==> [row=%d, strip%d]\n", table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j], table[i].row[j], table[i].strip[j] );
 
 
-                // uint16_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
-                // uint16_t val = packVal( table[i].row[j], table[i].strip[j] );
+                // UShort_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
+                // UShort_t val = packVal( table[i].row[j], table[i].strip[j] );
                 // mMap[ key ] = val;
                 // rMap[ val ] = key;
                 FttDataWindow fdw;
@@ -151,8 +151,8 @@ void StFttDb::loadHardwareMapFromDb( St_fttHardwareMap * dataset ) {
         fttHardwareMap_st *table = dataset->GetTable();
         for (Int_t i = 0; i < rows; i++) {
             for ( int j = 0; j < 1250; j++ ) {
-                uint16_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
-                uint16_t val = packVal( table[i].row[j], table[i].strip[j] );
+                UShort_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
+                UShort_t val = packVal( table[i].row[j], table[i].strip[j] );
                 mMap[ key ] = val;
                 rMap[ val ] = key;
             }
@@ -185,11 +185,11 @@ void StFttDb::loadHardwareMapFromFile( std::string fn ){
         puts("");
     }
     
-    uint16_t row, feb, vmm, ch, strip;
+    UShort_t row, feb, vmm, ch, strip;
     while( inf >> row >> feb >> vmm >> ch >> strip ){
         // pack the key (feb, vmm, ch)
-        uint16_t key = packKey( feb, vmm, ch );
-        uint16_t val = packVal( row, strip );
+        UShort_t key = packKey( feb, vmm, ch );
+        UShort_t val = packVal( row, strip );
         mMap[ key ] = val;
         rMap[ val ] = key;
         if ( mDebug ){
@@ -269,9 +269,9 @@ UChar_t StFttDb::getOrientation( int rob, int feb, int vmm, int row ) const {
  *
  */
 bool StFttDb::hardwareMap( int rob, int feb, int vmm, int ch, int &row, int &strip, UChar_t &orientation ) const{
-    uint16_t key = packKey( feb, vmm, ch );
+    UShort_t key = packKey( feb, vmm, ch );
     if ( mMap.count( key ) ){
-        uint16_t val = mMap.at( key );
+        UShort_t val = mMap.at( key );
         unpackVal( val, row, strip );
         orientation = getOrientation( rob, feb, vmm, row );
         return true;
@@ -280,9 +280,9 @@ bool StFttDb::hardwareMap( int rob, int feb, int vmm, int ch, int &row, int &str
 }
 
 bool StFttDb::hardwareMap( StFttRawHit * hit ) const{
-    uint16_t key = packKey( hit->feb()+1, hit->vmm()+1, hit->channel() );
+    UShort_t key = packKey( hit->feb()+1, hit->vmm()+1, hit->channel() );
     if ( mMap.count( key ) ){
-        uint16_t val = mMap.at( key );
+        UShort_t val = mMap.at( key );
         int row=-1, strip=-1;
         unpackVal( val, row, strip );
         
