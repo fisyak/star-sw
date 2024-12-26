@@ -43,7 +43,7 @@
 #include "AliHLTTPCCATrackLinearisation.h"
 
 // ---
-#include "AliHLTTPCCAPerformance.h"
+#include "TPCCATrackerPerformance/AliHLTTPCCAPerformance.h"
 #include "AliHLTTPCCAGBTracker.h"
 // ---
 
