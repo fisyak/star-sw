@@ -14,9 +14,9 @@
 #include "AliHLTTPCPerformanceBase.h"
 
 // #include "AliHLTTPCCADef.h"
-#include "AliHLTArray.h"
-#include "AliHLTTPCCAMCTrack.h"
-#include "AliHLTTPCCAMCPoint.h"
+//#include "AliHLTArray.h"
+//#include "AliHLTTPCCAMCTrack.h"
+//#include "AliHLTTPCCAMCPoint.h"
 
 #include <fstream>
 #include <cstdio>

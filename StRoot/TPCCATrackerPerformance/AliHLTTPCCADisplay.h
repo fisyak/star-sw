@@ -13,8 +13,8 @@
 #ifndef ALIHLTTPCCADISPLAY_H
 #define ALIHLTTPCCADISPLAY_H
 
-#include "AliHLTTPCCAParameters.h"
-#include "AliHLTArray.h"
+#include "TPCCATracker/AliHLTTPCCAParameters.h"
+#include "TPCCATracker/AliHLTArray.h"
 
 class AliHLTTPCCAGBTracker;
 class AliHLTTPCCATracker;

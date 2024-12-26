@@ -26,20 +26,20 @@
 
 //#define DRAW_3D // infrequent use for drawing 3D pictures
 
-#include "AliHLTTPCCATracker.h"
-#include "AliHLTTPCCAGBTracker.h"
-#include "AliHLTTPCCARow.h"
-#include "AliHLTTPCCATrack.h"
-#include "AliHLTTPCCAGBTrack.h"
-#include "AliHLTTPCCAGBHit.h"
+#include "TPCCATracker/AliHLTTPCCATracker.h"
+#include "TPCCATracker/AliHLTTPCCAGBTracker.h"
+#include "TPCCATracker/AliHLTTPCCARow.h"
+#include "TPCCATracker/AliHLTTPCCATrack.h"
+#include "TPCCATracker/AliHLTTPCCAGBTrack.h"
+#include "TPCCATracker/AliHLTTPCCAGBHit.h"
 #include "AliHLTTPCCAPerformance.h"
 #include "AliHLTTPCCAMCTrack.h"
-#include "AliHLTTPCCAOutTrack.h"
-#include "AliHLTTPCCAParam.h"
-#include "AliHLTTPCCASliceOutput.h"
-#include "AliHLTTPCCAClusterData.h"
-#include "AliHLTTPCCATrack.h"
-
+#include "TPCCATracker/AliHLTTPCCAOutTrack.h"
+#include "TPCCATracker/AliHLTTPCCAParam.h"
+#include "TPCCATracker/AliHLTTPCCASliceOutput.h"
+#include "TPCCATracker/AliHLTTPCCAClusterData.h"
+#include "TPCCATracker/AliHLTTPCCATrack.h"
+	  
 #include "TString.h"
 #include "Riostream.h"
 #include "TMath.h"

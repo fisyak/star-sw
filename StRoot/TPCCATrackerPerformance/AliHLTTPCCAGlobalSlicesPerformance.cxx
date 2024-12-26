@@ -27,14 +27,14 @@
 #include "AliHLTTPCCAGlobalSlicesPerformance.h"
 
 
-#include "AliHLTTPCCAGBHit.h"
+#include "TPCCATracker/AliHLTTPCCAGBHit.h"
 #include "AliHLTTPCCAMCTrack.h"
 #include "AliHLTTPCCAMCPoint.h"
-#include "AliHLTTPCCAOutTrack.h"
-#include "AliHLTTPCCAGBTrack.h"
-#include "AliHLTTPCCAGBTracker.h"
+#include "TPCCATracker/AliHLTTPCCAOutTrack.h"
+#include "TPCCATracker/AliHLTTPCCAGBTrack.h"
+#include "TPCCATracker/AliHLTTPCCAGBTracker.h"
 
-#include "AliHLTTPCCATracker.h"
+#include "TPCCATracker/AliHLTTPCCATracker.h"
 
 #ifndef HLTCA_STANDALONE
 #include "AliHLTTPCCADisplay.h"

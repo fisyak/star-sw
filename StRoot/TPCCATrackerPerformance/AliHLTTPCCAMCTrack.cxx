@@ -22,7 +22,7 @@
 
 
 #include "AliHLTTPCCAMCTrack.h"
-#include "AliHLTTPCCAMath.h"
+#include "TPCCATracker/AliHLTTPCCAMath.h"
 
 #ifndef HLTCA_STANDALONE
 #include "TParticle.h"

@@ -14,10 +14,10 @@
 
 #include "AliHLTTPCCASlicesPerformance.h"
 
-#include "AliHLTArray.h"
+#include "TPCCATracker/AliHLTArray.h"
 #include "AliHLTTPCCAMCTrack.h"
 #include "AliHLTTPCCAMCPoint.h"
-#include "AliHLTTPCCAGBTracker.h"
+#include "TPCCATracker/AliHLTTPCCAGBTracker.h"
 
   /**
    * @class AliHLTTPCCASlicesLinksPerformance

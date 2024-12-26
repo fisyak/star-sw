@@ -20,7 +20,7 @@
 //***************************************************************************
 
 #include "AliHLTTPCCAMCPoint.h"
-#include "AliHLTTPCCAMath.h"
+#include "TPCCATracker/AliHLTTPCCAMath.h"
 
 AliHLTTPCCAMCPoint::AliHLTTPCCAMCPoint()
     : fX( 0 ), fY( 0 ), fZ( 0 ), fSx( 0 ), fSy( 0 ), fSz( 0 ), fTime( 0 ), fISlice( 0 ), fTrackID( 0 )

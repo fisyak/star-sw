@@ -13,7 +13,7 @@
 
 #include "AliHLTTPCCATrackPerformanceBase.h"
 
-#include "AliHLTArray.h"
+#include "TPCCATracker/AliHLTArray.h"
 #include "AliHLTTPCCAMCTrack.h"
 #include "AliHLTTPCCAMCPoint.h"
 #include <fstream>

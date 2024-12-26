@@ -26,7 +26,7 @@
 #include "AliHLTTPCCASlicesPerformance.h"
 #include "AliHLTTPCCASlicesLinksPerformance.h"
 
-#include "AliHLTArray.h"
+#include "TPCCATracker/AliHLTArray.h"
 #include "AliHLTTPCCAMCTrack.h"
 #include "AliHLTTPCCAMCPoint.h"
 
