@@ -371,11 +371,13 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
 }
 //_____________________________________________________________________________
 Int_t StTpcDbMaker::Make(){
+#if 0
   // check that TPC is tripped 
   if (St_tpcAnodeHVavgC::instance()->tripped()) {
     gMessMgr->Info() << "StTpcDbMaker::TPC has tripped - declaring EOF to avoid possibly bad data" << endm;
     return kStEOF;
   }
+#endif
   StTpcDb::instance()->SetDriftVelocity();
   //  SetTpcRotations();
   return kStOK;

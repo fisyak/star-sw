@@ -65,8 +65,9 @@
 //#define V7	// Without V6(V6_1) options. [1 iteration CA] + [new 3-hit seeds (exV5)]
 
 
-
+#ifndef NDEBUG
 #define NDEBUG
+#endif
 #define USE_TIMERS
 
 // ----- Vc -----

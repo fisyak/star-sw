@@ -26,6 +26,7 @@
 #  setenv StarEndMakerShell
 # set sdt = ",sdt20200111.052520";
 #  set sdt = ",sdt20200718.045322";
+  set sdt = ",sdt20190225.202320"; # {"19GeV_2019",	              	     20190225, 202320, "y2019", "19GeV_2019"}, // 1st run = 20056032
 #  echo $Name | grep -i Ideal
 #  if ($?) set sdt = ",sdt20160301";
   set KFVertex = "";
@@ -33,7 +34,8 @@
   if (! $?) set KFVertex = ",KFVertex";
   if (! -r ${generF} ) then
 #    root.exe -q -b -x 'bfc.C(100,"In,P2019a,readAll,sdt20200111.052520,StiCA,StiKFVertex,-hitfilt,-geantOut,-evout,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco","'${file}'")' &gt;&amp; ${logName}
-   root.exe -q -b -x 'bfc.C(100,"genIn,MC.19GeV_2019,McTpcAna,-bbcSim,StiCA,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,NoHistos,noTags,noRunco,RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#   root.exe -q -b -x 'bfc.C(100,"genIn,MC.19GeV_2019,McTpcAna,-bbcSim,StiCA,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,NoHistos,noTags,noRunco,RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+   root.exe -q -b -x 'bfc.C(100,"genIn,MC.2019'${sdt}',McTpcAna,-bbcSim,StiCA,geantOut,evout,vmc,VMCAlignment,CorrZ,StiPulls,NoHistos,noTags,noRunco,RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->
