@@ -1,4 +1,5 @@
-#!/opt/star/bin/perl
+#!/usr/bin/env perl
+use Env;
 Import qw ( env INCLUDE LIB BIN BUILD OBJ);
 (my $build = $OBJ) =~ s/\#//g;
 $build =~ s/\\/\//g;
@@ -13,7 +14,21 @@ my $DIR = Cwd::cwd();
 my $YACC = "yacc";
 my $YACCLIB = "-ly";
 my $LEX  = "lex";
-my $LEXLIB = "-ll";
+#my $LIBPATH = $env->{LIBPATH}; print "`============================================================ LIBPATH = $LIBPATH\n";
+my $LIBPATH = $env->{Packages}->{spack}->{LIBDIR}; #print "`============================================================ LIBPATH = $LIBPATH\n";
+#my $LD_LIBRARY_PATH = $env->{ENV}->{LD_LIBRARY_PATH};
+#    print "LD_LIBRARY_PATH = $LD_LIBRARY_PATH\n";
+# my @words = split ':',$LD_LIBRARY_PATH;
+# # find spack path
+# foreach my $path (@words) {
+# #    print "path = $path\n";
+#     if ($path =~ /view/) {
+# 	$LIBPATH =  $path;
+# #	print "LIBPATH = $LIBPATH\n";
+# 	last;
+#     }
+# }
+my $LEXLIB = " -ll";
 my $CFLAGS = $env->{CFLAGS};# print "CFLAGS = $CFLAGS\n";
 $CFLAGS =~  s/\-m32//g;     # print "CFLAGS = $CFLAGS\n";
 my $LDFLAGS   = $env->{LDFLAGS};
@@ -23,6 +38,14 @@ if ($STAR_SYS =~ /i386/ or $STAR_SYS =~ /^sl5/) {
   $YACCLIB = "";
   $LEX = "flex";
   $LEXLIB = "-lfl";
+} elsif ($STAR_SYS =~ /^al/) {
+#  $LEXLIB = "-L" . $CMAKE_PREFIX_PATH . "/lib -lfl";
+#   if ($env->{Packages}->{spack}->{LIBDIR}) {
+#     $LIBPATH = "";
+#     $LEXLIB = $env->{Packages}->{spack}->{LIBDIR} . "/libfl.so.2";
+#   } else {
+    $LEXLIB = "-lfl";
+#   }
 }
 
 my $CXX_VERSION= $env->{CXX_VERSION};
@@ -44,7 +67,7 @@ $env2 = $env->clone('CPPPATH'      => $CPPPATH,
 		    'CFLAGS'       => $CFLAGS,
 		    'EXTRA_LDFLAGS'=> "",
 		    'Libraries'    => "",
-		    'LIBPATH'      => "",
+		    'LIBPATH'      => $LIBPATH,
 		    'LIBS'         => $LEXLIB);
 
 Depends $env2 'src/idl-yacc.c', 'src/idl-lex.c';
