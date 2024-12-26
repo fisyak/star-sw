@@ -56,6 +56,7 @@ Repository
 .cvsignore
 .svn
 .sl*
+.al*
 .rh*
 .amd64*
 .misc
