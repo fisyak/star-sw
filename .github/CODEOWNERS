@@ -120,7 +120,8 @@
 /StRoot/Stl3*                                      @jml985            @tonko-lj
 /StRoot/Stv*                                       @perevbnlgov
 /StRoot/StvUtil                                    @klendathu2k       @perevbnlgov
-/StRoot/TPCCATracker                               @fisyak      @R-Witt        @iraklic
+/StRoot/TPCCATracker*                              @fisyak      @R-Witt        @iraklic
+/StRoot/KFParticle*                                @fisyak      @R-Witt        @iraklic
 /StRoot/macros                                     @genevb            @plexoos     @fisyak      @R-Witt        @iraklic
 /StRoot/macros/embedding                           @zhux97
 /StRoot/macros/mudst                               @nigmatkulov       @plexoos

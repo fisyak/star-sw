@@ -18,7 +18,6 @@
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "TF1.h"
 #include "St_base/StMessMgr.h"
-#include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StBichsel/Bichsel.h"
 #include "StBichsel/StdEdxModel.h"
 #include "StBichsel/StdEdxPull.h"
