@@ -1875,7 +1875,7 @@ void StMuMcAnalysisMaker::FillKFVertexPlots(){
 		  cutVariables[particle.NDaughters()*nTrackCuts]   = particle.Chi2()/particle.NDF();
 		  
 		  KFParticleSIMD tempSIMDParticle(particle);
-		  float_v l,dl;
+		  float32_v l,dl;
 		  KFParticleSIMD pv(PrimVertex[0]);
 		  tempSIMDParticle.GetDistanceToVertexLine(pv, l, dl);
 		  cutVariables[particle.NDaughters()*nTrackCuts+1] = l[0]/dl[0];
