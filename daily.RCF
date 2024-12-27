@@ -3461,8 +3461,24 @@ g++ -pthread -m64 -fdiagnostics-color=always -msse4.2 -fPIC -Wno-misleading-inde
 -I/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/include 
 -c .al92_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx -o .al92_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.o
 
+================================================================================
+12/256/2024
 
 
+[rcas6006] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/StRoot/RTS/src/DAQ_TPC23 $ git diff .
+diff --git a/StRoot/RTS/src/DAQ_TPC23/tpc23_base.cxx b/StRoot/RTS/src/DAQ_TPC23/tpc23_base.cxx
+index 23b508da8d..5e53678cfb 100644
+--- a/StRoot/RTS/src/DAQ_TPC23/tpc23_base.cxx
++++ b/StRoot/RTS/src/DAQ_TPC23/tpc23_base.cxx
+@@ -1179,7 +1179,7 @@ int tpc23_base::row_stage1(int row)
+ #endif
+ 
+        if(blob_merges) {
+-               for(int i=0;i<blob_cou;i++) {
++               for(int i=1;i<blob_cou;i++) {
+                        int ix = blob_ix[i] ;
+ 
+                        if(ix==i) continue ;
 
 
 
