@@ -3,38 +3,49 @@
 #define __StMuMcTrack_h__
 #include "tables/St_g2t_track_Table.h" 
 #include "StThreeVectorF.hh"
-#ifdef __TFG__VERSION__
-#include "KFParticlePerformance/KFMCTrack.h"
-#endif /* __TFG__VERSION__ */
 class StMuMcTrack : public TObject {
  public:
   enum EHIT {ktpc, ksvt, kssd,
 	     kctb, keem, kemc, kesm, kftp, kgem, khpd, kist, kigt, kfst, 
 	     kfgt, kfpd, kmwc, kpgc, kpmd, ksmd, kpix, ktof, kvpd, 
        ketr, khca, kfts, keto, kstg, kwca, kpre, kepd,
-#ifdef __TFG__VERSION__
-       ktpcR, 
-#endif /* __TFG__VERSION__ */
-        ktot};
+       ktot};
   StMuMcTrack(const g2t_track_st &t);
-#ifdef __TFG__VERSION__
-  StMuMcTrack();
-#else /* ! __TFG__VERSION__ */
+#if 0
+  StMuMcTrack(const g2t_track_st &t) : TObject(), mGePid(t.ge_pid), mId(t.id), mIsShower(t.is_shower), mItrmdVertex(t.itrmd_vertex_p),
+    mIdVx(t.start_vertex_p), mIdVxEnd(t.stop_vertex_p), mCharge(t.charge), mE(t.e), mEta(t. eta), mPxyz(t.p), mpT(t.pt), mPtot(t.ptot), 
+    mRapidity(t.rapidity) {
+    mHits[kctb] = 0xff & t.n_ctb_hit;  /* Nhits in ctb */
+    mHits[keem] = 0xff & t.n_eem_hit;  /* Nhits in eem (endcap em cal) */
+    mHits[kemc] = 0xff & t.n_emc_hit;  /* Nhits in emc */
+    mHits[kesm] = 0xff & t.n_esm_hit;  /* Nhits in esm (endcap shower max) */
+    mHits[kftp] = 0xff & t.n_ftp_hit;  /* Nhits in forward tpc */
+    mHits[kgem] = 0xff & t.n_gem_hit;  /* Nhits in gem barrel */
+    mHits[khpd] = 0xff & t.n_hpd_hit;  /* Nhits in hpd */
+    mHits[kist] = 0xff & t.n_ist_hit;  /* Nhits in ist */
+    mHits[kigt] = 0xff & t.n_igt_hit;  /* Nhits in igt */
+    mHits[kfst] = 0xff & t.n_fst_hit;  /* Nhits in fst */
+    mHits[kfgt] = 0xff & t.n_fgt_hit;  /* Nhits in fgt */
+    mHits[kfpd] = 0xff & t.n_fpd_hit;  /* Nhits in fpd */
+    mHits[kmwc] = 0xff & t.n_mwc_hit;  /* Nhits in mwc */
+    mHits[kpgc] = 0xff & t.n_pgc_hit;  /* Nhits in pgc  ???  */
+    mHits[kpmd] = 0xff & t.n_pmd_hit;  /* Nhits in pmd (PMD) */
+    mHits[ksmd] = 0xff & t.n_smd_hit;  /* number of hits in shower max */
+    mHits[kssd] = 0xff & t.n_ssd_hit;  /* Nhits in ssd */
+    mHits[ksvt] = 0xff & t.n_svt_hit;  /* Nhits in svt */
+    mHits[kpix] = 0xff & t.n_pix_hit;  /* Nhits in pix */
+    mHits[ktof] = 0xff & t.n_tof_hit;  /* Nhits in tof */
+    mHits[ktpc] = 0xff & t.n_tpc_hit;  /* Nhits in tpc */
+    mHits[kvpd] = 0xff & t.n_vpd_hit;  /* Nhits in vpd */
+  }
+#endif
   StMuMcTrack() {}
-#endif /* __TFG__VERSION__ */
   virtual ~StMuMcTrack() {}
   Int_t                 GePid()        const {return mGePid;} /* GEANT particle id */	        
-#ifdef __TFG__VERSION__
-  Int_t                 Pdg()          const {return mPDG;}
-#endif /* __TFG__VERSION__ */
   Int_t           	Id()           const {return mId;}    /* primary key */		       
   Bool_t          	IsShower()     const {return mIsShower;} /* 1 if shower track, 0 if not */
-#ifndef __TFG__VERSION__
   Int_t                 NoHits()       const {Int_t n = 0; for (Int_t i = ktpc; i < ktot; i++) n+= NoHits(i); return n;}
-#else /* ! __TFG__VERSION__ */
-  Int_t                 NoHits()       const {Int_t n = No_tpc_hit(); for (Int_t i = ktpc + 1; i < ktpcR; i++) n+= NoHits(i); return n;}
-#endif /* __TFG__VERSION__ */
-  UChar_t               NoHits(Int_t k)const {return mHits[k];}      
+  UChar_t               NoHits(Int_t k)const {return mHits[k];}					   
   UChar_t     		No_ctb_hit()   const {return NoHits(kctb);}   /* Nhits in ctb */			   
   UChar_t     		No_eem_hit()   const {return NoHits(keem);}   /* Nhits in eem (endcap em cal) */	   
   UChar_t     		No_emc_hit()   const {return NoHits(kemc);}   /* Nhits in emc */			   
@@ -55,12 +66,7 @@ class StMuMcTrack : public TObject {
   UChar_t     		No_svt_hit()   const {return NoHits(ksvt);}   /* Nhits in svt */			   
   UChar_t     		No_pix_hit()   const {return NoHits(kpix);}   /* Nhits in pix */			   
   UChar_t     		No_tof_hit()   const {return NoHits(ktof);}   /* Nhits in tof */			   
-#ifndef __TFG__VERSION__
   UChar_t     		No_tpc_hit()   const {return NoHits(ktpc);}   /* Nhits in tpc */			   
-#else /* __TFG__VERSION__ */
-  Int_t       		No_tpc_hitA()  const {return NoHits(ktpc);}   /* Nhits in tpc */			   
-  Int_t       		No_tpc_hit()   const {return NoHits(ktpcR);}  /* Nhits in tpc excluding pseudo pad rows*/			   
-#endif /* __TFG__VERSION__ */
   UChar_t     		No_vpd_hit()   const {return NoHits(kvpd);}   /* Nhits in vpd */   
   UChar_t     		No_etr_hit()   const {return NoHits(ketr);}   /* Nhits in etr */
   UChar_t     		No_hca_hit()   const {return NoHits(khca);}   /* Nhits in hca */
@@ -80,24 +86,10 @@ class StMuMcTrack : public TObject {
   Float_t               pT         ()  const {return mpT;         } /* Transverse momentum */	 	   
   Float_t        	Ptot       ()  const {return mPtot;       } /* Total momentum */	 	   
   Float_t        	Rapidity   ()  const {return mRapidity;   } /* Rapidity */                        
-#ifdef __TFG__VERSION__
-  void                  SetPdg(Int_t m)      {mPDG = m;}
-#endif /* __TFG__VERSION__ */
   virtual void          Print(Option_t* option = "") const;  ///< Print track info
-#ifdef __TFG__VERSION__
-  virtual void          PrintHits(Option_t* option = "") const;  ///< Print MC hit info
-#endif /* __TFG__VERSION__ */
   static Int_t          CorrectGePid(Int_t gePid);
   const Char_t         *GeName();
-#ifdef __TFG__VERSION__
-  void                  FillKFMCTrack(KFMCTrack &mcTrackKF);
-#endif /* __TFG__VERSION__ */
  private:
-#ifdef __TFG__VERSION__
-  Char_t         mBeg[1];      //!
-  Int_t          mEgLabel;     /* generator track label (0 if GEANT track) */
-  Int_t          mPDG;         /* PDG,  */
-#endif /* __TFG__VERSION__ */
   Int_t          mGePid;       /* GEANT particle id */
   Int_t          mId;          /* primary key */
   Bool_t         mIsShower;    /* 1 if shower track, 0 if not */
@@ -108,19 +100,11 @@ class StMuMcTrack : public TObject {
   Char_t         mCharge;      /* Charge */
   Float_t        mE;           /* Energy */
   Float_t        mEta;         /* Pseudorapidity */
-#ifndef __TFG__VERSION__
   StThreeVectorF mPxyz;        /* Momentum */
-#endif /* ! __TFG__VERSION__ */
   Float_t        mpT;          /* Transverse momentum */
   Float_t        mPtot;        /* Total momentum */
   Float_t        mRapidity;    /* Rapidity */
-#ifndef __TFG__VERSION__
   ClassDef(StMuMcTrack,2)
-#else /* __TFG__VERSION__ */
-  Char_t         mEnd[1];      //!
-  StThreeVectorF mPxyz;        /* Momentum */
-  ClassDef(StMuMcTrack,6)
-#endif /* __TFG__VERSION__ */
 };
 ostream&              operator<<(ostream& os, StMuMcTrack const & v);
 #endif

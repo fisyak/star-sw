@@ -1265,7 +1265,6 @@ sub wanted {
       /^\w.*\.g$/     ||
       /^\w.*\.age$/   || #for STAR      /^\w.*\.f$/       ||
       /^\w.*\.cdf$/   ||
-      /^\w.*\.f90$/   ||
       /^\w.*\.F$/) {# print " $File::Find::name\n";
     push @main::search_files,  $File::Find::name;
   }
@@ -1523,7 +1522,6 @@ sub wanted_idl {
   my ($dev,$ino,$mode,$nlink,$uid,$gid) = lstat($_);
   if ( -r $_ &&
        (/^CVS$/ ||
-	/^macros$/ ||
 	/^exa$/ ||
 	/^src$/ ||
 	/^doc$/ ||
@@ -2211,31 +2209,6 @@ sub find {
 	my($self) = find build::command($env, $env->{FCCOM});
 	$self->{scanner} = $cscanner;
 	bless $env->{_fc} = $self;
-    }
-}
-#________________________________________
-# Invoke the associated	 C scanner to get signature of included files.
-sub includes {
-    my($self, $tgt) = @_;
-    $self->{scanner}->includes($tgt, $tgt->{sources}[0]);
-}
-#________________________________________________________________________________
-# Builder for a F9 module
-package build::command::f90;
-
-use vars qw( @ISA );
-
-BEGIN { @ISA = qw(build::command) }
-
-#________________________________________
-sub find {
-    $_[1]->{_f90} || do {
-	my($class, $env) = @_;
-	my($cscanner) = find scan::cpp($env->{_cwd}, $env->{FCPATH});
-	$env->{_IFLAGS} = "%(" . $cscanner->iflags($env) . "%)";
-	my($self) = find build::command($env, $env->{F90COM});
-	$self->{scanner} = $cscanner;
-	bless $env->{_f90} = $self;
     }
 }
 #________________________________________
@@ -4243,7 +4216,7 @@ sub copy {
     # Use Perl standard library module for file copying, which handles
     # binary copies. <schwarze@isa.de> 1998-06-18
     if (! File::Copy::copy($sp, $tp)) {
-#yf 	warn qq($0: can\'t install "$sp" to "$tp" ($!)\n); #'
+	warn qq($0: can\'t install "$sp" to "$tp" ($!)\n); #'
 	return undef;
     }
     # The file has been created, so try both the chmod and utime,
@@ -4636,14 +4609,14 @@ sub srcsig {
 	close(FILE);
 	unpack("H*", $md5->digest());
     } else {
-# 	if ($param::quiet < 1){
-# 	    print  
-# 		"***************************************************************\n",
-# 		" WARNING from $0 \n",
-# 		"   [$path] found as an include dependency but is also a directory.\n",
-# 		"   Until renamed, the include-dependency will not be checked.\n",
-# 		"***************************************************************\n";
-# 	}
+	if ($param::quiet < 1){
+	    print  
+		"***************************************************************\n",
+		" WARNING from $0 \n",
+		"   [$path] found as an include dependency but is also a directory.\n",
+		"   Until renamed, the include-dependency will not be checked.\n",
+		"***************************************************************\n";
+	}
     }
 }
 

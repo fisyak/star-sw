@@ -7,9 +7,7 @@
 
 #ifndef StMuDst_h
 #define StMuDst_h
-#ifdef __TFG__VERSION__
-#include "StMuDst.TFG.h"
-#else /* ! __TFG__VERSION__ */
+
 #include "TObject.h"
 #include "TClonesArray.h"
 
@@ -173,6 +171,8 @@ public:
   void fixTofTrackIndices();
   void fixETofTrackIndices();
   void fixMtdTrackIndices();
+  static StMuDst *instance() {return fgMuDst;}
+  void SetInstance() {fgMuDst = this;}
 
   void setMtdArray(StMtdCollection *mtd_coll); 
   
@@ -183,6 +183,7 @@ public:
 
 
  protected:
+  static StMuDst *fgMuDst; //!
   /// array of TClonesArrays
   static TClonesArray** arrays;
 #ifndef __NO_STRANGE_MUDST__
@@ -550,7 +551,7 @@ public:
   // Increment this by 1 every time the class structure is changed
   ClassDef(StMuDst,6)
 };
-#endif /* ! __TFG__VERSION__ */
+
 #endif
 
 /***************************************************************************

@@ -1,4 +1,4 @@
-//*-- Author : Maksym Zyzak & Yuri Fisyak 02/02/2016
+//*-- Author : Yuri Fisyak 02/02/2016
 #include "StKFParticleAnalysisMaker.h"
 #include "TDirectory.h"
 #include "TNtuple.h"
@@ -23,6 +23,7 @@
 #include "StPicoEvent/StPicoTrack.h"
 #include "StPicoEvent/StPicoBTofPidTraits.h"
 //--- Mu classes ---
+#include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 //--- TMVA classes ---
@@ -33,12 +34,11 @@
 //--- StRefMult class ---
 #include "StRefMultCorr/StRefMultCorr.h"
 #include "StRefMultCorr/CentralityMaker.h"
-#include "StDetectorDbMaker/St_beamInfoC.h"
 ClassImp(StKFParticleAnalysisMaker);
 
 //________________________________________________________________________________
 StKFParticleAnalysisMaker::StKFParticleAnalysisMaker(const char *name) : StMaker(name), fNTrackTMVACuts(0), fIsPicoAnalysis(true), fdEdXMode(1), 
-  fStoreTmvaNTuples(false), fProcessSignal(false), fCollectTrackHistograms(false), fCollectPIDHistograms(false),fCollectPVHistograms(true),fTMVAselection(false), 
+  fStoreTmvaNTuples(false), fProcessSignal(false), fCollectTrackHistograms(false), fCollectPIDHistograms(false),fCollectPVHistograms(false),fTMVAselection(false), 
   fFlowAnalysis(false), fFlowChain(NULL), fFlowRunId(-1), fFlowEventId(-1), fCentrality(-1), fFlowFiles(), fFlowMap(), 
   fRunCentralityAnalysis(0), fRefmultCorrUtil(0), fCentralityFile(""), fAnalyseDsPhiPi(false), fDecays(0), fIsProduce3DEfficiencyFile(false), f3DEfficiencyFile(""), 
   fStoreCandidates(false), fPartcileCandidate(), fIsStoreCandidate(KFPartEfficiencies::nParticles, false), fCandidateFileName("candidates.root"), fCandidateFile(nullptr), fCandidatesTree(nullptr)
@@ -260,10 +260,6 @@ Int_t StKFParticleAnalysisMaker::InitRun(Int_t runumber)
 //     Int_t Nb = sizeof(ActiveBranches)/sizeof(Char_t *);
 //     for (Int_t i = 0; i < Nb; i++) StPicoDstMaker::instance()->SetStatus(ActiveBranches[i],1); // Set Active braches
 //   }
-  StKFParticleInterface::instance()->SetFixedTarget(St_beamInfoC::instance()->IsFixedTarget());
-  if (GetDateTime().GetYear() == 2018)
-  StKFParticleInterface::instance()->SetFixedTarget2018(St_beamInfoC::instance()->IsFixedTarget());
-  StKFParticleInterface::instance()->SetBeamSpot();
   return StMaker::InitRun(runumber);
 }
 //_____________________________________________________________________________
@@ -314,9 +310,14 @@ Int_t StKFParticleAnalysisMaker::Make()
   }
   else
   {  
+#ifdef __TFG__VERSION__
     fMuDst = StMuDst::instance();
-    if(!fMuDst) return kStOK;
-    else { if(StMuDst::instance()->numberOfPrimaryVertices() == 0 ) return kStOK; }
+#else /* !__TFG__VERSION__ */
+  StMuDstMaker *muDstMaker = (StMuDstMaker *)GetTopChain()->GetMakerInheritsFrom("StMuDstMaker");
+  if (muDstMaker)  fMuDst = muDstMaker->muDst();
+#endif /* __TFG__VERSION__ */
+    if(! fMuDst) return kStOK;
+    else { if(fMuDst->numberOfPrimaryVertices() == 0 ) return kStOK; }
   }
   
   //find max global track index
@@ -677,7 +678,7 @@ void StKFParticleAnalysisMaker::GetDaughterParameters(const int iReader, int& iD
     fTMVAParticleParameters[iReader][fDaughterNames[iReader].size()*fNTrackTMVACuts + iDaughterParticle*3] = particle.Chi2()/particle.NDF();  
     
     KFParticleSIMD tempSIMDParticle(particle);
-    float_v l,dl;
+    float32_v l,dl;
     KFParticleSIMD pv(fStKFParticleInterface->GetTopoReconstructor()->GetPrimVertex());
     tempSIMDParticle.GetDistanceToVertexLine(pv, l, dl);
     fTMVAParticleParameters[iReader][fDaughterNames[iReader].size()*fNTrackTMVACuts + iDaughterParticle*3 + 1] = l[0]/dl[0];
@@ -706,7 +707,7 @@ void StKFParticleAnalysisMaker::GetParticleParameters(const int iReader, KFParti
   fTMVAParticleParameters[iReader][nDaughterParticleCut]   = particle.Chi2()/particle.NDF();  
   
   KFParticleSIMD tempSIMDParticle(particle);
-  float_v l,dl;
+  float32_v l,dl;
   KFParticleSIMD pv(fStKFParticleInterface->GetTopoReconstructor()->GetPrimVertex());
   tempSIMDParticle.GetDistanceToVertexLine(pv, l, dl);
   fTMVAParticleParameters[iReader][nDaughterParticleCut + 1] = l[0]/dl[0];

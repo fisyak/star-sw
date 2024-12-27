@@ -1,4 +1,4 @@
-#!/bin/tcsh -f 
+#
 # Evaluation of hit errors.
 # invoking:
 # fiterr.csh daqfile.daq pp2009 <noPrepass>
@@ -20,7 +20,7 @@
 # All questions to Victor Perev
 # Victor Perev Feb 17, 2007
 ############################################################################
-#source ${GROUP_DIR}/.starver  DEV
+source ${GROUP_DIR}/.starver  DEV
 #source ${GROUP_DIR}/.starver  .DEV
 echo STAR = $STAR $ROOTSYS
 
@@ -66,20 +66,20 @@ if (${daqFile:e} == "fz") touch fiterrPrepass.DONE
 if (${noPrepass}        ) touch fiterrPrepass.DONE
 
 if (!(-e fiterrPrepass.DONE)) then
-rm -f fit.log sti.log
+rm fit.log sti.log
 touch sti.log
 touch fit.log
 setenv STARNODELETE YES
 
-echo "*** Prepass Started *** $daqFile"
-echo '*** Prepass Started *** $daqFile'>> sti.log
+echo '*** Prepass Started *** '
+echo '*** Prepass Started *** '>> sti.log
 
 root4star -b  <<EOF  >>& sti.log
 .L calib/prepass.C
 #include <stdlib.h>
 int ans =13;
 ans =prepass("$daqFile","$Opt");
-printf("ptrepass ans=%d\n",ans);
+printf("ptrepass ans=%d\n",ans);\n");
 if (ans != 99) exit(13);
 printf("exit(0)\n");
 exit(0);
@@ -107,8 +107,7 @@ echo '*** STI Started *** Iter=' $iter
 echo '*** STI Started *** Iter=' $iter >> sti.log
 
 STI:
-#root4star -b  <<EOF  >>& sti.log
-root.exe -b  <<EOF  >>& sti.log
+root4star -b  <<EOF  >>& sti.log
 .L calib/fiterrSti.C
 #include <stdlib.h>
 int ans =13;
@@ -124,7 +123,7 @@ EOF
 set myerr = $status
 echo '*** STI Ended *** Status=' $myerr
 echo '*** STI Ended *** Iter=' $iter >> sti.log
-#if ($myerr) goto STIERR
+if ($myerr) goto STIERR
 
 FIT:
 echo '*** FitErr Started *** Iter=' $iter
@@ -134,7 +133,14 @@ echo $timstamp
 touch fit.log
 echo STAR = $STAR $ROOTSYS
 echo LIBP = $LD_LIBRARY_PATH
-root.exe -q -b 'fiterr.C+("U '${timstamp[2]}'")' >>& fit.log
+root.exe -b <<EOF  >>& fit.log
+#include <stdlib.h>
+.L fiterr.C+
+int ans = 13;
+ans = fiterr("U ${timstamp[2]}");
+exit(ans);
+.q
+EOF
 set myerr = $status
 echo '*** FitErr Ended *** Status=' $myerr
 if ($myerr) goto FITERR

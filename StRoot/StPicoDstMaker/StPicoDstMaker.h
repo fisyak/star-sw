@@ -57,9 +57,6 @@
 // PicoDst headers
 #include "StPicoEvent/StPicoArrays.h"
 #include "StPicoDstMaker/StPicoFmsFiller.h"
-#if defined (__TFG__VERSION__)
-#include "StMuDSTMaker/COMMON/StMuDst.h"
-#endif /* __TFG__VERSION__ */
 
 #if defined (__TFG__VERSION__)
 #include "StMuDSTMaker/COMMON/StMuDst.h"
@@ -69,6 +66,7 @@ class TClonesArray;
 class TChain;
 class TFile;
 class TTree;
+class StMuDst;
 class StMuTrack;
 class StEmcCollection;
 class StEmcPosition;
@@ -95,14 +93,14 @@ class StPicoDstMaker : public StMaker {
   enum PicoVtxMode {NotSet=0, Default=1, Vpd=2, VpdOrDefault=3, Mtd=4, FXT=5};
 #endif /* ! __TFG__VERSION__ */
   /// Write or not write covariance matrix: 0-skip, 1-write
-  enum PicoCovMtxMode {CovSkip=0, CovWrite=1};
+  enum PicoCovMtxMode {Skip=0, Write=1};
   /// Write or not write the BEmc SMD hits associated with a BHT2/3 trigger: 0-skip, 1-write
   enum PicoBEmcSmdMode {SmdSkip=0, SmdWrite=1};
 
   /// Constructor
   StPicoDstMaker(char const* name = "PicoDst");
   /// Constructor that takes most of pararmeters
-  StPicoDstMaker(Int_t ioMode, char const* fileName = "",
+  StPicoDstMaker(PicoIoMode ioMode, char const* fileName = "",
 		 char const* name = "PicoDst");
   /// Destructor
   virtual ~StPicoDstMaker();
@@ -113,7 +111,6 @@ class StPicoDstMaker : public StMaker {
   virtual Int_t Init();
   /// Standard STAR Make() function called from StChain
   virtual Int_t Make();
-  virtual Int_t Make(Int_t RunId, Int_t EventId);
   /// Clear
   virtual void  Clear(Option_t* option = "");
   /// Standard STAR Finish() function called from StChain
@@ -141,7 +138,8 @@ class StPicoDstMaker : public StMaker {
   /// 9 is the higher compression level.
   void setCompression(int comp = 9);
 
-#if defined(__TFG__VERSION__)
+  static StPicoDstMaker *instance()     { return fgPicoDstMaker; }
+#if defined (__TFG__VERSION__)
   PicoVtxMode vtxMode()                 { return StMuDst::instance()->vtxMode(); }
   void setVtxMode(const PicoVtxMode vtxMode)
   { StMuDst::instance()->setVtxMode(vtxMode); }
@@ -155,14 +153,12 @@ class StPicoDstMaker : public StMaker {
   void SetVxZrange(Double_t zmin = -70, Double_t zmax = 70.)
   { StMuDst::instance()->SetVxZrange(zmin, zmax); }
   void SetVxRmax(Double_t rmax = 2)     { StMuDst::instance()->SetVxRmax(rmax); }
-  static StPicoDstMaker *instance()     { return fgPicoDstMaker; }
   TClonesArray** picoArrays()           { return mPicoArrays; }
-  virtual Int_t        Skip(Int_t nskip) {mEventCounter = nskip; return mEventCounter;}     //Skip events
 #else /* ! __TFG__VERSION__ */
 
   /// Set vertex selection mode
   void setVtxMode(const PicoVtxMode vtxMode)              { mVtxMode = vtxMode; }
-#endif /* __TFG__VERSION__ */
+#endif
   /// Set to write or not to write covariant matrix
   void setCovMtxMode(const PicoCovMtxMode covMtxMode)     { mCovMtxMode = covMtxMode; }
   /// Set to write or not write BEmc Smd hits
@@ -183,7 +179,6 @@ class StPicoDstMaker : public StMaker {
   Int_t openRead();
   /// Read information
   void  read();
-  Int_t read(Int_t RunId, Int_t EventId);
   /// Close file which was read
   void closeRead();
   /// Set branch addresses
@@ -205,7 +200,6 @@ class StPicoDstMaker : public StMaker {
   void createArrays();
 
   Int_t MakeRead();
-  Int_t MakeRead(Int_t RunId, Int_t EventId);
   Int_t MakeWrite();
 
   /// Fill event header info
@@ -275,7 +269,7 @@ class StPicoDstMaker : public StMaker {
   Bool_t selectVertex();
   /// VpdVz-Vz cut value. Default is 5 cm.
   Float_t   mTpcVpdVzDiffCut;
-#endif /* __TFG__VERSION__ */
+#endif
 
   /// A pointer to the main input source containing all muDst `TObjArray`s
   /// filled from corresponding muDst branches
@@ -345,9 +339,7 @@ class StPicoDstMaker : public StMaker {
 
   /// FMS filler
   StPicoFmsFiller  mFmsFiller;
-#if defined (__TFG__VERSION__)
   static StPicoDstMaker *fgPicoDstMaker; //!
-#endif
 
   /// Get CVS status
   virtual const char *GetCVS() const {

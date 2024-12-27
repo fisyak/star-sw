@@ -29,7 +29,7 @@
 #include <map>
 #include <iostream>
 #include <fstream>
-
+#include <cstring>
 /** @class KFPHistogram
  ** @brief A common object containing histograms for all particle species.
  ** @author  M.Zyzak, I.Kisel

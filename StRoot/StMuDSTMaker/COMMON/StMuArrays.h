@@ -38,11 +38,7 @@ enum strangeTypes {smuEv=0, smuEvMc, smuV0, smuV0Mc, smuV0Assoc, smuXi, smuXiMc,
 /// @enum MCTypes enumeration to to index the mcArrays
 enum MCTypes {MCVertex=0, MCTrack};
 /// @enum enumeration to to index the arrays
-#ifndef __TFG__VERSION__
 enum muDstTypes {muEvent=0, muPrimaryVertex, muPrimary, muGlobal, muOther, muL3, muRich, muState, muAccept, muReject, muCovGlobTrack, muCovPrimTrack, mupp2pp, muMtd}; 
-#else /* __TFG__VERSION__ */
-enum muDstTypes {muEvent=0, muPrimaryVertex, muPrimary, muGlobal, muOther, muL3, muRich, muState, muAccept, muReject, muCovGlobTrack, muCovPrimTrack, mupp2pp, muMtd, muKFTracks, muKFVertices}; 
-#endif /* __TFG__VERSION__ */
 
 /// @enum pmdTypes enumeration to to index the pmdArrays
 enum pmdTypes {muPmdHit=0, muCpvHit, muPmdCluster, muCpvCluster}; 
@@ -65,11 +61,7 @@ enum epdTypes {muEpdHit=0};    // MALisa
 enum eztTypes {muEztHead=0, muEztTrig, muEztETow, muEztESmd,muEztFpd};
 
 enum NARRAYS {
-#ifndef __TFG__VERSION__
 __NARRAYS__        =14,	///< size of the 'regular stuff' arrays, i.e. number of TClonesArrays  (add two more for global and primary track covariance matrices)
-#else /* __TFG__VERSION__ */
-__NARRAYS__        =16,	///< size of the 'regular stuff' arrays, i.e. number of TClonesArrays  (add two more for global and primary track covariance matrices)
-#endif /* __TFG__VERSION__ */
 #ifndef __NO_STRANGE_MUDST__
 __NSTRANGEARRAYS__ =12,	///< size of the strangeness arrays, i.e. number of TClonesArrays  
 #endif
@@ -101,10 +93,7 @@ __NALLARRAYS__     =  __NARRAYS__+__NMCARRAYS__+__NEMCARRAYS__+__NFMSARRAYS__+__
 class StMuArrays {
  public:
  StMuArrays();
-#ifdef __TFG__VERSION__
- virtual ~StMuArrays() {}
-#endif /* __TFG__VERSION__ */
-#if !defined(__CINT__) || defined(__TFG__VERSION__)  && !defined(__CLING__)
+ #ifndef __CINT__
     ///< names of the TBranches in the TTree/File 
     static const char*         arrayNames    [__NALLARRAYS__    ];
 #ifndef __NO_STRANGE_MUDST__
@@ -192,7 +181,7 @@ class StMuArrays {
     static int*    mtdArrayCounters;// [__NEZARRAYS__    ]
     static int*    fgtArrayCounters;// [__NFGTARRAYS__    ]
     static int*    eztArrayCounters;// [__NEZARRAYS__    ]
-#endif  /* !defined(__CINT__) || defined(__TFG__VERSION__)  && !defined(__CLING__) */
+#endif    
     ClassDef(StMuArrays,0)
 };
 
@@ -218,8 +207,6 @@ class StMuArrays {
  *
  * Revision 1.29  2013/04/10 19:28:35  jeromel
  * Step back to 04/04 version (van aware) - previous changes may be recoverred
- * Revision 1.28  2013/04/08 18:07:54  fisyak
- * Add branches for KFParticles, fix problem with zero cov. matrix for primary tracks
  *
  * Revision 1.27  2013/01/08 22:57:33  sangalin
  * Merged in FGT changes allowing for a variable number of timebins to be read out for each strip.

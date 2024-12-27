@@ -15,20 +15,12 @@ using namespace std;
 #include "StMaker.h"
 #include "StChain.h"
 #include "StIOInterFace.h"
-#ifndef __TFG__VERSION__
 #include "St_DataSetIter.h"
 
-#else /* __TFG__VERSION__ */
-#include "TDataSetIter.h"
-#include "TObjectSet.h"
-#include "TObjArray.h"
-#endif /* __TFG__VERSION__ */
 #include "StMuArrays.h"
 
 #include "StMuFilter.h"
-#ifndef __TFG__VERSION__
 #include "StMuL3Filter.h"
-#endif /* ! __TFG__VERSION__ */
 
 
 class StMuEvent;
@@ -60,9 +52,6 @@ class StKinkMc;
 class StStrangeAssoc;
 class StStrangeCuts;
 #endif
-#ifdef __TFG__VERSION__
-class KFParticle;
-#endif /* __TFG__VERSION__ */
 /// emc stuff
 #include "StMuEmcCollection.h"
 class StMuEmcUtil;
@@ -141,9 +130,6 @@ class StMuMtdHeader;
 */
 class StMuDstMaker : public StIOInterFace {
  public:
-#ifdef __TFG__VERSION__
-  static StMuDstMaker* instance() {return gStMuDstMaker;}
-#endif /* __TFG__VERSION__ */
     /// Default constructor
     StMuDstMaker(const char* name="MuDst");
     /// Constructor
@@ -155,11 +141,8 @@ class StMuDstMaker : public StIOInterFace {
   virtual int Init();
   virtual void Clear(Option_t *option="");
   virtual int  Make();
-  virtual int  Make(Int_t RunId, Int_t EventId);
-  virtual Int_t MakeRead(const StUKey &RunEvent);
-  Int_t MakeRead(Int_t RunId, Int_t EventId);
+  virtual  Int_t MakeRead(const StUKey &RunEvent);
   virtual  Int_t MakeRead();
-  virtual  void  UpdateMuDst();
   virtual  Int_t MakeWrite();
   virtual int  Finish();
           void printArrays();
@@ -171,9 +154,7 @@ class StMuDstMaker : public StIOInterFace {
   StMuFilter* trackFilter();
   /// Set the track filter used for L3 tracks when creating muDsts from StEvent and writing to disk.
   void setL3TrackFilter(StMuCut* c);
-#ifndef __TFG__VERSION__
   StMuL3Filter* l3TrackFilter();
-#endif /* ! __TFG__VERSION__ */
   /// Set the file from where the PID probability tables should be read.
   /**
       Set the file from where the PID probability tables should be read.
@@ -208,11 +189,6 @@ class StMuDstMaker : public StIOInterFace {
   void setBufferSize(int=65536*4);
   /// Sets the compression level for the file and all branches. 0 means no compression, 9 is the higher compression level.
   void setCompression(int comp=9);
-#ifdef __TFG__VERSION__
-  Int_t IOMode() {return mIoMode;}
-  //______________________________________________________________________________
-  virtual Int_t        Skip(Int_t nskip) {mEventCounter = nskip; return mEventCounter;}     //Skip events
-#endif /* __TFG__VERSION__ */
 
   StMuEmcUtil* muEmcUtil() { return mEmcUtil; } ///< return pointer to StMuEmcUtil;
   StMuFmsUtil* muFmsUtil() { return mFmsUtil; } ///< return pointer to StMuFmsUtil;
@@ -241,9 +217,6 @@ protected:
   void connectFstCollection();
   void connectFwdTrackCollection();
   void connectPmdCollection();
-#ifdef __TFG__VERSION__
- public:
-#endif /* __TFG__VERSION__ */
   enum ioMode {ioRead, ioWrite};
   /** Specifies the way the output file name is contructed when creating muDsts.
       ioFix = use filename specified in when calling the constructor, right in the
@@ -255,9 +228,6 @@ protected:
   */
   enum ioNameMode {ioFix=0, ioIOMaker, ioTreeMaker};
 
-#ifdef __TFG__VERSION__
- protected:
-#endif /* __TFG__VERSION__ */
   StEvent* mStEvent;
   StMuDst* mStMuDst;
 #ifndef __NO_STRANGE_MUDST__
@@ -325,8 +295,7 @@ virtual   void closeWrite();
   void streamerOff();
 
 virtual   int openRead();
-virtual   Int_t read();
- virtual   Int_t read(Int_t RunId, Int_t EventId);
+virtual   void read();
 void setBranchAddresses();
 virtual   void closeRead();
 
@@ -370,10 +339,6 @@ virtual   void closeRead();
   void fillFgt(StEvent* ev);
 
     void fillEzt(StEvent* ev);
-#ifdef __TFG__VERSION__
-  Int_t fillKFTracks(const KFParticle *p);
-  Int_t fillKFVertices(const KFParticle *p);
-#endif /* __TFG__VERSION__ */
 
   void fillHddr();
 
@@ -451,9 +416,6 @@ virtual   void closeRead();
   StMuFwdTrackCollection *mFwdTrackCollection;
   TClonesArray*  mPmdCollectionArray; // Needed to hold old format
   StMuPmdCollection *mPmdCollection;
-#ifdef __TFG__VERSION__
-  static StMuDstMaker *gStMuDstMaker;
-#endif /* __TFG__VERSION__ */
   //  StMuEpdHitCollection *mMuEpdHitCollection;   // MALisa
 
   // Increment this by 1 every time the class structure is changed
@@ -466,9 +428,7 @@ inline TTree* StMuDstMaker::tree() { return mTTree; }
 inline void StMuDstMaker::setTrackFilter(StMuCut* c) { mTrackFilter=c;}
 inline void StMuDstMaker::setL3TrackFilter(StMuCut* c) { mL3TrackFilter=c;}
 inline StMuFilter* StMuDstMaker::trackFilter() { return (StMuFilter*)mTrackFilter;}
-#ifndef __TFG__VERSION__
 inline StMuL3Filter* StMuDstMaker::l3TrackFilter() { return (StMuL3Filter*)mL3TrackFilter;}
-#endif /* ! __TFG__VERSION__ */
 #ifndef __NO_STRANGE_MUDST__
 inline void StMuDstMaker::setStStrangeMuDstMaker(StStrangeMuDstMaker* s) {mStStrangeMuDstMaker=s;}
 inline StStrangeMuDstMaker* StMuDstMaker::stStrangeMuDstMaker() {return mStStrangeMuDstMaker;}
@@ -522,8 +482,6 @@ inline void StMuDstMaker::setBufferSize(int buf) { mBufferSize = buf; }
  *
  * Revision 1.57  2013/04/10 19:28:35  jeromel
  * Step back to 04/04 version (van aware) - previous changes may be recoverred
- * Revision 1.56  2013/04/08 18:07:55  fisyak
- * Add branches for KFParticles, fix problem with zero cov. matrix for primary tracks
  *
  * Revision 1.55  2012/11/15 22:26:13  sangalin
  * Added the FGT. Fixed bugs in array offsets for the MTD.

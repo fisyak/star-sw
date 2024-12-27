@@ -40,9 +40,11 @@ Int_t StFemtoDstMaker::Make(){
   fFemtoDst = StPicoDst::instance();
   if (! fFemtoDst) return kStOK; 
   vector<int> triggeredTracks; 
-  bool isGoodEvent = fStKFParticleInterface->ProcessEvent(fFemtoDst, triggeredTracks); 
   bool openCharmTrigger = false; 
+#ifdef __TFG__VERSION__
+  bool isGoodEvent = fStKFParticleInterface->ProcessEvent(fFemtoDst, triggeredTracks); 
   if(isGoodEvent) openCharmTrigger = fStKFParticleInterface->OpenCharmTrigger();
+#endif /* __TFG__VERSION__ */
   if (! openCharmTrigger) {
     for (UInt_t i = StPicoArrays::Track; i < StPicoArrays::NAllPicoArrays; i++) {
 #ifdef __TFG__VERSION__
