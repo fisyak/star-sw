@@ -1179,7 +1179,7 @@ int tpc23_base::row_stage1(int row)
 #endif
 
 	if(blob_merges) {
-		for(int i=0;i<blob_cou;i++) {
+		for(int i=1;i<blob_cou;i++) {
 			int ix = blob_ix[i] ;
 
 			if(ix==i) continue ;
