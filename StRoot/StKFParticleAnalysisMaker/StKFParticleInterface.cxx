@@ -1541,13 +1541,13 @@ bool StKFParticleInterface::FitPV(KFVertex& pv, bool isFirstSeed, const KFPTrack
 
   KFParticleSIMD trackSIMD;
   KFParticleSIMD pvSIMD(pv);
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
 
     trackSIMD.Load(tracks, iTrack);
    
-    const float_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
+    const float32_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
     
-    for(int iV=0; iV<float_vLen; iV++){
+    for(int iV=0; iV<SimdLen; iV++){
       const int iTr = iTrack + iV;
       if(iTr >= tracks.Size()) break;
       
@@ -1615,12 +1615,12 @@ bool StKFParticleInterface::FitPV(KFVertex& pv, bool isFirstSeed, const KFPTrack
 
     pvSIMD = KFParticleSIMD(pv);
 
-    for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+    for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
       trackSIMD.Load(tracks, iTrack);
     
-      const float_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
+      const float32_v deviation = trackSIMD.GetDeviationFromVertex(pvSIMD);
       
-      for(int iV=0; iV<float_vLen; iV++){
+      for(int iV=0; iV<SimdLen; iV++){
         const int iTr = iTrack + iV;
         if(iTr >= tracks.Size()) break;
       
@@ -1853,13 +1853,13 @@ template<> void getPoints<Point3D>(
   std::vector<KFParticle>& points, std::vector<Position>& zHisto)
 {
   KFParticleSIMD trackSIMD;
-  const float_v beamXY[2]{beamPosition.X(), beamPosition.Y()};
+  const float32_v beamXY[2]{beamPosition.X(), beamPosition.Y()};
 
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
     trackSIMD.Load(tracks, iTrack);
     
-    const float_v ds = trackSIMD.GetDStoPointXY(beamXY);
-    float_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
+    const float32_v ds = trackSIMD.GetDStoPointXY(beamXY);
+    float32_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
     trackSIMD.TransportToDS(ds, dsdr);
     
     for(int iV=0; iV<4; iV++) {
@@ -1887,17 +1887,17 @@ template<> void getPoints<PointPhiZ>(
   std::vector<KFParticle>& points, std::vector<Position>& zHisto)
 {
   KFParticleSIMD trackSIMD;
-  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=float_vLen) {
+  for(int iTrack=0; iTrack < tracks.Size(); iTrack+=SimdLen) {
     trackSIMD.Load(tracks, iTrack);
     KFParticleSIMD p1 = trackSIMD;
     KFParticleSIMD p2 = trackSIMD;
-    float_v ds[2]{0.f, 0.f};
+    float32_v ds[2]{0.f, 0.f};
     p1.GetDStoCylinder(R, ds);
-    float_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
+    float32_v dsdr[6] = {0.f,0.f,0.f,0.f,0.f,0.f};
     p1.TransportToDS(ds[0], dsdr);
     p2.TransportToDS(ds[1], dsdr);
     
-    const float_m saveFirstPoint = (p1.GetR() > R-dR) && (p1.GetR() < R+dR) && (p1.Z() > -200.f);
+    const mask32_v saveFirstPoint = (p1.GetR() > R-dR) && (p1.GetR() < R+dR) && (p1.Z() > -200.f);
     for(int iV=0; iV<4; iV++) {
       if(!saveFirstPoint[iV]) continue;
       if(iTrack + iV >= tracks.Size()) continue;
