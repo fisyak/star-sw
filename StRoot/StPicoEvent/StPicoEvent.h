@@ -13,7 +13,6 @@
 #include <vector>
 
 // ROOT headers
-#include "StPicoDst.h"
 #include "TObject.h"
 #include "TVector3.h"
 
@@ -165,7 +164,7 @@ class StPicoEvent : public TObject {
   Float_t  vzVpd() const                 { return mVzVpd; }
   // In the following, the factors of 1000. serve to convert times back and forth between external nsec and internal psec
   /// Return number of particles before T0 outlier rejection
-  Int_t    nTofT0Can() const            { return (Int_t)mNTofT0Can; }
+  Int_t    nTofT0Can() const		 { return (Int_t)mNTofT0Can; }
   /// Return event start time in nano seconds
   Double_t  tStart() const                { return ((Double_t)mTStart)/1000.; }
   /// Return hit time in nano seconds for the earliest candidate particle in the T0 calculation
@@ -350,7 +349,7 @@ class StPicoEvent : public TObject {
   void setVzVpd(Float_t vpdVz)                  { mVzVpd = vpdVz; }
   // In the following, the factors of 1000. serve to convert times back and forth between external nsec and internal psec
   /// Set number of particles before T0 outlier rejection
-  void setNTofT0Can(Int_t t0Can)                      { mNTofT0Can = (UShort_t)t0Can; }
+  void setNTofT0Can(Int_t t0Can)		       { mNTofT0Can = (UShort_t)t0Can; }
   /// Set event start time
   void setTStart(Double_t startTime)                   { mTStart = (Int_t)(startTime*1000.); }  
   /// Set time of earliest candidate particle in T0 calculation
@@ -548,7 +547,7 @@ protected:
   Int_t  mLatestVpdEHit;
   /// Furthest VPDW hit compared to start time
   Int_t  mLatestVpdWHit;
-
+ 
   /// ZDC coincidence rate
   UInt_t   mZDCx;
   /// BBC coincidence rate
@@ -584,7 +583,8 @@ protected:
   Float_t  mZdcEastRate;
   /// West ZDC rate
   Float_t  mZdcWestRate;
-#endif /* __TFG__VERSION__ */
+#endif
+
   /// Sum of ADC in east ZDC
   UShort_t mZdcSumAdcEast;
   /// Sum of ADC in west ZDC
@@ -626,10 +626,10 @@ protected:
   UShort_t mZdcUnAttenuated[2];
 
 #if defined (__TFG__VERSION__)
-  ClassDef(StPicoEvent, 11)
+  ClassDef(StPicoEvent, 10)
 #else /* ! __TFG__VERSION__ */
   ClassDef(StPicoEvent, 8)
-#endif /* __TFG__VERSION__ */
+#endif
 };
 
 #endif

@@ -6,16 +6,6 @@
 #include <algorithm>
 #include <limits>
 
-#if defined(__TFG__VERSION__)
-#include "StPicoDst.h"
-#include "StEvent/StBTofHeader.h"
-#include "StEvent/StEventTypes.h"
-#include "StMuDSTMaker/COMMON/StMuDst.h"
-#include "StMuDSTMaker/COMMON/StMuEvent.h"
-#include "StMuDSTMaker/COMMON/StMuPrimaryVertex.h"
-#include "StEventUtilities/StGoodTrigger.h"
-#include "TEnv.h"
-#endif /* __TFG__VERSION__ */
 // PicoDst headers
 #include "StPicoMessMgr.h"
 #include "StPicoEvent.h"
@@ -24,15 +14,9 @@ ClassImp(StPicoEvent)
 
 //_________________
 StPicoEvent::StPicoEvent(): TObject(),
-#if defined(__TFG__VERSION__)
-  mProductionVersion(gEnv->GetValue("STAR_GIT_VERSION","Unknown")),
-#endif /* __TFG__VERSION__ */
   mRunId(0), mEventId(0), mFillId(0), mBField(0), mTime(0),
   mPrimaryVertexX(0), mPrimaryVertexY(0), mPrimaryVertexZ(0),
   mPrimaryVertexErrorX(0), mPrimaryVertexErrorY(0), mPrimaryVertexErrorZ(0),
-#if defined(__TFG__VERSION__)
-  mPrimaryVertexCorr{0,0,0},	
-#endif /* __TFG__VERSION__ */
   mRanking(-999), mNBEMCMatch(0), mNBTOFMatch(0),
   mTriggerIds(),
   mRefMultFtpcEast(0), mRefMultFtpcWest(0),
@@ -207,13 +191,6 @@ Int_t StPicoEvent::day() const {
 Bool_t StPicoEvent::isTrigger(unsigned int id) const {
   return std::find(mTriggerIds.begin(), mTriggerIds.end(), id) != mTriggerIds.end();
 }
-#if defined(__TFG__VERSION__)
-//_________________
-Bool_t StPicoEvent::IsGoodTrigger() {
-  if (! StGoodTrigger::instance()) return kTRUE;
-  return StGoodTrigger::instance()->IsGood(mTriggerIds);
-}
-#endif /* __TFG__VERSION__ */
 
 //_________________
 void StPicoEvent::setTriggerId(UInt_t id) {

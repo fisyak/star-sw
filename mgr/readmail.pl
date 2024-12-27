@@ -1,8 +1,8 @@
 #!/opt/star/bin/perl 
 #
-#  $Id:
+#  
 #
-#  $Log:   read_mail.pl - script to read production emails and move
+#     read_mail.pl - script to read production emails and move
 #          jobfiles if job crashed from archive to jobfiles to resubmit them  
 #  L.Didenko
 ###############################################################################

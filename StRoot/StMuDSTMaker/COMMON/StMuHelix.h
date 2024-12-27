@@ -1,6 +1,6 @@
 /***************************************************************************
  *
- * $Id: StMuHelix.h,v 1.2 2013/08/07 12:58:40 fisyak Exp $
+ * $Id: StMuHelix.h,v 1.8 2009/12/01 21:56:35 tone421 Exp $
  * Author: Frank Laue, BNL, laue@bnl.gov
  *
  ***************************************************************************/
@@ -29,7 +29,7 @@ class StMuHelix : public TObject {
   short q() const;
   float b() const;
   int   bad() const;
-  StPhysicalHelixD helix() const;
+  StPhysicalHelix helix() const;
  protected:
   StThreeVectorF mP;
   StThreeVectorF mOrigin;
@@ -51,12 +51,6 @@ inline float StMuHelix::b() const { return mB; }
 /***************************************************************************
  *
  * $Log: StMuHelix.h,v $
- * Revision 1.2  2013/08/07 12:58:40  fisyak
- * Add access to StMuHelix
- *
- * Revision 1.1.1.1  2013/07/23 14:14:48  fisyak
- *
- *
  * Revision 1.8  2009/12/01 21:56:35  tone421
  * Implemented changes as per http://www.star.bnl.gov/rt2/Ticket/Display.html?id=1734
  *

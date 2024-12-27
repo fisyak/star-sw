@@ -1,15 +1,21 @@
 #!/usr/bin/env perl
-# $Id: Construct,v 1.182 2017/01/24 14:14:22 fisyak Exp $
+# $Id: Construct,v 1.184 2018/10/01 22:56:44 jeromel Exp $
 use Env;
-use File::Basename;
-use lib qw(./mgr $STAR/mgr);
+use lib qw(./mgr $STAR/mgr);#$ENV{ConstructLocation};           # Modify perl include path
 use ConsDefs;
+
+#my $xx=$ENV{ConstructLocation};
+#print "Path used for ConsDefs is $xx\n" unless ($param::quiet);
 
 if ( -e "mgr/Conscript-standard"){
     $xx = " local";
+#    $param::defaultConscript =
+#	"mgr/Conscript-standard";          # Local construction file.
 } else {
     $xx = " default";
-}
+#    $param::defaultConscript =
+#	$STAR . "/mgr/Conscript-standard"; # Default construction file.
+}   
 $param::defaultInclude = $INCLUDE; 
 $param::defaultInclude =~ s|^#||; print "param::defaultInclude = $param::defaultInclude\n";
 
@@ -35,19 +41,38 @@ my $def = {@param::defaults};
     }
   }
 }
-$LIB = $BUILD . "/" . File::Basename::basename($STAR_LIB);
-$OBJ = $BUILD . "/" . File::Basename::basename($STAR_OBJ);
-$BIN = $BUILD . "/" . File::Basename::basename($STAR_BIN);
-$LIBPATH = $LIB;
-# $LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{ROOT}->{LIBDIR};
-# $LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{MYSQL}->{LIBDIR};
-# $LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{QT}->{LIBDIR};
-# $LIBPATH .= $main::PATH_SEPARATOR . $def->{ENV}->{OPTSTAR} . "/lib";
-#print "LD_LIBRARY_PATH = $def->{ENV}->{LD_LIBRARY_PATH} ================================================================================\n";
-foreach my $lib  (split ':',$def->{ENV}->{LD_LIBRARY_PATH}) {
-#  print "lib = $lib ================================================================================\n";
-  $LIBPATH .= $main::PATH_SEPARATOR . $lib;
+
+#
+# Change directory structure depending on options
+#
+if ($def->{CXX}  =~ m/-Zoi/ ){
+    # Drtup for INSURE tree directory.
+    $LIB = $BUILD . "/ILIB";
+    $BIN = $BUILD . "/IBIN";
+    $OBJ = $BUILD . "/IOBJ";
+
+} elsif ( defined($def->{GPROF}) ) {
+    $LIB = $BUILD . "/GLIB";
+    $BIN = $BUILD . "/GBIN";
+    $OBJ = $BUILD . "/GOBJ";
+
+} elsif ($def->{DEBUG}  eq "-g" ) {
+    $LIB = $BUILD . "/lib";
+    $BIN = $BUILD . "/bin";
+    $OBJ = $BUILD . "/obj";
+
+} else {
+    $LIB = $BUILD . "/LIB";
+    $BIN = $BUILD . "/BIN";
+    $OBJ = $BUILD . "/OBJ";
 }
+
+
+$LIBPATH = $LIB;
+$LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{ROOT}->{LIBDIR};
+$LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{MYSQL}->{LIBDIR};
+$LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{QT}->{LIBDIR};
+$LIBPATH .= $main::PATH_SEPARATOR . $def->{ENV}->{OPTSTAR} . "/lib";
 print "Set LIB = $LIB BIN = $BIN OBJ = $OBJ INCLUDE = $INCLUDE LIBPATH = $LIBPATH\n";
 
 #if ( defined( $ARG{CPPPATH} ) ){$CPPPATH = $ARG{CPPPATH};}
@@ -60,6 +85,7 @@ $repository = `echo $STAR`;
 chop($repository);
 print "repository = $repository\n" unless ($param::quiet);
 Repository($repository); 
+
 my @Repo = Repository_List;
 if ( defined( $ARG{Salt} ) ) { $Salt = $ARG{Salt}; }
 if ( defined( $ARG{NoKeep} ) ) { $NoKeep = $ARG{NoKeep}; }
@@ -74,25 +100,16 @@ if ( $#Repo > -1 ) {
 }
 else { if (! $NoKeep) {$param::keep = 1; }}
 
+
 Link $OBJ => $DirPath;
 print "Link $BUILD => $DirPath\n" unless ($param::quiet);
+#  'FCPATH'         => $FCPATH,
+#  'CPPPATH'        => $CPPPATH,
+#  'EXTRA_CXXFLAGS' => $EXTRA_CXXFLAGS,
+#  'EXTRA_CFLAGS'   => $EXTRA_CFLAGS,
 $env = new cons(
   'LIBPATH'        => $LIBPATH,
 );
-
-$GITINFO = $LIB . "/etc/gitinfo.txt";
-if (-d ".git") {
-#  my $opt = "'+%b %d %Y, %H:%M:%S";
-  my @DEPS = ();
-  my @gitFiles = qw(.git/HEAD .git/FETCH_HEAD .git/ORIG_HEAD .git/COMMIT_EDITMSG .git/logs/HEAD);
-  foreach my $file (@gitfiles) {
-    if (-r $file) {
-      push  @DEPS, "#" . $file;
-    } 
-  }
-  Command $env [$GITINFO], (@DEPS), qq( git describe --all > %>;  git describe --always >> %>; date >> %>);
-}
-
 Ignore qw(
   include/geant321/incbeg.inc
   include/geant231/incbeg.inc
@@ -110,33 +127,26 @@ Ignore qw(
 
 if ( !$param::quiet ) {
   my @list = qw (STAR_SYS ROOTSYS br 
-		 CERNLIB_FPPFLAGS CERNLIB_CPPFLAGS br
-		 CXX DEBUG CXXFLAGS EXTRA_CXXFLAGS br
+		 CXX DEBUG CXXFLAGS EXTRA_CXXFLAGS 
 		 CPPFLAGS EXTRA_CPPFLAGS br 
 		 CPPPATH EXTRA_CPPPATH br
 		 CC DEBUG CFLAGS EXTRA_CFLAGS br
 		 FC FDEBUG FPPFLAGS FEXTEND FFLAGS br 
-		 FCPATH EXTRA_FCPATH FLIBS br
+		 FCPATH EXTRA_FCPATH br
 		 F77LD F77LDFLAGS br
 		 CERNLIBS br 
 		 FLIBS CLIBS SYSLIBS LIBG2C br
-		 LD LDFLAGS EXTRA_LDFLAGS br 
-                 LIBPATH LIBS Libraries SO SOFLAGS br 
+		 LD LDFLAGS EXTRA_LDFLAGS LIBPATH LIBS Libraries br
+		 SO SOFLAGS br 
 		 LIBG2C LIBSTDC br
 		 ROOTLIBS br
-		 spack
-	       );
-  my $tab = ""; 
-  foreach my $p ( @list ) {#    print "p = $p\n";
+		);
+  my $tab = "";
+  foreach my $p ( @list ) {
     if ($p eq 'br') {print "\n"; $tab = "";}
     else {
-      if ($env->{Packages}->{$p}) {# print "env->{Packages}->{$p} = $env->{Packages}->{$p}\n";
-        for my $t (qw(INCDIR LIBDIR BINDIR LIBS)) {# print "$t\n";
-          if ($env->{Packages}->{$p}->{$t}) {print "$p\-\>\{$t\} =  $env->{Packages}->{$p}->{$t}\n"; $tab = "";}
-	}
-      } 
+      if ($env->{$p})           {print "$tab$p = ", $env->{$p}; $tab = "\t";}
       elsif ($env->{ENV}->{$p}) {print "$tab$p = ", $env->{ENV}->{$p};  $tab = "\t";}
-      elsif ($env->{$p})        {print "$tab$p = ", $env->{$p}; $tab = "\t";}
     }
   }
 }
@@ -144,9 +154,9 @@ PrintHash($env,"\$env->{") if ($param::debug);
 my @packages = ();
 #find_PACKAGE(\&find_PACKAGE,"."); #print "Packages found: @packages\n";
 my @subdirs = ();
-#if ($env->{ENV}->{ROOT_LEVEL} !~ /^6/) {
+
 # install includes
-my @DirsWithIncludes = glob "asps/rexe/TGeant3/.includes_for_export.flg StarVMC/*/.includes_for_export.flg StarVMC/geant3/TGeant3/.includes_for_export.flg StRoot/*/.includes_for_export.flg StRoot/*/*/.includes_for_export.flg StRoot/RTS/src/RTS_READER/.includes_for_export.flg ";
+my @DirsWithIncludes = glob "asps/*/.includes_for_export.flg asps/*/*/.includes_for_export.flg StDb/*/.includes_for_export.flg StarVMC/*/.includes_for_export.flg StarVMC/*/*/.includes_for_export.flg OnlTools/*/.includes_for_export.flg OnlTools/*/*/.includes_for_export.flg StRoot/*/.includes_for_export.flg StRoot/*/*/.includes_for_export.flg StRoot/StRTSClient/include/.includes_for_export.flg  StRoot/RTS/src/RTS_READER/.includes_for_export.flg";
 @DirsWithIncludes = map File::Basename::dirname($_), @DirsWithIncludes;
 
 my @DirsIdlInc = glob "pams/*/idl pams/*/inc";
@@ -175,78 +185,79 @@ foreach my $dir (@DirsWithIncludes, @DirsIdlInc) {
     Install $env $INCLUDE, @incT;
   }
 }
-#}
-my @excludeDirList = qw(\. \.\. macros CVS html doc inc idl local run wrk example include kumac.*);
-my  $excludeDirList = join ("|", @excludeDirList);
-#my  @items = qw(StShadowMaker); #StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
-my  @items = qw(StShadowMaker StFwdTrackMaker  ); #  StFcsWaveformFitMaker#StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
-if (! -r "$ROOSYS/include/TPythia6.h") {
-  push @items, "StEStructPool"; # pyhtia
+foreach my $dir (qw(StRoot/Vc/include/Vc StRoot/Vc/common  StRoot/Vc/scalar StRoot/Vc/sse StRoot/Vc/include/Vc/internal
+		   StRoot/TBB/include/tbb StRoot/TBB/include/tbb/machine)) {
+  next if ! -r $dir;
+  my $installdir = $INCLUDE;
+  if ($dir =~ /Vc/) {
+    $installdir = $INCLUDE . "/Vc";
+    if ($dir =~ /internal$/) {$installdir .= "/internal";}
+    if ($dir =~ /common$/) {$installdir .= "/common";}
+    if ($dir =~ /scalar$/) {$installdir .= "/scalar";}
+    if ($dir =~ /sse$/)    {$installdir .= "/sse";}
+  }
+  if ($dir =~ /tbb/) {
+    $installdir .= "/tbb";
+    if ($dir =~ /machine$/) {$installdir .= "/machine";}
+  }
+  print "$dir => $installdir\n" if ($param::debug);
+  opendir( DIR, $dir ) or die "Can't open $dir\n";
+  my @incs = readdir DIR; print "incs = @incs\n" if ($param::debug);
+  closedir DIR;
+  my @incT = (); 
+  foreach my $inc(@incs) {
+    my $file = $dir . "/" . $inc;
+    next if ! -f $file;
+    next if $file =~ /\.consign/;
+    push @incT, $dir . "/" . $inc;
+    print "+++ add $inc from $dir\n" if ($param::debug);
+  }  
+  print "\n" if ($param::debug);
+  print "$dir => $installdir @incT\n" if ($param::debug);
+  if ( $#incT > -1 && !$param::rflag ) {
+    Install $env $installdir, @incT;
+  }
 }
-if ($STAR_HOST_SYS =~ /darwin/ or ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 8))) {
+my @excludeDirList = qw(\. \.\. macros CVS html doc inc idl local run wrk example include kumac.*);
+#my  $excludeDirList = "^(\.|\.\.|macros|CVS|html|doc|inc|idl|local|run|wrk|example|include|kumac.*)\$";
+my  $excludeDirList = join ("|", @excludeDirList);
+#
+# Open exclusion list 
+# Note: Please start new list with "|XX" to exclude XX
+#   We should avoid having this list expanded - package not compiling should
+#   simply not be checked out in dev or other areas. Only possible exception
+#   are R&D packages which may requires a default exlcusion (unless +XX is
+#   used) or a trigger on conditions (CXX version, compiler presence). In
+#   such a case, those packages shouldbe stricly optional.
+#
+my  @items = qw(); #  StBTofPool StFgtPool
+if ( 1==0 ){ # disable the exclusion
+    if ($USE_64BITS and $USE_64BITS != "0"){
+	push @items, "gstar";
+	push @items, "control";
+	push @items, "St_geant_Maker";
+    }
+}
+#print "CXX MAJOR = $env->{CXX_MAJOR} CXX MINOR =  $env->{CXX_MINOR}\n";
+#if ($env->{CXX_MAJOR} < 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} < 4)) {
+#    $items .= "|Vc|TBB|TPCCATracker";
+#}
+if ($STAR_HOST_SYS =~ /sl61_gcc445/) {# broken Qt4
   push @items, "St_geom_Maker";
 }
-push @items, "StTrsMaker";
-
-if ($STAR_HOST_SYS =~ /darwin/ or $STAR_HOST_SYS =~ /icc/) {
+if ($STAR_SYS =~ /x86_darwin/) {
+  push @items, "St_geom_Maker"; # if no QT |StStarLogger
   push @items, "GeoTestMaker"; # if no QT |StStarLogger
   push @items, "Pythia6"; # problem with pythia6_common_address.c
-  push @items, "StarLight"; # problem with capital and low case letter in file names
-  push @items, "UrQMD3_3_1"; # -"-
-  push @items, "StEmbeddingUtilities";
-  push @items, "StEEmcIUPi0";
-  push @items, "StHLTCAMaker";
-  push @items, "StMaxStripPi0";
-  push @items, "StarGenerator";
-  push @items, "StJetMaker";
+#ifdef ____MAC_____
+  push @items, "StEStructPool";
+  push @items, "StMCFilter";
+  push @items, "StTriggerUtilities";
+  push @items, "StSpinPool";
+#endif /* ____MAC_____ */
 }
-if ($STAR_HOST_SYS =~ /icc/) {
-   push @items, "StMCAsymMaker";
-}
-if ($env->{ENV}->{Vc}->{LIBS}) {
-  push @items, "StHLTCAMaker";
-  push @items, "KFParticle";
-  push @items, "TPCCATracker";
-}
-if ($STAR_HOST_SYS =~ /gcc447/) {# no c++11
-  push @items, "FmsDbMaker";
-  push @items, "FmsFastSimulatorMaker";
-  push @items, "FmsHitMaker";
-  push @items, "FmsPointMaker";
-  push @items, "FmsUtil";
-}
-# if ($ROOT_LEVEL =~ /^5/ ){
-#   push @items, "StStrangeMuDstMaker";
-#    push @items, "St_Table";
-# }
-if ($ROOT_LEVEL !~ /^5/ ){
-  push @items, "GeoTestMaker";
-  push @items, "garfield";
-  push @items, "Pythia6_2_22";
-  push @items, "Pythia6_2_23";
-  push @items, "Pythia6_2_28";
-  push @items, "Pythia8_1_62";
-  push @items, "Pythia8_1_86";
-  push @items, "Pythia8_2_25";
-}
-my $python2 = system("which python2 > /dev/null 2>& 1");
-#print "python2 = $python2\n";
-if ($python2) {
-  push @items, "Geometry";
-}
-if ($STAR_HOST_SYS =~ /^al92/) {# no cern
-  push @items, "rexe";
-  push @items, "starsim";
-  push @items, "gcalor";
-  push @items, "geant321";
-}
-if (! $env->{Packages}->{fastjet}->{LIBS}) {
-  push @items, "StJetFinder";
-  push @items, "StarGenerator/FILT";
-}
-#push @items, "StiCA";
-#push @items, "StarVMC/xgeometry";
-#push @items, "GenFit";
+#$items .= "StBTofPool|StTriggerUtilities|StFgtPool|StPeCMaker";
+#$items .= "StBTofPool|StFgtPool|StPeCMaker";
 # closing exclusion list
 my $items = "";# print "items $#items  = @items\n";
 
@@ -259,17 +270,8 @@ if ( defined($SKIP_DIRS) ) {
 if ( $#items > -1){
   if (!$items) {$items  =       join("|",@items);}
   else         {$items .= "|" . join("|",@items);}
-}
-if ( defined($SKIP_DIRS) ){ 
-  if ($items) {$items .= "|";}
-  $items .= join("|",split(" ",$SKIP_DIRS));
-}
-if ($items) {
-  $SKIP_DIRS = $items;
   print "SKIP_DIRS is now: $#items $items\n";
 }
-#print "SKIP_DIRS = $SKIP_DIRS\n";
-#die;
 # Search for directories (one level down) and make
 # list of targets
 #
@@ -279,10 +281,8 @@ foreach my $dir( "pams", "StRoot", "StPiD", "StarVMC" ) {
   my @subdirS = readdir DIR;  print "subdirS = @subdirS\n" if ($param::debug);
   closedir DIR;
   foreach my $sub_dir (@subdirS) { 
-    next if ($sub_dir eq '.' || $sub_dir eq '..');
-    next if ($sub_dir =~ $excludeDirList);
-#    next if ($sub_dir eq 'Table' and $ROOT_LEVEL =~ /^5/ );
-    next if ($sub_dir eq 'Table');
+    next if $sub_dir eq '.' || $sub_dir eq '..';
+    next if ( $sub_dir =~ $excludeDirList);
     my $sub_Dir = $dir . "/" . $sub_dir; 
     next if !-d $sub_Dir and !-l $sub_Dir;
 
@@ -290,6 +290,8 @@ foreach my $dir( "pams", "StRoot", "StPiD", "StarVMC" ) {
     next if ($sub_Dir =~ m/StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 
     print "dir = $dir \t sub_dir = $sub_dir sub_Dir = $sub_Dir\n" if ($param::debug);
+#    print "$sub_dir => $items\n";
+#      if ($items and $sub_dir =~ /$items/) {print "skip dir: $sub_dir \t=> $items\n"; next;}
     print "items = $items sub_dir = $sub_dir $param::include\n" if ($param::debug);
     if ($items and $sub_dir =~ /$items/ and ( ! $param::include or  $sub_dir !~ /$param::include/o )    ) { 
       print "====== param::include = $param::include $subsub_dir \n" if ($param::debug);
@@ -365,21 +367,35 @@ if ( index($env->{EXTRA_CXXFLAGS}, "-Werror") != -1 ) {
 my @Targets = ();
 
 # List of targets
-my @sysdirlist = qw(asps/Simulation/agetof
-		    asps/staf/sdd
-		    StDb
-		   );# print "sysdirlist = @sysdirlist\n";
-if (-r "StarDb/AgiGeometry" ) {push @sysdirlist, "StarDb/AgiGeometry";}
-if (-r "StarDb/AgMLGeometry") {push @sysdirlist, "StarDb/AgMLGeometry";}
-if ($STAR_HOST_SYS !~ /darwin/) {
+my @sysdirlist = qw(asps/Simulation/agetof 
+		    asps/staf/sdd 
+		    StDb 
+		   );
+if ($STAR_SYS !~ /x86_darwin/) {
   push @sysdirlist, "asps/DAQBrowser";
 }
- if ($STAR_HOST_SYS !~ /darwin/){# && $ROOT_LEVEL !~ /^6/ ){
-   push @sysdirlist, "asps/Simulation/geant321";
-   push @sysdirlist, "asps/Simulation/gcalor";
-   push @sysdirlist, "asps/rexe";
-   push @sysdirlist, "asps/Simulation/starsim";
- }
+
+#
+# TODO: This excludes the build of root4star, Geant etc ... under a 64bits target
+#       Need investigation at some stage. 
+#       A comment character before !($USE_64BITS and $USE_64BITS != "0") would reenable
+#       compilation but other parts of this code excludes more directories.
+#
+#if ( 1==0 ){  # disable the exclusion 
+#    if ( !($USE_64BITS and $USE_64BITS != "0") &&
+     if (  $STAR_SYS !~ /x86_darwin/){
+	push @sysdirlist, "asps/Simulation/geant321";
+	push @sysdirlist, "asps/Simulation/gcalor";
+	push @sysdirlist, "asps/rexe";
+	push @sysdirlist, "asps/Simulation/starsim";
+	if ($STAR_HOST_SYS !~ /sl61_gcc445/) { # broken Qt
+	    push @sysdirlist, "OnlTools/OnlinePlots";
+	    push @sysdirlist, "OnlTools/PDFUtil";
+	    push @sysdirlist, "OnlTools/StOnlineDisplay";
+	    push @sysdirlist, "OnlTools/Jevp";
+	}
+    }
+#}
 
 #print "sysdirlist = @sysdirlist \n subdirs = @subdirs\n";
 
@@ -387,6 +403,8 @@ if ($STAR_HOST_SYS !~ /darwin/) {
 
 foreach $dir(@sysdirlist , @subdirs ) {
     if ( -d $dir or -l $dir ) {
+#	next if $param::include && $dir !~ /$param::include/o;
+#	next if $param::exclude && $dir =~ /$param::exclude/o;
         print "Add dir : $dir\n" if $param::debug;
         #push @Targets, $OBJ . "/" . $dir . "/Conscript";
         next if grep($dir =~ m/$_/, @skip_dirs);
@@ -395,28 +413,15 @@ foreach $dir(@sysdirlist , @subdirs ) {
 }
 #print "Packages $#packages : @packages\n";
 @packages = sortu(@packages);
-#print "======= STAR_HOST_SYS = $STAR_HOST_SYS $param::include\n";
-my $qtRoot = "QtRoot";
-if (($STAR_HOST_SYS !~ /^darwin/ && $STAR_HOST_SYS !~ /^al/  ) && # and $STAR_HOST_SYS !~ /sl53_gcc471/ and $STAR_HOST_SYS !~ /gcc482/) ||
-    $ROOT_LEVEL !~ /^6/ ||
-    ($param::include and $qtRoot =~ /$param::include/)) {# no qt on mac
-#  print "check $qtRoot\n";
-  if ((-d $qtRoot or -l $qtRoot)) {# and $env->{CXX_MAJOR} <= 6 ) {
-#    print "$qtRoot does exist\n";
-    push @packages, $qtRoot;
-  } else {
-#    print "$qtRoot does not exist\n";
-  }
+if ($STAR_SYS !~ /x86_darwin/) {# no qt on mac
+ my $qtRoot = "QtRoot";
+ #if ($param::include and $qtRoot =~ /$param::include/) {
+  push @packages, $qtRoot if ( -d $qtRoot or -l $qtRoot);
 }
-if ($STAR_HOST_SYS !~ /darwin/ and $STAR_HOST_SYS !~ /icc/ and  $ROOT_LEVEL =~ /^5/ and $env->{CXX_MAJOR} <= 6) {
-  push @packages, "garfield";
-}
-#if ($STAR_HOST_SYS !~ /icc/) {
-#push @packages, "MillepedeII";
-#}
 #print "packages after $#packages : @packages\n";
 print "BUILD  = $BUILD OBJ = $OBJ\n" unless ($param::quiet);
 @Targets = map($OBJ . "/" . $_ . "/Conscript", @packages);
+#@Targets = map('#' . $_ . "/Conscript", @packages);
 
 if ($param::debug){
     print "Packages $#packages : @packages\n";
@@ -429,7 +434,44 @@ Default qw (   .  );
 
 Depends $env $STAR . "/mgr/RootCint.pl", $env->{ENV}->{ROOTSYS} . "/bin/rootcint";
 
+
+
 Build @Targets;
+#if ($env->{Packages}->{ROOT}->{RLIBMAP}) {
+#  # Create libraries map
+  
+#  my @L = Repository_List;
+#  push @L, "."; 
+  
+#  my $glob = join (' ', map($_ . "/." . $STAR_HOST_SYS . "/lib/lib*.so",@L));# print "glob = $glob\n";
+#  my @Libs = glob $glob; 
+#  my @rootlibs = split ' ', $ROOTLIBS;
+#  foreach my $l (@rootlibs) {$l = s/-l//; if ($l) {$l = $ROOTSYS . "/lib/lib" . $l . ".so"; push @Libs, $l;}}
+#  push @Libs, $env->{ENV}->{OPTSTAR} . "/lib/liblog4cxx.so";
+#  push @Libs, "/usr/lib/libmysqlclient.so"; #print "Libs = @Libs\n";
+#  my $map = $BUILD . "/etc/STAR_LIB.map";
+#  $map =~ s/^#//;
+#  if (! -r $map)  {
+#    print "$map does not exist. Try to create.\n";
+#    Command $env [("#" . $map)], @Libs, qq(LibsDeps.pl %< > %>);
+#  }
+#  if ( -r $map) {
+#    print "$map does exist. Try to use.\n";
+#    open(IN,"$map") or die "Can't open $map";
+#    my $line;
+#    while ($line = <IN>) {
+#      next if ! $line;
+#      next if $line !~ /:/;
+#      my @words = split ':', $line;# print "words |$words[0]| |$words[1]\n";
+#      chomp($words[1]);
+#      my $lib = File::Basename::basename($words[0]);
+#      $env->{MAP}->{$lib} = $words[1];# print "lib =  $lib Deps = $env->{MAP}->{$lib} = $words[1]\n";
+#    }
+#    close (IN);
+#  }
+  
+## rm ~/.rootmap; cat $STAR_LIB/*.map > ~/.rootmap
+#}
 #___________________________________________________________________________
 sub script::wanted_dead {
     -l and not -e and print "bogus link: $File::Find::name \t--- remove it\n"
@@ -451,9 +493,7 @@ sub script::PrintHash($$) {
 #________________________________________________________________________________
 sub find_PACKAGE {
   @packages   = ();
-  if ($_) {
-    &File::Find::find(\&wanted_PACKAGE, @_);
-  }
+  &File::Find::find(\&wanted_PACKAGE, @_);
   return @packages;
 }
 #________________________________________________________________________________
@@ -471,8 +511,7 @@ sub wanted_PACKAGE {
       /^run$/ ||
       /^examples$/ ||
       /^images$/ ||
-      /^local$/ ||      
-      /^calib$/ ||
+      /^local$/ ||
       /^hold$/ ||
       /^wrk$/)
     {$File::Find::prune = 1; return;}

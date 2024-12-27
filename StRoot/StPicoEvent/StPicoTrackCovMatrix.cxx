@@ -37,21 +37,21 @@ void StPicoTrackCovMatrix::Print(Char_t const* option __attribute__((unused)) ) 
   const Float_t *lSigma = sigmas();
   const Float_t *lCorr = correlations();
   LOG_INFO << "imp: " << imp()
-	   << "\tz: " << z()
-	   << "\tpsi: " << psi()
-	   << "\tpti: " << pti()
-	   << "\ttan: " << tan()
-	   << "\tcurv: " << curv()
-	   << "\nsigmas: \t"
-	   << lSigma[0] << "\t" << lSigma[1] << "\t"
-	   << lSigma[2] << "\t" << lSigma[3] << "\t"
+	   << "z: " << z()
+	   << "psi: " << psi()
+	   << "pti: " << pti()
+	   << "tan: " << tan()
+	   << "curv: " << curv()
+	   << "sigmas: \n"
+	   << lSigma[0] << "/" << lSigma[1] << "/"
+	   << lSigma[2] << "/" << lSigma[3] << "/"
 	   << lSigma[4] << "\n"
 	   << "correlations: \n"
-	   << lCorr[0] << "\t" << lCorr[1] << "\t"
-	   << lCorr[2] << "\t" << lCorr[3] << "\t"
-	   << lCorr[4] << "\t" << lCorr[5] << "\t"
-	   << lCorr[6] << "\t" << lCorr[7] << "\t"
-	   << lCorr[8] << "\t" << lCorr[9] << endm;
+	   << lCorr[0] << "/" << lCorr[1] << "/"
+	   << lCorr[2] << "/" << lCorr[3] << "/"
+	   << lCorr[4] << "/" << lCorr[5] << "/"
+	   << lCorr[6] << "/" << lCorr[7] << "/"
+	   << lCorr[8] << "/" << lCorr[9] << endm;
 }
 
 //_________________
@@ -67,7 +67,6 @@ Bool_t StPicoTrackCovMatrix::isBadCovMatrix() {
 	  mCorr[5]==0 && mCorr[6]==0 && mCorr[7]==0 && mCorr[8]==0 && mCorr[9]==0 );
 }
 
-#if defined (__TFG__VERSION__)
 //_________________
 StDcaGeometry &StPicoTrackCovMatrix::dcaGeometry() const {
   static StDcaGeometry a;
@@ -85,4 +84,3 @@ StDcaGeometry &StPicoTrackCovMatrix::dcaGeometry() const {
   a.set(params(), errMatrix);
   return *&a;
 }      
-#endif /* __TFG__VERSION__ */

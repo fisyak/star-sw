@@ -50,7 +50,7 @@ class KFPEmcCluster
   
   void Resize(const int n);
   void Set(KFPEmcCluster& v, int vSize, int offset);
-  void SetTracks(const KFPEmcCluster& track, const kfvector_uint& trackIndex, const int nIndexes);
+  void SetTracks(const KFPEmcCluster& track, const kfvector_int& trackIndex, const int nIndexes);
   
   const kfvector_float& X()  const { return fP[0]; } ///< Returns constant reference to the vector with X coordinates.
   const kfvector_float& Y()  const { return fP[1]; } ///< Returns constant reference to the vector with Y coordinates.
@@ -65,8 +65,8 @@ class KFPEmcCluster
   void SetParameter (float value, int iP, int iTr) { fP[iP][iTr] = value; } ///< Sets the "value" of the parameter "iP" of the cluster with index "iTr".
   void SetCovariance(float value, int iC, int iTr) { fC[iC][iTr] = value; } ///< Sets the "value" of the element of covariance matrix "iC" of the cluster with index "iTr".
 
-  void SetParameter (const float_v& value, int iP, int iTr);  
-  void SetCovariance(const float_v& value, int iC, int iTr);
+  void SetParameter (const float32_v& value, int iP, int iTr);  
+  void SetCovariance(const float32_v& value, int iC, int iTr);
 
   void SetId        (int value, int iTr)           { fId[iTr] = value; } ///< Sets the "value" of the id of the cluster with index "iTr".
   
