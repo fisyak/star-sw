@@ -120,11 +120,13 @@ int StMuMomentumShiftMaker::Make() {
     StMuTrack *track= mudst->globalTracks(i_glob);
     ScaleMomentum(track);
   }
+#ifndef __TFG__VERSION__
   Int_t n_other=mudst->numberOfOtherTracks();
   for (Int_t i_other=0; i_other < n_other; i_other++) {
     StMuTrack *track= mudst->otherTracks(i_other);
     ScaleMomentum(track);
   }
+#endif /* __TFG__VERSION__ */
   /* Skip L3 tracks for now, they were reconstructed seperately
   Int_t n_l3=mudst->numberOfL3Tracks();
   for (Int_t i_l3=0; i_l3 < n_l3; i_l3++) {

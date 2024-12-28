@@ -1,6 +1,6 @@
 /***************************************************************************
  *   
- * $Id: StMuHelix.cxx,v 1.5 2009/12/01 21:56:35 tone421 Exp $
+ * $Id: StMuHelix.cxx,v 1.2 2013/08/07 12:58:40 fisyak Exp $
  * Author: Frank Laue, BNL, laue@bnl.gov
  *
  ***************************************************************************/
@@ -29,15 +29,21 @@ int StMuHelix::bad() const
    if (fabs(mB) >  1000)        return 41;
    return 0;
 }
-StPhysicalHelix  StMuHelix::helix() const
+StPhysicalHelixD  StMuHelix::helix() const
 {
-   return StPhysicalHelix(mP,mOrigin,mB*kilogauss,mQ);
+   return StPhysicalHelixD(mP,mOrigin,mB*kilogauss,mQ);
 }
 
 ClassImp(StMuHelix)
 /***************************************************************************
  *
  * $Log: StMuHelix.cxx,v $
+ * Revision 1.2  2013/08/07 12:58:40  fisyak
+ * Add access to StMuHelix
+ *
+ * Revision 1.1.1.1  2013/07/23 14:14:48  fisyak
+ *
+ *
  * Revision 1.5  2009/12/01 21:56:35  tone421
  * Implemented changes as per http://www.star.bnl.gov/rt2/Ticket/Display.html?id=1734
  *

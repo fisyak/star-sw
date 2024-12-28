@@ -70,10 +70,10 @@ void StuDraw3DMuEvent::Tracks(StTrackType type)
    Int_t n_glob=0;
    TObjArray *globTracks = 0;
    TObjArray *primTracks = 0;
-   if (type == global && ( globTracks= StMuDst::globalTracks() ) ){
-      n_glob=StMuDst::GetNGlobalTrack();
-   } else if ( (primTracks = StMuDst::primaryTracks()) ) {
-      n_prim=StMuDst::GetNPrimaryTrack();
+   if (type == global && ( globTracks= StMuDst::instance()->globalTracks() ) ){
+      n_glob=StMuDst::instance()->GetNGlobalTrack();
+   } else if ( (primTracks = StMuDst::instance()->primaryTracks()) ) {
+      n_prim=StMuDst::instance()->GetNPrimaryTrack();
    }
 
    Int_t i_track=0;
@@ -193,7 +193,7 @@ EEmcGeomSimple *StuDraw3DMuEvent::EndcapGeom()
 //___________________________________________________
 void   StuDraw3DMuEvent::Endcaps(Style_t sty)
 {
-   StMuEmcCollection *emc= StMuDst::muEmcCollection();
+   StMuEmcCollection *emc= StMuDst::instance()->muEmcCollection();
    if (emc)  Endcaps(*emc,sty);
 }
 

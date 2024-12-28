@@ -15,7 +15,12 @@
 #include "StEvent/StDedxPidTraits.h"
 
 
+#ifdef __TFG__VERSION__
+#include "TMath.h"
+#include "StBichsel/Bichsel.h"
+#else  /* !__TFG__VERSION__ */
 #include "StarClassLibrary/BetheBloch.h"
+#endif /* __TFG__VERSION__ */
 
 ClassImp(StMuL3Filter)
 
@@ -31,12 +36,16 @@ bool StMuL3Filter::accept( const StKinkMuDst* k) { cout << "StMuL3Filter::accept
 StMuL3Filter::StMuL3Filter()  {
   DEBUGMESSAGE3("");
   cerr << "StMuL3Filter::StMuL3Filter(): called. Next BetheBloch instance is made." << endl;
+#ifndef __TFG__VERSION__
   mBB = new BetheBloch();
+#endif /* !__TFG__VERSION__ */
   cerr << "StMuL3Filter::StMuL3Filter(): did you see the BetheBloch warning?" << endl;
 }
 
 StMuL3Filter::~StMuL3Filter()  {
+#ifndef __TFG__VERSION__
   delete mBB; mBB = 0;
+#endif /* !__TFG__VERSION__ */
 }
 
 bool StMuL3Filter::accept(const StTrack* track) {
@@ -77,9 +86,14 @@ bool StMuL3Filter::accept(const StTrack* track) {
 	      // check dEdx
 	      //	      if (mBB==0) mBB = new BetheBloch();
 	      float p = track->geometry()->momentum().magnitude();
+#ifndef __TFG__VERSION__
 	      float dedxHigh = dEdxFractionCutHigh * mBB->Sirrf(p/dEdxMassCutHigh);
 	      float dedxLow = dEdxFractionCutLow * mBB->Sirrf(p/dEdxMassCutLow);
 
+#else /* __TFG__VERSION__ */
+	      float dedxHigh = dEdxFractionCutHigh * Bichsel::Instance()->GetI70M(TMath::Log10(p/dEdxMassCutHigh));
+	      float dedxLow  = dEdxFractionCutLow  * Bichsel::Instance()->GetI70M(TMath::Log10(p/dEdxMassCutLow));
+#endif /* __TFG__VERSION__ */
 	      float dedx = 0;
 	      // get track dEdx
 	      const StSPtrVecTrackPidTraits& traits = track->pidTraits();

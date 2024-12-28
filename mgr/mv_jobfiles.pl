@@ -1,8 +1,8 @@
 #! /opt/star/bin/perl -w
 #
-#  
+#  $Id:
 #
-#     mv_jobfiles.pl - script to move jobfiles for crashed jobs
+#  $Log:   mv_jobfiles.pl - script to move jobfiles for crashed jobs
 #          from archive to jobfiles directory 
 #  L.Didenko
 ###############################################################################

@@ -91,7 +91,7 @@ sub scan_directories{
 
     chomp $line;
 
-    $line =~ /\\s+([\w\.,]+)\s+([\d\.]+)\s+(.*)Exp/ and do{
+    $line =~ /\$Id:\s+([\w\.,]+)\s+([\d\.]+)\s+(.*)Exp/ and do{
       $rev = $2;
       $date_time = $3;
       ($name = $1) =~ s/,v$//;

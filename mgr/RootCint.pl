@@ -6,8 +6,16 @@
 #
 use Env;
 use File::Basename;
+use Cwd;
 
-#
+# my $Lib = "";
+# my $Pcm = "";
+# if ($ROOT_LEVEL =~ /^6/) {
+#   $Lib = shift;
+#   $RootMap = shift;
+#   $Pcm     = shift;
+#   print "RootCint.pl : Lib = $Lib, RootMap = $RootMap, Pcm = $Pcm\n";
+# }
 my $Cint_cxx = shift;
 my $Cint_h  = $Cint_cxx;
 $Cint_h  =~ s/_Cint\.cxx/_Cint\.h/g;
@@ -89,6 +97,7 @@ for my $def  (split /\s/,$sources) {		#print "SRC:", $def, "\n";
 	my $classG = $class;
 	if ($classG =~ /</) {($classG) = split '<', $classG;} 
 	if (!$classG) 			{goto PRINT;}
+	if ($classG =~ /::/) {$classG =~ s/.*:://;}
 	if ($class_written{$class} and $class eq $classG)		{next;}
 	push @classes, $classG;
 	$class_written{$classG} = 1; 	#print "class: $class, written: $class_written{$class}\n";
@@ -104,10 +113,10 @@ for my $h  (split /\s/,$sources) {
     #print "DEBUG SRC:", $h, "\n";
     next if !$h;
     next if $h =~ /LinkDef/;
-
+    next if $h =~ /Ttypes/;
     
     if ($h =~ /Stypes/)  {
-	$h_files .= " " . basename($h); 
+	$h_files .= " " .  basename($h); 
 	next;
     } 
     $h_dir = dirname($h);
@@ -207,7 +216,7 @@ for my $h  (split /\s/,$sources) {
 	    $inc_h =~ s/\"//g; 
 	    # print "inc_h = $inc_h\n";
 	  
-	    my $inc_hh = basename($inc_h);
+	    my $inc_hh = $inc_h; # basename($inc_h);
 	    if ($sources =~ /$inc_hh/) {
 		$includes .= ":" . $inc_hh;   	
 		# print "--includes for $h: $includes\n";
@@ -240,7 +249,7 @@ for my $h  (split /\s/,$sources) {
 	}
 	if ($line =~ /\#define/) { next;}
 	if ($line =~ /StCollectionDef/) {
-	    $coll++;  #print "$coll, $line\n";
+	    $coll++;#  print "$coll, $line\n";
 	}
     }
     close (In);
@@ -250,7 +259,7 @@ for my $h  (split /\s/,$sources) {
 	my $macro = "./StRoot/St_base/StArray.h";
 	if ( -f $macro) { }
 	else { $macro = `echo \$STAR/StRoot/St_base/StArray.h`;}
-	my $tmp = "temp.h";
+	my $tmp = $$ . "temp.h";# print "tmp = $tmp =========================\n";
 	open (INPUT, $h) or die "Can't open $h\n";
 	my $new_h = $DirName . "/" . basename($h);
 	open (OUTPUT, ">$tmp") or die "Can't open $tmp\n";
@@ -299,7 +308,7 @@ for my $h  (split /\s/,$sources) {
 	}
 	close (OUTPUT);
 	rename $tmp, $new_h or 
-	    `/bin/mv $tmp $new_h`;# or die "Can't rename or move $tmp to $new_h;\n";
+	    `mv $tmp $new_h`;# or die "Can't rename or move $tmp to $new_h;\n";
 	
     } #end Collection Definition
 }
@@ -404,7 +413,7 @@ for my $class (@classes) {	#loop over classes
       next;
   }
 
-  my $hh = " " . basename($h) . " "; 				#print "hh = $hh\n";
+  my $hh = " " . $h . ""; # basename($h) . " "; 				#print "hh = $hh\n";
   if ($h_files !~ /$hh/ )  {$h_files .= $hh;}
 }#end loop over classes
 
@@ -420,32 +429,34 @@ $h_files = $h_filesC . " " . $h_filesR;
 my $hfile = $DirName . "/Stypes.h";
 if (-f $hfile) {$h_files .= " Stypes.h";}
 if ($h_files) {
-    $h_files .= " " . "LinkDef.h";
-
-
-#  $CPPFLAGS .= " -I" . $DirName;
-#  my $cmd  = "rootcint -f $Cint_cxx -c -DROOT_CINT -D__ROOT__ -I. $CPPFLAGS $h_files";
-
-    $CPPFLAGS = " -I" . $DirName . " " . $IncDirName . $CPPFLAGS;
-    
-    my $cmd;
-    #foreach (keys %ENV){
-    #	print "DEBUG ".$_." ".$ENV{$_}."\n";
-    #}
-
-    #if ( defined($ENV{ROOTCINT_CPPFLAGS}) ){
-    #	$cmd  = "rootcint -f $Cint_cxx -c  -D__NO_STRANGE_MUDST__ -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-    #	print "cmd (+extra) = ",$cmd,"\n";
-    #} else {
-    	$cmd  = "rootcint -f $Cint_cxx -c -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-     	print "cmd (normal)= ",$cmd,"\n";
-    #	die;
-    #}
-
-
+  $h_files .= " " . "LinkDef.h";
+  #  $CPPFLAGS .= " -I" . $DirName;
+  #  my $cmd  = "rootcint -f $Cint_cxx -c -DROOT_CINT -D__ROOT__ -I. $CPPFLAGS $h_files";
+  $CPPFLAGS = " -I" . $DirName . " " . $IncDirName . $CPPFLAGS;
+  my $cmd;
+  #foreach (keys %ENV){
+  #	print "DEBUG ".$_." ".$ENV{$_}."\n";
+  #}
+  #if ( defined($ENV{ROOTCINT_CPPFLAGS}) ){
+  #	$cmd  = "rootcint -f $Cint_cxx -c  -D__NO_STRANGE_MUDST__ -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+  #	print "cmd (+extra) = ",$cmd,"\n";
+  #} else {
+#  if (! $Lib) {
+#    $cmd  = "rootcint -f $Cint_cxx -c -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+my $CintF = cwd() . "/" . $Cint_cxx;
+    $cmd  = "rootcint -f $CintF -c -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+#   } else {
+# #    $cmd  = "rootcling -f $Cint_cxx -c -rmf $RootMap  -rml $Lib -s $Lib -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+# # rootcling -rootbuild -f K_Dict.cc -s libK -rml libA.so -rml libC.so -rml libG.so -rmf libK.rootmap -c -p -I[INCLUDES] K1.hh K2.hh K3.hh LinkDef.hh
+#     $cmd  = "rootcling -rootbuild -f $Cint_cxx -rml $Lib -rmf $RootMap -c -p -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+# #
+# #rootcling -v0 "--lib-list-prefix=/star/u/fisyak/macros/Chain_C_ACLiC_map" -f "/star/u/fisyak/macros/Chain_C_ACLiC_dict.cxx" -c -p -I$ROOTSYS/include -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/etc" -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/etc/cling" -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/include" -I"/opt/rh/devtoolset-4/root/usr/lib/gcc/x86_64-redhat-linux/5.2.1/../../../../include/c++/5.2.1" -I"/opt/rh/devtoolset-4/root/usr/lib/gcc/x86_64-redhat-linux/5.2.1/../../../../include/c++/5.2.1/x86_64-redhat-linux" -I"/opt/rh/devtoolset-4/root/usr/lib/gcc/x86_64-redhat-linux/5.2.1/../../../../include/c++/5.2.1/backward" -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/Build/include" -D__ACLIC__ -I$HOME/macros -I/usr/include/QtGui "/star/u/fisyak/macros/Chain.C" "/star/u/fisyak/macros/Chain_C_ACLiC_linkdef.h
+# #    $cmd  = "rootcling -rootbuild -f $Cint_cxx -s $Lib  -rml $Lib -rmf $RootMap -c -p -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+#   }
+  print "cmd (normal)= ",$cmd,"\n";
+  #	die;
+  #}
     my $flag = `$cmd`; if ($?) {exit 2;}
 }
-
 exit(0);
-
 # last line

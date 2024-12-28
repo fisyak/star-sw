@@ -14,6 +14,9 @@ const char* StMuArrays::arrayNames [__NALLARRAYS__    ] = {"MuEvent","PrimaryVer
 					                   "PrimaryTracks","GlobalTracks","OtherTracks","L3Tracks",
 					                   "RichSpectra","DetectorStates","L3AlgoAccept","L3AlgoReject",
 							   "CovGlobTrack","CovPrimTrack","pp2pp","mtd",
+#ifdef __TFG__VERSION__
+							   "KFTracks","KFVertices",
+#endif /* __TFG__VERSION__ */
 #ifndef __NO_STRANGE_MUDST__
 /*strangeArrayNames[__NSTRANGEARRAYS__]*/                  "Event","McEvent",
 							   "V0","McV0","V0Assoc",
@@ -69,7 +72,12 @@ const char** StMuArrays::eztArrayNames = StMuArrays::fgtArrayNames    +__NFGTARR
 const char* StMuArrays::arrayTypes [__NALLARRAYS__    ] = {"StMuEvent","StMuPrimaryVertex",
 					                   "StMuTrack","StMuTrack","StMuTrack","StMuTrack",
 					                   "StRichSpectra","StDetectorState","StL3AlgorithmInfo","StL3AlgorithmInfo",
+#ifndef __TFG__VERSION__
 							   "StDcaGeometry","StMuPrimaryTrackCovariance","StMuRpsCollection","StMuMtdCollection",
+#else /* __TFG__VERSION__ */
+							   "StDcaGeometry","StMuPrimaryTrackCovariance","StMuRpsCollection","StMuMtdCollection", 
+							   "KFParticle","KFVertex",
+#endif /* __TFG__VERSION__ */
 #ifndef __NO_STRANGE_MUDST__
 /*strangeArrayTypes[__NSTRANGEARRAYS__]*/                  "StStrangeEvMuDst","StStrangeEvMuDst",
 							   "StV0MuDst","StV0Mc","StStrangeAssoc",
@@ -214,10 +222,10 @@ StMuArrays::StMuArrays()
 {
 #ifndef __NO_STRANGE_MUDST__
   int i = strangeArrayNames-arrayNames-__NARRAYS__;
-  printf("strangeArrayNames-arrayNames-__NARRAYS__ = %d\n",i);
+  //  printf("strangeArrayNames-arrayNames-__NARRAYS__ = %d\n",i);
 #else
   int i = mcArrayNames-arrayNames-__NARRAYS__;
-  printf("mcArrayNames-arrayNames-__NARRAYS__ = %d\n",i);
+  //  printf("mcArrayNames-arrayNames-__NARRAYS__ = %d\n",i);
 #endif
   assert(i==0);
 }

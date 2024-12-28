@@ -1,5 +1,6 @@
 #ifndef StMuException_hh
 #define StMuException_hh
+#ifndef __ROOTCLING__
 
 #include <string>
 #include "Stiostream.h"
@@ -46,6 +47,7 @@ EXE(BadFlag);
 EXE(EOF);
 
 
+#endif /* __ROOTCLING__ */
 
 
 

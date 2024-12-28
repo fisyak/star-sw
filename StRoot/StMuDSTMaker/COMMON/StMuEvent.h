@@ -14,6 +14,10 @@
 #include "StMuFmsCollection.h"
 #include "StMuTriggerIdCollection.h"
 
+#ifdef __TFG__VERSION__
+#include "StMuPrimaryVertex.h"
+#include "StMuTrack.h"
+#endif /* __TFG__VERSION__ */
 #include "StEvent/StEventInfo.h"
 #include "StEvent/StRunInfo.h"
 #include "StEvent/StEventSummary.h"
@@ -29,6 +33,9 @@
 #include "StEvent/StL0Trigger.h"
 #include "StEvent/StTriggerIdCollection.h"
 #include "StEvent/StDetectorState.h"
+#ifdef __TFG__VERSION__
+#include "StDetectorDbMaker/St_trigDetSumsC.h"
+#endif /* __TFG__VERSION__ */
 
 #ifndef __NO_STRANGE_MUDST__
 #include "StStrangeMuDstMaker/StStrangeMuDst.hh"
@@ -56,11 +63,19 @@ class StMuEvent : public TObject {
     mEventSummary.Clear(opt);
   }
 
+#ifndef __TFG__VERSION__
   int eventId();
   int eventNumber();
   int runId();
   int runNumber();
+#else /* __TFG__VERSION__ */
+  Int_t eventId()                               { return mEventInfo.id();}   
+  Int_t eventNumber() 				{ return mEventInfo.id();}   
+  Int_t runId()       				{ return mEventInfo.runId();}
+  Int_t runNumber()   				{ return mEventInfo.runId();}
+#endif /* __TFG__VERSION__ */
   // classes taken straight from StEvent
+#ifndef __TFG__VERSION__
   StRunInfo& runInfo();
   StEventInfo& eventInfo();
   StEventSummary& eventSummary();
@@ -74,10 +89,31 @@ class StMuEvent : public TObject {
   StFmsTriggerDetector& fmsTriggerDetector();
   StFpdCollection& fpdCollection(); 
   StL0Trigger& l0Trigger(); 
+#else /* __TFG__VERSION__ */
+  StRunInfo& runInfo()                          { return mRunInfo;}
+  StEventInfo& eventInfo()                      { return mEventInfo;} 
+  StEventSummary& eventSummary()                { return mEventSummary;}
+  StVpdTriggerDetector& vpdTriggerDetector()    { return mVpdTriggerDetector;}
+  StMtdTriggerDetector& mtdTriggerDetector()	{ return mMtdTriggerDetector;}
+  StCtbTriggerDetector& ctbTriggerDetector()	{ return mCtbTriggerDetector;}
+  StZdcTriggerDetector& zdcTriggerDetector()	{ return mZdcTriggerDetector;}
+  StBbcTriggerDetector& bbcTriggerDetector()	{ return mBbcTriggerDetector;}
+  StEmcTriggerDetector& emcTriggerDetector()	{ return mEmcTriggerDetector;}
+  StFpdTriggerDetector& fpdTriggerDetector()	{ return mFpdTriggerDetector;}
+  StFmsTriggerDetector& fmsTriggerDetector()	{ return mFmsTriggerDetector;}
+  StFpdCollection& fpdCollection()  		{ return mFpdCollection;}     
+  StL0Trigger& l0Trigger() 			{ return mL0Trigger;}         
+#endif /* __TFG__VERSION__ */
   // Special classes for the muDst
+#ifndef __TFG__VERSION__
   StMuL3EventSummary& l3EventSummary();
   StMuTriggerIdCollection& triggerIdCollection();
   const StTriggerData* triggerData() const;
+#else /* __TFG__VERSION__ */
+  StMuL3EventSummary& l3EventSummary()          { return mL3EventSummary;}
+  StMuTriggerIdCollection& triggerIdCollection(){ return mTriggerIdCollection;}
+  const StTriggerData* triggerData() const      { return mTriggerData; }
+#endif /* __TFG__VERSION__ */
 
   /// Reference multiplicity of positive particles as defined in StEventUtilities/StuRefMult.hh for vertex vtx_id (-1 is default index from StMuDst)
   unsigned short refMultPos(int vtx_id = -1);
@@ -98,21 +134,45 @@ class StMuEvent : public TObject {
   float nearestVertexZ(int vtx_id=-1);
 
 	/// Currently not filled properly.
+#ifndef __TFG__VERSION__
   double reactionPlane(unsigned short);
   void   setReactionPlane(unsigned short, double v);
+#else /* __TFG__VERSION__ */
+  Double_t reactionPlane(UShort_t s)            { return (s==0) ? mReactionPlane[0] : mReactionPlane[1];}
+  void   setReactionPlane(UShort_t s, Double_t v){(s==0) ? mReactionPlane[0]=v : mReactionPlane[1]=v;}
+#endif /* __TFG__VERSION__ */
   /// Currently not filled properly.
+#ifndef __TFG__VERSION__
   double reactionPlanePtWgt(unsigned short);
   void   setReactionPlanePtWgt(unsigned short, double v);
   double magneticField();
   double zdcAdcAttentuatedSumWest();
   double zdcAdcAttentuatedSumEast();
   double ctbMultiplicity();
+#else /* __TFG__VERSION__ */
+  Double_t reactionPlanePtWgt(UShort_t s)       { return (s==0) ? mReactionPlanePtWgt[0] : mReactionPlanePtWgt[1];}
+  void   setReactionPlanePtWgt(UShort_t s, Double_t v) {(s==0) ? mReactionPlanePtWgt[0]=v : mReactionPlanePtWgt[1]=v;}
+  Double_t magneticField()                      { return mEventSummary.magneticField();}
+  Double_t zdcAdcAttentuatedSumWest()           { return mZdcTriggerDetector.adc(10);}
+  Double_t zdcAdcAttentuatedSumEast()           { return mZdcTriggerDetector.adc(13);}
+  Double_t ctbMultiplicity() { 
+    Double_t ctb=0;
+    for (UInt_t slat = 0; slat < mCtbTriggerDetector.numberOfSlats(); slat++) {
+      for (UInt_t tray = 0; tray < mCtbTriggerDetector.numberOfTrays(); tray++) {
+	ctb += mCtbTriggerDetector.mips(tray,slat,0);
+      }
+    }
+    return ctb;
+  }
+
+#endif /* __TFG__VERSION__ */
   ///    The StMuDst is supposed to be structured in 'physical events'.  Therefore there is only 1 primary vertex per mu event.
   StThreeVectorF primaryVertexPosition(int vtx_id = -1) const;
   StThreeVectorF primaryVertexErrors(int vtx_id = -1) const;
   TArrayI& L2Result(); // Raw L2Result[] array
 
   // Calibrated VPD info from StTofCollection in StEvent
+#ifndef __TFG__VERSION__
   unsigned int numberOfVpdEastHits();  
   unsigned int numberOfVpdWestHits();
   float vpdTstart();
@@ -123,6 +183,33 @@ class StMuEvent : public TObject {
   unsigned int numberOfPxlOuterHits();
   unsigned int numberOfIstHits();
   unsigned int numberOfSsdHits();
+#else /* __TFG__VERSION__ */
+  UInt_t numberOfVpdEastHits()  {  
+    UInt_t num = 0;
+    for(Int_t i=0;i<32;i++) {
+      num += mVpdEast>>i & 1;
+    }
+    return num;
+  }
+  UInt_t numberOfVpdWestHits() {
+    UInt_t num = 0;
+    for(Int_t i=0;i<32;i++) {
+      num += mVpdWest>>i & 1;
+    }
+    return num;
+  }
+  Float_t vpdTstart()                           { return mVpdTstart;}
+  Float_t vpdTdiff()                            { return mVpdTdiff;}
+  Float_t vpdVz()                               { return mVpdVz; }
+  const trigDetSums_st& trigDetSums() const     { return *&mTrigDetSums;}
+
+  UInt_t numberOfPxlInnerHits()                 { return mNHitsHFT[0]; }
+  UInt_t numberOfPxlOuterHits()			{ return mNHitsHFT[1]; }
+  UInt_t numberOfIstHits()			{ return mNHitsHFT[2]; }
+  UInt_t numberOfSsdHits()			{ return mNHitsHFT[3]; }
+
+
+#endif /* __TFG__VERSION__ */
 
  protected:
   void clear();
@@ -165,14 +252,23 @@ class StMuEvent : public TObject {
   Float_t mVpdTstart;  // VPD start time (calibrated)
   Float_t mVpdTdiff;   // VPD time difference (calibrated)
   Float_t mVpdVz;      // VPD vertex z
+#ifndef __TFG__VERSION__
 
+#else /* __TFG__VERSION__ */
+  trigDetSums_st mTrigDetSums; // RICH scalers
+#endif /* __TFG__VERSION__ */
   friend class StMuDst;
   friend class StMuDstMaker;
   friend class StMuMomentumShiftMaker;
   friend class StMuL3EventSummary;
+#ifndef __TFG__VERSION__
   ClassDef(StMuEvent,15)
+#else /* __TFG__VERSION__ */
+  ClassDef(StMuEvent,17)
+#endif /* __TFG__VERSION__ */
 };
 
+#ifndef __TFG__VERSION__
 inline int StMuEvent::eventId() { return mEventInfo.id();}
 inline int StMuEvent::eventNumber() { return mEventInfo.id();}
 inline int StMuEvent::runId() { return mEventInfo.runId();}
@@ -234,6 +330,7 @@ inline unsigned int StMuEvent::numberOfPxlOuterHits() { return mNHitsHFT[1]; }
 inline unsigned int StMuEvent::numberOfIstHits() { return mNHitsHFT[2]; }
 inline unsigned int StMuEvent::numberOfSsdHits() { return mNHitsHFT[3]; }
 
+#endif /* ! __TFG__VERSION__ */
 #endif
 /***************************************************************************
  *

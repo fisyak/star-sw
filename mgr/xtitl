@@ -1,9 +1,25 @@
 #! /bin/sh 
 # Purpose: change the title in an vt or xterm - @G.Alves
 if [ $# -eq 0 ]; then
+ r=""
+ which root-config > /dev/null 2>& 1
+ if [ $? -eq 0 ]; then
+   r=`root-config --version`;
+ fi
  t=""
  d=""
  v=""
+ c=""
+ s=""
+ if test ! "x$USE_CVMFS" = "x"; then
+     c="_cvmfs"
+ fi
+ if test ! "x$SPACK_ROOT" = "x"; then
+     s="_spack"
+ fi
+# if test ! "x$ROOT_LEVEL" = "x"; then
+#  r=$ROOT_LEVEL
+# fi
  if test ! "x$STAR_HOST_SYS" = "x"; then
   t=$STAR_HOST_SYS
  fi
@@ -12,18 +28,24 @@ if [ $# -eq 0 ]; then
  fi
  if test ! "x$NODEBUG" = "x"; then
   d=opt
+  if test "x$NODEBUG" = "x-O3"; then
+  d=opt3
+  fi
  else 
   d=debug
  fi
- TNAME=`hostname -s`_${v}_${t}_${d}
+ TNAME=${r}_${v}_${t}_${d}${c}${s}
+ TNAMET=`hostname -s`_${TNAME}
 else
+ TNAMET=$1
  TNAME=$1
 fi
 
 # Begin source code.
 case $TERM in
- xterm|vt100|vt220|xterms|aixterm)          # vt100 tool
- echo "]0;${TNAME}"
+ xterm|vt100|vt220|xterms|aixterm|xterm*)          # vt100 tool
+ echo -ne "]1;${TNAMET}"
+ echo -ne "]0;${TNAMET}"
  ;;
 
  *)

@@ -11,24 +11,38 @@
 // PicoDst headers
 #include "StPicoMessMgr.h"
 #include "StPicoTrack.h"
-
+#if defined(__TFG__VERSION__)
+#include "TMath.h"
 #include "TF1.h"
 #include "St_base/StMessMgr.h"
+#include "StMuDSTMaker/COMMON/StMuTrack.h"
+#include "TF1.h"
+#include "St_base/StMessMgr.h"
+#include "StMuDSTMaker/COMMON/StMuTrack.h"
 #include "StBichsel/Bichsel.h"
 #include "StBichsel/StdEdxModel.h"
 #include "StBichsel/StdEdxPull.h"
+
+Int_t StPicoTrack::fgdEdXMode = 1;
+Float_t StPicoTrack::fgdEdxErrorScale = 1;
+#endif /* __TFG__VERSION__ */
 
 ClassImp(StPicoTrack)
 
 //_________________
 StPicoTrack::StPicoTrack() : TObject(),
-  mId(0),
+  mId(0), 
+#if defined (__TFG__VERSION__)
+  mFlagExtension(0),
+#endif
   mChi2(std::numeric_limits<unsigned short>::max()),
   mPMomentumX(0), mPMomentumY(0), mPMomentumZ(0),
   mGMomentumX(0), mGMomentumY(0), mGMomentumZ(0),
   mOriginX(0),mOriginY(0), mOriginZ(0),
   mDedx(0), mDedxError(0),
+#if defined (__TFG__VERSION__)
   mDnDx(0),mDnDxError(0),
+#endif
   mNHitsFit(0), mNHitsMax(0), mNHitsDedx(0),
   mNSigmaPion( std::numeric_limits<short>::min() ),
   mNSigmaKaon( std::numeric_limits<short>::min() ),
@@ -38,11 +52,9 @@ StPicoTrack::StPicoTrack() : TObject(),
   mMtdPidTraitsIndex(-1), mETofPidTraitsIndex(-1),
   mBEmcMatchedTowerIndex(-1)
 #if !defined (__TFG__VERSION__)
-  , mTopoMap_iTpc(0),
+  , mTopoMap_iTpc(0)
 #endif
-  mStatus(0),
-  mIdTruth(0), mQATruth(0), mVertexIndex(-1)
-  {
+  , mIdTruth(0), mQATruth(0), mVertexIndex(-1) {
   // Default constructor
   /* empty */
 }
@@ -51,6 +63,10 @@ StPicoTrack::StPicoTrack() : TObject(),
 StPicoTrack::StPicoTrack(const StPicoTrack &track) : TObject() {
 
   mId = track.mId;
+  mDedxError = track.mDedxError;
+#if defined (__TFG__VERSION__)
+  mFlagExtension = track.mFlagExtension;
+#endif
   mChi2 = track.mChi2;
   mPMomentumX = track.mPMomentumX;
   mPMomentumY = track.mPMomentumY;
@@ -63,8 +79,10 @@ StPicoTrack::StPicoTrack(const StPicoTrack &track) : TObject() {
   mOriginZ = track.mOriginZ;
   mDedx = track.mDedx;
   mDedxError = track.mDedxError;
+#if defined (__TFG__VERSION__)
   mDnDx = track.mDnDx;
   mDnDxError = track.mDnDxError;
+#endif
   mNHitsFit = track.mNHitsFit;
   mNHitsMax = track.mNHitsMax;
   mNHitsDedx = track.mNHitsDedx;
@@ -77,12 +95,12 @@ StPicoTrack::StPicoTrack(const StPicoTrack &track) : TObject() {
   }
   mBEmcPidTraitsIndex = track.mBEmcPidTraitsIndex;
   mBTofPidTraitsIndex = track.mBTofPidTraitsIndex;
+  mETofPidTraitsIndex = track.mETofPidTraitsIndex;
   mMtdPidTraitsIndex = track.mMtdPidTraitsIndex;
   mETofPidTraitsIndex = track.mETofPidTraitsIndex;
 #if !defined (__TFG__VERSION__)
   mTopoMap_iTpc = track.mTopoMap_iTpc;
 #endif
-  mStatus = track.mStatus;
   mIdTruth = track.mIdTruth;
   mQATruth = track.mQATruth;
   mVertexIndex = track.mVertexIndex;
@@ -94,18 +112,31 @@ StPicoTrack::~StPicoTrack() {
 }
 
 //_________________
-void StPicoTrack::Print(const Char_t* option __attribute__((unused))) const {
+void StPicoTrack::Print(const Char_t* option __attribute__((unused)) ) const {
+#if defined (__TFG__VERSION__)
+  LOG_INFO << "id: " << id() << " chi2: " << chi2() << "\t"
+           << "pMom: " << pMom().X() << " " << pMom().Y() << " " << pMom().Z() << "\t"
+	   << "gMom: " << gMom().X() << " " << gMom().Y() << " " << gMom().Z() << "\t"
+	   << "origin: " << origin().X() << " " << origin().Y() << " " << origin().Z() << "\t"
+#else  /* ! __TFG__VERSION__ */
   LOG_INFO << "id: " << id() << " chi2: " << chi2() << "\n"
            << "pMom: " << pMom().X() << " " << pMom().Y() << " " << pMom().Z() << "\n"
            << "gMom: " << gMom().X() << " " << gMom().Y() << " " << gMom().Z() << "\n"
            << "origin: " << origin().X() << " " << origin().Y() << " " << origin().Z() << "\n"
+#endif /* __TFG__VERSION__ */
            << "nHitsFit: " << nHitsFit()
-           << " nHitsdEdx: " << nHitsDedx() << "\n"
+           << " nHitsdEdx: " << nHitsDedx() << "\t"
            << "nSigma pi/K/p/e: " << nSigmaPion()   << "/" << nSigmaKaon() << "/"
+#if defined (__TFG__VERSION__)
+           << nSigmaProton() << "/" << nSigmaElectron() << "\t"
+	   << "Hit index in BEMC/BTof/MTD/ETof: " << mBEmcPidTraitsIndex << "/"
+	   << mBTofPidTraitsIndex << "/" << mMtdPidTraitsIndex << "/" << mETofPidTraitsIndex 
+#else  /* ! __TFG__VERSION__ */
            << nSigmaProton() << "/" << nSigmaElectron() << "\n"
            << "Hit index in BEMC/BTof/MTD/ETof: " << mBEmcPidTraitsIndex << "/"
            << mBTofPidTraitsIndex << "/" << mMtdPidTraitsIndex << "/" << mETofPidTraitsIndex << "\n"
            << "idTruth: " << idTruth() << " qaTruth: " << qaTruth() << "\n"
+#endif /* __TFG__VERSION__ */
            << endm;
 }
 
@@ -209,6 +240,7 @@ StPicoPhysicalHelix StPicoTrack::helix(Float_t const B) const {
 			      static_cast<float>( charge() ) );
 }
 
+#if defined (__TFG__VERSION__)
 //_________________
 Float_t StPicoTrack::dEdxPull(Float_t mass, UChar_t fit, Int_t charge) const {
   Float_t z = -999.;
@@ -228,7 +260,7 @@ Float_t StPicoTrack::dEdxPull(Float_t mass, UChar_t fit, Int_t charge) const {
     dedx_resolution = dNdxError();
   }
   if (dedx_resolution <= 0) return z;
-  z = StdEdxPull::Eval(dedx_measured,dedx_resolution,betagamma,fit,charge);
+  z = StdEdxPull::Eval(dedx_measured,dedx_resolution,betagamma,fit,charge, mass);
   return z;
 }
 
@@ -404,6 +436,7 @@ Float_t StPicoTrack::dEdxPullToF(Float_t mass, UChar_t fit, Int_t charge) const 
   return z;
 }
 
+#endif /* __TFG__VERSION__ */
 
 //_________________
 Float_t StPicoTrack::gDCAs(TVector3 point) const {

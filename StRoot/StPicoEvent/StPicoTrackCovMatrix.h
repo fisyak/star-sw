@@ -3,8 +3,12 @@
 
 // ROOT headers
 #include "TObject.h"
-
+#include "StPicoDst.h"
+#if defined (__TFG__VERSION__)
 #include "StEvent/StDcaGeometry.h"
+#include "KFParticle/KFParticle.h"
+#include "THelixTrack.h"
+#endif /* __TFG__VERSION__ */
 
 //_________________
 class StPicoTrackCovMatrix : public TObject {
@@ -44,14 +48,22 @@ class StPicoTrackCovMatrix : public TObject {
   Float_t tan() const                 { return mTan; }
   /// Return curvature
   Float_t curv() const                { return mCurv; }
+  /// Return momentum at the first TPC hit
+  Float_t pIn() const                { return mpIn; }
+  /// Return momentum at the last TPC hit
+  Float_t pOut() const                { return mpOut; }
 
   /// Return true, if all values 0. It corresponds to
   /// the case when track did not have a covariance
   /// matrix in MuDst
   Bool_t isBadCovMatrix();
 
+#if defined (__TFG__VERSION__)
   /// DCA geometry
   StDcaGeometry &dcaGeometry() const;
+  KFParticle    &Particle(Int_t kg = 0, Int_t pdg = 0)  const {return dcaGeometry().Particle(kg,pdg);}
+  THelixTrack    thelix()                               const {return dcaGeometry().thelix();}
+#endif /* __TFG__VERSION__ */
 
   //
   // Setters
@@ -77,6 +89,9 @@ class StPicoTrackCovMatrix : public TObject {
   void setTan(Float_t tan)       { mTan = (Float16_t)tan; }
   /// Set curvature
   void setCurv(Float_t curv)     { mCurv = (Float16_t)curv; }
+  /// Set momentum at the first and last TPC hits
+  void setPin(Float_t p)     { mpIn = (Float16_t)p; }
+  void setPout(Float_t p)     { mpOut = (Float16_t)p; }
   
  private:
 
@@ -105,8 +120,14 @@ class StPicoTrackCovMatrix : public TObject {
   Float16_t mSigma[5];
   /// Off-diagonal elements
   Float16_t mCorr[10];   //[-1,1,20] 
-
+  /// Momenta at the first and last TPC hits
+  Float16_t mpIn;
+  Float16_t mpOut;
+#if defined (__TFG__VERSION__) /* add StPicoTrackCovMatrix::Class()->IgnoreTObjectStreamer(); */
+  ClassDef(StPicoTrackCovMatrix, 3)
+#else 
   ClassDef(StPicoTrackCovMatrix, 1)
+#endif /* __TFG__VERSION__ */
 };
 
 #endif

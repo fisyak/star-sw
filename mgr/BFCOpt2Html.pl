@@ -1,5 +1,5 @@
-#!/usr/local/bin/perl -w
-
+#!/usr/bin/env perl
+#use strict;
 #
 # Written J.Lauret sometime in January 2002
 # 2013 modified for additional menues

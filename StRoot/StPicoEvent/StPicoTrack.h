@@ -1,4 +1,4 @@
-/**
+/*
  * \class StPicoTrack
  * \brief Holds information about track parameters
  *
@@ -23,11 +23,11 @@
 #include "SystemOfUnits.h"
 #include "PhysicalConstants.h"
 #else
+#include "StPicoDst.h"
+#include "StEvent/StEnumerations.h"
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/PhysicalConstants.h"
 #endif
-
-#include "StPicoTrackCovMatrix.h"
 
 //_________________
 class StPicoTrack : public TObject {
@@ -54,6 +54,9 @@ class StPicoTrack : public TObject {
 
   /// Return unique Id of the track
   Int_t   id() const              { return mId; }
+#if defined (__TFG__VERSION__)
+  UInt_t  flagExtension() const { return mFlagExtension; }
+#endif /* __TFG__VERSION__ */
   /// Return chi2 of the track
   Float_t chi2() const            { return mChi2 / 1000.f; }
   /// Return momentum (GeV/c) of the primary track. Return (0,0,0) if not primary track
@@ -110,23 +113,26 @@ class StPicoTrack : public TObject {
   Int_t   nHitsDedx() const              { return (Int_t)mNHitsDedx; }
   /// Return a map of hits in HFT
   UInt_t  hftHitsMap() const             { return topologyMap(0) >> 1 & 0x7F; }
+#if !defined(__TFG__VERSION__)
   /// Return dE/dx (in keV/cm) of the track
   Float_t dEdx() const                   { return mDedx; }
-  /// Return dE/dx error of the track (in GeV/cm)
+  /// Return relative dE/dx error of the track 
   Float_t dEdxError() const              { return mDedxError; }
-
+#else /* __TFG__VERSION__ */
+  /// Return dE/dx (keV/cm) of the track
+  Float_t dEdx(UChar_t fit = 1) const  { return (fit == 2) ? mDnDx : mDedx; }
+  Float_t dEdxError(UChar_t fit = 1) const  { return (fit == 2) ?  mDnDxError: fgdEdxErrorScale*mDedxError; }
+  static  void    setdEdxErrorScale(Float_t scale = 1) {fgdEdxErrorScale = scale;}
   Float_t dEdxPull(Float_t mass, UChar_t fit = 1, Int_t charge = 1) const;
   Float_t dEdxPullToF(Float_t mass, UChar_t fit = 1, Int_t charge = 1) const;
-  Float_t dEdxPullPion()      const { return dEdxPull(0.13956995,1); }
-  Float_t dEdxPullKaon()      const { return dEdxPull(0.493677,1); }
-  Float_t dEdxPullProton()    const { return dEdxPull(0.93827231,1); }
-  Float_t dEdxPullElectron()  const { return dEdxPull(0.51099907e-3,1); }
-  /// Return dN/dx of the track
+  Float_t dEdxPullPion(UChar_t fit = 1)      const { return dEdxPull(0.13956995, fit); }
+  Float_t dEdxPullKaon(UChar_t fit = 1)      const { return dEdxPull(0.493677, fit); }
+  Float_t dEdxPullProton(UChar_t fit = 1)    const { return dEdxPull(0.93827231, fit); }
+  Float_t dEdxPullElectron(UChar_t fit = 1)  const { return dEdxPull(0.51099907e-3, fit); }
   Float_t dNdx() const              { return mDnDx; }
-  /// Return dN/dx error of the track
   Float_t dNdxError() const         { return mDnDxError; }
-  /// Return if the track was fitted to any vertex (0 - not fitted, 1 - fitted)
-  Char_t  status() const            { return mStatus; }
+  Char_t  status()            const { return mStatus;}
+#endif
 
   /// Return nSigma(pion)
   Float_t nSigmaPion() const             { return (Float_t)mNSigmaPion / 1000.f; }
@@ -138,10 +144,12 @@ class StPicoTrack : public TObject {
   Float_t nSigmaElectron() const         { return (Float_t)mNSigmaElectron / 1000.f; }
 
   /// Return track topology map (return 0 in case when requested index is >1)
-  UInt_t  topologyMap(UInt_t idx) const  { return (idx>1) ? 0 : mTopologyMap[idx]; }
+  UInt_t  topologyMap(UInt_t idx) const  { return (idx>=eTopologyMap) ? 0 : mTopologyMap[idx]; }
 #if !defined (__TFG__VERSION__)
   /// Return topology map for iTPC
   ULong64_t iTpcTopologyMap() const      { return mTopoMap_iTpc; }
+#else /* __TFG__VERSION__ */
+  ULong64_t iTpcTopologyMap() const      { return topologyMap(2); }
 #endif
   
 
@@ -208,6 +216,32 @@ class StPicoTrack : public TObject {
 
   /// Set track ID
   void setId(Int_t id)                   { mId = (UShort_t)id; }
+#if defined (__TFG__VERSION__)
+  void  setFlagExtension(UInt_t k)       { mFlagExtension = k; }
+  Bool_t       testBit(UInt_t f) const { return (Bool_t) ((mFlagExtension & f) != 0); }
+  Bool_t       isCtbMatched()            const {return testBit(kCtbMatched);}   
+  Bool_t       isToFMatched()  	   const {return testBit(kToFMatched);}   
+  Bool_t       isBToFMatched()  	   const {return testBit(kToFMatched);}   
+  Bool_t       isBemcMatched() 	   const {return testBit(kBemcMatched);}  
+  Bool_t       isEemcMatched() 	   const {return testBit(kEemcMatched);}  
+  
+  Bool_t       isCtbNotMatched()         const {return testBit(kCtbNotMatched);}
+  Bool_t       isToFNotMatched()  	   const {return testBit(kToFNotMatched);}   
+  Bool_t       isBToFNotMatched()  	   const {return testBit(kToFNotMatched);}   
+  Bool_t       isBemcNotMatched() 	   const {return testBit(kBemcNotMatched);}  
+  Bool_t       isEemcNotMatched() 	   const {return testBit(kEemcNotMatched);}  
+  
+  Bool_t       isDecayTrack()  	   const {return testBit(kDecayTrack);}   
+  Bool_t       isPromptTrack() 	   const {return testBit(kPromptTrack);}       
+  Bool_t       isPostXTrack()            const {return testBit(kPostXTrack);} 
+  Bool_t       isMembraneCrossingTrack() const {return testBit(kXMembrane);} 
+  Bool_t       isShortTrack2EMC()        const {return testBit(kShortTrack2EMC);}
+  Bool_t       isRejected()              const {return testBit(kRejectedTrack);}
+  Bool_t       isWestTpcOnly()           const {return testBit(kWestTpcOnlyTrack);}
+  Bool_t       isEastTpcOnly()           const {return testBit(kEastTpcOnlyTrack);}
+#endif /* __TFG__VERSION__ */
+  /// Return chi2 of the track
+  
   /// Set chi2 of the track
   void setChi2(Float_t chi2);
   /// Set momentum of the primary track
@@ -243,12 +277,13 @@ class StPicoTrack : public TObject {
   /// Set dE/dx error of the track
   void setDedxError(Float_t dEdxError)     { mDedxError = dEdxError; }
 
+#if defined (__TFG__VERSION__)
   /// Set dN/dx of the track
   void setDndx(Float_t dNdx)               { mDnDx = dNdx;}
   /// Set dN/dx error of the track
   void setDndxError(Float_t dNdxError)     { mDnDxError = dNdxError; }
-  /// Set status of the track (0 - not fitted to any vertex, 1 - fitted to a vertex)
-  void setStatus(Char_t k = 0)             { mStatus = k; }
+  void setStatus(Char_t k = 0)             { mStatus = k;}
+#endif
   
   /// Set nHitsFit ( charge * nHitsFit )
   void setNHitsFit(Int_t nhits)            { mNHitsFit = (Char_t)nhits; }
@@ -292,6 +327,9 @@ class StPicoTrack : public TObject {
 
   /// Unique track ID
   UShort_t mId;
+#ifdef __TFG__VERSION__
+  UInt_t  mFlagExtension; // bit wise fast detector matching status
+#endif /* __TFG__VERSION__ */
   /// Chi2 of the track (encoding = chi2*1000)
   UShort_t mChi2;
   /// Px momentum (GeV/c) of the primary track ( 0 if not primary )
@@ -317,10 +355,13 @@ class StPicoTrack : public TObject {
   Float16_t  mDedx;
   /// dE/dx error (in GeV/cm)
   Float16_t  mDedxError;
+
+#if defined (__TFG__VERSION__)
   /// Fitted dN/dx
   Float_t  mDnDx;
   /// Fitted dN/dx error
   Float_t  mDnDxError;
+#endif
   
   /// Charge * nHitsFit
   Char_t   mNHitsFit;
@@ -347,6 +388,10 @@ class StPicoTrack : public TObject {
   Short_t  mMtdPidTraitsIndex;
   /// Index of the ETOF pidTratis in the event
   Short_t  mETofPidTraitsIndex;
+#ifdef __TFG__VERSION__ 
+  static Int_t fgdEdXMode; // type - 0 => I70, 1 => dEdxFit, 2 => dNdx
+  static Float_t fgdEdxErrorScale; // correction for Y2011 bug on dE/dx error parametrization
+#endif /* __TFG__VERSION__ */
   /// Index of the BEMC-matched tower. The indexing scheme was chosen so that
   /// towers with an exact match are stored with the softid (1, 4800), towers
   /// with an close match are stored as -softid (-1, -4800), and towers without
@@ -356,12 +401,9 @@ class StPicoTrack : public TObject {
 #if !defined (__TFG__VERSION__)
   /// Topology map for the iTPC
   ULong64_t mTopoMap_iTpc;
+#else
+    Char_t mStatus; // =1 if fitted in a vertex
 #endif
-
-  /// Checks if the track was fitted to any vertex
-  /// \par 0 not fitted
-  /// \par 1 fitted
-  Char_t mStatus;
 
   /// MC track id
   UShort_t mIdTruth;
@@ -371,9 +413,9 @@ class StPicoTrack : public TObject {
   Char_t   mVertexIndex;
 
 #if !defined (__TFG__VERSION__)
-  ClassDef(StPicoTrack, 9)
+  ClassDef(StPicoTrack, 8)
 #else
-  ClassDef(StPicoTrack, 10)
+  ClassDef(StPicoTrack, 11)
 #endif
 };
 

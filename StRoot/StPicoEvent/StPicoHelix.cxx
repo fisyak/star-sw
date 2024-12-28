@@ -16,6 +16,7 @@
 #include <float.h>
 #include <ostream>
 
+#include "Riostream.h"
 // PicoDst headers
 #include "StPicoHelix.h"
 #ifdef _VANILLA_ROOT_

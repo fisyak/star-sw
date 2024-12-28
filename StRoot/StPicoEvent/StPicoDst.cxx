@@ -9,10 +9,12 @@
 #include "StPicoEmcTrigger.h"
 #include "StPicoBTowHit.h"
 #include "StPicoBTofHit.h"
+#include "StPicoETofHit.h"
 #include "StPicoMtdHit.h"
 #include "StPicoFmsHit.h"
 #include "StPicoBEmcPidTraits.h"
 #include "StPicoBTofPidTraits.h"
+#include "StPicoETofPidTraits.h"
 #include "StPicoMtdPidTraits.h"
 #include "StPicoTrackCovMatrix.h"
 #include "StPicoBEmcSmdEHit.h"
@@ -23,8 +25,11 @@
 #include "StPicoMcTrack.h"
 #include "StPicoDst.h"          //MUST be the last one
 
-TClonesArray** StPicoDst::picoArrays = 0;
+#ifdef __TFG__VERSION__
 StPicoDst *StPicoDst::fgPicoDst = 0;
+#endif /* __TFG__VERSION__ */
+//TClonesArray** StPicoDst::picoArrays = 0;
+
 //_________________
 void StPicoDst::unset() {
   picoArrays = 0;
@@ -65,7 +70,6 @@ void StPicoDst::printMcVertices() {
     LOG_INFO << "No MC vertices found!" << endm;
     return;
   }
-
   LOG_INFO << "\n+++++++++ vertex list ( " << numberOfMcTracks() << " entries )\n\n";
   for(UInt_t iVtx=0; iVtx<numberOfMcVertices(); iVtx++) {
     LOG_INFO << "+++ vertex " << iVtx << "\n";
@@ -213,7 +217,7 @@ void StPicoDst::printBTofPidTraits() {
 
   LOG_INFO << "\n+++++++++ BTof pidTraits list ( " << numberOfBTofPidTraits() << " entries )\n\n";
   for(UInt_t iEntry=0; iEntry<numberOfBTofPidTraits(); iEntry++) {
-    LOG_INFO << "+++ EmcPidTraits " << iEntry << "\n";
+    LOG_INFO << "+++ BTofPidTraits " << iEntry << "\n";
     btofPidTraits(iEntry)->Print();
     LOG_INFO << "\n";
   }
@@ -238,6 +242,10 @@ void StPicoDst::printMtdPidTraits() {
 
   LOG_INFO << endm;
 }
+#if defined(__TFG__VERSION__)
+//_________________
+Bool_t StPicoDst::IsGoodTrigger() const {return event() ? event()->IsGoodTrigger() : kFALSE;}
+#endif /* __TFG__VERSION__ */
 
 //_________________
 void StPicoDst::printTrackCovMatrices() {
@@ -327,4 +335,12 @@ void StPicoDst::printETofPidTraits() {
   }
 
   LOG_INFO << endm;
+}
+//_________________
+UShort_t StPicoDst::numberOfPrimaryTracksRecorded() const {
+  UShort_t NoPrTracksR = 0;
+  for(UInt_t iTrk=0; iTrk<numberOfTracks(); iTrk++) {
+    if (track(iTrk)->isPrimary()) NoPrTracksR++;
+  }
+  return NoPrTracksR;
 }

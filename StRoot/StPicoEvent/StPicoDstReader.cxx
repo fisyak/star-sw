@@ -20,10 +20,12 @@
 #include "StPicoEpdHit.h"
 #include "StPicoBTowHit.h"
 #include "StPicoBTofHit.h"
+#include "StPicoETofHit.h"
 #include "StPicoMtdHit.h"
 #include "StPicoFmsHit.h"
 #include "StPicoBEmcPidTraits.h"
 #include "StPicoBTofPidTraits.h"
+#include "StPicoETofPidTraits.h"
 #include "StPicoMtdPidTraits.h"
 #include "StPicoTrackCovMatrix.h"
 #include "StPicoBEmcSmdEHit.h"
@@ -116,6 +118,7 @@ void StPicoDstReader::streamerOff() {
   StPicoEvent::Class()->IgnoreTObjectStreamer();
   StPicoTrack::Class()->IgnoreTObjectStreamer();
   StPicoBTofHit::Class()->IgnoreTObjectStreamer();
+  StPicoETofHit::Class()->IgnoreTObjectStreamer();
   StPicoBTowHit::Class()->IgnoreTObjectStreamer();
   StPicoMtdHit::Class()->IgnoreTObjectStreamer();
   StPicoBbcHit::Class()->IgnoreTObjectStreamer();
@@ -124,6 +127,7 @@ void StPicoDstReader::streamerOff() {
   StPicoEmcTrigger::Class()->IgnoreTObjectStreamer();
   StPicoMtdTrigger::Class()->IgnoreTObjectStreamer();
   StPicoBTofPidTraits::Class()->IgnoreTObjectStreamer();
+  StPicoETofPidTraits::Class()->IgnoreTObjectStreamer();
   StPicoBEmcPidTraits::Class()->IgnoreTObjectStreamer();
   StPicoMtdPidTraits::Class()->IgnoreTObjectStreamer();
   StPicoTrackCovMatrix::Class()->IgnoreTObjectStreamer();
@@ -141,6 +145,7 @@ void StPicoDstReader::createArrays() {
   for(Int_t iArr=0; iArr<StPicoArrays::NAllPicoArrays; iArr++) {
     mPicoArrays[iArr] = new TClonesArray(StPicoArrays::picoArrayTypes[iArr],
 					 StPicoArrays::picoArraySizes[iArr]);
+    mPicoArrays[iArr]->SetOwner(kTRUE);
   }
   mPicoDst->set(mPicoArrays);
 }

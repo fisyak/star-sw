@@ -20,9 +20,15 @@
 #include "TChain.h"
 #include "TSystem.h"
 #include "StMessMgr.h"
+#ifndef __TFG__VERSION__
 
 extern TSystem* gSystem;
 
+#else /* __TFG__VERSION__ */
+#include "TDirIter.h"
+//extern TSystem* gSystem;
+#endif /* __TFG__VERSION__ */
+static Long64_t kMaxEntries = std::numeric_limits<Long64_t>::max();
 string StMuChainMaker::mSQLConnection ="";
 
 ClassImp(StMuChainMaker)
@@ -135,11 +141,31 @@ TChain* StMuChainMaker::make(string dir, string file, string filter, int maxFile
 
   if (dirFile.find(".lis")!=string::npos) 	        fromList(dirFile);
   else if (dirFile.find(".files")!=string::npos)        fromList(dirFile);
+#ifndef __TFG__VERSION__
   else if (dirFile.find(".MuDst.root")!=string::npos)   fromFile(dirFile);
+#else /* __TFG__VERSION__ */
+  //  else if (dirFile.find(".MuDst.root")!=string::npos)   fromFile(dirFile);
+#endif /* __TFG__VERSION__ */
   else if (dirFile.rfind("/") == dirFile.length()-1 )   fromDir(dirFile);
   else {
+#ifdef __TFG__VERSION__
+    TDirIter Dir(dirFile.c_str());
+    Char_t *name = 0;
+    Int_t NFiles = 0;
+    Int_t numberOfEvents = kMaxEntries;
+    while ((name = (Char_t *) Dir.NextFile())) {
+      if ( pass(name,mSubFilters)) {
+	mFileList.push_back( StMuStringIntPair( name, numberOfEvents) );
+	NFiles++;
+      }
+    }
+    if (! NFiles) {
+#endif /* __TFG__VERSION__ */
     FORCEDDEBUGMESSAGE("ATTENTION: don't know how to read input (you may have used a bogus constructor syntax)");
     return NULL;
+#ifdef __TFG__VERSION__
+    }
+#endif /* __TFG__VERSION__ */
   }
  
   if ( mFileList.size() == 0 ) {
@@ -178,11 +204,11 @@ void StMuChainMaker::subFilter(string filter) {
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
-void StMuChainMaker::add( StMuStringLongPairVector fileList ) {
+void StMuChainMaker::add( StMuStringIntPairVector fileList ) {
     DEBUGMESSAGE3("");
     // if no entries in db, just add file
 
-    StMuStringLongPairVectorIterator iter;
+    StMuStringIntPairVectorIterator iter;
     for ( iter=fileList.begin(); iter!=fileList.end(); iter++) {
 	if (mFileCounter>=mMaxFiles) break;
 	add( *iter );
@@ -193,7 +219,7 @@ void StMuChainMaker::add( StMuStringLongPairVector fileList ) {
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 /// This method contains a hidden assumption for STAR Scheduler purposes
-void StMuChainMaker::add( StMuStringLongPair filenameEvents) {
+void StMuChainMaker::add( StMuStringIntPair filenameEvents) { 
     string file = filenameEvents.first;
     int entries = filenameEvents.second;
 
@@ -219,15 +245,15 @@ void StMuChainMaker::add( StMuStringLongPair filenameEvents) {
 	}
     }
     
-    if (entries==0 || entries==TChain::kBigNumber) { // try to read the number of event from the db reader 
+    if (entries==0 || entries==kMaxEntries) { // try to read the number of event from the db reader 
 	int tmp_entries = mDbReader->entries(file.c_str());
         if (tmp_entries != 0)
            entries = tmp_entries;
         else 
-           entries = TChain::kBigNumber;  // If still not known, set to kBigNumber to avoid opening of file 
+           entries = kMaxEntries;  // If still not known, set to kBigNumber to avoid opening of file 
     }
     // If entries==0, TChain will open the file and get the number of entries
-    // If entries==TChain::kBigNumber, TChain will start reading 
+    // If entries==kMaxEntries, TChain will start reading 
     //    and figure out the numbers of events while going along
     mChain->Add( file.c_str(), entries );
     mFileCounter++;
@@ -251,8 +277,7 @@ void StMuChainMaker::fromDir(string dir) {
     if ( good && pass(name,mSubFilters) ) {
       char* fullFile = gSystem->ConcatFileName(dir.c_str(),fileName);
       // add it to the list of files
-      const auto TChain_kBigNumber = TChain::kBigNumber; // https://github.com/root-project/root/issues/9422
-      mFileList.push_back( StMuStringLongPair( fullFile, TChain_kBigNumber ) );
+      mFileList.push_back( StMuStringIntPair( fullFile, kMaxEntries ) );
       delete []fullFile;
     }
   }   
@@ -320,7 +345,7 @@ void StMuChainMaker::fromFileCatalog(string list) {
     file += +"/";
     file += row->GetField(1);
     entries = atoi(row->GetField(2));
-    mFileList.push_back( StMuStringLongPair(file, entries ));
+    mFileList.push_back( StMuStringIntPair(file, entries ));
   }
 
   server->Close();
@@ -344,11 +369,11 @@ void StMuChainMaker::fromList(string list) {
       inputStream.getline(line,512);
 	  string ltest(line);
 	  if  (inputStream.good()) {
-	  Long_t numberOfEvents = TChain::kBigNumber;
+	  int numberOfEvents = kMaxEntries;
 	  int iret = sscanf(line,"%s%i",name, &numberOfEvents);
 		  if(iret) {/*warnOff*/}
 	  if ( pass(name,mSubFilters) && ltest!="") {
-	      mFileList.push_back( StMuStringLongPair( name, numberOfEvents) );
+	      mFileList.push_back( StMuStringIntPair( name, numberOfEvents) );
 	  }
       }
   }   
@@ -359,8 +384,7 @@ void StMuChainMaker::fromList(string list) {
 void StMuChainMaker::fromFile(string file) {
   DEBUGMESSAGE2("");
   DEBUGMESSAGE2(mTreeName.c_str());
-  const auto TChain_kBigNumber = TChain::kBigNumber; // https://github.com/root-project/root/issues/9422
-  mFileList.push_back( StMuStringLongPair( file, TChain_kBigNumber ) );
+  mFileList.push_back( StMuStringIntPair( file, kMaxEntries ) );
 }
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
@@ -387,7 +411,7 @@ void StMuChainMaker::fromFile(string file) {
   * Replace GetEnv by HostName()
   *
   * Revision 1.29  2007/08/02 18:57:49  mvl
-  * One more change to avoid reading all input files on initialisation: If the number of events is '0' for a given file, set it to TChain::kBigNumber.
+  * One more change to avoid reading all input files on initialisation: If the number of events is '0' for a given file, set it to kMaxEntries.
   *
   * Revision 1.28  2007/05/16 18:50:49  mvl
   * Cleanup of output. Replaced cout with LOG_INFO etc.

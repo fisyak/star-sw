@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
-
+#####!/opt/star/sl53_gcc451/bin/perl
+######!/opt/star/bin/perl
 #
 # 2009 - J.Lauret - added detection of dead links
 #        Also added -debug, -clink, -h, --help, -nov
@@ -10,7 +11,8 @@
 
 use Env;
 # if (defined($AFS)) {$File::Find::dont_use_nlink;}
-use File::Find;
+#require "find.pl";
+use File::Find ();
 
 # Added so it does not depend on soft-link but
 # rather on afs/cons created tree structure.
@@ -48,7 +50,7 @@ $SELF =~ s/.*\///;
 
 # default value for keep - could be overwritten by numerical argument
 if( $^O eq "linux"){
-    $KEEP = 2;
+    $KEEP = 1;
 } else {
     $KEEP = 1;
 }
@@ -98,6 +100,8 @@ if ( $#dirs == -1){
     push(@dirs,$SYSNM."OBJ");
     push(@dirs,$SYSNM."IOBJ");
     push(@dirs,$SYSNM."GOBJ");
+    push(@dirs,$SYSNM."obj6");
+    push(@dirs,$SYSNM."OBJ6");
 }
 
 
@@ -137,6 +141,7 @@ if ( $cleanl ){
 	if (-r $dir) {
 	    print "Run $SELF in $dir keep = $KEEP\n";
 	    &File::Find::find (\&wanted_S,$dir);
+#	    &File::Find::find ({wanted => \&wanted_S, follow =>1}, $dir);
 	}
     }
 }

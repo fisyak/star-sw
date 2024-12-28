@@ -19,9 +19,9 @@ using namespace std;
 #endif
 
 
-typedef pair<string,Long_t> StMuStringLongPair;
-typedef vector<StMuStringLongPair> StMuStringLongPairVector;
-typedef vector<StMuStringLongPair>::iterator StMuStringLongPairVectorIterator;
+typedef pair<string,int> StMuStringIntPair;
+typedef vector<StMuStringIntPair> StMuStringIntPairVector;
+typedef vector<StMuStringIntPair>::iterator StMuStringIntPairVectorIterator;
 
 class TChain;
 class StMuDbReader;
@@ -53,10 +53,10 @@ protected:
     string mTreeName;
     int mFileCounter;
     int mMaxFiles;
-    StMuStringLongPairVector mFileList;
+    StMuStringIntPairVector mFileList;
     bool pass(string file, string*  filters);
-    void add(StMuStringLongPairVector);
-    void add(StMuStringLongPair);
+    void add(StMuStringIntPairVector);
+    void add(StMuStringIntPair);
     
     ClassDef(StMuChainMaker,0)
 	};
