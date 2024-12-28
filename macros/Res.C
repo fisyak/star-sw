@@ -314,8 +314,9 @@ void Res(const Char_t *select="x", const Char_t *name="sigma", const Char_t *pat
 	  ltit = Form("#sigma(@%5.1fcm) = %5.2f%\%",Title.Data(),L,100*powfit->Eval(L));
 	} else {
 	  Double_t L = 72.0 * 0.85; // 
-	  if (Title.Contains("70")) L *= 2./3.;
-	  ltit = Form("#sigma(@%2.0f npts) = %5.2f%\%",L,100*powfit->Eval(L));
+	  if (Title.Contains("Points70")) L *= 2./3.;
+	  Double_t r = powfit->Eval(L);
+	  ltit = Form("#sigma(@%2.0f npts) = %5.2f%\%",L,100*r);
 	}
       } else {
 	ltit = Form("#mu = %5.2f%\%",100*powfit->GetParameter(0));

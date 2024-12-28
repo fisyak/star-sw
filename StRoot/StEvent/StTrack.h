@@ -189,7 +189,7 @@
 #include "StFunctional.h"
 #include "StTrackFitTraits.h"
 #ifdef  __kfpAtFirstHit__
-#include "KFPTrack.h"
+#include "KFParticle/KFPTrack.h"
 #endif
 class StTrack;
 ostream&  operator<<(ostream& os,  const StTrack& t);

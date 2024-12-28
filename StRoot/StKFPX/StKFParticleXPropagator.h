@@ -1,7 +1,6 @@
 #ifndef __StKFParticleXPropagator__
 #define __StKFParticleXPropagator__
 #include "KFParticleXPropagator.h"
-#include "KFParticle.h"
 #include "TGeoMaterial.h"
 #include <vector>
 using namespace std;

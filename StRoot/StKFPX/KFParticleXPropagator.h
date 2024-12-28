@@ -1,6 +1,6 @@
 #ifndef __KFParticleXPropagator__
 #define __KFParticleXPropagator__
-#include "KFParticle.h"
+#include "KFParticle/KFParticle.h"
 class KFParticleXPropagator : public TObject {
  public: 
   KFParticleXPropagator() {fgKFParticleXPropagator = this;}

@@ -53,7 +53,7 @@
 #include "TString.h"
 #include "TArrayF.h"
 #include "TArrayL.h"
-#include "KFVertex.h"
+#include "KFParticle/KFVertex.h"
 class L4CAVertex {
  public:
   Float_t Const, dConst;

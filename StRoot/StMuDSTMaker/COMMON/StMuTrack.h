@@ -40,7 +40,7 @@
 
 #ifdef __TFG__VERSION__
 #ifdef  __kfpAtFirstHit__
-#include "KFPTrack.h"
+#include "KFParticle/KFPTrack.h"
 #endif
 #endif /* __TFG__VERSION__ */
 #define __PROB_SCALE__  1000.

@@ -8,7 +8,7 @@
 #include "TGeoManager.h"
 #include "TMath.h"
 #include "TVector3.h"
-#include "KFPTrack.h"
+#include "KFParticle/KFPTrack.h"
 #include "StDcaGeometry.h"
 #include "TVector3.h"
 #include "TVector2.h"
