@@ -1,7 +1,7 @@
 #include "StKFParticleInterface.h"
 
-#include "KFParticleTopoReconstructor.h"
-#include "KFMCTrack.h"
+#include "KFParticle/KFParticleTopoReconstructor.h"
+#include "KFParticlePerformance/KFMCTrack.h"
 
 #include "TMath.h"
 #include "TArrayD.h"

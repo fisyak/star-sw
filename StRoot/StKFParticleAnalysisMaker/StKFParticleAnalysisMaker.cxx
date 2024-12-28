@@ -8,12 +8,12 @@
 #include "TTree.h"
 #include "TSystem.h"
 //--- KF particle classes ---
-#include "KFVertex.h"
-#include "KFParticle.h"
-#include "KFParticleSIMD.h"
-#include "KFPTrack.h"
-#include "KFParticleTopoReconstructor.h"
-#include "KFPartEfficiencies.h"
+#include "KFParticle/KFVertex.h"
+#include "KFParticle/KFParticle.h"
+#include "KFParticle/KFParticleSIMD.h"
+#include "KFParticle/KFPTrack.h"
+#include "KFParticle/KFParticleTopoReconstructor.h"
+#include "KFParticlePerformance/KFPartEfficiencies.h"
 #include "StKFParticleInterface.h"
 #include "StKFParticlePerformanceInterface.h"
 //--- Pico classes ---

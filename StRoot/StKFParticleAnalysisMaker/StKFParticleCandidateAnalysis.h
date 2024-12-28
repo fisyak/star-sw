@@ -1,7 +1,7 @@
 #ifndef STAR_StKFParticleCandidateAnalysisMaker
 #define STAR_StKFParticleCandidateAnalysisMaker
 
-#include "KFParticle.h"
+#include "KFParticle/KFParticle.h"
 
 #include "TString.h"
 #include "TObject.h"

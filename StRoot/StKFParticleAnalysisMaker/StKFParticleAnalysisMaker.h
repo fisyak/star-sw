@@ -13,7 +13,7 @@
 #endif
 #include "TMVA/Reader.h"
 
-#include "KFParticle.h"
+#include "KFParticle/KFParticle.h"
 
 class StKFParticleInterface;
 class StKFParticlePerformanceInterface;

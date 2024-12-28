@@ -23,7 +23,7 @@
 #define KFPHISTOGRAMSET
 
 #include "KFPHistogram1D.h"
-#include "KFParticle.h"
+#include "KFParticle/KFParticle.h"
 
 /** @class KFPHistogramSet
  ** @brief A set of histograms collected at the external devise.

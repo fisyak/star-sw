@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 
-#include "KFParticle.h"
+#include "KFParticle/KFParticle.h"
 #include "TObject.h"
 #include "StMuDSTMaker/COMMON/StMuTrack.h"
 

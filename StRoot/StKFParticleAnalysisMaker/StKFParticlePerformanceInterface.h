@@ -1,7 +1,7 @@
 #ifndef StKFParticlePerformanceInterface_H
 #define StKFParticlePerformanceInterface_H
 
-#include "KFMCTrack.h"
+#include "KFParticlePerformance/KFMCTrack.h"
 
 #include "TObject.h"
 #include "TString.h"

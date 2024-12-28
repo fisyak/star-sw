@@ -25,7 +25,7 @@
 
 #include "KFPHistogramSet.h"
 #include "KFPartEfficiencies.h"
-#include "KFParticleTopoReconstructor.h"
+#include "KFParticle/KFParticleTopoReconstructor.h"
 #include <map>
 #include <iostream>
 #include <fstream>

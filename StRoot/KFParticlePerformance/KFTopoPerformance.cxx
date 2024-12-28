@@ -29,8 +29,8 @@
 #include "AliHLTTPCCAPerformance.h"
 #endif
 
-#include "KFParticleTopoReconstructor.h"
-#include "KFParticleSIMD.h"
+#include "KFParticle/KFParticleTopoReconstructor.h"
+#include "KFParticle/KFParticleSIMD.h"
 #include "KFPHistogram/KFPHistogram.h"
 
 #include "TParticlePDG.h"

@@ -14,7 +14,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "KFParticleSIMD.h"
+#include "KFParticle/KFParticleSIMD.h"
 
 ClassImp(StKFParticleCandidateAnalysis)
 

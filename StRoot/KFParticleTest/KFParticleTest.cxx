@@ -19,10 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "KFParticle.h"
-#include "KFPTrack.h"
-#include "KFPVertex.h"
-#include "KFParticleSIMD.h"
+#include "KFParticle/KFParticle.h"
+#include "KFParticle/KFPTrack.h"
+#include "KFParticle/KFPVertex.h"
+#include "KFParticle/KFParticleSIMD.h"
 #include "KFParticleTest.h"
 
 #include <iostream>
