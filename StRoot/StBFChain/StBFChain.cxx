@@ -706,8 +706,7 @@ Int_t StBFChain::Instantiate()
       if (GetOption("usePct4Vtx" ) )      mk->SetAttr("PCT"           	, kTRUE);
       if (GetOption("useBTOF4Vtx") )      mk->SetAttr("BTOF"          	, kTRUE);
       if (GetOption("useBTOFmatchOnly") ) mk->SetAttr("useBTOFmatchOnly", kTRUE);
-      if (GetOption("FXT"        ) )      mk->SetAttr("FXT"             , kTRUE);
-
+      
       // X-tended works only for VFPPV, VFPPVnoCTB, VFPPVev for now but could be re-used
       // However, we will change this to a more flexible arbitrarry setting later
       if (GetOption("VFStoreX")    ) mk->SetAttr("VFStore"      , 100); 
@@ -914,8 +913,7 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("useLDV")    ) mk->SetAttr("useLDV",kTRUE) ;// uses laserDV database
       if ( GetOption("useCDV")    ) mk->SetAttr("useCDV",kTRUE) ;// uses ofl database
       if ( GetOption("useNewLDV") ) mk->SetAttr("useNewLDV",kTRUE);// uses new laserDV
-      if ( GetOption("Alignment2024")) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
-      if ( GetOption("TpcMDF4Error") ) mk->SetAttr("TpcMDF4Error",kTRUE);// uses TpcMDF4Error
+      if ( GetOption("Alignment2024")     ) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
       if ( GetOption("Cosmics")   ) mk->SetAttr("Cosmics"    ,kTRUE);
       if (GetOption("ExB")){
 	mk->SetAttr("ExB", kTRUE);	// bit 0 is ExB ON or OFF

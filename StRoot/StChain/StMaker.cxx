@@ -1,4 +1,4 @@
-// $Id: StMaker.cxx,v 1.269 2020/02/20 22:26:33 genevb Exp $
+// $Id: StMaker.cxx,v 1.268 2019/07/22 18:27:11 smirnovd Exp $
 //
 //
 /*!
@@ -23,10 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "TClass.h"
 #include "TROOT.h"
 #include "TError.h"
-#include "TEnv.h"
 #if 0
 #include "THtml.h"
 #endif
@@ -37,7 +35,7 @@
 #include "TList.h"
 #include "TClonesArray.h"
 #include "TBrowser.h"
-
+#include "TEnv.h"
 #include "StChainOpt.h"
 #include "TObjectSet.h"
 #include "StChain.h"
@@ -187,9 +185,9 @@ ClassImp(StMaker)
 
 //_____________________________________________________________________________
 StMaker::StMaker(const Char_t *name,const Char_t *):TDataSet(name,".maker"),
-						m_Number(0), m_LastRun(-3),
-						m_DebugLevel(0),m_MakeReturn(0),fStatus(0),
-						fLogger(0),fLoggerHold(0),m_Mode(0)
+						m_Mode(0),m_Number(0), m_LastRun(-3),
+						m_DebugLevel(0),m_MakeReturn(0),
+                                                fStatus(0),fLogger(0),fLoggerHold(0)
 {
    m_Attr=0;
    m_Inputs = 0;
@@ -517,10 +515,7 @@ Int_t icol,islas;
     dataset = 0;
     if (actInput.IsNull()) continue;
   //		Direct try
-    //if (actInput.Contains("."))  dataset = Find(actInput);
-    // GVB: The use of TString::Contains() [above] is time-expensive for
-    // finding a single character. Using strchr() [below] is much faster.
-    if (strchr(actInput.Data(),'.')) dataset = Find(actInput);
+    if (actInput.Contains("."))  dataset = Find(actInput);
     if (dataset) goto FOUND;
 
     if (actInput==GetName()) dataset = m_DataSet;
@@ -587,17 +582,17 @@ Int_t icol,islas;
     //		Not FOUND
     NOTFOUND:
       if (!dowMk && GetDebug()>1) //PrintWarning message
-	if ((MaxWarnings--) > 0) Warning("GetDataSet"," \"%s\" Not Found ***\n",(const char*)actInput);
+	if ((MaxWarnings--) > 0) Warning("GetDataSet"," \"%s\" Not Found ***",(const char*)actInput);
       dataset = 0; continue;
 
     //		DataSet FOUND
     FOUND: if (uppMk || dowMk) 	return dataset;
 	   if (GetDebug()<2) 	return dataset;
 #ifdef STAR_LOGGER     
-	   LOG_DEBUG << Form("<%s::%s> DataSet %s FOUND in %s\n"
+	   LOG_INFO << Form("<%s::%s> DataSet %s FOUND in %s"
 			     ,ClassName(),"GetDataSet",logInput,(const char*)dataset->Path()) << endm;
 #else
-      printf("Remark: <%s::%s> DataSet %s FOUND in %s\n"
+      printf("Remark: <%s::%s> DataSet %s FOUND in %s"
       ,ClassName(),"GetDataSet",logInput,(const char*)dataset->Path());
 #endif
     break;
@@ -700,11 +695,19 @@ Int_t StMaker::Init()
       maker->fMemStatMake  = new StMemStat(ts2);
       ts2 = ts1; ts2+="Clear";
       maker->fMemStatClear = new StMemStat(ts2);
-      
+      if (Debug() > 3) {
+	cout << maker->ClassName() << ":Init() *** before Call" << endl;
+	lsMakers(fgTopChain);
+      }
       if ( maker->Init()) {
         LOG_ERROR << "   Maker "<< maker->GetName() << " failed in Init" << endm;
         return kStErr;
       }
+      if (Debug() > 3) {
+	cout << maker->ClassName() << ":Init() *** Done" << endl;
+	lsMakers(fgTopChain);
+      }
+
       maker->StopTimer();
 
 // 		Add the Maker histograms in the Maker histograms list
@@ -813,17 +816,18 @@ Int_t StMaker::Finish()
       }
         LOG_QA <<
            Form("QAInfo:Maker %20s::%-20s Ast =%6.2f(%4.1f%%) Cpu =%6.2f(%4.1f%%) "
-             ,maker->ClassName(),maker->GetName()
-             ,maker->RealTime()
-             ,100*maker->RealTime()/totalRealTime
-             ,maker->CpuTime()
-             ,100*maker->CpuTime()/totalCpuTime) << endm;
-
+		,maker->ClassName(),maker->GetName()
+		,maker->RealTime()
+		,100*maker->RealTime()/totalRealTime
+		,maker->CpuTime()
+		,100*maker->CpuTime()/totalCpuTime);// << endm;
+	
       static const Char_t *ee[]={"nStOK","nStWarn","nStEOF","nStErr","nStFatal"};
       TString tail("");
       for (Int_t j=0;j<=kStFatal;j++) {
         if (fTallyMaker[j]) tail += Form(" %s=%d",ee[j],fTallyMaker[j]);}
-      if (tail != "") LOG_QA << (const Char_t *) tail << endm;     
+      if (tail != "") LOG_QA << (const Char_t *) tail;// << endm;     
+      LOG_QA << endm;
 #else
      if (fst) {
         fst=0;
@@ -921,12 +925,14 @@ Int_t StMaker::Make()
        run = hd->GetRunNumber();  
        if (Debug() && this == fgStChain && m_LastRun!=run){
          m_LastRun = run;
+	 if (run > 0) {
 #ifdef STAR_LOGGER     
-        LOG_INFO << " +++ New RunNumber found=" << run << " (previous = " << oldrun << ")" << endm;
+	   LOG_INFO << " +++ New RunNumber found=" << run << " (previous = " << oldrun << ")" << endm;
 #else
-        printf(" +++ New RunNumber found=%d (previous = %d)\n",run,oldrun);
+	   printf(" +++ New RunNumber found=%d (previous = %d)\n",run,oldrun);
 #endif                
-         hd->Print();
+	   hd->Print();
+	 }
        }
        maker->InitRun(run);
        maker->m_LastRun=run;
@@ -1016,7 +1022,7 @@ void StMaker::PrintInfo()
    if (cvs && cvs[0]) built = strstr(cvs,"built");
    else cvs = "No CVS tag was defined";
 #ifdef STAR_LOGGER       
-   if (built > cvs) { LOG_QA << Form("QAInfo:%-20s %s from %.*s",ClassName(),built,built-cvs,cvs)<< endm; }
+   if (built > cvs) { LOG_QA << Form("QAInfo:%-20s %s from %.*s",ClassName(),built,int(built-cvs),cvs)<< endm; }
    else             { LOG_QA << Form("QAInfo:%-20s    from %s",ClassName(),cvs) << endm; }
 #else   
    if (built > cvs) printf("QAInfo:%-20s %s from %.*s\n",ClassName(),built,built-cvs,cvs);
@@ -1110,6 +1116,10 @@ void StMaker::PrintTimer(Option_t *option)
 }
 void StMaker::lsMakers(const StMaker *top)
 {
+  if (! top) {
+    lsMakers(fgTopChain);
+    return;
+  }
   TDataSetIter   iter((TDataSet*)top,20);
   Int_t N=0;
   for(const TDataSet *mk=top;mk;mk = iter.Next()) {
@@ -1706,9 +1716,10 @@ Int_t StMaker::AliasDate(const Char_t *alias)
 
 {
 
-  Int_t n = strcspn(alias," ."); if (n<3) return 0;
+  //yf  Int_t n = strcspn(alias," ."); if (n<3) return 0;
   Int_t i;
-  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  //yf  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+    for (i=0;fDbAlias[i].tag && strcmp(alias,fDbAlias[i].tag);i++) {} 
   return fDbAlias[i].date;
 }
 //_____________________________________________________________________________
@@ -1716,9 +1727,10 @@ Int_t StMaker::AliasTime(const Char_t *alias)
 
 {
 
-  Int_t n = strcspn(alias," ."); if (n<3) return 0;
+  //yf  Int_t n = strcspn(alias," ."); if (n<3) return 0;
   Int_t i;
-  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  //yf  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  for (i=0;fDbAlias[i].tag && strcmp(alias,fDbAlias[i].tag);i++) {} 
   return fDbAlias[i].time;
 }
 //_____________________________________________________________________________
@@ -1726,9 +1738,10 @@ const Char_t *StMaker::AliasGeometry(const Char_t *alias)
 
 {
 
-  Int_t n = strcspn(alias," ."); if (n<3) return 0;
+  //yf  Int_t n = strcspn(alias," ."); if (n<3) return 0;
   Int_t i;
-  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  //yf  for (i=0;fDbAlias[i].tag && strncmp(alias,fDbAlias[i].tag,n);i++) {} 
+  for (i=0;fDbAlias[i].tag && strcmp(alias,fDbAlias[i].tag);i++) {} 
   return fDbAlias[i].geometry;
 }
 //_____________________________________________________________________________
@@ -1761,7 +1774,50 @@ TFile *StMaker::GetTFile() const
   if (!opt) return 0;
   return opt->GetTFile();
 }
-
+//_____________________________________________________________________________
+const TString &StMaker::GetFileIn() const 			
+{
+  const static Char_t *mktype = "StBFChain";
+  const static TString empty("");
+  StMaker  *mk = 0;
+  if (this->InheritsFrom(mktype)) {mk = (StMaker *) this;}
+  else {
+    StMakerIter mkiter(GetChain());
+    while ((mk = mkiter.NextMaker())) {//loop over makers
+      if (mk->InheritsFrom(mktype))   {// take first TFile in any BFC
+	const StChainOpt *opt = mk->GetChainOpt();
+	if (!opt) continue;
+	if (opt->GetFileIn() != empty) break;
+      }
+    }
+  }
+  if (! mk) return empty;
+  const StChainOpt *opt = mk->GetChainOpt();
+  if (!opt) return empty;
+  return opt->GetFileIn();
+}
+//_____________________________________________________________________________
+const TString &StMaker::GetFileOut() const 			
+{
+  const static Char_t *mktype = "StBFChain";
+  const static TString empty("");
+  StMaker  *mk = 0;
+  if (this->InheritsFrom(mktype)) {mk = (StMaker *) this;}
+  else {
+    StMakerIter mkiter(GetChain());
+    while ((mk = mkiter.NextMaker())) {//loop over makers
+      if (mk->InheritsFrom(mktype))   {// take first TFile in any BFC
+	const StChainOpt *opt = mk->GetChainOpt();
+	if (!opt) continue;
+	if (opt->GetFileOut() != empty) break;
+      }
+    }
+  }
+  if (! mk) return empty;
+  const StChainOpt *opt = mk->GetChainOpt();
+  if (!opt) return empty;
+  return opt->GetFileOut();
+}
 ClassImp(StTestMaker)
 //_____________________________________________________________________________
 StTestMaker::StTestMaker(const Char_t *name):StMaker(name)
@@ -1811,9 +1867,6 @@ Int_t StMaker::Skip(Int_t NoEventSkip)
 
 //_____________________________________________________________________________
 // $Log: StMaker.cxx,v $
-// Revision 1.269  2020/02/20 22:26:33  genevb
-// Replace TString::Contains() with faster strchr()
-//
 // Revision 1.268  2019/07/22 18:27:11  smirnovd
 // Move doPs function from StMaker to StMemStat
 //

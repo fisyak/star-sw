@@ -150,8 +150,11 @@ class KFParticlePerformanceBase
   TH2F *hPartParam2DPrimaryTopoMass[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D with mass and vertex constraints.
   TH2F *hPartParam2DSecondary[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D for secondary candidates.
   TH2F *hPartParam2DSecondaryMass[nParametersSet][KFPartEfficiencies::nParticles][nHistoPartParam2D]; ///< 2D for secondary candidates with mass constraint.
-
+#ifndef __TFG__VERSION__
   static const int nHistoPartParam3D = 12; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4
+#else /* __TFG__VERSION__ */
+  static const int nHistoPartParam3D = 14; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4, y-phi-M for pT > 1 GeV/c, y-pt-dM
+#endif /* __TFG__VERSION__ */
   TH3F *hPartParam3D[1][KFPartEfficiencies::nParticles][nHistoPartParam3D]; ///< 3D histograms.
 
   static const int nPartEfficiency = 9; ///< Number of efficiency plots for each decay: vs p, pt, y, z, c*tau, decay length, l, r, Mt.

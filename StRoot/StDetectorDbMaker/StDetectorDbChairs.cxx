@@ -1377,21 +1377,6 @@ Float_t St_tpcAnodeHVC::voltagePadrow(Int_t sector, Int_t padrow) const {
 }
 MakeChairOptionalInstance(TpcAvgPowerSupply,Calibrations/tpc/TpcAvgPowerSupply);
 //________________________________________________________________________________
-Bool_t St_TpcAvgPowerSupplyC::tripped(Int_t /* sector */,  Int_t /* padrow */) const {
-  Int_t u = StMaker::GetChain()->GetDateTime().Convert();
-  // +/-15 seconds to account readout speed ( 30 secs) 
-  //  if (u < start_time() - 15 || u > stop_time() + 15) return kTRUE;
-  Int_t stop = stop_time();
-  if (stop > 0 && u > stop + 15) {
-    TDatime tmax; tmax.Set(stop + 15);
-    LOG_WARN << "St_TpcAvgPowerSupplyC::tripped\t Current time = " << u << "\t" << StMaker::GetChain()->GetDateTime().AsString() 
-	     << "\tEnd time = " << stop + 15 << "\t" << tmax.AsString() << " for run = " << run() << endm;
-    PrintC("V");
-    return kTRUE;
-  }
-  return kFALSE;
-}
-//________________________________________________________________________________
 Float_t St_TpcAvgPowerSupplyC::voltagePadrow(Int_t sector, Int_t padrow) const {
   Int_t e1 = 0, e2 = 0;
   Float_t f2 = 0;
@@ -1432,12 +1417,7 @@ void St_TpcAvgPowerSupplyC::PrintC(Option_t *opt) const {
   const St_TpcAvgPowerSupply *TpcAvgPowerSupply = (St_TpcAvgPowerSupply *) GetThisTable();
   const TpcAvgPowerSupply_st &avgC = *TpcAvgPowerSupply->GetTable();
   Double_t AcCharge[2] = {0, 0};
-  TDatime t[2];
-  t[0].Set(start_time());
-  t[1].Set(stop_time());
-  cout << "TpcAvgPowerSupply for run = " << avgC.run 
-       << "\tstart_time: " << start_time() << "\t" << t[0].AsString() 
-       << "\tstop_time:  " << stop_time()  << "\t" << t[1].AsString() << endl;
+  cout << "TpcAvgPowerSupply for run = " << avgC.run << endl;
   for (Int_t sec = 1; sec <= 24; sec++) {
     cout << "Voltage " << sec;
     for (Int_t socket = 1; socket <= 8; socket++) cout << "\t" << Form("%10.3f",avgC.Voltage[8*(sec-1)+socket-1]);

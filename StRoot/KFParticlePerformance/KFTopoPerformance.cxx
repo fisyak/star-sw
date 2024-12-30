@@ -1667,6 +1667,17 @@ void KFTopoPerformance::FillParticleParameters(KFParticle& TempPart,
       histoParameters3D[0][iParticle][4]->Fill(fCentralityBin, M_t, M, fCentralityWeight);
     }
     histoParameters3D[0][iParticle][5]->Fill(cT, Pt, M, weight);
+#ifdef __TFG__VERSION__
+    int index1 = TempPart.DaughterIds()[0];
+    int index2 = TempPart.DaughterIds()[1];
+    if (histoParameters3D && histoParameters3D[0][iParticle][13] && (index1 >= 0 && index2 >= 0)) {
+      if (Pt > 1.0) {
+       //    if (Pt > 1.0 && (index1 >= 0 && index2 >= 0) && (negDaughter.NDF() > 45 && posDaughter.NDF() > 45)) {
+       histoParameters3D[0][iParticle][12]->Fill(Rapidity, Phi, M, 1);
+      }
+      histoParameters3D[0][iParticle][13]->Fill(Rapidity,Pt,ErrM,1);
+    }
+#endif /* __TFG__VERSION__ */
     
     if(IsCollectDalitz(iParticle))
     {

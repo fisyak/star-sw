@@ -25,7 +25,16 @@ public:
          row.fTypeSize= sizeof(unsigned char);
          row.fType=kUChar;
      }
+  virtual ~StRtsTableDescriptor() { if (this == gStRtsTableDescriptor) gStRtsTableDescriptor  = 0;}
+  static StRtsTableDescriptor *instance(size_t structLength) {
+    SafeDelete(gStRtsTableDescriptor);
+    gStRtsTableDescriptor = new  StRtsTableDescriptor(structLength);
+    return gStRtsTableDescriptor;
+  }
+private:
+  static StRtsTableDescriptor *gStRtsTableDescriptor;
 }; 
+StRtsTableDescriptor *StRtsTableDescriptor::gStRtsTableDescriptor = 0;
 //________________________________________________________
 StRtsTable::StRtsTable(size_t structLength, Int_t n) : 
  TGenericTable(StRtsTableDescriptor(structLength),1)

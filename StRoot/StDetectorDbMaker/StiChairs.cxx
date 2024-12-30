@@ -4,23 +4,10 @@
 #include "St_db_Maker/St_db_Maker.h"
 #include "StDetectorDbMaker/StiHitErrorCalculator.h"
 ClassImp(StiHitErrorCalculator);
-//#define __BenchMark__
-#ifdef __BenchMark__
-#include "TBenchmark.h"
-#endif /* __BenchMark__ */
-//________________________________________________________________________________
-StiHitErrorCalculator::~StiHitErrorCalculator() {
-#ifdef __BenchMark__
-  gBenchmark->Print("StiHitErrorCalculator");
-#endif /* __BenchMark__ */
-}
 //________________________________________________________________________________
 void StiHitErrorCalculator::calculateError(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t &ecross, Double_t &edip, Double_t fudgeCactor) const {
-#ifdef __BenchMark__
-  gBenchmark->Start("StiHitErrorCalculator");
-#endif /* __BenchMark__ */
-  static const Double_t hundredMicrons = 1e-2;
-  static const Double_t min2Err = hundredMicrons*hundredMicrons;
+  static const Double_t tenMicrons = 1e-3;
+  static const Double_t min2Err = tenMicrons*tenMicrons;
   static const Double_t max2Err = 1.;
   static const Double_t scale = 1.;
   const Double_t *Coeff = ((StiHitErrorCalculator *) this)->coeff();
@@ -51,9 +38,6 @@ void StiHitErrorCalculator::calculateError(Double_t _z,  Double_t _eta, Double_t
 //	Temporary hack for Gene. Increase prompt hit errors
 //  if (fabs(_z) >200) {ecross*=10; edip*=10;}
 
-#ifdef __BenchMark__
-  gBenchmark->Stop("StiHitErrorCalculator");
-#endif /* __BenchMark__ */
 
 }
 //________________________________________________________________________________
@@ -71,12 +55,6 @@ MakeChairInstance2(KalmanTrackFinderParameters,StiKalmanTrackFinderParameters,Ca
 #include "StiTpcPullMDF4.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
 //________________________________________________________________________________
-StiTpcHitErrorMDF4::~StiTpcHitErrorMDF4() {
-#ifdef __BenchMark__
-  gBenchmark->Print("StiTpcHitErrorMDF4");
-#endif /* __BenchMark__ */
-}
-//________________________________________________________________________________
 void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
   fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
   Double_t y = TMath::Tan(_eta);
@@ -89,11 +67,8 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
 					Double_t &ecross, Double_t &edip, 
 					Double_t fudgeFactor, Double_t AdcL, 
 					Double_t *dZ, Double_t *dX) const {
-#ifdef __BenchMark__
-  gBenchmark->Start("StiTpcHitErrorMDF4");
-#endif /* __BenchMark__ */
-  static const Double_t minimumError = 2e-2;
-  static const Double_t min2Err = minimumError*minimumError;
+  static const Double_t hundredMicrons = 1e-2;
+  static const Double_t min2Err = hundredMicrons*hundredMicrons;
   static const Double_t max2Err = 1.;
   static const Double_t scale = 1.;
   static Double_t timeP = -1;
@@ -141,9 +116,6 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
     cout << endl;
     _debug++;
   }
-#ifdef __BenchMark__
-  gBenchmark->Stop("StiTpcHitErrorMDF4");
-#endif /* __BenchMark__ */
 }
 MakeChairInstance2(MDFCorrection4,StiTpcInnerHitErrorMDF4,Calibrations/tracker/TpcInnerHitErrorMDF4);
 MakeChairInstance2(MDFCorrection4,StiTpcOuterHitErrorMDF4,Calibrations/tracker/TpcOuterHitErrorMDF4);

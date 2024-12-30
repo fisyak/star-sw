@@ -1,4 +1,3 @@
-// $Id: StKFParticleAnalysisMaker.h,v 1.16 2014/08/06 11:43:53 jeromel Exp $
 /*!
  * \class  StKFParticleAnalysisMaker
  * \author Maksym Zyzak
@@ -17,7 +16,6 @@
 
 class StKFParticleInterface;
 class StKFParticlePerformanceInterface;
-// class KFParticle;
 class StPicoDst;
 class StMuDst;
 class TNtuple;
@@ -111,9 +109,9 @@ class StKFParticleAnalysisMaker : public StMaker {
   }
   void ProcessSignal() { fProcessSignal = true; }
   void StoreTMVANtuples() { fStoreTmvaNTuples = true; }
-  void CollectTrackHistograms() { fCollectTrackHistograms = true; }
-  void CollectPIDHistograms() { fCollectPIDHistograms = true; }
-  void CollectPVHistograms() { fCollectPVHistograms = true; }
+  void CollectTrackHistograms(Bool_t k = kTRUE) { fCollectTrackHistograms = k; }
+  void CollectPIDHistograms(Bool_t k = kTRUE) { fCollectPIDHistograms = k; }
+  void CollectPVHistograms(Bool_t k = kTRUE) { fCollectPVHistograms = k; }
   void UseTMVA() { fTMVAselection = true; }
   void SetTMVABinsD0   (TString centralityBins, TString ptBins) { SetTMVABins(0, centralityBins, ptBins); }
   void SetTMVABinsDPlus(TString centralityBins, TString ptBins) { SetTMVABins(1, centralityBins, ptBins); }

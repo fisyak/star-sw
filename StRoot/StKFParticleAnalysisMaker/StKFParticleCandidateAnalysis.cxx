@@ -195,36 +195,28 @@ StKFParticleCandidateAnalysis::StKFParticleCandidateAnalysis(TString inputFile):
       }
       const int nBinsM = 250;
       //ctau - M
-      fHistos2D[iParticle][0] = new TH2D("ctauM", "ctauM", 
+      fHistos2D[iParticle][0] = new TH2D("ctauM", "ctauM ; c#tau ; m [GeV/c]", 
                                 nBins[24], minX[24], maxX[24],
                                 nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-      fHistos2D[iParticle][0]->GetXaxis()->SetTitle("c#tau");
-      fHistos2D[iParticle][0]->GetYaxis()->SetTitle("m [GeV/c]");
 
-      fHistos2D[iParticle][1] = new TH2D("Armenteros", "Armenteros", 
+      fHistos2D[iParticle][1] = new TH2D("Armenteros", "Armenteros ; #alpha (p_{L}^{+}-p_{L}^{-})/(p_{L}^{+}+p_{L}^{-}) ; q_{t} [GeV/c]", 
                                 4000, -2.f, 2.f,
                                 1000,  0.f, 1.f);
-      fHistos2D[iParticle][1]->GetXaxis()->SetTitle("#alpha (p_{L}^{+}-p_{L}^{-})/(p_{L}^{+}+p_{L}^{-})");
-      fHistos2D[iParticle][1]->GetYaxis()->SetTitle("q_{t} [GeV/c]");
 
-      fHistos2D[iParticle][2] = new TH2D("ChiTopoVsM", "ChiTopoVsM", 
+      fHistos2D[iParticle][2] = new TH2D("ChiTopoVsM", "ChiTopoVsM ; prob ; M [GeV^{2}/c^{2}]", 
                                 100, 0.f, 1.f,
                                 nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-      fHistos2D[iParticle][2]->GetXaxis()->SetTitle("prob");
-      fHistos2D[iParticle][2]->GetYaxis()->SetTitle("M [GeV^{2}/c^{2}]");
 
-      fHistos2D[iParticle][3] = new TH2D("MPl", "MPl", 
+      fHistos2D[iParticle][3] = new TH2D("MPl", "MPl : #alpha (p_{L}^{+}-p_{L}^{-})/(p_{L}^{+}+p_{L}^{-}) ; m [GeV/c]", 
                                 400, -2.f, 2.f,
                                 nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-      fHistos2D[iParticle][3]->GetXaxis()->SetTitle("#alpha (p_{L}^{+}-p_{L}^{-})/(p_{L}^{+}+p_{L}^{-})");
-      fHistos2D[iParticle][3]->GetYaxis()->SetTitle("m [GeV/c]");
 
       //y-pt-M and y-mt-M
-      fHistos3D[iParticle][0] = new TH3D("y-pt-m", "y-pt-m",
+      fHistos3D[iParticle][0] = new TH3D("y-pt-m","y-pt-m ; " + histoNames[28] + " ;" + histoNames[6] + " ; " +histoNames[iParticle],
                                 nBins[28], minX[28], maxX[28],
                                 nBins[6], minX[6], maxX[6],
                                 nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-      fHistos3D[iParticle][1] = new TH3D("y-mt-m", "y-mt-m",
+      fHistos3D[iParticle][1] = new TH3D("y-mt-m", "y-mt-m ; " + histoNames[28] + " ; " + histoNames[29] + " ; M[" + histoNames[iParticle] + "]",
                                 nBins[28], minX[28], maxX[28],
                                 nBins[29], minX[29], maxX[29],
                                 nBinsM, minM[0][iParticle], maxM[0][iParticle]);
@@ -236,29 +228,20 @@ StKFParticleCandidateAnalysis::StKFParticleCandidateAnalysis(TString inputFile):
         TString f1f2Name="m_{"; f1f2Name+=f1Name[iParticle]; f1f2Name+=f2Name[iParticle]; f1f2Name+="} [GeV/c]";
         TString f1f2piName="m_{"; f1f2piName+=f1Name[iParticle]; f1f2piName+=f2Name[iParticle]; f1f2piName+="#pi} [GeV/c]";
         
-        fHistos3D[iParticle][2] = new TH3D("dalitz0", "dalitz0",
+        fHistos3D[iParticle][2] = new TH3D("dalitz0", "dalitz0 ; " + f1f2Name + " ; " + f2piName + " ; " + f1f2piName,
                                   100, minM[7][iParticle], maxM[7][iParticle]-0.15,
                                   100, minM[4][iParticle], maxM[4][iParticle]-0.15,
                                   nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-        fHistos3D[iParticle][2]->GetXaxis()->SetTitle(f1f2Name);
-        fHistos3D[iParticle][2]->GetYaxis()->SetTitle(f2piName);
-        fHistos3D[iParticle][2]->GetZaxis()->SetTitle(f1f2piName);
 
-        fHistos3D[iParticle][3] = new TH3D("dalitz1", "dalitz1",
+        fHistos3D[iParticle][3] = new TH3D("dalitz1", "dalitz1 ; " + f1piName + " ; " + f2piName + " ; " + f1f2piName,
                                   100, minM[6][iParticle], maxM[6][iParticle]-0.15,
                                   100, minM[4][iParticle], maxM[4][iParticle]-0.15,
                                   nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-        fHistos3D[iParticle][3]->GetXaxis()->SetTitle(f1piName);
-        fHistos3D[iParticle][3]->GetYaxis()->SetTitle(f2piName);
-        fHistos3D[iParticle][3]->GetZaxis()->SetTitle(f1f2piName);
 
-        fHistos3D[iParticle][4] = new TH3D("dalitz2", "dalitz2",
+        fHistos3D[iParticle][4] = new TH3D("dalitz2", "dalitz2 ; " + f1f2Name + " ; " + f1piName + " ; " + f1f2piName, 
                                   100, minM[7][iParticle], maxM[7][iParticle]-0.15,
                                   100, minM[6][iParticle], maxM[6][iParticle]-0.15,
                                   nBinsM, minM[0][iParticle], maxM[0][iParticle]);
-        fHistos3D[iParticle][4]->GetXaxis()->SetTitle(f1f2Name);
-        fHistos3D[iParticle][4]->GetYaxis()->SetTitle(f1piName);
-        fHistos3D[iParticle][4]->GetZaxis()->SetTitle(f1f2piName);
       }
 
       gDirectory->cd(".."); //main folder
@@ -787,7 +770,7 @@ void StKFParticleCandidateAnalysis::RunMixedEvent() {
       if(events.size() == 1000 || iParticle >= nCandidates) {
 
         std::map<const KFParticle*, int> nUsed;
-        for(const auto event: events) {
+        for(const auto &event: events) {
           for(uint32_t iP=0; iP<event.m_L.size(); iP++) {
             nUsed[&(event.m_L[iP])] = 0;
             nUsed[&(event.m_f[iP])] = 0;

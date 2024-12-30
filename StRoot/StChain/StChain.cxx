@@ -39,11 +39,12 @@
 #include <stdio.h>
 #include "TROOT.h"
 #include "TError.h"
-#include "TEnv.h"
 #include "TBrowser.h"
 #include "TBenchmark.h"
+#if 0
 #include <sys/times.h>
 #include <time.h>
+#endif
 #include "TSystem.h"
 #include "StChain.h"
 #include "StEvtHddr.h"
@@ -51,6 +52,8 @@
 #include "StMemStat.h"
 #include "StCloseFileOnTerminate.h"
 #include "TApplication.h"
+#include "TError.h"
+#include "TEnv.h"
 ClassImp(StChain)
 
 //_____________________________________________________________________________
@@ -132,6 +135,7 @@ const StChainOpt *StChain::GetChainOpt()    const
 Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk) 
 {
   TBenchmark evnt;
+#if 0
   struct tms cpt;
   Double_t userCpuTime=0;
   Double_t systemCpuTime=0;
@@ -139,6 +143,7 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
   Double_t childSystemCpuTime=0;
   Double_t gTicks = (Double_t) sysconf(_SC_CLK_TCK);
   struct timespec ts;
+#endif
   int jCur=0,iMake=0;
   Bool_t quiet = gEnv->GetValue("quiet", 0);
 #ifdef STAR_TRACKING 
@@ -175,11 +180,12 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
 #endif         
 #endif                
   if (jBeg > 1) Skip(jBeg-1);
+#if 0
   // End of the event loop as soon as the application receives TERM (-15) system signal
-  class teminator : public  StTerminateNotified {
+  class terminator : public  StTerminateNotified {
     Bool_t fEnd_of_time;
   public: 
-    teminator() : StTerminateNotified(), fEnd_of_time(kFALSE) {}
+    terminator() : StTerminateNotified(), fEnd_of_time(kFALSE) {}
     Bool_t Notify() {return ! fEnd_of_time;}
     void SetNotifiedCallBack() { 
       fEnd_of_time = true; 
@@ -189,11 +195,31 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
 	GetTopChain()->Finish();
       }
       fgStChain->Error(__FUNCTION__,"Terminating  . . . . ");
+      fgStChain->Error(__FUNCTION__," Closing all TFiles   . . . . ");
+      TSeqCollection   *files = gROOT->GetListOfFiles();
+      int count = 0;
+      if (files && files->GetSize() >0 ) {
+	TIter next(files);
+	while( TFile *f = (TFile *) next() ) { 
+	  if ( f-> IsWritable() ) {
+	    fgStChain->Error(__FUNCTION__, "file %s will be closed", f->GetName());
+	    f->Write();
+	    f->Close(); ++count; 
+	    fgStChain->Error(__FUNCTION__, "file %s has been closed", f->GetName());
+	  }
+	}
+	files->Delete();
+      }
+      if (count) fgStChain->Error(__FUNCTION__, "%d files have been closed", count);
+      else fgStChain->Print(" There was no open file to close");
+      
       gApplication->Terminate(15);
     }
   } endOfTime;
+#endif
   for (jCur=jBeg; jCur<=jEnd; jCur++) {
      evnt.Reset(); evnt.Start("QAInfo:");
+#if 0
      gTicks = (Double_t) sysconf(_SC_CLK_TCK);
      times(&cpt);
      userCpuTime = ((Double_t) cpt.tms_utime) / gTicks;
@@ -203,7 +229,7 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
      clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&ts);
      time_t start_tv_sec = ts.tv_sec;
      long  start_tv_nsec = ts.tv_nsec;
-
+#endif
      Clear();
      iMake = Make(jCur);
 
@@ -213,6 +239,7 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
      evnt.Stop("QAInfo:");
      if (! quiet) {
      //  evnt.Show("QAInfo:");
+#if 0
      times(&cpt);
      userCpuTime = ((Double_t) cpt.tms_utime) / gTicks - userCpuTime;
      systemCpuTime = ((Double_t) cpt.tms_stime) / gTicks - systemCpuTime;
@@ -225,7 +252,7 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
      stop_tv_nsec -= start_tv_nsec;
      stop_tv_sec -= start_tv_sec;
      double tv_diff = ((double) stop_tv_sec) + (((double) stop_tv_nsec)*1e-9);
-     
+#endif     
      //
      // ATTENTION - please DO NOT change the format of the next line,
      //   they are used by our parsers to detect a generation 
@@ -237,9 +264,11 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
 	jCur,GetRunNumber(),GetEventNumber(),GetDate(), GetTime(),
 	     iMake,evnt.GetRealTime("QAInfo:"),evnt.GetCpuTime("QAInfo:")) 
      << endm;
+#if 0
      LOG_QA << Form("QAInfo: Cpu Times: user / system / user children / system children = %8.2f / %8.2f / %8.2f / %8.2f seconds (tick = %8.2f, cps = %ld)",
                     userCpuTime,systemCpuTime,childUserCpuTime,childSystemCpuTime,gTicks,CLOCKS_PER_SEC) << endm;
      LOG_QA << Form("QAInfo: Cpu Times: all threads = %15.9f seconds",tv_diff) << endm;
+#endif
      }
 #ifdef STAR_TRACKING 
 #ifdef OLDTRACKING    

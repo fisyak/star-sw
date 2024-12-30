@@ -25,7 +25,7 @@
 #include "TStopwatch.h"
 #include "StMessMgr.h" 
 
-#ifndef __CINT__
+#if !defined(__CINT__) && !defined(__CLING__)
 #if ROOT_VERSION_CODE >= ROOT_VERSION(3,05,04)
 typedef TDataSet::EDataSetPass EDataSetPass;
 #endif
@@ -223,7 +223,8 @@ public:
    virtual Int_t        GetDebug(){ return m_DebugLevel;}
    virtual const StChainOpt *GetChainOpt()    const;
    virtual TFile *GetTFile() const; 			
-
+   virtual const TString &GetFileIn()  const;
+   virtual const TString &GetFileOut() const;
    virtual void         NotifyEm(const char *about,const void *ptr);
 
    virtual Double_t     RealTime(){ return m_Timer.RealTime();}
@@ -256,7 +257,7 @@ protected:
 
 public:
 static Int_t Cleanup(TDataSet *&ds);
-static void lsMakers(const StMaker *top);
+static void lsMakers(const StMaker *top = 0);
 
 private:
   TAttr *m_Attr;		
