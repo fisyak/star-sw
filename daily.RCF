@@ -3370,6 +3370,8 @@ source /afs/rhic.bnl.gov/rhstar/group/.starver SL24y;
 #sigma(@61 npts) =  5.31% for F-9p8GeV_fixedTarget_2020	 #mu =  0.29% for F-9p8GeV_fixedTarget_2020  
 
 
+
+
 --------------------------------------------------------------------------------
 
 
@@ -3482,3 +3484,18 @@ index 23b508da8d..5e53678cfb 100644
 
 
 
+================================================================================
+12/28/2024 
+sed '/CLIENTSCRIPT="foo"/a CLIENTSCRIPT2="hello"' file
+
+sed '/Priority         = +10/a requirements = (Microarch >= "x86_64-v4")'  sched08D32B88112F4DFB4F7A3A59C8984754_0_47.condor > condor.condor
+
+touch q.condor
+foreach f (`ls -1d sched*.condor`)
+  sed '/Priority         = +10/a requirements = (Microarch >= "x86_64-v4")' ${f} | tee -a q.condor
+end
+
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch >= "x86_64-v4")' ${f} > Q${b}
+end

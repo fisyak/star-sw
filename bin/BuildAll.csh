@@ -11,8 +11,8 @@ foreach root (root6 root5)
     breaksw
     case "*bnl.gov":
     #    set list = "gcc482 gcc492 gcc/6.3 gcc/10";
-#	set list = "gcc" #  gcc/6.3  gcc/10.1.0"
-	set list = "gcc gcc/11 gcc/12"#  gcc/13" #  gcc/6.3  gcc/11"
+	set list = "gcc" #  gcc/6.3  gcc/10.1.0"
+#	set list = "gcc gcc/11 gcc/12"#  gcc/13" #  gcc/6.3  gcc/11"
     breaksw
   endsw
   set gcc_list = "${list}"
@@ -24,7 +24,7 @@ foreach root (root6 root5)
 #   if ($gcc == "gcc8" || gcc == "gcc631") set opts = "debug opt opt3"
     foreach optt ($opts)
       set bits = "64b";
-      if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
+#      if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
 #      echo "gcc = $gcc, optt = $optt, bits = $bits"
       foreach bit (${bits})
         unsetenv NODEBUG

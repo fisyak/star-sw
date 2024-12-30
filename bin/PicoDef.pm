@@ -135,6 +135,7 @@
 # production_44p5GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
 # production_70GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
 # production_100GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
+# dir -ltrd /star/data*/reco/production*/*/P24iy | awk -F/ '{print $5"/"$6"/"$7}' | sort -u
 
 
 @PicoDefs= (
