@@ -684,6 +684,9 @@ if ( ! $?JAVA_ROOT ) then
 	endif
     endif
 endif
+if ( ! $?JAVA_ROOT && -d $CMAKE_PREFIX_PATH ) then
+    setenv JAVA_ROOT $CMAKE_PREFIX_PATH
+endif
 if ( $?JAVA_ROOT ) then
     if ( -d $JAVA_ROOT/ ) then
 	if ( `echo $PATH | $GREP kerberos` != "") then
