@@ -1069,7 +1069,7 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
                                 -10.f, // ctau
                                   0.f, // chi2/ndf
                                   0.f, // prob
-                                  0.f, // theta
+     -static_cast<float>(TMath::Pi()), // theta
      -static_cast<float>(TMath::Pi()), // phi
                                 -10.f, // X
                                 -10.f, // Y
@@ -1096,8 +1096,8 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
                                   50.f, // ctau
                                   20.f, // chi2/ndf
                                    1.f, // prob
-      -static_cast<float>(TMath::Pi()), // theta
-      -static_cast<float>(TMath::Pi()), // phi
+       static_cast<float>(TMath::Pi()), // theta
+       static_cast<float>(TMath::Pi()), // phi
                                   10.f, // X
                                   10.f, // Y
                                  230.f, // Z
