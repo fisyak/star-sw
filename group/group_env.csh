@@ -684,8 +684,12 @@ if ( ! $?JAVA_ROOT ) then
 	endif
     endif
 endif
-if ( ! $?JAVA_ROOT && -d $CMAKE_PREFIX_PATH ) then
-    setenv JAVA_ROOT $CMAKE_PREFIX_PATH
+if ( ! $?JAVA_ROOT) then 
+  if ( $?CMAKE_PREFIX_PATH) then
+    if ( -d $CMAKE_PREFIX_PATH ) then
+      setenv JAVA_ROOT $CMAKE_PREFIX_PATH
+    endif
+  endif
 endif
 if ( $?JAVA_ROOT ) then
     if ( -d $JAVA_ROOT/ ) then
