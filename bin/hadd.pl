@@ -199,18 +199,61 @@ foreach my $key (sort keys %TagList) {
 #    next if -r $SCRIPT;
     open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
     print "Create $SCRIPT\n";
-    print OUT "#!/bin/tcsh -v\n";
+#    print OUT "#!/bin/tcsh -v\n";
+    print OUT "#!/usr/bin/env tcsh \n";
+    print OUT "source ~/.tcshrc\n";
+    print OUT "env\n";
     print OUT "cd $DIR\n";
-    print OUT "setenv NODEBUG yes\n";
-    print OUT "setup " . $ARG{platform} . "\n";
+#    print OUT "setenv NODEBUG yes\n";
+#    print OUT "setup " . $ARG{platform} . "\n";
 #    print OUT "setup " . $ARG{gcc} . "\n";
-    print OUT "starver " . $ARG{version} . "\n";
+#    print OUT "starver " . $ARG{version} . "\n";
     print OUT "$cmd\n";
     if ($ARG{keep} eq 'no') {
       print OUT "if (\$? == 0) rm $list;\n";
     }
-    close (OOUT);
+    close (OUT);
+    chmod 0755,  $SCRIPT;
     print XML "<input URL=\"file:" . $DIR . "/" .  $SCRIPT ."\" />\n";
+    my $CONDOR = "hadd" . $outn . $name . ".condor";
+    open (CONDOR,">$CONDOR") or die "Can't open $CONDOR";
+
+#     print CONDOR "Universe         = vanilla\n";
+#     print CONDOR "Notification     = Never\n";
+# #    print CONDOR "Executable       = /usr/bin/csh\n";
+#     print CONDOR "Executable       = /bin/sh\n";
+#     print CONDOR "Arguments        = \"-c 'exec " . $DIR . "/" . $SCRIPT . "'\"\n";
+#     print CONDOR "Output           = " . $DIR . "/" . $SCRIPT . ".log\n";
+#     print CONDOR "Requirements    = ((CPU_Experiment == \"star\") || ( CPU_Experiment == \"phenix\" ))\n";
+#     print CONDOR "Log              = " . $SCRIPT . ".condor.log\n"; 
+#     print CONDOR "Initialdir       = ". $DIR . "\n";
+# #    print CONDOR "+Experiment     = \"general\"                              \n";
+# #    print CONDOR "+Job_Type       = \"cas\"\n";
+# #    print CONDOR "kill_sig        = SIGINT\n";
+# #    print CONDOR "PeriodicRemove  = (NumJobStarts >=1 && JobStatus==1) || (JobStatus == 2 && (CurrentTime - JobCurrentStartDate > (54000)) && ((RemoteUserCpu+RemoteSysCpu)/(CurrentTime-JobCurrentStartDate) < 0.10))  || (((CurrentTime - EnteredCurrentStatus) > (2*24*3600)) && JobStatus == 5)\n";
+# #    print CONDOR "Priority         = +10\n";
+#     print CONDOR "should_transfer_files   = YES\n";
+#     print CONDOR "requirements = (Microarch == \"x86_64-v4\")\n";
+#     print CONDOR "Queue\n";
+    print CONDOR "
+Universe         = vanilla
+Notification     = never
+Executable       = /bin/sh
+Arguments        = \"-c 'exec " . $DIR . "/" . $SCRIPT . "'\"
+Output           = " . $DIR . "/" . $SCRIPT . ".log
+Error            = " . $DIR . "/" . $SCRIPT . ".err
+Requirements    = ((CPU_Experiment == \"star\") || ( CPU_Experiment == \"phenix\" ))
+Log              = " . $SCRIPT . ".condor.log
+Initialdir       = " . $DIR . "
++Experiment     = \"general\"                              
++Job_Type       = \"cas\"
+kill_sig        = SIGINT
+PeriodicRemove  = (NumJobStarts >=1 && JobStatus==1) || (JobStatus == 2 && (CurrentTime - JobCurrentStartDate > (54000)) && ((RemoteUserCpu+RemoteSysCpu)/(CurrentTime-JobCurrentStartDate) < 0.10))  || (((CurrentTime - EnteredCurrentStatus) > (2*24*3600)) && JobStatus == 5)
+Priority         = +10
+requirements = (Microarch == \"x86_64-v4\")
+Queue
+";
+    close(CONDOR);
   }
 }
 print XML '

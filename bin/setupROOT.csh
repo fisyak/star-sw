@@ -47,6 +47,7 @@ setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --disable
 	setenv MYSQLCLILIB /usr/lib/mysql
 #setenv GSL_DIR $ROOTSYS
 setenv GSL_DIR $XOPTSTAR # $ROOTSYS
+if (-r $CMAKE_PREFIX_PATH/lib) setenv GSL_DIR $CMAKE_PREFIX_PATH
 setenv FFTW3   $ROOTSYS # $XOPTSTAR 
 setenv F77 gfortran
 switch ( $STAR_HOST_SYS )  
@@ -165,15 +166,16 @@ endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
     case *al92_x8664_*:
-	setenv DISABLE "$DISABLE --disable-memstat"
+     setenv DISABLE "$DISABLE --disable-memstat"
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS  --cxxflags=-Wno-register --cxxflags=-Wno-misleading-indentation --cflags=-Wno-register --cflags=-Wno-misleading-indentation" # --cflags=--std=c++17
     breaksw
     case *gcc12*:
-     setenv DISABLE "$DISABLE --disable-python --disable-xrootd --disable-pythia8"
-     setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
+     setenv DISABLE "$DISABLE --disable-python --disable-xrootdxs --disable-pythia8"
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17 --cxxflags=-Wno-register"
      breaksw
     case *gcc1*:
      setenv DISABLE "$DISABLE --disable-xrootd --disable-pythia8"
-     setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17 --cxxflags=-Wno-register"
      breaksw
     case *gcc9*:
     case *gcc8*:

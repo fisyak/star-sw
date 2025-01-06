@@ -3512,3 +3512,35 @@ end
 [spoolsub01] /gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/6.99.99/.al92_x8664_gcc11/rootdeb/sql/mysql/CMakeFiles/RMySQL.dir $ grep -r txt .
 ./build.make:lib/libRMySQL.so: sql/mysql/CMakeFiles/RMySQL.dir/link.txt
 ./build.make:   cd /gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/6.35.01/.al92_x8664_gcc11/rootdeb/sql/mysql && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RMySQL.dir/link.txt --verbose=$(VERBOSE)
+
+
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+================================================================================
+01/01/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d */sched*.condor`)
+  set d = `dirname ${f}`
+  set b = `basename  ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > ${d}/Q${b}
+end
+
+
+spool1800.sdcc.bnl.gov MySQL failed 
+
+
+condor_status -long `hostname` | grep -i microarch | uniq
+
+
+ find . -name "*.root" -size -8983534c  -exec rm {} \;
+
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
