@@ -124,6 +124,7 @@ if ( !$param::quiet ) {
                  LIBPATH LIBS Libraries SO SOFLAGS br 
 		 LIBG2C LIBSTDC br
 		 ROOTLIBS br
+                 MYSQL br
 		 spack
 	       );
   my $tab = ""; 

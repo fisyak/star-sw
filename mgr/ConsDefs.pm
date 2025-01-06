@@ -480,7 +480,8 @@
  my ($MYSQLINCDIR,$mysqlheader);
  if ( defined($ENV{USE_LOCAL_MYSQL}) ){
    ($MYSQLINCDIR,$mysqlheader) =
-     script::find_lib( $XOPTSTAR . "/include " .  $XOPTSTAR . "/include/mysql ".
+       script::find_lib($CMAKE_PREFIX_PATH . "/include ". 
+	               $XOPTSTAR . "/include " .  $XOPTSTAR . "/include/mysql ".
 		       $MYSQL . " " .
 		       "/sw/include/mysql ".
 		       "/include /usr/include ".
@@ -490,7 +491,8 @@
 		       "mysql.h");
  } else { 
    ($MYSQLINCDIR,$mysqlheader) =
-     script::find_lib( $MYSQL . " " .
+       script::find_lib($CMAKE_PREFIX_PATH . "/include ". 
+			$MYSQL . " " .
 		       "/sw/include/mysql ".
 		       "/include /usr/include ".
 		       "/usr/include/mysql  ".
@@ -508,7 +510,7 @@
  my ($MYSQLCONFIG,$mysqlconf);
  # if ( defined($ENV{USE_LOCAL_MYSQL}) ){
  ($MYSQLCONFIG,$mysqlconf) =
- script::find_lib($XOPTSTAR . "/bin " .  $XOPTSTAR . "/bin/mysql /sw/bin ".
+ script::find_lib($CMAKE_PREFIX_PATH . "/bin ".  $XOPTSTAR . "/bin " .  $XOPTSTAR . "/bin/mysql /sw/bin ".
 		  $MYSQL . " ".
 		  "/usr/$LLIB/mysql /usr/bin/mysql /usr/bin ",
 		  "mysql_config");
