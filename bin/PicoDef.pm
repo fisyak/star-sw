@@ -174,6 +174,7 @@
 '2019/4p59GeV_fixedTarget_TFG24e'              => '2019/RF/4p59GeV_fixedTarget',    
 '2019/4p59GeV_fixedTarget_TFG24eg'              => '2019/RF/4p59GeV_fixedTarget',    
 '2019/4p59GeV_fixedTarget_P24iy_calib'       	       => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_calib',    
+'2019/4p59GeV_fixedTarget_P24iy'       	       => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy',    
 
 '2019/7.3GeV_fixedTarget' =>			  'production_7.3GeV_fixedTarget_2019/ReversedFullField/P21id',
 '2019/7.3GeV_fixedTarget_P23id'		       => 'production_7.3GeV_fixedTarget_2019/ReversedFullField/P23id',     
@@ -236,6 +237,7 @@
 '2020/9p8GeV_fixedTarget_P24ia'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia',     
 '2020/9p8GeV_fixedTarget_c_P24ia'		       => 'production_9p8GeV_fixedTarget_c2020/ReversedFullField/P24ia',     
 '2020/9p8GeV_fixedTarget_P24iy_calib'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P24iy_calib',     
+'2020/9p8GeV_fixedTarget_P24iy'		       => 'production_9p8GeV_fixedTarget_2020/ReversedFullField/P24iy',     
 
 '2020/11p5GeV' =>              		                          'production_11p5GeV_2020/ReversedFullField/P23ia', 
 '2020/11p5GeV.B' =>				  '',
