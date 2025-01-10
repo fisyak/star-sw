@@ -34,6 +34,8 @@ public:
     int  isC()   const;
     float getPosition()   const;
     short getAdc( int tb = -1 ) const;
+    Int_t getAdcSum() const {return mAdcSum;}
+    Float_t getAvgTB() const {return (mAdcSum > 0) ? mAvgTB/mAdcSum : -1.;}
     short getPedSubtractedAdc( int tb = -1 ) const;
     short getMaxAdc() const;
     short getMaxPedSubtractedAdc() const;
@@ -63,7 +65,6 @@ public:
     void setPedSubtractedAdc    ( short adc, int tb = -1 );
     void setMaxAdc(short adc);
     void setMaxPedSubtractedAdc(short adc);
-//     void setClusterSeedType( short seedType );
     void setCharge ( float charge );
     void setChargeUncert( float chargeUncert);
     void setElecCoords( int rdo, int arm,  int apv,  int chan ); 
@@ -89,15 +90,15 @@ protected:
     Short_t mMaxPedSubtractedAdc;               // max over the time bins
     Short_t mMaxAdcTB;               // max over the time bins
     Short_t mMaxPedSubtractedAdcTB;               // max over the time bins
-//     Short_t mClusterSeedType;      // See types in StGmtConsts.h
     Float_t mCharge;               // before GEM, units (C), relation: ADC = ped + charge*gain(r,phi,disc)
     Float_t mChargeUncert;
     Int_t   mRdo, mArm, mApv, mChan; // elec coords, straight out of the DAQ file
     Float_t mPed;
     Float_t mPedStdDev; // standard deviation
     Float_t mPedErr;  // RMS
-    
-    Int_t mIsC; //is used in a cluster ?
+    Int_t   mIsC; //is used in a cluster ?
+    Int_t   mAdcSum;
+    Float_t mAvgTB;
 
     static Int_t mDefaultTimeBin;
     
@@ -173,11 +174,15 @@ inline void StGmtStrip::invalidateCharge()                      { mCharge = kInv
 
 inline void StGmtStrip::setAdc( short adc, int tb ) {
     mAdc[ (tb < 0 || tb >= kGmtNumTimeBins) ? mDefaultTimeBin : tb ] = adc;
+    if (adc > 0 && ! (tb < 0 || tb >= kGmtNumTimeBins)) {
+      if (mAdcSum  < 0) {mAdcSum  = adc; mAvgTB  = adc*tb;}
+      else              {mAdcSum += adc; mAvgTB += adc*tb;}
+      
+    }
     if( adc > mMaxAdc ) {
         mMaxAdc=adc;
         mMaxAdcTB=tb;
     }
-    //LOG_INFO << "SETADC : " << adc << "," << tb << "\t=> " << mMaxAdc << "," << mMaxAdcTB << endm;
 };
 
 inline void StGmtStrip::setPedSubtractedAdc( short adc, int tb ) {
@@ -186,7 +191,6 @@ inline void StGmtStrip::setPedSubtractedAdc( short adc, int tb ) {
         mMaxPedSubtractedAdc=adc;
         mMaxPedSubtractedAdcTB=tb;
     }
-    //LOG_INFO << "SETADCPED : " << adc << "," << tb << "\t=> " << mMaxPedSubtractedAdc << "," << mMaxPedSubtractedAdcTB << endm;
 };
 
 // static default time bin

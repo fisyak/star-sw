@@ -1371,7 +1371,7 @@ Bfc_st BFC[] = { // standard chains
   {"FmsUtil"     ,""  ,"","",""                             ,"StFmsUtil,libMinuit","Load StFmsUtil",kFALSE},
   {"RhicfUtil"   ,""  ,"","",""                       ,"StRHICfUtil,libSpectrum","Load StRHICfUtil",kFALSE},
   {"FgtUtil"     ,""  ,"","",""                                       ,"StFgtUtil","Load StFgtUtil",kFALSE},
-  {"GmtUtil"     ,""  ,"","",""                                       ,"StGmtUtil","Load StGmtUtil",kFALSE},
+  {"GmtUtil"     ,""  ,"","",""                          "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"l3Util"      ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"PmdUtil"     ,""  ,"","","",                                       "StPmdUtil","Load StPmdUtil",kFALSE},
   {"EmcTrig"     ,""  ,"","","",                                             "StEmcTriggerMaker","",kFALSE},
@@ -1531,10 +1531,9 @@ Bfc_st BFC[] = { // standard chains
   {"mtdDat"   ,"mtd_raw","","db,MuDst","StMtdHitMaker","StEvent,StMtdHitMaker",     "MTD hit maker",kFALSE},
   {"mtdTrkMask","","","db",      "StMtdTrackingMaskMaker","StMtdEvtFilterMaker","MTD track masking",kFALSE},  
   // GMT
-  {"gmt"        ,"","","gmtDat,gmtClu"                                      ,"","","Gmt data Chain",kFALSE},
-  {"gmtDat"     ,"","","event","StGmtRawMaker","StGmtRawMaker",                   "GMT Data reader",kFALSE},
-  {"gmtClu"   ,"","","gmtutil","StGmtClusterMaker"
-   ,                                        "Spectrum,Fumili,StGmtClusterMaker","GMT cluster maker",kFALSE},
+  {"gmt"        ,"","","event,gmtDat"                                       ,"","","Gmt data Chain",kFALSE},
+  {"gmtClu"      ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
+  {"gmtDat"      ,"","","",     "StGmtRawMaker","Spectrum,Fumili,StGmtRawMaker","GMT cluster maker",kFALSE},
   {"gmtCosmics" ,"","","Cosmics,gmt","","",  "Save only events with GMT clusters and Cosmic tracks",kFALSE},
   {"gmtClusTree","","","","","",                               "WARNING *** Option is OBSOLETE ***",kFALSE},
   {"epdHit",    "", "", "epdDb,event",            "StEpdHitMaker", "StEpdHitMaker","EPD hit maker", kFALSE},

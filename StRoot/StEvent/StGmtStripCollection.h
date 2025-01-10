@@ -66,6 +66,7 @@ public:
 //     StGmtStrip* getStrip( int elecId );
     StGmtStrip* getStrip( int Id );
     StGmtStrip* getSortedStrip( int Id );
+    void     Print(Option_t *option="") const;
     
 protected:  
     // function used for sorting strips by geoId
@@ -88,6 +89,7 @@ protected:
 private:   
     ClassDef(StGmtStripCollection,1)
 }; 
+ostream&              operator<<(ostream& os, StGmtStripCollection const & v);
 
 
 // inline functions

@@ -671,7 +671,7 @@ Int_t StBFChain::Instantiate()
       if (GetOption("Cosmics"))   mk->SetAttr("Cosmics"    ,kTRUE);
       mk->PrintAttr();
     }
-    if (maker== "StGmtClusterMaker") {
+    if (maker== "StGmtRawMaker") {
       if (GetOption("gmtCosmics"))  mk->SetAttr("gmtCosmics",  kTRUE);
     }
     if (maker=="StiKFVertexMaker" && GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
