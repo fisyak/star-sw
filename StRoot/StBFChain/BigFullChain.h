@@ -1921,7 +1921,7 @@ Bfc_st BFC[] = { // standard chains
   {"mtdMatch"    ,"","","db,MtdUtil",  "StMtdMatchMaker","StMtdMatchMaker","TPC-MTD track matching",kFALSE},
   {"mtdCalib"    ,"","","db",                 "StMtdCalibMaker","StMtdCalibMaker","MTD calibration",kFALSE},
   {"mtdEvtFilt"  ,"","","db",       "StMtdEvtFilterMaker","StMtdEvtFilterMaker","MTD event filter" ,kFALSE},
-  {"gmtMatch"                                 ,"","","", "","","WARNING *** Option is OBSOLETE ***",kFALSE},
+  {"GmtMatch"    ,"","","detDb",   "StGmtMatchMaker","StGmtMatchMaker","GMT cluster to track match",kFALSE},
   {"gmtPlotter"                               ,"","","", "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"FindVtxSeed"   ,"FindVtxSeed"   ,"","globT,MuDSTDeps,PicoDeps","StVertexSeedMaker"
    ,                                   "StPass0CalibMaker",          "Performs vertex seed finding",kFALSE},
@@ -2045,7 +2045,6 @@ Bfc_st BFC[] = { // standard chains
    ,                              "StHftPoolEventT,StHftPoolHftMatchedTree","Create HftMatchedTree",kFALSE},
   {"HftMatTreeB","","","","HftMatchedTree"
    ,                            "StHftPoolEventTB,StHftPoolHftMatchedTreeB","Create HftMatchedTree",kFALSE},
-  {"gmtAligner"    ,"","","detDb",             "StGmtAligner","StGmtAligner","GMT cluster plotting",kFALSE},
   {"fastjet"     ,""  ,"",""     ,         "","fastjet,siscone,siscone_spherical,fastjetplugins","",kFALSE},
   {"Jet"         ,"","","gen_T","", "StJetEvent,StJetSkimEvent,StJets,StRandomSelector,StUeEvent,"
    "StSpinDbMaker,StMCAsymMaker,StJetFinder,fastjet,StJetMaker"                                 ,"",kFALSE},
