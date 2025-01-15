@@ -3572,3 +3572,14 @@ foreach f (`ls -1d sched*.condor`)
   set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
   sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
 end
+================================================================================
+01/13/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+grep -B 1 'found table TpcLengthCorrectionMDN' *.log | tee
+
+[starsub01] ~/work/dEdx/RunXIX_XXI39/4p59GeV_fixedTarget_2019 $ grep 'found table TpcLengthCorrectionMDN' *.log | awk -F\: '{print $6}' | sort -u 
+20190629/34111 - 20190709/32312
