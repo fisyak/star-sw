@@ -500,7 +500,10 @@
 	<Fill name="TPCG" comment="Subversion 1">
 	  <var name="version"  value="3.1"     comment="selector" />
 	  <var name="rmax"     value="207.77"  comment="Max envelope radius" />
+<!--
 	  <var name="deadzone" value="14"      comment="Extend deadzone before gating grid" />
+-->
+            <var name="DeadZone" value="0." comment="// Dead zone is taking care of in  GatingGrid simulation "  />
 	  <var name="tofmax"   value="32.0E-6" comment="Increase maximum TOF for particles" />
 	</Fill>
         
