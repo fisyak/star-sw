@@ -3573,11 +3573,30 @@ foreach f (`ls -1d sched*.condor`)
   sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
 end
 ================================================================================
-01/13/2025
+<<<<<<< HEAD
+01/12/2025
+foreach f (`ls -1d */sched*.condor`)
+  set d = `dirname ${f}`
+  set b = `basename  ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > ${d}/Q${b}
+end
+
 foreach f (`ls -1d sched*.condor`)
   set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
   sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
 end
+=================================================================================
+01/14/2025
+=======
+01/13/2025
+>>>>>>> 00e47c098f50056f7cc0fcc272204fd8bd3c502c
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+grep -B 1 'found table TpcZCorrectionC' */*.log | tee TpcZCorrectionC
+ ~/work/dEdx/RunXIX_XXI41/3p85GeV_fixedTarget_2021 $ grep -B 1 'found table TpcsecRowB' *.log
+ ~/work/dEdx/RunXIX_XXI41/3p85GeV_fixedTarget_2021 $ grep -B 1 'found table TpcZCorrectionC' *.log
 
 grep -B 1 'found table TpcLengthCorrectionMDN' *.log | tee
 
