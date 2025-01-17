@@ -230,11 +230,11 @@ if ($ROOT_LEVEL !~ /^5/ ){
   push @items, "Pythia8_1_86";
   push @items, "Pythia8_2_25";
 }
-my $python2 = system("which python2 > /dev/null 2>& 1");
+#my $python2 = system("which python2 > /dev/null 2>& 1");
 #print "python2 = $python2\n";
-if ($python2) {
-  push @items, "Geometry";
-}
+#if ($python2) {
+#  push @items, "Geometry";
+#}
 if ($STAR_HOST_SYS =~ /^al92/) {# no cern
   push @items, "rexe";
   push @items, "starsim";
