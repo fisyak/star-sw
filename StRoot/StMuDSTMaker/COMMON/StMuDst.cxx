@@ -44,6 +44,8 @@
 #include "StMuMcTrack.h"
 #include "KFParticle/KFParticle.h"
 #include "KFParticle/KFVertex.h"
+#include "StGmtCollection.h"
+#include "StGmtPoint.h"
 #endif /* __TFG__VERSION__ */
 ///dongx
 #include "StBTofCollection.h"
@@ -129,7 +131,7 @@ ClassImp(StMuDst);
 #endif /* __TFG__VERSION__ */
 
 StMuDst::StMuDst() {
-  DEBUGMESSAGE("");
+//DEBUGMESSAGE("");
 #ifndef __TFG__VERSION__
   /* no-op */
 #else /* __TFG__VERSION__ */
@@ -164,7 +166,6 @@ void StMuDst::unset() {
     pmdArrays     = 0;
     tofArrays     = 0;
     btofArrays    = 0;   // dongx
-    mtdArrays     = 0;   // dongx
     etofArrays    = 0;   // jdb
     epdArrays     = 0;   // MALisa
     fgtArrays     = 0;
@@ -183,13 +184,16 @@ void StMuDst::unset() {
     mRHICfCollection = 0;
     eztArrays      = 0;
     mtdArrays = 0;
+#ifdef __TFG__VERSION__
+    gmtArrays     = 0;   // YF
+#endif /* __TFG__VERSION__ */
 }
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 void StMuDst::set(StMuDstMaker* maker) {
-  DEBUGMESSAGE2("");
-  if (!maker) { DEBUGVALUE(maker); return;}
+//DEBUGMESSAGE2("");
+//if (!maker) { DEBUGVALUE(maker); return;}
   arrays        = maker->mArrays;
 #ifndef __NO_STRANGE_MUDST__
   strangeArrays = maker->mStrangeArrays;
@@ -208,6 +212,9 @@ void StMuDst::set(StMuDstMaker* maker) {
   etofArrays    = maker->mETofArrays;    // jdb
   epdArrays     = maker->mEpdArrays;    // MALisa
   mtdArrays     = maker->mMtdArrays;
+#ifdef __TFG__VERSION__
+  gmtArrays     = maker->mGmtArrays;
+#endif /* __TFG__VERSION__ */
   fgtArrays     = maker->mFgtArrays;
 
 
@@ -300,11 +307,15 @@ void StMuDst::set(TClonesArray** theArrays,
       StMuFstCollection *fst,
       StMuFwdTrackCollection *fwdTrack,
       TClonesArray* pmd_arr,
-		  StMuPmdCollection *pmd)
+		  StMuPmdCollection *pmd
+#ifdef  __TFG__VERSION__
+		  ,TClonesArray** theGMTArrays
+#endif /* __TFG__VERSION__ */
+		  )
 {
   // I don't understand why this method is still needed,
   // but cannot comile dictionary  when it is removed
-  DEBUGMESSAGE2("");
+//DEBUGMESSAGE2("");
   arrays        = theArrays;
 #ifndef __NO_STRANGE_MUDST__
   strangeArrays = theStrangeArrays;
@@ -334,7 +345,10 @@ void StMuDst::set(TClonesArray** theArrays,
   mMuPmdCollectionArray = pmd_arr;
   mMuPmdCollection = pmd;
   eztArrays     = theEztArrays;
-    mtdArrays = theMTDArrays;
+  mtdArrays = theMTDArrays;
+#ifdef  __TFG__VERSION__
+  gmtArrays = theGMTArrays;
+#endif /* __TFG__VERSION__ */
 }
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
@@ -393,7 +407,7 @@ void StMuDst::fixTrackIndices(TClonesArray* primary, TClonesArray* global) {
   /// a track from the TClonesArrays)
 
   if ( !(global&&primary) ) return;
-  DEBUGMESSAGE1("");
+//DEBUGMESSAGE1("");
   StTimer timer;
   timer.start();
 
@@ -417,7 +431,7 @@ void StMuDst::fixTrackIndices(TClonesArray* primary, TClonesArray* global) {
     }
   }
   // set the indices for the primary tracks
-  DEBUGVALUE2(primary->GetEntriesFast());
+//DEBUGVALUE2(primary->GetEntriesFast());
   for (int i=0; i<nPrimaries; i++) {
     StMuTrack *p = (StMuTrack*) primary->UncheckedAt(i);
     if (p) {
@@ -427,7 +441,7 @@ void StMuDst::fixTrackIndices(TClonesArray* primary, TClonesArray* global) {
         p->setIndex2Global(-1);
     }
   }
-  DEBUGVALUE2(timer.elapsedTime());
+//DEBUGVALUE2(timer.elapsedTime());
 }
 
 void StMuDst::fixTrackIndicesG(int mult) {
@@ -507,7 +521,7 @@ void StMuDst::fixTofTrackIndices() {
 void StMuDst::fixTofTrackIndices(TClonesArray* btofHit, TClonesArray* primary, TClonesArray* global) {
 
   if ( !(primary&&global&&btofHit) ) return;
-  DEBUGMESSAGE1("");
+//DEBUGMESSAGE1("");
   StTimer timer;
   timer.start();
 
@@ -565,7 +579,7 @@ void StMuDst::fixTofTrackIndices(TClonesArray* btofHit, TClonesArray* primary, T
     }
   }
 
-  DEBUGVALUE2(timer.elapsedTime());
+//DEBUGVALUE2(timer.elapsedTime());
 }
 
 //-----------------------------------------------------------------------
@@ -583,7 +597,7 @@ void StMuDst::fixETofTrackIndices() {
 void StMuDst::fixETofTrackIndices( TClonesArray* etofHit, TClonesArray* primary, TClonesArray* global ) {
 
   if( !( primary && global && etofHit ) ) return;
-  DEBUGMESSAGE1("");
+//DEBUGMESSAGE1("");
   StTimer timer;
   timer.start();
 
@@ -645,7 +659,7 @@ void StMuDst::fixETofTrackIndices( TClonesArray* etofHit, TClonesArray* primary,
     }
   }
 
-  DEBUGVALUE2(timer.elapsedTime());
+//DEBUGVALUE2(timer.elapsedTime());
 }
 
 //-----------------------------------------------------------------------
@@ -663,7 +677,7 @@ void StMuDst::fixMtdTrackIndices() {
 void StMuDst::fixMtdTrackIndices(TClonesArray* mtdHit, TClonesArray* primary, TClonesArray* global) {
 
   if ( !(primary&&global&&mtdHit) ) return;
-  DEBUGMESSAGE1("");
+//DEBUGMESSAGE1("");
   StTimer timer;
   timer.start();
 
@@ -721,7 +735,7 @@ void StMuDst::fixMtdTrackIndices(TClonesArray* mtdHit, TClonesArray* primary, TC
     }
   }
 
-  DEBUGVALUE2(timer.elapsedTime());
+//DEBUGVALUE2(timer.elapsedTime());
 }
 
 //-----------------------------------------------------------------------
@@ -746,6 +760,83 @@ void StMuDst::setMtdArray(StMtdCollection *mtd_coll) {
       new((*mtdArrays[muMTDHeader])[0]) StMuMtdHeader(*mtdHead);
     }
 }
+#ifdef __TFG__VERSION__
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+void StMuDst::fixGmtTrackIndices() {
+  /// global and primary tracks share the same id, so we can fix the 
+  /// index2Global up in case they got out of order (e.g. by removing 
+  /// a track from the TClonesArrays
+    fixGmtTrackIndices( gmtArrays[muGMTPoint], arrays[muPrimary], arrays[muGlobal] );  
+}
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
+void StMuDst::fixGmtTrackIndices(TClonesArray* gmtHit, TClonesArray* primary, TClonesArray* global) {
+  if ( !(primary&&global&&gmtHit) ) return;
+//DEBUGMESSAGE1("");
+  StTimer timer;
+  timer.start();
+#if 0
+
+ int nPrimarys = primary->GetEntriesFast();
+  int nGlobals = global->GetEntriesFast();
+  int nGmtPoints = gmtHit->GetEntriesFast();
+  // map to keep track of index numbers, key is track->id(), value is index of track in MuDst
+  map<short,unsigned short> gmtIndex;
+  map<short,unsigned short> globalIndex;
+  map<short,unsigned short> primaryIndex;
+
+  for (int i=0; i<nGmtPoints; i++) {
+    StGmtPoint *t = (StGmtPoint*) gmtHit->UncheckedAt(i);
+    if (t) {
+      gmtIndex[t->associatedTrackKey()] = i+1;  // starting from 1
+    }
+  }
+
+  for (Int_t i=0; i<nGlobals; i++) {
+    StMuTrack *g = (StMuTrack*) global->UncheckedAt(i);
+    if (g) {
+      globalIndex[g->id()] = i+1;
+
+      if(gmtIndex[g->id()])
+        g->setIndex2GmtPoint( gmtIndex[g->id()]-1 );
+      else
+        g->setIndex2GmtPoint(-1);
+    }
+  }
+  for (int i=0; i<nPrimarys; i++) {
+    StMuTrack *p = (StMuTrack*) primary->UncheckedAt(i);
+    if (p) {
+      primaryIndex[p->id()] = i+1;
+
+      if(gmtIndex[p->id()])
+        p->setIndex2GmtPoint( gmtIndex[p->id()]-1 );
+      else
+        p->setIndex2GmtPoint(-1);
+    }
+  }
+
+  /// set the indices for GmtPoints
+  for (int i=0; i<nGmtPoints; i++) {
+    StGmtPoint *t = (StGmtPoint*) gmtHit->UncheckedAt(i);
+    if (t) {
+      if(globalIndex[t->associatedTrackKey()])
+        t->setIndex2Global( globalIndex[t->associatedTrackKey()]-1 );
+      else
+        t->setIndex2Global(-1);
+
+      if(primaryIndex[t->associatedTrackKey()])
+        t->setIndex2Primary( primaryIndex[t->associatedTrackKey()]-1 );
+      else
+        t->setIndex2Primary(-1);
+    }
+  }
+#endif
+//DEBUGVALUE2(timer.elapsedTime());
+}
+#endif /* __TFG__VERSION__ */
 
 //-----------------------------------------------------------------------
 void StMuDst::setETofArray( const StETofCollection* etof_coll ) {
@@ -798,7 +889,7 @@ void StMuDst::addETofHit( const StMuETofHit* hit ) {
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 StEvent* StMuDst::createStEvent() {
-  DEBUGMESSAGE1("");
+//DEBUGMESSAGE1("");
   StTimer timer;
   timer.start();
 
@@ -1011,7 +1102,7 @@ StEvent* StMuDst::createStEvent() {
   ev->setTriggerIdCollection( triggerIdCollection );
     
   
-  DEBUGVALUE2(timer.elapsedTime());
+//DEBUGVALUE2(timer.elapsedTime());
   return ev;
 }
 
@@ -2083,6 +2174,10 @@ TClonesArray* StMuDst::btofArray(Int_t type) { return instance()->btofArrays[typ
 TClonesArray* StMuDst::etofArray(int type) { return instance()->etofArrays[type]; }
   // returns pointer to the n-th TClonesArray from the mtd arrays
 TClonesArray* StMuDst::mtdArray(Int_t type) { return instance()->mtdArrays[type]; }
+#ifdef __TFG__VERSION__
+  // returns pointer to the n-th TClonesArray from the gmt arrays
+TClonesArray* StMuDst::gmtArray(Int_t type) { return instance()->gmtArrays[type]; }
+#endif /* __TFG__VERSION__ */
   // returns pointer to the n-th TClonesArray from the fgt arrays
 TClonesArray* StMuDst::fgtArray(Int_t type) { return instance()->fgtArrays[type]; }
   // returns pointer to the n-th TClonesArray from the ezt arrays
@@ -2138,6 +2233,9 @@ StL3AlgorithmInfo* StMuDst::l3AlgoReject(Int_t i) { return (StL3AlgorithmInfo*)i
   //returns pp2pp infomation
 StMuRpsCollection* StMuDst::RpsCollection() { return (StMuRpsCollection*)instance()->arrays[mupp2pp]->UncheckedAt(0); }
 StMuMtdCollection* StMuDst::MtdCollection() { return (StMuMtdCollection*)instance()->arrays[muMtd]->UncheckedAt(0); }
+#ifdef __TFG__VERSION__
+StGmtCollection* StMuDst::GmtCollection() { return (StGmtCollection*)instance()->arrays[muGmt]->UncheckedAt(0); }
+#endif /* __TFG__VERSION__ */
 
 StDcaGeometry* StMuDst::covGlobTracks(Int_t i) { return (StDcaGeometry*)instance()->arrays[muCovGlobTrack]->UncheckedAt(i); }
 StMuPrimaryTrackCovariance* StMuDst::covPrimTracks(Int_t i) { return (StMuPrimaryTrackCovariance*)instance()->arrays[muCovPrimTrack]->UncheckedAt(i); }
@@ -2231,7 +2329,9 @@ StMuEpdHit* StMuDst::epdHit(int i) { return (StMuEpdHit*)instance()->epdArrays[m
 StMuMtdHit* StMuDst::mtdHit(Int_t  i) { return (StMuMtdHit*)instance()->mtdArrays[muMTDHit]->UncheckedAt(i); }
   StMuMtdRawHit* StMuDst::mtdRawHit(Int_t  i) { return (StMuMtdRawHit*)instance()->mtdArrays[muMTDRawHit]->UncheckedAt(i); }
   StMuMtdHeader* StMuDst::mtdHeader() { return (StMuMtdHeader*)instance()->mtdArrays[muMTDHeader]->UncheckedAt(0); } 
-    
+#ifdef __TFG__VERSION__
+StGmtPoint* StMuDst::gmtPoint(Int_t  i) { return (StGmtPoint*)instance()->gmtArrays[muGMTPoint]->UncheckedAt(i); }
+#endif /* __TFG__VERSION__ */
     
   // returns pointer to eztHeader 
  EztEventHeader* StMuDst::eztHeader() { return (EztEventHeader*)instance()->eztArrays[muEztHead]->UncheckedAt(0); }
@@ -2296,7 +2396,9 @@ UInt_t StMuDst::numberOfEpdHit()       { return instance()->epdArrays[muEpdHit]-
 
 UInt_t StMuDst::numberOfMTDHit()       { return instance()->mtdArrays[muMTDHit]->GetEntriesFast(); }
 UInt_t StMuDst::numberOfBMTDRawHit()    { return instance()->mtdArrays[muMTDRawHit]->GetEntriesFast(); }
-    
+#ifdef __TFG__VERSION__
+UInt_t StMuDst::numberOfGMTPoint()       { return instance()->gmtArrays[muGMTPoint]->GetEntriesFast(); }
+#endif /* __TFG__VERSION__ */        
 UInt_t StMuDst::GetNPrimaryVertex()    { return instance()->numberOfPrimaryVertices(); }  
 UInt_t StMuDst::GetNPrimaryTrack()    { return instance()->numberOfPrimaryTracks(); }  
 UInt_t StMuDst::GetNGlobalTrack()     { return instance()->numberOfGlobalTracks(); }   
@@ -2339,6 +2441,7 @@ UInt_t StMuDst::GetNEpdHit()         { return instance()->numberOfEpdHit(); }
 #ifdef __TFG__VERSION__
 UInt_t StMuDst::GetNMTDHit()         { return instance()->numberOfMTDHit(); }
 UInt_t StMuDst::GetNMTDRawHit()      { return instance()->numberOfBMTDRawHit(); }
+UInt_t StMuDst::GetNGMTPoint()         { return instance()->numberOfGMTPoint(); }
 #endif /* __TFG__VERSION__ */
 /***************************************************************************
  *

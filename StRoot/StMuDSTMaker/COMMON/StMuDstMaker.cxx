@@ -69,6 +69,9 @@
 #include "StMuMtdRawHit.h"
 #include "StMuMtdHit.h"
 #include "StMuMtdHeader.h"
+#ifdef __TFG__VERSION__
+#include "StGmtPoint.h"
+#endif /* __TFG__VERSION__ */
 #include "StMuTrack.h"
 #include "StMuDebug.h"
 #include "StMuCut.h"
@@ -155,12 +158,12 @@
 #include "StMuMcVertex.h"
 #include "StMuMcTrack.h"
 #include "StG2TrackVertexMap.h"
+#include "StMuArrays.h"
 #ifdef __TFG__VERSION__
 #include "TArrayF.h"
 #include "TUnixTime.h"
-ClassImp(StMuDstMaker);
+static StMuArrays MuArrays;
 #endif /* __TFG__VERSION__ */
-
 #ifdef __TFG__VERSION__
 StMuDstMaker *StMuDstMaker::gStMuDstMaker = 0;
 #endif /* __TFG__VERSION__ */
@@ -293,6 +296,9 @@ void StMuDstMaker::assignArrays()
   mMtdArrays      = mEpdArrays     + __NEPDARRAYS__;   /// dongx  
   mFgtArrays      = mMtdArrays     + __NMTDARRAYS__;      
   mEztArrays      = mFgtArrays     + __NFGTARRAYS__;
+#ifdef __TFG__VERSION__
+  mGmtArrays      = mEztArrays     + __NEZTARRAYS__;
+#endif /* __TFG__VERSION__ */
 }
 
 void StMuDstMaker::clearArrays()
@@ -314,8 +320,8 @@ void StMuDstMaker::clearArrays()
     __NBTOFARRAYS__+  /// dongx
     __NETOFARRAYS__+ //jdb
     __NEPDARRAYS__+     // MALisa
+#ifndef __TFG__VERSION__
     __NMTDARRAYS__+__NFGTARRAYS__;
-
   for ( int i=0; i<ezIndex; i++) {
     mAArrays[i]->Clear("C");
     StMuArrays::arrayCounters[i]=0;
@@ -325,6 +331,11 @@ void StMuDstMaker::clearArrays()
     mAArrays[i]->Delete();
     StMuArrays::arrayCounters[i]=0;
   }
+#else /* __TFG__VERSION__ */
+  __NMTDARRAYS__+__NFGTARRAYS__+__NGMTARRAYS__;
+  for ( int i=0; i<ezIndex; i++)     mAArrays[i]->Clear("C");
+  for ( int i=ezIndex; i<__NALLARRAYS__; i++)  mAArrays[i]->Delete();
+#endif /* __TFG__VERSION__ */
 }
 
 void StMuDstMaker::zeroArrays()
@@ -350,6 +361,9 @@ void StMuDstMaker::zeroArrays()
             __NETOFARRAYS__+ //jdb
             __NEPDARRAYS__+  // MALisa
             __NMTDARRAYS__+
+#ifndef __TFG__VERSION__
+            __NGMTARRAYS__+
+#endif /* __TFG__VERSION__ */
             __NFGTARRAYS__],(char)0,__NEZTARRAYS__);
   
 }
@@ -367,6 +381,7 @@ void StMuDstMaker::zeroArrays()
    BTofAll    - all branches related to BTof  /// dongx
    ETofAll    - all branches related to ETof  /// fseck
    MTDAll     - all branches related to MTD
+   GMTAll     - all branches related to GMT
    FgtAll     - all branches related to Fgt
 
   By default all branches of MuDst are read. If user wants to read only some of
@@ -381,6 +396,7 @@ void StMuDstMaker::zeroArrays()
    SetStatus("ETofAll"   ,1)  // all standard ETof    branches ON  /// fseck
    SetStatus("EpdAll"    ,1)  // all standard Epd     branches ON  /// MALisa
    SetStatus("MTDAll"    ,1)  // all standard Mtd     branches ON
+   SetStatus("GMTAll"    ,1)  // all standard Gmt     branches ON
    SetStatus("FgtAll"    ,1)  // all standard Fgt     branches ON
  
    SetStatus("XiAssoc"    ,1) // Strange branch "XiAssoc" is ON  
@@ -389,17 +405,25 @@ void StMuDstMaker::zeroArrays()
 */
 void StMuDstMaker::SetStatus(const char *arrType,int status)
 {
+ static const char *specNames[]={"MuEventAll"
 #ifndef __NO_STRANGE_MUDST__
-  static const char *specNames[]={"MuEventAll","StrangeAll","MCAll","EmcAll","PmdAll","FMSAll","RHICfAll","FcsAll","FttAll","FstAll","TofAll","BTofAll","ETofAll","EpdAll","MTDAll","FgtAll","EztAll",0};  /// dongx, MALisa
-#else
-  static const char *specNames[]={"MuEventAll",             "MCAll","EmcAll","PmdAll","FMSAll","RHICfAll","FcsAll","FttAll","FstAll","TofAll","BTofAll","ETofAll","EpdAll","MTDAll","FgtAll","EztAll",0};  /// dongx, MALisa
+				 ,"StrangeAll"
 #endif
-  static const int   specIndex[]={
+				 ,"MCAll","EmcAll","PmdAll","FMSAll","RHICfAll","FcsAll","FttAll","FstAll","TofAll","BTofAll","ETofAll","EpdAll","MTDAll","FgtAll","EztAll"
+#ifdef __TFG__VERSION__
+				 ,"GMTAll"
+#endif /* __TFG__VERSION__ */
+				 ,0};  
+   static const int   specIndex[]={
   0, __NARRAYS__,
   #ifndef __NO_STRANGE_MUDST__
       __NSTRANGEARRAYS__,
   #endif
-  __NMCARRAYS__,__NEMCARRAYS__,__NPMDARRAYS__,__NFMSARRAYS__,__NRHICFARRAYS__,__NFCSARRAYS__,__NFTTARRAYS__,__NFSTARRAYS__,__NFWDTRACKARRAYS__,__NTOFARRAYS__,__NBTOFARRAYS__,__NETOFARRAYS__,__NEPDARRAYS__,__NMTDARRAYS__,__NFGTARRAYS__,__NEZTARRAYS__,-1};
+  __NMCARRAYS__,__NEMCARRAYS__,__NPMDARRAYS__,__NFMSARRAYS__,__NRHICFARRAYS__,__NFCSARRAYS__,__NFTTARRAYS__,__NFSTARRAYS__,__NFWDTRACKARRAYS__,__NTOFARRAYS__,__NBTOFARRAYS__,__NETOFARRAYS__,__NEPDARRAYS__,__NMTDARRAYS__,__NFGTARRAYS__,__NEZTARRAYS__,
+#ifdef __TFG__VERSION__
+  __NGMTARRAYS__,
+#endif /* __TFG__VERSION__ */
+  -1};
 
     // jdb fixed with new implementation, 
     // this method was broken for several years
@@ -602,7 +626,17 @@ void StMuDstMaker::createArrays() {
   /// all stuff
   for ( int i=0; i<__NALLARRAYS__; i++) {
     DEBUGVALUE2(mAArrays[i]);
+#ifdef __TFG__VERSION__
+    if (Debug()) {
+      cout << "tMuDstMaker::createArrays\t ,StMuArrays::arrayTypes[" << i << "] = " << StMuArrays::arrayTypes[i]
+	   << "\tStMuArrays::arrayNames[" << i << "] = " << StMuArrays::arrayNames[i] 
+	   << "\tStMuArrays::arraySizes[" << i << "] = " << StMuArrays::arraySizes[i] 
+	   << endl;
+    }
+      clonesArray(mAArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i]);
+#else /* ! __TFG__VERSION__ */
 	clonesArray(mAArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i],StMuArrays::arrayCounters[i]);
+#endif /* __TFG__VERSION__ */
 	DEBUGVALUE2(mAArrays[i]);
   }
   mStMuDst->set(this);
@@ -612,15 +646,24 @@ void StMuDstMaker::createArrays() {
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
-TClonesArray* StMuDstMaker::clonesArray(TClonesArray*& p, const char* type, int size, int& counter) {
+#ifdef __TFG__VERSION__
+TClonesArray* StMuDstMaker::clonesArray(TClonesArray*& p, const char* type, int size) 
+#else /* ! __TFG__VERSION__ */
+TClonesArray* StMuDstMaker::clonesArray(TClonesArray*& p, const char* type, int size, int& counter) 
+#endif /* __TFG__VERSION__ */
+  {
   DEBUGMESSAGE2("");
   if (p) return p;
   DEBUGVALUE2(type);
   p = new TClonesArray(type, size);
 #ifdef __TFG__VERSION__
   p->SetOwner(kTRUE);
-#endif /* __TFG__VERSION__ */
+  if (Debug()) {
+    cout << "StMuDstMaker::clonesArray(" << type << "," << size << ") => " << p << endl;
+  }
+#else /* ! __TFG__VERSION__ */
   counter=0;
+#endif /* __TFG__VERSION__ */
   return p;
 }
 //-----------------------------------------------------------------------
@@ -1242,6 +1285,7 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
     fillETof(ev);
     fillEpd(ev);  // MALisa
     fillMtd(ev);
+    fillGmt(ev);
     fillFgt(ev);
     fillEzt(ev);
   }
@@ -1293,18 +1337,14 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
     }
   }
 #endif
-#ifndef __TFG__VERSION__
-
-  //catch(StMuException &e) {
-  //  e.print();
-  //  throw e;
-  //}
-
-#endif /* ! __TFG__VERSION__ */
   mStMuDst->set(this);
   mStMuDst->fixTofTrackIndices();
   mStMuDst->fixETofTrackIndices();
   mStMuDst->fixMtdTrackIndices();
+#ifdef __TFG__VERSION__
+  mStMuDst->fixGmtTrackIndices();
+#endif /* __TFG__VERSION__ */
+
   mStMuDst->fixTrackIndicesG(mStMuDst->numberOfPrimaryVertices());
 }
 
@@ -1796,6 +1836,28 @@ void StMuDstMaker::fillMtd(StEvent* ev) {
 	DEBUGVALUE2(timer.elapsedTime());
 }
 
+#ifdef __TFG__VERSION__
+void StMuDstMaker::fillGmt(StEvent* ev) {
+  DEBUGMESSAGE2("");
+  StTimer timer;
+  timer.start();
+  
+  const StGmtCollection *gmt=ev->gmtCollection();
+  if(!gmt) return;
+  const StGmtPointCollection* pointVec = gmt->getPointCollection();
+  if (! pointVec) return;
+  size_t NoHits = pointVec->getNumPoints();
+  if (! NoHits) return;
+  const StSPtrVecGmtPoint& Vec = pointVec->getPointVec();
+  for (size_t l = 0; l < NoHits; l++) {
+    const StGmtPoint *hit = Vec[l];
+    if (! hit) continue;
+    addType( mGmtArrays[muGMTPoint], *hit );
+  }
+  timer.stop();
+  DEBUGVALUE2(timer.elapsedTime());
+}
+#endif /* __TFG__VERSION__ */
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------

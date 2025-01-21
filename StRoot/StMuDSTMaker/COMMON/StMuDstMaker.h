@@ -10,14 +10,13 @@
 
 #ifndef ST_NO_NAMESPACES
 using namespace std;
-#endif
+#endif /* ! ST_NO_NAMESPACES */
 
 #include "StMaker.h"
 #include "StChain.h"
 #include "StIOInterFace.h"
 #ifndef __TFG__VERSION__
 #include "St_DataSetIter.h"
-
 #else /* __TFG__VERSION__ */
 #include "TDataSetIter.h"
 #include "TObjectSet.h"
@@ -59,7 +58,7 @@ class StKinkMuDst;
 class StKinkMc;
 class StStrangeAssoc;
 class StStrangeCuts;
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
 #ifdef __TFG__VERSION__
 class KFParticle;
 #endif /* __TFG__VERSION__ */
@@ -127,6 +126,12 @@ class StMuMtdCollection;
 class StMuMtdHit;
 class StMuMtdRawHit;
 class StMuMtdHeader;
+#ifdef __TFG__VERSION__
+class StMuGmtCollection;
+class StMuGmtPoint;
+#endif /* __TFG__VERSION__ */
+
+
 
 /**
    \class StMuDstMaker
@@ -262,7 +267,7 @@ protected:
   StMuDst* mStMuDst;
 #ifndef __NO_STRANGE_MUDST__
   StStrangeMuDstMaker* mStStrangeMuDstMaker;
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
   StIOMaker* mIOMaker;
   StTreeMaker* mTreeMaker;
   StMuEmcUtil* mEmcUtil;
@@ -336,7 +341,12 @@ virtual   void closeRead();
   void clearArrays();
   void zeroArrays();
   void createArrays();
+
+#ifdef __TFG__VERSION__
+  TClonesArray* clonesArray(TClonesArray*& p, const char* type, int size);
+#else /* ! __TFG__VERSION__ */
   TClonesArray* clonesArray(TClonesArray*& p, const char* type, int size, int& counter);
+#endif /* __TFG__VERSION__ */
 
   void fill();
   void fillTrees(StEvent* ev, StMuCut* cut=0);
@@ -356,7 +366,7 @@ virtual   void closeRead();
   void fillFwdTrack(StEvent* ev);
 #ifndef __NO_STRANGE_MUDST__
   void fillStrange(StStrangeMuDstMaker*);
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
   void fillMC();
   void fillL3Tracks(StEvent* ev, StMuCut* cut=0);
   void fillTracks(StEvent* ev, StMuCut* cut=0);
@@ -367,6 +377,9 @@ virtual   void closeRead();
   void fillBTof(StEvent* ev);
   void fillETof(StEvent* ev); // jdb
   void fillMtd(StEvent* ev);
+#ifdef __TFG__VERSION__
+  void fillGmt(StEvent* ev);
+#endif /* __TFG__VERSION__ */
   void fillFgt(StEvent* ev);
 
     void fillEzt(StEvent* ev);
@@ -393,21 +406,21 @@ virtual   void closeRead();
 #ifndef __NO_STRANGE_MUDST__
   void setStStrangeMuDstMaker(StStrangeMuDstMaker*);
   StStrangeMuDstMaker* stStrangeMuDstMaker();
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
   unsigned int trackType();
   bool readTracks();
 #ifndef __NO_STRANGE_MUDST__
   bool readV0s();
   bool readXis();
   bool readKinks();
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
   void setTrackType(unsigned int);
   void setReadTracks(bool);
 #ifndef __NO_STRANGE_MUDST__
   void setReadV0s(bool);
   void setReadXis(bool);
   void setReadKinks(bool);
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
   string basename(string);
   string dirname(string);
   string buildFileName(string dir, string fileName, string extention);
@@ -421,7 +434,7 @@ virtual   void closeRead();
   TClonesArray** mArrays;       //[__NARRAYS__       ];
 #ifndef __NO_STRANGE_MUDST__
   TClonesArray** mStrangeArrays;//[__NSTRANGEARRAYS__];
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
   TClonesArray** mMCArrays;//[__NMCARRAYS__];
   TClonesArray** mEmcArrays;    //[__NEMCARRAYS__    ];
   TClonesArray** mFmsArrays;    //[__NFMSARRAYS__    ];
@@ -439,6 +452,9 @@ virtual   void closeRead();
   TClonesArray** mMtdArrays;    //[__NMTDARRAYS__    ];
   TClonesArray** mFgtArrays;    //[__NFGTARRAYS__    ];
   TClonesArray** mEztArrays;    //[__NEZTARRAYS__    ];
+#ifdef __TFG__VERSION__
+  TClonesArray** mGmtArrays;    //[__NGMTARRAYS__    ];
+#endif /* __TFG__VERSION__ */
     
     char           mStatusArrays    [__NALLARRAYS__    ];
   TClonesArray*  mEmcCollectionArray; // Needed to hold old format
@@ -472,7 +488,7 @@ inline StMuL3Filter* StMuDstMaker::l3TrackFilter() { return (StMuL3Filter*)mL3Tr
 #ifndef __NO_STRANGE_MUDST__
 inline void StMuDstMaker::setStStrangeMuDstMaker(StStrangeMuDstMaker* s) {mStStrangeMuDstMaker=s;}
 inline StStrangeMuDstMaker* StMuDstMaker::stStrangeMuDstMaker() {return mStStrangeMuDstMaker;}
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
 inline void StMuDstMaker::setTrackType(unsigned int t) {mTrackType=t;}
 inline unsigned int StMuDstMaker::trackType() {return mTrackType;}
 
@@ -481,20 +497,20 @@ inline bool StMuDstMaker::readTracks() { return mReadTracks;}
 inline bool StMuDstMaker::readV0s() { return mReadV0s;}
 inline bool StMuDstMaker::readXis() { return mReadXis;}
 inline bool StMuDstMaker::readKinks() { return mReadKinks;}
-#endif
+#endif /* ! __NO_STRANGE_MUDST__*/
 inline void StMuDstMaker::setReadTracks(bool b) { mReadTracks=b;}
 #ifndef __NO_STRANGE_MUDST__
 inline void StMuDstMaker::setReadV0s(bool b) { mReadV0s=b;}
 inline void StMuDstMaker::setReadXis(bool b) { mReadXis=b;}
 inline void StMuDstMaker::setReadKinks(bool b) { mReadKinks=b;}
-#endif
+#endif /* ! __NO_STRANGE_MUDST__ */
 
 inline void StMuDstMaker::setSplit(int split) { mSplit = split;}
 inline void StMuDstMaker::setCompression(int comp) { mCompression = comp;}
 inline void StMuDstMaker::setBufferSize(int buf) { mBufferSize = buf; }
 
 
-#endif
+#endif /* ! StMuDstMaker_hh */
 
 /***************************************************************************
  *

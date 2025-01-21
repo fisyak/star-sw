@@ -23,7 +23,7 @@ const char* StMuArrays::arrayNames [__NALLARRAYS__    ] = {"MuEvent","PrimaryVer
 							   "Xi","McXi","XiAssoc",
 							   "Kink","McKink","KinkAssoc",
 							   "StrangeCuts",
-#endif
+#endif /*! __NO_STRANGE_MUDST__ */
 /*mcArrayNames[__NMCARRAYS__]*/                            "StMuMcVertex","StMuMcTrack",
 /*emcArrayNames    [__NEMCARRAYS__    ]*/                  "EmcTow",
                                                            "EmcPrs","EmcSmde",
@@ -42,8 +42,11 @@ const char* StMuArrays::arrayNames [__NALLARRAYS__    ] = {"MuEvent","PrimaryVer
 /*epdArrayNames [__NEPDARRAYS ]       */                   "EpdHit",  // MALisa
 /*mtdArrayNames    [__NMTDARRAYS__    ]*/                  "MTDHit","MTDRawHit","MTDHeader",
 /*fgtArrayNames    [__NFGTARRAYS__    ]*/                  "FgtStrip","FgtCluster","FgtStripAssociation","FgtAdc",
-    /*eztArrayNames    [__NEZTARRAYS__    ]*/              "EztHead","EztTrig","EztETow","EztESmd","EztFpd"};
-                                                            
+/*eztArrayNames    [__NEZTARRAYS__    ]*/                  "EztHead","EztTrig","EztETow","EztESmd","EztFpd"
+#ifdef __TFG__VERSION__
+/*gmtArrayNames    [__NGMTARRAYS__    ]*/                  ,"GmtPoint"
+#endif /* __TFG__VERSION__ */
+};
 #ifndef __NO_STRANGE_MUDST__
 const char** StMuArrays::strangeArrayNames = StMuArrays::arrayNames   +__NARRAYS__;
 const char** StMuArrays::mcArrayNames = StMuArrays::strangeArrayNames +__NSTRANGEARRAYS__;
@@ -65,17 +68,17 @@ const char** StMuArrays::epdArrayNames  = StMuArrays::etofArrayNames  +__NETOFAR
 const char** StMuArrays::mtdArrayNames = StMuArrays::epdArrayNames    +__NEPDARRAYS__;
 const char** StMuArrays::fgtArrayNames = StMuArrays::mtdArrayNames    +__NMTDARRAYS__;
 const char** StMuArrays::eztArrayNames = StMuArrays::fgtArrayNames    +__NFGTARRAYS__; // dongx
-
+#ifdef __TFG__VERSION__
+const char** StMuArrays::gmtArrayNames = StMuArrays::eztArrayNames    +__NEZTARRAYS__;
+#endif /* __TFG__VERSION__ */
 
 //		ARRAY TYPES
 //============================================================================================
 const char* StMuArrays::arrayTypes [__NALLARRAYS__    ] = {"StMuEvent","StMuPrimaryVertex",
 					                   "StMuTrack","StMuTrack","StMuTrack","StMuTrack",
 					                   "StRichSpectra","StDetectorState","StL3AlgorithmInfo","StL3AlgorithmInfo",
-#ifndef __TFG__VERSION__
 							   "StDcaGeometry","StMuPrimaryTrackCovariance","StMuRpsCollection","StMuMtdCollection",
-#else /* __TFG__VERSION__ */
-							   "StDcaGeometry","StMuPrimaryTrackCovariance","StMuRpsCollection","StMuMtdCollection", 
+#ifdef __TFG__VERSION__
 							   "KFParticle","KFVertex",
 #endif /* __TFG__VERSION__ */
 #ifndef __NO_STRANGE_MUDST__
@@ -101,7 +104,11 @@ const char* StMuArrays::arrayTypes [__NALLARRAYS__    ] = {"StMuEvent","StMuPrim
 /*epdArrayTypes   [__NEPDARRAYS__     ]*/                  "StMuEpdHit",  // MALisa
 /*mtdArrayNames   [__NMTDARRAYS__     ]*/                  "StMuMtdHit","StMuMtdRawHit","StMuMtdHeader",
 /*fgtArrayTypes   [__NFGTARRAYS__     ]*/                  "StMuFgtStrip","StMuFgtCluster","StMuFgtStripAssociation","StMuFgtAdc",
-/*eztArrayTypes   [__NEZTARRAYS__     ]*/                  "EztEventHeader","EztTrigBlob","EztEmcRawData","EztEmcRawData","EztFpdBlob"};
+/*eztArrayTypes   [__NEZTARRAYS__     ]*/                  "EztEventHeader","EztTrigBlob","EztEmcRawData","EztEmcRawData","EztFpdBlob"
+#ifdef __TFG__VERSION__
+/*gmtArrayNames   [__NGMTARRAYS__     ]*/                  ,"StGmtPoint"
+#endif /* __TFG__VERSION__ */
+};
 #ifndef __NO_STRANGE_MUDST__
 const char** StMuArrays::strangeArrayTypes = StMuArrays::arrayTypes    +__NARRAYS__;
 const char** StMuArrays::mcArrayTypes = StMuArrays::strangeArrayTypes  +__NSTRANGEARRAYS__;
@@ -123,6 +130,9 @@ const char** StMuArrays::epdArrayTypes  = StMuArrays::etofArrayTypes   +__NETOFA
 const char** StMuArrays::mtdArrayTypes  = StMuArrays::epdArrayTypes    +__NEPDARRAYS__;  // dongx
 const char** StMuArrays::fgtArrayTypes  = StMuArrays::mtdArrayTypes    +__NMTDARRAYS__;
 const char** StMuArrays::eztArrayTypes  = StMuArrays::fgtArrayTypes    +__NFGTARRAYS__;
+#ifdef __TFG__VERSION__
+const char** StMuArrays::gmtArrayTypes = StMuArrays::eztArrayTypes    +__NEZTARRAYS__;
+#endif /* __TFG__VERSION__ */
 
 //		ARRAY SIZES
 //============================================================================================
@@ -132,8 +142,9 @@ const char** StMuArrays::eztArrayTypes  = StMuArrays::fgtArrayTypes    +__NFGTAR
 int   StMuArrays::arraySizes       [__NALLARRAYS__    ] = {1,10,1000,1000,1000,1000,100,100,100,100, 1000,1000,1,1,
 #ifndef __NO_STRANGE_MUDST__
 /*strangeArraySizes[__NSTRANGEARRAYS__]*/                  1,1,1000,100,100,1000,100,100,1000,100,100,200,
-#endif
+#endif /* ! __NO_STRANGE_MUDST__ */
 /*mcArraySizes[__NMCARRAYS__]*/                            10,1000,
+
 /*emcArraySizes    [__NEMCARRAYS__    ]*/                  1,1000,1000,1000,1000,1000,1000,
 /*pmdArraySizes    [__NPMDARRAYS__    ]*/                  1000,1000,1000,1000,
 /*fmsArraySizes    [__NFMSARRAYS__    ]*/                  1,1,1,1,
@@ -148,7 +159,11 @@ int   StMuArrays::arraySizes       [__NALLARRAYS__    ] = {1,10,1000,1000,1000,1
 /*epdArraySizes    [__NEPDARRAYS__ ] */                    744,  // MALisa
 /*mtdArraySizes    [__NMTDARRAYS__    ]*/                  1000,1000,1,
 /*fgtArraySizes    [__NFGTARRAYS__    ]*/                  500, 50, 500, 2000,
-    /*eztArraySizes    [__NEZTARRAYS__    ]*/                  1, 1, 1, 1, 1};
+/*eztArraySizes    [__NEZTARRAYS__    ]*/                  1, 1, 1, 1, 1
+#ifdef  __TFG__VERSION__
+/*gmtArraySizes    [__NGMTARRAYS__    ]*/                  ,1
+#endif /* __TFG__VERSION__ */
+};
 #ifndef __NO_STRANGE_MUDST__
 int* StMuArrays::strangeArraySizes = StMuArrays::arraySizes    +__NARRAYS__;
 int* StMuArrays::mcArraySizes = StMuArrays::strangeArraySizes  +__NSTRANGEARRAYS__;
@@ -170,7 +185,8 @@ int* StMuArrays::epdArraySizes  = StMuArrays::etofArraySizes   +__NETOFARRAYS__;
 int* StMuArrays::mtdArraySizes = StMuArrays::epdArraySizes     +__NEPDARRAYS__;  // dongx
 int* StMuArrays::fgtArraySizes = StMuArrays::mtdArraySizes     +__NMTDARRAYS__;
 int* StMuArrays::eztArraySizes = StMuArrays::fgtArraySizes     +__NFGTARRAYS__;
-
+int* StMuArrays::gmtArraySizes = StMuArrays::eztArraySizes     +__NEZTARRAYS__;  // YF
+#ifndef __TFG__VERSION__    
 //		ARRAY COUNTERS
 //============================================================================================
 int   StMuArrays::arrayCounters       [__NALLARRAYS__ ] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -192,8 +208,8 @@ int   StMuArrays::arrayCounters       [__NALLARRAYS__ ] = {0,0,0,0,0,0,0,0,0,0,0
 /*epdArrayCounters   [__NEPDARRAYS__     ] */              0,   // MALisa
 /*mtdArrayCounters    [__NMTDARRAYS__    ]*/               0, 0, 0,
 /*fgtArrayCounters    [__NFGTARRAYS__    ]*/               0, 0, 0, 0,
-   /*eztArrayCounters    [__NEZTARRAYS__    ]*/            0, 0, 0, 0, 0};
-
+/*eztArrayCounters    [__NEZTARRAYS__    ]*/            0, 0, 0, 0, 0
+};
 StMuArrays test;
 #ifndef __NO_STRANGE_MUDST__
 int* StMuArrays::strangeArrayCounters = StMuArrays::arrayCounters        +__NARRAYS__;
@@ -216,7 +232,7 @@ int* StMuArrays::epdArrayCounters = StMuArrays::etofArrayCounters    +__NETOFARR
 int* StMuArrays::mtdArrayCounters = StMuArrays::epdArrayCounters     +__NEPDARRAYS__;
 int* StMuArrays::fgtArrayCounters = StMuArrays::mtdArrayCounters     +__NMTDARRAYS__;
 int* StMuArrays::eztArrayCounters = StMuArrays::fgtArrayCounters     +__NFGTARRAYS__;  
-
+#endif /* ! __TFG__VERSION__ */
 ClassImp(StMuArrays);
 StMuArrays::StMuArrays()
 {
