@@ -4,7 +4,7 @@
 #include <string.h>
 #include "TObject.h"
 #include "TMath.h"
-#include "HitT.h"
+class StGmtPoint;
 class TrackT : public TObject {
   
  private:
@@ -23,7 +23,7 @@ class TrackT : public TObject {
   UInt_t          fNPpoint;      //Number of possible points for this track
   Short_t         fValid;        //Validity criterion
   UInt_t          fNsp;          //Number of points for this track with a special value
-  UInt_t          fIdHitT[NSP];   //Index of HitT in fHitT array
+  UInt_t          fIdHitT[NSP];   //Index of StGmtPoint in fHitT array
   Double32_t      fdEdx;  
   Double32_t      fLength;
   Char_t          end;

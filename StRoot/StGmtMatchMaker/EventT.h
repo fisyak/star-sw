@@ -1,18 +1,16 @@
 #ifndef __EVENT__
 #define __EVENT__
-#include <string.h>
 #include "TObject.h"
-#include "HitT.h"
-#include "TrackT.h"
+#include "TTree.h"
+#include "TChain.h"
 #include "TClonesArray.h"
-#include "TRefArray.h"
-#include "TRef.h"
 #include "THashList.h"
 #include "TROOT.h"
 #include "TFile.h"
-#include "TChain.h"
-#include "TTree.h"
+#include "TrackT.h"
 class TGeoHMatrix;
+class StGmtPoint;
+class StHit;
 class EventTHeader {
  private:
   Int_t      fEvtNum;
@@ -63,8 +61,8 @@ class EventT : public TObject {
   void              SetFlag(UInt_t f) { fFlag = f; }							     
   void              SetHeader(Int_t i, Int_t run, Int_t date, Double32_t field);				     
   TrackT           *AddTrackT();									      
-  HitT             *AddHitT();										      
-  HitT             *SetHitT(HitT *h, StHit *hit, TGeoHMatrix *comb, TrackT *track);
+  StGmtPoint             *AddHitT();										      
+  StGmtPoint             *SetHitT(StGmtPoint *h, StHit *hit, TGeoHMatrix *comb, TrackT *track);
   Double32_t        GetVertex(UInt_t i=0) {return (i<3)?fVertex[i]:0;}  
   UInt_t            GetTotalNoTracks() const {return fNPTracks;}	       
   UInt_t            GetNtrack() const { return fNtrack; }	         
@@ -76,9 +74,9 @@ class EventT : public TObject {
   TClonesArray     *GetTracks() const {return fTracks;}
   TClonesArray     *GetHits() const {return fHits;}
   TrackT           *GetTrackT(UInt_t i=0) const {return fTracks && i < fNtrack ? (TrackT*) fTracks->At(i): 0;}
-  HitT             *GetHitT(UInt_t i=0) const {return fHits && i < fNhit ? (HitT*) fHits->At(i): 0;}
+  StGmtPoint             *GetHitT(UInt_t i=0) const {return fHits && i < fNhit ? (StGmtPoint*) fHits->At(i): 0;}
   Int_t             GetIndexOfTrackT(const TrackT *obj) const {return fgTracks->IndexOf(obj);}
-  Int_t             GetIndexOfHitT(const HitT *obj) const {return fgHits->IndexOf(obj);}
+  Int_t             GetIndexOfHitT(const StGmtPoint *obj) const {return fgHits->IndexOf((TObject *) obj);}
   static void       SetRotMatrices(THashList *Rot) {fRotList = Rot;}
   static void       RestoreListOfRotations();
   static THashList *RotMatrices() {return fRotList;}

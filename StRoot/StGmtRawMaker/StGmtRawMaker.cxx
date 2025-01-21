@@ -3,7 +3,7 @@
 // \class StGmtRawMaker
 // \authors K.S. Engle and Richard Witt (witt@usna.edu)
 // based on StFgtClusterMaker
-
+#include <string>
 #include "StGmtRawMaker.h"
 #include "StRoot/StEvent/StEvent.h"
 #include "StRoot/StEvent/StGmtCollection.h"
@@ -19,13 +19,98 @@
 #include "TAxis.h"
 ClassImp(StGmtRawMaker);
 
-Int_t StGmtRawMaker::gmtStat = 0;
 const UInt_t         CLUS_BINS = 128;
 const Double_t       CLUS_MIN  = 0.0;
 const Double_t       CLUS_MAX  = 128*0.08;
 const UInt_t         MAX_PEAKS = 8; // from TFumili default no. of parameters = 25
 //________________________________________________________________________________
-inline Double_t MyGaus(Double_t x, Double_t mean, Double_t sigma, Double_t delta) {
+StGmtRawMaker::StGmtRawMaker( const Char_t* name ) :  StRTSBaseMaker( "clustser", name ) {
+  memset(mBeg,0,mEnd-mBeg+1);
+  SetAttr("gmtCosmics"             ,kFALSE);
+  TFile *f = GetTFile();
+  for (Int_t ixy = 0; ixy < kGmtNumLayers; ixy++) {
+    for (UShort_t module = 0; module < kGmtNumModules; module++) {
+      TString name("Pedestal");
+      if (! ixy) name += "X";
+      else       name += "Y";
+      name += "_"; name += module;
+      mPedestalXY[ixy][module] = new TProfile(name,name,CLUS_BINS,CLUS_MIN,CLUS_MAX,"s");
+      mPedestalXY[ixy][module]->SetDirectory(f);
+    }
+  }
+};
+//________________________________________________________________________________
+Int_t StGmtRawMaker::InitRun(Int_t /* runumber */) {
+   return 0;
+}
+//________________________________________________________________________________
+Int_t StGmtRawMaker::Make() {
+  static ULong_t nEvents=0;
+  StEvent* event = (StEvent*) (GetInputDS("StEvent"));
+  if(!event) {
+    LOG_ERROR << "Error getting pointer to StEvent from '" << ClassName() << "'" << endm;
+    return kStErr;
+  }
+  mGmtCollection = event->gmtCollection();
+  if(!mGmtCollection)    {
+    mGmtCollection = new StGmtCollection();
+    if(!mGmtCollection)	{
+      LOG_DEBUG <<"::prepareEnvironment could not create StGmtCollection" <<endm;
+      return kStFatal;
+    }
+    event->setGmtCollection(mGmtCollection);
+    LOG_DEBUG <<"::prepareEnvironment() has added a non existing StGmtCollection()"<<endm;
+  } else  {
+    //this should be unncessary if the member clear function is called
+    mGmtCollection->Clear();
+  }
+  if (fillHits()) return kStWarn;
+  UInt_t noModWithGMT = 0;
+  for(UInt_t module=0; module < kGmtNumModules; module++) {
+    if(Debug()) {
+      LOG_INFO << "module: " << module << " has strips: \t" <<  mGmtCollection->getNumStrips(module) << endm;
+    }
+    Int_t nelements = mGmtCollection->getNumStrips(module);
+    if(! nelements) {
+      if(Debug()) {
+	LOG_WARN <<"StClusterMaker::Make(): no data for module " << module << endm;
+      }
+      continue;
+    }
+    StGmtHitCollection *hitCollection = mGmtCollection->getHitCollection(module);
+    if (ClusterBuilder(nEvents,module,*hitCollection)) noModWithGMT++;
+    const StGmtHitCollection *coll = mGmtCollection->getHitCollection(module);
+    if (! coll) continue;
+    if (Debug()) {
+      const StSPtrVecGmtHit &hits = coll->getHitVec();
+      UInt_t NoHits = hits.size();
+      for (UInt_t l = 0; l < NoHits; l++) {
+	const StGmtHit *hit = hits[l];
+	if (hit) {
+	  hit->Print("");
+	}
+      }
+    }
+  }
+  if (noModWithGMT) nEvents++;
+  
+  if(Debug()) {
+    LOG_INFO << "End of gmt-clust-maker, print all strips & clusters: " << endm;
+    LOG_INFO <<"  gmtCollnumModule=" << kGmtNumModules<<", tot strip=" <<mGmtCollection->getNumStrips()
+	     <<"  totClust=" <<  mGmtCollection->getNumHits() <<endm;
+  }
+  if (! mGmtCollection->getNumHits()) return kStERR;
+  return kStOk;
+}
+//________________________________________________________________________________
+ Int_t StGmtRawMaker::Init() {
+  if (IAttr("gmtCosmics")) SetAttr(".Privilege",kTRUE);
+  if (gFumili) {delete gFumili;}
+  new TFumili(MAX_PEAKS*3+1);
+  return StMaker::Init();
+}
+//________________________________________________________________________________
+Double_t StGmtRawMaker::MyGaus(Double_t x, Double_t mean, Double_t sigma, Double_t delta) {
   return TMath::Freq((x-mean+delta/2)/sigma)-TMath::Freq((x-mean-delta/2)/sigma);
 }
 //________________________________________________________________________________
@@ -58,7 +143,20 @@ Int_t StGmtRawMaker::fillHits() {
 
 //   LOG_INFO << "StGmtRawMaker::fillHits() Trying to find fgt/adc... " << endm;
   LOG_INFO << "StGmtRawMaker::fillHits() Trying to find gmt/adc... " << endm;
-  
+  if (Debug() > 2) {
+    for (Int_t module = 0; module < kGmtNumModules; module++) {
+      for (Int_t ixy = 0; ixy < kGmtNumLayers; ixy++) {
+	static const Char_t *XY[2] = {"X", "Y"};
+	if (! mAdcTimeBins[ixy][module]) {
+	  mAdcTimeBins[ixy][module] = 
+	    new TH2F(Form("AdcT%s_%i",XY[ixy],module),Form("Adc versus strip and time %s module %i",XY[ixy],module), 
+		     kGmtNumTimeBins, -0.5, kGmtNumTimeBins -0.5, CLUS_BINS, CLUS_MIN, CLUS_MAX);
+	} else {
+	  mAdcTimeBins[ixy][module]->Reset();
+	}
+      }
+    }
+  }
   ////// FIX ME!!!!!!!!!!!!!!!!!!
   //now grab the constants from the header file, loop over the raw data and fill the hits...
   TString query("gmt/adc");
@@ -109,9 +207,6 @@ Int_t StGmtRawMaker::fillHits() {
 	  strip->setPosition( position );
 	  strip->setElecCoords( rdo, arm, apv, channel );
 	  strip->setCoordNum( coordNum );
-	  strip->setPed( 0 );
-	  strip->setPedStdDev( 0 );
-	  strip->setPedErr( 0 );
 	} else  {// these are connected (mapping in StGmtGeom.cxx)
 	  if(layer) {// layer here is just an indicator for either a X ( i.e. strip (=0) ) or Y ( i.e. pad (=1) ) element
 	    strip->setCoordNum( coordNum + kGmtNumStrips ); // map Y into 128-255
@@ -129,6 +224,9 @@ Int_t StGmtRawMaker::fillHits() {
 	  strip->setIsY( layer );
 	  strip->setPosition( position );
 	  strip->setElecCoords( rdo, arm, apv, channel );
+	  if (Debug() > 2) {
+	    mAdcTimeBins[layer][moduleIdx]->Fill(timebin, position, adc);
+	  }
 	}
       } else { LOG_WARN << "StGmtRawMaker::Make() -- Could not access module " << moduleIdx << endm; }
     }
@@ -147,7 +245,7 @@ Int_t StGmtRawMaker::fillHits() {
   return ok;
 }
 //________________________________________________________________________________
-Double_t fpeaks(Double_t *x, Double_t *par) {
+Double_t StGmtRawMaker::fpeaks(Double_t *x, Double_t *par) {
   Float_t result=0.0;
   UInt_t nPar=(UInt_t)par[0];
   for (UInt_t p = 0; p < nPar; p++) {
@@ -225,6 +323,7 @@ TF1* StGmtRawMaker::FindPeaks(TH1D* hist) {
 //________________________________________________________________________________
 Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitCollection& hits) {
   static TCanvas* canv=0;
+  static TCanvas* canvAdc=0;
   static TH1D* histXY[2][8] = {0};
   static TH1D dhistXY[2][8];
   static const Char_t *XY[2] = {"X", "Y"};
@@ -237,12 +336,17 @@ Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitColl
     LOG_INFO << "Cluster " << strips->getNumStrips() << "strips\tin module" << strips->getModule() << endm;
   }
   UInt_t stripsNum = strips->getNumStrips();
-  int adc;
+  Float_t adc, adcRMS;
   TSpectrum spectX(MAX_PEAKS); TSpectrum spectY(MAX_PEAKS);
   if(Debug() > 1) {
     canv = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("GmtClusters");
     if(!canv) canv=new TCanvas("GmtClusters","GmtClusters",800,1200);
     else      canv->Clear();
+    if (Debug() > 2) {
+      canvAdc = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("GmtTimeStrip");
+      if(!canvAdc) canvAdc=new TCanvas("GmtTimeStrip","GmtTimeStrip",800,100,800,600);
+      else      canvAdc->Clear();
+    }
   }
   UInt_t nClusXY[2] = {0};
   TF1 *fitXY[2] = {0};
@@ -255,14 +359,14 @@ Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitColl
       pStrip = strips->getSortedStrip(iStrip);
       if (pStrip->isY() != ixy) continue;
       adc = pStrip->getAdcSum();
+      adcRMS = pStrip->getAdcSumRMS();
       if (adc <= 0) continue;
       position = pStrip->getPosition();
       if (position < -990) continue;
       Int_t bin = histXY[ixy][module]->Fill(position,adc);
-      Float_t error = TMath::Sqrt(adc);
-      histXY[ixy][module]->SetBinError(bin,error);
+      histXY[ixy][module]->SetBinError(bin,adcRMS);
     }
-    if (events >= 1) {
+    if (events >= 0) {
       dhistXY[ixy][module] = *histXY[ixy][module];
       dhistXY[ixy][module].SetName(Form("D%s",histXY[ixy][module]->GetName()));
       dhistXY[ixy][module].Add(mPedestalXY[ixy][module],-1.0); 
@@ -316,6 +420,10 @@ Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitColl
   if (Debug() > 1) {
     canv->Clear();
     canv->Divide(2,4);
+    if (canvAdc) {
+      canvAdc->Clear();
+      canvAdc->Divide(2,1);
+    }
     if (nClusXY[0] + nClusXY[1] > 0) {
       for (Int_t ixy = 0; ixy < 2 ; ixy++) {
 	if (nClusXY[ixy]) {
@@ -327,6 +435,14 @@ Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitColl
       }	
       canv->Modified();
       canv->Update();
+      if (canvAdc) {
+	for (Int_t ixy = 0; ixy < 2 ; ixy++) {
+	  canvAdc->cd(ixy+1);
+	  mAdcTimeBins[ixy][module]->Draw("colz");
+	  canvAdc->Modified();
+	  canvAdc->Update();
+	}
+      }
       static Int_t ibreak = 0;
       ibreak++;
     }
@@ -356,93 +472,4 @@ void StGmtRawMaker::AddPed(TH1 *hist, TProfile *Pedestal) {
     if (hist->GetBinContent(i) > 100000.0) continue;
     Pedestal->Fill(xax->GetBinCenter(i), hist->GetBinContent(i));
   }
-}
-//________________________________________________________________________________
-StGmtRawMaker::StGmtRawMaker( const Char_t* name ) :  StRTSBaseMaker( "clustser", name ) ,mPedestalXY(0) {
-  SetAttr("gmtCosmics"             ,kFALSE);
-  if (! mPedestalXY) {
-    mPedestalXY = new TProfile** [2];
-    TFile *f = GetTFile();
-    for (Int_t ixy = 0; ixy < 2; ixy++) {
-      mPedestalXY[ixy] = new TProfile* [kGmtNumModules];
-      for (UShort_t module = 0; module < kGmtNumModules; module++) {
-	TString name("Pedestal");
-	if (! ixy) name += "X";
-	else       name += "Y";
-	name += "_"; name += module;
-	mPedestalXY[ixy][module] = new TProfile(name,name,CLUS_BINS,CLUS_MIN,CLUS_MAX,"s");
-	mPedestalXY[ixy][module]->SetDirectory(f);
-      }
-    }
-  }
-};
-//________________________________________________________________________________
-Int_t StGmtRawMaker::InitRun(Int_t /* runumber */) {
-   return 0;
-}
-//________________________________________________________________________________
-Int_t StGmtRawMaker::Make() {
-  static ULong_t nEvents=0;
-  StEvent* event = (StEvent*) (GetInputDS("StEvent"));
-  if(!event) {
-    LOG_ERROR << "Error getting pointer to StEvent from '" << ClassName() << "'" << endm;
-    return kStErr;
-  }
-  mGmtCollection = event->gmtCollection();
-  if(!mGmtCollection)    {
-    mGmtCollection = new StGmtCollection();
-    if(!mGmtCollection)	{
-      LOG_DEBUG <<"::prepareEnvironment could not create StGmtCollection" <<endm;
-      return kStFatal;
-    }
-    event->setGmtCollection(mGmtCollection);
-    LOG_DEBUG <<"::prepareEnvironment() has added a non existing StGmtCollection()"<<endm;
-  } else  {
-    //this should be unncessary if the member clear function is called
-    mGmtCollection->Clear();
-  }
-  if (fillHits()) return kStWarn;
-  UInt_t noModWithGMT = 0;
-  for(UInt_t module=0; module < kGmtNumModules; module++) {
-    if(Debug()) {
-      LOG_INFO << "module: " << module << " has strips: \t" <<  mGmtCollection->getNumStrips(module) << endm;
-    }
-    Int_t nelements = mGmtCollection->getNumStrips(module);
-    if(! nelements) {
-      if(Debug()) {
-	LOG_WARN <<"StClusterMaker::Make(): no data for module " << module << endm;
-      }
-      continue;
-    }
-    StGmtHitCollection *hitCollection = mGmtCollection->getHitCollection(module);
-    if (ClusterBuilder(nEvents,module,*hitCollection)) noModWithGMT++;
-    const StGmtHitCollection *coll = mGmtCollection->getHitCollection(module);
-    if (! coll) continue;
-    if (Debug()) {
-      const StSPtrVecGmtHit &hits = coll->getHitVec();
-      UInt_t NoHits = hits.size();
-      for (UInt_t l = 0; l < NoHits; l++) {
-	const StGmtHit *hit = hits[l];
-	if (hit) {
-	  hit->Print("");
-	}
-      }
-    }
-  }
-  if (noModWithGMT) nEvents++;
-  
-  if(Debug()) {
-    LOG_INFO << "End of gmt-clust-maker, print all strips & clusters: " << endm;
-    LOG_INFO <<"  gmtCollnumModule=" << kGmtNumModules<<", tot strip=" <<mGmtCollection->getNumStrips()
-	     <<"  totClust=" <<  mGmtCollection->getNumHits() <<endm;
-  }
-  if (! mGmtCollection->getNumHits()) return kStERR;
-  return kStOk;
-}
-//________________________________________________________________________________
- Int_t StGmtRawMaker::Init() {
-  if (IAttr("gmtCosmics")) SetAttr(".Privilege",kTRUE);
-  if (gFumili) {delete gFumili;}
-  new TFumili(MAX_PEAKS*3+1);
-  return StMaker::Init();
 }

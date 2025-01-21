@@ -1,4 +1,8 @@
 #include <assert.h>
+#include <string.h>
+#include "TrackT.h"
+#include "TRefArray.h"
+#include "TRef.h"
 #include "TH1.h"
 #include "TH2.h"
 #include "TStyle.h"
@@ -18,8 +22,7 @@
 #include "TGeoMatrix.h"
 #include "StarRoot/THelixTrack.h"
 #include "EventT.h"
-#include "TrackT.h"
-#include "HitT.h"
+#include "StGmtPoint.h"
 #include "TKey.h"
 #include "TDirectory.h"
 #include "TClass.h"
@@ -28,11 +31,7 @@
 #include "StGmtHit.h"
 #include "StGmtHitCollection.h"
 #include "StGmtCollection.h"
-#define __OnlyGlobal__
-ClassImp(EventTHeader);
-ClassImp(EventT);
-ClassImp(TrackT);
-ClassImp(HitT);  
+//#define __OnlyGlobal__
 
 TClonesArray *EventT::fgTracks = 0;
 TClonesArray *EventT::fgHits = 0;
@@ -50,7 +49,7 @@ EventT::EventT() : fIsValid(kFALSE)
   if (!fgTracks) fgTracks = new TClonesArray("TrackT", 1000);
   fTracks = fgTracks;
   fNtrack = 0;
-  if (!fgHits) fgHits = new TClonesArray("HitT", 1000);
+  if (!fgHits) fgHits = new TClonesArray("StGmtPoint", 1000);
   fHits = fgHits;
   fNhit = 0;
 }
@@ -64,7 +63,6 @@ EventT::~EventT()
 
 //______________________________________________________________________________
 Int_t  EventT::Build(StEvent *pEventT, Double_t pCut) {
-  static const Int_t NoFitPointCutForGoodTrackT = 15;
   Clear();
   Int_t iok = 1;
   fIsValid = kFALSE;
@@ -88,6 +86,7 @@ Int_t  EventT::Build(StEvent *pEventT, Double_t pCut) {
   SetFlag(1);
   Int_t nTotMatch = 0;
   //  Create and Fill the TrackT objects
+  StGmtPointCollection* gmtPointCol = GmtCollection->getPointCollection();  
   for (UInt_t i=0; i<nnodes; i++) {
     StTrackNode *node = theNodes[i];
     if (! node) continue;
@@ -136,17 +135,12 @@ Int_t  EventT::Build(StEvent *pEventT, Double_t pCut) {
     Int_t NoHitPerTrack = 0;
     THashList *fRotList = RotMatrices();
     if (! fRotList) continue;
-    TIter next(fRotList);
-    TGeoHMatrix *comb = 0;
-
-    while ((comb = (TGeoHMatrix *) next())) {
-      TString combName(comb->GetName());
-      if (! combName.BeginsWith("R")) continue;
-      Int_t Id;
-      sscanf(comb->GetName()+1,"%i",&Id);
-      UInt_t module = Id;
+    for (UInt_t module = 0; module < GmtCollection->getNumModules(); module++) {
+      if (! GmtCollection->getNumHits()) continue;
+      TGeoHMatrix *comb = (TGeoHMatrix *) fRotList->FindObject(Form("%i1",module));
+      if (! comb) continue;
       StGmtHitCollection* GmtHitCollection = GmtCollection->getHitCollection(module);
-      if (! GmtHitCollection) { cout << "No GMT HitT Collections for mudule " << module << endl; continue;}
+      if (! GmtHitCollection) { cout << "No  GmtHitCollection for mudule " << module << endl; continue;}
       StSPtrVecGmtHit& hitvec = GmtHitCollection->getHitVec();
       UInt_t NoHits = hitvec.size();
       if (! NoHits) continue;
@@ -215,14 +209,14 @@ Int_t  EventT::Build(StEvent *pEventT, Double_t pCut) {
       mIsCrossingMembrain = kFALSE;
     }
       
-      for (UInt_t l = 0; l < NoHits; l++) {
-	StHit *hit = hitvec[l];
+    for (UInt_t l = 0; l < NoHits; l++) {
+      StHit *hit = hitvec[l];
 	if (hit) {
 	  //if (hit->flag()>=4) continue;
 	  //if (hit->flag()< 0) continu;
 	  //	  cout << "hitFlag=" << hit->flag() << endl;
 	  
-	  HitT *h = AddHitT();
+	  StGmtPoint *h = AddHitT();
 	  h->SetHitLength(sh);
 	  h->SetHitLength(stepR);
 	  h->SetHitdR(dR.magnitude());
@@ -237,6 +231,7 @@ Int_t  EventT::Build(StEvent *pEventT, Double_t pCut) {
 	  NoHitPerTrack++;
 	  h->SetHitPerTrack(NoHitPerTrack);
 	  //	    SetHitT(h, hit, comb, track, &TPDeriv);
+	  gmtPointCol->getPointVec().push_back(h);
 	}
       }
     }
@@ -261,7 +256,7 @@ TrackT *EventT::AddTrackT()
   return track;
 }
 //______________________________________________________________________________
-HitT *EventT::AddHitT()
+StGmtPoint *EventT::AddHitT()
 {
   // Add a new hit to the list of hits for this event.
   // To avoid calling the very time consuming operator new for each hit,
@@ -270,7 +265,7 @@ HitT *EventT::AddHitT()
   // otherwise the previous HitT[i] will be overwritten.
   
   TClonesArray &hits = *fHits;
-  HitT *hit = new(hits[fNhit++]) HitT();
+  StGmtPoint *hit = new(hits[fNhit++]) StGmtPoint();
   //Save reference to last HitT in the collection of Hits
   return hit;
 }
@@ -314,7 +309,7 @@ void EventT::Print(Option_t *opt) const {
   
 }
 //________________________________________________________________________________
-HitT *EventT::SetHitT(HitT *h, StHit *hit, TGeoHMatrix *comb, TrackT *track) {
+StGmtPoint *EventT::SetHitT(StGmtPoint *h, StHit *hit, TGeoHMatrix *comb, TrackT *track) {
   UInt_t B = 0, L = 0, l = 0, W = 0, H = 0;
   Int_t rdo = 0;
   h->SetRDO(rdo);
@@ -375,17 +370,6 @@ void TrackT::Print(Option_t *opt) const {
   cout << endl;
 }
 //________________________________________________________________________________
-void HitT::SetId(Int_t B, Int_t L, Int_t l, Int_t W, Int_t H) {
-  barrel = B; layer = L; ladder = l; wafer = W; hybrid = H;
-}
-//________________________________________________________________________________
-void HitT::Print(Option_t *opt) const {
-  cout << "HitT: Id " << Id << "\tpT = " << pT << "\tmomentum " << pMom << endl;
-  TRVector glob(3,&xG); cout << "Global :" << glob << endl;
-  cout << "Local      u/v/w " << u << "/ " << v << "/ " << w << endl;
-  cout << "Prediction uP/vP " << uP << "/ " << vP << "\ttuP/tvP " << tuP << "/ " << tvP << endl;
-}
-//________________________________________________________________________________
 void EventT::RestoreListOfRotations() {
   if (fRotList) return;
   if (! gDirectory) return;
@@ -404,8 +388,8 @@ void EventT::RestoreListOfRotations() {
 void TBase::Loop(Int_t Nevents) {  
 #if 1
   struct PlotPar_t {
-    Char_t *Name;
-    Char_t *Title;
+    const Char_t *Name;
+    const Char_t *Title;
     Int_t    nx;
     Int_t    ny;
     Double_t xmin; 
@@ -431,20 +415,25 @@ void TBase::Loop(Int_t Nevents) {
   //              B 
   TH1F *LocPlots[NM];
   TH1F *  uPlots[NM];
+#if 0
   TH1F *    hpT = new TH1F(   "Pt",   "pt", 200, -2., 2.);
   TH1F *    hpM = new TH1F( "Ptot", "ptot", 200,  0., 5.);
+#endif
   TH1F * uPAll  = new TH1F("UPall","uPall", plotUP.nx, plotUP.xmin, plotUP.xmax);
-  TH1F * uAll   = new TH1F("Uall", "ua",    plotUP.nx, plotUP.xmin, plotUP.xmax);
   TH1F * duB[NM][2];
   TH1F * dvB[NM];
+#if 0
   TH1F * uCuts[NM];
   TH1F * xCuts[NM];
+#endif
   TH1F * uCut   = new TH1F("Ucut","uc", plotDu.nx, plotDu.xmin, plotDu.xmax);
   TH1F * vCut   = new TH1F("Vcut","vc", 200, -3., 3.);
   TH2F * dMin   = new TH2F("DMin","vumin",100,-0.75,0.75,100,-0.75,0.75); 
   TH1F * vMin   = new TH1F("VMin","vmin", plotDuv.nx, plotDuv.xmin, plotDuv.xmax);
   TH1F * uMin   = new TH1F("UMin","umin", plotDuv.nx, plotDuv.xmin, plotDuv.xmax);
+#if 0
   TH1F * uMinC  = new TH1F("UMinC","umC", plotDuv.nx, plotDuv.xmin, plotDuv.xmax);
+#endif
   memset(LocPlots,0,NM*sizeof(TH1F *));
   memset(  uPlots,0,NM*sizeof(TH1F *));
   for (int M = 0; M < NM; M++) {// over gmt Modules
@@ -465,12 +454,14 @@ void TBase::Loop(Int_t Nevents) {
       new TH1F(uName, uTitle, plotUP.nx, plotUP.xmin, plotUP.xmax );
     uName  = Form("%sM%i", plotDu.Name, module);
     uTitle = Form("u-uP for M %i", module);
+#if 0
     uCuts[module]= 
       new TH1F(uName, uTitle, plotDu.nx, plotDu.xmin, plotDu.xmax );
     uName  = Form("%sxM%i", plotDu.Name, module);
     uTitle = Form("u-uP corr M %i", module);
     xCuts[module]= 
       new TH1F(uName, uTitle, plotDu.nx, plotDu.xmin, plotDu.xmax );
+#endif
   }
   Long64_t nentries = fChain->GetEntriesFast();
   if (Nevents > 0 && nentries > Nevents) nentries = Nevents;
@@ -496,8 +487,8 @@ void TBase::Loop(Int_t Nevents) {
     for (UInt_t trk = 0; trk < Ntrack; trk++) {
       TrackT *track = (TrackT *)fEvent->GetTracks()->UncheckedAt(trk);
       if (! track) continue;
-      Int_t Npoints = track->GetNpoint();
 #if 0
+      Int_t Npoints = track->GetNpoint();
       if (minNoFitPoints > 0 && Npoints%100 < minNoFitPoints) continue;
       if (UseSsd && Npoints < 1000) continue; 
       if (UseSvt && Npoints <  100) continue; 
@@ -505,11 +496,10 @@ void TBase::Loop(Int_t Nevents) {
       Int_t Nsp = track->GetN();
       double dvmin = 1000.;
       double dumin = 1000.;
-      int kmin;
       for (Int_t hit = 0; hit < Nsp; hit++) {
 	Int_t k = track->GetHitTId(hit) - 1;
 	//	 assert(k>=0);
-	HitT *hitT = (HitT *) fEvent->GetHitT(k);
+	StGmtPoint *hitT = (StGmtPoint *) fEvent->GetHitT(k);
 	if ( k < 0) cout <<" k <0:"<<k<<" hit="<<hit<<" Nsp="<<Nsp<< endl;
 	if ( k < 0) continue;
 	Int_t module  = hitT->Barrel();
@@ -524,7 +514,7 @@ void TBase::Loop(Int_t Nevents) {
 	hpM->Fill(hitT->GetpMom());
 	if (TMath::Abs(hitT->GetpT()) < 0.2) continue;
 #endif
-	if ( TMath::Abs(dv) < TMath::Abs(dvmin) ) {dvmin = dv; dumin= du; kmin = k;}
+	if ( TMath::Abs(dv) < TMath::Abs(dvmin) ) {dvmin = dv; dumin= du;}
 	uPAll->Fill( uP );
 	uPlots[module]->Fill( uP );
 	

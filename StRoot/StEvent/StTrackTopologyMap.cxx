@@ -438,25 +438,25 @@ StTrackTopologyMap::hasHitInRow(StDetectorId id, unsigned int row) const
 {
     switch (id) {
     case kTpcId:
-      if (!ftpcFormat()) {
-        if (row <= 45) return bit(row+7);
-	return  bit(row+64-46);
-      }
-      break;
+      //      if (!ftpcFormat()) {
+      if (row <= 45) return bit(row+7);
+      return  bit(row+64-46);
+      //      }
+      //      break;
     case kFtpcWestId:
         return ftpcFormat() && bit(row);
         break;
     case kFtpcEastId:
         return ftpcFormat() && bit(row+10);
-        break;
+	//        break;
 #ifndef __TFG__VERSION__
     case kiTpcId:
         return !ftpcFormat() && iTpcBit(row);
-        break;
+	//        break;
 #endif /* ! __TFG__VERSION__ */
     default:
         return false;
-        break;
+	//        break;
     }
 }
 

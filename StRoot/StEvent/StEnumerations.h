@@ -768,7 +768,7 @@ enum StGmtPhysConsts {
  */
 // unsorted constants
 enum StGmtGeneralConsts {
-    kGmtNumTimeBins = 15,
+    kGmtNumTimeBins = 7,
     kGmtNumTimeBinsForPed = 3,  // number of time bins to use for pedestal determination
     kGmtMaxAdc = 4096,
     kGmtPedCut = 3,   // pedestal subtracted threshold to temporarily tag a "hit" for 2nd pedestal pass

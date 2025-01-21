@@ -22,8 +22,11 @@
 #include "StBFChain.h"
 #include "TGeoMatrix.h"
 #include "EventT.h"
+#include "StMessMgr.h" 
+#include "StBichsel/Bichsel.h"
 #include "StTpcDb/StTpcDb.h"
 #include "StDetectorDbMaker/StGmtSurveyC.h"
+#include "StGmtCollection.h"
 //________________________________________________________________________________
 StGmtMatchMaker::StGmtMatchMaker(const Char_t *name) : StMaker(name),fFile(0), fTree(0), fEvent(0) {
   SetMinNoHits();
@@ -81,8 +84,15 @@ void StGmtMatchMaker::SetTree() {
 }
 //________________________________________________________________________________
 Int_t StGmtMatchMaker::Make() {
-  if (! EventT::RotMatrices()) MakeListOfRotations();
   StEvent* pEvent = (StEvent*) GetInputDS("StEvent");
+  if (! pEvent) return kStOK;
+  StGmtCollection* GmtCollection = pEvent->gmtCollection();
+  if (! GmtCollection) {
+    if (Debug()) { LOG_WARN << "No GMT Collections" << endm; }
+    return kStOK;
+  }
+  if (GmtCollection->getNumHits() == 0) return kStOK;
+  if (! EventT::RotMatrices()) MakeListOfRotations();
   if (pEvent && !fEvent->Build(pEvent,fpCut)) fTree->Fill();  //fill the tree
   return kStOK;
 }
