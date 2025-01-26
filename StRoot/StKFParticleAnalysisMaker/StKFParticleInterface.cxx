@@ -1076,9 +1076,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
       fTrackHistograms2D[khdNdX]->Fill(pL10, dNdxL10);
       if(q>0) fTrackHistograms2D[khdNdXPos]->Fill(pL10, dNdxL10);
       else    fTrackHistograms2D[khdNdXNeg]->Fill(pL10, dNdxL10);
-
-      fTrackHistograms2D[khdEdXwithTof]->Fill(pL10, dEdxL10);
-      fTrackHistograms2D[khdNdXwithTof]->Fill(pL10, dNdxL10);
 #ifdef __ETAPN_TOF_PLOTS__
       Double_t eta = gTrack->gMom().Eta();
 #endif /* __ETAPN_TOF_PLOTS__ */
@@ -1120,7 +1117,7 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     StTrackCombPiD PiD(picoDst,iTrack);
     vector<int> totalPDG = PiD.GetPDG();
     int nPartSaved0 = nPartSaved;
-    unsigned int nPrimaryTracks = primaryTrackList.size();
+    //    unsigned int nPrimaryTracks = primaryTrackList.size();
     Int_t NDF = 2*gTrack->nHitsFit() - 5;
     Float_t Chi2 = gTrack->chi2()*NDF;
     PrPO(track);
@@ -1131,7 +1128,8 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     
     //fill PID histograms if they are created
       //Histograms are filled for secondary tracks only!!!
-    if(fCollectPIDHistograms && (nPrimaryTracks == primaryTrackList.size())) 
+    // not any more     if(fCollectPIDHistograms && (nPrimaryTracks == primaryTrackList.size())) 
+    if(fCollectPIDHistograms) 
       {
 	vector<int> selectedPdg;
 	for(int iPdg = nPartSaved0; iPdg<nPartSaved; iPdg++)
