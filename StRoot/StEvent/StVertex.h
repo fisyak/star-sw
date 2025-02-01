@@ -153,6 +153,7 @@ public:
     Bool_t        isKinkVertex()      const {return TESTBIT(mFlag,kKinkVtxId);}    
     Bool_t        isBeamConstrained() const {return TESTBIT(mFlag,kBEAMConstrVtxId);}
     Bool_t        isRejected()        const {return TESTBIT(mFlag,kRejectedVtxId);}
+    Bool_t        isFwdVtx()          const {return TESTBIT(mFlag,kFwdVtxId);}
     virtual  void Print(Option_t *option="") const {cout << option << *this << endl; }
     static void   SetNoFitPointCutForGoodTrack(UInt_t val) {fgNoFitPointCutForGoodTrack = val;}
     static UInt_t NoFitPointCutForGoodTrack() {return fgNoFitPointCutForGoodTrack;}

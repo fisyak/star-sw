@@ -409,7 +409,9 @@ enum StVertexId {kUndefinedVtxId   = kUndefinedVertexIdentifier,
                  kFtpcEastCalVtxId = kFtpcEastCalibrationVertexIdentifier,
                  kFtpcWestCalVtxId = kFtpcWestCalibrationVertexIdentifier,
 		         kBEAMConstrVtxId,
-                 kRejectedVtxId};
+                 kRejectedVtxId,
+                 kFwdVtxId
+                 };
 
 /*!
  * \enum StRichPidFlag
