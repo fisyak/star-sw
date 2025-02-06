@@ -1534,7 +1534,7 @@ Bfc_st BFC[] = { // standard chains
   {"gmt"        ,"","","event,gmtDat"                                       ,"","","Gmt data Chain",kFALSE},
   {"gmtClu"      ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"gmtDat"      ,"","","",     "StGmtRawMaker","Spectrum,Fumili,StGmtRawMaker","GMT cluster maker",kFALSE},
-  {"gmtCosmics" ,"","","Cosmics,gmt","","",  "Save only events with GMT clusters and Cosmic tracks",kFALSE},
+  {"gmtOnly" ,"","","","","",                "Save only events with GMT clusters and Cosmic tracks",kFALSE},
   {"gmtClusTree","","","","","",                               "WARNING *** Option is OBSOLETE ***",kFALSE},
   {"epdHit",    "", "", "epdDb,event",            "StEpdHitMaker", "StEpdHitMaker","EPD hit maker", kFALSE},
   {"tpc" ,"","","TpxRaw,TpxClu,tpcI" ,"","","WARNING *** Option is OBSOLETE *** use TpxClu instead",kFALSE},
