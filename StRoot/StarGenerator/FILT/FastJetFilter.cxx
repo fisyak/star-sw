@@ -73,7 +73,7 @@ int FastJetFilter::Init() {
   double R = DAttr("radius"); assert(R>0);
 
   jetdefinition = new fastjet::JetDefinition(algorithm, R, recombScheme, strategy);
-
+  return 0;
 }
 //______________________________________________________________________________________________
 int FastJetFilter::Filter( StarGenEvent *_event ) 

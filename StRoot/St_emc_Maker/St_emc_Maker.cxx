@@ -143,7 +143,7 @@ void St_emc_Maker::MakeHistograms(){
   //Filling QA Histograms
   if (GetData()) {
     Int_t det, i, n, id;
-    Float_t eta, phi, ene;
+    Float_t eta=0, phi=0, ene;
     St_DataSetIter itr(GetData());
     StEmcHitCollection *hit = 0;
     StEmcHitCollection dummy;

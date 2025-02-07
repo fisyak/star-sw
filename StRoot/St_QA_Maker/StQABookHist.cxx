@@ -2013,7 +2013,8 @@ void StQABookHist::BookHistPoint(){
 //_____________________________________________________________________________
 void StQABookHist::BookHistEMC(){
 
-  if (!((gROOT->GetClass("StEmcMath")) && (gROOT->GetClass("StEmcGeom"))))
+  //  if (!((gROOT->GetClass("StEmcMath")) && (gROOT->GetClass("StEmcGeom"))))
+  if (! gROOT->GetClass("StEmcGeom"))
     return;
 // Book the hists for SimulatorMaker
   m_emc_nhit=QAH::H2F("EmcNHitsVsDet","emc: Number of hit(log) .vs. Detector #",100,0.0,4.5,4,0.5,4.5);

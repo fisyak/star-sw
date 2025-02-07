@@ -180,4 +180,5 @@ StiDetectorBuilder * StiMasterDetectorBuilder::get(const string & name)
     }
 	cout << "StiMasterDetectorBuilder::get(const string & name) -E- Requested object not found" << endl;
 	assert(0);
+	return 0;
 }

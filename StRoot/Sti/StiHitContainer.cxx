@@ -125,10 +125,10 @@ void StiHitContainer::print()
         break;
       }
     }
-
+#if 0
     if (position>50 && position<200 && dets[1]) {
       const char *cek = 0;
-      int pad[2],sek[2]={0};
+      int pad[2]={0},sek[2]={0};
       for (int j=0;j<2;j++) {
         const char *nam = dets[j]->getName().c_str();
         cek = strstr(nam,"Sector_");
@@ -141,6 +141,7 @@ void StiHitContainer::print()
       assert(!pad[1] || sek[1]==(24-sek[0]%12));
       assert(!pad[1] || pad[1]==pad[0]);
     }
+#endif
 static const double k57 = 180./M_PI;
     printf("%d - (refangle=%g position=%g)\t",num,refangle*k57,position);
     for ( int j=0;dets[j];j++) {

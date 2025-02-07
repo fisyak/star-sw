@@ -106,7 +106,7 @@ Int_t StEmcHitCollection::ADCtoEnergy(St_emc_hits *emc_hit){
     case 1:
 
       for(i = 0; i<n; i++){
-	Float_t eta, phi; Int_t id,m,e,s;
+	Float_t eta=0, phi=0; Int_t id,m,e,s;
         m = (Int_t)hit[i].module; 
         e = (Int_t)hit[i].eta;
         s = (Int_t)hit[i].sub;
@@ -148,7 +148,7 @@ Int_t StEmcHitCollection::ADCtoEnergy(St_emc_hits *emc_hit){
 	<< name << " Nhits " << n << endl;    
     for(i = 0; i<n; i++){
       if(hit[i].energy>0.0){
-	Float_t eta, phi; Int_t id,m,e,s;
+	Float_t eta=0, phi=0; Int_t id,m,e,s;
         m = (Int_t)hit[i].module; 
         e = (Int_t)hit[i].eta;
         s = (Int_t)hit[i].sub;
@@ -200,7 +200,7 @@ Int_t StEmcHitCollection::fill(St_emc_hits *emc_hits)
   }
 
   // To calculate modules boundary => Service information
-  Int_t id, m, e, s, mold;
+  Int_t id, m=0, e=0, s=0, mold=0;
   id   = HitId(0);  // First hit
   getBin(id, mold, e, s);
   mNumsModule[0]     = (Short_t)mold;
@@ -229,7 +229,7 @@ Int_t StEmcHitCollection::fill(St_emc_hits *emc_hits)
 //_____________________________________________________________________________
 St_emc_hits* StEmcHitCollection::copyToTable(const Char_t *Name){
   //Create a table emc_hits and restore hits. 
-  Int_t   i, id, m, e, s, n=0;
+  Int_t   i, id, m=0, e=0, s=0, n=0;
   emc_hits_st raw;
   St_emc_hits *emc_hits = new St_emc_hits((Text_t*)Name, mNHit);
   for(i=0; i<mNHit; i++){
@@ -251,7 +251,7 @@ St_emc_hits* StEmcHitCollection::copyToTable(const Char_t *Name){
 //_____________________________________________________________________________
 void StEmcHitCollection::printHits(Int_t n, Int_t start){
   //Print hits
-  Int_t i, m, e, s,id;
+  Int_t i, m=0, e=0, s=0,id;
   cout << endl << GetName() << " : ";
   if(mNHit<=0){cout << "No hits" << endl; return;}
   else{cout << mNHit << " hits" << " Modules "<<mModule<< endl;} 

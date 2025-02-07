@@ -197,7 +197,7 @@ DRand48Engine::DRand48Engine(const DRand48Engine &p)
   // to make the physical copy of the object preserving its
   // original status.
 
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) {// && (&p)) {
     p.saveStatus();
     restoreStatus();
     setSeeds(&theSeed,0);
@@ -210,7 +210,7 @@ DRand48Engine & DRand48Engine::operator = (const DRand48Engine &p)
   // to make the physical copy of the object preserving its
   // original status.
 
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     p.saveStatus();
     restoreStatus();
     setSeeds(&theSeed,0);

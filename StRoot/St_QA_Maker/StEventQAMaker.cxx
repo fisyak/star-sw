@@ -139,7 +139,8 @@ Int_t StEventQAMaker::InitRun(int runnumber) {
                                  100,0.,1.e-5,2,this);
   }
   
-  if ((gROOT->GetClass("StEmcMath")) && (gROOT->GetClass("StEmcGeom"))) {
+  //  if ((gROOT->GetClass("StEmcMath")) && (gROOT->GetClass("StEmcGeom"))) {
+  if (gROOT->GetClass("StEmcGeom")) {
     for(Int_t i=0; i<4; i++) {emcGeom[i] = StEmcGeom::getEmcGeom(i+1);} // 3-oct-2001 by PAI
   }
 
@@ -2059,7 +2060,7 @@ void StEventQAMaker::MakeHistEMC() {
         if(module) {
           StSPtrVecEmcRawHit& rawHit=module->hits();
 	  
-          Int_t m,e,s,adc,sId,stripInMod;
+          Int_t m,e,s,adc,sId=0,stripInMod;
           Float_t eta(0),phi(0),E(0);
           nh += rawHit.size();
           for(UInt_t k=0;k<rawHit.size();k++){

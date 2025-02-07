@@ -67,7 +67,7 @@ void StiTrackNodeHelper::reset()
 //______________________________________________________________________________
 void StiTrackNodeHelper::set(StiKalmanTrackNode *pNode,StiKalmanTrackNode *sNode)		
 {
-  static const double EC = 2.99792458e-4;
+  //  static const double EC = 2.99792458e-4;
   if(!pNode) reset();
   mParentNode = pNode;
   mTargetNode = sNode;
@@ -493,7 +493,7 @@ int StiTrackNodeHelper::join()
   if (mTargetNode!=mVertexNode) mTargetNode->setChi2(mChi2);
 
 //	Sanity check
-  double myMaxChi2 = (mTargetNode==mVertexNode)? 1000:mChi2Max;
+//  double myMaxChi2 = (mTargetNode==mVertexNode)? 1000:mChi2Max;
   if (mState ==  StiTrackNode::kTNFitEnd) {
     assert(mChi2 <myMaxChi2);
   } else {
@@ -920,7 +920,7 @@ int StiTrackNodeHelper::updateNode()
   double r00,r01,r11;
   if (!mDetector)	{ //Primary vertex
     mHitPars[0] = mPredPars.x();
-    double chi2 = joinVtx(mHitPars,mHrr,mPredPars,mPredErrs,&mFitdPars,&mFitdErrs);
+    /* double chi2 = */ joinVtx(mHitPars,mHrr,mPredPars,mPredErrs,&mFitdPars,&mFitdErrs);
     mFitdPars.curv() = mTargetHz*mFitdPars.ptin();
     assert(chi2>900 || fabs(mChi2-chi2)<1e-10);
     if (debug()) {

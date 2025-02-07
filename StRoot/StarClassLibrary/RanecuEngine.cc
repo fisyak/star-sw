@@ -78,7 +78,7 @@ RanecuEngine::RanecuEngine(const RanecuEngine &p)
   shift1(2147483563),shift2(2147483399),maxSeq(215),
   prec(4.6566128E-10)
 {
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.getSeed();
     seq = p.seq;
     for (HepInt i=0; i<2; ++i)
@@ -91,7 +91,7 @@ RanecuEngine::RanecuEngine(const RanecuEngine &p)
 
 RanecuEngine & RanecuEngine::operator = (const RanecuEngine &p)
 {
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.getSeed();
     seq = p.seq;
     for (HepInt i=0; i<2; ++i)
