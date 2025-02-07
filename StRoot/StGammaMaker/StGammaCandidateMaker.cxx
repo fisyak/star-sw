@@ -359,7 +359,7 @@ Int_t StGammaCandidateMaker::MakeBarrel()
                 smdEtaGeom->getBin(id, module, eta, sub);
 
                 // Find vertex corrected position of the strip
-                float x, y, z;
+                float x=0, y=0, z=0;
                 smdEtaGeom->getXYZ(id, x, y, z);
                 TVector3 vEta(x, y, z);
 
@@ -432,7 +432,7 @@ Int_t StGammaCandidateMaker::MakeBarrel()
                 smdEtaGeom->getBin(id, module, eta, sub);
 
                 // Find vertex corrected position of the strip
-                float x, y, z;
+                float x=0, y=0, z=0;
                 smdPhiGeom->getXYZ(id, x, y, z);
                 TVector3 vPhi(x, y, z);
 

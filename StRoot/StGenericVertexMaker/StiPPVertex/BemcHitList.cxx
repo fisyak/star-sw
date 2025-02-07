@@ -54,9 +54,9 @@ BemcHitList::initRun(St_db_Maker* db_maker) {
     //........... querry BTOW DB/geom
     int  status;
     myTable->getStatus(BTOW, id, status);
-    int m,e,s;
+    int m=0,e=0,s=0;
     geomB->getBin(id,m,e,s);
-    float eta,phi;
+    float eta=0,phi=0;
     geomB->getEta(m,e,eta);
     geomB->getPhi(m,s,phi);  // -pi <= phi < pi
     if( phi<0) phi+=2*M_PI; // I want phi in [0,2Pi]
@@ -138,7 +138,7 @@ BemcHitList::build ( StEmcDetector*det, float adcMin){
       
       if ( getActive(iBin)<0) continue;
 
-      int id;
+      int id=0;
       geomB->getId(m,e,s,id); // to get the software id    
       Float_t ped,sig;
       myTable->getPedestal(BTOW, id, 0, ped,sig); 

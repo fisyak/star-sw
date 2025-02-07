@@ -203,7 +203,7 @@ StBarrelEmcCluster* StBarrelEmcClusterMaker::makeCluster(StGammaTower* tower) co
 //////////////////////////////////////////////////
 void StBarrelEmcClusterMaker::getTowerPosition(int id, TVector3& position) const
 {
-    float x, y, z;
+  float x=0, y=0, z=0;
     StEmcGeom::instance("bemc")->getXYZ(id, x, y, z);
     position.SetXYZ(x, y, z);
 }

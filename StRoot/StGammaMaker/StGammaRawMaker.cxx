@@ -308,7 +308,7 @@ void StGammaRawMaker::GetBarrel()
                 int status;
                 int ADC = tempRawHit->adc(); //not pedestal subtracted!
                 double energy = tempRawHit->energy();
-                float x, y, z;
+                float x = 0, y = 0, z = 0;
                 geom->getXYZ(id, x, y, z);
                 TVector3 position(x, y, z);
                 position -= TVector3(StMuDst::event()->primaryVertexPosition().xyz());
@@ -366,7 +366,7 @@ void StGammaRawMaker::GetBarrel()
                 int ADC = tempRawHit->adc();
                 double energy = tempRawHit->energy();
                 id = tempRawHit->softId(BPRS);
-                float x, y, z;
+                float x = 0, y = 0, z = 0;
                 geom->getXYZ(id,x,y,z);
                 TVector3 position(x, y, z);
                 position -= TVector3(StMuDst::event()->primaryVertexPosition().xyz());

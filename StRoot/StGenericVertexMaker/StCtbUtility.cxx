@@ -166,11 +166,11 @@ void  StCtbUtility::collectCTBhitsData(StTriggerData *trgD){
 //==========================================================
 //==========================================================
 void  StCtbUtility::printCtb() {
-  LOG_INFO<<Form("StCtbUtility::print(),nSlat=%d\n",mCtbHits.size())<<endm;
+  LOG_INFO<<Form("StCtbUtility::print(),nSlat=%d\n",(int)mCtbHits.size())<<endm;
 
   unsigned int ih;
   for(ih=0;ih<mCtbHits.size();ih++) {// loop over CTB hits
-    LOG_INFO<<Form("ih=%d eta=%.3f phi/deg=%.1f adc=%.1f\n",ih
+    LOG_INFO<<Form("ih=%d eta=%.3f phi/deg=%.1f adc=%.1f\n",(int)ih
            ,mCtbHits[ih].eta,mCtbHits[ih].phi/3.1416*180,mCtbHits[ih].adc)<<endm;
   }
 }

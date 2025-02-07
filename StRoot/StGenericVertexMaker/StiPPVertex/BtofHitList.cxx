@@ -1,3 +1,4 @@
+
 #include <string.h>
 #include <assert.h>
 #include <cmath>
@@ -19,10 +20,10 @@
 
 //==========================================================
 //==========================================================
-BtofHitList::BtofHitList() : geometry(0), 
+BtofHitList::BtofHitList() : 
   // phi, 60 bins
   // eta, 32*2 bins not with the same width, so eta0,deta are really not used
-  ScintHitList(0.,M_PI/60,60, -0.9,0.028125,64,"Btof",4,0.75)
+  ScintHitList(0.,M_PI/60,60, -0.9,0.028125,64,"Btof",4,0.75), geometry(0)
 {
   myTable = new StBTofTables();
 }
