@@ -333,7 +333,8 @@ void EventDisplay::drawEvent(unsigned int id, bool resetCam) {
           fitter.reset(new DAF());
           ( static_cast<KalmanFitterRefTrack*>( (static_cast<DAF*>(fitter.get()))->getKalman() ) )->setDeltaChi2Ref(dChi2Ref_);
           break;
-
+      default:
+	assert(0);
       }
       fitter->setDebugLvl(std::max(0, (int)debugLvl_-1));
       fitter->setMinIterations(nMinIter_);
