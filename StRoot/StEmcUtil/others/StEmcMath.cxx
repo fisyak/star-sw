@@ -6,8 +6,6 @@
 #include "StEmcUtil/others/emcInternalDef.h"
 #include "StEmcUtil/geometry/StEmcGeom.h"
 
-ClassImp(StEmcMath)
-
 Bool_t 
 StEmcMath::etaPhi(StMeasuredPoint* point,StMeasuredPoint* vertex, Double_t &eta, Double_t &phi)
 { 

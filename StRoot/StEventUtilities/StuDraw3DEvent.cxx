@@ -93,10 +93,11 @@ TObject *StuDraw3DEvent::EmcHit(Int_t emcHitsSoftId, Color_t col,Style_t sty,Siz
 {  
    TObject *model = 0;
    StEmcGeom *emcGeom =StEmcGeom::getEmcGeom(detId);
+   Int_t softId=0;
+   Float_t eta=0;
+   Float_t phi=0;
    if (emcGeom) {
-      Int_t softId=emcHitsSoftId;
-      Float_t eta;
-      Float_t phi;
+     softId=emcHitsSoftId;
       emcGeom->getEtaPhi(softId,eta,phi);
       Float_t etaStep = 1.0/emcGeom->NEta();
       Float_t phiStep = TMath::Pi()/60; 
@@ -130,7 +131,7 @@ TObject *StuDraw3DEvent::EmcHit(const StEmcRawHit &emcHit, Color_t col,Style_t s
    StEmcGeom *emcGeom =StEmcGeom::getEmcGeom(detId);
    if (emcGeom) {
       int m, e, s;
-      Int_t softId;
+      Int_t softId=0;
       emcHit.modEtaSub(m,e,s);
       emcGeom->getId(m,e,s,softId);
       EmcHit(softId, col,sty,siz,detId);

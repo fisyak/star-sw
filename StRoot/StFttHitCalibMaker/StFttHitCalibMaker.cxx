@@ -52,7 +52,7 @@ Int_t StFttHitCalibMaker::Finish()
 { 
     LOG_INFO << "StFttHitCalibMaker::Finish()" << endm;
 
-    if (this->mCalibMode == StFttHitCalibMaker::CalibMode::Calibration) {
+    if ((StFttHitCalibMaker::CalibMode) GetMode() == StFttHitCalibMaker::CalibMode::Calibration) {
         LOG_INFO << "Writing StFttHitCalib parameters to plaintext: " << endm;
         WriteCalibrationToPlainText();
     }

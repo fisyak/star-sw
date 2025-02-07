@@ -678,7 +678,7 @@ TArrayI StMuTrack::getTower(Bool_t useExitRadius,Int_t det) const{ //1=BTOW, 3=B
 	tower[3] = -10;		
 
 	StThreeVectorD momentum,position;
-	Double_t radius;
+	Double_t radius = 0;
 	
 	StEmcGeom* mEmcGeom = StEmcGeom::instance("bemc");
 	StEmcGeom* mSmdEGeom= StEmcGeom::instance("bsmde");
@@ -704,7 +704,7 @@ TArrayI StMuTrack::getTower(Bool_t useExitRadius,Int_t det) const{ //1=BTOW, 3=B
 	goodProjection = mEmcPosition.trackOnEmc(&position,&momentum,this,mField,radius);
 #endif /* __TFG__VERSION__ */
 	if(goodProjection){
-		Int_t m,e,s,id=0;
+		Int_t m=0,e=0,s=0,id=0;
 		Float_t eta=position.pseudoRapidity();
 		Float_t phi=position.phi();
 		if(det==1){

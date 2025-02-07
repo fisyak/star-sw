@@ -368,7 +368,7 @@ int OLDEVP::DAQemcReader(char *m)
 
 					// I currently only know about RAW data
 					if(emcadcr == NULL) {
-					  LOG_WARN << Form("EMC %d: instance %d, format %d is not implemented yet!",
+					  LOG_WARN << Form("EMC %s: instance %s, format %d is not implemented yet!",
 							   id2char(id),inst2char(instance), k) << endm;
 						continue ;
 					}
@@ -585,14 +585,14 @@ char* OLDEVP::getEmcTrgData(DATAP* datap, int index)
   LOG_INFO << "Starting EMC reader..." << endm;
 
   // DATA pointer bank
-  LOG_INFO << Form("DATAP=08x%x, byte order=0x%08x", datap, datap->bh.byte_order) << endm;
+  LOG_INFO << Form("DATAP=%p, byte order=0x%08x", datap, (int)datap->bh.byte_order) << endm;
   if (!(datap->det[TRG_ID].off && datap->det[TRG_ID].len)) return 0;
   bool swapdatap = datap->bh.byte_order != DAQ_RAW_FORMAT_ORDER;
   int off = qswap32(swapdatap, datap->det[TRG_ID].off);
 
   // TRG pointer bank
   TRGP* trgp = (TRGP*)((int*)datap + off) ;
-  LOG_INFO << Form("TRGP=0x%08x, byte order=0x%08x", trgp, trgp->bh.byte_order) << endm;
+  LOG_INFO << Form("TRGP=%p, byte order=0x%08x", trgp, (int)trgp->bh.byte_order) << endm;
   if (checkBank(trgp->bh.bank_type, "TRGP") < 0) return 0; // Wrong bank!
 
   if (!trgp->bh.token) {
@@ -607,7 +607,7 @@ char* OLDEVP::getEmcTrgData(DATAP* datap, int index)
 
   // TRG data bank
   TRGD* trgd = (TRGD*)((int*)trgp + off);
-  LOG_INFO << Form("TRGD=0x%08x, byte order=0x%08x", trgd, trgd->bh.byte_order) << endm;
+  LOG_INFO << Form("TRGD=%p, byte order=0x%08x", trgd, (int)trgd->bh.byte_order) << endm;
 
   // Check miscellanious things
   if (checkBank(trgd->bh.bank_type, "TRGD") < 0) return 0; // Wrong bank!

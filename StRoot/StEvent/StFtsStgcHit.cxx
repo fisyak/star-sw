@@ -34,7 +34,7 @@ void StFtsStgcHit::print(Option_t *option) const {
 
 	cout << Form("StFtsStgcHit: rdo=%2d sec=%2d altro=%2d CH=%2d | Ntb=%d sumADC=%d", rdo(), sec(), altro(), ch(), nTimebins(), adcSum() ) << endl;
 	cout << ":::::";
-	for(int i=0; i<nTimebins(); i++) {
+	for(UInt_t i=0; i<nTimebins(); i++) {
 		cout << Form("%4d (%3d) ",adc(i),timebin(i));
 	}
 	cout << endl;
@@ -71,11 +71,11 @@ int StFtsStgcHit::adcSum() const{
 
 int StFtsStgcHit::adcSum( int tb0, int tb1 ) const{
 	unsigned int sum = 0;
-	if ( tb0 >= mNTimebins || tb1 >= mNTimebins )
+	if ( tb0 >= (int) mNTimebins || tb1 >= (int) mNTimebins )
 		return 0;
 
 
-	for ( size_t i = tb0; i < tb1; i++ ){
+	for ( int i = tb0; i < tb1; i++ ){
 		sum+=adc(i);
 	}
 	return sum;

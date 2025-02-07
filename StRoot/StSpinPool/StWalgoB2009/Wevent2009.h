@@ -105,7 +105,7 @@ class WeveVertex { // info about vertex
   }
   
   void print( int flag=0){
-    printf(" Vertex ID=%d Z=%.1f cm  nTrack=%d\n",id,z, eleTrack.size());
+    printf(" Vertex ID=%d Z=%.1f cm  nTrack=%d\n",id,z, (int)eleTrack.size());
     for(unsigned int i=0;i< eleTrack.size();i++) 
       eleTrack[i].print();
   }
@@ -213,7 +213,7 @@ class Wevent2009 {
   
   //...........................
   void print( int flag=0, int isMC=0) {
-    printf("\nmy W2009event ID=%d  L2Wbits: ET=%d rnd=%d;  bx7=%d bx48=%d nVert=%d\n",id,l2bitET,l2bitRnd,bx7,bx48, vertex.size());
+    printf("\nmy W2009event ID=%d  L2Wbits: ET=%d rnd=%d;  bx7=%d bx48=%d nVert=%d\n",id,l2bitET,l2bitRnd,bx7,bx48, (int)vertex.size());
     if(!isMC)L2wResult2009_print(l2algo);
     for(unsigned int i=0;i< vertex.size();i++) vertex[i].print(flag);
     bemc.print(flag);

@@ -41,7 +41,7 @@
 #include "dighistograms.h"
 
 
-extern Int_t GlobalSeed = 1;
+Int_t DIGAction::GlobalSeed = 1;
 
 //==============================================================================
 ClassImp(DIGMAPS)
@@ -61,7 +61,7 @@ DIGMAPS::DIGMAPS(char *name, char *title, TString aCP, TString aCFN,  TString ou
   time_t seconds;
   seconds = time(NULL); 
   gRandom->SetSeed(seconds);
-  GlobalSeed=seconds;
+  DIGAction::GlobalSeed=seconds;
   ColorChosen=1;
 
   SetConfigPathAndFileName(aCP,aCFN); 
@@ -109,7 +109,7 @@ DIGMAPS::DIGMAPS(char *name, char *title, TString aCP, TString aCFN , TString ac
   time_t seconds;
   seconds = time(NULL); 
   gRandom->SetSeed(seconds);
-  GlobalSeed=seconds;
+  DIGAction::GlobalSeed=seconds;
   ColorChosen=1;
 
   SetConfigPathAndFileName(aCP,aCFN); 
@@ -1421,11 +1421,11 @@ void  DIGMAPS::InspectEvent(Int_t EventNumber)
 {
   DIGAction *myAction = GetAction();
   Char_t *myDoit = myAction->GetDoit();  
-  Int_t myIntAction = 0;
+  //  Int_t myIntAction = 0;
   Char_t action2[200] = "plot";
   if(!strncmp( action2, myDoit,strlen(action2))  ){
     cout<<" WE CAN PLOT THAT !"<<endl;
-    myIntAction=2;
+    //    myIntAction=2;
   }else{
     cout<<" No action plot done before !"<<endl;
     return;
@@ -1453,8 +1453,8 @@ void  DIGMAPS::RunConfiguration(Int_t configcounter, Int_t BeamNumber, Int_t Pla
   Double_t xran,yran,zran;
 
 
-  GlobalSeed++;
-  TRandom3 *r3 = new TRandom3(GlobalSeed);
+  DIGAction::GlobalSeed++;
+  TRandom3 *r3 = new TRandom3(DIGAction::GlobalSeed);
 
   Int_t NumberOfEvents = GetBeam(BeamNumber)->GetNumberOfEvents();
 
@@ -1597,8 +1597,8 @@ void  DIGMAPS::ChargeGeneration(DIGParticle& aDIGParticle, Float_t StartingSegme
 Int_t  DIGMAPS::PoissonLaw(Float_t Lambda) 
 { 
   Int_t n;
-  GlobalSeed++;
-  TRandom3 *r3 = new TRandom3(GlobalSeed);
+  DIGAction::GlobalSeed++;
+  TRandom3 *r3 = new TRandom3(DIGAction::GlobalSeed);
   //Float_t smear = r3->Rndm(245);
   n = r3->Poisson(Lambda);
 
@@ -1612,8 +1612,8 @@ Int_t  DIGMAPS::PoissonLaw(Float_t Lambda)
 Double_t  DIGMAPS::LandauLaw(Double_t mean, Double_t sigma) 
 { 
   Double_t x;
-  GlobalSeed++;
-  TRandom3 *r3 = new TRandom3(GlobalSeed);
+  DIGAction::GlobalSeed++;
+  TRandom3 *r3 = new TRandom3(DIGAction::GlobalSeed);
   //Float_t smear = r3->Rndm(245);
   x = r3->Landau(mean,sigma);
   //  TMath::PoissonI(x,Lambda)
@@ -1625,8 +1625,8 @@ Double_t  DIGMAPS::LandauLaw(Double_t mean, Double_t sigma)
 Double_t  DIGMAPS::GaussianLaw(Double_t mean, Double_t sigma) 
 { 
   Double_t x;
-  GlobalSeed++;
-  TRandom3 *r3 = new TRandom3(GlobalSeed);
+  DIGAction::GlobalSeed++;
+  TRandom3 *r3 = new TRandom3(DIGAction::GlobalSeed);
   //Float_t smear = r3->Rndm(245);
   x = r3->Gaus(mean,sigma);
   //  TMath::PoissonI(x,Lambda)

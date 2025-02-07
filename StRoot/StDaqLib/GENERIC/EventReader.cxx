@@ -265,8 +265,8 @@ static const char *detnams[] =
   LOG_INFO<<"===============  Event # "<<EventSeqNo<<"  ============="<<endm;
   LOG_INFO<<"Ev len (wds) "<<EventLength<<endm;
   LOG_INFO<<"Creation Time: "<<ts<<endm;
-  LOG_INFO<<"Trigger word "<< std::hex << (void *)TrigWord<<
-        "\t\tTrigger Input word "<< std::hex << (void *)TrigInputWord<<endm;
+  LOG_INFO<<"Trigger word "<< std::hex << TrigWord<<
+        "\t\tTrigger Input word "<< std::hex <<TrigInputWord<<endm;
   LOG_INFO<<"Token: "<<Token<<endm;
   LOG_INFO<<"Detectors present: ";
   unsigned const char* p=0; int i=0;
@@ -379,7 +379,7 @@ void EventReader::InitEventReader(int fdes, long offset, int MMap)
 {//InitER
 #define MX_MAP_SIZE 0x20000000
 
-  off_t FileLength;
+  //  off_t FileLength;
 
   if (verbose) {
     LOG_INFO<< "Initializing EventReader with a MAPPED file" << endm;
@@ -406,7 +406,7 @@ void EventReader::InitEventReader(int fdes, long offset, int MMap)
    LOG_ERROR << "DaqOpenTag"<< strerror(errno) <<endm;
    ERROR(ERR_FILE);
   }
-  FileLength = buf.st_size;
+  //  FileLength = buf.st_size;
 
   next_event_offset = 0;
   Logical_Record lr;
@@ -436,7 +436,7 @@ void EventReader::InitEventReader(int fdes, long offset, int MMap)
   if((MMAPP = (char *)mmap(0, mapsize, PROT_READ | PROT_WRITE,
 			   MAP_PRIVATE, fd, mmap_offset)) == (caddr_t) -1) { 
     LOG_ERROR<<strerror(errno)<<"mapping file request "
-                              <<std::hex<<(void*)mapsize<<" bytes"<<endm;
+                              <<std::hex<<mapsize<<" bytes"<<endm;
     ERROR(ERR_MEM);
   }
 

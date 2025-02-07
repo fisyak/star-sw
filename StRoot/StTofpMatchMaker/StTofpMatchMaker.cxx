@@ -360,7 +360,7 @@ Int_t StTofpMatchMaker::Make(){
 	       << "\thitprof="<< slatHitVec[ii].hitProfile 
 	       << "\ts="<<slatHitVec[ii].s << "\tthxy="<<slatHitVec[ii].theta_xy 
 	       << "\tthzr="<<slatHitVec[ii].theta_zr;
-	  if (slatHitVec.size()>1) LOG_INFO << " M" << endm;
+	  if (slatHitVec.size()>1) {LOG_INFO << " M" << endm;}
 	  else LOG_INFO << endm;
 	}
       }
@@ -781,13 +781,13 @@ Int_t StTofpMatchMaker::Make(){
       //--- calculate local hit position on slat based first, last and middle plane
       //    (middle plane is the average of first and last plane, which is mathematically
       //     the same as SlatHitVec.hitPosition ... )
-      StThreeVectorD *pInnerLayer, *pOuterLayer;
-      pInnerLayer =  &(*(allMatchedSlatsVec[ii].layerHitPositions.begin()));
-      pOuterLayer =  &(*(allMatchedSlatsVec[ii].layerHitPositions.end() - 1));
+      //      StThreeVectorD *pInnerLayer, *pOuterLayer;
+//       pInnerLayer =  &(*(allMatchedSlatsVec[ii].layerHitPositions.begin()));
+//       pOuterLayer =  &(*(allMatchedSlatsVec[ii].layerHitPositions.end() - 1));
 
       //--- dig out from the dedx and rich pid traits (only for Debug mode)
       float dedx(0.), cherang(0);
-      int dedx_np(0), cherang_nph(0);
+      int /* dedx_np(0),*/ cherang_nph(0);
       if (Debug()){
 	StSPtrVecTrackPidTraits& traits = theTrack->pidTraits();
 	for (unsigned int it=0;it<traits.size();it++){
@@ -795,7 +795,7 @@ Int_t StTofpMatchMaker::Make(){
 	    StDedxPidTraits *pid = dynamic_cast<StDedxPidTraits*>(traits[it]);
 	    if (pid && pid->method() ==kTruncatedMeanId){
 	      dedx    = pid->mean();
-	      dedx_np =  pid->numberOfPoints();
+	      //	      dedx_np =  pid->numberOfPoints();
 	    }
 	  } else if  (traits[it]->detector() == kRichId){
 	    StRichPidTraits *pid = dynamic_cast<StRichPidTraits*>(traits[it]);

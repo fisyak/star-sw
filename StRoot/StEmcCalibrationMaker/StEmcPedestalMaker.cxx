@@ -281,13 +281,13 @@ void StEmcPedestalMaker::saveToDb(const Char_t *timeStamp, const Char_t *tableFi
 	    Int_t statusNew = (int)getStatus(id);
 	    Float_t pedLast = 0;
 	    Float_t rmsLast = 0;
-	    Float_t chiLast = 0;
+	    //	    Float_t chiLast = 0;
 	    Int_t statusLast = 0;
 	    if (getDetector() < 3) {
 		if (ped_t_st) {
 		    pedLast = (short)ped_t_st->AdcPedestal[i] / 100.0;
 		    rmsLast = (short)ped_t_st->AdcPedestalRMS[i] / 100.0;
-		    chiLast = ped_t_st->ChiSquare[i];
+		    //		    chiLast = ped_t_st->ChiSquare[i];
 		    statusLast = ped_t_st->Status[i];
 		}
 	    } else {

@@ -487,7 +487,7 @@ void StEmcOfflineCalibrationMaker::getADCs(Int_t det) //1==BTOW, 2==BPRS, 3=BSMD
 	    Int_t eta = rawHit[k]->eta(); 
 	    Int_t submodule = TMath::Abs(rawHit[k]->sub());
 	    Int_t ADC = rawHit[k]->adc();
-	    Int_t hitid;
+	    Int_t hitid = 0;
 	    Int_t stat=-9;	      
 	    if(det<2) stat = mEmcGeom->getId(module,eta,submodule,hitid);
 	    else if(det==2) stat=mSmdEGeom->getId(module,eta,submodule,hitid);
@@ -528,7 +528,7 @@ pair<Int_t, pair<Float_t,Float_t> > StEmcOfflineCalibrationMaker::getTrackTower(
   tower.second.second = 1000.;  
 
   StThreeVectorD momentum,position;
-  Double_t radius;
+  Double_t radius=0;
   if(det==1) radius = mEmcGeom->Radius();
   if(det==2) radius = mEmcGeom->Radius();
   if(det==3) radius = mSmdEGeom->Radius();
@@ -542,7 +542,7 @@ pair<Int_t, pair<Float_t,Float_t> > StEmcOfflineCalibrationMaker::getTrackTower(
 
   bool goodProjection = mEmcPosition->trackOnEmc(&position,&momentum,track,mField,radius);
   if(goodProjection){
-    Int_t m,e,s,id=0;
+    Int_t m=0,e=0,s=0,id=0;
     Float_t eta=position.pseudoRapidity();
     Float_t phi=position.phi();
     if(det==1){

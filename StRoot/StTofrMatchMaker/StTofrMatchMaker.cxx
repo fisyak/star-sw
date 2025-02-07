@@ -183,13 +183,13 @@ StTofrMatchMaker::StTofrMatchMaker(const Char_t *name): StMaker(name)
  , mPvpdAdc(mNPVPD,0)
  , mPvpdAdcLoRes( mNPVPD,0)
  , mPvpdTdc(mNPVPD,0)
+ , mPvpdToT(mNPVPD,0)
+ , mTofr5Tdc(mNTOFR5,0)
+ , mTofr5ToT(mNTOFR5,0) // ToT as adc
  , mStrobeTdcMin(mNPVPD,0)
  , mStrobeTdcMax(mNPVPD,0)
  , mPedTOFr(mNTOFR,0)
     //year 5
- , mPvpdToT(mNPVPD,0)
- , mTofr5Tdc(mNTOFR5,0)
- , mTofr5ToT(mNTOFR5,0) // ToT as adc
  , mHitCorr(mNValidTrays_Run8,(TH2D*)0)
  , mHitCorrModule(mNValidTrays_Run8,(TH2D*)0)
 {
@@ -1068,14 +1068,14 @@ Int_t StTofrMatchMaker::processEventYear2to4(){
       
       //--- dig out from the dedx and rich pid traits
       Float_t dedx(0.), cherang(0);
-      Int_t dedx_np(0), cherang_nph(0);
+      Int_t /* dedx_np(0),*/ cherang_nph(0);
       StSPtrVecTrackPidTraits& traits = theTrack->pidTraits();
       for (unsigned int it=0;it<traits.size();it++){
 	if (traits[it]->detector() == kTpcId){
 	  StDedxPidTraits *pid = dynamic_cast<StDedxPidTraits*>(traits[it]);
 	  if (pid && pid->method() ==kTruncatedMeanId){
 	    dedx    = pid->mean();
-	    dedx_np =  pid->numberOfPoints();
+	    //	    dedx_np =  pid->numberOfPoints();
 	  }
 	} else if  (traits[it]->detector() == kRichId){
 	  StRichPidTraits *pid = dynamic_cast<StRichPidTraits*>(traits[it]);
@@ -1689,14 +1689,14 @@ Int_t StTofrMatchMaker::processEventYear5(){
       
       //--- dig out from the dedx and rich pid traits
       Float_t dedx(0.), cherang(0);
-      Int_t dedx_np(0), cherang_nph(0);
+      Int_t /* dedx_np(0),*/ cherang_nph(0);
       StSPtrVecTrackPidTraits& traits = theTrack->pidTraits();
       for (unsigned int it=0;it<traits.size();it++){
 	if (traits[it]->detector() == kTpcId){
 	  StDedxPidTraits *pid = dynamic_cast<StDedxPidTraits*>(traits[it]);
 	  if (pid && pid->method() ==kTruncatedMeanId){
 	    dedx    = pid->mean();
-	    dedx_np =  pid->numberOfPoints();
+	    //	    dedx_np =  pid->numberOfPoints();
 	  }
 	} else if  (traits[it]->detector() == kRichId){
 	  StRichPidTraits *pid = dynamic_cast<StRichPidTraits*>(traits[it]);

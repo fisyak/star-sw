@@ -142,11 +142,11 @@ void StSvtClusterFinder::ClusterFinder()
 
 void StSvtClusterFinder::getClusterMembers(int& mAnode, int &mSeq)
   {                                                                        
-   int members, memCount , breakAn = 0, status;
+    int members, memCount , breakAn = 0; //, status;
    int mSeqStart,  mSeqLength, mSeqEnd;
    int newMem = 0;
-   int mRightFlagCounter = 0;
-   int mLeftFlagCounter = 0;
+//    int mRightFlagCounter = 0;
+//    int mLeftFlagCounter = 0;
 
    ++cluIndex;
    memCount = 0;
@@ -167,21 +167,21 @@ void StSvtClusterFinder::getClusterMembers(int& mAnode, int &mSeq)
 
       mContainer1[mem] = 0;   //zeroed after being used
 
-      status = hybdata->getListSequences(mAnode,mSequence,sequence);
+      /* status =*/ hybdata->getListSequences(mAnode,mSequence,sequence);
 
       mSeqStart = sequence[mSeq].startTimeBin;
       mSeqLength = sequence[mSeq].length;
       mSeqEnd =  mSeqStart + mSeqLength - 1;
 
-      mRightFlagCounter = getSeqOnRight(mAnode,mSeqStart, mSeqEnd, memCount, newMem);
-      mLeftFlagCounter  = getSeqOnLeft(mAnode,breakAn,mSeqStart, mSeqEnd, memCount, newMem);
+      /* mRightFlagCounter =*/ getSeqOnRight(mAnode,mSeqStart, mSeqEnd, memCount, newMem);
+      /* mLeftFlagCounter  =*/  getSeqOnLeft(mAnode,breakAn,mSeqStart, mSeqEnd, memCount, newMem);
 
       //      if((mem == members - 1) && (mRightFlagCounter != 0 || mLeftFlagCounter != 0))
      if((mem == members - 1) && newMem!=0)
        {     
         members = newMem;
-        mRightFlagCounter = 0;
-        mLeftFlagCounter = 0;
+//         mRightFlagCounter = 0;
+//         mLeftFlagCounter = 0;
 
        // we don't need to do this now since we  made each zero already
 	                                   
@@ -225,7 +225,7 @@ void StSvtClusterFinder::getClusterMembers(int& mAnode, int &mSeq)
 	 
 	 mSeq = -1;
 	 mAnode = breakAn;
-	 status = hybdata->getListSequences(mAnode,mSequence,sequence);
+	 /* status = */  hybdata->getListSequences(mAnode,mSequence,sequence);
 	 
        }
      }
@@ -236,13 +236,13 @@ void StSvtClusterFinder::getClusterMembers(int& mAnode, int &mSeq)
 
 int StSvtClusterFinder::getSeqOnRight(int mAnode, int mSeqStart, int mSeqEnd, int& memCount,int& newmem)
 {
- int mRightAnode = 0, mRightSequence = 0, rightFlagCounter = 0, status;
+  int mRightAnode = 0, mRightSequence = 0, rightFlagCounter = 0; //, status;
  int  mRightSeqStart, mRightSeqLength, mRightSeqEnd;
   
  mRightAnode = mAnode + 1;
  if(mRightAnode != 240)
    {
-    status = hybdata->getListSequences(mRightAnode,mRightSequence,sequence);
+     /* status = */ hybdata->getListSequences(mRightAnode,mRightSequence,sequence);
               
     for(int mRightSeq = 0; mRightSeq < mRightSequence ; mRightSeq++)
       {
@@ -310,14 +310,14 @@ int StSvtClusterFinder::getSeqOnRight(int mAnode, int mSeqStart, int mSeqEnd, in
 
 int StSvtClusterFinder::getSeqOnLeft(int mAnode, int& breakAn,int mSeqStart, int mSeqEnd, int& memCount,int& newmem)
 {
-  int mLeftAnode = 0, mLeftSequence = 0, leftFlagCounter = 0, status;
+  int mLeftAnode = 0, mLeftSequence = 0, leftFlagCounter = 0;//, status;
   int mLeftSeqStart, mLeftSeqLength, mLeftSeqEnd;
  
   mLeftAnode = mAnode - 1;
 
   if(mLeftAnode != -1)
     {
-     status = hybdata->getListSequences(mLeftAnode,mLeftSequence,sequence);
+      /* status = */ hybdata->getListSequences(mLeftAnode,mLeftSequence,sequence);
 
      for(int mLeftSeq = 0; mLeftSeq < mLeftSequence ; mLeftSeq++)
 	{

@@ -70,7 +70,7 @@ RanluxEngine::RanluxEngine(const RanluxEngine &p)
   mantissa_bit_24((HepFloat) ::pow(0.5,24.)),
   mantissa_bit_12((HepFloat) ::pow(0.5,12.))
 {
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.getSeed();
     setSeeds(&theSeed, p.luxury);
     for (HepInt i=0; i<24; ++i)
@@ -85,7 +85,7 @@ RanluxEngine::RanluxEngine(const RanluxEngine &p)
 
 RanluxEngine & RanluxEngine::operator = (const RanluxEngine &p)
 {
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.getSeed();
     setSeeds(&theSeed, p.luxury);
     for (HepInt i=0; i<24; ++i)

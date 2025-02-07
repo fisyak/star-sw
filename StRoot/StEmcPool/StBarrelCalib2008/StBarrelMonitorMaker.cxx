@@ -255,7 +255,7 @@ StBarrelMonitorMaker::unpackStTiles(int ibp){
     StSPtrVecEmcRawHit& rawHit=module->hits();
     // printf("HHH n=%d\n",rawHit.size());
     for(UInt_t k = 0; k < rawHit.size(); ++k){
-      int id;
+      int id = 0;
       
       Int_t m=rawHit[k]->module();
       Int_t e=rawHit[k]->eta();

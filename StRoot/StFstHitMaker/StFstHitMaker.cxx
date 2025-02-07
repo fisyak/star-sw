@@ -128,7 +128,7 @@ Int_t StFstHitMaker::Make()
 				newHit->setId(key);
 				newHit->setIdTruth(idTruth);
 
-                                int moduleIdx;
+                                int moduleIdx = -1;
 				if(disk == 1) // Disk 1
 					moduleIdx = wedge;
 				else if(disk == 2)// Disk 2

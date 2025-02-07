@@ -258,7 +258,7 @@
 #include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
 #include "StTpcRawData.h"
 #include "StThreeVectorF.hh"
-
+#define TRANS_TABLE_10TO8_HH
 #include "StDaqLib/TPC/trans_table.hh"
 #include "StRtsTable.h"
 #include "StDbUtilities/StTpcCoordinateTransform.hh"

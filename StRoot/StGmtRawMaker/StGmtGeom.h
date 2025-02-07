@@ -18,7 +18,7 @@
 #include <iostream>
 #include <algorithm>
 #include "TString.h"
-#include "StRoot/StGmtUtil/StGmtConsts.h"
+#include "StGmtConsts.h"
 
 
 //  StGmtGeom is a "singleton" class. Only one of it needs to exist in any
@@ -46,62 +46,18 @@ class StGmtGeom
 	//The set of geoIds IS NOT CONTINUOUS simply becuase strip 
 	//number is not continuous. On the R plane strips 280-399 
 	//are not implemented.
-// 	static Int_t encodeGeoId( Int_t module,
-// 				  Char_t layer, Int_t strip );
 	static Int_t encodeGeoId( Int_t rdo, Int_t arm, Int_t apv, Int_t channel );
-// 	static Int_t decodeGeoId( Int_t geoId, Short_t & module,
-// 				 Char_t & layer,
-// 				 Short_t & strip );
 	static Int_t decodeGeoId( Int_t geoId, Short_t & module, Int_t & layer, Short_t & strip );
 
-
-	//Geoname is human readable form of geoId
-	static std::string encodeGeoName( Int_t module, 
-					  Char_t layer, Int_t strip );
-// 	static Int_t decodeGeoName( const std::string & geoName, Short_t & module,
-// 				   Char_t & layer,
-// 				   Short_t & strip );
-	static Int_t decodeGeoName( const std::string & geoName, Short_t & module,
-				   Int_t & layer,
-				   Short_t & strip );
-	static std::string translateGeoIdToGeoName( Int_t geoId );
-	static Int_t translateGeoNameToGeoId( const std::string & geoName );
 
 	//Returns range upper and lower range of R or Phi valus depending on geoId.  
 	//NOTE phi values are only local - that is they are the same for each quadrant
 	//The ordinate, lowerSpan and upperSpan are all in centimeters or radians
-// 	static Int_t getPhysicalCoordinate( Int_t geoId, Short_t & module,
-// 					   Char_t & layer);
 	static Int_t getPhysicalCoordinate( Int_t geoId, Short_t & module,
 					   Int_t & layer);
-
-
-      
-	//Returns range upper and lower range of R or Phi valus depending on geoName.  
-	//NOTE phi values are only local - that is they are the same for each quadrant
-	//The ordinate, lowerSpan and upperSpan are all in centimeters or radians
-// 	static Int_t getPhysicalCoordinate( const std::string & geoName,
-// 					    Short_t & module,
-// 					    Char_t & layer);
-	static Int_t getPhysicalCoordinate( const std::string & geoName,
-					    Short_t & module,
-					    Int_t & layer);
-	
-
 	//Similar to getPhysicalCoordinate but returns phi in STAR coordinate system
-// 	static Int_t getGlobalPhysicalCoordinate( Int_t geoId, Short_t & module,
-// 					    Char_t & layer);
 	static Int_t getGlobalPhysicalCoordinate( Int_t geoId, Short_t & module,
 					    Int_t & layer);
-
-	//Similar to getPhysicalCoordinate but returns phi in STAR coordinate system
-// 	static Int_t getGlobalPhysicalCoordinate( const std::string & geoName,
-// 					    Short_t & module,
-// 					    Char_t & layer);
-	static Int_t getGlobalPhysicalCoordinate( const std::string & geoName,
-					    Short_t & module,
-					    Int_t & layer);
-
 	static Int_t getCoordNumFromElecCoord( Int_t rdo, Int_t arm, Int_t apv, Int_t channel);
 	static Double_t getPositionFromElecCoord( Int_t rdo, Int_t arm, Int_t apv, Int_t channel);
   
@@ -165,33 +121,15 @@ class StGmtGeom
 	//  Jan's necessary functions start here.  These were written by Jan,
 	//  modified slightly by me.
 	//  Jan: I have adjusted the dimensions to match GMT as build, September, 2011
-// 	static double rIn()	{ return kGmtRin; }
-// 	static double rMid()	{ return kGmtRmid; }
-// 	static double rOut()	{ return kGmtRout; }
 	static double sFirst()  { return kGmtSfirst; }
 	static double sLast()   { return kGmtSlast;}
 	static double pFirst()  { return kGmtPfirst; }
 	static double pLast()   { return kGmtPlast;}
 
-// 	static double radStrip_pitch() { return kGmtRadPitch; }		//  cm
-// 	static double phiStrip_pitch() { return  kGmtPhiAnglePitch; }	//  rad
 	static double xStrip_pitch() { return kGmtXPitch; }		//  cm
 	static double yStrip_pitch() { return  kGmtYPitch; }	//  cm
 
-// 	static double yLimit() { return kGmtRout; }
-
 	//  deadQuadEdge is in cm, local ref frame
-// 	static double deadQuadEdge()	{ return kGmtDeadQuadEdge; }
-
-// 	static double radStripOff() { return mRadStripOff; }
-// 	static double phiStripOff() { return mPhiStripOff; }
-// 	static double StripOff() { return mStripOff; }
-// 	static double PadOff() { return mPadOff; }
-
-// 	static  double phiQuadXaxis(int iquad);
-// 	static  bool inDisc( TVector3 rLab );	
-// 	static  bool belowFlat( TVector3 rLoc );
-// 	static  int  getQuad( double phiLab );
 	static  bool inModule( TVector3 rLab );	
 	
 	//  What follows are some functions to help with the
@@ -204,24 +142,10 @@ class StGmtGeom
 	static  int phi2LocalStripId( double rad, double phi,
 				      double *binFrac=0 );
 
-// 	static double rStrip_Phi_High(int rindex);//return upper phi range for an r strip
-// 	static double rStrip_Phi_Low(int rindex);//return lower phi range for an r strip
-// 	static double pHistrip_R_Low(int pindex);//return lower r range for a phi strip
-// 	static double pHistrip_R_High(int pindex);//return upper r range for a phi strip
 
     protected:
 	//  StGmtGeomData stores data on each ordinate associated with each
 	//  global ID used to index individual geometry elements.
-// 	struct StGmtGeomData
-// 	{
-// // 	    Bool_t isPhi;
-// // 	    Double_t ordinate;
-// // 	    Double_t lowerSpan;
-// // 	    Double_t upperSpan;
-// 	    Bool_t isX;
-// 	    Double_t localX;
-// 	    Double_t localY;
-// 	};
 	struct StGmtGeomData
 	{
 	    Int_t apv;         // apv number (arm channel 0-3 or 12-15)
@@ -239,20 +163,12 @@ class StGmtGeom
 	//  Various constants used in Jan's conversion functions.
 	static double mPi;
 	static double mHalfPi;
-// 	static double mRadStripOff;
-// 	static double mPhiStripOff;
-// 	static int mRadStripLOCId_number;
-// 	static int mPhiStripLOCId_number;
-// 	static double mStripOff;
-// 	static double mPadOff;
 
 
 	//  ---Private member variables---
-// 	static StGmtGeomData mStrips[ 2*kGmtNumStrips ];
 	static StGmtGeomData mStrips[ kGmtNumStripsPerModule ]; // 128 X strip and 128 Y strips
 
         // maps from (apv*128 + channel) to ((layer=='P')*kGmtNumStrips + stripID)
-// 	static Int_t mNaiveMapping[  kGmtNumChannels*kGmtApvsPerQuad ];
 	static Int_t mNaiveMapping[ kGmtNumStripsPerModule ];
 
         // reverse mapping: ((layer=='P')*kGmtNumStrips + stripID) to (apv*128 + channel)
@@ -265,7 +181,6 @@ class StGmtGeom
 
 	//  Calculates coordinates of strip in global coordinate system
         //  Units are in cm andradians, depending on the layer.
-//         static Int_t computeGlobalPhysicalCoordinate(Char_t & layer,
         static Int_t computeGlobalPhysicalCoordinate(Int_t & layer,
                                                      Short_t & strip);
 };
@@ -301,28 +216,6 @@ inline Int_t StGmtGeom::getOctant( Double_t phi )
   int i8=phiDeg/45;
   return i8;
 }
-
-// inline std::string StGmtGeom::getNaiveGeoNameFromElecCoord
-// (
-//     Int_t rdo, Int_t arm, Int_t apv, Int_t channel
-// )
-// {
-//     return
-// 	translateGeoIdToGeoName(
-// 	    getNaiveGeoIdFromElecCoord( rdo, arm, apv, channel )
-// 	);
-// }
-// 
-// inline Int_t StGmtGeom::getNaivePhysCoordFromElecCoord
-// (
-//     Int_t rdo, Int_t arm, Int_t apv, Int_t channel,
-//     Short_t & module, Char_t & layer
-// )
-// {
-//     return getPhysicalCoordinate(
-// 	getNaiveGeoIdFromElecCoord( rdo, arm, apv, channel ),
-// 	module, layer);
-// }
 
 #endif
 

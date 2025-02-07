@@ -291,8 +291,8 @@ TObject *StuDraw3DMuEvent::EmcHit(Int_t emcHitsSoftId, Color_t col,Style_t sty,S
    StEmcGeom *emcGeom =StEmcGeom::getEmcGeom(detId);
    if (emcGeom) {
       Int_t softId=emcHitsSoftId;
-      Float_t eta;
-      Float_t phi;
+      Float_t eta = 0;
+      Float_t phi = 0;
       emcGeom->getEtaPhi(softId,eta,phi);
       Float_t etaStep = 1.0/emcGeom->NEta();
       Float_t phiStep = TMath::Pi()/60; 

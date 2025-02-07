@@ -250,7 +250,7 @@ Int_t StFgtGeneralBase::fillFromStEvent(StFgtCollection* fgtCollectionPtr)
 	    Double_t posPhi=(*hitIter)->getPositionPhi();
 
 	    Double_t discZ=getLocDiscZ(disc);
-	    float tmpX, tmpY,tmpZ,tmpP,tmpR;
+	    float /* tmpX, tmpY,*/ tmpZ,tmpP,tmpR;
 	    tmpR=posR;
 	    tmpP=posPhi;
 	    tmpZ=discZ;
@@ -357,7 +357,7 @@ Int_t StFgtGeneralBase::fillFromStEvent(StFgtCollection* fgtCollectionPtr)
 		      {
 			//			     cout <<"this strip geo ID ("<<geoId<<") supposedly belongs to cluster with geo " << (*pClusters[disc])[mapGeoId2Cluster[geoId] ].centralStripGeoId <<" int index: " << mapGeoId2Cluster[geoId] <<endl;
 			//			     cout <<" strip disc: " << disc <<" cluster disc: " << (*pClusters[disc])[mapGeoId2Cluster[geoId] ].disc <<  " index: " << (pStrips[disc*4+quad].size()-1) << " quad: " << quad <<endl;
-			if(mapGeoId2Cluster[geoId]>=(*pClusters[disc]).size())
+			if(mapGeoId2Cluster[geoId]>=(int)(*pClusters[disc]).size())
 			  {
 			    //				 cout <<" bad read5" <<endl;
 			    //				 cout <<"geo id: " << geoId << " map: " << mapGeoId2Cluster[geoId] <<" size:" << (*pClusters[disc]).size() <<" disc: " << disc <<endl;
@@ -396,7 +396,7 @@ Int_t StFgtGeneralBase::fillFromStEvent(StFgtCollection* fgtCollectionPtr)
 	    Double_t maxChargeInt=it->maxAdc;
 	    //		 cout <<"center strip" << centerStripId<<" idx: " << iDx << " quad: " << it->quad <<endl;
 	    //		 cout <<" size:" <<pStrips[iDx*4+it->quad].size()<<endl;
-	    if(centerStripId>=pStrips[iDx*4+it->quad].size())
+	    if(centerStripId>=(int)pStrips[iDx*4+it->quad].size())
 	      {
 		cout <<"bad read5" <<endl;
 		continue;
@@ -423,7 +423,7 @@ Int_t StFgtGeneralBase::fillFromStEvent(StFgtCollection* fgtCollectionPtr)
 	    //and go up
 	    stripCounter=(centerStripId+1);
 	    //should be strictly smaller
-	    while(stripCounter<(pStrips[iDx*4+it->quad]).size())
+	    while(stripCounter<(int)(pStrips[iDx*4+it->quad]).size())
 	      {
 		Int_t seedType=(pStrips[iDx*4+it->quad])[stripCounter].seedType;
 		if(!((seedType==kFgtClusterPart)||(seedType==kFgtClusterEndUp)||(seedType==kFgtClusterEndDown)||(seedType==kFgtSeedType1)||(seedType==kFgtSeedType2)||(seedType==kFgtSeedType3)))
@@ -454,6 +454,7 @@ Int_t StFgtGeneralBase::fillFromStEvent(StFgtCollection* fgtCollectionPtr)
     return ierr;
 
   }
+  return 0;
 }
 
 Int_t StFgtGeneralBase::fillFromMuDst(StFgtCollection& fgtCollection)
@@ -489,7 +490,7 @@ Int_t StFgtGeneralBase::fillFromMuDst(StFgtCollection& fgtCollection)
 	      }
 	  }
 	const StThreeVectorF& v = event->primaryVertexPosition();
-	StEventInfo &info=event->eventInfo();
+	//	StEventInfo &info=event->eventInfo();
 	int nPrimV=muDst->numberOfPrimaryVertices();
 	//	cout <<"nPrimV: " << nPrimV <<" vertex num: " << mVertexNumber << " useEHT: " << mUseEHTTrigs << " have EHT? " << haveEHTTrig <<endl;
 
@@ -543,8 +544,8 @@ Int_t StFgtGeneralBase::fillFromMuDst(StFgtCollection& fgtCollection)
 
 	ierr = kStOk;
 	Int_t nAssoc=fgtStripAssoc->GetEntriesFast();
-	Int_t nClus=fgtClusters->GetEntriesFast();
-	Int_t nStrips=fgtStrips->GetEntriesFast();
+	//	Int_t nClus=fgtClusters->GetEntriesFast();
+	//	Int_t nStrips=fgtStrips->GetEntriesFast();
 	Int_t nAdc=fgtAdc->GetEntriesFast();
 	//	 cout <<"there are " << nAssoc <<" associations" <<endl;
 	Int_t oldClusIdx=-1;
@@ -653,7 +654,7 @@ void StFgtGeneralBase::checkNumPulses()
 {
 
   Char_t layer;
-  Short_t quad, disc, strip;
+  Short_t quad, disc;//, strip;
   Double_t ordinate, lowerSpan, upperSpan;
   Int_t iValCluR[4];
   Int_t iValCluP[4];
@@ -688,7 +689,7 @@ void StFgtGeneralBase::checkNumPulses()
 	  int iValPulseR=0;
 	  int iValChargeR=0;
 	  Char_t layer;
-	  Short_t quad, disc, strip;
+	  Short_t quad, disc;//, strip;
 	  Double_t ordinate, lowerSpan, upperSpan;
 	  for(vector<generalStrip>::iterator it=pStrips[iDx*4+iQ].begin();it!=pStrips[iDx*4+iQ].end();it++)
 	    {

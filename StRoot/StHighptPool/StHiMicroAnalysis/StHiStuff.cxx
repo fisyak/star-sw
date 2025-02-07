@@ -388,8 +388,8 @@ StHiStuff::trackLoop()
 
     Int_t sector = findSector(phiGl,firstSector);
 
-    phiGlDeg = (phiGlDeg<-165) ? (phiGlDeg += 360) : phiGlDeg;
-    phiPrDeg = (phiPrDeg<-165) ? (phiPrDeg += 360) : phiPrDeg;
+    if (phiGlDeg<-165) phiGlDeg += 360;
+    if (phiPrDeg<-165) phiPrDeg += 360;
 
     //Float_t exitZ = vtxZ+200*TMath::Tan(track->DipAnglePr());
 

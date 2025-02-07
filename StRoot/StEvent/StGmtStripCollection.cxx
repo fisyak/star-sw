@@ -33,7 +33,7 @@ void StGmtStripCollection::removeFlagged(){
         
         // iterators
         StSPtrVecGmtStripIterator srcIter;
-        StSPtrVecGmtStripIterator lastCopied=mStripVec.begin()-1;
+	//        StSPtrVecGmtStripIterator lastCopied=mStripVec.begin()-1;
         
         // copy all valid events
         for( srcIter = mStripVec.begin(); srcIter != mStripVec.end(); ++srcIter )
@@ -156,5 +156,13 @@ StGmtStrip* StGmtStripCollection::getSortedStrip( Int_t Id ){  // using geoId no
     }
     return stripPtr;
 }
+ostream&  operator<<(ostream& os, const StGmtStripCollection& v)
+{
+  for (auto Iter = v.getStripVec().begin(); Iter!= v.getStripVec().end(); ++Iter) {
+    os << *(*Iter) << endl;
+  }
+  return os;
+}
+void   StGmtStripCollection::Print(Option_t *option) const {cout << *this << endl;}
 
 ClassImp(StGmtStripCollection)

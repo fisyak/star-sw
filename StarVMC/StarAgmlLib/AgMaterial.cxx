@@ -379,6 +379,7 @@ AgMaterial AgMaterial::CopyMaterial( const Char_t *name )
   cout << Form("  In module %s volume %s", modname.Data(), volname.Data() ) << endl;
 
   assert(0); // should never get here
+  return 0;
 }
 
 // ==============================================================================================================

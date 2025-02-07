@@ -94,7 +94,7 @@ StFgtClustFindMaker::Make(){
     int nRCl=findClust1D(ssMk->mRadAdcList[iDisk],mRadClustList[iDisk]);
     int nPCl=findClust1D(ssMk->mPhiAdcList[iDisk],mPhiClustList[iDisk]);
 
-    printf("disk=%d  %d -->%d   %d -->%d \n",iDisk+1,ssMk->mRadAdcList[iDisk].size(),nRCl,ssMk->mPhiAdcList[iDisk].size(),nPCl);
+    printf("disk=%d  %d -->%d   %d -->%d \n",iDisk+1,(int)ssMk->mRadAdcList[iDisk].size(),nRCl,(int)ssMk->mPhiAdcList[iDisk].size(),nPCl);
     
     UInt_t i;
     int j;
@@ -252,7 +252,7 @@ StFgtClustFindMaker::findClust1D(vector<fgt_strip> &sL, vector<fgt_cluster1D> &c
 	  cl.fBin_mean=sumx/sum;
 	  cl.totAmpl=sum;
 	  cl.peakAmpl=peakA;
-	  printf("add cl=%d  fBin=%.3f, sum=%.1f peakA=%.1f width=%d\n",clL.size(),cl.fBin_mean,sum,peakA,nbin);
+	  printf("add cl=%d  fBin=%.3f, sum=%.1f peakA=%.1f width=%d\n",(int)clL.size(),cl.fBin_mean,sum,peakA,nbin);
 	  clL.push_back(cl);
         }
       }

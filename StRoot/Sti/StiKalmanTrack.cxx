@@ -701,14 +701,15 @@ int StiKalmanTrack::initialize(const std::vector<StiHit*> &hits)
   //cout << "StiKalmanTrack::initialize() -I- Started"<<endl;
   reset();
   //StiKalmanTrackNode * node  = 0;
-  const StiDetector* detector=0;
+  //  const StiDetector* detector=0;
   UInt_t nhits = hits.size();
   setSeedHitCount(nhits);
   for (UInt_t ihit=0;ihit<nhits;ihit++)
   {
     StiHit *hit = hits[ihit];
-    detector = hit->detector();
-    assert(detector);
+    //    detector = hit->detector();
+    //    assert(detector);
+    assert(hit->detector());
     StiKalmanTrackNode * n = trackNodeFactory->getInstance();
     n->initialize(hit);
     add(n,kOutsideIn);
@@ -724,14 +725,15 @@ int StiKalmanTrack::initialize0(const std::vector<StiHit*> &hits, StiNodePars *f
 {
   reset();
   //StiKalmanTrackNode * node  = 0;
-  const StiDetector* detector=0;
+  //  const StiDetector* detector=0;
   UInt_t nhits = hits.size();
   setSeedHitCount(nhits);
 
   for (UInt_t ihit = 0; ihit < nhits; ihit++)  {
     StiHit *hit = hits[ihit];
-    detector = hit->detector();
-    assert(detector);
+    //    detector = hit->detector();
+    //    assert(detector);
+    assert( hit->detector() );
     StiKalmanTrackNode * n = trackNodeFactory->getInstance();
     n->initialize(hit);
     add(n,kOutsideIn);

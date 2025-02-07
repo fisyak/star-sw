@@ -441,7 +441,7 @@ void StFcsTriggerSimMaker::runStage2(link_t ecal[], link_t hcal[], link_t pres[]
         printf("Event#=%3d STG2to3 ns=%1d i=%d j=%2d %s dat=%x sim=%x emu=%x",
                iev,geo.ns,i,j,s2bit[i][j],(dta[i]>>j)&1,(sim[i]>>j)&1,(emu[i]>>j)&1);
         if(i==0 && j<7){
-          int maxr=0, maxc=0, max=0;
+          unsigned int maxr=0, maxc=0, max=0;
           for(int r=0; r<15; r++){
             for(int c=0; c<9; c++){
               if(max < mTrgSim->esum[geo.ns][r][c]) {maxr=r; maxc=c; max=mTrgSim->esum[geo.ns][r][c];}
@@ -562,7 +562,7 @@ void StFcsTriggerSimMaker::print4B4(){
 		sxyz[ns][i][j] = sf * exyz[ns][i][j];
 		//search for closest hcal 4x4
 		float dmin=999.0;
-		int k,l;
+		int k = 0,l = 0;
 		for(int ii=0; ii<HX2B2-1; ii++){
 		    for(int jj=0; jj<HY2B2-1; jj++){
 			StThreeVectorF diff = sxyz[ns][i][j]-hxyz[ns][ii][jj];
@@ -590,7 +590,7 @@ void StFcsTriggerSimMaker::print4B4(){
 
 		//hcal 2x2
 		float dmin2=999.0;
-                int kk,ll;
+                int kk = 0,ll = 0;
 		for(int ii=0; ii<HX2B2; ii++){
 		    for(int jj=0; jj<HY2B2; jj++){
 			StThreeVectorF diff = sxyz[ns][i][j]-Hxyz[ns][ii][jj];

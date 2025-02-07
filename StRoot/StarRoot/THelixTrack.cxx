@@ -924,7 +924,7 @@ void THelixTrack::TestMtx()
 {
   enum {kH=0,kA,kC,kZ,kL};
 const static char* T="HACZL";
-  double Dir[4][3],X[4][3]={{0}},Rho[2],step,F[5][5],Del,Dif,Fi[5][5];
+ double Dir[4][3],X[4][3]={{0}},Rho[2],step,F[5][5],Del=0,Dif=0,Fi[5][5];
   double maxEps = 0;  
   int nErr=0;
   int iR = 10+ gRandom->Rndm()*100;
@@ -1284,7 +1284,7 @@ void THelixTrack::Test5()
   };
   for (int ip=0;ip<3;ip++) {
     THelixTrack th1(pars[ip][0],pars[ip][0]+3,pars[ip][0][6]); 
-    THelixTrack th2(pars[ip][1],pars[ip][1]+3,pars[ip][1][8]); 
+    THelixTrack th2(pars[ip][1],pars[ip][1]+3,pars[ip][1][6]); 
     th1.Move(-50);
     th2.Move(-50);
     double s2;

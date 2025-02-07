@@ -374,7 +374,7 @@ inline Int_t StEmcGeom::getBin(const Float_t phi, const Float_t eta, Int_t &m, I
 // _____________________________________________________________________
 inline Int_t StEmcGeom::getId(const Float_t phi, const Float_t eta, Int_t &softId) const
 {
-	Int_t m,e,s;
+	Int_t m,e,s=-1;
 	if(getBin(phi,eta,m,e,s) == 0 && s != -1) {
 		return getId(m,e,s,softId);
 	}
@@ -394,7 +394,7 @@ inline Int_t StEmcGeom::getZlYl(const Int_t softId, Float_t &zl, Float_t &yl) co
 // _____________________________________________________________________
 inline void StEmcGeom::getXYZ(const Int_t m, const Int_t e, const Int_t s, Float_t &x,Float_t &y,Float_t &z) const
 {
-  Float_t phi;
+  Float_t phi = 0;
   if(m<=60) z = mZlocal[e-1];
   else      z =-mZlocal[e-1];
   getPhi(m,s,phi);

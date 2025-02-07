@@ -2,14 +2,14 @@ void runGmtTree(const Char_t *input, const Char_t *output=0) {
   gROOT->LoadMacro("bfc.C");
   Load();
   TString Input(input);
-  TString Chain("in,StEvent,mysql,libPhysics,db,StarMagField,MagF,svtDb,ssdDb,GmtAligner,nodefault");
+  TString Chain("in,StEvent,mysql,libPhysics,db,StarMagField,MagF,svtDb,ssdDb,GmtMatch,nodefault");
   if (Input.Contains("rcf") || Input.Contains("gstar")) Chain += ",y2005e,simu";
   cout << "Chain used:\t" << Chain << endl;
   bfc(-1,Chain.Data(),input,0,output);
   StMaker *db = chain->Maker("db");
   if (db) db->SetDebug(1);
-  StGmtAligner *mtree  = (StGmtAligner *) chain->Maker("GmtAligner");
-  if (! mtree) *mtree  = new StGmtAligner();
+  StGmtMatchMaker *mtree  = (StGmtMatchMaker *) chain->Maker("StGmtMatchMaker");
+  if (! mtree) *mtree  = new StGmtMatchMaker();
   if (! mtree) return;
 #if 0
   mtree->SetMinNoHits(2);

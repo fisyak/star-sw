@@ -94,7 +94,6 @@
 #include "StuProbabilityPidAlgorithm.h"
 
 #include "StEventUtilities/BetheBlochFunction.hh"
-#include "StEventUtilities/MaxllBoltz.hh"
 #include "StEventUtilities/Linear.hh"
 
 #include "StEventUtilities/StuFtpcRefMult.hh"

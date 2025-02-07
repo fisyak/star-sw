@@ -1,7 +1,7 @@
 /*
   root.exe 'bfc.C(-1,"gmtAligner,tpcDb,mysql,nodefault,quiet")' GmtChain.C+
  */
-#include "StGmtAligner/StGmtQAPlotter.h"
+#include "StGmtMatchMaker/StGmtQAPlotter.h"
 #include <TChain.h>
 #include <TSystemDirectory.h>
 #include <TList.h>

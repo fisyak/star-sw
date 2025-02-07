@@ -168,12 +168,7 @@ void AliHLTTPCCAGlobalPerformance::CheckMCTracks()
     }
     // ---
     if ( mc.NHits() >= /*PParameters::MinimumHitsForMCTrack*/10 ){
-//    if ( mc.NMCPoints() >= /*PParameters::MinimumMCPointsForMCTrack*/15 ) {
-//    if ( mc.NMCRows() >= PParameters::MinimumMCPointsForMCTrack ) {
-//    if ( mc.NMCRows() >= /*PParameters::MinimumMCPointsForMCTrack*/15 ) {
       mcTrackData.SetAsReconstructable();
-//      std::cout<<" ___ imc: "<<imc<<";   nRows: "<<mc.NMCRows()<<";   nHits: "<<mc.NHits()<<";   nPoints: "<<mc.NMCPoints()<<" - set us reconstructable\n";
-//    }
 
       if ( mc.NMCRows() >= 30 && mc.NHits() <= 72 ) {
         mcTrackData.SetAsReconstructable30();
@@ -190,20 +185,15 @@ void AliHLTTPCCAGlobalPerformance::CheckMCTracks()
         mcTrackData.SetAsNonReconstructable_l30();
         mcTrackData.SetAsNonReconstructable_l30_r10();
       }
-//    else std::cout<<" ___ imc: "<<imc<<";   nRows: "<<mc.NMCRows()<<";   nHits: "<<mc.NHits()<<";   nPoints: "<<mc.NMCPoints()<<" - skip\n";
     // ---
       mc.SetSet( 1 );
       mcTrackData.SetSet( 1 );
     // ---
-//      if( mc.NMCPoints() <= 20 ) {
       if( mc.NHits() <= 20 ) {
-//      if( mc.NMCRows() >= 15 && mc.NMCRows() <= 20 ) {
 	  mc.SetSet1( 1 );
 	  mcTrackData.SetSet1( 1 );
       }
-//      if( mc.NMCPoints() > 20 ) {
       if( mc.NHits() > 20 ) {
-//    if( mc.NMCRows() > 20 ) {
 	  mc.SetSet1( 2 );
 	  mcTrackData.SetSet1( 2 );
       }
@@ -213,7 +203,6 @@ void AliHLTTPCCAGlobalPerformance::CheckMCTracks()
         if ( mc.P() >= AliHLTTPCCAParameters::RefThreshold ) {
           mc.SetSet( 2 );
           mcTrackData.SetSet( 2 );
-//        if ( mc.NMCRows() >= fTracker->Slice(0).Param().NRows() ) {
           if ( tmpnr >= fTracker->Slice(0).Param().NRows() ) {
             mc.SetSet( 3 );
             mcTrackData.SetSet( 3 );
@@ -233,7 +222,6 @@ void AliHLTTPCCAGlobalPerformance::CheckMCTracks()
             mc.SetSet30( 2 );
             mcTrackData.SetSet30( 2 );
             if ( mc.NMCRows() >= fTracker->Slice(0).Param().NRows() ) {
-//        if ( tmpnr >= fTracker->Slice(0).Param().NRows() ) {
               mc.SetSet30( 3 );
               mcTrackData.SetSet30( 3 );
             }
@@ -250,18 +238,14 @@ void AliHLTTPCCAGlobalPerformance::CheckMCTracks()
       if ( mc.NMCRows() < 30 && mc.NHits() <= 72 ) {
         if ( mc.P() >= AliHLTTPCCAParameters::ExtraThreshold ) {
           if ( mc.P() >= AliHLTTPCCAParameters::RefThreshold ) {
-//          mc.SetSet_l30( 2 );
             mcTrackData.SetSet_l30( 2 );
             mcTrackData.SetSet_l30_r10( 2 );
             if ( mc.NMCRows() >= fTracker->Slice(0).Param().NRows() ) {
-//        if ( tmpnr >= fTracker->Slice(0).Param().NRows() ) {
-//            mc.SetSet30( 3 );
               mcTrackData.SetSet_l30( 3 );
               mcTrackData.SetSet_l30_r10( 3 );
             }
           }
           else{
-//          mc.SetSet30( 1 );
             mcTrackData.SetSet_l30( 1 );
             mcTrackData.SetSet_l30_r10( 1 );
           }
@@ -353,9 +337,6 @@ void AliHLTTPCCAGlobalPerformance::MatchTracks()
 //    std::cout<<"> itr: "<<itr<<";   nhits: "<<nhits<<";   lmax: "<<lmax<<";   traLabels: "<<traLabels<<";   traPurity: "<<traPurity<<"\n";
     if( traLabels < 0 ) { traPurity = 0; continue; }
     // ---
-//    std::cout<<" ---> itr: "<<itr<<";   nhits: "<<nhits<<";   lmax: "<<lmax<<";   traPurity: "<<traPurity<<";   traLabels: "<<traLabels<<"\n";
-//    const AliHLTTPCCAMCTrack &mct = (*fMCTracks)[traLabels];
-//    std::cout<<" -----> MC Track: PDG: "<<mct.PDG()<<";   NMCRows: "<<mct.NMCRows()<<";   NMCPoints: "<<mct.NMCPoints()<<"\n";
     if ( lb ) delete[] lb;
 
     recoData[itr].SetMCTrack(traLabels, traPurity, nhits);
@@ -365,23 +346,6 @@ void AliHLTTPCCAGlobalPerformance::MatchTracks()
     if( (loopers_map.find(traLabels)->second == 1) && !tCA.IsMerged() && mcData[traLabels].IsReconstructed() ) {
       allMT++;
     }
-//    if( loopers_map.find(traLabels)->second == 2 ) {
-//	allMT--;
-//	loopers_map.find(traLabels)->second++;
-//    }
-
-//    if( (loopers_map.find(traLabels)->second == 0) && tCA.IsMerged() ) {
-//	allMT++;
-//	mergedMT++;
-//    }
-//    std::cout<<" - itr: "<<itr<<" - set MC track: "<<traLabels<<";   with purity: "<<traPurity<<"\n";
-//     TParticlePDG* particlePDG = TDatabasePDG::Instance()->GetParticle((*fMCTracks)[traLabels].PDG());
-//     Double_t qMC = (particlePDG) ? particlePDG->Charge() :1;
-//     int qMCi = qMC>=0?1:-1;
-//     int qTr = tCA.Param().QPt()>=0?1:-1;
-//
-//     if(qMCi==-qTr)
-//    if ( recoData[itr].IsReco(PParameters::MinTrackPurity, PParameters::MinimumHitsForRecoTrack) ) {
     if ( mcData[traLabels].IsReconstructable30() && recoData[itr].IsReco(purCut,15) ) {
       mcData[traLabels].AddReconstructed30();
       recoData[itr].SetReconstructed();
@@ -390,14 +354,10 @@ void AliHLTTPCCAGlobalPerformance::MatchTracks()
 
     if ( mcData[traLabels].IsReconstructable_l30() && recoData[itr].IsReco(purCut,15) ) {
       mcData[traLabels].AddReconstructed_l30();
-//      recoData[itr].SetReconstructed();
-//      if( mcData[traLabels].GetNClones_l30() ) recoData[itr].SetClone();
     }
 
     if ( mcData[traLabels].IsReconstructable_l30_r10() && recoData[itr].IsReco(purCut,10) ) {
       mcData[traLabels].AddReconstructed_l30_r10();
-//      recoData[itr].SetReconstructed();
-//      if( mcData[traLabels].GetNClones_l30() ) recoData[itr].SetClone();
     }
 
     if ( mcData[traLabels].IsReconstructable_mc4_15_r4() && recoData[itr].IsReco(purCut,4) ) {
@@ -412,11 +372,6 @@ void AliHLTTPCCAGlobalPerformance::MatchTracks()
 	mcData[traLabels].AddReconstructed1();
     }
     if ( recoData[itr].IsReco(/*PParameters::MinTrackPurity, PParameters::MinimumHitsForRecoTrack*/purCut,10) ) {
-//	if( !mcData[traLabels].IsReconstructed() && !tCA.IsMerged() ){
-//	    dzds_map.insert( pair<int, float>(traLabels, tCA.DzDs0()) );
-//	    qpt_map.insert( pair<int, float>(traLabels, tCA.QPt0()) );
-//	    loopers_map.insert( pair<int, int>(traLabels, 1) );
-//	}
 	if( !mcData[traLabels].IsReconstructed() && tCA.IsMerged() ){
 	    allMT++;
 	    mergedMT++;
@@ -424,68 +379,33 @@ void AliHLTTPCCAGlobalPerformance::MatchTracks()
 	mcData[traLabels].AddReconstructed();
 	tCA1.SetReco( 1 );
 if( mcData[traLabels].NReconstructed() == 1 ) {
-//    AliHLTTPCCAGBTrack &tCA1 = fTracker->Tracks()[itr];
-//    tCA1.SetFirstMC(traLabels);
     mcData[traLabels].SetFirstTrackID(itr);
 }
 if( (mcData[traLabels].NReconstructed() > 1) && !(recoData[itr].IsGhost(PParameters::MinTrackPurity)) ) {
     AliHLTTPCCAGBTrack &tCA1 = fTracker->Tracks()[itr];
     tCA1.SetClone();
-//#ifdef DRAW_GLOBALPERF
-//  if ( AliHLTTPCCADisplay::Instance().DrawType() != 3 ) return;
-//
-//  // AliHLTTPCCAPerformance::Instance().Init();
-//  AliHLTTPCCAPerformance& gbPerfo = AliHLTTPCCAPerformance::Instance();
-//  AliHLTTPCCADisplay &disp = AliHLTTPCCADisplay::Instance();
-//  disp.ClearView();
-//  disp.SetGB( gbPerfo.GetTracker() );
-//  disp.SetTPC( fTracker->Slices()[0].Param() );
-//  disp.SetTPCView();
-//  disp.DrawTPC();
-//  disp.SpecDrawRecoTrackGlobal( mcData[traLabels].GetFirstTrackID(), kBlack, 0.3 );
-//  disp.SpecDrawRecoTrackGlobal( itr, kRed, 0.1 );
-//  disp.SaveCanvasToFile( "DrawClones.pdf" );
-//  disp.Ask();
-//#endif
 }
-//	std::cout<<"... itr: "<<itr<<";   mc: "<<traLabels<<";   p: "<<(*fMCTracks)[traLabels].P()<<"\n";
     }
-//    std::cout<<"_____ map size: "<<dzds_map.size()<<"\n";
-//    std::cout<<">itr: "<<itr<<";   nhits: "<<nhits<<";   traLabels: "<<traLabels<<";   traPurity: "<<traPurity<<"\n";
     if ( recoData[itr].IsReco(PParameters::MinTrackPurity, PParameters::MinimumHitsForRecoTrack) ) {
-//	std::cout<<">>> Reconstructed\n";
-//	std::cout<<" ___ imc: "<<traLabels<<";   nRows: "<<(*fMCTracks)[traLabels].NMCRows()<<";   nHits: "<<(*fMCTracks)[traLabels].NHits()<<";   nPoints: "<<(*fMCTracks)[traLabels].NMCPoints()<<"\n";
 	rst++;
     }
   } // for iReco
-//  std::cout<<" >>> mergedMT: "<<mergedMT<<";   allMT: "<<allMT<<"\n";
-//  std::cout<<" --- global - nRecoT: "<<rst<<"\n";
   if( allMT == 0 ) allMT = 1;
-//  std::cout<<" | Merging efficiency:   | "<<100 * mergedMT / allMT<<"% | "<<mergedMT<<" / "<<allMT<<"\n";
-//  std::cout<<"\n <><><> reconstructed total: "<<rst<<"\n\n";
 } // void AliHLTTPCCAGlobalPerformance::MatchTracks()
 
 
 void AliHLTTPCCAGlobalPerformance::EfficiencyPerformance( )
 {
-//  std::cout<<" - EfficiencyPerformance\n";
   for ( int iRTr = 0; iRTr < nRecoTracks; iRTr++ ) {
 #if 0
-//    if (  recoData[iRTr].IsGhost(PParameters::MinTrackPurity) )
     if (  !recoData[iRTr].IsReco(0,15) )
       {
 	const AliHLTTPCCAGBTrack &tCA = fTracker->Tracks()[iRTr];
 	int mct = tCA.GetFirstMC();
-//	if( mct < 0 ) continue;
-//	if( mcData[mct].IsReconstructable() )
 	if( mct < 0 )
 	  fEff.ghosts++;
       }
     else
-//      if (  !recoData[iRTr].IsGhost(PParameters::MinTrackPurity) ) {
-      /*if( recoData[iRTr].GetNHits() > 30 )*/ fEff.IncA( recoData[iRTr].GetNHits(), recoData[iRTr].GetPurity() );
-//	  std::cout<<" --- iRTr: "<<iRTr<<";   Purity: "<<recoData[iRTr].GetPurity()<<"\n";
-//      }
 #else
   const AliHLTTPCCAGBTrack &tCA = fTracker->Tracks()[iRTr];
   int mct = tCA.GetFirstMC();
@@ -499,41 +419,24 @@ void AliHLTTPCCAGlobalPerformance::EfficiencyPerformance( )
 #endif
   }
 
-//  std::cout<<" --- set nRecoTracks: "<<nRecoTracks<<"\n";
   fEff.SetNRecoTracks( nRecoTracks );
-//  std::cout<<" --- set fEff.ghosts: "<<fEff.ghosts<<"\n";
-//  std::cout<<" --- nMCTracks: "<<nMCTracks<<"\n";
   int rbl(0), rtd(0), rr(0);
 
   int notFound(0), wrongFound(0), found(0);
   for ( int iMCTr = 0; iMCTr < nMCTracks; iMCTr++ ) {
     AliHLTTPCCAPerformanceMCTrackData &mc = mcData[iMCTr];
-//    if( mc.IsReconstructable() || mc.IsReconstructed() )
-//      std::cout<<" ----- iMCTr: "<<iMCTr<<";   reconstractable: "<<mc.IsReconstructable()<<";   reconstructed: "<<mc.IsReconstructed()<<"\n";
     if( mc.IsReconstructable() && !mc.IsReconstructed() ) notFound++;
     if( !mc.IsReconstructable() && mc.IsReconstructed() ) wrongFound++;
     if( mc.IsReconstructable() && mc.IsReconstructed() ) found++;
     if( mc.IsReconstructable() ) rbl++;
     if( mc.IsReconstructed() ) rtd++;
-//    if( mc.IsReconstructed() ) std::cout<<" ----- iMCTr: "<<iMCTr<<" - reconstructed\n";
     if( mc.IsReconstructable() && mc.IsReconstructed() ) rr++;
     if ( !mc.IsReconstructable() ) continue;
     const bool reco = mc.IsReconstructed();
     const int clones = mc.GetNClones();
     // ---
-    //    const int clones1 = mc.GetNClones1();
     const bool reco11 = mc.IsReconstructed1();
     // ---
-    //    const int clones4 = mc.GetNClones_mc4_15_r4();
-    //    const bool reco4 = mc.IsReconstructed_mc4_15_r4();
-
-//     const bool reco_all4 = mc.IsReconstructed_mc4_15_r4() || mc.IsReconstructed();
-//     const int clones_all4 = mc.GetNClones_all4();
-    // ---
-//    std::cout<<" --- iMCTr: "<<iMCTr<<";   reco: "<<reco<<";   clones: "<<clones<<";   clones1: "<<clones1<<";   reco11: "<<reco11<<"\n";
-//    int clones = 0;
-//    if( mc.GetNClones() ) clones = 1;
-//    std::cout<<" >>> iMCTr: "<<iMCTr<<";   IsReconstructed: "<<mc.IsReconstructed()<<";   NClones: "<<mc.GetNClones()<<"\n";
 
     if ( mc.GetSet() == 0){ // rest, out track
       fEff.Inc(reco,clones,"rest");
@@ -660,17 +563,6 @@ void AliHLTTPCCAGlobalPerformance::EfficiencyPerformance( )
       fEff.Inc(reco4,clones4,"total_4");
     }
   }
-  // ---
-//  std::cout<<" ------- notFound: "<<notFound<<";   wrongFound: "<<wrongFound<<";   found: "<<found<<"\n";
-
-//  std::cout<<" --- reconstractable: "<<rbl<<";   reconstructed: "<<rtd<<";   recrec: "<<rr<<"\n";
-  // ---
-//  for ( int iRTr = 0; iRTr < nRecoTracks; iRTr++ ) {
-//      std::cout<<" > Track: "<<iRTr<<";   isReco: "<<recoData[iRTr].IsReco()<<";   isGhost: "<<recoData[iRTr].IsGhost(PParameters::MinTrackPurity)<<";   Purity: "<<recoData[iRTr].GetPurity()<<"\n";
-//      std::cout<<" _ nHits: "<<recoData[iRTr].GetNHits()<<"\n";
-//      recoData[iRTr].Print();
-//  }
-  // ---
 
   AliHLTTPCCATrackPerformanceBase::EfficiencyPerformance();
 } // void AliHLTTPCCAGlobalPerformance::EfficiencyPerformance( )
@@ -741,43 +633,18 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
   int recoTrC1(0), recoTrC2(0), ghostTr(0);
   for(int iRTr=0; iRTr < nRecoTracks; iRTr++){  // TODO: make common
     AliHLTTPCCAPerformanceRecoTrackData &recoD = recoData[iRTr];
-//std::cout<<"   iRTr: "<<iRTr<<";   reco: "<<recoD.IsReconstructed()<<";   clone: "<<recoD.IsClone()<<"\n";
-    // ---
- //    const AliHLTTPCCAGBTrack &tCA = fTracker->Tracks()[iRTr];
-//if( tCA.NHits() < 4 ) {
-//    std::cout<<" ---!!!--- bad tracklet with nHits: "<<tCA.NHits()<<"\n";
-//    int aaa;
-//    std::cin>>aaa;
-//}
-//    int mct = tCA.GetFirstMC();
-//    if( mct < 0 ) std::cout<<" --- iRTr: "<<iRTr<<";   is ghost;   nHits: "<<tCA.NHits()<<"\n";
-//    if (  recoD.IsGhost(0) ) std::cout<<" ----- is ghost 0\n";
-    // ---
-    //    AliHLTTPCCAMCTrack &mcTr1 = (*fMCTracks)[ recoD.GetMCTrackId() ];
-//    if( mcTr1.Set30() <= 0 ) continue;
-//    if (  recoD.IsGhost(0) ) std::cout<<" ----- is ghost 1\n";
     if( recoD.IsClone() ) continue;
-//    if (  recoD.IsGhost(0) ) std::cout<<" ----- is ghost 2\n";
-//if( mcTrackNRecoHits[recoD.GetMCTrackId()] < 30 ) continue;
     recoTrC1++;
-    // ---
-//    if (  recoD.IsGhost(0) ) std::cout<<"> ghost...1\n";
 
     const AliHLTTPCCAGBTrack &recoTr = fTracker->Tracks()[iRTr];  // TODO: make common
 
-//    if( recoTr.NHits() < 15 ) continue;
-//    std::cout<<"   iRTr: "<<iRTr<<";   reco: "<<recoD.IsReconstructed()<<";   clone: "<<recoD.IsClone()<<"\n";
 
     //AliHLTTPCCATrackParam param = t.EndPoint();
     double RecoPt  = 1. / fabs(recoTr.InnerParam().QPt());
     double RecoMom = RecoPt * sqrt(1. + recoTr.InnerParam().DzDs()*recoTr.InnerParam().DzDs());
-      //     fNVsMom->Fill( param.GetY());
-      //     fLengthVsMom->Fill( param.GetY(), t.NHits());
 
     GetHisto(kpurity)->Fill( recoData[iRTr].GetPurity() );
-//    if (  recoD.IsGhost(SPParameters::MinTrackPurity) ) {
     if (  recoD.IsGhost(0) ) {
-//	std::cout<<" -----> is ghost 0 - fill histos\n";
       GetHisto(kghostsLength)->Fill( recoTr.NHits() );
       GetHisto(kghostsRMom)->Fill( RecoMom );
       GetHisto(kghostsRPt)->Fill( RecoPt );
@@ -790,7 +657,6 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
     else {
       AliHLTTPCCAMCTrack &mcTr = (*fMCTracks)[ recoD.GetMCTrackId() ];
       recoTrC2++;
-//std::cout<<"     iRTr: "<<iRTr<<";   recoTr.NHits(): "<<recoTr.NHits()<<"\n";
       GetHisto(krecosLength)->Fill( recoTr.NHits() );
       GetHisto(krecosRMom)->Fill( RecoMom );
       GetHisto(krecosMCMom)->Fill( mcTr.P() );
@@ -802,52 +668,25 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
       GetHisto(krecosProb)->Fill( TMath::Prob(recoTr.InnerParam().GetChi2(),recoTr.InnerParam().GetNDF()));
       /*if( mcTr.P() > 0.5 ) */GetHisto(knHitsRecoTOverNHitsMCT)->Fill( float(recoTr.NHits()) / mcTrackNRecoHits[recoD.GetMCTrackId()] );
 
-//      GetHisto(krecoMCToHits2D)->Fill( recoTr.NHits(), mcTrackNRecoHits[recoD.GetMCTrackId()] );
       GetHisto(krecoMCToHits2D)->Fill( mcTrackNRecoHits[recoD.GetMCTrackId()], recoTr.NHits() );
     }
   }
-//  std::cout<<"___ recoTrC1: "<<recoTrC1<<";   recoTrC2: "<<recoTrC2<<";   ghostTr: "<<ghostTr<<"\n";
   
   // global tracker performance
   {
     int nWrittenTracks = 0;
     for ( int itr = 0; itr < nRecoTracks; itr++ ) {
       const int iMC = recoData[itr].GetMCTrackId();
-//      if ( recoData[itr].IsGhost(PParameters::MinTrackPurity) ) continue;
       AliHLTTPCCAMCTrack &mc = (*fMCTracks)[iMC];
       // ---
       if( mc.Set30() <= 0 ) continue;
       nWrittenTracks++;
-//      std::cout<<" --- itr: "<<itr<<";   iMC: "<<iMC<<";   mc.P: "<<mc.P()<<";   motherId: "<<mc.MotherId()<<";   nWrittenTracks: "<<nWrittenTracks<<"\n";
-      // ---
       const AliHLTTPCCAGBTrack &tCA = fTracker->Tracks()[itr];
 
       AliHLTTPCCAPerformanceRecoTrackData &recoD = recoData[itr];
       if( recoD.IsClone() ) continue;
       if( tCA.NHits() < 15 ) continue;
 
-      //      const int nhits = tCA.NHits();
-//       for ( int ihit = 0; ihit < nhits; ihit++ ) {
-//         const int index = fTracker->TrackHit( tCA.FirstHitRef() + ihit );
-	//        const AliHLTTPCCAGBHit &hit = fTracker->Hit( index );
-//        std::cout<<" ------->>> hit: "<<ihit<<";   x: "<<hit.X()<<";   y: "<<hit.Y()<<";   z: "<<hit.Z()<<"\n";
-//        int iSlice = hit.ISlice();
-//	  float alpha = fTracker->Slice( iSlice ).Param().Alpha();
-//	  float x = hit.X();
-//	  float y = hit.Y();
-//	  float z = hit.Z();
-//	  float gx = x * cos(alpha) - y * sin(alpha);
-//	  float gy = y * cos(alpha) + x * sin(alpha);
-////	  float gx = x * cos(alpha) + y * sin(alpha);
-////	  float gy = y * cos(alpha) - x * sin(alpha);
-//	  float gx1 = gy;
-//	  float gy1 = -gx;
-//	  float gz = z;
-//	  std::cout<<" -----. gx: "<<gx<<";   gy: "<<gy<<";   gx1: "<<gx1<<";   gy1: "<<gy1<<"\n";
-//      }
-      // ---
-//      if ( mc.P() < 1 ) continue;
-//      if ( mc.MotherId() != -1 ) continue;
       
       int nFirstMC = mc.FirstMCPointID();
       int nMCPoints = mc.NMCPoints();
@@ -866,91 +705,35 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
       float gy = y * cos(alpha) + x * sin(alpha);
       float gx1 = gy;
       float gy1 = -gx;
-      //      float gz = z;
-//      std::cout<<" -----. gx: "<<gx<<";   gy: "<<gy<<";   gx1: "<<gx1<<";   gy1: "<<gy1<<"\n";
-      // ---
       int MCindex=-1;
-//      std::cout<<" ---> nMCPoints: "<<nMCPoints<<"\n";
       for(int iMCPoint=0; iMCPoint<nMCPoints; iMCPoint++)
       {
-//	  std::cout<<" ----- iMCPoint: "<<iMCPoint<<";   point.x: "<<points[iMCPoint].X()<<";   param.x: "<<p.X()<<";   pouint.z: "<<points[iMCPoint].Z()<<";   param.z: "<<p.Z()<<"\n";
-//	  std::cout<<"        point.y: "<<points[iMCPoint].Y()<<";   param.y: "<<p.Y()<<"\n";
-	  // ---
-//	  int iSlice = points[iMCPoint].ISlice();
-//	  float alpha = fTracker->Slice( iSlice ).Param().Alpha();
-//	  float x = points[iMCPoint].X();
-//	  float y = points[iMCPoint].Y();
-//	  float z = points[iMCPoint].Z();
-//	  float gx = x * cos(alpha) - y * sin(alpha);
-//	  float gy = y * cos(alpha) + x * sin(alpha);
-//	  float gz = z;
-//	  std::cout<<" -----. gx: "<<gx<<";   gy: "<<gy<<"\n";
-	  // ---
-//std::cout<<"     mcX: "<<points[iMCPoint].X()<<";   hX: "<<gx1<<";   dX: "<<fabs(points[iMCPoint].X() - gx1)<<"\n";
-//        if(fabs(points[iMCPoint].X() - p.X())< 2.f)
 	if(fabs(points[iMCPoint].X() - gx1)< 2.f)
         {
-//            std::cout<<" -----> point.y: "<<points[iMCPoint].Y()<<";   param.y: "<<p.Y()<<"\n";
-//            std::cout<<" -----> point.z: "<<points[iMCPoint].Z()<<";   param.z: "<<p.Z()<<"\n";
-//          if(fabs(p.Y() - points[iMCPoint].Y())<2 && fabs(p.Z() - points[iMCPoint].Z())<2)
-//std::cout<<"     mcY: "<<points[iMCPoint].Y()<<";   hY: "<<gy1<<";   dY: "<<fabs(points[iMCPoint].Y() - gy1)<<"\n";
-//std::cout<<"     mcZ: "<<points[iMCPoint].Z()<<";   hZ: "<<gz<<";   dZ: "<<fabs(points[iMCPoint].Z() - gz)<<"\n";
           if(fabs(gy1 - points[iMCPoint].Y())<2 && fabs(p.Z() - points[iMCPoint].Z())<2) {
             MCindex = iMCPoint;
-//std::cout<<"          ACCEPTED\n";
-//            std::cout<<" <<< set mc. point.z: "<<points[iMCPoint].Z()<<";   param.z: "<<p.Z()<<"\n";
-//            std::cout<<" <<< p.X(): "<<p.X()<<";   p.Y(): "<<p.Y()<<"\n";
           }
         }
       }
-//      std::cout<<" ---> MCindex: "<<MCindex<<"\n";
       if(MCindex == -1)
       {
         continue;
       }
       // track resolutions
       while ( 1/*mc.Set() == 2 && TMath::Abs( mc.TPCPar()[0] ) + TMath::Abs( mc.TPCPar()[1] ) > 1*/ ) {
-//        double cosA = TMath::Cos( t.Alpha() );
-//        double sinA = TMath::Sin( t.Alpha() );
 	  double cosA = TMath::Cos( alpha );
 	  double sinA = TMath::Sin( alpha );
-//        double mcX0 =  mc.TPCPar()[0] * cosA + mc.TPCPar()[1] * sinA;
-//        double mcY0 = -mc.TPCPar()[0] * sinA + mc.TPCPar()[1] * cosA;
-//        double mcZ0 =  mc.TPCPar()[2];
 
         double mcY0 =  points[MCindex].X() * cosA + points[MCindex].Y() * sinA;
         double mcX0 = -(-points[MCindex].X() * sinA + points[MCindex].Y() * cosA);
 	//        double mcZ0 =  points[MCindex].Z();
-//	  double mcY0 =  -points[MCindex].X() * cosA + points[MCindex].Y() * sinA;
-//	  double mcX0 = points[MCindex].X() * sinA + points[MCindex].Y() * cosA;
-//	  double mcZ0 =  points[MCindex].Z();
-        double mcEy0 =  mc.Par(3) * cosA + mc.Par(4) * sinA;
-        double mcEx0 = -(-mc.Par(3) * sinA + mc.Par(4) * cosA);
-	//        double mcEz0 =  mc.Par(5);
-	//        double mcEt0 = TMath::Sqrt( mcEx0 * mcEx0 + mcEy0 * mcEy0 );
-//        if ( TMath::Abs( mcEt ) < 1.e-4 ) break;
-//        double mcSinPhi0 = mcEy0 / mcEt0;
-//        double mcDzDs0   = mcEz0 / mcEt0;
-//        double mcQPt0 = mc.Par(6) / mcEt0;
-//        if ( TMath::Abs( mcQPt ) < 1.e-4 ) break;
-//        double mcPt0 = 1. / TMath::Abs( mcQPt0 );
-//        if ( mcPt < Parameters::RefThreshold ) break;
-//        if ( t.NHits() <  PParameters::MinimumHitsForMCTrack ) break;
-//        double bz = fTracker->Slice( 0 ).Param().Bz();
-        // ---
         double mcQP_ = points[MCindex].QP();
         double px0_ = -(-points[MCindex].Px() * sinA + points[MCindex].Py() * cosA);
         double py0_ = points[MCindex].Px() * cosA + points[MCindex].Py() * sinA;
         double mcEx_ = px0_*mcQP_;
         double mcEy_ = py0_*mcQP_;
-	//        double mcEz_ = points[MCindex].Pz()*mcQP_;
         double mcEt_ = TMath::Sqrt( mcEx_ * mcEx_ + mcEy_ * mcEy_ );
         double mcSinPhi_ = mcEy_ / mcEt_;
-        // ---
-	
-	
-//         double mcX =  points[MCindex].X();
-//         double mcY =  points[MCindex].Y();
         double mcZ =  points[MCindex].Z();
         double mcQP = points[MCindex].QP();
         double mcEx = points[MCindex].Px()*mcQP;
@@ -963,24 +746,9 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
         double mcQPt =  mcQP / mcEt;
         if ( TMath::Abs( mcQPt ) < 1.e-6 ) break;
         double mcPt = 1. / TMath::Abs( mcQPt );
-//        if ( mcPt < Parameters::RefThreshold ) break;
-//	if ( t.NHits() <  PParameters::MinimumHitsForMCTrack ) break;
         double bz = fTracker->Slice( 0 ).Param().cBz();
 	
         if ( !p.TransportToXWithMaterial( mcX0, bz ) ) break;
-        // ---
-//              int iSlice = fTracker->Hit( fTracker->TrackHit( tCA.FirstHitRef() ) ).ISlice();
-//              float alpha = fTracker->Slice( iSlice ).Param().Alpha();
-              float xc = p.X();
-              float yc = p.Y();
-	      //              float zc = p.Z();
-	      //              float gxc = xc * cos(alpha) - yc * sin(alpha);
-	      //              float gyc = yc * cos(alpha) + xc * sin(alpha);
-	      //              float gx1c = gyc;
-	      //              float gy1c = -gx;
-	      //              float gzc = zc;
-//              std::cout<<" -----. gxc: "<<gxc<<";   gy: "<<gyc<<";   gx1c: "<<gx1c<<";   gy1c: "<<gy1c<<"\n";
-              // ---
         if ( p.GetCosPhi()*mcEx < 0 ) { // change direction
           mcSinPhi = -mcSinPhi;
           mcDzDs = -mcDzDs;
@@ -990,47 +758,20 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
         if ( p.GetCosPhi()*mcEx_ < 0 ) {
           mcSinPhi_ = -mcSinPhi_;
         }
-        // ---
-//        if ( p.GetCosPhi()*mcEx0 < 0 ) { // change direction
-//          mcSinPhi0 = -mcSinPhi0;
-//          mcDzDs0 = -mcDzDs0;
-//          mcQPt0 = -mcQPt0;
-//        }
-
-        // ---
-//         const double kCLight = 0.000299792458;
-//         double k2QPt = 100;
-//         if ( TMath::Abs( bz ) > 1.e-4 ) k2QPt = 1. / ( bz * kCLight );
-/*        double qPt = p.GetKappa( bz ) * k2QPt;
-        double pt = 100;*/
 	double qPt = p.GetQPt();
         double pt = 1. / TMath::Abs( qPt );
 	
         if ( mcPt < 0.010 ) break;
-//        if ( TMath::Abs( qPt ) > 1.e-4 ) pt = 1. / TMath::Abs( qPt );
         // ---
         if( (mcDzDs>0 && p.GetDzDs()<0) || (mcDzDs<0 && p.GetDzDs()>0) ) {
           mcDzDs = -mcDzDs;
 
-//          mcSinPhi = -mcSinPhi;
-//          mcQPt = -mcQPt;
         }
 
         if ( mcQPt * p.GetQPt() < 0) {
             mcQPt = -mcQPt;
         }
-        // ---
-//std::cout<<"> Fill histos\n";
-//std::cout<<"___ sinPhi: "<<p.GetSinPhi()<<";   mcSinPhi: "<<mcSinPhi<<";   mcSinPhi0: "<<mcSinPhi0<<";   mcSinPhi_: "<<mcSinPhi_<<";   dSinPhi: "<<( p.GetSinPhi() - mcSinPhi )<<"\n";
-//std::cout<<" --- \n";
-//std::cout<<" >>> mcX: "<<mcX<<";   mcY: "<<mcY<<" |||   mcX0: "<<mcX0<<";   mcY0: "<<mcY0<<"\n";
-//std::cout<<" >>> p.GetSinPhi(): "<<p.GetSinPhi()<<";   mcSinPhi: "<<mcSinPhi<<";   mcSinPhi0: "<<mcSinPhi0<<"\n";
-//std::cout<<" >>>>>>> fill dy: "<<gy1c - mcY<<";   mc.y: "<<mcY<<";   param.y: "<<gy1c<<"\n";
-//std::cout<<" >>>>>>> fill dz: "<<p.GetZ() - mcZ<<";   mc.z: "<<mcZ<<";   param.z: "<<p.GetZ()<<"\n";
-//std::cout<<" >>>>>>> fill sinPhi: "<<p.GetSinPhi() - mcSinPhi<<";   mc.sinPhi: "<<mcSinPhi<<";   param.sinPhi: "<<p.GetSinPhi()<<"\n";
-//std::cout<<" >>>>>>> fill DzDs: "<<p.GetDzDs() - mcDzDs<<";   mc.DzDs: "<<mcDzDs<<";   param.DzDs: "<<p.GetDzDs()<<";   mcDzDs0: "<<mcDzDs0<<"\n";
         GetHisto(kresY)->Fill( p.GetY() - mcY0 );
-//        GetHisto(kresY)->Fill( gy1c - mcY );
         GetHisto(kresZ)->Fill( p.GetZ() - mcZ );
         GetHisto(kresSinPhi)->Fill( p.GetSinPhi() - mcSinPhi_ );
         GetHisto(kresDzDs)->Fill( p.GetDzDs() - mcDzDs );
@@ -1038,7 +779,6 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
           GetHisto(kresPt)->Fill( (pt - mcPt)/mcPt );
         }
         if ( p.GetErr2Y() > 0 ) GetHisto(kpullY)->Fill( ( p.GetY() - mcY0 ) / TMath::Sqrt( p.GetErr2Y() ) );
-//        if ( p.GetErr2Y() > 0 ) GetHisto(kpullY)->Fill( ( gy1c - mcY ) / TMath::Sqrt( p.GetErr2Y() ) );
         if ( p.GetErr2Z() > 0 ) GetHisto(kpullZ)->Fill( ( p.GetZ() - mcZ ) / TMath::Sqrt( p.GetErr2Z() ) );
 
         if ( p.GetErr2SinPhi() > 0 ) GetHisto(kpullSinPhi)->Fill( ( p.GetSinPhi() - mcSinPhi_ ) / TMath::Sqrt( p.GetErr2SinPhi() ) );
@@ -1060,12 +800,8 @@ if( mcTrackNRecoHits[i] < 30 ) continue;
     for ( int ih = 0; ih < nHits; ih++ ) {
       const AliHLTTPCCAGBHit &hit = fTracker->Hit( ih );
       const AliHLTTPCCAHitLabel &l = (*fHitLabels)[hit.ID()];
-//       fhHitErrY->Fill( hit.ErrY() );
-//       fhHitErrZ->Fill( hit.ErrZ() );
       int nmc = 0;
       for ( int il = 0; il < 3; il++ ) if ( l.fLab[il] >= 0 ) nmc++;
-//       if ( nmc == 1 ) fhHitShared->Fill( hit.IRow(), 0 );
-//       else if ( nmc > 1 ) fhHitShared->Fill( hit.IRow(), 1 );
     }
   }
 
@@ -1084,13 +820,6 @@ void AliHLTTPCCAGlobalPerformance::Draw()
   disp.SetTPC( fTracker->Slices()[0].Param() );
   disp.SetTPCView();
   disp.DrawTPC();
-//  disp.DrawGBHits( *gbPerfo.GetTracker(), kGreen, 0.03, 1  );
-
-  // ---
-//  disp.ClearViewPT();
-//  disp.DrawSliceHitsPT(1, 0.5);
-//  disp.DrawSliceLinksPT(-1,-1,1);
-  // ---
 
 #if 0 // MC info
   /*for ( int imc = 0; imc < nMCTracks; imc++ ) {

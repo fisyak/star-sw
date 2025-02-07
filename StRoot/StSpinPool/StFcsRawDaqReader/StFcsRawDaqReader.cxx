@@ -207,7 +207,7 @@ Int_t StFcsRawDaqReader::Make() {
 
   daq_dta *dd = 0;
   dd = mRdr->det("trg")->get("raw");
-  int startrg=0,fcstrg=0;
+  //  int startrg=0,fcstrg=0;
   if(!dd){
     LOG_WARN << "trg/raw not found" << endm;
   }else{
@@ -246,7 +246,7 @@ Int_t StFcsRawDaqReader::Make() {
 	//  + (fcs4<<4) + (fcs5<<5) + (fcs6<<6) + (fcs7<<7) + (fcs8<<8);
 	LOG_DEBUG << Form("FCS TCU Bits = 0x%04x",mFcsTcuBit)<<endm;
 
-	unsigned long long l2sum=mTrg->l2sum();
+	//	unsigned long long l2sum=mTrg->l2sum();
 	//startrg = (l2sum & 0xFF8000FFFFFFFFFF)?1:0;
 	//fcstrg  = (l2sum & 0x007FFF0000000000)?1:0;
 	//LOG_DEBUG << Form("L2SUM = 0x%016llx STAR=%1d FCS=%1d",l2sum,startrg,fcstrg) << endm;
@@ -309,7 +309,7 @@ Int_t StFcsRawDaqReader::Make() {
       //if(ch>=32) continue;
       u_short *d16 = (u_short *)dd->Void;
       StFcsHit* hit=0;
-      unsigned short tmp[1024];
+      //      unsigned short tmp[1024];
       if(mReadMode==0){
 	hit = new StFcsHit(0,detid,id,ns,ehp,dep,ch,n,d16);
       }else{

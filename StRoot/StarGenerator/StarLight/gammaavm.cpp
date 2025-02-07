@@ -273,7 +273,7 @@ bool Gammaavectormeson::fourBodyDecay
 double Gammaavectormeson::getDaughterMass(starlightConstants::particleTypeEnum &ipid)
 {
 	//This will return the daughter particles mass, and the final particles outputed id...
-	double ytest=0.,mdec=0.;
+  double /* ytest=0.,*/ mdec=0.;
   
 	switch(_VMpidtest){
 	case starlightConstants::RHO:
@@ -313,7 +313,7 @@ double Gammaavectormeson::getDaughterMass(starlightConstants::particleTypeEnum &
 	case starlightConstants::UPSILON2S:
 	case starlightConstants::UPSILON3S:
 		//  decays 50% to e+/e-, 50% to mu+/mu-
-		ytest = _randy.Rndom();//random()/(RAND_MAX+1.0);
+	  //		ytest = _randy.Rndom();//random()/(RAND_MAX+1.0);
     
 		mdec = starlightConstants::muonMass;
 		ipid = starlightConstants::MUON;
@@ -406,15 +406,15 @@ void Gammaavectormeson::momenta(double W,double Y,double &E,double &px,double &p
 	//     given W and Y,   without interference.  Subroutine vmpt.f handles
 	//     production with interference
  
-	double dW,dY;
+  //	double dW,dY;
 	double Egam,Epom,tmin,pt1,pt2,phi1,phi2;
 	double px1,py1,px2,py2;
 	double pt,xt,xtest;
 	double photon_spectrum;
 	double t1,t2;
 
-	dW = (_VMWmax-_VMWmin)/double(_VMnumw);
-	dY  = (_VMYmax-_VMYmin)/double(_VMnumy);
+// 	dW = (_VMWmax-_VMWmin)/double(_VMnumw);
+// 	dY  = (_VMYmax-_VMYmin)/double(_VMnumy);
   
 	//Find Egam,Epom in CM frame
 	Egam = 0.5*W*exp(Y);
@@ -530,10 +530,10 @@ void Gammaavectormeson::vmpt(double W,double Y,double &E,double &px,double &py, 
 	//    This function calculates momentum and energy of vector meson
 	//     given W and Y, including interference.
 	//     It gets the pt distribution from a lookup table.
-	double dW=0.,dY=0.,yleft=0.,yfract=0.,xpt=0.,pt1=0.,ptfract=0.,pt=0.,pt2=0.,theta=0.;
+  double /* dW=0.,*/ dY=0.,yleft=0.,yfract=0.,xpt=0.,pt1=0.,ptfract=0.,pt=0.,pt2=0.,theta=0.;
 	int IY=0,j=0;
   
-	dW = (_VMWmax-_VMWmin)/double(_VMnumw);
+	//	dW = (_VMWmax-_VMWmin)/double(_VMnumw);
 	dY  = (_VMYmax-_VMYmin)/double(_VMnumy);
   
 	//  Y is already fixed; choose a pt

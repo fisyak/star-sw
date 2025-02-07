@@ -1706,7 +1706,7 @@ void StFlowAnalysisMaker::FillParticleHistograms() {
 	  if (pFlowMaker->PhiWgtCalc() && j < 2) { // only first two harmonics for phiWgt
 
 	    // Get detID
-	    StDetectorId detId;
+	    //	    StDetectorId detId;
 	    Bool_t kTpcFarEast  = kFALSE;
 	    Bool_t kTpcEast     = kFALSE;
 	    Bool_t kTpcWest     = kFALSE;
@@ -1717,7 +1717,7 @@ void StFlowAnalysisMaker::FillParticleHistograms() {
 	    Bool_t kFtpcFarWest = kFALSE;
 	    if (map.hasHitInDetector(kTpcId) || (map.data(0) == 0 && map.data(1) == 0)) {
 	      // Tpc track, or TopologyMap not available
-	      detId = kTpcId;
+	      //	      detId = kTpcId;
 	      // Set TpcEast and West
 	      if (pFlowEvent->FirstLastPoints()) {
 		if (zFirstPoint > 0. && zLastPoint > 0.) {
@@ -1742,7 +1742,7 @@ void StFlowAnalysisMaker::FillParticleHistograms() {
 		}
 	      }
 	    } else if (map.trackFtpcEast()) { // FTPC track
-	      detId = kFtpcEastId;  // eta < 0.
+	      //	      detId = kFtpcEastId;  // eta < 0.
 	      Float_t vertexZ = pFlowEvent->VertexPos().z();
 	      if (vertexZ > 0.) {
 		kFtpcEast = kTRUE;
@@ -1750,7 +1750,7 @@ void StFlowAnalysisMaker::FillParticleHistograms() {
 		kFtpcFarEast = kTRUE;
 	      }
 	    } else if (map.trackFtpcWest()) {
-	      detId = kFtpcWestId; // eta > 0.
+	      //	      detId = kFtpcWestId; // eta > 0.
 	      Float_t vertexZ = pFlowEvent->VertexPos().z();
 	      if (vertexZ > 0.) {
 		kFtpcFarWest = kTRUE;
@@ -1758,7 +1758,7 @@ void StFlowAnalysisMaker::FillParticleHistograms() {
 		kFtpcWest = kTRUE;
 	      }
 	    } else {
-	      detId = kUnknownId;
+	      //	      detId = kUnknownId;
 	    }
 	    
 	    // Calculate weights for filling histograms

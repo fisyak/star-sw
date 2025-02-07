@@ -117,8 +117,8 @@ void StEmcAsciiDbMaker::exportBtowDb(TString fname, int runNo, int yyyymmdd,int 
   LOG_INFO << GetName()<<"::exportBtowDb start -->"<<fname<<endm;
   
   // for calulation of  ideal gains @ maxEt=60 GeV - if needed
-  const int par_maxADC=4096; // chan
-  const float par_maxEt=60; // GeV Et
+  //  const int par_maxADC=4096; // chan
+  //  const float par_maxEt=60; // GeV Et
 
   StBemcTables *myTable=new StBemcTables;
   myTable->loadTables(this );
@@ -145,11 +145,11 @@ void StEmcAsciiDbMaker::exportBtowDb(TString fname, int runNo, int yyyymmdd,int 
     //........... querry BTOW DB/geom
     int  status;
     myTable->getStatus(BTOW, softID, status);
-    int m,e,s;
+    int m=0,e=0,s=0;
     mGeomB->getBin(softID,m,e,s);
     
-    float etaF,phiF;
-    mGeomB->getEta(m,e,etaF);
+    float /* etaF,*/ phiF = 0;
+    //    mGeomB->getEta(m,e,etaF);
     mGeomB->getPhi(m,s,phiF);  // -pi <= phi < pi
     if( phiF<0) phiF+=2*C_PI; // I want phi in [0,2Pi]
     // printf("soft=%4d   DRO=%4d CR=0x%02x CHAN=%3d    eta=%.2f phi/deg=%.1f\n",softID,RDO,CR,CHAN,etaF,phiF/3.1416*180.);
@@ -163,8 +163,8 @@ void StEmcAsciiDbMaker::exportBtowDb(TString fname, int runNo, int yyyymmdd,int 
     //........... convert it to private bins
  
 
-    assert(fabs(etaF)<0.99);
-    int kEta=1+(int)((etaF+1.)/0.05);
+    //    assert(fabs(etaF)<0.99);
+    //    int kEta=1+(int)((etaF+1.)/0.05);
     
     int kPhi=24-(int)( phiF/C_PI*60.);
     if(kPhi<0) kPhi+=120;
@@ -173,10 +173,10 @@ void StEmcAsciiDbMaker::exportBtowDb(TString fname, int runNo, int yyyymmdd,int 
     char name[10]="nnn", pname[100];
     int sec=1+kPhi/10;
     char sub='a'+kPhi%10;
-    sprintf(name,"%02dt%c%02d",sec,sub,kEta);
+    //    sprintf(name,"%02dt%c%02d",sec,sub,kEta);
 
-    hA[2]->Fill(softID,1000*kPhi+(kEta-1));
-    hA[3]->SetBinContent(kEta,kPhi+1,softID);
+    //    hA[2]->Fill(softID,1000*kPhi+(kEta-1));
+    //    hA[3]->SetBinContent(kEta,kPhi+1,softID);
 
     //  printf("phiF/deg=%.1f  kPhi=%d %s\n",phiF/C_PI*180.,kPhi,name);    
      float myGain=-2;
@@ -185,7 +185,7 @@ void StEmcAsciiDbMaker::exportBtowDb(TString fname, int runNo, int yyyymmdd,int 
        nC++;
      }
 
-     if(mgain60Et) myGain=par_maxADC/par_maxEt/cosh(etaF); // ideal gains?
+     //     if(mgain60Et) myGain=par_maxADC/par_maxEt/cosh(etaF); // ideal gains?
 
      // printf("%s %f %d\n",name,myGain,nC);    assert(2==3);
      ushort stat=0;
@@ -194,13 +194,15 @@ void StEmcAsciiDbMaker::exportBtowDb(TString fname, int runNo, int yyyymmdd,int 
        nB++;
        float ph=phiF/C_PI*180.;
        while(ph<0) ph+=360.;
-      ((TH2F*) hA[0])->Fill(etaF,ph,myGain);
+       //      ((TH2F*) hA[0])->Fill(etaF,ph,myGain);
      }
 
      float thr=ped+mEeDb->getKsigOverPed()*sig;
      sprintf(pname,"id%04d-%03d-%d-%02d",softID,m,s,e);
-     fprintf(fd,"%6s   0x%02x 0x%02x   %2d %c %2d   %8.2f   %5.2f %5.2f  0x%02x 0x%02x  %8s %4d\n",
-	    name,CR,CHAN,sec,sub,kEta,myGain,ped,thr,stat,fail,pname,RDO);
+     //     fprintf(fd,"%6s   0x%02x 0x%02x   %2d %c %2d   %8.2f   %5.2f %5.2f  0x%02x 0x%02x  %8s %4d\n",
+	     //	    name,CR,CHAN,sec,sub,kEta,myGain,ped,thr,stat,fail,pname,RDO);
+     fprintf(fd,"%6s   0x%02x 0x%02x   %2d %c   %8.2f   %5.2f %5.2f  0x%02x 0x%02x  %8s %4d\n",
+	    name,CR,CHAN,sec,sub,myGain,ped,thr,stat,fail,pname,RDO);
      //     if(softID>100) break;
   }
   fclose(fd);

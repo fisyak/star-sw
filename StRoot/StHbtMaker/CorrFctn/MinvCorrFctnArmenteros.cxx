@@ -114,7 +114,7 @@ StHbtString MinvCorrFctnArmenteros::Report(){
 }
 //____________________________
 inline void MinvCorrFctnArmenteros::AddRealPair(const StHbtPair* pair){
-  if ( pair->mInv()>mLo && pair->mInv()<mHi || mHi == mLo) {
+  if ( (pair->mInv()>mLo && pair->mInv()<mHi) || mHi == mLo) {
     pairD ptArmAlpha = armenteros(pair);
     mNumerator->Fill( ptArmAlpha.first, ptArmAlpha.second, 1.);
     mRealPairs++;
@@ -122,7 +122,7 @@ inline void MinvCorrFctnArmenteros::AddRealPair(const StHbtPair* pair){
 }
 //____________________________
 inline void MinvCorrFctnArmenteros::AddMixedPair(const StHbtPair* pair){ 
-  if ( pair->mInv()>mLo && pair->mInv()<mHi || mHi == mLo) {
+  if ( (pair->mInv()>mLo && pair->mInv()<mHi) || mHi == mLo) {
     pairD ptArmAlpha = armenteros(pair);
     mDenominator->Fill( ptArmAlpha.first, ptArmAlpha.second, 1.);
     mMixedPairs++;

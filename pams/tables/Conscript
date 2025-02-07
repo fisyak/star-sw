@@ -30,7 +30,7 @@ my $LIBPKG = $PKG . "." . $env->{SUFLIB};
 my $lib    = $LIB . "/lib" . $SO_PKG;
 
 print "--> lib=$lib LIB=$LIB SO_PKG=$SO_PKG\n" if $param::debug;
-printf ("Run Conscript          in %-30s  for %-20s\n",$Dir, $PKG) unless ($param::quiet);
+printf ("Run Conscript          in %-45s  for %-32s\n",$Dir, $PKG) unless ($param::quiet);
 Depends $env3 $SO_PKG, @Deps;
 script::Keep $SO_PKG;
 LinkedModule $env3 $SO_PKG;

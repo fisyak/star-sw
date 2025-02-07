@@ -51,7 +51,7 @@ Int_t FcsDYBGFilter::Filter( StarGenEvent *mEvent){
     StarGenParticle *p = 0;
     vector<StarGenParticle*> forwardParticles;
     while( ( p = (StarGenParticle*)Iterator.Next() ) ){
-	int pid = abs(p->GetId());
+      //	int pid = abs(p->GetId());
 //	if(p->GetStatus()!=1 || pid==111) continue;
         if(p->GetStatus()!=1) continue;
 	if(p->GetPz()<0.0) continue; // +z direction only
@@ -104,12 +104,12 @@ Int_t FcsDYBGFilter::Filter( StarGenEvent *mEvent){
     if(mDYmode && !(res & 0x08)) return StarGenEvent::kReject;
     if(accept>0) {
 	ngood++;
-	int nswap=0;
+	//	int nswap=0;
 	if(mSwap){
 	  //this has to be implemented with middle of GEANT (particle by particle) filter
-	  cout << Form("FcsDYBGFilter : found %d accepted pairs, swapped %d particles when implemented",accept,swap.size())<<endl;
+	  cout << Form("FcsDYBGFilter : found %d accepted pairs, swapped %d particles when implemented",accept,(int)swap.size())<<endl;
 	}else{
-	  cout << Form("FcsDYBGFilter : found %d accepted pairs, No swap but could swap %d particles",accept,swap.size())<<endl;
+	  cout << Form("FcsDYBGFilter : found %d accepted pairs, No swap but could swap %d particles",accept,(int)swap.size())<<endl;
 	}
 	cout << Form("FcsDYBGFilter : N_Genearted=%6d  N_Accepted=%6d  R=%6.4f",
 		     ntot,ngood,float(ngood)/float(ntot)) <<endl;

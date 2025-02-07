@@ -387,11 +387,11 @@ int FTPV1P0_ZS_SR::getSequences(int PadRow, int Pad, int *nSeq,
   *nSeq = Pad_array[PadRow-1][Pad-1].nseq;   // number of sequences this pad
   *SeqData = Pad_array[PadRow-1][Pad-1].seq;  // pass back pointer to Sequence array 
 
-  if (&nSeq) {
+  //  if (&nSeq) {
     return 1;           // If there are sequences, return 1.
-  } else {              //This matches better with the ADCRawReader
-    return 0;           //which returns 1 if raw ADC data exists.
-  }
+//   } else {              //This matches better with the ADCRawReader
+//     return 0;           //which returns 1 if raw ADC data exists.
+//   }
 }
 
 int FTPV1P0_ZS_SR::getFeeSequences(int Fee, int Pin, int *nSeq, 

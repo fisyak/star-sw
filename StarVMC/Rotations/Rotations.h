@@ -34,6 +34,7 @@ class rotm_t {
 	 Float_t thet3 = 0, Float_t phi3 = 0) : 
     Thet1(thet1), Phi1(phi1), Thet2(thet2), Phi2(phi2), Thet3(thet3), Phi3(phi3) {strcpy(name, (Char_t *) Name);}
     //  static vector<rotm_t> fgRotaions;
+    virtual ~rotm_t() {}
   void Print() {std::cout 
       << name 
       << "\t" <<  Thet1 

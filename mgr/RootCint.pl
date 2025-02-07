@@ -8,26 +8,19 @@ use Env;
 use File::Basename;
 use Cwd;
 
-# my $Lib = "";
-# my $Pcm = "";
-# if ($ROOT_LEVEL =~ /^6/) {
-#   $Lib = shift;
-#   $RootMap = shift;
-#   $Pcm     = shift;
-#   print "RootCint.pl : Lib = $Lib, RootMap = $RootMap, Pcm = $Pcm\n";
-# }
 my $Cint_cxx = shift;
 my $Cint_h  = $Cint_cxx;
 $Cint_h  =~ s/_Cint\.cxx/_Cint\.h/g;
-
-my $DirName = dirname($Cint_cxx);		#print "DirName = $DirName\n";
-my $LinkDef = $DirName . "/" . "LinkDef.h"; 	#print "Cint Files :", $Cint_cxx, ",", $Cint_h,",",$LinkDef,"\n";
+my $debug = 0;
+print "================================================================================\n" if ($debug);
+my $DirName = dirname($Cint_cxx);		print "DirName = $DirName\n" if ($debug);
+my $LinkDef = $DirName . "/" . "LinkDef.h"; 	print "Cint Files :", $Cint_cxx, ",", $Cint_h,",",$LinkDef,"\n" if ($debug);
 
 my $LinkDefDirName;
 
-my $sources  = shift; 				#print "sources =", $sources,"\n";
-my $CPPFLAGS = shift; 				#print "CPPFLAGS = ", $CPPFLAGS, "\n";
-my @cpps = split / /,$CPPFLAGS;			#print "cpps: @cpps \n";
+my $sources  = shift; 				print "sources =", $sources,"\n" if ($debug);
+my $CPPFLAGS = shift; 				print "CPPFLAGS = ", $CPPFLAGS, "\n" if ($debug);
+my @cpps = split / /,$CPPFLAGS;			print "cpps: @cpps \n" if ($debug);
 
 my %class_hfile = (); 		# class h-file map
 my %class_hfile_depens_on = (); #
@@ -53,17 +46,17 @@ print Out "#pragma link off all globals;\n";
 print Out "#pragma link off all classes;\n";
 print Out "#pragma link off all functions;\n";;
 my $off = 1;
-for my $def  (split /\s/,$sources) {		#print "SRC:", $def, "\n";
+for my $def  (split /\s/,$sources) {		print "SRC:", $def, "\n" if ($debug);
     if (!($def =~ /LinkDef/  ))		{next;}
     if ( ($def =~/^$LinkDef$/))   	{next;}
 
     open (In, $def) or die "Can't open $def";
     $LinkDefDirName = dirname($def);
 
-    #print "DEBUG SRC:", $def, "\n";
+    print "DEBUG SRC:", $def, "\n" if ($debug);
 
     while ($line = <In>) {
-	#print "DEBUG $line";
+	print "DEBUG $line" if ($debug);
       
 	#  if LinkDef.h file contains "//IncFile=aaa/bbb/ccc.h"
 	#  this file included to the list of files to process(VP)
@@ -78,22 +71,19 @@ for my $def  (split /\s/,$sources) {		#print "SRC:", $def, "\n";
 	if (!($line  =~ /^\#pragma/))	{next;}
 	if ($line =~ /link off all/) 	{next;}
 
-##VP      print Out $line;# print $line;
-#    if (!($line =~ / class / || $line =~ / typedef /))		{goto PRINT;}
 	if (!($line =~ / class / ))		{goto PRINT;}
 
 	my @words = split /([ \(,\)\;\-\!+])/, $line;
-#    my $i=0;	 foreach my $w (@words) {print "\t$i\t$w"; $i++;}; print "\n"; 
+        if ($debug) {my $i=0;	 foreach my $w (@words) {print "\t$i\t$w"; $i++;}; print "\n"; }
 	if ($words[10] != "class") 		{goto PRINT;}
 	my $class = "";
 	for (my $i = 12; $i < $#words; $i++) {
-#      print "\t$i|$words[$i]|"; 
+	  print "\t$i|$words[$i]|" if ($debug); 
 	    next if $words[$i] eq '' or $words[$i] =~ /^\s+/; 
 	    $class = $words[$i]; 
 	    last;
 	} 
-#    print "class = |$class|\n";
-#    my $class = $words[12]; 
+	print "class = |$class|\n" if ($debug);
 	my $classG = $class;
 	if ($classG =~ /</) {($classG) = split '<', $classG;} 
 	if (!$classG) 			{goto PRINT;}
@@ -110,7 +100,7 @@ close (Out);
 
 
 for my $h  (split /\s/,$sources) {	
-    #print "DEBUG SRC:", $h, "\n";
+    print "DEBUG SRC:", $h, "\n" if ($debug);
     next if !$h;
     next if $h =~ /LinkDef/;
     next if $h =~ /Ttypes/;
@@ -129,8 +119,6 @@ for my $h  (split /\s/,$sources) {
 
     if ($h != $hh ){
 	print "=== RootCint-Info :: massaging h = hh = $h --> hh = $hh\n";
-	# } else {
-	#    print "=== RootCint-Info :: $h ok (without .share)\n";
     }
 
     open (In,$hh) or die "Can't open $hh";
@@ -144,29 +132,18 @@ for my $h  (split /\s/,$sources) {
 
     while ($line = <In>) {
 	chomp($line);
-	#my $rdebug =  ($h =~ /StEmcDbHandler/);
-	#print "DEBUG: [$line]\n" if ($rdebug);
-
-	#if ( ! $NEW){
-	#if ($line =~ /\/\//) {
-	#	  $line =~ s/\/\/.*$//;
-	#	  # print "==> $line";
-	#}
-	#}
 	if ( $line =~ /\/\/\*/){
 	    # will not try to analyze this one and assume //.*
 	    $line =~ s/\/\/\*//;
 	}
       
-#      next if $line =~ /^\s*\/\//; # c++ comment '//'
-#      print "==> $line";
 	if ($com) {
 	    if ($line =~ /\*\//) {
 		$com = 0; 
-		$line =~ s/^*\*\///; # print "==> $line";
+		$line =~ s/^*\*\///;  print "==> $line" if ($debug);
 			  
 	    } else {
-		#print "DEBUG ==> skip\n" if ($rdebug);
+		print "DEBUG ==> skip\n" if ($debug);
 		next;
 	    }
 	}
@@ -175,7 +152,7 @@ for my $h  (split /\s/,$sources) {
 	    # be sure we do not have a /* preceded by a //
 	    # the //.* will be removed later
 	    if ( $Lprefix !~ m/\/\// ){ #|| ! $NEW ){
-		#print "DEBUG: Enabling comment mode\n" if ($rdebug);
+		#print "DEBUG: Enabling comment mode\n" if ($debug);
 		$com = 1;
 		if ($line =~ /\*\//) {
 		    $line =~ s/\/\*.*\*\///;
@@ -196,41 +173,35 @@ for my $h  (split /\s/,$sources) {
 	    if ( $line !~ /using/ && $line =~ m/\$NMSPC/ ){
 		$nmspc = $dummy;
 	    }
-	    #print "DEBUG: YEAH! Matched\n";
+#	    print "DEBUG: YEAH! Matched\n" if ($debug);
 	} else {
-	    #print "DEBUG: Did not match [$line]\n";
+#	    print "DEBUG: Did not match [$line]\n" if ($debug);
 	}
 
-	#if ( $NEW){
-	# strip of // should likely happen after /* */
 	if ($line =~ /\/\//) {
 	    $line =~ s/\/\/.*$//;
-	    # print "==> $line";
+	    print "==> $line" if ($debug);
 	}
-	#}
 
-	# print "DEBUG: <$line>\n" if ($rdebug);
+	print "DEBUG: <$line>\n" if ($debug);
 
 	if ($line =~ /\#include/ && $line !~ /(<>)/ && $line !~ /Table\.h/) {
 	    (my $inc_h = $line) =~ s/\#include\s//g; chop ($inc_h);
-	    $inc_h =~ s/\"//g; 
-	    # print "inc_h = $inc_h\n";
-	  
 	    my $inc_hh = $inc_h; # basename($inc_h);
 	    if ($sources =~ /$inc_hh/) {
 		$includes .= ":" . $inc_hh;   	
-		# print "--includes for $h: $includes\n";
+		print "--includes for $h: $includes\n" if ($debug);
 	    }
 	}
 
 	if ($line =~/ClassDef/ && $line !~ /ClassDefChair/) { 
-	    # print "================================ $line \n";
+	    print "================================ $line \n" if ($debug);
 	    if ($line =~ /\#\#/) { next;} # ClassDefs in macro definition
 	    my @words = split /([\(,\-\!\)])/, $line;
 	    my $class = $words[2];      	
 	    #print "=================class = ",$class," ($h_dir)\n"; 
 	    if ( index($IncDirName,$h_dir) == -1 && $h_dir ne $DirName){
-		# print "=> Adding $h_dir to [$IncDirname]\n";
+		print "=> Adding $h_dir to [$IncDirname]\n" if ($debug);
 		$IncDirName .= "-I$h_dir ";
 	    }
 	  
@@ -240,8 +211,8 @@ for my $h  (split /\s/,$sources) {
 		#$nclass = $class;
 		push @classes, $nclass;
 		$class_hfile{$nclass} = $h; 	
-		# print "class: $class, written: $class_written{$class}, h: $class_hfile{$class}\n";
-	      
+		print "class: $class, written: $class_written{$class}, h: $class_hfile{$class}\n" if ($debug);
+		
 		$class_hfile_depens_on{$nclass} = $includes;
 		
 		$namespaces{"$nmspc"}++ if ( $nmspc ne "" );
@@ -259,7 +230,7 @@ for my $h  (split /\s/,$sources) {
 	my $macro = "./StRoot/St_base/StArray.h";
 	if ( -f $macro) { }
 	else { $macro = `echo \$STAR/StRoot/St_base/StArray.h`;}
-	my $tmp = $$ . "temp.h";# print "tmp = $tmp =========================\n";
+	my $tmp = $$ . "temp.h"; print "tmp = $tmp =========================\n" if ($debug);
 	open (INPUT, $h) or die "Can't open $h\n";
 	my $new_h = $DirName . "/" . basename($h);
 	open (OUTPUT, ">$tmp") or die "Can't open $tmp\n";
@@ -280,12 +251,12 @@ for my $h  (split /\s/,$sources) {
 		    foreach my $stem ("Iterator","PtrVec","SPtrVec") {
 			if ($stem eq "Iterator") {$cl = "St" . $core . $stem      ;}
 			else                     {$cl = "St" . $stem . $core . "-";}
-			#print "DEBUG pushing $cl\n";
+			print "DEBUG pushing $cl\n" if ($debug);
 			push @classes, $cl;
 			$class_hfile{$cl} = $new_h; 
 			$class_hfile_depens_on{$cl} = $includes;
 
-			#print "DEBUG class: $stem $core $cl includes [$includes]\n";
+			print "DEBUG class: $stem $core $cl includes [$includes]\n" if ($debug);
 		    }
 		    open(DEF, $macro) || die "Can't open Macros $macro \n";
 		    my $def = 0;
@@ -339,13 +310,12 @@ foreach my $class (@classes) {
 		print Out "#pragma link C++ class $class-;\n"; 
 		print     "#pragma link C++ class $class-;\n";
 		(my $global = $class) =~ s/St_//g;
-		#  vf print Out "#pragma link C++ global $global;\n"; print  "#pragma link C++ global $global;\n";
 	    } else {
 		if ($class =~ /^St/ and $class =~ /Iterator$/) {
 		    print Out "#pragma link C++ typedef $class;\n"; 
 		    print     "#pragma link C++ typedef $class;\n";
 		} else {
-		    # print "======> |$class|\n";
+		    print "======> |$class|\n" if ($debug);;
 		    if ($class =~ /-$/) {
 			print Out "#pragma link C++ class $class;\n"; 
 			print     "#pragma link C++ class $class;\n";
@@ -430,32 +400,12 @@ my $hfile = $DirName . "/Stypes.h";
 if (-f $hfile) {$h_files .= " Stypes.h";}
 if ($h_files) {
   $h_files .= " " . "LinkDef.h";
-  #  $CPPFLAGS .= " -I" . $DirName;
-  #  my $cmd  = "rootcint -f $Cint_cxx -c -DROOT_CINT -D__ROOT__ -I. $CPPFLAGS $h_files";
   $CPPFLAGS = " -I" . $DirName . " " . $IncDirName . $CPPFLAGS;
   my $cmd;
-  #foreach (keys %ENV){
-  #	print "DEBUG ".$_." ".$ENV{$_}."\n";
-  #}
-  #if ( defined($ENV{ROOTCINT_CPPFLAGS}) ){
-  #	$cmd  = "rootcint -f $Cint_cxx -c  -D__NO_STRANGE_MUDST__ -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-  #	print "cmd (+extra) = ",$cmd,"\n";
-  #} else {
-#  if (! $Lib) {
-#    $cmd  = "rootcint -f $Cint_cxx -c -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
 my $CintF = cwd() . "/" . $Cint_cxx;
-    $cmd  = "rootcint -f $CintF -c -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-#   } else {
-# #    $cmd  = "rootcling -f $Cint_cxx -c -rmf $RootMap  -rml $Lib -s $Lib -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-# # rootcling -rootbuild -f K_Dict.cc -s libK -rml libA.so -rml libC.so -rml libG.so -rmf libK.rootmap -c -p -I[INCLUDES] K1.hh K2.hh K3.hh LinkDef.hh
-#     $cmd  = "rootcling -rootbuild -f $Cint_cxx -rml $Lib -rmf $RootMap -c -p -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-# #
-# #rootcling -v0 "--lib-list-prefix=/star/u/fisyak/macros/Chain_C_ACLiC_map" -f "/star/u/fisyak/macros/Chain_C_ACLiC_dict.cxx" -c -p -I$ROOTSYS/include -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/etc" -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/etc/cling" -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/include" -I"/opt/rh/devtoolset-4/root/usr/lib/gcc/x86_64-redhat-linux/5.2.1/../../../../include/c++/5.2.1" -I"/opt/rh/devtoolset-4/root/usr/lib/gcc/x86_64-redhat-linux/5.2.1/../../../../include/c++/5.2.1/x86_64-redhat-linux" -I"/opt/rh/devtoolset-4/root/usr/lib/gcc/x86_64-redhat-linux/5.2.1/../../../../include/c++/5.2.1/backward" -I"/net/l402/data/fisyak/STAR/ROOT/6.99.99/.sl68_x8664_gcc521/rootdeb/Build/include" -D__ACLIC__ -I$HOME/macros -I/usr/include/QtGui "/star/u/fisyak/macros/Chain.C" "/star/u/fisyak/macros/Chain_C_ACLiC_linkdef.h
-# #    $cmd  = "rootcling -rootbuild -f $Cint_cxx -s $Lib  -rml $Lib -rmf $RootMap -c -p -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
-#   }
+#    $cmd  = "rootcint -f $CintF -c -DROOT_CINT -D__ROOT__ $CPPFLAGS $h_files";
+    $cmd  = "rootcint -f $CintF -c -DROOT_CINT $CPPFLAGS $h_files";
   print "cmd (normal)= ",$cmd,"\n";
-  #	die;
-  #}
     my $flag = `$cmd`; if ($?) {exit 2;}
 }
 exit(0);

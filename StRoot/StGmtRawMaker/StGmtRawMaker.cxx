@@ -1,99 +1,153 @@
 //
+// First Cluster Maker
 // \class StGmtRawMaker
 // \authors K.S. Engle and Richard Witt (witt@usna.edu)
-// based on StFgtRawMaker
-//
-
-#include "St_base/StMessMgr.h"
-#include "St_base/Stypes.h"
-
-#include "StChain/StRtsTable.h"
-#include "StEvent/StEvent.h"
-#include "DAQ_FGT/daq_fgt.h"
-#include "DAQ_READER/daq_dta.h"
-// #include "DAQ_GMT/daq_gmt.h"
-// #include "DAQ_READER/daq_dta.h"
-
-#include "StEvent/StGmtCollection.h"
-#include "StEvent/StGmtStripCollection.h"
-#include "StEvent/StGmtStrip.h"
-// #include "StGmtDbMaker/StGmtDbMaker.h"
-#include "StGmtUtil/geometry/StGmtGeom.h"
-#include "St_base/StMessMgr.h"
-#include "St_base/Stypes.h"
-
+// based on StFgtClusterMaker
+#include <string>
 #include "StGmtRawMaker.h"
-ClassImp(StGmtRawMaker)
+#include "StRoot/StEvent/StEvent.h"
+#include "StRoot/StEvent/StGmtCollection.h"
+#include "StEvent/StGmtHit.h"
+#include "StRtsTable.h"
+#include "DAQ_READER/daq_dta.h"
+#include "DAQ_FGT/daq_fgt.h"
+#include "StGmtGeom.h"
+#include "Riostream.h"
+#include "TSystem.h"
+#include "StMessMgr.h" 
+#include "TFumili.h"
+#include "TMath.h"
+#include "TFile.h"
+#include "TAxis.h"
+ClassImp(StGmtRawMaker);
 
-const Int_t mChIdToSeqId[128] = {
-	0,16,32,48,64,80,96,112,4,20,36,52,68,84,100,116,8,
-	24,40,56,72,88,104,120,12,28,44,60,76,92,108,124,1,
-	17,33,49,65,81,97,113,5,21,37,53,69,85,101,117,9,
-	25,41,57,73,89,105,121,13,29,45,61,77,93,109,125,2,
-	18,34,50,66,82,98,114,6,22,38,54,70,86,102,118,10,
-	26,42,58,74,90,106,122,14,30,46,62,78,94,110,126,3,
-	19,35,51,67,83,99,115,7,23,39,55,71,87,103,119,11,
-	27,43,59,75,91,107,123,15,31,47,63,79,95,111,127
-};
-
+const UInt_t         CLUS_BINS = 128;
+const Double_t       CLUS_MIN  = 0.0;
+const Double_t       CLUS_MAX  = 128*0.08;
+const UInt_t         MAX_PEAKS = 8; // from TFumili default no. of parameters = 25
 //________________________________________________________________________________
-/**
-Function to get pointer to StEvent datastructures. Creates them if they do not exist already.
-*/
-Int_t StGmtRawMaker::prepareEnvironment() {
-  StEvent* eventPtr = (StEvent*)StRTSBaseMaker::GetInputDS("StEvent");
-  if (! eventPtr) return kStFatal;
-  mGmtCollectionPtr = eventPtr->gmtCollection();
-  if(!mGmtCollectionPtr)    {
-    mGmtCollectionPtr = new StGmtCollection();
-    if(!mGmtCollectionPtr)	{
+StGmtRawMaker::StGmtRawMaker( const Char_t* name ) :  StRTSBaseMaker( "clustser", name ) {
+  memset(mBeg,0,mEnd-mBeg+1);
+  SetAttr("gmtOnly"             ,kFALSE);
+};
+//________________________________________________________________________________
+Int_t StGmtRawMaker::InitRun(Int_t /* runumber */) {
+   return 0;
+}
+//________________________________________________________________________________
+Int_t StGmtRawMaker::Make() {
+  static ULong_t nEvents=0;
+  StEvent* event = (StEvent*) (GetInputDS("StEvent"));
+  if(!event) {
+    LOG_ERROR << "Error getting pointer to StEvent from '" << ClassName() << "'" << endm;
+    return kStErr;
+  }
+  mGmtCollection = event->gmtCollection();
+  if(!mGmtCollection)    {
+    mGmtCollection = new StGmtCollection();
+    if(!mGmtCollection)	{
       LOG_DEBUG <<"::prepareEnvironment could not create StGmtCollection" <<endm;
       return kStFatal;
     }
-    eventPtr->setGmtCollection(mGmtCollectionPtr);
+    event->setGmtCollection(mGmtCollection);
     LOG_DEBUG <<"::prepareEnvironment() has added a non existing StGmtCollection()"<<endm;
   } else  {
     //this should be unncessary if the member clear function is called
-    mGmtCollectionPtr->Clear();
+    mGmtCollection->Clear();
   }
-  return kStOK;
+  if (fillHits()) return kStErr;
+  UInt_t noModWithGMT = 0;
+  for(UInt_t module=0; module < kGmtNumModules; module++) {
+    if(Debug()) {
+      LOG_INFO << "module: " << module << " has strips: \t" <<  mGmtCollection->getNumStrips(module) << endm;
+    }
+    Int_t nelements = mGmtCollection->getNumStrips(module);
+    if(! nelements) {
+      if(Debug()) {
+	LOG_WARN <<"StClusterMaker::Make(): no data for module " << module << endm;
+      }
+      continue;
+    }
+    StGmtHitCollection *hitCollection = mGmtCollection->getHitCollection(module);
+    if (ClusterBuilder(nEvents,module,*hitCollection)) noModWithGMT++;
+    const StGmtHitCollection *coll = mGmtCollection->getHitCollection(module);
+    if (! coll) continue;
+    if (Debug()) {
+      const StSPtrVecGmtHit &hits = coll->getHitVec();
+      UInt_t NoHits = hits.size();
+      for (UInt_t l = 0; l < NoHits; l++) {
+	const StGmtHit *hit = hits[l];
+	if (hit) {
+	  hit->Print("");
+	}
+      }
+    }
+  }
+  if (noModWithGMT) nEvents++;
+  
+  if(Debug()) {
+    LOG_INFO << "End of gmt-clust-maker, print all strips & clusters: " << endm;
+    LOG_INFO <<"  gmtCollnumModule=" << kGmtNumModules<<", tot strip=" <<mGmtCollection->getNumStrips()
+	     <<"  totClust=" <<  mGmtCollection->getNumHits() <<endm;
+  }
+  if (! mGmtCollection->getNumHits()) return kStERR;
+  return kStOk;
 }
 //________________________________________________________________________________
-/**
-Maker main function. Getting pointer to StEvent and fills the event structure
-*/
-Int_t StGmtRawMaker::Make()
-{
-
-  LOG_DEBUG <<"StGmtRawMaker::Make()******************************************************************"<<endm;
-
-  if( prepareEnvironment()!=kStOK ) {
-    LOG_ERROR << "Error preparing enviroment" << endm;
-    return kStFatal;
-  }   else    {
-    return fillHits();
-  }
+ Int_t StGmtRawMaker::Init() {
+  if (IAttr("gmtOnly")) SetAttr(".Privilege",kTRUE);
+  if (gFumili) {delete gFumili;}
+  new TFumili(MAX_PEAKS*3+1);
+  return StMaker::Init();
+}
+//________________________________________________________________________________
+Double_t StGmtRawMaker::MyGaus(Double_t x, Double_t mean, Double_t sigma, Double_t delta) {
+  return TMath::Freq((x-mean+delta/2)/sigma)-TMath::Freq((x-mean-delta/2)/sigma);
 }
 //________________________________________________________________________________
 /**
 utility function to get the data from the daq file and fill the StEvent structure
 */
 Int_t StGmtRawMaker::fillHits() {
+  static Int_t mChIdToSeqId[128] = {
+    0,16,32,48,64,80,96,112,4,20,36,52,68,84,100,116,8,
+    24,40,56,72,88,104,120,12,28,44,60,76,92,108,124,1,
+    17,33,49,65,81,97,113,5,21,37,53,69,85,101,117,9,
+    25,41,57,73,89,105,121,13,29,45,61,77,93,109,125,2,
+    18,34,50,66,82,98,114,6,22,38,54,70,86,102,118,10,
+    26,42,58,74,90,106,122,14,0,46,62,78,94,110,126,3,
+    19,35,51,67,83,99,115,7,23,39,55,71,87,103,119,11,
+    27,43,59,75,91,107,123,15,31,47,63,79,95,111,127
+  };
+   mGmtCollection->Clear();
   
   Int_t rdo=0;
   Int_t arm=0;
   Int_t apv=0;
-  Int_t port=-999;
   Int_t channel=0;
   Short_t adc=0;
   Short_t timebin=0;
-  Short_t moduleIdx=0;
+  Short_t module=0;
   Short_t coordNum=0;
   Double_t position=0;
+  Int_t ok = kStErr;
 
 //   LOG_INFO << "StGmtRawMaker::fillHits() Trying to find fgt/adc... " << endm;
   LOG_INFO << "StGmtRawMaker::fillHits() Trying to find gmt/adc... " << endm;
-  
+  if (Debug() > 2) {
+    for (Int_t module = 0; module < kGmtNumModules; module++) {
+      for (Int_t ixy = 0; ixy < kGmtNumLayers; ixy++) {
+	static const Char_t *XY[2] = {"X", "Y"};
+	if (! mAdcTimeBins[ixy][module]) {
+	  mAdcTimeBins[ixy][module] = 
+	    new TH2F(Form("AdcT%s_%i",XY[ixy],module),Form("Adc versus strip and time %s module %i",XY[ixy],module), 
+		     kGmtNumTimeBins, -0.5, kGmtNumTimeBins -0.5, CLUS_BINS, CLUS_MIN, CLUS_MAX);
+	} else {
+	  mAdcTimeBins[ixy][module]->Reset();
+	}
+      }
+    }
+  }
   ////// FIX ME!!!!!!!!!!!!!!!!!!
   //now grab the constants from the header file, loop over the raw data and fill the hits...
   TString query("gmt/adc");
@@ -112,79 +166,252 @@ Int_t StGmtRawMaker::fillHits() {
       adc=mGmtRawData->adc;
       arm=rts_tbl->Sector();
       apv=rts_tbl->Pad();
-      // the next segment is needed because of a lack of ARM port information
-      if ( (apv >= 0) && (apv <= 3)) {
-	port = 0; 
-      }	  else if ( (apv >= 12) && (apv <= 15) ) {
-	//		  cout<<"APV "<<apv<<endl;
-	port = 1;
-      }
       count++;
-      if(Debug()) {
+      if(Debug() > 3) {
 	LOG_INFO << "StGmtRawMaker::fillHits() Got: " <<
 	  "rdo: " << rdo <<
 	  "  arm: " << arm <<
 	  "  apv: " << apv <<
-	  "  port: " << port <<
 	  "  channel: " << channel <<
 	  "  timebin: " << timebin <<
 	  "  adc: " << adc <<
 	  endm;
       }
-      ////// FIX ME!!!!!!!!!!!!!!!!!!
-      Int_t geoId=-1;
+      Int_t geoId = StGmtGeom::encodeGeoId( rdo, arm, apv, channel ); // geoId same as elecId for now (RW 3/29/2013)
       Int_t layer=-1;
-      Short_t strip=-1;
-      moduleIdx = StGmtGeom::getModuleIdFromElecCoord( rdo, arm, apv );
+      Short_t stripNo=-1;
       coordNum = StGmtGeom::getCoordNumFromElecCoord( rdo, arm, apv, channel );
       position = StGmtGeom::getPositionFromElecCoord( rdo, arm, apv, channel );
       // the next segment is needed because of a lack of ARM port information
-      geoId = StGmtGeom::encodeGeoId( rdo, arm, apv, channel ); // geoId same as elecId for now (RW 3/29/2013)
-      StGmtGeom::decodeGeoId( geoId, moduleIdx, layer, strip );
-      StGmtStripCollection *stripCollectionPtr = mGmtCollectionPtr->getStripCollection( moduleIdx );
-      if( stripCollectionPtr )	    {
+      StGmtGeom::decodeGeoId( geoId, module, layer, stripNo );
+      StGmtStripCollection *stripCollection = mGmtCollection->getStripCollection( module );
+      if( stripCollection )	    {
 	geoId =  StGmtGeom::encodeGeoId( rdo, arm, apv, channel );
-#if 0
-	Int_t elecId =  StGmtGeom::getElectIdFromElecCoord( rdo, arm, apv, channel );
-#endif
-	StGmtStrip* stripPtr = stripCollectionPtr->getStrip( geoId );
+	StGmtStrip* strip = stripCollection->getStrip( geoId );
 	if( coordNum == 999 ) { // these are not connected
-	  stripPtr->setAdc( 0, timebin );
-	  stripPtr->setCharge( 0 ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
-	  stripPtr->setChargeUncert( 0 ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
-	  stripPtr->setGeoId( geoId );
-	  stripPtr->setModule( moduleIdx );
-	  stripPtr->setIsY( layer );
-	  stripPtr->setPosition( position );
-	  stripPtr->setElecCoords( rdo, arm, apv, channel );
-	  stripPtr->setCoordNum( coordNum );
-	  stripPtr->setPed( 0 );
-	  stripPtr->setPedStdDev( 0 );
-	  stripPtr->setPedErr( 0 );
+	  strip->setAdc( 0, timebin );
+	  strip->setCharge( 0 ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
+	  strip->setChargeUncert( 0 ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
+	  strip->setGeoId( geoId );
+	  strip->setModule( module );
+	  strip->setIsY( layer );
+	  strip->setPosition( position );
+	  strip->setElecCoords( rdo, arm, apv, channel );
+	  strip->setCoordNum( coordNum );
 	} else  {// these are connected (mapping in StGmtGeom.cxx)
 	  if(layer) {// layer here is just an indicator for either a X ( i.e. strip (=0) ) or Y ( i.e. pad (=1) ) element
-	    stripPtr->setCoordNum( coordNum + kGmtNumStrips ); // map Y into 128-255
+	    strip->setCoordNum( coordNum + kGmtNumStrips ); // map Y into 128-255
 	    //never returns more certain ids
 	    if(channel==100) {LOG_INFO << "Str.=" << channel << "\tLay0\tgeoid=" << geoId<< "\tposition=" << position << endl;}
 	  }  else   {
-	    stripPtr->setCoordNum( coordNum );  // map X into 0-127
+	    strip->setCoordNum( coordNum );  // map X into 0-127
 	    if(channel==50) LOG_INFO << "Str.=" << channel << "\tLay0\tgeoid=" << geoId<< "\tposition=" << position << endl;
 	  }
-	  stripPtr->setAdc( adc, timebin );
-	  stripPtr->setCharge( adc ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
-	  stripPtr->setChargeUncert( sqrt(adc) ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
-	  stripPtr->setGeoId( geoId );
-	  stripPtr->setModule( moduleIdx );
-	  stripPtr->setIsY( layer );
-	  stripPtr->setPosition( position );
-	  stripPtr->setElecCoords( rdo, arm, apv, channel );
+	  strip->setAdc( adc, timebin );
+	  strip->setCharge( adc ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
+	  strip->setChargeUncert( sqrt(adc) ); // was done in separate maker for FGT (StFgtA2CMaker), assume gain=1 for now
+	  strip->setGeoId( geoId );
+	  strip->setModule( module );
+	  strip->setIsY( layer );
+	  strip->setPosition( position );
+	  strip->setElecCoords( rdo, arm, apv, channel );
 	}
-	if (Debug()) {
-	 LOG_INFO << "StGmtRawMaker::fillHits() Set: " 
-		  <<  *stripPtr << endm;
+      } else { LOG_WARN << "StGmtRawMaker::Make() -- Could not access module " << module << endm; }
+    }
+    if (count) {
+      ok = kStOK;
+      if (Debug() > 3) {
+	for (UShort_t module = 0; module < kGmtNumModules; module++) {
+	  StGmtStripCollection *stripCollection = mGmtCollection->getStripCollection( module );
+	  if (! stripCollection) continue;
+	  cout << "Module\t" << module << endl;
+	  stripCollection->Print("");
 	}
-      } else { LOG_WARN << "StGmtRawMaker::Make() -- Could not access module " << moduleIdx << endm; }
+      }
     }
   }
-  return kStOK;
+  return ok;
+}
+//________________________________________________________________________________
+Double_t StGmtRawMaker::fpeaks(Double_t *x, Double_t *par) {
+  Float_t result=0.0;
+  UInt_t nPar=(UInt_t)par[0];
+  for (UInt_t p = 0; p < nPar; p++) {
+    Double_t norm  = TMath::Exp(par[3*p+1]);
+    Double_t mean  = par[3*p+2];
+    Double_t sigma = par[3*p+3];
+    result += norm*MyGaus(x[0],mean,sigma,0.08); //norm*TMath::Gaus(x[0],mean,sigma,1);
+  }
+  return result;
+}
+//________________________________________________________________________________
+TF1* StGmtRawMaker::FindPeaks(TH1D* hist) {
+  if (hist->GetMaximum() < 500.0) return 0;
+  TSpectrum spect(MAX_PEAKS);
+  TF1 back("poly","pol0",CLUS_MIN,CLUS_MAX);
+  Double_t par[MAX_PEAKS*3+1];
+  spect.Search(hist, 2, "", 0.20);
+#if  ROOT_VERSION_CODE < 395523
+  Float_t* xpeaks=spect.GetPositionX();
+  //  Float_t* ypeaks=spect.GetPositionY();
+#else
+  Double_t* xpeaks=spect.GetPositionX();
+  //  Double_t* ypeaks=spect.GetPositionY();
+#endif
+  hist->Fit(&back,"Q");
+  UInt_t npx=0;
+  UInt_t nfound = spect.GetNPeaks();
+  for(UInt_t i=0; i < nfound; i++) {
+    Double_t xp=xpeaks[i];
+    Int_t bin=hist->GetXaxis()->FindBin(xp);
+    Double_t yp=hist->GetBinContent(bin);
+    Double_t err=hist->GetBinError(bin);
+    if(err<=0.0) continue;
+    if(bin<=1) continue;
+    if((yp-err*3) < back.GetParameter(0)) continue;
+    Double_t yp_left=hist->GetBinContent(bin-1);
+    Double_t yp_right=hist->GetBinContent(bin+1);
+    Double_t err_left=hist->GetBinError(bin-1);
+    Double_t err_right=hist->GetBinError(bin+1);
+    Double_t yp_sum=yp+yp_left+yp_right;
+    Double_t err_sum=TMath::Sqrt(err*err+err_left*err_left+err_right*err_right);
+    if((yp_sum-3*err_sum) < back.GetParameter(0)) continue;
+    
+    par[3*npx+1]=TMath::Log(yp);
+    par[3*npx+2]=xp;
+    par[3*npx+3]=kGmtXPitch; // sigma
+    npx++;
+  }
+  if (Debug()) {LOG_INFO << hist->GetName() << " found " << nfound << " Accpeted " << npx << endm;}
+  if (! npx) return 0;
+  
+  TString funcName=Form("Func%s_%i",hist->GetName(),npx);
+  TF1* fitFunc = (TF1*)gROOT->GetListOfFunctions()->FindObject(funcName);
+  if (fitFunc) {delete fitFunc;}
+  fitFunc = new TF1(funcName,fpeaks,CLUS_MIN,CLUS_MAX,3*npx+1);
+  fitFunc->SetParName(0,"nPeaks");
+  for(UInt_t i=0; i < npx; i++) {
+    fitFunc->SetParName(3*i+1,Form("logNorm_{%i}",i));  
+    fitFunc->SetParName(3*i+2,Form("#mu_{%i}",i));  
+    fitFunc->SetParLimits(3*i+2,par[3*i+2]-2*kGmtXPitch,par[3*i+2]+2*kGmtXPitch);
+    fitFunc->SetParName(3*i+3,Form("#sigma_{%i}",i));  
+    fitFunc->SetParLimits(3*i+3,kGmtXPitch*0.1,kGmtXPitch*10);
+  }
+  fitFunc->SetParameters(par);
+  fitFunc->FixParameter(0,(double)npx);
+  fitFunc->SetNpx(1000);
+  fitFunc->SetLineColor(kGreen);
+  
+  TVirtualFitter::SetDefaultFitter("Fumili");
+  int isOk=hist->Fit(fitFunc);
+  if(isOk) isOk=hist->Fit(fitFunc);
+  if(isOk) return 0;
+  
+  return fitFunc;
+}
+//________________________________________________________________________________
+Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitCollection& hits) {
+  static TCanvas* canv=0;
+  static TCanvas* canvAdc=0;
+  static TH1D* histXY[kGmtNumLayers][kGmtNumModules] = {0};
+  static const Char_t *XY[kGmtNumLayers] = {"X", "Y"};
+  Int_t NoClusters = 0;
+  StGmtStrip* pStrip;
+  Float_t position;
+  StGmtStripCollection *strips = mGmtCollection->getStripCollection(module);
+  if (! strips) return 0;
+  if(Debug()) {
+    LOG_INFO << "Cluster " << strips->getNumStrips() << "strips\tin module" << strips->getModule() << endm;
+  }
+  UInt_t stripsNum = strips->getNumStrips();
+  Float_t adc, adcRMS;
+  TSpectrum spectX(MAX_PEAKS); TSpectrum spectY(MAX_PEAKS);
+  if(Debug() > 1) {
+    canv = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("GmtClusters");
+    if(!canv) canv = new TCanvas("GmtClusters","GmtClusters",800,600);
+    else      canv->Clear();
+    if (Debug() > 2) {
+      canvAdc = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("GmtTimeStrip");
+      if(!canvAdc) canvAdc = new TCanvas("GmtTimeStrip","GmtTimeStrip",800,100,800,600);
+      else      canvAdc->Clear();
+    }
+  }
+  UInt_t nClusXY[kGmtNumLayers] = {0};
+  TF1 *fitXY[kGmtNumLayers] = {0};
+  //  UInt_t idXY[kGmtNumLayers][MAX_PEAKS] = {0};
+  for (Int_t ixy = 0; ixy < kGmtNumLayers; ixy++) {
+    TString name(Form("Cluster%s_%i",XY[ixy],module));
+    if(!histXY[ixy][module]) {histXY[ixy][module] = new TH1D(name,name,CLUS_BINS,CLUS_MIN,CLUS_MAX); histXY[ixy][module]->SetDirectory(0);}
+    else                      histXY[ixy][module]->Reset();
+    for(UInt_t iStrip = 0; iStrip < stripsNum; iStrip++) {
+      pStrip = strips->getSortedStrip(iStrip);
+      if (pStrip->isY() != ixy) continue;
+      adc = pStrip->getAdcSum();
+      adcRMS = pStrip->getAdcSumRMS();
+      if (adc <= 0) continue;
+      position = pStrip->getPosition();
+      if (position < -990) continue;
+      Int_t bin = histXY[ixy][module]->Fill(position,adc);
+      histXY[ixy][module]->SetBinError(bin,adcRMS);
+      if (Debug() > 2) {
+	Float_t ped = pStrip->getPedV();
+	for (Int_t timeBin = 0; timeBin < kGmtNumTimeBins; timeBin++) {
+	  mAdcTimeBins[ixy][module]->Fill(timeBin, position, pStrip->getAdc(timeBin) - ped);
+	}
+      }
+    }
+    fitXY[ixy] = FindPeaks(histXY[ixy][module]); 
+    if(fitXY[ixy]) {
+      Int_t nx = fitXY[ixy]->GetParameter(0);
+      for(Int_t i = 0; i < nx; i++) {
+	if (fitXY[ixy]->GetParameter(3*i+3) >= 5*kGmtXPitch) continue;
+	if (fitXY[ixy]->GetParameter(3*i+1) <  5.0) continue;
+	//	idXY[ixy][nClusXY[ixy]]  =  i;
+	nClusXY[ixy]++;
+	StGmtHit* hit = new StGmtHit(hits.getHitVec().size()+1,
+				     module, ixy,
+				     fitXY[ixy]->GetParameter(3*i+1),             // adcLog
+				     fitXY[ixy]->GetParError(3*i+1),              // error(adc)
+				     fitXY[ixy]->GetParameter(3*i+2),             // mean
+				     fitXY[ixy]->GetParError(3*i+2),              // error(mean)
+				     fitXY[ixy]->GetParameter(3*i+3),             // sigma
+				     fitXY[ixy]->GetParError(3*i+3));             // error(sigma)
+	hits.getHitVec().push_back(hit);
+	if (Debug()) hit->Print();
+      }
+      if (Debug()) {
+	LOG_INFO << "######" << XY[ixy] << " peaks found  = " << fitXY[ixy]->GetParameter(0) << ", Clusters fitted  = " << nClusXY[ixy] << endm;}
+    } 
+  }
+  if (! hits.getHitVec().size()) return kStErr;
+      
+  if (Debug() > 1) {
+    canv->Clear();
+    canv->Divide(kGmtNumLayers,1);
+    if (canvAdc) {
+      canvAdc->Clear();
+      canvAdc->Divide(kGmtNumLayers,1);
+    }
+    if (nClusXY[0] + nClusXY[1] > 0) {
+      for (Int_t ixy = 0; ixy < kGmtNumLayers ; ixy++) {
+	if (nClusXY[ixy]) {
+	  canv->cd(ixy+1);
+	  histXY[ixy][module]->Draw();
+	}
+      }	
+      canv->Modified();
+      canv->Update();
+      if (canvAdc) {
+	for (Int_t ixy = 0; ixy < kGmtNumLayers ; ixy++) {
+	  canvAdc->cd(ixy+1);
+	  mAdcTimeBins[ixy][module]->Draw("colz");
+	  canvAdc->Modified();
+	  canvAdc->Update();
+	}
+      }
+      static Int_t ibreak = 0;
+      ibreak++;
+    }
+  }
+  return NoClusters;
 }

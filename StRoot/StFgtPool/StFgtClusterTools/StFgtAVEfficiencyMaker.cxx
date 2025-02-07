@@ -78,7 +78,7 @@ Int_t StFgtAVEfficiencyMaker::Make()
   //  cout <<" in eff make " <<endl;
   Float_t x;
   Float_t y;
-  Int_t prvGeoId=-1;
+  //  Int_t prvGeoId=-1;
 
   StFgtHitCollection* clusterColD1=mFgtCollectionPtr->getHitCollection(0);
   StFgtHitCollection* clusterColD6=mFgtCollectionPtr->getHitCollection(5);
@@ -201,7 +201,7 @@ Int_t StFgtAVEfficiencyMaker::Make()
 			  vector<Int_t> v_geoIDsR;
 			  vector<Int_t> v_geoIDsPhi;
 
-			  int iFound=0;
+			  size_t iFound=0;
 			  int iFoundR=0;
 
 			  //zarm is d6 position - D1
@@ -328,7 +328,7 @@ Int_t StFgtAVEfficiencyMaker::Make()
 				{
 
 				  //			  		  cout <<"filled hip with " << xIpExp << " / " << yIpExp <<endl;
-				  for(int i=0;i<v_x.size();i++)
+				  for(size_t i=0;i<v_x.size();i++)
 				    {
 				      usedPoints.insert(v_geoIDsPhi[i]);
 				      usedPoints.insert(v_geoIDsR[i]);
@@ -345,7 +345,7 @@ Int_t StFgtAVEfficiencyMaker::Make()
 				      h_clusterChargeR[disk]->Fill(rCharge);
 				      h_clusterChargePhi[disk]->Fill(phiCharge);
 				    }
-				  for(int i=0;i<v_xFail.size();i++)
+				  for(size_t i=0;i<v_xFail.size();i++)
 				    {
 				      Int_t disk=v_xFail[i].first;
 				      Double_t x=v_xFail[i].second;
@@ -365,14 +365,14 @@ Int_t StFgtAVEfficiencyMaker::Make()
 				}
 			      else
 				{
-				  for(int i=0;i<v_r.size();i++)
+				  for(size_t i=0;i<v_r.size();i++)
 				    {
 				      Int_t disk=v_r[i].first;
 				      Double_t r=v_r[i].second;
 				      //			      cout <<"filling  r disk: " << disk <<" with: " << r <<endl;
 				      rEff[disk]->Fill(r);
 				    }
-				  for(int i=0;i<v_rFail.size();i++)
+				  for(size_t i=0;i<v_rFail.size();i++)
 				    {
 				      Int_t disk=v_rFail[i].first;
 				      Double_t r=v_rFail[i].second;

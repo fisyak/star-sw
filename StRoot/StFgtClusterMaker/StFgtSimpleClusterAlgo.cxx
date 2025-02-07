@@ -101,9 +101,9 @@ Int_t StFgtSimpleClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
   strips.sortByGeoId();
 
   Float_t defaultError = 0.001;
-  Short_t disc, quadrant,prvDisc,prvQuad;
+  Short_t disc, quadrant;//,prvDis,prvQuad;
   Char_t layer,prvLayer,noLayer='z';
-  Double_t ordinate, lowerSpan, upperSpan, prvOrdinate;
+  Double_t ordinate, lowerSpan, upperSpan;//, prvOrdinate;
   Int_t prvGeoId;
   Double_t accuCharge=0; 
   Double_t accuChargeError=0;
@@ -112,7 +112,7 @@ Int_t StFgtSimpleClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
   Int_t numStrips=0;
   //bool lookForNewCluster=true;
   prvLayer=noLayer;
-  bool isPhi, isR;
+  bool isPhi;//, isR;
   StFgtHit* newCluster=0;
   //to compute energy weighted strip id
   Double_t meanGeoId=0;
@@ -135,7 +135,7 @@ Int_t StFgtSimpleClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
     {
       StFgtGeom::getPhysicalCoordinate((*it)->getGeoId(),disc,quadrant,layer,ordinate,lowerSpan,upperSpan);
       isPhi=(layer=='P');
-      isR=(!isPhi);
+      //      isR=(!isPhi);
       if(prvLayer==noLayer)//first hit
 	{
 	  newCluster=new StFgtHit(clusters.getHitVec().size(),meanGeoId,accuCharge, disc, quadrant, layer, ordinate, defaultError,ordinate, defaultError,0.0,0.0);
@@ -153,7 +153,7 @@ Int_t StFgtSimpleClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
 	  prvLayer=layer;
 	  prvGeoId=(*it)->getGeoId();
 	  numStrips=1;
-	  prvOrdinate=ordinate;
+	  //	  prvOrdinate=ordinate;
 	  //go to next hit
 	  continue;
 	}
@@ -182,7 +182,7 @@ Int_t StFgtSimpleClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
           stripWeightMap[ *it ] = 1;
 	  prvLayer=layer;
 	  prvGeoId=(*it)->getGeoId();
-	  prvOrdinate=ordinate;
+	  //	  prvOrdinate=ordinate;
 	  continue;
 	}
       else
@@ -244,9 +244,9 @@ Int_t StFgtSimpleClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
           stripWeightMap[ *it ] = 1;
 	  prvLayer=layer;
 	  prvGeoId=(*it)->getGeoId();
-	  prvDisc=disc;
-	  prvQuad=quadrant;
-	  prvOrdinate=ordinate;
+	  //	  prvDisc=disc;
+	  //	  prvQuad=quadrant;
+	  //	  prvOrdinate=ordinate;
 	}
     }
 

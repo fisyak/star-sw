@@ -25,6 +25,7 @@ if ( defined( $ARG{LinksCheck} ) ) {
   &File::Find::find( \&wanted_dead, $build )   if -d $build;
   &File::Find::find( \&wanted_dead, $include ) if -d $include;
 }
+if ($ARG{EXTRA_CXXFLAGS} eq "") {$ARG{EXTRA_CXXFLAGS} = "-Werror"; print "Force use -Werror ========================================\n";};
 my $def = {@param::defaults};
 {
   foreach my $key( sort keys %$def) {
@@ -44,6 +45,7 @@ $LIBPATH = $LIB;
 # $LIBPATH .= $main::PATH_SEPARATOR . $def->{Packages}->{QT}->{LIBDIR};
 # $LIBPATH .= $main::PATH_SEPARATOR . $def->{ENV}->{OPTSTAR} . "/lib";
 #print "LD_LIBRARY_PATH = $def->{ENV}->{LD_LIBRARY_PATH} ================================================================================\n";
+
 foreach my $lib  (split ':',$def->{ENV}->{LD_LIBRARY_PATH}) {
 #  print "lib = $lib ================================================================================\n";
   $LIBPATH .= $main::PATH_SEPARATOR . $lib;
@@ -230,11 +232,12 @@ if ($ROOT_LEVEL !~ /^5/ ){
   push @items, "Pythia8_1_86";
   push @items, "Pythia8_2_25";
 }
-#my $python2 = system("which python2 > /dev/null 2>& 1");
+my $python2 = system("which python2 > /dev/null 2>& 1");
+my $pyparsing = system("which pyparsing > /dev/null 2>& 1");
 #print "python2 = $python2\n";
-#if ($python2) {
-#  push @items, "Geometry";
-#}
+if ($python2 || $pyparsing) {
+  push @items, "Geometry";
+}
 if ($STAR_HOST_SYS =~ /^al92/) {# no cern
   push @items, "rexe";
   push @items, "starsim";
@@ -355,12 +358,12 @@ if ( index($env->{EXTRA_CXXFLAGS}, "-Werror") != -1 ) {
   chomp(@warnoff_dirs = <warnoff_dirs_file>);
   close(warnoff_dirs_file);
 
-  if (@warnoff_dirs) {
-    print "Compiler warnings will be inhibited for directories matching the following patterns:\n";
-    foreach $dir (@warnoff_dirs) {
-      print "\t$dir\n";
-    }
-  }
+#   if (@warnoff_dirs) {
+#     print "Compiler warnings will be inhibited for directories matching the following patterns:\n";
+#     foreach $dir (@warnoff_dirs) {
+#       print "\t$dir\n";
+#     }
+#   }
 }
 
 my @Targets = ();

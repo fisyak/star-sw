@@ -120,7 +120,7 @@ int StMCCaloFilter::RejectGT(const StGenParticleMaster &ptl) const
     // Resume instantiations
     double E = 0;
     double particleEt = 0;
-    double detectorEt = 0;
+    //    double detectorEt = 0;
     double detectorEta = 0;
     double detectorPhi = 0;
 
@@ -180,7 +180,7 @@ int StMCCaloFilter::RejectGT(const StGenParticleMaster &ptl) const
 
         rho2 = p[0] * p[0] + p[1] * p[1];
 
-        detectorEt = E * TMath::Sqrt( rho2 / (rho2 + p[2] * p[2] ) );
+	//        detectorEt = E * TMath::Sqrt( rho2 / (rho2 + p[2] * p[2] ) );
         detectorEta = - log( TMath::Sqrt(rho2) / ( TMath::Sqrt( rho2 + p[2] * p[2] ) + p[2] ) );
         detectorPhi = atan2(p[1], p[0]);
 

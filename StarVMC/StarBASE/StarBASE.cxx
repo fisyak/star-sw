@@ -70,7 +70,7 @@ int StarBASE::Make()
   //
   Float_t dphi = 0.0;
   Float_t deta = 0.0;
-  Float_t min_phi, max_phi, min_eta, max_eta;
+  Float_t min_phi=0, max_phi=0, min_eta=0, max_eta=0;
 
   Int_t nsample = 4;
  
@@ -138,10 +138,10 @@ int StarBASE::Finish()
 
   Float_t dphi = 0.0;
   Float_t deta = 0.0;
-  Float_t eta_min, eta_max;
-  Float_t phi_min, phi_max;
+  Float_t eta_min=0, eta_max=0;
+  Float_t phi_min=0, phi_max=0;
 
-  Int_t nsample = 4;
+  //  Int_t nsample = 4;
  
   if ( *SAttr("eta_min") )       eta_min=DAttr("eta_min");
   if ( *SAttr("eta_max") )       eta_max=DAttr("eta_max");
@@ -151,7 +151,7 @@ int StarBASE::Finish()
   if ( *SAttr("phi_max") )       phi_max=DAttr("phi_max");
   if ( *SAttr("dphi")    )       dphi   =DAttr("dphi");
 
-  if ( *SAttr("sample")  )       nsample=IAttr("sample");
+  //  if ( *SAttr("sample")  )       nsample=IAttr("sample");
 
   //  TPaveText *pave = new TPaveText(0.7, 0.6, 0.875, 0.875);
   TPaveText *pave = new TPaveText(395.0,200.0,795.0,400.0);

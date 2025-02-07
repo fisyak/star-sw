@@ -110,7 +110,7 @@ Int_t StFgtDaq2RootMaker::Make(){
                for( Int_t tb = 0; tb < kFgtNumTimeBins; ++tb ){
                   Short_t adc = (*stripIter)->getAdc(tb);
 
-                  Int_t rdo, arm, apv, chan, quad;
+                  Int_t rdo, arm, apv, chan, quad = 0;
                   (*stripIter)->getElecCoords( rdo, arm, apv, chan );
 
                   // Note: for cosmic data, discs are in the order

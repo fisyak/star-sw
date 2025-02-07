@@ -186,7 +186,7 @@ StBadDcaAnalysis::trackLoop()
 
     float dcaXYGl = track->DcaXYGl();
     float phiGlDeg = track->PhiGl()*180./M_PI;;
-    phiGlDeg = (phiGlDeg<-165) ? (phiGlDeg += 360) : phiGlDeg;
+    if (phiGlDeg<-165)  phiGlDeg += 360;
 
     int ic=(track->Charge()>0) ? 0 : 1;
 

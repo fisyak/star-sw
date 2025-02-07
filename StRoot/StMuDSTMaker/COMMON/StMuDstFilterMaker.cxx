@@ -266,24 +266,38 @@ void StMuDstFilterMaker::clear(){
  */
 void StMuDstFilterMaker::createArrays() {
   /// regular stuff
+#ifndef __TFG__VERSION__
     int dummy;
+#endif /* ! __TFG__VERSION__ */
     for ( int i=0; i<__NARRAYS__; i++) {
 	mArrays[i] = 0;
 	DEBUGVALUE2(mArrays[i]);
+#ifdef __TFG__VERSION__
+	mArrays[i]= mMuDstMaker->clonesArray(mArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i]);
+#else /* ! __TFG__VERSION__ */
 	mArrays[i]= mMuDstMaker->clonesArray(mArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i],dummy);
+#endif /* __TFG__VERSION__ */
 	DEBUGVALUE2(mArrays[i]);
     }
 #ifndef __NO_STRANGE_MUDST__
     /// from strangeness group
     for ( int i=0; i<__NSTRANGEARRAYS__; i++) {
 	mStrangeArrays[i] = 0;
+#ifdef __TFG__VERSION__
+	mStrangeArrays[i]= mMuDstMaker->clonesArray(mStrangeArrays[i],StMuArrays::strangeArrayTypes[i],StMuArrays::strangeArraySizes[i]);
+#else /* ! __TFG__VERSION__ */
 	mStrangeArrays[i]= mMuDstMaker->clonesArray(mStrangeArrays[i],StMuArrays::strangeArrayTypes[i],StMuArrays::strangeArraySizes[i],dummy);
+#endif /* __TFG__VERSION__ */
     }
 #endif
     /// from emc group
     for ( int i=0; i<__NEMCARRAYS__; i++) {
 	mEmcArrays[i] = 0;
+#ifdef __TFG__VERSION__
+	mEmcArrays[i]= mMuDstMaker->clonesArray(mEmcArrays[i],StMuArrays::emcArrayTypes[i],StMuArrays::emcArraySizes[i]);
+#else /* ! __TFG__VERSION__ */
 	mEmcArrays[i]= mMuDstMaker->clonesArray(mEmcArrays[i],StMuArrays::emcArrayTypes[i],StMuArrays::emcArraySizes[i],dummy);
+#endif /* __TFG__VERSION__ */
   }
 }
 

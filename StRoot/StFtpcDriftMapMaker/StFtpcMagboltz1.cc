@@ -39,7 +39,7 @@ float *vdr, float *psiang, float *efin)
 
     /* Local variables */
     static double aold, anew;
-    static int last, itot, iout, j, l, m;
+    static int last, itot, iout, j, l;//, m;
     static double aconv, anorm;
     static int ist;
 
@@ -209,7 +209,7 @@ L60:
 	if (inpt_1.idlong == 1) {
 	    steppr_(&inpt_1.i2type, &l);
 	}
-	m = l + 4;
+	//	m = l + 4;
 /* MK      CALL OUTPUT(M) */
 	for (j = 1; j <= 2002; ++j) {
 	    f2c_1.f2[j - 1] = (float)0.;
@@ -2458,8 +2458,8 @@ int StFtpcMagboltz1::output_(int *n)
     static double faci;
     static double velx, vely, vtot, velx1, vely1, velz1;
     static int j;
-    static double vtot1, vtot2, fudge, ratei, dovmb, rteel, vtot12, dl, 
-	    ri, wm, select, erootf[2002], colrte, rteinl, ratatt, alpatt, 
+    static double vtot1, vtot2/*, fudge*/, ratei, dovmb, rteel, vtot12, dl, 
+      ri, wm, select/* , erootf[2002] */, colrte, rteinl, ratatt, alpatt, 
 	    dlovmb, fac, cjk, dss, dxx, sum, dyy, dyz, dzz, dxz;
 
 
@@ -2670,7 +2670,7 @@ L16:
     i__1 = inpt_1.nstep1;
     for (j = 1; j <= i__1; ++j) {
 /* L130: */
-	erootf[j - 1] = mix2_1.eroot[j - 1] * f0c_1.f[j - 1];
+//	erootf[j - 1] = mix2_1.eroot[j - 1] * f0c_1.f[j - 1];
     }
     i__1 = inpt_1.nstep1;
     for (j = 1; j <= i__1; ++j) {
@@ -2753,7 +2753,7 @@ L16:
 /* cccccccccccccccccccccccccccccccccccccccccccccccccccccccccc */
 /* convert long. diff. to um/::sqrt(cm) by W.Gong */
 /* also applying the correction */
-    fudge = dl / dzz;
+//    fudge = dl / dzz;
     mk_1.sig_long__ = ::sqrt(dl * (float)2. * (float)1e6 / mk_1.velz) * (float)
 	    10.;
     mk_1.sig_tranx__ = ::sqrt(dxx * (float)2. * (float)1e6 / mk_1.velz) * (
@@ -2990,7 +2990,7 @@ int StFtpcMagboltz1::stepph_(int *l)
     static double accur, dxold;
     static int kstep;
     static double dhfrs1, dhfrs2, h01, dhfnal, dhlast, dhstep, dhfrst;
-    static int kprint;
+    //    static int kprint;
     static double dum, dxx;
 
     if (*l == 2) {
@@ -3003,7 +3003,7 @@ L21:
     accur = (float).02;
     dxold = (float)0.;
     dhlast = (float)0.;
-    kprint = 0;
+    //    kprint = 0;
     kstep = 0;
 /*   INITIALLY USE WIDE STEPS */
     dhstep = (float)100.;

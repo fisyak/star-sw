@@ -122,7 +122,7 @@ public:
   Vector(const Vector& v):x(v.x),y(v.y),z(v.z){}
   Vector(const Vector& v1, const Vector& v2):x(v1.x-v2.x),y(v1.y-v2.y),z(v1.z-v2.z){}
   //  Vector operator=(const Vector& v) {return Vector(v.x,v.y,v.z);}
-  Vector operator=(const Vector& v) {x=v.x; y=v.y; z=v.z;}
+  Vector operator=(const Vector& v) {x=v.x; y=v.y; z=v.z; return *this;}
   Vector operator-() {return Vector(-x,-y,-z);}
   friend Vector operator+(const Vector& v1, const Vector& v2) {return Vector(v1.x+v2.x,v1.y+v2.y,v1.z+v2.z);}
   friend Vector operator-(const Vector& v1, const Vector& v2) {return Vector(v1.x-v2.x,v1.y-v2.y,v1.z-v2.z);}
@@ -468,8 +468,8 @@ double residHelix(double *par){
     if(mFillHist>0) {
       double r=sqrt(x*x+y*y);
       double phi=atan2(y,x);
-      double hx=mHitAlg.x[i];
-      double hy=mHitAlg.y[i];
+//       double hx=mHitAlg.x[i];
+//       double hy=mHitAlg.y[i];
       double hr=mHitAlg.r[i];
       double hp=mHitAlg.p[i];
       double dr = hr-r;
@@ -628,8 +628,8 @@ double residLine(double *par){
     if(mFillHist>0) {
       double r=sqrt(x*x+y*y);
       double phi=atan2(y,x);
-      double hx=mHitAlg.x[i];
-      double hy=mHitAlg.y[i];
+//       double hx=mHitAlg.x[i];
+//       double hy=mHitAlg.y[i];
       double hr=mHitAlg.r[i];
       double hp=mHitAlg.p[i];
       double dr = hr-r;
@@ -1428,7 +1428,7 @@ void StFgtAlignmentMaker::readFromStraightTrackAndMudst(){
     gMessMgr->Warning() << "StFgtAlignmentMaker::Make : No MuDST event" << endm;
     return;          // if no mudst event, we're done
   }
-  StEventInfo &info=event->eventInfo();
+  //  StEventInfo &info=event->eventInfo();
 
   if(mDebug>0) cout << "Event: Run "<< event->runId() << " Event No: " << event->eventId() << endl;
 
@@ -1801,14 +1801,14 @@ void StFgtAlignmentMaker::DispFromStraightTrackMaker(){
     if(neemc==0) continue;
     //if(nprompt==0 && neemc==0) continue;
     //getting idea where we should plot
-    double xmin = (t->ax + t->mx*zmin2);
-    double ymin = (t->ay + t->my*zmin2);
+//     double xmin = (t->ax + t->mx*zmin2);
+//     double ymin = (t->ay + t->my*zmin2);
     double xmax = (t->ax + t->mx*zmax);
     double ymax = (t->ay + t->my*zmax);
-    double rmin = sqrt(xmin*xmin+ymin*ymin);
+//     double rmin = sqrt(xmin*xmin+ymin*ymin);
     double rmax = sqrt(xmax*xmax+ymax*ymax);
-    double pmax = atan2(ymax,xmax) + 0.3;
-    double pmin = atan2(ymax,xmax) - 0.3;
+//     double pmax = atan2(ymax,xmax) + 0.3;
+//     double pmin = atan2(ymax,xmax) - 0.3;
     if(rmax<70) continue;
     //Draw 
     static TCanvas *c1=0, *c2=0; 

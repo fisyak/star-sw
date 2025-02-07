@@ -322,7 +322,7 @@ void DrawHftG(const Char_t *pattern = "d.*13", const Char_t *ctitle = "", Int_t 
 void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
   TString patt(pattern);
   TPRegexp reg(pattern);
-  TString cTitle = patt;
+  TString cTitle = "C" + patt;
   cTitle += ctitle;
   cTitle.ReplaceAll(".*","");
   cTitle.ReplaceAll("^","");

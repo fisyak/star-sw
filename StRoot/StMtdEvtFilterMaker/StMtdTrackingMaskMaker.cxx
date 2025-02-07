@@ -314,14 +314,14 @@ void StMtdTrackingMaskMaker::processTriggerData()
 
   // MT101 informaiton (QA purpose)
   int mix_tacsum[4][2];
-  int mix_id[4][2];
+  //  int mix_id[4][2];
   int nMixSignal = 0;
   for(int i = 0; i < 4; i++)
     {
       mix_tacsum[i][0] = (mTrigData->mtdDsmAtCh(3*i,0)) + ((mTrigData->mtdDsmAtCh(3*i+1,0)&0x3)<<8);
-      mix_id[i][0]     = (mTrigData->mtdDsmAtCh(3*i+1,0)&0xc)>>2;
+      //      mix_id[i][0]     = (mTrigData->mtdDsmAtCh(3*i+1,0)&0xc)>>2;
       mix_tacsum[i][1] = (mTrigData->mtdDsmAtCh(3*i+1,0)>>4) + ((mTrigData->mtdDsmAtCh(3*i+2,0)&0x3f)<<4);
-      mix_id[i][1]     = (mTrigData->mtdDsmAtCh(3*i+2,0)&0xc0)>>6;
+      //      mix_id[i][1]     = (mTrigData->mtdDsmAtCh(3*i+2,0)&0xc0)>>6;
 
       for(int j=0; j<2; j++)
 	{

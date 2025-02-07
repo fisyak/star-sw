@@ -19,6 +19,7 @@
 //---------------
 class WeveCluster { // info BTOW cluster
  public:
+  virtual ~WeveCluster() {}
   float energy,ET, adcSum;
   int nTower; // with non-zero ADC>kSigPed
   int iEta, iPhi; // lower-left corner of the cluster, can be negative, L2-indexing convention
@@ -44,6 +45,7 @@ class WeveCluster { // info BTOW cluster
 //---------------
 class WevePointTower { // tower pointed by the track
  public:
+  virtual ~WevePointTower() {}
   TVector3 R; // extrapolated position of primary track
   TVector3 Rglob; // extrapolated position of global track
   int id; // BTOW tower id, not used for ETOW
@@ -63,6 +65,7 @@ class WevePointTower { // tower pointed by the track
 //---------------
 class WeveEleTrack { // electron track info
  public:
+  virtual ~WeveEleTrack() {}
   int isMatch2Cl; // result of cuts
   WevePointTower pointTower;
   const StMuTrack *glMuTrack, *prMuTrack;
@@ -136,6 +139,7 @@ class WeveEleTrack { // electron track info
 //---------------
 class WeveVertex { // info about vertex
  public:
+  virtual ~WeveVertex() {}
   int id; // as store do muDst list
   float z; // cm
   float rank,funnyRank;
@@ -149,7 +153,7 @@ class WeveVertex { // info about vertex
   }
   
   void print( int flag=0){
-    printf(" Vertex ID=%d Z=%.1f cm  nTrack=%d\n",id,z, eleTrack.size());
+    printf(" Vertex ID=%d Z=%.1f cm  nTrack=%d\n",id,z, (int)eleTrack.size());
     for(unsigned int i=0;i< eleTrack.size();i++) 
       eleTrack[i].print();
   }
@@ -163,6 +167,7 @@ class WeveVertex { // info about vertex
 //---------------
 class WeveBEMC { // info about BEMC
  public:
+  virtual ~WeveBEMC() {}
   //raw BTOW/BPRS hits
   int   tileIn[mxBTile]; // 0 if no data
   float adcTile[mxBTile][mxBtow];
@@ -225,6 +230,7 @@ class WeveBEMC { // info about BEMC
 //--------------
 class WeveETOW { // info about ETOW           
  public:
+  virtual ~WeveETOW() {};
   
   //raw ETOW hit
   int etowIn;
@@ -253,7 +259,7 @@ class WeveETOW { // info about ETOW
 //--------------
 class WeveEPRS { // info about EPRS           
  public:
-
+  virtual ~WeveEPRS() {}
   //raw EPRS hit
   int eprsIn;
   float adc[mxEtowSec*mxEtowSub][mxEtowEta][mxPrs]; //[phibin][etabin][layer]
@@ -275,7 +281,7 @@ class WeveEPRS { // info about EPRS
 //--------------
 class WeveESMD { // info about ESMD           
  public:
-
+  virtual ~WeveESMD() {}
   //raw ESMD hit
   int esmdIn;
   float adc[mxEtowSec][mxEsmdPlane][mxEsmdStrip]; //[phibin][etabin]
@@ -298,6 +304,7 @@ class WeveESMD { // info about ESMD
 //---------------
 class Wevent2011 : public TObject {
  public:
+  virtual ~Wevent2011() {}
   // .....variables ....
   int l2bitET,l2bitRnd;
   int l2EbitET,l2EbitRnd;

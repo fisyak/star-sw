@@ -183,25 +183,6 @@ StBFChain *bfc(Int_t First, Int_t Last,
     if (Last == -2 && tChain.CompareTo("ittf",TString::kIgnoreCase)) Usage();
     return 0;
   } else {
-#if 0
-    // Predefined test chains
-    Int_t typeC = 0;
-    const Char_t *predChains[4] = {"MC2016","MC2017","MC2018","MC2019"};
-    for (Int_t i = 0; i < 4; i++) {
-      TString PredChain(predChains[i]);
-      if (TString(Chain) == PredChain) {typeC = i+1; break;}
-      PredChain += ".Ideal";
-      if (TString(Chain) == PredChain) {typeC = -(i+1); break;}
-    }
-    if (typeC) {
-      if ( TString(gProgName) == "root4star") {
-	tChain += ".Ideal,gstar,useXgeom,CorrX"; 
-      } else                                   {
-	tChain += ",vmc,CorrX";
-      }
-      tChain += ",RunG.1";
-    }
-#endif
   }
 #ifndef __CLING__
   if (gClassTable->GetID("StBFChain") < 0) Load(tChain.Data());
@@ -241,19 +222,6 @@ StBFChain *bfc(Int_t First, Int_t Last,
     gSystem->Exit(1);
   }
   StMaker::lsMakers(chain);
-  StMaker *dbMk = chain->GetMaker("db");
-  if (dbMk) {
-    dbMk->SetDebug(1);
-    if (tChain.Contains("Cosmics",TString::kIgnoreCase)) {
-      cout << "Disable MySQL for TPC alignment parameters" << endl;
-      dbMk->SetFlavor("TFG","tpcSectorT0offset"); // disable MySQL 
-      dbMk->SetFlavor("TFG","TpcPosition"); // disable MySQL 
-      dbMk->SetFlavor("TFG","TpcHalfPosition"); // disable MySQL 
-      dbMk->SetFlavor("TFG","TpcSuperSectorPositionB"); // disable MySQL 
-      dbMk->SetFlavor("TFG","TpcInnerSectorPositionB"); // disable MySQL 
-      dbMk->SetFlavor("TFG","TpcOuterSectorPositionB"); // disable MySQL 
-    }
-  }
   if (Last < 0) return chain;
   StMaker *EventMk = chain->GetMaker("0Event");
   if (EventMk) EventMk->SetDebug(1);
@@ -315,13 +283,14 @@ StBFChain *bfc(Int_t First, Int_t Last,
   chain->SetAttr(".Privilege",1,"StIOInterFace::*" ); 	  //All IO makers are priviliged
   chain->SetAttr(".Privilege",1,"St_geant_Maker::*"); 	  //It is also IO maker
   chain->SetAttr(".Privilege",1,"StTpcDbMaker::*"); 	  //It is also TpcDb maker to catch trips
-  chain->SetAttr(".Privilege",1,"*::tpc_hits"); //May be allowed to act upon excessive events
-  chain->SetAttr(".Privilege",1,"*::tpx_hits"); //May be allowed to act upon excessive events
-  chain->SetAttr(".Privilege",1,"StTpcHitMover::*"); //May be allowed to act upon corrupt events
-  chain->SetAttr(".Privilege",1,"*::tpcChain"); //May pass on messages from sub-makers
+  chain->SetAttr(".Privilege",1,"*::tpc_hits");           //May be allowed to act upon excessive events
+  chain->SetAttr(".Privilege",1,"*::tpx_hits");           //May be allowed to act upon excessive events
+  chain->SetAttr(".Privilege",1,"StTpcHitMover::*");      //May be allowed to act upon corrupt events
+  chain->SetAttr(".Privilege",1,"*::tpcChain");           //May pass on messages from sub-makers
   chain->SetAttr(".Privilege",1,"StTriggerDataMaker::*"); //TriggerData could reject event based on corrupt triggers
-  chain->SetAttr(".Privilege",1,"StEandBDirMaker::*"); // just for debuggin purpose
-  chain->SetAttr(".Privilege",1,"StEventMaker::*"); //May be allowed to act upon trigger IDs (filtering)
+  chain->SetAttr(".Privilege",1,"StEandBDirMaker::*");    // just for debuggin purpose
+  chain->SetAttr(".Privilege",1,"StEventMaker::*");       //May be allowed to act upon trigger IDs (filtering)
+  //  if (TString(Chain).Contains("gmtCosmics",TString::kIgnoreCase)) chain->SetAttr(".Privilege",1,"StGmtRawMaker::*");  
 #endif
   Int_t iInit = chain->Init();
   if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return chain;}

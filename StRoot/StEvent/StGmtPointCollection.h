@@ -19,50 +19,16 @@
 class StGmtPoint;
 
 class StGmtPointCollection : public StObject {
-public:
-    // constructors
-    StGmtPointCollection();
-    // StGmtPointCollection( const StGmtPointCollection& other );            ---> use default
-    // StGmtPointCollection& operator=( const StGmtPointCollection& other ); ---> use default 
-    
-    // deconstructor
-    ~StGmtPointCollection();
-    
-    // accessors/modifiers for the underlying vector
-    StSPtrVecGmtPoint& getPointVec();
-    const StSPtrVecGmtPoint& getPointVec() const;
-    
-    size_t getNumPoints() const;
-    
-    // Clear
-    void Clear( Option_t *opt = "" );
-    
+ public:
+ StGmtPointCollection() : StObject() {}
+  virtual  ~StGmtPointCollection() {}
+  StSPtrVecGmtPoint&       getPointVec()        {   return mPointVec;}
+  const StSPtrVecGmtPoint& getPointVec()  const {   return mPointVec;}
+  size_t                   getNumPoints() const {   return mPointVec.size();}
+  void Clear( Option_t *opt = "" )              {   mPointVec.clear();}
 protected:
-    // the data member
     StSPtrVecGmtPoint mPointVec;
-    
-private:   
     ClassDef(StGmtPointCollection,1)
 }; 
-
-
-// inline functions
-
-inline StGmtPointCollection::StGmtPointCollection() : StObject() {
-   // nothing else to do
-};
-
-inline StSPtrVecGmtPoint& StGmtPointCollection::getPointVec() {
-   return mPointVec;
-};
-
-inline const StSPtrVecGmtPoint& StGmtPointCollection::getPointVec() const{
-   return mPointVec;
-};
-
-inline size_t StGmtPointCollection::getNumPoints() const {
-   return mPointVec.size();
-};
-
 #endif
 

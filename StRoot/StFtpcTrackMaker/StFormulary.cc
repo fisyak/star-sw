@@ -39,8 +39,6 @@
 // functions and calulations.                                                //
 ///////////////////////////////////////////////////////////////////////////////
 
-ClassImp(StFormulary)
-
 void StFormulary::Pq(const Double_t *p, const Double_t *q, Double_t x[2]) 
 {
   // Calculates the x(y=0)-values of a parabola of the form

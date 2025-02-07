@@ -970,7 +970,7 @@ Int_t StTofCalibMaker::Make()
   } else if(mYear8) {
     iret = processEventYear8();
   }
-  return kStOK;
+  return iret;
 }
 
 //____________________________________________________________________________

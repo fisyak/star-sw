@@ -464,14 +464,14 @@ Bool_t StFgtStraightTrackMaker::getTrack(vector<AVPoint>& points, Double_t ipZ)
 
 Double_t StFgtStraightTrackMaker::getRPhiRatio(vector<generalCluster>::iterator hitIterBegin, vector<generalCluster>::iterator hitIterEnd)
 {
-  Short_t quad;
+  //  Short_t quad;
   Char_t layer; 
   Int_t numR=0;
   Int_t numPhi=0;
   vector<generalCluster>::iterator hitIter=hitIterBegin;
   for(;hitIter!=hitIterEnd;hitIter++)
     {
-      quad=hitIter->quad;
+      //      quad=hitIter->quad;
       layer=hitIter->layer;
 
       if(layer=='R')
@@ -505,17 +505,17 @@ Int_t StFgtStraightTrackMaker::Make()
 
 
   pClusters=fgtGenMkr->getClusters();
+#if 0
   for(int i=0;i<6;i++)
     {
       //     cout <<"there are " << pClusters[i]->size() << " clusters in disk " << i <<endl;
-      for(int j=0;j<pClusters[i]->size();j++)
+      for(size_t j=0;j<pClusters[i]->size();j++)
 	{
 
 	  /*	  if((*(pClusters[i]))[j].layer=='R')
 	    cout <<"R layer, ";
 	    else
 	    cout <<"Phi layer, ";*/
-
 	  Double_t posPhi=(*(pClusters[i]))[j].posPhi;
 	  Double_t posR=(*(pClusters[i]))[j].posR;
 	  Int_t clusSize=(*(pClusters[i]))[j].clusterSize;
@@ -525,6 +525,7 @@ Int_t StFgtStraightTrackMaker::Make()
 	  //	  cout <<"cluster pos phi: " << posPhi <<" posR: " << posR <<" clusSize: " << clusSize << " charge: "<< charge <<" geoId: "<< cntGeoId <<" seedT : " << seedType<<endl;
 	}
     }
+#endif
   pStrips=fgtGenMkr->getStrips();
 
   //  cout <<" mtracks size: " << m_tracks.size() << " oldnum: "<< oldNumTracks <<endl;
@@ -567,7 +568,7 @@ Int_t StFgtStraightTrackMaker::Make()
 	    continue;
 	  if(iSeed1==m_effDisk || iSeed2==m_effDisk)
 	    continue;
-	  if(pClusters[iSeed1]->size() > maxClusters || pClusters[iSeed2]->size() > maxClusters)
+	  if((int)pClusters[iSeed1]->size() > maxClusters || (int)pClusters[iSeed2]->size() > maxClusters)
 	    {
 	      //	           cout <<"too many clusters in the disk!!!"<<endl<<endl;
 	      continue;
@@ -716,7 +717,7 @@ Int_t StFgtStraightTrackMaker::Make()
 			  vector<generalCluster>::iterator iterClosestR;
 
 			  Double_t closestDist=999999;
-			  Int_t closestQuad;
+			  Int_t closestQuad=0;
 			  Int_t quadTestR=-1;
 			  //			  cout <<"looking for more hits..." <<endl;
 			  for(int iD=0;iD<6;iD++)
@@ -736,7 +737,7 @@ Int_t StFgtStraightTrackMaker::Make()
 			      Double_t xPosExp=xD1+(xD6-xD1)*(diskZ-D1Pos)/zArm;
 			      Double_t yPosExp=yD1+(yD6-yD1)*(diskZ-D1Pos)/zArm;
 			      //			      cout <<"hope to see something x: " << xPosExp <<" y: " << yPosExp <<endl;
-			      Double_t rPosExp=rD1+(rD6-rD1)*(diskZ-D1Pos)/zArm;
+			      //			      Double_t rPosExp=rD1+(rD6-rD1)*(diskZ-D1Pos)/zArm;
 			      vector<generalCluster> &hitVec=*(pClusters[iD]);
 			      for(hitIter=hitVec.begin();hitIter!=hitVec.end();hitIter++)
 				{
@@ -835,8 +836,8 @@ Int_t StFgtStraightTrackMaker::Make()
 				  StFgtHit* fgtHitR=iterClosestR->fgtHit;
 				  StFgtHit* fgtHitPhi=iterClosestPhi->fgtHit;
 
-				  Int_t geoIdR=iterClosestR->centralStripGeoId;
-				  Int_t geoIdPhi=iterClosestPhi->centralStripGeoId;
+// 				  Int_t geoIdR=iterClosestR->centralStripGeoId;
+// 				  Int_t geoIdPhi=iterClosestPhi->centralStripGeoId;
 
 				  double x=r*cos(phi);
 				  double y=r*sin(phi);
@@ -888,7 +889,7 @@ Int_t StFgtStraightTrackMaker::Make()
 			      Bool_t passQCuts=true;
 			      //			      if(v_x.size()>iFound)
 			      {
-				Double_t ipZ;
+				Double_t ipZ=0;
 				//				cout <<"about to get track" <<endl;
 				//				cout <<"check for valid track " << endl;
 				//this also manipulates the points vector to only put points in there that fit
@@ -967,7 +968,7 @@ bool StFgtStraightTrackMaker::trackQCuts(AVTrack& trk)
 StFgtStraightTrackMaker::StFgtStraightTrackMaker( const Char_t* name): StMaker( name ),useChargeMatch(false),runningEvtNr(0),hitCounter(0),hitCounterR(0),maxChi2(2),dcaCut(1),vertexCutPos(70),vertexCutNeg(-120)
 {
   //  cout <<"AVE constructor!!" <<endl;
-  int numTb=7;
+  //  int numTb=7;
   m_effDisk=10;//
   isMuDst=true; //might want to change this...
   maxPhiDiff=0.1;
@@ -997,7 +998,7 @@ Int_t StFgtStraightTrackMaker::Finish(){
   ///////////////////////////track collection
   //  vector<AVTrack>::iterator it=m_tracks.begin();
   //  cout <<"we found " << m_tracks.size() <<" tracks" <<endl;
-  int counter=0;
+    //  int counter=0;
 
   ///  cout <<"canvases etc.. " << endl;
   //////////////////////////////////////////////////

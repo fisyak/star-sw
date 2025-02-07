@@ -216,10 +216,12 @@ void StTriggerStudyMaker::fillTree()
       simutriggers.push_back(triggers[i]);
       StTriggerSimuResult trigsimuresult = mTriggerSimuMaker->detailedResult(triggers[i]);
       vector<short> towers = trigsimuresult.highTowerIds();
+#if 0
       for(unsigned int j = 0; j < towers.size(); j++){
 	int dsm = trigsimuresult.highTowerAdc(towers[j]);
 	//if(dsm > 0)mTSEvent->addTowerDSM(towers[j],dsm);
       }
+#endif
       vector<short> jpatches = trigsimuresult.jetPatchIds();
       for(unsigned int j = 0; j < jpatches.size(); j++){
 	int dsm = trigsimuresult.jetPatchAdc(jpatches[j]);

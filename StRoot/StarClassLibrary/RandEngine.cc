@@ -62,7 +62,7 @@ RandEngine::RandEngine(const RandEngine &p) : mx(RAND_MAX)
   // This copy constructor uses "seq" to make the physical copy
   // of the object preserving its original status.
 
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.theSeed;
     seq = 0;
     for (HepInt i=0; i<p.seq; ++i) flat();
@@ -75,7 +75,7 @@ RandEngine & RandEngine::operator = (const RandEngine &p)
   // This operator uses "seq" to make the physical copy
   // of the object preserving its original status.
 
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.theSeed;
     seq = 0;
     for (HepInt i=0; i<p.seq; ++i) flat();

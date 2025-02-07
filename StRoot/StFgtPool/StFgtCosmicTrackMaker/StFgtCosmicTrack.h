@@ -49,7 +49,7 @@ class StFgtCosmicTrack {
    StFgtCosmicTrack& operator=(const StFgtCosmicTrack&);
 
    // deconstructor
-   ~StFgtCosmicTrack();
+   virtual ~StFgtCosmicTrack() {}
 
    // accessors
    Short_t getKey() const;
@@ -87,8 +87,6 @@ class StFgtCosmicTrack {
 
 // inline functions
 
-// deconstructor
-inline StFgtCosmicTrack::~StFgtCosmicTrack() { /* */ };
 
 // accessors
 inline Short_t StFgtCosmicTrack::getKey() const {

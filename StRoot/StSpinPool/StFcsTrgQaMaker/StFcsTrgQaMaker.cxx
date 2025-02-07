@@ -52,8 +52,8 @@ Int_t StFcsTrgQaMaker::Init(){
       int yday=mRun/1000;
       sprintf(mFilename,"%d/%d.trgQa.root",yday,mRun);
   }else if(mFilename==0){
-    char* fname = "fcs.trgqa.root";
-    mFilename=fname;
+    const char* fname = "fcs.trgqa.root";
+    mFilename= (char *) fname;
   }
   printf("StFcsTrgQaMaker::Init - Opening %s\n",mFilename);
   mFile=new TFile(mFilename,"RECREATE");
@@ -256,11 +256,11 @@ Int_t StFcsTrgQaMaker::Make() {
     }
 
     unsigned int max;
-    int maxns,maxc,maxr;    
-    int maxns2,maxc2,maxr2;    
-    int maxns3,maxc3,maxr3;    
-    int maxns4,maxc4,maxr4;    
-    int maxns5,maxc5,maxr5;    
+    int maxns=0,maxc=0,maxr=0;    
+    //    int maxns2,maxc2,maxr2;    
+    int maxns3=0,maxc3=0,maxr3=0;    
+    int maxns4=0,maxc4=0,maxr4=0;    
+    int maxns5=0,maxc5=0,maxr5=0;    
     //Ecal HT 2x2 
     for(int ns=0; ns<kFcsNorthSouth; ns++){
       max=0;
@@ -316,16 +316,16 @@ Int_t StFcsTrgQaMaker::Make() {
     //Ecal 4x4
     for(int ns=0; ns<kFcsNorthSouth; ns++){
       max=0;
-      int emmax=0, elemax=0, summax=0, hadmax=0;
+      unsigned int emmax=0, elemax=0, summax=0, hadmax=0;
       for(int c=0; c<kFcsEcal4x4NCol; c++){
 	for(int r=0; r<kFcsEcal4x4NRow; r++){
-	  int esum=trg->esum[ns][r][c];	  
-	  int sum=trg->sum[ns][r][c];
+	  unsigned int esum=trg->esum[ns][r][c];	  
+	  unsigned int sum=trg->sum[ns][r][c];
 	  if(esum>max){  //find max Ecal 4x4
 	    max=esum; maxns=ns; maxr=r; maxc=c;		    	    
 	  }
 	  if(esum>emmax && trg->ratiomax[ns][r][c] > 1.0/(1.0+(float)trg->EM_HERATIO_THR/128)){
-	    emmax=esum; maxns2=ns; maxr2=r; maxc2=c;  
+	    emmax=esum;// maxns2=ns; maxr2=r; maxc2=c;  
 	  }
 	  if(esum>elemax && trg->ratiomax[ns][r][c] > 1.0/(1.0+(float)trg->EM_HERATIO_THR/128) && trg->epdcoin[ns][r][c]){
 	    elemax=esum; maxns3=ns; maxr3=r; maxc3=c;  

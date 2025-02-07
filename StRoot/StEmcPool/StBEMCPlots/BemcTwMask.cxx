@@ -51,7 +51,7 @@ bool useBtowMask(const Char_t *fname, BemcTwMask *m) {
  
   string line; 
   Int_t softid, cr, seq, TWmask, HTmask ,TPmask, tp;
-  Int_t plot, channelinplot, nok=0;
+  Int_t plot = 0, channelinplot, nok=0;
   Float_t ped;
   Char_t name[1000];
 

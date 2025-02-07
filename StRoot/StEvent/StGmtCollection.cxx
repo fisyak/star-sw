@@ -11,18 +11,11 @@
 
 #include "StGmtCollection.h"
 
-// constructor
-StGmtCollection::StGmtCollection() : StObject() {
-    // set the module field for some of the collections
-    for( int i=0; i<kGmtNumModules; ++i ){
-        mStripCollection[i].setModule( i );
-        mHitCollection[i].setModule( i );
-    }
-}
-
-// deconstructor
-StGmtCollection::~StGmtCollection(){
-    // nothing to do
+StGmtCollection::StGmtCollection() {
+  for( int i=0; i<kGmtNumModules; ++i ){
+    mStripCollection[i].setModule( i );
+    mHitCollection[i].setModule( i );
+  }
 }
 
 void StGmtCollection::Clear( Option_t *opt ){
@@ -32,5 +25,3 @@ void StGmtCollection::Clear( Option_t *opt ){
     }
     mPointCollection.Clear( opt );
 }
-
-ClassImp(StGmtCollection)

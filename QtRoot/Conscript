@@ -21,7 +21,7 @@ my $PKGT = "QtRoot";
 # Import from ENV variables
 # $TEMP = $TMP = (defined($ENV{SCRATCH})?$ENV{SCRATCH}:"/tmp");
 
-printf( "Run Conscript          in %-30s  for %-20s\n", $Dir,$PKGT );
+printf( "Run Conscript          in %-45s  for %-32s\n", $Dir,$PKGT );
 
 my @src = ();
 my @dirs = qw(qt qtgui qtimage qtgl qtExamples qtroot qtthread);

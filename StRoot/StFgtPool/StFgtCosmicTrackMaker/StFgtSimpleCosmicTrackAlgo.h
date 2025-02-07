@@ -42,7 +42,7 @@ class StFgtSimpleCosmicTrackAlgo :public StFgtICosmicTrackAlgo {
  public:
   // constructor
   StFgtSimpleCosmicTrackAlgo();
-
+  virtual ~StFgtSimpleCosmicTrackAlgo() {}
   // takes in data from maker, calculates line parameters etc.
   virtual Int_t makeCosmicTracks(StFgtPointCollection&, StFgtCosmicTrackVec&, Int_t);
 

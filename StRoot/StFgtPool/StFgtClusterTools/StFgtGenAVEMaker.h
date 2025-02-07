@@ -109,8 +109,6 @@ class StFgtGenAVEMaker : public StFgtGeneralBase {
    vector<TH2D*> v_hClusP;
    vector<TH2D*> v_hClusR;
    Bool_t useChargeMatch;
-   Int_t printCounter;
-   Int_t fitCounter;
    ofstream* outTxtFile;
    ofstream* cluNotFoundTxt;
    Short_t getQuadFromCoo(Double_t x, Double_t y);
@@ -302,6 +300,8 @@ class StFgtGenAVEMaker : public StFgtGeneralBase {
    int hitCounter;
    int hitCounterR;
    //THD2** 
+   Int_t printCounter;
+   Int_t fitCounter;
 
 
  private:   

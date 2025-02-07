@@ -570,8 +570,8 @@ StppLMVVertexFinder::ppLMV5() {
 #endif
 
 
-  LOG_DEBUG <<"ppLMV5: Primary Vertex found!\nVert position: "<<XVertex<<", accepted tracks "<<mPrimCand.size()<<" of "<<totTr<<" eveID="<<eveID<<endm;
-  printf("##V %6d %d %f %f %f    %d %d %d\n",eveID,mTotEve,XVertex.x(),XVertex.y(),XVertex.z(),mCtbHits.size(),n1,NCtbMatches());
+  LOG_DEBUG <<"ppLMV5: Primary Vertex found!\nVert position: "<<XVertex<<", accepted tracks "<<(int)mPrimCand.size()<<" of "<<totTr<<" eveID="<<eveID<<endm;
+  printf("##V %6d %d %f %f %f    %d %d %d\n",eveID,mTotEve,XVertex.x(),XVertex.y(),XVertex.z(),(int)mCtbHits.size(),n1,NCtbMatches());
 
 
   // get geant vertex
@@ -585,8 +585,8 @@ StppLMVVertexFinder::ppLMV5() {
       // hPiFi[10]->Fill(GVER->ge_x[2]-rZver);
       // hPiFi[11]->Fill(GVER->ge_x[0]-rXver);
       // hPiFi[12]->Fill(GVER->ge_x[1]-rYver);
-      printf("Z Geant-found=%.2f, dx=%.2f, dy=%.2f nCtbSl=%d n1=%d eveID=%d\n",GVER->ge_x[2]-XVertex.z(),GVER->ge_x[0]-XVertex.x(),GVER->ge_x[1]-XVertex.y(),mCtbHits.size(),n1,eveID);
-      printf("##G %6d %d %f %f    %d %d %d\n",eveID,mTotEve,GVER->ge_x[2],XVertex.z(),mCtbHits.size(),n1,NCtbMatches());
+      printf("Z Geant-found=%.2f, dx=%.2f, dy=%.2f nCtbSl=%d n1=%d eveID=%d\n",GVER->ge_x[2]-XVertex.z(),GVER->ge_x[0]-XVertex.x(),GVER->ge_x[1]-XVertex.y(),(int)mCtbHits.size(),n1,eveID);
+      printf("##G %6d %d %f %f    %d %d %d\n",eveID,mTotEve,GVER->ge_x[2],XVertex.z(),(int)mCtbHits.size(),n1,NCtbMatches());
       
     }
   }

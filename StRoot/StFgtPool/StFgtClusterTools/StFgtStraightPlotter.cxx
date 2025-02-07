@@ -381,8 +381,8 @@ void StFgtStraightPlotter::fillStripHistos(Float_t r, Float_t phi, Int_t iD, Int
 
   Double_t maxRCharge=-9999;
   Double_t maxPhiCharge=-9999;
-  Double_t maxRChargeUncert=-9999;
-  Double_t maxPhiChargeUncert=-9999;
+  //  Double_t maxRChargeUncert=-9999;
+  //  Double_t maxPhiChargeUncert=-9999;
   Int_t maxRInd=-1;
   Int_t maxPInd=-1;
   Int_t maxRTb=-1;
@@ -407,12 +407,12 @@ void StFgtStraightPlotter::fillStripHistos(Float_t r, Float_t phi, Int_t iD, Int
   Short_t disc, quadrant,strip;
   Char_t layer;
   //These variables will store the APV number at which the relevant stuff happens for the overall quad.                                                                                                    
-  Int_t APVmaxRCharge=-9999;
-  Int_t APVmaxPhiCharge=-9999;
+  //  Int_t APVmaxRCharge=-9999;
+  //  Int_t APVmaxPhiCharge=-9999;
   //Int_t APVmaxRChargeUncert=-9999;
   //Int_t APVmaxPhiChargeUncert=-9999;
-  Int_t APVmaxRInd=-1;
-  Int_t APVmaxPInd=-1;
+  //  Int_t APVmaxRInd=-1;
+  //  Int_t APVmaxPInd=-1;
   Int_t APVmaxRTb=-1;
   Int_t APVmaxPTb=-1;
   Int_t APVmaxRAdc=-1;
@@ -466,16 +466,16 @@ void StFgtStraightPlotter::fillStripHistos(Float_t r, Float_t phi, Int_t iD, Int
 		      clusterChargeP=-9999;
 		    }
 		  maxPhiCharge=pStrip.charge;
-		  maxPhiChargeUncert=pStrip.chargeUncert;
+		  //		  maxPhiChargeUncert=pStrip.chargeUncert;
 		  maxPInd=i;
 		  maxPAdc=-9999;
 		  maxSigAdcP=-9999;
 		  numFSigP=0;
 		  firstFSigTbP=-1;
 		  firstTbSigP=-1;
-		  APVmaxPhiCharge=-1;
-                  APVmaxPInd=-1;
-                  APVmaxPAdc=-1;
+		  //		  APVmaxPhiCharge=-1;
+		  //                  APVmaxPInd=-1;
+		  //                  APVmaxPAdc=-1;
                   APVmaxSigAdcP=-1;
                   APVnumFSigP=-1;
                   APVfirstFSigTbP=-1;
@@ -537,14 +537,14 @@ void StFgtStraightPlotter::fillStripHistos(Float_t r, Float_t phi, Int_t iD, Int
 		  
 		  maxRCharge=pStrip.charge;
 		  maxRInd=i;
-		  maxRChargeUncert=pStrip.chargeUncert;
+		  //		  maxRChargeUncert=pStrip.chargeUncert;
 		  maxRAdc=-9999;
 		  maxSigAdcR=-9999;
 		  numFSigR=0;
 		  firstFSigTbR=-1;
 		  firstTbSigR=-1;
-		  APVmaxRCharge=-1;
-                  APVmaxRInd=-1;
+		  //		  APVmaxRCharge=-1;
+		  //                  APVmaxRInd=-1;
                   APVmaxRAdc=-1;
                   APVmaxSigAdcR=-1;
                   APVnumFSigR=-1;
@@ -710,7 +710,7 @@ void StFgtStraightPlotter::fillStripHistos(Float_t r, Float_t phi, Int_t iD, Int
     {
 
       //      cout <<" part of p cluster " << endl;
-      float intPCharge=(float)pStrips[iD*4+iq][maxPInd].charge+(float)pStrips[iD*4+iq][maxPInd-1].charge+(float)pStrips[iD*4+iq][maxPInd+1].charge;
+      //      float intPCharge=(float)pStrips[iD*4+iq][maxPInd].charge+(float)pStrips[iD*4+iq][maxPInd-1].charge+(float)pStrips[iD*4+iq][maxPInd+1].charge;
       float chi2Ndf;
       float amp;
       float t0;
@@ -747,7 +747,7 @@ void StFgtStraightPlotter::fillStripHistos(Float_t r, Float_t phi, Int_t iD, Int
     {
 
       //      cout <<" part of R cluster " << endl;
-      float intRCharge=(float)pStrips[iD*4+iq][maxRInd].charge+(float)pStrips[iD*4+iq][maxRInd-1].charge+(float)pStrips[iD*4+iq][maxRInd+1].charge;
+      //      float intRCharge=(float)pStrips[iD*4+iq][maxRInd].charge+(float)pStrips[iD*4+iq][maxRInd-1].charge+(float)pStrips[iD*4+iq][maxRInd+1].charge;
       float chi2Ndf;
       float amp;
       float t0;
@@ -1246,14 +1246,14 @@ pair<Double_t,Double_t> StFgtStraightPlotter::getChargeRatio(Float_t r, Float_t 
 
 Double_t StFgtStraightPlotter::getRPhiRatio(vector<generalCluster>::iterator hitIterBegin, vector<generalCluster>::iterator hitIterEnd)
 {
-  Short_t quad;
+  //  Short_t quad;
   Char_t layer; 
   Int_t numR=0;
   Int_t numPhi=0;
   vector<generalCluster>::iterator hitIter=hitIterBegin;
   for(;hitIter!=hitIterEnd;hitIter++)
     {
-      quad=hitIter->quad;
+      //      quad=hitIter->quad;
       layer=hitIter->layer;
 
       if(layer=='R')
@@ -1329,7 +1329,7 @@ Int_t StFgtStraightPlotter::Make()
       intNumTracks++; 
       numTracksInCurrEv++;
       numPointsPerTrack->Fill(it->points->size());
-      for(int i=0;i<it->points->size();i++)
+      for(size_t i=0;i<it->points->size();i++)
 	{
 	  Int_t iD=(*(it->points))[i].dID;
 	  Int_t iq=(*(it->points))[i].quadID;
@@ -1615,8 +1615,8 @@ Int_t StFgtStraightPlotter::Finish(){
   Int_t ierr = kStOk;
   //  cout <<"we found " << intNumTracks << " tracks " <<endl;
   ///////////////////////////track collection//does this make sense? Not if m_tracks gets erased for every event...
-  StFgtStraightTrackMaker *fgtSTracker = static_cast<StFgtStraightTrackMaker * >( GetMaker("fgtStraightTracker"));
-  vector<AVTrack>& tracks=fgtSTracker->getTracks();
+    //  StFgtStraightTrackMaker *fgtSTracker = static_cast<StFgtStraightTrackMaker * >( GetMaker("fgtStraightTracker"));
+  //  vector<AVTrack>& tracks=fgtSTracker->getTracks();
 
   ///  cout <<"canvases etc.. " << endl;
   //////////////////// //////////////////////////////
@@ -2306,7 +2306,8 @@ Int_t StFgtStraightPlotter::Init(){
   for (Int_t iii=0;iii< 22;iii++)
     { 
       char buffer[100];
-      sprintf(buffer, "%s_APV%d", "disk1QuadA_%s",iii,mFileName);
+      //      sprintf(buffer, "%s_APV%d", "disk1QuadA_%s",iii,mFileName);
+      sprintf(buffer, "APV%d_disk1QuadA_%s",iii,mFileName);
       disk1QuadA[iii]=new TH1I(buffer,buffer,128,0,128);
     }
 
@@ -2439,7 +2440,7 @@ Int_t StFgtStraightPlotter::Init(){
 	  chargeCorr[iD*4+iq]=new TH2D(buffer,buffer,200,0,70000,200,0,70000);
 	  sprintf(buffer,"clusterSizeRInDisk_%d_quad_%d_%s",iD+1,iq,mFileName);
 	  clusterSizeR[iD*4+iq]=new TH1D(buffer,buffer,100,0,100);
-	  sprintf(buffer,"clusterSizePInDisk_%d_quad_%d_%d",iD+1,iq,mFileName);
+	  sprintf(buffer,"clusterSizePInDisk_%d_quad_%d_%s",iD+1,iq,mFileName);
 	  clusterSizeP[iD*4+iq]=new TH1D(buffer,buffer,100,0,100);
 	}
       sprintf(buffer,"radioDiskNonEff_%d_%s",iD,mFileName);

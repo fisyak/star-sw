@@ -695,15 +695,15 @@ TH1F *Pi0Analysis::getYield(TH2F *h, const Char_t *flag)
 
     sumfit[i]=new TF1(sumname,sumFit,0.0,1.0,6);
    
-
+#if 0
     float firstbin=0;
     for(int ib=1;ib<=ptslice[i]->GetNbinsX();ib++){
       if(ptslice[i]->GetBinContent(ib)>0.){
-        firstbin=(float)ptslice[i]->GetXaxis()->GetBinCenter(ib);
+	firstbin=(float)ptslice[i]->GetXaxis()->GetBinCenter(ib);
         break;
       }
     }
-
+#endif
     combbg[i]->SetParameters(1.0,-1.0,1.0);
     
     EXCLUDERANGE=kTRUE;//leave out pi0 range, interval:

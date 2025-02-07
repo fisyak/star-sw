@@ -61,7 +61,7 @@ Int_t HftMatchedTree::InitRun(Int_t runnumber)
    }
 
    TObjectSet *istDbDataSet = (TObjectSet*) GetDataSet("ist_db");
-   StIstDb* stIstDb = StIstDb::instance();
+   //   StIstDb* stIstDb = StIstDb::instance();
 
    if (istDbDataSet) {
    }

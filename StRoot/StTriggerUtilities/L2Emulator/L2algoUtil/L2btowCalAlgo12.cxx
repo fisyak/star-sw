@@ -52,7 +52,7 @@ L2btowCalAlgo12::L2btowCalAlgo12(const char* name, const char *uid, L2EmcDb2012*
     btowCalibData.hitSize=0;
   }
 
-  LOG("JEFF", "sizeof L2 event stream: %d", sizeof(L2eventStream2012));
+  LOG("JEFF", "sizeof L2 event stream: %d", (int)sizeof(L2eventStream2012));
 
  }
 

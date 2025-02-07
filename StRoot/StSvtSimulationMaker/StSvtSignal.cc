@@ -715,11 +715,11 @@ double StSvtSignal::getShortSignal(double localTime)
 double StSvtSignal::getLongSignal(double localTime)
  {
   double ds0, ds1, ds2, dsc, dsc0, dsc1, dsc2, dsc3;
-  double da1,da2,a2,a3,a4;
+  double da1,da2/* ,a2 */, a3,a4;
 
   da1 = mTimeWidth/mTau_s;
   da2 = da1*da1;
-  a2 = 0.5*mCollectedCharge/da1;
+  //  a2 = 0.5*mCollectedCharge/da1;
   a3 = mTimeWidth/mTau_l;
   a4 = 0.5*a3*a3;
 
@@ -840,7 +840,7 @@ double StSvtSignal::numConvInt(int nMin , int n, int numOfIntPoints, double tSte
 //_______________________________________________
 double StSvtSignal::analConvInt(double tim, double sigmat, double tc)
 {
- double a, b, c, bc5, bc4, bc3, bc2, ac1;
+  double a, b, /* c, */  bc5, bc4, bc3, bc2, ac1;
  double At = 0,tb, ta, ta2,ta3, ta4,Errb,Erra,expb,expa,gaus ;
  double sigmat2,sigmat3,sigmat4;
 
@@ -849,7 +849,7 @@ double StSvtSignal::analConvInt(double tim, double sigmat, double tc)
   sigmat4 = sigmat3*sigmat;
 
   //a = 1.0/mTau_s;          b = 1.0/mTau_l;         c = b - a;
-  a = 90.909090909091;   b = 2.0;             c = -88.909090909091;
+  a = 90.909090909091;   b = 2.0;//             c = -88.909090909091;
 
   //bc5 = b/::pow(c,5);   bc4 = b/::pow(c,4);    bc3 = b/(2*::pow(c,3));   bc2 = b/(6*c*c);    ac1 = a/(24*c);
 
@@ -928,9 +928,9 @@ double StSvtSignal::simpsonInt(int numOfIntPoints,double lowlim, double step, do
 //_______________________________________________
 double StSvtSignal::gausInput(double tim)
 {
-  double tPr2, PI,Exp1;
+  double tPr2/* , PI */,Exp1;
   
-  PI = M_PI;
+  //  PI = M_PI;
  //cout<<"tim = "<<tim<<endl;
  // 1.0/::sqrt(2*PI) = 0.39894228040143;
 
@@ -944,14 +944,14 @@ double StSvtSignal::gausInput(double tim)
 //_______________________________________________
 double StSvtSignal::pasaRes(double tim)
 {
- double  a, b, c, bc5, bc4, bc3, bc2, ac1, t2, t3,t4;
+  double  a, b/* , c*/, bc5, bc4, bc3, bc2, ac1, t2, t3,t4;
  double Fpasa = 0;
 
  if(tim >= 0)
  {
   
   //a = 1.0/mTau_s;          b = 1.0/mTau_l;         c = b - a;
-  a = 90.909090909091;   b = 2.0;             c = -88.909090909091;
+   a = 90.909090909091;   b = 2.0;//             c = -88.909090909091;
 
   //bc5 = b/::pow(c,5);   bc4 = b/::pow(c,4);    bc3 = b/(2*::pow(c,3));   bc2 = b/(6*c*c);    ac1 = a/(24*c);
     bc5 = -0.00000000035999; bc4 = 0.00000003200702; 

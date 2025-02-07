@@ -13,8 +13,8 @@
 #include "TSystem.h"
 //________________________________________________________________________________
 void StiStarDetectorBuilder::buildDetectors(StMaker&s) {
-  TGeoManager *geo = StiVMCToolKit::GetVMC();
-  assert(geo);
+  /*  TGeoManager *geo = */ StiVMCToolKit::GetVMC();
+  //  assert(geo);
   useVMCGeometry(); 
   cout << "StiStarDetectorBuilder::buildDetectors() -I- Done" << endl;
 }

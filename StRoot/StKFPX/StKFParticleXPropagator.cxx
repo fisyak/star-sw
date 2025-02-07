@@ -214,7 +214,7 @@ Bool_t StKFParticleXPropagator::Propagete2Radius(const KFParticle &p, Float_t Ra
   Float_t B[3];
   Double_t R;
   Float_t dsdr[6] = {0};
-  Float_t  P[8], C[36], dsdr1[6], F[36], F1[36];
+  Float_t  P[8], C[36]/*, dsdr1[6],  F[36], F1[36] */;
   fgParticle.GetFieldValue(&fgParticle.X(), B);
   //  float P[8], C[36];
   if (CurrentR < Radius) {
@@ -303,7 +303,7 @@ Bool_t StKFParticleXPropagator::Propagete2Radius(const KFParticle &p, Float_t Ra
 void StKFParticleXPropagator::Test(const Option_t *opt) {
   // MC
   Float_t K_S01xyz[3] = {-17.110554, -4.202028, 71.238022};
-  Double_t pKS0[3]    = { -2.426288, -0.594788,  3.127483};
+  //  Double_t pKS0[3]    = { -2.426288, -0.594788,  3.127483};
   Double_t piMC[2][3] = {
     {-1.100831,-0.071224, 1.264852}, //pi+
     {-1.325457,-0.523564, 1.862632}  //pi-

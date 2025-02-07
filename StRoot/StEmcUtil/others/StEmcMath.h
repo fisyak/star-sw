@@ -33,7 +33,6 @@ public:
   static Double_t getPhiPlusMinusPi(const Double_t phi); 
   static TArrayD  *binForSmde(Bool_t kprint=kFALSE);
 
-  ClassDef(StEmcMath, 1)   // Definition of patch
 };
 #endif
 // $Id: StEmcMath.h,v 1.1 2003/01/23 01:30:49 suaide Exp $

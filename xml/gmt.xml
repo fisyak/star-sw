@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+        <command>
+  cd ${SUBMITTINGDIRECTORY}
+#setenv StarEndMakerShell
+  setenv STARFPE NO
+  
+  set evtsFile = $INPUTFILE0;
+  echo "${evtsFile}"
+  set filel    = `basename $evtsFile .daq`
+  set output  = ${filel}.event.root
+  if (! -r ${evtsFile}) exit 1;
+  set logFile  = ${filel}.gmt.log
+  set gmtFile  = ${filel}.gmt.root
+  if ( -r ${SUBMITTINGDIRECTORY}/$gmtFile) exit 0;
+  root.exe -b -q  'bfc.C(100000,"in,MakeEvent,gmt,analysis,nodefault","'${evtsFile}'","","'${gmtFile}'")' &gt;&amp; ${logFile}
+  gzip ${logFile}
+        </command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+<!-- 
+<input URL="file:/hlt/cephfs/daq/2019/054/20054064/hlt*.daq" />
+<input URL="file:/gpfs01/star/daq/2019/066/20066003/*.daq" />
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_20160*.daq" />
+<input URL="file:/gpfs01/star/embed/daq/2014/auau200_vpdmb_chop_added/st_physics_adc*.daq" />
+<input URL="file:/gpfs01/star/daq/2017/*/*/st_W_*.daq" />
+<input URL="command:daq_2019T.pl" />
+<input URL="file:/star/data03/daq/2020/005/21005010/st_physics_*.daq" /> 
+<input URL="file:/gpfs01/star/daq/2019/087/20087007/st_physics_2*.daq" /> 
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_2016002*.daq" />
+<input URL="command:daq_2019T.pl" />
+<input URL="file:/star/data03/daq/2019/160/*/st_physics_adc_2016002*.daq" />
+-->
+<input URL="command:daqdR.localA.pl" />
+</job>

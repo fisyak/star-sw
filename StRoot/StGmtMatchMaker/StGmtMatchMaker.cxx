@@ -1,4 +1,4 @@
-#include "StGmtAligner.h"
+#include "StGmtMatchMaker.h"
 #include <stdlib.h>
 #include "Riostream.h"
 #include "TROOT.h"
@@ -21,22 +21,26 @@
 #include "StPrimaryVertex.h"
 #include "StBFChain.h"
 #include "TGeoMatrix.h"
-#include "EventT.h"
+#include "GmtEvent.h"
+#include "StMessMgr.h" 
+#include "StBichsel/Bichsel.h"
 #include "StTpcDb/StTpcDb.h"
 #include "StDetectorDbMaker/StGmtSurveyC.h"
+#include "StGmtCollection.h"
+Int_t    StGmtMatchMaker::fMinNoHits = 15;
+Double_t StGmtMatchMaker::fpCut = 0.2;;
+
 //________________________________________________________________________________
-StGmtAligner::StGmtAligner(const Char_t *name) : StMaker(name),fFile(0), fTree(0), fEvent(0) {
-  SetMinNoHits();
-  SetpCut();
+StGmtMatchMaker::StGmtMatchMaker(const Char_t *name) : StMaker(name),fFile(0), fTree(0), fEvent(0) {
   SetOut();
 }
 //________________________________________________________________________________
-Int_t StGmtAligner::Init() {
+Int_t StGmtMatchMaker::Init() {
   SetTree();
   return StMaker::Init();
 }
 //________________________________________________________________________________
-Int_t StGmtAligner::Finish() {
+Int_t StGmtMatchMaker::Finish() {
   if (fFile) {
     fFile = fTree->GetCurrentFile(); //just in case we switched to a new file
     fFile->Write();
@@ -46,7 +50,7 @@ Int_t StGmtAligner::Finish() {
 }
 
 //________________________________________________________________________________
-void StGmtAligner::SetTree() {
+void StGmtMatchMaker::SetTree() {
   StBFChain *chain = (StBFChain *) StMaker::GetChain();
   if (! chain) return;
   // root.exe 
@@ -74,22 +78,34 @@ void StGmtAligner::SetTree() {
   fTree->SetAutoSave(1000000000);  // autosave when 1 Gbyte written
   bufsize = 64000;
   if (split)  bufsize /= 4;
-  fEvent = new EventT();
+  fEvent = new GmtEvent();
   TTree::SetBranchStyle(branchStyle);
-  TBranch *branch = fTree->Branch("EventT", &fEvent, bufsize,split);
+  TBranch *branch = fTree->Branch("GmtEvent", &fEvent, bufsize,split);
   branch->SetAutoDelete(kFALSE);
 }
 //________________________________________________________________________________
-Int_t StGmtAligner::Make() {
-  if (! EventT::RotMatrices()) MakeListOfRotations();
+Int_t StGmtMatchMaker::Make() {
   StEvent* pEvent = (StEvent*) GetInputDS("StEvent");
-  if (pEvent && !fEvent->Build(pEvent,fpCut)) fTree->Fill();  //fill the tree
+  if (! pEvent) return kStOK;
+  StGmtCollection* GmtCollection = pEvent->gmtCollection();
+  if (! GmtCollection) {
+    if (Debug()) { LOG_WARN << "No GMT Collections" << endm; }
+    return kStOK;
+  }
+  if (GmtCollection->getNumHits() == 0) return kStOK;
+  StSPtrVecTrackNode& theNodes = pEvent->trackNodes();
+  UInt_t nnodes = theNodes.size();
+  if (! nnodes) { cout << "No tracks" << endl; return kStOK;}
+  if (! GmtEvent::RotMatrices()) MakeListOfRotations();
+  if (pEvent && !fEvent->Build(pEvent,fpCut,fMinNoHits)) {
+    if (fTree)  fTree->Fill();  //fill the tree
+  }
   return kStOK;
 }
 //________________________________________________________________________________
-void StGmtAligner::Print(Option_t *opt) const {
-  if (! EventT::RotMatrices()) return;
-  TIter next(EventT::RotMatrices());
+void StGmtMatchMaker::Print(Option_t *opt) const {
+  if (! GmtEvent::RotMatrices()) return;
+  TIter next(GmtEvent::RotMatrices());
   TGeoHMatrix *comb = 0;
   while ((comb = (TGeoHMatrix *) next())) {
     Int_t Id;
@@ -103,10 +119,10 @@ void StGmtAligner::Print(Option_t *opt) const {
   }
 }
 //________________________________________________________________________________
-void StGmtAligner::MakeListOfRotations() {
-  if (EventT::RotMatrices()) return;
+void StGmtMatchMaker::MakeListOfRotations() {
+  if (GmtEvent::RotMatrices()) return;
   THashList *rotMHash = new THashList(100,0);
-  EventT::SetRotMatrices(rotMHash);
+  GmtEvent::SetRotMatrices(rotMHash);
   //  THashList *hash = 0;
   const TGeoHMatrix& tpc2Glob = gStTpcDb->Tpc2GlobalMatrix();
   for(int module=0;module<  kGmtNumModules;module++)    {

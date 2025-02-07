@@ -62,7 +62,7 @@ HepJamesRandom::~HepJamesRandom() {}
 HepJamesRandom::HepJamesRandom(const HepJamesRandom &p)
 {
   HepInt ipos, jpos;
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.getSeed();
     setSeeds(&theSeed,0);
     for (HepInt i=0; i<97; ++i)
@@ -77,7 +77,7 @@ HepJamesRandom::HepJamesRandom(const HepJamesRandom &p)
 HepJamesRandom & HepJamesRandom::operator = (const HepJamesRandom &p)
 {
   HepInt ipos, jpos;
-  if ((this != &p) && (&p)) {
+  if ((this != &p)) { //  && (&p)) {
     theSeed = p.getSeed();
     setSeeds(&theSeed,0);
     for (HepInt i=0; i<97; ++i)

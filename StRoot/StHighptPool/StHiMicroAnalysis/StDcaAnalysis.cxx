@@ -165,7 +165,7 @@ StDcaAnalysis::trackLoop()
     Float_t dcaXYGl = track->DcaXYGl();
     Int_t charge = track->Charge();
     Float_t phiGlDeg = track->PhiGl()*180./M_PI;
-    phiGlDeg = (phiGlDeg<-165) ? (phiGlDeg += 360) : phiGlDeg;
+    if (phiGlDeg<-165) phiGlDeg += 360;
     Float_t eta  = track->EtaPr();
 
     Float_t z = vertexZ;

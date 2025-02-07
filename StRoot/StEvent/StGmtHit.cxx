@@ -14,10 +14,10 @@
 ClassImp(StGmtHit)
 //________________________________________________________________________________
 ostream&  operator<<(ostream& os, const StGmtHit& v) {
-  return os << Form("Gmt m %3i ",v.getModule())
-	    << *((StHit *)&v)
-	    << Form(" Adc X/Y  %5.1f/%5.1f locX = %8.3f +/- %7.3f locY = %8.3f +/- %7.3f",
-		    v.getAdcX(), v.getAdcY(), v.getLocalX(), v.getErrorLocalX(), v.getLocalY(), v.getErrorLocalY()); 
+  static const Char_t *XY[2] = {"X", "Y"};
+  return os << Form("Gmt Id = %3i, module = %3i %s", v.id(), v.getModule(), XY[v.getXorY()]) 
+	    << Form(" Adc %5.1f +/- %5.1f,   loc = %8.3f +/- %7.3f, sigma = %8.3f +/- %7.3f",
+		    v.getAdc(), v.getErrorAdc(), v.getLocal(), v.getErrorLocal(), v.getSigma(), v.getErrorSigma()); 
 }
 //________________________________________________________________________________
 void   StGmtHit::Print(Option_t *option) const {cout << *this << endl;}

@@ -50,7 +50,7 @@ Int_t StStgcQAMaker::Make(){
 
 		string name = prefix + sstripDir + "_adcVsTb";
 
-		for ( int tb_index = 0; tb_index < h->nTimebins(); tb_index++ ){
+		for ( UInt_t tb_index = 0; tb_index < h->nTimebins(); tb_index++ ){
 			mHistograms[ name ]->Fill( h->timebin( tb_index ), h->adc( tb_index ) );
 
 			name = prefix + sstripDir + "_TbVsStrip";

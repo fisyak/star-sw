@@ -144,7 +144,7 @@ Int_t St2eemcFeeRawMaker::Make(){
     StEmcModule* stmod =   twE->module(i);
     if(stmod==0)	continue;
     StSPtrVecEmcRawHit& emcTowerHits = stmod->hits();
-    LOG_INFO<<Form("bbb i=%d %d\n",i,emcTowerHits.size())<<endm;
+    LOG_INFO<<Form("bbb i=%d %d\n",i,(int)emcTowerHits.size())<<endm;
  
     uint j;
     for ( j = 0; j < emcTowerHits.size(); j++) { 

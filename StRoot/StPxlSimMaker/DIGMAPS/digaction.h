@@ -69,6 +69,8 @@ class DIGAction : public TObject {
   ActionParameter_t& GetActionPar()         {return ActionParameter;}
 
 */
+ public:
+  static Int_t GlobalSeed;
   ClassDef(DIGAction,1);
 };
 

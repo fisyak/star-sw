@@ -155,7 +155,7 @@ void RichEventReader::InitEventReader(int fdes, long offset, int MMap)
   //#define MX_MAP_SIZE 0x20000000
 #define MX_MAP_SIZE 32768*4 /*max event size in RICH*/
 
-  off_t FileLength;
+  //  off_t FileLength;
 
   //  cout << "Initializing EventReader with a MAPPED file" << endl;
   
@@ -181,7 +181,7 @@ void RichEventReader::InitEventReader(int fdes, long offset, int MMap)
     ERROR(ERR_FILE);
     next_event_offset = -1;
   }
-  FileLength = buf.st_size;
+  //  FileLength = buf.st_size;
   
   Bank_RICP lr;
 
@@ -401,7 +401,7 @@ EventInfo RichEventReader::getEventInfo()
 
 void RichEventReader::printEventInfo(FILE * fd)
 {
-  EventInfo ei = getEventInfo();
+  //  EventInfo ei = getEventInfo();
   // ei.printEventInfo(fd);
 }
 

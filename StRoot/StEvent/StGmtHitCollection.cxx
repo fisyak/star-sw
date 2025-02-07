@@ -14,12 +14,6 @@
 #include "StContainers.h"
 #include "StGmtHit.h"
 #include "StGmtHitCollection.h"
-
-// deconstructor
-StGmtHitCollection::~StGmtHitCollection() {
-   // nothing to do
-}
-
 void StGmtHitCollection::Clear( Option_t *opt ){
 
    // no need to delete the objects in mStripVec, is done within its
@@ -28,5 +22,3 @@ void StGmtHitCollection::Clear( Option_t *opt ){
    // clear the vector
    mHitVec.clear();
 }
-
-ClassImp(StGmtHitCollection)

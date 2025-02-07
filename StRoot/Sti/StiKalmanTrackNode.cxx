@@ -1084,7 +1084,7 @@ StiDebug::Break(nCall);
 
   StiShape * sh = tDet->getShape();
   int shapeCode = sh->getShapeCode();
-  double endVal,dAlpha;
+  double endVal=0,dAlpha;
   switch (shapeCode) {
 
   case kPlanar: endVal = nNormalRadius;

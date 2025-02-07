@@ -32,7 +32,7 @@ L2DbConfig::L2DbConfig( const Char_t *fname )
       //tmp assert(c.getFullStartTime() > timeOld);
       timeOld=c.getFullStartTime();
     }
-  std::cout << Form("L2DbConfig::Read in %i records from=%s=, done",mConfig.size(),fname) << std::endl;
+  std::cout << Form("L2DbConfig::Read in %i records from=%s=, done",(int)mConfig.size(),fname) << std::endl;
   
 
 }

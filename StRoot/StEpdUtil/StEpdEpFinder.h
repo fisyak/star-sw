@@ -106,7 +106,7 @@ class StEpdEpFinder{
   /// \param CorrectionFileName     Full name of the .root file with correction histograms.
   /// \param nEventTypeBins        Number of EventType bins that the user is using.  Up to the user to have a consistent usage, here and in analysis.
   StEpdEpFinder(int nEventTypeBins=10, char const* OutFileName="StEpdEpFinderCorrectionHistograms_OUTPUT.root", char const* CorrectionFileName="StEpdEpFinderCorrectionHistograms_INPUT.root");
-  ~StEpdEpFinder(){/* no-op */};
+  virtual ~StEpdEpFinder(){/* no-op */};
 
   /// sets eta-based weights and sets the flag indicating that eta-based weights will be used
   /// The x-axis of the TH2D is abs(eta).  The y-axis is EventTypeID (according to whatever convention/definition the user is using)

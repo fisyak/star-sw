@@ -207,10 +207,10 @@ Int_t StFcsQaMaker::Make() {
   }
 
   //tof multiplicity from trigger data
-  int tofmult = 0;
+  //  int tofmult = 0;
   //check if FCS was readout for this event
   if(trg){
-      tofmult = trg->tofMultiplicity(); 
+    //      tofmult = trg->tofMultiplicity(); 
       unsigned short detmask=trg->getTrgDetMask();
       printf("TrgDetMask = %4x\n",detmask);
       if(! ((detmask >> 30) & 0x1)){   //FCS_ID=30 but detmask is 16bit:O
@@ -336,7 +336,7 @@ Int_t StFcsQaMaker::Make() {
       mEsum[2]->Fill(etot[0]+etot[1]+etot[2]+etot[3]);
 
       if(mDump>0){
-	int oldid=-1;
+	//	int oldid=-1;
 	for (int i=0; i<nhit; i++){
 	  int id  = hits[i]->id();
 	  int ehp = hits[i]->ehp();
@@ -354,10 +354,10 @@ Int_t StFcsQaMaker::Make() {
 	    //	  }else if(mDump==2 && det==1 && (id==32 || id==18)){
 	  }else if(mDump==2 && det==1 && id==12){
 	    printf("\nFCSDump %5d %22s %5.1f %5d ",nevt,name,ped,sum[det][id]);
-	    int max=0, min=4000;
+	    unsigned int max=0, min=4000;
 	    for(int j=0; j<ntb; j++){
 	      unsigned int adc=hits[i]->adc(j);
-	      unsigned int tb =hits[i]->timebin(j);
+	      //	      unsigned int tb =hits[i]->timebin(j);
 	      if(adc>max) max=adc;
 	      if(adc<min) min=adc;
 	      printf("%4d ",adc);	    		    

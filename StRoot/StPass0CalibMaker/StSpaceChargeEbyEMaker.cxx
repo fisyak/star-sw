@@ -613,7 +613,7 @@ Int_t StSpaceChargeEbyEMaker::Make() {
           if (TrackInfomode) {
             LOG_INFO << Form("GOODTRACK %d %d %6.2f %9.4f %8.3f %8.4f %8.4f %6.4f %6.4f %d",
               runid,event->id(),vtxPos.z(),ch/oldPt,eta,phi,DCA2,DCAerr,
-              vtxPosErr.perp(),hits.size()) << endm;
+			     vtxPosErr.perp(),(int)hits.size()) << endm;
             continue;
           }
 

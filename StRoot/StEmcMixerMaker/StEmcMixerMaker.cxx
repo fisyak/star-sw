@@ -334,7 +334,7 @@ Bool_t StEmcMixerMaker::checkHit(Int_t d,StEmcRawHit* h)
   Int_t m = (Int_t)h->module();
   Int_t e = (Int_t)h->eta();
   Int_t s = abs(h->sub());     
-  Int_t id;
+  Int_t id = 0;
   mGeom[d]->getId(m,e,s,id);
   if(id>0) if(mStatus[d][id-1]==1) return kTRUE;
   return kFALSE;     

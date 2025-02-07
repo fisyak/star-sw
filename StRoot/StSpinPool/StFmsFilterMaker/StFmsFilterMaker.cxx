@@ -69,7 +69,7 @@ Int_t StFmsFilterMaker::Make(){
   mH0->Fill(1);
   StEvent* mEvent = (StEvent*)GetInputDS("StEvent");
   assert(mEvent);//fix your chain or open the right event file 
-  Float_t vertexPosZ =par_Z0_vert ;
+  //  Float_t vertexPosZ =par_Z0_vert ;
   /*
   if(myMode==kUseRecoVertex) {
     int nV=mEvent->numberOfPrimaryVertices();
@@ -93,7 +93,7 @@ Int_t StFmsFilterMaker::Make(){
   mFmsColl = event->fmsCollection();
 
   
-  Float_t triggerPatchEt;
+  //  Float_t triggerPatchEt;
   Int_t triggerConditionReturn = triggerCondition();
 
 
@@ -129,9 +129,9 @@ Int_t StFmsFilterMaker::triggerCondition()
       int ch= hits[i]->channel();
       
       StThreeVectorF v3  =mFmsDbMaker->getStarXYZ(dId,ch);
-      Float_t x = v3.x();
-      Float_t y = v3.y();
-      Int_t id = dId*1000+ch;
+ //      Float_t x = v3.x();
+//       Float_t y = v3.y();
+//       Int_t id = dId*1000+ch;
       Float_t phi =  v3.phi();
       
       binPhi = 8;

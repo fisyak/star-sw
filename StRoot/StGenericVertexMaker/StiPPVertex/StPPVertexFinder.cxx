@@ -383,7 +383,7 @@ void StPPVertexFinder::printInfo(ostream& os) const
   }
 
   LOG_INFO << Form("PPVend  eveID=%d,  list of found %d vertices from pool of %d tracks\n",
-                   eveID, mVertexData.size(), mTrackData.size()) << endm;
+                   eveID, (int) mVertexData.size(), (int) mTrackData.size()) << endm;
 
   for (const VertexData &vertex : mVertexData)
     vertex.print(os);
@@ -491,7 +491,7 @@ int StPPVertexFinder::fit(StEvent* event)
        nTracksMatchingAnyFastDetector++;
   }
 
-  LOG_INFO << Form("PPV::TpcList size=%d nMatched=%d\n\n",mTrackData.size(),kTpc)
+  LOG_INFO << Form("PPV::TpcList size=%d nMatched=%d\n\n",(int)mTrackData.size(),kTpc)
            << "PPV::fit() nEve=" << mTotEve << " , "
            << nTracksMatchingAnyFastDetector << " traks with good DCA, matching: BTOF="
            << kBtof << " CTB=" << kCtb << " BEMC=" << kBemc << " EEMC=" << kEemc << endm;

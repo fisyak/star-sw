@@ -73,7 +73,7 @@ StMaker(name), mPythiaFile(0), mPythiaTree(0), mPythiaEvent(0)
     mPosition = new StEmcPosition();
     assert(mPosition);
 
-    for ( int ii=0;ii< nBemcTowers+1;ii++ )
+    for (unsigned  int ii=0;ii< nBemcTowers+1;ii++ )
       {
 	mBemcTowerHits[ii] = 0;
       }

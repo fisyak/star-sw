@@ -31,7 +31,7 @@ void EEmcDbCrate::print() const{
     return;
   }
 
-   LOG_INFO<<Form("EEmcDbCrate:: crID=%3d crIDswitch=%3d fiber=%d nCh=%d nHead=%d type=%c useIt=%d\n",name, crID, crIDswitch,fiber,nCh,nHead,type,useIt)<<endm;
+   LOG_INFO<<Form("EEmcDbCrate::%s crID=%3d crIDswitch=%3d fiber=%d nCh=%d nHead=%d type=%c useIt=%d\n",name, crID, crIDswitch,fiber,nCh,nHead,type,useIt)<<endm;
 }
 
 ostream &

@@ -60,8 +60,6 @@ class StFgtStraightPlotter : public StMaker {
    vector<TH2D*> v_hClusP;
    vector<TH2D*> v_hClusR;
    Bool_t useChargeMatch;
-   Int_t printCounter;
-   Int_t fitCounter;
    ofstream* outTxtFile;
    ofstream* cluNotFoundTxt;
   Float_t chargeMatchCut;
@@ -301,6 +299,8 @@ class StFgtStraightPlotter : public StMaker {
    Int_t evtNr;
    int hitCounter;
    int hitCounterR;
+   Int_t printCounter;
+   Int_t fitCounter;
    //THD2** 
 
 

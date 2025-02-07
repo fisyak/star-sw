@@ -6,6 +6,8 @@ class PhotonAnalysisSettings;
 void getPhotonSpectrum(const PhotonAnalysisSettings &settings);
 
 class PhotonAnalysisUtil {
+  PhotonAnalysisUtil() {}
+  virtual ~PhotonAnalysisUtil() {}
 ClassDef(PhotonAnalysisUtil, 1)
 };
 

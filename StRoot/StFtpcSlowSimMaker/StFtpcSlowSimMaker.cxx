@@ -450,7 +450,7 @@ LOG_INFO << "Event number "<<(int) GetEventNumber()<<endm;
           return kStWarn;
       }
 
-      Int_t  returnCode;
+      //      Int_t  returnCode;
 
       // use available pressure and gas temperature from offline DB to adjust 
       // the barometric pressure depending on the FTPC gas temperature
@@ -461,15 +461,15 @@ LOG_INFO << "Event number "<<(int) GetEventNumber()<<endm;
 				                            gas,
                                                             m_temps);
 
-      returnCode = gasUtils->barometricPressure();
+      //      returnCode = gasUtils->barometricPressure();
 
       // Calculate FTPC gas temperature from body temperatures
 
-      Int_t dbDate = mDbMaker->GetDateTime().GetDate();
+      //      Int_t dbDate = mDbMaker->GetDateTime().GetDate();
 
       // For FTPC West
       
-      returnCode = gasUtils->averageTemperatureWest(dbDate,GetRunNumber());
+      //      returnCode = gasUtils->averageTemperatureWest(dbDate,GetRunNumber());
 
      // test if averageBodyTemperature for FTPC West found for first event
      if (paramReader->gasTemperatureWest() == 0) {
@@ -479,12 +479,12 @@ LOG_INFO << "Event number "<<(int) GetEventNumber()<<endm;
 	      // currently using daqReader->SVTPresent() to test but may need
 	      // access to Conditions_svt/svtInterLocks
 	  LOG_INFO << "daqReader->SVTPresent() = " << daqReader->SVTPresent()<<endm;
-	  returnCode = gasUtils->defaultTemperatureWest(dbDate,daqReader->SVTPresent());
+	  //	  returnCode = gasUtils->defaultTemperatureWest(dbDate,daqReader->SVTPresent());
      }
 
      // For FTPC East
      
-     returnCode = gasUtils->averageTemperatureEast(dbDate,GetRunNumber());
+     //     returnCode = gasUtils->averageTemperatureEast(dbDate,GetRunNumber());
     
      // test if averageBodyTemperature for FTPC East found for first event
      if (paramReader->gasTemperatureEast() == 0 ) {
@@ -494,7 +494,7 @@ LOG_INFO << "Event number "<<(int) GetEventNumber()<<endm;
            // currently using daqReader->SVTPresent() to test but may need
            // access to Conditions_svt/svtInterLocks
         LOG_INFO << "daqReader->SVTPresent() = " << daqReader->SVTPresent()<<endm;
-        returnCode = gasUtils->defaultTemperatureEast(dbDate,daqReader->SVTPresent());
+	//        returnCode = gasUtils->defaultTemperatureEast(dbDate,daqReader->SVTPresent());
      }
      
        LOG_INFO << " Using normalizedNowPressure = "<<paramReader->normalizedNowPressure()<<" gasTemperatureWest = "<<paramReader->gasTemperatureWest()<<" gasTemperatureEast = "<<paramReader->gasTemperatureEast()<<endm;

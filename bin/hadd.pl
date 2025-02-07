@@ -19,6 +19,7 @@ my %ARG = (files => '*.root',
 	   keep => 'yes',
 	   prefix => '',
 	   option => '',
+	   minsize => '500000',
 	   debug  => 0
 	  );
 while (@ARGV) {
@@ -64,26 +65,26 @@ if ($ARG{all}) {
 # 'production_9p2GeV_AuAu_4'                           => { first=> '20196005',         second => '20196017',   list => '',  beginTime => '20190715.085004'}, #        2019-07-15      08:50:04        2019-07-15      11:43:38
 # 	     );
 # Run XXI before and after calibrations
-  @periods = ( 
-	      '7p7GeV_2021_1',  => { first => '22033001',	 second => '22039999',	 list => '',  beginTime => '20210202.065915'},
-	      '7p7GeV_2021_2',  => { first => '22040001',	 second => '99999999',	 list => '',  beginTime => '20210202.065915'},
-	     );
-}
+#   @periods = ( 
+# 	      '7p7GeV_2021_1',  => { first => '22033001',	 second => '22039999',	 list => '',  beginTime => '20210202.065915'},
+# 	      '7p7GeV_2021_2',  => { first => '22040001',	 second => '99999999',	 list => '',  beginTime => '20210202.065915'},
+# 	     );
+ }
 my @tags = ();
 my $def = {@periods};
 foreach my $key (sort keys %$def) {
   my $found = 0;
-  print "key = $key\n";
+  print "key = $key\n" if ($ARG{debug});
   my ($t,$r) = split ':', $key;
   foreach my $tag (@tags) {
-    print "\t    tag = $tag\n";
+    print "\t    tag = $tag\n" if ($ARG{debug});
     if ($t eq $tag) {$found = 1; next;}
   }
   next if $found;
   push @tags, $t;
 }
 my $tags = join '|', @tags;
-print "found tags = $#tags : tags   ==> $tags\n";
+print "found tags = $#tags : tags   ==> $tags\n" if ($ARG{debug});
 #if ($#tags < 0) {die "No tags found";}
 my $glob = $ARG{files}; print "glob = $glob\n"; 
 my $outn = basename($glob); $outn =~ s#\*##g; $outn =~ s#\.root##;
@@ -98,10 +99,11 @@ if ($#Files < 0) {die "No files fond";}
 foreach my $file (@Files) { print "file = $file\n" if ($ARG{debug});
   my ($dev,$ino,$mode,$nlink,$uid,$gid,$dev, $size, $atime, 
       $mtim, $ctime, $blksize,$blocks) = stat($file );
-  next if $size < 500000; # 0.5 MB limit
+  next if $size < $ARG{minsize}; # 0.5 MB limit
   my $f = File::Basename::basename($file); print "$file = $f"  if ($ARG{debug});
   my $dir = File::Basename::dirname($file); print "$file = $dir"  if ($ARG{debug});
   next if ($f =~ /^($tags)/ and $dir eq '.');
+  $f =~ s/\.gmt//g;
   $f =~ s/\.root//g;
   $f =~ s/adc_//g;
   $f =~ s/st_//;

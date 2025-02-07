@@ -55,6 +55,9 @@ class StRHICfCollection;
 
 class StMtdCollection;
 
+class StGmtCollection;
+class StGmtPoint;
+
 class StMuTofHit;
 class StTofData;
 // run 5 - dongx
@@ -117,35 +120,36 @@ public:
   /// dongx
     void set(TClonesArray** /* Arrays */, 
 #ifndef __NO_STRANGE_MUDST__
-		    TClonesArray** /* StrangeArrays */, 
+	     TClonesArray** /* StrangeArrays */, 
 #endif
-		    TClonesArray** mc_ptca=0, 
-		    TClonesArray** emc_ptca=0, 
-		    TClonesArray** fms_ptca=0, 
-        TClonesArray** rhicf_ptca=0,
-	TClonesArray** fcs_ptca=0, 
-        TClonesArray** ftt_ptca=0, 
-        TClonesArray** fst_ptca=0, 
-        TClonesArray** fwd_ptca=0, 
-		    TClonesArray** pmd_ptca=0, 
-		    TClonesArray** tof_ptca=0, 
-		    TClonesArray** btof_ptca=0,
-        TClonesArray** etof_col=0,  // jdb
-		    TClonesArray**  epd_col=0,  // MALisa
-		    TClonesArray** mtd_ptca=0,
-		    TClonesArray** fgt_ptca=0,
-		    TClonesArray** ezt_ptca=0,
-		    TClonesArray *emc_tca=0, 
-		    StMuEmcCollection *emc_col=0, 
-		    StMuFmsCollection *fms_col=0, 
-        StMuRHICfCollection *rhicf_col=0,
-        StMuFcsCollection *fcs_col=0,
-        StMuFttCollection *ftt_col=0,
-        StMuFstCollection *fst_col=0, 
-        StMuFwdTrackCollection *fwd_track_col=0, 
-		    TClonesArray *pmd_tca=0, 
-		    StMuPmdCollection *pmd_col=0
-);
+	     TClonesArray** mc_ptca=0, 
+	     TClonesArray** emc_ptca=0, 
+	     TClonesArray** fms_ptca=0, 
+	     TClonesArray** rhicf_ptca=0,
+	     TClonesArray** fcs_ptca=0, 
+	     TClonesArray** ftt_ptca=0, 
+	     TClonesArray** fst_ptca=0, 
+	     TClonesArray** fwd_ptca=0, 
+	     TClonesArray** pmd_ptca=0, 
+	     TClonesArray** tof_ptca=0, 
+	     TClonesArray** btof_ptca=0,
+	     TClonesArray** etof_col=0,  // jdb
+	     TClonesArray**  epd_col=0,  // MALisa
+	     TClonesArray** mtd_ptca=0,
+	     TClonesArray** fgt_ptca=0,
+	     TClonesArray** ezt_ptca=0,
+	     TClonesArray *emc_tca=0, 
+	     StMuEmcCollection *emc_col=0, 
+	     StMuFmsCollection *fms_col=0, 
+	     StMuRHICfCollection *rhicf_col=0,
+	     StMuFcsCollection *fcs_col=0,
+	     StMuFttCollection *ftt_col=0,
+	     StMuFstCollection *fst_col=0, 
+	     StMuFwdTrackCollection *fwd_track_col=0, 
+	     TClonesArray *pmd_tca=0, 
+	     StMuPmdCollection *pmd_col=0,
+	     TClonesArray** gmt_ptca=0
+	     );
   /// set pointer to current StEmcCollection
   static void setEmcCollection(StEmcCollection *emc_coll) { instance()->mEmcCollection=emc_coll; }
   
@@ -172,12 +176,15 @@ public:
   static void fixTofTrackIndices(TClonesArray* btofHit, TClonesArray* primary, TClonesArray* global);
   static void fixETofTrackIndices(TClonesArray* btofHit, TClonesArray* primary, TClonesArray* global);
   static void fixMtdTrackIndices(TClonesArray* mtdHit, TClonesArray* primary, TClonesArray* global);
+  static void fixGmtTrackIndices(TClonesArray* gmtPoint, TClonesArray* primary, TClonesArray* global);
   ///
   void fixTofTrackIndices();
   void fixETofTrackIndices();
   void fixMtdTrackIndices();
+  void fixGmtTrackIndices();
 
   void setMtdArray(StMtdCollection *mtd_coll); 
+  void setGmtArray(StGmtCollection *gmt_coll); 
   static StMuDst *instance() {return fgMuDst;}
   void SetInstance() {fgMuDst = this;}
   static PicoVtxMode vtxMode()  {return mVtxMode;}
@@ -274,6 +281,8 @@ public:
   StFmsCollection *mFmsCollection;
   /// pointer to RHICfCollecion (for RHICf clusterfinding etc)
   StRHICfCollection *mRHICfCollection;
+  /// array of TClonesArrays for the stuff inherited from the Gmt
+  TClonesArray** gmtArrays;  
 
   /// array of TClonesArrays for the stuff inherited from the EZT (ezTree)
   TClonesArray** eztArrays;
@@ -352,6 +361,8 @@ public:
   static TClonesArray* covPrimTrack() ;
   static TClonesArray* KFTracks() ;
   static TClonesArray* KFVertices() ;
+  /// returns pointer to the n-th TClonesArray from the gmt arrays
+  static TClonesArray* gmtArray(Int_t type) ;
 
   /// returns pointer to current StMuEvent (class holding the event wise information, e.g. event number, run number)
   static StMuEvent* event() ;
@@ -379,6 +390,7 @@ public:
   //returns pp2pp infomation
   static StMuRpsCollection* RpsCollection() ;
   static StMuMtdCollection* MtdCollection() ;
+  static StGmtCollection*   GmtCollection() ;
 
   static StDcaGeometry* covGlobTracks(Int_t i) ;
   static StMuPrimaryTrackCovariance* covPrimTracks(Int_t i) ;
@@ -479,9 +491,10 @@ public:
   static StMuEpdHit* epdHit(Int_t  i) ;
 
   static StMuMtdHit* mtdHit(Int_t  i) ;
-    static StMuMtdRawHit* mtdRawHit(Int_t  i) ;
-    static StMuMtdHeader* mtdHeader() ;
+  static StMuMtdRawHit* mtdRawHit(Int_t  i) ;
+  static StMuMtdHeader* mtdHeader() ;
     
+  static StGmtPoint* gmtPoint(Int_t  i) ;
     
   /// returns pointer to eztHeader 
   static  EztEventHeader* eztHeader() ;
@@ -549,6 +562,8 @@ public:
   static unsigned int numberOfMTDHit()       ;
   static unsigned int numberOfBMTDRawHit()    ;
     
+  static unsigned int numberOfGMTPoint()       ;
+
   static UInt_t GetNPrimaryVertex()    ;
   static UInt_t GetNPrimaryTrack()    ;
   static UInt_t GetNGlobalTrack()     ;
@@ -586,6 +601,8 @@ public:
   static unsigned int GetNMTDHit()         ;
   static unsigned int GetNMTDRawHit()      ;
     
+  static unsigned int GetNGMTPoint()         ;
+
   virtual void Print(Option_t *option = "") const; ///< Print basic event info
   static void printPrimaryTracks();
   static void printAllPrimaryTracks();

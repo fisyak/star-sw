@@ -105,6 +105,7 @@ int StFcsRawHitMaker::readMuDst() {
     StMuFcsUtil util;    
     mFcsCollectionPtr = util.getFcs(mufcsColl);
     mEvent->setFcsCollection(mFcsCollectionPtr);
+    return 0;
 }
 
 void StFcsRawHitMaker::Clear( Option_t *opts ){};

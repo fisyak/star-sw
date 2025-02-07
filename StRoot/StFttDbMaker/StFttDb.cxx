@@ -106,7 +106,7 @@ void StFttDb::loadDataWindowsFromDb( St_fttDataWindows * dataset ) {
 
         fttDataWindows_st *table = dataset->GetTable();
         for (Int_t i = 0; i < rows; i++) {
-            for ( int j = 0; j < StFttDb::nVMM; j++ ) {
+            for ( size_t j = 0; j < StFttDb::nVMM; j++ ) {
                 // printf( "[feb=%d, vmm=%d, ch=%d] ==> [row=%d, strip%d]\n", table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j], table[i].row[j], table[i].strip[j] );
 
 

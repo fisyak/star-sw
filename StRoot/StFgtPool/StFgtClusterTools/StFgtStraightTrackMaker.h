@@ -47,10 +47,6 @@ class StFgtStraightTrackMaker : public StMaker {
    Bool_t isCosmic;
 
 
-   Float_t maxChi2;
-   Float_t dcaCut;
-   Float_t vertexCutPos;
-   Float_t vertexCutNeg;
 
    Float_t maxPhiDiff;//for points belonging to same track
    Int_t maxClusters; //per disk
@@ -101,6 +97,10 @@ class StFgtStraightTrackMaker : public StMaker {
    int runningEvtNr;
    int hitCounter;
    int hitCounterR;
+   Float_t maxChi2;
+   Float_t dcaCut;
+   Float_t vertexCutPos;
+   Float_t vertexCutNeg;
    //THD2** 
  private:   
       ClassDef(StFgtStraightTrackMaker,1);

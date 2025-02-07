@@ -72,6 +72,7 @@ Parameter * Parameters::getParameter(const string name)
 	return *iter;
     } 
   assert(0);
+  return 0;
 }
 
 

@@ -18,8 +18,8 @@ ClassImp(StSpinTreeReader)
 
 StSpinTreeReader::StSpinTreeReader(const char *treeName) : connectJets(true), 
     connectNeutralJets(true), connectChargedPions(true), connectBemcPions(true),
-    connectEemcPions(true), connectBemcElectrons(true), requireDidFire(false), requireShouldFire(false),
-    mEemcPions(NULL), mEventList(NULL), mIsConnected(false)
+     connectBemcElectrons(true), connectEemcPions(true), requireDidFire(false), requireShouldFire(false),
+  mEemcPions(NULL), mEventList(NULL), mIsConnected(false)
 {
     mChain              = new TChain(treeName);
     mChainConeJets      = new TChain("ConeJets");

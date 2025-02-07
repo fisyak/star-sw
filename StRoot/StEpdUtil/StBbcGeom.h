@@ -62,7 +62,7 @@ class StBbcGeom{
 
  public:
   StBbcGeom();
-  ~StBbcGeom();
+  virtual ~StBbcGeom();
 
   //------------------------------------------------------
 

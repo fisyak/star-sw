@@ -244,7 +244,7 @@ Int_t StSvtPedMaker::AddStat()
 {
   if (Debug()) gMessMgr->Debug() << "StSvtPedMaker::AddStat" << endm;
 
-  int anodeID, nAnodes, nSeq, iseq, time, timeSeq, status;
+  int anodeID, nAnodes, nSeq, iseq, time, timeSeq;//, status;
   int capacitor, nSCAZero;
   int* anodeList;
   StSequence* Seq;
@@ -307,7 +307,7 @@ Int_t StSvtPedMaker::AddStat()
 	    Seq = NULL;
 	    nSeq = 0;
 	
-	    status = fData->getSequences(anodeID,nSeq,Seq);
+	    //	    status = fData->getSequences(anodeID,nSeq,Seq);
 	    
 	    for (iseq=0;iseq<nSeq;iseq++) {	  	  
 	      for (timeSeq=0; timeSeq<Seq[iseq].length; timeSeq++) {
@@ -345,7 +345,7 @@ Int_t StSvtPedMaker::AddStat()
 //_____________________________________________________________________________
 Int_t StSvtPedMaker::AddStat2ndOrd()
 {
-  int anodeID, nAnodes, nSeq, iseq, time, timeSeq, status;
+  int anodeID, nAnodes, nSeq, iseq, time, timeSeq;//, status;
   int capacitor, nSCAZero;
   int* anodeList;
   StSequence* Seq;
@@ -410,7 +410,7 @@ Int_t StSvtPedMaker::AddStat2ndOrd()
 	    Seq = NULL;
 	    nSeq = 0;
 	
-	    status = fData->getSequences(anodeID,nSeq,Seq);
+	    //	    status = fData->getSequences(anodeID,nSeq,Seq);
 	    
 	    for (iseq=0;iseq<nSeq;iseq++) {	  	  
 	      for (timeSeq=0; timeSeq<Seq[iseq].length; timeSeq++) {

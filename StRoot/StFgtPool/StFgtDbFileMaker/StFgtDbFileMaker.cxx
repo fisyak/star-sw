@@ -109,11 +109,11 @@ void StFgtDbFileMaker::printRealDbMappingFile(){
   f.open("NewMappingFileMark2.txt");
   if (!f) return;
    
-  Int_t apv,ch,bs;
+  Int_t apv=0,ch,bs;
   Double_t r,phi;
-  Char_t layer;
+  Char_t layer=0;
   Int_t strip,stripId;
-  Int_t rdo,arm,group;
+  Int_t rdo=0,arm=0,group=0;
   Int_t electronicID,geoId;
 
   

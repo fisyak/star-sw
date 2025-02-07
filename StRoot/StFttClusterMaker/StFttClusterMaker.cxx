@@ -384,7 +384,7 @@ std::vector<StFttCluster*> StFttClusterMaker::FindClusters( std::vector< StFttRa
     
         // NOTE according to SO this is faster than using ctor
         set<StFttRawHit*, decltype(cmp)> s(cmp);
-        unsigned size = hits.size();
+	//        unsigned size = hits.size();
         for( auto h : hits ) s.insert( h );
         hits.assign( s.begin(), s.end() );
     }

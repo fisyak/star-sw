@@ -51,7 +51,6 @@ class StFormulary
         static void  Diff(const Double_t *p1, const Double_t *p2, Double_t *P, Int_t n = 3);      // difference of two vectors
     static Double_t  Abs(const Double_t *p, Int_t dim = 3);                                       // length of a vector
 
-    ClassDef(StFormulary,0)  // Mathematical formulary
 };    
 
 

@@ -183,7 +183,7 @@ void StiSvtDetectorBuilder::buildDetectors(StMaker & source)
     StSvtWaferGeometry* waferGeom;
     Int_t index1, index2;
     StSvtWaferGeometry* waferGeom2;
-    for(unsigned int ladder = 0; ladder<nSectors; ladder++)	{
+    for(int ladder = 0; ladder<nSectors; ladder++)	{
       Int_t svtLadder = 2*(ladder+1) - (svtLayer-1)%2;
       Int_t wafer = nWafers/2+1;
       index1 = _geometry->getWaferIndex(svtBarrel,svtLadder,wafer);
