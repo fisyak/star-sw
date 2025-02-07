@@ -51,6 +51,7 @@ class StGmtStrip : public StObject {
   }
   Float_t getAdcSumRMS()        const { return mAdcSumRMS;}
   void    getElecCoords( Int_t& rdo, Int_t& arm,  Int_t& apv,  Int_t& chan ){ rdo = mRdo; arm = mArm; apv = mApv; chan = mChan; }
+  Float_t getPedV()          const { return mPed;}
   Float_t getPed()                   {
     Int_t n = 0;
     mPed = 0;

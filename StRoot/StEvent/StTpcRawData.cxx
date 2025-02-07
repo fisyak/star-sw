@@ -9,8 +9,9 @@
 #include "TError.h"
 #include <assert.h>
 #include "TMath.h"
-#include "StDaqLib/TPC/trans_table.hh"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
+#define TRANS_TABLE_10TO8_HH
+#include "StDaqLib/TPC/trans_table.hh"
 StMemoryPool StDigitalPixel::mPool(sizeof(StDigitalPixel));
 
 //________________________________________________________________________________

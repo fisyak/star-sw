@@ -33,7 +33,7 @@ void StGmtStripCollection::removeFlagged(){
         
         // iterators
         StSPtrVecGmtStripIterator srcIter;
-        StSPtrVecGmtStripIterator lastCopied=mStripVec.begin()-1;
+	//        StSPtrVecGmtStripIterator lastCopied=mStripVec.begin()-1;
         
         // copy all valid events
         for( srcIter = mStripVec.begin(); srcIter != mStripVec.end(); ++srcIter )
