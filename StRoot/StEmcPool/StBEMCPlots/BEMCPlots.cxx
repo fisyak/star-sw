@@ -876,7 +876,7 @@ void BEMCPlots::processEvent( char *datap
 	      if ((tdc >= 10) && (tdc < 20) && (TDCStatus[tdc]!=BEMCNOTINSTALLED) && this->mHist_btow_spectra_2) this->mHist_btow_spectra_2->Fill(daqid, adc);
 	      if ((tdc >= 20) && (tdc < 30) && (TDCStatus[tdc]!=BEMCNOTINSTALLED) && this->mHist_btow_spectra_3) this->mHist_btow_spectra_3->Fill(daqid, adc);
 	      int softId = -1;
-	      float iphi, eta, adcped;
+	      float iphi = 0, eta = 0, adcped;
 	      
 	      if (BEMCDecoder && BEMCDecoder->GetTowerIdFromDaqId(i, softId)) {
 		
@@ -1005,7 +1005,7 @@ void BEMCPlots::processEvent( char *datap
 			    totalSumPSD += adc;
 			    if ((box >= 1) && (box <= 60)) {
 				pmtSum[box - 1] += adc;
-				float iphi, eta;
+				float iphi = 0, eta = 0;
 			        StEmcGeom *BEMCGeom = StEmcGeom::instance("bemc");
 				if(adc>20){
 				  BEMCGeom->getEta(softId, eta);

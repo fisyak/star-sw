@@ -232,8 +232,8 @@ TH1F* StEmcMipMaker::findMip(int eta0,int eta1,StEmcEqualMaker* equal)
 //_____________________________________________________________________________
 TH1F* StEmcMipMaker::findMip(int id, int rebin, bool print)
 {
-  float mip = 0;
-  float width =0;
+//   float mip = 0;
+//   float width =0;
   float chi = 0;
   delete funcFitPeak; funcFitPeak = NULL;
   delete funcFitBack; funcFitBack = NULL;
@@ -287,8 +287,8 @@ TH1F* StEmcMipMaker::findMip(int id, int rebin, bool print)
   mIntegral->Fill(id,integral);
   if(print) cout <<"MIP peak = "<<peak<<"+-"<<epeak<<"  width = "<<w<<"+-"<<ew<<endl;
   if(print) cout <<"Final chi2 = "<<chi<<endl;
-  mip = peak;
-  width = w;
+//   mip = peak;
+//   width = w;
   return h;  
 }
 //_____________________________________________________________________________

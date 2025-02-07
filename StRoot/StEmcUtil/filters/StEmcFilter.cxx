@@ -572,7 +572,6 @@ Bool_t StEmcFilter::getTrackId(StTrack *track,Int_t& nPoints,Float_t& dEdX,Float
   m[1] = mProton->mass();
   m[2] = mKaon->mass();
   m[3] = mElectron->mass();
-  Int_t kk[4]={0,0,0,1};
 
   if (size>0)
   {
@@ -600,6 +599,7 @@ Bool_t StEmcFilter::getTrackId(StTrack *track,Int_t& nPoints,Float_t& dEdX,Float
     {
       //dedx_expected=mBB(momentum/m[i])*mdEdXScale;      
 #if 0
+      static Int_t kk[4]={0,0,0,1};
       dedx_expected = 1.0e-6*mBB.Sirrf(momentum/m[i],length,kk[i])*mdEdXScale;
 #else
       dedx_expected = 1.e-6*Bichsel::Instance()->GetI70(TMath::Log10(momentum/m[i]),1.)*mdEdXScale;

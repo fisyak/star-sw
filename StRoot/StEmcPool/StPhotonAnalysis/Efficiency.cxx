@@ -474,7 +474,7 @@ Int_t Efficiency::make(Int_t evmax)
 
 	  h_dist->Fill(TMath::Abs(p->distanceToTrack()));
 
-	  MyMcTrack *closestTrack=0;
+	  //	  MyMcTrack *closestTrack=0;
 	  if(PIONS||ETAS){
 	    PdistMC=9999.;//reset
 	    MyMcTrack *trA=(MyMcTrack*)ev->getMcPhotonArray()->At(0);
@@ -496,7 +496,7 @@ Int_t Efficiency::make(Int_t evmax)
 	    Float_t dpB=sqrt(pow(Bn-Pn,2)+pow(dphiBP,2));
 	    //distance to mc track:
 	    PdistMC=dpA<dpB ? dpA : dpB;
-	    closestTrack=dpA<dpB ? trA : trB;
+	    //	    closestTrack=dpA<dpB ? trA : trB;
 
 	    h_mcdist->Fill(PdistMC);
 	    h_mcdist2D->Fill(pMom.Pt(),PdistMC);

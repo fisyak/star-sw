@@ -151,7 +151,7 @@ Int_t StBemcBeamBckgFinderMaker::Make(){
   
   if(mTrigId<0) { // print all triggers
     vector<unsigned int> nominalL=nominal->triggerIds();
-    printf("trigL len=%d totEve=%d\n",nominalL.size(),mInpEve);
+    printf("trigL len=%d totEve=%d\n",(int)nominalL.size(),mInpEve);
     uint ii;
     for(ii=0;ii<nominalL.size();ii++)printf("trgID=%d, ",nominalL[ii]);
     printf("\n");
@@ -292,10 +292,10 @@ Int_t StBemcBeamBckgFinderMaker::InitRun(int runNo){
 
     int status;
     myTable->getStatus(BTOW, softID, status);
-    int m,e,s;
+    int m=0,e=0,s=0;
     mGeomB->getBin(softID,m,e,s);
 
-    float etaF,phiF;
+    float etaF=0,phiF=0;
     mGeomB->getEta(m,e,etaF);
     mGeomB->getPhi(m,s,phiF);  // -pi <= phi < pi
     if(phiF<0) phiF+=2*C_PI; // I want phi in [0,2pi]

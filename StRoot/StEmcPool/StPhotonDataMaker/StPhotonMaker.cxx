@@ -544,14 +544,14 @@ Int_t StPhotonMaker::Make()
 
 
   StSPtrVecEmcPoint& barrelPoints=emcCol->barrelPoints();
-  Int_t nPrimTracks=0;
+  //  Int_t nPrimTracks=0;
   Int_t nGoodPrimaries=0;
   Int_t nGoodPrimBarrel=0;
   Int_t nGoodGlobals=0;
   Float_t TpcPt=0.;
   Float_t TpcPtBarrelWest=0.;
   if(event->primaryVertex()){
-    nPrimTracks=pVert->numberOfDaughters();
+    //    nPrimTracks=pVert->numberOfDaughters();
     StSPtrVecTrackNode& trackNode=event->trackNodes();
     if(mDebug) cout<<"number of tracknodes: "<<trackNode.size()<<endl;
     for(UInt_t j=0;j<trackNode.size();j++){

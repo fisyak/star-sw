@@ -178,7 +178,7 @@ CSMStatusUtils::plotAllStatuses(TString rootfiledir,int year,int runstart) {
   }
   tm ptm;
   ptm.tm_year = year-1900;
-  int firstdate=99999999, firsttime,lastdate=0, lasttime, firstrun=99999999, lastrun=0;
+  int firstdate=99999999, firsttime=0,lastdate=0, lasttime=0, firstrun=99999999, lastrun=0;
   IntToPtrVecShortConstIter first = mRunStatusMapPtr->begin();
   IntToPtrVecShortConstIter last = mRunStatusMapPtr->end();
   IntToPtrVecShortConstIter iter = first;
@@ -516,9 +516,9 @@ CSMStatusUtils::makeStatusPlots(TString plotDir) {
   TH2F* currentHist = NULL;
   TH2F* tmpHist = NULL;
   TString runnumberstring;
-  int runnumber, priorRunNumber, currentRunNumber=99999999, savedCurrentRunNumber;
-  int priorTimeStamp, currentTimeStamp=99999999;
-  int priorDateStamp, currentDateStamp=99999999;
+  int runnumber, priorRunNumber=0, currentRunNumber=99999999, savedCurrentRunNumber;
+  int priorTimeStamp=0, currentTimeStamp=99999999;
+  int priorDateStamp=0, currentDateStamp=99999999;
   Bool_t firstGoodRun = kTRUE;
   Float_t averageNumberHitsPerChan;
   Int_t goodTowers;
