@@ -1345,7 +1345,7 @@ void StAnalysisMaker::summarizeEvent(StEvent *event, Int_t mEventCounter) {
   if (event->gmtCollection() && 
       (event->gmtCollection()->getNumHits()) // || event->gmtCollection()->getNumStrips())
       ) {
-    LOG_QA << "# GMT hits:           " << event->gmtCollection()->getNumHits() 
+    LOG_QA << "# GMT  hits:           " << event->gmtCollection()->getNumHits() 
 	   << " points: " << event->gmtCollection()->getNumPoints() 
 	   << " strips: " << event->gmtCollection()->getNumStrips()
 	   << endm;
