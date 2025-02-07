@@ -62,75 +62,7 @@ Int_t StGmtGeom::decodeGeoId(    Int_t geoId, Short_t & module, Int_t & layer, S
   return 0;
 }
 
-std::string StGmtGeom::encodeGeoName(    Int_t module, Char_t layer, Int_t strip){
-  Char_t testS='S';
-  Char_t testP='P';
 
-  if ( module < 0 || module >= kGmtNumModules )    {
-    LOG_DEBUG << "Module " << module << " out of range in StGmtGeom::encodeGeoName." << endm;
-    return kGmtErrorString;
-  }  else if (layer != testS && layer != testP    )    {
-    LOG_DEBUG << "Layer " << layer << " out of range in StGmtGeom::encodeGeoName." << endm;
-    return kGmtErrorString;
-  }  else if ( strip < 0 || strip >= kGmtNumStrips )    {
-    LOG_DEBUG << "Strip " << strip << " out of range in StGmtGeom::encodeGeoName." << endm;
-    return kGmtErrorString;
-  }
-
-   std::stringstream buff;
-   buff << module+1 << layer;
-   if ( strip < 10 )        buff << "00";
-   else if ( strip < 100 )  buff << "0";
-   buff << strip;
-   return buff.str();
-}
-
-Int_t StGmtGeom::decodeGeoName (    const std::string & geoName,    Short_t & module, Int_t & layer, Short_t & strip){
-  module = geoName[0] - '1';
-  layer = geoName[2];
-  strip = std::atoi( (geoName.substr(3)).c_str() );
-  
-  //	This is unlikely to catch all errors with the geoName, but it should
-  //	do fairly well.
-  if (module < 0	
-      || module >= kGmtNumModules 	
-      || (	     layer < 0 || layer > 1	   )
-      || strip < 0
-      || strip > kGmtNumStrips    )    {
-    LOG_DEBUG << "Malformed geoName " << geoName << " in StGmtGeom::decodeGeoName." << endm;
-    module = kGmtError;
-    layer = kGmtErrorChar;
-    strip = kGmtError;
-    
-    return kGmtError;
-    }
-  
-  return 0;
-}
-
-std::string StGmtGeom::translateGeoIdToGeoName( Int_t geoId ){
-  Short_t module, strip;
-  Int_t layer;
-    
-  if ( geoId < 0 || geoId >= kGmtNumGeoIds )    {
-    LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::translateGeoIdToGeoName." << endm;
-    return kGmtErrorString;
-  }
-  
-  decodeGeoId( geoId, module, layer, strip );
-  return encodeGeoName( module, layer, strip );
-}
-
-Int_t StGmtGeom::translateGeoNameToGeoId( const std::string & geoName ){
-  Short_t module, strip;
-  Int_t layer;
-  Int_t rdo, arm, apv, channel;
-
-  //	Error message already taken care of in decodeGeoName.
-  if ( decodeGeoName( geoName, module, layer, strip ) < 0 )    return kGmtError;
-
-  return encodeGeoId( rdo, arm, apv, channel );
-}
 
 Int_t StGmtGeom::getPhysicalCoordinate(    Int_t geoId,    Short_t & module, Int_t & layer){
   if ( geoId < 0 || geoId >= kGmtNumGeoIds )    {
@@ -144,20 +76,6 @@ Int_t StGmtGeom::getPhysicalCoordinate(    Int_t geoId,    Short_t & module, Int
   Short_t strip;
 
   decodeGeoId( geoId, module, layer, strip );
-
-  return 0;
-}
-
-Int_t StGmtGeom::getPhysicalCoordinate(    const std::string & geoName,    Short_t & module, Int_t & layer){
-  Short_t strip;
-
-  if ( decodeGeoName( geoName, module, layer, strip ) < 0 )    {
-    //  Error is mostly handled by the decodeGeoName call.
-    module = kGmtError;
-    layer = kGmtError;
-
-    return kGmtError;
-  }
 
   return 0;
 }
@@ -270,23 +188,6 @@ Int_t StGmtGeom::getGlobalPhysicalCoordinate(    Int_t geoId, Short_t & module, 
   }
 
   return computeGlobalPhysicalCoordinate( layer, strip);
-}
-
-//  The ordinate, lowerSpan and upperSpan are all in centimeters or
-//  radians, depending on the layer.
-Int_t StGmtGeom::getGlobalPhysicalCoordinate(    const std::string & geoName,    Short_t & module, Int_t & layer){
-  Short_t strip;
-  
-  if ( decodeGeoName( geoName, module, layer, strip ) < 0 )    {
-    //  Error is mostly handled by the decodeGeoName call.
-    module = kGmtError;
-    layer = kGmtError;
-    
-    return kGmtError;
-  }
-  
-  return computeGlobalPhysicalCoordinate( layer, strip);
-  
 }
 
 

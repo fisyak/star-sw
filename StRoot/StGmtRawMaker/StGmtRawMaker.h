@@ -40,10 +40,8 @@ class StGmtRawMaker :  public StRTSBaseMaker {
   Int_t     ClusterBuilder(ULong_t events, UInt_t module, StGmtHitCollection& hits);
   Int_t     fillHits();
   TF1*      FindPeaks(TH1D* hist);
-  void      AddPed(TH1 *adc, TProfile *pedestal);
   Char_t          mBeg[1]; //!
   StGmtCollection *mGmtCollection;
-  TProfile        *mPedestalXY[kGmtNumLayers][kGmtNumModules];
   TH2F            *mAdcTimeBins[kGmtNumLayers][kGmtNumModules];
   Char_t          mEnd[1]; //!
   ClassDef(StGmtRawMaker,1)

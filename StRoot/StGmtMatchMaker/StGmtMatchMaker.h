@@ -4,7 +4,7 @@
 #include "TFile.h"
 #include "TArrayI.h"
 #include "TTree.h"
-class EventT;
+class GmtEvent;
 class StGmtMatchMaker : public StMaker {
  public:
   StGmtMatchMaker(const Char_t *name="StGmtMatchMaker");
@@ -14,16 +14,16 @@ class StGmtMatchMaker : public StMaker {
   virtual Int_t Finish();
   void SetTree();
   void Print(Option_t *opt="") const;
-  void SetMinNoHits(Int_t MinNoHits=0) {fMinNoHits = MinNoHits;}
-  void SetpCut(Double_t pCut=0.0) {fpCut = pCut;}
+  static void SetMinNoHits(Int_t MinNoHits=0) {fMinNoHits = MinNoHits;}
+  static void SetpCut(Double_t pCut=0.0) {fpCut = pCut;}
   void SetOut(const Char_t *Out="Event") {fOut = Out;}
   void MakeListOfRotations();
  private:
   TFile   *fFile;
   TTree   *fTree;
-  EventT  *fEvent;
-  Int_t    fMinNoHits;
-  Double_t fpCut;
+  GmtEvent  *fEvent;
+  static Int_t    fMinNoHits;
+  static Double_t fpCut;
   const Char_t  *fOut;
   ClassDef(StGmtMatchMaker,1)
 };

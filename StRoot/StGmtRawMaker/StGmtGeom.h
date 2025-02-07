@@ -50,40 +50,14 @@ class StGmtGeom
 	static Int_t decodeGeoId( Int_t geoId, Short_t & module, Int_t & layer, Short_t & strip );
 
 
-	//Geoname is human readable form of geoId
-	static std::string encodeGeoName( Int_t module, 
-					  Char_t layer, Int_t strip );
-	static Int_t decodeGeoName( const std::string & geoName, Short_t & module,
-				   Int_t & layer,
-				   Short_t & strip );
-	static std::string translateGeoIdToGeoName( Int_t geoId );
-	static Int_t translateGeoNameToGeoId( const std::string & geoName );
-
 	//Returns range upper and lower range of R or Phi valus depending on geoId.  
 	//NOTE phi values are only local - that is they are the same for each quadrant
 	//The ordinate, lowerSpan and upperSpan are all in centimeters or radians
 	static Int_t getPhysicalCoordinate( Int_t geoId, Short_t & module,
 					   Int_t & layer);
-
-
-      
-	//Returns range upper and lower range of R or Phi valus depending on geoName.  
-	//NOTE phi values are only local - that is they are the same for each quadrant
-	//The ordinate, lowerSpan and upperSpan are all in centimeters or radians
-	static Int_t getPhysicalCoordinate( const std::string & geoName,
-					    Short_t & module,
-					    Int_t & layer);
-	
-
 	//Similar to getPhysicalCoordinate but returns phi in STAR coordinate system
 	static Int_t getGlobalPhysicalCoordinate( Int_t geoId, Short_t & module,
 					    Int_t & layer);
-
-	//Similar to getPhysicalCoordinate but returns phi in STAR coordinate system
-	static Int_t getGlobalPhysicalCoordinate( const std::string & geoName,
-					    Short_t & module,
-					    Int_t & layer);
-
 	static Int_t getCoordNumFromElecCoord( Int_t rdo, Int_t arm, Int_t apv, Int_t channel);
 	static Double_t getPositionFromElecCoord( Int_t rdo, Int_t arm, Int_t apv, Int_t channel);
   

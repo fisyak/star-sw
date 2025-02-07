@@ -14,172 +14,56 @@
 #ifndef _ST_GMT_POINT_H_
 #define _ST_GMT_POINT_H_
 
-#include "StHit.h"
-#include <string.h>
-
+#include "StGmtHit.h"
 
 class StGmtPoint : public StHit {
 public:
-    // constructors
-  StGmtPoint(Int_t B = 0, Int_t L = 0, Int_t l = 0, Int_t W = 0, Int_t H = 0,
-      Double32_t X = 0, Double32_t Y = 0, Double32_t Z = 0,
-      Double32_t XL = 0, Double32_t YL = 0, Double32_t ZL = 0) {
-    memset(&start, 0, &end - &start);
-    SetId(B,L,l,W,H); Set(X,Y,Z,XL,YL,ZL);
-  }
-    // deconstructor
+ StGmtPoint(Int_t id  = -1, Int_t module = -1, Int_t trackId = 0, 
+	    Double32_t XG = 0, Double32_t YG = 0, Double32_t ZG = 0,
+	    Double32_t XL = 0, Double32_t YL = 0, Double32_t ZL = 0, 
+	    Float_t yD = 0, Float_t sigmaY = 0, Float_t AdcLy = 0,
+	    Float_t dyD = 0, Float_t dsigmaY = 0, Float_t dAdcLy = 0,
+	    Float_t zD = 0, Float_t sigmaZ = 0, Float_t AdcLz = 0,
+	    Float_t dzD = 0, Float_t dsigmaZ = 0, Float_t dAdcLz = 0) :
+  StHit( StThreeVectorF(XG, YG, ZG), StThreeVectorF(XL, YL, ZL), 2*(module+1), 0., 0, 0, 0, id), 
+    mTrackId(trackId), 
+    myD(yD), msigmaY(sigmaY), mAdcLy(AdcLy), mdyD(dyD), mdsigmaY(dsigmaY), mdAdcLy(dAdcLy),
+    mzD(zD), msigmaZ(sigmaZ), mAdcLz(AdcLz), mdzD(dzD), mdsigmaZ(dsigmaZ), mdAdcLz(dAdcLz) 
+  {}
+#if 0	 
+  StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local) :
+  StHit(global, local, 2*(hitY.getModule()+1), 0., 0, 0, 0, hitY.id() + 100*hitZ.id())
+    ,mTrackId(trackId)
+    ,hitY.getLocal(), hitY.getSigma(), hitY.getAdc(), hitY.getErrorLocal(), hitY.getErrorSigma(), hitY.getErrorAdc()
+    ,hitZ.getLocal(), hitZ.getSigma(), hitZ.getAdc(), hitZ.getErrorLocal(), hitZ.getErrorSigma(), hitZ.getErrorAdc() 
+  {}
+#endif
   ~StGmtPoint() {}
-    virtual StDetectorId detector() const           {return kGmtId;}    
-    // other accessors
-    int getKey() {    return mKey;}
-    int getModule() {    return static_cast< int >(mHardwarePosition/8);}
-    
-    Int_t volumeID() const {return 0;}
-    
-  void Set(Double32_t X, Double32_t Y, Double32_t Z,
-      Double32_t XL = 0, Double32_t YL = 0, Double32_t ZL = 0) {
-    xG = X; yG = Y; zG = Z; 
-    uM = XL; vM = YL; w = ZL;
-  }
-  void SetHitLength(Double_t sh) {sLength = sh;}  
-  void SetHitLengthR(Double_t sh) {sLengthR = sh;}
-  void SetHitdR(Double_t sh) {dR = sh;}
-  void SetHitFlag(const UInt_t flag) {hitFlag = flag;}
-  void SetL(Double32_t X, Double32_t Y, Double32_t Z) {xL = X; yL = Y; zL = Z;}
-  void SetGC(Double32_t X, Double32_t Y, Double32_t Z) {xGC = X; yGC = Y; zGC = Z;}
-  void SetLM(Double32_t X, Double32_t Z) {u = X; v = Z;}
-  void SetAnode(Double32_t p=0) {anode=p;}
-  void SetTimeB(Double32_t p=0) {timeb=p;}
-  void SetId(Int_t B = 0, Int_t L = 0, Int_t l = 0, Int_t W = 0, Int_t H = 0);
-#if 0
-  void SetId(StHit *StGmtPoint);
-#endif
-  void Set(Double32_t *xyzG, Double32_t *xyzL) {Set(xyzG[0],xyzG[1],xyzG[2],xyzL[0],xyzL[1],xyzL[2]);}
-  void SetpT(Double32_t p) {pT = p;}
-  void SetMom(Double32_t p) {pMom = p;}
-  void SetUVPred(Double32_t u, Double32_t v) {uP = u; vP = v;}
-  void SettUVPred(Double32_t tu, Double32_t tv) {tuP = tu; tvP = tv;}
-  void SetWG(Double32_t wu, Double32_t wv, Double32_t ww) { wGu = wu; wGv = wv; wGw = ww;}
-  //  void SetWL(Double32_t wx, Double32_t wy, Double32_t wz) { wLx = wx; wLy = wy; wLz = wz;}
-#if 0
-  void SetValidDerivatives(Bool_t p=kTRUE) {fValidDerivatives = p;}
-  void SetDerivatives(Double32_t *der) {Double32_t *d = &duPdxV; for (Int_t i = 0; i < 12; i++) d[i] = der[i];}
-#endif
-  void SetXyzG(const Double_t *x) {Double32_t *xyzPG = &xPG; for (Int_t i = 0; i < 3; i++) xyzPG[i] = x[i];}
-  void SetDirG(const Double_t *x) {Double32_t *dirPG = &cxPG;for (Int_t i = 0; i < 3; i++) dirPG[i] = x[i];}
-  void SetXyzL(const Double_t *x) {Double32_t *xyzPL = &xPL; for (Int_t i = 0; i < 3; i++) xyzPL[i] = x[i];}
-  void SetRDO(Int_t r) {rdo = r;}
-  void SetuvD(Double32_t u, Double32_t v) {uD = u; vD = v;}
-  void SetuvDError(Double32_t du, Double32_t dv) {duD = du; dvD = dv;}
-  void SetSigma(Double32_t su, Double32_t sv) {suD = su; svD = sv;}
-  void SetSigmaError(Double32_t dsu, Double32_t dsv) {dsuD = dsu; dsvD = dsv;}
-  void SetAdc(Double32_t uAdc, Double32_t vAdc) {uAdcD = uAdc; vAdcD = vAdc;}
-  void SetAdcError(Double32_t duAdc, Double32_t dvAdc) {duAdcD = duAdc; dvAdcD = dvAdc;}
-#ifdef __USE_GLOBAL__
-  void SetUVPredGl(Double32_t u, Double32_t v) {uPGl = u; vPGl = v;}
-  void SettUVPredGl(Double32_t tu, Double32_t tv) {tuPGl = tu; tvPGl = tv;}
-  void SetXyzGl(const Double_t *x) {Double32_t *xyzPG = &xPGlG; for (Int_t i = 0; i < 3; i++) xyzPG[i] = x[i];}
-  void SetDirGl(const Double_t *x) {Double32_t *dirPG = &cxPGlG;for (Int_t i = 0; i < 3; i++) dirPG[i] = x[i];}
-  void SetXyzGlL(const Double_t *x) {Double32_t *xyzPL = &xPGlL; for (Int_t i = 0; i < 3; i++) xyzPL[i] = x[i];}
-#endif
-  void SetHitPerTrack(Int_t k) {NoHitPerTrack = k;}
-  void SetuHat(Double_t u) {uHat = u;}
-  void SetvHat(Double_t v) {vHat = v;}
-  void SetNofHits(Int_t n) {NofHits = n;}
-  void SetNofFHits(Int_t n) {NofFHits = n;}
-  void SetisFitted(Int_t k=1) {isFitted = k;}
-  void SetisTrack(Int_t k=1) {isTrack = k;}
-  void SetUsedInFit(Int_t k=0) {isUsedInFit = k;}
-  void SetisPrimary(Bool_t k) {isPrimary = k;}
-  void SetisCrossingMembrain(Bool_t k) {isCrossingMembrain = k;}
-  UInt_t      GetHitFlag()     const {return hitFlag;}
-  Double32_t  GetU()           const {return u;}
-  Double32_t  GetV()           const {return v;}
-  Double32_t  GetuD()          const {return uD;}
-  Double32_t  GetvD()          const {return vD;}
-  Double32_t *GetXyzP()              {return &xPG;}
-  Double32_t *GetXyzL()              {return &xPL;}
-  Double32_t *GetXyzW()              {return &xPL;}
-  Double32_t  GetPredtU()      const {return tuP;}
-  Double32_t  GetPredtV()      const {return tvP;}
-  Double32_t  GetPredU()       const {return uP;}
-  Double32_t  GetPredV()       const {return vP;}
-  Bool_t      GetisPrimary()   const {return isPrimary;}
-  Bool_t      GetisCrossingMembrain(){return isCrossingMembrain;}
-#ifdef __USE_GLOBAL__
-
-  Double32_t *GetXyzPGl()              {return &xPGlG;}
-  Double32_t *GetXyzLGl()              {return &xPGlL;}
-  Double32_t *GetXyzWGl()              {return &xPGlL;}
-  Double32_t  GetPredGltU()      const {return tuPGl;}
-  Double32_t  GetPredGltV()      const {return tvPGl;}
-  Double32_t  GetPredGlU()       const {return uPGl;}
-  Double32_t  GetPredGlV()       const {return vPGl;}
-#endif
-  Int_t       Barrel()         const {return barrel;}
-  Int_t       Layer()          const {return layer;}
-  Int_t       Ladder()         const {return ladder;}
-  Int_t       Wafer()          const {return wafer;}
-  Int_t       GetId()          const {return Id;}
-#if 0
-  const Double32_t *GetDerivatives() const {return &duPdxV;}
-  Bool_t      ValidDerivatives() const {return fValidDerivatives;}
-#endif
+  StDetectorId detector()      const  {return kGmtId;}    
+  Int_t        getTrackId()    const  {return mTrackId;}
+  Int_t        getModule()     const  {return hardwarePosition()/2 - 1;}
+  Int_t        volumeID()      const  {return 0;}
+  StThreeVectorF local()       const  {return positionError();}  // prediction in local coorditane system
+  Float_t      yD()            const  {return myD;}
+  Float_t      sigmaY()        const  {return msigmaY;}
+  Float_t      AdcLy()         const  {return mAdcLy;}
+  Float_t      dyD()           const  {return mdyD;}
+  Float_t      dsigmaY()       const  {return mdsigmaY;}
+  Float_t      dAdcLy()        const  {return mdAdcLy;}
+  Float_t      zD()            const  {return mzD;}
+  Float_t      sigmaZ()        const  {return msigmaZ;}
+  Float_t      AdcLz()         const  {return mAdcLz;}
+  Float_t      dzD()           const  {return mdzD;}
+  Float_t      dsigmaZ()       const  {return mdsigmaZ;}
+  Float_t      dAdcLz()        const  {return mdAdcLz;}
   virtual void Print(Option_t *opt="") const;
  private:   
     // data members
-  Char_t start;
-  Int_t Id;
-  Int_t sector, barrel, layer, ladder, wafer, hybrid, rdo; // SSD: barrel = layer = hybrid = 0
-  Double32_t xG, yG, zG;    // hit Global from StEvent
-  Double32_t xGC, yGC, zGC; // hit Global from local
-  Double32_t xL, yL, zL;    // hit in Ladder CS
-  Double32_t u, v, w;       // hit in Local (Wafer) xL == u_m, yL == v_m
-  Double32_t tuP, tvP;      // tangs 
-  Double32_t uP, vP;        // prediction in Wafer CS
-  Double32_t pT, pMom;      // track 
-  Double32_t xPG, yPG, zPG; // Prediction in Global CS
-  Double32_t cxPG, cyPG, czPG; // Predicted direction cos in Global
-  Double32_t wGu, wGv, wGw; // Global direction for detector plane
-  Double32_t xPL, yPL, zPL; // Ladder
-  Bool_t     isPrimary;     // If primary track
-  Bool_t     isCrossingMembrain; //If track crosses membrain
-#ifdef __USE_GLOBAL__
-  Double32_t uPGl, vPGl;        // prediction in Wafer CS
-  Double32_t tuPGl, tvPGl;      // tangs 
-  Double32_t xPGlG, yPGlG, zPGlG; // Prediction in Global CS
-  Double32_t cxPGlG, cyPGlG, czPGlG; // Predicted direction cos in Global
-  Double32_t xPGlL, yPGlL, zPGlL; // Ladder
-#endif
-  //  Double32_t cxPL, cyPL, czPL; // Ladder
-#if 0
-  Bool_t     fValidDerivatives;
-  Double32_t duPdxV,duPdyV,duPdzV,duPddip,duPdphi,duPdRho; // derivatives uP wrt xV,yV,zV,1/pT,dip,phi
-  Double32_t dvPdxV,dvPdyV,dvPdzV,dvPddip,dvPdphi,dvPdRho; // derivatives vP wrt xV,yV,zV,1/pT,dip,phi
-#endif
-  Double32_t uM, vM;
-  Double32_t anode, timeb;
-  Int_t      NoHitPerTrack;
-  Double32_t uD, vD;       // positions of hits from detector
-  Double32_t duD, dvD;     // errors in positions
-  Double32_t suD, svD;     // sigma
-  Double32_t dsuD, dsvD;   // errors in sigma
-  Double32_t uAdcD, vAdcD;   // Adc
-  Double32_t duAdcD, dvAdcD; // errors in adc
-  Double32_t uHat;
-  Double32_t vHat;
-  Int_t      NofHits; // total no. of hits per wafer
-  Int_t      NofFHits;// total no. of fitted hits per wafer
-  Int_t      isFitted;
-  Int_t      isTrack; 
-  Int_t      isUsedInFit;
-  UInt_t     hitFlag;
-  Double32_t sLength; 
-  Double32_t sLengthR; 
-  Double32_t dR;
-  Int_t mKey;                         // unique label
-  Char_t end;
-
-  ClassDef(StGmtPoint,1)
+  Int_t   mTrackId;              
+  Float_t myD, msigmaY, mAdcLy;
+  Float_t mdyD, mdsigmaY, mdAdcLy;
+  Float_t mzD, msigmaZ, mAdcLz;
+  Float_t mdzD, mdsigmaZ, mdAdcLz;
+  ClassDef(StGmtPoint,2)
 }; 
 #endif

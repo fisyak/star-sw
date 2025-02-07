@@ -21,16 +21,17 @@
 #include "StPrimaryVertex.h"
 #include "StBFChain.h"
 #include "TGeoMatrix.h"
-#include "EventT.h"
+#include "GmtEvent.h"
 #include "StMessMgr.h" 
 #include "StBichsel/Bichsel.h"
 #include "StTpcDb/StTpcDb.h"
 #include "StDetectorDbMaker/StGmtSurveyC.h"
 #include "StGmtCollection.h"
+Int_t    StGmtMatchMaker::fMinNoHits = 15;
+Double_t StGmtMatchMaker::fpCut = 0.2;;
+
 //________________________________________________________________________________
 StGmtMatchMaker::StGmtMatchMaker(const Char_t *name) : StMaker(name),fFile(0), fTree(0), fEvent(0) {
-  SetMinNoHits();
-  SetpCut();
   SetOut();
 }
 //________________________________________________________________________________
@@ -77,9 +78,9 @@ void StGmtMatchMaker::SetTree() {
   fTree->SetAutoSave(1000000000);  // autosave when 1 Gbyte written
   bufsize = 64000;
   if (split)  bufsize /= 4;
-  fEvent = new EventT();
+  fEvent = new GmtEvent();
   TTree::SetBranchStyle(branchStyle);
-  TBranch *branch = fTree->Branch("EventT", &fEvent, bufsize,split);
+  TBranch *branch = fTree->Branch("GmtEvent", &fEvent, bufsize,split);
   branch->SetAutoDelete(kFALSE);
 }
 //________________________________________________________________________________
@@ -92,14 +93,19 @@ Int_t StGmtMatchMaker::Make() {
     return kStOK;
   }
   if (GmtCollection->getNumHits() == 0) return kStOK;
-  if (! EventT::RotMatrices()) MakeListOfRotations();
-  if (pEvent && !fEvent->Build(pEvent,fpCut)) fTree->Fill();  //fill the tree
+  StSPtrVecTrackNode& theNodes = pEvent->trackNodes();
+  UInt_t nnodes = theNodes.size();
+  if (! nnodes) { cout << "No tracks" << endl; return kStOK;}
+  if (! GmtEvent::RotMatrices()) MakeListOfRotations();
+  if (pEvent && !fEvent->Build(pEvent,fpCut,fMinNoHits)) {
+    if (fTree)  fTree->Fill();  //fill the tree
+  }
   return kStOK;
 }
 //________________________________________________________________________________
 void StGmtMatchMaker::Print(Option_t *opt) const {
-  if (! EventT::RotMatrices()) return;
-  TIter next(EventT::RotMatrices());
+  if (! GmtEvent::RotMatrices()) return;
+  TIter next(GmtEvent::RotMatrices());
   TGeoHMatrix *comb = 0;
   while ((comb = (TGeoHMatrix *) next())) {
     Int_t Id;
@@ -114,9 +120,9 @@ void StGmtMatchMaker::Print(Option_t *opt) const {
 }
 //________________________________________________________________________________
 void StGmtMatchMaker::MakeListOfRotations() {
-  if (EventT::RotMatrices()) return;
+  if (GmtEvent::RotMatrices()) return;
   THashList *rotMHash = new THashList(100,0);
-  EventT::SetRotMatrices(rotMHash);
+  GmtEvent::SetRotMatrices(rotMHash);
   //  THashList *hash = 0;
   const TGeoHMatrix& tpc2Glob = gStTpcDb->Tpc2GlobalMatrix();
   for(int module=0;module<  kGmtNumModules;module++)    {
