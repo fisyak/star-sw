@@ -2721,7 +2721,9 @@ my $debug = 0;
 #$hist = "RunXIX_XXI39"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/13/2025 test with MySQL with AL92 
 #$hist = "RunXIX_XXI40"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/13/2025  with AL92  TpcZCorrectionC.3p85GeV_fixedTarget_2021.C
 #$hist = "RunXIX_XXI41"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/14/2025  with AL92  TpcSecRowB.3p85GeV_fixedTarget_2021.root
-$hist = "RunXIX_XXI42"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/15/2025  with AL92  check MySQL
+#$hist = "RunXIX_XXI42"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/15/2025  with AL92  check MySQL
+############################################ RunXXII ####################################
+$hist = "RunXXII01"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/04/2025  the fist run
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;

@@ -201,8 +201,37 @@ foreach my $key (sort keys %TagList) {
     print "Create $SCRIPT\n";
 #    print OUT "#!/bin/tcsh -v\n";
     print OUT "#!/usr/bin/env tcsh \n";
-    print OUT "source ~/.tcshrc\n";
-    print OUT "env\n";
+#    print OUT "source ~/.tcshrc\n";
+#    print OUT "env\n";
+    print OUT "
+#/usr/bin/env
+# Default value for path if not defined.
+if ( ! \$?PATH ) then
+   setenv PATH /usr/local/bin:/bin:/usr/bin
+endif
+#echo \"--------------------------------------------------------------------------------\"
+if ( ! \$?USER ) then
+    echo \"USER is not defined\"
+    set USER=`id | sed \"s/).*//\" | sed \"s/.*(//\"`
+endif
+if ( ! \$?HOME ) then
+    echo \"HOME is not defined\"
+
+    if ( -x /usr/bin/getent ) then
+        # we have getent, should not be on aix, bsd, Tru64 however
+        # will work for Linux
+        echo \"Using getent method\"
+#        setenv HOME `/usr/bin/getent passwd $USER | /bin/awk -F: '{print $6}'`
+        setenv HOME `/usr/bin/getent passwd \$USER | /bin/sed 's|.*\\:.*\\:.*\\:.*\\:\\([^\\:]*\\):.*|\\1|'`
+    endif
+endif
+echo \"HOME is now $HOME\"
+
+
+/usr/bin/test -r $HOME/.cshrc && source $HOME/.cshrc
+
+#env
+";
     print OUT "cd $DIR\n";
 #    print OUT "setenv NODEBUG yes\n";
 #    print OUT "setup " . $ARG{platform} . "\n";

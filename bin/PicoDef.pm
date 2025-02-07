@@ -1,143 +1,17 @@
-## AuAu11_production
-## AuAu19_production
-## AuAu200_production
-## AuAu200_production_2011
-## AuAu_200_production_low_2014
-## AuAu27_production_2011
-## AuAu39_production
-## AuAu62_production
-## AuAu7_production
-## pp200_production_2012
-## pp500_production_2017
-## pp500_production_rhicf_2017
-## production_11p5GeV_2020
-## production_13p5GeV_fixedTarget_2020
-## production_14p5GeV_2019
-## production_19GeV_2019
-## production_19GeV_2019b
-## production_19p5GeV_fixedTarget_2020
-## production_26p5GeV_fixedTarget_2020
-## production_27GeV_fixedTarget_2018
-## production_31GeV_fixedTarget_2019
-## production_31p2GeV_fixedTarget_2020
-## production_3p85GeV_fixedTarget_2019
-## production_4p59GeV_fixedTarget_2019
-## production_5p75GeV_fixedTarget_2020
-## production_isobar_2018
-## production_7.3GeV_fixedTarget_2019
-## production_AuAu200_2019
-## production_7p3GeV_fixedTarget_2020
-## production_9p2GeV_2020
-## production_9p2GeV_2020b
-## production_9p2GeV_2020c
-## production_9p8GeV_fixedTarget_2020
-## production_7p7GeV_2021
-## production_dAu200_2021
-## production_OO_200GeV_2021
-## production_OO_fcsTiming
-## production_FF_OO_200GeV_2021
-## production_ps_OO_200GeV_2021
-## production_pp500_2022
-## production_AuAu_2023
-## production_AuAu_HalfField_2023
-## trgsetupname= production_3p85GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_4p59GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_7.3GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_31GeV_fixedTarget_2019,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_5p75GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_7p3GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_9p8GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_31p2GeV_fixedTarget_2020,production=P23id,library=SL23d,filetype=daq_reco_picodst,storage!=hpss
-# production_AuAu_ZeroField_2023
-#production_17p3GeV_2021_P23id_picodst.txt
-# trgsetupname= production_5p75GeV_fixedTarget_2020,production=P23ie,library=SL23e,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_7p3GeV_fixedTarget_2020,production=P23ie,library=SL23e,filetype=daq_reco_picodst,storage!=hpss
-# trgsetupname= production_9p8GeV_fixedTarget_2020,production=P23ie,library=SL23e,filetype=daq_reco_picodst,storage!=hpss
-# 04/16/2024
-#  dir -ltrd /star/data1??/reco/production*/*/P24ia | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
-# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-
+# 04/16/2024   dir -ltrd /star/data1??/reco/production*/*/P24ia | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
 # 04/17/2024  dir -ltrd /star/data1??/reco/production*/*/P24ia | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
-# production_31GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
 # 04/26/2024  dir -ltrd /star/data1??/reco/production*/*/P24ia  | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
-# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_26p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_31GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
-
-# production_pp500_2022/ReversedFullField/P24ia 
-
 # 06/10/2024 dir -ltrd /star/data1??/reco/production*/*/P24ia | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
-# production_100GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_26p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_26p5GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_31GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_3p85GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_44p5GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_70GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_pp500_2022/ReversedFullField/P24ia
-
 # 07/07/2024 dir -ltrd /star/data1??/reco/production*/*/P24ia | awk -F/ '{print $5"/"$6"/"$7}' | sort -u 
-# production_100GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_26p5GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_26p5GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_31GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_3p85GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_44p5GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_70GeV_fixedTarget_2021/ReversedFullField/P24ia
-# production_7.3GeV_fixedTarget_2019/ReversedFullField/P24ia
-# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24ia
-# production_pp500_2022/ReversedFullField/P24ia
 # dir -ltrd /star/data*/reco/production*/*/P24iy* | awk -F/ '{print $5"/"$6"/"$7}' | sort -u
-# production_3p85GeV_fixedTarget_2019/ReversedFullField/P24iy_calib
-# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_calib
-# production_31GeV_fixedTarget_2019/ReversedFullField/P24iy_calib
-
-# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-# production_13p5GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-# production_19p5GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-# production_26p5GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-# production_31p2GeV_fixedTarget_2020/ReversedFullField/P24iy_calib
-
-# production_26p5GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
-# production_44p5GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
-# production_70GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
-# production_100GeV_fixedTarget_2021/ReversedFullField/P24iy_calib
-# dir -ltrd /star/data*/reco/production*/*/P24iy | awk -F/ '{print $5"/"$6"/"$7}' | sort -u
-
-
+# 01/15/2025 dir -ltrd /star/data*/reco/production*/*/P24iy | awk -F/ '{print $5"/"$6"/"$7}' | sort -u
+# production_19GeV_2019/ReversedFullField/P24iy
+# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy
+# production_5p75GeV_fixedTarget_2020/ReversedFullField/P24iy
+# production_7p3GeV_fixedTarget_2020/ReversedFullField/P24iy
+# production_9p8GeV_fixedTarget_2020/ReversedFullField/P24iy
+# [starsub01] ~/work/Vipul $ dir -ltrd /star/data*/reco/production*/*/P24iy.SL24b | awk -F/ '{print $5"/"$6"/"$7}' | sort -u
+# production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy.SL24b
 @PicoDefs= (
 '2010/11GeV' =>                                   'AuAu11_production/ReversedFullField/P10ih.SL23a',
 '2010/FF_AuAu200' =>                              'AuAu200_production/FullField/P10ik.SL21c',
@@ -175,6 +49,7 @@
 '2019/4p59GeV_fixedTarget_TFG24eg'              => '2019/RF/4p59GeV_fixedTarget',    
 '2019/4p59GeV_fixedTarget_P24iy_calib'       	       => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_calib',    
 '2019/4p59GeV_fixedTarget_P24iy'       	       => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy',    
+'2019/4p59GeV_fixedTarget_P24iy.SL24b'         => 'production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy.SL24b',    
 
 '2019/7.3GeV_fixedTarget' =>			  'production_7.3GeV_fixedTarget_2019/ReversedFullField/P21id',
 '2019/7.3GeV_fixedTarget_P23id'		       => 'production_7.3GeV_fixedTarget_2019/ReversedFullField/P23id',     
@@ -194,6 +69,7 @@
 '2019/19GeV_2019_P24iy_calib'		       => 'production_19GeV_2019/ReversedFullField/P24iy_calib',     
 '2019/19GeV_2019_P24iy_calib3'		       => 'production_19GeV_2019/ReversedFullField/P24iy_calib3',     
 '2019/19GeV_2019_P24iy_calib4'		       => 'production_19GeV_2019/ReversedFullField/P24iy_calib4',     
+'2019/19GeV_2019_P24iy'		       => 'production_19GeV_2019/ReversedFullField/P24iy',     
 
 '2019/31GeV_fixedTarget_2019_TFG19l.Minuit' =>	  '',
 '2019/31GeV_fixedTarget_2019_P21id' =>		  'production_31GeV_fixedTarget_2019/ReversedFullField/P21id',

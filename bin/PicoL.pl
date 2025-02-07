@@ -21,8 +21,12 @@ use PicoDef;
 #my $glob =  "/net/l401/data/scratch2/kehw/reco/2019/14GeV_2019_StiCA/0??/*";
 #my $glob =  "./Pico*/???/*/*.picoDst.root";
 my $debug = 0;
+my $step = 1;
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
+  if ($#ARGV >= 1) {
+    $step = $ARGV[1];
+  }
 }
 my $now = time();
 #____________________________________________________________
@@ -226,7 +230,6 @@ foreach my $run (@Files) {
   my @files =  glob $glb; print "glb = $glb, no. files = $#files\n" if ($debug);
   my $NF = $#files + 1;
 #  my $step = 10;
-  my $step = 1;
   for (my $i = 0; $i < $NF; $i += $step) {
     my @list = ();
     my @listB = ();
