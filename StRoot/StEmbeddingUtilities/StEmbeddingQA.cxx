@@ -461,7 +461,7 @@ Bool_t StEmbeddingQA::fillEmbedding(const TString inputFileName)
   //   enum Category { MC,MATCHED,MERGED,SPLIT,CONTAM,GHOST,MATGLOB};
 
   const Long64_t nentries = tree->GetEntries();
-  LOG_INFO << Form("    OPEN %s,  # of event = %10d", inputFileName.Data(), nentries) << endm;
+  LOG_INFO << Form("    OPEN %s,  # of event = %10d", inputFileName.Data(), (int)nentries) << endm;
 
   /// Loop over all events
   for (Int_t ievent=0; ievent<nentries;ievent++) {
@@ -732,7 +732,7 @@ StEmbeddingQATrack* StEmbeddingQA::getEmbeddingQATrack(const StMiniMcEvent& mcev
 
     /// Remove contamination from MC tracks
     if ( track->isPrimary() != 1 ){
-      LOG_DEBUG << Form("StEmbeddingQA::getEmbeddingQATrack", "MC track with GeantID %3d is not a primary track", track->geantId()) << endm ;
+      LOG_DEBUG << Form("StEmbeddingQA::getEmbeddingQATrack MC track with GeantID %3d is not a primary track", track->geantId()) << endm ;
       return 0;
     }
 
@@ -744,7 +744,7 @@ StEmbeddingQATrack* StEmbeddingQA::getEmbeddingQATrack(const StMiniMcEvent& mcev
 
     /// Make sure that the input geantid exists in StParticleTable
     if ( !utility->isGeantIdOk(track->geantId()) ){
-      LOG_DEBUG << Form("StEmbeddingQA::getEmbeddingQATrack", "No geantid = %3d exists in StParticleTable", track->geantId()) << endm ;
+      LOG_DEBUG << Form("StEmbeddingQA::getEmbeddingQATrack No geantid = %3d exists in StParticleTable", track->geantId()) << endm ;
       return 0;
     }
 
@@ -756,7 +756,7 @@ StEmbeddingQATrack* StEmbeddingQA::getEmbeddingQATrack(const StMiniMcEvent& mcev
 
     /// Make sure that the input geantid exists in StParticleTable
     if ( !utility->isGeantIdOk(track->geantId()) ){
-      LOG_DEBUG << Form("StEmbeddingQA::getEmbeddingQATrack", "No geantid = %3d exists in StParticleTable", track->geantId()) << endm ;
+      LOG_DEBUG << Form("StEmbeddingQA::getEmbeddingQATrack No geantid = %3d exists in StParticleTable", track->geantId()) << endm ;
       return 0;
     }
 
