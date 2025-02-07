@@ -64,7 +64,7 @@ void StEmcPreCluster::update()
         return;
 
     Int_t m,e,s;
-    Float_t E,P,energy,phi0;
+    Float_t E=0,P=0,energy,phi0;
     phi0 = -999; //this is always initialized below if there are any hits at all
     Bool_t firstHit = true;
     for(Int_t i = 0;i<nH;i++)
@@ -168,7 +168,7 @@ StEmcPreCluster* StEmcPreCluster::splitInEta(Float_t eta)
         return NULL; // no way to split only with 1 hit
     StEmcPreCluster *cluster = NULL;
     TList *above = new TList();
-    Float_t E;
+    Float_t E=0;
     Int_t m,e;
     Bool_t hasBelow = kFALSE;
     for(Int_t i=0;i<nH;i++)
@@ -208,7 +208,7 @@ StEmcPreCluster* StEmcPreCluster::splitInPhi(Float_t phi)
         return NULL; // no way to split only with 1 hit
     StEmcPreCluster *cluster = NULL;
     TList *above = new TList();
-    Float_t P;
+    Float_t P=0;
     Int_t m,s;
     Bool_t hasBelow = kFALSE;
     for(Int_t i=0;i<nH;i++)

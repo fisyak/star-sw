@@ -74,8 +74,8 @@ int StFmsTrgQaMaker::Make(){
   mTrgd=(StTriggerData*)GetDataSet("StTriggerData")->GetObject();
   if(!mTrgd) { printf("No StTriggerData found\n"); return kStErr;}
   
-  int npre=mTrgd->numberOfPreXing();
-  int npost=mTrgd->numberOfPostXing();
+  //  int npre=mTrgd->numberOfPreXing();
+  //  int npost=mTrgd->numberOfPostXing();
   //printf("Npre/Npost=%2d/%2d ",npre,npost); printTriggers();
 
   countOverlap();
@@ -338,7 +338,7 @@ int StFmsTrgQaMaker::isTrg(const char* trgn){
 }
 
 void StFmsTrgQaMaker::printTriggers(){
-  int id=-1;
+  //  int id=-1;
   unsigned long long one=1;
   printf("l2sum=%16llx  TRG=",mTrgd->l2sum());
   for(int i=0; i<64; i++){                                                                                                                       

@@ -18,7 +18,6 @@
 #pragma link C++ class StStrangeMuDst+;
 #pragma link C++ class StStrangeAssoc+;
 #pragma link C++ class StStrangeMuDstMaker+;
-#pragma link C++ class StrangeMuDstPlayer+;
 #pragma link C++ class StV0I;
 #pragma link C++ class StV0Mc+;
 #pragma link C++ class StV0MuDst+;

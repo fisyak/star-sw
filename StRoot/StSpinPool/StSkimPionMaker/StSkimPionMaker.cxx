@@ -374,7 +374,7 @@ Int_t StSkimPionMaker::Make()
     StSPtrVecEmcPoint& bEmcPoints = emccol->barrelPoints();
 
     // Fill histos with raw EMC information
-    StEmcGeom* emcGeom = StEmcGeom::getEmcGeom("bemc");
+    //    StEmcGeom* emcGeom = StEmcGeom::getEmcGeom("bemc");
   
     // get primary tracks
     long numberOfPrimaryTracks = mMuDst->primaryTracks()->GetEntries();
@@ -539,15 +539,15 @@ StThreeVectorF StSkimPionMaker::getPoint(StEmcPoint *p, Int_t &id, Float_t &e, F
     Float_t towerEnergy = 0;
     Float_t etaEnergy=0.;
     Float_t phiEnergy=0.;
-    Float_t etaWidth=0.;
-    Float_t phiWidth=0.;
+    //    Float_t etaWidth=0.;
+    //    Float_t phiWidth=0.;
     Int_t tId[5];
     Float_t tEnergy[5];
     for (int k=0;k<5;k++) {
 	tId[k] = 0;
 	tEnergy[k] = 0;
     }
-    Float_t fraction = 0;
+    //    Float_t fraction = 0;
     
     if(towerClus.size() > 0) {
 	StEmcCluster *clT=(StEmcCluster*)towerClus[0];
@@ -572,21 +572,21 @@ StThreeVectorF StSkimPionMaker::getPoint(StEmcPoint *p, Int_t &id, Float_t &e, F
 	StPtrVecEmcRawHit& hE=clE->hit();
 	nEtaHits=hE.size();
 	etaEnergy=clE->energy();
-	etaWidth=clE->sigmaEta();
+	//	etaWidth=clE->sigmaEta();
     }
     if(phiClus.size()>0){
 	StEmcCluster *clP=(StEmcCluster*)phiClus[0];
 	StPtrVecEmcRawHit& hP=clP->hit();
 	nPhiHits=hP.size();
 	phiEnergy=clP->energy();
-	phiWidth=clP->sigmaPhi();
+	//	phiWidth=clP->sigmaPhi();
     }
 
     // get point energy
     e = p->energy();
 
     // get fraction
-    fraction = e/(tEnergy[0]+tEnergy[1]+tEnergy[2]+tEnergy[3]+tEnergy[4]);
+    //    fraction = e/(tEnergy[0]+tEnergy[1]+tEnergy[2]+tEnergy[3]+tEnergy[4]);
 
     // get Alan's corrected energy from correction factors file
     //e = fraction*(tEnergy[0]*c_factors[tId[0]] + tEnergy[1]*c_factors[tId[1]] + tEnergy[2]*c_factors[tId[2]] + tEnergy[3]*c_factors[tId[3]] + tEnergy[4]*c_factors[tId[4]]);
@@ -630,7 +630,7 @@ Int_t StSkimPionMaker::doTrackPtHist(float eT, float threshold, TObjArray *photo
 	    if (debug) cout << "StSkimPionMaker::doTrackPtHist: Can't get Event pointer" << endl;
 	    return kStOk;
 	}
-    
+#if 0    
     // tracks
     int numberOfPrimaries= mMuDst->primaryTracks()->GetEntries();
     int numberOfGlobals= mMuDst->globalTracks()->GetEntries();
@@ -648,7 +648,7 @@ Int_t StSkimPionMaker::doTrackPtHist(float eT, float threshold, TObjArray *photo
 	}
 
     if (debug) cout <<"++++++++++++ StSkimPionMaker::doTrackPtHist: got tracks, try to get points"<<endl;
-    
+#endif    
     // EMC points
     for (Int_t i=0; i<photonlist->GetEntries(); i++)
 	{
@@ -661,12 +661,12 @@ Int_t StSkimPionMaker::doTrackPtHist(float eT, float threshold, TObjArray *photo
 	    emcGeom->getBin(pointVector.phi(), pointVector.pseudoRapidity(), mod, eta, sub);
 	    //emcGeom->getId(mod, eta, sub, id);
 	    
-	    Float_t e = p->energy();
+	    //	    Float_t e = p->energy();
 	    
 	    // get photon pT
 	    Float_t theta = 0.;
 	    emcGeom->getTheta(mod, eta, theta);
-	    Float_t pt = e * sin(theta);	    
+	    //	    Float_t pt = e * sin(theta);	    
 	}
     
     return kStOk;
@@ -762,7 +762,7 @@ Int_t StSkimPionMaker::associateTracksWithEmcPoints(StMaker* anyMaker)
     StThreeVectorD position, momentum;
     StEmcGeom* emcGeom = StEmcGeom::getEmcGeom("bemc");
     // tracks
-    int numberOfPrimaries= mMuDst->primaryTracks()->GetEntries();
+    //    int numberOfPrimaries= mMuDst->primaryTracks()->GetEntries();
     int numberOfGlobals= mMuDst->globalTracks()->GetEntries();
   
     StMuTrack* track;
@@ -813,7 +813,7 @@ Int_t StSkimPionMaker::associateTracksWithEmcPoints(StMaker* anyMaker)
 Float_t StSkimPionMaker::getNeutralEnergySum(TObjArray *photonlist)
 {
     Float_t eSum = 0;
-    Int_t cntb=0;
+    //    Int_t cntb=0;
     Int_t id1, n1, t1;
     Float_t e1, pt1;
     Float_t eSMDe1, eSMDp1;
@@ -846,10 +846,10 @@ void StSkimPionMaker::getPhotonSpectra(TObjArray *photonlist, int runnm, float v
     Float_t eSMDe1, eSMDp1;
     Float_t eTower1;
     Float_t sSMDe1, sSMDp1, sTower1;
-    
+#if 0    
     Float_t pt1_trg=0;
     Int_t id1_trg=0;	  
-    
+#endif    
     for (Int_t i=0; i<photonlist->GetEntries(); i++)
 	{
 	    StEmcPoint *p1 = (StEmcPoint *) photonlist->At(i);
@@ -864,6 +864,7 @@ void StSkimPionMaker::getPhotonSpectra(TObjArray *photonlist, int runnm, float v
 	    
 	    if (n1==0)
 		{
+#if 0
 		    if (pt1>pt1_trg)
 			{ 
 			    pt1_trg = pt1;
@@ -871,6 +872,7 @@ void StSkimPionMaker::getPhotonSpectra(TObjArray *photonlist, int runnm, float v
 			}
 		    
 		    // count number of photons
+#endif
 		    cntb++;
 		}
 	}    
@@ -979,7 +981,7 @@ void StSkimPionMaker::getInvMass(int mode, TObjArray *photonlist1, TObjArray *ph
 				v2rel = v2;
 			    }
 			    
-			    Float_t dist = vdist.mag();
+			    //			    Float_t dist = vdist.mag();
 			    double mInvPi0; 
 			    StThreeVectorF pPi0;
 			    Float_t asym;
@@ -1147,7 +1149,7 @@ Bool_t StSkimPionMaker::readPointList()
 	    point = *it;
 	    photonlist->Add(point);
 	    // fill the EMC point ntuple for each entry
-	    const StThreeVectorF& pointVector = point->position();
+	    //	    const StThreeVectorF& pointVector = point->position();
 	}
     
     if (debug) cout <<"++++++++++++ StSkimPionMaker::readPointList(): StEmcPoint point list: "<< photonlist->GetEntries() << endl;

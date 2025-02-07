@@ -6,7 +6,7 @@
 ClassImp(StPrimaryElectron)
 
 StPrimaryElectron::StPrimaryElectron(const StPrimaryElectron &t) : TObject(t) {
-    assert(&t!=NULL);
+  //    assert(&t!=NULL);
     this->Charge            = t.Charge;
     this->dEdx              = t.dEdx;
     this->dEdxSigmaElectron = t.dEdxSigmaElectron;

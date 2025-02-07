@@ -158,7 +158,7 @@ Int_t StFmsFastSimMaker::Make(){
     //merging points
      
     int np=fmsColl->numberOfPoints();
-    LOG_INFO << Form("Etot=%f Emeasured=%f Created %d StFmsPoints, and NRealPi0=%d",etot,emeas,np,mRealPi0.size()) << endm;
+    LOG_INFO << Form("Etot=%f Emeasured=%f Created %d StFmsPoints, and NRealPi0=%d",etot,emeas,np,(int)mRealPi0.size()) << endm;
     
    return kStOK;    
 }

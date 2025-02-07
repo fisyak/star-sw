@@ -5,7 +5,7 @@
 #include <math.h>
 
 #include "StSvtEnergySim.hh"
-    
+#include "TString.h"    
 StSvtEnergySim::StSvtEnergySim()
 {
   mNumberOfParticles = 0;
@@ -34,7 +34,7 @@ void StSvtEnergySim::CalculateEnAndMom(char* option, char* parType)
  for(int i = 0; i<mNumberOfParticles; i++)
   {
 
-   if(parType == "proton")
+   if(TString(parType) == "proton")
      mParticle[i].mass = 931.0;
 
    randNum1 = 2.0*((float)rand()/(float)RAND_MAX) - 1.0;

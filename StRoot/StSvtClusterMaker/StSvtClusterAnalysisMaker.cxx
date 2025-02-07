@@ -524,8 +524,8 @@ void StSvtClusterAnalysisMaker::printClusterInfo()
 Int_t StSvtClusterAnalysisMaker::GetRawData(int index)
 {
   int* anodeList;
-  int numOfAnodes,numOfSeq,seqStart;
-  unsigned char* adc;
+  int numOfAnodes,numOfSeq,seqStart=0;
+  //  unsigned char* adc;
   StSequence* svtSequence;
 
   numOfAnodes = mHybridRawData->getAnodeList(anodeList);
@@ -543,8 +543,8 @@ Int_t StSvtClusterAnalysisMaker::GetRawData(int index)
         if(an < numOfAnodes)
          {
            mHybridRawData->getListSequences(an,numOfSeq,svtSequence);
-           seqStart =  svtSequence[seq].startTimeBin;
-           adc = svtSequence[seq].firstAdc;
+	   seqStart =  svtSequence[seq].startTimeBin;
+	   //           adc = svtSequence[seq].firstAdc;
            //cout<<(int)adc[seqStart + mseq] - 100<<" ";
            ++an;
 	 }

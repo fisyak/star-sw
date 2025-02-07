@@ -192,11 +192,10 @@ void StStrangeMuDstMaker::InitCreateDst() {
   EachController(InitCreateDst());
 
   Int_t split = 99;
-  TBranch* branch = tree->Branch("StrangeCuts",&cutsArray,bsize[evT],split);
   if (!dstMaker) {
-    branch = tree->Branch("Event",&evClonesArray,bsize[evT],split);
+    tree->Branch("Event",&evClonesArray,bsize[evT],split);
     if (doMc) {
-      branch = tree->Branch("McEvent",&evMcArray,bsize[evT],split);
+      tree->Branch("McEvent",&evMcArray,bsize[evT],split);
     }
   }
 
@@ -207,10 +206,10 @@ void StStrangeMuDstMaker::InitCreateSubDst() {
 
   Int_t split=2;
   evClonesArray = dstMaker->GetEvClonesArray();
-  TBranch* branch = tree->Branch("Event",&evClonesArray,bsize[evT],split);
   if (doMc) {
+    tree->Branch("Event",&evClonesArray,bsize[evT],split);
     evMcArray = dstMaker->GetEvMcArray();
-    branch = tree->Branch("McEvent",&evMcArray,bsize[evT],split);
+    tree->Branch("McEvent",&evMcArray,bsize[evT],split);
   }
   EachController(InitCreateSubDst());
 }

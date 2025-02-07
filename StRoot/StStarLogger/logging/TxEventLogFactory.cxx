@@ -82,7 +82,7 @@ int  Main(int argc, const char *argv[])
    while (--argc) arg += *(++argv);
    regex_t rgex1;
    regex_t rgex2;
-   char errtext[512]={0};
+   //   char errtext[512]={0};
    int errcode = 0;
 
    const char *regX1 = "^ *([^ ]+) *= *([^ ]+.*[^ ]*) *$";

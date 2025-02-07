@@ -457,9 +457,10 @@ void StDcaToVtx::TestDCA()
   Double_t K_S0[3] = {-2.426288,-0.594788, 3.127483};
   Double_t piP[3]  = {-1.100831,-0.071224, 1.264852};
   Double_t piM[3]  = {-1.325457,-0.523564, 1.862632};
-#else
+#endif
   // MC
   Float_t K_S01xyz[3] = {-17.110554,  -4.202028, 71.238022};
+#if 0
   Double_t pKS0[3]  = { -2.426288, -0.594788,  3.127483};
   Double_t piM[3]  = {-1.325457,-0.523564, 1.862632};
   Double_t piP[3]  = {-1.100831,-0.071224, 1.264852};
@@ -481,7 +482,7 @@ void StDcaToVtx::TestDCA()
     {0.064900,0.027517,0.069824,-0.001595,-0.000675,0.000047,-0.011415,-0.004870,0.000284,0.002246,-0.000005,-0.000857,0.000000,0.000009,0.000034}};
   
   
-  Float_t vtx[3] = {0};
+  //  Float_t vtx[3] = {0};
   static const double PiMASS=0.13956995;
   class MyMat_t {public: const char* Material; int No; double A,Z,Density,RadLen;}; 
   static MyMat_t myMat[] = {
@@ -506,12 +507,13 @@ void StDcaToVtx::TestDCA()
 					   ,myMat[2].Z
 					   ,myMat[2].Density
 					   ,myMat[2].RadLen);
+#if 0
   TGeoMaterial *matAir = new TGeoMaterial (myMat[3].Material
 					   ,myMat[3].A
 					   ,myMat[3].Z
 					   ,myMat[3].Density
 					   ,myMat[3].RadLen);
-  
+#endif  
   StDcaToVtx dv[2];
   StDcaGeometry dca[2]; 
   KFParticle particles[2];

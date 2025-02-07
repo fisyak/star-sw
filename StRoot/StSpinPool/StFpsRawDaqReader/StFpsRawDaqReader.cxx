@@ -91,7 +91,7 @@ Int_t StFpsRawDaqReader::Make() {
     printf("daqbits64="); 
     for(int i=63; i>=0; i--){     
       if(i%10==9) printf(" ");
-      printf("%1x",(mTrgMask>>i)&0x1);
+      printf("%1x",(int)(mTrgMask>>i)&0x1);
     }; 
     printf("\n");
   }

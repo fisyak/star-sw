@@ -58,7 +58,7 @@ void PIDFitter::Process( Char_t* sigmaOfSigmTrialInputName,
 void PIDFitter::GetSigmaOfSingleTrail(Char_t* fileName4SigmaOfSingleTrail,Char_t* sigmaFileName){//use pion
 
        cout<<" getting sigma of single trail..."<<endl;
-       TFile* fitResoFile;
+       TFile* fitResoFile = 0;
 
        if (mWriteSigmaNSampleGraph) {
          fitResoFile = new TFile("sigmaNSample.root","UPDATE");
@@ -170,7 +170,7 @@ void PIDFitter::GetSigmaOfSingleTrail(Char_t* fileName4SigmaOfSingleTrail,Char_t
 float PIDFitter::FitResoGaus(TH1F* resoHist,float fitRange,float& er,float theStart, float theEnd, int ParIndex, int j, int k, float thePPosition){
   //get the par from fitting of sigma _ Nsample.
 
-  TFile* fitResoFile;
+  TFile* fitResoFile = 0;
 
   if (mWriteGaus4SigmaNSampleHist) {
     fitResoFile = new TFile("Gaus4SigmaNSample.root","UPDATE"); //no name change!

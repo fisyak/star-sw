@@ -52,11 +52,11 @@ void StSvtInverseProducts::FindInvProducts(StSvtHybridData* hybridData, int anod
 {
  StSequence* mSequence;
  unsigned char*  adcValue;
- int mNumOfSequence,status;
+ int mNumOfSequence;//,status;
  int startTBin, length;
  double mProdOfInvProb;
 
- status = hybridData->getListSequences(anode,mNumOfSequence,mSequence);
+ /* status = */  hybridData->getListSequences(anode,mNumOfSequence,mSequence);
   
  for(int mSeq = 0; mSeq < mNumOfSequence; mSeq++)
    {

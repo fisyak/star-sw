@@ -59,7 +59,7 @@ int StSvtPedSub::SubtractPed( StSvtHybridData* fData, int Index, int PedOffset)
 {
 
 
-  int nAnodes, anodeID, nSeq, iseq, time, newAdc, status;
+  int nAnodes, anodeID, nSeq, iseq, time, newAdc;//, status;
   StSequence* Seq;
   int* anodeList;
 	  
@@ -76,7 +76,7 @@ int StSvtPedSub::SubtractPed( StSvtHybridData* fData, int Index, int PedOffset)
     Seq = NULL;
     nSeq = 0;
     
-    status = fData->getSequences(anodeID,nSeq,Seq);
+    /* status = */ fData->getSequences(anodeID,nSeq,Seq);
     for (iseq=0;iseq<nSeq;iseq++) {	  	  
       for (time=0; time<Seq[iseq].length; time++) {
 

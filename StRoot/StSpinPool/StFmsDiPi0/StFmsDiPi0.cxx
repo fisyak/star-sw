@@ -351,7 +351,7 @@ Int_t StFmsDiPi0::Make(){
 	}
     }
 
-    if(print) cout << Form("Ncut = %d",pcut.size()) << endl;
+    if(print) cout << Form("Ncut = %d",(int)pcut.size()) << endl;
     if(pcut.size()>1){
 	//sort by pT
 	std::sort(pcut.begin(), pcut.end(), [](StFmsPoint* a, StFmsPoint* b) {
@@ -372,7 +372,7 @@ Int_t StFmsDiPi0::Make(){
 		}
 	    }
 	}
-	if(print) cout << Form("Npair = %d",pair.size()) << endl;
+	if(print) cout << Form("Npair = %d",(int)pair.size()) << endl;
 	if(pair.size()>0) {	
 	    
 	    // write Tree file

@@ -186,8 +186,8 @@ Int_t StTofMaker::Make(){
       mTheTofCollection = new StTofCollection();
       mEvent->setTofCollection(mTheTofCollection);
       mTheTofCollection = mEvent->tofCollection();
-      if (mTheTofCollection) LOG_INFO << "OK"<< endm;
-      else                   LOG_INFO << "FAILED" << endm;
+      if (mTheTofCollection) {LOG_INFO << "OK"<< endm;}
+      else                   {LOG_INFO << "FAILED" << endm;}
     } 	// end !mTheTofCollection check
   }   	// end mEvent check
   else LOG_INFO << "StTofMaker   No StEvent structures detected ... not good!" << endm;
@@ -347,9 +347,9 @@ Int_t StTofMaker::Make(){
 	
       } // end year5
 
-    } else if(m_Mode == 1)        // no action
+    } else if(m_Mode == 1)  {      // no action
       LOG_INFO << "StTofMaker No special action required for DataCollection"<<endm;
-    else {
+    } else {
       LOG_INFO << "WRONG SetMode (" << m_Mode << ")! "
 	   << "... should be either 0 (DAQ reader) or 1(no action, SIM)" << endm;
       return kStOK;

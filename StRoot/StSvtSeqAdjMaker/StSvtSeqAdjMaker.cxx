@@ -460,7 +460,7 @@ Int_t StSvtSeqAdjMaker::CreateHist(Int_t tNuOfHyb)
    char  Index[4];
    char* RawTitle_cut;
    char* AdcAf_cut;
-   char* TimeAnCh;
+   //   char* TimeAnCh;
   for (int barrel = 1;barrel <= mSvtRawData->getNumberOfBarrels();barrel++) {
     for (int ladder = 1;ladder <= mSvtRawData->getNumberOfLadders(barrel);ladder++) {
       for (int wafer = 1;wafer <= mSvtRawData->getNumberOfWafers(barrel);wafer++) {
@@ -475,7 +475,7 @@ Int_t StSvtSeqAdjMaker::CreateHist(Int_t tNuOfHyb)
             sprintf(Index,"%d", index);
             RawTitle_cut = strcat(RawTitle,Index);
 	    AdcAf_cut = strcat(AdcAfterTitle,Index);
-	    TimeAnCh = strcat(TimeAnTitle,Index);
+	    /* TimeAnCh =*/ strcat(TimeAnTitle,Index);
 
 	    mRawAdc[index] = new TH1F(RawTitle_cut,"Raw ADC for each anode",241,0,241);
 	    mAdcAfter[index] = new TH1F(AdcAf_cut,"Number of hits in each anode",241,0,241);
@@ -564,11 +564,11 @@ Int_t StSvtSeqAdjMaker::Make()
 	   }
 	 
 	  if( doCommon){
-	    int TimeLast, TimeAv, TimeSum, TimeAvSav;
+	    int TimeLast, TimeAv, TimeSum;//, TimeAvSav;
 	    TimeLast = 0;
 	    TimeSum = 0;
 	    TimeAv=0;
-	    TimeAvSav = 0;
+	    //	    TimeAvSav = 0;
 	    for( int TimeBin=0; TimeBin<128; TimeBin++){
 	      if(mCommonModeNoiseAn[TimeBin] > 30)
 		mCommonModeNoise[TimeBin] /= mCommonModeNoiseAn[TimeBin];
@@ -580,7 +580,7 @@ Int_t StSvtSeqAdjMaker::Make()
 		    
 		    TimeAv /= TimeSum;
 		    TimeLast = TimeBin;
-		    TimeAvSav = TimeAv;
+		    //		    TimeAvSav = TimeAv;
 		    TimeAv = 0;
 		    TimeSum=0;
 		  }
@@ -647,7 +647,7 @@ Int_t StSvtSeqAdjMaker::AdjustSequences1(int iAnode, int Anode){
   // > than m_thresh_hi  
 
   int  nSeqOrig, nSeqNow, nSeqTruth, length, count1, count2;
-  int startTimeBin,  status;
+  int startTimeBin;//,  status;
   StSequence* Sequence;
   StMCTruth*   SeqTruth;
   unsigned char* adc;
@@ -658,8 +658,8 @@ Int_t StSvtSeqAdjMaker::AdjustSequences1(int iAnode, int Anode){
   int firstTimeBin;
 
   //Anode is the index into the anolist array
-   status= mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
-   status= mHybridRawData->getListTruth     (iAnode,nSeqTruth,SeqTruth );
+  /* status= */ mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
+  /* status= */ mHybridRawData->getListTruth     (iAnode,nSeqTruth,SeqTruth );
   //status= mHybridRawData->getSequences(Anode,nSeqOrig,Sequence);
 
   nSeqNow = 0;
@@ -756,7 +756,7 @@ Int_t StSvtSeqAdjMaker::AdjustSequences2(int iAnode, int Anode){
   // counts that do not have the shape of noise
 
   int nSeqBefore, nSeqNow, count1, nSeqTruth;
-  int startTimeBin, length, status;
+  int startTimeBin, length;//, status;
   StSequence* Sequence;
   StMCTruth*  SeqTruth;
   unsigned char* adc;
@@ -772,8 +772,8 @@ Int_t StSvtSeqAdjMaker::AdjustSequences2(int iAnode, int Anode){
   nSeqNow = 0;
   StSequence tempSeq1[128];
   StMCTruth  tempTru1[128];
-  status = mHybridAdjData->getListSequences(iAnode,nSeqBefore,Sequence);
-  status = mHybridRawData->getListTruth    (iAnode,nSeqTruth ,SeqTruth );
+  /* status = */ mHybridAdjData->getListSequences(iAnode,nSeqBefore,Sequence);
+  /* status = */ mHybridRawData->getListTruth    (iAnode,nSeqTruth ,SeqTruth );
   
   for(int Seq = 0; Seq < nSeqBefore; Seq++) 
     {
@@ -887,13 +887,13 @@ void StSvtSeqAdjMaker::CommonModeNoiseCalc(int iAnode){
   // Calc common mode noise
 
   int  nSeqOrig, length;
-  int startTimeBin,  status;
+  int startTimeBin;//,  status;
   StSequence* Sequence;
   unsigned char* adc;
 
   //Anode is the index into the anolist array
   
-  status= mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
+  /* status = */ mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
 
   for( int nSeq=0; nSeq< nSeqOrig ; nSeq++){
   
@@ -920,13 +920,13 @@ void StSvtSeqAdjMaker::CommonModeNoiseSub(int iAnode){
   // Calc common mode noise
 
   int  nSeqOrig, length;
-  int startTimeBin,  status;
+  int startTimeBin;//,  status;
   StSequence* Sequence;
   unsigned char* adc;
 
   //Anode is the index into the anolist array
   
-  status= mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
+  /* status = */ mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
 
   for( int nSeq=0; nSeq< nSeqOrig ; nSeq++){
   
@@ -953,13 +953,13 @@ void StSvtSeqAdjMaker::SubtractFirstAnode(int iAnode){
   // Calc common mode noise
 
   int  nSeq, nSeqOrig, length;
-  int startTimeBin,  status, j;
+  int startTimeBin /*,  status */, j;
   int adcMean;
   StSequence* Sequence;
   unsigned char* adc;
 
 
-  status= mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
+  /* status = */ mHybridRawData->getListSequences(iAnode,nSeqOrig,Sequence);
 
   adcMean = 0;
   for( nSeq=0; nSeq< nSeqOrig ; nSeq++){
@@ -993,7 +993,7 @@ int StSvtSeqAdjMaker::FindBlackAnodes(){
   //value or via first two black anodes.Have many options andoes 1&240,
   //1&2 or 2&239. IN some case one of the black anodes is bad so only 
   //subtract one.
-  int status, length;
+  int /* status, */ length;
   int i, j, startTimeBin;
   int nSequence = 0;
   StSequence* Seq = NULL;
@@ -1003,19 +1003,19 @@ int StSvtSeqAdjMaker::FindBlackAnodes(){
   mNAnodes=2;
   int adcAv=0;
   
-  status= mHybridRawData->getSequences(240,nSequence,Seq);
+  /* status = */ mHybridRawData->getSequences(240,nSequence,Seq);
   length = 0;
   for(j=0; j<128; j++) adcCommon[j]=0;
   for( i=0; i<nSequence; i++)  length += Seq[i].length;
   if( length < 126){
     // IF anode 240 isnt black try 239
-    status= mHybridRawData->getSequences(239,nSequence,Seq);
+    /* status = */ mHybridRawData->getSequences(239,nSequence,Seq);
     length = 0;
     
     for( i=0; i<nSequence; i++)  length += Seq[i].length;
     if( length < 126){
       //if that one isnt black either try 2
-      status= mHybridRawData->getSequences(2,nSequence,Seq);
+      /* status = */ mHybridRawData->getSequences(2,nSequence,Seq);
       length = 0;
       
       for( i=0; i<nSequence; i++)  length += Seq[i].length;
@@ -1051,12 +1051,12 @@ int StSvtSeqAdjMaker::FindBlackAnodes(){
   
   // now find second black anode
   
-  status= mHybridRawData->getSequences(2,nSequence,Seq);
+  /* status = */ mHybridRawData->getSequences(2,nSequence,Seq);
   length = 0;
   
   for( i=0; i<nSequence; i++)  length += Seq[i].length;
   if( length < 126){
-    status= mHybridRawData->getSequences(1,nSequence,Seq);
+    /* status = */ mHybridRawData->getSequences(1,nSequence,Seq);
     length = 0;	  
     
     for( i=0; i<nSequence; i++)  length += Seq[i].length;
@@ -1109,7 +1109,7 @@ void StSvtSeqAdjMaker::MakeHistogramsAdc(StSvtHybridData* hybridData, int index,
   
   // Count is 1 for before CM-Noise subtraction and 2 for after CMN subtraction.
   int mSequence;
-  int len,status;
+  int len;//,status;
   unsigned char* adc;
 
   StSequence* svtSequence;
@@ -1118,7 +1118,7 @@ void StSvtSeqAdjMaker::MakeHistogramsAdc(StSvtHybridData* hybridData, int index,
 
   // Anode goes between 1-240
   
-  status = hybridData->getSequences(Anode,mSequence,svtSequence);
+  /* status = */ hybridData->getSequences(Anode,mSequence,svtSequence);
   
   int numOfPixels=0;
   for(int mSeq = 0; mSeq < mSequence; mSeq++) 

@@ -436,13 +436,13 @@ StEemcTriggerSimu::compareTRG2_TRG3(){
 
   hA[620]->Fill(cha,inpEtot1bit);
   hA[621]->Fill(cha,outEtot1bit);
-
+#if 0
   if( outEtot1bit != outEtot1bit){
     printf("!!! BAD Etot1bit out2 = %d, inp3 = %d, diff=%d\n", outEtot1bit, inpEtot1bit, outEtot1bit-inpEtot1bit);
     hA[622]->Fill(cha,inpEtot1bit-outEtot1bit);
     hA[623]->Fill(cha);
   }
-
+#endif
   int outBarreSum = dsm2TreeTRG->getIntBarreSum();
   if ( (outBarreSum<76) && (outBarreSum>64) ){
     hA[690]->Fill(cha, outBarreSum);

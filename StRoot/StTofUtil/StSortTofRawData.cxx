@@ -286,7 +286,7 @@ IntVec StSortTofRawData::GetTrailingTdc(int tray, int channel, bool triggerevent
 }
 
 Int_t StSortTofRawData::GetTriggerTime(int tray, int channel) {
-  Int_t triggertime;
+  Int_t triggertime=0;
   for(size_t i=0 ; i<mRawHitVec[tray-1].size() ; i++) {
     if(mRawHitVec[tray-1][i].tray!=tray) continue;
     if(mRawHitVec[tray-1][i].channel!=channel) continue;

@@ -244,10 +244,10 @@ void StSvtBadAnodesMaker::bookHistograms()
 //_____________________________________________________________________________
 Int_t StSvtBadAnodesMaker::Make()
 {
-  int adc, anode, nAnodes, nSeq, iseq, time, timeSeq, status, index;
+  int adc, anode, nAnodes, nSeq, iseq, time, timeSeq/*, status */, index;
   int* anodeList;
   StSequence* Seq;
-  int nullAdc, overloadedAdc, occup, badRMS;
+  int nullAdc, overloadedAdc, occup;//, badRMS;
   float ped,rms,meanPed, meanRms;
 
   setSvtData();
@@ -281,13 +281,13 @@ Int_t StSvtBadAnodesMaker::Make()
 	      nullAdc = 0;
 	      overloadedAdc = 0;
 	      occup = 0;
-	      badRMS = 0;
+	      //	      badRMS = 0;
 	      
 	      anode = anodeList[ianode];
 	      Seq = NULL;
 	      nSeq = 0;
 	      
-	      status = mHybridData->getSequences(anode,nSeq,Seq);
+	      //	      status = mHybridData->getSequences(anode,nSeq,Seq);
 	      
 	      for (iseq=0;iseq<nSeq;iseq++) {	  	  
 		for (timeSeq=0; timeSeq<Seq[iseq].length; timeSeq++) {
@@ -468,7 +468,7 @@ Int_t StSvtBadAnodesMaker::Finish()
 
   cout << FREQ_NULL_ADC << "  " << FREQ_OVERLOADED_ADC << "  " << FREQ_OCCUP << endl;
 
-  int adc, anode, nSeq, iseq, time, timeSeq, status, index, index2, ihybrid;
+  int adc, anode, nSeq, iseq, time, timeSeq/*, status */, index, index2, ihybrid;
   int nBadAnodesHyb=0, nBadAnodesLadder=0;
   StSequence* Seq;
   float fraction;
@@ -509,7 +509,7 @@ Int_t StSvtBadAnodesMaker::Finish()
 		Seq = NULL;
 		nSeq = 0;
 		
-		status = mHybridData->getSequences(anode,nSeq,Seq);
+		//		status = mHybridData->getSequences(anode,nSeq,Seq);
 	    
 		for (iseq=0;iseq<nSeq;iseq++) {	  	  
 		  for (timeSeq=0; timeSeq<Seq[iseq].length; timeSeq++) {

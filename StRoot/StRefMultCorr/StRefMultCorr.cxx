@@ -800,7 +800,7 @@ Bool_t StRefMultCorr::isIndexOk() const {
   if ( mParameterIndex >= (Int_t)mStart_runId.size() ) {
     Error("StRefMultCorr::isIndexOk",
 	  Form("mParameterIndex = %d > max number of parameter set = %d. Make sure you put correct index for this energy",
-	       mParameterIndex, mStart_runId.size()));
+	       mParameterIndex,(int) mStart_runId.size()));
     return kFALSE ;
   }
 

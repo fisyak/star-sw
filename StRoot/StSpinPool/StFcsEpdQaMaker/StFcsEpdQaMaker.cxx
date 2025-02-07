@@ -46,7 +46,7 @@ Int_t StFcsEpdQaMaker::Init(){
   mFile=new TFile(mFilename,"RECREATE");
   
   char t[100], n[100];
-  char *cNS[2]={"N","S"};
+  const char *cNS[2]={"N","S"};
   for(int det=kFcsPresNorthDetId; det<=kFcsPresSouthDetId; det++){
       for(int id=0; id<kFcsPresMaxId; id++){
 	  char name[100];

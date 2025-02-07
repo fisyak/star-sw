@@ -31,10 +31,10 @@
 #include "digplane.h"
 #include "digadc.h"
 #include "digtransport.h"
+#include "digaction.h"
 
 using namespace std;
 
-extern Int_t GlobalSeed;
 
 //_______________________________________________________________________________________
 //
@@ -385,9 +385,9 @@ void DIGParticle::ComputeChargeTransport(DIGPlane *aDIGPlane,DIGTransport *aDIGT
   Float_t   l1dimgauslor_norm_lor_2nd =  aDIGTransport->Getf1dimgauslor_norm_lor_2nd();  
 
 
-  GlobalSeed++;
-  TRandom3 *r3 = new TRandom3(GlobalSeed);
-  r3->SetSeed(GlobalSeed);
+  DIGAction::GlobalSeed++;
+  TRandom3 *r3 = new TRandom3(DIGAction::GlobalSeed);
+  r3->SetSeed(DIGAction::GlobalSeed);
 
   TF2 *mymodel2D=0;
   TF1 *mymodel1D_1st=0;
@@ -547,8 +547,8 @@ void DIGParticle::ComputeChargeTransport(DIGPlane *aDIGPlane,DIGTransport *aDIGT
       Double_t xrandom;
       Double_t yrandom;
       gRandom = new TRandom3;
-      GlobalSeed++;
-      gRandom->SetSeed(GlobalSeed);
+      DIGAction::GlobalSeed++;
+      gRandom->SetSeed(DIGAction::GlobalSeed);
       mylorentz2D->GetRandom2(xrandom,yrandom);
     
       Double_t xpos_aftertransport = fSegmentX[i] + xrandom;
@@ -764,8 +764,8 @@ Double_t  DIGParticle::GaussianLaw(Double_t mean, Double_t sigma)
 { 
   Double_t x;
   TRandom3 *r3 = new TRandom3(0);
-  GlobalSeed++;
-  r3->SetSeed(GlobalSeed);
+  DIGAction::GlobalSeed++;
+  r3->SetSeed(DIGAction::GlobalSeed);
 
   x = r3->Gaus(mean,sigma);
 

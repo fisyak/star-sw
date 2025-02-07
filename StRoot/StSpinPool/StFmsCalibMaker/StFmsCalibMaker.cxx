@@ -130,8 +130,8 @@ Float_t StFmsCalibMaker::GetBbcZCorr(const StTriggerData* triggerData) //Written
 	Float_t bbcZ     = -999.;
 	Float_t bbcTdiff = -999.;
 	UShort_t tdc1east, tdc1west;
-	UShort_t pmt1east, pmt1west;
-	UShort_t adc1east, adc1west;
+	UShort_t pmt1east = 0, pmt1west = 0;
+	UShort_t adc1east = 0, adc1west = 0;
 	unsigned int tdcMatchEast = 0;
 	unsigned int tdcMatchWest = 0;
 	bbcTdiff = (float)triggerData->bbcTimeDifference();

@@ -62,7 +62,7 @@ void StChargedPionMcEvent::Clear(Option_t* o) {
 
 StChargedPionLorentzVector
 StChargedPionMcEvent::parton(int id, StChargedPionMcEvent::Frame frame) const { 
-    const StChargedPionLorentzVector *v;
+  const StChargedPionLorentzVector *v = 0;
     switch(id) {
         case 1: v = &mParton1; break;
         case 2: v = &mParton2; break;

@@ -84,7 +84,7 @@ Int_t StClusterDisplay::Init()
         for(Int_t m=1;m<=60;m++)
             for(Int_t s=1;s<=nSub+1;s++)
             {
-                Float_t center;
+                Float_t center = 0;
                 mGeo[i]->getPhiModule(m,center);
                 PhiBins1[j]=center+PhiB[s-1];
                 j++;
@@ -157,7 +157,7 @@ Int_t StClusterDisplay::Make()
 
                     for(Int_t k=0;k<(Int_t)rawHit.size();k++)
                     {
-                        Float_t eta,phi;
+                        Float_t eta=0,phi=0;
                         Int_t m=rawHit[k]->module();
                         Int_t e=rawHit[k]->eta();
                         Int_t s=abs(rawHit[k]->sub());

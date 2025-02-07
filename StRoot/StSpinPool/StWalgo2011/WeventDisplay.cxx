@@ -371,9 +371,9 @@ WeventDisplay::exportEvent( const char *tit, WeveVertex myV, WeveEleTrack myTr, 
   clear();
   int eveId=wMK->wEve->id; //wMK->mMuDstMaker->muDst()->event()->eventId();
   int runNo=wMK->wEve->runNo; //wMK->mMuDstMaker->muDst()->event()->runId();
-  const char *afile = ""; //wMK->mMuDstMaker->GetFile();
-  int len=strlen(afile);
-  int daqSeq=atoi(afile+(len-18));
+  //  const char *afile = ""; //wMK->mMuDstMaker->GetFile();
+  //  int len=strlen(afile);
+  //  int daqSeq=atoi(afile+(len-18));
   //  printf("DDD %s len=%d %d =%s=\n",afile,len,daqSeq,afile+(len-15));
 
   TVector3 rTw=myTr.cluster.position;
@@ -465,7 +465,7 @@ WeventDisplay::exportEvent( const char *tit, WeveVertex myV, WeveEleTrack myTr, 
   hEsmdXpt->SetBins(130,rW.X()-width,rW.X()+width,130,rW.Y()-width,rW.Y()+width);
 
   //.... produce plot & save
-  draw(tit,eveId, daqSeq,runNo,myV, myTr);
+  //  draw(tit,eveId, daqSeq,runNo,myV, myTr);
   //export2sketchup(tit,myV, myTr);
 }
 

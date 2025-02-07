@@ -285,16 +285,17 @@ Int_t StTofSimMaker::Make(){
   StTofCollection *mmTheTofCollection = mEvent->tofCollection();
   if(mmTheTofCollection) {
     LOG_INFO << " + StEvent tofCollection Exists" << endm;
-    if(mmTheTofCollection->slatsPresent())
+    if(mmTheTofCollection->slatsPresent()) {
       LOG_INFO << " + StEvent TofSlatCollection Exists" << endm;
-    else
+    } else {
       LOG_INFO << " - StEvent TofSlatCollection DOES NOT Exist" << endm;
-    if(mmTheTofCollection->hitsPresent())
+    }
+    if(mmTheTofCollection->hitsPresent()) {
       LOG_INFO << " + StEvent TofHitCollection Exists" << endm;
-    else
+    } else {
       LOG_INFO << " - StEvent TofHitCollection DOES NOT Exist" << endm;
-  }
-  else {
+    }
+  }  else {
     LOG_INFO << " - StEvent tofCollection DOES NOT Exist" << endm;
     LOG_INFO << " - StEvent TofSlatCollection DOES NOT Exist" << endm;
     LOG_INFO << " - StEvent TofHitCollection DOES NOT Exist" << endm;

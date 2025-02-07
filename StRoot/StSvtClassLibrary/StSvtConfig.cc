@@ -365,7 +365,7 @@ int StSvtConfig::getBarrel(int index){
 
 int StSvtConfig::getLayer(int index)
 {
-  int Layer;
+  int Layer = 0;
   int Barrel = getBarrel(index);
   int Ladder = getLadder(index);
   switch (Barrel) {

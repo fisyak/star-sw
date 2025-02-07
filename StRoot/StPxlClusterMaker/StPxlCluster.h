@@ -50,6 +50,7 @@ class StPxlCluster
 {
 public:
    StPxlCluster();
+   virtual ~StPxlCluster() {}
    Int_t nRawHits() const;                              ///< number of raw hits
    void addRawHit(const StPxlRawHit *rawHit);           ///< add a raw hit to the cluster
    void summarize(int embeddingShortCut = 0);           ///< calculate column center, row center, and most frequent idTruth among raw hits

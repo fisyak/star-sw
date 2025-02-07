@@ -323,7 +323,7 @@ Int_t StSvtDaqMaker::GetHybridData(int barrel, int ladder, int wafer, int hybrid
 {
   if (Debug()) gMessMgr->Debug() << "StSvtDaqMaker::Make" << endm;
 
-  int status = 0;
+  //  int status = 0;
 
   if (!fData) {
     fData = new StSvtHybridDaqData(barrel, ladder, wafer, hybrid);
@@ -336,7 +336,7 @@ Int_t StSvtDaqMaker::GetHybridData(int barrel, int ladder, int wafer, int hybrid
   if (fSvtData->getHybridIndex(barrel,ladder,wafer,hybrid) < 0)
     delete fData;
   else
-    status = fData->setHybridData(svtReader, fDataType);
+    /* status = */ fData->setHybridData(svtReader, fDataType);
   
   return kStOK;
 }
