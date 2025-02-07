@@ -24,6 +24,5 @@ public:
         nMaxNoOfTrinBin=15
     };
 
-    ClassDef(Epc,1)  // macro for rootCint
 };
 #endif
