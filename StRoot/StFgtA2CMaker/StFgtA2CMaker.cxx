@@ -359,7 +359,7 @@ Int_t StFgtA2CMaker::Make(){
 
                   // set the charge
                   strip->setCharge( sumC/gain );
-		  int idebug=0;
+		  //		  int idebug=0;
 		  //if(sumC/gain==4713.0 || sumC/gain==5250.0) {
 		  // idebug=1;
 		  // printf("charge=%f\n ",sumC/gain);

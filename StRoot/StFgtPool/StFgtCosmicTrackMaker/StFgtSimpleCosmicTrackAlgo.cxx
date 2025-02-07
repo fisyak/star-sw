@@ -61,7 +61,7 @@ Int_t StFgtSimpleCosmicTrackAlgo::makeCosmicTracks(StFgtPointCollection& points,
   Float_t dX=0, dY=0, trackdX=0, trackdY=0, hitX=0, hitY=0;
   Bool_t isTrack=false, isTrueTrack=false;
   Float_t XoS=0, YoS=0, ZoS=0, OoS=0,
-          XXoS=0, YYoS=0, ZZoS=0, ZXoS=0, ZYoS=0,
+    /* XXoS=0, YYoS=0,*/ ZZoS=0, ZXoS=0, ZYoS=0,
           sigma=0.3*0.3;// +a*a*0.5*0.5;// assuming known Z and XY errors of 3mm
   Int_t quad0Id, quad1Id, quad2Id;
   Float_t x0,y0,z0,r0,phi0,x1,y1,z1,r1,phi1,x2,y2,z2,r2,phi2;
@@ -97,8 +97,8 @@ Int_t StFgtSimpleCosmicTrackAlgo::makeCosmicTracks(StFgtPointCollection& points,
           YoS = (y0+y1+y2)/sigma;
           ZoS = (z0+z1+z2)/sigma;
           OoS = 3/sigma;
-          XXoS = (x0*x0+x1*x1+x2*x2)/sigma;
-          YYoS = (y0*y0+y1*y1+y2*y2)/sigma;
+//           XXoS = (x0*x0+x1*x1+x2*x2)/sigma;
+//           YYoS = (y0*y0+y1*y1+y2*y2)/sigma;
           ZZoS = (z0*z0+z1*z1+z2*z2)/sigma;
           ZXoS = (x0*z0+x1*z1+x2*z2)/sigma;
           ZYoS = (y0*z0+y1*z1+y2*z2)/sigma;

@@ -218,7 +218,7 @@ int StFcsClusterMaker::makeCluster(int det) {
     StFcsCluster* clu=clusters[j];
     StThreeVectorD xyz = mDb->getStarXYZfromColumnRow(det,clu->x(),clu->y());
     clu->setFourMomentum(mDb->getLorentzVector(xyz,clu->energy(),0.0));
-    const StLorentzVectorD& p = clu->fourMomentum();
+    //    const StLorentzVectorD& p = clu->fourMomentum();
     //LOG_DEBUG << Form("momentum= %lf %lf %lf %lf", p.px(), p.py(), p.pz(), p.e()) << endm;
     int ret=clusterMomentAnalysis(clu,mTowerEThreMoment); //moment analysis with default threshold
     if(ret==kStErr) ret=clusterMomentAnalysis(clu,0.0);   //Redo with 0 threshold
@@ -406,7 +406,7 @@ float StFcsClusterMaker::getSigma(StFcsCluster* clu, double theta, float ecut){
     int nhit=clu->hits().size();
     for (int i=0; i<nhit; i++){ // loop over all hits in cluster
 	StFcsHit* hit = clu->hits()[i];
-        int det=hit->detectorId();
+	//        int det=hit->detectorId();
 	float x,y;
 	mDb->getLocalXYinCell(hit,x,y);
 	// the 2-d vector from the "center" of cluster to tower

@@ -78,8 +78,8 @@ Int_t StFgtMaxClusterAlgo::doClustering(const StFgtCollection& fgtCollection, St
   Double_t ordinate, lowerSpan, upperSpan;
   Double_t maxRCharge=0;
   Double_t maxPhiCharge=0;
-  Double_t phiOrdinate,rOrdinate;
-  Int_t phiGeoId, rGeoId;
+  Double_t phiOrdinate=0,rOrdinate=0;
+  Int_t phiGeoId=0, rGeoId=0;
   bool isPhi, isR;
   //  cout <<"we have " << mSortPtr.size() << " points " <<endl;
   StFgtStrip *rStripPtr = 0;

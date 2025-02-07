@@ -754,7 +754,7 @@ StThreeVectorD StFcsDb::getNormal(int det) const
   double detangle = getDetectorAngle(det)*M_PI/180.0;
   if( det%2==0 ){ detangle *= -1.0; } //North side use negative angle
   return StThreeVectorD( sin(detangle), 0 ,cos(detangle) );
-  double planenormal[3] = {sin(detangle),0,cos(detangle)};
+  //  double planenormal[3] = {sin(detangle),0,cos(detangle)};
 }
 
 StThreeVectorD StFcsDb::projectTrackToEcal(const g2t_track_st* g2ttrk, const g2t_vertex_st* g2tvert) const
@@ -2227,7 +2227,7 @@ const g2t_track_st* StFcsDb::getG2tTrack(StFcsCluster* c, g2t_track_st* g2ttrk, 
       detot+=de;
     }
   }
-  ntrk=parents.size();
+  ntrk=(UInt_t) parents.size();
   if(order >= ntrk) {fraction=0; return 0;}
   std::nth_element(parents.begin(), parents.begin()+order, parents.end(),
             [](const pair<unsigned int,float>&a, const pair<unsigned int,float>&b){

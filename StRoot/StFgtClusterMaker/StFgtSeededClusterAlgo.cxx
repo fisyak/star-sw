@@ -135,7 +135,7 @@
 //#define KEEP_BIG_AND_NOISY_CLUSTERS
 
 
-StFgtSeededClusterAlgo::StFgtSeededClusterAlgo():up(true),down(false),stepTwo(true),mThreshold2AddStrip(3.0),numAdditionalStrips(2),mDb(0)
+StFgtSeededClusterAlgo::StFgtSeededClusterAlgo():numAdditionalStrips(2),mDb(0),up(true),down(false),stepTwo(true),mThreshold2AddStrip(3.0)
 {
   //nothing else to do....
 };
@@ -163,7 +163,7 @@ void StFgtSeededClusterAlgo::doStripFit(void* stripsT)
   Double_t y[40];
   Double_t ex[40];
   Double_t ey[40];
-  int numStripsInClu=strips.size();
+  //  int numStripsInClu=strips.size();
   //    TF1 *func = new TF1("func","[0]*(x>[1])*(x-[1])**2*exp(-(x-[1])*[2])");
   TF1 *func = new TF1("func","[0]*(x>[1])*(x-[1])**2*exp(-(x-[1])*0.55)");
   func->SetParName(0,"A");
@@ -208,12 +208,12 @@ void StFgtSeededClusterAlgo::doStripFit(void* stripsT)
       //      cout <<endl;
       TGraphErrors* tg1=new TGraphErrors(mMaxTimeBin,x,y,ex,ey);
       Int_t tbFitStatus=tg1->Fit(func);
-      float amp,t0,invtau,chi2Ndf, chi2;
+      float amp/* ,t0 ,invtau*/ ,chi2Ndf/*, chi2*/;
       amp=func->GetParameter(0);
-      t0=func->GetParameter(1);
+      //      t0=func->GetParameter(1);
       //      invtau=func->GetParameter(2);
       chi2Ndf=func->GetChisquare()/(float)func->GetNDF();
-      chi2=func->GetChisquare();
+      //      chi2=func->GetChisquare();
       if(chi2Ndf>0.1 && chi2Ndf<2&& tbFitStatus==0)
 	{
 	  if(stripIt==stripMaxPos)
@@ -321,7 +321,7 @@ void StFgtSeededClusterAlgo::FillClusterInfo(StFgtHit* cluster,StFgtStripCollect
   Double_t accuChargeUneven=0;
   Double_t accuChargeSq=0;
   Double_t accuChargeSqEven=0;
-  Double_t accuChargeSqWeight=0;
+  //  Double_t accuChargeSqWeight=0;
   Double_t accuChargeError=0;
   Double_t accuChargeErrorEven=0;
   Int_t numStrips=0;
@@ -410,7 +410,7 @@ void StFgtSeededClusterAlgo::FillClusterInfo(StFgtHit* cluster,StFgtStripCollect
   //  cout <<"setting seedtype: " << seedtype <<endl;
   cluster->setSeedType(seedtype);
 
-  int maxtbin;
+  int maxtbin = 0;
   float maxadc=0.0;
   for(int i=0; i<mMaxTimeBin; i++){
     e[i]=sqrt(e[i]);
@@ -574,7 +574,7 @@ void StFgtSeededClusterAlgo::FillClusterInfo(StFgtHit* cluster,StFgtStripCollect
       Int_t clusterLayer=layer;
       Int_t clusterDisk=disc;
       //      cout <<" looking at disk: " << disc <<endl;
-      Int_t rdo, arm, apv, chan; 
+      //      Int_t rdo, arm, apv, chan; 
       firstGeoId--;
       
       //      cout <<"last geo Id: " << lastGeoId <<endl;
@@ -723,7 +723,7 @@ Bool_t StFgtSeededClusterAlgo::isSameCluster(StSPtrVecFgtStripIterator itSeed,St
 Int_t StFgtSeededClusterAlgo::addStrips2Cluster(StFgtHit* clus, StSPtrVecFgtStripIterator itSeed, StSPtrVecFgtStripIterator itVecBegin, StSPtrVecFgtStripIterator itVecEnd,
 						Bool_t direction, Int_t sidedSize)
 {
-  bool isPhi, isR;
+  bool isPhi;// , isR;
   Short_t seedDisc, seedQuad, seedStrip;
   Short_t disc, quadrant,strip;
   //,noLayer='z';
@@ -742,7 +742,7 @@ Int_t StFgtSeededClusterAlgo::addStrips2Cluster(StFgtHit* clus, StSPtrVecFgtStri
     if(debug) cout <<" up   : ";
   }
   isPhi=(seedLayer=='P');
-  isR=(!isPhi);
+  //  isR=(!isPhi);
 
   
   StSPtrVecFgtStripIterator nextStrip=itSeed+inc;
@@ -854,7 +854,8 @@ Int_t StFgtSeededClusterAlgo::addStrips2Cluster(StFgtHit* clus, StSPtrVecFgtStri
 Int_t StFgtSeededClusterAlgo::doClustering(const StFgtCollection& fgtCollection, StFgtStripCollection& strips, StFgtHitCollection& clusters )
 {
   mMaxTimeBin=0;
-  if(&fgtCollection){ mMaxTimeBin=fgtCollection.getNumTimeBins(); }
+  //  if(&fgtCollection)
+  { mMaxTimeBin=fgtCollection.getNumTimeBins(); }
   if(mMaxTimeBin==0) return kStOk;
 
   //  cout.precision(10);
@@ -866,7 +867,7 @@ Int_t StFgtSeededClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
   Char_t layer;
   Double_t ordinate, lowerSpan, upperSpan;//, prvOrdinate;
   Double_t accuCharge=0; 
-  bool isPhi, isR;
+  //  bool isPhi, isR;
   StFgtHit* newCluster=0;
   //to compute energy weighted strip id
   Double_t meanGeoId=0;
@@ -910,7 +911,7 @@ Int_t StFgtSeededClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
 	  if(firstStrip<strips.getStripVec().begin())
 	    firstStrip=strips.getStripVec().begin();
 	  Int_t stripsW_Charge=0;
-	  Int_t stripsWO_Charge=0;
+	  //	  Int_t stripsWO_Charge=0;
 	  //compare with energy in cluster
 	  //	  cout << " looking around " << (*it)->getGeoId() << ": " << (*firstStrip)->getGeoId() <<" to something... " <<endl;
 	  for(StSPtrVecFgtStripIterator it2=firstStrip;(it2!=strips.getStripVec().end())&&(it2<=lastStrip);it2++)
@@ -941,8 +942,8 @@ Int_t StFgtSeededClusterAlgo::doClustering(const StFgtCollection& fgtCollection,
 
 
 	  StFgtGeom::getPhysicalCoordinate((*it)->getGeoId(),disc,quadrant,layer,ordinate,lowerSpan,upperSpan);
-	  isPhi=(layer=='P');
-	  isR=(!isPhi);
+	  //	  isPhi=(layer=='P');
+	  //	  isR=(!isPhi);
 	  newCluster=new StFgtHit(clusters.getHitVec().size(),meanGeoId,accuCharge, disc, quadrant, layer, ordinate, defaultError,ordinate, defaultError,0.0,0.0);
 	  stripWeightMap_t &stripWeightMap = newCluster->getStripWeightMap();
 	  stripWeightMap[ *it ] = 1;

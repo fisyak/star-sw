@@ -208,7 +208,7 @@ Int_t StFgtClusterPlotter::Make()
 	     Float_t r=(*hitIter)->getPositionR();
 	     Int_t geoId=(*hitIter)->getCentralStripGeoId();
 	     Float_t charge=(*hitIter)->charge();
-	     Float_t chargeErr=(*hitIter)->getChargeUncert();
+	     //	     Float_t chargeErr=(*hitIter)->getChargeUncert();
 	     Int_t numStrips=(*hitIter)->getStripWeightMap().size();
 	     ///check if at least one of the strips has a valid seed)
 	     Short_t quad, disc, strip;
@@ -233,6 +233,7 @@ Int_t StFgtClusterPlotter::Make()
 		 for(stripWeightMap_t::iterator it=(*hitIter)->getStripWeightMap().begin();it!=(*hitIter)->getStripWeightMap().end();it++)
 		   {
 		     StFgtGeom::decodeGeoId(it->first->getGeoId(),disc, quad, layer, strip);
+#if 0
 		     for( Int_t timebin = 0; timebin < kFgtNumTimeBins-2; ++timebin )
 		       {
 			 float numSig=it->first->getAdc(timebin)/it->first->getPedErr();
@@ -246,6 +247,7 @@ Int_t StFgtClusterPlotter::Make()
 		     //		     (*outTxtFile) << " ped: " << it->first->getPed() <<" +- " << it->first->getPedErr();
 		     //		     (*outTxtFile) << " running evtNo " << runningEvtNr;
 		     //		     (*outTxtFile)  <<" t0: " << it->first->getFitParamT0() <<" fit chi2/ndf: " << it->first->getFitChi2();
+#endif
 		     if(it->first->getClusterSeedType()==kFgtSeedType1)
 		   {
 		     //		     (*outTxtFile) << " ---> seed with 3 high strips";

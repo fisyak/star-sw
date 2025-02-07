@@ -98,7 +98,6 @@ class StFgtGeneralBase : public StMaker {
  public:
   Double_t vtxZ;
   Int_t vtxRank;
-  Int_t mVertexNumber;
   StFgtGeneralBase(const Char_t* name="FgtGeneralBase");
 
   void fillFromEvent(Bool_t fillFromEv=true); //default, no, use mDsts
@@ -175,10 +174,7 @@ enum evStatCodes
     numCluSeed2,
     numCluSeed3
   };
- StFgtCollection* fgtCollection;
- Bool_t m_fillFromEvent;
  Bool_t m_isCosmic;
- Bool_t mUseEHTTrigs;
   //EHT1*L2EW == 430315
   //EHT1 == 430313
   //EHT0 == 430312
@@ -204,8 +200,12 @@ enum evStatCodes
 
   static Float_t chargeMatchCut;
 
+  Bool_t m_fillFromEvent;
   Int_t evtNr;
   Int_t m_effDisk;
+  StFgtCollection* fgtCollection;
+  Int_t mVertexNumber;
+ Bool_t mUseEHTTrigs;
   vector<generalCluster> clustersD1;
   vector<generalCluster> clustersD2;
   vector<generalCluster> clustersD3;
