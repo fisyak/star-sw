@@ -30,8 +30,8 @@
  **************************************************************************/
 
 /*  10-to-8-bit Translation Table, 0-1023:   */
-#ifndef TRANS_TABLE_HH
-#define TRANS_TABLE_HH
+#ifndef TRANS_TABLE_10TO8_HH
+#define TRANS_TABLE_10TO8_HH
  static unsigned char log10to8_table[1024] ={
 
   0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
@@ -99,6 +99,9 @@
 252,252,252,252,253,253,253,253,253,253,253,253,253,253,253,253,
 253,253,254,254,254,254,254,254,254,254,254,254,254,254,254,254 };
 
+#endif // TRANS_TABLE_8To10_HH
+#ifndef TRANS_TABLE_8To10_HH
+#define TRANS_TABLE_8To10_HH
 
 /*    Inverse Table, 0-255:  */
 
@@ -141,4 +144,4 @@ static unsigned short log8to10_table[256] = {
 //  char x = log10to8_table[0];
 //  x = log8to10_table[0];
 //}	
-#endif // TRANS_TABLE_HH
+#endif // TRANS_TABLE_8To10_HH

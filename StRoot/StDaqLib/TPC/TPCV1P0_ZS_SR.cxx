@@ -187,7 +187,7 @@ int TPCV1P0_ZS_SR::initialize()
   for(rcb = 0; rcb < 6; rcb++) {
     for(int mz = 0; mz < 3; mz++) {
       if (seqd_p[rcb][mz] == (classname(Bank_TPCSEQD) *)NULL) continue;
-      int padrow=-1, pad=-1, lastbin=-2, pad_seq, oldstart = 0;
+      int padrow=-1, pad=-1, lastbin=-2, pad_seq = 0, oldstart = 0;
       int len = seqd_p[rcb][mz]->header.BankLength - (sizeof(Bank_Header)/4);
       int numseq = (4*len)/sizeof(short); // find # sequences this bank
       u_char *adc_locn = (u_char *)adcd_p[rcb][mz]->ADC;

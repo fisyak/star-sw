@@ -7,7 +7,7 @@
 using namespace OLDEVP;
 
 int TRG_Reader::UnpackTrg2008(Bank_TRGP *pTRGP){
-  int returnValue,npre,npost,swap,res;
+  int /* returnValue, */ npre,npost,swap,res;
 
   if ( ! pTRGP){
     printf("TRG_Reader::UnpackTrg2008 - not pTRGP\n");
@@ -18,10 +18,10 @@ int TRG_Reader::UnpackTrg2008(Bank_TRGP *pTRGP){
 	 pTRGP->header.ByteOrder==0x04030201);
   if(pTRGP->header.ByteOrder==0x04030201) {
     swap=1;
-    returnValue=0;
+    //    returnValue=0;
   }else{
     swap=1;
-    returnValue=pTRGP->header.swap();
+    //    returnValue=pTRGP->header.swap();
   }
   if(pTRGP->header.ByteOrder!=0x04030201){
     printf("TRG_Reader::UnpackTrg2008: Swap Header error %s %d.\n", __FILE__ , __LINE__ );
@@ -61,7 +61,7 @@ int TRG_Reader::UnpackTrg2008(Bank_TRGP *pTRGP){
   char* trg_version = (char*)pTRGP + size_off + size_head + offset + 3;
   printf("TRG_Reader::UnpackTrg2008: trg_version = 0x%x\n",*trg_version);
   if(*trg_version != 0x32) {
-    printf("TRG_Reader::UnpackTrg2008: Trigger version error %s %d.\n",*trg_version, __FILE__ , __LINE__ );
+    printf("TRG_Reader::UnpackTrg2008: Trigger version error 0x%x: %s %d.\n",*trg_version, __FILE__ , __LINE__ );
     return -1;
   }
 

@@ -436,7 +436,7 @@ int TPCV2P0_ZS_SR::initialize()
 	// process TPCSEQD to fill in the Pad_array[][].seq structs
 	u_char *adc_locn = (u_char *)adcd_p[rcb][mz]->ADC;
 	padrow=-1; pad=-1; lastbin=-2; oldstart = 0; i=0;
-	int pad_seq;
+	int pad_seq = 0;
 
 	while  (i<numseq)  {
 	  if (seqd_p[rcb][mz]->sequence[i]<0) { //padrow, pad
