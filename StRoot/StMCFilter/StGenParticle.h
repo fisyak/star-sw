@@ -157,7 +157,7 @@ virtual       void           Momentum(double p4[4])   const=0 ;
 virtual       void           Vertex(double v[3]) const=0;
 virtual       double         Time() const=0;
               int            IsPrimary       ()  const { return !GetMother(0);} //Is this particle primary one?
-              int            IsFinal         ()  const { return !GetStatusCode()==1;} //Is this particle final one?
+              int            IsFinal         ()  const { return GetStatusCode()==0;} //Is this particle final one?
 
 double        R     () const;
 double        Rho   () const;

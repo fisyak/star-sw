@@ -215,7 +215,7 @@ void StMtdGeoNode::MasterToLocal(const Double_t* master, Double_t* local)
 	}else{
 		fMatrix->MasterToLocal(master,local);
 	}
-
+#if 0
 	Double_t x, y, z;
 	x = master[0] - fTransMRS[0];
 	y = master[1] - fTransMRS[1];
@@ -225,7 +225,7 @@ void StMtdGeoNode::MasterToLocal(const Double_t* master, Double_t* local)
 	test[0] = fRotMRS[0]*x + fRotMRS[3]*y + fRotMRS[6]*z;
 	test[1] = fRotMRS[1]*x + fRotMRS[4]*y + fRotMRS[7]*z;
 	test[2] = fRotMRS[2]*x + fRotMRS[5]*y + fRotMRS[8]*z;
-
+#endif
 	return;
 
 }

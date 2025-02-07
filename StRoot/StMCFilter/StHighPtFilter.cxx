@@ -135,7 +135,7 @@ int StHighPtFilter::RejectGT(const StGenParticleMaster &ptl) const
   // and with pT > 2.5 GeV.  The |y|<1.2 cut is consistent
   // with  vertex cuts of |z|<100 cm.
   //
-  float maxPt = 0.; 
+  //  float maxPt = 0.; 
 
   for (int i=0;i<n;i++) {
 

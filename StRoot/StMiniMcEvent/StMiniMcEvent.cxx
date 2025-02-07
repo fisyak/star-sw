@@ -121,8 +121,8 @@ StContamPair *StMiniMcEvent::addContamPair(StContamPair* trk)
 
 StMiniMcPair* StMiniMcEvent::addTrackPair(StMiniMcPair* pair,Category category)
 {
-  TClonesArray *tracks;
-  Int_t *nPair;
+  TClonesArray *tracks = 0;
+  Int_t *nPair = 0;
 
   // special case for contamination pairs (make it a new function?)
   // downcast..
