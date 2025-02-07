@@ -30,7 +30,7 @@ class StESMDClustersPerSector_t {
    // constructor
    StESMDClustersPerSector_t() : mSector(0) { /* */ };
    StESMDClustersPerSector_t( Short_t sector ) : mSector(sector) { /* */ };
-   ~StESMDClustersPerSector_t(){ /* */ };
+   virtual ~StESMDClustersPerSector_t(){ /* */ };
 
    // accessors
    StSimpleClusterVec_t& getClusterVecU() { return mClusterVecU; };

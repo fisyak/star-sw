@@ -120,7 +120,7 @@ StFgtSlowSimuMaker::Init(){
 
   // initialize RAD- gains
   mRadStripRelativeGain=new double[geom->radStripGBLId_number()+1]; // allocate array
-  memset(mRadStripRelativeGain,0,sizeof(mRadStripRelativeGain));
+  memset(mRadStripRelativeGain,0,sizeof(double)*(geom->radStripGBLId_number()+1));
   int i;
   for(i=0;i<geom->radStripGBLId_number();i++) {
     double del=99999;
@@ -132,7 +132,7 @@ StFgtSlowSimuMaker::Init(){
   
   // initialize PHI- gains
   mPhiStripRelativeGain=new double[geom->phiStripGBLId_number()+1]; // allocate array
-  memset(mPhiStripRelativeGain,0,sizeof(mPhiStripRelativeGain));
+  memset(mPhiStripRelativeGain,0,sizeof(double)*(geom->phiStripGBLId_number()+1));
   for(i=0;i<geom->phiStripGBLId_number();i++) {
     double del=99999;
     while(fabs(del)> 2.*par_phiStripGainSigma)
@@ -215,7 +215,7 @@ StFgtSlowSimuMaker::Make(){
     for(iQuad=0;iQuad<kFgtMxQuad;iQuad++) {
       digXY->Reset(); // needs reset for every quadrant
       
-      printf(" process %d g2t hits in disk=%d quad=%d\n", mG2tHitList[iDisk][iQuad].size(),iDisk,iQuad);
+      printf(" process %d g2t hits in disk=%d quad=%d\n", (int)mG2tHitList[iDisk][iQuad].size(),iDisk,iQuad);
       // accumulate response in digXY array
       vector<fgt_g2t_auxil> &L=mG2tHitList[iDisk][iQuad];
       if(L.size()<=0) continue;// drop if empty quad
@@ -238,7 +238,7 @@ StFgtSlowSimuMaker::Make(){
   } // end of disk
 
   printf(" Summary of fired strips\n disk  #Rad-strip  #Phi-strip \n");
-  for(iDisk=0;iDisk<kFgtMxDisk;iDisk++) printf("%d  %d  %d \n",iDisk,mRadAdcList[iDisk].size(),mPhiAdcList[iDisk].size());
+  for(iDisk=0;iDisk<kFgtMxDisk;iDisk++) printf("%d  %d  %d \n",iDisk,(int)mRadAdcList[iDisk].size(),(int)mPhiAdcList[iDisk].size());
   
   return kStOK;
 }
@@ -250,7 +250,7 @@ void
 StFgtSlowSimuMaker::sort_g2t_hits( St_g2t_fgt_hit *fgt_hitT){
   g2t_fgt_hit_st *hitPtr  = fgt_hitT->GetTable();
   assert(hitPtr);
-  LOG_INFO<<Form("Sorting g2t FGT hits, size=%d",fgt_hitT->GetNRows())<<endm;
+  LOG_INFO<<Form("Sorting g2t FGT hits, size=%d",(int)fgt_hitT->GetNRows())<<endm;
 
   int ntot=0;
   Int_t     nhits      = fgt_hitT->GetNRows();

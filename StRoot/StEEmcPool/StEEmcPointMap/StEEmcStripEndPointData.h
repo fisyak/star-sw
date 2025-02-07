@@ -24,7 +24,7 @@ class StEEmcStripEndPointData_t {
    // constructor
    StEEmcStripEndPointData_t() : mStripIndex(0), mX(0), mY1(0), mY2(0) { /* */ };
    StEEmcStripEndPointData_t( Short_t stripIndex, Float_t x, Float_t y1, Float_t y2 ) : mStripIndex(stripIndex), mX(x), mY1(y1), mY2(y2) { /* */ };
-   ~StEEmcStripEndPointData_t() { /* */ };
+   virtual ~StEEmcStripEndPointData_t() { /* */ };
 
    // less than if X values are less than (needed to find strips by X position)
    Bool_t operator<( const StEEmcStripEndPointData_t& other ) const { return (mX < other.mX); };

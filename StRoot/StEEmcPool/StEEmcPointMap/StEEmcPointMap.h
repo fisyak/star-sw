@@ -25,7 +25,7 @@ class StEEmcPointMap_t {
    StEEmcPointMap_t( Bool_t crossSectorBoundaries = 1 );
 
    // deconstructor
-   ~StEEmcPointMap_t() { /* */ };
+   virtual ~StEEmcPointMap_t() { /* */ };
 
    static void getStripEndPoints( Float_t stripGeoId, Float_t& x1, Float_t& y1, Float_t& x2, Float_t& y2 );
    static void getStripLineParam( Float_t stripGeoId, Float_t& a, Float_t& b );

@@ -49,7 +49,7 @@ inline float swapF(float *var)
 inline TrgDataType *swapDescSum( TrgDataType *trgD )
 {
   int ii;
-  volatile unsigned int *x;
+  volatile unsigned int *x = 0;
 
   x  = (volatile unsigned int*)&trgD->EvtDesc.TCUdataBytes;
 

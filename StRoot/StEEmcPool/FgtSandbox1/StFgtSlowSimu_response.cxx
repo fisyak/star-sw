@@ -117,7 +117,7 @@ of PERPENDICULAR diffusion to a hit. But, a better understanding of the
 
     //...............snap to the nearest hole in hexagonal GEM lattice.......
     if(hexLat) { 
-      TVector2 r2=r.XYvector(); int kU,kV;
+      TVector2 r2=r.XYvector(); int kU=0,kV=0;
       TVector2 r2s= hexLat->snap(r2,kU,kV); 
       r.SetX(r2s.X());    r.SetY(r2s.Y()); // replace location of this electron
     }

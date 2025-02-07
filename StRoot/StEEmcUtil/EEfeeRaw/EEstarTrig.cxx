@@ -47,9 +47,9 @@ void EEstarTrig :: clear() {
 //--------------------------------------------------
 int  EEstarTrig :: get48bXing() const{
   // printf("EEstarTrig:: print0() %d %d %d \n",bX48hi,bX48lo, bX7bit);
-  UInt_t hi=bX48hi;
+  //  UInt_t hi=bX48hi;
   UInt_t lo=bX48lo;
-  UInt_t bx48=hi<<32;
+  UInt_t bx48=0; //hi<<32;
   bx48+= lo;
   int bx=bx48%120;
   return bx;
