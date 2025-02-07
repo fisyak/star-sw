@@ -35,7 +35,7 @@ public:
     void setDriftVelocity(double inDriftVelocity);
     double getDriftVelocity() { return driftVelocity; }
     double getMapDriftVelocity() { return mapDriftVelocity; }
-    double tpcHitMap[45][nPadGrids+1][nTimeBucketGrids+1][3][2];
+    double tpcHitMap[72][nPadGrids+1][nTimeBucketGrids+1][3][2];
     //[padRow-1][padGrid][timeBucketGrid][x/y/z][independent or propotional to luminosity]
 
 private:

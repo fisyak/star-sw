@@ -289,9 +289,10 @@ void HftT::Loop(Int_t Nevents) {
     const Char_t *Title;
     Double_t xmax[3]; // pxl ist  ssd 
   };
-  static Double_t Du[2] = {3.000, 3.65};
-  static Double_t Sv[2] = {6.305, 4.35};
+  //  static Double_t Du[2] = {3.000, 3.65};
+  //  static Double_t Sv[2] = {6.305, 4.35};
   enum {eLocPlots = 8, eGlobPlots = 37};
+#if 0
   const  PlotName_t plotNameD[eLocPlots] = {// plots for drift
     {"dutuP","<u - uP>       versus  tuP =>  dw ", { 0.5, 0.5, 1}},                    //  0
     {"dvtvP","<v - vP>       versus  tvP =>  dw ", { 2.5, 2.5, 1}},                    //  1
@@ -302,6 +303,7 @@ void HftT::Loop(Int_t Nevents) {
     {"duOvertuPuP","<(u - uP)/tuP> versus  u => -beta (our gamma)", { 1, -1, 1}},      //  6
     {"dvOvertvPuP","<(v - vP)/tvP> versus  u => -beta (our gamma)", { 1, -1, 1}},      //  7
   };
+#endif
   const  PlotName_t plotName[eGlobPlots] = {
     {"dutuP","<u - uP>       versus  tuP =>  dw", { 0.5, 0.5, 1}},                    //  0
     {"dvtvP","<v - vP>       versus  tvP =>  dw", { 2.5, 2.5, 1}},                    //  1
@@ -347,7 +349,7 @@ void HftT::Loop(Int_t Nevents) {
 
 
   };
-  Double_t rCut = 0.5;
+  //  Double_t rCut = 0.5;
   TFile *fOut = new TFile(fOutFileName,"recreate");
   TString Name, Title;
 #if 0
@@ -461,7 +463,7 @@ void HftT::Loop(Int_t Nevents) {
 	   << " so far. switch to file " << fChain->GetCurrentFile()->GetName() << endl;
       TreeNo = fChain->GetTreeNumber();
     }
-    TClonesArray *matched = _e->GetMatchHits();
+    //    TClonesArray *matched = _e->GetMatchHits();
     Int_t NHits = _e->fNmatchhit;
     for (Int_t k = 0; k < NHits; k++) {
       HitMatchT *hitK = _e->GetHitMatchT(k);
@@ -490,19 +492,19 @@ void HftT::Loop(Int_t Nevents) {
       Int_t layer  = hitK->Layer();
       Int_t sector = hitK->Sector();
       Int_t ladder = hitK->Ladder();
-      Int_t half   = hitK->Half();
+      //      Int_t half   = hitK->Half();
       Int_t tpcSector = hitK->SectorTpc;
       if (ladder == 0) continue;
-      Int_t sensor  = hitK->Sensor();
+      //      Int_t sensor  = hitK->Sensor();
       Double32_t xGP = hitK->xTPCP;
       Double32_t zGP = hitK->zTPCP;
       Double32_t yGP = hitK->yTPCP;
-      Double32_t uP = hitK->xLP;       
-      Double32_t vP = hitK->zLP;
+//       Double32_t uP = hitK->xLP;       
+//       Double32_t vP = hitK->zLP;
       Double32_t tuP = hitK->tuP;       
       Double32_t tvP = hitK->tvP;
-      Double32_t xLP = hitK->xLP;
-      Double32_t zLP = hitK->zLP;
+//       Double32_t xLP = hitK->xLP;
+//       Double32_t zLP = hitK->zLP;
       Double32_t dxP = hitK->dxTPCP;
       Double32_t dyP = hitK->dyTPCP;
       Double32_t dzP = hitK->dzTPCP;
@@ -512,21 +514,21 @@ void HftT::Loop(Int_t Nevents) {
       Double32_t dX = xG - xGP;
       Double32_t dY = yG - yGP;
       Double32_t dZ = zG - zGP;
-      Double32_t u = hitK->xL;       
-      Double32_t v = hitK->zL;
-      Double32_t zL = hitK->zL;
-      Double32_t xL = hitK->xL;
-      Double32_t DxL = xL - xLP;
-      Double32_t DzL = zL - zLP;
-      Double32_t du = u - uP;
-      Double32_t dv = v - vP;
-      Double_t uA = TMath::Abs(u);
-      Double_t vA = TMath::Abs(v);
+//       Double32_t u = hitK->xL;       
+//       Double32_t v = hitK->zL;
+//       Double32_t zL = hitK->zL;
+//       Double32_t xL = hitK->xL;
+      //      Double32_t DxL = xL - xLP;
+      //      Double32_t DzL = zL - zLP;
+      //      Double32_t du = u - uP;
+      //      Double32_t dv = v - vP;
+      //      Double_t uA = TMath::Abs(u);
+      //      Double_t vA = TMath::Abs(v);
       Double_t x = xGP;
       Double_t y = yGP;
       Double_t z = zGP;
       Double_t jL2 = TMath::Sqrt(1. + tuP*tuP + tvP*tvP);
-      Double_t wG[3] = {hitK->wGu,hitK->wGv, hitK->wGw};
+//       Double_t wG[3] = {hitK->wGu,hitK->wGv, hitK->wGw};
       Double_t vx =  hitK->wGu*jL2;
       Double_t vy =  hitK->wGv*jL2;
       Double_t vz =  hitK->wGw*jL2;

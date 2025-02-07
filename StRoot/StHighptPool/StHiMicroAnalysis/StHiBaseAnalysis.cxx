@@ -179,13 +179,14 @@ StHiBaseAnalysis::trackLoop()
     cout << "StHiBaseAnalysis::trackLoop()" << endl;
 
   Int_t nTrack = mHiMicroEvent->NTrack();
+#if 0
   StHiMicroTrack* track;
   
   for(Int_t i=0; i<nTrack; i++){
     track =(StHiMicroTrack*) mHiMicroEvent->tracks()->At(i);
 
   } // tracks
-
+#endif
   if(mDebug)
     cout << "\ttracks : " << nTrack << endl;
 
