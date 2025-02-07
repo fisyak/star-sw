@@ -33,9 +33,9 @@ foreach root (root6 root5)
         setup ${gcc}
 #        echo "setup gcc = $gcc, optt = $optt, bit = $bit"
 	if (${gcc} == "gcc/12") then
-    setup spackTFG
-    spack env activate x86_64_gcc12
-    spack env view enable
+#    setup spackTFG
+#    spack env activate x86_64_gcc12
+#    spack env view enable
         endif
         setup ${bit}
 #        echo "setup bit gcc = $gcc, optt = $optt, bit = $bit"

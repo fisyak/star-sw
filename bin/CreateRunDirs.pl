@@ -25,9 +25,9 @@ if ($run2) {push @AllRuns, $run2;}
 foreach my $currentrun (@AllRuns) {
   my @RUNS = glob $currentrun; print "$0 RUNS = @RUNS\n" if ($debug);
   foreach my $run (@RUNS) {
-    my $r = File::Basename::basename($run); #print "$0 run = $run, r = $r\n" if ($debug);
-#    if (GoodRun($def,$r,$debug) < 0) {next;}
-    if (GoodRun($def,$r,0) < 0) {next;}
+    my $r = File::Basename::basename($run); print "$0 run = $run, r = $r\n" if ($debug);
+    if (GoodRun($def,$r,$debug) < 0) {next;}
+#    if (GoodRun($def,$r,0) < 0) {next;}
     #  if ($r < 21040001) {next;}
     #  if ($r < 21042001) {next;} # exclude 9p2GeV
     foreach my $tag (qw(hlt st_physics_)) { # st_physics_2 st_cosmic st_physic)) {

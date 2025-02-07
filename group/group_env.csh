@@ -965,6 +965,10 @@ setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/incl
 #$USER from $HOST asked for STAR_LEVEL=${STAR_LEVEL} / STAR_VERSION=${STAR_VERSION}  $date
 #EOD
 #END
+#if (-x $GROUP_DIR/dropit ) then
+#	setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star`
+#        setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH -p /usr/lib`
+#endif
 
 
 #echo "${STAR}"

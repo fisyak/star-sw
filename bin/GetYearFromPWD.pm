@@ -20,11 +20,11 @@ sub GoodRun($$$) {
   my $run = shift;
   my $debug = shift;
   print "GoodRun:: run = $run" if $debug > 1;
-  my $pwd = cwd(); #print "pwd = $pwd\n";
+  my $pwd = cwd(); print "pwd = $pwd\n" if ($debug > 2);;
   foreach my $key (sort keys %$env ) {
     print "$pwd, trig = $env->{$key}->{trig}, field = $env->{$key}->{field}; first = $env->{$key}->{first}, last = $env->{$key}->{last}" if ($debug > 1);
-    if ($pwd !~ /$env->{$key}->{trig}/)  {print ", rejected by trig\n"  if ($debug > 1); next;}
     if ($pwd !~ /$env->{$key}->{field}/) {print ", rejected by field\n" if ($debug > 1); next;}
+    if ($pwd !~ /$env->{$key}->{trig}/)  {print ", rejected by trig\n"  if ($debug > 1); next;}
     if ($run < $env->{$key}->{first})     {print ", rejected by first\n" if ($debug > 1); next;}
     if ($run > $env->{$key}->{last})      {print ", rejected by last\n"  if ($debug > 1); next;}
     print " accepted\n" if ($debug > 1);

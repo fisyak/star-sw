@@ -1,7 +1,7 @@
 #! /usr/local/bin/tcsh -f
 set log=$STAR_HOST_SYS;
 if ($?NODEBUG) then 
-    set log = buiild.${STAR_HOST_SYS}.opt.log
+    set log = build.${STAR_HOST_SYS}.opt.log
 else
     set log = build.${STAR_HOST_SYS}.debug.log
 endif

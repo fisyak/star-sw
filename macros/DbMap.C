@@ -1,16 +1,48 @@
 /*
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB where elementID=1 and  deactive = 0 and beginTime > "2019" and beginTime < "2022" order by beginTime;' | tee TpcSecRowB.txt
+---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20210501.165437 --- 20210506.070146
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230049 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20210501.165437 --- 20210506.070146
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20210501.165437 --- 20210506.070146
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202321 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20210501.165437 --- 20210506.070146
+
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcSecRowB.txt
   root.exe 'DbMap.C+("TpcSecRowB.txt")' 
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcTimeDependence  where elementID=1 and  deactive = 0 and beginTime > "2019" and beginTime < "2022" order by beginTime;' | tee tpcTimeDependence.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcTimeDependence  where elementID=1 and  deactive = 0  order by beginTime;' | tee tpcTimeDependence.txt
   root.exe 'DbMap.C+("tpcTimeDependence.txt")'
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcLengthCorrectionMDN  where elementID=1 and  deactive = 0 and beginTime > "2019" and beginTime < "2022" order by beginTime;' | tee TpcLengthCorrectionMDN.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcLengthCorrectionMDN  where elementID=1 and  deactive = 0 and beginTime > "2019" and beginTime < "2022" order by beginTime;' | tee TpcLengthCorrectionMDN.txt
-  root.exe 'DbMap.C+("TpcLengthCorrectionMDN.txt")'
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcZCorrectionC  where elementID=1 and  deactive = 0 and beginTime > "2019" and beginTime < "2022" order by beginTime;' | tee TpcZCorrectionC.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcZCorrectionC  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcZCorrectionC.txt
   root.exe 'DbMap.C+("TpcZCorrectionC.txt")'
 
   mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcLengthCorrectionMDN  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcLengthCorrectionMDN.txt
   root.exe 'DbMap.C+("TpcLengthCorrectionMDN.txt")'
+
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcAdcCorrection6MDF  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcAdcCorrection6MDF.txt
+  root.exe 'DbMap.C+("TpcAdcCorrection6MDF.txt")'
+
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcPadCorrectionMDC  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcPadCorrectionMDC.txt
+  root.exe 'DbMap.C+("TpcPadCorrectionMDC.txt")'
+
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcAdcCorrection6MDF  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcAdcCorrection6MDF.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcSecRowB.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcPressureB  where elementID=1 and  deactive = 0  order by beginTime;' | tee tpcPressureB.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcZCorrectionC  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcZCorrectionC.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcPadCorrectionMDC  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcPadCorrectionMDC.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcTimeDependence  where elementID=1 and  deactive = 0  order by beginTime;' | tee tpcTimeDependence.txt
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcLengthCorrectionMDN  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcLengthCorrectionMDN.txt
+
+  root.exe DbMap.C+
+
+  DbMap("TpcAdcCorrection6MDF.txt");   >> TpcAdcCorrection6MDF.log
+  DbMap("TpcSecRowB.txt");             >> TpcSecRowB.log
+  DbMap("tpcPressureB.txt");           >> tpcPressureB.log
+  DbMap("TpcZCorrectionC.txt");        >> TpcZCorrectionC.log
+  DbMap("TpcPadCorrectionMDC.txt");    >>TpcPadCorrectionMDC.log
+  DbMap("tpcTimeDependence.txt");      >> tpcTimeDependence.log
+  DbMap("TpcLengthCorrectionMDN.txt"); >> TpcLengthCorrectionMDN.log
 
 */
 #include <stdio.h>
