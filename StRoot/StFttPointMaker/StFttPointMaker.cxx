@@ -132,7 +132,7 @@ void StFttPointMaker::MakeLocalPoints(){
                     for ( size_t iV = 0; iV < nV; iV++ ){
                         auto cluV = clusters[ iRob ][ iRowV ][ kFttVertical ][ iV ];
 
-                        StFttPoint * p = makePoint( cluH, cluV );
+                        /* StFttPoint * p = */ makePoint( cluH, cluV );
                     } // iV
                 } // iH
             } // iRowV

@@ -80,7 +80,7 @@
 #include "StFmsUtil/StFmsTower.h"
 #include "StFmsUtil/StFmsTowerCluster.h"
 #include "StFmsUtil/StFmsConstant.h"
-
+#if 0
 namespace {
   // Calculate a 4 momentum from a direction/momentum vector and energy
   // assuming zero mass i.e. E = p
@@ -89,7 +89,7 @@ namespace {
 	return StLorentzVectorF(mom3, energy);
     }
 }  // unnamed namespace
-
+#endif
 StFmsPointMaker::StFmsPointMaker(const char* name)
     : StMaker(name) {}
 
@@ -205,7 +205,7 @@ int StFmsPointMaker::clusterDetector(TowerList* towers, const int detectorId) {
   for (auto cluster = clusters.begin(); cluster != clusters.end(); ++cluster) {
     processTowerCluster(cluster->get(), detectorId);
   }  // for
-  LOG_DEBUG << Form("Found %d clusters for det=%d",clusters.size(),detectorId)<<endm;
+  LOG_DEBUG << Form("Found %d clusters for det=%d",(int)clusters.size(),detectorId)<<endm;
   return kStOk;
 }
 
@@ -364,7 +364,7 @@ bool StFmsPointMaker::populateTowerLists() {
       n++;
     }  // if
   }  // for
-  LOG_INFO << Form("NHit=%d NValidHit=%d Esum=%f (%f %f %f %f) Max=%f",hits.size(),n,sumE[0],sumE[1],sumE[2],sumE[3],sumE[4],mMaxEnergySum) << endm;
+  LOG_INFO << Form("NHit=%d NValidHit=%d Esum=%f (%f %f %f %f) Max=%f",(int)hits.size(),n,sumE[0],sumE[1],sumE[2],sumE[3],sumE[4],mMaxEnergySum) << endm;
   if(sumE[0]<=0.0 || sumE[0]>mMaxEnergySum) {
       LOG_INFO << Form("Energy sum=%f exceed MaxEnergySum=%f (LED tail?) or below zero. Skipping!",sumE[0],mMaxEnergySum)<< endm;
       return false;

@@ -124,10 +124,10 @@ struct IsBadCluster {
       : energy(minEnergy), towers(maxTowers) { }
   bool operator()(const fms::ClusterList::value_type& cluster) const {
       if(cluster->cluster()->energy() <= energy){
-	  LOG_DEBUG << Form("Removing cluster because E=%f <= %f (NTower=%d)",cluster->cluster()->energy(),energy,cluster->towers().size()) << endm;
+	LOG_DEBUG << Form("Removing cluster because E=%f <= %f (NTower=%d)",cluster->cluster()->energy(),energy,(int)cluster->towers().size()) << endm;
       }
       if(cluster->towers().size() > towers){
-	  LOG_INFO << Form("Removing cluster because NTower=%d > %d (E=%f)",cluster->towers().size(),towers,cluster->cluster()->energy()) << endm;
+	LOG_INFO << Form("Removing cluster because NTower=%d > %d (E=%f)",(int)cluster->towers().size(),towers,cluster->cluster()->energy()) << endm;
       }      
       return cluster->cluster()->energy() <= energy ||
 	     cluster->towers().size() > towers;
@@ -478,6 +478,7 @@ Double_t StFmsEventClusterer::photonEnergyInTower(
 
  if (mShowerShapeWithAngle>0)   return photon->energy * mFitter->showerShapeFunction()->Eval(tower->x(),photon->x,tower->y(),photon->y);
  if (mShowerShapeWithAngle==0)  return photon->energy * mFitter->showerShapeFunction()->Eval(tower->x()-photon->x,tower->y()-photon->y);
+ return 0;
 }
 
 /* 1-photon fitting function */

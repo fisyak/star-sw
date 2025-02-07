@@ -208,7 +208,7 @@ int StFtpcFastSimu::ffs_gen_padres()
   {
     // Local Variables:
     float check1, check2;
-    float xi, yi, zi, phi_local, Rh, Vh, Timeb;
+    float xi, yi, zi, phi_local, Rh;//, Vh, Timeb;
     float sigTimeb, sigPhi, sigma_tr;
     float sigma_l, sigma_z;
     float alpha, lambda;
@@ -266,10 +266,10 @@ int StFtpcFastSimu::ffs_gen_padres()
 	Rh = ::sqrt(xi*xi + yi*yi);
 
 	//       Drift velocity at hit [cm/microsec]
-	Vh = Vhm[0] + Vhm[1]*Rh + Vhm[2]*Rh*Rh + Vhm[3]*Rh*Rh*Rh;
+	//	Vh = Vhm[0] + Vhm[1]*Rh + Vhm[2]*Rh*Rh + Vhm[3]*Rh*Rh*Rh;
 
 	//       Arrival time at Readout-Chambers in microsec    
-	Timeb = Tbm[0] + Tbm[1]*Rh + Tbm[2]*Rh*Rh + Tbm[3]*Rh*Rh*Rh;
+	//	Timeb = Tbm[0] + Tbm[1]*Rh + Tbm[2]*Rh*Rh + Tbm[3]*Rh*Rh*Rh;
 
 	// Angle-Determination:
 	// Calculate Dip- and Crossing-Angle

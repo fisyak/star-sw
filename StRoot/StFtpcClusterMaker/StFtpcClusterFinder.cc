@@ -417,9 +417,9 @@ int StFtpcClusterFinder::search()
   int firstPadrowToSearch;
   int bNewSec;
   int clusters;
-  int iNowSeqIndex, iNewSeqIndex, iOldSeqNumber, iOldSeqIndex;
+  int /* iNowSeqIndex,*/ iNewSeqIndex, iOldSeqNumber, iOldSeqIndex;
   int iCUCSequence, iMoveSequence, iOldSeqBuf;
-  int bOldSequenceUsed, bLastSequence;
+  int bOldSequenceUsed; //, bLastSequence;
   TClusterUC *FirstCUC, *CurrentCUC, *LastCUC, *DeleteCUC;
   TClusterUC *SequenceInCUC;
   TPCSequence *OldSequences, *NewSequences, *(SequencePointer[3]);
@@ -505,11 +505,11 @@ for ( int iftpc=0; iftpc<2; iftpc++) {
   iNewSeqIndex = 0;
 
   /* loop over raw data sequences */
-  iNowSeqIndex = 0;
+  //  iNowSeqIndex = 0;
   iPad=0;
   iSec=0;
   iRow=0;
-  bLastSequence=0;
+  //  bLastSequence=0;
 
   for(iRow=firstPadrowToSearch,iRowBuf=firstPadrowToSearch;iRow<firstPadrowToSearch+mDb->numberOfPadrowsPerSide(); iRow++)
     {

@@ -170,7 +170,7 @@ int StFmsHitMaker::Make(){
 			if(bitshift>0){		  
 			    int check=adc % (1<<bitshift);
 			    if(check!=0){
-				LOG_ERROR << Form("Bitshift in DB is not consistent with data! det=%2d ch=%3d adc=%4d bitshift=%2d adc%(1<<bitshift)=%d", 
+				LOG_ERROR << Form("Bitshift in DB is not consistent with data! det=%2d ch=%3d adc=%4d bitshift=%2d adc/(1<<bitshift)=%d", 
 						  d,c,adc,bitshift,check) << endm;
 			    }
 			}else if(bitshift<0){

@@ -638,8 +638,8 @@ void StFtpcDisplay::TrackInfo()
 	trackcluster = hits->GetEntriesFast();
 	// cout << "Track: " << i << " Cluster: " << trackcluster << endl;
 	for (Int_t j = 0; j < trackcluster; j++) {
-	  
-	  if ((StFtpcConfMapPoint *)address == (StFtpcConfMapPoint *)hits->At(j)) {
+	  StFtpcConfMapPoint *address = (StFtpcConfMapPoint *)hits->At(j);
+	  if (address) {
 	    cout << "Track: " << i << " Cluster #" << j << endl;
 	  }
 	}
