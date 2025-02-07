@@ -183,7 +183,7 @@
  }
  # Vc: gcc :  -Wno-unused-function  -Wno-parentheses  -Wno-strict-aliasing -Wno-uninitialized 
  if ($CXX eq "g++" or $CXX eq "gcc") {
-    $CXXFLAGS .= " -Wall -Woverloaded-virtual -Wcast-align -fno-threadsafe-statics";
+    $CXXFLAGS .= " -Wall -Wno-overloaded-virtual -Wcast-align -fno-threadsafe-statics -Wno-strict-aliasing -Wno-error=sign-compare"; #-Wno-error=strict-aliasing";
     $CFLAGS   .= " -Wall -Wcast-align";
 #    $FFLAGS   .= " -fPIC -pipe";
     $FFLAGS   .= " -pipe";
