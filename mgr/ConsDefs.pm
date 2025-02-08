@@ -130,6 +130,7 @@
    }
 #  if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
    if ($CXX_MAJOR > 6 or $CXX_MAJOR == 6 and $CXX_MINOR >= 3) {$CXXFLAGS .= " -Wno-misleading-indentation -Wno-ignored-attributes";}
+   if ($CXX_MAJOR > 10)  {$CXXFLAGS .= " -Wno-error=bool-operation -Wno-error=class-memaccess -Wno-error=deprecated-declarations -Wno-error=format-overflow= -Wno-error=format-truncation= -Wno-error=int-in-bool-context -Wno-error=memset-elt-size -Wno-error=parentheses -Wno-error=restrict";}
 #   print "CXX_MAJOR = $CXX_MAJOR, CXX_MINOR = $CXX_MINOR => CXXFLAGS = $CXXFLAGS ==============\n";
  }
  my @words     = split(' ',$CFLAGS);# print "words = @words\n";
@@ -184,6 +185,7 @@
  # Vc: gcc :  -Wno-unused-function  -Wno-parentheses  -Wno-strict-aliasing -Wno-uninitialized 
  if ($CXX eq "g++" or $CXX eq "gcc") {
     $CXXFLAGS .= " -Wall -Wno-overloaded-virtual -Wcast-align -fno-threadsafe-statics -Wno-strict-aliasing -Wno-error=sign-compare"; #-Wno-error=strict-aliasing";
+    
     $CFLAGS   .= " -Wall -Wcast-align";
 #    $FFLAGS   .= " -fPIC -pipe";
     $FFLAGS   .= " -pipe";
