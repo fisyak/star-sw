@@ -355,8 +355,8 @@ void KFParticlePerformanceBase::CreateHistos(std::string histoDir, TDirectory* o
       int nBins[nHistosPVParam] = {1000,1000,1000,1000,1001,10000,1001,10000,100,102,102,102,102,102,1000};
       // float xMin[nHistosPVParam] = {-10., -10., -160.,  0,   -0.5,    0.,   -0.5,    0., 0., -0.01, -0.01, -0.01, -0.01, -0.01, 0.};
       // float xMax[nHistosPVParam] = { 10.,  10.,  230., 10, 1000.5, 1000., 1000.5, 1000., 1.,  1.01,  1.01,  1.01,  1.01,  1.01, 100.};
-      float xMin[nHistosPVParam] = {-10., -10., 195.,  0,   -0.5,    0.,   -0.5,    0., 0., -0.01, -0.01, -0.01, -0.01, -0.01, 0.};
-      float xMax[nHistosPVParam] = { 10.,  10., 205., 10, 1000.5, 1000., 1000.5, 1000., 1.,  1.01,  1.01,  1.01,  1.01,  1.01, 100.};
+      float xMin[nHistosPVParam] = {-10., -10.,-220.,  0,   -0.5,    0.,   -0.5,    0., 0., -0.01, -0.01, -0.01, -0.01, -0.01, 0.};
+      float xMax[nHistosPVParam] = { 10.,  10., 220., 10, 1000.5, 1000., 1000.5, 1000., 1.,  1.01,  1.01,  1.01,  1.01,  1.01, 100.};
 #ifdef __TFG__VERSION__
       Int_t iHz = 2;
       Double_t zMin  = xMin[iHz], zMax  = xMax[iHz], dZ  = 0.2;      // 0.20 cm
@@ -391,23 +391,20 @@ void KFParticlePerformanceBase::CreateHistos(std::string histoDir, TDirectory* o
 #ifdef __TFG__VERSION__
        if (iH != iHz) 
 #endif /* __TFG__VERSION__ */    
-	 hPVParam[iH]       = new TH1F(parName[iH].Data(),(GetDirectoryPath()+parName[iH]).Data(),
+	 hPVParam[iH]       = new TH1F(parName[iH],(GetDirectoryPath()+parName[iH])+" ; " + parName[iH],
                                        nBins[iH],xMin[iH],xMax[iH]);
 #ifdef __TFG__VERSION__
        else 
-         hPVParam[iH]       = new TH1F(parName[iH].Data(),(GetDirectoryPath()+parName[iH]).Data(),
+         hPVParam[iH]       = new TH1F(parName[iH],(GetDirectoryPath()+parName[iH])+" ; " + parName[iH],
 				       i-1, Z.GetArray());
 #endif /* __TFG__VERSION__ */ 
-        hPVParam[iH]->GetXaxis()->SetTitle(parAxisName[iH].Data());
       }
 
       for(int iH=0; iH<nHistosPVParam2D; iH++)
       {
-        hPVParam2D[iH]       = new TH2F(parName2D[iH].Data(),(GetDirectoryPath()+parName2D[iH]).Data(),
+        hPVParam2D[iH]       = new TH2F(parName2D[iH],(GetDirectoryPath()+parName2D[iH])+" ; " + parXAxisName2D[iH] +" ; " + parYAxisName2D[iH],
                                         nBinsX2D[iH],xMin2D[iH],xMax2D[iH],
                                         nBinsY2D[iH],yMin2D[iH],yMax2D[iH]);
-        hPVParam2D[iH]->GetXaxis()->SetTitle(parXAxisName2D[iH].Data());
-        hPVParam2D[iH]->GetYaxis()->SetTitle(parYAxisName2D[iH].Data());
         hPVParam2D[iH]->GetYaxis()->SetTitleOffset(1.0);
       }
       
