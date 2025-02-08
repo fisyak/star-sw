@@ -3573,7 +3573,6 @@ foreach f (`ls -1d sched*.condor`)
   sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
 end
 ================================================================================
-<<<<<<< HEAD
 01/12/2025
 foreach f (`ls -1d */sched*.condor`)
   set d = `dirname ${f}`
@@ -3587,9 +3586,6 @@ foreach f (`ls -1d sched*.condor`)
 end
 =================================================================================
 01/14/2025
-=======
-01/13/2025
->>>>>>> 00e47c098f50056f7cc0fcc272204fd8bd3c502c
 foreach f (`ls -1d sched*.condor`)
   set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
   sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
@@ -3602,3 +3598,281 @@ grep -B 1 'found table TpcLengthCorrectionMDN' *.log | tee
 
 [starsub01] ~/work/dEdx/RunXIX_XXI39/4p59GeV_fixedTarget_2019 $ grep 'found table TpcLengthCorrectionMDN' *.log | awk -F\: '{print $6}' | sort -u 
 20190629/34111 - 20190709/32312
+================================================================================
+01/15/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+================================================================================
+01/16/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+w 0.000417418   +/-   2.31841e-05================================================================================
+01/17/2025
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view/bin/java -Xmx196m 
+-cp /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts//:/gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts//scheduler.jar 
+gov.bnl.star.offline.scheduler.SchedulerCommandLine 
+-conf /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts//globalConfig.xml 
+-site sdcc.bnl.gov 
+/star/u/fisyak/xml/kfpAnalysis.xml
+STAR Unified Meta Scheduler 1.10.31
+Your Log file can be found at: /star/u/fisyak/doc/log//fisyak.log
+...
+he default policy configuration is not set. Possible causes: 
+
+1) If the configuration for this site was built via the small site config (SUMS configures its self by asking you questions) you will need to select the policy with the command line arguments ( -p [policy_name] ) when you run SUMS.
+
+2) If your site configuration is actively managed the default policy many not be set. This is a configuration error.
+
+
+Scheduling failed!
+Cannot invoke "gov.bnl.star.offline.scheduler.Policy.assignTargetMachine(gov.bnl.star.offline.scheduler.request.Request)" because "this.policy" is null
+endif
+endif
+
+
+rcas6006
+/usr/lib/jvm/jre-openjdk/bin/java -Xmx196m 
+-cp /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts//:/gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts//scheduler.jar 
+gov.bnl.star.offline.scheduler.SchedulerCommandLine
+ -conf /gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts//globalConfig.xml 
+-site rhic.bnl.gov 
+/star/u/fisyak/xml/kfpAnalysis.xml
+
+
+-site rhic.bnl.gov 
+-site sdcc.bnl.gov 
+================================================================================
+01/18/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+================================================================================
+01/19/2025
+foreach f (`ls -1d */sched*.condor`)
+  set d = `dirname ${f}`
+  set b = `basename  ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > ${d}/Q${b}
+end
+foreach f (`ls -1d */Q*`)
+  condor_submit ${f}
+end
+
+
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+endxs
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+--------------------------------------------------------------------------------
+[starsub01] ~ $ df -h /gpfs01/star/data2[4-7]
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   32T   20T  63% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   34T   18T  67% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   28T   24T  54% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   32T   20T  62% /gpfs/mnt/gpfs01
+[starsub01] ~ $ df -h  /gpfs01/star/data2[4-7]/TpcAlignment
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   32T   20T  63% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   34T   18T  67% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   28T   24T  54% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   32T   20T  62% /gpfs/mnt/gpfs01
+================================================================================
+01/21/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+01/22/2025
+find . -name "*.root" -size -8983534c  -exec rm {} \;
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+01/23/2025
+find . -name "*.root" -size -8983534c  -exec rm {} \;
+================================================================================
+01/24/2025
+hsi 
+out 2016_17098035
+ls -1 /home/starsink/raw/daq/2016/098/17098035/*.daq
+exit
+------------
+Clean up TFG24c-e
+[rcas6006] ~/work/daq $ df -h /gpfs01/star/data2[4-7] /gpfs01/star/subsysg
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   32T   20T  63% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   34T   18T  67% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   28T   24T  54% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   32T   20T  62% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01  141T  125T   17T  89% /gpfs/mnt/gpfs01
+dir -d /gpfs01/star/data2*/TpcAlignment/daq/*
+dirc -d /gpfs01/star/data2*/TpcAlignment/TFG24c/2019/RF/*
+dirc -d /gpfs01/star/data2*/TpcAlignment/TFG*/*/RF/*
+dirc -d /gpfs01/star/subsysg/TFG/reco/*/*/daq /gpfs01/star/data27/TpcAlignment/TFG*/*/*/*
+find . -depth -type d -empty -print
+find . -type l
+dir -d /gpfs01/star/data2*/TpcAlignment/daq/*
+dir -d /gpfs01/star/data2*/TpcAlignment/TFG*/*/*/*
+dir -d /gpfs01/star/subsysg/TFG/reco/TFG24*/*/*/*
+
+
+
+foreach d (`ls -1d /gpfs01/star/data2*/TpcAlignment/daq/* /gpfs01/star/data2*/TpcAlignment/TFG*/*/*/* /gpfs01/star/subsysg/TFG/reco/TFG24*/*/*/*`)
+  du -sh ${d} | tee -a TFG.dum
+end
+foreach? end
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget
+8.6T    /gpfs01/star/data24/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+5.3T    /gpfs01/star/data25/TpcAlignment/daq/2019
+21T     /gpfs01/star/data25/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget
+5.4T    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/4p59GeV_fixedTarget
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+13T     /gpfs01/star/data27/TpcAlignment/daq/2019
+791G    /gpfs01/star/data27/TpcAlignment/daq/2020
+13T     /gpfs01/star/data27/TpcAlignment/TFG24c/2019/RF/4p59GeV_fixedTarget
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+21T     /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget
+--------------------------------------------------------------------------------
+clear
+5.3T    /gpfs01/star/data25/TpcAlignment/daq/2019
+13T     /gpfs01/star/data27/TpcAlignment/daq/2019
+791G    /gpfs01/star/data27/TpcAlignment/daq/2020
+
+5.4T    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/4p59GeV_fixedTarget
+13T     /gpfs01/star/data27/TpcAlignment/TFG24c/2019/RF/4p59GeV_fixedTarget
+21T     /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget
+21T     /gpfs01/star/data25/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget
+8.6T    /gpfs01/star/data24/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget
+________________________________________________________________________________
+keep
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget
+
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget
+
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget
+
+[rcas6006] ~ $ rm -rf /gpfs01/star/data25/TpcAlignment/daq/2019  /gpfs01/star/data27/TpcAlignment/daq/2019 /gpfs01/star/data27/TpcAlignment/daq/2020
+rm -rf /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/4p59GeV_fixedTarget  /gpfs01/star/data27/TpcAlignment/TFG24c/2019/RF/4p59GeV_fixedTarget /gpfs01/star/subsysg/TFG/reco/TFG24c/2019/RF/4p59GeV_fixedTarget /gpfs01/star/data25/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget /gpfs01/star/data24/TpcAlignment/TFG24d/2019/RF/4p59GeV_fixedTarget
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+
+[rcas6006] ~ $  df -h  /gpfs01/star/data2[4-7]/TpcAlignment
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   24T   28T  46% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T  7.9T   44T  16% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   22T   30T  43% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T  5.4T   46T  11% /gpfs/mnt/gpfs01
+[rcas6006] ~ $ df -h /gpfs01/star/subsysg
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01  141T  105T   37T  74% /gpfs/mnt/gpfs01
+
+find . -name "*.root" -size -8983534c  -exec rm {} \;
+
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+01/29/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+01/30/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+02/01/2025
+foreach f (`ls -1d sched*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+02/04/2025
+foreach f (`ls -1d dEdx*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+end
+================================================================================
+02/06/2025
+foreach f (`ls -1d dEdx*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end
+================================================================================
+02/07/2025
+[starsub01] /gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG $ grep error: build.al92_x8664_gcc11.debug.log | awk '{print $NF}' | sort -u
+[-Werror=bool-operation]
+[-Werror=class-memaccess]
+[-Werror=deprecated-declarations]
+[-Werror=format-overflow=]
+[-Werror=format-truncation=]
+[-Werror=int-in-bool-context]
+[-Werror=memset-elt-size]
+[-Werror=parentheses]
+[-Werror=restrict]
+
+-Wno-error=bool-operation -Wno-error=class-memaccess -Wno-error=deprecated-declarations -Wno-error=format-overflow= -Wno-error=format-truncation= -Wno-error=int-in-bool-context -Wno-error=memset-elt-size -Wno-error=parentheses -Wno-error=restrict 
