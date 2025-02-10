@@ -261,7 +261,6 @@
 #include "StFgtCollection.h"
 #include "StPxlHitCollection.h"
 #include "StIstHitCollection.h"
-#include "StGmtCollection.h"
 #include "StFstEvtCollection.h"
 #include "StFstHitCollection.h"
 #include "StTrackNode.h"
@@ -936,23 +935,6 @@ StEvent::fgtCollection() const
     return fgtCollection;
 }
 
-StGmtCollection*
-StEvent::gmtCollection()
-{
-    StGmtCollection *gmtCollection = 0;
-    _lookup(gmtCollection, mContent);
-    return gmtCollection;
-}
-
-const StGmtCollection*
-StEvent::gmtCollection() const
-{
-    StGmtCollection *gmtCollection = 0;
-    _lookup(gmtCollection, mContent);
-    return gmtCollection;
-}
-
-
 StIstHitCollection*
 StEvent::istHitCollection()
 {
@@ -1515,12 +1497,6 @@ StEvent::setHltEvent(StHltEvent* val)
 
 void
 StEvent::setFgtCollection(StFgtCollection* val)
-{
-    _lookupAndSet(val, mContent);
-}
-
-void
-StEvent::setGmtCollection(StGmtCollection* val)
 {
     _lookupAndSet(val, mContent);
 }

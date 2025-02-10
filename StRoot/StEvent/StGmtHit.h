@@ -1,3 +1,5 @@
+#ifndef StGmtHit_hh
+#define StGmtHit_hh
 /**
  * \class StGmtHit
  * \brief Holds data for the hit in GMT
@@ -8,9 +10,6 @@
  * \author Richard Witt (witt@usna.edu), Jan. 2013
  * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
  */
-
-#ifndef StGmtHit_hh
-#define StGmtHit_hh
 
 #include "StHit.h"
 #include "StGmtStrip.h"
@@ -43,5 +42,4 @@ private:
     ClassDef(StGmtHit,2)
 }; 
 ostream&   operator<<(ostream& os, StGmtHit const & v);
-#endif
 #endif // #define StGmtHit_hh

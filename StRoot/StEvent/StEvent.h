@@ -227,7 +227,6 @@ class StHltEvent;
 class StFgtCollection;
 class StPxlHitCollection;
 class StIstHitCollection;
-class StGmtCollection;
 class StFstEvtCollection;
 class StFstHitCollection;
 class StFwdTrackCollection;
@@ -306,10 +305,6 @@ public:
     const StPxlHitCollection*           pxlHitCollection() const;
     StIstHitCollection*                 istHitCollection();
     const StIstHitCollection*           istHitCollection() const;
-
-    StGmtCollection*                    gmtCollection();
-    const StGmtCollection*              gmtCollection() const;
-    
     StFstEvtCollection*                 fstEvtCollection();
     const StFstEvtCollection*           fstEvtCollection() const;
     StFstHitCollection*                 fstHitCollection();

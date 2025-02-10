@@ -16,7 +16,7 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm>
-#include "StRoot/StGmtUtil/StGmtConsts.h"
+#include "StGmtConsts.h"
 
 
 //  StGmtGeom is a "singleton" class. Only one of it needs to exist in any
