@@ -15,6 +15,7 @@
 #define _ST_GMT_POINT_H_
 
 #include "StGmtHit.h"
+#include "StTrack.h"
 
 class StGmtPoint : public StHit {
 public:
@@ -24,19 +25,9 @@ public:
 	    Float_t yD = 0, Float_t sigmaY = 0, Float_t AdcLy = 0,
 	    Float_t dyD = 0, Float_t dsigmaY = 0, Float_t dAdcLy = 0,
 	    Float_t zD = 0, Float_t sigmaZ = 0, Float_t AdcLz = 0,
-	    Float_t dzD = 0, Float_t dsigmaZ = 0, Float_t dAdcLz = 0) :
-  StHit( StThreeVectorF(XG, YG, ZG), StThreeVectorF(XL, YL, ZL), 2*(module+1), 0., 0, 0, 0, id), 
-    mTrackId(trackId), 
-    myD(yD), msigmaY(sigmaY), mAdcLy(AdcLy), mdyD(dyD), mdsigmaY(dsigmaY), mdAdcLy(dAdcLy),
-    mzD(zD), msigmaZ(sigmaZ), mAdcLz(AdcLz), mdzD(dzD), mdsigmaZ(dsigmaZ), mdAdcLz(dAdcLz) 
-  {}
-#if 0	 
-  StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local) :
-  StHit(global, local, 2*(hitY.getModule()+1), 0., 0, 0, 0, hitY.id() + 100*hitZ.id())
-    ,mTrackId(trackId)
-    ,hitY.getLocal(), hitY.getSigma(), hitY.getAdc(), hitY.getErrorLocal(), hitY.getErrorSigma(), hitY.getErrorAdc()
-    ,hitZ.getLocal(), hitZ.getSigma(), hitZ.getAdc(), hitZ.getErrorLocal(), hitZ.getErrorSigma(), hitZ.getErrorAdc() 
-  {}
+	    Float_t dzD = 0, Float_t dsigmaZ = 0, Float_t dAdcLz = 0);
+#if 1
+ StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local);
 #endif
   ~StGmtPoint() {}
   StDetectorId detector()      const  {return kGmtId;}    
@@ -56,14 +47,22 @@ public:
   Float_t      dzD()           const  {return mdzD;}
   Float_t      dsigmaZ()       const  {return mdsigmaZ;}
   Float_t      dAdcLz()        const  {return mdAdcLz;}
+  void setAssociatedTrack(StTrack* val);
+  StTrack*        associatedTrack();
+  const StTrack*  associatedTrack() const;
   virtual void Print(Option_t *opt="") const;
  private:   
-    // data members
+  // data members
   Int_t   mTrackId;              
   Float_t myD, msigmaY, mAdcLy;
   Float_t mdyD, mdsigmaY, mdAdcLy;
   Float_t mzD, msigmaZ, mAdcLz;
   Float_t mdzD, mdsigmaZ, mdAdcLz;
+#if defined(__CINT__) || defined(__CLING__)
+  StObjLink        mAssociatedTrack;		
+#else
+  StLink<StTrack>  mAssociatedTrack;		
+#endif //__CINT__
   ClassDef(StGmtPoint,2)
 }; 
 #endif
