@@ -688,7 +688,6 @@ void StAnalysisMaker::PrintSstHits() {
 }
 //________________________________________________________________________________
 void StAnalysisMaker::PrintGmtHits() {
-#ifdef _ST_GMT_HIT_H_
   //  Double_t zPrim = 0;
   StEvent* pEvent = (StEvent*) StMaker::GetChain()->GetInputDS("StEvent");
   if (!pEvent) return;
@@ -708,7 +707,17 @@ void StAnalysisMaker::PrintGmtHits() {
       }
     }
   }
-#endif /* _ST_GMT_HIT_H_ */
+  UInt_t NoPoints = GmtCollection->getNumPoints();
+  if (NoPoints) {
+     StSPtrVecGmtPoint &points = GmtCollection->getPointCollection()->getPointVec();
+     for (UInt_t l = 0; l < NoPoints; l++) {
+       const StGmtPoint *point = points[l];
+       if (point) {
+	 if (mOnlyIdT && point->idTruth() <= 0) continue;
+	 point->Print("");
+       }
+     }
+  }
 }
 //________________________________________________________________________________
 void StAnalysisMaker::PrintToFHits() {
@@ -1341,7 +1350,6 @@ void StAnalysisMaker::summarizeEvent(StEvent *event, Int_t mEventCounter) {
   if (event->numberOfPsds()) {
     LOG_QA << "# PSDs:                " << event->numberOfPsds() << endm;
   }
-#ifdef _ST_GMT_HIT_H_
   if (event->gmtCollection() && 
       (event->gmtCollection()->getNumHits()) // || event->gmtCollection()->getNumStrips())
       ) {
@@ -1350,7 +1358,7 @@ void StAnalysisMaker::summarizeEvent(StEvent *event, Int_t mEventCounter) {
 	   << " strips: " << event->gmtCollection()->getNumStrips()
 	   << endm;
   }
-#endif /* _ST_GMT_HIT_H_ */
+
   if (event->rpsCollection()) {
     Int_t n = event->rpsCollection()->clusters().size();
     if (n) {

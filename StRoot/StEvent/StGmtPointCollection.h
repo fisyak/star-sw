@@ -1,17 +1,17 @@
-/***************************************************************************
+/**
+ * \class StGmtCollection
+ * \brief Holds collections of GMT points
+ * 
+ * Collection of GMT points for StEvent. Basically a wrapper 
+ * for an StSPtrVecGmtPoint (based on StFgtPointCollection)
  *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtPointCollection
- *
- ***************************************************************************
- *
- * Description: A collection of StGmtPoint classes for StEvent.
- * Basically a wrapper for an StSPtrVecGmtPoint
- *
- ***************************************************************************/
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 
-#ifndef _ST_GMT_POINT_COLLECTION_H_
-#define _ST_GMT_POINT_COLLECTION_H_
+#ifndef StGmtPointCollection_hh
+#define StGmtPointCollection_hh
 
 #include "StObject.h"
 #include "StContainers.h"
@@ -30,5 +30,5 @@ protected:
     StSPtrVecGmtPoint mPointVec;
     ClassDef(StGmtPointCollection,1)
 }; 
-#endif
+#endif /* StGmtPointCollection_hh */
 

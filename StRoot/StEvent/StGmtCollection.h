@@ -1,17 +1,15 @@
-/***************************************************************************
+#ifndef StGmtCollection_hh
+#define StGmtCollection_hh
+/**
+ * \class StGmtCollection
+ * \brief Holds collections of GMT data
+ * 
+ * GMT data collection for StEvent (based on StFgtCollection)
  *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtCollection
- *
- ***************************************************************************
- *
- * Description: GMT data collection for StEvent.
- *
- ***************************************************************************/
-
-#ifndef _ST_GMT_COLLECTION_H_
-#define _ST_GMT_COLLECTION_H_
-
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 #include "StObject.h"
 #include "StGmtStripCollection.h"
 #include "StGmtHitCollection.h"
@@ -61,4 +59,4 @@ class StGmtCollection: public StObject  {
   ClassDef(StGmtCollection,1)
 }; 
 
-#endif
+#endif /* StGmtCollection_hh */

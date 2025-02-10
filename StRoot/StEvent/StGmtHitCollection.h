@@ -1,18 +1,17 @@
-/***************************************************************************
- *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtHitCollection
- *
- ***************************************************************************
- *
- * Description: A collection of StGmtHit classes for StEvent.
- * Basically a wrapper for an StSPtrVecGmtHit.  Note, one instance of
+#ifndef StGmtHitCollection_hh
+#define StGmtHitCollection_hh
+/**
+ * \class StGmtHitCollection
+ * \brief Holds collection of GMT hits in the module
+ * 
+ * A collection of StGmtHit classes for StEvent.
+ * Basically a wrapper for an StSPtrVecGmtHit. Note, one instance of
  * this class corresponds to one module.
  *
- ***************************************************************************/
-
-#ifndef _ST_GMT_HIT_COLLECTION_H_
-#define _ST_GMT_HIT_COLLECTION_H_
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 
 #include "StObject.h"
 #include "StContainers.h"
@@ -35,5 +34,4 @@ public:
   StSPtrVecGmtHit mHitVec;
   ClassDef(StGmtHitCollection,1)
 }; 
-#endif
-
+#endif /* StGmtHitCollection_hhStGmtHitCollection_hh */

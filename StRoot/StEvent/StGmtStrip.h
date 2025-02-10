@@ -1,16 +1,16 @@
-/***************************************************************************
- *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtStrip
- *
- ***************************************************************************
- *
- * Description: data for individual strip of the GMT.
- *
- ***************************************************************************/
+#ifndef StGmtStrip_hh
+#define StGmtStrip_hh
 
-#ifndef _ST_GMT_STRIP_H_
-#define _ST_GMT_STRIP_H_
+/**
+ * \class StGmtStrip
+ * \brief Holds data for the strip in GMT
+ * 
+ * Data for an individual strip in GMT (based on StFgtStrip).
+ *
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 
 #include "StObject.h"
 #include "StEnumerations.h"
@@ -127,4 +127,4 @@ ostream&              operator<<(ostream& os, StGmtStrip const & v);
 struct gmtStripPtrLessThan {
     Bool_t operator() (const StGmtStrip* strip1, const StGmtStrip* strip2) const;
 };
-#endif
+#endif /* StGmtStrip_hh */

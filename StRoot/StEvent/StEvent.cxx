@@ -268,6 +268,7 @@
 #include "StTrack.h"
 #include "Stiostream.h"
 #include "StFwdTrackCollection.h"
+#include "StGmtCollection.h"
 
 #ifndef ST_NO_NAMESPACES
 using std::swap;
@@ -935,6 +936,23 @@ StEvent::fgtCollection() const
     return fgtCollection;
 }
 
+StGmtCollection*
+StEvent::gmtCollection()
+{
+    StGmtCollection *gmtCollection = 0;
+    _lookup(gmtCollection, mContent);
+    return gmtCollection;
+}
+
+const StGmtCollection*
+StEvent::gmtCollection() const
+{
+    StGmtCollection *gmtCollection = 0;
+    _lookup(gmtCollection, mContent);
+    return gmtCollection;
+}
+
+
 StIstHitCollection*
 StEvent::istHitCollection()
 {
@@ -1502,6 +1520,12 @@ StEvent::setFgtCollection(StFgtCollection* val)
 }
 
 void
+StEvent::setGmtCollection(StGmtCollection* val)
+{
+    _lookupAndSet(val, mContent);
+}
+
+void
 StEvent::setIstHitCollection(StIstHitCollection* val)
 {
     _lookupAndSet(val, mContent);
@@ -1709,6 +1733,7 @@ void StEvent::statistics()
     cout << "\t# of hits in EMC:            " << (emcCollection() ? emcCollection()->barrelPoints().size() : 0) << endl;
     cout << "\t# of hits in EEMC:           " << (emcCollection() ? emcCollection()->endcapPoints().size() : 0) << endl;
     cout << "\t# of hits in FGT:            " << (fgtCollection() ? fgtCollection()->getNumHits() : 0) << endl;
+    cout << "\t# of hits in GMT:            " << (gmtCollection() ? gmtCollection()->getNumHits() : 0) << endl;
     cout << "\t# of hits in RICH:           " << (richCollection() ? richCollection()->getRichHits().size() : 0) << endl;
     cout << "\t# of PSDs:                   " << numberOfPsds() << endl;
     cout << "\t# of hits in GMT:            " << (gmtCollection() ? gmtCollection()->getNumHits() : 0) << endl;

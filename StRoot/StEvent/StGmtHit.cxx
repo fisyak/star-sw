@@ -1,13 +1,14 @@
-/***************************************************************************
+/**
+ * \class StGmtHit
+ * \brief Holds data for the hit in GMT
+ * 
+ * Data for an individual ``hit'' in GMT, i.e. a 1D cluster (based on StFgtHit).
  *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtHit
- *
- ***************************************************************************
- *
- * Description: see header file.
- *
- ***************************************************************************/
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
+
 
 #include "StGmtHit.h"
 #include <cmath>
@@ -22,4 +23,3 @@ ostream&  operator<<(ostream& os, const StGmtHit& v) {
 //________________________________________________________________________________
 void   StGmtHit::Print(Option_t *option) const {cout << *this << endl;}
 //________________________________________________________________________________
-

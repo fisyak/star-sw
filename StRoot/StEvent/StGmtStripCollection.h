@@ -1,18 +1,16 @@
-/***************************************************************************
+#ifndef StGmtStripCollection_hh
+#define StGmtStripCollection_hh
+/**
+ * \class StGmtCollection
+ * \brief Holds collections of GMT strips
+ * 
+ * Collection of GMT strips for StEvent. Basically a wrapper 
+ * for an StSPtrVecGmtStrip (based on StFgtStripCollection)
  *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtStripCollection
- *
- ***************************************************************************
- *
- * Description: A collection of StGmtStrip classes for StEvent.
- * Basically a wrapper for an StSPtrVecGmtStrip
- *
- ***************************************************************************/
-
-#ifndef _ST_GMT_STRIP_COLLECTION_H_
-#define _ST_GMT_STRIP_COLLECTION_H_
-
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 #include "StObject.h"
 #include "StContainers.h"
 #include "StGmtStrip.h"
@@ -144,17 +142,4 @@ inline void StGmtStripCollection::sortByCoord(){
     return;
 };
 
-
-inline size_t StGmtStripCollection::getNumStrips() const {
-    return mStripVec.size();
-};
-
-inline void StGmtStripCollection::setModule( short moduleId ) {
-    mModule = moduleId;
-};
-
-inline short StGmtStripCollection::getModule() const {
-    return mModule;
-};
-
-#endif
+#endif /* StGmtStripCollection_hh */
