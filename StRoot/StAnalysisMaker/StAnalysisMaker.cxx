@@ -709,7 +709,7 @@ void StAnalysisMaker::PrintGmtHits() {
   }
   UInt_t NoPoints = GmtCollection->getNumPoints();
   if (NoPoints) {
-     StSPtrVecGmtPoint &points = GmtCollection->getPointCollection()->getPointVec();
+     const StSPtrVecGmtPoint &points = GmtCollection->getPointCollection()->getPointVec();
      for (UInt_t l = 0; l < NoPoints; l++) {
        const StGmtPoint *point = points[l];
        if (point) {
