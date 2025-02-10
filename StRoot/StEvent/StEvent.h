@@ -227,10 +227,10 @@ class StHltEvent;
 class StFgtCollection;
 class StPxlHitCollection;
 class StIstHitCollection;
-class StGmtCollection;
 class StFstEvtCollection;
 class StFstHitCollection;
 class StFwdTrackCollection;
+class StGmtCollection;
 
 class StEvent : public StXRefMain {
 public:
@@ -305,10 +305,6 @@ public:
     const StPxlHitCollection*           pxlHitCollection() const;
     StIstHitCollection*                 istHitCollection();
     const StIstHitCollection*           istHitCollection() const;
-
-    StGmtCollection*                    gmtCollection();
-    const StGmtCollection*              gmtCollection() const;
-    
     StFstEvtCollection*                 fstEvtCollection();
     const StFstEvtCollection*           fstEvtCollection() const;
     StFstHitCollection*                 fstHitCollection();
@@ -327,6 +323,8 @@ public:
     const StTriggerIdCollection*        triggerIdCollection() const;
     StTriggerData*                      triggerData();
     const StTriggerData*                triggerData() const;
+    StGmtCollection*                    gmtCollection();
+    const StGmtCollection*              gmtCollection() const;
     
     StSPtrVecTrackDetectorInfo&         trackDetectorInfo();
     const StSPtrVecTrackDetectorInfo&   trackDetectorInfo() const;
@@ -426,7 +424,7 @@ public:
 #endif
     void removeHitCollection(const Char_t *name);
     void setGmtCollection(StGmtCollection*);
-    
+
     virtual Bool_t Notify();
     
 protected:

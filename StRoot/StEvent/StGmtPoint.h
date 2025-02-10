@@ -1,18 +1,19 @@
-/***************************************************************************
- *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtHit
- *
- ***************************************************************************
- *
+#ifndef StGmtPoint_hh
+#define StGmtPoint_hh
+/**
+ * \class StGmtPoint
+ * \brief Holds data for the point (a.k.a. cluster) in GMT
+ * 
  * Description: data for individual ``point'' on the GMT, i.e. a pair
  * of 1D clusters.  Note, if errors during construction, the key will
- * be set to -999.  Need to check this after constructing.
+ * be set to -999. Based on StFgtHit.
  *
- ***************************************************************************/
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 
-#ifndef _ST_GMT_POINT_H_
-#define _ST_GMT_POINT_H_
+#include "StGmtHit.h"
 
 #include "StGmtHit.h"
 #include "StTrack.h"
@@ -26,9 +27,9 @@ public:
 	    Float_t dyD = 0, Float_t dsigmaY = 0, Float_t dAdcLy = 0,
 	    Float_t zD = 0, Float_t sigmaZ = 0, Float_t AdcLz = 0,
 	    Float_t dzD = 0, Float_t dsigmaZ = 0, Float_t dAdcLz = 0);
-#if 1
  StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local);
-#endif
+ StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local);
+>>>>>>> 1127f1c105936c4536fba62287fc85b4fb46fc5a
   ~StGmtPoint() {}
   StDetectorId detector()      const  {return kGmtId;}    
   Int_t        getTrackId()    const  {return mTrackId;}
@@ -65,4 +66,4 @@ public:
 #endif //__CINT__
   ClassDef(StGmtPoint,2)
 }; 
-#endif
+#endif /* StGmtPoint_hh */

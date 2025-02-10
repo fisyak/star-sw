@@ -58,54 +58,6 @@ bool StGmtStripCollection::hitGeoIdLessThan( const StGmtStrip* h1, const StGmtSt
 
 bool StGmtStripCollection::hitCoordLessThan( const StGmtStrip* h1, const StGmtStrip* h2 ){
     return h1->getCoordNum() < h2->getCoordNum();
-//     if( (h1->isY() && h2->isY()) || ( !(h1->isY()) && !(h2->isY()) ) )
-//     {
-// //       LOG_ERROR << "StGmtStripCollection::hitCoordLessThan sort CASE 1: " << 
-// //       "\n\t h1 " << h1 << 
-// //       "\n\t h1->isY() " << h1->isY() << 
-// //       "\n\t h1->GetCoordNum() " << h1->getCoordNum() << 
-// //       "\n\t h2 " << h2 << 
-// //       "\n\t h2->isY() " << h2->isY() << 
-// //       "\n\t h2->GetCoordNum() " << h2->getCoordNum() << 
-// //       "\n\t will return: " << h1->getCoordNum() << " < " << h2->getCoordNum() << endm;
-//       return h1->getCoordNum() < h2->getCoordNum();
-//     }
-//     else if( h1->isY() && !(h2->isY()) )
-//     {
-// //       LOG_ERROR << "StGmtStripCollection::hitCoordLessThan sort CASE 2: " << 
-// //       "\n\t h1 " << h1 << 
-// //       "\n\t h1->isY() " << h1->isY() << 
-// //       "\n\t h1->GetCoordNum() " << h1->getCoordNum() << 
-// //       "\n\t h2 " << h2 << 
-// //       "\n\t h2->isY() " << h2->isY() << 
-// //       "\n\t h2->GetCoordNum() " << h2->getCoordNum() << 
-// //       "\n\t will return: " << h1->getCoordNum()+kGmtNumStrips << " < " << h2->getCoordNum() << endm;
-//       return (h1->getCoordNum()+kGmtNumStrips) < h2->getCoordNum(); // order X first 
-//     }
-//     else if( !(h1->isY()) && h2->isY() )
-//     {
-// //       LOG_ERROR << "StGmtStripCollection::hitCoordLessThan sort CASE 3: " << 
-// //       "\n\t h1 " << h1 << 
-// //       "\n\t h1->isY() " << h1->isY() << 
-// //       "\n\t h1->GetCoordNum() " << h1->getCoordNum() << 
-// //       "\n\t h2 " << h2 << 
-// //       "\n\t h2->isY() " << h2->isY() << 
-// //       "\n\t h2->GetCoordNum() " << h2->getCoordNum() << 
-// //       "\n\t will return: " << h1->getCoordNum() << " < " <<  h2->getCoordNum()+kGmtNumStrips << endm;
-//       return h1->getCoordNum() < (h2->getCoordNum()+kGmtNumStrips); // order X first 
-//     }
-//     else
-//     {
-// //       LOG_ERROR << "StGmtStripCollection::hitCoordLessThan sort FAILED: " << 
-// //       "\n\t h1 " << h1 << 
-// //       "\n\t h1->isY() " << h1->isY() << 
-// //       "\n\t h1->GetCoordNum() " << h1->getCoordNum() << 
-// //       "\n\t h2 " << h2 << 
-// //       "\n\t h2->isY() " << h2->isY() << 
-// //       "\n\t h2->GetCoordNum() " << h2->getCoordNum() << 
-// //       "\n\t will return: " << -1 << endm;
-//       return -1;
-//     }
 };
 
 bool StGmtStripCollection::hitLayerLessThan( const StGmtStrip* h1, const StGmtStrip* h2 ){
@@ -137,15 +89,6 @@ StGmtStrip* StGmtStripCollection::getStrip( Int_t Id ){  // using geoId now inst
     }
     return stripPtr;
 }
-
-// StGmtStrip* StGmtStripCollection::getStrip( Int_t Id ){  // using geoId now instead of elecId so now using more generic index name
-//     StGmtStrip* &stripPtr = mStripVec[Id]; 
-//     if( !stripPtr ){
-//         stripPtr = new StGmtStrip();
-//         mStripVec.push_back( stripPtr );
-//     }
-//     return stripPtr;
-// }
 
 StGmtStrip* StGmtStripCollection::getSortedStrip( Int_t Id ){  // using geoId now instead of elecId so now using more generic index name
 //     StGmtStrip* &stripPtr = mStripElecIdVec[Id]; 

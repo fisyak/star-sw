@@ -7,241 +7,383 @@
  */
 
 #include <TMath.h>
-//#include <assert.h>
 #include <iostream>
 #include <algorithm>
 #include "StGmtGeom.h"
 #include "StMessMgr.h"
 
-//ClassImp(StGmtGeom)
-
 double	StGmtGeom::mPi = TMath::Pi();
 double	StGmtGeom::mHalfPi = TMath::PiOver2();
 
+//________________
+Int_t StGmtGeom::encodeGeoId(Int_t rdo, Int_t arm, Int_t apv, Int_t channel) {
 
-Int_t StGmtGeom::encodeGeoId(    Int_t rdo, Int_t arm, Int_t apv, Int_t channel)   {
-  Short_t module = getModuleIdFromElecCoord( rdo, arm, apv );
-  // locally map apv number into [0,1]
-  if ( apv <= 3 )  apv = apv % 2;
-  else             apv = (apv - 12) % 2;
-  if ( module < 0 || module >= kGmtNumModules )     {
-    LOG_DEBUG << "Module " << module << " out of range in StGmtGeom::encodeGeoId." << endm;
-    return kGmtError;
-  }
-  else if ( apv > 1 || apv < 0 )    {
-    LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::encodeGeoId." << endm;
-    return kGmtError;
-  }  else if ( channel < 0 || channel >= kGmtNumStrips )    {
-    LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::encodeGeoId." << endm;
-    return kGmtError;
-  }
-  return        ( module * kGmtNumLayers + apv ) * kGmtNumStrips + channel; // from 0 to 2047 since channel is from 0-127;
-}
-
-Int_t StGmtGeom::decodeGeoId(    Int_t geoId, Short_t & module, Int_t & layer, Short_t & strip){
-  if ( geoId < 0 || geoId >= kGmtNumGeoIds )    {
-    LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::decodeGeoId." << endm;
-    module = kGmtError;
-    layer = kGmtError;
-    strip = kGmtError;
-    
-    return kGmtError;
-  }
-
-  strip = geoId % kGmtNumStrips;
-  geoId /= kGmtNumStrips;
-
-  Int_t apv = ( geoId % kGmtNumLayers ) ? 1 : 0;
-  geoId /= kGmtNumLayers;
-  
-  StGmtGeomData stripdata = mStrips[ strip + apv*kGmtNumStrips ];
-  layer = stripdata.isY;
-
-  module = geoId;
-  
-  return 0;
-}
-
-
-
-Int_t StGmtGeom::getPhysicalCoordinate(    Int_t geoId,    Short_t & module, Int_t & layer){
-  if ( geoId < 0 || geoId >= kGmtNumGeoIds )    {
-    LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::getPhysicalCoordinate." << endm;
-    module = kGmtError;
-    layer = kGmtErrorChar;
-    
-    return kGmtError;
-  }
-
-  Short_t strip;
-
-  decodeGeoId( geoId, module, layer, strip );
-
-  return 0;
-}
-
-Short_t StGmtGeom::getModuleIdFromElecCoord(    Int_t rdo, Int_t arm, Int_t apv){
-  if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos )    {
-    LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::getModuleIdFromElecCoord." << endm;
-    return kGmtError;
-  } else if ( arm < 0 || arm >= kGmtNumArms )    {
-    LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::getModuleIdFromElecCoord." << endm;
-    return kGmtError;
-  }    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  )    {
-    LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::getModuleIdFromElecCoord." << endm;
-    return kGmtError;
-  }
-
-  if ( arm == 0 )    {
-    if( apv == 0 || apv == 1 )	return 0;
-    else if( apv == 2 || apv == 3 )	return 1;
-    else if( apv == 12 || apv == 13 )	return 2;
-    else if( apv == 14 || apv == 15 )	return 3;
-    else      {
-      LOG_DEBUG << "Invalid electronics coordinates in StGmtGeom::getModuleIdFromElecCoord." << endm;
-      return kGmtError;
+    Short_t module = getModuleIdFromElecCoord(rdo, arm, apv);
+    // locally map apv number into [0,1]
+    if ( apv <= 3 ) {
+      apv = apv % 2;
     }
-  }    else    {
-    if( apv == 0 || apv == 1 )	return 4;
-    else if( apv == 2 || apv == 3 )	return 5;
-    else if( apv == 12 || apv == 13 )	return 6;
-    else if( apv == 14 || apv == 15 )	return 7;
-    else      {
-      LOG_DEBUG << "Invalid electronics coordinates in StGmtGeom::getModuleIdFromElecCoord." << endm;
-      return kGmtError;
+    else {
+      apv = (apv - 12) % 2;
     }
-  }
+
+    if ( module < 0 || module >= kGmtNumModules ) {
+        LOG_DEBUG << "Module " << module << " out of range in StGmtGeom::encodeGeoId." << endm;
+        return kGmtError;
+    }
+    else if ( apv > 1 || apv < 0 ) {
+        LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::encodeGeoId." << endm;
+        return kGmtError;
+    }
+    else if ( channel < 0 || channel >= kGmtNumStrips ) {
+        LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::encodeGeoId." << endm;
+        return kGmtError;
+    }
+    return ( module * kGmtNumLayers + apv ) * kGmtNumStrips + channel; // from 0 to 2047 since channel is from 0-127;
 }
 
-Int_t StGmtGeom::getCoordNumFromElecCoord(    Int_t rdo, Int_t arm, Int_t apv, Int_t channel){
-  if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos )    {
-    LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }    else if ( arm < 0 || arm >= kGmtNumArms )    {
-    LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  )    {
-    LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }    else if ( channel < 0 || channel >= kGmtNumChannels )    {
-    LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }
+//________________
+Int_t StGmtGeom::decodeGeoId(Int_t geoId, Short_t &module, Int_t &layer, Short_t &strip) {
+    if ( geoId < 0 || geoId >= kGmtNumGeoIds ) {
+        LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::decodeGeoId." << endm;
+        module = kGmtError;
+        // 	layer = kGmtErrorChar;
+        layer = kGmtError;
+        strip = kGmtError;
 
-  StGmtGeomData stripdata = mStrips[ channel + (apv % 2) * kGmtNumStrips ];
-    
-  return stripdata.coordinate;
-    
+        return kGmtError;
+    }
+
+    strip = geoId % kGmtNumStrips;
+    geoId /= kGmtNumStrips;
+
+    // layer = ( geoId % kGmtNumLayers ) ? 'P' : 'S';
+    Int_t apv = ( geoId % kGmtNumLayers ) ? 1 : 0;
+    geoId /= kGmtNumLayers;
+
+    StGmtGeomData stripdata = mStrips[ strip + apv*kGmtNumStrips ];
+    layer = stripdata.isY;
+    module = geoId;
+    return 0;
 }
 
-Double_t StGmtGeom::getPositionFromElecCoord( Int_t rdo, Int_t arm, Int_t apv, Int_t channel ){
-  if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos )    {
-    LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }  else if ( arm < 0 || arm >= kGmtNumArms )    {
-    LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }  else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  )    {
-    LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }  else if ( channel < 0 || channel >= kGmtNumChannels )    {
-    LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
-    return kGmtError;
-  }
+//________________
+std::string StGmtGeom::encodeGeoName(Int_t module, Char_t layer, Int_t strip) {
 
+    Char_t testS='S';
+    Char_t testP='P';
 
-  apv = apv%2;
-  
-  StGmtGeomData stripdata = mStrips[ channel + apv*kGmtNumStrips ];//0-257
-  return stripdata.location;//0-10, 0-127: 0 to 5.2; 128-256 5.2 to 10
-  
+    if ( module < 0 || module >= kGmtNumModules ) {
+        LOG_DEBUG << "Module " << module << " out of range in StGmtGeom::encodeGeoName." << endm;
+        return kGmtErrorString;
+    }
+    else if (layer != testS && layer != testP) {
+        LOG_DEBUG << "Layer " << layer << " out of range in StGmtGeom::encodeGeoName." << endm;
+        return kGmtErrorString;
+    }
+    else if ( strip < 0 || strip >= kGmtNumStrips ) {
+        LOG_DEBUG << "Strip " << strip << " out of range in StGmtGeom::encodeGeoName." << endm;
+        return kGmtErrorString;
+    }
+
+    std::stringstream buff;
+    // buff << disc+1 << (Char_t)(quadrant+'A') << layer;
+    buff << module+1 << layer;
+
+    if ( strip < 10 ) {
+        buff << "00";
+    }
+    else if ( strip < 100 ) {
+        buff << "0";
+    }
+
+    buff << strip;
+    return buff.str();
 }
 
+//________________
+Int_t StGmtGeom::decodeGeoName(const std::string &geoName, Short_t &module, Int_t &layer, Short_t &strip) {
+    module = geoName[0] - '1';
+    layer = geoName[2];
+    strip = std::atoi( (geoName.substr(3)).c_str() );
+
+    //	This is unlikely to catch all errors with the geoName, but it should do fairly well.
+    if (module < 0 || module >= kGmtNumModules || (
+        //  layer != testS && layer != testP
+	     layer < 0 || layer > 1) || strip < 0 || strip > kGmtNumStrips) {
+        LOG_DEBUG << "Malformed geoName " << geoName << " in StGmtGeom::decodeGeoName." << endm;
+        module = kGmtError;
+        layer = kGmtErrorChar;
+        strip = kGmtError;
+        return kGmtError;
+    }
+    return 0;
+}
+
+//________________
+std::string StGmtGeom::translateGeoIdToGeoName(Int_t geoId) {
+    Short_t module, strip;
+    Int_t layer;
+    if ( geoId < 0 || geoId >= kGmtNumGeoIds ) {
+        LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::translateGeoIdToGeoName." << endm;
+        return kGmtErrorString;
+    }
+
+    decodeGeoId(geoId, module, layer, strip);
+    return encodeGeoName(module, layer, strip);
+}
+
+//________________
+Int_t StGmtGeom::getPhysicalCoordinate(Int_t geoId, Short_t &module, Int_t &layer) {
+    if ( geoId < 0 || geoId >= kGmtNumGeoIds ) {
+        LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::getPhysicalCoordinate." << endm;
+        module = kGmtError;
+        layer = kGmtErrorChar;
+        return kGmtError;
+    }
+
+    Short_t strip;
+    decodeGeoId(geoId, module, layer, strip);
+    return 0;
+}
+
+//________________
+Int_t StGmtGeom::getPhysicalCoordinate(const std::string &geoName, Short_t &module, Int_t &layer) {
+    Short_t strip;
+    if ( decodeGeoName( geoName, module, layer, strip ) < 0 ) {
+        // Error is mostly handled by the decodeGeoName call.
+        module = kGmtError;
+        // layer = kGmtErrorChar;
+        layer = kGmtError;
+        return kGmtError;
+    }
+    return 0;
+}
+
+//________________
+Short_t StGmtGeom::getModuleIdFromElecCoord(Int_t rdo, Int_t arm, Int_t apv) {
+    Short_t retVal = kGmtError;
+    if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos ) {
+        LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::getModuleIdFromElecCoord." << endm;
+        return retVal;
+    }
+    else if ( arm < 0 || arm >= kGmtNumArms ) {
+        LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::getModuleIdFromElecCoord." << endm;
+        return retVal;
+    }
+    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  ) {
+        LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::getModuleIdFromElecCoord." << endm;
+        return retVal;
+    }
+
+    if (arm == 0) {
+        if (apv == 0 || apv == 1) {
+            retVal = 0;
+        }
+        else if (apv == 2 || apv == 3) {
+            retVal = 1;
+        }
+        else if (apv == 12 || apv == 13) {
+            retVal = 2;
+        }
+        else if (apv == 14 || apv == 15) {
+            retVal = 3;
+        }
+        else {
+            LOG_DEBUG << "Invalid electronics coordinates in StGmtGeom::getModuleIdFromElecCoord." << endm;
+        }
+    } // if ( arm == 0 )
+    else {
+        if (apv == 0 || apv == 1) {
+            retVal = 4;
+        }
+        else if (apv == 2 || apv == 3) {
+            retVal = 5;
+        }
+        else if (apv == 12 || apv == 13) {
+            retVal = 6;
+        }
+        else if (apv == 14 || apv == 15) {
+            retVal = 7;
+        }
+        else {
+            LOG_DEBUG << "Invalid electronics coordinates in StGmtGeom::getModuleIdFromElecCoord." << endm;
+        }
+    } // else
+    return retVal;
+}
+
+//________________
+Int_t StGmtGeom::getCoordNumFromElecCoord(Int_t rdo, Int_t arm, Int_t apv, Int_t channel) {
+
+    if ( (rdo - 1) < 0 || ( (rdo - 1) >= kGmtNumRdos ) ) {
+        LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+    else if ( arm < 0 || arm >= kGmtNumArms ) {
+        LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  ) {
+        LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+    else if ( channel < 0 || channel >= kGmtNumChannels ) {
+        LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+
+    StGmtGeomData stripdata = mStrips[ channel + (apv % 2) * kGmtNumStrips ];    
+    return stripdata.coordinate; 
+}
+
+//________________
+Double_t StGmtGeom::getPositionFromElecCoord(Int_t rdo, Int_t arm, Int_t apv, Int_t channel) {
+    //Int_t apvi = apv;
+    if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos ) {
+        LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+    else if ( arm < 0 || arm >= kGmtNumArms ) {
+        LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12) ) {
+        LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+    else if ( channel < 0 || channel >= kGmtNumChannels ) {
+        LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::getCoordNumFromElecCoord." << endm;
+        return kGmtError;
+    }
+
+    // locally map apv number into [0,1]
+    //   if ( apv <= 3 )
+    //     {
+    //       apv = apv/2;
+    //     }
+    //   else
+    //     {
+    //       apv = (apv - 12)/2;
+    //     }
+
+    apv = apv%2;
+    StGmtGeomData stripdata = mStrips[ channel + apv*kGmtNumStrips ];//0-257
+    //LOG_INFO << "rdo=" << rdo << "\tarm="<< arm << "\tapv="<< apvi <<"\tchannel = "<< channel << endm;
+    //LOG_INFO << "apv2= " << apv << "\tstr=" << kGmtNumStrips << "\t[]=" <<  channel + apv*kGmtNumStrips << "\t===> " <<stripdata.location << endm;
+    return stripdata.location; //0-10, 0-127: 0 to 5.2; 128-256 5.2 to 10
+}
+
+//________________
 //  Calculates coordinates of strip in global coordinate system
 //  Units are in cm and radians, depending on the layer.
-Int_t StGmtGeom::computeGlobalPhysicalCoordinate(    Int_t & layer,    Short_t & strip){
-  switch (layer) {
-  case (1) :
-    break;
-  case (0) :
-    break;
-  default:
-    return kGmtError;
-    break;
-  }
-
-  return 0;
+Int_t StGmtGeom::computeGlobalPhysicalCoordinate(Int_t & layer, Short_t & strip) {
+    switch (layer) {
+// 	case ('P') :
+	case (1) :
+//             ordinate =
+//                 mStrips[kGmtNumStrips + strip].ordinate + StGmtGeom::phiQuadXaxis(quadrant);
+//             lowerSpan =
+//                 mStrips[kGmtNumStrips + strip].lowerSpan;
+//             upperSpan =
+//                 mStrips[kGmtNumStrips + strip].upperSpan;
+            break;
+// 	case ('S') :
+	case (0) :
+//             ordinate =
+//                 mStrips[strip].ordinate;
+//             lowerSpan =
+//                 mStrips[strip].lowerSpan + StGmtGeom::phiQuadXaxis(quadrant);
+//             upperSpan =
+//                 mStrips[strip].upperSpan + StGmtGeom::phiQuadXaxis(quadrant);
+            break;
+    default:
+	    return kGmtError;
+	    break;
+    }
+    return 0;
 }
 
-Int_t StGmtGeom::getGlobalPhysicalCoordinate(    Int_t geoId, Short_t & module, Int_t & layer){
-  Short_t strip;
- 
-  decodeGeoId( geoId, module, layer, strip );
+//________________
+Int_t StGmtGeom::getGlobalPhysicalCoordinate(Int_t geoId, Short_t & module, Int_t & layer) {
 
-
-  if ( geoId < 0 || geoId >= kGmtNumGeoIds )    {
-    LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::getPhysicalCoordinate." << endm;
-    module = kGmtError;
-    layer = kGmtError;
-
-    return kGmtError;
-  }
-
-  return computeGlobalPhysicalCoordinate( layer, strip);
+    Short_t strip;
+    decodeGeoId( geoId, module, layer, strip );
+    if ( geoId < 0 || geoId >= kGmtNumGeoIds ){
+        LOG_DEBUG << "GeoId " << geoId << " out of range in StGmtGeom::getPhysicalCoordinate." << endm;
+        module = kGmtError;
+        // 	layer = kGmtErrorChar;
+        layer = kGmtError;
+        return kGmtError;
+    }
+    return computeGlobalPhysicalCoordinate( layer, strip);
 }
 
+//________________
+//  The ordinate, lowerSpan and upperSpan are all in centimeters or
+//  radians, depending on the layer.
+Int_t StGmtGeom::getGlobalPhysicalCoordinate(const std::string & geoName, Short_t & module, Int_t & layer) {
+    
+    Short_t strip;
+    if ( decodeGeoName( geoName, module, layer, strip ) < 0 ) {
+        //  Error is mostly handled by the decodeGeoName call.
+        module = kGmtError;
+        // 	layer = kGmtErrorChar;
+        layer = kGmtError;
+        return kGmtError;
+    }
+    return computeGlobalPhysicalCoordinate( layer, strip);
+}
 
-
-
+//________________
 //  Please note that the following functions do NOT access the STAR
 //  database to find mapping information. They assume the most
 //  straight-forward mapping scheme and use that.
 //  For those functions that have them, currently rdo can only be 1, arm
 //  can be 0-1, apv can be 0-23 (although 4-11 are not
 //  technically valid) and channel is 0-127.
-Int_t StGmtGeom::encodeElectronicId(    Int_t rdo, Int_t arm, Int_t apv, Int_t channel){
-  if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos )    {
-    LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::encodeElectronicId." << endm;
-    return kGmtError;
-  }    else if ( arm < 0 || arm >= kGmtNumArms )    {
-    LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::encodeElectronicId." << endm;
-    return kGmtError;
-  }    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  )    {
-    LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::encodeElectronicId." << endm;
-    return kGmtError;
-  }    else if ( channel < 0 || channel >= kGmtNumChannels )    {
-    LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::encodeElectronicId." << endm;
-    return kGmtError;
-  }
-
-  return channel + kGmtNumStrips*(apv + 4*arm);
+Int_t StGmtGeom::encodeElectronicId(Int_t rdo, Int_t arm, Int_t apv, Int_t channel) {
+    if ( (rdo - 1) < 0 || (rdo - 1) >= kGmtNumRdos ) {
+        LOG_DEBUG << "RDO " << rdo << " out of range in StGmtGeom::encodeElectronicId." << endm;
+        return kGmtError;
+    }
+    else if ( arm < 0 || arm >= kGmtNumArms ) {
+        LOG_DEBUG << "ARM " << arm << " out of range in StGmtGeom::encodeElectronicId." << endm;
+        return kGmtError;
+    }
+    else if ( apv < 0 || apv > kGmtMaxApvId || (apv > 3 && apv < 12)  ) {
+        LOG_DEBUG << "APV " << apv << " out of range in StGmtGeom::encodeElectronicId." << endm;
+        return kGmtError;
+    }
+    else if ( channel < 0 || channel >= kGmtNumChannels ) {
+        LOG_DEBUG << "Channel " << channel << " out of range in StGmtGeom::encodeElectronicId." << endm;
+        return kGmtError;
+    }
+    return channel + kGmtNumStrips*(apv + 4*arm);
 }
 
-Int_t StGmtGeom::decodeElectronicId(    Int_t elecId,    Int_t &rdo, Int_t &arm, Int_t &apv, Int_t &channel){
-  if ( elecId < 0 || elecId >= kGmtNumElecIds )    {
-    LOG_DEBUG << "Electronic ID " << elecId << " out of range in StGmtGeom::decodeElectronicId." << endm;
+//________________
+Int_t StGmtGeom::decodeElectronicId(Int_t elecId, Int_t &rdo, Int_t &arm, Int_t &apv, Int_t &channel) {
+    if (elecId < 0 || elecId >= kGmtNumElecIds) {
+        LOG_DEBUG << "Electronic ID " << elecId << " out of range in StGmtGeom::decodeElectronicId." << endm;
+        rdo = kGmtError;
+        arm = kGmtError;
+        apv = kGmtError;
+        channel = kGmtError;
+        return kGmtError;
+    }
 
-    rdo = kGmtError;
-    arm = kGmtError;
-    apv = kGmtError;
-    channel = kGmtError;
-    
-    return kGmtError;
-  }
+    channel = elecId % 128;
+    elecId /= 128;
 
-  channel = elecId % 128;
-  elecId /= 128;
-  
-  apv = elecId % 4;
-  elecId /= 4;
-  
-  arm = elecId;
-  rdo = 1;
-  
-  return 0;
+    apv = elecId % 4;
+    elecId /= 4;
+
+    arm = elecId;
+    rdo = 1;
+
+    return 0;
 }
-
-
 
 // Whether the reverse map is valid
 Bool_t StGmtGeom::mReverseNaiveMappingValid = 0;
@@ -249,9 +391,9 @@ Bool_t StGmtGeom::mReverseNaiveMappingValid = 0;
 // The reverse map data member
 Int_t StGmtGeom::mReverseNaiveMapping[ kGmtNumStripsPerModule ];
 
-
+//________________________
 //  Initialize our physical coordinate database here. These are:
-//  APV,Chan,Strip(0) or Pad(1),coo[rdinate #,Location (cm),Signal *,Readout Order
+//  APV,Chan,Strip(0) or Pad(1),coordinate #,Location (cm),Signal *,Readout Order
 //  The index corresponds to int(apv/2)+channel (assuming that the apv is in
 //  [0,12).  If apv is in [12,24), then the index is int((apv-12)/2)+channel.
 StGmtGeom::StGmtGeomData StGmtGeom::mStrips[] =
@@ -514,8 +656,9 @@ StGmtGeom::StGmtGeomData StGmtGeom::mStrips[] =
     {1,127,1,66,5.24,"P66",255}  
 };
 
-// //  This initialized an idealized mapping.  The index of the array is the coordinate number (X coordinates are first then Y).
-// //  The value in the array is the readout number of the coordinate (i.e. the index into mStrips[] above).
+//________________
+//  This initialized an idealized mapping.  The index of the array is the coordinate number (X coordinates are first then Y).
+//  The value in the array is the readout number of the coordinate (i.e. the index into mStrips[] above).
 Int_t StGmtGeom::mNaiveMapping[] =
 {
 	111,
@@ -776,37 +919,38 @@ Int_t StGmtGeom::mNaiveMapping[] =
 	224
 };
 
+//________________
 // Module locations at the corner of the GEM,
 // per email from W.J. Llope to stargmt-l@lists.bnl.gov
 // on 2012/10/31
-
 Double_t StGmtGeom::getModuleZ(int iModule) {
-  switch (iModule) {
-   case 4:
-   case 0 : return 77.768 * 2.54; // inches => cm
-   case 5:
-   case 1 : return 2.729 * 2.54; // inches => cm
-   case 7:
-   case 3 : return -2.729 * 2.54; // inches => cm
-   case 6:
-   case 2 : return -77.768 * 2.54; // inches => cm
-   default : return -999;
- }
+    switch (iModule) {
+        case 4:
+        case 0 : return 77.768 * 2.54;  // inches => cm
+        case 5:
+        case 1 : return 2.729 * 2.54;   // inches => cm
+        case 7:
+        case 3 : return -2.729 * 2.54;  // inches => cm
+        case 6:
+        case 2 : return -77.768 * 2.54; // inches => cm
+        default : return -999;
+    }
 }
 
+//________________
 Double_t StGmtGeom::getModulePhi(int iModule) {
-  double R = 85.606 * 2.54; // inches => cm
-  double deltaphi = 5./R; // crude radian conversion
-  switch (iModule) {
-   case 0:
-   case 1 : return TMath::Pi()*(10./6.)-deltaphi;
-   case 2:
-   case 3 : return TMath::Pi()*(10./6.)+deltaphi;
-   case 4:
-   case 5 : return TMath::Pi()*(1./6.)-deltaphi;
-   case 6:
-   case 7 : return TMath::Pi()*(1./6.)+deltaphi;
-   default : return 0;
- }
+    double R = 85.606 * 2.54; // inches => cm
+    double deltaphi = 5./R; // crude radian conversion
+    switch (iModule) {
+        case 0:
+        case 1 : return TMath::Pi()*(10./6.)-deltaphi;
+        case 2:
+        case 3 : return TMath::Pi()*(10./6.)+deltaphi;
+        case 4:
+        case 5 : return TMath::Pi()*(1./6.)-deltaphi;
+        case 6:
+        case 7 : return TMath::Pi()*(1./6.)+deltaphi;
+        default : return 0;
+    }
 }
 

@@ -261,13 +261,13 @@
 #include "StFgtCollection.h"
 #include "StPxlHitCollection.h"
 #include "StIstHitCollection.h"
-#include "StGmtCollection.h"
 #include "StFstEvtCollection.h"
 #include "StFstHitCollection.h"
 #include "StTrackNode.h"
 #include "StTrack.h"
 #include "Stiostream.h"
 #include "StFwdTrackCollection.h"
+#include "StGmtCollection.h"
 
 #ifndef ST_NO_NAMESPACES
 using std::swap;
@@ -1709,6 +1709,7 @@ void StEvent::statistics()
     cout << "\t# of hits in EMC:            " << (emcCollection() ? emcCollection()->barrelPoints().size() : 0) << endl;
     cout << "\t# of hits in EEMC:           " << (emcCollection() ? emcCollection()->endcapPoints().size() : 0) << endl;
     cout << "\t# of hits in FGT:            " << (fgtCollection() ? fgtCollection()->getNumHits() : 0) << endl;
+    cout << "\t# of hits in GMT:            " << (gmtCollection() ? gmtCollection()->getNumHits() : 0) << endl;
     cout << "\t# of hits in RICH:           " << (richCollection() ? richCollection()->getRichHits().size() : 0) << endl;
     cout << "\t# of PSDs:                   " << numberOfPsds() << endl;
     cout << "\t# of hits in GMT:            " << (gmtCollection() ? gmtCollection()->getNumHits() : 0) << endl;

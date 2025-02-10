@@ -1,4 +1,3 @@
-//
 // First Cluster Maker
 // \class StGmtRawMaker
 // \authors K.S. Engle and Richard Witt (witt@usna.edu)

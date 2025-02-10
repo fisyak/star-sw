@@ -1,17 +1,16 @@
-/***************************************************************************
+/**
+ * \class StGmtStrip
+ * \brief Holds data for the strip in GMT
+ * 
+ * Data for an individual strip in GMT (based on StFgtStrip).
  *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtStrip
- *
- ***************************************************************************
- *
- * Description: See header file.
- *
- ***************************************************************************/
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 
 #include "StGmtStrip.h"
 #include <string>
-ClassImp(StGmtStrip)
 
 bool gmtStripPtrLessThan::operator() (const StGmtStrip* strip1, const StGmtStrip* strip2) const
 {

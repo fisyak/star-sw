@@ -1,18 +1,15 @@
-/***************************************************************************
+#ifndef StGmtHit_hh
+#define StGmtHit_hh
+/**
+ * \class StGmtHit
+ * \brief Holds data for the hit in GMT
+ * 
+ * Data for an individual ``hit'' in GMT, i.e. a 1D cluster (based on StFgtHit).
  *
- * Authors: K.S. Engle and Richard Witt (witt@usna.edu), Jan 2013
- * based on StFgtHit
- *
- ***************************************************************************
- *
- * Description: data for individual ``hit'' on the GMT, i.e. a 1D cluster.
- *
- ***************************************************************************/
-
-#ifndef _ST_GMT_HIT_H_
-#define _ST_GMT_HIT_H_
-
-#include <map>
+ * \author K.S. Engle, Jan. 2013
+ * \author Richard Witt (witt@usna.edu), Jan. 2013
+ * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ */
 
 #include "StHit.h"
 #include "StGmtStrip.h"
@@ -45,4 +42,4 @@ private:
     ClassDef(StGmtHit,2)
 }; 
 ostream&   operator<<(ostream& os, StGmtHit const & v);
-#endif
+#endif // #define StGmtHit_hh
