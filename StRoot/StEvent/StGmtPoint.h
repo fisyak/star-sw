@@ -2,7 +2,7 @@
 #define StGmtPoint_hh
 /**
  * \class StGmtPoint
- * \brief Holds data for the point (a.k.a. cluster) in GMT
+ * \brief Holds data for the point (a.k.a. cluster) in GMT associated with a track
  * 
  * Description: data for individual ``point'' on the GMT, i.e. a pair
  * of 1D clusters.  Note, if errors during construction, the key will
@@ -11,6 +11,7 @@
  * \author K.S. Engle, Jan. 2013
  * \author Richard Witt (witt@usna.edu), Jan. 2013
  * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ * \author Yuri Fisyak (fisyak@bnl.gov), Feb. 2025
  */
 
 #include "StGmtHit.h"
@@ -28,8 +29,6 @@ public:
 	    Float_t zD = 0, Float_t sigmaZ = 0, Float_t AdcLz = 0,
 	    Float_t dzD = 0, Float_t dsigmaZ = 0, Float_t dAdcLz = 0);
  StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local);
- StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local);
->>>>>>> 1127f1c105936c4536fba62287fc85b4fb46fc5a
   ~StGmtPoint() {}
   StDetectorId detector()      const  {return kGmtId;}    
   Int_t        getTrackId()    const  {return mTrackId;}
