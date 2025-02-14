@@ -30,7 +30,7 @@ foreach my $currentrun (@AllRuns) {
 #    if (GoodRun($def,$r,0) < 0) {next;}
     #  if ($r < 21040001) {next;}
     #  if ($r < 21042001) {next;} # exclude 9p2GeV
-    foreach my $tag (qw(hlt st_physics_)) { # st_physics_2 st_cosmic st_physic)) {
+    foreach my $tag (qw(hlt st_physics_ st_cosmic)) { # st_physics_2 st_cosmic st_physic)) {
       my $glob = $run . "/" . $tag . "*.daq";
       my @daqfiles = glob $glob; print "$0 $glob => $#daqfiles : @daqfiles\n" if ($debug);
       if ($#daqfiles < 0) {next;}

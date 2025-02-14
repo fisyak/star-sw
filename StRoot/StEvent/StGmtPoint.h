@@ -2,7 +2,7 @@
 #define StGmtPoint_hh
 /**
  * \class StGmtPoint
- * \brief Holds data for the point (a.k.a. cluster) in GMT associated with a track
+ * \brief Holds data (YL, ZL) for the point (a.k.a. cluster) in GMT associated with a track
  * 
  * Description: data for individual ``point'' on the GMT, i.e. a pair
  * of 1D clusters.  Note, if errors during construction, the key will
@@ -11,6 +11,7 @@
  * \author K.S. Engle, Jan. 2013
  * \author Richard Witt (witt@usna.edu), Jan. 2013
  * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ * https://drupal.star.bnl.gov/STAR/system/files/GmtAlignmentHowTo.pdf
  * \author Yuri Fisyak (fisyak@bnl.gov), Feb. 2025
  */
 

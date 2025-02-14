@@ -53,7 +53,7 @@ class StGmtCollection: public StObject  {
   void Clear( Option_t *opts = "" );
   
  protected:
-  StGmtStripCollection mStripCollection[kGmtNumModules];
+  StGmtStripCollection mStripCollection[kGmtNumModules]; //! Don't store strips
   StGmtHitCollection   mHitCollection[kGmtNumModules];
   StGmtPointCollection mPointCollection;
   ClassDef(StGmtCollection,1)

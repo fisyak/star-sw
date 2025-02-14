@@ -3,89 +3,34 @@
 #include "Riostream.h"
 #include "TROOT.h"
 #include "TSystem.h"
-#include "TFile.h"
-#include "TKey.h"
-#include "TRandom.h"
-#include "TTree.h"
-#include "TBranch.h"
-#include "TStopwatch.h"
-#include "StThreeVectorF.hh"
-#include "StMatrixF.hh"
-#include "TH1.h"
-#include "TH2.h"
-#include "TProfile.h"
 #include "TMath.h"
 #include "TVector3.h"
-#include "TProcessID.h"
+#include "StThreeVectorD.hh"
+#include "StThreeVectorF.hh"
 #include "StEvent.h"
-#include "StPrimaryVertex.h"
-#include "StBFChain.h"
 #include "TGeoMatrix.h"
-#include "GmtEvent.h"
 #include "StMessMgr.h" 
-#include "StBichsel/Bichsel.h"
 #include "StTpcDb/StTpcDb.h"
 #include "StDetectorDbMaker/StGmtSurveyC.h"
 #include "StGmtCollection.h"
+#include "StGmtHit.h"
+#include "StGmtPoint.h"
+#include "StGmtPidTraits.h"
+#include "StTrackNode.h"
+#include "StTrack.h"
+#include "StTrackGeometry.h"
+#include "StTrackDetectorInfo.h"
+#include "StPrimaryTrack.h"
+#include "StGlobalTrack.h"
+#include "StDcaGeometry.h"
+#include "TRVector.h"
+#include "StGmtRawMaker/StGmtConsts.h"
 Int_t    StGmtMatchMaker::fMinNoHits = 15;
 Double_t StGmtMatchMaker::fpCut = 0.2;;
-
-//________________________________________________________________________________
-StGmtMatchMaker::StGmtMatchMaker(const Char_t *name) : StMaker(name),fFile(0), fTree(0), fEvent(0) {
-  SetOut();
-}
-//________________________________________________________________________________
-Int_t StGmtMatchMaker::Init() {
-  SetTree();
-  return StMaker::Init();
-}
-//________________________________________________________________________________
-Int_t StGmtMatchMaker::Finish() {
-  if (fFile) {
-    fFile = fTree->GetCurrentFile(); //just in case we switched to a new file
-    fFile->Write();
-    fTree->Print();
-  }
-  return kStOK;
-}
-
-//________________________________________________________________________________
-void StGmtMatchMaker::SetTree() {
-  StBFChain *chain = (StBFChain *) StMaker::GetChain();
-  if (! chain) return;
-  // root.exe 
-  Int_t split  = 99;       // by default, split Event in sub branches
-  Int_t comp   = 1;       // by default file is compressed
-  Int_t branchStyle = 1; //new style by default
-  if (split < 0) {branchStyle = 0; split = -1-split;}
-  Int_t bufsize;
-  //Authorize Trees up to 2 Terabytes (if the system can do it)
-  TTree::SetMaxTreeSize(1000*Long64_t(2000000000));
-  TFile *f = GetTFile();
-  if (f) f->cd();
-  else {
-    TString FName(fOut);
-    if (fMinNoHits > 0) FName += Form("_%i_%f2.1_",fMinNoHits,fpCut);
-    FName += gSystem->BaseName(chain->GetFileIn().Data());
-    FName.ReplaceAll("st_physics","");
-    FName.ReplaceAll(".event","");
-    FName.ReplaceAll(".daq",".root");
-    fFile = new TFile(FName,"RECREATE","TTree with SVT + SSD hits and tracks");
-    fFile->SetCompressionLevel(comp);
-  }
-  // Create a ROOT Tree and one superbranch
-  fTree = new TTree("T","TTree with SVT + SSD hits and tracks");
-  fTree->SetAutoSave(1000000000);  // autosave when 1 Gbyte written
-  bufsize = 64000;
-  if (split)  bufsize /= 4;
-  fEvent = new GmtEvent();
-  TTree::SetBranchStyle(branchStyle);
-  TBranch *branch = fTree->Branch("GmtEvent", &fEvent, bufsize,split);
-  branch->SetAutoDelete(kFALSE);
-}
+static   Int_t _debug = 0;
 //________________________________________________________________________________
 Int_t StGmtMatchMaker::Make() {
-  StEvent* pEvent = (StEvent*) GetInputDS("StEvent");
+  pEvent = (StEvent*) GetInputDS("StEvent");
   if (! pEvent) return kStOK;
   StGmtCollection* GmtCollection = pEvent->gmtCollection();
   if (! GmtCollection) {
@@ -96,67 +41,185 @@ Int_t StGmtMatchMaker::Make() {
   StSPtrVecTrackNode& theNodes = pEvent->trackNodes();
   UInt_t nnodes = theNodes.size();
   if (! nnodes) { cout << "No tracks" << endl; return kStOK;}
-  if (! GmtEvent::RotMatrices()) MakeListOfRotations();
-  if (pEvent && !fEvent->Build(pEvent,fpCut,fMinNoHits)) {
-    if (fTree)  fTree->Fill();  //fill the tree
-  }
+  if (! fRotMHash) MakeListOfRotations();
+  Match();
   return kStOK;
 }
 //________________________________________________________________________________
-void StGmtMatchMaker::Print(Option_t *opt) const {
-  if (! GmtEvent::RotMatrices()) return;
-  TIter next(GmtEvent::RotMatrices());
-  TGeoHMatrix *comb = 0;
-  while ((comb = (TGeoHMatrix *) next())) {
-    Int_t Id;
-    sscanf(comb->GetName()+1,"%04i",&Id);
-    Int_t Ladder = Id%100;
-    Int_t Layer  = Id/1000; if (Layer > 7) Layer = 7;
-    Int_t Wafer  = (Id - 1000*Layer)/100;
-    cout << comb->GetName() << "\tLayer/Ladder/Wafer = " << Layer << "/" << Ladder << "/" << Wafer << endl;
-    comb->Print();
-    cout << "=================================" << endl;
-  }
-}
-//________________________________________________________________________________
 void StGmtMatchMaker::MakeListOfRotations() {
-  if (GmtEvent::RotMatrices()) return;
-  THashList *rotMHash = new THashList(100,0);
-  GmtEvent::SetRotMatrices(rotMHash);
+  if (fRotMHash) return;
+  fRotMHash = new THashList(100,0);
   //  THashList *hash = 0;
   const TGeoHMatrix& tpc2Glob = gStTpcDb->Tpc2GlobalMatrix();
   for(int module=0;module<  kGmtNumModules;module++)    {
-    TGeoHMatrix *WL            = new TGeoHMatrix(StGmtOnModule::instance()->GetMatrix(module));
-    WL->SetName(Form("WL%i",module));
-    rotMHash->Add(WL);
-    TGeoHMatrix GmtOnGlob      = tpc2Glob * StGmtOnTpc::instance()->GetMatrix(module) * (*WL);
+    TGeoHMatrix *L            = new TGeoHMatrix(StGmtOnModule::instance()->GetMatrix(module));
+    L->SetName(Form("L%i",module));
+    fRotMHash->Add(L);
+    TGeoHMatrix GmtOnGlob      = tpc2Glob * StGmtOnTpc::instance()->GetMatrix(module) * (*L);
     TGeoHMatrix *R             = new TGeoHMatrix(GmtOnGlob);
     R->SetName(Form("R%i",module));
-    rotMHash->Add(R);
+    fRotMHash->Add(R);
   }
-  TIter next(rotMHash);
-  TGeoHMatrix *comb;
-  Int_t fail = 0;
-  while ((comb = (TGeoHMatrix *) next())) {
-    TString Name(comb->GetName());
-    if (Name.BeginsWith("R")) {
-      TGeoHMatrix *WL = (TGeoHMatrix *) rotMHash->FindObject(Form("WL%s",Name.Data()+1));
-      if (! WL) {
-	cout << Form("WL%s",Name.Data()+1) << " has not been found" << endl;
-	fail++;
-      }
-    }
-  }
-  assert(! fail);
-#if 0
-  if (fFile) {
-    TDirectory *g = 0;
-    if (gDirectory != fFile) {
-      g = gDirectory; 
-      fFile->cd(); 
-    }
-    rotMHash->Write();
-    if (g) g->cd();
-  }
-#endif
 }
+//______________________________________________________________________________
+Int_t  StGmtMatchMaker::Match() {
+  Int_t iok = 1;
+  StGmtCollection* GmtCollection = pEvent->gmtCollection();
+  StSPtrVecTrackNode& theNodes = pEvent->trackNodes();
+  UInt_t nnodes = theNodes.size();
+  if (! nnodes) { cout << "No tracks" << endl; return iok;}
+  Int_t nTotMatch = 0;
+  //  Create and Fill the GmtTrack objects
+  StGmtPointCollection* gmtPointCol = GmtCollection->getPointCollection();  
+  assert(fRotMHash);
+  for (UInt_t module = 0; module < GmtCollection->getNumModules(); module++) {
+    StGmtHitCollection* GmtHitCollection = GmtCollection->getHitCollection(module);
+    StSPtrVecGmtHit& gmtHitVec = GmtHitCollection->getHitVec();
+    UInt_t NoGMThits = gmtHitVec.size();
+    if (! NoGMThits) continue;
+    // Check Y and Z
+    Int_t nY = 0, nZ = 0;
+    for (UInt_t l = 0; l < NoGMThits; l++) {
+      StGmtHit *hitY = gmtHitVec[l];
+      if (! hitY) continue; 
+      if (hitY->getXorY() == 0) nY++;
+      else                      nZ++;
+    }
+    if (! nY || ! nZ) continue;
+    TGeoHMatrix *comb = (TGeoHMatrix *) fRotMHash->FindObject(Form("R%i",module));
+    if (! comb) continue;
+    if (_debug) {
+      cout << comb->GetName() << "\tmodule = " << module << endl;
+      comb->Print();
+    }
+    static Double_t dz[2] = {50.00, kGmtSlast/2.};
+    static Double_t dx[2] = {50.00, kGmtSlast/2.};
+    Double_t *rot = comb->GetRotationMatrix();
+    Double_t *tra = comb->GetTranslation();
+    const StThreeVectorD unit(1.,0.,0.);
+    const StThreeVectorD zero(0.,0.,0.);
+    StThreeVectorD normal(rot[2],      rot[5],      rot[8]);
+    StThreeVectorD middle(tra);
+    if (_debug) cout << "Global middle:" << middle << "\tnormal:" << normal << endl;
+    comb->LocalToMaster(zero.xyz(),middle.xyz());
+    comb->LocalToMasterVect(unit.xyz(), normal.xyz());
+    if (_debug) cout << "Local middle:" << middle << "\tnormal:" << normal << endl;
+    Double_t zM = middle.z();
+    Double_t phiM = TMath::RadToDeg()*middle.phi();
+    for (UInt_t i=0; i<nnodes; i++) {
+      StTrackNode *node = theNodes[i];
+      if (! node) continue;
+      StTrack *Track = node->track(global);
+      if (! Track) continue;
+      StGlobalTrack *gTrack = (StGlobalTrack *) Track;
+      if (gTrack->fitTraits().numberOfFitPoints() < fMinNoHits) continue;
+      StDcaGeometry *dca = gTrack->dcaGeometry();
+      if (! dca) continue;
+      StPrimaryTrack *pTrack = (StPrimaryTrack *) node->track(primary);
+      StTrack *tracks[2] = {gTrack, pTrack};
+      for (Int_t t = 0; t <2 ; t++) {
+	Track = tracks[t];
+	if (! Track) continue;
+	StThreeVectorD g3 = Track->geometry()->momentum();
+	Double_t pMom = g3.mag();
+	if (pMom < fpCut) continue;
+	StPhysicalHelixD helixO = Track->outerGeometry()->helix();
+	Double_t R_tof[2]= {210., 216.};  // inner and outer surfaces
+	pair<Double_t,Double_t> shR = helixO.pathLength(0.5*(R_tof[0]+R_tof[1]));
+	if (TMath::Abs(shR.first) > 200 && TMath::Abs(shR.second) > 200) continue; 
+	Double_t stepR = (shR.first > 0) ? shR.first : shR.second;
+	StThreeVectorD xyzR = helixO.at(stepR);
+	Double_t phiR = TMath::RadToDeg()*xyzR.phi();
+	if (_debug) 
+	  cout << "\t shR " << shR.first << "\t" << shR.second << "\tstepR " << stepR 
+	       << "\txyzR\t" << xyzR << "\tphiR\t" << phiR << endl;
+	if (_debug) cout << "phiR = " << phiR << "\tphiM = " << phiM << "\tzM = " << zM << endl;
+	Double_t dPhi = phiR - phiM; 
+	if (dPhi >  360) dPhi -= 360;
+	if (dPhi < -360) dPhi += 360;
+	if (TMath::Abs(dPhi) > 15) continue;
+	if (_debug) cout << "zR = " << xyzR.z() << "\tzM = " << tra[2] << endl;
+	if (TMath::Abs(xyzR.z() -  tra[2]) > 20) continue;
+	Double_t sh = helixO.pathLength(middle, normal); 
+	if (_debug) {
+	  cout << "StHelix sh " << sh 
+	       << "\t shR " << shR.first << "\t" << shR.second
+	       << endl;
+	}
+	StThreeVectorD xyzG = helixO.at(sh); if (_debug) cout << "StHelix xyzG\t" << xyzG << endl;
+	StThreeVectorD dR = xyzR - xyzG; if (_debug) cout << "dR\t" << dR << " dist = " << dR.magnitude() << endl;
+	if (dR.magnitude() > 50) continue;
+	if (sh < -5e2 || sh > 5e2) continue;
+	if (_debug) { 
+	  StThreeVectorD dX = xyzG - helixO.at(0); 
+	  cout << "Qi: " << Track->geometry()->charge() 
+	       << "\tQo: " << Track->outerGeometry()->charge()
+	       << "\tdX " << dX << endl;
+	  cout << *dca << endl;
+	}
+	Double_t uvPred[3];
+	comb->MasterToLocal(xyzG.xyz(),uvPred);
+	TRVector xyzL(3,uvPred); if (_debug) cout << "StHelix xyzL\t" << xyzL << endl;
+	Double_t dirGPred[3] = {helixO.cx(sh),helixO.cy(sh),helixO.cz(sh)};
+	Double_t dxyzL[3];
+	comb->MasterToLocalVect(dirGPred,dxyzL);
+	Double_t tuvPred[2] = {dxyzL[1]/dxyzL[0], dxyzL[2]/dxyzL[0]};
+	if (_debug) cout << "StHelix tU/tV =  " << tuvPred[0] << "\t" << tuvPred[1] << endl; 
+	Int_t k = 0; // gmt
+	if (TMath::Abs(uvPred[1]) > dx[k] + 1.0) continue;
+	if (TMath::Abs(uvPred[2]) > dz[k] + 1.0) continue;
+	Int_t TrackId = Track->key();
+	StGmtPoint *point = 0, *pointBest = 0;
+	StGmtPidTraits *pid = 0, *pidBest = 0;
+	for (UInt_t l = 0; l < NoGMThits; l++) {
+	  StGmtHit *hitY = gmtHitVec[l];
+	  if (! hitY) continue;
+	  if (hitY->getXorY() != 0) continue; // x => Z
+	  Float_t u = hitY->getLocal();
+	  if (TMath::Abs(u - uvPred[1]) > kGmtSlast) continue;
+	  for (UInt_t k = 0; k < NoGMThits; k++) {
+	    if (l == k) continue;
+	    StGmtHit *hitZ = gmtHitVec[k];
+	    if (! hitZ) continue;
+	    if (hitZ->getXorY() != 1) continue; // y => Y
+	    Float_t v = hitZ->getLocal();
+	    if (TMath::Abs(v - uvPred[2]) > kGmtSlast) continue;
+	    assert(! point || ! pid);
+	    StThreeVectorF xyzGF(xyzG);
+	    StThreeVectorF uvPredF(uvPred);
+	    point = new StGmtPoint(*hitY, *hitZ, TrackId, xyzGF, uvPredF);
+	    point->setAssociatedTrack(Track);
+	    pid = new StGmtPidTraits(point);
+	    // Check for the best match
+	    if (pidBest) {
+	      if (pid->deviation() < pidBest->deviation()) {
+		delete pointBest; 
+		delete pidBest;
+		pointBest = point;
+                pidBest  = pid;
+		point = 0;
+		pid = 0;
+	      } else {
+		SafeDelete(point);
+		SafeDelete(pid);
+	      }
+	    } else {
+	      pointBest = point;
+	      pidBest  = pid;
+	      point = 0;
+	      pid = 0;
+	    }
+	  } // hit Z
+	} // hit Y
+	if (! pointBest) continue;
+	StTrackDetectorInfo* detInfo = Track->detectorInfo();
+	if (detInfo) detInfo->addHit(pointBest);
+	gmtPointCol->getPointVec().push_back(pointBest);
+	// detectorInfo
+	Track->addPidTraits(pidBest);;
+      } // global primary
+    } // nodes
+  } // loop over modules
+  if (nTotMatch) iok = 0;
+  return iok;
+}  

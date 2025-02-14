@@ -37,7 +37,7 @@ class StGmtRawMaker :  public StRTSBaseMaker {
   static Double_t  MyGaus(Double_t x, Double_t mean, Double_t sigma, Double_t delta);
   static Double_t  fpeaks(Double_t *x, Double_t *par);
 
-  Int_t     ClusterBuilder(ULong_t events, UInt_t module, StGmtHitCollection& hits);
+  Int_t     ClusterBuilder(UInt_t module, StGmtHitCollection& hits);
   Int_t     fillHits();
   TF1*      FindPeaks(TH1D* hist);
   Char_t          mBeg[1]; //!

@@ -19,6 +19,9 @@
 #include "StEvent/StETofPidTraits.h"
 #include "StEvent/StMtdHit.h"
 #include "StEvent/StMtdPidTraits.h"
+#ifdef __TFG__VERSION__
+#include "StEvent/StGmtPidTraits.h"
+#endif /* __TFG__VERSION__ */
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StEvent/StTpcDedxPidAlgorithm.h"
 #include "StarClassLibrary/StThreeVectorD.hh"
@@ -259,6 +262,9 @@ StMuTrack::StMuTrack(const StEvent* event, const StTrack* track, const StVertex 
 #endif /* __TFG__VERSION__ */
   mIndex2MtdHit = -1;    
   fillMuMtdPidTraits(track);
+#ifdef __TFG__VERSION__
+ fillMuGmtPidTraits(track);
+#endif /* __TFG__VERSION__ */
 
   if ( track->outerGeometry() ) 
     mOuterHelix = StMuHelix(track->outerGeometry()->helix(),event->runInfo()->magneticField());
@@ -549,6 +555,17 @@ void StMuTrack::fillMuMtdPidTraits(const StTrack* t) {
     }    
   }
 }
+#ifdef __TFG__VERSION__
+void StMuTrack::fillMuGmtPidTraits(const StTrack* t) {
+  StPtrVecTrackPidTraits traits = t->pidTraits(kGmtId);
+  UInt_t size = traits.size();
+  for (UInt_t i = 0; i < size; i++) {
+    const StGmtPidTraits* gmtPidTraits = dynamic_cast<const StGmtPidTraits*>(traits[i]);
+    if ( !gmtPidTraits ) continue;
+    mGmtPidTraits.set(gmtPidTraits);
+  }    
+}
+#endif /* __TFG__VERSION__ */
 
 #if 0
 void StMuTrack::Print(Option_t *option) const {

@@ -24,6 +24,9 @@
 #include "StMuBTofPidTraits.h" /// dongx
 #include "StMuETofPidTraits.h" /// fseck
 #include "StMuMtdPidTraits.h" /// Bingchu
+#ifdef __TFG__VERSION__
+#include "StMuGmtPidTraits.h"    /// YF
+#endif /* __TFG__VERSION__ */
 #include "StMuPrimaryTrackCovariance.h"
 
 #include "StEvent/StEnumerations.h"
@@ -251,9 +254,11 @@ class StMuTrack : public TObject {
     const StMuBTofPidTraits &btofPidTraits() const  { return mBTofPidTraits;}/// dongx
     const StMuETofPidTraits &etofPidTraits() const  { return mETofPidTraits;}
     const StMuMtdPidTraits &mtdPidTraits()   const  { return mMtdPidTraits;} /// Bingchu
+    const StMuGmtPidTraits   &gmtPidTraits()   const  { return mGmtPidTraits;} /// YF
     void setBTofPidTraits(const StMuBTofPidTraits& pid) { mBTofPidTraits = pid; } /// dongx
     void setETofPidTraits(const StMuETofPidTraits& pid) { mETofPidTraits = pid; }
     void setMtdPidTraits(const StMuMtdPidTraits& pid)   { mMtdPidTraits  = pid; } ///
+    void setGmtPidTraits(const StMuGmtPidTraits& pid)   { mGmtPidTraits  = pid; }   /// YF
     static void setProbabilityPidAlgorithm(StuProbabilityPidAlgorithm* p) { mProbabilityPidAlgorithm=p;} ///< Sets the StuProbabilityPidAlgorithm. Important in order to calculate Aihong's pids.
     static void setProbabilityPidCentrality(Double_t cent) { mProbabilityPidCentrality = cent;} ///< Sets the centrality for calculating Aihong's pid.
 #endif /* __TFG__VERSION__ */
@@ -356,6 +361,9 @@ protected:
   StMuProbPidTraits mProbPidTraits; ///< Class holding the new Yuri Fisyak pid probabilities.
   StMuBTofPidTraits mBTofPidTraits; /// dongx
   StMuMtdPidTraits  mMtdPidTraits; /// Bingchu
+#ifdef __TFG__VERSION__
+  StMuGmtPidTraits    mGmtPidTraits; /// YF
+#endif /* __TFG__VERSION__ */
   Int_t mIndex2Cov;
   Int_t mIndex2ETofHit;
   StMuETofPidTraits mETofPidTraits;
@@ -383,6 +391,7 @@ protected:
   void fillMuBTofPidTraits(const StTrack*); /// dongx
   void fillMuETofPidTraits(const StTrack*);
   void fillMuMtdPidTraits(const StTrack*); /// Bingchu
+  void fillMuGmtPidTraits(const StTrack*); /// YF
   static StuProbabilityPidAlgorithm* mProbabilityPidAlgorithm; ///< StuProbabilityPidAlgorithm, we will use the same algorithm for all tracks
   static Double_t mProbabilityPidCentrality; ///< Centrality for Aihong's pid prob calculations. Will set when new StMuEvent is made from StEvent
   friend class StMuDst;

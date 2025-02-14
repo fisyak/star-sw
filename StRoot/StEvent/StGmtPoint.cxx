@@ -37,11 +37,16 @@ StTrack*        StGmtPoint::associatedTrack()        { return mAssociatedTrack; 
 const StTrack*  StGmtPoint:: associatedTrack() const { return mAssociatedTrack; }
 //________________________________________________________________________________
 void StGmtPoint::Print(Option_t *opt) const {
-  cout << "StGmtPoint: Id x(yL) " << id()%1000 << " y(zL) " << id()/100 
+  cout << "StGmtPoint: Id X(yL) " << id()%100 << " Y(zL) " << id()/100 
        << "\tPrediction Global: " << position() 
        << "\tLocal:  " << local();
-  if ( associatedTrack()) {
-    cout << "\tAssociated track: " << associatedTrack()->key();
+  const StTrack *Track = associatedTrack();
+  if ( Track) {
+    cout << "\tAssociated track: " << Track->key();
+    if      (Track->type() == global)  cout << " global ";
+    else if (Track->type() == primary) cout << " primary";
+    cout << "\tdY = " << yD() - local().y() << " +/- " << dyD();
+    cout << "\tdZ = " << zD() - local().z() << " +/- " << dzD();
   }
   cout << endl;
 }

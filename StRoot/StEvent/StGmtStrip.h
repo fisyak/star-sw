@@ -10,6 +10,7 @@
  * \author K.S. Engle, Jan. 2013
  * \author Richard Witt (witt@usna.edu), Jan. 2013
  * \author Grigory Nigmatkulov (nigmatkulov@gmail.com), Dec. 2020
+ * https://drupal.star.bnl.gov/STAR/system/files/GmtAlignmentHowTo.pdf
  */
 
 #include "StObject.h"

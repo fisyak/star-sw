@@ -35,7 +35,6 @@ Int_t StGmtRawMaker::InitRun(Int_t /* runumber */) {
 }
 //________________________________________________________________________________
 Int_t StGmtRawMaker::Make() {
-  static ULong_t nEvents=0;
   StEvent* event = (StEvent*) (GetInputDS("StEvent"));
   if(!event) {
     LOG_ERROR << "Error getting pointer to StEvent from '" << ClassName() << "'" << endm;
@@ -68,28 +67,28 @@ Int_t StGmtRawMaker::Make() {
       continue;
     }
     StGmtHitCollection *hitCollection = mGmtCollection->getHitCollection(module);
-    if (ClusterBuilder(nEvents,module,*hitCollection)) noModWithGMT++;
-    const StGmtHitCollection *coll = mGmtCollection->getHitCollection(module);
-    if (! coll) continue;
-    if (Debug()) {
-      const StSPtrVecGmtHit &hits = coll->getHitVec();
-      UInt_t NoHits = hits.size();
-      for (UInt_t l = 0; l < NoHits; l++) {
-	const StGmtHit *hit = hits[l];
-	if (hit) {
-	  hit->Print("");
-	}
-      }
+    ClusterBuilder(module,*hitCollection);
+    StSPtrVecGmtHit& gmtHitVec = hitCollection->getHitVec();
+    UInt_t NoGMThits = gmtHitVec.size();
+    if (! NoGMThits) continue;
+    // Check Y and Z
+    Int_t nY = 0, nZ = 0;
+    for (UInt_t l = 0; l < NoGMThits; l++) {
+      StGmtHit *hit = gmtHitVec[l];
+      if (! hit) continue;
+      if (Debug()) hit->Print();
+      if (hit->getXorY() == 0) nY++;
+      else                     nZ++;
     }
+    if ( nY && nZ) noModWithGMT++;
   }
-  if (noModWithGMT) nEvents++;
   
   if(Debug()) {
     LOG_INFO << "End of gmt-clust-maker, print all strips & clusters: " << endm;
     LOG_INFO <<"  gmtCollnumModule=" << kGmtNumModules<<", tot strip=" <<mGmtCollection->getNumStrips()
-	     <<"  totClust=" <<  mGmtCollection->getNumHits() <<endm;
+	     <<"  totClust=" <<  mGmtCollection->getNumHits() << " modules with XY clusters = " << noModWithGMT << endm;
   }
-  if (! mGmtCollection->getNumHits()) return kStERR;
+  if (! noModWithGMT) return kStERR;
   return kStOk;
 }
 //________________________________________________________________________________
@@ -215,7 +214,7 @@ Int_t StGmtRawMaker::fillHits() {
 	  strip->setPosition( position );
 	  strip->setElecCoords( rdo, arm, apv, channel );
 	}
-      } else { LOG_WARN << "StGmtRawMaker::Make() -- Could not access module " << module << endm; }
+      } else { LOG_WARN << "StGmtRawMaker::fillHits() -- Could not access module " << module << endm; }
     }
     if (count) {
       ok = kStOK;
@@ -249,7 +248,10 @@ TF1* StGmtRawMaker::FindPeaks(TH1D* hist) {
   TSpectrum spect(MAX_PEAKS);
   TF1 back("poly","pol0",CLUS_MIN,CLUS_MAX);
   Double_t par[MAX_PEAKS*3+1];
-  spect.Search(hist, 2, "", 0.20);
+  TString Opt("nodraw");
+  TString FitOpt("QN");
+  if (Debug() > 1) {Opt = ""; FitOpt = "";}
+  spect.Search(hist, 2, Opt, 0.20);
 #if  ROOT_VERSION_CODE < 395523
   Float_t* xpeaks=spect.GetPositionX();
   //  Float_t* ypeaks=spect.GetPositionY();
@@ -257,7 +259,7 @@ TF1* StGmtRawMaker::FindPeaks(TH1D* hist) {
   Double_t* xpeaks=spect.GetPositionX();
   //  Double_t* ypeaks=spect.GetPositionY();
 #endif
-  hist->Fit(&back,"Q");
+  hist->Fit(&back, FitOpt);
   UInt_t npx=0;
   UInt_t nfound = spect.GetNPeaks();
   for(UInt_t i=0; i < nfound; i++) {
@@ -302,16 +304,16 @@ TF1* StGmtRawMaker::FindPeaks(TH1D* hist) {
   fitFunc->SetLineColor(kGreen);
   
   TVirtualFitter::SetDefaultFitter("Fumili");
-  int isOk=hist->Fit(fitFunc);
-  if(isOk) isOk=hist->Fit(fitFunc);
+  int isOk=hist->Fit(fitFunc, FitOpt);
+  if(isOk) isOk=hist->Fit(fitFunc, FitOpt);
   if(isOk) return 0;
   
   return fitFunc;
 }
 //________________________________________________________________________________
-Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitCollection& hits) {
-  static TCanvas* canv=0;
-  static TCanvas* canvAdc=0;
+Int_t  StGmtRawMaker::ClusterBuilder(UInt_t module, StGmtHitCollection& hits) {
+  TCanvas* canv=0;
+  TCanvas* canvAdc=0;
   static TH1D* histXY[kGmtNumLayers][kGmtNumModules] = {0};
   static const Char_t *XY[kGmtNumLayers] = {"X", "Y"};
   Int_t NoClusters = 0;
@@ -384,7 +386,7 @@ Int_t  StGmtRawMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtHitColl
   }
   if (! hits.getHitVec().size()) return kStErr;
       
-  if (Debug() > 1) {
+  if (canv) {
     canv->Clear();
     canv->Divide(kGmtNumLayers,1);
     if (canvAdc) {

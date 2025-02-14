@@ -2,7 +2,7 @@
 #define StGmtHit_hh
 /**
  * \class StGmtHit
- * \brief Holds data for the hit in GMT
+ * \brief Holds data for the hit(1-D)  in GMT plane (0 => YL, 1 => ZL)
  * 
  * Data for an individual ``hit'' in GMT, i.e. a 1D cluster (based on StFgtHit).
  *
@@ -28,8 +28,8 @@ public:
     // accessors/modifiers for the map
     // modifer
     // other accessors
-    Int_t   getModule()     const {return (hardwarePosition() - 1)/2; }
-    Int_t   getXorY()       const {return (hardwarePosition() - 1)%2; }
+    Int_t   getModule()     const {return (hardwarePosition())/2 - 1; }
+    Int_t   getXorY()       const {return (hardwarePosition()+1)%2; } // 1 => u (yL), 0 => v (zL)
     Float_t getLocal()      const {return position().x();}
     Float_t getErrorLocal() const {return positionError().x();}
     Float_t getSigma()      const {return position().y();}

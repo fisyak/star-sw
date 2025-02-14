@@ -19,4 +19,5 @@
 #pragma link C++ enum mtdTypes;
 #pragma link C++ enum eztTypes;
 #pragma link C++ enum NARRAYS;
+#pragma link C++ enum gmtTypes;
 #endif
