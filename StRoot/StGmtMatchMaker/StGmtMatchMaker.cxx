@@ -27,7 +27,6 @@
 #include "StGmtRawMaker/StGmtConsts.h"
 Int_t    StGmtMatchMaker::fMinNoHits = 15;
 Double_t StGmtMatchMaker::fpCut = 0.2;;
-static   Int_t _debug = 0;
 //________________________________________________________________________________
 Int_t StGmtMatchMaker::Make() {
   pEvent = (StEvent*) GetInputDS("StEvent");
@@ -88,7 +87,7 @@ Int_t  StGmtMatchMaker::Match() {
     if (! nY || ! nZ) continue;
     TGeoHMatrix *comb = (TGeoHMatrix *) fRotMHash->FindObject(Form("R%i",module));
     if (! comb) continue;
-    if (_debug) {
+    if (Debug()) {
       cout << comb->GetName() << "\tmodule = " << module << endl;
       comb->Print();
     }
@@ -100,10 +99,10 @@ Int_t  StGmtMatchMaker::Match() {
     const StThreeVectorD zero(0.,0.,0.);
     StThreeVectorD normal(rot[2],      rot[5],      rot[8]);
     StThreeVectorD middle(tra);
-    if (_debug) cout << "Global middle:" << middle << "\tnormal:" << normal << endl;
+    if (Debug()) cout << "Global middle:" << middle << "\tnormal:" << normal << endl;
     comb->LocalToMaster(zero.xyz(),middle.xyz());
     comb->LocalToMasterVect(unit.xyz(), normal.xyz());
-    if (_debug) cout << "Local middle:" << middle << "\tnormal:" << normal << endl;
+    if (Debug()) cout << "Local middle:" << middle << "\tnormal:" << normal << endl;
     Double_t zM = middle.z();
     Double_t phiM = TMath::RadToDeg()*middle.phi();
     for (UInt_t i=0; i<nnodes; i++) {
@@ -130,27 +129,27 @@ Int_t  StGmtMatchMaker::Match() {
 	Double_t stepR = (shR.first > 0) ? shR.first : shR.second;
 	StThreeVectorD xyzR = helixO.at(stepR);
 	Double_t phiR = TMath::RadToDeg()*xyzR.phi();
-	if (_debug) 
+	if (Debug()) 
 	  cout << "\t shR " << shR.first << "\t" << shR.second << "\tstepR " << stepR 
 	       << "\txyzR\t" << xyzR << "\tphiR\t" << phiR << endl;
-	if (_debug) cout << "phiR = " << phiR << "\tphiM = " << phiM << "\tzM = " << zM << endl;
+	if (Debug()) cout << "phiR = " << phiR << "\tphiM = " << phiM << "\tzM = " << zM << endl;
 	Double_t dPhi = phiR - phiM; 
 	if (dPhi >  360) dPhi -= 360;
 	if (dPhi < -360) dPhi += 360;
 	if (TMath::Abs(dPhi) > 15) continue;
-	if (_debug) cout << "zR = " << xyzR.z() << "\tzM = " << tra[2] << endl;
+	if (Debug()) cout << "zR = " << xyzR.z() << "\tzM = " << tra[2] << endl;
 	if (TMath::Abs(xyzR.z() -  tra[2]) > 20) continue;
 	Double_t sh = helixO.pathLength(middle, normal); 
-	if (_debug) {
+	if (Debug()) {
 	  cout << "StHelix sh " << sh 
 	       << "\t shR " << shR.first << "\t" << shR.second
 	       << endl;
 	}
-	StThreeVectorD xyzG = helixO.at(sh); if (_debug) cout << "StHelix xyzG\t" << xyzG << endl;
-	StThreeVectorD dR = xyzR - xyzG; if (_debug) cout << "dR\t" << dR << " dist = " << dR.magnitude() << endl;
+	StThreeVectorD xyzG = helixO.at(sh); if (Debug()) cout << "StHelix xyzG\t" << xyzG << endl;
+	StThreeVectorD dR = xyzR - xyzG; if (Debug()) cout << "dR\t" << dR << " dist = " << dR.magnitude() << endl;
 	if (dR.magnitude() > 50) continue;
 	if (sh < -5e2 || sh > 5e2) continue;
-	if (_debug) { 
+	if (Debug()) { 
 	  StThreeVectorD dX = xyzG - helixO.at(0); 
 	  cout << "Qi: " << Track->geometry()->charge() 
 	       << "\tQo: " << Track->outerGeometry()->charge()
@@ -159,12 +158,12 @@ Int_t  StGmtMatchMaker::Match() {
 	}
 	Double_t uvPred[3];
 	comb->MasterToLocal(xyzG.xyz(),uvPred);
-	TRVector xyzL(3,uvPred); if (_debug) cout << "StHelix xyzL\t" << xyzL << endl;
+	TRVector xyzL(3,uvPred); if (Debug()) cout << "StHelix xyzL\t" << xyzL << endl;
 	Double_t dirGPred[3] = {helixO.cx(sh),helixO.cy(sh),helixO.cz(sh)};
 	Double_t dxyzL[3];
 	comb->MasterToLocalVect(dirGPred,dxyzL);
 	Double_t tuvPred[2] = {dxyzL[1]/dxyzL[0], dxyzL[2]/dxyzL[0]};
-	if (_debug) cout << "StHelix tU/tV =  " << tuvPred[0] << "\t" << tuvPred[1] << endl; 
+	if (Debug()) cout << "StHelix tU/tV =  " << tuvPred[0] << "\t" << tuvPred[1] << endl; 
 	Int_t k = 0; // gmt
 	if (TMath::Abs(uvPred[1]) > dx[k] + 1.0) continue;
 	if (TMath::Abs(uvPred[2]) > dz[k] + 1.0) continue;
