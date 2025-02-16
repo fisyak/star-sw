@@ -1101,7 +1101,10 @@ Int_t StBFChain::Instantiate()
   Add2Chain:
     if (! mk) continue;
     if (isInChain) continue;
-    if (name == "") strncpy (fBFC[i].Name,(Char_t *) mk->GetName() , sizeof(fBFC[i].Name));
+    if (name == "") {
+      memset(fBFC[i].Name, 0,sizeof(fBFC[i].Name)); 
+      strncpy (fBFC[i].Name,(Char_t *) mk->GetName() , TString(fBFC[i].Name).Length());
+    }
     if (myChain) myChain->AddMaker(mk);
     continue;
   Error:

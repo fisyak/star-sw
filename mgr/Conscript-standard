@@ -138,6 +138,15 @@ if ( $pkg eq "GenFit"
   $WarnOff = "disable -Werror";
   #    $CXXFLAGS .= " -Wno-error=switch"; # -fno-permissive";# -Wno-permissive";
   #    print "CXXFLAGS = $CXXFLAGS ================================================================================\n";
+} elsif ($pkg =~  /StBTofMatchMaker/ or $pkg =~ /StTofrMatchMaker/) {
+  $WarnOff .= " -Wno-error=maybe-uninitialized";
+  $EXTRA_CXXFLAGS .= $WarnOff;xs
+} elsif ($pkg =~ /StDaqLib/) {
+  $WarnOff .= " -Wno-error=array-bounds ";
+  $EXTRA_CXXFLAGS .= $WarnOff;xs
+} elsif ($pkg =~  /StDbBroker/ or $pkg =~ /StDbLib/) {
+  $WarnOff .= " -Wno-error=stringop-truncation";
+  $EXTRA_CXXFLAGS .= $WarnOff;xs
 } elsif ($Dir =~ m/StSpinPool/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
@@ -146,22 +155,28 @@ if ( $pkg eq "GenFit"
   $WarnOff .= " -Wno-error=sequence-point";
   $EXTRA_CXXFLAGS .= $WarnOff;xs
 } elsif ($pkg =~  /StEEmcUtil/) {
-  $WarnOff .= " -Wno-error=unused-value";
+  $WarnOff .= " -Wno-error=unused-value -Wno-error=stringop-truncation";
   $EXTRA_CXXFLAGS .= $WarnOff;
-} elsif ($pkg =~ /StEmcUtil/ || 
-	 $pkg =~ /StEmcCalibrationMaker/ || 
-	 $pkg =~ /StEmcRawMaker/ || 
-	 $pkg =~ /StEmcSimulatorMaker/) {
-  $WarnOff .= " -Wno-error=maybe-uninitialized";
+} elsif (   $pkg =~ /StEmcUtil/ 
+	 or $pkg =~ /StEmcCalibrationMaker/ 
+	 or $pkg =~ /StEmcRawMaker/ 
+	 or $pkg =~ /StEmcSimulatorMaker/) {
+  $WarnOff .= " -Wno-error=maybe-uninitialized -Wno-error=stringop-truncation";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~ /StEmcTriggerMaker/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized -Wno-error=aggressive-loop-optimizations";
   $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif ($pkg =~ /StEmbeddingUtilities/) {
+  $WarnOff .= " -Wno-error=nonnull";
+  $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StEmcADCtoE/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif ($pkg =~  /StETofMatchMaker/) {
+  $WarnOff .= " -Wno-error=maybe-uninitialized";
+  $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StEvent$/) {
-  $WarnOff .= " -Wno-error=unused-function";# -Wno-error=sign-compare -Wno-error=unused-variable";
+  $WarnOff .= " -Wno-error=unused-function -Wno-error=stringop-truncation -Wno-error=aggressive-loop-optimizations";# -Wno-error=sign-compare -Wno-error=unused-variable";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StTpcHitMaker$/) {
   $WarnOff .= " -Wno-error=unused-variable";
@@ -197,6 +212,16 @@ if ( $pkg eq "GenFit"
 } elsif ($pkg =~  /StiUtilities/) {
   $WarnOff .= " -Wno-error=aggressive-loop-optimizations";
   $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif ($pkg =~  /StPxlSimMaker/) {
+  $WarnOff .= " -Wno-error=free-nonheap-object";
+  $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif (   $pkg =~ /StUtilities/ 
+	 or $pkg =~ /St_base$/ 
+	 or $pkg =~ /St_geant_Maker/
+	 or $pkg =~ /^geant3$/
+	) {
+  $WarnOff .= " -Wno-error=stringop-truncation";
+  $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
   if ($pkg eq 'StMuDSTMaker' or $pkg eq 'StHbtMaker' or $pkg eq 'StBFChain') {
@@ -217,8 +242,7 @@ if ($pkg eq "RTS") {
 	  .  $main::PATH_SEPARATOR . "#StRoot/RTS/src" 
 	    .  $main::PATH_SEPARATOR . "#StRoot/RTS/src/EVP_READER" 
 	      .  $main::PATH_SEPARATOR . $CPPPATH;
-  $EXTRA_CXXFLAGS .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings";
-  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings";
+  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds -Wno-error=stringop-truncation";
   $EXTRA_CXXFLAGS .= $WarnOff;
   if ($DEBUG =~ /-O/ and $STAR_SYS =~ /gcc482/) { # hack for  FtfUtilities with gcc482
     $envNoDeb = $env1->clone('DEBUG' => $NOOPTIMIZED);
