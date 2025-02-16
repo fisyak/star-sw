@@ -55,5 +55,5 @@ void fitTH2gaus(TH2D *h2) {
     gaus12->SetParName(5,"#rho_{12}");
   }
   gaus12->SetParameters(param);
-  h2->Fit(gaus12,"r");
+  h2->Fit(gaus12,"rli");
 }
