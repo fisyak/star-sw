@@ -709,8 +709,8 @@ StBTofGeometry::StBTofGeometry(const char* name, const char* title)
    SetAlignFile("");
 
    std::fill( mBTofTray, mBTofTray + mNTrays, nullptr );
-   std::fill( &mBTofSensor[0][0], &mBTofSensor[mNTrays][0], nullptr );
-
+   //   std::fill( &mBTofSensor[0][0], &mBTofSensor[mNTrays][0], nullptr );
+   memset( &mBTofSensor[0][0], 0, sizeof(mBTofSensor));
    //
    //We only need one instance of StBTofGeometry
    //

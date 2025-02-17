@@ -681,14 +681,12 @@ void KFParticlePerformanceBase::CreateFitHistograms(TH1F* histo[nFitQA], int iPa
     
     for( int iH=0; iH<nFitQA/2; iH++ )
     {
-      histo[iH]   = new TH1F((res+parName[iH]).Data(),
-                             (GetDirectoryPath()+res+parName[iH]).Data(), 
+      histo[iH]   = new TH1F(res+parName[iH],
+                             GetDirectoryPath()+res+parName[iH] +"; "+AxisNameResidual[iH], 
                              nBins, -mult[iH]*xMax[iH],mult[iH]*xMax[iH]);
-      histo[iH]->GetXaxis()->SetTitle(AxisNameResidual[iH].Data());
-      histo[iH+8] = new TH1F((pull+parName[iH]).Data(),
-                             (GetDirectoryPath()+pull+parName[iH]).Data(), 
+      histo[iH+8] = new TH1F(pull+parName[iH],
+                             GetDirectoryPath()+pull+parName[iH] +"; "+AxisNameResidual[iH], 
                              nBins, -6,6);
-      histo[iH+8]->GetXaxis()->SetTitle(AxisNamePull[iH+8].Data());
     }
   }
   gDirectory->cd("..");

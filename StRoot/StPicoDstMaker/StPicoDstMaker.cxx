@@ -1987,7 +1987,7 @@ void StPicoDstMaker::fillEmcTrigger() {
 	StEmcDetector* smdp = mEmcCollection->detector(kBarrelSmdPhiStripId);
 
 	if (smde && smdp) {
-	  Float_t trigEta, trigPhi;
+	  Float_t trigEta = 0, trigPhi = 0;
 	  mEmcGeom[0]->getEtaPhi(towerId, trigEta, trigPhi);
 
 	  // Length of tower side in eta/phi space

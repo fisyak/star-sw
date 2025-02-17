@@ -458,7 +458,7 @@ Int_t StGammaCandidateMaker::MakeBarrel()
                     else
                     {
 
-                        float phi;
+                        float phi = 0;
 
                         smdPhiGeom->getPhi(id, phi);
 
