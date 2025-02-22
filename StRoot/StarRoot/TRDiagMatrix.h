@@ -23,7 +23,7 @@ class TRDiagMatrix : public TRArray {
   Double_t       &operator()(Int_t i)                    {return TRArray::operator[](i);}
   Double_t        operator()(Int_t i) const              {return TRArray::operator[](i);}
   Double_t       &operator()(Int_t i,Int_t j);
-  Double_t        operator()(Int_t i,Int_t j) const {return operator()(i,j);}
+  Double_t        operator()(Int_t i,Int_t j) const;
   void AddRow(const Double_t *row) {
     fNrows++; Set(fNrows*(fNrows+1)/2); memcpy(fArray+(fNrows-1)*fNrows/2, row, fNrows*sizeof(Double_t));
   }
@@ -37,6 +37,22 @@ class TRDiagMatrix : public TRArray {
 };
 ostream& operator<<(ostream& s,const TRDiagMatrix &target);
 inline Double_t &TRDiagMatrix::operator()(Int_t i,Int_t j){
+  if (j < 0 || j >= fNrows) {
+    ::Error("TRDiagMatrix::operator()", "index j %d out of bounds (size: %d, this: %p)", 
+	    j, fNrows, this); 
+    j = 0;
+  }
+  if (i < 0 || i >= fNrows) {
+    ::Error("TRDiagMatrix::operator()", "index i %d out of bounds (size: %d, this: %p)", 
+	    i, fNrows, this); 
+    i = 0;
+  }
+  Int_t m = i;
+  Int_t l = j;
+  if (i > j) {m = j; l = i;}
+  return TArrayD::operator[](m + (l+1)*l/2);
+}
+inline Double_t TRDiagMatrix::operator()(Int_t i,Int_t j) const {
   if (j < 0 || j >= fNrows) {
     ::Error("TRDiagMatrix::operator()", "index j %d out of bounds (size: %d, this: %p)", 
 	    j, fNrows, this); 

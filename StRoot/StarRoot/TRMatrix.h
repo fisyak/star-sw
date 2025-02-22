@@ -44,7 +44,7 @@ class TRMatrix : public TRArray {
   Double_t       &operator()(Int_t i)                    {return TRArray::operator[](i);}
   Double_t        operator()(Int_t i) const              {return TRArray::operator[](i);}
   Double_t       &operator()(Int_t i,Int_t j);
-  Double_t        operator()(Int_t i,Int_t j) const {return operator()(i,j);}
+  Double_t        operator()(Int_t i,Int_t j) const;
  protected:
   Int_t     fNrows;            // number of rows 
   Int_t     fNcols;            // number of columns
@@ -70,6 +70,19 @@ class TRMatrix : public TRArray {
 };
 std::ostream& operator<<(std::ostream& s,const TRMatrix &target);
 inline Double_t &TRMatrix::operator()(Int_t i,Int_t j){
+  if (j < 0 || j >= fNcols) {
+    ::Error("TRMatrix::operator()", "index j %d out of bounds (size: %d, this: %p)", 
+	    j, fNcols, (void *) this); 
+    j = 0;
+  }
+  if (i < 0 || i >= fNrows) {
+    ::Error("TRMatrix::operator()", "index i %d out of bounds (size: %d, this: %p)", 
+	    i, fNrows, (void *) this); 
+    i = 0;
+  }
+  return TArrayD::operator[](j + i*fNcols);
+}
+inline Double_t TRMatrix::operator()(Int_t i,Int_t j) const {
   if (j < 0 || j >= fNcols) {
     ::Error("TRMatrix::operator()", "index j %d out of bounds (size: %d, this: %p)", 
 	    j, fNcols, (void *) this); 
