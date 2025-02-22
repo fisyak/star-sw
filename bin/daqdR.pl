@@ -30,12 +30,20 @@ sub SPrint ($$$$$) {
 	}  
 #	next;
       } else {
-	my $f1 = $f;
-	for (my $f1 = $f1; $f1 < $l; $f1 += $noEventsPerJob) {
-	  my $l1 = $f1 + $noEventsPerJob - 1;
-	  if ($l1 > $l) {$l1 = $l;}
-	  print "string:$line:$f1:$l1\n";
-	  $count++;
+	my $tagsf  = $file . "," . $f . "," . $l . ".tags.root";
+	if (-r $tagsf) { 
+	  if (debug > 0) { 
+	    print "$tagsf exits\n";
+	  }  
+	  #	next;
+	} else {
+	  my $f1 = $f;
+	  for (my $f1 = $f1; $f1 < $l; $f1 += $noEventsPerJob) {
+	    my $l1 = $f1 + $noEventsPerJob - 1;
+	    if ($l1 > $l) {$l1 = $l;}
+	    print "string:$line:$f1:$l1\n";
+	    $count++;
+	  }
 	}
       }
     }

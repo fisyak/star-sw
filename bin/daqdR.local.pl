@@ -22,7 +22,7 @@ foreach my $currentrun (@AllRuns) {
     if (GoodRun($def,$r,$debug) < 0) {next;}
     print "$run Accepted\n" if ($debug);
 #    foreach my $tag (qw(st hlt)) {
-    foreach my $tag (qw(hlt st_physics_)) { # st_physics_2
+    foreach my $tag (qw(hlt st_physics_ st_cosmic_ )) { # st_physics_2
       my @files = glob $run . "/" . $tag . "*.daq"; print "files ($tag) = @files\n" if ($debug);
       if ($#files < 0) {next;}
       #  print "files = @files\n";
@@ -40,13 +40,26 @@ foreach my $currentrun (@AllRuns) {
 	my $file = $files[$i];
 	my $b = File::Basename::basename($file,".daq");
 	print "$b\n" if ($debug);
-	my $evfile = $b . ",1,10000.event.root"  ; print "evfile = $evfile \n"   if ($debug);
+# 	my $evfile = $b . ",1,10000.event.root"  ; print "evfile = $evfile \n"   if ($debug);
+# 	if (-r $evfile) {next;}			         		                   
+# 	my $mufile = $b . ",1,10000.MuDst.root"  ; print "mufile = $mufile \n"   if ($debug);
+# 	if (-r $mufile) {next;}			         		                   
+# 	my $pifile = $b . ",1,10000.picoDst.root"; print "pifile = $pifile \n"   if ($debug);
+# 	if (-r $pifile) {next;}			         		                   
+# 	my $blafile = $b . ",1,10000.bla.root"   ; print "blafile = $blafile \n" if ($debug);
+# 	if (-r $blafile) {next;}
+# 	print "string:$file\n";
+	my $logfile = $b . "B.log.gz"  ; print "logfile = $logfile \n"   if ($debug);
+	if (-r $logfile) {next;}			         		                   
+	my $evfile = $b . ".event.root"  ; print "evfile = $evfile \n"   if ($debug);
 	if (-r $evfile) {next;}			         		                   
-	my $mufile = $b . ",1,10000.MuDst.root"  ; print "mufile = $mufile \n"   if ($debug);
+	my $mufile = $b . ".MuDst.root"  ; print "mufile = $mufile \n"   if ($debug);
 	if (-r $mufile) {next;}			         		                   
-	my $pifile = $b . ",1,10000.picoDst.root"; print "pifile = $pifile \n"   if ($debug);
+	my $pifile = $b . ".picoDst.root"; print "pifile = $pifile \n"   if ($debug);
 	if (-r $pifile) {next;}			         		                   
-	my $blafile = $b . ",1,10000.bla.root"   ; print "blafile = $blafile \n" if ($debug);
+	my $tagsfile = $b . ".tags.root"   ; print "tagsfile = $tagsfile \n" if ($debug);
+	if (-r $tagsfile) {next;}
+	my $blafile = $b . ".bla.root"   ; print "blafile = $blafile \n" if ($debug);
 	if (-r $blafile) {next;}
 	print "string:$file\n";
 	$fNo++;
