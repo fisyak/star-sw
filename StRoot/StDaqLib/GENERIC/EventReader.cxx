@@ -988,7 +988,7 @@ void EventReader::WhereAreThePointers(int *beg,int *end,char *xx) {
   if((*end-*beg)%2!=1) assert(0);
 }
 void EventReader::Swap4(unsigned long *data) {
-  char *hh,temp[4];
+  char *hh,temp[4]={0};
   hh=(char*)data;
   temp[0]=hh[3]; temp[1]=hh[2]; temp[2]=hh[1]; temp[3]=hh[0];
   *data=*((unsigned long*)temp);
