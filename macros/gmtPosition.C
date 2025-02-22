@@ -12,4 +12,10 @@ void gmtPosition() {
   frame->SetXTitle("z (cm)");
   frame->SetYTitle("#phi (^{o})");
   grxy->Draw("xp");
+  for (Int_t i = 0; i < n; i++) {
+    TText *t = new TText(z[i],phi[i], Form("%i",i));
+    t->SetTextColor(i+1);
+    t->SetTextSize(0.04);
+    t->Draw();
+  }
 }
