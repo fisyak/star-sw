@@ -138,7 +138,7 @@ const char* StHyperCacheManager::get(const std::string& group_key, const std::st
 				m_JsonBuffer = const_cast<char*>(result);
 				m_JsonBufferSize = value_length;
 				m_JsonDocument.clear();
-				m_JsonDocumentIter == m_JsonDocument.begin();
+				//				m_JsonDocumentIter == m_JsonDocument.begin();
 				if (parseJsonBuffer()) { return result; }
 				return 0;
 			}
