@@ -106,8 +106,8 @@ void StRnDHit::setDetectorId(StDetectorId id) {mDetectorId = id;}
 
 ostream& operator<<(ostream& os, const StRnDHit& hit)
 {
-    return os << "HFT Hit -I- \tLayer:"<<hit.mLayer<<" ladder: "<<hit.mLadder
-	    << " wafer: "<< hit.mWafer<<"\n\t\t"<< hit
+  return os << "HFT Hit -I- \tLayer:"<<hit.mLayer<<" ladder: "<<hit.mLadder
+	    << " wafer: "<< hit.mWafer<<"\n\t\t"<< *((StHit *) &hit)
 	    <<" \n\t\tExtraByte0: "<<hit.mExtraByte0<<" ExtraByte1: "<<hit.mExtraByte1
 	    <<"\n\t\tDoubles: "<< hit.mDouble0<< " "<<hit.mDouble1<<" "<<hit.mDouble2
 	    << hit.mDouble3 << " " << hit.mDouble4<<endl;
