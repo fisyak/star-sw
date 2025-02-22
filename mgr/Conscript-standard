@@ -117,6 +117,14 @@ if ( ($Dir =~ m/StRoot.*Pool\//   && $Dir !~ /StRoot.*Pool\/St/)   ||
   $PKG = $pkg;
   $OnlinePackage=true if $Dir =~ /^OnlTools/;# and $pkg ne "OnlinePlots";
 }
+my $stringop_truncation = " -Wno-error=stringop-truncation";
+my $over_flow           = " -Wno-error=overflow";
+my $stringop_overflow   = " -Wno-error=stringop-overflow=";
+if ($env->{CXX_MAJOR} <= 4) {
+  $stringop_truncation = "";
+  $over_flow           = "";
+  $stringop_overflow   = "";
+}
 if ( $pkg eq "GenFit" 
      || $pkg =~ /Fgt/ 
      || $pkg =~ /StFlow/ 
@@ -128,7 +136,11 @@ if ( $pkg eq "GenFit"
      || $pkg =~ /StPmd/
      || $Dir =~ /StTofPool/
      || $Dir =~ /StTriggerUtilities/
+     || $Dir =~ /StPetr/
+     || $Dir =~ /StKFPX/
      || $Dir =~ /StHLTCAMaker/
+     || $Dir =~ /StDaqLib/
+     || $Dir =~ /StDAQMaker/
    ) {
   #  print "pkg = $pkg, CXX_MAJOR = $env->{CXX_MAJOR}, CXX_MAJOR = $env->{CXX_MINOR} ================================================================================\n";
   if ( $pkg eq "GenFit") {# and ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 6)) {
@@ -141,11 +153,11 @@ if ( $pkg eq "GenFit"
 } elsif ($pkg =~  /StBTofMatchMaker/ or $pkg =~ /StTofrMatchMaker/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;xs
-} elsif ($pkg =~ /StDaqLib/) {
-  $WarnOff .= " -Wno-error=array-bounds ";
-  $EXTRA_CXXFLAGS .= $WarnOff;xs
+# } elsif ($pkg =~ /StDaqLib/) {
+#   $WarnOff .= " -Wno-error=array-bounds ";
+#   $EXTRA_CXXFLAGS .= $WarnOff;xs
 } elsif ($pkg =~  /StDbBroker/ or $pkg =~ /StDbLib/) {
-  $WarnOff .= " -Wno-error=stringop-truncation";
+  $WarnOff .= "" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;xs
 } elsif ($Dir =~ m/StSpinPool/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized";
@@ -155,19 +167,19 @@ if ( $pkg eq "GenFit"
   $WarnOff .= " -Wno-error=sequence-point";
   $EXTRA_CXXFLAGS .= $WarnOff;xs
 } elsif ($pkg =~  /StEEmcUtil/) {
-  $WarnOff .= " -Wno-error=unused-value -Wno-error=stringop-truncation";
+  $WarnOff .= " -Wno-error=unused-value" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif (   $pkg =~ /StEmcUtil/ 
 	 or $pkg =~ /StEmcCalibrationMaker/ 
 	 or $pkg =~ /StEmcRawMaker/ 
 	 or $pkg =~ /StEmcSimulatorMaker/) {
-  $WarnOff .= " -Wno-error=maybe-uninitialized -Wno-error=stringop-truncation";
+  $WarnOff .= " -Wno-error=maybe-uninitialized" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~ /StEmcTriggerMaker/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized -Wno-error=aggressive-loop-optimizations";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~ /StEmbeddingUtilities/) {
-  $WarnOff .= " -Wno-error=nonnull";
+  $WarnOff .= " -Wno-error=nonnull -Wno-error=sequence-point";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StEmcADCtoE/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized";
@@ -176,13 +188,13 @@ if ( $pkg eq "GenFit"
   $WarnOff .= " -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StEvent$/) {
-  $WarnOff .= " -Wno-error=unused-function -Wno-error=stringop-truncation -Wno-error=aggressive-loop-optimizations";# -Wno-error=sign-compare -Wno-error=unused-variable";
+  $WarnOff .= " -Wno-error=unused-function" .  $stringop_truncation . " -Wno-error=aggressive-loop-optimizations";# -Wno-error=sign-compare -Wno-error=unused-variable";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StTpcHitMaker$/) {
   $WarnOff .= " -Wno-error=unused-variable";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StTreeMaker$/) {
-  $WarnOff .= " -Wno-error=overflow";
+  $WarnOff .= "" . $over_flow;
   $EXTRA_CXXFLAGS .= $WarnOff;
 # } elsif ($pkg =~  /StTriggerUtilities/) {
 #   $WarnOff .= " -Wno-error=unused-but-set-variable -Wno-error=sizeof-pointer-memaccess";
@@ -218,18 +230,18 @@ if ( $pkg eq "GenFit"
 } elsif (   $pkg =~ /StUtilities/ 
 	 or $pkg =~ /St_geant_Maker/
 	) {
-  $WarnOff .= " -Wno-error=stringop-truncation";
+  $WarnOff .= "" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ( $pkg =~ /^geant3$/	) {
-  $WarnOff .= " -Wno-error=stringop-truncation -Wno-error=maybe-uninitialized";
+  $WarnOff .= $stringop_truncation . " -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif (   $pkg =~ /St_base$/ 	) {
-  $WarnOff .= " -Wno-error=stringop-truncation -Wno-error=stringop-overflow=";
+  $WarnOff .= $stringop_truncation . $stringop_overflow; #" -Wno-error=stringop-truncation -Wno-error=stringop-overflow=";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif (  $pkg =~ /AgStar/
  	or $pkg =~ /StarGeneratorUtil/
 	or $pkg =~ /StarVMCApplication/) {
-  $WarnOff .= " -Wno-error=stringop-truncation";
+  $WarnOff .= "" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
@@ -251,7 +263,7 @@ if ($pkg eq "RTS") {
 	  .  $main::PATH_SEPARATOR . "#StRoot/RTS/src" 
 	    .  $main::PATH_SEPARATOR . "#StRoot/RTS/src/EVP_READER" 
 	      .  $main::PATH_SEPARATOR . $CPPPATH;
-  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds -Wno-error=stringop-truncation";
+  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
   if ($DEBUG =~ /-O/ and $STAR_SYS =~ /gcc482/) { # hack for  FtfUtilities with gcc482
     $envNoDeb = $env1->clone('DEBUG' => $NOOPTIMIZED);
