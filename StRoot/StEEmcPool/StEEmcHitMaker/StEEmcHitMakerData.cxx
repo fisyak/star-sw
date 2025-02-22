@@ -21,6 +21,13 @@ StSimpleClusterVec_t& StEEmcHitMakerData_t::getTowerClusterVec( TowerLayer_t lay
    };
    return mTowerClusterVec[ layer ];
 };
+const StSimpleClusterVec_t& StEEmcHitMakerData_t::getTowerClusterVec( TowerLayer_t layer ) const {
+   if( layer > NUM_TOW_LAYERS ){
+      LOG_FATAL << "StEEmcHitMaker_t::getTowerClusterVec( TowerLayer_t layer ) given invalid layer: " << layer << endm;
+      return mTowerClusterVec[ 0 ];
+   };
+   return mTowerClusterVec[ layer ];
+};
 
 void StEEmcHitMakerData_t::clearData(){
    for( Int_t i = 0; i<NUM_TOW_LAYERS; ++i )

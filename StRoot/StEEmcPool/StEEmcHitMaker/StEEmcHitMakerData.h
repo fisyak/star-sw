@@ -38,7 +38,7 @@ class StEEmcHitMakerData_t {
 
    /// const accessors
    const StEEmcHitVec_t& getHitVec() const { return mHitVec; };
-   const StSimpleClusterVec_t& getTowerClusterVec( TowerLayer_t layer ) const { return getTowerClusterVec(layer); };
+   const StSimpleClusterVec_t& getTowerClusterVec( TowerLayer_t layer ) const;// { return getTowerClusterVec(layer); };
    const StSimpleClusterVec_t& getTowerClusterVec() const { return mTowerClusterVec[ TOWER ]; };
    const StESMDClustersVec_t& getESMDClustersVec() const { return mESMDClusterVec; };
 
