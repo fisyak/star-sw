@@ -17,6 +17,7 @@
 setenv YEAR `GetYearFromPWD.pl`
 if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && $YEAR != "2023" && $YEAR != "2024") exit 1;
 #  CreateRunDirs${YEAR}.pl
+  CreateRunDirs.pl
   foreach d (`ls -1d ???/2*`)
     if (! -d ${d}) continue;
     cd $d;
