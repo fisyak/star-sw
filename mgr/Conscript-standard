@@ -120,9 +120,13 @@ if ( ($Dir =~ m/StRoot.*Pool\//   && $Dir !~ /StRoot.*Pool\/St/)   ||
 my $stringop_truncation = " -Wno-error=stringop-truncation";
 my $over_flow           = " -Wno-error=overflow";
 my $stringop_overflow   = " -Wno-error=stringop-overflow=";
-if ($env->{CXX_MAJOR} <= 4) {
+if ($env->{CXX_MAJOR} == 6) {
   $stringop_truncation = "";
-  $over_flow           = "";
+# $over_flow           = "";
+  $stringop_overflow   = "";
+} elsif ($env->{CXX_MAJOR} <= 4) {
+  $stringop_truncation = "";
+# $over_flow           = "";
   $stringop_overflow   = "";
 }
 if ( $pkg eq "GenFit" 
@@ -1010,6 +1014,7 @@ if ( $pkg =~ m/^St.*Db/             ||
   if ($STAR_SYS eq 'sl64_gcc447' or $STAR_SYS eq 'sl64_x8664_gcc447') {$extraCXXFLAGS .= " --param large-function-growth=500";}
   $extraCXXFLAGS .= "  -Wno-parentheses -Wno-unused-function"; # new flags
   $extraCXXFLAGS .= " -DNDEBUG";
+  $extraCXXFLAGS .= " -Wno-deprecated-declarations";
   $CXXFLAGS .= $extraCXXFLAGS;
   if ($CC ne 'icc') {
     $CXXFLAGS .= " -Wno-pragmas"; # new flags needed for Vc 
