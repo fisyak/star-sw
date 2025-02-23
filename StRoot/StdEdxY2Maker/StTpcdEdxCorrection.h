@@ -2,6 +2,7 @@
 #ifndef STAR_StTpcdEdxCorrection
 #define STAR_StTpcdEdxCorrection
 //
+#include <string>
 //#include "StDetectorDbMaker/St_trigDetSumsC.h"
 #include "StTrackPidTraits.h"
 #include "TString.h"
@@ -140,13 +141,13 @@ class StTpcdEdxCorrection : public TObject {
 //________________________________________________________________________________
 class dEdxY2_t {
  public:
-  dEdxY2_t() {}
-  virtual ~dEdxY2_t() {}
+  dEdxY2_t() {Reset();}
+  ~dEdxY2_t() {}
   /* U->R->S->P->O->Z->X
      U->R (TpcAdcCorrection) -> P (tpcPressure) ->
      S (TpcSecRowB/TpcSecRowC) ->  O (TpcDriftDistOxygen) ->  
      Z (TpcZCorrection) -> X(TpcdXCorrection) */
-  Char_t   first[1];
+  Char_t   first[1]; //!
   Int_t    sector;
   Int_t    row;
   Int_t    channel;

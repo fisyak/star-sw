@@ -617,6 +617,8 @@ void  StMuDstMaker::streamerOff() {
   StMuFgtAdc::Class()->IgnoreTObjectStreamer();
 #if defined(__TFG__VERSION__) && defined(__kfpAtFirstHit__)
   KFPTrack::Class()->IgnoreTObjectStreamer();
+  StGmtPoint::Class()->IgnoreTObjectStreamer();
+  StMuGmtPidTraits::Class()->IgnoreTObjectStreamer();
 #endif /* __TFG__VERSION__ */
 }
 //-----------------------------------------------------------------------

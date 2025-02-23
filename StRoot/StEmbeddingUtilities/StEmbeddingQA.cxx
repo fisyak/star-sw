@@ -394,7 +394,7 @@ Bool_t StEmbeddingQA::book(const TString outputFileName)
 }
 
 //__________________________________________________________________________________________
-Bool_t StEmbeddingQA::make(const TString inputFileName, const Bool_t isSimulation)
+Int_t StEmbeddingQA::make(const TString inputFileName, const Bool_t isSimulation)
 {
   /// Fill histograms for either embedding or real data
 
@@ -423,7 +423,7 @@ Bool_t StEmbeddingQA::make(const TString inputFileName, const Bool_t isSimulatio
 }
 
 //__________________________________________________________________________________________
-Bool_t StEmbeddingQA::fillEmbedding(const TString inputFileName)
+Int_t StEmbeddingQA::fillEmbedding(const TString inputFileName)
 {
   /// Read minimc (embedding) and fill histograms
 

@@ -189,7 +189,7 @@ Int_t StV0sMaker::Init(){
 Int_t StV0sMaker::Make(){
   //p track's information  
   int vphit,vphitpos;
-  float vpdca,vpsigma,vpdedx;
+  float vpdca,vpsigma=0,vpdedx;
   
   //pi track's information
   int vpihit,vpihitpos;

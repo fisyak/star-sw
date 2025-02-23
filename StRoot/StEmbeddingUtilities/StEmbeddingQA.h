@@ -94,7 +94,7 @@ class StEmbeddingQA {
     Bool_t book(const TString outputFileName = "");
 
     /// Either fillEmbedding or fillRealData according to the isSimulation flag
-    Bool_t make(const TString inputFileName, const Bool_t isSimulation = kTRUE);
+    Int_t make(const TString inputFileName, const Bool_t isSimulation = kTRUE);
 
     /// Either RunRealData or RunEmbedding according to the kIsSimulation flag
     Bool_t run(const TString inputFileList) ;
@@ -134,7 +134,7 @@ class StEmbeddingQA {
     void clear() ; /// Clear all histograms
 
     // Fill histograms
-    Bool_t fillEmbedding(const TString inputFileName) ; // Fill embedding histograms
+    Int_t fillEmbedding(const TString inputFileName) ; // Fill embedding histograms
     Bool_t fillRealData(const TString inputFileName) ;  // Fill real data histograms
 
     /// Fill embedding tracks

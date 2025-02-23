@@ -2103,7 +2103,6 @@ Double_t StTpcRSMaker::dEdxCorrection(HitPoint_t &TrackSegmentHits) {
     //    dEdxCor = -1;
     Double_t dStep =  TMath::Abs(TrackSegmentHits.tpc_hitC->ds);
     dEdxY2_t CdEdx;
-    memset (&CdEdx, 0, sizeof(dEdxY2_t));
     CdEdx.DeltaZ = 5.2; 
     CdEdx.QRatio = -2;
     CdEdx.QRatioA = -2.;

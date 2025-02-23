@@ -352,6 +352,7 @@ Int_t  StGmtRawMaker::ClusterBuilder(UInt_t module, StGmtHitCollection& hits) {
       if (adc <= 0) continue;
       position = pStrip->getPosition();
       if (position < -990) continue;
+      if (module == 1 && position < 5.12) continue;   // hot strips in Y & Z 
       Int_t bin = histXY[ixy][module]->Fill(position,adc);
       histXY[ixy][module]->SetBinError(bin,adcRMS);
       if (Debug() > 2) {
