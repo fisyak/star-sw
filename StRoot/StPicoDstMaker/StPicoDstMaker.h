@@ -102,7 +102,7 @@ class StPicoDstMaker : public StMaker {
   /// Constructor
   StPicoDstMaker(char const* name = "PicoDst");
   /// Constructor that takes most of pararmeters
-  StPicoDstMaker(Int_t ioMode, char const* fileName = "",
+  StPicoDstMaker(PicoIoMode ioMode, char const* fileName = "",
 		 char const* name = "PicoDst");
   StPicoDstMaker(Int_t ioMode, char const* fileName = "",
 		 char const* name = "PicoDst") : StPicoDstMaker((PicoIoMode) ioMode, fileName, name) {}
