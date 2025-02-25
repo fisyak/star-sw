@@ -1,5 +1,4 @@
 // @(#)StRoot/StBFChain:$Name:  $:$Id: StBFChain.cxx,v 1.670 2021/03/21 03:32:28 genevb Exp $
-
 #include "TROOT.h"
 #include "TPRegexp.h"
 #include "TString.h"
@@ -27,10 +26,8 @@
 #include "StarGenerator/BASE/StarPrimaryMaker.h"
 #include "StarGenerator/StarGenEventReader/StarGenEventReader.h"
 #endif
-#if  ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)
 #include "StMuDSTMaker/COMMON/StMuDstMaker.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
-#endif
 #define STAR_LOGGER 1
 // PLease, preserve the comment after = { . It is used for documentation formatting
 //
@@ -434,12 +431,7 @@ Int_t StBFChain::Instantiate()
     // need to take place before 'maker' is created.
     if (! mk) {
       if (maker == "StMuDstMaker" && GetOption("RMuDst")) {
-#if  ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)
 	mk = new StMuDstMaker(0,0,".",fInFile.Data(),"st:MuDst.root",1e9);
-#else
-	ProcessLine(Form("new StMuDstMaker(0,0,\"\",\"%s\",\"st:MuDst.root\",1e9)",fInFile.Data()));
-	mk = GetMaker("MuDst");
-#endif
 	if (GetOption("RMuDst")) 
 	  NoMakersWithInput++;
       } else if (maker == "StPicoDstMaker") {
@@ -447,21 +439,11 @@ Int_t StBFChain::Instantiate()
 	if (GetOption("RpicoDst")) {
 	  NoMakersWithInput++;
 	  io = 2; // IoRead=2
-#if  ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)
 	  mk = new StPicoDstMaker(io,fInFile.Data());
-#else
-	  ProcessLine(Form("new StPicoDstMaker(%i,\"%s\")",io,fInFile.Data()));
-#endif
 	} else {
-#if  ROOT_VERSION_CODE >= ROOT_VERSION(6,0,0)
 	  mk = new StPicoDstMaker(io,fFileOut.Data());
-#else
-	  ProcessLine(Form("new StPicoDstMaker(%i,\"%s\")",io,fFileOut.Data()));
-#endif
 	}
-#if  ROOT_VERSION_CODE < ROOT_VERSION(6,0,0)
 	mk = GetMaker("PicoDst");
-#endif
       } else {
 	if (strlen(fBFC[i].Name) > 0) mk = New(fBFC[i].Maker,fBFC[i].Name);
 	else                          mk = New(fBFC[i].Maker);
