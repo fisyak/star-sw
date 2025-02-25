@@ -24,12 +24,7 @@
 #include "StPicoMcVertex.h"
 #include "StPicoMcTrack.h"
 #include "StPicoDst.h"          //MUST be the last one
-
-#ifdef __TFG__VERSION__
 StPicoDst *StPicoDst::fgPicoDst = 0;
-#endif /* __TFG__VERSION__ */
-//TClonesArray** StPicoDst::picoArrays = 0;
-
 //_________________
 void StPicoDst::unset() {
   picoArrays = 0;

@@ -29,6 +29,8 @@
 #include "StarClassLibrary/PhysicalConstants.h"
 #endif
 
+#include "StPicoTrackCovMatrix.h"
+
 //_________________
 class StPicoTrack : public TObject {
 

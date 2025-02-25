@@ -5,10 +5,10 @@
 #include "TObject.h"
 #include "StPicoDst.h"
 #if defined (__TFG__VERSION__)
-#include "StEvent/StDcaGeometry.h"
 #include "KFParticle/KFParticle.h"
 #include "THelixTrack.h"
 #endif /* __TFG__VERSION__ */
+#include "StEvent/StDcaGeometry.h"
 
 //_________________
 class StPicoTrackCovMatrix : public TObject {
@@ -58,9 +58,9 @@ class StPicoTrackCovMatrix : public TObject {
   /// matrix in MuDst
   Bool_t isBadCovMatrix();
 
-#if defined (__TFG__VERSION__)
   /// DCA geometry
   StDcaGeometry &dcaGeometry() const;
+#ifdef __TFG__VERSION__
   KFParticle    &Particle(Int_t kg = 0, Int_t pdg = 0)  const {return dcaGeometry().Particle(kg,pdg);}
   THelixTrack    thelix()                               const {return dcaGeometry().thelix();}
 #endif /* __TFG__VERSION__ */

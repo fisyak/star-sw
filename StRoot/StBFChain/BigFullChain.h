@@ -2051,7 +2051,6 @@ Bfc_st BFC[] = { // standard chains
   {"VecBos","" ,"","fastjet","","boost_program_options,StJets,StVecBosAna", "Vector Boson analysis",kFALSE},
   {"LAna"        ,"","","in,detDb,StEvent,tpcDb,TpcHitMover","StLaserAnalysisMaker"
    ,                                                   "StLaserAnalysisMaker","Laser data Analysis",kFALSE},
-  {"MuD0Anal"    ,"","","","StMuD0AnalysisMaker",         "StMuD0AnalysisMaker","MuDst D0 Analysis",kFALSE},
   {"RefMult"     ,"","","",                                 "","StRefMultCorr","Load StRefMultCorr",kFALSE},
   {"KFPInter"    ,"","","KFParticle,RefMult,picoDeps", "","KFParticle,KFParticlePerformance,"
    "StKFParticleAnalysisMaker",                                         "STAR KFParticle interface",kFALSE},
