@@ -303,7 +303,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
 	assert(m_Corrections[x].Chair);
 	continue;
       }
-      LOG_WARN << "With" << m_Corrections[k].Name << " activated => Deactivate " << m_Corrections[x].Name << endm;
+      LOG_WARN << "With " << m_Corrections[k].Name << " activated => Deactivate " << m_Corrections[x].Name << endm;
       CLRBIT(m_Mask,x); 
       SafeDelete(m_Corrections[x].Chair);
     }
