@@ -1,39 +1,8 @@
 /*
----------------------------------------------------------------------------------------
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20210501.165437 --- 20210506.070146
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230049 --- 20371231.120000
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20210501.165437 --- 20210506.070146
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000000 --- 20371231.120000
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20210501.165437 --- 20210506.070146
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202321 --- 20371231.120000
-StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20210501.165437 --- 20210506.070146
-
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcSecRowB.txt
-  root.exe 'DbMap.C+("TpcSecRowB.txt")' 
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcTimeDependence  where elementID=1 and  deactive = 0  order by beginTime;' | tee tpcTimeDependence.txt
-  root.exe 'DbMap.C+("tpcTimeDependence.txt")'
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcZCorrectionC  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcZCorrectionC.txt
-  root.exe 'DbMap.C+("TpcZCorrectionC.txt")'
-
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcLengthCorrectionMDN  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcLengthCorrectionMDN.txt
-  root.exe 'DbMap.C+("TpcLengthCorrectionMDN.txt")'
-
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcAdcCorrection6MDF  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcAdcCorrection6MDF.txt
-  root.exe 'DbMap.C+("TpcAdcCorrection6MDF.txt")'
-
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcPadCorrectionMDC  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcPadCorrectionMDC.txt
-  root.exe 'DbMap.C+("TpcPadCorrectionMDC.txt")'
-
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcAdcCorrection6MDF  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcAdcCorrection6MDF.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcSecRowB.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcPressureB  where elementID=1 and  deactive = 0  order by beginTime;' | tee tpcPressureB.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcZCorrectionC  where elementID=1 and  deactive = 0  order by beginTime;' | tee TpcZCorrectionC.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcPadCorrectionMDC  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcPadCorrectionMDC.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from tpcTimeDependence  where elementID=1 and  deactive = 0  order by beginTime;' | tee tpcTimeDependence.txt
-  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from TpcLengthCorrectionMDN  where elementID=1 and  deactive = 0 order by beginTime;' | tee TpcLengthCorrectionMDN.txt
-
+foreach db (tpcAcCharge TpcAccumulatedQ TpcAdcCorrection3MDF TpcAdcCorrection4MDF TpcAdcCorrection5MDF TpcAdcCorrection6MDF TpcAdcCorrectionB TpcAdcCorrectionC TpcAdcCorrectionMDF TpcAdcI tpcBXT0CorrEPD TpcCurrentCorrectionX TpcdCharge TpcdEdxCor TpcDriftDistOxygen tpcDriftVelocity TpcDriftVelRowCor TpcdXCorrectionB TpcdXdY TpcdZdY TpcEdge TpcEffectivedX TpcEtaCorrection TpcEtaCorrectionB tpcExtraGainCorrection tpcGainCorrection tpcGasTemperature TpcLengthCorrectionB TpcLengthCorrectionMDF TpcLengthCorrectionMDN tpcMethaneIn TpcMultiplicity TpcnPad TpcnTbk TpcPadCorrection TpcPadCorrectionMDC TpcPadCorrectionMDF TpcPhiDirection tpcPressureB TpcrCharge tpcRDOMap tpcRDOT0offset TpcResponseSimulator TpcRowQ TpcSecRowB tpcSectorT0offset tpcSlewing TpcSpaceCharge tpcStatus tpcT0 tpcT0BX TpcTanL tpcTimeBucketCor tpcTimeDependence tpcWaterOut TpcZCorrectionB TpcZCorrectionC TpcZDC) 
+  mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from '${db}'  where elementID=1 and  deactive = 0 order by beginTime;' | tee ${db}.txt
+end
+  
   root.exe DbMap.C+
 
   DbMap("TpcAdcCorrection6MDF.txt");   >> TpcAdcCorrection6MDF.log
@@ -50,6 +19,7 @@ StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation v
 #include "Riostream.h"
 #include "TSystem.h"
 #include "TString.h"
+#include "TDirIter.h"
 struct DbAlias_t {
   const char *tag;
   Int_t date;
@@ -58,16 +28,17 @@ struct DbAlias_t {
   const char *comment;
 };
 #include "StChain/GeometryDbAliases.h"
-void DbMap(const Char_t *FileName = "TpcLengthCorrectionMDN.txt") {
+void DbMap(const Char_t *FileName) {
 #if 0
-    for (Int_t i = 0; fDbAlias[i].date; i++) {
-      Double_t dt1 = fDbAlias[i].date   + ((Double_t) fDbAlias[i].time)  /1000000.;
-      Double_t dt2 = fDbAlias[i+1].date + ((Double_t) fDbAlias[i+1].time)/1000000.;
-      if (dt1 > dt2) {
-	cout << "Wrong order; " << fDbAlias[i].tag << " > " << fDbAlias[i+1].tag << Form("dt1 = %16.6f, dt2 = %16.6f\n",dt1,dt2);
-      }
+  for (Int_t i = 0; fDbAlias[i].date; i++) {
+    Double_t dt1 = fDbAlias[i].date   + ((Double_t) fDbAlias[i].time)  /1000000.;
+    Double_t dt2 = fDbAlias[i+1].date + ((Double_t) fDbAlias[i+1].time)/1000000.;
+    if (dt1 > dt2) {
+      cout << "Wrong order; " << fDbAlias[i].tag << " > " << fDbAlias[i+1].tag << Form("dt1 = %16.6f, dt2 = %16.6f\n",dt1,dt2);
     }
+  }
 #endif
+  TString F(FileName); F.ReplaceAll(".txt","");
   FILE *fp = fopen(FileName,"r");
   if (! fp) {
     cout << "Can't open" << FileName << endl;
@@ -99,7 +70,7 @@ void DbMap(const Char_t *FileName = "TpcLengthCorrectionMDN.txt") {
 #endif
       if (dt1 <= dt && dt < dt2) {
 	Tag = fDbAlias[i].tag;
-	printf("%-32s %8i %6i beginTime = %4d-%02d-%02d %02d:%02d:%02d, entryTime %s",Tag.Data(),d,t, bY,bM,bD,bh,bm,bs,line);
+	printf("%-28s %-32s %8i %6i beginTime = %4d-%02d-%02d %02d:%02d:%02d, entryTime %s",Tag.Data(),F.Data(),d,t, bY,bM,bD,bh,bm,bs,line);
 	break;
       }
     }    
@@ -108,4 +79,13 @@ void DbMap(const Char_t *FileName = "TpcLengthCorrectionMDN.txt") {
 #endif
   }
   fclose(fp);
+}
+//________________________________________________________________________________
+void DbMap() {
+  TDirIter Dir("*.txt");
+  Char_t *file = 0;
+  while ((file = (Char_t *) Dir.NextFile())) {
+    printf("%s ====================\n",file);
+    DbMap(file);
+  }
 }

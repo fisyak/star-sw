@@ -57,7 +57,7 @@
  set Chain = "";
   switch ($year)
     case "2019":
-      Chain = "P2019a";
+      set Chain = "P2019a";
    breaksw
     case "2020":
       set Chain = "P2020a";

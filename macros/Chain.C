@@ -39,7 +39,7 @@ TChain *Chain(const Char_t *TreeName = "FitP") {
 #include "TDirIter.h"
 #include "TSystem.h"
 TChain *tChain = 0;
-TChain *Chain(const Char_t *files = "./*.MuDst.root",const Char_t *TreeName = "MuDst", Bool_t Checkgz = kFALSE) {
+TChain *Chain(const Char_t *files = "./*/*/*.MuDst.root",const Char_t *TreeName = "MuDst", Bool_t Checkgz = kFALSE) {
   TDirIter Dir(files);
   //  TTreeIter iter(TreeName);
   //  iter.AddFile(files);

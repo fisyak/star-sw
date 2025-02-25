@@ -11,7 +11,7 @@
 #include "TMath.h"
 //________________________________________________________________________________
 void GMT(TChain *tChain) {
-  TFile *f = new TFile("MdYZC.root","recreate");
+  TFile *f = new TFile("MdYZ.root","recreate");
   tChain->Draw("GlobalTracks.mGmtPidTraits.mDeltaZ:GlobalTracks.mGmtPidTraits.mDeltaY:GlobalTracks.mGmtPidTraits.mModule>>MdYZ(8,-0.5,7.5,500,-2.5,2.5,500,-2.5,2.5)","GlobalTracks.mGmtPidTraits.mModule<8");
   f->Write();
 }

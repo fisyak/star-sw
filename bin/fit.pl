@@ -94,6 +94,10 @@ if ($all) {
 			     NPoints70+NPoints70P NPointsF+NPointsFP NPoints70U+NPoints70UP NPointsFU+NPointsFUP  NPointsN+NPointsNP NPointsNU+NPointsNUP
 			     NPoints70 NPoints70P NPointsF NPointsFP NPoints70U NPoints70UP NPointsFU NPointsFUP  NPointsN NPointsNP NPointsNU NPointsNUP
                              TimeF 
+			     Eta3 Eta3C 
+			     EtaB3 EtaB3C
+			     Eta3P Eta3PC
+			     EtaB3P EtaB3PC
 	      );
 #  TPoints70+TPoints70P TPointsF+TPointsFP TPoints70U+TPoints70UP TPointsFU+TPointsFUP  TPointsN+TPointsNP TPointsNU+TPointsNUP
 #  TPoints70 TPoints70P TPointsF TPointsFP TPoints70U TPoints70UP TPointsFU TPointsFUP  TPointsN TPointsNP TPointsNU TPointsNUP
