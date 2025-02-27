@@ -70,67 +70,6 @@ StTpcdEdxCorrection::StTpcdEdxCorrection(Int_t option, Int_t debug) :
 {
   assert(gStTpcDb);
   if (!m_Mask) m_Mask = -1;
-#if 0
-  static const Char_t *FXTtables[] = {"TpcAdcCorrectionB",         
-				      "TpcAdcCorrectionC",         
-				      "TpcEdge",            
-				      //				      "TpcAdcCorrectionMDF",       
-				      "TpcAdcCorrection6MDF",
-				      "TpcAdcCorrection5MDF",
-				      "TpcAdcCorrection4MDF",
-				      "TpcAdcCorrection3MDF",
-				      "TpcdCharge",         
-				      //				      "TpcrCharge",                
-				      "TpcCurrentCorrection",     
-				      "TpcRowQ",            
-				      "TpcAccumulatedQ",    
-				      "TpcSecRowB",                
-				      //				      "TpcSecRowC",         
-				      "tpcPressureB",       
-				      //				      "tpcTime",            
-				      "TpcDriftDistOxygen", 
-				      "TpcMultiplicity",    
-				      "TpcZCorrectionC",           
-				      "TpcZCorrectionB",    
-				      "tpcMethaneIn",       
-				      "tpcGasTemperature",     
-				      "tpcWaterOut",        
-				      //				      "TpcSpaceCharge",            
-				      "TpcPhiDirection",           
-				      "TpcTanL",            
-				      "TpcdXCorrectionB",   
-				      "TpcEtaCorrectionB",   
-				      "TpcEffectivedX",     
-				      //				      "TpcPadTBins",               
-				      "TpcZDC",                    
-				      "TpcPadCorrectionMDF",     
-				      "TpcPadCorrectionMDC",     
-				      //				      "TpcAdcI",            
-				      //				      "TpcnPad",                   
-				      //				      "TpcnTbk",            
-				      //				      "TpcdZdY",            
-				      //				      "TpcdXdY",            
-				      "TpcLengthCorrectionB",
-				      "TpcLengthCorrectionMDF",        
-				      "TpcLengthCorrectionMD2",              
-				      "TpcLengthCorrectionMDN",              
-				      "TpcdEdxCor"};
-  static Int_t NT = sizeof(FXTtables)/sizeof(const Char_t *);
-  m_isFixedTarget = St_beamInfoC::instance()->IsFixedTarget();
-  if (m_isFixedTarget) {
-    TString flavor("sim+ofl+FXT");
-#ifdef __TFG__VERSION__
-    flavor += "+TFG";
-#endif
-    St_db_Maker *dbMk = (St_db_Maker *) StMaker::GetTopChain()->Maker("db");
-    TDataSet *flaDir = dbMk->Find(".flavor");
-    for (Int_t i = 0; i < NT; i++) {
-      // Don't touch tables with set flavor
-      if (flaDir && flaDir->Find(FXTtables[i])) continue;
-      dbMk->SetFlavor(flavor, FXTtables[i]);
-    }
-  }
-#endif
   ReSetCorrections();
 }
 //________________________________________________________________________________
@@ -240,6 +179,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
       if (Debug()) {
 	LOG_WARN << CommentLine.Data() << endm;
       }
+      LOG_WARN << CommentLine.Data() << endm;
       continue;
     }
     if (St_db_Maker::GetValidity(table,t) > 0) {
@@ -260,9 +200,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
       if (! chairSecRow && ! chairEffectivedX) {
 	CommentLine +=  "\tis not tpcCorrection, MDFCorrection, TpcEffectivedX, TpcEffectivedX, or TpcSecRowCor types";
       }
-      //      if (Debug()) {
       LOG_WARN << CommentLine.Data() << endm;
-      //      }
       continue;
     }
     if (! npar ) {
@@ -272,6 +210,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
       if (Debug()) {
 	LOG_WARN << CommentLine.Data() << endm;
       }
+      LOG_WARN << CommentLine.Data() << endm;
       continue;
     }
     LOG_WARN << CommentLine.Data() << endm;

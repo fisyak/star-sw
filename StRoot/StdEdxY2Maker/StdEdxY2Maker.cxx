@@ -14,10 +14,10 @@
   #define __DEBUG_dNdx__
 //#define __ADD_PROB__
 //#define __BENCHMARKS__DOFIT_ZN__
-  #define __FIT_PULLS__
+//#define __FIT_PULLS__
   #define __CHECK_RDOMAP_AND_VOLTAGE__
   #ifdef __CHECK_RDOMAP_AND_VOLTAGE__
-     #include "TProfile3D.h"
+#include "TProfile3D.h"
   #endif /* __CHECK_RDOMAP_AND_VOLTAGE__ */
 //#define __dZdY_dXdY__
 //#define __Pad_Tmbk__
