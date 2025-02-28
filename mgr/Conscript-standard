@@ -247,6 +247,9 @@ if ( $pkg eq "GenFit"
 	or $pkg =~ /StarVMCApplication/) {
   $WarnOff .= "" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif (  $pkg =~ /Geometry/) {
+  $WarnOff .= " -Wno-error=unused-but-set-variable";
+  $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
   if ($pkg eq 'StMuDSTMaker' or $pkg eq 'StHbtMaker' or $pkg eq 'StBFChain') {
