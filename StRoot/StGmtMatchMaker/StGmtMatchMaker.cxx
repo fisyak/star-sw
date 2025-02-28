@@ -24,7 +24,7 @@
 #include "StGlobalTrack.h"
 #include "StDcaGeometry.h"
 #include "TRVector.h"
-#include "StGmtRawMaker/StGmtConsts.h"
+#include "StGmtRaw25Maker/StGmtConsts.h"
 Int_t    StGmtMatchMaker::fMinNoHits = 15;
 Double_t StGmtMatchMaker::fpCut = 0.2;;
 //________________________________________________________________________________
