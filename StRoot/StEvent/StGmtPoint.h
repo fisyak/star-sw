@@ -31,23 +31,35 @@ public:
 	    Float_t dzD = 0, Float_t dsigmaZ = 0, Float_t dAdcLz = 0);
  StGmtPoint(StGmtHit &hitY, StGmtHit &hitZ, Int_t trackId, StThreeVectorF &global, StThreeVectorF &local);
   ~StGmtPoint() {}
-  StDetectorId detector()      const  {return kGmtId;}    
-  Int_t        getTrackId()    const  {return mTrackId;}
-  Int_t        getModule()     const  {return hardwarePosition()/2 - 1;}
-  Int_t        volumeID()      const  {return 0;}
-  StThreeVectorF local()       const  {return positionError();}  // prediction in local coorditane system
-  Float_t      yD()            const  {return myD;}
-  Float_t      sigmaY()        const  {return msigmaY;}
-  Float_t      AdcLy()         const  {return mAdcLy;}
-  Float_t      dyD()           const  {return mdyD;}
-  Float_t      dsigmaY()       const  {return mdsigmaY;}
-  Float_t      dAdcLy()        const  {return mdAdcLy;}
-  Float_t      zD()            const  {return mzD;}
-  Float_t      sigmaZ()        const  {return msigmaZ;}
-  Float_t      AdcLz()         const  {return mAdcLz;}
-  Float_t      dzD()           const  {return mdzD;}
-  Float_t      dsigmaZ()       const  {return mdsigmaZ;}
-  Float_t      dAdcLz()        const  {return mdAdcLz;}
+  StDetectorId detector()       const  {return kGmtId;}    
+  Int_t        getTrackId()     const  {return mTrackId;}
+  Int_t        getModule()      const  {return hardwarePosition()/2 - 1;}
+  Int_t        volumeID()       const  {return 0;}
+  StThreeVectorF local()        const  {return positionError();}  // prediction in local coorditane system
+  Float_t      yD()             const  {return myD;}
+  Float_t      sigmaY()         const  {return msigmaY;}
+  Float_t      AdcLy()          const  {return mAdcLy;}
+  Float_t      dyD()            const  {return mdyD;}
+  Float_t      dsigmaY()        const  {return mdsigmaY;}
+  Float_t      dAdcLy()         const  {return mdAdcLy;}
+  Float_t      zD()             const  {return mzD;}
+  Float_t      sigmaZ()         const  {return msigmaZ;}
+  Float_t      AdcLz()          const  {return mAdcLz;}
+  Float_t      dzD()            const  {return mdzD;}
+  Float_t      dsigmaZ()        const  {return mdsigmaZ;}
+  Float_t      dAdcLz()         const  {return mdAdcLz;}
+  Float_t      getLocalY()      const  {return yD();}
+  Float_t      getLocalX()      const  {return zD();}
+  Float_t      getErrorLocalY() const  {return dyD();}
+  Float_t      getErrorLocalX() const  {return dzD();}
+  Float_t      getAdcY()        const  {return AdcLy();}
+  Float_t      getAdcX()        const  {return AdcLz();}
+  Float_t      getSigmaY()      const  {return sigmaY();}
+  Float_t      getSigmaX()      const  {return sigmaZ();}
+  Float_t      getErrorSigmaY() const  {return dsigmaY();}
+  Float_t      getErrorSigmaX() const  {return dsigmaZ();}
+  Float_t      getErrorAdcY()   const  {return dAdcLy();}
+  Float_t      getErrorAdcX()   const  {return dAdcLz();}
   void setAssociatedTrack(StTrack* val);
   StTrack*        associatedTrack();
   const StTrack*  associatedTrack() const;
