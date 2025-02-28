@@ -44,13 +44,13 @@
 #root.exe -q -b 'bfc.C(1000,"P2018,TpxRaw,TpxClu,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,CorrX,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,McTpcAna","'${input}'","'$output'","'${bf}.root'")' &gt;&amp; ${logFile}
 #root.exe -q -b 'bfc.C(100000,"P2018a,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,useCDV,CorrX,-evout,NoHistos,noTags,noRunco,StiCA,KFVertex","'${input}'")' &gt;&amp; ${logFile}
 #root.exe -q -b 'bfc.C(100000,"P2018a,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,useCDV,CorrX,OPr40,-evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite","'${input}'")' &gt;&amp; ${logFile}
-#root.exe -q -b 'bfc.C(100000,"P2018a,gmt,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
-#root.exe -q -b 'bfc.C(100000,"P2019,gmt,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
-# root.exe -q -b 'bfc.C(100000,"P2019,TpxRaw,TpxClu,gmt,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
-#root.exe -q -b 'bfc.C(100000,"P2019,gmt,-l3onl,-fpd,-hitfilt,mtd,btof,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
-#root.exe -q -b 'bfc.C(100000,"P2019a,gmt,-l3onl,-fpd,mtd,btof,OGridLeakFull,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
-#root.exe -q -b 'bfc.C(100000,"P2019a,gmt,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,TpcAligner,NoHistos,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
-#root.exe -q -b 'bfc.C(100000,"P2019a,CorrZ,gmt,gmtOnly,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2018a,gmt25,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2019,gmt25,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+# root.exe -q -b 'bfc.C(100000,"P2019,TpxRaw,TpxClu,gmt25,-l3onl,-fpd,-hitfilt,mtd,btof,BEmcChkStat,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,KFVertex,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2019,gmt25,-l3onl,-fpd,-hitfilt,mtd,btof,OGridLeakFull,CorrX,OPr40,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2019a,gmt25,-l3onl,-fpd,mtd,btof,OGridLeakFull,evout,NoHistos,noTags,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2019a,gmt25,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,TpcAligner,NoHistos,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
+#root.exe -q -b 'bfc.C(100000,"P2019a,CorrZ,gmt25,gmtOnly,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst","'${input}'")' &gt;&amp; ${logFile}
   set year = `GetYearFromPWD.pl`
   echo ${year} | grep 20
   if ($? != 0) exit 0;
@@ -77,7 +77,7 @@
     default:
       exit 0;
   endsw
-  set Chain = "${Chain},CorrZ,gmt,gmtOnly,Agi,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,-fttDat,-fcs,-fcsDat,fcsWFF,-fcsCluster,-fcsPoint,-fcsdb"; #,noTags
+  set Chain = "${Chain},CorrZ,gmt25,gmtOnly,Agi,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,-fttDat,-fcs,-fcsDat,fcsWFF,-fcsCluster,-fcsPoint,-fcsdb"; #,noTags
   root.exe -b -q  'bfc.C(100000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
     cp -p ${logFile} ${SUBMITTINGDIRECTORY}/
     cp -p ${bf}*.root ${SUBMITTINGDIRECTORY}/

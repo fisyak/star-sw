@@ -13,7 +13,7 @@
   set logFile  = ${filel}.gmt.log
   set gmtFile  = ${filel}.gmt.root
   if ( -r ${SUBMITTINGDIRECTORY}/$gmtFile) exit 0;
-  root.exe -b -q  'bfc.C(100000,"in,MakeEvent,gmt,analysis,nodefault","'${evtsFile}'","","'${gmtFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(100000,"in,MakeEvent,gmt25,analysis,nodefault","'${evtsFile}'","","'${gmtFile}'")' &gt;&amp; ${logFile}
   gzip ${logFile}
         </command>
         <stdout URL="file:./sched$JOBID.log" />

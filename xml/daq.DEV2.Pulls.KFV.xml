@@ -35,32 +35,32 @@
 # 2019    root4star -b -q 'bfc.C(1000,"P2019a,StiCA,PicoVtxDefault,BEmcChkStat,OSpaceZ2,OGridLeakFull,-OPr13,OPr40,-hitfilt,evout,-beamline3D","'${evtsFile}'")' &gt;&amp; ${logFile}
 #         root.exe -b -q  'bfc.C(1000,"P2019a,StiCA,PicoVtxDefault,BEmcChkStat,OSpaceZ2,OGridLeakFull,-OPr13,OPr40,-hitfilt,evout,-beamline3D","'${evtsFile}'")' &gt;&amp; ${logFile}
 #         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#         root.exe -b -q  'bfc.C(5000,"P2019a,DbV20191031,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#         root.exe -b -q  'bfc.C(5000,"P2019a,DbV20191001,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#         root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#         root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,-beamLine3D,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#          root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#          root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-OGridLeakFull,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#          root.exe -b -q  'bfc.C(5000,"P2019a,DbV20190430,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,DbV20191031,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,DbV20191001,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,-beamLine3D,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,DbV20191001,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(5000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-OGridLeakFull,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#          root.exe -b -q  'bfc.C(5000,"P2019a,DbV20190430,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#         root.exe -b -q  'bfc.C(5000,"P2019a,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout,-OSpaceZ2","'${evtsFile}'")' &gt;&amp; ${logFile}
 #          root.exe -b -q  'bfc.C(500,"DbV20191001,P2019a,StiCA,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
 # 2020    root4star -b -q 'bfc.C(6000,"P2020a,StiCA,btof,mtd,etofA,BEmcChkStat,picoVtxDefault,PicoCovMtxWrite,-hitfilt,QAalltrigs,evout,NoHistos,noTags,noRunco","'${evtsFile}'")' &gt;&amp; ${logFile}
 #         root.exe  -b -q 'bfc.C(6000,"P2020a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault","'${evtsFile}'")' &gt;&amp; ${logFile}
-#           root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
-#           root.exe -b -q  'bfc.C(1000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,StiPulls,gmt,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#           root.exe -b -q  'bfc.C(3000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
+#           root.exe -b -q  'bfc.C(1000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,StiPulls,gmt25,PicoVtxVpdOrDefault,BEmcChkStat,NoHistos,noTags,noRunco,evout","'${evtsFile}'")' &gt;&amp; ${logFile}
 # 07/06/2023
-#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt25'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
 # 08/04/2023
 #  set WestEastOff = ""
 #  echo ${SUBMITTINGDIRECTORY} | grep WestOff
 #  if ($? == 0) set WestEastOff = ",WestOff"
 #  echo ${SUBMITTINGDIRECTORY} | grep EastOff
 #  if ($? == 0) set WestEastOff = ",EastOff"
-#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
+#  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
   set year = `GetYearFromPWD.pl`
   echo ${year} | grep 20
   if ($? != 0) exit 0;
@@ -73,11 +73,11 @@
   set Chain = "";
   switch ($year)
     case "2019":
-#      Chain = "P2019a,CorrZ,TFGdbOpt,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt${PicoMode},BEmcChkStat,NoHistos,noTags,noRunco";
+#      Chain = "P2019a,CorrZ,TFGdbOpt,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt25${PicoMode},BEmcChkStat,NoHistos,noTags,noRunco";
       set Chain = "P2019a,CorrZ,TFGdbOpt,btof,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
     breaksw
     case "2020":
-      set Chain = "P2020a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA,gmt${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
+      set Chain = "P2020a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA,gmt25${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
     breaksw
     case "2021":
       set Chain = "P2021a,CorrZ,TFGdbOpt,btof,mtd,etofA,BEmcChkStat,-beamLine3D,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";

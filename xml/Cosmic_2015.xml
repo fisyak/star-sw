@@ -25,16 +25,16 @@ foreach input (`cat $FILELIST`)
   if (-r $muFile) exit 0;
   set tFile = ${filel}.root
   if (-r $tFile) exit 0;
-#  root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,tpcX,TpxRaw,TpxClu2D,gmt,UseXgeom,tpcDB,TpcHitMover,StiCA,Cosmics,KFVertex,Corr4,evout,NoHistos,noTags,noRunco","'${input}'","'$output'")' &gt;&amp; ${logFile}
-#  root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,tpcX,TpxRaw,TpxClu2D,gmt,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,Corr4,evout,NoHistos,noTags,noRunco,BAna,","'${input}'","'$output'")' &gt;&amp; ${logFile}
+#  root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,tpcX,TpxRaw,TpxClu2D,gmt25,UseXgeom,tpcDB,TpcHitMover,StiCA,Cosmics,KFVertex,Corr4,evout,NoHistos,noTags,noRunco","'${input}'","'$output'")' &gt;&amp; ${logFile}
+#  root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,tpcX,TpxRaw,TpxClu2D,gmt25,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,Corr4,evout,NoHistos,noTags,noRunco,BAna,","'${input}'","'$output'")' &gt;&amp; ${logFile}
 #eval
 #  root4star -q -b 'bfc.C('${f}','${l}',"B2015,in,tpcX,useXGeom,TpxRaw,tpcDB,TpcHitMover,StiCA,KFVertex,Corr4,OSpaceZ2,OGridLeakFull,evout,NoHistos,noTags,noRunco,BAna,","'${input}'","'$output'")' &gt;&amp; ${logFile}
 #.dev2 + TpcAligne
-# root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,TpxRaw,tpxClu2D,gmt,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,OSpaceZ2,OGridLeakFull,evout,NoHistos,noTags,noRunco,BAna,TpcAligner","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
+# root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,TpxRaw,tpxClu2D,gmt25,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,OSpaceZ2,OGridLeakFull,evout,NoHistos,noTags,noRunco,BAna,TpcAligner","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
 #08/29/14
-#  root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,Tpx,gmt,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,evout,NoHistos,noTags,noRunco,BAna,TpcAligner,StiHftC,analysis","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
+#  root.exe -q -b 'bfc.C('${f}','${l}',"B2015,in,Tpx,gmt25,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,evout,NoHistos,noTags,noRunco,BAna,TpcAligner,StiHftC,analysis","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
 #07/17/15
-  root4star -q -b 'bfc.C('${f}','${l}',"B2015,in,Tpx,gmt,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,evout,NoHistos,noTags,noRunco,BAna,TpcAligner,StiHftC,analysis","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
+  root4star -q -b 'bfc.C('${f}','${l}',"B2015,in,Tpx,gmt25,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,evout,NoHistos,noTags,noRunco,BAna,TpcAligner,StiHftC,analysis","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
 end
         </command>
         <stdout URL="file:./sched$JOBID.log" />

@@ -25,7 +25,7 @@ foreach input (`cat $FILELIST`)
   if (-r $muFile) exit 0;
   set tFile = ${filel}.root
   if (-r $tFile) exit 0;
-  root4star -q -b 'bfc.C('${f}','${l}',"B2015,in,Tpx,gmt,gmtMatch,gmtCosmics,gmtClusTree,CMuDst,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,evout,NoHistos,noTags,noRunco,BAna,analysis","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
+  root4star -q -b 'bfc.C('${f}','${l}',"B2015,in,Tpx,gmt25,gmtMatch,gmtCosmics,gmtClusTree,CMuDst,UseXgeom,tpcDB,TpcHitMover,StiCA,KFVertex,CorrX,evout,NoHistos,noTags,noRunco,BAna,analysis","'${input}'","'${output}'","'${tFile}'")' &gt;&amp; ${logFile}
 end
         </command>
         <stdout URL="file:./sched$JOBID.log" />

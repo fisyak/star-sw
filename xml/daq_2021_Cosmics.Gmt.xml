@@ -48,7 +48,7 @@
 #root.exe -q -b 'bfc.C(100000,"P2021a,-evout,TpcAligner,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
 #root.exe -q -b 'bfc.C(100000,"P2021a,evout,TpcAligner,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
 #root.exe -q -b 'bfc.C(100000,"P2021a,evout,TpcAligner,-Alignment,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
-root.exe -q -b 'bfc.C(100000,"P2021a,CorrZ,gmt,gmtOnly,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
+root.exe -q -b 'bfc.C(100000,"P2021a,CorrZ,gmt25,gmtOnly,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,Cosmics","'${input}'")' &gt;&amp; ${logFile}
 #ifndef SUBMITTINGDIRECTORY
 #    cp -p ${logFile} ${SUBMITTINGDIRECTORY}/
 #    cp -p ${bf}*.root ${SUBMITTINGDIRECTORY}/
