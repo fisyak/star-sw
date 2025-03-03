@@ -511,6 +511,9 @@ Bfc_st BFC[] = { // standard chains
   {"pp2022","" ,"",
    "B2022,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,gmt25,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx,analysis",
    "","",     "Production chain for year 2022 pp data - no Corr (+ epd, mtf, b/etof, fcs, e/b-emc)",kFALSE},
+  {"pp2022a","" ,"",
+   "B2022a,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx,analysis",
+      "","","Production chain for year 2022 pp data - CorrY (+ l3, epd, mtf, b/etof, fcs, e/b-emc)",kFALSE},
 // 2023  chains
   {"B2023"  ,"","",
    "ry2023,in,tpcX,UseXgeom,iTpcIT,CorrY,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
@@ -1532,8 +1535,8 @@ Bfc_st BFC[] = { // standard chains
   {"mtdTrkMask","","","db",      "StMtdTrackingMaskMaker","StMtdEvtFilterMaker","MTD track masking",kFALSE},  
   // GMT
   {"gmt",        "","","gmtDat,gmtClu",                                      "","","Gmt data Chain",kFALSE},
-  {"gmtClu",   "","","gmtutil","StGmtClusterMaker","Spectrum,StGmtClusterMaker","GMT cluster maker",kFALSE},
   {"gmtDat"      ,"","","",     "StGmtRawMaker","Spectrum,Fumili,StGmtRawMaker","GMT cluster maker",kFALSE},
+  {"gmtClu",   "","","gmtutil","StGmtClusterMaker","Spectrum,StGmtClusterMaker","GMT cluster maker",kFALSE},
   {"gmtOnly" ,"","","","","",                "Save only events with GMT clusters and Cosmic tracks",kFALSE},
   {"gmtClusTree","","","","","",                               "WARNING *** Option is OBSOLETE ***",kFALSE},
   {"gmt25"      ,"","","event,gmtRaw25,gmtMatch"                            ,"","","Gmt data Chain",kFALSE},
