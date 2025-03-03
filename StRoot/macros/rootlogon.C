@@ -203,7 +203,7 @@
 #endif
     SysInfo_t info;
     if (gSystem->GetSysInfo(&info) >= 0) {
-      printf("with %i %s",info.fCpus,info.fModel.Data());
+      printf("with %i %s CpuSpeed %i MHz",info.fCpus,info.fModel.Data(),info.fCpuSpeed);
     }
     printf("\n");
     // note that the above bacward support the old mode for include whenever
