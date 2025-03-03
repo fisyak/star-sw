@@ -20,7 +20,7 @@ int StGmtClusterMaker::gmtStat = 0;
 const unsigned int CLUS_BINS = 128;
 const double       CLUS_MIN  = 0.0;
 const double       CLUS_MAX  = 128*0.08;
-const unsigned int MAX_PEAKS = 20;
+const unsigned int MAX_PEAKS = 8;
 
 //_________________
 inline Double_t MyGaus(Double_t x, Double_t mean, Double_t sigma, Double_t delta) {
@@ -153,6 +153,7 @@ void StGmtClusterMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtStrip
   
   TF1 *fitX=0, *fitY=0;
   fitX = FindPeaks(histX); fitY = FindPeaks(histY);
+  if (! fitX || ! fitY) return;
   UInt_t idx[MAX_PEAKS], idy[MAX_PEAKS];
   UInt_t nClusX=0, nClusY=0;
   if(fitX) {
@@ -239,7 +240,8 @@ void StGmtClusterMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtStrip
     canv->Update();
     canv->Draw();
     if (nClusX || nClusY) {
-      while (!gSystem->ProcessEvents()){gSystem->Sleep(200);}
+      static Int_t ibreak = 0;
+      ibreak++;
     }
   }
 }
@@ -247,13 +249,12 @@ void StGmtClusterMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtStrip
 //_________________
 StGmtClusterMaker::StGmtClusterMaker( const Char_t* name ) : //StMaker(name),
   StRTSBaseMaker( "clustser", name ) {
-  SetAttr("gmtCosmics"             ,kFALSE);
+  SetAttr("gmtOnly"             ,kFALSE);
 }
 
 //_________________
 Int_t StGmtClusterMaker::Make() {
   LOG_INFO << "MAKE of StGmtClusterMaker" << endm;
-  Int_t ierr = kStOk;
   static ULong_t nEvents=0;
   //StEvent* eventPtr = 0;
   //eventPtr = (StEvent*)GetInputDS("StEvent");
@@ -303,9 +304,7 @@ Int_t StGmtClusterMaker::Make() {
     LOG_INFO <<"  gmtCollnumModule=" << gmtCollectionPtr->getNumModules()<<", tot strip=" <<gmtCollectionPtr->getNumStrips()
 	     <<"  totClust=" <<  gmtCollectionPtr->getNumHits() <<endm;
   }
-  if (IAttr("gmtCosmics")) {
-    if (! gmtCollectionPtr->getNumHits()) return kStERR;
-  }
+  if (! gmtCollectionPtr->getNumHits()) return kStERR;
   if (Debug()) {
     UShort_t NumModules = gmtCollectionPtr->getNumModules();
     for (UShort_t m = 0; m < NumModules; m++) {
@@ -321,12 +320,11 @@ Int_t StGmtClusterMaker::Make() {
       }
     }
   }
-  return ierr;
+  return kStOk;
 }
 
 //_________________
 Int_t StGmtClusterMaker::Init() {
-  LOG_INFO << "INTI of StGmtClusterMaker" << endm;
-  if (IAttr("gmtCosmics")) SetAttr(".Privilege",kTRUE);
+  if (IAttr("gmtOnly")) SetAttr(".Privilege",kTRUE);
   return kStOk;
 }
