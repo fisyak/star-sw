@@ -119,7 +119,7 @@ Int_t StGmtRawMaker::fillHits() {
             }
 
             count++;
-            if(Debug()) {
+            if(Debug() > 3) {
                 LOG_INFO << "StGmtRawMaker::fillHits() Got: " <<
                 "rdo: " << rdo <<
                 "  arm: " << arm <<
@@ -183,7 +183,7 @@ Int_t StGmtRawMaker::fillHits() {
                     stripPtr->setElecCoords( rdo, arm, apv, channel );
                 } // else
                 
-                if (Debug()) {
+                if (Debug() > 3) {
                     LOG_INFO << "StGmtRawMaker::fillHits() Set: " <<  *stripPtr << endm;
                 }
             } 
