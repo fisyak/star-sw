@@ -248,7 +248,7 @@ if ( $pkg eq "GenFit"
   $WarnOff .= "" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif (  $pkg =~ /Geometry/) {
-  $WarnOff .= " -Wno-error=unused-but-set-variable";
+  $WarnOff .= " -Wno-error=unused-but-set-variable -Wno-error=array-bounds -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {

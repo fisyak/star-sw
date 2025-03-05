@@ -109,7 +109,7 @@ void StGmtClusterMaker::ClusterBuilder(ULong_t events, UInt_t module, StGmtStrip
   TString name, title;
 //  LOG_INFO << "STart TSpectrum" << endm;
 //  TSpectrum spectX(MAX_PEAKS); TSpectrum spectY(MAX_PEAKS);
-  TSpectrum spectX(); TSpectrum spectY();
+  TSpectrum spectX, spectY;
   LOG_INFO << "Created TSpectrum" << endm;
   TH1F* histPointer;
   TProfile* profPointer;

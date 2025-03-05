@@ -16,7 +16,7 @@ $RootMap = shift;
 my $Cint_cxx = shift;
 my $Cint_h  = $Cint_cxx;
 $Cint_h  =~ s/_Cint\.cxx/_Cint\.h/g;
-print "Rootcling.pl :\n Lib = $Lib,\n LibDep = $LibDep,\n RootMap = $RootMap\n Cint_cxx = $Cint_cxx,\n h_files = @ARGV\n";
+#print "Rootcling.pl :\n Lib = $Lib,\n LibDep = $LibDep,\n RootMap = $RootMap\n Cint_cxx = $Cint_cxx,\n h_files = @ARGV\n";
 
 my $DirName = dirname($Cint_cxx);		#print "DirName = $DirName\n";
 my $LinkDef = $DirName . "/" . "LinkDef.h"; 	#print "Cint Files :", $Cint_cxx, ",", $Cint_h,",",$LinkDef,"\n";

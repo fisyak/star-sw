@@ -645,7 +645,7 @@ static const double kMinAng = 0.1,kDeltaL=1e-4;
 //_____________________________________________________________________________
 double THelixTrack_::PathX(const THelixTrack_ &th,double *s2, double *dst, double *xyz) const
 {
-  double ss1,ss2,dd,ss1Best,ss2Best,ddBest=1e33;
+  double ss1,ss2,dd,ss1Best=1e33,ss2Best=1e33,ddBest=1e33;
   double xx[9];
   int jkBest=-1;
   for (int jk=0;jk<4;jk++) {
