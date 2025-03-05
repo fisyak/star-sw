@@ -103,9 +103,10 @@ else
 #set list = xrootd
 #set list = pythia8
 #set list = pythia6
-set list =  apache-log4cxx-0.10.0.CVS
+#set list =  apache-log4cxx-0.10.0.CVS
 #set list = "perl-5.34.0"
 #if ($#argv != 0) set list2 = $argv[1];
+set list = pyparsing-1.5.7
 endif
 setenv DIR ~/sources/.${STAR_HOST_SYS}
 if ($?NODEBUG) setenv DIR ~/sources/.${STAR_HOST_SYS}_opt

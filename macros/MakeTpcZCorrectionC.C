@@ -105,6 +105,8 @@ void MakeTpcZCorrection1() {
   else if (fileIn.Contains("fixed_2020"))  		 {} // {nrows = 0;}
   else if (fileIn.Contains("fixed_2021"))  		 {} // {nrows = 0;}
   else if (fileIn.Contains("fixed"))                     {} // {nrows = 0;}
+#else
+  else if (fileIn.Contains("pp500_2022"))                {nrows = 2; minInner = 10; maxInner = 220; minOuter = 10; maxOuter = 220;}
 #endif
   if (! nrows) {
     cout << "Reject " << fileIn.Data() << endl;

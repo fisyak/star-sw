@@ -98,6 +98,9 @@ if ($all) {
 			     EtaB3 EtaB3C
 			     Eta3P Eta3PC
 			     EtaB3P EtaB3PC
+			     AvCurrent AvCurrent  
+			     Qcm       QcmC
+			     VoltageP  VoltagePC
 	      );
 #  TPoints70+TPoints70P TPointsF+TPointsFP TPoints70U+TPoints70UP TPointsFU+TPointsFUP  TPointsN+TPointsNP TPointsNU+TPointsNUP
 #  TPoints70 TPoints70P TPointsF TPointsFP TPoints70U TPoints70UP TPointsFU TPointsFUP  TPointsN TPointsNP TPointsNU TPointsNUP

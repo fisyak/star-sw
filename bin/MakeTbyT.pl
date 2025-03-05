@@ -3,8 +3,8 @@ use File::Basename;
 use Cwd;
 my $macro = "RunTbyT";
 my $debug = 1;
-my @FilesNew = glob "new/*.event.root"; print "FilesNew @FilesNew\n" if $debug;
-my @FilesOld = glob "old/*.event.root"; print "FilesOld @FilesOld\n" if $debug;
+my @FilesNew = glob "new/*.event.root";# print "FilesNew @FilesNew\n" if $debug;
+my @FilesOld = glob "old/*.event.root";# print "FilesOld @FilesOld\n" if $debug;
 
 my $newfiles = "";
 my $oldfiles = "";
@@ -32,19 +32,22 @@ foreach my $f (@FilesOld) {
 }
 $newfiles =~ s/\|/ /g;
 $oldfiles =~ s/\|/ /g;
-@FilesNew = split(' ',$newfiles); print "FilesNew @FilesNew\n" if $debug;
-@FilesOld = split(' ',$oldfiles); print "FilesOld @FilesOld\n" if $debug;
+@FilesNew = split(' ',$newfiles);# print "FilesNew @FilesNew\n" if $debug;
+@FilesOld = split(' ',$oldfiles);# print "FilesOld @FilesOld\n" if $debug;
 my %Pair = (
 	    'new'              => 'old'
 	   );
 my %Files = {};
 foreach my $newf (@FilesNew) {
-  my $nff = File::Basename::basename($newf);
+  my $nff = File::Basename::basename($newf); 
 #  $nff =~ s/\.event\.root//;
   my $nf = $nff;
 #  $nf =~ s/_1_500//;
 #  $nf =~ s/_501_1000//;
-#  print "nf = $nf\n";
+  $nf =~ s/st_physics_//;
+  $nf =~ s/hlt_//;
+  $nf =~ s/_.*//;
+#  print "newf = $newf, nf = $nf\n" if ($debug);
   foreach my $oldf (@FilesOld) {
     my $off = File::Basename::basename($oldf);
 #    $off =~ s/\.event\.root//;
@@ -52,8 +55,13 @@ foreach my $newf (@FilesNew) {
 #    $of =~ s/_1_500//;
 #    $of =~ s/_501_1000//;
 #    print "of = $of\n";
-    if ($nff eq $off) {$nf = $nff; $of = $off;}
-    next if $nf !~ /$of/;
+    $of =~ s/st_physics_//;
+    $of =~ s/hlt_//;
+    $of =~ s/_.*//;
+    if ($nf < $of) {last;}
+#    print "oldf = $oldf, of = $of\n" if ($debug);
+    next if ($nf != $of);
+#    if ($nff eq $off) {$nf = $nff; $of = $off;}
     print "================\n$oldf => $nf\n$newf => $of\n";
     my $key = $nf;
     my $first = $oldf;
@@ -62,7 +70,8 @@ foreach my $newf (@FilesNew) {
     my $SCRIPT = $key;
     my $LOG = $SCRIPT . ".log";
     my $root = $SCRIPT;
-    my $RootFile = "trackMateFile" . $root . ".root";
+#    my $RootFile = "trackMateFile" . $root . ".root";
+    my $RootFile = $root . ".root";
     next if -r $RootFile;
     $SCRIPT .= ".csh";
     my $file1 =  $first;
