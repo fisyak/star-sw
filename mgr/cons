@@ -623,7 +623,7 @@ sub buildtoptarget {
     if ($status ne 'built') {
 	my($path) = $tgt->path;
 	if ($status eq "errors") {
-	    print qq($0: "$path" not remade because of errors.\n);
+	    print qq($0: "$path" not remade because of errors. FAILED\n);
 	    $errors++;
 	} elsif ($status eq "handled") {
 	    print qq($0: "$path" is up-to-date.\n) if ($param::quiet < 2);
