@@ -2723,7 +2723,14 @@ my $debug = 0;
 #$hist = "RunXIX_XXI41"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/14/2025  with AL92  TpcSecRowB.3p85GeV_fixedTarget_2021.root
 #$hist = "RunXIX_XXI42"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib5"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/15/2025  with AL92  check MySQL
 ############################################ RunXXII ####################################
-$hist = "RunXXII01"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/04/2025  the fist run
+#$hist = "RunXXII01"; $NEvents = 500000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/04/2025  the fist run
+#$hist = "RunXXII02"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/16/2025  TpcSecRowB.pp500_2022.root + TpcZCorrectionC.pp500_2022.C
+#$hist = "RunXXII03"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/18/2025  TpcSecRowB.pp500_2022.root + TpcZCorrectionC.pp500_2022.C disable MySQL in dEdx.C
+#$hist = "RunXXII04"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 10; $Mode = 2; $macro = "dEdx";# 02/26/2025 Clear MySQL tables, 10% remove FIT_PULL, 
+#$hist = "RunXXII05"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 02/28/2025 switch off all corrections
+#$hist = "RunXXII06"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/01/2025  TpcSecRowB.pp500_2022.root
+#$hist = "RunXXII07"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/03/2025  TpcSecRowB.pp500_2022.root & TpcZCorrectionC.pp500_2022.C
+$hist = "RunXXII08"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/04/2025  TpcPadCorrectionMDF.pp500_2022.C
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2918,8 +2925,8 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 #	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 	}
 	print OUT "/usr/bin/test -d $scrr || mkdir -p $scrr;\n";
-	my $cmd = "/usr/bin/test ! -r " . $root . " && root.exe -q -b  '" . $macro;
-	$cmd .= ".C(" . $First ."," .$Last. ",\"" . $ffile . "\",\"" . $root . "\"," . $Mode . ")\' >& $log";
+	my $cmd = "/usr/bin/test ! -r " . $root . " &&  hostname >>& $log  && root.exe -q -b  '" . $macro;
+	$cmd .= ".C(" . $First ."," .$Last. ",\"" . $ffile . "\",\"" . $root . "\"," . $Mode . ")\' >>& $log; ";
 	#    $cmd .= "; cp -p $logL $log;";
 	print OUT "$cmd\n";
 	$count++;

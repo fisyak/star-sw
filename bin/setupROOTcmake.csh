@@ -10,11 +10,13 @@ echo "ROOT_BUILD = $ROOT_BUILD"
 #cmake cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_LINKER=g++ -Dall=ON -Dcxx11=ON -Dlibcxx=ON -Dcacoa=ON -Dgdml=ON -Dgsl_shared=ON -Dminuit2=ON -Dqt=ON -Drootfit=ON -Dtable=ON -Dvc=ON 
 setenv GSL_ROOT_DIR ${XOPTSTAR}
 #setenv PYTHIA6_LIBRARY ${STAR_LIB}
+setenv PYTHIA6         ${XOPTSTAR}/lib
 setenv PYTHIA6_LIBRARY ${XOPTSTAR}/lib
 #setenv PYTHIA6_INCLUDE_DIR ${XOPTSTAR}/include
 #setenv PYTHIA6_INCLUDE_DIR ${STAR}/.${STAR_HOST_SYS}/include
 #setenv PYTHIA8_LIBRARY ${XOPTSTAR}/lib
 #setenv PYTHIA8_INCLUDE_DIR ${XOPTSTAR}}/include
+setenv PYTHIA6_LIBRARIS ${XOPTSTAR}/lib/libPythia6.so
 setenv PYTHIA6_DIR ${XOPTSTAR}
 setenv PYTHIA8_DIR ${XOPTSTAR}
 setenv CC `which gcc`

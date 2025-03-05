@@ -201,6 +201,9 @@ void MakeTpcPadCorrectionMDF(const Char_t  *total = "mu", Int_t max=7, Int_t max
   TString fOut =  Form("TpcPadCorrectionMDF.%8i.%06i.C",date,time);
   cout << "Create " << fOut << endl;
   out.open(fOut.Data());
+  out << "#ifndef __CINT__" << endl;
+  out << "#include \"tables/St_MDFCorrection_Table.h\"" << endl;
+  out << "#endif" << endl;
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection\")) return 0;" << endl;
   out << "  MDFCorrection_st row;" << endl;

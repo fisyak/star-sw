@@ -177,6 +177,7 @@
 '2021/OO_200GeV' =>		                   'production_OO_200GeV_2021/ReversedFullField/P23ic',
 '2021/p7p7_21_DEV_calib' =>			   '',
 '2022/pp500' =>                                    'production_pp500_2022/ReversedFullField/dev',
+'2022/pp500_calib2' =>                             'production_pp500_2022/ReversedFullField/P24ib_calib2',
 '2023/AuAu200' =>                                  'production_AuAu_2023/ReversedHalfField/dev',
 '2023/HRF_AuAu200' =>                              'production_AuAu_HalfField_2023/ReversedHalfField/dev',
 '2023/ZF_AuAu200' =>                               'production_AuAu_ZeroField_2023/FieldOff/dev'
