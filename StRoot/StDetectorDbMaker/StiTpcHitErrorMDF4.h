@@ -30,6 +30,7 @@ class StiTpcHitErrorMDF4 : public St_MDFCorrection4C {
     case 1: return St_tpcPadConfigC::instance()->outerSectorPadPitch();
     default: assert(0);
     };
+    return 0;
   }
   Double_t timePitch() const {return St_tpcDriftVelocityC::instance()->timeBucketPitch();}
   ClassDefineChair(StiTpcHitErrorMDF4,St_MDFCorrection4, MDFCorrection4_st )
