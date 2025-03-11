@@ -67,12 +67,12 @@ my $CPPPATH  = "#" . $DirPath . $main::PATH_SEPARATOR . $env->{CPPPATH};
 my $LIBPATH = $env->{LIBPATH};
 if ($LIBPATH) { $LIBPATH .= $main::PATH_SEPARATOR;}
 $LIBPATH   .= $LIB;
- my $LIBPATH = $LIB .  $main::PATH_SEPARATOR . $env->{ENV}->{ROOTSYS} . "/lib" . $main::PATH_SEPARATOR . $env->{ENV}->{OPTSTAR} . "/lib";
-# if ($STAR_SYS =~ /x8664/) {
-#   $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib64/mysql";
-# } else {
-#   $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib/mysql";
-# }
+my $LIBPATH = $LIB .  $main::PATH_SEPARATOR . $env->{ENV}->{ROOTSYS} . "/lib" . $main::PATH_SEPARATOR . $env->{ENV}->{OPTSTAR} . "/lib";
+if ($STAR_SYS =~ /x8664/) {
+  $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib64/mysql";
+} else {
+  $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib/mysql";
+}
 $env1 = $env->clone('Package'  => $pkg, 'LIBPATH' => $LIBPATH);
 # Disable all compiler warnings if $Dir matches any value from @$warnoff_dirs
 #
@@ -145,6 +145,8 @@ if ( $pkg eq "GenFit"
      || $Dir =~ /StHLTCAMaker/
      || $Dir =~ /StDaqLib/
      || $Dir =~ /StDAQMaker/
+     || $pkg =~ m/^StStarLogger/
+     || $pkg =~ m/^RTS/
    ) {
   #  print "pkg = $pkg, CXX_MAJOR = $env->{CXX_MAJOR}, CXX_MAJOR = $env->{CXX_MINOR} ================================================================================\n";
   if ( $pkg eq "GenFit") {# and ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 6)) {
@@ -250,6 +252,9 @@ if ( $pkg eq "GenFit"
 } elsif (  $pkg =~ /Geometry/) {
   $WarnOff .= " -Wno-error=unused-but-set-variable -Wno-error=array-bounds -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
+#} elsif (  $pkg =~ /RTS/) {
+#  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
+#  $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
   if ($pkg eq 'StMuDSTMaker' or $pkg eq 'StHbtMaker' or $pkg eq 'StBFChain') {
@@ -270,8 +275,6 @@ if ($pkg eq "RTS") {
 	  .  $main::PATH_SEPARATOR . "#StRoot/RTS/src" 
 	    .  $main::PATH_SEPARATOR . "#StRoot/RTS/src/EVP_READER" 
 	      .  $main::PATH_SEPARATOR . $CPPPATH;
-  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
-  $EXTRA_CXXFLAGS .= $WarnOff;
   if ($DEBUG =~ /-O/ and $STAR_SYS =~ /gcc482/) { # hack for  FtfUtilities with gcc482
     $envNoDeb = $env1->clone('DEBUG' => $NOOPTIMIZED);
     for ($i = 0; $i < $#srcL; $i++) {

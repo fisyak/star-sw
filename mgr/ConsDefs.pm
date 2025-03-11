@@ -124,13 +124,13 @@
 # $CXXFLAGS    .= " -Wall -Wextra -Wno-long-long  -Wabi"; # garfield
  $CFLAGS       = $CXXFLAGS;
  if ($CXX eq 'g++') {
-   if ($CXX_MAJOR >= 12) {
-     $CXXFLAGS .= " -Wno-deprecated-declarations -Wno-memset-elt-size";
-     if ($ROOT_LEVEL =~ /^5/) {$CXXFLAGS .= " -Wno-register";}
+   if ($CXX_MAJOR >= 10) {
+     if ($ROOT_LEVEL =~ /^5/) {$CXXFLAGS .= " -Wno-register -Wno-misleading-indentation";}
    }
 #  if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
    if ($CXX_MAJOR > 6 or $CXX_MAJOR == 6 and $CXX_MINOR >= 3) {$CXXFLAGS .= " -Wno-misleading-indentation -Wno-ignored-attributes";}
    if ($CXX_MAJOR > 10)  {$CXXFLAGS .= " -Wno-error=bool-operation -Wno-error=class-memaccess -Wno-error=deprecated-declarations -Wno-error=format-overflow= -Wno-error=format-truncation= -Wno-error=int-in-bool-context -Wno-error=memset-elt-size -Wno-error=parentheses -Wno-error=restrict";}
+   if ($CXX_MAJOR > 11)  {$CXXFLAGS .= " -Wno-error=dangling-pointer=";}
 #   print "CXX_MAJOR = $CXX_MAJOR, CXX_MINOR = $CXX_MINOR => CXXFLAGS = $CXXFLAGS ==============\n";
  }
  my @words     = split(' ',$CFLAGS);# print "words = @words\n";
