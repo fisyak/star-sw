@@ -385,7 +385,7 @@ Int_t StGammaCandidateMaker::MakeBarrel()
                     else
                     {
 
-                        float eta;
+                        float eta = 0;
 
                         smdEtaGeom->getEta(id, eta);
              

@@ -1338,7 +1338,7 @@ UShort_t StFmsDbMaker::maxChannel(Int_t detectorId) const {
 
 Int_t StFmsDbMaker::detectorId(Int_t ew, Int_t ns, Int_t type){
   for(Int_t i=0; i<=mMaxDetectorId; i++)
-    if((mChannelGeometry+i)){
+    if((Long_t)(mChannelGeometry+i) != 0){
       if(mChannelGeometry[i].ew   == ew && mChannelGeometry[i].ns   == ns && mChannelGeometry[i].type == type)
 	return mChannelGeometry[i].detectorId;
     }
@@ -1498,7 +1498,7 @@ void StFmsDbMaker::dumpFmsDetectorPosition(const Char_t* filename) {
     fprintf(fp,"maxDetectorId = %d\n",maxDetectorId());
     fprintf(fp,"  detiid   zoffset   xoffset yoffset    xwidth    ywidth\n");
     for(Int_t i=0; i<mMaxDetectorId+1; i++)
-      if((mDetectorPosition+i))
+      if((Long_t)(mDetectorPosition+i) != 0)
 	fprintf(fp,"%8d%10.1f%10.2f%8.1f%10.3f%10.3f\n", i,getDetectorOffset(i).z(),getDetectorOffset(i).x(),getDetectorOffset(i).y(),getXWidth(i),getYWidth(i));
     fclose(fp);
   }

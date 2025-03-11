@@ -107,7 +107,7 @@ void PIDFitter::GetSigmaOfSingleTrail(Char_t* fileName4SigmaOfSingleTrail,Char_t
         else sprintf(theName,"h%d%d%d",i,j,k);
               
 	theHist= (TH1F *)histo4CalibFile.Get(theName);
-        delete theName;
+        delete [] theName;
 
 
 	for (int mm=0; mm<tempHisto->GetNbinsX(); mm++)
@@ -310,7 +310,7 @@ void PIDFitter::DoPhaseSpaceCalibration(Char_t* fileName4Calibration,Char_t* pha
         else sprintf(theName,"h%d%d%d",i,jname,kname);
 
 	theHist= (TH1F *)histo4CalibFile.Get(theName);
-        delete theName;
+        delete [] theName;
 
       float pPosition = 
             float(i)*((mPEnd-mPStart)/float(mNPBins)) + 
