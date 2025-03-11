@@ -34,10 +34,10 @@
  *
  *
  ***************************************************************************/
-#include "StFmsPoint.h"
+                                                                     #include "StFmsPoint.h"
 #include "St_base/StMessMgr.h"
 #include "TMath.h"
-
+#include "TArrayI.h"
 static const char rcsid[] = "$Id: StFmsPoint.cxx,v 2.8 2017/11/20 20:01:49 smirnovd Exp $";
 
 StFmsPoint::StFmsPoint()
@@ -118,7 +118,9 @@ void StFmsPoint::orderFpsCandidates(int layer) {  //order candidates by distance
     for(int l=l1; l<l2; l++){
         int n=mFpsNCandidate[l];
         if(n<2) continue;
-        int index[kFpsNCandidate];
+	//        int index[kFpsNCandidate];
+	TArrayI Index(n);
+	Int_t *index = Index.GetArray();
         TMath::Sort(n,mFpsDistance[l],index,false); //flase=increasing order
         for(int i=0; i<n-1; i++) {   //swap contents based on index
             int j=index[i];
