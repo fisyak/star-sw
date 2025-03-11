@@ -93,12 +93,12 @@ if ($all) {
  push  @{ $Opts{GP} },  qw (
 			     NPoints70+NPoints70P NPointsF+NPointsFP NPoints70U+NPoints70UP NPointsFU+NPointsFUP  NPointsN+NPointsNP NPointsNU+NPointsNUP
 			     NPoints70 NPoints70P NPointsF NPointsFP NPoints70U NPoints70UP NPointsFU NPointsFUP  NPointsN NPointsNP NPointsNU NPointsNUP
-                             TimeF 
+                             Time TimeC TimeF TimeF TimeFP 
 			     Eta3 Eta3C 
 			     EtaB3 EtaB3C
 			     Eta3P Eta3PC
 			     EtaB3P EtaB3PC
-			     AvCurrent AvCurrent  
+			     AvCurrent AvCurrentC  
 			     Qcm       QcmC
 			     VoltageP  VoltagePC
 	      );

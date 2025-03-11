@@ -581,6 +581,13 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     } else {
       MuDraw(muPlot.Data(),"ZO", 2*ny, -yMax, yMax, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "Z", "#mu versus Z");
     }
+  } else if (Name.BeginsWith("AvCurrent") || Name.BeginsWith("Qcm"))      {
+    muPlot += ":y";
+    if (Opt == "" || Opt == "I") {
+      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(i-1)%8+1<=4)", "prof", -0.4,  0.4, Title, "Z", "#mu versus Z");
+    } else {
+      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(i-1)%8+1>4)", "prof", -0.4,  0.4, "Outer", "Z", "#mu versus Z");
+    }
   } else if (Name.BeginsWith("dX3"))      {
     muPlot += ":TMath::Sign(y,x)";
     if (Opt == "") {

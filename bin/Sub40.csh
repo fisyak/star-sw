@@ -5,7 +5,7 @@ foreach done (`ls -1d *.csh`)
 #  set d = `dirname ${done}`
 #  ls -ltr Chain.log
 	@ count = `ps au | grep root.exe | wc -l`; # ++;  echo "count $count";
-    if ($count > 40) then 
+    if ($count >= 40) then 
 	echo "$count limit reached"
 	break;
     endif
