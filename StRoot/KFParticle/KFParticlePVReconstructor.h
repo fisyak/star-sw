@@ -99,10 +99,10 @@ class KFParticlePVReconstructor{
    ** which are then provided to KFVertex object for fit.
    **/
   struct KFParticleCluster {
-    KFParticleCluster():fTracks(0) {};
+  KFParticleCluster():fTracks(0)  {};
     std::vector<int> fTracks; ///< List of tracks in a cluster.
-    float fP[3]; ///< Estimation of the vertex position based on the current cluster: {X, Y, Z}.
-    float fC[6]; ///< Estimated errors of the position approximation.
+    float fP[3] = {0}; ///< Estimation of the vertex position based on the current cluster: {X, Y, Z}.
+    float fC[6] = {0}; ///< Estimated errors of the position approximation.
   };
 
   std::vector< KFParticleCluster > fClusters; ///< Vector with clusters to be used for fit of a primary vertex.
