@@ -633,13 +633,12 @@ void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
   TFile *f = 0;
   Int_t FileNo = 0;
   Int_t Ntotal = 0;
-  TString tFile("");
   while ((set = next())) {
     TString Title(set->GetTitle());
     if (Title != "file") continue;
     TString Name(set->GetName());
     if (! Name.EndsWith(".root")) continue;
-    if (! (Name.BeginsWith("trackMateFile") || Name.BeginsWith("TbyT"))) continue;
+    //    if (! (Name.BeginsWith("trackMateFile") || Name.BeginsWith("TbyT"))) continue;
     f = new TFile(Name);
     TChain *tree = (TChain *) f->Get(TreeName);
     if (tree) {
@@ -648,23 +647,14 @@ void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
       if (nEvents > 0) {
 	FileNo++; 
 	Ntotal += nEvents;
-	cout << "\tAdd "<< FileNo << "\t" << nEvents << "\tEvents, Total = " << Ntotal << endl;
+	cout << "\tAdd "<< FileNo << "\t" << Name.Data() << "\t"<< nEvents << "\tEvents, Total = " << Ntotal << endl;
 	fChain->Add(pFile);
-	tFile = pFile;
       }
-      delete f;
     }
+    delete f;
   }
   TrackMatch *T = new TrackMatch;
   fChain->SetBranchAddress("TrackMatch", &T);
-#if 0
-  tFile.ReplaceAll(".root","");
-  tFile.ReplaceAll("trackMate_physics_","");
-  tFile.ReplaceAll("trackMate_","");
-  tFile.ReplaceAll("5043073_raw_1010010_","");
-  tFile.ReplaceAll("5046043_raw_1010010_","");
-  Out = tFile;
-#endif
   TString Out;
   if (Out == "") {
     Out += "Plots.root";

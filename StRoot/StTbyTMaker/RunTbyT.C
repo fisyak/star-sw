@@ -1,7 +1,12 @@
-//#define __ASK__
+#define __ASK__
 #ifdef __ASK__
 #include "Ask.h"
 #endif
+class StIOMaker;
+class StEvent;
+class StUKey;
+StIOMaker *makers[2] = {0};
+StEvent   *events[2] = {0};
 //________________________________________________________________________________
 void RunTbyT(Int_t nevents=999,
 	     const char *eventFile1="/star/data98/reco/AuAu200_production/FullField/eval_Sti/2010/030/11030018/st_physics_11030018_raw_1020001.event.root",
@@ -13,63 +18,36 @@ void RunTbyT(Int_t nevents=999,
   TString Chain("StEvent,StiLib,detDb,StarMagField,magF,tpcDb,mysql,nodefault");
   bfc(-1,Chain.Data(),0,0,tFile);
   gSystem->Load("StTbyTMaker");
-  StTbyTMaker::SetHitMatch(kTRUE);
+  //  StTbyTMaker::SetHitMatch(kTRUE);
   cout << "Job will run on    File: " << eventFile1 << endl;
-  cout << "Correspondibg new  File: " << eventFile2 << endl;
+  cout << "Corresponding new  File: " << eventFile2 << endl;
   gSystem->Load("StIOMaker");
   // 1st IOMaker, for tpt file
-  StIOMaker* ioMaker1 = new StIOMaker("IO1","r",eventFile1);//,"bfcTree");
-  chain->AddBefore("db",ioMaker1);
+  makers[0] = new StIOMaker("IO1","r",eventFile1);//,"bfcTree");
+  chain->AddBefore("db",makers[0]);
   // 2nd IOMaker, for ittf file
-  StIOMaker* ioMaker2 = new StIOMaker("IO2","r",eventFile2);//,"bfcTree");
-  chain->AddBefore("db",ioMaker2);
+  makers[1] = new StIOMaker("IO2","r",eventFile2);//,"bfcTree");
+  chain->AddBefore("db",makers[1]);
   StTbyTMaker*  goodStuff      = new StTbyTMaker;
+  
+  goodStuff->SetActive(kFALSE);
   //  chain->SetDEBUG(2);
   // now execute the chain member functions
   StMaker::lsMakers(chain);
   chain->PrintInfo();
   Int_t initStat = chain->Init(); // This should call the Init() method in ALL makers
   if (initStat) chain->Fatal(initStat, "during Init()");
-  chain->MakeEvent();
+  StUKey    ukey[2];
   //  if (nevents > 0) chain->EventLoop(1,nevents);
-  Int_t iMake = 0;
-  StIOMaker *makers[2]  = {ioMaker1, ioMaker2};
-  StEvent   *events[2] = {0,0};
+  Int_t iMake = chain->MakeEvent();
+  if (iMake) return 1;;
   for (Int_t ev = 0; ev < nevents; ev++) {
-    chain->Clear();
-    StUKey ukey;
-    while ((! events[0] || ! events[1])) {
-      for (Int_t m = 0; m < 2; m++) {
-	if (! events[m]) {
-	  makers[m]->Clear();
-	  iMake = makers[m]->MakeRead(ukey);
-	  if (iMake%10 == kStEOF || iMake%10==kStFatal)	goto ENDofLOOP;
-	  events[m] = (StEvent   *) makers[m]->GetDataSet("StEvent");
-	}
-      }
-      if (! (events[0] && events[1])) continue;
-      if (events[0]->runId() != events[1]->runId() || 
-	  events[0]->id()    != events[1]->id()) {
-	cout << "MisMatched runId/Event\t" 
-	     << events[0]->runId() << "/" << events[0]->id() << "\t" 
-	     << events[1]->runId() << "/" << events[1]->id() <<  endl;
-	if (events[0]->runId() <  events[1]->runId() ||
-	    events[0]->runId() == events[1]->runId() && 
-	    events[0]->id()    < events[1]->id()) {
-	  events[0] = 0; ukey = StUKey(events[1]->runId(),events[1]->id());
-	} else {
-	    events[1] = 0; ukey = StUKey(events[0]->runId(),events[0]->id());
-	}
-	continue;
-      }
-    }
+    if ( StTbyTMaker::EventMatch()) return;
+    if (goodStuff->Make()) return;
 #ifdef __ASK__
     if (! gROOT->IsBatch()) {
       if (Ask()) return;
     } else {_debugAsk = 0;}
 #endif
-    goodStuff->Make();
-    events[0] = events[1] = 0;
   }
- ENDofLOOP:
 }

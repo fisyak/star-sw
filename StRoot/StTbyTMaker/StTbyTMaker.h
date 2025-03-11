@@ -153,6 +153,7 @@ class StTbyTMaker : public StMaker {
   HitParameters HitParametersFill(const StTpcHit *tpcHit = 0);
   static void SetHitMatch(Bool_t k = kTRUE) {fgHitMatch = k;}
   static Bool_t fgHitMatch;
+  Int_t EventMatch();
  private:
   void FillMatch(const StGlobalTrack* trk1, const StGlobalTrack* trk2 = 0);
   void FillMatch(const StTpcHit* hit1, const StTpcHit* hit2 = 0);

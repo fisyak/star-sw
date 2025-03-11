@@ -23,6 +23,9 @@
 #include "StDbUtilities/StTpcCoordinateTransform.hh"
 #include "StDbUtilities/StCoordinates.hh" 
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "StBFChain/StBFChain.h"
+#include "StIOMaker/StIOMaker.h"
+#include "StEvent/StEvent.h"
 #define __REQUIRE_PRIMARY_VERTEX__
 #define __DEBUG__
 #if defined(__DEBUG__)
@@ -51,6 +54,50 @@ bool compStTrackPing(const StTrackPing& rhs, const StTrackPing& lhs){
 static const char rcsid[] = "$Id: StTbyTMaker.cxx,v 1.4 2013/01/16 21:56:45 fisyak Exp $";
 ClassImp(StTbyTMaker);
 Bool_t StTbyTMaker::fgHitMatch = kFALSE;
+//________________________________________________________________________________
+Int_t StTbyTMaker::EventMatch() {
+  StBFChain *chain = (StBFChain *) StMaker::GetTopChain();
+  StIOMaker *IN1 = (StIOMaker *) chain->Maker("IO1");
+  StIOMaker *IN2 = (StIOMaker *) chain->Maker("IO2");
+  assert (IN1 && IN2);
+  StIOMaker *makers[2] = {IN1, IN2};
+  StEvent   *events[2] = {0};
+  Int_t evNo[2] = {0};
+  for (Int_t m = 0; m < 2; m++) {
+    events[m] = (StEvent   *) makers[m]->GetDataSet("StEvent");
+    if (! events[m]) continue;
+    cout << "m = " << m << "\trun = " << events[m]->runId() << "\tevent = " <<  events[m]->id() << endl;
+    //       ukey[m] = StUKey(events[m]->runId(), events[m]->id(), 2); 
+    //       cout << "m = " << m << "\trun = " << events[m]->runId() << "\tevent = " <<  events[m]->id() << "\t" << ukey[m].GetName() << endl;
+    evNo[m] = events[m]->id();
+  }
+  if (events[0]->runId() != events[1]->runId()) {
+    cout << "Runs : " << events[0]->runId() << " and " << events[1]->runId() << " mismatched. Stop !" << endl;
+    return 1;;
+  }
+  while (1) {
+    for (Int_t m = 0; m < 2; m++) {
+      while (! events[m]) {
+	((StMaker *) makers[m])->Clear();
+	Int_t iMake = makers[m]->Make();
+	if (iMake%10 == kStEOF || iMake%10==kStFatal)	return 1;;
+	events[m] = (StEvent   *) makers[m]->GetDataSet("StEvent");
+	if ( events[m]) {
+	  evNo[m] = events[m]->id();
+	  break;
+	}
+      }
+    }
+    cout << "Event1 = " << evNo[0] << "\tEvent2 = " << evNo[1] << endl;
+    if (evNo[0] == evNo[1]) break;
+    if (evNo[0] <  evNo[1]) {
+      events[0] = 0;
+    } else {
+      events[1] = 0;
+    }
+  }
+  return 0;
+}
 //________________________________________________________________________________
 Int_t StTbyTMaker::Init() {
   TFile *f = GetTFile();
