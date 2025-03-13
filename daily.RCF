@@ -3997,3 +3997,13 @@ end
 foreach f (`ls -1d Q*`)
   condor_submit ${f}
 end
+================================================================================
+03/08-12/2025
+foreach f (`ls -1d dEdx*.condor`)
+  set b = `echo ${f} | awk -F_ '{print $2"_"$3}'`
+  sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")' ${f} > Q${b}
+end
+
+foreach f (`ls -1d Q*`)
+  condor_submit ${f}
+end

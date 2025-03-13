@@ -68,10 +68,12 @@ my $LIBPATH = $env->{LIBPATH};
 if ($LIBPATH) { $LIBPATH .= $main::PATH_SEPARATOR;}
 $LIBPATH   .= $LIB;
 my $LIBPATH = $LIB .  $main::PATH_SEPARATOR . $env->{ENV}->{ROOTSYS} . "/lib" . $main::PATH_SEPARATOR . $env->{ENV}->{OPTSTAR} . "/lib";
-if ($STAR_SYS =~ /x8664/) {
-  $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib64/mysql";
-} else {
-  $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib/mysql";
+if ($STAR_SYS !~ /^sl/) {
+  if ($STAR_SYS =~ /x8664/) {
+    $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib64/mysql";
+  } else {
+    $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib/mysql";
+  }
 }
 $env1 = $env->clone('Package'  => $pkg, 'LIBPATH' => $LIBPATH);
 # Disable all compiler warnings if $Dir matches any value from @$warnoff_dirs
@@ -541,7 +543,7 @@ my @QtDefs = ();
 my @uih = ();#   print "h_files: @h_files\n";
 foreach my $h (@h_files) {
   if ((!$qt4 && ($h =~ /\.ui\.h$/)) || ($qt4 && ($h =~ /ui_.+\.h$/))) {
-    print "uih: $h\n";
+    print "uih: $h\n" if $param::debug;
     push @uih, $h;
   }
 }
@@ -562,7 +564,7 @@ foreach my $ui (@uiQT) {
     print "Qt4: out : $out ==> $uilocal\n" if $param::debug ;
     Depends $env [$out], ($uilocal);
     Command $env [$out], ($uilocal), qq(cd %1:d; $uic %1:f -o %>:f );
-    push @QtDefs, $out;    print "Qt4/QtDefs from $ui -> $out\n"; # if $param::debug;
+    push @QtDefs, $out;    print "Qt4/QtDefs from $ui -> $out\n" if $param::debug;
   } else {
     my @out = ($dirbase . $stem . ".cxx", $dirbase . $stem . ".h") ; 
     Depends $env [$out[1]], (@dep); 
@@ -570,7 +572,7 @@ foreach my $ui (@uiQT) {
     Command $env [$out[1]], @dep, qq(cd %1:d; $uic %1:f -o %>:f );
     Command $env [@out[0]], ($uilocal,$out[1]), qq(cd %1:d; $uic %1:f  -i %2:f -o %>:f);
     push @src, $out[0];
-    push @QtDefs, $out[1]; print "Qt3/QtDefs from $ui -> $out[1]\n"; # if $param::debug;
+    push @QtDefs, $out[1]; print "Qt3/QtDefs from $ui -> $out[1]\n" if $param::debug;
   }
 }
 if ($#xpmQT >= 0) {
@@ -585,7 +587,7 @@ if ($#xpmQT >= 0) {
     }
     my @xpm = map ($dirbase . File::Basename::basename( $_), @xpmQT);
     #	  my @xpm = @xpmQT;
-    print "Command $uic -embed ".join(" ",@xpm)." -o $out \n";
+    print "Command $uic -embed ".join(" ",@xpm)." -o $out \n" if $param::debug;
     Command $env [$out], @xpm, qq($uic -embed %< -o %> );
     push @src, $out
   }
@@ -976,7 +978,7 @@ if ( $pkg =~ m/^StEventDisplay/ || $#uiQT >= 0 || $OnlinePackage ) {
 } elsif ( $pkg =~ m/^StBFChain$/ && (! $IsRepo || $IsDotDev) ) {
   my($cmd)="BFCOpt2Html.pl";
   $cmd = "mgr/BFCOpt2Html.pl" if ( -e "mgr/BFCOpt2Html.pl");
-  print "\t add documentation for $pkg\n";
+  print "\t add documentation for $pkg\n" if $param::debug;
   Command $env ["#StRoot/StBFChain/doc/BFC.h"], ("#StRoot/StBFChain/BigFullChain.h"), qq (%CPP            %< > %>);
   Command $env ["#StRoot/StBFChain/doc/BFC2.h"],("#StRoot/StBFChain/BigFullChain.h"), qq (%CPP -D__BFC2__ %< > %>);
   Command $env [("#StRoot/StBFChain/doc/index.html","#StRoot/StBFChain/doc/StBFChain.cxx_doc")],
@@ -1036,8 +1038,8 @@ if ( $pkg =~ m/^St.*Db/             ||
 } 
 if ( $pkg =~ m/^StChain$/) {  
   if ($STAR_SYS =~ /gcc471/) { # hack for StRtsTable gcc471
-    my $cxxflags = $env->{CXXFLAGS} . " -fpermissive"; print "cxxflags = $cxxflags\n";
-    $envHack = $env->clone('CXXFLAGS' => $cxxflags); print "==> $envHack->{CXXFLAGS}\n";
+    my $cxxflags = $env->{CXXFLAGS} . " -fpermissive"; print "cxxflags = $cxxflags\n" if $param::debug;
+    $envHack = $env->clone('CXXFLAGS' => $cxxflags); print "==> $envHack->{CXXFLAGS}\n" if $param::debug;
     for ($i = 0; $i <= $#src; $i++) {
       if ($src[$i] =~ /StRtsTable\.cxx/) {# print "========= hack for StRtsTable.cxx =========\n";
 	my @objfiles = Objects $envHack ($src[$i]);
