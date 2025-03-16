@@ -636,4 +636,7 @@ TSeqCollection *files = gROOT->GetListOfFiles();
 
 RunNT->SetMarkerColor(1);
 
+
+laser->Draw("fHits.xyz.mX2:")
+laser->Draw("fHits.xyz.mX2:fHits.xyz.mX1")
 */
