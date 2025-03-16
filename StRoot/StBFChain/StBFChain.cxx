@@ -655,6 +655,7 @@ Int_t StBFChain::Instantiate()
     }
     if (maker== "StGmtClusterMaker" or maker== "StGmtRaw25Maker") {
       if (GetOption("gmtOnly"))   mk->SetAttr("gmtOnly",  kTRUE);
+      if (GetOption("Cosmics"))   mk->SetAttr("Cosmics",  kTRUE);
     }
     if (maker=="StiKFVertexMaker" && GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
     //		Sti(ITTF) end
