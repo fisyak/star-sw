@@ -13,6 +13,7 @@
 //________________________________________________________________________________
 void GMT(TChain *tChain) {
   TFile *f = new TFile("MdYZ.root","recreate");
-  tChain->Draw("GlobalTracks.mGmtPidTraits.mDeltaZ:GlobalTracks.mGmtPidTraits.mDeltaY:GlobalTracks.mGmtPidTraits.mModule>>MdYZ(8,-0.5,7.5,250,-5.0,5.0,250,-5.0,5.0)","GlobalTracks.mGmtPidTraits.mModule<8");
+  //  tChain->Draw("GlobalTracks.mGmtPidTraits.mDeltaZ:GlobalTracks.mGmtPidTraits.mDeltaY:GlobalTracks.mGmtPidTraits.mModule>>MdYZ(8,-0.5,7.5,250,-5.0,5.0,250,-5.0,5.0)","GlobalTracks.mGmtPidTraits.mModule<8");
+  tChain->Draw("GlobalTracks.mGmtPidTraits.mDeltaZ:GlobalTracks.mGmtPidTraits.mDeltaY:GlobalTracks.mGmtPidTraits.mModule>>MdYZ(8,-0.5,7.5,250,-25.0,25.0,250,-25.0,25.0)","GlobalTracks.mGmtPidTraits.mModule<8");
   f->Write();
 }
