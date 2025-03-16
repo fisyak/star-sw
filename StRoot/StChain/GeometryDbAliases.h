@@ -385,6 +385,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"pp200_radial_e",	              	     20240802,  70632, "y2021", "pp200_radial"}, // 1st run = 25215009          	     
   {"AuAu_2024",	                             20241006, 124742, "y2021", "AuAu_2024"}, // 1st run = 25280025                         
   { "y2025",       20241210,     0, "y2025",    "y2025 first cut geometry, AgML,xgeometry"},    
+  { "r2025",       20241220,     0, "y2025",    "y2025 first cut geometry, AgML,xgeometry"},    
 
   {"athena",                                 20301220,      1,      "",         "athena"}, // 
   {"epic",                                   20301221,      1,      "",           "epic"}, // 
