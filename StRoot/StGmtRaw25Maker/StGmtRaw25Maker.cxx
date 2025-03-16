@@ -352,7 +352,9 @@ Int_t  StGmtRaw25Maker::ClusterBuilder(UInt_t module, StGmtHitCollection& hits) 
       if (adc <= 0) continue;
       position = pStrip->getPosition();
       if (position < -990) continue;
-      if (module == 1 && position < 5.12) continue;   // hot strips in Y & Z 
+      if (module == 1 && position < 5.12) {
+	if (IAttr("Cosmics")) continue;   // hot strips in Y & Z only for Cosmics ?
+      }
       Int_t bin = histXY[ixy][module]->Fill(position,adc);
       histXY[ixy][module]->SetBinError(bin,adcRMS);
       if (Debug() > 2) {
