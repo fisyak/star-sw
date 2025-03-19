@@ -351,7 +351,7 @@
  $CERNLIBS =~ s/$strip//g     if ($strip ne "");
  #	$CERNLIBS =~ s/lib /lib64 /g if ($USE_64BITS);
  chop($CERNLIBS);
- if ( $STAR_HOST_SYS =~ /al92/ ) {
+ if ( $STAR_HOST_SYS =~ /al9/ ) {
    $CERNLIBS =~ s#-lnsl##;
  }
  if ( $STAR_HOST_SYS !~ /darwin/ ) {

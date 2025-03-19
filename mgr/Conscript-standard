@@ -43,7 +43,7 @@ my $DEBUG   = $env->{DEBUG};
 my $FDEBUG  = $env->{FDEBUG};
 my $NOOPTIMIZED = $DEBUG; $NOOPTIMIZED =~ s/-O2//g; $NOOPTIMIZED =~ s/-O//g; print "DEBUG = $DEBUG, NOOPTIMIZED = $NOOPTIMIZED\n" if  $param::debug;
 my $CXXFLAGS= $env->{CXXFLAGS}; #print "CXXFLAGS = $CXXFLAGS --------------------------------------------------------------------------------\n";
-if ($STAR_SYS eq "al92_x8664_gcc11") {$ROOTCINT_CPPFLAGS .= " -D_BITS_TYPES_H=1 -D_STDINT_H=1"; $CXXFLAGS.= " -Wno-register";}
+if ($STAR_SYS =~ /^al9/) {$ROOTCINT_CPPFLAGS .= " -D_BITS_TYPES_H=1 -D_STDINT_H=1"; $CXXFLAGS.= " -Wno-register";}
 my $EXTRA_CXXFLAGS= $env->{EXTRA_CXXFLAGS}; 
 my $CFLAGS  = $env->{CFLAGS};
 my $FC      = $env->{FC};
