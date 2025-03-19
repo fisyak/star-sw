@@ -165,6 +165,7 @@ switch ( $STAR_HOST_SYS )
 endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
+    case *al95_x8664_*:
     case *al92_x8664_*:
      setenv DISABLE "$DISABLE --disable-memstat"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS  --cxxflags=-Wno-register --cxxflags=-Wno-misleading-indentation --cflags=-Wno-register --cflags=-Wno-misleading-indentation" # --cflags=--std=c++17
