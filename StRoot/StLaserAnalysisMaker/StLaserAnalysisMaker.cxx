@@ -221,13 +221,13 @@ Int_t StLaserAnalysisMaker::InitRun(Int_t run){
 	LaserBeams[NoBeams]->Bundle = local->Bundle;
 	LaserBeams[NoBeams]->Mirror = local->Mirror;
 #ifdef CORRECT_LASER_POSITIONS
-       LaserBeams[NoBeams]->XyzB = StThreeVectorD(Mirrors[r][b][m].X+Mirrors[r][b][m].dX,
-						  Mirrors[r][b][m].Y+Mirrors[r][b][m].dY,
-						  Mirrors[r][b][m].Z+Mirrors[r][b][m].dZ);
+	LaserBeams[NoBeams]->XyzB = StThreeVectorD(Mirrors[r][b][m].X+Mirrors[r][b][m].dX,
+						   Mirrors[r][b][m].Y+Mirrors[r][b][m].dY,
+						   Mirrors[r][b][m].Z+Mirrors[r][b][m].dZ);
 #else
-       LaserBeams[NoBeams]->XyzB = StThreeVectorD(Mirrors[r][b][m].X,
-						  Mirrors[r][b][m].Y,
-						  Mirrors[r][b][m].Z);
+	LaserBeams[NoBeams]->XyzB = StThreeVectorD(Mirrors[r][b][m].X,
+						   Mirrors[r][b][m].Y,
+						   Mirrors[r][b][m].Z);
 #endif
 	Double_t theta = Bundles[r][b].ThetaZ + Mirrors[r][b][m].ThetaZ;
 	Double_t phi   = Bundles[r][b].Phi    + Mirrors[r][b][m].Phi;
@@ -270,8 +270,13 @@ Int_t StLaserAnalysisMaker::InitRun(Int_t run){
     Lasers[s][b][m] = theLaser;
     Tpc2Global.LocalToMaster(theLaser->XyzL.xyz(),theLaser->XyzG.xyz());
     Tpc2Global.LocalToMasterVect(theLaser->dirL.xyz(),theLaser->dirG.xyz());
-    gStTpcDb->SupS2Tpc(theLaser->Sector).MasterToLocal(theLaser->XyzL.xyz(),theLaser->XyzS.xyz());
-    gStTpcDb->SupS2Tpc(theLaser->Sector).MasterToLocalVect(theLaser->dirL.xyz(),theLaser->dirS.xyz());
+    if (! StTpcDb::Alignment2024()) {
+      gStTpcDb->SupS2Tpc(theLaser->Sector).MasterToLocal(theLaser->XyzL.xyz(),theLaser->XyzS.xyz());
+      gStTpcDb->SupS2Tpc(theLaser->Sector).MasterToLocalVect(theLaser->dirL.xyz(),theLaser->dirS.xyz());
+    } else {
+      gStTpcDb->Sup12S2Tpc(theLaser->Sector).MasterToLocal(theLaser->XyzL.xyz(),theLaser->XyzS.xyz());
+      gStTpcDb->Sup12S2Tpc(theLaser->Sector).MasterToLocalVect(theLaser->dirL.xyz(),theLaser->dirS.xyz());
+    }
     theLaser->PhiG = theLaser->dirG.phi();
     theLaser->ThetaG = theLaser->dirG.theta();
     theLaser->IsValid = 0;
