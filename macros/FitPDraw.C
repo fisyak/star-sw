@@ -582,9 +582,9 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.BeginsWith("AvCurrent") || Name.BeginsWith("Qcm") || Name.BeginsWith("VoltageP"))     {
     muPlot += ":y";
     if (Opt == "" || Opt == "I") {
-      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(i-1)%8+1<=4)", "prof", -0.4,  0.4, Title, "Z", "#mu");
+      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(i-1)%8+1<=4)/dmu**2", "profg", -0.4,  0.4, Title, "Z", "#mu");
     } else {
-      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(i-1)%8+1>4)", "prof", -0.4,  0.4, "Outer", "Z", "#mu");
+      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4&&(i-1)%8+1>4)/dmu**2", "profg", -0.4,  0.4, "Outer", "Z", "#mu");
     }
   } else if (Name.BeginsWith("dX3"))      {
     muPlot += ":TMath::Sign(y,x)";
@@ -596,9 +596,9 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.BeginsWith("Eta3") || Name.BeginsWith("EtaB3" ))      {
     muPlot += ":y";
     if (Opt == "" || Opt == "I") {
-      MuDraw(muPlot.Data(),"EtaI", ny, yMin, yMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "Eta", "#mu versus #eta");
+      MuDraw(muPlot.Data(),"EtaI", ny, yMin, yMax, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)/dmu**2", "profg", -0.4,  0.4, "Inner", "Eta", "#mu versus #eta");
     } else {
-      MuDraw(muPlot.Data(),"EtaO", ny, yMin, yMax, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "Eta", "#mu versus #eta");
+      MuDraw(muPlot.Data(),"EtaO", ny, yMin, yMax, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)/dmu**2", "profg", -0.4,  0.4, "Outer", "Eta", "#mu versus #eta");
     }
   } else if (Name.BeginsWith("xyPad3qB"))      {
     muPlot += ":0.5*y+TMath::Nint(x)";

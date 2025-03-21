@@ -49,7 +49,7 @@ Double_t gauss1D(double *x, double *par) {
   return val;
 }
 //________________________________________________________________________________
-TF2 *fit2D(TH2 *h2) {
+TF2 *fit2D(TH2 *h2) {// y 
   Double_t param1[4], param2[4],param[6];
   if (! h2) return 0;
   TF1 *gaus1D = (TF1 *) gROOT->GetListOfFunctions()->FindObject("gaus1D");
@@ -65,8 +65,8 @@ TF2 *fit2D(TH2 *h2) {
   gaus1 = 0;
   gaus2 = 0;
   for (Int_t xy = 0; xy < 2; xy++) {
-    if (! xy) proj[xy] = h2->ProjectionX();
-    else      proj[xy] = h2->ProjectionY();
+    if (! xy) proj[xy] = h2->ProjectionY(); // xy = 0 : y
+    else      proj[xy] = h2->ProjectionX(); // xy = 1 : z
     Double_t T = proj[xy]->GetEntries();
     Double_t mu = proj[xy]->GetMean();
     Double_t sigma = proj[xy]->GetRMS();
@@ -89,10 +89,10 @@ TF2 *fit2D(TH2 *h2) {
     else      {gaus2 = gausxy[xy]; gaus2->GetParameters(param2);}
   }
   if (! gaus1 || ! gaus2) return 0; 
-  param[0] = TMath::Log(param1[0]);
-  param[1] = param1[1];
+  param[0] = TMath::Log(param1[0]);  
+  param[1] = param1[1]; // y 
   param[2] = param1[2];
-  param[3] = param2[1];
+  param[3] = param2[1]; // z
   param[4] = param2[2];
   param[5] = 0;
   param[6] = 0.5*(param1[3] + param2[3]);
@@ -102,11 +102,11 @@ TF2 *fit2D(TH2 *h2) {
 // 		     h2->GetXaxis()->GetXmin(),h2->GetXaxis()->GetXmax(),
 // 		     h2->GetYaxis()->GetXmin(),h2->GetYaxis()->GetXmax(), 6);
     gaus12->SetParName(0,"log(N)");
-    gaus12->SetParName(1,"#mu_{1}");
-    gaus12->SetParName(2,"#sigma_{1}"); gaus12->SetParLimits(2,0.01,0.5);
-    gaus12->SetParName(3,"#mu_{2}");
-    gaus12->SetParName(4,"#sigma_{2}"); gaus12->SetParLimits(4,0.01,0.5);
-    gaus12->SetParName(5,"#rho_{12}");  gaus12->SetParLimits(5,-1.0,1.0);
+    gaus12->SetParName(1,"#mu_{Y}");
+    gaus12->SetParName(2,"#sigma_{Y}"); gaus12->SetParLimits(2,0.01,0.5);
+    gaus12->SetParName(3,"#mu_{Z}");
+    gaus12->SetParName(4,"#sigma_{Z}"); gaus12->SetParLimits(4,0.01,0.5);
+    gaus12->SetParName(5,"#rho_{YZ}");  gaus12->SetParLimits(5,-1.0,1.0);
     gaus12->SetParName(6,"back");       gaus12->SetParLimits(6,0., 2*param[6]);
   }
   gaus12->SetParameters(param);
@@ -116,7 +116,7 @@ TF2 *fit2D(TH2 *h2) {
   return gaus12;
 }
 //________________________________________________________________________________
-void fit2D(TH3 *h3=0) {
+void fit2D(TH3 *h3=0) { // dZ:dY:m => (x = m, y = dY, z = dz)
   if (! h3) {
     h3 = (TH3 *) gDirectory->Get("MdYZ");
   }
@@ -139,37 +139,40 @@ void fit2D(TH3 *h3=0) {
   for (module = 0; module < nx; module++) {
     Int_t ix = module + 1;
     xa->SetRange(ix,ix);
-    TH2D *h2 = (TH2D *) h3->Project3D(Form("yz_%i",ix-1)); 
+    TH2D *h2 = (TH2D *) h3->Project3D(Form("yz_%i",ix-1)); //  y:z = (x = z, y = y); 
     TF2 *gaus12 = fit2D(h2);
     cout << Form("%10s",h2->GetName()); 
     out  << Form("/* %10s */",h2->GetName()); 
     TF1 *gaus[2] = {gaus1, gaus2};
+    const Char_t *Cxy[2] = {"Y","Z"};
     for (Int_t xy = 0; xy < 2; xy++) {
       Double_t par[6] = {0};
       Double_t err[6] = {0};
       if (gaus[xy]) {gaus[xy]->GetParameters(par); err[1] = gaus[xy]->GetParError(1); err[2] = gaus[xy]->GetParError(2);}
-      if (gaus[xy]) cout << Form(" Y %7.3f +/- %7.3f sY %7.3f +/- %7.3f", par[1], err[1], par[2], err[2]);
-      else       cout << "                                            ";
-      if (! xy)  out << Form("{/* Y */ %7.3f, %7.3f, /* sY */ %7.3f, %7.3f", par[1], err[1], par[2], err[2]);
-      else       out << Form(",/* Z */ %7.3f, %7.3f, /* sZ */ %7.3f, %7.3f, /* rho */ %7.3f, %7.3f},", par[1], err[1], par[2], err[2], par[5], err[5]);
-
-    }      cout << endl;
-    out  << endl;
+      if (gaus[xy]) {
+	cout << Form(" %s %7.3f +/- %7.3f s%s %7.3f +/- %7.3f", Cxy[xy], par[1], err[1], Cxy[xy], par[2], err[2]);
+	if (xy) out << ",";
+	else    out << "//{";
+	out << Form("{/* %s */ %7.3f, %7.3f s%s %7.3f, %7.3f", Cxy[xy], par[1], err[1], Cxy[xy], par[2], err[2]);
+      } 
+    }      
+    cout << endl;
+    out  << "}," << endl;
     Double_t par[6] = {0};
     Double_t err[6] = {0};
     if (gaus12) {
       gaus12->GetParameters(par); 
-      for (Int_t p = 1; p <=5; p++) err[p] = gaus12->GetParError(p);
+      for (Int_t p = 1; p <= 5; p++) err[p] = gaus12->GetParError(p);
     }
     cout << "          ";
-    cout << Form(" Y %7.3f +/- %7.3f sY %7.3f +/- %7.3f",par[1], err[1], par[2], err[2]);  
-    cout << Form(" Z %7.3f +/- %7.3f sZ %7.3f +/- %7.3f",par[3], err[3], par[4], err[4]);  
+    cout << Form(" Y %7.3f +/- %7.3f sY %7.3f +/- %7.3f",par[3], err[3], par[4], err[4]);  
+    cout << Form(" Z %7.3f +/- %7.3f sZ %7.3f +/- %7.3f",par[1], err[1], par[2], err[2]);  
     cout << Form(" rho %7.3f +/- %7.3f", par[5], err[5]);
     if (par[2] > 0.45 || par[4] > 0.45) cout << " ==========  Unreliable";
     cout<< endl;  
     out << Form("/* %10s */",h2->GetName()); 
-    out << Form("{/* Y */ %7.3f, %7.3f, /* sY */ %7.3f, %7.3f",par[1], err[1], par[2], err[2]);  
-    out << Form(",/* Z */ %7.3f, %7.3f, /* sZ */ %7.3f, %7.3f",par[3], err[3], par[4], err[4]);  
+    out << Form("{/* Y */ %7.3f, %7.3f, /* sY */ %7.3f, %7.3f",par[3], err[3], par[4], err[4]);  
+    out << Form(",/* Z */ %7.3f, %7.3f, /* sZ */ %7.3f, %7.3f",par[1], err[1], par[2], err[2]);  
     out << Form(", /* rho */ %7.3f, %7.3f},", par[5], err[5]);
     if (par[2] > 0.45 || par[4] > 0.45) out << "// ==========  Unreliable";
     out << endl;
