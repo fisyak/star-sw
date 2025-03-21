@@ -2742,7 +2742,8 @@ my $debug = 0;
 #$hist = "RunXXII17"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/15/2025 TpcEtaCorrection.pp500_2022.C TpcLengthCorrectionMDN.pp500_2022.C
 #$hist = "RunXXII18"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/16/2025 TpcZCorrectionC.pp500_2022.C
 #$hist = "RunXXII19"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/17/2025  TpcSecRowB.pp500_2022.root
-$hist = "RunXXII20"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/19/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+#$hist = "RunXXII20"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/19/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+$hist = "RunXXII21"; $NEvents = 1000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2022/*/pp500_2022/???/2*/"; $FILE = "*"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/21/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;

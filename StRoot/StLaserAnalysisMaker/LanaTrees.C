@@ -98,7 +98,7 @@ static Int_t Time = 0;
 static Double_t  DVAll[2][3];
 static Double_t dDVAll[2][3];
 static Int_t  _debug = 0; 
-static Double_t sigmaAcceptedDV = 0.01; // 03/17/2025 ; 50e-4;// 05/18/2024 10e-4; // 5e-4; // maximum sigma for acceptable drift velocity
+static Double_t sigmaAcceptedDV = 50e-4; // 03/20/25 0.01; // 03/17/2025 ; 50e-4;// 05/18/2024 10e-4; // 5e-4; // maximum sigma for acceptable drift velocity
 TH2D *dv = 0;
 TH2D *slope = 0;
 TH2D *memAdc = 0;
@@ -376,37 +376,38 @@ void LanaTrees(const Char_t *files="./st_laser_*.laser.root", const Char_t *Out 
 	Run.vWest = event->GetHeader()->fDriVelWest;
 	Run.vEast = event->GetHeader()->fDriVelEast;
 	Run.events = 0;
+	TString runName("");
+#ifdef __USE_RUN_NUMBER__
+	runName = Form("i",event->GetHeader()->fRun%1000000);
+#endif /* __USE_RUN_NUMBER__ */
 #ifdef ADJUSTABLE_BINNING
-	dv = new TH2D(Form("DV%i",event->GetHeader()->fRun%1000000),Form("Drift Velocity for run %i",event->GetHeader()->fRun%1000000),12,1,25,400,1,-1);
+	dv = new TH2D(Form("DV%s",runName.Data()),Form("Drift Velocity for run %s",runName.Data()),12,1,25,400,1,-1);
 	dv->SetBuffer(100000);
+	slope = new TH2D(Form("SL%s",runName.Data()),Form("Slope for run %s",runName.Data()),12,1,25,1600,4,-4);
+	slope->SetBuffer(100000);
 #else
-	dv = new TH2D(Form("DV%i",event->GetHeader()->fRun%1000000),Form("Drift Velocity for run %i",event->GetHeader()->fRun%1000000),12,1,25,4000,5.0,6.0);
+	dv = new TH2D(Form("DV%s",runName.Data()),Form("Drift Velocity for run %s",runName.Data()),12,1,25,4000,5.4,5.7);
+	slope = new TH2D(Form("SL%s",runName.Data()),Form("Slope for run %s",runName.Data()),12,1,25,8000,-40.,40.);
 #endif
 	dv->SetXTitle("Sector");
 	dv->SetYTitle("Drift Velocity ");
-#ifdef ADJUSTABLE_BINNING
-	slope = new TH2D(Form("SL%i",event->GetHeader()->fRun%1000000),Form("Slope for run %i",event->GetHeader()->fRun%1000000),12,1,25,400,1,-1);
-	slope->SetBuffer(100000);
-#else
-	slope = new TH2D(Form("SL%i",event->GetHeader()->fRun%1000000),Form("Slope for run %i",event->GetHeader()->fRun%1000000),12,1,25,2000,-10.,10.);
-#endif
 	slope->SetXTitle("Sector");
 	slope->SetYTitle("Difference wrt reference Drift Velocity in pemill");
-	memAdc = new TH2D(Form("memAdc%i", event->GetHeader()->fRun%1000000),
-			  Form("Log(Adc) @ Membrane for West and East, Inner and Outer sectors for run %i",event->GetHeader()->fRun%1000000),
+	memAdc = new TH2D(Form("memAdc%s",runName.Data()),
+			  Form("Log(Adc) @ Membrane for West and East, Inner and Outer sectors for run %s",runName.Data()),
 			  4, 0.5, 4.5, 100, 0, 10);
 	for (Int_t io = 0; io < 2; io++) {// 0 => Inner, 1 => Outer
 	  TString name("Z");
 	  TString title("Z[cm] of Membrane");
 	  if (io == 0)  {name += "I"; title += " Inner";}
 	  else          {name += "O"; title += " Outer";}
-	  name += Form("%i",event->GetHeader()->GetRun()%1000000);
-	  title += Form(" for run %i",event->GetHeader()->GetRun()%1000000); 
+	  name += runName;
+	  title += Form(" for run %s",runName.Data()); 
 	  //	  dMembraneY[io] = new TH2D(name,title,24,0.5,24.5,2000,-10.,10.);
 	  zMembrane[io] = new TH2D(name,title,24,0.5,24.5,200,200,210);
 	  for (Int_t we = 0; we < 2; we++) {
 	    for (Int_t xy = 0; xy < 2; xy++) {
-	      name  = "R"; name += Form("%i",event->GetHeader()->GetRun()%1000000); 
+	      name  = "R"; name += runName;
 	      title = "Drift length for Membrane clusters versus";
 	      if (xy == 0) {name += "X"; title += " X. ";}
 	      else         {name += "Y"; title += " Y. ";}
