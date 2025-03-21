@@ -106,5 +106,6 @@
 <li> TFG24h Maksym's version KFParticle without Vc from 12/16/24         2024-12-18 16:24:09 -0500  (HEAD -> TFG24h, tag: TFG24h, origin/TFG24h)
 <li> TFG24i Merge with Maksym's version and TFG24g                       2024-12-30 12:03:16 -0500  (HEAD -> TFG, tag: TFG24i)
 <li> TFG25a Alma Linux release with latest update for gmt                2025-03-05 18:16:00 -0500  (HEAD -> TFG, tag: TFG25a_2)
+<li> TFG25b Alma Linux release with latest update for gmt                2025-03-21 13:02:05 -0400  (tag: TFG25b)
 <li>.DEV2   head of TFG git repository
 </ul>
