@@ -453,18 +453,14 @@
  
  $ROOTSRC = $ROOTSYS . "/include";
  
-# $CERNINO = "#asps/Simulation/geant321/include" . 
-# $CERNINO =  $main::PATH_SEPARATOR . $CERN_ROOT . "/include";
  $CERNINO =  $CERN_ROOT . "/include";
  if ($CPPPATH) {$CPPPATH .= $main::PATH_SEPARATOR;}
  $CPPPATH .= "#".  $main::PATH_SEPARATOR . "#StRoot" .  $main::PATH_SEPARATOR . $INCLUDE;# . $main::PATH_SEPARATOR . $ROOTSRC;# . $main::PATH_SEPARATOR . "#";
  $CPPPATH .= $main::PATH_SEPARATOR . $ROOTSRC;
- if (-r $XOPTSTAR . "/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";}
-#  if ($XOPTSTAR ne $OPTSTAR) {
-#    $CPPPATH .= $main::PATH_SEPARATOR . $OPTSTAR . "/include";
-#  }
- #    $CPPPATH .= $main::PATH_SEPARATOR ."#";# . $CERNINO;
- if (-r $XOPTSTAR . "/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";}
+ if (-r $XOPTSTAR . "/include") {
+   $CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";
+   if (-r $XOPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/spack/include";}
+ }
  my $pwd = cwd();
  my $path2bin = $pwd . "/." . $STAR_HOST_SYS . "/bin";
  if ($PATH !~ /$STAR_BIN/) {$PATH = $STAR_BIN . ":" . $PATH;}
@@ -479,43 +475,20 @@
  #
  # *** Standard package first, then XOPTSTAR ***
  #	
+ my $mysql_search = "":
+ if ($MYSQL) {$mysql_search = $MYSQL . " " . $MYSQL . "/include ";}
+ $mysql_search .= $XOPTSTAR . "/include " . $XOPTSTAR . "/spack/include " . $XOPTSTAR . "/include/mysql ".
+ "/sw/include/mysql " .  "/include /usr/include ".  "/usr/include/mysql  ".  "/usr/mysql/include  " .  "/usr/mysql  ";
  my ($MYSQLINCDIR,$mysqlheader);
- if ( defined($ENV{USE_LOCAL_MYSQL}) ){
-   ($MYSQLINCDIR,$mysqlheader) =
-       script::find_lib($CMAKE_PREFIX_PATH . "/include ". 
-	               $XOPTSTAR . "/include " .  $XOPTSTAR . "/include/mysql ".
-		       $MYSQL . " " .
-		       "/sw/include/mysql ".
-		       "/include /usr/include ".
-		       "/usr/include/mysql  ".
-		       "/usr/mysql/include  ".
-		       "/usr/mysql  ",
-		       "mysql.h");
- } else { 
-   ($MYSQLINCDIR,$mysqlheader) =
-       script::find_lib($CMAKE_PREFIX_PATH . "/include ". 
-			$MYSQL . " " .
-		       "/sw/include/mysql ".
-		       "/include /usr/include ".
-		       "/usr/include/mysql  ".
-		       "/usr/mysql/include  ".
-		       "/usr/mysql  ".
-		       $XOPTSTAR . "/include " .  $XOPTSTAR . "/include/mysql " ,
-		       "mysql.h");
- }
- 
+ ($MYSQLINCDIR,$mysqlheader) = script::find_lib($mysql_search,  "mysql.h");
  if (! $MYSQLINCDIR) {
-   die "Can't find mysql.h in standard path and $XOPTSTAR/include  $XOPTSTAR/include/mysql\n";
+   die "Can't find mysql.h in standard path and $XOPTSTAR/include $XOPTSTAR/spack/include  $XOPTSTAR/include/mysql\n";
  }
- 
+ $mysql_search =~ s/include/bin/g;
  # search for the config    
  my ($MYSQLCONFIG,$mysqlconf);
- # if ( defined($ENV{USE_LOCAL_MYSQL}) ){
- ($MYSQLCONFIG,$mysqlconf) =
- script::find_lib($CMAKE_PREFIX_PATH . "/bin ".  $XOPTSTAR . "/bin " .  $XOPTSTAR . "/bin/mysql /sw/bin ".
-		  $MYSQL . " ".
-		  "/usr/$LLIB/mysql /usr/bin/mysql /usr/bin ",
-		  "mysql_config");
+ 
+ ($MYSQLCONFIG,$mysqlconf) = script::find_lib($mysql_search, "mysql_config");
  # Associate the proper lib with where the inc was found
  my ($mysqllibdir)=$MYSQLINCDIR;
  $mysqllibdir =~ s/include/$LLIB/;# print "mysqllibdir => $mysqllibdir =========\n";
@@ -632,7 +605,7 @@
    }
  }
  # spack
- my $SPACK_PREFIX = $CMAKE_PREFIX_PATH;
+ my $SPACK_PREFIX = $XOPTSTAR . "/spack";
  my $spackINCDIR  = ""; 
  my $spackLIBDIR  = ""; 
  my $spackBINDIR  = ""; 
