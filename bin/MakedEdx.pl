@@ -2742,8 +2742,9 @@ my $debug = 0;
 #$hist = "RunXXII17"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/15/2025 TpcEtaCorrection.pp500_2022.C TpcLengthCorrectionMDN.pp500_2022.C
 #$hist = "RunXXII18"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/16/2025 TpcZCorrectionC.pp500_2022.C
 #$hist = "RunXXII19"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/17/2025  TpcSecRowB.pp500_2022.root
-#$hist = "RunXXII20"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/19/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
-$hist = "RunXXII21"; $NEvents = 1000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2022/*/pp500_2022/???/2*/"; $FILE = "*"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/21/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+#$hist = "RunXXII20"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/19/2025 03/23/25  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+#$hist = "RunXXII21"; $NEvents = 1000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2022/*/pp500_2022/???/2*/"; $FILE = "*"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/21/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+$hist = "RunXXII22"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/25/25  check MySQL
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2926,8 +2927,37 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 	print "Create $SCRIPT\n";
 	print XML "<input URL=\"file:" . $DIR . "/" .  $SCRIPT ."\" />\n";
 	open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
+    print OUT "
+#/usr/bin/env
+# Default value for path if not defined.
+if ( ! \$?PATH ) then
+   setenv PATH /usr/local/bin:/bin:/usr/bin
+endif
+#echo \"--------------------------------------------------------------------------------\"
+if ( ! \$?USER ) then
+    echo \"USER is not defined\"
+    set USER=`id | sed \"s/).*//\" | sed \"s/.*(//\"`
+endif
+if ( ! \$?HOME ) then
+    echo \"HOME is not defined\"
+
+    if ( -x /usr/bin/getent ) then
+        # we have getent, should not be on aix, bsd, Tru64 however
+        # will work for Linux
+        echo \"Using getent method\"
+#        setenv HOME `/usr/bin/getent passwd $USER | /bin/awk -F: '{print $6}'`
+        setenv HOME `/usr/bin/getent passwd \$USER | /bin/sed 's|.*\\:.*\\:.*\\:.*\\:\\([^\\:]*\\):.*|\\1|'`
+    endif
+endif
+echo \"HOME is now $HOME\"
+
+
+/usr/bin/test -r $HOME/.cshrc && source $HOME/.cshrc
+
+#env
+";
 #	print OUT "#! /usr/local/bin/tcsh -f\n";
-	print OUT "#! /usr/bin/tcsh -f\n";
+#	print OUT "#! /usr/bin/tcsh -f\n";
 	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
 	if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
 	  print OUT "source ${GROUP_DIR}/setup gcc;\n";
@@ -2946,6 +2976,27 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 	$countperdd++;
 	close (OUT); $opened = 0; $count = 0;
 	chmod 0755, $SCRIPT;
+	my $CONDOR = $BCRIPT . ".condor";
+	open (OUT,">$CONDOR") or die "Can't open $CONDOR";
+	print OUT "
+Universe         = vanilla
+Notification     = never
+Executable       = /bin/sh
+Arguments        = \"-c 'exec " . $DIR . "/" . $SCRIPT . "'\"
+Output           = " . $DIR . "/" . $SCRIPT . ".log
+Error            = " . $DIR . "/" . $SCRIPT . ".err
+Requirements    = ((CPU_Experiment == \"star\") || ( CPU_Experiment == \"phenix\" ))
+Log              = " . $SCRIPT . ".condor.log
+Initialdir       = " . $DIR . "
++Experiment     = \"general\"                              
++Job_Type       = \"cas\"
+kill_sig        = SIGINT
+PeriodicRemove  = (NumJobStarts >=1 && JobStatus==1) || (JobStatus == 2 && (CurrentTime - JobCurrentStartDate > (54000)) && ((RemoteUserCpu+RemoteSysCpu)/(CurrentTime-JobCurrentStartDate) < 0.10))  || (((CurrentTime - EnteredCurrentStatus) > (2*24*3600)) && JobStatus == 5)
+Priority         = +10
+Queue
+";
+	close (OUT);
+#requirements = (Microarch == \"x86_64-v4\")
       }
   ENDL:
     }
