@@ -1,0 +1,227 @@
+#!/bin/csh
+# ---------------------------------
+# STAR Scheduler launch script
+# Gabriele Carcassi / Jerome Lauret / Levente Hajdu
+# ---------------------------------
+
+# This script should be located in the same directory with scheduler.jar and
+# scheduler.properties. This directory must be specified here, in the
+# scriptDir variable.
+
+#Make a group dir for the log if it does not exist, make it group readable log dir.
+/bin/mkdir -p $HOME/.sums
+chmod g+rx $HOME/.sums
+
+
+set scriptName = `/bin/basename $0`
+set scriptDir  = `echo $0 | /bin/sed "s/$scriptName//"`
+
+
+
+# Support for external sites and users requires this block
+# to be present. Usually done in the STAR Global login.
+
+
+# NIS may define DOMAINAME but in case it does not ...
+if( ! $?DOMAINNAME) then
+    if ( -x "/bin/domainname" ) then
+       setenv DOMAINNAME `/bin/domainname`
+    else
+       # Be aware that NIS/YP could be disabled 
+       setenv DOMAINNAME "(none)"
+    endif
+    if ( "$DOMAINNAME" == "(none)") then 
+       setenv DOMAINNAME `/bin/hostname | /bin/sed 's/^[^\.]*\.//'`
+    endif
+endif
+
+# Support for JAVA/JDK
+if ( ! $?JAVA_ROOT ) then
+    # Search for a default path
+    foreach p ( /usr/java /usr/lib/jvm )
+    if ( -d $p ) then
+        set a = `/bin/ls $p | /usr/bin/tail -1`
+        if ( "$a" != "") then
+        if ( -d $p/$a/jre ) then
+            setenv JAVA_ROOT $p/$a/jre
+        else
+            setenv JAVA_ROOT $p/$a
+        endif
+        break
+        endif
+    endif
+    end
+endif
+
+
+if ( ! $?JAVA_ROOT ) then
+   # no longer attempts to search for a default path 
+   # Would duplicate logic in login and with the many options
+   # became a bit of a multi-choice
+   echo "JAVA_ROOT is not defined - please contact the administrator"
+   echo "or define it as the base path where bin/ and lib/ are found"
+   echo "for 'a' java distribution suitable for your site."
+   exit
+endif
+# if ( $?JAVA_ROOT ) then
+#   if ( -d $JAVA_ROOT/ ) then
+#      set path=($path $JAVA_ROOT/bin)
+#      if ($?MANPATH) then
+#         setenv MANPATH ${MANPATH}:$JAVA_ROOT/man
+#      else
+#         setenv MANPATH $JAVA_ROOT/man
+#      endif
+#   endif
+# endif
+
+
+
+# No longer used because there is one config for all sites
+# Choose the appropriate configuration site for the site
+
+#switch ($DOMAINNAME)
+#   case "nersc.gov":    # <--- or whatever domainame returns
+#      #set SCHEDULERCONF = "pdsfConfig.xml"
+#      set SCHEDULERCONF = "globalConfig.xml"
+#      module load java
+#      breaksw
+# 
+#   case "rhic.bnl.gov":
+#   case "rcf.bnl.gov":
+#       set SCHEDULERCONF = "globalConfig.xml"
+#       setenv DOMAINNAME "rhic.bnl.gov"
+#      breaksw
+#
+#  case "if.usp.br":
+#      #set SCHEDULERCONF = "spConfig.xml"
+#      set SCHEDULERCONF = "globalConfig.xml"
+#      breaksw
+#
+#  case "ikf.physik.uni-frankfurt.de":
+#      set SCHEDULERCONF = "globalConfig.xml"
+#      breaksw
+#
+#   case "sns.bnl.gov":
+#      set SCHEDULERCONF = "snsConfig.xml"
+#      breaksw
+#
+#    case "cluster.phy.uic.edu":
+#        set SCHEDULERCONF = "globalConfig.xml"
+#    breaksw
+#
+#   default:
+#      echo "DOMAINNAME variable not found, the scheduler can't select the appropriate configuration for the site."
+#      echo "Contact the administrator"
+#      exit
+#      breaksw
+#endsw
+
+
+
+switch ($DOMAINNAME)
+    case "rcf.bnl.gov":
+        if (`/bin/hostname | /bin/grep -e "eic[0-9]*.rcf.bnl.gov" | /bin/wc -l` == 1 )then
+             setenv DOMAINNAME "eic.bnl.gov"
+        else
+             setenv DOMAINNAME "rhic.bnl.gov"
+        endif
+    breaksw
+
+    case "sdcc.bnl.gov":
+        if (`/bin/hostname | /bin/grep osgsub01.sdcc.bnl.gov | /bin/wc -l` == 1 )then
+             setenv DOMAINNAME "eic.grid.sdcc.bnl.gov"
+        endif
+    breaksw
+    
+
+
+endsw
+
+
+
+set SCHEDULERCONF = "globalConfig.xml"
+
+
+#needed for UCM
+#setenv SIDL_DLL_PATH "/star/data08/users/lbhajdu/ucm/tracking/babel/logging/cppImpl/libTxLoggingCxx.scl;/star/data08/users/lbhajdu/ucm/tracking/babel/logging/javaDriver/libTxLoggingJava.scl;/star/data08/users/lbhajdu/ucm/babel_bin/lib/libsidl.scl;/star/data08/users/lbhajdu/ucm/babel_bin/lib/libsidlstub_java.scl"
+
+
+if ( $#argv > 0) then
+    set xTEST=X$argv[1]
+else
+    set xTEST=X
+endif
+
+
+
+#Note active because onl01-onl14 do not have $OPTSTAR  
+################### needed for UCM  ##########################
+#
+#$JAVA_ROOT/bin/java -d64 >&/dev/null
+#
+#if ( $? == 0) then
+#    #setup UCM libs for 64bit JVM
+#    setenv OPTSTAR /afs/rhic.bnl.gov/opt/star/sl53_x8664_gcc432
+#    setenv LD_LIBRARY_PATH $scriptDir/:$scriptDir/X86_64/:$OPTSTAR/lib
+#else
+#    #setup UCM libs for 32bit JVM
+#    setenv LD_LIBRARY_PATH $scriptDir/:$scriptDir/X86/:$OPTSTAR/lib
+#endif
+#
+##############################################################
+
+
+# Starts the scheduler itself
+#----------------------------
+
+#used to start the gris feeder 
+if($xTEST =~ X-gridfeed )then
+     $JAVA_ROOT/bin/java -Xmx196m -cp $scriptDir/:$scriptDir/scheduler.jar gov.bnl.star.offline.scheduler.util.persistent.GridFeeder $scriptDir/$SCHEDULERCONF $DOMAINNAME $*
+else if (( $xTEST =~ X-h )||( $xTEST =~ X-help )) then
+     $JAVA_ROOT/bin/java -Xmx196m -cp $scriptDir/:$scriptDir/scheduler.jar gov.bnl.star.offline.scheduler.util.persistent.CommandLineReDispatch $scriptDir/$SCHEDULERCONF $DOMAINNAME $*
+else 
+#used for resubmitting jobs
+    if(( $xTEST =~ X-kr )||( $xTEST =~ X-k )||( $xTEST =~ X-kd )||( $xTEST =~ X-r )||( $xTEST =~ X-s )||( $xTEST =~ X-n )||( $xTEST =~ X-f ))then
+
+#-------------------- Resubmit session file with same version it was made by --------------------
+        set SUMSLocation = `which sums-submit | sed 's|sums-submit||' `
+        set sessionFile = $argv[3]
+        set sessionVersionNum = `tail -1 $sessionFile | sed 's|.*Meta Scheduler \([0-9]\+\.[0-9]\+\.[0-9]\+\).*|\1|'`
+        echo "Session File Version: $sessionVersionNum"
+
+        if( ! $?no_version_check )then
+                foreach SUMSEntry (`find $SUMSLocation -maxdepth 1  | grep -e "\(sums\)\|\(star\)-submit" | grep -v "template" | grep -v -e ".*\(\([0-9]\+\.[0-9]\+\.[0-9]\+\)\)"  `)
+                     set SUMSEntryversion = `$SUMSEntry -version | sed 's|.*Meta Scheduler \([0-9]\+\.[0-9]\+\.[0-9]\+\).*|\1|'`
+                     if($SUMSEntryversion == $sessionVersionNum) then
+                        setenv no_version_check
+                        echo "Found Version: $SUMSEntry"
+                        $SUMSEntry $*
+                        unset no_version_check
+                        exit
+                     endif
+               end
+
+               foreach SUMSEntry (`find $SUMSLocation -maxdepth 1  | grep -e "\(sums\)\|\(star\)-submit" | grep -v "template" | grep -e ".*\(\([0-9]\+\.[0-9]\+\.[0-9]\+\)\)"  `)
+                     echo "Check version -> "$SUMSEntry
+                     set SUMSEntryversion = `echo $SUMSEntry | sed 's|.*\(\([0-9]\+\.[0-9]\+\.[0-9]\+\)\)|\1|'`
+                     if($SUMSEntryversion == $sessionVersionNum) then
+                          setenv no_version_check
+                          echo "Found Version: $SUMSEntry"
+                          $SUMSEntry $*
+                          unset no_version_check
+                          exit
+                     endif
+                end
+        endif
+#------------------------------------------------------------------------------------------------
+
+
+        $JAVA_ROOT/bin/java -Xmx196m -cp $scriptDir/:$scriptDir/scheduler.jar gov.bnl.star.offline.scheduler.util.persistent.CommandLineReDispatch $scriptDir/$SCHEDULERCONF $DOMAINNAME $*
+    else
+#the "normal\basic" star submit command
+        $JAVA_ROOT/bin/java -Xmx196m  -cp $scriptDir/:$scriptDir/scheduler.jar gov.bnl.star.offline.scheduler.SchedulerCommandLine -conf $scriptDir/$SCHEDULERCONF -site $DOMAINNAME $*
+    endif
+endif
+
+
+
