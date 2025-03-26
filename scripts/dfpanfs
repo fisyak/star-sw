@@ -1,6 +1,7 @@
 #!/usr/local/bin/perl
 
 #
+# G. Van Buren 2022 - added extenstion for Lustre
 # J. Lauret 2018 - added extenstion for GPFS
 #
 # J. Lauret May 2005
@@ -117,6 +118,38 @@ if ($result =~ m/\/panasas/ && $ARGV[0] ne "" && -e $PEXEC){
     #print $result;
     print "$items[0]\n";
     print "$items[1]\n";    
+
+} elsif ( $result =~ m/\/lustre/ && $ARGV[0] ne "" ){
+
+    @OSTlist = `/usr/sbin/lctl pool_list lustre02.star_production | /usr/bin/grep -v Pool: `;
+    $result = `/usr/bin/lfs df /direct/sdcc+lustre02 `;
+    @items = split(/\n/,$result);
+
+    $TOTALS = 0;
+    $USEDS = 0;
+    $AVAILS = 0;
+    foreach $OST (@OSTlist){
+        chomp $OST;
+        foreach $item (@items){
+            if ( $item =~ m/$OST/ ){
+                @vals = split(/ / ,$item);
+                $TOTALS += $vals[1];
+                $USEDS += $vals[2];
+                $AVAILS += $vals[3];
+                $mountedOn = (split(/\[/,$vals[6]))[0];
+            }
+        }
+    }
+    # TOTALS from lfs appear to include an overhead of 6% that we should ignore
+    $TOTALS = $USEDS + $AVAILS;
+    $val = 0;
+    if ($TOTALS > 0){
+        $val = int(100 * $USEDS / $TOTALS);
+        $val = 100 if ( $val > 100);
+    }
+
+    print "Filesystem\t1K-blocks\tUsed\t\tAvailable\tUse%\tMounted on\n";
+    print "$ARGV[0]\t$TOTALS\t$USEDS\t$AVAILS\t$val%\t$mountedOn\n";
 
 } else {
     print $result;

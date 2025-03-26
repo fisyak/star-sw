@@ -1996,7 +1996,9 @@ foreach my $line (@logfile) {
                  $Err_messg = "Killed";
 
         }elsif ($line =~ /Abort/)  {
-            if($line =~ /AbortGap/)  {
+            #if($line =~ /AbortGap/)  {
+            # GVB: Some trigger names printed by StTriggerSimuMaker have "Abort" in them
+            if($line =~ /AbortGap/ || $line =~ /StTriggerSimuMaker\:INFO.+Abort/)  {
                $Err_messg = "none";
             }else{
               $Err_messg = "Abort";

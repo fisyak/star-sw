@@ -1,10 +1,10 @@
 #!/bin/csh
 #
 # Written J.Lauret Fri May 25 2001
-# (c) J. Lauret 2001-2012
+# (c) J. Lauret 2001-2024
 #
 # Version: [will increment and compare with ssh GK]
-set VERSION="V1.502";
+set VERSION="V1.505";
 
 #
 # Generic enough to work everywhere.
@@ -29,6 +29,7 @@ set port=""
 set extra=""
 set col=""
 set excluded=""
+set SXARGS=""
 set DEBUG=0
 set pool="condor02.rcf.bnl.gov:9664" 
 
@@ -81,6 +82,15 @@ while ( $count <= $#argv)
 	    set X11Opt="-Y"
 	    breaksw
 
+	    ## SXARGS can be further used to simply the other
+	    ## argument passing logic.
+	case "-ipv4":
+	    set SXARGS="$SXARGS -4"
+	    breaksw
+	case "-ipv6":
+	    set SXARGS="$SXARGS -6"
+	    breaksw
+
 	case "-x":
 	    set excluded="$excluded $argv[$count]"
 	    if( $DEBUG) then
@@ -98,7 +108,7 @@ while ( $count <= $#argv)
 	    set port="-p $argv[$count]"
 	    set extra="$extra port $argv[$count]"
 	    if ($DEBUG) then
-		echo "Extraneous args are   [$extra]"
+		echo "Additional arguments args are   [$extra]"
 	    endif
 	    @ count++
 	    breaksw
@@ -388,8 +398,8 @@ if ($help) then
    set wnode=`echo $node | $SED "s/+//"`
    $CAT <<EOF | more
 
-rterm, $VERSION - Written by J. Lauret 2001 
-This command will open a connection to any remote node using the slogin 
+rterm, $VERSION - Written by J. Lauret 2001 - 2023
+This command will open a connection to any remote node using the ssh 
 command and, without node precision open a terminal on the least loaded 
 node.
 
@@ -397,6 +407,8 @@ Syntax is
   % $prgm [Options] [NodeSpec] [UserName]
 
 Currently implemented options are :
+  -ipv4      force ssh IPv4 addresses only
+  -ipv6      force ssh IPv5 addresses only
   -i         interactive mode i.e. do not open an xterm but use slogin
              directly to connect.
   -p port    use port number 'port' to connect
@@ -422,6 +434,7 @@ Finally, you may modify the xterminal layout by using the following
 environment variables 
   TERM_BKG_COLOR     sets the xterm background color
   TERM_OPTIONS       sets any other xterm options
+  SSH_OPTIONS        sets any other ssh options to be passed
 
 EOF
    exit
@@ -578,16 +591,23 @@ endif
 if( ! $?TERM_OPTIONS ) then
     set TERM_OPTIONS=""
 endif
+if( ! $?SSH_OPTIONS ) then
+    set SSH_OPTIONS=""
+endif
 
 
 
 
-# One more executable, the slogin program
+# One more executable, the slogin/ssh program
 set SLOGIN = ""
 foreach path ( /usr/bin/ /usr/local/bin )
     if ( -e $path) then
-	if (-x $path/slogin ) then	
-	    set SLOGIN=$path/slogin
+	#if (-x $path/slogin ) then	
+	#    set SLOGIN=$path/slogin
+	#    break
+	#endif
+	if (-x $path/ssh ) then	
+	    set SLOGIN=$path/ssh
 	    break
 	endif
     endif
@@ -605,15 +625,14 @@ if ( $node == "") then
     echo "Try using a specific node name as first argument"
 else
     if ("$SLOGIN" == "") then
-	echo "Could not find slogin program"
+	echo "Could not find the ssh executable "
     else
 	if ($inter) then
-	    echo "Opening a connection to [$node] for $user $extra"
-	    $SLOGIN -A $port $user@$node
+	    echo "Opening a connection to [$node] for $user $SXARGS $extra"
+	    $SLOGIN -A $SXARGS $SSH_OPTIONS $port $user@$node
 	else
-	    echo "Opening a $col terminal on $node for $user $extra"
-#	    $TERM_PRGM -sl 10000 -sb +si -sk -T "$user@$node" -n "Xterm_$node" -bg $TERM_BKG_COLOR $TERM_OPTIONS -e $SLOGIN -A $X11Opt $port $user@$node &
-	    $TERM_PRGM -sl 10000 -sb +si -sk -T "$user@$node" -n "Xterm_$node" -bg $TERM_BKG_COLOR -fn fixed -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 $TERM_OPTIONS -e $SLOGIN -A $X11Opt $port $user@$node &
+	    echo "Opening a $col terminal on $node for $user $SXARGS $extra"
+	    $TERM_PRGM -sl 500 -sb +si -sk -T "$user@$node" -n "Xterm_$node" -bg $TERM_BKG_COLOR $TERM_OPTIONS -e $SLOGIN -A $SXARGS $SSH_OPTIONS $port $user@$node &
 	endif
     endif
 endif

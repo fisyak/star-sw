@@ -55,10 +55,13 @@ if ( ! $?STARCVMFS) setenv STARCVMFS /cvmfs/star.sdcc.bnl.gov
 
 
 # In case of token failure, send an Email to
-set EMAIL="jeromel@bnl.gov,didenko@bnl.gov"
+set EMAIL="jeromel@bnl.gov,gene@bnl.gov"
 
 # Path where to find the damned scripts.
 set SCRIPTD=$AFS_RHIC/star/packages/scripts
+set SCRIPTDCVMFS=$STARCVMFS/packages/scripts
+
+#set SCRIPTD = /star/u/starlib/Amol/GITDEV_update
 
 # Loading of the star environment etc ...
 if ( ! $?GROUP_DIR ) then
@@ -96,6 +99,7 @@ if ( -r  $GROUP_DIR/star_login.csh ) then
 	    setenv SILENT 1
 	    if ($?INSURE)  unsetenv INSURE
 	    if ($?NODEBUG) unsetenv NODEBUG
+	    #starver gitdev
 	    staradev
 	    unset noclobber
 
@@ -228,7 +232,13 @@ if ( -r  $GROUP_DIR/star_login.csh ) then
 	    #case "SL5":
 	    #	set XTRACMD="unsetenv PGI"
 	    case "64bits":
-		set XTRACMD="setup 64bits"
+                #echo "You are in 64 bit switch"
+                #$SCRIPTD/AutoBuild.pl 64bits >$HOME/log/AB-$DAY-64bits.log
+                $SCRIPTD/AutoBuild.pl -R -T 64bits -b 'setup 64bits' >$HOME/log/AB-$DAY-64bits.log
+                breaksw
+	    case "cvmfs64bits":
+                $SCRIPTDCVMFS/AutoBuild.pl -R -cvmfs -T CVMFS64bits -b 'setup 64bits' -a 'setenv PATH /opt/star/sl73_x8664_gcc485/bin:$PATH' >$HOME/log/AB_cvmfs-$DAY-64bits.log
+                breaksw
 	    case "Linux61":
 	    case "Linux72":
 	    case "Linux80":
@@ -271,9 +281,16 @@ if ( -r  $GROUP_DIR/star_login.csh ) then
 		# same as default with -s
 		$SCRIPTD/AutoBuild.pl -s -u -R >$HOME/log/AB-$DAY.log
 		breaksw
-	    default
+	    case "old":
 		# Is update mode, not checkout
 		$SCRIPTD/AutoBuild.pl -u -R    >$HOME/log/AB-$DAY.log
+                breaksw
+	    case "cvmfs":
+                $SCRIPTDCVMFS/AutoBuild.pl -R -cvmfs -T CVMFS -a 'setenv PATH /opt/star/sl73_gcc485/bin:$PATH'  >$HOME/log/AB_cvmfs-$DAY.log
+                breaksw
+	    default:
+                $SCRIPTD/AutoBuild.pl -R >$HOME/log/AB-$DAY.log
+                breaksw
 	    endsw
 	endif
 endif

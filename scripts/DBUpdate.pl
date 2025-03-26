@@ -37,23 +37,22 @@ if ($#ARGV == -1){
    This script scans a disk given as the first argument
    checks all files and update the database with a file
    location new entry if it finds the same entry as
-   storage = HPSS.
-
-   It uses the clone_location() method to update the
-   database with that entry and is a very good example
-   of how to do this ...
+   storage = HPSS. 
 
    This is REALLY a spider ... It is used to post-scan
    disk and catch entries which may be missing.
 
-   Only clones (if there is no similar entries in the db,
-   it will not add it).
+   This script does NOT register or handle new files - all 
+   it does is replicate known ones (clone) adding a new 
+   location as needed. Only clones (if there is no similar 
+   entries in the db, it will not add it).
 
 
  Arguments are
    ARGV0   the base path of a disk to scan (default /star/data06)
-   ARGV1   the filetype (default .root ). If null, it will
-           search for all files
+   ARGV1   a filetype (default .root ) or a path pattern.
+           If null, it will search for all files. Path pattern
+           will search for files with the specific path pattern
    ARGV2   this scripts limits it to a sub-directory "reco" starting
            from ARGV0. Use this argument to overwrite.
    ARGV3   A base path substitution for find the entry in HPSS
@@ -67,6 +66,7 @@ if ($#ARGV == -1){
  Examples
   % DBUpdate.pl /star/data27
   % DBUpdate.pl /star/data27 ""
+  % DBUpdate.pl /star/data102 path=P16id
   % DBUpdate.pl /star/data03 .daq daq /home/starsink/raw
   % DBUpdate.pl /home/starlib/home/starreco -k /home/starlib -l
 
@@ -203,6 +203,10 @@ for ($i=0 ; $i <= $#ARGV ; $i++){
 
     } else {
 	# ... as well as previous syntax
+	if ( substr($ARGV[$i],0,1) eq "-"){
+	    die "$SELF :: Unrecognized argument $ARGV[$i]";
+	}
+
 	$kk++;
 	$SCAND = $ARGV[$i] if ( $kk == 1);
 	$FTYPE = $ARGV[$i] if ( $kk == 2);
@@ -245,26 +249,26 @@ if ( $DEBUG ){
 
 $stimer = time();
 if( $DOIT && -e "$SCAND/$SUB"){
-    if ($FTYPE ne "" ){
-	print "Searching for all files like '*$FTYPE' in $SCAND/$SUB  ...\n";
-	if ( $DOSL){
-	    @ALL   = `/usr/bin/find $SCAND/$SUB -type l -name '*$FTYPE'`;
-	    print "Found ".($#ALL+1)." links to add (x2)\n";
-	} else {
-	    @ALL   = `/usr/bin/find $SCAND/$SUB -type f -name '*$FTYPE'`;
-	    print "Found ".($#ALL+1)." files to add (x2)\n";
-	}
-
+    my($cmd,$desc)=("/usr/bin/find $SCAND/$SUB -type ","");
+    if ( $DOSL){
+	$cmd .= "l";
+	$desc = "links";
     } else {
-	print "Searching for all files in $SCAND/$SUB ...\n";
-	if ($DOSL){
-	    @ALL   = `/usr/bin/find $SCAND/$SUB -type l`;
-	    print "Found ".($#ALL+1)." links to add (x2)\n";
-	} else {
-	    @ALL   = `/usr/bin/find $SCAND/$SUB -type f`;
-	    print "Found ".($#ALL+1)." files to add (x2)\n";
-	}
+	$cmd .= "f";
+	$desc = "files";
     }
+    if ( $FTYPE =~ m/(path=)(.*)/ ){
+	$desc = "files with path like '*$2*'";
+	$cmd .= " -path '*$2*'";
+    } elsif ( $FTYPE ne ""){            # in this script, we do not use " "
+	$cmd .= " -name '*$FTYPE'";
+	$desc.= " matching '*$FTYPE'";
+    }
+    print "Searching for $desc in $SCAND/$SUB  ...\n";
+    print "Executing $cmd\n";
+    @ALL   = `$cmd`;
+    print "Found ".($#ALL+1)." $desc to add (x2)\n";
+
 }
 $etimer = time()-$stimer;
 
