@@ -4,7 +4,7 @@
 <command> 
 #  source ~/.tcshrc
   cd ${SUBMITTINGDIRECTORY}  
-#  starver TFG25a
+  starver TFG25b
   set evtsFile = $INPUTFILE0;
   set file     = `basename $evtsFile .daq`
   echo "${evtsFile}"
