@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/perl -w
 
 # Written as interface to JProf formatting
 # However, arguments are expected to be the same

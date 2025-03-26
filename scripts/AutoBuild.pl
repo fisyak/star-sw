@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# $Id: AutoBuild.pl,v 1.55 2020/02/26 12:06:08 jeromel Exp $
+# $Id: AutoBuild.pl,v 1.56 2025/02/03 19:34:09 jeromel Exp $
 # This script was written to perform an automatic compilation
 # with cvs co and write some html page related to it afterward.
 # Written J.Lauret Apr 6 2001

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
 # This script should be run by root on the STAR Webserver.
 # At present (22-Feb-2002) it is started in rc.local on

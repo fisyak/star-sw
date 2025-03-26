@@ -63,7 +63,7 @@ if ( $user eq ""){
 my $rscript = "/star/u/starreco/FCrmRootfiles_4.csh";
 
    open (CSFILE, ">$rscript");
-  print CSFILE "#! /usr/local/bin/tcsh -f", "\n";
+  print CSFILE "#!/usr/bin/tcsh -f", "\n";
 
   foreach my $line (@fileList)  {
       chop $line;
@@ -109,7 +109,7 @@ my $rscript = "/star/u/starreco/FCrmRootfiles_4.csh";
   $script = "/star/u/starreco/scripts/copy_".$nn.".csh";
 
   open (FILE, ">$script");
-  print FILE "#! /usr/local/bin/tcsh -f", "\n";
+  print FILE "#!/usr/bin/tcsh -f", "\n";
   print FILE "pftp -v hpss.rcf.bnl.gov 4021 <<EOF","\n";
   print FILE "quote site setcos 11","\n";
   print FILE "bin","\n";

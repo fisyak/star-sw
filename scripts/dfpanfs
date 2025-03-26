@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 #
 # G. Van Buren 2022 - added extenstion for Lustre
@@ -132,11 +132,11 @@ if ($result =~ m/\/panasas/ && $ARGV[0] ne "" && -e $PEXEC){
         chomp $OST;
         foreach $item (@items){
             if ( $item =~ m/$OST/ ){
-                @vals = split(/ / ,$item);
+                @vals = split(/ / ,$item =~ s/ +/ /gr);
                 $TOTALS += $vals[1];
                 $USEDS += $vals[2];
                 $AVAILS += $vals[3];
-                $mountedOn = (split(/\[/,$vals[6]))[0];
+                $mountedOn = (split(/\[/,$vals[5]))[0];
             }
         }
     }

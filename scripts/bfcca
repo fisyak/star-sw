@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 #
 # This script will be developped as a unique flexible
@@ -32,6 +32,8 @@
 #                           11 copy picodst and mudst to XRootD
 #                  Bit 8    0 32-bit
 #                           1 64-bit
+#                  Bit 9    0 AFS/NFS root4star software stack
+#                           1 CVMFS root4star software stack
 #
 #   LibraryVersion can be one of new, dev, old, pro or a version
 #                  understood by 'starver'
@@ -108,7 +110,7 @@ $SOFFTOL = 0.02;                   # Size offset tolerance (2%)
 $MAXFILL = 95;                     # Maximum disk occupency in %tage for free space algo
 @SETUP   = undef;                  # some setup to run before root4star
 $SING    = 
-    "singularity exec -B /direct -B /gpfs -B /star  -B /cvmfs ".
+    "singularity exec -B /direct -B /gpfs -B /star -B /cvmfs -B /sdcc/lustre02 ".
     "/cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif" ;
 $OSVER   = undef;
 
@@ -157,6 +159,9 @@ if ( -e "/etc/redhat-release"){
 }
 
 
+if ( $OSVER =~ m/alma/i ){
+    $AFS_RHIC= "/star/nfs4/AFS"; # path to pseudo-AFS head
+}
 
 # The first element of the argument list
 # is rather of unknown usage. It is always
@@ -214,12 +219,13 @@ if( $CHAINOPT eq "~" ){
 
 
 # --- Option bitmask ----------------------------------------------
-$STDOPT = ($ALLOPT &   1) >> 0; # i.e.       1
-$TAGSFL = ($ALLOPT &   2) >> 1; # i.e.      10
-$OPTOPT = ($ALLOPT &   4) >> 2; # i.e.     100
-$COMPRS = ($ALLOPT &  24) >> 3; # i.e.   11000
-$XRDCP  = ($ALLOPT &  96) >> 5; # i.e. 1100000 
-$BITS64 = ($ALLOPT & 128) >> 7; # i.e.10000000 
+$STDOPT = ($ALLOPT &   1) >> 0; # i.e.        1
+$TAGSFL = ($ALLOPT &   2) >> 1; # i.e.       10
+$OPTOPT = ($ALLOPT &   4) >> 2; # i.e.      100
+$COMPRS = ($ALLOPT &  24) >> 3; # i.e.    11000
+$XRDCP  = ($ALLOPT &  96) >> 5; # i.e.  1100000 
+$BITS64 = ($ALLOPT & 128) >> 7; # i.e. 10000000 
+$CVMFS  = ($ALLOPT & 256) >> 8; # i.e.100000000 
 
 
 # --- ENV variables we may use       ------------------------------
@@ -557,8 +563,10 @@ print "Outputs final will be            ".join(" ",@OUTPUTS)."\n";
 if ( $GENERICO ne ""){
     print "Generic output filename          $GENERICO\n";
 }
-print "Running condition                ".($OPTOPT?"":"Non-")."Optimized ".
-    ($BITS64?"64":"32")."-bit\n";
+print "Running condition                ".
+    ($OPTOPT ? "" : "Non-")."Optimized ".
+    ($BITS64 ? "64" : "32")."-bit from ".
+    ($CVMFS  ? "CVMFS" : ( $AFS_RHIC =~ m/nfs/i ? "NFS" : "AFS"))."\n";
 
 if ( $#SETUP != -1){
     foreach $tmp (@SETUP){
@@ -609,9 +617,10 @@ if ( ! open(FO,">$PWD/$JOB_ID.csh") ){
 	"#!/bin/csh\n",
 	"setenv GROUP_DIR $AFS_RHIC/star/group\n",   # default GROUP_DIR
 	"source \$GROUP_DIR/star_cshrc.csh\n",       # load basic login env
-	"unset noclobber\n",                         # over-write
-	"setup ".($BITS64?"64":"32")."bits\n";       # 32/64-bit env
+	"unset noclobber\n";                         # over-write
+    print FO "setup cvmfs\n" if ($CVMFS);            # CVMFS source
     print FO
+	"setup ".($BITS64?"64":"32")."bits\n",       # 32/64-bit env
 	"setenv NODEBUG yes\n" if($OPTOPT);          # STAR soft specific env
 
     # before changing env, also execute the setup commands

@@ -53,10 +53,10 @@ $fileC->connect_as($SITE."::User","FC_user") || die "Connection failed for FC_us
  my $copyscript = "/u/didenko/copy_hpss.csh";
 
    open (FILE, ">$script");
-   print FILE "#! /usr/local/bin/tcsh -f", "\n";
+   print FILE "#!/usr/bin/tcsh -f", "\n";
 
    open (CFILE, ">$copyscript");
-   print CFILE "#! /usr/local/bin/tcsh -f", "\n";
+   print CFILE "#!/usr/bin/tcsh -f", "\n";
    print CFILE "pftp -v hpss.rcf.bnl.gov 4021 <<EOF | tee -a copy_grid.log", "\n";
    print CFILE "quote site setcos 11", "\n";
    print CFILE "bin", "\n";
