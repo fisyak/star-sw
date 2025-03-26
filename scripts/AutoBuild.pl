@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-# $Id: AutoBuild.pl,v 1.55 2020/02/26 12:06:08 jeromel Exp $
+# $Id: AutoBuild.pl,v 1.56 2025/02/03 19:34:09 jeromel Exp $
 # This script was written to perform an automatic compilation
 # with cvs co and write some html page related to it afterward.
 # Written J.Lauret Apr 6 2001
@@ -9,14 +9,20 @@
 #   the menu will appear on top of the report.
 #
 #
-use lib "/afs/rhic.bnl.gov/star/packages/scripts";
+use lib $ENV{STAR_SCRIPTS};
 use ABUtils;
+#use strict;
 
 # Source, library, directory
-$LIBRARY = "adev";                     # Default library version to work with
+$LIBRARY = "";                         # Library version to work with (later assigned)
 $TRGTDIR = IUHtmlDir();                # Dir where the reports will be at the end
 $COMPDIR = "";                         # Compilation directory (later assigned)
+$GITREPO = "True";
+$USECVMFS = 1==0;
 
+#my $yesterday = `date -d yesterday +%Y-%m-%dT%H:%M:%S`;
+#print "\n$yesterday";
+#exit();
 
 # Cvs command and directory
 #if ( -x "/usr/bin/cvs"){
@@ -46,8 +52,8 @@ $DFILE   = "RELEASE.date";
 #
 %RECOVER = ("Disk quota exceeded",     "mgr/CleanLibs 0");
 
-	    #"no newline at end of file",
-	    #"mgr/CleanLibs && /usr/bin/find /tmp -type f -user \$USER -exec /bin/rm -f {} \\;");
+#"no newline at end of file",
+#"mgr/CleanLibs && /usr/bin/find /tmp -type f -user \$USER -exec /bin/rm -f {} \\;");
 
 #
 # Patterns to exclude from reporting ...
@@ -93,6 +99,8 @@ $OPTCONS = "";
 # name of the HTML output report. ONLY the main name
 # is expected here. Extension .html will be added.
 $FLNM    = "AutoBuild";
+$CHECKOUTcodeFILE = "last_co.txt";
+
 
 # file to recover the STAR_HOST_SYS version
 $RECSTARLVL= "/tmp/$FLNM.STAR_HOST_SYS.$$";
@@ -131,6 +139,10 @@ $RESETST   = 1==1;       # reset sticky tag i.e. use/append -A
 $ALLARGS   = "$^O";      # platform will be kept in for sure
 $CHENVA    = $CHENVB = "echo noop";# possible additional environment change command
 
+# SHAs for curl requests to github repositories
+$SHASW     = "main";
+#$SHASW     = "9811528b557897def0e070a5a3ca9279fea46f46";
+$SHAMCGEN  = "main";
 
 # display arguments for debugging
 print $FILO "The arguments passed are [".join(" ",@ARGV)."]\n";
@@ -193,6 +205,7 @@ for ($i=0 ; $i <= $#ARGV ; $i++){
 	    # tag output file with arbitrary tag
 	    $FLNM .= "-".$ARGV[++$i];
 	    $POST .= "-".$ARGV[$i];
+            $CHECKOUTcodeFILE = "last_co-".$ARGV[$i].".txt";
 
 	} elsif($arg eq "-1"){
 	    # first compilation pass only
@@ -237,6 +250,12 @@ for ($i=0 ; $i <= $#ARGV ; $i++){
 	    $COMPDIR  = $ARGV[++$i];
 	    # $DEBUG    = 1==1;
 	    $ALLARGS .= " $COMPDIR";
+	} elsif($arg eq "-m"){
+	    $SHASW    = $ARGV[++$i];
+	} elsif($arg eq "-M"){
+	    $SHAMCGEN = $ARGV[++$i];
+	} elsif($arg eq "-cvmfs"){
+	    $USECVMFS = 1==1;
 	} elsif ($arg eq "-h" || $arg eq "--help"){
 	    &lhelp();
 	    exit;
@@ -248,8 +267,9 @@ for ($i=0 ; $i <= $#ARGV ; $i++){
 	die "Check syntax.\n";
     }
 }
-
-
+$LIBRARY = ($USECVMFS ? "adev" : "gitdev") if ($LIBRARY eq ""); # Default library version to work with
+$CHENVB = "setup cvmfs && ".$CHENVB if ($USECVMFS); # Setup CVMFS
+#exit();
 # Check stickey tag flag - default will be to destroy the sticky tag
 # by using -A option. User -pst (preserve stick tag) to bypass the default. 
 if ( $RESETST ){
@@ -257,24 +277,32 @@ if ( $RESETST ){
     $CVSCMDR .= " -A";
     $CVSUPDC .= " -A";
 }
+if ($GITREPO!="True"){
 print $FILO 
     "Our CVS commands will be\n",
     " - Diff check [$CVSCMDT]\n",
     " - Checkout   [$CVSCMDR]\n",
     " - Update     [$CVSUPDC]\n";
-
+}
 # Massage parameters
-if($LIBRARY =~ m/dev/i || $LIBRARY =~ m/new/i ||
+if(#$LIBRARY =~ m/dev/i || 
+   $LIBRARY =~ m/new/i ||
    $LIBRARY =~ m/pro/i || $LIBRARY =~ m/old/i ||
    $LIBRARY =~ m/\.dev/i ){
     $CHVER = "star".lc($LIBRARY);
 } else {
     $CHVER = "starver $LIBRARY";
 }
-
+print "\n$CHVER";
+#exit();
 # Directory this script will work in
-$COMPDIR=IUCompDir($LIBRARY) if ( $COMPDIR eq "");
-
+$COMPDIR=IUCompDir($LIBRARY,$USECVMFS) if ( $COMPDIR eq "");
+print("\nOld path:$COMPDIR");
+#Changing the directory to working order  
+my $newpath = $COMPDIR =~ s/\/rhic.bnl.gov\//\/.rhic.bnl.gov\//r;
+$COMPDIR = $newpath;
+print("\nNew path:$COMPDIR\n");
+#exit();
 # A temp script will be created with this name (number will be
 # appended at the end).
 $TMPNM   = "$COMPDIR/.AutoBuild".$POST;
@@ -294,6 +322,8 @@ if ( ! IULockCheck(129600) ){ exit;}        # Check lock file lifetime
 #
 # --- We start here
 #
+print "\n$FLNMRC\n";
+
 if( ! chdir($COMPDIR) ){
     die "Could not change directory to $COMPDIR\n";
 }
@@ -303,12 +333,14 @@ IULockWrite("We are now in $COMPDIR");
 print $FILO " - We are now in $COMPDIR\n";
 $fail = 0;
 
-
+#exit();
 #
 # If a config file exists, read it
 #
 if( -e $FLNMRC){
+  #  print "U r inside"; 
     if (open(FI,$FLNMRC)){
+  #      print "Opened";
 	IULockWrite("Reading configuration $FLNMRC");
 	print $FILO " - Reading configuration\n";
 	while( defined($line = <FI>) ){
@@ -330,7 +362,90 @@ if( -e $FLNMRC){
 	close(FI);
     }
 }
+else { print "File is not present"; }
 
+# Getting the last check out time
+open(FH1, "< $CHECKOUTcodeFILE")or die "Sorry!! couldn't open $CHECKOUTcodeFILE";
+print "\nReading files to get last check out time:\n";
+my $last_co_date;
+while(<FH1>)
+{
+    # Printing one line at a time
+    #     $line = chomp($_);
+         $last_co_date = $_;
+}
+close(FH1);
+print "Last check out time:$last_co_date\n";
+
+# Getting updated code from git repository
+print("Getting code from git repository:...\n");
+$fail = `/bin/curl -sL https://github.com/star-bnl/star-sw/archive/${SHASW}.tar.gz | /bin/tar -xz --strip-components 1`;
+$fail = `/bin/curl -sL https://github.com/star-bnl/star-mcgen/archive/${SHAMCGEN}.tar.gz | /bin/tar -xz --strip-components 1`;
+$fail = `/bin/rm $CHECKOUTcodeFILE`;
+$fail = `/bin/date +"%Y-%m-%dT%H:%M:%S" > $CHECKOUTcodeFILE`;
+
+# Get the updated files from git repository 
+print("\nChecking for updated files...\n");
+$fail = `/star/u/starlib/Amol/GITDEV_update/getGitUpdates.csh $last_co_date`; 
+
+# Read the files which was modified by above script
+
+open(FH0, "< /tmp/GITDELETES.list")or die "Sorry!! couldn't open";
+print "Reading files to get deletes\n";
+my @DELETES;
+while(<FH0>)
+{
+    # Printing one line at a time
+    $rm_cnt = chomp($_);
+    $line = $_;
+    if(grep { $_ eq $line } @DELETES){
+    }
+    else {
+       push(@DELETES,$line);
+       $fail = `/bin/rm $line`;
+    }
+}
+close(FH0);
+if (@DELETES) {
+    # Git doesn't keep track of directories, so we have to delete them separately
+    $fail = `/star/u/starlib/Amol/GITDEV_update/removeEmptySubDirs.csh`;
+}
+
+open(FH1, "< /tmp/GITUPDATES-sw.list")or die "Sorry!! couldn't open";
+print "Reading files to get updates\n";
+my @UPDATES;
+my %UpdateRepo;  
+while(<FH1>)
+{
+    # Printing one line at a time
+    $rm_cnt = chomp($_);
+    $line = $_;
+    if(grep { $_ eq $line } @UPDATES){
+    }
+    else {
+       #print($line,"\n");
+       push(@UPDATES,$line);
+       $UpdateRepo{$line} = 'star-sw'; 
+    }
+}
+close(FH1);
+open(FH2, "< /tmp/GITUPDATES-mcgen.list")or die "Sorry!! couldn't open";
+#@UPDATES = <FH>;
+while(<FH2>)
+{
+    # Printing one line at a time
+    $rm_cnt = chomp($_);
+    $line = $_;
+    if(grep { $_ eq $line } @UPDATES){
+    }               
+    else {
+       push(@UPDATES,$line);
+       $UpdateRepo{$line} = 'star-mcgen';
+    }
+}
+close(FH2);
+$fail = `rm /tmp/GITUPDATES-*`;
+print "\nUpdates:@UPDATES\n";
 
 #
 # Do the CVS fake-checkout or checkout of directories
@@ -340,7 +455,9 @@ if( -e $FLNMRC){
 # Note that @DIRS contains base level directories so
 # the CODIRS have to be treated sperately.
 #
-if($NIGNOR){
+#print "\n$NIGNOR";
+
+if($NIGNOR and $GITREPO!="True"){
     foreach $dir (@DIRS){
 	IULockWrite(" Inspecting $dir");
 	print $FILO " + Inspecting $dir\n";
@@ -349,6 +466,7 @@ if($NIGNOR){
 	} else {
 	    $cmd = "$CVSCMDR $dir";
 	}
+        print "\n$cmd\n";
 	@res = `$cmd`;
 
 	if($? != 0){ 
@@ -436,9 +554,6 @@ if($NIGNOR){
 
 }
 
-
-
-
 # Output this out. Note that we will update ONLY what was
 # caught in the above search. This will avoid interim commit
 # to get on the way ...
@@ -454,7 +569,7 @@ if($#UPDATES != -1){
     print $FILO
 	"\n",
 	" - List of updates will follow ...\n";
-    push(@REPORT,"%%REF%%<H2>List of new codes</H2>&nbsp;<I>".localtime()."</I>");
+    push(@REPORT,"%%REF%%<H2>List of updated codes</H2>&nbsp;<I>".localtime()."</I>");
     push(@REPORT,"<UL>");
     foreach $line (@UPDATES){
 	$dir = (split("/",$line))[0];
@@ -465,24 +580,29 @@ if($#UPDATES != -1){
 	    print $FILO "   For $dir ...\n";
 	    $tmp = $dir;
 	}
-	push(@REPORT," <LI><TT>".&IUCVSRef($line)."</TT>");
-	print $FILO "     $line\n";
+	#push(@REPORT," <LI><TT>".&IUCVSRef($line)."</TT>");
+	$repo = $UpdateRepo{$line}; 
+        $WASDELETED = "";
+        $WASDELETED = " (deleted)" if(grep { $_ eq $line } @DELETES);
+	push(@REPORT," <LI><TT>".&IUGITRef($line,$repo)."</TT>$WASDELETED");
+	print $FILO "     $line$WASDELETED\n";
     }
     push(@REPORT," </OL>") if($tmp ne "");
     push(@REPORT,"</UL>");
 }
 
-
+#exit();
 #
 # Displaying code which needs to be 'M' moved happened already.
 #
+
 IULockWrite("Dealing with merging");
 if($#MERGED != -1){
     print $FILO
 	"\n",
 	" - List of un-comitted code will follow ...\n";
     push(@REPORT,"%%REF%%<H2>List of code found with conflicting CVS version.</H2>");
-    push(@REPORT,"Those re codes modified on disk and NOT commited ");
+    push(@REPORT,"There are codes modified on disk and NOT commited ");
     push(@REPORT,"in the repository. This may be a mistake or an experimental ");
     push(@REPORT,"version. Please, <U>delete or commit</U> them now !! ");
     push(@REPORT,"<UL>");
@@ -493,9 +613,12 @@ if($#MERGED != -1){
     push(@REPORT,"</UL>");
 }
 
+
 #
 # Debug those out (who knows what it may contain)
 #
+
+
 IULockWrite("Dealing with unknown CVS reports");
 if ($#DONOTKNOW != -1){
     print $FILO
@@ -526,13 +649,12 @@ if ($#DONOTKNOW != -1){
     $fail++;
 }
 
-
-
 #
 # Ask for confirmation or proceed depending on interractive
 # mode or not. Also displays the compilation commmands which
 # would occur so the librarian can decide if it is correct.
 #
+
 print $FILO " - Compilation will exclude [".join(" ",@SKIP)."]\n";
 
 if ($#PRECOMPILE != -1){
@@ -545,21 +667,24 @@ print $FILO " - Compilation commands will be \n";
 foreach $line (sort keys %COMPILC){
     print $FILO "   ".($COMPILC{$line}?"MANDATORY":"OPTIONAL ")." '$line'\n";
 }
-print $FILO "\n";
+#print "$FILO \n";
+#exit();
 
-
+if ($GITREPO!="True"){
 if(! $SILENT){
     print $FILO " Is this OK ? y/u/i/[n] ";
     chomp($ans = <STDIN>);
     $ans = "no" if ($ans eq "");
 } else {
+    #print "You are in else";
     if($CVSUPD){     $ans = "u";}   # update
     elsif($CVSCOU){  $ans = "y";}   # yes => checkout (default)
     elsif($NIGNOR){  $ans = "i";}   # ignore i.e. compile now without updating the tree
     else {           $ans = "n";}   # absolutly not. Stop ASAP.
 }
 
-
+#print "\nAns:$ans\n";
+#exit();
 
 
 #
@@ -672,11 +797,10 @@ if ($ans =~ /^\s*y/i){
     print $FILO "OK. Goodbye !...\n";
     &Exit(-1);
 }
+} #!GITREPO
 
 
 
-
-#
 # If failure at this stage, DO NOT continue (it certainly
 # requires a manual intervention and/or carefull inspection)
 #
@@ -684,7 +808,7 @@ if($fail != 0){ &Exit($fail); }
 
 
 
-
+#exit();
 
 #
 # Compilation will now take place. Note that recent inclusion
@@ -706,6 +830,7 @@ if ($#PRECOMPILE != -1){
     push(@REPORT,"<UL>");
     foreach $line (@PRECOMPILE){
 	#push(@REPORT,"<LI><TT>$line</TT>");
+	print "\nExecute Command:$line";
 	if ( &Execute($line) == 0){
 	    push(@REPORT,"<LI><TT>".IUl2pre($line)."</TT> ".&STRsts(0,$line));
 	} else {
@@ -727,10 +852,11 @@ COMPILE_BEGIN:
 
     push(@REPORT,"%%REF%%<H2>Compilation report (pass $PASSN)</H2>");
     push(@REPORT,"<UL>");
-
+    
     # hum ! @ = keys did not put it in the same order.
     $i = 0;
     foreach $line (sort keys %COMPILC){
+        #print "\n Creation of file $TMPNM$i";
 	if( ! open(FO,">$TMPNM$i") ){
 	    print $FILO " * Could not open file $TMPNM$i for write\n";
 	    push(@REPORT,"<LI><U>Failure</U> to open temporary file $TMPNM\n");
@@ -749,6 +875,7 @@ COMPILE_BEGIN:
 	    "\n",
 	    "# Set SKIP_DIRS according to config\n",
 	    "setenv SKIP_DIRS \"".join(" ",@SKIP)."\"\n",
+            "$EXTRA_LINE\n",
 	    "# Compilation command execution\n",
 	    "$line $OPTCONS\n",
 	    "\n",
@@ -758,11 +885,15 @@ COMPILE_BEGIN:
 	    "echo \$STAR_HOST_SYS >$RECSTARLVL\n",
 	    "exit \$sts\n";
 
-
+    
 	close(FO);
 	chmod(0770,"$TMPNM$i");
+ 
 	#&DumpContent($FILO,"$TMPNM$i");
-
+        #print "\n TMPNM:$TMPNM$i";
+        #print "\n Line:$line";
+        #print "\n iline:$iline";
+        #exit();
 	push(@REPORT,"<P>");
 	push(@REPORT,"%%REF%%<LI>$line<BR>");
 	$fail = $COMPILC{$iline}*(&Execute("$TMPNM$i"));
@@ -919,12 +1050,12 @@ sub Exit()
 	    
 	    if ( $RELCODE ){
 		push(@REPORT,"<BLOCKQUOTE>");
-		push(@REPORT,"%%REF%%<B>AFS release</B>\n");
+		push(@REPORT,"%%REF%%<B>" . ($USECVMFS ? "CVMFS" : "AFS") . " release</B>\n");
 		push(@REPORT," <UL>\n");
 		# Release the volume now
-		$subd = $tmp = IUReleaseFile();
+		$subd = $tmp = IUReleaseFile($USECVMFS);
 		$subd =~ m/(.*\/)(.*)/; $subd = $1;
-		if ( -e $subd ){
+		if ( -e $subd || $USECVMFS ){
 		    ABUnlink($tmp);
 		    if ( open(FO,">$tmp") ){
 			print FO "Ready to release on ".localtime()."\n";
@@ -1062,7 +1193,7 @@ sub ReportToHtml
 	    uc(&STRsts($sts))."</TD></TR>\n",
 	"<TR><TD><B>Skipped DIRS </B></TD><TD><TT>".
 	    join(" ",@SKIP)."</TT></TD></TR>\n";
-    if(IUCompDir($LIBRARY) ne $COMPDIR){
+    if(IUCompDir($LIBRARY,$USECVMFS) ne $COMPDIR){
 	print $fo
 	"<TR><TD><B>Working directory</B></TD>".
 	    "<TD><TT>$COMPDIR</TT></TD></TR>\n";
@@ -1342,6 +1473,13 @@ sub lhelp
 
  -pst         Preserve sticky tag - default is to destroy it upon CVS
               actions and take the code from the head.
+
+ -m SHA       Set the SHA or tag to use for the curl request from the star-sw
+              star-sw git repository
+ -M SHA       Set the SHA or tag to use for the curl request from the star-sw
+              star-mcgen git repository
+
+ -cvmfs       Use CVMFS paths
 
  -h or --help Display this help.
 

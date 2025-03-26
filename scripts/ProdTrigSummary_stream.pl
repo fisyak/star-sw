@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
 # $Log:
 #
@@ -29,10 +29,10 @@ my $TrigDataT = "ProdTriggers";
 #my $TrigDataT = "ProdTriggerSet";
 
 #$dbhosto="dbbak.starp.bnl.gov:3411";
-$dbhosto="dbbak.starp.bnl.gov:3413";
+#$dbhosto="dbbak.starp.bnl.gov:3413";
 #$dbhosto="dbbak.starp.bnl.gov:3501";
 #$dbhosto="dbbak.starp.bnl.gov:3412";
-#$dbhosto="db04.star.bnl.gov:3412";
+$dbhosto="db04.star.bnl.gov:3418";
 $dbusero="starreco";
 $dbpasso="";
 $dbnameo="RunLog";
@@ -117,7 +117,7 @@ my $nn = 0;
 
      while(@fields = $cursor->fetchrow) {
       my $cols=$cursor->{NUM_OF_FIELDS};
-
+       print "Column: ",$cols,"\n";
        for($i=0;$i<$cols;$i++) {
        $dbrunnum[$nk] = $fields[0];
        $dbstream[$nk] = $fields[1];

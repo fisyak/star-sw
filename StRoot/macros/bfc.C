@@ -17,6 +17,8 @@ class StMessMgr;
 #pragma cling load("StUtilities")
 #pragma cling load("StBFChain")
 #pragma cling load("geant3")
+#pragma cling load("StDb_Tables")
+#pragma cling load("StBichsel")
 #endif /* __CLING__ */
 
 #if defined(__CINT__)

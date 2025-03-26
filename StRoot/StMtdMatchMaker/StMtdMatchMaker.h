@@ -284,7 +284,7 @@ class StMtdMatchMaker: public StMaker
 		typedef idVector::iterator idVectorIter;    
 		struct StructCellHit{
 		  StructCellHit() : backleg(0), module(0), cell(0), matchFlag(0), zhit(0), 
-				    yhit(0), index2MtdHit(0), theta(0), pathLength(0) {}
+		    yhit(0), index2MtdHit(0), theta(0), pathLength(0), expTof2MTD(0) {}
 			Int_t backleg;
 			Int_t module;
 			Int_t cell;

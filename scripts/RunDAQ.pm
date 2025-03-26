@@ -179,7 +179,8 @@ require Exporter;
 # Database information
 #
 #$DDBSERVER = "onlsun1.star.bnl.gov";
-$DDBSERVER = "onldb.starp.bnl.gov";
+#$DDBSERVER = "onldb.starp.bnl.gov"; #master - do not use
+$DDBSERVER = "heston.star.bnl.gov"; #slave - accessible from SDCC
 $DDBUSER   = "starreco";
 $DDBPASSWD = "";
 $DDBPORT   = 3501;
@@ -579,7 +580,7 @@ sub rdaq_raw_files
     $xrows = $sth->rows();
 
     if ($DEBUG){
-	&info_message("raw_files",3,"Expected number of rows = $xrows ($xinfo)\n");
+	&info_message("raw_files",3,"Returned number of rows = $xrows ($xinfo)\n");
 	if ( $xrows == 0 ){
 	    # Then verify what could be wrong with the querry
 	    my($mcmd,$ccmd);

@@ -126,11 +126,18 @@ endif
     #
     setenv STAR_HOST_SYS $STAR_SYS
     set redhat = ""
+    set avx512 = ""
     if (-f /etc/redhat-release) then
 	set rhflavor = `$AWK '{print $1 $2}' /etc/redhat-release | sed "s/[a-z]//g" | $AWK '{print tolower($1)}'`
 	set redhat   = `$AWK '{for (i=1;i<=NF;i++) if ($i == "release" || $i == "Release") print $(i+1)}' /etc/redhat-release`
 	set rhmajor  = `echo $redhat | sed "s/\..*//"`
 	set redhat   = `echo $redhat | sed "s/\.//g"`
+	if ($rhmajor >= 9) then
+	if (-r /proc/cpuinfo) then
+	   grep -i 'avx512' /proc/cpuinfo > /dev/null
+           if ($?) set avx512 = "_v3"
+        endif
+        endif
     else
 	# will try this combination to first order
 	# - on linux, would lead to something like .linux_i686
@@ -235,6 +242,23 @@ endif
 # trick to handle non STAR nodes
 if ("${STAR_SYS}" == "sl64_gcc447"      ) setenv STAR_HOST_SYS sl64_gcc482
 if ("${STAR_SYS}" == "sl64_x8664_gcc447") setenv STAR_HOST_SYS sl64_x8664_gcc482
+if ($?STAR_HOST_SYS) then
+  setenv STAR_HOST_SYS ${STAR_HOST_SYS}${avx512}  
+#  if ($?CMAKE_PREFIX_PATH) setenv CMAKE_PREFIX_PATHCMAKE_PREFIX_PATH ""
+#  switch ( ${STAR_HOST_SYS} )   
+#    case "al92*":
+#        setenv CMAKE_PREFIX_PATH /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view
+#	breaksw
+#    case "al95*_v3":
+#        setenv CMAKE_PREFIX_PATH /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL95_v3/.spack-env/view
+#	breaksw
+#    case "al95*":
+#        setenv CMAKE_PREFIX_PATH /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL95/.spack-env/view
+#	breaksw
+#    default:
+#	breaksw
+#  endsw 
+endif
 echo $STAR_LEVEL | egrep '(.DEV2|TFG22[d-z]|TFG2[3-9]|TFG.star|^TFG$)' > /dev/null
 if ($?) then 
   if ($?STAR_NEW_ENVIRONMENT) unsetenv STAR_NEW_ENVIRONMENT

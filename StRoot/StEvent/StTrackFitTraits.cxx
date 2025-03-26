@@ -434,29 +434,29 @@ StThreeVectorF StTrackFitTraits::momentum() {
 }//________________________________________________________________________________
 StThreeVectorF StTrackFitTraits::momentumErrors() {
     StMatrixF Cxyz = momentumCovariance();
-    return StThreeVectorF(Cxyz(0,0) > 0 ? TMath::Sqrt(Cxyz(0,0)) : 13,
-                          Cxyz(1,1) > 0 ? TMath::Sqrt(Cxyz(1,1)) : 13,
-                          Cxyz(2,2) > 0 ? TMath::Sqrt(Cxyz(2,2)) : 13);
+    return StThreeVectorF(Cxyz(1,1) > 0 ? TMath::Sqrt(Cxyz(1,1)) : 13,
+                          Cxyz(2,2) > 0 ? TMath::Sqrt(Cxyz(2,2)) : 13,
+                          Cxyz(3,3) > 0 ? TMath::Sqrt(Cxyz(3,3)) : 13);
 }//________________________________________________________________________________
 StMatrixF StTrackFitTraits::momentumCovariance() {
     StMatrixF Cxyz(3,3);
     if (mCovariantMatrix[2]) {
         StMatrixF C(3,3);
-        C(0,0) =          mCovariantMatrix[3]; 
-        C(0,1) = C(1,0) = mCovariantMatrix[4]; 
-        C(1,1) =          mCovariantMatrix[5];
-        C(0,2) = C(2,0) = mCovariantMatrix[6]; 
-        C(1,2) = C(2,1) = mCovariantMatrix[7]; 
-        C(2,2) =          mCovariantMatrix[8]; 
+        C(1,1) =          mCovariantMatrix[3]; 
+        C(1,2) = C(2,1) = mCovariantMatrix[4]; 
+        C(2,2) =          mCovariantMatrix[5];
+        C(1,3) = C(3,1) = mCovariantMatrix[6]; 
+        C(2,3) = C(3,2) = mCovariantMatrix[7]; 
+        C(3,3) =          mCovariantMatrix[8]; 
         StThreeVectorF P = momentum();
         Float_t pT = 1./TMath::Abs(mCovariantMatrix[2]);
         static Float_t One = 1.;
         Float_t pTs = -pT*TMath::Sign(One,mCovariantMatrix[2]);
         StMatrixF F(3,3);
         //     tanL               Psi                 Pti
-        F(0,0) =  0;  F(0,1) =- P.y(); F(0,2) = pTs*P.x(); // p_x
-        F(1,0) =  0;  F(1,1) =  P.x(); F(1,2) = pTs*P.y();
-        F(2,0) = pT;  F(2,1) =      0; F(2,2) = pTs*P.z();
+        F(1,1) =  0;  F(1,2) =- P.y(); F(1,3) = pTs*P.x(); // p_x
+        F(2,1) =  0;  F(2,2) =  P.x(); F(2,3) = pTs*P.y();
+        F(3,1) = pT;  F(3,2) =      0; F(3,3) = pTs*P.z();
         StMatrixF FT = F.T();
         Cxyz = FT*C*F;
     }

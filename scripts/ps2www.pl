@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 # Originally written by David Anderson (dva@ee.gatech.edu) Oct 7, 1997
 
@@ -8,6 +8,9 @@
 #  ps2www resume "Resume of David Anderson"
 
 # $Log: ps2www.pl,v $
+# Revision 1.2  2025/02/03 19:22:00  jeromel
+# a9 does not have the soft links and we support only Linux at this stage. Replace local/bin to bin
+#
 # Revision 1.1  2000/01/26 16:04:02  fisyak
 # Add ps2www.pl
 #

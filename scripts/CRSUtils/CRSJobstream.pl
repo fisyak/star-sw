@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/bin/perl -w
 #
 # CRSJobstream.pl - monitor number of different stream jobs on the farm in MAIN-EXEC stage
 #

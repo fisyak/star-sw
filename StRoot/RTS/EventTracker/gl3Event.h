@@ -73,7 +73,7 @@ class gl3Event {
     int readFromEvpReader(daqReader *rdr, 
 			  float bField=1000);
 
-    void readClustersFromEvpReader(daqReader *rdr, int sector);
+    int readClustersFromEvpReader(daqReader *rdr, int sector);
     int readITPCClustersFromEvpReader(daqReader *rdr, int sector);
 	
     int sectorFirstHit[25];

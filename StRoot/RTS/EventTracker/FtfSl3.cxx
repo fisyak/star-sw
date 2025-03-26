@@ -897,7 +897,7 @@ void FtfSl3::setClustersFromGl3Event(gl3Event *event, int sector) {
     int filtered_out = 0;
 
     sectorNr = sector;
-    LOG(DBG, "set sectorNr to %d maxHits=%d nhits=%d", sector, maxHits, event->nHits);
+    LOG(DBG, "set sectorNr to %d maxHits=%d sectorFirstHit[sec]=%d nhits=%d (mynHits=%d", sector, maxHits, event->sectorFirstHit[sector], event->nHits, nHits);
     
     for(int i=event->sectorFirstHit[sector]; i < event->nHits; i++) {
 	if(i >= maxHits) {
@@ -938,7 +938,9 @@ void FtfSl3::setClustersFromGl3Event(gl3Event *event, int sector) {
 	//printf("z: %f\n", hitP->z);
     }
 
-    LOG(DBG, "sect = %d (%d) nhits = %d   (%d)", sector, event->sectorFirstHit[sector], nHits, filtered_out);
+    LOG(DBG, "sect = %d (%d) nhits = %d   (filtered = %d)", sector, event->sectorFirstHit[sector], nHits, filtered_out);
+
+    
 }
 
 /*

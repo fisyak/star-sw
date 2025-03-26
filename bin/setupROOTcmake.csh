@@ -81,8 +81,12 @@ rm -f CMakeCache.txt
 #-Dbuiltin_cfitsio=On -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -msse -msse2 -msse3 -msse4.1 -mssse3" \
 #-DCMAKE_C_FLAGS="-fdiagnostics-color=always -msse -msse2 -msse3 -msse4.1 -mssse3" \
 # cmake --build . -- install -j8
-if ($?CMAKE_PREFIX_PATH) setenv EXTRA_OFF "${EXTRA_OFF} -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} -DZSTD_INCLUDE_DIR=${CMAKE_PREFIX_PATH}/include -DZSTD_LIBRARIES=${CMAKE_PREFIX_PATH}/lib -DMYSQL_CONFIG_EXECUTABLE=${CMAKE_PREFIX_PATH}/bin"
-echo "EXTRA_OFF = ${EXTRA_OFF}, CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}, CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}"
+if ($?CMAKE_PREFIX_PATH) then 
+  setenv EXTRA_OFF "${EXTRA_OFF} -DCMAKE_PREFIX_PATH=${XOPTSTAR}/spack} -DZSTD_INCLUDE_DIR=${XOPTSTAR}/spack}/include -DZSTD_LIBRARIES=${XOPTSTAR}/spack}/lib -DMYSQL_CONFIG_EXECUTABLE=${XOPTSTAR}/spack}/bin"
+  echo "EXTRA_OFF = ${EXTRA_OFF}, CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}, CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}"
+endif
+#setenv DAVIX_INCLUDE_DIRS ${XOPTSTAR}/spack/include
+#setenv DAVIX_INCLUDE_DIRS ${XOPTSTAR}/spack/include
 cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD_TYPE="${ROOT_BUILD}" \
 -DCMAKE_C_COMPILER="${CC}" -DCMAKE_CXX_COMPILER="${CXX}" -DCMAKE_Fortran_COMPILER="${FC}" -Dfortran=ON \
 -DPYTHIA6_DIR=${XOPTSTAR} -Dpythia6=ON  -Dpythia8=ON \
@@ -92,6 +96,7 @@ cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD
 -Dtable=ON \
 -Dvmc=ON \
 -Droot7=ON \
+-Ddavix=OFF \
 ${EXTRA_OFF}
 #
 #-DCMAKE_VERBOSE_MAKEFILE=ON \

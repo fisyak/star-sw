@@ -89,7 +89,7 @@ Int_t StEmcOfflineCalibrationElectronAnalysis::Init()
   
   while(1){
     Int_t softId, towerStat;
-    Float_t mipAdc, mipAdcErr, mipGain, towEta = 0, towTheta;
+    Float_t mipAdc, mipAdcErr, mipGain, towEta = 0, towTheta = 0;
     mipGainFile >> softId >> mipAdc >> mipAdcErr >> towerStat;
     if(!mipGainFile.good())break;
     mEmcGeom->getEta(softId, towEta);

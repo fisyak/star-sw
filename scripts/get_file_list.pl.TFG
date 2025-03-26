@@ -29,8 +29,11 @@
 use Env;
 #use Env (OPTSTAR);
 #use lib "$OPTSTAR/lib";
-#use lib "/afs/rhic.bnl.gov/star/packages/.DEV2/scripts";
-use lib $STAR_PATH . "/scripts";
+#use lib "/afs/rhic.bnl.gov/star/packages/scripts";
+#use lib "/star/u/jeromel/work/ddb";
+
+use FindBin;
+use lib "$FindBin::Bin";
 use strict;
 use FileCatalog;
 #use XML::Simple qw(:strict);
@@ -244,7 +247,7 @@ sub PDebug
 sub Usage
 {
   # Formatted by text2c V01-122 (Flex V2.5). Last update 31-Dec-2003
-  print "\nCommand usage:\n %% get_file_list.pl [qualifiers] -keys fie";
+  print "\nCommand usage:\n % get_file_list.pl [qualifiers] -keys fie";
   print "ld{,field} [-cond field=value{,field=value}]\n\n where the qu";
   print "alifiers may be\n -all                  use  all entries rega";
   print "rdless of availability  flag \n                       default";

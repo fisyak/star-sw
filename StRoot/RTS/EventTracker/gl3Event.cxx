@@ -67,6 +67,7 @@ int gl3Event::readFromEvpReader(daqReader *rdr, float bField)
     // +1 , -1 or 0 if zero field...
     tracker->para.bFieldPolarity = (bField>0) ? 1 : -1;
 
+    LOG(DBG, "Set tracker params");
   
     ////// check parms  ///////////////
     tracker->setXyError(.12) ; 
@@ -84,32 +85,44 @@ int gl3Event::readFromEvpReader(daqReader *rdr, float bField)
     L3_SECTP *sectp = NULL;
     sectp = (L3_SECTP *)malloc(szSECP_max);
 
+    int tpx_hits=0;
+    int itpc_hits=0;
+
     int i;
     for(i=0;i<24;i++) {
+	LOG(DBG, "Sector %d",i+1);
+
 	if((i%2) == 0) {
 	    tracker->nHits = 0;
 	    tracker->setTrackingAngles(i+1);    // only set angles by hypersector...
 	}
 	LOG(DBG, "READ TPC data for sector %d  (0x%x)",i+1,rdr);
-
+   
+	int num_tpx_read=0;
+	int num_itpc_read = 0;
 	// read in clusters...
 	LOG(DBG, "Reading clusters");
 	if(i != 100000) {
 	    sectorFirstHit[i+1] = nHits;
-	    readITPCClustersFromEvpReader(rdr, i+1);
-	    readClustersFromEvpReader(rdr, i+1);
+	    num_itpc_read = readITPCClustersFromEvpReader(rdr, i+1);
+	    itpc_hits = nHits;
+	    num_tpx_read = readClustersFromEvpReader(rdr, i+1);
+	    tpx_hits = nHits - itpc_hits;
 	}
-	
+
 	// Do tracking...
-	LOG(DBG, "Tracking...");
+	LOG(DBG, "Tracking... tracker nHits=%d", tracker->nHits);
 	tracker->setClustersFromGl3Event(this, i+1);
 	//tracker->readSectorFromEvpReader(i+1);
 
+	LOG("JEFF", "Sector=%d nHits=%d (tpx=%d itpc=%d)",i+1, num_tpx_read + num_itpc_read, num_tpx_read, num_itpc_read);
+     
 	int ret=0;
 	// only do tracking on full hypersectors...
-	if((i%2) == 1) {
+	if(((i%2) == 1) && 
+	   (tracker->nHits > 0)){
 	    ret = tracker->processSector();
-	    //LOG("JEFF", "processSector returns %d", ret);
+	    LOG(DBG, "processSector returns %d", ret);
 	    if(ret == 1) {
 		free(sectp);
 		delete tracker;
@@ -118,12 +131,12 @@ int gl3Event::readFromEvpReader(daqReader *rdr, float bField)
 
 	  
 	    ret = tracker->fillTracks(szSECP_max, (char *)sectp, 0);
-	    ///LOG("JEFF", "fillTracks returns %d", ret);
+	    LOG(DBG, "fillTracks returns %d", ret);
 	    
-	    //LOG("JEFF", "SECP size = %d",sectp->bh.length*4 + sectp->banks[0].len*4);
+	    LOG(DBG, "SECP size = %d",sectp->bh.length*4 + sectp->banks[0].len*4);
 	    
 	    int n = readSectorTracks((char *)sectp);
-	    //LOG("JEFF", "Got %d tracks",n);
+	    LOG(DBG, "Got %d tracks",n);
 	    
 	    if(n < 0) {
 		LOG(WARN, "Error reading tracker: sector %d\n",i,0,0,0,0);
@@ -150,10 +163,11 @@ int gl3Event::readFromEvpReader(daqReader *rdr, float bField)
 // Assume global tpc structure already filled....
 // s = sector from 1
 //
-void gl3Event::readClustersFromEvpReader(daqReader *rdr, int sector)
+int gl3Event::readClustersFromEvpReader(daqReader *rdr, int sector)
 {
     daq_dta *dd;
-    
+    int num_read = 0;
+
     pTPC = NULL;
 
     // Read the data....
@@ -168,20 +182,24 @@ void gl3Event::readClustersFromEvpReader(daqReader *rdr, int sector)
     }
     else {
 	LOG(DBG, "No data for sector %d check for TPC",sector);
-	return;
+	return 0;
     }
     
     LOG(DBG, "have clusters?  %p %d",pTPC, pTPC->has_clusters);
-    if(!pTPC->has_clusters) return;
+    if(!pTPC->has_clusters) return 0;
 
     for(int r=0;r<45;r++) {
 
 	for(int j=0;j<pTPC->cl_counts[r];j++) {
 	    tpc_cl *c = &pTPC->cl[r][j];
 	
+	    LOG(DBG, " tpx: sec=%d row=%d pad=%d charge=%d flags=%d",
+		sector, r, c->p, c->charge, c->flags);
+	    
 	    gl3Hit *gl3c = &hit[nHits];
 	    nHits++;
-      
+	    num_read++;
+
 	    l3_cluster sl3c;
 	    sl3c.pad = (int)((c->p - 0.5) * 64);
 	    sl3c.time = (int)((c->t - 0.5) * 64);
@@ -204,16 +222,16 @@ void gl3Event::readClustersFromEvpReader(daqReader *rdr, int sector)
       
 	}
     }
+    return num_read;
 }
   
  int gl3Event::readITPCClustersFromEvpReader(daqReader *rdr, int sector) {
-   
    int ncld = 0;
    daq_dta *dd;
    dd = rdr->det("itpc")->get("cld", sector);
    if(dd) {
      while(dd->iterate()) {
-       ncld++;
+  
        
        //yf       int padrow = dd->row;
        int sec = dd->sec;
@@ -227,8 +245,12 @@ void gl3Event::readClustersFromEvpReader(daqReader *rdr, int sector)
 
 	 gl3Hit *gl3c = &hit[nHits];
 	 nHits++;
+	 ncld++;
 
 	 gl3c->setITPCHit(coordinateTransformer, sec, padrow, pad, tb, charge, flags);
+
+	 LOG(DBG, "itpc: sec=%d row=%d pad=%d charge=%d flags=%d",
+	     sec, padrow, pad, charge, flags);
        }
      }
    }

@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
 # $Log:
 #
@@ -24,8 +24,8 @@ $dbpass="";
 $dbname="operation";
 
 my $TrigDataT = "ProdTriggerSet";
-
-$dbhosto="dbbak.starp.bnl.gov:3411";
+$dbhosto="db04.star.bnl.gov:3418";
+#$dbhosto="dbbak.starp.bnl.gov:3411";
 $dbusero="starreco";
 $dbpasso="";
 $dbnameo="RunLog";

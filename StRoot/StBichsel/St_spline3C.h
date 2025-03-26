@@ -3,7 +3,7 @@
 
 #include "TChair.h"
 //#include "tables/St_spline3_Table.h"
-#include "St_spline3_Table.h"
+#include "StBichsel/St_spline3_Table.h"
 #include "TSpline.h"
 #include "TF1.h"
 //________________________________________________________________________________

@@ -11,8 +11,8 @@ if (-r $STAR_LIB/libPythia6.so) then
  set  PYTHIA6 =  $STAR_LIB
 else if (-r $XOPTSTAR/lib/libPythia6.so) then
  set PYTHIA6 =  $XOPTSTAR/lib
-else if (-r $CMAKE_PREFIX_PATH/lib/libPythia6.so) then
- set PYTHIA6 = $CMAKE_PREFIX_PATH/lib
+else if (-r ${XOPTSTAR}/spack//lib/libPythia6.so) then
+ set PYTHIA6 = ${XOPTSTAR}/spack//lib
 endif
 setenv DISABLE ""
 setenv ENABLE ""
@@ -47,7 +47,7 @@ setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --disable
 	setenv MYSQLCLILIB /usr/lib/mysql
 #setenv GSL_DIR $ROOTSYS
 setenv GSL_DIR $XOPTSTAR # $ROOTSYS
-if (-r $CMAKE_PREFIX_PATH/lib) setenv GSL_DIR $CMAKE_PREFIX_PATH
+if (-r ${XOPTSTAR}/spack//lib) setenv GSL_DIR ${XOPTSTAR}/spack/
 setenv FFTW3   $ROOTSYS # $XOPTSTAR 
 setenv F77 gfortran
 switch ( $STAR_HOST_SYS )  
@@ -165,6 +165,7 @@ switch ( $STAR_HOST_SYS )
 endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
+    case *al95_x8664_*:
     case *al92_x8664_*:
      setenv DISABLE "$DISABLE --disable-memstat"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS  --cxxflags=-Wno-register --cxxflags=-Wno-misleading-indentation --cflags=-Wno-register --cflags=-Wno-misleading-indentation" # --cflags=--std=c++17

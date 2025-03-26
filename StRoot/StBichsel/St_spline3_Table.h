@@ -4,7 +4,7 @@
 
 #include "TTable.h"
 
-#include "spline3.h"
+#include "StBichsel/spline3.h"
 
 /*!
  * \class  St_spline3

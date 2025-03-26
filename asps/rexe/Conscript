@@ -18,7 +18,10 @@ my $FFLAGS = $env->{FFLAGS};
 my $FPPFLAGS = $env->{FPPFLAGS};
 my $CPPFLAGS = $env->{CPPFLAGS};
 my $CXXFLAGS = $env->{CXXFLAGS};
-$CXXFLAGS .= " -Wno-error=strict-aliasing";
+#$CXXFLAGS .= " -Wno-error=strict-aliasing  -Wno-error=stringop-truncation";
+if ($env->{CXX_MAJOR} > 6) {
+  $CXXFLAGS .= " -Wno-error=stringop-truncation"; print "CXXFLAGS = $CXXFLAGS ========================================\n";
+}
 my $FLIBS = $env->{FLIBS};
 my $LD = $env->{LD};
 my $LDFLAGS = $env->{LDFLAGS};

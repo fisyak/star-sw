@@ -807,7 +807,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
     g2 = new TF1("G4EY",gf4EYFunc, -5, 5, 16);
 #endif
     g2->SetParName(0,"norm");      g2->SetParLimits(0,-0.6,0.6); // g2->FixParameter(0,0.0); // 
-    g2->SetParName(1,"mu");        g2->SetParLimits(1,-0.6,0.6); // g2->SetParLimits(1,-1.2,1.6);  				     
+    g2->SetParName(1,"mu");        g2->SetParLimits(1,-1.6,0.6); // g2->SetParLimits(1,-1.2,1.6);  				     
     g2->SetParName(2,"Sigma");     g2->FixParameter(2,0.0); // g2->SetParLimits(2,-0.1,0.1);	     
     g2->SetParName(3,"P");         g2->SetParLimits(3,0.0,TMath::Pi()/2);		     
     g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,TMath::Pi()/2); 	     

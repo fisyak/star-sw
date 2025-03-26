@@ -73,12 +73,12 @@ switch ($pkg)
     if ( -r $SPACK_SETUP ) then
       if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
       source $SPACK_SETUP 
-      if ($?CMAKE_PREFIX_PATH) then
-        if ($?USE_64BITS && $USE_64BITS == 1) then
-	  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64:${CMAKE_PREFIX_PATH}/lib:/usr/lib64:/usr/lib
-        endif
-	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib:/usr/lib
-      endif
+#      if ($?CMAKE_PREFIX_PATH) then
+#        if ($?USE_64BITS && $USE_64BITS == 1) then
+#	  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64:${CMAKE_PREFIX_PATH}/lib:/usr/lib64:/usr/lib
+#        endif
+#	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib:/usr/lib
+#      endif
     else
 	if ($?DECHO) echo "SPACK_SETUP has not been set"
     endif

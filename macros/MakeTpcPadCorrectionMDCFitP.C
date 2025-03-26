@@ -607,6 +607,9 @@ void MakeTpcPadCorrectionMDCFitP(TChain *tChain, Int_t sec = -1, Int_t qb = -1, 
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
   Int_t nrows = 96;
+  out << "#ifndef __CINT__" << endl;
+  out << "#include \"tables/St_MDFCorrection_Table.h\"" << endl;
+  out << "#endif" << endl;
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection\")) return 0;" << endl;
   out << "  MDFCorrection_st row;" << endl;

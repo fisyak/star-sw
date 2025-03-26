@@ -5,7 +5,8 @@
 #cd /net/l404/data/fisyak/Tpc/Lana/2022
 #cd /net/l404/data/fisyak/Tpc/Lana/2023
 #cd /net/l404/data/fisyak/Tpc/Lana/2023B
-cd /net/l404/data/fisyak/Tpc/Lana/2024
+#cd /net/l404/data/fisyak/Tpc/Lana/2024
+cd /net/l404/data/fisyak/Tpc/Lana/2025
 LoopOverLaserTrees.pl
 if ($?) exit 0;
 /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit ~/xml/LoopOverLaserTrees.xml

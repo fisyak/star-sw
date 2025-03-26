@@ -232,7 +232,7 @@ float StFtpcSlowSimField::Interpolate(const int npt, const float* x,
 //
     float x1[5];
     float y1[5];
-    register int i;
+    int i;
 
     if (ich < 2) {
         for ( i=0; i<2; i++) {
@@ -266,9 +266,9 @@ float StFtpcSlowSimField::InterpValue(const int npt, const float* x,
     float term;
     float sum = 0;
 
-    for(register int i=0; i < npt; i++) {
+    for(int i=0; i < npt; i++) {
         term = y[i];
-        for(register int j=0; j < npt; j++) {
+        for(int j=0; j < npt; j++) {
             if (j != i) term *= (xx-x[j])/(x[i]-x[j]);
         }
         sum += term;

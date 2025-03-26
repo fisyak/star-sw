@@ -43,7 +43,7 @@ my $DEBUG   = $env->{DEBUG};
 my $FDEBUG  = $env->{FDEBUG};
 my $NOOPTIMIZED = $DEBUG; $NOOPTIMIZED =~ s/-O2//g; $NOOPTIMIZED =~ s/-O//g; print "DEBUG = $DEBUG, NOOPTIMIZED = $NOOPTIMIZED\n" if  $param::debug;
 my $CXXFLAGS= $env->{CXXFLAGS}; #print "CXXFLAGS = $CXXFLAGS --------------------------------------------------------------------------------\n";
-if ($STAR_SYS eq "al92_x8664_gcc11") {$ROOTCINT_CPPFLAGS .= " -D_BITS_TYPES_H=1 -D_STDINT_H=1"; $CXXFLAGS.= " -Wno-register";}
+if ($STAR_SYS =~ /^al9/) {$ROOTCINT_CPPFLAGS .= " -D_BITS_TYPES_H=1 -D_STDINT_H=1"; $CXXFLAGS.= " -Wno-register";}
 my $EXTRA_CXXFLAGS= $env->{EXTRA_CXXFLAGS}; 
 my $CFLAGS  = $env->{CFLAGS};
 my $FC      = $env->{FC};
@@ -67,11 +67,13 @@ my $CPPPATH  = "#" . $DirPath . $main::PATH_SEPARATOR . $env->{CPPPATH};
 my $LIBPATH = $env->{LIBPATH};
 if ($LIBPATH) { $LIBPATH .= $main::PATH_SEPARATOR;}
 $LIBPATH   .= $LIB;
- my $LIBPATH = $LIB .  $main::PATH_SEPARATOR . $env->{ENV}->{ROOTSYS} . "/lib" . $main::PATH_SEPARATOR . $env->{ENV}->{OPTSTAR} . "/lib";
-# if ($STAR_SYS =~ /x8664/) {
-#   $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib64/mysql";
-# } else {
-#   $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib/mysql";
+my $LIBPATH .= $LIB .  $main::PATH_SEPARATOR . $env->{ENV}->{ROOTSYS} . "/lib" . $main::PATH_SEPARATOR . $env->{ENV}->{OPTSTAR} . "/lib";
+# if ($STAR_SYS !~ /^sl/) {
+#   if ($STAR_SYS =~ /x8664/) {
+#     $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib64/mysql";
+#   } else {
+#     $LIBPATH .= $main::PATH_SEPARATOR . "/usr/lib/mysql";
+#   }
 # }
 $env1 = $env->clone('Package'  => $pkg, 'LIBPATH' => $LIBPATH);
 # Disable all compiler warnings if $Dir matches any value from @$warnoff_dirs
@@ -145,6 +147,8 @@ if ( $pkg eq "GenFit"
      || $Dir =~ /StHLTCAMaker/
      || $Dir =~ /StDaqLib/
      || $Dir =~ /StDAQMaker/
+     || $pkg =~ m/^StStarLogger/
+     || $pkg =~ m/^RTS/
    ) {
   #  print "pkg = $pkg, CXX_MAJOR = $env->{CXX_MAJOR}, CXX_MAJOR = $env->{CXX_MINOR} ================================================================================\n";
   if ( $pkg eq "GenFit") {# and ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 6)) {
@@ -250,6 +254,9 @@ if ( $pkg eq "GenFit"
 } elsif (  $pkg =~ /Geometry/) {
   $WarnOff .= " -Wno-error=unused-but-set-variable -Wno-error=array-bounds -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
+#} elsif (  $pkg =~ /RTS/) {
+#  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
+#  $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
   if ($pkg eq 'StMuDSTMaker' or $pkg eq 'StHbtMaker' or $pkg eq 'StBFChain') {
@@ -270,8 +277,6 @@ if ($pkg eq "RTS") {
 	  .  $main::PATH_SEPARATOR . "#StRoot/RTS/src" 
 	    .  $main::PATH_SEPARATOR . "#StRoot/RTS/src/EVP_READER" 
 	      .  $main::PATH_SEPARATOR . $CPPPATH;
-  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
-  $EXTRA_CXXFLAGS .= $WarnOff;
   if ($DEBUG =~ /-O/ and $STAR_SYS =~ /gcc482/) { # hack for  FtfUtilities with gcc482
     $envNoDeb = $env1->clone('DEBUG' => $NOOPTIMIZED);
     for ($i = 0; $i < $#srcL; $i++) {
@@ -538,7 +543,7 @@ my @QtDefs = ();
 my @uih = ();#   print "h_files: @h_files\n";
 foreach my $h (@h_files) {
   if ((!$qt4 && ($h =~ /\.ui\.h$/)) || ($qt4 && ($h =~ /ui_.+\.h$/))) {
-    print "uih: $h\n";
+    print "uih: $h\n" if $param::debug;
     push @uih, $h;
   }
 }
@@ -559,7 +564,7 @@ foreach my $ui (@uiQT) {
     print "Qt4: out : $out ==> $uilocal\n" if $param::debug ;
     Depends $env [$out], ($uilocal);
     Command $env [$out], ($uilocal), qq(cd %1:d; $uic %1:f -o %>:f );
-    push @QtDefs, $out;    print "Qt4/QtDefs from $ui -> $out\n"; # if $param::debug;
+    push @QtDefs, $out;    print "Qt4/QtDefs from $ui -> $out\n" if $param::debug;
   } else {
     my @out = ($dirbase . $stem . ".cxx", $dirbase . $stem . ".h") ; 
     Depends $env [$out[1]], (@dep); 
@@ -567,7 +572,7 @@ foreach my $ui (@uiQT) {
     Command $env [$out[1]], @dep, qq(cd %1:d; $uic %1:f -o %>:f );
     Command $env [@out[0]], ($uilocal,$out[1]), qq(cd %1:d; $uic %1:f  -i %2:f -o %>:f);
     push @src, $out[0];
-    push @QtDefs, $out[1]; print "Qt3/QtDefs from $ui -> $out[1]\n"; # if $param::debug;
+    push @QtDefs, $out[1]; print "Qt3/QtDefs from $ui -> $out[1]\n" if $param::debug;
   }
 }
 if ($#xpmQT >= 0) {
@@ -582,7 +587,7 @@ if ($#xpmQT >= 0) {
     }
     my @xpm = map ($dirbase . File::Basename::basename( $_), @xpmQT);
     #	  my @xpm = @xpmQT;
-    print "Command $uic -embed ".join(" ",@xpm)." -o $out \n";
+    print "Command $uic -embed ".join(" ",@xpm)." -o $out \n" if $param::debug;
     Command $env [$out], @xpm, qq($uic -embed %< -o %> );
     push @src, $out
   }
@@ -973,7 +978,7 @@ if ( $pkg =~ m/^StEventDisplay/ || $#uiQT >= 0 || $OnlinePackage ) {
 } elsif ( $pkg =~ m/^StBFChain$/ && (! $IsRepo || $IsDotDev) ) {
   my($cmd)="BFCOpt2Html.pl";
   $cmd = "mgr/BFCOpt2Html.pl" if ( -e "mgr/BFCOpt2Html.pl");
-  print "\t add documentation for $pkg\n";
+  print "\t add documentation for $pkg\n" if $param::debug;
   Command $env ["#StRoot/StBFChain/doc/BFC.h"], ("#StRoot/StBFChain/BigFullChain.h"), qq (%CPP            %< > %>);
   Command $env ["#StRoot/StBFChain/doc/BFC2.h"],("#StRoot/StBFChain/BigFullChain.h"), qq (%CPP -D__BFC2__ %< > %>);
   Command $env [("#StRoot/StBFChain/doc/index.html","#StRoot/StBFChain/doc/StBFChain.cxx_doc")],
@@ -1033,8 +1038,8 @@ if ( $pkg =~ m/^St.*Db/             ||
 } 
 if ( $pkg =~ m/^StChain$/) {  
   if ($STAR_SYS =~ /gcc471/) { # hack for StRtsTable gcc471
-    my $cxxflags = $env->{CXXFLAGS} . " -fpermissive"; print "cxxflags = $cxxflags\n";
-    $envHack = $env->clone('CXXFLAGS' => $cxxflags); print "==> $envHack->{CXXFLAGS}\n";
+    my $cxxflags = $env->{CXXFLAGS} . " -fpermissive"; print "cxxflags = $cxxflags\n" if $param::debug;
+    $envHack = $env->clone('CXXFLAGS' => $cxxflags); print "==> $envHack->{CXXFLAGS}\n" if $param::debug;
     for ($i = 0; $i <= $#src; $i++) {
       if ($src[$i] =~ /StRtsTable\.cxx/) {# print "========= hack for StRtsTable.cxx =========\n";
 	my @objfiles = Objects $envHack ($src[$i]);
@@ -1431,6 +1436,7 @@ if ( $#Defs > -1) {# &&  $pkg !~ m/^GenFit$/ ) {
     my $Package = $Dir . "/PACKAGE";
     my $LIBST   = $env2->{LIBS};
     my $LIBSP   = "";
+    my $libmysqlpath = "";
     if ($Package and -r $Package) {
       open(IN,"$Package") or die "Can't open $Package\n";
       while (my $line = <IN>) {
@@ -1443,6 +1449,9 @@ if ( $#Defs > -1) {# &&  $pkg !~ m/^GenFit$/ ) {
 	else             {$LIBSP = $l;}
 	my @libs = split(' ',$LIBSP);
 	foreach my $lib (@libs) {
+	  if ($lib eq "-lmysqlclient") {
+	    $libmysqlpath = $env2->{Packages}->{MYSQL}->{LIBDIR};
+	  }
 	  my $fullname = $lib; $fullname =~ s/-l/lib/; print "lib = $lib => fullname = $fullname\n"  if ($DEBUG_CLING);
 	  my @pathes = split($main::PATH_SEPARATOR, $env->{LIBPATH});
 	  my $found_path = "";
@@ -1465,6 +1474,7 @@ if ( $#Defs > -1) {# &&  $pkg !~ m/^GenFit$/ ) {
       if ($LIBSP) {
 	$env2->{LIBS} = $LIBST . $LIBSP; 
 	$env2->{LIBPATH} .= $main::PATH_SEPARATOR . $LIBPATH;
+	if ($libmysqlpath) {$env2->{LIBPATH} .= $main::PATH_SEPARATOR . $libmysqlpath;}
 	print "env2->{LIBPATH} = $env2->{LIBPATH} $env2->{LIBS} = $env2->{LIBS} \n" if ($DEBUG_CLING);
       }
        Depends $env2 $CintFiles[0], "#" . $Package;

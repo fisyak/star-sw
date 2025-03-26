@@ -125,8 +125,8 @@ double StWsLogger::getTimeMs() const {
 }
 
 std::string StWsLogger::getUserName() const {
-	register struct passwd *pw;
-	register uid_t uid;
+	struct passwd *pw;
+	uid_t uid;
 	uid = geteuid();
 	pw = getpwuid (uid);
 	if (pw) {

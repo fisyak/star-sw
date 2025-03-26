@@ -1,8 +1,11 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
-# $Id: diskUsers.pl,v 1.2 2000/01/22 02:21:42 wenaus Exp $
+# $Id: diskUsers.pl,v 1.3 2025/02/03 19:22:01 jeromel Exp $
 #
 # $Log: diskUsers.pl,v $
+# Revision 1.3  2025/02/03 19:22:01  jeromel
+# a9 does not have the soft links and we support only Linux at this stage. Replace local/bin to bin
+#
 # Revision 1.2  2000/01/22 02:21:42  wenaus
 # no 'strict'
 #

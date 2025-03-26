@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 
 #
 # Get a detail of the space on each disks
@@ -18,11 +18,11 @@
 # List of disks will be by numbers
 $MIN   =   1;                                             # 4
 $MAX   =   6;                                             # for testing
-$MAX   = 101;                                             # Upper number ; can be as high
+$MAX   = 115;                                             # Upper number ; can be as high
 $MAIN  = "/star/data";                                    # default base path
 
 # An array of disks to add to the $MAIN pattern - entries can also be wildcarded patterns
-# which will be used in a glob() statement or sunngle disk entries
+# which will be used in a glob() statement or single disk entries
 @ADDD  = (
           #"/star/institutions/*",
           "/star/subsys/*",
@@ -38,8 +38,8 @@ $MAIN  = "/star/data";                                    # default base path
           );
 
 # The mechanism below will gradually supplement the ADDD mechanism
-# Format will be disk => group it belongs to. Tis logic is not
-# done/complete or implemented.
+# Format will be disk => group it belongs to. 
+# ### This logic is not done/complete or implemented ###
 %DGRP = (
           "/star/u"                => 1,
           "/gpfs01/star/pwg"       => 1,
@@ -60,8 +60,9 @@ $MAIN  = "/star/data";                                    # default base path
 
           #"/star/institutions/*"   => 3,
 
-          "/gpfs01/star/data*"     => 4, # a link reading will be done, duplicate removed
-          "/gpfs03/star/data*"     => 4, # a link reading will be done, duplicate removed
+          #"/gpfs01/star/data*"     => 4, # a link reading will be done, duplicate removed
+          #"/gpfs03/star/data*"     => 4, # a link reading will be done, duplicate removed
+          #"/sdcc/lustre02/star/data*" => 4, # Also a link
           "/star/data*"            => 4, # so order matters
 
   	  "/star/simu"             => 5,
@@ -129,7 +130,8 @@ $SpiderControl = "/cgi-bin/%%RELP%%/SpiderControl.cgi"; # a CGI controling the s
 
 $DINFO = "(check '<A HREF=\"$SpiderControl\">nova</A>' Spiders)"; # Many tools may be used for indexing
                                                                # display info about which one.
-$DINFO =~ s/%%RELP%%/public/;
+#$DINFO =~ s/%%RELP%%/public/;
+$DINFO =~ s/%%RELP%%/protected/;
 
 
 @COLORS = ("#7FFFD4","#40E0D0","#00DEFF","#87CEFA","#CCCCEE","#D8BFD8","#DB7093"); #"#D02090");
@@ -188,14 +190,22 @@ if ( -e $1."dfpanfs"){
 
 
 
-for ( $i = $MIN ; $i <= $MAX ; $i++){
+for ( $i = $MIN ; $i <= 99 ; $i++){
+    # there are 3 digit numbers but 2.2 
     push(@DISKS,sprintf("$MAIN%2.2d",$i));
 }
+for ( $i = 100 ; $i <= $MAX ; $i++){
+    # there are 3 digit 
+    push(@DISKS,sprintf("$MAIN%3.3d",$i));
+}
+
+
 $kk = 0;
 if ( $#ADDD != -1 ){
     foreach $i (@ADDD){
 	# print "Adding $i\n";
 	if ( $i =~ m/\*/ ){
+	    # a glob will not sort as we wish if we have XX and XXX mixed
 	    push(@DISKS,glob($i));
 	    push(@DISKS,"---$kk---"); $kk++;
 	} else {
@@ -646,7 +656,8 @@ if ($#FCRefs == -1){
 	# print $FO "<!-- Now $ind -->\n";
 
 	$ind = "<A HREF=\"$SpiderControl?disk=$refdisk&action=view\"><i>$ind</i></A>";
-	$ind  =~ s/%%RELP%%/public/;
+	#$ind  =~ s/%%RELP%%/public/;
+	$ind  =~ s/%%RELP%%/protected/;
 
 	if ($ii % 3 == 0){ print $FO "<TR>\n";}
 	print $FO

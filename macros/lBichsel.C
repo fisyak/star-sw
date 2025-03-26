@@ -1,5 +1,5 @@
 void lBichsel() {
-#if defined(__CINT__) && ! defined(__MAKECINT__)
+#if (defined(__CINT__) || defined(__CLING__)) && ! defined(__MAKECINT__)
   if (gClassTable->GetID("StBichsel") < 0) {
     //    gSystem->Load("libTable");
     gSystem->Load("St_base");

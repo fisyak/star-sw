@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-# cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
+# cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXVDefs.pm
 # git diff . RunXXIVDefs.pm
 # git ci -m "Update"  RunXXIVDefs.pm
 #CreateRunDirs.pl 0 100
