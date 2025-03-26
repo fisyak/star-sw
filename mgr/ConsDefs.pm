@@ -475,7 +475,7 @@
  #
  # *** Standard package first, then XOPTSTAR ***
  #	
- my $mysql_search = "":
+ my $mysql_search = "";
  if ($MYSQL) {$mysql_search = $MYSQL . " " . $MYSQL . "/include ";}
  $mysql_search .= $XOPTSTAR . "/include " . $XOPTSTAR . "/spack/include " . $XOPTSTAR . "/include/mysql ".
  "/sw/include/mysql " .  "/include /usr/include ".  "/usr/include/mysql  ".  "/usr/mysql/include  " .  "/usr/mysql  ";

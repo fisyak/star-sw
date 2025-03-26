@@ -318,15 +318,17 @@ else
 	    setenv SITE "LBL"
 	    breaksw
 
-	case "rhic.bnl.gov":
-	case "rcf.bnl.gov":
-	case "star.bnl.gov":
-	case "sdcc.bnl.gov":
-	    setenv SITE "BNL"
-	    breaksw
-
 	case "starp.bnl.gov":
-	    setenv SITE "BNLONL"
+        case "l4.bnl.local":
+            setenv SITE "HLT"
+            breaksw
+
+#	case "starp.bnl.gov":
+#	    setenv SITE "BNLONL"
+#	    breaksw
+
+	case "*.bnl.gov":
+	    setenv SITE "BNL"
 	    breaksw
 
 	case "if.usp.br":
@@ -339,11 +341,6 @@ else
 
         case "sdfarm.kr":
             setenv SITE "KISTI"
-            breaksw
-
-	case "starp.bnl.gov":
-        case "l4.bnl.local":
-            setenv SITE "HLT"
             breaksw
 
 	default:
