@@ -43,7 +43,8 @@ if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && 
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2019_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq_${YEAR}_CosmicsGmt.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  ~/xml/daq_${YEAR}_Cosmics.Gmt.xml
-    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  ~/xml/daq_Cosmics.Gmt.xml
+#    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  ~/xml/daq_Cosmics.Gmt.xml
+    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit   -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq_Cosmics.Gmt.xml
     touch Submitted
     cd -
   end

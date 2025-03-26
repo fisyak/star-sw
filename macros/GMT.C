@@ -2,7 +2,7 @@
 //  foreach d (`ls -1d */*F`)
     if (-r ${d}/MdYZB.root) continue;
     cd ${d}
-    root.exe -q -b 'Chain.C+("*/*/*MuDst.root")' 'GMT.C(tChain)'
+root.exe -q -b 'Chain.C+("*/*/*MuDst.root")' 'GMT.C(tChain)' >& GMT.log &
     cd -
   end
   root.exe MdYZ.root fit2D.C+
