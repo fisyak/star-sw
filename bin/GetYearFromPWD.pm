@@ -79,6 +79,7 @@ sub GetRuns($) {
   elsif ($pwd =~ /\/2022\//) {$year = "2022"; require RunXXIIDefs;}
   elsif ($pwd =~ /\/2023\//) {$year = "2023"; require RunXXIIIDefs;}
   elsif ($pwd =~ /\/2024\//) {$year = "2024"; require RunXXIVDefs;}
+  elsif ($pwd =~ /\/2025\//) {$year = "2025"; require RunXXVDefs;}
   our @Runs;
   my $def = {@Runs};
 #  PrintHash($def,"Runs");
@@ -121,6 +122,7 @@ sub GetHash() {
   elsif ($pwd =~ /2022/) {$year = "2022"; require RunXXIIDefs;}
   elsif ($pwd =~ /2023/) {$year = "2023"; require RunXXIIIDefs;}
   elsif ($pwd =~ /2024/) {$year = "2024"; require RunXXIVDefs;}
+  elsif ($pwd =~ /2025/) {$year = "2025"; require RunXXVDefs;}
   our @Runs;
   my $def = {@Runs};
   return ($def, $year);
