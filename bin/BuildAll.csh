@@ -24,7 +24,7 @@ foreach root (root6 root5)
 #   if ($gcc == "gcc8" || gcc == "gcc631") set opts = "debug opt opt3"
     foreach optt ($opts)
       set bits = "64b";
-#      if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
+      if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
 #      echo "gcc = $gcc, optt = $optt, bits = $bits"
       foreach bit (${bits})
         unsetenv NODEBUG
@@ -45,6 +45,7 @@ foreach root (root6 root5)
 #        echo "setup optt gcc = $gcc, optt = $optt, bit = $bit"
         echo "starver ${STAR_LEVEL}"
         starver ${STAR_LEVEL}
+        rehash
 	which rootcint
 	if ($?) continue;
         set log = build.${STAR_HOST_SYS}.${optt}.`date +%m%d%y:%H%M.`${HOST}.${root}.log;
