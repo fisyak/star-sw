@@ -77,7 +77,8 @@
     default:
       exit 0;
   endsw
-  set Chain = "${Chain},CorrZ,gmt25,gmtOnly,Agi,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,-fttDat,-fcs,-fcsDat,fcsWFF,-fcsCluster,-fcsPoint,-fcsdb"; #,noTags
+#  set Chain = "${Chain},CorrZ,gmt25,gmtOnly,Agi,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,-fttDat,-fcs,-fcsDat,fcsWFF,-fcsCluster,-fcsPoint,-fcsdb"; #,noTags
+  set Chain = "${Chain},CorrY,gmt25,gmtOnly,Agi,-l3onl,-fpd,mtd,btof,OGridLeakFull,-evout,NoHistos,noRunco,StiCA,-picoWrite,-picoDst,-fttDat,-fcs,-fcsDat,fcsWFF,-fcsCluster,-fcsPoint,-fcsdb"; #,noTags
   root.exe -b -q  'bfc.C(100000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
     cp -p ${logFile} ${SUBMITTINGDIRECTORY}/
     cp -p ${bf}*.root ${SUBMITTINGDIRECTORY}/

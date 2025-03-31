@@ -13,7 +13,7 @@
 #  cd ${D}
 #  cd /hlt/cephfs/reco/2022/ZF/Cosmic
 #  cd /hlt/cephfs/reco/CosmicsC/2024/RF
-#CreateRunDirs.pl 
+CreateRunDirs.pl 
 setenv YEAR `GetYearFromPWD.pl`
 if ($YEAR != "2019" && $YEAR != "2020" && $YEAR != "2021" && $YEAR != "2022" && $YEAR != "2023" && $YEAR != "2024") exit 1;
 #  CreateRunDirs${YEAR}.pl

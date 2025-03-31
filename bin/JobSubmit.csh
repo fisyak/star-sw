@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-# cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXIVDefs.pm
+# cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXVDefs.pm
 # git diff . RunXXIVDefs.pm
 # git ci -m "Update"  RunXXIVDefs.pm
 #CreateRunDirs.pl 0 100
@@ -29,8 +29,8 @@ foreach d (`ls -1d ???/2*`)
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2023_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X ~/xml/daq_2019_Cosmics.xml
 #    /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq_${YEAR}_Cosmics.xml
-  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.TFG25a.xml
-#  touch Submitted
+  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.TFG25c.xml
+  touch Submitted
   cd -
 #  if ($countJ >= 40) then 
 #	break;

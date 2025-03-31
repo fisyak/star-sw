@@ -32,6 +32,7 @@ elsif ($pwd =~ /\/2021\//) {$year = "2021";}
 elsif ($pwd =~ /\/2022\//) {$year = "2022";}
 elsif ($pwd =~ /\/2023\//) {$year = "2023";}
 elsif ($pwd =~ /\/2024\//) {$year = "2024";}
+elsif ($pwd =~ /\/2025\//) {$year = "2025";}
 if    ($pwd =~ /FFI/) {$FIELD = "FFI";}
 elsif ($pwd =~ /RFI/) {$FIELD = "RFI";}
 elsif ($pwd =~ /FF/) {$FIELD = "FF";}
