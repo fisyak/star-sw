@@ -241,8 +241,8 @@ int StFcsTrackMatchMaker::Make()
     {
       LOG_INFO << Form("TRK pT=%6.2f Cg=%1d NEcal=%lu NHcal=%lu",
                        trk->momentum().perp(), trk->charge(),
-                       trk->ecalClusters().size(),
-                       trk->hcalClusters().size())
+                       (ULong_t) trk->ecalClusters().size(),
+                       (ULong_t) trk->hcalClusters().size())
                << endm;
     }
   }
@@ -259,7 +259,7 @@ int StFcsTrackMatchMaker::Make()
         if (clu->energy() > mMinEnergy[ehp])
         {
           LOG_INFO << Form("FCS DET=%d ET=%6.2f NTrk=%ld",
-                           clu->detectorId(), clu->fourMomentum().perp(), clu->tracks().size())
+                           clu->detectorId(), clu->fourMomentum().perp(), (Long_t)clu->tracks().size())
                    << endm;
         }
       }

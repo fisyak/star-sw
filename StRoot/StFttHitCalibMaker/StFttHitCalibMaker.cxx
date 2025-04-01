@@ -67,9 +67,9 @@ void StFttHitCalibMaker::WriteCalibrationToPlainText() {
     for ( int uuid = 0; uuid <= 400; uuid++ ){
         Short_t anchor = mHelper->anchor( uuid );
         auto hist = mHelper->histFor( uuid );
-        size_t counts = hist.size(); 
-        size_t samples = mHelper->samples( uuid );
-        outf << TString::Format( "%d\t%d\t%lu\t%lu", uuid, (int) anchor, counts, samples ) << endl;
+	ULong_t counts = hist.size(); 
+        ULong_t samples = mHelper->samples( uuid );
+        outf << TString::Format( "%d\t%d\t%lu\t%lu", uuid,  anchor, counts, samples ) << endl;
     }
     outf.close();
 
