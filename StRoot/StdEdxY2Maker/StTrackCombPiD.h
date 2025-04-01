@@ -34,11 +34,11 @@ class StTrackPiD {
   void Clear(Option_t * /*option*/ ="") {memset(mBeg,0,mEnd-mBeg+1); for (Int_t l = 0; l < KPidAllParticles; l++) fPred[l] = fPredC[l] = fdev[l] = fPull[l] = fPullC[l] = -999;}
   void Print(Option_t *option = "") const;
   Double_t  pred(Int_t  k = 0)      const {return fPred[k];}
-  double_t  residual(Int_t   k = 0) const {return fdev[k];}
-  double_t  pull(Int_t  k = 0)      const {return fPull[k];}
-  double_t  predC(Int_t k = 0)      const {return fPredC[k];}
-  double_t  residualC(Int_t  k = 0) const {return fdevC[k];}
-  double_t  pullC(Int_t k = 0)      const {return fPullC[k];}
+  Double_t  residual(Int_t   k = 0) const {return fdev[k];}
+  Double_t  pull(Int_t  k = 0)      const {return fPull[k];}
+  Double_t  predC(Int_t k = 0)      const {return fPredC[k];}
+  Double_t  residualC(Int_t  k = 0) const {return fdevC[k];}
+  Double_t  pullC(Int_t k = 0)      const {return fPullC[k];}
   Double_t &Pred(Int_t  k = 0)            {return fPred[k];}
   Double_t &Residual(Int_t   k = 0)       {return fdev[k];}
   Double_t &Pull(Int_t  k = 0)            {return fPull[k];}
