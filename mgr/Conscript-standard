@@ -520,11 +520,13 @@ if ( $pkg eq 'sim' or $pkg eq 'gen' ) {
     if (-r "StarVMC/xgeometry/xgeometry.age") {
       InstallAs $env1 "xgeometry.age", "#StarVMC/xgeometry/xgeometry.age";
       push @srcE, "xgeometry.age";
+      $LIBS .= " -lStarMagFieldNoDict ";
     }
-    LinkedModule $env1 $xgeometry, @srcE;
-    Install $env1 $LIB, $xgeometry;
+    $envX = $env1->clone('Package'  => $pkg, 'LIBS'     => $LIBS, 'LIBPATH' => $LIBPATH);
+    LinkedModule $envX $xgeometry, @srcE;
+    Install $envX $LIB, $xgeometry;
     $lib = $LIB . "/lib" . $xgeometry;
-    InstallAs $env1 $lib, $xgeometry;
+    InstallAs $envX $lib, $xgeometry;
     $LIBPKG = "";
   }
 } 
