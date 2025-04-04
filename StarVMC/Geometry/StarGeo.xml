@@ -66,7 +66,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  /> 
-    <Construct sys="tpce" config="TPCEv61"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -94,7 +94,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> 
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -120,7 +120,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> 
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -146,7 +146,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" /> 
-    <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv5" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -173,7 +173,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> 
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -199,7 +199,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> 
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -225,7 +225,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" /> 
-    <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv5" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -253,7 +253,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> 
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -279,7 +279,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> 
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -305,7 +305,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" /> 
-    <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv5" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -387,7 +387,7 @@
 <!-- Temporarily removed so that we do not need to introduce overlapping volumes -->
     <Construct sys="pipe" config="PIPE12ft"/>
     <Construct sys="targ" config="TARGv1"  /> --><!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -413,7 +413,7 @@
 <!-- Temporarily removed so that we do not need to introduce overlapping volumes -->
     <Construct sys="pipe" config="PIPE12ft"/>
     <Construct sys="targ" config="TARGv1"  /> --><!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -440,7 +440,7 @@
 <!-- Temporarily removed so that we do not need to introduce overlapping volumes -->
     <Construct sys="pipe" config="PIPE12ft"/>
     <Construct sys="targ" config="TARGv1b"  /> --><!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv5" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -468,7 +468,7 @@
     <!--Construct sys="pipe" config="PIPE12"-->
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -490,7 +490,7 @@
     <!--Construct sys="pipe" config="PIPE12"-->
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -512,7 +512,7 @@
     <!--Construct sys="pipe" config="PIPE12"-->
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv61"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -535,7 +535,7 @@
     <!--Construct sys="pipe" config="PIPE12"-->
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -556,7 +556,7 @@
     <!--Construct sys="pipe" config="PIPE12"-->
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv6"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -577,7 +577,7 @@
     <!--Construct sys="pipe" config="PIPE12"-->
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCEv61"  />
+    <Construct sys="tpce" config="TPCEv5"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -599,7 +599,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCE31"  />
+    <Construct sys="tpce" config="TPCEv5Z"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -636,7 +636,7 @@
     <Construct sys="zcal" config="ZCALon"  />
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12"  />
-    <Construct sys="tpce" config="TPCE31"  />
+    <Construct sys="tpce" config="TPCEv5Z"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -661,7 +661,7 @@
     <Construct sys="zcal" config="ZCALon"  />
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12"  />
-    <Construct sys="tpce" config="TPCE31"  />
+    <Construct sys="tpce" config="TPCEv5Z"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -687,7 +687,7 @@
     <Construct sys="zcal" config="ZCALon"  />
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12"  />
-    <Construct sys="tpce" config="TPCE31"  />
+    <Construct sys="tpce" config="TPCEv5Z"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -710,7 +710,7 @@
     <Construct sys="scon" config="SCON14"  />
     <Construct sys="pipe" config="PIPE12ft"  />
     <Construct sys="targ" config="TARGv1"  /> <!-- fixed target geometry -->
-    <Construct sys="tpce" config="TPCE31"  />
+    <Construct sys="tpce" config="TPCEv5Z"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
