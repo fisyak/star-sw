@@ -1,14 +1,6 @@
-// $Id: StEandBDirMaker.cxx,v 1.10 2014/03/19 21:04:16 fisyak Exp $
-// $Log: StEandBDirMaker.cxx,v $
-// Revision 1.10  2014/03/19 21:04:16  fisyak
-// Switch to 2D mag. field
-//
-// Revision 1.9  2014/01/07 15:00:56  fisyak
-// Freeze
 //
 // Revision 1.8  2013/09/25 22:33:14  fisyak
 // More debugging
-//
 // Revision 1.7  2013/08/29 23:11:20  fisyak
 // Back to distrotion, simplify fit
 //
@@ -114,9 +106,9 @@ Int_t StEandBDirMaker::Init(){
 Int_t StEandBDirMaker::Make(){
   if (! secXY) {
     GetTFile()->cd();
-    secXY = new TH2D("secXY","clusters X and Y in the sector",60,-60,60,70,50,190); secXY->SetDirectory(0);
-    secXZ = new TH2D("secXZ","clusters X vs Z in the sector",105,0,210,60,-60, 60); secXZ->SetDirectory(0);
-    secYZ = new TH2D("secYZ","clusters Y vs Z in the sector",105,0,210,70, 50,190); secYZ->SetDirectory(0);
+    secXY = new TH2D("secXY","clusters X and Y in the sector : X : Y",60,-60,60,70,50,190); secXY->SetDirectory(0);
+    secXZ = new TH2D("secXZ","clusters X vs Z in the sector : Z : X",105,0,210,60,-60, 60); secXZ->SetDirectory(0);
+    secYZ = new TH2D("secYZ","clusters Y vs Z in the sector : Z : Y",105,0,210,70, 50,190); secYZ->SetDirectory(0);
   }
   StEvent* pEvent = (StEvent*) StMaker::GetChain()->GetInputDS("StEvent");
   if (!pEvent) { cout << "Can't find StEvent" << endl; return kStWarn;}
@@ -144,6 +136,7 @@ Int_t StEandBDirMaker::Make(){
 	for (Long_t l = 0; l < NoHits; l++) {
 	  StTpcHit *tpcHit = static_cast<StTpcHit *> (hits[l]);
 	  if (! tpcHit) continue;
+	  if (tpcHit->usedInFit()) continue;
 	  if (tpcHit->flag() & FCF_CHOPPED || tpcHit->flag() & FCF_SANITY)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
 	  if (tpcHit->pad() > 182 || tpcHit->timeBucket() > 511) continue; // some garbadge  for y2001 daq
 #if 1
@@ -164,11 +157,12 @@ Int_t StEandBDirMaker::Make(){
       cout << "Found " << nfound << endl;
       spectr->Print();
       c2 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c2");
-      if (! c2) c2 = new TCanvas("c2","c2",800,500);
+      if (! c2) c2 = new TCanvas("c2","c2",800,1200);
       else      c2->Clear();
       c2->Divide(1,3);
       c2->cd(1);
       secXY->Draw("colz");
+      c2->Update();
     }
 #if ROOT_VERSION_CODE < ROOT_VERSION(6,0,1)
     Float_t *xpeaks = spectr->GetPositionX();
@@ -177,8 +171,8 @@ Int_t StEandBDirMaker::Make(){
     Double_t *xpeaks = spectr->GetPositionX();
     Double_t *ypeaks = spectr->GetPositionY();
 #endif
-    static Double_t windowX = 5;
-    static Double_t windowY = 5;
+    static Double_t windowX = 15;
+    static Double_t windowY = 15;
     for (Int_t pf = 0; pf < nfound; pf++) {
       // Check significance
 #if ROOT_VERSION_CODE < ROOT_VERSION(6,0,1)
@@ -203,9 +197,7 @@ Int_t StEandBDirMaker::Make(){
       Double_t avRow = 0;
       if (Debug()) {
 	secXZ->Reset();
-	secXZ->SetTitle(Form("clusters X vs Z the sector %i",sec));
 	secYZ->Reset();
-	secYZ->SetTitle(Form("clusters Y vs Z in the sector %i",sec));
       }
       for (int j = 0; j< numberOfPadrows; j++) {
 	StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(j);
@@ -215,8 +207,10 @@ Int_t StEandBDirMaker::Make(){
 	  for (Long_t l = 0; l < NoHits; l++) {
 	    StTpcHit *tpcHit = static_cast<StTpcHit *> (hits[l]);
 	    if (! tpcHit) continue;
+	    if (tpcHit->usedInFit()) continue;
 	    if (tpcHit->flag() & FCF_CHOPPED || tpcHit->flag() & FCF_SANITY)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
 	    if (tpcHit->pad() > 182 || tpcHit->timeBucket() > 511) continue; // some garbadge  for y2001 daq
+	    if (tpcHit->usedInFit()) continue;
 #if 1
 	    StGlobalCoordinate glob(tpcHit->position());
 	    tran(glob,loc,tpcHit->sector(),tpcHit->padrow());
@@ -230,6 +224,7 @@ Int_t StEandBDirMaker::Make(){
 #endif
 	    if (TMath::Abs(loc.position().x() - xp) > windowX ||
 		TMath::Abs(loc.position().y() - yp) > windowY) continue;
+	    tpcHit->setFitFlag(1);
 	    fTracklet->nhits++;
 	    if (Debug() > 1) {
 	      cout << fTracklet->nhits << " " << *tpcHit << endl;
@@ -294,18 +289,23 @@ Int_t StEandBDirMaker::Make(){
 	  TMath::Abs(x0) > 50) {
 	if (Debug()) {
 	  cout << "Illegal y0 = " << y0 << " x0 " << x0 << " tY " << tY << " tX " << tX << endl;
-	}
-	continue;
+	}	continue;
       }
       fTracklet->x0 = x0;
       fTracklet->tX = tX;
       fTracklet->y0 = y0;
       fTracklet->tY = tY;
+      fTracklet->z0 = L.z();
       fTracklet->dirL = StThreeVectorD(tX,tY,1.);
       StTpcLocalSectorDirection dirLS(fTracklet->dirL,sec, fTracklet->row);
       StTpcLocalDirection       dirS2L;
       tran(dirLS,dirS2L);
       fTracklet->dirST = dirS2L.position();
+      StGlobalDirection       dirS2G;
+      tran(dirS2L,dirS2G);
+      fTracklet->dirG = dirS2G.position();
+      fTracklet->tXG = fTracklet->dirG.x()/fTracklet->dirG.z();
+      fTracklet->tYG = fTracklet->dirG.y()/fTracklet->dirG.z();
       Double_t detT = (W     *DT.z() - LT.z()*LT.z());
       if (TMath::Abs(detT) < 1e-7) continue;
       Double_t x0T =   (LT.x()*DT.z() - DT.x()*LT.z())/detT;
@@ -316,6 +316,7 @@ Int_t StEandBDirMaker::Make(){
       fTracklet->tXT = tXT;
       fTracklet->y0T = y0T;
       fTracklet->tYT = tYT;
+      fTracklet->z0T = posT.z();
       fTracklet->dirT = StThreeVectorD(tXT,tYT,1.);
       StGlobalDirection globD(fTracklet->BG);
       tran(globD,locD,sec, TMath::Nint(avRow) );
