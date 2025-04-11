@@ -520,13 +520,17 @@ if ( $pkg eq 'sim' or $pkg eq 'gen' ) {
     if (-r "StarVMC/xgeometry/xgeometry.age") {
       InstallAs $env1 "xgeometry.age", "#StarVMC/xgeometry/xgeometry.age";
       push @srcE, "xgeometry.age";
-      $LIBS .= " -lStarMagFieldNoDict ";
+#####!      $LIBS .= " -lStarMagFieldNoDict ";
     }
-    $envX = $env1->clone('Package'  => $pkg, 'LIBS'     => $LIBS, 'LIBPATH' => $LIBPATH);
-    LinkedModule $envX $xgeometry, @srcE;
-    Install $envX $LIB, $xgeometry;
+    LinkedModule $env1 $xgeometry, @srcE;
+    Install $env1 $LIB, $xgeometry;
     $lib = $LIB . "/lib" . $xgeometry;
-    InstallAs $envX $lib, $xgeometry;
+    InstallAs $env1 $lib, $xgeometry;
+#     $envX = $env1->clone('Package'  => $pkg, 'LIBS'     => $LIBS, 'LIBPATH' => $LIBPATH);
+#     LinkedModule $envX $xgeometry, @srcE;
+#     Install $envX $LIB, $xgeometry;
+#     $lib = $LIB . "/lib" . $xgeometry;
+#     InstallAs $envX $lib, $xgeometry;
     $LIBPKG = "";
   }
 } 
@@ -1107,49 +1111,39 @@ if ($pkg =~ /^Ag.*Geometry/){# and  $STAR_SYS =~ /sl.._gcc485/ ) {
     }
   }
   if (-r $GeometryDbAliases) {
+#    print "======================================== open(SCAN, $GeometryDbAliases);\n";
     open(SCAN, $GeometryDbAliases);
     while (<SCAN>) {
       next if (/^\s*\//);
       my @words = split('"',$_);
       next if (! $words[1]);
+      my $tag = $words[1];
       my $geom = $words[3];
-      if ($geom == "") {next;}
-      if ($geom =~ /y2010x$/) {next;} # take out for them moment all geometies which ends with x
-      $geom =~ s/ear//;
+#      print "======================================== tag = $tag, geom = $geom $words[5]\n";
+      if ($tag !~ "^y") {next;}
       push @versionList, $geom;
-      $tagList{$words[1]} = $geom; # print "geom = $geom\n";
+      $tagList{$tag} = $geom; # print "geom = $geom\n";
       if ($words[5] =~ /xgeometry/) {
-	$xgeomList{$words[1]} = $geom; print " xgeomList{$words[1]} =  $xgeomList{$words[1]}\n" if $param::debug;
+	$xgeomList{$tag} = $geom; print " xgeomList{$tag} =  $xgeomList{$tag}\n" if $param::debug;
       }
       if ($words[5] =~ /AgML/) {
-	$AgMLList{$words[1]} = $geom; print " AgMLList{$words[1]} =  $AgMLList{$words[1]}\n" if $param::debug;
-      }
+	$AgMLList{$tag} = $geom; print " AgMLList{$tag} =  $AgMLList{$tag}\n" if $param::debug;
+      } 
     }
     close(SCAN);
     @versionList = script::sortu(@versionList);
-    print "versionList = @versionList\n"  if $param::debug;
-    if ($pkg eq 'AgMLGeometry') {#print "pkg = $pkg\n ";
-      foreach my $tag ( sort keys %tagList ) {
-	my $geom = $AgMLList{$tag};
+    print "versionList = @versionList\n" if $param::debug;
+    if ( -d "./StarDb/starsim") {
+      my %geomList = ();
+      foreach my $geom (@versionList) {
+	print "AgiGeometry: tag = $tag, geom = $geom \n" if $param::debug;
 	next if ! $geom;
-	print "Build $geometry for $tag\n" if $param::debug;
-	my $geometry = "Geometry." . $tag . ".root";# print "geometry = $geometry\n";
-	Command $env1 [$geometry], ($LIB . "/" . "StarAgmlLib" . "." . $env1->{SUFSOLIB},
-				    $LIB . "/" . "Geometry" . "." . $env1->{SUFSOLIB}),
-				      qq(cd  %>:d;root.exe -q -b 'AgML.C("$tag","$geom")' >& /dev/null;);
-      }
-    }	else { # AgiGeometry
-      if ( -d "./StarDb/starsim") {
-	my %geomList = ();
-	foreach my $tag ( sort keys %tagList ) {
-	  my $geom = $tagList{$tag}; print "AgiGeometry: tag = $tag, geom = $geom, geomList{$geom} = $geomList{$geom}\n" if $param::debug;
-	  next if ! $geom;
-	  next if $geomList{$geom};
-	  $geomList{$geom} = $geom;
-	  my $starsim_geom = "./StarDb/starsim/geometry." . $tag . ".C";
-	  if (! -r $starsim_geom) {
-	    open (Out, ">$starsim_geom") or die "Can't open $starsim_geom";
-	    print Out "
+	next if $geomList{$geom};
+	$geomList{$geom} = $geom;
+	my $starsim_geom = "./StarDb/starsim/geometry." . $geom . ".C";
+	if (! -r $starsim_geom) {
+	  open (Out, ">$starsim_geom") or die "Can't open $starsim_geom";
+	  print Out "
 TDataSet *CreateTable() {
   if (!gROOT->GetClass(\"St_geant_Maker\")) return 0;
   St_geant_Maker *geant = (St_geant_Maker *) StMaker::GetChain()->Maker(\"geant\");
@@ -1158,54 +1152,48 @@ TDataSet *CreateTable() {
   geant->Do(\"detp geom $geom\");
   return geom;
 };";
-	    close(Out);
-	  }
+	  close(Out);
+	}
+      }
+    }
+#    my $NoAst2Root = $env->{CXX_MAJOR} > 6; #$STAR_SYS =~ /gcc7/ || $STAR_SYS =~ /darwin/ || $CC eq 'icc'; # CERNLIB is incompartible with gcc 7
+    if ($pkg eq 'AgMLGeometry') {#print "pkg = $pkg\n ";
+      foreach my $geom (@versionList) {
+	next if ! $geom;
+	print "Build $geometry for $geom\n" if $param::debug;  
+	my $geometry = "Geometry." . $geom . ".root";# print "geometry = $geometry\n";
+	Command $env1 [$geometry], ($LIB . "/" . "StarAgmlLib" . "." . $env1->{SUFSOLIB},
+				    $LIB . "/" . "Geometry" . "." . $env1->{SUFSOLIB}),
+				      qq(cd  %>:d;root.exe -q -b 'AgML.C("$geom")' >& /dev/null;);
+      }
+    } else { # AgiGeometry
+      my %geomList = ();
+      my $bin = $BIN; $bin =~ s|#||;
+      my $root4star = $CWD . "/" . $bin . "/" . "root4star";
+      if (! -x $root4star) {
+	$root4star = $env->{ENV}->{STAR} . "/" . $bin . "/" . "root4star";
+	if (! -x $root4star) {
+	  $root4star = "";
+	}
+      }
+      if ($root4star) {
+	foreach my $geom (@versionList) {
+	  next if ! $geom;
+	  my $geometry = "Geometry." . $geom . ".C";# print "geometry = $geometry\n";
 	  my $geom_h = $geom . ".h";
-	  my $geometry = "Geometry." . $geom . ".C";
- 	  my $NoAst2Root = $STAR_SYS =~ /gcc7/ || $STAR_SYS =~ /darwin/ || $CC eq 'icc'; # CERNLIB is incompartible with gcc 7
-	  if ($NoAst2Root) {# platform with no root4star or icc
-	    my $glob = ".sl*/obj/StarDb/AgiGeometry/" .$geom_h ;
-	    my @dirs = glob $glob;# print "glob = $glob $dirs = @dirs\n"; 
-	    my $dir;
-	    foreach $dir (@dirs) {
-	      if ($NoAst2Root) {next;} #$dir =~ /x86/ || $dir =~ /darwin/) {next;}
-	      if ($dir) {
-		my $file = "#" . $dir;
-		Command $env1 [$geom_h], ($file), qq(cd %>:d; ln -s %<:a %>:f;);
-		last;
-	      }
-	    }
-	    # geometry
-	    $glob = ".sl*/obj/StarDb/AgiGeometry/" . $geometry;
-	    @dirs = glob $glob;# print "glob = $glob $dirs = @dirs\n"; 
-	    foreach $dir (@dirs) {
-	      if ($NoAst2Root) {next;} # if ($dir =~ /x86/ || $dir =~ /darwin/ || $FC eq 'icc') {next;} 
-	      if ($dir) {
-		my $file = "#" . $dir;
-		Depends $env1 [$geometry], qw(CreateGeometry.h Material.h Media.h);# Rotations.h);
-		Command $env1 [$geometry], ($file), qq(cd %>:d; ln -s %<:a %>:f;);
-		last;
-	      }
-	    }
-	  } else {
-	    my $bin = $BIN; $bin =~ s|#||;
-	    my $root4star = $CWD . "/" . $bin . "/" . "root4star";
-	    if (! -x $root4star) {
-	      $root4star = $env->{ENV}->{STAR} . "/" . $bin . "/" . "root4star";
-	    }
-	    Depends $env1 [$geometry], ($LIB . "/St_geant_Maker." .  $env1->{SUFSOLIB});
-	    if (! $xgeomList{$geom}) {
-	      Depends $env1 [$geometry], qw(CreateGeometry.h Material.h Media.h);# Rotations.h);
-	      Command $env1 [$geom_h,$geometry], ($LIB . "/libgeometry." .  $env1->{SUFSOLIB}),
-		qq (cd  %>:d; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
-	    } else{
-	      Depends $env1 [$geom_h], ($LIB . "/xgeometry." .  $env1->{SUFSOLIB});
-	      Command $env1 [$geom_h,$geometry], ($LIB . "/xgeometry." .  $env1->{SUFSOLIB}),
-		qq (cd  %>:d; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
-	    }
+	  if (! -r $ObjDir . "/" . $geom_h) {
+	    print "Build $geometry for $geom\n" if $param::debug;
+#	    Command $env1 [$geom_h,$geometry], ($LIB . "/St_geant_Maker." .  $env1->{SUFSOLIB}, $LIB . "/xgeometry." .  $env1->{SUFSOLIB}),
+#	    Command $env1 $geom_h, $LIB . "/xgeometry." .  $env1->{SUFSOLIB},
+	    Command $env1 $geom_h, $LIB . "/xgeometry." .  $env1->{SUFSOLIB},
+	      qq (cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f; 
+#	      qq (test -r  %> && ( cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;) ); #   mv geom.rz %>:f; 
+#	      qq (echo "%< - %1 > %>"; cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
+	    #	  Command $env1 [$geom_h,$geometry], ($LIB . "/xgeometry." .  $env1->{SUFSOLIB}),
+	    # 
+	    #  qq (cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
+	    #	  qq (cd  %>:d; export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")'); #   mv geom.rz %>:f;
 	  }
-	  if ($geomlist) { $geomlist .= "|";}
-	  $geomlist .= $geom;
 	}
       }
     }
@@ -1513,7 +1501,7 @@ if ( $#Defs > -1) {# &&  $pkg !~ m/^GenFit$/ ) {
 if ( $#QtDefs > -1 ) {
   my $mocheaders = join $main::PATH_SEPARATOR, @QtDefs;
   my @mocs = script::MakeMoc( $env2, $pkg, $done, $mocheaders);
-  print "mocheaders: $mocheaders \tmocs: @mocs\n";# if $param::debug;
+  print "mocheaders: $mocheaders \tmocs: @mocs\n" if $param::debug;
   foreach $m(@mocs) { push @src, $m;}
 }
 #____________________________________Tables____________________________
@@ -1553,7 +1541,8 @@ if ( $#src > -1 ) {
       #      foreach my $s (@o) {
       #	if ($s !~ /Cint/) {push @PlainObj, $s;}
       #      }
-      $SO_PKG_PLAIN = $libPrefix . $pkg . "NoDict";
+#      $SO_PKG_PLAIN = $libPrefix . $pkg . "NoDict";
+      $SO_PKG_PLAIN = $pkg . "NoDict";
       printf( "Run Conscript-standard in %-45s  for %-32s %s\n", $Dir, $SO_PKG_PLAIN, $WarnOff );
       $SO_PKG_PLAIN .= "." . $env2->{SUFSOLIB};
     }
@@ -1604,7 +1593,7 @@ if ( $#src > -1 ) {
     }
     if ($SO_PKG ne $SO_PKG_PLAIN and $SO_PKG ne $SO_PKG_lib and $#PlainObj > -1 and $pkg ne 'ctf') {
       script::Keep $SO_PKG_PLAIN;
-      LinkedModule $envPlain $SO_PKG_PLAIN, @PlainObj;
+      LinkedModule $envPlain $SO_PKG_PLAIN, @PlainObj;  print "==================== build plain $SO_PKG_PLAIN, @PlainObj\n" if $params::debug;
       Install $envPlain $LIB,         $SO_PKG_PLAIN;
       if ($SO_PKG_PLAIN !~ /^lib/) {
 	my $lib = $LIB . "/lib" . $SO_PKG_PLAIN;
