@@ -1402,8 +1402,6 @@ Bfc_st BFC[] = { // standard chains
   {"geantL","","","geomT,gen_T,sim_T,StarMagField","","geometry,Geom,St_db_Maker,St_g2t,St_geant_Maker"
    ,                                                                               "Load GeantLibs",kFALSE},
   {"gstarLib","","",""                                                 ,"","gstar","Load gstar lib",kFALSE},
-  {"flux"        ,"","","simu"                               ,"","flux","Load flux lib for starsim",kFALSE},
-  {"fluxVMC"     ,"","","simu"                                ,"","","Set Flux flag for StVMCMaker",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"Generators  ","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
@@ -1493,6 +1491,9 @@ Bfc_st BFC[] = { // standard chains
   {"VMC"         ,"geant","","Simu,VMCAppl,-geant","StVMCMaker",           "StVMCMaker","VMC Maker",kFALSE},
   {"VMCPassive"  ,"geant","","VMCAppl",       "StVMCMaker","StVMCMaker","VMC Maker in Passive Mode",kFALSE},
   // for simulation on fly Event time stamp is set outside of the simulation makers
+  {"flux"        ,"geant","","-fzin,-ntin,-geant,-in,Simu,geantL","St_geant_Maker"                               
+   ,                                                             "flux","Load flux lib for starsim",kFALSE},
+  {"fluxVMC"     ,"","","simu"                                ,"","","Set Flux flag for StVMCMaker",kFALSE},
   {"gstar"       ,"geant"  ,"","-fzin,-ntin,-geant,-in,Simu,geantL","St_geant_Maker"
    ,                                        "","gstar for 20 muon tracks with pT = 1GeV in |eta|<4",kFALSE},
   {"mickey"      ,"geant"  ,"","-fzin,-geant,-gstar,-in,geantL,gstarLib,-magF","St_geant_Maker"
