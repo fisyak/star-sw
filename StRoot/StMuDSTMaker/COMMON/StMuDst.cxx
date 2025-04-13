@@ -1196,8 +1196,8 @@ void StMuDst::Print(Option_t *option) const {
   else 
     cout << "No event structure (StMuEvent) found!" << endl;
 #ifndef __TFG__VERSION__
-
-
+  TString Option(option);
+  if (Option.Cotains("h",TString::kIgnoreCase)) return;
   cout << numberOfPrimaryVertices() << " vertices reconstructed" << endl;
   cout << numberOfPrimaryTracks() << " primary tracks, ";
 #else /* __TFG__VERSION__ */
