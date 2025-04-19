@@ -1,3 +1,4 @@
+// root.exe -q -b EandB.C+ >& EandB.log &
 #include "Riostream.h"
 #include <stdio.h>
 #include "TSystem.h"
@@ -6,6 +7,7 @@
 #include "TH2.h"
 #include "TH3.h"
 #include "TProfile.h"
+#include "TProfile2D.h"
 #include "TStyle.h"
 #include "TF1.h"
 #include "TTree.h"
@@ -63,11 +65,11 @@ public :
    Double_t        y0T;
    Double_t        tYT;
    Double_t        z0T;
-   Double_t        x0G;
+  //   Double_t        x0G;
    Double_t        tXG;
-   Double_t        y0G;
+  //   Double_t        y0G;
    Double_t        tYG;
-   Double_t        z0G;
+  //   Double_t        z0G;
    Double_t        BG_mX1;
    Double_t        BG_mX2;
    Double_t        BG_mX3;
@@ -124,11 +126,11 @@ public :
    TBranch        *b_Tracklet_y0T;   //!
    TBranch        *b_Tracklet_tYT;   //!
    TBranch        *b_Tracklet_z0T;   //!
-   TBranch        *b_Tracklet_x0G;   //!
+  //   TBranch        *b_Tracklet_x0G;   //!
    TBranch        *b_Tracklet_tXG;   //!
-   TBranch        *b_Tracklet_y0G;   //!
+  //   TBranch        *b_Tracklet_y0G;   //!
    TBranch        *b_Tracklet_tYG;   //!
-   TBranch        *b_Tracklet_z0G;   //!
+  //   TBranch        *b_Tracklet_z0G;   //!
    TBranch        *b_Tracklet_BG_mX1;   //!
    TBranch        *b_Tracklet_BG_mX2;   //!
    TBranch        *b_Tracklet_BG_mX3;   //!
@@ -170,42 +172,15 @@ public :
    TBranch        *b_Tracklet_posRMST_mX3;   //!
 
   static Bool_t         FieldTypeFF;
-  TH1F* dEdx; //log(AdcSum/nhits)
-  TH1F* dEdxClean; //log(AdcSum/nhits)
-  TH2F* dEdxVsSectorDirty;
-  TH2F* dEdxVsRowDirty;
-  TH2F* dEdxVsSectorClean;
-  TH2F* dEdxVsRowClean;
-  TH2F* y0vsx0Dirty;
-  TH2F* y0vsx0Clean;
-  
-  //Local c.s.
-  TH2F* x0vsSector[2];
-  TH2F* y0vsSector[2];
-  TH2F* tXvsSector[2];
-  TH2F* tYvsSector[2];
-  TH2F* tBXvsSector[2];
-  TH2F* tBYvsSector[2];
-  TH2F* BXvsSector[2];
-  TH2F* BYvsSector[2];
-  //Tpc c.s.
-  TH2F* x0TpcvsSector[2];
-  TH2F* y0TpcvsSector[2];
-  TH2F* tXTpcvsSector[2];
-  TH2F* tYTpcvsSector[2];
-  TH2F* BXTpcvsSector[2];
-  TH2F* BYTpcvsSector[2];
-  //Global c.s.
-//   TH2F* x0GvsSector[2];
-//   TH2F* y0GvsSector[2];
-  TH2F* tXGvsSector[2];
-  TH2F* tYGvsSector[2];
-  TH2F* BXGvsSector[2];
-  TH2F* BYGvsSector[2];
-
+  TH2F* SecRow;
+  TProfile2D* SecRowNhits;
+  TProfile2D* SecRowAdcL;
+  enum {NIO = 3, NSYS = 3, NVAR = 6};
+  TH3F *hists[NSYS][NIO][NVAR]; // = {0};
+  //  TH3F *hists[NSYS*NIO*NVAR]; // = {0};
    TrackletTree(TTree *tree=0);
    virtual ~TrackletTree();
-   virtual Int_t    Cut(Long64_t entry);
+   virtual Int_t    Cut(Long64_t entry = 0);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
@@ -289,11 +264,11 @@ void TrackletTree::Init(TTree *tree)
    fChain->SetBranchAddress("y0T", &y0T, &b_Tracklet_y0T);
    fChain->SetBranchAddress("tYT", &tYT, &b_Tracklet_tYT);
    fChain->SetBranchAddress("z0T", &z0T, &b_Tracklet_z0T);
-   fChain->SetBranchAddress("x0G", &x0G, &b_Tracklet_x0G);
+   //   fChain->SetBranchAddress("x0G", &x0G, &b_Tracklet_x0G);
    fChain->SetBranchAddress("tXG", &tXG, &b_Tracklet_tXG);
-   fChain->SetBranchAddress("y0G", &y0G, &b_Tracklet_y0G);
+   //   fChain->SetBranchAddress("y0G", &y0G, &b_Tracklet_y0G);
    fChain->SetBranchAddress("tYG", &tYG, &b_Tracklet_tYG);
-   fChain->SetBranchAddress("z0G", &z0G, &b_Tracklet_z0G);
+   //   fChain->SetBranchAddress("z0G", &z0G, &b_Tracklet_z0G);
    fChain->SetBranchAddress("BG.mX1", &BG_mX1, &b_Tracklet_BG_mX1);
    fChain->SetBranchAddress("BG.mX2", &BG_mX2, &b_Tracklet_BG_mX2);
    fChain->SetBranchAddress("BG.mX3", &BG_mX3, &b_Tracklet_BG_mX3);
@@ -336,13 +311,8 @@ void TrackletTree::Init(TTree *tree)
    Notify();
 }
 void TrackletTree::BookHistograms(const Char_t *opt ) {
+  fOut->cd();
     cout<<"Creating histograms...";
-    Int_t x0_nbins = 100;
-    Double_t x0_min = -50;
-    Double_t x0_max = +50;
-    Int_t  y0_nbins = 150;
-    Double_t  y0_min = 40;
-    Double_t y0_max = 190;
     Int_t  sec_nbins = 24;
     Double_t sec_min = 0.5;
     Double_t sec_max = 24.5;
@@ -350,126 +320,29 @@ void TrackletTree::BookHistograms(const Char_t *opt ) {
     Int_t row_nbins = 72;
     Double_t row_min = 0.5;
     Double_t row_max = 72.5;
-    
-    Int_t tX_nbins = 1000;
-    Double_t tX_min = -50.0;
-    Double_t tX_max = +50.0;
-    
+
     Int_t tY_nbins = 400;
     Double_t tY_min = -20.0;
     Double_t tY_max = +20.0;
-    Int_t dEdx_nbins = 60;
-    Double_t dEdx_min = 3.;
-    Double_t dEdx_max = 9.;
-  
-  
-    dEdx = new TH1F("dEdx",Form("log(AdcSum/nhits) for %s",opt),dEdx_nbins,dEdx_min,dEdx_max);
-    dEdxClean = new TH1F("dEdxClean",Form("log(AdcSum/nhits) for %s",opt),dEdx_nbins,dEdx_min,dEdx_max);
-    dEdxVsSectorDirty = new TH2F("dEdxVsSectorDirty",Form("log(AdcSum/nhits) vs sector for %s;Sector# ;log(AdcSum/nhits)",opt),
-				  sec_nbins,sec_min,sec_max,dEdx_nbins,dEdx_min,dEdx_max);
-    dEdxVsRowDirty = new TH2F("dEdxVsRowDirty",Form("log(AdcSum/nhits) vs Row for %s;Row# ;log(AdcSum/nhits)",opt),
-			       row_nbins,row_min,row_max,dEdx_nbins,dEdx_min,dEdx_max);
-    dEdxVsSectorClean = new TH2F("dEdxVsSectorClean",Form("log(AdcSum/nhits) vs sector for %s;Sector# ;log(AdcSum/nhits)",opt),
-				  sec_nbins,sec_min,sec_max,dEdx_nbins,dEdx_min,dEdx_max);
-    dEdxVsRowClean = new TH2F("dEdxVsRowClean",Form("log(AdcSum/nhits) vs Row for %s;Row# ;log(AdcSum/nhits)",opt),
-			       row_nbins,row_min,row_max,dEdx_nbins,dEdx_min,dEdx_max);
-    y0vsx0Dirty = new TH2F("y0vsx0Dirty",Form("Local y0 vs x0 before cuts for %s;x0;y0",opt),
-			    x0_nbins,x0_min,x0_max,y0_nbins,y0_min,y0_max);
-    y0vsx0Clean = new TH2F("y0vsx0Clean",Form("Local y0 vs x0 after cuts for %s;x0;y0",opt),
-			    x0_nbins,x0_min,x0_max,y0_nbins,y0_min,y0_max);
-    
-    //Local coordinate system
-    tXvsSector[0] = new TH2F("tXvsSectorOuter",Form("tX vs sector (outer) for %s;Sector# ;tX [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    tXvsSector[1] = new TH2F("tXvsSectorInner",Form("tX vs sector (inner) for %s;Sector# ;tX [mrad]",opt),
-				sec_nbins,sec_min,sec_max,
-				tX_nbins,tX_min,tX_max);
-    x0vsSector[0] = new TH2F("x0vsSectorOuter",Form("x0 vs sector (outer) for %s;Sector# ;x0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,x0_nbins,x0_min,x0_max);
-    x0vsSector[1] = new TH2F("x0vsSectorInner",Form("x0 vs sector (inner) for %s;Sector# ;x0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,x0_nbins,x0_min,x0_max);
-    
-    tYvsSector[0] = new TH2F("tYvsSectorOuter",Form("tY vs sector (outer) for %s;Sector# ;tY [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    tYvsSector[1] = new TH2F("tYvsSectorInner",Form("tY vs sector (inner) for %s;Sector# ;tY [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    y0vsSector[0] = new TH2F("y0vsSectorOuter",Form("y0 vs sector (outer) for %s;Sector# ;y0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,y0_nbins,y0_min,y0_max);
-    y0vsSector[1] = new TH2F("y0vsSectorInner",Form("y0 vs sector (inner) for %s;Sector# ;y0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,y0_nbins,y0_min,y0_max);
-    //Local coordinate system
-    tBXvsSector[0] = new TH2F("tBXvsSectorOuter",Form("tX-Bx vs sector (outer) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    tBXvsSector[1] = new TH2F("tBXvsSectorInner",Form("tX-Bx vs sector (inner) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    tBYvsSector[0] = new TH2F("tBYvsSectorOuter",Form("tY-By vs sector (outer) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    tBYvsSector[1] = new TH2F("tBYvsSectorInner",Form("tY-By vs sector (inner) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    BXvsSector[0] = new TH2F("BXvsSectorOuter",Form("Bx vs sector (outer) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    BXvsSector[1] = new TH2F("BXvsSectorInner",Form("Bx vs sector (inner) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    BYvsSector[0] = new TH2F("BYvsSectorOuter",Form("By vs sector (outer) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    BYvsSector[1] = new TH2F("BYvsSectorInner",Form("By vs sector (inner) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    //Tpc coordinate system
-    tXTpcvsSector[0] = new TH2F("tXTpcvsSectorOuter",Form("tX Tpc vs sector (outer) for %s;Sector# ;tX [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    tXTpcvsSector[1] = new TH2F("tXTpcvsSectorInner",Form("tX Tpc vs sector (inner) for %s;Sector# ;tX [mrad]",opt),
-				sec_nbins,sec_min,sec_max,
-				tX_nbins,tX_min,tX_max);
-    x0TpcvsSector[0] = new TH2F("x0TpcvsSectorOuter",Form("x0 Tpc vs sector (outer) for %s;Sector# ;x0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,x0_nbins,x0_min,x0_max);
-    x0TpcvsSector[1] = new TH2F("x0TpcvsSectorInner",Form("x0 Tpc vs sector (inner) for %s;Sector# ;x0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,x0_nbins,x0_min,x0_max);
-    
-    tYTpcvsSector[0] = new TH2F("tYTpcvsSectorOuter",Form("tY Tpc vs sector (outer) for %s;Sector# ;tY [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    tYTpcvsSector[1] = new TH2F("tYTpcvsSectorInner",Form("tY Tpc vs sector (inner) for %s;Sector# ;tY [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    y0TpcvsSector[0] = new TH2F("y0TpcvsSectorOuter",Form("y0 Tpc vs sector (outer) for %s;Sector# ;y0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,y0_nbins,y0_min,y0_max);
-    y0TpcvsSector[1] = new TH2F("y0TpcvsSectorInner",Form("y0 Tpc vs sector (inner) for %s;Sector# ;y0 [cm]",opt),
-				sec_nbins,sec_min,sec_max,y0_nbins,y0_min,y0_max);
-    
-    BXTpcvsSector[0] = new TH2F("BXTpcvsSectorOuter",Form("Bx Tpc vs sector (outer) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    BXTpcvsSector[1] = new TH2F("BXTpcvsSectorInner",Form("Bx Tpc vs sector (inner) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    BYTpcvsSector[0] = new TH2F("BYTpcvsSectorOuter",Form("By Tpc vs sector (outer) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    BYTpcvsSector[1] = new TH2F("BYTpcvsSectorInner",Form("By Tpc vs sector (inner) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    //Global  coordinate system
-    tXGvsSector[0] = new TH2F("tXGvsSectorOuter",Form("tX G vs sector (outer) for %s;Sector# ;tX [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    tXGvsSector[1] = new TH2F("tXGvsSectorInner",Form("tX G vs sector (inner) for %s;Sector# ;tX [mrad]",opt),
-				sec_nbins,sec_min,sec_max,
-				tX_nbins,tX_min,tX_max);
-//     x0GvsSector[0] = new TH2F("x0GvsSectorOuter",Form("x0 G vs sector (outer) for %s;Sector# ;x0 [cm]",opt),
-// 				sec_nbins,sec_min,sec_max,x0_nbins,x0_min,x0_max);
-//     x0GvsSector[1] = new TH2F("x0GvsSectorInner",Form("x0 G vs sector (inner) for %s;Sector# ;x0 [cm]",opt),
-// 				sec_nbins,sec_min,sec_max,x0_nbins,x0_min,x0_max);
-    
-    tYGvsSector[0] = new TH2F("tYGvsSectorOuter",Form("tY G vs sector (outer) for %s;Sector# ;tY [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    tYGvsSector[1] = new TH2F("tYGvsSectorInner",Form("tY G vs sector (inner) for %s;Sector# ;tY [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-//     y0GvsSector[0] = new TH2F("y0GvsSectorOuter",Form("y0 G vs sector (outer) for %s;Sector# ;y0 [cm]",opt),
-// 				sec_nbins,sec_min,sec_max,y0_nbins,y0_min,y0_max);
-//     y0GvsSector[1] = new TH2F("y0GvsSectorInner",Form("y0 G vs sector (inner) for %s;Sector# ;y0 [cm]",opt),
-// 				sec_nbins,sec_min,sec_max,y0_nbins,y0_min,y0_max);
-    
-    BXGvsSector[0] = new TH2F("BXGvsSectorOuter",Form("Bx G vs sector (outer) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    BXGvsSector[1] = new TH2F("BXGvsSectorInner",Form("Bx G vs sector (inner) for %s;Sector# ;tX-Bx [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tX_nbins,tX_min,tX_max);
-    BYGvsSector[0] = new TH2F("BYGvsSectorOuter",Form("By G vs sector (outer) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
-    BYGvsSector[1] = new TH2F("BYGvsSectorInner",Form("By G vs sector (inner) for %s;Sector# ;tY-By [mrad]",opt),
-				sec_nbins,sec_min,sec_max,tY_nbins,tY_min,tY_max);
+
+    SecRow      = new TH2F("SecRow","Sector vs row : row : sector",row_nbins,row_min,row_max,24,0.5,24.5);
+    SecRowNhits = new TProfile2D("SecRowNHits","<Hnits> vs Sector and row : row : sector",row_nbins,row_min,row_max,24,0.5,24.5);
+    SecRowAdcL  = new TProfile2D("SecRowAdc","<log<Adc/nhits>)> vs Sector and row : row : sector",row_nbins,row_min,row_max,24,0.5,24.5);
+    const Char_t *nSYS[NSYS] = {     "",  "T",      "G"};
+    const Char_t *tSYS[NSYS] = {"Sector","TPC","Global"};
+    const Char_t *nIO[NIO]   = {     "I",  "O", "All"};
+    const Char_t *tIO[NIO]   = {"Inner","Outer","All"};
+    const Char_t *nVAR[NVAR] = {"tX","tY", "BX", "BY",   "dtBX",    "dtBY"};
+    const Char_t *tVAR[NVAR] = {"tX","tY", "BX", "BY", "dtX-BX", "dtY -BY"};
+    for (Int_t s  = 0; s  < NSYS; s++) 
+      for (Int_t io = 0; io < NIO; io++) 
+	for (Int_t v  = 0; v  < NVAR; v++) {
+	  TString Name(Form("%s%s%s",nSYS[s],nIO[io],nVAR[v]));
+	  TString Title(Form("%s %s %s ; sector ; drift[cm];  %s [mrad]",tSYS[s],tIO[io],tVAR[v],tVAR[v]));
+	  //	  Int_t siov = v + NVAR*(io + NSYS*s);
+	  hists[s][io][v] = new TH3F(Name, Title, sec_nbins,sec_min,sec_max, 50, 0., 200., tY_nbins,tY_min,tY_max);
+	  //	  hists[siov] = new TH3F(Name, Title, sec_nbins,sec_min,sec_max, 50, 0., 200., tY_nbins,tY_min,tY_max);
+	}
     cout<<"\t [DONE]"<<endl;
 }
 
@@ -538,84 +411,79 @@ void TrackletTree::Loop(Int_t N)
    }
 }
 void TrackletTree::FillHistograms() {
-    //    static Double_t sqrt3 = TMath::Sqrt(3.);
-    if (nhits < 25) return;
-    Float_t AdcL = TMath::Log(AdcSum/nhits);
-    dEdx->Fill(AdcL);
-    dEdxVsSectorDirty->Fill(sector, AdcL);
-    dEdxVsRowDirty->Fill(row,AdcL);
-    if (posRMSL_mX3 < 10.0 || posRMSL_mX3 > 70) return;
-    //    if (posL.z()+sqrt3*posRMSL_mX3 > 210) return; // vers.5
-    //    if (posL.z() < 50 || posRMSL_mX3 > 15) return;
-    if (AdcL < 5) return;
+  //    static Double_t sqrt3 = TMath::Sqrt(3.);
+  if (nhits < 25) return;
+  Float_t AdcL = TMath::Log(AdcSum/nhits);
+  if (posRMSL_mX3 < 10.0 || posRMSL_mX3 > 70) return;
+  //    if (posL.z()+sqrt3*posRMSL_mX3 > 210) return; // vers.5
+  //    if (posL.z() < 50 || posRMSL_mX3 > 15) return;
+  if (AdcL < 5 || AdcL > 8) return;
 #if 0
-    //    if (AdcSum/nhits < 150) return;
-    if (! FieldTypeFF &&         //false - RFF; true - FF
-	(( sector== 5 && row==13) || 
-	 ( sector== 6 && row==34) || 
-	 ( sector==13 && row==36) || 
-	 ( sector== 7 && row== 1) || 
+  //    if (AdcSum/nhits < 150) return;
+  if (! FieldTypeFF &&         //false - RFF; true - FF
+      (( sector== 5 && row==13) || 
+       ( sector== 6 && row==34) || 
+       ( sector==13 && row==36) || 
+       ( sector== 7 && row== 1) || 
 	 ( sector==18 && row==35))) return;
 #endif
-    dEdxVsSectorClean->Fill(sector, AdcL);
-    dEdxClean->Fill(AdcL);
-    dEdxVsRowClean->Fill(row,AdcL);
-    Int_t io = 0;
-    if (row <= 40) io = 1;
-    tXvsSector[io]->Fill(sector,1e3*tX);
-    tBYvsSector[io]->Fill(sector,1e3*(tY-BL_mX2/BL_mX3));
-    tBXvsSector[io]->Fill(sector,1e3*(tX-BL_mX1/BL_mX3));
-    BYvsSector[io]->Fill(sector,1e3*(BL_mX2/BL_mX3));
-    BXvsSector[io]->Fill(sector,1e3*(BL_mX1/BL_mX3));
-    
-    tYvsSector[io]->Fill(sector,1e3*tY);
-    x0vsSector[io]->Fill(sector,x0);
-    y0vsSector[io]->Fill(sector,y0);
-    
-    tXTpcvsSector[io]->Fill(sector,1e3*tXT);
-    tYTpcvsSector[io]->Fill(sector,1e3*tYT);
-    x0TpcvsSector[io]->Fill(sector,x0T);
-    y0TpcvsSector[io]->Fill(sector,y0T);
-    BYTpcvsSector[io]->Fill(sector,1e3*(BT_mX2/BT_mX3));
-    BXTpcvsSector[io]->Fill(sector,1e3*(BT_mX1/BT_mX3));
-
-    tXGvsSector[io]->Fill(sector,1e3*tXG);
-    tYGvsSector[io]->Fill(sector,1e3*tYG);
-//     x0GvsSector[io]->Fill(sector,x0G);
-//     y0GvsSector[io]->Fill(sector,y0G);
-    BYGvsSector[io]->Fill(sector,1e3*(BG_mX2/BG_mX3));
-    BXGvsSector[io]->Fill(sector,1e3*(BG_mX1/BG_mX3));
-
-   }
-  //________________________________________________________________________________
+  SecRow->Fill(row,sector);
+  SecRowNhits->Fill(row,sector,nhits);
+  SecRowAdcL->Fill(row,sector,AdcL);
+  Int_t io = 0;
+  if (row > 40) io = 1;
+  Double_t Vars[NVAR] = {0};
+  for (Int_t s = 0; s < NSYS; s++) {
+    if (s == 0) {// Localsector
+      Vars[0] = tX;
+      Vars[1] = tY;
+      Vars[2] = BL_mX1/BL_mX3;
+      Vars[3] = BL_mX2/BL_mX3;
+    } else if (s == 1) {// TPC
+      Vars[0] = tXT;
+      Vars[1] = tYT;
+      Vars[2] = BT_mX1/BT_mX3;
+      Vars[3] = BT_mX2/BT_mX3;
+    } else {
+      Vars[0] = tXG;
+      Vars[1] = tYG;
+      Vars[2] = BG_mX1/BG_mX3;
+      Vars[3] = BG_mX2/BG_mX3;
+    }
+    Vars[4] = Vars[0] - Vars[2];
+    Vars[5] = Vars[1] - Vars[3];
+    for (Int_t v = 0; v < NVAR; v++) {
+      //      Int_t siov = v + NVAR*(io + NSYS*s);
+      hists[s][io][v]->Fill(sector,z0, 1e3*Vars[v]);
+      hists[s][2 ][v]->Fill(sector,z0, 1e3*Vars[v]);
+//       hists[siov]->Fill(sector,z0, 1e3*Vars[v]);
+//       siov = v + NVAR*(2 + NSYS*s);
+//       hists[siov]->Fill(sector,z0, 1e3*Vars[v]);
+    }
+  }
+}
+//________________________________________________________________________________
 void TrackletTree::FitHistograms() {
   cout<<"Creating 2D histograms slicesY...";
-  //Local c.s.
-  for (Int_t io = 0; io <2; io++ ) {
-    tXvsSector[io]->FitSlicesY();
-    tYvsSector[io]->FitSlicesY();
-    tBXvsSector[io]->FitSlicesY();
-    tBYvsSector[io]->FitSlicesY();
-    BXvsSector[io]->FitSlicesY();
-    BYvsSector[io]->FitSlicesY();
-    
-    tXTpcvsSector[io]->FitSlicesY();
-    tYTpcvsSector[io]->FitSlicesY();
-    
-    tXGvsSector[io]->FitSlicesY();
-    tYGvsSector[io]->FitSlicesY();
-  }
+  for (Int_t s  = 0; s  < NSYS; s++) 
+    for (Int_t io = 0; io < NIO; io++) 
+      for (Int_t v  = 0; v  < NVAR; v++) {
+	//	Int_t siov = v + NVAR*(io + NSYS*s);
+	TH2D *h2 = (TH2D * ) hists[s][io][v]->Project3D("zx");
+	//	TH2D *h2 = (TH2D * ) hists[siov]->Project3D("zx");
+	h2->FitSlicesY();
+      }
   cout<<"\t [DONE]"<<endl;
-};
+}
 
 //________________________________________________________________________________
-void EandB(Int_t nevents = -1, const Char_t *select = "hlt*.root", const Char_t *out = "CompAllMLX.root") {
+void EandB(Int_t nevents = -1, const Char_t *select = "hlt*.root", const Char_t *out = "EandB.root") {
   tChain = Chain(select, "TrackletTree");
+  fOut               = new TFile(out,"recreate");
   TrackletTree *T = new TrackletTree(tChain);
   Int_t nentries = (Int_t)tChain->GetEntries();
   if (nevents > 0)  nevents = TMath::Min(nevents, nentries);
   else              nevents = nentries;
-  fOut               = new TFile(out,"update");
   
   T->FieldTypeFF = kTRUE;
 #if 0
@@ -664,32 +532,6 @@ Double_t funcSumtY(Double_t *x, Double_t *p) {
   if (x[0] < 12.5) val = - val;
   return val;
 }
-/* MagG.dem
-tXWS:$$\left[  \sin \phi (\lambda - \alpha) +\beta  \cos \phi - B_\rho \cos \Phi\right] $$
-tYWS:$$\left[ -\cos \phi (\lambda - \alpha) +\beta  \sin \phi + B_\rho \sin \Phi\right] $$
-tXES:$$\left[ -\sin \phi (\lambda - \alpha) -\beta  \cos \phi + B_\rho \cos \Phi\right] $$
-tYES:$$\left[ -\cos \phi (\lambda - \alpha) +\beta  \sin \phi - B_\rho \sin \Phi\right] $$
-*/
-Double_t functS(Double_t *x, Double_t *p) { 
-  Double_t offset = p[0];  
-  Double_t alpha  = p[1]; // -(alpha - lambda)
-  Double_t beta   = p[2]; 
-  Double_t b_rho  = p[3]; 
-  Double_t Phi0   = p[4]; 
-  Int_t            we = 0; // West; 
-  if (x[0] > 12.5) we = 2; // East 
-  Int_t    k = TMath::Nint(p[5]) + we; /* 0 => tX, 1 => tY */ 
-  Double_t phi = Phi(x[0]);  
-  Double_t val = 0; 
-  switch (k) {  
-    /* tXWS */ case 0: val =    alpha*TMath::Sin(phi) +beta* TMath::Cos(phi) - b_rho*TMath::Cos(Phi0); break; 
-    /* tYWS */ case 1: val =   -alpha*TMath::Cos(phi) +beta* TMath::Sin(phi) + b_rho*TMath::Sin(Phi0); break;
-    /* tXES */ case 2: val =-( -alpha*TMath::Sin(phi) -beta* TMath::Cos(phi) + b_rho*TMath::Cos(Phi0)); break;				       
-    /* tYES */ case 3: val =-( -alpha*TMath::Cos(phi) +beta* TMath::Sin(phi) - b_rho*TMath::Sin(Phi0)); break; 
-  default: break;
-  };
-  return offset + val;
-}
 //________________________________________________________________________________
 Double_t funcSumtXN(Double_t *x, Double_t *p) {
   Double_t phi = Phi(x[0]); //  p[1] = delta = alpha - lambda, [2] = beta
@@ -725,6 +567,27 @@ Double_t funcDiftY(Double_t *x, Double_t *p) {
 }
 #endif
 //________________________________________________________________________________
+Double_t functS(Double_t *x, Double_t *p) { 
+  Double_t offset = p[0];  
+  Double_t alpha  = p[1]; // -(alpha - lambda)
+  Double_t beta   = p[2]; 
+  Double_t b_rho  = p[3]; 
+  Double_t Phi0   = p[4]; 
+  Int_t            we = 0; // West; 
+  if (x[0] > 12.5) we = 2; // East 
+  Int_t    k = TMath::Nint(p[5]) + we; /* 0 => tX, 1 => tY */ 
+  Double_t phi = Phi(x[0]);  
+  Double_t val = 0; 
+  switch (k) {  
+    /* tXWS */ case 0: val =    alpha*TMath::Sin(phi) +beta* TMath::Cos(phi) - b_rho*TMath::Cos(Phi0); break; 
+    /* tYWS */ case 1: val =   -alpha*TMath::Cos(phi) +beta* TMath::Sin(phi) + b_rho*TMath::Sin(Phi0); break;
+    /* tXES */ case 2: val =-( -alpha*TMath::Sin(phi) -beta* TMath::Cos(phi) + b_rho*TMath::Cos(Phi0)); break;				       
+    /* tYES */ case 3: val =-( -alpha*TMath::Cos(phi) +beta* TMath::Sin(phi) - b_rho*TMath::Sin(Phi0)); break; 
+  default: break;
+  };
+  return offset + val;
+}
+//________________________________________________________________________________
 TF1 *Func(const Char_t *name, Int_t xy = 0) {
   TF1 *f = new TF1(name, functS,0.5,24.5,6);
   //  f->SetParNames("o","#alpha-#lambda","#beta","b_{#rho}","#Phi","XY");
@@ -735,6 +598,36 @@ TF1 *Func(const Char_t *name, Int_t xy = 0) {
   f->FixParameter(3,0); // b_rho => 0
   f->FixParameter(4,0); // #Phi => 0
   f->FixParameter(5,xy);
+  return f;
+}
+//________________________________________________________________________________
+Double_t funcdtB(Double_t *x, Double_t *p) {
+  Double_t offset = p[0];  
+  Double_t alpha  = p[1]; 
+  Double_t beta   = p[2]; 
+  Int_t    k      = p[3]; // k = 0 -> dTX - BX, k = 1 -> dTY - BY
+  Double_t phi = Phi(x[0]);  
+  Double_t val = offset;
+  if (k == 0) {
+    val +=    beta*TMath::Cos(phi) - alpha*TMath::Sin(phi);
+  } else {
+    val += (- beta*TMath::Sin(phi)) - alpha*TMath::Cos(phi);
+  }
+  return val;
+} 
+//________________________________________________________________________________
+TF1 *FuncBt(Int_t xy = 0) {
+  TString name = (xy == 0) ? "FitdtBX" : "FitdtBY";
+  TF1 *f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(name);
+  if (! f) {
+    f = new TF1(name, funcdtB,0.5,24.5,4);
+    f->SetParNames("o","#alpha","#beta","XY");
+    f->SetParameters(0,0,0,0);
+    f->FixParameter(0,0);
+    f->SetParLimits(1,-2,2); 
+    f->SetParLimits(2,-2,2); 
+    f->FixParameter(3,xy);
+  }
   return f;
 }
 //________________________________________________________________________________
@@ -759,7 +652,7 @@ void Draw(TString Opt, TString tag ) {
   }
   delete array;
 #else
-  Int_t Nplots = 4;
+  enum { Nplots = 4};
   TString names[Nplots];
   TString title[Nplots];
   const Char_t *plotN[4] = {"XvsSectorInner_1","XvsSectorOuter_1","YvsSectorInner_1","YvsSectorOuter_1"};

@@ -1,4 +1,4 @@
-void AgML(const Char_t *tag="y2013_2", const Char_t *geom="") {
+void AgML(const Char_t *tag="y2025", const Char_t *geom="") {
   TString Tag(tag);
   TString Geom(geom);
   if (Tag == "") {
@@ -23,7 +23,6 @@ void AgML(const Char_t *tag="y2013_2", const Char_t *geom="") {
   gSystem->Load("StarAgmlUtil");
   gSystem->Load("StarAgmlLib");
   gSystem->Load("Geometry");
-  gSystem->Load("StarGeometry");
   gSystem->AddIncludePath(" -IStRoot -Igeom -IStarVMC -IStarVMC/Geometry/macros -I$STAR/StRoot -Igeom -I$STAR/StarVMC -I$STAR/StarVMC/Geometry/macros ");
   gErrorIgnoreLevel=9999;                        // Silence ROOT warnings for now
   gGeoManager = new TGeoManager(Geom.Data(),Form("%s/AgML",Geom.Data()));
@@ -40,4 +39,22 @@ void AgML(const Char_t *tag="y2013_2", const Char_t *geom="") {
   TCollection::StartGarbageCollection();
   delete fOut;
   delete gGeoManager;
+#if 0
+  St_geant_Maker *geant = (St_geant_Maker *) chain->Maker("geant");
+  if (! geant) return;
+  TString hfile(tag);
+  hfile += ".h";
+  geant->g2Root(hfile);
+  ofstream out;
+  TString fOut("Geometry.");
+  fOut += tag;
+  fOut += ".C";
+  out.open(fOut.Data());
+  out << "#include \"CreateGeometry.h\"" << endl;
+  out << "TDataSet *CreateTable() {" << endl;
+  geant->Version(out);
+  out << "  return CreateGeometry(\"" << tag << "\",configGeom);" << endl;
+  out << "}" << endl;
+  out.close(); 
+#endif
 }

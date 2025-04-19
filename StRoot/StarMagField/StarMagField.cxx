@@ -394,7 +394,7 @@ static const BDAT_t BDAT[nZext] = { // calculated STAR field
     { 24.8,  23.8,  21.0,  16.8,  11.6,   6.1,   0.9,  -3.5,  -6.7 } , // Axial
     {  0.0,   5.2,   9.8,  13.3,  15.2,  15.4,  14.1,  11.4,   7.9 } },// Radial
 };
-#if defined(__ROOT__) && defined(__RotaateMagField__)
+#if defined(__ROOT__) && defined(__RotateMagField__)
 //________________________________________________________________________________
 void StarMagField::SetStarMagFieldRotation(TGeoRotation &rot) {
   fStarMagFieldRotation = rot;

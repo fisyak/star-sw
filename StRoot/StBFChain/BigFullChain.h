@@ -695,6 +695,8 @@ Bfc_st BFC[] = { // standard chains
   {"MC.zeroFieldAligment_2022",                  "","","MC.2022,sdt20220207.204124","","",       "",kFALSE},      
 
   {"MC.2023",              "","","MC,P2023a,StiCA,-in,TpcRS,TpxClu,bbcSim,btofsim,ETofSim","","","",kFALSE},
+  {"MC.2024",             "","","MC,P2024a,,StiCA,-in,TpcRS,TpxClu,bbcSim,btofsim,ETofSim","","","",kFALSE},
+  {"MC.2025",               "","","MC,P2025,StiCA,-in,TpcRS,TpxClu,bbcSim,btofsim,ETofSim","","","",kFALSE},
   {"XC",          "","","MC,TpcRS,TpxClu,VMC,GeantOut,noRunco,noHistos,20Muons,"
    "OSpaceZ2,OGridLeak3D,CorrX,tpcDB,TpcHitMover"
    ",bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,evout,Stx,KFVertex,Idst,BAna"       
@@ -1206,7 +1208,6 @@ Bfc_st BFC[] = { // standard chains
   {"NoLocalCintDb","" ,"",""                                      ,"","","Switch off local Cint Db",kFALSE},
   {"NoMySQLDb"   ,""  ,"",""                                           ,"","","Switch off MySQL Db",kFALSE},
   {"NoCintCalDb" ,""  ,"","NoLocalCintDb"                         ,"","","Switch off local Cint Db",kFALSE},
-  {"TFGDbTag",    ""  ,"",""                                 ,"","","Switch on TFG specific Db tag",kFALSE},
   {"dbSnapshot"  ,""  ,"",""                                         ,"","","Create?use dbSnapshot",kFALSE},
   {"NoEvent"     ,""  ,"","-event,-analysis"      ,"","","Switch Off StEvent and StAnalysis Makers",kFALSE},
   {"MakeDoc"     ,""  ,"",""                   ,"","","Make HTML documentation for the given Chain",kFALSE},
@@ -1309,8 +1310,11 @@ Bfc_st BFC[] = { // standard chains
   // Those options are for StTpcDbMaker
   {"useLDV" ,""  ,"","",""                                   ,"","... uses laserDV database flavor",kFALSE},
   {"useCDV" ,""  ,"","",""                                       ,"","... uses ofl database flavor",kFALSE},
-  {"useNewLDV" ,""  ,"","",""                                    ,"","... uses ofl database flavor",kFALSE},
-  {"TFGdbOpt" ,""  ,"","",""                ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
+  {"useNewLDV",""  ,"","",""                                     ,"","... uses ofl database flavor",kFALSE},
+  {"TFGdbOpt"     ,""  ,"","",""            ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
+  {"TFGdbTag"     ,""  ,"TFGdbOpt","",""    ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
+  {"noTFGDbTag",   ""  ,"-TFGdbOpt",""                      ,"","","Switch off TFG specific Db tag",kFALSE},
+  {"noFieldFlip", "","-TFGdbOpt","","","","Pass to StTpcDb : do NOT flip alignment with mag. field",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"Tables      ","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},

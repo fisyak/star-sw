@@ -139,18 +139,19 @@ Int_t StEandBDirMaker::Make(){
 	  if (tpcHit->usedInFit()) continue;
 	  if (tpcHit->flag() & FCF_CHOPPED || tpcHit->flag() & FCF_SANITY)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
 	  if (tpcHit->pad() > 182 || tpcHit->timeBucket() > 511) continue; // some garbadge  for y2001 daq
-#if 1
+#define __USE_GLOBAL_POSITION__ /* StTpcHitMover is in the chain */
+#ifdef __USE_GLOBAL_POSITION__
 	  StGlobalCoordinate glob(tpcHit->position());
 	  tran(glob,loc,tpcHit->sector(),tpcHit->padrow());
-#else
+#else /* ! __USE_GLOBAL_POSITION__ */
 	  StTpcPadCoordinate pad(tpcHit->sector(),tpcHit->padrow(),tpcHit->pad(),tpcHit->timeBucket());
 	  tran(pad,loc);
-#endif
+#endif /* __USE_GLOBAL_POSITION__ */
 	  secXY->Fill(loc.position().x(),loc.position().y(),tpcHit->adc());
 	}
       }
     }
-    if (secXY->GetEntries() < 5) continue;
+    if (secXY->GetEntries() < 20) continue;
     if (! spectr) spectr = new TSpectrum2(2*maxpeaks,1);
     Int_t nfound = spectr->Search(secXY,2,"colnomarkov");
     if (Debug()) {
@@ -211,17 +212,17 @@ Int_t StEandBDirMaker::Make(){
 	    if (tpcHit->flag() & FCF_CHOPPED || tpcHit->flag() & FCF_SANITY)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
 	    if (tpcHit->pad() > 182 || tpcHit->timeBucket() > 511) continue; // some garbadge  for y2001 daq
 	    if (tpcHit->usedInFit()) continue;
-#if 1
+#ifdef __USE_GLOBAL_POSITION__
 	    StGlobalCoordinate glob(tpcHit->position());
 	    tran(glob,loc,tpcHit->sector(),tpcHit->padrow());
 	    tran(glob,locT,tpcHit->sector(),tpcHit->padrow());
-#else
+#else /* ! __USE_GLOBAL_POSITION__ */
 	    StTpcPadCoordinate pad(tpcHit->sector(),tpcHit->padrow(),tpcHit->pad(),tpcHit->timeBucket());
 	    tran(pad,loc);
 	    tran(loc,locT);
 	    StGlobalCoordinate glob;
 	    tran(locT,glob);
-#endif
+#endif /* __USE_GLOBAL_POSITION__ */
 	    if (TMath::Abs(loc.position().x() - xp) > windowX ||
 		TMath::Abs(loc.position().y() - yp) > windowY) continue;
 	    tpcHit->setFitFlag(1);
@@ -252,7 +253,7 @@ Int_t StEandBDirMaker::Make(){
 	  }
 	}
       }
-      if (fTracklet->nhits < 5) continue;
+      if (fTracklet->nhits < 20) continue;
       if (W < 100) continue;
       fTracklet->AdcSum = W;
       avRow /= W;
