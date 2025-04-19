@@ -1,6 +1,13 @@
 ///  root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,picoEvt,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault")' 'MuEbyE.C+("7p7GeV_EastOff/*/*/*.MuDst.root","7p7GeV_WestOff/*/*/*.MuDst.root","EbyE7p7GeV.root")'
 ///  root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,picoEvt,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault")' 'MuEbyE.C+("14p5GeV_2019_EastOff/118/20118006/st_physics_20118006_raw_1500002.MuDst.root","14p5GeV_2019_WestOff/118/20118006/st_physics_20118006_raw_3000001.MuDst.root","EbyE14p5GeV.root")'
-
+//________________________________________________________________________________
+// foreach W (`ls -1d */*WestOff/???`) 
+//  set E = `echo ${W} | sed -e 's/West/East/'`
+//  set B = `echo ${W} | sed -e 's/WestOff//'`
+//  set C = `echo ${B} | sed -e 's/\//_/g'`
+//  root.exe -q -b 'lMuDst.C(-1,"","StEvent,Stu,MuDst,picoEvt,mysql,tpcDb,detDb,CorrZ,magF,nodefault")' 'MuEbyE.C+("'${W}'/*/*.MuDst.root","'${E}'/*/*.MuDst.root","EbyE'${C}'.root")' >& ${C}.log & 
+// end
+//________________________________________________________________________________
 #if ! defined(__CINT__) && ! defined(__CLING__) || defined(__MAKECINT__)
 #include "StBFChain/StBFChain.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
