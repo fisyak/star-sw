@@ -158,8 +158,8 @@ foreach my $dir (@DirsWithIncludes, @DirsIdlInc) {
   print "---> looking for include in $dir\n" if ($param::debug);
   next if ! -r $dir;
 
-  # Do not export StRoot/Table headers if ROOT_VERSION < 6
-  next if ($dir =~ /StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
+#   # Do not export StRoot/Table headers if ROOT_VERSION < 6
+#   next if ($dir =~ /StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 
   opendir( DIR, $dir ) or die "Can't open $dir\n";
   my @incs = readdir DIR; print "incs = @incs\n" if ($param::debug);
@@ -239,7 +239,8 @@ my $python2 = system("which python2 > /dev/null 2>& 1");
 if ($python2) {
   push @items, "Geometry";
 }
-if ($STAR_HOST_SYS =~ /^al9/) {# no cern
+#if ($STAR_HOST_SYS =~ /^al9/) {# no cern
+if ( $def->{ENV}->{ROOT_VERSION_MAJOR} > 6) {# no cern
   push @items, "rexe";
   push @items, "starsim";
   push @items, "gcalor";
