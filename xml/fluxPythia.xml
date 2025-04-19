@@ -5,7 +5,7 @@
 <command> 
   cd ${SUBMITTINGDIRECTORY}  
   setup debug
-  starver .DEV2
+  starver TFG25c
 #if pp500 pp200
   set f        = 1
   echo $INPUTFILE0 | grep ':'
@@ -32,8 +32,8 @@
   root4star -q -b 'bfc.C('$l',"'${vers}',useXgeom,StEvent,noRunco,noHistos,pythia,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
   endif
 </command>
-<!-- <input URL="command:fluxPythia.pl 1 500 500 r2013" /> -->
-<input URL="command:fluxPythia.pl 1 500 500 r2022" />
+<input URL="command:fluxPythia.pl 1 500 500 r2013" /> 
+<!-- <input URL="command:fluxPythia.pl 1 500 500 r2022" /> -->
 <!-- <input URL="file:/star/simu/simu/jwebb/2014/HijingMinbiasHe3*.nt" /> -->
 <!-- <input URL="file:/star/simu/simu/jwebb/2014/HijingMinbias/*.nt" /> -->
 </job>

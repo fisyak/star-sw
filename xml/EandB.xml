@@ -26,7 +26,8 @@ foreach input (`cat $FILELIST`)
   set output  = ${filel}.root
   if (! -r ${output}) then
     set logFile  = ${filel}B.log
-    root.exe  -q -b 'bfc.C(1000000,"EandBDir,CorrZ,quiet","'${input}'",0,"'${output}'")'  &gt;&amp;  ${logFile}
+#    root.exe  -q -b 'bfc.C(1000000,"EandBDir,CorrZ,quiet","'${input}'",0,"'${output}'")'  &gt;&amp;  ${logFile}
+    root.exe  -q -b 'bfc.C(1000000,"EandBDir,CorrZ,quiet,noFieldFlip","'${input}'",0,"'${output}'")'  &gt;&amp;  ${logFile}
   endif
 end
 
