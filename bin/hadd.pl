@@ -19,7 +19,7 @@ my %ARG = (files => '*.root',
 	   keep => 'yes',
 	   prefix => '',
 	   option => '',
-	   minsize => '500000',
+	   minsize => '100000',
 	   debug  => 0
 	  );
 while (@ARGV) {
