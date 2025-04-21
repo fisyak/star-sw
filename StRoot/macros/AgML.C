@@ -29,7 +29,7 @@ void AgML(const Char_t *tag="y2025", const Char_t *geom="") {
   AgBlock::SetStacker( new StarTGeoStacker() );  // Creates TGeo geometry
   Geometry *build = new Geometry();                        // Instantiate the geometry
   build -> ConstructGeometry ( Geom.Data() );            
-
+  //  gGeoManager->SetTopVolume("HALL");
   gGeoManager->CloseGeometry();
   //  gGeoManager->Export(Form("%s.root",Geom.Data()));
   TObjectSet *geomOS = new TObjectSet("Geometry",gGeoManager,kFALSE);
