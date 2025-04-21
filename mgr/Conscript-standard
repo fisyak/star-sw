@@ -1158,14 +1158,17 @@ TDataSet *CreateTable() {
     }
 #    my $NoAst2Root = $env->{CXX_MAJOR} > 6; #$STAR_SYS =~ /gcc7/ || $STAR_SYS =~ /darwin/ || $CC eq 'icc'; # CERNLIB is incompartible with gcc 7
     if ($pkg eq 'AgMLGeometry') {#print "pkg = $pkg\n ";
-      foreach my $geom (@versionList) {
-	next if ! $geom;
-	print "Build $geometry for $geom\n" if $param::debug;  
-	my $geometry = "Geometry." . $geom . ".root";# print "geometry = $geometry\n";
-	Command $env1 [$geometry], ($LIB . "/" . "StarAgmlLib" . "." . $env1->{SUFSOLIB},
-				    $LIB . "/" . "Geometry" . "." . $env1->{SUFSOLIB}),
-				      qq(cd  %>:d;root.exe -q -b 'AgML.C("$geom")' >& /dev/null;);
-      }
+#      if (-r $LIB . "/" . "Geometry" . "." . $env1->{SUFSOLIB}) {
+	foreach my $geom (@versionList) {
+	  next if ! $geom;
+	  next if ! $AgMLList{$geom};
+	  print "Build $geometry for $geom\n" if $param::debug;  
+	  my $geometry = "Geometry." . $geom . ".root";# print "geometry = $geometry\n";
+	  Command $env1 [$geometry], ($LIB . "/" . "StarAgmlLib" . "." . $env1->{SUFSOLIB},
+				      $LIB . "/" . "Geometry" . "." . $env1->{SUFSOLIB}),
+					qq(cd  %>:d;root.exe -q -b 'AgML.C("$geom")' >& /dev/null;);
+	}
+#      }
     } else { # AgiGeometry
       my %geomList = ();
       my $bin = $BIN; $bin =~ s|#||;
@@ -1179,6 +1182,7 @@ TDataSet *CreateTable() {
       if ($root4star) {
 	foreach my $geom (@versionList) {
 	  next if ! $geom;
+	  next if ! $xgeomList{$geom};
 	  my $geometry = "Geometry." . $geom . ".C";# print "geometry = $geometry\n";
 	  my $geom_h = $geom . ".h";
 	  if (! -r $ObjDir . "/" . $geom_h) {

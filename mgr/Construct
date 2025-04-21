@@ -27,6 +27,8 @@ if ( defined( $ARG{LinksCheck} ) ) {
 }
 if ($ARG{EXTRA_CXXFLAGS} eq "") {$ARG{EXTRA_CXXFLAGS} = "-Werror"; print "Force use -Werror ========================================\n";};
 my $def = {@param::defaults};
+#PrintHash($def,"\$def->{");# if ($param::debug);
+#die;
 {
   foreach my $key( sort keys %$def) {
     if ( defined( $ARG{$key} ) ) {
@@ -81,7 +83,8 @@ print "Link $BUILD => $DirPath\n" unless ($param::quiet);
 $env = new cons(
   'LIBPATH'        => $LIBPATH,
 );
-
+#PrintHash($env,"\$env->{");
+@die;
 $GITINFO = $LIB . "/etc/gitinfo.txt";
 if (-d ".git") {
 #  my $opt = "'+%b %d %Y, %H:%M:%S";
@@ -159,7 +162,7 @@ foreach my $dir (@DirsWithIncludes, @DirsIdlInc) {
   next if ! -r $dir;
 
 #   # Do not export StRoot/Table headers if ROOT_VERSION < 6
-#   next if ($dir =~ /StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
+#   next if ($dir =~ /StRoot\/Table$/ and $env->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 
   opendir( DIR, $dir ) or die "Can't open $dir\n";
   my @incs = readdir DIR; print "incs = @incs\n" if ($param::debug);
@@ -240,12 +243,14 @@ if ($python2) {
   push @items, "Geometry";
 }
 #if ($STAR_HOST_SYS =~ /^al9/) {# no cern
-if ( $def->{ENV}->{ROOT_VERSION_MAJOR} > 6) {# no cern
+#print "def->{CXX_MAJOR} = $env->{CXX_MAJOR} ========================================\n";
+if ( $env->{CXX_MAJOR}  > 6) {# no cern
   push @items, "rexe";
   push @items, "starsim";
   push @items, "gcalor";
   push @items, "geant321";
 }
+#die;
 if (! $env->{Packages}->{fastjet}->{LIBS}) {
   push @items, "StJetFinder";
   push @items, "StarGenerator/FILT";
@@ -275,7 +280,7 @@ if ($items) {
   print "SKIP_DIRS is now: $#items $items\n";
 }
 #print "SKIP_DIRS = $SKIP_DIRS\n";
-#die;
+##die;
 # Search for directories (one level down) and make
 # list of targets
 #
@@ -293,7 +298,7 @@ foreach my $dir( "pams", "StRoot", "StPiD", "StarVMC" ) {
     next if !-d $sub_Dir and !-l $sub_Dir;
 
     # Do not build StRoot/Table if ROOT_VERSION < 6
-    next if ($sub_Dir =~ m/StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
+    next if ($sub_Dir =~ m/StRoot\/Table$/ and $env->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 
     print "dir = $dir \t sub_dir = $sub_dir sub_Dir = $sub_Dir\n" if ($param::debug);
     print "items = $items sub_dir = $sub_dir $param::include\n" if ($param::debug);
