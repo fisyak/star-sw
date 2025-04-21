@@ -2110,6 +2110,10 @@ If LL>0
                   Geom = 'Y2003x  ';
                  exe y2003x;
                }
+  Case Y2003z    { same as y2003b but with full calorimeters and PHMD
+                  Geom = 'Y2003z  ';
+                 call geom_y2003z;
+               }
 
 *
 *
@@ -2157,6 +2161,12 @@ If LL>0
   Case Y2004Y    { same as Y2004X but with the SVT chip correction+cone+better SSD+TPC backplane+FTRO
                   Geom = 'Y2004y  ';
                  !call geom_y2004y;
+                }
+
+****************************************************************************************
+  Case Y2004z    { same as Y2004z but with the SVT chip correction+cone+better SSD+TPC backplane+FTRO
+                  Geom = 'Y2004z  ';
+                 call geom_y2004z;
                 }
 
 ****************************************************************************************
@@ -2267,6 +2277,10 @@ If LL>0
                 Geom = 'Y2005i  ';
                 call geom_y2005i;
               }
+  Case y2005z { Y2005h + updated endcap and lowered thresholds in E/BEMC
+                Geom = 'Y2005z  ';
+                call geom_y2005z;
+              }
 ****************************************************************************************
 ****************************************************************************************
   Case Y2006    { y2006 baseline which is Y2005D+fixed TPC backplane+New SSD
@@ -2299,6 +2313,10 @@ If LL>0
                   Geom = 'Y2006h  ';
                   call geom_y2006h;
                 }
+  Case y2006z { Y2006z development: y2006g + version 6.1 of the endcap (not yet ready for production)
+                  Geom = 'Y2006z  ';
+                  call geom_y2006z;
+                }
 
 ****************************************************************************************
 ****************************************************************************************
@@ -2320,6 +2338,10 @@ If LL>0
   Case Y2007H   { y2007g + TPC
                   Geom = 'Y2007h  ';
                   call geom_y2007h;
+                }
+  Case Y2007z   { y2007z + TPC
+                  Geom = 'Y2007z  ';
+                  call geom_y2007z;
                 }
 ****************************************************************************************
 ****************************************************************************************
@@ -2349,6 +2371,9 @@ If LL>0
   Case Y2008e   {"Y2008 production tag E: Same as D but with lowered EM cuts in the EEMC and BEMC";
                   Geom = 'Y2008e  ';
                   call geom_y2008e;}
+  Case Y2008z   {"Y2008 production tag E: Same as D but with lowered EM cuts in the EEMC and BEMC";
+                  Geom = 'Y2008z  ';
+                  call geom_y2008z;}
 
 ****************************************************************************************
   Case Y2009   { y2009 initial geometry: more detailed TPC
@@ -2371,6 +2396,10 @@ If LL>0
                    Geom = 'Y2009d';
                    call geom_y2009d;
                  }
+  Case Y2009z    {   "y2009z production tag D: Improved SROD description in support cone";
+                   Geom = 'Y2009z';
+                   call geom_y2009z;
+                 }
 
 ****************************************************************************************
   Case Y2010   { y2010: baseline
@@ -2388,6 +2417,9 @@ If LL>0
   Case Y2010c  { "Y2010 production tag C: Improved SROD description in support cone";
                  Geom = 'Y2010c  ';
                  call geom_y2010c;       }
+  Case Y2010z  { "Y2010 production tag C: Improved SROD description in support cone";
+                 Geom = 'Y2010z  ';
+                 call geom_y2010z;       }
 
 ****************************************************************************************
 
@@ -2402,6 +2434,9 @@ If LL>0
   Case y2011b   { Y2011b: Production quality tag
                  Geom = 'Y2011b  ';
                  call geom_y2011b; }
+  Case y2011z   { Y2011z: Production quality tag
+                 Geom = 'Y2011z  ';
+                 call geom_y2011z; }
 
 
   Case upgr2012 { y2012 : Y2012 geometry first cut;
@@ -2419,6 +2454,9 @@ If LL>0
   Case y2012b { y2012b : Y2012b production geometry tag;
                  Geom = 'y2012b  ';
                  call geom_y2012b; }
+  Case y2012z { y2012z : Y2012z production geometry tag;
+                 Geom = 'y2012z  ';
+                 call geom_y2012z; }
 
   Case dev13 { dev13 : y2013 studies;
                  Geom = 'dev13   ';
@@ -2478,6 +2516,13 @@ If LL>0
   Case Y2013_2c { Y2013_2c equals Y2013_2x in library SL14a;
                   Geom = 'y2013_2c   ';
                   call geom_y2013_2c; }
+  Case Y2013_1z { Y2013_1z equals Y2013_1x in library SL14a;
+                  Geom = 'y2013_1z   ';
+                  call geom_y2013_1z; }
+
+  Case Y2013_2z { Y2013_2z equals Y2013_2x in library SL14a;
+                  Geom = 'y2013_2z   ';
+                  call geom_y2013_2z; }
  
 
   Case y2014    { y2014 : y2014 first cut;
@@ -2490,6 +2535,8 @@ If LL>0
                  call geom_y2014b; }
   Case y2014x   { y2014x : y2014a plus hcal prototype; Geom = 'y2014x    '; 
                  call geom_y2014x; }
+  Case y2014z   { y2014z : y2014a plus hcal prototype; Geom = 'y2014z    '; 
+                 call geom_y2014z; }
 
   Case y2015    { y2015  : y2015 baseline, is y2014a plus FMS preshower;
                   Geom = 'y2015     '; call geom_y2015; }
@@ -2513,13 +2560,17 @@ If LL>0
                   Geom = 'y2015x    '; call geom_y2015x; }
   Case y2015y   { y2015y : y2015c production baseline, is y2015 with mtd radii corrections; 
                   Geom = 'y2015y    '; call geom_y2015y; }
+  Case y2015z   { y2015z : y2015c production baseline, is y2015 with mtd radii corrections; 
+                  Geom = 'y2015z    '; call geom_y2015z; }
 
   Case y2016   { y2016  : y2016 baseline;     Geom = 'y2016     '; call geom_y2016;  }
   Case y2016a  { y2016a : y2016 production;  Geom = 'y2016a    ' ; call geom_y2016a; }
   Case y2016x  { y2016x : y2016 production;  Geom = 'y2016x    ' ; call geom_y2016x; }
+  Case y2016z  { y2016z : y2016 production;  Geom = 'y2016z    ' ; call geom_y2016z; }
 
   Case y2017   { y2017  : y2017 baseline;     Geom = 'y2017     '; call geom_y2017;  }
   Case y2017a  { y2017a : y2017 production;   Geom = 'y2017a    '; call geom_y2017a;  } 
+  Case y2017z  { y2017z : y2017 production;   Geom = 'y2017z    '; call geom_y2017z;  } 
 
   case y2018 { y2018: y2018 first cut geometry; Geom =        'y2018     '; call geom_y2018;} 
   case y2018a { y2018a: y2018 first cut geometry; Geom =        'y2018a    '; call geom_y2018a;} 
@@ -2527,33 +2578,41 @@ If LL>0
   case y2018c { y2018c: y2018 + FXT; Geom =        'y2018c    '; call geom_y2018c;} 
 
   case y2018x { y2018x: y2018 experimentap TPC geometry; Geom =        'y2018x    '; call geom_y2018x;} 
+  case y2018z { y2018z: y2018 experimentap TPC geometry; Geom =        'y2018z    '; call geom_y2018z;} 
 
   case y2019 { y2019: y2019 first cut geometry; Geom =        'y2019     '; call geom_y2019;} 
   case y2019a { y2019: y2019a production release; Geom =        'y2019a    '; call geom_y2019a;} 
   case y2019b { y2019: y2019b production release; Geom =        'y2019b    '; call geom_y2019b;} 
+  case y2019z { y2019: y2019z production release; Geom =        'y2019z    '; call geom_y2019z;} 
 
 
   case y2020 { y2020: y2020 first cut geometry; Geom =        'y2020     '; call geom_y2020;} 
   case y2020a { y2020a: y2020a production; Geom =        'y2020a    '; call geom_y2020a;} 
   case y2020b { y2020b: y2020a production; Geom =        'y2020b    '; call geom_y2020b;} 
+  case y2020z { y2020z: y2020a production; Geom =        'y2020z    '; call geom_y2020z;} 
 
   case y2021 { y2021: y2021 first cut geometry; Geom =        'y2021     '; call geom_y2021;} 
   case y2021a { y2021a: y2021 first production geometry; Geom =        'y2021a    '; call geom_y2021a;} 
   case y2021b { y2021b: y2021 first production geometry; Geom =        'y2021b    '; call geom_y2021b;} 
+  case y2021z { y2021z: y2021 first production geometry; Geom =        'y2021z    '; call geom_y2021z;} 
 
   case y2022 { y2022: y2022 first cut geometry; Geom =        'y2022     '; call geom_y2022;} 
   case y2022a { y2022a: y2022 first production geometry; Geom =        'y2022a    '; call geom_y2022a;} 
   case y2022b { y2022b: y2022 first production geometry; Geom =        'y2022b    '; call geom_y2022b;} 
+  case y2022z { y2022z: y2022 first production geometry; Geom =        'y2022z    '; call geom_y2022z;} 
 
   case y2023 { y2023: y2023 first cut geometry; Geom =        'y2023     '; call geom_y2023;} 
   case y2023a { y2023a: y2023a production tag; Geom =         'y2023a    '; call geom_y2023a;} 
   case y2023b { y2023b: y2023b production tag; Geom =         'y2023b    '; call geom_y2023b;} 
+  case y2023z { y2023z: y2023z production tag; Geom =         'y2023z    '; call geom_y2023z;} 
 
   case y2024 { y2024: y2024 first cut geometry; Geom =        'y2024     '; call geom_y2024;} 
   case y2024a { y2024a: y2024a production tag; Geom =         'y2024a    '; call geom_y2024a;}
   case y2024b { y2024b: y2024b production tag; Geom =         'y2024b    '; call geom_y2024b;}
+  case y2024z { y2024z: y2024z production tag; Geom =         'y2024z    '; call geom_y2024z;}
 
   case y2025 { y2025: y2025 first cut geometry; Geom =        'y2025     '; call geom_y2025;}  
+  case y2025z { y2025z: y2025z first cut geometry; Geom =        'y2025z     '; call geom_y2025z;}  
 
   case dev2021 { dev2021:  First cut forward upgrades; Geom =        'dev2021   '; call geom_dev2021;} 
   case dev2022 { dev2022:  First cut forward upgrades; Geom =        'dev2022   '; call geom_dev2022;} 
