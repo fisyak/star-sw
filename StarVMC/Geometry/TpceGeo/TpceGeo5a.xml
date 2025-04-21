@@ -1,0 +1,106 @@
+<Document  file="StarVMC/Geometry/TpceGeo/TpceGeo5a.xml"  >
+<Module name="TPCEv5" comment="Dummy module calling tpcegeo5.g">
+       <Author name="David Underwood corrected by Maxim Potekhin, 
+		      implmented in TGeo by Yuri, translated back 
+		      to AgSTAR by Victor, and code cleanup by Jason,
+		      converted to iTPC by Irakli"  />
+
+        <Created date="  Dec 7, 2005 "  />
+        <CDE  >
+            AGECOM
+            GCUNIT
+            GCONST
+        </CDE>
+	<!-- Primary configuration structure -->
+	<!-- Primary configuration structure -->
+        <Structure name="TPCC">
+	  <var name="version" />
+	  <var name="misalign" type="int"   />
+	</Structure>
+        
+        <Structure name="TPCG"  >
+            <var name="version" type="float"  />
+            <var name="TpadConfig" type="int"  />
+            <var name="Rmin" type="float"  />
+            <var name="Rmax" type="float"  />
+            <var name="RminIFC" type="float"  />
+            <var name="LengthT" type="float"  />
+            <var name="Length" type="float"  />
+            <var name="LengthW" type="float"  />
+            <var name="LengthV" type="float"  />
+            <var name="dZEnvelop" type="float"  />
+            <var name="WheelIR" type="float"  />
+            <var name="WheelR0" type="float"  />
+            <var name="WheelR1" type="float"  />
+            <var name="WheelR2" type="float"  />
+            <var name="WheelTotalRibWidth" type="float"  />
+            <var name="WheelRibWidth" type="float"  />
+            <var name="WheelRibHeight" type="float"  />
+            <var name="WheelBoxDx" type="float"  />
+            <var name="WheelBoxDy" type="float"  />
+            <var name="WheelOR1" type="float"  />
+            <var name="WheelOR" type="float"  />
+            <var name="WheelTHK1" type="float"  />
+            <var name="WheelTHK" type="float"  />
+            <var name="SenGasOR" type="float"  />
+            <var name="MembTHK" type="float"  />
+            <var name="tocsDR" type="float"  />
+            <var name="tokaDR" type="float"  />
+            <var name="tonxDR" type="float"  />
+            <var name="toadDR" type="float"  />
+            <var name="toigDR" type="float"  />
+            <var name="toalDR" type="float"  />
+            <var name="tohaDR" type="float"  />
+            <var name="tiadDR" type="float"  />
+            <var name="tinxDR" type="float"  />
+            <var name="tikaDR" type="float"  />
+            <var name="tialDR" type="float"  />
+            <var name="tifcRF" type="float"  />
+            <var name="tifcDRT" type="float"  />
+            <var name="dzYF1" type="float"  />
+            <var name="dzYF2" type="float"  />
+            <var name="dzYF3" type="float"  />
+            <var name="PadPlaneThickness" type="float"  />
+            <var name="dGateGround" type="float"  />
+            <var name="WireMountWidth" type="float"  />
+            <var name="WireMountHeight" type="float"  />
+            <var name="dxRDO" type="float"  />
+            <var name="dyRDO" type="float"  />
+            <var name="dzRDO" type="float"  />
+            <var name="zRDO" type="float"  />
+            <var name="heigTube" type="float"  />
+            <var name="widTube" type="float"  />
+            <var name="RDOCoolingdX" type="float"  />
+            <var name="RDOCoolingdY" type="float"  />
+            <var name="RDOCoolingdZ" type="float"  />
+            <var name="zGatingGrid" type="float"  />
+            <var name="zGroundGrid" type="float"  />
+            <var name="DeadZone" type="float"  />
+            <var name="dAnode(2)" type="float"  />
+	    <var name="tofmax" />
+	    <var name="IDeadZone" type="float" />
+        </Structure>
+<Export language="Mortran">
+<!--
+	<Use struct="TPCC" />
+        <Fill name="TPCC" comment="Selected TPCG version subversion">
+	  <var name="version" value="6.0" commenet="Default is 3.0" />
+	  <var name="misalign" value="0" comment="0: ideal 1: global position" />
+	</Fill>
+        <Fill name="TPCG" comment="// TPC basic dimensions"  >
+            <var name="version" value="3.0" comment="// version    =&gt; current version "  />
+            <var name="tpadconfig" value="6.0" comment="Default to starndard TPC TPAD configuration" />
+	</Fill>
+        <Use struct="TPCG" select="version" value="TPCC_version" />
+        <Use struct="TPCG" select="tpadconfig" value="TPCG_tpadconfig" />
+        <External routine="TPADSTEP"  />
+        <External routine="TPAISTEP"  />
+        <External routine="TPAOSTEP"  />
+        <External routine="TPCELASER"  />
+        <External routine="TPCEGEO5"  />
+-->
+Call TpceGeo5
+</Export>
+</Module>
+</Document>
+

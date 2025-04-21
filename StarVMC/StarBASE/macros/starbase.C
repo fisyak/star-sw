@@ -105,7 +105,7 @@ void Load()
   gSystem->Load("StUtilities.so");
   gSystem->Load("StChain.so");
   gSystem->Load("StarVMCApplication.so");
-  gSystem->Load("libStarMiniCern.so");
+  //  gSystem->Load("libStarMiniCern.so");
   gSystem->Load("libgeant3.so");
   gSystem->Load("StarBASE.so");
 }

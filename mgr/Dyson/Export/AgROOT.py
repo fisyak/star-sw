@@ -547,7 +547,7 @@ class Tag( Handler ):
             for f in files:
 
                 # Skip anything that looks like a backup file
-                if '~' in f:
+                if not '.*.xml$' in f:
                     continue
                 
                 if 'Config.xml' in f:

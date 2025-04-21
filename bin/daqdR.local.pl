@@ -22,7 +22,7 @@ foreach my $currentrun (@AllRuns) {
     if (GoodRun($def,$r,$debug) < 0) {next;}
     print "$run Accepted\n" if ($debug);
 #    foreach my $tag (qw(st hlt)) {
-    foreach my $tag (qw(hlt st_physics_ st_cosmic_ )) { # st_physics_2
+    foreach my $tag (qw(hlt st_physics_ st_cosmic_ st_hlt)) { # st_physics_2
       my @files = glob $run . "/" . $tag . "*.daq"; print "files ($tag) = @files\n" if ($debug);
       if ($#files < 0) {next;}
       #  print "files = @files\n";

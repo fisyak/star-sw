@@ -310,8 +310,11 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
   } else {
     StTpcDb::SetTpcMDF4Error(kFALSE);
   }
+  if (IAttr("noFieldFlip")) {
+    StTpcDb::SetnoFieldFlip(kTRUE);
+    gMessMgr->Info() << "StTpcDbMaker::Use  noFieldFlip : do NOT flip alignment with mag. field" << endm;
+  }
   StTpcDb::instance()->SetDriftVelocity();
-  
   if (IAttr("ExB")) { 
     if(! IAttr("OSpaceFXT") && St_beamInfoC::instance()->IsFixedTarget() ) {
       SetAttr("OSpaceFXT"  , kTRUE);
@@ -366,6 +369,10 @@ Int_t StTpcDbMaker::InitRun(int runnumber){
   if (  gROOT->GetClass("StTpcRTSHitMaker") || gROOT->GetClass("StiMaker")) {
     St_tpcPadGainT0C::instance();  // activate extra gain corrections for tpx
     St_itpcPadGainT0C::instance(); // activate extra gain corrections for iTPC
+  }
+  if (IAttr("Cosmics")) {
+    StTpcDb::SetCosmics(kTRUE);
+    gMessMgr->Info() << "StTpcDbMaker::Use Cosmics " << endm;
   }
   return kStOK;
 }

@@ -16,6 +16,9 @@
 #  if ( -r ${SUBMITTINGDIRECTORY}/$logFile) exit 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
+  if (-r ${SUBMITTINGDIRECTORY}/Submitted) then 
+    rm ${SUBMITTINGDIRECTORY}/Submitted
+  endif
   set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
   if (-r ${bla}) exit 0;
   touch ${bla}
@@ -47,11 +50,11 @@
 # 07/06/2023
 #  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt25'${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,-evout,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
 # 08/04/2023
-#  set WestEastOff = ""
-#  echo ${SUBMITTINGDIRECTORY} | grep WestOff
-#  if ($? == 0) set WestEastOff = ",WestOff"
-#  echo ${SUBMITTINGDIRECTORY} | grep EastOff
-#  if ($? == 0) set WestEastOff = ",EastOff"
+  set WestEastOff = ""
+  echo ${SUBMITTINGDIRECTORY} | grep WestOff
+  if ($? == 0) set WestEastOff = ",WestOff"
+  echo ${SUBMITTINGDIRECTORY} | grep EastOff
+  if ($? == 0) set WestEastOff = ",EastOff"
 #  root.exe -b -q  'bfc.C(10000,"P2019a,CorrY,-beamLine3D,OSpaceZ2,-HitFilt,StiCA,gmt25,'${WestEastOff}''${PicoMode}',BEmcChkStat,NoHistos,noTags,noRunco,evout,UseCAVxFinder,FXT","'${evtsFile}'")' &gt;&amp; ${logFile}
   set year = `GetYearFromPWD.pl`
   echo ${year} | grep 20
@@ -59,41 +62,6 @@
   set PicoMode = ",PicoVtxVpdOrDefault"
   echo ${SUBMITTINGDIRECTORY} | grep fixed
   if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT"
-  set Cosmic = "";
-  echo ${SUBMITTINGDIRECTORY} | grep Cosmic
-  if ($? == 0) set Cosmic = ",Cosmics,-picoWrite,-picoDst"
-  set Chain = "";
-  switch ($year)
-    case "2019":
-#      Chain = "P2019a,CorrZ,Agi,TFGdbOpt,TpxRaw,TpxClu,McTpcAna,-beamLine3D,OSpaceZ2,StiCA,gmt25${PicoMode},BEmcChkStat,NoHistos,noTags,noRunco";
-      set Chain = "P2019a,CorrZ,Agi,btof,gmt25,mtd,BEmcChkStat,-l3onl,-fpd,StiCA,${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    case "2020":
-      set Chain = "P2020a,CorrZ,Agi,btof,gmt25,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA,gmt25${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    case "2021":
-      set Chain = "P2021a,CorrZ,Agi,btof,gmt25,mtd,etofA,BEmcChkStat,-beamLine3D,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    case "2022":
-      set Chain = "pp2022,CorrZ,Agi,btof,gmt25,mtd,etofA,BEmcChkStat,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    case "2023":
-      set Chain = "P2023,CorrZ,Agi,btof,gmt25,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    case "2024":
-      set Chain = "pp2024a,CorrZ,Agi,btof,gmt25,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    case "2025":
-      set Chain = "P2024a,CorrZ,Agi,btof,gmt25,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},BEmcChkStat,NoHistos,noTags,noRunco";
-    breaksw
-    default:
-      exit 0;
-  endsw
-  set WestEast = "";
-  echo "${SUBMITTINGDIRECTORY}" | grep -i WestOff
-  if ($? == 0) set WestEast = ",WestOff"
-  echo "${SUBMITTINGDIRECTORY}" | grep -i EastOff
-  if ($? == 0)  set WestEast = ",EastOff"
 #  set evout = ",evout";
 #  if ($JOBINDEX > 2) then
 #    @ n =  $JOBINDEX % 20  # 05/29/2023
@@ -101,8 +69,42 @@
 #    set evout = ",-evout";
 #    if ($n == 4) set evout = ",evout";
 #  endif
-   set evout = ",evout";
-# set evout = ",-evout";
+# set evout = ",evout";
+  set evout = ",-evout";
+  set Cosmic = "";
+  echo ${SUBMITTINGDIRECTORY} | grep Cosmic
+  if ($? == 0) then
+    set Cosmic = ",Cosmics,-picoWrite,-picoDst"
+    set evout = ",evout";
+  endif
+  set bChain = "CorrZ,Agi,btof,gmt25,mtd,BEmcChkStat,-l3onl,-fpd,StiCA${PicoMode}${Cosmic},NoHistos,noTags,noRunco${WestEastOff}${evout}";
+  set bChainA = "${bChain},etofA"
+  set bChainB = "${bChainA},-fttDat,-fcs,-fcsDat,-fcsWFF,-fcsCluster,-fcsPoint,-fcsdb";
+  switch ($year)
+    case "2019":
+      set Chain = "P2019a,${bChain}";
+    breaksw
+    case "2020":        
+      set Chain = "P2020a,${bChainA}"
+    breaksw
+    case "2021":        
+      set Chain = "P2021a,${bChainA}"
+    breaksw
+    case "2022":        
+      set Chain = "pp2022,${bChainA}"
+    breaksw
+    case "2023":
+      set Chain = "P2023,${bChain}"
+    breaksw
+    case "2024":
+      set Chain = "pp2024a,${bChainB}"
+    breaksw
+    case "2025":
+      set Chain = "P2024a,${bChainB}"
+    breaksw
+    default:
+      exit 0;
+  endsw
 #  root.exe -b -q  'bfc.C(10000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
@@ -112,7 +114,7 @@
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder,StiKFVertex,-genvtx","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(100000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
 #  root.exe -b -q  'bfc.C(1000,"'${Chain}${WestEast}${evout}',UseCAVxFinder","'${evtsFile}'")' &gt;&amp; ${logFile}
-  root.exe -b -q  'bfc.C(100000,"'${Chain}${evout}',CorrZ -fttDat -fcs -fcsDat -fcsWFF -fcsCluster -fcsPoint -fcsdb","'${evtsFile}'")' &gt;&amp; ${logFile}
+  root.exe -b -q  'bfc.C(1000000,"'${Chain}'","'${evtsFile}'")' &gt;&amp; ${logFile}
 #   cp  ${filel}* ${SUBMITTINGDIRECTORY}
    rm ${bla}
   gzip ${logFile}

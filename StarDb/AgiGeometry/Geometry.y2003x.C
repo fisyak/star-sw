@@ -7,11 +7,12 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("ical",12);
  configGeom ->SetValue("ivpd",-1);
  configGeom ->SetValue("istb",-1);
- configGeom ->SetValue("ifms",-1);
+ configGeom ->SetValue("ifpd",-1);
+ configGeom ->SetValue("ifms",3);
  configGeom ->SetValue("ifsc",-1);
  configGeom ->SetValue("imtd",-1);
  configGeom ->SetValue("svtg_version",2);
- configGeom ->SetValue("tpcg_version",5);
+ configGeom ->SetValue("tpcg_version",2);
  configGeom ->SetValue("btog_version",5);
  configGeom ->SetValue("btog_choice",5);
  configGeom ->SetValue("btog_posit1(1)",32);
@@ -30,6 +31,6 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("emcg_version",5);
  configGeom ->SetValue("emcg_onoff",3);
  configGeom ->SetValue("emcg_fillmode",3);
- configGeom ->SetValue("fpdg_version",5);
+ configGeom ->SetValue("fmcg_version",6);
   return CreateGeometry("y2003x",configGeom);
 }

@@ -11,42 +11,8 @@
  * \brief  Try to measure direction Electric and Magnetic Field using low energy elctrons
  *
  */                                                                      
-#ifndef StMaker_H
 #include "StMaker.h"
-#endif
-#include "StThreeVectorD.hh"
-class Tracklet : public TObject {
-public:
-  Tracklet() {Clear();}
-  ~Tracklet() {}
-  Char_t         beg[1]; // !
-  Int_t          run;
-  Int_t          sector;
-  Int_t          row;
-  Int_t          nhits;
-  Double_t       AdcSum;
-  Double_t       x0, tX, y0, tY;
-  Double_t       x0T, tXT, y0T, tYT; // in Tpc coordinate system
-  Char_t         end[1]; // !
-  StThreeVectorD BG;
-  StThreeVectorD BL;
-  StThreeVectorD BT;
-  StThreeVectorD posG;
-  StThreeVectorD posL;
-  StThreeVectorD dirL;
-  StThreeVectorD posT;
-  StThreeVectorD dirT;
-  StThreeVectorD dirST;
-  StThreeVectorD posRMSG;
-  StThreeVectorD posRMSL;
-  StThreeVectorD posRMST;
-  void           Clear(Option_t *opt = 0) {
-    if (opt); memset(beg, 0, end-beg); 
-    BG = BL = posG = posL = posT = posRMSG = posRMSL = posRMST = dirL = dirT = StThreeVectorD();
-  }
-  ClassDef(Tracklet,1)
-};
-
+#include "Tracklet.h"
 class StEandBDirMaker : public StMaker {
  private:
   // Private method declaration if any

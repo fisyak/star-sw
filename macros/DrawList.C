@@ -437,7 +437,10 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
       }
       h->Draw();
       c->Update();
-      TString fnam(gSystem->BaseName(gSystem->DirName(f->GetName())));
+      TString DirName(f->GetName());
+      Int_t indx = DirName.Index("/");
+      if (indx > 0) {DirName = TString(DirName,indx);}
+      TString fnam(gSystem->BaseName(DirName));
       if (fnam == ".") {fnam = gSystem->BaseName(f->GetName()); fnam.ReplaceAll(".root","");}
       leg->AddEntry(h, fnam);
       TPaveStats *st = (TPaveStats*) h->FindObject("stats");
@@ -455,7 +458,7 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
     }
     //    hstack->Draw("nostack,e1p");
     //    TAxis *xax = hstak->GetXaxis();
-    hstack->Draw("nostack");
+    hstack->Draw("nostacksame");
     leg->Draw();
   }
   c->Update();

@@ -78,12 +78,15 @@
 #include "TError.h"
 #include <Stiostream.h>
 #include "StMagFMaker.h"
+#include "StarMagField.h"
 #include "StDetectorDbMaker/St_MagFactorC.h"
 #include "StDetectorDbMaker/St_starMagOnlC.h"
 #include "StDetectorDbMaker/St_starMagAvgC.h"
+#ifdef __RotateMagField__
+#include "StDetectorDbMaker/St_starMagRotationC.h"
+#endif 
 #include "StMessMgr.h" 
 #include "StMagF.h"
-#include "StarMagField.h"
 #include "StarCallf77.h"
 #include "tables/St_Survey_Table.h"
 #include "TMath.h"
@@ -110,7 +113,7 @@ Int_t StMagFMaker::InitRun(Int_t RunNo)
     gMessMgr->Info() << "StMagFMaker::InitRun passive mode. Don't update Mag.Field from DB" << endm;
   } else {
     gMessMgr->Info() << "StMagFMaker::InitRun active mode " << endm;
-    Float_t  fScale = St_MagFactorC::instance()->ScaleFactor();
+    Float_t  fScale = -9999;
     if (! St_starMagAvgC::instance()->Table()->IsMarked()) {
       fScale = St_starMagAvgC::instance()->ScaleFactor();
       gMessMgr->Info() << "StMagFMaker::InitRun use Scale Factor = " << fScale 
@@ -155,15 +158,21 @@ Int_t StMagFMaker::InitRun(Int_t RunNo)
       gMessMgr->Info() << "Initialize STAR magnetic field with scale factor " << fScale << endm;
     }
 #ifdef __RotateMagField__
-    St_Survey *tableSet = (St_Survey *) GetDataBase("StMagF/MagFieldRotation");
-    if (tableSet) {
-      Survey_st *row = tableSet->GetTable();
-      StarMagField::Instance()->SetStarMagFieldRotation(&row->r00);
+    St_starMagRotationC *chair = St_starMagRotationC::instance();
+    Int_t irf = -1;
+    if      (fScale < -0.1) irf = 0;
+    else if (fScale >  0.1) irf = 1;
+    if (irf > -1) {
+      TGeoRotation rot = StarMagField::Instance()->StarMagFieldRotation();
+      rot.RotateX(1e-3*TMath::RadToDeg()*chair->alpha(irf));
+      rot.RotateY(1e-3*TMath::RadToDeg()*chair->beta(irf));
+      StarMagField::Instance()->SetStarMagFieldRotation(rot);
     }
 #endif
   }    
   double myX[3]={0},myB[3];
-  StarMagField::Instance()->BField(myX,myB);
+  StarMagField *instance = StarMagField::Instance();
+  instance->BField(myX,myB);
   gMessMgr->Info() << "StMagFMaker::InitRun Bz(0) = " << myB[2] << endm;
 
   return kStOK;

@@ -2526,6 +2526,8 @@ starClockOnl_st *St_starClockOnlC::Struct(Int_t i) {
 MakeChairInstance(starMagOnl,RunLog/onl/starMagOnl);
 #include "St_starMagAvgC.h"
 MakeChairOptionalInstance(starMagAvg,RunLog/onl/starMagAvg);
+#include "St_starMagRotationC.h"
+MakeChairOptionalInstance(starMagRotation,StMagF/starMagRotation);
 #include "St_beamInfoC.h"
 MakeChairInstance(beamInfo,RunLog/onl/beamInfo);
 static Double_t kuAtomicMassUnit = 931.4940054e-3; // GeV

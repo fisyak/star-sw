@@ -1,0 +1,14 @@
+/*    starMagRotation.idl
+*
+*  Table: starMagRotation
+*
+*       description: Rotation of STAR magnet map with respect to STAR magnet survey position
+*/ 
+
+
+struct starMagRotation { 
+  long   Id;    /* 0 => RF, 1 => FF */
+  float  alpha; /* rotation around X (mrad)*/
+  float  beta;  /* rotation around Y (mrad) */
+  float  gamma; /* rotation around Z (mrad) = 0 */ 
+ };  
