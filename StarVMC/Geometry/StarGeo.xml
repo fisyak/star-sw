@@ -1513,7 +1513,7 @@
   </Geometry>
   <Geometry tag="y2013_1a" check="false" comment="DO NOT USE IN PRODUCTION">
 
-    This is the y2013_1a geometry.
+  <!--  This is the y2013_1a geometry. -->
 
     <Construct sys="cave" config="CAVE05" />
     <Construct sys="idsm" config="IDSM02" />
