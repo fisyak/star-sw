@@ -468,30 +468,28 @@ void TrackletTree::FitHistograms() {
   for (Int_t s  = 0; s  < NSYS; s++) 
     for (Int_t io = 0; io < NIO; io++) 
       for (Int_t v  = 0; v  < NVAR; v++) {
-	//	Int_t siov = v + NVAR*(io + NSYS*s);
-	TH2D *h2 = (TH2D * ) hists[s][io][v]->Project3D("zx");
-	//	TH2D *h2 = (TH2D * ) hists[siov]->Project3D("zx");
-	h2->FitSlicesY();
+	for (Int_t i = 0; i < 2; i++) {
+	  static const Char_t *xy[2] = {"zx", "zy"};
+	  TH2D *h2 = (TH2D * ) hists[s][io][v]->Project3D(xy[i]);
+	  h2->FitSlicesY();
+	}
       }
   cout<<"\t [DONE]"<<endl;
 }
 
 //________________________________________________________________________________
-void EandB(Int_t nevents = -1, const Char_t *select = "hlt*.root", const Char_t *out = "EandB.root") {
+void EandB(const Char_t *select = "hlt*.root", const Char_t *out = "EandB.root") {
   tChain = Chain(select, "TrackletTree");
   fOut               = new TFile(out,"recreate");
   TrackletTree *T = new TrackletTree(tChain);
   Int_t nentries = (Int_t)tChain->GetEntries();
-  if (nevents > 0)  nevents = TMath::Min(nevents, nentries);
-  else              nevents = nentries;
-  
   T->FieldTypeFF = kTRUE;
 #if 0
   if (! fOut->cd(F)) {fOut->mkdir(F); fOut->cd(F); cout << "Create directory " << F.Data() << endl;}
   if (F.Contains("RF",TString::kIgnoreCase)) T->FieldTypeFF = kFALSE;
 #endif
   T->BookHistograms();
-  T->Loop(nevents);
+  T->Loop(nentries);
   T->FitHistograms();
   fOut->Write();
 }
