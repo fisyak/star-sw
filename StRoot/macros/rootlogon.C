@@ -166,9 +166,9 @@
   gEnv->SetValue("XNet.RedirDomainAllowRE","rcf.bnl.gov"); 
   gEnv->SetValue("XNet.ReconnectTimeout","5"); 
   //  Print version
-  TString STAR_GIT("$STAR/.git");            gSystem->ExpandPathName(STAR_GIT);
-  TString STAR_LEVEL("$STAR_LEVEL");         gSystem->ExpandPathName(STAR_LEVEL);
-  TString STAR_LIB("$STAR_LIB");             gSystem->ExpandPathName(STAR_LIB);
+  TString STAR_GIT   = gSystem->ExpandPathName("$STAR/.git");  
+  TString STAR_LEVEL = gSystem->ExpandPathName("$STAR_LEVEL"); 
+  TString STAR_LIB   = gSystem->ExpandPathName("$STAR_LIB");   
   TString STAR_GIT_VERSION; 
   if (! gSystem->AccessPathName(STAR_GIT,kReadPermission)) {
     STAR_GIT_VERSION = ", git = ";
@@ -188,11 +188,11 @@
       STAR_GIT_VERSION += gSystem->GetFromPipe("git --git-dir=$STAR/.git describe --always"); 
     }
     gEnv->SetValue("STAR_GIT_VERSION", STAR_GIT_VERSION.Data());
-    TString ROOT_LEVEL("$ROOT_LEVEL");         gSystem->ExpandPathName(ROOT_LEVEL);
-    TString GARFIELD_HOME("$GARFIELD_HOME");   gSystem->ExpandPathName(GARFIELD_HOME);
-    TString OPTSTAR("$OPTSTAR");               gSystem->ExpandPathName(OPTSTAR);
-    TString XOPTSTAR("$XOPTSTAR");             gSystem->ExpandPathName(XOPTSTAR);
-    TString QTDIR("$QTDIR");                   gSystem->ExpandPathName(QTDIR);
+    TString ROOT_LEVEL    = gSystem->ExpandPathName("$ROOT_LEVEL");       
+    TString GARFIELD_HOME = gSystem->ExpandPathName("$GARFIELD_HOME"); 
+    TString OPTSTAR       = gSystem->ExpandPathName("$OPTSTAR");             
+    TString XOPTSTAR      = gSystem->ExpandPathName("$XOPTSTAR");           
+    TString QTDIR         = gSystem->ExpandPathName("$QTDIR");                  
     printf("QAInfo:You are using STAR_LEVEL : %s%s, ROOT_LEVEL : %s and node : %s ",  
 		  STAR_LEVEL.Data(),STAR_GIT_VERSION.Data(),ROOT_LEVEL.Data(),gSystem->HostName());
 #ifndef __CLING__1
