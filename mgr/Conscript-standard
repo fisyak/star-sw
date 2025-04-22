@@ -1167,6 +1167,8 @@ TDataSet *CreateTable() {
 	  Command $env1 [$geometry], ($LIB . "/" . "StarAgmlLib" . "." . $env1->{SUFSOLIB},
 				      $LIB . "/" . "Geometry" . "." . $env1->{SUFSOLIB}),
 					qq(cd  %>:d;root.exe -q -b 'AgML.C("$geom")' >& /dev/null;);
+#					qq(cd  %>:d;root.exe -q -b 'AgML.C("$geom")');
+#					qq(printenv | sort -u > env.cons; cd  %>:d;root.exe -q -b 'AgML.C("$geom")');
 	}
 #      }
     } else { # AgiGeometry
