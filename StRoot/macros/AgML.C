@@ -1,3 +1,19 @@
+class StBFChain;        
+class StMessMgr;
+#if defined(__CLING__)
+#pragma cling load("StarRoot")
+#pragma cling load("St_base")
+#pragma cling load("StChain")
+#pragma cling load("libStUtilities")
+#pragma cling load("StarAgmlUtil")
+#pragma cling load("StarAgmlLib")
+#pragma cling load("Geometry")
+#endif /* __CLING__ */
+#pragma cling load("StBFChain")
+
+#if defined(__CINT__)
+StBFChain* chain = 0;
+#endif
 void AgML(const Char_t *tag="y2025", const Char_t *geom="") {
   TString Tag(tag);
   TString Geom(geom);
@@ -18,11 +34,13 @@ void AgML(const Char_t *tag="y2025", const Char_t *geom="") {
     }
     cout << endl;
   }
+#ifdef __CINT__
   gSystem->Load("libStChain");                                        //  StMemStat::PrintMem("load StChain");
   gSystem->Load("libStUtilities");                                    //  StMemStat::PrintMem("load StUtilities");
   gSystem->Load("StarAgmlUtil");
   gSystem->Load("StarAgmlLib");
   gSystem->Load("Geometry");
+#endif
   gSystem->AddIncludePath(" -IStRoot -Igeom -IStarVMC -IStarVMC/Geometry/macros -I$STAR/StRoot -Igeom -I$STAR/StarVMC -I$STAR/StarVMC/Geometry/macros ");
   gErrorIgnoreLevel=9999;                        // Silence ROOT warnings for now
   gGeoManager = new TGeoManager(Geom.Data(),Form("%s/AgML",Geom.Data()));
