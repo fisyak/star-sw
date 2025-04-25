@@ -517,6 +517,13 @@ switch ($pkg)
 #             spack env view enable
 #          endif
         endif
+      else if (-e /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh) then
+        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh"
+        source /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh
+        endif
+     endif
+     endif 
+     endif
 	breaksw
 
 	case "gcc451":
