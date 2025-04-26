@@ -9,7 +9,8 @@
         </CDE>
         
         <Content  >
-            SHLX,SHBS,SHLS,SHBI,SHFI,SHOL,SFLR
+<!--            SHLX,SHBS,SHLS,SHBI,SHFI,SHOL,SFLR -->
+            SHLX,SHBS,SHLS,SHBI,SHFI,SHOL
         </Content>
         
         <Structure name="SHLG"  >
@@ -86,15 +87,15 @@
             <Rotation thetaz="180"  />
         </Placement>
         
-
+<!--  CAVE extruded by: CAVE/SFLR_1 ovlp=2730
         <Create block="SFLR"  />
         <Placement y="shlg_baseLevel-0.5*shlg_floorThk" x="0" z="+shlg_floorPos" block="SFLR" in="CAVE"  >
         </Placement>
-        
+
         <Placement y="shlg_baseLevel-0.5*shlg_floorThk" x="0" z="-shlg_floorPos" block="SFLR" in="CAVE"  >
             <Rotation thetaz="180"  />
         </Placement>
-        
+-->        
 
         <Block name="SHLX" comment="is the shield mother volume in the STAR cave"  >
             <Material name="Air"  />
@@ -132,7 +133,7 @@
             
 
         </Block>
-        
+<!--        
         <Block name="SFLR" comment="is the floor"  >
             <Attribute for="SFLR" seen="1" colo="3"  />
 
@@ -145,7 +146,7 @@
 
             <Shape type="BOX" dz="shlg_floorLen/2.0" dx="shlg_floorWidth/2.0" dy="shlg_floorThk/2.0"  />
         </Block>
-        
+-->        
         <Block name="SHBS" comment="is the shield base"  >
             <Attribute for="SHBS" seen="1" colo="3"  />
 
