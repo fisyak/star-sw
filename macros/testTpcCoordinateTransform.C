@@ -89,7 +89,7 @@ void testTpcCoordinateTransform(Int_t sector = 3, Int_t row = 10, Int_t pad = 30
   StTpcDb::instance()->SubSInner2SupS(sector).Print();
   StTpcDb::instance()->SubSOuter2SupS(sector).Print();
   transform = new StTpcCoordinateTransform(StTpcDb::instance());
-#if 0
+#if 1
   Print(sector,row);
 #else
   cout << "Coordinates ============================" << endl;
@@ -135,4 +135,13 @@ void testDerivatives() {
     Double_t dZ = (coorGd.position().z() - coorG.position().z())/dtime;
     cout << "sector = " << sector << "\tdX = " << dX << "\tdY = " << dY << "\tdZ = " << dZ << endl;
   }
+}
+//________________________________________________________________________________
+void CheckDirection() {
+  StGlobalDirection BG(1.,2.,5.); cout << "BG\t" << BG << endl;
+  StTpcLocalSectorDirection  BLS;
+  transform(BG,BLS, 3,1); cout << "BLS\t" << BLS << endl;
+  transform(BG,BLS,15,1); cout << "BLS\t" << BLS << endl;
+  transform(BG,BLS,12,1); cout << "BLS\t" << BLS << endl;
+  transform(BG,BLS,24,1); cout << "BLS\t" << BLS << endl;
 }

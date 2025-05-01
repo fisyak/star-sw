@@ -1,5 +1,5 @@
 ********************************************************************************
-macro xgeom year=y2019
+macro xgeom year=y2025z
   message 'xgeom year='//[year]
 *  starsim -w 1 -b xgeom.kumac
   DETP geom [year]

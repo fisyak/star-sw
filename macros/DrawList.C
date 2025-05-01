@@ -320,6 +320,7 @@ void DrawHftG(const Char_t *pattern = "d.*13", const Char_t *ctitle = "", Int_t 
 }
 //________________________________________________________________________________
 void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
+  // gStyle->SetOptStat(0)
   TString patt(pattern);
   TPRegexp reg(pattern);
   TString cTitle = "C" + patt;
@@ -458,6 +459,11 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
     }
     //    hstack->Draw("nostack,e1p");
     //    TAxis *xax = hstak->GetXaxis();
+    hstack->Draw("nostacksame");
+    Double_t yMin = hstack->GetMinimum("nostack");
+    Double_t yMax = hstack->GetMaximum("nostack");
+    hstack->GetHistogram()->SetMinimum(yMin);
+    hstack->GetHistogram()->SetMaximum(yMax);
     hstack->Draw("nostacksame");
     leg->Draw();
   }
