@@ -8,7 +8,7 @@ if ($#argv == 0 || $#argv > 3 || "$1" == "help" || "$1" == "-h") then
    % setup 'Package' {version}
 
  where packages stands for one of
-   cvmfs|afs                        reset the environment to switch between
+   cvmfs|afs|nfs4                   reset the environment to switch between
                                     afs or cvmfs based install. Warning: this
                                     will remove all ENV variable and reload 
                                     the STAR login.
@@ -49,180 +49,116 @@ if ( $#argv > 0 ) set version  = $1
 if ( $#argv > 1 ) set location = $2
 #echo "==================== setup $pkg $version $location ===================="
 if ($?STAR_HOST_SYS != 0) then
-  setenv oldSTAR_HOST_SYS $STAR_HOST_SYS
+    setenv oldSTAR_HOST_SYS $STAR_HOST_SYS
 endif
 if (! $?GROUP_DIR != 0) then
-  source $GROUP_DIR/unix_programs.csh
+    source $GROUP_DIR/unix_programs.csh
 endif
-      if ($?DECHO) echo "setup ${pkg}"
+if ($?DECHO) echo "setup ${pkg}"
 switch ($pkg)
     case "spackTFG":
     case "SPACKTFG":
-    if ($?USE_CVMFS) then 
-      if (-e /cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup-env.csh && $USE_CVMFS == 1) then
-        set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup-env.csh"
-	if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
-      endif 
-    else 
-      if (-e "/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh") then
-        set SPACK_SETUP="/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh"
-      else if (-e "/star/u/fisyak/work/sources/spack/share/spack/setup-env.csh") then
-        set SPACK_SETUP="/star/u/fisyak/work/sources/spack/share/spack/setup-env.csh"
-      endif
-    endif
-    if ( -r $SPACK_SETUP ) then
-      if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
-      source $SPACK_SETUP 
+	if ($?USE_CVMFS) then 
+	    if (-e /cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup-env.csh && $USE_CVMFS == 1) then
+		set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/TFG/spack/share/spack/setup-env.csh"
+		if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
+	    endif 
+	else 
+	    if (-e "/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh") then
+		set SPACK_SETUP="/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh"
+	    else 
+		if (-e "/star/u/fisyak/work/sources/spack/share/spack/setup-env.csh") then
+		    set SPACK_SETUP="/star/u/fisyak/work/sources/spack/share/spack/setup-env.csh"
+		endif
+	    endif
+	endif
+	if ( -r $SPACK_SETUP ) then
+	    if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
+		source $SPACK_SETUP 
 #      if ($?CMAKE_PREFIX_PATH) then
 #        if ($?USE_64BITS && $USE_64BITS == 1) then
 #	  setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64:${CMAKE_PREFIX_PATH}/lib:/usr/lib64:/usr/lib
 #        endif
 #	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib:/usr/lib
 #      endif
-    else
-	if ($?DECHO) echo "SPACK_SETUP has not been set"
-    endif
-      breaksw
+	    else
+		if ($?DECHO) echo "SPACK_SETUP has not been set"
+	    endif
+	endif
+    breaksw
     case "spack":
     case "SPACK":
-      set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
-      if ( -e $SPACK_SETUP && $?USE_CVMFS && $USE_CVMFS == 1) then
-       source $SPACK_SETUP 
-       if ($?
-      endif
-        breaksw
+	set SPACK_SETUP="/cvmfs/star.sdcc.bnl.gov/star-spack/setup.csh"
+	if ( -e $SPACK_SETUP && $?USE_CVMFS && $USE_CVMFS == 1) then
+	    source $SPACK_SETUP 
+	    if ($? && $?DECHO) echo "SPACK_SETUP has not been set"
+	endif
+    breaksw
     case "NEW_ENV*":
     case "new_env*":
-      if (! $?STAR_NEW_ENVIRONMENT) then
-	setenv STAR_NEW_ENVIRONMENT "yes"
-        source $GROUP_DIR/group_env.csh
-        source ${GROUP_DIR}/.starver $STAR_LEVEL
-      endif
-      breaksw
+	if (! $?STAR_NEW_ENVIRONMENT) then
+	    setenv STAR_NEW_ENVIRONMENT "yes"
+	    source $GROUP_DIR/group_env.csh
+	    source ${GROUP_DIR}/.starver $STAR_LEVEL
+	endif
+    breaksw
     case "OLD_ENV*":
     case "old_env*":
-      if ($?STAR_NEW_ENVIRONMENT) then
-	unsetenv STAR_NEW_ENVIRONMENT 
-        source $GROUP_DIR/group_env.csh
-        source ${GROUP_DIR}/.starver $STAR_LEVEL
-      endif
-      breaksw
+	if ($?STAR_NEW_ENVIRONMENT) then
+	    unsetenv STAR_NEW_ENVIRONMENT 
+	    source $GROUP_DIR/group_env.csh
+	    source ${GROUP_DIR}/.starver $STAR_LEVEL
+	endif
+    breaksw
     case "root6":
     case "ROOT6":
     case "root6":
-      setenv ROOT_VERSION 6
-      source $GROUP_DIR/group_env.csh
-      source ${GROUP_DIR}/.starver $STAR_LEVEL
-      breaksw
+	setenv ROOT_VERSION 6
+	source $GROUP_DIR/group_env.csh
+	source ${GROUP_DIR}/.starver $STAR_LEVEL
+    breaksw
     case "ROOT5":
     case "root5":
-      setenv ROOT_VERSION ""
-      source $GROUP_DIR/group_env.csh
-      source ${GROUP_DIR}/.starver $STAR_LEVEL
-      breaksw
+	setenv ROOT_VERSION ""
+	source $GROUP_DIR/group_env.csh
+	source ${GROUP_DIR}/.starver $STAR_LEVEL
+    breaksw
     case "NOTFG":
     case "NoTFG":
     case "noTFG":
     case "notfg":
-      unsetenv TFG_STAR
-      breaksw
+	unsetenv TFG_STAR
+    breaksw
     case "TFG":
     case "tfg":
-      setenv TFG_STAR
-      breaksw
+	setenv TFG_STAR
+    breaksw
     case "cvmfs":
+    case "nfs4":
     case "afs":
-      if ($?STAR_LEVEL) then
-        setenv LEVEL_STAR ${STAR_LEVEL}
-      endif
-      if ($?AFS_RHIC) unsetenv AFS_RHIC      ; if ($?DECHO) echo "unsetenv AFS_RHIC"
-      if ($?STARFPE) then
-        setenv xSTARFPE $STARFPE
-      endif
-      unsetenv STAR*         ; if ($?DECHO) echo "unsetenv STAR*"
-      if ($?xSTARFPE) then 
-        setenv STARFPE $xSTARFPE
-      endif
-      unsetenv ROOT*         ; if ($?DECHO) echo "unsetenv ROOT*"
-      if ($?GROUP_DIR) then
-        unsetenv GROUP*      ; if ($?DECHO) echo "unsetenv GROUP*"
-      endif
-      unsetenv STAF*         ; if ($?DECHO) echo "unsetenv STAF*"
-      unsetenv CINTSYSDIR    ; if ($?DECHO) echo "unsetenv CINTSYSDIR"
-      unsetenv IVROOT        ; if ($?DECHO) echo "unsetenv IVROOT"
-      unsetenv *optstar      ; if ($?DECHO) echo "unsetenv *optstar"
-      unsetenv *OPTSTAR      ; if ($?DECHO) echo "unsetenv *OPTSTAR"
-      if ($?QTDIR) then
-        unsetenv QTDIR       ; if ($?DECHO) echo "unsetenv QTDIR"
-      endif
-      unsetenv SITE          ; if ($?DECHO) echo "unsetenv SITE"
-#     unsetenv *DEBUG        ; if ($?DECHO) echo "unsetenv *DEBUG"
-#     unsetenv XROOTDSYS XrdSecPWDALOGFILE XrdSecPWDSRVPUK
-      unsetenv star*         ; if ($?DECHO) echo "unsetenv star*"
-      if ($?CERN_ROOT) then 
-        unsetenv CERN*       ; if ($?DECHO) echo "unsetenv CERN*"
-      endif
-      if ($?CLHEP_ROOT) then
-        unsetenv CLHEP*        ; if ($?DECHO) echo "unsetenv CLHEP*"
-      endif
-      if ($?LEVEL_STAR) then
-        setenv STAR_LEVEL ${LEVEL_STAR}
-      endif
-      if ( $pkg == "cvmfs") then
-	 setenv    USE_CVMFS 1
-         if ($?TFG_STAR) then
-	   setenv AFS_RHIC  /cvmfs/star.sdcc.bnl.gov/TFG
-         else 
-	   setenv AFS_RHIC  /cvmfs/star.sdcc.bnl.gov
-         endif
-      else
-	 unsetenv  USE_CVMFS
-         if ($?TFG_STAR) then	 
-	   if (-d  /net/l402/data/fisyak/STAR) then 
-             setenv AFS_RHIC /net/l402/data/fisyak/STAR 
-	   else 
-	     if (-d /gpfs01/star/subsys-tpc/fisyak/STAR) then
-               setenv AFS_RHIC  /gpfs01/star/subsys-tpc/fisyak/STAR
-             else 
-               setenv AFS_RHIC  /afs/rhic.bnl.gov/star
-             endif
-	   endif
-         endif
-      endif
-      if (-d ${AFS_RHIC}/packages/.DEV2/group) then 
-         setenv GROUP_DIR  ${AFS_RHIC}/packages/.DEV2/group
-      else                                     
-         setenv GROUP_DIR  ${AFS_RHIC}/group
-      endif
-      if ($?DECHO) echo "GROUP_DIR = ${GROUP_DIR}"
-      setenv STAR_ROOT ${AFS_RHIC}
-#      echo "GROUP_DIR = ${GROUP_DIR}"
-
-      source $GROUP_DIR/group_env.csh
-#      source $HOME/.cshrc
-      breaksw
-
+	source ${GROUP_DIR}/setup_AFS_RHIC ${pkg}
+    breaksw
     case "64bits":
     case "64b":
-      setenv USE_64BITS 1
-      unsetenv OPTSTAR
-      unsetenv XOPTSTAR
-      if (-x $GROUP_DIR/dropit ) then
-	setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star`
-        setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS /opt/star ^/usr/lib`
-      endif
+	setenv USE_64BITS 1
+#      unsetenv OPTSTAR
+#      unsetenv XOPTSTAR
+	if (-x $GROUP_DIR/dropit ) then
+	    setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star`
+	    setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS /opt/star ^/usr/lib`
+	endif
 #      setup $xSTARCMPL
-      source $GROUP_DIR/STAR_SYS
+	source $GROUP_DIR/STAR_SYS
 #      setenv CERN /cern64
-      setup cern
+#	setup cern
 #      setenv CERN /afs/rhic.bnl.gov/.asis/x8664_sl5/cern64
 #      setenv CERN /afs/rhic.bnl.gov/star/packages/.DEV2/misc/sl53_x8664_gcc451
-      unsetenv CERN_ROOT
-      unsetenv OPTSTAR
-      unsetenv QTDIR
-      source $GROUP_DIR/group_env.csh
-      setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS ^/usr/lib /opt/star`
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib64/mysql:/usr/lib
+	unsetenv CERN_ROOT
+#      unsetenv OPTSTAR
+	unsetenv QTDIR
+	source $GROUP_DIR/group_env.csh
+	setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS ^/usr/lib /opt/star`
+	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib64/mysql:/usr/lib
 #      setenv ValeryOptStar /afs/rhic.bnl.gov/star/users/fine/data08/STAR/OPTSTAR/.$STAR_HOST_SYS
 #      setenv LD_LIBRARY_PATH $ValeryOptStar/lib:$OPTSTAR/lib:$LD_LIBRARY_PATH
 #      setenv PATH $ValeryOptStar/bin:$OPTSTAR/bin:$PATH
@@ -230,28 +166,27 @@ switch ($pkg)
 #      if ($?QTDIR) setenv QTDIR $OPTSTAR/qt4
 #      setenv PATH $QTDIR/bin:$PATH
 #      setenv LD_LIBRARY_PATH $QTDIR/lib:$LD_LIBRARY_PATH
-       source ${GROUP_DIR}/.starver $STAR_LEVEL
-     breaksw
-
+	source ${GROUP_DIR}/.starver $STAR_LEVEL
+    breaksw
     case "32bits":
     case "32b":
-      setenv USE_64BITS 0
-      unsetenv OPTSTAR
-      unsetenv XOPTSTAR
+	setenv USE_64BITS 0
+#      unsetenv OPTSTAR
+#      unsetenv XOPTSTAR
 #      setup $xSTARCMPL
-      if (-x $GROUP_DIR/dropit ) then
-	setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star cern64`
-        setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS /opt/star lib64 cern64`
-      endif
+	if (-x $GROUP_DIR/dropit ) then
+	    setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star cern64`
+	    setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS /opt/star lib64 cern64`
+	endif
 #      setenv OPTSTAR /afs/rhic.bnl.gov/star/packages/.DEV2/misc/opt/star/$STAR_HOST_SYS
-      source $GROUP_DIR/STAR_SYS
+	source $GROUP_DIR/STAR_SYS
 #      setenv CERN /cern
-      setup cern
-      unsetenv CERN_ROOT
-      unsetenv OPTSTAR
-      unsetenv QTDIR
-      source $GROUP_DIR/group_env.csh 
-      setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS lib64 lib`
+#	setup cern
+	unsetenv CERN_ROOT
+#      unsetenv OPTSTAR
+	unsetenv QTDIR
+	source $GROUP_DIR/group_env.csh 
+	setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH $oldSTAR_HOST_SYS lib64 lib`
 #      setenv ValeryOptStar /afs/rhic.bnl.gov/star/users/fine/data08/STAR/OPTSTAR/.$STAR_HOST_SYS
 #      setenv LD_LIBRARY_PATH $ValeryOptStar/lib:$OPTSTAR/lib:$LD_LIBRARY_PATH
 #      setenv PATH $ValeryOptStar/bin:$OPTSTAR/bin:$PATH
@@ -263,32 +198,30 @@ switch ($pkg)
 #      setenv LD_LIBRARY_PATH $QTDIR/lib:$LD_LIBRARY_PATH
 #      setup $xSTARCMPL
 #       source ${GROUP_DIR}/.starver $STAR_LEVEL
-      breaksw
-
-
+    breaksw
     case "PGI":
     case "pgi":
 #% setenv PGI /software/pgi
 #% set path=(/software/pgi/linux86-64/18.10/bin $path)
 #% setenv MANPATH "$MANPATH":/software/pgi/linux86-64/18.10/man
 #% setenv LM_LICENSE_FILE /software/pgi/license.dat:"$LM_LICENSE_FILE"      # PGI compiler - this may be used
-    if ( ! $?PGI) then
-      if(-d /software/pgi) then
-	setenv PGI /software/pgi
-	setenv USE_64BITS 1
-	setenv PGI_V linux86-64/18.10
-	if (-d $PGI/$PGI_V/bin) then
-	  setenv PATH `${GROUP_DIR}/dropit -p $PGI/$PGI_V/bin -p $PATH`
-	  setenv PGILIB $PGI/$PGI_V/lib
-	  if ( -d $PGI/$PGI_V/man) then
-	    setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH} -p ${PGI}/${PGI_V}/man`
-          endif
-          setenv LM_LICENSE_FILE $PGI/license.dat
-	else
-	  unsetenv PGI
+	if ( ! $?PGI) then
+	    if(-d /software/pgi) then
+		setenv PGI /software/pgi
+		setenv USE_64BITS 1
+		setenv PGI_V linux86-64/18.10
+		if (-d $PGI/$PGI_V/bin) then
+		    setenv PATH `${GROUP_DIR}/dropit -p $PGI/$PGI_V/bin -p $PATH`
+		    setenv PGILIB $PGI/$PGI_V/lib
+		    if ( -d $PGI/$PGI_V/man) then
+			setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH} -p ${PGI}/${PGI_V}/man`
+		    endif
+		    setenv LM_LICENSE_FILE $PGI/license.dat
+		else
+		    unsetenv PGI
+		endif
+	    endif
 	endif
-      endif
-    endif
     breaksw
 
     case "OSG":
@@ -492,8 +425,8 @@ switch ($pkg)
       setenv  STARCMPL "gcc"
       setenv xSTARCMPL $pkg; # "gcc";
       if ($?QTDIR)    unsetenv QTDIR
-      if ($?OPTSTAR)  unsetenv OPTSTAR
-      if ($?XOPTSTAR) unsetenv XOPTSTAR
+#      if ($?OPTSTAR)  unsetenv OPTSTAR
+#      if ($?XOPTSTAR) unsetenv XOPTSTAR
       if ($?devtools) unsetenv devtools
       if ( $?DECHO ) echo "setup:reset PATH = $PATH"
       if ( $?DECHO ) echo "setup:reset LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
@@ -502,57 +435,29 @@ switch ($pkg)
       switch ($pkg)
 # contrib => releases
 	case "gcc/*":
-      if (-e /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh) then
-        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh"
-        source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh
-      else if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh) then
-        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh"
-        source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh
-	if ($pkg == "gcc/12") then
-#	  if (-r /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads) then
-#             source /net/l402/data/fisyak/STAR/sources/spack/var/spack/environments/x86_64_gcc12/loads
-#          else 
-#	     setup spackTFG
-#	     spack env activate x86_64_gcc12
-#             spack env view enable
-#          endif
-        endif
-      else if (-e /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh) then
-        if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh"
-        source /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh
-        endif
-     endif
-     endif 
-     endif
+	    if (-e /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh) then
+		if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh"
+		source /cvmfs/sft.cern.ch/lcg/releases/${pkg}/x86_64-centos7/setup.csh
+	    else 
+		if (-e /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh) then
+		    if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh"
+		    source /cvmfs/sft.cern.ch/lcg/contrib/${pkg}/x86_64-centos7/setup.csh
+		else 
+		    if (-e /cvmfs/sft.cern.ch/lcg/releases/gcc/${pkg}/x86_64-el9/setup.csh) then
+			if ( $?DECHO ) echo "source /cvmfs/sft.cern.ch/lcg/releases/gcc/${pkg}/x86_64-el9/setup.csh"
+			source /cvmfs/sft.cern.ch/lcg/releases/gcc/14.2.0/x86_64-el9/setup.csh
+		    endif
+		endif
+	    endif 
 	breaksw
 
 	case "gcc451":
-	setenv PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc451/bin:$PATH
-	if (! $USE_64BITS) then
-	    setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc451/lib:/usr/lib/mysql:$LD_LIBRARY_PATH
-	else
-	    setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc451/lib64:/usr/lib64/mysql:$LD_LIBRARY_PATH
-	endif
-	breaksw
-	case "gcc452":
-	if ( -x $GROUP_DIR/dropit ) then
-	    setenv PATH            `$GROUP_DIR/dropit alt $STAR_HOST_SYS gcc4`
-	    setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH alt $STAR_HOST_SYS gcc4`
-	endif
-	setenv PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc452/bin:$PATH
-	if (! $USE_64BITS) then
-	    setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc452/lib:/usr/lib/mysql:$LD_LIBRARY_PATH
-	else
-	    setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc452/lib64:/usr/lib64/mysql:$LD_LIBRARY_PATH
-	endif
-	breaksw
-	case "gcc45*":
-	setenv PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc45/bin:$PATH
-	if (! $USE_64BITS) then
-	    setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc45/lib:/usr/lib/mysql:$LD_LIBRARY_PATH
-	else
-	    setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc45/lib64:/usr/lib64/mysql:$LD_LIBRARY_PATH
-	endif
+	    setenv PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc451/bin:$PATH
+	    if (! $USE_64BITS) then
+		setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc451/lib:/usr/lib/mysql:$LD_LIBRARY_PATH
+	    else
+		setenv LD_LIBRARY_PATH /afs/rhic.bnl.gov/rcassoft/x8664_sl5/gcc451/lib64:/usr/lib64/mysql:$LD_LIBRARY_PATH
+	    endif
 	breaksw
 	case "gcc471":
 	if ( -x $GROUP_DIR/dropit ) then
@@ -614,22 +519,6 @@ switch ($pkg)
           setenv X_SCLS  `basename $devtools`
 	endif
 	breaksw
-#	case "gcc83*":
-#	setenv USE_64BITS 1
-#	setenv devtools /net/l409/software/fisyak/STAR/sources/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/gcc-8.3.0-opnwtdjumg2hxo4ljvnx77ugb6afmvj3
-#	if (-r ${devtools}) then
-#	  setenv PATH  ${devtools}/root/usr/bin:${PATH}
-#	  setenv LD_LIBRARY_PATH  ${devtools}/root/usr/lib64:${devtools}/root/usr/lib:${LD_LIBRARY_PATH}
-#	  setenv INFOPATH  ${devtools}/root/usr/share/info
-#	  setenv PCP_DIR   ${devtools}/root
-#          setenv PERL5LIB  ${devtools}/root/usr/lib64/perl5/vendor_perl:${devtools}/root/usr/lib/perl5:${devtools}/root/usr/share/perl5/vendor_perl:${PERL5LIB}
-#	  setenv PYTHONPATH  ${devtools}/root/usr/lib64/python2.7/site-packages:${devtools}/root/usr/lib/python2.7/site-packages:/opt/rh/devtoolset-3/root/usr/lib64/python2.6/site-packages:/opt/rh/devtoolset-3/root/usr/lib/python2.6/site-packages
-#	  setenv PKG_CONFIG_PATH  	
-#	  setenv XDG_CONFIG_DIRS  ${devtools}/root/etc/xdg:/etc/xdg
-#	  setenv XDG_DATA_DIRS  ${devtools}/root/usr/share:/usr/local/share:/usr/share
-#          setenv X_SCLS  `basename $devtools`
-#	endif
-#	breaksw
 	case "gcc8*":
 	setenv USE_64BITS 1
 	setenv devtools /opt/rh/devtoolset-8

@@ -1,5 +1,5 @@
 #!/bin/csh
-#       $Id: group_env.csh,v 1.266 2022/06/22 16:16:12 jeromel Exp $
+#       $Id: group_env.csh,v 1.269 2025/02/11 19:30:10 jeromel Exp $
 #	Purpose:	STAR group csh setup
 #
 # Revisions & notes
@@ -63,18 +63,23 @@ if (! $?STAR_ROOT) then
 	if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as AFS based if -d checks"
 	if ( -d ${AFS_RHIC}/star ) then
 	    setenv STAR_ROOT ${AFS_RHIC}/star
+	else
+	# We will fail (we know that)
+	  echo "$self ::  Did not find a valid STAR_ROOT"
+	  setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
+	  set FAIL="$FAIL STAR_ROOT"
         endif
     else
-       if ( -d /usr/local/star ) then
-	    # this is valid
-	    if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as /usr/local/star"
-	    setenv STAR_ROOT /usr/local/star
-       else
-	    # We will fail (we know that)
-	    if ($INTERACTIVE) echo "$self ::  Did not find a valid STAR_ROOT"
-	    setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
-	    set FAIL="$FAIL STAR_ROOT"
-       endif
+	    if ( -d /usr/local/star ) then
+		# this is valid
+		if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as /usr/local/star"
+		setenv STAR_ROOT /usr/local/star
+	    else
+		# We will fail (we know that)
+		echo "$self ::  Did not find a valid STAR_ROOT"
+		setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
+		set FAIL="$FAIL STAR_ROOT"
+	    endif
     endif
 endif
 
@@ -83,7 +88,7 @@ if ($?STAR_HOST_SYS) then
   if (-x ${GROUP_DIR}/dropit) then
      setenv                    PATH             `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${PATH}`
      setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${LD_LIBRARY_PATH}`
-     if ($?SHLIB_PATH)  setenv SHLIB_PATh       `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${SHLIB_PATH}`
+     if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${SHLIB_PATH}`
      if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${MAN_PATH}`
   endif
 endif
@@ -91,7 +96,7 @@ if ($?STAR) then
   if (-x ${GROUP_DIR}/dropit) then
      setenv                    PATH             `${GROUP_DIR}/dropit ${STAR} -p ${PATH}`
      setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit ${STAR} -p ${LD_LIBRARY_PATH}`
-     if ($?SHLIB_PATH)  setenv SHLIB_PATh       `${GROUP_DIR}/dropit ${STAR} -p ${SHLIB_PATH}`
+     if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit ${STAR} -p ${SHLIB_PATH}`
      if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit ${STAR} -p ${MAN_PATH}`
   endif
 endif
@@ -110,17 +115,6 @@ source ${GROUP_DIR}/STAR_SYS;#  echo "STAR_HOST_SYS = ${STAR_HOST_SYS}"
    if (-r ${OPTSTAR}/${STAR_HOST_SYS}) then 
      setenv XOPTSTAR ${OPTSTAR}/${STAR_HOST_SYS}
    endif
-#endif
-# X indicates points to the AFS reference
-#if ( ! $?XOPTSTAR ) then
-#    if (-d ${OPTSTAR}/${STAR_HOST_SYS}) setenv XOPTSTAR ${OPTSTAR}/${STAR_HOST_SYS}
-#    # keep a reference to the AFS one
-#    # this -r test may fail - don't do it
-#    if ( "$READ_AFS" == "" ) then
-##	setenv XOPTSTAR ${AFS_RHIC}/star/packages/.DEV2/misc/opt/star/${STAR_HOST_SYS}
-#	setenv XOPTSTAR $OPTSTAR #${AFS_RHIC}/opt/star
-#    endif
-#endif
 # define but feedback later
 if ( $?DECHO) echo "$self :: Defining GROUP_DIR STAR_PATH"
 if ( ! $?GROUP_DIR )   setenv GROUP_DIR ${STAR_ROOT}/group     # Defined to AFS Group Dir
@@ -260,6 +254,7 @@ setenv STAR_VERSION ${STAR_LEVEL}
 #-
 if (! $?LD_LIBRARY_PATH ) setenv LD_LIBRARY_PATH ""
 if ( $?OPTSTAR ) then
+    if ( $?DECHO) echo "$self :: Checking  OPTSTAR if defined ahead - YES"
     if (!  $?optstar ) setenv  optstar  ${OPTSTAR}
     if (! $?xoptstar ) setenv xoptstar ${XOPTSTAR}
 endif
@@ -888,6 +883,16 @@ if ( -x ${GROUP_DIR}/dropit) then
     setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH}`
     setenv PATH `${GROUP_DIR}/dropit -p ${PATH} GROUPPATH`
 endif
+
+
+
+## After the introduction of SPACK, we created
+## an inconsistency that could bre paired this way
+#if ( $?STAR_LEVEL ) then
+#    setenv EXEFLOGIN 1
+#    starver $STAR_LEVEL
+#    unsetenv EXEFLOGIN
+#endif
 #
 # Display this message as it is likely the environment is
 # screwed up if this happens.
@@ -923,6 +928,8 @@ if ($ECHO) then
     echo   "LD_LIBRARY_PATH = $LD_LIBRARY_PATH"
     unset ECHO
 endif
+
+if ( $?DECHO) echo "$self :: done"
 
 # restore if previously defined
 if ( $?GRPE_pself ) then

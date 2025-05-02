@@ -12,12 +12,11 @@ set self="rootenv"
 source $GROUP_DIR/unix_programs.csh
 
 #if ($#argv > 0) setenv ROOT_LEVEL $1
-#echo "rootenv 1 => $PATH"
 if ($?STAR_HOST_SYS == 0) setenv STAR_HOST_SYS `sys`
 set level = `echo $ROOT_LEVEL | $AWK -F. '{print $1$2}'`
 
 if (! $?ROOT) setenv ROOT ${STAR_ROOT}/ROOT
-if ($?ROOTROOT == 0)   setenv ROOTROOT ${ROOT}/${ROOT_LEVEL}
+
 if ($level >= 305 )  then
     # all is sorted out here actually
     set p = ""
@@ -27,77 +26,95 @@ if ($level >= 305 )  then
     if ($?NODEBUG) set x = ""
 
     set ROOTBASE = "${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}"
-#echo "rootenv 3 => $PATH"
 
-    if ( ! -r ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} && $?DECHO )then
+    if ( ! -e ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} && $?DECHO )then
 	echo "$self :: Did not find ${p}root${x}"
     endif
 
-    if (! -r ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} ) then
+    if ( ! $?ROOTSYS || ! -e ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} ) then
 	# We set "a" default
 	setenv ROOTSYS ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/rootdeb
     else
 	# we reset it according to what is defined
 	setenv ROOTSYS ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x}
-	setenv TMVASYS $ROOTSYS
     endif
-#echo "rootenv 4 => $PATH"
 
 else
     if ($level  >= 224 )  then
 	setenv ROOTSYS ${ROOT}/${ROOT_LEVEL}
-	setenv TMVASYS $ROOTSYS
 	set root = "/.${STAR_HOST_SYS}/root"
     else
 	# not sure what that was but older version of
 	# root we can probably get rid off
 	setenv ROOTSYS ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/root
-	setenv TMVASYS $ROOTSYS
 	set root   = ""
     endif
 endif
 
-#echo "rootenv 5 => $PATH"
 
 
 
-
-# Treat the PATH and LD_LIBRARY_PATH
+# Treat the LD Path
+if (! ${?LD_LIBRARY_PATH}) setenv LD_LIBRARY_PATH
 if ( -x ${GROUP_DIR}/dropit) then
     # the setenv at this stage would be a catastrophe
     # if dropit is not found
-    # setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p "$LD_LIBRARY_PATH" ROOT`
-    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/bin -p ${PATH}`
-    if ($?LD_LIBRARY_PATH) setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/lib -p ${LD_LIBRARY_PATH}`
-    else                   setenv LD_LIBRARY_PATH ""
+    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p "$LD_LIBRARY_PATH" ROOT`
+    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/lib -p ${LD_LIBRARY_PATH}`
+
     if ($level  < 305 )  then
 	if ($?NODEBUG) then
-	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/BIN -p ${PATH}`
 	    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/LIB -p ${LD_LIBRARY_PATH}`
 	endif
 	if ($?INSURE) then
-	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/IBIN -p ${PATH}`
 	    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/ILIB -p ${LD_LIBRARY_PATH}`
 	endif
 	if ($?GPROF) then
-	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/GBIN -p ${PATH}`
 	    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/GLIB -p ${LD_LIBRARY_PATH}`
 	endif
     else
 	# version is greater
 	if ($?NODEBUG) then
-	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTBASE}/root/bin -p ${PATH}`
 	    setenv  LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTBASE}/root/lib -p ${LD_LIBRARY_PATH}`
 	endif
 	if ($?INSURE || $?GPROF ) then
-	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTBASE}/${p}root/bin -p ${PATH}`
 	    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${ROOTBASE}/${p}root/lib -p ${LD_LIBRARY_PATH}`
 	endif
     endif
 else
-    setenv PATH ${ROOTSYS}/bin:${PATH}
     setenv LD_LIBRARY_PATH ${ROOTSYS}/lib:${LD_LIBRARY_PATH}
 endif
+
+
+# Deal with PATH
+if ( -x ${GROUP_DIR}/dropit) then
+    setenv PATH `${GROUP_DIR}/dropit -p "$PATH" ROOT`
+    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/bin -p ${PATH}`
+
+    if ($level  < 305 )  then
+	if ($?NODEBUG) then
+	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/BIN -p ${PATH}`
+	endif
+	if ($?INSURE) then
+	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/IBIN -p ${PATH}`
+	endif
+	if ($?GPROF) then
+	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTSYS}/GBIN -p ${PATH}`
+	endif
+    else
+	if ($?NODEBUG) then
+	    ##VP   setenv PATH "${ROOTSYS}/${root}/BIN:${PATH}"
+	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTBASE}/root/bin -p ${PATH}`
+	endif
+	if ($?INSURE || $?GPROF ) then
+	    setenv PATH `${GROUP_DIR}/dropit -p ${ROOTBASE}/${p}root/bin -p ${PATH}`
+	endif
+    endif
+else
+    setenv PATH ${ROOTSYS}/bin:${PATH}
+endif
+
+
 
 #
 # ATTENTION -- XROOTD NOT VALID PRIOR TO THIS VERSION
@@ -120,10 +137,10 @@ if ($level >= 404  && $?XROOTDSYS ) then
     # The server will search for $HOME/.xrd/pwdnetrc which may cause some
     # information syncrhonization issues if $HOME and ${XROOTDSYS} are on 
     # different FS.
-    if ( ! -r $HOME/.xrd/pwdnetrc && -r ${XROOTDSYS}/.xrd/pwdnetrc ) then
+    if ( ! -e $HOME/.xrd/pwdnetrc && -e ${XROOTDSYS}/.xrd/pwdnetrc ) then
 	setenv XrdSecPWDALOGFILE ${XROOTDSYS}/.xrd/pwdnetrc
     endif
-    if ( ! -r $HOME/.xrd/pwdsrvpuk && -r ${XROOTDSYS}/.xrd/pwdsrvpuk ) then
+    if ( ! -e $HOME/.xrd/pwdsrvpuk && -e ${XROOTDSYS}/.xrd/pwdsrvpuk ) then
 	setenv XrdSecPWDSRVPUK   ${XROOTDSYS}/.xrd/pwdsrvpuk
     endif
 endif
@@ -131,8 +148,8 @@ endif
 
 # attempt to check qt from ROOT
 #if ( 0 ) then
-#if ( -r ${ROOTSYS}/config.log ) then
-    if ( -r ${OPTSTAR}/qt4 || -r ${OPTSTAR}/qt3 ) then
+#if ( -e ${ROOTSYS}/config.log ) then
+    if ( -e ${OPTSTAR}/qt4 || -e ${OPTSTAR}/qt3 ) then
 	# there is a possibility for an ambiguity to be
 	# resolved
 	# ->> this test is not safe - newer version of root config.log
@@ -145,16 +162,16 @@ endif
 	    # qt4 was used for ROOT but possibly an ambigous path
 	    # reset
 	    if ( "testq" != "") then
-	    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | sed 's/qt\/lib/qt4\/lib/'`
+	    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | /bin/sed 's/qt\/lib/qt4\/lib/'`
 	    endif
 	    if ( "$test3" != "") then
-	    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | sed 's/qt3\/lib/qt4\/lib/'`
+	    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | /bin/sed 's/qt3\/lib/qt4\/lib/'`
 	    endif
 	    setenv QTDIR ${OPTSTAR}/qt4
 
 	    # Beware that on Linux, the login may default to qt3 with diverse
 	    # naming conventions
-	    if ( -r /etc/profile.d/qt.csh ) then
+	    if ( -e /etc/profile.d/qt.csh ) then
 		set test4=`echo $PATH | $GREP '/qt.*4/'`
 		set test3=`echo $PATH | $GREP '/qt.*3/'`
 
@@ -171,10 +188,10 @@ endif
 	#else 
 	#    # assume qt3 - we have already tested we had $OPTSTAR/qt3
 	#    if ( "testq" != "") then
-	#    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | sed 's/qt\/lib/qt3\/lib/'`
+	#    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | /bin/sed 's/qt\/lib/qt3\/lib/'`
 	#    endif
 	#    if ( "test4" != "") then
-	#    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | sed 's/qt4\/lib/qt3\/lib/'`
+	#    setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | /bin/sed 's/qt4\/lib/qt3\/lib/'`
 	#    endif
 	#    setenv QTDIR ${OPTSTAR}/qt3	    
 	#endif 
@@ -194,7 +211,7 @@ endif
 setenv PYTHONPATH $ROOTSYS/lib
 
 # OpenGL
-if ( -r $ROOTSYS/../Mesa) setenv OPENGL $ROOTSYS/../Mesa
+if ( -e $ROOTSYS/../Mesa) setenv OPENGL $ROOTSYS/../Mesa
 
 # CINT
 if ( -d ${ROOTSYS}/cint/cint ) then
@@ -206,20 +223,13 @@ endif
 if ( -x ${GROUP_DIR}/dropit && -d ${ROOTSYS}/cint/doc ) then
     setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH} -p ${ROOTSYS}/cint/doc`
 endif
-# set PYTHONPATH for gdml
-if (! $?PYTHONPATH ) then 
-    setenv PYTHONPATH ${ROOTSYS}/lib:${ROOTROOT}/root/geom/gdml
-else 
-   if (-x ${GROUP_DIR}/dropit && -d ${ROOTROOT}/root/geom/gdml) then
-    setenv PYTHONPATH `${GROUP_DIR}/dropit -p ${PYTHONPATH} ROOTROOT gdml`;
-    setenv PYTHONPATH ${PYTHONPATH}:${ROOTSYS}/lib:${ROOTROOT}/root/geom/gdml
-   endif
-endif
+
 
 # restore - this in case of a sourcing
 if ( $?pself ) then
     set self=$pself
 endif
+
 
 # befeore leaving unset
 unset p x

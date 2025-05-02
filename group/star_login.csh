@@ -34,7 +34,6 @@ setenv star_login_csh 1
 # This file is reserved for pre-login env setup which
 # are site specific. None of the star variables are
 # known at this stage ...
-if (! $?AFS_RHIC) setenv AFS_RHIC /afs/rhic.bnl.gov
 if( -r $GROUP_DIR/site_pre_setup.csh ) then
     if ( $?DECHO )  echo "$self :: Sourcing site pre setup"
     source $GROUP_DIR/site_pre_setup.csh
@@ -60,7 +59,7 @@ if ( ! $?USER ) then
     if ( $?LOGNAME ) then
 	setenv USER $LOGNAME
     else
-	setenv USER `whoami`
+	setenv USER `/usr/bin/whoami`
     endif
 endif
 if ( ! $?LOGNAME ) then
@@ -71,8 +70,8 @@ endif
 # CHECK FOR LOGIN PERMISSION
 if ( -f /etc/nologin &&  $USER != root  ) then
    echo "$self :: Sorry but this system is under maintenance. No logins ..."
-   cat /etc/nologin
-   sleep 5
+   /bin/cat /etc/nologin
+   /bin/sleep 5
    exec "echo"
    exit
 endif
@@ -93,7 +92,8 @@ set user=$USER
 
 # May be more. To be extended if needed or
 # actually supressed if unused.
-setenv OSTYPE `uname -s`
+setenv OSTYPE `/bin/uname -s`
+# setenv OSPROC `/bin/uname -p`
 switch ($OSTYPE)
     case "SunOS":
 	set OS="Solaris"
@@ -115,7 +115,7 @@ if ( $?DECHO ) echo "$self :: Setting X11 and other path setup [$PATH]"
 
 # This is done stupidly in HEpix. I prefer
 if( ! $?X11BIN || ! $?PATH) then
-    if ( $?PATH && ! $?SAVED_PATH) setenv SAVED_PATH `echo $PATH | sed "s/:/ /g"`
+    if ( $?PATH && ! $?SAVED_PATH) setenv SAVED_PATH `echo $PATH | /bin/sed "s/:/ /g"`
     if( -d /usr/openwin/bin ) then
 	# Damned open window systems
 	setenv X11BIN  "/usr/openwin/bin"
@@ -174,7 +174,7 @@ if ( $?DECHO ) echo "$self :: PATH is now = $PATH"
 if ( $?DECHO ) echo "$self :: Setting basic manpath"
 
 if ( -r "/etc/man.config" ) then
-   setenv SYSMAN `awk 'BEGIN{fi=1}/^MANPATH[\t ]/{if(fi==1){printf("%s",$2);fi=0}else{printf(":%s",$2)}}END{printf"\n"}' /etc/man.config`
+   setenv SYSMAN `/bin/awk 'BEGIN{fi=1}/^MANPATH[\t ]/{if(fi==1){printf("%s",$2);fi=0}else{printf(":%s",$2)}}END{printf"\n"}' /etc/man.config`
 else
    setenv SYSMAN "/usr/man"
 endif
@@ -184,39 +184,6 @@ setenv LESSCHARSET latin1
 #setenv PRINT_CMD   "xprint"
 
 
-
-# CERN stuff
-if ( $?DECHO ) echo "$self :: Checking CERN stuff"
-
-if ($?CERN == 0) then
-    # should be defined by now but ...
-    if ( -x $GROUP_DIR/setup  ) then
-	source $GROUP_DIR/setup CERN
-    endif
-    if ($?ECHO == 1) then
-	if ( ! $?CERN ) then
-	    echo "$self :: Could not find a suitable CERN path"
-	else
-	    echo "$self :: Set CERN to $CERN"
-	endif
-    endif
-else
-#    echo "CERN set to $CERN"
-#    exit 1
-endif
-
-# If still undefined, set it to /cern and proceed
-# This will act as a safety net / minimal setup
-if ($?CERN == 0)       then
-    setup cern
-endif
-if ($?CERN_LEVEL == 0) setenv CERN_LEVEL pro
-# add one more check - if does not existing, switch to pro
-if ( ! -r  $CERN/$CERN_LEVEL ) then
-    if ( $?DECHO ) echo "$self :: $CERN/$CERN_LEVEL not found, switch to pro"
-    setenv CERN_LEVEL pro
-endif
-setenv CERN_ROOT "$CERN/$CERN_LEVEL"
 
 
 
@@ -231,9 +198,9 @@ unsetenv INITIALE
 if ( ! $?HOSTNAME ) then
     # this may be necessary as globhal login may be
     # skipped in Condor mode for example
-    setenv HOSTNAME `hostname`
+    setenv HOSTNAME `/bin/hostname`
 endif
-setenv HOST `hostname | sed "s/\..*//"`
+setenv HOST `/bin/hostname | /bin/sed "s/\..*//"`
 
 
 # In principle, the was a if (-r) on several files here
@@ -285,8 +252,18 @@ else
     setenv PAGER       "more"
 endif
 
+set test=`which pico`
+set test2=`echo $test | $GREP "not found"`
+if ( "$test" != "" && "$test2" != "$test" ) then
+    setenv EDITOR      "pico -w"
+    setenv VISUAL      "pico -w"
+else
     setenv EDITOR      "emacs -nw"
     setenv VISUAL      "emacs -nw"
+endif
+
+unset test
+unset test2
 
 
 # ** GROUP LOGIN ***> should be merged as well
@@ -305,37 +282,17 @@ else
     set ttydev=""
 endif
 if ("$ttydev" != "") then
-    chmod 622 $ttydev >& /dev/null
+    /bin/chmod 622 $ttydev >& /dev/null
 endif
 
-# Prepare the scratch disk if not present
-if ($?SCRATCH == 0) then
-    if ( $?TMPDIR ) then
-	setenv SCRATCH "$TMPDIR"
-    #else if ( -w /scr20 ) then
-    #	setenv SCRATCH /scr20/$LOGNAME
-    #else if ( -w /scr21 ) then
-    #	setenv SCRATCH /scr21/$LOGNAME
-    #else if ( -w /scr22 ) then
-    #	setenv SCRATCH /scr22/$LOGNAME
-    else if ( -w /scratch ) then
-	setenv SCRATCH /scratch/$LOGNAME
-    else
-	# echo No scratch directory available. Using /tmp/$USER ...
-	setenv SCRATCH /tmp/$LOGNAME
-    endif
-    if ( ! -d $SCRATCH ) then
-	mkdir -p $SCRATCH && chmod 755 $SCRATCH
-    endif
-    if ($?ECHO) echo   "Setting up SCRATCH   = $SCRATCH"
-endif
+
 # <** GROUP LOGIN ENDS. Some parts moved.
 
 
 # The last part is executed in case
 # a user forgets to do it from within is cshrc
 if ( ! $?star_cshrc_csh) then
-    if ( -r $GROUP_DIR/star_cshrc.csh ) then
+    if ( -e $GROUP_DIR/star_cshrc.csh ) then
 	if ( $?DECHO )  echo "$self :: Sourcing star_cshrc.csh"
 	source $GROUP_DIR/star_cshrc.csh
     endif
@@ -344,10 +301,10 @@ endif
 # Now, display the news if any
 if ( ! $?SILENT && $?prompt) then
     if ( -f $STAR_PATH/news/motd ) then
-	alias motd cat $STAR_PATH/news/motd
-        cat $STAR_PATH/news/motd
+	alias motd /bin/cat $STAR_PATH/news/motd
+        /bin/cat $STAR_PATH/news/motd
     endif
-    if ( -f $STAR_PATH/news/motd.$STAR_SYS ) cat $STAR_PATH/news/motd.$STAR_SYS
+    if ( -f $STAR_PATH/news/motd.$STAR_SYS ) /bin/cat $STAR_PATH/news/motd.$STAR_SYS
 endif
 
 
