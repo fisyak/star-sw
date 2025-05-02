@@ -1,6 +1,4 @@
-setenv NODEBUG yes
-setenv USE_64BITS 1
-setenv TFG_STAR 1
+set hn = `hostname`;
 switch ($hn) 
     case "*.starp.bnl.gov":
     case "*.l4.bnl.local":

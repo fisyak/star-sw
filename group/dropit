@@ -21,7 +21,7 @@
 #
 
 set PTEST=""
-foreach perl (/usr/bin/perl /usr/local/bin/perl) # $OPTSTAR/bin/perl )
+foreach perl (/usr/bin/perl /usr/local/bin/perl $OPTSTAR/bin/perl )
     if ( -x $perl ) then
 	set PTEST=$perl
 	# take the first found - it is only for dropit
