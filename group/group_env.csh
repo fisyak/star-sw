@@ -88,7 +88,7 @@ if ($?STAR_HOST_SYS) then
   if (-x ${GROUP_DIR}/dropit) then
      setenv                    PATH             `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${PATH}`
      setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${LD_LIBRARY_PATH}`
-     if ($?SHLIB_PATH)  setenv SHLIB_PATh       `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${SHLIB_PATH}`
+     if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${SHLIB_PATH}`
      if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${MAN_PATH}`
   endif
 endif
@@ -96,7 +96,7 @@ if ($?STAR) then
   if (-x ${GROUP_DIR}/dropit) then
      setenv                    PATH             `${GROUP_DIR}/dropit ${STAR} -p ${PATH}`
      setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit ${STAR} -p ${LD_LIBRARY_PATH}`
-     if ($?SHLIB_PATH)  setenv SHLIB_PATh       `${GROUP_DIR}/dropit ${STAR} -p ${SHLIB_PATH}`
+     if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit ${STAR} -p ${SHLIB_PATH}`
      if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit ${STAR} -p ${MAN_PATH}`
   endif
 endif
