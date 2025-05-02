@@ -21,6 +21,10 @@ my $FILE = "/*/st_physics";
 my $NEvents = 100000;
 my $step = 0;
 my $debug = 0;
+if ($#ARGV >= 0) {
+  $debug = $ARGV[0];
+}
+
 #================================================================================
 #  dir -ltr /star/data14/GRID/NFS_FileList/
 #  dir /gpfs01/star/data*/reco/production_7p7GeV_2021/ReversedFullField/P22ia*/2021/*/*/*event.root
@@ -2744,7 +2748,8 @@ my $debug = 0;
 #$hist = "RunXXII19"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/17/2025  TpcSecRowB.pp500_2022.root
 #$hist = "RunXXII20"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/19/2025 03/23/25  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
 #$hist = "RunXXII21"; $NEvents = 1000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2022/*/pp500_2022/???/2*/"; $FILE = "*"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/21/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
-$hist = "RunXXII22"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/25/25  check MySQL
+#$hist = "RunXXII22"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/25/25  check MySQL
+$hist = "RunXXII23"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 04/02/25  check dev
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2790,7 +2795,7 @@ my $hostname = `hostname`; chomp($hostname);
 $scr = $SCR . $hist . "/";
 print "Production = $Production ==> $hist\n";
 my $glb = "";
-if ($#ARGV >= 0) {$glb = $ARGV[0];}
+if ($#ARGV >= 1) {$glb = $ARGV[1];}
 else {
   if ($Production) {
     if ($disk !~ /^\//) {
@@ -2846,6 +2851,8 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     $ProdFiles{$dd} .= " " . $file;  
     if ($debug) {print "$dd => $ProdFiles{$dd}\n";}
   }
+  my $apptainer = "apptainer exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02";
+  if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {$apptainer .= " /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif";}
   foreach my $dd (keys %ProdFiles) {
     my $countperdd = 0;
     my @FilesRun = split " ", $ProdFiles{$dd};# print "$dd => $#FielsRun ================================================================================\n";
@@ -2854,21 +2861,19 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
-    if ($STAR_LEVEL eq "TFG") {
-    print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">	 <command>
-         cd ${SUBMITTINGDIRECTORY}
-if ($?INPUTFILE0) csh -x $INPUTFILE0
-         </command>
-';
-  } else {
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
 <job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">	 <command>
          cd ${SUBMITTINGDIRECTORY}
-if ($?INPUTFILE0) csh -x $INPUTFILE0
+if ($?INPUTFILE0) ' . $apptainer . ' csh -x $INPUTFILE0
          </command>
 ';
-  }
+#     if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
+#        print XML '<shell>singularity exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif</shell>
+# ';
+#     } else {
+#        print XML '<shell>singularity exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02</shell>
+# ';
+#     }
     foreach my $file (@FilesRun) {
       my $dir = File::Basename::dirname($file);
       my $fff = File::Basename::basename($file);
@@ -2960,18 +2965,20 @@ echo \"HOME is now $HOME\"
 #	print OUT "#! /usr/bin/tcsh -f\n";
 	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
 	if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
-	  print OUT "source ${GROUP_DIR}/setup gcc;\n";
-	  print OUT "source /afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh;\n";  
-	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
+#	  print OUT "singularity exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif csh ";
+	  print OUT "source $STAR/unsetupDEV2.csh\n";  
+#	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 #	  print OUT "setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib;\n";
 	} else {
+#	  print OUT "singularity exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 csh ";
 #	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
 	}
-	print OUT "/usr/bin/test -d $scrr || mkdir -p $scrr;\n";
+	print OUT " /usr/bin/test -d $scrr || mkdir -p $scrr\n";
 	my $cmd = "/usr/bin/test ! -r " . $root . " &&  hostname >>& $log  && root.exe -q -b  '" . $macro;
 	$cmd .= ".C(" . $First ."," .$Last. ",\"" . $ffile . "\",\"" . $root . "\"," . $Mode . ")\' >>& $log; ";
 	#    $cmd .= "; cp -p $logL $log;";
 	print OUT "$cmd\n";
+#	print OUT "exit\n";
 	$count++;
 	$countperdd++;
 	close (OUT); $opened = 0; $count = 0;
