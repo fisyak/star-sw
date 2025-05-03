@@ -79,7 +79,7 @@ switch ($pkg)
     breaksw
 endsw
 if ($?AFS_RHIC) then
-    setenv STAR_ROOT ${AFS_RHIC}
+    setenv STAR_ROOT ${AFS_RHIC}/star
     setenv STAR_PATH ${STAR_ROOT}/packages
     setenv OPTSTAR   ${STAR_ROOT}/opt/star
     setenv XOPTSTAR  ${OPTSTAR}

@@ -4013,3 +4013,96 @@ end
 foreach f (`ls -1d *.condor`)
   condor_submit ${f}
 end
+================================================================================
+03/31/2025
+[rcas6014] ~ $ du -sh /gpfs01/star/data2[4-7]/TpcAlignment
+21T     /gpfs01/star/data24/TpcAlignment
+5.7T    /gpfs01/star/data25/TpcAlignment
+20T     /gpfs01/star/data26/TpcAlignment
+2.7T    /gpfs01/star/data27/TpcAlignment
+[rcas6014] ~ $ df -h /gpfs01/star/data2[4-7]/TpcAlignment
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   24T   28T  46% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T  7.9T   44T  16% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   22T   30T  43% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T  5.4T   46T  11% /gpfs/mnt/gpfs01
+[rcas6014] ~ $ du -sh /gpfs01/star/data2[4-7]/TpcAlignment/*
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c
+3.0K    /gpfs01/star/data24/TpcAlignment/TFG24d
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e
+3.0K    /gpfs01/star/data25/TpcAlignment/TFG24d
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e
+17T     /gpfs01/star/data26/TpcAlignment/TFG24c
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e
+3.0K    /gpfs01/star/data27/TpcAlignment/TFG24c
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e
+================================================================================
+04/01/2025
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+50T
+
+
+-rw-rw-r--   1 fisyak rhstar     5 Jul 21  2024 st_physics_21044023_raw_7000003.noeve
+-rw-rw-r--   1 pkisel rhstar   66M Jul 13  2024 st_physics_21044023_raw_7500001,1,7080.log
+-rw-rw-r--   1 pkisel rhstar  955M Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.MuDst.root
+-rw-rw-r--   1 fisyak rhstar   15K Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.MuDst.root.log
+-rw-r--r--   1 fisyak rhstar  191M Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.picoDst.root
+-rw-rw-r--   1 fisyak rhstar  636K Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.picoDst.root.log
+-rw-rw-r--   1 fisyak rhstar  3.9M Jul 20  2024 st_physics_21044023_raw_7500001,7081,12611B.log.gz
+-rw-r--r--   1 fisyak rhstar  756M Jul 20  2024 st_physics_21044023_raw_7500001,7081,12611.MuDst.root
+-rw-r--r--   1 fisyak rhstar  153M Jul 20  2024 st_physics_21044023_raw_7500001,7081,12611.picoDst.root
+
+dir /gpfs01/star/data2[4-7]/TpcAlignment/TFG24e/*/RF/*/*/*/*.log
+rm /gpfs01/star/data2[4-7]/TpcAlignment/TFG24e/*/RF/*/*/*/*.log
+rm /gpfs01/star/data24/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data25/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data26/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data27/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data2[4-7]/TpcAlignment/TFG24e/*/RF/*/*/*/*.noeve
+
+
+rm /gpfs01/star/data24/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data25/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data26/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data27/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/*/*/*.noeve
+
+rm /gpfs01/star/data24/TpcAlignment/*/*/RF/*/*/*/*.log
+rm /gpfs01/star/data25/TpcAlignment/*/*/RF/*/*/*/*.log
+rm /gpfs01/star/data26/TpcAlignment/*/*/RF/*/*/*/*.log
+rm /gpfs01/star/data27/TpcAlignment/*/*/RF/*/*/*/*.log
+[rcas6014] /<3>users/fisyak/na27/paw/> du -sh  /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/
+1.9T    /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+1.7T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+963G    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+450G    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+455G    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+[rcas6014] /<4>TFG24c/2020/RF/7p3GeV_fixedTarget/> du -sh  /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/
+1.9T    /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+1.7T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+963G    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+64G     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/
+2.5T    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+338G    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+450G    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+455G    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+[rcas6014] /<4>TFG24c/2020/RF/7p3GeV_fixedTarget/> du -sh  /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/
+1.9T    /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+1.7T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+963G    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+64G     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/
+2.4T    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+305G    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+450G    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+455G    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+8.3T
