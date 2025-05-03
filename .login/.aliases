@@ -97,6 +97,7 @@ set name=`uname -n`
 #  set name=`echo $name |  awk -F\. '{print $1}'_${1}		
 #endif	
 #alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg black -fg white  -sb -sl 10000 -geometry 132x60 &"
+#alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg black -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
 alias XtermB "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg black -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
 alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
 #alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg blue -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
@@ -110,6 +111,9 @@ alias FPE_OFF 'setenv STARFPE NO'
 #alias getSvtRuns "get_file_list.pl -cond  'filetype=online_daq,storage=HPSS,runnumber>=6020020,tpc=1,svt=1,ssd=1,trgsetupname~cu,filename~physics'  -keys 'runnumber'"
 alias rssh 'ssh  -o TCPKeepAlive=yes -Y ssh.sdcc.bnl.gov'
 alias assh 'ssh  -o TCPKeepAlive=yes -Y atlasgw.bnl.gov'
+alias assh_v3 'ssh  -o TCPKeepAlive=yes -Y spar0108.usatlas.bnl.gov'
+alias cvmfs01ssh 'ssh  -o TCPKeepAlive=yes -Y cvmfswrite01.sdcc.bnl.gov'
+alias cvmfs02ssh 'ssh  -o TCPKeepAlive=yes -Y cvmfswrite02.sdcc.bnl.gov'
 #alias ldd  'otool -L'
 alias nxsh 'ssh -o TCPKeepAlive=yes -Y -L 7026:nx01.rcf.bnl.gov:22 -l fisyak ssh01.sdcc.bnl.gov'
 alias nxsh4 'ssh -o TCPKeepAlive=yes -Y -L 7025:nx02.rcf.bnl.gov:22 -l fisyak ssh01.sdcc.bnl.gov'
@@ -118,17 +122,21 @@ alias nx01 'ssh -o TCPKeepAlive=yes -Y -L 7025:nx01.rcf.bnl.gov:22 -l fisyak ssh
 alias rgsi 'ssh -o TCPKeepAlive=yes -Y ikisel@lxi001.gsi.de'
 alias lxir039 'ssh -o TCPKeepAlive=yes -Y ikisel@lxir039.gsi.de'
 #alias lsf $STAR_PATH/scripts/star-submit
+#alias lsfA $STAR_PATH/scripts/star-submit
+#alias lsfA /gpfs01/star/pwg/fisyak/STAR/packages/scripts/star-submit
+alias  lsfB /star/nfs4/AFS/star/packages/scripts/sums-submit-beta
 #alias lsf /afs/rhic/star/users/starjobs/dev/star-submit
-#alias lsf $STAR_PATH/scripts/star-submit-beta
+#alias lsf $STAR/scripts/star-submit
 #alias lsfE $STAR_PATH/scripts/star-submit-beta -p bnl_condor_eval  
-alias lsf $STAR/scripts/star-submit
+alias  lsf $STAR/scripts/star-submit
 alias lsfn $STAR/scripts/new/star-submit
 alias lsf45 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber45
 alias lsfafs lsf45
 alias lsf62 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber62
 alias lsf63 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber63
 alias lsf6X $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X
-alias lsfnightly  $STAR/scripts/star-submit -p bnl_condor_nightlyTest
+#alias lsfnightly  $STAR/scripts/star-submit -p bnl_condor_nightlyTest
+alias lsfnightly  $STAR/scripts/star-submit -p bnl_condor_benchmark
 # Requirements   = Machine == "l416.l4.bnl.local"
 # alias lsf405 l405.l4.bnl.local
 #cppcheck --quiet --enable=all <dir_with_cpp_files>
@@ -138,11 +146,13 @@ alias difw340 'diff -aywbB --width=340'
 alias difw360 'diff -aywbB --width=360'
 alias difw380 'diff -aywbB --width=380'
 alias difw420 'diff -aywbB --width=420'
+alias difw450 'diff -aywbB --width=450'
 alias zdifw 'zdiff -aywbB --width=320'
 alias zdifw340 'zdiff -aywbB --width=340'
 alias zdifw360 'zdiff -aywbB --width=360'
 alias zdifw380 'zdiff -aywbB --width=380'
 alias zdifw420 'zdiff -aywbB --width=420'
+alias zdifw450 'zdiff -aywbB --width=450'
 #alias vg-in-place /star/institutions/bnl/fisyak/valgrind-3.6.1/vg-in-place
 #alias condq 'condor_q -global -wide -submitter fisyak'
 alias condq 'condor_q -wide'
