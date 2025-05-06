@@ -1,98 +1,26 @@
-set hn = `hostname`;
-switch ($hn) 
-    case "*.starp.bnl.gov":
-    case "*.l4.bnl.local":
-	if (-d  /net/l402/data/fisyak/STAR) then
-	    setenv AFS_RHIC   /net/l402/data/fisyak/STAR
-	    setenv STAR_ROOT ${AFS_RHIC}
-	    setenv OPTSTAR   ${STAR_ROOT}/opt/star
-	    if ($?CERN == 0) setenv CERN ${STAR_ROOT}/cern
-	    if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
-	    setenv PROD_LOG /net/l404/data/fisyak/prodlog
-	endif
-    breaksw
-    case "yuri.star.bnl.gov":
-    case "autiry.star.bnl.gov":
-	if (-r /sw/bin/init.csh) source /sw/bin/init.csh
-	setenv AFS_RHIC  /afs/rhic.bnl.gov
-	setenv STAR_ROOT ~/STAR
-	setenv OPTSTAR   ${STAR_ROOT}/opt
-	if ($?CERN == 0) setenv CERN ${STAR_ROOT}/cern
-	if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
-    breaksw
-    case "*.sdcc.bnl.gov"
-    case "*.star.bnl.gov":
-    case "rhic.bnl.gov":                                   
-    case "rcf.bnl.gov":  
-    default:  
-	if (-d /gpfs01/star/subsys-tpc/fisyak/STAR) then
-	    setenv AFS_RHIC  /gpfs01/star/subsys-tpc/fisyak/STAR
-	    setenv STAR_ROOT ${AFS_RHIC}
-	    if ($?CERN == 0) setenv CERN ${STAR_ROOT}/cern
-	    if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
-	else 
-	    if (-d  /afs/rhic.bnl.gov) then
-		setenv AFS_RHIC /afs/rhic.bnl.gov  
-		setenv STAR_ROOT ${AFS_RHIC}/star
-	    else 
-		setenv AFS_RHIC ${HOME}
-		setenv STAR_ROOT ${AFS_RHIC}/star
-	    endif
-	endif
-    breaksw	
-endsw
-setenv OPTSTAR   ${STAR_ROOT}/opt
-setenv XOPTSTAR ${OPTSTAR}
-if ($?LD_LIBRARY_PATH == 0) setenv LD_LIBRARY_PATH ""
-if ($?CERN == 0) setenv CERN /cern
-if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
-setenv STAR_PATH ${STAR_ROOT}/packages
-setenv STAR_LEVEL pro
-#if (-r $STAR_PATH/.DEV2) then
-#  setenv STAR_LEVEL .DEV2
-#else if (-r $STAR_PATH/TFG) then
+setenv NODEBUG yes
+setenv USE_64BITS 1 
+setenv TFG_STAR 1
+if ($?PERL5LIB == 0) setenv PERL5LIB
+setenv PERL5LIB ${PERL5LIB}:${HOME}/bin/lib:/usr/share/perl5/usr/share/perl5/vendor_perl;
+if ( -r $HOME/star/group/setup_AFS_RHIC) source $HOME/star/group/setup_AFS_RHIC afs
+if (-d /opt/rh/devtoolset-6/root/usr/bin) source $GROUP_DIR/setup gcc631
+if (-r $STAR_PATH/TFG) then
   setenv STAR_LEVEL TFG
-#endif
-setenv STAR      ${STAR_PATH}/${STAR_LEVEL}
-setenv GROUP_DIR ${STAR}/group
+endif
+#setenv PATH ${PATH}:${GROUP_DIR}  
 source ${GROUP_DIR}/STAR_SYS
 if ($?ROOT_LEVEL == 0) setenv ROOT_LEVEL 5.99.99
 if ($?CERN && $?CERN_ROOT == 0)  setenv CERN_ROOT $CERN/pro
 if ($?GROUP_DIR == 0)  then                                     
             echo "GROUP_DIR is not defined"                    
 endif        
-#if ($?CMAKE_PREFIX_PATH) then
-#  if (-r ${CMAKE_PREFIX_PATH}) then
-#    setenv PATH ${CMAKE_PREFIX_PATH}/bin:${PATH}
-#    setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64:${CMAKE_PREFIX_PATH}/lib:
-#    if (-e ${GROUP_DIR}/dropit) then
-##    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib64:${CMAKE_PREFIX_PATH}/lib
-#      setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit /usr/lib64 -p ${LD_LIBRARY_PATH}`:/usr/lib64:/usr/lib
-#    endif
-#  endif
-#endif
 source $GROUP_DIR/group_env.csh
 if ($?PERL5LIB == 0) setenv PERL5LIB
 setenv PERL5LIB ${PERL5LIB}:${HOME}/bin/lib:/usr/share/perl5/usr/share/perl5/vendor_perl;#:/usr/share/perl5/vendor_perl/TAP/Harness/ #/afs/rhic.bnl.gov/star/packages/.DEV2/.misc
 setenv PATH ${PATH}:${GROUP_DIR}                                                    
-#setenv use_my_star 1
-if (-d /opt/rh/devtoolset-6/root/usr/bin) source $GROUP_DIR/setup gcc631
-#switch ($STAR_HOST_SYS)
-#    case "al92_x8664_gcc11":
-#      setup spackTFG
-#      spack env activate AL92
-#      if (! $?CMAKE_PREFIX_PATH) then
-#        setenv CMAKE_PREFIX_PATH /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view
-#      endif
-#      breaksw
-#    default:  
-#      breaksw
-# endsw
-#echo "5 => $PATH"
 if (-r $GROUP_DIR/group_aliases.csh) source $GROUP_DIR/group_aliases.csh
-#echo "6 => $PATH"
 if (-r $HOME/.aliases) source $HOME/.aliases
-#echo "7 => $PATH"
 if ($?CERNLIB == 0) setenv CERNLIB ${CERN_ROOT}/lib
 if ($?OBJY_HOME)  unsetenv OBJY_HOME
 #setenv CLASSPATH "/usr/local/Aglets1.1b2/lib/aglets.jar:/usr/local/Aglets1.1b2/public:/usr/java1.1/mm.mysql.jdbc-1.2b"
@@ -159,6 +87,7 @@ if ( $?LD_LIBRARY_PATH == 0) setenv LD_LIBRARY_PATH
 if ( $?PERL5LIB == 0)        setenv PERL5LIB 
 if (  $?MANPATH == 0)        setenv MANPATH
 if ($?COLORS == 1) unset COLORS
+set hn = `hostname`;
 switch ($hn) 
   case "rftpexp*":
     setenv SILENT 1

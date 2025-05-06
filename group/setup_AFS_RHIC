@@ -67,7 +67,7 @@ switch ($pkg)
 			setenv AFS_RHIC ~/STAR
                     else 
 			if (-r ~/star/group) then
-			    setenv AFS_RHIC ~/star
+			    setenv AFS_RHIC $HOME
 			else 
 			    unsetevn AFS_RHIC 
                             echo "AFS_RHIC is not set"
@@ -98,5 +98,7 @@ if ($?AFS_RHIC) then
     else
 	setenv GROUP_DIR ${AFS_RHIC}/star/group
     endif
-    if ($?LEVEL_STAR) source ${GROUP_DIR}/.starver ${LEVEL_STAR}
+    if ($?LEVEL_STAR) then 
+      source ${GROUP_DIR}/.starver ${LEVEL_STAR}
+    endif
 endif

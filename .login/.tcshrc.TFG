@@ -11,10 +11,9 @@
 # Last Change:	   Mon Dec  5 16:31:50 MET 19
 #-############################################################################
 setenv cf unknown
-set domain=`hostname -d`
-if ($?) set domain = `domainame`;
-set host  = `uname -s`
-set hn = `hostname`;
+#set domain=`hostname -d`
+#if ($?) set domain = `domainame`;
+#set host  = `uname -s`
 which fs >& /dev/null
 if ($?) then 
   set syst = amd64_linux26
@@ -33,16 +32,7 @@ endif
 #if ($?STAR_LEVEL == 0 || $STAR_LEVEL == "") then
 
 if ($?STAR == 0) then
-  setenv NODEBUG yes
-  setenv USE_64BITS 1 
-  setenv TFG_STAR 1
-  setenv STAR_LEVEL TFG
-#  if (-r $HOME/.default.csh) source $HOME/.default.csh
-  if (-r $HOME/star/group/setup_AFS_RHIC) source $HOME/star/group/setup_AFS_RHIC afs
-  if ($?PERL5LIB == 0) setenv PERL5LIB
-  setenv PERL5LIB ${PERL5LIB}:${HOME}/bin/lib:/usr/share/perl5/usr/share/perl5/vendor_perl;
-  setenv PATH ${PATH}:${GROUP_DIR}  
-  if ( -r /opt/rh/devtoolset-6) setup gcc631 
+  if ( -r $HOME/.default.csh) source $HOME/.default.csh
 endif
 #======================================================================#
 # The following is a set of examples.
