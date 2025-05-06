@@ -2,7 +2,7 @@
   root4star 'Ast2Root.C("y2019")'
  */
 //#define OLD_GEANT_VMC
-void Ast2Root(const Char_t *vers="y2016a", const Char_t *geom = "useXgeom") {
+void Ast2Root(const Char_t *vers="y2025z", const Char_t *geom = "useXgeom") {
   gROOT->LoadMacro("bfc.C");
   //  TString cmd("bfc(0,\"gstar,useXgeom,nodefault,");
   TString cmd("bfc(0,\"gstar,magF,FieldOn,nodefault,");
