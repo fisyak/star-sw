@@ -19,6 +19,8 @@ void PyTune( Int_t tune );
 void PyHepc( Int_t mode );
 /// Initialize pythia
 void PyInit( string frame, string blue, string yellow, Double_t energy );
+/// Configure pythia
+void PyGive( string command );
 
 void Py1Ent( int ip, int kf, double energy, double theta, double phi );
 int  PyComp( int kf );
@@ -62,6 +64,23 @@ struct PySubs_t {
   Double_t &ckin( Int_t i ){ return _ckin[i-1]; }
 };
 extern "C" PySubs_t *address_of_pysubs();
+
+//
+// Interface to the PYDAT1 common block
+//      COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
+//
+#define address_of_pydat1 F77_NAME( address_of_pydat1, ADDRESS_OF_PYDAT1 )
+struct PyDat1_t{
+  Int_t    _mstu[200];
+  Double_t _paru[200];
+  Int_t    _mstj[200];
+  Double_t _parj[200];
+  Int_t    &mstu(Int_t i){return _mstu[i-1];}
+  Double_t &paru(Int_t i){return _paru[i-1];}
+  Int_t    &mstj(Int_t i){return _mstj[i-1];}
+  Double_t &parj(Int_t i){return _parj[i-1];}
+};
+extern "C" PyDat1_t *address_of_pydat1();
 
 //
 // Interface to the PYDAT3 common block
@@ -110,4 +129,22 @@ struct PyInt5_t {
 };
 extern "C" PyInt5_t *address_of_pyint5();
 
+//
+// Interface to the PYINT2 common block
+//      COMMON/PYINT2/ISET(500),KFPR(500,2),COEF(500,20),ICOL(40,4,2)
+//
+#define address_of_pyint2 F77_NAME( address_of_pyint2, ADDRESS_OF_PYINT2 )
+struct PyInt2_t {
+  int    _iset[500];
+  int    _kfpr[2][500];
+  double _coef[20][500];
+  int    _icol[2][4][40];
+  int& iset( int index ){ return _iset[index-1]; }
+  int& kfpr( int isub, int i ){ return _kfpr[i-1][isub-1]; }
+  double& coef( int isub, int i){ return _coef[i-1][isub-1]; }
+  int& icol(int i, int j, int k){ return _icol[k-1][j-1][i-1]; }  
+};
+extern "C" PyInt2_t *address_of_pyint2();
+
 #endif
+

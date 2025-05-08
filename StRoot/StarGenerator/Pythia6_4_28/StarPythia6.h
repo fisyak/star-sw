@@ -59,10 +59,14 @@ class StarPythia6 : public StarGenerator
   static PyJets_t &pyjets(){ return *address_of_pyjets(); }
   /// Returns a reference to the /PYSUBS/ common block
   static PySubs_t &pysubs(){ return *address_of_pysubs(); }
+  /// Returns a reference to the /PYDAT1/ common block
+  static PyDat1_t &pydat1(){ return *address_of_pydat1(); }
   /// Returns a reference to the /PYDAT3/ common block
   static PyDat3_t &pydat3(){ return *address_of_pydat3(); }
   /// Returns a reference to the /PYPARS/ common block
   static PyPars_t &pypars(){ return *address_of_pypars(); }
+  /// Returns a reference to the /PYINT2/ common block
+  static PyInt2_t &pyint2(){ return *address_of_pyint2(); }
   /// Returns a reference to the /PYINT5/ common block
   static PyInt5_t &pyint5(){ return *address_of_pyint5(); }
 
@@ -72,6 +76,10 @@ class StarPythia6 : public StarGenerator
   static void PyStat( Int_t stat );
   /// Calls the pylist function
   static void PyList( Int_t list );
+  /// Calls the pygive function
+  static void PyGive( const char* give );
+  /// ... and alias this to Set
+  static void Set( const char* give ){ PyGive(give); }
 
   static void CloseDecays( int id ){ PyCloseDecays(id); }
   static void OpenDecay( int id, int idcy, int val ){ PyOpenDecay( id, idcy, val ); } 

@@ -52,6 +52,7 @@ StarPythia6::StarPythia6( const Char_t *name ) : StarGenerator(name)
 
   regtable("PyJets_t", "pyjets", address_of_pyjets() );
   regtable("PySubs_t", "pysubs", address_of_pysubs() );
+  regtable("PyDat1_t", "pydat1", address_of_pydat1() );
   regtable("PyDat3_t", "pydat3", address_of_pydat3() );
   regtable("PyPars_t", "pypars", address_of_pypars() );
   regtable("PyInt5_t", "pyint5", address_of_pyint5() );
@@ -63,6 +64,7 @@ StarPythia6::StarPythia6( const Char_t *name ) : StarGenerator(name)
 void StarPythia6::PyTune( Int_t tune ){  ::PyTune(tune); }
 void StarPythia6::PyStat( Int_t stat ){  ::PyStat(stat); }
 void StarPythia6::PyList( Int_t list ){  ::PyList(list); }
+void StarPythia6::PyGive( const char* give){ ::PyGive(give); }
 
 // ----------------------------------------------------------------------------
 Int_t StarPythia6::Init()
@@ -194,6 +196,9 @@ void StarPythia6::FillPP( StarGenEvent *event )
   myevent -> phiHat     = -999;
   
   myevent -> weight     = pypars().pari(7);
+  
+  myevent -> mstu72     = pydat1().mstu(72);
+  myevent -> mstu73     = pydat1().mstu(73);
 
 }
 // ----------------------------------------------------------------------------
