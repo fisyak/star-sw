@@ -5,7 +5,7 @@
 # History at the end of this script
 #
 if ( $?DECHO ) echo "======================================== start of STAR_SYS"
-setenv STAR_SYS ""
+#setenv STAR_SYS ""
 source $GROUP_DIR/unix_programs.csh
 if ( $?self ) then
     set STAR_SYS_pself=${self}
@@ -14,7 +14,7 @@ set self="STAR_SYS"
 #
 # Sort it out otherwise via uname command
 #
-if ( "${STAR_SYS}" == "") then
+if ( "${STAR_SYS}" == "" || "${STAR_SYS}" == "unknown") then
     if ( $?DECHO ) echo "$self :: STAR_SYS still empty - trying uname"
     # selection using uname -sr
     set mach_os = `uname -sr | sed -e 's/ //g' -e 's/\.//g' -e 's/(.*//'`
@@ -83,7 +83,8 @@ if ( "${STAR_SYS}" == "") then
 	if ( $?DECHO ) echo "$self :: Cygwin detected"
 	setenv STAR_SYS "$mach_os"
 	breaksw
-
+     case "Darwin*:"
+        breaksw
      default:
 	if ( $?DECHO ) echo "$self :: Bam!! Unknown"
 	setenv STAR_SYS unknown

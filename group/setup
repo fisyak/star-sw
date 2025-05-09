@@ -75,9 +75,16 @@ switch ($pkg)
 	else 
 	    if (-e "/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh") then
 		set SPACK_SETUP="/net/l402/data/fisyak/STAR/sources/spack/share/spack/setup-env.csh"
+		if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
 	    else 
 		if (-e "/star/u/fisyak/work/sources/spack/share/spack/setup-env.csh") then
 		    set SPACK_SETUP="/star/u/fisyak/work/sources/spack/share/spack/setup-env.csh"
+		    if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
+                else
+		    if (-r "/Users/fisyak/sources/spack/share/spack/setup-env.csh") then
+		       set SPACK_SETUP="/Users/fisyak/sources/spack/share/spack/setup-env.csh"
+            	       if ($?DECHO) echo "SPACK_SETUP=${SPACK_SETUP}"
+                    endif
 		endif
 	    endif
 	endif
