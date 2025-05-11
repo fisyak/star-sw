@@ -6,6 +6,71 @@ setenv PERL5LIB ${PERL5LIB}:${HOME}/bin/lib:/usr/share/perl5/usr/share/perl5/ven
 if ( -r $HOME/star/group/setup_AFS_RHIC) source $HOME/star/group/setup_AFS_RHIC afs
 if (-d /opt/rh/devtoolset-6/root/usr/bin) source $GROUP_DIR/setup gcc631
 if (-r $STAR_PATH/TFG) then
+set domain=`hostname -d`
+if ($?) set domain = `domainame`;
+set host  = `uname -s`
+set hn = `hostname`;
+#echo "hn = ${hn}"
+switch ($hn) 
+    case "*.starp.bnl.gov":
+    case "*.l4.bnl.local":
+	if (-d  /net/l402/data/fisyak/STAR) then
+	    setenv AFS_RHIC   /net/l402/data/fisyak/STAR
+	    setenv STAR_ROOT ${AFS_RHIC}
+	    setenv OPTSTAR   ${STAR_ROOT}/opt/star
+	    if ($?CERN == 0) setenv CERN ${STAR_ROOT}/cern
+	    if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
+	    setenv PROD_LOG /net/l404/data/fisyak/prodlog
+	endif
+    breaksw
+    case "Yuri*":
+    case "Mac*":
+    case "yuri.star.bnl.gov":
+    case "autiry.star.bnl.gov":
+    case "*user.vpn.bnl.local":
+	if (-r /sw/bin/init.csh) source /sw/bin/init.csh
+	setenv AFS_RHIC  ~/STAR  #/afs/rhic.bnl.gov
+	setenv STAR_ROOT ~/STAR
+	setenv OPTSTAR   ${STAR_ROOT}/opt
+	if ($?CERN == 0) setenv CERN ${STAR_ROOT}/cern
+	if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
+	which fs >& /dev/null
+	if (! $?) then 
+		setenv STAR_SYS `fs sysname | awk -F\' '{print $2}'`
+        endif
+        setenv PATH ${PATH}:/opt/local/bin
+    breaksw
+    case "*.sdcc.bnl.gov":
+    case "*.star.bnl.gov":
+    case "*.rhic.bnl.gov":                                   
+    case "*.rcf.bnl.gov":  
+    default:  
+	if (-d /gpfs01/star/subsys-tpc/fisyak/STAR) then
+	    setenv AFS_RHIC  /gpfs01/star/subsys-tpc/fisyak/STAR
+	    setenv STAR_ROOT ${AFS_RHIC}
+	    if ($?CERN == 0) setenv CERN ${STAR_ROOT}/cern
+	    if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
+	else 
+	    if (-d  /afs/rhic.bnl.gov) then
+		setenv AFS_RHIC /afs/rhic.bnl.gov  
+		setenv STAR_ROOT ${AFS_RHIC}/star
+	    else 
+		setenv AFS_RHIC ${HOME}
+		setenv STAR_ROOT ${AFS_RHIC}/star
+	    endif
+	endif
+    breaksw	
+endsw
+setenv OPTSTAR   ${STAR_ROOT}/opt
+setenv XOPTSTAR ${OPTSTAR}
+if ($?LD_LIBRARY_PATH == 0) setenv LD_LIBRARY_PATH ""
+if ($?CERN == 0) setenv CERN /cern
+if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
+setenv STAR_PATH ${STAR_ROOT}/packages
+setenv STAR_LEVEL pro
+#if (-r $STAR_PATH/.DEV2) then
+#  setenv STAR_LEVEL .DEV2
+#else if (-r $STAR_PATH/TFG) then
   setenv STAR_LEVEL TFG
 endif
 #setenv PATH ${PATH}:${GROUP_DIR}  
