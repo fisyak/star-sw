@@ -3,7 +3,7 @@
 #include <string>
 
 #include "inputParameters.h"
-#include "starlight.h"
+#include "StarLight.h"
 #include "upcevent.h"
 
 #include <math.h>

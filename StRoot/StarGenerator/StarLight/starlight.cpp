@@ -50,7 +50,7 @@
 #include "gammaaluminosity.h"
 #include "upcevent.h"
 #include "eventfilewriter.h"
-#include "starlight.h"
+#include "StarLight.h"
 
 
 using namespace std;
