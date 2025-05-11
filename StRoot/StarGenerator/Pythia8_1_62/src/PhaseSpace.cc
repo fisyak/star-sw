@@ -175,9 +175,9 @@ void PhaseSpace::init(bool isFirst, SigmaProcess* sigmaProcessPtrIn,
   biasWt          = 1.;
 
   // Flags if user should be allowed to reweight cross section.
-  canModifySigma   = (userHooksPtr > 0) 
+  canModifySigma   = (userHooksPtr != 0) 
                    ? userHooksPtr->canModifySigma() : false; 
-  canBiasSelection = (userHooksPtr > 0) 
+  canBiasSelection = (userHooksPtr != 0) 
                    ? userHooksPtr->canBiasSelection() : false; 
 
 }

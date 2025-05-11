@@ -757,7 +757,7 @@ bool CellJet::analyze(const Event& event, double eTjetMinIn,
         cells[j].eTcell += pTnow; 
         continue;
       }
-    }
+    } 
     if (!found) {
       double etaCell = (etaMax / nEta) * (2 * iEtaNow - 1 - nEta);
       double phiCell = (M_PI / nPhi) * (2 * iPhiNow - 1 - nPhi);
@@ -766,7 +766,7 @@ bool CellJet::analyze(const Event& event, double eTjetMinIn,
   }
 
   // Smear true bin content by calorimeter resolution.
-  if (smear > 0 && rndmPtr > 0) 
+  if (smear > 0 && rndmPtr != 0) 
   for (int j = 0; j < int(cells.size()); ++j) {
     double eTeConv = (smear < 2) ? 1. : cosh( cells[j].etaCell );
     double eBef = cells[j].eTcell * eTeConv; 

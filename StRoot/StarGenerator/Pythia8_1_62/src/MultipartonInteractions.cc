@@ -468,7 +468,7 @@ bool MultipartonInteractions::init( bool doMPIinit, int diffractiveModeIn,
 
   // Rescattering not yet implemented for x-dependent impact profile.
   if (bProfile == 4) allowRescatter = false;
-
+ 
   // A global recoil FSR stategy restricts rescattering.
   globalRecoilFSR     = settings.flag("TimeShower:globalRecoil");
   nMaxGlobalRecoilFSR = settings.mode("TimeShower:nMaxGlobalRecoil");
@@ -487,7 +487,7 @@ bool MultipartonInteractions::init( bool doMPIinit, int diffractiveModeIn,
   mMinPertDiff   = settings.parm("Diffraction:mMinPert");
 
   // Possibility to allow user veto of MPI
-  canVetoMPI = (userHooksPtr > 0) ? userHooksPtr->canVetoMPIEmission() : false;
+  canVetoMPI = (userHooksPtr != 0) ? userHooksPtr->canVetoMPIEmission() : false;
 
   // Some common combinations for double Gaussian, as shorthand.
   if (bProfile == 2) {

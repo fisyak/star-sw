@@ -181,7 +181,7 @@ void SpaceShower::init( BeamParticle* beamAPtrIn,
   if (!useSamePTasMPI) enhanceScreening = 0;
 
   // Possibility to allow user veto of emission step.
-  canVetoEmission = (userHooksPtr > 0) ? userHooksPtr->canVetoISREmission() 
+  canVetoEmission = (userHooksPtr != 0) ? userHooksPtr->canVetoISREmission() 
     : false;
 
 } 

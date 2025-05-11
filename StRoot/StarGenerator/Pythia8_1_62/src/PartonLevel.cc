@@ -80,7 +80,7 @@ bool PartonLevel::init( Info* infoPtrIn, Settings& settings,
 
 //   doTrial            = settings.flag("PartonLevel:Trial");
 //   nTrialEmissions    = (doTrial) ? settings.mode("PartonLevel:nTrial") : -1;
-  bool hasMergingHooks = (mergingHooksPtr > 0);
+  bool hasMergingHooks = (mergingHooksPtr != 0);
   doMerging          =  settings.flag("Merging:doUserMerging")
                      || settings.flag("Merging:doMGMerging")
                      || settings.flag("Merging:doKTMerging");
@@ -123,15 +123,15 @@ bool PartonLevel::init( Info* infoPtrIn, Settings& settings,
   }
 
   // Possibility to allow user veto during evolution.
-  canVetoPT      = (userHooksPtr > 0) ? userHooksPtr->canVetoPT()   : false;
+  canVetoPT      = (userHooksPtr != 0) ? userHooksPtr->canVetoPT()   : false;
   pTvetoPT       = (canVetoPT)        ? userHooksPtr->scaleVetoPT() : -1.;
-  canVetoStep    = (userHooksPtr > 0) ? userHooksPtr->canVetoStep() : false;
+  canVetoStep    = (userHooksPtr != 0) ? userHooksPtr->canVetoStep() : false;
   nVetoStep      = (canVetoStep)   ? userHooksPtr->numberVetoStep() : -1;
-  canVetoMPIStep = (userHooksPtr > 0) ? userHooksPtr->canVetoMPIStep() : false;
+  canVetoMPIStep = (userHooksPtr != 0) ? userHooksPtr->canVetoMPIStep() : false;
   nVetoMPIStep   = (canVetoStep)   ? userHooksPtr->numberVetoMPIStep() : -1;
 
   // Possibility to set maximal shower scale in resonance decays.
-  canSetScale    = (userHooksPtr > 0) ? userHooksPtr->canSetResonanceScale() 
+  canSetScale    = (userHooksPtr != 0) ? userHooksPtr->canSetResonanceScale() 
                                       : false;
 
   // Set info and initialize the respective program elements.

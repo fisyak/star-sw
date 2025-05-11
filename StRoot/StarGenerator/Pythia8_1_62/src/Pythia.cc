@@ -371,7 +371,7 @@ bool Pythia::init() {
         mergingHooksPtr = new MergingHooks();
         hasOwnMergingHooks = true;
       }
-      hasMergingHooks  = (mergingHooksPtr > 0);
+      hasMergingHooks  = (mergingHooksPtr != 0);
       if (hasMergingHooks) mergingHooksPtr->setLHEInputFile( lhef);
     }
 
@@ -451,7 +451,7 @@ bool Pythia::init() {
   rHadrons.init( &info, settings, &particleData, &rndm);
 
   // Set up values related to user hooks.
-  hasUserHooks  = (userHooksPtr > 0);
+  hasUserHooks  = (userHooksPtr != 0);
   doVetoProcess = (hasUserHooks) 
                 ? userHooksPtr->canVetoProcessLevel() : false;
   doVetoPartons = (hasUserHooks) 

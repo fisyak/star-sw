@@ -203,7 +203,7 @@ void LHAPDF::init(string setName, int member, Info* infoPtr) {
   // Check that not dummy library was linked and put nSet negative.
   isSet = (nSet >= 0); 
   if (!isSet) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from LHAPDF::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from LHAPDF::init: "
       "you try to use LHAPDF but did not link it");  
     else cout << " Error from LHAPDF::init: you try to use LHAPDF "
       << "but did not link it" << endl;  
@@ -692,7 +692,7 @@ void MSTWpdf::init(int iFitIn, string xmlPath, Info* infoPtr) {
   // Open data file.
   ifstream data_file( (xmlPath + fileName).c_str() );
   if (!data_file.good()) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
       "did not find parametrization file ", fileName);  
     else cout << " Error from MSTWpdf::init: "
       << "did not find parametrization file " << fileName << endl;  
@@ -728,14 +728,14 @@ void MSTWpdf::init(int iFitIn, string xmlPath, Info* infoPtr) {
 
   // Check that the heavy quark masses are sensible.
   if (mc2 < qq[3] || mc2 > qq[6]) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
       "invalid mCharm");  
     else cout << " Error from MSTWpdf::init: invalid mCharm" << endl;  
     isSet = false;
     return;
   }
   if (mb2 < qq[13] || mb2 > qq[16]) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
       "invalid mBottom");  
     else cout << " Error from MSTWpdf::init: invalid mBottom" << endl;  
     isSet = false;
@@ -746,7 +746,7 @@ void MSTWpdf::init(int iFitIn, string xmlPath, Info* infoPtr) {
   // with future grids where, for example, a photon distribution
   // might be provided (cf. the MRST2004QED PDFs).
   if (nExtraFlavours < 0 || nExtraFlavours > 1) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
       "invalid nExtraFlavours");  
     else cout << " Error from MSTWpdf::init: invalid nExtraFlavours" << endl;  
     isSet = false;
@@ -771,7 +771,7 @@ void MSTWpdf::init(int iFitIn, string xmlPath, Info* infoPtr) {
       else
 	f[12][n][m] = 0.; // photon
       if (data_file.eof()) {
-        if (infoPtr > 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
+        if (infoPtr != 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
           "failed to read in data file");  
         else cout << " Error from MSTWpdf::init: failed to read in data file" 
           << endl;  
@@ -783,7 +783,7 @@ void MSTWpdf::init(int iFitIn, string xmlPath, Info* infoPtr) {
   // Check that ALL the file contents have been read in.
   data_file >> dtemp;
   if (!data_file.eof()) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from MSTWpdf::init: "
       "failed to read in data file");  
     else cout << " Error from MSTWpdf::init: failed to read in data file" 
       << endl;  
@@ -1281,7 +1281,7 @@ void CTEQ6pdf::init(int iFitIn, string xmlPath, Info* infoPtr) {
   // Open data file.
   ifstream pdfgrid( (xmlPath + fileName).c_str() );
   if (!pdfgrid.good()) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from CTEQ6pdf::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from CTEQ6pdf::init: "
       "did not find parametrization file ", fileName);  
     else cout << " Error from CTEQ6pdf::init: "
       << "did not find parametrization file " << fileName << endl;  
@@ -1856,7 +1856,7 @@ void PomH1FitAB::init( int iFit, string xmlPath, Info* infoPtr) {
   if (iFit == 2) dataFile = "pomH1FitB.data";
   ifstream is( (xmlPath + dataFile).c_str() );
   if (!is.good()) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from PomH1FitAB::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from PomH1FitAB::init: "
       "the H1 Pomeron parametrization file was not found");  
     else cout << " Error from PomH1FitAB::init: "
       << "the H1 Pomeron parametrization file was not found" << endl;  
@@ -1886,7 +1886,7 @@ void PomH1FitAB::init( int iFit, string xmlPath, Info* infoPtr) {
 
   // Check for errors during read-in of file.
   if (!is) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from PomH1FitAB::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from PomH1FitAB::init: "
       "the H1 Pomeron parametrization files could not be read");  
     else cout << " Error from PomH1FitAB::init: "
       << "the H1 Pomeron parametrization files could not be read" << endl;  
@@ -1963,7 +1963,7 @@ void PomH1Jets::init( string xmlPath, Info* infoPtr) {
   ifstream isq( (xmlPath + "pomH1JetsSinglet.data").c_str() );
   ifstream isc( (xmlPath + "pomH1JetsCharm.data").c_str() );
   if (!isg.good() || !isq.good() || !isc.good()) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from PomH1Jets::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from PomH1Jets::init: "
       "the H1 Pomeron parametrization files were not found");  
     else cout << " Error from PomH1Jets::init: "
       << "the H1 Pomeron parametrization files were not found" << endl;  
@@ -2010,7 +2010,7 @@ void PomH1Jets::init( string xmlPath, Info* infoPtr) {
 
   // Check for errors during read-in of files.
   if (!isg || !isq || !isc) {
-    if (infoPtr > 0) infoPtr->errorMsg("Error from PomH1Jets::init: "
+    if (infoPtr != 0) infoPtr->errorMsg("Error from PomH1Jets::init: "
       "the H1 Pomeron parametrization files could not be read");  
     else cout << " Error from PomH1Jets::init: "
       << "the H1 Pomeron parametrization files could not be read" << endl;  

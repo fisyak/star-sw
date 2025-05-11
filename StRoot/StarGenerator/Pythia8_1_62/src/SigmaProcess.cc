@@ -52,12 +52,12 @@ void SigmaProcess::init(Info* infoPtrIn, Settings* settingsPtrIn,
   slhaPtr         = slhaPtrIn;
 
   // Read out some properties of beams to allow shorthand.
-  idA             = (beamAPtr > 0) ? beamAPtr->id() : 0;
-  idB             = (beamBPtr > 0) ? beamBPtr->id() : 0;
-  mA              = (beamAPtr > 0) ? beamAPtr->m() : 0.;
-  mB              = (beamBPtr > 0) ? beamBPtr->m() : 0.;
-  isLeptonA       = (beamAPtr > 0) ? beamAPtr->isLepton() : false;
-  isLeptonB       = (beamBPtr > 0) ? beamBPtr->isLepton() : false;
+  idA             = (beamAPtr != 0) ? beamAPtr->id() : 0;
+  idB             = (beamBPtr != 0) ? beamBPtr->id() : 0;
+  mA              = (beamAPtr != 0) ? beamAPtr->m() : 0.;
+  mB              = (beamBPtr != 0) ? beamBPtr->m() : 0.;
+  isLeptonA       = (beamAPtr != 0) ? beamAPtr->isLepton() : false;
+  isLeptonB       = (beamBPtr != 0) ? beamBPtr->isLepton() : false;
   hasLeptonBeams  = isLeptonA || isLeptonB;
 
   // K factor, multiplying resolved processes. (But not here for MPI.)

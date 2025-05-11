@@ -167,7 +167,7 @@ void TimeShower::init( BeamParticle* beamAPtrIn,
   brokenHVsym        = (nCHV == 1 && mHV > 0.);
 
   // Possibility to allow user veto of emission step.
-  canVetoEmission = (userHooksPtr > 0) ? userHooksPtr->canVetoFSREmission() 
+  canVetoEmission = (userHooksPtr != 0) ? userHooksPtr->canVetoFSREmission() 
     : false;
 
 }
