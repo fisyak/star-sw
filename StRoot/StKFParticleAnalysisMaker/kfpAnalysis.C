@@ -30,7 +30,7 @@ void kfpAnalysis(Int_t N = 10000000,
   if (! isPico) {Chain += ",RMuDst";} //,PicoWrite"; isPico = kTRUE;}
   else          {Chain += ",RpicoDst";}
   Chain += ",kfpAna,mysql,detDb,nodefault,LdEdxY2,quiet,MuDST";
-  //  lMuDst(0,input,"ry2016,RpicoDst,mysql,PicoAnalysis,quiet,nodefault",output);
+  //  Chain += ",dbSnapshot";
   lMuDst(-1,input,Chain,output);
 //________________________________________________________________________________
 // from  /gpfs01/star/pwg/mzyzak/2019_2_2/Template/femtoAnalysis.C
