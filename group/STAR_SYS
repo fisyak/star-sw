@@ -1,5 +1,4 @@
 #!/bin/csh
-
 #
 # Determine STAR_SYS and STAR_HOST_SYS variables.
 # History at the end of this script
@@ -14,6 +13,7 @@ set self="STAR_SYS"
 #
 # Sort it out otherwise via uname command
 #
+if ($?STAR_SYS ==  0) setenv STAR_SYS ""
 if ( "${STAR_SYS}" == "" || "${STAR_SYS}" == "unknown") then
     if ( $?DECHO ) echo "$self :: STAR_SYS still empty - trying uname"
     # selection using uname -sr
