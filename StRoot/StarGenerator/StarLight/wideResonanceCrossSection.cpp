@@ -75,8 +75,8 @@ wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 	double y1,y2,y12,ega1,ega2,ega12;
 	// double t,tmin,tmax;
 	double csgA1,csgA2,csgA12,int_r,dR,rate;
-	double /*dsigdW,dsigdWalt,dndW,*/ tmp;
-	//	double dsigdW2;
+	double dsigdW,dsigdWalt,dndW,tmp;
+	double dsigdW2;
 	// double ax,bx;
 	double Eth;
 	int    I,J,NW,NY;
@@ -114,10 +114,10 @@ wideResonanceCrossSection::crossSectionCalculation(const double bwnormsave)
 		W = _wideWmin + double(I)*dW + 0.5*dW;
     
 		tmp = 0.0;
-// 		dsigdW=0.0;
-// 		dsigdW2=0.0;
-// 		dsigdWalt=0.0;
-// 		dndW=0.0;
+		dsigdW=0.0;
+		dsigdW2=0.0;
+		dsigdWalt=0.0;
+		dndW=0.0;
     
 		for(J=0;J<=NY-1;J++){
       
