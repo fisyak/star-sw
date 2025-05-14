@@ -147,6 +147,7 @@ if ( $pkg eq "GenFit"
      || $Dir =~ /StHLTCAMaker/
      || $Dir =~ /StDaqLib/
      || $Dir =~ /StDAQMaker/
+     || $Dir =~ /StarGenerator/
      || $pkg =~ m/^StStarLogger/
      || $pkg =~ m/^RTS/
    ) {
@@ -173,7 +174,7 @@ if ( $pkg eq "GenFit"
   #  print "---------------------------------------- CXXFLAGS = $CXXFLAGS\n";
 } elsif ($pkg =~  /HanksTriggerDataReader/) {
   $WarnOff .= " -Wno-error=sequence-point";
-  $EXTRA_CXXFLAGS .= $WarnOff;xs
+  $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StEEmcUtil/) {
   $WarnOff .= " -Wno-error=unused-value" . $stringop_truncation;
   $EXTRA_CXXFLAGS .= $WarnOff;
@@ -1162,6 +1163,7 @@ TDataSet *CreateTable() {
 	foreach my $geom (@versionList) {
 	  next if ! $geom;
 	  next if ! $AgMLList{$geom};
+	  next;
 	  print "Build $geometry for $geom\n" if $param::debug;  
 	  my $geometry = "Geometry." . $geom . ".root";# print "geometry = $geometry\n";
 	  Command $env1 [$geometry], ($LIB . "/" . "StarAgmlLib" . "." . $env1->{SUFSOLIB},
