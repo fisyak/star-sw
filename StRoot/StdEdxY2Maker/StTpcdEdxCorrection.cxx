@@ -80,6 +80,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
     LOG_ERROR << "=== tpcGas is missing ===" << endm; 
     assert(tpcGas);
   }
+  m_isFixedTarget = St_beamInfoC::instance()->IsFixedTarget();
   SettpcGas(tpcGas);
   mTimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency();
   mInnerSectorzOffset = StTpcDb::instance()->Dimensions()->zInnerOffset();
