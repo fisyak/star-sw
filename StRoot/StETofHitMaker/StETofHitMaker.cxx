@@ -459,7 +459,7 @@ StETofHitMaker::FinishRun( Int_t runnumber )
 Int_t
 StETofHitMaker::Finish()
 {
-    LOG_INFO << "StETofHitMaker::Finish()" << endm;
+  if (Debug()) {LOG_INFO << "StETofHitMaker::Finish()" << endm;}
     
     if( mDoQA ) {
         LOG_INFO << "Finish() - writing *.etofHit.root ..." << endm;

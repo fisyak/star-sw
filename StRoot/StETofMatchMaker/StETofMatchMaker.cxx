@@ -368,7 +368,7 @@ StETofMatchMaker::FinishRun( Int_t runnumber )
 Int_t
 StETofMatchMaker::Finish()
 {
-    LOG_DEBUG << "StETofMatchMaker::Finish()" << endm;
+  if (Debug()) {LOG_INFO << "StETofMatchMaker::Finish()" << endm;}
 
     if( mDoQA ) {
         LOG_INFO << "Finish() - writing *.etofMatch.root ..." << endm;

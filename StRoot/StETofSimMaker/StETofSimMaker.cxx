@@ -143,8 +143,8 @@ StETofSimMaker::FinishRun( Int_t runnumber )
 Int_t
 StETofSimMaker::Finish()
 {
-    LOG_INFO << "StETofSimMaker::Finish()" << endm;
 #if 0    
+    LOG_INFO << "StETofSimMaker::Finish()" << endm;
     if ( mWriteHistos ) {        
         setHistoFileName();
         
