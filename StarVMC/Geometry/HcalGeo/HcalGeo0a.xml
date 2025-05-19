@@ -270,7 +270,7 @@
 
     <Fill name="WPFM" comment="West Platform geometry">
       <var name="PoleD" value="{12.0*2.54, (155.5 - 33.0) * 2.54, 12.0*2.54, 1.0}"  />
-      <var name="PoleP" value="{72.0*2.54, (-44.36-10-(155.5 - 33.0)/2)*2.54, 807.72-27*2.54}"  />
+      <var name="PoleP" value="{72.0*2.54, (-44.36-10-(155.5 - 33.0)/2 + 7.2)*2.54, 807.72-27*2.54}"  />
       <var name="IstrD" value="{231.0*2.54, 8.0*2.54, 8.0*2.54, 1.0}"  />
       <var name="Ist1P" value="{-8.0*2.54, (-44.36-5.0)*2.54, 807.72-37*2.54}"  />
       <var name="Ist2P" value="{-8.0*2.54, (-44.36-5.0)*2.54, 807.72-17*2.54}"  />
@@ -301,15 +301,15 @@
     <Placement block="WPPL" in="CAVE" group="WestRefSys" x="-WPFM_PoleP(1)" y="WPFM_PoleP(2)" z="WPFM_PoleP(3)" />
 
     <Create    block="WPIS"  />
-    <Placement block="WPIS" in="CAVE" group="WestRefSys" x="WPFM_Ist1P(1)" y="WPFM_Ist1P(2)" z="WPFM_Ist1P(3)" />
-    <Placement block="WPIS" in="CAVE" group="WestRefSys" x="WPFM_Ist2P(1)" y="WPFM_Ist2P(2)" z="WPFM_Ist2P(3)" />
+    <Placement block="WPIS" in="CAVE" konly="MANY" group="WestRefSys" x="WPFM_Ist1P(1)" y="WPFM_Ist1P(2)" z="WPFM_Ist1P(3)" />
+    <Placement block="WPIS" in="CAVE" konly="MANY" group="WestRefSys" x="WPFM_Ist2P(1)" y="WPFM_Ist2P(2)" z="WPFM_Ist2P(3)" />
 
     <Create    block="WPUF"  />
     <Placement block="WPUF" in="CAVE" group="WestRefSys" x="+WPFM_UstFP(1)" y="WPFM_UstFP(2)" z="WPFM_UstFP(3)" />
     <Create    block="WPUN"  />
     <Placement block="WPUN" in="CAVE" group="WestRefSys" x="+WPFM_UstNP(1)" y="WPFM_UstNP(2)" z="WPFM_UstNP(3)" />
     <Create    block="WPUS"  />
-    <Placement block="WPUS" in="CAVE" group="WestRefSys" x="+WPFM_UstSP(1)" y="WPFM_UstSP(2)" z="WPFM_UstSP(3)" />
+    <Placement block="WPUS" in="CAVE" konly="MANY" group="WestRefSys" x="+WPFM_UstSP(1)" y="WPFM_UstSP(2)" z="WPFM_UstSP(3)" />
     <!-- End of  Pre Shower -->
 
 

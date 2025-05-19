@@ -294,8 +294,8 @@
     <Create block="WALL"  />
     <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" group="CaveRefSys" />  <!--  WAL8 13 -->
     <Placement y="wall_yy" x="wall_xx" z="-wall_zz" block="WALL" group="CaveRefSys" /> <!--  WAL8 14 -->
-    <Placement y="wall_yy" x="-wall_xx" z="wall_zz" block="WALL" group="CaveRefSys" /> <!--  WAL8 15 -->
-    <Placement y="wall_yy" x="-wall_xx" z="-wall_zz" block="WALL" group="CaveRefSys" /><!--  WAL8 16 -->
+    <Placement y="wall_yy" x="-wall_xx" z="wall_zz" block="WALL" group="CaveRefSys" /> <!--  WAL8 15 overlap with 20 -->
+    <Placement y="wall_yy" x="-wall_xx" z="-wall_zz" block="WALL" group="CaveRefSys" /><!--  WAL8 16 overlap with 18 -->
 
                 
     wall_dx = 0.5 * shld_xwidth(1) 
@@ -314,7 +314,8 @@
     wall_dz = 0.5 * shld_zwidth(2) 
     wall_zz = -220.0 *2.54 - wall_dz - cdim_dz 
     wall_yy = -tdim_dfloor + wall_dy 
-    wall_xx = -tdim_dnorth + wall_dx 
+<!--    wall_xx = -tdim_dnorth + wall_dx  -->
+    wall_xx = -(TDIM_Dnorth + TDIM_Dsouth)/2  + (TDIM_Dnorth - TDIM_Dsouth)/2 + wall_dx 
 
 
     <Create block="WALL"  />
@@ -336,7 +337,8 @@
     wall_dz = 0.5 * shld_zwidth(4) 
     wall_zz = +512.3 *2.54 + 144.25 *2.54 - 236.0 *2.54 + wall_dz 
     wall_yy = -tdim_dfloor + wall_dy 
-    wall_xx = -tdim_dnorth + wall_dx 
+<!--    wall_xx = -tdim_dnorth + wall_dx  -->
+    wall_xx = -(TDIM_Dnorth + TDIM_Dsouth)/2  + (TDIM_Dnorth - TDIM_Dsouth)/2 + wall_dx 
 
     <Create block="WALL"  />
     <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WALb 20 -->
