@@ -303,7 +303,7 @@ Int_t StMuMcAnalysisMaker::Finish() {
       gFile = curFile;
       gDirectory = curDirectory;
     }
-  return kStOK;
+  return StMaker::Finish();
 }
 //________________________________________________________________________________
 Int_t StMuMcAnalysisMaker::InitRun(Int_t runumber) {
