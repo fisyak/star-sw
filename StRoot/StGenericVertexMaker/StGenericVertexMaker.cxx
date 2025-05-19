@@ -213,9 +213,9 @@ Int_t StGenericVertexMaker::InitRun(int runnumber){
 Int_t StGenericVertexMaker::Finish()
 {
 
-  LOG_INFO << "StGenericVertexMaker::Finish " <<GetName() <<endm;
-  LOG_INFO << " Total events: " << nEvTotal << endm;
-  LOG_INFO << " Good events:  " << nEvGood  << endm;
+  LOG_INFO << "StGenericVertexMaker::Finish " <<GetName()
+	   << " Total events: " << nEvTotal 
+	   << " Good events:  " << nEvGood  << endm;
 
 
   //LSB TODO Leave this for now. Should really be using STAR/ROOT I/O scheme?
