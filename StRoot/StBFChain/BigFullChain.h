@@ -1513,7 +1513,7 @@ Bfc_st BFC[] = { // standard chains
   {"PrepEmbed","","","geantEmb","StPrepEmbedMaker","St_geant_Maker"
    ,                                                             "Prepare kinematics for embedding",kFALSE},
   {"PythiaEmbed","","","pythia,-Simu","","",                     "Prepare kinematics for embedding",kFALSE},
-  {"StarPrimary", "StarPrimary", "", "Generators,-StarPrimary0", "StarPrimaryMaker",""
+  {"StarPrimary", "StarPrimary", "geant", "Generators,-StarPrimary0", "StarPrimaryMaker",""
    ,                                                                        "Basic STAR Generators",kFALSE},
   {"Kinematics", "","StarPrimary","StarPrimary",              "StarKinematics","StarKinematics","", kFALSE},
   {"Herwig6", "","StarPrimary","StarPrimary",                      "StarHerwig6","Herwig6_5_20","", kFALSE},
