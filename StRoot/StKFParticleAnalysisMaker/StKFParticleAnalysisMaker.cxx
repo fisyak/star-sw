@@ -751,7 +751,7 @@ Int_t StKFParticleAnalysisMaker::Finish()
     gDirectory = curDirectory;
   }
   
-  return kStOK;
+  return StMaker::Finish();
 }
 
 long StKFParticleAnalysisMaker::GetUniqueEventId(const int iRun, const int iEvent) const
