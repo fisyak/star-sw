@@ -1240,13 +1240,14 @@ void StMuDstMaker::closeWrite(){
   if (! gROOT->GetListOfFiles() || ! gROOT->GetListOfFiles()->FindObject(mCurrentFile)) {
     mCurrentFile = 0;
   }
-#endif /* __TFG__VERSION__ */
+#else  /* !  __TFG__VERSION__ */
   if (mTTree && mCurrentFile) {
     LOG_INFO << " ##### " << __PRETTYF__ << endm;
     LOG_INFO << " ##### File=" << mCurrentFile->GetName() << " ";
     LOG_INFO << " NumberOfEvents= " << mTTree->GetEntries() << " ";
     LOG_INFO << " ##### " << endm;
   }
+#endif /* __TFG__VERSION__ */
   //if (mTTree) mTTree->AutoSave();
   
   if (mCurrentFile) {
