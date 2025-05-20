@@ -199,8 +199,11 @@ if ( $pkg eq "GenFit"
 } elsif ($pkg =~  /StEvent$/) {
   $WarnOff .= " -Wno-error=unused-function" .  $stringop_truncation . " -Wno-error=aggressive-loop-optimizations";# -Wno-error=sign-compare -Wno-error=unused-variable";
   $EXTRA_CXXFLAGS .= $WarnOff;
-} elsif ($pkg =~  /StTpcHitMaker$/) {
+} elsif ($pkg =~  /StTpcHitMaker$/ ) {
   $WarnOff .= " -Wno-error=unused-variable";
+  $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif ($pkg =~  /StFwdTrackMaker/) {
+  $WarnOff .= " -Wno-error=unused-variable -Wno-error=unused-but-set-variable";
   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StTreeMaker$/) {
   $WarnOff .= "" . $over_flow;
