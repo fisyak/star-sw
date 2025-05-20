@@ -134,7 +134,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kPhiDirection          ] = dEdxCorrection_t("TpcPhiDirection"     ,"Gain on interception angle"				                ,St_TpcPhiDirectionC::instance());	     
   m_Corrections[kTanL                  ] = dEdxCorrection_t("TpcTanL"             ,"Gain on Tan(lambda)"					        ,St_TpcTanLC::instance());		     
   m_Corrections[kdXCorrection          ] = dEdxCorrection_t("TpcdXCorrectionB"    ,"dX correction"							,St_TpcdXCorrectionBC::instance());	     
-  m_Corrections[kEtaCorrection         ] = dEdxCorrection_t("TpcEtaCorrection"    ,"Eta correction MC"							,St_TpcEtaCorrectionC::instance());	     
+  m_Corrections[kEtaCorrection         ] = dEdxCorrection_t("TpcEtaCorrection"    ,"Eta*Eta correction MC"					       	,St_TpcEtaCorrectionC::instance());	     
   m_Corrections[kEtaCorrectionB        ] = dEdxCorrection_t("TpcEtaCorrectionB"   ,"Eta correction RC"							,St_TpcEtaCorrectionBC::instance());	     
   m_Corrections[kTpcEffectivedX        ] = dEdxCorrection_t("TpcEffectivedX"      ,"dEdx correction wrt Bichsel parameterization"			,St_TpcEffectivedXC::instance()); 	     
   m_Corrections[kTpcPadTBins           ] = dEdxCorrection_t("TpcPadTBins"         ,"Variation on cluster size"						,0);					     
