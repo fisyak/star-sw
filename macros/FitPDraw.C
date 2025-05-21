@@ -617,9 +617,9 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.BeginsWith("Pressure")) {
     muPlot += ":y";
     if (Opt == "" || Opt == "I") {
-      MuDraw(muPlot.Data(),"PO",150, 6.84, 6.99, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PO",150, 6.905, 6.93, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
     } else if (Opt == "O") {
-      MuDraw(muPlot.Data(),"PI",150, 6.84, 6.99, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PI",150, 6.905, 6.93, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
     }
   } else if (Name.BeginsWith("Temperature")) {
     muPlot += ":y";
