@@ -459,7 +459,8 @@
  $CPPPATH .= $main::PATH_SEPARATOR . $ROOTSRC;
  if (-r $XOPTSTAR . "/include") {
    $CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";
-   if (-r $XOPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/spack/include";}
+   if    (-r $XOPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/spack/include";}
+   elsif (-r  $OPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR .  $OPTSTAR . "/spack/include";}
  }
  my $pwd = cwd();
  my $path2bin = $pwd . "/." . $STAR_HOST_SYS . "/bin";
