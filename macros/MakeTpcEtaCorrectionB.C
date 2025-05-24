@@ -1,6 +1,6 @@
 /*
-  root.exe Eta3GF*.root MakeTpcEtaCorrectionB.C+
-  root.exe EtaB3G4E*.root MakeTpcEtaCorrectionB.C+
+  root.exe EtaB3GP*.root MakeTpcEtaCorrectionB.C+
+  root.exe EtaB3GP*.root Chain.C 'MakeTpcEtaCorrectionB.C+(tChain)'
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -56,22 +56,29 @@
 TCanvas *c1 = 0;
 TCanvas *c2 = 0;
 //________________________________________________________________________________
-void MakeTpcEtaCorrection1() {
+void MakeTpcEtaCorrection1(TNtuple *FitP = 0) {
   const Char_t *tableName = "TpcEtaCorrectionB";
-  TString fileIn(gDirectory->GetName());
-  if (! fileIn.BeginsWith("EtaB3")) return;
-  TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
+  TString fileIn("tChain");
+  if (! FitP) { 
+    fileIn = gDirectory->GetName();
+    if (! fileIn.BeginsWith("EtaB3")) return;
+    FitP = (TNtuple *) gDirectory->Get("FitP");
+  }
   if (! FitP) return;
   fileIn.ReplaceAll("EtaB3C+EtaB3PCG4EY","");
   fileIn.ReplaceAll("EtaB3+EtaB3PG4EY","");
   fileIn.ReplaceAll("EtaB3CG4EY","");
   fileIn.ReplaceAll("EtaB3G4EY","");
+  fileIn.ReplaceAll("EtaB3C+EtaB3PCGP","");
+  fileIn.ReplaceAll("EtaB3+EtaB3PGP","");
+  fileIn.ReplaceAll("EtaB3CGP","");
+  fileIn.ReplaceAll("EtaB3GP","");
 
   fileIn.ReplaceAll(".root","");
   TString fOut =  Form("%s.%s.C", tableName, fileIn.Data());
   TF1* f[2] = {(TF1 *) gROOT->GetFunction("pol2"), (TF1 *) gROOT->GetFunction("pol5")};
   Int_t nrows = 4; // for separate West and East
-  Int_t np = 10;
+  Int_t np =  7;
   Int_t npO = -1;
   Double_t min      =  -2.5;
   Double_t max      =   2.5;
@@ -83,10 +90,10 @@ void MakeTpcEtaCorrection1() {
   Double_t maxInner =  max;
 #if 1
   if      (fileIn == "")                                  {nrows = 0;}
+#else 
   else if (fileIn.Contains("9p8GeV_fixedTarget_2020"))    {nrows = 0;} 
   else if (fileIn.Contains("pp500GeV_2022"))              {nrows = 2; np = 1;}           //ok 
   else if (fileIn.Contains("ps_OO_200GeV_2021"))          {nrows = 2; np = 1;}           //ok 
-#else 
   if      (fileIn == "")                                  {nrows = 0;}
   else if (fileIn.Contains("GeV_20"))                     {nrows = 2;}           //ok 
   else if (fileIn.Contains("GeVb_20"))                    {nrows = 2;}           //ok 
@@ -247,24 +254,32 @@ void MakeTpcEtaCorrection1() {
   cout << "=================================<" << fOut.Data() << "===============================================" << endl;
 }
 //________________________________________________________________________________
-void MakeTpcEtaCorrectionB() {
-  TSeqCollection *files = gROOT->GetListOfFiles();
-  if (! files) return;
-  TF1::InitStandardFunctions();
-  TIter next(files);
-  TFile *f = 0;
+void MakeTpcEtaCorrectionB(TChain *tChain = 0) {
   Int_t n = 0;
-  while ( (f = (TFile *) next()) ) { 
-    TString F(f->GetName());
-    if (! F.Contains("EtaB3")) continue;
-    F.ReplaceAll(".root","");
-    f->cd();
-    TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
-    if (! FitP) continue;
-    n++;
+  TString F("tChain");
+  if (! tChain) {
+    TSeqCollection *files = gROOT->GetListOfFiles();
+    if (! files) return;
+    TF1::InitStandardFunctions();
+    TIter next(files);
+    TFile *f = 0;
+    while ( (f = (TFile *) next()) ) { 
+      F = f->GetName();
+      if (! F.Contains("EtaB3")) continue;
+      F.ReplaceAll(".root","");
+      f->cd();
+      TNtuple *FitP = (TNtuple *) gDirectory->Get("FitP");
+      if (! FitP) continue;
+      n++;
+      TString cn = Form("c%i",n,1200,1200);
+      c1 = new TCanvas(cn,F);
+      MakeTpcEtaCorrection1();
+      if (Ask()) return;
+    }
+  } else {
+    TNtuple *FitP = (TNtuple *) tChain;
     TString cn = Form("c%i",n,1200,1200);
     c1 = new TCanvas(cn,F);
-    MakeTpcEtaCorrection1();
-    if (Ask()) return;
+    MakeTpcEtaCorrection1(FitP);
   }
 }

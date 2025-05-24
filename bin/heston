@@ -1,2 +1,3 @@
 #! /bin/tcsh -f
  mysql -h heston.star.bnl.gov --port=3501 -u "" --password=""  Conditions_rts
+#  mysql -h heston.star.bnl.gov --port=3606 -u test --password="" -e "SELECT * FROM  mq_collector_Conditions_rhic.magnetField ORDER by beginTime" | tee Magnet.txt
