@@ -1,4 +1,5 @@
 #!/bin/csh -f
+if ($?DECHO) echo "======================= start of setup_AFS_RHIC ====================================="
 set pkg = $1; shift;
 unsetenv  USE_NFS4 
 unsetenv  USE_CVMFS
@@ -102,3 +103,4 @@ if ($?AFS_RHIC) then
       source ${GROUP_DIR}/.starver ${LEVEL_STAR}
     endif
 endif
+if ($?DECHO) echo "======================= end of setup_AFS_RHIC ====================================="

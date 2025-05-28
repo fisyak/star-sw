@@ -1,11 +1,10 @@
+if ($?DECHO) echo "======================= start of .default.csh  ====================================="
 setenv NODEBUG yes
 setenv USE_64BITS 1 
 setenv TFG_STAR 1
+setenv STAR_LEVEL TFG
 if ($?PERL5LIB == 0) setenv PERL5LIB
 setenv PERL5LIB ${PERL5LIB}:${HOME}/bin/lib:/usr/share/perl5/usr/share/perl5/vendor_perl;
-if ( -r $HOME/star/group/setup_AFS_RHIC) source $HOME/star/group/setup_AFS_RHIC afs
-if (-d /opt/rh/devtoolset-6/root/usr/bin) source $GROUP_DIR/setup gcc631
-if (-r $STAR_PATH/TFG) then
 set domain=`hostname -d`
 if ($?) set domain = `domainame`;
 set host  = `uname -s`
@@ -61,17 +60,21 @@ switch ($hn)
 	endif
     breaksw	
 endsw
-setenv OPTSTAR   ${STAR_ROOT}/opt
-setenv XOPTSTAR ${OPTSTAR}
-if ($?LD_LIBRARY_PATH == 0) setenv LD_LIBRARY_PATH ""
-if ($?CERN == 0) setenv CERN /cern
-if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
+setenv GROUP_DIR $STAR_ROOT/star/group
 setenv STAR_PATH ${STAR_ROOT}/packages
-setenv STAR_LEVEL pro
+#if ( -r $HOME/star/group/setup_AFS_RHIC) source $HOME/star/group/setup_AFS_RHIC afs
+if (-d /opt/rh/devtoolset-6/root/usr/bin) source $GROUP_DIR/setup gcc631
+if (-r $STAR_PATH/TFG) then
+  setenv OPTSTAR   ${STAR_ROOT}/opt
+  setenv XOPTSTAR ${OPTSTAR}
+  if ($?LD_LIBRARY_PATH == 0) setenv LD_LIBRARY_PATH ""
+  if ($?CERN == 0) setenv CERN /cern
+  if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
+#  setenv STAR_LEVEL pro
 #if (-r $STAR_PATH/.DEV2) then
 #  setenv STAR_LEVEL .DEV2
 #else if (-r $STAR_PATH/TFG) then
-  setenv STAR_LEVEL TFG
+#  setenv STAR_LEVEL TFG
 endif
 #setenv PATH ${PATH}:${GROUP_DIR}  
 source ${GROUP_DIR}/STAR_SYS
@@ -162,3 +165,4 @@ switch ($hn)
    breaksw
 endsw
 #echo "4 => $PATH"
+if ($?DECHO) echo "======================= end of of .default.csh  ====================================="
