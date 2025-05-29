@@ -1,5 +1,5 @@
 /*
-foreach d (`ls -1dt *GeV*`)
+foreach d (`ls -1dt *`)
   cd ${d}
   set list = `ls -1d 2*.root | awk -F_ '{print $1}' | sort -u | xargs`
   cd -
