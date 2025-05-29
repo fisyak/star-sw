@@ -18,7 +18,7 @@ if ( "${STAR_SYS}" == "" || "${STAR_SYS}" == "unknown") then
     if ( $?DECHO ) echo "$self :: STAR_SYS still empty - trying uname"
     # selection using uname -sr
     set mach_os = `uname -sr | sed -e 's/ //g' -e 's/\.//g' -e 's/(.*//'`
-
+    if ($?DECHO) echo "mach_os = ${mach_os}"
     switch ($mach_os)
      case "Linux222":
 	if ( $?DECHO ) echo "$self :: Linux222 logic branching"
@@ -59,11 +59,11 @@ if ( "${STAR_SYS}" == "" || "${STAR_SYS}" == "unknown") then
 	setenv STAR_SYS osf1
 	breaksw
 
-     case "SunOS54"
+     case "SunOS54":
         setenv STAR_SYS sun4x_54
 	if ( $?DECHO ) echo "$self :: SunOSx454 logic branch (historical)"
 	breaksw
-     case "SunOS551"
+     case "SunOS551":
 	if ( $?DECHO ) echo "$self :: SunOSx455 logic branch (historical)"
         setenv STAR_SYS sun4x_55
 	breaksw
@@ -83,7 +83,9 @@ if ( "${STAR_SYS}" == "" || "${STAR_SYS}" == "unknown") then
 	if ( $?DECHO ) echo "$self :: Cygwin detected"
 	setenv STAR_SYS "$mach_os"
 	breaksw
-     case "Darwin*:"
+     case "Darwin*":
+	if ( $?DECHO ) echo "$self :: Cygwin detected"
+	setenv STAR_SYS amd64_darwin_240
         breaksw
      default:
 	if ( $?DECHO ) echo "$self :: Bam!! Unknown"

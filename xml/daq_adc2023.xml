@@ -86,6 +86,7 @@
 <!-- 2023AuAu200 -->
 <!-- <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/208/*/st_physics_adc*.daq'" /> -->
 <!-- <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/208/24208001/st_physics_adc*4.daq'" /> -->
+<!-- <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/211/24211048/st_physics_adc_*.daq'" /> -->
 <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/*/*/st_physics_adc_*.daq'" />
    <ResourceUsage>
       <Priority>99</Priority>
