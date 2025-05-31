@@ -1,5 +1,5 @@
 /*
-  root.exe sqlstarMagnetField.C+
+  root.exe sqlstarMagAvgCurrentAndField.C+
   T->Draw("current:time-946684800+978325200>>AvgC(1000,633e6,641e6,100,-4520,-4500","","sames");
   select unix_timestamp("1995-01-01 00:00:00"); 788918400     
   select unix_timestamp("2000-01-01 00:00:00"); 946684800     TDatime tt(2000,1,1,0,0,0); 946702800 => +18000
@@ -57,7 +57,8 @@ using namespace std;
 #endif
    
 void sqlstarMagAvgCurrentAndField() {
-  TSQLServer *db = TSQLServer::Connect("mysql://heston.star.bnl.gov:3606","test", "");
+  //  TSQLServer *db = TSQLServer::Connect("mysql://heston.star.bnl.gov:3606","test", "");
+  TSQLServer *db = TSQLServer::Connect("mysql://dbbak.starp.bnl.gov:3423","", "");
   if (! db) return;
   printf("Server info: %s\n", db->ServerInfo());
   TSQLServer *dbOFL = TSQLServer::Connect("mysql://dbx.star.bnl.gov:3316","", "");
@@ -79,20 +80,21 @@ void sqlstarMagAvgCurrentAndField() {
    static starMagnetField_t BPoint;
    static Int_t   *xix = &BPoint.time;
    static Float_t *xfx = (Float_t *) xix;
-   TFile *fOut = new TFile("starMagAvgCurrentAndField.root","recreate");
+   TFile *fOut = new TFile("starMagAvgCurrentAndField2024.root","recreate");
    TTree *tree = new TTree("T","star Magnet Current and Field sensor (T)");
    tree->Branch("mag",&BPoint,"time/I:current/F:rms/F:noEntries/I:startRunTime/I:endRunTime/I:field/F:fieldRMS/F:noFieldEntries/I");
    // start timer
    TStopwatch timer;
    timer.Start();
    const char *sqlOFL = "select UNIX_TIMESTAMP(beginTime),current,rms,noEntries,startRunTime,endRunTime  from RunLog_onl.starMagAvg "
-                     "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2025-02-24 21:50:56'";
-   //                     "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2024-07-05 14:15:30";
+     "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2024-07-05 14:15:30' and beginTimw <= '2024-12-26 13:18:16'";
+     //                    "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2025-01-24 21:50:56'";
 //   const char *sql = "select count(*) from Calibrations_rhic.starMagAvg "
 //                     "WHERE tag&(1<<2)";
    
    resOFL = dbOFL->Query(sqlOFL);
    if (! resOFL) return;
+   static Int_t debugP = 1;
 
    Int_t nrowsOFL = resOFL->GetRowCount();
    if (debugP > 0) printf("\nGot %d rowsOFL in result\n", nrowsOFL);
@@ -100,7 +102,6 @@ void sqlstarMagAvgCurrentAndField() {
 
    // query database and print results 30 secs average
    
-   static Int_t debugP = 1;
    for (Int_t i = 0; i < nrowsOFL; i++) {
      if (debugP > 0) {
        for (Int_t i = 0; i < nfieldsOFL; i++)
@@ -177,3 +178,67 @@ void sqlstarMagAvgCurrentAndField() {
    fOut->Write();
    printf("\nRealTime=%f seconds, CpuTime=%f seconds\n", rtime, ctime);
 }
+/*
+FF
+ T->Draw("field:current>>FF(30,4510,4513)","current>4400&&field>0.4988","prof")
+root.exe [14] T->Draw("field","current>4400&&field>0.4988","")
+(Long64_t)65
+root.exe [15] htemp->Fit("gaus")
+ FCN=17.9646 FROM MIGRAD    STATUS=CONVERGED     119 CALLS         120 TOTAL
+                     EDM=9.44681e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.55503e+00   2.81637e-01   4.81658e-04  -5.88006e-04
+   2  Mean         4.98858e-01   7.00058e-06   2.37874e-07   1.82075e+02
+   3  Sigma        1.95070e-05   1.08205e-05   5.23415e-04  -7.92125e-04
+ 1.95070e-05/4.98858e-01= 3.9e-05
+root.exe [16] T->Draw("current","current>4400&&field>0.4988","")
+root.exe [17] htemp->Fit("gaus")
+ FCN=15.2948 FROM MIGRAD    STATUS=CONVERGED     116 CALLS         117 TOTAL
+                     EDM=3.8223e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.67124e+00   3.23817e-01   4.67198e-04   1.04856e-04
+   2  Mean         4.51248e+03   1.10896e-01   2.15172e-03  -7.06669e-04
+   3  Sigma        3.28950e-01   2.17888e-01   5.54642e-04   5.90909e-05
+3.28950e-01/4.51248e+03 = 7.3e-05
+root.exe [22] 4500/(9.98071899596718826e-01)
+(const double)4.50869321320264680e+03               => 4508.7 A
+
+root.exe [20] 4.51248e+03/(4500/(9.98071899596718826e-01))
+(const double)1.00083988566493365e+00
+root.exe [21] 4.51248e+03/(4500/(9.98071899596718826e-01))-1
+(const double)8.39885664933648357e-04
+
+RF
+
+T->Draw("abs(current)>>RFC","current<-4400&&field>0.4988","")
+
+root.exe [26] RFC->Fit("gaus","er","",4508,4511)
+ FCN=70.654 FROM MINOS     STATUS=SUCCESSFUL     42 CALLS         226 TOTAL
+                     EDM=8.80699e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.47373e+01   3.39635e+00  -1.19126e-02   1.90647e-04
+   2  Mean         4.50970e+03   1.34349e-02  -2.06312e-05   3.82179e-02
+   3  Sigma        2.90748e-01   1.35364e-02   1.35364e-02  -6.25564e-04
+
+root.exe [27] RFC->Fit("gaus","er+","",4511,4514)
+ FCN=65.6351 FROM MINOS     STATUS=SUCCESSFUL     85 CALLS         364 TOTAL
+                     EDM=3.29697e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     3.95495e+01   4.96014e+00   6.81894e-02  -7.95756e-05
+   2  Mean         4.51258e+03   1.90403e-02   2.01413e-04  -3.97224e-04
+   3  Sigma        1.62554e-01   1.76796e-02   1.76796e-02  -9.82392e-02
+(class TFitResultPtr)24671296
+
+================================================================================
+[rcas6007] ~/work/Magnet $ root.exe starMagAvg.root
+   TCanvas *c1 = new TCanvas("c1","c1",2400,1600);
+   c1->Divided(1,3);
+   c1->cd(1)->SetLogz(1);
+   TH2F *CurrentT = new TH2F("CurrentT","|current| for Full Field  versus time, all",500,5e8,10e8,100,4500,4520);
+   
+   T->Draw("abs(current):time-788936400>>CurrentT","abs(abs(current)-4500)<100","colz");
+ */

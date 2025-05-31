@@ -19,77 +19,110 @@
 #include "TTree.h"
 #include "TString.h"
 #include "TDatime.h"
+#include "TCanvas.h"
+#include "TH2.h"
 using namespace std;
 #endif
    
-void sqlstarMagnetField()
-{
-   TSQLServer *db = TSQLServer::Connect("mysql://heston.star.bnl.gov:3606","test", "");
-   if (! db) return;
-   printf("Server info: %s\n", db->ServerInfo());
-   
-   TSQLRow *row;
-   TSQLResult *res;
-   struct starMagnetField_t {
-     Int_t   time; 
-     Float_t field;
+void sqlstarMagnetField() {
+  TSQLServer *db = TSQLServer::Connect("mysql://heston.star.bnl.gov:3606","test", "");
+  if (! db) return;
+  printf("Server info: %s\n", db->ServerInfo());
+  
+  TSQLRow *row;
+  TSQLResult *res;
+  struct starMagnetField_t {
+    Int_t   time; 
+    Float_t field;
    };
-   static starMagnetField_t BPoint;
-   TFile *fOut = new TFile("starMagnetField.root","recreate");
-   TTree *tree = new TTree("T","star Magnet Field sensor (T)");
-   tree->Branch("mag",&BPoint,"time/I:field/F");
-   // start timer
-   TStopwatch timer;
-   timer.Start();
-   // query database and print results 30 secs average
-   const char *sql = "SELECT *  from mq_collector_Conditions_rhic.magnetField WHERE dataID > 0";
-   //                     "WHERE flavor='ofl' and deactive=0";
-//   const char *sql = "select count(*) from Calibrations_rhic.starMagnetField  "
-//                     "WHERE tag&(1<<2)";
-   
-   res = db->Query(sql);
-   if (! res) return;
-   int nrows = res->GetRowCount();
-   printf("\nGot %d rows in result\n", nrows);
-   
-   int nfields = res->GetFieldCount();
-   static Int_t debugP = 12;
-   if (debugP > 0) {
-     for (int i = 0; i < nfields; i++)
-       printf("%20s", res->GetFieldName(i));
-     printf("\n");
-     for (int i = 0; i < nfields*40; i++)
-       printf("=");
-     printf("\n");
-   }
-   for (int i = 0; i < nrows; i++) {
-     row = res->Next();
-     for (int j = 0; j < nfields; j++) {
-       TString Field(row->GetField(j));
-       if (debugP > 0) {
-	 printf("%20s ", Field.Data());
-       }
-       if       (j == 2) {
-	 TDatime time(row->GetField(j));
-	 BPoint.time = time.Convert();
-       } else if (j == 3) {
-	   BPoint.field = Field.Atof(); 
-       }
-     }
-     if (debugP > 0) {
-       printf("u = %i, field = %f\n", BPoint.time,  BPoint.field);
-       debugP--;
-     }
-     delete row;
-     tree->Fill();
-   }
-   delete res;
-   delete db;
-
-   // stop timer and print results
-   timer.Stop();
-   Double_t rtime = timer.RealTime();
-   Double_t ctime = timer.CpuTime();
-   fOut->Write();
-   printf("\nRealTime=%f seconds, CpuTime=%f seconds\n", rtime, ctime);
+  static starMagnetField_t BPoint;
+  TFile *fOut = new TFile("starMagnetField.root","recreate");
+  TTree *tree = new TTree("T","star Magnet Field sensor (T)");
+  tree->Branch("mag",&BPoint,"time/I:field/F");
+  // start timer
+  TStopwatch timer;
+  timer.Start();
+  // query database and print results 30 secs average
+  const char *sql = "SELECT *  from mq_collector_Conditions_rhic.magnetField WHERE dataID > 0";
+  //                     "WHERE flavor='ofl' and deactive=0";
+  //   const char *sql = "select count(*) from Calibrations_rhic.starMagnetField  "
+  //                     "WHERE tag&(1<<2)";
+  
+  res = db->Query(sql);
+  if (! res) return;
+  int nrows = res->GetRowCount();
+  printf("\nGot %d rows in result\n", nrows);
+  
+  int nfields = res->GetFieldCount();
+  static Int_t debugP = 12;
+  if (debugP > 0) {
+    for (int i = 0; i < nfields; i++)
+      printf("%20s", res->GetFieldName(i));
+    printf("\n");
+    for (int i = 0; i < nfields*40; i++)
+      printf("=");
+    printf("\n");
+  }
+  for (int i = 0; i < nrows; i++) {
+    row = res->Next();
+    for (int j = 0; j < nfields; j++) {
+      TString Field(row->GetField(j));
+      if (debugP > 0) {
+	printf("%20s ", Field.Data());
+      }
+      if       (j == 2) {
+	TDatime time(row->GetField(j));
+	BPoint.time = time.Convert();
+      } else if (j == 3) {
+	BPoint.field = Field.Atof(); 
+      }
+    }
+    if (debugP > 0) {
+      printf("u = %i, field = %f\n", BPoint.time,  BPoint.field);
+      debugP--;
+    }
+    delete row;
+    tree->Fill();
+  }
+  delete res;
+  delete db;
+  
+  // stop timer and print results
+  timer.Stop();
+  Double_t rtime = timer.RealTime();
+  Double_t ctime = timer.CpuTime();
+  fOut->Write();
+  printf("\nRealTime=%f seconds, CpuTime=%f seconds\n", rtime, ctime);
+}
+//________________________________________________________________________________
+void DrawCurrent() {// Draw all available averaged current measurements for Full Field
+  TTree *tree = (TTree *) gDirectory->Get("T");
+  if (! tree) return;
+  Int_t nx = 500;
+  Double_t xmin =  5e8;
+  Double_t xmax = 10e8;
+  Int_t ny = 100;
+  Double_t ymin = 4505;
+  Double_t ymax = 4515;
+  struct Plot_t {
+    const Char_t *name;
+    const Char_t *title;
+    const Char_t *plot;
+    const Char_t *cut;
+  };
+  Plot_t P[3] = {
+    {"CurrentT", "|current| for Full Field  ; time ; |C|(A)", "abs(current):time - 788936400 >> CurrentT","abs(abs(current)-4510)<5"},
+    {"CurrentF", "|current| for Forward Full Fielld ; time ; |C|(A)", "abs(current):time - 788936400 >> CurrentF","current>0&&abs(abs(current)-4510)<5"},
+    {"CurrentR", "|current| for Reverse Full Fielld ; time ; |C|(A)", "abs(current):time - 788936400 >> CurrentR","current<0&&abs(abs(current)-4510)<5"}
+  };
+  TCanvas *c1 = new TCanvas("c1","c1",2400,1600);
+  c1->Divide(1,3);
+  for (Int_t i = 0; i < 3; i++) {
+    c1->cd(i+1)->SetLogz(1);
+    TH2F *h2 = new TH2F(P[i].name,P[i].title,nx,xmin,xmax,ny,ymin,ymax);
+    h2->GetXaxis()->SetTimeDisplay(1);
+    h2->GetXaxis()->SetTimeFormat("%m/%d/%y%F1995-01-01 00:00:00");
+    h2->SetStats(0);
+    tree->Draw(P[i].plot,P[i].cut,"colz");
+  }
 }
