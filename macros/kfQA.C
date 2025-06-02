@@ -478,7 +478,6 @@ void Plot(Int_t iplot1=0, Int_t iplot2=0, const Char_t *tfg = "kfQA.K.dEdx.W.roo
 #endif
 //________________________________________________________________________________
 /*
-  QA->Draw("Mass_Ks_Gamma:run","Mass_Ks_Gamma<1&&Mass_Ks_Gamma>0.004")
-  QA->Draw("1000*(Mass_Ks_M-0.497611):run","Mass_Ks_Gamma<0.009&&Mass_Ks_Gamma>0.004")
-  QA->Draw("Mass_Ks_PerEvent:run","Mass_Ks_Gamma<0.009&&Mass_Ks_Gamma>0.004")
+  QA->Draw("1000*(Ks_Mass-0.497611)","Ks_Mass>0")
+
 */  

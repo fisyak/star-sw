@@ -39,6 +39,7 @@ void kfpAnalysis(Int_t N = 10000000,
 //   StKFParticleInterface::instance()->SetChi2TopoCutCharmManybodyDecays(2);
 //   StKFParticleInterface::instance()->SetSoftKaonPIDMode();
 //   StKFParticleInterface::instance()->SetSoftTofPidMode();
+  StKFParticleInterface::UseMagScaleFactor(kTRUE); // Only for Full Field, freeze it.
   std::cout << "KFParticleAnalysis: running analysis for triggerSet " << triggerSet << "." << std::endl; 
   StKFParticleAnalysisMaker* kfpAnalysis = (StKFParticleAnalysisMaker*) StMaker::GetTopChain()->Maker("KFParticleAnalysis");
   if (! isPico) kfpAnalysis->ProcessSignal();  // requires MC info

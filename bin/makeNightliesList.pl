@@ -2,14 +2,14 @@
 use File::Basename;
 use File::Find;
 use Cwd;
-my @use = qw(
-	      grep 'Processing bfc.C' /star/rcf/test/dev/*/*/*/*/*.log | \
-	      sed -e 's/daq_sl302//' -e 's/simu/MC/' -e 's/trs_sl302//' \
-	      -e 's/_opt//' -e 's/ittf//' -e 's/stica//' -e 's/stihr//' \
-	      -e 's/bfc\.C(//' -e 's/","/:/' -e 's/")\.\.\.//' | tee bfc1.log | \
-	      awk -F\/ '{print $8"/"$6"/"$9" "$10}' | awk '{print $1":"$3}' | sort -u | tee Nightlies.listRaf);
+# my @use = qw(
+# 	      grep 'Processing bfc.C' /star/rcf/test/dev/*/*/*/*/*.log | \
+# 	      sed -e 's/daq_sl302//' -e 's/simu/MC/' -e 's/trs_sl302//' \
+# 	      -e 's/_opt//' -e 's/ittf//' -e 's/stica//' -e 's/stihr//' \
+# 	      -e 's/bfc\.C(//' -e 's/","/:/' -e 's/")\.\.\.//' | tee bfc1.log | \
+# 	      awk -F\/ '{print $8"/"$6"/"$9" "$10}' | awk '{print $1":"$3}' | sort -u | tee Nightlies.listRaf);
 my $today = (Sun,Mon,Tue,Wed,Thu,Fri,Sat)[(localtime)[6]];
-my $glob = "/star/rcf/test/dev/*.ittf/" . $today . "/*/*/*.log";
+my $glob = "/star/rcf/test/dev/daq*/" . $today . "/*/*/*.log" . " /star/rcf/test/dev/trs*/" . $today . "/*/*/*.log";
 my @Files = glob $glob;# print "Files = @Files\n";
 my %Hash = ();
 my $FullPath = "";
@@ -24,11 +24,13 @@ sub input_file {
 my $no = 0;
 foreach my $file (@Files) {
 #  print "$file\n";
+  if (! -r $file) {print "$file does not exist\n"; next;}
   open(In,$file) or die "Can't open $file";
   while ( my $it = <In>) {
     if ($it !~ /Processing bfc/) {next;}
     my ($NoEvents,$Chain,$dum,$input) = split('"', $it);
     $Input = $input;
+    $Input =~ s/\n.*//;
     $NoEvents =~ s/Processing bfc\.C\(//; $NoEvents =~ s/,//;
 #    print "$file => NoEvents = $NoEvents; Chain = $Chain; input = $Input\n";
     $Hash{$file}->{file} = $file;
@@ -40,7 +42,8 @@ foreach my $file (@Files) {
     $Hash{$file}->{FullPath} = $FullPath;
 #    print "$Hash{$file}->{file} => NoEvents = $Hash{$file}->{NoEvents}; Chain = $Hash{$file}->{Chain}; input = $Hash{$file}->{input}; Full Path = $Hash{$file}->{FullPath}\n";
     if (! $FullPath) {
-      die;
+    #  die;
+      print("input is not found for $it\n");
     }
     last;
   } 

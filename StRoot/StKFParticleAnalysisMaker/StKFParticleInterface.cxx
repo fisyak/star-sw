@@ -57,7 +57,14 @@ static Int_t _debug = 0;
   if (! hist) {								\
     hist = new TH2F(Name,Title, 700, -2, 1.5, 300, dNdxL10min, dNdxL10min+2.5);	\
   } 
+static Double_t FixedFullField = 4.9834; // kG for full field   
 Double_t StKFParticleInterface::fgMagScaleFactor = 1;
+Bool_t   StKFParticleInterface::fgUseMagScaleFactor = kFALSE;
+void StKFParticleInterface::UseMagScaleFactor(Bool_t k) {
+  fgUseMagScaleFactor = k;
+  if (fgUseMagScaleFactor)
+    std::cout << " StKFParticleInterface::UseMagScaleFactor to freeze FixedFullField " << FixedFullField << " kG for full field"  << std::endl;
+}       
 void StKFParticleInterface::SetMagScaleFactor(Double_t scale) {
   fgMagScaleFactor = scale;
   std::cout << " StKFParticleInterface::SetMagScaleFactor to " << fgMagScaleFactor << std::endl;
@@ -624,8 +631,7 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
     //correct for the charge of ions
     const int index2[9] = { 6,7,8, 10,11,12, 15,16,17 };
     const int index4[6] = { 9, 13,14, 18,19,20 };
-#ifdef __MagFieldCorrection__
-    {
+    if (TMath::Abs(fgMagScaleFactor - 1.) > 1e-7) {
       trackPDG.SetPx( trackPDG.GetPx() * fgMagScaleFactor );
       trackPDG.SetPy( trackPDG.GetPy() * fgMagScaleFactor );
       trackPDG.SetPz( trackPDG.GetPz() * fgMagScaleFactor );
@@ -638,7 +644,6 @@ void StKFParticleInterface::AddTrackToParticleList(const KFPTrack& track, int nH
         trackPDG.SetCovariance( iC, trackPDG.GetCovariance(iC) * fgMagScaleFactor * fgMagScaleFactor );
       }
     }
-#endif
     if(abs(pdg) == 1000020030 || abs(pdg) == 1000020040 || abs(pdg) == 1000020060) {
       trackPDG.SetCharge( trackPDG.Charge()*2.f );
       trackPDG.SetPx( trackPDG.GetPx()*2.f );
@@ -961,6 +966,11 @@ void StKFParticleInterface::ResizeTrackPidVectors(const int nTracks)
 
 bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& triggeredTracks)
 {
+  if (fgUseMagScaleFactor) {
+    fgMagScaleFactor = FixedFullField/TMath::Abs(picoDst->event()->bField());
+  }
+  const Double_t field = picoDst->event()->bField() *  fgMagScaleFactor; 
+  SetField(field);
   triggeredTracks.resize(0);
   
   //read PV from pico Event
@@ -1166,8 +1176,6 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
        if( primaryVertex.GetR() > 2.5 ) return 0;
     }
   }
-  const Double_t field = picoEvent->bField();  
-  SetField(field);
 
   CleanPV();
   InitParticles();
@@ -1192,6 +1200,11 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 //________________________________________________________________________________
 bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTracks, vector<int>& mcIndices, bool processSignal)
  {  
+  if (fgUseMagScaleFactor) {
+    fgMagScaleFactor = FixedFullField/TMath::Abs(muDst->event()->magneticField());
+  }
+  const Double_t field = muDst->event()->magneticField() *  fgMagScaleFactor; 
+  SetField(field);
   mcTracks.resize(muDst->numberOfMcTracks());
   for (unsigned int iMCTrack=0; iMCTrack<muDst->numberOfMcTracks(); iMCTrack++) 
   {
@@ -1415,13 +1428,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
   } else {
     if( fCleanLowPVTrackEvents && primaryVertex.GetR() > 2.5 ) return 0;
   }
-
-#ifdef __MagFieldCorrection__
-  const Double_t field = muDst->event()->magneticField() *  fgMagScaleFactor;
-#else /* !  __MagFieldCorrection__ */
-  const Double_t field = muDst->event()->magneticField();
-#endif /*  __MagFieldCorrection__ */
-  SetField(field);
 
   CleanPV();
 #ifdef __kfpAtFirstHit__

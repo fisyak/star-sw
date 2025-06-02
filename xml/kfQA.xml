@@ -4,15 +4,16 @@
   cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
 #  set input        = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
-  set input        = $INPUTFILE0
-  set Routput      =  R${input}.root
-  if (! -r ${Routput})   hadd ${Routput} *${input}*.root &gt;&amp; R${input}.log
-#  set output       = D${input}.root
-#  set log          = D${input}.log
-#  if (-r ${output}) exit 0;
-# if (-r ${log}) exit 0;
-#  ln -s ~/macros/.sl* .
-#  root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+('${input}',"'${output}'")'  &gt;&amp; ${log}
+  set input        = `basename ${INPUTFILE0} .root`
+#  set Routput      =  R${input}.root
+#  if (! -r ${Routput})   hadd ${Routput} *${input}*.root &gt;&amp; R${input}.log
+  set output       = D${input}.root
+  set log          = D${input}.log
+  if (-r ${output}) exit 0;
+  if (-r ${log}) exit 0;
+  ln -s ~/macros/.sl* .
+  ln -s ~/macros/.al* .
+  root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+('${input}',"'${output}'")'  &gt;&amp; ${log}
         </command>
     <ResourceUsage>
       <Priority>99</Priority>

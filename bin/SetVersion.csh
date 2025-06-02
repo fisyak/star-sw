@@ -40,7 +40,13 @@ switch ($case)
     default:
     setup gcc
 endsw
-
+switch ($case) 
+ case "*_R6":
+   setup root6
+   breaksw
+ default:
+   breaksw
+endsw
 switch ($case) 
   case "*SL18f*" :   
 #   source $STAR_PATH/.DEV2/unsetupDEV2.csh
@@ -89,6 +95,13 @@ switch ($case)
   case "DEV6":  
     setenv STAR_LEVEL .DEV2
     breaksw
+  case "*TFG25c*": 
+    setenv STAR_LEVEL TFG25c; 
+  breaksw
+  case "*TFG*": 
+  case "*DEV2*": 
+    setenv STAR_LEVEL TFG; 
+  breaksw
   default:
     breaksw
 endsw
