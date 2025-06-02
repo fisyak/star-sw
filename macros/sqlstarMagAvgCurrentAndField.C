@@ -87,7 +87,7 @@ void sqlstarMagAvgCurrentAndField() {
    TStopwatch timer;
    timer.Start();
    const char *sqlOFL = "select UNIX_TIMESTAMP(beginTime),current,rms,noEntries,startRunTime,endRunTime  from RunLog_onl.starMagAvg "
-     "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2024-07-05 14:15:30' and beginTimw <= '2024-12-26 13:18:16'";
+     "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2024-07-05 14:15:30' and beginTime <= '2024-12-26 13:18:16'";
      //                    "WHERE flavor='ofl' and deactive=0 and rms > 0 and rms < 10 and beginTime >= '2025-01-24 21:50:56'";
 //   const char *sql = "select count(*) from Calibrations_rhic.starMagAvg "
 //                     "WHERE tag&(1<<2)";
