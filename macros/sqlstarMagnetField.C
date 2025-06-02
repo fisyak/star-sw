@@ -126,3 +126,61 @@ void DrawCurrent() {// Draw all available averaged current measurements for Full
     tree->Draw(P[i].plot,P[i].cut,"colz");
   }
 }
+/* 2024
+
+root.exe [21] T->Draw("field","abs(current)>4500&&field>0.49875&&current<0","")
+(Long64_t)5648
+root.exe [22] htemp->Fit("gaus")
+Warning in <Fit>: Abnormal termination of minimization.
+ FCN=289.542 FROM MIGRAD    STATUS=FAILED         98 CALLS          99 TOTAL
+                     EDM=4.00349e-05    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   0.7 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     3.50840e+02   6.92222e+00  -0.00000e+00   3.69306e-05
+   2  Mean         4.98856e-01   5.90276e-08   0.00000e+00  -1.20766e+05
+   3  Sigma        7.43439e-06   1.00267e-07   0.00000e+00   4.32144e-02
+T->Draw("abs(current)","abs(current)>4500&&field>0.49875&&current<0","")
+root.exe [25] htemp->Fit("gaus","er","",4508,4511)
+ FCN=372.309 FROM MINOS     STATUS=SUCCESSFUL     41 CALLS         197 TOTAL
+                     EDM=1.98196e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     3.67960e+02   1.14732e+01  -1.41701e-01  -3.88309e-06
+   2  Mean         4.50939e+03   5.65426e-03  -1.10669e-05  -8.69611e-03
+   3  Sigma        2.90532e-01   7.11119e-03   7.11119e-03  -8.16429e-02
+root.exe [26] htemp->Fit("gaus","er+","",4511,4514)
+ FCN=289.278 FROM MINOS     STATUS=SUCCESSFUL     41 CALLS         190 TOTAL
+                     EDM=6.86532e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.74063e+02   1.74683e+01  -1.25881e-01  -5.93703e-07
+   2  Mean         4.51244e+03   3.31308e-03   5.60764e-06  -5.06666e-03
+   3  Sigma        1.53703e-01   3.33616e-03   3.33616e-03   3.83918e-02
+
+root.exe [30] T->Draw("field","abs(current+4.50939e+03)<3*2.90532e-01&&field>0.498","")
+(Long64_t)2834
+root.exe [31] htemp->Fit("gaus")
+Warning in <Fit>: Abnormal termination of minimization.
+ FCN=209.243 FROM MIGRAD    STATUS=FAILED         96 CALLS          97 TOTAL
+                     EDM=1.28999e-05    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   0.2 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.72948e+02   4.58175e+00  -0.00000e+00   8.40476e-05
+   2  Mean         4.98857e-01   8.42949e-08   0.00000e+00  -6.02136e+04
+   3  Sigma        6.05479e-06   1.08503e-07   0.00000e+00   5.97020e-02
+root.exe [32] T->Draw("field","abs(current+4.51244e+03)<3*1.53703e-01&&field>0.498","")
+(Long64_t)2263
+root.exe [33] htemp->Fit("gaus")
+Warning in <Fit>: Abnormal termination of minimization.
+ FCN=255.363 FROM MIGRAD    STATUS=FAILED        126 CALLS         127 TOTAL
+                     EDM=4.99408e-05    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   1.3 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     3.24102e+02   1.03107e+01  -0.00000e+00   9.24010e-05
+   2  Mean         4.98853e-01   1.35805e-07   0.00000e+00  -1.60326e+05
+   3  Sigma        5.68396e-06   1.24897e-07   0.00000e+00   1.30990e-01
+root.exe [34] 4.50939e+03-4.51244e+03
+(const double)(-3.04999999999927240e+00)
+root.exe [36] 4.98857e-01- 4.98853e-01
+(const double)4.00000000000400036e-06
+ */
