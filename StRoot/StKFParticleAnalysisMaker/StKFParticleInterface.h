@@ -148,6 +148,7 @@ class StKFParticleInterface: public TObject
   static void       SetUsedx2(Bool_t k = kTRUE);
   static void       SetUseTof(Bool_t k = kTRUE);
   void              SetMagScaleFactor(Double_t scale = 1.0);
+  static void       UseMagScaleFactor(Bool_t k = kTRUE);   // Rescale field to the fixed value 4.9834 kG for full field  
  private:
   
   double InversedChi2Prob(double p, int ndf) const;
@@ -254,6 +255,7 @@ class StKFParticleInterface: public TObject
   Bool_t            fIsFixedTarget2018;
   Bool_t            fPidQA;
   static Double_t   fgMagScaleFactor;
+  static Bool_t     fgUseMagScaleFactor;
   static Bool_t     fgUsedx2; //! flag for StPiDStatus to absord log2(dx) dependence into TpcLengthCorrectionMD2
   static Bool_t     fgUseTof;
   std::vector<float> fm2TofArray;
