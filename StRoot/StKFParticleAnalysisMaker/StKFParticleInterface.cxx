@@ -57,7 +57,7 @@ static Int_t _debug = 0;
   if (! hist) {								\
     hist = new TH2F(Name,Title, 700, -2, 1.5, 300, dNdxL10min, dNdxL10min+2.5);	\
   } 
-static Double_t FixedFullField = 4.9834; // kG for full field   
+static Double_t FixedFullField = 4.9834/TMath::Exp(-7.08104e-02/206/1.57); // kG for full field   deltaM MeV)/Q(=206 MeV)
 Double_t StKFParticleInterface::fgMagScaleFactor = 1;
 Bool_t   StKFParticleInterface::fgUseMagScaleFactor = kFALSE;
 void StKFParticleInterface::UseMagScaleFactor(Bool_t k) {
