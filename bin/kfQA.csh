@@ -7,8 +7,9 @@
 # echo "string:${f}"
 #end
 
-#foreach f (`find . -maxdepth 1 -name "*.root" -size +8100000c | sed -e 's|./||' -e 's|st_physics_||' -e 's/hlt_//' -e 's|st_fmsslow_||' -e 's|st_minbias_||' -e 's|st_hlt_||' -e 's|adc_||' -e 's|hlt_||' | awk -F_ '{print $1}' | sort -u`)
-foreach f (`ls -1d R*.root | sed -e 's/^R//' -e 's/.root//'`)
+#foreach f (`ls -1d R*.root | sed -e 's/^R//' -e 's/.root//'`)
+#foreach f (`find . -maxdepth 2 -name "*.root" -size +8100000c | sed -e 's|./||' -e 's|st_physics_||' -e 's/hlt_//' -e 's|st_fmsslow_||' -e 's|st_minbias_||' -e 's|st_hlt_||' -e 's|adc_||' -e 's|hlt_||' | awk -F_ '{print $1}' | sort -u`)
+foreach f (`find . -name "st*.root" -size +8100000c | awk -F\/ '{print $2}' | sort -u`)
  if (-r D${f}.root) continue;
  echo "string:${f}"
 end
