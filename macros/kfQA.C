@@ -57,7 +57,7 @@ public:
   const Char_t *Path;
   Int_t         p;
 };
-vector<Plot_t> Plots;
+std::vector<Plot_t> Plots;
 class Hist_t {										
 public:											
   Hist_t (const Char_t *name = "", const Char_t *path = "", const Int_t Opt = 0, Int_t P = -1) : Name((Char_t *) name), Path(path), opt(Opt), p(P) {}
@@ -98,7 +98,7 @@ static Hist_t Histos[] = {
   Hist_t("M2","/Tracks/p/hTofPID",64+128, -1),
   Hist_t("M2","/Tracks/p-/hTofPID",64+128, -1),
   Hist_t("Mass","/Particles/KFParticlesFinder/Particles/Ks/Parameters/M",256+512+1024+2048, -1),
-  Hist_t("Mass1GeV","/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-#phi-M",256+512+1024+2048, -1)
+  Hist_t("Mass1GeV","/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-#phi-M1GeV",256+512+1024+2048, -1)
   
 }; 
 const Int_t NoHists = sizeof(Histos)/sizeof(Hist_t); 
@@ -113,7 +113,7 @@ TString InitVars() {
     NameB.ReplaceAll("/Tracks/","");
     NameB.ReplaceAll("/Particles/KFParticlesFinder/Particles/","");
     NameB.ReplaceAll("Parameters/","");
-    NameB.ReplaceAll("/y-#phi-M","1GeV");
+    NameB.ReplaceAll("/y-#phi-M1GeV","1GeV");
     NameB.ReplaceAll("+","P");
     NameB.ReplaceAll("-","N");
     NameB.ReplaceAll("/","_");
@@ -141,14 +141,16 @@ TString InitVars() {
 TDirectory *Merge(Int_t run) {
   TString targetFile(Form("R%i.root",run));
   const Char_t *targetname = targetFile.Data();
-  Char_t *tfile = gSystem->Which(".",targetFile,kReadPermission);
-  if (! tfile) {
+  Char_t *tfileName = gSystem->Which(".",targetFile,kReadPermission);
+  if ( tfileName) {
+    return new TFile(tfileName);
+  } else {
    gSystem->Load("libTreePlayer");
    TClass::GetClass("ROOT::Cintex::Cintex"); // autoload Cintex if it exist.
    if (gInterpreter->IsLoaded("libCintex")) {
       gROOT->ProcessLine("ROOT::Cintex::Cintex::Enable();");
    }
-   TDirIter Dir(Form("%i_*.root",run));
+   TDirIter Dir(Form("%i/*%i*.root",run,run));
    Bool_t force = kFALSE;
    Bool_t skip_errors = kFALSE;
    Bool_t reoptimize = kFALSE;
@@ -199,6 +201,7 @@ TDirectory *Merge(Int_t run) {
      if (verbosity == 1) {
        std::cout << "hadd merged " << merger.GetMergeList()->GetEntries() << " input files in " << targetname << ".\n";
      }
+     return merger.GetOutputFile();
    } else {
      if (verbosity == 1) {
        std::cout << "hadd failure during the merge of " << merger.GetMergeList()->GetEntries() << " input files in " << targetname << ".\n";
@@ -206,14 +209,13 @@ TDirectory *Merge(Int_t run) {
      return 0;
    }
   }
-  return new TFile(tfile);
 }
 //________________________________________________________________________________
 void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
   TDirectory *myDir = Merge(Run);
   if (! myDir) return;
   TString OutFile;
-  if (!Out) OutFile = "kfQAN.root";
+  if (!Out) {OutFile = "D";  OutFile+= Run; OutFile += ".root";}
   else      OutFile = Out;
   TFile *fout = new TFile(OutFile,"recreate");
   TString Tuple = InitVars();
@@ -248,7 +250,13 @@ void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
   Int_t p = 0;
   for (Int_t i = 0; i < NoHists; i++) { // loop over histograms
     TH1F *hist = (TH1F *) myDir->Get(Histos[i].Path);
-    if (! hist) continue;
+    if (! hist) {
+      if (Histos[i].Name != "Ks1GeV") continue;
+      TString path = Histos[i].Path;
+      path.ReplaceAll("1GeV","");
+      hist = (TH1F *) myDir->Get(path);
+      if (! hist) continue;
+    }
     TObjArray* arr = 0;
     Double_t binWidth;
     Double_t S;
@@ -332,9 +340,9 @@ void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
 	      //	      BW = brtw();
 	      TH3F *h3 = (TH3F *) hist;
 	      TH1D *h1 = (TH1D *) h3->Project3D("z");
-	      BW = K0BW(h1->GetName());
+	      BW = K0BW(h1->GetName(),kFALSE);
 	    } else {
-	      BW = K0BW(hist);
+	      BW = K0BW(hist,kFALSE);
 	    }
 	    if (BW) {
 	      BP.params[p]   = BW->GetParameter(1);
@@ -479,5 +487,7 @@ void Plot(Int_t iplot1=0, Int_t iplot2=0, const Char_t *tfg = "kfQA.K.dEdx.W.roo
 //________________________________________________________________________________
 /*
   QA->Draw("1000*(Ks_Mass-0.497611)","Ks_Mass>0")
-
+brtw: FitH3: 
+FitP->Draw("1e3*(M_S-0.497611)","chisq/NDF<5&&dM_S<2e-4&&dM_S>0&&M_S>0.495&&M_S<0.5")
+FitP->Draw("1e3*(M_S-0.497611):y","dM_S<1e-3&&dM_S>0&&M_S>0.495&&M_S<0.5&&x<0","prof")
 */  

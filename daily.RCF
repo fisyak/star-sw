@@ -4797,3 +4797,60 @@ C        mBField
 4511.77  4511.77/(4511.4/4.986189) = 4.98659793955978259/(1 + 1.31847e-01/206) = 4.98340838885179771e+00
 
          4.986189/4.98340838885179771e+00 = 1.00055797376639322e+00 = 1 + 5.57973766393216053e-04
+================================================================================
+06/05/2025
+/star/rcf/test/dev/daq_sl302.stica_opt/Sat/year_2021/
+DEV                                                                          CPU ratio
+production_OO_200GeV_2021_64bit al95_x8664_gcc11_opt:  CPU/event = 1.11857 (sec)  100%
+apptainer_sl7_x8664_gcc485_opt.DEV/cpu_per_event:      CPU/event = 0.931071(sec)   98%
+TFG
+apptainer_sl7_x8664_gcc485_opt.TFG/cpu_per_event:      CPU/event = 1.11275 (sec)   99%
+al95_x8664_gcc11_opt.TFG/cpu_per_event:                CPU/event = 0.796597(sec)   71%  native gives 28% speed up wrt apptained with SL7
+al95_x8664_gcc11_opt.TFG.R6/cpu_per_event:             CPU/event = 1.01941 (sec)   91%  ROOT6 opt
+al95_x8664_gcc11.TFG.R6/cpu_per_event:                 CPU/event = 2.6679  (sec)  238%  ROOT6 debug
+================================================================================
+ps_OO_200GeV_2021.P24iy_calib.root    2  M_{S}        4.97742e-01   3.02039e-06                            
+FF_OO_200GeV_2021.P24iy_calib.root    2  M_{S}        4.97752e-01   3.49299e-06
+OO_200GeV_2021.P24iy_calib.root       2  M_{S}        4.97765e-01   5.42188e-06
+root.exe [0] double m[3] ={4.97742e-01,4.97752e-01,4.97765e-01};
+root.exe [4] for (Int_t i = 0; i < 3; i++) cout << 1e3*(m[i] - 0.497611) << endl;
+0.131
+0.141
+0.154
+ 206./5000 = 0.041 MeV from 1 G over 5 kG
+1GeV
+ps_OO_200GeV_2021.P24iy_calib.root      y-#phi-M1GeV_z_BW    2  M_{S}        4.97729e-01   5.42291e-06  0.118  MeV
+OO_200GeV_2021.P24iy_calib.root         y-#phi-M1GeV_z_BW    2  M_{S}        4.97765e-01   9.74101e-06  0.154  MeV
+FF_OO_200GeV_2021.P24iy_calib.root      y-#phi-M1GeV_z_BW    2  M_{S}        4.97738e-01   6.45534e-06  0.127  MeV
+================================================================================
+06/06/2025
+19GeV_2019_P24iy_64bit_dEdxF3.root      y-#phi-M1GeV_z_BW    2  M_{S}        4.97710e-01   8.94985e-07 1e3*(4.97710e-01-0.497611) =  0.1  s MeV
+19GeV_2019_P24iy_64bit_dEdxF3.root      M_BW                 2  M_{S}        4.97609e-01   4.50931e-07 1e3*(4.97609e-01-0.497611) = -0.002 MeV
+
+
+
+StMagUtilities::CommonSta  Magnetic Field scale factor is 1
+StMagUtilities::BField        =  4.98318 kGauss at (0,0,0)
+StMagUtilities::CommonSta  Magnetic Field scale factor is -1
+StMagUtilities::BField        =  -4.98317 kGauss at (0,0,0)
+================================================================================
+06/07/2025 "/hlt/cephfs/reco/MC/TFG/19GeV_2019/K_S0
+Ana.root        y-#phi-M_z_BW  1GeV                             2  M_{S}        4.98269e-01   8.57349e-25  1e3*(4.98269e-01-0.497611) = 0.657 MeV
+                M_BW                                            2  M_{S}        4.98208e-01   9.47333e-27  1e3*(4.98208e-01-0.497611) = 0.597 MeV
+                M_Gaus                                          2  #mu          4.98287e-01   1.67557e-05  1e3*(4.98287e-01-0.497611) = 0.676 MeV
+                                                                                -7.89999999999957403e-05 = -.0078 MeV
+kfpAnalysis
+StMagFMaker:INFO  - StMagFMaker::InitRun from DB fScale = -1.0006
+StMagFMaker:INFO  - Reset STAR magnetic field with scale factor -1.0006
+
+
+StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98619
+StMagUtilities::BField        =  -4.98619 kGauss at (0,0,0)
+StMagUtilities::CommonSta  Magnetic Field scale factor is -1.0006
+================================================================================
+06/08/2025
+/hlt/cephfs/reco/MC/TFG/19GeV_2019/K_S0
+Ana.root        y-#phi-M_z_BW           2  M_{S}        4.98090e-01   4.73613e-06  1e3*(4.98090e-01-0.497611) = 0.48
+                M_BW                    2  M_{S}        4.98190e-01                1e3*(4.98190e-01-0.497611) = 0.58
+                Ana.root        M_Gaus  2  #mu          4.98286e-01   6.86546e-06  1e3*(4.98286e-01-0.497611) = 0.67
+                                                       -0.10 MeV

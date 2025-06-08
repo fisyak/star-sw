@@ -147,7 +147,8 @@ TH1F *SubstracF(TH1F *hist, TF1* total, const Option_t *opt="b") {
   return h;
 }
 //________________________________________________________________________________
-TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, Double_t m2 = mpi, Int_t l = 0, Bool_t baryon = kFALSE) {
+TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, Double_t m2 = mpi, 
+	  Int_t l = 0, Bool_t baryon = kFALSE, Bool_t saveAsPng = kTRUE) {
   BRTW:: nevents = 0;
   BRTW:: binWidth = 0;
   BRTW:: S = 0;
@@ -247,6 +248,8 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
     Total->SetParLimits(3*s,-90,90);
     Total->ReleaseParameter(3*s+1);
     Total->ReleaseParameter(3*s+2);
+    Total->SetParLimits(2*s+1, 1e-7, 1e2);
+    Total->SetParLimits(2*s+2, 1e-7, 1.0);
   }
   res = hist->Fit(Total,"vrm","same",MMin,MMax);
   //  res = hist->Fit(Total,"vrim","same",MMin,MMax);
@@ -264,59 +267,74 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
   BRTW::S = Signal->Integral(params[1]-3*params[2],params[1]+3*params[2])/BRTW::binWidth;
   BRTW::B = Background->Integral(params[1]-2*params[2],params[1]+2*params[2])/BRTW::binWidth;
   BRTW::T = Total->Integral(params[1]-2*params[2],params[1]+2*params[2])/BRTW::binWidth;
-  TString Out("Title");
+  TString Out("Title_");
+  Out +=  gSystem->BaseName(gDirectory->GetName());
+  Out.ReplaceAll(".root","");
   Out += Title;
   Out += ".txt";
   ofstream out;
-  out.open(Out.Data());
   cout << gSystem->BaseName(gDirectory->GetName()) << "\t";
   cout << hist->GetName() << "\t S = " << BRTW::S << "\tB = " << BRTW::B;
-  out << gSystem->BaseName(gDirectory->GetName()) << "\t";
-  out << hist->GetName() << "\t S = " << BRTW::S << "\tB = " << BRTW::B << endl;
+  if (saveAsPng)     {
+    out.open(Out.Data());
+    out << gSystem->BaseName(gDirectory->GetName()) << "\t";
+    out << hist->GetName() << "\t S = " << BRTW::S << "\tB = " << BRTW::B << endl;
+  }
   if (BRTW::B > 0) {
     cout<< "\tS/B = " << BRTW::S/BRTW::B;
-    out<< "\tS/B = " << BRTW::S/BRTW::B;
+    if (saveAsPng)     out<< "\tS/B = " << BRTW::S/BRTW::B;
   }
   if (Total->GetParError(0) > 0) BRTW::Significance =  1./Total->GetParError(0);
   cout << "\tS/sqrt(T) = " << BRTW::S/TMath::Sqrt(BRTW::T);
   cout << "\tSignificance = " << BRTW::Significance;
+  if (saveAsPng) {
    out << "\tS/sqrt(T) = " << BRTW::S/TMath::Sqrt(BRTW::T);
    out << "\tSignificance = " << BRTW::Significance;
+  }
   TH1F *z = (TH1F *) gDirectory->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/z");
   if (z) {
     BRTW::nevents = z->GetEntries();
     if (BRTW::nevents > 0) {
       BRTW::SperE = BRTW::S/BRTW::nevents;
       cout << "\tSignal per Event(";
-      out << "\tSignal per Event(";
+      if (saveAsPng)  out << "\tSignal per Event(";
       if (BRTW::nevents < 1000) {
 	cout << Form("%7.0f",BRTW::nevents);
-	out << Form("%7.0f",BRTW::nevents);
+	if (saveAsPng)  out << Form("%7.0f",BRTW::nevents);
       } else if (BRTW::nevents < 1e6) {
 	cout << Form("%7.3fK",BRTW::nevents/1e3);
-	out << Form("%7.3fK",BRTW::nevents/1e3);
+	if (saveAsPng)  out << Form("%7.3fK",BRTW::nevents/1e3);
       } else {
 	cout << Form("%7.3fM",BRTW::nevents/1e6);
-	out << Form("%7.3fM",BRTW::nevents/1e6);
+	if (saveAsPng)  out << Form("%7.3fM",BRTW::nevents/1e6);
       }
       cout << ")  = " << BRTW::SperE;
-      out << ")  = " << BRTW::SperE << endl;
+      if (saveAsPng)  out << ")  = " << BRTW::SperE << endl;
     }
   }
   cout << Form("\tM = %7.2f +/- %5.2f",1e3*Total->GetParameter(1),1e3*Total->GetParError(1))
        << Form("\tW = %7.2f +/- %5.2f",1e3*Total->GetParameter(2),1e3*Total->GetParError(2)) 
        << " (MeV)" << endl;
-  out << Form("\tM = %7.2f +/- %5.2f",1e3*Total->GetParameter(1),1e3*Total->GetParError(1))
-       << Form("\tW = %7.2f +/- %5.2f",1e3*Total->GetParameter(2),1e3*Total->GetParError(2)) 
-       << " (MeV)" << endl;
-  out.close();
-  TString png(Title);
-  png += ".png";
-  c1->SaveAs(png);
+  if (saveAsPng) {
+    out << Form("\tM = %7.2f +/- %5.2f",1e3*Total->GetParameter(1),1e3*Total->GetParError(1))
+	<< Form("\tW = %7.2f +/- %5.2f",1e3*Total->GetParameter(2),1e3*Total->GetParError(2)) 
+	<< " (MeV)" << endl;
+    out.close();
+  }
+  if (c1) c1->Update();
+  if (saveAsPng) {
+    TString png(Title);
+    png += ".png";
+    c1->SaveAs(png);
+  }
   return Total;
 }
 //________________________________________________________________________________
-TF1 *K0BW(TH1F *M) {
+TF1 *brtw(TH1 *hist, Bool_t saveAsPng) {
+  return brtw(hist,0.3,1.3,mpi,mpi,0,kFALSE,saveAsPng);
+}
+//________________________________________________________________________________
+TF1 *K0BW(TH1F *M, Bool_t saveAsPng = kTRUE) {
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
   m->SetName(Form("%s_BW",M->GetName()));
@@ -336,16 +354,16 @@ TF1 *K0BW(TH1F *M) {
   Masses[0] = 0.497611; // Initail parameters
   Widths[0] = 0.0107;
   nameP = "K_S0";
-  return brtw(m,0.45,0.55,mpi, mpi, 0);
+  return brtw(m,0.45,0.55,mpi, mpi, 0, kFALSE, saveAsPng);
 }
 //________________________________________________________________________________
-TF1 *K0BW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/M") {
+TF1 *K0BW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/M", Bool_t saveAsPng = kTRUE) {
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
-  return K0BW(M);
+  return K0BW(M, saveAsPng);
 }
 //________________________________________________________________________________
-TF1 *K0G(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/M") {
+TF1 *K0G(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/M", Bool_t saveAsPng = kTRUE) {
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
@@ -353,10 +371,10 @@ TF1 *K0G(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parame
   Masses[0] = 0.497611; // Initail parameters
   Widths[0] = 0.0107;
   nameP = "K_S0";
-  return brtw(m,0.45,0.55,mpi, mpi, -1);
+  return brtw(m,0.45,0.55,mpi, mpi, -1, kFALSE, saveAsPng);
 }
 //________________________________________________________________________________
-TF1 *LambdaBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambda/Parameters/M") {
+TF1 *LambdaBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambda/Parameters/M", Bool_t saveAsPng = kTRUE) {
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
@@ -368,7 +386,7 @@ TF1 *LambdaBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lamb
   return brtw(m,1.1,1.2,mpi, mP, 0);
 }
 //________________________________________________________________________________
-TF1 *Lambda(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambda/Parameters/M") {
+TF1 *Lambda(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambda/Parameters/M", Bool_t saveAsPng = kTRUE) {
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
@@ -380,7 +398,7 @@ TF1 *Lambda(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambda
   return brtw(m,1.1,1.2,mpi, mP, -1);
 }
 //________________________________________________________________________________
-TF1 *Lambdab(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambdab/Parameters/M") {
+TF1 *Lambdab(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambdab/Parameters/M", Bool_t saveAsPng = kTRUE) {
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
@@ -392,7 +410,7 @@ TF1 *Lambdab(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambd
   return brtw(m,1.1,1.2,mpi, mP, -1);
 }
 //________________________________________________________________________________
-TF1 *phiBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/phi_KK/Parameters/M") {
+TF1 *phiBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/phi_KK/Parameters/M", Bool_t saveAsPng = kTRUE) {
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
@@ -405,11 +423,16 @@ TF1 *phiBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/phi_KK/
 }
 //________________________________________________________________________________
 void FitH3(
-	   const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-#phi-M"
+	   const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-#phi-M1GeV"
 	   //	   const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-p_{t}-M" 
 	   ) {
-  TH3F *h3 = (TH3F *) gDirectory->Get(histN);
-  if (! h3) return;
+  TString HistN(histN);
+  TH3F *h3 = (TH3F *) gDirectory->Get(HistN);
+  if (! h3) {
+    HistN.ReplaceAll("1GeV","");
+    h3 = (TH3F *) gDirectory->Get(HistN);
+    if (! h3) return;
+  }
   if (h3->GetDimension() != 3) return;
   TFile *fOut = new TFile("FitH3.root","recreate");
   TString Name(gSystem->BaseName(histN));
@@ -462,7 +485,7 @@ void FitH3(
       rms->SetBinContent(i,j,proj->GetRMS());
       entries->SetBinContent(i,j,proj->GetEntries());
       if (proj->GetEntries() < 1e2) continue;
-      T = brtw(proj,0.45,0.55,mpi, mpi, 0);
+      T = brtw(proj,0.45,0.55,mpi, mpi, 0, kFALSE, kFALSE);
       if (! T) continue;
       vars[0] = i; // i
       vars[1] = j; // j
@@ -525,7 +548,14 @@ void Drawf0_0() {
 }
 //________________________________________________________________________________
 void brtw() {
-  const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-#phi-M";
+  const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parameters/y-#phi-M1GeV";
+  TString HistN(histN);
+  TH3F *h3 = (TH3F *) gDirectory->Get(HistN);
+  if (! h3) {
+    HistN.ReplaceAll("1GeV","");
+    h3 = (TH3F *) gDirectory->Get(HistN);
+    if (! h3) return;
+  }
   TSeqCollection *files = gROOT->GetListOfFiles();
   if (! files) return;
   TIter next(files);
@@ -533,7 +563,7 @@ void brtw() {
   while ( (f = (TFile *) next()) ) { 
     f->cd();
     TString F(f->GetName());
-    TH3F *h3 = (TH3F *) gDirectory->Get(histN);
+    TH3F *h3 = (TH3F *) gDirectory->Get(HistN);
     if (! h3) continue;;
     TH1D *h1 = (TH1D *) h3->Project3D("z");
     K0BW(h1->GetName());

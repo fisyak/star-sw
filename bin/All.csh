@@ -11,17 +11,18 @@ foreach d (`ls -1dtr ${GLOB}| sort -u`)
     echo "rm All*"
     rm All*
     hadd.pl
-    if ($STAR_SYS != "x8664_al9") then
+#    if ($STAR_SYS != "x8664_al9") then
     switch ($domain) 
       case "*local":
       case "*starp.bnl.gov":
       /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit -p bnl_condor_online_CpuModelNumber63 hadd.xml
       breaksw
       default:
-	/gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts/star-submit hadd.xml
+#	/gpfs01/star/subsys-tpc/fisyak/STAR/packages/scripts/star-submit hadd.xml
+        /star/nfs4/AFS/star/packages/scripts/sums-submit-beta hadd.xml
       breaksw
     endsw
-    endif	
+#    endif	
   endif
   cd -
 end
