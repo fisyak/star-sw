@@ -2524,8 +2524,32 @@ starClockOnl_st *St_starClockOnlC::Struct(Int_t i) {
 }
 #include "St_starMagOnlC.h"
 MakeChairInstance(starMagOnl,RunLog/onl/starMagOnl);
+//________________________________________________________________________________
+Double_t  St_starMagOnlC::currentToScaleFactor(Double_t current) {
+    Double_t value = -9999;
+    if     (current < -4450 && current > -4550)	value = -1.0;
+    else if(current < -2200 && current > -2300)	value = -0.5;
+    else if(current >   -50 && current <    50)	value =  0.0;
+    else if(current >  2200 && current <  2300)	value =  0.5;
+    else if(current >  4450 && current <  4550)	value =  1.0;
+    else {
+      cout << " St_starMagOnlC::currentToScaleFactor illegal current = " << current << endl;
+      assert(0);
+    }
+    return value;
+  }
+//________________________________________________________________________________
+Double_t St_starMagOnlC::ScaleFactor(Int_t i){
+  return St_starMagOnlC::currentToScaleFactor(current(i));
+}
+//________________________________________________________________________________
 #include "St_starMagAvgC.h"
 MakeChairOptionalInstance(starMagAvg,RunLog/onl/starMagAvg);
+//________________________________________________________________________________
+Double_t St_starMagAvgC::ScaleFactor(Int_t i){
+  return St_starMagOnlC::currentToScaleFactor(current(i));
+}
+//________________________________________________________________________________
 #include "St_starMagRotationC.h"
 MakeChairOptionalInstance(starMagRotation,StMagF/starMagRotation);
 #include "St_beamInfoC.h"
