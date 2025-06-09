@@ -308,26 +308,30 @@ Int_t StMuMcAnalysisMaker::Finish() {
 //________________________________________________________________________________
 Int_t StMuMcAnalysisMaker::InitRun(Int_t runumber) {
   assert(StMuDstMaker::instance());
-  if (StMuDstMaker::instance()->IOMode() == StMuDstMaker::ioRead) {
-    StMuDstMaker::instance()->SetStatus("*",0);
-    const Char_t *ActiveBranches[] = {
-      "MuEvent"
-      ,"PrimaryVertices"
-      ,"PrimaryTracks"
-      ,"GlobalTracks"
-      ,"StStMuMcVertex"
-      ,"StStMuMcTrack"
-      ,"CovPrimTrack"
-      ,"CovGlobTrack"
-      ,"StStMuMcVertex"
-      ,"StStMuMcTrack"
-      ,"KFTracks"
-      ,"KFVertices"
-      ,"StBTofHit"
-      ,"StBTofHeader"
-    }; 
-    Int_t Nb = sizeof(ActiveBranches)/sizeof(Char_t *);
-    for (Int_t i = 0; i < Nb; i++) StMuDstMaker::instance()->SetStatus(ActiveBranches[i],1); // Set Active braches
+  static Bool_t InitRunDone = kFALSE;
+  if (! InitRunDone) {
+    if (StMuDstMaker::instance()->IOMode() == StMuDstMaker::ioRead) {
+      StMuDstMaker::instance()->SetStatus("*",0);
+      const Char_t *ActiveBranches[] = {
+	"MuEvent"
+	,"PrimaryVertices"
+	,"PrimaryTracks"
+	,"GlobalTracks"
+	,"StStMuMcVertex"
+	,"StStMuMcTrack"
+	,"CovPrimTrack"
+	,"CovGlobTrack"
+	,"StStMuMcVertex"
+	,"StStMuMcTrack"
+	,"KFTracks"
+	,"KFVertices"
+	,"StBTofHit"
+	,"StBTofHeader"
+      }; 
+      Int_t Nb = sizeof(ActiveBranches)/sizeof(Char_t *);
+      for (Int_t i = 0; i < Nb; i++) StMuDstMaker::instance()->SetStatus(ActiveBranches[i],1); // Set Active braches
+    }
+    InitRunDone = kTRUE;
   }
   return StMaker::InitRun(runumber);
 }
