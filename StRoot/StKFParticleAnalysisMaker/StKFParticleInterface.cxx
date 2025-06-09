@@ -1214,7 +1214,6 @@ bool StKFParticleInterface::ProcessEvent(StMuDst* muDst, vector<KFMCTrack>& mcTr
     mcTrack->FillKFMCTrack(mcTrackKF);
     mcTrackKF.SetNMCPixelPoints(mcTrack->No_ist_hit() + mcTrack->No_ssd_hit() + mcTrack->No_pix_hit());
   }
-  mcTracks.resize(0);
   //read PV
   KFVertex primaryVertex;
   vector<int> primaryTrackList;
