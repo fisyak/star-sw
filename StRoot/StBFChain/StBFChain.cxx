@@ -431,7 +431,7 @@ Int_t StBFChain::Instantiate()
     // need to take place before 'maker' is created.
     if (! mk) {
       if (maker == "StMuDstMaker" && GetOption("RMuDst")) {
-	mk = new StMuDstMaker(0,0,".",fInFile.Data(),"st:MuDst.root",1e9);
+	mk = new StMuDstMaker(0,0,"",fInFile.Data(),"st:MuDst.root",1e9);
 	if (GetOption("RMuDst")) 
 	  NoMakersWithInput++;
       } else if (maker == "StPicoDstMaker") {
