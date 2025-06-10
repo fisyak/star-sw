@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job  name="LcKppi" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<job  name="" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 <stdout URL="file:./sched$JOBID.log" />
 <stderr URL="file:./sched$JOBID.err" />
 <command> 
@@ -10,6 +10,7 @@
 #  setup 64b
 #  starver TFG19g
 #  starver TFG20j
+#  starver TFG25c
   echo $INPUTFILE0 | grep ':'
   if (! $?) then
     set rung  = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
@@ -40,12 +41,15 @@
 #Stx  set chain = "MC.2019a,P2019a,btof,BEmcChkStat,CorrY,OSpaceZ2,OGridLeakFull,-evout,NoHistos,noTags,noRunco,Stx,KFVertex,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,"${name};
 #StiCA
 #  set chain = "MC.2019a,P2019a,btof,BEmcChkStat,CorrY,OSpaceZ2,OGridLeakFull,-evout,NoHistos,noTags,noRunco,StiCA,StiKFVertex,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,"${name};
-  set chain = "MC.2019a,P2019a,btof,BEmcChkStat,CorrY,OSpaceZ2,OGridLeakFull,-evout,NoHistos,noTags,noRunco,StiCA,StiKFVertex,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,-McTpcAna,"${name};
+#  set chain = "vmc,MC.19GeV_2019,P2019a,btof,BEmcChkStat,CorrY,OSpaceZ2,OGridLeakFull,-evout,NoHistos,noTags,noRunco,StiCA,StiKFVertex,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,-McTpcAna,"${name};
 #Stx  (03/06/2020)
 #  set chain = "MC.2019a,UseMCTstart,P2019a,btof,BEmcChkStat,CorrY,OSpaceZ2,OGridLeakFull,-evout,NoHistos,noTags,noRunco,Stx,KFVertex,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,"${name};
-  set sdt = ",sdt20190311"
+#  set sdt = ",sdt20190311"
 #  set sdt = ",sdt20190610" # 3p85GeV_fixedTarget
-  set VFMCE = ",VFMCE";
+#  set sdt = ",sdt20190226" # 19GeV_2019 
+  set chain = "vmc,MC.19GeV_2019,P2019a,btof,BEmcChkStat,CorrZ,-evout,NoHistos,noTags,noRunco,StiCA,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,-McTpcAna,"${name};
+  set sdt = ""
+  set VFMCE = ",VFMCE,KFVertex";
   set Chain = ${chain}${VFMCE}${sdt}",Rung."${rung}
   set base = ${name}_${rung}_${f}_${N};
   set file = ${base}.MuDst.root
@@ -63,5 +67,5 @@
     endif
   endif
 </command>
-<input URL="command:RunId.pl 1 100 1000 Omega" />
+<input URL="command:RunId.pl 1 1000 500 K0S" />
 </job>
