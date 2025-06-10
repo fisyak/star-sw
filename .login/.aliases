@@ -128,8 +128,11 @@ alias  lsfB /star/nfs4/AFS/star/packages/scripts/sums-submit-beta
 #alias lsf /afs/rhic/star/users/starjobs/dev/star-submit
 #alias lsf $STAR/scripts/star-submit
 #alias lsfE $STAR_PATH/scripts/star-submit-beta -p bnl_condor_eval  
-#alias  lsf $STAR/scripts/star-submit
-alias  lsf /star/nfs4/AFS/star/packages/scripts/sums-submit-beta
+if (-r /star/nfs4/AFS/star/packages/scripts/sums-submit-beta) then
+  alias  lsf /star/nfs4/AFS/star/packages/scripts/sums-submit-beta
+else
+  alias  lsf $STAR/scripts/star-submit
+endif
 alias lsfn $STAR/scripts/new/star-submit
 alias lsf45 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber45
 alias lsfafs lsf45
