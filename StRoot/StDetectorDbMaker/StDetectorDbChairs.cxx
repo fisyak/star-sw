@@ -2526,18 +2526,22 @@ starClockOnl_st *St_starClockOnlC::Struct(Int_t i) {
 MakeChairInstance(starMagOnl,RunLog/onl/starMagOnl);
 //________________________________________________________________________________
 Double_t  St_starMagOnlC::currentToScaleFactor(Double_t current) {
-    Double_t value = -9999;
-    if     (current < -4450 && current > -4550)	value = -1.0;
-    else if(current < -2200 && current > -2300)	value = -0.5;
-    else if(current >   -50 && current <    50)	value =  0.0;
-    else if(current >  2200 && current <  2300)	value =  0.5;
-    else if(current >  4450 && current <  4550)	value =  1.0;
-    else {
-      cout << " St_starMagOnlC::currentToScaleFactor illegal current = " << current << endl;
-      assert(0);
-    }
-    return value;
+  // from K_S0 mass from 19GeV_2019 https://drupal.star.bnl.gov/STAR/blog/fisyak/Use-Ks0-calibrate-STAR-magnetic-field
+  // from B_z(0,0,0) = 4.98317 kG (3D Filed map)
+  // to                4.98449 kG. i.e. +1.32 G;   
+  static Double_t fixScale = 1 + 2.65e-4; 
+  Double_t value = -9999;
+  if     (current < -4450 && current > -4550)	value = -1.0;
+  else if(current < -2200 && current > -2300)	value = -0.5;
+  else if(current >   -50 && current <    50)	value =  0.0;
+  else if(current >  2200 && current <  2300)	value =  0.5;
+  else if(current >  4450 && current <  4550)	value =  1.0;
+  else {
+    cout << " St_starMagOnlC::currentToScaleFactor illegal current = " << current << endl;
+    assert(0);
   }
+  return value*fixScale;
+}
 //________________________________________________________________________________
 Double_t St_starMagOnlC::ScaleFactor(Int_t i){
   return St_starMagOnlC::currentToScaleFactor(current(i));
