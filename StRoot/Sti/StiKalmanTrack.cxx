@@ -1355,6 +1355,7 @@ static int nCall=0; nCall++;
         tNode->setChi2(0); 
 	tNode->setHit(0);
 	tNode->setDetector(0);
+	if (debug()) sNode->PrintpT("DC");
         return tNode;
       } else {			//Normal vertex 
 	tNode->setChi2(3e33);
@@ -1363,6 +1364,7 @@ static int nCall=0; nCall++;
 	dz=tNode->getZ()- localVertex.z();
 	d = ::sqrt(dy*dy+dz*dz);
 	_vChi2= chi2; _dca = d;
+	if (debug()) sNode->PrintpT("VX");
       }
 
 #ifdef Sti_DEBUG      
@@ -1972,7 +1974,7 @@ Int_t StiKalmanTrack::ClearWorstHits(Int_t max) {
     A.push_back(pair<StiKalmanTrackNode *, Double_t>(node,chi2));
     noHits++;
     if (debug() > 2) {
-      node->PrintpTA("A");
+      node->PrintpT("A " );
     } 
   }
   // Sort using comparator function 
@@ -1989,7 +1991,7 @@ Int_t StiKalmanTrack::ClearWorstHits(Int_t max) {
     auto node = it.first;
     if (it.second > Chi2HitCut() && NoRejected < max) {
       if (debug()) {
-	node->PrintpTA("r");
+	node->PrintpT("r ");
       } 
       NoRejected++;
       node->setHit(0); node->setChi2(3e33); 

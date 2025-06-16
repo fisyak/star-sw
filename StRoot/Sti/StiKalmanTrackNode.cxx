@@ -1,4 +1,3 @@
-//StiKalmanTrack.cxx
 /*
  * $Id: StiKalmanTrackNode.cxx,v 2.180 2018/06/23 23:59:29 perev Exp $
  *
@@ -669,7 +668,7 @@ static const int    idx66[6][6] =
   ,{ 6, 7, 8, 9,13,18},{10,11,12,13,14,19},{15,16,17,18,19,20}};
 
 bool StiKalmanTrackNode::useCalculatedHitError = true;
-TString StiKalmanTrackNode::comment("Legend: \tE - extapolation\tM Multiple scattering\tV at Vertex\tB at beam\tR at Radius\tU Updated\n");
+TString StiKalmanTrackNode::comment("Legend: \tS - start\tE - extapolation\tM Multiple scattering\tV at Vertex\tB at beam\tR at Radius\tU Updated\n");
 TString StiKalmanTrackNode::commentdEdx(""); 
 Float_t StiKalmanTrackNode::fExternalTriggerOffset = 0;
 //debug vars
@@ -677,8 +676,7 @@ Float_t StiKalmanTrackNode::fExternalTriggerOffset = 0;
 //#define STI_DERIV_TEST
 #ifdef STI_DERIV_TEST
 int    StiKalmanTrackNode::fDerivTestOn=0;   
-#endif
-#ifndef STI_DERIV_TEST
+#else
 int    StiKalmanTrackNode::fDerivTestOn=-10;   
 #endif
 
@@ -1077,7 +1075,6 @@ StiDebug::Break(nCall);
   setState(pNode);
   setDetector(tDet);
   if (mFP._cosCA <-1e-5) return kMissed; 
-  if (debug()) ResetComment(::Form("%40s ",tDet->getName().c_str()));
 
   StiPlacement * place = tDet->getPlacement();
   double nNormalRadius = place->getNormalRadius();
@@ -1132,12 +1129,12 @@ StiDebug::Break(nCall);
   if (mFP[0]*mFP._cosCA+mFP[1]*mFP._sinCA<0) return kEnded;
 
   propagateError();
-  if (debug() & 8) { PrintpT("E");}
+  //  if (debug() & 8) { PrintpT("E ");}
 
   // Multiple scattering
   if (StiKalmanTrackFinderParameters::instance()->mcsCalculated() && getHz())  
     propagateMCS(pNode,tDet);
-  if (debug() & 8) { PrintpT("M");}
+  //  if (debug() & 8) { PrintpT("M ");}
   return position;
 }
 
@@ -1164,10 +1161,9 @@ StiDebug::Break(nCall);
   double ang = atan2(tc.Dir()[1],tc.Dir()[0]);
   vertex->rotate(ang);
   rotate(ang);
-  if (debug()) ResetComment(::Form("Vtx:%8.3f %8.3f %8.3f",vertex->x(),vertex->y(),vertex->z()));
   if (propagate(vertex->x(),kPlanar,dir))    return false; // track does not reach vertex "plane"
   propagateError();
-  if (debug() & 8) { PrintpT("V"); PrintStep();}
+  if (debug() & 8) PrintpT(Form("Vtx:%8.3f %8.3f %8.3f",vertex->x(),vertex->y(),vertex->z()));
   setHit(vertex);
   setDetector(0);
   return true;
@@ -1179,16 +1175,11 @@ StiDebug::Break(nCall);
 bool StiKalmanTrackNode::propagateToBeam(const StiKalmanTrackNode *parentNode,int dir)
 {
   setState(parentNode);
-  if (debug()) {
-    if (parentNode->getDetector()) 
-      ResetComment(::Form("%40s ",parentNode->getDetector()->getName().c_str()));
-    else ResetComment("Unknown Detector");
-  }
   if (propagate(0., kPlanar,dir)) return false; // track does not reach vertex "plane"
   
   propagateError();
   if (mFE.zign()<0) return false;
-  if (debug() & 8) { PrintpT("B"); PrintStep();}
+  if (debug() & 8) PrintpT("B ");
   setHit(0);
   setDetector(0);
   return true;
@@ -1201,11 +1192,10 @@ int StiKalmanTrackNode::propagateToRadius(StiKalmanTrackNode *pNode, double radi
 {
   int position = 0;
   setState(pNode);
-  if (debug()) ResetComment(::Form("%40s ",pNode->getDetector()->getName().c_str()));
   position = propagate(radius,kCylindrical,dir);
   if (position) return position;
   propagateError();
-  if (debug() & 8) { PrintpT("R"); PrintStep();}
+  if (debug() & 8) PrintpT("R ");
   _detector = 0;
   return position;
 }
@@ -1538,7 +1528,6 @@ int StiKalmanTrackNode::isDca() const
  */
 void StiKalmanTrackNode::propagateMCS(StiKalmanTrackNode * previousNode, const StiDetector * tDet)
 {  
-static const int keepElossBug = StiDebug::iFlag("keepElossBug");
 
 static int nCall=0; nCall++;
   propagateCurv(previousNode);
@@ -1567,97 +1556,6 @@ static int nCall=0; nCall++;
   double e2=p2+m2;
   double beta2=p2/e2;
 
-if (keepElossBug) {	//Old Eloss bug prezerved
-  d1    = previousNode->getDensity();
-  x0p   = previousNode->getX0();
-  d3    = tDet->getMaterial()->getDensity();
-  x0    = tDet->getMaterial()->getX0();
-
-
-  if (pL2> (pL1+pL3)) 
-    {
-      pL2=pL2-pL1-pL3;
-      if (mgP.dx>0)
-				{
-					x0Gas = tDet->getGas()->getX0();
-					d2    = tDet->getGas()->getDensity();
-				}
-      else
-				{
-					x0Gas = previousNode->getGasX0(); 
-					d2    = previousNode->getGasDensity();
-				}
-      relRadThickness = 0.;
-      dxEloss = 0;
-      if (x0p>0.) 
-	{
-	  relRadThickness += pL1/x0p;
-	  dxEloss += d1*pL1;
-	}
-      if (x0Gas>0.)
-				{
-					relRadThickness += pL2/x0Gas;
-					dxEloss += d2*pL2;
-				}
-      if (x0>0.)
-				{
-					relRadThickness += pL3/x0;
-					dxEloss += d3*pL3;
-				}
-    }
-  else 
-    {
-      relRadThickness = 0.; 
-      dxEloss = 0;
-      if (x0p>0.) 
-				{
-					relRadThickness += pL1/x0p;
-					dxEloss += d1*pL1;
-				}
-      if (x0>0.)
-				{
-					relRadThickness += pL3/x0;
-					dxEloss += d3*pL3;
-				}
-    }
-  //cout << " m2:"<<m2<<" p2:"<<p2<<" beta2:"<<beta2;
-  double theta2=mcs2(relRadThickness,beta2,p2);
-  //cout << " theta2:"<<theta2;
- double pti = mFP.ptin(), tanl = mFP.tanl(); 
-
- double cos2Li = (1.+ tanl*tanl);  // 1/cos(lamda)**2
- 
- mFE._cEE += cos2Li 		*theta2;
- mFE._cPP += tanl*tanl*pti*pti	*theta2;
- mFE._cTP += pti*tanl*cos2Li	*theta2;
- mFE._cTT += cos2Li*cos2Li	*theta2;
-
-  double dE=0;
-  double sign = (mgP.dx>0)? 1:-1;
-
-//  const static double I2Ar = (15.8*18) * (15.8*18) * 1e-18; // GeV**2
-  StiElossCalculator * calculator = tDet->getMaterial()->getElossCalculator();
-assert(calculator);
-  double eloss = calculator->calculate(1.,m, beta2);
-  dE = sign*dxEloss*eloss;
-
-//		save detLoss and gasLoss for investigation only
-//  setELoss(2*sign*d3*eloss,sign*d2*eloss);
-
-  if (TMath::Abs(dE)>0)
-    {
-      if (debug()) {
-	commentdEdx  = Form("%6.3g cm(%5.2f) %6.3g keV %6.3f GeV",mgP.dx,100*relRadThickness,1e6*dE,TMath::Sqrt(e2)-m); 
-      }
-      double correction =1. + ::sqrt(e2)*dE/p2;
-      if      (correction>1.1) 	correction = 1.1;
-      else if (correction<0.9) 	correction = 0.9;
-      mFP.curv() = mFP.curv()*correction;
-      mFP.ptin() = mFP.ptin()*correction;
-    }
-    mPP() = mFP; mPE() = mFE;
-
-} else { // ELoss bug fixed =====================================================================
 
   const StiDetector 		*preDet = previousNode->getDetector();
   const StiMaterial 		*preMat = preDet->getMaterial();
@@ -1709,19 +1607,17 @@ assert(mFE._cTT>0);
   mELoss[1].mLen   = 2*pL2;
   mELoss[1].mDens  = gasMat->getDensity();
   mELoss[1].mX0    = x0Gas;
- 
- if (fabs(dE)>0)
-    {
-      double correction =1. + ::sqrt(e2)*dE/p2;
-      if (correction>1.1) correction = 1.1;
-      else if (correction<0.9) correction = 0.9;
-      mFP.curv() = mFP.curv()*correction;
-      mFP.ptin() = mFP.ptin()*correction;
-    }
-    mPP() = mFP; mPE() = mFE;
-}
-
-
+  
+  if (fabs(dE)>0)    {
+    if (debug()) PrintpT("dE",mgP.dx, relRadThickness,dE, TMath::Sqrt(e2) - m);
+    double correction =1. + ::sqrt(e2)*dE/p2;
+    if (correction>1.1) correction = 1.1;
+    else if (correction<0.9) correction = 0.9;
+    mFP.curv() = mFP.curv()*correction;
+    mFP.ptin() = mFP.ptin()*correction;
+  }
+  mPP() = mFP; mPE() = mFE;
+  
 }
 
 //______________________________________________________________________________
@@ -2208,24 +2104,6 @@ void StiKalmanTrackNode::backStatics(double *sav)
   mgP.dl=             sav[14];
   mgP.dl0=            sav[15];
   mgP.dy=             sav[16];
-}
-//________________________________________________________________________________
-void   StiKalmanTrackNode::PrintpT(const Char_t *opt) const {
-  // opt = "E" extapolation
-  //       "M" Multiple scattering
-  //       "V" at Vertex
-  //       "B" at beam
-  //       "R" at Radius
-  //       "U" Updated
-  //       "r" rejected
-  //       mFP fit parameters
-  //       mFE fit errors
-  //       _ext->mPP 
-  //       _ext->mPE
-  //       _ext->mMtx
-  Double_t dpTOverpT = 100*TMath::Sqrt(mFE._cPP/(mFP.ptin()*mFP.ptin()));
-  if (dpTOverpT > 9999.9) dpTOverpT = 9999.9;
-  comment += ::Form(" %s pT %8.3f+-%6.1f, sy %6.4f, z = %8.3f",opt,getPt(),dpTOverpT,TMath::Sqrt(mFE._cYY), mFP.z());
 }
 //________________________________________________________________________________
 void StiKalmanTrackNode::PrintStep() {
