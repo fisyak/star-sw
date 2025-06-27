@@ -4,7 +4,7 @@
 
 
 LDLIBS = 
-DEFINES += -DRTS_LOG_COLORED
+DEFINES += -DRTS_LOG_COLORED -std=c++11
 
 
 VOBJS += libbsmd.a libbtow.a libemc.a libesmd.a libfpd.a libftp.a libl3.a libpmd.a libpp2pp.a  \
@@ -19,7 +19,7 @@ VPATH += ../DAQ_BSMD ../DAQ_BTOW ../DAQ_EMC ../DAQ_ESMD ../DAQ_FPD ../DAQ_FTP ..
 	../DAQ_READER  ../SFS ../LOG ../DAQ_TPC23
 
 
-BINS = rts_example daqFileMerger daqFileHacker daqFileChopper testReader testReader2 tpc_rerun tpx_read_gains
+BINS = rts_example daqFileMerger daqFileSorter daqFileMerger_Ordered daqFileHacker daqFileChopper testReader testReader2 tpc_rerun tpx_read_gains
 
 all:   $(BINS)
 
@@ -50,6 +50,12 @@ daqFileHacker: daqFileHacker.o $(VOBJS)
 	$(LINK.o) -o $@ $(LDLIBS) -Wl,--whole-archive $^ -Wl,--no-whole-archive
 
 daqFileMerger: daqFileMerger.o $(VOBJS)
+	$(LINK.o) -o $@ $(LDLIBS) -Wl,--whole-archive $^ -Wl,--no-whole-archive
+
+daqFileMerger_Ordered: daqFileMerger_Ordered.o $(VOBJS)
+	$(LINK.o) -o $@ $(LDLIBS) -Wl,--whole-archive $^ -Wl,--no-whole-archive
+
+daqFileSorter: daqFileSorter.o $(VOBJS)
 	$(LINK.o) -o $@ $(LDLIBS) -Wl,--whole-archive $^ -Wl,--no-whole-archive
 
 testReader: testReader.o $(VOBJS)
