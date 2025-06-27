@@ -10,6 +10,8 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("ifpd",-1);
  configGeom ->SetValue("ifms",-1);
  configGeom ->SetValue("ifsc",-1);
+ configGeom ->SetValue("ipxl",-1);
+ configGeom ->SetValue("ifst",-1);
  configGeom ->SetValue("tpcg_version",5);
  configGeom ->SetValue("btog_version",6);
  configGeom ->SetValue("btog_choice",13);
