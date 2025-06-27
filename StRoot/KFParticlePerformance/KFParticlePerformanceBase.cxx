@@ -956,9 +956,9 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
 #endif /* __TFG__VERSION__ */
   };
   TString parTitle3D[nHistoPartParam3D];
+  TString path = GetDirectoryPath();
   for(int iParam=0; iParam<nHistoPartParam; iParam++)
   {
-    TString path = GetDirectoryPath();
     parTitle[iParam] = path + parName[iParam];
     if(iParam<nHistoPartParam2D)
       parTitle2D[iParam] = path + parName2D[iParam];
@@ -1242,23 +1242,25 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
                                            nBins[0],xMin[0],xMax[0]);
     histoParameters3D[iPart][1]->GetYaxis()->SetTitleOffset(1.0);
 #ifdef __TFG__VERSION__
-    histoParameters3D[iPart][12] = new TH3F(parName3D[12],parTitle3D[12] + " pT > 1 GeV ; y ; #phi (rad); M", 
-                                           nBins[3],xMin[3],xMax[3],
-                                           nBins[9],xMin[9],xMax[9],
-                                           nBins[0],xMin[0],xMax[0]);
-    histoParameters3D[iPart][13] = new TH3F(parName3D[13],parTitle3D[13] + " pT > 1 GeV ; y ; #phi (rad); dM", 
-                                           nBins[3],xMin[3],xMax[3],
-                                           nBins[9],xMin[9],xMax[9],
-                                           nBins[25],xMin[25],xMax[25]);
-    histoParameters3D[iPart][14] = new TH3F(parName3D[14],parTitle3D[14] + " ; y ; #phi (rad); M", 
-                                           nBins[3],xMin[3],xMax[3],
-                                           nBins[9],xMin[9],xMax[9],
-                                           nBins[0],xMin[0],xMax[0]);
-
-    histoParameters3D[iPart][15] = new TH3F(parName3D[13],parTitle3D[15] + " ; y ; #phi (rad); dM", 
-                                           nBins[3],xMin[3],xMax[3],
-                                           nBins[9],xMin[9],xMax[9],
-                                           nBins[25],xMin[25],xMax[25]);
+    if (path == "Ks") {
+      histoParameters3D[iPart][12] = new TH3F(parName3D[12],parTitle3D[12] + " pT > 1 GeV ; y ; #phi (rad); M", 
+					      nBins[3],xMin[3],xMax[3],
+					      nBins[9],xMin[9],xMax[9],
+					      nBins[0],xMin[0],xMax[0]);
+      histoParameters3D[iPart][13] = new TH3F(parName3D[13],parTitle3D[13] + " pT > 1 GeV ; y ; #phi (rad); dM", 
+					      nBins[3],xMin[3],xMax[3],
+					      nBins[9],xMin[9],xMax[9],
+					      nBins[25],xMin[25],xMax[25]);
+      histoParameters3D[iPart][14] = new TH3F(parName3D[14],parTitle3D[14] + " ; y ; #phi (rad); M", 
+					      nBins[3],xMin[3],xMax[3],
+					      nBins[9],xMin[9],xMax[9],
+					      nBins[0],xMin[0],xMax[0]);
+      
+      histoParameters3D[iPart][15] = new TH3F(parName3D[13],parTitle3D[15] + " ; y ; #phi (rad); dM", 
+					      nBins[3],xMin[3],xMax[3],
+					      nBins[9],xMin[9],xMax[9],
+					      nBins[25],xMin[25],xMax[25]);
+    }
 #endif /* __TFG__VERSION__ */
     
     int centralityHisto[3] = {2,3,16};
