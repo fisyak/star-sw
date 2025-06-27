@@ -2,26 +2,38 @@
 //                                                                      //
 // Macro for running chain with different inputs                        //
 // owner:  Yuri Fisyak                                                  //
-// Modifications by J. Lauret, V, Prevoztchikov, G.V. Buren, L. Didenko //
+// Modifications by J. Lauret, V, Prevotchikov, G.V. Buren, L. Didenko  //
 //                  and V. Fine                                         //
 //                                                                      //
 // $Id: bfc.C,v 1.194 2020/04/12 20:24:18 perev Exp $
 //////////////////////////////////////////////////////////////////////////
 class StBFChain;        
 class StMessMgr;
-#if defined(__CLING__)
+
 #pragma cling load("StarRoot")
 #pragma cling load("St_base")
 #pragma cling load("StChain")
-#pragma cling load("libStDbLib")
 #pragma cling load("StUtilities")
 #pragma cling load("StBFChain")
-#pragma cling load("geant3")
-#pragma cling load("StDb_Tables")
-#pragma cling load("StBichsel")
-#endif /* __CLING__ */
 
-#if defined(__CINT__)
+#if !(defined(__CINT__) || defined(__CLING__)) || defined(__MAKECINT__)
+
+#include "Stiostream.h"
+#include "TSystem.h"
+#include "TClassTable.h"
+#include "TApplication.h"
+#include "TInterpreter.h"
+#include "StBFChain.h"
+#include "StMessMgr.h"
+#include "TROOT.h"
+#include "TAttr.h"
+#include "Rtypes.h"
+#endif
+
+#if !defined(__CINT__) || defined(__CLING__)
+// 'chain' is defined in StBFChain library (see StRoot/StBFChain.cxx)
+extern StBFChain* chain;
+#else
 StBFChain* chain = 0;
 #endif
 
@@ -29,69 +41,34 @@ StBFChain* chain = 0;
 //_________________ Prototypes _______________________________________________
 void Usage();
 void Load(const Char_t *options="");
-//TString defChain("MC.y2009a,StiCA,Muons20,vmc,Rung.1,dEdxCalib,McTpcAna");
-//TString defChain("y2010,gstar,Muons20,Test.default.Fast.ITTF,NosvtIT,NossdIT,-sfs,-ssdFast");
-//TString defChain("y2011,gstar,Muons20,TpcRS,TpxClu,bbcSim,btofsim,emcY2,EEfs,pmdSim,IdTruth,MakeEvent,VFMinuit,ITTF,NosvtIT,NossdIT,analysis,BTofIT,KFVertex");//,corr4,KFVertex,sdt20100107.110000");
-//TString defChain("MC.y2012a,sdt20120319,gstar,Muons20,StiCA,KFVertex,BEmcChkStat,btof,fmsSim,emcSim,EEss,eemcA2E,Corr4,OSpaceZ2,OGridLeak3D,-hitfilt");//,corr4,KFVertex,sdt20100107.110000");
-//TString defChain("MC.y2012a,gstar,Muons20,StiCA,KFVertex,BEmcChkStat,btof,fmsSim,emcSim,EEss,Corr4,OSpaceZ2,OGridLeak3D,-hitfilt");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012a,gstar,Muons20,StiCA,KFVertex,xgeometry");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012a,gstar,Muons20,StiVMC");//,KFVertex");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012a,gstar,Muons20,StiCA,KFVertex,-hitfilt");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,pythia,StiCA,beamline,-hitfilt,KFVertex,CorrX,OSpaceZ2,OGridLeak3D,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,StiCA,beamline,-hitfilt,KFVertex,CorrX,OSpaceZ2,OGridLeak3D,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,pythia,Sti,-hitfilt,Corr4,OSpaceZ2,OGridLeak3D,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,pythia,beamline,StiCA,KFVertex,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,pythia,TpcRS,StiCA,KFVertex,beamline,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,TpcRS,StiCA,KFVertex,beamline,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,TpcRS,Sti,beamline,VFPPVnoCTB,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,TpcRS,StiCA,beamline,KFVertex,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,TpcRS,StiCA,KFVertex,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,TpcRS,Sti,VFMinuit,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2013,pythia,StiCA,-hitfilt,KFVertex,beamline");//eemcA2E,,sdt20100107.110000"); ,KFVertex
-//TString defChain("MC.y2012a,gstar,Muons20,StiCA,-hitfilt,KFVertex,beamline,sdt20120408.134653,Corr4,OSpaceZ2,OGridLeak3D");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012a,pythia,StiCA,-hitfilt,KFVertex,beamline,sdt20120408.134653,Corr4,OSpaceZ2,OGridLeak3D");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.y2012,gstar,Muons20,tofsim,TpcRS,StiCA,KFVertex,beamline,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.devTY,gstar,Muons20,tofsim,TpcRS,StiCA,KFVertex,beamline,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2014,AgML,pythia,StiCA,-hitfilt,KFVertex,Corr4,OSpaceZ2,OGridLeak3D");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2014,AgML,pythia,StiCA,-hitfilt,KFVertex,Corr4,OSpaceZ2,OGridLeak3D,StiHftC,pxlFastSim,ssdfast");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2014,pythia,StiCA,-hitfilt,KFVertex,Corr4,OSpaceZ2,OGridLeak3D,StiHftC,pxlFastSim,ssdfast,AgML,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2014,pythia,StiCA,-hitfilt,KFVertex,Corr4,OSpaceZ2,OGridLeak3D,StiHftC,pxlFastSim,ssdfast,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2014,gstar,Muons20,StiCA,beamline,-hitfilt,KFVertex,Corr4,OSpaceZ2,OGridLeak3D,StiHftC,pxlFastSim,ssdfast,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2014,gstar,Muons20,StiCA,-hitfilt,KFVertex,Corr4,OSpaceZ2,OGridLeak3D,StiHftC,pxlFastSim,ssdfast,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("P2014aPxLSim,gstar,Muons20,TpcRS,TpxClu,bbcSim,btofsim,btofMatch,emcY2,emcSim,EEfs,McEvent,StiCA,KFVertex,useXgeom,HftMatTree");
-//TString defChain("MC.2014,gstar,Muons20,TpcRS,Sti,KFVertex,beamline,-hitfilt,useXgeom,pxlFastSim,IstSim");
-//TString defChain("MC.2014,gstar,Muons20,TpcRS,StiCA,KFVertex,-hitfilt,useXgeom,pxlFastSim,IstSim,sdt20140410.123905,phys_off");
-//TString defChain("MC.2014,Pythia,TpcRS,StiCA,KFVertex,beamline,-hitfilt,useXgeom,pxlFastSim,IstSim");
-//"P2014a,Stv,mtd,btof,pxlHit,istHit,BEmcChkStat,CorrX,OSpaceZ2,OGridLeak3D,-hitfilt,-SsdIt","/star/rcf/test/daq/2014/164/st_physics_15164004_raw_2000022.daq")'
-//TString defChain("MC.2015,gstar,Muons20,phys_off,TpcRS,StiCA,beamline,KFVertex,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2015,gstar,Muons20,TpcRS,StiCA,VFMinuit,-hitfilt,useXgeom");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2015,HijingAuAuFixedTarget19,StiCA,KFVertex,-SstIt,-SstDb");//eemcA2E,,sdt20100107.110000");
-//TString defChain("MC.2015,HijingAuAuFixedTarget19,StiCA,KFVertex,-SstIt,-SstDb,-MiniMcMk,tfs");//eemcA2E,,sdt20100107.110000");
-//TString defChain("test.RC.AuAu200.y2016,StiCA,KFVertex");
-//TString defChain("gstar,Muons20,y2005h,tpcDb,trs,tpc,Physics,Cdst,Kalman,tags,Tree,EvOut,McEvOut,IdTruth,miniMcMk,StarMagField,FieldOn,McAna");
-//TString defChain("gstar,K_S01,y2020a,tpcDb,TpcRS,tpc,Physics,Cdst,Kalman,tags,Tree,EvOut,McEvOut,IdTruth,miniMcMk,StarMagField,FieldOn,McAna");
-//TString defChain("MC2016,StiCA,Muons20,vmc,Rung.1");
-//TString defChain("MC.2017,sdt20170621.104909,StiCA,Muons20,vmc,Rung.1,UseCAVxFinder");
-//TString defChain("MC.2019,StiCA,Muons20,vmc,Rung.1"); //,AgML");
-//TString defChain("MC.2019,StiCA,Muons20,vmc,Rung.1,dEdxCalib,McTpcAna"); //,AgML");
-//TString defChain("MC.7p7GeV_2021,Muons20,vmc,Rung.1,dEdxCalib"); //,AgML");
-//TString defChain("MC.7p7GeV_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
-//TString defChain("MC.2021,3p85GeV_fixedTarget_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
-TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
-//TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,dbSnapshot");
-//TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
-StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
-		const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
-StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,
- 	       const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName = "");
-//	 const Char_t *Chain="gstar,Muons20,y2005h,tpcDb,trs,tpc,Physics,Cdst,Kalman,tags,Tree,EvOut,McEvOut,IdTruth,miniMcMk,StarMagField,FieldOn,McAna", // McQA
+//TString defChain("y2010,gstar,Test.default.Fast.ITTF,NosvtIT,NossdIT,-sfs,-ssdFast");
+TString defChain("y2010,gstar,Test.default.ITTF,NosvtIT,NossdIT,-sfs,-ssdFast,sdt20100107.110000");
+void bfc(Int_t First, Int_t Last,const Char_t *Chain = defChain + ",Display",
+	 const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0);
+//	 const Char_t *Chain="gstar,y2005h,MakeEvent,trs,sss,svt,ssd,fss,bbcSim,emcY2,tpcI,fcf,ftpc,SvtCL,svtDb,ssdDb,svtIT,ssdIT,ITTF,genvtx,Idst,event,analysis,EventQA,tags,Tree,EvOut,McEvOut,GeantOut,IdTruth,miniMcMk,StarMagField,FieldOn,McAna,Display",//,,NoSimuDb, display, //McQa, 
+void bfc(Int_t Last, const Char_t *Chain = defChain,
+	 const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0);
+	 //	 const Char_t *Chain="gstar,y2005h,tpcDb,trs,tpc,Physics,Cdst,Kalman,tags,Tree,EvOut,McEvOut,IdTruth,miniMcMk,StarMagField,FieldOn,McAna", // McQA
 //_____________________________________________________________________
 void Load(const Char_t *options)
 {
   cout << "Load system libraries\t";
   int nodefault = TString(options).Contains("nodefault",TString::kIgnoreCase);
 
+
   if ( TString(gProgName)!="root4star") { // ! root4star
+    if (!nodefault || TString(options).Contains("pgf77",TString::kIgnoreCase)) {
+      const Char_t *pgf77 = "libpgf77VMC";
+      if (gSystem->DynamicPathName(pgf77,kTRUE) ) {
+	gSystem->Load(pgf77); cout << " " << pgf77 << " + ";
+      }
+    }
+    if (!nodefault || TString(options).Contains("cern" ,TString::kIgnoreCase)) {
+        gSystem->Load("libStarMiniCern"); 
+        cout << "libStarMiniCern" ;
+    }
+
+    
     if (!nodefault || TString(options).Contains("mysql",TString::kIgnoreCase)) {
       const Char_t *mysql = "libmysqlclient";
       //Char_t *mysql = "libmimerS"; // just to test it picks from OPTSTAR
@@ -105,7 +82,6 @@ void Load(const Char_t *options)
 			    "/usr/lib/", 
 			    "/usr/lib/mysql/", 
 			    "/usr/mysql/lib/",
-			    "/sw/lib/",
 			    NULL}; 
       const Char_t *libsGlbal[]= {"", 
 			    "/usr/lib/", 
@@ -113,7 +89,6 @@ void Load(const Char_t *options)
 			    "/usr/mysql/lib/",
 			    "$OPTSTAR/lib/",
 			    "$OPTSTAR/lib/mysql/",
-			    "/sw/lib/",
 			    NULL}; 
 
       const Char_t **libs;
@@ -148,14 +123,11 @@ void Load(const Char_t *options)
   }
   gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   // Look up for the logger option
-  Bool_t needLogger  = kFALSE;
-  if (gSystem->Load("liblog4cxx") >=  0) {             //  StMemStat::PrintMem("load log4cxx");
-    cout << " + liblog4cxx";
-    if(gSystem->Load("libStStarLogger") >= 0) {              //  StMemStat::PrintMem("load log4cxx");
-      cout << " + libStStarLogger";
-      //      gROOT->ProcessLine("StLoggerManager::StarLoggerInit();"); 
-      StLoggerManager::StarLoggerInit();
-      if (gROOT->IsBatch())  StLoggerManager::setColorEnabled(kFALSE);
+  if (gSystem->Load("liblog4cxx.so") >=  0) {             //  StMemStat::PrintMem("load log4cxx");
+    cout << " + liblog4cxx.so";
+    if(gSystem->Load("libStStarLogger.so") >= 0) {              //  StMemStat::PrintMem("load log4cxx");
+      cout << " + libStStarLogger.so";
+      gROOT->ProcessLine("StLoggerManager::StarLoggerInit();"); 
     }
   }
   //  gSystem->Load("libHtml");
@@ -165,74 +137,42 @@ void Load(const Char_t *options)
   cout << endl;
 }
 //_____________________________________________________________________
-StBFChain *bfc(Int_t First, Int_t Last,
-	       const Char_t *Chain,
-	       const Char_t *infile,
-	       const Char_t *outfile,
-	       const Char_t *TreeFile, 
-	       const Char_t *chainName)
+void bfc(Int_t First, Int_t Last,
+	 const Char_t *Chain,
+	 const Char_t *infile,
+	 const Char_t *outfile,
+	 const Char_t *TreeFile)
 { // Chain variable define the chain configuration 
   // All symbols are significant (regardless of case)
   // "-" sign before requiest means that this option is disallowed
-  // Chain = "gstar,Muons20" run GEANT on flight with 10 muons in range |eta| < 1 amd pT = 1GeV/c (default)
+  // Chain = "gstar" run GEANT on flight with 10 muons in range |eta| < 1 amd pT = 1GeV/c (default)
   // Dynamically link some shared libs
-  // disable cint exeption catching
-#ifndef __CLING__
-  gROOT->ProcessLine(".exception");
-#endif
+  Load(Chain);
+  chain = new StBFChain(); cout << "Create chain " << chain->GetName() << endl;
   TString tChain(Chain);
-  if (tChain == "") {
-    if (Last == -2 && tChain.CompareTo("ittf",TString::kIgnoreCase)) Usage();
-    return 0;
-  } else {
-  }
-#ifndef __CLING__
-  if (gClassTable->GetID("StBFChain") < 0) Load(tChain.Data());
-  chain = (StBFChain *) StMaker::New("StBFChain", chainName);
-#else
-  Load(tChain.Data());
-  StBFChain *chain = new StBFChain;
-#endif
-  cout << "Create chain " << chain->GetName() << endl;
   chain->cd();
   chain->SetDebug(1);
-  if (Last < -3) return chain;
-  chain->SetFlags(tChain);
-#ifndef __CLING__
+  if (Last < -3) return;
+  chain->SetFlags(Chain);
+  if (tChain == "" || ! tChain.CompareTo("ittf",TString::kIgnoreCase)) Usage();
   gMessMgr->QAInfo() << Form("Process [First=%6i/Last=%6i/Total=%6i] Events",First,Last,Last-First+1) << endm;
-#else
-  cout <<  Form("QA :INFO  - Process [First=%6i/Last=%6i/Total=%6i] Events",First,Last,Last-First+1) << endl;
-#endif
-  if (Last < -2) return chain;
+  if (Last < -2) return;
   if (chain->Load() > kStOk) {
-#ifndef __CLING__
     gMessMgr->Error() << "Problems with loading of shared library(ies)" << endm;
-#else
-    cout << "QA :ERROR - Problems with loading of shared library(ies)" << endl;
-#endif
     gSystem->Exit(1);
   }
-  if (TreeFile) chain->SetTFile(new TFile(TreeFile,"RECREATE"));
   chain->Set_IO_Files(infile,outfile);
-  if (Last < -1) return chain;
+  if (TreeFile) chain->SetTFile(new TFile(TreeFile,"RECREATE"));
+
+  if (Last < -1) return;
   if (chain->Instantiate() > kStOk)  { 
-#ifndef __CLING__
     gMessMgr->Error() << "Problems with instantiation of Maker(s)" << endm;
-#else
-    cout << "QA :ERROR - Problems with instantiation of Maker(s)" << endl;
-#endif
     gSystem->Exit(1);
   }
   StMaker::lsMakers(chain);
-  if (Last < 0) return chain;
-  StMaker *EventMk = chain->GetMaker("0Event");
-  if (EventMk) EventMk->SetDebug(1);
-  StMaker *sti  = chain->GetMaker("Sti");
-  if (sti) sti->SetAttr("useTiming",1);
-#if 0
-  StMaker *btofSim = chain->GetMaker("BTofSim");
-  if (btofSim) btofSim->SetAttr("UseMCTstart",1);
-#endif
+  if (Last < 0) return;
+  StMaker *dbMk = chain->GetMaker("db");
+  if (dbMk) dbMk->SetDebug(1);
 #if 0
   // Insert your maker before "tpc_hits"
   Char_t *myMaker = "St_TLA_Maker";
@@ -265,63 +205,38 @@ StBFChain *bfc(Int_t First, Int_t Last,
 #endif
   {
     TDatime t;
-#ifndef __CLING__
     gMessMgr->QAInfo() << Form("Run is started at Date/Time %i/%i",t.GetDate(),t.GetTime()) << endm;
-#else
-    cout << Form("QA :INFO  - Run is started at Date/Time %i/%i",t.GetDate(),t.GetTime()) << endl;
-#endif
   }
-#ifndef __CLING__
   gMessMgr->QAInfo() << Form("Run on %s in %s",gSystem->HostName(),gSystem->WorkingDirectory()) << endm;
   gMessMgr->QAInfo() << Form("with %s", chain->GetCVS()) << endm;
-#else
-  cout << Form("QA :INFO  - Run on %s in %s",gSystem->HostName(),gSystem->WorkingDirectory()) << endl;
-  cout << Form("QA :INFO  - with %s", chain->GetCVS()) << endl;
-#endif
   // Init the chain and all its makers
   TAttr::SetDebug(0);
-#ifndef __CLING__
   chain->SetAttr(".Privilege",0,"*"                ); 	  //All  makers are NOT priviliged
   chain->SetAttr(".Privilege",1,"StIOInterFace::*" ); 	  //All IO makers are priviliged
   chain->SetAttr(".Privilege",1,"St_geant_Maker::*"); 	  //It is also IO maker
   chain->SetAttr(".Privilege",1,"StTpcDbMaker::*"); 	  //It is also TpcDb maker to catch trips
-  chain->SetAttr(".Privilege",1,"*::tpc_hits");           //May be allowed to act upon excessive events
-  chain->SetAttr(".Privilege",1,"*::tpx_hits");           //May be allowed to act upon excessive events
-  chain->SetAttr(".Privilege",1,"StTpcHitMover::*");      //May be allowed to act upon corrupt events
-  chain->SetAttr(".Privilege",1,"*::tpcChain");           //May pass on messages from sub-makers
+  chain->SetAttr(".Privilege",1,"*::tpc_hits"); //May be allowed to act upon excessive events
+  chain->SetAttr(".Privilege",1,"*::tpx_hits"); //May be allowed to act upon excessive events
+  chain->SetAttr(".Privilege",1,"StTpcHitMover::*"); //May be allowed to act upon corrupt events
+  chain->SetAttr(".Privilege",1,"*::tpcChain"); //May pass on messages from sub-makers
   chain->SetAttr(".Privilege",1,"StTriggerDataMaker::*"); //TriggerData could reject event based on corrupt triggers
-  chain->SetAttr(".Privilege",1,"StEandBDirMaker::*");    // just for debuggin purpose
-  chain->SetAttr(".Privilege",1,"StEventMaker::*");       //May be allowed to act upon trigger IDs (filtering)
-  //  if (TString(Chain).Contains("gmtCosmics",TString::kIgnoreCase)) chain->SetAttr(".Privilege",1,"StGmtRawMaker::*");  
-#endif
+  chain->SetAttr(".Privilege",1,"StEventMaker::*"); //May be allowed to act upon trigger IDs (filtering)
   Int_t iInit = chain->Init();
-  if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return chain;}
-  if (Last == 0) return chain;
+  if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return;}
+  if (Last == 0) return;
   StEvtHddr *hd = (StEvtHddr*)chain->GetDataSet("EvtHddr");
   if (hd) hd->SetRunNumber(-2); // to be sure that InitRun calls at least once
-#if defined(__CINT__) && !defined(__MAKECINT__)
-  if (TClass::GetClass("StarMCPrimaryGenerator")) { // Print list of input  particles
-    if (StarMCPrimaryGenerator::Instance()) {
-      StarMCPrimaryGenerator::Instance()->SetDebug(1);
-    }
-  }
-#endif
+    // skip if any
   chain->EventLoop(First,Last,0);
-#ifndef __CLING__
   gMessMgr->QAInfo() << "Run completed " << endm;
-#else
-  cout << "QA :INFO  - Run completed " << endl;
-#endif
-  return chain;
 }
 //_____________________________________________________________________
-StBFChain *bfc(Int_t Last, 
-	       const Char_t *Chain,
-	       const Char_t *infile, 
-	       const Char_t *outfile, 
-	       const Char_t *TreeFile,
-	       const Char_t *chainName) {
-  return bfc(1,Last,Chain,infile,outfile,TreeFile,chainName);
+void bfc(Int_t Last, 
+	 const Char_t *Chain,
+	 const Char_t *infile, 
+	 const Char_t *outfile, 
+	 const Char_t *TreeFile) {
+  bfc(1,Last,Chain,infile,outfile,TreeFile);
 }
 //____________________________________________________________
 void Usage() {
@@ -333,7 +248,7 @@ void Usage() {
   printf (" First     \t- First event to process\t(Default = 1)\n");
   printf (" Last      \t- Last  event to process\t(Default = 1)\n");
   printf (" Chain     \t- Chain specification   \t(without First &  Last: Default is \"\" which gives this message)\n");
-  printf ("           \t                        \t with    First || Last: Default is \"gstar,Muons20\")\n");
+  printf ("           \t                        \t with    First || Last: Default is \"gstar tfs\")\n");
   printf (" infile    \t- Name of Input file    \t(Default = 0, i.e. use preset file names depending on Chain)\n"); 
   printf (" outfile   \t- Name of Output file   \t(Default = 0, i.e. define Output file name from Input one)\n");
   printf (" outfile   \t- Name of Tree File     \t(Default = 0, i.e. define Output file name from Input one (tags TNtuple))\n");
@@ -341,6 +256,6 @@ void Usage() {
   gSystem->Exit(1);
 }
 //_____________________________________________________________________
-StBFChain *bfc(const Char_t *Chain="ittf") {
-  return bfc(-2,Chain);
+void bfc(const Char_t *Chain="ittf") {
+  bfc(-2,Chain);
 }
