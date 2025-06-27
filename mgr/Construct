@@ -408,7 +408,7 @@ foreach $dir(@sysdirlist , @subdirs ) {
 @packages = sortu(@packages);
 #print "======= STAR_HOST_SYS = $STAR_HOST_SYS $param::include\n";
 my $qtRoot = "QtRoot";
-if (($STAR_HOST_SYS !~ /^darwin/ && $STAR_HOST_SYS !~ /^al/  ) && # and $STAR_HOST_SYS !~ /sl53_gcc471/ and $STAR_HOST_SYS !~ /gcc482/) ||
+if (($STAR_HOST_SYS !~ /^darwin/) && # && $STAR_HOST_SYS !~ /^al/  ) && # and $STAR_HOST_SYS !~ /sl53_gcc471/ and $STAR_HOST_SYS !~ /gcc482/) ||
     $ROOT_LEVEL !~ /^6/ ||
     ($param::include and $qtRoot =~ /$param::include/)) {# no qt on mac
 #  print "check $qtRoot\n";
