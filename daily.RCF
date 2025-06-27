@@ -4854,3 +4854,156 @@ Ana.root        y-#phi-M_z_BW           2  M_{S}        4.98090e-01   4.73613e-0
                 M_BW                    2  M_{S}        4.98190e-01                1e3*(4.98190e-01-0.497611) = 0.58
                 Ana.root        M_Gaus  2  #mu          4.98286e-01   6.86546e-06  1e3*(4.98286e-01-0.497611) = 0.67
                                                        -0.10 MeV
+================================================================================
+06/09/2025
+/hlt/cephfs/reco/MC/TFG/19GeV_2019/K_S0B
+Ana.root        y-#phi-M1GeV_z_BW       2  M_{S}        4.98101e-01   0.00000e+00  1e3*(4.98101e-01-0.497611) = 0.49
+StMagFMaker:INFO  - StMagFMaker::InitRun use Scale Factor = -1.0006 average for run 20060057                                                                                                 |  StMagFMaker:INFO  - StMagFMaker::InitRun use Scale Factor = -1 average for run 20060057
+StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98619                                                                                                                                    |  StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98317
+StMagUtilities::BField        =  -4.98619 kGauss at (0,0,0)                                                                                                                                  |  StMagUtilities::BField        =  -4.98317 kGauss at (0,0,0)
+================================================================================
+06/16/2025 QT on Alma Linux
+g++ -m64 -fPIC -c -include .pch/release-shared/QtNetwork -m64 -fPIC -O2 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -W -D_REENTRANT -fPIC -DQT_SHARED -DQT_BUILD_NETWORK_LIB -DQT_NO_USING_NAMESPACE -DQT_NO_CAST_TO_ASCII -DQT_ASCII_CAST_WARNINGS -DQT_MOC_COMPAT -DQT_USE_QSTRINGBUILDER -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_HAVE_SSE3 -DQT_HAVE_SSSE3 -DQT_HAVE_SSE4_1 -DQT_HAVE_SSE4_2 -DQT_HAVE_AVX -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -I../../mkspecs/linux-g++ -I. -I../../include/QtCore -I../../include -I../../include/QtNetwork -I.rcc/release-shared -Ikernel -I.moc/release-shared -o .obj/release-shared/qsslcertificate.o ssl/qsslcertificate.cpp
+make[1]: *** [Makefile:17093: .obj/release-shared/qsslcertificate.o] Error 1
+make[1]: Leaving directory '/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/sources/.al95_x8664_gcc11_opt/qt-everywhere-opensource-src-4.8.7/src/network'
+================================================================================
+06/20/2025
+St_db_Maker:ERROR - MysqlDb::ExecQuery() line=665  Query Failed  Malformed packet
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00007fffd6fe1103 in mysql_fetch_row () from /usr/lib64/mysql/libmysqlclient.so
+(gdb) bt 20
+#0  0x00007fffd6fe1103 in mysql_fetch_row () from /usr/lib64/mysql/libmysqlclient.so
+#1  0x00007fffc3aedec8 in MysqlDb::Output (this=0x20c30c8, aBuff=0x20c3fb8) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/MysqlDb.cc:931
+#2  0x00007fffc3b1448f in StDbSql::queryNode (this=0x20b4050, node=0x20b4140) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbSql.cc:1202
+#3  0x00007fffc3b143bb in StDbSql::prepareNode (this=0x20b4050, dbNode=0x20b4140) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbSql.cc:1190
+#4  0x00007fffc3b0f611 in StDbSql::QueryDb (this=0x20b4050, node=0x20b4140) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbSql.cc:221
+#5  0x00007fffc3af8aae in StDbConfigNodeImpl::buildTree (this=0x20b4140, opt=1) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbConfigNodeImpl.cc:158
+#6  0x00007fffc3aff9ce in StDbManagerImpl::initConfig (this=0x20b2880, type=dbStDb, domain=dbStar, configName=0x7fffc32e4ebf "reconV0", opt=1) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbManagerImpl.cc:1116
+#7  0x00007fffc3aff88f in StDbManagerImpl::initConfig (this=0x20b2880, dbName=0x7ffffffcc2bf "StarDb", configName=0x7fffc32e4ebf "reconV0", opt=1) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbManagerImpl.cc:1095
+#8  0x00007fffc32d7dba in StDbBroker::InitConfig (this=0x20b2790, configName=0x7ffffffcc2bf "StarDb", numRows=@0x7ffffffcc21c: 0, versionName=0x0) at .sl73_x8664_gcc485/obj/StRoot/StDbBroker/StDbBroker.cxx:835
+#9  0x00007fffc309ad1a in St_db_Maker::OpenMySQL (this=0x1bdb140, dbname=0x7ffffffcc2bf "StarDb") at .sl73_x8664_gcc485/obj/StRoot/St_db_Maker/St_db_Maker.cxx:609
+#10 0x00007fffc3099b2a in St_db_Maker::Init (this=0x1bdb140) at .sl73_x8664_gcc485/obj/StRoot/St_db_Maker/St_db_Maker.cxx:433
+#11 0x00007fffd5e72c0b in StMaker::Init (this=0x1466f50) at .sl73_x8664_gcc485/obj/StRoot/StChain/StMaker.cxx:702
+#12 0x00007fffd5e6cb56 in StChain::Init (this=0x1466f50) at .sl73_x8664_gcc485/obj/StRoot/StChain/StChain.cxx:109
+#13 0x00007fffd5789783 in StBFChain::Init (this=0x1466f50) at .sl73_x8664_gcc485/obj/StRoot/StBFChain/StBFChain.cxx:1218
+#14 0x00007fffd5e8260f in G__StChain_Cint_573_0_6(G__value*, char const*, G__param*, int) () from /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/packages/TFG/.sl73_x8664_gcc485/lib/libStChain.so
+#15 0x00007ffff5e676cb in Cint::G__ExceptionWrapper (funcp=0x7fffd5e825e1 <G__StChain_Cint_573_0_6(G__value*, char const*, G__param*, int)>, result7=0x7ffffffcd4a0, funcname=0x14621e0 "", libp=0x7ffffffcd4e0, hash=0) at cint/cint/src/Api.cxx:385
+#16 0x00007ffff5d91e8c in G__execute_call (result7=0x7ffffffcd4a0, libp=0x7ffffffcd4e0, ifunc=0x14621e0, ifn=0) at cint/cint/src/newlink.cxx:2408
+#17 0x00007ffff5d92832 in G__call_cppfunc (result7=0x7ffffffcd4a0, libp=0x7ffffffcd4e0, ifunc=0x14621e0, ifn=0) at cint/cint/src/newlink.cxx:2612
+#18 0x00007ffff5e07c60 in G__interpret_func (result7=0x7ffffffcd4a0, funcname=0xe1a620 "Init", libp=0x7ffffffcd4e0, hash=404, p_ifunc=0x14621e0, funcmatch=1, memfunc_flag=1) at cint/cint/src/ifunc.cxx:5791
+#19 0x00007ffff5ed8019 in G__getfunction (item=0xe0a917 "Init()", known3=0x7ffffffd8f84, memfunc_flag=1) at cint/cint/src/func.cxx:2660
+(More stack frames follow...)
+(gdb) up 
+#1  0x00007fffc3aedec8 in MysqlDb::Output (this=0x20c30c8, aBuff=0x20c3fb8) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/MysqlDb.cc:931
+931       MYSQL_ROW tRow=mysql_fetch_row(mRes->mRes);
+(gdb) p aBuff
+$1 = (StDbBuffer *) 0x20c3fb8
+(gdb) p *aBuff
+$2 = {<StDbBufferI> = {_vptr.StDbBufferI = 0x7fffc3d9d030 <vtable for StDbBuffer+16>}, mMax = 100, mCur = 0, mLast = -1, mCol = 0x20ccf70, mMode = Storage}
+(gdb) p *mRes
+$5 = {_vptr.MysqlResult = 0x7fffc3d9ce10 <vtable for MysqlResult+16>, mRes = 0x0, mRow = 0xffffffff, mSep = 0 '\000'}
+================================================================================ CPU types ====
+[starsub01] ~/work/kfp/2019/4p59GeV_fixedTarget_P24iy_64bit/dEdx $ lscpu
+Architecture:             x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          46 bits physical, 48 bits virtual
+  Byte Order:             Little Endian
+CPU(s):                   8
+  On-line CPU(s) list:    0-7
+Vendor ID:                GenuineIntel
+  Model name:             Intel Xeon Processor (Cascadelake)
+    CPU family:           6
+    Model:                85
+    Thread(s) per core:   1
+    Core(s) per socket:   1
+    Socket(s):            8
+    Stepping:             6
+    BogoMIPS:             4389.68
+    Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc re
+                          p_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave a
+                          vx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsba
+                          se tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv
+                          1 xsaves arat vnmi umip pku ospke avx512_vnni md_clear flush_l1d arch_capabilities
+Virtualization features:  
+  Virtualization:         VT-x
+  Hypervisor vendor:      KVM
+  Virtualization type:    full
+Caches (sum of all):      
+  L1d:                    256 KiB (8 instances)
+  L1i:                    256 KiB (8 instances)
+  L2:                     32 MiB (8 instances)
+  L3:                     128 MiB (8 instances)
+NUMA:                     
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-7
+Vulnerabilities:          
+  Gather data sampling:   Not affected
+  Itlb multihit:          Not affected
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Mitigation; Clear CPU buffers; SMT Host state unknown
+  Reg file data sampling: Not affected
+  Retbleed:               Mitigation; Enhanced IBRS
+  Spec rstack overflow:   Not affected
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+  Srbds:                  Not affected
+  Tsx async abort:        Mitigation; TSX disabled
+
+--------------------------------------------------------------------------------
+spar0108] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG $ lscpu
+Architecture:             x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          48 bits physical, 48 bits virtual
+  Byte Order:             Little Endian
+CPU(s):                   8
+  On-line CPU(s) list:    0-7
+Vendor ID:                AuthenticAMD
+  Model name:             AMD EPYC Processor (with IBPB)
+    CPU family:           23
+    Model:                1
+    Thread(s) per core:   1
+    Core(s) per socket:   1
+    Socket(s):            8
+    Stepping:             2
+    BogoMIPS:             4799.99
+    Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_ap
+                          icid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnow
+                          prefetch osvw intel_ppin ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 virt_ssbd arat
+Virtualization features:  
+  Hypervisor vendor:      KVM
+  Virtualization type:    full
+Caches (sum of all):      
+  L1d:                    512 KiB (8 instances)
+  L1i:                    512 KiB (8 instances)
+  L2:                     4 MiB (8 instances)
+NUMA:                     
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-7
+Vulnerabilities:          
+  Gather data sampling:   Not affected
+  Itlb multihit:          Not affected
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Not affected
+  Reg file data sampling: Not affected
+  Retbleed:               Mitigation; untrained return thunk; SMT disabled
+  Spec rstack overflow:   Vulnerable: Safe RET, no microcode
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+  Srbds:                  Not affected
+  Tsx async abort:        Not affected
+================================================================================
+06/22/2025
+[starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 'Note: File' 2*.log | awk -F\/ '{print $10}' | sort -u 
+.al95_x8664_gcc11_opt
+.al95_x8664_gcc11_v3_opt
+starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 al95_x8664_gcc11_opt 2*.log | wc -l
+499
+[starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 al95_x8664_gcc11_v3_opt 2*.log | wc -l
+4

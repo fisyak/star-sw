@@ -62,9 +62,11 @@ void dEdx(Int_t First, Int_t Last,
   if (gClassTable->GetID("TTable") < 0) {
     gSystem->Load("libTable");
   }
+#if 0
   if (gClassTable->GetID("StTerminateNotified") < 0) {
     gSystem->Load("libStarRoot");
   }
+#endif
   gROOT->LoadMacro("bfc.C");
   TString Chain("in,dEdxY2,magF,StEvent,mysql,NoDefault,analysis");//,SkipdNdx
   if        (Year.Contains("2019")) {// Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
@@ -151,7 +153,7 @@ void dEdx(Int_t First, Int_t Last,
     db->SetDebug(1);
 #if 0 /* disable MySQl for tables under calibration */
     //    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC", "tpcTimeDependence", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
-    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
+    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN", "TpcEtaCorrectionB", "tpcTimeDependence"}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
     for (Int_t i = 0; TFGTables[i]; i++) {
       cout << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endl; 
       db->SetFlavor("TFG",TFGTables[i]);

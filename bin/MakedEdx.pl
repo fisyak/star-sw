@@ -2752,6 +2752,7 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXII23"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 04/02/25 - 05/02/2025  check dev
 #$hist = "RunXXII24"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 05/02/25  check TFG with apptainer
 #$hist = "RunXXII25"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/16/25  fix m_TpcdEdxCorrection->IsFixedTarget()
+#$hist = "RunXXII26"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25  check tpcExtraGainCorrection.y2022.C
 ################################## RunXXIII ##########################
 #$hist = "RunXXIII09"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/25 the first pass 
 #$hist = "RunXXIII10"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/14/25  reset TpcSecRowB to 1, full statistics, kep for FE,RDO
@@ -2776,7 +2777,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXIII29"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 TpcLengthCorrectionMDN.AuAu_2023*.C
 #$hist = "RunXXIII30"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 check MySQL
 #$hist = "RunXXIII31"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/25 check DEV
-$hist = "RunXXIII32"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/29/25 move TpcEtaCorrection.r2023.C to MySQL
+#$hist = "RunXXIII32"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/29/25 move TpcEtaCorrection.r2023.C to MySQL
+#$hist = "RunXXIII33"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/2025 check tpcExtraGainCorrection.y2023.C
 #################################### RunXXI OO200GeV P24iy ########################
 #$hist = "RunXXI01"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   check what is in MySQL
 #$hist = "RunXXI02"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   reset TpcSecRowB, TpcZCorrectionC, TpcEtaCorrectionB, TpcLengthCorrectionMDN
@@ -2791,6 +2793,17 @@ $hist = "RunXXIII32"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/productio
 #$hist = "RunXXI11"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 TpcLengthCorrectionMDN.*OO*.C
 #$hist = "RunXXI12"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 checl MySQL
 #$hist = "RunXXI13"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/25 checl DEV
+#################################### RunXXIproduction_3p85GeV_fixedTarget_2021   P24iy_calib6  ########################
+#$hist = "RunXXI3p85_01"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/18/25 check current MySQL
+#$hist = "RunXXI3p85_02"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/20/25 disable "TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN"
+#$hist = "RunXXI3p85_03"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/21/25 new 3p85GeV_fixedTarget_2021[b-d].root
+#$hist = "RunXXI3p85_04"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/22/25 Reset tables in MySQL, new TpcZCorrectionC.3p85GeV_fixedTarget_2021b.C
+#$hist = "RunXXI3p85_05"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/22/25 new TpcSecRowB.3p85GeV_fixedTarget_2021b.root
+#$hist = "RunXXI3p85_06"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25 new TpcZCorrectionC.3p85GeV_fixedTarget_2021b.C
+#$hist = "RunXXI3p85_07"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25 new TpcSecRowB.3p85GeV_fixedTarget_2021b.root
+#$hist = "RunXXI3p85_08"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/24/25 new TpcLengthCorrectionMDN.3p85GeV_fixedTarget_2021b.C
+#$hist = "RunXXI3p85_09"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version
+$hist = "RunXXI3p85_10"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version with DEV
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -2843,7 +2856,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $dt = $now - $ctime;
     print "$file dt = $dt\n";
     if ($dt < 600) {next;}
-    my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
+    my @words = split '/', $file; if ($debug > 1) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4] . '_' . $words[5];
     if ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
       $dd = $words[7];
@@ -2864,14 +2877,17 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     $dd =~ s/_RF//;
     $dd =~ s/_FullField//;
     $dd =~ s/_FF//;
+    if ($dd eq "3p85GeV_fixedTarget_2021" and $words[8] >= 158) {
+      $dd .= "b";
+    }
     $ProdFiles{$dd} .= " " . $file;  
-    if ($debug) {print "$dd => $ProdFiles{$dd}\n";}
+    if ($debug > 1) {print "$dd => $ProdFiles{$dd}\n";}
   }
-  my $apptainer = "apptainer exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02";
-  if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {$apptainer .= " /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif";}
+  my $apptainer = "";
+  if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {$apptainer = "apptainer exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif";}
   foreach my $dd (keys %ProdFiles) {
     my $countperdd = 0;
-    my @FilesRun = split " ", $ProdFiles{$dd};# print "$dd => $#FielsRun ================================================================================\n";
+    my @FilesRun = split " ", $ProdFiles{$dd}; if ($debug) { print "$dd => $#FielsRun ================================================================================\n";}
     if ($#FilesRun < 0) {next;}
 #    print "$dd => @FilesRun\n";
     my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
@@ -2980,7 +2996,7 @@ echo \"HOME is now $HOME\"
 	print OUT "$cmd\n";
 	$count++;
 	$countperdd++;
-	close (OUT); $opened = 0; $count = 0;
+	close (OUT); $opened = 0; #$count = 0;
 	chmod 0755, $SCRIPT;
 	my $CONDOR = $BCRIPT . ".condor";
 	open (OUT,">$CONDOR") or die "Can't open $CONDOR";

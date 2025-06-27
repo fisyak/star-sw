@@ -22,7 +22,9 @@ end
   sort -u AliveFEE2.list | tee AliveFEE.sorted
   MergeDeadFee.pl AliveFEE.sorted  | tee AliveFeeRuns
   sort AliveFeeRuns | tee AliveFeeRuns.sorted
-  cat *Runs.sorted | sort -u | tee DeadOrAlived_Runs_XIX_XXII.sorted
+  cat *Runs.sorted | sort -u | tee DeadOrAlived_Runs.sorted
+  grep -E '(Dead|Alive)' DeadOrAlived_Runs.sorted $STAR/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2022.C | awk -F: '{print $2}' | sort | tee DeadOrAlived_Runs.merged
+  grep -E '(Dead|Alive)' DeadOrAlived_Runs.sorted $STAR/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2023.C | awk -F: '{print $2}' | sort | tee DeadOrAlived_Runs.merged
 */
 //________________________________________________________________________________
 #if !defined(__CINT__) || defined(__MAKECINT__)
