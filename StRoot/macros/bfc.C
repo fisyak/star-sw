@@ -26,7 +26,10 @@ StBFChain* chain = 0;
 #endif
 
 //_____________________________________________________________________
-//_________________ Prototypes _______________________________________________
+/*   Check STIGEOM
+     StiDetectorVolume::setdZIgnore(1.0);
+     chain->GetDataSet("STIGEOM");
+*/_________________ Prototypes _______________________________________________
 void Usage();
 void Load(const Char_t *options="");
 //TString defChain("MC.y2009a,StiCA,Muons20,vmc,Rung.1,dEdxCalib,McTpcAna");
@@ -78,7 +81,8 @@ void Load(const Char_t *options="");
 //TString defChain("MC.7p7GeV_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
 //TString defChain("MC.2021,3p85GeV_fixedTarget_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
-TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+//TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,dbSnapshot");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
