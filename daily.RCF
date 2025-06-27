@@ -3554,6 +3554,7 @@ end
 g++ -g -m64 -rdynamic -shared -Wl,-Bdynamic -o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbLib.so .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/ChapiDbHost.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/ChapiStringUtilities.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/MysqlDb.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDataBaseI.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbBuffer.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbConfigNode.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbConfigNodeImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbDefaults.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbElementIndex.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbFastSqlWriter.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbManager.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbManagerImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbMessenger.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbModifier.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbNode.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbServer.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbServerImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbServiceBroker.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbSql.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbStoreInfo.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTable.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTableDescriptor.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTableFactory.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTableIterImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbXmlReader.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbXmlWriter.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheConfig.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheFactory.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheFileLocal.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheI.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheManager.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheWebservice.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperHashMd5.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperHashSha256.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperLock.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperUtilFilesystem.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperUtilGeneric.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperUtilPlatform.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StString.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StlXmlTree.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/parseXmlString.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbLib_Cint.o -L.al92_x8664_gcc11_R6/lib -L/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/6.99.99/.al92_x8664_gcc11/rootdeb/lib -L/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al92_x8664_gcc11/lib -L/usr/lib64/mysql -L/usr/lib64 -lxml2 -lz -llzma -lm
 
 
+
 g++ -g -m64 -rdynamic -shared -Wl,-Bdynamic -o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbLib.so .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/ChapiDbHost.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/ChapiStringUtilities.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/MysqlDb.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDataBaseI.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbBuffer.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbConfigNode.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbConfigNodeImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbDefaults.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbElementIndex.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbFastSqlWriter.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbManager.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbManagerImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbMessenger.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbModifier.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbNode.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbServer.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbServerImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbServiceBroker.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbSql.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbStoreInfo.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTable.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTableDescriptor.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTableFactory.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbTableIterImpl.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbXmlReader.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbXmlWriter.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheConfig.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheFactory.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheFileLocal.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheI.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheManager.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperCacheWebservice.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperHashMd5.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperHashSha256.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperLock.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperUtilFilesystem.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperUtilGeneric.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StHyperUtilPlatform.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StString.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StlXmlTree.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/parseXmlString.o .al92_x8664_gcc11_R6/obj/StRoot/StDbLib/StDbLib_Cint.o
 -L.al92_x8664_gcc11_R6/lib
 -L/gpfs01/star/subsys-tpc/fisyak/STAR/ROOT/6.99.99/.al92_x8664_gcc11/rootdeb/lib
@@ -4013,3 +4014,996 @@ end
 foreach f (`ls -1d *.condor`)
   condor_submit ${f}
 end
+================================================================================
+03/31/2025
+[rcas6014] ~ $ du -sh /gpfs01/star/data2[4-7]/TpcAlignment
+21T     /gpfs01/star/data24/TpcAlignment
+5.7T    /gpfs01/star/data25/TpcAlignment
+20T     /gpfs01/star/data26/TpcAlignment
+2.7T    /gpfs01/star/data27/TpcAlignment
+[rcas6014] ~ $ df -h /gpfs01/star/data2[4-7]/TpcAlignment
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   51T   24T   28T  46% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T  7.9T   44T  16% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T   22T   30T  43% /gpfs/mnt/gpfs01
+/gpfs/mnt/gpfs01   51T  5.4T   46T  11% /gpfs/mnt/gpfs01
+[rcas6014] ~ $ du -sh /gpfs01/star/data2[4-7]/TpcAlignment/*
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c
+3.0K    /gpfs01/star/data24/TpcAlignment/TFG24d
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e
+3.0K    /gpfs01/star/data25/TpcAlignment/TFG24d
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e
+17T     /gpfs01/star/data26/TpcAlignment/TFG24c
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e
+3.0K    /gpfs01/star/data27/TpcAlignment/TFG24c
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e
+================================================================================
+04/01/2025
+12T     /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget
+9.6T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+5.7T    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget
+2.7T    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+2.7T    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget
+50T
+
+
+-rw-rw-r--   1 fisyak rhstar     5 Jul 21  2024 st_physics_21044023_raw_7000003.noeve
+-rw-rw-r--   1 pkisel rhstar   66M Jul 13  2024 st_physics_21044023_raw_7500001,1,7080.log
+-rw-rw-r--   1 pkisel rhstar  955M Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.MuDst.root
+-rw-rw-r--   1 fisyak rhstar   15K Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.MuDst.root.log
+-rw-r--r--   1 fisyak rhstar  191M Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.picoDst.root
+-rw-rw-r--   1 fisyak rhstar  636K Jul 16  2024 st_physics_21044023_raw_7500001,1,7080.picoDst.root.log
+-rw-rw-r--   1 fisyak rhstar  3.9M Jul 20  2024 st_physics_21044023_raw_7500001,7081,12611B.log.gz
+-rw-r--r--   1 fisyak rhstar  756M Jul 20  2024 st_physics_21044023_raw_7500001,7081,12611.MuDst.root
+-rw-r--r--   1 fisyak rhstar  153M Jul 20  2024 st_physics_21044023_raw_7500001,7081,12611.picoDst.root
+
+dir /gpfs01/star/data2[4-7]/TpcAlignment/TFG24e/*/RF/*/*/*/*.log
+rm /gpfs01/star/data2[4-7]/TpcAlignment/TFG24e/*/RF/*/*/*/*.log
+rm /gpfs01/star/data24/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data25/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data26/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data27/TpcAlignment/TFG24e/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data2[4-7]/TpcAlignment/TFG24e/*/RF/*/*/*/*.noeve
+
+
+rm /gpfs01/star/data24/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data25/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data26/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data27/TpcAlignment/*/*/RF/*/*/*/*.MuDst.root 
+rm /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/*/*/*.noeve
+
+rm /gpfs01/star/data24/TpcAlignment/*/*/RF/*/*/*/*.log
+rm /gpfs01/star/data25/TpcAlignment/*/*/RF/*/*/*/*.log
+rm /gpfs01/star/data26/TpcAlignment/*/*/RF/*/*/*/*.log
+rm /gpfs01/star/data27/TpcAlignment/*/*/RF/*/*/*/*.log
+[rcas6014] /<3>users/fisyak/na27/paw/> du -sh  /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/
+1.9T    /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+1.7T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+963G    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+413G    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/
+15T     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+1.7T    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+450G    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+455G    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+[rcas6014] /<4>TFG24c/2020/RF/7p3GeV_fixedTarget/> du -sh  /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/
+1.9T    /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+1.7T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+963G    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+64G     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/
+2.5T    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+338G    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+450G    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+455G    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+[rcas6014] /<4>TFG24c/2020/RF/7p3GeV_fixedTarget/> du -sh  /gpfs01/star/data2[4-7]/TpcAlignment/*/*/RF/*/
+1.9T    /gpfs01/star/data24/TpcAlignment/TFG24c/2020/RF/5p75GeV_fixedTarget/
+1.7T    /gpfs01/star/data24/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+963G    /gpfs01/star/data25/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+64G     /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/3p85GeV_fixedTarget/
+2.4T    /gpfs01/star/data26/TpcAlignment/TFG24c/2019/RF/7.3GeV_fixedTarget/
+305G    /gpfs01/star/data26/TpcAlignment/TFG24c/2020/RF/7p3GeV_fixedTarget/
+450G    /gpfs01/star/data26/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+455G    /gpfs01/star/data27/TpcAlignment/TFG24e/2019/RF/4p59GeV_fixedTarget/
+8.3T
+================================================================================
+05/09/2025
+[starsub01] ~ $ difw380 /star/rcf/test/dev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016_64bit/st_physics_17078006_raw_1000030.log /star/rcf/test/dev/daq_sl302.stica/Fri/year_2016/AuAu200_production_2016/st_physics_17078006_raw_1000030.log | more
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20160207.000102 --- 20160618.000102         <
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20160207.000216 --- 20160512.000207         <
+================================================================================
+05/12/2025
+diff -a /star/rcf/test/dev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016{,_64bit}/*log 
+================================================================================
+05/13/2025
+difw380 /star/rcf/test/dev/daq_sl302.stica/Fri/year_2020/production_19p5GeV_fixedTarget_2020{,_64bit}/*log | more
+*** Start at Date : Fri May  9 04:01:19 2025                                                                                                                                                |   
+*** Start at Date : Fri Mar 28 20:39:05 2025
+QA :INFO  - Library libStarAgmlUtil        [        AgMLlib] (/afs/rhic.bnl.gov/star/packages/DEV/.sl73_gcc485/lib/libStarAgmlUtil.so)  is loaded                                            |  
+QA :INFO  - Library libStarAgmlUtil        [        AgMLlib] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/lib/libStarAgmlUtil.so)       is loaded
+
+---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20190201.000813 --- 20201220.000000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20190201.000813 --- 20201220.000000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20200201.191904 --- 20200202.160409            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20200201.191904 --- 20200202.160409
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230049 --- 20211215.081702            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20190225.230049 --- 20211215.081702
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  tpcTime/                                        Unregognized time dependce  Validity:20200201.191904 --- 20200202.160409            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  tpcTime/                                        Unregognized time dependce  Validity:20200201.191904 --- 20200202.160409
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20200201.191904 --- 20200202.160409            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20200201.191904 --- 20200202.160409
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000000 --- 20211215.081702            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20181220.000000 --- 20211215.081702
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20200201.191904 --- 20200202.160409            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20200201.191904 --- 20200202.160409
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20190225.202320 --- 20211215.081702            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20190225.202320 --- 20211215.081702
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202321 --- 20211215.081702            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20190225.202321 --- 20211215.081702
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20191120.000000 --- 20211215.081702            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20191120.000000 --- 20211215.081702
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20200201.191904 --- 20200202.160409            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20200201.191904 --- 20200202.160409
+StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB                                                                                                        StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB
+StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF                                                                                                StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF
+StdEdxY2Maker:WARN  - With TpcPadCorrectionMDC activated => Deactivate TpcPadCorrectionMDF                                                                                                      StdEdxY2Maker:WARN  - With TpcPadCorrectionMDC activated => Deactivate TpcPadCorrectionMDF
+ 
+difw380 /star/rcf/test/dev/daq_sl302.ittf/Tue/year_2007/2007ProductionMinBias{,_64bit}/*log
+ *** Start at Date : Tue May 13 04:01:45 2025                                                                                                                                                |   
+ *** Start at Date : Tue May 13 10:27:57 2025
+QA :INFO  - Library libStDb_Tables         [          StDbT] (/afs/rhic.bnl.gov/star/packages/DEV/.sl73_gcc485/lib/libStDb_Tables.so)   is loaded                                            |  
+QA :INFO  - Library libStDb_Tables         [          StDbT] (/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/lib/libStDb_Tables.so)     is loaded
+...
+---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20031120.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20031120.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20070321.000040 --- 20070524.000044            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20070321.000040 --- 20070524.000044
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20070321.000002 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20070321.000002 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:       TpcDriftDistOxygen/                      Correction for Electron Attachment due to O2  Validity:20031120.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:       TpcDriftDistOxygen/                      Correction for Electron Attachment due to O2  Validity:20031120.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionB/               Variation on drift distance without Gating Gird one  Validity:20060210.180000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionB/               Variation on drift distance without Gating Gird one  Validity:20060210.180000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        tpcGasTemperature/                  Gain on Gas Dens. due to Output (T5) Temperature  Validity:20050111.220000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        tpcGasTemperature/                  Gain on Gas Dens. due to Output (T5) Temperature  Validity:20050111.220000 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20000101.000000 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcLengthCorrectionB/        Variation vs Track length and relative error in Ionization  Validity:20070321.000042 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:19950101.000000 --- 20191120.000000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDF activated => Deactivate TpcLengthCorrectionB
+StdEdxY2Maker:INFO  - TAttr::Found : skipdndx = 1                                                                                                                                               StdEdxY2Maker:INFO  - TAttr::Found : skipdndx = 1
+
+
+diff -a /star/rcf/test/dev/daq_sl302.stica/Sat/year_2016/AuAu200_production_2016{,_64bit}/*log 
+diff -a /star/rcf/test/dev/daq_sl302.ittf/Sat/year_2007/2007ProductionMinBias{,_64bit}/*log
+diff -a /star/rcf/test/dev/daq_sl302.stica/Sat/year_2021/production_3p85GeV_fixedTarget_2021{,_64bit}/*log 
+================================================================================
+05/17/2025 
+[starsub01] ~/pwg/dEdx/RunXXIII14/AuAu_2023 $ grep -m 1 libStdEdxY2Maker 24*.log | awk -F: '{print $3}' | sort -u
+ /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.al95_x8664_gcc11_opt/lib/libStdEdxY2Maker.so
+INFO  - Library libStdEdxY2Maker       [        LdEdxY2] (/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.al95_x8664_gcc11_opt/lib/libStdEdxY2Maker.so)  is loaded
+INFO  - Library libStdEdxY2Maker       [        LdEdxY2] (/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.al95_x8664_gcc11_v3_opt/lib/libStdEdxY2Maker.so)       is loaded
+
+================================================================================
+05/18/2025
+mkdir AuAu_2023_1; cd AuAu_2023_1;  ln -s ../AuAu_2023/2416*.root ../AuAu_2023/2417[0-6]*.root ../AuAu_2023/2417700*.root ../AuAu_2023/2417701[1-2]*.root .; cd -;
+mkdir AuAu_2023_2; cd AuAu_2023_2;  ln -s ../AuAu_2023/24177017*  ../AuAu_2023/241770[2-9]* ../AuAu_2023/2417[8-9]*.root ../AuAu_2023/241[8-9]*.root ../AuAu_2023/242*.root .; cd -;
+================================================================================
+05/20/2025 OO_200_2021
+
+OO_200GeV_2021/22130046_3000001_1_5000.log:OO_200GeV_2021/22130046_3000001_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db        Validity:20210510/134726 - 20210513/83120
+
+OO_200GeV_2021/22133005_7500012_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db        Validity:20210513/84424 - 20210516/112015
+ps_OO_200GeV_2021/22133004_3500001_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210513/83120 - 20210513/83121
+
+ps_OO_200GeV_2021/22133004_4500002_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210513/83120 - 20210513/83121
+ps_OO_200GeV_2021/22133004_7500002_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210513/83120 - 20210513/83121
+
+ps_OO_200GeV_2021/22133023_2500002_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210513/84424 - 20210516/112015
+
+ps_OO_200GeV_2021/22136011_3500028_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210516/112017 - 20210522/23642
+FF_OO_200GeV_2021/22141040_3500003_1_5000.log:FF_OO_200GeV_2021/22144006_7000019_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210522/23644 - 20210525/113236 
+
+OO_200GeV_2021/22130046_3000001_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db        Validity:20210510/134726 - 20210513/83120
+OO_200GeV_2021/22133005_7500012_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db        Validity:20210513/84424 - 20210516/112015
+ps_OO_200GeV_2021/22133004_3500001_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210513/83120 - 20210513/83121
+ps_OO_200GeV_2021/22136011_3500028_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210516/112017 - 20210522/23642
+FF_OO_200GeV_2021/22141040_3500003_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210522/23644 - 20210525/113236
+
+
+                                             20210513.000000     
+  {"OO_200GeV_2021",	                     20210510, 134726, "y2021z", "OO_200GeV_2021"},    // 1st run = 22130029	  	     
+  {"ps_OO_200GeV_2021",	              	     20210513,  83120, "y2021z", "ps_OO_200GeV_2021"}, // 1st run = 22133004	  	     
+  {"OO_200GeV_2021b",	              	     20210513,  84422, "y2021z", "OO_200GeV_2021"},    // 1st run = 22133005	  	     
+  {"ps_OO_200GeV_2021b",	             20210516, 112015, "y2021z", "ps_OO_200GeV_2021"}, // 1st run = 22136011	  	     
+  {"FF_OO_200GeV_2021", 	             20210522,  23642, "y2021z", "FF_OO_200GeV_2021"}, // 1st run = 22141038 FF_OO_200GeV_2021/22141040_3500003_1_5000.log	  	     
+select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB  where elementID=1 and  deactive = 0 and beginTime > "2021-11-01 00:00:00" and beginTime < "2022-12-01 00:00:00" order by beginTime;
+MySQL [Calibrations_tpc]> select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB  where elementID=1 and  deactive = 0 and beginTime > "2021-11-01 00:00:00" and beginTime < "2022-12-01 00:00:00" order by beginTime;
+MySQL [Calibrations_tpc]> select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB  where elementID=1 and  beginTime > "2021-05-01 00:00:00" and beginTime < "2021-05-31 00:00:00" order by beginTime;
++---------------------+---------------------+--------+-----------+------------+
+| entryTime           | beginTime           | flavor | elementID | deactive   |
++---------------------+---------------------+--------+-----------+------------+
+| 2022-05-16 21:58:40 | 2021-05-01 16:54:37 | ofl    |         1 | 1668275117 |
+| 2025-01-15 16:28:01 | 2021-05-01 16:54:37 | ofl    |         1 |          0 |
+| 2022-12-11 22:16:45 | 2021-05-01 16:54:37 | ofl    |         1 | 1728487861 |
+| 2024-10-24 15:56:50 | 2021-05-01 16:54:37 | ofl    |         1 | 1736958026 |
+| 2023-03-14 13:37:31 | 2021-05-01 16:54:38 | ofl    |         1 | 1728487861 |
+| 2023-09-15 19:38:38 | 2021-05-01 16:54:39 | ofl    |         1 | 1728487861 |
+| 2022-05-16 21:58:41 | 2021-05-06 07:01:46 | ofl    |         1 | 1668275117 |
+| 2024-12-15 22:53:59 | 2021-05-06 07:01:46 | ofl    |         1 |          0 |
+| 2024-10-24 15:56:52 | 2021-05-06 07:01:46 | ofl    |         1 | 1734302537 |
+| 2022-12-11 22:16:48 | 2021-05-06 07:01:46 | ofl    |         1 | 1728487861 |
+| 2023-03-14 13:37:35 | 2021-05-06 07:01:47 | ofl    |         1 | 1728487861 |
+| 2023-09-15 19:38:42 | 2021-05-06 07:01:48 | ofl    |         1 | 1728487861 |
+| 2022-05-16 21:58:41 | 2021-05-07 03:16:39 | ofl    |         1 | 1668275117 |
+| 2024-12-15 22:54:06 | 2021-05-07 03:16:39 | ofl    |         1 |          0 |
+| 2022-12-11 22:16:51 | 2021-05-07 03:16:39 | ofl    |         1 | 1728487861 |
+| 2024-10-24 15:57:02 | 2021-05-07 03:16:39 | ofl    |         1 | 1734302537 |
+| 2023-03-14 13:37:38 | 2021-05-07 03:16:40 | ofl    |         1 | 1694807139 |
+| 2023-09-15 19:48:51 | 2021-05-07 03:16:40 | ofl    |         1 | 1728487861 |
+| 2022-12-11 22:16:54 | 2021-05-08 04:15:26 | ofl    |         1 | 1728487861 |
+| 2024-10-24 15:56:03 | 2021-05-08 04:15:26 | ofl    |         1 | 1734302537 |
+| 2024-12-15 22:53:38 | 2021-05-08 04:15:26 | ofl    |         1 |          0 |
+| 2022-05-16 21:58:41 | 2021-05-08 04:15:26 | ofl    |         1 | 1668275117 |
+| 2023-03-14 13:37:41 | 2021-05-08 04:15:27 | ofl    |         1 | 1728487861 |
+| 2023-09-15 19:38:48 | 2021-05-08 04:15:28 | ofl    |         1 | 1728487861 |
+| 2022-12-11 22:16:56 | 2021-05-10 13:47:26 | ofl    |         1 |          0 |
+| 2023-03-14 13:37:44 | 2021-05-10 13:47:27 | ofl    |         1 | 1734302537 |
+| 2023-03-14 16:32:01 | 2021-05-10 13:47:28 | ofl    |         1 | 1734302537 |
+| 2022-12-11 22:17:00 | 2021-05-13 08:31:20 | ofl    |         1 |          0 |
+| 2023-03-14 13:37:48 | 2021-05-13 08:31:21 | ofl    |         1 |          0 |
+| 2023-03-14 16:32:03 | 2021-05-13 08:31:22 | ofl    |         1 |          0 |
+| 2022-12-11 22:17:02 | 2021-05-13 08:44:22 | ofl    |         1 |          0 |
+| 2023-03-14 13:37:51 | 2021-05-13 08:44:23 | ofl    |         1 |          0 |
+| 2023-03-14 16:32:07 | 2021-05-13 08:44:24 | ofl    |         1 |          0 |
+| 2022-12-11 22:17:05 | 2021-05-13 17:52:28 | ofl    |         1 | 1734302537 |
+| 2023-03-14 13:37:54 | 2021-05-13 17:52:29 | ofl    |         1 | 1734302537 |
+| 2023-03-14 16:32:10 | 2021-05-13 17:52:30 | ofl    |         1 | 1734302537 |
+| 2022-12-11 22:17:07 | 2021-05-13 18:22:05 | ofl    |         1 | 1734302537 |
+| 2023-03-14 13:37:57 | 2021-05-13 18:22:06 | ofl    |         1 | 1734302537 |
+| 2023-03-14 16:32:13 | 2021-05-13 18:22:07 | ofl    |         1 | 1734302537 |
+| 2022-12-11 22:17:10 | 2021-05-14 15:02:40 | ofl    |         1 | 1734302537 |
+| 2023-03-14 13:38:01 | 2021-05-14 15:02:41 | ofl    |         1 | 1734302537 |
+| 2023-03-14 16:32:16 | 2021-05-14 15:02:42 | ofl    |         1 | 1734302537 |
+| 2022-12-11 22:17:13 | 2021-05-16 11:20:15 | ofl    |         1 |          0 |
+| 2023-03-14 13:38:04 | 2021-05-16 11:20:16 | ofl    |         1 |          0 |
+| 2023-03-14 16:32:19 | 2021-05-16 11:20:17 | ofl    |         1 |          0 |
+| 2022-12-11 22:17:16 | 2021-05-22 02:36:42 | ofl    |         1 |          0 |
+| 2023-03-14 13:38:07 | 2021-05-22 02:36:43 | ofl    |         1 |          0 |
+| 2023-03-14 16:32:22 | 2021-05-22 02:36:44 | ofl    |         1 |          0 |
+| 2022-12-11 22:17:19 | 2021-05-25 11:32:36 | ofl    |         1 |          0 |
+| 2022-05-16 21:58:41 | 2021-05-25 11:32:36 | ofl    |         1 | 1668275117 |
+| 2023-03-14 13:38:10 | 2021-05-25 11:32:37 | ofl    |         1 | 1734302537 |
+| 2023-08-04 00:18:49 | 2021-05-25 11:32:38 | ofl    |         1 | 1734302537 |
+| 2023-08-15 22:52:31 | 2021-05-25 11:32:39 | ofl    |         1 | 1734302537 |
++---------------------+---------------------+--------+-----------+------------+
+53 rows in set (0.04 sec)
+MySQL [Calibrations_tpc]> select entryTime, beginTime, flavor, elementID, deactive from TpcSecRowB  where elementID=1 and deactive = 0 and  beginTime > "2021-01-01 00:00:00" and beginTime < "2021-12-01 00:00:00" order by beginTime;
++---------------------+---------------------+--------+-----------+----------+
+| entryTime           | beginTime           | flavor | elementID | deactive |
++---------------------+---------------------+--------+-----------+----------+
+| 2022-12-11 22:16:42 | 2021-01-31 19:33:46 | ofl    |         1 |        0 |
+| 2023-03-14 13:37:28 | 2021-01-31 19:33:47 | ofl    |         1 |        0 |
+| 2025-01-15 16:28:01 | 2021-05-01 16:54:37 | ofl    |         1 |        0 |
+| 2024-12-15 22:53:59 | 2021-05-06 07:01:46 | ofl    |         1 |        0 |
+| 2024-12-15 22:54:06 | 2021-05-07 03:16:39 | ofl    |         1 |        0 |
+| 2024-12-15 22:53:38 | 2021-05-08 04:15:26 | ofl    |         1 |        0 |
+| 2022-12-11 22:16:56 | 2021-05-10 13:47:26 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:00 | 2021-05-13 08:31:20 | ofl    |         1 |        0 |
+| 2023-03-14 13:37:48 | 2021-05-13 08:31:21 | ofl    |         1 |        0 |
+| 2023-03-14 16:32:03 | 2021-05-13 08:31:22 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:02 | 2021-05-13 08:44:22 | ofl    |         1 |        0 |
+| 2023-03-14 13:37:51 | 2021-05-13 08:44:23 | ofl    |         1 |        0 |
+| 2023-03-14 16:32:07 | 2021-05-13 08:44:24 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:13 | 2021-05-16 11:20:15 | ofl    |         1 |        0 |
+| 2023-03-14 13:38:04 | 2021-05-16 11:20:16 | ofl    |         1 |        0 |
+| 2023-03-14 16:32:19 | 2021-05-16 11:20:17 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:16 | 2021-05-22 02:36:42 | ofl    |         1 |        0 |
+| 2023-03-14 13:38:07 | 2021-05-22 02:36:43 | ofl    |         1 |        0 |
+| 2023-03-14 16:32:22 | 2021-05-22 02:36:44 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:19 | 2021-05-25 11:32:36 | ofl    |         1 |        0 |
+| 2024-12-15 22:53:50 | 2021-06-04 02:30:45 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:24 | 2021-06-04 08:14:55 | ofl    |         1 |        0 |
+| 2024-12-15 22:49:40 | 2021-06-17 22:45:33 | ofl    |         1 |        0 |
+| 2024-10-24 16:00:50 | 2021-06-18 04:09:35 | ofl    |         1 |        0 |
+| 2024-12-15 22:49:42 | 2021-06-27 15:27:47 | ofl    |         1 |        0 |
+| 2024-10-24 16:00:53 | 2021-06-28 11:54:28 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:41 | 2021-06-30 02:28:49 | ofl    |         1 |        0 |
+| 2023-03-14 13:38:36 | 2021-06-30 02:28:50 | ofl    |         1 |        0 |
+| 2023-08-04 00:18:53 | 2021-06-30 02:28:51 | ofl    |         1 |        0 |
+| 2023-08-15 22:52:35 | 2021-06-30 02:28:52 | ofl    |         1 |        0 |
+| 2024-12-15 22:49:44 | 2021-07-03 01:06:50 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:46 | 2021-07-03 05:30:33 | ofl    |         1 |        0 |
+| 2024-12-15 22:49:47 | 2021-07-03 23:06:57 | ofl    |         1 |        0 |
+| 2022-12-11 22:17:52 | 2021-07-04 03:40:46 | ofl    |         1 |        0 |
+| 2023-03-14 13:38:49 | 2021-07-04 03:40:47 | ofl    |         1 |        0 |
+| 2023-08-04 00:18:25 | 2021-07-04 03:40:48 | ofl    |         1 |        0 |
+| 2023-08-15 22:52:39 | 2021-07-04 03:40:49 | ofl    |         1 |        0 |
++---------------------+---------------------+--------+-----------+----------+
+37 rows in set (0.04 sec)
+ set db = TpcSecRowB ; mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from '${db}'  where elementID=1 and  deactive = 0 order by beginTime;' | tee ${db}.txt
+root.exe 'DbMap.C+("TpcSecRowB.txt")'  
+OO_200GeV_2021      2021-05-10 13:47:26         TpcSecRowB                       20210510 134726 beginTime = 2021-05-10 13:47:26, entryTime 2022-12-11 22:16:56    2021-05-10 13:47:26     ofl     1       0
+
+OO_200GeV_2021b     2021-05-13 08:31:20         TpcSecRowB                       20210513  83120 beginTime = 2021-05-13 08:31:20, entryTime 2022-12-11 22:17:00    2021-05-13 08:31:20     ofl     1       0
+OO_200GeV_2021b     2021-05-13 08:31:21         TpcSecRowB                       20210513  83121 beginTime = 2021-05-13 08:31:21, entryTime 2023-03-14 13:37:48    2021-05-13 08:31:21     ofl     1       0
+OO_200GeV_2021b     2021-05-13 08:31:22         TpcSecRowB                       20210513  83122 beginTime = 2021-05-13 08:31:22, entryTime 2023-03-14 16:32:03    2021-05-13 08:31:22     ofl     1       0
+OO_200GeV_2021b     2021-05-13 08:44:22         TpcSecRowB                       20210513  84422 beginTime = 2021-05-13 08:44:22, entryTime 2022-12-11 22:17:02    2021-05-13 08:44:22     ofl     1       0
+OO_200GeV_2021b     2021-05-13 08:44:23         TpcSecRowB                       20210513  84423 beginTime = 2021-05-13 08:44:23, entryTime 2023-03-14 13:37:51    2021-05-13 08:44:23     ofl     1       0
+OO_200GeV_2021b     2021-05-13 08:44:24         TpcSecRowB                       20210513  84424 beginTime = 2021-05-13 08:44:24, entryTime 2023-03-14 16:32:07    2021-05-13 08:44:24     ofl     1       0
+
+ps_OO_200GeV_2021b  2021-05-16 11:20:15         TpcSecRowB                       20210516 112015 beginTime = 2021-05-16 11:20:15, entryTime 2022-12-11 22:17:13    2021-05-16 11:20:15     ofl     1       0
+ps_OO_200GeV_2021b  2021-05-16 11:20:16         TpcSecRowB                       20210516 112016 beginTime = 2021-05-16 11:20:16, entryTime 2023-03-14 13:38:04    2021-05-16 11:20:16     ofl     1       0
+ps_OO_200GeV_2021b  2021-05-16 11:20:17         TpcSecRowB                       20210516 112017 beginTime = 2021-05-16 11:20:17, entryTime 2023-03-14 16:32:19    2021-05-16 11:20:17     ofl     1       0
+
+FF_OO_200GeV_2021   2021-05-22 02:36:42         TpcSecRowB                       20210522  23642 beginTime = 2021-05-22 02:36:42, entryTime 2022-12-11 22:17:16    2021-05-22 02:36:42     ofl     1       0
+FF_OO_200GeV_2021   2021-05-22 02:36:43         TpcSecRowB                       20210522  23643 beginTime = 2021-05-22 02:36:43, entryTime 2023-03-14 13:38:07    2021-05-22 02:36:43     ofl     1       0
+FF_OO_200GeV_2021   2021-05-22 02:36:44         TpcSecRowB                       20210522  23644 beginTime = 2021-05-22 02:36:44, entryTime 2023-03-14 16:32:22    2021-05-22 02:36:44     ofl     1       0
+
+OO_200GeV_2021/22130046_3000001_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db        Validity:20210510/134726 - 20210513/ 83120 OO_200GeV_2021
+ps_OO_200GeV_2021/22133004_3500001_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210513/ 83120 - 20210513/ 83121 OO_200GeV_2021b 
+OO_200GeV_2021/22133005_7500012_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db        Validity:20210513/ 84424 - 20210516/112015 
+ps_OO_200GeV_2021/22136011_3500028_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210516/112017 - 20210522/ 23642
+FF_OO_200GeV_2021/22141040_3500003_1_5000.log:StdEdxY2Maker:WARN  - St_TpcSecRowCorC::instance found table TpcSecRowB with NRows = 24 in db     Validity:20210522/ 23644 - 20210525/113236
+
+Deactivate tables 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20210522.023644 --- 20210525.113236
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20210522.023644 --- 20210525.113236
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20210516.112015 --- 20210525.113236
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20210522.023644 --- 20210525.113236
+[starsub01] ~/pwg/dEdx/RunXXIII21 $ 
+mkdir AuAu_2023_1; cd AuAu_2023_1;  ln -s ../AuAu_2023/2416*.root ../AuAu_2023/2417[0-6]*.root ../AuAu_2023/2417700*.root ../AuAu_2023/2417701[1-2]*.root .; cd -;
+mkdir AuAu_2023_2; cd AuAu_2023_2;  ln -s ../AuAu_2023/24177017*  ../AuAu_2023/241770[2-9]* ../AuAu_2023/2417[8-9]*.root ../AuAu_2023/241[8-9]*.root ../AuAu_2023/242*.root .; cd -;
+================================================================================
+ldd /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/packages/TFG/.al92_x8664_gcc11_opt/lib/libGQt.so
+      libpng15.so.15 => not found
+ 
+================================================================================
+05/22/2025
+before All.csh do 
+mv ps_OO_200GeV_2021/22133* OO_200GeV_2021
+mv ps_OO_200GeV_2021 ps_OO_200GeV_2021b
+
+
+[starsub01] ~/pwg/dEdx/RunXXI05 $ 
+foreach f ( `grep -l Assert */*.log | awk -F\. '{print $1}'` )
+   rm ${f}.*
+end
+
+
+mkdir AuAu_2023_1; cd AuAu_2023_1;  ln -s ../AuAu_2023/2416*.root ../AuAu_2023/2417[0-6]*.root ../AuAu_2023/2417700*.root ../AuAu_2023/2417701[1-2]*.root .; cd -;
+mkdir AuAu_2023_2; cd AuAu_2023_2;  ln -s ../AuAu_2023/24177017*  ../AuAu_2023/241770[2-9]* ../AuAu_2023/2417[8-9]*.root ../AuAu_2023/241[8-9]*.root ../AuAu_2023/242*.root .; cd -;
+
+All.csh
+foreach f (`ls -1d */*.xml`)
+  lsf ${f}
+end
+================================================================================
+05/23/2025 
+foreach f (`ls -1d *.condor`)
+  condor_submit ${f}
+end
+
+================================================================================
+05/24/2025 
+foreach f (`ls -1d *.condor`)
+  condor_submit ${f}
+end
+OO_2021      03/20/2023 https://drupal.star.bnl.gov/STAR/system/files/RunXXI%20OO200GeV_1.pdf
+ps_OO_2021    6.13 
+FF_OO_2021    6.72
+OO_2021       6.30
+[l409] ~/work/Histograms/RunXXI01 $ root.exe NPointsFG*.root Res.C       MySQL  
+#sigma(@61 npts) =  5.90% for F-ps_OO_200GeV_2021
+#sigma(@61 npts) =  5.88% for F-All
+#sigma(@61 npts) =  5.91% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  6.10% for F-OO_200GeV_2021
+[starsub01] ~/work/Histograms/RunXXI02 $ root.exe NPointsFGP*.root Res.C reset TpcSecRowB, TpcZCorrectionC, TpcEtaCorrectionB, TpcLengthCorrectionMDN
+#sigma(@61 npts) =  6.26% for F-ps_OO_200GeV_2021
+#sigma(@61 npts) =  6.32% for F-All
+#sigma(@61 npts) =  6.31% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  6.39% for F-OO_200GeV_2021
+[starsub01] ~/work/Histograms/RunXXI03 $ root.exe NPointsFGP*.root Res.C TpcSecRowB.OO_200GeV_2021.root
+#sigma(@61 npts) =  5.79% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.89% for F-All
+#sigma(@61 npts) =  5.81% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.94% for F-OO_200GeV_2021
+[starsub01] ~/work/Histograms/RunXXI04 $ root.exe NPointsFGP*.root Res.C TpcSecRowB.*OO_200GeV_2021*.root  
+#sigma(@61 npts) =  5.79% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.78% for F-All
+#sigma(@61 npts) =  5.79% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.94% for F-OO_200GeV_2021
+[l409] ~/work/Histograms/RunXXI05 $  root.exe NPointsFGP*.root Res.C     TpcZCorrectionC.*_OO_200GeV_2021.C
+#sigma(@61 npts) =  5.73% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.72% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.94% for F-OO_200GeV_2021
+[l409] ~/work/Histograms/RunXXI07 $ root.exe NPointsFGP*.root Res.C       TpcEtaCorrectionB.OO_200GeV_2021.C <<<<<<<<<<<
+#sigma(@61 npts) =  5.75% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.76% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.97% for F-OO_200GeV_2021
+[l409] ~/work/Histograms/RunXXI08 $ root.exe NPointsFGP*.root Res.C       TpcSecRowB.AuAu_2023*.root
+#sigma(@61 npts) =  5.77% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.79% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.98% for F-OO_200GeV_2021
+[l409] ~/work/Histograms/RunXXI09 $ root.exe NPointsFGP*.root Res.C       TpcSecRowB.AuAu_2023*.root
+#sigma(@61 npts) =  5.77% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.81% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.99% for F-OO_200GeV_2021
+[l409] ~/work/Histograms/RunXXI10 $  root.exe NPointsFGP*.root Res.C 
+#sigma(@61 npts) =  5.77% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.80% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.98% for F-OO_200GeV_2021
+l409] ~/work/Histograms/RunXXI11 $  root.exe NPointsFGP*.root Res.C 
+#sigma(@61 npts) =  5.75% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.78% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.96% for F-OO_200GeV_2021
+l409] ~/work/Histograms/RunXXI11 $ root.exe NPointsNGP*.root Res.C
+#sigma(@61 npts) =  5.25% for N-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.30% for N-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.49% for N-OO_200GeV_2021
+[l409] ~/work/Histograms/RunXXI12 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  5.75% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.78% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.96% for F-OO_200GeV_2021
+l409] ~/work/Histograms/RunXXI13 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  5.75% for F-ps_OO_200GeV_2021b
+#sigma(@61 npts) =  5.77% for F-FF_OO_200GeV_2021
+#sigma(@61 npts) =  5.95% for F-OO_200GeV_2021
+
+--------------------------------------------------------------------------------
+[l409] ~/work/Histograms/RunXXIII001 $ root.exe NPointsFGPAuAu_2023E.root   Empty  Jul 28  2023
+[l409] ~/work/Histograms/RunXXIII002 $ root.exe NPointsFGPAuAu_2023E.root   Empty  Aug 30  2023
+[l409] ~/work/Histograms/RunXXIII005 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  6.53% for F-AuAu_2023
+[l409] ~/work/Histograms/RunXXIII006 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  6.60% for F-AuAu_2023
+[l409] ~/work/Histograms/RunXXIII007 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  7.02% for F-AuAu_2023
+[l409] ~/work/Histograms/RunXXIII008 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  6.53% for F-AuAu_2023
+[l409] ~/work/Histograms/RunXXIII09 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  8.41% for F-AuAu_2023
+[l409] ~/work/Histograms/RunXXIII10 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  8.31% for F-AuAu_2023
+[l409] ~/work/Histograms/RunXXIII11 $ root.exe NPointsFG*.root Res.C
+#sigma(@61 npts) =  7.65% for F-AuAu_2023
+/star/u/fisyak/work/Histograms/RunXXIII12
+#sigma(@61 npts) =  7.60% for F-AuAu_2023
+/star/u/fisyak/work/Histograms/RunXXIII13
+#sigma(@61 npts) =  7.62% for F-AuAu_2023
+/star/u/fisyak/work/Histograms/RunXXIII14
+#sigma(@61 npts) =  7.83% for F-AuAu_2023
+/star/u/fisyak/work/Histograms/RunXXIII15
+#sigma(@61 npts) =  7.81% for F-AuAu_2023
+/star/u/fisyak/work/Histograms/RunXXIII16
+#sigma(@61 npts) =  7.78% for F-AuAu_2023
+/star/u/fisyak/work/Histograms/RunXXIII17   TpcSecRowB.AuAu_2023.root
+#sigma(@61 npts) =  7.77% for F-AuAu_2023
+#sigma(@61 npts) =  6.14% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.55% for F-AuAu_2023_2
+/star/u/fisyak/work/Histograms/RunXXIII18   TpcSecRowB.AuAu_2023_1.root & TpcSecRowB.AuAu_2023_2.root
+#sigma(@61 npts) =  6.20% for F-AuAu_2023
+#sigma(@61 npts) =  5.96% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.31% for F-AuAu_2023_2
+/star/u/fisyak/work/Histograms/RunXXIII19    TpcZCorrectionC.AuAu_2023_?.C                             <<<<<<<<<<<
+#sigma(@61 npts) =  6.17% for F-AuAu_2023
+#sigma(@61 npts) =  5.99% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.28% for F-AuAu_2023_2
+/star/u/fisyak/work/Histograms/RunXXIII20    TpcSecRowB.AuAu_2023*.root
+#sigma(@61 npts) =  6.19% for F-AuAu_2023
+#sigma(@61 npts) =  6.00% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.27% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII21 $ root.exe NPointsFGP*.root Res.C TpcEtaCorrectionB.AuAu_2023_?.C
+#sigma(@61 npts) =  6.20% for F-AuAu_2023
+#sigma(@61 npts) =  6.01% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.30% for F-AuAu_2023_2
+[starsub01] ~/work/Histograms/RunXXIII22 $  root.exe NPointsFGP*.root Res.C  TpcZCorrectionC.AuAu_2023_?.C
+#sigma(@61 npts) =  6.18% for F-AuAu_2023
+#sigma(@61 npts) =  5.97% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.35% for F-AuAu_2023_2
+[starsub01] ~/work/Histograms/RunXXIII23 $ root.exe NPointsFGP*.root Res.C TpcEtaCorrectionB.AuAu_2023_?.C1  
+#sigma(@61 npts) =  6.26% for F-AuAu_2023
+#sigma(@61 npts) =  5.98% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.34% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII24 $ root.exe NPointsFGP*.root Res.C TpcSecRowB.AuAu_2023_?.root
+#sigma(@61 npts) =  6.27% for F-AuAu_2023
+#sigma(@61 npts) =  5.99% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.34% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII26 $ root.exe NPointsFGP*.root Res.C TpcEtaCorrectionB.AuAu_2023_?.C
+#sigma(@61 npts) =  6.39% for F-AuAu_2023
+#sigma(@61 npts) =  6.08% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.50% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII27 $ root.exe NPointsFG*.root Res.C TpcZCorrectionC.AuAu_2023_?.C
+#sigma(@61 npts) =  6.51% for F-AuAu_2023
+#sigma(@61 npts) =  6.21% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.65% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII28 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  6.47% for F-AuAu_2023
+#sigma(@61 npts) =  6.20% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.65% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII29 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  6.41% for F-AuAu_2023
+#sigma(@61 npts) =  6.18% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.63% for F-AuAu_2023_2
+l409] ~/work/Histograms/RunXXIII30 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  6.41% for F-AuAu_2023
+#sigma(@61 npts) =  6.18% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.63% for F-AuAu_2023_2
+l409] ~/work/Histograms/RunXXIII31 $ root.exe NPointsFGP*.root Res.C
+#sigma(@61 npts) =  6.55% for F-AuAu_2023
+#sigma(@61 npts) =  6.43% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.70% for F-AuAu_2023_2
+l409] ~/work/Histograms/RunXXIII31 $  root.exe NPointsFG*.root Res.C 
+#sigma(@61 npts) =  6.45% for F-AuAu_2023
+#sigma(@61 npts) =  6.21% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.67% for F-AuAu_2023_2
+[l409] ~/work/Histograms/RunXXIII32 $ root.exe NPointsFG*.root Res.C 
+#sigma(@61 npts) =  6.40% for F-AuAu_2023
+#sigma(@61 npts) =  6.16% for F-AuAu_2023_1
+#sigma(@61 npts) =  6.61% for F-AuAu_2023_2
+
+
+================================================================================
+June 20 2024. 
+X = {-6, 7, -130}; NMR Magnetometr possion from A.Lebedeb              
+StarMagField::Instance()->BField(X,B);
+B = {2.17315e-05, -2.53534e-05, -4.98625}; |B| = 4.98625 [kG]
+NMR = 0.4988631 [T]
+NMR/B = 0.4988631/4.98625*10 = 1.00047751316119338 => 0.5 %%
+Just remind that our correction from St_starMagAvgC  
+…
+  Double_t      ScaleFactor(Int_t i = 0){return current()/(4500/(9.98071899596718826e-01));} // 12/03/20 scale Run 2020 11p5GeV K_s^0 (pcmax(0.49827)/pcmax(0.497611)) to PDG value
+…
+          = -1.93182515614376271e-03 = -2 %%
+ ================================================================================
+05/26/2025
+MySQL [Calibrations_tpc]> select unix_timestamp("1995-01-01 00:00:00");
++---------------------------------------+
+| unix_timestamp("1995-01-01 00:00:00") |
++---------------------------------------+
+|                             788918400 |
++---------------------------------------+
+1 row in set (0.00 sec)
+
+root.exe [19] t0->Print()
+Date/Time = Sun Jan  1 00:00:00 1995
+root.exe [20] t0->Convert()
+(const unsigned int)788936400
+================================================================================
+05/27/2025
+R.Witt memory leak in KFTopoPerformance::CreateHistos TFG24e
+
+
+
+[spoolsub01] ~/pwg/dEdx/RunXXIII31/AuAu_2023 $ tail -60 ../../RunXXIII30/AuAu_2023/24213024_0300002_1_5000.log | head -3
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/193321; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =10686.98        Cpu =5538.09   cpu/event =   1.11
+[spoolsub01] ~/pwg/dEdx/RunXXIII31/AuAu_2023 $ tail -64 24213024_0300002_1_5000.log | head -3
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250527/24407; Total events processed :5000 and not completed: 0 
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =41715.35        Cpu =32382.97       >>> cpu/event = 6.47
+
+ratio = 5.85
+
+
+spoolsub01] ~/pwg/dEdx/RunXXIII31/AuAu_2023 $ foreach f ( `ls -1dtr  2*.log | head -20` )
+ tail -64 ${f} | head -3
+ tail -60 ../../RunXXIII30/AuAu_2023/${f} | head -3
+end
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data27/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/202/24202003/st_physics_24202003_raw_0400035.event.root
+QA :INFO  - Output root file name st_physics_24202003_raw_0400035.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/195610; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =12049.60        Cpu =5249.25   cpu/event =   1.05
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data27/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/208/24208003/st_physics_24208003_raw_2100019.event.root
+QA :INFO  - Output root file name st_physics_24208003_raw_2100019.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/193829; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =10980.93        Cpu =5617.44   cpu/event =   1.12
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data27/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/205/24205012/st_physics_24205012_raw_0300018.event.root
+QA :INFO  - Output root file name st_physics_24205012_raw_0300018.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/192832; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =10385.04        Cpu =5418.99   cpu/event =   1.08
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data24/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/201/24201032/st_physics_24201032_raw_2300039.event.root
+QA :INFO  - Output root file name st_physics_24201032_raw_2300039.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/194432; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =11348.05        Cpu =5447.56   cpu/event =   1.09
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data27/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/204/24204040/st_physics_24204040_raw_0800037.event.root
+QA :INFO  - Output root file name st_physics_24204040_raw_0800037.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/195910; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =12224.67        Cpu =6382.33   cpu/event =   1.28
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data26/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/212/24212008/st_physics_24212008_raw_0800045.event.root
+QA :INFO  - Output root file name st_physics_24212008_raw_0800045.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/192519; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =10195.82        Cpu =5580.23   cpu/event =   1.12
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data24/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/206/24206009/st_physics_24206009_raw_2200038.event.root
+QA :INFO  - Output root file name st_physics_24206009_raw_2200038.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/194653; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =11488.42        Cpu =5476.56   cpu/event =   1.10
+QA :INFO  - Library libStDbLib             [             db] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStDbLib.so)    is loaded
+QA :INFO  - Library libStDbBroker          [             db] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStDbBroker.so) is loaded
+QA :INFO  - Library libSt_db_Maker         [             db] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libSt_db_Maker.so)        is loaded
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/193511; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =10794.79        Cpu =5330.35   cpu/event =   1.07
+QA :INFO  - Library libStAnalysisMaker     [       analysis] (/star/nfs4/AFS/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStAnalysisMaker.so)    is loaded
+QA :INFO  - Input file name = /star/data25/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/203/24203015/st_physics_24203015_raw_2100031.event.root
+QA :INFO  - Output root file name st_physics_24203015_raw_2100031.event.root
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/194039; Total events processed :5000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =11112.53        Cpu =5609.72   cpu/event =   1.12
+
+================================================================================
+05/282025
+---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20201220.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20201220.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcAdcCorrectionMDF/                        ADC/Clustering nonlinearity correction MDF  Validity:20181220.000000 --- 20380101.000000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcdCharge/                              ADC/Clustering undershoot correction  Validity:20050111.220000 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcCurrentCorrection/            Correction due to sagg of Voltage due to anode current  Validity:20211215.081702 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcCurrentCorrection/            Correction due to sagg of Voltage due to anode current  Validity:20211215.081702 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20230616.185721 --- 20230626.085710            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20230616.185721 --- 20230626.085710
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcRowQ/            Gas gain correction for row versus accumulated charge,  Validity:20190225.230000 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20211215.081702 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20211215.081702 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20211215.081702 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20211215.081702 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  tpcTime/                                        Unregognized time dependce  Validity:20221225.000000 --- 20240513.173321    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:       TpcDriftDistOxygen/                      Correction for Electron Attachment due to O2  Validity:20160618.000004 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcMultiplicity/                              Global track multiplicity dependence  Validity:19950101.000000 --- 20380101.000000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20230616.185721 --- 20230626.085710            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20230616.185721 --- 20230626.085710
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                                 Eta correction MC  Validity:20211215.081702 --- 20371231.120000         |  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionB/               Variation on drift distance without Gating Gird one  Validity:20181220.000000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        tpcGasTemperature/                  Gain on Gas Dens. due to Output (T5) Temperature  Validity:20151210.000100 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcPhiDirection/                                        Gain on interception angle  Validity:20060210.180000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcTanL/                                               Gain on Tan(lambda)  Validity:20191120.180000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcdXCorrectionB/                                                     dX correction  Validity:20181220.000000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcEtaCorrection/                                             Eta*Eta correction MC  Validity:20221225.000000 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20230616.185721 --- 20230626.085710            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20230616.185721 --- 20230626.085710
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                   TpcZDC/                                       Gain on Zdc CoincidenceRate  Validity:20170101.000000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDF/                               Gain Variation along the anode wire  Validity:20211215.081702 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20211215.081702 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20211215.081702 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcnPad/                                    Gain on cluster length in pads  Validity:19950101.000000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcnTbk/                           Gain on cluster length in  time buckets  Validity:19950101.000000 --- 20371231.120000    has 
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcLengthCorrectionB/        Variation vs Track length and relative error in Ionization  Validity:20170101.000000 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20211215.081702 --- 20371231.120000            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20211215.081702 --- 20371231.120000
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMD2/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20000101.000001 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20230616.185721 --- 20230626.085710            StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20230616.185721 --- 20230626.085710
+                                                                                                                                                                                             >  StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcdEdxCor/                      dEdx correction wrt Bichsel parameterization  Validity:20031120.000000 --- 20371231.120000    has 
+StdEdxY2Maker:WARN  - WithTpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB                                                                                                        StdEdxY2Maker:WARN  - With TpcAdcCorrection6MDF activated => Deactivate TpcAdcCorrectionB
+StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF                                                                                                StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDN activated => Deactivate TpcLengthCorrectionMDF
+StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions                                                                                                         StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions 
+LoadTable: .L /star/nfs4/AFS/star/packages/DEV/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2023.C                                                                                        |  LoadTable: .L /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2023.C
+StdEdxY2Maker:WARN  - St_tpcExtraGainCorrectionC::instance found table tpcExtraGainCorrection with NRows = 1 in db                                                                           |  StdEdxY2Maker:WARN  - St_tpcExtraGainCorrectionC::instance found table tpcExtraGainCorrection with NRows = 1 in db      Validity:20221215/0 - 20380101/0
+[starsub01] ~/pwg/dEdx $ tail -100 RunXXI13/ps_OO_200GeV_2021b/22137016_5500030_1_10000.log
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250527/200813; Total events processed :10000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =31842.47        Cpu =22874.18 
+[starsub01] ~/pwg/dEdx $ tail -100 RunXXI12/ps_OO_200GeV_2021b/22137016_5500030_1_10000.log
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/210018; Total events processed :10000 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =3888.50        Cpu =3749.35    cpu/event =   0.37
+
+
+
+starsub01] /star/rcf/test/dev/daq_sl302.stica_opt/Tue/year_2021/production_OO_200GeV_2021_64bit $ cpu_per_event.csh 
+        CPU/event = 0.686557(sec) and   Total/event = 0.68966(sec)      99.5501 %       for 999 events
+starsub01] /star/rcf/test/dev/daq_sl302.stica_opt/Wed/year_2021/production_OO_200GeV_2021 $ cpu_per_event.csh 
+        CPU/event = 1.1003(sec) and     Total/event = 1.11086(sec)      99.0493 %       for 999 events
+================================================================================
+05/29/2025
+[starsub01] /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Timing/apptainer_sl7_x8664_gcc485_opt 
+[starsub01] ~/work/Timing/apptainer_sl7_x8664_gcc485_opt $ apptainer exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif csh
+setenv STARFPE NO; setenv NODEBUG yes
+source /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/unsetupDEV2.csh
+[starsub01] /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Timing/apptainer_sl7_x8664_gcc485_opt $ root4star -q -b 'bfc.C(1000,"P2021a,StiCA,EbyET0,BEmcChkStat,-hitfilt,QAalltrigs","st_physics_22134030_raw_4500015.daq")' >& st_physics_22134030_raw_4500015.log &
+
+
+Extra  ---------------------------------------------------------------------------------------                                                                                                     <
+ bfc/.make/db/.const/StarDb/Calibrations/tpc/.TpcEtaCorrection/TpcEtaCorrection  Allocated rows: 50      Used rows: 50   Row size: 120 bytes                                                 <
+ Table: tpcCorrection_st             [0] :     [1] :                                                                                                                                         <
+ ======================================================================================                                                                                                      <
+int     type                   0 :       0 :                                                                                                                                                 <
+int     idx                    1 :       2 :                                                                                                                                                 <
+int     nrows                  2 :       2 :                                                                                                                                                 <
+int     npar                   8 :       6 :                                                                                                                                                 <
+double  OffSet                 0 :       0 :                                                                                                                                                 <
+double  min                    0 :       0 :                                                                                                                                                 <
+double  max                    0 :       0 :                                                                                                                                                 <
+double  a[0]            0.093979 : 0.12352 :                                                                                                                                                 <
+         [1]            -0.31361 :-0.30695 :                                                                                                                                                 <
+         [2]             0.16694 : 0.21603 :                                                                                                                                                 <
+         [3]            -0.24056 :-0.13112 :                                                                                                                                                 <
+         [4]             0.46237 :0.049665 :                                                                                                                                                 <
+         [5]            -0.38921 :-0.0069185 :                                                                                                                                               <
+         [6]             0.14844 :       0 :                                                                                                                                                 <
+         [7]            -0.021335 :       0 :                                                                                                                                                <
+         [8]                   0 :       0 :                                                                                                                                                 <
+         [9]                   0 :       0 :                                                                                                                                                             [9]                   0 :       0 :
+---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - St_tpcCorrectionC::instance found table TpcEtaCorrectionB with NRows = 4 in db                                                                                         |  StdEdxY2Maker:WARN  - St_tpcCorrectionC::instance found table TpcTanL with NRows = 0 in db      Validity:20191120/180000 - 20371231/120000
+StdEdxY2Maker:WARN  - Validity:20230626/85710 -----   20371231/120000                                                                                                                        |  StdEdxY2Maker:WARN  - St_tpcCorrectionC::instance found table TpcdXCorrectionB with NRows = 0 in db     Validity:20181220/0 - 20371231/120000
+                                                                                                                                                                                             >  LoadTable: .L /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StarDb/Calibrations/tpc/TpcEtaCorrection.r2023.C
+================================================================================
+05/30/2025
+mkdir AuAu_2023_1; cd AuAu_2023_1;  ln -s ../AuAu_2023/2416*.root ../AuAu_2023/2417[0-6]*.root ../AuAu_2023/2417700*.root ../AuAu_2023/2417701[1-2]*.root .; cd -;
+mkdir AuAu_2023_2; cd AuAu_2023_2;  ln -s ../AuAu_2023/24177017*  ../AuAu_2023/241770[2-9]* ../AuAu_2023/2417[8-9]*.root ../AuAu_2023/241[8-9]*.root ../AuAu_2023/242*.root .; cd -;
+
+All.csh
+foreach f (`ls -1d */*.xml`)
+  lsf ${f}
+end
+================================================================================
+05/31/2025
+[starsub01] ~/work/Timing $ grep CPU */cpu*
+al95_x8664_gcc11_opt.TFG/cpu_per_event:                 CPU/event = 0.796597(sec) and   Total/event = 0.8(sec)          99.5746 %       for 999 events
+al95_x8664_gcc11_opt.TFG/cpu_per_event.ref:             CPU/event = 1.11857(sec)  and   Total/event = 1.28815(sec)      86.8354 %       for 999 events
+apptainer_sl7_x8664_gcc485_opt.DEV/cpu_per_event:       CPU/event = 0.931071(sec) and   Total/event = 1.09939(sec)      84.6898 %       for 999 events
+apptainer_sl7_x8664_gcc485_opt.TFG/cpu_per_event:       CPU/event = 1.11275(sec)  and   Total/event = 1.14889(sec)      96.8547 %       for 999 events
+
+[starsub01] ~/pwg/dEdx/RunXXI12/NoQuiet $ tail -100 /gpfs01/star/pwg/fisyak/dEdx/RunXXI12/OO_200GeV_2021/22130046_3000001_1_10000.log
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250525/200919; Total events processed :3749 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =841.09        Cpu =829.67      cpu/event =   0.22
+[starsub01] ~/pwg/dEdx/RunXXI12/NoQuiet
+[starsub01] ~/pwg/dEdx/RunXXI12/NoQuiet $ tail -100 st_physics_22130046_raw_3000001.log
+QA :INFO  - QAInfo:Run is finished at Date/Time 20250531/125526; Total events processed :3749 and not completed: 0
+QA :INFO  - =================================================================================
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =654.79        Cpu =640.75      cpu/event =   0.17
+================================================================================
+06/02/2025 
+Average current for 19GeV_2019
+[rcas6007] ~/work/Magnet $ root.exe starMagAvg.root
+root.exe [12] T->Draw("current:time-788936400>>C19GeV","time>=1551144200&&time<1554385445&&abs(current)>100")
+(Long64_t)1503
+root.exe [13] .x DrawTime.C(C19GeV)
+root.exe [14] T->Draw("current","time>=1551144200&&time<1554385445&&abs(current)>100")
+(Long64_t)1503
+root.exe [15] htemp->Fit("gaus","er","",-4513,-4511)
+ FCN=37.0966 FROM MINOS     STATUS=SUCCESSFUL     30 CALLS         182 TOTAL
+                     EDM=4.54302e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.50028e+02   6.13248e+00  -2.04517e-02   2.11199e-04
+   2  Mean        -4.51177e+03   8.09956e-03  -4.87267e-05   1.00180e-03
+   3  Sigma        2.64706e-01   7.30745e-03   7.30745e-03   4.74183e-03
+(class TFitResultPtr)148973544
+
+double  current          -4511.4 : averaged magnet current (- means B polarity)  
+StMagFMaker:INFO  - StMagFMaker::InitRun use Scale Factor = -1.0006 average for run 20060057
+StMagFMaker:INFO  - StMagFMaker::InitRun from DB fScale = -1.0006
+StMagUtilities::BField        =  -4.98619 kGauss at (0,0,0)
+ Event.mBField   = -4.986189
+ Event.mBField   = -4.986189
+[l409] ~/work_tpc/kfp/2019/19GeV_2019_P24iy_64bit/dEdx $ root.exe kfQA.root 
+root.exe [5]  QA->Draw("1000*(Ks_Mass-0.497611)","Ks_Mass>0")
+(Long64_t)941
+root.exe [6] htemp->Fit("gaus","er","",0.05,0.2)
+ FCN=29.8354 FROM MINOS     STATUS=SUCCESSFUL     42 CALLS         188 TOTAL
+                     EDM=1.05878e-10    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     6.21483e+01   3.05623e+00  -2.38297e-02   4.56534e-06
+   2  Mean         1.31847e-01   9.75396e-04   1.38896e-07   7.83083e-01
+   3  Sigma        2.57858e-02   8.66274e-04   8.66274e-04  -3.78801e-02
+
+1.31847e-01/206 => 6.40033980582524280e-04
+
+C/mBFiel = 4511.4/4.986189*mBField
+C        mBField
+4511.4   4.986189
+4511.77  4511.77/(4511.4/4.986189) = 4.98659793955978259
+4511.77  4511.77/(4511.4/4.986189) = 4.98659793955978259/(1 + 1.31847e-01/206) = 4.98340838885179771e+00
+
+         4.986189/4.98340838885179771e+00 = 1.00055797376639322e+00 = 1 + 5.57973766393216053e-04
+================================================================================
+06/05/2025
+/star/rcf/test/dev/daq_sl302.stica_opt/Sat/year_2021/
+DEV                                                                          CPU ratio
+production_OO_200GeV_2021_64bit al95_x8664_gcc11_opt:  CPU/event = 1.11857 (sec)  100%
+apptainer_sl7_x8664_gcc485_opt.DEV/cpu_per_event:      CPU/event = 0.931071(sec)   98%
+TFG
+apptainer_sl7_x8664_gcc485_opt.TFG/cpu_per_event:      CPU/event = 1.11275 (sec)   99%
+al95_x8664_gcc11_opt.TFG/cpu_per_event:                CPU/event = 0.796597(sec)   71%  native gives 28% speed up wrt apptained with SL7
+al95_x8664_gcc11_opt.TFG.R6/cpu_per_event:             CPU/event = 1.01941 (sec)   91%  ROOT6 opt
+al95_x8664_gcc11.TFG.R6/cpu_per_event:                 CPU/event = 2.6679  (sec)  238%  ROOT6 debug
+================================================================================
+ps_OO_200GeV_2021.P24iy_calib.root    2  M_{S}        4.97742e-01   3.02039e-06                            
+FF_OO_200GeV_2021.P24iy_calib.root    2  M_{S}        4.97752e-01   3.49299e-06
+OO_200GeV_2021.P24iy_calib.root       2  M_{S}        4.97765e-01   5.42188e-06
+root.exe [0] double m[3] ={4.97742e-01,4.97752e-01,4.97765e-01};
+root.exe [4] for (Int_t i = 0; i < 3; i++) cout << 1e3*(m[i] - 0.497611) << endl;
+0.131
+0.141
+0.154
+ 206./5000 = 0.041 MeV from 1 G over 5 kG
+1GeV
+ps_OO_200GeV_2021.P24iy_calib.root      y-#phi-M1GeV_z_BW    2  M_{S}        4.97729e-01   5.42291e-06  0.118  MeV
+OO_200GeV_2021.P24iy_calib.root         y-#phi-M1GeV_z_BW    2  M_{S}        4.97765e-01   9.74101e-06  0.154  MeV
+FF_OO_200GeV_2021.P24iy_calib.root      y-#phi-M1GeV_z_BW    2  M_{S}        4.97738e-01   6.45534e-06  0.127  MeV
+================================================================================
+06/06/2025
+19GeV_2019_P24iy_64bit_dEdxF3.root      y-#phi-M1GeV_z_BW    2  M_{S}        4.97710e-01   8.94985e-07 1e3*(4.97710e-01-0.497611) =  0.1  s MeV
+19GeV_2019_P24iy_64bit_dEdxF3.root      M_BW                 2  M_{S}        4.97609e-01   4.50931e-07 1e3*(4.97609e-01-0.497611) = -0.002 MeV
+
+
+
+StMagUtilities::CommonSta  Magnetic Field scale factor is 1
+StMagUtilities::BField        =  4.98318 kGauss at (0,0,0)
+StMagUtilities::CommonSta  Magnetic Field scale factor is -1
+StMagUtilities::BField        =  -4.98317 kGauss at (0,0,0)
+================================================================================
+06/07/2025 "/hlt/cephfs/reco/MC/TFG/19GeV_2019/K_S0
+Ana.root        y-#phi-M_z_BW  1GeV                             2  M_{S}        4.98269e-01   8.57349e-25  1e3*(4.98269e-01-0.497611) = 0.657 MeV
+                M_BW                                            2  M_{S}        4.98208e-01   9.47333e-27  1e3*(4.98208e-01-0.497611) = 0.597 MeV
+                M_Gaus                                          2  #mu          4.98287e-01   1.67557e-05  1e3*(4.98287e-01-0.497611) = 0.676 MeV
+                                                                                -7.89999999999957403e-05 = -.0078 MeV
+kfpAnalysis
+StMagFMaker:INFO  - StMagFMaker::InitRun from DB fScale = -1.0006
+StMagFMaker:INFO  - Reset STAR magnetic field with scale factor -1.0006
+
+
+StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98619
+StMagUtilities::BField        =  -4.98619 kGauss at (0,0,0)
+StMagUtilities::CommonSta  Magnetic Field scale factor is -1.0006
+================================================================================
+06/08/2025
+/hlt/cephfs/reco/MC/TFG/19GeV_2019/K_S0
+Ana.root        y-#phi-M_z_BW           2  M_{S}        4.98090e-01   4.73613e-06  1e3*(4.98090e-01-0.497611) = 0.48
+                M_BW                    2  M_{S}        4.98190e-01                1e3*(4.98190e-01-0.497611) = 0.58
+                Ana.root        M_Gaus  2  #mu          4.98286e-01   6.86546e-06  1e3*(4.98286e-01-0.497611) = 0.67
+                                                       -0.10 MeV
+================================================================================
+06/09/2025
+/hlt/cephfs/reco/MC/TFG/19GeV_2019/K_S0B
+Ana.root        y-#phi-M1GeV_z_BW       2  M_{S}        4.98101e-01   0.00000e+00  1e3*(4.98101e-01-0.497611) = 0.49
+StMagFMaker:INFO  - StMagFMaker::InitRun use Scale Factor = -1.0006 average for run 20060057                                                                                                 |  StMagFMaker:INFO  - StMagFMaker::InitRun use Scale Factor = -1 average for run 20060057
+StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98619                                                                                                                                    |  StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98317
+StMagUtilities::BField        =  -4.98619 kGauss at (0,0,0)                                                                                                                                  |  StMagUtilities::BField        =  -4.98317 kGauss at (0,0,0)
+================================================================================
+06/16/2025 QT on Alma Linux
+g++ -m64 -fPIC -c -include .pch/release-shared/QtNetwork -m64 -fPIC -O2 -fvisibility=hidden -fvisibility-inlines-hidden -Wall -W -D_REENTRANT -fPIC -DQT_SHARED -DQT_BUILD_NETWORK_LIB -DQT_NO_USING_NAMESPACE -DQT_NO_CAST_TO_ASCII -DQT_ASCII_CAST_WARNINGS -DQT_MOC_COMPAT -DQT_USE_QSTRINGBUILDER -DQT_NO_DEBUG -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_HAVE_SSE3 -DQT_HAVE_SSSE3 -DQT_HAVE_SSE4_1 -DQT_HAVE_SSE4_2 -DQT_HAVE_AVX -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -I../../mkspecs/linux-g++ -I. -I../../include/QtCore -I../../include -I../../include/QtNetwork -I.rcc/release-shared -Ikernel -I.moc/release-shared -o .obj/release-shared/qsslcertificate.o ssl/qsslcertificate.cpp
+make[1]: *** [Makefile:17093: .obj/release-shared/qsslcertificate.o] Error 1
+make[1]: Leaving directory '/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/sources/.al95_x8664_gcc11_opt/qt-everywhere-opensource-src-4.8.7/src/network'
+================================================================================
+06/20/2025
+St_db_Maker:ERROR - MysqlDb::ExecQuery() line=665  Query Failed  Malformed packet
+
+Program received signal SIGSEGV, Segmentation fault.
+0x00007fffd6fe1103 in mysql_fetch_row () from /usr/lib64/mysql/libmysqlclient.so
+(gdb) bt 20
+#0  0x00007fffd6fe1103 in mysql_fetch_row () from /usr/lib64/mysql/libmysqlclient.so
+#1  0x00007fffc3aedec8 in MysqlDb::Output (this=0x20c30c8, aBuff=0x20c3fb8) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/MysqlDb.cc:931
+#2  0x00007fffc3b1448f in StDbSql::queryNode (this=0x20b4050, node=0x20b4140) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbSql.cc:1202
+#3  0x00007fffc3b143bb in StDbSql::prepareNode (this=0x20b4050, dbNode=0x20b4140) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbSql.cc:1190
+#4  0x00007fffc3b0f611 in StDbSql::QueryDb (this=0x20b4050, node=0x20b4140) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbSql.cc:221
+#5  0x00007fffc3af8aae in StDbConfigNodeImpl::buildTree (this=0x20b4140, opt=1) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbConfigNodeImpl.cc:158
+#6  0x00007fffc3aff9ce in StDbManagerImpl::initConfig (this=0x20b2880, type=dbStDb, domain=dbStar, configName=0x7fffc32e4ebf "reconV0", opt=1) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbManagerImpl.cc:1116
+#7  0x00007fffc3aff88f in StDbManagerImpl::initConfig (this=0x20b2880, dbName=0x7ffffffcc2bf "StarDb", configName=0x7fffc32e4ebf "reconV0", opt=1) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/StDbManagerImpl.cc:1095
+#8  0x00007fffc32d7dba in StDbBroker::InitConfig (this=0x20b2790, configName=0x7ffffffcc2bf "StarDb", numRows=@0x7ffffffcc21c: 0, versionName=0x0) at .sl73_x8664_gcc485/obj/StRoot/StDbBroker/StDbBroker.cxx:835
+#9  0x00007fffc309ad1a in St_db_Maker::OpenMySQL (this=0x1bdb140, dbname=0x7ffffffcc2bf "StarDb") at .sl73_x8664_gcc485/obj/StRoot/St_db_Maker/St_db_Maker.cxx:609
+#10 0x00007fffc3099b2a in St_db_Maker::Init (this=0x1bdb140) at .sl73_x8664_gcc485/obj/StRoot/St_db_Maker/St_db_Maker.cxx:433
+#11 0x00007fffd5e72c0b in StMaker::Init (this=0x1466f50) at .sl73_x8664_gcc485/obj/StRoot/StChain/StMaker.cxx:702
+#12 0x00007fffd5e6cb56 in StChain::Init (this=0x1466f50) at .sl73_x8664_gcc485/obj/StRoot/StChain/StChain.cxx:109
+#13 0x00007fffd5789783 in StBFChain::Init (this=0x1466f50) at .sl73_x8664_gcc485/obj/StRoot/StBFChain/StBFChain.cxx:1218
+#14 0x00007fffd5e8260f in G__StChain_Cint_573_0_6(G__value*, char const*, G__param*, int) () from /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/packages/TFG/.sl73_x8664_gcc485/lib/libStChain.so
+#15 0x00007ffff5e676cb in Cint::G__ExceptionWrapper (funcp=0x7fffd5e825e1 <G__StChain_Cint_573_0_6(G__value*, char const*, G__param*, int)>, result7=0x7ffffffcd4a0, funcname=0x14621e0 "", libp=0x7ffffffcd4e0, hash=0) at cint/cint/src/Api.cxx:385
+#16 0x00007ffff5d91e8c in G__execute_call (result7=0x7ffffffcd4a0, libp=0x7ffffffcd4e0, ifunc=0x14621e0, ifn=0) at cint/cint/src/newlink.cxx:2408
+#17 0x00007ffff5d92832 in G__call_cppfunc (result7=0x7ffffffcd4a0, libp=0x7ffffffcd4e0, ifunc=0x14621e0, ifn=0) at cint/cint/src/newlink.cxx:2612
+#18 0x00007ffff5e07c60 in G__interpret_func (result7=0x7ffffffcd4a0, funcname=0xe1a620 "Init", libp=0x7ffffffcd4e0, hash=404, p_ifunc=0x14621e0, funcmatch=1, memfunc_flag=1) at cint/cint/src/ifunc.cxx:5791
+#19 0x00007ffff5ed8019 in G__getfunction (item=0xe0a917 "Init()", known3=0x7ffffffd8f84, memfunc_flag=1) at cint/cint/src/func.cxx:2660
+(More stack frames follow...)
+(gdb) up 
+#1  0x00007fffc3aedec8 in MysqlDb::Output (this=0x20c30c8, aBuff=0x20c3fb8) at .sl73_x8664_gcc485/obj/StRoot/StDbLib/MysqlDb.cc:931
+931       MYSQL_ROW tRow=mysql_fetch_row(mRes->mRes);
+(gdb) p aBuff
+$1 = (StDbBuffer *) 0x20c3fb8
+(gdb) p *aBuff
+$2 = {<StDbBufferI> = {_vptr.StDbBufferI = 0x7fffc3d9d030 <vtable for StDbBuffer+16>}, mMax = 100, mCur = 0, mLast = -1, mCol = 0x20ccf70, mMode = Storage}
+(gdb) p *mRes
+$5 = {_vptr.MysqlResult = 0x7fffc3d9ce10 <vtable for MysqlResult+16>, mRes = 0x0, mRow = 0xffffffff, mSep = 0 '\000'}
+================================================================================ CPU types ====
+[starsub01] ~/work/kfp/2019/4p59GeV_fixedTarget_P24iy_64bit/dEdx $ lscpu
+Architecture:             x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          46 bits physical, 48 bits virtual
+  Byte Order:             Little Endian
+CPU(s):                   8
+  On-line CPU(s) list:    0-7
+Vendor ID:                GenuineIntel
+  Model name:             Intel Xeon Processor (Cascadelake)
+    CPU family:           6
+    Model:                85
+    Thread(s) per core:   1
+    Core(s) per socket:   1
+    Socket(s):            8
+    Stepping:             6
+    BogoMIPS:             4389.68
+    Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc re
+                          p_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave a
+                          vx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsba
+                          se tsc_adjust bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv
+                          1 xsaves arat vnmi umip pku ospke avx512_vnni md_clear flush_l1d arch_capabilities
+Virtualization features:  
+  Virtualization:         VT-x
+  Hypervisor vendor:      KVM
+  Virtualization type:    full
+Caches (sum of all):      
+  L1d:                    256 KiB (8 instances)
+  L1i:                    256 KiB (8 instances)
+  L2:                     32 MiB (8 instances)
+  L3:                     128 MiB (8 instances)
+NUMA:                     
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-7
+Vulnerabilities:          
+  Gather data sampling:   Not affected
+  Itlb multihit:          Not affected
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Mitigation; Clear CPU buffers; SMT Host state unknown
+  Reg file data sampling: Not affected
+  Retbleed:               Mitigation; Enhanced IBRS
+  Spec rstack overflow:   Not affected
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+  Srbds:                  Not affected
+  Tsx async abort:        Mitigation; TSX disabled
+
+--------------------------------------------------------------------------------
+spar0108] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG $ lscpu
+Architecture:             x86_64
+  CPU op-mode(s):         32-bit, 64-bit
+  Address sizes:          48 bits physical, 48 bits virtual
+  Byte Order:             Little Endian
+CPU(s):                   8
+  On-line CPU(s) list:    0-7
+Vendor ID:                AuthenticAMD
+  Model name:             AMD EPYC Processor (with IBPB)
+    CPU family:           23
+    Model:                1
+    Thread(s) per core:   1
+    Core(s) per socket:   1
+    Socket(s):            8
+    Stepping:             2
+    BogoMIPS:             4799.99
+    Flags:                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_ap
+                          icid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy cr8_legacy abm sse4a misalignsse 3dnow
+                          prefetch osvw intel_ppin ssbd ibpb vmmcall fsgsbase bmi1 avx2 smep bmi2 rdseed adx smap clflushopt sha_ni xsaveopt xsavec xgetbv1 virt_ssbd arat
+Virtualization features:  
+  Hypervisor vendor:      KVM
+  Virtualization type:    full
+Caches (sum of all):      
+  L1d:                    512 KiB (8 instances)
+  L1i:                    512 KiB (8 instances)
+  L2:                     4 MiB (8 instances)
+NUMA:                     
+  NUMA node(s):           1
+  NUMA node0 CPU(s):      0-7
+Vulnerabilities:          
+  Gather data sampling:   Not affected
+  Itlb multihit:          Not affected
+  L1tf:                   Not affected
+  Mds:                    Not affected
+  Meltdown:               Not affected
+  Mmio stale data:        Not affected
+  Reg file data sampling: Not affected
+  Retbleed:               Mitigation; untrained return thunk; SMT disabled
+  Spec rstack overflow:   Vulnerable: Safe RET, no microcode
+  Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+  Spectre v2:             Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+  Srbds:                  Not affected
+  Tsx async abort:        Not affected
+================================================================================
+06/22/2025
+[starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 'Note: File' 2*.log | awk -F\/ '{print $10}' | sort -u 
+.al95_x8664_gcc11_opt
+.al95_x8664_gcc11_v3_opt
+starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 al95_x8664_gcc11_opt 2*.log | wc -l
+499
+[starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 al95_x8664_gcc11_v3_opt 2*.log | wc -l
+4

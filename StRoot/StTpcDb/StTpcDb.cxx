@@ -31,6 +31,7 @@ Bool_t StTpcDb::mOldScheme = kTRUE;
 Bool_t StTpcDb::mAlignment2024 = kFALSE;
 Bool_t StTpcDb::mTpcMDF4Error = kFALSE;
 Bool_t StTpcDb::mCosmics = kFALSE;
+Bool_t StTpcDb::mnoFieldFlip = kFALSE;
 TGeoHMatrix   *StTpcDb::mTpc2GlobMatrix = 0;
 // C++ routines:
 //_____________________________________________________________________________
@@ -409,11 +410,13 @@ matrix([     1, gamma,  -beta,-x_0],
 	  if (k == kSup12S2Tpc) rotA *= Flip(); // new in 2024 schema
 	  SetTpcRotationMatrix(&rotA,sector,kRotM);// Save ideal rotation
 	  dR = chair->GetMatrix(sector-1);
-	  if (chairD->getNumRows() == 24) {
-	    if (gFactor > 0.2) {
-	      dR *= chairD->GetMatrix(sector-1);
-	    } else if (gFactor < -0.2) {
-	      dR *= chairD->GetMatrix(sector-1).Inverse();
+	  if (! mnoFieldFlip) {
+	    if (chairD->getNumRows() == 24) {
+	      if (gFactor > 0.2) {
+		dR *= chairD->GetMatrix(sector-1);
+	      } else if (gFactor < -0.2) {
+		dR *= chairD->GetMatrix(sector-1).Inverse();
+	      }
 	    }
 	  }
 	  SetTpcRotationMatrix(&dR,sector,kdRS12);// Save correction
@@ -441,11 +444,13 @@ matrix([     1, gamma,  -beta,-x_0],
 	  if (k == kSubSOuter2SupS || 
 	      k == kSubSInner2SupS) rotA = Flip() * chair->GetMatrix(sector-1);
 	  else                      rotA =          chair->GetMatrix(sector-1);  
-	  if (chair->GetNRows() == 48) {
-	    if (gFactor > 0.2) {
-	      rotA *= chair->GetMatrix(sector-1+24);
-	    } else if (gFactor < -0.2) {
-	      rotA *= chair->GetMatrix(sector-1+24).Inverse();
+	  if (! mnoFieldFlip) {
+	    if (chair->GetNRows() == 48) {
+	      if (gFactor > 0.2) {
+		rotA *= chair->GetMatrix(sector-1+24);
+	      } else if (gFactor < -0.2) {
+		rotA *= chair->GetMatrix(sector-1+24).Inverse();
+	      }
 	    }
 	  }
 	  break;

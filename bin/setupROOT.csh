@@ -47,7 +47,11 @@ setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --disable
 	setenv MYSQLCLILIB /usr/lib/mysql
 #setenv GSL_DIR $ROOTSYS
 setenv GSL_DIR $XOPTSTAR # $ROOTSYS
-if (-r ${XOPTSTAR}/spack//lib) setenv GSL_DIR ${XOPTSTAR}/spack/
+if (-r ${XOPTSTAR}/spack/lib) then 
+  setenv GSL_DIR ${XOPTSTAR}/spack/
+  setenv MYSQLINCDIR $XOPTSTAR/spack/include
+  setenv MYSQLCLILIB $XOPTSTAR/spack/lib
+endif
 setenv FFTW3   $ROOTSYS # $XOPTSTAR 
 setenv F77 gfortran
 switch ( $STAR_HOST_SYS )  
@@ -55,7 +59,7 @@ switch ( $STAR_HOST_SYS )
 #	setenv CERN_ROOT_Local /afs/rhic.bnl.gov/.asis/$STAR_HOST_SYS/cern/2004
 	setenv ARCH linuxx8664gcc
 #	setenv MYSQLINCDIR /usr/include/mysql
-	setenv MYSQLCLILIB /usr/lib64/mysql
+#	setenv MYSQLCLILIB /usr/lib64/mysql
 #	setenv SHIFTLIBDIR $CERN_ROOT/lib
 #	setenv SHIFTINCDIR  /afs/rhic.bnl.gov/.asis/share/usr.local/include
 #	setenv x11libdir /usr/X11R6/lib64
@@ -68,7 +72,7 @@ switch ( $STAR_HOST_SYS )
 #	setenv CERN_ROOT_Local /afs/rhic.bnl.gov/.asis/$STAR_HOST_SYS/cern/2004
 	setenv ARCH linuxx8664icc
 #	setenv MYSQLINCDIR /usr/include/mysql
-	setenv MYSQLCLILIB /usr/lib64/mysql
+#	setenv MYSQLCLILIB /usr/lib64/mysql
 #	setenv SHIFTLIBDIR $CERN_ROOT/lib
 #	setenv SHIFTINCDIR  /afs/rhic.bnl.gov/.asis/share/usr.local/include
 #	setenv x11libdir /usr/X11R6/lib64
@@ -168,7 +172,19 @@ switch ( $STAR_HOST_SYS )
     case *al95_x8664_*:
     case *al92_x8664_*:
      setenv DISABLE "$DISABLE --disable-memstat"
-     setenv EXTRA_FLAGS " $EXTRA_FLAGS  --cxxflags=-Wno-register --cxxflags=-Wno-misleading-indentation --cflags=-Wno-register --cflags=-Wno-misleading-indentation" # --cflags=--std=c++17
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-cast-function-type  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-class-memaccess  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-deprecated-declarations  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-ignored-qualifiers  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-implicit-fallthrough  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-misleading-indentation  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-stringop-truncation "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-register  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-cast-function-type  "
+#     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-declarations  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-format-truncation  "
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-misleading-indentation  "
+#     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-register"  #--cflags=--std=c++17 
     breaksw
     case *gcc12*:
      setenv DISABLE "$DISABLE --disable-python --disable-xrootdxs --disable-pythia8"
@@ -176,7 +192,7 @@ switch ( $STAR_HOST_SYS )
      breaksw
     case *gcc1*:
      setenv DISABLE "$DISABLE --disable-xrootd --disable-pythia8"
-     setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17 --cxxflags=-Wno-register"
+     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-ignored-qualifiers" # --cflags=--std=c++17 --cxxflags=-Wno-register"
      breaksw
     case *gcc9*:
     case *gcc8*:

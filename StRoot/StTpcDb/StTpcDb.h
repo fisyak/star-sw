@@ -105,6 +105,7 @@ class StTpcDb {
   static Bool_t         mAlignment2024; //! switch between Old and 2024 alignment scheme
   static Bool_t         mTpcMDF4Error;  //! switch between Old and MDF4 TPC error parameterization
   static Bool_t         mCosmics;       //! if cosmics 
+  static Bool_t         mnoFieldFlip;   //! do NOT flip alignment with mag. field" 
  private:
   StTpcDb();
  public:
@@ -192,6 +193,7 @@ class StTpcDb {
   const TGeoHMatrix &Pad2Sup12S(Int_t sector = 1, Int_t row = 1)  const {Int_t k = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? kPadInner2Sup12S: kPadOuter2Sup12S; return TpcRot(sector,k);}
 
 
+  static void   SetnoFieldFlip(Bool_t k = kFALSE) {mnoFieldFlip = k;}
   static void   SetAlignment2024(Bool_t k = kFALSE);
   static Bool_t Alignment2024() {return mAlignment2024;}
   static void   SetTpcMDF4Error(Bool_t k = kFALSE) {mTpcMDF4Error = k;}

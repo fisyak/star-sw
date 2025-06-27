@@ -1,0 +1,181 @@
+#############################################################################
+# File:            .tcshrc                                     
+# Description:     general purpose .tcshrc file            
+#                  This file gives examples of how to modify the behaviour of
+#                  Tenex /bin/csh (tcsh).
+#                  It sources a file on the central file server which is 
+#                  starting the HEP scripts if they are not installed locally.
+# Authors:         Arnaud Taddei
+# Site Contact:    Setup.Support@cern.ch
+# Version: 	   2.5
+# Last Change:	   Mon Dec  5 16:31:50 MET 19
+#-############################################################################
+setenv cf unknown
+#set domain=`hostname -d`
+#if ($?) set domain = `domainame`;
+#set host  = `uname -s`
+which fs >& /dev/null
+if ($?) then 
+  set syst = amd64_linux26
+  if (-r /etc/redhat-release) then
+    set syst = `awk '{print $1}' /etc/redhat-release`
+#    if ($syst == "AlmaLinux") then
+#      if (! $?CMAKE_PREFIX_PATH) then
+#        setenv CMAKE_PREFIX_PATH /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/var/spack/environments/AL92/.spack-env/view
+#      endif
+#    endif
+  endif
+else
+  set syst  = `fs sysname | awk -F\' '{print $2}'`
+endif
+#if (! $?AFS_RHIC || ! $?STAR_ROOT || ! $?CERN || ! $?STAR_SYS || ! $?STAR || ! $?GROUP_DIR || ! $?ROOTSYS || ! $?STAR_LEVEL) then
+#if ($?STAR_LEVEL == 0 || $STAR_LEVEL == "") then
+
+if ($?STAR == 0) then
+  if ( -r $HOME/.default.csh) source $HOME/.default.csh
+endif
+#======================================================================#
+# The following is a set of examples.
+# See CN/DCI/172 from the UCO for more information on customising your shell.
+# If you want to try them uncomment the line(s) you selected.
+#======================================================================#
+#
+# If you want to have ENVIRONMENT specific settings:
+#===================================================
+# Template for environment dependent login
+# switch ( $ENVIRONMENT )
+#        case INTERACTIVE: # Interactive non-login behaviour of the shell 
+#                          # (No output)
+#		           breaksw
+#        case LOGIN:       # STANDARD LOGIN AND DMLOGIN :
+#                          #echo "Environment $ENVIRONMENT"
+#                          breaksw
+#        case X11:         # X11 LOGIN (No output):
+#                          breaksw
+#        case BATCH:       # NQS,... (No output):
+#                          breaksw
+# endsw
+#
+#
+#
+# How can you change your prompt:
+#================================
+# Definition		 	# Result	# Comment
+#-------------------------------------------------------------------
+# set prompt="$HOST "	 	# plus1 		# 
+# set prompt='\! > '	 	# 3 >		# 3 means the third 
+#			 	# 		# you executed
+# set prompt='\! %~ %# '	# 3 ~/public >	# 
+# set prompt="[$HOST] > "	# [plus1] > 	#
+# set prompt='R; '		# R;		# for VM hackers!
+#
+set prompt='%S[%m]%s %~ %# '
+# How can you set aliases:
+#=========================
+# Definition				# Comment
+#---------------------------------------------------------------------
+# alias H 'history -r | fgrep "\!*"'	# just type H latex to get the 
+#					# last latex command
+# alias h history			# just type h for the history
+# alias m more				# just type m for more
+#
+#
+#
+#echo "5 => $PATH"
+if (-r $GROUP_DIR/group_aliases.csh) source $GROUP_DIR/group_aliases.csh
+#echo "6 => $PATH"
+if (-r $HOME/.aliases) source $HOME/.aliases
+# How can you change the path:
+#=============================
+# Basic rule:
+#------------
+# To include the access to new programs after the defaults:
+# set path=( $path new_directory ) 
+#
+# To include the access to new programs before the defaults:
+# set path=( new_directory $path )
+#
+# Examples of new_directory could be:
+# new_directory			# Comment
+#-----------------------------------------------------------------------
+# /afs/cern.ch/user/f/fred/bin 	# To be able to execute Fred's programs
+# $ORACLE/bin			# To use ORACLE
+# /usr/local/bin/gnu		# To access GNU programs
+#
+#
+# The next lines are provided in order to help you
+# removing the '.' in the path (if any)! (refer to CN/DCI/170 from the UCO)
+#-----------------------------------------------
+# set path = ( `echo $path | /bin/sed 's/ \.//'`)
+# set path = ( `echo $path | /bin/sed 's/\. //'`)
+#  set path = ( . `echo $path` )
+#  set path = ( . $AFS_RHIC/star/packages/perl56/bin `echo $path` )
+#
+#
+# How can you set environment variables:
+#=======================================
+# Action			# Comment
+#--------------------------------------------------------------
+if ($?EDITOR == 0) then
+  which xemacs >& /dev/null
+  if (! $?) then 
+    setenv EDITOR  xemacs
+  else
+    setenv EDITOR  emacs
+ endif
+endif
+# setenv EDITOR  nedit		# if you want nedit as default
+# setenv PRINTER 513-lps  	# print on 513-lps as default
+# setenv PAGER	 less		# use /usr/local/bin/less to read man pages		
+#
+#
+#
+# Changing the shell behaviour:
+#==============================
+# Normally, redirecting command output to a file, for example
+#
+#      /bin/ls > file.list
+#
+# will OVERWRITE any existing file.list. As the default you can't overwrite
+# existing files. If you dislike it uncomment the following line:
+#
+# unset noclobber
+#
+# If you have this option set you can override the extra protection by
+# adding a '!' - e.g.,
+#
+#      /bin/ls >! file.list
+#
+#---------------------------------------------------
+# By default you need to type "logout" to logout from a standard CERN Unix
+# system. If you prefer to logout with a simple "CTRL-D" you should
+#
+# unset ignoreeof
+# unset autologout
+set autologout=10080
+#
+# BEWARE: If you use the "menu" shell facilities it can be easy to logout
+# by mistake if you do this as "CTRL-D" is also used for menu completion
+#
+#-------------------------------------------------------
+#
+# The number of commands remembered is usually 40. To change this
+# to 100 (that's just an example) uncomment the next line and 
+# change the number to suit yourself.
+#
+set histsize=100
+#
+#
+# ORACLE
+# ------
+# If you want ORACLE uncomment the next lines:
+#=============================================
+# if ( -r /usr/local/lib/hepix/oracle_env.csh ) then
+#    source /usr/local/lib/hepix/oracle_env.csh
+# endif
+#setenv TERM_BKG_COLOR black
+setenv TERM_BKG_COLOR white
+#setenv TERM_OPTIONS " -fn fixed  -sl 9999 -sb +si -sk -geometry 132x60 -bd red -bw 2"
+#setenv TERM_OPTIONS "-fn fixed  -bg black -fg white  -sb -sl 4000 -geometry 132x64"
+setenv TERM_OPTIONS "-fn fixed -sb -sl 4000 -geometry 132x64"
+

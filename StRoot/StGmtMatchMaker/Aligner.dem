@@ -1,0 +1,72 @@
+/*
+   rmaxima -g -b AlignerF.dem
+*/
+
+load ("eigen")$
+load (f90)$
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+algebraic : true $
+simplified_output: true$
+inflag : true$
+debugmode(true) $ 
+  /* A.Lebedev 07/28/15
+    GMT modules installed
+    West   mid of sectors 2 and 5
+    East    mid of sectors 17 and 22
+    So it is a continuous  2 lines Phi = 210 and 300.
+    I don't know exact Z position
+    Best regards,
+    Alexie
+  */
+
+/*
+G = R * L (G == Master, L == Local)
+  Rotation: R                     Inverse rotation: RT = R^-1
+         r11  r12  r13   tx              r11  r21  r31   -tx
+         r21  r22  r23   ty              r12  r22  r32   -ty
+         r31  r32  r33   tz              r13  r23  r33   -tz
+          0    0    0    1                 0    0    0     1
+
+L = T^-1 * G
+     (dX = 0)
+D =  (dY    )   = 
+     (dZ    )
+*/
+R() := matrix([r11,  r12,  r13,   tx], 
+              [r21,  r22,  r23,   ty], 
+              [r31,  r32,  r33,   tz], 
+              [  0,    0,    0,    1])$  
+RT() := matrix([r11,  r21,  r31,   -tx], 
+               [r12,  r22,  r32,   -ty], 
+               [r13,  r23,  r33,   -tz], 
+               [  0,    0,    0,     1])$
+
+dR( alpha,beta,gamma, x_0, y_0, z_0) := 
+matrix([   a00,-gamma,   beta, x_0],
+       [ gamma,    a11,-alpha, y_0],
+       [ -beta, alpha,    a22, z_0],
+       [     0,     0,      0,   1]);
+dRT( alpha,beta,gamma, x_0, y_0, z_0) := /* dR^-1 */
+matrix([   a00, gamma,  -beta,-x_0],
+       [-gamma,    a11, alpha,-y_0],
+       [  beta,-alpha,    a22,-z_0],
+       [     0,     0,      0,   1]);
+
+G  : matrix( [xG],  [yG],  [zG], [1]);    /* Global Coordinate*/
+nG : matrix([nxG], [nyG], [nzG], [0]);    /* Global Direction */
+D(yD, zD) := matrix([0], [yD], [zD], [1]);   /* measurements */
+
+P : RT() . G;                               /* Prediction on the measurement plane */
+
+
+/* ratsimp(P); */
+/* dL dif : P - D(yD,zD); */
+dL  : matrix( [0],  [dY],  [dZ], [1]);    /* deviation of prediction from measurement D */
+
+/* PC: dRT( alpha,beta,gamma, x_0, y_0, z_0) . RT() . G; */
+PC: dRT( alpha,beta,gamma, x_0, y_0, z_0) . RT() . G;
+
+CC: PC - P;
+
+ddrR : RT() - dRT( 0,0,0, x_0, y_0, z_0) . RT();

@@ -183,7 +183,7 @@ Int_t StiKalmanTrackFinder::Fit(StiKalmanTrack *track, Double_t rMin) {
     StiTrackNode *extenDca = track->extendToVertex(&dcaHit);
     if (extenDca) {
       track->add(extenDca,kOutsideIn);
-      if (debug() >= 1) StiKalmanTrackNode::PrintStep();
+      if (debug() >= 1) ((StiKalmanTrackNode *)extenDca)->PrintpT("Fit");
     }
     //		End DCA node
     track->reduce();
@@ -638,13 +638,7 @@ assert(direction || leadNode==track->getLastNode());
           if (status)  break; 
 	  node->setChi2(hitCont.getChi2(jHit));
           if (!direction && node->getX()< kMinRadTpc) node->saveInfo(); //Save info for pulls 
-	  if (debug() > 0) {
-	  if (node->getDetector()) 
-	    StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));
-	  else 
-	    StiKalmanTrackNode::ResetComment("Vx                            ");
-	  StiKalmanTrackNode::PrintStep();
-	  }
+	  if (debug() > 0) node->PrintpT("find");
         }while(0);
         if (status)  {_trackNodeFactory->free(node); continue;}
 
@@ -652,13 +646,15 @@ assert(direction || leadNode==track->getLastNode());
 	track->add(node,direction,leadNode);
         nodeQA(node,position,active,qaTry);
 	find(track,direction,node,qaTry);
+#if 0
 	if (debug()) {
 	  if (node->getDetector()) 
 	    StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));
 	  else 
 	    StiKalmanTrackNode::ResetComment("Vx                            ");
-	  node->PrintpT("H"); StiKalmanTrackNode::PrintStep();
+	  node->PrintpT("H "); StiKalmanTrackNode::PrintStep();
 	}
+#endif
         if (jHit==0) { qaBest=qaTry; continue;}
         int igor = qaBest.compQA(qaTry);
         if (igor<0)  { leadNode->remove(0);}

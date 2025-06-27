@@ -157,6 +157,23 @@ Int_t SectorNumber(Float_t phi, Float_t z) {
   return Sector;
 }
 //________________________________________________________________________________
+Int_t SectorFromEtaPhi(Float_t eta, Float_t phiRad) { 
+  Float_t phi = TMath::RadToDeg()*phiRad;
+  if (phi < 0) phi += 360;
+  Int_t iphi = TMath::Nint(phi/30.);
+  Float_t dphi = phi/30 - iphi;
+  Int_t Sector;
+  if (eta > 0) {
+    Sector = 3 - iphi;
+    dphi = - dphi;
+    if (Sector <=  0) Sector += 12;
+  } else {
+    Sector = 21 + iphi;
+    if (Sector > 24) Sector -= 12;
+  }
+  return Sector + dphi;
+}
+//________________________________________________________________________________
 Int_t SectorNumber(Float_t x, Float_t y, Float_t z) {
   Float_t phi = TMath::RadToDeg()*TMath::ATan2(y,x);
   return SectorNumber(phi, z);

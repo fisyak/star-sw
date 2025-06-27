@@ -182,7 +182,7 @@ Content   TPCE,TOFC,TOFS,TOST,TOKA,TONX,TOAD,TOHA,TPGV,TPSS,
         Real tifcIR,tialIR,tialOR,tikaIR,tikaOR,tinxIR,tinxOR,tiadIR,tiadOR,tifcOR;
 
 !//   variables from tpcegeo2
-        Real tpgvLeng,tofcLeng,tpgvz;
+        Real tpgvLeng,tpgvz;
         Integer i_sec,i_row;
 External  TPADSTEP,TPAISTEP,TPAOSTEP,TPCELASER
 !//  derive radii of larger structureures
@@ -304,12 +304,12 @@ Structure TFEE {Vers,CardDX ,CardDY,CardDZ,PlateDX,PlateDY,PlateDZ,
         version =       5               !// version    => current version
 	TpadConfig=     0               !// default
         Rmin =          46.107          !// Rmin          => TPC envelope inner radius
-        Rmax =          206.75    ! TPC outer envelope 
+        Rmax =          207.750 !// 206.75    ! TPC outer envelope 
         RminIFC =       46.6            !// RminIFC    => inner radius TPC IFC  : A.Lebedev measurement 10/16/08
-        LengthT =       2*271.0         !// LengthT    => TPC full length up to front of EEMC
+        LengthT =       2*259.685 !// 2*271.0         !// LengthT    => TPC full length up to front of EEMC
         Length  =       2*259.685       !// Length        => TPC full length including RDOs
         LengthW =       2*229.71        !// LengthW    => TPC length including Wheel
-        LengthV =       2*210.107       !// LengthV    => TPC (Outer) gas volume length 
+        LengthV =       2*209.99 !// 2*210.107       !// LengthV    => TPC (Outer) gas volume length 
         DzEnvelop =     268.            !// TPCE envelop dz
         WheelIR =       38.620*INCH/2   !// 49.60 WheelIR    => support wheel inner radius
         WheelR0 =       21.500*INCH     !// WheelR0 => Distance from IP of end of inner cylindrical part
@@ -339,16 +339,16 @@ Structure TFEE {Vers,CardDX ,CardDY,CardDZ,PlateDX,PlateDY,PlateDZ,
         tialDR =        0.004           !// tialDR        => inner aluminum layer thickness
         tifcRF =        51.7            !// tifcRF        => outer radius of IFC flange
         tifcDRT=        0.1             !// tifcDRT    => tolerance between flange and wheel
-        dzYF1   =       221.162         !// dz of YF1
-        dzYF2  =        211.9           !// dz of YF2
-        dzYF3  =        208.02          !// dz of YF3
+        dzYF1   =       221.162         !// dz of YF1  => IFC
+        dzYF2  =        211.9           !// dz of YF2  => OFC
+        dzYF3  =        208.02          !// dz of YF3  => OFC 2
         PadPlaneThickness = 0.182       !// 1.82 mm  Drawing 24A0314 & 24A0304
         dGateGround = 0.6            !//
-        WireMountWidth  = 5*((0.130+0.1376)/2)*INCH  !//
+        WireMountWidth  = 5*0.130*inch !// 5*((0.130+0.1376)/2)*INCH  !//
         WireMountHeight = 1.340*inch    !// Drawing 24A0434
         dxRDO   = 1.75/2                !// A.Lebedev 1 RDO = 5 lb  10/24/14 A.Lebedev  945g
         dyRDO   = 45.72/2               !//
-        dzRDO   = 17.78/2               !//
+        dzRDO   = 17.0/2 !// 17.78/2               !//
         zRDO    = TPCG_LengthW/2 + 20.0         !//
         heigTube = 0.703*INCH           !// x Cooling TUBE Drawing 24A0801B
         widTube  = 0.500*INCH           !// z Mixture TPCE_Water_Pipe => rho = 2.32155 g/cm**3
@@ -367,7 +367,7 @@ Structure TFEE {Vers,CardDX ,CardDY,CardDZ,PlateDX,PlateDY,PlateDZ,
       sec    = 1                ! sector number: 1 for inner, 2 for outer
       nRow   = 13               ! number of padrows in the sector
       pitch  = 0.335            ! tpc padrow pitch width
-      width  = 1.20             ! tpc padrow pitch
+      width  = 1.20             ! tpc padrow pitch  >> from 1.15
       super  = 3                ! number of padrows in a superpadrow
       dAnode = 0.2              !// distance to anode wire from pad plane
       Npads  = { 88, 96, 104, 112, 118, 126, 134, 142, 150,
@@ -438,7 +438,7 @@ Structure TFEE {Vers,CardDX ,CardDY,CardDZ,PlateDX,PlateDY,PlateDZ,
       nRow   = 32               ! number of padrows in the sector
       nRow   = 32               ! number of padrows in outer sector
       pitch  = 0.67             ! outer tpc padrow pitch width
-      width  = 2.00             ! outer tpc padrow pitch
+      width  = 2.00             ! outer tpc padrow pitch >> from 1.95 
       super  = 1                ! number of padrows in a superpadrow
       dAnode = 0.4              !// distance to anode wire from pad plane
       Npads  = { 98, 100, 102, 104, 106, 106, 108, 110, 112,
@@ -503,7 +503,7 @@ Fill TECW       !// EC trapezoid and support Wheel
    holeDy       =         2.500/2*INCH  !//
 endFill
 *
-Fill TPCR              ! volume for tpc readout boards
+Fill TPCR              ! volume for tpc readout boards >> should be corrected for new iTPC RDO
    RdoVthk   = 30.     ! length of RDO volume
    Rdothk    =.25      ! thickness of rdo card
    Rdolen    = 27      ! card length along beam direction
@@ -550,8 +550,6 @@ USE TECW
 !//   *-----------------------------------------------------------------------
 !//   */
 
- tofcLENG = tpcg_Length-2*tpcg_WheelTHK-2*TPCR_RdoVthk  !// gas plus endcaps
-!//? tpgvLeng = (tofcLeng-tpcg_MembTHK)/2   	!// active gas
  tpgvLeng = (TPCG_LengthV-tpcg_MembTHK)/2 	!// active gas
 
 

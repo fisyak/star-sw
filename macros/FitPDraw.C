@@ -281,7 +281,14 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
     cout << Form("%2i %-52s\t", k, F[k]->GetName()); //  << endl;
     cout << "FitP->Draw(\"" << Drawh << "\",\"" << cut << "\",\"" << same << "\")" << "\t"; //  endl;
 #endif
-    FitP->Draw("mu>>muH",cut,"goff");
+    TString P(draw);
+    Int_t indx = P.Index(":");
+    if (indx > 0) {
+      Int_t l = P.Length();
+      P.ReplaceAll(P(indx,l),"");
+    };
+    P += ">>muH";
+    FitP->Draw(P,cut,"goff");
     TH1 *muH = (TH1 *) gDirectory->Get("muH");
     Double_t RMS = -99;
     if (muH) RMS = 100*muH->GetRMS();
@@ -297,6 +304,12 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       dir.ReplaceAll("ZTMfl0T","");
       TString name = gSystem->BaseName(gDirectory->GetName());
       name.ReplaceAll(".root","");
+      if (name.BeginsWith("FitH3")) {
+	name.ReplaceAll("FitH3","");
+	if      (name == "F")   {name += ": 1 + 0.46e-4";}
+	else if (name == "F2")  {name += ": 1 + 3.90e-4";}
+	else if (name == "F3")  {name += ": 1 + 2.65e-4";}
+      }
       name.ReplaceAll("DP","");
       name.ReplaceAll("DT","");
       name.ReplaceAll("GP"," ");
@@ -443,7 +456,7 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
 	     const Char_t *var  = "row", // log_{10}(#Sigma Adc)"
 	     const Char_t *title = "#mu versus pad row"
 	    ) {
-  cout << "Mu2Draw(\"" << draw << "\",\"" << ext << "\"," << nx << "," << xMin << "," << xMax << ",\"" << cut << ",\"" << opt << "\"," << " ny = " << ny << "," << yMin << "," << yMax 
+  cout << "Mu2Draw(\"" << draw << "\",\"" << ext << "\"," << nx << "," << xMin << "," << xMax << ",\"" << cut << "\",\"" << opt << "\"," << " ny = " << ny << "," << yMin << "," << yMax 
        << ",\"" <<  side << "\",\"" << var << "\",\"" << title << "\")" << endl;
   TCanvas *c1 = (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c1");
   if (! c1)  c1 = new TCanvas("c1","c1",1400,1200);
@@ -617,9 +630,9 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.BeginsWith("Pressure")) {
     muPlot += ":y";
     if (Opt == "" || Opt == "I") {
-      MuDraw(muPlot.Data(),"PO",150, 6.84, 6.99, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PO",150, 6.905, 6.93, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Outer", "log(P)", "#mu versus log(P)");
     } else if (Opt == "O") {
-      MuDraw(muPlot.Data(),"PI",150, 6.84, 6.99, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
+      MuDraw(muPlot.Data(),"PI",150, 6.905, 6.93, "(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1&&abs(mu)<0.4)", "prof", -0.4,  0.4, "Inner", "log(P)", "#mu versus log(P)");
     }
   } else if (Name.BeginsWith("Temperature")) {
     muPlot += ":y";
@@ -704,5 +717,7 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     } else  {
       Mu2Draw("mu:sector","S", 24, 0.5, 24.5, "(dmu>0&&dmu<0.1)", "", 1200, 2.0,  14.0, "", "sector","#mu");
     }
+  } else if (Name.BeginsWith("FitH3"))      {
+      MuDraw("1e3*(M_S-0.497611):x","S", 40, -2.0, 2.0, "i", "", -10,  10.0, "", "#eta","#deltaM(MeV)");
   }
 }

@@ -62,13 +62,15 @@ void dEdx(Int_t First, Int_t Last,
   if (gClassTable->GetID("TTable") < 0) {
     gSystem->Load("libTable");
   }
+#if 0
   if (gClassTable->GetID("StTerminateNotified") < 0) {
     gSystem->Load("libStarRoot");
   }
+#endif
   gROOT->LoadMacro("bfc.C");
   TString Chain("in,dEdxY2,magF,StEvent,mysql,NoDefault,analysis");//,SkipdNdx
-  if        (Year.Contains("2019")) { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
-  } else if (Year.Contains("202"))  { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2020
+  if        (Year.Contains("2019")) {// Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
+  } else if (Year.Contains("202"))  {// Chain += ",CorrZ"; // ,analysis to add OPr40 for y2020
   } else if (Year.Contains("2005")) { Chain += ",SCEbyE,OGridLeak,OShortR,OSpaceZ2,";
   } else                            { Chain += ",CorrX"; // ,analysis to add OPr40 for <= 2018
   }
@@ -79,6 +81,9 @@ void dEdx(Int_t First, Int_t Last,
     tfgV = kTRUE;
     //Chain += ",quiet,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
     Chain += ",quiet"; //,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
+    if        (Year.Contains("2019")) { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
+    } else if (Year.Contains("202"))  { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2020
+    }
     //    Chain += ",ForcedX";
     if (mode == 2) Chain += ",dEdxCalib"; // , DontSort"; //,DbV20211017"; // !!!!!!!!!!!!   check DbV
   } else {
@@ -148,7 +153,7 @@ void dEdx(Int_t First, Int_t Last,
     db->SetDebug(1);
 #if 0 /* disable MySQl for tables under calibration */
     //    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC", "tpcTimeDependence", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
-    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
+    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN", "TpcEtaCorrectionB", "tpcTimeDependence"}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
     for (Int_t i = 0; TFGTables[i]; i++) {
       cout << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endl; 
       db->SetFlavor("TFG",TFGTables[i]);

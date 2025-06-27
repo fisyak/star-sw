@@ -1674,8 +1674,10 @@ void KFTopoPerformance::FillParticleParameters(KFParticle& TempPart,
       if (Pt > 1.0) {
        //    if (Pt > 1.0 && (index1 >= 0 && index2 >= 0) && (negDaughter.NDF() > 45 && posDaughter.NDF() > 45)) {
        histoParameters3D[0][iParticle][12]->Fill(Rapidity, Phi, M, 1);
+       histoParameters3D[0][iParticle][13]->Fill(Rapidity,Pt,ErrM,1);
       }
-      histoParameters3D[0][iParticle][13]->Fill(Rapidity,Pt,ErrM,1);
+      histoParameters3D[0][iParticle][14]->Fill(Rapidity, Phi, M, 1);
+      histoParameters3D[0][iParticle][15]->Fill(Rapidity,Pt,ErrM,1);
     }
 #endif /* __TFG__VERSION__ */
     

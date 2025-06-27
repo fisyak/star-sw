@@ -240,7 +240,7 @@ void Res(const Char_t *select="x", const Char_t *name="sigma", const Char_t *pat
   }
   if (IsLength) frame->SetXTitle("Track Length (cm)                   ");
   else          frame->SetXTitle("No. dEdx/dx points                  ");
-  TLegend *leg = new TLegend(0.55,0.6,0.9,0.9,"");
+  TLegend *leg = new TLegend(0.35,0.6,0.9,0.9,"");
   Int_t c = 0;
   TF1 *powfit = 0;
   if (plot == "sigma") {

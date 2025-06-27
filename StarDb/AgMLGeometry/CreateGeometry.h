@@ -41,7 +41,7 @@ TDataSet *CreateGeometry(const Char_t *name="y2011") {
   cout << "AgML: Building geometry " << name << " " << endl;
 
 
-  Geometry *build = new Geometry();  
+  StarGeometry *build = new StarGeometry();  
   build->InitAgML( "StarTGeoStacker" );
 
   // Suppress copious ROOT warnings 

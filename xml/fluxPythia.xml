@@ -5,7 +5,7 @@
 <command> 
   cd ${SUBMITTINGDIRECTORY}  
   setup debug
-  starver .DEV2
+#  starver TFG25c
 #if pp500 pp200
   set f        = 1
   echo $INPUTFILE0 | grep ':'
@@ -25,11 +25,15 @@
 #else pp200 y2014
 # root4star -q -b 'bfc.C('$l',"y2014a,useXgeom,StEvent,noRunco,noHistos,pythia,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
 #else pp510 y2017a
- root4star -q -b 'bfc.C('$l',"y2017a,useXgeom,StEvent,noRunco,noHistos,pythia,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
+# root4star -q -b 'bfc.C('$l',"y2017a,useXgeom,StEvent,noRunco,noHistos,pythia,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
+# root4star -q -b 'bfc.C('$l',"y2022b,useXgeom,StEvent,noRunco,noHistos,pythia,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
 #endif
+# root4star -q -b 'bfc.C('$l',"'${vers}',useXgeom,StEvent,noRunco,noHistos,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
+  root4star -q -b 'bfc.C('$l',"'${vers}',useXgeom,StEvent,noRunco,noHistos,pythia,flux,rung.'${rung}',nodefault","","","'${file}'")' &gt;&amp; ${logFile}
   endif
 </command>
-<input URL="command:fluxPythia.pl" />
+<input URL="command:fluxPythia.pl 1 500 500 r2013" /> 
+<!-- <input URL="command:fluxPythia.pl 1 500 500 r2022" /> -->
 <!-- <input URL="file:/star/simu/simu/jwebb/2014/HijingMinbiasHe3*.nt" /> -->
 <!-- <input URL="file:/star/simu/simu/jwebb/2014/HijingMinbias/*.nt" /> -->
 </job>

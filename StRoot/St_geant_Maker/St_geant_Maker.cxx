@@ -2427,7 +2427,7 @@ void dstkine() {
 //________________________________________________________________________________
 void St_geant_Maker::Version(ostream& os) {
   const Char_t *names[] = {
-    "isvt","itpc","ibtf","ical","ivpd","ieem","istb","ifpd","ifms","ifsc","imtd",
+    "isvt","itpc","ibtf","ical","ivpd","ieem","istb","ifpd","ifms","ifsc","imtd", "ipxl", "iist", "isst",  "ifst",
     "svtg_version",  
     "tpcg_version", "tpcg_tpadconfig",    
     "vpdg_version",  

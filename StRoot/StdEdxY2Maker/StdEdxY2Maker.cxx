@@ -1002,8 +1002,6 @@ void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
   
   //  static Hists3D Volt("Volt","log(dE/dx)","Sector*Channels","Voltage", numberOfSectors*NumberOfChannels,410,990.,1400.);
 
-  static Hists3D AvCurrent("AvCurrent","log(dEdx/Pion)","Sector*Channels","Average Current [#{mu}A]",numberOfSectors*NumberOfChannels,200,0.,1.0);
-  static Hists3D Qcm("Qcm","log(dEdx/Pion)","Sector*Channels","Accumulated Charge [uC/cm]",numberOfSectors*NumberOfChannels,200,0.,1000);
   static Hists3D ADC3("ADC3","<logADC)>","sector","row",numberOfSectors,
 		      NoRows,0,-1, 
 		      100,0.,10.,
@@ -1039,7 +1037,9 @@ void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
   static Hists3D Eta3 ## SIGN ("Eta3" MakeString(SIGN) ,"log(dEdx/Pion) MC" MakeString(NEGPOS) ,"row","#eta_{G}",-NoRows,50,-2.5,2.5); \
   static Hists3D EtaB3 ## SIGN ("EtaB3" MakeString(SIGN) ,"log(dEdx/Pion) RC" MakeString(NEGPOS) ,"row","#eta_{G}",-NoRows,50,-2.5,2.5); \
 __BOOK__VARS__dZdY(SIGN,NEGPOS) \
-__BOOK__VARS__PadTmbk(SIGN,NEGPOS)
+__BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
+  static Hists3D AvCurrent ## SIGN ("AvCurrent" MakeString(SIGN) ,"log(dEdx/Pion)"  MakeString(NEGPOS) ,"Sector*Channels","Average Current [#{mu}A]",numberOfSectors*NumberOfChannels,200,0.,1.0); \
+  static Hists3D Qcm ## SIGN ("Qcm" MakeString(SIGN) ,"log(dEdx/Pion)"  MakeString(NEGPOS) ,"Sector*Channels","Accumulated Charge [uC/cm]",numberOfSectors*NumberOfChannels,200,0.,1000);
 #if 0 /* skip Pad and Tbk */
   static Hists3D nPad3 ## SIGN ("nPad3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"row","npad",-NoRows,18,0.5,18.5); \
   static Hists3D nTbk3 ## SIGN ("nTbk3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"row","ntimebuckets",-NoRows,35,2.5,37.5);
@@ -1375,10 +1375,6 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	      PressureT[sCharge]->Fill(rowS, pressT, FdEdx[k].F.dEdxN);
 	    }
 	  }
-	  Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].dEdxN;
-	  Qcm.Fill(cs,FdEdx[k].Qcm,Vars);
-	  Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].dEdxN;
-	  AvCurrent.Fill(cs,FdEdx[k].Crow,Vars);
 	}
 	Double_t vars[2] = {tpcTime,FdEdx[k].C[ StTpcdEdxCorrection::ktpcTime].dEdxN};
 	if (Time)    Time->Fill(vars);
@@ -1425,8 +1421,12 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)
 	Pressure ## SIGN.Fill(rowS,press,Vars); \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcGasTemperature].dEdxN;   \
 	Temperature ## SIGN.Fill(rowS,temp,Vars); \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].dEdxN; \
+	Qcm ## SIGN.Fill(cs,FdEdx[k].Qcm,Vars);\
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].dEdxN;\
+	AvCurrent ## SIGN.Fill(cs,FdEdx[k].Crow,Vars);\
 __FILL__VARS__dZdY(SIGN) \
-__FILL__VARS__PadTmbk(SIGN) 
+__FILL__VARS__PadTmbk(SIGN)
 #if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
 	__FILL__VARS__();
 #else /* ! __NEGATIVE_AND_POSITIVE__ */

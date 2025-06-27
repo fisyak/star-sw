@@ -341,7 +341,7 @@ Int_t StBFChain::Instantiate()
 	  TString flavors = "ofl"; // default flavor for offline
 
 	  // TFG specific Db tag
-	  if (GetOption("TFGDbTag")) flavors += "+TFG";
+	  if (GetOption("TFGDbOpt")) flavors += "+TFG";
 	  // fixed target flavor
 	  if (GetOption("FXT")) flavors.Prepend("FXT+");
 
@@ -431,7 +431,7 @@ Int_t StBFChain::Instantiate()
     // need to take place before 'maker' is created.
     if (! mk) {
       if (maker == "StMuDstMaker" && GetOption("RMuDst")) {
-	mk = new StMuDstMaker(0,0,".",fInFile.Data(),"st:MuDst.root",1e9);
+	mk = new StMuDstMaker(0,0,"",fInFile.Data(),"st:MuDst.root",1e9);
 	if (GetOption("RMuDst")) 
 	  NoMakersWithInput++;
       } else if (maker == "StPicoDstMaker") {
@@ -466,7 +466,6 @@ Int_t StBFChain::Instantiate()
       }
     }
     
-    if (maker == "StTpcDbMaker" && GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
     if (maker == "StDAQMaker") {
       if (GetOption("adcOnly")) mk->SetAttr("adcOnly",kTRUE);
       NoMakersWithInput++;
@@ -892,6 +891,8 @@ Int_t StBFChain::Instantiate()
     if (GetOption("Cosmics") && (maker == "StTpcHitMaker" || maker == "StTpcRTSHitMaker")) mk->SetAttr("Cosmics"    ,kTRUE);
     
     if (maker == "StTpcDbMaker"){
+      if ( GetOption("noFieldFlip")) mk->SetAttr("noFieldFlip"    ,kTRUE);
+      if ( GetOption("laserIT"))  mk->SetAttr("laserIT"    ,kTRUE);
       if ( GetOption("Simu") && ! GetOption("NoSimuDb")) mk->SetAttr("Simu",kTRUE);
       if ( GetOption("useLDV")    ) mk->SetAttr("useLDV",kTRUE) ;// uses laserDV database
       if ( GetOption("useCDV")    ) mk->SetAttr("useCDV",kTRUE) ;// uses ofl database
@@ -2196,7 +2197,7 @@ void StBFChain::SetDbOptions(StMaker *mk){
 				 0};
     LOG_INFO << "TFG version for TPC alignment parameters" << endm;
     for (Int_t i = 0; TFGTables[i]; i++) {
-      LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endm; 
+      LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable sim+ofl" << endm; 
       mk->SetFlavor("TFG",TFGTables[i]);
     }
   }

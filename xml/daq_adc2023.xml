@@ -16,7 +16,7 @@
 #    starver TFG23a
      set evtsFile = $INPUTFILE0;
      set f        = 1
-     set l        = 100; #20000
+     set l        = 20000
   echo "${evtsFile}"
  if (! -r ${evtsFile}) exit 1;
   set evtsFileB = `basename ${evtsFile}`
@@ -38,7 +38,8 @@
 #  echo "cp ${evtsFile} ${evtsFileB}"
 #  cp ${evtsFile} ${evtsFileB}
 #   set chain = P2019a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,McTpcAna
-   set chain = P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,NoHistos,noTags,noRunco,-fcs,-fcsDb,-fcsDat,-fcsWFF,-fcsCluster,-fcsPoint,NoTpxAfterBurner
+#   set chain = P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,NoHistos,noTags,noRunco,-fcs,-fcsDb,-fcsDat,-fcsWFF,-fcsCluster,-fcsPoint,NoTpxAfterBurner
+   set chain = P2023a,corrZ,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,NoHistos,noTags,noRunco,-fcs,-fcsDb,-fcsDat,-fcsWFF,-fcsCluster,-fcsPoint,NoTpxAfterBurner
    echo ${SUBMITTINGDIRECTORY} | grep TpxRaw
    if (! $? ) set chain = ${chain},TpxRaw,TpxClu;
    echo ${SUBMITTINGDIRECTORY} | grep TPC23
@@ -84,7 +85,9 @@
 -->
 <!-- 2023AuAu200 -->
 <!-- <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/208/*/st_physics_adc*.daq'" /> -->
-<input URL="command:daqList.pl '/hlt/cephfs/daq/2023/208/24208001/st_physics_adc*4.daq'" />
+<!-- <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/208/24208001/st_physics_adc*4.daq'" /> -->
+<!-- <input URL="command:daqList.pl '/hlt/cephfs/daq/2023/211/24211048/st_physics_adc_*.daq'" /> -->
+<input URL="command:daqList.pl '/hlt/cephfs/daq/2023/*/*/st_physics_adc_*.daq'" />
    <ResourceUsage>
       <Priority>99</Priority>
     </ResourceUsage>

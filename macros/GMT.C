@@ -6,6 +6,14 @@ root.exe -q -b 'Chain.C+("*/*/*MuDst.root")' 'GMT.C(tChain)' >& GMT.log &
     cd -
   end
   root.exe MdYZ.root fit2D.C+
+foreach d (`ls -1d ???`) 
+    if (-r ${d}/MdYZ.root) continue;
+    cd ${d}
+ln -s ~/macros/.sl* .
+root.exe -q -b 'Chain.C+("*/*MuDst.root")' 'GMT.C(tChain)' >& GMT.log &
+    cd -
+  end
+  
 #endif
 #include "TFile.h"
 #include "TChain.h"

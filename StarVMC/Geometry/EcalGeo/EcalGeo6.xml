@@ -30,7 +30,8 @@
         </CDE>
         
         <Content  >
-            EAGA,EALP,ECAL,ECHC,ECVO,ECGH,EFLP,EHMS,ELED,EMGT,EMOD,EPER,EPSB,ERAD,ERCM,ERSM,ESHM,ESEC,ESCI,ESPL,ESSP,EMSS,ETAR,EXSG,EXPS,EFLS,EBLS
+<!--        EAGA,EALP,ECAL,ECHC,ECVO,ECGH,EFLP,EHMS,ELED,EMGT,EMOD,EPER,EPSB,ERAD,ERCM,ERSM,ESHM,ESEC,ESCI,ESPL,ESSP,EMSS,ETAR,EXSG,EXPS,EFLS,EBLS -->
+            EAGA,EALP,ECAL,     ECVO,     EFLP,EHMS,ELED,EMGT,EMOD,EPER,     ERAD,     ERSM,ESHM,ESEC,ESCI,ESPL,ESSP,EMSS,ETAR,EXSG,EXPS,EFLS,EBLS
         </Content>
                        
         <Structure name="EMCG"  >
@@ -615,14 +616,14 @@
                 <Create block="EMSS"  />
                 <Placement konly="'MANY'" block="EMSS"  >
                 </Placement>
-                
+<!--                
                 curr  = emcs_zorg  
                 curcl = emcs_zend 
                 <Create block="ECGH"  />
                 <Placement konly="'ONLY'" block="ECGH"  >
                     <Rotation alphaz="90"  />
                 </Placement>
-                
+-->                
             </If>
             
         </Block>
@@ -727,6 +728,7 @@
             </Print>
             
             zwidth = emcs_zend-emcs_zorg 
+<!--
             <Create block="ERCM"  />
             <Do var="i" from="1" to="2"  >
                 <Do var="j" from="1" to="5"  >
@@ -738,7 +740,6 @@
                     </Placement>
                     
                 </Do>
-                
             </Do>
             
             rth = emcs_zorg*tan_upp+dup + 2.5/2 
@@ -757,6 +758,7 @@
                 </Placement>
                 
             </Do>
+-->                
             
         </Block>
         
@@ -846,7 +848,7 @@
         </Block>
         
 
-
+<!--
         <Block name="ECGH" comment="is air gap between endcap half wheels"  >
             <Material name="ECAL_Air"  />
             <Attribute for="ECGH" seen="0" colo="7"  />
@@ -889,7 +891,7 @@
             <Shape type="TRAP" tl2="zwidth/2" alp1="0" alp2="0" h2="emcs_cover/2" h1="emcs_cover/2" bl1="secwid/2" tl1="secwid/2" bl2="zwidth/2" phi="0" dz="(curcl-curr)/2" thet="p"  />
         </Block>
         
-
+-->
 
 
         <Block name="ESSP" comment="is stainless steel back plate"  >
@@ -901,22 +903,22 @@
 
 
 
-
+<!--
         <Block name="EPSB" comment="IS A PROJECTILE STAINLESS STEEL BAR"  >
             <Material name="Ecal_Steel"  />
             <Attribute for="EPSB" seen="1" colo="6" fill="1"  />
             <Shape type="TRAP" tl2="2.5/2" alp1="0" alp2="0" h2="2.0/2" h1="2.0/2" bl1="2.5/2" tl1="2.5/2" bl2="2.5/2" phi="0" dz="(emcs_zend-emcs_zorg)/2" thet="p"  />
         </Block>
-        
+-->      
 
 
-
+<!--
         <Block name="ERCM" comment="is stainless steel tie rod in calorimeter sections"  >
             <Material name="Ecal_Steel"  />
             <Attribute for="ERSM" seen="1" colo="6" fill="1"  />
             <Shape type="TUBE" dz="zwidth/2" rmin="0" rmax="emcs_rtie"  />
         </Block>
-        
+-->        
 
 
         <Block name="ERSM" comment="is stainless steel tie rod in shower max"  >

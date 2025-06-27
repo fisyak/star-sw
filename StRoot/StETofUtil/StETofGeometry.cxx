@@ -687,7 +687,7 @@ StETofGeometry::reset()
         delete mETofModule[ i ];
         mETofModule[ i ] = 0;
     }
-    LOG_INFO << "StETofGeometry cleared up ...." << endm;
+    LOG_DEBUG << "StETofGeometry cleared up ...." << endm;
 
     mNValidModules = 0;
     mAlignmentParameters.clear();

@@ -194,9 +194,21 @@
 	   rmx="{+cave_Rmax(2),+cave_Rmax(2),+cave_Rmax(1),+cave_Rmax(1),+cave_Rmax(2),+cave_Rmax(2)}" 
 	   />
 
-    <!-- Create TPC reference system -->
-    <If expr="CVCF_tpcrefsys!=0"><Group name="TpcRefSys" /></If>
 
+    <!--
+	Setup reference systems for STAR detector
+    -->
+    <Group name="TpcRefSys" /> <!-- TPC and attached detectors -->
+
+    <Group name="MagRefSys" /> 
+    <Group name="CaveRefSys" />
+
+<!-- 
+    Remove E & W reference systems 
+
+    <Group name="WestRefSys" />
+    <Group name="EastRefSys" />
+-->
 
 
     CDIM_Rmax = cave_Rmax(1) 
@@ -212,12 +224,12 @@
     D3      = CDIM_Dceiling-wall_dy
     wall_yy = D3 
 
-    <Create    block="WALL"  /> <!-- CAVE Floor -->
-    <Placement block="WALL" y="wall_yy" />
+    <Create    block="WALL"  />
+    <Placement block="WALL" group="CaveRefSys" y="wall_yy" /> <!--  WALL 1 -->
 
     wall_dy = (D1-CDIM_Dfloor)/2
     <Create    block="WALL"  /> 
-    <Placement block="WALL" y="-cave_Rmax(1)+wall_dy" />
+    <Placement block="WALL" group="CaveRefSys" y="-cave_Rmax(1)+wall_dy" />  <!--  WAL1 2 -->
 
 
     D3 = CDIM_Dceiling - CDIM_ThickCeil 
@@ -227,30 +239,30 @@
     wall_yy = (D3 - CDIM_Dfloor)/2  
     wall_dz = cave_dz(1) - 244.8; <!-- complicated sourth wall -->
     <Create block="WALL"  /> 
-    <Placement y="wall_yy" x="wall_xx" block="WALL"  />
+    <Placement y="wall_yy" x="wall_xx" block="WALL" group="CaveRefSys" />   <!--  WAL2 3 -->
     wall_dx = 61.2/2
     wall_dz = 244.8/2
     XX = wall_xx + 146.9 + 68 *2.54 / 2 - wall_dx
     YY = wall_yy
     ZZ = -cave_dz(1) +  wall_dz
     <Create block="WALL"  /> 
-    <Placement y="YY" x="XX" z="ZZ"  block="WALL"  />
-    <Placement y="YY" x="XX" z="-ZZ"  block="WALL"  />
+    <Placement y="YY" x="XX" z="ZZ"  block="WALL" group="CaveRefSys" />    <!--  WAL3 4 -->
+    <Placement y="YY" x="XX" z="-ZZ"  block="WALL" group="CaveRefSys" />   <!--  WAL3 5 -->
 
     wall_dx = 146.9/2
     wall_dz = 62/2
     ZZ = -cave_dz(1) + 244.8 + 123.9 + wall_dz
     XX = -CDIM_Dnorth + 68 *2.54 + wall_dx
     <Create block="WALL"  /> 
-    <Placement y="YY" x="XX" z="ZZ"  block="WALL"  />
+    <Placement y="YY" x="XX" z="ZZ"  block="WALL" group="CaveRefSys" />   <!--  WAL4 6 -->
 
     wall_dz = (244.8-122.4)/2
     wall_dx = 62/2
     ZZ = -cave_dz(1) + 122.4 + wall_dz
     XX = -CDIM_Dnorth + wall_dx
     <Create block="WALL"  /> 
-    <Placement y="YY" x="XX" z="ZZ"  block="WALL"  />
-    <Placement y="YY" x="XX" z="-ZZ"  block="WALL"  />
+    <Placement y="YY" x="XX" z="ZZ"  block="WALL" group="CaveRefSys" />   <!--  WAL5 7 -->
+    <Placement y="YY" x="XX" z="-ZZ"  block="WALL" group="CaveRefSys" />  <!--  WAL5 8 -->
            <!-- end of complicated waill -->
     wall_zz = (cave_dz(2) + cave_dz(1))/2 
     wall_dz = (cave_dz(2) - cave_dz(1))/2 
@@ -261,8 +273,8 @@
     D2 = wall_yy - wall_dy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" z="wall_zz"  block="WALL"  />                
-    <Placement y="wall_yy" z="-wall_zz" block="WALL"  />
+    <Placement y="wall_yy" z="wall_zz"  block="WALL" group="CaveRefSys"  />  <!--  WAL6  9 -->              
+    <Placement y="wall_yy" z="-wall_zz" block="WALL" group="CaveRefSys"  />  <!--  WAL6 10 -->
 
                 
     wall_dy = (D1 - TDIM_Dfloor)/2 
@@ -270,8 +282,8 @@
     D3 = - (wall_yy - wall_dy) 
 
     <Create block="WALL"  />
-    <Placement y="-wall_yy" z="wall_zz" block="WALL"  />
-    <Placement y="-wall_yy" z="-wall_zz" block="WALL"  />
+    <Placement y="-wall_yy" z="wall_zz" block="WALL" group="CaveRefSys"  />  <!--  WAL7 11 -->
+    <Placement y="-wall_yy" z="-wall_zz" block="WALL" group="CaveRefSys"  /> <!--  WAL7 12 -->
 
     
     wall_dy = (D2 - D3)/2 
@@ -280,10 +292,10 @@
     wall_xx = (TDIM_Dnorth + TDIM_Dsouth)/2 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="-wall_zz" block="WALL"  />
-    <Placement y="wall_yy" x="-wall_xx" z="wall_zz" block="WALL"  />
-    <Placement y="wall_yy" x="-wall_xx" z="-wall_zz" block="WALL"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" group="CaveRefSys" />  <!--  WAL8 13 -->
+    <Placement y="wall_yy" x="wall_xx" z="-wall_zz" block="WALL" group="CaveRefSys" /> <!--  WAL8 14 -->
+    <Placement y="wall_yy" x="-wall_xx" z="wall_zz" block="WALL" group="CaveRefSys" /> <!--  WAL8 15 overlap with 20 -->
+    <Placement y="wall_yy" x="-wall_xx" z="-wall_zz" block="WALL" group="CaveRefSys" /><!--  WAL8 16 overlap with 18 -->
 
                 
     wall_dx = 0.5 * shld_xwidth(1) 
@@ -294,7 +306,7 @@
     wall_xx = +tdim_dsouth - wall_dx 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys" /> <!--  WAL9 17 -->
 
                 
     wall_dx = 0.5 * shld_xwidth(2) 
@@ -302,11 +314,12 @@
     wall_dz = 0.5 * shld_zwidth(2) 
     wall_zz = -220.0 *2.54 - wall_dz - cdim_dz 
     wall_yy = -tdim_dfloor + wall_dy 
-    wall_xx = -tdim_dnorth + wall_dx 
+<!--    wall_xx = -tdim_dnorth + wall_dx  -->
+    wall_xx = -(TDIM_Dnorth + TDIM_Dsouth)/2  + (TDIM_Dnorth - TDIM_Dsouth)/2 + wall_dx 
 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WAL0 18 -->
 
                 
     wall_dx = 0.5 * shld_xwidth(3) 
@@ -316,7 +329,7 @@
     wall_yy = -tdim_dfloor + wall_dy 
     wall_xx = +tdim_dsouth - wall_dx 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WALa 19 -->
 
                 
     wall_dx = 0.5 * shld_xwidth(4) 
@@ -324,10 +337,11 @@
     wall_dz = 0.5 * shld_zwidth(4) 
     wall_zz = +512.3 *2.54 + 144.25 *2.54 - 236.0 *2.54 + wall_dz 
     wall_yy = -tdim_dfloor + wall_dy 
-    wall_xx = -tdim_dnorth + wall_dx 
+<!--    wall_xx = -tdim_dnorth + wall_dx  -->
+    wall_xx = -(TDIM_Dnorth + TDIM_Dsouth)/2  + (TDIM_Dnorth - TDIM_Dsouth)/2 + wall_dx 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WALb 20 -->
 
 
     
@@ -339,7 +353,7 @@
     wall_yy = -tdim_dfloor + wall_dy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WALc 21 -->
 
                 
     wall_dz = 0.5 * 45.0 *2.54 
@@ -350,7 +364,7 @@
     wall_yy = -tdim_dfloor + 65.0 *2.54 + wall_dy 
 
     <Create block="SHLD"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="SHLD" in="CAVE" />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="SHLD" in="CAVE" /> 
 
                 
     wall_dx = 0.5 * ( 60.5 + 77.5 ) *2.54 
@@ -361,7 +375,7 @@
     wall_yy = -tdim_dfloor + wall_dy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys" /> <!--  WALd 22 -->
 
                 
     wall_dz = 0.5 * 45.0 *2.54 
@@ -394,7 +408,7 @@
     wall_yy = wall_yy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WALe 23 -->
 
                 
     wall_dz = 0.5 * 45.0 *2.54                             ! exact 
@@ -416,7 +430,7 @@
     wall_yy = wall_yy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys" /> <!--  WALf 24 -->
 
                 
 
@@ -428,7 +442,7 @@
     wall_yy = -tdim_dfloor + 25.0 *2.54 + wall_dy          ! very good approx 
 
     <Create block="SHLD"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="SHLD" in="CAVE" />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="SHLD" in="CAVE" />  <!--  WALg 25 -->
 
                 
     wall_dz = 0.5 * (81.0-45.0) *2.54 
@@ -439,7 +453,7 @@
     wall_yy = wall_yy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE"  />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys"  /> <!--  WALg 25 -->
 
                 
     wall_dz = 0.5 * 45.0 *2.54                             ! exact 
@@ -461,7 +475,7 @@
     wall_yy = wall_yy 
 
     <Create block="WALL"  />
-    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" />
+    <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="WALL" in="CAVE" group="CaveRefSys" /> <!--  WALh 26 -->
 
                 
     D1 = 415  ! ExtMuDTRadius 
@@ -498,7 +512,7 @@
 	wall_xx = 600 + 300*(j-1)  
 	<Do var="k" from="1" to="8"  >
 	  wall_zz = -260 + 65*(k-1) 
-	  <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="CRAT" in="CAVE" />
+	  <Placement y="wall_yy" x="wall_xx" z="wall_zz" block="CRAT" in="CAVE" group="CaveRefSys" />
 	</Do>
       </Do>      
     </Do>
@@ -508,16 +522,13 @@
       wall_xx = (2*i-3)*450 
       <Do var="j" from="1" to="2"  >
 	wall_yy = (2*j-3)*100 
-	<Placement y="wall_yy" x="wall_xx" block="MGWP" in="CAVE" />
+	<Placement y="wall_yy" x="wall_xx" block="MGWP" in="CAVE" group="CaveRefSys" />
       </Do>      
     </Do>
   </Volume>
 
         <Volume name="WALL" comment="is the floor (or bottom) of the cave"  >
-<!--            <Mixture name="Concrete" dens="2.5"  >
-                <Component name="Si" a="28.08" z="14" w="1"  />
-                <Component name="O2" a="16" z="8" w="2"  />
-            </Mixture> -->
+<!-- have been defined above 
 <Mixture name="Concrete" dens="2.35"  >
 <Component name="Hydrogen " a="1.00794" z="1" w="0.006"  />
 <Component name="Carbon " a="12.011" z="6" w="0.03"  />
@@ -529,9 +540,9 @@
 <Component name="Calcium " a="40.078" z="20" w="0.2"  />
 <Component name="Iron " a="55.85" z="26" w="0.014"  />
 </Mixture>
-            
+-->            
             <Medium name="Concrete"  />
-            <Attribute for="WALL" seen="1" colo="1"  />
+            <Attribute for="WALL" seen="0" colo="3"  />
             <Shape type="BOX" dz="wall_dz" dx="wall_dx" dy="wall_dy"  />
         </Volume>
         
@@ -545,7 +556,7 @@
 
         </Volume>
         
-        <Volume name="HOLE" comment="is the floor (or bottom) of the cave"  >
+        <Volume name="HOLE" comment="the cave roof"  >
             <Material name="Air"  />
             <Material name="Air" isvol="0"  />
             <Medium name="Air"  />
@@ -588,8 +599,6 @@
             <Attribute for="MGWT" seen="0" colo="6"  />
             <Shape type="TUBE" dz="310" rmin="0" rmax="10"  />
         </Volume>
-
-  
 
 </Module>
 </Document>

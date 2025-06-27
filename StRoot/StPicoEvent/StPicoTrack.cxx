@@ -121,9 +121,10 @@ void StPicoTrack::Print(const Char_t* option __attribute__((unused)) ) const {
            << "gMom: " << gMom().X() << " " << gMom().Y() << " " << gMom().Z() << "\n"
            << "origin: " << origin().X() << " " << origin().Y() << " " << origin().Z() << "\n"
 #endif /* __TFG__VERSION__ */
-           << "nHitsFit: " << nHitsFit()
-           << " nHitsdEdx: " << nHitsDedx() << "\t"
-           << "nSigma pi/K/p/e: " << nSigmaPion()   << "/" << nSigmaKaon() << "/"
+	   << "q: " << charge()
+           << " nHitsFit: " << nHitsFit()
+           << " nHitsdEdx: " << nHitsDedx() 
+           << "\n\tnSigma pi/K/p/e: " << nSigmaPion()   << "/" << nSigmaKaon() << "/"
 #if defined (__TFG__VERSION__)
            << nSigmaProton() << "/" << nSigmaElectron() << "\t"
 	   << "Hit index in BEMC/BTof/MTD/ETof: " << mBEmcPidTraitsIndex << "/"

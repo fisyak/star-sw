@@ -390,7 +390,8 @@ void StXRefManager::AddColl (const StStrArray *sarr)
      p = (const TObject**)fObjTab.GET(u);
      if (*p) 	{// Used already		
        if (*p == to)			continue;
-       assert(to->IsA() == (*p)->IsA()); 
+       Error("StXRefManager::AddColl","assert(to->IsA() == (*p)->IsA()"); 
+       continue;
      }
      *p = to;
    }

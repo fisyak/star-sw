@@ -84,6 +84,7 @@
 #include <Stiostream.h>
 #include <Rtypes.h>
 #if defined (__ROOT__)
+#define __RotateMagField__
 #include "TH2.h"
 #include "TGeoMatrix.h"
 #if ROOT_VERSION_CODE >= 335360 /* ROOT_VERSION(5,30,0) */
@@ -115,7 +116,7 @@ class StarMagField
   virtual void    ReadField ( ) ;
   static StarMagField *fgInstance;
 #if defined (__ROOT__)
-#ifdef __RotaateMagField__
+#ifdef __RotateMagField__
   TGeoRotation fStarMagFieldRotation;
 #endif
   TH2F *fBzdZCorrection; // correction due to endcap calomiter
@@ -191,7 +192,7 @@ class StarMagField
   virtual Bool_t  IsLocked()   {return fLock;}
   virtual void    Print(Option_t* opt="") const;
 #if defined(__ROOT__)
-#ifdef __RotaateMagField__
+#ifdef __RotateMagField__
   void  SetStarMagFieldRotation(TGeoRotation &rot);
   void  SetStarMagFieldRotation(Double_t *rot);
   const TGeoRotation &StarMagFieldRotation() {return *&fStarMagFieldRotation;}

@@ -786,7 +786,10 @@ Int_t StMaker::Finish()
    Int_t run = GetRunNumber();
    if (run>-1) FinishRun(run);   
 
-   TIter next(GetMakeList(),kIterBackward);
+   //   TIter next(GetMakeList(),kIterBackward);
+   TList *tl = GetMakeList();
+   if (! tl) return kStOK;
+   TIter next(GetMakeList());
    StMaker *maker;
    Double_t totalCpuTime = 0;
    Double_t totalRealTime = 0;   
@@ -803,8 +806,7 @@ Int_t StMaker::Finish()
    next.Reset();
    Int_t fst=1;
    while ((maker = (StMaker*)next())) {
- #ifdef STAR_LOGGER  
-      TURN_LOGGER(maker);
+       TURN_LOGGER(maker);
 
       if (fst) {
         fst=0;
@@ -812,7 +814,12 @@ Int_t StMaker::Finish()
             Form("=================================================================================") << endm;
         LOG_QA <<
             Form("QAInfo:Chain %20s::%-20s Ast =%6.2f        Cpu =%6.2f "
-                   ,ClassName(),GetName(),totalRealTime,totalCpuTime) << endm;
+		 ,ClassName(),GetName(),totalRealTime,totalCpuTime);
+	if (fgTopChain == this) {
+	  Int_t noeve = ((StChain *) fgTopChain)->GetNTotal();
+	  if (noeve > 0) {LOG_QA << Form("\tcpu/event = %6.2f", totalCpuTime/noeve);}
+	}
+	LOG_QA << endm;
       }
         LOG_QA <<
            Form("QAInfo:Maker %20s::%-20s Ast =%6.2f(%4.1f%%) Cpu =%6.2f(%4.1f%%) "
@@ -828,25 +835,6 @@ Int_t StMaker::Finish()
         if (fTallyMaker[j]) tail += Form(" %s=%d",ee[j],fTallyMaker[j]);}
       if (tail != "") LOG_QA << (const Char_t *) tail;// << endm;     
       LOG_QA << endm;
-#else
-     if (fst) {
-        fst=0;
-        Printf("=================================================================================\n");
-        Printf("QAInfo: Chain %20s::%-20s Ast =%6.2f        Cpu =%6.2f "
-               ,ClassName(),GetName(),totalRealTime,totalCpuTime);
-      }
-      printf("QAInfo: Maker %20s::%-20s Ast =%6.2f(%4.1f%%) Cpu =%6.2f(%4.1f%%) "
-             ,maker->ClassName(),maker->GetName()
-             ,maker->RealTime()
-             ,100*maker->RealTime()/totalRealTime
-             ,maker->CpuTime()
-             ,100*maker->CpuTime()/totalCpuTime);
-
-      static const Char_t *ee[]={"nStOK","nStWarn","nStEOF","nStErr","nStFatal"};
-      for (Int_t j=0;j<=kStFatal;j++) {
-        if (fTallyMaker[j]) printf(" %s=%d",ee[j],fTallyMaker[j]);}
-      printf("\n");
-#endif      
    }
 
    next.Reset();

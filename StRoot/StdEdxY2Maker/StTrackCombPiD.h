@@ -164,7 +164,7 @@ class StBEmcStatus  : public StTrackPiD {
   Bool_t IsFailed()       const {return fPiD == 0;}
 };
 //________________________________________________________________________________
-struct Particle_t {
+struct Particle_t { // for positive particles
   Int_t pdg;
   const Char_t *name;
   Double_t mass;
@@ -244,7 +244,7 @@ class StTrackCombPiD : public TObject {
   const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
   const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
   const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus    *) fStatus[kBEmc ];} 
-  static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
+  static Particle_t &l2par(Int_t l) {return *&fgParticles[l];}
   static const KFVertex &BestVX() {return fgBestVx;}
   static void  SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
   static void  SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
@@ -256,12 +256,13 @@ class StTrackCombPiD : public TObject {
   static Int_t PiDCorrection() {return fgUsePiDCorrection;}
   static void  ResetBestVx();
   static Int_t Debug() {return fgDebug;}
+  static void  SetDebug(Int_t k = 1) {fgDebug = k;}
   static const Char_t *fgPiDStatusNames[kTotal+1];
  private:
   static Int_t       fgDebug;
   static Double_t    fgSigmaCut;
   static Int_t       fgl2p[KPidAllParticles];
-  static Particle_t  fgParticles[34];
+  static Particle_t  fgParticles[KPidAllParticles];
   std::vector<Int_t> fTPCPDG;
   std::vector<Int_t> fdNdxPDG;
   std::vector<Int_t> fTofPDG;

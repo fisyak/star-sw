@@ -1,0 +1,179 @@
+#if ($OS == "Linux")  then 
+#	alias dir 'ls -alFh --color=tty' 
+#else    
+	alias dir  'ls -alFh --color=never'
+	alias dirc 'ls -alFh --color=auto'
+        alias grep 'grep --color=auto'
+#endif
+alias h 'history'
+#alias cd 	'cd \!*; echo "(wd now: `pwd`)"'
+alias up	'cd ..'
+alias copy 	'cp -iv'
+alias Xemacs "xemacs &"
+alias h			'history \!* | more'
+alias la		/bin/ls -aCF
+alias ll		/bin/ls -laC
+alias ldir 		/bin/ls -ld
+alias dy                'cd | cd '
+alias cop                cp
+alias del                rm
+alias ren                mv
+alias cls		 clear
+alias pwd		'echo $cwd'
+alias ty                 more
+alias sho		'(set echo;set; alias; setenv; limit; umask; ps -ux)|& more;jobs;set noecho'
+#
+alias vt300 "set term = vt300"
+#		X terminal
+switch (`uname`)
+case "Linux":
+	alias psf "ps ux"
+	breaksw
+default:
+	alias psf " ps -ef | grep $USER  | grep -v 'ps -ef'"
+endsw
+alias psfc "psf | grep -v condor"
+alias decdb "/usr/bin/decladebug"
+#alias newrootversion "tar cvf - `find . -type l` | ( cd ../2.23.11 ; tar xvf - ); tar cvf - `find . -name "*Xpm*"` | ( cd ../2.23.11 ; tar xvf - );"
+alias starver "source $GROUP_DIR/.starver"
+#alias man /usr/bin/man
+alias debug  /usr/bin/X11/dxladebug
+#alias cmsdev "source $CMS_PATH/utils/cmsdev"
+#alias cmsnew "source $CMS_PATH/utils/cmsnew"
+#alias cmspro "source $CMS_PATH/utils/cmspro"
+#alias cmsold "source $CMS_PATH/utils/cmsold"
+#alias cms111 "source $CMS_PATH/utils/cms111"
+#alias cms112 "source $CMS_PATH/utils/cms112"
+#alias d0dev  "source $D0GSTAR_DIR/init/d0dev"
+#alias d0new  "source $D0GSTAR_DIR/init/d0new"
+#alias d0pro  "source $D0GSTAR_DIR/init/d0pro"
+#alias imake  "$CERN_ROOT/mgr/imake -I$CERN_ROOT/src/config"
+#alias CERNLIB "$CVSCOSRC/config/imake_boot;  gmake tree; make all "
+#alias cvstar "cvs -d fisyak@rsgi00.rhic.bnl.gov:/afs/rhic/star/CVSREP"
+#alias lscvs "$HOME/bin/lscvs !*"
+#alias quota 'fs listquota'
+#alias gmake make
+#alias  cvsyf "cvs -z 9 -d fisyak@reines.ucdavis.edu:/afs/cern.ch/cms/cmsim/repository"
+#alias  cvsd0 "cvs -z 9 -d cvsuser@d0chb.fnal.gov:/cvsroot/d0cvs"
+#alias  cvsgnu "cvs -z 9 -d :pserver:anoncvs@anoncvs.cygnus.com:/cvs/gcc"
+#alias print    'lpr -Php5si1_paper'
+#alias pritrans 'lpr -Php5si1_trans'
+#alias prilarge 'lpr -Php5si1_large'
+#alias pricolp  'lpr -Pstarcol_paper'
+#alias pritras  'lpr -Pstarcol_trans'
+#alias star 'setenv PATH `dropit gcc-alt`; setenv LD_LIBRARY_PATH  `dropit -p $LD_LIBRARY_PATH gcc-alt`; setenv GROUP_DIR /afs/rhic/star/group; source $GROUP_DIR/group_env.csh'
+#alias atlas 'source ~/.atlas'
+#alias SetupRoot 'source /afs/usatlas.bnl.gov/scripts/ROOT_env.csh'
+#alias bu "busers all | awk '{if ( "\$4" > 0 ) print}' "
+#alias art "busers all | grep -e '\W[1-9]' -e 'USER'"
+#alias Cons 'cons NoSalt=yes NoKeep=yes -noR'
+#setenv Test  /afs/usatlas.bnl.gov/users/fisyak/public/offline/TestRelease/run
+#alias cdof     'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline'
+#alias cdAtlsim 'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline/Applications/AtlsimMain/cmt'
+#alias cdRootK 'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline/Database/AthenaRoot/RootKernel/cmt'
+#alias cdMG3 'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline/MuonSpectrometer/MuonG3Model/cmt'
+#alias cdAthena 'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline/Applications/AtlsimAthena/cmt'
+#alias cdMxK    'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline/MuonSpectrometer/Moore/MooxKal/cmt'
+#alias cdTest   'cd /afs/usatlas.bnl.gov/users/fisyak/public/offline/TestRelease/run'
+#alias get_file_list '$STAR/scripts/get_file_list.pl -keys path,filename -cond storage=NFS,simulation=1 -limit 0'
+#alias get_file_list "$STAR/scripts/get_file_list.pl -keys path,filename -cond 'storage=NFS,filetype=daq_reco_MuDst,production=P02gc' -limit 0"
+#get_file_list get_file_list.pl -keys 'filename' -cond' production=P03ih,trgsetupname=dAuMinBias,filetype=daq_reco_MuDst,storage=NFS' -limit 0
+#get_file_list  get_file_list.pl -distinct -keys 'path' -cond 'production=P03ih,trgsetupname=dAuMinBias,filetype=daq_reco_MuDst,storage=NFS'
+#alias mysql_db1 'mysql -h db1.usatlas.bnl.gov -u atlas -pinsider Production -e'
+#alias mystar 'source ~/bin/use_mystar.csh'
+#alias stardef 'source ~/bin/use_star_def.csh; starver dev'
+alias setup   'source $GROUP_DIR/setup'
+#alias disp "setenv DISPLAY bergman.star.bnl.gov:0.0; source $HOME/.aliases"
+#alias dispa "setenv DISPLAY autry.star.bnl.gov:0.0; source $HOME/.aliases"
+#alias dispw "setenv DISPLAY welles.star.bnl.gov:0.0; source $HOME/.aliases"
+#alias dispt "setenv DISPLAY startpc5.star.bnl.gov:0.0; source $HOME/.aliases"
+#alias dispy "setenv DISPLAY yuri.star.bnl.gov:0.0; source $HOME/.aliases"
+#alias dispx "setenv DISPLAY ool-18bb589e.dyn.optonline.net:0.0; source $HOME/.aliases"
+#alias dispc "setenv DISPLAY 128.141.39.42:0.0; source $HOME/.aliases"
+#alias dispc "setenv DISPLAY pb-d-128-141-39-37.cern.ch:0.0; source $HOME/.aliases"
+if ( $?DISPLAY == 0) exit
+set name=`uname -n`
+#if ($1) then
+#  set name=`echo $name |  awk -F\. '{print $1}'_${1}		
+#endif	
+#alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg black -fg white  -sb -sl 10000 -geometry 132x60 &"
+#alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg black -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
+alias XtermB "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg black -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
+alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
+#alias Xterm "xterm -T "$name" -n "$name" -display $DISPLAY -fn fixed  -bg blue -fg white   -sl 10000 -sb +si -sk -geometry 132x60 -bd red -bw 2 &"
+alias xw "   xterm -T "$name" -n "$name" -display $DISPLAY -fn 10x20  -bg black -fg white -cr red -ms blue -sb -sl 10000 -cn -geometry 132x48 &"
+alias sl STAR_LEVELS
+#alias    Condor 'star-submit -policy condorRCRSPolicy'
+alias    Condor 'star-submit -policy bnl_condor_crs'
+alias dev2 'starver .DEV2'
+alias FPE_ON 'setenv STARFPE YES'
+alias FPE_OFF 'setenv STARFPE NO'
+#alias getSvtRuns "get_file_list.pl -cond  'filetype=online_daq,storage=HPSS,runnumber>=6020020,tpc=1,svt=1,ssd=1,trgsetupname~cu,filename~physics'  -keys 'runnumber'"
+alias rssh 'ssh  -o TCPKeepAlive=yes -Y ssh.sdcc.bnl.gov'
+alias assh 'ssh  -o TCPKeepAlive=yes -Y atlasgw.bnl.gov'
+alias assh_v3 'ssh  -o TCPKeepAlive=yes -Y spar0108.usatlas.bnl.gov'
+alias cvmfs01ssh 'ssh  -o TCPKeepAlive=yes -Y cvmfswrite01.sdcc.bnl.gov'
+alias cvmfs02ssh 'ssh  -o TCPKeepAlive=yes -Y cvmfswrite02.sdcc.bnl.gov'
+#alias ldd  'otool -L'
+alias nxsh 'ssh -o TCPKeepAlive=yes -Y -L 7026:nx01.rcf.bnl.gov:22 -l fisyak ssh01.sdcc.bnl.gov'
+alias nxsh4 'ssh -o TCPKeepAlive=yes -Y -L 7025:nx02.rcf.bnl.gov:22 -l fisyak ssh01.sdcc.bnl.gov'
+alias autry 'ssh  -o TCPKeepAlive=yes -Y autry.star.bnl.gov'
+alias nx01 'ssh -o TCPKeepAlive=yes -Y -L 7025:nx01.rcf.bnl.gov:22 -l fisyak ssh01.sdcc.bnl.gov'
+alias rgsi 'ssh -o TCPKeepAlive=yes -Y ikisel@lxi001.gsi.de'
+alias lxir039 'ssh -o TCPKeepAlive=yes -Y ikisel@lxir039.gsi.de'
+#alias lsf $STAR_PATH/scripts/star-submit
+#alias lsfA $STAR_PATH/scripts/star-submit
+#alias lsfA /gpfs01/star/pwg/fisyak/STAR/packages/scripts/star-submit
+alias  lsfB /star/nfs4/AFS/star/packages/scripts/sums-submit-beta
+#alias lsf /afs/rhic/star/users/starjobs/dev/star-submit
+#alias lsf $STAR/scripts/star-submit
+#alias lsfE $STAR_PATH/scripts/star-submit-beta -p bnl_condor_eval  
+if (-r /star/nfs4/AFS/star/packages/scripts/sums-submit-beta) then
+  alias  lsf /star/nfs4/AFS/star/packages/scripts/sums-submit-beta
+else
+  alias  lsf $STAR/scripts/star-submit
+endif
+alias lsfn $STAR/scripts/new/star-submit
+alias lsf45 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber45
+alias lsfafs lsf45
+alias lsf62 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber62
+alias lsf63 $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber63
+alias lsf6X $STAR/scripts/star-submit -p bnl_condor_online_CpuModelNumber6X
+#alias lsfnightly  $STAR/scripts/star-submit -p bnl_condor_nightlyTest
+alias lsfnightly  $STAR/scripts/star-submit -p bnl_condor_benchmark
+# Requirements   = Machine == "l416.l4.bnl.local"
+# alias lsf405 l405.l4.bnl.local
+#cppcheck --quiet --enable=all <dir_with_cpp_files>
+#alias get2011AuAu200RFF  "get_file_list.pl -keys path,filename -cond 'filetype=daq_reco_MuDst,filename~physics,magscale=ReversedFullField,production=P11id,trgname=AuAu200_production_2011,storage=NFS,' -limit 100"
+alias difw 'diff -aywbB --width=320'
+alias difw340 'diff -aywbB --width=340'
+alias difw360 'diff -aywbB --width=360'
+alias difw380 'diff -aywbB --width=380'
+alias difw420 'diff -aywbB --width=420'
+alias difw450 'diff -aywbB --width=450'
+alias zdifw 'zdiff -aywbB --width=320'
+alias zdifw340 'zdiff -aywbB --width=340'
+alias zdifw360 'zdiff -aywbB --width=360'
+alias zdifw380 'zdiff -aywbB --width=380'
+alias zdifw420 'zdiff -aywbB --width=420'
+alias zdifw450 'zdiff -aywbB --width=450'
+#alias vg-in-place /star/institutions/bnl/fisyak/valgrind-3.6.1/vg-in-place
+#alias condq 'condor_q -global -wide -submitter fisyak'
+alias condq 'condor_q -wide'
+alias condqq 'condor_q -wide -global -submitter fisyak -autoformat:jh ImageSize_RAW RemoteUserCpu Cmd'
+#alias condqq 'condor_q -wide -submitter fisyak -autoformat:jh ImageSize_RAW RemoteUserCpu Cmd'
+#alias condrm 'condor_q -wide -submitter fisyak -cputime -autoformat:j ImageSize_RAW RemoteUserCpu Cmd | awk \'{if ($2 > 4000000 && $3 > 0) print $1}\' | xargs condor_rm'
+#alias condhold_rm 'condor_rm \`condq | grep -w H | awk -F\. \'{printf(" %i",$1)}\'\`'
+#alias cmake cmake28
+#alias condrmH "condor_q -submitter fisyak | grep -w H | awk '{print $1}' | xargs condor_rm"
+alias cvsupdate "cvs update -dP | tee update.`date +%m%d%y`"
+alias condID  "condq -l | egrep '(Cmd = |ClusterId)'"
+alias domainname "hostname -d"
+#alias domainname "hostname -f"
+alias SetVersion source ~/bin/SetVersion.csh
+alias xe 'xemacs -title `hostname`&'
+alias RunXX 'cd ~/bin/; onl CURRENT | SortRun.pl | tee RunXXDefs.pm'
+alias xe 'xemacs -bg white'
+alias ec2npps 'echo -n -e \"\033]0; ec2hsf \007\"; ssh -i ~/hsfserver.pem -l ec2-user -A -o \'ForwardX11=yes\' 54.145.145.10\'
+alias ec2 ssh -i ~/hsfserver.pem -l ec2-user -o IPQoS=throughput -o TCPKeepAlive=yes -o ServerAliveInterval=3009 -o ServerAliveCountMax=299  -AX -Y 54.145.145.10
+alias module 'set _prompt="$prompt";set prompt="";eval `~/bin/modulecmd tcsh \!*`; set _exit=$status; set prompt="$_prompt";unset _prompt;; /usr/bin/test 0 = $_exit;'

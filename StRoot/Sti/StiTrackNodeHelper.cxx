@@ -30,7 +30,6 @@ static const double kMinCos = sqrt(1.-kMaxSin*kMaxSin);
 static const double DY=0.9,DZ=0.9,DEta=0.1,DPti=3,DTan=0.1;
 static const double MAXSTEP[]={0,DY,DZ,DEta,DPti,DTan};
 static const double ERROR_FACTOR = 2.;
-int StiTrackNodeHelper::_debug = 0;
 int StiTrackNodeHelper::mgCutStep=0;
 
 //______________________________________________________________________________
@@ -103,6 +102,8 @@ assert(!pNode || pNode->fitPars().hz());
   }
 
   if (!mIter) mTargetNode->mFlipFlop=0;
+  //  if (debug() & 8) mTargetNode->PrintpT("set");
+
 }
 //______________________________________________________________________________
 int StiTrackNodeHelper::propagatePars(const StiNodePars &parPars
@@ -369,7 +370,6 @@ int StiTrackNodeHelper::makeFit(int smooth)
     }
     mChi2 = chi2; if (mChi2>999) mChi2=999;
     ians = updateNode();
-    if (debug() & 8) { LOG_INFO << Form("%5d ",ians); StiKalmanTrackNode::PrintStep();}
     if (!ians) 	break;
     if (mTargetNode == mVertexNode)	return 15;
     mState = StiTrackNode::kTNReady;
@@ -499,7 +499,7 @@ int StiTrackNodeHelper::join()
   } else {
     assert(mChi2 <=0 || mChi2 >=myMaxChi2);
   }
-
+  //  if (debug()) mTargetNode->PrintpT("join");
   return 0;
 }
 //______________________________________________________________________________
@@ -684,6 +684,7 @@ mFitdPars.hz()=mTargetHz;///???????????????????????????
    mTargetNode->_state = mState;
    if (mHit && ((mChi2<1000) != (mTargetNode->getChi2()<1000))) mTargetNode->mFlipFlop++;
    if (mTargetNode!=mVertexNode) mTargetNode->setChi2(mChi2);
+   //   if (debug()) mTargetNode->PrintpT("save");
    return 0;
 }
 //______________________________________________________________________________
@@ -699,7 +700,7 @@ mFitdPars.hz()=mTargetHz;///???????????????????????????
 int StiTrackNodeHelper::propagateMCS()
 {  
   mMcs.reset();
-  if (!mDetector) 			return 0;
+  if (!mDetector) 		return 0;
   mMcs._ptinCorr =  0;
   if (fabs(mBestPars.ptin())<=1e-3)	return 0;
   double pt     = 1./(fabs(mBestPars.ptin())+1e-6);
@@ -784,6 +785,7 @@ assert(mMcs._cEE>=0);
 
   mMcs._ptinCorr = ::sqrt(e2)*dE/p2;
   if (fabs(mMcs._ptinCorr)>0.1) mMcs._ptinCorr = (dE<0)? -0.1:0.1;
+  if (debug()) mTargetNode->PrintpT("dE",pL1+pL2+pL3, relRadThickness,dE, TMath::Sqrt(e2) - m);
 
 
 
@@ -923,9 +925,6 @@ int StiTrackNodeHelper::updateNode()
     /* double chi2 = */ joinVtx(mHitPars,mHrr,mPredPars,mPredErrs,&mFitdPars,&mFitdErrs);
     mFitdPars.curv() = mTargetHz*mFitdPars.ptin();
     assert(chi2>900 || fabs(mChi2-chi2)<1e-10);
-    if (debug()) {
-      StiKalmanTrackNode::ResetComment(Form("Vertex                        "));
-    }
   } else 		{ //Normal Hit
     r00=mHrr.hYY+mPredErrs._cYY;
     r01=mHrr.hZY+mPredErrs._cZY;
@@ -1016,12 +1015,7 @@ if(ERRTEST) errTest(mPredPars,mPredErrs,mHit,mHrr,mFitdPars,mFitdErrs,mChi2);
     }  
   } //EndIf Not a primary	  
   if (mTargetNode && debug() & 8) {
-    if (mTargetNode->getDetector()) 
-      StiKalmanTrackNode::ResetComment(::Form("%40s ",mTargetNode->getDetector()->getName().c_str()));
-    else
-      StiKalmanTrackNode::ResetComment("Vx                            ");
-    StiKalmanTrackNode::comment += Form(" chi2 = %6.2f",mChi2);
-    mTargetNode->PrintpT("U");
+    mTargetNode->PrintpT("U ");
   }
   mState = StiTrackNode::kTNFitEnd;
   return 0; 

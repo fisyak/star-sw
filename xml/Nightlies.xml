@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<job name="Nightlies" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<job name="" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 <command>
 #  source ~/.tcshrc
 #  setenv STARFPE NO
@@ -14,7 +14,8 @@
     set file  = `echo $INPUTFILE0 | awk -F\: '{print $3}'`
     set l     = `echo $INPUTFILE0 | awk -F\: '{print $4}'`
     set ref   = `echo $INPUTFILE0 | awk -F\: '{print $5}'`
-  else
+#echo "$INPUTFILE0 = $$INPUTFILE0 ==> chain = $chain, dir = $dir, file = $file, l = $l, ref = $ref"
+  else  else
     exit 1;
   endif
   if (! -d $dir) mkdir -p $dir
@@ -29,9 +30,11 @@
   ln -s $ref $refFile; 
   if (-r $logFile) exit 0;
   setenv StarEndMakerShell
-  set exec = "root4star"
-  echo $chain | grep '\.RC\.'
-  if (! $?)  set exec = "root.exe"
+  set exec = "root.exe "
+  echo $file | grep 'fz.'
+  if (! $?)  set exec = "root4star"
+  which $exec
+  if ($?) exit;
   ${exec} -q -b -x 'bfc.C('$f','$l',"'$chain',Sti","'$file')' &gt;&amp; ${logFile}
 </command>
 <stdout URL="file:./sched$JOBID.log" />

@@ -16,8 +16,7 @@ class St_starMagOnlC : public TChair {
   UInt_t 	runNumber(Int_t i = 0) 	{return Struct(i)->runNumber;}
   UInt_t 	time(Int_t i = 0) 	{return Struct(i)->time;}
   Double_t 	current(Int_t i = 0) 	{return Struct(i)->current;}
-  //  Double_t      ScaleFactor(Int_t i = 0){return current()/(4500*(0.49827/0.497611));} // scale 9.98677423886647819e-01 Run 2020 11p5GeV K0s mass to PDG value 
-  Double_t      ScaleFactor(Int_t i = 0){return current()/4500.;};//11/26/21  (4500/(9.98071899596718826e-01));} // 12/03/20 scale Run 2020 11p5GeV K0s (pcmax(0.49827)/pcmax(0.497611)) to PDG value 
+  Double_t      ScaleFactor(Int_t i = 0);
   Double_t      getScaleFactor(UInt_t time=0) {return currentToScaleFactor(getMagnetCurrent(time));}
   Double_t      getMagnetCurrent(UInt_t time=0) {
     if (! instance()) return 0;
@@ -29,30 +28,10 @@ class St_starMagOnlC : public TChair {
 	  tempCurrent = getMagnetCurrentEntry(i);
     return tempCurrent;
   }
-  StMagnetPolarity           getMagneticField(UInt_t time=0) {
-    StMagnetPolarity value = eUnknownMField;
-    if (! instance()) return value;
-    Double_t scaleFactor = getScaleFactor(time);
-    if(scaleFactor == 1.0)	value = eFullMFieldPolA;
-    if(scaleFactor == 0.5)	value = eHalfMFieldPolA;
-    if(scaleFactor == 0.0)	value = eZeroMField;
-    if(scaleFactor == -0.5)	value = eHalfMFieldPolB;
-    if(scaleFactor == -1.0)	value = eFullMFieldPolB;
-    return value;
-  }
   UInt_t        getRunNumber() {return runNumber();}
   UInt_t        getTimeEntry(UInt_t i=0) {return time(i);}
   Double_t      getMagnetCurrentEntry(UInt_t i=0) {return current(i);}
-  static Double_t  currentToScaleFactor(Double_t current) {
-    Double_t value = -9999;
-    if (! instance()) return value;    
-    if     (current < -4450 && current > -4550)	value = -1.0;
-    else if(current < -2200 && current > -2300)	value = -0.5;
-    else if(current >   -50 && current <    50)	value =  0.0;
-    else if(current >  2200 && current <  2300)	value =  0.5;
-    else if(current >  4450 && current <  4550)	value =  1.0;
-    return value;
-  }
+  static Double_t  currentToScaleFactor(Double_t current);
  protected:
   St_starMagOnlC(St_starMagOnl *table=0) : TChair(table) {}
   virtual ~St_starMagOnlC() {fgInstance = 0;}

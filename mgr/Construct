@@ -27,6 +27,8 @@ if ( defined( $ARG{LinksCheck} ) ) {
 }
 if ($ARG{EXTRA_CXXFLAGS} eq "") {$ARG{EXTRA_CXXFLAGS} = "-Werror"; print "Force use -Werror ========================================\n";};
 my $def = {@param::defaults};
+#PrintHash($def,"\$def->{");# if ($param::debug);
+#die;
 {
   foreach my $key( sort keys %$def) {
     if ( defined( $ARG{$key} ) ) {
@@ -81,7 +83,8 @@ print "Link $BUILD => $DirPath\n" unless ($param::quiet);
 $env = new cons(
   'LIBPATH'        => $LIBPATH,
 );
-
+#PrintHash($env,"\$env->{");
+@die;
 $GITINFO = $LIB . "/etc/gitinfo.txt";
 if (-d ".git") {
 #  my $opt = "'+%b %d %Y, %H:%M:%S";
@@ -158,8 +161,8 @@ foreach my $dir (@DirsWithIncludes, @DirsIdlInc) {
   print "---> looking for include in $dir\n" if ($param::debug);
   next if ! -r $dir;
 
-  # Do not export StRoot/Table headers if ROOT_VERSION < 6
-  next if ($dir =~ /StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
+#   # Do not export StRoot/Table headers if ROOT_VERSION < 6
+#   next if ($dir =~ /StRoot\/Table$/ and $env->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 
   opendir( DIR, $dir ) or die "Can't open $dir\n";
   my @incs = readdir DIR; print "incs = @incs\n" if ($param::debug);
@@ -182,7 +185,7 @@ foreach my $dir (@DirsWithIncludes, @DirsIdlInc) {
 my @excludeDirList = qw(\. \.\. macros CVS html doc inc idl local run wrk example include kumac.*);
 my  $excludeDirList = join ("|", @excludeDirList);
 #my  @items = qw(StShadowMaker); #StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
-my  @items = qw(StShadowMaker StFwdTrackMaker  ); #  StFcsWaveformFitMaker#StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
+my  @items = qw(StShadowMaker  StFwdTrackMaker  ); #  StFcsWaveformFitMaker#StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
 if (! -r "$ROOSYS/include/TPythia6.h") {
   push @items, "StEStructPool"; # pyhtia
 }
@@ -239,12 +242,15 @@ my $python2 = system("which python2 > /dev/null 2>& 1");
 if ($python2) {
   push @items, "Geometry";
 }
-if ($STAR_HOST_SYS =~ /^al9/) {# no cern
+#if ($STAR_HOST_SYS =~ /^al9/) {# no cern
+#print "def->{CXX_MAJOR} = $env->{CXX_MAJOR} ========================================\n";
+if ( $env->{CXX_MAJOR}  > 6) {# no cern
   push @items, "rexe";
   push @items, "starsim";
   push @items, "gcalor";
   push @items, "geant321";
 }
+#die;
 if (! $env->{Packages}->{fastjet}->{LIBS}) {
   push @items, "StJetFinder";
   push @items, "StarGenerator/FILT";
@@ -274,7 +280,7 @@ if ($items) {
   print "SKIP_DIRS is now: $#items $items\n";
 }
 #print "SKIP_DIRS = $SKIP_DIRS\n";
-#die;
+##die;
 # Search for directories (one level down) and make
 # list of targets
 #
@@ -292,7 +298,7 @@ foreach my $dir( "pams", "StRoot", "StPiD", "StarVMC" ) {
     next if !-d $sub_Dir and !-l $sub_Dir;
 
     # Do not build StRoot/Table if ROOT_VERSION < 6
-    next if ($sub_Dir =~ m/StRoot\/Table$/ and $def->{ENV}->{ROOT_VERSION_MAJOR} < 6);
+    next if ($sub_Dir =~ m/StRoot\/Table$/ and $env->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 
     print "dir = $dir \t sub_dir = $sub_dir sub_Dir = $sub_Dir\n" if ($param::debug);
     print "items = $items sub_dir = $sub_dir $param::include\n" if ($param::debug);
@@ -402,7 +408,7 @@ foreach $dir(@sysdirlist , @subdirs ) {
 @packages = sortu(@packages);
 #print "======= STAR_HOST_SYS = $STAR_HOST_SYS $param::include\n";
 my $qtRoot = "QtRoot";
-if (($STAR_HOST_SYS !~ /^darwin/ && $STAR_HOST_SYS !~ /^al/  ) && # and $STAR_HOST_SYS !~ /sl53_gcc471/ and $STAR_HOST_SYS !~ /gcc482/) ||
+if (($STAR_HOST_SYS !~ /^darwin/) && # && $STAR_HOST_SYS !~ /^al/  ) && # and $STAR_HOST_SYS !~ /sl53_gcc471/ and $STAR_HOST_SYS !~ /gcc482/) ||
     $ROOT_LEVEL !~ /^6/ ||
     ($param::include and $qtRoot =~ /$param::include/)) {# no qt on mac
 #  print "check $qtRoot\n";

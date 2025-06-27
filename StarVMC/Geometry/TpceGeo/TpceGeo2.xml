@@ -20,6 +20,7 @@
         
         <Structure name="TPCG"  >
             <var name="version" type="float"  />
+            <var name="TpadConfig" type="int"  />
             <var name="rmin" type="float"  />
             <var name="rmax" type="float"  />
             <var name="length" type="float"  />

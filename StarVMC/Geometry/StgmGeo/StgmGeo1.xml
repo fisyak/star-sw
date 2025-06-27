@@ -215,7 +215,7 @@
       <!-- Create and place the STGC Mother volume in the CAVE -->
 
         <Create    block="STGM" />
-        <Placement block="STGM" in="CAVE" konly="ONLY" x="0" y="5.9" z="338.8385" >
+        <Placement block="STGM" in="CAVE" konly="MANY" x="0" y="5.9" z="338.8385" >
             <Misalign table="Geometry/stgc/stgcOnTpc" row="0"/>
         </Placement>
 

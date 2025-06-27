@@ -28,48 +28,30 @@ extern "C" {
 };
 KFVertex StTrackCombPiD::fgBestVx;
 Double_t StTrackCombPiD::fgSigmaCut = 3.0;
-Particle_t StTrackCombPiD::fgParticles[34] = {
-  {         11,  "e-",   0.51099907e-3, -1,  kPidElectron},  
-  {        -11,  "e+",   0.51099907e-3,  1,  kPidElectron},  
-  {         13,  "mu-",  0.1056584,     -1,  kPidMuon},        
-  { 	   -13,  "mu+",  0.1056584,      1,  kPidMuon},        
-  {        211,  "pi+",  0.13956995,     1,  kPidPion},        
-  {       -211,  "pi-",  0.13956995,    -1,  kPidPion},        
-  { 	   321,  "K+",   0.493677,       1,  kPidKaon},        
-  { 	  -321,  "K-",   0.493677,       1,  kPidKaon},        
-  {       2212,  "p",    0.93827231,     1,  kPidProton},      
-  {      -2212,  "p-",   0.93827231,    -1,  kPidProton},      
-  { 1000010020,  "d",    1.8756,         1,  kPidDeuteron},       
-  {-1000010020,  "d-",   1.8756,        -1,  kPidDeuteron},       
-  { 1000010030,  "t",    2.8089,         1,  kPidTriton},      
-  {-1000010030,  "t-",   2.8089,        -1,  kPidTriton},      
-  { 1000020030,  "He3",  2.8084,         2,  kPidHe3},      
-  {-1000020030,  "He3-", 2.8084,        -2,  kPidHe3},      
-  { 1000020040,  "He4",  3.7274,         2,  kPidAlpha},	 
-  {-1000020040,  "He4-", 3.7274,        -2,  kPidAlpha},	 
-  { 1000020060,  "He6",  5.6055,         2,  kPidHe6},	 
-  {-1000020060,  "He6-", 5.6055,        -2,  kPidHe6},	 
-  { 1000030050,  "Li5",  4.6676,         3,  kPidLi5},	 
-  {-1000030050,  "Li5-", 4.6676,        -3,  kPidLi5},	 
-  { 1000030060,  "Li6",  5.6015,         3,  kPidLi6},	 
-  {-1000030060,  "Li6-", 5.6015,         3,  kPidLi6},	 
-  { 1000030070,  "Li7",  6.5338,         3,  kPidLi7},	 
-  {-1000030070,  "Li7-", 6.5338,        -3,  kPidLi7},	 
-  { 1000040070,  "Be7",  6.5342,         4,  kPidBe7},	 
-  {-1000040070,  "Be7-", 6.5342,        -4,  kPidBe7},	 
-  { 1000040090,  "Be9",  8.3948,         4,  kPidBe9},	 
-  {-1000040090,  "Be9-", 8.3948,        -4,  kPidBe9},	 
-  { 1000040100,  "Be10", 9.3275,         4,  kPidBe10},	 
-  {-1000040100,  "Be10-",9.3275,        -4,  kPidBe10},	 
-  { 1000050110,  "B11", 10.2666,         5,  kPidB11},	 
-  {-1000050110,  "B11-",10.2666,        -5,  kPidB11}
+Particle_t StTrackCombPiD::fgParticles[KPidAllParticles] = {
+  {        -11,  "e+",   0.51099907e-3,  1,  kPidElectron},    // {         11,  "e-",   0.51099907e-3, -1,  kPidElectron},  
+  { 	   -13,  "mu+",  0.1056584,      1,  kPidMuon},        // {         13,  "mu-",  0.1056584,     -1,  kPidMuon},        
+  {        211,  "pi+",  0.13956995,     1,  kPidPion},        // {       -211,  "pi-",  0.13956995,    -1,  kPidPion},        
+  { 	   321,  "K+",   0.493677,       1,  kPidKaon},        // { 	  -321,  "K-",   0.493677,       1,  kPidKaon},        
+  {       2212,  "p",    0.93827231,     1,  kPidProton},      // {      -2212,  "p-",   0.93827231,    -1,  kPidProton},      
+  { 1000010020,  "d",    1.8756,         1,  kPidDeuteron},    // {-1000010020,  "d-",   1.8756,        -1,  kPidDeuteron},       
+  { 1000010030,  "t",    2.8089,         1,  kPidTriton},      // {-1000010030,  "t-",   2.8089,        -1,  kPidTriton},      
+  { 1000020030,  "He3",  2.8084,         2,  kPidHe3},         // {-1000020030,  "He3-", 2.8084,        -2,  kPidHe3},      
+  { 1000020040,  "He4",  3.7274,         2,  kPidAlpha},       // {-1000020040,  "He4-", 3.7274,        -2,  kPidAlpha},	 
+  { 1000020060,  "He6",  5.6055,         2,  kPidHe6},	       // {-1000020060,  "He6-", 5.6055,        -2,  kPidHe6},	 KPidParticles = kPidHe6
+  { 1000030050,  "Li5",  4.6676,         3,  kPidLi5},	       // {-1000030050,  "Li5-", 4.6676,        -3,  kPidLi5},	 
+  { 1000030060,  "Li6",  5.6015,         3,  kPidLi6},	       // {-1000030060,  "Li6-", 5.6015,         3,  kPidLi6},	 
+  { 1000030070,  "Li7",  6.5338,         3,  kPidLi7},	       // {-1000030070,  "Li7-", 6.5338,        -3,  kPidLi7},	 
+  { 1000040070,  "Be7",  6.5342,         4,  kPidBe7},	       // {-1000040070,  "Be7-", 6.5342,        -4,  kPidBe7},	 
+  { 1000040090,  "Be9",  8.3948,         4,  kPidBe9},	       // {-1000040090,  "Be9-", 8.3948,        -4,  kPidBe9},	 
+  { 1000040100,  "Be10", 9.3275,         4,  kPidBe10},	       // {-1000040100,  "Be10-",9.3275,        -4,  kPidBe10},	 
+  { 1000050110,  "B11", 10.2666,         5,  kPidB11} 	       // {-1000050110,  "B11-",10.2666,        -5,  kPidB11}
 };
 const Char_t *StTrackCombPiD::fgPiDStatusNames[kTotal+1] = {
   "Undef",     "I70",     "I70U",     "Fit",     "FitU",     "dNdx",     "dNdxU", 
   "BTof",      "ETof",    "Mtd",      "BEmc",    "dEdx & BTof"
 };
 
-Int_t  StTrackCombPiD::fgl2p[KPidAllParticles] = {0};
 Bool_t StTrackCombPiD::fgUsedx2 = kFALSE;
 Bool_t StTrackCombPiD::fgUseTof = kFALSE;
 Bool_t StTrackCombPiD::fgUsedNdx = kFALSE;
@@ -467,16 +449,6 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) 
 StTrackCombPiD::StTrackCombPiD(StPicoDst *pico, Int_t iTrack) : StTrackCombPiD(pico->track(iTrack), pico->trackCovMatrix(iTrack)) {}
 //________________________________________________________________________________
 void StTrackCombPiD::SetCombPiD() {
-  if (! fgl2p[3]) {
-    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
-      for (Int_t p = 0; p < 34; p++) {
-	if (fgParticles[p].code == l) {
-	  fgl2p[l] = p;
-	  break;
-	}
-      }
-    }
-  }
   if (! (fStatus[kI70] || fStatus[kFit])) return;
   if (fId <= 0) return;
   fParticle = fDca.Particle(fId);
@@ -502,7 +474,7 @@ void StTrackCombPiD::SetCombPiD() {
     }
   }
   for (Int_t l = kPidElectron; l < fgNparticles; l++) {
-    Int_t p = fgl2p[l];
+    Int_t p = fgParticles[l].code;
     Int_t charge  = fgParticles[p].charge;
     Double_t mass = fgParticles[p].mass;
     Double_t pOverQ = pMomentum/charge;
@@ -868,7 +840,7 @@ void StTrackCombPiD::SetPDGfromTPC() {
   if (! fStatus[k]) return;
   for (Int_t l = kPidElectron; l < fgNparticles; l++) {
     if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-      Int_t p = fgl2p[l];
+      Int_t p = fgParticles[l].code;
       fTPCPDG.push_back(GetQ()*fgParticles[p].pdg);
     }
   }
@@ -879,7 +851,7 @@ void StTrackCombPiD::SetPDGfromTof() {
     if (! fStatus[k]) continue;
     for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-	Int_t p = fgl2p[l];
+	Int_t p = fgParticles[l].code;
 	fTofPDG.push_back(GetQ()*fgParticles[p].pdg);
       }
     }
@@ -891,7 +863,7 @@ void StTrackCombPiD::SetPDGfromdNdx() {
   if (fStatus[k]) {
     for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-	Int_t p = fgl2p[l];
+	Int_t p = fgParticles[l].code;
 	fdNdxPDG.push_back(GetQ()*fgParticles[p].pdg);
       }
     }

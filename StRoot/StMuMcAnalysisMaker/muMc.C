@@ -2,7 +2,7 @@
   FPE_OFF
   root.exe -q -b -x 'muMc.C(1e6,"../*MuDst.root")'
 */
-void muMc(Int_t N = 1000000, 
+void muMc(Int_t N = 1000000, Bool_t rePlot = kFALSE,
 	  const Char_t *input = "../*.MuDst.root", 
 	  const Char_t *output = "muMc.root", 
 	  const Char_t *ChainOpt = "RMuDst,KFPInter,MuMc,quiet,mysql,nodefault,y2021") {
@@ -11,11 +11,10 @@ void muMc(Int_t N = 1000000,
 #else
   //  gSystem->SetFPEMask(kInvalid | kDivByZero | kOverflow );
   gROOT->LoadMacro("lMuDst.C");
-#if 1 //=> 1 if you want to replot
-  Char_t *file = gSystem->Which("./",output,kReadPermission);
-#else
   Char_t *file = 0;
-#endif
+  if (rePlot) {
+    file = gSystem->Which("./",output,kReadPermission);
+  }
   if (! file) {
     //    lMuDst(-1,input,"RMuDst,KFPInter,MuMc,quiet,mysql,nodefault",output);
     lMuDst(-1,input,ChainOpt,output);

@@ -889,9 +889,9 @@
 
             <Create block="IBEM"  />
 	    <If expr="kIBeamStyle&lt;4"> <!-- west side got new support for kIBeamStyle=4 -->
-              <Placement y="vpdg_IBposYc+UDshift" z="+(vpdg_IBPosZc)" block="IBEM" in="Cave"></Placement>
+              <Placement y="vpdg_IBposYc+UDshift" z="+(vpdg_IBPosZc)" block="IBEM" in="Cave" konly="'MANY'" ></Placement>
             </If>
-            <Placement y="vpdg_IBposYc+UDshift" z="-(vpdg_IBPosZc+EWshift)" block="IBEM" in="Cave"><Rotation thetaz="180"/></Placement>
+            <Placement y="vpdg_IBposYc+UDshift" z="-(vpdg_IBPosZc+EWshift)" block="IBEM" in="Cave" konly="'MANY'"><Rotation thetaz="180"/></Placement>
             
             <If expr="kIBeamStyle&gt;1"  >
 

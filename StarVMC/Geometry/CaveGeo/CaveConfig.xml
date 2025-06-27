@@ -2,8 +2,7 @@
 <Detector name="CAVE" comment="Barrel EMC">
   <Modules>
     CaveGeo,
-    CaveGeo2,
-    CaveGeo3
+    CaveGeo2
   </Modules>
 
   <Setup  name  = "CAVEof" comment="No CAVE" module="CaveGeo" onoff="off" />
@@ -25,7 +24,7 @@
     <Init struct="cvcf" var="config"      value="5" />
     <Init struct="cvcf" var="tpcrefsys"   value="1" />
   </Setup>
-  <Setup name="CAVE06" comment="The STAR Wide Angle Hall" module="CaveGeo3" onoff="on" top="HALL"  simu="1">
+  <Setup name="CAVE06" comment="The STAR Wide Angle Hall" module="CaveGeo2" onoff="on" top="HALL"  simu="1">
     <Init struct="cvcf" var="config"      value="6" /> 
     <Init struct="cvcf" var="tpcrefsys"   value="1" />
   </Setup>

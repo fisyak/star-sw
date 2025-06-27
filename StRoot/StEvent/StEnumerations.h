@@ -474,10 +474,14 @@ enum StPwg         {generic,                                           /**< enum
 /*!
  * \enum StEmcCrateStatus
  */
-enum StEmcCrateStatus {crateUnknown       = 0,
-                       crateNotPresent    = 1,
-                       crateOK            = 2,
-                       crateHeaderCorrupt = 3};
+enum StEmcCrateStatus
+#ifndef __CINT__
+: int 
+#endif
+  {crateUnknown       = 0,
+      crateNotPresent    = 1,
+      crateOK            = 2,
+      crateHeaderCorrupt = 3};
 
 /*!
  * \enum StarMaxSize

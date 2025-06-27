@@ -349,10 +349,10 @@
         
 
         <If expr="vpdg_IBchoice!=0"  >
-            <Placement y="vpdg_IBposYc" z="+vpdg_IBPosZc" block="IBEM" in="Cave"  >
+            <Placement y="vpdg_IBposYc" z="+vpdg_IBPosZc" block="IBEM" in="Cave" konly="'MANY'" >
             </Placement>
             
-            <Placement y="vpdg_IBposYc" z="-vpdg_IBPosZc" block="IBEM" in="Cave"  >
+            <Placement y="vpdg_IBposYc" z="-vpdg_IBPosZc" block="IBEM" in="Cave" konly="'MANY'" >
                 <Rotation thetaz="180"  />
             </Placement>
             

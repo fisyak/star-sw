@@ -121,9 +121,13 @@ Int_t StChain::Make() {
 //_____________________________________________________________________________
 Int_t StChain::MakeEvent() 
 {
+#if 0
   // Make next event from the TBrowser TContextMenu
   Clear();
   return StMaker::IMake(GetNumber()+1);
+#else 
+  return EventLoop(1, 1);
+#endif
 }
 //_____________________________________________________________________________
 const StChainOpt *StChain::GetChainOpt()    const
@@ -231,7 +235,7 @@ Int_t StChain::EventLoop(Int_t jBeg,Int_t jEnd, StMaker *outMk)
      long  start_tv_nsec = ts.tv_nsec;
 #endif
      Clear();
-     iMake = Make(jCur);
+     iMake = Make(GetNumber()+jCur);
 
      if (outMk && iMake == kStErr) {/*outMk->IMake(jCur);*/ mNFailed++;}
      if (iMake%10 == kStEOF || iMake%10==kStFatal)	break;
