@@ -221,13 +221,12 @@ C
             if (mother(1:nmother) .eq. 'CAVE' .and. (
      +           pname(1:np) .eq. 'IDSM' .or.
      +           pname(1:np) .eq. 'SVTT' .or.
-     +           pname(1:np) .eq. 'SCON' .or.
+*yf     +           pname(1:np) .eq. 'SCON' .or.   ! Keep PIPE, SCON, and SBSP in CAVE despite of they are attached to TPC
      +           pname(1:np) .eq. 'SFMO' .or.
      +           pname(1:np) .eq. 'TPCE' .or.
      +           pname(1:np) .eq. 'FTPC' .or.
      +           pname(1:np) .eq. 'FTMO' .or.
      +           pname(1:np) .eq. 'FSMO' .or.
-     +           pname(1:np) .eq. 'BTOF' .or.
      +           pname(1:np) .eq. 'PXMO' .or.
      +           pname(1:np) .eq. 'IGMO' .or.
      +           pname(1:np) .eq. 'FGMO' .or.
