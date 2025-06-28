@@ -3,7 +3,7 @@ foreach db (tpcAcCharge TpcAccumulatedQ TpcAdcCorrection3MDF TpcAdcCorrection4MD
   mysql -h robinson.star.bnl.gov --port=3306 -u "fisyak" Calibrations_tpc -e 'select entryTime, beginTime, flavor, elementID, deactive from '${db}'  where elementID=1 and  deactive = 0 order by beginTime;' | tee ${db}.txt
 end
   
-  root.exe DbMap.C+
+  root.exe -q -b DbMap.C+ >& DbMap.log
 
   DbMap("TpcAdcCorrection6MDF.txt");   >> TpcAdcCorrection6MDF.log
   DbMap("TpcSecRowB.txt");             >> TpcSecRowB.log

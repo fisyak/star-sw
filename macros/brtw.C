@@ -237,7 +237,12 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
   if (! NoBackground) {
     SetReject(kTRUE);
     res = hist->Fit(Total,"vr","",MMin,MMax);
+    //    if ((Int_t) res != 0) return 0;
     SetReject(kFALSE);
+    for (Int_t i = 3*NoSignals; i < NoParameters; i++) {
+      if (Total->GetParError(i) > 0.0 && TMath::Abs(Total->GetParameter(i)) < 3*Total->GetParError(i)) 
+	Total->FixParameter(i, -99.);
+    }
   } else {
     for (Int_t i = 3*NoSignals; i < NoParameters; i++) {
       Total->FixParameter(i, -99.);
@@ -252,6 +257,7 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
     Total->SetParLimits(2*s+2, 1e-7, 1.0);
   }
   res = hist->Fit(Total,"vrm","same",MMin,MMax);
+  //  if ((Int_t) res != 0) return 0;
   //  res = hist->Fit(Total,"vrim","same",MMin,MMax);
   Double_t params[20];
   Total->GetParameters(params);
@@ -428,13 +434,16 @@ void FitH3(
 	   ) {
   TString HistN(histN);
   TH3F *h3 = (TH3F *) gDirectory->Get(HistN);
-  if (! h3) {
+  if (! h3 && HistN.Contains("1GeV")) {
     HistN.ReplaceAll("1GeV","");
     h3 = (TH3F *) gDirectory->Get(HistN);
     if (! h3) return;
   }
   if (h3->GetDimension() != 3) return;
-  TFile *fOut = new TFile("FitH3.root","recreate");
+  TString nOut(h3->GetName());
+  nOut.ReplaceAll("#","");
+  nOut += "FitH3.root";
+  TFile *fOut = new TFile(nOut,"recreate");
   TString Name(gSystem->BaseName(histN));
   Name += "_z";
   TAxis *xax = h3->GetXaxis();
@@ -462,8 +471,13 @@ void FitH3(
       if (i == 0 && j != 0 || j != 0 && j == 0) continue;
       if (i == 0 && j == 0)  proj = h3->ProjectionZ(Form("f%i_%i", i, j )); 
       else                   proj = h3->ProjectionZ(Form("f%i_%i", i, j ),i,i,j,j); 
-      if (! T) {
-	T =  brtw(proj,0.45,0.55,mpi, mpi, 0);
+      mean->SetBinContent(i,j,proj->GetMean());
+      rms->SetBinContent(i,j,proj->GetRMS());
+      entries->SetBinContent(i,j,proj->GetEntries());
+      if (proj->GetEntries() < 1e3) continue;
+      T = brtw(proj,0.45,0.55,mpi, mpi, 0, kFALSE, kFALSE);
+      if (! T) continue;
+      if (! FitP) {
 	Npar = T->GetNpar();
 	varsX = TArrayF(2*Npar+6);
 	vars = varsX.GetArray();
@@ -481,12 +495,6 @@ void FitH3(
 	Vars += ":NDF:chisq:mean:rms:entries";
 	FitP = new TNtuple("FitP",Form("Fit results for %s",histN),Vars);
       }
-      mean->SetBinContent(i,j,proj->GetMean());
-      rms->SetBinContent(i,j,proj->GetRMS());
-      entries->SetBinContent(i,j,proj->GetEntries());
-      if (proj->GetEntries() < 1e2) continue;
-      T = brtw(proj,0.45,0.55,mpi, mpi, 0, kFALSE, kFALSE);
-      if (! T) continue;
       vars[0] = i; // i
       vars[1] = j; // j
       vars[2] = xax->GetBinCenter(i); // x
