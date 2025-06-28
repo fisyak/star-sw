@@ -1214,3 +1214,101 @@ StiTpcSeedFinder::findTpcTracks
 		AliHLTTPCCATracker::Reconstructor::execute
 		  AliHLTTPCCATracker::NeighboursFinder
          StiTPCCATrackerInterface::MakeSeeds
+================================================================================
+06/13/2025  Merge flows 
+StiMaker::Make
+      StiMaker::MakeGlobalTracks(event)
+        StiKalmanTrackFinder::findTracks();
+	  StiKalmanTrackFinder::extendSeeds
+	     StiCATpcSeedFinder::findTrack
+		StiCATpcTrackerInterface::Run
+		   AliHLTTPCCAGBTracker::FindTracks
+                   StiCATpcTrackerInterface::MakeSeeds
+                StiCATpcTrackerInterface::GetSeeds
+________________________________________________________________________________
+StiMaker::Make
+	// StiLocalTrackSeedFinder*       _seedFinder
+	// StiLocalTrackSeedFinder*       _trackSeedFinder
+	// StiKalmanTrackFinder*          _tracker;
+	// StiKalmanTrackFitter*          _fitter
+	// 04/23/09 StiHitLoader::loadEvent(event,_loaderTrackFilter,_loaderHitFilter);
+        Clear StEvent & Make map with MC
+	StiKalmanTrackFinder::clear()
+        StiHitLoader<StEvent,StiDetectorBuilder>::loadEvent(event,_loaderTrackFilter,_loaderHitFilter)    	loadHits
+	MakeGlobalTracks
+	  StiKalmanTrackFinder::reset()
+	  StiKalmanTrackFinder::findTracks()
+		 	track = StiCATpcSeedFinder::findTrack
+			StiKalmanTrackFinder::extendTrack(track,rMin);
+				StiKalmanTrackFinder::find(track,kOutsideIn,rMin)
+					StiKalmanTrackFinder::Fit
+						StiTrack::fit
+							 StiKalmanTrackFitter::fit
+								StiKalmanTrackNode::propagate
+
+
+
+
+
+					StiKalmanTrackFinder::StiKalmanTrackFinder::find(track,direction,leadNode,qa)
+				StiKalmanTrackFinder::find(track,kInsideOut);
+				track->StiKalmanTrack::approx(); // 
+				track->StiKalmanTrack::refit()	
+			StiTrackNode *extenDca = track->extendToVertex(&dcaHit);
+			track->add(extenDca,kOutsideIn);
+			track->reduce();
+			track->setFlag(1);
+		        _trackContainer->push_back(track);
+        		track->setId(_trackContainer->size());
+        		track->reserveHits();
+			BFactory::Free(track);
+	  FinishTracks()
+	  StiStEventFiller::fillEvent()
+	  StEvent::setIdTruth()
+________________________________________________________________________________
+	StiStEventFiller::fillEvent(event, _trackContainer);
+	"GenericVertex"::fit(event);                              /// findVertex()
+	StiKalmanTrackFinder::extendTracksToVertex(vertex)
+    make primary vertex 
+    MakePrimaryTracks
+________________________________________________________________________________
+#0  0x00007fffbb702bb0 in StiKalmanTrackNode::PrintpT(char const*) const@plt () from /net/l402/data/fisyak/STAR/packages/TFG/.sl73_x8664_gcc631/lib/libSti.so
+#1  0x00007fffbb766591 in StiKalmanTrackFitter::fit (this=0x74d4070, stiTrack=0x7515bc0, fitDirection=0) at .sl73_x8664_gcc631/obj/StRoot/Sti/StiKalmanTrackFitter.cxx:79
+#2  0x00007fffbb77712f in StiTrack::fit (this=0x7515bc0, direction=0) at .sl73_x8664_gcc631/obj/StRoot/Sti/StiTrack.cxx:84
+#3  0x00007fffbb75ff67 in StiKalmanTrackFinder::Fit (this=0x74d40a0, track=0x7515bc0, rMin=0) at .sl73_x8664_gcc631/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:173
+#4  0x00007fffbb760524 in StiKalmanTrackFinder::extendSeeds (this=0x74d40a0, rMin=0) at .sl73_x8664_gcc631/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:232
+#5  0x00007fffbb75feab in StiKalmanTrackFinder::findTracks (this=0x74d40a0) at .sl73_x8664_gcc631/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+#6  0x00007fffba14f824 in StiMaker::MakeGlobalTracks (this=0x29bc870, event=0x70c5ff0) at .sl73_x8664_gcc631/obj/StRoot/StiMaker/StiMaker.cxx:461
+
+TString StiKalmanTrackNode::comment("Legend: \tS - start\tE - extapolation\tM Multiple scattering\tV at Vertex\tB at beam\tR at Radius\tU Updated\n");
+
+StiKalmanTrackFitter::fit
+StiMaker:INFO  -                   Tpc/Padrow_69/Sector_3 start refit S pT    0.994+-  99.4, sy 0.3000, z = -194.614 chi2 =   3.31
+l
+
+================================================================================
+06/14/2025 
+StiMaker::Make
+	StiMaker::MakeGlobalTracks
+		StiKalmanTrackFinder::findTracks
+			StiKalmanTrackFinder::extendSeeds
+				StiKalmanTrackFinder::Fit
+					StiTrack::fit
+						StiKalmanTrackFitter::fit
+ targetNode->PrintpT("S"); // targetNode->PrintStep();
+							StiKalmanTrackNode::propagate(this=0x751a298, pNode=0x751a480, tDet=0x73b1b88, dir=0)
+								StiKalmanTrackNode::propagate (this=0x751a298, xk=181.02859497070312, option=1, dir=0)
+								StiKalmanTrackNode::propagateError
+ if (debug() & 8) { PrintpT("E");}
+								StiKalmanTrackNode::propagateMtx 
+								StiKalmanTrackNode::propagateMCS 
+ if (debug() & 8) { PrintpT("M");}
+						StiKalmanTrackFinder::extendTrack
+							StiKalmanTrack::refit
+								StiTrackNodeHelper::set
+									StiTrackNodeHelper::reset
+								StiKalmanTrack::refitL
+									StiTrackNodeHelper::set
+									StiTrackNodeHelper::makeFit
+										StiTrackNodeHelper::evalChi2
+										StiTrackNodeHelper::updateNode
