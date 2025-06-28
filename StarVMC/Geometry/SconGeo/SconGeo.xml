@@ -455,7 +455,7 @@
         <Block name="SBRL" comment="is the ceramic roller supporting the beampipe"  >
             <Material a="20.719" name="PYREX" dens="2.23" radl="12.6" absl="50.7" z="10.307"  />
             <Attribute for="SBRL" seen="1" colo="6"  />
-            <Shape type="TUBE" rmax="ssub_SRollOd/2" rmin="ssub_SRollId/2" dy="ssub_SRollLen/2"  />
+            <Shape type="TUBE" rmax="ssub_SRollOd/2" rmin="ssub_SRollId/2" dz="ssub_SRollLen/2"  />
         </Block>
         
         <Block name="SBRX" comment="is the stainless steel roller axis"  >
