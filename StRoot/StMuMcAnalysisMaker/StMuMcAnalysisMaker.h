@@ -145,12 +145,18 @@ class StMuMcAnalysisMaker : public StMaker {
   StKFParticleInterface            *mStKFParticleInterface;            //!
   StKFParticlePerformanceInterface *mStKFParticlePerformanceInterface; //!
 #endif
+  Int_t fneta;
+  Double_t fetamin;
+  Double_t fetamax;
   Char_t                mEnd[1];        //!
   static StMuMcAnalysisMaker *fgStMuMcAnalysisMaker; //!
  protected:
  public: 
   StMuMcAnalysisMaker(const char *name="MuMcAnalysis");
   virtual       ~StMuMcAnalysisMaker();
+  void           SetNeta(Int_t n) {fneta = n;}
+  void           SetEtaMin(Double_t etamin) {fetamin = etamin;}
+  void           SetEtaMax(Double_t etamax) {fetamax = etamax;}
   virtual Int_t  Init();
   virtual Int_t  Finish();
   virtual Int_t  InitRun(Int_t runumber);

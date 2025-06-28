@@ -196,6 +196,9 @@ const Char_t *StMuMcAnalysisMaker::MakeTitle( Int_t gp, Int_t type, Int_t partic
 StMuMcAnalysisMaker::StMuMcAnalysisMaker(const char *name) : StMaker(name), fProcessSignal(kFALSE) {
   memset(mBeg,0,mEnd-mBeg+1);
   fgStMuMcAnalysisMaker = this;
+  SetNeta(100);
+  SetEtaMin(-2.5);
+  SetEtaMax( 2.5);
 }
 //________________________________________________________________________________
 StMuMcAnalysisMaker::~StMuMcAnalysisMaker() {
@@ -386,12 +389,10 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
     }
   }
   phiBins[nphi] = 180.;
-  Int_t    neta   = 100; 
-  Double_t etamax = 2.5;
-  Double_t deta = 2*etamax/neta;
-  TArrayD EtaBins(neta+1);
+  Double_t deta = (fetamax - fetamin)/fneta;
+  TArrayD EtaBins(fneta+1);
   Double_t *etaBins = EtaBins.GetArray();
-  for (i = 0; i <= neta; i++) {etaBins[i] = -etamax + deta*i;}
+  for (i = 0; i <= fneta; i++) {etaBins[i] = fetamin + deta*i;}
   PrintMem("");
   
   TDirectory *dirs[7] = {0};
@@ -472,12 +473,12 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
 		  Double_t dz = (plotVar[i].zmax - plotVar[i].zmin)/plotVar[i].nz;
 		  for (Int_t j = 0; j <= plotVar[i].nz; j++) zBins[j] = plotVar[i].zmin + dz*j;
 		  fHistsT[gp][type][particle][pm][x][i] = new TH3F(plotVar[i].Name, MakeTitle(gp, type, particle, pm, x, i),
-								   neta, etaBins,
+								   fneta, etaBins,
 								   npT, ptBins,
 								   plotVar[i].nz, zBins);
 		} else {
 		  fHistsT[gp][type][particle][pm][x][i] = new TH3F(plotVar[i].Name, MakeTitle(gp, type, particle, pm, x, i),
-								   neta, etaBins,
+								   fneta, etaBins,
 								   npT, ptBins,
 								   nphi, phiBins);
 		}
@@ -582,14 +583,14 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
 		if (i == 0) { // dM2
 		  LToF[gp][hyp][pm][i] = new TH3F(ToFTypes[i],Form("#Delta M^2 versus #eta and p for %s %s",
 								   TitleTrType[gp],NamesF[h]),
-						  neta, etaBins,
+						  fneta, etaBins,
 						  npT, ptBins,
 						  nz, zBins);
 		  LToF[gp][hyp][pm][i]->GetZaxis()->SetTitle("#Delta M^2"); 
 		} else { // (1/beta^2 - 1/beta_exp^2)/beta^2
 		  LToF[gp][hyp][pm][i] = new TH3F(ToFTypes[i],Form("#delta 1/#beta versus #eta and p for %s %s ",
 								   TitleTrType[gp],NamesF[h]),
-						  neta, etaBins,
+						  fneta, etaBins,
 						  npT, ptBins,
 						  nz, zBins);
 		}

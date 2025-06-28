@@ -23,6 +23,11 @@ void muMc(Int_t N = 1000000, Bool_t rePlot = kFALSE,
     muMc->SetAttr("TrackPlots",1);
     muMc->SetAttr("PiDPlots",1);
     muMc->SetAttr("VertexPlots",1);
+#if 0
+    muMc->SetNeta(50);
+    muMc->SetEtaMin(-1.5);
+    muMc->SetEtaMax(-0.5);
+#endif
     //    muMc->SetAttr("StoreCutNTuples",1);
     chain->Init();
     if (N <= 0) return;
