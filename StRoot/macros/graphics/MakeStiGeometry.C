@@ -1,4 +1,4 @@
-// Create the Sti "drawable" geometry view from the current STAR "chain"
+// Create the Sti "drawable" geometry view from the current STAR "chain" "STIGEOM"
 TVolume *MakeStiGeometry()
 {
    StMaker *starChain = StMaker::GetChain();
