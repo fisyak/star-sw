@@ -57,6 +57,8 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TH3.h"
+#include "TProfile.h"
+#include "TProfile2D.h"
 #include "StMaker.h"
 TableClassImpl(St_VMCPath2Detector,VMCPath2Detector_st);
 ClassImp(StarVMCApplication);
@@ -153,8 +155,11 @@ void StarVMCApplication::PreTrack() {    // User actions at beginning of each tr
 }
 //_____________________________________________________________________________
 void StarVMCApplication::Stepping() {    // User actions at each step
-  if (flux) usflux();
-  else if (fMcHits) fMcHits->Step();
+  Gckine_t *ckine = fgGeant3->Gckine();
+  Int_t Ipart = ckine->ipart%100;
+  if (Ipart == 48) { Geanttino();
+  } else if (flux) { usflux();
+  } else if (fMcHits) fMcHits->Step();
 }
 //_____________________________________________________________________________
 void StarVMCApplication::PostTrack() {    // User actions after finishing of each track
@@ -1064,6 +1069,92 @@ void StarVMCApplication::usflux() {
     }
   }
 #undef __3DPLOTS__
+}
+//________________________________________________________________________________
+void StarVMCApplication::Geanttino() {
+  Int_t        i;
+  Float_t      eta;
+  Int_t        NstepB;
+  Float_t      stepF, XYZ[3];
+  Float_t      RADIUS;
+  enum {NPF2D=4};
+  static TProfile2D *prof2D[NPF2D];
+  static Bool_t first = kTRUE;
+  if (first) {
+    assert(StMaker::GetChain()->GetTFile());
+    StMaker::GetChain()->GetTFile()->cd();
+    first = kFALSE;
+    memset(prof2D, 0, sizeof(prof2D));
+    struct Name_t {
+      const Char_t *Name;
+      const Char_t *Title;
+    };
+    struct NameX_t {
+      Name_t name;
+      Int_t nX;
+      Double_t xMin, xMax;
+      Int_t nY;
+      Double_t yMin, yMax;
+    };
+    NameX_t Types2[NPF2D] = {
+      {{"RadLetaR"  ,"<RadL> ; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
+      {{"RadLIetaR" ,"<RadLI>; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
+      {{"AbsLetaR"  ,"<AbsL> ; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
+      {{"AbsLIetaR" ,"<AbsLI>; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
+    };
+    for (Int_t t = 0; t < NPF2D; t++) {
+      TString Name(Types2[t].name.Name); 
+      TString Title(Types2[t].name.Title);
+      prof2D[t] = 
+	new TProfile2D(Name,Title,Types2[t].nX,Types2[t].xMin,Types2[t].xMax,Types2[t].nY,Types2[t].yMin,Types2[t].yMax);//24,-180,180);
+      
+    }
+  }
+  // Fill histograms
+  Gckine_t *ckine = fgGeant3->Gckine();
+  Gctrak_t *ctrak = fgGeant3->Gctrak();
+  Double_t sleng = ctrak->sleng;
+//   Gcking_t *cking = fgGeant3->Gcking();
+  Gcmate_t *cmate = fgGeant3->Gcmate();
+  Int_t Ipart = ckine->ipart%100;
+  if (Ipart !=48) return;
+  static Double_t radlI = 0;
+  static Double_t abslI = 0;
+  if (sleng <= 0.0) {radlI = 0; abslI = 0;}
+  Double_t radl = cmate->radl;
+  Double_t absl = cmate->absl;
+//   RR = TMath::Sqrt(ctrak->vect[0]*ctrak->vect[0] + ctrak->vect[1]*ctrak->vect[1]);
+//   ZZ = ctrak->vect[2];
+  Double_t Theta = TMath::ATan2(TMath::Sqrt(ctrak->vect[3]*ctrak->vect[3] + ctrak->vect[4]*ctrak->vect[4]),ctrak->vect[5]) ;
+  eta = -TMath::Log(TMath::Tan(Theta/2.));
+//   Double_t Phi = TMath::RadToDeg()*TMath::ATan2(ctrak->vect[1],ctrak->vect[0]);
+//   if (Phi < -180) Phi += 360;
+//   if (Phi >  180) Phi -= 360;
+  /*
+   * *** step cannot be bigger then 10 cm => suppose stright line in R/Z
+   */
+  if (ctrak->step > 0.0)        {
+    NstepB = ctrak->step + 0.5;
+    NstepB = TMath::Max (1, NstepB);
+    stepF  = ctrak->step/NstepB;
+    for (i = 1; i <= NstepB; i++) {
+      XYZ[0] = ctrak->vect[0] + ctrak->vect[3]*stepF*(0.5 - i);
+      XYZ[1] = ctrak->vect[1] + ctrak->vect[4]*stepF*(0.5 - i);
+      XYZ[2] = ctrak->vect[2] + ctrak->vect[5]*stepF*(0.5 - i);
+      RADIUS = TMath::Sqrt(XYZ[0]*XYZ[0] + XYZ[1]*XYZ[1]);
+//       Double_t phi = TMath::RadToDeg()*TMath::ATan2(XYZ[1],XYZ[0]);
+//       if (phi < -180) phi += 360;
+//       if (phi >  180) phi -= 360;
+      Double_t  dradl = stepF/radl;
+      Double_t  dabsl = stepF/absl;
+      radlI += dradl;
+      abslI += dabsl;
+      prof2D[0]->Fill(eta, RADIUS, dradl);
+      prof2D[1]->Fill(eta, RADIUS, radlI);
+      prof2D[2]->Fill(eta, RADIUS, dabsl);
+      prof2D[3]->Fill(eta, RADIUS, abslI);
+    }
+  }
 }
 #undef PrPV
 // $Log: StarVMCApplication.cxx,v $

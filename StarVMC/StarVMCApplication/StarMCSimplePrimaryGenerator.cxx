@@ -25,18 +25,6 @@ StarMCSimplePrimaryGenerator::StarMCSimplePrimaryGenerator(Int_t    nprim,   Int
 }
 //_____________________________________________________________________________
 void StarMCSimplePrimaryGenerator::PreSet() {
-  fStarStack = 0;
-  fIsRandom = false;
-  fNofPrimaries = 0; fId = 0;
-  fpT_min = 0; fpT_max = 0; fEta_min = 0; fEta_max = 0; fPhi_min = 0; fPhi_max = 0; fZ_min = 0; fZ_max = 0;
-  fOption = "";
-  fOrigin = TVector3(0,0,0);
-  fCurOrigin = fOrigin;
-  fGun = kFALSE;
-  fGunpX = fGunpY = fGunpZ = fGunX = fGunY = fGunZ = 0;
-  fGunId = 0;
-  fPVX = fPVY = fPVZ = fPVxyError = 0;
-  fPVxy = 0;
 }
 //_____________________________________________________________________________
 void StarMCSimplePrimaryGenerator::GeneratePrimary() {     

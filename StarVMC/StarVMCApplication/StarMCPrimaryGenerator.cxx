@@ -17,6 +17,9 @@ ClassImp(StarMCPrimaryGenerator);
 //________________________________________________________________________________
 StarMCPrimaryGenerator::StarMCPrimaryGenerator() : fStatus(kStOK)  {
   memset(mBeg,0,mEnd-mBeg+1);
+  fOption = "";
+  fOrigin = TVector3(0,0,0);
+  fCurOrigin = fOrigin;
   fgInstance = this;
   if (! fStarStack) fStarStack = StarVMCApplication::Instance()->GetStack();
   TString path(".");
@@ -93,9 +96,15 @@ void StarMCPrimaryGenerator::SetGenerator(Int_t nprim, Int_t Id,
     LOG_INFO << fEta_min  << " < eta < " << fEta_max  << endm;
   }
   LOG_INFO << fPhi_min<< " < phi < " << fPhi_max<< endm;
-  LOG_INFO << fZ_min  << " < zVer< " << fZ_max  << endm;
-  
-  fgInstance = this;
+  if (fPVZ) {
+    if (fPVX) {LOG_INFO << "X from histogram " <<  fPVX->GetName() << "\t";}
+    if (fPVY) {LOG_INFO << "Y from histogram " <<  fPVY->GetName() << "\t";}
+    LOG_INFO << "Z from histogram " <<  fPVZ->GetName();
+    if (fPVxyError) {LOG_INFO << "\tadn their errors from " << fPVxyError->GetName();}
+    LOG_INFO << endm;
+  } else {
+    LOG_INFO << fZ_min  << " < zVer< " << fZ_max  << endm;
+  }
 }
 //________________________________________________________________________________
 Int_t StarMCPrimaryGenerator::Skip(Int_t nskip) {

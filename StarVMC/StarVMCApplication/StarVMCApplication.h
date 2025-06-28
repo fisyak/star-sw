@@ -75,6 +75,7 @@ class StarVMCApplication : public TVirtualMCApplication {
 		   const Char_t *mode2A = 0, const Char_t *mode2B = 0, const Char_t *mode2C = 0, Float_t branch2 = 0,
 		   const Char_t *mode3A = 0, const Char_t *mode3B = 0, const Char_t *mode3C = 0, Float_t branch3 = 0);
   static void usflux();
+  static void Geanttino();
   static Int_t ipartx(Int_t id);
   static Float_t dose(Float_t Z);
   static void SetFlux(Bool_t k = kTRUE) {flux = k;}
