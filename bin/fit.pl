@@ -98,8 +98,8 @@ if ($all) {
 			     EtaB3 EtaB3C
 			     Eta3P Eta3PC
 			     EtaB3P EtaB3PC
-			     AvCurrent AvCurrentC  
-			     Qcm       QcmC
+			     AvCurrent AvCurrentC  AvCurrentP AvCurrentPC  
+			     Qcm       QcmC QcmP       QcmPC
 			     VoltageP  VoltagePC
 	      );
 #  TPoints70+TPoints70P TPointsF+TPointsFP TPoints70U+TPoints70UP TPointsFU+TPointsFUP  TPointsN+TPointsNP TPointsNU+TPointsNUP
