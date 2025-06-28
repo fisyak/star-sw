@@ -262,7 +262,7 @@ if ($?STAR_HOST_SYS) then
 #	breaksw
 #  endsw 
 endif
-echo $STAR_LEVEL | egrep '(.DEV2|TFG22[d-z]|TFG2[3-9]|TFG.star|^TFG$)' > /dev/null
+echo $STAR_LEVEL | egrep '(.DEV2|TFG22[d-z]|TFG2[3-9][a-z]|TFG.star|^TFG$)' > /dev/null
 if ($?) then 
   if ($?STAR_NEW_ENVIRONMENT) unsetenv STAR_NEW_ENVIRONMENT
   if ($?STAR_HOST_SYS_OPT)    unsetenv STAR_HOST_SYS_OPT

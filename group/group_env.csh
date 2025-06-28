@@ -422,6 +422,7 @@ if ( -f ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}  && -f ${STAR}/mgr/CERN_LEVEL ) th
 
 else
     if ($INTERACTIVE) echo "CERN_LEVEL and ROOT_LEVEL has not been set. ABORT."
+    exit 1;
 endif
 
 if ($ECHO) echo   "Setting up ROOT_LEVEL= ${ROOT_LEVEL}"
