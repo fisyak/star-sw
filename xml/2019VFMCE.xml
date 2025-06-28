@@ -47,7 +47,8 @@
 #  set sdt = ",sdt20190311"
 #  set sdt = ",sdt20190610" # 3p85GeV_fixedTarget
 #  set sdt = ",sdt20190226" # 19GeV_2019 
-  set chain = "vmc,MC.19GeV_2019,P2019a,btof,BEmcChkStat,CorrZ,-evout,NoHistos,noTags,noRunco,StiCA,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,-McTpcAna,"${name};
+#  set chain = "vmc,MC.19GeV_2019,P2019a,btof,BEmcChkStat,CorrZ,-evout,NoHistos,noTags,noRunco,StiCA,picoWrite,PicoVtxVpdOrDefault,-geantOut,-evout,-useXgeom,-McTpcAna,"${name};
+  set chain = "vmc,MC.19GeV_2019,tpcX,iTpcIT,tpcDB,TpcHitMover,Idst,BAna,CorrZ,NoHistos,noRunco,StiCA,picoWrite,PicoVtxVpdOrDefault,-geantOut,"${name};
   set sdt = ""
   set VFMCE = ",VFMCE,KFVertex";
   set Chain = ${chain}${VFMCE}${sdt}",Rung."${rung}
@@ -67,5 +68,5 @@
     endif
   endif
 </command>
-<input URL="command:RunId.pl 1 1000 500 K0S" />
+<input URL="command:RunId.pl 101 500 500  K0S" />
 </job>
