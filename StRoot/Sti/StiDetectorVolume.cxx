@@ -18,7 +18,7 @@
 #include "Sti/StiPlacement.h"
 #include "Sti/StiMaterial.h"
 #include "Sti/StiToolkit.h"
-
+double StiDetectorVolume::dZIgnore = 5.0; // ignore detectors with dZ < dZIgnore in print out
 #if 0
 //_____________________________________________________________________________
 static Bool_t CompareMatrix(TRotMatrix &a,TRotMatrix &b)
@@ -160,7 +160,16 @@ void StiDetectorVolume::MakeVolume(const StiDetectorBuilder &builder, unsigned i
         }
         position->SetNode(nextVolume);
         Add(nextVolume,position);
-#if 1
+	next->Print("");
+#if 0
+	static TString Line("");
+	static Int_t No = 0;
+	static TString material;
+	if (No == 0) {
+	  Line = "//           Media name, type, No,   R_min,   R_max,       A,       Z,   density.       X_0,   Z_min,   Z_max, *Media";
+	  cout << Line.Data() << endl;
+	}
+	Line = Form("/* R: %10.3g, Z: %10.3g, a:  %10.3g */", place->getNormalRadius(), place->getZcenter(), place->getNormalRefAngle());
 // 	nextVolume->Print(); 
 	TShape *sh = nextVolume->GetShape();
 // 	sh->Print();
@@ -189,16 +198,11 @@ void StiDetectorVolume::MakeVolume(const StiDetectorBuilder &builder, unsigned i
 // 	    }
 // 	    cout << endl;
 // 	    position->Print();
-	    if (tube->GetDz() < 5.0) continue;
-	    static Int_t No = 0;
-	    static TString Line;
-	    static TString material;
+	    if (tube->GetDz() < dZIgnore) continue;
 	    material = "\"";
             material += stiGas->getName().c_str();
 	    material += "\"";
 	    if (No == 0) {
-	      Line = "//           Media name, type, No,   R_min,   R_max,       A,       Z,    density.       X_0,   Z_min,   Z_max, *Media";
-	      cout << Line.Data() << endl;
 	      /*
   {"Vacuum"            ,"gas",  0,   3.900,   4.000,   1.000,   0.000,   0.000, 1.000e+11, -76.200,  76.200, 0},//PIPE_1/PIPC_1
   {"BERILLIUM"         ,"mat",  1,   3.900,   4.000,   9.010,   4.000,   1.848, 3.446e+01, -76.200,  76.200, 0},//PIPE_1/PIPC_1
@@ -212,18 +216,20 @@ void StiDetectorVolume::MakeVolume(const StiDetectorBuilder &builder, unsigned i
   {"ALUMINIUM_TOFC"    ,"mat",  9, 200.000, 207.731,  26.827,  12.886,   0.324, 7.480e+01,-224.186, 223.794, 0},///TOFC_1
 	       */
 	    }
-	    Line = Form("  {%-20s,\"gas\",%3i,%8.3f,%8.3f,%8.3f,%8.3f,%10.3e,%10.3e",material.Data(), No,tube->GetRmin(),tube->GetRmax(),
+#if 0
+	    Line += Form("  {%-20s,\"gas\",%3i,%8.3f,%8.3f,%8.3f,%8.3f,%10.3e,%10.3e",material.Data(), No,tube->GetRmin(),tube->GetRmax(),
 				stiGas->getA(), stiGas->getZ(),stiGas->getDensity(),stiGas->getX0());
 	    Line += Form(",%8.3f,%8.3f, 0},", position->GetZ() - tube->GetDz(), position->GetZ() + tube->GetDz());
-	    cout << Line.Data() << "//" << next->getName() << endl;
+	    cout << Line.Data() << "//\t" << next->getName() << endl;
 	    No++;
+#endif
 	    material = "\"";
             material += stiMat->getName().c_str();
 	    material += "\"";
-	    Line = Form("  {%-20s,\"mat\",%3i,%8.3f,%8.3f,%8.3f,%8.3f,%8.3f,%10.3e",material.Data(), No,tube->GetRmin(),tube->GetRmax(),
+	    Line += Form("  {%-20s,\"mat\",%3i,%8.3f,%8.3f,%8.3f,%8.3f,%10.3f,%10.3e",material.Data(), No,tube->GetRmin(),tube->GetRmax(),
 				stiMat->getA(), stiMat->getZ(),stiMat->getDensity(),stiMat->getX0());
 	    Line += Form(",%8.3f,%8.3f, 0},", position->GetZ() - tube->GetDz(), position->GetZ() + tube->GetDz());
-	    cout << Line.Data() << "//" << next->getName() << endl;
+	    cout << Line.Data() << "//\t" << next->getName() << " i = " << i << ", j = " << j << endl;
 	    No++;
 	  }
 	}
