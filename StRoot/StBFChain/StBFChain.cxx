@@ -688,6 +688,7 @@ Int_t StBFChain::Instantiate()
       if (GetOption("usePct4Vtx" ) )      mk->SetAttr("PCT"           	, kTRUE);
       if (GetOption("useBTOF4Vtx") )      mk->SetAttr("BTOF"          	, kTRUE);
       if (GetOption("useBTOFmatchOnly") ) mk->SetAttr("useBTOFmatchOnly", kTRUE);
+      if (GetOption("FXT"        ) )      mk->SetAttr("FXT"             , kTRUE);
       
       // X-tended works only for VFPPV, VFPPVnoCTB, VFPPVev for now but could be re-used
       // However, we will change this to a more flexible arbitrarry setting later
@@ -802,6 +803,7 @@ Int_t StBFChain::Instantiate()
       }
       if ( GetOption("picoRead")  )  mk->SetMode(2);   // possibly more magic
       if ( GetOption("PicoVtxVpd"))           mk->SetAttr("PicoVtxMode", "PicoVtxVpd");
+      else if ( GetOption("PicoVtxFXT"))      mk->SetAttr("PicoVtxMode", "PicoVtxFXT");
       else if ( GetOption("FXT"))             mk->SetAttr("PicoVtxMode", "PicoVtxFXT");
       else if ( GetOption("PicoVtxMtd"))      mk->SetAttr("PicoVtxMode", "PicoVtxMtd");
       else if ( GetOption("PicoVtxVpdOrDefault"))  mk->SetAttr("PicoVtxMode", "PicoVtxVpdOrDefault");
@@ -897,6 +899,7 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("useLDV")    ) mk->SetAttr("useLDV",kTRUE) ;// uses laserDV database
       if ( GetOption("useCDV")    ) mk->SetAttr("useCDV",kTRUE) ;// uses ofl database
       if ( GetOption("useNewLDV") ) mk->SetAttr("useNewLDV",kTRUE);// uses new laserDV
+      if ( GetOption("shadow")    ) mk->SetAttr("NoReset",kTRUE);// no resetting ExB
       if ( GetOption("Alignment2024")     ) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
       if ( GetOption("Cosmics")   ) mk->SetAttr("Cosmics"    ,kTRUE);
       if (GetOption("ExB")){
