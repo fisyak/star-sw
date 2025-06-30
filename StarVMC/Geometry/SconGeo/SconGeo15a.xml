@@ -1,0 +1,16 @@
+<Document file="StarVMC/Geometry/SconGeo/SconGeo15a.xml">
+<Module name="SCON15" comment="Dummy module calling scongeo15.g">
+        <CDE  >
+            AGECOM
+            GCUNIT
+            GCONST
+        </CDE>
+<Export language="Mortran">
+Call Scongeo15
+</Export>
+</Module>
+    
+
+
+</Document>
+
