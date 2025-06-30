@@ -1,0 +1,9 @@
+<Document name="scongeo15a.xml">
+<Export language="Mortran">
+<Import file="pams/geometry/scongeo/scongeo15.g" verbatim="true" />
+<Module name="SCONGEO15a" comment="Dummy module calling SCONGEO15a">
+<CDE>AGECOM,GCUNIT</CDE>
+Call SconGeo15
+</Module>
+</Export>
+</Document>
