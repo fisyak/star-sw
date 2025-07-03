@@ -228,6 +228,7 @@ replace [exe SCON02;] with [;scon_addr=0;             " build by SVTT           
 replace [exe SCON12;] with [;scon_addr=setup_scon12();" new cable weight estimate ";]
 replace [exe SCON13;] with [;scon_addr=setup_scon13();" new cable weight estimate ";]
 replace [exe SCON14;] with [;scon_addr=setup_scon14();" new cable weight estimate better SROD";]
+replace [exe SCON15;] with [;scon_addr=setup_scon14();" new scon design";]
 
 
 *                                                                               Silicon Strip Detector

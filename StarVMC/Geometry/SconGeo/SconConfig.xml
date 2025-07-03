@@ -2,7 +2,7 @@
 
   <Detector name="SCON" comment="Beam Beam Counter configurations"> 
  
-    <Modules>SconGeo, SconGeo15</Modules>
+    <Modules>SconGeo, SconGeo15a</Modules>
 
     <Setup  name   = "SCONof" comment="FGT off" module="SconGeo" onoff="off"  simu="1"/>
 
@@ -74,7 +74,7 @@
 
     <Setup  name   = "SCON15"  simu="1"
 	    comment= "Default configuration for the SVT support cone"
-	    module = "SconGeo15"
+	    module = "SconGeo15a"
 	    onoff  = "on" > 
 <!--
       <Init struct="svtg" var="conever" value="4.0" />      

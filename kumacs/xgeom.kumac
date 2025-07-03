@@ -17,7 +17,7 @@ macro xgeom year=y2025z
   satt * seen 1
 *  exec xgeom#zcutTPC [year]
   exec xgeom#xcut  [year] -
-  exec xgeom#TPCzcut [year] -100
+*  exec xgeom#TPCzcut [year] -100
 return
 ********************************************************************************
 macro xcut year=y2019
