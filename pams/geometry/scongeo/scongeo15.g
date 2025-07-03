@@ -46,7 +46,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 *
       Real           conez(7), coneRi(7), coneRO(7)
       Real           conezx(7), coneRix(7), coneROx(7)
-      Real           phi, xbuf, xbuf1, xbuf2
+      Real           phi, xbuf, xbuf1, xbuf2, yy
       Integer        i, j
 ***************************
    Fill SVTG ! Basic SVT dimensions 
@@ -314,15 +314,21 @@ endblock
 Block SAKM is the beampipe support aluminum kinematic mount*
       Material Aluminium
       Attribute SAKM Seen=1 Colo=2
-     Shape     TUBE rmin=ssub_KMountId/2 rmax=ssub_KMountOd/2,
+*     Shape     TUBE rmin=ssub_KMountId/2 rmax=ssub_KMountOd/2,
 *		     dz=ssub_KMntThk/2
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={     conez(6),     conez(1),     conez(1),     conez(2)},
 Rmn={svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin},
 Rmx={coneRi(1)+0.1,coneRi(1)+0.1,    coneRi(1),     coneRi(1)}
-
-*     Position  SPOK y=ssub_KMCutOff               Konly='MANY'
-*     Position  SPOK y=-ssub_KMCutOff  AlphaZ=180  Konly='MANY'
+*     {"180X",   90.0,    0.0,  -90.0,   90.0,  180.0,    0.0}, // "180X"  (x,y,z) = > ( x,-y,-z)
+*     {"90ZD",  -90.0,    0.0,    0.0,    0.0,   90.0,   90.0}, // "90ZD"  (x,y,z) = > (-x, z, y)
+*     {"90XD",   90.0,   90.0,    0.0,    0.0,   90.0,    0.0}, // "90XD"  (x,y,z) = > ( z, x, y)
+      YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
+      CREATE SPOK
+      Position  SPOK x=YY  y=YY  z=conez(1)  ThetaX=90 PhiX=135 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=45
+      Position  SPOK x=-YY y=YY  z=conez(1)  ThetaX=90 PhiX=225 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=135
+      Position  SPOK x=-YY y=-YY z=conez(1)  ThetaX=90 PhiX=315 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=225
+      Position  SPOK x=YY  y=-YY z=conez(1)  ThetaX=90 PhiX=45  ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=315
 Endblock
 Block SPOK is beam line support spokes
       Material Aluminium
