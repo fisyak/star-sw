@@ -36,13 +36,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
                        RodID,     RodOD,     RodIDx,    RodODx,
                        carbonShell, carbonDens, nomexDens}
 *
-      structure SSUB { Version,   KMountId,  KMountOd,  KMntThk,
-                       KMCutOd,   KMCutId,   KMCutOA,   KMCutOff,
-                       SRingId,   SRingOd,   SRingThk,
-                       SRCutPhi,  SRCutWid,  SRCutOut,  SRCutIn,
-                       SRollId,   SRollOd,   SRollLen,  SWireLen,
-                       MBlkHgh,   MBlkOWid,  MBlkOLen,  MBlkIWid,
-                       MBlkILen,  MBlkORad,  MBlkIRad,  MRodDia}
+      structure SSUB { Version,   KMountId,  KMountOd,  KMntThk}
 *
       Real           conez(7), coneRi(7), coneRO(7)
       Real           conezx(7), coneRix(7), coneROx(7)
@@ -72,7 +66,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 
       RodLen    = 111.4 !  110.8      ! Length of support rods
       RodDist   = 20.1  !  distance from center to IP 15.6  !  17.5       ! Distance of support rod od from beam axis  20.1 - 4.5 = 15.6
-*      RodDist   = 15.6  !  17.5       ! Distance of support rod od from beam axis  20.1 - 4.5 = 15.6
+**      RodDist   = 15.6  !  17.5       ! Distance of support rod od from beam axis  20.1 - 4.5 = 15.6
       RodID     = 3.64       ! ID of Carbon support rods 
       RodOD     = 4.50       ! OD of Carbon support rods 
       RodIDx    = 8.72       ! ID of Carbon support rods 
@@ -89,33 +83,6 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       KMountId  = 31.34      ! id of beampipe support kinematic mount
       KMountOd  = 38.96      ! od of beampipe support kinematic mount
       KMntThk   = 0.64       ! thickness of support kinematic mount
-*
-      KMCutOd   = 18.31      ! od of cutout in kinematic mount
-      KMCutId   = 14         ! id of cutout in kinematic mount
-      KMCutOA   = 38         ! opening angle of cutout
-      KMCutOff  = 26.58      ! offset of cutout center from axis
-*
-      SRingId   = 8.47       ! id of beampipe support ring
-      SRingOd   = 12.78      ! od of beampipe support ring
-      SRingThk  = 0.64       ! thichkness of beampipe support ring
-*
-      SRCutPhi  = 38         ! support ring cutout angle to z-axis
-      SRCutWid  = 3.63       ! support ring cutout width
-      SRCutOut  = 5.08       ! support ring cutout depth
-      SRCutIn   = 3.5        ! support ring cutout start
-      SRollId   = 0.2        ! support roller Id
-      SRollOd   = 0.62       ! support roller Od
-      SRollLen  = 2.54       ! support roller length
-      SWireLen  = 5.08       ! support roller axis length
-*
-      MBlkHgh   = 0.97       ! mounting block height
-      MBlkOWid  = 2.54       ! outer mounting block width
-      MBlkOLen  = 1.27       ! outer mounting block length
-      MBlkIWid  = 3.175      ! inner mounting block width
-      MBlkILen  = 1.27       ! inner mounting block length
-      MBlkORad  = 17.4       ! outer mounting block at radius
-      MBlkIRad  = 5.42       ! inner mounting block at radius
-      MRodDia   = 0.32       ! mounting support rod diameter
    EndFill
 
 *
@@ -300,8 +267,6 @@ endblock
 Block SBSP is the beampipe support mother volume
       Material Air
       Attribute SBSP Seen=0 Colo=1
-*      Shape TUBE rmin=svtg_RSizeMin rmax=ssub_KMountOd/2,
-*                 dz=ssub_KMntThk/2+ssub_MBlkHgh
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={       conez(6),       conez(1),       conez(1),                    conez(2)},
 Rmn={SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
@@ -314,14 +279,10 @@ endblock
 Block SAKM is the beampipe support aluminum kinematic mount*
       Material Aluminium
       Attribute SAKM Seen=1 Colo=2
-*     Shape     TUBE rmin=ssub_KMountId/2 rmax=ssub_KMountOd/2,
-*		     dz=ssub_KMntThk/2
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={     conez(6),     conez(1),     conez(1),     conez(2)},
 Rmn={svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin},
 Rmx={coneRi(1)+0.1,coneRi(1)+0.1,    coneRi(1),     coneRi(1)}
-*     {"180X",   90.0,    0.0,  -90.0,   90.0,  180.0,    0.0}, // "180X"  (x,y,z) = > ( x,-y,-z)
-*     {"90ZD",  -90.0,    0.0,    0.0,    0.0,   90.0,   90.0}, // "90ZD"  (x,y,z) = > (-x, z, y)
 *     {"90XD",   90.0,   90.0,    0.0,    0.0,   90.0,    0.0}, // "90XD"  (x,y,z) = > ( z, x, y)
       YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
       CREATE SPOK
