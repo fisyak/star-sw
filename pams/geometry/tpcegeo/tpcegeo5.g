@@ -145,7 +145,7 @@ Content   TPCE,TOFC,TOFS,TOST,TOKA,TONX,TOAD,TOHA,TPGV,TPSS,
           TIFC,TIAL,TIKA,TINX,TPCW,TWSS,TWGI,TPCM,TPEA,
           TESS,TSWH,TMWC,TMEA,TMSE,TIAG,TOAE,TPAD,TPAI,TPAO,TDEA,
           THOL,THRA,THLA,TALC,TAEC,TCEX,TCRX,TSAW,
-          TWGC,TWGB,TPIP,TMAN,TRDV,TRDS,TRDC,TIAD,TOIG,
+          TWGC,TWGB,TPIP,TMAN,TRDV,TRDS,TRDC,TRDI,TIAD,TOIG,
           FEES,FEEP,FEER,FEEI,FEEA,
           TSAS,TWAS,TALS,TSGT,TWBT,TWRC,TWRG,TWRI,TWTR,TWMR,
           TRDO,TBRW,TWRB,TCOO,TCAB,TRIB,TWIR
@@ -277,7 +277,7 @@ External  TPADSTEP,TPAISTEP,TPAOSTEP,TPCELASER
                         tohaDR,tiadDR,tinxDR,tikaDR,tialDR,
                         tifcRF,tifcDRT,dzYF1,dzYF2,dzYF3,
                         PadPlaneThickness,dGateGround,WireMountWidth,
-                        WireMountHeight,dxRDO,dyRDO,dzRDO,zRDO,
+                        WireMountHeight,dxRDO,dyRDO,dzRDO,zRDO,dxRDI,dyRDI,dzRDI,
                         heigTube,widTube,RDOCoolingdX,RDOCoolingdY,RDOCoolingdZ,
                         zGatingGrid,zGroundGrid,DeadZone,dAnode(2) }
 
@@ -346,10 +346,13 @@ Structure TFEE {Vers,CardDX ,CardDY,CardDZ,PlateDX,PlateDY,PlateDZ,
         dGateGround = 0.6            !//
         WireMountWidth  = 5*0.130*inch !// 5*((0.130+0.1376)/2)*INCH  !//
         WireMountHeight = 1.340*inch    !// Drawing 24A0434
-        dxRDO   = 1.75/2                !// A.Lebedev 1 RDO = 5 lb  10/24/14 A.Lebedev  945g
+        dxRDO   = 1.75/2                !// A.Lebedev 1: RDO = 5 lb  10/24/14 A.Lebedev  945g | A.Lebedev 2: 03/12/2025  820 g
         dyRDO   = 45.72/2               !//
         dzRDO   = 17.0/2 !// 17.78/2               !//
         zRDO    = TPCG_LengthW/2 + 20.0         !//
+        dxRDI   = 1.75/2                !// A.Lebedev iTPC RDO 540g  03/12/2025 
+        dyRDI   = 23.5/2                !//
+        dzRDI   = 9.0                   !//
         heigTube = 0.703*INCH           !// x Cooling TUBE Drawing 24A0801B
         widTube  = 0.500*INCH           !// z Mixture TPCE_Water_Pipe => rho = 2.32155 g/cm**3
         RDOCoolingdX = (38.0 + 9.0 + 58.0)/2    !//
@@ -1586,16 +1589,43 @@ Attribute TRDO seen=1  colo=kYellow
     Create And Position TCOO x=myPar(11) y=0 z=myPar(13) ORT=YZX
 !//     write(*,*) '###TRDO.TCOO myPar(1-4)=', myPar(1),myPar(2),myPar(3),myPar(4);
 !//     write(*,*) '###TRDO.TCOO myPar(11,13)=', myPar(11),myPar(13);
-
-    if (iCoo. ne. 0 .and. iCoo .ne. 6) {
+    if (iCoo .eq. 6) goto 9913
+    if (TPCG_TpadConfig .eq. 0 .or. TPCG_TpadConfig .eq. 9 .and. sector .ne. 20) {!  old TPC
+      if (iCoo .lt. 6) {
 !//      TpcRDO->AddNode(RDOCard, iRDOCard++, new TGeoTranslation(z+dz+TPCG_dxRDO, 0, TPCG_zRDO - TPCG_dzRDO));
-       myPar(11) = z+dz+TPCG_dxRDO; myPar(13) =TPCG_zRDO-TPCG_dzRDO;
-       Create And Position TRDC x=myPar(11) y=0 z=myPar(13);
-!//     write(*,*) '###TRDO.TRDC myPar(11,13)=', myPar(11),myPar(13);
+        myPar(11) = z+dz+TPCG_dxRDO; myPar(13) =TPCG_zRDO-TPCG_dzRDO;
+        Create And Position TRDC x=myPar(11) y=0 z=myPar(13);
+!//        write(*,*) '###TRDO.TRDC myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
+      }
+    } else {
+        if (iCoo .lt. 4) {
+!//       TpcRDO->AddNode(RDOCard, iRDOCard++, new TGeoTranslation(z+dz+TPCG_dxRDO, 0, TPCG_zRDO - TPCG_dzRDO));
+          myPar(11) = z+dz+TPCG_dxRDO; myPar(13) =TPCG_zRDO-TPCG_dzRDO;
+          Create And Position TRDC x=myPar(11) y=0 z=myPar(13);
+!//     write(*,*) '###TRDO.TRDC myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
+         } else {
+	   if (iCoo .eq .4) {
+             myPar(11) = z+dz+TPCG_dxRDI; myPar(13) =TPCG_zRDO-TPCG_dzRDI;
+             Create And Position TRDI x=myPar(11) y=-TPCG_dyRDI-2.5 z=myPar(13);
+!//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
+             Create And Position TRDI x=myPar(11) y=+TPCG_dyRDI+2.5 z=myPar(13);
+!//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
+           } 
+	   if (iCoo .eq. 5) {
+             myPar(11) = z+dz+TPCG_dxRDI; myPar(13) =TPCG_zRDO-TPCG_dzRDI;
+             Create And Position TRDI x=myPar(11) y=0 z=myPar(13);
+!//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
+           }
+	   if (iCoo .eq. 7) {
+             myPar(11) = z-dz-TPCG_dxRDI; myPar(13) =TPCG_zRDO-TPCG_dzRDI;
+             Create And Position TRDI x=myPar(11) y=0 z=myPar(13);
+!//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
+           }
+       }
     }
+9913 continue
     RCoolingTube -= dRDOCooling(iCoo);
   }
-
 endBlock        "end TRDO"
 *
 *------------------------------------------------------------------------------
@@ -1660,11 +1690,30 @@ block TRDC      RDOCard
       Component  C   A=12     Z=6   W=0.4*8*12./174.
       Component  H   A=1      Z=1   W=0.4*14*1./174.
       Component  O   A=16     Z=8   W=0.4*4*16./174.
-      Mixture G10RDO  Dens=1.7/2.41
+      Mixture G10RDO  Dens=1.7/2.41/1.17 ! to get A.Lebedeb's 820 g 
       material  G10RDO
 
-        SHAPE PARA dX=TPCG_dxRDO dY=TPCG_dyRDO dZ=TPCG_dzRDO
+        SHAPE BOX dX=TPCG_dxRDO dY=TPCG_dyRDO dZ=TPCG_dzRDO
 endBlock        "end TRDC"
+*
+*------------------------------------------------------------------------------
+*
+block TRDI      RDOCard for iTPC
+!//  TGeoVolume *RDOCard = gGeoManager->MakeBox("RDOCard", GetMed("TPCE_G10"), TPCG_dxRDO, TPCG_dyRDO, TPCG_dzRDO);
+        Attribute TRDI seen=1  colo=kBlue
+!        Material G10 
+*   Effective G10 + electonics + connectors
+*   the following is taken
+      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
+      Component  O   A=16     Z=8   W=0.6*2*16./60.
+      Component  C   A=12     Z=6   W=0.4*8*12./174.
+      Component  H   A=1      Z=1   W=0.4*14*1./174.
+      Component  O   A=16     Z=8   W=0.4*4*16./174.
+      Mixture G10RDI  Dens=1.7/2.41/0.967 ! to get A.Lebedev 540 g
+      material  G10RDI
+!//	write(*,*) 'dX=',TPCG_dxRDI,' dY=',TPCG_dyRDI,' dZ=',TPCG_dzRDI
+        SHAPE BOX dX=TPCG_dxRDI dY=TPCG_dyRDI dZ=TPCG_dzRDI
+endBlock        "end TRDI"
 *
 *------------------------------------------------------------------------------
 *
