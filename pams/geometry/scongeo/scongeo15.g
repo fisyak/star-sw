@@ -271,13 +271,14 @@ Block SBSP is the beampipe support mother volume
  zi={       conez(6),       conez(1),       conez(1),                    conez(2)},
 Rmn={SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
 Rmx={  coneRi(1)+0.1,  coneRi(1)+0.1,      coneRi(1),                   coneRi(1)}
-      Create SAKM  " aluminum kinematic mount "
+      Create SAKM  " aluminum kinematic mount (just guess) "
       Position SAKM
-      Create    SPOK  " spoke to support beam pipe "
+      Create    SPOK  " spoke to support beam pipe (just guess) "
 endblock
 *
 Block SAKM is the beampipe support aluminum kinematic mount*
       Material Aluminium
+      Material AluminiumFiber dens=0.27 ! Just a guess
       Attribute SAKM Seen=1 Colo=2
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={     conez(6),     conez(1),     conez(1),     conez(2)},
