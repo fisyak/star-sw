@@ -16,8 +16,9 @@ macro xgeom year=y2025z
   graphics/set fwid 6              | Width of fit lines
   satt * seen 1
 *  exec xgeom#zcutTPC [year]
-  exec xgeom#xcut  [year] -
+*  exec xgeom#xcut  [year] -
 *  exec xgeom#TPCzcut [year] -100
+  exec RDOcut
 return
 ********************************************************************************
 macro xcut year=y2019
@@ -48,4 +49,9 @@ macro TPCzcut  year=y2019 z=-100
 *dcut mcse x -10 0 0 1 1
 *null 0 500 -10 10 
 *dcut hall x 0 0 0 1 1
+return
+*******************************************************************************
+macro RDOcut
+  null 40 220 -60 60
+  dcut trdo z 248 0 0  1 1
 return

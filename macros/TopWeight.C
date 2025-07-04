@@ -1,17 +1,18 @@
 TDataSet *CreateTable();
 //________________________________________________________________________________
-void TopWeight(const Char_t *tag = "y2020") {
+void TopWeight(const Char_t *tag = "y2025z") {
   const Double_t lb2kg = 0.45359237;
   //  const Int_t NVolumes = 55;
   //  const Char_t *topVolumeNames[55] = {
   const Char_t *topVolumeNames[] = {
     "HALL","CAVE","PIPE","UPST","SVTT","SFMO","FTPC","SUPO","FTMO",
-    "FTCM","BTOF","VPDD","CALB","ECAL","BBCM","FBOX","ZCAL","MAGP","FGMO",
+    "FTCM","BTOF","VPDD","CALB","ECAL","BBCM","FBOX","ZCAL","MAGP",
     "PHMD","PXMO","RICH","IBMO","FGMO","GMBO","MGMT","SHLD","MUTD","IGMO",
     "YPXM","ITSP","IBSH","IBSG","IBSF","IBSE","IBSD","IBSC","IBSB","IBSA",
     "IBEM","IBEH","DUMM","ITSP:ITS1","FSMO","TPCE","TPCM","TIFC","TOFC","TPEA",
-    "TRDV","TPCW","TWSS","TWGI","TWGI:TWG1",
-    "SCON","SCMY","SGRA","SBSP","SAKM","SCKM","SBMM","SBMI","SBMO","SMRD","SBRL","SBRX","SBSR","SBCR","SROD","SROH","SRON","SROI",
+    "TRDC","TRDI","TRDV","TPCW","TWSS","TWGI","TWGI:TWG1",
+    "SCOM","SCON","SCMY","SGRA","SBSP","SAKM","SPOK","SCKM","SBMM","SBMI","SBMO","SMRD","SBRL","SBRX","SBSR","SBCR","SROD","SROH","SRON","SROI",
+    "YPLM","FHCM","FPDM","FSCE","FPIM","SHLD",
     0
   };
   
@@ -20,7 +21,13 @@ void TopWeight(const Char_t *tag = "y2020") {
   }
   if (! gGeoManager) {
     TString STAR(gSystem->Getenv("STAR"));
-		 gROOT->LoadMacro(Form("%s/StarDb/AgiGeometry/Geometry.%s.C",STAR.Data(),tag));
+    const Char_t *path  = ".:./StarDb/AgiGeometry:$STAR/StarDb/AgiGeometry";
+    TString File(Form("Geometry.%s.C",tag));
+    Char_t *file = gSystem->Which(path,File.Data(),kReadPermission);
+    if (! file) {Fatal("TopWeight","File %s has not been found in path %s",File.Data(),path); return;}
+    else        Warning("TopWeight","File %s has been found as %s",File.Data(),file);
+    gROOT->LoadMacro(file);
+    delete file;
     CreateTable();
   }
   if (! gGeoManager) return;
@@ -188,4 +195,44 @@ SROD    Analytical  = 0.366298[kg]      0.807548[lb]    Statistical = 0.36318[kg
 SROH    Analytical  = 0[kg]     0[lb]   Statistical = 0[kg]     0[lb]
 SRON    Analytical  = 0.19281[kg]       0.425074[lb]    Statistical = 0.194218[kg]      0.428177[lb]
 SROI    Analytical  = 0.154156[kg]      0.339855[lb]    Statistical = 0.15343[kg]       0.338255[lb]
+
+07/03/2025 update scon
+HALL    Analytical  = 2.63419e+07[kg]   5.8074e+07[lb]  Statistical = 2.62135e+07[kg]   5.77909e+07[lb]
+CAVE    Analytical  = 1.70944e+07[kg]   3.76867e+07[lb] Statistical = 1.71455e+07[kg]   3.77993e+07[lb]
+PIPE    Analytical  = 22.1248[kg]       48.7769[lb]     Statistical = 21.7908[kg]       48.0406[lb]
+UPST    Analytical  = 11885.7[kg]       26203.6[lb]     Statistical = 11829.7[kg]       26080[lb]
+BTOF    Analytical  = 3703.05[kg]       8163.82[lb]     Statistical = 3738.67[kg]       8242.35[lb]
+VPDD    Analytical  = 5.93389[kg]       13.082[lb]      Statistical = 5.87931[kg]       12.9617[lb]
+CALB    Analytical  = 119249[kg]        262898[lb]      Statistical = 119565[kg]        263597[lb]
+ECAL    Analytical  = 26152.1[kg]       57655.4[lb]     Statistical = 26294.9[kg]       57970.2[lb]
+BBCM    Analytical  = 1.14168[kg]       2.51697[lb]     Statistical = 1.13474[kg]       2.50168[lb]
+ZCAL    Analytical  = 419.814[kg]       925.532[lb]     Statistical = 417.365[kg]       920.132[lb]
+MAGP    Analytical  = 778401[kg]        1.71608e+06[lb] Statistical = 777845[kg]        1.71486e+06[lb]
+SHLD    Analytical  = 65341.4[kg]       144053[lb]      Statistical = 65341.4[kg]       144053[lb]
+MUTD    Analytical  = 387.836[kg]       855.031[lb]     Statistical = 381.027[kg]       840.021[lb]
+IBSH    Analytical  = 0.0514456[kg]     0.113418[lb]    Statistical = 0.0515075[kg]     0.113555[lb]
+IBSG    Analytical  = 0.102891[kg]      0.226836[lb]    Statistical = 0.102803[kg]      0.226642[lb]
+IBSF    Analytical  = 4.08073[kg]       8.99647[lb]     Statistical = 4.08227[kg]       8.99986[lb]
+IBSE    Analytical  = 0.134537[kg]      0.296603[lb]    Statistical = 0.134537[kg]      0.296603[lb]
+IBSD    Analytical  = 0.267561[kg]      0.58987[lb]     Statistical = 0.267561[kg]      0.58987[lb]
+IBSC    Analytical  = 1.3773[kg]        3.03642[lb]     Statistical = 1.29318[kg]       2.85097[lb]
+IBSB    Analytical  = 5.5665[kg]        12.272[lb]      Statistical = 5.26436[kg]       11.6059[lb]
+IBSA    Analytical  = 3.28361[kg]       7.23912[lb]     Statistical = 3.09077[kg]       6.81397[lb]
+IBEM    Analytical  = 11.6868[kg]       25.7649[lb]     Statistical = 11.843[kg]        26.1094[lb]
+IBEH    Analytical  = 4.46906[kg]       9.8526[lb]      Statistical = 4.46906[kg]       9.8526[lb]
+TPCE    Analytical  = 6953.98[kg]       15330.9[lb]     Statistical = 5054.39[kg]       11143[lb]
+TPCM    Analytical  = 1.25444[kg]       2.76556[lb]     Statistical = 1.25486[kg]       2.76649[lb]
+TIFC    Analytical  = 64.5094[kg]       142.219[lb]     Statistical = 63.6324[kg]       140.285[lb]
+TOFC    Analytical  = 1434.57[kg]       3162.69[lb]     Statistical = 1453.21[kg]       3203.77[lb]
+SCOM    Analytical  = 42.621[kg]        93.9633[lb]     Statistical = 22.7702[kg]       50.1997[lb]
+SCON    Analytical  = 5.94166[kg]       13.0991[lb]     Statistical = 5.92583[kg]       13.0642[lb]
+
+SBSP    Analytical  = 15.0006[kg]       33.0706[lb]     Statistical = 10.0598[kg]       22.1781[lb]
+SAKM    Analytical  = 15.0006[kg]       33.0706[lb]     Statistical = 14.9792[kg]       33.0235[lb]
+SPOK    Analytical  = 0.000981402[kg]   0.00216362[lb]  Statistical = 0.000982629[kg]   0.00216633[lb]
+SROD    Analytical  = 0.368281[kg]      0.811921[lb]    Statistical = 0.36973[kg]       0.815114[lb]
+SROH    Analytical  = 0[kg]     0[lb]   Statistical = 0[kg]     0[lb]
+SRON    Analytical  = 0.193854[kg]      0.427376[lb]    Statistical = 0.195821[kg]      0.431712[lb]
+SROI    Analytical  = 0.154991[kg]      0.341696[lb]    Statistical = 0.155571[kg]      0.342975[lb]
+
 */
