@@ -18,7 +18,8 @@ macro xgeom year=y2025z
 *  exec xgeom#zcutTPC [year]
 *  exec xgeom#xcut  [year] -
 *  exec xgeom#TPCzcut [year] -100
-  exec RDOcut
+*  exec RDOcut
+  exec GMTcut
 return
 ********************************************************************************
 macro xcut year=y2019
@@ -54,4 +55,9 @@ return
 macro RDOcut
   null 40 220 -60 60
   dcut trdo z 248 0 0  1 1
+return
+*******************************************************************************
+macro GMTcut
+ null 75 125 -5 5 
+ dcut bgm1 y 0 0 0 1 1
 return
