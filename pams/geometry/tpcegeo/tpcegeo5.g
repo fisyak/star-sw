@@ -1097,7 +1097,7 @@ yhOF = {-15.025, -11.606, -8.177, -4.220,  0,  4.220,  8.177,  11.606, 15.025,
 !//  TGeoVolume *WheelRibBox = gGeoManager->MakeBox("WheelRibBox",GetMed("TPCE_ALUMINIUM"), TPCG_WheelBoxDy/2, TPCG_WheelBoxDx/2, TPCG_WheelTHK/2);
 !//  TpcSectorAndWheel->AddNodeOverlap(WheelRibBox, 1, new TGeoTranslation(TPCG_WheelR1, 0., zWheel1+TPCG_WheelTHK/2));
 
-        Create And Position TBRW          X=TPCG_WheelR1, Z=zWheel1+TPCG_WheelTHK/2 "//TpcWheelRibBox"
+        Create And Position TBRW          X=TPCG_WheelR1, Z=zWheel1+TPCG_WheelTHK/2 Konly='Many' "//TpcWheelRibBox"
     x1 = TPCG_WheelR0*cos15;
     x2 = TPCG_WheelR2;
     dz = TPCG_WheelRibHeight/2;
@@ -1136,7 +1136,7 @@ yhOF = {-15.025, -11.606, -8.177, -4.220,  0,  4.220,  8.177,  11.606, 15.025,
       x = r ;
       y = r *tand(alpha);
 !//      TpcSectorAndWheel->AddNodeOverlap(WheelRibBox, 3+4*inOut+j, new TGeoCombiTrans(x, y, zWheel1+TPCG_WheelTHK/2, GetRot(rotm)));
-     Position TBRW x=x y=y z=zWheel1+TPCG_WheelTHK/2 alphaz=alpha 
+     Position TBRW x=x y=y z=zWheel1+TPCG_WheelTHK/2 alphaz=alpha Konly='Many'
     }
     qwe(1) = -qwe(1);
     qwe(2) = -qwe(2);
@@ -1604,20 +1604,21 @@ Attribute TRDO seen=1  colo=kYellow
           Create And Position TRDC x=myPar(11) y=0 z=myPar(13);
 !//     write(*,*) '###TRDO.TRDC myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
          } else {
+	   myPar(13) =TPCG_zRDO-2*TPCG_dzRDO+TPCG_dzRDI;
 	   if (iCoo .eq .4) {
-             myPar(11) = z+dz+TPCG_dxRDI; myPar(13) =TPCG_zRDO-TPCG_dzRDI;
+             myPar(11) = z+dz+TPCG_dxRDI; 
              Create And Position TRDI x=myPar(11) y=-TPCG_dyRDI-2.5 z=myPar(13);
 !//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
              Create And Position TRDI x=myPar(11) y=+TPCG_dyRDI+2.5 z=myPar(13);
 !//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
            } 
 	   if (iCoo .eq. 5) {
-             myPar(11) = z+dz+TPCG_dxRDI; myPar(13) =TPCG_zRDO-TPCG_dzRDI;
+             myPar(11) = z+dz+TPCG_dxRDI; 
              Create And Position TRDI x=myPar(11) y=0 z=myPar(13);
 !//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
            }
 	   if (iCoo .eq. 7) {
-             myPar(11) = z-dz-TPCG_dxRDI; myPar(13) =TPCG_zRDO-TPCG_dzRDI;
+             myPar(11) = z-dz-TPCG_dxRDI; 
              Create And Position TRDI x=myPar(11) y=0 z=myPar(13);
 !//             write(*,*) '###TRDO.TRDI myPar(11,13)=', myPar(11),myPar(13), iCoo, sector
            }

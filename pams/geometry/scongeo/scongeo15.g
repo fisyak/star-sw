@@ -269,11 +269,17 @@ Block SBSP is the beampipe support mother volume
       Attribute SBSP Seen=0 Colo=1
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={       conez(6),       conez(1),       conez(1),                    conez(2)},
-Rmn={SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
+Rmn={ svtg_RSizeMin,   svtg_RSizeMin,svtg_RSizeMin,                 svtg_RSizeMin},
 Rmx={  coneRi(1)+0.1,  coneRi(1)+0.1,      coneRi(1),                   coneRi(1)}
       Create SAKM  " aluminum kinematic mount (just guess) "
       Position SAKM
       Create    SPOK  " spoke to support beam pipe (just guess) "
+*     {"90XD",   90.0,   90.0,    0.0,    0.0,   90.0,    0.0}, // "90XD"  (x,y,z) = > ( z, x, y)
+      YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
+      Position  SPOK x=YY  y=YY  z=conez(1)  ThetaX=90 PhiX=135 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=45
+      Position  SPOK x=-YY y=YY  z=conez(1)  ThetaX=90 PhiX=225 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=135
+      Position  SPOK x=-YY y=-YY z=conez(1)  ThetaX=90 PhiX=315 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=225
+      Position  SPOK x=YY  y=-YY z=conez(1)  ThetaX=90 PhiX=45  ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=315
 endblock
 *
 Block SAKM is the beampipe support aluminum kinematic mount*
@@ -282,15 +288,8 @@ Block SAKM is the beampipe support aluminum kinematic mount*
       Attribute SAKM Seen=1 Colo=2
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={     conez(6),     conez(1),     conez(1),     conez(2)},
-Rmn={svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin},
+Rmn={SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
 Rmx={coneRi(1)+0.1,coneRi(1)+0.1,    coneRi(1),     coneRi(1)}
-*     {"90XD",   90.0,   90.0,    0.0,    0.0,   90.0,    0.0}, // "90XD"  (x,y,z) = > ( z, x, y)
-      YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
-      CREATE SPOK
-      Position  SPOK x=YY  y=YY  z=conez(1)  ThetaX=90 PhiX=135 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=45
-      Position  SPOK x=-YY y=YY  z=conez(1)  ThetaX=90 PhiX=225 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=135
-      Position  SPOK x=-YY y=-YY z=conez(1)  ThetaX=90 PhiX=315 ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=225
-      Position  SPOK x=YY  y=-YY z=conez(1)  ThetaX=90 PhiX=45  ThetaY=0 PhiY=0 ThetaZ=90 PhiZ=315
 Endblock
 Block SPOK is beam line support spokes
       Material Aluminium
