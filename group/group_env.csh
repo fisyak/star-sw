@@ -103,18 +103,6 @@ endif
 if ( $?DECHO) echo "$self :: Executing STAR_SYS"
 source ${GROUP_DIR}/STAR_SYS;#  echo "STAR_HOST_SYS = ${STAR_HOST_SYS}"
 
-# Define /opt/star (or equivalent)
-    if (-r ${AFS_RHIC}/opt/star) then
-      setenv OPTSTAR ${AFS_RHIC}/opt/star
-    else 
-      if (-r /opt/star) then 
-        setenv OPTSTAR /opt/star
-      endif
-   endif
-   setenv XOPTSTAR ${OPTSTAR}
-   if (-r ${OPTSTAR}/${STAR_HOST_SYS}) then 
-     setenv XOPTSTAR ${OPTSTAR}/${STAR_HOST_SYS}
-   endif
 # define but feedback later
 if ( $?DECHO) echo "$self :: Defining GROUP_DIR STAR_PATH"
 if ( ! $?GROUP_DIR )   setenv GROUP_DIR ${STAR_ROOT}/group     # Defined to AFS Group Dir
