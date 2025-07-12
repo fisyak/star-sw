@@ -368,7 +368,7 @@ def replacements( line ):
             #
             # Look for things of the form struct.array(index,jndex) and replace with struct.array[int(jndex)-1][int(index)-1]
             #
-            expr = "%s\(([a-z0-9_\+\-\*\/\ \.]*)\,([a-z0-9_\+\-\*\/\ \.]*)\)"%key
+            expr = r"%s\(([a-z0-9_\+\-\*\/\ \.]*)\,([a-z0-9_\+\-\*\/\ \.]*)\)"%key
             for match in re.finditer( expr, myline, re.IGNORECASE ):
                 Old = match.group()
 
@@ -394,9 +394,9 @@ def replacements( line ):
             #
             # Look for things of the form struct.array(index) and replace with struct.array[int(index)-1]
             #
-            expr = "%s\(([a-z0-9_\+\-\*\/\ \.]*)\)"%key
+            expr = r"%s\(([a-z0-9_\+\-\*\/\ \.]*)\)"%key
 
-            for match in re.finditer( "%s\(([a-z0-9_\+\-\*\/\ \.]*)\)"%key, myline, re.IGNORECASE  ):
+            for match in re.finditer( r"%s\(([a-z0-9_\+\-\*\/\ \.]*)\)"%key, myline, re.IGNORECASE  ):
 
                 Old = match.group()
                 New = Old.replace('(','[int(')
@@ -1271,8 +1271,8 @@ class Module ( Handler ):
         # ---------------------------------------------------------------
         # Header file
         # ---------------------------------------------------------------
-        document.head('/// \class %s'%document.agmodule )
-        document.head('/// \\brief %s'%self.comment      )
+        document.head(r'/// \class %s'%document.agmodule )
+        document.head(r'/// \\brief %s'%self.comment      )
         document.head('class %s : public AgModule' % document.agmodule )
         document.head('{')
         document.head('public:')
@@ -2303,8 +2303,8 @@ class Structure( Handler ):
         if self.mkdocs:
             document.impl('//  -----------------------------------------------------',       unit='global')
             document.impl('/// @defgroup %s_doc'%name,           unit='global') # doxygen group is lowercase struct name
-            document.impl('/// \class %s_t'%camelCase(name),     unit='global') # declares it as a class (which it is)
-            document.impl('/// \\brief User-defined structure',  unit='global') # provides a brief description
+            document.impl(r'/// \class %s_t'%camelCase(name),     unit='global') # declares it as a class (which it is)
+            document.impl(r'/// \\brief User-defined structure',  unit='global') # provides a brief description
             document.impl('///                        ',         unit='global') #        
             document.impl('/// AgML structure members:',         unit='global') # followed by list of structure members
             document.impl('///                        ',         unit='global') #
@@ -2951,7 +2951,7 @@ class Shape(Handler):
             if ( val == None ): continue
         
             # Detect the section arguments of p*ons
-            if  re.match('\{',val):
+            if  re.match(r'\{',val):
                 val = val.strip('{}')
                 arr = val.split(',')
                 doxy_slice[ pconMap(a) ] = arr

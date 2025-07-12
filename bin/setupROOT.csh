@@ -169,8 +169,7 @@ switch ( $STAR_HOST_SYS )
 endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
-    case *al95_x8664_*:
-    case *al92_x8664_*:
+    case *al9*_x8664_*:
      setenv DISABLE "$DISABLE --disable-memstat"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-cast-function-type  "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-class-memaccess  "
