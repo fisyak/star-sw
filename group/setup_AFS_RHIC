@@ -84,16 +84,6 @@ if ($?AFS_RHIC) then
     setenv STAR_PATH ${STAR_ROOT}/packages
     setenv OPTSTAR   ${STAR_ROOT}/opt/star
     setenv XOPTSTAR  ${OPTSTAR}
-    if ($?CERN == 0) then 
-	set cern = cern
-	if ($USE_64BITS == 1) set cern = cern64 
-	if (-r "/$cern") then 
-	    setenv CERN "/${cern}"
-	else 
-	    setenv CERN ${STAR_ROOT}/${cern}
-	endif
-    endif
-    if ($?ROOT == 0) setenv ROOT ${STAR_ROOT}/ROOT
     if ($?TFG_STAR && -r ${AFS_RHIC}/packages/TFG/group) then
 	setenv GROUP_DIR ${AFS_RHIC}/packages/TFG/group
     else
