@@ -239,17 +239,17 @@ my $python2 = system("which python2 > /dev/null 2>& 1");
 #my $pyparsing = system("which pyparsing > /dev/null 2>& 1");
 #print "python2 = $python2\n";
 #if ($python2 || $pyparsing) {
-if ($python2) {
-  push @items, "Geometry";
-}
+#if ($python2) {
+#  push @items, "Geometry";
+#}
 #if ($STAR_HOST_SYS =~ /^al9/) {# no cern
 #print "def->{CXX_MAJOR} = $env->{CXX_MAJOR} ========================================\n";
-if ( $env->{CXX_MAJOR}  > 6) {# no cern
-  push @items, "rexe";
-  push @items, "starsim";
-  push @items, "gcalor";
-  push @items, "geant321";
-}
+#if ( $env->{CXX_MAJOR}  > 6) {# no cern
+#  push @items, "rexe";
+#  push @items, "starsim";
+#  push @items, "gcalor";
+#  push @items, "geant321";
+#}
 #die;
 if (! $env->{Packages}->{fastjet}->{LIBS}) {
   push @items, "StJetFinder";
