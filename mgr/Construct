@@ -244,12 +244,12 @@ if ($python2) {
 }
 #if ($STAR_HOST_SYS =~ /^al9/) {# no cern
 #print "def->{CXX_MAJOR} = $env->{CXX_MAJOR} ========================================\n";
-if ( $env->{CXX_MAJOR}  > 6) {# no cern
-  push @items, "rexe";
-  push @items, "starsim";
-  push @items, "gcalor";
-  push @items, "geant321";
-}
+#if ( $env->{CXX_MAJOR}  > 6) {# no cern
+#  push @items, "rexe";
+#  push @items, "starsim";
+#  push @items, "gcalor";
+#  push @items, "geant321";
+#}
 #die;
 if (! $env->{Packages}->{fastjet}->{LIBS}) {
   push @items, "StJetFinder";
