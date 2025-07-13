@@ -109,5 +109,6 @@
 <li> TFG25b Alma Linux release with latest update for gmt                2025-03-21 13:16:42 -0400  (HEAD -> TFG, tag: TFG25b_1)
 <li> TFG25c Move spack to opt/star, freeze GMT, dEdx pp500_2022          2025-03-26 15:04:41 -0400  (HEAD -> TFG, tag: TFG25c)
 <li> TFG25d Freeze before geometry modifications                         2025-06-29 10:34:22 -0400  (HEAD -> TFG, tag: TFG25d_2)
+<li> TFG25e new cernlib for Alma Linux, Full STAR                        2025-07-13 10:34:22 -0400  (HEAD -> TFG, tag: TFG25e)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
