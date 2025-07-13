@@ -186,12 +186,12 @@ my @excludeDirList = qw(\. \.\. macros CVS html doc inc idl local run wrk exampl
 my  $excludeDirList = join ("|", @excludeDirList);
 #my  @items = qw(StShadowMaker); #StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
 my  @items = qw(StShadowMaker  StFwdTrackMaker  ); #  StFcsWaveformFitMaker#StFgtClusterTools StFgtPool); #   StHbtMaker StBTofPool StFgtPool
-if (! -r "$ROOSYS/include/TPythia6.h") {
-  push @items, "StEStructPool"; # pyhtia
+if (! -r "$ROOTSYS/include/TPythia6.h") {
+  push @items, "StEStructPool"; # pythia
 }
-if ($STAR_HOST_SYS =~ /darwin/ or ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 8))) {
-  push @items, "St_geom_Maker";
-}
+#if ($STAR_HOST_SYS =~ /darwin/ or ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 8))) {
+#  push @items, "St_geom_Maker";
+#}
 push @items, "StTrsMaker";
 
 if ($STAR_HOST_SYS =~ /darwin/ or $STAR_HOST_SYS =~ /icc/) {
@@ -239,16 +239,18 @@ my $python2 = system("which python2 > /dev/null 2>& 1");
 #my $pyparsing = system("which pyparsing > /dev/null 2>& 1");
 #print "python2 = $python2\n";
 #if ($python2 || $pyparsing) {
-if ($python2) {
-  push @items, "Geometry";
-}
+#if ($python2) {
+#  push @items, "Geometry";
+#}
 #if ($STAR_HOST_SYS =~ /^al9/) {# no cern
 #print "def->{CXX_MAJOR} = $env->{CXX_MAJOR} ========================================\n";
 if ( $env->{CXX_MAJOR}  > 6) {# no cern
-  push @items, "rexe";
-  push @items, "starsim";
-  push @items, "gcalor";
-  push @items, "geant321";
+#  push @items, "rexe";
+#  push @items, "starsim";
+#  push @items, "gcalor";
+#  push @items, "geant321";
+    push @items, "apythia"; # before sorting out -fpic for libpdflib804
+    push @items, "bpythia";
 }
 #die;
 if (! $env->{Packages}->{fastjet}->{LIBS}) {

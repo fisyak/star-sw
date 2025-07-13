@@ -148,6 +148,7 @@ if ( $pkg eq "GenFit"
      || $Dir =~ /StDaqLib/
      || $Dir =~ /StDAQMaker/
      || $Dir =~ /StarGenerator/
+     || $Dir =~ /StEStructPool/
      || $pkg =~ m/^StStarLogger/
      || $pkg =~ m/^RTS/
    ) {

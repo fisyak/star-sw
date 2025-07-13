@@ -345,7 +345,7 @@
    $packl = "packlib";
    $kernl = "kernlib";
  }
- $CERNLIBS .= " " . `$cernl pawlib packlib graflib/X11 packlib mathlib kernlib`;
+ $CERNLIBS .= " " . `$cernl pawlib packlib graflib/X11 packlib mathlib packlib kernlib`;
  $CERNLIBS =~ s/packlib\./$packl\./g;
  $CERNLIBS =~ s/kernlib\./$kernl\./g;
  $CERNLIBS =~ s/$strip//g     if ($strip ne "");
