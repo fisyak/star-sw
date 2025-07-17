@@ -379,35 +379,6 @@ if (! $?ROOT_VERSION) setenv ROOT_VERSION ""
 if ( -f ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}  && -f ${STAR}/mgr/CERN_LEVEL ) then
   setenv ROOT_LEVEL `cat ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}`
   setenv CERN_LEVEL `cat ${STAR}/mgr/CERN_LEVEL`
-
-  # try with post-fix
-  if ( -f ${STAR}/mgr/CERN_LEVEL.${STAR_SYS} ) then
-    # Overwrite
-    setenv CERN_LEVEL `cat ${STAR}/mgr/CERN_LEVEL.${STAR_SYS}`
-  endif
-  if ( -f ${STAR}/mgr/CERN_LEVEL.${STAR_HOST_SYS} ) then
-    # Overwrite
-    setenv CERN_LEVEL `cat ${STAR}/mgr/CERN_LEVEL.${STAR_HOST_SYS}`
-  endif
-
-  # try with post-fix
-  if ( -f ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}.${STAR_SYS} ) then
-    # Overwrite
-    setenv ROOT_LEVEL `cat ${STAR}/mgr/ROOT_LEVEL.${STAR_SYS}`
-  endif
-  if ( -f ${STAR}/mgr/ROOT_LEVEL.${STAR_HOST_SYS} ) then
-    # Overwrite
-    setenv ROOT_LEVEL `cat ${STAR}/mgr/ROOT_LEVEL.${STAR_HOST_SYS}`
-  endif
-
-  # now check if CERN exists
-  if ( $?CERN ) then
-    if ( ! -r $CERN/$CERN_LEVEL ) then
-	if ( $?DECHO) echo "$self :: Caught $CERN_LEVEL from config in ${STAR}/mgr/ but not found - reverting to pro"
-	setenv CERN_LEVEL pro
-    endif
-  endif
-
 else
     if ($INTERACTIVE) echo "CERN_LEVEL and ROOT_LEVEL has not been set. ABORT."
     exit 1;
