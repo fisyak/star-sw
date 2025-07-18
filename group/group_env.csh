@@ -915,6 +915,7 @@ if (-r ${HOME}/bin/.${STAR_HOST_SYS}) setenv PATH ${HOME}/bin/.${STAR_HOST_SYS}:
 if (-r ${STAR}/scripts/RCF)           setenv PATH ${PATH}:${STAR}/scripts/RCF
 if (-r ${STAR}/bin)                   setenv PATH ${PATH}:${STAR}/bin
 if (-x ${GROUP_DIR}/dropit)           setenv PATH `${GROUP_DIR}/dropit`
+if (-r ${XOPTSTAR}/spack/lib/perl5)   setenv PERL5LIB ${XOPTSTAR}/spack/lib/perl5:${PERL5LIB}
 setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/include:${STAR}:${STAR}/StRoot:${STAR}/.${STAR_HOST_SYS}/include"
 #:$STAR/StRoot/StStarLogger:$STAR/StRoot/StEmcRawMake"
 #setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH};$STAR/StRoot/StEmcUtil/database:$STAR/StRoot/StEmcUtil/filters:$STAR/StRoot/StEmcUtil/geometry:$STAR/StRoot/StEmcUtil/others:$STAR/StRoot/StEmcUtil/projection:$STAR/StRoot/StEmcUtil/voltageCalib"
