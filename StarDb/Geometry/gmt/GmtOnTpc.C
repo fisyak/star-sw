@@ -1,3 +1,8 @@
+#ifndef __CINT__
+#include "tables/St_Survey_Table.h"
+#include "TGeoMatrix.h"
+#include "TROOT.h"
+#endif
 TDataSet *CreateTable() { 
   if (!gROOT->GetClass("St_Survey") || !gROOT->GetClass("TGeoRotation")) return 0;
   Survey_st row = {0, 1,0,0, 0,1,0, 0,0,1, 0,0,0, 1e-5,1e-5,1e-4,4e-3,4e-3,4e-3,"Pass 5"};
@@ -29,7 +34,7 @@ TDataSet *CreateTable() {
     TGeoRotation *rotm = new TGeoRotation(Rot);
     //    rotm->RotateZ(-phi[m]); // Pass 6
     rotm->RotateZ(phi[m]); // Pass 5, 7
-    Double_t *rotaion = rotm->GetRotationMatrix();
+    const Double_t *rotaion = rotm->GetRotationMatrix();
     memcpy(&row.r00, rotm->GetRotationMatrix(), 9*sizeof(Double_t));
     Double_t xyz[3] = {R*inch, 0, z[m]*inch};
     rotm->LocalToMaster(xyz, &row.t0);

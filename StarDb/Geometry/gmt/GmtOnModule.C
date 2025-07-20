@@ -1,3 +1,8 @@
+#ifndef __CINT__
+#include "tables/St_Survey_Table.h"
+#include "TGeoMatrix.h"
+#include "TROOT.h"
+#endif
 TDataSet *CreateTable() { 
   // strip coordinate (x,y,0) => module coordinate (y,0,x)
   if (!gROOT->GetClass("St_Survey")) return 0;

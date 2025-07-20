@@ -41,7 +41,7 @@
 		<Host name="star-db06.rcf.bnl.gov" port="3316" machinePower="1.0" />
 
 		<Host name="star-db09.rcf.bnl.gov" port="3316" machinePower="1.0" />
-		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" />
+<!--		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" /> -->
 
 	</Server>	
 
@@ -51,7 +51,7 @@
 		<Host name="star-db06.rcf.bnl.gov" port="3316" machinePower="1.0" />
 
 		<Host name="star-db09.rcf.bnl.gov" port="3316" machinePower="10.0" /> 
-		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" /> 
+<!--		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" />  -->
 		<Host name="star-db11.rcf.bnl.gov" port="3316" machinePower="10.0" />
 
 	</Server>
