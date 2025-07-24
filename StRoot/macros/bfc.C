@@ -95,59 +95,10 @@ void Load(const Char_t *options)
   if ( TString(gProgName)!="root4star") { // ! root4star
     if (!nodefault || TString(options).Contains("mysql",TString::kIgnoreCase)) {
       const Char_t *mysql = "libmysqlclient";
-      //Char_t *mysql = "libmimerS"; // just to test it picks from OPTSTAR
-
-      //
-      // May use USE_64BITS - the x8664 work fine too
-      //
-      const Char_t *libsLocal[]= {"",
-	                    "$OPTSTAR/lib/",
-			    "$OPTSTAR/lib/mysql/",
-			    "/usr/lib/", 
-			    "/usr/lib/mysql/", 
-			    "/usr/mysql/lib/",
-			    "/sw/lib/",
-			    NULL}; 
-      const Char_t *libsGlbal[]= {"", 
-			    "/usr/lib/", 
-			    "/usr/lib/mysql/", 
-			    "/usr/mysql/lib/",
-			    "$OPTSTAR/lib/",
-			    "$OPTSTAR/lib/mysql/",
-			    "/sw/lib/",
-			    NULL}; 
-
-      const Char_t **libs;
-
-      if ( gSystem->Getenv("USE_LOCAL_MYSQL") ){
-	libs = libsLocal;
-      } else {
-	libs = libsGlbal;
-      }
-
-
-      TString Arch( gSystem->GetBuildArch() );
-      Bool_t i64 = kFALSE;
-      if ( gSystem->Getenv("USE_64BITS") || Arch.Contains("x8664")) i64 = kTRUE;
-
-      Int_t i = 0;
-      while ((libs[i])) {
-	TString lib(libs[i]);
-	//cout << "Found " << lib << endl;
-	if (i64) lib.ReplaceAll("/lib","/lib64");
-	lib += mysql;
-	lib = gSystem->ExpandPathName(lib.Data());
-	if (gSystem->DynamicPathName(lib,kTRUE)) {
-	  gSystem->Load(lib.Data()); 
-	  cout << " + " << mysql << " from " << lib.Data();
-	  break;
-	}
-	i++;
-      }
+      gSystem->Load(mysql);
     }
-    cout << endl;
+    gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   }
-  gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   // Look up for the logger option
   Bool_t needLogger  = kFALSE;
   if (gSystem->Load("liblog4cxx") >=  0) {             //  StMemStat::PrintMem("load log4cxx");
