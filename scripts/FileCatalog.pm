@@ -162,12 +162,13 @@ my @DCMD;
 my $DSITE     =   undef;
 my $XMLREF    =   undef;
 my $dbname    =   "FileCatalog_BNL";     # Defaults were
-my $dbhost    =   "fc1.star.bnl.gov";    # "duvall.star.bnl.gov";
+#my $dbhost    =   "fc1.star.bnl.gov";    # "duvall.star.bnl.gov";
+my $dbhost    =   "star-fc1.sdcc.bnl.gov";    # "duvall.star.bnl.gov";
 my $dbport    =   "3336";                # "3336";
 my $dbuser    =   "FC_user";
 my $dbpass    =   "FCatalog";
 my $sth;
-
+#print "dbname = $dbname, dbhost = $dbhost, dbport = $dbport, dbuser = $dbuser, dbpass = $dbpass\n";
 # Some other name-spaced globals
 $FC::DEBUG        =  0;                  # enable debuging -debug
 $FC::SILENT       =  0;                  # if SILENT is enabled, all messages are suppressed

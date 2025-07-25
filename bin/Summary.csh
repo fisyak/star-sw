@@ -16,7 +16,7 @@ foreach done (`ls -1d ???/*`)
     rm -rf .sl*
     set n = `ls -1d *MuDst.root | wc -l`
     if ($n > 0) then
-      ln -s ~fisyak/macros/.sl* .	
+      ln -s ~fisyak/macros/.sl* ~fisyak/macros/.al* .	
       root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
       root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
       @ countJ++

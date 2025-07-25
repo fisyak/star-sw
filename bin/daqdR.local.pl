@@ -2,7 +2,8 @@
 use File::Basename;
 use Cwd;
 use Env;
-use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
+use lib dirname $0; # 
+#use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 $debug = 0;
 if ($#ARGV >= 0) {
@@ -61,6 +62,20 @@ foreach my $currentrun (@AllRuns) {
 	if (-r $tagsfile) {next;}
 	my $blafile = $b . ".bla.root"   ; print "blafile = $blafile \n" if ($debug);
 	if (-r $blafile) {next;}
+
+	$logfile = $b . ",1,10000B.log.gz"  ; print "logfile = $logfile \n"   if ($debug);
+	if (-r $logfile) {next;}			         		                   
+	$evfile = $b . ",1,10000.event.root"  ; print "evfile = $evfile \n"   if ($debug);
+	if (-r $evfile) {next;}			         		                   
+	$mufile = $b . ",1,10000.MuDst.root"  ; print "mufile = $mufile \n"   if ($debug);
+	if (-r $mufile) {next;}			         		                   
+	$pifile = $b . ",1,10000.picoDst.root"; print "pifile = $pifile \n"   if ($debug);
+	if (-r $pifile) {next;}			         		                   
+	$tagsfile = $b . ",1,10000.tags.root"   ; print "tagsfile = $tagsfile \n" if ($debug);
+	if (-r $tagsfile) {next;}
+	$blafile = $b . ",1,10000.bla.root"   ; print "blafile = $blafile \n" if ($debug);
+	if (-r $blafile) {next;}
+
 	print "string:$file\n";
 	$fNo++;
       }

@@ -5007,3 +5007,535 @@ starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 al95_x
 499
 [starsub01] ~/pwg/dEdx/RunXXI3p85_04/3p85GeV_fixedTarget_2021b $ grep -m 1 al95_x8664_gcc11_v3_opt 2*.log | wc -l
 4
+================================================================================
+06/30/2025
+cvmfswrite01 sl73_x8664_gcc485
+cvmfswrite02 sl73_x8664_gcc485
+cvmfswrite03 does not respond
+cvmfswrite04 al92_x8664_gcc11
+cvmfswrite05 al92_x8664_gcc11
+cvmfswrite06 al96_x8664_gcc11  no gpfs01
+cvmfswrite07 al96_x8664_gcc11  -"-
+cvmfswrite08 does not respond
+cvmfswrite09 no login
+cvmfswrite10 -"-
+================================================================================
+07/08/2025 _ht_/_physics_
+~/work/daq $ grep physics 26188058 | awk 'BEGIN {n=0;}{ n += $5} END {print n/1e9}'
+6888.93
+[rcas6012] ~/work/daq $ grep ht 26188058 | awk 'BEGIN {n=0;}{ n += $5} END {print n/1e9}'
+192.451
+192.451/6888.93*100 = 2.8%
+
+================================================================================
+07/09/2025
+[starsub01] /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack $ spack find
+==> In environment AL95
+==> 33 root specs
+-- no arch / no compilers ---------------------------------------
+[+] bison    [+] eigen                [+] gdb   [+] imake   [+] libpng   [+] lndir      [+] nlohmann-json  [+] py-pip        [+] r-base64     [+] tcl  [+] xrootd
+[+] cfitsio  [+] environment-modules  [+] gsl   [+] java    [+] libxml2  [+] mercurial  [+] npm            [+] py-pyparsing  [+] r-base64enc  [+] vc   [+] yacc
+[+] davix    [+] flex                 [+] htop  [+] lapack  [+] lmod     [+] mysql      [+] perl           [+] qemacs        [+] snap         [+] vdt  [+] zstd
+
+foreach p (\
+ bison     eigen                 gdb    imake    libpng    lndir       nlohmann-json   py-pip         r-base64      tcl   xrootd\
+ cfitsio   environment-modules   gsl    java     libxml2   mercurial   npm             py-pyparsing   r-base64enc   vc    yacc\
+ davix     flex                  htop   lapack   lmod      mysql       perl            qemacs         snap          vdt   zstd)
+  spack add ${p}
+end
+
+
+================================================================================
+07/14/2025
+mysql sl7                                 mysql al96					 
+(gdb) ptyp mData			  (gdb) ptyp mData				 
+type = struct st_mysql {		  type = struct MYSQL {				 
+    NET net;				      NET net;					 
+    unsigned char *connector_fd;	      unsigned char *connector_fd;		 
+    char *host;				      char *host;					 
+    char *user;				      char *user;					 
+    char *passwd;			      char *passwd;				 
+    char *unix_socket;			      char *unix_socket;				 
+    char *server_version;		      char *server_version;			 
+    char *host_info;			      char *host_info;				 
+    char *info;				      char *info;					 
+    char *db;				      char *db;					 
+    const charset_info_st *charset;	      CHARSET_INFO *charset;			 
+    MYSQL_FIELD *fields;		      MYSQL_FIELD *fields;			 
+    MEM_ROOT field_alloc;		      MEM_ROOT *field_alloc;			 
+    my_ulonglong affected_rows;		      uint64_t affected_rows;			 
+    my_ulonglong insert_id;		      uint64_t insert_id;				 
+    my_ulonglong extra_info;		      uint64_t extra_info;			 
+    unsigned long thread_id;		      unsigned long thread_id;			 
+    unsigned long packet_length;	      unsigned long packet_length;		 
+    unsigned int port;			      unsigned int port;				 
+    unsigned long client_flag;		      unsigned long client_flag;			 
+    unsigned long server_capabilities;	      unsigned long server_capabilities;		 
+    unsigned int protocol_version;	      unsigned int protocol_version;		 
+    unsigned int field_count;		      unsigned int field_count;			 
+    unsigned int server_status;		      unsigned int server_status;			 
+    unsigned int server_language;	      unsigned int server_language;		 
+    unsigned int warning_count;		      unsigned int warning_count;			 
+    st_mysql_options options;		      st_mysql_options options;			 
+    mysql_status status;		      mysql_status status;			 
+                                              enum_resultset_metadata resultset_metadata;  
+    my_bool free_me;			      bool free_me;				         
+    my_bool reconnect;			      bool reconnect;				   
+    char scramble[21];			      char scramble[21];			   
+    my_bool unused1;			    	         
+    void *unused2;			    	   
+    void *unused3;			    	   
+    void *unused4;			    	         
+    void *unused5;			               
+    LIST *stmts;			      LIST *stmts;		                   
+    const st_mysql_methods *methods;	      const MYSQL_METHODS *methods;   
+    void *thd;				      void *thd;		      
+    my_bool *unbuffered_fetch_owner;	      bool *unbuffered_fetch_owner;   
+    char *info_buffer;			     
+    void *extension;			      void *extension;                                                 
+}					  }                                   
+mysql al96
+(gdb) ptyp mData
+type = struct MYSQL {
+    NET net;
+    unsigned char *connector_fd;
+    char *host;
+    char *user;
+    char *passwd;
+    char *unix_socket;
+    char *server_version;
+    char *host_info;
+    char *info;
+    char *db;
+    CHARSET_INFO *charset;
+    MYSQL_FIELD *fields;
+    MEM_ROOT *field_alloc;
+    uint64_t affected_rows;
+    uint64_t insert_id;
+    uint64_t extra_info;
+    unsigned long thread_id;
+    unsigned long packet_length;
+    unsigned int port;
+    unsigned long client_flag;
+    unsigned long server_capabilities;
+    unsigned int protocol_version;
+    unsigned int field_count;
+    unsigned int server_status;
+    unsigned int server_language;
+    unsigned int warning_count;
+    st_mysql_options options;
+    mysql_status status;
+    enum_resultset_metadata resultset_metadata;
+    bool free_me;
+    bool reconnect;
+    char scramble[21];
+    LIST *stmts;
+    const MYSQL_METHODS *methods;
+    void *thd;
+    bool *unbuffered_fetch_owner;
+    void *extension;                                 
+}                                                
+
+
+************* Node Structure ****************                                            ************* Node Structure ****************
+
+Node=StarDb VersionKey = reconV0                                                         Node=StarDb VersionKey = reconV0
+    Node=Geometry VersionKey = reconV0                                                <
+        Node=tpc VersionKey = reconV0                                                 <
+            Table=tpcDimensions, Version=default, numRows=1, elementID=0              <
+================================================================================
+07/16/2025
+[starsub02] ~/TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/179/20179040 $ sed '/Priority         = +10/a GetEnv          = True' submit.condor > submit2.condor
+
+cat *.condor | sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")\nGetEnv          = True' > submit.condor
+
+
+11
+StVMCMaker:INFO  - TGeoMaterial::ctor : Material ETOF_RPCGAS defined with fractional Z=8.389635
+*** Shape TSWH: TGeoPcon ***
+    Nz    = 8
+    phi1  =   345.00000
+    dphi  =    30.00000
+     plane 0: z=  209.90000 Rmin=   47.96900 Rmax=  200.00000
+     plane 1: z=  218.28000 Rmin=   47.96900 Rmax=  200.00000
+     plane 2: z=  218.28000 Rmin=   47.96900 Rmax=  201.00000
+     plane 3: z=  223.99000 Rmin=   47.96900 Rmax=  201.00000
+     plane 4: z=  223.99000 Rmin=   47.96900 Rmax=  206.75000
+     plane 5: z=  228.14000 Rmin=   51.80000 Rmax=  206.75000 <
+     plane 6: z=  228.14000 Rmin=   51.80000 Rmax=  206.75000
+     plane 7: z=  268.00000 Rmin=   51.80000 Rmax=  206.75000
+ Bounding box:
+*** Shape TSWH: TGeoBBox ***
+    dX =     0.00000
+    dY =     0.00000
+    dZ =     0.00000
+    origin: x=    0.00000 y=    0.00000 z=    0.00000
+================================================================================
+07/17/2025
+al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/cpu_per_event:    CPU/event = 2.24217(sec) and    Total/event = 2.32112(sec)      96.5989 %       for  67810 events   75%
+al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/cpu_per_event: CPU/event = 1.85897(sec) and    Total/event = 1.93371(sec)      96.1348 %       for 152638 events   62% 
+sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:   CPU/event = 2.97545(sec) and    Total/event = 3.08142(sec)      96.5612 %       for  45962 events  100%
+
+
+al96_x8664_gcc11_opt:    CPU/event = 2.24217(sec)  for  67810 events   75%xf
+al96_x8664_gcc11_opt_R6: CPU/event = 1.85897(sec)  for 152638 events   62% 
+sl73_x8664_gcc485_opt:   CPU/event = 2.97545(sec)  for  45962 events  100%
+
+
+cat sched*.condor | sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")\nGetEnv          = True' > submit.condor; condor_submit submit.condor
+
+zgrep -a -m 1 ROOT_LEVEL */*/*.gz
+================================================================================
+07/18/2025 
+[starsub02] ~/TFG25e/2019/RF $ dir  ~/TFG25e/2019/RF/*/4p59GeV_fixedTarget_2019/179/20179041/st_physics_adc_20179041_raw_7500002,1,10000B.log.gz /star/rcf/prodlog/P24iy_64bit//log/daq_4p59_fixedTarget_2019/st_physics_adc_20179041_raw_7500002.log.gz
+-rw-r--r--+ 1 starreco rhstar 1.9M May 27 01:42 /star/rcf/prodlog/P24iy_64bit//log/daq_4p59_fixedTarget_2019/st_physics_adc_20179041_raw_7500002.log.gz
+-rw-r--r--+ 1 fisyak   rhstar 2.0M Jul 16 18:02 /star/u/fisyak/TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/179/20179041/st_physics_adc_20179041_raw_7500002,1,10000B.log.gz
+-rw-r--r--+ 1 fisyak   rhstar 1.9M Jul 16 17:19 /star/u/fisyak/TFG25e/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179041/st_physics_adc_20179041_raw_7500002,1,10000B.log.gz
+-rw-r--r--+ 1 fisyak   rhstar 2.0M Jul 16 14:23 /star/u/fisyak/TFG25e/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179041/st_physics_adc_20179041_raw_7500002,1,10000B.log.gz
+DbV20250120 P2019b StiCA FXT EbyET0 CorrZ -mtd picoVtxFXT PicoCovMtxWrite BEmcChkStat
+
+Processing bfc.C(500000,"DbV20250120 P2019b StiCA FXT EbyET0 CorrZ -mtd picoVtxFXT PicoCovMtxWrite BEmcChkStat","st_physics_adc_20179041_raw_7500002.daq")...                                |   *** Start at Date : Wed Jul 16 12:55:43 2025
+================================================================================
+get_file_list.pl -limit 20 -keys path,filename -cond 'production = P03ia,storage = NFS, filetype = daq_reco_MuDst, trgsetupname = dAuMinBias,magscale = FullField'
+Can't locate DBI.pm in @INC (you may need to install the DBI module) (@INC entries checked: 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/packages/TFG/scripts /star/u/fisyak/bin/lib /usr/share/perl5/usr/share/perl5/vendor_perl 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/opt/spack/linux-almalinux9-x86_64_v3/gcc-11.3.1/perl-5.40.0-yk2ldhimrwec3p5uewnc5u4bu4dn6xrs/lib/perl5 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/opt/spack/linux-almalinux9-x86_64_v3/gcc-11.3.1/perl-5.40.0-yk2ldhimrwec3p5uewnc5u4bu4dn6xrs/lib/site_perl/5.40.0/x86_64-linux-thread-multi 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/opt/spack/linux-almalinux9-x86_64_v3/gcc-11.3.1/perl-5.40.0-yk2ldhimrwec3p5uewnc5u4bu4dn6xrs/lib/site_perl/5.40.0 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/opt/spack/linux-almalinux9-x86_64_v3/gcc-11.3.1/perl-5.40.0-yk2ldhimrwec3p5uewnc5u4bu4dn6xrs/lib/5.40.0/x86_64-linux-thread-multi 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack/opt/spack/linux-almalinux9-x86_64_v3/gcc-11.3.1/perl-5.40.0-yk2ldhimrwec3p5uewnc5u4bu4dn6xrs/lib/5.40.0)
+ at 
+/gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/packages/TFG/scripts/FileCatalog.pm line 148.
+BEGIN failed--compilation aborted at /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/packages/TFG/scripts/FileCatalog.pm line 148.
+Compilation failed in require at /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/scripts/get_file_list.pl line 38.
+BEGIN failed--compilation aborted at /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/scripts/get_file_list.pl line 38.
+
+
+foreach f ( `ls -1d *.root` )
+  set b = `echo ${f} | sed -e 's/,1,10000//'`; mv ${f} ${b}
+end
+
+foreach f (`ls -1d */*/*B.log`)
+  gzip ${f}
+end
+
+
+~/pwg/SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019  CPU/event = 2.27537(sec) and    Total/event = 2.38234(sec)      95.5096 %       for 1532258 events
+~/pwg/TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019  CPU/event = 6.24781(sec) and    Total/event = 6.39061(sec)      97.7655 %       for 1613494 events
+==========================================================================================
+07/20/2025
+New 
+(gdb) p *res_set
+$38 = {row_count = 1, fields = 0x1ad5b70, data = 0x1a1b060, data_cursor = 0x0, lengths = 0x1aed2e8, handle = 0x0, methods = 0x7fffeef9bfa0 <client_methods>, row = 0x0, current_row = 0x19ab7b8, field_alloc = 0x1ad4700, field_count = 2, current_field = 0, eof = true,   unbuffered_fetch_cancelled = false, metadata = RESULTSET_METADATA_FULL, extension = 0x0}
+Old
+(gdb) p *res_set
+$35 = {row_count = 1, fields = 0x19b4d68, data = 0x19ab770, data_cursor = 0x0, lengths = 0x19938d8, handle = 0x0, methods = 0x7fffded0ece0, row = 0x0, current_row = 0x19b2da0, field_alloc = {free = 0x19b4d50,     used = 0x0, pre_alloc = 0x0, min_malloc = 32, block_size = 8152, block_num = 5, first_block_usage = 0, error_handler = 0x0}, field_count = 2, current_field = 0, eof = 1 '\001', 
+  unbuffered_fetch_cancelled = 0 '\000', extension = 0x0}
+
+
+[cvmfswrite07] /cvmfs/star.sdcc.bnl.gov/TFG $ robinson
+mysql> select @@sql_mode;
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| @@sql_mode                                                                                                                                |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+[rcas6014] ~/work/TestDb $ robinson
+MySQL [Calibrations_tpc]> select @@sql_mode;
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| @@sql_mode                                                                                                                                |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+| ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION |
++-------------------------------------------------------------------------------------------------------------------------------------------+
+================================================================================
+07/21/2025
+[rcas6014] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG $ printenv | grep LOCAL
+DB_SERVER_LOCAL_CONFIG=/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/conf/dbLoadBalancerLocalConfig_BNL.xml
+
+[rcas6014] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG $ grep -rn DB_SERVER_LOCAL_CONFIG group/
+group/group_env.csh:341:    #if ( ! $?DB_SERVER_LOCAL_CONFIG ) then
+group/group_env.csh:344:            setenv DB_SERVER_LOCAL_CONFIG ${STAR_PATH}/conf/dbLoadBalancerLocalConfig_${SITE}.xml
+group/group_env.csh:350:            setenv DB_SERVER_LOCAL_CONFIG ${STAR}/StDb/servers/dbLoadBalancerLocalConfig_${SITE}.xml
+group/group_env.csh:353:  if ($ECHO) echo   "Setting up DB_SERVER_LOCAL_CONFIG = ${DB_SERVER_LOCAL_CONFIG}" 
+
+
+StInfo: MysqlDb::Connect: Load balancer took 0 ms, will use star-db05.rcf.bnl.gov:3316
+StInfo: MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db10.rcf.bnl.gov:3316
+do01-03 ok
+
+db04  Cannot connect to star-db04.rcf.bnl.gov:3316, database server is busy or unreachable.
+
+db05-db11
+
+[starsub02] ~/TFG/TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/179/20179040 $ grep -a -m 1 node *B.log | awk '{print $16}' | sort -u
+spool0106.sdcc.bnl.gov
+spool0111.sdcc.bnl.gov
+spool0112.sdcc.bnl.gov
+spool0114.sdcc.bnl.gov
+spool0116.sdcc.bnl.gov
+spool0117.sdcc.bnl.gov
+spool0119.sdcc.bnl.gov
+spool0120.sdcc.bnl.gov
+spool0121.sdcc.bnl.gov
+spool0123.sdcc.bnl.gov
+spool0127.sdcc.bnl.gov
+spool0131.sdcc.bnl.gov
+spool0133.sdcc.bnl.gov
+spool0134.sdcc.bnl.gov
+spool0136.sdcc.bnl.gov
+spool0671.sdcc.bnl.gov
+spool0672.sdcc.bnl.gov
+spool0673.sdcc.bnl.gov
+spool0674.sdcc.bnl.gov
+spool0676.sdcc.bnl.gov
+spool0682.sdcc.bnl.gov
+spool0685.sdcc.bnl.gov
+spool0689.sdcc.bnl.gov
+spool0690.sdcc.bnl.gov
+spool0694.sdcc.bnl.gov
+spool0696.sdcc.bnl.gov
+spool0801.sdcc.bnl.gov
+spool0802.sdcc.bnl.gov
+spool0805.sdcc.bnl.gov
+spool0806.sdcc.bnl.gov
+spool0807.sdcc.bnl.gov
+spool0808.sdcc.bnl.gov
+spool0809.sdcc.bnl.gov
+spool0811.sdcc.bnl.gov
+spool0812.sdcc.bnl.gov
+spool0813.sdcc.bnl.gov
+spool0814.sdcc.bnl.gov
+spool0815.sdcc.bnl.gov
+spool0817.sdcc.bnl.gov
+spool0819.sdcc.bnl.gov
+spool0820.sdcc.bnl.gov
+spool0822.sdcc.bnl.gov
+spool0824.sdcc.bnl.gov
+spool0826.sdcc.bnl.gov
+spool0828.sdcc.bnl.gov
+spool0829.sdcc.bnl.gov
+spool0830.sdcc.bnl.gov
+spool0835.sdcc.bnl.gov
+spool0836.sdcc.bnl.gov
+spool0837.sdcc.bnl.gov
+spool0840.sdcc.bnl.gov
+spool0842.sdcc.bnl.gov
+spool0846.sdcc.bnl.gov
+spool0847.sdcc.bnl.gov
+spool0849.sdcc.bnl.gov
+spool0851.sdcc.bnl.gov
+spool0854.sdcc.bnl.gov
+spool0856.sdcc.bnl.gov
+spool0857.sdcc.bnl.gov
+spool0858.sdcc.bnl.gov
+spool0859.sdcc.bnl.gov
+spool0861.sdcc.bnl.gov
+spool0862.sdcc.bnl.gov
+spool0866.sdcc.bnl.gov
+spool0867.sdcc.bnl.gov
+spool0868.sdcc.bnl.gov
+spool0869.sdcc.bnl.gov
+spool0870.sdcc.bnl.gov
+spool0872.sdcc.bnl.gov
+spool1482.sdcc.bnl.gov
+spool1485.sdcc.bnl.gov
+spool1486.sdcc.bnl.gov
+spool1488.sdcc.bnl.gov
+spool1492.sdcc.bnl.gov
+spool1494.sdcc.bnl.gov
+spool1496.sdcc.bnl.gov
+spool1497.sdcc.bnl.gov
+spool1500.sdcc.bnl.gov
+spool1501.sdcc.bnl.gov
+spool1502.sdcc.bnl.gov
+spool1504.sdcc.bnl.gov
+spool1507.sdcc.bnl.gov
+spool1508.sdcc.bnl.gov
+spool1509.sdcc.bnl.gov
+spool1511.sdcc.bnl.gov
+spool1513.sdcc.bnl.gov
+spool1759.sdcc.bnl.gov
+spool1770.sdcc.bnl.gov
+spool1773.sdcc.bnl.gov
+spool1800.sdcc.bnl.gov
+spool1802.sdcc.bnl.gov
+spool1803.sdcc.bnl.gov
+spool1844.sdcc.bnl.gov
+
+[starsub02] ~/TFG/TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/179/20179040 $ zgrep -a -m 1 node hold/*B.log.gz | awk '{print $16}' | sort -u
+spool0117.sdcc.bnl.gov
+spool0118.sdcc.bnl.gov
+spool0123.sdcc.bnl.gov
+spool0124.sdcc.bnl.gov
+spool0125.sdcc.bnl.gov
+spool0127.sdcc.bnl.gov
+spool0130.sdcc.bnl.gov
+spool0132.sdcc.bnl.gov
+spool0670.sdcc.bnl.gov
+spool0673.sdcc.bnl.gov
+spool0687.sdcc.bnl.gov
+spool0690.sdcc.bnl.gov
+spool0801.sdcc.bnl.gov
+spool0805.sdcc.bnl.gov
+spool0827.sdcc.bnl.gov
+spool0833.sdcc.bnl.gov
+spool0849.sdcc.bnl.gov
+spool0850.sdcc.bnl.gov
+spool0854.sdcc.bnl.gov
+spool0864.sdcc.bnl.gov
+spool0873.sdcc.bnl.gov
+spool1484.sdcc.bnl.gov
+spool1490.sdcc.bnl.gov
+spool1493.sdcc.bnl.gov
+spool1494.sdcc.bnl.gov
+spool1504.sdcc.bnl.gov
+spool1507.sdcc.bnl.gov
+spool1509.sdcc.bnl.gov
+spool1510.sdcc.bnl.gov
+spool1800.sdcc.bnl.gov
+
+
+[starsub02] ~/TFG/TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/179/20179040 $ zgrep -a -m 1 node hold2/*B.log.gz | awk '{print $16}' | sort -u
+spool0106.sdcc.bnl.gov
+spool0109.sdcc.bnl.gov
+spool0112.sdcc.bnl.gov
+spool0118.sdcc.bnl.gov
+spool0122.sdcc.bnl.gov
+spool0126.sdcc.bnl.gov
+spool0128.sdcc.bnl.gov
+spool0131.sdcc.bnl.gov
+spool0134.sdcc.bnl.gov
+spool0135.sdcc.bnl.gov
+spool0136.sdcc.bnl.gov
+spool0679.sdcc.bnl.gov
+spool0685.sdcc.bnl.gov
+spool0689.sdcc.bnl.gov
+spool0806.sdcc.bnl.gov
+spool0826.sdcc.bnl.gov
+spool0827.sdcc.bnl.gov
+spool0832.sdcc.bnl.gov
+spool0833.sdcc.bnl.gov
+spool0834.sdcc.bnl.gov
+spool0837.sdcc.bnl.gov
+spool0839.sdcc.bnl.gov
+spool0852.sdcc.bnl.gov
+spool0855.sdcc.bnl.gov
+spool0859.sdcc.bnl.gov
+spool0861.sdcc.bnl.gov
+spool0863.sdcc.bnl.gov
+spool0867.sdcc.bnl.gov
+spool0870.sdcc.bnl.gov
+spool0872.sdcc.bnl.gov
+spool0873.sdcc.bnl.gov
+spool1483.sdcc.bnl.gov
+spool1486.sdcc.bnl.gov
+spool1489.sdcc.bnl.gov
+spool1496.sdcc.bnl.gov
+spool1504.sdcc.bnl.gov
+spool1506.sdcc.bnl.gov
+================================================================================
+07/22/2025 
+[rcas6014] ~/TFG/TFG25e/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 $ dir -ltr *.gz
+-rw-r--r-- 1 fisyak rhstar 1.6M Jul 20 12:17 st_physics_20179040_raw_4000006,30001,31875B.log.gz
+-rw-r--r-- 1 fisyak rhstar 4.3M Jul 20 16:10 st_physics_20179040_raw_7000004,20001,25000B.log.gz
+-rw-r--r-- 1 fisyak rhstar 4.3M Jul 20 16:22 st_physics_20179040_raw_7000004,35001,40000B.log.gz
+-rw-r--r-- 1 fisyak rhstar  16K Jul 20 18:39 st_physics_20179040_raw_1500005,10001,15000B.log.gz
+-rw-r--r-- 1 fisyak rhstar  16K Jul 20 18:39 st_physics_20179040_raw_1500005,20001,25000B.log.gz
+================================================================================
+bfcca
+bfcca :: Info: direct IO mode.
+Taking care of -1 inputs
+Job is starting on               Tue May 27 22:42:33 2025
+We are running on                spool1611.sdcc.bnl.gov
+CPU speed                        3600.000 MHz
+Our job ID is                    94537
+Our working directory            /home/condor/local/sdcc/execute/dir_94521
+We will run from library version SL24y
+Main processing chain options    DbV20250120 P2019b StiCA FXT EbyET0 CorrZ -mtd picoVtxFXT PicoCovMtxWrite BEmcChkStat
+The number of events would be    500000
+The chain will run over file     /home/starsink/raw/daq/2019/183/20183025/st_physics_adc_20183025_raw_7500002.daq
+This file is stored as           st_physics_adc_20183025_raw_7500002.daq
+The output destination will be   /star/data+109-114 (range)
+Our disk space usage command is  /afs/rhic.bnl.gov/star/packages/scripts/dfpanfs
+Outputs initial will be          st_physics_adc_20183025_raw_7500002.MuDst.root st_physics_adc_20183025_raw_7500002.hist.root st_physics_adc_20183025_raw_7500002.tags.root st_physics_adc_20183025_raw_7500002.picoDst.root
+Outputs final will be            /home/starreco/reco/production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_64bit/2019/183/20183025/st_physics_adc_20183025_raw_7500002.MuDst.root /home/starreco/reco/production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_64bit/2019/183/20183025/st_physics_adc_20183025_raw_7500002.hist.root /home/starreco/reco/productio
+n_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_64bit/2019/183/20183025/st_physics_adc_20183025_raw_7500002.tags.root /home/starreco/reco/production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy_64bit/2019/183/20183025/st_physics_adc_20183025_raw_7500002.picoDst.root
+Running condition                Optimized 64-bit from AFS
+Before execution, execute    
+DB may take its data from        /star/u/starreco/dbServers.xml
+-=-=-=- Generated script content follows -=-=-=-
+#!/bin/csh
+setenv GROUP_DIR /afs/rhic.bnl.gov/star/group
+source $GROUP_DIR/star_cshrc.csh
+unset noclobber
+setup 64bits
+setenv NODEBUG yes
+
+starver SL24y
+echo "bfcca :: Using `which root4star`"
+echo "bfcca :: Reco run is starting on `/bin/date`"
+echo ""
+root4star -b -q 'bfc.C(500000,"DbV20250120 P2019b StiCA FXT EbyET0 CorrZ -mtd picoVtxFXT PicoCovMtxWrite BEmcChkStat","st_physics_adc_20183025_raw_7500002.daq")'
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+bfcca :: Info: Our working directory contains
+total 4884948
+drwxr-xr-x  4 starreco rhstar        4096 May 27 22:42 .
+drwxr-xr-x 98 condor   root          4096 May 27 22:42 ..
+-rwxr-xr-x  1 starreco rhstar         415 May 27 22:42 94537.csh
+-rwx------  1 starreco rhstar          48 May 27 22:41 .chirp.config
+-rw-r--r--  1 condor   rhstaff       5236 May 27 22:41 .job.ad
+-rw-r--r--  1 condor   rhstaff       7074 May 27 22:41 .machine.ad
+-rw-r--r--  1 starreco rhstar  5002126336 May 27 22:42 st_physics_adc_20183025_raw_7500002.daq
+-rw-r--r--  1 starreco rhstar           0 May 27 22:42 st_physics_adc_20183025_raw_7500002.err
+-rw-r--r--  1 starreco rhstar        2468 May 27 22:42 st_physics_adc_20183025_raw_7500002.log
+drwx------  2 starreco rhstar        4096 May 27 22:41 tmp
+-rw-r--r--  1 starreco rhstar        6628 May 27 22:41 .update.ad
+drwx------  3 starreco rhstar        4096 May 27 22:41 var
+Filesystem                 1K-blocks      Used  Available Use% Mounted on
+/dev/mapper/sysvg-scratch 7048051384 902031364 5790794012  14% /home
+bfcca :: Info: We will now start to run ...
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+bfcca :: Using /afs/rhic.bnl.gov/star/packages/SL24y/.sl73_x8664_gcc485/BIN/root4star
+bfcca :: Reco run is starting on Tue May 27 22:42:42 EDT 2025
+================================================================================
+  372,000,000
+2,096,000,000
+================================================================================
+07/24/2025
+Reading event root files build by root5 via root6
+
+root6 by root6 => pico, MuDst
+================================================================================
+07/25/2025 
+[rcas6014] ~/work/TestDb $ STAR_LEVELS 
+rcas6014.rcf.bnl.gov;CERN-pro;ROOT-5.34.39-qt4;STAR-TFG;root4star-7/13/25-3:57-TFG/.sl73_x8664_gcc485_opt;Optimized:64bits:/gpfs01
+root.exe [0] gDebug = 1
+(const int)1
+root.exe [1] .x Db.C
+Info in <TCint::AutoLoadCallback>: loaded dependent library libMinuit.so libGraf.so libHist.so libMatrix.so libMathCore.so for class TMinuit
+Info in <TUnixSystem::Load>: loading dependent library libMathCore.so for library libMinuit.so
+Info in <TUnixSystem::Load>: loading dependent library libMatrix.so for library rmysqllibMinuit.so
+Info in <TUnixSystem::Load>: loading dependent library libHist.so for library libMinuit.so
+Info in <TUnixSystem::Load>: loading dependent library libGraf.so for library libMinuit.so
+Info in <TUnixSystem::Load>: loaded library /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.sl73_x8664_gcc485/root/lib/libMinuit.so, status 0
+Info in <TCint::AutoLoadCallback>: loaded library libMinuit.so for class TMinuit
+Info in <TCint::AutoLoadCallback>: loaded dependent library libSpectrum.so libHist.so libMatrix.so for class TSpectrum
+Info in <TUnixSystem::Load>: loading dependent library libMatrix.so for library libSpectrum.so
+Info in <TUnixSystem::Load>: loading dependent library libHist.so for library libSpectrum.so
+Info in <TUnixSystem::Load>: loaded library /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.sl73_x8664_gcc485/root/lib/libSpectrum.so, status 0
+Info in <TCint::AutoLoadCallback>: loaded library libSpectrum.so for class TSpectrum
+G__catchexception=0
+
+Info in <TUnixSystem::Load>: loaded library /usr/lib64/mysql/libmysqlclient.so, status 0
+
+Info in <TUnixSystem::Load>: loaded library /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485_opt/lib/libSt_base.so, status 0
+Info in <TUnixSystem::Load>: loaded library /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/sl73_x8664_gcc485/lib/liblog4cxx.so, status 0
+Info in <TUnixSystem::Load>: loaded library /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485_opt/lib/libStStarLogger.so, status 0
+Load system libraries    + liblog4cxx + libStStarLoggerBFC:INFO  - TUnixSystem::Load : loaded library /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485_opt/lib/libStChain.so, status 0
+
+[rcas6014] ~/work/TestDb $ rpm -qf /usr/lib64/mysql/libmysqlclient.so
+mariadb-devel-5.5.52-1.el7.x86_64
+[starsub02] ~/work/TestDb $ rpm -qf /usr/lib64/libmysqlclient.so 
+mariadb-connector-c-devel-3.2.6-1.el9_0.x86_64

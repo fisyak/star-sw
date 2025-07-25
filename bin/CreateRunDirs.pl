@@ -18,7 +18,7 @@ if ($#ARGV >= 1) {
 my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug);
 print "$0 Year = $year, Field = $FIELD, runs = $runs, def = $def,  Day = $Day, Run = $Run, run2 = $run2\n" if ($debug);
 if (! $year || ! $FIELD) {die "wrong directory $pwd";}
-#PrintHash($def,"Runs") if ($debug);
+PrintHash($def,"Runs") if ($debug);
 my $fNo = 0;
 my @AllRuns = ($runs);
 if ($run2) {push @AllRuns, $run2;}
