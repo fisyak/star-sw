@@ -2,7 +2,7 @@
   FPE_OFF
   root.exe -q -b -x 'muMc.C(1e6,"../*MuDst.root")'
 */
-void muMc(Int_t N = 1000000, Bool_t rePlot = kFALSE,
+void muMc(Int_t N = 1000000, Bool_t rePlot = kTRUE,
 	  const Char_t *input = "../*.MuDst.root", 
 	  const Char_t *output = "muMc.root", 
 	  const Char_t *ChainOpt = "RMuDst,KFPInter,MuMc,quiet,mysql,nodefault,y2021") {
@@ -23,7 +23,7 @@ void muMc(Int_t N = 1000000, Bool_t rePlot = kFALSE,
     muMc->SetAttr("TrackPlots",1);
     muMc->SetAttr("PiDPlots",1);
     muMc->SetAttr("VertexPlots",1);
-#if 0
+#if 1
     muMc->SetNeta(50);
     muMc->SetEtaMin(-1.5);
     muMc->SetEtaMax(-0.5);
@@ -34,6 +34,7 @@ void muMc(Int_t N = 1000000, Bool_t rePlot = kFALSE,
     chain->EventLoop(N);
     TFile *f = chain->GetTFile();
     if (f) f->Write();
+    StMuMcAnalysisMaker::instance()->Draw();
   } else {
     lMuDst(-1,"","RMuDst,MuMc,mysql,nodefault");
     TFile *f = new TFile(output);
@@ -44,9 +45,13 @@ void muMc(Int_t N = 1000000, Bool_t rePlot = kFALSE,
     muMc->SetAttr("TrackPlots",1);
     muMc->SetAttr("VertexPlots",1);
     chain->Init();
+#if 0
+    //                                      gp,pp,xx,ii,xy 
+    StMuMcAnalysisMaker::instance()->DrawQA( 0, 0, 1, 6, 0); // Tracks_Global_Rec_All_EtapT_dPtiR_zx_1.png;
+    StMuMcAnalysisMaker::instance()->DrawQA( 0, 0, 1, 9, 0); // Tracks_Global_Rec_All_EtapT_pDcaXY_zx_1
+#endif
   }
   delete [] file;
-   StMuMcAnalysisMaker::instance()->Draw();
 #endif
   
 }

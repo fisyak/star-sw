@@ -446,7 +446,7 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
 	      if (gp == kGlobal && plotVar[i].GlobalOnly <  0) continue;
 	      if (gp == kPrimary && plotVar[i].GlobalOnly == 0) continue;
 	      if ((fHistsT[gp][type][particle][pm][x][i] = (TH3F *) dirs[6]->Get(plotVar[i].Name))) {
-		cout << "Histogram : " 
+		cout << "Histogram[gp="<<gp<<"][type="<<type<<"][particle="<<particle<<"][pm="<<pm<<"][x="<<x<<"][i="<<i<<"] : " 
 		  << fHistsT[gp][type][particle][pm][x][i]->GetName()  << "\t" 
 		  << fHistsT[gp][type][particle][pm][x][i]->GetTitle()  << "\t" 
 		  << " has been found with " 
@@ -495,7 +495,7 @@ void StMuMcAnalysisMaker::BookTrackPlots(){
 	      //    for (Int_t l = 1; l < 7; l++) cout << "/" << dirs[l]->GetName();
 	      //    cout << "\t" << "fHistsT[" << gp << "][" << type << "][" << particle << "][" << pm << "][" << x << "][" << i << "]";
 	      //    cout << " = " << fHistsT[gp][type][particle][pm][x][i]->GetName() << "\t" << fHistsT[gp][type][particle][pm][x][i]->GetTitle() << endl;
-	      cout << "Histogram : " 
+	      cout << "Histogram[gp="<<gp<<"][type="<<type<<"][particle="<<particle<<"][pm="<<pm<<"][x="<<x<<"][i="<<i<<"] : " 
 		   << fHistsT[gp][type][particle][pm][x][i]->GetName() << "\t"
 		   << fHistsT[gp][type][particle][pm][x][i]->GetTitle() << " has created." << endl;
 #if 0
@@ -2167,7 +2167,7 @@ void StMuMcAnalysisMaker::MinMax(TH1 *h, Double_t &min, Double_t &max, Double_t 
   if (imax < n) h->GetXaxis()->SetRange(imin,imax);
 }
 //________________________________________________________________________________
-void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Double_t max, Int_t np) {
+void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Double_t max, Int_t np, Int_t xy) {
   TH3F *h3s[2] = {h3[0], h3[1]};
   if (! h3s[0] && ! h3s[1]) return;
   for (Int_t i = 0; i < 2; i++) {
@@ -2181,7 +2181,9 @@ void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Doub
     cout << "To few for analysis. Skip" << endl;
     return;
   }
-  for (Int_t p = 0; p < np; p++) {// zx, zy, x, y, yx
+  Int_t p1 = 0, p2 = np - 1;
+  if (xy >= 0 && xy < np) {p1 = p2 = xy;}
+  for (Int_t p = p1; p <= p2; p++) {// zx, zy, x, y, yx
     TCanvas *cpm[2] = {0};
     TH2 *h2[2] = {0,0};
     TH1 *h1[2] = {0,0};
@@ -2190,7 +2192,7 @@ void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Doub
       TH3 *h3 = h3s[pm];
       if (! h3) continue;
       h3->GetDirectory()->cd();
-      h2[pm] = (TH2 *) h3->Project3D(Form("%s",proj[p]));
+      h2[pm] = (TH2 *) h3->Project3D(Form("%s",proj[p]));         
       TString Title(h2[pm]->GetTitle());
       Title.ReplaceAll("(+) ","");
       Title.ReplaceAll("(-) ","");
@@ -2252,7 +2254,9 @@ void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Doub
 	for (Int_t pm = kPositive; pm < kTotalSigns; pm++) {
 	  if (! h1[pm]) continue;
 	  TString xName(h1[pm]->GetXaxis()->GetTitle());
-	  cpm[pm] = new TCanvas(pmNames[pm],pmNames[pm],400,400); //,700,500);
+	  cpm[pm] = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(pmNames[pm]);
+	  if (cpm[pm]) cpm[pm]->Clear();
+	  else         cpm[pm] = new TCanvas(pmNames[pm],pmNames[pm],400,400); //,700,500);
 	  if (xName.Contains("pT",TString::kIgnoreCase)) cpm[pm]->SetLogx(1);
 	  cpm[p]->SetLogz(1);
 	  h2[pm]->Draw("colz");
@@ -2262,7 +2266,9 @@ void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Doub
       }
       TString &Name = FormName(h1[pmA]); 
       TString xName(h1[pmA]->GetXaxis()->GetTitle());
-      TCanvas *c = new TCanvas(Name.Data(),Name.Data(),400,400); //,700,500);
+      TCanvas *c = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(Name);
+      if (c)   c->Clear();
+      else     c = new TCanvas(Name.Data(),Name.Data(),400,400); //,700,500);
       if (max > 0) max *= 1.1;
       else         max *= 0.9;
       if (min > 0) min *= 0.9;
@@ -2297,19 +2303,22 @@ void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Doub
       if (animate) ForceAnimate(0,200);
       c->Update();
       DrawPng(c);
-      delete c;
+#if 0
+      //      delete c;
       for (Int_t i = 0; i < 2; i++) {
-	SafeDelete(cpm[i]);
+	//	SafeDelete(cpm[i]);
 	SafeDelete(h2[1]);
 	SafeDelete(h1[1]);
 	SafeDelete(s1[1]);
       }
+#endif
     }
   }
 }
 //_____________________________________________________________________________
 void StMuMcAnalysisMaker::Draw(Option_t *option){
   if (! Check()) return;
+  TString Option(option);
 #if 0
   TString Out("indexMc.html");
   out.open(Out, ios::out); //"Results.list",ios::out | ios::app);
@@ -2318,12 +2327,16 @@ void StMuMcAnalysisMaker::Draw(Option_t *option){
   Chapter = "1.1"; // nPng = 0;
   out << "<H2>" << Chapter.Data() << ". Quality of reconstructed tracks with respect to MC.</H2>" << endl;
 #endif
-  DrawQA();
+  if (Option == "" || Option.Contains("QA",TString::kIgnoreCase)) {
+    DrawQA();
+  }
 #if 0
   Chapter = "1.2"; // nPng = 0;
   out << "<H2>" << Chapter.Data() << ". Track reconstuction efficiencies.</H2>" << endl;
 #endif
-  DrawEff();
+  if (Option == "" || Option.Contains("Eff",TString::kIgnoreCase)) {
+    DrawEff();
+  }
   if (IAttr("PiDPlots")) {
 #if 0
     Chapter = "1.3"; // nPng = 0;
@@ -2359,15 +2372,16 @@ Bool_t StMuMcAnalysisMaker::Check() {
   return kTRUE;
 }
 //________________________________________________________________________________
-void StMuMcAnalysisMaker::DrawQA(Int_t gp, Int_t pp, Int_t xx, Int_t ii) {// versus Nhits
+void StMuMcAnalysisMaker::DrawQA(Int_t gp, Int_t pp, Int_t xx, Int_t ii, Int_t xy) {// versus Nhits
   Int_t animate = 0;
   MatchType type = kRecoTk;
   Int_t k1 = kGlobal, k2 = kPrimary;
-  if (gp >= 0 && gp <= kPrimary) {k1 =  k2 = gp;}
-  for (Int_t k = k2; k >= k1; k--) {
-    Section = Chapter; Section += "."; Section += k+1;
+  if (gp >= kGlobal && gp <= kPrimary) {k1 =  k2 = gp;}
+  for (Int_t k = k2; k >= k1; k--) {                     //gp
 #if 0
+    Section = Chapter; Section += "."; Section += k+1;
     out << "<h3>" << Section.Data() << ". " << TitleTrType[k] << " tracks. </h3>" << endl;
+    Int_t subsection = 0;
 #endif
     Int_t i1 = 0, i2 = kTotalQAll - 1;
     TH3F *h3s[2] = {0};
@@ -2376,9 +2390,8 @@ void StMuMcAnalysisMaker::DrawQA(Int_t gp, Int_t pp, Int_t xx, Int_t ii) {// ver
     if (type == kGhostTk || type == kGhostHftTk || type == kGhostToFTk) p2 = 0; // no pion for ghosts
     Int_t x1 = 0; Int_t x2 = kVariables - 1;
     if (xx >= 0 && xx < kVariables) {x1 = x2 = xx;}
-    Int_t subsection = 0;
-    for (Int_t particle = p1; particle <= p2; particle++) {
-      for (Int_t x = x1; x <= x2; x++) {
+    for (Int_t particle = p1; particle <= p2; particle++) { // pp : All, pion
+      for (Int_t x = x1; x <= x2; x++) {                    // xx : NoHits, Kinem
 	if (ii >= 0 && ii < kTotalQAll) {i1 = i2 = ii;}
 	TString h4line;
 	TString tag;
@@ -2390,11 +2403,13 @@ void StMuMcAnalysisMaker::DrawQA(Int_t gp, Int_t pp, Int_t xx, Int_t ii) {// ver
 	h4line += tag;
 	if (x == 0)            {tag += "NoHits"; h4line += " No. of fit and quality.";}
 	else                   {tag += "Kinema"; h4line += "Track parameters";}
+#if 0
 	subsection++;
 	SubSection = Section; SubSection += "."; SubSection += subsection;
 	out << "<h4><a name \"" << tag.Data() << "\">" << SubSection.Data() << ". " <<h4line.Data() << "</a></h4>" << endl;
 	BeginTable();
-	for (Int_t i = i1; i <= i2; i++) {
+#endif
+	for (Int_t i = i1; i <= i2; i++) { 
 	  h3s[0] = fHistsT[k][type][particle][kPositive][x][i]; if (! h3s[0]) {cout << "DrawQA: " << MakeTitle(k,type,particle,kPositive,x,i) << " not fond." << endl;}
 	  h3s[1] = fHistsT[k][type][particle][kNegative][x][i]; if (! h3s[0]) {cout << "DrawQA: " << MakeTitle(k,type,particle,kNegative,x,i) << " not fond." << endl;}
 	  if (! h3s[0] && ! h3s[1]) {
@@ -2411,10 +2426,12 @@ void StMuMcAnalysisMaker::DrawQA(Int_t gp, Int_t pp, Int_t xx, Int_t ii) {// ver
 	  if (k == kPrimary) {min = plotPrVar[i].min;  max = plotPrVar[i].max;}
 	  else               {min = plotGlVar[i].min;  max = plotGlVar[i].max;}
 #endif
-	  if (i == 0) DrawH3s(h3s, animate, min, max, 5);
-	  else        DrawH3s(h3s, animate, min, max, 2);
+	  if (i == 0) DrawH3s(h3s, animate, min, max, 5, xy);
+	  else        DrawH3s(h3s, animate, min, max, 2, xy);
 	}
+#if 0
 	EndTable();
+#endif
       }
     }
   }
@@ -2425,18 +2442,20 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
   const Double_t pTmins[4] = {0.11, 0.5, 1.01, 2.0};
   TCanvas *c1 = 0;
   if (Debug()) {
-    c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+    c1= (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
     if (c1) c1->Clear();
     else    c1 = new TCanvas("c1","c1",400,400);
   }
   
   for (Int_t gp = kGlobal; gp < kTotalT; gp++) {
-    Section = Chapter; Section += "."; Section += gp+1;
 #if 0
+    Section = Chapter; Section += "."; Section += gp+1;
     out << "<h3>" << Section.Data() << ". " << TitleTrType[gp] << " tracks. </h3>" << endl;
 #endif
     for (Int_t particle = 0; particle < kPartypeT; particle++) {
+#if 0
       Int_t subsection = 0;
+#endif
       for (Int_t i = 0; i < kEffTotal; i++) {
 	//  MatchType t1 = eff[i].kDividend;
 	//  MatchType t2 = eff[i].kDivider;
@@ -2447,9 +2466,9 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
 	else                   tag += " Pions.";
 	tag += " "; tag += eff[i].Title; 
 	h4line += tag; h4line += ".";
+#if 0
 	subsection++;
 	SubSection = Section; SubSection += "."; SubSection += subsection;
-#if 0
 	out << "<h4><a name \"" << tag.Data() << "\">" << SubSection.Data() << ". " <<h4line.Data() << "</a></h4>" << endl;
 	BeginTable();
 #endif
@@ -2566,7 +2585,9 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
 	  }
 	  if (pmA >= 0) {
 	    if (heff[pmA]) Name = FormName(heff[pmA]);
-	    TCanvas *c = new TCanvas(Name.Data(),Name.Data(),400,400);
+	    TCanvas *c = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(Name);
+	    if (c) c->Clear();
+	    else   c = new TCanvas(Name.Data(),Name.Data(),400,400);
 	    if (p == 1) c->SetLogx(1);
 	    TLegend *l = 0;
 	    if (NS > kTotalSigns) l = new TLegend(0.1,0.4,0.4,0.6);
@@ -2582,7 +2603,7 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
 	    if (animate) ForceAnimate(0,200);
 	    DrawPng(c);
 	    if (Break) return;
-	    delete c;
+	    //	    delete c;
 	  }
 	  for (Int_t i = 0; i < 8; i++) {SafeDelete(heff[i]);}
 	}
@@ -2597,11 +2618,11 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
 void StMuMcAnalysisMaker::DrawdEdx(Double_t lenMin) {
   if (! Check()) return;
   for (Int_t gp = 0; gp < kTotalT; gp++) {
-    Section = Chapter; Section += "."; Section += gp+1;
 #if 0
+    Section = Chapter; Section += "."; Section += gp+1;
     out << "<h3>" << Section.Data() << ". " << TitleTrType[gp] << " tracks. </h3>" << endl;
-#endif
     Int_t subsection = 0;
+#endif
     for (Int_t hyp = 0; hyp < NHypTypes; hyp++) {
       TString h4line;
       TString tag;
@@ -2609,9 +2630,9 @@ void StMuMcAnalysisMaker::DrawdEdx(Double_t lenMin) {
       else               tag += "Primary ";
       tag += " tracks. ";
       tag += StProbPidTraits::mPidParticleDefinitions[hyp]->name().c_str();
+#if 0
       subsection++;
       SubSection = Section; SubSection += "."; SubSection += subsection;
-#if 0
       out << "<h4><a name \"" << tag.Data() << "\">" << SubSection.Data() << ". " <<h4line.Data() << "</a></h4>" << endl;
       BeginTable();
 #endif
@@ -2634,11 +2655,11 @@ void StMuMcAnalysisMaker::DrawdEdx(Double_t lenMin) {
 void StMuMcAnalysisMaker::DrawToF() {
   if (! Check()) return;
   for (Int_t gp = 0; gp < kTotalT; gp++) {
-    Section = Chapter; Section += "."; Section += gp+1;
 #if 0
+    Section = Chapter; Section += "."; Section += gp+1;
     out << "<h3>" << Section.Data() << ". " << TitleTrType[gp] << " tracks. </h3>" << endl;
-#endif
     Int_t subsection = 0;
+#endif
     for (Int_t hyp = 0; hyp < NHypTypes; hyp++) {
       TString h4line;
       TString tag;
@@ -2646,9 +2667,9 @@ void StMuMcAnalysisMaker::DrawToF() {
       else               tag += "Primary ";
       tag += " tracks. ";
       tag += StProbPidTraits::mPidParticleDefinitions[hyp]->name().c_str();
+#if 0
       subsection++;
       SubSection = Section; SubSection += "."; SubSection += subsection;
-#if 0
       out << "<h4><a name \"" << tag.Data() << "\">" << SubSection.Data() << ". " <<h4line.Data() << "</a></h4>" << endl;
       BeginTable();
 #endif
