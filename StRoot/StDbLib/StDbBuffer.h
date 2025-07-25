@@ -48,8 +48,8 @@
 #ifndef STDBBUFFER_H
 #define STDBBUFFER_H
 #if !defined(__CINT__) && !defined(__CLING__)
-#include "mysql.h"
-#include "mysql_com.h"
+#include <mysql.h>
+//#include "mysql_com.h"
 #endif
 
 #include "StDbBufferI.h"
