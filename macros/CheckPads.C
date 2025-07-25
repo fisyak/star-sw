@@ -25,6 +25,9 @@ end
   cat *Runs.sorted | sort -u | tee DeadOrAlived_Runs.sorted
   grep -E '(Dead|Alive)' DeadOrAlived_Runs.sorted $STAR/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2022.C | awk -F: '{print $2}' | sort | tee DeadOrAlived_Runs.merged
   grep -E '(Dead|Alive)' DeadOrAlived_Runs.sorted $STAR/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2023.C | awk -F: '{print $2}' | sort | tee DeadOrAlived_Runs.merged
+  grep -E '(Dead|Alive)' DeadOrAlived_Runs.sorted $STAR/StarDb/Calibrations/tpc/tpcExtraGainCorrection.y2021.C | awk -F: '{print $2}' | sort | tee DeadOrAlived_Runs.merged
+
+  getRunList.pl 23001002 23001034
 */
 //________________________________________________________________________________
 #if !defined(__CINT__) || defined(__MAKECINT__)

@@ -93,12 +93,15 @@ sub GetRuns($) {
   my $DAQ_DIR = "";
   if (-r "/hlt/cephfs/daq") {
     $DAQ_DIR =  "/hlt/cephfs/daq";
+  } elsif (-r "/gpfs01/star/data03/daq") {
+    $DAQ_DIR =  " /gpfs01/star/data03/daq";
   } elsif (-r "/gpfs01/star/daq") {
     $DAQ_DIR =  " /gpfs01/star/daq";
   } else {
     die "unknow $DAQ_DIR";
   }
   my $runs = $DAQ_DIR . "/" . $year . "/" . $Day . "/" .  $Run;
+  print "runs = $runs\n" if ($debug);
   my $run2 = "";
   if ($year eq "2020") {
     $runs = $DAQ_DIR . "/" . "2019/" . $Day . "/" .  $Run;
