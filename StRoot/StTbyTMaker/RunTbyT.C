@@ -23,10 +23,10 @@ void RunTbyT(Int_t nevents=999,
   cout << "Corresponding new  File: " << eventFile2 << endl;
   gSystem->Load("StIOMaker");
   // 1st IOMaker, for tpt file
-  makers[0] = new StIOMaker("IO1","r",eventFile1);//,"bfcTree");
+  makers[0] = new StIOMaker("IO1","r",eventFile1);
   chain->AddBefore("db",makers[0]);
   // 2nd IOMaker, for ittf file
-  makers[1] = new StIOMaker("IO2","r",eventFile2);//,"bfcTree");
+  makers[1] = new StIOMaker("IO2","r",eventFile2);
   chain->AddBefore("db",makers[1]);
   StTbyTMaker*  goodStuff      = new StTbyTMaker;
   
@@ -42,12 +42,15 @@ void RunTbyT(Int_t nevents=999,
   Int_t iMake = chain->MakeEvent();
   if (iMake) return 1;;
   for (Int_t ev = 0; ev < nevents; ev++) {
-    if ( StTbyTMaker::EventMatch()) return;
-    if (goodStuff->Make()) return;
+    if (! StTbyTMaker::EventMatch()) {
+      goodStuff->Make();
 #ifdef __ASK__
-    if (! gROOT->IsBatch()) {
-      if (Ask()) return;
-    } else {_debugAsk = 0;}
+      if (! gROOT->IsBatch()) {
+	if (Ask()) return;
+      } else {_debugAsk = 0;}
 #endif
+    }
+    iMake = chain->MakeEvent();
+    if (iMake == 2) return 1;;
   }
 }

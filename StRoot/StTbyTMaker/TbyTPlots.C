@@ -36,9 +36,8 @@
 #include "TList.h"
 #include "TDirectory.h"
 #include "TPolyMarker.h"
-#include "TFileSet.h"
-#include "TDataSetIter.h"
 #include "TEfficiency.h"
+#include "TDirIter.h"
 #include "Ask.h"
 //#include "StSpectraPool/StTbyTMaker/TrackMatch.h#ifndef __TrackMatch__
 #ifndef __TrackMatch__
@@ -624,19 +623,16 @@ void Draw(const Char_t *file="Plots.root") {
 #endif
 }
 //________________________________________________________________________________
-void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
+void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
   TString TreeName("trackMateComp");
   fChain = new TChain(TreeName);
-  TFileSet dir(files);
-  TDataSetIter next(&dir,0);
-  TDataSet *set = 0;
+  TDirIter Dir(files);
+  Char_t *file = 0;
   TFile *f = 0;
   Int_t FileNo = 0;
-  Int_t Ntotal = 0;
-  while ((set = next())) {
-    TString Title(set->GetTitle());
-    if (Title != "file") continue;
-    TString Name(set->GetName());
+  ULong64_t  Ntotal = 0;
+  while ( (file = (Char_t *) Dir.NextFile()) ) {   
+    TString Name(file);
     if (! Name.EndsWith(".root")) continue;
     //    if (! (Name.BeginsWith("trackMateFile") || Name.BeginsWith("TbyT"))) continue;
     f = new TFile(Name);
@@ -653,6 +649,7 @@ void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
     }
     delete f;
   }
+  if (! FileNo) return;
   TrackMatch *T = new TrackMatch;
   fChain->SetBranchAddress("TrackMatch", &T);
   TString Out;
@@ -837,7 +834,7 @@ void TbyTPlots(const Char_t *files = ".", Int_t Nentries=0) {
 	cout << ientry << "\tgp = " << gp << "\tOld " << iOld << " Id = " << T->newP.Id << "\tL/M/C = " << LostOld << "/" << MatchedOld << "/" << CloneOld 
 	     << "\tc/pT/eta/phi" << c[kold] << "/" << Vars[kold][kpT] << "/" << Vars[kold][kEta] << "/" << Vars[kold][kPhi] << endl; 
 	cout << ientry << "\tgp = " << gp << "\tNew " << iNew << " Id = " << T->oldP.Id << "\tL/M/C = " << LostNew << "/" << MatchedNew << "/" << CloneNew 
-	     << "\tc/pT/eta/phi" << c[knew] << "/" << Vars[knew][kpT] << "/" << Vars[knew][kpT] << "/" << Vars[knew][kPhi] << endl; 
+	     << "\tc/pT/eta/phi" << c[knew] << "/" << Vars[knew][kpT] << "/" << Vars[knew][kEta] << "/" << Vars[knew][kPhi] << endl; 
       }
       for (Int_t var = 0; var < 3 ; var++) {
 	if (iNew) Eff[gp][c[knew]][kclone][knew][var]->Fill(Vars[knew][var],CloneNew);
