@@ -910,6 +910,13 @@ if (-r ${STAR}/bin)                   setenv PATH ${PATH}:${STAR}/bin
 if (-x ${GROUP_DIR}/dropit)           setenv PATH `${GROUP_DIR}/dropit`
 if (-r ${XOPTSTAR}/spack/lib/perl5)   setenv PERL5LIB ${XOPTSTAR}/spack/lib/perl5:${PERL5LIB}
 setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/include:${STAR}:${STAR}/StRoot:${STAR}/.${STAR_HOST_SYS}/include"
+# remuve dubplication
+if (-x ${GROUP_DIR}/dropit) then
+    setenv                    PATH             `${GROUP_DIR}/dropit -p ${PATH}`
+    setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit -p ${LD_LIBRARY_PATH}`
+    if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit -p ${SHLIB_PATH}`
+    if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit -p ${MAN_PATH}`
+endif
 which xtitl >& /dev/null
 if (! $?) xtitl
 if ( $?DECHO ) echo "======================================== end group_env.csh $1"
