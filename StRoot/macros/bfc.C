@@ -78,7 +78,8 @@ void Load(const Char_t *options="");
 //TString defChain("MC.7p7GeV_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
 //TString defChain("MC.2021,3p85GeV_fixedTarget_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
-TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
+//TString defChain("MC,OO_200GeV_2021,P2023a,gstar,AgML,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,dbSnapshot");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
@@ -89,6 +90,8 @@ StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,
 //_____________________________________________________________________
 void Load(const Char_t *options)
 {
+  Int_t debug = gDebug;
+  gDebug = 1;
   cout << "Load system libraries\t";
   int nodefault = TString(options).Contains("nodefault",TString::kIgnoreCase);
 
@@ -115,6 +118,7 @@ void Load(const Char_t *options)
   gSystem->Load("libStUtilities");                                    //  StMemStat::PrintMem("load StUtilities");
   gSystem->Load("libStBFChain");                                      //  StMemStat::PrintMem("load StBFChain");
   cout << endl;
+  gDebug = debug;
 }
 //_____________________________________________________________________
 StBFChain *bfc(Int_t First, Int_t Last,

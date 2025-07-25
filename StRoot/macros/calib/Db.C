@@ -11,7 +11,7 @@
 //#define __USE_ROOFIT__
 //#endif
 //________________________________________________________________________________
-#if !defined(__CINT__) && ! defined(__MAKECINT__) 
+#if !defined(__CINT__) && !defined(__CLING__) && ! defined(__MAKECINT__) 
 #include "Riostream.h"
 #include <stdio.h>
 #include "TROOT.h"
@@ -67,6 +67,9 @@ class Bichsel;
 class St_db_Maker;
 class TTable;
 class StBFChain;
+#ifdef __CLING__
+#include "macros/bfc.C"
+#endif
 // Refer to a class implemented in libRooFit to force its loading
 // via the autoloader.
 #ifdef __USE_ROOFIT__
@@ -85,9 +88,11 @@ StBFChain *bfc(Int_t First, const Char_t *Chain = "MC2016,Muons20,vmc,Rung.1",
 //________________________________________________________________________________
 void DbLoad() {
   //  if (gClassTable->GetID("StDbManager") < 0) {
+#ifdef __CINT__
     gROOT->LoadMacro("bfc.C");
+#endif
     //    bfc(-1,"tpcDb,detDb,CorrX,nodefault");
-    bfc(-1,"tpcDb,detDb,mysql,nodefault,CorrX"); // ,dbV20151120");
+    chain = bfc(-1,"tpcDb,detDb,mysql,nodefault,CorrZ"); // ,dbV20151120");
     dbMk = (St_db_Maker *) chain->Maker("db");
     //  }    
 }
