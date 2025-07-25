@@ -380,6 +380,7 @@ Int_t StdEdxY2Maker::Make(){
 #ifdef __BEST_VERTEX__
     if (TESTBIT(m_Mode, kCalibration)) {// calibration mode
       for (Int_t l = 0; l < 2; l++) {
+	if (! EtaVspT[l][sCharge]) continue;
 	track = tracks[l];
 	if (track) {
 	  StThreeVectorD g3 = track->geometry()->momentum(); // p of global track
@@ -1200,7 +1201,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
   Int_t sCharge = 0;                                 // positive
   if (gTrack->geometry()->charge() < 0) sCharge = 1; // negative
 #ifdef __BEST_VERTEX__
-  EtaVspTC[sCharge]->Fill(TMath::Log10(g3.perp()), g3.pseudoRapidity());
+  if (EtaVspTC[sCharge])  EtaVspTC[sCharge]->Fill(TMath::Log10(g3.perp()), g3.pseudoRapidity());
 #endif /* __BEST_VERTEX__ */
 #ifdef __TEST_DX__
   if (dXTest[0]) {

@@ -450,12 +450,6 @@ else
   if ( $?DECHO ) echo "$self ::  ${GROUP_DIR}/dropit is not -x"
 endif
 
-
-## Put mysql on path if available
-if ( -d /usr/local/mysql/bin) then
-  if ( -x ${GROUP_DIR}/dropit) setenv PATH `${GROUP_DIR}/dropit -p ${PATH} -p /usr/local/mysql/bin`
-endif
-
 if ($?MANPATH == 1) then
   ##VP   setenv MANPATH ${MANPATH}:${STAR_PATH}/man
   setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH} -p ${STAR_PATH}/man`
@@ -830,16 +824,6 @@ if ( -x ${GROUP_DIR}/dropit) then
     endif
     setenv PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/bin  -p ${XOPTSTAR}/spack/bin -p ${PATH}`
     setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib  -p ${XOPTSTAR}/spack/lib -p $LD_LIBRARY_PATH`
-# Note from 2011/10 - Unofrtunately, MySQL has not been there for a while
-    if ( -d ${XOPTSTAR}/lib/mysql ) then
-      setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${LD_LIBRARY_PATH} -p ${XOPTSTAR}/lib  -p ${XOPTSTAR}/spack/lib/mysql`
-    endif
-    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p "$LD_LIBRARY_PATH ^/usr/lib"`
-    if ($USE_64BITS) then 
-	setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib64/mysql
-    else                  
-	setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib:/usr/lib/mysql
-    endif
     setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH}`
     setenv PATH `${GROUP_DIR}/dropit -p ${PATH} GROUPPATH`
 endif
@@ -904,12 +888,21 @@ if (-r /opt/rh/httpd24/enable ) then
 # setenv LIBRARY_PATH /opt/rh/httpd24/root/usr/lib64:${LIBRARY_PATH}
   setenv LD_LIBRARY_PATH /opt/rh/httpd24/root/usr/lib64:${LD_LIBRARY_PATH}
 endif
-#if (-r /opt/rh/rh-git218/enable) then 
-#  setenv PATH /opt/rh/rh-git218/root/usr/bin:${PATH}
-#  setenv MANPATH /opt/rh/rh-git218/root/usr/share/man:${MANPATH}
-#  setenv PERL5LIB /opt/rh/rh-git218/root/usr/share/perl5/vendor_perl:${PERL5LIB}
-#  setenv LD_LIBRARY_PATH /opt/rh/httpd24/root/usr/lib64:${LD_LIBRARY_PATH}
-#endif
+# mysql check
+if ( -d /usr/local/mysql/bin) then
+  if ( -x ${GROUP_DIR}/dropit) setenv PATH `${GROUP_DIR}/dropit -p ${PATH} -p /usr/local/mysql/bin`
+endif
+if ($USE_64BITS) then 
+   setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib
+   if (-r /usr/lib64/mysql) then
+      setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib64/mysql
+   endif
+else                  
+   setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib
+   if (-r /usr/lib/mysql) then
+      setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib/mysql
+   endif
+endif
 if (-r ${HOME}/bin)                   setenv PATH ${HOME}/bin:${PATH}
 if (-r ${HOME}/bin/.${STAR_HOST_SYS}) setenv PATH ${HOME}/bin/.${STAR_HOST_SYS}:${PATH}
 if (-r ${STAR}/scripts/RCF)           setenv PATH ${PATH}:${STAR}/scripts/RCF
@@ -917,29 +910,6 @@ if (-r ${STAR}/bin)                   setenv PATH ${PATH}:${STAR}/bin
 if (-x ${GROUP_DIR}/dropit)           setenv PATH `${GROUP_DIR}/dropit`
 if (-r ${XOPTSTAR}/spack/lib/perl5)   setenv PERL5LIB ${XOPTSTAR}/spack/lib/perl5:${PERL5LIB}
 setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/include:${STAR}:${STAR}/StRoot:${STAR}/.${STAR_HOST_SYS}/include"
-#:$STAR/StRoot/StStarLogger:$STAR/StRoot/StEmcRawMake"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH};$STAR/StRoot/StEmcUtil/database:$STAR/StRoot/StEmcUtil/filters:$STAR/StRoot/StEmcUtil/geometry:$STAR/StRoot/StEmcUtil/others:$STAR/StRoot/StEmcUtil/projection:$STAR/StRoot/StEmcUtil/voltageCalib"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StEEmcUtil/EEevent:$STAR/StRoot/StEEmcUtil/database:$STAR/StRoot/StEEmcUtil/EEevent:$STAR/StRoot/StEEmcUtil/EEfeeRaw:$STAR/StRoot/StEEmcUtil/EEmcGeom:$STAR/StRoot/StEEmcUtil/EEmcMC"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StEEmcUtil/EEmcSmdMap:$STAR/StRoot/StEEmcUtil/StEEmcSmd"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StMuDSTMaker/COMMON"
-
-#
-# Uncomment to get statistics on version used at
-# login level.
-#
-#set date="`date`"
-#cat >> $GROUP_DIR/statistics/star${STAR_VERSION} <<\lndir $ROO EOD
-#$USER from $HOST asked for STAR_LEVEL=${STAR_LEVEL} / STAR_VERSION=${STAR_VERSION}  $date
-#EOD
-#END
-#if (-x $GROUP_DIR/dropit ) then
-#	setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star`
-#        setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH -p /usr/lib`
-#endif
-
-
-#echo "${STAR}"
-#echo "$LD_LIBRARY_PATH"
 which xtitl >& /dev/null
 if (! $?) xtitl
 if ( $?DECHO ) echo "======================================== end group_env.csh $1"
