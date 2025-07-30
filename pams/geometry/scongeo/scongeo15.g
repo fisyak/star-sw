@@ -21,7 +21,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 *
       Content          SCOM,SCON,SNMX,
                        SROD,SRON,SROI,SROH,
-                       SBSP ,SAKM, SPOK, SASH, SDSK, SPOA, SPOB, BOLT
+                       SBSP ,SAKM, SPOK, SASH, SDSK, SPOA, SPOB, BOLT, SPOC
       structure SVTG { Version,  
                        RsizeMin,  RsizeMax,
                        SupportVer,   ConeVer,
@@ -308,7 +308,8 @@ Block SPOA is beam spoke assembly
       Attribute SPOA Seen=0 Colo=2
       SHAPE box dx=1.6 dy=1.25 dz = (SSUB_KMountId/2 - svtg_RSizeMin)/2
       Create and Position SPOK y =  -0.4 
-      Create and Position SPOB z = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8
+      Create and Position SPOB z = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8 
+      Create and Position SPOC z = +(SSUB_KMountId/2 - svtg_RSizeMin)/2 - 0.8 
 EndBlock
 Block SPOB is beam spoke assembly
       Material G10
@@ -316,8 +317,17 @@ Block SPOB is beam spoke assembly
       SHAPE box dx=1.6 dy=1.25 dz = 0.8 
 *  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
 *    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
-      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=-1.3
+      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=-1.3 
       Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=+1.3
+EndBlock
+Block SPOC is beam spoke assembly upper part
+      Material G10
+      Attribute SPOC Seen=1 Colo=2
+      SHAPE box dx=1.25 dy=0.5 dz = 0.6 
+*  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
+*    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
+      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=-0.5
+      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=+0.5
 EndBlock
 Block SPOK is beam line support spokes
       Material Aluminium
