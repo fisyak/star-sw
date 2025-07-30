@@ -11,7 +11,7 @@
 #
 Unix.*.Root.DynamicPath:    :$HOME/macros:$STAR/macros/.$STAR_HOST_SYS:$STAR/macros:$STAR/macros/.$STAR_HOST_SYS:$(LD_LIBRARY_PATH)
 Unix.*.Root.MacroPath:      :$HOME/macros:$STAR/macros:$(ROOTSYS)/macros:./StRoot/macros:./StRoot/macros/graphics:./StRoot/macros/analysis:./StRoot/macros/test:./StRoot/macros/examples:./StRoot/macros/html:./StRoot/macros/qa:./StRoot/macros/mudst:$(STAR)/StRoot/macros:$(STAR)/StRoot/macros/graphics:$(STAR)/StRoot/macros/analysis:$(STAR)/StRoot/macros/test:$(STAR)/StRoot/macros/examples:$(STAR)/StRoot/macros/html:$(STAR)/StRoot/macros/qa:$(STAR)/StRoot/macros/mudst:$(STAR)/StRoot/macros/calib:./StRoot/macros/embedding:$(STAR)/StRoot/macros/embedding:$(ROOTSYS)/macros:$ROOTSYS/tutorials:$(ROOTROOT)/root/tmva/test
-+ACLiC.IncludePaths:          -I$HOME/macros -IStRoot/GenFit -I$STAR/StRoot/GenFit 
++ACLiC.IncludePaths:          -I$HOME/macros -I$STAR -IStRoot -I$STAR/StRoot -IStRoot/GenFit -I$STAR/StRoot/GenFit 
 Rint.Logon:               $STAR/StRoot/macros/rootlogon.C
 Rint.Logoff:              $STAR/StRoot/macros/rootlogoff.C
 #Unix.*.Root.PluginPath:     :./plugins:~/plugins:$STAR/QtRoot/plugins:$ROOTSYS/etc/plugins:
@@ -27,7 +27,7 @@ Plugin.TVirtualX            ^qt      TGQt          GQt          "TGQt(const char
 Plugin.TGuiFactory          ^qtgui   TQtGUIFactory  QtRootGui       "TQtGUIFactory()"
 #Plugin.TGuiFactory         ^qtgui    TQtRootGuiFactory QtRoot       "TQtRootGuiFactory()"
 
-Logger.Configuration        $STAR/Bfc.xml
+Logger.Configuration        $STAR/StRoot/StStarLogger/Bfc.xml
 Logger.Color                yes
 #Root.Debug:                1
 Root.MemStat:               1
@@ -44,5 +44,6 @@ Root.ObjectStat:            1
 # F: File browser E: Text Editor H: HTML browser
 # C: Canvas I: I/O redirection P: Proof G: GL viewer
 #Browser.Options:             CEI
+Browser.Name: TRootBrowser
 WebGui.CheckRemoteDisplay: no
 Canvas.Name: TRootCanvas
