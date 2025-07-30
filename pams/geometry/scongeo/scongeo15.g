@@ -1,4 +1,3 @@
-*
 * Support structures after removinf SVT 
 * SCON has revisited accoudingly  drawings from https://drupal.star.bnl.gov/STAR/system/files/SVT%20CONE%20DRAWINGS%20BINDER%5B49%5D.pdf
 * 07/01/2025
@@ -22,7 +21,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 *
       Content          SCOM,SCON,SNMX,
                        SROD,SRON,SROI,SROH,
-                       SBSP ,SAKM, SPOK, SASH, SDSK, SPOA, SPOB
+                       SBSP ,SAKM, SPOK, SASH, SDSK, SPOA, SPOB, BOLT
       structure SVTG { Version,  
                        RsizeMin,  RsizeMax,
                        SupportVer,   ConeVer,
@@ -38,7 +37,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 *
       structure SSUB { Version,  KMountId,  KMountOd,  KMntThk
                      ,AlScrThk, zG10Start, G10Thk1, G10Thk2, G10Thk3, G10RI, G10RO,
-                       rbolz, dZBolt
+                       rbolt, dZBolt
 	}
 *
       Real           conez(7), coneRi(7), coneRO(7)
@@ -91,7 +90,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       G10Thk3   = 0.6        ! thikness 
       G10RI     = 4.1        ! radius 
       G10RO     = 6.4        ! radius 
-      rbolz     = 0.3        ! bolt 	
+      rbolt     = 0.3        ! bolt 	
       dZBolt    = 0.7        ! bolt    
    EndFill
 
@@ -133,10 +132,6 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       coneRix(5) = coneRix(4)
 
       Create and Position SCOM in Cave konly='MANY'
-* The beampipe support
-      Create   SBSP  "Beam Support"
-      Position SBSP   z= 0             konly='MANY'
-      Position SBSP   z= 0 ThetaZ=180  konly='MANY'
 *******************************************************************************
 Block SCOM is supporting cone mother volume
       Material   Air
@@ -153,12 +148,12 @@ Block SCOM is supporting cone mother volume
  AG_ZI( 2) = -conez(4);	AG_RMN( 2)  = coneRi(4);     AG_RMX( 2) =  coneRo(4);     
  AG_ZI( 3) = -conez(3);	AG_RMN( 3)  = coneRi(3);     AG_RMX( 3) =  coneRo(3);     
  AG_ZI( 4) = -conez(2); AG_RMN( 4)  = coneRi(2);     AG_RMX( 4) =  coneRo(2);     
- AG_ZI( 5) = -conez(2);	AG_RMN( 5)  = coneRi(2);     AG_RMX( 5) =  coneRo(2);     
- AG_ZI( 6) = -conez(6);	AG_RMN( 6)  = coneRi(2);     AG_RMX( 6) =  coneRo(1);     
- AG_ZI( 7) = -conez(6);	AG_RMN( 7)  = coneRi(1)-4.0; AG_RMX( 7) =  coneRo(1)+0.6; 
- AG_ZI( 8) =  conez(6);	AG_RMN( 8)  = coneRi(1)-4.0; AG_RMX( 8) =  coneRo(1)+0.6; 
- AG_ZI( 9) =  conez(6);	AG_RMN( 9)  = coneRi(2);     AG_RMX( 9) =  coneRo(1);     
- AG_ZI(10) =  conez(2);	AG_RMN(10) =  coneRi(2);     AG_RMX(10) =  coneRo(2);     
+ AG_ZI( 5) = -conez(2);	AG_RMN( 5)  = svtg_RSizeMin; AG_RMX( 5) =  coneRo(2);     
+ AG_ZI( 6) = -conez(6);	AG_RMN( 6)  = svtg_RSizeMin; AG_RMX( 6) =  coneRo(1);     
+ AG_ZI( 7) = -conez(6);	AG_RMN( 7)  = svtg_RSizeMin; AG_RMX( 7) =  coneRo(1)+0.6; 
+ AG_ZI( 8) =  conez(6);	AG_RMN( 8)  = svtg_RSizeMin; AG_RMX( 8) =  coneRo(1)+0.6; 
+ AG_ZI( 9) =  conez(6);	AG_RMN( 9)  = svtg_RSizeMin; AG_RMX( 9) =  coneRo(1);     
+ AG_ZI(10) =  conez(2);	AG_RMN(10) =  svtg_RSizeMin; AG_RMX(10) =  coneRo(2);     
  AG_ZI(11) =  conez(2);	AG_RMN(11) =  coneRi(2);     AG_RMX(11) =  coneRo(2);     
  AG_ZI(12) =  conez(3);	AG_RMN(12) =  coneRi(3);     AG_RMX(12) =  coneRo(3);     
  AG_ZI(13) =  conez(4);	AG_RMN(13) =  coneRi(4);     AG_RMX(13) =  coneRo(4);     
@@ -175,6 +170,10 @@ Block SCOM is supporting cone mother volume
       Create    SROD  "Support rod"
       Position  SROD  y = ssup_rodDist  
       Position  SROD  y =-ssup_rodDist  
+* The beampipe support
+      Create   SBSP  "Beam Support"
+      Position SBSP   z= 0             konly='MANY'
+      Position SBSP   z= 0 ThetaZ=180  konly='MANY'
 
 EndBlock
 *******************************************************************************
@@ -295,7 +294,7 @@ endblock
 *
 Block SAKM is the beampipe support aluminum kinematic mount*
       Material Aluminium
-      Attribute SAKM Seen=1 Colo=2
+      Attribute SAKM Seen=1 Colo=3
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
  zi={     conez(6),     conez(1),     conez(1),     conez(2)},
 Rmn={SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
@@ -306,7 +305,7 @@ Endblock
 *
 Block SPOA is beam spoke assembly
       Material Air
-      Attribute SPOA Seen=1 Colo=2
+      Attribute SPOA Seen=0 Colo=2
       SHAPE box dx=1.6 dy=1.25 dz = (SSUB_KMountId/2 - svtg_RSizeMin)/2
       Create and Position SPOK y =  -0.4 
       Create and Position SPOB z = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8
@@ -315,6 +314,10 @@ Block SPOB is beam spoke assembly
       Material G10
       Attribute SPOB Seen=1 Colo=2
       SHAPE box dx=1.6 dy=1.25 dz = 0.8 
+*  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
+*    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
+      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=-1.3
+      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=+1.3
 EndBlock
 Block SPOK is beam line support spokes
       Material Aluminium
@@ -327,7 +330,7 @@ EndBlock
 Block SASH is the beampipe support aluminum EM shield
       Material Aluminium
       Material AluminiumMesh dens=0.125 ! Bob Soja
-      Attribute SASH Seen=1 Colo=2
+      Attribute SASH Seen=1 Colo=3
       Shape PCON   Phi1=0   Dphi=360   Nz=2,
  zi={       conez(6),  conez(6)+SSUB_AlScrThk},
 Rmn={  svtg_RSizeMin,           svtg_RSizeMin},
@@ -338,10 +341,31 @@ Endblock
 *
 Block SDSK is the beampipe support G10
       Material G10
-      Attribute SDSK Seen=1 Colo=3
+      Attribute SDSK Seen=1 Colo=1
       Shape PCON   Phi1=0   Dphi=360   Nz=2,
  zi={conez(6)-SSUB_G10Thk3,   conez(6)},
 Rmn={           SSUB_G10RI, SSUB_G10RI},
 Rmx={           SSUB_G10RO, SSUB_G10RO}
+     Create BOLT 
+     Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2+0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x=-(SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x=-(SSUB_G10RI+SSUB_G10RO)/2+0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
+
+     Position BOLT x=-2.3 y= 4.3 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x= 2.3 y= 4.3 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x=-2.3 y=-4.3 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x= 2.3 y=-4.3 z=conez(6)-SSUB_G10Thk3/2
+
+     Position BOLT x= 4.3 y=-2.3 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x= 4.3 y= 2.3 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x=-4.3 y=-2.3 z=conez(6)-SSUB_G10Thk3/2
+     Position BOLT x=-4.3 y= 2.3 z=conez(6)-SSUB_G10Thk3/2
+
+Endblock
+Block BOLT is the beampipe support G10
+      Material IRON
+      Attribute BOLT Seen=1 Colo=4
+      Shape TUBE rmin=0 rmax = SSUB_rbolt  dz=SSUB_dZBolt
 Endblock
 end
