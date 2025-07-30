@@ -274,10 +274,10 @@ Bfc_st BFC[] = { // standard chains
    "B2009.1,IAna,ppOpt,VFMinuit,emcDY2,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
    ,             "","","Production chain for 2009 data - no Corr (+     ftpc, e/b-emc, no trigger)",kFALSE},
   {"pp2009c"      ,"" ,"",
-   "B2009.2,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis","",""
+   "B2009.2,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT","",""
    ,                   "Production chain for 2009 data - no Corr, no VF (+    ftpc, e/b-emc, trig)",kFALSE},
   {"pp2009d"      ,"" ,"",
-   "B2009.3,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis","",""
+   "B2009.3,BAna,ppOpt,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT","",""
    ,                   "Production chain for 2009 data - no Corr, no VF (+    ftpc, e/b-emc, trig)",kFALSE},
   // chains for year 10
   {"B2010","","","ry2010,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
@@ -285,41 +285,41 @@ Bfc_st BFC[] = { // standard chains
   {"B2010c","","","ry2010c,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2010 ITTF (tpc)",kFALSE},
   {"P2010a","" ,"",  // initial chain - Add some to all of BEmcChkStat,QAalltrigs,trgd,btof,Corr3
-   "B2010,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                         "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc)",kFALSE},
   {"pp2010a","" ,"", // initial chain - Add some to all of BEmcChkStat,QAalltrigs,trgd,btof,Corr3,VFPPVnoCTB
-   "B2010,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                  "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc, no VF)",kFALSE},
   {"P2010c","" ,"",  // use of y2010c geometry
-   "B2010c,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010c,BAna,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                         "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc)",kFALSE},
   {"pp2010c","" ,"", // use of y2010c geometry
-   "B2010c,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2010c,BAna,ppOpt,emcDY2,trgd,ftpc,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                  "","","Production chain for 2010 data - no Corr (+     ftpc, e/b-emc, no VF)",kFALSE},
   // chains for year 11
   {"B2011","","","ry2011,in,tpcX,UseXgeom,ftpc,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2011 ITTF (tpc)",kFALSE},
   {"P2011a","" ,"",  // initial chain - Add some to all of BEmcChkStat,QAalltrigs,trgd,btof,Corr3
-   "B2011,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2011,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                               "","","Production chain for 2011 data - no Corr (+     e/b-emc)",kFALSE},
   {"pp2011a","" ,"", // initial chain - Add some to all of BEmcChkStat,QAalltrigs,btof,Corr3,VFPPVnoCTB
-   "B2011,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2011,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                        "","","Production chain for 2011 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   // chains for year 12
   {"B2012","","","ry2012,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2012 ITTF (tpc)",kFALSE},
-  {"pp2012a","" ,"","B2012,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+  {"pp2012a","" ,"","B2012,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,        "","",                "Production chain for 2012 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"P2012a","" ,"",
-   "B2012,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2012,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                               "","","Production chain for 2011 data - no Corr (+     e/b-emc)",kFALSE},
   {"B2012b","","","ry2012a,in,tpcX,UseXgeom,ITTF,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2012 ITTF (tpc)",kFALSE},
   {"pp2012b","" ,"",
-   "B2012b,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2012b,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,        "","",                "Production chain for 2012 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"P2012b","" ,"",
-   "B2012b,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2012b,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,                               "","","Production chain for 2011 data - no Corr (+     e/b-emc)",kFALSE},
   // Year 13 chains
   {"B2013","","","in,tpcX,UseXgeom,ITTF,NosvtIT,NossdIT,NosstIT,tpcDB,TpcHitMover,Idst,tags,Tree,evout,"
@@ -333,14 +333,14 @@ Bfc_st BFC[] = { // standard chains
   {"B2013_c1","","","ry2013_1c,in,tpcX,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2013 ITTF (tpc)",kFALSE},
   {"pp2013a","" ,"",
-   "B2013_c2,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis",
+   "B2013_c2,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT",
    "","",                         "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"pp2013b","" ,"",
-   "B2013_c1,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "B2013_c1,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,        "","",                "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   // option is bare, no tracker and no Geom
   {"pp2013","" ,"",
-   "BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT,analysis"
+   "BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT"
    ,        "","",                "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   // Year 14 chains
   {"B2014"  ,"","","ry2014,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
@@ -348,11 +348,11 @@ Bfc_st BFC[] = { // standard chains
   {"B2014a","","","ry2014a,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                              "Base chain for 2014a ITTF (tpc)",kFALSE},
   {"P2014","" ,"",
-   "B2014,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25,analysis" //,l3onl,fpd
+   "B2014,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25" //,l3onl,fpd
    ,                      "","","Production chain for 2014 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   // Target Chain options for BES -> P2014a,DbV20140410,BEmcChkStat,Corr4,OSpaceZ2,OGridLeak3D
   {"P2014a","" ,"",
-   "B2014a,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis,"
+   "B2014a,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                               "","","Production chain for 2014 data - no Corr (+     e/b-emc)",kFALSE},
   // Year 15 chains
   {"B2015"  ,"","","ry2015,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
@@ -364,79 +364,79 @@ Bfc_st BFC[] = { // standard chains
   {"B2015c"  ,"","","ry2015c,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                  "Base chain for run 2015 with y2015c geometry",kFALSE},
   {"pp2015","" ,"",
-   "B2015,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                               "","","Production chain for 2014 data - no Corr (+     e/b-emc)",kFALSE},
   {"pp2015a","" ,"",
-   "B2015a,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015a,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                "","","Production chain for year 2015a data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"pp2015b","" ,"",
-   "B2015b,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015b,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                "","","Production chain for year 2015b data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"pp2015c","" ,"",
-   "B2015c,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015c,ITTF,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                "","","Production chain for year 2015c data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"P2015","" ,"",
-   "B2015,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                      "","","Production chain for 2015 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"P2015a","" ,"",
-   "B2015a,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015a,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                 "","","Production chain for year 2015a data - no Corr (+        bcc, e/b-emc)",kFALSE},
   {"P2015b","" ,"",
-   "B2015b,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2015b,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                 "","","Production chain for year 2015b data - no Corr (+        bcc, e/b-emc)",kFALSE},
-  {"P2015c","" ,"", "B2015c,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+  {"P2015c","" ,"", "B2015c,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                 "","","Production chain for year 2015c data - no Corr (+        bcc, e/b-emc)",kFALSE},
   // Year 16 initial chains - no data to really test yet but placeholder
   // 2016 standard + one base with HftC (Complete)
   {"B2016"  ,"","","ry2016,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2016 ITTF (tpc)",kFALSE},
   {"P2016","" ,"",
-   "B2016,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2016,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                      "","","Production chain for 2016 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"B2016a"  ,"","","ry2016a,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                         "Production chain for 2016 data (tpc)",kFALSE},
   {"P2016a","" ,"",
-   "B2016a,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25,analysis"
+   "B2016a,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,StiHftC,gmt25"
    ,                      "","","Production chain for 2016 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   // Year 17, p+p and BES - first chains are FastOffline related as usual
   {"B2017"  ,"","","ry2017,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2017 ITTF (tpc)",kFALSE},
-  {"P2017","" ,"", "B2017,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25,analysis"
+  {"P2017","" ,"", "B2017,ITTF,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25"
    ,                                                         "","","Production chain for 2017 data",kFALSE},
   {"pp2017","" ,"",
-   "B2017,Sti,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,gmt25,analysis"
+   "B2017,Sti,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline,emcDY2,trgd,ZDCvtx,gmt25"
    ,              "","","Production chain for year 2017 pp data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"P2017","" ,"",
-   "B2017,Sti,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25,analysis"
+   "B2017,Sti,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25"
    ,              "","","Production chain for year 2017 AA data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"B2017a"  ,"","","ry2017a,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                     "Production chain for run 2017 data (tpc)",kFALSE},
   {"pp2017a","" ,"",
-   "B2017a,Sti,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline3D,emcDY2,trgd,ZDCvtx,gmt25,analysis"
+   "B2017a,Sti,UseXgeom,BAna,ppOpt,VFPPVnoCTB,beamline3D,emcDY2,trgd,ZDCvtx,gmt25"
    ,              "","","Production chain for year 2017 pp data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"P2017a","" ,"",
-   "B2017a,Sti,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25,analysis"
+   "B2017a,Sti,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25"
    ,              "","","Production chain for year 2017 AA data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"B2018"  ,"","","r2018,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout,CorrX","",""
    ,                                                     "Production chain for run 2018 data (tpc)",kFALSE},
   {"P2018","" ,"",
-   "B2018,StiCA,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25,analysis"
+   "B2018,StiCA,UseXgeom,BAna,VFMinuit,emcDY2,trgd,ZDCvtx,gmt25"
    ,                 "","","Production chain for year 2018 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"B2018a"  ,"","","ry2018,in,tpcX,CorrX,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite","",""
    ,                                                           "Base chain for run 2018 data (tpc)",kFALSE},
   {"P2018a", "" ,"",
-   "B2018a,ITTF,UseXgeom,BAna,VFMinuit,beamline3D,emcDY2,epdHit,trgd,ZDCvtx,gmt25,analysis"
+   "B2018a,ITTF,UseXgeom,BAna,VFMinuit,beamline3D,emcDY2,epdHit,trgd,ZDCvtx,gmt25"
    ,                    "","","Base chain for year 2018 AA data - no Corr (+         bcc, e/b-emc)",kFALSE},
   {"B2019"  ,"","","r2019,in,tpcX,tpcDB,TpcHitMover,Idst,tags,Tree,evout,CorrY","",""
    ,                                                     "Production chain for run 2019 data (tpc)",kFALSE},
   {"P2019","" ,"",
-   "B2019,StiCA,UseXgeom,BAna,VFMinuit,btof,gmt25,mtd,emcDY2,btof,mtd,epdHit,trgd,ZDCvtx,analysis"
+   "B2019,StiCA,UseXgeom,BAna,VFMinuit,btof,gmt25,mtd,emcDY2,btof,mtd,epdHit,trgd,ZDCvtx"
    ,                 "","","Production chain for year 2019 data - no Corr (+         bcc, e/b-emc)",kFALSE},
   // 
   {"B2019a" ,"","","ry2019a,in,tpcX,UseXgeom,iTpcIT,CorrY,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite",
    "","",                                                      "Base chain for run 2019 data (tpc)",kFALSE},
   {"P2019a","" ,"",
-   "B2019a,ITTF,BAna,iTpcIT,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   "B2019a,ITTF,BAna,iTpcIT,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx"
    ,    "","",         "Base chain for year 2019 AA data - no Corr (+     epd, mtd, b/etof, b-emc)",kFALSE},
 
   // 2020 initial chains
@@ -476,7 +476,7 @@ Bfc_st BFC[] = { // standard chains
    "","",                                                      "Base chain for run 2020 data (tpc)",kFALSE},
 
   {"P2021a","" ,"",
-   "B2021a,ITTF,BAna,iTpcIT,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   "B2021a,ITTF,BAna,iTpcIT,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx"
    ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
 
   // 2021 initial chains
@@ -508,13 +508,13 @@ Bfc_st BFC[] = { // standard chains
    "","",                                                      "Base chain for run 2020 data (tpc)",kFALSE},
  
   {"P2022a","" ,"",
-   "B2022a,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   "B2022a,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx"
    ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
   {"pp2022","" ,"",
-   "B2022,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,gmt25,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx,analysis",
+   "B2022,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,gmt25,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx",
    "","",     "Production chain for year 2022 pp data - no Corr (+ epd, mtf, b/etof, fcs, e/b-emc)",kFALSE},
   {"pp2022a","" ,"",
-   "B2022a,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,gmt25,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx,analysis",
+   "B2022a,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,etofa,btof,gmt25,mtd,emcDY2,FttDat,fcs,trgd,ZDCvtx",
       "","","Production chain for year 2022 pp data - CorrY (+ l3, epd, mtf, b/etof, fcs, e/b-emc)",kFALSE},
 // 2023  chains
   {"B2023"  ,"","",
@@ -524,10 +524,10 @@ Bfc_st BFC[] = { // standard chains
    "ry2023a,in,tpcX,UseXgeom,iTpcIT,CorrY,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
    "","",                                                      "Base chain for run 2020 data (tpc)",kFALSE},
   {"P2023","" ,"",
-   "B2023,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   "B2023,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx"
    ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
   {"P2023a","" ,"",
-   "B2023a,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx,analysis"
+   "B2023a,ITTF,BAna,iTpcIT,ImpBToFt0Mode,VFMinuit,etofa,btof,gmt25,mtd,emcDY2,epdHit,trgd,ZDCvtx"
    ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
   // 2024 initial chains
   {"B2024a"  ,"","",
@@ -535,14 +535,14 @@ Bfc_st BFC[] = { // standard chains
     "","",                                                     "Base chain for run 2024 data (tpc)",kFALSE},
 
   {"P2024a","" ,"",
-   "B2024a,ITTF,BAna,ppOpt,ImpBToFt0Mode,-beamline3D,l3onl,epdhit,btof,gmt25,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
+   "B2024a,ITTF,BAna,ppOpt,ImpBToFt0Mode,-beamline3D,l3onl,epdhit,btof,gmt25,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx",
    "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},
   {"pp2024a","" ,"",
-   "B2024a,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,l3onl,epdhit,btof,gmt25,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx,analysis",
+   "B2024a,ITTF,BAna,ppOpt,ImpBToFt0Mode,VFPPVnoCTB,beamline3D,l3onl,epdhit,btof,gmt25,mtd,emcDY2,ftt,fcs,trgd,ZDCvtx",
    "","","Production chain for year 2024 pp data - CorrY (+ l3, epd, mtd, btof, fcs, ftt, e/b-emc)",kFALSE},
  
   {"P2024a","" ,"",
-   "B2024a,ITTF,BAna,iTpcIT,VFMinuit,etofa,btof,gmt25,mtd,l3onl,emcDY2,epdHit,trgd,ZDCvtx,analysis",
+   "B2024a,ITTF,BAna,iTpcIT,VFMinuit,etofa,btof,gmt25,mtd,l3onl,emcDY2,epdHit,trgd,ZDCvtx",
    "","",                "Base chain for year 2024 AA data - CorrY (+ l3, epd, mtd, b/etof, b-emc)",kFALSE},
   // 2025 initial chains
   {"B2025"  ,"","",
@@ -550,7 +550,7 @@ Bfc_st BFC[] = { // standard chains
     "","",                                                     "Base chain for run 2025 data (tpc)",kFALSE},
 
   {"P2025","" ,"",
-   "B2025,ITTF,BAna,VFMinuit,etofa,btof,gmt25,mtd,l3onl,emcDY2,epdHit,trgd,ZDCvtx,analysis",
+   "B2025,ITTF,BAna,VFMinuit,etofa,btof,gmt25,mtd,l3onl,emcDY2,epdHit,trgd,ZDCvtx",
            "","",        "Base chain for year 2025 AA data, using CorrY (+ l3, epd, mtd, b/etof, b-emc)",kFALSE},
   {"Calibration chains","------------","-----------","-----------------------------------","","","",kFALSE},
   {"LanaDV",   "","","LanaDVtpx","",""                                                   ,"get LDV",kFALSE},
@@ -563,92 +563,92 @@ Bfc_st BFC[] = { // standard chains
    "VFMinuit,geant,evout,IdTruth,tags,GeantOut,big,useXGeom"                      ,"","","no emc2Y",kFALSE},
   {"MC.pp.y2001"     ,"","","MC,tpcRS,rrs,fss,y2001n,Idst,rich,IAna,l0,tpcI,tpxClu,ftpc,-Kink2,"
    "VFMinuit,geant,evout,IdTruth,tags,MiniMcMk,GeantOut,big,useXGeom"                     ,"","","",kFALSE},
-  {"MC.y2003"        ,"","","MC,tpcRS,fss,y2003,Idst,IAna,l0,tpcI,tpxClu,ftpc,VFMinuit,bbcSim,tofsim,"
+  {"MC.y2003"        ,"","","MC,tpcRS,fss,y2003z,Idst,IAna,l0,tpcI,tpxClu,ftpc,VFMinuit,bbcSim,tofsim,"
    "tags,emcY2,evout,IdTruth,geantout,useXGeom"                                           ,"","","",kFALSE}, // EEfs,
-  {"MC.y2004"        ,"","","MC,tpcRS,srs,fss,y2004,Idst,BAna,l0,tpcI,tpxClu,ftpc,VFMinuit,SvtIt,geant,evout,"
+  {"MC.y2004"        ,"","","MC,tpcRS,srs,fss,y2004z,Idst,BAna,l0,tpcI,tpxClu,ftpc,VFMinuit,SvtIt,geant,evout,"
    "tags,bbcSim,tofsim,emcY2,EEfs,GeantOut,big,useXGeom"                                  ,"","","",kFALSE},
-  {"MC.y2004a"       ,"","","MC,tpcRS,srs,fss,y2004a,Idst,BAna,l0,tpcI,tpxClu,ftpc,VFMinuit,SvtIT,geant"
+  {"MC.y2004a"       ,"","","MC,tpcRS,srs,fss,y2004z,Idst,BAna,l0,tpcI,tpxClu,ftpc,VFMinuit,SvtIT,geant"
    ",tags,bbcSim,tofsim,emcY2,EEfs,evout,GeantOut,big,useXGeom"                           ,"","","",kFALSE},
-  {"MC.y2005"        ,"","","MC,tpcRS,srs,fss,ssd,y2005x,Idst,IAna,l0,tpcI,tpxClu,ftpc,SvtCL,svtDb,"
+  {"MC.y2005"        ,"","","MC,tpcRS,srs,fss,ssd,y2005z,Idst,IAna,l0,tpcI,tpxClu,ftpc,SvtCL,svtDb,"
    "SsdIt,SvtIt,VFMinuit,geant,evout,tags,bbcSim,tofsim,emcY2,EEfs,GeantOut,big,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2005.noSvt"        ,"","","MC,tpcRS,fss,y2005x,Idst,IAna,l0,tpcI,tpxClu,ftpc,"
+  {"MC.y2005.noSvt"        ,"","","MC,tpcRS,fss,y2005z,Idst,IAna,l0,tpcI,tpxClu,ftpc,"
    "-SsdIt,-SvtIt,VFMinuit,geant,evout,tags,bbcSim,tofsim,emcY2,EEfs,GeantOut,big,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2006"        ,"","","MC,tpcRS,fss,y2006h,Idst,IAna,l0,tpcI,tpxClu,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
+  {"MC.y2006"        ,"","","MC,tpcRS,fss,y2006z,Idst,IAna,l0,tpcI,tpxClu,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
    ",MakeEvent,bbcSim,tofsim,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom",         "","","",kFALSE},
-  {"MC.y2007"        ,"","","MC,tpcRS,srs,ssd,fss,y2007,Idst,BAna,tpcI,tpxClu,ftpc,SvtIt,SsdIt,"
+  {"MC.y2007"        ,"","","MC,tpcRS,srs,ssd,fss,y2007z,Idst,BAna,tpcI,tpxClu,ftpc,SvtIt,SsdIt,"
    "VFMinuit,MakeEvent,IdTruth,geant,tags,bbcSim,tofsim,emcY2,EEfs,evout,GeantOut,big,useXGeom"
    ""                                                               ,"","","no l0 and trg any more",kFALSE},
-  {"MC.y2008"        ,"","","MC,tpcRS,fss,y2008a,Idst,IAna,tpcI,tpxClu,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
+  {"MC.y2008"        ,"","","MC,tpcRS,fss,y2008z,Idst,IAna,tpcI,tpxClu,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
    ",MakeEvent,bbcSim,tofsim,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom"
    ,                                                                 "","","no l0 and trg any more",kFALSE},
-  {"MC.in.y2008"     ,"","","MC,in,y2008e,Idst,BAna,ftpcT,fpt,NoSsdIt,"
+  {"MC.in.y2008"     ,"","","MC,in,y2008z,Idst,BAna,ftpcT,fpt,NoSsdIt,"
    "NoSvtIt,VFMinuit,tpcDB,MakeEvent,IdTruth,tags,bbcsim,emcY2,EEfs,evout,big,McEvout,MiniMcMk,"
    "ReadAll,useXGeom"                                                                     ,"","","",kFALSE},
-  {"MC.in.y2009"     ,"","","MC,in,y2009c,Idst,BAna,ftpcT,fpt,NoSsdIt,"
+  {"MC.in.y2009"     ,"","","MC,in,y2009z,Idst,BAna,ftpcT,fpt,NoSsdIt,"
    "NoSvtIt,VFMinuit,tpcDB,MakeEvent,IdTruth,tags,bbcsim,emcY2,EEfs,evout,big,McEvout,MiniMcMk,"
    "ReadAll,useXGeom"                                                                     ,"","","",kFALSE},
-  {"MC.y2009"       ,"","","MC,TpcRS,TpxClu,fss,y2009,Idst,IAna,tpcI,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
+  {"MC.y2009"       ,"","","MC,TpcRS,TpxClu,fss,y2009z,Idst,IAna,tpcI,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
    ",MakeEvent,bbcSim,tofsim,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom",         "","","",kFALSE},
-  {"MC.y2009a"       ,"","","MC,TpcRS,TpxClu,fss,y2009a,Idst,IAna,tpcI,ftpc,VFMinuit,NoSsdIt,NoSvtIt,"
+  {"MC.y2009a"       ,"","","MC,TpcRS,TpxClu,fss,y2009z,Idst,IAna,tpcI,ftpc,VFMinuit,NoSsdIt,NoSvtIt,"
    "MakeEvent,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big,usexgeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2010a"       ,"","","MC,TpcRS,TpxClu,fss,ftpc,y2010a,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
+  {"MC.y2010a"       ,"","","MC,TpcRS,TpxClu,fss,ftpc,y2010z,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
    "TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2010"        ,"","","MC,TpcRS,TpxClu,fss,ftpc,y2010,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
+  {"MC.y2010"        ,"","","MC,TpcRS,TpxClu,fss,ftpc,y2010z,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
    "TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom"
    ,                                                       "","","no l0 and trg any more, +BTof RC",kFALSE},
-  {"MC.in.y2010"     ,"","","MC,in,y2010c,Idst,BAna,fss,ftpcT,fpt,NoSsdIt,"
+  {"MC.in.y2010"     ,"","","MC,in,y2010z,Idst,BAna,fss,ftpcT,fpt,NoSsdIt,"
    "NoSvtIt,VFMinuit,tpcDB,MakeEvent,IdTruth,tags,bbcsim,emcY2,EEfs,evout,big,McEvout,MiniMcMk,"
    "ReadAll,useXGeom"                                                                     ,"","","",kFALSE},
-  {"MC.y2011","","","MC,TpcRS,TpxClu,y2011,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,fss,ftpcT,fpt,VFMinuit,tpcDB"
+  {"MC.y2011","","","MC,TpcRS,TpxClu,y2011z,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,fss,ftpcT,fpt,VFMinuit,tpcDB"
    ",TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom"
    ,                                                       "","","no l0 and trg any more, +BTof RC",kFALSE},
-  {"MC.in.y2011"     ,"","","MC,in,y2011,Idst,BAna,NoSsdIt,NoSvtIt,ftpcT,fpt,"
+  {"MC.in.y2011"     ,"","","MC,in,y2011z,Idst,BAna,NoSsdIt,NoSvtIt,ftpcT,fpt,"
    "VFMinuit,tpcDB,MakeEvent,IdTruth,tags,bbcsim,emcY2,EEfs,evout,big,McEvout,MiniMcMk,ReadAll,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2012"        ,"","","MC,TpcRS,TpxClu,y2012,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
+  {"MC.y2012"        ,"","","MC,TpcRS,TpxClu,y2012z,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
    "TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom"
    ,                                                       "","","no l0 and trg any more, +BTof RC",kFALSE},
-  {"MC.y2012a"       ,"","","MC,TpcRS,TpxClu,y2012a,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
+  {"MC.y2012a"       ,"","","MC,TpcRS,TpxClu,y2012z,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,"
    "TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2012.eval"      ,"","","MC,in,y2012,Idst,BAna,NoSsdIt,NoSvtIt"
+  {"MC.y2012.eval"      ,"","","MC,in,y2012z,Idst,BAna,NoSsdIt,NoSvtIt"
    ",VFMinuit,tpcDB,MakeEvent,IdTruth,tags,bbcsim,emcY2,EEfs,evout,big,McEvout,MiniMcMk,ReadAll,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2013","","","MC,TpcRS,TpxClu,y2013_1x,useXgeom,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,TpcHitMover,"
+  {"MC.y2013","","","MC,TpcRS,TpxClu,y2013_1z,useXgeom,MakeEvent,NoSsdIt,NoSvtIt,Idst,BAna,VFMinuit,tpcDB,TpcHitMover,"
    "bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,EEfs,evout,IdTruth,geantout,big"        ,"","","",kFALSE},
-  {"MC.2014","","","MC,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,emcY2,eefs,TpxClu,y2014a,useXgeom,NoSsdIt"
+  {"MC.2014","","","MC,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,emcY2,eefs,TpxClu,y2014z,useXgeom,NoSsdIt"
    ",NoSvtIt,StiHftC,Idst,BAna,VFMinuit,tpcDB,TpcHitMover,btofMatch,btofCalib,tags,emcY2,evout,IdTruth"
    ",geantout,big,MiniMcMk,Sti"                           ,"","","no l0 and trg any more, +BTof RC",kFALSE},
-  {"MC.2014VMC","","","MC,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,emcY2,eefs,TpxClu,y2014a,useXgeom,NoSsdIt"
+  {"MC.2014VMC","","","MC,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,emcY2,eefs,TpxClu,y2014z,useXgeom,NoSsdIt"
    ",NoSvtIt,Idst,BAna,VFMinuit,tpcDB,TpcHitMover,btofMatch,btofCalib,tags,emcY2,evout,IdTruth"
    ",geantout,big,MiniMcMk,vmc"                           ,"","","no l0 and trg any more, +BTof RC",kFALSE},
-  {"MC.2015","","","MC,TpcRS,pxlFastSim,istSim,emcY2,EEfs,TpxClu,y2015,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
+  {"MC.2015","","","MC,TpcRS,pxlFastSim,istSim,emcY2,EEfs,TpxClu,y2015z,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
    ",VFMinuit,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,evout,IdTruth,geantout,big,Sti"
    ,                                                                                      "","","",kFALSE},
-  {"MC.2015b","","","MC,TpcRS,pxlFastSim,istSim,emcY2,EEfs,TpxClu,y2015b,useXgeom,NoSsdIt,NoSvtIt,Idst,BAna"
+  {"MC.2015b","","","MC,TpcRS,pxlFastSim,istSim,emcY2,EEfs,TpxClu,y2015z,useXgeom,NoSsdIt,NoSvtIt,Idst,BAna"
    ",VFPPVnoCTB,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,evout,IdTruth,geantout,big,Sti"
    ,                                                                                      "","","",kFALSE},
-  {"MC.2016","","","MC,y2016,TpcRS,pxlFastSim,istSim,sstfast,emcY2,EEfs,TpxClu,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
+  {"MC.2016","","","MC,y2016z,TpcRS,pxlFastSim,istSim,sstfast,emcY2,EEfs,TpxClu,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
    ",VFMinuit,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,evout,IdTruth,geantout,big,Sti,Agi"
    ,                                                                                      "","","",kFALSE},
   {"MC.y2016","","","MC.2016",                                                            "","","",kFALSE},
-  {"MC.2016a","","","MC,y2016a,TpcRS,pxlFastSim,istSim,sstfast,emcY2,EEfs,TpxClu,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
+  {"MC.2016a","","","MC,y2016z,TpcRS,pxlFastSim,istSim,sstfast,emcY2,EEfs,TpxClu,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
    ",VFMinuit,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,evout,IdTruth,geantout,big,Sti,Agi"
    ,                                                                                      "","","",kFALSE},
   {"MC.y2016a","","","MC.2016a",                                                          "","","",kFALSE},
-  {"MC.2017","","","MC,y2017,TpcRS,TpxClu,useXgeom,NoSsdIt,NoSvtIt,Idst,BAna"
+  {"MC.2017","","","MC,y2017z,TpcRS,TpxClu,useXgeom,NoSsdIt,NoSvtIt,Idst,BAna"
    ",VFMinuit,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,evout,IdTruth,geantout,big,MiniMcMk,Sti"
    ,                                                                                       "","","",kFALSE},
   {"MC2016.Ideal","","","MC.2016a,istSlowSim,pxlSlowSim,StiHftC,MC.StiCA"                 ,"","","",kFALSE},
   {"MC2016",      "","","MC2016.Ideal,VMCAlignment,sdt20160301"                           ,"","","",kFALSE},
-  {"MC.y2017","","","MC.2017",                                                             "","","",kFALSE},
+  {"MC.y2017","","","MC.2017z",                                                             "","","",kFALSE},
   {"MC2017.Ideal","","","MC.2017,MC.StiCA"                                                ,"","","",kFALSE},
   {"MC2017",      "","","MC2017.Ideal"                                                    ,"","","",kFALSE},
-  {"MC.2018","","","MC,y2018,TpcRS,TpxClu,useXgeom,NoSsdIt,NoSvtIt,Idst,BAna"
+  {"MC.2018","","","MC,y2018z,TpcRS,TpxClu,useXgeom,NoSsdIt,NoSvtIt,Idst,BAna"
    ",VFMinuit,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,evout,IdTruth,geantout,big,MiniMcMk,Sti"
    ,                                                                                       "","","",kFALSE},
   {"MC.y2018","","","MC.2018",                                                             "","","",kFALSE},
@@ -694,18 +694,20 @@ Bfc_st BFC[] = { // standard chains
   {"MC.pp500GeV_2022",                           "","","MC.2022,sdt20211215.081703","","",       "",kFALSE},      
   {"MC.zeroFieldAligment_2022",                  "","","MC.2022,sdt20220207.204124","","",       "",kFALSE},      
 
-  {"MC.2023",              "","","MC,P2023a,StiCA,-in,TpcRS,TpxClu,bbcSim,btofsim,ETofSim","","","",kFALSE},
+  {"MC.2023",               "","","MC,P2023a,StiCA,-in,TpcRS,TPC23,bbcSim,btofsim,ETofSim","","","",kFALSE},
+  {"MC.2024",              "","","MC,P2024a,,StiCA,-in,TpcRS,TPC23,bbcSim,btofsim,ETofSim","","","",kFALSE},
+  {"MC.2025",                "","","MC,P2025,StiCA,-in,TpcRS,TPC23,bbcSim,btofsim,ETofSim","","","",kFALSE},
   {"XC",          "","","MC,TpcRS,TpxClu,VMC,GeantOut,noRunco,noHistos,20Muons,"
    "OSpaceZ2,OGridLeak3D,CorrX,tpcDB,TpcHitMover"
    ",bbcSim,btofsim,btofMatch,btofCalib,tags,emcY2,evout,Stx,KFVertex,Idst,BAna"       
    ,                                                                                       "","","",kFALSE},
-  {"XC2017I",     "","","y2017,XC",                                                        "","","",kFALSE},
-  {"XC2018I",     "","","y2018,XC",                                                        "","","",kFALSE},
-  {"XC2018",      "","","y2018,XC,sdt20180426.122000",                                     "","","",kFALSE},
-  {"XC2019",      "","","y2019,XC,sdt20190301",                                            "","","",kFALSE},
-  {"XC2019I",     "","","y2019,XC",                                                        "","","",kFALSE},
-  {"XC2020",      "","","y2020,XC,sdt20200229",                                            "","","",kFALSE},
-  {"XC2020I",     "","","y2020,XC",                                                        "","","",kFALSE},
+  {"XC2017I",     "","","y2017z,XC",                                                       "","","",kFALSE},
+  {"XC2018I",     "","","y2018z,XC",                                                       "","","",kFALSE},
+  {"XC2018",      "","","y2018z,XC,sdt20180426.122000",                                    "","","",kFALSE},
+  {"XC2019",      "","","y2019z,XC,sdt20190301",                                           "","","",kFALSE},
+  {"XC2019I",     "","","y2019z,XC",                                                       "","","",kFALSE},
+  {"XC2020",      "","","y2020z,XC,sdt20200229",                                           "","","",kFALSE},
+  {"XC2020I",     "","","y2020z,XC",                                                       "","","",kFALSE},
   {"RC----------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"RC.y2000"        ,"","","p2000,VFMinuit,CMuDst,NosvtIT,NossdIT,NosstIT"               ,"","","",kFALSE},
   {"RC.y2001"        ,"","","P2001a,VFMinuit,ZDCvtx,CMuDst,NosvtIT,NossdIT,NosstIT"       ,"","","",kFALSE},
@@ -1206,7 +1208,6 @@ Bfc_st BFC[] = { // standard chains
   {"NoLocalCintDb","" ,"",""                                      ,"","","Switch off local Cint Db",kFALSE},
   {"NoMySQLDb"   ,""  ,"",""                                           ,"","","Switch off MySQL Db",kFALSE},
   {"NoCintCalDb" ,""  ,"","NoLocalCintDb"                         ,"","","Switch off local Cint Db",kFALSE},
-  {"TFGDbTag",    ""  ,"",""                                 ,"","","Switch on TFG specific Db tag",kFALSE},
   {"dbSnapshot"  ,""  ,"",""                                         ,"","","Create?use dbSnapshot",kFALSE},
   {"NoEvent"     ,""  ,"","-event,-analysis"      ,"","","Switch Off StEvent and StAnalysis Makers",kFALSE},
   {"MakeDoc"     ,""  ,"",""                   ,"","","Make HTML documentation for the given Chain",kFALSE},
@@ -1309,8 +1310,11 @@ Bfc_st BFC[] = { // standard chains
   // Those options are for StTpcDbMaker
   {"useLDV" ,""  ,"","",""                                   ,"","... uses laserDV database flavor",kFALSE},
   {"useCDV" ,""  ,"","",""                                       ,"","... uses ofl database flavor",kFALSE},
-  {"useNewLDV" ,""  ,"","",""                                    ,"","... uses ofl database flavor",kFALSE},
-  {"TFGdbOpt" ,""  ,"","",""                ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
+  {"useNewLDV",""  ,"","",""                                     ,"","... uses ofl database flavor",kFALSE},
+  {"TFGdbOpt"     ,""  ,"","",""            ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
+  {"TFGdbTag"     ,""  ,"TFGdbOpt","",""    ,"","... uses TFG database flavor for alignemnt tables",kFALSE},
+  {"noTFGDbTag",   ""  ,"-TFGdbOpt",""                      ,"","","Switch off TFG specific Db tag",kFALSE},
+  {"noFieldFlip", "","-TFGdbOpt","","","","Pass to StTpcDb : do NOT flip alignment with mag. field",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"Tables      ","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
@@ -1402,8 +1406,6 @@ Bfc_st BFC[] = { // standard chains
   {"geantL","","","geomT,gen_T,sim_T,StarMagField","","geometry,Geom,St_db_Maker,St_g2t,St_geant_Maker"
    ,                                                                               "Load GeantLibs",kFALSE},
   {"gstarLib","","",""                                                 ,"","gstar","Load gstar lib",kFALSE},
-  {"flux"        ,"","","simu"                               ,"","flux","Load flux lib for starsim",kFALSE},
-  {"fluxVMC"     ,"","","simu"                                ,"","","Set Flux flag for StVMCMaker",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"Generators  ","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
@@ -1493,6 +1495,9 @@ Bfc_st BFC[] = { // standard chains
   {"VMC"         ,"geant","","Simu,VMCAppl,-geant","StVMCMaker",           "StVMCMaker","VMC Maker",kFALSE},
   {"VMCPassive"  ,"geant","","VMCAppl",       "StVMCMaker","StVMCMaker","VMC Maker in Passive Mode",kFALSE},
   // for simulation on fly Event time stamp is set outside of the simulation makers
+  {"flux"        ,"geant","","-fzin,-ntin,-geant,-in,Simu,geantL","St_geant_Maker"                               
+   ,                                                             "flux","Load flux lib for starsim",kFALSE},
+  {"fluxVMC"     ,"","","simu"                                ,"","","Set Flux flag for StVMCMaker",kFALSE},
   {"gstar"       ,"geant"  ,"","-fzin,-ntin,-geant,-in,Simu,geantL","St_geant_Maker"
    ,                                        "","gstar for 20 muon tracks with pT = 1GeV in |eta|<4",kFALSE},
   {"mickey"      ,"geant"  ,"","-fzin,-geant,-gstar,-in,geantL,gstarLib,-magF","St_geant_Maker"
@@ -1508,7 +1513,7 @@ Bfc_st BFC[] = { // standard chains
   {"PrepEmbed","","","geantEmb","StPrepEmbedMaker","St_geant_Maker"
    ,                                                             "Prepare kinematics for embedding",kFALSE},
   {"PythiaEmbed","","","pythia,-Simu","","",                     "Prepare kinematics for embedding",kFALSE},
-  {"StarPrimary", "StarPrimary", "", "Generators,-StarPrimary0", "StarPrimaryMaker",""
+  {"StarPrimary", "StarPrimary", "geant", "Generators,-StarPrimary0", "StarPrimaryMaker",""
    ,                                                                        "Basic STAR Generators",kFALSE},
   {"Kinematics", "","StarPrimary","StarPrimary",              "StarKinematics","StarKinematics","", kFALSE},
   {"Herwig6", "","StarPrimary","StarPrimary",                      "StarHerwig6","Herwig6_5_20","", kFALSE},
@@ -1884,7 +1889,7 @@ Bfc_st BFC[] = { // standard chains
   {"KFVertex",""  ,"Stx","-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2,TMVARank"
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
-  {"StiKFVertex","StiKFVertex","Sti","StiLibs,-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2,-genvtx"
+  {"StiKFVertex","StiKFVertex","Sti","StiLibs,-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2"
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker,StiMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
   {"laserIT"  ,"","","TpcIT","",                              "","use Sti for laser reconstruction",kFALSE},

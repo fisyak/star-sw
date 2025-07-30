@@ -88,6 +88,14 @@
      root.exe lMuDst.C Cosmics.C+ Cosmics.root PlotCosmics.C
      cd -
    end
+
+ foreach d (`ls -1d ???`)
+    if (-r ${d}/Cosmics.root) continue;
+    cd ${d}
+    ln -s ~/macros/.sl* .
+    root.exe -q -b lMuDst.C 'Cosmics.C+("*\/*MuDst.root")' > & Cosmics.log &
+    cd -
+  end
 */
 #endif
 //#define __PrimaryVertices__

@@ -47,6 +47,8 @@ class StiDetectorVolume : public TVolume {
       virtual ~StiDetectorVolume(){;}
       virtual void   Browse(TBrowser *b);
       virtual char *GetObjectInfo(Int_t px, Int_t py) const;
+      static double dZIgnore;
+      static void setdZIgnore(double dz) {dZIgnore = dz;}
       
     ClassDef(StiDetectorVolume,0); // TVolume Sti decorator
 };

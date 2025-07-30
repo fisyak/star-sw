@@ -1,5 +1,5 @@
 #!/bin/csh
-#       $Id: group_env.csh,v 1.266 2022/06/22 16:16:12 jeromel Exp $
+#       $Id: group_env.csh,v 1.269 2025/02/11 19:30:10 jeromel Exp $
 #	Purpose:	STAR group csh setup
 #
 # Revisions & notes
@@ -63,18 +63,23 @@ if (! $?STAR_ROOT) then
 	if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as AFS based if -d checks"
 	if ( -d ${AFS_RHIC}/star ) then
 	    setenv STAR_ROOT ${AFS_RHIC}/star
+	else
+	# We will fail (we know that)
+	  echo "$self ::  Did not find a valid STAR_ROOT"
+	  setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
+	  set FAIL="$FAIL STAR_ROOT"
         endif
     else
-       if ( -d /usr/local/star ) then
-	    # this is valid
-	    if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as /usr/local/star"
-	    setenv STAR_ROOT /usr/local/star
-       else
-	    # We will fail (we know that)
-	    if ($INTERACTIVE) echo "$self ::  Did not find a valid STAR_ROOT"
-	    setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
-	    set FAIL="$FAIL STAR_ROOT"
-       endif
+	    if ( -d /usr/local/star ) then
+		# this is valid
+		if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as /usr/local/star"
+		setenv STAR_ROOT /usr/local/star
+	    else
+		# We will fail (we know that)
+		echo "$self ::  Did not find a valid STAR_ROOT"
+		setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
+		set FAIL="$FAIL STAR_ROOT"
+	    endif
     endif
 endif
 
@@ -83,7 +88,7 @@ if ($?STAR_HOST_SYS) then
   if (-x ${GROUP_DIR}/dropit) then
      setenv                    PATH             `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${PATH}`
      setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${LD_LIBRARY_PATH}`
-     if ($?SHLIB_PATH)  setenv SHLIB_PATh       `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${SHLIB_PATH}`
+     if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${SHLIB_PATH}`
      if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit ${STAR_HOST_SYS} -p ${MAN_PATH}`
   endif
 endif
@@ -91,36 +96,13 @@ if ($?STAR) then
   if (-x ${GROUP_DIR}/dropit) then
      setenv                    PATH             `${GROUP_DIR}/dropit ${STAR} -p ${PATH}`
      setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit ${STAR} -p ${LD_LIBRARY_PATH}`
-     if ($?SHLIB_PATH)  setenv SHLIB_PATh       `${GROUP_DIR}/dropit ${STAR} -p ${SHLIB_PATH}`
+     if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit ${STAR} -p ${SHLIB_PATH}`
      if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit ${STAR} -p ${MAN_PATH}`
   endif
 endif
 if ( $?DECHO) echo "$self :: Executing STAR_SYS"
 source ${GROUP_DIR}/STAR_SYS;#  echo "STAR_HOST_SYS = ${STAR_HOST_SYS}"
 
-# Define /opt/star (or equivalent)
-    if (-r ${AFS_RHIC}/opt/star) then
-      setenv OPTSTAR ${AFS_RHIC}/opt/star
-    else 
-      if (-r /opt/star) then 
-        setenv OPTSTAR /opt/star
-      endif
-   endif
-   setenv XOPTSTAR ${OPTSTAR}
-   if (-r ${OPTSTAR}/${STAR_HOST_SYS}) then 
-     setenv XOPTSTAR ${OPTSTAR}/${STAR_HOST_SYS}
-   endif
-#endif
-# X indicates points to the AFS reference
-#if ( ! $?XOPTSTAR ) then
-#    if (-d ${OPTSTAR}/${STAR_HOST_SYS}) setenv XOPTSTAR ${OPTSTAR}/${STAR_HOST_SYS}
-#    # keep a reference to the AFS one
-#    # this -r test may fail - don't do it
-#    if ( "$READ_AFS" == "" ) then
-##	setenv XOPTSTAR ${AFS_RHIC}/star/packages/.DEV2/misc/opt/star/${STAR_HOST_SYS}
-#	setenv XOPTSTAR $OPTSTAR #${AFS_RHIC}/opt/star
-#    endif
-#endif
 # define but feedback later
 if ( $?DECHO) echo "$self :: Defining GROUP_DIR STAR_PATH"
 if ( ! $?GROUP_DIR )   setenv GROUP_DIR ${STAR_ROOT}/group     # Defined to AFS Group Dir
@@ -260,6 +242,7 @@ setenv STAR_VERSION ${STAR_LEVEL}
 #-
 if (! $?LD_LIBRARY_PATH ) setenv LD_LIBRARY_PATH ""
 if ( $?OPTSTAR ) then
+    if ( $?DECHO) echo "$self :: Checking  OPTSTAR if defined ahead - YES"
     if (!  $?optstar ) setenv  optstar  ${OPTSTAR}
     if (! $?xoptstar ) setenv xoptstar ${XOPTSTAR}
 endif
@@ -396,37 +379,9 @@ if (! $?ROOT_VERSION) setenv ROOT_VERSION ""
 if ( -f ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}  && -f ${STAR}/mgr/CERN_LEVEL ) then
   setenv ROOT_LEVEL `cat ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}`
   setenv CERN_LEVEL `cat ${STAR}/mgr/CERN_LEVEL`
-
-  # try with post-fix
-  if ( -f ${STAR}/mgr/CERN_LEVEL.${STAR_SYS} ) then
-    # Overwrite
-    setenv CERN_LEVEL `cat ${STAR}/mgr/CERN_LEVEL.${STAR_SYS}`
-  endif
-  if ( -f ${STAR}/mgr/CERN_LEVEL.${STAR_HOST_SYS} ) then
-    # Overwrite
-    setenv CERN_LEVEL `cat ${STAR}/mgr/CERN_LEVEL.${STAR_HOST_SYS}`
-  endif
-
-  # try with post-fix
-  if ( -f ${STAR}/mgr/ROOT_LEVEL${ROOT_VERSION}.${STAR_SYS} ) then
-    # Overwrite
-    setenv ROOT_LEVEL `cat ${STAR}/mgr/ROOT_LEVEL.${STAR_SYS}`
-  endif
-  if ( -f ${STAR}/mgr/ROOT_LEVEL.${STAR_HOST_SYS} ) then
-    # Overwrite
-    setenv ROOT_LEVEL `cat ${STAR}/mgr/ROOT_LEVEL.${STAR_HOST_SYS}`
-  endif
-
-  # now check if CERN exists
-  if ( $?CERN ) then
-    if ( ! -r $CERN/$CERN_LEVEL ) then
-	if ( $?DECHO) echo "$self :: Caught $CERN_LEVEL from config in ${STAR}/mgr/ but not found - reverting to pro"
-	setenv CERN_LEVEL pro
-    endif
-  endif
-
 else
     if ($INTERACTIVE) echo "CERN_LEVEL and ROOT_LEVEL has not been set. ABORT."
+    exit 1;
 endif
 
 if ($ECHO) echo   "Setting up ROOT_LEVEL= ${ROOT_LEVEL}"
@@ -493,12 +448,6 @@ if ( -x ${GROUP_DIR}/dropit) then
   setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib  -p ${XOPTSTAR}/spack/lib -p $LD_LIBRARY_PATH`
 else
   if ( $?DECHO ) echo "$self ::  ${GROUP_DIR}/dropit is not -x"
-endif
-
-
-## Put mysql on path if available
-if ( -d /usr/local/mysql/bin) then
-  if ( -x ${GROUP_DIR}/dropit) setenv PATH `${GROUP_DIR}/dropit -p ${PATH} -p /usr/local/mysql/bin`
 endif
 
 if ($?MANPATH == 1) then
@@ -875,19 +824,19 @@ if ( -x ${GROUP_DIR}/dropit) then
     endif
     setenv PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/bin  -p ${XOPTSTAR}/spack/bin -p ${PATH}`
     setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${XOPTSTAR}/lib  -p ${XOPTSTAR}/spack/lib -p $LD_LIBRARY_PATH`
-# Note from 2011/10 - Unofrtunately, MySQL has not been there for a while
-    if ( -d ${XOPTSTAR}/lib/mysql ) then
-      setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p ${LD_LIBRARY_PATH} -p ${XOPTSTAR}/lib  -p ${XOPTSTAR}/spack/lib/mysql`
-    endif
-    setenv LD_LIBRARY_PATH `${GROUP_DIR}/dropit -p "$LD_LIBRARY_PATH ^/usr/lib"`
-    if ($USE_64BITS) then 
-	setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib64/mysql
-    else                  
-	setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib:/usr/lib/mysql
-    endif
     setenv MANPATH `${GROUP_DIR}/dropit -p ${MANPATH}`
     setenv PATH `${GROUP_DIR}/dropit -p ${PATH} GROUPPATH`
 endif
+
+
+
+## After the introduction of SPACK, we created
+## an inconsistency that could bre paired this way
+#if ( $?STAR_LEVEL ) then
+#    setenv EXEFLOGIN 1
+#    starver $STAR_LEVEL
+#    unsetenv EXEFLOGIN
+#endif
 #
 # Display this message as it is likely the environment is
 # screwed up if this happens.
@@ -924,6 +873,8 @@ if ($ECHO) then
     unset ECHO
 endif
 
+if ( $?DECHO) echo "$self :: done"
+
 # restore if previously defined
 if ( $?GRPE_pself ) then
     set self=$GRPE_pself
@@ -937,41 +888,35 @@ if (-r /opt/rh/httpd24/enable ) then
 # setenv LIBRARY_PATH /opt/rh/httpd24/root/usr/lib64:${LIBRARY_PATH}
   setenv LD_LIBRARY_PATH /opt/rh/httpd24/root/usr/lib64:${LD_LIBRARY_PATH}
 endif
-#if (-r /opt/rh/rh-git218/enable) then 
-#  setenv PATH /opt/rh/rh-git218/root/usr/bin:${PATH}
-#  setenv MANPATH /opt/rh/rh-git218/root/usr/share/man:${MANPATH}
-#  setenv PERL5LIB /opt/rh/rh-git218/root/usr/share/perl5/vendor_perl:${PERL5LIB}
-#  setenv LD_LIBRARY_PATH /opt/rh/httpd24/root/usr/lib64:${LD_LIBRARY_PATH}
-#endif
+# mysql check
+if ( -d /usr/local/mysql/bin) then
+  if ( -x ${GROUP_DIR}/dropit) setenv PATH `${GROUP_DIR}/dropit -p ${PATH} -p /usr/local/mysql/bin`
+endif
+if ($USE_64BITS) then 
+   setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib
+   if (-r /usr/lib64/mysql) then
+      setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib64/mysql
+   endif
+else                  
+   setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib
+   if (-r /usr/lib/mysql) then
+      setenv LD_LIBRARY_PATH  ${LD_LIBRARY_PATH}:/usr/lib/mysql
+   endif
+endif
 if (-r ${HOME}/bin)                   setenv PATH ${HOME}/bin:${PATH}
 if (-r ${HOME}/bin/.${STAR_HOST_SYS}) setenv PATH ${HOME}/bin/.${STAR_HOST_SYS}:${PATH}
 if (-r ${STAR}/scripts/RCF)           setenv PATH ${PATH}:${STAR}/scripts/RCF
 if (-r ${STAR}/bin)                   setenv PATH ${PATH}:${STAR}/bin
 if (-x ${GROUP_DIR}/dropit)           setenv PATH `${GROUP_DIR}/dropit`
+if (-r ${XOPTSTAR}/spack/lib/perl5)   setenv PERL5LIB ${XOPTSTAR}/spack/lib/perl5:${PERL5LIB}
 setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/include:${STAR}:${STAR}/StRoot:${STAR}/.${STAR_HOST_SYS}/include"
-#:$STAR/StRoot/StStarLogger:$STAR/StRoot/StEmcRawMake"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH};$STAR/StRoot/StEmcUtil/database:$STAR/StRoot/StEmcUtil/filters:$STAR/StRoot/StEmcUtil/geometry:$STAR/StRoot/StEmcUtil/others:$STAR/StRoot/StEmcUtil/projection:$STAR/StRoot/StEmcUtil/voltageCalib"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StEEmcUtil/EEevent:$STAR/StRoot/StEEmcUtil/database:$STAR/StRoot/StEEmcUtil/EEevent:$STAR/StRoot/StEEmcUtil/EEfeeRaw:$STAR/StRoot/StEEmcUtil/EEmcGeom:$STAR/StRoot/StEEmcUtil/EEmcMC"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StEEmcUtil/EEmcSmdMap:$STAR/StRoot/StEEmcUtil/StEEmcSmd"
-#setenv ROOT_INCLUDE_PATH "${ROOT_INCLUDE_PATH}:$STAR/StRoot/StMuDSTMaker/COMMON"
-
-#
-# Uncomment to get statistics on version used at
-# login level.
-#
-#set date="`date`"
-#cat >> $GROUP_DIR/statistics/star${STAR_VERSION} <<\lndir $ROO EOD
-#$USER from $HOST asked for STAR_LEVEL=${STAR_LEVEL} / STAR_VERSION=${STAR_VERSION}  $date
-#EOD
-#END
-#if (-x $GROUP_DIR/dropit ) then
-#	setenv PATH            `$GROUP_DIR/dropit $STAR_HOST_SYS /opt/star`
-#        setenv LD_LIBRARY_PATH `$GROUP_DIR/dropit -p $LD_LIBRARY_PATH -p /usr/lib`
-#endif
-
-
-#echo "${STAR}"
-#echo "$LD_LIBRARY_PATH"
+# remuve dubplication
+if (-x ${GROUP_DIR}/dropit) then
+    setenv                    PATH             `${GROUP_DIR}/dropit -p ${PATH}`
+    setenv                    LD_LIBRARY_PATH  `${GROUP_DIR}/dropit -p ${LD_LIBRARY_PATH}`
+    if ($?SHLIB_PATH)  setenv SHLIB_PATH       `${GROUP_DIR}/dropit -p ${SHLIB_PATH}`
+    if ($?MAN_PATH)    setenv MAN_PATH         `${GROUP_DIR}/dropit -p ${MAN_PATH}`
+endif
 which xtitl >& /dev/null
 if (! $?) xtitl
 if ( $?DECHO ) echo "======================================== end group_env.csh $1"

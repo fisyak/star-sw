@@ -77,7 +77,9 @@ void Load(const Char_t *options="");
 //TString defChain("MC.7p7GeV_2021,Muons20,vmc,Rung.1,dEdxCalib"); //,AgML");
 //TString defChain("MC.7p7GeV_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder"); //,AgML");
 //TString defChain("MC.2021,3p85GeV_fixedTarget_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
-TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+//TString defChain("MC,r2023a,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
+//TString defChain("MC,OO_200GeV_2021,P2023a,gstar,AgML,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,dbSnapshot");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
@@ -88,65 +90,18 @@ StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,
 //_____________________________________________________________________
 void Load(const Char_t *options)
 {
+  Int_t debug = gDebug;
+  gDebug = 1;
   cout << "Load system libraries\t";
   int nodefault = TString(options).Contains("nodefault",TString::kIgnoreCase);
 
   if ( TString(gProgName)!="root4star") { // ! root4star
     if (!nodefault || TString(options).Contains("mysql",TString::kIgnoreCase)) {
       const Char_t *mysql = "libmysqlclient";
-      //Char_t *mysql = "libmimerS"; // just to test it picks from OPTSTAR
-
-      //
-      // May use USE_64BITS - the x8664 work fine too
-      //
-      const Char_t *libsLocal[]= {"",
-	                    "$OPTSTAR/lib/",
-			    "$OPTSTAR/lib/mysql/",
-			    "/usr/lib/", 
-			    "/usr/lib/mysql/", 
-			    "/usr/mysql/lib/",
-			    "/sw/lib/",
-			    NULL}; 
-      const Char_t *libsGlbal[]= {"", 
-			    "/usr/lib/", 
-			    "/usr/lib/mysql/", 
-			    "/usr/mysql/lib/",
-			    "$OPTSTAR/lib/",
-			    "$OPTSTAR/lib/mysql/",
-			    "/sw/lib/",
-			    NULL}; 
-
-      const Char_t **libs;
-
-      if ( gSystem->Getenv("USE_LOCAL_MYSQL") ){
-	libs = libsLocal;
-      } else {
-	libs = libsGlbal;
-      }
-
-
-      TString Arch( gSystem->GetBuildArch() );
-      Bool_t i64 = kFALSE;
-      if ( gSystem->Getenv("USE_64BITS") || Arch.Contains("x8664")) i64 = kTRUE;
-
-      Int_t i = 0;
-      while ((libs[i])) {
-	TString lib(libs[i]);
-	//cout << "Found " << lib << endl;
-	if (i64) lib.ReplaceAll("/lib","/lib64");
-	lib += mysql;
-	lib = gSystem->ExpandPathName(lib.Data());
-	if (gSystem->DynamicPathName(lib,kTRUE)) {
-	  gSystem->Load(lib.Data()); 
-	  cout << " + " << mysql << " from " << lib.Data();
-	  break;
-	}
-	i++;
-      }
+      gSystem->Load(mysql);
     }
-    cout << endl;
+    gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   }
-  gSystem->Load("libSt_base");                                        //  StMemStat::PrintMem("load St_base");
   // Look up for the logger option
   Bool_t needLogger  = kFALSE;
   if (gSystem->Load("liblog4cxx") >=  0) {             //  StMemStat::PrintMem("load log4cxx");
@@ -163,6 +118,7 @@ void Load(const Char_t *options)
   gSystem->Load("libStUtilities");                                    //  StMemStat::PrintMem("load StUtilities");
   gSystem->Load("libStBFChain");                                      //  StMemStat::PrintMem("load StBFChain");
   cout << endl;
+  gDebug = debug;
 }
 //_____________________________________________________________________
 StBFChain *bfc(Int_t First, Int_t Last,

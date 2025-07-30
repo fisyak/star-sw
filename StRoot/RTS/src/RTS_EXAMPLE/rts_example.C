@@ -689,6 +689,10 @@ static int tpx_doer(daqReader *rdr, const char  *do_print)
 					int tb = dd->adc[i].tb ;
 					int adc = dd->adc[i].adc ;
 
+					if(tb > 500) {
+					    printf("JEFF TPX: evt=%d seq=%d sec=%d row=%d pad=%d tb=%d %d\n", rdr->event_number, rdr->seq, dd->sec, dd->row, dd->pad, tb, adc);
+					}
+
 					if(tb < 100) {
 					    adctb[tb] += adc;
 					}
@@ -1915,7 +1919,13 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
 	    L1_DSM_Data *l1Dsm = (L1_DSM_Data *)(((char *)trg) + swap32(trg->L1_DSM_ofl.offset));
 
 
-	    printf("l1Dsm offset %d\n",swap32(trg->L1_DSM_ofl.offset)) ;	// should NOT be 0!
+	    // 3/7/25
+	    u_int *array = (u_int *)l1Dsm;
+	    array += 2;  // Get to start of data:
+	    for(int iii=0;iii<7;iii++) {
+		printf("L1 DSM Data[%d] = 0x%x 0x%x 0x%x 0x%x\n",iii,swap32(array[iii*4]), swap32(array[iii*4+1]), swap32(array[iii*4+2]), swap32(array[iii*4+3]));
+	    }
+
 
 	    u_int bc2 = swap16(l1Dsm->BCdata[2]) ;
             u_int bc7bit = bc2  & 0x7F ;
@@ -2486,6 +2496,11 @@ static int itpc_doer(daqReader *rdr, const char *do_print)
 
 				for(u_int i=0;i<dd->ncontent;i++) {
 				    adctb[dd->adc[i].tb] += dd->adc[i].adc;
+				
+
+				    if(dd->adc[i].tb > 500) {
+					printf("JEFF iTPC: evt=%d seq=%d sec=%d row=%d pad=%d tb=%d %d\n", rdr->event_number, rdr->seq, dd->sec, dd->row, dd->pad, dd->adc[i].tb, dd->adc[i].adc);
+				    }
 				}
 
 				if(do_print) {

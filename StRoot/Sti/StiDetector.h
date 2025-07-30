@@ -104,7 +104,7 @@ public:
     double getVolume() const;
     double getWeight() const;
     void   getDetPlane(double plane[4]) const;
-
+    void   Print(const char *opt="") const;
  static int    mgIndex;
  static double mgValue[3];
 
@@ -146,7 +146,6 @@ public:
 
 
 
-
 inline void StiDetector::setPlacement(StiPlacement *val)
 { 
   placement = val; 
@@ -169,28 +168,4 @@ inline void StiDetector::setSplit(StiDetector *gemini)
 {
   mGemini = gemini; gemini->mGemini= this;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif

@@ -1166,6 +1166,9 @@ void StMagUtilities::CommonStart ( Int_t mode )
   cout << "StMagUtilities::TPC_Z0        =  " << TPC_Z0 << " cm" << endl ; 
   cout << "StMagUtilities::TensorV1+V2   =  " << TensorV1 << " " << TensorV2 << endl ; 
   cout << "StMagUtilities::OmegaTau1+2   =  " << OmegaTau * TensorV1 << " " << OmegaTau * TensorV2 << endl ; 
+  cout << "StMagUtilities::Const_0        =  " << Const_0 << endl ;
+  cout << "StMagUtilities::Const_1        =  " << Const_1 << endl ;
+  cout << "StMagUtilities::Const_2        =  " << Const_2 << endl ;
   cout << "StMagUtilities::XTWIST        =  " << XTWIST << " mrad" << endl ;
   cout << "StMagUtilities::YTWIST        =  " << YTWIST << " mrad" << endl ;
   cout << "StMagUtilities::SpaceCharge   =  " << SpaceCharge << " Coulombs/epsilon-nought" << endl ;

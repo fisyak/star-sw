@@ -29,11 +29,11 @@ if ($level >= 305 )  then
     set ROOTBASE = "${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}"
 #echo "rootenv 3 => $PATH"
 
-    if ( ! -r ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} && $?DECHO )then
+    if ( ! -e ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} && $?DECHO )then
 	echo "$self :: Did not find ${p}root${x}"
     endif
 
-    if (! -r ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} ) then
+    if (! -e ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/${p}root${x} ) then
 	# We set "a" default
 	setenv ROOTSYS ${ROOT}/${ROOT_LEVEL}/.${STAR_HOST_SYS}/rootdeb
     else

@@ -4,6 +4,8 @@ vector<rotm_t> fgRotations;
 //________________________________________________________________________________
 void rotm_t::Rotations() {
   // Name      Thet1    Phi1   Thet2    Phi2   Thet3    Phi3
+  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
+  //
   rotm_t rotI[] = {
     {"000D",   90.0,    0.0,   90.0,   90.0,    0.0,    0.0}, // "000D"  (x,y,z) = > ( x, y, z)
     {"XYZD",  -90.0,    0.0,   90.0,   90.0,    0.0,    0.0}, // "XYZD"  (x,y,z) = > (-x, y, z)

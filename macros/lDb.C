@@ -1,12 +1,14 @@
 class StBFChain;        
 class StMessMgr;
 #if defined(__CLING__)
+#pragma cling load("libTable")
 #pragma cling load("StarRoot")
 #pragma cling load("St_base")
 #pragma cling load("StChain")
 #pragma cling load("libStDbLib")
 #pragma cling load("StUtilities")
 #pragma cling load("StBFChain")
+#pragma ciing load("libStDb_Tables")
 #pragma cling load("geant3")
 #pragma cling load("libmysqlclient")
 #endif /* __CLING__ */

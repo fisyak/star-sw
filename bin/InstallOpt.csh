@@ -5,7 +5,7 @@
   if (! -d ${XOPTSTAR}) mkdir -p ${XOPTSTAR}
   if (! -d ${XOPTSTAR}/qt4) mkdir -p ${XOPTSTAR}/qt4
   setenv QTDIR  ${XOPTSTAR}/qt4
-  starver .DEV2
+  starver TFG
 #endif
 setenv FORCE_32BITS FALSE
 setenv CC  "gcc"
@@ -106,10 +106,12 @@ else
 #set list =  apache-log4cxx-0.10.0.CVS
 #set list = "perl-5.34.0"
 #if ($#argv != 0) set list2 = $argv[1];
-set list = pyparsing-1.5.7
+#set list = pyparsing-1.5.7
+#set list = qt-everywhere-opensource-src-4.8.7
+set list = " apr-1.5.2  apr-util-1.5.4 apache-log4cxx-0.10.0.CVS  fastjet-3.0.3  pythia6"
 endif
-setenv DIR ~/sources/.${STAR_HOST_SYS}
-if ($?NODEBUG) setenv DIR ~/sources/.${STAR_HOST_SYS}_opt
+setenv DIR ~/Sources/.${STAR_HOST_SYS}
+if ($?NODEBUG) setenv DIR ~/Sources/.${STAR_HOST_SYS}_opt
 if (! -d ${DIR}) mkdir ${DIR}
 foreach pkg ($list) 
     rehash
@@ -123,25 +125,25 @@ setenv CFLAGSd   "$cflags"
     if ( -r ${pkg}.Done || -r ${pkg}.Failed) continue
 #    if (! -r ${pkg}) then
       if ($pkg != "xrootd" && $pkg != "xrootd-4.4.1" && $pkg != "xrootd-4.5.0-rc1" && $pkg != "Coin-3.1.3" && $pkg != "eigen3" && $pkg != "VecGeom" && pkg != "tbb") then
-        if (-r ~/sources/${pkg}) then
-#          dirsync  ~/sources/${pkg} ${pkg}
-          cp -r  ~/sources/${pkg} ${pkg}
+        if (-r ~/Sources/${pkg}) then
+#          dirsync  ~/Sources/${pkg} ${pkg}
+          cp -r  ~/Sources/${pkg} ${pkg}
         else 
-          if (-r ~/sources/${pkg}.tar.gz) then
-            gunzip ~/sources/${pkg}.tar.gz
-            tar xf ~/sources/${pkg}.tar
+          if (-r ~/Sources/${pkg}.tar.gz) then
+            gunzip ~/Sources/${pkg}.tar.gz
+            tar xf ~/Sources/${pkg}.tar
 	    mv ${pkg} ../
           else
-            if (-r ~/sources/${pkg}.tar) then
-              tar xf ~/sources/${pkg}.tar
+            if (-r ~/Sources/${pkg}.tar) then
+              tar xf ~/Sources/${pkg}.tar
 	      mv ${pkg} ../
             else
-              if (-r ~/sources/${pkg}.tz) then
-                tar xfz ~/sources/${pkg}.tz
+              if (-r ~/Sources/${pkg}.tz) then
+                tar xfz ~/Sources/${pkg}.tz
          	mv ${pkg} ../
 	      else 
-	        if (-r ~/sources/${pkg}.zip) then
-                  unzip ~/sources/${pkg}.zip
+	        if (-r ~/Sources/${pkg}.zip) then
+                  unzip ~/Sources/${pkg}.zip
                 endif
               endif
             endif
@@ -226,8 +228,8 @@ setenv CFLAGSd   "$cflags"
           touch ../${pkg}.Done
           breaksw
       case "apache-log4cxx-0.10.0.CVS":
-#          dirsync  ~/sources/${pkg} .
-          cp -r  ~/sources/${pkg} .
+#          dirsync  ~/Sources/${pkg} .
+          cp -r  ~/Sources/${pkg} .
 #	  unsetenv CXXFLAGS  # ${CXXFLAGS} -Wnonarrowing"
 #	  unsetenv CFLAGS    # ${CFLAGS} -Wnonarrowing"
 #          ./configure --prefix=$XOPTSTAR --with-apr=$XOPTSTAR --with-apr-util=$XOPTSTAR --disable-libtool --with-tags=$LDFLAGS

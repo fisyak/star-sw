@@ -325,7 +325,9 @@
 #define CR_NAMEDPIPESETSTATE_ERROR 2018
 
 #define __CLASS__ "MysqlDb"
-
+#ifdef __TFG__VERSION__
+Int_t _debug = 0;
+#endif /* __TFG__VERSION__ */
 namespace {
 
 time_t get_time_nanosec() {
@@ -652,7 +654,7 @@ if(mlogTime)mqueryLog.start();
 
 //int status=mysql_real_query(&mData,mQuery,mQueryLen);
 #ifdef __TFG__VERSION__
-//  cout << "MysqlDb::ExecQuery: " << mQ.c_str() << endl;
+ if (_debug) {cout << "MysqlDb::ExecQuery: " << mQ.c_str() << endl;}
 #endif /* __TFG__VERSION__ */
   int status=mysql_real_query(&mData,mQ.c_str(), mQ.size());
 

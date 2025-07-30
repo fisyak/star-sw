@@ -2,7 +2,7 @@
 TDataSet *CreateTable() {
   TEnv *configGeom = new TEnv("configGeom");
  configGeom ->SetValue("isvt",-1);
- configGeom ->SetValue("itpc",4);
+ configGeom ->SetValue("itpc",-1);
  configGeom ->SetValue("ibtf",8);
  configGeom ->SetValue("ical",12);
  configGeom ->SetValue("ivpd",-1);
@@ -10,7 +10,10 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("ifpd",-1);
  configGeom ->SetValue("ifms",3);
  configGeom ->SetValue("ifsc",-1);
- configGeom ->SetValue("tpcg_version",5);
+ configGeom ->SetValue("ipxl",-1);
+ configGeom ->SetValue("iist",-1);
+ configGeom ->SetValue("isst",-1);
+ configGeom ->SetValue("ifst",-1);
  configGeom ->SetValue("btog_version",6);
  configGeom ->SetValue("btog_choice",13);
  configGeom ->SetValue("btog_posit1(1)",32);
@@ -30,7 +33,7 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("emcg_version",6.1);
  configGeom ->SetValue("emcg_onoff",1);
  configGeom ->SetValue("emcg_fillmode",3);
- configGeom ->SetValue("fmcg_version",8);
- configGeom ->SetValue("mtdg_version",1);
+ configGeom ->SetValue("fmcg_version",9);
+ configGeom ->SetValue("mtdg_version",1.1);
   return CreateGeometry("y2017a",configGeom);
 }

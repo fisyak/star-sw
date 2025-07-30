@@ -79,6 +79,7 @@ sub GetRuns($) {
   elsif ($pwd =~ /\/2022\//) {$year = "2022"; require RunXXIIDefs;}
   elsif ($pwd =~ /\/2023\//) {$year = "2023"; require RunXXIIIDefs;}
   elsif ($pwd =~ /\/2024\//) {$year = "2024"; require RunXXIVDefs;}
+  elsif ($pwd =~ /\/2025\//) {$year = "2025"; require RunXXVDefs;}
   our @Runs;
   my $def = {@Runs};
 #  PrintHash($def,"Runs");
@@ -92,12 +93,15 @@ sub GetRuns($) {
   my $DAQ_DIR = "";
   if (-r "/hlt/cephfs/daq") {
     $DAQ_DIR =  "/hlt/cephfs/daq";
+  } elsif (-r "/gpfs01/star/data03/daq") {
+    $DAQ_DIR =  " /gpfs01/star/data03/daq";
   } elsif (-r "/gpfs01/star/daq") {
     $DAQ_DIR =  " /gpfs01/star/daq";
   } else {
     die "unknow $DAQ_DIR";
   }
   my $runs = $DAQ_DIR . "/" . $year . "/" . $Day . "/" .  $Run;
+  print "runs = $runs\n" if ($debug);
   my $run2 = "";
   if ($year eq "2020") {
     $runs = $DAQ_DIR . "/" . "2019/" . $Day . "/" .  $Run;
@@ -121,6 +125,7 @@ sub GetHash() {
   elsif ($pwd =~ /2022/) {$year = "2022"; require RunXXIIDefs;}
   elsif ($pwd =~ /2023/) {$year = "2023"; require RunXXIIIDefs;}
   elsif ($pwd =~ /2024/) {$year = "2024"; require RunXXIVDefs;}
+  elsif ($pwd =~ /2025/) {$year = "2025"; require RunXXVDefs;}
   our @Runs;
   my $def = {@Runs};
   return ($def, $year);

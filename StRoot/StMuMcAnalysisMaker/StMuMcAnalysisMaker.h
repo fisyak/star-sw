@@ -145,12 +145,18 @@ class StMuMcAnalysisMaker : public StMaker {
   StKFParticleInterface            *mStKFParticleInterface;            //!
   StKFParticlePerformanceInterface *mStKFParticlePerformanceInterface; //!
 #endif
+  Int_t fneta;
+  Double_t fetamin;
+  Double_t fetamax;
   Char_t                mEnd[1];        //!
   static StMuMcAnalysisMaker *fgStMuMcAnalysisMaker; //!
  protected:
  public: 
   StMuMcAnalysisMaker(const char *name="MuMcAnalysis");
   virtual       ~StMuMcAnalysisMaker();
+  void           SetNeta(Int_t n) {fneta = n;}
+  void           SetEtaMin(Double_t etamin) {fetamin = etamin;}
+  void           SetEtaMax(Double_t etamax) {fetamax = etamax;}
   virtual Int_t  Init();
   virtual Int_t  Finish();
   virtual Int_t  InitRun(Int_t runumber);
@@ -166,12 +172,12 @@ class StMuMcAnalysisMaker : public StMaker {
   void           FillKFVertexPlots();
   Bool_t         Check();
   void           Draw(Option_t *option="");
-  void           DrawQA(Int_t gp = -1, Int_t pp = -1, Int_t xx = -1, Int_t ii = -1);
+  void           DrawQA(Int_t gp = -1, Int_t pp = -1, Int_t xx = -1, Int_t ii = -1, Int_t xy = -1);
   void           DrawEff(Double_t ymax=1.0, Double_t pTmin = -1, Int_t animate=0);
   void           DrawdEdx(Double_t lenMin=40);
   void           DrawToF();
   void           DrawPng(TCanvas *c);
-  void           DrawH3s(TH3F *h3s[2], Int_t animate = 0, Double_t min = 1e9, Double_t max = -1e9, Int_t np = 2);
+  void           DrawH3s(TH3F *h3s[2], Int_t animate = 0, Double_t min = 1e9, Double_t max = -1e9, Int_t np = 2, Int_t xy = -1);
   void           MinMax(TH1 *h, Double_t &min, Double_t &max, Double_t amax = 1000);
   static         TH3F *GetTrackHist(UInt_t track, UInt_t match, UInt_t particle, UInt_t charge, UInt_t var, UInt_t i);
   static         TH3F *GetdEdxHist(UInt_t track, UInt_t particle, UInt_t charge, UInt_t var);

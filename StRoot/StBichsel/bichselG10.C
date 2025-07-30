@@ -1,7 +1,7 @@
 /*
   root.exe lBichsel.C bichselG10.C+
   bichselG10("N");  // dN/dx
-  bichselG10("70"; // I70
+  bichselG10("70)"; // I70
   bichselG10("z"); // Ifit
   TH1D *pB70  = (TH1D *) ((TF1 *) gROOT->GetListOfFunctions()->FindObject("70p1"))->GetHistogram();
   TH1D *piB70 = (TH1D *) ((TF1 *) gROOT->GetListOfFunctions()->FindObject("70#pi1"))->GetHistogram();
@@ -76,6 +76,7 @@
 #include "Riostream.h"
 #include <stdio.h>
 #include "TF1.h"
+#include "TH1.h"
 #include "TMath.h"
 #include "TSystem.h"
 #include "TCanvas.h"
@@ -366,7 +367,7 @@ Double_t aleph70(Double_t *x,Double_t *par) {
 }
 #endif /* __CINT__ */
 //________________________________________________________________________________
-void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFALSE) {
+void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFALSE, Bool_t plot = kTRUE) {
   fgRigidity = rigidity;
   if (gClassTable->GetID("StBichsel") < 0) {
     gSystem->Load("libTable");
@@ -420,8 +421,10 @@ void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFAL
     func->SetLineColor(color);
     func->SetMarkerColor(color);
 #endif
-    func->Draw("same");
-    leg->AddEntry(func,Part[h].Name);
+    if (plot) {
+      func->Draw("same");
+      leg->AddEntry(func,Part[h].Name);
+    }
 #if !defined( __CINT__) && defined(__Aleph__)
     TF1 *fA = new TF1(Form("Aleph%s",Part[h].Name),aleph70,xmin,xmax, 1);
     fA->SetParameter(0,h);
@@ -453,8 +456,59 @@ void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFAL
       FHypsFromPion[h]->Draw("samel");
       legS->AddEntry(FHypsFromPion[h],FHypsFromPion[h]->GetName());
     }
-    legS->Draw();
-    csep->Update();
+    if (plot) {
+      legS->Draw();
+      csep->Update();
+    }
   }
 #endif
+}
+//________________________________________________________________________________
+void Diff(const Char_t *opt = "zM", Bool_t nsigma = kFALSE) {
+  TString cname(opt);
+  if (nsigma) cname += "n#sigma";
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(opt);
+  if (c1) c1->Clear();
+  else c1 = new TCanvas(opt,opt);
+  TH1F *frame = 0;
+  if (! nsigma) frame = c1->DrawFrame(-1.5,-1.0,1.5,3.5); 
+  else          frame = c1->DrawFrame(-1.5,-50.0,1.5,50); 
+  Int_t pPion = 2;
+  TF1 *pionF = (TF1 *) gROOT->GetListOfFunctions()->FindObject(Form("%s%s1",opt,Part[pPion].Name));
+  if (! pionF) {
+    bichselG10(opt, 18, kFALSE, kFALSE);
+    pionF = (TF1 *) gROOT->GetListOfFunctions()->FindObject(Form("%s%s1",opt,Part[pPion].Name));
+  }
+  if (! pionF) return;
+  static Int_t plist[] = {0,1,3,4, -1};
+  TLegend *l = new TLegend(0.5,0.5,0.85,0.85);
+  TH1D *pionH = new TH1D(*((TH1D*)pionF->GetHistogram())); 
+  pionH->SetName("pi");
+  /*
+    #sigma(@61 npts) =  5.23% for N-3p85GeV_fixedTarget_2021b
+    #sigma(@61 npts) =  5.83% for F-3p85GeV_fixedTarget_2021b
+  */
+  for (Int_t i = 0; plist[i] > -1; i++) {
+    Int_t p = plist[i];
+    TH1D *hist = new TH1D(*(TH1D *) ((TF1 *) gROOT->GetListOfFunctions()->FindObject(Form("%s%s1",opt,Part[p].Name)))->GetHistogram());
+    TString name(hist->GetName());
+    name.ReplaceAll(opt,"");
+    name.ReplaceAll("1","");
+    hist->SetName(name);
+    TString title = name;
+    title += "- pi";
+    hist->Add(pionH,-1.0);
+    if (nsigma) {
+      title.Prepend("n#sigma(");
+      title += ")";
+      Double_t scale = TMath::Log(10.0);
+      if (cname.BeginsWith("zM")) scale /= 5.83e-2;
+      if (cname.BeginsWith("dNdx")) scale /= 5.23e-2;
+      hist->Scale(scale);
+    }
+    hist->SetTitle(title);
+    hist->Draw("samel");
+    l->AddEntry(hist,title);
+  }
+  l->Draw();
 }

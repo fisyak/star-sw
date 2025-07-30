@@ -350,13 +350,13 @@ C     RZfile maked always with Exchange mode for FQXISN (ie LINUX ...)
       IQ(KQSP+LTOP+KRUSED) = NRD
       IQ(KQSP+LTOP+KWUSED) = NWL
       IF (IOPTN.NE.0) THEN
-        WRITE(IQLOG,7001) CHDIR
+*yf        WRITE(IQLOG,7001) CHDIR
  7001   FORMAT(' RZMAKE. new RZ format selected for ',a)
 *     +        ' This file will not be readable with versions',
 *     +            ' of RZ prior to release 94B')
         IQ(KQSP+LTOP+KRZVER) = 1
       ELSE
-        WRITE(IQLOG,7007) CHDIR
+*yf        WRITE(IQLOG,7007) CHDIR
  7007   FORMAT(' *****  RZMAKE. OLD RZ format selected for ',a)
 *     +        ' This file will have the limit on the number of',
 *     +           ' blocks < 64 K')

@@ -88,10 +88,11 @@ Int_t StAnalysisMaker::Finish() {
     //  A good place for printout and to summarize
     //  the run.
     //
+  if (Debug()) {
     gMessMgr->Info() << "StAnalysisMaker::Finish() "
 		     << "Processed " << mEventCounter << " events." << endm;
-    
-    return kStOK;
+  }
+    return StMaker::Finish();
 }
 
 /*!

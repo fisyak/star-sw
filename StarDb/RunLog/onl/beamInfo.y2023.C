@@ -13,7 +13,7 @@ beamInfo_st row;
 St_beamInfo *tableSet = new St_beamInfo("beamInfo",1);
 //
 memset(&row,0,tableSet->GetRowSize());
-    row.runNumber	 =   17101001; // ;
+    row.runNumber	 =   24101001; // ;
     row.entryTag	 =          0; // 0=startrun, 1=endrun, 2=runave, 3=std  ;
  memcpy(&row.blueSpecies,"Au",2);// species  
     row.blueMassNumber	 =        197; // ;

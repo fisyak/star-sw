@@ -21,6 +21,10 @@ my $FILE = "/*/st_physics";
 my $NEvents = 100000;
 my $step = 0;
 my $debug = 0;
+if ($#ARGV >= 0) {
+  $debug = $ARGV[0];
+}
+
 #================================================================================
 #  dir -ltr /star/data14/GRID/NFS_FileList/
 #  dir /gpfs01/star/data*/reco/production_7p7GeV_2021/ReversedFullField/P22ia*/2021/*/*/*event.root
@@ -2731,57 +2735,101 @@ my $debug = 0;
 #$hist = "RunXXII06"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/01/2025  TpcSecRowB.pp500_2022.root
 #$hist = "RunXXII07"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/03/2025  TpcSecRowB.pp500_2022.root & TpcZCorrectionC.pp500_2022.C
 #$hist = "RunXXII08"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/04/2025  TpcPadCorrectionMDF.pp500_2022.C
-$hist = "RunXXII09"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/07/2025  TpcCurrentCorrection.pp500_2022.C
+#$hist = "RunXXII09"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/06/2025  TpcPadCorrectionMDF.pp500_2022.C => TpcPadCorrectionMDC.pp500_2022.C
+#$hist = "RunXXII10"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/08/2025  TpcCurrentCorrectionX.pp500_2022.C
+#$hist = "RunXXII11"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/09/2025  TpcAccumulatedQ.pp500_2022.C
+#$hist = "RunXXII12"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/10/2025 TpcSecRowB.pp500_2022.root
+#$hist = "RunXXII13"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/11/2025 TpcEtaCorrection.pp500_2022.C
+#$hist = "RunXXII14"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/12/2025 TpcLengthCorrectionMDN.pp500_2022.C  tpcPressureB.pp500_2022.C  TpcSecRowB.pp500_2022.root  TpcZCorrectionC.pp500_2022.C
+#$hist = "RunXXII15"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/13/2025 TpcSecRowB.pp500_2022.root
+#$hist = "RunXXII16"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/14/2025 tpcPressureB.pp500_2022.C TpcZCorrectionC.pp500_2022.C
+#$hist = "RunXXII17"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/15/2025 TpcEtaCorrection.pp500_2022.C TpcLengthCorrectionMDN.pp500_2022.C
+#$hist = "RunXXII18"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/16/2025 TpcZCorrectionC.pp500_2022.C
+#$hist = "RunXXII19"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/17/2025  TpcSecRowB.pp500_2022.root
+#$hist = "RunXXII20"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/19/2025 03/23/25  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+#$hist = "RunXXII21"; $NEvents = 1000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/dEdxCalib"; $year = "/2022/*/pp500_2022/???/2*/"; $FILE = "*"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/21/2025  TpcSecRowB.pp500_2022.root TpcLengthCorrectionMDN.pp500_2022.C
+#$hist = "RunXXII22"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 03/25/25  check MySQL
+#$hist = "RunXXII23"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "dev"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 04/02/25 - 05/02/2025  check dev
+#$hist = "RunXXII24"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 5; $Mode = 2; $macro = "dEdx";# 05/02/25  check TFG with apptainer
+#$hist = "RunXXII25"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/16/25  fix m_TpcdEdxCorrection->IsFixedTarget()
+#$hist = "RunXXII26"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_pp500_2022/*/";  $Production = "P24ib_calib2"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25  check tpcExtraGainCorrection.y2022.C
+################################## RunXXIII ##########################
+#$hist = "RunXXIII09"; $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/25 the first pass 
+#$hist = "RunXXIII10"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/14/25  reset TpcSecRowB to 1, full statistics, kep for FE,RDO
+#$hist = "RunXXIII11"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/15/25  TpcSecRowB.AuAu_2023.root
+#$hist = "RunXXIII12"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/15/25  TpcEtaCorrection.AuAu_2023.C
+#$hist = "RunXXIII13"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/16/25   TpcSecRowB.AuAu_2023.root
+#$hist = "RunXXIII14"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/16/25   fix m_TpcdEdxCorrection->IsFixedTarget()
+#$hist = "RunXXIII15"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/17/25   TpcZCorrectionC.AuAu_2023.C
+#$hist = "RunXXIII16"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/17/25   remove TpcZCorrectionC.AuAu_2023.C & TpcEtaCorrection.AuAu_2023.C
+#$hist = "RunXXIII17"; $NEvents = 2000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/210*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/18/25   TpcSecRowB.AuAu_2023.root
+#$hist = "RunXXIII18"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/18/25   TpcSecRowB.AuAu_2023_1.root & TpcSecRowB.AuAu_2023_2.root
+#$hist = "RunXXIII19"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/19/25   TpcZCorrectionC.AuAu_2023_?.C
+#$hist = "RunXXIII20"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/19/25   TpcSecRowB.AuAu_2023*.root
+#$hist = "RunXXIII21"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   TpcEtaCorrectionB.AuAu_2023_?.C
+#$hist = "RunXXIII22"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/21/25 TpcZCorrectionC.AuAu_2023*.C   
+#$hist = "RunXXIII23"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/21/25 TpcEtaCorrectionB.AuAu_2023_?.C
+#$hist = "RunXXIII24"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/22/25 TpcSecRowB.AuAu_2023_?.root
+#$hist = "RunXXIII25"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/25 TpcZCorrectionC.AuAu_2023_?.C
+#$hist = "RunXXIII26"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/25 TpcEtaCorrectionB.AuAu_2023_?.C
+#$hist = "RunXXIII27"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/25 TpcZCorrectionC.AuAu_2023_?.C
+#$hist = "RunXXIII28"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/25 TpcSecRowB.AuAu_2023*.root
+#$hist = "RunXXIII29"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 TpcLengthCorrectionMDN.AuAu_2023*.C
+#$hist = "RunXXIII30"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 check MySQL
+#$hist = "RunXXIII31"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/25 check DEV
+#$hist = "RunXXIII32"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/29/25 move TpcEtaCorrection.r2023.C to MySQL
+#$hist = "RunXXIII33"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/2025 check tpcExtraGainCorrection.y2023.C
+#################################### RunXXI OO200GeV P24iy ########################
+#$hist = "RunXXI01"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   check what is in MySQL
+#$hist = "RunXXI02"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   reset TpcSecRowB, TpcZCorrectionC, TpcEtaCorrectionB, TpcLengthCorrectionMDN
+#$hist = "RunXXI03"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/21/25 TpcSecRowB.OO_200GeV_2021.root  
+#$hist = "RunXXI04"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/21/25 TpcSecRowB.*OO_200GeV_2021*.root  
+#$hist = "RunXXI05"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/22/25 TpcZCorrectionC.*_OO_200GeV_2021.C
+#$hist = "RunXXI06"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/25 TpcEtaCorrectionB.OO_200GeV_2021.C
+#$hist = "RunXXI07"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/23/25 TpcZCorrectionC.*OO*.C
+#$hist = "RunXXI08"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/25 TpcSecRowB.*OO_200GeV_2021.root
+#$hist = "RunXXI09"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/25 TpcEtaCorrectionB.*OO*.C
+#$hist = "RunXXI10"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/24/25 TpcSecRowB.*OO_200GeV_2021*.root
+#$hist = "RunXXI11"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 TpcLengthCorrectionMDN.*OO*.C
+#$hist = "RunXXI12"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/25/25 checl MySQL
+#$hist = "RunXXI13"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/25 checl DEV
+#################################### RunXXIproduction_3p85GeV_fixedTarget_2021   P24iy_calib6  ########################
+#$hist = "RunXXI3p85_01"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/18/25 check current MySQL
+#$hist = "RunXXI3p85_02"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/20/25 disable "TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN"
+#$hist = "RunXXI3p85_03"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/21/25 new 3p85GeV_fixedTarget_2021[b-d].root
+#$hist = "RunXXI3p85_04"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/22/25 Reset tables in MySQL, new TpcZCorrectionC.3p85GeV_fixedTarget_2021b.C
+#$hist = "RunXXI3p85_05"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/22/25 new TpcSecRowB.3p85GeV_fixedTarget_2021b.root
+#$hist = "RunXXI3p85_06"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25 new TpcZCorrectionC.3p85GeV_fixedTarget_2021b.C
+#$hist = "RunXXI3p85_07"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25 new TpcSecRowB.3p85GeV_fixedTarget_2021b.root
+#$hist = "RunXXI3p85_08"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/24/25 new TpcLengthCorrectionMDN.3p85GeV_fixedTarget_2021b.C
+#$hist = "RunXXI3p85_09"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version
+$hist = "RunXXI3p85_10"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version with DEV
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
 $prod =~ s/\*//g;
 $prod =~ s/\//_/g;
 print "prod $prod\n";
-#$hist .= $prod;
 $TOPSW = $Production;#"";#"dEdxA" . $Production; C for Central
 my $Total_Size = 0;
 my $script = "";
-#my $CONDOR = "jobs.condor";
-#open (CONDOR,">$CONDOR") or die "Can't open $CONDOR";
-#my $XML = "jobs." . $hist . "." . $prod . ".xml";
-#if ($?INPUTFILE1) csh -x $INPUTFILE1
-#if ($?INPUTFILE2) csh -x $INPUTFILE2
-#if ($?INPUTFILE3) csh -x $INPUTFILE3
-#if ($?INPUTFILE4) csh -x $INPUTFILE4
-#if ($?INPUTFILE5) csh -x $INPUTFILE5
-#if ($?INPUTFILE6) csh -x $INPUTFILE6
-#if ($?INPUTFILE7) csh -x $INPUTFILE7
-#if ($?INPUTFILE8) csh -x $INPUTFILE8
-#if ($?INPUTFILE9) csh -x $INPUTFILE9
 
 my @files = ();
 $script = $prod;# . "O";
-#my $SCR = "/star/institutions/bnl/fisyak/dEdx/";
-#my $SCR = "/star/data05/scratch/fisyak/dEdx/";
-my $SCR = "/gpfs01/star/subsys-tpc/fisyak/dEdx/";
+my $SCR = "/gpfs01/star/pwg/fisyak/dEdx/";
 if (! -r $SCR) {
   $SCR = "/net/l404/data/fisyak/dEdx/";
 #  $SCR = "/hlt/cephfs/fisyak/dEdx/";
 }
 my @ProdFiles = ();
 my $hostname = `hostname`; chomp($hostname);
-#my $homedir  = "/afs/rhic/star/users/fisyak/public/.dev/dEdx";
-#my $homedir  = "/star/institutions/bnl/fisyak/dEdx/jobs/SL04i";
-#my $homedir  = "/star/institutions/bnl/fisyak/dEdx/jobs/" .$STAR_LEVEL ;
-#my $homedir  = "/star/data07/calib/fisyak/dEdx/jobs/" .$STAR_LEVEL ;
-#if ($hostname =~ /^a/) {
-#  $SCR = "/usatlas/projects/dc0/deexx/";
-#  $homedir = "/usatlas/projects/dc0/deexx/Jobs";
-#}
 $scr = $SCR . $hist . "/";
 print "Production = $Production ==> $hist\n";
 my $glb = "";
-if ($#ARGV >= 0) {$glb = $ARGV[0];}
+if ($#ARGV >= 1) {$glb = $ARGV[1];}
 else {
   if ($Production) {
     if ($disk !~ /^\//) {
-#      $glb =  "/star/" . $disk . $RECO . $Production . "*" . $year . $FILE . $select . ".event.root";
       if (-d "/direct/star") {
 	$glb =  "/direct/star/" . $disk . $RECO . $Production . $year . $FILE . $select . ".event.root";
       } else {
@@ -2791,7 +2839,6 @@ else {
       $glb =  $disk . $RECO . $Production . "*" . $year . $FILE . $select . ".event.root";
     }
   } 
-#  if ($Production) {$glb =  "/star/" . $disk . $RECO . $Production . "*calib*/" . $year . $FILE . $select . ".event.root";}
   else { die "Production has not been defined";}
 }
 print "glb = $glb\n";
@@ -2809,7 +2856,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $dt = $now - $ctime;
     print "$file dt = $dt\n";
     if ($dt < 600) {next;}
-    my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
+    my @words = split '/', $file; if ($debug > 1) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4] . '_' . $words[5];
     if ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
       $dd = $words[7];
@@ -2830,32 +2877,28 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     $dd =~ s/_RF//;
     $dd =~ s/_FullField//;
     $dd =~ s/_FF//;
+    if ($dd eq "3p85GeV_fixedTarget_2021" and $words[8] >= 158) {
+      $dd .= "b";
+    }
     $ProdFiles{$dd} .= " " . $file;  
-    if ($debug) {print "$dd => $ProdFiles{$dd}\n";}
+    if ($debug > 1) {print "$dd => $ProdFiles{$dd}\n";}
   }
+  my $apptainer = "";
+  if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {$apptainer = "apptainer exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif";}
   foreach my $dd (keys %ProdFiles) {
     my $countperdd = 0;
-    my @FilesRun = split " ", $ProdFiles{$dd};# print "$dd => $#FielsRun ================================================================================\n";
+    my @FilesRun = split " ", $ProdFiles{$dd}; if ($debug) { print "$dd => $#FielsRun ================================================================================\n";}
     if ($#FilesRun < 0) {next;}
 #    print "$dd => @FilesRun\n";
     my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
-    if ($STAR_LEVEL eq "TFG") {
-    print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">	 <command>
-         cd ${SUBMITTINGDIRECTORY}
-if ($?INPUTFILE0) csh -x $INPUTFILE0
-         </command>
-';
-  } else {
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
 <job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">	 <command>
          cd ${SUBMITTINGDIRECTORY}
-if ($?INPUTFILE0) csh -x $INPUTFILE0
+if ($?INPUTFILE0) ' . $apptainer . ' csh -x $INPUTFILE0
          </command>
 ';
-  }
     foreach my $file (@FilesRun) {
       my $dir = File::Basename::dirname($file);
       my $fff = File::Basename::basename($file);
@@ -2914,26 +2957,63 @@ if ($?INPUTFILE0) csh -x $INPUTFILE0
 	print "Create $SCRIPT\n";
 	print XML "<input URL=\"file:" . $DIR . "/" .  $SCRIPT ."\" />\n";
 	open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
-#	print OUT "#! /usr/local/bin/tcsh -f\n";
-	print OUT "#! /usr/bin/tcsh -f\n";
+    print OUT "#! /usr/bin/env tcsh 
+# Default value for path if not defined.
+if ( ! \$?PATH ) then
+   setenv PATH /usr/local/bin:/bin:/usr/bin
+endif
+#echo \"--------------------------------------------------------------------------------\"
+if ( ! \$?USER ) then
+    echo \"USER is not defined\"
+    set USER=`id | sed \"s/).*//\" | sed \"s/.*(//\"`
+endif
+if ( ! \$?HOME ) then
+    echo \"HOME is not defined\"
+
+    if ( -x /usr/bin/getent ) then
+        # we have getent, should not be on aix, bsd, Tru64 however
+        # will work for Linux
+        echo \"Using getent method\"
+#        setenv HOME `/usr/bin/getent passwd $USER | /bin/awk -F: '{print $6}'`
+        setenv HOME `/usr/bin/getent passwd \$USER | /bin/sed 's|.*\\:.*\\:.*\\:.*\\:\\([^\\:]*\\):.*|\\1|'`
+    endif
+endif
+echo \"HOME is now $HOME\"
+
+
+/usr/bin/test -r $HOME/.cshrc && source $HOME/.cshrc
+
+#env
+";
 	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
 	if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
-	  print OUT "source ${GROUP_DIR}/setup gcc;\n";
-	  print OUT "source /afs/rhic.bnl.gov/star/packages/.DEV2/unsetupDEV2.csh;\n";  
-	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
-#	  print OUT "setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/usr/lib64:/usr/lib;\n";
-	} else {
-#	  print OUT "source $GROUP_DIR/.starver $STAR_LEVEL;\n";
+	  print OUT "source $STAR/unsetupDEV2.csh\n";  
 	}
-	print OUT "/usr/bin/test -d $scrr || mkdir -p $scrr;\n";
+	print OUT " /usr/bin/test -d $scrr || mkdir -p $scrr\n";
 	my $cmd = "/usr/bin/test ! -r " . $root . " &&  hostname >>& $log  && root.exe -q -b  '" . $macro;
 	$cmd .= ".C(" . $First ."," .$Last. ",\"" . $ffile . "\",\"" . $root . "\"," . $Mode . ")\' >>& $log; ";
 	#    $cmd .= "; cp -p $logL $log;";
 	print OUT "$cmd\n";
 	$count++;
 	$countperdd++;
-	close (OUT); $opened = 0; $count = 0;
+	close (OUT); $opened = 0; #$count = 0;
 	chmod 0755, $SCRIPT;
+	my $CONDOR = $BCRIPT . ".condor";
+	open (OUT,">$CONDOR") or die "Can't open $CONDOR";
+	print OUT "
+Universe         = vanilla
+Notification     = never
+Executable       = /bin/csh
+Arguments        = \"-c 'exec " . $DIR . "/" . $SCRIPT . "'\"
+Output           = " . $DIR . "/" . $SCRIPT . ".log
+Log              = ./" . $SCRIPT . ".condor.log
+Error            = ./" . $SCRIPT . ".condor.err
+Initialdir       = " . $DIR . "
+kill_sig        = SIGINT
+Accounting_group = group_star.cas
+Priority         = +10
+Queue
+";
       }
   ENDL:
     }

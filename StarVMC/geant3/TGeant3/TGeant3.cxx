@@ -1,4 +1,3 @@
-
 /**************************************************************************
  * Copyright(c) 1998-2003, ALICE Experiment at CERN, All rights reserved. *
  *                                                                        *
@@ -3486,7 +3485,7 @@ void TGeant3::Glast()
 }
 
 //______________________________________________________________________
-void TGeant3::Gprint(const char *name)
+void TGeant3::Gprint(const char *name, const Int_t numb)
 {
    //
    // Routine to print data structures
@@ -3494,7 +3493,7 @@ void TGeant3::Gprint(const char *name)
    //
    char vname[5];
    Vname(name, vname);
-   g3print(PASSCHARD(vname), 0 PASSCHARL(vname));
+   g3print(PASSCHARD(vname), numb PASSCHARL(vname));
 }
 
 //______________________________________________________________________

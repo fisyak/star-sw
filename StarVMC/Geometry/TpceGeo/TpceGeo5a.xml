@@ -1,0 +1,22 @@
+<Document  file="StarVMC/Geometry/TpceGeo/TpceGeo5a.xml"  >
+<Module name="TPCEv5" comment="Dummy module calling tpcegeo5.g">
+        <CDE  >
+            AGECOM
+            GCUNIT
+            GCONST
+        </CDE>
+        <Structure name="TPCC">
+	  <var name="version" />
+	  <var name="misalign" type="int"   />
+	</Structure>
+        
+        <Structure name="TPCG"  >
+            <var name="version" type="float"  />
+            <var name="TpadConfig" type="int"  />
+        </Structure>
+<Export language="Mortran">
+Call TpceGeo5
+</Export>
+</Module>
+</Document>
+

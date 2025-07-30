@@ -1,7 +1,7 @@
-# $Id: group_aliases.csh,v 1.1.1.1 2013/08/22 01:27:48 fisyak Exp $
+# $Id: group_aliases.csh,v 1.18 2023/06/21 15:21:47 jeromel Exp $
 # $Log: group_aliases.csh,v $
-# Revision 1.1.1.1  2013/08/22 01:27:48  fisyak
-# Freeze
+# Revision 1.18  2023/06/21 15:21:47  jeromel
+# Remove unused alias
 #
 # Revision 1.17  2004/11/23 14:47:33  jeromel
 # Alias paw -> starsim
@@ -47,7 +47,7 @@ alias starnew    'source ${GROUP_DIR}/.starnew'
 alias stardev    'source ${GROUP_DIR}/.stardev'
 alias staradev   'source ${GROUP_DIR}/.staradev'
 alias star.dev   'source ${GROUP_DIR}/star.dev'
-alias star..dev  'source ${GROUP_DIR}/star..dev'
+#alias star..dev  'source ${GROUP_DIR}/star..dev'
 alias starver    'source ${GROUP_DIR}/.starver'
 alias setup      'source ${GROUP_DIR}/setup'
 alias starsetup  'source ${GROUP_DIR}/setup'

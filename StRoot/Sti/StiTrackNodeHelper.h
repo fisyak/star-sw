@@ -55,6 +55,34 @@ public:
   int                 getUsed()     	const	{return mUsed;}
   void                setDir(int dir) { mDir = dir;};
 static int isCutStep()				{return mgCutStep;}
+  void  PrintpT(const Char_t *opt = "", Double_t dx = 0.0, Double_t relRadThickness = 0.0, Double_t dE = 0.0, Double_t T = 0.0 )  {
+    // opt = "E" extapolation
+    //       "M" Multiple scattering
+    //       "V" at Vertex
+    //       "B" at beam
+    //       "R" at Radius
+    //       "U" Updated
+    //       "r" rejected
+    //       mFP fit parameters
+    //       mFE fit errors
+    //       _ext->mPP 
+    //       _ext->mPE
+    //       _ext->mMtx
+    if (mDetector) StiKalmanTrackNode::ResetComment(::Form("%40s ",mDetector->getName().c_str())); 
+    else           StiKalmanTrackNode::ResetComment();
+    Double_t pT = (TMath::Abs(mFitdPars.ptin())<1e-3) ? 1e3: 1./TMath::Abs(mFitdPars.ptin());
+    Double_t dpTOverpT = 100*TMath::Sqrt(mFitdErrs._cPP)*pT;
+    if (dpTOverpT > 9999.9) dpTOverpT = 9999.9;
+    StiKalmanTrackNode::comment += ::Form(" %s pT %6.3f+-%5.1f, sy %5.3f, x = %7.2f z = %7.2f",opt,pT,dpTOverpT,TMath::Sqrt(mFitdErrs._cYY), mFitdPars.x(), mFitdPars.z());
+    if (mTargetNode->getHit()) {StiKalmanTrackNode::comment += Form(" chi2 = %6.2f", mChi2);}
+    if (dE != 0.0) {
+      StiKalmanTrackNode::comment  += Form("%6.3g cm(%5.2f%%)", dx,100*relRadThickness);
+      if (TMath::Abs(dE) < 1e-3) StiKalmanTrackNode::comment += Form("%6.3g keV", 1e6*dE);
+      else                       StiKalmanTrackNode::comment += Form("%6.3g MeV", 1e3*dE);
+      if (T != 0.0) StiKalmanTrackNode::comment += Form(" %6.3f GeV",T); 
+    }
+    StiKalmanTrackNode::PrintStep();
+  }
 private:
   void reset();
   int propagatePars(const StiNodePars &parPars
@@ -90,8 +118,8 @@ double        joinVtx(const double      *Y,const StiHitErrs  &B
                      ,const StiNodePars &X,const StiNodeErrs &A
 	             ,      StiNodePars *M=0,    StiNodeErrs *C=0);
 static int getHitErrors(const StiHit *hit,const StiNodePars *pars, StiHitErrs *hrr);
-static Int_t  debug() 		{return _debug;}
-static void   setDebug(Int_t m) {_debug = m;}
+ static Int_t  debug() 		{return StiKalmanTrackNode::debug();}
+ static void   setDebug(Int_t m) {StiKalmanTrackNode::setDebug(m);}
 
 private:
 double mChi2Max;
@@ -156,7 +184,6 @@ StiNode2Pars mUnTouch;
   int    mState;
   int    mUsed;
   char   mEnd[1];
-  static int  _debug;
 public:
   QaFit  mCurvQa;
   QaFit  mTanlQa;

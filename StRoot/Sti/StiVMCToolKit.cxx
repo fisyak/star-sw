@@ -41,6 +41,7 @@ static VolumeMap_t VolumesToBeAveraged[] = {
   {"PVAC","the Vacuum Volume of Be section of pipe","HALL_1/CAVE_1/PIPE_1-2/PIPC_1/PVAC_1","",""},
   {"PIPO","Steel pipe from Be to 1st flanges","HALL_1/CAVE_1/PIPE_1-2/PIPO_1/PVAO_1","",""},
   {"PVAO","its cavity","HALL_1/CAVE_1/PIPE_1-2/PIPO_1/PVAO_1","",""},
+  //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
   // Pixel
   {"PXBX","Extrenal Berillium tube","HALL_1/CAVE_1/PXBX_1","",""},
   // SVT

@@ -17,6 +17,8 @@ class StGmtMatchMaker : public StMaker {
   static Double_t fpCut;
   THashList      *fRotMHash;
   StEvent        *pEvent;
+  virtual const char *GetCVS() const
+  {static const char cvs[] = "Tag $Name:$ $Id:$ built " __DATE__ " " __TIME__ ; return cvs;}
   ClassDef(StGmtMatchMaker,1)
 };
 #endif

@@ -71,15 +71,9 @@ Int_t StiKalmanTrackFitter::fit(StiTrack * stiTrack, Int_t fitDirection)
 	if (status)			{nerr++; continue;}
       }
       else  {
-	if (debug()) {
-	  if (targetDet) 
-	    targetNode->ResetComment(::Form("%40s start refit",targetDet->getName().c_str()));
-	  else 
-	    targetNode->ResetComment(::Form("%40s start refit","Vertex"));
-	  targetNode->PrintpT("S");}
-//        pNode = targetNode;		continue;
         pNode = targetNode;		
       }
+      //      if (debug()) targetNode->PrintpT("S "); 
 // target node has parameters now but not fitted
 // if targetNode has hit, get chi2 and update track parameters accordingly
       do {// Fit
@@ -94,13 +88,11 @@ Int_t StiKalmanTrackFitter::fit(StiTrack * stiTrack, Int_t fitDirection)
         status = tryNode.updateNode();
         if (status) 			{nerr++; break;}
         tryNode.setChi2(chi2);
-	{ //continue block
-	  if (debug()) { StiKalmanTrackNode::PrintStep();}
-	}//end continue block
 
         *targetNode=tryNode;
       }while(0);//end fit block
       pNode = targetNode;
+      if (debug()) targetNode->PrintpT("F "); 
     } while(0);//end refit block
   }//end for of nodes
   nGoodNodes = track->getNNodes(3);

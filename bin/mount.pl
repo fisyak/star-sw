@@ -26,9 +26,19 @@ if (! $disk) {die "mount point disk is not defined";}
 if (! -r $disk ) {
   my $cmd = "mkdir -p $disk";
   my $flag = system($cmd);
-  print "$cmd\n";
-  if ( $flag) {print "failed \n";}
-  print "\n";
+  if ( $flag) {
+    print "$cmd failed \n";
+    $cmd =~ s#/direct#/tmp/fisyak/direct#;
+    $flag = system($cmd);
+    if ( $flag) {
+	print "$cmd failed \n";
+    } else {  
+      print "$cmd\n";
+      $disk =~ s#/direct#/tmp/fisyak/direct#;
+    }
+  } else {  
+      print "$cmd\n";
+  }
 }
 my $myVolName = $mount; #File::Basename::basename($mount);
 # fusermount -u /direct/gpfs01

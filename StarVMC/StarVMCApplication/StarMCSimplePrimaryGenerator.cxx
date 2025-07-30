@@ -25,18 +25,6 @@ StarMCSimplePrimaryGenerator::StarMCSimplePrimaryGenerator(Int_t    nprim,   Int
 }
 //_____________________________________________________________________________
 void StarMCSimplePrimaryGenerator::PreSet() {
-  fStarStack = 0;
-  fIsRandom = false;
-  fNofPrimaries = 0; fId = 0;
-  fpT_min = 0; fpT_max = 0; fEta_min = 0; fEta_max = 0; fPhi_min = 0; fPhi_max = 0; fZ_min = 0; fZ_max = 0;
-  fOption = "";
-  fOrigin = TVector3(0,0,0);
-  fCurOrigin = fOrigin;
-  fGun = kFALSE;
-  fGunpX = fGunpY = fGunpZ = fGunX = fGunY = fGunZ = 0;
-  fGunId = 0;
-  fPVX = fPVY = fPVZ = fPVxyError = 0;
-  fPVxy = 0;
 }
 //_____________________________________________________________________________
 void StarMCSimplePrimaryGenerator::GeneratePrimary() {     
@@ -106,6 +94,22 @@ void StarMCSimplePrimaryGenerator::GeneratePrimary() {
 	      Double_t pT2 = mT*mT - mass*mass;
 	      pT  = TMath::Sqrt(pT2);
 	    }
+	  } else if (fOption.Contains("DeltaRays",TString::kIgnoreCase)) {
+	    static Double_t Rmin = 55.8, Rmax = 127.195 + 32 * 2.0;
+	    pdg = 11;
+	    Double_t R = Rmin + (Rmax - Rmin)*gRandom->Rndm();
+	    Double_t phi = 2*TMath::Pi()*gRandom->Rndm();
+	    vx = R*TMath::Cos(phi);
+	    vy = R*TMath::Sin(phi);
+	    vz = 200.*(2*gRandom->Rndm() - 1.0);
+	    static Double_t Pmin = 1e-3, Pmax = 50e-3, LPmaxmin = TMath::Log(Pmax/Pmin);
+	    Double_t P = Pmin*TMath::Exp(gRandom->Rndm()*LPmaxmin);
+            Double_t cosL = 2*gRandom->Rndm() - 1;
+	    Double_t sinL = TMath::Sqrt(1. - cosL*cosL);
+	    if (gRandom->Rndm() < 0.5) sinL *= -1.;
+	    px = P*cosL*TMath::Cos(phi);
+	    px = P*cosL*TMath::Sin(phi);
+	    pz = P*sinL;
 	  } else {
 	    pT               = fpT_min + (fpT_max - fpT_min)*gRandom->Rndm();
 	  }

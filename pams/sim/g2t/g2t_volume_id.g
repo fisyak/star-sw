@@ -406,7 +406,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           USE  /DETM/FSTM/FSTG  stat=ifst
         
           call RBPOPD
-#else /* __STAR_VMC__ */
+#else /* __STAR_VMC__ *//* __STAR_VMC__ */
       isvt     = getValue('isvt')
       itpc     = getValue('itpc')
       ibtf     = getValue('ibtf')
@@ -418,6 +418,10 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       ifms     = getValue('ifms')
       ifsc     = getValue('ifsc')
       imtd     = getValue('imtd')
+      ipxl     = getValue('ipxl')
+      iist     = getValue('iist')
+      isst     = getValue('isst')
+      ifst     = getValue('ifst')
       svtg_version      =       getValue('svtg_version')
       tpcg_version      =       getValue('tpcg_version')
       tpcg_tpadconfig   =       getValue('tpcg_tpadconfig')
@@ -452,7 +456,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       mtdg_version      =       getValue('mtdg_version')
         
 #endif /* ! __STAR_VMC__ */
-          if (itpc>=0) print *,' g2t_volume_id: TPC version =',tpcg_version
+          if (itpc>=0) print *,' g2t_volume_id: TPC version =',tpcg_version, ', tpcg_tpadconfig = ', tpcg_tpadconfig
           if (ivpd>=0) print *,'              : VPD version =',vpdg_version
           if (ibtf>=0) print *,'              : TOF version =',btog_version,
                                ' choice  =',btog_choice
@@ -1398,6 +1402,7 @@ c          write (*,*) csys, volume_id
                      
       else
           print *,' G2T warning: volume  ',Csys,'  not found '  
+	  volume_id = numbv(1)
       endif
 
 
@@ -1415,6 +1420,10 @@ c          write (*,*) csys, volume_id
       if (csys == 'ifms')            g2t_version = ifms
       if (csys == 'ifsc')            g2t_version = ifsc
       if (csys == 'imtd')            g2t_version = imtd
+      if (csys == 'ipxl')            g2t_version = ipxl
+      if (csys == 'iist')            g2t_version = iist
+      if (csys == 'isst')            g2t_version = isst
+      if (csys == 'ifst')            g2t_version = ifst
 
       if (csys == 'svtg_version')    g2t_version = svtg_version
       if (csys == 'tpcg_version')    g2t_version = tpcg_version
@@ -1453,7 +1462,7 @@ c          write (*,*) csys, volume_id
       if (csys == 'mtdg_version')    g2t_version = mtdg_version
 #endif /* __G2T_VERSION__ */
     end
-
+#ifndef __STAR_VMC__
 !//______________________________________________________________________________________      
     Integer function g2t_tpc_volume_id ( numbv )
       Integer, intent(in) :: numbv(15)
@@ -1613,6 +1622,7 @@ c          write (*,*) csys, volume_id
 
       RETURN
     end
+#endif /* ! __STAR_VMC__ */
 !//______________________________________________________________________________________      
     Integer function g2t_fst_volume_id ( numbv )
       Integer, intent(in) :: numbv(15)
@@ -1628,7 +1638,11 @@ c          write (*,*) csys, volume_id
       COMMON /AGCHITV/ Iprin,Nvb(8),cs,cd
 
       IF ( first ) then
+#ifndef __STAR_VMC__
          USE  /DETM/FSTM/FSTG  stat=ifst
+#else /* __STAR_VMC__ */
+	ifst     = getValue('ifst')
+#endif /* ! __STAR_VMC__ */
       ENDIF 
 
 

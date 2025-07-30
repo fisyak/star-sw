@@ -1,0 +1,96 @@
+#!/bin/csh -f
+if ($?DECHO) echo "======================= start of setup_AFS_RHIC ====================================="
+set pkg = $1; shift;
+unsetenv  USE_NFS4 
+unsetenv  USE_CVMFS
+unsetenv  USE_AFS
+if ($?STAR_LEVEL) then
+    setenv LEVEL_STAR ${STAR_LEVEL}
+endif
+if ($?AFS_RHIC) unsetenv AFS_RHIC      ; if ($?DECHO) echo "unsetenv AFS_RHIC"
+if ($?STARFPE) then
+    setenv xSTARFPE $STARFPE
+endif
+unsetenv STAR*         ; if ($?DECHO) echo "unsetenv STAR*"
+if ($?xSTARFPE) then 
+    setenv STARFPE $xSTARFPE
+endif
+unsetenv ROOT*         ; if ($?DECHO) echo "unsetenv ROOT*"
+if ($?GROUP_DIR) then
+    unsetenv GROUP*      ; if ($?DECHO) echo "unsetenv GROUP*"
+endif
+unsetenv STAF*         ; if ($?DECHO) echo "unsetenv STAF*"
+unsetenv CINTSYSDIR    ; if ($?DECHO) echo "unsetenv CINTSYSDIR"
+unsetenv IVROOT        ; if ($?DECHO) echo "unsetenv IVROOT"
+unsetenv *optstar      ; if ($?DECHO) echo "unsetenv *optstar"
+#	unsetenv *OPTSTAR      ; if ($?DECHO) echo "unsetenv *OPTSTAR"
+if ($?QTDIR) then
+    unsetenv QTDIR       ; if ($?DECHO) echo "unsetenv QTDIR"
+endif
+unsetenv SITE          ; if ($?DECHO) echo "unsetenv SITE"
+unsetenv star*         ; if ($?DECHO) echo "unsetenv star*"
+if ($?CERN_ROOT) then 
+    unsetenv CERN*       ; if ($?DECHO) echo "unsetenv CERN*"
+endif
+if ($?CLHEP_ROOT) then
+    unsetenv CLHEP*        ; if ($?DECHO) echo "unsetenv CLHEP*"
+endif
+if ($?LEVEL_STAR) then
+    setenv STAR_LEVEL ${LEVEL_STAR}
+endif
+switch ($pkg)
+    case "cvmfs":
+	setenv    USE_CVMFS 1
+	if ($?TFG_STAR) then
+	    setenv AFS_RHIC  /cvmfs/star.sdcc.bnl.gov/TFG
+	else 
+	    setenv AFS_RHIC  /cvmfs/star.sdcc.bnl.gov
+	endif
+    breaksw
+    case "nfs4":
+	if (-r /star/nfs4/AFS) then
+	    setenv USE_NFS4  1
+	    setenv AFS_RHIC  /star/nfs4/AFS
+	endif
+    breaksw
+    case "afs":
+    default:
+	setenv USE_AFS   1
+	setenv AFS_RHIC  /afs/rhic.bnl.gov
+	if ($?TFG_STAR) then	 
+	    if (-d  /net/l402/data/fisyak/STAR) then 
+		setenv AFS_RHIC /net/l402/data/fisyak/STAR 
+	    else 
+		if (-d /gpfs01/star/subsys-tpc/fisyak/STAR) then
+		    setenv AFS_RHIC  /gpfs01/star/subsys-tpc/fisyak/STAR
+		else 
+		    if (-r ~/STAR/group) then
+			setenv AFS_RHIC ~/STAR
+                    else 
+			if (-r ~/star/group) then
+			    setenv AFS_RHIC $HOME
+			else 
+			    unsetevn AFS_RHIC 
+                            echo "AFS_RHIC is not set"
+		        endif
+		    endif
+		endif
+	    endif
+	endif
+    breaksw
+endsw
+if ($?AFS_RHIC) then
+    setenv STAR_ROOT ${AFS_RHIC}/star
+    setenv STAR_PATH ${STAR_ROOT}/packages
+    setenv OPTSTAR   ${STAR_ROOT}/opt/star
+    setenv XOPTSTAR  ${OPTSTAR}
+    if ($?TFG_STAR && -r ${AFS_RHIC}/packages/TFG/group) then
+	setenv GROUP_DIR ${AFS_RHIC}/packages/TFG/group
+    else
+	setenv GROUP_DIR ${AFS_RHIC}/star/group
+    endif
+    if ($?LEVEL_STAR) then 
+      source ${GROUP_DIR}/.starver ${LEVEL_STAR}
+    endif
+endif
+if ($?DECHO) echo "======================= end of setup_AFS_RHIC ====================================="

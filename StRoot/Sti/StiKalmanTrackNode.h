@@ -188,6 +188,33 @@ public:
       StiELoss *getELoss()  		{return mELoss;}
 const StiELoss *getELoss()const		{return mELoss;}
   static void PrintStep();
+  void  PrintpT(const Char_t *opt = "", Double_t dx = 0.0, Double_t relRadThickness = 0.0, Double_t dE = 0.0, Double_t T = 0.0 )  {
+    // opt = "E" extapolation
+    //       "M" Multiple scattering
+    //       "V" at Vertex
+    //       "B" at beam
+    //       "R" at Radius
+    //       "U" Updated
+    //       "r" rejected
+    //       mFP fit parameters
+    //       mFE fit errors
+    //       _ext->mPP 
+    //       _ext->mPE
+    //       _ext->mMtx
+    if (getDetector()) ResetComment(::Form("%40s ",getDetector()->getName().c_str())); 
+    else               ResetComment();
+    Double_t dpTOverpT = 100*TMath::Sqrt(mFE._cPP/(mFP.ptin()*mFP.ptin()));
+    if (dpTOverpT > 9999.9) dpTOverpT = 9999.9;
+    comment += ::Form(" %s pT %6.3f+-%5.1f, sy %5.3f, x = %7.2f z = %7.2f",opt,getPt(),dpTOverpT,TMath::Sqrt(mFE._cYY), mFP.x(), mFP.z());
+    if (getHit() &&  getChi2() < 1e10) {comment += Form(" chi2 = %6.2f", getChi2());}
+    if (dE != 0.0) {
+      comment  += Form("%6.3g cm(%5.2f%%)", dx,100*relRadThickness);
+      if (TMath::Abs(dE) < 1e-3) comment += Form("%6.3g keV", 1e6*dE);
+      else                       comment += Form("%6.3g MeV", 1e3*dE);
+      if (T != 0.0) comment += Form(" %6.3f GeV",T); 
+    }
+    PrintStep();
+  }
   StThreeVector<double>getPoint() const;
   StThreeVector<double>getGlobalPoint() const;
   /// Calculates and returns the momentum and error of the track at this node in global coordinates.
@@ -208,7 +235,7 @@ const StiELoss *getELoss()const		{return mELoss;}
   void propagateMtx();
   void propagateError();
   void saveInfo(int kase=1);
-const StiNodeInf *getInfo() const 	{return _inf;}
+  const StiNodeInf *getInfo() const 	{return _inf;}
   int  testError(double *emx,int begend);
   void numeDeriv(double val,int kind,int shape=0,int dir=0);
   int  testDeriv(double *der);
@@ -250,12 +277,6 @@ const StiNodeInf *getInfo() const 	{return _inf;}
   static void   setDebug(Int_t m) {_debug = m;}
   static void   SetLaser(Int_t m) {_laser = m;}
   static Int_t  IsLaser()         {return _laser;}
-  void   PrintpT(const Char_t *opt="") const ;
-  void   PrintpTA(const Char_t *opt="") {
-    getDetector() ? ResetComment(::Form("%40s ",getDetector()->getName().c_str())) :ResetComment(); 
-    PrintpT(opt); 
-    if (getHit()) {comment += Form(" chi2 = %6.2f", getChi2());}
-    PrintStep();}
   int    getFlipFlop() const 			{return mFlipFlop;}
   static void   ResetComment(const Char_t *m = "") 	{comment = m; commentdEdx = "";}
   static const Char_t *Comment() 		{return comment.Data();}

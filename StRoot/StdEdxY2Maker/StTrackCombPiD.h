@@ -34,11 +34,11 @@ class StTrackPiD {
   void Clear(Option_t * /*option*/ ="") {memset(mBeg,0,mEnd-mBeg+1); for (Int_t l = 0; l < KPidAllParticles; l++) fPred[l] = fPredC[l] = fdev[l] = fPull[l] = fPullC[l] = -999;}
   void Print(Option_t *option = "") const;
   Double_t  pred(Int_t  k = 0)      const {return fPred[k];}
-  double_t  residual(Int_t   k = 0) const {return fdev[k];}
-  double_t  pull(Int_t  k = 0)      const {return fPull[k];}
-  double_t  predC(Int_t k = 0)      const {return fPredC[k];}
-  double_t  residualC(Int_t  k = 0) const {return fdevC[k];}
-  double_t  pullC(Int_t k = 0)      const {return fPullC[k];}
+  Double_t  residual(Int_t   k = 0) const {return fdev[k];}
+  Double_t  pull(Int_t  k = 0)      const {return fPull[k];}
+  Double_t  predC(Int_t k = 0)      const {return fPredC[k];}
+  Double_t  residualC(Int_t  k = 0) const {return fdevC[k];}
+  Double_t  pullC(Int_t k = 0)      const {return fPullC[k];}
   Double_t &Pred(Int_t  k = 0)            {return fPred[k];}
   Double_t &Residual(Int_t   k = 0)       {return fdev[k];}
   Double_t &Pull(Int_t  k = 0)            {return fPull[k];}
@@ -164,7 +164,7 @@ class StBEmcStatus  : public StTrackPiD {
   Bool_t IsFailed()       const {return fPiD == 0;}
 };
 //________________________________________________________________________________
-struct Particle_t {
+struct Particle_t { // for positive particles
   Int_t pdg;
   const Char_t *name;
   Double_t mass;
@@ -244,7 +244,7 @@ class StTrackCombPiD : public TObject {
   const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
   const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
   const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus    *) fStatus[kBEmc ];} 
-  static Particle_t &l2par(Int_t l) {return *&fgParticles[fgl2p[l]];}
+  static Particle_t &l2par(Int_t l) {return *&fgParticles[l];}
   static const KFVertex &BestVX() {return fgBestVx;}
   static void  SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
   static void  SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
@@ -256,12 +256,13 @@ class StTrackCombPiD : public TObject {
   static Int_t PiDCorrection() {return fgUsePiDCorrection;}
   static void  ResetBestVx();
   static Int_t Debug() {return fgDebug;}
+  static void  SetDebug(Int_t k = 1) {fgDebug = k;}
   static const Char_t *fgPiDStatusNames[kTotal+1];
  private:
   static Int_t       fgDebug;
   static Double_t    fgSigmaCut;
   static Int_t       fgl2p[KPidAllParticles];
-  static Particle_t  fgParticles[34];
+  static Particle_t  fgParticles[KPidAllParticles];
   std::vector<Int_t> fTPCPDG;
   std::vector<Int_t> fdNdxPDG;
   std::vector<Int_t> fTofPDG;

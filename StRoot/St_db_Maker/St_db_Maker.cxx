@@ -466,11 +466,11 @@ Int_t St_db_Maker::Finish()
 {
    Snapshot(1);
    for (int i=0;i<6;i++) fTimer[i].Stop();
-   Printf("St_db_Maker::Init ");fTimer[0].Print();
-   Printf("      MySQL::Init ");fTimer[2].Print();
-   Printf("St_db_Maker::Make ");fTimer[1].Print();
-   Printf("      MySQL::Make ");fTimer[3].Print();
-   Printf("      MySQL::Data ");fTimer[4].Print();
+   cout << "St_db_Maker::Init "; fTimer[0].Print();
+   cout << "      MySQL::Init "; fTimer[2].Print();
+   cout << "St_db_Maker::Make "; fTimer[1].Print();
+   cout << "      MySQL::Make "; fTimer[3].Print();
+   cout << "      MySQL::Data "; fTimer[4].Print();
 
    if (fEvents[1]<=0) return 0;
    double estiTime = fTimer[4].RealTime()*fTimer[5].CpuTime()/fTimer[5].RealTime();

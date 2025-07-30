@@ -9,6 +9,47 @@
 
 # This should not happen
 if( ! $?AFS_RHIC)   setenv AFS_RHIC  /afs/rhic.bnl.gov
+### TODO: once we get rid of AFS, this path could change
+
+# Switch to CVMFS if defined
+if ( ! $?STAR_BASE_PATH ) setenv STAR_BASE_PATH ""
+
+# to ease integration, we can do one more step - if nothing
+# is defined as USE_, define it as USE_NFS4
+if ( ! $?USE_CVMFS && ! $?USE_AFS ) then
+    setenv USE_NFS4 1
+endif
+
+
+if ( $?USE_NFS4 ) then
+    if ( -d "/star/nfs4/AFS/star" ) then
+	setenv STAR_BASE_PATH /star/nfs4/AFS/star
+    endif
+
+else if ( $?USE_CVMFS ) then
+    if ( -d "/cvmfs/star.sdcc.bnl.gov") then
+	setenv STARCVMFS /cvmfs/star.sdcc.bnl.gov
+	setenv STAR_BASE_PATH ${STARCVMFS}
+
+	# Assume Linux only? but this logic is in STAR_SYS
+	source ${GROUP_DIR}/STAR_SYS
+	if ( $?DECHO ) echo "$self :: setting STAR_SYS to ${STAR_SYS}"
+    else
+	unsetenv USE_CVMFS
+	# this is an issue so we should display a message
+	#if ( $?ECHO ) then
+	    echo " ******************************************************"
+	    echo " *** CVMFS on but /cvmfs/star.sdcc.bnl.gov not seen ***"
+	    echo " ***     Falling back to AFS based installation     ***"
+	    echo " ******************************************************"	
+	#endif
+    endif
+else
+    # itroduced but not used
+    setenv USE_AFS 1
+endif
+
+
 
 # Define DOMAINNAME if does not exists
 if( ! $?DOMAINNAME) then
@@ -32,8 +73,13 @@ switch ($DOMAINNAME)
    case "usatlas.bnl.gov":
     # This detects everything
     if ( ! $?XROOTDSYS ) then
-	# in AFS land 
-	set xrootd=${AFS_RHIC}/star/ROOT/Xrootd/prod
+	# in AFS land?
+	# Needs some attention for CVMFS
+	if ( $STAR_BASE_PATH != "" && ! $?USE_CVMFS ) then
+	    set xrootd=${STAR_BASE_PATH}/star/ROOT/Xrootd/prod
+	else
+	    set xrootd=${AFS_RHIC}/star/ROOT/Xrootd/prod
+	endif
 
 	if ( -d $xrootd ) then
 	    setenv XROOTDSYS $xrootd
@@ -41,7 +87,12 @@ switch ($DOMAINNAME)
     endif
 
     # We have it valid for Linux only
-    set PP=${AFS_RHIC}/star/Grid/OSG/WNC
+    # Needs some attention for CVMFS
+    if ( $STAR_BASE_PATH != "" && ! $?USE_CVMFS ) then
+	set PP=${STAR_BASE_PATH}/Grid/OSG/WNC
+    else
+	set PP=${AFS_RHIC}/star/Grid/OSG/WNC
+    endif
     if ( -d $PP ) then
 	if ( `uname` == "Linux") then
 	    setenv WNOSG $PP

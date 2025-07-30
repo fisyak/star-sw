@@ -11,6 +11,8 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TString.h"
+#include "TCanvas.h"
+#include "TH2.h"
 using namespace std;
 #endif
    
@@ -63,13 +65,14 @@ void sqlstarMagOnl()
 	 if (debugP > 0) {
          printf("%20s ", Field.Data());
 	 }
-	 if (j == 0) {vertex.time = Field.Atoi(); cout << "time " << vertex.time << endl;}
-	 else        {x[j]        = Field.Atof(); cout << "x[" << j << "] = " << x[j] << endl;}
+	 if (j == 0) {vertex.time = Field.Atoi(); if (debugP > 0) cout << "time " << vertex.time << endl;}
+	 else        {x[j]        = Field.Atof(); if (debugP > 0) cout << "x[" << j << "] = " << x[j] << endl;}
       }
       if (debugP > 0) {
       printf("\n");
       }
       delete row;
+      debugP--;
       tree->Fill();
    }
    
@@ -82,4 +85,36 @@ void sqlstarMagOnl()
    Double_t ctime = timer.CpuTime();
    fOut->Write();
    printf("\nRealTime=%f seconds, CpuTime=%f seconds\n", rtime, ctime);
+}
+//________________________________________________________________________________
+void DrawCurrent() {// Draw all available averaged current measurements for Full Field
+  TTree *tree = (TTree *) gDirectory->Get("T");
+  if (! tree) return;
+  Int_t nx = 900;
+  Double_t xmin =  1e8;
+  Double_t xmax = 10e8;
+  Int_t ny = 60;
+  Double_t ymin = 4504;
+  Double_t ymax = 4516;
+  struct Plot_t {
+    const Char_t *name;
+    const Char_t *title;
+    const Char_t *plot;
+    const Char_t *cut;
+  };
+  Plot_t P[3] = {
+    {"CurrentT", "|current|_{onl} for Full Field  ; time ; |C|(A)", "abs(current):time - 788936400 >> CurrentT","abs(abs(current)-4510)<5"},
+    {"CurrentF", "|current|_{onl} for Forward Full Fielld ; time ; |C|(A)", "abs(current):time - 788936400 >> CurrentF","current>0&&abs(abs(current)-4510)<5"},
+    {"CurrentR", "|current|_{onl} for Reverse Full Fielld ; time ; |C|(A)", "abs(current):time - 788936400 >> CurrentR","current<0&&abs(abs(current)-4510)<5"}
+  };
+  TCanvas *c1 = new TCanvas("c1","c1",2400,1600);
+  c1->Divide(1,3);
+  for (Int_t i = 0; i < 3; i++) {
+    c1->cd(i+1)->SetLogz(1);
+    TH2F *h2 = new TH2F(P[i].name,P[i].title,nx,xmin,xmax,ny,ymin,ymax);
+    h2->GetXaxis()->SetTimeDisplay(1);
+    h2->GetXaxis()->SetTimeFormat("%m/%d/%y%F1995-01-01 00:00:00");
+    h2->SetStats(0);
+    tree->Draw(P[i].plot,P[i].cut,"colz");
+  }
 }

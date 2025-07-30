@@ -868,7 +868,7 @@ public:
    virtual void Ggclos();
    virtual void Gfile(const char *filename, const char *option = "I");
    virtual void Glast();
-   virtual void Gprint(const char *name);
+   virtual void Gprint(const char *name, const Int_t numb = 0);
    virtual void Grun();
    virtual void Gtrig();
    virtual void Gtrigc();

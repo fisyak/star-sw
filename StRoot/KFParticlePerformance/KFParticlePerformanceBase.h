@@ -153,7 +153,7 @@ class KFParticlePerformanceBase
 #ifndef __TFG__VERSION__
   static const int nHistoPartParam3D = 12; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4
 #else /* __TFG__VERSION__ */
-  static const int nHistoPartParam3D = 14; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4, y-phi-M for pT > 1 GeV/c, y-pt-dM
+  static const int nHistoPartParam3D = 16; ///< Number of 3D histograms: y-pt-M, y-mt-M, b-pt-M, b-y-M, b-mt-M, ct-pt-M, dalitz1-4, y-phi-M1GeV for pT > 1 GeV/c, y-pt-dM1GeV, , y-phi-M, y-pt-dM
 #endif /* __TFG__VERSION__ */
   TH3F *hPartParam3D[1][KFPartEfficiencies::nParticles][nHistoPartParam3D]; ///< 3D histograms.
 

@@ -55,6 +55,11 @@ void StiStarDetectorBuilder::OldBeamPipe() {
   //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
     {"SROD", "Support rod","HALL_1/CAVE_1/SVTT_1/SROD_1-2","",""},
     {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SVTT_1/SBSP_1-2","",""},
+    {"SROD", "Support rod","HALL_1/CAVE_1/SROD_1-2","",""},
+    {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SBSP_1-2","",""},
+  //{"SCON", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_1-2","",""},
+    {"SCMY", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_%d/SCMY_1","",""},
+    {"SGRA", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_%d/GRA_1","",""},
 #if 0    
   //{"FGTM", "Beampipe support mother","HALL_1/CAVE_1/FGTM_1","",""},
     {"FGCM", "FGT nylon and Al ring","HALL_1/CAVE_1/FGTM_1","",""},

@@ -868,8 +868,8 @@
         <If expr="kIBeamStyle&gt;0"  >
 
             <Create block="IBEM"  />
-            <Placement block="IBEM" in="CAVE" group="WestRefSys"   y="vpdg_IBposYc+UDshift" z="+(vpdg_IBPosZc)" />
-            <Placement block="IBEM" in="CAVE" group="EastRefSys"   y="vpdg_IBposYc+UDshift" z="-(vpdg_IBPosZc+EWshift)"  >
+            <Placement block="IBEM" in="CAVE" konly="'MANY'" group="WestRefSys"   y="vpdg_IBposYc+UDshift" z="+(vpdg_IBPosZc)" />
+            <Placement block="IBEM" in="CAVE" konly="'MANY'" group="EastRefSys"   y="vpdg_IBposYc+UDshift" z="-(vpdg_IBPosZc+EWshift)"  >
                 <Rotation thetaz="180"  />
             </Placement>
             

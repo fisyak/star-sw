@@ -1,3 +1,0 @@
-*  starsim -w 1 -b y2009.kumac
-detp geom y2009 field=-5
-gexec $STAR_LIB/geometry.so

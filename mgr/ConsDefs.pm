@@ -345,7 +345,7 @@
    $packl = "packlib";
    $kernl = "kernlib";
  }
- $CERNLIBS .= " " . `$cernl pawlib packlib graflib/X11 packlib mathlib kernlib`;
+ $CERNLIBS .= " " . `$cernl pawlib packlib graflib/X11 packlib mathlib packlib kernlib`;
  $CERNLIBS =~ s/packlib\./$packl\./g;
  $CERNLIBS =~ s/kernlib\./$kernl\./g;
  $CERNLIBS =~ s/$strip//g     if ($strip ne "");
@@ -459,7 +459,8 @@
  $CPPPATH .= $main::PATH_SEPARATOR . $ROOTSRC;
  if (-r $XOPTSTAR . "/include") {
    $CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/include";
-   if (-r $XOPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/spack/include";}
+   if    (-r $XOPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR . $XOPTSTAR . "/spack/include";}
+   elsif (-r  $OPTSTAR . "/spack/include") {$CPPPATH .= $main::PATH_SEPARATOR .  $OPTSTAR . "/spack/include";}
  }
  my $pwd = cwd();
  my $path2bin = $pwd . "/." . $STAR_HOST_SYS . "/bin";
@@ -823,6 +824,7 @@
 			    'ROOT_LEVEL'      => $ROOT_LEVEL,
 			    'ROOTSRC'         => $ROOTSRC,
 			    'ROOTSYS'         => $ROOTSYS,
+			    'ROOT_INCLUDE_PATH' => $ROOT_INCLUDE_PATH,
 			    'CINTSYSDIR'      => $CINTSYSDIR,
 			    'LD_LIBRARY_PATH' => $LD_LIBRARY_PATH,
 			    'SHLIB_PATH'      => $SHLIB_PATH,
@@ -838,6 +840,8 @@
 			    'STAR_HOST_SYS'   => $STAR_HOST_SYS,
 			    'STAR_OBJ'        => $STAR_OBJ,
 			    'STAR_LIB'        => $STAR_LIB,
+			    'STARFPE'         => $STARFPE,
+			    'XOPTSTAR'        => $XOPTSTAR,
 			    'STAR_VERSION'    => $STAR_VERSION,
 			    'PERL5LIB'        => $PERL5LIB,
 			    'OPTSTAR'         => $XOPTSTAR,

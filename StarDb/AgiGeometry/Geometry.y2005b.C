@@ -11,8 +11,12 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("ifms",3);
  configGeom ->SetValue("ifsc",-1);
  configGeom ->SetValue("imtd",-1);
+ configGeom ->SetValue("ipxl",-1);
+ configGeom ->SetValue("iist",-1);
+ configGeom ->SetValue("isst",5);
+ configGeom ->SetValue("ifst",-1);
  configGeom ->SetValue("svtg_version",2);
- configGeom ->SetValue("tpcg_version",5);
+ configGeom ->SetValue("tpcg_version",2);
  configGeom ->SetValue("btog_version",5);
  configGeom ->SetValue("btog_choice",7);
  configGeom ->SetValue("btog_posit1(1)",32);

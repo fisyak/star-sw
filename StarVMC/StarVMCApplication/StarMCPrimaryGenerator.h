@@ -95,7 +95,6 @@ class StarMCPrimaryGenerator : public TObject {
   Char_t                mBeg[1];        //!
   StarStack        *fStarStack;    
   Bool_t            fIsRandom;
-  Bool_t            fSimpleKine;
   Int_t             fNofPrimaries;
   Int_t             fDebug;
   Int_t             fId;

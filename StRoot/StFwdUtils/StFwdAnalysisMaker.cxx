@@ -176,7 +176,7 @@ void StFwdAnalysisMaker::ProcessFwdTracks(  ){
             continue;
         }
         nGood++;
-        LOG_DEBUG << TString::Format("StFwdTrack[ nProjections=%lu, nFTTSeeds=%lu, nFSTSeeds=%lu, mPt=%f ]", fwdTrack->mProjections.size(), fwdTrack->mFTTPoints.size(), fwdTrack->mFSTPoints.size(), fwdTrack->momentum().perp()) << endm;
+        LOG_DEBUG << TString::Format("StFwdTrack[ nProjections=%lu, nFTTSeeds=%lu, nFSTSeeds=%lu, mPt=%f ]", (ULong_t) fwdTrack->mProjections.size(), (ULong_t) fwdTrack->mFTTPoints.size(), (ULong_t) fwdTrack->mFSTPoints.size(), fwdTrack->momentum().perp()) << endm;
         LOG_DEBUG << "track fit momentum " << TString::Format( "(pt=%f, eta=%f, phi=%f)", fwdTrack->momentum().perp(), fwdTrack->momentum().pseudoRapidity(), fwdTrack->momentum().phi() ) << endm;
         LOG_DEBUG << "StFwdTrack has " << fwdTrack->ecalClusters().size() << " ecal matches" << endm;
         LOG_DEBUG << "StFwdTrack has " << fwdTrack->hcalClusters().size() << " hcal matches" << endm;

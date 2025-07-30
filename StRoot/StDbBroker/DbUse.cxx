@@ -67,8 +67,8 @@
 #include <string.h>
 #include "Stiostream.h"
 #include "Stsstream.h"
-#include "mysql.h"
-#include "mysql_com.h"
+#include <mysql.h>
+//#include "mysql_com.h"
 #include "DbEndian.h"
 #include "StMessMgr.h"
 #include "StDbBroker.h"

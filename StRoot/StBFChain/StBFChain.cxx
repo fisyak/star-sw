@@ -341,7 +341,7 @@ Int_t StBFChain::Instantiate()
 	  TString flavors = "ofl"; // default flavor for offline
 
 	  // TFG specific Db tag
-	  if (GetOption("TFGDbTag")) flavors += "+TFG";
+	  if (GetOption("TFGDbOpt")) flavors += "+TFG";
 	  // fixed target flavor
 	  if (GetOption("FXT")) flavors.Prepend("FXT+");
 
@@ -431,7 +431,7 @@ Int_t StBFChain::Instantiate()
     // need to take place before 'maker' is created.
     if (! mk) {
       if (maker == "StMuDstMaker" && GetOption("RMuDst")) {
-	mk = new StMuDstMaker(0,0,".",fInFile.Data(),"st:MuDst.root",1e9);
+	mk = new StMuDstMaker(0,0,"",fInFile.Data(),"st:MuDst.root",1e9);
 	if (GetOption("RMuDst")) 
 	  NoMakersWithInput++;
       } else if (maker == "StPicoDstMaker") {
@@ -466,7 +466,6 @@ Int_t StBFChain::Instantiate()
       }
     }
     
-    if (maker == "StTpcDbMaker" && GetOption("laserIT"))   mk->SetAttr("laserIT"    ,kTRUE);
     if (maker == "StDAQMaker") {
       if (GetOption("adcOnly")) mk->SetAttr("adcOnly",kTRUE);
       NoMakersWithInput++;
@@ -689,6 +688,7 @@ Int_t StBFChain::Instantiate()
       if (GetOption("usePct4Vtx" ) )      mk->SetAttr("PCT"           	, kTRUE);
       if (GetOption("useBTOF4Vtx") )      mk->SetAttr("BTOF"          	, kTRUE);
       if (GetOption("useBTOFmatchOnly") ) mk->SetAttr("useBTOFmatchOnly", kTRUE);
+      if (GetOption("FXT"        ) )      mk->SetAttr("FXT"             , kTRUE);
       
       // X-tended works only for VFPPV, VFPPVnoCTB, VFPPVev for now but could be re-used
       // However, we will change this to a more flexible arbitrarry setting later
@@ -803,6 +803,7 @@ Int_t StBFChain::Instantiate()
       }
       if ( GetOption("picoRead")  )  mk->SetMode(2);   // possibly more magic
       if ( GetOption("PicoVtxVpd"))           mk->SetAttr("PicoVtxMode", "PicoVtxVpd");
+      else if ( GetOption("PicoVtxFXT"))      mk->SetAttr("PicoVtxMode", "PicoVtxFXT");
       else if ( GetOption("FXT"))             mk->SetAttr("PicoVtxMode", "PicoVtxFXT");
       else if ( GetOption("PicoVtxMtd"))      mk->SetAttr("PicoVtxMode", "PicoVtxMtd");
       else if ( GetOption("PicoVtxVpdOrDefault"))  mk->SetAttr("PicoVtxMode", "PicoVtxVpdOrDefault");
@@ -892,10 +893,13 @@ Int_t StBFChain::Instantiate()
     if (GetOption("Cosmics") && (maker == "StTpcHitMaker" || maker == "StTpcRTSHitMaker")) mk->SetAttr("Cosmics"    ,kTRUE);
     
     if (maker == "StTpcDbMaker"){
+      if ( GetOption("noFieldFlip")) mk->SetAttr("noFieldFlip"    ,kTRUE);
+      if ( GetOption("laserIT"))  mk->SetAttr("laserIT"    ,kTRUE);
       if ( GetOption("Simu") && ! GetOption("NoSimuDb")) mk->SetAttr("Simu",kTRUE);
       if ( GetOption("useLDV")    ) mk->SetAttr("useLDV",kTRUE) ;// uses laserDV database
       if ( GetOption("useCDV")    ) mk->SetAttr("useCDV",kTRUE) ;// uses ofl database
       if ( GetOption("useNewLDV") ) mk->SetAttr("useNewLDV",kTRUE);// uses new laserDV
+      if ( GetOption("shadow")    ) mk->SetAttr("NoReset",kTRUE);// no resetting ExB
       if ( GetOption("Alignment2024")     ) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
       if ( GetOption("Cosmics")   ) mk->SetAttr("Cosmics"    ,kTRUE);
       if (GetOption("ExB")){
@@ -2196,7 +2200,7 @@ void StBFChain::SetDbOptions(StMaker *mk){
 				 0};
     LOG_INFO << "TFG version for TPC alignment parameters" << endm;
     for (Int_t i = 0; TFGTables[i]; i++) {
-      LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endm; 
+      LOG_INFO << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable sim+ofl" << endm; 
       mk->SetFlavor("TFG",TFGTables[i]);
     }
   }

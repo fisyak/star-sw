@@ -55,9 +55,15 @@ void StiDetector::copy(StiDetector &detector){
 ostream& operator<<(ostream& os, const StiDetector& d)
 {
   os   << d.getName()
-       << Form("\tR: %7.3f cm ",d.getPlacement()->getNormalRadius()) 
-       << Form("\tA: %7.3f degree", TMath::RadToDeg()*d.getPlacement()->getNormalRefAngle());
+       << "\t" << *d.getShape()
+       << "\t" << *d.getPlacement()
+       << "\t" << *d.getMaterial()
+       << "\t" << *d.getGas();
   return os;
+}
+//______________________________________________________________________________
+void StiDetector::Print(const char *opt) const {
+  cout << *this << endl;
 }
 //______________________________________________________________________________
 int StiDetector::splitIt(StiDetVect &vect,double dXdY,int nMax)
