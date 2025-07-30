@@ -2,7 +2,6 @@
 TDataSet *CreateTable() {
   TEnv *configGeom = new TEnv("configGeom");
  configGeom ->SetValue("isvt",3);
- configGeom ->SetValue("itpc",4);
  configGeom ->SetValue("ibtf",8);
  configGeom ->SetValue("ical",12);
  configGeom ->SetValue("ivpd",-1);
