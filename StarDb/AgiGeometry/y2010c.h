@@ -759,7 +759,7 @@ TGeoVolume *SBMO = gGeoManager->MakeBox("SBMO",GetMed("SCON_G10"),1.27,0.635,0.4
   SBMO->SetLineColor(3);
 TGeoVolume *SBMI = gGeoManager->MakeBox("SBMI",GetMed("SCON_G10"),1.5875,0.635,0.485); SBMI->SetTitle("SBMI");
   SBMI->SetLineColor(3);
-TGeoVolume *SBRL = gGeoManager->MakeTube("SBRL",GetMed("SCON_PYREX"),0.1,0.31,1.29); SBRL->SetTitle("SBRL");
+TGeoVolume *SBRL = gGeoManager->MakeTube("SBRL",GetMed("SCON_PYREX"),0.1,0.31,1.27); SBRL->SetTitle("SBRL");
   SBRL->SetLineColor(6);
 TGeoVolume *SBRX = gGeoManager->MakeTube("SBRX",GetMed("SCON_IRON"),0,0.1,2.54); SBRX->SetTitle("SBRX");
   SBRX->SetLineColor(2);
