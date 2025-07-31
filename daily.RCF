@@ -5539,3 +5539,143 @@ Load system libraries    + liblog4cxx + libStStarLoggerBFC:INFO  - TUnixSystem::
 mariadb-devel-5.5.52-1.el7.x86_64
 [starsub02] ~/work/TestDb $ rpm -qf /usr/lib64/libmysqlclient.so 
 mariadb-connector-c-devel-3.2.6-1.el9_0.x86_64
+[l409] /net/l402/data/fisyak/STAR/packages/TFG $ rpm -qf  /usr/lib64/mysql/libmysqlclient.so 
+mariadb-devel-5.5.56-2.el7.x86_64
+================================================================================
+07/26/2025
+[rcas6014] ~/TFG/> grep CPU */2019/RF/*/4p59GeV_fixedTarget_2019/cpu_per_event
+SL24y/2019/RF/sl73_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:   CPU/event = 2.71677(sec) and    Total/event = 2.89076(sec)      93.9813 %       for 635701 events
+SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:     CPU/event = 2.23173(sec) and    Total/event = 2.34964(sec)      94.9818 %       for 253151 events
+TFG/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:       CPU/event = 3.58281(sec) and    Total/event = 3.74312(sec)      95.7173 %       for 207288 events
+TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/cpu_per_event:     CPU/event = 1.51085(sec) and    Total/event = 1.55308(sec)      97.2806 %       for 635701 events
+TFG25e/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/cpu_per_event:  CPU/event = 2.12179(sec) and    Total/event = 2.16668(sec)      97.9278 %       for 635701 events
+TFG25e/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:    CPU/event = 3.34432(sec) and    Total/event = 3.44264(sec)      97.1439 %       for 423473 events
+--------------------------------------------------------------------------------
+2019/RF/4p59GeV_fixedTarget_2019/cpu_per_event
+SL24y/sl73_gcc485_opt/:           CPU/event = 2.71677(sec) and    Total/event = 2.89076(sec)      93.9813 %       for 635701 events     86%
+SL24y/sl73_x8664_gcc485_opt/:     CPU/event = 2.23173(sec) and    Total/event = 2.34964(sec)      94.9818 %       for 253151 events     67%
+
+TFG25e/al96_x8664_gcc11_opt/:     CPU/event = 1.51085(sec) and    Total/event = 1.55308(sec)      97.2806 %       for 635701 events     46%
+TFG25e/al96_x8664_gcc11_opt_R6/:  CPU/event = 2.12179(sec) and    Total/event = 2.16668(sec)      97.9278 %       for 635701 events     61%
+TFG25e/sl73_x8664_gcc485_opt/:    CPU/event = 3.34432(sec) and    Total/event = 3.44264(sec)      97.1439 %       for 423473 events    100%
+
+TFG/sl73_x8664_gcc485_opt/:       CPU/event = 3.58281(sec) and    Total/event = 3.74312(sec)      95.7173 %       for 207288 events    107%
+
+[starsub02] ~/TFG/TFG25e_1/2019/RF $ grep CPU */*/cpu*
+al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/cpu_per_event:    CPU/event = 1.76114(sec) and    Total/event = 1.81306(sec)      97.1363 %       for 635701 events   66%
+al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/cpu_per_event: CPU/event = 2.23488(sec) and    Total/event = 2.31083(sec)      96.7131 %       for 635701 events   81%
+sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:   CPU/event = 2.74658(sec) and    Total/event = 2.83669(sec)      96.8233 %       for 635701 events  100%
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+~/TFG/TFG25e/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root 'bfc.C(1,"in,analysis,nodefault","st_physics_20179040_raw_7000004,35001,40000.event.root")'
+R6 with R6 event.root o.k.
+Info in <TInterpreter::TransactionRollback>: Restoring ability to autoaparse: 
+#line 1 "libStStarLogger dictionary payload"
+... 
+// Inline headers
+
+R5 with R6  eent.root problems:
+Info in <TInterpreter::TransactionRollback>: Restoring ability to autoaparse: 
+#line 1 "libStStarLogger dictionary payload"
+... 
+// Inline headers
+** <StBranch::Open> Branch=eventBranch  Mode=READ       File=./st_physics_20179040_raw_7000004,35001,40000.event.root   Opened **
+StIOMaker:ERROR - TClass::IgnoreTObjectStreamer : Must be called before the creation of StreamerInfo
+StIOMaker:ERROR - TBufferFile::CheckByteCount : object of class KFParticle read too many bytes: 234724 instead of 222
+StIOMaker:INFO  - TBufferFile::CheckByteCount : KFParticle::Streamer() not in sync with data on file ./st_physics_20179040_raw_7000004,35001,40000.event.root, fix Streamer()
+StIOMaker:FATAL - TUnixSystem::DispatchSignals : segmentation violation
+#5  0x00007f496750fa50 in TBufferFile::ReadFastArray(int*, int) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#6  0x00007f49676fcfe6 in int TStreamerInfoActions::VectorLooper::ReadCollectionBasicType<int>(TBuffer&, void*, TStreamerInfoActions::TConfiguration const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#7  0x00007f4967518f15 in TBufferFile::ReadClassBuffer(TClass const*, void*, TClass const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#8  0x00007f49675ed086 in TStreamerInfoActions::ReadViaClassBuffer(TBuffer&, void*, TStreamerInfoActions::TConfiguration const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#9  0x00007f4967518f15 in TBufferFile::ReadClassBuffer(TClass const*, void*, TClass const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#10 0x00007f494d33161b in KFVertex::Streamer (this=0x6558ba8, R__b=...) at .al96_x8664_gcc11_opt_R6/obj/StRoot/KFParticle/KFParticle_Cint.cxx:320
+
+~/TFG/SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 with recompiled root6 StEvent
+#10 0x00007f9e158200ba in TClass::StreamerTObject (pThis=0x863ca00, object=0x82553d8, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/core/meta/src/TClass.cxx:6957
+#11 0x00007f9e13fa167d in TClass::Streamer (onfile_class=0x0, b=..., obj=<optimized out>, this=0x863ca00) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/core/meta/inc/TClass.h:623
+#12 TStreamerInfo::ReadBuffer<char**> (this=0x8404d30, b=..., arr=<optimized out>, compinfo=0x8648518, first=<optimized out>, last=1, narr=1, eoffset=0, arrayMode=0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TStreamerInfoReadBuffer.cxx:1376
+#13 0x00007f9e13d7ca42 in TStreamerInfoActions::GenericReadAction (buf=..., addr=0x8255350, config=0x8648500) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TStreamerInfoActions.cxx:254
+#14 0x00007f9e13c8a5f3 in TStreamerInfoActions::TConfiguredAction::operator() (this=0x6571e70, buffer=..., object=0x8255350) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/inc/TStreamerInfoActions.h:123
+#15 0x00007f9e13c8837e in TBufferFile::ApplySequence (this=0x7ffe8d722a80, sequence=..., obj=0x8255350) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TBufferFile.cxx:3747
+#16 0x00007f9e13c87dc6 in TBufferFile::ReadClassBuffer (this=0x7ffe8d722a80, cl=0x863c710, pointer=0x8255350, onFileClass=0x0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TBufferFile.cxx:3666
+#17 0x00007f9df016a273 in StBTofHit::Streamer (this=0x8255350, R__b=...) at .al96_x8664_gcc11_R6/obj/StRoot/StEvent/StEvent_Cint.cxx:33336
+
+
+root6 fiels with root5
+[starsub02] ~/TFG/TFG25e_1/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe 'bfc.C(1,"in,analysis,nodefault","st_physics_20179040_raw_7000004,35001,40000.event.root")'#10 0x0000000000000000 in ?? ()
+#11 0x00007f9e05919291 in TList::FindObject (this=0x1d86230, obj=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:521
+#12 0x00007f9e05916701 in THashTable::FindObject (this=0x1d66560, obj=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashTable.cxx:233
+#13 0x00007f9e0591584e in THashList::FindObject (this=0x1d85ea0, obj=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashList.cxx:230
+#14 0x00007f9e0591d6eb in TObjArray::Delete (this=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TObjArray.cxx:345
+#15 0x00007f9e05869510 in TApplication::ClearInputFiles (this=0x1eba0f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TApplication.cxx:350
+#16 0x00007f9e05f396e4 in TRint::Run (this=0x1eba0f0, retrn=false) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/rint/src/TRint.cxx:443
+#17 0x000000000040220d in main (argc=1, argv=0x7ffd0701a9c8) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/main/src/rmain.cxx:29
+
+[starsub02] ~/TFG/TFG25e_1/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe lMuDst.C st_physics_20179040_raw_7000004,35001,40000.MuDst.root
+===========================================================
+#10 0x00007fdec891927e in TList::FindObject (this=0xe57230, obj=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:521
+#11 0x00007fdec8916701 in THashTable::FindObject (this=0xe37560, obj=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashTable.cxx:233
+#12 0x00007fdec891584e in THashList::FindObject (this=0xe56ea0, obj=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashList.cxx:230
+#13 0x00007fdec891d6eb in TObjArray::Delete (this=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TObjArray.cxx:345
+#14 0x00007fdec8869510 in TApplication::ClearInputFiles (this=0xf8b0f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TApplication.cxx:350
+#15 0x00007fdec90106e4 in TRint::Run (this=0xf8b0f0, retrn=false) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/rint/src/TRint.cxx:443
+#16 0x000000000040220d in main (argc=1, argv=0x7ffca7bc9e28) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/main/src/rmain.cxx:29
+===========================================================
+[starsub02] ~/TFG/TFG25e_1/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe st_physics_20179040_raw_7000004,35001,40000.picoDst.root
+===========================================================
+#10 0x00007f8b5a91927e in TList::FindObject (this=0xa4e230, obj=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:521
+#11 0x00007f8b5a916701 in THashTable::FindObject (this=0xa2e560, obj=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashTable.cxx:233
+#12 0x00007f8b5a91584e in THashList::FindObject (this=0xa4dea0, obj=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashList.cxx:230
+#13 0x00007f8b5a91d6eb in TObjArray::Delete (this=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TObjArray.cxx:345
+#14 0x00007f8b5a869510 in TApplication::ClearInputFiles (this=0xb820f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TApplication.cxx:350
+#15 0x00007f8b5a5dc6e4 in TRint::Run (this=0xb820f0, retrn=false) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/rint/src/TRint.cxx:443
+#16 0x000000000040220d in main (argc=1, argv=0x7fffb3365768) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/main/src/rmain.cxx:29
+===========================================================
+
+================================================================================
+07/28/2025 Effect of EbyET0 correction
+cvmfswrite01] ~/TFG/SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 $  root.exe 'Chain.C+("*picoDst.root","PicoDst")'
+chained 54 files        with total 199559 events        with size 6.13537 GB    chain returned pointer: 0x2c4dfc0
+root.exe [6] tChain->Draw("Event.mPrimaryVertexZ-200>>Z(100,-0.5,0.5)")
+root.exe [11] Z->Fit("gaus","er","",-0.18,0.03)
+ FCN=320.828 FROM MINOS     STATUS=SUCCESSFUL     20 CALLS         151 TOTAL
+                     EDM=3.19292e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.66978e+03   3.61208e+01   7.65542e-02  -2.32465e-06
+   2  Mean        -7.25805e-02   2.11816e-04   5.25044e-08   4.12744e-02
+   3  Sigma        6.26551e-02   2.54298e-04   2.54298e-04   1.12520e-02
+
+
+[rcas6014] ~/TFG/TFG25e_1/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe 'Chain.C+("*picoDst.root","PicoDst")'
+chained 136 files       with total 503006 events        with size 14.1778 GB    chain returned pointer: 0x1cb1d50
+root.exe [2]  tChain->Draw("Event.mPrimaryVertexZ-200>>Z(100,-0.5,0.5)")
+root.exe [8] Z->Fit("gaus","er","",-0.35,0.0)
+ FCN=150.079 FROM MINOS     STATUS=SUCCESSFUL     20 CALLS         151 TOTAL
+                     EDM=2.30389e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.58737e+04   3.50147e+01   5.11415e-02  -9.39671e-07
+   2  Mean        -1.66672e-01   2.27789e-04   6.82769e-08   3.10360e-02
+   3  Sigma        1.09300e-01   2.75171e-04   2.75171e-04   1.32328e-02
+================================================================================
+spokes positions:
+================================================================================
+07/31/2025 
+
+Checking for mysql.h ... /cvmfs/star.sdcc.bnl.gov/TFG/opt/star/al96_x8664_gcc11/spack/include
+Checking for libmysqlclient_r, libmysqlclient, or mysqlclient ... /cvmfs/star.sdcc.bnl.gov/TFG/opt/star/al96_x8664_gcc11/spack/lib
+
+
+Checking for GL/gl.h, or gl.h ... /usr/include
+Checking for libGL, or libMesaGL ... /usr/lib64
+Checking for libGLU, or libMesaGLU ... /usr/lib64
+Checking for GL/glew.h ... no
+Checking for libGLEW ... no
+Checking whether to build included GLEW ... yes

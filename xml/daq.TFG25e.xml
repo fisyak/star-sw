@@ -42,7 +42,7 @@
   if ($? != 0) exit 0;
   set PicoMode = ",PicoVtxVpdOrDefault"
   echo ${SUBMITTINGDIRECTORY} | grep fixed
-  if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT"
+  if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT,EbyET0"
   set Cosmic = "";
   echo ${SUBMITTINGDIRECTORY} | grep Cosmic
   if ($? == 0) set Cosmic = ",Cosmic"
@@ -67,8 +67,8 @@
 #    if ($n == 4) set evout = ",evout";
 #  endif
   hostname &gt;&amp; ${logFile}
-#  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
-  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}',EbyET0","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+# root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}',EbyET0","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
 ##
 ##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
 ##   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
