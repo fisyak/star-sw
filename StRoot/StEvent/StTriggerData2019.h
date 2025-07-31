@@ -282,7 +282,7 @@ protected:
     void swapRawDetOfflen(TrgOfflen2019* offlen);
     void swapRawDet(DataBlock2019* data, int name, int hlength, int bs);
     
-    ClassDef(StTriggerData2019,1) 
+    ClassDef(StTriggerData2019,2) 
 };
 
 inline void StTriggerData2019::swapOfflen(TrgOfflen2019* offlen)
