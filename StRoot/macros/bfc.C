@@ -7,11 +7,12 @@
 //                                                                      //
 // $Id: bfc.C,v 1.194 2020/04/12 20:24:18 perev Exp $
 //////////////////////////////////////////////////////////////////////////
-class StBFChain;        
-class StMessMgr;
 #if defined(__CLING__)
 #pragma cling load("StarRoot")
+//#pragma cling load("libmysqlclient")
 #pragma cling load("St_base")
+//#pragma cling load("liblog4cxx")
+//#pragma cling load("libStStarLogger")
 #pragma cling load("StChain")
 #pragma cling load("libStDbLib")
 #pragma cling load("StUtilities")
@@ -19,6 +20,10 @@ class StMessMgr;
 #pragma cling load("geant3")
 #pragma cling load("StDb_Tables")
 #pragma cling load("StBichsel")
+#pragma cling load("libKFParticle")
+#else
+class StBFChain;        
+class StMessMgr;
 #endif /* __CLING__ */
 
 #if defined(__CINT__)
@@ -90,8 +95,8 @@ StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,
 //_____________________________________________________________________
 void Load(const Char_t *options)
 {
-  Int_t debug = gDebug;
-  gDebug = 1;
+//   Int_t debug = gDebug;
+//   gDebug = 1;
   cout << "Load system libraries\t";
   int nodefault = TString(options).Contains("nodefault",TString::kIgnoreCase);
 
@@ -118,7 +123,7 @@ void Load(const Char_t *options)
   gSystem->Load("libStUtilities");                                    //  StMemStat::PrintMem("load StUtilities");
   gSystem->Load("libStBFChain");                                      //  StMemStat::PrintMem("load StBFChain");
   cout << endl;
-  gDebug = debug;
+//   gDebug = debug;
 }
 //_____________________________________________________________________
 StBFChain *bfc(Int_t First, Int_t Last,
@@ -140,13 +145,11 @@ StBFChain *bfc(Int_t First, Int_t Last,
   if (tChain == "") {
     if (Last == -2 && tChain.CompareTo("ittf",TString::kIgnoreCase)) Usage();
     return 0;
-  } else {
   }
+  Load(tChain.Data());
 #ifndef __CLING__
-  if (gClassTable->GetID("StBFChain") < 0) Load(tChain.Data());
   chain = (StBFChain *) StMaker::New("StBFChain", chainName);
 #else
-  Load(tChain.Data());
   StBFChain *chain = new StBFChain;
 #endif
   cout << "Create chain " << chain->GetName() << endl;
