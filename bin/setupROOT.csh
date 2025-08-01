@@ -11,8 +11,8 @@ if (-r $STAR_LIB/libPythia6.so) then
  set  PYTHIA6 =  $STAR_LIB
 else if (-r $XOPTSTAR/lib/libPythia6.so) then
  set PYTHIA6 =  $XOPTSTAR/lib
-else if (-r ${XOPTSTAR}/spack//lib/libPythia6.so) then
- set PYTHIA6 = ${XOPTSTAR}/spack//lib
+else if (-r ${XOPTSTAR}/spack/lib/libPythia6.so) then
+ set PYTHIA6 = ${XOPTSTAR}/spack/lib
 endif
 setenv DISABLE ""
 setenv ENABLE ""
@@ -20,17 +20,7 @@ if ($PYTHIA6 != "") then
     setenv ENABLE "--with-pythia6-libdir=$PYTHIA6"
 endif
 unset PYTHIA6
-#setenv PYTHIA /afs/rhic.bnl.gov/star/ROOT/XNew/.$STAR_HOST_SYS/root
-#setenv PYTHIA6 /afs/rhic.bnl.gov/star/ROOT/XNew/.$STAR_HOST_SYS/root
-#setenv VENUS /afs/rhic.bnl.gov/star/ROOT/XNew/.$STAR_HOST_SYS/root
-#setenv PYTHIA8 $STAR_LIB
-#setenv PYTHIA6 $STAR_LIB
-#setenv VENUS $XOPTSTAR
-#if (-r $ROOTSYS/bin/setxrd.csh && -d /opt/xrootd/xrootd-3.2.7) source $ROOTSYS/bin/setxrd.csh  /opt/xrootd/xrootd-3.2.7
-#if (-r $ROOTSYS/bin/setxrd.csh && -d /opt/xrootd) source $ROOTSYS/bin/setxrd.csh  /opt/xrootd
-#if (-r $ROOTSYS/bin/setxrd.csh && -d /opt/xrootd) source $ROOTSYS/bin/setxrd.csh  $ROOTSYS
-#if (-r $XOPTSTAR/bin/setxrd.csh && -d /opt/xrootd) source $ROOTSYS/bin/setxrd.csh  $XOPTSTAR
-if (-r ./bin/setxrd.csh && -d $XOPTSTAR) source ./bin/setxrd.csh  $XOPTSTAR
+if (-r ./bin/setxrd.csh && -d $XOPTSTAR/spack) source ./bin/setxrd.csh  $XOPTSTAR/spack
 setenv CERN_ROOT_Local $CERN_ROOT
 setenv SHIFTLIB "" #"-lshift"
 setenv SHIFTLIBDIR ""#$CERN/../usr.local/lib
@@ -39,44 +29,51 @@ setenv x11libdir /usr/X11R6/lib
 setenv xpmlibdir /usr/X11R6/lib
 setenv xftlibdir /usr/X11R6/lib
 setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --disable-vc --disable-pythia8 --disable-xrootd"
-#setenv DISABLE "--disable-qt --disable-qtgsi --disable-vc"
-#setenv MYSQL /opt/star
-#setenv MYSQLINCDIR $MYSQL/include/mysql	
-#setenv MYSQLCLILIB $MYSQL/lib/mysql
-	setenv MYSQLINCDIR /usr/include/mysql
-	setenv MYSQLCLILIB /usr/lib/mysql
+setenv MYSQLINCDIR /usr/include/mysql
+if ($USE_64BITS == 0) then
+    setenv MYSQLLIBDIR /usr/lib
+else 
+    setenv MYSQLLIBDIR /usr/lib64
+endif
+if (-r $XOPTSTAR/spack/include/mysql) then
+        setenv MYSQLINCDIR $XOPTSTAR/spack/include/mysql
+        setenv MYSQLLIBDIR $XOPTSTAR/spack/lib
+endif
+
 #setenv GSL_DIR $ROOTSYS
 setenv GSL_DIR $XOPTSTAR # $ROOTSYS
-if (-r ${XOPTSTAR}/spack/lib) then 
+if (-r ${XOPTSTAR}/spack/include/gsl) then 
   setenv GSL_DIR ${XOPTSTAR}/spack/
-  setenv MYSQLINCDIR $XOPTSTAR/spack/include
-  setenv MYSQLCLILIB $XOPTSTAR/spack/lib
 endif
 setenv FFTW3   $ROOTSYS # $XOPTSTAR 
 setenv F77 gfortran
 switch ( $STAR_HOST_SYS )  
     case *x8664*gcc*:
-#	setenv CERN_ROOT_Local /afs/rhic.bnl.gov/.asis/$STAR_HOST_SYS/cern/2004
 	setenv ARCH linuxx8664gcc
-#	setenv MYSQLINCDIR /usr/include/mysql
-#	setenv MYSQLCLILIB /usr/lib64/mysql
-#	setenv SHIFTLIBDIR $CERN_ROOT/lib
-#	setenv SHIFTINCDIR  /afs/rhic.bnl.gov/.asis/share/usr.local/include
-#	setenv x11libdir /usr/X11R6/lib64
-#	setenv xpmlibdir /usr/X11R6/lib64
 	setenv x11libdir /usr/lib64
 	setenv xpmlibdir /usr/lib64
 	setenv xftlibdir /usr/lib64
+	if (-r $XOPTSTAR/spack/lib/libX11.so) then
+          setenv x11libdir $XOPTSTAR/spack/lib
+          setenv ENABLE "$ENABLE --with-x11-libdir=$XOPTSTAR/spack/lib"
+          setenv ENABLE "$ENABLE --with-finkdir=$XOPTSTAR/spack --with-x11-libdir=$XOPTSTAR/spack/lib"
+   	endif
+	if (-r $XOPTSTAR/spack/lib/libXpm.so) then
+          setenv xpmlibdir $XOPTSTAR/spack/lib
+          setenv ENABLE "$ENABLE --with-xpm-incdir=$XOPTSTAR/spack/include --with-xpm-libdir=$XOPTSTAR/spack/lib"
+   	endif
+	if (-r $XOPTSTAR/spack/lib/libXft.so) then
+          setenv xftlibdir $XOPTSTAR/spack/lib
+          setenv ENABLE "$ENABLE --with-xft-libdir=$XOPTSTAR/spack/lib"
+   	endif
+	if (-r $XOPTSTAR/spacklib64/libGLEW.so) then
+	  setenv glewincdir  $XOPTSTAR/spack/include/GL
+          setenv glewlibdir $XOPTSTAR/spack/lib64
+          setenv ENABLE "$ENABLE --with-glew-incdir=$XOPTSTAR/spack/include/GL --with-xglew-libdir=$XOPTSTAR/spack/lib64"
+   	endif
     breaksw
     case *x8664*icc*:
-#	setenv CERN_ROOT_Local /afs/rhic.bnl.gov/.asis/$STAR_HOST_SYS/cern/2004
 	setenv ARCH linuxx8664icc
-#	setenv MYSQLINCDIR /usr/include/mysql
-#	setenv MYSQLCLILIB /usr/lib64/mysql
-#	setenv SHIFTLIBDIR $CERN_ROOT/lib
-#	setenv SHIFTINCDIR  /afs/rhic.bnl.gov/.asis/share/usr.local/include
-#	setenv x11libdir /usr/X11R6/lib64
-#	setenv xpmlibdir /usr/X11R6/lib64
 	setenv x11libdir /usr/lib64
 	setenv xpmlibdir /usr/lib64
 	setenv xftlibdir /usr/lib64
@@ -89,41 +86,20 @@ switch ( $STAR_HOST_SYS )
     case sl6*gcc*:
     case sl7*gcc*:
 	setenv ARCH  linux
-#	setenv SHIFTLIBDIR $CERN_ROOT/lib
-#	setenv SHIFTINCDIR  /afs/rhic.bnl.gov/.asis/share/usr.local/include
 	setenv x11libdir /usr/lib
 	setenv xpmlibdir /usr/lib
 	setenv xftlibdir /usr/lib
     breaksw
     case sl*gcc*:
 	setenv ARCH  linux
-#	setenv MYSQLINCDIR /usr/include/mysql
-#	setenv MYSQLCLILIB /usr/lib
-#	setenv MYSQLINCDIR /afs/rhic/star/users/fisyak/public/sources/mysql-max-4.1.20-pc-linux-gnu-i686-icc-glibc23/include
-#	setenv MYSQLCLILIB  /afs/rhic/star/users/fisyak/public/sources/mysql-max-4.1.20-pc-linux-gnu-i686-icc-glibc23/lib
-# 	setenv MYSQLINCDIR  ${ROOTSYS}/mysql-4.1.20/include
-#	setenv MYSQLCLILIB  ${ROOTSYS}/mysql-4.1.20/lib
-#	setenv PATH         ${ROOTSYS}/mysql-4.1.20/bin:${PATH}
     breaksw
     case sl*icc*:
     case rh*icc*:
 	setenv ARCH  linuxicc
-# 	setenv MYSQLINCDIR /usr/include/mysql
-#	setenv MYSQLCLILIB /usr/lib
-#	setenv MYSQLINCDIR /afs/rhic/star/users/fisyak/public/sources/mysql-max-4.1.20-pc-linux-gnu-i686-icc-glibc23/include
-#	setenv MYSQLCLILIB  /afs/rhic/star/users/fisyak/public/sources/mysql-max-4.1.20-pc-linux-gnu-i686-icc-glibc23/lib
-#	setenv MYSQLINCDIR  ${ROOTSYS}/mysql-4.1.20/include
-#	setenv MYSQLCLILIB  ${ROOTSYS}/mysql-4.1.20/lib
-#	setenv PATH         ${ROOTSYS}/mysql-4.1.20/bin:${PATH}
-#	setenv PYTHIA /afs/rhic.bnl.gov/star/ROOT/XNew/.i386_redhat61/root
-#	setenv PYTHIA6 /afs/rhic.bnl.gov/star/ROOT/XNew/.i386_redhat61/root
-#	setenv VENUS /afs/rhic.bnl.gov/star/ROOT/XNew/.i386_redhat61/root
-#	setenv QTDIR ""
 	setenv F77 ifort
 	setenv x11libdir /usr/lib
 	setenv xpmlibdir /usr/lib
 	setenv xftlibdir /usr/lib
-#	setenv GSL_DIR /home/pinkenbu/new/install.1
 	setenv DISABLE "$DISABLE --disable-vc --enable-cxx14"
     breaksw
     case alpha_dux*:
@@ -144,10 +120,7 @@ switch ( $STAR_HOST_SYS )
 	setenv GSLDIR /sw
     breaksw
     case *x8664*:
-#	setenv CERN_ROOT_Local /afs/rhic.bnl.gov/.asis/$STAR_HOST_SYS/cern/2004
 	setenv ARCH linuxx8664gcc
-#	setenv MYSQLINCDIR /usr/include/mysql
-#	setenv MYSQLCLILIB /usr/lib64/mysql
 	setenv SHIFTLIBDIR $CERN_ROOT/lib
 	setenv SHIFTINCDIR  /afs/rhic.bnl.gov/.asis/share/usr.local/include
 	setenv x11libdir /usr/X11R6/lib64
@@ -180,10 +153,8 @@ switch ( $STAR_HOST_SYS )
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-stringop-truncation "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cxxflags=-Wno-register  "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-cast-function-type  "
-#     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-declarations  "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-format-truncation  "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-misleading-indentation  "
-#     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-register"  #--cflags=--std=c++17 
     breaksw
     case *gcc12*:
      setenv DISABLE "$DISABLE --disable-python --disable-xrootdxs --disable-pythia8"
@@ -208,8 +179,6 @@ switch ( $STAR_HOST_SYS )
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=--std=c++14"
      breaksw
     case *gcc6*:
-#     setenv ENABLE_CXX11 "--enable-cxx11"
-#     setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=--std=c++14"
      breaksw
     case *gcc6*:
      setenv ENABLE_CXX11 "--enable-cxx11"
@@ -252,34 +221,6 @@ switch ( $STAR_HOST_SYS )
  endsw  
 echo "EXTRA_FLAGS = $EXTRA_FLAGS"
 echo "DISABLE = $DISABLE"
-#setenv libdir \$\(LD_LIBRARY_PATH\)
-#setenv macrodir \$HOME/macros:./StRoot/macros:./StRoot/macros/graphics:./StRoot/macros/analysis:./StRoot/macros/test:./StRoot/macros/examples:./StRoot/macros/html:./StRoot/macros/qa:./StRoot/macros/embedding:\$\(STAR\)/StRoot/macros:\$\(STAR\)/StRoot/macros/graphics:\$\(STAR\)/StRoot/macros/analysis:\$\(STAR\)/StRoot/macros/test:\$\(STAR\)/StRoot/macros/examples:\$\(STAR\)/StRoot/macros/html:\$\(STAR\)/StRoot/macros/qa:\$\(STAR\)/StRoot/macros/embedding:\$\(ROOTSYS\)/macros:\$\(ROOTSYS\)/tutorials
-#setenv plugindir \$STAR/plugins
-#./configure $ARCH --build=debug\
-#    --build=$ROOTBUILD \
-#    --with-thread-libdir=/usr/lib \
-#    --with-afs=/usr/awsfs/lib \
-#    --with-x11-libdir=$x11libdir \
-#    --with-xpm-libdir=$xpmlibdir \
-#    --with-gsl-incdir=$GSL_DIR/include \
-#    --with-gsl-libdir=$GSL_DIR/lib \
-#    --with-pythia6-libdir=$XOPTSTAR/lib \
-#    --with-llvm-config=$ROOTSYS/../../../.sl64_gcc447/tools \
-#    --with-f77=$F77 \
-#    --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLCLILIB \
-#    --with-fftw3-incdir=$XOPTSTAR/include --with-fftw3-libdir=$XOPTSTAR/lib \
-#    --enable-builtin_ftgl       \
-#    --enable-builtin_freetype   \
-#    --enable-builtin_glew       \
-#    --enable-builtin_pcre       \
-#    --enable-builtin_zlib       \
-#    --enable-builtin_lzma       \
-#    --all \
-#    --disable-python \
-#    $DISABLE \
-#    $ENABLE_CXX11 $EXTRA_FLAGS
-#    --with-xrootd=$XOPTSTAR \
-#setenv plugindir \$STAR/plugins
 ./configure $ARCH \
     --build=$ROOTBUILD \
     --enable-builtin_ftgl       \
@@ -290,23 +231,23 @@ echo "DISABLE = $DISABLE"
     --enable-builtin_lzma       \
     --with-gsl-incdir=$GSL_DIR/include \
     --with-gsl-libdir=$GSL_DIR/lib \
-    --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLCLILIB \
+    --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLLIBDIR \
     --with-fftw3-incdir=$XOPTSTAR/include --with-fftw3-libdir=$XOPTSTAR/lib \
     --with-f77=$F77 \
     --all \
     $DISABLE \
     $ENABLE \
     $ENABLE_CXX11 $EXTRA_FLAGS
-#    --with-pythia6-libdir=$XOPTSTAR/lib \
-#    --enable-opengl \
-#    --with-xrootd=$XOPTSTAR \
-#    --with-pythia8-libdir=$XOPTSTAR/lib \
-#    --with-pythia8-incdir=$XOPTSTAR/include \
+#    --with-pythia6-libdir=$XOPTSTAR/lib 
+#    --enable-opengl 
+#    --with-xrootd=$XOPTSTAR 
+#    --with-pythia8-libdir=$XOPTSTAR/lib 
+#    --with-pythia8-incdir=$XOPTSTAR/include 
 #unsetenv libdir 
 #unsetenv macrodir
 #unsetenv plugindir
-#    --enable-builtin_afterimage \
-#    --enable-builtin_lz4        \
+#    --enable-builtin_afterimage 
+#    --enable-builtin_lz4        
 #__END__
 #mkdir $ROOTSYS
 #cd $ROOTSYS

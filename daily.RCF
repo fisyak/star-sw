@@ -5679,3 +5679,55 @@ Checking for libGLU, or libMesaGLU ... /usr/lib64
 Checking for GL/glew.h ... no
 Checking for libGLEW ... no
 Checking whether to build included GLEW ... yes
+
+
+    x86_64_gcc12  x86_64_v3_gcc12  AL95  AL96  AL96_mysql  SL73
+[cvmfswrite04] /cvmfs/star.sdcc.bnl.gov/TFG/star/packages $ spack find
+==> In environment AL96
+==> 38 root specs
+-- no arch / no compilers ---------------------------------------
+[+] bison    [+] eigen                [+] gdb   [+] imake   [+] libpng   [+] lmod       [+] mesa        [+] nlohmann-json  [+] perl-dbd-mysql  [+] py-pyparsing  [+] r-base64enc  [+] vc      [+] yacc
+[+] cfitsio  [+] environment-modules  [+] gsl   [+] java    [+] libxaw   [+] lndir      [+] mesa-demos  [+] npm            [+] perl-dbi        [+] qemacs        [+] snap         [+] vdt     [+] zstd
+[+] davix    [+] flex                 [+] htop  [+] lapack  [+] libxml2  [+] mercurial  [+] mesa-glu    [+] perl           [+] py-pip          [+] r-base64      [+] tcl          [+] xrootd
+
+-- linux-almalinux9-cascadelake / %c,cxx,fortran=gcc@11.3.1 -----
+doxygen@1.13.2  openmpi@5.0.7  snap@master
+
+-- linux-almalinux9-cascadelake / %c,cxx,fortran=gcc@11.5.0 -----
+gdb@15.2  llvm-amdgpu@6.4.0  openblas@0.3.29  r@4.5.0
+
+-- linux-almalinux9-cascadelake / %c,cxx=gcc@11.3.1 -------------
+berkeley-db@18.1.40  boost@1.77.0  curl@8.11.1  expat@2.7.1  fmt@11.2.0      gmp@6.3.0     icu4c@76.1   libarchive@3.8.0  lz4@1.10.0  mercurial@6.7.3  nghttp2@1.65.0   openssh@9.9p1  patchelf@0.17.2  tcl@8.6.12   unzip@6.0  zlib-ng@2.2.4
+bison@3.8.2          cmake@3.31.6  eigen@3.4.0  flex@2.6.3   gettext@0.23.1  hwloc@2.11.1  krb5@1.21.3  libffi@3.4.8      m4@1.4.19   ncurses@6.5      node-js@22.14.0  openssl@3.4.1  python@3.13.2    texinfo@7.1  vc@1.4.5   zstd@1.5.7
+
+-- linux-almalinux9-cascadelake / %c,cxx=gcc@11.5.0 -------------
+cmake@3.31.6  davix@0.8.10    libpng@1.6.47    lua@5.4.6    mesa-demos@8.4.0  mysql@8.0.35  nlohmann-json@3.11.3  r-askpass@1.2.0  vdt@0.4.6     z3@4.12.4
+curl@8.11.1   elfutils@0.192  libunwind@1.8.1  mesa@25.0.5  mesa-glu@9.0.2    ninja@1.12.1  py-cython@3.0.11      re2c@3.1         xrootd@5.7.1
+
+-- linux-almalinux9-cascadelake / %c,fortran=gcc@11.5.0 ---------
+cfitsio@4.5.0
+
+-- linux-almalinux9-cascadelake / %c=gcc@11.3.1 -----------------
+automake@1.16.5  ed@1.4                     git@2.48.1   imake@1.0.10  libbsd@0.12.2         libidn2@2.3.7        libsigsegv@2.14   libxcrypt@4.4.38  mpfr@4.2.1      perl@5.40.0    readline@8.2        util-linux@2.40.2     xz@5.6.3
+bc@1.07.1        environment-modules@5.5.0  gmake@4.4.1  isa-l@2.31.1  libedit@3.1-20240808  libmd@1.1.0          libtirpc@1.3.3    libxml2@2.13.5    nasm@2.16.03    pigz@2.8       rpcsvc-proto@1.4.4  util-linux-uuid@2.41  yasm@1.3.0
+bzip2@1.0.8      findutils@4.10.0           gsl@2.8      json-c@0.18   libevent@2.1.12       libmicrohttpd@1.0.1  libtool@2.4.7     lndir@1.0.5       numactl@2.0.18  pkgconf@2.3.0  sqlite@3.46.0       which@2.21
+diffutils@3.10   gdbm@1.23                  htop@3.3.0   less@668      libiconv@1.18         libpciaccess@0.17    libunistring@1.2  lzo@2.10          pcre2@10.44     pmix@5.0.5     tar@1.35            xproto@7.0.31
+
+-- linux-almalinux9-cascadelake / %c=gcc@11.5.0 -----------------
+glew@2.2.0        kbproto@1.0.7         libsm@1.2.6    libxaw@1.0.16   libxext@1.3.6  libxrandr@1.5.4     libxt@1.3.1    lua-luafilesystem@1.8.0  py-markupsafe@2.1.3  r-sys@3.4.2         xextproto@7.3.0
+glproto@1.4.17    libice@1.1.2          libx11@1.8.11  libxcb@1.17.0   libxmu@1.2.1   libxrender@0.9.12   libyaml@0.2.5  lua-luaposix@36.1        r-base64enc@0.1-3    randrproto@1.5.0    xrandr@1.5.3
+inputproto@2.3.2  libpthread-stubs@0.5  libxau@1.0.12  libxdmcp@1.1.5  libxpm@3.5.17  libxshmfence@1.3.3  lmod@8.7.55    perl-dbd-mysql@5.005     r-openssl@2.2.1      renderproto@0.11.1  xtrans@1.6.0
+
+-- linux-almalinux9-cascadelake / %cxx=gcc@11.3.1 ---------------
+npm@11.2.0  rapidjson@1.2.0-2024-08-16  spdlog@1.15.2
+
+-- linux-almalinux9-cascadelake / no compilers ------------------
+autoconf@2.72                       gcc@11.3.1          glibc@2.34         perl-dbi@1.645            py-certifi@2025.4.26  py-mako@1.2.4       py-pluggy@1.5.0     py-setuptools@79.0.1               python-venv@1.0     xcb-proto@1.17.0
+autoconf-archive@2023.02.20         gcc@11.5.0          glx@1.4            perl-devel-checklib@1.16  py-docutils@0.20.1    py-packaging@25.0   py-pygments@2.18.0  py-setuptools-scm@8.2.1            qemacs@6.4.1        xorg-cf-files@1.0.8
+ca-certificates-mozilla@2025-02-25  gcc-runtime@11.3.1  meson@1.7.0        perl-test-deep@1.204      py-flit-core@3.12.0   py-pathspec@0.12.1  py-pyparsing@3.1.2  py-trove-classifiers@2025.4.11.15  r-base64@2.0.1
+compiler-wrapper@1.0                gcc-runtime@11.5.0  openjdk@17.0.11_9  py-calver@2022.6.26       py-hatchling@1.27.0   py-pip@25.1.1       py-pyyaml@6.0.2     py-wheel@0.45.1                    util-macros@1.20.1
+==> 183 installed packages
+==> 0 concretized packages to be installed (show with `spack find -c`)
+
+int: Use -f if you really want to add them.
+hint: Disable this message with "git config advice.addIgnoredFile false"
