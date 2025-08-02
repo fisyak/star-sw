@@ -174,7 +174,7 @@ Block SCOM is supporting cone mother volume
       Position  SROD  y =-ssup_rodDist  
 * The beampipe support
       Create   SBSP  "Beam Support"
-      Position SBSP   z= 0             konly='MANY'
+      Position SBSP   z= 0             konly='MANY'  
       Position SBSP   z= 0 ThetaZ=180  konly='MANY'
 
 EndBlock
@@ -187,7 +187,7 @@ EndBlock
 Block SCON is the Silicon tracker supporting cone mother volume
       Material   Carbon
       Material CarbonFiber dens=ssup_carbonDens	
-      attribute SCON    seen=0 colo=1
+      attribute SCON    seen=1 colo=1
       SHAPE     PCON    Phi1=0  Dphi=360  Nz=5,
  zi={ conez(6), conez(2), conez(3), conez(4), conez(5)},
 Rmn={coneRi(1),coneRi(2),coneRi(3),coneRi(4),coneRi(5)},
@@ -287,7 +287,8 @@ Rmx={  coneRi(2)-4.0,  coneRi(2)-4.0,  coneRi(1)+0.1,   coneRi(1)+0.1,      cone
          rr = (SSUB_KMountId/2 + svtg_RSizeMin)/2
          xx = rr*cos(degrad*phi)
          yy = rr*sin(degrad*phi)
-         Position SPOA x=xx y=yy z=conez(1) AlphaZ=phi
+*         Position SPOA x=xx y=yy z=conez(1) AlphaY=phi
+	Position SPOA x=xx y=yy z=conez(1) ThetaX=90 Phix=phi+90 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=phi
       enddo
       Create SASH   " Aliuminium screen "
       Position SASH
@@ -312,12 +313,12 @@ Block SPOA is beam spoke assembly
       SHAPE box dx=SSUB_SWireLen dy=1.5 dz = (SSUB_KMountId/2 - svtg_RSizeMin)/2
       Create and Position SPOK y =  -0.4 
       zz = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8 
-      Create and Position SPOB z = zz
-      Create and Position SPOC z = -zz
+      Create and Position SPOB AlphaY=90 z = zz
+      Create and Position SPOC AlphaY=90 z = -zz
       Create SBRL
       Create SBRX 				               
       Position SBRL  ALphaY=90 x=0 y = 0.4 z=zz  
-      Position SBRX  ALPHAY=90 x=0 y = 0.4 z=zz  
+      Position SBRX  AlphaY=90 x=0 y = 0.4 z=zz  
 EndBlock
 Block SPOB is beam spoke assembly
 *   G10 is given as 60% SiO2 and 40% epoxy in ftpcgeo.g, from which
@@ -363,7 +364,7 @@ Endblock
 *
 Block SDSA is the mother fpr  beampipe support 
       Material Air
-      Attribute SDSA Seen=1 Colo=1
+      Attribute SDSA Seen=0 Colo=1
       zz = conez(6)-SSUB_dZBolt
       Shape PCON   Phi1=0   Dphi=360   Nz=2,
  zi={zz-SSUB_dZBolt, zz+SSUB_dZBolt},
