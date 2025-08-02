@@ -142,10 +142,6 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 Block SCOM is supporting cone mother volume
       Material   Air
       attribute SCOM    seen=0 colo=1
-*      SHAPE     PCON    Phi1=0  Dphi=360  Nz=14,
-* zi={ -conez(5),-conez(4),-conez(3),-conez(2),    -conez(2),    -conez(6),    -conez(6),     conez(6),     conez(6),     conez(2), conez(2), conez(3), conez(4), conez(5)},
-*Rmn={ coneRi(5),coneRi(4),coneRi(3),coneRi(2),svtg_RSizeMin,svtg_RSizeMin,coneRi(1)-4.0,coneRi(1)-4.0,svtg_RSizeMin,svtg_RSizeMin,coneRi(2),coneRi(3),coneRi(4),coneRi(5)},
-*Rmx={ coneRo(5),coneRo(4),coneRo(3),coneRo(2),    coneRo(2),    coneRo(1),coneRo(1)+0.6,coneRo(1)+0.6,    coneRo(1),    coneRo(2),coneRo(2),coneRo(3),coneRo(4),coneRo(5)}
          CALL AGSRESET                        
          AG_PHI1 = 0                          
          AG_DPHI = 360                        
@@ -286,19 +282,11 @@ Rmx={  coneRi(2)-4.0,  coneRi(2)-4.0,  coneRi(1)+0.1,   coneRi(1)+0.1,      cone
       Create SAKM  " aluminum kinematic mount (just guess) "
       Position SAKM
       Create    SPOA  " spoke to support beam pipe assembly "
-     
-*     {"90XD",   90.0,   90.0,    0.0,    0.0,   90.0,    0.0}, // "90XD"  (x,y,z) = > ( z, x, y)
-*      YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
-*      Position  SPOA x=YY  y=YY  z=conez(1)  ThetaX=90 Phix=135 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=45
-*      Position  SPOA x=-YY y=YY  z=conez(1)  ThetaX=90 Phix=225 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=135
-*      Position  SPOA x=-YY y=-YY z=conez(1)  ThetaX=90 Phix=315 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=225
-*      Position  SPOA x=YY  y=-YY z=conez(1)  ThetaX=90 Phix=45  ThetaY=0 PhiY=0 ThetaZ=90 Phiz=315
-       do i = 1, 4
+      do i = 1, 4
 	 phi = 45  + 90*(i-1)
          rr = (SSUB_KMountId/2 + svtg_RSizeMin)/2
          xx = rr*cos(degrad*phi)
          yy = rr*sin(degrad*phi)
-*         Position SPOA x=xx y=yy z=conez(1) ThetaX=90 Phix=phi+90 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=phi
          Position SPOA x=xx y=yy z=conez(1) AlphaZ=phi
       enddo
       Create SASH   " Aliuminium screen "
@@ -328,14 +316,8 @@ Block SPOA is beam spoke assembly
       Create and Position SPOC z = -zz
       Create SBRL
       Create SBRX 				               
-*  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
-*    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
-*      Position SBRL  ThetaY=-90 PhiY=90 ThetaZ=90 x=0 y = 0.4 z=zz  
       Position SBRL  ALphaY=90 x=0 y = 0.4 z=zz  
-*     Position SBRL   x=0 y = 0.4 z=zz  
-*      Position SBRX  ThetaY=-90 PhiY=90 ThetaZ=90 x=0 y = 0.4 z=zz  
       Position SBRX  ALPHAY=90 x=0 y = 0.4 z=zz  
-*     Position SBRX   x=0 y = 0.4 z=zz  
 EndBlock
 Block SPOB is beam spoke assembly
 *   G10 is given as 60% SiO2 and 40% epoxy in ftpcgeo.g, from which
@@ -349,12 +331,6 @@ Block SPOB is beam spoke assembly
       Material G10
       Attribute SPOB Seen=1 Colo=2
       SHAPE box dx=1.6 dy=1.25 dz = 0.8 
-*  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
-*    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
-*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=-1.3 
-*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=+1.3
-*      Create and Position BOLT AlphaY=90 y=-0.9 x=-1.3 
-*      Create and Position BOLT Alphay=90 y=-0.9 x=+1.3
       Create and Position BOLT  y=-0.9 x=-1.3 
       Create and Position BOLT  y=-0.9 x=+1.3
 EndBlock
@@ -362,12 +338,6 @@ Block SPOC is beam spoke assembly upper part
       Material G10
       Attribute SPOC Seen=1 Colo=2
       SHAPE box dx=1.25 dy=0.5 dz = 0.6 
-*  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
-*    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
-*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=-0.5
-*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=+0.5
-*      Create and Position BOLT AlphaY=90 y=0.0 x=-0.5
-*      Create and Position BOLT AlphaY=90 y=0.0 x=+0.5
       Create and Position BOLT  y=0.0 x=-0.5
       Create and Position BOLT  y=0.0 x=+0.5
 EndBlock
@@ -424,10 +394,6 @@ Endblock
 Block SDSK is the beampipe support G10
       Material G10
       Attribute SDSK Seen=1 Colo=1
-*      Shape PCON   Phi1=0   Dphi=360   Nz=2,
-* zi={conez(6)-SSUB_G10Thk3,   conez(6)},
-*Rmn={           SSUB_G10RI, SSUB_G10RI},
-*Rmx={           SSUB_G10RO, SSUB_G10RO}
       ShAPE TUBE rmin=SSUB_G10RI rmax=SSUB_G10RO dz=SSUB_G10Thk3/2
 Endblock
 Block BOLT is the bolt
