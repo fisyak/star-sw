@@ -21,7 +21,8 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 *
       Content          SCOM,SCON,SNMX,
                        SROD,SRON,SROI,SROH,
-                       SBSP ,SAKM, SPOK, SASH, SDSK, SPOA, SPOB, BOLT, SPOC
+                       SBSP,SAKM, SPOK, SASH, SDSK, SDSA, SPOA, SPOB, BOLT, SPOC,
+                       SBRL,SBRX 
       structure SVTG { Version,  
                        RsizeMin,  RsizeMax,
                        SupportVer,   ConeVer,
@@ -37,12 +38,13 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
 *
       structure SSUB { Version,  KMountId,  KMountOd,  KMntThk
                      ,AlScrThk, zG10Start, G10Thk1, G10Thk2, G10Thk3, G10RI, G10RO,
+	              SRollId,   SRollOd,   SRollLen,  SWireLen,
                        rbolt, dZBolt
 	}
 *
       Real           conez(7), coneRi(7), coneRO(7)
       Real           conezx(7), coneRix(7), coneROx(7)
-      Real           phi, xbuf, xbuf1, xbuf2, yy
+      Real           phi, xbuf, xbuf1, xbuf2, rr, xx, yy, zz
       Integer        i, j
 ***************************
    Fill SVTG ! Basic SVT dimensions 
@@ -90,6 +92,10 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       G10Thk3   = 0.6        ! thikness 
       G10RI     = 4.1        ! radius 
       G10RO     = 6.4        ! radius 
+      SRollId   = 0.2        ! support roller Id
+      SRollOd   = 0.62       ! support roller Od
+      SRollLen  = 2.54       ! support roller length
+      SWireLen  = 5.08       ! support roller axis length
       rbolt     = 0.3        ! bolt 	
       dZBolt    = 0.7        ! bolt    
    EndFill
@@ -280,16 +286,25 @@ Rmx={  coneRi(2)-4.0,  coneRi(2)-4.0,  coneRi(1)+0.1,   coneRi(1)+0.1,      cone
       Create SAKM  " aluminum kinematic mount (just guess) "
       Position SAKM
       Create    SPOA  " spoke to support beam pipe assembly "
+     
 *     {"90XD",   90.0,   90.0,    0.0,    0.0,   90.0,    0.0}, // "90XD"  (x,y,z) = > ( z, x, y)
-      YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
-      Position  SPOA x=YY  y=YY  z=conez(1)  ThetaX=90 Phix=135 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=45
-      Position  SPOA x=-YY y=YY  z=conez(1)  ThetaX=90 Phix=225 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=135
-      Position  SPOA x=-YY y=-YY z=conez(1)  ThetaX=90 Phix=315 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=225
-      Position  SPOA x=YY  y=-YY z=conez(1)  ThetaX=90 Phix=45  ThetaY=0 PhiY=0 ThetaZ=90 Phiz=315
+*      YY = (SSUB_KMountId/2 + svtg_RSizeMin)/2/sqrt(2.)
+*      Position  SPOA x=YY  y=YY  z=conez(1)  ThetaX=90 Phix=135 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=45
+*      Position  SPOA x=-YY y=YY  z=conez(1)  ThetaX=90 Phix=225 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=135
+*      Position  SPOA x=-YY y=-YY z=conez(1)  ThetaX=90 Phix=315 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=225
+*      Position  SPOA x=YY  y=-YY z=conez(1)  ThetaX=90 Phix=45  ThetaY=0 PhiY=0 ThetaZ=90 Phiz=315
+       do i = 1, 4
+	 phi = 45  + 90*(i-1)
+         rr = (SSUB_KMountId/2 + svtg_RSizeMin)/2
+         xx = rr*cos(degrad*phi)
+         yy = rr*sin(degrad*phi)
+*         Position SPOA x=xx y=yy z=conez(1) ThetaX=90 Phix=phi+90 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=phi
+         Position SPOA x=xx y=yy z=conez(1) AlphaZ=phi
+      enddo
       Create SASH   " Aliuminium screen "
       Position SASH
-      Create SDSK    " G10 support Disk"
-      Position SDSK  konly='MANY'
+      Create SDSA    " Mother for G10 support Disk"
+      Position SDSA  konly='MANY'
 endblock
 *
 Block SAKM is the beampipe support aluminum kinematic mount*
@@ -306,19 +321,42 @@ Endblock
 Block SPOA is beam spoke assembly
       Material Air
       Attribute SPOA Seen=0 Colo=2
-      SHAPE box dx=1.6 dy=1.25 dz = (SSUB_KMountId/2 - svtg_RSizeMin)/2
+      SHAPE box dx=SSUB_SWireLen dy=1.5 dz = (SSUB_KMountId/2 - svtg_RSizeMin)/2
       Create and Position SPOK y =  -0.4 
-      Create and Position SPOB z = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8 
-      Create and Position SPOC z = +(SSUB_KMountId/2 - svtg_RSizeMin)/2 - 0.8 
+      zz = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8 
+      Create and Position SPOB z = zz
+      Create and Position SPOC z = -zz
+      Create SBRL
+      Create SBRX 				               
+*  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
+*    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
+*      Position SBRL  ThetaY=-90 PhiY=90 ThetaZ=90 x=0 y = 0.4 z=zz  
+      Position SBRL  ALphaY=90 x=0 y = 0.4 z=zz  
+*     Position SBRL   x=0 y = 0.4 z=zz  
+*      Position SBRX  ThetaY=-90 PhiY=90 ThetaZ=90 x=0 y = 0.4 z=zz  
+      Position SBRX  ALPHAY=90 x=0 y = 0.4 z=zz  
+*     Position SBRX   x=0 y = 0.4 z=zz  
 EndBlock
 Block SPOB is beam spoke assembly
+*   G10 is given as 60% SiO2 and 40% epoxy in ftpcgeo.g, from which
+*   the following is taken
+      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
+      Component  O   A=16     Z=8   W=0.6*2*16./60.
+      Component  C   A=12     Z=6   W=0.4*8*12./174.
+      Component  H   A=1      Z=1   W=0.4*14*1./174.
+      Component  O   A=16     Z=8   W=0.4*4*16./174.
+      Mixture G10  Dens=1.7
       Material G10
       Attribute SPOB Seen=1 Colo=2
       SHAPE box dx=1.6 dy=1.25 dz = 0.8 
 *  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
 *    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
-      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=-1.3 
-      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=+1.3
+*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=-1.3 
+*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=-0.9 x=+1.3
+*      Create and Position BOLT AlphaY=90 y=-0.9 x=-1.3 
+*      Create and Position BOLT Alphay=90 y=-0.9 x=+1.3
+      Create and Position BOLT  y=-0.9 x=-1.3 
+      Create and Position BOLT  y=-0.9 x=+1.3
 EndBlock
 Block SPOC is beam spoke assembly upper part
       Material G10
@@ -326,8 +364,12 @@ Block SPOC is beam spoke assembly upper part
       SHAPE box dx=1.25 dy=0.5 dz = 0.6 
 *  //           ThetaX   PhiX   ThetaY   PhiY   ThetaZ   PhiZ
 *    {"90XY",    0.0,    0.0,  -90.0,   90.0,   90.0,    0.0}, // "90XY"  (x,y,z) = > ( z,-y, x)
-      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=-0.5
-      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=+0.5
+*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=-0.5
+*      Create and Position BOLT ThetaY=-90 PhiY=90 ThetaZ=90 y=0.0 x=+0.5
+*      Create and Position BOLT AlphaY=90 y=0.0 x=-0.5
+*      Create and Position BOLT AlphaY=90 y=0.0 x=+0.5
+      Create and Position BOLT  y=0.0 x=-0.5
+      Create and Position BOLT  y=0.0 x=+0.5
 EndBlock
 Block SPOK is beam line support spokes
       Material Aluminium
@@ -349,33 +391,67 @@ Endblock
 *
 *------------------------------------------------------------------------------
 *
+Block SDSA is the mother fpr  beampipe support 
+      Material Air
+      Attribute SDSA Seen=1 Colo=1
+      zz = conez(6)-SSUB_dZBolt
+      Shape PCON   Phi1=0   Dphi=360   Nz=2,
+ zi={zz-SSUB_dZBolt, zz+SSUB_dZBolt},
+Rmn={    SSUB_G10RI,     SSUB_G10RI},
+Rmx={    SSUB_G10RO,     SSUB_G10RO}
+     Create BOLT 
+     Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=zz
+     Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2+0.5 y=0 z=zz
+     Position BOLT x=-(SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=zz
+     Position BOLT x=-(SSUB_G10RI+SSUB_G10RO)/2+0.5 y=0 z=zz
+
+     Position BOLT x=-2.3 y= 4.3 z=zz
+     Position BOLT x= 2.3 y= 4.3 z=zz
+     Position BOLT x=-2.3 y=-4.3 z=zz
+     Position BOLT x= 2.3 y=-4.3 z=zz
+
+     Position BOLT x= 4.3 y=-2.3 z=zz
+     Position BOLT x= 4.3 y= 2.3 z=zz
+     Position BOLT x=-4.3 y=-2.3 z=zz
+     Position BOLT x=-4.3 y= 2.3 z=zz
+     Create SDSK    " G10 support Disk"
+     Position SDSK z=zz  konly='MANY'
+
+Endblock
+*
+*------------------------------------------------------------------------------
+*
 Block SDSK is the beampipe support G10
       Material G10
       Attribute SDSK Seen=1 Colo=1
-      Shape PCON   Phi1=0   Dphi=360   Nz=2,
- zi={conez(6)-SSUB_G10Thk3,   conez(6)},
-Rmn={           SSUB_G10RI, SSUB_G10RI},
-Rmx={           SSUB_G10RO, SSUB_G10RO}
-     Create BOLT 
-     Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2+0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x=-(SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x=-(SSUB_G10RI+SSUB_G10RO)/2+0.5 y=0 z=conez(6)-SSUB_G10Thk3/2
-
-     Position BOLT x=-2.3 y= 4.3 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x= 2.3 y= 4.3 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x=-2.3 y=-4.3 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x= 2.3 y=-4.3 z=conez(6)-SSUB_G10Thk3/2
-
-     Position BOLT x= 4.3 y=-2.3 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x= 4.3 y= 2.3 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x=-4.3 y=-2.3 z=conez(6)-SSUB_G10Thk3/2
-     Position BOLT x=-4.3 y= 2.3 z=conez(6)-SSUB_G10Thk3/2
-
+*      Shape PCON   Phi1=0   Dphi=360   Nz=2,
+* zi={conez(6)-SSUB_G10Thk3,   conez(6)},
+*Rmn={           SSUB_G10RI, SSUB_G10RI},
+*Rmx={           SSUB_G10RO, SSUB_G10RO}
+      ShAPE TUBE rmin=SSUB_G10RI rmax=SSUB_G10RO dz=SSUB_G10Thk3/2
 Endblock
-Block BOLT is the beampipe support G10
+Block BOLT is the bolt
       Material IRON
       Attribute BOLT Seen=1 Colo=4
       Shape TUBE rmin=0 rmax = SSUB_rbolt  dz=SSUB_dZBolt
 Endblock
+*
+*------------------------------------------------------------------------------
+*
+Block SBRL is the ceramic roller supporting the beampipe
+* approximate MACOR with PYREX, the ceramic used in the ftpc
+      Material  PYREX A=20.719  Z=10.307  Dens=2.23  RadL=12.6  AbsL=50.7
+      Attribute SBRL  Seen=1 Colo=6
+      Shape     TUBE  rmin=ssub_SRollId/2  rmax=ssub_SRollOd/2,
+                       dz=ssub_SRollLen/2
+EndBlock
+*
+*------------------------------------------------------------------------------
+*
+Block SBRX is the stainless steel roller axis
+      Material  Iron
+      Attribute SBRX Seen=1 Colo=2
+      Shape TUBE rmin=0.0 rmax=ssub_SRollId/2,
+                  dz=ssub_SWireLen/2
+EndBlock
 end
