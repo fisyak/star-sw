@@ -66,7 +66,6 @@ return
 macro SCOMxcut
 null 50 60 0 25    
 dcut scom x 0  0 0 1 1
-dcut sbsp x 0  0 0 1 1
 return
 *******************************************************************************
 macro SCOMzcut
