@@ -77,9 +77,9 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       RodIDx    = 8.72       ! ID of Carbon support rods 
       RodODx    = 9.58       ! OD of Carbon support rods 
 
-      carbonShell = 0.04     ! 0.4mm carbon fiber shell "  />
-      carbonDens = 1.78      ! 1.78 g/cm^3 is a typical carbon composite density "  />
-      nomexDens = 0.048      ! Ballpark figure "  />
+      carbonShell = 0.04     ! 0.4mm carbon fiber shell 
+      carbonDens = 1.78      ! 1.78 g/cm^3 is a typical carbon composite density 
+      nomexDens = 0.048      ! Ballpark figure 
 *------------------------------------------------------------
 *------------------------------------------------------------
    Fill SSUB ! beampipe support
@@ -282,10 +282,15 @@ Block SBSP is the beampipe support mother volume
       Material Air
       Attribute SBSP Seen=0 Colo=1
       zz = SSUB_zG10Start-SSUB_G10Thk0-conez(6)
+      xx = conez(1)-conez(6)
+      yy = conez(2)-conez(6)
       Shape PCON   Phi1=0   Dphi=360   Nz=6,
- zi={             zz,               0,              0, conez(1)-conez(6), conez(1)-conez(6), conez(2)-conez(6)},
-Rmn={  svtg_RSizeMin,   svtg_RSizeMin,  svtg_RSizeMin,     svtg_RSizeMin,     svtg_RSizeMin,     svtg_RSizeMin},
-Rmx={ssub_KMountOd/2, ssub_KMountOd/2,  coneRi(1)+0.1,     coneRi(1)+0.1,         coneRi(1),         coneRi(1)}
+ zi={             zz,               0,              0,
+            xx,            xx,            yy},
+Rmn={  svtg_RSizeMin,   svtg_RSizeMin,  svtg_RSizeMin,
+ svtg_RSizeMin, svtg_RSizeMin, svtg_RSizeMin},
+Rmx={ssub_KMountOd/2, ssub_KMountOd/2,  coneRi(1)+0.1,
+         coneRi(1)+0.1,     coneRi(1),     coneRi(1)}
       Create SAKM  " aluminum kinematic mount"
       Position SAKM
       Create SASH    " Aliuminium screen "
@@ -298,7 +303,8 @@ Rmx={ssub_KMountOd/2, ssub_KMountOd/2,  coneRi(1)+0.1,     coneRi(1)+0.1,       
          rr = svtg_RSizeMin + SSUB_SpokeLen/2 + 0.8
          xx = rr*cos(degrad*phi)
          yy = rr*sin(degrad*phi)
-	Position SPOA x=xx y=yy z=conez(1)-conez(6)-1.0 ThetaX=90 Phix=phi+90 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=phi konly='MANY'
+         zz = conez(1)-conez(6)-1.0
+	Position SPOA x=xx y=yy z=zz ThetaX=90 Phix=phi+90 ThetaY=0 PhiY=0 ThetaZ=90 Phiz=phi konly='MANY'
       enddo
 endblock
 *
@@ -329,12 +335,12 @@ EndBlock
 Block SPOB is beam spoke assembly
 *   G10 is given as 60% SiO2 and 40% epoxy in ftpcgeo.g, from which
 *   the following is taken
-      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
-      Component  O   A=16     Z=8   W=0.6*2*16./60.
-      Component  C   A=12     Z=6   W=0.4*8*12./174.
-      Component  H   A=1      Z=1   W=0.4*14*1./174.
-      Component  O   A=16     Z=8   W=0.4*4*16./174.
-      Mixture G10  Dens=1.7
+*      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
+*      Component  O   A=16     Z=8   W=0.6*2*16./60.
+*      Component  C   A=12     Z=6   W=0.4*8*12./174.
+*      Component  H   A=1      Z=1   W=0.4*14*1./174.
+*      Component  O   A=16     Z=8   W=0.4*4*16./174.
+*      Mixture G10  Dens=1.7
       Material G10
       Attribute SPOB Seen=1 Colo=6
       SHAPE box dx=1.6 dy=1.25 dz = 0.8 
@@ -366,10 +372,6 @@ Block SASH is the beampipe support aluminum EM shield
       Material Aluminium
       Material AluminiumMesh dens=0.125 ! Bob Soja
       Attribute SASH Seen=1 Colo=3
-*      Shape PCON   Phi1=0   Dphi=360   Nz=2,
-* zi={              0,   SSUB_AlScrThk},
-*Rmn={  svtg_RSizeMin,   svtg_RSizeMin},
-*Rmx={SSUB_KMountId/2, SSUB_KMountId/2}
       SHAPE TUBE rmin=SSUB_G10RO rmax=SSUB_KMountId/2 dz=SSUB_AlScrThk/2
 Endblock
 *
@@ -379,10 +381,6 @@ Block SDSA is the mother fpr  beampipe support
       Material Air
       Attribute SDSA Seen=0 Colo=1
       zz = 0
-*      Shape PCON   Phi1=0   Dphi=360   Nz=2,
-* zi={zz-SSUB_dZBolt, zz+SSUB_dZBolt},
-*Rmn={    SSUB_G10RI,     SSUB_G10RI},
-*Rmx={    SSUB_G10RO,     SSUB_G10RO}
      SHAPE TUBE rmin=SSUB_G10RI rmax=SSUB_G10RO dz=SSUB_dZBolt
      Create BOLT 
      Position BOLT x= (SSUB_G10RI+SSUB_G10RO)/2-0.5 y=0 z=zz
@@ -399,7 +397,7 @@ Block SDSA is the mother fpr  beampipe support
      Position BOLT x= 4.3 y= 2.3 z=zz
      Position BOLT x=-4.3 y=-2.3 z=zz
      Position BOLT x=-4.3 y= 2.3 z=zz
-     Create SDSK    " G10 support Disk"
+     Create SDSK    
      Position SDSK z=zz  konly='MANY'
 
 Endblock
@@ -423,8 +421,7 @@ Block SBRL is the ceramic roller supporting the beampipe
 * approximate MACOR with PYREX, the ceramic used in the ftpc
       Material  PYREX A=20.719  Z=10.307  Dens=2.23  RadL=12.6  AbsL=50.7
       Attribute SBRL  Seen=1 Colo=6
-      Shape     TUBE  rmin=ssub_SRollId/2  rmax=ssub_SRollOd/2,
-                       dz=ssub_SRollLen/2
+      Shape     TUBE  rmin=ssub_SRollId/2  rmax=ssub_SRollOd/2 dz=ssub_SRollLen/2
 EndBlock
 *
 *------------------------------------------------------------------------------
@@ -432,7 +429,6 @@ EndBlock
 Block SBRX is the stainless steel roller axis
       Material  Iron
       Attribute SBRX Seen=1 Colo=4
-      Shape TUBE rmin=0.0 rmax=ssub_SRollId/2,
-                  dz=ssub_SWireLen/2
+      Shape TUBE rmin=0.0 rmax=ssub_SRollId/2 dz=ssub_SWireLen/2
 EndBlock
 end
