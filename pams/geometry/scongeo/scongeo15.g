@@ -322,7 +322,7 @@ Endblock
 Block SPOA is beam spoke assembly lower part
       Material Air
       Attribute SPOA Seen=0 Colo=2
-      SHAPE box dx=SSUB_SWireLen dy=1.5 dz = SSUB_SpokeLen/2 + 0.8
+      SHAPE box dx=SSUB_SWireLen dy=1.5 dz = SSUB_SpokeLen/2 + 0.95
       Create and Position SPOK y = 0.8-0.2 
       zz = -(SSUB_KMountId/2 - svtg_RSizeMin)/2 + 0.8 
       Create and Position SPOB z = -SSUB_SpokeLen/2

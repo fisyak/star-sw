@@ -1077,7 +1077,7 @@ void StarVMCApplication::Geanttino() {
   Int_t        NstepB;
   Float_t      stepF, XYZ[3];
   Float_t      RADIUS;
-  enum {NPF2D=4};
+  enum {NPF2D=4*3};
   static TProfile2D *prof2D[NPF2D];
   static Bool_t first = kTRUE;
   if (first) {
@@ -1101,6 +1101,16 @@ void StarVMCApplication::Geanttino() {
       {{"RadLIetaR" ,"<RadLI>; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
       {{"AbsLetaR"  ,"<AbsL> ; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
       {{"AbsLIetaR" ,"<AbsLI>; #eta ; R (cm)"                  }, 200, -2.5, 2.5, 200, 0.0 , 200},  //0 100
+
+      {{"RadLXY"  ,"<RadL> ; X (cm) ; Y (cm)"                  }, 800, -40.0,  40.0, 800, -40.0, 40.0},  //0 100
+      {{"RadLIXY" ,"<RadLI>; X (cm) ; Y (cm)"                  }, 800, -40.0,  40.0, 800, -40.0, 40.0},  //0 100
+      {{"AbsLXY"  ,"<AbsL> ; X (cm) ; Y (cm)"                  }, 800, -40.0,  40.0, 800, -40.0, 40.0},  //0 100
+      {{"AbsLIXY" ,"<AbsLI>; X (cm) ; Y (cm)"                  }, 800, -40.0,  40.0, 800, -40.0, 40.0},  //0 100
+
+      {{"RadLRZ"  ,"<RadL> ; Z (cm) ;+/-R (cm)"                  }, 4400, -220.0,  220.0, 400, -40.0, 40.0},  //0 100
+      {{"RadLIRZ" ,"<RadLI>; Z (cm) ;+/-R (cm)"                  }, 4400, -220.0,  220.0, 400, -40.0, 40.0},  //0 100
+      {{"AbsLRZ"  ,"<AbsL> ; Z (cm) ;+/-R (cm)"                  }, 4400, -220.0,  220.0, 400, -40.0, 40.0},  //0 100
+      {{"AbsLIRZ" ,"<AbsLI>; Z (cm) ;+/-R (cm)"                  }, 4400, -220.0,  220.0, 400, -40.0, 40.0}   //0 100
     };
     for (Int_t t = 0; t < NPF2D; t++) {
       TString Name(Types2[t].name.Name); 
@@ -1153,6 +1163,17 @@ void StarVMCApplication::Geanttino() {
       prof2D[1]->Fill(eta, RADIUS, radlI);
       prof2D[2]->Fill(eta, RADIUS, dabsl);
       prof2D[3]->Fill(eta, RADIUS, abslI);
+
+      prof2D[4+0]->Fill(XYZ[0], XYZ[1], dradl);
+      prof2D[4+1]->Fill(XYZ[0], XYZ[1], radlI);
+      prof2D[4+2]->Fill(XYZ[0], XYZ[1], dabsl);
+      prof2D[4+3]->Fill(XYZ[0], XYZ[1], abslI);
+
+      if (XYZ[1] < 0) RADIUS = -RADIUS;
+      prof2D[8+0]->Fill(XYZ[2], RADIUS, dradl);
+      prof2D[8+1]->Fill(XYZ[2], RADIUS, radlI);
+      prof2D[8+2]->Fill(XYZ[2], RADIUS, dabsl);
+      prof2D[8+3]->Fill(XYZ[2], RADIUS, abslI);
     }
   }
 }
