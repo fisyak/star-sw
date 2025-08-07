@@ -22,7 +22,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       Content          SCOM,SCON,SNMX,
                        SROD,SRON,SROI,SROH,
                        SBSP,SAKM, SPOK, SASH, SDSK, SDSA, SPOA, SPOB, BOLT, SPOC, 
-                       SPOD, 
+                       SPOD,SAKH, 
                        SBRL,SBRX 
       structure SVTG { Version,  
                        RsizeMin,  RsizeMax,
@@ -127,7 +127,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       coneRi(5) = coneRi(4)
       conez(6)  = conez(1) - 0.1 ! expand mother volume
 
-      conezx(1)  = SSUP_Cone1z              ! start of code
+      conezx(1)  = SSUP_Cone1z              ! start of cone
       coneRox(1) = SSUP_rO1  - SSUP_carbonShell
       coneRix(1) = coneRox(1) - SSUP_NomexThk1
       conezx(2)  = conezx(1)  + SSUP_Cone1dz  ! cylinder part of cone with nomex 0.5 cm
@@ -311,10 +311,25 @@ endblock
 Block SAKM is the beampipe support aluminum kinematic mount*
       Material Aluminium
       Attribute SAKM Seen=1 Colo=3
+      zz=conez(1)-conez(6)
       Shape PCON   Phi1=0   Dphi=360   Nz=4,
- zi={              0, conez(1)-conez(6), conez(1)-conez(6),           conez(2)-conez(6)},
-Rmn={SSUB_KMountId/2,   SSUB_KMountId/2,   SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
-Rmx={  coneRi(1)+0.1,     coneRi(1)+0.1,         coneRi(1),                   coneRi(1)}
+ zi={              0,             zz,              zz,           conez(2)-conez(6)},
+Rmn={SSUB_KMountId/2,SSUB_KMountId/2, SSUB_KMountId/2,SSUB_KMountId/2+SSUP_Cone1dZ},
+Rmx={       SSUP_rO1,       SSUP_rO1,       coneRi(1),                   coneRi(1)}
+      Create SAKH
+      Position SAKH y=+20.1 x=+1.4+0.1  z=(conez(2)-conez(6))/2 
+      Position SAKH y=+20.1 x=-1.4-0.1  z=(conez(2)-conez(6))/2 
+      Position SAKH y=-20.1 x=+1.4+0.1  z=(conez(2)-conez(6))/2 
+      Position SAKH y=-20.1 x=-1.4-0.1  z=(conez(2)-conez(6))/2 
+Endblock
+*
+*------------------------------------------------------------------------------
+*
+*
+Block SAKH is the hole in beampipe support aluminum kinematic mount*
+      Material Air
+      Attribute SAKH Seen=1 Colo=3
+      Shape TUBE rmin=0 rmax=1.4 dz=(conez(2)-conez(6))/2
 Endblock
 *
 *------------------------------------------------------------------------------
