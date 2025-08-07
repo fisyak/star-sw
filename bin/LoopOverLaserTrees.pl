@@ -3,6 +3,9 @@ use File::Basename;
 use Cwd;
 my %runs = ();
 my $debug = 0;
+if ($#ARGV >= 0) {
+  $debug = $ARGV[0];
+}
 my $noRuns = 0;
 # mv `grep 'Laser Run' tpc*ofl | awk '{print "LaserPlots.*"$6".root"}' | sort -u | xargs | sed -e 's/\w/\|/'` Done/
 #my @list = glob "*.laser.root";
