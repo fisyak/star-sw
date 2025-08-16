@@ -2670,12 +2670,6 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXIFXT12"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/13/2023 redo with .DEV2
 #$hist = "RunXXIFXT13"; $NEvents = 10000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/14/2023 new TpcLengthCorrectionMDN from  NPoints*UGP*.root (only "-")
 #$hist = "RunXXIFXT14"; $NEvents = 5000; $disk = "data1*/"; $RECO = "reco/production_*fixedTarget_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/15/2023 check MySQL with SL23d, 5k
-############################ RunXXIV ####################################################
-#$hist = "RunXXIV01"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2024 
-#$hist = "RunXXIV02"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/12/2024 
-#$hist = "RunXXIV03"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
-#$hist = "RunXXIV04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
-#$hist = "RunXXIV05"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/05/2024  
 #################################### TFG24c ############################################
 #$hist = "RunTFG24c01"; $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/reco/TFG24c"; $RECO = "/";  $Production = "20*/RF/*GeV*/"; $year = "/*/"; $FILE = "st_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 07/21/2024 check old calibration with TFG24c production
 #################################### DEV2 fixedTarget 2019-2021 ############################################
@@ -2803,7 +2797,19 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXI3p85_07"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/25 new TpcSecRowB.3p85GeV_fixedTarget_2021b.root
 #$hist = "RunXXI3p85_08"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/24/25 new TpcLengthCorrectionMDN.3p85GeV_fixedTarget_2021b.C
 #$hist = "RunXXI3p85_09"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version
-$hist = "RunXXI3p85_10"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version with DEV
+#$hist = "RunXXI3p85_10"; $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_3p85GeV_fixedTarget_2021/*/";  $Production = "P24iy_calib6"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/25/25 check MySQL version with DEV
+############################ RunXXIV ####################################################
+#$hist = "RunXXIV01"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2024 
+#$hist = "RunXXIV02"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_LowLuminosity/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/12/2024 
+#$hist = "RunXXIV03"; $NEvents = 5000; $disk = "/hlt/cephfs/reco/2024/RF/TFG24b"; $RECO = "/";  $Production = "pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+#$hist = "RunXXIV04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/13/2024  TpcSecRowB
+#$hist = "RunXXIV05"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/2024/RF/TFG24b/pp200_*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = ".DEV2"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/05/2024  
+# /star/data21/reco/pp200_production_LowLuminosity/ReversedFullField/P24iy_calib/2024/122/25122025/st_physics_25122025_raw_0000001.event.root
+#  /star/data*/reco/pp200_production*/*/P24iy_calib6/2024/*/*/st*.event.root
+#$hist = "RunXXIV06";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/13/2025 check 
+#$hist = "RunXXIV07";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/14/2025  TpcSecRowB.pp200_LowLuminosity.root
+$hist = "RunXXIV08";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/16/2025  TpcZCorrectionC.pp200_LowLuminosity.C
+################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
 my $prod = $hist; #$Production;
@@ -3012,6 +3018,8 @@ Initialdir       = " . $DIR . "
 kill_sig        = SIGINT
 Accounting_group = group_star.cas
 Priority         = +10
+GetEnv           = True
+requirements     = (Microarch == \"x86_64-v4\")
 Queue
 ";
       }
