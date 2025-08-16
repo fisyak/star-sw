@@ -1199,6 +1199,7 @@ TDataSet *CreateTable() {
 #	    Command $env1 $geom_h, $LIB . "/xgeometry." .  $env1->{SUFSOLIB},
 	    Command $env1 $geom_h, $LIB . "/xgeometry." .  $env1->{SUFSOLIB},
 	      qq (cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f; 
+#	      qq (cd  %>:d;  $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")';); 
 #	      qq (test -r  %> && ( cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;) ); #   mv geom.rz %>:f; 
 #	      qq (echo "%< - %1 > %>"; cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
 	    #	  Command $env1 [$geom_h,$geometry], ($LIB . "/xgeometry." .  $env1->{SUFSOLIB}),
@@ -1435,52 +1436,52 @@ if ( $#Defs > -1) {# &&  $pkg !~ m/^GenFit$/ ) {
       qq($RCINTPL "%>" "%<" "$ROOTCINT_CPPPATH $ROOTCINT_CPPFLAGS $CPPFLAGS" );
   } else {
     print "ROOTCLING = $env2->{Packages}->{ROOT}->{ROOTCLING}, RCINTPL = $RCINTPL ========================================\n" if ($DEBUG_CLING);
-    my $Package = $Dir . "/PACKAGE";
     my $LIBST   = $env2->{LIBS};
     my $LIBSP   = "";
-    my $libmysqlpath = "";
-    if ($Package and -r $Package) {
-      open(IN,"$Package") or die "Can't open $Package\n";
-      while (my $line = <IN>) {
-	next if $line =~ m/^\s*#/; print "$line"  if ($DEBUG_CLING);
-	my ($dummy,$lib,$libst) = split /:/, $line;
-	print "Read PACKAGE;\t |$dummy| \t |$lib| \t|$libst| for SO_PKG = |$SO_PKG|\n" if ($DEBUG_CLING);
-	next if $lib !~ /$SO_PKG/;
-	my ($d,$l) = split /\=/, $libst; print "d = $d \t l = $l\n"  if ($DEBUG_CLING);
-	if ($d =~ m/\+/) {$LIBSP .= " " . $l;}
-	else             {$LIBSP = $l;}
-	my @libs = split(' ',$LIBSP);
-	foreach my $lib (@libs) {
-	  if ($lib eq "-lmysqlclient") {
-	    $libmysqlpath = $env2->{Packages}->{MYSQL}->{LIBDIR};
-	  }
-	  my $fullname = $lib; $fullname =~ s/-l/lib/; print "lib = $lib => fullname = $fullname\n"  if ($DEBUG_CLING);
-	  my @pathes = split($main::PATH_SEPARATOR, $env->{LIBPATH});
-	  my $found_path = "";
-	  foreach my $path (@pathes) {
-	    foreach my $suffix ($env2->{SUFSOLIB}, $env2->{SUFLIBS}) {
-	      my $checkpath = $path . "/" . $fullname . "." . $suffix; print "checkpath = $checkpath\n"  if ($DEBUG_CLING);
-	      if (-r $checkpath) {$found_path = $checkpath; last;}
-	    }
-	    if ($found_path) {last;}
-	  }
-	   if (! $found_path) {
-	     my $libpkg = $LIB . "/" . $fullname . "." . $env2->{SUFSOLIB}; print "Depends $SO_PKG, $libpkg;\n"  if ($DEBUG_CLING);
-#	     print "PACKAGE: $libpkg ================================================================================\n";
-	     Depends $env $SO_PKG, $libpkg;
-	   }
-	}
-      }
-      close(IN);
-      chomp($LIBSP); print "LIBSP = $LIBSP ================================================================================\n" if ($DEBUG_CLING);
-      if ($LIBSP) {
-	$env2->{LIBS} = $LIBST . $LIBSP; 
-	$env2->{LIBPATH} .= $main::PATH_SEPARATOR . $LIBPATH;
-	if ($libmysqlpath) {$env2->{LIBPATH} .= $main::PATH_SEPARATOR . $libmysqlpath;}
-	print "env2->{LIBPATH} = $env2->{LIBPATH} $env2->{LIBS} = $env2->{LIBS} \n" if ($DEBUG_CLING);
-      }
-       Depends $env2 $CintFiles[0], "#" . $Package;
-    }
+#     my $libmysqlpath = "";
+#     my $Package = $Dir . "/PACKAGE";
+#     if ($Package and -r $Package) {
+#       open(IN,"$Package") or die "Can't open $Package\n";
+#       while (my $line = <IN>) {
+# 	next if $line =~ m/^\s*#/; print "$line"  if ($DEBUG_CLING);
+# 	my ($dummy,$lib,$libst) = split /:/, $line;
+# 	print "Read PACKAGE;\t |$dummy| \t |$lib| \t|$libst| for SO_PKG = |$SO_PKG|\n" if ($DEBUG_CLING);
+# 	next if $lib !~ /$SO_PKG/;
+# 	my ($d,$l) = split /\=/, $libst; print "d = $d \t l = $l\n"  if ($DEBUG_CLING);
+# 	if ($d =~ m/\+/) {$LIBSP .= " " . $l;}
+# 	else             {$LIBSP = $l;}
+# 	my @libs = split(' ',$LIBSP);
+# 	foreach my $lib (@libs) {
+# 	  if ($lib eq "-lmysqlclient") {
+# 	    $libmysqlpath = $env2->{Packages}->{MYSQL}->{LIBDIR};
+# 	  }
+# 	  my $fullname = $lib; $fullname =~ s/-l/lib/; print "lib = $lib => fullname = $fullname\n"  if ($DEBUG_CLING);
+# 	  my @pathes = split($main::PATH_SEPARATOR, $env->{LIBPATH});
+# 	  my $found_path = "";
+# 	  foreach my $path (@pathes) {
+# 	    foreach my $suffix ($env2->{SUFSOLIB}, $env2->{SUFLIBS}) {
+# 	      my $checkpath = $path . "/" . $fullname . "." . $suffix; print "checkpath = $checkpath\n"  if ($DEBUG_CLING);
+# 	      if (-r $checkpath) {$found_path = $checkpath; last;}
+# 	    }
+# 	    if ($found_path) {last;}
+# 	  }
+# 	   if (! $found_path) {
+# 	     my $libpkg = $LIB . "/" . $fullname . "." . $env2->{SUFSOLIB}; print "Depends $SO_PKG, $libpkg;\n"  if ($DEBUG_CLING);
+# #	     print "PACKAGE: $libpkg ================================================================================\n";
+# 	     Depends $env $SO_PKG, $libpkg;
+# 	   }
+# 	}
+#       }
+#       close(IN);
+#       chomp($LIBSP); print "LIBSP = $LIBSP ================================================================================\n" if ($DEBUG_CLING);
+#       if ($LIBSP) {
+# 	$env2->{LIBS} = $LIBST . $LIBSP; 
+# 	$env2->{LIBPATH} .= $main::PATH_SEPARATOR . $LIBPATH;
+# 	if ($libmysqlpath) {$env2->{LIBPATH} .= $main::PATH_SEPARATOR . $libmysqlpath;}
+# 	print "env2->{LIBPATH} = $env2->{LIBPATH} $env2->{LIBS} = $env2->{LIBS} \n" if ($DEBUG_CLING);
+#       }
+#        Depends $env2 $CintFiles[0], "#" . $Package;
+#     }
     my $LLIB = $LIB; $LLIB =~ s/^\#//;
     my $loclib = $SO_PKG;
     if ($loclib !~ /^lib/) {$loclib = "lib" . $loclib;}
