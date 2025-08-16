@@ -851,6 +851,7 @@
 			    'HOME'            => $HOME,
 			    'GARFIELD_HOME'   => $GARFIELD_HOME,
 			    'NODEBUG'         => $NODEBUG,
+			    'DB_SERVER_LOCAL_CONFIG' => $DB_SERVER_LOCAL_CONFIG,
 			    'CC'       => $CC, #         C compiler command
 			    'CFLAGS'   => $CFLAGS, #     C compiler flags
 			    'LDFLAGS'  => $LDFLAGS, #    linker flags, e.g. -L<lib dir> if you have libraries in a nonstandard directory <lib dir>
