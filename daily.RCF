@@ -5731,3 +5731,218 @@ compiler-wrapper@1.0                gcc-runtime@11.5.0  openjdk@17.0.11_9  py-ca
 
 int: Use -f if you really want to add them.
 hint: Disable this message with "git config advice.addIgnoredFile false"
+================================================================================
+08/08/2025
+in cons 
+St_db_Maker:ERROR - StDbManagerImpl::lookUpServers(): DB_SERVER_LOCAL_CONFIG is undefined! 
+St_db_Maker:ERROR - StDbManagerImpl::lookUpServers(): could not open /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbLoadBalancerGlobalConfig.xml
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServers(): config file name is 
+St_db_Maker:ERROR - StDbManagerImpl::lookUpServers() StDbServiceBroker error 2 disable XML loadbalancing 
+ looking at 1 /star/u/fisyak/dbServers.xml
+DB OVERRIDE default user with: fisyak
+ looking at 2 /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+DB OVERRIDE default user with: fisyak
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServer() line=713 
+******** Order of Files searched for dbServers ********* 
+  2. /star/u/fisyak/dbServers.xml
+  3. /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+********************************************************
+
+St_db_Maker:INFO  - MysqlDb::Connect: Load balancer took 0 ms, will use robinson.star.bnl.gov:3306
+St_db_Maker:INFO  - Ssl_cipher = AES128-SHA
+St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=robinson.star.bnl.gov:3306
+ --> Connection Time=0.0277119 sec    MysqlVersion=5.7.24-log
+St_db_Maker:ERROR - MysqlDb::ExecQuery() line=667  Query Failed  Malformed packet
+================================================================================
+08/09/2025 merge with v6.36.02
+CMake Warning at cmake/modules/RootMacros.cmake:933 (add_library):
+  Cannot generate a safe runtime search path for target RGL because files in
+  some directories may conflict with libraries in implicit directories:
+
+    runtime library [libSM.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libsm-1.2.6-om4q2xwennm7fia2a2nzqhhzlhw3wblt/lib
+    runtime library [libICE.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libice-1.1.2-htwbo63s2kn6kossoq2hckjwq6fsn3nw/lib
+    runtime library [libX11.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libx11-1.8.11-gin5ebgahluntbofi65d5i35m6xzbd4h/lib
+    runtime library [libXext.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libxext-1.3.6-ambh7a42xppfdadyhrpqfpox6lu5p6xw/lib
+
+  Some of these libraries may not be found correctly.
+Call Stack (most recent call first):
+  cmake/modules/RootMacros.cmake:1358 (ROOT_LINKER_LIBRARY)
+  graf3d/gl/CMakeLists.txt:28 (ROOT_STANDARD_LIBRARY_PACKAGE)
+
+================================================================================
+08/13/2025 
+[starsub02] ~/pwg/dEdx/RunXXIV06/pp200_LowLuminosity $ grep -m 1 node `grep -l -m 1 illegal *.log` | awk '{print $16}' | sort -u
+spool0201.sdcc.bnl.gov
+spool0202.sdcc.bnl.gov
+spool0203.sdcc.bnl.gov
+spool0205.sdcc.bnl.gov
+spool0206.sdcc.bnl.gov
+spool0207.sdcc.bnl.gov
+spool0209.sdcc.bnl.gov
+spool0210.sdcc.bnl.gov
+spool0211.sdcc.bnl.gov
+spool0212.sdcc.bnl.gov
+spool0213.sdcc.bnl.gov
+spool0214.sdcc.bnl.gov
+spool0215.sdcc.bnl.gov
+spool0217.sdcc.bnl.gov
+spool0218.sdcc.bnl.gov
+spool0219.sdcc.bnl.gov
+spool0220.sdcc.bnl.gov
+spool0221.sdcc.bnl.gov
+spool0222.sdcc.bnl.gov
+spool0223.sdcc.bnl.gov
+spool0224.sdcc.bnl.gov
+spool0225.sdcc.bnl.gov
+spool0226.sdcc.bnl.gov
+spool0227.sdcc.bnl.gov
+spool0228.sdcc.bnl.gov
+spool0229.sdcc.bnl.gov
+spool0231.sdcc.bnl.gov
+spool0232.sdcc.bnl.gov
+spool0233.sdcc.bnl.gov
+spool0234.sdcc.bnl.gov
+spool0237.sdcc.bnl.gov
+spool0238.sdcc.bnl.gov
+spool0239.sdcc.bnl.gov
+spool0240.sdcc.bnl.gov
+spool0241.sdcc.bnl.gov
+spool0242.sdcc.bnl.gov
+spool0243.sdcc.bnl.gov
+spool0244.sdcc.bnl.gov
+spool0246.sdcc.bnl.gov
+spool0247.sdcc.bnl.gov
+spool0249.sdcc.bnl.gov
+spool0250.sdcc.bnl.gov
+spool0252.sdcc.bnl.gov
+spool0253.sdcc.bnl.gov
+spool0254.sdcc.bnl.gov
+spool0255.sdcc.bnl.gov
+spool0256.sdcc.bnl.gov
+spool0260.sdcc.bnl.gov
+spool0261.sdcc.bnl.gov
+spool0264.sdcc.bnl.gov
+spool0265.sdcc.bnl.gov
+spool0266.sdcc.bnl.gov
+spool0267.sdcc.bnl.gov
+spool0269.sdcc.bnl.gov
+spool0270.sdcc.bnl.gov
+spool0271.sdcc.bnl.gov
+spool0272.sdcc.bnl.gov
+spool0273.sdcc.bnl.gov
+spool0274.sdcc.bnl.gov
+spool0275.sdcc.bnl.gov
+spool0278.sdcc.bnl.gov
+spool0279.sdcc.bnl.gov
+spool0280.sdcc.bnl.gov
+spool0281.sdcc.bnl.gov
+spool0282.sdcc.bnl.gov
+spool0283.sdcc.bnl.gov
+spool0285.sdcc.bnl.gov
+spool0287.sdcc.bnl.gov
+spool0289.sdcc.bnl.gov
+spool0290.sdcc.bnl.gov
+spool0291.sdcc.bnl.gov
+spool0292.sdcc.bnl.gov
+spool0293.sdcc.bnl.gov
+spool0295.sdcc.bnl.gov
+spool0588.sdcc.bnl.gov
+spool0589.sdcc.bnl.gov
+spool0590.sdcc.bnl.gov
+spool0591.sdcc.bnl.gov
+spool0592.sdcc.bnl.gov
+spool0593.sdcc.bnl.gov
+spool0594.sdcc.bnl.gov
+spool0595.sdcc.bnl.gov
+spool0597.sdcc.bnl.gov
+spool0598.sdcc.bnl.gov
+spool0599.sdcc.bnl.gov
+spool0602.sdcc.bnl.gov
+spool0603.sdcc.bnl.gov
+spool0604.sdcc.bnl.gov
+spool0605.sdcc.bnl.gov
+spool0606.sdcc.bnl.gov
+spool0607.sdcc.bnl.gov
+spool0610.sdcc.bnl.gov
+spool0611.sdcc.bnl.gov
+spool0612.sdcc.bnl.gov
+spool0613.sdcc.bnl.gov
+spool0614.sdcc.bnl.gov
+spool0615.sdcc.bnl.gov
+spool0616.sdcc.bnl.gov
+spool0617.sdcc.bnl.gov
+spool0618.sdcc.bnl.gov
+spool0619.sdcc.bnl.gov
+spool0620.sdcc.bnl.gov
+spool0621.sdcc.bnl.gov
+spool0623.sdcc.bnl.gov
+spool0624.sdcc.bnl.gov
+spool0626.sdcc.bnl.gov
+spool0627.sdcc.bnl.gov
+spool0628.sdcc.bnl.gov
+spool0630.sdcc.bnl.gov
+spool0631.sdcc.bnl.gov
+spool0632.sdcc.bnl.gov
+spool0633.sdcc.bnl.gov
+spool0634.sdcc.bnl.gov
+spool0637.sdcc.bnl.gov
+spool0639.sdcc.bnl.gov
+spool0640.sdcc.bnl.gov
+spool0641.sdcc.bnl.gov
+spool0642.sdcc.bnl.gov
+spool0643.sdcc.bnl.gov
+--------------------------------------------------------------------------------
+root.exe [1] .class StEventClusteringHints
+===========================================================================
+class StEventClusteringHints
+ size=0xb0 FILE:/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so LINE:-1
+ (tagnum=5725,voffset=-1,isabstract=0,parent=-1,gcomp=0:-1,funcs(dn21=~xcpd)=77)
+List of base class--------------------------------------------------------
+0x0        public: StObject //Base class for StEvent
+  0x0        public: TObject //Basic ROOT object
+List of member variable---------------------------------------------------
+Defined in StEventClusteringHints
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: TObject* fParent //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,string>* mNameMap //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,string> mDstMap , size=0 //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,string> mMiniDstMap , size=0 //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,int> mBranchIds , size=0 //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0x0        private: static TClass* fgIsA
+List of member function---------------------------------------------------
+filename       line:size busy function type and name  (in StEventClusteringHints)
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual void ~StEventClusteringHints(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: StEventClusteringHints StEventClusteringHints(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void setDstMode(void); //switch to DST mode
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void setMiniDstMode(void); //switch to miniDST mode
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: const char* branchName(const char*) const; //get branch name for given class name
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: int branchId(const char*) const; //return unique ID for given branch
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void SetParent(TObject* par);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void setBranch(const char*,const char*,int); //assign classname with a branch name (incl. ID)
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void print(ostream&=cout); //print current configuration
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 private: StEventClusteringHints StEventClusteringHints(const StEventClusteringHints&);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static TClass* Class(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static const char* Class_Name(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static Version_t Class_Version(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static void Dictionary(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual TClass* IsA(void) const;
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual void ShowMembers(TMemberInspector&);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual void Streamer(TBuffer&);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void StreamerNVirtual(TBuffer& ClassDef_StreamerNVirtual_b);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static const char* DeclFileName(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static int ImplFileLine(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static const char* ImplFileName(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static int DeclFileLine(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: StEventClusteringHints& operator=(const StEventClusteringHints&);
+================================================================================
+08/14/2025
+26p5GeV_fixedTarget_2021 =>  St_beamInfoC::instance()->SqrtS()= 7.15212249755859375e+00
+14p5                                                            5.36067247390747070e+00
+9p5                                                             4.40743684768676758e+00
+9p8                                                             4.47036695480346680e+00
+10                                                              4.51183223724365234e+00
+9p95                                                            4.50150156021118164e+00
+ 7.15212249755859375e+00, 5.36067247390747070e+00, 4.40743684768676758e+00, 4.47036695480346680e+00, 4.51183223724365234e+00
