@@ -110,6 +110,6 @@
 <li> TFG25c Move spack to opt/star, freeze GMT, dEdx pp500_2022          2025-03-26 15:04:41 -0400  (HEAD -> TFG, tag: TFG25c)
 <li> TFG25d Freeze before geometry modifications                         2025-06-29 10:34:22 -0400  (HEAD -> TFG, tag: TFG25d_2)
 <li> TFG25e new cernlib for Alma Linux, remove spack mysql               2025-07-25 14:39:35 -0400  (tag: TFG25e_1)
-<li> TFG25f add UrQMD                                                    2025-08-16 14:39:35 -0400  (HEAD -> TFG, tag: TFG25f)
+<li> TFG25f add UrQMD                                                    2025-08-16 18:32:46 -0400  (HEAD -> TFG, tag: TFG25f)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
