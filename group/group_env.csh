@@ -407,7 +407,11 @@ if ( -x ${GROUP_DIR}/dropit) then
 else
     setenv GROUPPATH ${GROUP_DIR}:mgr:${STAR_MGR}:mgr/bin:${STAR_MGR}/bin:${STAR_SCRIPTS}:${STAR_CGI}:${MINE_BIN}:${STAR_BIN} #:${STAF}/mgr:${STAF_BIN}
     setenv PATH  ${XOPTSTAR}/bin:${XOPTSTAR}/spack/bin:$PATH
-    setenv LD_LIBRARY_PATH ${XOPTSTAR}/lib:${XOPTSTAR}/spack/lib:${LD_LIBRARY_PATH}
+endif
+if ( $USE_64BITS == 1 ) then
+      setenv LD_LIBRARY_PATH ${XOPTSTAR}/lib:${XOPTSTAR}/spack/lib64:${XOPTSTAR}/spack/lib:${LD_LIBRARY_PATH}
+else 
+      setenv LD_LIBRARY_PATH ${XOPTSTAR}/lib:${XOPTSTAR}/spack/lib:${LD_LIBRARY_PATH}
 endif
  
 # test return value of PTEST from dropit
