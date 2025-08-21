@@ -7,10 +7,7 @@
   set Name = `basename $PWD`
 #  setenv NODEBUG yes
 #  setup 64b
-#   starver TFG19a
-#  starver .DEV2 
-#  starver TFG17u 
-#  starver TFG17v 
+#  starver TFG25f
   set file = $INPUTFILE0;
 #  set rung = `echo $file | awk -F\: '{print $1}'`
 #  set f    = `echo $file | awk -F\: '{print $2}'`
@@ -31,8 +28,10 @@
 #  set KFVertex = "";
 #  echo $Name | grep -i KFV
 #  if (! $?) set KFVertex = ",KFVertex";
-#  if (! -r ${generF} ) then
-     root.exe -q -b -x 'bfc.C(100,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,StiPulls,McTpcAna,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+  if (! -r ${generF} ) then
+     if (-r ${logName}) rm ${logName}
+      hostname &gt;&amp;  ${logName}
+     root.exe -q -b -x 'bfc.C(100,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,StiPulls,McTpcAna,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->
@@ -43,7 +42,11 @@ foreach f (`ls -1d /gpfs01/star/pwg/vassilie/phqmd/bin*/*.root`)
 end
 <input URL="file:/star/subsys/tpc/fisyak/simu/phqmd/3GeV/phqmd_*.root" />
 <input URL="file:/net/l404/data/fisyak/simu/3p85_fixedTarget/phqmd/*.root" />
--->
 <input URL="file:/gpfs01/star/pwg_tasks/simulations/UrQMD/IMP/4p5/roots/000*.root" />
+<input URL="file:/gpfs01/star/pwg_tasks/simulations/UrQMD/IMP/4p5/roots/00[0-7][1-9]*.root" />
+<input URL="file:/gpfs01/star/pwg_tasks/simulations/UrQMD/IMP/4p5/roots/00[0-7][1-9]*.root" />
+-->
+<input URL="command:lsROOT.pl /gpfs01/star/pwg_tasks/simulations/UrQMD/IMP/4p5/roots" />
+
 </job>
 
