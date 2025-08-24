@@ -318,6 +318,11 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"Cosmic_2024_RFA", 			     20240416, 161358, "y2024z", "Cosmic_2024/RFA"}, 
   {"pp200_lowlumi",	                     20240430,  70551, "y2024z", "pp200_lowlumi"}, // 1st run = 25121013		     
   {"pp200_LowLuminosity",	             20240430,  74640, "y2024z", "pp200_LowLuminosity"}, // 1st run = 25121016		     
+
+  {"pp200_LowLuminositya",	             20240501,  75505, "y2024z", "pp200_LowLuminosity"}, // 1st run = 25122005		     
+  {"pp200_LowLuminosityb",	             20240509, 225743, "y2024z", "pp200_LowLuminosity"}, // 1st run = 25130036		     
+  {"pp200_LowLuminosityc",	             20240510, 193924, "y2024z", "pp200_LowLuminosity"}, // 1st run = 25131040		     
+
   {"pp200_HighLuminosity",	             20240513, 173321, "y2024z", "pp200_HighLuminosity"}, // 1st run = 25134037		     
   {"pp200_LowLuminosity_b",	             20240514,  11109, "y2024z", "pp200_LowLuminosity"}, // 1st run = 25134054		     
   {"pp200_HighLuminosity_b",	             20240517,  35506, "y2024z", "pp200_HighLuminosity"}, // 1st run = 25137047		     
