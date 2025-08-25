@@ -15,6 +15,24 @@
 14      HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
 15      HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBE[1]/GEMG[1]
 16      HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[146]
+y2025z
+1       HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[76]
+2       HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+3       HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+4       HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+5       HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+6       HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+7       HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+8       HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+9       HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+10      HALL[1]/CAVE[1]/BBCM[2]/BBCA[1]/THXM[6]/SHXT[3]/BPOL[1]
+11      HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+12      HALL[1]/CAVE[1]/FSTM[1]/FSTD[6]/FSTW[12]/FTUS[3]
+13      HALL[1]/CAVE[1]/ETOF[324]/EGAS[1]/ECOU[3]/EGAP[12]/ECEL[32]
+14      HALL[1]/CAVE[1]/EPDM[2]/EPSS[12]/EPDT[62]
+15      HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGP[1]
+16      HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGL[1]
+17      HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGS[1]
 
   root.exe 'Load.C("libsim_Tables")' 'LoopOverSens.C+("y2019")'
 
@@ -36,6 +54,9 @@
 #include "TGeoManager.h"
 #include "TGeoVolume.h"
 #include "TInterpreter.h"
+#include "TGeoPhysicalNode.h"
+#include "TGeoMatrix.h"
+#include "TVector3.h"
 #else
 class det_path_st;
 class St_det_path;
@@ -154,7 +175,7 @@ Int_t LoopOverTgeo(TGeoNode *nodeT = 0, TString pathT = "") {
   return NoSensVolumes;
 }
 //________________________________________________________________________________
-void LoopOverSens(const Char_t *vers="upgr13") {
+void LoopOverSens(const Char_t *vers="y2025z") {
 #if defined(__CINT__) && ! defined(__MAKECINT__)
   gSystem->Load("libsim_Tables");
 #endif
@@ -191,4 +212,32 @@ void LoopOverSens(const Char_t *vers="upgr13") {
     cout << endl;
   }
 }
+//________________________________________________________________________________
+//                               HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+void GetGMT(const Char_t *fmt = "HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_%i/BSEC_%i/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_%i/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1", Int_t n1 = 2, Int_t n2 = 48, Int_t n3 = 2) {
+  TGeoPhysicalNode *nodeP = 0;
+  for (Int_t i = 1; i <= n1; i++) 
+    for (Int_t j = 1; j <= n2; j++)
+      for (Int_t k = 1; k <= n3; k++) {
+	nodeP =  gGeoManager->MakePhysicalNode(Form(fmt,i,j,k));
+	if (! nodeP) continue;
+	//	nodeP->Print();
+	TGeoHMatrix *mat = nodeP->GetMatrix();
+	TVector3 R(mat->GetTranslation());
+	cout << nodeP->GetName() << "\tR = " << R.Perp() << "\tZ = " << R.Z() << endl;
+	mat->Print();
+      }
+}
+/*
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 184.916342
+  0.500000   -0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000   -1.000000    Tz =  16.874003
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 184.916342
+  0.500000   -0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000   -1.000000    Tz = 207.564503
 
+ */
