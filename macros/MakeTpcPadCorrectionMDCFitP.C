@@ -505,8 +505,8 @@ void FitP::Mdf(Int_t sector, Int_t qB, Int_t IO, Int_t max, Int_t maxTerm, Int_t
     if (ix == 0 || jy == 0)   continue;
     if (x < xmin || x > xmax) continue;
     if (dmu    > 0.15) continue;
-    if (dsigma > 0.05) continue;
-    if (chisq >  200.) continue;
+    //    if (dsigma > 0.05) continue;
+    if (chisq >  1e3) continue;
     if (mu    <= -0.8) continue;
     /*
       
