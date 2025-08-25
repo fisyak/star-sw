@@ -193,14 +193,14 @@ Int_t SetFileList() {
 	fnx = nx;
       }
       fxMin = TMath::Min(fxMin, xMin);
-      fxMax = TMath::Min(fxMax, xMax);
+      fxMax = TMath::Max(fxMax, xMax);
       if (mu->GetDimension() == 2) {
 	Int_t ny = mu->GetYaxis()->GetNbins();
 	Double_t yMin = mu->GetYaxis()->GetXmin();
 	Double_t yMax = mu->GetYaxis()->GetXmax();
 	fny = ny;
 	fyMin = TMath::Min(fyMin, yMin);
-	fyMax = TMath::Min(fyMax, yMax);
+	fyMax = TMath::Max(fyMax, yMax);
       }
     } else {
       if (fnx > 0) continue;
@@ -661,9 +661,9 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.BeginsWith("neN"))      {
     MuDraw("mu:x","PI", nx, xMin, xMax, "(i&&j&&dmu<0.1&&dsigma<0.04&&dp3<1&&mu<1&&p3>0)", "prof", 0.5,  1.0, Title, "neN","#mu versus log(nP)");
   } else if (Name.Contains("Time"))      {
-    nx = 20;
-    xMin = 834.1e6;
-    xMax = 836e6;
+    nx = fnx; // 20;
+    xMin = fxMin; //834.1e6;
+    xMax = fxMax; //836e6;
     if (plot == "sigma") {
       MuDraw("sigma:x","TimeL",nx, xMin, xMax, "(i&&dmu>0&&dmu<2e-2&&dsigma<2e-2)", "prof", -0.4,  1.4, Title, "Time","#sigma vsu Time)");
     } else {
