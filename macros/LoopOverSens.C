@@ -229,15 +229,68 @@ void GetGMT(const Char_t *fmt = "HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_%i/BSEC_%
       }
 }
 /*
-HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 16.874
+ https://drupal.star.bnl.gov/STAR/blog/genevb/gmt-module-positions
+2014-06-20 16:21.
+From my CADD files of the TOF trays, this GEM origin in |Z| is
+thus nominally
+position 1 (|eta|~0): Z = 1.665 + 1.064 = 2.729"   =   6.932 cm
+position 8 (|eta|~1): Z = 76.740 + 1.064 = 77.768" = 197.531 cm
+
+again - this is the high-phi, low-|eta| corner of the gems
+not their centroid (as e.g. geant would want).
+
+In R...
+82.642          (top surface of TPC rail, 209.91cm)
++ (3.050-0.30)  (bottom assy to upper pem nut)
++ (1.300-0.75)  (top assy from lower through hole)
+-------------
+85.942" = 218.2927 cm
+
+with richard's offset of 0.336", the R-center of the gem fiducial
+is then at 85.606" = 217.3924 cm o.k.
+Bill
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------                                 217.3924 - 213.523 = 3.8694
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 16.874 : 16.874 - 6.932 = 9.942
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
   0.866025    0.500000    0.000000    Tx = 184.916342
   0.500000   -0.866025    0.000000    Ty = 106.761500
   0.000000    0.000000   -1.000000    Tz =  16.874003
-HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 207.565
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 207.565 : 207.565 - 197.531 = 10.034
+
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
   0.866025    0.500000    0.000000    Tx = 184.916342
   0.500000   -0.866025    0.000000    Ty = 106.761500
   0.000000    0.000000   -1.000000    Tz = 207.564503
-
- */
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = 16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 106.761500
+ -0.866025   -0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000   -1.000000    Tz =  16.874003
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = 207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 106.761500
+ -0.866025   -0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000   -1.000000    Tz = 207.564503
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 106.761500
+ -0.866025    0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000    1.000000    Tz = -16.874003
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 106.761500
+ -0.866025    0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000    1.000000    Tz = -207.564503
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 184.916342
+  0.500000    0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000    1.000000    Tz = -16.874003
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 184.916342
+  0.500000    0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000    1.000000    Tz = -207.564503
+*/
