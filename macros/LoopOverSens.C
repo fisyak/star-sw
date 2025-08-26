@@ -57,6 +57,7 @@ y2025z
 #include "TGeoPhysicalNode.h"
 #include "TGeoMatrix.h"
 #include "TVector3.h"
+#include "TMath.h"
 #else
 class det_path_st;
 class St_det_path;
@@ -216,15 +217,31 @@ void LoopOverSens(const Char_t *vers="y2025z") {
 //                               HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
 void GetGMT(const Char_t *fmt = "HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_%i/BSEC_%i/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_%i/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1", Int_t n1 = 2, Int_t n2 = 48, Int_t n3 = 2) {
   TGeoPhysicalNode *nodeP = 0;
+  struct Module_t {Int_t n1, n2, n3;};
+  Module_t Module[8] = {
+    { 1, 23, 2},
+    { 1, 23, 1},
+    { 2, 33, 2},
+    { 2, 33, 1},
+    { 1,  8, 2},
+    { 1,  8, 1},
+    { 2, 48, 2},
+    { 2, 48, 1}
+  };
+#if 0
   for (Int_t i = 1; i <= n1; i++) 
     for (Int_t j = 1; j <= n2; j++)
       for (Int_t k = 1; k <= n3; k++) {
 	nodeP =  gGeoManager->MakePhysicalNode(Form(fmt,i,j,k));
+#else
+	for (Int_t m = 0; m < 8; m++) {
+	  nodeP =  gGeoManager->MakePhysicalNode(Form(fmt,Module[m].n1,Module[m].n2,Module[m].n3));
+#endif
 	if (! nodeP) continue;
 	//	nodeP->Print();
 	TGeoHMatrix *mat = nodeP->GetMatrix();
 	TVector3 R(mat->GetTranslation());
-	cout << nodeP->GetName() << "\tR = " << R.Perp() << "\tZ = " << R.Z() << endl;
+	cout << nodeP->GetName() << "\tR = " << R.Perp() << "\tZ = " << R.Z() << "\tPhi = " << TMath::RadToDeg()*R.Phi() << "\tmodule = " << m << endl;
 	mat->Print();
       }
 }
@@ -254,43 +271,166 @@ Bill
 --------------------------------------------------------------------------------                                 217.3924 - 213.523 = 3.8694
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 16.874 : 16.874 - 6.932 = 9.942
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.866025    0.500000    0.000000    Tx = 184.916342
+  0.866025    0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
   0.500000   -0.866025    0.000000    Ty = 106.761500
-  0.000000    0.000000   -1.000000    Tz =  16.874003
+  0.000000    0.000000   -1.000000    Tz =  16.874003                                         module 5
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 207.565 : 207.565 - 197.531 = 10.034
-
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.866025    0.500000    0.000000    Tx = 184.916342
+  0.866025    0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
   0.500000   -0.866025    0.000000    Ty = 106.761500
-  0.000000    0.000000   -1.000000    Tz = 207.564503
+  0.000000    0.000000   -1.000000    Tz = 207.564503                                         module 4
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = 16.874
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.500000   -0.866025    0.000000    Tx = 106.761500
+  0.500000   -0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
  -0.866025   -0.500000    0.000000    Ty = -184.916342
-  0.000000    0.000000   -1.000000    Tz =  16.874003
+  0.000000    0.000000   -1.000000    Tz =  16.874003                                         module 1
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = 207.565
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.500000   -0.866025    0.000000    Tx = 106.761500
+  0.500000   -0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
  -0.866025   -0.500000    0.000000    Ty = -184.916342
-  0.000000    0.000000   -1.000000    Tz = 207.564503
+  0.000000    0.000000   -1.000000    Tz = 207.564503                                         module 0
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -16.874
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.500000    0.866025    0.000000    Tx = 106.761500
+  0.500000    0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
  -0.866025    0.500000    0.000000    Ty = -184.916342
-  0.000000    0.000000    1.000000    Tz = -16.874003
+  0.000000    0.000000    1.000000    Tz = -16.874003                                         module 3
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -207.565
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.500000    0.866025    0.000000    Tx = 106.761500
+  0.500000    0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
  -0.866025    0.500000    0.000000    Ty = -184.916342
-  0.000000    0.000000    1.000000    Tz = -207.564503
+  0.000000    0.000000    1.000000    Tz = -207.564503                                        module 2
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -16.874
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.866025   -0.500000    0.000000    Tx = 184.916342
+  0.866025   -0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
   0.500000    0.866025    0.000000    Ty = 106.761500
-  0.000000    0.000000    1.000000    Tz = -16.874003
+  0.000000    0.000000    1.000000    Tz = -16.874003                                         module 7
 HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -207.565
 matrix global_15 - tr=1  rot=1  refl=0  scl=0
-  0.866025   -0.500000    0.000000    Tx = 184.916342
+  0.866025   -0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
   0.500000    0.866025    0.000000    Ty = 106.761500
-  0.000000    0.000000    1.000000    Tz = -207.564503
+  0.000000    0.000000    1.000000    Tz = -207.564503                                         module 6
+--------------------------------------------------------------------------------                                 217.3924 - 213.523 = 3.8694
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = 207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
+ -0.866025   -0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000   -1.000000    Tz = 207.564503                                         module 0 +1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = 16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
+ -0.866025   -0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000   -1.000000    Tz =  16.874003                                         module 1 +1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
+ -0.866025    0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000    1.000000    Tz = -207.564503                                        module 2 -1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 106.761500 TMath::RadToDeg()*TMath::ATan2(-184.916342,106.761500) = -60
+ -0.866025    0.500000    0.000000    Ty = -184.916342
+  0.000000    0.000000    1.000000    Tz = -16.874003                                         module 3 -1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 207.565 : 207.565 - 197.531 = 10.034
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
+  0.500000   -0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000   -1.000000    Tz = 207.564503                                         module 4 +1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 213.523     Z = 16.874 : 16.874 - 6.932 = 9.942
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
+  0.500000   -0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000   -1.000000    Tz =  16.874003                                         module 5 +1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -207.565
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
+  0.500000    0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000    1.000000    Tz = -207.564503                                         module 6 -1
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 213.523     Z = -16.874
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 184.916342 TMath::RadToDeg()*TMath::ATan2(106.761500,184.916342) = 30
+  0.500000    0.866025    0.000000    Ty = 106.761500
+  0.000000    0.000000    1.000000    Tz = -16.874003                                         module 7 -1
+================================================================================
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 215.591     Z = 11.834
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 186.707283
+  0.500000    0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000    1.000000    Tz =  11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 215.591     Z = 202.524
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 186.707283
+  0.500000    0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000    1.000000    Tz = 202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = 11.834
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 107.795500
+ -0.866025    0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000    1.000000    Tz =  11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = 202.524
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 107.795500
+ -0.866025    0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000    1.000000    Tz = 202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -11.834
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 107.795500
+ -0.866025   -0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000   -1.000000    Tz = -11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -202.524
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 107.795500
+ -0.866025   -0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000   -1.000000    Tz = -202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -11.834
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 186.707283
+  0.500000   -0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000   -1.000000    Tz = -11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -202.524
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 186.707283
+  0.500000   -0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000   -1.000000    Tz = -202.524500
+================================================================================
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = 202.524     Phi = -60       module = 0
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 107.795500
+ -0.866025    0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000    1.000000    Tz = 202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_23/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = 11.834      Phi = -60       module = 1
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000    0.866025    0.000000    Tx = 107.795500
+ -0.866025    0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000    1.000000    Tz =  11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -202.524    Phi = -60       module = 2
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 107.795500
+ -0.866025   -0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000   -1.000000    Tz = -202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_33/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -11.834     Phi = -60       module = 3
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.500000   -0.866025    0.000000    Tx = 107.795500
+ -0.866025   -0.500000    0.000000    Ty = -186.707283
+  0.000000    0.000000   -1.000000    Tz = -11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 215.591     Z = 202.524     Phi = 30        module = 4
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 186.707283
+  0.500000    0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000    1.000000    Tz = 202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_1/BSEC_8/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1    R = 215.591     Z = 11.834      Phi = 30        module = 5
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025   -0.500000    0.000000    Tx = 186.707283
+  0.500000    0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000    1.000000    Tz =  11.834000
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_2/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -202.524    Phi = 30        module = 6
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 186.707283
+  0.500000   -0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000   -1.000000    Tz = -202.524500
+HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_2/BSEC_48/BTRA_1/BXTR_1/BRTC_1/BGMT_1/GMTS_1/GSBA_1/GSBE_1/GETE_1/GMTB_1/GMTG_1   R = 215.591     Z = -11.834     Phi = 30        module = 7
+matrix global_15 - tr=1  rot=1  refl=0  scl=0
+  0.866025    0.500000    0.000000    Tx = 186.707283
+  0.500000   -0.866025    0.000000    Ty = 107.795500
+  0.000000    0.000000   -1.000000    Tz = -11.834000
+
 */
