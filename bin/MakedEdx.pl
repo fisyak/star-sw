@@ -2808,7 +2808,24 @@ if ($#ARGV >= 0) {
 #  /star/data*/reco/pp200_production*/*/P24iy_calib6/2024/*/*/st*.event.root
 #$hist = "RunXXIV06";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/13/2025 check 
 #$hist = "RunXXIV07";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/14/2025  TpcSecRowB.pp200_LowLuminosity.root
-$hist = "RunXXIV08";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/16/2025  TpcZCorrectionC.pp200_LowLuminosity.C
+#$hist = "RunXXIV08";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/16/2025  TpcZCorrectionC.pp200_LowLuminosity.C
+#$hist = "RunXXIV09";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/18/2025  TpcSecRowB.pp200_LowLuminosity[a-c].root
+#$hist = "RunXXIV10";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/19/2025  back to RunxXIV08 with TpcCurrentCorrectionX.pp200_LowLuminosity.C
+#$hist = "RunXXIV11";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/19/2025  TpcSecRowB.pp200_LowLuminosity.root
+#$hist = "RunXXIV12";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/20/2025  correct bug in TpcCurrentCorrectionX.pp200_LowLuminosity.C
+#$hist = "RunXXIV13";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/20/2025  TpcSecRowB.pp200_LowLuminosity.root
+#$hist = "RunXXIV14";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/21/2025  tpcTimeDependence.pp200_LowLuminosity?.C
+#$hist = "RunXXIV15";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/22/2025  TpcSecRowB.pp200_LowLuminosity.root
+#$hist = "RunXXIV16";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/23/2025  TpcPadCorrectionMDC.pp200_LowLuminosity.C
+#$hist = "RunXXIV17";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/23/2025  TpcSecRowB.pp200_LowLuminosity.root
+#$hist = "RunXXIV18";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/24/2025 TpcLengthCorrectionMDN.pp200_LowLuminosity.C
+#$hist = "RunXXIV19";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/24/2025 TpcEtaCorrectionB.pp200_LowLuminosity.C
+#$hist = "RunXXIV20";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/25/2025 TpcSecRowB.pp200_LowLuminosity.root
+#$hist = "RunXXIV21";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/25/2025  TpcZCorrectionC.pp200_LowLuminosity.C
+#$hist = "RunXXIV22";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/26/2025  TpcLengthCorrectionMDN.pp200_LowLuminosity.C  TpcSecRowB.pp200_LowLuminosity.root
+#$hist = "RunXXIV23";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/26/2025  TpcLengthCorrectionMDN.pp200_LowLuminosity.C 
+#$hist = "RunXXIV24";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/27/2025 move to MySQL
+$hist = "RunXXIV25";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "SL24y"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/28/2025 move to MySQL
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2991,10 +3008,22 @@ echo \"HOME is now $HOME\"
 
 #env
 ";
-	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
 	if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {
 	  print OUT "source $STAR/unsetupDEV2.csh\n";  
+          print OUT "starver $STAR_LEVEL\n";    
+# 	  print OUT "
+# setenv AFS_RHIC  /star/nfs4/AFS
+# setenv STAR_BASE_PATH ""
+# setenv USE_NFS4 1
+# setenv GROUP_DIR ${AFS_RHIC}/star/group
+# source $GROUP_DIR/star_cshrc.csh
+# unset  noclobber
+# setup  64bits
+# setenv NODEBUG yes
+# starver $STAR_LEVEL
+# ";
 	}
+	print OUT "setenv STARFPE NO; setenv NODEBUG yes\n";
 	print OUT " /usr/bin/test -d $scrr || mkdir -p $scrr\n";
 	my $cmd = "/usr/bin/test ! -r " . $root . " &&  hostname >>& $log  && root.exe -q -b  '" . $macro;
 	$cmd .= ".C(" . $First ."," .$Last. ",\"" . $ffile . "\",\"" . $root . "\"," . $Mode . ")\' >>& $log; ";

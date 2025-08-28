@@ -5946,3 +5946,30 @@ filename       line:size busy function type and name  (in StEventClusteringHints
 10                                                              4.51183223724365234e+00
 9p95                                                            4.50150156021118164e+00
  7.15212249755859375e+00, 5.36067247390747070e+00, 4.40743684768676758e+00, 4.47036695480346680e+00, 4.51183223724365234e+00
+================================================================================
+08/21/2025
+https://cernlib.web.cern.ch/version.html
+https://cernlib.web.cern.ch/install/install.html
+cmake -S mysourcedir -B mybuilddir -DCMAKE_INSTALL_PREFIX=myinstalldir 
+cmake --build mybuilddir 
+cmake --install mybuilddir 
+cd mybuilddir 
+ctest .
+--------------------------------------------------------------------------------
+[starsub02] ~/sources/cernlib/cernlib 
+
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/lib $ ln -s /usr/lib64/libnsl.so.1 libnsl.so
+[starsub02] ~/sources/cernlib/cernlib $ setenv CMAKE_LIBRARY_PATH $LD_LIBRARY_PATH 
+
+cmake -S ~/sources/cernlib/cernlib -B ~/sources/cernlib/build64x -DCMAKE_INSTALL_PREFIX=$XOPTSTAR/cern64
+cmake --build -j8 ~/sources/cernlib/build64x 
+cmake --install ~/sources/cernlib/build64x 
+cd ~/sources/cernlib/build64x 
+ctest .
+
+
+CMake Warning (dev) at CMakeLists.txt:987 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-dev to suppress it.
