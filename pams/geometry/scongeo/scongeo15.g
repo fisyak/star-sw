@@ -350,12 +350,12 @@ EndBlock
 Block SPOB is beam spoke assembly
 *   G10 is given as 60% SiO2 and 40% epoxy in ftpcgeo.g, from which
 *   the following is taken
-*      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
-*      Component  O   A=16     Z=8   W=0.6*2*16./60.
-*      Component  C   A=12     Z=6   W=0.4*8*12./174.
-*      Component  H   A=1      Z=1   W=0.4*14*1./174.
-*      Component  O   A=16     Z=8   W=0.4*4*16./174.
-*      Mixture G10  Dens=1.7
+      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
+      Component  O   A=16     Z=8   W=0.6*2*16./60.
+      Component  C   A=12     Z=6   W=0.4*8*12./174.
+      Component  H   A=1      Z=1   W=0.4*14*1./174.
+      Component  O   A=16     Z=8   W=0.4*4*16./174.
+      Mixture G10  Dens=1.7
       Material G10
       Attribute SPOB Seen=1 Colo=6
       SHAPE box dx=1.6 dy=1.25 dz = 0.8 
@@ -420,6 +420,12 @@ Endblock
 *------------------------------------------------------------------------------
 *
 Block SDSK is the beampipe support G10
+      Component  Si  A=28.08  Z=14  W=0.6*1*28./60.
+      Component  O   A=16     Z=8   W=0.6*2*16./60.
+      Component  C   A=12     Z=6   W=0.4*8*12./174.
+      Component  H   A=1      Z=1   W=0.4*14*1./174.
+      Component  O   A=16     Z=8   W=0.4*4*16./174.
+      Mixture G10  Dens=1.7
       Material G10
       Attribute SDSK Seen=1 Colo=6
       ShAPE TUBE rmin=SSUB_G10RI rmax=SSUB_G10RO dz=SSUB_G10Thk3/2
