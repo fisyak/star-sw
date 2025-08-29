@@ -235,7 +235,7 @@ void GetGMT(const Char_t *fmt = "HALL_1/CAVE_1/TpcRefSys_1/BTOF_1/BTOH_%i/BSEC_%
     TGeoHMatrix *mat = nodeP->GetMatrix();
     TVector3 R(mat->GetTranslation());
     cout << nodeP->GetName() << "\tR = " << R.Perp() << "\tZ = " << R.Z() << "\tPhi = " << TMath::RadToDeg()*R.Phi() << "\tmodule = " << m << endl;
-    mat->Print();x2
+    mat->Print();
   }
 }
 /*
