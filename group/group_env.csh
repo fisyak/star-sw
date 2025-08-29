@@ -1,9 +1,9 @@
 #!/bin/csh
-#       $Id: group_env.csh,v 1.269 2025/02/11 19:30:10 jeromel Exp $
+#       $Id: group_env.csh,v 1.272 2025/06/20 15:54:18 jeromel Exp $
 #	Purpose:	STAR group csh setup
 #
 # Revisions & notes
-#    2001-2022  Maintained J. Lauret
+#    2001-2025  Maintained J. Lauret (many changes, see cvs)
 #    24 Apr 01  J. Lauret  Disabled echoing in ! prompt.
 #                          DO NOT MODIFY THIS !!!
 #     2 Apr 01  J. Lauret  Insure path added
@@ -19,10 +19,23 @@ set ECHO = 1;
 set FAIL = "";
 
 setenv INTERACTIVE 0
-if ( ! $?prompt) then
-    # when there is not prompt, we are usually in batch
+set tty_output = `tty`
+
+#if ( $USER == "jeromel") then
+#    echo "DEBUG [$tty_output] [$?prompt]"
+#    # "$tty_output" == "not a tty"
+#    if (  ! $?prompt || "$tty_output" == "not a tty" ) then
+#	echo "DEBUG not a tty"
+#    else
+#	echo "DEBUG thinks it is fine"
+#    endif
+#endif
+
+if (  ! $?prompt || "$tty_output" == "not a tty" ) then
+    # when there is no prompt, we are usually in batch
     # or captive mode. Condor tends to copy env though
     set ECHO = 0
+    set SILENT = 1
 else
     # otherwise, set this for convenience but make a few
     # more checks 
@@ -32,6 +45,11 @@ else
 endif
 if ($?STAR == 1 && ! $?DECHO)   set ECHO = 0
 if ($?SILENT == 1) set ECHO = 0
+
+
+#if ( $USER == "jeromel") then
+#    echo "DEBUG Echo is $ECHO"
+#endif
 
 # This variable was added for the ECHOD debug mode
 if ( $?self ) then
@@ -70,16 +88,32 @@ if (! $?STAR_ROOT) then
 	  set FAIL="$FAIL STAR_ROOT"
         endif
     else
+	if ( "$READ_AFS" == "") then
+	    if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as AFS based if -d checks"
+	    if ( -d ${AFS_RHIC}/star ) then
+		setenv STAR_ROOT ${AFS_RHIC}/star
+            else
+	        # missing logic as always assumed this exists 
+		if ( ! $?SILENT ) then
+		    echo "$self ::  Did not find a valid STAR_ROOT with ${AFS_RHIC}/star"
+                endif
+		setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
+		set FAIL="$FAIL STAR_ROOT"
+	    endif
+	else
 	    if ( -d /usr/local/star ) then
 		# this is valid
 		if ( $?DECHO) echo "$self ::  Defining STAR_ROOT as /usr/local/star"
 		setenv STAR_ROOT /usr/local/star
 	    else
 		# We will fail (we know that)
-		echo "$self ::  Did not find a valid STAR_ROOT"
+		if ( ! $?SILENT ) then
+		    echo "$self ::  Did not find a valid STAR_ROOT"
+                endif
 		setenv STAR_ROOT /Path_Not_Found_STAR_Login_Failure
 		set FAIL="$FAIL STAR_ROOT"
 	    endif
+        endif
     endif
 endif
 
@@ -834,13 +868,25 @@ endif
 
 
 
-## After the introduction of SPACK, we created
-## an inconsistency that could bre paired this way
-#if ( $?STAR_LEVEL ) then
-#    setenv EXEFLOGIN 1
-#    starver $STAR_LEVEL
-#    unsetenv EXEFLOGIN
-#endif
+# # After the introduction of SPACK, we created
+# # an inconsistency that could be repaired this way
+# if ( $?STAR_LEVEL ) then
+#     setenv EXEFLOGIN 1
+#     if ( $?STAR_CF ) then
+# 	starver $STAR_LEVEL $STAR_CF
+#     else
+# 	starver $STAR_LEVEL
+#     endif
+#     unsetenv EXEFLOGIN
+# endif
+
+
+
+
+
+
+
+
 #
 # Display this message as it is likely the environment is
 # screwed up if this happens.
