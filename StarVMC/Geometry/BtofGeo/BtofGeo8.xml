@@ -438,7 +438,8 @@
             <var name="FEEHz" value="2.54" comment=" distance of GINO to tray side "  /> 
             <var name="FEEHy" value="2.54" comment=" distance of GINO to tray front "  />
             <var name="GINW" value="20.83" comment=" GINO board width "  />
-            <var name="GINL" value="23.11" comment=" GINO board length "  />
+<!--            <var name="GINL" value="23.11" comment=" GINO board length "  /> -->
+            <var name="GINL" value="21.80" comment=" GINO board length "  />
             <var name="GINThk" value="0.23" comment=" GINO board thickness "  />
             <var name="GEM1Thk" value="0.318" comment=" GEM gap1 (drift) board thickness "  />
             <var name="GEM2Thk" value="0.238" comment=" GEM gap1 (aplification) board thickness "  />
@@ -487,8 +488,8 @@
 	    <var name="GEMThkd" value="2.133" comment=" is the distance to the center of the fourth GEM foil from the center of the GSBE "  />
 	    <var name="APVThkd" value="0.125" comment="is the distance to the center of the APV from the center of the GSBE "  />
             <var name="GEMGd" value="2.52" comment=" is the displacement from center "  />
-            <var name="POS1" value="{3.133+1.8014,10.795,  14.224+0.0990}"  comment="position 1st GEM box" />
-            <var name="POS2" value="{3.133+1.8014,10.795,204.9145+0.0080}"  comment="position 2nd GEM box" />
+            <var name="POS1" value="{3.133,10.795,  14.224+0.0990}"  comment="position 1st GEM box" />
+            <var name="POS2" value="{3.133,10.795,204.9145+0.0080}"  comment="position 2nd GEM box" />
 	    <var name="HVThk" value="2.23" comment=" is the thickness of the HV Box"  />
 	    <var name="HVW" value="2.87" comment="is the width of the HV Box"  />
 	    <var name="GtoHVW" value="3.78" comment="is the distance from the center of the GINO board to the closest end of the HV Box"  />
@@ -1987,7 +1988,7 @@ x0 = mod4_X0Offset
   <Shape type="BOX" dx="(tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2" dy="(gmtr_GINW)/2" dz="(gmtr_GINL)/2"  />
   <!--will need to look at all thicknesses but for now y and z-->
 <!--   xpos = gmtr_GMTSThk/2 - (tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2  +gmtr_GINThkd -->
-  xpos = (tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2 - gmtr_GINThkd/2
+  xpos = (tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2 - gmtr_GINThkd/2 + 0.8474
   <Create    block="GINO"  />
   <Placement block="GINO" x="xpos" y="0" z="0"    /> 
   xpos = xpos - gmtr_GINThk/2 - gmtr_GSBSThk/2
@@ -2080,7 +2081,11 @@ x0 = mod4_X0Offset
 	    <Material name="ArGAS"  />
 	    <Shape type="Box" dz="gmtr_GEMGL/2" dy="gmtr_GEMGW/2" dx="gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2"  />
 	    <Create block="GMTG"  />
-            xx = gmtr_GEM1Thk/2-(gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2)
+<!--            xx = gmtr_GEM1Thk/2-(gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2)
++1.8014
++1.8014
+-->
+            xx = 3*gmtr_GEM1Thk/2
 	    <Placement  block="GMTG"  x="xx" />	   
     </Block>
     <Block name="GMTG" comment="is the Argon sensitive gas within the GEM"  >
