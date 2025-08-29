@@ -87,19 +87,29 @@ if ( $?DECHO && $?STAR_CONFIG ) then
     echo "$0 :: Config is now $STAR_CONFIG"
 endif
 
+# we need to pass this around for recursive loading
+setenv STAR_CF "$cf"
+
+
+
 # check again
 if ( $?STAR_CONFIG ) then
+    # we have introduced many dependencies making the STAR login non-portable
+    # thge configs are exclusively in cvmfs, not mounted on servr nodes
+    set cvmfs_exists=0
+    test -d "/cvmfs/star.sdcc.bnl.gov/star-spack" && set cvmfs_exists=1
+
     #echo "--- yo $ECHO"
     if ($?DECHO) echo "starver :: Loading configuration $cf ($STAR_CONFIGP)"
     # this depends on the xistence of "module" so need to
     # protected against non existence
     which module >&/dev/null
-    if ( $status == 0 ) then
+    if ( $status == 0 && $cvmfs_exists ) then
 	source $STAR_CONFIGP
     else
 	# scream if allowed
-	if ($?ECHO) then
-	    echo "WARNING module is not insatlled - 2024+ libraries may depend on it"
+	if ($?DECHO) then
+	    echo "WARNING module is not installed - 2024+ libraries may depend on it"
 	endif
     endif
 else
