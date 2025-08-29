@@ -21,6 +21,7 @@
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StDetectorDbMaker/St_tpcAnodeHVavgC.h"
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
+#include "StiTpcIsActiveFunctor.h"
 //________________________________________________________________________________
 StiTpcHitLoader::StiTpcHitLoader(): StiHitLoader<StEvent,StiDetectorBuilder>("TpcHitLoader"),
   _minRow(1), _maxRow(72), _minSector(1), _maxSector(24), _maxZ(1000)   { }
@@ -68,7 +69,9 @@ void StiTpcHitLoader::loadHits(StEvent* source,
       Int_t StiRow = StiTpcDetectorBuilder::StiRow(sector+1,row+1)-1;
       detector = _detector->getDetector(StiRow,stiSector);
       assert(detector);
-      
+      StiTpcIsActiveFunctor *active = (StiTpcIsActiveFunctor *) detector->getIsActiveFunctor();
+      if ((sector <  12 && ! active->isWestActive()) ||
+	  (sector >= 12 && ! active->isEastActive())) continue;
       for (iter = hitvec.begin();iter != hitvec.end();++iter)        {
         StTpcHit*hit=*iter;
 	if (StiKalmanTrackNode::IsLaser() && hit->flag()) continue;
