@@ -19,9 +19,9 @@
             BCON,BPLA,BCOO,BRAI,BPIP,BPIQ,BRTC,
             BRMD,BRHC,BRCB,BRNY,BRGR,BROG,BRDT,
             BRSG,BRIG,BRWG,BRFE,BUPC,BTFE,BGMT,
-            GMTS,GSBX,GSBY,GSBZ,GNSF,GSBB,GINO,
-	    GSBE,GFBO,GHVB,GVBC,GFBC,GEMG,GEMS,
-	    GAPV
+            GMTS,GINO,
+	    GSBE,GFBO,GHVB,GVBC,GFBC,
+	    GAPV,GSBA,GETE,GMTG,GMTB
         </Content>
         
 
@@ -80,6 +80,8 @@
             <var name="GINW" type="float"  />
             <var name="GINL" type="float"  />
             <var name="GINThk" type="float"  />
+            <var name="GEM1Thk" type="float"  />
+            <var name="GEM2Thk" type="float"  />
 	    <var name="GMTSThk" type="float"  />
 	    <var name="GINThkd" type="float"  />
             <var name="GNFThk" type="float"  />
@@ -372,7 +374,7 @@
         </Structure>
         
         <varlist type="REAL"  >
-            support_arm_width,support_arm_Xpos,support_arm_Ypos,support_aile_width,support_aile_Ypos,xpos,ypos,zpos,totlen,sublen,subcen,x0,z0,Y,Z,DTHgt
+            support_arm_width,support_arm_Xpos,support_arm_Ypos,support_aile_width,support_aile_Ypos,xpos,ypos,zpos,totlen,sublen,subcen,x0,z0,Y,Z,DTHgt,xx
         </varlist>
         
 
@@ -402,7 +404,8 @@
         <Fill name="TRAY" comment="general tray stats"  >
             <var name="Height" value="11.43" comment=" tray height(8.128+3.302) "  />
             <var name="Width" value="21.59" comment=" full tray width "  />
-            <var name="Length" value="240.60" comment=" full tray length(240.60) "  />
+<!--            <var name="Length" value="240.60" comment=" full tray length(240.60) "  /> -->
+            <var name="Length" value="246.00" comment=" full tray length = BTOG_dz "  />
             <var name="WallThk" value="0.13" comment=" tray wall thickness "  />
             <var name="SupFullH" value="2.03" comment=" support height (radial) "  />
             <var name="SupFullW" value="15.24" comment=" support full width with arms "  />
@@ -437,6 +440,8 @@
             <var name="GINW" value="20.83" comment=" GINO board width "  />
             <var name="GINL" value="23.11" comment=" GINO board length "  />
             <var name="GINThk" value="0.23" comment=" GINO board thickness "  />
+            <var name="GEM1Thk" value="0.318" comment=" GEM gap1 (drift) board thickness "  />
+            <var name="GEM2Thk" value="0.238" comment=" GEM gap1 (aplification) board thickness "  />
 	    <var name="GMTSThk" value="8.64" comment=" Oveall GMTS thickness "  />
 	    <var name="GINThkd" value="1.98" comment=" is to the center of the GINO board from the center of GMTS "  />
             <var name="GNFThk" value="0.95" comment=" is the thickness of the gas seal flange "  />
@@ -444,6 +449,7 @@
 	    <var name="GSBEThkd" value="2.05" comment=" is to the center of the empty space inside of the bonnet from the center of GMTS "  />
             <var name="GNFL" value="19.94" comment=" is the length of the gas seal flange "  />
             <var name="GNFW" value="15.24" comment=" is the width of the gas seal flange "  />
+
             <var name="GSBLb" value="19.94" comment=" is the length of the gas seal bonnet base "  />
             <var name="GSBWb" value="15.24" comment=" is the width of the gas seal bonnet base "  />
             <var name="GSBThkb" value="0.64" comment=" is the thickness of the gas seal bonnet base "  />
@@ -451,18 +457,23 @@
             <var name="GSBL" value="18.03" comment=" is the length of the empty space in the gas seal bonnet "  />
             <var name="GSBW" value="13.34" comment=" is the width of the empty space in the gas seal bonnet "  />
             <var name="GSBThk" value="4.31" comment=" is the thickness of the empty space in the gas seal bonnet "  />
+
             <var name="GSThk" value="0.14" comment=" is the thickness of the gas seal bonnet cover top "  />
+
             <var name="GSBTL" value="18.42" comment=" is the length of the gas seal bonnet cover top "  />
             <var name="GSBTW" value="13.72" comment=" is the width of the gas seal bonnet cover top "  />
+            <var name="GSBSW" value="13.72" comment=" is the width of the side of the gas seal bonnet "  />
+            <var name="GSBSThk" value="4.45" comment=" is the thickness of the side of the gas seal bonnet "  />
+
             <var name="GSBSL" value="0.19" comment=" is the length of the side of the gas seal bonnet wrt (axis) "  />
 	    <var name="GSBThkd" value="1.95" comment=" is the distance to the center of the gas seal bonnet sides from the center of GMTS "  />
 	    <var name="GHVBThkd" value="3.21" comment="is the distance to the center of the high voltage box from the center of GMTS "  />
+
 	    <var name="GSBTThkd" value="4.25" comment=" is the distance to the center of the gas seal bonnet top from the center of GMTS "  />
-            <var name="GSBSW" value="13.72" comment=" is the width of the side of the gas seal bonnet "  />
             <var name="GSBFBL" value="18.42" comment="is the length of the back and front of the gas seal bonnet"  />
             <var name="GSBFBW" value="0.19" comment="is the width of the back and front of the gas seal bonnet"  />
             <var name="GSBFBThk" value="4.45" comment="is the thickness of the back and front of the gas seal bonnet"  />
-            <var name="GSBSThk" value="4.45" comment=" is the thickness of the side of the gas seal bonnet "  />
+
             <var name="GEML" value="10" comment=" is the length of the GEM "  />
             <var name="GEMW" value="10" comment=" is the width of the GEM "  />
             <var name="GEMThk" value="0.005" comment=" is the thickness of the GEM "  />
@@ -476,8 +487,8 @@
 	    <var name="GEMThkd" value="2.133" comment=" is the distance to the center of the fourth GEM foil from the center of the GSBE "  />
 	    <var name="APVThkd" value="0.125" comment="is the distance to the center of the APV from the center of the GSBE "  />
             <var name="GEMGd" value="2.52" comment=" is the displacement from center "  />
-            <var name="POS1" value="{3.133,10.795,14.224}"  comment="position 1st GEM box" />
-            <var name="POS2" value="{3.133,10.795,204.9145}" comment="position 2nd GEM box" />
+            <var name="POS1" value="{3.133+1.8014,10.795,  14.224+0.0990}"  comment="position 1st GEM box" />
+            <var name="POS2" value="{3.133+1.8014,10.795,204.9145+0.0080}"  comment="position 2nd GEM box" />
 	    <var name="HVThk" value="2.23" comment=" is the thickness of the HV Box"  />
 	    <var name="HVW" value="2.87" comment="is the width of the HV Box"  />
 	    <var name="GtoHVW" value="3.78" comment="is the distance from the center of the GINO board to the closest end of the HV Box"  />
@@ -1100,7 +1111,7 @@
             <Placement rmin="ctbb_PmtMinR" rmax="ctbb_PmtMaxR" dz="ctbb_PmtLen/2" x="xpos" z="zpos" block="BCPM"  >
             </Placement>
             
-            zpos = zpos - (ctbb_PmtLen + ctbb_BaseLen)/2 
+            zpos = zpos-(ctbb_PmtLen+ctbb_BaseLen)/2 
             <Create block="BCSK"  />
             <Placement rmin="ctbb_BaseMinR" rmax="ctbb_BaseMaxR" dz="ctbb_BaseLen/2" x="xpos" z="zpos" block="BCSK"  >
             </Placement>
@@ -1123,8 +1134,9 @@
             zpos = zpos - (ctbb_ConvLen + ctbb_PmtLen)/2 
             <Placement rmin="ctbb_PmtMinR" rmax="ctbb_PmtMaxR" dz="ctbb_PmtLen/2" x="xpos" z="-zpos" block="BCPM"  >
             </Placement>
-            
-            zpos = zpos - (ctbb_PmtLen + ctbb_BaseLen)/2 
+
+            zpos=zpos-(ctbb_PmtLen+ctbb_BaseLen)/2
+
             <Placement rmin="ctbb_BaseMinR" rmax="ctbb_BaseMaxR" dz="ctbb_BaseLen/2" x="xpos" z="-zpos" block="BCSK"  >
             </Placement>
             
@@ -1326,8 +1338,14 @@ x0 = mod4_X0Offset
                           </Placement>
                       </Do>
                       <Create block="GMTS" />
-		      <Placement x="x0+gmtr_POS1(1)" y="0" z="z0-gmtr_POS1(3)" block="GMTS" />
-                      <Placement x="x0+gmtr_POS2(1)" y="0" z="z0-gmtr_POS2(3)" block="GMTS" />
+   xpos = gmtr_GMTSThk - (tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)-0.12
+		      <Placement x="xpos+x0+gmtr_POS1(1)" y="0" z="z0-gmtr_POS1(3)"  block="GMTS" konly="'MANY'">
+                                      <Rotation alphax="180"  />
+                      </Placement>
+
+                      <Placement x="xpos+x0+gmtr_POS2(1)" y="0" z="z0-gmtr_POS2(3)" block="GMTS" konly="'MANY'" >
+                                      <Rotation alphax="180"  />
+                      </Placement>
 		      <!--<Placement x="x0+gmtr_POS1(1)" y="0" z="z0-gmtr_POS1(3)" block="GMTS" />
                       <Placement x="x0+gmtr_POS2(1)" y="0" z="z0-gmtr_POS2(3)" block="GMTS" />-->
                   </Elif>
@@ -1961,47 +1979,33 @@ x0 = mod4_X0Offset
 <!-- Here starts GMT -->
 		
 <Block name="GMTS" comment="is the space for the geometry pertaining to the GMT"  >
+  <Material name="Air"  />
 
   <Attribute for="GMTS" seen="1" colo="2"  />
   <!-- FG note: dimensions based on priv. comm. with Dick Majka -->
-  <Shape type="BOX" dx="(gmtr_GMTSThk)/2" dy="(gmtr_GINW)/2" dz="(gmtr_GINL)/2"  />
+<!--  <Shape type="BOX" dx="(gmtr_GMTSThk)/2" dy="(gmtr_GINW)/2" dz="(gmtr_GINL)/2"  /> -->
+  <Shape type="BOX" dx="(tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2" dy="(gmtr_GINW)/2" dz="(gmtr_GINL)/2"  />
   <!--will need to look at all thicknesses but for now y and z-->
+<!--   xpos = gmtr_GMTSThk/2 - (tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2  +gmtr_GINThkd -->
+  xpos = (tray_Height-tray_CoverH-tray_TopThk-tray_WallThk)/2 - gmtr_GINThkd/2
   <Create    block="GINO"  />
-  <Placement block="GINO" x="gmtr_GINThkd" y="0" z="0"    /> 
-  
-  <Create    block="GSBB"  />
-  <Placement block="GSBB" x="gmtr_GSBBThkd" y="0" z="0" />
-  
-  <Create    block="GNSF"  />
-  <Placement block="GNSF" x="gmtr_GNSFThkd" y="0" z="0"   />
-  
-  <Create    block="GSBE"  />  
-  <Placement block="GSBE" x="-gmtr_GSBEThkd" y="0" z="0"    />
-        
-  <Create     block="GSBX"  />
-  <Placement  block="GSBX"  x="-gmtr_GSBTThkd"  y="0" z="0" />
-        
-  <Create    block="GSBY"  />
-  <Placement block="GSBY"   x="-gmtr_GSBThkd" y="0" z="+(gmtr_GSBTL)/2-(gmtr_GSBSL)/2"  />        
-  <Placement block="GSBY"   x="-gmtr_GSBThkd" y="0" z="-(gmtr_GSBTL)/2-(gmtr_GSBSL)/2"  />
-        
-  <Create    block="GSBZ"  />
-  <Placement block="GSBZ" x="-gmtr_GSBThkd" y="+gmtr_GSBTW/2+gmtr_GSBFBW/2" z="0" />
-  <Placement block="GSBZ" x="-gmtr_GSBThkd" y="-gmtr_GSBTW/2-gmtr_GSBFBW/2" z="0" />
-
+  <Placement block="GINO" x="xpos" y="0" z="0"    /> 
+  xpos = xpos - gmtr_GINThk/2 - gmtr_GSBSThk/2
+  <Create    block="GSBA"  />  
+  <Placement block="GSBA" x="xpos" y="0" z="0"    />
   <Create    block="GHVB"  />
-  <Placement block="GHVB" x="gmtr_GHVBThkd" y="gmtr_GtoHVW/2+gmtr_HVW/2" z="gmtr_GtoHVL+gmtr_HVL/2" />
+  <Placement block="GHVB" x="xpos+gmtr_GHVBThkd" y="gmtr_GtoHVW/2+gmtr_HVW/2" z="gmtr_GtoHVL+gmtr_HVL/2" />
 	
   <Create    block="GVBC"  />
-  <Placement block="GVBC" x="gmtr_GHVBThkd" y="gmtr_GtoHVW/2+gmtr_HVW/2" z="gmtr_GtoHVL-gmtr_GVL/2" />
+  <Placement block="GVBC" x="xpos+gmtr_GHVBThkd" y="gmtr_GtoHVW/2+gmtr_HVW/2" z="gmtr_GtoHVL-gmtr_GVL/2" />
 	
   <Create    block="GFBO"  /> <!-- Place twice at different z-positions -->
-  <Placement block="GFBO" x="gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="-gmtr_GtoGFL+gmtr_GBL/2" /> 	
-  <Placement block="GFBO" x="gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="+gmtr_GtoGBL+gmtr_GBL/2" /> 
+  <Placement block="GFBO" x="xpos+gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="-gmtr_GtoGFL+gmtr_GBL/2" /> 	
+  <Placement block="GFBO" x="xpos+gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="+gmtr_GtoGBL+gmtr_GBL/2" /> 
 	
   <Create    block="GFBC"  /> <!-- Place twice at different z-positions -->
-  <Placement block="GFBC" x="gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="-gmtr_GtoGFL-gmtr_GCL/2" />
-  <Placement block="GFBC" x="gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="+gmtr_GtoGBL-gmtr_GCL/2" />	
+  <Placement block="GFBC" x="xpos+gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="-gmtr_GtoGFL-gmtr_GCL/2" />
+  <Placement block="GFBC" x="xpos+gmtr_GBThkd" y="-gmtr_GtoGFW-gmtr_GBW/2" z="+gmtr_GtoGBL-gmtr_GCL/2" />	
 
 </Block>
 
@@ -2011,36 +2015,15 @@ x0 = mod4_X0Offset
 	<Shape type="BOX" dz="gmtr_GINL/2" dx="gmtr_GINThk/2" dy="gmtr_GINW/2"  />
     </Block>
     
-    <Block name="GSBB" comment="is the gas seal bonnet base"  >
-	    <Attribute for="GSBB" seen="1" colo="4"  />
-	    <Material name="Aluminium"  />
-	    <Shape type="Box" dz="gmtr_GSBLb/2" dy="gmtr_GSBWb/2" dx="gmtr_GSBThkb/2"  />
-    </Block>
-    
-    <Block name="GNSF" comment="is the gas seal flange"  >
-	    <Attribute for="GNSF" seen="1" colo="3"  />
-	    <Material name="Aluminium"  />
-	    <Shape type="Box" dz="gmtr_GNFL/2" dy="gmtr_GNFW/2" dx="gmtr_GNFThk/2"  />
-    </Block>
-    
-    <Block name="GSBX" comment="is the gas seal bonnet cover top"  >
-        <Attribute for="GSBX" seen="1" colo="5"  />
+    <Block name="GSBA" comment="is the gas Aluminium envleloop"  >
+        <Attribute for="GSBA" seen="1" colo="5"  />
         <Material name="Aluminium"  />
-    	<Shape type="Box" dz="gmtr_GSBTL/2" dy="gmtr_GSBTW/2" dx="gmtr_GSThk/2"  />
+    	<Shape type="Box" dz="gmtr_GSBTL/2" dy="gmtr_GSBTW/2" dx="gmtr_GSBSThk/2"  />
+  <Create    block="GSBE"  />  
+  <Placement block="GSBE" x="gmtr_GSThk/2" y="0" z="0"    />
+
     </Block>
-    
-    <Block name="GSBY" comment="is the gas seal bonnet side"  >
-        <Attribute for="GSBY" seen="1" colo="5"  />
-        <Material name="Aluminium"  />
-    	<Shape type="Box" dz="(gmtr_GSBSL)/2" dy="(gmtr_GSBSW)/2" dx="(gmtr_GSBSThk)/2"  />
-    </Block>
-    
-    <Block name="GSBZ" comment="is the gas seal bonnet front/back"  >
-        <Attribute for="GSBZ" seen="1" colo="5"  />
-        <Material name="Aluminium"  />
-        <Shape type="Box" dz="gmtr_GSBFBL/2" dy="gmtr_GSBFBW/2" dx="gmtr_GSBFBThk/2"  />
-    </Block>
-    
+
     <Block name="GHVB" comment="is the HV Box"  >
 	    <Attribute for="GHVB" seen="1" colo="2"  />
 	    <Material name="Aluminium"  />
@@ -2068,41 +2051,46 @@ x0 = mod4_X0Offset
     <Block name="GSBE" comment="is the empty space inside the gas seal bonnet"  >
 	    <Attribute for="GSBE" seen="0" colo="0"  />
 	    <Material name="ArGAS"  />
-	    <Shape type="Box" dz="gmtr_GSBL/2" dy="gmtr_GSBW/2" dx="gmtr_GSBThk/2"  />
-	    
-	    <Create block="GEMG"  />
-	    <Placement  block="GEMG" x="+gmtr_GEMGThkd"  y="0"  z="-gmtr_GEMGd"   />	   
+            <Shape type="Box" dz="gmtr_GSBTL/2-gmtr_GSBSL" dy="gmtr_GSBTW/2-gmtr_GSBFBW" dx="(gmtr_GSBSThk-gmtr_GSThk)/2"  />
+	    <Create block="GETE"  />
+            xx = (gmtr_GSBSThk-gmtr_GSThk)/2-(gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2)
+	    <Placement  block="GETE" x="xx"  y="0"  z="-gmtr_GEMGd"   />	   
 
-	    <Create block="GEMS"  />
-	    <Placement x="+gmtr_GEMThka" y="0" z="-gmtr_GEMGd"  block="GEMS"  >
-	    </Placement> <!--The first GEM is the cathode plane-->
-	    
-	    <Placement x="+gmtr_GEMThkb" y="0" z="-gmtr_GEMGd"  block="GEMS"  >
-	    </Placement>
-	    
-	    <Placement x="+gmtr_GEMThkc" y="0" z="-gmtr_GEMGd"  block="GEMS"  >
-	    </Placement>
-	    
-	    <Placement x="+gmtr_GEMThkd" y="0" z="-gmtr_GEMGd"  block="GEMS"  >
-	    </Placement>
-	    
 	    <Create block="GAPV"  />
 	    <Placement x="gmtr_APVThkd" y="0" z="+gmtr_GtoAPVL+gmtr_APVL/2" block="GAPV"  >
 	    </Placement>
     </Block>
+    <Block name="GETE" comment="is the G10 body of the GEM"  >
+	    <Attribute for="GETE" seen="1" colo="1"  />
+        <Mixture name="G10" dens="1.7"  >
+            <Component name="Si" a="28.08" z="14" w="0.6*1*28./60."  />
+            <Component name="O" a="16" z="8" w="0.6*2*16./60."  />
+            <Component name="C" a="12" z="6" w="0.4*8*12./174."  />
+            <Component name="H" a="1" z="1" w="0.4*14*1./174."  />
+            <Component name="O" a="16" z="8" w="0.4*4*16./174."  />
+        </Mixture>
+<!--	<Material name="G10"  /> -->
+	    <Shape type="Box" dz="gmtr_GEMGL/2+1" dy="gmtr_GEMGW/2+1." dx="gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2"  />
+	    <Create block="GMTB"  />
+	    <Placement  block="GMTB"  />	   
+    </Block>
     
-    <Block name="GEMG" comment="is the Argon gas within the GEM"  >
-	    <Attribute for="GEMG" seen="1" colo="1"  />
+    <Block name="GMTB" comment="is the Argon gas within the GEM"  >
+	    <Attribute for="GMTB" seen="1" colo="1"  />
 	    <Material name="ArGAS"  />
-	    <Medium name="sensitive" isvol="1 "  />
-	    <Shape type="Box" dz="gmtr_GEMGL/2" dy="gmtr_GEMGW/2" dx="gmtr_GEMGThk/2"  />
+	    <Shape type="Box" dz="gmtr_GEMGL/2" dy="gmtr_GEMGW/2" dx="gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2"  />
+	    <Create block="GMTG"  />
+            xx = gmtr_GEM1Thk/2-(gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2)
+	    <Placement  block="GMTG"  x="xx" />	   
+    </Block>
+    <Block name="GMTG" comment="is the Argon sensitive gas within the GEM"  >
+	    <Attribute for="GMTG" seen="1" colo="3"  />
+	    <Material name="ArGAS"  />
+	    <Medium name="ArGASsensitive" isvol="1 "  />
+<!--            xx = (gmtr_GEM1Thk/2 + 3*gmtr_GEM1Thk/2) -->
+	    <Shape type="Box" dz="gmtr_GEMGL/2" dy="gmtr_GEMGW/2" dx="gmtr_GEM1Thk/2"  />
     </Block>
     
-    <Block name="GEMS" comment="the GEM"  >
-	    <Attribute for="GEMS" seen="1" colo="6"  />
-	    <Material name="Mylar"  />  <!-- Should be kapton, but what is the difference? -->
-	    <Shape type="Box" dz="gmtr_GEML/2" dy="gmtr_GEMW/2" dx="gmtr_GEMThk/2"  />
-    </Block>
 
     <Block name="GAPV" comment="is the dual APV board"  >
 	    <Attribute for="GAPV" seen="1" colo="7"  />
