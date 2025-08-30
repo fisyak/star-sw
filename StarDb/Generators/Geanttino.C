@@ -9,8 +9,8 @@ TDataSet *CreateTable() {
   Double_t Yhigh  =   2.5;
   Double_t Philow =   0;
   Double_t Phihigh= 2*TMath::Pi();
-  Double_t Zlow   =  200; 
-  Double_t Zhigh  =  200; 
+  Double_t Zlow   =    0; 
+  Double_t Zhigh  =    0; 
   Int_t    Npart  =   20;
   gEnv->SetValue("FixedSigmaX", 0);
   gEnv->SetValue("FixedSigmaY", 0);

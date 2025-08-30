@@ -492,7 +492,8 @@
  ($MYSQLCONFIG,$mysqlconf) = script::find_lib($mysql_search, "mysql_config");
  # Associate the proper lib with where the inc was found
  my ($mysqllibdir)=$MYSQLINCDIR;
- $mysqllibdir =~ s/include/$LLIB/;# print "mysqllibdir => $mysqllibdir =========\n";
+ $mysqllibdir =~ s/include/$LLIB/; print "mysqllibdir => $mysqllibdir =========\n" if $param::debug;
+ $mysqllibdir .= $main::PATH_SEPARATOR  . "/usr/" . $LLIB; print "mysqllibdir => $mysqllibdir =========\n" if $param::debug;
  if ( $mysqlconf ){
    $mysqlconf = "$MYSQLCONFIG/$mysqlconf";# print "mysqlconf = $mysqlconf\n";
    # if ( 1==1 ){
@@ -851,6 +852,7 @@
 			    'HOME'            => $HOME,
 			    'GARFIELD_HOME'   => $GARFIELD_HOME,
 			    'NODEBUG'         => $NODEBUG,
+			    'DB_SERVER_LOCAL_CONFIG' => $DB_SERVER_LOCAL_CONFIG,
 			    'CC'       => $CC, #         C compiler command
 			    'CFLAGS'   => $CFLAGS, #     C compiler flags
 			    'LDFLAGS'  => $LDFLAGS, #    linker flags, e.g. -L<lib dir> if you have libraries in a nonstandard directory <lib dir>

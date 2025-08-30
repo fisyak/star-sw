@@ -5541,4 +5541,437 @@ Load system libraries    + liblog4cxx + libStStarLoggerBFC:INFO  - TUnixSystem::
 mariadb-devel-5.5.52-1.el7.x86_64
 [starsub02] ~/work/TestDb $ rpm -qf /usr/lib64/libmysqlclient.so 
 mariadb-connector-c-devel-3.2.6-1.el9_0.x86_64
->>>>>>> ba928ac35d91054e1f050a4e2a5aa9210a21ddf8
+[l409] /net/l402/data/fisyak/STAR/packages/TFG $ rpm -qf  /usr/lib64/mysql/libmysqlclient.so 
+mariadb-devel-5.5.56-2.el7.x86_64
+================================================================================
+07/26/2025
+[rcas6014] ~/TFG/> grep CPU */2019/RF/*/4p59GeV_fixedTarget_2019/cpu_per_event
+SL24y/2019/RF/sl73_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:   CPU/event = 2.71677(sec) and    Total/event = 2.89076(sec)      93.9813 %       for 635701 events
+SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:     CPU/event = 2.23173(sec) and    Total/event = 2.34964(sec)      94.9818 %       for 253151 events
+TFG/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:       CPU/event = 3.58281(sec) and    Total/event = 3.74312(sec)      95.7173 %       for 207288 events
+TFG25e/2019/RF/al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/cpu_per_event:     CPU/event = 1.51085(sec) and    Total/event = 1.55308(sec)      97.2806 %       for 635701 events
+TFG25e/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/cpu_per_event:  CPU/event = 2.12179(sec) and    Total/event = 2.16668(sec)      97.9278 %       for 635701 events
+TFG25e/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:    CPU/event = 3.34432(sec) and    Total/event = 3.44264(sec)      97.1439 %       for 423473 events
+--------------------------------------------------------------------------------
+2019/RF/4p59GeV_fixedTarget_2019/cpu_per_event
+SL24y/sl73_gcc485_opt/:           CPU/event = 2.71677(sec) and    Total/event = 2.89076(sec)      93.9813 %       for 635701 events     86%
+SL24y/sl73_x8664_gcc485_opt/:     CPU/event = 2.23173(sec) and    Total/event = 2.34964(sec)      94.9818 %       for 253151 events     67%
+
+TFG25e/al96_x8664_gcc11_opt/:     CPU/event = 1.51085(sec) and    Total/event = 1.55308(sec)      97.2806 %       for 635701 events     46%
+TFG25e/al96_x8664_gcc11_opt_R6/:  CPU/event = 2.12179(sec) and    Total/event = 2.16668(sec)      97.9278 %       for 635701 events     61%
+TFG25e/sl73_x8664_gcc485_opt/:    CPU/event = 3.34432(sec) and    Total/event = 3.44264(sec)      97.1439 %       for 423473 events    100%
+
+TFG/sl73_x8664_gcc485_opt/:       CPU/event = 3.58281(sec) and    Total/event = 3.74312(sec)      95.7173 %       for 207288 events    107%
+
+[starsub02] ~/TFG/TFG25e_1/2019/RF $ grep CPU */*/cpu*
+al96_x8664_gcc11_opt/4p59GeV_fixedTarget_2019/cpu_per_event:    CPU/event = 1.76114(sec) and    Total/event = 1.81306(sec)      97.1363 %       for 635701 events   66%
+al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/cpu_per_event: CPU/event = 2.23488(sec) and    Total/event = 2.31083(sec)      96.7131 %       for 635701 events   81%
+sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/cpu_per_event:   CPU/event = 2.74658(sec) and    Total/event = 2.83669(sec)      96.8233 %       for 635701 events  100%
+
+
+
+
+
+
+--------------------------------------------------------------------------------
+~/TFG/TFG25e/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root 'bfc.C(1,"in,analysis,nodefault","st_physics_20179040_raw_7000004,35001,40000.event.root")'
+R6 with R6 event.root o.k.
+Info in <TInterpreter::TransactionRollback>: Restoring ability to autoaparse: 
+#line 1 "libStStarLogger dictionary payload"
+... 
+// Inline headers
+
+R5 with R6  eent.root problems:
+Info in <TInterpreter::TransactionRollback>: Restoring ability to autoaparse: 
+#line 1 "libStStarLogger dictionary payload"
+... 
+// Inline headers
+** <StBranch::Open> Branch=eventBranch  Mode=READ       File=./st_physics_20179040_raw_7000004,35001,40000.event.root   Opened **
+StIOMaker:ERROR - TClass::IgnoreTObjectStreamer : Must be called before the creation of StreamerInfo
+StIOMaker:ERROR - TBufferFile::CheckByteCount : object of class KFParticle read too many bytes: 234724 instead of 222
+StIOMaker:INFO  - TBufferFile::CheckByteCount : KFParticle::Streamer() not in sync with data on file ./st_physics_20179040_raw_7000004,35001,40000.event.root, fix Streamer()
+StIOMaker:FATAL - TUnixSystem::DispatchSignals : segmentation violation
+#5  0x00007f496750fa50 in TBufferFile::ReadFastArray(int*, int) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#6  0x00007f49676fcfe6 in int TStreamerInfoActions::VectorLooper::ReadCollectionBasicType<int>(TBuffer&, void*, TStreamerInfoActions::TConfiguration const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#7  0x00007f4967518f15 in TBufferFile::ReadClassBuffer(TClass const*, void*, TClass const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#8  0x00007f49675ed086 in TStreamerInfoActions::ReadViaClassBuffer(TBuffer&, void*, TStreamerInfoActions::TConfiguration const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#9  0x00007f4967518f15 in TBufferFile::ReadClassBuffer(TClass const*, void*, TClass const*) () from /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/.al96_x8664_gcc11/root/lib/libRIO.so
+#10 0x00007f494d33161b in KFVertex::Streamer (this=0x6558ba8, R__b=...) at .al96_x8664_gcc11_opt_R6/obj/StRoot/KFParticle/KFParticle_Cint.cxx:320
+
+~/TFG/SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 with recompiled root6 StEvent
+#10 0x00007f9e158200ba in TClass::StreamerTObject (pThis=0x863ca00, object=0x82553d8, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/core/meta/src/TClass.cxx:6957
+#11 0x00007f9e13fa167d in TClass::Streamer (onfile_class=0x0, b=..., obj=<optimized out>, this=0x863ca00) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/core/meta/inc/TClass.h:623
+#12 TStreamerInfo::ReadBuffer<char**> (this=0x8404d30, b=..., arr=<optimized out>, compinfo=0x8648518, first=<optimized out>, last=1, narr=1, eoffset=0, arrayMode=0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TStreamerInfoReadBuffer.cxx:1376
+#13 0x00007f9e13d7ca42 in TStreamerInfoActions::GenericReadAction (buf=..., addr=0x8255350, config=0x8648500) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TStreamerInfoActions.cxx:254
+#14 0x00007f9e13c8a5f3 in TStreamerInfoActions::TConfiguredAction::operator() (this=0x6571e70, buffer=..., object=0x8255350) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/inc/TStreamerInfoActions.h:123
+#15 0x00007f9e13c8837e in TBufferFile::ApplySequence (this=0x7ffe8d722a80, sequence=..., obj=0x8255350) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TBufferFile.cxx:3747
+#16 0x00007f9e13c87dc6 in TBufferFile::ReadClassBuffer (this=0x7ffe8d722a80, cl=0x863c710, pointer=0x8255350, onFileClass=0x0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01/root/io/io/src/TBufferFile.cxx:3666
+#17 0x00007f9df016a273 in StBTofHit::Streamer (this=0x8255350, R__b=...) at .al96_x8664_gcc11_R6/obj/StRoot/StEvent/StEvent_Cint.cxx:33336
+
+
+root6 fiels with root5
+[starsub02] ~/TFG/TFG25e_1/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe 'bfc.C(1,"in,analysis,nodefault","st_physics_20179040_raw_7000004,35001,40000.event.root")'#10 0x0000000000000000 in ?? ()
+#11 0x00007f9e05919291 in TList::FindObject (this=0x1d86230, obj=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:521
+#12 0x00007f9e05916701 in THashTable::FindObject (this=0x1d66560, obj=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashTable.cxx:233
+#13 0x00007f9e0591584e in THashList::FindObject (this=0x1d85ea0, obj=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashList.cxx:230
+#14 0x00007f9e0591d6eb in TObjArray::Delete (this=0x1ebab00) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TObjArray.cxx:345
+#15 0x00007f9e05869510 in TApplication::ClearInputFiles (this=0x1eba0f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TApplication.cxx:350
+#16 0x00007f9e05f396e4 in TRint::Run (this=0x1eba0f0, retrn=false) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/rint/src/TRint.cxx:443
+#17 0x000000000040220d in main (argc=1, argv=0x7ffd0701a9c8) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/main/src/rmain.cxx:29
+
+[starsub02] ~/TFG/TFG25e_1/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe lMuDst.C st_physics_20179040_raw_7000004,35001,40000.MuDst.root
+===========================================================
+#10 0x00007fdec891927e in TList::FindObject (this=0xe57230, obj=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:521
+#11 0x00007fdec8916701 in THashTable::FindObject (this=0xe37560, obj=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashTable.cxx:233
+#12 0x00007fdec891584e in THashList::FindObject (this=0xe56ea0, obj=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashList.cxx:230
+#13 0x00007fdec891d6eb in TObjArray::Delete (this=0xf8bad0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TObjArray.cxx:345
+#14 0x00007fdec8869510 in TApplication::ClearInputFiles (this=0xf8b0f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TApplication.cxx:350
+#15 0x00007fdec90106e4 in TRint::Run (this=0xf8b0f0, retrn=false) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/rint/src/TRint.cxx:443
+#16 0x000000000040220d in main (argc=1, argv=0x7ffca7bc9e28) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/main/src/rmain.cxx:29
+===========================================================
+[starsub02] ~/TFG/TFG25e_1/2019/RF/al96_x8664_gcc11_opt_R6/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe st_physics_20179040_raw_7000004,35001,40000.picoDst.root
+===========================================================
+#10 0x00007f8b5a91927e in TList::FindObject (this=0xa4e230, obj=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:521
+#11 0x00007f8b5a916701 in THashTable::FindObject (this=0xa2e560, obj=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashTable.cxx:233
+#12 0x00007f8b5a91584e in THashList::FindObject (this=0xa4dea0, obj=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/THashList.cxx:230
+#13 0x00007f8b5a91d6eb in TObjArray::Delete (this=0xb825f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TObjArray.cxx:345
+#14 0x00007f8b5a869510 in TApplication::ClearInputFiles (this=0xb820f0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TApplication.cxx:350
+#15 0x00007f8b5a5dc6e4 in TRint::Run (this=0xb820f0, retrn=false) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/rint/src/TRint.cxx:443
+#16 0x000000000040220d in main (argc=1, argv=0x7fffb3365768) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/main/src/rmain.cxx:29
+===========================================================
+
+================================================================================
+07/28/2025 Effect of EbyET0 correction
+cvmfswrite01] ~/TFG/SL24y/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 $  root.exe 'Chain.C+("*picoDst.root","PicoDst")'
+chained 54 files        with total 199559 events        with size 6.13537 GB    chain returned pointer: 0x2c4dfc0
+root.exe [6] tChain->Draw("Event.mPrimaryVertexZ-200>>Z(100,-0.5,0.5)")
+root.exe [11] Z->Fit("gaus","er","",-0.18,0.03)
+ FCN=320.828 FROM MINOS     STATUS=SUCCESSFUL     20 CALLS         151 TOTAL
+                     EDM=3.19292e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.66978e+03   3.61208e+01   7.65542e-02  -2.32465e-06
+   2  Mean        -7.25805e-02   2.11816e-04   5.25044e-08   4.12744e-02
+   3  Sigma        6.26551e-02   2.54298e-04   2.54298e-04   1.12520e-02
+
+
+[rcas6014] ~/TFG/TFG25e_1/2019/RF/sl73_x8664_gcc485_opt/4p59GeV_fixedTarget_2019/179/20179040 $ root.exe 'Chain.C+("*picoDst.root","PicoDst")'
+chained 136 files       with total 503006 events        with size 14.1778 GB    chain returned pointer: 0x1cb1d50
+root.exe [2]  tChain->Draw("Event.mPrimaryVertexZ-200>>Z(100,-0.5,0.5)")
+root.exe [8] Z->Fit("gaus","er","",-0.35,0.0)
+ FCN=150.079 FROM MINOS     STATUS=SUCCESSFUL     20 CALLS         151 TOTAL
+                     EDM=2.30389e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.58737e+04   3.50147e+01   5.11415e-02  -9.39671e-07
+   2  Mean        -1.66672e-01   2.27789e-04   6.82769e-08   3.10360e-02
+   3  Sigma        1.09300e-01   2.75171e-04   2.75171e-04   1.32328e-02
+================================================================================
+spokes positions:
+================================================================================
+07/31/2025 
+
+Checking for mysql.h ... /cvmfs/star.sdcc.bnl.gov/TFG/opt/star/al96_x8664_gcc11/spack/include
+Checking for libmysqlclient_r, libmysqlclient, or mysqlclient ... /cvmfs/star.sdcc.bnl.gov/TFG/opt/star/al96_x8664_gcc11/spack/lib
+
+
+Checking for GL/gl.h, or gl.h ... /usr/include
+Checking for libGL, or libMesaGL ... /usr/lib64
+Checking for libGLU, or libMesaGLU ... /usr/lib64
+Checking for GL/glew.h ... no
+Checking for libGLEW ... no
+Checking whether to build included GLEW ... yes
+
+
+    x86_64_gcc12  x86_64_v3_gcc12  AL95  AL96  AL96_mysql  SL73
+[cvmfswrite04] /cvmfs/star.sdcc.bnl.gov/TFG/star/packages $ spack find
+==> In environment AL96
+==> 38 root specs
+-- no arch / no compilers ---------------------------------------
+[+] bison    [+] eigen                [+] gdb   [+] imake   [+] libpng   [+] lmod       [+] mesa        [+] nlohmann-json  [+] perl-dbd-mysql  [+] py-pyparsing  [+] r-base64enc  [+] vc      [+] yacc
+[+] cfitsio  [+] environment-modules  [+] gsl   [+] java    [+] libxaw   [+] lndir      [+] mesa-demos  [+] npm            [+] perl-dbi        [+] qemacs        [+] snap         [+] vdt     [+] zstd
+[+] davix    [+] flex                 [+] htop  [+] lapack  [+] libxml2  [+] mercurial  [+] mesa-glu    [+] perl           [+] py-pip          [+] r-base64      [+] tcl          [+] xrootd
+
+-- linux-almalinux9-cascadelake / %c,cxx,fortran=gcc@11.3.1 -----
+doxygen@1.13.2  openmpi@5.0.7  snap@master
+
+-- linux-almalinux9-cascadelake / %c,cxx,fortran=gcc@11.5.0 -----
+gdb@15.2  llvm-amdgpu@6.4.0  openblas@0.3.29  r@4.5.0
+
+-- linux-almalinux9-cascadelake / %c,cxx=gcc@11.3.1 -------------
+berkeley-db@18.1.40  boost@1.77.0  curl@8.11.1  expat@2.7.1  fmt@11.2.0      gmp@6.3.0     icu4c@76.1   libarchive@3.8.0  lz4@1.10.0  mercurial@6.7.3  nghttp2@1.65.0   openssh@9.9p1  patchelf@0.17.2  tcl@8.6.12   unzip@6.0  zlib-ng@2.2.4
+bison@3.8.2          cmake@3.31.6  eigen@3.4.0  flex@2.6.3   gettext@0.23.1  hwloc@2.11.1  krb5@1.21.3  libffi@3.4.8      m4@1.4.19   ncurses@6.5      node-js@22.14.0  openssl@3.4.1  python@3.13.2    texinfo@7.1  vc@1.4.5   zstd@1.5.7
+
+-- linux-almalinux9-cascadelake / %c,cxx=gcc@11.5.0 -------------
+cmake@3.31.6  davix@0.8.10    libpng@1.6.47    lua@5.4.6    mesa-demos@8.4.0  mysql@8.0.35  nlohmann-json@3.11.3  r-askpass@1.2.0  vdt@0.4.6     z3@4.12.4
+curl@8.11.1   elfutils@0.192  libunwind@1.8.1  mesa@25.0.5  mesa-glu@9.0.2    ninja@1.12.1  py-cython@3.0.11      re2c@3.1         xrootd@5.7.1
+
+-- linux-almalinux9-cascadelake / %c,fortran=gcc@11.5.0 ---------
+cfitsio@4.5.0
+
+-- linux-almalinux9-cascadelake / %c=gcc@11.3.1 -----------------
+automake@1.16.5  ed@1.4                     git@2.48.1   imake@1.0.10  libbsd@0.12.2         libidn2@2.3.7        libsigsegv@2.14   libxcrypt@4.4.38  mpfr@4.2.1      perl@5.40.0    readline@8.2        util-linux@2.40.2     xz@5.6.3
+bc@1.07.1        environment-modules@5.5.0  gmake@4.4.1  isa-l@2.31.1  libedit@3.1-20240808  libmd@1.1.0          libtirpc@1.3.3    libxml2@2.13.5    nasm@2.16.03    pigz@2.8       rpcsvc-proto@1.4.4  util-linux-uuid@2.41  yasm@1.3.0
+bzip2@1.0.8      findutils@4.10.0           gsl@2.8      json-c@0.18   libevent@2.1.12       libmicrohttpd@1.0.1  libtool@2.4.7     lndir@1.0.5       numactl@2.0.18  pkgconf@2.3.0  sqlite@3.46.0       which@2.21
+diffutils@3.10   gdbm@1.23                  htop@3.3.0   less@668      libiconv@1.18         libpciaccess@0.17    libunistring@1.2  lzo@2.10          pcre2@10.44     pmix@5.0.5     tar@1.35            xproto@7.0.31
+
+-- linux-almalinux9-cascadelake / %c=gcc@11.5.0 -----------------
+glew@2.2.0        kbproto@1.0.7         libsm@1.2.6    libxaw@1.0.16   libxext@1.3.6  libxrandr@1.5.4     libxt@1.3.1    lua-luafilesystem@1.8.0  py-markupsafe@2.1.3  r-sys@3.4.2         xextproto@7.3.0
+glproto@1.4.17    libice@1.1.2          libx11@1.8.11  libxcb@1.17.0   libxmu@1.2.1   libxrender@0.9.12   libyaml@0.2.5  lua-luaposix@36.1        r-base64enc@0.1-3    randrproto@1.5.0    xrandr@1.5.3
+inputproto@2.3.2  libpthread-stubs@0.5  libxau@1.0.12  libxdmcp@1.1.5  libxpm@3.5.17  libxshmfence@1.3.3  lmod@8.7.55    perl-dbd-mysql@5.005     r-openssl@2.2.1      renderproto@0.11.1  xtrans@1.6.0
+
+-- linux-almalinux9-cascadelake / %cxx=gcc@11.3.1 ---------------
+npm@11.2.0  rapidjson@1.2.0-2024-08-16  spdlog@1.15.2
+
+-- linux-almalinux9-cascadelake / no compilers ------------------
+autoconf@2.72                       gcc@11.3.1          glibc@2.34         perl-dbi@1.645            py-certifi@2025.4.26  py-mako@1.2.4       py-pluggy@1.5.0     py-setuptools@79.0.1               python-venv@1.0     xcb-proto@1.17.0
+autoconf-archive@2023.02.20         gcc@11.5.0          glx@1.4            perl-devel-checklib@1.16  py-docutils@0.20.1    py-packaging@25.0   py-pygments@2.18.0  py-setuptools-scm@8.2.1            qemacs@6.4.1        xorg-cf-files@1.0.8
+ca-certificates-mozilla@2025-02-25  gcc-runtime@11.3.1  meson@1.7.0        perl-test-deep@1.204      py-flit-core@3.12.0   py-pathspec@0.12.1  py-pyparsing@3.1.2  py-trove-classifiers@2025.4.11.15  r-base64@2.0.1
+compiler-wrapper@1.0                gcc-runtime@11.5.0  openjdk@17.0.11_9  py-calver@2022.6.26       py-hatchling@1.27.0   py-pip@25.1.1       py-pyyaml@6.0.2     py-wheel@0.45.1                    util-macros@1.20.1
+==> 183 installed packages
+==> 0 concretized packages to be installed (show with `spack find -c`)
+
+int: Use -f if you really want to add them.
+hint: Disable this message with "git config advice.addIgnoredFile false"
+================================================================================
+08/08/2025
+in cons 
+St_db_Maker:ERROR - StDbManagerImpl::lookUpServers(): DB_SERVER_LOCAL_CONFIG is undefined! 
+St_db_Maker:ERROR - StDbManagerImpl::lookUpServers(): could not open /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbLoadBalancerGlobalConfig.xml
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServers(): config file name is 
+St_db_Maker:ERROR - StDbManagerImpl::lookUpServers() StDbServiceBroker error 2 disable XML loadbalancing 
+ looking at 1 /star/u/fisyak/dbServers.xml
+DB OVERRIDE default user with: fisyak
+ looking at 2 /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+DB OVERRIDE default user with: fisyak
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServer() line=713 
+******** Order of Files searched for dbServers ********* 
+  2. /star/u/fisyak/dbServers.xml
+  3. /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+********************************************************
+
+St_db_Maker:INFO  - MysqlDb::Connect: Load balancer took 0 ms, will use robinson.star.bnl.gov:3306
+St_db_Maker:INFO  - Ssl_cipher = AES128-SHA
+St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=robinson.star.bnl.gov:3306
+ --> Connection Time=0.0277119 sec    MysqlVersion=5.7.24-log
+St_db_Maker:ERROR - MysqlDb::ExecQuery() line=667  Query Failed  Malformed packet
+================================================================================
+08/09/2025 merge with v6.36.02
+CMake Warning at cmake/modules/RootMacros.cmake:933 (add_library):
+  Cannot generate a safe runtime search path for target RGL because files in
+  some directories may conflict with libraries in implicit directories:
+
+    runtime library [libSM.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libsm-1.2.6-om4q2xwennm7fia2a2nzqhhzlhw3wblt/lib
+    runtime library [libICE.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libice-1.1.2-htwbo63s2kn6kossoq2hckjwq6fsn3nw/lib
+    runtime library [libX11.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libx11-1.8.11-gin5ebgahluntbofi65d5i35m6xzbd4h/lib
+    runtime library [libXext.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libxext-1.3.6-ambh7a42xppfdadyhrpqfpox6lu5p6xw/lib
+
+  Some of these libraries may not be found correctly.
+Call Stack (most recent call first):
+  cmake/modules/RootMacros.cmake:1358 (ROOT_LINKER_LIBRARY)
+  graf3d/gl/CMakeLists.txt:28 (ROOT_STANDARD_LIBRARY_PACKAGE)
+
+================================================================================
+08/13/2025 
+[starsub02] ~/pwg/dEdx/RunXXIV06/pp200_LowLuminosity $ grep -m 1 node `grep -l -m 1 illegal *.log` | awk '{print $16}' | sort -u
+spool0201.sdcc.bnl.gov
+spool0202.sdcc.bnl.gov
+spool0203.sdcc.bnl.gov
+spool0205.sdcc.bnl.gov
+spool0206.sdcc.bnl.gov
+spool0207.sdcc.bnl.gov
+spool0209.sdcc.bnl.gov
+spool0210.sdcc.bnl.gov
+spool0211.sdcc.bnl.gov
+spool0212.sdcc.bnl.gov
+spool0213.sdcc.bnl.gov
+spool0214.sdcc.bnl.gov
+spool0215.sdcc.bnl.gov
+spool0217.sdcc.bnl.gov
+spool0218.sdcc.bnl.gov
+spool0219.sdcc.bnl.gov
+spool0220.sdcc.bnl.gov
+spool0221.sdcc.bnl.gov
+spool0222.sdcc.bnl.gov
+spool0223.sdcc.bnl.gov
+spool0224.sdcc.bnl.gov
+spool0225.sdcc.bnl.gov
+spool0226.sdcc.bnl.gov
+spool0227.sdcc.bnl.gov
+spool0228.sdcc.bnl.gov
+spool0229.sdcc.bnl.gov
+spool0231.sdcc.bnl.gov
+spool0232.sdcc.bnl.gov
+spool0233.sdcc.bnl.gov
+spool0234.sdcc.bnl.gov
+spool0237.sdcc.bnl.gov
+spool0238.sdcc.bnl.gov
+spool0239.sdcc.bnl.gov
+spool0240.sdcc.bnl.gov
+spool0241.sdcc.bnl.gov
+spool0242.sdcc.bnl.gov
+spool0243.sdcc.bnl.gov
+spool0244.sdcc.bnl.gov
+spool0246.sdcc.bnl.gov
+spool0247.sdcc.bnl.gov
+spool0249.sdcc.bnl.gov
+spool0250.sdcc.bnl.gov
+spool0252.sdcc.bnl.gov
+spool0253.sdcc.bnl.gov
+spool0254.sdcc.bnl.gov
+spool0255.sdcc.bnl.gov
+spool0256.sdcc.bnl.gov
+spool0260.sdcc.bnl.gov
+spool0261.sdcc.bnl.gov
+spool0264.sdcc.bnl.gov
+spool0265.sdcc.bnl.gov
+spool0266.sdcc.bnl.gov
+spool0267.sdcc.bnl.gov
+spool0269.sdcc.bnl.gov
+spool0270.sdcc.bnl.gov
+spool0271.sdcc.bnl.gov
+spool0272.sdcc.bnl.gov
+spool0273.sdcc.bnl.gov
+spool0274.sdcc.bnl.gov
+spool0275.sdcc.bnl.gov
+spool0278.sdcc.bnl.gov
+spool0279.sdcc.bnl.gov
+spool0280.sdcc.bnl.gov
+spool0281.sdcc.bnl.gov
+spool0282.sdcc.bnl.gov
+spool0283.sdcc.bnl.gov
+spool0285.sdcc.bnl.gov
+spool0287.sdcc.bnl.gov
+spool0289.sdcc.bnl.gov
+spool0290.sdcc.bnl.gov
+spool0291.sdcc.bnl.gov
+spool0292.sdcc.bnl.gov
+spool0293.sdcc.bnl.gov
+spool0295.sdcc.bnl.gov
+spool0588.sdcc.bnl.gov
+spool0589.sdcc.bnl.gov
+spool0590.sdcc.bnl.gov
+spool0591.sdcc.bnl.gov
+spool0592.sdcc.bnl.gov
+spool0593.sdcc.bnl.gov
+spool0594.sdcc.bnl.gov
+spool0595.sdcc.bnl.gov
+spool0597.sdcc.bnl.gov
+spool0598.sdcc.bnl.gov
+spool0599.sdcc.bnl.gov
+spool0602.sdcc.bnl.gov
+spool0603.sdcc.bnl.gov
+spool0604.sdcc.bnl.gov
+spool0605.sdcc.bnl.gov
+spool0606.sdcc.bnl.gov
+spool0607.sdcc.bnl.gov
+spool0610.sdcc.bnl.gov
+spool0611.sdcc.bnl.gov
+spool0612.sdcc.bnl.gov
+spool0613.sdcc.bnl.gov
+spool0614.sdcc.bnl.gov
+spool0615.sdcc.bnl.gov
+spool0616.sdcc.bnl.gov
+spool0617.sdcc.bnl.gov
+spool0618.sdcc.bnl.gov
+spool0619.sdcc.bnl.gov
+spool0620.sdcc.bnl.gov
+spool0621.sdcc.bnl.gov
+spool0623.sdcc.bnl.gov
+spool0624.sdcc.bnl.gov
+spool0626.sdcc.bnl.gov
+spool0627.sdcc.bnl.gov
+spool0628.sdcc.bnl.gov
+spool0630.sdcc.bnl.gov
+spool0631.sdcc.bnl.gov
+spool0632.sdcc.bnl.gov
+spool0633.sdcc.bnl.gov
+spool0634.sdcc.bnl.gov
+spool0637.sdcc.bnl.gov
+spool0639.sdcc.bnl.gov
+spool0640.sdcc.bnl.gov
+spool0641.sdcc.bnl.gov
+spool0642.sdcc.bnl.gov
+spool0643.sdcc.bnl.gov
+--------------------------------------------------------------------------------
+root.exe [1] .class StEventClusteringHints
+===========================================================================
+class StEventClusteringHints
+ size=0xb0 FILE:/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so LINE:-1
+ (tagnum=5725,voffset=-1,isabstract=0,parent=-1,gcomp=0:-1,funcs(dn21=~xcpd)=77)
+List of base class--------------------------------------------------------
+0x0        public: StObject //Base class for StEvent
+  0x0        public: TObject //Basic ROOT object
+List of member variable---------------------------------------------------
+Defined in StEventClusteringHints
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: TObject* fParent //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,string>* mNameMap //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,string> mDstMap , size=0 //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,string> mMiniDstMap , size=0 //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0xffffffffffffffff private: map<string,int> mBranchIds , size=0 //!
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1 0x0        private: static TClass* fgIsA
+List of member function---------------------------------------------------
+filename       line:size busy function type and name  (in StEventClusteringHints)
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual void ~StEventClusteringHints(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: StEventClusteringHints StEventClusteringHints(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void setDstMode(void); //switch to DST mode
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void setMiniDstMode(void); //switch to miniDST mode
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: const char* branchName(const char*) const; //get branch name for given class name
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: int branchId(const char*) const; //return unique ID for given branch
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void SetParent(TObject* par);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void setBranch(const char*,const char*,int); //assign classname with a branch name (incl. ID)
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void print(ostream&=cout); //print current configuration
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 private: StEventClusteringHints StEventClusteringHints(const StEventClusteringHints&);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static TClass* Class(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static const char* Class_Name(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static Version_t Class_Version(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static void Dictionary(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual TClass* IsA(void) const;
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual void ShowMembers(TMemberInspector&);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: virtual void Streamer(TBuffer&);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: void StreamerNVirtual(TBuffer& ClassDef_StreamerNVirtual_b);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static const char* DeclFileName(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static int ImplFileLine(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static const char* ImplFileName(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: static int DeclFileLine(void);
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.sl73_x8664_gcc485/lib/libStEvent.so  -1:-1   0 public: StEventClusteringHints& operator=(const StEventClusteringHints&);
+================================================================================
+08/14/2025
+26p5GeV_fixedTarget_2021 =>  St_beamInfoC::instance()->SqrtS()= 7.15212249755859375e+00
+14p5                                                            5.36067247390747070e+00
+9p5                                                             4.40743684768676758e+00
+9p8                                                             4.47036695480346680e+00
+10                                                              4.51183223724365234e+00
+9p95                                                            4.50150156021118164e+00
+ 7.15212249755859375e+00, 5.36067247390747070e+00, 4.40743684768676758e+00, 4.47036695480346680e+00, 4.51183223724365234e+00
+================================================================================
+08/21/2025
+https://cernlib.web.cern.ch/version.html
+https://cernlib.web.cern.ch/install/install.html
+cmake -S mysourcedir -B mybuilddir -DCMAKE_INSTALL_PREFIX=myinstalldir 
+cmake --build mybuilddir 
+cmake --install mybuilddir 
+cd mybuilddir 
+ctest .
+--------------------------------------------------------------------------------
+[starsub02] ~/sources/cernlib/cernlib 
+
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/lib $ ln -s /usr/lib64/libnsl.so.1 libnsl.so
+[starsub02] ~/sources/cernlib/cernlib $ setenv CMAKE_LIBRARY_PATH $LD_LIBRARY_PATH 
+
+cmake -S ~/sources/cernlib/cernlib -B ~/sources/cernlib/build64x -DCMAKE_INSTALL_PREFIX=$XOPTSTAR/cern64
+cmake --build -j8 ~/sources/cernlib/build64x 
+cmake --install ~/sources/cernlib/build64x 
+cd ~/sources/cernlib/build64x 
+ctest .
+
+
+CMake Warning (dev) at CMakeLists.txt:987 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-dev to suppress it.

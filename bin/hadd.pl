@@ -279,8 +279,9 @@ Initialdir       = " . $DIR . "
 +Experiment     = \"general\"                              
 +Job_Type       = \"cas\"
 kill_sig        = SIGINT
-PeriodicRemove  = (NumJobStarts >=1 && JobStatus==1) || (JobStatus == 2 && (CurrentTime - JobCurrentStartDate > (54000)) && ((RemoteUserCpu+RemoteSysCpu)/(CurrentTime-JobCurrentStartDate) < 0.10))  || (((CurrentTime - EnteredCurrentStatus) > (2*24*3600)) && JobStatus == 5)
+Accounting_group = group_star.cas
 Priority         = +10
+GetEnv           = True
 requirements = (Microarch == \"x86_64-v4\")
 Queue
 ";

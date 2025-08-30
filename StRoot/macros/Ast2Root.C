@@ -2,6 +2,21 @@
   root4star 'Ast2Root.C("y2019")'
  */
 //#define OLD_GEANT_VMC
+#if defined(__CLING__)
+#pragma cling load("StarRoot")
+//#pragma cling load("libmysqlclient")
+#pragma cling load("St_base")
+//#pragma cling load("liblog4cxx")
+//#pragma cling load("libStStarLogger")
+#pragma cling load("StChain")
+#pragma cling load("libStDbLib")
+#pragma cling load("StUtilities")
+#pragma cling load("StBFChain")
+#pragma cling load("St_geant_Maker")
+#else
+class StBFChain;        
+class StMessMgr;
+#endif /* __CLING__ */
 void Ast2Root(const Char_t *vers="y2025z", const Char_t *geom = "useXgeom") {
   gROOT->LoadMacro("bfc.C");
   //  TString cmd("bfc(0,\"gstar,useXgeom,nodefault,");

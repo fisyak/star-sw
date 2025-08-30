@@ -104,6 +104,8 @@
     //    gSystem->Load("libStUtilities"); 
     gSystem->Load("libSt_base"); 
     gSystem->Load("libStStarLogger"); 
+    gSystem->Load("libStChain"); 
+    gSystem->Load("libStBFChain"); 
 #endif
   }
   gSystem->Load("libEG");

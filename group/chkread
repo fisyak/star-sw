@@ -53,7 +53,7 @@ if( $PID = fork() ) {
     foreach $filename (@ARGV){
 	print "$self :: Checking $filename\n"                if ($DEBUG);
 	if ( ! -r $filename){
-	    print "$self :: File or directory $filename is not readable\n";
+	    print "$self :: File or directory $filename is not readable\n" if ($DEBUG);
 	    $sig = 10;
 	    last;
 	}

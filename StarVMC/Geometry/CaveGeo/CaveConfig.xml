@@ -25,7 +25,7 @@
     <Init struct="cvcf" var="tpcrefsys"   value="1" />
   </Setup>
   <Setup name="CAVE06" comment="The STAR Wide Angle Hall" module="CaveGeo2" onoff="on" top="HALL"  simu="1">
-    <Init struct="cvcf" var="config"      value="6" /> 
+    <Init struct="cvcf" var="config"      value="5" /> 
     <Init struct="cvcf" var="tpcrefsys"   value="1" />
   </Setup>
 

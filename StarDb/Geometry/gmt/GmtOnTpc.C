@@ -15,7 +15,27 @@ TDataSet *CreateTable() {
     I don't know exact Z position
     Best regards,
     Alexie
-  */
+ https://drupal.star.bnl.gov/STAR/blog/genevb/gmt-module-positions
+2014-06-20 16:21.
+From my CADD files of the TOF trays, this GEM origin in |Z| is
+thus nominally
+position 1 (|eta|~0): Z = 1.665 + 1.064 = 2.729"   =   6.932 cm
+position 8 (|eta|~1): Z = 76.740 + 1.064 = 77.768" = 197.531 cm
+
+again - this is the high-phi, low-|eta| corner of the gems
+not their centroid (as e.g. geant would want).
+
+In R...
+82.642          (top surface of TPC rail, 209.91cm)
++ (3.050-0.30)  (bottom assy to upper pem nut)
++ (1.300-0.75)  (top assy from lower through hole)
+-------------
+85.942" = 218.2927 cm
+
+with richard's offset of 0.336", the R-center of the gem fiducial
+is then at 85.606" = 217.3924 cm o.k.
+Bill
+ */
   double inch = 2.54;
   double R = 85.606; // inches => cm
   double deltaphi = 5./R; // crude radian conversion

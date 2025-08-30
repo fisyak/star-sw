@@ -17,7 +17,7 @@ if ( ! $?STAR_BASE_PATH ) setenv STAR_BASE_PATH ""
 # to ease integration, we can do one more step - if nothing
 # is defined as USE_, define it as USE_NFS4
 if ( ! $?USE_CVMFS && ! $?USE_AFS ) then
-    setenv USE_NFS4 1
+    # setenv USE_NFS4 1
 endif
 
 
@@ -110,3 +110,47 @@ switch ($DOMAINNAME)
   default:
     # DO NOTHING
 endsw     
+
+
+
+
+if ($?TFG_STAR == 0) then 
+# Experimental
+# scl is a command on Sl7, a script wrapper on A9/RH8 
+# installed as  /etc/scl/func_scl.csh and is NOT executable
+if ( -e "/etc/scl/func_scl.csh" ) then
+    set SCLCMD="source /etc/scl/func_scl.csh list-collections"
+else
+    if ( -x "/usr/bin/scl" ) then
+	set SCLCMD="/usr/bin/scl -l"
+    else
+	set SCLCMD=""
+    endif
+endif
+
+
+# if ( "$SCLCMD" != "" ) then
+#     set dts=`$SCLCMD | /usr/bin/tail -1`
+#     if ( "$dts" != "") then
+# 	set test=`echo $PATH | grep $dts`
+# 	if ( "$test" == "") then
+# 	    if ( -d /opt/rh/$dts/root/usr ) then
+# 		if ( $?DECHO ) then
+# 		    echo "$self :: Devtoolset version $dts is available"
+# 		endif
+# 		# ---> that's one possibility but requires more massage
+# 		#      PATH wise
+# 		#/usr/bin/scl enable $dts '/bin/tcsh -l'
+# 		#logout
+# 		#<--- 
+# 		#if ( ! $?USE_GCC_DIR ) then
+# 		#    if ( $?DECHO ) echo "$self :: setting GCC DIR to $dts"
+# 		#    setenv USE_GCC_DIR /opt/rh/$dts/root/usr 
+# 		#endif
+# 	    endif
+# 	endif
+#     else
+# 	if ( $?DECHO ) echo "We are using devtoolset $dts"
+#     endif
+# endif
+# endif

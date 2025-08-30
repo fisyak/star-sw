@@ -1,20 +1,22 @@
 class StBFChain;        
 class StMessMgr;
 #if defined(__CLING__)
+#pragma cling load("libmysqlclient")
 #pragma cling load("libTable")
 #pragma cling load("StarRoot")
+#pragma cling load("liblog4cxx")
+#pragma cling load("libStStarLogger")
 #pragma cling load("St_base")
 #pragma cling load("StChain")
 #pragma cling load("libStDbLib")
 #pragma cling load("StUtilities")
-#pragma cling load("StBFChain")
+#pragma cling load("libStBFChain")
 #pragma ciing load("libStDb_Tables")
 #pragma cling load("geant3")
-#pragma cling load("libmysqlclient")
 #endif /* __CLING__ */
 
 #if defined(__CINT__)
-StBFChain* chain = 0;
+
 #endif
 #ifdef __CLING__
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
@@ -31,21 +33,18 @@ void lDb(Int_t Last = -1, const Char_t *date = "r2024,TFGdbOpt,CorrZ") {
   gROOT->LoadMacro("bfc.C");
   bfc(-1,Chain.Data());
   if (Last < 0) return;
-  StMaker *dbMk = chain->Maker("db");
-  if (! dbMk) return;
-  chain->Init();
-  if (Last == 0) return;
-  chain->Make();
 #else
-  StBFChain* chain = new StBFChain;
+  StBFChain* chain = bfc(-1,Chain.Data());
+#endif
   cout << "Create chain " << chain->GetName() << endl;
   chain->cd();
   chain->SetDebug(1);
   if (Last < -3) return;
   chain->SetFlags(Chain);
   if (Last < 0) return;
+  StMaker *dbMk = chain->Maker("db");
+  if (! dbMk) return;
   chain->Init();
-  if (Last <= 0) return;
+  if (Last == 0) return;
   chain->Make();
-#endif
 }
