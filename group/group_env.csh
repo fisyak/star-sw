@@ -747,16 +747,6 @@ foreach pkg ( $PKGS )
 end
 
 
-#
-#if ( $STAR_LEVEL  == "dev" || $STAR_LEVEL  == ".dev" || $STAR_LEVEL  == "adev" ) then
-#    # not a very intuitive path ..
-#    setenv Vc_DIR /cvmfs/star.sdcc.bnl.gov/star-spack/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/vc_-1.4.1-7m2zajp3rqt6usw3zlgtmfrlxbbw5yvn
-#else
-#    #if ( $?Vc_DIR ) then
-#    #	unsetenv Vc_DIR
-#    #endif
-#endif 
-
 
 # Support for subversion if installed in a sub-directory
 # Will start with simple one location
@@ -959,6 +949,7 @@ if (-r ${STAR}/scripts/RCF)           setenv PATH ${PATH}:${STAR}/scripts/RCF
 if (-r ${STAR}/bin)                   setenv PATH ${PATH}:${STAR}/bin
 if (-x ${GROUP_DIR}/dropit)           setenv PATH `${GROUP_DIR}/dropit`
 if (-r ${XOPTSTAR}/spack/lib/perl5)   setenv PERL5LIB ${XOPTSTAR}/spack/lib/perl5:${PERL5LIB}
+if (-e ${XOPTSTAR}/spack/bin/kinit && $?KRB5CCNAME == 0)   setenv KRB5CCNAME /tmp/krb5cc_`id -u`
 setenv ROOT_INCLUDE_PATH "${ROOTSYS}/include:.:./StRoot:./.${STAR_HOST_SYS}/include:${STAR}:${STAR}/StRoot:${STAR}/.${STAR_HOST_SYS}/include"
 # remuve dubplication
 if (-x ${GROUP_DIR}/dropit) then
