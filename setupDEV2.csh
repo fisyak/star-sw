@@ -39,7 +39,7 @@ endif
 if (! $?PERL5LIB) setenv PERL5LIB ""
 setenv STAR_ROOT ${AFS_RHIC}
 setenv OPTSTAR   ${STAR_ROOT}/opt
-setenv GROUP_DIR ${STAR_ROOT}/packages/.DEV2/group
+setenv GROUP_DIR ${STAR_ROOT}/packages/TFG/group
 #unsetenv STAR
 setenv TFG_STAR 1
 source ${GROUP_DIR}/group_env.csh
@@ -54,7 +54,7 @@ source ${GROUP_DIR}/setup    64b
 #setup gcc492
 #setup 32b
 #source ${GROUP_DIR}/.starver ${STAR_LEVEL}
-source ${GROUP_DIR}/.starver .DEV2
+source ${GROUP_DIR}/.starver TFG
 #setup   64b
 #setup   32b
 #if ($STAR_SYS == "x8664_sl5") 
@@ -69,5 +69,5 @@ source ${GROUP_DIR}/.starver .DEV2
 #setenv  CXXFLAGS " -m32"
 #setenv  CFLAGS  " -m32"
 #setenv  LDFLAGS " -m32"
-cat $AFS_RHIC/packages/.DEV2/TFG_Releases.md
+cat $AFS_RHIC/packages/TFG/TFG_Releases.md
 
