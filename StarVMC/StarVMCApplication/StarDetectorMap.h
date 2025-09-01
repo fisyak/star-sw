@@ -129,7 +129,7 @@ static const StarDetectorMap_t Detectors[] = {// missing : hpd, pre
   {kUnknownId            ,"fts","FTSD","FTSA","g2t_fts_hit","g2t_fts_hit",""},                      // Active volume for each FTS disk
   {kFtsId                ,"fts","FSTH","FTUS","g2t_fts_hit","g2t_fts_hit",""},                      // 6*12*3 Tube segment for FST silicon
   {kUnknownId            ,"gem","GEMB","GMDI","g2t_gem_hit","g2t_gem_hit",""},                      // the sensitive volume of the GEM strip detector, layer 1
-  {kGmtId       	 ,"gmt","BTOF","GEMG","g2t_ctf_hit","g2t_gmt_hit",""},                      // 2*48*2 the sensitive gas layer in the GMT  module
+  {kGmtId       	 ,"gmt","BTOF","GMTG","g2t_ctf_hit","g2t_gmt_hit",""},                      // 2*48*2 the sensitive gas layer in the GMT  module
   {kUnknownId            ,"hca","HCAL","BBCB","g2t_emc_hit","g2t_hca_hit",""},                      // Beam Counter front, Back scint paddle 
   {kUnknownId            ,"hca","HCAL","BBCF","g2t_emc_hit","g2t_hca_hit",""},                      // Beam Counter front, Front scint paddle 
   {kUnknownId            ,"hca","HCAL","FPSC","g2t_emc_hit","g2t_hca_hit",""},                      // a piece of scintillator in FMS Preshower
