@@ -62,13 +62,9 @@
 #include "StPicoEvent/StPicoBTofPidTraits.h"
 #include "StPicoEvent/StPicoETofPidTraits.h"
 #include "StPicoEvent/StPicoTrackCovMatrix.h"
-#if 0
 #include "StProbPidTraits.h"
-#endif
 #include "StdEdxY2Maker/dEdxHist.h"
-#if 0
-#include "StdEdxY2Maker/StPidStatus.h"
-#endif
+#include "StdEdxY2Maker/StTrackCombPiD.h"
 #undef  StMessMgr
 #undef ClassStMessMgr
 #else
@@ -233,7 +229,7 @@ Int_t IndexH(const Char_t *name) {
   //  if (index >= 0) cout << "Found " << Name << "\t" << PidNames[index] << "\tindex\t" << index << endl;      
   return index;
 }
-#if 0
+#if 1
 //________________________________________________________________________________
 void Pico1(const Char_t *files ="./*.picoDst.root",
 	      const Char_t *Out = "Pico.root"){
@@ -470,8 +466,8 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
 #endif
 #endif
 #ifdef __TFG__VERSION__
-      StPidStatus PiD(gTrack); 
-      if (PiD.PiDStatus < 0) continue;
+      StTrackCombPiD PiD(gTrack); 
+      if (! PiD.Status()) continue;
 #endif /*  __TFG__VERSION__ */
       memset (&Var.refMult, 0, sizeof(Var_t));
       Var.refMult = NoGlobalTracks;
@@ -490,9 +486,9 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
       Double_t zPred[3][KPidParticles];
       Double_t sPred[3][KPidParticles]; // errors versus bg10
 #ifdef __TFG__VERSION__
-      StdEdxStatusO *PiDs[3] = { PiD.fFit, PiD.fI70, PiD.fdNdx};
+      const StdEdxStatus *PiDs[3] = { PiD.fFit(), PiD.fI70(), PiD.fdNdx()};
 #else
-      StdEdxStatusO *PiDs[3] = { 0};
+      const StdEdxStatus *PiDs[3] = { 0};
 #endif /*  __TFG__VERSION__ */
       Double_t dEdx[3] = {0};
       Double_t dEdxL[3] = {0};
@@ -515,7 +511,7 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
 	if (sigmas[k] <= 0.0) continue;
 #ifdef __TFG__VERSION__
 	nSigmasPi[k] = PiDs[k]->D();
-	Zs[k] =  PiDs[k]->dev[kPidPion];
+	Zs[k] =  PiDs[k]->residual(kPidPion);
 	//	StDedxMethod m = kTPoints[k];
 	//	if (! PiD.dEdxStatus((StDedxMethod)m)) continue;
 #else  /*  !__TFG__VERSION__ */
@@ -548,40 +544,40 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
 	    __fTdEdx_Fill__(1,t,s);
 	  }
 #ifdef __fit__
-	  if (PiD.fFit) {
-	    fitZ.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fFit->dev[l]);
-	    fitZ.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fFit->dev[l]);
-	    if (Debug()) cout << "fitZ->dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fFit->dev[l] << "\tpull = " << PiD.fFit->devS[l] 
+	  if (PiD.fFit()) {
+	    fitZ.dev[l][sCharge]->Fill(PiD.bghyp(l),PiD.fFit()->residual(l));
+	    fitZ.dev[l][      2]->Fill(PiD.bghyp(l),PiD.fFit()->residual(l));
+	    if (Debug()) cout << "fitZ->dev l = " << l << "\t bg = " << PiD.bghyp(l) << "\tdevZ = " << PiD.fFit()->residual(l) << "\tpull = " << PiD.fFit()->pull(l) 
 			      << " nSigma = " <<nSigmal 
 			      << endl;
 	    if (k >= 0) {
-	      fitZ.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fFit->dev[l]);
-	      fitZ.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fFit->dev[l]);
-	      if (Debug()) cout << "fitZ->dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fFit->dev[l] << "\tpull = " << PiD.fFit->devS[l] 
+	      fitZ.devT[l][sCharge]->Fill(PiD.bghyp(l),PiD.fFit()->residual(l));
+	      fitZ.devT[l][      2]->Fill(PiD.bghyp(l),PiD.fFit()->residual(l));
+	      if (Debug()) cout << "fitZ->dev l = " << l << "\t bg = " << PiD.bghyp(l) << "\tdevZ = " << PiD.fFit()->residual(l) << "\tpull = " << PiD.fFit()->pull(l) 
 				<< " nSigma = " <<nSigmal  
 				<< endl;
 	    }
 	  }
 #endif /* __fit__ */
 #ifdef     __Use_dNdx__
-	  if (PiD.fI70) {
-	    I70.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fI70->dev[l]);
-	    I70.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fI70->dev[l]);
-	    if (Debug()) cout << "I70->dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fI70->dev[l] << endl;
+	  if (PiD.fI70()) {
+	    I70.dev[l][sCharge]->Fill(PiD.bghyp(l),PiD.fI70()->residual(l));
+	    I70.dev[l][      2]->Fill(PiD.bghyp(l),PiD.fI70()->residual(l));
+	    if (Debug()) cout << "I70->dev l = " << l << "\t bg = " << PiD.bghyp(l) << "\tdevZ = " << PiD.fI70()->residual(l) << endl;
 	    if (k >= 0) {
-	      I70.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fI70->dev[l]);
-	      I70.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fI70->dev[l]);
-	      if (Debug()) cout << "I70->dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fI70->dev[l] << endl;
+	      I70.devT[l][sCharge]->Fill(PiD.bghyp(l),PiD.fI70()->residual(l));
+	      I70.devT[l][      2]->Fill(PiD.bghyp(l),PiD.fI70()->residual(l));
+	      if (Debug()) cout << "I70->dev l = " << l << "\t bg = " << PiD.bghyp(l) << "\tdevZ = " << PiD.fI70()->residual(l) << endl;
 	    }
 	  }
-	  if (PiD.fdNdx) {
-	    fitN.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fdNdx->dev[l]);
-	    fitN.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fdNdx->dev[l]);
-	    if (Debug()) cout << "fitN->dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fdNdx->dev[l] << endl;
+	  if (PiD.fdNdx()) {
+	    fitN.dev[l][sCharge]->Fill(PiD.bghyp(l),PiD.fdNdx()->residual(l));
+	    fitN.dev[l][      2]->Fill(PiD.bghyp(l),PiD.fdNdx()->residual(l));
+	    if (Debug()) cout << "fitN->dev l = " << l << "\t bg = " << PiD.bghyp(l) << "\tdevZ = " << PiD.fdNdx()->residual(l) << endl;
 	    if (k >= 0) {
-	      fitN.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fdNdx->dev[l]);
-	      fitN.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fdNdx->dev[l]);
-	      if (Debug()) cout << "fitN->dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fdNdx->dev[l] << endl;
+	      fitN.devT[l][sCharge]->Fill(PiD.bghyp(l),PiD.fdNdx()->residual(l));
+	      fitN.devT[l][      2]->Fill(PiD.bghyp(l),PiD.fdNdx()->residual(l));
+	      if (Debug()) cout << "fitN->dev l = " << l << "\t bg = " << PiD.bghyp(l) << "\tdevZ = " << PiD.fdNdx()->residual(l) << endl;
 	    }
 	  }
 #endif /* __Use_dNdx_ */
@@ -612,10 +608,10 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
   if (fOut) fOut->Write();
 #endif /* !__CINT__ */
 }
-#endif
+#else
 //________________________________________________________________________________
 void Pico(const Char_t *files ="./*.picoDst.root",
-	      const Char_t *Out = "Pico.root"){
+	      const Char_t *Out = "PicodEdx.root"){
 #ifndef __CINT__
   maker = new StPicoDstMaker(StPicoDstMaker::IoRead,files);
   maker->Init();
@@ -707,3 +703,4 @@ void Pico(const Char_t *files ="./*.picoDst.root",
   } // event loop
   if (fOut) fOut->Write();
 }
+#endif
