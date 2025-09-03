@@ -7,15 +7,19 @@ use lib dirname $0; #
 #use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 my $debug = 0;
+my $runs = "";
+my $fNoMax = -1;
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
+  if ($#ARGV >= 1) {
+    $runs = $ARGV[1];
+  }
+  if ($#ARGV >= 2) {
+    $fNoMax = $ARGV[2];
+    print "fNoMax = $fNoMax\n";
+  }
 }
-my $fNoMax = -1;
-if ($#ARGV >= 1) {
-  $fNoMax = $ARGV[1];
-  print "fNoMax = $fNoMax\n";
-}
-my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug);
+my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug,$runs);
 print "$0 Year = $year, Field = $FIELD, runs = $runs, def = $def,  Day = $Day, Run = $Run, run2 = $run2\n" if ($debug);
 if (! $year || ! $FIELD) {die "wrong directory $pwd";}
 PrintHash($def,"Runs") if ($debug);

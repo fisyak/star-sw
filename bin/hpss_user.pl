@@ -1,4 +1,4 @@
-#!/opt/star/bin/perl -w
+#! /usr/bin/env perl
 #  Program Name            : HPSS_USER.PL
 #    Original Author       : JLAURET
 #    Date                  :  7-DEC-1998
