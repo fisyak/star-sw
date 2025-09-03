@@ -34,8 +34,9 @@ sub GoodRun($$$) {
   return -1;
 }
 #__________________________________________________________________________________________
-sub GetRuns($) {
+sub GetRuns($$) {
   my $debug = shift;
+  my $runs = shift;
 #  print "debug = $debug\n";
   my $pwd = cwd(); #print "pwd = $pwd\n";
   my $year  = "";
@@ -90,29 +91,28 @@ sub GetRuns($) {
   elsif ($pwd =~ /ZF/) {$FIELD = "ZF";}
   #$ENV{YEAR} = $year;
   #$ENV{FIELD} = $FIELD;
-  my $DAQ_DIR = "";
-  if (-r "/hlt/cephfs/daq") {
-    $DAQ_DIR =  "/hlt/cephfs/daq";
-  } elsif (-r "/gpfs01/star/data03/daq") {
-    $DAQ_DIR =  " /gpfs01/star/data03/daq";
-  } elsif (-r "/gpfs01/star/daq") {
-    $DAQ_DIR =  " /gpfs01/star/daq";
-  } else {
-    die "unknow $DAQ_DIR";
-  }
-  my $runs = $DAQ_DIR . "/" . $year . "/" . $Day . "/" .  $Run;
-  print "runs = $runs\n" if ($debug);
   my $run2 = "";
-  if ($year eq "2020") {
-    $runs = $DAQ_DIR . "/" . "2019/" . $Day . "/" .  $Run;
-    $run2 = $DAQ_DIR . "/" . "2020/" . $Day . "/" .  $Run;
-  } elsif ($year eq "2021") {
-    $runs = $DAQ_DIR . "/" . "2020/" . $Day . "/" .  $Run;
-    $run2 = $DAQ_DIR . "/" . "2021/" . $Day . "/" .  $Run;
-  } elsif ($year eq "2022") {
-    $runs = $DAQ_DIR . "/" . "2021/" . $Day . "/" .  $Run;
-    $run2 = $DAQ_DIR . "/" . "2022/" . $Day . "/" .  $Run;
+  my $DAQ_DIR = "";
+  if (! $runs) {
+    if (-r "/hlt/cephfs/daq") {
+      $DAQ_DIR =  "/hlt/cephfs/daq";
+    } elsif (-r "/gpfs01/star/daq") {
+      $DAQ_DIR =  " /gpfs01/star/daq";
+    } elsif (-r "/gpfs01/star/data03/daq") {
+      $DAQ_DIR =  " /gpfs01/star/data03/daq";
+    } else {
+      die "unknow $DAQ_DIR";
+    }
+    $runs = $DAQ_DIR . "/" . $year . "/" . $Day . "/" .  $Run;
+    if ($year eq "2020") {
+      $run2 = $DAQ_DIR . "/" . "2019/" . $Day . "/" .  $Run;
+    } elsif ($year eq "2021") {
+      $run2 = $DAQ_DIR . "/" . "2020/" . $Day . "/" .  $Run;
+    } elsif ($year eq "2022") {
+      $run2 = $DAQ_DIR . "/" . "2021/" . $Day . "/" .  $Run;
+    }
   }
+  print "runs = $runs\t run2 = $run2\n" if ($debug);
   return ($year,$FIELD,$runs,$def,$Day,$Run,$run2);
 }
 #__________________________________________________________________________________________

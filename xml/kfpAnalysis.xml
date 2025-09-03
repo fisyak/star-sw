@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job maxFilesPerProcess="10" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+<job maxFilesPerProcess="10" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="true" copyInputLocally="false">
         <command>
  set CURRENT_DIR = `pwd`
 #C       cd ${SUBMITTINGDIRECTORY}
@@ -11,7 +11,7 @@
 #  setup debug
 #  setenv NODEBUG yes
 #  setenv StarEndMakerShell
-#  starver TFG21d
+  starver TFG
 #  set split = (${INPUTFILE0}:as|/| |)
 foreach  evtsFile(`cat $FILELIST`)
 #  set evtsFile = $INPUTFILE0;
@@ -45,7 +45,9 @@ foreach  evtsFile(`cat $FILELIST`)
         rsync  ${inputDIR}  .
       endif
   endif
-  root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&amp; ${log}
+  echo echo "`hostname` $STAR_HOST_SYS $STAR $ROOTSYS"  &gt;&amp; ${log} 
+#  printenv | sort &gt;&gt;&amp; ${log} 
+  root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&gt;&amp; ${log}
   rm ./*.${dstype}.root
 end 
  rm -rf ${CURRENT_DIR}

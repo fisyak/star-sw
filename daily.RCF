@@ -5975,3 +5975,60 @@ CMake Warning (dev) at CMakeLists.txt:987 (install):
   "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
   command to set the policy and suppress this warning.
 This warning is for project developers.  Use -Wno-dev to suppress it.
+
+
+test -f .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication/g2t_volume_id.g && rm .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication/g2t_volume_id.g; gcc -E -P -DCERNLIB_TYPE -DCERNLIB_UNIX -DCERNLIB_BSLASH -DCERNLIB_DZDOC -DCERNLIB_SHL -DCERNLIB_NONEWL -DCERNLIB_HIGZ -DCERNLIB_CG -DCERNLIB_HADRON -DCERNLIB_COMIS -DCERNLIB_BLDLIB -DCERNLIB_CZ -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_LXIA64 -DCERNLIB_GCC11 -DCERNLIB_LINUX -DCERNLIB_GFORTRAN -I.al96_x8664_gcc11/include -I. -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/cern64/pro/include .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication/g2t_volume_id.F -o .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication/g2t_volume_id.g;cd .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication; test -f g2t_volume_id.for && /bin/rm g2t_volume_id.for;/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/.al96_x8664_gcc11/bin/agetof -V 1 g2t_volume_id.g -o g2t_volume_id.for && cd - &&gfortran -DCERNLIB_TYPE -DCERNLIB_UNIX -DCERNLIB_BSLASH -DCERNLIB_DZDOC -DCERNLIB_SHL -DCERNLIB_NONEWL -DCERNLIB_HIGZ -DCERNLIB_CG -DCERNLIB_HADRON -DCERNLIB_COMIS -DCERNLIB_BLDLIB -DCERNLIB_CZ -DCERNLIB_QMGLIBC -DCERNLIB_QMLXIA64 -DCERNLIB_LXIA64 -DCERNLIB_GCC11 -DCERNLIB_LINUX -DCERNLIB_GFORTRAN -pthread -m64 -msse4.2 -Wno-misleading-indentation -fPIC -pipe -std=legacy -fno-second-underscore -fno-automatic -Waliasing -Wampersand -Wsurprising -Wintrinsics-std -Wno-tabs -Wintrinsic-shadow -Wcast-align -g -I.al96_x8664_gcc11/include -I. -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/cern64/pro/include -c .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication/g2t_volume_id.for -o .al96_x8664_gcc11/obj/StarVMC/StarVMCApplication/g2t_volume_id.o
+================================================================================
+08/31/2025
+[starsub03] /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack $ spack find
+==> In environment AL96
+==> 22 root specs
+-- no arch / no compilers ---------------------------------------
+[+] bison  [+] eigen  [+] gdb  [+] htop    [+] lmod   [+] mysql  [+] perl-date-manip  [+] perl-dbi      [+] python  [+] tcl  [+] xrootd
+[+] cmake  [+] flex   [+] gsl  [+] libxaw  [+] lndir  [+] perl   [+] perl-dbd-mysql   [+] py-pyparsing  [+] qemacs  [+] vc   [+] yacc
+
+coin3d
+
+[cvmfswrite07] /cvmfs/star.sdcc.bnl.gov/TFG/spack $ spack find
+==> In environment AL96x
+==> 22 root specs
+-- no arch / no compilers ---------------------------------------
+[+] bison  [+] coin3d  [+] flex  [+] gsl   [+] libxft  [+] lmod   [+] mesa        [+] mesa-glu  [+] py-pyparsing  [+] tcl  [+] xrootd
+[+] cmake  [+] eigen   [+] gdb   [+] htop  [+] libxpm  [+] lndir  [+] mesa-demos  [+] perl      [+] qemacs        [+] vc   [+] yacc
+
+perl-dbi
+perl-date-manip
+perl-dbd-mysql
+python
+
+[cvmfswrite07] /cvmfs/star.sdcc.bnl.gov/TFG/spack $ spack find
+==> In environment AL96x
+==> 26 root specs
+-- no arch / no compilers ---------------------------------------
+[+] bison  [+] coin3d  [+] flex  [+] gsl   [+] libxft  [+] lmod   [+] mesa        [+] mesa-glu  [+] perl-date-manip  [+] perl-dbi      [+] python  [+] tcl  [+] xrootd
+[+] cmake  [+] eigen   [+] gdb   [+] htop  [+] libxpm  [+] lndir  [+] mesa-demos  [+] perl      [+] perl-dbd-mysql   [+] py-pyparsing  [+] qemacs  [+] vc   [+] yacc
+
+
+ bison   coin3d   flex   gsl    libxft    mesa         mesa-glu   perl-date-manip   perl-dbi       python   xrootd  cmake   eigen    gdb    htop   libxpm   lndir   mesa-demos   perl       perl-dbd-mysql    py-pyparsing   qemacs   vc    yacc
+================================================================================
+09/02/2025 
+[starsub03] ~/work/kfp/2020/13p5GeV_fixedTarget_P24iy/dEdx $ difw  st_physics_21034008_raw_7500014B.log Failed3/st_physics_adc_21034013_raw_7500017B.log | more 
+sphnx0879.sdcc.bnl.gov                                                                                                                                        | 
+spool0691.sdcc.bnl.gov
+APPTAINER_CACHEDIR=/home/condor/local/sdcc/execute/dir_2897043                                                                                                | 
+APPTAINER_CACHEDIR=/home/condor/local/sdcc/execute/dir_3846646
+CERN=/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/cern64                                                                                     | 
+CERN=/gpfs01/star/subsys-tpc/fisyak/STAR/cern64
+GROUPPATH=/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/group:/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/mgr:/gpfs01/star/subsys-tpc/fisyak/STA | 
+GROUPPATH=/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/group:/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/mgr:/gpfs01/star/subsys-tpc/fisyak/STA
+LD_LIBRARY_PATH=/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/lib:/gp | 
+LD_LIBRARY_PATH=/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al95_x8664_gcc11/lib:/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al95_x8664_gcc11/spack/lib:/gp
+MINE_BIN=.al96_x8664_gcc11_opt/bin                                                                                                                            | 
+MINE_BIN=.al95_x8664_gcc11_opt/bin
+
+foreach f (`ls -1d .*al96*`) 
+     set b = `echo ${f} | sed -e 's/96/95/'`
+     ln -s ${f} ${b}
+     set c = `echo ${f} | sed -e 's/96/92/'`
+     ln -s ${f} ${c}
+end

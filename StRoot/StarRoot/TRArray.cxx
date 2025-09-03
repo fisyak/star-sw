@@ -54,6 +54,7 @@ istream & operator>>(istream &s, TRArray &target) {
   for (int i = 0; i < N; i++) s >> target.fArray[i];
   return s;
 }
+#if 0
 //________________________________________________________________________________
 TRArray &TRArray::operator=(const TRArray &rhs) {   // TRArray assignment operator.
   if (this != &rhs) {
@@ -65,6 +66,7 @@ TRArray &TRArray::operator=(const TRArray &rhs) {   // TRArray assignment operat
   }
   return *this;
 }
+#endif
 //________________________________________________________________________________
 Bool_t TRArray::Verify(const TRArray &A, Double_t zeru, Int_t Level) const {
   // TRUE if test failed

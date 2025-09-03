@@ -64,7 +64,7 @@ class TRArray : public TArrayD {
   void           Set(Int_t n, const Float_t *array);
   void           AdoptA(Int_t n, Double_t *arr);
   void           reset() {Reset();}
-  TRArray& operator=(const TRArray &rhs);
+  //  TRArray& operator=(const TRArray &rhs);
   virtual Double_t &operator()(Int_t i)                    {return operator[](i);}
   virtual Double_t operator()(Int_t i) const               {return operator[](i);}
   friend TRArray &operator-=(TRArray &target, Double_t scalar) {
@@ -106,8 +106,8 @@ class TRArray : public TArrayD {
     const Double_t *fB  = A.GetArray();
     for (int i=0; i<target.fN; i++) {if (target.fArray[i] != fB[i]) return kFALSE;} return kTRUE;
   }
-  friend TRArray operator + (const TRArray &A, const TRArray &B) {TRArray C(A); C += B; return C;}
-  friend TRArray operator - (const TRArray &A, const TRArray &B) {TRArray C(A); C -= B; return C;}
+  friend TRArray operator + (const TRArray &A, const TRArray &B) {TRArray C = A; C += B; return C;}
+  friend TRArray operator - (const TRArray &A, const TRArray &B) {TRArray C = A; C -= B; return C;}
   
   Bool_t Verify(const TRArray &A, const Double_t zeru=5.e-7, Int_t Level=1) const;
   virtual void   Print(Option_t *opt="") const;
