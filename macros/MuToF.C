@@ -20,7 +20,7 @@
 #endif
 #define DEBUG
 //________________________________________________________________________________
-void MuToF(const Char_t *files =  "./tpt/*.MuDst.root", const Char_t *Out="tof.root") {
+void MuToF(const Char_t *files =  "./*.MuDst.root", const Char_t *Out="tof.root") {
   TFile *fOut = new TFile(Out,"recreate");
   TH2D *PrVsGl = new TH2D("PrVsGl","No. of Primary tracks versus No. of Globals",
 			    100,0,5000., 100,0.,2500.);
