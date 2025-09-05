@@ -257,7 +257,7 @@ void StarUrQMDPrimaryGenerator::GeneratePrimary() {
   Double_t poly = 0.; 
   Double_t polz = 0.; 
   Int_t ntr = 0;
-  Int_t N = T->Npart;
+  Int_t N = T->mul;
   for (Int_t i = 0; i < N; i++) {
     if (TMath::Abs(T->pid[i]) < 10) continue;
     if (! TDatabasePDG::Instance()->GetParticle(T->pid[i])) continue;
