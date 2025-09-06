@@ -6032,3 +6032,9 @@ foreach f (`ls -1d .*al96*`)
      set c = `echo ${f} | sed -e 's/96/92/'`
      ln -s ${f} ${c}
 end
+================================================================================
+09/05/2025
+if (! -d hold) mkdir hold
+foreach f (`grep -l Assertion *B.log` )
+  set b = `basename ${f} B.log`; mv ${b}* hold
+end

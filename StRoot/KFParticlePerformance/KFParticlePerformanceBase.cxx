@@ -1242,7 +1242,7 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
                                            nBins[0],xMin[0],xMax[0]);
     histoParameters3D[iPart][1]->GetYaxis()->SetTitleOffset(1.0);
 #ifdef __TFG__VERSION__
-    if (path == "Ks") {
+    if (path.Contains("Ks")) {
       histoParameters3D[iPart][12] = new TH3F(parName3D[12],parTitle3D[12] + " pT > 1 GeV ; y ; #phi (rad); M", 
 					      nBins[3],xMin[3],xMax[3],
 					      nBins[9],xMin[9],xMax[9],

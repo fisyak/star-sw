@@ -5,9 +5,10 @@
 <command> 
   cd ${SUBMITTINGDIRECTORY}  
   set Name = `basename $PWD`
-#  setenv NODEBUG yes
-#  setup 64b
+  setenv NODEBUG yes
+  setup 64b
 #  starver TFG25f
+  starver TFG
   set file = $INPUTFILE0;
 #  set rung = `echo $file | awk -F\: '{print $1}'`
 #  set f    = `echo $file | awk -F\: '{print $2}'`
@@ -21,6 +22,7 @@
   set logName  = ${name}B.log
   set generF   = ${name}.MuDst.root
   set tagf     = ${name}.root
+  if (-r $tagf) exit 0;
 #  setenv StarEndMakerShell
 #  set sdt = "";
 #  echo $Name | grep -i Ideal
