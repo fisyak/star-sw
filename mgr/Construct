@@ -207,7 +207,7 @@ if ($STAR_HOST_SYS =~ /darwin/ or $STAR_HOST_SYS =~ /icc/) {
   push @items, "StJetMaker";
 }
 if ($STAR_HOST_SYS =~ /icc/) {
-   push @items, "StMCAsy[mMaker";
+   push @items, "StMCAsymMaker";
 }
 if ($env->{ENV}->{Vc}->{LIBS}) {
   push @items, "StHLTCAMaker";
