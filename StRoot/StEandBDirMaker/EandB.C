@@ -478,7 +478,7 @@ void TrackletTree::FitHistograms() {
 }
 
 //________________________________________________________________________________
-void EandB(const Char_t *select = "hlt*.root", const Char_t *out = "EandB.root") {
+void EandB(const Char_t *select = "*/*/*.tags*.root", const Char_t *out = "EandB.root") {
   tChain = Chain(select, "TrackletTree");
   fOut               = new TFile(out,"recreate");
   TrackletTree *T = new TrackletTree(tChain);
