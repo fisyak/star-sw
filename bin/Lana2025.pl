@@ -20,10 +20,10 @@ foreach my $fullpath (@list) {
 #  my $glob = "./*/" . $file . ".laser.root";
 #  my @rootfiles = glob $glob;# print "glob = $glob rootfiles = @rootfiles\n";
 #  if ($#rootfiles >= 0) {next;}
-  $rootfile = $file;
-  $rootfile =~ s/_adc//;
-  $rootfile .= "_adc.laser.root";
-  if (-r $rootfile) {next;}
+#  $rootfile = $file;
+#  $rootfile =~ s/_adc//;
+#  $rootfile .= "_adc.laser.root";
+#  if (-r $rootfile) {next;}
   print "string:$fullpath\n";
   $NoJobs++;
 }

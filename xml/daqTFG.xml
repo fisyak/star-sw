@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="true" copyInputLocally="false">
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
         <command>
   cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
 #  setup cvmfs
 #  starver TFG25e
-  echo $INPUTFILE0 | grep ':'
   set ext = "";
+  echo $INPUTFILE0 | grep ':'
   if (! $?) then
     set evtsFileF = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
     set f         = `echo $INPUTFILE0 | awk -F\: '{print $2}'`
@@ -15,7 +15,7 @@
   else
     set evtsFileF = $INPUTFILE0;
     set f         = 1
-    set l         = 10000
+    set l         = 1000000
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .
@@ -29,6 +29,7 @@
 #  if (-r $logFile) exit 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
+  set tagFile = ${filel}.tags.root
   set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
   if (-r ${bla}) exit 0;
   touch ${bla}
@@ -40,12 +41,20 @@
   cd -
   echo ${year} | grep 20
   if ($? != 0) exit 0;
-  set PicoMode = ",PicoVtxVpdOrDefault"
-  echo ${SUBMITTINGDIRECTORY} | grep fixed
-  if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT,EbyET0"
+  set evout = ",-evout";
+  set PicoMode = "";
   set Cosmic = "";
   echo ${SUBMITTINGDIRECTORY} | grep Cosmic
-  if ($? == 0) set Cosmic = ",Cosmic"
+  if ($? == 0) then
+    set Cosmic = ",Cosmic"
+    set evout = ",evout";
+    echo ${SUBMITTINGDIRECTORY} | grep EandB
+    if ($? == 0)     set Cosmic = ",EandBDir"
+  else
+    set PicoMode = ",PicoVtxVpdOrDefault"
+    echo ${SUBMITTINGDIRECTORY} | grep fixed
+    if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT,EbyET0"
+  endif
   set Chain = "";
   switch ($year)
     case "2*":
@@ -59,14 +68,14 @@
   if ($? == 0) set WestEast = ",WestOff"
   echo "${SUBMITTINGDIRECTORY}" | grep -i EastOff
   if ($? == 0)  set WestEast = ",EastOff"
-  set evout = ",-evout";
 #  if ($JOBINDEX > 0) then
 #    @ n =  $JOBINDEX % 20  # 05/29/2023
 #    set evout = ",-evout";
 #    if ($n == 4) set evout = ",evout";
 #  endif
   hostname &gt;&amp; ${logFile}
-  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}'","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
 # root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}',EbyET0","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
 ##
 ##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
@@ -76,5 +85,6 @@
         </command>
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />
-<input URL="command:daqdR.pl" />
+<!-- <input URL="command:daqdR.pl" /> -->
+<input URL="command:daqdR.local.pl" />
 </job>

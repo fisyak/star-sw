@@ -9,7 +9,7 @@ $debug = 0;
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
 }
-my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug);
+my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug,"");
 print "Year = $year, Field = $FIELD, runs = $runs,  Day = $Day, Run = $Run, $run2\n" if ($debug);
 if (! $year || ! $FIELD) {die "wrong directory $pwd";}
 my $def = {@Runs};# print "Runs = @Runs\n";
