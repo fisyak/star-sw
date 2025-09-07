@@ -23,7 +23,8 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-
+#include "TRandom.h"
+#include "TGeant3.h"
 // Header file for the classes stored in the TTree if any.
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
@@ -258,12 +259,22 @@ void StarUrQMDPrimaryGenerator::GeneratePrimary() {
   Double_t polz = 0.; 
   Int_t ntr = 0;
   Int_t N = T->mul;
+  static TGeant3 *geant3 = (TGeant3 *)TVirtualMC::GetMC();
   for (Int_t i = 0; i < N; i++) {
-    if (TMath::Abs(T->pid[i]) < 10) continue;
-    if (! TDatabasePDG::Instance()->GetParticle(T->pid[i])) continue;
+    Int_t pid = T->pid[i];
+    if (TMath::Abs(pid) < 10) continue;
+    if (! TDatabasePDG::Instance()->GetParticle(pid)) continue;
+    if (TMath::Abs(pid) == 311) {
+      if (gRandom->Rndm() < 0.5) pid = 130;
+      else                       pid = 310;
+    }
+    if (geant3 && geant3->IdFromPDG(pid) < 1) {
+      cout << "StarUrQMDPrimaryGenerator::GeneratePrimary illegal pdg = " << pid << "\t Skip." << endl;
+      continue;
+    }
     TVector3 P3( T->px[i], T->py[i],T->pz[i]);
     Double_t pmom = P3.Mag();
-    Double_t M = TDatabasePDG::Instance()->GetParticle(T->pid[i])->Mass();
+    Double_t M = TDatabasePDG::Instance()->GetParticle(pid)->Mass();
     Double_t E = TMath::Sqrt(M*M + pmom*pmom);
     TLorentzVector P(P3, E);
     static Double_t beta = St_beamInfoC::instance()->BetaCMS();
@@ -272,7 +283,7 @@ void StarUrQMDPrimaryGenerator::GeneratePrimary() {
     }
     // Add particle to stackx2 
     fStarStack->PushTrack(toBeDone, -1, 
-			  T->pid[i], 
+			  pid, 
 			  P.Px(), 
 			  P.Py(),
 			  P.Pz(),
