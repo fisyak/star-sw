@@ -207,7 +207,7 @@ if ($STAR_HOST_SYS =~ /darwin/ or $STAR_HOST_SYS =~ /icc/) {
   push @items, "StJetMaker";
 }
 if ($STAR_HOST_SYS =~ /icc/) {
-   push @items, "StMCAsymMaker";
+   push @items, "StMCAsy[mMaker";
 }
 if ($env->{ENV}->{Vc}->{LIBS}) {
   push @items, "StHLTCAMaker";
@@ -221,10 +221,9 @@ if ($STAR_HOST_SYS =~ /gcc447/) {# no c++11
   push @items, "FmsPointMaker";
   push @items, "FmsUtil";
 }
-# if ($ROOT_LEVEL =~ /^5/ ){
-#   push @items, "StStrangeMuDstMaker";
-#    push @items, "St_Table";
-# }
+#if ($ROOT_LEVEL =~ /^6/ ){
+#  push @items, "/Geomety/";
+#}
 if ($ROOT_LEVEL !~ /^5/ ){
   push @items, "GeoTestMaker";
   push @items, "garfield";
@@ -244,7 +243,7 @@ my $python2 = system("which python2 > /dev/null 2>& 1");
 #}
 #if ($STAR_HOST_SYS =~ /^al9/) {# no cern
 #print "def->{CXX_MAJOR} = $env->{CXX_MAJOR} ========================================\n";
-if ( $env->{CXX_MAJOR}  > 6) {# no cern
+if ( $env->{CXX_MAJOR}  > 5) {# no cern
 #  push @items, "rexe";
 #  push @items, "starsim";
 #  push @items, "gcalor";

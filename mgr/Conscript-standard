@@ -1183,11 +1183,18 @@ TDataSet *CreateTable() {
       my $root4star = $CWD . "/" . $bin . "/" . "root4star";
       if (! -x $root4star) {
 	$root4star = $env->{ENV}->{STAR} . "/" . $bin . "/" . "root4star";
+#	print "root4star = $root3star, ROOT_LEVEL = $env->{ENV}-{ROOT_LEVEL}\n";
 	if (! -x $root4star) {
 	  $root4star = "";
+#	  print "reset root4star\n";
 	}
       }
-      if ($root4star) {
+      print "root4star = $root4star, ROOT_LEVEL = $env->{ENV}-{ROOT_LEVEL}\n";
+      if ($root4star || $env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
+	$root4star = "";
+#	print "reset root4star\n";
+      }
+      if ($root4star)  {
 	foreach my $geom (@versionList) {
 	  next if ! $geom;
 	  next if ! $xgeomList{$geom};
@@ -1195,17 +1202,8 @@ TDataSet *CreateTable() {
 	  my $geom_h = $geom . ".h";
 	  if (! -r $ObjDir . "/" . $geom_h) {
 	    print "Build $geometry for $geom\n" if $param::debug;
-#	    Command $env1 [$geom_h,$geometry], ($LIB . "/St_geant_Maker." .  $env1->{SUFSOLIB}, $LIB . "/xgeometry." .  $env1->{SUFSOLIB}),
-#	    Command $env1 $geom_h, $LIB . "/xgeometry." .  $env1->{SUFSOLIB},
 	    Command $env1 $geom_h, $LIB . "/xgeometry." .  $env1->{SUFSOLIB},
 	      qq (cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f; 
-#	      qq (cd  %>:d;  $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")';); 
-#	      qq (test -r  %> && ( cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;) ); #   mv geom.rz %>:f; 
-#	      qq (echo "%< - %1 > %>"; cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
-	    #	  Command $env1 [$geom_h,$geometry], ($LIB . "/xgeometry." .  $env1->{SUFSOLIB}),
-	    # 
-	    #  qq (cd  %>:d;  export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")' > /dev/null 2>&1;); #   mv geom.rz %>:f;
-	    #	  qq (cd  %>:d; export STARFPE=NO; $root4star -q -b 'Ast2Root.C("$geom","UseXgeom")'); #   mv geom.rz %>:f;
 	  }
 	}
       }
