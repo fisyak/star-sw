@@ -552,6 +552,9 @@ Bfc_st BFC[] = { // standard chains
   {"P2025","" ,"",
    "B2025,ITTF,BAna,VFMinuit,etofa,btof,gmt25,mtd,l3onl,emcDY2,epdHit,trgd,ZDCvtx",
            "","",        "Base chain for year 2025 AA data, using CorrY (+ l3, epd, mtd, b/etof, b-emc)",kFALSE},
+  {"P2025a","" ,"",
+   "B2025,ITTF,BAna,VFMinuit,etofa,btof,gmt25,mtd,l3onl,emcDY2,epdHit,trgd,ZDCvtx",
+           "","",        "Base chain for year 2025 AA data, using CorrY (+ l3, epd, mtd, b/etof, b-emc)",kFALSE},
   {"Calibration chains","------------","-----------","-----------------------------------","","","",kFALSE},
   {"LanaDV",   "","","LanaDVtpx","",""                                                   ,"get LDV",kFALSE},
   {"LanaDVtpx","","","MakeEvent,trgd,in,tpx,TpcHitMover,LaserIT,VFMinuit,Lana,Analysis,Corr4,"
