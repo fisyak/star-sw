@@ -32,7 +32,7 @@
 #  if (! $?) set KFVertex = ",KFVertex";
   if (! -r ${generF} ) then
      if (-r ${logName}) rm ${logName}
-      hostname &gt;&amp;  ${logName}
+      hostname &gt;&amp;  ${logName}; # dbSnapshot
      root.exe -q -b -x 'bfc.C(100,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,StiPulls,McTpcAna,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&gt;&amp; ${logName}
   endif
 </command>
