@@ -638,11 +638,16 @@ int StBTofSimMaker::fillEvent()
 		//! Fill StBTofHeader --
 
 		StBTofHeader *tofHeader = mBTofCollection->tofHeader();
+#ifndef __TFG__VERSION__
 		StBTofHeader aHead;
-
+#endif /* ! __TFG__VERSION__ */
 		if(!tofHeader) {
 			  LOG_INFO << " No StEvent/btofCollection, creating new... " << endm;
+#ifndef __TFG__VERSION__
 			  mBTofCollection->setHeader(new StBTofHeader(aHead));
+#else /*  __TFG__VERSION__ */
+			  mBTofCollection->setHeader(new StBTofHeader());
+#endif /* ! __TFG__VERSION__ */
 		 }
 		else {
 			tofHeader = (StBTofHeader *) mBTofCollection->tofHeader();

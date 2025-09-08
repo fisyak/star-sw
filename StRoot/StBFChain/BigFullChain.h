@@ -1730,12 +1730,10 @@ Bfc_st BFC[] = { // standard chains
 #else
   {"vpdSim"    ,"","","","",""   ,                                           "ignore Vpd Simulator",kFALSE},
 #endif
-  {"btofSim" ,"","","BTofUtil,vpdOff"  ,"StBTofSimMaker",
+  {"btofSim" ,"","","BTofUtil,vpdOff,-BtofDat,UseMCTstart"  ,"StBTofSimMaker",
                        "StEvent,StMcEvent,StTofUtil,StBTofHitMaker,StBTofSimMaker","BTOF Simulator",kFALSE},
-  {"UseMCTstart"    ,"","","","",""   ,                                   "Use MC tstart for ",kFALSE},  
+  {"UseMCTstart"    ,"","","","",""   ,                                        "Use MC tstart for ",kFALSE},  
   {"vpdCalib","","","db,BTofUtil,-vpdSim","StVpdCalibMaker"    ,"StVpdCalibMaker","VPD calibration",kFALSE},
-  //  {"vpdCalib","","","db,BTofUtil","StVpdCalibMaker"            ,"StVpdCalibMaker","VPD calibration",kFALSE},
-  //  {"btofSim" ,"","","BTofUtil,vpdSim,UseMCTstart"  ,"StBTofSimMaker",
   {"vpdOff"    ,"","","-vpdCalib,-vpdSim","",""                             ,"ignore Vpd Simulator",kFALSE},
 #if 0
   {"btofMixer"    ,"","","BTofUtil","StBTofMixerMaker","StEvent,StBTofHitMaker,StBTofMixerMaker"
@@ -1744,12 +1742,12 @@ Bfc_st BFC[] = { // standard chains
   {"btofMixer"    ,"","","","",""                                               "ignore BTof Mixer",kFALSE},
 #endif
   // ETOF chains - do they have to be before the VPD / vpdsim?
+  {"ETofA",  "", "","etofdat,ETofCalib,etofhit,ETofMatch","","","... ETOF chain options for data",  kFALSE},
   {"ETofDat",   "etof_raw","", "db, ETofUtil", "StETofDigiMaker",  "StEvent,StETofDigiMaker",
                                                                                   "ETOF digi maker",kFALSE},
   {"ETofCalib", "",  "", "db, ETofUtil, muDst", "StETofCalibMaker", "StETofCalibMaker",
                                                                                  "ETOF calibration",kFALSE},
-  {"ETofSim" ,  "",        "", "",                    "StETofSimMaker",  "StETofSimMaker",
-                                                                                   "ETOF simulator",kFALSE},
+  {"ETofSim" ,  "", "", "-ETofDat,-ETofCalib", "StETofSimMaker",  "StETofSimMaker","ETOF simulator",kFALSE},
   // left MTD chain for sumulation alone here
   {"mtdSim"    ,"","","","StMtdSimMaker,StEvent",                   "StMtdSimMaker","MTD Simulator",kFALSE},
   // Time Of Flight related options
@@ -1927,7 +1925,6 @@ Bfc_st BFC[] = { // standard chains
   // second wave of BTOF options needed after Sti
   {"btofMatch" ,"","","db,BTofUtil","StBTofMatchMaker","StBTofMatchMaker","TPC-BTOF track matching",kFALSE},
   {"btofCalib","","","db,BTofUtil",        "StBTofCalibMaker","StBTofCalibMaker","BTOF calibration",kFALSE},
-  {"UseMCTstart","","","",                                  "","","Use MC Time start for btofCalib",kFALSE},
   // ETOF hit building and track matching after bTofCalib - needs to be after btof	
   {"ETofHit",   "",      "", "db, ETofUtil, muDst", "StETofHitMaker",   "StETofHitMaker",
                                                                                    "ETOF hit maker",kFALSE},
@@ -1935,7 +1932,6 @@ Bfc_st BFC[] = { // standard chains
                                                                                  "ETOF match maker",kFALSE},
   {"ETofQa",     "",     "", "db, ETofUtil, muDst", "StETofQAMaker",    "StETofQAMaker",
                                                                                     "ETOF QA maker",kFALSE},
-  {"ETofA",  "", "","etofdat,ETofCalib,etofhit,ETofMatch","","","... ETOF chain options for data",  kFALSE},
   // the below needs to be done earlier to save time - leaving here for documentation purposes as two
   // makers are part of the same library (let's not forget this)
   //{"mtdTrkMask"  ,"","","db",    "StMtdTrackingMaskMaker","StMtdEvtFilterMaker","MTD track masking",kFALSE},

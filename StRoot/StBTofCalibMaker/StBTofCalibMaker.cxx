@@ -1,4 +1,4 @@
-/*******************************************************************
+tstart_/*******************************************************************
  *
  * $Id: StBTofCalibMaker.cxx,v 1.24 2021/05/29 23:57:08 geurts Exp $
  *
@@ -338,11 +338,9 @@ Int_t StBTofCalibMaker::Init()
      bookPPPAHistograms();
      LOG_INFO << "pppAMode Histograms are booked!" << endm;
   }
-#endif /* ! __TFG__VERSION__ */
-
-#ifndef __TFG__VERSION__
-    return kStOK;
+  return kStOK;
 #else /* __TFG__VERSION__ */
+  if (IAttr("UseMCTstart")) forceTStartZero();
   return StMaker::Init();
 #endif /* __TFG__VERSION__ */
 }
@@ -1160,22 +1158,11 @@ void StBTofCalibMaker::processStEvent()
 
 
     if(mTStart<-1000.) {
-#ifdef __TFG__VERSION__
-    if (IAttr("UseMCTstart")) {
-      //      mTStart = mVpdSimConfig->getMcClock()*1000;
-      mTStart = 0;
-      LOG_INFO << "use MC start time = " << mTStart << " for this event." << endm;
+      LOG_INFO << "No valid start time for this event. Skip ..." << endm;
+      mValidStartTime = kFALSE;
+      return;
+    } else {
       mValidStartTime = kTRUE;
-    } else {
-#endif
-        LOG_INFO << "No valid start time for this event. Skip ..." << endm;
-        mValidStartTime = kFALSE;
-        return;
-#ifdef __TFG__VERSION__
-    }
-#endif
-    } else {
-        mValidStartTime = kTRUE;
     }
 
     //---------------------------------------

@@ -3501,7 +3501,7 @@ Double_t St_tofSimResParamsC::timeres_tof(UInt_t itray, UInt_t imodule, UInt_t i
    * Calculates the average resolution across all 38 tubes (discounts inactive tubes)
    * then returns a single vertex resolution (in ps) for use in embedding w/ vpdStart
    */
-  Double_t result = 8.5e-11;
+  Double_t result = 85; // picoseconds
   if ( itray > 120 || imodule > 32 || icell > 6 )    return result;
   return params[ itray ][ imodule * 6 + icell ];
 }
