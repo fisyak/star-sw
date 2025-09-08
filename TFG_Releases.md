@@ -112,5 +112,6 @@
 <li> TFG25e new cernlib for Alma Linux, remove spack mysql               2025-07-25 14:39:35 -0400  (tag: TFG25e_1)
 <li> TFG25f add UrQMD                                                    2025-08-16 18:32:46 -0400  (HEAD -> TFG, tag: TFG25f)
 <li> TFG25g fix UrQMD                                                    2025-09-05 11:03:46 -0400  (HEAD -> TFG, tag: TFG25g, origin/TFG)
+<li> TFG25h fix B and E Tof Sim                                          2025-09-05 17:03:46 -0400  (HEAD -> TFG, tag: TFG25h, origin/TFG)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
