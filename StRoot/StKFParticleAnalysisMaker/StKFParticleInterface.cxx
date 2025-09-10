@@ -302,12 +302,13 @@ void StKFParticleInterface::CollectTrackHistograms()
   }
   dirs[1] = dirs[0]->GetDirectory("Tracks"); assert(dirs[1]);
   dirs[1]->cd();
-  
+  //________________________________________________________________________________ dEdx 
   const Char_t *chargeName[4] = {"","Pos","Neg","withTof"};
   for (Int_t i = 0; i < 4; i++) {
-    __BOOK_hdEdx__(dirs[1],fTrackHistograms2D[khdEdX+i]   , Form("hdEdX%s",chargeName[i]), Form("hdEdX%s ; log_{10} P[GeV] ; log_{10} dE/dx[keV]",chargeName[i]));
+    __BOOK_hdEdx__(dirs[1],fTrackHistograms2D[khdEdX+i], Form("hdEdX%s",chargeName[i]), Form("hdEdX%s ; log_{10} P[GeV] ; log_{10} dE/dx[keV]",chargeName[i]));
     __BOOK_hdNdx__(dirs[1],fTrackHistograms2D[khdNdX+i], Form("hdNdX%s",chargeName[i]), Form("hdNdX%s ; log_{10} P[GeV] ; log_{10} dN/dx",chargeName[i]));
   }
+    //________________________________________________________________________________ Tof
   fTrackHistograms2D[khTofPID] = (TH2F *)   dirs[1]->Get("hTofPID");
   if (! fTrackHistograms2D[khTofPID]) {
     fTrackHistograms2D[khTofPID] = new TH2F("hTofPID", "hTofPID ; log_{10}P ; m^{2}", 200, -1, 1, 1100, -1, 10);
@@ -316,6 +317,21 @@ void StKFParticleInterface::CollectTrackHistograms()
     fTrackHistograms2D[khTofPIDN] = new TH2F("hTofPIDN", "hTofPIDN eta <= 0 ; log_{10}P ; m^{2}", 200, -1, 1, 1100, -1, 10);
 #endif /* __ETAPN_TOF_PLOTS__ */
   }
+  fTrackHistograms2D[khETofPID] = (TH2F *)   dirs[1]->Get("hETofPID");
+  if (! fTrackHistograms2D[khETofPID]) 
+    fTrackHistograms2D[khETofPID] = new TH2F("hETofPID", "ETofPID ; log_{10}P ; m^{2}", 200, -1, 1, 1100, -1, 10);
+
+  fTrackHistograms2D[khdEdXTofPID] = (TH2F *)   dirs[1]->Get("hdEdXTofPID");
+  if (! fTrackHistograms2D[khdEdXTofPID]) 
+    fTrackHistograms2D[khdEdXTofPID] = new TH2F("hdEdXTofPID", "hdEdXTofPID ; log_{10} dEdx[keV] ; m^{2}", 250, dEdxL10min, dEdxL10min+2.5, 2100, -1, 20);
+  fTrackHistograms2D[khdNdXTofPID] = (TH2F *)   dirs[1]->Get("hdNdXTofPID");
+  if (! fTrackHistograms2D[khdNdXTofPID]) 
+    fTrackHistograms2D[khdNdXTofPID] = new TH2F("hdNdXTofPID", "hdNdXTofPID : log_{10} dN/dx ; m^{2}", 300, dNdxL10min, dNdxL10min+2.5, 2100, -1, 20);
+
+  fTrackHistograms2D[khdEdXETofPID] = (TH2F *)   dirs[1]->Get("hdEdXETofPID");
+  if (! fTrackHistograms2D[khdEdXETofPID]) 
+    fTrackHistograms2D[khdEdXETofPID] = new TH2F("hdEdXETofPID", "hdEdXETofPID ; log_{10} dEdx[keV] ; m^{2}", 250, dEdxL10min, dEdxL10min+2.5, 2100, -1, 20);
+
 #ifdef __USE_HFT__
   fTrackHistograms[0] = (TH1F *)   dirs[1]->Get("hNHFTHits");
   if (! fTrackHistograms[0]) fTrackHistograms[0] = new TH1F("hNHFTHits", "hNHFTHits ; no.HFT hits",11, -0.5, 10.5);
@@ -337,21 +353,6 @@ void StKFParticleInterface::CollectTrackHistograms()
   fTrackHistograms2D[khGlobalVsPrimaryTracks] = (TH2F *)   dirs[1]->Get("hGlobalVsPrimaryTracks");
   if (! fTrackHistograms2D[khGlobalVsPrimaryTracks]) 
     fTrackHistograms2D[khGlobalVsPrimaryTracks] = new TH2F("hGlobalVsPrimaryTracks", "Global tracks: Log_{10} No. Global ; Log_{10} No. Primary Tracks", 350, 0.0, 3.5, 350, 0, 3.5);
-
-  fTrackHistograms2D[khdEdXTofPID] = (TH2F *)   dirs[1]->Get("hdEdXTofPID");
-  if (! fTrackHistograms2D[khdEdXTofPID]) 
-    fTrackHistograms2D[khdEdXTofPID] = new TH2F("hdEdXTofPID", "hdEdXTofPID ; log_{10} dEdx[keV] ; m^{2}", 250, dEdxL10min, dEdxL10min+2.5, 2100, -1, 20);
-  fTrackHistograms2D[khETofPID] = (TH2F *)   dirs[1]->Get("hETofPID");
-  if (! fTrackHistograms2D[khETofPID]) 
-    fTrackHistograms2D[khETofPID] = new TH2F("hETofPID", "ETofPID ; log_{10} dEdx[keV] ; m^{2}", 250, dEdxL10min, dEdxL10min+2.5, 2100, -1, 20);
-
-  fTrackHistograms2D[khdNdXTofPID] = (TH2F *)   dirs[1]->Get("hdNdXTofPID");
-  if (! fTrackHistograms2D[khdNdXTofPID]) 
-    fTrackHistograms2D[khdNdXTofPID] = new TH2F("hdNdXTofPIDK", "hdNdXTofPID : log_{10} dN/dx ; m^{2}", 300, dNdxL10min, dNdxL10min+2.5, 2100, -1, 20);
-
-  fTrackHistograms2D[khdEdXETofPID] = (TH2F *)   dirs[1]->Get("hdEdXETofPID");
-  if (! fTrackHistograms2D[khdEdXETofPID]) fTrackHistograms2D[khdEdXETofPID] = new TH2F("hdEdXETofPID", "hdEdXETofPID", 200, 0, 200, 2100, -1, 20);
-
   fTrackHistograms2D[kEtaVspT] = (TH2F *)   dirs[1]->Get("EtaVspT");
   if (! fTrackHistograms2D[kEtaVspT]) fTrackHistograms2D[kEtaVspT] = new TH2F("EtaVspT", "Primary tracks ; Eta ; Log_{10}p_{T}", 350, -2, 1.5, 600, -3.0, 3.0);
 
@@ -1100,12 +1101,14 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	  isTofm2 = true;
 	  fTrackHistograms2D[khdEdXwithTof]->Fill(pL10, dEdxL10);  
 	  fTrackHistograms2D[khdNdXwithTof]->Fill(pL10, dNdxL10);  
-	}
-	fTrackHistograms2D[khTofPID]->Fill(pL10, m2tof);
+	  fTrackHistograms2D[khTofPID]->Fill(pL10, m2tof);
 #ifdef __ETAPN_TOF_PLOTS__
-	if (eta > 0) fTrackHistograms2D[khTofPIDP]->Fill(pL10, m2tof);
-	else         fTrackHistograms2D[khTofPIDN]->Fill(pL10, m2tof);
+	  if (eta > 0) fTrackHistograms2D[khTofPIDP]->Fill(pL10, m2tof);
+	  else         fTrackHistograms2D[khTofPIDN]->Fill(pL10, m2tof);
 #endif /* __ETAPN_TOF_PLOTS__ */
+	  fTrackHistograms2D[khdEdXTofPID]->Fill(dEdxL10, m2tof);
+	  fTrackHistograms2D[khdNdXTofPID]->Fill(dNdxL10, m2tof);
+	}
       } else if (gTrack->eTofPidTraitsIndex() >= 0) { 
 	const StPicoETofPidTraits* etofPid = picoDst->etofPidTraits(gTrack->eTofPidTraitsIndex());
 	double betaTof2 = etofPid->beta() * etofPid->beta();
@@ -1116,13 +1119,13 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
 	  isTofm2 = true;
 	  isETofm2 = isTofm2;
 	  m2Etof = m2tof;
-	  fTrackHistograms2D[khETofPID]->Fill(pL10, dEdxL10);  
+	  fTrackHistograms2D[khdEdXwithTof]->Fill(pL10, dEdxL10);  
 	  fTrackHistograms2D[khdNdXwithTof]->Fill(pL10, dNdxL10);  
+	  fTrackHistograms2D[khETofPID]->Fill(pL10, m2tof);
+	  fTrackHistograms2D[khdEdXETofPID]->Fill(dEdxL10, m2tof);
+	  //	  fTrackHistograms2D[khdNdXETofPID]->Fill(dNdxL10, m2tof);
 	}
-	fTrackHistograms2D[khdEdXETofPID]->Fill(pL10, m2tof);
       }
-      fTrackHistograms2D[khdEdXTofPID]->Fill(dEdxL10, m2tof);
-      fTrackHistograms2D[khdNdXTofPID]->Fill(dNdxL10, m2tof);
     }
     StTrackCombPiD PiD(picoDst,iTrack);
     vector<int> totalPDG = PiD.GetPDG();
