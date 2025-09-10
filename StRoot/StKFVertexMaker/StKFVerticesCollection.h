@@ -7,7 +7,6 @@
 #include "StKFVertex.h"
 #include "TCanvas.h"
 #include "TH1.h"
-#include "TH1K.h"
 class St_vertexSeedC;
 class StKFVerticesCollection;
 std::ostream&  operator<<(std::ostream& os,  const StKFVerticesCollection& vc);
