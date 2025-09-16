@@ -16,6 +16,7 @@ class StarUrQMDPrimaryGenerator : public StarMCPrimaryGenerator  {
   virtual void PreSet();
   TH1 *fPVX, *fPVY, *fPVZ, *fPVxyError; 
   Double_t gSpreadX, gSpreadY, gSpreadZ;
+  Int_t Skip(Int_t nskip);
   ClassDef(StarUrQMDPrimaryGenerator,1)  //StarUrQMDPrimaryGenerator
 };
 #endif //StarUrQMDPrimaryGenerator_h

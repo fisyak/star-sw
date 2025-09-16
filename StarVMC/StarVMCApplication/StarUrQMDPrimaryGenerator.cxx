@@ -202,6 +202,11 @@ StarUrQMDPrimaryGenerator::StarUrQMDPrimaryGenerator(TString mode, Int_t tune) :
   PreSet(); 
 }
 //_____________________________________________________________________________
+Int_t StarUrQMDPrimaryGenerator::Skip(Int_t skip) {
+  if (skip > 0) jentry += skip -1;
+  return kStOK;
+}
+//_____________________________________________________________________________
 void StarUrQMDPrimaryGenerator::PreSet() {
   fNofPrimaries = 0; fId = 0;
   fOption = "";
