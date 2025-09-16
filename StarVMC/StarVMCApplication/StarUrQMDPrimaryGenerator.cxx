@@ -203,7 +203,7 @@ StarUrQMDPrimaryGenerator::StarUrQMDPrimaryGenerator(TString mode, Int_t tune) :
 }
 //_____________________________________________________________________________
 Int_t StarUrQMDPrimaryGenerator::Skip(Int_t skip) {
-  if (skip > 0) jentry += skip -1;
+  if (skip > 0) jentry += skip;
   return kStOK;
 }
 //_____________________________________________________________________________
