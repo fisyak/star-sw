@@ -5,6 +5,15 @@
 // what it does: opens the ROOT session
 //=======================================================================
 {
+  // ROOT and XROOTD
+  // some rootd default dummy stuff
+  TAuthenticate::SetGlobalUser("starlib");
+  TAuthenticate::SetGlobalPasswd("ROOT4STAR");
+
+  // This will help tracing failure on XrdOpen() if any
+  gEnv->SetValue("XNet.DebugTimestamp","1");
+  gEnv->SetValue("XNet.ReconnectTimeout","15");
+  gEnv->SetValue("XNet.RequestTimeout","90");
   //  cout << gSystem->GetDynamicPath() << endl;
   if (gSystem->Getenv("LIBNEW")) {
     printf("*** load libNew ***\n");
@@ -257,4 +266,11 @@
     //#endif
   }
   gInterpreter->AddIncludePath("/usr/include/mysql");
+
+  // Requested by users, allow loading a "complementary" local
+  // rootlogon if exists
+  if ( !gSystem->AccessPathName("./rootlogon.C", kFileExists ) ){
+    cout << "Found and loading local rootlogon.C" << endl;
+    gROOT->Macro("./rootlogon.C");
+  }
 }
