@@ -129,6 +129,7 @@
     gSystem->Load("libKFParticle");
   }
 #endif
+#if 0
   if (TString(gSystem->GetLibraries()).Contains("libTable")) {
     gROOT->ProcessLine("typedef TCL              StCL;");              
     gROOT->ProcessLine("typedef TDataSet         St_DataSet ;");       
@@ -150,6 +151,7 @@
     gROOT->ProcessLine("typedef TTableSorter     St_TableSorter;");    
     gROOT->ProcessLine("typedef TTableDescriptor St_tableDescriptor;");
   }
+#endif
   printf(" *** Start at Date : %s\n",TDatime().AsString());
   
    // 	Assign bif size of hashtable for STAR I/O
