@@ -88,6 +88,8 @@ sub GetRuns($$) {
   elsif ($pwd =~ /RFI/) {$FIELD = "RFI";}
   elsif ($pwd =~ /FF/) {$FIELD = "FF";}
   elsif ($pwd =~ /RF/) {$FIELD = "RF";}
+  elsif ($pwd =~ /RHF/) {$FIELD = "RHF";}
+  elsif ($pwd =~ /FHF/) {$FIELD = "FHF";}
   elsif ($pwd =~ /ZF/) {$FIELD = "ZF";}
   #$ENV{YEAR} = $year;
   #$ENV{FIELD} = $FIELD;
