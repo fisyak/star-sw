@@ -1,5 +1,6 @@
 #include "StEEmcTower.h"
 #include <iostream>
+#include "TMath.h"
 ClassImp(StEEmcTower);
 
 // ----------------------------------------------------------------------------

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "TIdTruUtil.h"
+#include "TMath.h"
 ClassImp(TIdTruUtil)
 //______________________________________________________________________________
 TIdTruUtil::TIdTruUtil(const char *name):TNamed(name,"")
@@ -48,7 +49,7 @@ void TIdTruUtil::Eval()
     myWtDet.insert( std::pair<double,int>(-wt,idTru));
   }
   if (!myWtDet.size()) return;
-  mQua   = fabs((*myWtDet.begin()).first/(totWt+1e-11));
+  mQua   = TMath::Abs((*myWtDet.begin()).first/(totWt+1e-11));
   mIdTru = (*myWtDet.begin()).second;
 }
 //______________________________________________________________________________

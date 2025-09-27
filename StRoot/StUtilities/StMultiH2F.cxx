@@ -15,6 +15,7 @@
 #include "TLegend.h"
 #include "TPad.h"
 #include "TDirectory.h"
+#include "TMath.h"
 
 ClassImp(StMultiH2F)
 

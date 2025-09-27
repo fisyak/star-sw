@@ -3,6 +3,7 @@ ClassImp(AgShape);
 
 #include <iostream>
 #include "AgBlock.h"
+#include "TMath.h"
 
 #include "TGeoShape.h"
 #include "TGeoBBox.h"
