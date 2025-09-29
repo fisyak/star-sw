@@ -15,7 +15,9 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TH3.h"
+#ifdef __THSTACK__
 #include "THStack.h"
+#endif
 #include "TPaveStats.h"
 #include "TStyle.h"
 #include "TF1.h"
@@ -393,24 +395,35 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
   TCanvas *c = new TCanvas(cTitle,cTitle);
   c->Divide(nx,ny);
+#ifdef __THSTACK__
   THStack *hstack = 0; // new THStack("hs",histName);
+#endif
   Double_t ymax = 0.98;
   Double_t ymin = 0.10 + 0.05*NFiles;
   Double_t dy   = (ymax - ymin)/(NFiles + 1);
   if (dy > 0.25) dy = 0.25;
+  TH1 *h1 = 0;
+  Double_t yMin =  1e9;
+  Double_t yMax = -1e9;
   for (Int_t i = 0; i < NF; i++) {
     TH1 *hist = (TH1*) array.At(i);
     c->cd(i+1)->SetLogz(1);
     TLegend *leg = new TLegend(0.66,0.10,0.98,ymin,"");
     Double_t yref = -1;
+    Int_t nh = -1;
+    TString same("");
     for (Int_t l = 0; l < NFiles; l++) {
       f = FitFiles[l];
       TH1 *h = (TH1 *) f->Get(hist->GetName());
       if (! h) continue;
+      nh++;
+      if (! h1) h1 = h;
       cout << "i = " << i << "\tl = " << l << "\t" << f->GetName() << "\t" << h->GetName() << endl;
       h->SetMarkerStyle(20);
       h->SetMarkerColor(l+1);
       h->SetLineColor(l+1);
+      if (h->GetMaximum() > yMax) yMax = h->GetMaximum(); 
+      if (h->GetMinimum() < yMin) yMin = h->GetMinimum(); 
       TList *fl = h->GetListOfFunctions();
       if (fl) {
 	TF1 *fun = 0;
@@ -436,8 +449,8 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 	   c->cd(i+1)->SetLogy(1);
 	}
       }
-      h->Draw();
-      c->Update();
+      h->Draw(same); same = "same";
+      c->cd(i+1)->Update();
       TString DirName(f->GetName());
       Int_t indx = DirName.Index("/");
       if (indx > 0) {DirName = TString(DirName,indx);}
@@ -449,23 +462,35 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 	//	st->Print();
 	st->SetX1NDC(0.72);
 	st->SetX2NDC(0.98);
-	st->SetY1NDC(ymax - dy*(l+1));
-	st->SetY2NDC(ymax - dy*(l  ));
+	st->SetY1NDC(ymax - dy*(nh+1));
+	st->SetY2NDC(ymax - dy*(nh  ));
       }
       if (l == 0) {
+#ifdef __THSTACK__
 	hstack = new THStack(h->GetName(),h->GetTitle());
+#endif
       }
+#ifdef __THSTACK__
       hstack->Add(h);
+#endif
     }
+#ifdef __THSTACK__
     //    hstack->Draw("nostack,e1p");
     //    TAxis *xax = hstak->GetXaxis();
+    hstack->Print("");
     hstack->Draw("nostacksame");
     Double_t yMin = hstack->GetMinimum("nostack");
     Double_t yMax = hstack->GetMaximum("nostack");
     hstack->GetHistogram()->SetMinimum(yMin);
     hstack->GetHistogram()->SetMaximum(yMax);
     hstack->Draw("nostacksame");
+#endif
+    if (h1) {
+      h1->SetMaximum(yMax);
+      h1->SetMinimum(yMin);
+    }
     leg->Draw();
+    c->cd(i+1)->Update();
   }
   c->Update();
 #ifdef _zoom__
@@ -584,9 +609,9 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
 	hist->Draw();
       }
     }
-    TLegend *l = new TLegend(0.1,0.85,0.7,0.90);
-    l->AddEntry(hist, dirName.Data());
-    l->Draw();
+    TLegend *leg = new TLegend(0.1,0.85,0.7,0.90);
+    leg->AddEntry(hist, dirName.Data());
+    leg->Draw();
     if (gp) {
       Int_t rf = 1;
       if (dirName.Contains("RF")) rf = 0; 
@@ -1072,5 +1097,10 @@ void PrintFList(const Char_t *name = "/Particles/KFParticlesFinder/PrimaryVertex
     }
   }
 }
-
-
+//_______________________________________________________________________________
+void DrawFSigma() {
+  DrawFList("^InnerPadRcSigmaSQNoise_p2");
+  DrawFList("^OuterPadRcSigmaSQNoise_p2");
+  DrawFList("^InnerTimeRcSigmaSqSpreadNoise_p2");
+  DrawFList("^OuterTimeRcSigmaSqSpreadNoise_p2");
+}
