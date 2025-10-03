@@ -6034,7 +6034,50 @@ foreach f (`ls -1d .*al96*`)
 end
 ================================================================================
 09/05/2025
-if (! -d hold) mkdir hold
+if (! -d hold2) mkdir hold2
 foreach f (`grep -l Assertion *B.log` )
-  set b = `basename ${f} B.log`; mv ${b}* hold
+  set b = `basename ${f} B.log`; mv ${b}* hold2
 end
+[starsub01] ~/TFG/TFG25g/9p95GeV_fixedTarget_2021/hold $ grep -a -m 1 'Connecting: DB=StarDb' *B.log | awk  '{print $8}' | sort -u
+Host=star-db06.rcf.bnl.gov:3316
+Host=star-db09.rcf.bnl.gov:3316
+[starsub01] ~/TFG/TFG25g/9p95GeV_fixedTarget_2021 $ grep -a -m 1 'Connecting: DB=StarDb' *B.log | awk '{print $8}' | sort -u
+Host=star-db05.rcf.bnl.gov:3316
+Host=star-db06.rcf.bnl.gov:3316
+Host=star-db09.rcf.bnl.gov:3316
+[starsub01] ~/TFG/TFG25g/9p95GeV_fixedTarget_2021/hold $ grep -a -m 1 'Connecting: DB=StarDb' *B.log | awk '{print $8}' | sort -u
+Host=star-db06.rcf.bnl.gov:3316
+Host=star-db09.rcf.bnl.gov:3316
+[starsub01] ~/TFG/TFG25g/9p95GeV_fixedTarget_2025 $ grep -a -m 1 'Connecting: DB=StarDb' *B.log | awk '{print $8}' | sort -u
+Host=star-db05.rcf.bnl.gov:3316
+[starsub01] ~/TFG/TFG25g/9p95GeV_fixedTarget_2025/hold $ grep -a -m 1 'Connecting: DB=StarDb' *B.log | awk '{print $8}' | sort -u
+Host=star-db06.rcf.bnl.gov:3316
+Host=star-db09.rcf.bnl.gov:3316
+
+
+[starsub01] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StRoot $ grep -rni forceTStartZero .
+./StBTofCalibMaker/StBTofCalibMaker.cxx:210:    mForceTStartZero = false;
+./StBTofCalibMaker/StBTofCalibMaker.cxx:1900:    if ( mForceTStartZero ){
+./StBTofCalibMaker/StBTofCalibMaker.cxx:1924:    if ( mForceTStartZero ){
+./StBTofCalibMaker/StBTofCalibMaker.cxx:2186:    if ( mForceTStartZero ){
+./StBTofCalibMaker/StBTofCalibMaker.h:180:  void forceTStartZero();
+./StBTofCalibMaker/StBTofCalibMaker.h:329:    Bool_t            mForceTStartZero = false; //!switch to allow totally startless bTOF
+./StBTofCalibMaker/StBTofCalibMaker.h:367:inline void StBTofCalibMaker::forceTStartZero(  ) { mForceTStartZero = true; }
+================================================================================
+09/16/2025
+.x bfc.C(101,101,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noRunco,UseCAVxFinder,FXT","/gpfs01/star/pwg_tasks/simulations/UrQMD/IMP/4p5/roots/04999.root","04999,101,101.event.root")
+
+================================================================================
+09/26/2025 
+CMake Warning (dev) at CMakeLists.txt:987 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+
+/star/u/fisyak/sources/cernlib/cernlib/paw_motif/cmotif/chain_tree.c:22:10: fatal error: X11/Xaw/Tree.h: No such file or directory
+   22 | #include <X11/Xaw/Tree.h>
+setup spackTFG
+spack env activate AL96x
+ setenv CMAKE_INCLUDE_PATH $XOPTSTAR/spack/include 
