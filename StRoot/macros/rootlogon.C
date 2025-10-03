@@ -14,7 +14,12 @@
   gEnv->SetValue("XNet.DebugTimestamp","1");
   gEnv->SetValue("XNet.ReconnectTimeout","15");
   gEnv->SetValue("XNet.RequestTimeout","90");
+  //  gEnv->SetValue("XNet.ConnectDomainAllowRE","rcf.bnl.gov|usatlas.bnl.gov");
+  //  gEnv->SetValue("XNet.RedirDomainAllowRE","rcf.bnl.gov"); 
   //  cout << gSystem->GetDynamicPath() << endl;
+  // This is already implied in system.rootrc although one could use
+  // this to switch to a beta version of the client library.
+  //ROOT->GetPluginManager()->AddHandler("TFile","^root:","TXNetFile", "Netx", "TXNetFile(const char*,Option_t*,const char*,Int_t,Int_t)"); 
   if (gSystem->Getenv("LIBNEW")) {
     printf("*** load libNew ***\n");
     gSystem->Load("libNew"); 
@@ -138,7 +143,7 @@
     gSystem->Load("libKFParticle");
   }
 #endif
-#if 0
+#if 1 /* keep for QtRoot */
   if (TString(gSystem->GetLibraries()).Contains("libTable")) {
     gROOT->ProcessLine("typedef TCL              StCL;");              
     gROOT->ProcessLine("typedef TDataSet         St_DataSet ;");       
@@ -162,22 +167,8 @@
   }
 #endif
   printf(" *** Start at Date : %s\n",TDatime().AsString());
-  
-   // 	Assign bif size of hashtable for STAR I/O
-   TBufferFile::SetGlobalWriteParam(2003);
-
-
-
-
-  // This is already implied in system.rootrc although one could use
-  // this to switch to a beta version of the client library.
-  //ROOT->GetPluginManager()->AddHandler("TFile","^root:","TXNetFile", "Netx", "TXNetFile(const char*,Option_t*,const char*,Int_t,Int_t)"); 
-
-  // This will help tracing failure on XrdOpen() if any
-  gEnv->SetValue("XNet.DebugTimestamp","1"); 
-  gEnv->SetValue("XNet.ConnectDomainAllowRE","rcf.bnl.gov|usatlas.bnl.gov");
-  gEnv->SetValue("XNet.RedirDomainAllowRE","rcf.bnl.gov"); 
-  gEnv->SetValue("XNet.ReconnectTimeout","5"); 
+  // 	Assign bif size of hashtable for STAR I/O
+  TBufferFile::SetGlobalWriteParam(2003);
   //  Print version
   TString STAR_GIT   = gSystem->ExpandPathName("$STAR/.git");  
   TString STAR_LEVEL = gSystem->ExpandPathName("$STAR_LEVEL"); 
