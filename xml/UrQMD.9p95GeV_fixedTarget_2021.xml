@@ -10,30 +10,18 @@
 #  starver TFG25f
   starver TFG
   set file = $INPUTFILE0;
-#  set rung = `echo $file | awk -F\: '{print $1}'`
-#  set f    = `echo $file | awk -F\: '{print $2}'`
-#  set l    = `echo $file | awk -F\: '{print $3}'`
   set file2 = `basename ${file} .gener.root`;
   set file1 = `basename ${file2} .event.root`;
   set file3 = `basename ${file1} .root`;
   set name  = `basename ${file3} .daq`;
-#  set name  = ${name}_101_1000
   echo "${name}"
   set logName  = ${name}B.log
-  set generF   = ${name}.MuDst.root
-  set tagf     = ${name}.root
-  if (-r $tagf) exit 0;
-#  setenv StarEndMakerShell
-#  set sdt = "";
-#  echo $Name | grep -i Ideal
-#  if ($?) set sdt = ",sdt20160301";
-#  set KFVertex = "";
-#  echo $Name | grep -i KFV
-#  if (! $?) set KFVertex = ",KFVertex";
-  if (! -r ${generF} ) then
+  set MuF   = ${name}.MuDst.root
+  if (! -r ${MuF} ) then
      if (-r ${logName}) rm ${logName}
       hostname &gt;&amp;  ${logName}; # dbSnapshot
-     root.exe -q -b -x 'bfc.C(100,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,StiPulls,McTpcAna,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&gt;&amp; ${logName}
+#     root.exe -q -b -x 'bfc.C(100,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,StiPulls,McTpcAna,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&gt;&amp; ${logName}
+     root.exe -q -b -x 'bfc.C(901,1000,"UrQMDFXT,vmc,MC.2021,9p95GeV_fixedTarget_2021,RunG.22168039,-bbcSim,StiCA,-geantOut,-evout,VMCAlignment,CorrZ,NoHistos,noRunco,FXT","'${file}')' &gt;&gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->
