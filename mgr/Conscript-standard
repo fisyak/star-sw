@@ -222,6 +222,9 @@ if ( $pkg eq "GenFit"
 # 	 $pkg =~ /StKFVertexMaker/) {
 #   $WarnOff .= " -Wno-error=overloaded-virtual";
 #   $EXTRA_CXXFLAGS .= $WarnOff;
+ } elsif ($pkg =~ /StKFVertexMaker/) {
+   $WarnOff .= " -Wno-error=deprecated-declarations";
+   $EXTRA_CXXFLAGS .= $WarnOff;
 } elsif ($pkg =~  /StHeavyTagMaker/) {
   $WarnOff .= " -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
@@ -259,6 +262,10 @@ if ( $pkg eq "GenFit"
 } elsif (  $pkg =~ /Geometry/) {
   $WarnOff .= " -Wno-error=unused-but-set-variable -Wno-error=array-bounds -Wno-error=maybe-uninitialized";
   $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif ($pkg =~ m/^StJetFinder/) {
+  $WarnOff .= " -Wno-error=deprecated-declarations";
+  $EXTRA_CXXFLAGS .= $WarnOff;
+
 #} elsif (  $pkg =~ /RTS/) {
 #  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
 #  $EXTRA_CXXFLAGS .= $WarnOff;
