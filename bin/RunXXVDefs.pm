@@ -1270,6 +1270,36 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1265'=> {trig=>'Cosmic',                	field => 'FHF',	first=> '26273046',	 last => '26273052',	 list => '',  beginTime => '20251001.002901'}, # 	2025-10-01	00:29:01	2025-10-01	04:17:58
 '1266'=> {trig=>'Cosmic',                	field => 'FHF',	first=> '26274002',	 last => '26274008',	 list => '',  beginTime => '20251001.041758'}, # 	2025-10-01	04:17:58	2025-10-01	08:15:17
 '1267'=> {trig=>'Cosmic',                	field => 'FHF',	first=> '26274010',	 last => '26274014',	 list => '',  beginTime => '20251001.081517'}, # 	2025-10-01	08:15:17	2025-10-01	10:54:22
-'1268'=> {trig=>'Cosmic',                	field => 'FHF',	first=> '26274016',	 last => '26274016',	 list => '',  beginTime => '20251001.105422'}, # 	2025-10-01	10:54:22	2025-10-01	10:54:22
+'1268'=> {trig=>'Cosmic',                	field => 'FHF',	first=> '26274016',	 last => '26274016',	 list => '',  beginTime => '20251001.105422'}, # 	2025-10-01	10:54:22	2025-10-01	11:28:14
+'1269'=> {trig=>'Cosmic',                	field => 'FHF',	first=> '26274019',	 last => '26274019',	 list => '',  beginTime => '20251001.112814'}, # 	2025-10-01	11:28:14	2025-10-06	20:07:52
+'1270'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26279043',	 last => '26279053',	 list => '',  beginTime => '20251006.200752'}, # 	2025-10-06	20:07:52	2025-10-06	23:08:38	timestamp = AuAu_2025_HiLumi_RF
+'1271'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26279054',	 last => '26279061',	 list => '',  beginTime => '20251006.230838'}, # 	2025-10-06	23:08:38	2025-10-07	01:57:24	timestamp = AuAu_2025_RF
+'1272'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26279075',	 last => '26279078',	 list => '',  beginTime => '20251007.015724'}, # 	2025-10-07	01:57:24	2025-10-07	03:04:10	timestamp = AuAu_2025_HiLumi_RF
+'1273'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26279080',	 last => '26279084',	 list => '',  beginTime => '20251007.030410'}, # 	2025-10-07	03:04:10	2025-10-07	04:06:14
+'1274'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26280001',	 last => '26280006',	 list => '',  beginTime => '20251007.040614'}, # 	2025-10-07	04:06:14	2025-10-07	05:58:48
+'1275'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26280007',	 last => '26280011',	 list => '',  beginTime => '20251007.055848'}, # 	2025-10-07	05:58:48	2025-10-07	07:18:03	timestamp = AuAu_2025_RF
+'1276'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26280013',	 last => '26280014',	 list => '',  beginTime => '20251007.071803'}, # 	2025-10-07	07:18:03	2025-10-07	09:46:30
+'1277'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26280023',	 last => '26280023',	 list => '',  beginTime => '20251007.094630'}, # 	2025-10-07	09:46:30	2025-10-07	11:57:25	timestamp = Cosmic_RF
+'1278'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26280032',	 last => '26280032',	 list => '',  beginTime => '20251007.115725'}, # 	2025-10-07	11:57:25	2025-10-07	12:49:26	timestamp = AuAu_2025_HiLumi_RF
+'1279'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26280036',	 last => '26280040',	 list => '',  beginTime => '20251007.124926'}, # 	2025-10-07	12:49:26	2025-10-08	00:15:00	timestamp = Cosmic_RF
+'1280'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26280059',	 last => '26280062',	 list => '',  beginTime => '20251008.001500'}, # 	2025-10-08	00:15:00	2025-10-08	04:06:06
+'1281'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281001',	 last => '26281001',	 list => '',  beginTime => '20251008.040606'}, # 	2025-10-08	04:06:06	2025-10-08	04:10:49	timestamp = AuAu_2025_HiLumi_RF
+'1282'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281003',	 last => '26281006',	 list => '',  beginTime => '20251008.041049'}, # 	2025-10-08	04:10:49	2025-10-08	05:53:01
+'1283'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281009',	 last => '26281009',	 list => '',  beginTime => '20251008.055301'}, # 	2025-10-08	05:53:01	2025-10-08	06:27:22
+'1284'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281011',	 last => '26281014',	 list => '',  beginTime => '20251008.062722'}, # 	2025-10-08	06:27:22	2025-10-08	08:05:49
+'1285'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26281015',	 last => '26281015',	 list => '',  beginTime => '20251008.080549'}, # 	2025-10-08	08:05:49	2025-10-08	08:40:12	timestamp = AuAu_2025_RF
+'1286'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26281017',	 last => '26281019',	 list => '',  beginTime => '20251008.084012'}, # 	2025-10-08	08:40:12	2025-10-08	10:50:46
+'1287'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281031',	 last => '26281036',	 list => '',  beginTime => '20251008.105046'}, # 	2025-10-08	10:50:46	2025-10-08	14:55:32	timestamp = AuAu_2025_HiLumi_RF
+'1288'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26281037',	 last => '26281040',	 list => '',  beginTime => '20251008.145532'}, # 	2025-10-08	14:55:32	2025-10-08	18:17:10	timestamp = AuAu_2025_RF
+'1289'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281050',	 last => '26281052',	 list => '',  beginTime => '20251008.181710'}, # 	2025-10-08	18:17:10	2025-10-08	20:17:48	timestamp = AuAu_2025_HiLumi_RF
+'1290'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26281054',	 last => '26281054',	 list => '',  beginTime => '20251008.201748'}, # 	2025-10-08	20:17:48	2025-10-08	21:07:58	timestamp = Cosmic_RF
+'1291'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26281057',	 last => '26281067',	 list => '',  beginTime => '20251008.210758'}, # 	2025-10-08	21:07:58	2025-10-09	01:09:02	timestamp = AuAu_2025_HiLumi_RF
+'1292'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26281068',	 last => '26281078',	 list => '',  beginTime => '20251009.010902'}, # 	2025-10-09	01:09:02	2025-10-09	04:14:22	timestamp = AuAu_2025_RF
+'1293'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26282002',	 last => '26282003',	 list => '',  beginTime => '20251009.041422'}, # 	2025-10-09	04:14:22	2025-10-09	04:52:19
+'1294'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26282009',	 last => '26282011',	 list => '',  beginTime => '20251009.045219'}, # 	2025-10-09	04:52:19	2025-10-09	06:51:02
+'1295'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26282017',	 last => '26282017',	 list => '',  beginTime => '20251009.065102'}, # 	2025-10-09	06:51:02	2025-10-09	06:59:32	timestamp = Cosmic_RF
+'1296'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26282019',	 last => '26282019',	 list => '',  beginTime => '20251009.065932'}, # 	2025-10-09	06:59:32	2025-10-09	08:24:54
+'1297'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26282024',	 last => '26282024',	 list => '',  beginTime => '20251009.082454'}, # 	2025-10-09	08:24:54	2025-10-09	09:20:03	timestamp = AuAu_2025_HiLumi_RF
+'1298'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26282028',	 last => '26282029',	 list => '',  beginTime => '20251009.092003'}, # 	2025-10-09	09:20:03	2025-10-09	10:29:19	timestamp = Cosmic_RF
 );
 1;

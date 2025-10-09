@@ -13,6 +13,9 @@ my $pwd = cwd();
 #my $glob = "/net/l401/data/scratch1/fisyak/Tpc/TpcRS/" . $Trigger . "/st_physics_adc*.MuDst.root";  print "glob = $glob\n" if ($debug);
 my $locdir  = File::Basename::basename($pwd);
 $locdir =~ s/TpcRS_//; $locdir =~ s/\..*//; print "locdir = $locdir\n" if ($debug);
+$locdir =~ s/_.*//;                         print "locdir = $locdir\n" if ($debug);
+#if ($locdir == "ZF") {$locdir = "RF";}
+print "locdir = $locdir\n" if ($debug);
 my $glob = "";
 if (-d "../" . $locdir) {$glob = "../" . $locdir . "/*.MuDst.root"; print "glob = $glob\n" if ($debug);}
 else {
@@ -25,7 +28,7 @@ else {
   $glob = "../" . $Trigger . "/*.MuDst.root"; print "glob = $glob\n" if ($debug);
 }
 my $fNo = 0;
-#my @globs = glob $glob; print "globs = @globs\n" if ($debug);
+my @globs = glob $glob; print "globs = @globs\n" if ($debug);
 my $GlobL = "Glob.log";
 if (! -r $GlobL) {
   my $cmd = "root.exe -q -b 'Chain.C+(\"" . $glob . "\")' >&" . $GlobL; print "$cmd\n" if ($debug);
