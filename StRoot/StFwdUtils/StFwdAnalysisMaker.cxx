@@ -28,19 +28,19 @@ StFwdAnalysisMaker::StFwdAnalysisMaker() : StMaker("fwdAna"){
 int StFwdAnalysisMaker::Finish() { 
     
     if ( mLocalOutputFile != "" ){
-#if ROOT_VERSION_CODE < 401153  /* (6,3,1) */
-        auto prevDir = gDirectory;
+        TDirectory* prevDir = TDirectory::CurrentDirectory();
         
         // output file name
         TFile *fOutput = new TFile(mLocalOutputFile, "RECREATE");
         fOutput->cd();
         for (auto nh : mHists) {
-            nh.second->SetDirectory(gDirectory);
+            nh.second->SetDirectory(TDirectory::CurrentDirectory());
             nh.second->Write();
         }
 
         // restore previous directory
-        gDirectory = prevDir;
+        prevDir->cd();
+
         LOG_INFO << "Done writing StFwdAnalysisMaker output to local file : " << mLocalOutputFile << endm;
 #endif
     }

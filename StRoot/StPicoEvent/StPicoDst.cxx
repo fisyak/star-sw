@@ -21,6 +21,8 @@
 #include "StPicoBEmcSmdPHit.h"
 #include "StPicoETofHit.h"
 #include "StPicoETofPidTraits.h"
+#include "StPicoFwdTrack.h"
+#include "StPicoFwdVertex.h"
 #include "StPicoMcVertex.h"
 #include "StPicoMcTrack.h"
 #include "StPicoDst.h"          //MUST be the last one
@@ -332,10 +334,18 @@ void StPicoDst::printETofPidTraits() {
   LOG_INFO << endm;
 }
 //_________________
-UShort_t StPicoDst::numberOfPrimaryTracksRecorded() const {
-  UShort_t NoPrTracksR = 0;
-  for(UInt_t iTrk=0; iTrk<numberOfTracks(); iTrk++) {
-    if (track(iTrk)->isPrimary()) NoPrTracksR++;
+void StPicoDst::printFwdTracks() {
+  if(numberOfFwdTracks() == 0) {
+    LOG_INFO << "No Fwd tracks found!" << endm;
+    return;
   }
-  return NoPrTracksR;
+
+  LOG_INFO << "\n+++++++++ fwd track list ( " << numberOfFwdTracks() << " entries )\n\n";
+  for(UInt_t iTrk=0; iTrk<numberOfFwdTracks(); iTrk++) {
+    LOG_INFO << "+++ track " << iTrk << "\n";
+    fwdTrack(iTrk)->Print();
+    LOG_INFO << "\n";
+  }
+
+  LOG_INFO << endm;
 }

@@ -4,6 +4,7 @@
 
 // C++ headers
 #include <algorithm>
+#include <cstddef>
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -39,6 +40,10 @@
 #include "StEvent/StTriggerData.h"
 #include "StEvent/StEnumerations.h"
 #include "StEvent/StL0Trigger.h"
+#include "StEvent/StFwdTrackCollection.h"
+#include "StEvent/StFwdTrack.h"
+#include "StEvent/StFcsCluster.h"
+#include "StEvent/StPrimaryVertex.h"
 
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
@@ -59,6 +64,9 @@
 #include "StMuDSTMaker/COMMON/StMuETofHeader.h"
 #include "StMuDSTMaker/COMMON/StMuMcTrack.h"
 #include "StMuDSTMaker/COMMON/StMuMcVertex.h"
+#include "StMuDSTMaker/COMMON/StMuFcsCollection.h"
+#include "StMuDSTMaker/COMMON/StMuFcsHit.h"
+#include "StMuDSTMaker/COMMON/StMuFcsCluster.h"
 
 #include "StTriggerUtilities/StTriggerSimuMaker.h"
 #include "StTriggerUtilities/Bemc/StBemcTriggerSimu.h"
@@ -70,6 +78,7 @@
 #include "StEmcRawMaker/StBemcTables.h"
 
 #include "StFmsDbMaker/StFmsDbMaker.h"
+#include "StFcsDbMaker/StFcsDb.h"
 
 #include "tables/St_mtdModuleToQTmap_Table.h"
 #include "tables/St_mtdQTSlewingCorr_Table.h"
@@ -95,6 +104,10 @@
 #include "StPicoEvent/StPicoBEmcSmdPHit.h"
 #include "StPicoEvent/StPicoETofHit.h"
 #include "StPicoEvent/StPicoETofPidTraits.h"
+#include "StPicoEvent/StPicoFwdTrack.h"
+#include "StPicoEvent/StPicoFwdVertex.h"
+#include "StPicoEvent/StPicoFcsHit.h"
+#include "StPicoEvent/StPicoFcsCluster.h"
 #include "StPicoEvent/StPicoMcVertex.h"
 #include "StPicoEvent/StPicoMcTrack.h"
 #include "StPicoEvent/StPicoArrays.h"
@@ -247,6 +260,10 @@ void StPicoDstMaker::streamerOff() {
   StPicoTrackCovMatrix::Class()->IgnoreTObjectStreamer();
   StPicoETofHit::Class()->IgnoreTObjectStreamer();
   StPicoETofPidTraits::Class()->IgnoreTObjectStreamer();
+  StPicoFwdTrack::Class()->IgnoreTObjectStreamer();
+  StPicoFwdVertex::Class()->IgnoreTObjectStreamer();
+  StPicoFcsHit::Class()->IgnoreTObjectStreamer();
+  StPicoFcsCluster::Class()->IgnoreTObjectStreamer();
   StPicoMcVertex::Class()->IgnoreTObjectStreamer();
   StPicoMcTrack::Class()->IgnoreTObjectStreamer();
 }
@@ -358,6 +375,11 @@ Int_t StPicoDstMaker::setVtxModeAttr(){
     LOG_INFO << " PicoVtxMtd is being used " << endm;
     return kStOK;
   }
+  else if (strcasecmp(SAttr("PicoVtxMode"), "PicoVtxless") == 0) {
+      setVtxMode( PicoVtxMode::Vtxless );
+      LOG_INFO << " PicoVtxless is being used " << endm;
+      return kStOK;
+    }
 
   return kStErr;
 }
@@ -896,6 +918,9 @@ Int_t StPicoDstMaker::MakeWrite() {
   fillEpdHits();
   fillBbcHits();
   fillETofHits();
+  fillFcsHits();
+  fillFcsClusters();
+  fillFwdTracks();
 
   // Could be a good idea to move this call to Init() or InitRun()
   StFmsDbMaker* fmsDbMaker = static_cast<StFmsDbMaker*>(GetMaker("fmsDb"));
@@ -907,7 +932,7 @@ Int_t StPicoDstMaker::MakeWrite() {
   mFmsFiller.fill(*mMuDst);
 
   if (Debug()) mPicoDst->printTracks();
-
+  
   mTTree->Fill();
   if ( isFromDaq ) {
     delete mEmcCollection;
@@ -1022,9 +1047,13 @@ void StPicoDstMaker::fillTracks() {
   // don't use StMuTrack::primary(), it returns primary tracks associated with
   // all vertices
   std::unordered_map<unsigned int, unsigned int> index2Primary;
-
+  
+  
   // Retrieve number of primary tracks
-  Int_t nPrimarys = mMuDst->numberOfPrimaryTracks();
+  Int_t nPrimarys = 0;
+  if (mMuDst->primaryTracks() != nullptr) {
+    nPrimarys = mMuDst->numberOfPrimaryTracks();
+  }
 
   // Loop over primary trakcs
   for (int i = 0; i < nPrimarys; ++i) {
@@ -1081,8 +1110,8 @@ void StPicoDstMaker::fillTracks() {
     }
 #endif /* __TFG__VERSION__ */
 
-#if defined(__TFG__VERSION__)
-    if ( StMuDst::dca3Dmax()>0 ) {
+#if defined (__TFG__VERSION__)
+    if ( StMuDst::dca3Dmax()>0) {
       // Cut large Dca
       THelixTrack t = dcaG->thelix();
       StThreeVectorD V(mMuDst->primaryVertex()->position());
@@ -1176,7 +1205,7 @@ void StPicoDstMaker::fillTracks() {
     
     // Calculate global momentum and position at point of DCA to the pVtx
     // at it is done in MuDst
-    if( dcaG ) {
+    if( dcaG && mMuDst->primaryVertex() ) {
       const StThreeVectorF &pvert =  mMuDst->primaryVertex()->position();
       Double_t vtx[3] = {pvert[0],pvert[1],pvert[2]};
       THelixTrack thelix =  dcaG->thelix();
@@ -1188,7 +1217,7 @@ void StPicoDstMaker::fillTracks() {
       picoTrk->setGlobalMomentum( momAtDca[0], momAtDca[1], momAtDca[2] );
       picoTrk->setOrigin( pos[0], pos[1], pos[2] );
     }
-    else {
+    else if ( mMuDst->primaryVertex() ){
       StPhysicalHelixD gHelix = dcaG->helix();
       gHelix.moveOrigin( gHelix.pathLength( mMuDst->primaryVertex()->position() ) );
       StThreeVectorF globMom =  gHelix.momentum( mBField * kilogauss );
@@ -1772,14 +1801,15 @@ void StPicoDstMaker::fillEvent() {
   picoEvent->setFillId( ev->runInfo().beamFillNumber( blue ) );
   picoEvent->setBField( ev->magneticField() );
   picoEvent->setTime( ev->eventInfo().time() );
-
   // Set primary vertex information
-  picoEvent->setPrimaryVertexPosition( ev->primaryVertexPosition().x(),
-				       ev->primaryVertexPosition().y(),
-				       ev->primaryVertexPosition().z() );
-  picoEvent->setPrimaryVertexPositionError( ev->primaryVertexErrors().x(),
-					    ev->primaryVertexErrors().y(),
-					    ev->primaryVertexErrors().z() );
+  if ( mMuDst->numberOfPrimaryVertices() > 0 ) {
+    picoEvent->setPrimaryVertexPosition( ev->primaryVertexPosition().x(),
+                ev->primaryVertexPosition().y(),
+                ev->primaryVertexPosition().z() );
+    picoEvent->setPrimaryVertexPositionError( ev->primaryVertexErrors().x(),
+                ev->primaryVertexErrors().y(),
+                ev->primaryVertexErrors().z() );
+  }
 
   if( StMuPrimaryVertex *pv = mMuDst->primaryVertex() ) {
     picoEvent->setPrimaryVertexRanking( pv->ranking() );
@@ -1819,7 +1849,11 @@ void StPicoDstMaker::fillEvent() {
 
   picoEvent->setGRefMult( ev->grefmult() );
   picoEvent->setNumberOfGlobalTracks( mMuDst->numberOfGlobalTracks() );
-  picoEvent->setNumberOfPrimaryTracks( mMuDst->numberOfPrimaryTracks() );
+  if (mMuDst->primaryTracks() ){ //calling mMudst->numberOfPrimaryTracks() will crash if there are no primary vertices
+    picoEvent->setNumberOfPrimaryTracks( mMuDst->numberOfPrimaryTracks() );
+  } else {
+    picoEvent->setNumberOfPrimaryTracks( 0 );
+  }
   picoEvent->setbTofTrayMultiplicity( ev->btofTrayMultiplicity() );
   picoEvent->setETofHitMultiplicity( ev->etofHitMultiplicity() );
   StMuETofHeader *header = mMuDst->etofHeader();
@@ -1916,8 +1950,8 @@ void StPicoDstMaker::fillEvent() {
     }
   } //for(UInt_t iPMT=0; iPMT<bbc.numberOfPMTs(); ++iPMT)
 
-  // Set bunch crossing ID
-  picoEvent->setBunchId( ev->l0Trigger().bunchCrossingId() );
+    // Set bunch crossing ID
+  picoEvent->setBunchId( ev->l0Trigger().bunchCrossingId7bit(ev->runNumber()) );
 }
 
 //_________________
@@ -2484,8 +2518,174 @@ void StPicoDstMaker::fillMtdHits() {
   } //while (triggerPos.size() > 0)
 }
 
-#if !defined(__TFG__VERSION__)
- 
+//_________________
+void StPicoDstMaker::fillFwdTracks() {
+
+  StEvent *evt = (StEvent *)GetDataSet("StEvent");
+  if ( evt ){
+    StFwdTrackCollection * evc = evt->fwdTrackCollection();
+    if ( !evc ) return;
+
+    // fill a map of picodst FCS clusters between index and the cluster pointer
+    map<UShort_t, StPicoFcsCluster*> fcsClusterMap;
+    for ( auto iClu = 0; iClu < mPicoArrays[StPicoArrays::FcsCluster]->GetEntries(); iClu++ ){
+      StPicoFcsCluster * picoFcsCluster = (StPicoFcsCluster*)mPicoArrays[StPicoArrays::FcsCluster]->At(iClu);
+      fcsClusterMap[picoFcsCluster->index()] = picoFcsCluster; 
+    }
+
+    const StSPtrVecFwdTrack& evTracks = evc->tracks();
+    LOG_DEBUG << "Adding " << evc->numberOfTracks() << " StFwdTracks from StEvent to PicoDst" << endm; 
+    for ( size_t i = 0; i < evc->numberOfTracks(); i++ ){
+      StFwdTrack * evTrack = evTracks[i];
+      StPicoFwdTrack picoFwdTrack;
+      // Set the PicoDst attributes
+      picoFwdTrack.setMomentum( evTrack->momentum().x(), evTrack->momentum().y(), evTrack->momentum().z() );
+      picoFwdTrack.setNumberOfFitPoints( evTrack->numberOfFitPoints() * evTrack->charge() );
+      picoFwdTrack.setNumberOfSeedPoints( evTrack->numberOfSeedPoints() );
+      picoFwdTrack.setChi2( evTrack->chi2() );
+      picoFwdTrack.setPVal( evTrack->pval() );
+      picoFwdTrack.setDca( evTrack->dca().x(), evTrack->dca().y(), evTrack->dca().z() );
+      if ( evTrack->didFitConvergeFully())
+        picoFwdTrack.setStatus( 2 );
+      else if ( evTrack->didFitConverge())
+        picoFwdTrack.setStatus( 1 );
+      else
+        picoFwdTrack.setStatus( 0 );
+
+      picoFwdTrack.setMcTruth( evTrack->idTruth(), evTrack->qaTruth() );
+      picoFwdTrack.setVtxIndexRaw( evTrack->vertexIndexRaw() );
+      picoFwdTrack.setGlobalTrackIndex( evTrack->globalTrackIndex() );
+
+      // fill matched ecal and hcal clusters for the track
+      // ecal
+      size_t nUnmatchedEcal = 0;
+      for ( auto & cluster : evTrack->ecalClusters() ){
+        if ( mMapFcsIdPairIndex.count( make_pair( cluster->detectorId(), cluster->id() ) ) == 0 ){
+          nUnmatchedEcal++;
+          continue;
+        }
+        int index = mMapFcsIdPairIndex[ make_pair( cluster->detectorId(), cluster->id() ) ];
+        picoFwdTrack.addEcalCluster( index );
+      }
+      if ( nUnmatchedEcal > 0 ){
+        LOG_ERROR << "No FCS cluster found for " << nUnmatchedEcal << " ecal clusters" << endm;
+      }
+      // hcal
+      size_t nUnmatchedHcal = 0;
+      for ( auto & cluster : evTrack->hcalClusters() ){
+        if ( mMapFcsIdPairIndex.count( make_pair( cluster->detectorId(), cluster->id() ) ) == 0 ){
+          nUnmatchedHcal++;
+          continue;
+        }
+        int index = mMapFcsIdPairIndex[ make_pair( cluster->detectorId(), cluster->id() ) ];
+        picoFwdTrack.addHcalCluster( index );
+      }
+      if ( nUnmatchedHcal > 0 ){
+        LOG_ERROR << "No FCS cluster found for " << nUnmatchedHcal << " hcal clusters" << endm;
+      }
+
+      // Now set the projections for ECal and HCal
+      StFwdTrackProjection ecalProj = evTrack->getProjectionFor(kFcsWcalId);
+      StFwdTrackProjection hcalProj = evTrack->getProjectionFor(kFcsHcalId);
+      if ( !std::isnan( ecalProj.mXYZ.x() ) && !std::isnan( ecalProj.mXYZ.y() ) && !std::isnan( ecalProj.mXYZ.z() ) )
+        picoFwdTrack.setECalProjection( ecalProj.mXYZ.x(), ecalProj.mXYZ.y(), ecalProj.mXYZ.z() );
+      else 
+        picoFwdTrack.setECalProjection( -999., -999., -999. );
+      if ( !std::isnan( hcalProj.mXYZ.x() ) && !std::isnan( hcalProj.mXYZ.y() ) && !std::isnan( hcalProj.mXYZ.z() ) )
+        picoFwdTrack.setHCalProjection( hcalProj.mXYZ.x(), hcalProj.mXYZ.y(), hcalProj.mXYZ.z() );
+      else
+        picoFwdTrack.setHCalProjection( -999., -999., -999. );
+
+      int counter = mPicoArrays[StPicoArrays::FwdTrack]->GetEntries();
+      picoFwdTrack.setId( counter );
+      new((*(mPicoArrays[StPicoArrays::FwdTrack]))[counter]) StPicoFwdTrack(picoFwdTrack);
+    }
+  } else {
+    LOG_DEBUG << "Cannot get Fwd Tracks from StEvent" << endm;
+  }
+
+  // Fill FwdVertex also
+  // get primary vertex from StEvent
+  LOG_DEBUG << "There are " << evt->numberOfPrimaryVertices() << " primary vertices from StEvent" << endm; 
+  for ( size_t i = 0; i < evt->numberOfPrimaryVertices(); i++ ){
+    StPrimaryVertex * evVertex = evt->primaryVertex(i);
+    if (!evVertex || !evVertex->isFwdVtx()) continue; // only save valid FwdVertex
+    StPicoFwdVertex picoFwdVertex;
+    // Set the PicoDst attributes
+    picoFwdVertex.setPosition( evVertex->position().x(), evVertex->position().y(), evVertex->position().z() );
+    LOG_DEBUG << "Adding StPicoFwdVertex from StPrimaryVertex" << endm;
+    picoFwdVertex.setChi2( evVertex->chiSquared() );
+    picoFwdVertex.setNumberOfTracks( evVertex->numTracksUsedInFinder() );
+    int counter = mPicoArrays[StPicoArrays::FwdVertex]->GetEntries();
+    new((*(mPicoArrays[StPicoArrays::FwdVertex]))[counter]) StPicoFwdVertex(picoFwdVertex);
+  } // for each primary vertex
+
+} //fillFwdTracks
+
+//_________________
+void StPicoDstMaker::fillFcsClusters() {
+  StMuFcsCollection * muFcs = mMuDst->muFcsCollection();
+  if ( !muFcs ) return;
+  StFcsDb* fcsDb = static_cast<StFcsDb*>(GetDataSet("fcsDb"));
+  if( !fcsDb ) {
+      LOG_ERROR << "Cannot get StFcsDb object" << endm;
+      return;
+  }
+  TIter next(muFcs->getClusterArray());
+  StMuFcsCluster* muCluster(NULL);
+  while ((muCluster = static_cast<StMuFcsCluster*>(next()))) {
+    int counter = mPicoArrays[StPicoArrays::FcsCluster]->GetEntries();
+    StPicoFcsCluster picoFcsCluster;
+    picoFcsCluster.setId(muCluster->id());
+    picoFcsCluster.setIndex(counter);
+    picoFcsCluster.setDetectorId(muCluster->detectorId());
+    picoFcsCluster.setCategory(muCluster->category());
+    picoFcsCluster.setNTowers(muCluster->nTowers());
+    picoFcsCluster.setEnergy(muCluster->energy());
+    picoFcsCluster.setX(muCluster->x());
+    picoFcsCluster.setY(muCluster->y());
+    picoFcsCluster.setSigmaMin(muCluster->sigmaMin());
+    picoFcsCluster.setSigmaMax(muCluster->sigmaMax());
+    picoFcsCluster.setTheta(muCluster->theta());
+    picoFcsCluster.setChi2Ndf1Photon(muCluster->chi2Ndf1Photon());
+    picoFcsCluster.setChi2Ndf2Photon(muCluster->chi2Ndf2Photon());
+    double zVertex=picoDst()->event()->primaryVertex().z();
+    StThreeVectorD xyz=fcsDb->getStarXYZfromColumnRow(muCluster->detectorId(), muCluster->x(), muCluster->y());    
+    StLorentzVectorD lv = fcsDb->getLorentzVector(xyz, muCluster->energy(), zVertex);
+    picoFcsCluster.setFourMomentum(lv.px(),lv.py(),lv.pz(),lv.e());
+    new((*(mPicoArrays[StPicoArrays::FcsCluster]))[counter]) StPicoFcsCluster(picoFcsCluster);
+    mMapFcsIdPairIndex[ make_pair( muCluster->detectorId(), muCluster->id() ) ] = counter;
+  }
+  LOG_INFO << "StPicoDstMaker::fillFcsClusters filled " << mPicoArrays[StPicoArrays::FcsCluster]->GetEntries() << endm;
+}//fillFcsClusters
+
+//_________________
+void StPicoDstMaker::fillFcsHits() {
+  StMuFcsCollection * muFcs = mMuDst->muFcsCollection();
+  if ( !muFcs ) return;
+  StFcsDb* fcsDb = static_cast<StFcsDb*>(GetDataSet("fcsDb"));
+  if( !fcsDb ) {
+      LOG_ERROR << "Cannot get StFcsDb object" << endm;
+      return;
+  }
+  TIter next(muFcs->getHitArray());
+  StMuFcsHit* muHit(NULL);
+  while ((muHit = static_cast<StMuFcsHit*>(next()))) {
+    int counter = mPicoArrays[StPicoArrays::FcsHit]->GetEntries();
+    StPicoFcsHit picoFcsHit;
+    picoFcsHit.setDetectorId(muHit->detectorId());
+    picoFcsHit.setId(muHit->id());
+    double zVertex=picoDst()->event()->primaryVertex().z();
+    StThreeVectorD xyz = fcsDb->getStarXYZ(muHit->detectorId(), muHit->id());
+    StLorentzVectorD lv = fcsDb->getLorentzVector(xyz, muHit->energy(), zVertex);
+    picoFcsHit.setFourMomentum(lv.px(),lv.py(),lv.pz(),lv.e());
+    new((*(mPicoArrays[StPicoArrays::FcsHit]))[counter]) StPicoFcsHit(picoFcsHit);
+  }
+  LOG_INFO << "StPicoDstMaker::fillFcsHits filled " << mPicoArrays[StPicoArrays::FcsHit]->GetEntries() << endm;
+}//fillFcsHit
+
+#if !defined (__TFG__VERSION__)
+
 /**
  * Selects a primary vertex from `muDst` vertex collection according to the
  * vertex selection mode `mVtxMode` specified by the user. The mode must be
@@ -2505,6 +2705,9 @@ bool StPicoDstMaker::selectVertex() {
   StMuPrimaryVertex* selectedVertex = nullptr;
 
   // Switch between modes: Default and Vpd (VpdOrDefault)
+  if ( mVtxMode == PicoVtxMode::Vtxless ) {
+    return true;
+  }
   // Default takes the first primary vertex, meanwhile
   // Vpd
   if ( mVtxMode == PicoVtxMode::Default ) {
@@ -2536,7 +2739,7 @@ bool StPicoDstMaker::selectVertex() {
   else if ( mVtxMode == PicoVtxMode::Vpd || mVtxMode == PicoVtxMode::VpdOrDefault ) {
 
     // For VpdOrDefault option one will take the first primary
-    // vertex if no TOF or VPD information is available
+    // vertex if no TO1F or VPD information is available
     if( mVtxMode == PicoVtxMode::VpdOrDefault ) {
       mMuDst->setVertexIndex(0);
       selectedVertex = mMuDst->primaryVertex();
