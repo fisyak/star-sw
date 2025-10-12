@@ -42,7 +42,6 @@ int StFwdAnalysisMaker::Finish() {
         prevDir->cd();
 
         LOG_INFO << "Done writing StFwdAnalysisMaker output to local file : " << mLocalOutputFile << endm;
-#endif
     }
 
     return kStOk; 

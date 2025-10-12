@@ -30,6 +30,7 @@
 #include "StarClassLibrary/StPhysicalHelix.hh"
 #include "StarClassLibrary/PhysicalConstants.h"
 
+#include "StEvent/StEvent.h"
 #include "StEvent/StBTofHeader.h"
 #include "StEvent/StDcaGeometry.h"
 #include "StEvent/StEmcCollection.h"
