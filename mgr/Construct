@@ -421,7 +421,7 @@ if (($STAR_HOST_SYS !~ /^darwin/) && # && $STAR_HOST_SYS !~ /^al/  ) && # and $S
   }
 }
 if ($STAR_HOST_SYS !~ /darwin/ and $STAR_HOST_SYS !~ /icc/ and  $ROOT_LEVEL =~ /^5/ and $env->{CXX_MAJOR} <= 6) {
-  push @packages, "garfield";
+  push @packages, "garfield"; #print "================================================================================ add garfield\n"; die;
 }
 #if ($STAR_HOST_SYS !~ /icc/) {
 #push @packages, "MillepedeII";
