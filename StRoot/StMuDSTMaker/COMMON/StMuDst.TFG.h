@@ -108,7 +108,7 @@ typedef multimap<StMuPrimaryVertex*,KFParticle*>::iterator RcVx2KFVxIter;
     detector info, etc).  
     
 */
-enum PicoVtxMode {NotSet=0, Default=1, Vpd=2, VpdOrDefault=3, Mtd=4, FXT=5};
+enum PicoVtxMode {NotSet=0, Default=1, Vpd=2, VpdOrDefault=3, Mtd=4, FXT=5, Vtxless=6};
 
 class StMuDst : public TObject {
 public:
