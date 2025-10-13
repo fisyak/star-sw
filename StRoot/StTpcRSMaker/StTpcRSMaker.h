@@ -141,6 +141,8 @@ class StTpcRSMaker : public StMaker {
   Double_t tbksdE[kTimeBacketMax];    //!
   Double_t rowsdEH[kRowMax];          //!
   Double_t rowsdE[kRowMax];           //!
+  Double_t mTransDiffParO;            //!
+  Double_t mTransDiffParI;            //!
   Char_t end[1];                      //!
   Double_t             mLaserScale;   //!
   const Double_t minSignal;           //!

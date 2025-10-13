@@ -66,6 +66,8 @@ class St_TpcResponseSimulatorC : public TChair {
   Float_t       tMaxI(Int_t i = 0)          const {return  Struct(i)->tMaxI;}  
   Float_t       tMaxO(Int_t i = 0)          const {return  Struct(i)->tMaxO;}  
   Float_t      *tMax(Int_t i = 0)           const {return  &Struct(i)->tMaxI;}  
+  Double_t     *transDiffParO(Int_t i = 0)  const {return  &Struct(i)->transDiffParO[0];}  
+  Double_t     *transDiffParI(Int_t i = 0)  const {return  &Struct(i)->transDiffParI[0];}  
  protected:
   St_TpcResponseSimulatorC(St_TpcResponseSimulator *table=0) : TChair(table) {}
   virtual ~St_TpcResponseSimulatorC() {fgInstance = 0;}
