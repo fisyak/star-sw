@@ -38,6 +38,7 @@
 #include "TQtZoomPadWidget.h"
 #include "TQtCanvas2Html.h"
 #include "TPolynomial.h"
+#include "TROOT.h"
 #endif
 void DrawList() {} 
 //________________________________________________________________________________
@@ -323,6 +324,9 @@ void DrawHftG(const Char_t *pattern = "d.*13", const Char_t *ctitle = "", Int_t 
 //________________________________________________________________________________
 void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
   // gStyle->SetOptStat(0)
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  if (c1) c1->Clear();
+  else    c1 = new TCanvas("c1","c1");
   TString patt(pattern);
   TPRegexp reg(pattern);
   TString cTitle = "C" + patt;
@@ -412,16 +416,16 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
     Double_t yref = -1;
     Int_t nh = -1;
     TString same("");
-    for (Int_t l = 0; l < NFiles; l++) {
-      f = FitFiles[l];
+    for (Int_t lf = 0; lf < NFiles; lf++) {
+      f = FitFiles[lf];
       TH1 *h = (TH1 *) f->Get(hist->GetName());
       if (! h) continue;
       nh++;
       if (! h1) h1 = h;
-      cout << "i = " << i << "\tl = " << l << "\t" << f->GetName() << "\t" << h->GetName() << endl;
+      cout << "i = " << i << "\tlf = " << lf << "\t" << f->GetName() << "\t" << h->GetName() << endl;
       h->SetMarkerStyle(20);
-      h->SetMarkerColor(l+1);
-      h->SetLineColor(l+1);
+      h->SetMarkerColor(lf+1);
+      h->SetLineColor(lf+1);
       if (h->GetMaximum() > yMax) yMax = h->GetMaximum(); 
       if (h->GetMinimum() < yMin) yMin = h->GetMinimum(); 
       TList *fl = h->GetListOfFunctions();
@@ -431,7 +435,7 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 	while ((fun = (TF1 *) next())) {
 	  TString Name(fun->GetName());
 	  if (Name != "stats") {
-	    fun->SetLineColor(l+1);
+	    fun->SetLineColor(lf+1);
 	  }
 	}
       }
@@ -449,28 +453,51 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 	   c->cd(i+1)->SetLogy(1);
 	}
       }
-      h->Draw(same); same = "same";
-      c->cd(i+1)->Update();
       TString DirName(f->GetName());
       Int_t indx = DirName.Index("/");
       if (indx > 0) {DirName = TString(DirName,indx);}
       TString fnam(gSystem->BaseName(DirName));
       if (fnam == ".") {fnam = gSystem->BaseName(f->GetName()); fnam.ReplaceAll(".root","");}
       leg->AddEntry(h, fnam);
+      c1->cd(); h->Draw(); c1->Update();
+#if 0
+      Double_t s1[TH1::kNstat] = {0};
+      h->GetStats(s1);
+#endif
       TPaveStats *st = (TPaveStats*) h->FindObject("stats");
       if (st) {
 	//	st->Print();
 	st->SetX1NDC(0.72);
 	st->SetX2NDC(0.98);
-	st->SetY1NDC(ymax - dy*(nh+1));
-	st->SetY2NDC(ymax - dy*(nh  ));
+	st->SetY1NDC(ymax - dy*(lf+1));
+	st->SetY2NDC(ymax - dy*(lf  ));
       }
-      if (l == 0) {
-#ifdef __THSTACK__
-	hstack = new THStack(h->GetName(),h->GetTitle());
+      c->cd(i+1);
+      h->Draw(same); same = "sames";
+      TString hName(h->GetName());
+      if (hName.Contains("TimeRcSigmaSqSpreadNoise_p2")) {
+#if 0
+	TF1 *pol2A = (TF1 *) gROOT->GetListOfFunctions()->FindObject("pol2A"); 
+	if (! pol2A) pol2A = new TF1("pol2A","[0]*[0]+([1]*x)**2",-50,50);
+	pol2A->SetLineColor(h->GetMarkerColor());
+	h->Fit(pol2A,"er","",-50.,50.);
+#else
+	TF1 *pol0 = (TF1 *) gROOT->GetListOfFunctions()->FindObject("pol0"); 
+	if (! pol0) {
+	  TF1::InitStandardFunctions();
+	  pol0 = (TF1 *) gROOT->GetListOfFunctions()->FindObject("pol0"); 
+	}
+	if (pol0) {
+	  pol0->SetLineColor(h->GetMarkerColor());
+	  h->Fit(pol0,"er","",-50.,50.);
+	}
 #endif
       }
+      c->cd(i+1)->Update();
 #ifdef __THSTACK__
+      if (lf == 0) {
+	hstack = new THStack(h->GetName(),h->GetTitle());
+      }
       hstack->Add(h);
 #endif
     }
