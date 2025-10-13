@@ -13,8 +13,8 @@ TDataSet *CreateTable() {
   Int_t    iD     =   6; 
   Double_t pTlow  =   1;
   Double_t pThigh =   1;
-  Double_t Ylow   =  -2; 
-  Double_t Yhigh  =   1;
+  Double_t Ylow   =  -5; 
+  Double_t Yhigh  =   5;
   Double_t Philow =   0;
   Double_t Phihigh= 2*TMath::Pi();
   Double_t Zlow   =  -10; 
