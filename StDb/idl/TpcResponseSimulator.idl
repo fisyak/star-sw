@@ -61,4 +61,6 @@ struct TpcResponseSimulator {
   float  betaStar;        /* = 0.6  beam beta* (meters) */
   float  tMaxI;           /* = 0.0  maximum ion time collection for Inner Sectors */
   float  tMaxO;           /* = 0.0  maximum ion time collection for Outer Sectors */
+  double transDiffParO[3];/* transeferce diffusion parameterization versus BField(kG) for Outer sectors */
+  double transDiffParI[3];/* transeferce diffusion parameterization versus BField(kG) for Innerr sectors */
  };  

@@ -50,6 +50,7 @@
 #include "TError.h"
 #include "TH1.h"
 #include "TStyle.h"
+#include "TMath.h"
 
 #include "StEmbeddingQAUtilities.h"
 #include "StMessMgr.h"

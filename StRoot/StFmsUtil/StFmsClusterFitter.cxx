@@ -59,7 +59,6 @@
 #include <vector>
 
 #include "TF2.h"
-#include "TMath.h"
 #include "TString.h"
 
 #include "St_base/StMessMgr.h"

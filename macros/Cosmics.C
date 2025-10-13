@@ -680,6 +680,9 @@ void Plot(Int_t nevents = 1e9, const Char_t *Out = "CosmicPlots.root") {
   TString pwd(gSystem->WorkingDirectory());
   if (pwd.Contains("FF")) Field = "FF";
   if (pwd.Contains("RF")) Field = "RF";
+  if (pwd.Contains("FHF")) Field = "FHF";
+  if (pwd.Contains("RHF")) Field = "RHF";
+  if (pwd.Contains("ZF")) Field = "ZF";
   Int_t nC = 3; // NC;
   Int_t nDCA = 1; // NDCA;
   Int_t Npads = 2*nC*nDCA*kAll;

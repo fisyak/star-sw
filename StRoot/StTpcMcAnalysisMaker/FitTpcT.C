@@ -1,5 +1,8 @@
 /*
-   root.exe -q *.H.root FitTpcT.C
+TpcRS_RF>    root.exe  RF.Plots.root FitTpcT.C
+      RF>    root.exe ../TpcRS_RF/RF.Plots.root RF.Plots.root FitTpcT.C
+TpcRS_RF>    root.exe  ~/macros/TpcRS_y2023.root *.T.root  FitTpcT.C
+
 */
 #include "Riostream.h"
 void FitTpcT() {

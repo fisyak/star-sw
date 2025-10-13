@@ -44,7 +44,7 @@
 // extra t0 off set for Altro chip
 //
 // Revision 1.7  2010/06/14 23:36:08  fisyak
-// Freeze version V
+// Freeze version Vxs
 //
 // Revision 1.6  2010/05/24 21:39:53  fisyak
 // Fix bracket
@@ -77,9 +77,10 @@ TDataSet *CreateTable() {
   row.I0                    = 13.1;// eV, CH4 		       
   row.Cluster    	    = 3.2; // average no. of electrons per primary  			       
   row.W          	    = 26.2;// eV 								       
-  row.OmegaTau   	    = 3.02;// fit of data 							       
-  row.K3IP       	    = 0.68;//(pads) for a/s = 2.5e-3 and h/s = 0.5 
-  row.K3IR       	    = 0.89;//(row)  for a/s = 2.5e-3 and h/s = 0.5 
+  row.OmegaTau   	    = 2.585; // fit 2023 data 3.02;// fit of data @ 5kG							       
+  // h = distance between anode and cathode planes, s - anode wire pitchxs, Chapter 5 of Mathieson's book, Fig 5.3(a => rho, a => rho2)1
+  row.K3IP       	    = 0.68;//(pads) for a/s = 2.5e-3 and h/s = 0.5, rho2
+  row.K3IR       	    = 0.89;//(row)  for a/s = 2.5e-3 and h/s = 0.5, rho1 
   row.K3OP       	    = 0.55;//(pads) for a/s = 2.5e-3 and h/s = 1.0 
   row.K3OR       	    = 0.61;//(row)  for a/s = 2.5e-3 and h/s = 1.0 
   row.FanoFactor 	    = 0.3; //                                                                        
@@ -93,13 +94,15 @@ TDataSet *CreateTable() {
   row.tauXO                 =  74.6e-9;// secs Tpx Outer integration time 
   row.tauCI                 =   0;  
   row.tauCO                 =   0;  
-  row.SigmaJitterTI         = 0.00000 + 0.47;// 0.4317;// 0.25;//ad  0.0;// b for Tpx inner 
-  row.SigmaJitterTO         = 0.00000 + 0;// 0.4300;// E: 0.4801;//0.25;//ad  0.0;// b for Tpx outer 
-  row.SigmaJitterXI         = 0.1 + 0.037; // 0.15; // J 0.06; // F 0.21; //0.03426;// 0.1027785; // P: 0.1353*1.05/1.10; //O: 0.1353*1.05;// N: 0.1353; // C:0.;
-  row.SigmaJitterXO         = 0.13 + 0.025; // 0.15; // J 0.03; // I 0.04; //0.10; // F 0.21; // 0.03426*1.20;// 1.05;// 0.107525;  // P: 0.1472*1.05/1.03; //O: 0.1472*1.05;// N: 0.1472; // C:0.;
-  row.longitudinalDiffusion = 0.03624*1.3*0.92; //*1.3  Magboltz // HD 0.03624*1.5; //HC 0.03624; // Magboltz 
-  row.longitudinalDiffusionI= row.longitudinalDiffusion*0.95;
-  row.transverseDiffusion   = 0.02218*TMath::Sqrt(1 + row.OmegaTau*row.OmegaTau) ; // Magboltz 87% Ar + 10% CH4 + 3%CF4
+  //  row.SigmaJitterTI         = 0.501; // M4
+  //  row.SigmaJitterTO         = 0.317; // M4
+  row.SigmaJitterTI         = 0.564; // M5
+  row.SigmaJitterTO         = 0.352; // M5
+  row.SigmaJitterXI         = 0.08915;// M4 0.104; // M40.069; // M3 0.1461;//M2  0.; //0.1 + 0.037;
+  row.SigmaJitterXO         = 0.; //0.13 + 0.025; 
+  row.longitudinalDiffusion = 0.0362; // 0.03624*1.3*0.92; 
+  row.longitudinalDiffusionI= row.longitudinalDiffusion; // *0.95;
+  row.transverseDiffusion   = 0.02909*TMath::Sqrt(1 + row.OmegaTau*row.OmegaTau) ; //B  Fit 2023 data
   row.transverseDiffusionI  = row.transverseDiffusion/1.08;// J *0.983; // 0.97*
   row.NoElPerAdc            = 335.;   // No. of electrons per 1 ADC count
 #if 0
@@ -126,9 +129,23 @@ TDataSet *CreateTable() {
   row.PolyaInner = 1.38;
   row.PolyaOuter = 1.38;
   row.T0offset   = 0.50 -1.43663e-01 -0.00932877 + 0.0416 + 0.0241 ;//g // 01/18/12 Xianglei Zhu from Run 11 AuAu 27 & 19.6 GeV embedding 
-  row.T0offsetI  =  0.0709683 -0.00865149 + 0.307 - 0.3255; // TFG23a = 0
-  row.T0offsetO  = -0.0710492 -0.0159205  + 0.257 - 0.2417; // TFG23a = 0
+  row.T0offsetI  =  0.0709683 -0.00865149 + 0.307 - 0.3255 + 1.75e-3; // (RF + RHF)/2
+  row.T0offsetO  = -0.0710492 -0.0159205  + 0.257 - 0.2417 - 2.31e-2; // -"-
   row.tMaxI = row.tMaxO = 2e-5; // sec
+#if 0
+  Double_t parO[3] = { 0.08254, -0.017634, 0.001468};
+  Double_t parI[3] = { 0.07816, -0.01757,  0.0015496};
+#else
+  //  Double_t B[3]  = {5.0, 2.5, 0.}; // kG
+  Double_t parO[3] = { 0.021982,  0.032902, 0.0595239};
+  Double_t parI[3] = { 0.021982,  0.032902, 0.0595239};
+#endif
+  Double_t *O =  &row.transDiffParO[0];
+  Double_t *I =  &row.transDiffParI[0];
+  for (Int_t i = 0; i < 3; i++) {
+    O[i] = parO[i];
+    I[i] = parI[i];
+  }
   tableSet->AddAt(&row);
   // ----------------- end of code ---------------
   return (TDataSet *)tableSet;

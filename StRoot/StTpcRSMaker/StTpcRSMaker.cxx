@@ -30,6 +30,7 @@
 #include "TVirtualMC.h"
 #include "TInterpreter.h"
 #include "Math/SpecFuncMathMore.h"
+#include "TROOT.h"
 #include "StDbUtilities/StCoordinates.hh" 
 #include "StDbUtilities/StTpcCoordinateTransform.hh"
 // Dave's Header file
@@ -166,6 +167,40 @@ Int_t StTpcRSMaker::Finish() {
 }
 //________________________________________________________________________________
 Int_t StTpcRSMaker::InitRun(Int_t /* runnumber */) {
+  Float_t BFieldG[3]; 
+  Float_t xyz[3] = {0,0,0};
+  StMagF::Agufld(xyz,BFieldG);
+  Double_t field = TMath::Abs(BFieldG[2]);
+#if 0
+  TF1 *pol2 = (TF1 *)gROOT->GetListOfFunctions()->FindObject("pol2");
+  if (! pol2) {
+    TF1::InitStandardFunctions();
+    pol2 = (TF1  *) gROOT->GetListOfFunctions()->FindObject("pol2");;
+    assert(pol2);
+  }
+  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParO()[0]) > 1e-7) {
+    mTransDiffParO = pol2->EvalPar(&field,St_TpcResponseSimulatorC::instance()->transDiffParO())/TMath::Sqrt2();
+    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParO = " << 1e4*mTransDiffParO << " um/sqrt(cm)" << endm;
+  }  
+  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParI()[0]) > 1e-7) {
+    mTransDiffParI = pol2->EvalPar(&field,St_TpcResponseSimulatorC::instance()->transDiffParI())/TMath::Sqrt2();;
+    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParI = " << 1e4*mTransDiffParI << " um/sqrt(cm)" << endm;
+  }  
+#else
+  // from Magboltz
+  Int_t ff = 0;
+  if      (field < 1) ff = 2;
+  else if (field < 4) ff = 1; 
+  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParO()[ff]) > 1e-7) {
+    mTransDiffParO = St_TpcResponseSimulatorC::instance()->transDiffParO()[ff];
+    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParO = " << 1e4*mTransDiffParO << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
+  }  
+  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParI()[ff]) > 1e-7) {
+    mTransDiffParI = St_TpcResponseSimulatorC::instance()->transDiffParI()[ff];
+    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParI = " << 1e4*mTransDiffParI << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
+  }  
+
+#endif    
   SetAttr("minSector",1);
   SetAttr("maxSector",24);
   SetAttr("minRow",1);
@@ -234,9 +269,6 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
   if (St_tpcPadConfigC::instance()->iTPC(1)) { // iTpc for all TPC sectors
     NoOfPads = St_tpcPadConfigC::instance()->numberOfPadsAtRow(1,72);
   } 
-  Float_t BFieldG[3]; 
-  Float_t xyz[3] = {0,0,0};
-  StMagF::Agufld(xyz,BFieldG);
   St_TpcAvgPowerSupplyC::instance()->PrintC("V");
   // Shapers
   const Char_t *Names[2] = {"I","O"};
@@ -316,7 +348,7 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
   
   for (Int_t io = 0; io < 2; io++) {// In/Out
     //  mPolya = new TF1F("Polya;x = G/G_0;signal","sqrt(x)/exp(1.5*x)",0,10); // original Polya 
-    //  mPolya = new TF1F("Polya;x = G/G_0;signal","pow(x,0.38)*exp(-1.38*x)",0,10); //  Valeri Cherniatin
+    //  mPolya = new TF1F("Polya;x = G/G_0;signalxf","pow(x,0.38)*exp(-1.38*x)",0,10); //  Valeri Cherniatin
     //   mPoly = new TH1D("Poly","polyaAvalanche",100,0,10);
     //  TF1F *func = new TF1F("funcP","x*sqrt(x)/exp(2.5*x)",0,10);
     // see http://www4.rcf.bnl.gov/~lebedev/tec/polya.html
@@ -408,7 +440,7 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
       if (! mPadResponseFunction[io][sector-1]) { 
 	mPadResponseFunction[io][sector-1] = new TF1F(Form("%s_%02i",io == 0 ? "PadResponseFunctionInner" : "PadResponseFunctionOuter",sector),StTpcRSMaker::PadResponseFunc,xminP,xmaxP,6); 
 	mPadResponseFunction[io][sector-1]->SetParameters(paramsPad);
-	mPadResponseFunction[io][sector-1]->SetParNames("PadWidth","Anode-Cathode gap","wire spacing","K3OP","CrossTalk","PadPitch");
+	mPadResponseFunction[io][sector-1]->SetParNames("PadWidth","Anode-Cathode gap","wire spacing","K3P","CrossTalk","PadPitch");
 	mPadResponseFunction[io][sector-1]->SetTitle(mPadResponseFunction[io][sector-1]->GetName());
 	mPadResponseFunction[io][sector-1]->GetXaxis()->SetTitle("pads");
 	mPadResponseFunction[io][sector-1]->GetYaxis()->SetTitle("Signal");
@@ -458,7 +490,7 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
 	mChargeFraction[io][sector-1] = new TF1F(Form("%s_%02i", io == 0 ? "ChargeFractionInner" : "ChargeFractionOuter", sector), 
 						 StTpcRSMaker::PadResponseFunc,xminP,xmaxP,6);
 	mChargeFraction[io][sector-1]->SetParameters(paramsRow);
-	mChargeFraction[io][sector-1]->SetParNames("PadLength","Anode-Cathode gap","wire spacing","K3IR","CrossTalk","RowPitch");
+	mChargeFraction[io][sector-1]->SetParNames("PadLength","Anode-Cathode gap","wire spacing","K3R","CrossTalk","RowPitch");
 	mChargeFraction[io][sector-1]->SetTitle(mChargeFraction[io][sector-1]->GetName());
 	mChargeFraction[io][sector-1]->GetXaxis()->SetTitle("Distance (cm)");
 	mChargeFraction[io][sector-1]->GetYaxis()->SetTitle("Signal");
@@ -1013,11 +1045,20 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	}
 	Double_t driftLength = TMath::Abs(TrackSegmentHits[iSegHits].coorLS.position().z());
 	Double_t D = 1. + OmegaTau*OmegaTau;
-	Double_t SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusion()*  TMath::Sqrt(   driftLength/D);
+	Double_t SigmaT = 0;
+        if (mTransDiffParO > 1e-7) {
+	  SigmaT = mTransDiffParO*TMath::Sqrt(   driftLength  );
+	} else {
+	  SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusion()*  TMath::Sqrt(   driftLength/D);
+	}
 	Double_t SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusion()*TMath::Sqrt(   driftLength  );
 	if (St_tpcPadConfigC::instance()->IsRowInner(sector,row)) {
-	  if ( St_TpcResponseSimulatorC::instance()->transverseDiffusionI() > 0.0) 
-	    SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusionI()*  TMath::Sqrt(   driftLength/D);
+	  if (mTransDiffParI > 1e-7) {
+	    SigmaT = mTransDiffParI*TMath::Sqrt(   driftLength  );
+	  } else {
+	    if ( St_TpcResponseSimulatorC::instance()->transverseDiffusionI() > 0.0) 
+	      SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusionI()*  TMath::Sqrt(   driftLength/D);
+	  }
 	  if (St_TpcResponseSimulatorC::instance()->longitudinalDiffusionI() > 0.0) 
 	    SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusionI()*TMath::Sqrt(   driftLength  );
 	}

@@ -26,7 +26,7 @@
 #include "TError.h"
 #include <cassert>
 #include "TSystem.h"
-
+#include "TMath.h"
 Double_t  StMemStat::fgUsed=0;
 TList    *StMemStat::fgList=0;
 ClassImp(StMemStat)

@@ -97,6 +97,7 @@ switch ($pkg)
 #        endif
 #	setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CMAKE_PREFIX_PATH}/lib:/usr/lib
 #      endif
+	if (-r $SPACK_ROOT/../spack-stage) setenv  TMP $SPACK_ROOT/../spack-stage
 	    else
 		if ($?DECHO) echo "SPACK_SETUP has not been set"
 	    endif

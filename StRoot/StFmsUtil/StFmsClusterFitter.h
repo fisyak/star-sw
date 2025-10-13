@@ -61,6 +61,7 @@
 
 #include "TMinuit.h"
 #include "TObject.h"
+#include "TMath.h"
 
 #include "StFmsFittedPhoton.h"
 #include "StFmsTowerCluster.h"
@@ -283,7 +284,7 @@ inline double asmsqrt(double x) { //slower than std::sqrt()
 // https://drupal.star.bnl.gov/STAR/blog/leun/2010/aug/02/fms-meeting-20100802
 inline double showerShapeComponent(double x, double y, double a, double b) {
     if (a == 0.0 || b == 0.0) return 0.0;
-    return a * atan(x * y / (b * sqrt(b * b + x * x + y * y)));
+    return a * TMath::ATan(x * y / (b * TMath::Sqrt(b * b + x * x + y * y)));
 }
 
 inline Double_t StFmsClusterFitter::energyDepositionDistribution(double x, double y, double* parameters){

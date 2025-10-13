@@ -1,4 +1,8 @@
 #if 0
+  root.exe -q -b lBichsel.C 'TpcT.C+("st*.tags.root","P","RF.Plots.root")' >& RF.log &
+  root.exe -q -b lBichsel.C 'TpcT.C+("st*.tags.root","P","RHF.Plots.root")' >& RHF.log &
+
+
 set star = '*';
 foreach d (`ls -1d *GeV*`)
   root.exe -q -b lBichsel.C 'TpcT.C+("'${d}'/'${star}'/st*.tags.root","P","'${d}'.Plots.root")' >& ${d}.log &
@@ -42,7 +46,7 @@ end
 #define PRINT
 //#define __Y2008__
 //#define __Y2018__ 
-#define __Y2019__   /* >= 2019 */
+#define __iTPC__   /* >= 2019, remeber iTPC for y2018 only for sector 20 ! */
 //#define __LASER__
 //#define __Cosmics__
 #ifndef __Cosmics__
@@ -106,24 +110,29 @@ end
 #include "Ask.h"
 #include "Names.h"
 #include "StBichsel/StdEdxModel.h"
-#ifdef __Y2019__
-static Int_t NoInnerRows = 40; //-1; // Tpx
-static Int_t NoOfRows    = 72; //-1;
-#else
-static Int_t NoInnerRows = 13;
-static Int_t NoOfRows    = 45;
-#endif
 TMultiDimFit* MDfit = 0;
 TFile *fOut = 0;
 //#include "StTpcMcAnalysisMaker/TpcCluster.h"
-TF1  *mShaperResponse = 0;             //!
-TF1  *mShaperResponseInner = 0;        //!
-TF1  *mShaperResponseOuter = 0;        //!
-TF1  *mChargeFractionInner = 0;        //!
-TF1  *mChargeFractionOuter = 0;        //!
-TF1  *mPadResponseFunctionInner = 0;   //!
-TF1  *mPadResponseFunctionOuter = 0;   //!
-TF1  *mConvolution = 0;                //!
+// TpcRS functions
+/*
+ KEY: TF1      TimeShape3I;1            TimeShape3I              TF1      *fgTimeShape3[2];
+ KEY: TF1      TimeShape3O;1   		TimeShape3O              
+ KEY: TF1      TimeShape0I;1   		TimeShape0I              TF1      *fgTimeShape0[2];
+ KEY: TF1      TimeShape0O;1   		TimeShape0O
+*/
+TF1  *mShaperResponseInner = 0;        //!  ShaperFunc_I_S01              TF1F  *mShaperResponses[2][24];     //!
+TF1  *mShaperResponseOuter = 0;        //!  ShaperFunc_O_S01	      					     
+TF1  *mChargeFractionInner = 0;        //!  ChargeFractionInner_01        TF1F  *mChargeFraction[2][24];      //!
+TF1  *mChargeFractionOuter = 0;        //!  ChargeFractionOuter_01						     
+TF1  *mPadResponseFunctionInner = 0;   //!  PadResponseFunctionInner_01   TF1F  *mPadResponseFunction[2][24]; //!
+TF1  *mPadResponseFunctionOuter = 0;   //!  PadResponseFunctionOuter_01 
+static TF1 *mConvolution = 0;
+//                                                     0                      1                         2                         3                              4                              5
+TF1              **TpcRSFunc[6] = {&mShaperResponseInner, &mShaperResponseOuter,    &mChargeFractionInner,    &mChargeFractionOuter,    &mPadResponseFunctionInner,    &mPadResponseFunctionOuter};
+const Char_t *TpcRSFuncNames[6] = {   "ShaperFunc_I_S01",    "ShaperFunc_O_S01", "ChargeFractionInner_01", "ChargeFractionOuter_01", "PadResponseFunctionInner_01", "PadResponseFunctionOuter_01"}; 
+
+
+
 //static Double_t K3I = 1.5236; // fit data - res. 1.709;// data Full Field; 0.68;  // K3 from E.Mathieson, Fig. 5.3b (pads) for a/s = 2.5e-3 and h/s = 0.5
 //static Double_t K3O = 1.0270; // -"-      1.044;//      -"-       ; 0.89;    // K3 from E.Mathieson, Fig. 5.3a (row) for a/s = 2.5e-3 and h/s = 0.5
 static const Double_t K3IP = 0.68;    // K3 from E.Mathieson, Fig. 5.3b (pads) for a/s = 2.5e-3 and h/s = 0.5
@@ -136,20 +145,31 @@ static const Double_t FWHM = 2.827;  //     FWHM = sqrt(p)*tau*(2*TMath::Sqrt(2*
 // inner  FWHM = 2.827; tau = 0.5545
 // outer  FWHM = 3.038; tau = 0.5533
 static const Double_t CrossTalkInner = 0; // 0.004;
-static const Double_t CrossTalkOuter = 0; // 0.004;
+#ifndef __iTPC__
+static const Int_t    NoOfRows = 45;
 static const Double_t innerSectorAnodeVoltage = 1170;
-static const Double_t outerSectorAnodeVoltage = 1390;
-static const Double_t anodeWireRadius = 1e-3;
-static const Double_t anodeWirePitch  = 0.4;
 static const Double_t innerSectorPadWidth = 0.285;
 static const Double_t innerSectorPadPitch = 0.335;
 static const Double_t innerSectorPadLength = 1.15;
+#else /* __iTPC__ */
+static const Int_t    NoOfRows = 72;
+static const Double_t innerSectorAnodeVoltage = 1070;
+static const Double_t innerSectorPadWidth = 0.45;
+static const Double_t innerSectorPadPitch = 0.5;
+static const Double_t innerSectorPadLength = 1.55;
+#endif /* ! __iTPC__ */
+static const Int_t    NoInnerRows = NoOfRows - 32;
+static const Double_t CrossTalkOuter = 0; // 0.004;
+static const Double_t outerSectorAnodeVoltage = 1390;
+static const Double_t anodeWireRadius = 1e-3;
+static const Double_t anodeWirePitch  = 0.4;
 static const Double_t outerSectorPadWidth = 0.620;
-static const Double_t outerSectorPadPitch = 0.675;
+static const Double_t outerSectorPadPitch = 0.67;
 static const Double_t outerSectorPadLength = 1.95;
 static const Double_t tauIntegraton        =  74.6e-9; // secs
 static const Double_t tauF                 = 394.0e-9; 
 static const Double_t tauP                 = 775.0e-9;
+
 // H(s) = (1 + s*tau_P)/(1 + s*tau_F) => (s + d)/(s - b);
 /*1.6  (s + d) / ((s - a)*(s - b)) => A*exp(a*t) + B*exp(b*t) =
   (a+d)/(a-b)*exp(a*t) + (b+d)/(b-a)*exp(b*t) 
@@ -173,8 +193,8 @@ static const Double_t tauC[2]   = {999.655e-9, 919.183e-9};
 */
 const  Double_t mTimeBinWidth              = 1.06580379191673078e-07;//1.e-6/gStTpcDb->Electronics()->samplingFrequency();
 const  Double_t timeBin = 5.78602945878541108e-01;// (cm)
-const  Double_t pPI = 0.335;
-const  Double_t pPO = 0.670;
+const  Double_t pPI = innerSectorPadPitch;
+const  Double_t pPO = outerSectorPadPitch;
 const  Double_t rI  =  89.9;
 const  Double_t rO  = 156.2;
 const  Double_t lI  = 1.15;
@@ -227,40 +247,8 @@ Bool_t AcceptFile(const TString &File) {
 #endif  
   return ok;
 }
-//________________________________________________________________________________
-void SetInnerPadrows() {
-  if (! mChargeFractionInner )      mChargeFractionInner      = (TF1 *) gDirectory->Get("ChargeFractionInner_01");
-  if (! mChargeFractionOuter )      mChargeFractionOuter      = (TF1 *) gDirectory->Get("ChargeFractionOuter_01");
-  if (! mPadResponseFunctionInner)  mPadResponseFunctionInner = (TF1 *) gDirectory->Get("PadResponseFunctionInner_01");
-  if (! mPadResponseFunctionOuter)  mPadResponseFunctionOuter = (TF1 *) gDirectory->Get("PadResponseFunctionOuter_01");
-  if (! mShaperResponseInner)       mShaperResponseInner      = (TF1 *) gDirectory->Get("ShaperFunc_I_S01");
-  if (! mShaperResponseOuter)       mShaperResponseOuter      = (TF1 *) gDirectory->Get("ShaperFunc_O_S01");
-  if (! mShaperResponseOuter) {
-    TSeqCollection *files = gROOT->GetListOfFiles();
-    TIter next(files);
-    TFile *f = 0;
-    while ( (f = (TFile *) next()) ) { 
-      if (! mChargeFractionInner )      mChargeFractionInner      = (TF1 *) f->Get("ChargeFractionInner_01");
-      if (! mChargeFractionOuter )      mChargeFractionOuter      = (TF1 *) f->Get("ChargeFractionOuter_01");
-      if (! mPadResponseFunctionInner)  mPadResponseFunctionInner = (TF1 *) f->Get("PadResponseFunctionInner_01");
-      if (! mPadResponseFunctionOuter)  mPadResponseFunctionOuter = (TF1 *) f->Get("PadResponseFunctionOuter_01");
-      if (! mShaperResponseInner)       mShaperResponseInner      = (TF1 *) f->Get("ShaperFunc_I_S01");
-      if (! mShaperResponseOuter)       mShaperResponseOuter      = (TF1 *) f->Get("ShaperFunc_O_S01");
-    }
-  }
-  if (NoInnerRows > 0) return;
-  TH3 *h3 = (TH3 *) gDirectory->Get("SecRow3");
-  if (! h3) {
-    NoOfRows = 45;
-  } else {
-    NoOfRows = h3->GetNbinsY();
-  }
-  NoInnerRows = NoOfRows - 32;
-  cout << "SetInnerPadrows: NoInnerRows = " << NoInnerRows << "\tNoOfRows = " << NoOfRows << endl;
-  assert(NoInnerRows >= 13);
-}
 //--------------------------------------------------------------------------------
-void TpcT(const Char_t *files="*.root", const Char_t *opt = "S", const Char_t *Out = ""){//, const Char_t *Time = "20090415.000000") {
+void TpcT(const Char_t *files="*.root", const Char_t *opt = "T", const Char_t *Out = ""){//, const Char_t *Time = "20090415.000000") {
   //	   Int_t ev, Double_t tanCut, Int_t NpadCut, Double_t pMomin, Double_t pMomax) {
 #ifdef __useGainT0__
   gSystem->Load("libStDb_Tables.so");
@@ -287,7 +275,7 @@ void TpcT(const Char_t *files="*.root", const Char_t *opt = "S", const Char_t *O
 	iter.AddFile(file); 
 	NFiles++; 
 	file1 = file;
-	SetInnerPadrows();
+	MakeFunctions();
       }
     }
     delete f;
@@ -937,7 +925,7 @@ Double_t ConvolutionF(Double_t *x, Double_t *par) {
     pfunc->SetParameter(4,par[9]);
   }
   else if (icase == 2) {
-    pfunc = mShaperResponse;
+    pfunc = mShaperResponseOuter; // <<<<<<<<<<
     pfunc->SetParameter(0,par[8]); // tau
     pfunc->SetParameter(2,par[7]); // FWHM
     pfunc->SetParameter(3,par[5]); // t0
@@ -987,7 +975,7 @@ Double_t ConvGausShaperF(Double_t *x, Double_t *par) {
     proj->Draw();
     proj->Fit("tf","er","",-2.5,2.5);
    */
-  TF1* shape = mShaperResponse;
+  TF1* shape = mShaperResponseOuter;  // <<<<<<<<<<
   assert(shape);
 #if 0
   if (! shape) {
@@ -1058,7 +1046,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
 	iter.AddFile(file); 
 	NFiles++; 
 	file1 = file;
-	SetInnerPadrows();
+	MakeFunctions();
       } else {
 	cout << "TpcT Tree is missing in " << f->GetName() << endl;
       }
@@ -1644,7 +1632,7 @@ void TpcTPads(const Char_t *files="*.root", const Char_t *Out = "") {
       iter.AddFile(file); 
       NFiles++; 
       file1 = file;
-      SetInnerPadrows();
+      MakeFunctions();
     }
     delete f;
   }
@@ -2516,89 +2504,51 @@ Fit outer_1M    Fitted value of par[1]=Mean
     }
   }
 }
+//
+#ifndef __CINT__
+#define CheckParameter(FUNC,PARNO,PARAM) \
+  if (TMath::Abs(FUNC->GetParameter(PARNO) - PARAM) > 1e-7) {cout << FUNC->GetName() << "(" << #PARNO << ") \t=  "  << FUNC->GetParName(PARNO) << " = " << FUNC->GetParameter(PARNO)  << "\t!= " << #PARAM << " = " << PARAM << endl;}
+
 //________________________________________________________________________________
 void MakeFunctions() {
-#if 0
-  Double_t timeBinMin = -0.5;
-  Double_t timeBinMax = 10.5;
-  if (! mShaperResponse) 
-    mShaperResponse = new TF1("ShaperResponse",ShaperFunc,timeBinMin,timeBinMax,5);  
-  //  Double_t mTau                       = tau; //1.e-9*gStTpcDb->Electronics()->tau();// s 
-  //  mShaperResponse->SetParameters(mTau,mTimeBinWidth,FWHM,   0,     1);
-  mShaperResponse->SetParameters(0.5,        1.,         FWHM,   0,     1);
-  mShaperResponse->SetParNames("#tau","tbWidth",        "FWHM","t0","Norm");
-  Double_t params[12];
-  params[0] = 2.85e-01;//St_tpcPadConfigC::instance()->innerSectorPadWidth(sector);                     // w = width of pad       
-  params[1] = 0.2;//gStTpcDb->WirePlaneGeometry()->innerSectorAnodeWirePadPlaneSeparation(); // h = Anode-Cathode gap   
-  params[2] = 0.4;//gStTpcDb->WirePlaneGeometry()->anodeWirePitch();                         // s = wire spacing       
-  //    params[3] = anodeWireRadius;                                                         // a = Anode wire radius  
-  params[4] = 0;
-  params[5] = 0;
-  Double_t xmin = 0; 
-  Double_t xmax = 5.0;//4.5*St_tpcPadConfigC::instance()->innerSectorPadWidth(sector);// 4.5 
-  if (! mPadResponseFunctionInner)
-    mPadResponseFunctionInner = new TF1("PadResponseFunctionInner",
-					PadResponseFunc,xmin,xmax,6); 
-  params[3] =  K3IP;  
-  params[4] =  0; // CrossTalk
-  params[5] = innerSectorPadPitch;
-  mPadResponseFunctionInner->SetParameters(params);
-  mPadResponseFunctionInner->SetParNames("innerSectorPadWidth","innerSectorAnodeWirePadPlaneSeparation",
-					 "K3IP","anodeWirePitch",
-					 "CrossTalk","innerSectorPadPitch");
-  //      mPadResponseFunctionInner->Save(xmin,xmax,0,0,0,0);
-  xmax = 5.0;//5*St_tpcPadConfigC::instance()->innerSectorPadLength(sector); // 1.42
-  if (! mChargeFractionInner) 
-    mChargeFractionInner = new TF1("ChargeFractionInner",
-				   PadResponseFunc,xmin,xmax,5);
-  params[0] = 1.15;//St_tpcPadConfigC::instance()->innerSectorPadLength(sector);
-  params[3] = K3OR;
-  params[4] =  0; // CrossTalk
-  mChargeFractionInner->SetParameters(params);
-  mChargeFractionInner->SetParNames("innerSectorPadLength","innerSectorAnodeWirePadPlaneSeparation",
-				    "anodeWirePitch","K3OR",
-				    "CrossTalk","innerSectorPadPitch");
-  //  mChargeFractionInner->Save(xmin,xmax,0,0,0,0);
-  xmax = 5;//5.*St_tpcPadConfigC::instance()->outerSectorPadWidth(sector); // 3.
-  if (! mPadResponseFunctionOuter) 
-    mPadResponseFunctionOuter = new TF1("PadResponseFunctionOuter",
-					PadResponseFunc,xmin,xmax,6); 
-  params[0] = 6.2e-01;//St_tpcPadConfigC::instance()->outerSectorPadWidth(sector);                    // w = width of pad       
-  params[1] = 0.4;//gStTpcDb->WirePlaneGeometry()->outerSectorAnodeWirePadPlaneSeparation(); // h = Anode-Cathode gap   
-  params[2] = 0.4;//gStTpcDb->WirePlaneGeometry()->anodeWirePitch();                         // s = wire spacing       
-  //      params[3] = gStTpcDb->WirePlaneGeometry()->anodeWireRadius();                        // a = Anode wire radius  
-  params[3] = K3OP;    // K3 from E.Mathieson, Fig. 5.3b (pads) for a/s = 2.5e-3 and h/s = 1
-  params[4] =  0; // CrossTalk
-  params[5] = outerSectorPadPitch;
-  mPadResponseFunctionOuter->SetParameters(params);
-  mPadResponseFunctionOuter->SetParNames("outerSectorPadWidth","outerSectorAnodeWirePadPlaneSeparation",
-					 "anodeWirePitch","K3OP",
-					 "CrossTalk","outerSectorPadPitch");
-  //    mPadResponseFunctionOuter->Save(xmin,xmax,0,0,0,0);
-  xmax = 5;//5*St_tpcPadConfigC::instance()->outerSectorPadLength(sector); // 1.26
-  if (! mChargeFractionOuter) 
-    mChargeFractionOuter = new TF1("ChargeFractionOuter",
-				   PadResponseFunc,xmin,xmax,5);
-  params[0] = 1.95; //St_tpcPadConfigC::instance()->outerSectorPadLength(sector);
-  params[3] =  K3OR;    // K3 from E.Mathieson, Fig. 5.3a (row) for a/s = 2.5e-3 and h/s = 1.0
-  params[4] =  0; // CrossTalk
-  mChargeFractionOuter->SetParameters(params);
-  mChargeFractionOuter->SetParNames("outerSectorPadLength","outerSectorAnodeWirePadPlaneSeparation",
-				    "anodeWirePitch","K3OR",
-				    "CrossTalk","outerSectorPadPitch");
-#else
   TSeqCollection *files = gROOT->GetListOfFiles();
   TIter next(files);
   TFile *f = 0;
   while ( (f = (TFile *) next()) ) { 
-    if (! mChargeFractionInner )      mChargeFractionInner      = (TF1 *) f->Get("ChargeFractionInner_01");
-    if (! mChargeFractionOuter )      mChargeFractionOuter      = (TF1 *) f->Get("ChargeFractionOuter_01");
-    if (! mPadResponseFunctionInner)  mPadResponseFunctionInner = (TF1 *) f->Get("PadResponseFunctionInner_01");
-    if (! mPadResponseFunctionOuter)  mPadResponseFunctionOuter = (TF1 *) f->Get("PadResponseFunctionOuter_01");
-    if (! mShaperResponseInner)       mShaperResponseInner      = (TF1 *) f->Get("ShaperFunc_I_S01");
-    if (! mShaperResponseOuter)       mShaperResponseOuter      = (TF1 *) f->Get("ShaperFunc_O_S01");
+    for (Int_t i = 0; i < 6; i++) {
+      if (! *TpcRSFunc[i]) *TpcRSFunc[i] = (TF1 *) f->Get(TpcRSFuncNames[i]);
+      if (! *TpcRSFunc[i]) continue;
+      TF1 *F = *TpcRSFunc[i];
+      //  Check parameters consistency 
+      if        ( i == 2) { // ChargeFractionInner
+	CheckParameter(F, 0, innerSectorPadLength);
+	CheckParameter(F, 2, anodeWirePitch);
+	CheckParameter(F, 3, K3IR);
+	CheckParameter(F, 4, CrossTalkInner);
+	//	CheckParameter(F, 5, innerSectorPadPitch);
+      } else if ( i == 3) { // ChargeFractionOuter
+	CheckParameter(F, 0, outerSectorPadLength);
+	CheckParameter(F, 2, anodeWirePitch);
+	CheckParameter(F, 3, K3OR);
+	CheckParameter(F, 4, CrossTalkOuter);
+	//	CheckParameter(F, 5, outerSectorPadPitch);
+      } else if ( i == 4) { // mPadResponseFunctionInner
+	//	if (TMath::Abs(F->GetParameter(0) - innerSectorPadPitch) cout << TpcRSFunc[i]->GetName() << "\t[0] = " << F->GetParameter(0)  << " != innerSectorPadPitch = " << innerSectorPadPitch << endl;
+	CheckParameter(F, 0, innerSectorPadWidth);
+	CheckParameter(F, 2, anodeWirePitch);
+	CheckParameter(F, 3, K3IP);
+	CheckParameter(F, 4, CrossTalkInner);
+	CheckParameter(F, 5, innerSectorPadPitch);
+      } else if ( i == 5) { // mPadResponseFunctionOuter
+	CheckParameter(F, 0, outerSectorPadWidth);
+	CheckParameter(F, 2, anodeWirePitch);
+	CheckParameter(F, 3, K3OP);
+	CheckParameter(F, 4, CrossTalkOuter);
+	CheckParameter(F, 5, outerSectorPadPitch);
+      }
+    }
   }
-#endif
+
   //  mChargeFractionOuter->Save(xmin,xmax,0,0,0,0);
   if (! mConvolution) 
     mConvolution = new TF1("Convolution",ConvolutionF,-8,8,19);
@@ -2614,15 +2564,17 @@ void MakeFunctions() {
   mConvolution->SetParName(9,"CrossTalk"); mConvolution->FixParameter(9,0);
   mConvolution->SetParName(10,"frac"); mConvolution->FixParameter(10,0);  
   mConvolution->SetParName(11,"#Sigma"); mConvolution->FixParameter(11,0); 
-  mConvolution->SetParName(12,"anodeWirePitch"); mConvolution->FixParameter(12,0.4); 
+  mConvolution->SetParName(12,"anodeWirePitch"); mConvolution->FixParameter(12,anodeWirePitch); 
   mConvolution->SetParName(13,"innerSectorAnodeWirePadPlaneSeparation"); mConvolution->FixParameter(13,0.2); 
-  mConvolution->SetParName(14,"innerSectorPadWidth"); mConvolution->FixParameter(14,2.85e-01); 
+  mConvolution->SetParName(14,"innerSectorPadWidth"); mConvolution->FixParameter(14,innerSectorPadWidth); 
   mConvolution->SetParName(15,"innerSectorPadPitch"); mConvolution->FixParameter(15,innerSectorPadPitch);
   
   mConvolution->SetParName(16,"outerSectorAnodeWirePadPlaneSeparation"); mConvolution->FixParameter(16,0.4); 
-  mConvolution->SetParName(17,"outerSectorPadWidth"); mConvolution->FixParameter(17,6.2e-01); 
+  mConvolution->SetParName(17,"outerSectorPadWidth"); mConvolution->FixParameter(17,outerSectorPadWidth); 
   mConvolution->SetParName(18,"outerSectorPadPitch"); mConvolution->FixParameter(18,outerSectorPadPitch);
 }
+#undef CheckParameter
+#endif /* __CINT__ */
 //_______________________________________________________________________________
 void FitSlices(const Char_t *name="OuterPadRc", const Char_t *opt="K3", Int_t iy=0) {
   TDirectory *fIn = gDirectory;
@@ -2638,21 +2590,21 @@ void FitSlices(const Char_t *name="OuterPadRc", const Char_t *opt="K3", Int_t iy
   TF1 *gd = 0;
   if (Name.Contains("Pad",TString::kIgnoreCase)) {
     if (Name.Contains("Inner",TString::kIgnoreCase)) 
-      gd = new TF1("gdI",Form("([0]*[0]+[1]*[1]*(209.3-abs(x)))/(%f*%f)",pPI,pPI),-210,210); // to Ground wires
+      gd = new TF1("gdI",Form("([0]*[0]+TMath::Abs([1])*[1]*abs((208.707-abs(x))))/(%f*%f)",pPI,pPI),-210,210); // to Ground wires
     if (Name.Contains("Outer",TString::kIgnoreCase)) 
-      gd = new TF1("gdO",Form("([0]*[0]+[1]*[1]*(209.3-abs(x)))/(%f*%f)",pPO,pPO),-210,210);
+      gd = new TF1("gdO",Form("([0]*[0]+TMath::Abs([1])*[1]*abs((208.707-abs(x))))/(%f*%f)",pPO,pPO),-210,210);
     if (gd) {
       gd->SetParName(0,"#sigma_{C}");
       gd->SetParName(1,"#sigma_{D}");
       gd->SetParLimits(0,0,10.);
-      gd->SetParLimits(1,0,10.);
+      gd->SetParLimits(1,-10.0,10.);
     }
   }
   if (Name.Contains("Time",TString::kIgnoreCase)) {
     if (Name.Contains("Outer",TString::kIgnoreCase)) 
-      gd = new TF1("gdOT",Form("([0]*[0]+[1]*[1]*(209.3-abs(x)) + %f*x*x)/(%f*%f)",lO*lO/(rO*rO)/12.,timeBin,timeBin),-210,210);
+      gd = new TF1("gdOT",Form("([0]*[0]+[1]*[1]*abs((208.707-abs(x))) + %f*x*x)/(%f*%f)",lO*lO/(rO*rO)/12.,timeBin,timeBin),-210,210);
     else 
-      gd = new TF1("gdIT",Form("([0]*[0]+[1]*[1]*(209.3-abs(x)) + %f*x*x)/(%f*%f)",lI*lI/(rI*rI)/12.,timeBin,timeBin),-210,210);
+      gd = new TF1("gdIT",Form("([0]*[0]+[1]*[1]*abs((208.707-abs(x))) + %f*x*x)/(%f*%f)",lI*lI/(rI*rI)/12.,timeBin,timeBin),-210,210);
     if (gd) {
       gd->SetParName(0,"#sigma_{C}");
       gd->SetParName(1,"#sigma_{D}");
@@ -2863,7 +2815,7 @@ void FitSlicesT(const Char_t *name="OuterTimeRc", const Char_t *opt="SigmaSqSpre
   TString Name(h->GetName());
   Name += opt;
   if (! h) return;
-  TF1 *gd = new TF1("gd","[0]*[0]+[1]*[1]*(209.3-abs(x))",-210,210);
+  TF1 *gd = new TF1("gd","[0]*[0]+[1]*[1]*abs((208.707-abs(x)))",-210,210);
   if (gd) {
     gd->SetParName(0,"#sigma_{C}");
     gd->SetParName(1,"#sigma_{D}");
@@ -2872,7 +2824,7 @@ void FitSlicesT(const Char_t *name="OuterTimeRc", const Char_t *opt="SigmaSqSpre
   }
   Double_t lH = lI;
   TProfile *prof = (TProfile *) gDirectory->Get("dLInner");
-  mShaperResponse = mShaperResponseInner;
+  TF1 *mShaperResponse = mShaperResponseInner;
   if (Name.Contains("Outer")) {
     lH = lO;
     prof = (TProfile *) gDirectory->Get("dLOuter");
@@ -3412,7 +3364,7 @@ void Fits(const Char_t *opt="Rc", Int_t tp = -1) {
   //  const Char_t *PadTimeFitOptions[2] = {"ConvNoise","NoiseConv"};
   //  const Char_t *PadTimeFitOptions[2] = {"ConvFWHM","Conv"};
   //  const Char_t *PadTimeFitOptions[2] = {"ConvFWHM","ConvNoise"};
-  SetInnerPadrows();
+  MakeFunctions();
   const Char_t *X[2]                 = {"","X"};
   Int_t ip1 = 0;
   Int_t ip2 = 1;
@@ -3521,7 +3473,7 @@ void TpcTPadSp(const Char_t *Out = "SpXSpZ", const Char_t *files="*.root") {
       iter.AddFile(file); 
       NFiles++; 
       file1 = file;
-      SetInnerPadrows();
+      MakeFunctions();
     }
     delete f;
   }
@@ -4806,6 +4758,11 @@ void MDFerrorParameterization2(const Char_t *treeName = "FitP", Int_t iXZ = 0, I
 }
 //________________________________________________________________________________
 void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA5") {
+  /*
+    root.exe lBichsel.C
+      .L TpcT.C+
+      T0Offsets("*tags.root","offset.root") 
+   */
   TDirIter Dir(files);
   Char_t *file = 0;
   Char_t *file1 = 0;
@@ -4822,7 +4779,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA5") {
       iter.AddFile(file); 
       NFiles++; 
       file1 = file;
-      SetInnerPadrows();
+      MakeFunctions();
     }
     delete f;
   }
@@ -4992,6 +4949,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA5") {
       Int_t IdTruth = fRcHit_mIdTruth[l];
       Int_t row = padrow(fRcHit_mHardwarePosition[l]);
       Int_t sec = sector(fRcHit_mHardwarePosition[l]);
+#if 0 /* y2018 */
       NoInnerRows = 13;
       NoOfRows    = 45;
       if (year == 18) {
@@ -5000,6 +4958,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetLPA5") {
 	 NoInnerRows = 40; 
 	 NoOfRows    = 72;
       }
+#endif
       Int_t k = -1;
       for (Int_t k1 = 0; k1 < fNoMcHit; k1++) {
 	Int_t key = fMcHit_mKey[k1];
