@@ -292,19 +292,19 @@ Int_t Track::Matched() {
       Laser.Mirror < 1 || Laser.Mirror > 7) return iok; 
   iok = 0;
   Int_t status = 0;
-  if (TMath::Abs(dU.x()) > 0.05) status |= 1 << 3;
-  if (TMath::Abs(dU.y()) > 0.05) status |= 1 << 4;
+  if (TMath::Abs(dU.x()) > 0.01) status |= 1 << 3;
+  if (TMath::Abs(dU.y()) > 0.10) status |= 1 << 4;
   if (thePath < 5 || thePath > 25)    status |= 1 << 5;
   if (mNumberOfFitPointsTpc  < 25)    status |= 1 << 6;
   dTheta = Laser.ThetaG-fgeoOut.dipAngle()-TMath::Pi()/2;
-#if 1
+#if 0
   if (TMath::Abs(dTheta) > 0.030)                  status |= 1 << 7;;
 #endif
   dPhi = Laser.PhiG - fgeoOut.psi();
   if (dPhi >=  TMath::Pi()) dPhi -= 2*TMath::Pi();
   if (dPhi <= -TMath::Pi()) dPhi += 2*TMath::Pi();
   //  if (SectorMirror[m][i].sigma > 0 && TMath::Abs(dPhi) > 5*SectorMirror[m][i].sigma) status |= 1 << 8;
-#if 1
+#if 0
   if ( TMath::Abs(dPhi) > 0.020)  status |= 1 << 9;
 #endif
 #if 0

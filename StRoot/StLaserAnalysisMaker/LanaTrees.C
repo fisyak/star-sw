@@ -386,8 +386,8 @@ void LanaTrees(const Char_t *files="./st_laser_*.laser.root", const Char_t *Out 
 	slope = new TH2D(Form("SL%s",runName.Data()),Form("Slope for run %s",runName.Data()),12,1,25,1600,4,-4);
 	slope->SetBuffer(100000);
 #else
-	dv = new TH2D(Form("DV%s",runName.Data()),Form("Drift Velocity for run %s",runName.Data()),12,1,25,4000,5.4,5.7);
-	slope = new TH2D(Form("SL%s",runName.Data()),Form("Slope for run %s",runName.Data()),12,1,25,8000,-40.,40.);
+	dv = new TH2D(Form("DV%s",runName.Data()),Form("Drift Velocity for run %s",runName.Data()),12,1,25,6000,5.2,5.7);
+	slope = new TH2D(Form("SL%s",runName.Data()),Form("Slope for run %s",runName.Data()),12,1,25,12000,-80.,40.);
 #endif
 	dv->SetXTitle("Sector");
 	dv->SetYTitle("Drift Velocity ");
@@ -638,6 +638,6 @@ TSeqCollection *files = gROOT->GetListOfFiles();
 RunNT->SetMarkerColor(1);
 
 
-laser->Draw("fHits.xyz.mX2:")
+laser->Draw("fHits.xyz.mX3")
 laser->Draw("fHits.xyz.mX2:fHits.xyz.mX1")
 */

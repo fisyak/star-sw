@@ -125,9 +125,9 @@ void Slopes(Int_t n1 = 1, Int_t n2 = 9999) {
     TString plotE;
     TString CutW(cut); CutW += " && fFit.Sector < 13";
     TString CutE(cut); CutE += " && fFit.Sector > 12";
-    Char_t *cutName[3] = {"All ","West","East"};
-    Char_t *plName[2] = {"SS", "dV"};
-    Char_t *FMT[2] = {"%s dV = (%7.2f +/- %7.2f) x 10^3","%s dV = (%10.5f +/- %10.5f) cm/mksec"};
+    const Char_t *cutName[3] = {"All ","West","East"};
+    const Char_t *plName[2] = {"SS", "dV"};
+    const Char_t *FMT[2] = {"%s dV = (%7.2f +/- %7.2f) x 10^3","%s dV = (%10.5f +/- %10.5f) cm/mksec"};
     for (Int_t l = 0; l < 2; l++) {
       c[l]->cd(i+1)->SetLogz(1);
       histN = Form("%s%i",plName[l],run);
@@ -418,9 +418,9 @@ void FillHists(Int_t n1 = 0,const Char_t *Dir = ".") {
     TString plotE;
     TString CutW(cut); CutW += " && fFit.Sector < 13";
     TString CutE(cut); CutE += " && fFit.Sector > 12";
-    Char_t *cutName[3] = {"All ","West","East"};
-    Char_t *plName[2] = {"SS", "dV"};
-    Char_t *FMT[2] = {"%s dV = (%7.2f +/- %7.2f) x 10^3","%s dV = (%10.5f +/- %10.5f) cm/mksec"};
+    const Char_t *cutName[3] = {"All ","West","East"};
+    const Char_t *plName[2] = {"SS", "dV"};
+    const Char_t *FMT[2] = {"%s dV = (%7.2f +/- %7.2f) x 10^3","%s dV = (%10.5f +/- %10.5f) cm/mksec"};
     for (Int_t l = 0; l < 2; l++) {
       c[l]->cd(i+1)->SetLogz(1);
       histN = Form("%s%i",plName[l],run);
