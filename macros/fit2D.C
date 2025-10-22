@@ -14,6 +14,7 @@
 #include "TSystem.h"
 #include "TFitResult.h"
 #include "TFitResultPtr.h"
+#include "Ask.h"
 TF1 *gaus1 = 0, *gaus2 = 0;
 TCanvas *c1 = 0;
 Int_t module = -1;
@@ -177,6 +178,72 @@ void fit2D(TH3 *h3=0) { // dZ:dY:m => (x = m, y = dY, z = dz)
     cout << Line.Data() << endl;  
     Line.ReplaceAll(" +/- ",",");
     out << Line.Data() << endl;
+  }
+  out.close();
+}
+//________________________________________________________________________________
+void fit2Dxy(TH3 *h3=0) { // m:dX:dY)
+  if (! h3) {
+    h3 = (TH3 *) gDirectory->Get("dhdXY");
+  }
+  TString Out("xyMirror.data");
+//   Out += gDirectory->GetName();
+//   Out.ReplaceAll("/","_");
+//   Out.ReplaceAll(".root",".data");
+  ofstream out;
+  if (gSystem->AccessPathName(Out)) out.open(Out, ios::out); //"Results.list",ios::out | ios::app);
+  else                              out.open(Out, ios::app);
+  cout << Out.Data() << endl;
+  out << gSystem->WorkingDirectory() << "/" << gDirectory->GetName() << "/" << Out.Data() << endl;
+  if (! h3) return;
+  TAxis *za = h3->GetZaxis();
+  Int_t nz = za->GetNbins();
+  c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  if (! c1) c1 = new TCanvas("c1","c1",600,1600);
+  c1->Clear();
+  c1->Divide(3,nz);
+  Int_t xy = 0;
+  TString Line;
+  for (module = 0; module < nx; module++) {
+    Int_t ix = module + 1;
+    xa->SetRange(ix,ix);
+    TH2D *h2 = (TH2D *) h3->Project3D(Form("yz_%i",ix-1)); //  y:z = (x = z, y = y); 
+    TF2 *gaus12 = fit2D(h2);
+    Line = Form("/* %10s */",h2->GetName()); ;
+    TF1 *gaus[2] = {gaus1, gaus2};
+    const Char_t *Cxy[2] = {"Y","Z"};
+    for (xy = 0; xy < 2; xy++) {
+      Double_t par[6] = {0};
+      Double_t err[6] = {0};
+      if (gaus[xy]) {gaus[xy]->GetParameters(par); err[1] = gaus[xy]->GetParError(1); err[2] = gaus[xy]->GetParError(2);}
+      if (! xy) Line += "   {";
+      else      Line += "   ,";
+      Line +=  Form("/*  %s */ %7.3f +/- %7.3f, /* s%s */ %7.3f +/- %7.3f", Cxy[xy], par[1], err[1], Cxy[xy], par[2], err[2]);
+    }      
+    Line += ", 0, 0},";
+    cout << Line.Data() << endl;
+    Line.ReplaceAll(" +/- ",",");
+    out << Line.Data() << endl;
+
+    Double_t par[6] = {0};
+    Double_t err[6] = {0};
+    if (gaus12) {
+      gaus12->GetParameters(par); 
+      for (Int_t p = 1; p <= 5; p++) err[p] = gaus12->GetParError(p);
+    }
+    Line = Form("/* %10s */",h2->GetName()); ;
+    for (xy = 0; xy <2; xy++) {
+      if (! xy) Line += " //{";
+      else      Line += "   ,";
+      if (xy == 0) Line +=  Form("/*  %s */ %7.3f +/- %7.3f, /* s%s */ %7.3f +/- %7.3f", Cxy[xy], par[3], err[3], Cxy[xy], par[4], err[4]);
+      else         Line +=  Form("/*  %s */ %7.3f +/- %7.3f, /* s%s */ %7.3f +/- %7.3f", Cxy[xy], par[1], err[1], Cxy[xy], par[2], err[2]);
+    }
+    Line +=  Form(" /* rho */ %7.3f +/- %7.3f},", par[5], err[5]);
+    if (par[2] > 0.45 || par[4] > 0.45) Line += " // ==========  Unreliable";
+    cout << Line.Data() << endl;  
+    Line.ReplaceAll(" +/- ",",");
+    out << Line.Data() << endl;
+   if (! gROOT->IsBatch() && Ask()) break;
   }
   out.close();
 }
