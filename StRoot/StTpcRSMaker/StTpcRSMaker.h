@@ -16,7 +16,12 @@
 using namespace units;
 #endif
 #include "StTpcRawData.h"
+#define __USE_TF1F__
+#ifdef  __USE_TF1F__   
 #include "TF1F.h"
+#else /* ! __USE_TF1F__ */
+typedef TF1 TF1F;
+#endif /* __USE_TF1F__ */
 #include "TH1.h"
 #include "TTree.h"
 #include "StTpcDb/StTpcDb.h"

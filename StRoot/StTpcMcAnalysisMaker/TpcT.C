@@ -169,7 +169,7 @@ static const Double_t outerSectorPadLength = 1.95;
 static const Double_t tauIntegraton        =  74.6e-9; // secs
 static const Double_t tauF                 = 394.0e-9; 
 static const Double_t tauP                 = 775.0e-9;
-
+static Int_t _debug = 0;
 // H(s) = (1 + s*tau_P)/(1 + s*tau_F) => (s + d)/(s - b);
 /*1.6  (s + d) / ((s - a)*(s - b)) => A*exp(a*t) + B*exp(b*t) =
   (a+d)/(a-b)*exp(a*t) + (b+d)/(b-a)*exp(b*t) 
@@ -639,7 +639,8 @@ void TpcT(const Char_t *files="*.root", const Char_t *opt = "T", const Char_t *O
     Double_t tax  = (fRcHit_mMcl_t[0])/64.;
     histB[io]->Fill(pav-pax,tav-tax);
     entry++;
-    static Int_t noEntries2P = 1000;
+    Int_t noEntries2P = 1000000;
+    if (_debug) noEntries2P = 1000;
     if ((entry-1)%noEntries2P == 0) {
       cout << entry << "\t =======================================================" << endl;
       cout << "Sector/Row = " << sector << " / " << row;

@@ -106,12 +106,9 @@ TDataSet *CreateTable() {
   row.transverseDiffusionI  = row.transverseDiffusion/1.08;// J *0.983; // 0.97*
   row.NoElPerAdc            = 335.;   // No. of electrons per 1 ADC count
 #if 0
-  row.OmegaTauScaleI        =  2.145*1.515;// restore in D HC 1.;// 2.145*1.515;  //i; 2.145*1.4;  //h 2.145;  //ad 2.145*1.25;  //b effective reduction of OmegaTau near Inner sector anode wire
-  row.OmegaTauScaleO        =  1.8  *1.201;// -"- HC 1.;// 1.8  *1.201;  //i 1.8  *1.1;    //h 1.8;    //ad 1.8  *1.25;  //b effective reduction of OmegaTau near Outer sector anode wire
-#endif
   // Inner_wire_to_plane_coupling ( 0.533 ) * Inner_wire_to_plane_couplingScale ( 0.843485 )
   // Outer_wire_to_plane_coupling ( 0.512 ) * Outer_wire_to_plane_couplingScale ( 0.725267 )
-  row.SecRowCorIW[0] = row.SecRowCorIE[0] = 0.57692996501735538 + 5.13440e-02 - 0.23 + 2.02654e-01 -1.41451e-01 + -0.14; 
+  row.SecRowCorIW[0] = row.SecRowCorIE[0] = 3.19476965017355452e-010.57692996501735538 + 5.13440e-02 - 0.23 + 2.02654e-01 -1.41451e-01 + -0.14; 
   row.SecRowCorIW[1] = row.SecRowCorIE[1] = -5.40702e-04;
   row.SecRowCorOW[0] = row.SecRowCorOE[0] = 1.11982875000493309-1.27992e-01 + 2.52297e-02 - 0.135 + 1.72299e-01  -1.55654e-01;
   row.SecRowCorOW[1] = row.SecRowCorOE[1] = -3.73511e-04;
@@ -119,6 +116,13 @@ TDataSet *CreateTable() {
   //                                     Inner            3.10477e-01, Outer   2.70452e-01
   // RunXXI/Hijing.2021AuAu200.VMCF
   //                                     Inner            2.93912e-01  Iuter   2.76624e-01    
+#else
+  //                                                      -RC            +MC
+  row.SecRowCorIW[0] = row.SecRowCorIE[0] =  0.3195      + 0.1200      + 0.1611;
+  row.SecRowCorIW[1] = row.SecRowCorIE[1] = -5.40702e-04 - 1.91101e-03  -8.72089e-04;
+  row.SecRowCorOW[0] = row.SecRowCorOE[0] =  0.8987      + 0.0642      + 0.2517;
+  row.SecRowCorOW[1] = row.SecRowCorOE[1] = -3.73511e-04 - 1.07959e-03  -1.35275e-03;
+#endif
   const Double_t RowSigmaTrs[4] = {
     9.13675e-02, 0,  // Inner
     6.29849e-02, 0}; // Outer
