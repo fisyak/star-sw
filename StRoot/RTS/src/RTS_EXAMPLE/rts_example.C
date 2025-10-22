@@ -1863,8 +1863,7 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
 	if(dd->iterate()) {
 	    found = 1;
 	    TriggerDataBlk *trg = (TriggerDataBlk *)dd->Byte;
-
-
+	    
 	    
 	    EvtDescData *evtDesc = (EvtDescData *)(((char *)trg) + swap32(trg->EventDesc_ofl.offset));
 	    int trgDetMask = swap16(evtDesc->trgDetMask);
@@ -1915,8 +1914,17 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
 	    //printf("EvtDescData %d %d %d\n",evtDesc->tcuCtrBunch_hi,evtDesc->DSMAddress,0) ;
 
 
-	    //TrgSumData *trgSum = (TrgSumData *)(((char *)trg) + swap32(trg->Summary_ofl.offset));
+	    TrgSumData *trgSum = (TrgSumData *)(((char *)trg) + swap32(trg->Summary_ofl.offset));
 	    L1_DSM_Data *l1Dsm = (L1_DSM_Data *)(((char *)trg) + swap32(trg->L1_DSM_ofl.offset));
+
+
+	    printf("tinfo: trg=%p(%d) trgSum=%p(%d) l1DSM=%p(%d)\n", 
+		   trg, swap32(trg->totalTriggerLength),
+		   trgSum, swap32(trg->Summary_ofl.length),
+		   l1Dsm, swap32(trg->L1_DSM_ofl.length));
+
+	   
+	    printf("tinfo: %llx L1Results[0..4]: 0x%x 0x%x 0x%x 0x%x\n", rdr->daqbits64, trgSum->L1Result[0], trgSum->L1Result[1], trgSum->L1Result[2], trgSum->L1Result[3]);
 
 
 	    // 3/7/25
@@ -1925,6 +1933,8 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
 	    for(int iii=0;iii<7;iii++) {
 		printf("L1 DSM Data[%d] = 0x%x 0x%x 0x%x 0x%x\n",iii,swap32(array[iii*4]), swap32(array[iii*4+1]), swap32(array[iii*4+2]), swap32(array[iii*4+3]));
 	    }
+
+	    
 
 
 	    u_int bc2 = swap16(l1Dsm->BCdata[2]) ;

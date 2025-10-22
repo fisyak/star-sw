@@ -6,8 +6,8 @@ set top = `basename  ${topdir}`
 set log =  rsynchDAQ.`date +%m%d%y%H`.log;
 rsync -avrz -h                        \
     --include='st_physics_adc*.daq'                  \
-+    --exclude='*.*' \
-     /direct//gpfs01/star/daq/2023/15[1-3] . >>& ${log}
+    --exclude='*.*' \
+     /direct/gpfs01/star/daq/2023/15[1-3] . >>& ${log}
 
 #rsync -avrz -h                        \
 #    --include='st_cosmic*.daq'                  \

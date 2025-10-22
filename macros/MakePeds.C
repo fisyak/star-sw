@@ -1,4 +1,16 @@
 /*
+[rcas6005] ~/work/daq $ rts_example -Ditpc st_pedestal_adc_24151013_raw_0000003.daq | mor
+...
+ITPC ADC 423: sector  1, row  8, pad  26: 421 timebins
+        tb   0 =   76 ADC
+        tb   1 =   76 ADC
+...
+[rcas6005] ~/work/daq $ rts_example -Dtpx st_pedestal_adc_24151013_raw_0000003.daq | more
+...
+TPX: sec 01, row 18, pad 105: 435 pixels
+1 18 105 434 64
+1 18 105 433 63
+...
  rts_example -Dtpx st_pedestal_11003025_raw_1080001.daq > Ped.txt 
  root.exe
  gSystem->Load("libStDb_Tables.so");

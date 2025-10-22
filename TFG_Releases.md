@@ -114,5 +114,6 @@
 <li> TFG25g fix UrQMD                                                    2025-09-05 11:03:46 -0400  (HEAD -> TFG, tag: TFG25g, origin/TFG)
 <li> TFG25h fix B and E Tof Sim                                          2025-09-08 17:47:04 -0400  (HEAD -> TFG, tag: TFG25h)
 <li> TFG25i 2023 TpcRS ntune for RF, RHF, ZF                             2025-10-13 17:44:36 -0400  (HEAD -> TFG, tag: TFG25i)
+<li> TFG25j 2023 TpcRS ntune for RF, RHF, ZF freeze                      2025-10-22 10:57:24 -0400  (HEAD -> TFG, tag: TFG25j)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>

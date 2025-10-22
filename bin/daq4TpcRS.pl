@@ -14,7 +14,7 @@ my $pwd = cwd();
 my $locdir  = File::Basename::basename($pwd);
 $locdir =~ s/TpcRS_//; $locdir =~ s/\..*//; print "locdir = $locdir\n" if ($debug);
 $locdir =~ s/_.*//;                         print "locdir = $locdir\n" if ($debug);
-#if ($locdir == "ZF") {$locdir = "RF";}
+if ($locdir eq "ZF") {print "reset locdir = $locdir => RF\n" if ($debug); $locdir = "RF";}
 print "locdir = $locdir\n" if ($debug);
 my $glob = "";
 if (-d "../" . $locdir) {$glob = "../" . $locdir . "/*.MuDst.root"; print "glob = $glob\n" if ($debug);}

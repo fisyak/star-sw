@@ -1,3 +1,10 @@
+/*
+  foreach d (`ls -1d *C`)
+    cd ${d}
+    root.exe -q -b T0offset.C >& T0offset.log &
+    cd -
+  end
+ */
 #if !defined(__CINT__) || defined(__MAKECINT__)
 //#include <map>
 //#include <array>
@@ -46,7 +53,7 @@ void DrawdT(Int_t k = 0, Int_t group = 3) {
   else    c2 = new TCanvas(cname,ctitle,10,510,700,500);
   TString same1, same2;
   TObjArray *arr = new TObjArray(4);
-  const Char_t *COR[2] {"","Corr"};
+  const Char_t *COR[2] = {"","Corr"};
   const Char_t *IO[2] = {"Inner","Outer"};
   const Char_t *WE[3] = {"All","West","East"};
   TLegend *l1 = new TLegend(0.6,0.6,0.9,0.8);

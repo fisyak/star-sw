@@ -31,6 +31,7 @@
 #include "TDataSetIter.h"
 #include "TDirIter.h"
 #include "TTreeIter.h"
+#include "Chain.C"
 #endif
 static Int_t run = 0;
 static Int_t date = 0;
@@ -38,6 +39,7 @@ static Int_t Time = 0;
 //             Delta/dv  All,West,East
 static Double_t  DVAll[2][3];
 static Double_t dDVAll[2][3];
+TChain *laser = 0;
 //________________________________________________________________________________
 void MakeTable() {
   TString fOut =  Form("tpcDriftVelocity.%8i.%06i.C",date,Time);
@@ -515,7 +517,9 @@ void FillHists(Int_t n1 = 0,const Char_t *Dir = ".") {
   fOut->Write();
 }
 //________________________________________________________________________________
-void Laser(Int_t n1 = -1){
+void Laser(const Char_t *files="*.laser.root",Int_t n1 = -1){
+  laser = Chain(files,"laser");
+  if (! laser) return; 
   //  Slopes();
   FillHists(n1);
 }
