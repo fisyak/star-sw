@@ -17,6 +17,6 @@ namespace Heed {
 /// Simple function for Legendre polynomials.
 /// Implemented only l = 0, 1, 2, 3, 4, 5, 6.
 double polleg(const int l, const double x);
-}
+}  // namespace Heed
 
 #endif

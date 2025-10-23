@@ -1,77 +1,58 @@
-#include <iostream>
-#include <fstream>
-#include <cmath>
-
-#include <TCanvas.h>
-#include <TROOT.h>
 #include <TApplication.h>
-#include <TGraph.h>
+#include <TCanvas.h>
 #include <TH1F.h>
-#include <TAxis.h>
 
-#include "MediumSilicon.hh"
-#include "SolidBox.hh"
-#include "GeometrySimple.hh"
-#include "ComponentConstant.hh"
-#include "Sensor.hh"
-#include "TrackHeed.hh"
-#include "Plotting.hh"
+#include <iostream>
+
+#include "Garfield/ComponentConstant.hh"
+#include "Garfield/MediumSilicon.hh"
+#include "Garfield/Sensor.hh"
+#include "Garfield/TrackHeed.hh"
 
 using namespace Garfield;
 
-int main(int argc, char * argv[]) {
-
+int main(int argc, char* argv[]) {
   TApplication app("app", &argc, argv);
-  plottingEngine.SetDefaultStyle();
 
-  MediumSilicon* si = new MediumSilicon();
-  const double chamberWidth = 50.e-4;
-
-  SolidBox* box = new SolidBox(0., 0., 0., 2., 2., chamberWidth);
-  GeometrySimple* geo = new GeometrySimple();
-  geo->AddSolid(box, si);
+  MediumSilicon si;
 
   // Make a component
-  ComponentConstant* comp = new ComponentConstant();
-  comp->SetGeometry(geo);
-  comp->SetElectricField(0., 0., 20.);
+  ComponentConstant cmp;
+  constexpr double width = 50.e-4;
+  cmp.SetArea(-2, -2, 0, 2, 2, width);
+  cmp.SetMedium(&si);
+  cmp.SetElectricField(0., 0., 20.);
 
   // Make a sensor
-  Sensor* sensor = new Sensor();
-  sensor->AddComponent(comp);
+  Sensor sensor(&cmp);
 
-  TH1F* hNe = new TH1F("hNe", "", 150, 0., 15000.);
-  hNe->StatOverflows();
-  TH1F* hNc = new TH1F("hNc", "", 350, -0.5, 349.5);
-  // Track class
-  TrackHeed track;
+  TH1::StatOverflows(true);
+  TH1F hNe("hNe", ";deposited charge [electrons];entries", 150, 0., 15000.);
+  TH1F hNc("hNc", ";number of clusters;entries", 350, -0.5, 349.5);
 
-  track.SetSensor(sensor);
+  TrackHeed track(&sensor);
   track.SetParticle("pion");
   track.SetBetaGamma(10.);
-  const unsigned int nTracks = 10000;
-  for (unsigned int i = 0; i < nTracks; ++i) {
+  track.Initialise(&si, true);
+  const std::size_t nTracks = 10000;
+  for (std::size_t i = 0; i < nTracks; ++i) {
     if (i % 1000 == 0) std::cout << "Track " << i << "\n";
     track.NewTrack(0., 0., 0., 0., 0., 0., 1.);
-    double x = 0., y = 0., z = 0., t = 0.;
-    int n = 0;
-    double e = 0., dummy = 0.;
-    unsigned int nsum = 0;
-    unsigned int ncls = 0;
-    while (track.GetCluster(x, y, z, t, n, e, dummy)) {
-      nsum += n;
+    std::size_t nsum = 0;
+    std::size_t ncls = 0;
+    for (const auto& cluster : track.GetClusters()) {
+      nsum += cluster.electrons.size();
       ++ncls;
     }
-    hNe->Fill(nsum);
-    hNc->Fill(ncls);
+    hNe.Fill(nsum);
+    hNc.Fill(ncls);
   }
 
-  TCanvas* cNe = new TCanvas("cNe", "", 600, 600);
-  cNe->cd();
-  hNe->Draw("hist");
-  TCanvas* cNc = new TCanvas("cNc", "", 600, 600);
-  cNc->cd();
-  hNc->Draw("hist");
-  app.Run(kTRUE);
-
+  TCanvas cNe("cNe", "", 600, 600);
+  hNe.Draw();
+  cNe.Update();
+  TCanvas cNc("cNc", "", 600, 600);
+  hNc.Draw();
+  cNc.Update();
+  app.Run(true);
 }

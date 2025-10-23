@@ -12,20 +12,6 @@
 
 namespace Heed {
 
-float chispre(float *x, float *p, float *f, long q);
-// here x is a left side of interval on which
-// function p is a constant.
-// last point x[q] is the end of last interval.
-// p and f must have dimensions q.
-// x must have dimension q + 1
-// f is return array.
-// f[n] is normalized integral till the end of n'th interval or till
-// x[n+1].
-// Normalization is such that f[q-1]=1.0;
-// Return value is the true integral.
-
-float chisran(float flat_random_number, float *x, float *f, long q);
-
 double chispre(std::vector<double> &f, int s_allow_zero_f = 0);
 // here intervals are unit
 // function p is a constant along these intervals.
@@ -42,6 +28,6 @@ double chispre(std::vector<double> &f, int s_allow_zero_f = 0);
 // (this have sence only for debug.)
 
 double chisran(double flat_random_number, const std::vector<double> &f);
-}
+}  // namespace Heed
 
 #endif

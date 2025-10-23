@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 // $Id: GarfieldSteppingAction.hh 9999990 2015-12-11 14:47:43Z dpfeiffe $
-// 
+//
 /// \file GarfieldSteppingAction.hh
 /// \brief Definition of the GarfieldSteppingAction class
 
@@ -38,22 +38,22 @@ class GarfieldEventAction;
 
 /// Stepping action class.
 ///
-/// In UserSteppingAction() there are collected the energy deposit and track 
+/// In UserSteppingAction() there are collected the energy deposit and track
 /// lengths of charged particles in Absober and Gap layers and
 /// updated in GarfieldEventAction.
 
-class GarfieldSteppingAction : public G4UserSteppingAction
-{
-public:
-  GarfieldSteppingAction(const GarfieldDetectorConstruction* detectorConstruction,
-                    GarfieldEventAction* eventAction);
+class GarfieldSteppingAction : public G4UserSteppingAction {
+ public:
+  GarfieldSteppingAction(
+      const GarfieldDetectorConstruction* detectorConstruction,
+      GarfieldEventAction* eventAction);
   virtual ~GarfieldSteppingAction();
 
   virtual void UserSteppingAction(const G4Step* step);
-    
-private:
+
+ private:
   const GarfieldDetectorConstruction* fDetConstruction;
-  GarfieldEventAction*  fEventAction;  
+  GarfieldEventAction* fEventAction;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

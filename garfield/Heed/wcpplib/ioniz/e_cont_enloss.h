@@ -18,6 +18,6 @@ double e_cont_enloss(const double ratio_Z_to_A, const double I_eff,
 // To convert it to real values it need to multiply it by real density and
 // by real length.
 //
-}
+}  // namespace Heed
 
 #endif

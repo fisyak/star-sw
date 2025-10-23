@@ -1,149 +1,328 @@
-Signals are calculated using the Shockley-Ramo theorem. 
+Signals are calculated using the Shockley-Ramo theorem \cite{Shockley1938,Ramo1939}. 
 The current \(i\left(t\right)\) induced by a particle with charge 
 \(q\) at a position \(\mathbf{r}\) moving at a velocity \(\mathbf{v}\)
 is given by
-\begin{equation*}
+\begin{equation}\label{Eqn:RamoShockleyWeightingField}
   i\left(t\right) = -q \mathbf{v} \cdot \mathbf{E}_{w}\left(\mathbf{r}\right),
-\end{equation*}
+\end{equation}
 where \(\mathbf{E}_{w}\) is the so-called weighting field for the 
-electrode to be read out. 
+electrode to be read out and the charge induced by particle moving from 
+$\mathbf{r}_{1}$ to $\mathbf{r}_{2}$ is given by
+\begin{equation}\label{Eqn:RamoShockleyWeightingPotential}
+  \int\limits_{t_{1}}^{t_{2}}i\left(t\right)\text{d}t = q\left[\phi_{w}\left(\mathbf{r}_{2}\right) - \phi_{w}\left(\mathbf{r}_{1}\right)\right],
+\end{equation} 
+where $\phi_{w}$ is the weighting potential.
 
 The basic steps for calculating the current induced 
 by the drift of electrons and ions/holes are:
 \begin{enumerate}
   \item
-  Prepare the weighting field for the electrode to be read out. 
+  Prepare the weighting field and/or weighting potential 
+  for the electrode to be read out. 
   This step depends on the field calculation technique 
-  (\textit{i.\,e.} the type of \texttt{Component}) which is used 
+  (\textit{i.\,e.} the type of \texttt{Component}) that is used 
   (see Chapter~\ref{Chap:Components}). 
   \item
   Tell the \texttt{Sensor} that you want to use this 
-  weighting field for the signal calculation. 
-  \begin{lstlisting}
-void Sensor::AddElectrode(ComponentBase* cmp, std::string label);
-  \end{lstlisting}
+  weighting field/potential for the signal calculation. 
+\begin{lstlisting}
+void Sensor::AddElectrode(Component* cmp, std::string label);
+\end{lstlisting}
   where \texttt{cmp} is a pointer to the \texttt{Component} 
-  which calculates the weighting field, and \texttt{label} 
-  (in our example \texttt{"readout"}) is 
-  the name you have assigned to the weighting field in the previous step.
+  which calculates the weighting field/potential, and \texttt{label} 
+  (in our example \texttt{"readout"}) is the name 
+  you have assigned to the weighting field/potential in the previous step.
   \item
-  Setup the binning for the signal calculation.
-  \begin{lstlisting}
-void Sensor::SetTimeWindow(const double tmin, const double tstep, 
-                           const int nbins);
-  \end{lstlisting}
+  Set the binning for the signal calculation.
+\begin{lstlisting}
+void Sensor::SetTimeWindow(const double tmin, const double tstep, const int nbins);
+\end{lstlisting}
   The first parameter in this function is the lower time limit (in ns), 
   the second one is the bin width (in ns), and the last one 
   is the number of time bins.
   \item
-  Switch on signal calculation in the transport classes using 
-  \begin{lstlisting}
-void AvalancheMicroscopic::EnableSignalCalculation();
-void AvalancheMC::EnableSignalCalculation();
-  \end{lstlisting}
   The \texttt{Sensor} then records and accumulates the signals of all 
   avalanches and drift lines which are simulated.
   \item
   The calculated signal can be retrieved using 
-  \begin{lstlisting}
+\begin{lstlisting}
 double Sensor::GetSignal(const std::string label, const int bin);
 double Sensor::GetElectronSignal(const std::string label, const int bin);
 double Sensor::GetIonSignal(const std::string label, const int bin); 
-  \end{lstlisting}
+\end{lstlisting}
   The functions \texttt{GetElectronSignal} and 
   \texttt{GetIonSignal} return the signal induced by negative 
   and positive charges, respectively. \texttt{GetSignal} returns 
   the sum of both electron and hole signals.   
   \item
   After the signal of a given track is finished, call
-  \begin{lstlisting}
+\begin{lstlisting}
 void Sensor::ClearSignal();
-  \end{lstlisting}
+\end{lstlisting}
   to reset the signal to zero.
 \end{enumerate}
 
-For plotting the signal, the class \texttt{ViewSignal} can be used.
+The method 
+\begin{lstlisting}
+void Sensor::PlotSignal(const std::string& label, TPad* pad);
+\end{lstlisting}
+plots the (total) signal for the electrode with identifier \texttt{label} 
+on a pad.
+Internally, this method uses the class \texttt{ViewSignal}. 
+By default, the function
+\begin{lstlisting}
+void ViewSignal::PlotSignal(const std::string& label,
+                            const std::string& optTotal = "t",
+                            const std::string& optPrompt = "",
+                            const std::string& optDelayed = "",
+                            const bool same = false);
+\end{lstlisting} 
+produces the same plot as \texttt{Sensor::PlotSignal}. 
+The three option strings can be used for specifying the components of the 
+signal to be included in the plot. If \texttt{optTotal} is set to \texttt{tei}, the electron-induced signal, the signal induced by ions (or holes) and the sum of the two will be shown. Analogously, the option strings \texttt{optPrompt} and \texttt{optDelayed} define which components (if any) of the 
+prompt and delayed part of the signal should be shown. 
+
 As an illustration of the above recipe consider the following example. 
 \begin{lstlisting}
 // Electrode label
 const std::string label = "readout";
 // Setup the weighting field.
 // In this example we use a FEM field map.
-ComponentAnsys123* fm = new ComponentAnsys123();
+ComponentAnsys123 fm;
 ...
-fm->SetWeightingField("WPOT.lis", label);
+fm.SetWeightingField("WPOT.lis", label);
 
-Sensor* sensor = new Sensor();
-sensor->AddComponent(fm);
-sensor->AddElectrode(fm, label);
+Sensor sensor(&fm);
+sensor.AddElectrode(&fm, label);
 // Setup the binning (0 to 100 ns in 100 steps).
 const double tStart =   0.;
 const double tStop  = 100.;
 const int nSteps = 100;
 const double tStep = (tStop - tStart) / nSteps;
 
-AvalancheMicroscopic* aval = new AvalancheMicroscopic();
-aval->SetSensor(sensor);
-aval->EnableSignalCalculation();
+AvalancheMicroscopic aval(&sensor);
 // Calculate some drift lines.
 ...
 // Plot the induced current.
-ViewSignal* signalView = new ViewSignal(tStart, tStep, nSteps);
-signalView->SetSensor(sensor);
-signalView->Plot(label);
+TCanvas* cS = new TCanvas("cS", "Induced current", 600, 600);
+sensor.PlotSignal(label, cS);
 \end{lstlisting}
 
-\section{Readout Electronics}
+All three transport classes (\texttt{DriftLineRKF}, \texttt{AvalancheMC}, \texttt{AvalancheMicroscopic}) offer the choice 
+between using the weighting potential or the weighting field for computing 
+the induced current. The method to be used can be selected using
+\begin{lstlisting}
+void DriftLineRKF::UseWeightingPotential(const bool on = true);
+void AvalancheMC::UseWeightingPotential(const bool on = true);
+void AvalancheMicroscopic::UseWeightingPotential(const bool on = true);
+\end{lstlisting} 
+
+The weighting potential method (which is the default) 
+should be used if one wants to ensure that 
+the integral of the current is equal to the collected charge.
+It takes $\phi_{w}$ at the start and end of each step $j \rightarrow j + 1$ along the drift path
+and calculates the average current $q\Delta\phi_{w}/\left(t_{j+1} - t_{j}\right)$. 
+For electron drift lines calculated using \texttt{DriftLineRKF}, 
+$q$ is weighted by the avalanche size at this drift line step.
+
+The implementations of the weighting field method are slightly different 
+for \texttt{DriftLineRKF}, \texttt{AvalancheMC}, and \texttt{AvalancheMicroscopic}.
+For drift lines calculated using \texttt{AvalancheMicroscopic}, the signal 
+is assumed to be constant between subsequent drift line points 
+and the average velocity 
+$\mathbf{v} = \left(\mathbf{x}_{j + 1} - \mathbf{x}_{j}\right) / \left(t_{j + 1} - t_{j}\right)$ along a drift line segment is used.
+By default, the weighting field is evaluated at the mid-point of a 
+drift line segment. 
+Using 
+\begin{lstlisting}
+void AvalancheMicroscopic::EnableWeightingFieldIntegration(const bool on = true);
+\end{lstlisting} 
+one can request 6-point Gaussian integration of the weighting field 
+over a drift line segment.
+
+For drift lines calculated using \texttt{DriftLineRKF} or \texttt{AvalancheMC},
+the times $t_j$, coordinates $\mathbf{r}_j$ and drift velocities $\mathbf{v}_j$
+at each point along the drift line are taken and the induced current 
+\begin{equation*}
+  i_{j} = -q \mathbf{E}_{w}\left(\mathbf{r}_{j}\right) \cdot \mathbf{v}_j
+\end{equation*}
+at these points is computed. In order to calculate the average current 
+in each time bin, the array of $\left(t_{j}, i_{j}\right)$ is interpolated 
+(linearly) and then integrated using Simpson's rule over $2n_\text{avg} + 1$ points. The parameter $n_\text{avg}$ defaults to 2 for \texttt{DriftLineRKF} 
+and 1 for \texttt{AvalancheMC} and can be set using
+\begin{lstlisting}
+void DriftLineRKF::SetSignalAveragingOrder(const std::size_t navg);
+void AvalancheMC::SetSignalAveragingOrder(const std::size_t navg);
+\end{lstlisting} 
+
+\section{Readout electronics}
 
 In order to model the signal-processing by the front-end electronics, the 
-``raw signal'' -- \textit{i.\,e.} the induced current -- 
-can be convoluted with a so-called ``transfer function''. 
+``raw signal'' -- \ie~the induced current -- 
+can be convoluted with a so-called ``transfer function'' (often also referred 
+to as delta response function). 
 The transfer function to be applied can be set using
 \begin{lstlisting}
-void Sensor::SetTransferFunction(double (*f)(double t));
+void Sensor::SetTransferFunction(std::function<double(double)> f);
 \end{lstlisting}
-where \texttt{double f(double t)} is a function provided by the user, 
-or using
+where \texttt{f} is a function provided by the user which takes a \texttt{double} as an argument and returns a \texttt{double}, or using
 \begin{lstlisting}
-void Sensor::SetTransferFunction(std::vector<double> times,
-                                 std::vector<double> values);
+void Sensor::SetTransferFunction(const std::vector<double>& times,
+                                 const std::vector<double>& values);
 \end{lstlisting}
 in which case the transfer function will be calculated by 
 interpolation of the values provided in the table.
-
-In order to convolute the presently stored signal with the 
-transfer function (specified using the above function), 
-the function
+A third option is to use a predefined expression, implemented in 
+the helper class \texttt{Shaper}. Its constructor,
 \begin{lstlisting}
-bool Sensor::ConvoluteSignal();
+Shaper(const std::size_t n, const double tau, const double g, std::string shaperType);
 \end{lstlisting}
-can be called. 
+takes four arguments: $n$ is the order of the shaper, 
+$\tau$ is the time constant, $g$ is the gain factor, 
+and \texttt{shaperType} is either \texttt{"unipolar"} or \texttt{"bipolar"}.
+In the first case (unipolar shaper), the transfer function is given by
+\begin{equation*}
+  f\left(t\right) = g \exp\left(n\right)\left(\frac{t}{t_{p}}\right)^{n}
+                    \exp\left(-t / \tau\right), \qquad t_{p} = n\tau,
+\end{equation*} 
+while for a bipolar shaper the expression
+\begin{equation*}
+  f\left(t\right) = g \frac{\exp\left(r\right)}{\sqrt{n}} \left(n - \frac{t}{\tau}\right)
+                    \left(\frac{t}{t_{p}}\right)^{n - 1} 
+                    \exp\left(-t / \tau\right), \qquad t_{p} = r\tau, \qquad r = n - \sqrt{n}.
+\end{equation*}
+is used. The normalization of these expressions is chosen such that the  
+value of the transfer function at the peaking time $t = t_{p}$ is unity.
+In order to use a transfer function provided by a \texttt{Shaper} class,
+one should call
+\begin{lstlisting}
+Sensor::SetTransferFunction(Shaper& shaper);
+\end{lstlisting}
+
+The presently stored signal can be convoluted with the 
+transfer function (specified using one of the methods above) using 
+\begin{lstlisting}
+bool Sensor::ConvoluteSignal(const std::string& label);
+\end{lstlisting}
+\begin{description}
+  \item[label] name of the electrode
+\end{description}
+The function
+\begin{lstlisting}
+bool Sensor::ConvoluteSignals();
+\end{lstlisting}
+convolutes the signals of all electrodes with the transfer function.
 
 As an example, consider the following transfer function
 \begin{equation*}
-  f\left(t\right) = e\frac{t}{\tau}\text{e}^{1 - t/\tau}, \qquad
-  \tau = 25~\text{ns}
+  f\left(t\right) = \frac{t}{\tau}\exp\left(1 - t/\tau\right), \qquad
+  \tau = 25\,\text{ns},
 \end{equation*}
-
+\ie~a unipolar shaper with $n = 1$. The two code snippets 
+below illustrate different methods for applying this transfer function 
+to the induced signal. In the first one, we pass a pointer to a 
+C-style function to the \texttt{Sensor}.
 \begin{lstlisting}
 double transfer(double t) {
-
-  const double tau = 25.;
+  constexpr double tau = 25.;
   return (t / tau) * exp(1 - t / tau);
-
 }
 
 int main(int argc, char* argv[]) {
 
   // Setup component, media, etc.
-  ...
-  Sensor* sensor = new Sensor();
-  sensor->SetTransferFunction(transfer);
+  // ...
+  Sensor sensor;
+  sensor.SetTransferFunction(transfer);
   // Calculate the induced current.
-  ...
+  // ...
   // Apply the transfer function.
-  sensor->ConvoluteSignal();
-  ...
+  sensor.ConvoluteSignals();
+  // ...
 }
- 
 \end{lstlisting}
+
+In the second one, we use a \texttt{Shaper} object.
+\begin{lstlisting}
+int main(int argc, char* argv[]) {
+
+  // ...
+  Shaper shaper(1, 25., 1., "unipolar");
+  Sensor sensor;
+  sensor.SetTransferFunction(shaper);
+  // ...
+  sensor.ConvoluteSignals();
+  // ...
+}
+\end{lstlisting}
+
+\subsection{Noise}
+Prior to convoluting the induced current with a transfer function, 
+one can add a random noise component to the signal using 
+\begin{lstlisting}
+void AddWhiteNoise(const double enc, const bool poisson = true, const double q0 = 1.);
+\end{lstlisting}
+\begin{description}
+  \item[enc] desired equivalent noise charge (ENC) of the convoluted signal,
+  \item[poisson] flag whether to sample the number of noise pulses 
+    from a Poisson distribution, or to sample the noise charge in each 
+    bin from a Gaussian distribution,
+  \item[q0] amplitude of the noise delta pulses (in electrons). 
+\end{description} 
+
+The algorithm is based on the fact that white current noise is equivalent 
+to a random sequence of delta current pulses with large frequency $\nu$ 
+and with constant amplitude $q_0$. When processing this signal by an 
+amplifier with transfer function $f\left(t\right)$, 
+with a peak normalized to unity, the variance of the output signal becomes
+\begin{equation*}
+  \nu q_{0}^{2} \int f\left(t\right)^{2} \text{d}t.
+\end{equation*}
+We want this to be equivalent to the ENC$^2$, 
+which defines 
+\begin{equation*}
+\nu = \frac{1}{q_{0}^{2}}\frac{\text{ENC}^2}{\int f\left(t\right)^2 \text{d}t}.
+\end{equation*}
+
+The total number of current delta pulses in a period of time $\Delta{t}$ 
+is Poisson distributed with a mean $\nu\Delta{t}$ 
+and a standard deviation $\sqrt{\nu\Delta{t}}$.
+With the flag \texttt{poisson} set to \texttt{true}, a Poisson-distributed 
+number of current pulses is added to the signal in the time window.
+
+For large frequencies, the Poisson distribution becomes a 
+Gaussian distribution, so the standard deviation of charge 
+in a time bin $\Delta{t}$ is 
+\begin{equation*}
+  \sigma_{q} = q_{0} \sqrt{\nu\Delta{t}}.
+\end{equation*}
+With the flag \texttt{poisson} set to \texttt{false}, 
+a Gaussian-distributed noise charge is added to each signal bin.
+
+\section{Delayed signals}
+For detectors with resistive elements, the induced signal as function of time is not only given by the movement of the charges in the drift medium but also by the time dependent reaction of the resistive materials. 
+Computing the induced current in such a configuration requires an extended version of the Ramo-Shockley theorem, 
+\begin{equation}\label{Eqn:ExtendedRamoShockleyWeightingField}
+i\left(t\right) = -q\int\limits_{0}^{t}\text{d}t'\mathbf{H}\left[\mathbf{x}\left(t'\right), t - t'\right]\cdot \dot{\mathbf{x}}\left(t'\right), 
+\end{equation}
+where 
+\begin{equation*}
+\mathbf{H}_{w}\left(\mathbf{x}, t\right) = -\nabla \frac{\partial\phi_{w}\left(\mathbf{x}, t\right)}{\partial t}
+\end{equation*}
+is the time-dependent weighting vector.
+
+The time-dependent weighting potential $\phi_{w}\left(\mathbf{x}, t\right)$
+can be written as the sum of a static prompt component and a dynamic delayed component
+\begin{equation}
+\phi_{w}\left(\mathbf{x}, t\right) = \phi_{w}^{p}\left(\mathbf{x}\right) + \phi_{w}^{d}\left(\mathbf{x}, t\right), \qquad \text{where}~\phi_{w}^{d}\left(\mathbf{x}, 0\right) = 0.
+\end{equation} 
+We can then write Eq.~\eqref{Eqn:ExtendedRamoShockleyWeightingField} as 
+\begin{equation}\label{Eqn:PromptDelayedCurrent}
+i\left(t\right) = \underbrace{-q\mathbf{E}_{w}\left(\mathbf{x}\left(t\right)\right)\cdot \dot{\mathbf{x}}\left(t\right)}_{\text{direct induction}} \underbrace{-q\int\limits_{0}^{t}\text{d}t'\mathbf{H}_{w}^{d}\left[\mathbf{x}\left(t'\right), t - t'\right]\cdot \dot{\mathbf{x}}\left(t'\right)}_{\text{reaction from resistive material}}.
+\end{equation}
+
+The computation of the delayed component of the induced current, \textit{i. e.} the second term in Eq.~\ref{Eqn:PromptDelayedCurrent}, can be activated or deactivated using the function
+\begin{lstlisting}
+void Sensor::EnableDelayedSignal(const bool on);
+\end{lstlisting}
+To be able to compute the delayed component, the dynamic weighting potential or weighting field of the electrode must be defined. The method for doing so depends on the type of \texttt{Component}. At present, \texttt{ComponentComsol}, \texttt{ComponentGrid}, \texttt{ComponentTcad2d}, \texttt{ComponentTcad3d} and \texttt{ComponentUser} support time-dependent weighting fields/potentials.

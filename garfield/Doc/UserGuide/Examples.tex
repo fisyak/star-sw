@@ -1,21 +1,29 @@
 \section{Examples}
 
 Section~\ref{Sec:ExampleTube} discusses the 
-calculation of transport parameters with Magboltz, 
+calculation of transport parameters with \textsc{Magboltz}, 
 the use of analytic field calculation techniques, 
 ``macroscopic'' simulation of electron and ion drift lines, 
 and the calculation of induced signals. 
  
 Microscopic transport of electrons and 
-the use of finite element field maps are dealt with in 
+the use of finite element field maps are introduced in 
 Sec.~\ref{Sec:ExampleGem}. 
 
-Sample macros and further examples can be found on the webpage 
-(\href{http://garfieldpp.web.cern.ch/garfieldpp/}{cern.ch/garfieldpp}). 
+Section~\ref{Sec:ExampleSilicon} presents an example of 
+the simulation of drift lines and induced signals in a 
+silicon sensor.
  
-\subsection{Drift Tube}\label{Sec:ExampleTube}
+Further examples can be found on the webpage 
+(\url{http://garfieldpp.web.cern.ch/garfieldpp/Examples}) and 
+in the directory \texttt{Examples} of the source tree.
+ 
+\subsection{Drift tube}\label{Sec:ExampleTube}
+In this example, we consider a drift tube with an outer diameter of 
+15\,mm and a wire diameter of 50\,\textmu{m}, similar to the 
+ATLAS small-diameter muon drift tubes (sMDTs).
 
-\subsubsection{Gas Table}
+\subsubsection{Gas table}
 First, we prepare a table of transport parameters 
 (drift velocity, diffusion coefficients, Townsend coefficient,
 and attachment coefficient) as a function 
@@ -23,135 +31,203 @@ of the electric field \(\mathbf{E}\)
 (and, in general, also the magnetic field \(\mathbf{B}\) 
 as well as the angle between \(\mathbf{E}\) and \(\mathbf{B}\)).
 In this example, we use a gas mixture of 93\% argon and 7\% 
-carbon dioxide at a pressure of 3~atm and room temperature.
+carbon dioxide at a pressure of 3\,atm and room temperature.
 \begin{lstlisting}
-MediumMagboltz* gas = new MediumMagboltz();
-gas->SetComposition("ar", 93., "co2", 7.);
+MediumMagboltz gas("ar", 93., "co2", 7.);
 // Set temperature [K] and pressure [Torr].
-gas->SetPressure(3 * 760.);
-gas->SetTemperature(293.15);
+gas.SetPressure(3 * 760.);
+gas.SetTemperature(293.15);
 \end{lstlisting} 
 We also have to specify the number of electric fields to be 
 included in the table and the electric field range to be covered. 
-Here we use 20 field points between 100~V/cm and 100~kV/cm 
+Here we use 20 field points between 100\,V\,/\,cm and 100\,kV\,/\,cm 
 with logarithmic spacing. 
 \begin{lstlisting}
-gas->SetFieldGrid(100., 100.e3, 20, true);
+gas.SetFieldGrid(100., 100.e3, 20, true);
 \end{lstlisting}
-Now we run Magboltz to generate the gas table for this grid. 
+Now we run \textsc{Magboltz} to generate a gas table for this grid. 
 As input parameter we have to specify the number of collisions 
 (in multiples of \(10^{7}\)) over which the electron is traced 
-by Magboltz.
+by \textsc{Magboltz}.
 \begin{lstlisting}
 const int ncoll = 10;
-const bool verbose = true;
-gas->GenerateGasTable(ncoll, verbose);
+gas.GenerateGasTable(ncoll);
 \end{lstlisting}
 This calculation will take a while, don't panic. 
 After the calculation is finished, we save the gas table to a 
 file for later use.
 \begin{lstlisting}
-gas->WriteGasFile("ar_93_co2_7.gas");
+gas.WriteGasFile("ar_93_co2_7.gas");
 \end{lstlisting}
+Once we have saved the transport parameters to file 
+we can skip the steps above, 
+and simply import the table in our program using
+\begin{lstlisting}
+gas.LoadGasFile("ar_93_co2_7.gas");
+\end{lstlisting} 
 
+In order to make sure the calculation of the gas table was successful, 
+it is a good idea to plot, for instance, 
+the drift velocity as a function of the electric field.
+\begin{lstlisting}
+ViewMedium mediumView(&gas);
+mediumView.PlotElectronVelocity('e');
+\end{lstlisting}
 \subsubsection{Electric Field}
 For calculating the electric field inside the tube, 
 we use the class \texttt{ComponentAnalyticField} which can handle 
 (two-dimensional) arrangements of wires, planes and tubes.
 \begin{lstlisting}
-ComponentAnalyticField* cmp = new ComponentAnalyticField();
-\end{lstlisting} 
-The \texttt{Component} requires a description of the 
-geometry, that is a list of volumes and associated media.
+ComponentAnalyticField cmp;
+\end{lstlisting}
+We first set the medium inside the active region. 
+\begin{lstlisting}
+cmp.SetMedium(&gas); 
+\end{lstlisting}
+Next we add the elements defining the electric field, 
+\ie~the wire (which we label ``s'') and the tube.
 \begin{lstlisting}
 // Wire radius [cm]
 const double rWire = 25.e-4;
 // Outer radius of the tube [cm]
-const double rTube = 1.46;
-// Half-length of the tube [cm]
-const double lTube = 10.;
-GeometrySimple* geo = new GeometrySimple();
-// Make a tube 
-// (centered at the origin, inner radius: rWire, outer radius: rTube).
-SolidTube* tube = new SolidTube(0., 0., 0., rWire, rTube, lTube);
-// Add the solid to the geometry, together with the medium inside.
-geo->AddSolid(tube, gas);
-// Pass a pointer to the geometry class to the component.
-cmp->SetGeometry(geo); 
-\end{lstlisting}
-Next we setup the electric field.
-\begin{lstlisting}
+const double rTube = 0.71;
 // Voltages
-const double vWire = 3270.;
+const double vWire = 2730.;
 const double vTube =    0.;
-// Add the wire in the center.
-cmp->AddWire(0., 0., 2 * rWire, vWire, "s");
+// Add the wire in the centre.
+cmp.AddWire(0, 0, 2 * rWire, vWire, "s");
 // Add the tube.
-cmp->AddTube(rTube, vTube, 0, "t");
+cmp.AddTube(rTube, vTube, 0);
 \end{lstlisting}
-We want to calculate the signal induced on the wire. 
-Using 
-\begin{lstlisting}
-cmp->AddReadout("s");
-\end{lstlisting}
-we tell the \texttt{Component} to prepare the solution for the weighting field 
-of the wire (which we have given the label ``s'' before).
+%Using 
+%\begin{lstlisting}
+%cmp.AddReadout("s");
+%\end{lstlisting}
+%we tell \texttt{ComponentAnalyticField} to prepare the solution for the 
+%weighting potential and weighting field of the wire 
+%(which we have given the label ``s'' before).
  
 Finally we assemble a \texttt{Sensor} object which acts as an 
 interface to the transport classes discussed below.
 \begin{lstlisting}
-Sensor* sensor = new Sensor();
 // Calculate the electric field using the Component object cmp.
-sensor->AddComponent(cmp);
+Sensor sensor(&cmp);
 // Request signal calculation for the electrode named "s", 
 // using the weighting field provided by the Component object cmp.
-sensor->AddElectrode(cmp, "s"); 
+sensor.AddElectrode(&cmp, "s"); 
 \end{lstlisting}
-
-In this (not very realistic) example, we want to calculate only the 
-electron signal. We set the time interval within which the 
-signal is recorded by the sensor to 2~ns, with a binning of 0.02~ns. 
+We further need to set the time interval within which the
+signal is recorded and the granularity (bin width). 
+In this example, we use use 1000 bins with a width of 0.5\,ns.
 \begin{lstlisting}
-const double tMin = 0.;
-const double tMax = 2.;
-const double tStep = 0.02;
-const int nTimeBins = int((tMax - tMin) / tStep);
-sensor->SetTimeWindow(0., tStep, nTimeBins);
+const double tstep = 0.5;
+const double tmin = -0.5 * tstep;
+const std::size_t nbins = 1000;
+sensor.SetTimeWindow(tmin, tstep, nbins);
 \end{lstlisting}
 
-\subsubsection{Avalanche}
-For simulating the electron avalanche we use the class \texttt{AvalancheMC} 
-which uses the previously computed tables of transport parameters to 
+\subsubsection{Drift lines from a track}
+We use Heed (Sec.~\ref{Sec:Heed}) to simulate the ionisation 
+produced by a charged particle crossing the tube 
+(a 170\,GeV muon in our example).
+\begin{lstlisting}
+TrackHeed track(&sensor);
+track.SetParticle("muon");
+track.SetEnergy(170.e9);
+\end{lstlisting}
+The drift lines of the electrons created along the track are calculated 
+using Runge-Kutta-Fehlberg (RKF) integration,
+implemented in the class \texttt{DriftLineRKF}.
+This method uses the previously computed tables of transport parameters to 
 calculate drift lines and multiplication. 
 \begin{lstlisting}
-AvalancheMC* aval = new AvalancheMC();
-aval->SetSensor(sensor);
-// Switch on signal calculation.
-aval->EnableSignalCalculation();
-// Do the drift line calculation in time steps of 50 ps.
-aval->SetTimeSteps(0.05);
-// Starting position [cm] and time [ns] of the initial electron.
-// The electron is started at 100 micron above the wire.
-const double x0 = 0.;
-const double y0 = rWire + 100.e-4;
-const double z0 = 0.;
-const double t0 = 0.;
-// Simulate an avalanche.
-aval->AvalancheElectron(x0, y0, z0, t0);
+DriftLineRKF drift(&sensor);
+\end{lstlisting}
+Let us consider a track that passes at a distance of 3\,mm
+from the wire centre. After simulating the passage of the charged particle,
+we loop over the ``clusters'' 
+(\ie~the ionizing collisions of the primary particle)
+along the track and calculate a drift line for each electron produced in 
+the cluster.
+\begin{lstlisting}
+const double rTrack = 0.3;
+const double x0 = rTrack;
+const double y0 = -sqrt(rTube * rTube - rTrack * rTrack);
+track.NewTrack(x0, y0, 0, 0, 0, 1, 0);
+// Loop over the clusters along the track.
+for (const auto& cluster : track.GetClusters()) {
+  // Loop over the electrons in the cluster.
+  for (const auto& electron : cluster.electrons) {
+    drift.DriftElectron(electron.x, electron.y, electron.z, electron.t);
+  }
+}
+\end{lstlisting}
+As a check whether the simulation is doing something sensible, 
+it can be useful to visualize the drift lines. 
+Before simulating the charged particle track and
+the electron drift lines, we have to instruct \texttt{TrackHeed} and
+\texttt{DriftLineRKF} to pass the coordinates of the clusters and the 
+points along the drift line to a \texttt{ViewDrift} object
+which then takes care of plotting them.
+\begin{lstlisting}
+// Create a canvas.
+cD = new TCanvas("cD", "", 600, 600);
+ViewDrift driftView;
+driftView.SetCanvas(cD);
+drift.EnablePlotting(&driftView);
+track.EnablePlotting(&driftView);
+\end{lstlisting}
+We use the class \texttt{ViewCell} to draw the
+outline of the tube and the position of the wire on the same plot as the
+drift lines.
+\begin{lstlisting}
+ViewCell cellView(&cmp);
+cellView.SetCanvas(cD);
+\end{lstlisting}
+After we've simulated all drift lines from a charged particle 
+track, we create a plot using
+\begin{lstlisting}
+cellView.Plot2d();
+constexpr bool twod = true;
+constexpr bool drawaxis = false;
+driftView.Plot(twod, drawaxis);
+\end{lstlisting}
+and we plot the current induced on 
+the wire by the drift lines simulated in the previous step.
+\begin{lstlisting}
+TCanvas* cS = new TCanvas("cS", "", 600, 600);
+sensor.PlotSignal("s", cS);
 \end{lstlisting}
 
-Using the class \texttt{ViewSignal}, we plot the current induced on 
-the wire by the avalanche simulated in the previous step.
+\subsubsection{Ion tail}
+So far we have only considered the electron contribution 
+to the induced signal. 
+If we want to include the contribution from the ions produced in 
+the avalanche we need to import a table of ion mobilities
 \begin{lstlisting}
-ViewSignal* signalView = new ViewSignal();
-signalView->SetSensor(sensor);
-signalView->PlotSignal("s");
+gas.LoadIonMobility("IonMobility_Ar+_Ar.txt");
 \end{lstlisting}
+By default, \texttt{DriftLineRKF} will then include the ion tail in the simulation. 
+%\begin{lstlisting}
+%drift.EnableIonTail();
+%\end{lstlisting}
 
 \subsection{GEM}\label{Sec:ExampleGem}
+In this example, we will simulate the drift of electrons and ions 
+in a standard GEM \cite{Sauli2016}, 
+which consists of a 50\,\textmu{m} thick kapton foil 
+coated on both sides with a 5\,\textmu{m} layer of copper, 
+with a hexagonal pattern of holes (outer hole diameter: 70\,\textmu{m}, 
+inner hole diameter: 50\,\textmu{m}, pitch: 140\,\textmu{m}) 
+etched into the foil.
+\subsubsection{Field map}
+As a first step, we need to calculate the electric field in the GEM. 
+In this example, we use Ansys \cite{ANSYS} but the steps for importing 
+field maps from other finite-element solvers like
+Elmer \cite{Elmer} or Comsol \cite{Comsol} are very similar.
 
-\subsubsection{Field Map}
-
+In the following we assume that the output files resulting from the 
+Ansys run are located in the current working directory.
 The initialisation of \texttt{ComponentAnsys123} consists of 
 \begin{itemize}
   \item
@@ -165,66 +241,137 @@ The initialisation of \texttt{ComponentAnsys123} consists of
   setting the appropriate periodicities/symmetries.
 \end{itemize}
 \begin{lstlisting}
-ComponentAnsys123* fm = new ComponentAnsys123();
+ComponentAnsys123 fm;
 // Load the field map.
-fm->Initialise("ELIST.lis", "NLIST.lis", "MPLIST.lis", "PRNSOL.lis", "mm");
+fm.Initialise("ELIST.lis", "NLIST.lis", "MPLIST.lis", "PRNSOL.lis", "mm");
 // Set the periodicities
-fm->EnableMirrorPeriodicityX();
-fm->EnableMirorPeriodicityY();
+fm.EnableMirrorPeriodicityX();
+fm.EnableMirrorPeriodicityY();
 // Print some information about the cell dimensions.
-fm->PrintRange();
+fm.PrintRange();
 \end{lstlisting}
+We need to apply mirror periodicity in $x$ and $y$
+in \texttt{ComponentAnsys123} since we had exploited the symmetry 
+of the geometry and modelled only half a hole in Ansys.
 
-Next we create a \texttt{Sensor} and add the field map 
-component to it
+Using the class \texttt{ViewField}, we do a visual inspection of the 
+field map to make sure it looks sensible.
+We first make a plot of the potential along the hole axis ($z$ axis).
 \begin{lstlisting}
-Sensor* sensor = new Sensor();
-sensor->AddComponent(fm);
+ViewField fieldView(&fm);
+// Plot the potential along the hole axis.
+fieldView.PlotProfile(0., 0., 0.02, 0., 0., -0.02);
 \end{lstlisting}
-
+We also make a contour plot of the potential in the $x - z$ plane.
+\begin{lstlisting}
+const double pitch = 0.014;
+// Set the normal vector (0, -1, 0) of the viewing plane.
+fieldView.SetPlane(0., -1., 0., 0., 0., 0.);
+fieldView.SetArea(-pitch / 2., -0.02, pitch / 2., 0.02);
+fieldView.SetVoltageRange(-160., 160.);
+fieldView.PlotContour();
+\end{lstlisting}
+Next we create a \texttt{Sensor} based on the field map component.
+\begin{lstlisting}
+Sensor sensor(&fm);
+\end{lstlisting}
+Normally, particles are transported until they exit the mesh. 
+To speed up the calculation we restrict the drift region to 
+$-100\upmu\text{m} < z < +250\upmu\text{m}$.
+\begin{lstlisting}
+sensor.SetArea(-5 * pitch, -5 * pitch, -0.01, 5 * pitch,  5 * pitch,  0.025);
+\end{lstlisting}
 \subsubsection{Gas}
-
 We use a gas mixture of 80\% argon and 20\% CO\(_{2}\).
 \begin{lstlisting}
-MediumMagboltz* gas = new MediumMagboltz();
-gas->SetComposition("ar", 80., "co2", 20.);
+MediumMagboltz gas("ar", 80., "co2", 20.);
 // Set temperature [K] and pressure [Torr].
-gas->SetTemperature(293.15);
-gas->SetPressure(760.);
+gas.SetTemperature(293.15);
+gas.SetPressure(760.);
 \end{lstlisting}
+\paragraph{Electron collision rates}
+In this example, we will simulate electron avalanches using 
+a ``microscopic'' Monte Carlo method,
+based on the electron-atom/molecule cross-sections in the database of the 
+\textsc{Magboltz program}. 
+As discussed in more detail in Sec.~\ref{Sec:MicroscopicTracking},
+the algorithm takes as input the collision rates (as function of the 
+electron's kinetic energy) for each scattering mechanism 
+that can take place in the gas.
+The preparation of the tables of collision rates and the interpolation 
+in these tables is done by the class \texttt{MediumMagboltz}, which -- as
+the name suggests -- provides an interface to \textsc{Magboltz}.
 
-In this example, we calculate electron avalanches using 
-``microscopic'' Monte Carlo simulation, based directly on the 
-electron-atom/molecule cross-sections in the Magboltz database. 
- 
+In \texttt{MediumMagboltz} the collision rates are stored on an
+evenly spaced energy grid. The max. energy can be set by the user.
+For avalanche calculations, 50 -- 200\,eV is usually a reasonable choice.
 \begin{lstlisting}
-gas->SetMaxElectronEnergy(200.);
-const bool verbose = true;
-gas->Initialise(verbose);
+gas.SetMaxElectronEnergy(200.);
+gas.Initialise();
 \end{lstlisting}
+\paragraph{Penning transfer}
+Argon includes a number of excitation levels with an excitation energy
+exceeding the ionisation potential of CO$_{2}$ (13.78\,eV).
+These excited states can contribute to the gain,
+since (part of) the excitation energy can be transferred
+to a CO$_2$ molecule through collisions or by photo-ionisation.
 
+In the simulation, this so-called Penning effect can be described 
+in terms of a probability $r$ that an excitation is converted to an 
+ionising collision (Sec.~\ref{Sec:PenningTransfer}).
+\begin{lstlisting}
+// Penning transfer probability.
+const double rPenning = 0.57;
+// Mean distance from the point of excitation.
+const double lambdaPenning = 0.;
+gas.EnablePenningTransfer(rPenning, lambdaPenning, "ar");
+\end{lstlisting}
+\paragraph{Ion transport properties}
+Unlike electrons, ions cannnot be tracked microscopically in Garfield++.
+Moreover, there is no program like \textsc{Magboltz} that can compute  
+the macroscopic transport properties (such as the drift velocity),
+so we have to provide these data ourselves.
+In this example, we use the mobility of Ar$^{+}$ ions in Ar
+as an approximation because there is no literature data for drift in the
+mixture.
+Example files with mobility data for various pure gases are located
+in the \texttt{Data} directory of the project source tree and are copied to the \texttt{install} directory during installation. 
+If you don't provide a full path or if the mobility file is not in your current working directory, \texttt{MediumMagboltz} will look for it in the subdirectory \texttt{share/Garfield/Data} of the \texttt{install} folder.
+\begin{lstlisting}
+gas.LoadIonMobility("IonMobility_Ar+_Ar.txt");
+\end{lstlisting}
+\paragraph{Associating the gas to a field map region}
 In order to track a particle through the detector we have to 
 tell \texttt{ComponentAnsys123} which field map material corresponds 
 to which \texttt{Medium}.
+The gas can be distinguished from the other materials
+(here: kapton and copper) by its dielectric constant, in our case
+$\varepsilon = 1$.
 \begin{lstlisting}
-const int nMaterials = fm->GetNumberOfMaterials();
-for (int i = 0; i < nMaterials; ++i) {
-  const double eps = fm->GetPermmittivity(i);
-  if (fabs(eps - 1.) < 1.e-3) fm->SetMedium(i, gas);
+const size_t nMaterials = fm.GetNumberOfMaterials();
+for (size_t i = 0; i < nMaterials; ++i) {
+  const double eps = fm.GetPermittivity(i);
+  if (fabs(eps - 1.) < 1.e-3) fm.SetMedium(i, &gas);
 }
 // Print a list of the field map materials (for information).
-fm->PrintMaterials();
+fm.PrintMaterials();
 \end{lstlisting}
-
-\subsubsection{Avalanche}
-
-Microscopic tracking is handled by the class 
-\texttt{AvalancheMicroscopic}.
+Instead of iterating over the materials and retrieving the relative 
+dielectric constant, we can also use the helper function \texttt{SetGas}.
 \begin{lstlisting}
-AvalancheMicroscopic* aval = new AvalancheMicroscopic();
-aval->SetSensor(aval);
+fm.SetGas(&gas);
 \end{lstlisting}
-We are now ready to track an electron through the GEM.  
+
+\subsubsection{Electron transport}
+Microscopic tracking is handled by the class 
+\texttt{AvalancheMicroscopic} (Sec.~\ref{Sec:MicroscopicTracking}).
+\begin{lstlisting}
+AvalancheMicroscopic aval(&sensor);
+\end{lstlisting}
+We are now ready to simulate an electron avalanche in the GEM.
+We place the initial electron 200\,\textmu{m} above the centre of the GEM hole 
+and set its initial energy to a typical energy in the electric field 
+of the drift gap.
 \begin{lstlisting}
 // Initial position [cm] and starting time [ns]
 double x0 = 0., y0 = 0., z0 = 0.02;
@@ -235,5 +382,307 @@ double e0 = 0.1;
 // In case of a null vector, the initial direction is randomized.
 double dx0 = 0., dy0 = 0., dz0 = 0.;
 // Calculate an electron avalanche.
-aval->AvalancheElectron(x0, y0, 0, t0, e0, dx0, dy0, dz0);
+aval.AvalancheElectron(x0, y0, 0, t0, e0, dx0, dy0, dz0);
 \end{lstlisting}
+After the calculation, we can extract information such as
+the number of electrons/ions produced in the avalanche
+and the start- and endpoints of all electron trajectories. 
+\begin{lstlisting}
+int ne, ni;
+// Get the number of electrons and ions in the avalanche.
+aval.GetAvalancheSize(ne, ni);
+// Loop over the electrons in the avalanche.
+for (const auto& electron : aval.GetElectrons()) {
+  // Initial position.
+  const auto& p0 = electron.path.front();
+  std::cout << "Electron started at (" 
+            << p0.x << ", " << p0.y << ", " << p0.z << ")\n";
+  // Final position.
+  const auto& p1 = electron.path.back();
+  std::cout << "Electron stopped at (" 
+            << p1.x << ", " << p1.y << ", " << p1.z << ")\n";
+  std::cout << "Status code: " << electron.status << "\n";
+}
+\end{lstlisting}
+\paragraph{Ion transport}
+For tracking the ions, we use the class \texttt{AvalancheMC}, 
+which takes as input the macroscopic drift velocity as 
+function of the electric field and simulates drift lines using a 
+Monte Carlo technique (Sec.~\ref{Sec:DriftLineMC}).
+\begin{lstlisting}
+AvalancheMC drift(&sensor);
+drift.SetDistanceSteps(2.e-4);
+\end{lstlisting}
+After simulating an electron avalanche, we loop over all the electron
+trajectories, and calculate an ion drift line starting from the same
+initial point as the electron.
+\begin{lstlisting}
+// Loop over the avalanche electrons.
+for (const auto& electron : aval.GetElectrons()) {
+  const auto& p0 = electron.path[0];
+  drift.DriftIon(p0.x, p0.y, p0.z, p0.t);
+  // ...
+}
+\end{lstlisting}
+We can subsequently retrieve the endpoint of the ion drift line using
+\begin{lstlisting}
+const auto& p2 = drift.GetIons()[0].path.back()
+std::cout << "Ion stopped at (" 
+          << p2.x << ", " << p2.y << ", " << p2.z << ").\n";
+\end{lstlisting}
+\subsubsection{Visualizing the drift lines}
+To plot the electron and ion drift lines together with the geometry, 
+we use the classes \texttt{ViewDrift} and \texttt{ViewFEMesh}. 
+When setting up the \texttt{AvalancheMicroscopic} and \texttt{AvalancheMC} 
+objects, we need to switch on the storage of the drift line points and 
+attach a pointer to a \texttt{ViewDrift} object.
+\begin{lstlisting}
+ViewDrift driftView;
+aval.EnablePlotting(&driftView);
+drift.EnablePlotting(&driftView);
+\end{lstlisting}
+After having calculated the electron avalanche and ion drift lines, we create a plot using the snippet of code below.
+\begin{lstlisting}
+ViewFEMesh* meshView = new ViewFEMesh(&fm);
+meshView->SetArea(-2 * pitch, -2 * pitch, -0.02,
+                   2 * pitch,  2 * pitch,  0.02);
+// x-z projection
+meshView->SetPlane(0, -1, 0, 0, 0, 0);
+meshView->SetFillMesh(true); 
+// Set the color of the kapton.
+meshView->SetColor(2, kYellow + 3);
+meshView->EnableAxes();
+meshView->SetViewDrift(&driftView);
+meshView->Plot();
+\end{lstlisting}
+\subsection{Silicon sensor}\label{Sec:ExampleSilicon}
+In this example, we will simulate the signal in a 100\,\textmu{m} thick 
+planar silicon sensor due to the passage of a charged particle. 
+We will adopt a coordinate system where the back side of the sensor is at 
+$y = 0$ and the front side (\ie the strip or pixel side) is at $y = 100$\,\textmu{m}.
+
+\subsubsection{Transport properties}
+We start by creating a \texttt{MediumSilicon} object, 
+which provides the transport parameters (\eg drift velocity and 
+diffusion coefficients) of electrons and holes as function 
+of the electric field (and, in general, also the magnetic field, 
+but we will assume that it is zero in this example).
+\begin{lstlisting}
+MediumSilicon si;
+// Set the temperature [K].
+si.SetTemperature(293.15);
+\end{lstlisting}
+Unless the user overrides the default behaviour 
+(by providing a table of velocities at different electric fields), 
+\texttt{MediumSilicon} calculates the drift velocities according to 
+analytic parameterizations. 
+A description of the mobility models is given in Sec.~\ref{Sec:Silicon}.
+In this example, we will use the default parameterizations, 
+which correspond to the default models in Sentaurus Device \cite{Synopsys}. 
+The diffusion coefficients are calculated according to the Einstein relation.
+
+%\subsubsection{Geometry}
+%To describe the shape of our detector, we create a \texttt{SolidBox} object.
+%\begin{lstlisting}
+%// Thickness of the silicon [cm]
+%constexpr double d = 100.e-4;
+%SolidBox box(0, 0.5 * d, 0, 2 * d, 0.5 * d, 2 * d);
+%\end{lstlisting}
+%We then create a \texttt{GeometrySimple} object, and attach the box to it (\ie we pass it a pointer to the \texttt{SolidBox} object), together with the medium inside (\ie a pointer to the \texttt{MediumSilicon} object).
+%\begin{lstlisting}
+%// Set up the geometry.
+%GeometrySimple geo;
+%geo.AddSolid(&box, &si);
+%\end{lstlisting}
+
+\subsubsection{Electric field}
+The active volume in our example is a box with a length of $d = 100$\,\textmu{m} along $y$, centred at $y = 50$\,\textmu{m}, and made of silicon. 
+For accurate calculations of the electric field in a segmented silicon sensor, 
+one normally uses TCAD device simulation programs such as 
+Synopsys Sentaurus Device \cite{Synopsys}. 
+In the present example, we will follow a simplified approach 
+and approximate the electric field by that of an overdepleted pad sensor. 
+In that case, the $x$ and $z$ components of the electric field vanish, 
+and the $y$ component varies linearly between
+\begin{equation*}
+E_y = \frac{V_{\text{bias}} - V_{\text{dep}}}{d}
+\end{equation*}
+at the back side of the sensor ($y = 0$) and
+\begin{equation*}
+E_y = \frac{V_{\text{bias}} + V_{\text{dep}}}{d}
+\end{equation*}
+at the front side of the sensor ($y = d$), where 
+$V_{\text{dep}}$ is the depletion voltage of the sensor and 
+$V_{\text{bias}}$ is the applied bias voltage. 
+In this example, we will use $V_{\text{dep}} = -20$\,V and 
+$V_{\text{bias}} = -50$\,V.
+
+In order to use this expression for the electric field in our simulation, 
+we write a lambda expression
+\begin{lstlisting}
+// Depletion voltage [V]
+constexpr double vdep = -20.;
+auto eLinear = [d,vbias,vdep](const double /*x*/, const double y,
+                              const double /*z*/,
+                              double& ex, double& ey, double& ez) {
+  ex = ez = 0.;
+  ey = (vbias - vdep) / d + 2 * y * vdep / (d * d);
+};
+\end{lstlisting}
+and set up a \texttt{ComponentUser} object 
+which delegates the calculation of the electric field to this function.
+\begin{lstlisting}
+ComponentUser linearField;
+linearField.SetArea(-2 * d, 0., -2 * d, 2 * d, d, 2 * d);
+linearField.SetMedium(&si);
+linearField.SetElectricField(eLinear);
+\end{lstlisting}
+A pointer to this \texttt{Component} is then passed to a \texttt{Sensor}
+which acts as an interface to the transport classes.
+\begin{lstlisting}
+Sensor sensor;
+sensor.AddComponent(&linearField);
+\end{lstlisting}
+
+\subsubsection{Weighting field}
+
+For signal simulations, 
+we need to know not only the actual electric field in the sensor, 
+but also the weighting field of the electrode for which we want to 
+calculate the induced current (Chapter~\ref{Chap:Signals}).
+
+In this example, 
+we will use an analytic expression for the weighting field of a strip, 
+as implemented in the class \texttt{ComponentAnalyticField}. 
+We thus create a \texttt{ComponentAnalyticField} object, 
+define the equipotential planes ($y = 0$ and $y = d$) 
+and set the voltages at these planes to ground and $V = V_{\text{bias}}$. 
+We will not use this class to calculate the ``real'' electric field 
+in the sensor though, so the voltage settings don't actually matter 
+for our purposes.
+\begin{lstlisting}
+ComponentAnalyticField wField;
+wField.SetMedium(&si);
+wField.AddPlaneY(0, vbias, "back");
+wField.AddPlaneY(d, 0, "front");
+\end{lstlisting}
+We now define a strip (55\,\textmu{m} width, centred at $x = 0$) 
+on the front side of the sensor.
+\begin{lstlisting}
+constexpr double pitch = 55.e-4;
+constexpr double halfpitch = 0.5 * pitch;
+wField.AddStripOnPlaneY('z', d, -halfpitch, halfpitch, "strip");
+\end{lstlisting}
+The last argument of the above function is a label, which we will use 
+later to identify the signal induced on the strip.
+Similarly we could have set up the weighting field of a pixel electrode.
+\begin{lstlisting}
+wField.AddPixelOnPlaneY(d, -halfpitch, halfpitch, -halfpitch, halfpitch, "pixel");
+\end{lstlisting}
+
+Finally, we need to instruct the \texttt{Sensor} 
+to use the strip weighting field we just prepared 
+for computing the induced signal
+\begin{lstlisting}
+// Request signal calculation for the electrode named "strip",
+// using the weighting field provided by the Component object wField.
+sensor.AddElectrode(&wField, "strip");
+\end{lstlisting}
+and we need to set the granularity with which we want to record the signal 
+(in our example: 1000 bins between 0 and 10\,ns).
+
+\begin{lstlisting}
+// Set the time bins.
+const std::size_t nTimeBins = 1000;
+const double tmin =  0.;
+const double tmax = 10.;
+const double tstep = (tmax - tmin) / nTimeBins;
+sensor.SetTimeWindow(tmin, tstep, nTimeBins);
+\end{lstlisting}
+
+\subsubsection{Primary ionization and charge carrier transport}
+
+We use Heed (Sec.~\ref{Sec:Heed}) to simulate the electron/hole pairs 
+produced by a 180\,GeV\,/\,$c$ charged pion traversing the sensor.
+\begin{lstlisting}
+TrackHeed track(&sensor);
+// Set the particle type and momentum [eV/c].
+track.SetParticle("pion");
+track.SetMomentum(180.e9);
+\end{lstlisting}
+For transporting the electrons and holes, we use the class \texttt{AvalancheMC}. 
+When setting up the \texttt{AvalancheMC} object, 
+we need to set the step size used for the drift line calculation 
+to a reasonable value. In this example, we use steps of 1\,\textmu{m}. 
+This means that at each step, the electron/hole will be propagated by 
+1\,\textmu{m} in the direction of the drift velocity at the local field, 
+followed by a random step based on the diffusion coefficient.
+\begin{lstlisting}
+AvalancheMC drift(&sensor);
+// Set the step size [cm].
+drift.SetDistanceSteps(1.e-4);
+\end{lstlisting}
+We are now ready to run the simulation. In the snippet below, 
+we simulate a perpendicularly incident charged particle track 
+passing through the centre of the strip ($x = 0$), 
+loop over the electron/hole pairs produced by the particle, 
+and simulate a drift line for each electron and hole.
+\begin{lstlisting}
+double x0 = 0., y0 = 0., z0 = 0., t0 = 0.;
+double dx = 0., dy = 1., dz = 0.; 
+track.NewTrack(x0, y0, z0, t0, dx, dy, dz);
+// Retrieve the clusters along the track.
+for (const auto& cluster : track.GetClusters()) {
+  // Loop over the electrons in the cluster.
+  for (const auto& electron : cluster.electrons) {
+    // Simulate the electron and hole drift lines.
+    drift.DriftElectron(electron.x, electron.y, electron.z, electron.t);
+    drift.DriftHole(electron.x, electron.y, electron.z, electron.t);
+  }
+}
+\end{lstlisting}
+To check whether the results are sensible, 
+it can be instructive to visualize the drift lines 
+using the class \texttt{ViewDrift}.
+\begin{lstlisting}
+ViewDrift driftView;
+driftView.SetArea(-0.5 * d, 0, -0.5 * d, 0.5 * d, d, 0.5 * d);
+track.EnablePlotting(&driftView);
+drift.EnablePlotting(&driftView);
+\end{lstlisting}
+With the plotting option switched on, \texttt{AvalancheMC} 
+will pass the coordinates of all drift line points 
+to a \texttt{ViewDrift} object. 
+After having simulated all drift lines from a track, we can create a plot using
+\begin{lstlisting}
+constexpr bool twod = true;
+driftView.Plot(twod);
+\end{lstlisting}
+Plotting the drift lines can slow down the execution time quite a bit, so it is advisable to switch it off when simulating a large number of tracks.
+
+\subsubsection{Retrieving the signal}
+After having simulated the charge carrier drift lines, 
+we can plot the induced current.
+\begin{lstlisting}
+TCanvas* cSignal = new TCanvas("cSignal", "", 600, 600);
+sensor.PlotSignal("strip", cSignal);
+\end{lstlisting}
+
+To post-process the induced current pulse, one can convolute 
+it with a transfer function that describes the response 
+of the front-end electronics.
+
+Often it can also be useful to save the signal to a file. 
+An example for doing so is given in the code snippet below.
+\begin{lstlisting}
+std::ofstream outfile;
+outfile.open("signal.txt", std::ios::out);
+for (std::size_t i = 0; i < nTimeBins; ++i) {
+  const double t = (i + 0.5) * tstep;
+  const double f = sensor.GetSignal(label, i);
+  const double fe = sensor.GetElectronSignal(label, i);
+  const double fh = sensor.GetIonSignal(label, i);
+  outfile << t << "  " << f << "  " << fe << "  " << fh << "\n";
+}
+\end{lstlisting}
+

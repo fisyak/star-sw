@@ -1,43 +1,46 @@
-#include <cmath>
-#include <iostream>
+#include "Garfield/Random.hh"
 
 #include <TMath.h>
 
-#include "Random.hh"
+#include <cmath>
+#include <iostream>
+
+#include "Garfield/RandomEngineRoot.hh"
 
 namespace {
 
+static const Garfield::RandomEngineRoot randomEngineROOT;
+
 double denlan(const double v) {
-
-  const double p1[5] = {0.4259894875,    -0.1249762550, 0.03984243700,
+  const double p1[5] = {0.4259894875, -0.1249762550, 0.03984243700,
                         -0.006298287635, 0.001511162253};
-  const double q1[5] = {1.0,            -0.3388260629, 0.09594393323,
-                        -0.01608042283, 0.003778942063};
+  const double q1[5] = {1.0, -0.3388260629, 0.09594393323, -0.01608042283,
+                        0.003778942063};
 
-  const double p2[5] = {0.1788541609,    0.1173957403,   0.01488850518,
+  const double p2[5] = {0.1788541609, 0.1173957403, 0.01488850518,
                         -0.001394989411, 0.0001283617211};
-  const double q2[5] = {1.0,           0.7428795082,  0.3153932961,
-                        0.06694219548, 0.008790609714};
+  const double q2[5] = {1.0, 0.7428795082, 0.3153932961, 0.06694219548,
+                        0.008790609714};
 
-  const double p3[5] = {0.1788544503,     0.09359161662,     0.006325387654,
+  const double p3[5] = {0.1788544503, 0.09359161662, 0.006325387654,
                         0.00006611667319, -0.000002031049101};
-  const double q3[5] = {1.0,           0.6097809921,  0.2560616665,
-                        0.04746722384, 0.006957301675};
+  const double q3[5] = {1.0, 0.6097809921, 0.2560616665, 0.04746722384,
+                        0.006957301675};
 
-  const double p4[5] = {0.9874054407, 118.6723273, 849.2794360,
-                        -743.7792444, 427.0262186};
-  const double q4[5] = {1.0,         106.8615961, 337.6496214,
-                        2016.712389, 1597.063511};
+  const double p4[5] = {0.9874054407, 118.6723273, 849.2794360, -743.7792444,
+                        427.0262186};
+  const double q4[5] = {1.0, 106.8615961, 337.6496214, 2016.712389,
+                        1597.063511};
 
-  const double p5[5] = {1.003675074, 167.5702434, 4789.711289,
-                        21217.86767, -22324.94910};
-  const double q5[5] = {1.0,         156.9424537, 3745.310488,
-                        9834.698876, 66924.28357};
+  const double p5[5] = {1.003675074, 167.5702434, 4789.711289, 21217.86767,
+                        -22324.94910};
+  const double q5[5] = {1.0, 156.9424537, 3745.310488, 9834.698876,
+                        66924.28357};
 
-  const double p6[5] = {1.000827619, 664.9143136, 62972.92665,
-                        475554.6998, -5743609.109};
-  const double q6[5] = {1.0,         651.4101098, 56974.73333,
-                        165917.4725, -2815759.939};
+  const double p6[5] = {1.000827619, 664.9143136, 62972.92665, 475554.6998,
+                        -5743609.109};
+  const double q6[5] = {1.0, 651.4101098, 56974.73333, 165917.4725,
+                        -2815759.939};
 
   const double a1[3] = {0.04166666667, -0.01996527778, 0.02709538966};
 
@@ -81,11 +84,28 @@ double denlan(const double v) {
     return u * u * (1 + (a2[0] + a2[1] * u) * u);
   }
 }
+
+double lngamma(const double xx) {
+  // Implementation from CLHEP.
+  constexpr double cof[6] = {76.18009172947146,     -86.50532032941677,
+                             24.01409824083091,     -1.231739572450155,
+                             0.1208650973866179e-2, -0.5395239384953e-5};
+  double x = xx - 1.0;
+  double tmp = x + 5.5;
+  tmp -= (x + 0.5) * std::log(tmp);
+  double ser = 1.000000000190015;
+  for (int j = 0; j <= 5; j++) {
+    x += 1.0;
+    ser += cof[j] / x;
+  }
+  return -tmp + std::log(2.5066282746310005 * ser);
 }
+
+}  // namespace
 namespace Garfield {
 
 double RndmLandau() {
-  const double f[] = {
+  constexpr double f[] = {
       0,         0,         0,         0,         0,         -2.244733,
       -2.204365, -2.168163, -2.135219, -2.104898, -2.076740, -2.050397,
       -2.025605, -2.002150, -1.979866, -1.958612, -1.938275, -1.918760,
@@ -253,7 +273,7 @@ double RndmLandau() {
 
   const double x = RndmUniformPos();
   double u = 1000 * x;
-  int i = u;
+  const int i = static_cast<int>(u);
   u = u - i;
   if (i >= 70 && i <= 800) {
     return f[i - 1] + u * (f[i] - f[i - 1]);
@@ -281,14 +301,25 @@ double RndmLandau() {
 }
 
 double RndmVavilov(const double rkappa, const double beta2) {
-
   double ran = RndmUniform();
-  const double bkmnx1 = 0.02, bkmny1 = 0.05, bkmnx2 = 0.12, bkmny2 = 0.05,
-               bkmnx3 = 0.22, bkmny3 = 0.05, bkmxx1 = 0.1, bkmxy1 = 1,
-               bkmxx2 = 0.2, bkmxy2 = 1, bkmxx3 = 0.3, bkmxy3 = 1,
-               fbkx1 = 2 / (bkmxx1 - bkmnx1), fbkx2 = 2 / (bkmxx2 - bkmnx2),
-               fbkx3 = 2 / (bkmxx3 - bkmnx3), fbky1 = 2 / (bkmxy1 - bkmny1),
-               fbky2 = 2 / (bkmxy2 - bkmny2), fbky3 = 2 / (bkmxy3 - bkmny3);
+  constexpr double bkmnx1 = 0.02;
+  constexpr double bkmny1 = 0.05;
+  constexpr double bkmnx2 = 0.12;
+  constexpr double bkmny2 = 0.05;
+  constexpr double bkmnx3 = 0.22;
+  constexpr double bkmny3 = 0.05;
+  constexpr double bkmxx1 = 0.1;
+  constexpr double bkmxy1 = 1;
+  constexpr double bkmxx2 = 0.2;
+  constexpr double bkmxy2 = 1;
+  constexpr double bkmxx3 = 0.3;
+  constexpr double bkmxy3 = 1;
+  constexpr double fbkx1 = 2 / (bkmxx1 - bkmnx1);
+  constexpr double fbkx2 = 2 / (bkmxx2 - bkmnx2);
+  constexpr double fbkx3 = 2 / (bkmxx3 - bkmnx3);
+  constexpr double fbky1 = 2 / (bkmxy1 - bkmny1);
+  constexpr double fbky2 = 2 / (bkmxy2 - bkmny2);
+  constexpr double fbky3 = 2 / (bkmxy3 - bkmny3);
 
   double ac[14] = {0};
   double hc[9] = {0};
@@ -297,25 +328,42 @@ double RndmVavilov(const double rkappa, const double beta2) {
   double dsigm[5] = {0};
   double alfa[5] = {0};
 
-  // dimension ac(0:13),hc(0:8),h(9)
-  // dimension edgec(2:7),fninv(5),drk[5-1],dsigm[5-1],alfa[2:5-1]
-  // dimension u1(13),u2(13),u3(13),u4(12),u5(13),u6(13),u7( 8),u8(13)
-  // dimension v1(12),v2(12),v3(13),v4(12),v5(13),v6(13),v7(11),v8(11)
-  // dimension w1[13-1],w2(11),w3[13-1],w4(13),w5(13),w6(13),       w8( 8)
-
   double fninv[] = {1, 0.5, 0.33333333, 0.25, 0.2};
 
-  double edgec[] = {0,             0.16666667e+0, 0.41666667e-1, 0.83333333e-2,
-                    0.13888889e-1, 0.69444444e-2, 0.77160493e-3};
+  double edgec[] = {0.,
+                    0.16666667e+0,
+                    0.41666667e-1,
+                    0.83333333e-2,
+                    0.13888889e-1,
+                    0.69444444e-2,
+                    0.77160493e-3};
 
-  double u1[] = {0.25850868e+0, 0.32477982e-1, -0.59020496e-2, 0.,
-                 0.24880692e-1, 0.47404356e-2, -0.74445130e-3, 0.73225731e-2,
-                 0.,            0.11668284e-2, 0.,             -0.15727318e-2,
+  double u1[] = {0.25850868e+0,
+                 0.32477982e-1,
+                 -0.59020496e-2,
+                 0.,
+                 0.24880692e-1,
+                 0.47404356e-2,
+                 -0.74445130e-3,
+                 0.73225731e-2,
+                 0.,
+                 0.11668284e-2,
+                 0.,
+                 -0.15727318e-2,
                  -0.11210142e-2};
 
-  double u2[] = {0.43142611e+0, 0.40797543e-1, -0.91490215e-2, 0.,
-                 0.42127077e-1, 0.73167928e-2, -0.14026047e-2, 0.16195241e-1,
-                 0.24714789e-2, 0.20751278e-2, 0.,             -0.25141668e-2,
+  double u2[] = {0.43142611e+0,
+                 0.40797543e-1,
+                 -0.91490215e-2,
+                 0.,
+                 0.42127077e-1,
+                 0.73167928e-2,
+                 -0.14026047e-2,
+                 0.16195241e-1,
+                 0.24714789e-2,
+                 0.20751278e-2,
+                 0.,
+                 -0.25141668e-2,
                  -0.14064022e-2};
 
   double u3[] = {0.25225955e+0, 0.64820468e-1, -0.23615759e-1, 0.,
@@ -327,18 +375,34 @@ double RndmVavilov(const double rkappa, const double beta2) {
                  -0.46865180e-1, -0.77222986e-2, 0.32241039e-2, 0.89882920e-2,
                  -0.67167236e-2, -0.13049241e-1, 0.18786468e-1, 0.14484097e-1};
 
-  double u5[] = {-0.24864376e-1, -0.10368495e-2, 0.14330117e-2, 0.20052730e-3,
-                 0.18751903e-2,  0.12668869e-2,  0.48736023e-3, 0.34850854e-2,
-                 0.,             -0.36597173e-3, 0.19372124e-2, 0.70761825e-3,
+  double u5[] = {-0.24864376e-1, -0.10368495e-2, 0.14330117e-2,
+                 0.20052730e-3,  0.18751903e-2,  0.12668869e-2,
+                 0.48736023e-3,  0.34850854e-2,  0.,
+                 -0.36597173e-3, 0.19372124e-2,  0.70761825e-3,
                  0.46898375e-3};
 
-  double u6[] = {0.35855696e-1,  -0.27542114e-1, 0.12631023e-1, -0.30188807e-2,
-                 -0.84479939e-3, 0.,             0.45675843e-3, -0.69836141e-2,
-                 0.39876546e-2,  -0.36055679e-2, 0.,            0.15298434e-2,
+  double u6[] = {0.35855696e-1,
+                 -0.27542114e-1,
+                 0.12631023e-1,
+                 -0.30188807e-2,
+                 -0.84479939e-3,
+                 0.,
+                 0.45675843e-3,
+                 -0.69836141e-2,
+                 0.39876546e-2,
+                 -0.36055679e-2,
+                 0.,
+                 0.15298434e-2,
                  0.19247256e-2};
 
-  double u7[] = {0.10234691e+2,  -0.35619655e+1, 0.69387764e+0, -0.14047599e+0,
-                 -0.19952390e+1, -0.45679694e+0, 0.,            0.50505298e+0};
+  double u7[] = {0.10234691e+2,
+                 -0.35619655e+1,
+                 0.69387764e+0,
+                 -0.14047599e+0,
+                 -0.19952390e+1,
+                 -0.45679694e+0,
+                 0.,
+                 0.50505298e+0};
 
   double u8[] = {0.21487518e+2,  -0.11825253e+2, 0.43133087e+1,  -0.14500543e+1,
                  -0.34343169e+1, -0.11063164e+1, -0.21000819e+0, 0.17891643e+1,
@@ -349,9 +413,12 @@ double RndmVavilov(const double rkappa, const double beta2) {
                  0.45091424e-1,  0.80559636e-2,  -0.38974523e-2, 0.,
                  -0.30634124e-2, 0.75633702e-3,  0.54730726e-2,  0.19792507e-2};
 
-  double v2[] = {0.41421789e+0,  -0.30061649e-1, 0.52249697e-2,  0.,
-                 0.12693873e+0,  0.22999801e-1,  -0.86792801e-2, 0.31875584e-1,
-                 -0.61757928e-2, 0.,             0.19716857e-1,  0.32596742e-2};
+  double v2[] = {0.41421789e+0,  -0.30061649e-1,
+                 0.52249697e-2,  0.,
+                 0.12693873e+0,  0.22999801e-1,
+                 -0.86792801e-2, 0.31875584e-1,
+                 -0.61757928e-2, 0.,
+                 0.19716857e-1,  0.32596742e-2};
 
   double v3[] = {0.20191056e+0,  -0.46831422e-1, 0.96777473e-2,  -0.17995317e-2,
                  0.53921588e-1,  0.35068740e-2,  -0.12621494e-1, -0.54996531e-2,
@@ -363,9 +430,18 @@ double RndmVavilov(const double rkappa, const double beta2) {
                  0.24972042e-1,  -0.97751962e-2, 0.26087455e-1,
                  -0.11399062e-1, -0.48282515e-1, -0.98552378e-2};
 
-  double v5[] = {0.16435243e-1,  0.36051400e-1, 0.23036520e-2,  -0.61666343e-3,
-                 -0.10775802e-1, 0.51476061e-2, 0.56856517e-2,  -0.13438433e-1,
-                 0.,             0.,            -0.25421507e-2, 0.20169108e-2,
+  double v5[] = {0.16435243e-1,
+                 0.36051400e-1,
+                 0.23036520e-2,
+                 -0.61666343e-3,
+                 -0.10775802e-1,
+                 0.51476061e-2,
+                 0.56856517e-2,
+                 -0.13438433e-1,
+                 0.,
+                 0.,
+                 -0.25421507e-2,
+                 0.20169108e-2,
                  -0.15144931e-2};
 
   double v6[] = {0.33432405e-1,  0.60583916e-2,  -0.23381379e-2, 0.83846081e-3,
@@ -373,26 +449,40 @@ double RndmVavilov(const double rkappa, const double beta2) {
                  0.21900670e-2,  -0.13202847e-2, -0.45124157e-2, -0.15629454e-2,
                  0.22499176e-3};
 
-  double v7[] = {0.54529572e+1,  -0.90906096e+0, 0.86122438e-1,  0.,
-                 -0.12218009e+1, -0.32324120e+0, -0.27373591e-1, 0.12173464e+0,
-                 0.,             0.,             0.40917471e-1};
+  double v7[] = {
+      0.54529572e+1,  -0.90906096e+0, 0.86122438e-1, 0., -0.12218009e+1,
+      -0.32324120e+0, -0.27373591e-1, 0.12173464e+0, 0., 0.,
+      0.40917471e-1};
 
-  double v8[] = {0.93841352e+1,  -0.16276904e+1, 0.16571423e+0,  0.,
-                 -0.18160479e+1, -0.50919193e+0, -0.51384654e-1, 0.21413992e+0,
-                 0.,             0.,             0.66596366e-1};
+  double v8[] = {
+      0.93841352e+1,  -0.16276904e+1, 0.16571423e+0, 0., -0.18160479e+1,
+      -0.50919193e+0, -0.51384654e-1, 0.21413992e+0, 0., 0.,
+      0.66596366e-1};
 
-  double w1[] = {0.29712951e+0, 0.97572934e-2, 0.,             -0.15291686e-2,
-                 0.35707399e-1, 0.96221631e-2, -0.18402821e-2, -0.49821585e-2,
-                 0.18831112e-2, 0.43541673e-2, 0.20301312e-2,  -0.18723311e-2,
+  double w1[] = {0.29712951e+0,  0.97572934e-2,  0.,
+                 -0.15291686e-2, 0.35707399e-1,  0.96221631e-2,
+                 -0.18402821e-2, -0.49821585e-2, 0.18831112e-2,
+                 0.43541673e-2,  0.20301312e-2,  -0.18723311e-2,
                  -0.73403108e-3};
 
-  double w2[] = {0.40882635e+0, 0.14474912e-1, 0.25023704e-2, -0.37707379e-2,
-                 0.18719727e+0, 0.56954987e-1, 0.,            0.23020158e-1,
-                 0.50574313e-2, 0.94550140e-2, 0.19300232e-1};
+  double w2[] = {0.40882635e+0,
+                 0.14474912e-1,
+                 0.25023704e-2,
+                 -0.37707379e-2,
+                 0.18719727e+0,
+                 0.56954987e-1,
+                 0.,
+                 0.23020158e-1,
+                 0.50574313e-2,
+                 0.94550140e-2,
+                 0.19300232e-1};
 
-  double w3[] = {0.16861629e+0, 0.,            0.36317285e-2,  -0.43657818e-2,
-                 0.30144338e-1, 0.13891826e-1, -0.58030495e-2, -0.38717547e-2,
-                 0.85359607e-2, 0.14507659e-1, 0.82387775e-2,  -0.10116105e-1,
+  double w3[] = {0.16861629e+0,  0.,
+                 0.36317285e-2,  -0.43657818e-2,
+                 0.30144338e-1,  0.13891826e-1,
+                 -0.58030495e-2, -0.38717547e-2,
+                 0.85359607e-2,  0.14507659e-1,
+                 0.82387775e-2,  -0.10116105e-1,
                  -0.55135670e-2};
 
   double w4[] = {0.13493891e+1,  -0.26863185e-2, -0.35216040e-2, 0.24434909e-1,
@@ -400,9 +490,10 @@ double RndmVavilov(const double rkappa, const double beta2) {
                  -0.16209200e-1, -0.37768479e-1, -0.47890063e-1, 0.17778596e-1,
                  0.13179324e-1};
 
-  double w5[] = {0.10264945e+0,  0.32738857e-1,  0.,             0.43608779e-2,
-                 -0.43097757e-1, -0.22647176e-2, 0.94531290e-2,  -0.12442571e-1,
-                 -0.32283517e-2, -0.75640352e-2, -0.88293329e-2, 0.52537299e-2,
+  double w5[] = {0.10264945e+0,  0.32738857e-1,  0.,
+                 0.43608779e-2,  -0.43097757e-1, -0.22647176e-2,
+                 0.94531290e-2,  -0.12442571e-1, -0.32283517e-2,
+                 -0.75640352e-2, -0.88293329e-2, 0.52537299e-2,
                  0.13340546e-2};
 
   double w6[] = {0.29568177e-1,  -0.16300060e-2, -0.21119745e-3, 0.23599053e-2,
@@ -427,19 +518,18 @@ double RndmVavilov(const double rkappa, const double beta2) {
             (0.24533 * beta2 + 0.070152) * wk + (-0.55610 * beta2 - 3.1579);
     ac[8] = (-0.013483 * beta2 - 0.048801) * rkappa +
             (-1.6921 * beta2 + 8.3656) * wk + (-0.73275 * beta2 - 3.5226);
-    drk[1 - 1] = wk * wk;
-    dsigm[1 - 1] = sqrt(rkappa / (1 - 0.5 * beta2));
+    drk[0] = wk * wk;
+    dsigm[0] = sqrt(rkappa / (1 - 0.5 * beta2));
     for (int j = 1; j <= 4; j++) {
-      drk[j + 1 - 1] = drk[1 - 1] * drk[j - 1];
-      dsigm[j + 1 - 1] = dsigm[1 - 1] * dsigm[j - 1];
-      alfa[j + 1 - 1] = (fninv[j - 1] - beta2 * fninv[j + 1 - 1]) * drk[j - 1];
+      drk[j] = drk[0] * drk[j - 1];
+      dsigm[j] = dsigm[0] * dsigm[j - 1];
+      alfa[j] = (fninv[j - 1] - beta2 * fninv[j]) * drk[j - 1];
     }
     hc[0] = log(rkappa) + beta2 + 1. - Gamma;
-    hc[1] = dsigm[1 - 1];
-    hc[2] = alfa[3 - 1] * dsigm[3 - 1];
-    hc[3] = (3 * alfa[2 - 1] * alfa[2 - 1] + alfa[4 - 1]) * dsigm[4 - 1] - 3;
-    hc[4] = (10 * alfa[2 - 1] * alfa[3 - 1] + alfa[5 - 1]) * dsigm[5 - 1] -
-            10 * hc[2];
+    hc[1] = dsigm[0];
+    hc[2] = alfa[2] * dsigm[2];
+    hc[3] = (3 * alfa[1] * alfa[1] + alfa[3]) * dsigm[3] - 3;
+    hc[4] = (10 * alfa[1] * alfa[2] + alfa[4]) * dsigm[4] - 10 * hc[2];
     hc[5] = hc[2] * hc[2];
     hc[6] = hc[2] * hc[3];
     hc[7] = hc[2] * hc[5];
@@ -464,31 +554,25 @@ double RndmVavilov(const double rkappa, const double beta2) {
     const double q2 = y2 * x;
     const double q3 = y3 * x;
     const double pq = x2 * y2;
-    ac[1] = w1[1 - 1] + w1[2 - 1] * x + w1[4 - 1] * x3 + w1[5 - 1] * y +
-            w1[6 - 1] * y2 + w1[7 - 1] * y3 + w1[8 - 1] * xy + w1[9 - 1] * p2 +
-            w1[10 - 1] * p3 + w1[11 - 1] * q2 + w1[12 - 1] * q3 +
-            w1[13 - 1] * pq;
-    ac[2] = w2[1 - 1] + w2[2 - 1] * x + w2[3 - 1] * x2 + w2[4 - 1] * x3 +
-            w2[5 - 1] * y + w2[6 - 1] * y2 + w2[8 - 1] * xy + w2[9 - 1] * p2 +
-            w2[10 - 1] * p3 + w2[11 - 1] * q2;
-    ac[3] = w3[1 - 1] + w3[3 - 1] * x2 + w3[4 - 1] * x3 + w3[5 - 1] * y +
-            w3[6 - 1] * y2 + w3[7 - 1] * y3 + w3[8 - 1] * xy + w3[9 - 1] * p2 +
-            w3[10 - 1] * p3 + w3[11 - 1] * q2 + w3[12 - 1] * q3 +
-            w3[13 - 1] * pq;
-    ac[4] = w4[1 - 1] + w4[2 - 1] * x + w4[3 - 1] * x2 + w4[4 - 1] * x3 +
-            w4[5 - 1] * y + w4[6 - 1] * y2 + w4[7 - 1] * y3 + w4[8 - 1] * xy +
-            w4[9 - 1] * p2 + w4[10 - 1] * p3 + w4[11 - 1] * q2 +
-            w4[12 - 1] * q3 + w4[13 - 1] * pq;
-    ac[5] = w5[1 - 1] + w5[2 - 1] * x + w5[4 - 1] * x3 + w5[5 - 1] * y +
-            w5[6 - 1] * y2 + w5[7 - 1] * y3 + w5[8 - 1] * xy + w5[9 - 1] * p2 +
-            w5[10 - 1] * p3 + w5[11 - 1] * q2 + w5[12 - 1] * q3 +
-            w5[13 - 1] * pq;
-    ac[6] = w6[1 - 1] + w6[2 - 1] * x + w6[3 - 1] * x2 + w6[4 - 1] * x3 +
-            w6[5 - 1] * y + w6[6 - 1] * y2 + w6[7 - 1] * y3 + w6[8 - 1] * xy +
-            w6[9 - 1] * p2 + w6[10 - 1] * p3 + w6[11 - 1] * q2 +
-            w6[12 - 1] * q3 + w6[13 - 1] * pq;
-    ac[8] = w8[1 - 1] + w8[2 - 1] * x + w8[3 - 1] * x2 + w8[5 - 1] * y +
-            w8[6 - 1] * y2 + w8[7 - 1] * y3 + w8[8 - 1] * xy;
+    ac[1] = w1[0] + w1[1] * x + w1[3] * x3 + w1[4] * y + w1[5] * y2 +
+            w1[6] * y3 + w1[7] * xy + w1[8] * p2 + w1[9] * p3 + w1[10] * q2 +
+            w1[11] * q3 + w1[12] * pq;
+    ac[2] = w2[0] + w2[1] * x + w2[2] * x2 + w2[3] * x3 + w2[4] * y +
+            w2[5] * y2 + w2[7] * xy + w2[8] * p2 + w2[9] * p3 + w2[10] * q2;
+    ac[3] = w3[0] + w3[2] * x2 + w3[3] * x3 + w3[4] * y + w3[5] * y2 +
+            w3[6] * y3 + w3[7] * xy + w3[8] * p2 + w3[9] * p3 + w3[10] * q2 +
+            w3[11] * q3 + w3[12] * pq;
+    ac[4] = w4[0] + w4[1] * x + w4[2] * x2 + w4[3] * x3 + w4[4] * y +
+            w4[5] * y2 + w4[6] * y3 + w4[7] * xy + w4[8] * p2 + w4[9] * p3 +
+            w4[10] * q2 + w4[11] * q3 + w4[12] * pq;
+    ac[5] = w5[0] + w5[1] * x + w5[3] * x3 + w5[4] * y + w5[5] * y2 +
+            w5[6] * y3 + w5[7] * xy + w5[8] * p2 + w5[9] * p3 + w5[10] * q2 +
+            w5[11] * q3 + w5[12] * pq;
+    ac[6] = w6[0] + w6[1] * x + w6[2] * x2 + w6[3] * x3 + w6[4] * y +
+            w6[5] * y2 + w6[6] * y3 + w6[7] * xy + w6[8] * p2 + w6[9] * p3 +
+            w6[10] * q2 + w6[11] * q3 + w6[12] * pq;
+    ac[8] = w8[0] + w8[1] * x + w8[2] * x2 + w8[4] * y + w8[5] * y2 +
+            w8[6] * y3 + w8[7] * xy;
     ac[0] = -3.05;
   } else if (rkappa >= 0.12) {
     itype = 3;
@@ -507,31 +591,26 @@ double RndmVavilov(const double rkappa, const double beta2) {
     const double q2 = y2 * x;
     const double q3 = y3 * x;
     const double pq = x2 * y2;
-    ac[1] = v1[1 - 1] + v1[2 - 1] * x + v1[3 - 1] * x2 + v1[5 - 1] * y +
-            v1[6 - 1] * y2 + v1[7 - 1] * y3 + v1[9 - 1] * p2 + v1[10 - 1] * p3 +
-            v1[11 - 1] * q2 + v1[12 - 1] * q3;
-    ac[2] = v2[1 - 1] + v2[2 - 1] * x + v2[3 - 1] * x2 + v2[5 - 1] * y +
-            v2[6 - 1] * y2 + v2[7 - 1] * y3 + v2[8 - 1] * xy + v2[9 - 1] * p2 +
-            v2[11 - 1] * q2 + v2[12 - 1] * q3;
-    ac[3] = v3[1 - 1] + v3[2 - 1] * x + v3[3 - 1] * x2 + v3[4 - 1] * x3 +
-            v3[5 - 1] * y + v3[6 - 1] * y2 + v3[7 - 1] * y3 + v3[8 - 1] * xy +
-            v3[9 - 1] * p2 + v3[10 - 1] * p3 + v3[11 - 1] * q2 +
-            v3[12 - 1] * q3 + v3[13 - 1] * pq;
-    ac[4] = v4[1 - 1] + v4[2 - 1] * x + v4[3 - 1] * x2 + v4[4 - 1] * x3 +
-            v4[5 - 1] * y + v4[6 - 1] * y2 + v4[7 - 1] * y3 + v4[8 - 1] * xy +
-            v4[9 - 1] * p2 + v4[10 - 1] * p3 + v4[11 - 1] * q2 +
-            v4[12 - 1] * q3;
-    ac[5] = v5[1 - 1] + v5[2 - 1] * x + v5[3 - 1] * x2 + v5[4 - 1] * x3 +
-            v5[5 - 1] * y + v5[6 - 1] * y2 + v5[7 - 1] * y3 + v5[8 - 1] * xy +
-            v5[11 - 1] * q2 + v5[12 - 1] * q3 + v5[13 - 1] * pq;
-    ac[6] = v6[1 - 1] + v6[2 - 1] * x + v6[3 - 1] * x2 + v6[4 - 1] * x3 +
-            v6[5 - 1] * y + v6[6 - 1] * y2 + v6[7 - 1] * y3 + v6[8 - 1] * xy +
-            v6[9 - 1] * p2 + v6[10 - 1] * p3 + v6[11 - 1] * q2 +
-            v6[12 - 1] * q3 + v6[13 - 1] * pq;
-    ac[7] = v7[1 - 1] + v7[2 - 1] * x + v7[3 - 1] * x2 + v7[5 - 1] * y +
-            v7[6 - 1] * y2 + v7[7 - 1] * y3 + v7[8 - 1] * xy + v7[11 - 1] * q2;
-    ac[8] = v8[1 - 1] + v8[2 - 1] * x + v8[3 - 1] * x2 + v8[5 - 1] * y +
-            v8[6 - 1] * y2 + v8[7 - 1] * y3 + v8[8 - 1] * xy + v8[11 - 1] * q2;
+    ac[1] = v1[0] + v1[1] * x + v1[2] * x2 + v1[4] * y + v1[5] * y2 +
+            v1[6] * y3 + v1[8] * p2 + v1[9] * p3 + v1[10] * q2 + v1[11] * q3;
+    ac[2] = v2[0] + v2[1] * x + v2[2] * x2 + v2[4] * y + v2[5] * y2 +
+            v2[6] * y3 + v2[7] * xy + v2[8] * p2 + v2[10] * q2 + v2[11] * q3;
+    ac[3] = v3[0] + v3[1] * x + v3[2] * x2 + v3[3] * x3 + v3[4] * y +
+            v3[5] * y2 + v3[6] * y3 + v3[7] * xy + v3[8] * p2 + v3[9] * p3 +
+            v3[10] * q2 + v3[11] * q3 + v3[12] * pq;
+    ac[4] = v4[0] + v4[1] * x + v4[2] * x2 + v4[3] * x3 + v4[4] * y +
+            v4[5] * y2 + v4[6] * y3 + v4[7] * xy + v4[8] * p2 + v4[9] * p3 +
+            v4[10] * q2 + v4[11] * q3;
+    ac[5] = v5[0] + v5[1] * x + v5[2] * x2 + v5[3] * x3 + v5[4] * y +
+            v5[5] * y2 + v5[6] * y3 + v5[7] * xy + v5[10] * q2 + v5[11] * q3 +
+            v5[12] * pq;
+    ac[6] = v6[0] + v6[1] * x + v6[2] * x2 + v6[3] * x3 + v6[4] * y +
+            v6[5] * y2 + v6[6] * y3 + v6[7] * xy + v6[8] * p2 + v6[9] * p3 +
+            v6[10] * q2 + v6[11] * q3 + v6[12] * pq;
+    ac[7] = v7[0] + v7[1] * x + v7[2] * x2 + v7[4] * y + v7[5] * y2 +
+            v7[6] * y3 + v7[7] * xy + v7[10] * q2;
+    ac[8] = v8[0] + v8[1] * x + v8[2] * x2 + v8[4] * y + v8[5] * y2 +
+            v8[6] * y3 + v8[7] * xy + v8[10] * q2;
     ac[0] = -3.04;
   } else {
     itype = 4;
@@ -554,35 +633,29 @@ double RndmVavilov(const double rkappa, const double beta2) {
     const double q3 = y3 * x;
     const double pq = x2 * y2;
     if (itype == 3) {
-      ac[1] = u1[1 - 1] + u1[2 - 1] * x + u1[3 - 1] * x2 + u1[5 - 1] * y +
-              u1[6 - 1] * y2 + u1[7 - 1] * y3 + u1[8 - 1] * xy +
-              u1[10 - 1] * p3 + u1[12 - 1] * q3 + u1[13 - 1] * pq;
-      ac[2] = u2[1 - 1] + u2[2 - 1] * x + u2[3 - 1] * x2 + u2[5 - 1] * y +
-              u2[6 - 1] * y2 + u2[7 - 1] * y3 + u2[8 - 1] * xy +
-              u2[9 - 1] * p2 + u2[10 - 1] * p3 + u2[12 - 1] * q3 +
-              u2[13 - 1] * pq;
-      ac[3] = u3[1 - 1] + u3[2 - 1] * x + u3[3 - 1] * x2 + u3[5 - 1] * y +
-              u3[6 - 1] * y2 + u3[7 - 1] * y3 + u3[8 - 1] * xy +
-              u3[9 - 1] * p2 + u3[10 - 1] * p3 + u3[11 - 1] * q2 +
-              u3[12 - 1] * q3 + u3[13 - 1] * pq;
-      ac[4] = u4[1 - 1] + u4[2 - 1] * x + u4[3 - 1] * x2 + u4[4 - 1] * x3 +
-              u4[5 - 1] * y + u4[6 - 1] * y2 + u4[7 - 1] * y3 + u4[8 - 1] * xy +
-              u4[9 - 1] * p2 + u4[10 - 1] * p3 + u4[11 - 1] * q2 +
-              u4[12 - 1] * q3;
-      ac[5] = u5[1 - 1] + u5[2 - 1] * x + u5[3 - 1] * x2 + u5[4 - 1] * x3 +
-              u5[5 - 1] * y + u5[6 - 1] * y2 + u5[7 - 1] * y3 + u5[8 - 1] * xy +
-              u5[10 - 1] * p3 + u5[11 - 1] * q2 + u5[12 - 1] * q3 +
-              u5[13 - 1] * pq;
-      ac[6] = u6[1 - 1] + u6[2 - 1] * x + u6[3 - 1] * x2 + u6[4 - 1] * x3 +
-              u6[5 - 1] * y + u6[7 - 1] * y3 + u6[8 - 1] * xy + u6[9 - 1] * p2 +
-              u6[10 - 1] * p3 + u6[12 - 1] * q3 + u6[13 - 1] * pq;
-      ac[7] = u7[1 - 1] + u7[2 - 1] * x + u7[3 - 1] * x2 + u7[4 - 1] * x3 +
-              u7[5 - 1] * y + u7[6 - 1] * y2 + u7[8 - 1] * xy;
+      ac[1] = u1[0] + u1[1] * x + u1[2] * x2 + u1[4] * y + u1[5] * y2 +
+              u1[6] * y3 + u1[7] * xy + u1[9] * p3 + u1[11] * q3 + u1[12] * pq;
+      ac[2] = u2[0] + u2[1] * x + u2[2] * x2 + u2[4] * y + u2[5] * y2 +
+              u2[6] * y3 + u2[7] * xy + u2[8] * p2 + u2[9] * p3 + u2[11] * q3 +
+              u2[12] * pq;
+      ac[3] = u3[0] + u3[1] * x + u3[2] * x2 + u3[4] * y + u3[5] * y2 +
+              u3[6] * y3 + u3[7] * xy + u3[8] * p2 + u3[9] * p3 + u3[10] * q2 +
+              u3[11] * q3 + u3[12] * pq;
+      ac[4] = u4[0] + u4[1] * x + u4[2] * x2 + u4[3] * x3 + u4[4] * y +
+              u4[5] * y2 + u4[6] * y3 + u4[7] * xy + u4[8] * p2 + u4[9] * p3 +
+              u4[10] * q2 + u4[11] * q3;
+      ac[5] = u5[0] + u5[1] * x + u5[2] * x2 + u5[3] * x3 + u5[4] * y +
+              u5[5] * y2 + u5[6] * y3 + u5[7] * xy + u5[9] * p3 + u5[10] * q2 +
+              u5[11] * q3 + u5[12] * pq;
+      ac[6] = u6[0] + u6[1] * x + u6[2] * x2 + u6[3] * x3 + u6[4] * y +
+              u6[6] * y3 + u6[7] * xy + u6[8] * p2 + u6[9] * p3 + u6[11] * q3 +
+              u6[12] * pq;
+      ac[7] = u7[0] + u7[1] * x + u7[2] * x2 + u7[3] * x3 + u7[4] * y +
+              u7[5] * y2 + u7[7] * xy;
     }
-    ac[8] = u8[1 - 1] + u8[2 - 1] * x + u8[3 - 1] * x2 + u8[4 - 1] * x3 +
-            u8[5 - 1] * y + u8[6 - 1] * y2 + u8[7 - 1] * y3 + u8[8 - 1] * xy +
-            u8[9 - 1] * p2 + u8[10 - 1] * p3 + u8[11 - 1] * q2 +
-            u8[13 - 1] * pq;
+    ac[8] = u8[0] + u8[1] * x + u8[2] * x2 + u8[3] * x3 + u8[4] * y +
+            u8[5] * y2 + u8[6] * y3 + u8[7] * xy + u8[8] * p2 + u8[9] * p3 +
+            u8[10] * q2 + u8[12] * pq;
     ac[0] = -3.03;
   }
   ac[9] = (ac[8] - ac[0]) / npt;
@@ -590,9 +663,10 @@ double RndmVavilov(const double rkappa, const double beta2) {
     const double x = (ac[7] - ac[8]) / (ac[7] * ac[8]);
     const double y = 1 / log(ac[8] / ac[7]);
     const double p2 = ac[7] * ac[7];
-    ac[11] = p2 * (ac[1] * exp(-ac[2] * (ac[7] + ac[5] * p2) -
-                               ac[3] * exp(-ac[4] * (ac[7] + ac[6] * p2))) -
-                   0.045 * y / ac[7]) /
+    ac[11] = p2 *
+             (ac[1] * exp(-ac[2] * (ac[7] + ac[5] * p2) -
+                          ac[3] * exp(-ac[4] * (ac[7] + ac[6] * p2))) -
+              0.045 * y / ac[7]) /
              (1 + x * y * ac[7]);
     ac[12] = (0.045 + x * ac[11]) * y;
   }
@@ -610,15 +684,15 @@ double RndmVavilov(const double rkappa, const double beta2) {
     if (itype == 1) {
       double fn = 1;
       const double x = (rlam + hc[0]) * hc[1];
-      h[1 - 1] = x;
-      h[2 - 1] = x * x - 1;
+      h[0] = x;
+      h[1] = x * x - 1;
       for (int k = 2; k <= 8; k++) {
         fn += 1;
-        h[k + 1 - 1] = x * h[k - 1] - fn * h[k - 1 - 1];
+        h[k] = x * h[k - 1] - fn * h[k - 2];
       }
-      double y = 1 + hc[7] * h[9 - 1];
+      double y = 1 + hc[7] * h[8];
       for (int k = 2; k <= 6; k++) {
-        y = y + hc[k] * h[k + 1 - 1];
+        y = y + hc[k] * h[k];
       }
       if (y < 0) {
         fu = 0;
@@ -641,7 +715,7 @@ double RndmVavilov(const double rkappa, const double beta2) {
     } else {
       fu = ac[10] * denlan(rlam);
     }
-    s = s + fl + fu;
+    s += fl + fu;
     if (s > t) {
       break;
     }
@@ -656,12 +730,46 @@ double RndmVavilov(const double rkappa, const double beta2) {
   return v;
 }
 
+int RndmPoisson(const double mean) {
+  // Implementation from CLHEP (RandPoisson) and ROOT.
+  if (mean <= 0) return 0;
+  if (mean < 25) {
+    const double expmean = exp(-mean);
+    double pir = 1.;
+    int n = -1;
+    while (1) {
+      n++;
+      pir *= RndmUniform();
+      if (pir <= expmean) break;
+    }
+    return n;
+  } else if (mean < 1.e9) {
+    // Use inversion method for large values.
+    const double sq = sqrt(2. * mean);
+    const double alxm = log(mean);
+    const double g = mean * alxm - lngamma(mean + 1.);
+    double y = 0., t = 0.;
+    double em = -1.;
+    do {
+      do {
+        y = tan(Pi * RndmUniform());
+        em = sq * y + mean;
+      } while (em < 0.0);
+      em = floor(em);
+      t = 0.9 * (1. + y * y) * exp(em * alxm - lngamma(em + 1.) - g);
+    } while (RndmUniform() > t);
+    return static_cast<int>(em);
+  }
+  // Use Gaussian approximation for very large values.
+  return int(RndmGaussian() * sqrt(mean) + mean + 0.5);
+}
+
 double RndmHeedWF(const double w, const double f) {
   // RNDHWF - Generates random energies needed to create a single e- in
   //          a gas with asymptotic work function W and Fano factor F,
   //          according to Igor Smirnov's phenomenological model.
-  const double wref = 30.0;
-  const double fref = 0.174;
+  constexpr double wref = 30.0;
+  constexpr double fref = 0.174;
   // Check parameters
   if (w <= 0 || f < 0) {
     std::cerr << "RndmHeedWF: Work and/or Fano parameter out of range. "
@@ -673,25 +781,30 @@ double RndmHeedWF(const double w, const double f) {
   }
   // First generate a standardised (W = 30, F = 0.174) random energy.
   const double x = RndmUniform() * wref * 0.82174;
-  // E = 0 to w/2:     p = 0,       integral = 0
   double e;
   if (x < 0) {
+    // E = 0 to w/2:     p = 0,       integral = 0
     std::cerr << "RndmHeedWF: Random number is below the applicable range. "
               << "Program error. Returning w/2.\n";
-    e = wref / 2;
+    e = 0.5 * wref;
+  } else if (x < 0.5 * wref) {
     // E = w/2 to w:     p = 1,       integral = E-w/2
-  } else if (x < wref / 2) {
-    e = wref / 2 + x;
-    // E = w to 3.064 w: p = (w/E)^4, integral = w^4/3 (1/E^3 - 1/w^3)
+    e = 0.5 * wref + x;
   } else if (x < wref * 0.82174) {
-    e = pow(2 * wref * wref * wref * wref / (5 * wref - 6 * x), 1.0 / 3.0);
-    // E > 3.064 w:      p = 0,       integral = 0
+    // E = w to 3.064 w: p = (w/E)^4, integral = w^4/3 (1/E^3 - 1/w^3)
+    constexpr double w4 = wref * wref * wref * wref;
+    e = std::cbrt(2 * w4 / (5 * wref - 6 * x));
   } else {
+    // E > 3.064 w:      p = 0,       integral = 0
     std::cerr << "RndmHeedWF: Random number is above applicable range. "
               << "Program error. Returning 3.064 w.\n";
     e = 3.064 * wref;
   }
   // Scale.
-  return (w / wref) * sqrt(f / fref) * e + w * (1. - sqrt(f / fref));
+  const double sqf = sqrt(f / fref);
+  return (w / wref) * sqf * e + w * (1. - sqf);
 }
-}
+}  // namespace Garfield
+
+std::function<double(void)> Garfield::Random::draw{
+    std::bind(&RandomEngineRoot::Draw, ::randomEngineROOT)};

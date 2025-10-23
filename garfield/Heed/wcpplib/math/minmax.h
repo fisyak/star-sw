@@ -22,29 +22,8 @@ It is provided "as is" without express or implied warranty.
  * since these commonly-defined names are not part of the C/C++ standards.
  */
 #endif
-#include <cmath>
-#include <cfloat>
-#include "wcpplib/util/FunNameStack.h"
 
 namespace Heed {
-
-/// Minimal power of e the result of which can be represented.
-static const double dbl_min_e_exp = (DBL_MIN_EXP - 1) * log(double(FLT_RADIX));
-/// Maximal power of e the result of which can be represented.
-/// Similar numbers for a != e can be obtained in the user's program by
-/// double dbl_max_a_exp = dbl_max_e_exp / log(a);
-static const double dbl_max_e_exp = (DBL_MAX_EXP - 1) * log(double(FLT_RADIX));
-/// Largest number the square of which can be represented.
-static const double dbl_max_square = sqrt(DBL_MAX);  
-
-static const double flt_min_e_exp = (FLT_MIN_EXP - 1) * log(double(FLT_RADIX));
-static const double flt_max_e_exp = (FLT_MAX_EXP - 1) * log(double(FLT_RADIX));
-/// Largest number the square of which can be represented.
-static const double flt_max_square = sqrt(FLT_MAX);  
-
-inline long left_round(double f) {
-  return f >= 0 ? long(f) : -long(-f) - 1;
-}
 
 template <class T>
 inline T tabs(const T& x) {
@@ -61,6 +40,6 @@ int apeq_mant(const T& x1, const T& x2, T prec) {
   return 0;
 }
 
-}
+}  // namespace Heed
 
 #endif

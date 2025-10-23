@@ -22,34 +22,28 @@ and notices about any modifications of the original text
 appear in all copies and in supporting documentation.
 The file is provided "as is" without express or implied warranty.
 */
-#include <string>
-#include "wcpplib/util/FunNameStack.h"
-#include "wcpplib/safetl/AbsPtr.h"
+#include <iostream>
 
-#define pvecerror(string)                                      \
-  mfunname(string);                                            \
-  if (vecerror != 0) {                                         \
-    mcerr << "vecerror is not zero, program is terminated\n"   \
-          << " function detected error is " << string << '\n'; \
-    spexit(mcerr);                                             \
+#include "wcpplib/geometry/vfloat.h"
+#include "wcpplib/util/FunNameStack.h"
+
+#define pvecerror(string)                                          \
+  if (vecerror != 0) {                                             \
+    std::cerr << "vecerror is not zero, program is terminated\n"   \
+              << " function detected error is " << string << '\n'; \
+    spexit(std::cerr);                                             \
   }
-#define pvecerrorp(string)                                     \
-  mfunnamep(string);                                           \
-  if (vecerror != 0) {                                         \
-    mcerr << "vecerror is not zero, program is terminated\n"   \
-          << " function detected error is " << string << '\n'; \
-    spexit(mcerr);                                             \
+#define pvecerrorp(string)                                         \
+  if (vecerror != 0) {                                             \
+    std::cerr << "vecerror is not zero, program is terminated\n"   \
+              << " function detected error is " << string << '\n'; \
+    spexit(std::cerr);                                             \
   }
 // pvecerror is put after first line of function.
 // It makes up stack of functions names if FUNNAMESTACK is defined.
 // To work correctly stackline(string); should not be in any additional {}
 
-#include "wcpplib/geometry/vfloat.h"
-/* Introduces type vfloat which is used throughout the geometrical calculations
-instead of double. 'double' is meant to be replacable by 'float' for
-speeding up, but no consistent research was made to check that it really
-works in this way. So now vfloat is synonym of double.
-*/
+// #include "wcpplib/geometry/vfloat.h"
 
 namespace Heed {
 
@@ -66,7 +60,7 @@ class absref_transmit;
 /// Used for arranging of shift, turn and shange of coordinate system of
 /// vector objects. Four functions down(), up(), turn(), and shift() do that
 /// by calling of the same functions for any vector objects which are parts
-/// of this class. 
+/// of this class.
 /// Address of parts lets known by virtual function get_components()
 /// which is reloaded in any derivative class.
 /// Class vec represents three-vectors and
@@ -90,54 +84,51 @@ class absref {
   /// Convert numbering representation of objects to new system
   virtual void up(const abssyscoor* fasc);
   /// Turn around axis doing via center of coordinate system along dir.
-  virtual void turn(const vec& dir, vfloat angle);
+  virtual void turn(const vec& dir, double angle);
   virtual void shift(const vec& dir);
 
  private:
-  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
+  virtual absref_transmit get_components();
 };
 
-// Contains three methods of transmission, the fastest, slower and the slowest
+/// Container for transmitting geometry transformations.
+/// Three methods of transmission (fast, slower and slowest) are available.
 class absref_transmit {
  public:
-  absref_transmit() : qaref(0), qaref_pointer(0), qaref_other(0) {}
+  absref_transmit() = default;
   // For transmitting the members of the class, when
   // their relative addresses are available.
   absref_transmit(int fqaref, absref absref::** faref)
-      : qaref(fqaref), aref(faref), qaref_pointer(0), qaref_other(0) {}
+      : qaref(fqaref), aref(faref) {}
   absref_transmit(int fqaref_pointer, absref** faref_pointer)
-      : qaref(0),
-        qaref_pointer(fqaref_pointer),
-        aref_pointer(faref_pointer),
-        qaref_other(0) {}
+      : qaref_pointer(fqaref_pointer), aref_pointer(faref_pointer) {}
+
   absref_transmit(int fqaref, absref absref::** faref, int fqaref_pointer,
                   absref** faref_pointer)
       : qaref(fqaref),
         aref(faref),
         qaref_pointer(fqaref_pointer),
-        aref_pointer(faref_pointer),
-        qaref_other(0) {}
-
-  absref_transmit(const absref_transmit& f) { *this = f; }
-  /// Destructor
+        aref_pointer(faref_pointer) {}
+  /// Copy constructor.
+  absref_transmit(const absref_transmit&) = default;
+  /// Assignment operator.
+  absref_transmit& operator=(const absref_transmit&) = default;
+  /// Destructor.
   virtual ~absref_transmit() {}
 
-  virtual void print(std::ostream& file, int l) const;
-  virtual absref_transmit* copy() const { return new absref_transmit(*this); }
-
   /// Number of vector objects which are the members of the class
-  int qaref;  
+  int qaref = 0;
   /// Reference to address of array containing their relative addresses
   /// as class members.
-  absref(absref::** aref);  
+  absref absref::** aref;
 
   // When the relative addresses are not available, in particular
   // when the component object is located in heap memory:
   // Number of vector objects
-  int qaref_pointer;      
+  int qaref_pointer = 0;
 
   // Reference to address of array containing addresses of objects.
-  absref** aref_pointer;  
+  absref** aref_pointer;
 
   // For any method of the object location the pointers can also be
   // transmitted through the function get_other(int n)
@@ -146,34 +137,26 @@ class absref_transmit {
   // from absref_transmit. This is the slowest method of transmission.
 
   /// Number of objects available though virtual function GetOther.
-  int qaref_other;  
+  int qaref_other = 0;
   /// This function is meant to be redefined in derived classes to
   /// obtain additional address except those contained in aref and aref_pointer.
   /// This default version always returns NULL.
   virtual absref* get_other(int n);
-
 };
 
-#define ApplyAnyFunctionToVecElements(func)                       \
-  {                                                               \
-    ActivePtr<absref_transmit> aref_tran_cont;                    \
-    get_components(aref_tran_cont);                               \
-    absref_transmit* aref_tran = aref_tran_cont.get();            \
-    if (aref_tran != NULL) {                                      \
-      int n;                                                      \
-      int q = aref_tran->qaref;                                   \
-      for (n = 0; n < q; n++) (this->*(aref_tran->aref[n])).func; \
-      q = aref_tran->qaref_pointer;                               \
-      for (n = 0; n < q; n++) aref_tran->aref_pointer[n]->func;   \
-      q = aref_tran->qaref_other;                                 \
-      for (n = 0; n < q; n++) {                                   \
-        absref* ar = aref_tran->get_other(n);                     \
-        if (ar == NULL)                                           \
-          break;                                                  \
-        else                                                      \
-          ar->func;                                               \
-      }                                                           \
-    }                                                             \
+#define ApplyAnyFunctionToVecElements(func)                        \
+  {                                                                \
+    auto aref_tran = get_components();                             \
+    int q = aref_tran.qaref;                                       \
+    for (int n = 0; n < q; n++) (this->*(aref_tran.aref[n])).func; \
+    q = aref_tran.qaref_pointer;                                   \
+    for (int n = 0; n < q; n++) aref_tran.aref_pointer[n]->func;   \
+    q = aref_tran.qaref_other;                                     \
+    for (int n = 0; n < q; n++) {                                  \
+      absref* ar = aref_tran.get_other(n);                         \
+      if (!ar) break;                                              \
+      ar->func;                                                    \
+    }                                                              \
   }
 
 /// Vector.
@@ -186,39 +169,40 @@ class absref_transmit {
 class vec : public absref {
  public:
   /// Constructor.
-  vec(vfloat xx, vfloat yy, vfloat zz) {
+  vec(double xx, double yy, double zz) {
     x = xx;
     y = yy;
     z = zz;
   }
   /// Default constructor.
-  vec() {
-    x = 0;
-    y = 0;
-    z = 0;
-  }
+  vec() = default;
   /// Destructor
   virtual ~vec() {}
- 
-  vfloat x, y, z;
 
-  vfloat length() const { return sqrt(x * x + y * y + z * z); }
-  vfloat length2() const { return x * x + y * y + z * z; }
+  double x = 0.;
+  double y = 0.;
+  double z = 0.;
+
+  double length() const { return sqrt(x * x + y * y + z * z); }
+  double length2() const { return x * x + y * y + z * z; }
 
   vec down_new(const basis* fabas);
-  void down(const basis* fabas);
   vec up_new(const basis* fabas_new);
-  void up(const basis* fabas_new);
-  vec down_new(const abssyscoor* fasc);
-  void down(const abssyscoor* fasc);
-  vec up_new(const abssyscoor* fasc);
-  void up(const abssyscoor* fasc);
 
-  // make new turned vector and leave this unchanged
-  vec turn_new(const vec& dir, vfloat angle);
+  void down(const basis* fabas);
+  void up(const basis* fabas_new);
+
+  vec down_new(const abssyscoor* fasc);
+  vec up_new(const abssyscoor* fasc);
+
+  void down(const abssyscoor* fasc) override;
+  void up(const abssyscoor* fasc) override;
+
+  /// Make new turned vector and leave this one unchanged.
+  vec turn_new(const vec& dir, double angle);
   /// Turn this vector
-  void turn(const vec& dir, vfloat angle);
-  void shift(const vec& dir);
+  void turn(const vec& dir, double angle) override;
+  void shift(const vec& dir) override;
 
   /// Generate random unit vector in plane perpendicular to z-axis.
   void random_round_vec();
@@ -228,18 +212,18 @@ class vec : public absref {
   // Generate random unit vector in any direction in 3D space.
   void random_sfer_vec();
 
-  friend vec operator*(const vec& v, vfloat p) {
+  friend vec operator*(const vec& v, double p) {
     return vec(v.x * p, v.y * p, v.z * p);
   }
-  friend vec operator*=(vec& v, vfloat p) {
+  friend vec operator*=(vec& v, double p) {
     v = v * p;
     return v;
   }
-  friend vec operator*(vfloat p, const vec& v) {
+  friend vec operator*(double p, const vec& v) {
     return vec(v.x * p, v.y * p, v.z * p);
   }
-  vec operator/(vfloat p) const { return vec(x / p, y / p, z / p); }
-  friend vec operator/=(vec& v, vfloat p) {
+  vec operator/(double p) const { return vec(x / p, y / p, z / p); }
+  friend vec operator/=(vec& v, double p) {
     v = v / p;
     return v;
   }
@@ -258,7 +242,7 @@ class vec : public absref {
     return r1;
   }
   friend vec operator-(const vec& r) { return vec(-r.x, -r.y, -r.z); }
-  friend vfloat operator*(const vec& r1, const vec& r2) {
+  friend double operator*(const vec& r1, const vec& r2) {
     return r1.x * r2.x + r1.y * r2.y + r1.z * r2.z;
   }
   /// Vector product.
@@ -267,34 +251,76 @@ class vec : public absref {
                r1.x * r2.y - r1.y * r2.x);
   }
   /// Return 1 if precisely the same vectors and 0 otherwise.
-  friend inline int operator==(const vec& r1, const vec& r2);
+  friend inline int operator==(const vec& r1, const vec& r2) {
+    if (r1.x == r2.x && r1.y == r2.y && r1.z == r2.z)
+      return 1;
+    else
+      return 0;
+  }
   /// Return 0 if precisely the same vectors and 1 otherwise.
-  friend inline int operator!=(const vec& r1, const vec& r2);
+  friend inline int operator!=(const vec& r1, const vec& r2) {
+    if (r1 == r2)
+      return 0;
+    else
+      return 1;
+  }
 
   /// Return true if two vectors are approximately the same.
-  friend inline bool apeq(const vec& r1, const vec& r2, vfloat prec);
+  friend inline bool apeq(const vec& r1, const vec& r2, double prec) {
+    return (apeq(r1.x, r2.x, prec) && apeq(r1.y, r2.y, prec) &&
+            apeq(r1.z, r2.z, prec));
+  }
 
-  friend inline vec unit_vec(const vec& v);
+  friend inline vec unit_vec(const vec& v) {
+    // pvecerror("inline vec unit_vec(const vec &v)");
+    const double len = v.length();
+    if (len == 0) {
+      std::cerr << "error in unit_vec: length(vec)=0\n";
+      spexit(std::cerr);
+    }
+    return vec(v.x / len, v.y / len, v.z / len);
+  }
   // cosinus of angle between vectors
   // If one of vectors has zero length, it makes vecerror=1 and returns 0.
-  friend vfloat cos2vec(const vec& r1, const vec& r2);
+  friend double cos2vec(const vec& r1, const vec& r2);
   //  angle between vectors, in interval [0, M_PI]
   // If one of vectors has zero length, it makes vecerror=1.
-  friend vfloat ang2vec(const vec& r1, const vec& r2);
+  friend double ang2vec(const vec& r1, const vec& r2);
   friend vec project_to_plane(const vec& r, const vec& normal);
   // angle between projections of 2 vectors on plane normal to vector normal
   // in interval [0, 2*M_PI]
   // If one of vectors has zero length, it makes vecerror=1.
-  friend vfloat ang2projvec(const vec& r1, const vec& r2, const vec& normal);
+  friend double ang2projvec(const vec& r1, const vec& r2, const vec& normal);
   // sinus of angle between vectors, 0 or positive.
   // If one of vectors has zero length, it makes vecerror=1.
-  friend vfloat sin2vec(const vec& r1, const vec& r2);
+  friend double sin2vec(const vec& r1, const vec& r2);
 
   /// Check whether two vectors are parallel, or anti-parallel.
   /// Returns: 1 - parallel, -1  - antiparallel, 0 not parallel.
   /// Also returns 0 if one or both vectors have zero length.
   /// Thus, if angle between vectors < prec, they are parallel.
-  friend inline int check_par(const vec& r1, const vec& r2, vfloat prec);
+  friend inline int check_par(const vec& r1, const vec& r2, double prec) {
+    // 1 par, -1 antipar, 0 not parallel
+    double a = ang2vec(r1, r2);
+    if (vecerror != 0) {
+      vecerror = 0;
+      return 0;
+    }
+    if (a <= prec) return 1;
+    if (a >= M_PI - std::max(prec, vprecision)) {
+      // If without max(prec, vprecision) but with just -prec
+      // Even for exactly parallel vectors this function
+      // would never confirm this.
+      if (prec < vprecision) {
+        vec anti_r2 = -r2;         // reverse the vector
+        a = ang2vec(r1, anti_r2);  // M_PI - old_a
+        if (a <= prec) return -1;
+      } else {
+        return -1;
+      }
+    }
+    return 0;
+  }
 
   /// Check whether two vectors are perpendicular.
   /// Returns: 1 perpendicular, 0 not perpendicular.
@@ -302,52 +328,52 @@ class vec : public absref {
   /// Thus, if angle between vectors
   /// a > 0.5 * M_PI - max(prec, vprecision) and
   /// a < 0.5 * M_PI + max(prec, vprecision), they are perpendicular.
-  friend inline int check_perp(const vec& r1, const vec& r2, vfloat prec);
-  friend inline vec switch_xyz(const vec&);  // don't change the vector itself
-
+  friend inline int check_perp(const vec& r1, const vec& r2, double prec) {
+    // returns 1 if perpendicular
+    double a = ang2vec(r1, r2);
+    if (vecerror != 0) {
+      vecerror = 0;
+      return 0;
+    }
+    if (apeq(a, 0.5 * M_PI, std::max(prec, vprecision))) return 1;
+    // If without max(prec, vprecision) but with just prec
+    // Event for exactly perpendicular vectors this function
+    // would never confirm this.
+    // if(a >= 0.5*M_PI - prec && a =< 0.5*M_PI + prec ) return 1;
+    return 0;
+  }
 };
-std::ostream& operator<<(std::ostream& file, const vec& v);
 
 extern vec dex;  // unit vector by x
 extern vec dey;  // unit vector by y
 extern vec dez;  // unit vector by z
 extern vec dv0;  // zero vector
 
-#include "wcpplib/geometry/vec.ic"
-
 /// Basis.
 class basis : public absref {
  protected:
   /// Unit vectors giving directions of Cartesian axes.
   /// Supposed to be perpendicular, therefore not public.
-  vec ex, ey, ez;  
+  vec ex, ey, ez;
 
-  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
+  virtual absref_transmit get_components() override;
 
-  static absref absref::*aref[3];
-
- public:
-  std::string name;
+  static absref absref::* aref[3];
 
  public:
   vec Gex() const { return ex; }
   vec Gey() const { return ey; }
   vec Gez() const { return ez; }
 
-  /// Change ex=ez; ey=ex; ez=ey.
-  basis switch_xyz() const;  
-
   /// Nominal basis.
-  basis();                   
-  /// Nominal basis.
-  basis(const std::string& pname);    
+  basis();
   /// Longitudinal basis.
   /// z-axis is parallel to p.
   /// y-axis is vector product of z_new and z_old
   /// x-axis is vector product of y_new and z_new
   /// If p is parallel to z_old, the copy of old basis is created.
   /// If p is anti-parallel to z_old, the inverted copy of old basis is created.
-  basis(const vec& p, const std::string& fname);  
+  basis(const vec& p);
 
   /// More sophisticated basis.
   /// ez is parallel to p,                             ez=unit_vec(p)
@@ -355,19 +381,11 @@ class basis : public absref {
   /// ex is vector product of y and z,                 ex=ey||ez
   /// If p is parallel to c, or p is anti-parallel to c, vecerror=1
   /// if(length(p)==0||length(c)==0)) vecerror=1;
-  basis(const vec& p, const vec& c, const std::string& pname);
-
-  /// Same basis with other name, useful for later turning.
-  basis(const basis& pb, const std::string& pname);
+  basis(const vec& p, const vec& c);
   /// Direct definitions of basis by three perpendicular unit-length vectors.
-  basis(const vec& pex, const vec& pey, const vec& pez, const std::string& pname);
-
-  friend std::ostream& operator<<(std::ostream& file, const basis& b);
-  virtual basis* copy() const { return new basis(*this); }
-  virtual void print(std::ostream& file, int l) const;
+  basis(const vec& pex, const vec& pey, const vec& pez);
   virtual ~basis() {}
 };
-extern std::ostream& operator<<(std::ostream& file, const basis& b);
 
 /// Point.
 
@@ -376,23 +394,23 @@ class point : public absref {
   vec v;
 
  private:
-  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
-  static absref(absref::*aref);
+  absref_transmit get_components() override;
+  static absref absref::* aref;
 
  public:
-  virtual void down(const abssyscoor* fasc);
-  virtual void up(const abssyscoor* fasc);
-  virtual void shift(const vec& dir) {
-    // not defined for vectors, but defined for points
-    v += dir;
-  }
+  void down(const abssyscoor* fasc) override;
+  void up(const abssyscoor* fasc) override;
+  void shift(const vec& dir) override { v += dir; }
   /// Default constructor (coordinates are not initialised).
   point() : v() {}
-  /// Constructor from vector.  
+  /// Constructor from vector.
   point(const vec& fv) : v(fv) {}
   /// Constructor from coordinates.
-  point(const vfloat fex, const vfloat fey, const vfloat fez)
+  point(const double fex, const double fey, const double fez)
       : v(fex, fey, fez) {}
+  /// Copy constructor.
+  point(const point& p) : v(p.v) {}
+  /// Assignment operator.
   point& operator=(const point& fp) {
     v = fp.v;
     return *this;
@@ -406,71 +424,53 @@ class point : public absref {
   friend int operator!=(const point& p1, const point& p2) {
     return p1.v != p2.v ? 1 : 0;
   }
-  friend bool apeq(const point& p1, const point& p2, vfloat prec) {
+  friend bool apeq(const point& p1, const point& p2, double prec) {
     return apeq(p1.v, p2.v, prec);
   }
-  friend std::ostream& operator<<(std::ostream& file, const point& p);
-  virtual point* copy() const { return new point(*this); }
-  virtual void print(std::ostream& file, int l) const;
   virtual ~point() {}
 };
-std::ostream& operator<<(std::ostream& file, const point& p);
 
 /// Coordinate system (centre, basis and mother coordinate system).
 /// Take care: c.abas must be equal to abas->ex.abas.
 /// If asc==NULL and abs(c)==0 than it is primary system of coordinate
 /// and therefore c.abas and abas->ex.abas must be zero,
 /// baz may be zero or pointer to unit basis.
-
-#define vec_syscoor_index 0
 class abssyscoor {
  public:
-  std::string name;
   virtual const point* Gapiv() const = 0;
   virtual const basis* Gabas() const = 0;
-  abssyscoor() : name("none") {}
-  abssyscoor(char* fname) : name(fname) {}
-  abssyscoor(const std::string& fname) : name(fname) {}
-  virtual void print(std::ostream& file, int l) const;
-
+  abssyscoor() = default;
   virtual ~abssyscoor() {}
 };
-extern std::ostream& operator<<(std::ostream& file, const abssyscoor& s);
 
-class fixsyscoor : public absref, public abssyscoor, public RegPassivePtr {
+class fixsyscoor : public absref, public abssyscoor {
  public:
-  virtual const point* Gapiv() const { return &piv; }
-  virtual const basis* Gabas() const { return &bas; }
+  const point* Gapiv() const override { return &piv; }
+  const basis* Gabas() const override { return &bas; }
   void Ppiv(const point& fpiv);
   void Pbas(const basis& fbas);
   // nominal system
-  fixsyscoor() {}                                     
-  fixsyscoor(char* fname) : abssyscoor(fname) {}          
-  fixsyscoor(const std::string& fname) : abssyscoor(fname) {}
-  fixsyscoor(const point& fpiv, const basis& fbas, const std::string& fname)
-      : abssyscoor(fname), piv(fpiv), bas(fbas) {}
-  fixsyscoor(const point* const fapiv, const basis* const fabas,
-             const std::string& fname)
-      : abssyscoor(fname),
+  fixsyscoor() = default;
+  fixsyscoor(const point& fpiv, const basis& fbas)
+      : abssyscoor(), piv(fpiv), bas(fbas) {}
+  fixsyscoor(const point* const fapiv, const basis* const fabas)
+      : abssyscoor(),
         piv((fapiv != NULL) ? (*fapiv) : point()),
         bas((fabas != NULL) ? (*fabas) : basis()) {}
   fixsyscoor(const abssyscoor& f)
       : abssyscoor(f),
         piv((f.Gapiv() != NULL) ? (*(f.Gapiv())) : point()),
         bas((f.Gabas() != NULL) ? (*(f.Gabas())) : basis()) {}
-  virtual void print(std::ostream& file, int l) const;
-  virtual fixsyscoor* copy() const { return new fixsyscoor(*this); }
   virtual ~fixsyscoor() {}
 
  protected:
-  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
-  static absref(absref::*aref[2]);
+  absref_transmit get_components() override;
+  static absref absref::* aref[2];
 
  private:
   point piv;
   basis bas;
 };
-extern std::ostream& operator<<(std::ostream& file, const fixsyscoor& s);
-}
+}  // namespace Heed
 
 #endif

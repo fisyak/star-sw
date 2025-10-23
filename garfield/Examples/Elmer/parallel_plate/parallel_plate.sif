@@ -1,0 +1,84 @@
+! parallel_plate.sif
+!
+! ElmerSolver input file for parallel plate geometry.
+!
+! This is a modified version of "elstatics.sif" from the Elmer tutorials.
+! (see ElmerTutorials manual, Tutorial 14)
+!
+Check Keywords Warn
+
+! Specify output folder and location.
+Header
+  Mesh DB "." "parallel_plate"
+End
+
+! Details of the calculation and output files.
+Simulation
+  Coordinate System = Cartesian 3D
+  Simulation Type = Steady State
+  Steady State Max Iterations = 1
+  Output File = "parallel_plate.result"
+  Post File = "parallel_plate.ep"
+End
+
+! Define constants.
+Constants
+  Permittivity Of Vacuum = 8.8542e-12
+End
+
+! Specify equation and material for gas.
+Body 1
+  Equation = 1
+  Material = 1
+End
+
+! Specify equation and material for the dielectric.
+Body 2
+  Equation = 1
+  Material = 2
+End
+
+! Define the gas material.
+Material 1
+  Relative Permittivity = 1
+End
+
+! Define the dielectric material.
+Material 2
+  Relative Permittivity = 2
+End
+
+! Upper plate
+Boundary Condition 1
+  Target Boundaries = 1
+  Potential = 0
+End
+
+! Lower plate
+Boundary Condition 2
+  Target Boundaries = 2
+  Potential = 1000
+End
+
+! Details of the calculation procedure: all that must
+! be calculated is the potential.
+Equation 1
+  Active Solvers(1) = 1
+  Calculate Electric Energy = True
+End
+
+Solver 1
+  Equation = Stat Elec Solver
+  Variable = Potential
+  Variable DOFs = 1
+  Procedure = "StatElecSolve" "StatElecSolver"
+  Calculate Electric Field = False
+  Calculate Electric Flux = False
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 1000
+  Linear System Abort Not Converged = True
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Preconditioning = ILU1
+  Steady State Convergence Tolerance = 5.0e-7
+End

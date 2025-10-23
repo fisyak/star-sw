@@ -1,8 +1,8 @@
 #ifndef EPARTICLE_H
 #define EPARTICLE_H
 #include "wcpplib/geometry/mparticle.h"
+#include "wcpplib/particle/fieldmap.h"
 #include "wcpplib/particle/particle_def.h"
-#include "HeedFieldMap.h"
 
 // 1998 - 2004, I. Smirnov.
 
@@ -12,26 +12,24 @@ namespace Heed {
 /// particle and specification of concrete particle as one of types
 /// known by science.
 
-class eparticle : public mparticle, public particle_type {
+class eparticle : public mparticle /*, public particle_type*/ {
  public:
   /// Default constructor
-  eparticle() : mparticle(), particle_type(), m_fieldMap(NULL) {}
+  eparticle() = default;
   /// Constructor using velocity vector.
-  eparticle(manip_absvol* primvol, const point& pt, const vec& vel, vfloat time,
-            particle_def* fpardef, HeedFieldMap* fieldmap);
+  eparticle(manip_absvol* primvol, const point& pt, const vec& vel, double time,
+            particle_def* fpardef, fieldmap* fm);
   /// Destructor
   virtual ~eparticle() {}
 
-  virtual eparticle* copy() const { return new eparticle(*this); }
-  virtual void print(std::ostream& file, int l) const;
-
-  /// Calculate force components.
-  virtual int force(const point& pt, vec& f, vec& f_perp, vfloat& mrange);
-  // mrange - distance at which the force should not change much
-
  protected:
-  HeedFieldMap* m_fieldMap;
+  /// Calculate force components.
+  int force(const point& pt, vec& f, vec& f_perp, double& mrange) override;
+  // mrange - distance at which the force should not change much
+  particle_def* m_pardef = nullptr;
+  /// Pointer to field map.
+  fieldmap* m_fm = nullptr;
 };
-}
+}  // namespace Heed
 
 #endif

@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 // $Id: GarfieldRunAction.hh 9999999 2015-12-11 14:47:43Z dpfeiffe $
-// 
+//
 /// \file GarfieldRunAction.hh
 /// \brief Definition of the GarfieldRunAction class
 
@@ -38,9 +38,9 @@ class G4Run;
 
 /// Run action class
 ///
-/// It accumulates statistic and computes dispersion of the energy deposit 
+/// It accumulates statistic and computes dispersion of the energy deposit
 /// and track lengths of charged particles with use of analysis tools:
-/// H1D histograms are created in BeginOfRunAction() for the following 
+/// H1D histograms are created in BeginOfRunAction() for the following
 /// physics quantities:
 /// - Edep in absorber
 /// - Edep in gap
@@ -50,21 +50,19 @@ class G4Run;
 /// The histograms and ntuple are saved in the output file in a format
 /// accoring to a selected technology in Garfieldnalysis.hh.
 ///
-/// In EndOfRunAction(), the accumulated statistic and computed 
+/// In EndOfRunAction(), the accumulated statistic and computed
 /// dispersion is printed.
 ///
 
-class GarfieldRunAction : public G4UserRunAction
-{
-  public:
-    GarfieldRunAction();
-    virtual ~GarfieldRunAction();
+class GarfieldRunAction : public G4UserRunAction {
+ public:
+  GarfieldRunAction();
+  virtual ~GarfieldRunAction();
 
-    virtual void BeginOfRunAction(const G4Run*);
-    virtual void   EndOfRunAction(const G4Run*);
+  virtual void BeginOfRunAction(const G4Run*);
+  virtual void EndOfRunAction(const G4Run*);
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

@@ -1,0 +1,387 @@
+\chapter{Solids}\label{Sec:Solids}
+The constructors of the \texttt{Solid} classes usually come in two versions:
+one where the solid is kept in its default orientation 
+(\ie the local frame of the solid and the global frame are identical 
+except for a translation), and one where the solid's orientation is set 
+explicitly. This is done by specifying the direction of the solid's local 
+$z$ axis in the global frame.
+\section{Box}
+\texttt{SolidBox} describes a rectangular cuboid (Fig.~\ref{Fig:SolidBox}).
+The simplest version of the constructor creates a box the edges of which 
+are aligned with the axes of the coordinate system. 
+\begin{lstlisting}
+SolidBox(const double cx, const double cy, const double cz, 
+         const double lx, const double ly, const double lz);
+\end{lstlisting}
+\begin{description}
+\item[cx,cy,cz] Coordinates of the centre of gravity of the box.
+\item[lx,ly,lz] Half-widths of the box along $x$, $y$, and $z$.
+\end{description}
+A box with a non-default orientation in space is created using
+\begin{lstlisting}
+SolidBox(const double cx, const double cy, const double cz, 
+         const double lx, const double ly, const double lz, 
+         const double dx, const double dy, const double dz);
+\end{lstlisting} 
+
+\tdplotsetmaincoords{60}{120}
+\begin{figure}
+\centering
+\begin{tikzpicture}[panel/.style={fill=lightgray,fill opacity=0.2},line join=round,>=stealth,tdplot_main_coords]
+\pgfmathsetmacro{\lx}{1.5}
+\pgfmathsetmacro{\ly}{3}
+\pgfmathsetmacro{\lz}{2}
+\draw[thick,blue,dashed] (-\lx,0,0) -- (\lx,0,0);
+\draw[thick,blue,dashed] (0,-\ly,0) -- (0,\ly,0);
+\draw[thick,blue,dashed] (0,0,-\lz) -- (0,0,\lz);
+\draw[thick,blue,->] (\lx,0,0) -- (5,0,0) node[below left]{$x$};
+\draw[thick,blue,->] (0,\ly,0) -- (0,5,0) node[right]{$y$};
+\draw[thick,blue,->] (0,0,\lz) -- (0,0,5) node[above]{$z$};
+
+\filldraw[panel,thick] (-\lx,\ly,\lz) -- (\lx,\ly,\lz) -- (\lx,-\ly,\lz) -- (-\lx,-\ly,\lz) -- cycle;
+\fill[panel] (-\lx,\ly,-\lz) -- (\lx,\ly,-\lz) -- (\lx,-\ly,-\lz) -- (-\lx,-\ly,-\lz) -- cycle; 
+\filldraw[panel,thick] (-\lx,\ly,\lz) -- (\lx,\ly,\lz) -- (\lx,\ly,-\lz) -- (-\lx,\ly,-\lz) -- cycle; 
+\fill[panel] (-\lx,-\ly,\lz) -- (\lx,-\ly,\lz) -- (\lx,-\ly,-\lz) -- (-\lx,-\ly,-\lz) -- cycle; 
+\fill[panel] (-\lx,-\ly,\lz) -- (-\lx,\ly,\lz) -- (-\lx,\ly,-\lz) -- (-\lx,-\ly,-\lz) -- cycle; 
+\filldraw[panel,thick] (\lx,-\ly,\lz) -- (\lx,\ly,\lz) -- (\lx,\ly,-\lz) -- (\lx,-\ly,-\lz) -- cycle;
+\draw[line join=round,thick,dashed] (\lx,-\ly,-\lz) -- (-\lx,-\ly,-\lz) -- (-\lx,-\ly,\lz);
+\draw[line join=round,thick,dashed] (-\lx,-\ly,-\lz) -- (-\lx,\ly,-\lz);
+
+\draw[<->] (\lx,0,-\lz) -- (\lx,0,0) node[midway,left]{$l_{z}$}; 
+\draw[<->] (\lx,0,\lz) -- (\lx,0,0) node[midway,left]{$l_{z}$};
+
+\draw[<->] (-\lx,\ly,0) -- (0,\ly,0) node[midway,above]{$l_{x}$}; 
+\draw[<->] (\lx,\ly,0) -- (0,\ly,0) node[midway,above]{$l_{x}$};
+
+\draw[<->] (0,-\ly,\lz) -- (0,0,\lz) node[midway,below]{$l_{y}$}; 
+\draw[<->] (0,\ly,\lz) -- (0,0,\lz) node[midway,below]{$l_{y}$};
+\end{tikzpicture}
+\caption{\texttt{SolidBox} centred at $\left(0,0,0\right)$, defined 
+by its half-widths $l_{x}$, $l_{y}$, $l_{z}$.}
+\label{Fig:SolidBox}
+\end{figure}
+
+\section{Tube}
+\texttt{SolidTube} describes a cylinder. The simplest constructor requires
+the location of the centre, the (outer) radius and the half-length. 
+\begin{lstlisting}
+SolidTube(const double cx, const double cy, const double cz, const double r,
+          const double lz);
+\end{lstlisting}
+\begin{description}
+\item[cx,cy,cz] Coordinates of the centre of gravity of the cylinder.
+\item[r] Outer radius of the cylinder.
+\item[lz] Half-length of the cylinder.
+\end{description}
+By default, the central axis of the cylinder is collinear with the $z$-axis,
+ as illustrated in Fig.~\ref{Fig:SolidTube}. 
+To create a cylinder with a different orientation, the constructor
+\begin{lstlisting}
+SolidTube(const double cx, const double cy, const double cz, const double r,
+          const double lz, const double dx, const double dy, const double dz);
+\end{lstlisting} 
+can be used. 
+
+\begin{figure}
+\centering
+\tdplotsetmaincoords{60}{120}
+\begin{tikzpicture}[panel/.style={fill=lightgray,fill opacity=0.2},line join=round,>=stealth,tdplot_main_coords]
+\pgfmathsetmacro{\rmax}{2}
+\pgfmathsetmacro{\rmin}{0.4}
+\pgfmathsetmacro{\lz}{3}
+
+\begin{scope}[canvas is xy plane at z=0]
+  \coordinate (MLZ) at (\tdplotmainphi-60:\rmax);
+  \draw[thin] (\tdplotmainphi:\rmax) arc (\tdplotmainphi:\tdplotmainphi-180:\rmax);
+  \draw[thin,dashed] (\tdplotmainphi:\rmax) arc (\tdplotmainphi:\tdplotmainphi+180:\rmax);
+  %\draw[thin,dashed] (0,0) circle (\rmin);
+\end{scope}
+\begin{scope}[canvas is xy plane at z=-\lz]
+  \coordinate (BR) at (\tdplotmainphi:\rmax);
+  \coordinate (BL) at (\tdplotmainphi-180:\rmax);
+  \coordinate (BLZ) at (\tdplotmainphi-60:\rmax);
+  \draw[dashed] (\tdplotmainphi:\rmax) arc (\tdplotmainphi:\tdplotmainphi+180:\rmax);
+  %\draw[thin,dashed] (0,0) circle (\rmin);
+  \draw[<->,thick,solid] (0,0,0) -- (0:\rmax) node[midway,above]{$r$};
+\end{scope}
+\begin{scope}[canvas is xy plane at z=\lz]
+  \coordinate (AZ) at (\tdplotmainphi-90:\rmin);
+  \coordinate (TLZ) at (\tdplotmainphi-60:\rmax);
+  \filldraw[panel,thick] (BR) arc (\tdplotmainphi:\tdplotmainphi-180:\rmax) -- (\tdplotmainphi-180:\rmax) arc (\tdplotmainphi-180:\tdplotmainphi:\rmax) --cycle;
+ \filldraw[panel,thick] (0,0) circle (\rmax); 
+ %\filldraw[thick,fill=white] (0,0) circle (\rmin);
+ \draw[<->,thick] (MLZ) -- (TLZ) node[midway,right]{$l_{z}$};
+ \draw[<->,thick] (MLZ) -- (BLZ) node[midway,right]{$l_{z}$};
+\end{scope}
+
+\draw[thick,blue,dashed] (-\rmax,0,0) -- (\rmax,0,0);
+\draw[thick,blue,dashed] (0,-\rmax,0) -- (0,\rmax,0);
+\draw[thick,blue,dashed] (0,0,-\lz) -- (AZ);
+\draw[thick,blue,->] (\rmax,0,0) -- (5,0,0) node[below left]{$x$};
+\draw[thick,blue,->] (0,\rmax,0) -- (0,5,0) node[below right]{$y$};
+\draw[thick,blue,->] (AZ) -- (0,0,5) node[above]{$z$};
+
+\end{tikzpicture}
+\caption{\texttt{SolidTube} centred at $\left(0,0,0\right)$.}
+\label{Fig:SolidTube}
+\end{figure}
+
+When determining the surface panels (\eg for use in neBEM), 
+the cylinder is approximated as a polygon with a finite number of panels.
+The type of polygon to be used can be set using
+\begin{lstlisting}
+void SetSectors(const std::size_t n);
+\end{lstlisting}
+The number of corners of the polygon equals $4(n - 1)$.
+Thus, $n = 2$ will produce a square, $n = 3$ an octagon.
+By default, the polygon used for approximating the cylinder 
+is inscribed in a circle of the specified radius. 
+If the ``average-radius'' flag is activated using
+\begin{lstlisting}
+void SetAverageRadius(const bool average);
+\end{lstlisting}
+the radius will be interpreted as the mean radius of the polygon
+that approximates the cylinder.
+By default, the list of surface panels will include the ``lids'' at 
+$\pm z$. This can be switched off using the functions 
+\begin{lstlisting}
+void SetTopLid(const bool closed);
+void SetBottomLid(const bool closed);
+\end{lstlisting}
+
+\section{Sphere}
+\texttt{SolidSphere} has two constructors.
+The first one takes the location of the 
+centre and the outer radius of the sphere.
+\begin{lstlisting}
+SolidSphere(const double cx, const double cy, const double cz,
+            const double r);
+\end{lstlisting}
+\begin{description}
+\item[cx,cy,cz] Coordinates of the centre of the sphere.
+\item[r] Radius of the sphere.
+\end{description}
+The second one takes the coordinates of the centre and the inner and 
+outer radii.
+\begin{lstlisting}
+SolidSphere(const double cx, const double cy, const double cz,
+            const double rmin, const double rmax);
+\end{lstlisting}
+
+\begin{figure}
+\centering
+\tdplotsetmaincoords{60}{120}
+\begin{tikzpicture}[line join=round,>=stealth,tdplot_main_coords]
+\pgfmathsetmacro{\radius}{2}
+\draw[thick,blue,dashed] (-\radius,0,0) -- (\radius,0,0);
+\draw[thick,blue,dashed] (0,-\radius,0) -- (0,\radius,0);
+\draw[thick,blue,dashed] (0,0,-\radius) -- (0,0,\radius);
+\draw[thick,blue,->] (\radius,0,0) -- (5,0,0) node[below left]{$x$};
+\draw[thick,blue,->] (0,\radius,0) -- (0,5,0) node[below right]{$y$};
+\draw[thick,blue,->] (0,0,\radius) -- (0,0,5) node[above]{$z$};
+\shadedraw[tdplot_screen_coords,ball color = white,very thin,opacity=0.2] (0,0) circle (\radius);
+\draw[thin] (\tdplotmainphi:\radius) arc (\tdplotmainphi:\tdplotmainphi-180:\radius);
+\draw[thin,dashed] (\tdplotmainphi:\radius) arc (\tdplotmainphi:\tdplotmainphi+180:\radius);
+\tdplotsetthetaplanecoords{0}
+\tdplotdrawarc[dashed,thin,tdplot_rotated_coords]{(0,0,0)}{\radius}{\tdplotmaintheta-270}{\tdplotmaintheta-90}{}{}
+\tdplotdrawarc[thin,tdplot_rotated_coords]{(0,0,0)}{\radius}{\tdplotmaintheta-90}{\tdplotmaintheta+90}{}{}
+\draw[<->,thick,solid] (0,0,0) -- (-45:\radius) node[pos=0.7,above]{$r$};
+\end{tikzpicture}
+\caption{\texttt{SolidSphere} centred at $\left(0,0,0\right)$.}
+\label{Fig:SolidSphere}
+\end{figure}
+
+When calculating surface panels (\eg for use in neBEM), 
+the sphere is approximated by a set of parallelograms.
+The parameter $n$, set using
+\begin{lstlisting}
+void SetMeridians(const std::size_t n);
+\end{lstlisting} 
+specifies the number of meridians and also the number of parallels.
+
+\section{Hole}
+\texttt{SolidHole} describes an, optionally tapered, cylindrical hole 
+in a box. Mandatory parameters are the location of the centre, 
+the radii and the dimensions of the box (see Fig.~\ref{Fig:SolidHole} for 
+an illustration of the parameters).
+\begin{lstlisting}
+SolidHole(const double cx, const double cy, const double cz,
+          const double rup, const double rlow,
+          const double lx, const double ly, const double lz);      
+\end{lstlisting}
+\begin{description}
+  \item[cx,cy,cz] Location of the point that is on the central axis of the hole, half-way between the two planes of the box perpendicular to the central axis of the hole.
+  \item[rup,rlow] Radius of the hole as measured at the ``upper'' and at the ``lower'' surface of the box.
+  \item[lx,ly,lz] Half-lenghts of the box.
+\end{description}
+The central axis of the hole is collinear with the $z$-axis. 
+To create a hole with a non-default orientation, the constructor
+\begin{lstlisting}
+SolidHole(const double cx, const double cy, const double cz,
+          const double rup, const double rlow,
+          const double lx, const double ly, const double lz,
+          const double dx, const double dy, const double dz);
+\end{lstlisting}
+is available.
+\begin{figure}
+\centering
+\tdplotsetmaincoords{60}{120}
+\begin{tikzpicture}[panel/.style={fill=lightgray,fill opacity=0.2},line join=round,>=stealth,tdplot_main_coords]
+\pgfmathsetmacro{\rtop}{1.5}
+\pgfmathsetmacro{\rbot}{1.15}
+\pgfmathsetmacro{\lx}{2}
+\pgfmathsetmacro{\ly}{2}
+\pgfmathsetmacro{\lz}{2}
+
+\filldraw[panel,thick] (-\lx,\ly,\lz) -- (\lx,\ly,\lz) -- (\lx,-\ly,\lz) -- (-\lx,-\ly,\lz) -- cycle;
+\fill[panel] (-\lx,\ly,-\lz) -- (\lx,\ly,-\lz) -- (\lx,-\ly,-\lz) -- (-\lx,-\ly,-\lz) -- cycle; 
+\filldraw[panel,thick] (-\lx,\ly,\lz) -- (\lx,\ly,\lz) -- (\lx,\ly,-\lz) -- (-\lx,\ly,-\lz) -- cycle; 
+\fill[panel] (-\lx,-\ly,\lz) -- (\lx,-\ly,\lz) -- (\lx,-\ly,-\lz) -- (-\lx,-\ly,-\lz) -- cycle; 
+\fill[panel] (-\lx,-\ly,\lz) -- (-\lx,\ly,\lz) -- (-\lx,\ly,-\lz) -- (-\lx,-\ly,-\lz) -- cycle; 
+\filldraw[panel,thick] (\lx,-\ly,\lz) -- (\lx,\ly,\lz) -- (\lx,\ly,-\lz) -- (\lx,-\ly,-\lz) -- cycle;
+\draw[line join=round,thick,dashed] (\lx,-\ly,-\lz) -- (-\lx,-\ly,-\lz) -- (-\lx,-\ly,\lz);
+\draw[line join=round,thick,dashed] (-\lx,-\ly,-\lz) -- (-\lx,\ly,-\lz);
+
+\begin{scope}[canvas is xy plane at z=-\lz]
+  \coordinate (BR) at (\tdplotmainphi:\rbot);
+  \coordinate (BL) at (\tdplotmainphi-180:\rbot);
+  \draw[dashed] (0,0) circle (\rbot);
+  \draw[<->,thick,solid] (0,0,0) -- (\tdplotmainphi+180:\rbot) node[midway,above]{$r_{\text{low}}$};
+\end{scope}
+\begin{scope}[canvas is xy plane at z=\lz]
+  \coordinate (AZ) at (\tdplotmainphi-90:\rtop);
+  \filldraw[thick,fill=white] (0,0) circle (\rtop);
+  \draw[dashed] (\tdplotmainphi:\rtop) -- (BR);
+  \draw[dashed] (\tdplotmainphi-180:\rtop) -- (BL);
+  \draw[<->,thick,solid] (0,0,0) -- (\tdplotmainphi+180:\rtop) node[midway,above]{$r_{\text{up}}$};
+\end{scope}
+
+\draw[thick,blue,dashed] (-\lx,0,0) -- (\lx,0,0);
+\draw[thick,blue,dashed] (0,-\ly,0) -- (0,\ly,0);
+\draw[thick,blue,dashed] (0,0,-\lz) -- (AZ);
+\draw[thick,blue,->] (\lx,0,0) -- (5,0,0) node[below left]{$x$};
+\draw[thick,blue,->] (0,\ly,0) -- (0,5,0) node[right]{$y$};
+\draw[thick,blue,->] (AZ) -- (0,0,5) node[above]{$z$};
+\end{tikzpicture}
+\caption{\texttt{SolidHole} centred at $\left(0,0,0\right)$.}
+\label{Fig:SolidHole}
+\end{figure}
+
+Like in \texttt{SolidTube}, the type of polygon used for approximating the 
+hole when calculating the surface panels can be specified using 
+\begin{lstlisting}
+void SetSectors(const std::size_t n);
+\end{lstlisting}
+
+\section{Ridge}
+\texttt{SolidRidge} describes a ridge, similar to a Toblerone bar. 
+The constructor takes the location of the centre and size of the floor, 
+and the position of the ridge proper.
+\begin{lstlisting}
+SolidRidge(const double cx, const double cy, const double cz,
+           const double lx, const double ly, const double hz,
+           const double hx);
+\end{lstlisting} 
+\begin{description}
+  \item[cx,cy,cz] Centre of the floor of the ridge in the $\left(x,y\right)$ plane at $z=0$.
+  \item[lx,ly] Half-lenghts of the floor.
+  \item[hz] Height of the ridge measured from the floor.
+  \item[hx] Offset in the $x$-direction of the ridge. If the offset is set to 0, then the ridge will be symmetric.  
+\end{description}
+An illustration is given in Fig.~\ref{Fig:SolidRidge}.
+By default, the ridge is taken to be parallel with the $y$-axis.
+\begin{figure}
+\centering
+\tdplotsetmaincoords{60}{160}
+\begin{tikzpicture}[panel/.style={fill=lightgray,fill opacity=0.2},line join=round,>=stealth,tdplot_main_coords]
+\pgfmathsetmacro{\lx}{2}
+\pgfmathsetmacro{\ly}{3}
+\pgfmathsetmacro{\hz}{2}
+\pgfmathsetmacro{\hx}{0.5}
+\pgfmathsetmacro{\zo}{\hz*\lx/(\hx+\lx)}
+\draw[thick,blue,dashed] (-\lx,0,0) -- (\lx,0,0);
+\draw[thick,blue,dashed] (0,-\ly,0) -- (0,\ly,0);
+\draw[thick,blue,dashed] (0,0,0) -- (0,0,\zo);
+\draw[thick,blue,->] (\lx,0,0) -- (5,0,0) node[below left]{$x$};
+\draw[thick,blue,->] (0,\ly,0) -- (0,5,0) node[right]{$y$};
+\draw[thick,blue,->] (0,0,\zo) -- (0,0,5) node[above]{$z$};
+
+\filldraw[panel,dashed] (-\lx,-\ly,0) -- (\lx,-\ly,0) -- (\hx,-\ly,\hz) -- cycle;
+\filldraw[panel,thick] (-\lx,\ly,0) -- (\lx,\ly,0) -- (\hx,\ly,\hz) -- cycle;
+\filldraw[panel,thick] (-\lx,\ly,0) -- (-\lx,-\ly,0) -- (\hx,-\ly,\hz) -- (\hx,\ly,\hz) -- cycle; 
+\filldraw[panel,thick] (\lx,\ly,0) -- (\lx,-\ly,0) -- (\hx,-\ly,\hz) -- (\hx,\ly,\hz) -- cycle; 
+
+\draw[dashed,thin] (\hx,\ly,0) -- (\hx,-\ly,0) -- (\hx,-\ly,\hz);
+\draw[<->,thick] (\hx,\ly,0) -- (\hx,\ly,\hz) node[midway,left]{$h_{z}$};
+\draw[<->,thick] (\hx,-\ly,0) -- (0,-\ly,0) node[midway,above]{$h_{x}$};
+\draw[<->,thick] (-\lx,-\ly,0) -- (-\lx,0,0) node[midway,right]{$l_{y}$}; 
+\draw[<->,thick] (-\lx,+\ly,0) -- (-\lx,0,0) node[midway,right]{$l_{y}$}; 
+\draw[<->,thick] (-\lx,\ly,0) -- (0,\ly,0) node[midway,below]{$l_{x}$};
+\draw[<->,thick] (+\lx,\ly,0) -- (0,\ly,0) node[midway,below]{$l_{x}$};
+\end{tikzpicture}
+\caption{\texttt{SolidRidge} in its default orientation, centred at 
+$\left(0,0,0\right)$.}
+\label{Fig:SolidRidge}
+\end{figure}
+
+\section{Extrusion}
+\texttt{SolidExtrusion} (illustrated in Fig.~\ref{Fig:SolidExtrusion})
+describes a volume
+generated by extruding a polygon along its normal axis (default: $z$-axis).
+The constructor takes the half-length along 
+$z$, and the $x, y$ coordinates of the polygon defining the extrusion. 
+\begin{lstlisting}
+SolidExtrusion(const double lz,
+               const std::vector<double>& xp, const std::vector<double>& yp); 
+\end{lstlisting} 
+\begin{description}
+  \item[lz] Half-length of the extrusion along $z$.
+  \item[xp,yp] $x,y$ coordinates of the point defining the extrusion profile.
+\end{description}
+To create an extrusion with an orientation or offset different from the 
+default one, the constructor
+\begin{lstlisting}
+SolidExtrusion(const double lz,
+               const std::vector<double>& xp, const std::vector<double>& yp,
+               const double cx, const double cy, const double cz,
+               const double dx, const double dy, const double dz); 
+\end{lstlisting} 
+can be used.
+
+\begin{figure}
+\centering
+\tdplotsetmaincoords{80}{120}
+\begin{tikzpicture}[panel/.style={fill=lightgray,fill opacity=0.2},line join=round,>=stealth,tdplot_main_coords]
+\pgfmathsetmacro{\xa}{-3}
+\pgfmathsetmacro{\ya}{-2}
+\pgfmathsetmacro{\xb}{-2}
+\pgfmathsetmacro{\yb}{2}
+\pgfmathsetmacro{\xc}{2}
+\pgfmathsetmacro{\yc}{0}
+\pgfmathsetmacro{\xd}{1}
+\pgfmathsetmacro{\yd}{-1}
+
+\pgfmathsetmacro{\lx}{\xc}
+\pgfmathsetmacro{\ly}{1}
+\pgfmathsetmacro{\lz}{2}
+\pgfmathsetmacro{\hx}{0.5}
+\draw[thick,blue,dashed] (0,0,0) -- (\lx,0,0);
+\draw[thick,blue,dashed] (0,0,0) -- (0,\ly,0);
+\draw[thick,blue,dashed] (0,0,-\lz) -- (0,0,\lz);
+\draw[thick,blue,->] (\lx,0,0) -- (5,0,0) node[below left]{$x$};
+\draw[thick,blue,->] (0,\ly,0) -- (0,5,0) node[right]{$y$};
+\draw[thick,blue,->] (0,0,\lz) -- (0,0,5) node[above]{$z$};
+
+\filldraw[panel,dashed] (\xa,\ya,-\lz) -- (\xb,\yb,-\lz) -- (\xc,\yc,-\lz) -- (\xd,\yd,-\lz) -- cycle;
+\draw[dashed] (\xa,\ya,0) -- (\xb,\yb,0) -- (\xc,\yc,0) -- (\xd,\yd,0) -- cycle;
+\filldraw[panel,thick] (\xa,\ya,\lz) -- (\xb,\yb,\lz) -- (\xc,\yc,\lz) -- (\xd,\yd,\lz) -- cycle;
+\filldraw[panel,thick] (\xb,\yb,\lz) -- (\xc,\yc,\lz) -- (\xc,\yc,-\lz) -- (\xb,\yb,-\lz) -- cycle;
+\filldraw[panel,thick] (\xc,\yc,\lz) -- (\xd,\yd,\lz) -- (\xd,\yd,-\lz) -- (\xc,\yc,-\lz) -- cycle;
+\draw[dashed] (\xa,\ya,-\lz) -- (\xa,\ya,\lz);
+
+\draw[<->,thick] (0,\ly,-\lz) -- (0,\ly,0) node[midway,right]{$l_{z}$}; 
+\draw[<->,thick] (0,\ly,0) -- (0,\ly,\lz) node[midway,right]{$l_{z}$}; 
+\end{tikzpicture}
+\caption{\texttt{SolidExtrusion} in its default orientation.}
+\label{Fig:SolidExtrusion}
+\end{figure}

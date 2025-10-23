@@ -1,7 +1,8 @@
-#include <cfloat>
-#include <iomanip>
 #include "wcpplib/math/cubic.h"
-#include "wcpplib/math/parabol.h"
+
+#include <iostream>
+#include <limits>
+
 #include "wcpplib/util/FunNameStack.h"
 
 /*
@@ -22,7 +23,6 @@ const Cubic::double_complex Cubic::iu(0, 1);
 
 void Cubic::find_zero(double_complex& z1, double_complex& z2,
                       double_complex& z3) const {
-  mfunname("void Cubic::find_zero(...) const");
   const Cubic& t = (*this);
   if (s_dxzero != 0) {
     z1 = dz1;
@@ -31,7 +31,7 @@ void Cubic::find_zero(double_complex& z1, double_complex& z2,
     return;
   }
 
-  check_econd11a(da, == 0.0, "this is not cubic polynomial!", mcerr);
+  check_econd11a(da, == 0.0, "this is not cubic polynomial!", std::cerr);
   double a2 = db / da;
   double a1 = dc / da;
   double a0 = dd / da;
@@ -72,12 +72,11 @@ void Cubic::find_zero(double_complex& z1, double_complex& z2,
 }
 
 int Cubic::find_real_zero(double z[3]) const {
-  mfunname("int Cubic::find_real_zero(double z[3]) const");
   double_complex zc1;
   double_complex zc2;
   double_complex zc3;
   find_zero(zc1, zc2, zc3);
-  double thresh = 10.0 * DBL_MIN;
+  double thresh = 10.0 * std::numeric_limits<double>::min();
   int q = 0;
   if (fabs(zc1.imag()) < thresh ||
       (zc1.real() != 0.0 && fabs(zc1.imag() / zc1.real()) < thresh)) {
@@ -118,67 +117,4 @@ int Cubic::find_real_zero(double z[3]) const {
   return q;
 }
 
-int Cubic::find_maxmin(double xmm[2], double ymm[2], int s_mm[2]) const {
-  mfunname(
-      "int Cubic::find_maxmin(double xmm[2], double ymm[2], int s_mm[2]) "
-      "const");
-  double ap = 3 * da;
-  double bp = 2 * db;
-  double cp = dc;
-  Parabol par(ap, bp, cp);
-  s_mm[0] = 0;
-  s_mm[1] = 0;
-  int qz = par.find_zero(xmm);
-  if (qz == 1) {
-    s_mm[0] = 0;
-  }
-  if (qz == 2) {
-    if (a() > 0) {
-      s_mm[0] = 1;
-      s_mm[1] = -1;
-    } else {
-      s_mm[0] = -1;
-      s_mm[1] = 1;
-    }
-  }
-  for (int n = 0; n < qz; ++n) {
-    ymm[n] = y(xmm[n]);
-  }
-  return qz;
-}
-
-std::ostream& operator<<(std::ostream& file, const Cubic& f) {
-  Cubic::double_complex z1;
-  Cubic::double_complex z2;
-  Cubic::double_complex z3;
-  Ifile << "Cubic: s_xzero=" << f.s_xzero() << '\n';
-  indn.n += 2;
-  f.find_zero(z1, z2, z3);
-  Ifile << "Cubic: a=" << f.a() << " b=" << f.b() << " c=" << f.c()
-        << " d=" << f.d() << '\n';
-  file << " z1,2,3=" << z1 << ' ' << z2 << ' ' << z3 << '\n';
-  double r[3];
-  int q;
-  q = f.find_real_zero(r);
-  Ifile << "The number of real zeros =" << q << '\n';
-  int n;
-  Ifile << "Solutions=";
-  for (n = 0; n < q; n++) file << ' ' << r[n];
-  file << '\n';
-  double xmm[2];
-  double ymm[2];
-  int s_mm[2];
-  q = f.find_maxmin(xmm, ymm, s_mm);
-  Ifile << "Max/Min, q=" << q << '\n';
-  indn.n += 2;
-  for (n = 0; n < q; n++) {
-    Ifile << "n=" << n << " xmm[n]=" << std::setw(13) << xmm[n]
-          << " ymm[n]=" << std::setw(13) << ymm[n]
-          << " s_mm[n]=" << std::setw(13) << s_mm[n] << '\n';
-  }
-  indn.n -= 2;
-  indn.n -= 2;
-
-  return file;
-}
-}
+}  // namespace Heed

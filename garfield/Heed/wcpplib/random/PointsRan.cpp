@@ -1,6 +1,9 @@
-#include <iomanip>
-#include <cmath>
 #include "wcpplib/random/PointsRan.h"
+
+#include <cmath>
+#include <iomanip>
+#include <iostream>
+
 #include "wcpplib/util/FunNameStack.h"
 
 /*
@@ -19,16 +22,15 @@ namespace Heed {
 PointsRan::PointsRan(const std::vector<double>& fx,
                      const std::vector<double>& fy, double fxmin, double fxmax)
     : xmin(fxmin), xmax(fxmax), x(fx), y(fy) {
-  mfunnamep("PointsRan::PointsRan(...)");
-  check_econd12(x.size(), !=, y.size(), mcerr);
-  check_econd11(x.size(), < 2, mcerr);
-  check_econd12(xmin, >=, xmax, mcerr);
+  check_econd12(x.size(), !=, y.size(), std::cerr);
+  check_econd11(x.size(), < 2, std::cerr);
+  check_econd12(xmin, >=, xmax, std::cerr);
   const long q = x.size();
   for (long n = 0; n < q - 1; n++) {
-    check_econd12(x[n], >=, x[n + 1], mcerr);
+    check_econd12(x[n], >=, x[n + 1], std::cerr);
   }
   for (long n = 0; n < q; n++) {
-    check_econd11(y[n], < 0.0, mcerr);
+    check_econd11(y[n], < 0.0, std::cerr);
   }
   iy.resize(q);
   a.resize(q - 1);
@@ -39,7 +41,7 @@ PointsRan::PointsRan(const std::vector<double>& fx,
     double y0 = y[0] - a[0] * (x[0] - xmin);
     if (y0 < 0.0) {
       x[0] = x[0] - y[0] / a[0];
-      check_econd12(xmax, <, x[0], mcerr);
+      check_econd12(xmax, <, x[0], std::cerr);
       xmin = x[0];
       y[0] = 0.0;
     } else {
@@ -51,7 +53,7 @@ PointsRan::PointsRan(const std::vector<double>& fx,
     double yq = y[q - 1] + a[q - 2] * (xmax - x[q - 1]);
     if (yq < 0.0) {
       x[q - 1] = x[q - 1] - y[q - 1] / a[0];
-      check_econd12(xmin, >, x[q - 1], mcerr);
+      check_econd12(xmin, >, x[q - 1], std::cerr);
       xmax = x[q - 1];
       y[q - 1] = 0.0;
     } else {
@@ -85,11 +87,10 @@ PointsRan::PointsRan(const std::vector<double>& fx,
   integ_active = integ_finish - integ_start;
   double s = iy[q - 1];
   integ_total = s;
-  check_econd11(s, <= 0.0, mcerr);
+  check_econd11(s, <= 0.0, std::cerr);
 }
 
 double PointsRan::ran(double flat_ran) const {
-  mfunnamep("double PointsRan::ran(double flat_ran) const");
   flat_ran = integ_start + integ_active * flat_ran;
   // long q = x.get_qel();
   long n1 = n_start;
@@ -111,30 +112,8 @@ double PointsRan::ran(double flat_ran) const {
   } else {
     dx = (x[n2] - x[n1]) / (iy[n2] - iy[n1]) * dran;
   }
-  // check_econd11(dx , < 0 , mcerr); // for debug
-  // check_econd11(dx , > x[n2] - x[n1] , mcerr); // for debug
   double r = x[n1] + dx;
   return r;
 }
 
-void PointsRan::print(std::ostream& file) const {
-  Ifile << "PointsRan:\n";
-  indn.n += 2;
-  Ifile << "xmin=" << xmin << " xmax=" << xmax << '\n';
-  Ifile << "n_start=" << n_start << " n_finish=" << n_finish << '\n';
-  Ifile << "integ_start=" << integ_start << " integ_finish=" << integ_finish
-        << '\n';
-  Ifile << "integ_total=" << integ_total << " integ_active=" << integ_active
-        << '\n';
-  // Iprintn(file, integ);
-  const long q = x.size();
-  Iprintn(file, q);
-  for (long n = 0; n < q; n++) {
-    file << std::setw(3) << n << ' ' << std::setw(12) << x[n] << ' '
-         << std::setw(12) << y[n] << ' ' << std::setw(12) << iy[n];
-    if (n < q - 1) file << ' ' << std::setw(12) << a[n];
-    file << '\n';
-  }
-  indn.n -= 2;
-}
-}
+}  // namespace Heed

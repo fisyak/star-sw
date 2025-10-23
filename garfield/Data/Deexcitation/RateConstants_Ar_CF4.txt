@@ -1,0 +1,18 @@
+# Chen and Setser 
+1S5   0.33e-19
+1S3   0.26e-19
+# Guess (same ballpark number as 1S5 and 1S3).
+1S4   0.3e-19
+1S2   0.3e-19
+# Sadeghi et al.
+2P8   1.7e-19 
+2P6   1.7e-19
+2P5   1.6e-19
+2P1   2.2e-19
+# Average of 4p rate constants from Sadeghi et al.
+2P10  1.8e-19
+2P9   1.8e-19
+2P7   1.8e-19
+2P4   1.8e-19
+2P3   1.8e-19
+2P2   1.8e-19

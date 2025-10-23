@@ -1,0 +1,24 @@
+# installation location
+install
+
+# build location
+build
+Build
+
+# MacOS metadata
+.DS_Store
+
+# Visual Code
+.vscode
+.build
+.cache
+
+.codacy
+
+Doc/UserGuide/UserGuide.aux
+Doc/UserGuide/UserGuide.bbl
+Doc/UserGuide/UserGuide.blg
+Doc/UserGuide/UserGuide.log
+Doc/UserGuide/UserGuide.out
+Doc/UserGuide/UserGuide.synctex.gz
+Doc/UserGuide/UserGuide.toc

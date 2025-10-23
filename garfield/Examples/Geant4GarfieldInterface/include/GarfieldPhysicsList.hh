@@ -31,23 +31,20 @@
 #ifndef GarfieldPhysicsList_h
 #define GarfieldPhysicsList_h 1
 
-
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 
+class GarfieldPhysicsList : public G4VModularPhysicsList {
+ public:
+  GarfieldPhysicsList();
+  virtual ~GarfieldPhysicsList();
+  virtual void SetCuts();
+  virtual void ConstructParticle();
+  virtual void ConstructProcess();
 
-class GarfieldPhysicsList: public G4VModularPhysicsList {
-public:
-	GarfieldPhysicsList();
-	virtual ~GarfieldPhysicsList();
-	virtual void SetCuts();
-	virtual void ConstructParticle();
-	virtual void ConstructProcess();
-protected:
-	// these methods Construct physics processes and register them
-	void AddParameterisation();
-
+ protected:
+  // these methods Construct physics processes and register them
+  void AddParameterisation();
 };
-
 
 #endif /* GarfieldPhysicsList_h */

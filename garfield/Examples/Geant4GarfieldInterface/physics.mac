@@ -9,7 +9,7 @@
 # Here are the Geant4 particle types and energies that are set by useDefaults = true
 /exampleGarfield/physics/setGeant4ParticleTypeAndEnergy e- 0 1e+8 MeV 
 /exampleGarfield/physics/setGeant4ParticleTypeAndEnergy e+ 0 1e+8 MeV 
-/exampleGarfield/physics/setGeant4ParticleTypeAndEnergy mi- 0 1e+8 MeV 
+/exampleGarfield/physics/setGeant4ParticleTypeAndEnergy mu- 0 1e+8 MeV 
 /exampleGarfield/physics/setGeant4ParticleTypeAndEnergy mu+ 0 1e+8 MeV 
 /exampleGarfield/physics/setGeant4ParticleTypeAndEnergy proton 0 1e+8 MeV 
 /exampleGarfield/physics/setGeant4ParticleTypeAndEnergy pi+ 0 1e+8 MeV 

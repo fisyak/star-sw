@@ -43,30 +43,27 @@ class G4UIcmdWithoutParameter;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class GarfieldMessenger: public G4UImessenger {
-public:
+class GarfieldMessenger : public G4UImessenger {
+ public:
+  GarfieldMessenger(GarfieldDetectorConstruction*);
+  ~GarfieldMessenger();
 
-	GarfieldMessenger(GarfieldDetectorConstruction*);
-	~GarfieldMessenger();
+  virtual void SetNewValue(G4UIcommand*, G4String);
 
-	virtual void SetNewValue(G4UIcommand*, G4String);
+ private:
+  GarfieldDetectorConstruction* fDetector;
 
-private:
+  G4UIdirectory* fExampleDir;
+  G4UIdirectory* fAbsorberDir;
+  G4UIdirectory* fGarfieldPhysicsDir;
 
-	GarfieldDetectorConstruction* fDetector;
-
-	G4UIdirectory* fExampleDir;
-	G4UIdirectory* fAbsorberDir;
-	G4UIdirectory*  fGarfieldPhysicsDir;
-
-	G4UIcmdWithAString* fMaterialCmd;
-	G4UIcommand* fIsotopeCmd;
-	G4UIcommand* fIonizationModelCmd;
-	G4UIcommand* fGeant4ParticleCmd;
-	G4UIcommand* fGarfieldParticleCmd;
+  G4UIcmdWithAString* fMaterialCmd;
+  G4UIcommand* fIsotopeCmd;
+  G4UIcommand* fIonizationModelCmd;
+  G4UIcommand* fGeant4ParticleCmd;
+  G4UIcommand* fGarfieldParticleCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
-

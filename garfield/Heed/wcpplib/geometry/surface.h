@@ -1,6 +1,8 @@
 #ifndef SURFACE_H
 #define SURFACE_H
-#include <iostream>
+#include <array>
+#include <memory>
+
 #include "wcpplib/geometry/polyline.h"
 #include "wcpplib/geometry/volume.h"
 /*
@@ -19,27 +21,23 @@ The file is provided "as is" without express or implied warranty.
 
 namespace Heed {
 
-const int pqqsurf = 10;
-const int pqcrossurf = 4;
-
 /// Surface base class.
 
 class surface : public absref {
  public:
-  virtual surface* copy() const = 0;
   virtual ~surface() {}
   virtual int check_point_inside(const point& fpt, const vec& dir,
-                                 vfloat fprec) const = 0;
+                                 double fprec) const = 0;
   // If two volumes are exactly adjusted, it may happens that the point
   // belongs to both volumes, to their borders. If dir != dv0,
   // the exiting volume is ignored.
 
   virtual int check_point_inside1(const point& fpt, int s_ext,
-                                  vfloat fprec) const = 0;
+                                  double fprec) const = 0;
   // s_ext=0 - entering
   //       1 - exiting
 
-  virtual int range(const trajestep& fts, vfloat* crange, point* cpt,
+  virtual int range(const trajestep& fts, double* crange, point* cpt,
                     int* s_ext) const = 0;
   // Does not change fts
   // If no cross or cross father than fts.mrange,
@@ -60,8 +58,7 @@ class surface : public absref {
   // In case of parallel to border, s_ext=2.
 
   virtual int cross(const polyline& fpl, point* cntrpt, int& qcntrpt,
-                    vfloat prec) const = 0;
-  virtual void print(std::ostream& file, int l) const = 0;
+                    double prec) const = 0;
 };
 
 // **** splane ****
@@ -71,8 +68,8 @@ class splane : public surface {
   plane pn;
   vec dir_ins;  // direction to inside, supposed to be unit length (What for?)
  protected:
-  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
-  static absref(absref::*aref_splane[2]);
+  absref_transmit get_components() override;
+  static absref absref::* aref_splane[2];
 
  public:
   /// Default constructor
@@ -83,8 +80,10 @@ class splane : public surface {
   /// Destructor
   virtual ~splane() {}
 
-  int check_point_inside(const point& fpt, const vec& dir, vfloat fprec) const;
-  int check_point_inside1(const point& fpt, int s_ext, vfloat fprec) const;
+  int check_point_inside(const point& fpt, const vec& dir,
+                         double fprec) const override;
+  int check_point_inside1(const point& fpt, int s_ext,
+                          double fprec) const override;
   // s_ext=0 - entering
   //       1 - exiting
   // 15.02.2006: Remark on check_point_inside vs. check_point_inside1.
@@ -101,22 +100,21 @@ class splane : public surface {
   // all the surfaces, thus faking the entering even if the particle is
   // actually exiting. This allows to make a stop there.
 
-  int range(const trajestep& fts, vfloat* crange, point* cpt, int* s_ext) const;
+  int range(const trajestep& fts, double* crange, point* cpt,
+            int* s_ext) const override;
   // Does not change fts
   // If no cross, returns 0 a
   // If there are crosses, returns number of them and
   // assign crange and cpt
 
   int cross(const polyline& fpl, point* cntrpt, int& qcntrpt,
-            vfloat prec) const {
+            double prec) const override {
     polyline* plh = new polyline[fpl.Gqsl()];
     int qplh;
     int i = pn.cross(fpl, cntrpt, qcntrpt, plh, qplh, prec);
     delete[] plh;
     return i;
   }
-  virtual void print(std::ostream& file, int l) const;
-  virtual splane* copy() const { return new splane(*this); }
 };
 
 /// Unlimited surfaces volume.
@@ -141,56 +139,38 @@ class ulsvolume : public absvol {
   // It allows to make cylinders, tubes and many other complicated shapes.
 
  public:
-  int qsurf;
-  ActivePtr<surface> surf[pqqsurf];
-  std::string name;
+  static constexpr int pqqsurf = 10;
+  int qsurf = 0;
+  std::array<std::shared_ptr<surface>, pqqsurf> surf;
 
  protected:
-  surface* adrsurf[pqqsurf];  // used only for get_components
-  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
+  // Array of raw pointers used used in get_components.
+  surface* adrsurf[pqqsurf];
+
+  absref_transmit get_components() override;
 
  public:
   /// Default constructor.
-  ulsvolume();
-  ulsvolume(surface* fsurf[pqqsurf], int fqsurf, char* fname, vfloat fprec);
+  ulsvolume() {}
+  /// Constructor from surfaces.
+  ulsvolume(const std::vector<std::shared_ptr<surface> >& fsurf, double fprec);
   ulsvolume(ulsvolume& f);
   ulsvolume(const ulsvolume& fv);
   /// Destructor
   virtual ~ulsvolume() {}
 
-  int check_point_inside(const point& fpt, const vec& dir) const;
+  int check_point_inside(const point& fpt, const vec& dir) const override;
 
-  int range_ext(trajestep& fts, int s_ext) const;
+  int range_ext(trajestep& fts, int s_ext) const override;
   // If no cross, returns 0 and does not change fts
   // If there is cross, returns 1 and assign fts.mrange and fts.mpoint
-  void ulsvolume_init(surface* fsurf[pqqsurf], int fqsurf,
-                      const std::string& fname, vfloat fprec);
 
-  virtual void income(gparticle* /*gp*/) {}
-  virtual void chname(char* nm) const {
-    strcpy(nm, "ulsvolume: ");
-    strcat(nm, name.c_str());
-  }
-  virtual void print(std::ostream& file, int l) const;
-  virtual ulsvolume* copy() const { return new ulsvolume(*this); }
+  void ulsvolume_init(const std::vector<std::shared_ptr<surface> >& fsurf,
+                      double fprec);
+
+  void income(gparticle* /*gp*/) override {}
 };
 
-class manip_ulsvolume : public manip_absvol, public ulsvolume {
- public:
-  manip_ulsvolume() : manip_absvol(), ulsvolume() {}
-  manip_ulsvolume(const manip_ulsvolume& f);
-  manip_ulsvolume(const ulsvolume& f) : manip_absvol(), ulsvolume(f) {}
-  /// Destructor
-  virtual ~manip_ulsvolume() {}
-
-  virtual absvol* Gavol() const { return (ulsvolume*)this; }
-  virtual void chname(char* nm) const {
-    strcpy(nm, "manip_ulsvolume: ");
-    strcat(nm, name.c_str());
-  }
-  virtual void print(std::ostream& file, int l) const;
-  virtual manip_ulsvolume* copy() const { return new manip_ulsvolume(*this); }
-};
-}
+}  // namespace Heed
 
 #endif

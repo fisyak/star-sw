@@ -1,4 +1,7 @@
 #include "wcpplib/math/PolLeg.h"
+
+#include <iostream>
+
 #include "wcpplib/util/FunNameStack.h"
 
 /*
@@ -15,9 +18,8 @@ It is provided "as is" without express or implied warranty.
 namespace Heed {
 
 double polleg(const int l, const double x) {
-  mfunname("double polleg(int l, double x)");
-  check_econd11(l, < 0, mcerr);
-  check_econd11a(l, > 6, "not implemented", mcerr);
+  check_econd11(l, < 0, std::cerr);
+  check_econd11a(l, > 6, "not implemented", std::cerr);
   switch (l) {
     case 0:
       return 1.0;
@@ -46,4 +48,4 @@ double polleg(const int l, const double x) {
   }
   return 0.0;  // should never happen
 }
-}
+}  // namespace Heed

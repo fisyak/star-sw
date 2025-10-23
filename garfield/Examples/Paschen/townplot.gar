@@ -1,0 +1,54 @@
+// Make PostScript file
+Global ps = True
+
+// Plot range
+Global emin = 4000
+Global emax = 1000000
+Global e = emin*(emax/emin)^((row(200)-1)/199)
+
+// Read 99/1 transport table and extract Townsend coefficient
+&GAS
+get "ar-90-ic4h10-10-p1.gas"
+&MAIN
+Call townsend(e, a90_10)
+Global p90 = 1
+
+// Read 95/5 transport table and extract Townsend coefficient
+&GAS
+get "ar-95-ic4h10-5-p1.gas"
+&MAIN
+Call townsend(e, a95_5)
+Global p95 = 1
+
+// Read 90/10 transport table and extract Townsend coefficient
+&GAS
+get "ar-99-ic4h10-1-p1.gas"
+&MAIN
+Call townsend(e, a99_1)
+Global p99 = 1
+
+// Open PS file if requested
+If ps Then
+   < /afs/cern.ch/user/r/rjd/Garfield/Files/garftrans
+   ! add meta type PostScript file-name "denistown.ps"
+   ! open meta
+   ! act meta
+Endif
+
+// Plot the Townsend coefficients
+!opt log-x log-y
+Call plot_frame(emin, 1, emax, 15000, `E [V/cm]`, `&alpha; [1/cm]`)
+!rep function-1 polyline-colour brown
+Call plot_line(e/p90, a90_10/p90, `function-1`)
+!rep function-1 polyline-colour red
+Call plot_line(e/p95, a95_5/p95, `function-1`)
+!rep function-1 polyline-colour orange
+Call plot_line(e/p99, a99_1/p99, `function-1`)
+Call plot_end
+
+// Close the PS file
+If ps Then
+   ! deact meta
+   ! close meta
+   ! del meta
+Endif

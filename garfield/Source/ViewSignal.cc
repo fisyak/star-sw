@@ -1,167 +1,257 @@
+#include "Garfield/ViewSignal.hh"
+
+#include <TGraph.h>
+#include <TH1D.h>
+#include <TLegend.h>
+
+#include <cmath>
 #include <iostream>
-#include <sstream>
 
-#include <TAxis.h>
-
-#include "Plotting.hh"
-#include "Sensor.hh"
-#include "ViewSignal.hh"
+#include "Garfield/Exceptions.hh"
+#include "Garfield/GarfieldConstants.hh"
+#include "Garfield/Sensor.hh"
 
 namespace Garfield {
 
-ViewSignal::ViewSignal()
-    : m_className("ViewSignal"),
-      m_debug(false),
-      m_sensor(NULL),
-      m_canvas(NULL),
-      m_hasExternalCanvas(false),
-      m_hSignal(NULL), m_hSignalElectrons(NULL), m_hSignalIons(NULL),
-      m_gCrossings(NULL) {
+ViewSignal::ViewSignal() : ViewBase("ViewSignal") {}
 
-  plottingEngine.SetDefaultStyle();
+ViewSignal::ViewSignal(Sensor* sensor) : ViewSignal() { SetSensor(sensor); }
+
+void ViewSignal::SetSensor(Sensor* sensor) {
+  if (!sensor) throw Exception("::SetSensor: Null pointer");
+  m_sensor = sensor;
 }
 
-ViewSignal::~ViewSignal() {
-
-  if (!m_hasExternalCanvas && m_canvas) delete m_canvas;
-  if (m_hSignal) delete m_hSignal;
-  if (m_hSignalElectrons) delete m_hSignalElectrons;
-  if (m_hSignalIons) delete m_hSignalIons;
-  if (m_gCrossings) delete m_gCrossings;
+void ViewSignal::SetRangeX(const double xmin, const double xmax) {
+  if (std::fabs(xmax - xmin) < Small) throw Exception("Invalid range");
+  m_xmin = std::min(xmin, xmax);
+  m_xmax = std::max(xmin, xmax);
+  m_userRangeX = true;
 }
 
-void ViewSignal::SetSensor(Sensor* s) {
-
-  if (!s) {
-    std::cerr << m_className << "::SetSensor: Null pointer.\n";
-    return;
-  }
-  m_sensor = s;
+void ViewSignal::SetRangeY(const double ymin, const double ymax) {
+  if (std::fabs(ymax - ymin) < Small) throw Exception("Invalid range");
+  m_ymin = std::min(ymin, ymax);
+  m_ymax = std::max(ymin, ymax);
+  m_userRangeY = true;
 }
 
-void ViewSignal::SetCanvas(TCanvas* c) {
-
-  if (!c) return;
-  if (!m_hasExternalCanvas && m_canvas) {
-    delete m_canvas;
-    m_canvas = NULL;
+TH1* ViewSignal::DrawHistogram(TH1D& h, const std::string& opt,
+                               const std::string& ylabel) {
+  h.SetDirectory(nullptr);
+  h.SetStats(0);
+  h.GetXaxis()->SetTitle("time [ns]");
+  h.GetYaxis()->SetTitle(ylabel.c_str());
+  h.SetLineWidth(5);
+  auto hCopy = h.DrawCopy(opt.c_str(), "");
+  if (m_userRangeX) hCopy->SetAxisRange(m_xmin, m_xmax, "X");
+  if (m_userRangeY) {
+    hCopy->SetMinimum(m_ymin);
+    hCopy->SetMaximum(m_ymax);
   }
-  m_canvas = c;
-  m_hasExternalCanvas = true;
+  return hCopy;
 }
 
-void ViewSignal::PlotSignal(const std::string& label, const bool total,
-                            const bool electron, const bool ion) {
+void ViewSignal::PlotSignal(const std::string& label, const std::string& optT,
+                            const std::string& optP, const std::string& optD,
+                            const bool same) {
+  if (!m_sensor) throw Exception("Sensor is not defined");
+  const bool totT = true;
+  const bool totP = optP.find("t") != std::string::npos ? true : false;
+  const bool totD = optD.find("t") != std::string::npos ? true : false;
+  const bool eleT = optT.find("e") != std::string::npos ? true : false;
+  const bool eleP = optP.find("e") != std::string::npos ? true : false;
+  const bool eleD = optD.find("e") != std::string::npos ? true : false;
+  const bool ionT = optT.find("i") != std::string::npos ? true : false;
+  const bool ionP = optP.find("i") != std::string::npos ? true : false;
+  const bool ionD = optD.find("i") != std::string::npos ? true : false;
 
-  if (!m_sensor) {
-    std::cerr << m_className << "::PlotSignal: Sensor is not defined.\n";
-    return;
-  }
+  constexpr double tol = 1e-50;
 
-  // Setup the canvas
-  if (!m_canvas) {
-    m_canvas = new TCanvas();
-    m_canvas->SetTitle("Signal");
-    if (m_hasExternalCanvas) m_hasExternalCanvas = false;
-  }
-  m_canvas->cd();
+  auto canvas = GetCanvas();
+  canvas->cd();
+  canvas->SetTitle("Signal");
 
-  unsigned int nBins = 100;
+  std::size_t nBins = 100;
   double t0 = 0., dt = 1.;
   m_sensor->GetTimeWindow(t0, dt, nBins);
+  const double t1 = t0 + nBins * dt;
 
-  if (total) {
-    if (m_hSignal) {
-      delete m_hSignal;
-      m_hSignal = NULL;
-    }
-    const std::string hname = FindHistogramName("hSignal_");
-    m_hSignal = new TH1D(hname.c_str(), label.c_str(), nBins, t0, t0 + nBins * dt);
-    m_hSignal->SetLineColor(plottingEngine.GetRootColorLine1());
-    m_hSignal->GetXaxis()->SetTitle("time [ns]");
-    m_hSignal->GetYaxis()->SetTitle("signal [fC / ns]");
+  std::string ylabel = m_labelY;
+  if (ylabel.empty()) {
+    ylabel = m_sensor->IsIntegrated(label) ? "signal [fC]" : "signal [fC / ns]";
+  }
+  std::size_t nPlots = same ? 1 : 0;
+  if (!RangeSet(gPad)) nPlots = 0;
 
-    for (unsigned int i = 0; i < nBins; ++i) {
-      const double sig = m_sensor->GetSignal(label, i);
-      m_hSignal->SetBinContent(i + 1, sig);
+  TLegend* legend = nullptr;
+  if (m_legend) {
+    legend = new TLegend(0.7, 0.7, 0.9, 0.9);
+    legend->SetHeader("Induced current components");
+  }
+
+  if (totT) {
+    const auto hname = FindUnusedHistogramName("hSignal_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colTotal);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetSignal(label, i, 0);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
     }
-  
-    if (m_gCrossings) {
-      delete m_gCrossings;
-      m_gCrossings = NULL;
-    }
-  
-    // Get threshold crossings.
-    const int nCrossings = m_sensor->GetNumberOfThresholdCrossings();
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+
+    // Get and plot threshold crossings.
+    const auto nCrossings = m_sensor->GetNumberOfThresholdCrossings();
     if (nCrossings > 0) {
-      m_gCrossings = new TGraph(nCrossings);
-      m_gCrossings->SetMarkerStyle(20);
-      m_gCrossings->SetMarkerColor(plottingEngine.GetRootColorLine1());
+      TGraph gCrossings;
+      gCrossings.SetMarkerStyle(20);
+      gCrossings.SetMarkerColor(m_colTotal);
+      std::vector<double> xp;
+      std::vector<double> yp;
       double time = 0., level = 0.;
       bool rise = true;
-      for (int i = nCrossings; i--;) {
+      for (std::size_t i = 0; i < nCrossings; ++i) {
         if (m_sensor->GetThresholdCrossing(i, time, level, rise)) {
-          m_gCrossings->SetPoint(i, time, level);
+          xp.push_back(time);
+          yp.push_back(level);
         }
       }
+      gCrossings.DrawGraph(xp.size(), xp.data(), yp.data(), "psame");
     }
-  
-    m_hSignal->Draw("");
-    if (nCrossings > 0) m_gCrossings->Draw("psame");
-    m_canvas->Update();
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Total induced signal", "l");
   }
 
-  // Plot the electron and ion signals if requested.
-  if (electron) {
-    if (m_hSignalElectrons) {
-      delete m_hSignalElectrons;
-      m_hSignalElectrons = NULL;
+  if (totD) {
+    const auto hname = FindUnusedHistogramName("hDelayedSignal_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colDelayed[3]);
+    h.SetLineStyle(7);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetSignal(label, i, 2);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
     }
-    const std::string hname = FindHistogramName("hSignalElectrons_");
-    m_hSignalElectrons = new TH1D(hname.c_str(), 
-                                  label.c_str(), nBins, t0, t0 + nBins * dt);
-    m_hSignalElectrons->SetLineColor(plottingEngine.GetRootColorElectron());
-    m_hSignalElectrons->GetXaxis()->SetTitle("time [ns]");
-    m_hSignalElectrons->GetYaxis()->SetTitle("signal [fC / ns]");
-    for (unsigned int i = 0; i < nBins; ++i) {
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Delayed induced signal", "l");
+  }
+
+  if (totP) {
+    const auto hname = FindUnusedHistogramName("hPromptSignal_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colPrompt[0]);
+    h.SetLineStyle(2);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetSignal(label, i, 1);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
+    }
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Prompt induced signal", "l");
+  }
+
+  if (eleT) {
+    const auto hname = FindUnusedHistogramName("hSignalElectrons_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colElectrons);
+    for (std::size_t i = 0; i < nBins; ++i) {
       const double sig = m_sensor->GetElectronSignal(label, i);
-      m_hSignalElectrons->SetBinContent(i + 1, sig);
+      h.SetBinContent(i + 1, sig);
     }
-    m_hSignalElectrons->Draw("same");
-    m_canvas->Update();
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Electron induced signal", "l");
   }
-  if (ion) {
-    if (m_hSignalIons) {
-      delete m_hSignalIons;
-      m_hSignalIons = NULL;
+
+  if (eleD) {
+    const auto hname = FindUnusedHistogramName("hDelayedElectrons_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colDelayed[4]);
+    h.SetLineStyle(7);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetDelayedElectronSignal(label, i);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
     }
-    const std::string hname = FindHistogramName("hSignalIons_");
-    m_hSignalIons = new TH1D(hname.c_str(), 
-                                  label.c_str(), nBins, t0, t0 + nBins * dt);
-    m_hSignalIons->SetLineColor(plottingEngine.GetRootColorIon());
-    m_hSignalIons->GetXaxis()->SetTitle("time [ns]");
-    m_hSignalIons->GetYaxis()->SetTitle("signal [fC / ns]");
-    for (unsigned int i = 0; i < nBins; ++i) {
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Electron delayed induced signal", "l");
+  }
+
+  if (eleP) {
+    const auto hname = FindUnusedHistogramName("hPromptElectrons_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colPrompt[1]);
+    h.SetLineStyle(2);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetElectronSignal(label, i) -
+                         m_sensor->GetDelayedElectronSignal(label, i);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
+    }
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Electron prompt induced signal", "l");
+  }
+
+  if (ionT) {
+    const auto hname = FindUnusedHistogramName("hSignalIons_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colIons);
+    for (std::size_t i = 0; i < nBins; ++i) {
       const double sig = m_sensor->GetIonSignal(label, i);
-      m_hSignalIons->SetBinContent(i + 1, sig);
+      h.SetBinContent(i + 1, sig);
     }
-    m_hSignalIons->Draw("same");
-    m_canvas->Update();
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Ion induced signal", "l");
   }
-}
 
-std::string ViewSignal::FindHistogramName(const std::string& base) const {
-
-  std::string hname = base + "_0";
-  int idx = 0;
-  while (gDirectory->GetList()->FindObject(hname.c_str())) {
-    ++idx;
-    std::stringstream ss;
-    ss << base;
-    ss << idx;
-    hname = ss.str();
+  if (ionD) {
+    const auto hname = FindUnusedHistogramName("hDelayedIons_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colDelayed[5]);
+    h.SetLineStyle(7);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetDelayedIonSignal(label, i);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
+    }
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Ion/hole delayed induced signal", "l");
   }
-  return hname;
+
+  if (ionP) {
+    const auto hname = FindUnusedHistogramName("hPromptIons_");
+    TH1D h(hname.c_str(), "", nBins, t0, t1);
+    h.SetLineColor(m_colPrompt[2]);
+    h.SetLineStyle(2);
+    for (std::size_t i = 0; i < nBins; ++i) {
+      const double sig = m_sensor->GetIonSignal(label, i) -
+                         m_sensor->GetDelayedIonSignal(label, i);
+      if (std::isnan(sig) || std::abs(sig) < tol) continue;
+      h.SetBinContent(i + 1, sig);
+    }
+    const std::string opt = nPlots > 0 ? "same" : "";
+    ++nPlots;
+    auto hC = DrawHistogram(h, opt, ylabel);
+    if (legend) legend->AddEntry(hC, "Ion/hole prompt induced signal", "l");
+  }
+
+  if (legend) legend->Draw();
+  gPad->Update();
 }
 
-}
+}  // namespace Garfield

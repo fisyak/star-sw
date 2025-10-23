@@ -1,18 +1,44 @@
-\usepackage[T1]{fontenc}
-\usepackage{fixltx2e}
-\usepackage{cmbright}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+\defaultfontfeatures{Ligatures={TeX}}
+\usepackage{unicode-math}
+\setmathfont{LatinModernMath-Regular}
+\usepackage{microtype}
+%\usepackage[T1]{fontenc}
+%\usepackage{fixltx2e}
+%\usepackage{cmbright}
 %\usepackage{lmodern}
-\usepackage{amsmath,amsfonts,amssymb}
+%\usepackage{amsmath,amsfonts}
+%\usepackage{textcomp}
+%\usepackage{upgreek}
+\usepackage{diagbox}
 \usepackage{longtable,booktabs}
 \usepackage{dcolumn}
 \newcolumntype{.}{D{.}{.}{-1}}
 
-\usepackage[numbers,sort&compress,elide]{natbib}
+\usepackage[autostyle]{csquotes}
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{UserGuide.bib}
+%\usepackage[numbers,sort&compress,elide]{natbib}
 
 \usepackage{listings}
 
 \usepackage{tikz}
-\usetikzlibrary{shapes,arrows}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{shapes,arrows,3d}
+\usetikzlibrary{calc}
+\tikzset{
+  quadratic/.style={
+    to path={
+      (\tikztostart) .. controls
+      ($#1!1/3!(\tikztostart)$) and ($#1!1/3!(\tikztotarget)$)
+      .. (\tikztotarget)
+    }
+  }
+}
 
 \tikzstyle{block} = [rectangle, minimum width=5.5em, minimum height=2em, draw = black, fill = blue!60!green!40, text width=4em, text centered, rounded corners]
 \tikzstyle{drift} = [rectangle, minimum width=5.5em, minimum height=2em, draw = black, fill = red!100!blue!50!green!20, text width=4em, text centered, rounded corners]
@@ -77,12 +103,17 @@
 \lstset{
   basicstyle=\small\ttfamily,
   columns=flexible,
+  keepspaces=true,
   frame=lines,
   framesep=10pt,
   keywordstyle=\color{DarkBlue},
   commentstyle=\ttfamily \color{DarkGreen},
-  stringstyle=\color{DarkRed} 
+  stringstyle=\color{DarkRed},
+  mathescape=false 
 }
 
+\usepackage{xspace} 
+\newcommand{\eg}{\mbox{\itshape e.g.}\xspace}
+\newcommand{\ie}{\mbox{\itshape i.e.}\xspace}
 
 \usepackage[colorlinks, linkcolor=black, anchorcolor=black, citecolor=black, urlcolor=black ]{hyperref}

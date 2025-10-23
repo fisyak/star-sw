@@ -1,0 +1,185 @@
+FINISH
+/CLEAR,START
+/PREP7
+! No polynomial elements
+/PMETH,OFF,1
+ 
+! Set electric preferences
+KEYW,PR_ELMAG,1
+KEYW,MAGELC,1
+ 
+! Select element
+ET,1,SOLID123
+ 
+! Material properties
+MP,PERX,1,1e10  ! Metal
+MP,RSVX,1,0.0   !
+MP,PERX,2,1.0   ! Gas
+MP,PERX,3,4.0   ! Permittivity of FR4
+ 
+! Construct the structure
+metal = 0.2
+gas = 2
+sub = -1
+BLOCK, -10, -5, -10, 10,     0, metal ! 1: Wide side strip
+BLOCK,  -2, -4, -10, 10,     0, metal ! 2: First signal
+BLOCK,  -1,  1, -10, 10,     0, metal ! 3: 2nd signal
+BLOCK,   2,  4, -10, 10,     0, metal ! 4: 3rd signal
+BLOCK,   5, 10, -10, 10,     0, metal ! 5: Wide side strip
+BLOCK, -10, 10, -10, 10,   sub,     0 ! 6: Substrate
+BLOCK, -10, 10, -10, 10,     0,   gas ! 7: Gas
+ 
+! Subtract the strips from the gas
+VSBV,  7, 1, , , KEEP   ! 7 \&rarr; 8
+VSBV,  8, 2, , , KEEP   ! 8 \&rarr; 7
+VSBV,  7, 3, , , KEEP   ! 7 \&rarr; 8
+VSBV,  8, 4, , , KEEP   ! 8 \&rarr; 7
+VSBV,  7, 5, , , KEEP   ! 7 \&rarr; 8
+ 
+! Glue everything together 1 = left wide, 2, 3, 4, 5 = wide, 7 = sub, 8 = gas
+VGLUE, ALL
+ 
+! Assign material attributes
+VSEL, S, VOLU, , 1, 5 ! Metal strips
+VATT, 1, ,1
+VSEL, S, VOLU, , 7    ! Gas volume
+VATT, 3, ,1
+VSEL, S, VOLU, , 8    ! Substrate
+VATT, 2, ,1
+ 
+! Voltage boundary conditions on the metal
+VSEL, S, VOLU, , 1, 5 ! All strips at ground
+ASLV, S
+DA, ALL, VOLT, 0
+ASEL, S, LOC, Z, gas  ! Drift electrode
+DA, ALL, VOLT, -1000
+ASEL, S, LOC, Z, sub  ! Back plane
+DA, ALL, VOLT, 0
+ 
+! Meshing options
+VSEL, S, VOLU, , 8    ! Only mesh the gas
+ASLV, S
+ 
+MSHKEY,0
+SMRT, 4
+VMESH, 1,8
+ 
+! Solve the field
+/SOLU
+SOLVE
+ 
+! Write the solution
+/POST1
+/OUTPUT, field, lis
+PRNSOL
+/OUTPUT
+ 
+! Change to weighting field boundary conditions for first narrow strip
+/SOLU
+LSCLEAR,ALL
+ 
+VSEL, S, VOLU, , 1
+VSEL, A, VOLU, , 3, 5
+ASLV, S
+DA, ALL, VOLT, 0
+ 
+VSEL, S, VOLU, , 2
+ASLV, S
+DA, ALL, VOLT, 1
+ 
+ASEL, S, LOC, Z, gas
+DA, ALL, VOLT, 0
+ASEL, S, LOC, Z, sub
+DA, ALL, VOLT, 0
+ 
+! Meshing options
+VSEL, S, VOLU, , 1, 8
+ASLV, S
+ 
+! Solve the field
+SOLVE
+ 
+! Write the solution
+/POST1
+/OUTPUT, weight1, lis
+PRNSOL
+/OUTPUT
+ 
+! Change to weighting field boundary conditions for 2nd narrow strip
+/SOLU
+LSCLEAR,ALL
+ 
+VSEL, S, VOLU, , 1, 2
+VSEL, A, VOLU, , 4, 5
+ASLV, S
+DA, ALL, VOLT, 0
+ 
+VSEL, S, VOLU, , 3
+ASLV, S
+DA, ALL, VOLT, 1
+ 
+ASEL, S, LOC, Z, gas
+DA, ALL, VOLT, 0
+ASEL, S, LOC, Z, sub
+DA, ALL, VOLT, 0
+ 
+! Meshing options
+VSEL, S, VOLU, , 1, 8
+ASLV, S
+ 
+! Solve the field
+SOLVE
+ 
+! Write the solution
+/POST1
+/OUTPUT, weight2, lis
+PRNSOL
+/OUTPUT
+ 
+! Change to weighting field boundary conditions for last narrow strip
+/SOLU
+LSCLEAR,ALL
+ 
+VSEL, S, VOLU, , 1, 3
+VSEL, A, VOLU, , 5
+ASLV, S
+DA, ALL, VOLT, 0
+ 
+VSEL, S, VOLU, , 4
+ASLV, S
+DA, ALL, VOLT, 1
+ 
+ASEL, S, LOC, Z, gas
+DA, ALL, VOLT, 0
+ASEL, S, LOC, Z, sub
+DA, ALL, VOLT, 0
+ 
+! Meshing options
+VSEL, S, VOLU, , 1, 8
+ASLV, S
+ 
+! Solve the field
+SOLVE
+ 
+! Write the solution
+/POST1
+/OUTPUT, weight3, lis
+PRNSOL
+/OUTPUT
+ 
+! Write the mesh to files
+/OUTPUT, NLIST, lis
+NLIST,,,,COORD
+/OUTPUT
+ 
+/OUTPUT, ELIST, lis
+ELIST
+/OUTPUT
+ 
+/OUTPUT, MPLIST, lis
+MPLIST
+/OUTPUT
+ 
+! Show the solution
+/EFACET,1
+PLNSOL, VOLT,, 0
