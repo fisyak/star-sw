@@ -39,7 +39,7 @@ Root.ObjectStat:            1
 # Browser Options (plugins)
 # F: File browser E: Text Editor H: HTML browser
 # C: Canvas I: I/O redirection P: Proof G: GL viewer
-#Browser.Options:             CEI
+Browser.Options:             Lite
 Browser.Name: TRootBrowser
 WebGui.CheckRemoteDisplay: no
 Canvas.Name: TRootCanvas
