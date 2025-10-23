@@ -171,36 +171,14 @@ Int_t StTpcRSMaker::InitRun(Int_t /* runnumber */) {
   Float_t xyz[3] = {0,0,0};
   StMagF::Agufld(xyz,BFieldG);
   Double_t field = TMath::Abs(BFieldG[2]);
-#if 0
-  TF1 *pol2 = (TF1 *)gROOT->GetListOfFunctions()->FindObject("pol2");
-  if (! pol2) {
-    TF1::InitStandardFunctions();
-    pol2 = (TF1  *) gROOT->GetListOfFunctions()->FindObject("pol2");;
-    assert(pol2);
-  }
-  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParO()[0]) > 1e-7) {
-    mTransDiffParO = pol2->EvalPar(&field,St_TpcResponseSimulatorC::instance()->transDiffParO())/TMath::Sqrt2();
-    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParO = " << 1e4*mTransDiffParO << " um/sqrt(cm)" << endm;
-  }  
-  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParI()[0]) > 1e-7) {
-    mTransDiffParI = pol2->EvalPar(&field,St_TpcResponseSimulatorC::instance()->transDiffParI())/TMath::Sqrt2();;
-    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParI = " << 1e4*mTransDiffParI << " um/sqrt(cm)" << endm;
-  }  
-#else
   // from Magboltz
   Int_t ff = 0;
   if      (field < 1) ff = 2;
   else if (field < 4) ff = 1; 
-  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParO()[ff]) > 1e-7) {
-    mTransDiffParO = St_TpcResponseSimulatorC::instance()->transDiffParO()[ff];
-    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParO = " << 1e4*mTransDiffParO << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
+  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffMagboltz()[ff]) > 1e-7) {
+    mTransDiffMagboltz = St_TpcResponseSimulatorC::instance()->transDiffMagboltz()[ff];
+    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffMagboltz = " << 1e4*mTransDiffMagboltz << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
   }  
-  if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffParI()[ff]) > 1e-7) {
-    mTransDiffParI = St_TpcResponseSimulatorC::instance()->transDiffParI()[ff];
-    LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffParI = " << 1e4*mTransDiffParI << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
-  }  
-
-#endif    
   SetAttr("minSector",1);
   SetAttr("maxSector",24);
   SetAttr("minRow",1);
@@ -1045,24 +1023,23 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	}
 	Double_t driftLength = TMath::Abs(TrackSegmentHits[iSegHits].coorLS.position().z());
 	Double_t D = 1. + OmegaTau*OmegaTau;
+	Double_t SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusion()*TMath::Sqrt(   driftLength  );
 	Double_t SigmaT = 0;
-        if (mTransDiffParO > 1e-7) {
-	  SigmaT = mTransDiffParO*TMath::Sqrt(   driftLength  );
+        if (mTransDiffMagboltz > 1e-7) {
+	  SigmaT = mTransDiffMagboltz*TMath::Sqrt(   driftLength  );
 	} else {
 	  SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusion()*  TMath::Sqrt(   driftLength/D);
 	}
-	Double_t SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusion()*TMath::Sqrt(   driftLength  );
 	if (St_tpcPadConfigC::instance()->IsRowInner(sector,row)) {
-	  if (mTransDiffParI > 1e-7) {
-	    SigmaT = mTransDiffParI*TMath::Sqrt(   driftLength  );
+	  if (mTransDiffMagboltz > 1e-7) {
+	    SigmaT = mTransDiffMagboltz*TMath::Sqrt(   driftLength  );
 	  } else {
 	    if ( St_TpcResponseSimulatorC::instance()->transverseDiffusionI() > 0.0) 
 	      SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusionI()*  TMath::Sqrt(   driftLength/D);
+	    if (St_TpcResponseSimulatorC::instance()->longitudinalDiffusionI() > 0.0) 
+	      SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusionI()*TMath::Sqrt(   driftLength  );
 	  }
-	  if (St_TpcResponseSimulatorC::instance()->longitudinalDiffusionI() > 0.0) 
-	    SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusionI()*TMath::Sqrt(   driftLength  );
 	}
-	//	Double_t SigmaL = St_TpcResponseSimulatorC::instance()->longitudinalDiffusion()*TMath::Sqrt(2*driftLength  );
 	if (sigmaJitterX > 0) {SigmaT = TMath::Sqrt(SigmaT*SigmaT + sigmaJitterX*sigmaJitterX);}
 	Double_t NoElPerAdc = St_TpcResponseSimulatorC::instance()->NoElPerAdc();
 	if (NoElPerAdc <= 0) {

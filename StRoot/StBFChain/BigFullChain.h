@@ -1455,7 +1455,7 @@ Bfc_st BFC[] = { // standard chains
   {"Generators", "Generators", "","sim_T,gen_T", ""
    ,"VMC,MathMore,StarGeneratorUtil,StarGeneratorEvent,StarGeneratorBase",  "Basic STAR Generators",kFALSE},
   {"StarPrimary0", "StarPrimary", "","Generators", "StarPrimaryMaker", "",  "Basic STAR Generators",kFALSE},
-  {"mtin", "","","",""                                              ,"Read event from MuDst TTree", kFALSE},
+  {"mtin", "","","",""                                           ,"","Read event from MuDst TTree", kFALSE},
   //________________________________________________________________________________
   {"NoPiCovMtx","","","",""                                      ,"","Don't write Pico Cov. Matrix",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},

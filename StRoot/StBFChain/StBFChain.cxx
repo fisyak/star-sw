@@ -152,6 +152,7 @@ Int_t StBFChain::Load()
   }
   for (i = 1; i< fNoChainOptions; i++) { // Load Libraries if any
     if (fBFC[i].Flag) {
+      if (TString(fBFC[i].Libs) == "") continue;
       if (strlen(fBFC[i].Libs) > 0) {
 	TObjArray Libs;
 	ParseString(fBFC[i].Libs,Libs);
