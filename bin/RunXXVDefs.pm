@@ -1435,6 +1435,13 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1430'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26296028',	 last => '26296032',	 list => '',  beginTime => '20251023.115250'}, # 	2025-10-23	11:52:50	2025-10-23	13:59:23
 '1431'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26296033',	 last => '26296035',	 list => '',  beginTime => '20251023.135923'}, # 	2025-10-23	13:59:23	2025-10-23	15:36:13	timestamp = AuAu_2025_RF
 '1432'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26296037',	 last => '26296040',	 list => '',  beginTime => '20251023.153613'}, # 	2025-10-23	15:36:13	2025-10-23	19:13:21
-'1433'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26296044',	 last => '26296044',	 list => '',  beginTime => '20251023.191321'}, # 	2025-10-23	19:13:21	2025-10-23	19:13:21	timestamp = Cosmic_RF
+'1433'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26296044',	 last => '26296044',	 list => '',  beginTime => '20251023.191321'}, # 	2025-10-23	19:13:21	2025-10-23	20:52:54	timestamp = Cosmic_RF
+'1434'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26296047',	 last => '26296049',	 list => '',  beginTime => '20251023.205254'}, # 	2025-10-23	20:52:54	2025-10-23	22:14:58	timestamp = AuAu_2025_HiLumi_RF
+'1435'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26296054',	 last => '26296060',	 list => '',  beginTime => '20251023.221458'}, # 	2025-10-23	22:14:58	2025-10-24	00:57:09
+'1436'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26296061',	 last => '26296061',	 list => '',  beginTime => '20251024.005709'}, # 	2025-10-24	00:57:09	2025-10-24	01:32:39	timestamp = AuAu_2025_RF
+'1437'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26296064',	 last => '26296068',	 list => '',  beginTime => '20251024.013239'}, # 	2025-10-24	01:32:39	2025-10-24	04:02:17
+'1438'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26297001',	 last => '26297001',	 list => '',  beginTime => '20251024.040217'}, # 	2025-10-24	04:02:17	2025-10-24	05:35:27
+'1439'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26297006',	 last => '26297014',	 list => '',  beginTime => '20251024.053527'}, # 	2025-10-24	05:35:27	2025-10-24	09:34:37	timestamp = AuAu_2025_HiLumi_RF
+'1440'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26297015',	 last => '26297018',	 list => '',  beginTime => '20251024.093437'}, # 	2025-10-24	09:34:37	2025-10-24	10:45:05	timestamp = AuAu_2025_RF
 );
 1;
