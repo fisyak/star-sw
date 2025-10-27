@@ -20,6 +20,7 @@ using namespace units;
 #ifdef  __USE_TF1F__   
 #include "TF1F.h"
 #else /* ! __USE_TF1F__ */
+// increased cpu in TpcRS by up to 40%, rechecked with TPC23 sample 10/25/2025
 typedef TF1 TF1F;
 #endif /* __USE_TF1F__ */
 #include "TH1.h"
@@ -130,7 +131,6 @@ class StTpcRSMaker : public StMaker {
   Double_t outerSectorAnodeVoltage[24];//!
   Double_t      mtauIntegrationX[2];  //! for TPX inner=0/outer=1
   Double_t      mtauCX[2];            //! -"- 
-  Double_t    mLocalYDirectionCoupling[2][24][7]; //!
   Double_t   msMin, msMax;            //!
   TArrayI    mNoTpcHitsAll;           //!
   TArrayI    mNoTpcHitsReal;          //!

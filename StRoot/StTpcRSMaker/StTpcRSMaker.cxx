@@ -483,12 +483,6 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
 	mChargeFraction[io][sector-1]->Save(xminP,xmaxP,0,0,0,0); 
 	if (GetTFile()) mChargeFraction[io][sector-1]->Write();
       }
-#if 0
-      memset(mLocalYDirectionCoupling[io][sector-1], 0, sizeof(mLocalYDirectionCoupling[io][sector-1]));
-      for (Int_t j = 0; j < 7; j++) {
-	mLocalYDirectionCoupling[io][sector-1][j] = mChargeFraction[io][sector-1]->Eval(anodeWirePitch*j);
-      }
-#endif
       Int_t l = 0;
       if (St_tpcAltroParamsC::instance()->Table()->GetNRows() > sector) l = sector - 1;
       if (io == 0 && St_tpcAltroParamsC::instance()->Table()->GetNRows() > 24 + sector) l += 24;
@@ -2013,14 +2007,12 @@ void StTpcRSMaker::GenerateSignal(HitPoint_t &TrackSegmentHits, Int_t sector, In
       St_TpcResponseSimulatorC::instance()->T0offsetI() : 
       St_TpcResponseSimulatorC::instance()->T0offsetO();
     if (sigmaJitterT) dT += gRandom->Gaus(0,sigmaJitterT);  // #1
-#if 1
     Double_t dely      = {transform.yFromRow(sector,row)-yOnWire};    
+#ifdef  __USE_TF1F__   
     Double_t localYDirectionCoupling = mChargeFraction[io][sector-1]->GetSaveL(&dely);
-#else
-    Int_t idWire = TMath::Abs(TMath::Nint((transform.yFromRow(sector,row)-yOnWire)/anodeWirePitch));
-    if (idWire > 6) continue;
-    Double_t localYDirectionCoupling = mLocalYDirectionCoupling[io][sector-1][idWire];
-#endif
+#else /* ! __USE_TF1F__  */
+    Double_t localYDirectionCoupling = mChargeFraction[io][sector-1]->GetSave(&dely); // Eval(dely);
+#endif /* __USE_TF1F__  */
     if (ClusterProfile) {
       checkList[io][10]->Fill(TrackSegmentHits.xyzG.position().z(),localYDirectionCoupling);
     }
@@ -2033,11 +2025,13 @@ void StTpcRSMaker::GenerateSignal(HitPoint_t &TrackSegmentHits, Int_t sector, In
     Int_t DeltaPad = TMath::Nint(mPadResponseFunction[io][sector-1]->GetXmax()) + 1;
     Int_t padMin = TMath::Max(CentralPad - DeltaPad ,1);
     Int_t padMax = TMath::Min(CentralPad + DeltaPad ,PadsAtRow);
+#ifdef  __USE_TF1F__   
     Int_t Npads = TMath::Min(padMax-padMin+1, kPadMax);
     Double_t xPadMin = padMin - padX;
     static Double_t XDirectionCouplings[kPadMax];
     static Double_t TimeCouplings[kTimeBacketMax];
     mPadResponseFunction[io][sector-1]->GetSaveL(Npads,xPadMin,XDirectionCouplings);
+#endif /* __USE_TF1F__  */
     //	      Double_t xPad = padMin - padX;
     for(Int_t pad = padMin; pad <= padMax; pad++) {
       if ( ! StDetectorDbTpcRDOMasks::instance()->isRowOn(sector,row,pad)) continue;
@@ -2055,7 +2049,13 @@ void StTpcRSMaker::GenerateSignal(HitPoint_t &TrackSegmentHits, Int_t sector, In
 	GainHist[1]->Fill(sector,row,gain);
       }
       //		Double_t localXDirectionCoupling = localXDirectionCouplings[pad-padMin];
+
+#ifdef  __USE_TF1F__   
       Double_t localXDirectionCoupling = gain*XDirectionCouplings[pad-padMin];
+#else /* ! __USE_TF1F__  */
+      Double_t dp = pad - padX;
+      Double_t localXDirectionCoupling = gain*mPadResponseFunction[io][sector-1]->GetSave(&dp); // Eval(pad-padX);
+#endif /* __USE_TF1F__  */
       if (localXDirectionCoupling < minSignal) continue;
       if (ClusterProfile) {
 	checkList[io][13]->Fill(TrackSegmentHits.xyzG.position().z(),localXDirectionCoupling);
@@ -2068,11 +2068,18 @@ void StTpcRSMaker::GenerateSignal(HitPoint_t &TrackSegmentHits, Int_t sector, In
       Int_t bin_low  = TMath::Max(0             ,binT + TMath::Nint(dt+ShaperResponse->GetXmin()-0.5));
       Int_t bin_high = TMath::Min(NoOfTimeBins-1,binT + TMath::Nint(dt+ShaperResponse->GetXmax()+0.5));
       Int_t index = NoOfTimeBins*((row-1)*NoOfPads+pad-1)+bin_low;
+#ifdef  __USE_TF1F__   
       Int_t Ntbks = TMath::Min(bin_high-bin_low+1, kTimeBacketMax);
       Double_t tt = -dt + (bin_low - binT);
       ShaperResponse->GetSaveL(Ntbks,tt,TimeCouplings);
+#endif /* __USE_TF1F__  */
       for(Int_t itbin=bin_low;itbin<=bin_high;itbin++, index++){
+#ifdef  __USE_TF1F__   
 	Double_t signal = XYcoupling*TimeCouplings[itbin-bin_low];
+#else /* ! __USE_TF1F__  */
+        Double_t tt = -dt + (itbin - binT);
+	Double_t signal = XYcoupling*ShaperResponse->GetSave(&tt); // Eval(-dt + (itbin - binT));
+#endif /* __USE_TF1F__  */
 	if (signal < minSignal)  continue;
 #ifdef __DEBUG__
 	static Int_t iBreak = 0;
