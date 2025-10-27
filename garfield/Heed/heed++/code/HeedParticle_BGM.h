@@ -2,11 +2,11 @@
 #define HEEDPARTICLE_BGM_H
 
 #include <vector>
-
 #include "HeedCluster.h"
 #include "wcpplib/particle/eparticle.h"
 
 namespace Heed {
+extern long last_particle_number;
 
 /// Definition of the particle which can be traced through the geometry.
 /// 2003, I. Smirnov
@@ -16,28 +16,31 @@ class HeedParticle_BGM : public eparticle {
   /// Default constructor.
   HeedParticle_BGM() : eparticle() {}
   /// Constructor.
-  /// if fs_loss_only == true - only transfer energy and
+  /// if fs_loss_only == 1 - only transfer energy and
   /// no other physics: no deposition of clusters,
   /// no generation of virtual photons.
   /// Thus it is just a PAI without even clusters
   HeedParticle_BGM(manip_absvol* primvol, const point& pt, const vec& vel,
-                   double time, particle_def* fpardef, fieldmap* fm,
+                   vfloat time, particle_def* fpardef, HeedFieldMap* fieldmap,
                    bool fs_loss_only = false, bool fs_print_listing = false);
   /// Destructor
   virtual ~HeedParticle_BGM() {}
 
- protected:
-  void physics(std::vector<gparticle*>& secondaries) override;
+  virtual void physics(std::vector<gparticle*>& secondaries);
+  virtual void print(std::ostream& file, int l) const;
+  virtual HeedParticle_BGM* copy() const { return new HeedParticle_BGM(*this); }
 
  private:
-  bool m_loss_only = false;
+  bool s_print_listing;
+  long particle_number;
 
-  long m_particle_number = 0;
-
-  double m_edep = 0.;
+  bool s_loss_only;
+  std::vector<double> etransf;
+  std::vector<long> natom;
+  std::vector<long> nshell;
 
   std::vector<HeedCluster> m_clusterBank;
 };
-}  // namespace Heed
+}
 
 #endif

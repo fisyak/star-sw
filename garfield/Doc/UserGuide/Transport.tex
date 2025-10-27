@@ -12,7 +12,7 @@ For the solution of \eqref{Eqn:FirstOrderEquationOfMotion},
 two methods are available in Garfield++:
 \begin{itemize}
   \item
-  Runge-Kutta-Fehlberg integration (\texttt{DriftLineRKF}), and
+  Runge-Kutta-Fehlberg integration, and
   \item
   Monte Carlo integration (\texttt{AvalancheMC}).
 \end{itemize}
@@ -26,245 +26,10 @@ transporting electrons on a microscopic level --
 is the method of choice. 
 Microscopic tracking of electrons is dealt with by the class 
 \texttt{AvalancheMicroscopic}.  
-\section{Runge-Kutta-Fehlberg integration}
-\begin{table}
-\centering
-\caption{Coefficients of the Runge-Kutta-Fehlberg formula \cite{StoerBulirsch}.}
-\label{Tab:CoefficientsRKF}
-\begin{tabular}{c c c c} 
-\toprule
-                   & \multicolumn{3}{c}{$\beta_{k,i}$} \\
-\diagbox{$k$}{$i$} & 0 & 1 & 2 \\
-\midrule
-1 & $\frac{1}{4}$ \\
-2 & $\frac{-189}{800}$ & $\frac{729}{800}$ \\
-3 & $\frac{214}{891}$ & $\frac{1}{33}$ & $\frac{650}{891}$ \\
-\bottomrule
-\end{tabular}
-\quad
-\begin{tabular}{c c c}
-\toprule
-$k$ & $C_{I,k}$ & $C_{II,k}$ \\
-\midrule
-0 & $\frac{214}{891}$ & $\frac{533}{2106}$ \\  
-1 & $\frac{1}{33}$    & \\
-2 & $\frac{650}{891}$ & $\frac{800}{1053}$ \\ 
-3 &                   & $\frac{-1}{78}$ \\ 
-\bottomrule
-\end{tabular}
-\end{table}
-This method, implemented in the class \texttt{DriftLineRKF}, 
-calculates a drift line by iterating over the following steps.
-\begin{enumerate}
-  \item
-  Given a starting point $\mathbf{x}_{0}$, the velocity at the starting point, 
-  and a time step $\Delta{t}$, 
-  compute two estimates of the step to the next point on the drift line, 
-  \begin{itemize}
-    \item
-      $\boldsymbol{\Delta{v}}_{\text{I}} = \sum\limits_{k=0}^{2}C_{\text{I}, k}\mathbf{v}_{d}\left(\mathbf{x}_{k}\right)$, accurate to second order, and
-    \item
-      $\boldsymbol{\Delta{v}}_{\text{II}} = \sum\limits_{k=0}^{3}C_{\text{II}, k}\mathbf{v}_{d}\left(\mathbf{x}_{k}\right)$, accurate to third order.
-  \end{itemize}
-  These two estimates are based on the drift velocity at the starting point 
-  and the velocity at three new locations
-  \begin{equation*} 
-  \mathbf{x}_{k} = \mathbf{x}_{0} + \Delta{t}\sum\limits_{i = 0}^{k - 1}\beta_{k,i}\mathbf{v}_{d}\left(\mathbf{x}_{i}\right).
-  \end{equation*}
-  The values of the coefficients are shown in Table~\ref{Tab:CoefficientsRKF}. 
-  \item
-  The time step is updated by comparing the second and third order estimates 
-  with the requested accuracy
-  \begin{equation*}
-    \Delta{t}' = \sqrt{\frac{\varepsilon\Delta{t}}{\left|
-      \boldsymbol{\Delta{v}}_{\text{I}} - \boldsymbol{\Delta{v}}_{\text{II}}\right|}}.
-  \end{equation*}
-  \item
-  The step is repeated if
-  \begin{itemize}
-    \item
-    the time step shrinks by more than a factor five,
-    \item
-    the step size exceeds the maximum step length allowed (if such a limit is set),
-  \end{itemize}
-  \item
-  The position is updated with the second order estimate.
-  \item
-  The velocity is updated according to the end-point velocity of the step, 
-  which is one of the three velocity vectors that were computed under 1.
-\end{enumerate}
-The initial time step is estimated using 
-$\Delta{t} = \varepsilon / \left|\mathbf{v}_{d}\left(\mathbf{x}_{0}\right)\right|$.
-The parameter $\varepsilon$ used in this initial estimate and in step 2 of the above 
-algorithm, can be set using
-\begin{lstlisting}
-void SetIntegrationAccuracy(const double eps);
-\end{lstlisting} 
+\section{Runge-Kutta-Fehlberg Integration}
+This method is implemented in the class \texttt{DriftLineRKF}.
 
-When traversing a large area with a very smooth field, the step size becomes large. 
-If this is not desired, for instance because there is a fine structure behind the 
-smooth area, then one should limit the step size using
-\begin{lstlisting}
-void SetMaximumStepSize(const double ms);
-\end{lstlisting}
-The maximum step size is recommended to be of order $1/10 - 1/20$ 
-of the distance to be traversed. The default behaviour (no limit on the step size) 
-can be reinstated using
-\begin{lstlisting}
-void UnsetMaximumStepSize();
-\end{lstlisting}
-
-By default, the drift line calculation is aborted if the drift line makes a bend 
-sharper than 90$^{\circ}$. Such bends rarely occur in smooth fields, 
-the most common case is a drift line that tries to cross a saddle point. 
-This check can be switched on or off using
-\begin{lstlisting}
-void RejectKinks(const bool on = true);
-\end{lstlisting} 
-
-During the evaluation of the velocities $\mathbf{v}_{d}\left(\mathbf{x}_{k}\right)$
-for the next step, checks are made to ensure that none of the probe points 
-$\mathbf{x}_{k}$ are outside the active area and that no wire was crossed.
-If a wire has been crossed during the step, another algorithm for stepping towards 
-a wire takes over. The stepping towards the wire also starts when 
-the distance between the particle position and a wire is less than
-$n$ times the wire radius. The factor $n$ 
-(``trap radius'') can be set in \texttt{ComponentAnalyticField} when defining the wire. 
-If one of the points along the step is outside the active area,
-the drift line is terminated by doing a last linear step towards the boundary.
-
-Drift line calculations are started using 
-\begin{lstlisting}
-bool DriftElectron(const double x0, const double y0, const double z0, const double t0);
-bool DriftHole(const double x0, const double y0, const double z0, const double t0);
-bool DriftIon(const double x0, const double y0, const double z0, const double t0);
-\end{lstlisting}
-\begin{description}
-  \item[x0, y0, z0, t0] initial position and time
-\end{description}
-
-The function 
-\begin{lstlisting}
-bool DriftPositron(const double x0, const double y0, const double z0, const double t0);
-\end{lstlisting}
-computes an electron drift line, but assuming that the electron has positive charge 
-(which can be useful for determining isochrons). Analogously, the function
-\begin{lstlisting}
-bool DriftNegativeIon(const double x0, const double y0, const double z0, const double t0);
-\end{lstlisting}
-computes an ion drift line, assuming that the ion has negative charge.
-% Note that the drift velocity vector is not anti-symmetric under charge inversion 
-% if there is a non-zero E-perpendicular component of the B field.
-
-After calculating a drift line, the multiplication and loss factors 
-\begin{equation*}
-  \exp\left(\int\alpha\text{d}s\right), \exp\left(-\int\eta\text{d}s\right)
-\end{equation*}
-along the drift line can be obtained using 
-\begin{lstlisting}
-void GetGain(const double eps = 1.e-4);
-void GetLoss(const double eps = 1.e-4);
-\end{lstlisting}
-\begin{description}
-  \item[eps] parameter determining the accuracy of the integration.
-\end{description}
-Both functions use an adaptive Simpson-style integration.
-
-Similarly, the function
-\begin{lstlisting}
-void GetArrivalTimeSpread(const double eps = 1.e-4);
-\end{lstlisting}
-computes the $\sigma$ of the arrival time distribution by 
-integrating quadratically the ratio of longitudinal diffusion coefficient 
-and drift velocity over the drift line,
-\begin{equation*}
-  \sigma^{2} = \int\left(D_{L}/v_{\text{D}}\right)^2\,\text{d}s.
-\end{equation*}
-
-The points along the most recent drift line are accessible through the functions
-\begin{lstlisting}
-size_t GetNumberOfDriftLinePoints() const;
-void GetDriftLinePoint(const size_t i, double& x, double& y, double& z, double& t) const;
-\end{lstlisting}
-\begin{description}
-  \item[i] index of the point.
-  \item[x, y, z, t] coordinates and time of the point. 
-\end{description}
-If one is simply interested in the end point and status flag of the 
-current drift line, the function
-\begin{lstlisting}
-void GetEndPoint(double& x, double& y, double& z, double& t, int& st) const;
-\end{lstlisting}
-can be used. A list of the status codes 
-is given in Table~\ref{Tab:DriftLineStatusCodes}.
-
-By default, the induced current is calculated for each drift line.
-This can be activated or deactivated using
-\begin{lstlisting}
-void EnableSignalCalculation(const bool on = true);
-\end{lstlisting}
-
-For electron drift lines, multiplication is by default taken into account in the signal 
-calculation. For this purpose, after calculating a drift line
-the number of electrons and ions at each point of the line is calculated 
-by integrating the Townsend and attachment coefficient along the line. 
-For a given starting point, 
-the number of electrons at the end of the drift line is thus given by 
-\begin{equation*}
-  n_{e} = \exp\left(\int\left(\alpha - \eta\right)\text{d}s\right).
-\end{equation*}
-The multiplication factor can be set explicitly using
-\begin{lstlisting}
-void SetGainFluctuationsFixed(const double gain = -1.);
-\end{lstlisting}
-\begin{description}
-  \item[gain] multiplication factor to be used. 
-  If the provided value is $< 1$, the multiplication factor 
-  obtained by integrating $\alpha - \eta$ along the 
-  drift line is used instead (as is the default).
-\end{description} 
-Using 
-\begin{lstlisting}
-EnableAvalanche(const bool on);
-\end{lstlisting}
-the simulation of avalanches for electron drift lines can be switched on or off. 
-
-In order to take fluctuations of the avalanche size into account in 
-the signal calculation, the number of electrons in the avalanche 
-can be sampled from a P\'olya distribution \cite{Alkhazov1970}
-\begin{equation*}
- \overline{n}P_{n} = \frac{\left(\theta + 1\right)^{\theta + 1}}{\Gamma\left(\theta + 1\right)}\left(\frac{n}{\overline{n}}\right)^{\theta}\text{e}^{-\left(\theta + 1\right)n/\overline{n}},
-\end{equation*}
-where $P_{n}$ is the probability that the avalanche comprises $n$ electrons, 
-$\overline{n}$ is the mean avalanche size, and $\theta$ is a parameter 
-controlling the shape of the distribution. For $\theta = 0$ one obtains an 
-exponential distribution, while with increasing $\theta$ the distribution becomes 
-more and more ``rounded''. The simulation of gain fluctuations can be enabled using 
-the function 
-\begin{lstlisting}
-void SetGainFluctuationsPolya(const double theta, const double mean = -1.);
-\end{lstlisting}
-\begin{description}
-  \item[theta] shape parameter $\theta$ of the P\'olya distribution.
-  \item[mean] mean avalanche size $\overline{n}$. 
-  If the provided value is $< 1$, the multiplication factor 
-  obtained by integrating $\alpha - \eta$ along the 
-  drift line is used instead (as is the default).
-\end{description}
-
-By default, \texttt{DriftLineRKF} also simulates the ion tail, \textit{i. e.} the signal due to the ions created in an avalanche, provided that the drift medium has ion mobility data.
-Using the function
-\begin{lstlisting}
-EnableIonTail(const bool on);
-\end{lstlisting}
-the simulation of the ion tail can be switched on or off explicitly.
-
-The signal component due to negative ions created in the avalanche is not simulated by default, and needs to be requested explicitly using
-\begin{lstlisting}
-EnableNegativeIonTail(const bool on = true);
-\end{lstlisting}
-
-\section{Monte Carlo integration}\label{Sec:DriftLineMC}
+\section{Monte Carlo Integration}
 In the class \texttt{AvalancheMC}, Eq.~\eqref{Eqn:FirstOrderEquationOfMotion}
 is integrated in a stochastic manner:
 \begin{itemize}
@@ -272,7 +37,7 @@ is integrated in a stochastic manner:
   a step of length \(\Delta{s} = v_{\text{d}}\Delta{t}\) 
   in the direction of the
   drift velocity \(\mathbf{v}_{\text{d}}\) 
-  at the local electric and magnetic field is calculated (with either the 
+  at the local field is calculated (with either the 
   time step \(\Delta{t}\) or the distance \(\Delta{s}\) 
   being specified by the user);
   \item
@@ -293,94 +58,75 @@ void SetDistanceSteps(const double d = 0.001);
 void SetCollisionSteps(const int n = 100);
 \end{lstlisting} 
 In the first case the integration is done 
-using fixed time steps (default: 20\,ps), 
-in the second case using fixed distance steps (default: 10\,\textmu{m}). 
+using fixed time steps (default: 20 ps), 
+in the second case using fixed distance steps (default: 10 \(\mu\)m). 
 Calling the third function instructs the class to 
 do the integration with exponentially distributed time steps 
-with a mean equal to a multiple of the ``collision time'' 
+with a mean equal to the specified multiple of the ``collision time'' 
 \begin{equation*}
   \tau = \frac{m v_{d}}{q E}.
 \end{equation*}
-The third method is activated by default. 
-
-Instead of making simple straight-line steps (using the drift velocity 
-vector at the starting point of a step), the end point of a step 
-can be calculated using a (second-order) Runge-Kutta-Fehlberg method. 
-This feature can be activated using
-\begin{lstlisting}
-void EnableRKFSteps(const bool on = true); 
-\end{lstlisting}
-The average velocity $\mathbf{v}$ over a step $\Delta{t}$ is then 
-calculated using
-\begin{equation*}
-\mathbf{v} = \sum\limits_{k=0}^{2}C_{k}\mathbf{v}_{d}\left(\mathbf{x}_{k}\right), \quad 
-\mathbf{x}_{1} = \mathbf{x}_{0} + \Delta{t}\beta_{1,0}\mathbf{v}_{d}\left(\mathbf{x}_{0}\right), \quad 
-\mathbf{x}_{2} = \mathbf{x}_{0} + \Delta{t}\left(\beta_{2,0}\mathbf{v}_{d}\left(\mathbf{x}_{0}\right) + \beta_{2,1}\mathbf{v}_{d}\left(\mathbf{x}_{1}\right)\right),
-\end{equation*}
-where $\mathbf{x}_{0}$ is the starting point of the step. The values of the 
-coefficients $C_{k}$ and $\beta_{k,i}$ are given in 
-Table~\ref{Tab:CoefficientsRKF}.
-
-If the electric field or drift speed is zero, the algorithm switches 
-to diffusion-only steps based on the low-field mobility.
-%drawing Gaussian-distributed random steps in all three directions.
-%In case of fixed time steps $\Delta{t}$, the $\sigma$ of the 
-%Gaussian distribution is given by $\sqrt{2D\Delta{t}}$.
-%In case of fixed distance steps $\Delta{s}$, we take $\sigma = \Delta{s}$ 
-%and calculate the corresponding time step using 
-%$\Delta{t} = \sigma^2/\left((2D\right)$. In case of ``collision'' steps, 
-%we calculate $\sigma$ using $\sigma = n D / v_{\text{th}}$, where 
-%$v_{\text{th}} = \sqrt{2 k_{\text{B}}T / m}$ is the thermal velocity, 
-%and subsequently determine the corresponding time step as in the case of 
-%fixed distance steps.
-%Note that the diffusion coefficient $D$ used here has dimensions 
-%$\text{cm}^2/\text{ns}$.
+The third method is activated by default.
 
 Drift line calculations are started using 
 \begin{lstlisting}
-bool DriftElectron(const double x, const double y, const double z, const double t);
-bool DriftHole(const double x, const double y, const double z, const double t);
-bool DriftIon(const double x, const double y, const double z, const double t);
+bool DriftElectron(const double x0, const double y0, const double z0,
+                   const double t0);
+bool DriftHole(const double x0, const double y0, const double z0,
+               const double t0);
+bool DriftIon(const double x0, const double y0, const double z0,
+              const double t0);
 \end{lstlisting}
 \begin{description}
-  \item[x, y, z, t] initial position and time
+  \item[x0, y0, z0, t0] initial position and time
 \end{description}
 The trajectory can be retrieved using
 \begin{lstlisting} 
-size_t GetNumberOfDriftLinePoints() const;
-void GetDriftLinePoint(const size_t i, double& x, double& y, double& z, double& t);
+int GetNumberOfDriftLinePoints() const;
+void GetDriftLinePoint(const int i,
+                       double& x, double& y, double& z, double& t);
 \end{lstlisting}
 
 The calculation of an avalanche initiated by an electron, 
 a hole or an electron-hole pair is done using
 \begin{lstlisting}
-bool AvalancheElectron(const double x, const double y, const double z,
-                       const double t, const bool hole = false);
-bool AvalancheHole(const double x, const double y, const double z,
-                   const double t, const bool electron = false);
-bool AvalancheElectronHole(const double x, const double y, const double z, 
-                           const double t);
+bool AvalancheElectron(const double x0, const double y0, const double z0,
+                       const double t0, const bool hole = false);
+bool AvalancheHole(const double x0, const double y0, const double z0,
+                   const double t0, const bool electron = false);
+bool AvalancheElectronHole(const double x0, const double y0, const double z0,
+                           const double t0);
 \end{lstlisting}
-The flags \texttt{hole} and \texttt{electron} specify whether the  
-drift and multiplication of the holes/ions (electrons) created in the 
-avalanche should be simulated. 
-%In case of gas-based detectors, only \texttt{AvalancheElectron} with 
-%\texttt{hole = false} is meaningful. 
+The flags \texttt{hole} and \texttt{electron} specify whether 
+multiplication of holes and electrons, respectively, should be 
+taken into account in the simulation. 
+In case of gas-based detectors, only \texttt{AvalancheElectron} with 
+\texttt{hole = false} is meaningful. 
 
-The trajectories of the electrons in the avalanche can be 
+The starting and endpoints of electrons in the avalanche can be 
 retrieved using
 \begin{lstlisting}
-const std::vector<EndPoint>& GetElectrons();
+int GetNumberOfElectronEndpoints();
+void GetElectronEndpoint(const int i,
+                         double& x0, double& y0, double& z0, double& t0,
+                         double& x1, double& y1, double& z1, double& t1,
+                         int& status) const;
 \end{lstlisting}
-where \texttt{EndPoint} is a \texttt{struct} containing an integer status code indicating why the tracking of the electron was stopped and a vector of points along the drift line:
+\begin{description}
+  \item[i] index of the electron
+  \item[x0, y0, z0, t0] initial position and time of the electron
+  \item[x1, y1, z1, t1] final position and time of the electron
+  \item[status] status code indicating why the tracking of the electron was stopped.  
+\end{description}
+Analogous functions are available for holes and ions.
+
+The functions
 \begin{lstlisting}
-struct EndPoint {
-  int status;
-  std::vector<Point> path;
-};
-\end{lstlisting}  
-Analogous functions are available for holes and (positive and negative) ions.
-%In the following snippet of code we print the status code and the last point on the drift line for each electron in the avalanche.
+void EnableMagneticField();
+\end{lstlisting}
+instructs the class to consider not only the electric but also the magnetic field
+in the evaluation of the transport parameters.  
+By default, magnetic fields are not taken into account.
 
 For debugging purposes, attachment and diffusion can be switched off using
 \begin{lstlisting}
@@ -396,85 +142,32 @@ void SetTimeWindow(const double t0, const double t1);
   \item[t0] lower limit of the time window
   \item[t1] upper limit of the time window 
 \end{description}
-If a time window is set, 
-only charge carriers with a time coordinate \(t \in \left[t_{0}, t_{1}\right]\) 
+Only charge carriers with a time coordinate \(t \in \left[t_{0}, t_{1}\right]\) 
 are tracked. If the time coordinate of a particle crosses the upper limit, 
 it is stopped and assigned the status code -17.
 Slicing the calculation into time steps can be useful for instance 
 for making a movie of the avalanche evolution 
-or for calculations involving space charge. 
-Another useful function for that purpose is
-\begin{lstlisting}
-bool ResumeAvalanche(const bool electron = true, const bool hole = true);
-\end{lstlisting}
-\begin{description}
-  \item[electron,hole] flags to switch off the electron (hole) component of the avalanche
-\end{description}
-which instructs \texttt{AvalancheMC} to continue the avalanche simulation 
-from the most recent set of end points.
-Before calling \texttt{ResumeAvalanche}, one can ``manually'' add 
-electrons, holes, or ions to the list of charge carriers to be transported. 
-\begin{lstlisting}
-void AddElectron(const double x, const double y, const double z, const double t); 
-void AddHole(const double x, const double y, const double z, const double t); 
-void AddIon(const double x, const double y, const double z, const double t); 
-\end{lstlisting} 
-
+or for calculations involving space charge.
 The time window can be removed using
 \begin{lstlisting}
 void UnsetTimeWindow();
 \end{lstlisting}
-
-Using the function 
+ 
+\section{Microscopic Tracking}\label{Sec:MicroscopicTracking}
+Microscopic tracking is (at present) only possible for electrons. 
+It is implemented in the class \texttt{AvalancheMicroscopic}. 
+A calculation is started by means of
 \begin{lstlisting}
-void EnableProjectedPathIntegration(const bool on = true);
-\end{lstlisting} 
-one can request the Townsend and attachment coefficients to 
-be projected onto the local drift velocity vector when integrating 
-them over drift path segments.
-By default, this feature is switched on.
-%It ensures that the path length integral does not depend on the step size.
-The function 
-\begin{lstlisting}
-void EnableAvalancheSizeLimit(const std::size_t size);
-\end{lstlisting}
-sets an upper limit to the number of electrons in an avalanche 
-can be imposed.
-
-\section{Microscopic tracking}\label{Sec:MicroscopicTracking}
-In the microscopic tracking approach -- implemented at present only for electrons --
-a particle is followed from collision to collision. As input, it requires 
-a table of the collision rates $\tau^{-1}_{i}\left(\epsilon\right)$ for each 
-scattering process $i$ as function of the electron energy $\epsilon$. 
-For gases, these data are provided by the class \texttt{MediumMagboltz}.
-Between collisions, an electron is traced on a classical vacuum trajectory 
-according to the local electric (and optionally magnetic) field. 
-The duration $\Delta{t}$ of a free-flight step is controlled by the 
-total collision rate 
-$\tau^{-1}\left(\epsilon\right) = 
-\sum_{i}\tau^{-1}_{i}\left(\epsilon\right)$.
-The sampling of $\Delta{t}$ of a free-flight step is done using the 
-``null-collision'' method \cite{Skullerud1968}, which accounts for 
-the change in electron energy during the step. 
-After the step, the energy, direction, and position of the electron 
-are updated and the scattering process to take place is sampled based 
-on the relative collision rates at the new energy $\epsilon'$.
-The energy and direction of the electron are subsequently updated 
-according to the type of collision.
-
-In Garfield++, the microscopic tracking method is implemented in the class 
-\texttt{AvalancheMicroscopic}. A calculation is started by means of
-\begin{lstlisting}
-void AvalancheElectron(const double x, const double y, const double z,
-                       const double t, const double e,
-                       const double dx = 0., const double dy = 0., const double dz = 0.);
+void AvalancheElectron(const double x0, const double y0, const double z0,
+                       const double t0, const double e0,
+                       const double dx0 = 0., const double dy0 = 0., const double dz0 = 0.);
 \end{lstlisting}
 \begin{description}
-  \item[x, y, z, t] initial position and time
-  \item[e] initial energy (eV)
-  \item[dx, dy, dz] initial direction 
+  \item[x0, y0, z0, t0] initial position and time
+  \item[e0] initial energy (eV)
+  \item[dx0, dy0, dz0] initial direction 
 \end{description}
-If the length of the direction vector is zero, 
+If the norm of the direction vector is zero, 
 the initial direction is randomized.
 
 After the calculation is finished, the number of electrons 
@@ -483,25 +176,28 @@ produced in the avalanche can be retrieved using
 \begin{lstlisting}
 void GetAvalancheSize(int& ne, int& ni);
 \end{lstlisting}
-Information about the ``history'' of each avalanche electron can be retrieved using
+Information about the ``history'' of each avalanche electron can be 
+retrieved by
 \begin{lstlisting}
-const std::vector<Electron>& GetElectrons();
+int GetNumberOfElectronEndpoints();
+void GetElectronEndpoint(const int i, 
+               double& x0, double& y0, double& z0, double& t0, double& e0,
+               double& x1, double& y1, double& z1, double& t1, double& e1,
+                 int& status); 
 \end{lstlisting}
-where \texttt{Electron} is a \texttt{struct} containing an integer status code indicating why the simulation of the electron drift line was terminated, a vector of points along the trajectory and the total path length. 
-\begin{lstlisting}
-struct Electron {
-  int status = 0;
-  std::vector<Point> path;
-  double pathLength = 0.;
-};
-\end{lstlisting}
+\begin{description}
+  \item[i] index of the electron
+  \item[x0, y0, z0, t0, e0] initial position, time and energy of the electron
+  \item[x1, y1, z1, t1, e1] final position, time and energy of the electron
+  \item[status] status code indicating why the tracking of the electron was stopped.  
+\end{description}
 A list of status codes is given in Table~\ref{Tab:DriftLineStatusCodes}.
-The \texttt{Point} objects contain the location (\texttt{x, y, z}), time (\texttt{t}), kinetic energy (\texttt{energy}), and direction vector (\texttt{kx, ky, kz}) of the electron.
 
 The function
 \begin{lstlisting}
-bool DriftElectron(const double x, const double y, const double z, const double t,
-                   const double e, const double dx, const double dy, const double dz);
+bool DriftElectron(const double x0, const double y0, const double z0,
+                   const double t0, const double e0,
+                   const double dx0, const double dy0, const double dz0);
 \end{lstlisting}
 traces only the initial electron but not the secondaries 
 produced along its drift path 
@@ -509,8 +205,6 @@ produced along its drift path
 
 \begin{table}
   \centering
-  \caption{Status codes for the termination of drift lines.}
-  \label{Tab:DriftLineStatusCodes}
   \begin{tabular}{r l}
     \toprule
     status code &  meaning\\
@@ -519,49 +213,37 @@ produced along its drift path
      -3 & calculation abandoned (error, should not happen) \\
      -5 & particle not inside a drift medium  \\
      -7 & attachment                          \\
-     -8 & sharp kink (only for RKF)           \\
     -16 & energy below transport cut          \\
     -17 & outside the time window             \\
     \bottomrule
   \end{tabular}
+  \caption{Status codes for the termination of drift lines.}
+  \label{Tab:DriftLineStatusCodes}
 \end{table}
 
 The electron energy distribution can be extracted in the following way:
 \begin{lstlisting}
-AvalancheMicroscopic aval;
+AvalancheMicroscopic* aval = new AvalancheMicroscopic();
 // Make a histogram (100 bins between 0 and 100 eV).
-TH1F hEnergy("hEnergy", "Electron energy", 100, 0., 100.);
+TH1F* hEnergy = new TH1F("hEnergy", "Electron energy", 100, 0., 100.);
 // Pass the histogram to the avalanche class.
-aval.EnableElectronEnergyHistogramming(&hEnergy);
+aval->EnableElectronEnergyHistogramming(hEnergy);
 \end{lstlisting} 
 After each collision, 
 the histogram is filled with the current electron energy. 
 
-If the sensor has a non-zero magnetic field, \texttt{AvalancheMicroscopic} 
-will by default use a more complicated stepping algorithm which takes
-the effect of the $B$ field on the electron trajectory into account.
-In order to explicitly switch the use of magnetic fields on or off 
-one can use the function
+The effect of magnetic fields can be included 
+in the stepping algorithm using the function
 \begin{lstlisting}
-void EnableMagneticField(const bool on);
+void EnableMagneticField();
 \end{lstlisting}
-
-The default stepping algorithm evaluates the electric field only at the start of a free-flight step, assuming that it is constant throughout the step. This is an exact solution for uniform fields, and usually a good approximation if the electric field does not change drastically over a step.
-To improve the accuracy of the free-flight calculation, in particular at low gas pressure, a stepping algorithm based on Runge-Kutta-Nystr\"om integration can be requested using 
-\begin{lstlisting}
-void EnableRKNSteps(const bool on = true);
-\end{lstlisting}
-The error tolerance and minimum step size in the algorithm can be set using
-\begin{lstlisting}
-void SetRKNTolerance(const double sTol = 1.e-10,
-                     const double sMinStep = 1.e-5);
-\end{lstlisting}
+By default, magnetic fields are not taken into account in the calculation.
 
 Using 
 \begin{lstlisting}
-void EnableAvalancheSizeLimit(const std::size_t size);
+void EnableAvalancheSizeLimit(const int size);
 \end{lstlisting}
-an upper limit to the size of an electron avalanche can be imposed.
+the size of an electron avalanche can be limited. 
 After the avalanche has reached the specified max. size, 
 no further secondaries are added to the stack of electrons to be transported.  
 
@@ -585,19 +267,14 @@ is below the ionization potential of the gas.
 The transport cut can be removed by setting the threshold to a negative value.
 By default, no cut is applied.
 
-In order to extract information from the avalanche on a collision-by-collision basis, a number of callback functions (``user handles'') are available. 
+In order to extract information from the avalanche on a collision-by-collision basis, 
+so-called ``user handles'' are available. 
 \begin{lstlisting}
-void SetUserHandleStep(void (*f)(double x, double y, double z,
-                                 double t, double e,
-                                 double dx, double dy, double dz,
-                                 bool hole));
+ void SetUserHandleStep(void (*f)(double x, double y, double z,
+                                  double t, double e,
+                                  double dx, double dy, double dz,
+                                  bool hole));
 void UnsetUserHandleStep();
-void SetUserHandleCollision(void (*f)(double x, double y, double z, double     t,
-                                      int type, int level, Medium* m,
-                                      double e0, double e1,
-                                      double dx0, double dy0, double dz0,
-                                      double dx1, double dy1, double dz1));
-void UnsetUserHandleCollision();
 void SetUserHandleAttachment(void (*f)(double x, double y, double z,
                                        double t,
                                        int type, int level, Medium* m));
@@ -624,8 +301,6 @@ The parameters passed to this function are
   \item[hole]
   flag indicating whether the particle is an electron or a hole.
 \end{description}  
-The ``user handle'' function set via \texttt{SetUserHandleCollision} 
-is called every time a real collision (as opposed to a null collision) occurs.
 The ``user handle'' functions for attachment, ionisation, and inelastic collisions 
 are called each time a collision of the respective type occurs.  
 In this context, inelastic collisions also include excitations. 
@@ -640,19 +315,15 @@ The parameters passed to these functions are
   \item[m]
    a pointer to the current \texttt{Medium}. 
 \end{description}
-In the function set using \texttt{SetUserHandleCollision}, the energy 
-and the direction vector before and after the collision are available 
-in addition. 
-
-In the following example we want to retrieve  
-all excitations happening in the avalanche.
+In the following example we want 
+all excitations which occur to undergo a special treatment. 
 \begin{lstlisting}
 void userHandle(double x, double y, double z, double t,
                 int type, int level, Medium* m) {
 
   // Check if the collision is an excitation.
   if (type != 4) return;
-  // Do something (e. g. fill a histogram, simulate the emission of a VUV photon) 
+  // Do something (e.~g. fill a histogram, simulate the emission of a VUV photon) 
   ...
 } 
 
@@ -660,130 +331,42 @@ int main(int argc, char* argv[]) {
 
   // Setup gas, geometry, and field
   ...
-  AvalancheMicroscopic aval;
+  AvalancheMicroscopic* aval = new AvalancheMicroscopic();
   ...
-  aval.SetUserHandleInelastic(userHandle);
+  aval->SetUserHandleInelastic(userHandle);
   double x0 = 0., y0 = 0., z0 = 0., t0 = 0.;
   double e0 = 1.;
-  aval.AvalancheElectron(x0, y0, z0, t0, e0, 0., 0., 0.); 
+  aval->AvalancheElectron(x0, y0, z0, t0, e0, 0., 0., 0.); 
   ...
 
 }
 
 \end{lstlisting}
  
-\section{Visualizing drift lines}
+\section{Visualizing Drift Lines}
 
 For plotting drift lines and tracks the class \texttt{ViewDrift} can be used. 
-After attaching a \texttt{ViewDrift} object to a transport class, 
-\textit{e.~g.} using
+After attaching a \texttt{ViewDrift} object to a transport class, e.~g. using
 \begin{lstlisting}
-void AvalancheMicroscopic::EnablePlotting(ViewDrift* view, const size_t nColl = 100);
+void AvalancheMicroscopic::EnablePlotting(ViewDrift* view);
 void AvalancheMC::EnablePlotting(ViewDrift* view);
-void DriftLineRKF::EnablePlotting(ViewDrift* view);
 void Track::EnablePlotting(ViewDrift* view);
 \end{lstlisting}
-it will store the trajectories which are calculated by the respective 
-transport class.
- 
-To actually draw the trajectories, the function 
+\texttt{ViewDrift} stores the trajectories which are calculated by the 
+transport class. 
+The drawing of the trajectories is triggered by the function
 \begin{lstlisting}
 void ViewDrift::Plot();
 \end{lstlisting}
-needs to be called.
 
-In case of \texttt{AvalancheMicroscopic}, the second argument of 
-\texttt{EnablePlotting} (\texttt{nColl}) sets the number of 
-collisions to be skipped between successive points on the plot 
-(by default, every 100th collision is plotted). 
-Note that this setting does not affect the transport of the electron as such, 
-the electron is always tracked rigorously through single collisions.
-
-\section{Visualizing isochrons}
-
-For drift chambers, it is useful to determine the contours of equal drift time to a wire.
-These so-called isochrons can be calculated and drawn 
-using the class \texttt{ViewIsochrons}.
-The component or sensor from which to retrieve the field is set using
+In case of \texttt{AvalancheMicroscopic}, it is usually not advisable to 
+plot every single collision. The number of collisions 
+to be skipped for plotting can be set using
 \begin{lstlisting}
-void SetComponent(Component* c);
-\end{lstlisting}
-or
-\begin{lstlisting}
-void SetSensor(Sensor* s);
-\end{lstlisting}
-
-The function
-\begin{lstlisting}
-void DriftElectrons(const bool positive = false);
-\end{lstlisting}
-instructs the class to compute isochrons using electron drift lines.
-If the flag \texttt{positive} is set to \texttt{true}, the electrons 
-are drifted with positive charge,
-which is useful for calculating isochrons of wires that attract electrons.
-
-By calling
-\begin{lstlisting}
-void DriftIons(const bool negative = false);
-\end{lstlisting}
-one requests drift lines of (positive or negative) ions.
-
-The calculation of the drift lines and equal time contours and their visualization is 
-done by the function 
-\begin{lstlisting}
-void PlotIsochrons(const double tstep,
-    const std::vector<std::array<double, 3> >& points, const bool reverse = false,
-    const bool colour = false, const bool markers = false, const bool plotDriftLines = true);
+void AvalancheMicroscopic::SetCollisionSteps(const int n);
 \end{lstlisting}
 \begin{description}
-  \item[tstep] time interval between isochron lines,
-  \item[points] list of starting points from which to simulate drift lines,
-  \item[reverse] flag to measure the drift time from the end points of the drift lines (\texttt{true}) or from the starting points (\texttt{false}),
-  \item[colour] requests drawing the contour lines using the currently active colour palette,
-  \item[markers] flag to draw markers at the points on the isochrons (\texttt{true}) or draw the isochron as lines (\texttt{false}), 
-  \item[plotDriftLines] requests plotting of the drift lines together with the isochrons. 
-\end{description} 
-The calculation of the drift lines is done using \texttt{DriftLineRKF}.
-
-The appearance of the isochrons is affected by a number of additional parameters.
-By default, the algorithm tries to order the points at equal time such that 
-the isochrons appear as reasonably smooth lines. 
-This sorting step can be switched off or on using
-\begin{lstlisting}
-void EnableSorting(const bool on = true);
-\end{lstlisting} 
-When an isochron appears to be more or less circular, its points 
-are ordered by increasing angle with respect to the centre of gravity. 
-If the isochron, on the other hand, seems to be more or less linear, 
-the points are ordered along the longest principal axis of the distribution.
-Whether the set is circular or linear is decided by computing the RMS 
-in the two principal axes of the point distribution. 
-If the ratio of these two numbers exceeds a threshold
-then the isochron is assumed to be linear, otherwise circular.
-This parameter (which defaults to 3) can be set using
-\begin{lstlisting}
-void SetAspectRatioSwitch(const double ar);
-\end{lstlisting}
-Isochrons that appear to be circular are closed if the largest distance 
-between two points does not exceed a certain fraction of the 
-total length of the isochron. 
-This threshold (initially set to 0.2) can be modified using
-\begin{lstlisting}
-void SetLoopThreshold(const double thr);
-\end{lstlisting}
-
-Points on an isochron are only joined if they are less than a 
-certain fraction away from each other on the screen. 
-Points that can not be connected are shown by a marker. 
-This fraction (initial value: 0.2) can be set using
-\begin{lstlisting}
-void SetConnectionThreshold(const double thr);
-\end{lstlisting}
-By default, points on an isochron are also not joined if their connecting 
-line crosses a drift line.
-This feature can be switched on or off using
-\begin{lstlisting}
-void CheckCrossings(const bool on = true);
-\end{lstlisting}
-
-
+  \item[n] number of collisions to be skipped
+\end{description}
+Note that this setting does not affect the transport of the electron as such, 
+the electron is always tracked rigorously through single collisions.

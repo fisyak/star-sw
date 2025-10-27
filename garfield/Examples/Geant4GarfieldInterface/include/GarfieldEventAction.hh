@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 // $Id: GarfieldEventAction.hh 9999993 2015-12-11 14:47:43Z dpfeiffe $
-//
+// 
 /// \file GarfieldEventAction.hh
 /// \brief Definition of the GarfieldEventAction class
 
@@ -42,34 +42,41 @@
 /// which are collected step by step via the functions
 /// - AddAbs(), AddGap()
 
-class GarfieldEventAction : public G4UserEventAction {
- public:
-  GarfieldEventAction() = default;
-  virtual ~GarfieldEventAction();
+class GarfieldEventAction: public G4UserEventAction {
+public:
+	GarfieldEventAction();
+	virtual ~GarfieldEventAction();
 
-  void BeginOfEventAction(const G4Event* event) override;
-  void EndOfEventAction(const G4Event* event) override;
+	virtual void BeginOfEventAction(const G4Event* event);
+	virtual void EndOfEventAction(const G4Event* event);
 
-  void AddAbs(G4double de, G4double dl);
-  void AddGas(G4double de);
+	void AddAbs(G4double de, G4double dl);
+	void AddGas(G4double de);
 
- private:
-  G4double fEnergyAbs = 0.;
-  G4double fEnergyGas = 0.;
-  G4double fTrackLAbs = 0.;
-  G4double fAvalancheSize = 0.;
-  G4double fGain = 0.;
+private:
+	G4double fEnergyAbs;
+	G4double fEnergyGas;
+	G4double fTrackLAbs;
+	G4double fAvalancheSize;
+	G4double fGain;
+
+
 };
 
 // inline functions
 
 inline void GarfieldEventAction::AddAbs(G4double de, G4double dl) {
-  fEnergyAbs += de;
-  fTrackLAbs += dl;
+	fEnergyAbs += de;
+	fTrackLAbs += dl;
 }
 
-inline void GarfieldEventAction::AddGas(G4double de) { fEnergyGas += de; }
+inline void GarfieldEventAction::AddGas(G4double de) {
+	fEnergyGas += de;
+
+}
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
+

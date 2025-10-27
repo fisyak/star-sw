@@ -1,21 +1,22 @@
 Media are derived from the abstract base class \texttt{Medium}.
 
-The name (identifier) of a medium can be read using the function
+The name (identifier) of a medium can be read by the function
 \begin{lstlisting}
-const std::string& GetName() const;
+const std::string& GetName();
 \end{lstlisting}
-For compound media (\textit{e.\,g.} gas mixtures), 
+For compound media (e. g. gas mixtures), 
 the identifiers and fractions of the constituents are available via
 \begin{lstlisting}
-std::size_t GetNumberOfComponents();
-void GetComponent(const std::size_t i, std::string& label, double& f);
+unsigned int GetNumberOfComponents();
+void GetComponent(const unsigned int i, std::string& label, double& f);
 \end{lstlisting} 
 
-\section{Transport parameters}
+\section{Transport Parameters}
 
-\texttt{Medium} classes provide the following functions 
-for calculating macroscopic electron transport parameters 
-as a function of the electric and magnetic field:
+\texttt{Medium} classes provide functions for calculating the 
+macroscopic transport 
+parameters of electrons, holes, and ions as a function of the 
+electric and magnetic field:
 \begin{lstlisting}
 bool ElectronVelocity(const double ex, const double ey, const double ez,
                       const double bx, const double by, const double bz,
@@ -46,16 +47,16 @@ is available at the requested field.
 Analogous functions are available for holes 
 (albeit of course not meaningful for gases), and also for ions 
 (except for the Townsend and attachment coefficients). 
-%A function specific to ions is
-%\begin{lstlisting}
-%bool IonDissociation(const double ex, const double ey, const double ez,
-%                     const double bx, const double by, const double bz,
-%                     double& diss);
-%\end{lstlisting}
-%It returns the dissociation coefficient (in cm\(^{-1}\)). 
+A function specific to ions is
+\begin{lstlisting}
+bool IonDissociation(const double ex, const double ey, const double ez,
+                     const double bx, const double by, const double bz,
+                     double& diss);
+\end{lstlisting}
+It returns the dissociation coefficient (in cm\(^{-1}\)). 
 
-The components of the drift velocity are stored in a right-handed 
-coordinate system that is aligned with the electric and magnetic field vectors.
+The components of the drift velocity are stored in a coordinate system 
+which is aligned with the electric and magnetic field vectors.
 More precisely, the axes are along
 \begin{itemize}
   \item
@@ -63,7 +64,6 @@ More precisely, the axes are along
   \item
   the component of the magnetic field \(\mathbf{B}\) transverse to 
   \(\mathbf{E}\), 
-  \(\mathbf{B}_{t} = \left(\mathbf{E} \times \mathbf{B}\right) \times \textbf{E}\),
   \item
   \(\mathbf{E} \times \mathbf{B}\).
 \end{itemize}
@@ -73,38 +73,32 @@ along the two remaining axes.
 
 \begin{table}
   \centering
-  \caption{Pressure scaling relations for gases.}
-  \label{Tab:PressureScaling}
   \begin{tabular}{l r}
     \toprule
     transport parameter & scaling \\
     \midrule
     drift velocity & \(v\) vs. \(E/p\) \\
-    diffusion coefficients & \(\sigma\sqrt{p}\) vs. \(E/p\) \\
+    diffusion      & \(\sigma\sqrt{p}\) vs. \(E/p\) \\
     Townsend coefficient & \(\alpha / p\) vs. \(E/p\) \\
     attachment coefficient & \(\eta / p\) vs. \(E/p\) \\ 
     \bottomrule
   \end{tabular}
+  \caption{Pressure scaling relations for gases.}
+  \label{Tab:PressureScaling}
 \end{table}
 
-\subsection{Transport parameter tables}
+\subsection{Transport Tables}
 
 The transport parameters can either be stored in a 
 one-dimensional table (as a function of the electric field only) or 
 in a three-dimensional table (as a function of \textbf{E}, \textbf{B}, 
 and the angle \(\theta\) between \textbf{E} and \textbf{B}). 
 If only a one-dimensional table is present and the 
-drift velocity at \(B \ne 0\) is requested, the Langevin equation
-\cite{BlumRieglerRolandi2008}
-\begin{equation*}
-  \mathbf{v} = \frac{\mu}{1 + \mu^2 B^2} \left(
-  \mathbf{E} + \mu \mathbf{E} \times \mathbf{B} + 
-  \mu^2 \mathbf{B} \left(\mathbf{E} \cdot \mathbf{B}\right)\right), \qquad 
-  \mu = v / E. 
-\end{equation*} 
+drift velocity at \(B \ne 0\) is requested, the Laue-Langevin equation 
 is used. 
 
-All transport parameters share the same grid 
+In the present version of the code,
+all transport parameters share the same grid 
 of electric fields, magnetic fields, and angles.
 By default, the field and angular ranges are
 \begin{itemize}
@@ -112,14 +106,14 @@ By default, the field and angular ranges are
   20 electric field points between 100 V\,/\,cm and 100 kV\,/\,cm, 
   with logarithmic spacing
   \item
-  \(\mathbf{B} = 0\), \(\theta = \pi / 2\)
+  \(\mathbf{B} = 0\), \(\theta = 0\)
 \end{itemize}
 
 For specifying the field grid, two functions are available:
 \begin{lstlisting}
-void SetFieldGrid(double emin, double emax, const size_t ne, bool logE,
-                  double bmin, double bmax, const size_t nb,
-                  double amin, double amax, const size_t na);
+void SetFieldGrid(double emin, double emax, int ne, bool logE,
+                  double bmin, double bmax, int nb,
+                  double amin, double amax, int na);
 void SetFieldGrid(const std::vector<double>& efields,
                   const std::vector<double>& bfields,
                   const std::vector<double>& angles);
@@ -135,45 +129,17 @@ evenly spaced (\texttt{false}), or logarithmically spaced (\texttt{true})
 \(\theta\) (in ascending order)
 \end{description}
 Electric fields have to be supplied in V\,/\,cm, magnetic fields in Tesla, 
-and angles in radian.
+and angles in rad.
 
-The electron drift velocity components at a specific point in the table 
-can be set and retrieved using
-\begin{lstlisting}
-bool SetElectronVelocityE(const size_t ie, const size_t ib,
-                          const size_t ia, const double v);
-bool SetElectronVelocityB(const size_t ie, const size_t ib,
-                          const size_t ia, const double v);
-bool SetElectronVelocityExB(const size_t ie, const size_t ib,
-                            const size_t ia, const double v);
-bool GetElectronVelocityE(const size_t ie, const size_t ib,
-                          const size_t ia, double& v);
-bool GetElectronVelocityB(const size_t ie, const size_t ib,
-                          const size_t ia, double& v);
-bool GetElectronVelocityExB(const size_t ie, const size_t ib,
-                            const size_t ia, double& v);
-\end{lstlisting}
-\begin{description}
-  \item[ie] index in the list of electric fields,
-  \item[ib] index in the list of magnetic fields,
-  \item[ia] index in the list of angles,
-  \item[v] velocity
-\end{description}
-Analogous functions are available for the other transport parameters.
-For the Townsend coefficient $\alpha$ and the attachment coefficient
-$\eta$, the logarithms $\ln\alpha, \ln\eta$ and not the actual values 
-are stored in the tables. 
-%The same is true for the ion dissociation coefficient. 
- 
 The gas tables are interpolated using Newton polynomials. 
 The order of the interpolation polynomials can be set by means of
 \begin{lstlisting}
-void SetInterpolationMethodVelocity(const std::size_t intrp);
-void SetInterpolationMethodDiffusion(const std::size_t intrp);
-void SetInterpolationMethodTownsend(const std::size_t intrp);
-void SetInterpolationMethodAttachment(const std::size_t intrp);
-void SetInterpolationMethodIonMobility(const std::size_t intrp);
-void SetInterpolationMethodIonDissociation(const std::size_t intrp);
+void SetInterpolationMethodVelocity(const int intrp);
+void SetInterpolationMethodDiffusion(const int intrp);
+void SetInterpolationMethodTownsend(const int intrp);
+void SetInterpolationMethodAttachment(const int intrp);
+void SetInterpolationMethodIonMobility(const int intrp);
+void SetInterpolationMethodIonDissociation(const int intrp);
 \end{lstlisting}
 \begin{description}
 \item[intrp]
@@ -209,138 +175,78 @@ The default settings are
   linear extrapolation towards high values.
 \end{itemize}
 
-\subsection{Visualization}
-For plotting transport parameters as function of the electric field, 
-the member functions
-\begin{lstlisting}
-void PlotVelocity(const std::string& carriers, TPad* pad);
-void PlotDiffusion(const std::string& carriers, TPad* pad);
-void PlotTownsend(const std::string& carriers, TPad* pad);
-void PlotAttachment(const std::string& carriers, TPad* pad);
-void PlotAlphaEta(const std::string& carriers, TPad* pad);
-\end{lstlisting}
-of the class \texttt{Medium} can be used, where the option string 
-\texttt{carriers} indicates the charge carriers (\texttt{"e"}: electrons, \texttt{"i"}: ions, \texttt{"h"}: holes) for which to plot the requested 
-transport parameters. 
-The following example plots the drift velocity of electrons and holes in silicon as well as the Townsend and attachment coefficients.
-\begin{lstlisting}
-MediumSilicon si;
-TCanvas* c1 = new TCanvas("c1", "", 600, 600);
-si.PlotVelocity("eh", c1);
-TCanvas* c2 = new TCanvas("c2", "", 600, 600);
-si.PlotAlphaEta("eh", c2);
-\end{lstlisting} 
+For plotting the transport parameters, the class
+\texttt{ViewMedium} can be used. 
 
-Internally, the above functions use the class \texttt{ViewMedium}. 
-Using \texttt{ViewMedium} directly, another way to produce the first plot 
-in the above example would be:
-\begin{lstlisting}
-MediumSilicon si;
-ViewMedium view(&si);
-view.PlotVelocity("eh", 'e');
-\end{lstlisting}
-The second argument (of type \texttt{char}) of the function \texttt{ViewMedium::PlotVelocity} indicates the quantity to plot on the $x$-axis. 
-Valid options are \texttt{'e'} (electric field), \texttt{'b'} (magnetic field) and \texttt{'a'} (angle between electric and magnetic field). 
+\section{Electron Scattering Rates}
 
-By default, \texttt{ViewMedium} will try to determine the range of the 
-$x$ axis based on the grid of electric fields, magnetic fields, 
-and angles, and the range of the $y$ axis based on the 
-minima and maxima of the function to be plotted. This feature can be 
-switched on or off using the functions
-\begin{lstlisting}
-void EnableAutoRangeX(const bool on = true);
-void EnableAutoRangeY(const bool on = true);
-\end{lstlisting}
-The ranges can be set explicitly using
-\begin{lstlisting}
-void SetRangeE(const double emin, const double emax, const bool logscale);
-void SetRangeB(const double bmin, const double bmax, const bool logscale);
-void SetRangeA(const double amin, const double amax, const bool logscale);
-void SetRangeY(const double ymin, const double ymax, const bool logscale);
-\end{lstlisting}
-When making a plot as function of the electric field, the magnetic field 
-and angle can be set using
-\begin{lstlisting}
-void SetMagneticField(const double bfield);
-void SetAngle(const double angle);
-\end{lstlisting}
-Similarly, the electric field to be used when making a plot as 
-function of magnetic field or angle can be set using
-\begin{lstlisting}
-void SetElectricField(const double efield);
-\end{lstlisting}
+For calculating electron drift lines using ``microscopic tracking'' 
+(see Sec.~\ref{Sec:MicroscopicTracking}),
+the preparation of an electron transport table is not necessary, 
+since this method is based directly on the electron-atom/molecule 
+scattering rates. 
 
-The (ROOT) colours with which to draw the graphs/curves and the labels
-to be used to identify them can be customized using
+The following functions which are meant to be called from within the 
+class \texttt{AvalancheMicroscopic} are available in \texttt{Medium}:
+\begin{itemize}
+  \item
 \begin{lstlisting}
-void SetLabels(const std::vector<std::string>& labels);
-void SetColours(const std::vector<short>& cols);
+double GetElectronCollisionRate(const double e, const int band = 0);
 \end{lstlisting}
-
-If the function
+returns the total scattering rate of an electron with energy \texttt{e} 
+(in~eV) in the \texttt{Medium}. The band index is relevant only 
+for semiconducting media.
+  \item
 \begin{lstlisting}
-void EnableExport(const std::string& txtfile);
-\end{lstlisting} 
+bool GetElectronCollision(const double e, int& type, int& level,
+                          double& e1, double& dx, double& dy, double& dz,
+                          int& nion, int& ndx, int& band);
+\end{lstlisting}
 \begin{description}
-  \item[txtfile] name of the output text file
+  \item[e]          electron energy prior to the collision
+  \item[type]       category of the collision process
+                    (see Tab.~\ref{Tab:ElectronCollisionType})
+  \item[level]      index of the collision process
+  \item[e1]         electron energy after the collision
+  \item[dx, dy, dz] incoming and outgoing direction
+  \item[nion]       number of ``ionisation products'' 
+                    (\textit{i.\,e.} electrons and ions) 
+                    created in the collision
+  \item[ndxc]       number of ``deexcitation products'' 
+                    created in the collision
+  \item[band]       band index (irrelevant for gases) 
 \end{description}
-is called before one of the \texttt{Plot..} functions, the 
-plot data points will be saved to a text file.
+\end{itemize}
 
-%\section{Electron scattering rates}
-%For calculating electron drift lines using ``microscopic tracking'' 
-%(see Sec.~\ref{Sec:MicroscopicTracking}),
-%the preparation of a table of electron transport parameters, 
-%since this method uses directly the electron-atom/molecule 
-%scattering rates. 
-%
-%The following functions which are meant to be called from within the 
-%class \texttt{AvalancheMicroscopic} are available in \texttt{Medium}:
-%\begin{itemize}
-%  \item
-%\begin{lstlisting}
-%double GetElectronCollisionRate(const double e, const int band = 0);
-%\end{lstlisting}
-%returns the total scattering rate of an electron with energy \texttt{e} 
-%(in~eV) in the \texttt{Medium}. The band index is relevant only 
-%for semiconducting media.
-%  \item
-%\begin{lstlisting}
-%bool ElectronCollision(const double e, int& type, int& level,
-%                       double& e1, double& dx, double& dy, double& dz,
-%                       std::vector<std::pair<Particle, double> >& secondaries%,
-%                       int& ndx, int& band);
-%\end{lstlisting}
-%\begin{description}
-%  \item[e]          electron energy prior to the collision
-%  \item[type]       category of the collision process
-%                    (see Tab.~\ref{Tab:ElectronCollisionType})
-%  \item[level]      index of the collision process
-%  \item[e1]         electron energy after the collision
-%  \item[dx, dy, dz] incoming and outgoing direction
-%  \item[secondaries] list of ``ionisation products'' 
-%                    (\textit{i.\,e.} electrons and ions) 
-%                    created in the collision. 
-%                    The first (integer) number in the pair is a flag indicating whether 
-%                    it is an ion or an electron. The second number corresponds to the kinetic energy. 
-%  \item[ndxc]       number of ``deexcitation products'' 
-%                    created in the collision
-%  \item[band]       band index (irrelevant for gases) 
-%\end{description}
-%\end{itemize}
-
+\begin{table}
+  \centering
+  \begin{tabular}{l r}
+    \toprule
+    collision type         & index \\
+    \midrule
+    elastic collision      & 0  \\
+    ionisation             & 1  \\
+    attachment             & 2  \\
+    inelastic collision    & 3  \\
+    excitation             & 4  \\
+    superelastic collision & 5 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Classification of electron collision processes.}
+  \label{Tab:ElectronCollisionType}
+\end{table}
 \section{Gases}
 
-There are currently two classes implemented that can be used for the 
+There are currently two classes implemented which can be used for the 
 description of gaseous media: \texttt{MediumGas} and its 
 daughter class \texttt{MediumMagboltz}. 
 While \texttt{MediumGas} deals only with the interpolation of gas tables 
 and the import of gas files, 
 \texttt{MediumMagboltz} -- owing to an interface to the 
-\textsc{Magboltz} program \cite{Biagi1999} -- 
-can be used for the calculation of transport parameters. 
+Magboltz program \cite{Biagi1999} -- allows the calculation 
+of transport parameters. 
 In addition, the latter class provides access to the 
-electron-molecule scattering cross-sections used in \textsc{Magboltz} and is 
+electron-molecule scattering cross-sections used in Magboltz and is 
 thus suitable for microscopic tracking (chapter \ref{Chap:Transport}). 
 
 The composition of the gas mixture is specified using
@@ -354,46 +260,33 @@ bool SetComposition(const std::string& gas1, const double f1 = 1.,
 \end{lstlisting}
 \begin{description}
   \item[gas1, \dots, gas6] identifier of the molecule/atom
-  \item[f1, \dots, f6] number fraction of the respective molecule/atom
+  \item[f1, \dots, f6] fraction of the respective molecule/atom   
 \end{description}
 A valid gas mixture comprises at least one and at most six 
 different species. 
-
-The function
-\begin{lstlisting}
-void PrintGases();
-\end{lstlisting}
-prints out a list of the available gases and their identifiers 
-(see also Table~\ref{Tab:GasesMagboltz11}).
- 
+A list of the presently available gases and their identifiers 
+can be found in the appendix. 
 The fractions have to be strictly positive and 
 may add up to any non-zero value; 
 internally they will be normalized to one.
 
-The gas density is specified in terms of pressure (in Torr) 
-and temperature (in K)
+The gas density is specified in terms of pressure (Torr) 
+and temperature (K):
 \begin{lstlisting}
 void SetPressure(const double p);
 void SetTemperature(const double t);
 \end{lstlisting}
-and calculated using the ideal gas law. 
+Note that the density is calculated using the ideal gas law. 
 
 In the following example the gas mixture is set 
 to Ar/CH\(_{4}\) (80/20) at 
-atmospheric pressure and 20\(^{\circ}\)\,C.
+atmospheric pressure and 20\(^{\circ}\)~C.
 \begin{lstlisting}
-MediumMagboltz gas;
+MediumMagboltz* gas = new MediumMagboltz();
 // Set the composition
-gas.SetComposition("ar", 80., "ch4", 20.);
-gas.SetTemperature(293.15);
-gas.SetPressure(760.);
-\end{lstlisting}
-The gas composition can also be specified in the constructor of 
-\texttt{MediumMagboltz}.
-\begin{lstlisting}
-MediumMagboltz gas("ar", 80., "ch4", 20.);
-gas.SetTemperature(293.15);
-gas.SetPressure(760.);
+gas->SetComposition("ar", 80., "ch4", 20.);
+gas->SetTemperature(293.15);
+gas->SetPressure(760.);
 \end{lstlisting}
 
 The function
@@ -403,37 +296,17 @@ void PrintGas();
 prints information about the present transport parameter tables and 
 cross-section terms (if available). 
 
-\subsection{$W$ values and Fano factors}
-\texttt{MediumGas} has default settings for the 
-$W$ value (average energy to create an electron-ion pair) and 
-the Fano factor of each gas available in Magboltz.
-Where available, measurements of the $W$ value reported in 
-Refs.~\cite{ICRU31,Reinking1986,Pansky1997} and measurements of the Fano factor 
-reported in Refs.~\cite{IAEA799,Srdoc1987,Pansky1997} were used. 
+\subsection{Ion Transport}
 
-For gases for which there no experimental data could be found 
-in the literature, the $W$ values were calculated based on the set of 
-cross-sections implemented in Magboltz and the Fano factor was calculated 
-using the empirical relation \cite{KrajcarBronic1992}
-\begin{equation*}
-F = 0.188 \frac{W}{I} - 0.15
-\end{equation*}
-where $I$ is the ionisation potential of the gas.
-
-\subsection{Ion transport}
-
-The \texttt{Data} directory of the project includes a number of text files  
-(\textit{e.~g.} \texttt{IonMobility\_Ar+\_Ar.txt} for Ar\(^{+}\) ions in argon) 
-with ion mobility data. When building the project, these files are copied to the folder \texttt{share/Garfield/Data/} of the install directory. 
-More precisely, the files contain
-a table of reduced electric fields \(E/N\) and reduced mobilities.
-The reduced electric fields are given in units of   
-Td\footnote{1\,Td = 10\(^{-17}\) V\,cm\(^{2}\)} (Townsend) and the mobility values 
-in cm\(^{2}\)\,V\(^{-1}\)\,s\(^{-1}\). 
-Mobility files for positive ions can be imported using
+The \texttt{\$GARFIELD\_HOME/Data} directory includes a few files 
+(e.~g. \texttt{IonMobility\_Ar+\_Ar.txt} for Ar\(^{+}\) ions in argon) 
+which contain ion mobility data in form of 
+a table of reduced electric fields \(E/N\) 
+(in Td\footnote{1\,Td = 10\(^{-17}\) V\,cm\(^{2}\)}) vs. 
+mobilities (in cm\(^{2}\)\,V\(^{-1}\)\,s\(^{-1}\)). 
+These mobility files can be imported using
 \begin{lstlisting}
-bool MediumGas::LoadIonMobility(const std::string& filename,
-                                const bool quiet = false);
+bool MediumGas::LoadIonMobility(const std::string& filename);
 \end{lstlisting}
 \begin{description}
   \item[filename] path and filename of the mobility file
@@ -441,99 +314,70 @@ bool MediumGas::LoadIonMobility(const std::string& filename,
 Extensive compilations of ion mobilities and diffusion coefficients 
 can be found in Refs.~\cite{Ellis1976,Ellis1978,Ellis1984,Viehland1995}. 
 
-Analogously, mobility data for negative ions can be imported using
-\begin{lstlisting}
-bool LoadNegativeIonMobility(const std::string& filename,
-                             const bool quiet = false);
-\end{lstlisting}
-
 \subsection{Magboltz}
 
-\textsc{Magboltz}, written by Steve Biagi, is a program 
+Magboltz, written by Steve Biagi, is a program \cite{Biagi1999} 
 for the calculation of electron transport properties in gas 
-mixtures using semi-classical Monte Carlo simulation
-\cite{Biagi1999}. 
+mixtures using semi-classical Monte Carlo simulation. 
 It includes a database of electron-atom/molecule cross-sections 
 for a large number of detection gases. 
 
-The function
+\texttt{MediumMagboltz} allows running Magboltz for a 
+given electric field, magnetic field and field angle:
 \begin{lstlisting}
-void GenerateGasTable(const int numCollisions, const bool verbose);
+void RunMagboltz(const double e, const double b, const double btheta,
+                 const int ncoll, bool verbose, 
+                 double& vx, double& vy, double& vz,
+                 double& dl, double& dt, double& alpha, double& eta,
+                 double& vxerr, double& vyerr, double& vzerr,
+                 double& dlerr, double& dterr,
+                 double& alphaerr, double& etaerr, 
+                 double& alphatof);
 \end{lstlisting}
-runs Magboltz for all values of \(\mathbf{E}\), \(\mathbf{B}\), 
-and \(\theta\) included in the current field grid. 
-
-In addition to the transport parameters, this function also 
-retrieves the rates calculated by \textsc{Magboltz} for each excitation and 
-ionisation level, and stores them in the gas table. These can be used 
-later to adjust the Townsend coefficient based on the Penning transfer 
-probabilities set by the user.
-
-By default, the max. energy of the cross-section table  
-is chosen automatically by \textsc{Magboltz}. This feature can be 
-enabled or disabled using
-\begin{lstlisting}
-void EnableAutoEnergyLimit(const bool on = true);
-\end{lstlisting} 
-If it is switched off, the program uses the upper energy limit set using 
-\begin{lstlisting}
-bool SetMaxElectronEnergy(const double e);
-\end{lstlisting}
-
+\begin{description}
+  \item[e, b, btheta] 
+    \(\mathbf{E}\) field, \(\mathbf{B}\) field, and  angle
+  \item[ncoll] 
+    number of collisions (in multiples of \(10^{7}\)) over which 
+    the electron is tracked
+  \item[verbose] 
+    flag switching on/off full output from Magboltz
+  \item[vx, vy, vz] 
+    drift velocity along \(\mathbf{E}\) (\(vz\)), 
+    along \(\mathbf{B}_{t}\) (\(vy\)), and  
+    along \(\mathbf{E} \times \mathbf{B}\) (\(vy\))
+  \item[dl, dt]
+    diffusion coefficients
+  \item[alpha, eta]
+    Townsend and attachment coefficient calculated using the
+    SST technique or, at low fields, the ionization/loss rate
+  \item[vxerr, vyerr, \dots, etaerr] 
+    statistical error of the calculation in \(\%\)
+  \item[alphatof]
+    alternative estimate of the effective Townsend coefficient 
+    \(\alpha - \eta\) based on the Time-Of-Flight method  
+\end{description}
+The max. energy of the cross-section table  
+is chosen automatically by Magboltz. 
 For inelastic gases, setting \(\texttt{nColl} = 2 \dots 5\)
 should give an accuracy of about \(1\%\). 
 An accuracy better than \(0.5\%\) can be achieved by 
 \(\texttt{nColl} > 10\). 
 For pure elastic gases such as Ar, \texttt{nColl} should 
 be at least 10.  
-
-Recent versions of \textsc{Magboltz} allow the thermal motion of the gas 
-atoms/molecules to be taken into account in the simulation. 
-This feature can be enabled or disabled using
+ 
+In order to calculate the electron transport parameters 
+for all values of \(\mathbf{E}\), \(\mathbf{B}\), 
+and \(\theta\) included in the current field grid, 
+the function
 \begin{lstlisting}
-void EnableThermalMotion(const bool on);
-\end{lstlisting} 
-By default the option is switched off, \textit{i. e.} the gas 
-is assumed to be at 0\,K. 
-
-%In order to run \textsc{Magboltz} via the \texttt{MediumMagboltz} interface class
-%for a given electric field, magnetic field and field angle, the following 
-%function is provided:
-%\begin{lstlisting}
-%void RunMagboltz(const double e, const double b, const double btheta,
-%    const int ncoll, bool verbose, double& vx, double& vy, double& vz,
-%    double& dl, double& dt, double& alpha, double& eta, double& lor, 
-%    double& vxerr, double& vyerr, double& vzerr,
-%    double& dlerr, double& dterr, double& alphaerr, double& etaerr, 
-%    double& lorerr, double& alphatof, std::array<double, 6>& difftens);
-%\end{lstlisting}
-%\begin{description}
-%  \item[e, b, btheta] \(\mathbf{E}\) field, \(\mathbf{B}\) field, and  angle
-%  \item[ncoll] 
-%    number of collisions (in multiples of \(10^{7}\)) over which 
-%    the electron is tracked
-%  \item[verbose] flag switching on/off full output from \textsc{Magboltz}
-%  \item[vx, vy, vz] 
-%    drift velocity along \(\mathbf{E}\) (\(vz\)), along \(\mathbf{B}_{t}\) 
-%    (\(vy\)), and along \(\mathbf{E} \times \mathbf{B}\) (\(vy\))
-%  \item[dl, dt] diffusion coefficients
-%  \item[alpha, eta] Townsend and attachment coefficient calculated using 
-%    the SST technique or, at low fields, the ionization/loss rate
-%  \item[lor]
-%    Lorentz angle, calculated from the components of the drift velocity
-%  \item[vxerr, vyerr, \dots, etaerr] 
-%    statistical error of the calculation in \(\%\)
-%  \item[alphatof]
-%    alternative estimate of the effective Townsend coefficient 
-%    \(\alpha - \eta\) based on the Time-Of-Flight method 
-%  \item[difftens]
-%    components of the diffusion tensor ($\sigma_{zz}$, $\sigma_{xx}$, 
-%    $\sigma_{yy}$, $\sigma_{xz} = \sigma_{zx}$, $\sigma_{yz} = \sigma_{zy}$,
-%    $\sigma_{xy} = \sigma_{yx}$) 
-%\end{description}
+void GenerateGasTable(const int numCollisions);
+\end{lstlisting}
+can be used.
  
 Electron transport parameter tables can be saved to file 
-and read from file by means of
+and read from file  
+by means of
 \begin{lstlisting}
 bool WriteGasFile(const std::string& filename);
 bool LoadGasFile(const std::string& filename);
@@ -542,34 +386,12 @@ bool LoadGasFile(const std::string& filename);
 The format of the gas file used in Garfield++ is compatible with the 
 one used in Garfield 9. 
 
-Gas files for the same gas composition and the same temperature and pressure
-can be merged using
-\begin{lstlisting}
-bool MergeGasFile(const std::string& filename, const bool replaceOld);
-\end{lstlisting}
-\begin{description}
-  \item[filename] name of the gas file to be loaded and merged with the 
-present gas table,
-  \item[replaceOld] flag indicating whether new (\texttt{replaceOld = true}) or existing values should be used in case of overlaps between the 
-two tables. 
-\end{description}
-Suppose we have two gas files for Ar/CO$_{2}$, one for a $B$ field of 1\,T
-and one for $B = 2$\,T. We can combine the two tables 
-with the following snippet of code.
-\begin{lstlisting}
-MediumMagboltz gas;
-gas.LoadGasFile("ar_co2_1T.gas");
-gas.MergeGasFile("ar_co2_2T.gas");
-// Save the merged table.
-gas.WriteGasFile("ar_co2_merged.gas");
-\end{lstlisting} 
-
-\subsubsection{Scattering rates}
+\subsubsection{Scattering Rates}
 
 As a prerequisite for ``microscopic tracking'' a 
 table of the electron scattering rates 
 (based on the electron-atom/molecule cross-sections included in the 
-\textsc{Magboltz} database) for the 
+Magboltz database) for the 
 current gas mixture and density needs to be prepared. 
 This can be done using the function 
 \begin{lstlisting}
@@ -584,71 +406,48 @@ If
 void EnableCrossSectionOutput();
 \end{lstlisting}
 is called prior to \texttt{Initialise}, a table of the cross-sections 
-(as retrieved from \textsc{Magboltz}) is written to a file \texttt{cs.txt} 
+(as retrieved from Magboltz) is written to a file \texttt{cs.txt} 
 in the current working directory. 
 
-By default, the table of scattering rates extends from 0 to 40\,eV. 
-The max. energy to be included in the table can be set using
+By default, the scattering rates table extends from 0 to 40\,eV. 
+The max. energy to be included in the scattering rates table 
+can be set using
 \begin{lstlisting}
 SetMaxElectronEnergy(const double e);
 \end{lstlisting}
 \begin{description}
 \item[e]
-  max. electron energy (in eV).
+  max. electron energy (in eV)
 \end{description}
-Up to an upper limit of 400\,eV, equidistant energy steps are used.
-If the max. energy exceeds this value, logarithmically spaced 
-energy steps are used for the high-energy part ($>400$\,eV) 
-of the cross-section table.
 
 The parameters of the cross-section terms in the present gas mixture 
 can be retrieved via
 \begin{lstlisting}
 int GetNumberOfLevels();
-bool GetLevel(const std::size_t i, int& ngas, int& type, std::string& descr, double& e);
+bool GetLevel(const int i, int& ngas, int& type, std::string& descr, double& e);
 \end{lstlisting}
 \begin{description}
   \item[i] index of the cross-section term
   \item[ngas] index of the gas in the mixture
   \item[type] classification of the cross-section term 
               (see Table~\ref{Tab:ElectronCollisionType})
-  \item[descr] description of the cross-section term (from \textsc{Magboltz})
+  \item[descr] description of the cross-section term (from Magboltz)
   \item[e] energy loss
 \end{description}
-
-\begin{table}
-  \centering
-  \caption{Classification of electron collision processes.}
-  \label{Tab:ElectronCollisionType}
-  \begin{tabular}{l r}
-    \toprule
-    collision type         & index \\
-    \midrule
-    elastic collision      & 0  \\
-    ionisation             & 1  \\
-    attachment             & 2  \\
-    inelastic collision    & 3  \\
-    excitation             & 4  \\
-    superelastic collision & 5  \\
-    virtual (``null'') collision & 6 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 It is sometimes useful to know the frequency with which individual levels 
 are excited in an avalanche (or along a drift line). 
 For this purpose, \texttt{MediumMagboltz} keeps track of the number of times 
-the individual levels are sampled in \texttt{ElectronCollision}. 
+the individual levels are sampled in \texttt{GetElectronCollision}. 
 These counters are accessible through the functions
 \begin{lstlisting}
-std::size_t GetNumberOfElectronCollisions();
-std::size_t GetNumberOfElectronCollisions(std::size_t& nElastic, std::size_t& nIonising, 
-                                          std::size_t& nAttachment, std::size_t& nInelastic, 
-                                          std::size_t& nExcitation, std::size_t& nSuperelastic);
-std::size_t GetNumberOfElectronCollisions(const std::size_t level);
+int GetNumberOfElectronCollisions();
+int GetNumberOfElectronCollisions(int& nElastic, int& nIonising, int& nAttachment,
+                                  int& nInelastic, int& nExcitation, int& nSuperelastic);
+int GetNumberOfElectronCollisions(const int level);
 \end{lstlisting}
-The first function returns total number of electron collisions 
-since the last reset. 
+The first function returns total number of electron collisions (\textit{i.\,e.} calls 
+to \texttt{GetElectronCollisions}) since the last reset. 
 The second function additionally provides the number of collisions of each 
 cross-section category (elastic, ionising etc.). 
 The third function returns the number of collisions for a specific cross-section term.
@@ -657,7 +456,7 @@ The counters can be reset using
 void ResetCollisionCounters();
 \end{lstlisting} 
 
-\subsubsection{Excitation transfer}\label{Sec:PenningTransfer}
+\subsubsection{Excitation Transfer}
 
 Penning transfer can be taken into account in terms of a transfer efficiency 
 \(r_{i}\), \textit{i.\,e.} the probability for an excited level \(i\) with an  
@@ -666,10 +465,11 @@ excitation energy \(\epsilon_{i}\) exceeding the ionisation potential
 be ``converted'' to an ionisation.
 The simulation of Penning transfer can be switched on/off using
 \begin{lstlisting}
-void EnablePenningTransfer();
+void EnablePenningTransfer(const double r, const double lambda);
 void EnablePenningTransfer(const double r, const double lambda, 
                            std::string gasname);
-void EnablePenningTransfer(const double r, const double lambda);
+void DisablePenningTransfer();
+void DisablePenningTransfer(std::string gasname);
 \end{lstlisting}
 \begin{description}
   \item[r] value of the transfer efficiency
@@ -678,54 +478,22 @@ void EnablePenningTransfer(const double r, const double lambda);
   \item[gasname] name of the gas the excitation levels of which are to be assigned 
                  the specified transfer efficiency 
 \end{description}
-The first function, which takes no arguments, 
-calculates the Penning transfer probability for the current gas mixture
-using pre-implemented parameterisations taken from literature 
-\cite{Sahin2010,Sahin2017,Sahin2018,Sahin2021}, if available. 
-
-The second function sets the Penning transfer probability for a 
-specific gas component in the mixture.
- 
-The third function (without the \texttt{gasname} parameter)
-activates Penning transfer globally for all gases in the mixture. 
+The functions without the \texttt{gasname} parameter
+switch on/off Penning transfer globally for all gases in the mixture. 
 Note that \(r\) is an average transfer efficiency, it is assumed to be the same 
 for all energetically eligible levels (\(\epsilon_{i} > \epsilon_{\text{ion}}\)).
 
-Penning transfer can be switched off, globally or for a specific component, 
-using
-\begin{lstlisting}
-void DisablePenningTransfer();
-void DisablePenningTransfer(std::string gasname);
-\end{lstlisting}
-
-If the gas table includes excitation and ionisation rates as function 
-of the electric and magnetic fields, the Townsend coefficient is updated 
-accordingly when calling \texttt{EnablePenningTransfer} 
-(or \texttt{DisablePenningTransfer}). More precisely,  
-the adjusted Townsend coefficient is given by
-\begin{equation*}
-  \alpha = \alpha_{0} \frac{\sum_{i} r_{\text{exc}, i} + \sum_{i} r_{\text{ion}, i}}{\sum_{i} r_{\text{ion}, i}},
-\end{equation*}
-where $\alpha_{0}$ is the Townsend coefficient calculated without Penning 
-transfers,
-$r_{\text{exc}, i}$ is the rate of an excited level $i$ with an excitation 
-energy above the ionisation potential of the gas mixture, and 
-$r_{\text{ion}, i}$ is the rate of an ionization level $i$.
-
-\newpage
 \section{Semiconductors}
-\subsection{Silicon}\label{Sec:Silicon}
-Like for all \texttt{Medium} classes, users have the possibility to specify the 
+\texttt{MediumSilicon} is the only semiconductor-type \texttt{Medium} class implemented 
+so far. 
+\subsection{Transport Parameters}
+Like for all \texttt{Medium} classes the user has the possibility to specify the 
 transport parameters in tabulated form 
 as function of electric field, magnetic field, and angle. 
-If no such tables have been entered, \texttt{MediumSilicon} 
-calculates the electron and hole transport parameters 
+If no such tables have been entered, the transport parameters are calculated 
 based on empirical parameterizations (as used, for instance, in device simulation 
 programs). Several mobility models are implemented.
 \begin{table}
-  \centering
-  \caption{Lattice mobility parameter values.}
-  \label{Tab:LatticeMobility}
   \begin{tabular}{l . . . .}
     \toprule
       & \multicolumn{2}{c}{electrons} & 
@@ -740,6 +508,8 @@ programs). Several mobility models are implemented.
     Reggiani \cite{OmarReggiani1987} & 1.32  & -2.0 & 0.46   & -2.2 \\
     \bottomrule
   \end{tabular}
+  \caption{Lattice mobility parameter values.}
+  \label{Tab:LatticeMobility}
 \end{table} 
 For the mobility \(\mu_{0}\) at low electric fields, 
 the following options are available: 
@@ -765,10 +535,10 @@ void SetLatticeMobilityModelReggiani();
   \end{lstlisting} 
   In all cases, the dependence of the lattice mobility \(\mu_{L}\) 
   on the temperature \(T\) is described by 
-  \begin{equation}\label{Eqn:LatticeMobilityTemperatureDependence}
+  \begin{equation*}
     \mu_{L}\left(T\right) = \mu_{L}\left(T_{0}\right) 
               \left(\frac{T}{T_{0}}\right)^{\beta}, \qquad T_{0} = 300\text{ K}.
-  \end{equation}
+  \end{equation*}
   The values of the parameters \(\mu_{L}\left(T_{0}\right)\) and \(\beta\) 
   used in the different models are shown in Table~\ref{Tab:LatticeMobility}. 
   By default, the ``Sentaurus'' model is activated. 
@@ -789,12 +559,12 @@ the following options are available:
   \item
   The method for calculating the high-field saturation velocities 
   can be set using
-\begin{lstlisting}
+  \begin{lstlisting}
 void SetSaturationVelocity(const double vsate, const double vsath);
 void SetSaturationVelocityModelMinimos();
 void SetSaturationVelocityModelCanali();
 void SetSaturationVelocityModelReggiani();
-\end{lstlisting}
+  \end{lstlisting}
   The first function sets user-defined saturation velocities (in cm/ns) for 
   electrons and holes. The other functions activate different parameterizations 
   for the saturation velocity as function of temperature. In the Canali model 
@@ -808,12 +578,12 @@ void SetSaturationVelocityModelReggiani();
   \item
   The parameterization of the mobility as function of the electric field 
   to be used can be selected using
-\begin{lstlisting}
+  \begin{lstlisting}
 void SetHighFieldMobilityModelMinimos();
 void SetHighFieldMobilityModelCanali();
 void SetHighFieldMobilityModelReggiani();
 void SetHighFieldMobilityModelConstant();
-\end{lstlisting}
+  \end{lstlisting}
   The last function requests a constant mobility (\textit{i.\,e.} linear dependence of the 
   velocity on the electric field). 
   The models activated by the other functions used the following expressions
@@ -835,75 +605,13 @@ void SetHighFieldMobilityModelConstant();
 \end{itemize}
 
 For the impact ionization coefficient, the user has currently the choice 
-between the models of Grant \cite{Grant1973},
-van Overstraeten and de Man \cite{VanOverstraeten1970}, 
-Okuto and Crowell \cite{Okuto1975}, and Massey \cite{Massey2006}.
+between the model of Grant \cite{Grant1973} and the model of 
+van Overstraeten and de Man \cite{VanOverstraeten1970}.
 \begin{lstlisting}
 void SetImpactIonisationModelGrant();
 void SetImpactIonisationModelVanOverstraetenDeMan();
-void SetImpactIonisationModelMassey();
-void SetImpactIonisationModelOkutoCrowell();
 \end{lstlisting}
-By default, the model by van Overstraeten and de Man is used.
+The latter model is used by default.
 
-%On an experimental basis, electron collision rates for use with microscopic tracking 
-%are also included.
- 
-\subsection{Gallium arsenide}
-By default, \texttt{MediumGaAs} uses 
-Eq.~\eqref{Eqn:LatticeMobilityTemperatureDependence} for calculating the 
-low-field lattice mobility, with 
-\begin{equation*}
-\mu_{L}\left(T = 300\,\text{K}\right) = 8\times10^{-6}\,\text{cm}^{2}\,\text{V}^{-1}\,\text{ns}^{-1}, \qquad \beta=-1
-\end{equation*}
-for electrons and 
-\begin{equation*}
-\mu_{L}\left(T = 300\,\text{K}\right) = 0.4\times10^{-6}\,\text{cm}^{2}\,\text{V}^{-1}\,\text{ns}^{-1}, \beta=-2.1
-\end{equation*}
-for holes. Alternatively, the low-field mobilities can be set explicitly using
-\begin{lstlisting}
-SetLowFieldMobility(const double mue, const double muh);
-\end{lstlisting}
-For the dependence of the mobility on the electric field $E$, the 
-parameterizations \cite{Barnes1976} 
-\begin{equation*}
-  \mu^{e}\left(E\right) = \frac{\mu_{0}^{e} + \frac{v_{\text{sat}}}{E}\left(\frac{E}{E_{c}}\right)^{4}}{1 + \left(\frac{E}{E_{c}}\right)^4}, \qquad
-  \mu^{h}\left(E\right) = \frac{\mu_{0}^{h} + \frac{v_{\text{sat}}}{E_{c}}}{1 + \frac{E}{E_{c}}}, \qquad E_{c} = 4000\,\text{V}\,/\,\text{cm}
-\end{equation*}
-are used, and the saturation velocity is calculated using
-\begin{equation*}
-  v_{\text{sat}}^{e,h} = 1.13\times10^{-2} - 3.6\times10^{-3}\left(\frac{T}{T_{0}}\right)\,\text{cm}\,/\,\text{ns}. 
-\end{equation*}
-
-The Townsend (impact ionization) coefficient as a function of the 
-electric field $E$ is calculated using
-\begin{equation*}
-  \alpha^{e} = a \exp\left(-\left(\frac{b}{E}\right)^{1.75}\right), \qquad
-  \alpha^{h} = a \exp\left(-\left(\frac{b}{E}\right)^{1.82}\right).
-\end{equation*} 
-
-\subsection{Diamond}
-Unless the low-field mobility values are set explicitly by the user, 
-\texttt{MediumDiamond} calculates them using 
-\begin{equation*}
-\mu_{0}\left(T\right) = \left(\frac{T}{T_{0}}\right)^{-1.5}\mu_{0}\left(T_{0}\right),
-\end{equation*}
-where $T_{0} = 300$\,K and
-$\mu_{0}\left(T_{0}\right) = 4.551\times10^{-6}$\,cm$^{2}$\,V$^{-1}$\,ns$^{-1}$ 
-for electrons and
-$\mu_{0}\left(T_{0}\right) = 2.750\times10^{-6}$\,cm$^{2}$\,V$^{-1}$\,ns$^{-1}$ 
-for holes \cite{Pomorski2008}.
-The mobility as function of the electric field $E$ is calculated using
-\begin{equation*}
-  \mu\left(E\right) = \frac{\mu_{0}}{1 + \frac{\mu_{0}E}{v_{\text{sat}}}}
-\end{equation*}
-with default values of 
-$v_{\text{sat}} = 2.6\times10^{-2}$\,\text{cm}\,/\,\text{ns} for 
-electrons and 
-$v_{\text{sat}} = 1.6\times10^{-2}$\,\text{cm}\,/\,\text{ns} for 
-holes. 
-These default values can be overriden using
-\begin{lstlisting}
-void SetLowFieldMobility(const double mue, const double muh);
-void SetSaturationVelocity(const double vsate, const double vsath);
-\end{lstlisting}
+On an experimental basis, electron collision rates for use with microscopic tracking 
+are also included. 

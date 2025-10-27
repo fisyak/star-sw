@@ -1,11 +1,23 @@
-#include "Garfield/RandomEngineRoot.hh"
-
 #include <iostream>
+#include "RandomEngineRoot.hh"
 
 namespace Garfield {
-void RandomEngineRoot::Print() {
-  std::cout << "RandomEngineRoot::Print:\n"
-            << "    Generator type: TRandom3\n"
-            << "    Seed: " << m_rng.TRandom::GetSeed() << "\n";
+
+RandomEngineRoot randomEngine;
+
+RandomEngineRoot::RandomEngineRoot() : rng(0) {
+
+  std::cout << "RandomEngineRoot:\n";
+  std::cout << "    Generator type: TRandom3\n";
+  std::cout << "    Seed: " << rng.GetSeed() << "\n";
 }
-}  // namespace Garfield
+
+RandomEngineRoot::~RandomEngineRoot() {}
+
+void RandomEngineRoot::Seed(unsigned int s) {
+
+  rng.SetSeed(s);
+  std::cout << "RandomEngineRoot::Seed:\n";
+  std::cout << "    Seed: " << rng.GetSeed() << "\n";
+}
+}

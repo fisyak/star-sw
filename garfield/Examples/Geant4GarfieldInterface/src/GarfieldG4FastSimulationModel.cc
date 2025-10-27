@@ -23,116 +23,142 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+// $Id: GarfieldG4FastSimulationModel.cc 999994 2015-12-11 14:47:43Z dpfeiffe $
+//
 /// \file GarfieldG4FastSimulationModel.cc
 /// \brief Implementation of the GarfieldG4FastSimulationModel class
 
-#include "GarfieldG4FastSimulationModel.hh"
-
 #include <iostream>
-
-#include "G4Electron.hh"
-#include "G4GDMLParser.hh"
-#include "G4Gamma.hh"
-#include "G4SystemOfUnits.hh"
+#include "GarfieldG4FastSimulationModel.hh"
 #include "G4VPhysicalVolume.hh"
+#include "G4GDMLParser.hh"
+#include "G4Electron.hh"
+#include "G4Gamma.hh"
+
+#include "G4SystemOfUnits.hh"
 
 GarfieldG4FastSimulationModel::GarfieldG4FastSimulationModel(G4String modelName,
-                                                             G4Region* envelope)
-    : G4VFastSimulationModel(modelName, envelope) {
-  fGarfieldPhysics = GarfieldPhysics::GetInstance();
-  fGarfieldPhysics->InitializePhysics();
+		G4Region* envelope) :
+		G4VFastSimulationModel(modelName, envelope) {
+	fGarfieldPhysics = GarfieldPhysics::GetInstance();
+	fGarfieldPhysics->InitializePhysics();
+
 }
 
-GarfieldG4FastSimulationModel::GarfieldG4FastSimulationModel(G4String modelName)
-    : G4VFastSimulationModel(modelName) {
-  fGarfieldPhysics = GarfieldPhysics::GetInstance();
-  fGarfieldPhysics->InitializePhysics();
+GarfieldG4FastSimulationModel::GarfieldG4FastSimulationModel(G4String modelName) :
+		G4VFastSimulationModel(modelName) {
+	fGarfieldPhysics = GarfieldPhysics::GetInstance();
+	fGarfieldPhysics->InitializePhysics();
 }
 
-GarfieldG4FastSimulationModel::~GarfieldG4FastSimulationModel() {}
+GarfieldG4FastSimulationModel::~GarfieldG4FastSimulationModel() {
+}
 
 void GarfieldG4FastSimulationModel::WriteGeometryToGDML(
-    G4VPhysicalVolume* physicalVolume) {
-  G4GDMLParser* parser = new G4GDMLParser();
-  remove("garfieldGeometry.gdml");
-  parser->Write("garfieldGeometry.gdml", physicalVolume, false);
-  delete parser;
+		G4VPhysicalVolume* physicalVolume) {
+
+	G4GDMLParser* parser = new G4GDMLParser();
+	remove("garfieldGeometry.gdml");
+	parser->Write("garfieldGeometry.gdml", physicalVolume, false);
+	delete parser;
 }
 
 G4bool GarfieldG4FastSimulationModel::IsApplicable(
-    const G4ParticleDefinition& particleType) {
-  G4String particleName = particleType.GetParticleName();
-  if (fGarfieldPhysics->FindParticleName(particleName, "garfield")) {
-    return true;
-  }
-  return false;
+		const G4ParticleDefinition& particleType) {
+	G4String particleName = particleType.GetParticleName();
+	if (fGarfieldPhysics->FindParticleName(particleName, "garfield")) {
+		return true;
+	}
+	return false;
 }
 
 G4bool GarfieldG4FastSimulationModel::ModelTrigger(
-    const G4FastTrack& fastTrack) {
-  double ekin_MeV = fastTrack.GetPrimaryTrack()->GetKineticEnergy() / MeV;
-  G4String particleName =
-      fastTrack.GetPrimaryTrack()->GetParticleDefinition()->GetParticleName();
-  if (fGarfieldPhysics->FindParticleNameEnergy(particleName, ekin_MeV,
-                                               "garfield")) {
-    return true;
-  }
-  return false;
+		const G4FastTrack& fastTrack) {
+	double ekin_MeV = fastTrack.GetPrimaryTrack()->GetKineticEnergy() / MeV;
+	G4String particleName =
+			fastTrack.GetPrimaryTrack()->GetParticleDefinition()->GetParticleName();
+	if (fGarfieldPhysics->FindParticleNameEnergy(particleName, ekin_MeV,
+			"garfield")) {
+		return true;
+	}
+	return false;
 }
 
 void GarfieldG4FastSimulationModel::DoIt(const G4FastTrack& fastTrack,
-                                         G4FastStep& fastStep) {
-  G4ThreeVector localdir = fastTrack.GetPrimaryTrackLocalDirection();
-  G4ThreeVector localpos = fastTrack.GetPrimaryTrackLocalPosition();
+		G4FastStep& fastStep) {
 
-  double ekin_MeV = fastTrack.GetPrimaryTrack()->GetKineticEnergy() / MeV;
-  double globalTime = fastTrack.GetPrimaryTrack()->GetGlobalTime();
+	G4TouchableHandle theTouchable =
+			fastTrack.GetPrimaryTrack()->GetTouchableHandle();
+	G4String name = theTouchable->GetVolume()->GetName();
 
-  G4String particleName =
-      fastTrack.GetPrimaryTrack()->GetParticleDefinition()->GetParticleName();
+	G4ThreeVector pdirection =
+			fastTrack.GetPrimaryTrack()->GetMomentum().unit();
+	G4ThreeVector localdir = fastTrack.GetPrimaryTrackLocalDirection();
 
-  fastStep.KillPrimaryTrack();
-  fastStep.ProposePrimaryTrackPathLength(0.0);
+	G4ThreeVector worldPosition = fastTrack.GetPrimaryTrack()->GetPosition();
+	G4ThreeVector localPosition = fastTrack.GetPrimaryTrackLocalPosition();
 
-  if (particleName == "kaon+") {
-    particleName = "K+";
-  } else if (particleName == "kaon-") {
-    particleName = "K-";
-  } else if (particleName == "anti_proton") {
-    particleName = "anti-proton";
-  }
+	double ekin_MeV = fastTrack.GetPrimaryTrack()->GetKineticEnergy() / MeV;
+	G4double globalTime = fastTrack.GetPrimaryTrack()->GetGlobalTime();
 
-  fGarfieldPhysics->DoIt(particleName, ekin_MeV, globalTime,
-                         localpos.x() / CLHEP::cm, localpos.y() / CLHEP::cm,
-                         localpos.z() / CLHEP::cm, localdir.x(), localdir.y(),
-                         localdir.z());
+	G4String particleName =
+			fastTrack.GetPrimaryTrack()->GetParticleDefinition()->GetParticleName();
 
-  fastStep.ProposeTotalEnergyDeposited(
-      fGarfieldPhysics->GetEnergyDeposit_MeV());
+	fastStep.KillPrimaryTrack();
+	fastStep.SetPrimaryTrackPathLength(0.0);
 
-  if (!fGarfieldPhysics->GetCreateSecondariesInGeant4()) return;
-  const auto& secondaryParticles = fGarfieldPhysics->GetSecondaryParticles();
+	if (particleName == "kaon+") {
+		particleName = "K+";
+	} else if (particleName == "kaon-") {
+		particleName = "K-";
+	} else if (particleName == "anti_proton") {
+		particleName = "anti-proton";
+	}
 
-  if (secondaryParticles.empty()) return;
-  fastStep.SetNumberOfSecondaryTracks(secondaryParticles.size());
+	fGarfieldPhysics->DoIt(particleName, ekin_MeV, globalTime,
+			localPosition.x() / CLHEP::cm, localPosition.y() / CLHEP::cm,
+			localPosition.z() / CLHEP::cm, localdir.x(), localdir.y(),
+			localdir.z());
 
-  G4double totalEnergySecondaries_MeV = 0.;
+	fastStep.SetTotalEnergyDeposited(fGarfieldPhysics->GetEnergyDeposit_MeV());
 
-  for (const auto& sp : secondaryParticles) {
-    G4double eKin_MeV = sp.getEkin_MeV();
-    G4double time = sp.getTime();
-    G4ThreeVector momentumDirection(sp.getDX(), sp.getDY(), sp.getDZ());
-    G4ThreeVector position(sp.getX_mm(), sp.getY_mm(), sp.getZ_mm());
-    if (sp.getParticleName() == "e-") {
-      G4DynamicParticle particle(G4Electron::ElectronDefinition(),
-                                 momentumDirection, eKin_MeV);
-      fastStep.CreateSecondaryTrack(particle, position, time, true);
-      totalEnergySecondaries_MeV += eKin_MeV;
-    } else if (sp.getParticleName() == "gamma") {
-      G4DynamicParticle particle(G4Gamma::GammaDefinition(), momentumDirection,
-                                 eKin_MeV);
-      fastStep.CreateSecondaryTrack(particle, position, time, true);
-      totalEnergySecondaries_MeV += eKin_MeV;
-    }
-  }
+	if (fGarfieldPhysics->GetCreateSecondariesInGeant4()) {
+		std::vector<GarfieldParticle*>* secondaryParticles =
+				fGarfieldPhysics->GetSecondaryParticles();
+
+		if (secondaryParticles->size() > 0) {
+			fastStep.SetNumberOfSecondaryTracks(secondaryParticles->size());
+
+			G4double totalEnergySecondaries_MeV = 0;
+
+			for (std::vector<GarfieldParticle*>::iterator it =
+					secondaryParticles->begin();
+					it != secondaryParticles->end(); ++it) {
+				G4double x = (*it)->getX_mm();
+				G4double y = (*it)->getY_mm();
+				G4double z = (*it)->getZ_mm();
+				G4double eKin_MeV = (*it)->getEkin_MeV();
+				G4double dx = (*it)->getDX();
+				G4double dy = (*it)->getDY();
+				G4double dz = (*it)->getDZ();
+				G4double time = (*it)->getTime();
+				G4ThreeVector momentumDirection(dx, dy, dz);
+				G4ThreeVector position(x, y, z);
+				if ((*it)->getParticleName() == "e-") {
+					G4DynamicParticle particle(G4Electron::ElectronDefinition(),
+							momentumDirection, eKin_MeV);
+					fastStep.CreateSecondaryTrack(particle, position, time,
+							true);
+					totalEnergySecondaries_MeV += eKin_MeV;
+				} else if ((*it)->getParticleName() == "gamma") {
+					G4DynamicParticle particle(G4Gamma::GammaDefinition(),
+							momentumDirection, eKin_MeV);
+					fastStep.CreateSecondaryTrack(particle, position, time,
+							true);
+					totalEnergySecondaries_MeV += eKin_MeV;
+				}
+
+			}
+		}
+	}
 }

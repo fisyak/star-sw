@@ -1,7 +1,10 @@
 #ifndef BOX_H
 #define BOX_H
-#include "wcpplib/geometry/surface.h"
+#include <iostream>
+#include "wcpplib/geometry/straight.h"
+#include "wcpplib/geometry/plane.h"
 #include "wcpplib/geometry/volume.h"
+#include "wcpplib/geometry/surface.h"
 /*
 Copyright (c) 2000 Igor B. Smirnov
 
@@ -21,15 +24,19 @@ namespace Heed {
 
 class box : public absvol {
  public:
-  double m_dx, m_dy, m_dz;     ///< Lengths of sides
-  double m_dxh, m_dyh, m_dzh;  ///< Half-lengths of sides
+  vfloat m_dx, m_dy, m_dz;     ///< Lengths of sides
+  vfloat m_dxh, m_dyh, m_dzh;  ///< Half-lengths of sides
   ulsvolume m_ulsv;
+  std::string m_name;
 
  public:
   /// Default constructor.
   box();
   // Constructor, compute precision from mean of dimensions.
-  box(double fdx, double fdy, double fdz);
+  box(vfloat fdx, vfloat fdy, vfloat fdz, const std::string& fname);
+  /// Constructor with user-provided precision.
+  box(vfloat fdx, vfloat fdy, vfloat fdz, vfloat fprec,
+      const std::string& fname);
   box(box& fb);
   box(const box& fb);
   /// Destructor
@@ -38,15 +45,55 @@ class box : public absvol {
   void init_prec();
   void init_planes();
 
-  int check_point_inside(const point& fpt, const vec& dir) const override;
+  virtual int check_point_inside(const point& fpt, const vec& dir) const;
 
   /// Range till exit from given volume or to entry only.
-  int range_ext(trajestep& fts, int s_ext) const override;
-  void income(gparticle* gp) override;
+  virtual int range_ext(trajestep& fts, int s_ext) const;
+  virtual void income(gparticle* gp);
+  virtual void chname(char* nm) const;
+  virtual void print(std::ostream& file, int l) const;
+  virtual box* copy() const;
 
  protected:
-  absref_transmit get_components() override;
+  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
 };
 
-}  // namespace Heed
+/// Box "manipulator".
+
+class manip_box : public manip_absvol, public box {
+ public:
+  /// Constructor
+  manip_box() : manip_absvol(), box() {}
+  manip_box(const box& f) : manip_absvol(), box(f) {}
+  /// Destructor
+  virtual ~manip_box() {}
+
+  virtual absvol* Gavol() const;
+  virtual void chname(char* nm) const;
+  virtual void print(std::ostream& file, int l) const;
+  virtual manip_box* copy() const;
+};
+
+// *****   sh_manip_box  ********
+
+class sh_manip_box : public sh_manip_absvol, public box {
+ public:
+  /// Constructor
+  sh_manip_box() : sh_manip_absvol(), box() {}
+  sh_manip_box(const box& f) : sh_manip_absvol(), box(f) {}
+  sh_manip_box(const abssyscoor& fcsys, const box& fbx)
+      : sh_manip_absvol(fcsys), box(fbx) {}
+  /// Destructor
+  virtual ~sh_manip_box() {}
+
+  virtual absvol* Gavol() const;
+  virtual void chname(char* nm) const;
+  virtual void print(std::ostream& file, int l) const;
+  virtual sh_manip_box* copy() const;
+
+ protected:
+  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
+};
+}
+
 #endif

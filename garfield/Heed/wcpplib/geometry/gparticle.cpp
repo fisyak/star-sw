@@ -1,7 +1,4 @@
 #include "wcpplib/geometry/gparticle.h"
-
-#include <atomic>
-#include <limits>
 /*
 Copyright (c) 2000 Igor B. Smirnov
 
@@ -16,137 +13,159 @@ The file is provided "as is" without express or implied warranty.
 
 namespace Heed {
 
-std::atomic<long> gparticle::s_counter{0L};
+void stvpoint::print(std::ostream& file, int l) const {
+  if (l < 0) return;
+  Ifile << "stvpoint: sb=" << sb << " s_ent=" << s_ent << " prange=" << prange
+        << " time=" << time << '\n';
+  indn.n += 2;
+  Ifile << "position:\n" << pt << ptloc;
+  Ifile << "direction of moving:\n" << dir << dirloc;
+  Ifile << "speed=" << speed << '\n';
+  if (tid.eid.empty()) {
+    Ifile << "point is outside universe\n";
+    file.flush();
+    indn.n -= 2;
+    return;
+  }
+  tid.print(file, 1);
+  char s[100];
+  if (sb == 2) {
+    // next_eid.amvol->m_chname(s);
+    next_eid->m_chname(s);
+    Ifile << "next volume name " << s << '\n';
+  }
+  indn.n -= 2;
+  file.flush();
+}
+
+long gparticle::max_q_zero_step = 100;
 
 gparticle::gparticle(manip_absvol* primvol, const point& pt, const vec& vel,
-                     double ftime)
-    : m_prevpos(), m_nextpos() {
-  primvol->m_find_embed_vol(pt, vel, &m_origin.tid);
-  m_origin.pt = pt;
+                     vfloat time)
+    : s_life(false),
+      nstep(0),
+      total_range_from_origin(0.0),
+      n_zero_step(0),
+      prevpos(),
+      nextpos() {
+  // As far as I can now understand, PassivePtr<primvol> will be at
+  // origin.tid.eid[0]
+  mfunname("gparticle::gparticle(...)");
+  primvol->m_find_embed_vol(pt, vel, &origin.tid);
+  origin.pt = pt;
   if (vel == dv0) {
-    m_origin.dir = dv0;
-    m_origin.speed = 0.0;
+    origin.dir = dv0;
+    origin.speed = 0.0;
   } else {
-    m_origin.dir = unit_vec(vel);
-    m_origin.speed = vel.length();
+    origin.dir = unit_vec(vel);
+    origin.speed = vel.length();
   }
-  m_origin.ptloc = m_origin.pt;
-  m_origin.tid.up_absref(&m_origin.ptloc);
-  m_origin.dirloc = m_origin.dir;
-  m_origin.tid.up_absref(&m_origin.dirloc);
-  m_origin.time = ftime;
-  m_origin.sb = 0;
-  m_origin.s_ent = 1;
-  if (m_origin.tid.eid.empty()) return;
-  m_alive = true;
-  m_currpos = m_origin;
-  m_nextpos = m_currpos;
-  m_nextpos.s_ent = 0;
+  origin.ptloc = origin.pt;
+  origin.tid.up_absref(&origin.ptloc);
+  origin.dirloc = origin.dir;
+  origin.tid.up_absref(&origin.dirloc);
+  origin.time = time;
+  origin.sb = 0;
+  origin.s_ent = 1;
+  if (origin.tid.eid.empty()) return;
+  s_life = true;
+  currpos = origin;
+  nextpos = currpos;
+  nextpos.s_ent = 0;
 }
 
 void gparticle::step(std::vector<gparticle*>& secondaries) {
-  // Make step to next point and calculate new step to border.
-  m_prevpos = m_currpos;
-  m_currpos = m_nextpos;
-  m_total_range_from_origin += m_currpos.prange;
-  m_nstep++;
-  if (m_currpos.prange == 0) {
-    m_nzero_step++;
-    check_econd12a(m_nzero_step, >, m_max_qzero_step,
-                   "too many zero steps, possible infinite loop\n", std::cerr);
+  // Make step to nextpos and calculate new step to border
+  mfunname("void gparticle::step()");
+  prevpos = currpos;
+  currpos = nextpos;
+  curr_relcen = dv0;
+  total_range_from_origin += currpos.prange;
+  nstep++;
+  if (currpos.prange == 0) {
+    n_zero_step++;
+    check_econd12a(n_zero_step, >, max_q_zero_step,
+                   "too much zero steps, possible infinite loop\n", mcerr);
   } else {
-    m_nzero_step = 0;
+    n_zero_step = 0;
   }
   physics_after_new_speed(secondaries);
-  if (m_alive) {
-    if (m_prevpos.tid != m_currpos.tid) change_vol();
-    m_nextpos = calc_step_to_bord();
+  if (s_life) {
+    if (prevpos.tid != currpos.tid) change_vol();
+    nextpos = calc_step_to_bord();
   }
 }
 
-void gparticle::curvature(bool& curved, vec& frelcen, double& fmrange,
-                          double /*prec*/) {
-  curved = false;
-  frelcen.x = 0.;
-  frelcen.y = 0.;
-  frelcen.z = 0.;
-  fmrange = std::numeric_limits<double>::max();
+void gparticle::curvature(int& fs_cf, vec& frelcen, vfloat& fmrange,
+                          vfloat /*prec*/) {
+  fs_cf = 0;
+  frelcen = vec(0, 0, 0);
+  fmrange = max_vfloat;
   /* The following is for debug
   vec field(0,1,0);
-  double rad = 10;
-  if (length(m_currpos.dir) > 0 && check_par(m_currpos.dir, field) == 0) {
-    curved = true;
-    double coef = sin2vec(m_currpos.dir, field);
+  vfloat rad = 10;
+  if (length(currpos.dir) > 0 && check_par(currpos.dir, field) == 0) {
+    fs_cf = 1;
+    vfloat coef = sin2vec(currpos.dir, field);
     rad = rad / coef;
-    frelcen = unit_vec(m_currpos.dir || field) * rad;
+    frelcen = unit_vec(currpos.dir || field) * rad;
   }
   */
 }
 
 void gparticle::physics_mrange(double& /*fmrange*/) {}
 
+// calculate next point as step to border
 stvpoint gparticle::calc_step_to_bord() {
-  // Calculate next point as step to border.
   pvecerror("stvpoint gparticle::calc_step_to_bord()");
-  if (m_currpos.sb > 0) {
-    // Just switch to new volume.
+  curr_relcen = dv0;
+  if (currpos.sb > 0) {
+    // it does not do step, but switch to new volume
     return switch_new_vol();
   }
-  bool curved = false;
+  int s_cf;
   vec relcen;
-  double mrange;
-  curvature(curved, relcen, mrange, m_max_straight_arange);
+  vfloat mrange;
+  curvature(s_cf, relcen, mrange, gtrajlim.max_straight_arange);
+  curr_relcen = relcen;
   if (mrange <= 0) {
-    // Preserve current point for modification by physics.
-    stvpoint temp(m_currpos);
+    // preserves currpos for modification by physics
+    stvpoint temp(currpos);
     temp.s_ent = 0;
     return temp;
   }
-  // Change to local system.
-  m_currpos.tid.up_absref(&relcen);
+  currpos.tid.up_absref(&relcen);  // changing to local system
   physics_mrange(mrange);
-  trajestep ts(m_max_range, m_rad_for_straight, m_max_straight_arange,
-               m_max_circ_arange, m_currpos.ptloc, m_currpos.dirloc, curved,
-               relcen, mrange, m_currpos.tid.eid.back()->Gavol()->prec);
+  trajestep ts(&gtrajlim, currpos.ptloc, currpos.dirloc, s_cf, relcen, mrange,
+               currpos.tid.eid.back()->Gavol()->prec);
   if (ts.mrange <= 0) {
-    stvpoint temp(m_currpos);
+    stvpoint temp(currpos);
     temp.s_ent = 0;
     return temp;
   }
   // Here the range is calculated:
   int sb;
-  manip_absvol* faeid = nullptr;
-  m_currpos.volume()->range(ts, 1, sb, faeid);
+  // manip_absvol_eid faeid;
+  PassivePtr<manip_absvol> faeid;
+  currpos.tid.G_lavol()->range(ts, 1, sb, faeid);
   // 1 means inside the volume and makes
   // the program checking embraced volumes
   if (ts.s_prec == 0) {
-    // Point is crossed.
-    return stvpoint(m_currpos, ts, sb, 0, faeid);
+    // point is crossed
+    return stvpoint(currpos, ts, sb, 0, faeid);
   }
-  return stvpoint(m_currpos, ts, ts.mrange, sb, 0, faeid);
+  return stvpoint(currpos, ts, ts.mrange, sb, 0, faeid);
 }
 
-void gparticle::turn(const double ctheta, const double stheta) {
-  vec dir = m_currpos.dir;
-  basis temp(dir);
-  vec vturn;
-  vturn.random_round_vec();
-  vturn = vturn * stheta;
-  vec new_dir(vturn.x, vturn.y, ctheta);
-  new_dir.down(&temp);
-  m_currpos.dir = new_dir;
-  m_currpos.dirloc = m_currpos.dir;
-  m_currpos.tid.up_absref(&m_currpos.dirloc);
-}
-
-stvpoint gparticle::switch_new_vol() {
-  // Generate next position in new volume.
+stvpoint gparticle::switch_new_vol(void) {
+  // generates next position in new volume
+  mfunname("stvpoint gparticle::switch_new_vol(void)");
   manip_absvol_treeid tidl;
-  manip_absvol* eidl = nullptr;
-  stvpoint nextp = m_currpos;
+  PassivePtr<manip_absvol> eidl;
+  stvpoint nextp = currpos;
   point pth = nextp.pt;
-  // Search from primary
-  // In this case it does not necessarily switch to encountered volume
+  // search from primary
+  // In this case it does not necessary switch to encountered volume
   // namely nextp.next_eid
   // Borders of two volumes may coincide. Thus it should look for
   // the deepest volume at this point.
@@ -154,7 +173,7 @@ stvpoint gparticle::switch_new_vol() {
   while (!ok) {
     nextp.tid.eid[0]->m_find_embed_vol(pth, nextp.dir, &tidl);
     if (tidl.eid.empty()) {
-      m_alive = false;
+      s_life = false;
       break;
     }
     // By default, assume switching to new volume.
@@ -163,8 +182,8 @@ stvpoint gparticle::switch_new_vol() {
       // Remains in the same old volume, may be numerical error
       // Will probably repeat attempt to switch at the same steps until ok.
       s_e = 0;
-      double curprec = nextp.volume()->prec;
-      if (m_currpos.prange <= curprec) {
+      double curprec = nextp.tid.G_lavol()->prec;
+      if (currpos.prange <= curprec) {
         // very bad case, to repeat the trial.
         vec additional_dist = nextp.dir * curprec;
         pth = pth + additional_dist;
@@ -178,4 +197,43 @@ stvpoint gparticle::switch_new_vol() {
   return stvpoint();
 }
 
-}  // namespace Heed
+void gparticle::print(std::ostream& file, int l) const {
+  if (l < 0) return;
+  Ifile << "gparticle(l=" << l << "): s_life=" << s_life << " nstep=" << nstep
+        << " total_range_from_origin=" << total_range_from_origin
+        << " n_zero_step=" << n_zero_step << '\n';
+  if (l == 1) {
+    file.flush();
+    return;
+  }
+  indn.n += 2;
+  if (l - 5 >= 0) {
+    Ifile << "origin point:\n";
+    indn.n += 2;
+    origin.print(file, l - 2);
+    indn.n -= 2;
+  }
+  if (l - 4 >= 0) {
+    Ifile << "previous point:\n";
+    indn.n += 2;
+    prevpos.print(file, l - 1);
+    indn.n -= 2;
+  }
+  if (l - 2 >= 0) {
+    Ifile << "current point:\n";
+    indn.n += 2;
+    currpos.print(file, l);
+    Iprint(file, curr_relcen);
+    Ifile << " length(curr_relcen)=" << curr_relcen.length() << '\n';
+    indn.n -= 2;
+  }
+  if (l - 3 >= 0) {
+    Ifile << "next point:\n";
+    indn.n += 2;
+    nextpos.print(file, l - 1);
+    indn.n -= 2;
+  }
+  indn.n -= 2;
+  file.flush();
+}
+}

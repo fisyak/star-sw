@@ -1,5 +1,4 @@
 #include "wcpplib/geometry/circumf.h"
-
 #include "wcpplib/geometry/plane.h"
 /*
 Copyright (c) 2000 Igor B. Smirnov
@@ -15,20 +14,22 @@ The file is provided "as is" without express or implied warranty.
 
 namespace Heed {
 
-absref absref::* circumf::aref[2] = {(absref absref::*)&circumf::piv,
-                                     (absref absref::*)&circumf::dir};
+absref absref::*(circumf::aref[2]) = {(absref absref::*)&circumf::piv,
+                                      (absref absref::*)&circumf::dir};
 
 circumf::circumf() : piv(), dir(), rad(0) {}
-circumf::circumf(const point& fpiv, const vec& fdir, double frad)
+circumf::circumf(const point& fpiv, const vec& fdir, vfloat frad)
     : piv(fpiv), dir(), rad(frad) {
   pvecerror("circumf(...)");
-  check_econd11(fdir.length(), == 0, std::cerr);
+  check_econd11(fdir.length(), == 0, mcerr);
   dir = unit_vec(fdir);
 }
 circumf::circumf(const circumf& f)
     : absref(f), piv(f.piv), dir(f.dir), rad(f.rad) {}
 
-absref_transmit circumf::get_components() { return absref_transmit(2, aref); }
+void circumf::get_components(ActivePtr<absref_transmit>& aref_tran) {
+  aref_tran.pass(new absref_transmit(2, aref));
+}
 
 int operator==(const circumf& f1, const circumf& f2) {
   pvecerror("int operator==(const circumf &f1, const circumf &f2)");
@@ -40,21 +41,21 @@ int operator==(const circumf& f1, const circumf& f2) {
     return 0;
 }
 
-bool apeq(const circumf& f1, const circumf& f2, double prec) {
-  pvecerror("bool apeq(const circumf &f1, const circumf &f2, double prec)");
+bool apeq(const circumf& f1, const circumf& f2, vfloat prec) {
+  pvecerror("bool apeq(const circumf &f1, const circumf &f2, vfloat prec)");
   if (check_par(f1.dir, f2.dir, prec) == 0) return false;
   return apeq(f1.piv, f2.piv, prec) && apeq(f1.rad, f2.rad, prec);
 }
 
-int circumf::check_point_in(const point& fp, double prec) const {
+int circumf::check_point_in(const point& fp, vfloat prec) const {
   // returns 1 if point on the circumference
-  pvecerror("int circumf::check_point_in(const point &fp, double prec) const");
+  pvecerror("int circumf::check_point_in(const point &fp, vfloat prec) const");
   vec d = fp - piv;
   if (check_perp(d, dir, prec) != 1) return 0;
   if (apeq(d.length(), rad)) return 1;
   return 0;
 }
-int circumf::cross(const plane& pn, point pt[2], double prec) const {
+int circumf::cross(const plane& pn, point pt[2], vfloat prec) const {
   pvecerror("int circumf::cross(const plane& pn, point pt[2]) const");
   if (pn.distance(piv) > rad) return 0;  // to avoid cross at very far pn
   plane pnc(piv, dir);
@@ -68,16 +69,24 @@ int circumf::cross(const plane& pn, point pt[2], double prec) const {
     return 0;
   }
   point closest_pt;
-  double d = sl.distance(piv, closest_pt);
+  vfloat d = sl.distance(piv, closest_pt);
   if (apeq(d, rad, prec)) {
     pt[0] = closest_pt;
     return 1;
   }
   if (d > rad) return 0;
-  double cat = sqrt(rad * rad - d * d);
+  vfloat cat = sqrt(rad * rad - d * d);
   pt[0] = closest_pt + cat * sl.Gdir();
   pt[1] = closest_pt - cat * sl.Gdir();
   return 2;
 }
 
-}  // namespace Heed
+std::ostream& operator<<(std::ostream& file, const circumf& f) {
+  Ifile << "circumf(erence):\n";
+  indn.n += 2;
+  Ifile << "rad=" << f.rad << '\n';
+  file << f.piv << f.dir;
+  indn.n -= 2;
+  return file;
+}
+}

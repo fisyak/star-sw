@@ -2,13 +2,14 @@
 #define HEEDPARTICLE_H
 
 #include <vector>
-
-#include "HeedCluster.h"
 #include "wcpplib/particle/eparticle.h"
+#include "HeedCluster.h"
 
 namespace Heed {
+extern long last_particle_number;
 
-/// Charged particle which can be traced through the geometry.
+/// Definition of the particle which can be traced through the geometry.
+/// Also the definition of cluster (energy transfer), and particle bank.
 ///
 /// 2003, I. Smirnov
 
@@ -21,28 +22,28 @@ class HeedParticle : public eparticle {
   /// is simulated: no deposition of clusters,
   /// no generation of virtual photons.
   HeedParticle(manip_absvol* primvol, const point& pt, const vec& vel,
-               double time, particle_def* fpardef, fieldmap* fm,
-               const bool fcoulomb_scattering = false,
-               const bool floss_only = false,
-               const bool fprint_listing = false);
+               vfloat time, particle_def* fpardef, HeedFieldMap* fieldmap,
+               const bool fs_loss_only = false,
+               const bool fs_print_listing = false);
   /// Destructor
   virtual ~HeedParticle() {}
 
- protected:
-  void physics(std::vector<gparticle*>& secondaries) override;
-  void physics_mrange(double& fmrange) override;
+  virtual void physics(std::vector<gparticle*>& secondaries);
+  virtual HeedParticle* copy() const { return new HeedParticle(*this); }
+  virtual void print(std::ostream& file, int l) const;
 
  private:
-  bool m_coulomb_scattering = false;
-  bool m_loss_only = false;
-  bool m_store_clusters = false;
+  bool s_print_listing;
+  long particle_number;
 
-  long m_particle_number = 0;
+  bool s_loss_only;
+  std::vector<double> etransf;
+  std::vector<long> natom;
+  std::vector<long> nshell;
 
-  double m_edep = 0.;
-
+  bool s_store_clusters;
   std::vector<HeedCluster> m_clusterBank;
 };
-}  // namespace Heed
+}
 
 #endif

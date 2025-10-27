@@ -12,8 +12,8 @@ appear in all copies and in supporting documentation.
 The file is provided "as is" without express or implied warranty.
 */
 
-#include "wcpplib/geometry/straight.h"
 #include "wcpplib/geometry/vec.h"
+#include "wcpplib/geometry/straight.h"
 
 namespace Heed {
 
@@ -24,30 +24,29 @@ class polyline;
 class plane : public absref {
  protected:
   /// Origin point, pivot.
-  point piv;
+  point piv;  
   /// Direction of normal, unit vector.
-  vec dir;
+  vec dir;    
 
  public:
-  point Gpiv() const { return piv; }
-  vec Gdir() const { return dir; }
+  point Gpiv(void) const { return piv; }
+  vec Gdir(void) const { return dir; }
 
  protected:
-  virtual absref_transmit get_components() override;
-  static absref absref::* aref[2];
+  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
+  static absref(absref::*aref[2]);
 
  public:
-  plane() : piv(), dir() {}
-  plane(const point& fpiv, const vec& fdir) : piv(fpiv), dir(unit_vec(fdir)) {}
+  plane() : piv(), dir() { ; }
+  plane(const point& fpiv, const vec& fdir) : piv(fpiv), dir(unit_vec(fdir)) {
+    ;
+  }
   plane(const straight& sl, const point& pt);
-  plane(const straight& sl1, const straight& sl2, double prec);
-  // Good if lines are crossed or if they are different not crossed parallel.
+  plane(const straight& sl1, const straight& sl2, vfloat prec);
+  // good if lines are crossed or if they are different not crossed parallel.
   // Otherwise vecerror != 0
   // Prec is used for crossing of lines.
 
-  /// Copy constructor.
-  plane(const plane& p) : piv(p.piv), dir(p.dir) {}
-  /// Copy assignment operator.
   plane& operator=(const plane& fpl) {
     piv = fpl.piv;
     dir = fpl.dir;
@@ -58,27 +57,33 @@ class plane : public absref {
   friend int operator!=(const plane& pl1, const plane& pl2) {
     return pl1 == pl2 ? 0 : 1;
   }
-  friend bool apeq(const plane& pl1, const plane& pl2, double prec);
+  friend bool apeq(const plane& pl1, const plane& pl2, vfloat prec);
 
-  /// Return 1 if a point is in the plane (within precision prec).
-  int check_point_in(const point& fp, double prec) const;
+  int check_point_in(const point& fp, vfloat prec) const;
+  // returns 1 if point in the planeCalculates distance
+  // and compares it with prec
 
-  /// Figure out whether a straight line crosses the plane
-  /// and return the intersection point if it does.
-  /// vecerror = 2: line is parallel to the plane.
-  /// vecerror = 3: line is in the plane.
   point cross(const straight& sl) const;
-  /// Determine the intersection with another plane.
-  /// vecerror = 2: planes are parallel.
-  /// vecerror = 3: planes are identical.
+  // figure out whether the plane is crossed by straight line
+  // and return point if it is.
+  // straight is parallel(exactly) to plane but is not in plane,
+  //                      different parallel   vecerror=2
+  // the straight line is in plane(exactly)    vecerror=3
+
   straight cross(const plane& sl) const;
+  // different parallel     vecerror=2
+  // the same planes        vecerror=3
 
   int cross(const polyline& pll, point* crpt, int& qcrpt, polyline* crpll,
-            int& qcrpll, double prec) const;
+            int& qcrpll, vfloat prec) const;
 
-  double distance(const point& fpt) const;
+  vfloat distance(const point& fpt) const;
+  friend std::ostream& operator<<(std::ostream& file, const plane& s);
 };
 
-}  // namespace Heed
+std::ostream& operator<<(std::ostream& file, const plane& s);
+}
+
+#include "wcpplib/geometry/polyline.h"
 
 #endif

@@ -1,36 +1,39 @@
-#include <TApplication.h>
-#include <TCanvas.h>
-#include <TSystem.h>
-
-#include <cmath>
 #include <iostream>
 
-#include "Garfield/ComponentAnalyticField.hh"
-#include "Garfield/MediumMagboltz.hh"
-#include "Garfield/Sensor.hh"
-#include "Garfield/ViewCell.hh"
-#include "Garfield/ViewField.hh"
+#include <TCanvas.h>
+#include <TROOT.h>
+#include <TApplication.h>
+
+#include "ComponentAnalyticField.hh"
+#include "MediumMagboltz.hh"
+#include "SolidBox.hh"
+#include "GeometrySimple.hh"
+#include "Sensor.hh"
+#include "ViewField.hh"
+#include "ViewCell.hh"
+#include "Plotting.hh"
 
 using namespace Garfield;
 
-typedef void (*setupFunction)(ComponentAnalyticField*, double& xmin,
-                              double& xmax, double& ymin, double& ymax);
+typedef void(*setupFunction)(ComponentAnalyticField*, double& xmin, double& xmax, double& ymin, double& ymax);
 
 //==================================================
 // Spiral
 //==================================================
-void spiral(ComponentAnalyticField* cmp, double& xmin, double& xmax,
-            double& ymin, double& ymax) {
+void spiral(ComponentAnalyticField* cmp,
+            double& xmin, double& xmax, double& ymin, double& ymax) {
+
   const double d = 0.01;
-  const int n = 100;
-  for (int i = 0; i < n; ++i) {
+  const unsigned int n = 100;
+  for (unsigned int i = 0; i < n; ++i) {
     const double f = double(i) / n;
     const double r = 1. + 2 * f;
     const double phi = 4 * Pi * f;
     const double x = r * cos(phi);
     const double y = r * sin(phi);
+    const std::string label = i % 2 == 0 ? "p" : "s";
     const double v = i % 2 == 0 ? -i * 10 : i * 10;
-    cmp->AddWire(x, y, d, v);
+    cmp->AddWire(x, y, d, v, label);
   }
   xmin = ymin = -3.05;
   xmax = ymax = +3.05;
@@ -39,41 +42,44 @@ void spiral(ComponentAnalyticField* cmp, double& xmin, double& xmax,
 //==================================================
 // Hexagon
 //==================================================
-void hextube(ComponentAnalyticField* cmp, double& xmin, double& xmax,
-             double& ymin, double& ymax) {
-  cmp->AddTube(2., 0., 6);
-  cmp->AddWire(0., 0., 100.e-4, 5000.);
+void hextube(ComponentAnalyticField* cmp,
+             double& xmin, double& xmax, double& ymin, double& ymax) {
+
+  cmp->AddTube(2., 0., 6, "t");
+  cmp->AddWire(0., 0., 100.e-4, 5000., "s");
   xmin = ymin = -2.05;
-  xmax = ymax = 2.05;
+  xmax = ymax =  2.05;
 }
 
 //==================================================
 // Two wires, no periodicity
 //==================================================
-void b2x(ComponentAnalyticField* cmp, double& xmin, double& xmax, double& ymin,
-         double& ymax) {
-  cmp->AddPlaneX(-1., 0.);
-  cmp->AddPlaneX(1., 1000.);
+void b2x(ComponentAnalyticField* cmp,
+         double& xmin, double& xmax, double& ymin, double& ymax) {
+
+  cmp->AddPlaneX(-1.,    0., "p");
+  cmp->AddPlaneX( 1., 1000., "q");
   const double d = 0.01;
-  cmp->AddWire(0.0, 0.0, d, 2000.);
-  cmp->AddWire(0.5, 0.5, d, 2000.);
+  cmp->AddWire(0.0, 0.0, d, 2000., "s");
+  cmp->AddWire(0.5, 0.5, d, 2000., "p");
   xmin = -1.05;
-  xmax = 1.05;
+  xmax =  1.05;
   ymin = -0.8;
-  ymax = 1.3;
+  ymax =  1.3;
 }
 
 //==================================================
 // MWPC
 //==================================================
-void mwpc(ComponentAnalyticField* cmp, double& xmin, double& xmax, double& ymin,
-          double& ymax) {
+void mwpc(ComponentAnalyticField* cmp,
+          double& xmin, double& xmax, double& ymin, double& ymax) {
+
   const double gap = 0.5;
   const double pitch = 0.2;
   cmp->SetPeriodicityY(pitch);
 
-  cmp->AddPlaneX(0., 0.);
-  cmp->AddPlaneX(gap, 0.);
+  cmp->AddPlaneX( 0.,  0., "p");
+  cmp->AddPlaneX(gap,  0., "q");
 
   const double xw = 0.5 * gap;
   const double dw = 30.e-4;
@@ -85,16 +91,18 @@ void mwpc(ComponentAnalyticField* cmp, double& xmin, double& xmax, double& ymin,
   cmp->AddWire(xw, 0., dw, vw, "s", length, tension, rho);
 
   xmin = -0.01 * gap;
-  xmax = 1.01 * gap;
+  xmax =  1.01 * gap;
   ymin = -5 * pitch;
-  ymax = 5 * pitch;
+  ymax =  5 * pitch;
 }
+
 
 //==================================================
 // ALICE TPC O-ROC
 //==================================================
-void oroc(ComponentAnalyticField* cmp, double& xmin, double& xmax, double& ymin,
-          double& ymax) {
+void oroc(ComponentAnalyticField* cmp,
+          double& xmin, double& xmax, double& ymin, double& ymax) {
+ 
   const double gap = 0.3;
   // Periodicity
   const double period = 0.25;
@@ -115,17 +123,17 @@ void oroc(ComponentAnalyticField* cmp, double& xmin, double& xmax, double& ymin,
   const double yg = 2 * gap + 0.3;
   const double dg = 75.e-4;
   const double vg = -100.;
-  cmp->AddWire(0.25 * period, yg, dg, vg);
-  cmp->AddWire(0.75 * period, yg, dg, vg);
+  cmp->AddWire(0.25 * period, yg, dg, vg, "g");
+  cmp->AddWire(0.75 * period, yg, dg, vg, "g");
 
   // Planes.
-  cmp->AddPlaneY(0., 0.);
+  cmp->AddPlaneY(0., 0., "p");
   const double yp = 2.;
   const double vp = -570.;
-  cmp->AddPlaneY(yp, vp);
+  cmp->AddPlaneY(yp, vp, "q");
 
   xmin = -5 * period;
-  xmax = 5 * period;
+  xmax =  5 * period;
   ymin = -0.1;
   // ymax = 1.5 * yg;
   ymax = yp + 0.1;
@@ -134,42 +142,57 @@ void oroc(ComponentAnalyticField* cmp, double& xmin, double& xmax, double& ymin,
 //==================================================
 // Circle
 //==================================================
-void circle(ComponentAnalyticField* cmp, double& xmin, double& xmax,
-            double& ymin, double& ymax) {
-  cmp->AddPlaneX(-50., 0.);
-  cmp->AddPlaneX(50., 0.);
-  cmp->AddPlaneY(-50., 0.);
-  cmp->AddPlaneY(50., 0.);
+void circle(ComponentAnalyticField* cmp,
+            double& xmin, double& xmax, double& ymin, double& ymax) {
+
+  cmp->AddPlaneX(-50., 0., "p");
+  cmp->AddPlaneX( 50., 0., "p");
+  cmp->AddPlaneY(-50., 0., "p");
+  cmp->AddPlaneY( 50., 0., "p");
   const double r = 5.;
-  const std::size_t n = 16;
+  const unsigned int n = 16;
   const double d = 0.01;
-  for (std::size_t i = 0; i < 16; ++i) {
+  for (unsigned int i = 0; i < 16; ++i) {
     const double f = double(i) / n;
     const double phi = TwoPi * f;
     const double x = r * cos(phi);
     const double y = r * sin(phi);
-    cmp->AddWire(x, y, d, 1000.);
+    cmp->AddWire(x, y, d, 1000., "p"); 
   }
-  cmp->AddWire(0., 0., d, 4500.);
+  cmp->AddWire(0., 0., d, 4500., "s");
   xmin = ymin = -1.05 * r;
-  xmax = ymax = 1.05 * r;
+  xmax = ymax =  1.05 * r;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char * argv[]) {
+
   TApplication app("app", &argc, argv);
+  plottingEngine.SetDefaultStyle();
 
   // Setup the gas.
-  MediumMagboltz gas("ne", 85.72, "co2", 9.52, "n2", 4.76);
+  MediumMagboltz* gas = new MediumMagboltz();
+  gas->SetComposition("ne", 85.72, "co2", 9.52, "n2", 4.76);
 
+  // Build the geometry
+  GeometrySimple* geo = new GeometrySimple();
+  SolidBox* box = new SolidBox(0., 0., 0., 100., 100., 100.);
+  // Add the solid to the geometry, together with the gas
+  geo->AddSolid(box, gas);
+
+  // Setup the electric field 
   ComponentAnalyticField cmp;
-  Sensor sensor(&cmp);
+
+  // Make a sensor
+  Sensor sensor;
+  sensor.AddComponent(&cmp);
   sensor.SetArea();
 
   // Plot the potential.
   TCanvas canvas("c", "", 600, 600);
-  ViewCell cellView(&cmp);
+  ViewCell cellView;
   cellView.SetCanvas(&canvas);
-  ViewField fieldView(&sensor);
+  cellView.SetComponent(&cmp);
+  ViewField fieldView;
   fieldView.SetCanvas(&canvas);
 
   std::vector<setupFunction> cells;
@@ -182,19 +205,18 @@ int main(int argc, char* argv[]) {
 
   for (auto function : cells) {
     cmp.Clear();
-    cmp.SetMedium(&gas);
+    cmp.SetGeometry(geo);
     double xmin = 0., xmax = 0.;
     double ymin = 0., ymax = 0.;
     function(&cmp, xmin, xmax, ymin, ymax);
-    cmp.PrintCell();
-    canvas.Clear();
+    std::cout << cmp.GetCellType() << "\n";
+    fieldView.SetSensor(&sensor);
     fieldView.SetArea(xmin, ymin, xmax, ymax);
     fieldView.PlotContour();
-    cellView.SetArea(xmin, ymin, xmax, ymax);
+    cellView.SetArea(xmin, ymin, -1., xmax, ymax, 1.);
     cellView.Plot2d();
-    gSystem->ProcessEvents();
     std::cout << "Press ENTER to continue.\n";
     std::cin.get();
   }
-  app.Run();
+  app.Run(kTRUE);
 }

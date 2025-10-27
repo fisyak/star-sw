@@ -1,5 +1,6 @@
 #ifndef CIRCUMF_H
 #define CIRCUMF_H
+
 #include "wcpplib/geometry/vec.h"
 
 /*
@@ -24,7 +25,7 @@ class circumf : public absref {
   /// Default constructor.
   circumf();
   /// Constructor.
-  circumf(const point& fpiv, const vec& fdir, double frad);
+  circumf(const point& fpiv, const vec& fdir, vfloat frad);
   circumf(const circumf& f);
   circumf& operator=(const circumf& f) {
     piv = f.piv;
@@ -38,31 +39,35 @@ class circumf : public absref {
   friend int operator!=(const circumf& f1, const circumf& f2) {
     return f1 == f2 ? 0 : 1;
   }
-  friend bool apeq(const circumf& f1, const circumf& f2, double prec);
+  friend bool apeq(const circumf& f1, const circumf& f2, vfloat prec);
 
   point Gpiv() const { return piv; }
   vec Gdir() const { return dir; }
-  double Grad() const { return rad; }
+  vfloat Grad() const { return rad; }
 
   /// Return 1 if point on the circumference.
-  int check_point_in(const point& fp, double prec) const;
+  int check_point_in(const point& fp, vfloat prec) const;
   // return number of crosses and calculates pt.
   // if total circle lies in the plane, it returns -1.
   // prec allow to switch to one point if it is almost one
-  int cross(const plane& pn, point pt[2], double prec) const;
+  int cross(const plane& pn, point pt[2], vfloat prec) const;
 
+  friend std::ostream& operator<<(std::ostream& file, const circumf& f);
+ 
  protected:
   /// Central point, pivot.
-  point piv;
+  point piv;   
   /// Normal direction, unit vector.
   /// Circles with dir and -dir are considered the same.
-  vec dir;
+  vec dir;     
   /// Radius, >0.
-  double rad;
+  vfloat rad;  
 
-  virtual absref_transmit get_components() override;
-  static absref absref::* aref[2];
+  virtual void get_components(ActivePtr<absref_transmit>& aref_tran);
+  static absref(absref::*aref[2]);
+
 };
-}  // namespace Heed
+std::ostream& operator<<(std::ostream& file, const circumf& f);
+}
 
 #endif

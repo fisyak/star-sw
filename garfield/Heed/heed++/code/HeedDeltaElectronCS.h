@@ -3,6 +3,9 @@
 
 #include <vector>
 
+#include "heed++/code/HeedMatterDef.h"
+#include "heed++/code/ElElasticScat.h"
+#include "heed++/code/PairProd.h"
 #include "wcpplib/random/PointsRan.h"
 
 #define USE_MEAN_COEF  // new variant, means that used mean(1-cos(theta))
@@ -12,15 +15,10 @@
 
 namespace Heed {
 
-class HeedMatterDef;
-class ElElasticScat;
-class ElElasticScatLowSigma;
-class PairProd;
-
 /// Cross sections and various parameters for delta-electron transport.
 /// 2003, I. Smirnov
 
-class HeedDeltaElectronCS {
+class HeedDeltaElectronCS : public RegPassivePtr {
  public:
   /// Default constructor
   HeedDeltaElectronCS();
@@ -33,13 +31,18 @@ class HeedDeltaElectronCS {
   double get_sigma(double energy, double nscat) const;
   // copy of similar thing from ElElasticScatLowSigma
 
-  static constexpr long q_angular_mesh = 50;
-  static constexpr double low_cut_angle_deg = 20.;
+  virtual void print(std::ostream& file, int l) const;
+  virtual HeedDeltaElectronCS* copy() const {
+    return new HeedDeltaElectronCS(*this);
+  }
 
-  HeedMatterDef* hmd = nullptr;
-  ElElasticScat* ees = nullptr;
-  ElElasticScatLowSigma* eesls = nullptr;
-  PairProd* pairprod = nullptr;  // in eV
+  static const long q_angular_mesh = 50;
+  static const double low_cut_angle_deg;
+
+  PassivePtr<HeedMatterDef> hmd;
+  PassivePtr<ElElasticScat> ees;
+  PassivePtr<ElElasticScatLowSigma> eesls;
+  PassivePtr<PairProd> pairprod;  // in eV
   /// Table of velocities
   std::vector<double> beta;
   /// Table of momenta [MeV/c]
@@ -92,6 +95,6 @@ class HeedDeltaElectronCS {
 // this is sigma of cos(theta) - 1.0, supposing that center is 1.0
 #endif
 };
-}  // namespace Heed
+}
 
 #endif

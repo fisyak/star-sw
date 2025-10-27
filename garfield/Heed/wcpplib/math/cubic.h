@@ -48,7 +48,9 @@ class Cubic {
   Cubic(double fa, double fb, double fc, double fd)
       : da(fa), db(fb), dc(fc), dd(fd), s_dxzero(0) {}
 
-  double y(double x) const { return da * x * x * x + db * x * x + dc * x + dd; }
+  double y(double x) const {
+    return da * x * x * x + db * x * x + dc * x + dd;
+  }
 
   void find_zero(double_complex& z1, double_complex& z2,
                  double_complex& z3) const;
@@ -57,6 +59,10 @@ class Cubic {
   // returns number of solutions
   // Analysed and ordered real solutions
 
+  // returns number of solutions
+  // first is the least.
+  int find_maxmin(double xmm[2], double ymm[2],
+                  int s_mm[2]) const;  // 1 - maximum, -1 - minimum, 0 - non
  private:
   static const double_complex iu;
   double da, db, dc, dd;
@@ -66,6 +72,7 @@ class Cubic {
   mutable double_complex dz3;
 };
 
-}  // namespace Heed
+std::ostream& operator<<(std::ostream& file, const Cubic& f);
+}
 
 #endif

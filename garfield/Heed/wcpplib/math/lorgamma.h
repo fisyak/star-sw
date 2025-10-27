@@ -21,6 +21,6 @@ double lorbeta(const double gamma_1);
 /// \f$\beta^2\f$ as function of \f$\gamma - 1\f$.
 double lorbeta2(const double gamma_1);
 double lorbeta(const double momentum, const double mass);
-}  // namespace Heed
+}
 
 #endif
