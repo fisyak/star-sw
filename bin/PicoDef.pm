@@ -12,6 +12,7 @@
 # production_9p8GeV_fixedTarget_2020/ReversedFullField/P24iy
 # [starsub01] ~/work/Vipul $ dir -ltrd /star/data*/reco/production*/*/P24iy.SL24b | awk -F/ '{print $5"/"$6"/"$7}' | sort -u
 # production_4p59GeV_fixedTarget_2019/ReversedFullField/P24iy.SL24b
+# [starsub02] ~ $ dir -ltrd /star/data103/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy/2021/*/*
 @PicoDefs= (
 '2010/11GeV' =>                                   'AuAu11_production/ReversedFullField/P10ih.SL23a',
 '2010/FF_AuAu200' =>                              'AuAu200_production/FullField/P10ik.SL21c',

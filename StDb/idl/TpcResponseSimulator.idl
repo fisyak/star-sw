@@ -61,6 +61,7 @@ struct TpcResponseSimulator {
   float  betaStar;        /* = 0.6  beam beta* (meters) */
   float  tMaxI;           /* = 0.0  maximum ion time collection for Inner Sectors */
   float  tMaxO;           /* = 0.0  maximum ion time collection for Outer Sectors */
-  double transDiffParO[3];/* transeferce diffusion parameterization versus BField(kG) for Outer sectors */
-  double transDiffParI[3];/* transeferce diffusion parameterization versus BField(kG) for Innerr sectors */
+  float  transDiffFF;     /* = 0.021982 sqrt(cm), Magboltz transverse Diffusion for Full Field */ 
+  float  transDiffHF;     /* = 0.032902 sqrt(cm), Magboltz transverse Diffusion for Half Field */ 
+  float  transDiffZF;     /* = 0.059524 sqrt(cm), Magboltz transverse Diffusion for Zero Field */ 
  };  

@@ -1,0 +1,89 @@
+FINISH
+/CLEAR,START
+/PREP7
+
+KEYW,PR_ELMAG,1
+KEYW,MAGELC,1
+
+! Disable the p-method solution options.
+/PMETH,OFF,1
+
+! Select the quadrilateral as element:
+ET,1,PLANE121
+
+! Material properties
+MP, PERX, 1, 1e10 ! Metal
+MP, RSVX, 1, 0.0
+MP, PERX, 2, 4.5  ! Bulk dielectric constant
+
+! Define some dimensions, in microns
+halfpitch = 50
+thickbulk = 200
+halfstrip = 20
+thickstrip = 5
+
+BLC4, 0, 0, halfpitch, thickbulk   ! Area 1: dielectricum
+BLC4, 0, 0, halfstrip, thickstrip  ! Area 2: conductor
+ASBA, 1, 2, , , KEEP               ! Area 1 becomes area 3
+
+AGLUE, ALL                         ! Glue everything
+
+! Assign material properties
+ASEL, S, , , 3             ! Select the dielectricum
+AATT, 2                    ! Properties of material 2
+ASEL, S, , , 2             ! Select the conductor
+AATT, 1                    ! Properties of material 1
+
+! Set boundary conditions
+ASEL, S, , , 2             ! Select the metal
+LSLA, S                    ! Select all its border lines
+DL, ALL, 2, VOLT, 1000     ! Set the borders to 1000 V
+
+ASEL, S, , , 3             ! Select the dielectricum
+LSLA, S                    ! Select all its border lines
+LSEL, R, LOC, Y, thickbulk ! Sub-select lines at y=thickbulk
+DL, ALL, 3, VOLT, 0        ! Set this line to 0 V
+
+ASEL, S, , , 3
+LSLA, S
+LSEL, R, LOC, X, 0         ! Select the lines at x=0
+DL, ALL, 3, SYMM           ! Impose a symmetry condition
+ASEL, S, , , 3
+LSLA, S
+LSEL, R, LOC, X, halfpitch ! Idem for y=halfpitch
+DL, ALL, 3, SYMM
+
+! Mesh the problem.
+LSEL,ALL
+ASEL, ALL
+MSHKEY,0
+SMRT, 3
+AMESH, 2,3
+
+! Solve the problem
+/SOLU
+SOLVE
+FINISH
+
+! Visualise the solution
+/POST1
+/EFACET,1
+PLNSOL, VOLT,, 0
+
+! Write the solution to files
+/OUTPUT, PRNSOL, lis
+PRNSOL
+/OUTPUT
+
+/OUTPUT, NLIST, lis
+NLIST,,,,COORD
+/OUTPUT
+
+/OUTPUT, ELIST, lis
+ELIST
+/OUTPUT
+
+/OUTPUT, MPLIST, lis
+MPLIST
+/OUTPUT
+

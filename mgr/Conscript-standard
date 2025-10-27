@@ -270,6 +270,9 @@ if ( $pkg eq "GenFit"
 #} elsif (  $pkg =~ /RTS/) {
 #  $WarnOff .= " -Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=unused-function -Wno-error=unused-label -Wno-error=unused-value -Wno-error=maybe-uninitialized -Wno-error=write-strings -Wno-error=array-bounds" . $stringop_truncation;
 #  $EXTRA_CXXFLAGS .= $WarnOff;
+} elsif ($pkg =~ m/^^garfield$/) {
+  $WarnOff .= " -Wno-isleading-indentation";
+  $EXTRA_CXXFLAGS .= $WarnOff;
 }
 if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
   if ($pkg eq 'StMuDSTMaker' or $pkg eq 'StHbtMaker' or $pkg eq 'StBFChain') {
