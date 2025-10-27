@@ -1,0 +1,19 @@
+# Piper et al., J. Chem. Phys. 59 (1973), 3323-3340 
+1S5   7.1e-19
+1S4   6.1e-19
+1S2  11.0e-19
+# Velazco et al., J. Chem. Phys. 69 (1978)
+1S3   8.5e-19
+# Rate constants for ethane (+ scaling)
+# Sadeghi et al., J. Chem. Phys. 115 (2001)
+2P8   9.5289e-19 
+2P6   4.9716e-19
+2P5  10.253925e-19
+2P1  11.39325e-19 
+# Average of 4p rate constants from Sadeghi et al.
+2P10  5.696625e-19
+2P9   5.696625e-19
+2P7   5.696625e-19
+2P4   5.696625e-19
+2P3   5.696625e-19
+2P2   5.696625e-19

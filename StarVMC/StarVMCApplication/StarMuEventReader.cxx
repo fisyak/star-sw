@@ -187,8 +187,11 @@ Int_t StarMuEventReader::ReadEvent(Int_t N)
 };
 //________________________________________________________________________________
 Int_t StarMuEventReader::Skip(Int_t Nskip) {
+  Int_t debug = Debug();
+  SetDebug(0);
   for (Int_t i = 0; i < Nskip; i++) {
     if (ReadEvent()) return kStEOF; 
   }
+  SetDebug(debug);
   return kStOK;
 }

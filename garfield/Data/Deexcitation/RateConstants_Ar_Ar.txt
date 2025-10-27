@@ -1,0 +1,105 @@
+# K. Tachibana, Phys. Rev. A 34 (1986), 1007-1015
+# 1S5   Excimer 1.4e-41 # three-body
+# 1S5   1S4     2.3e-24
+# 1S3   Excimer 1.5e-41 # three-body
+# 1S3   1S4     4.3e-24
+#
+# Kolts and Setser, J. Chem. Phys. 68 (1978), 4848-4859
+1S5   Excimer 1.1e-41  # three-body
+1S5   1S4     2.1e-24
+1S3   Excimer 0.83e-41 # three-body
+1S3   1S4     5.3e-24
+#
+# Transfer to 4s states
+#
+# Inoue, Setser, and Sadeghi, J. Chem. Phys. 75 (1982), 977-983
+# 2P1   1S5     0.725e-20 
+# 2P1   1S4     0.725e-20
+# 2P1   1S3     0.725e-20
+# 2P1   1S2     0.725e-20
+# 2P2   1S5     0.95e-20 
+# 2P2   1S4     0.95e-20
+# 2P2   1S3     0.95e-20
+# 2P2   1S2     0.95e-20
+#
+# Sadeghi et al. J. Chem. Phys. 115 (2001), 3144-3154
+2P1   1S5     0.4e-20 
+2P1   1S4     0.4e-20
+2P1   1S3     0.4e-20
+2P1   1S2     0.4e-20
+# 
+# Chang and Setser, J. Chem. Phys. 69 (1978), 3885-3897 
+2P2   1S5     1.325e-20 
+2P2   1S4     1.325e-20
+2P2   1S3     1.325e-20
+2P2   1S2     1.325e-20
+#
+2P3   1S5     1.175e-20
+2P3   1S4     1.175e-20
+2P3   1S3     1.175e-20
+2P3   1S2     1.175e-20
+#
+2P4   1S5     0.975e-20
+2P4   1S4     0.975e-20
+2P4   1S3     0.975e-20
+2P4   1S2     0.975e-20
+#
+2P7   1S5     1.375e-20
+2P7   1S4     1.375e-20
+2P7   1S3     1.375e-20
+2P7   1S2     1.375e-20
+#
+2P8   1S5     0.75e-20 
+2P8   1S4     0.75e-20 
+2P8   1S3     0.75e-20 
+2P8   1S2     0.75e-20
+#
+2P9   1S5     0.875e-20 
+2P9   1S4     0.875e-20 
+2P9   1S3     0.875e-20 
+2P9   1S2     0.875e-20
+#
+2P10  1S5     0.5e-20 
+2P10  1S4     0.5e-20 
+2P10  1S3     0.5e-20 
+2P10  1S2     0.5e-20
+#
+# Collisional population transfer within 4p levels
+# T. D. Nguyen and N. Sadeghi, Phys. Rev. 18 (1978), 1388-1395
+2P2   2P3     0.5e-21
+#
+2P3   2P4     27.5e-21
+2P3   2P5     0.3e-21
+2P3   2P6     44.0e-21
+2P3   2P7     1.4e-21
+2P3   2P8     1.9e-21
+2P3   2P9     0.8e-21
+# Collisional population transfer within 4p levels
+# T. D. Nguyen and N. Sadeghi, Phys. Rev. 18 (1978), 1388-1395
+2P4   2P3     23.0e-21
+2P4   2P5     0.7e-21
+2P4   2P6     4.8e-21
+2P4   2P7     3.2e-21
+2P4   2P8     1.4e-21
+2P4   2P9     3.3e-21
+#
+2P5   2P4     1.7e-21
+2P5   2P6     11.3e-21
+2P5   2P8     9.5e-21
+#
+2P6   2P7     4.1e-21
+2P6   2P8     6.0e-21
+2P6   2P9     1.0e-21
+# 
+2P7   2P6     2.5e-21
+2P7   2P8     14.3e-21
+2P7   2P9     23.3e-21
+# 
+2P8   2P6     0.3e-21
+2P8   2P7     0.8e-21
+2P8   2P9     18.2e-21
+2P8   2P10    1.0e-21
+#
+2P9   2P8     6.8e-21
+2P9   2P10    5.1e-21
+# 

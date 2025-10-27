@@ -1,0 +1,18 @@
+# Chen and Setser, J. Phys. Chem. 95 (1991) 
+1S5   4.55e-19
+1S3   5.30e-19
+# Velazco et al., J. Chem. Phys. 69 (1978)
+1S4   4.5e-19
+1S2   5.7e-19
+# Sadeghi et al., J. Chem. Phys. 115 (2001)
+2P8   7.4e-19
+2P6   3.4e-19
+2P5   6.0e-19
+2P1   9.3e-19
+# Average of 4p rate constants from Sadeghi et al.
+2P10  6.53e-19 
+2P9   6.53e-19
+2P7   6.53e-19
+2P4   6.53e-19
+2P3   6.53e-19
+2P2   6.53e-19

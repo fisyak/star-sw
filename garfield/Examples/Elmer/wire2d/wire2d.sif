@@ -1,0 +1,72 @@
+Check Keywords Warn
+
+$Vwire = 1000
+
+Header
+  Mesh DB "." "wire2d"
+End
+
+Simulation
+  Coordinate System = "Cartesian 2D" 
+  Coordinate Mapping(3) = 1 2 3
+  Simulation Type = Steady state
+  Steady State Max Iterations = 1
+  Output Intervals = 1
+  Output File = "wire2d.result"
+  Post File = "wire2d.ep"
+End
+
+Constants
+  Permittivity of Vacuum = 8.8542e-12
+  Unit Charge = 1.602e-19
+End
+
+Body 1
+  Equation = 1
+  Material = 1
+End
+
+Body 2
+  Equation = 1
+  Material = 2
+End
+
+Solver 1
+  Equation = Electrostatics
+  Calculate Electric Energy = True
+  Calculate Electric Field = True
+  Calculate Electric Flux = False
+  Variable = Potential
+  Procedure = "StatElecSolve" "StatElecSolver"
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 1000
+  Linear System Abort Not Converged = True
+  Linear System Convergence Tolerance = 1.0e-10
+  Linear System Preconditioning = ILU1
+  Steady State Convergence Tolerance = 5.0e-7
+End
+
+Equation 1
+  Active Solvers(1) = 1
+End
+
+Material 1
+  Relative Permittivity = 1
+End
+
+Material 2
+  Relative Permittivity = 1e10
+End
+
+! Outer boundaries
+Boundary Condition 1
+  Target Boundaries(1) = 1 
+  Potential = 0
+End
+
+! Wire
+Boundary Condition 2
+  Target Boundaries(1) = 2
+  Potential = $Vwire
+End

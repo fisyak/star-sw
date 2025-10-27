@@ -1,0 +1,123 @@
+FINISH  
+/CLEAR,START
+/PREP7  
+! No polynomial elements
+/PMETH,OFF,1
+
+! Set electric preferences
+KEYW,PR_ELMAG,1
+KEYW,MAGELC,1   
+
+! Select element
+ET,1,SOLID123
+
+! Material properties
+MP,PERX,1,1e10  ! Metal
+MP,RSVX,1,0.0   !
+MP,PERX,2,1.0   ! Gas
+
+! T2K mesh
+hole = 38.4    ! Hole diameter
+wire = 18      ! Wire thickness
+ampl = 128     ! Gap between anode and bottom of mesh
+drift = 200    ! Drift gap
+
+BLOCK,  0,      hole/2+wire/2, 0,      hole/2+wire/2, 0,    ampl+wire+drift ! Gas
+WPOFFS,    hole/2+wire/2,    0,    ampl+wire/2                      !move the working plane
+WPROTA,    0,    -90,    0                                          !rotate the working plane
+CYL4,      0,    0,    0,    90,    wire/2,    270,    hole/2+wire/2  ! mesh cylinder 1
+WPOFFS,    0,    0,    hole/2+wire/2                                  ! move working plane
+WPROTA,    0,    0,    -90                                            ! rotate working plane
+CYL4,      0,    0,      0,  90,    wire/2,    270,    hole/2+wire/2  ! mesh cylinder 2
+
+! Merge the 2 wires
+VSEL, S,,,2
+VSEL, A,,,3
+VADD, ALL
+VSEL, S,,,4
+
+! Subtract the wires from the gas
+VSEL, ALL
+VSBV,  1, 4, , , KEEP   ! 1 -> 2
+
+! Which leaves us with 1: gas, 2 and 4: wires
+/COLOR, VOLU, GREEN, 4
+/COLOR, VOLU, RED, 2
+
+! Assign material attributes
+VSEL, S, VOLU, , 2
+VATT, 2, ,1
+VSEL, S, VOLU, , 4
+VATT, 1, ,1
+
+! Glue everything together
+VSEL, ALL
+VGLUE, ALL
+
+! Voltage boundaries on the gas
+VSEL, ALL
+ASEL, S, LOC, Z, 0
+DA, ALL, VOLT, 0
+ASEL, S, LOC, Z, ampl+wire+drift
+DA, ALL, VOLT, -535
+
+! Voltage on wires
+VSEL,S,,,4
+ASLV, S
+DA, ALL, VOLT, -531
+
+! Symmetry boundary conditions on the sides
+VSEL, ALL
+ASLV, S
+ASEL, R, LOC, X, 0
+DA, ALL, SYMM
+VSEL, ALL
+ASLV, S
+ASEL, R, LOC, X, hole/2+wire/2
+DA, ALL, SYMM
+VSEL, ALL
+ASLV, S
+ASEL, R, LOC, Y, 0
+DA, ALL, SYMM
+VSEL, ALL
+ASLV, S
+ASEL, R, LOC, Y, hole/2+wire/2
+DA, ALL, SYMM
+
+! Meshing options
+VSEL, ALL
+ASLV, S
+
+MSHKEY, 0
+SMRT, 1
+VMESH, ALL,,
+
+VSEL,ALL
+EREFINE, ALL,,,2
+
+! Solve the field
+/SOLU
+SOLVE   
+FINISH  
+
+! Display the solution
+/POST1  
+/EFACET,1   
+PLNSOL, VOLT,, 0
+
+! Write the solution to files
+/OUTPUT, PRNSOL, lis
+PRNSOL
+/OUTPUT
+
+/OUTPUT, NLIST, lis
+NLIST,,,,COORD
+/OUTPUT
+
+/OUTPUT, ELIST, lis
+ELIST
+/OUTPUT
+
+/OUTPUT, MPLIST, lis
+MPLIST
+/OUTPUT

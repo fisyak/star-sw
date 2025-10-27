@@ -1,0 +1,368 @@
+! A sample script to generate the triple GEM model in Ansys
+! Author : Ankit D. Mohapatra (NISER) and Tania Moulik (NISER)
+! The comments in Ansys start with a !         
+! First let us start from clearing the data base  
+/CLEAR,START
+
+! Give a name to the job for analysis and 1 because we want to create new error,log,lock... files all having same name (gem). 
+/FILNAME,gem,1
+
+! Define a main title
+/TITLE,triplegem
+
+! This is a preprocessor in Ansys which is called PREP-7 (general input data preprocessor)
+/PREP7
+
+! This command will activate the p-method (off because Garfield does not have shape functions for the p-method and 1 because we want to solve electrostatic problems) 
+/PMETH,OFF,1
+
+! KEYW - Used by the GUI specific for changing its behaviour and the keywords which follow it are used to specify that we are solving electric problems within 
+! electromagnetic domain
+KEYW,PR_ELMAG,1
+KEYW,MAGELC,1
+
+! Define a 3-D 10-node tetrahedral electrostatic solid (solid 123) using ET command
+ET,1,SOLID123
+
+! Define materials based on permittivity (PERX) and resistivity (RSVX) and then number it  
+MP,PERX,1,1e10
+MP,RSVX,1,0 !METAL
+MP,PERX,2,3.5 !KAPTON
+MP,PERX,3,1 !GAS
+
+! Let us build the model now.
+! GEM-2
+! We use three types of solid volumes to build the GEM: 
+! block, cone and cylinder. 
+
+! First we build three blocks: one 50 micron high block sandwiched between the two 5 micron thick blocks.
+BLOCK,0,140,0,140,0,50
+BLOCK,0,140,0,140,50,55
+BLOCK,0,140,0,140,0,-5
+
+! Next we build two inverted cones. Later these cones and cylinders are subtracted to give the biconical hole structure in the GEM. 
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+
+! And the two cylinders. 
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+
+! WPOFFS (Working Plane OFFset) moves the current working plane, in this case 70 microns both in positive x and y direction. 
+WPOFFS,70,70,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-70,-70,0
+WPOFFS,0,140,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,0,-140,0
+WPOFFS,140,0,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-140,0,0
+WPOFFS,140,140,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-140,-140,0
+
+! After building a total of 20 cones and cylinders 
+! (two cones and cylinders each at the corners and two at the center) 
+! we subtract them from the three blocks using the VSBV command. 
+! Note the numbers given to the solids.
+VSBV,1,4,,DELETE,DELETE
+VSBV,24,5,,DELETE,DELETE
+VSBV,1,8,,DELETE,DELETE
+VSBV,4,9,,DELETE,DELETE
+VSBV,1,12,,DELETE,DELETE
+VSBV,4,13,,DELETE,DELETE
+VSBV,1,16,,DELETE,DELETE
+VSBV,4,17,,DELETE,DELETE
+VSBV,1,20,,DELETE,DELETE
+VSBV,4,21,,DELETE,DELETE
+VSBV,2,6,,DELETE,DELETE
+VSBV,4,10,,DELETE,DELETE
+VSBV,2,14,,DELETE,DELETE
+VSBV,4,18,,DELETE,DELETE
+VSBV,2,22,,DELETE,DELETE
+VSBV,3,7,,DELETE,DELETE
+VSBV,2,11,,DELETE,DELETE
+VSBV,3,15,,DELETE,DELETE
+VSBV,2,19,,DELETE,DELETE
+VSBV,3,23,,DELETE,DELETE
+
+! GEM-3
+WPOFFS,0,0,2060
+BLOCK,0,140,0,140,0,50
+BLOCK,0,140,0,140,50,55
+BLOCK,0,140,0,140,0,-5
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,70,70,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-70,-70,0
+WPOFFS,0,140,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,0,-140,0
+WPOFFS,140,0,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-140,0,0
+WPOFFS,140,140,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-140,-140,0
+VSBV,3,7,,DELETE,DELETE
+VSBV,27,8,,DELETE,DELETE
+VSBV,3,11,,DELETE,DELETE
+VSBV,7,12,,DELETE,DELETE
+VSBV,3,15,,DELETE,DELETE
+VSBV,7,16,,DELETE,DELETE
+VSBV,3,19,,DELETE,DELETE
+VSBV,7,20,,DELETE,DELETE
+VSBV,3,23,,DELETE,DELETE
+VSBV,7,24,,DELETE,DELETE
+VSBV,5,9,,DELETE,DELETE
+VSBV,7,13,,DELETE,DELETE
+VSBV,5,17,,DELETE,DELETE
+VSBV,7,21,,DELETE,DELETE
+VSBV,5,25,,DELETE,DELETE
+VSBV,6,10,,DELETE,DELETE
+VSBV,5,14,,DELETE,DELETE
+VSBV,6,18,,DELETE,DELETE
+VSBV,5,22,,DELETE,DELETE
+VSBV,6,26,,DELETE,DELETE
+
+! GEM-1
+WPOFFS,0,0,-2060
+WPOFFS,0,0,-1060
+BLOCK,0,140,0,140,0,50
+BLOCK,0,140,0,140,50,55
+BLOCK,0,140,0,140,0,-5
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,70,70,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-70,-70,0
+WPOFFS,0,140,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,0,-140,0
+WPOFFS,140,0,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-140,0,0
+WPOFFS,140,140,0
+CONE,25,35,25,50,0,360
+CONE,35,25,0,25,0,360
+CYLIND,35,,50,55,0,360
+CYLIND,35,,0,-5,0,360
+WPOFFS,-140,-140,0
+VSBV,6,10,,DELETE,DELETE
+VSBV,30,11,,DELETE,DELETE
+VSBV,6,14,,DELETE,DELETE
+VSBV,10,15,,DELETE,DELETE
+VSBV,6,18,,DELETE,DELETE
+VSBV,10,19,,DELETE,DELETE
+VSBV,6,22,,DELETE,DELETE
+VSBV,10,23,,DELETE,DELETE
+VSBV,6,26,,DELETE,DELETE
+VSBV,10,27,,DELETE,DELETE
+VSBV,8,12,,DELETE,DELETE
+VSBV,10,16,,DELETE,DELETE
+VSBV,8,20,,DELETE,DELETE
+VSBV,10,24,,DELETE,DELETE
+VSBV,8,28,,DELETE,DELETE
+VSBV,9,13,,DELETE,DELETE
+VSBV,8,17,,DELETE,DELETE
+VSBV,9,21,,DELETE,DELETE
+VSBV,8,25,,DELETE,DELETE
+VSBV,9,29,,DELETE,DELETE
+
+! Cathode
+WPOFFS,0,0,1060
+WPOFFS,0,0,-4065
+BLOCK,0,140,0,140,0,-5
+
+! Anode
+WPOFFS,0,0,4065
+WPOFFS,0,0,3115
+BLOCK,0,140,0,140,0,5
+WPOFFS,0,0,-3115
+
+! Gas
+BLOCK,0,140,0,140,3115,-4065
+VSBV,12,1,,,KEEP
+VSBV,13,2,,,KEEP
+VSBV,12,3,,,KEEP
+VSBV,13,4,,,KEEP
+VSBV,12,5,,,KEEP
+VSBV,13,6,,,KEEP
+VSBV,12,7,,,KEEP
+VSBV,13,8,,,KEEP
+VSBV,12,10,,,KEEP
+
+VGLUE,ALL
+
+! Set the material properties
+VSEL,S,VOLU,,12,14,2
+VATT,1,,1
+VSEL,S,VOLU,,15,16
+VATT,1,,1
+VSEL,S,VOLU,,17,18
+VATT,1,,1
+VSEL,S,VOLU,,9,11,2
+VATT,1,,1
+VSEL,S,VOLU,,1,3,2
+VATT,2,,1
+VSEL,S,VOLU,,6
+VATT,2,,1
+VSEL,S,VOLU,,19
+VATT,3,,1
+
+VSEL,S,VOLU,,ALL
+VLIST,ALL
+
+! Specify the voltage boundary conditions.
+VSEL,S,VOLU,,9
+ASLV,S
+DA,ALL,VOLT,-4500
+
+VSEL,S,VOLU,,17
+ASLV,S
+DA,ALL,VOLT,-3043.2
+
+VSEL,S,VOLU,,18
+ASLV,S
+DA,ALL,VOLT,-2526.24
+
+VSEL,S,VOLU,,12
+ASLV,S
+DA,ALL,VOLT,-2056.34
+
+VSEL,S,VOLU,,14
+ASLV,S
+DA,ALL,VOLT,-1586.37
+
+VSEL,S,VOLU,,15
+ASLV,S
+DA,ALL,VOLT,-646.57
+
+VSEL,S,VOLU,,16
+ASLV,S
+DA,ALL,VOLT,-235.34
+
+VSEL,S,VOLU,,11
+ASLV,S
+DA,ALL,VOLT,0
+
+! Meshing
+MSHKEY,0
+SMRT,4
+VSEL,S,VOLU,,1,3,2
+ASLV,S
+VMESH,ALL
+VSEL,S,VOLU,,6,19,13
+ASLV,S
+VMESH,ALL
+
+! Solve for the fields.
+/SOLU
+SOLVE
+
+! Write the solution to file.
+/POST1
+/OUTPUT,field,lis
+PRNSOL
+/OUTPUT
+
+! Save the nodal coordinates.
+/OUTPUT,NLIST,lis
+NLIST,,,,COORD
+/OUTPUT
+
+! Save the material list.
+/OUTPUT,MPLIST,lis
+MPLIST
+/OUTPUT
+
+! Save the mesh structure.
+/OUTPUT,ELIST,lis
+ELIST
+/OUTPUT
+
+! Show the solution.
+/EFACET,1
+PLNSOL, VOLT
+
+! Solve for the weighting field.
+/SOLU
+LSCLEAR,ALL
+
+VSEL,S,VOLU,,9
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,17
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,18
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,12
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,14
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,15
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,16
+ASLV,S
+DA,ALL,VOLT,0
+
+VSEL,S,VOLU,,11
+ASLV,S
+DA,ALL,VOLT,1
+
+/POST1
+/OUTPUT, weight1, lis
+PRNSOL
+/OUTPUT
+
+FINISH

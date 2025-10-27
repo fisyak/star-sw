@@ -1,0 +1,14 @@
+import ROOT
+import os, sys
+
+path = '@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBDIR@'
+if sys.platform == 'darwin':
+  extension = '.dylib'
+else:
+  extension = '.so'
+
+ROOT.gSystem.Load(path + '/libGarfieldRandom' + extension)
+ROOT.gSystem.Load(path + '/libHeed' + extension)
+ROOT.gSystem.Load(path + '/libMagboltz' + extension)
+ROOT.gSystem.Load(path + '/libDegrade' + extension)
+ROOT.gSystem.Load(path + '/libGarfield' + extension)
