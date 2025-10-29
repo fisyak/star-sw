@@ -64,4 +64,7 @@ struct TpcResponseSimulator {
   float  transDiffFF;     /* = 0.021982 sqrt(cm), Magboltz transverse Diffusion for Full Field */ 
   float  transDiffHF;     /* = 0.032902 sqrt(cm), Magboltz transverse Diffusion for Half Field */ 
   float  transDiffZF;     /* = 0.059524 sqrt(cm), Magboltz transverse Diffusion for Zero Field */ 
+  float  dTransDiffFF;    /* = -0.0010; sqrt(cm), correction to Magboltz for iTPC */ 
+  float  dTransDiffHF;    /* =  0.0002; sqrt(cm), correction to Magboltz for iTPC */ 
+  float  dTransDiffZF;    /* = -0.0019; sqrt(cm), correction to Magboltz for iTPC */ 
  };  

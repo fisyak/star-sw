@@ -147,6 +147,7 @@ class StTpcRSMaker : public StMaker {
   Double_t rowsdEH[kRowMax];          //!
   Double_t rowsdE[kRowMax];           //!
   Double_t mTransDiffMagboltz;        //!
+  Double_t mTransDiffusioniTPC;       //!
   Char_t end[1];                      //!
   Double_t             mLaserScale;   //!
   const Double_t minSignal;           //!

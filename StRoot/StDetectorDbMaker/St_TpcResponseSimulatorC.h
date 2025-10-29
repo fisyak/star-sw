@@ -69,6 +69,9 @@ class St_TpcResponseSimulatorC : public TChair {
   Float_t       transDiffFF(Int_t i = 0)    const {return Struct(i)->transDiffFF;}
   Float_t       transDiffHF(Int_t i = 0)    const {return Struct(i)->transDiffHF;}
   Float_t       transDiffZF(Int_t i = 0)    const {return Struct(i)->transDiffZF;}
+  Float_t       dTransDiffFF(Int_t i = 0)   const {return Struct(i)->dTransDiffFF;}
+  Float_t       dTransDiffHF(Int_t i = 0)   const {return Struct(i)->dTransDiffHF;}
+  Float_t       dTransDiffZF(Int_t i = 0)   const {return Struct(i)->dTransDiffZF;}
   Float_t      *transDiffMagboltz(Int_t i = 0)   const {return  &Struct(i)->transDiffFF;}  
  protected:
   St_TpcResponseSimulatorC(St_TpcResponseSimulator *table=0) : TChair(table) {}
