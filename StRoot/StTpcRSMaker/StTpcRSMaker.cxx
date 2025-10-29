@@ -178,6 +178,12 @@ Int_t StTpcRSMaker::InitRun(Int_t /* runnumber */) {
   if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffMagboltz()[ff]) > 1e-7) {
     mTransDiffMagboltz = St_TpcResponseSimulatorC::instance()->transDiffMagboltz()[ff];
     LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffMagboltz = " << 1e4*mTransDiffMagboltz << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
+    mTransDiffusioniTPC = mTransDiffMagboltz;
+    // Extra correction for iTPC
+    if (TMath::Abs(St_TpcResponseSimulatorC::instance()->transDiffMagboltz()[ff+3]) > 1e-7) {
+      mTransDiffusioniTPC += St_TpcResponseSimulatorC::instance()->transDiffMagboltz()[ff+3];
+      LOG_INFO << "StTpcRSMaker::InitRun: mTransDiffusioniTPC = " << 1e4*mTransDiffusioniTPC << " um/sqrt(cm) @ |Bz| = " << field << " kG"<< endm;
+    }
   }  
   SetAttr("minSector",1);
   SetAttr("maxSector",24);
@@ -1025,8 +1031,8 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	  SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusion()*  TMath::Sqrt(   driftLength/D);
 	}
 	if (St_tpcPadConfigC::instance()->IsRowInner(sector,row)) {
-	  if (mTransDiffMagboltz > 1e-7) {
-	    SigmaT = mTransDiffMagboltz*TMath::Sqrt(   driftLength  );
+	  if (mTransDiffusioniTPC > 1e-7) {
+	    SigmaT = mTransDiffusioniTPC*TMath::Sqrt(   driftLength  );
 	  } else {
 	    if ( St_TpcResponseSimulatorC::instance()->transverseDiffusionI() > 0.0) 
 	      SigmaT = St_TpcResponseSimulatorC::instance()->transverseDiffusionI()*  TMath::Sqrt(   driftLength/D);
