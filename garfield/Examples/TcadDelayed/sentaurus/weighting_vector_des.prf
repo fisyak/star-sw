@@ -1,2 +1,0 @@
-set WB_tool(sdevice,input,parameter,common) 1
-set WB_tool(sdevice,parallel,activate) 0

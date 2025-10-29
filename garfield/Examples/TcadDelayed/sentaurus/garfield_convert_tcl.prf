@@ -1,2 +1,0 @@
-set WB_tool(gtclsh,exec_dependency) strict
-set WB_tool(gtclsh,parallel,activate) 0
