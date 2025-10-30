@@ -1500,6 +1500,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1495'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26302001',	 last => '26302001',	 list => '',  beginTime => '20251029.040615'}, # 	2025-10-29	04:06:15	2025-10-29	04:33:30
 '1496'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26302003',	 last => '26302003',	 list => '',  beginTime => '20251029.043330'}, # 	2025-10-29	04:33:30	2025-10-29	06:12:12	timestamp = AuAu_2025_RF
 '1497'=> {trig=>'Cosmic',                	field => 'RF',	first=> '26302010',	 last => '26302010',	 list => '',  beginTime => '20251029.061212'}, # 	2025-10-29	06:12:12	2025-10-29	08:26:27	timestamp = Cosmic_RF
-'1498'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26302013',	 last => '26302020',	 list => '',  beginTime => '20251029.082627'}, # 	2025-10-29	08:26:27	2025-10-29	11:33:25	timestamp = AuAu_2025_HiLumi_RF
+'1498'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26302013',	 last => '26302021',	 list => '',  beginTime => '20251029.082627'}, # 	2025-10-29	08:26:27	2025-10-29	12:26:41	timestamp = AuAu_2025_HiLumi_RF
+'1499'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26302022',	 last => '26302022',	 list => '',  beginTime => '20251029.122641'}, # 	2025-10-29	12:26:41	2025-10-29	12:26:41	timestamp = AuAu_2025_RF
 );
 1;
