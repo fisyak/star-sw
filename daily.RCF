@@ -6081,3 +6081,6 @@ This warning is for project developers.  Use -Wno-dev to suppress it.
 setup spackTFG
 spack env activate AL96x
  setenv CMAKE_INCLUDE_PATH $XOPTSTAR/spack/include 
+================================================================================
+10/07/2025
+StChain:INFO  - TDirectoryFile::Append : Replacing existing TH1: y-#phi-dM1GeV (Potential memory leak).

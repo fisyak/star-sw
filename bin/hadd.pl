@@ -11,7 +11,6 @@ my $dir = File::Basename::basename($DIR);
 my %ARG = (files => '*.root',
 	   all => '1', 
            FilesPerJob => '40',
-	   Out => 'hadd',
 	   version => 'TFG',
 	   platform => '64b',
 #	   platform => '32b',
@@ -147,7 +146,7 @@ foreach my $tag (@tags) {
   }
 }
 #die;
-my $XML = "hadd" . $outn . ".xml";
+my $XML = "hadd" . $ARG{prefix} . $outn . ".xml";
 open (XML,">$XML") or die "Can't open $XML";
 #
 print XML '<?xml version="1.0" encoding="utf-8" ?> 
@@ -169,42 +168,19 @@ foreach my $key (sort keys %TagList) {
     }
     next if  $#List == -1;
     my $list = join ' ', @List;
-#    print "list => $list\n";
-#    print "list => @List\n";
-#    print "======================> $List[0] - $List[$#List]\n";
-#    my @be = (File::Basename::basename($List[0]), File::Basename::basename($List[$#List]));
-#    for (my $i = 0; $i < 2; $i++) {
-#      my $f = $be[$i];
-#      $f =~ s/\.root//g;
-#      $f =~ s/adc_//g;
-#      #      my @ss = split /_/, $f;
-#      #      $f = $ss[0];
-#      $be[$i] = $f; 
-#    }
-#    print "b/e => $be[0] - $be[1]";
-#    my $job = $be[0] . "_" . $be[1];
     my $job = $jb;
     my $name     = $ARG{prefix} . $key . "_". $dir . $outn . "_" . $job;
     my $rootfile = $name. ".root";
     my $log      = $name. ".log";
     if ( -r $rootfile ) {print  "\tDone\n"; next;}
     else {print "\n";}
-#    $cmd  = " test -r $rootfile ||  root.exe -q -b " . $list;
-#    $cmd .= " Hadd.C\\\\(\\\\\"" . $rootfile . "\\\\\"\\\\)";
-#    $cmd .= " 'Hadd.C(\"" . $rootfile . "\")'";
-#    my $cmd = "test -r $rootfile || hadd -T -f $rootfile $list";
     my $cmd = "test -r $rootfile || hadd -k $ARG{option} -f $rootfile $list";
-#    my $cmd = "test -r $rootfile || root.exe -q -b 'Hadd.C+(\"" . $rootfile . "\",\"" . $list . "\")'";
     $cmd .= ">&  $log";
     print "job:$jb files: $i => $cmd \n";
     my $SCRIPT = $name . ".csh";
-#    next if -r $SCRIPT;
     open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
     print "Create $SCRIPT\n";
-#    print OUT "#!/bin/tcsh -v\n";
     print OUT "#!/usr/bin/env tcsh \n";
-#    print OUT "source ~/.tcshrc\n";
-#    print OUT "env\n";
     print OUT "
 #/usr/bin/env
 # Default value for path if not defined.

@@ -10,7 +10,7 @@ foreach d (`ls -1dtr ${GLOB}| sort -u`)
   if ($?) then
     echo "rm All*"
     rm All*
-    hadd.pl
+    hadd.pl FilesPerJob=10
     foreach f (`ls -1d hadd*.condor`)
       condor_submit ${f}
     end
