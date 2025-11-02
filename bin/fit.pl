@@ -5,7 +5,12 @@ use Cwd;
 use Env;
 my $DIR = Cwd::cwd();
 # list of all histogram to be fitted
-if (! -r .sl73_x8664_gcc631) {`ln -s ~/macros/.sl* .; ln -s ~/macros/.al* .`;}
+my @liblist = glob "~/macros/.sl* ~/macros/.al*";#  print "liblist = @liblist\n";
+foreach my $lib (@liblist) {
+  my $local = File::Basename::basename($lib);
+#  print "$lib $local\n";
+  symlink($lib,$local);
+}
 $ENV{STARFPE} = "NO";
 my @histG  = ();
 my @histGF = (); #SecRow3C);
