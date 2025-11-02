@@ -96,8 +96,12 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /
 #       if ($key =~ /P23ib/) {
 # 	$PICOPATH = "/sdcc/lustre02/star/data102"; print "PICOPATH = $PICOPATH\n" if ($debug);
 #       }
-      if ($key =~ '2021/3p85GeV_fixedTarget_2021a') {$dayMin = 122; $dayMax = 125;}
-      if ($key =~ '2021/3p85GeV_fixedTarget_2021b') {$dayMin = 158; $dayMax = 179;}
+      if ($key =~ '2021/3p85GeV_fixedTarget_2021a' ||
+	  $key =~ '2021/3p85GeV_fixedTarget_2021_P24iy.A'	 # part A has been processed
+	 ) {$dayMin = 122; $dayMax = 125;}
+      if ($key =~ '2021/3p85GeV_fixedTarget_2021b' ||
+	  $key =~ '2021/3p85GeV_fixedTarget_2021_P24iy.B'	 # part B has been processed
+	 ) {$dayMin = 158; $dayMax = 179;}
        print "dayMin = $dayMin, dayMax = $dayMax \n" if ($debug);
       last;
     }
@@ -230,6 +234,7 @@ foreach my $run (@Files) {
   my @files =  glob $glb; print "glb = $glb, no. files = $#files\n" if ($debug);
   my $NF = $#files + 1;
 #  my $step = 10;
+  my $part = 0;
   for (my $i = 0; $i < $NF; $i += $step) {
     my @list = ();
     my @listB = ();
@@ -255,7 +260,9 @@ foreach my $run (@Files) {
 	$ana =~ s/.picoDst//;
 	$ana = $f . "/" . $ana;
     } else {
-      $ana = $f . "_" . $Runs{$f} . ".root"; 
+      my $ext = "";
+      if (part > 0) {$ext = "_" . $part; $part++;}
+      $ana = "R" . $f . $ext . ".root"; 
     }
     print "f = $f , ana = $ana\n" if ($debug);
 #    die;

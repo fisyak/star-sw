@@ -16,7 +16,7 @@ class StGoodTrigger;
 void kfpAnalysis(Int_t N = 10000000, 
 		 //		 const Char_t *input = "/star/data102/reco/production_OO_200GeV_2021/ReversedFullField/P23ib/2021/136/22136010/st_physics_22136010_raw_1500002.picoDst.root", 
 		 const Char_t *input = "*.picoDst.root", 
-		 const Char_t *output = "Ana.root", const Char_t *triggerSet = "y2019", Bool_t idNdx = kFALSE) {
+		 const Char_t *output = "Ana.root", const Char_t *triggerSet = "y2021", Bool_t idNdx = kFALSE) {
 #if !defined(__CINT__)
   std::cout << "This code cannot be compiled" << std::endl;
 #else
@@ -39,7 +39,9 @@ void kfpAnalysis(Int_t N = 10000000,
 //   StKFParticleInterface::instance()->SetChi2TopoCutCharmManybodyDecays(2);
 //   StKFParticleInterface::instance()->SetSoftKaonPIDMode();
 //   StKFParticleInterface::instance()->SetSoftTofPidMode();
-//  StKFParticleInterface::UseMagScaleFactor(kTRUE); // Only for Full Field, freeze it.
+#ifdef __UseMagScaleFactor__
+  StKFParticleInterface::UseMagScaleFactor(kTRUE); // Only for Full Field, freeze it.
+#endif /* __UseMagScaleFactor__ */
   std::cout << "KFParticleAnalysis: running analysis for triggerSet " << triggerSet << "." << std::endl; 
   StKFParticleAnalysisMaker* kfpAnalysis = (StKFParticleAnalysisMaker*) StMaker::GetTopChain()->Maker("KFParticleAnalysis");
   if (! isPico) kfpAnalysis->ProcessSignal();  // requires MC info
