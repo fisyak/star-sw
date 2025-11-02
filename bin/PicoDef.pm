@@ -155,6 +155,8 @@
 '2021/3p85GeV_fixedTarget_2021b_P23id_calib'    => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
 '2021/3p85GeV_fixedTarget_2021_P23id_calib'     => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
 '2021/3p85GeV_fixedTarget_2021_P24iy'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
+'2021/3p85GeV_fixedTarget_2021_P24iy.A'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
+'2021/3p85GeV_fixedTarget_2021_P24iy.B'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
 
 '2021/17p3GeV_2021_P23id' =>                       'production_17p3GeV_2021/ReversedFullField/P23id',
 '2021/17p3GeV_2021_P24ia' =>                       'production_17p3GeV_2021/ReversedFullField/P24ia',
@@ -188,10 +190,14 @@
 '2021/ps_OO_200GeV_2021.P24iy' =>		   'production_ps_OO_200GeV_2021/ReversedFullField/P24iy',
 '2021/OO_200GeV_2021.P24iy' =>		           'production_OO_200GeV_2021/ReversedFullField/P24iy',
 '2021/p7p7_21_DEV_calib' =>			   '',
+
 '2022/pp500' =>                                    'production_pp500_2022/ReversedFullField/dev',
 '2022/pp500_calib2' =>                             'production_pp500_2022/ReversedFullField/P24ib_calib2',
+
 '2023/AuAu200' =>                                  'production_AuAu_2023/ReversedHalfField/dev',
 '2023/HRF_AuAu200' =>                              'production_AuAu_HalfField_2023/ReversedHalfField/dev',
-'2023/ZF_AuAu200' =>                               'production_AuAu_ZeroField_2023/FieldOff/dev'
+'2023/ZF_AuAu200' =>                               'production_AuAu_ZeroField_2023/FieldOff/dev',
+
+'2024/pp200_LowLuminosity_P24iy' =>                'pp200_production_LowLuminosity/ReversedFullField/P24iy'
 );
 1

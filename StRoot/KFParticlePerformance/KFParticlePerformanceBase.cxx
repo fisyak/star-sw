@@ -1256,7 +1256,7 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
 					      nBins[9],xMin[9],xMax[9],
 					      nBins[0],xMin[0],xMax[0]);
       
-      histoParameters3D[iPart][15] = new TH3F(parName3D[13],parTitle3D[15] + " ; y ; #phi (rad); dM", 
+      histoParameters3D[iPart][15] = new TH3F(parName3D[15],parTitle3D[15] + " ; y ; #phi (rad); dM", 
 					      nBins[3],xMin[3],xMax[3],
 					      nBins[9],xMin[9],xMax[9],
 					      nBins[25],xMin[25],xMax[25]);

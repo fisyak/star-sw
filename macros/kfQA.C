@@ -138,81 +138,79 @@ TString InitVars() {
   return Tuple;
 }
 //________________________________________________________________________________
-TDirectory *Merge(Int_t run) {
+void Merge(Int_t run) {
   TString targetFile(Form("R%i.root",run));
-  const Char_t *targetname = targetFile.Data();
-  Char_t *tfileName = gSystem->Which(".",targetFile,kReadPermission);
-  if ( tfileName) {
-    return new TFile(tfileName);
+  gSystem->Load("libTreePlayer");
+  TClass::GetClass("ROOT::Cintex::Cintex"); // autoload Cintex if it exist.
+  if (gInterpreter->IsLoaded("libCintex")) {
+    gROOT->ProcessLine("ROOT::Cintex::Cintex::Enable();");
+  }
+  TDirIter Dir(Form("%i/All*.root",run));
+  Bool_t force = kFALSE;
+  Bool_t skip_errors = kFALSE;
+  Bool_t reoptimize = kFALSE;
+  Bool_t noTrees = kFALSE;
+  Int_t maxopenedfiles = 0;
+  Int_t verbosity = 99;
+  Int_t newcomp = 1;
+  if (verbosity > 1) {
+    std::cout << "hadd Target file: " << targetFile.Data() << std::endl;
+  }
+  
+  TFileMerger merger(kFALSE,kFALSE);
+  //    merger.SetMsgPrefix("hadd");
+  //    merger.SetPrintLevel(verbosity - 1);
+  if (maxopenedfiles > 0) {
+    merger.SetMaxOpenedFiles(maxopenedfiles);
+  }
+  if (!merger.OutputFile(targetFile,force,newcomp) ) {
+    std::cerr << "hadd error opening target file (does " << targetFile.Data() << " exist?)." << std::endl;
+    std::cerr << "Pass \"-f\" argument to force re-creation of output file." << std::endl;
+    exit(1);
+  }
+  
+  Char_t *file = 0;
+  while ((file = (Char_t *) Dir.NextFile())) {
+    if( ! merger.AddFile(file) ) {
+      if ( skip_errors ) {
+	std::cerr << "hadd skipping file with error: " << file << std::endl;
+      } else {
+	std::cerr << "hadd exiting due to error in " << file << std::endl;
+      }
+    }
+  }
+  if (reoptimize) {
+    merger.SetFastMethod(kFALSE);
   } else {
-   gSystem->Load("libTreePlayer");
-   TClass::GetClass("ROOT::Cintex::Cintex"); // autoload Cintex if it exist.
-   if (gInterpreter->IsLoaded("libCintex")) {
-      gROOT->ProcessLine("ROOT::Cintex::Cintex::Enable();");
-   }
-   TDirIter Dir(Form("%i/*%i*.root",run,run));
-   Bool_t force = kFALSE;
-   Bool_t skip_errors = kFALSE;
-   Bool_t reoptimize = kFALSE;
-   Bool_t noTrees = kFALSE;
-   Int_t maxopenedfiles = 0;
-   Int_t verbosity = 99;
-   Int_t newcomp = 1;
-   if (verbosity > 1) {
-     std::cout << "hadd Target file: " << targetname << std::endl;
-   }
-   
-   TFileMerger merger(kFALSE,kFALSE);
-   //    merger.SetMsgPrefix("hadd");
-   //    merger.SetPrintLevel(verbosity - 1);
-   if (maxopenedfiles > 0) {
-     merger.SetMaxOpenedFiles(maxopenedfiles);
-    }
-   if (!merger.OutputFile(targetname,force,newcomp) ) {
-     std::cerr << "hadd error opening target file (does " << targetname << " exist?)." << std::endl;
-     std::cerr << "Pass \"-f\" argument to force re-creation of output file." << std::endl;
-     exit(1);
-    }
-   
-   Char_t *file = 0;
-   while ((file = (Char_t *) Dir.NextFile())) {
-     if( ! merger.AddFile(file) ) {
-       if ( skip_errors ) {
-	 std::cerr << "hadd skipping file with error: " << file << std::endl;
-       } else {
-	 std::cerr << "hadd exiting due to error in " << file << std::endl;
-	  return 0;
-       }
-     }
-   }
-   if (reoptimize) {
-     merger.SetFastMethod(kFALSE);
-   } else {
-     if (merger.HasCompressionChange()) {
-       // Don't warn if the user any request re-optimization.
-       std::cout <<"hadd Sources and Target have different compression levels"<<std::endl;
+    if (merger.HasCompressionChange()) {
+      // Don't warn if the user any request re-optimization.
+      std::cout <<"hadd Sources and Target have different compression levels"<<std::endl;
       std::cout <<"hadd merging will be slower"<<std::endl;
-     }
-   }
-   merger.SetNotrees(noTrees);
-   Bool_t status = merger.Merge();
-   
-   if (status) {
-     if (verbosity == 1) {
-       std::cout << "hadd merged " << merger.GetMergeList()->GetEntries() << " input files in " << targetname << ".\n";
-     }
-     return merger.GetOutputFile();
-   } else {
-     if (verbosity == 1) {
-       std::cout << "hadd failure during the merge of " << merger.GetMergeList()->GetEntries() << " input files in " << targetname << ".\n";
-     }
-     return 0;
-   }
+    }
+  }
+  merger.SetNotrees(noTrees);
+  Bool_t status = merger.Merge();
+  
+  if (status) {
+    if (verbosity == 1) {
+      std::cout << "hadd merged " << merger.GetMergeList()->GetEntries() << " input files in " << targetFile.Data() << ".\n";
+    }
+  } else {
+    if (verbosity == 1) {
+      std::cout << "hadd failure during the merge of " << merger.GetMergeList()->GetEntries() << " input files in " << targetFile.Data() << ".\n";
+    }
   }
 }
 //________________________________________________________________________________
 void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
-  TDirectory *myDir = Merge(Run);
+  TString targetFile(Form("R%i.root",Run));
+  Char_t *tfileName = gSystem->Which(".",targetFile,kReadPermission);
+  if (! tfileName) {
+    Merge(Run);
+    tfileName = gSystem->Which(".",targetFile,kReadPermission);
+    if (tfileName) return;
+  }
+  TFile *myDir = new TFile(tfileName);
   if (! myDir) return;
   TString OutFile;
   if (!Out) {OutFile = "D";  OutFile+= Run; OutFile += ".root";}
