@@ -10,6 +10,7 @@ my $ObjDir       = "#" . $obj_dir;                     #  print "ObjDir = $ObjDi
 my $STAR_SYS     = $env->{ENV}->{STAR_SYS};	         
 my $STAR_VERSION = $env->{ENV}->{STAR_VERSION};        #  print "#####  $STAR_VERSION\n";
 my $AFS_RHIC     = $env->{ENV}->{AFS_RHIC};
+my $ROOT_LEVEL   = $env->{ENV}->{ROOT_LEVEL};
 @Repo   = Repository_List unless $param::noRepository;#   print "Repositories = |@Repo|\n";
 print "+-+-+- STAR=".$env->{ENV}->{STAR}."\n"  if $param::debug;
 print "+-+-+- cwd=".$CWD."\n"                  if $param::debug;
@@ -43,7 +44,10 @@ my $DEBUG   = $env->{DEBUG};
 my $FDEBUG  = $env->{FDEBUG};
 my $NOOPTIMIZED = $DEBUG; $NOOPTIMIZED =~ s/-O2//g; $NOOPTIMIZED =~ s/-O//g; print "DEBUG = $DEBUG, NOOPTIMIZED = $NOOPTIMIZED\n" if  $param::debug;
 my $CXXFLAGS= $env->{CXXFLAGS}; #print "CXXFLAGS = $CXXFLAGS --------------------------------------------------------------------------------\n";
-if ($STAR_SYS =~ /^al9/) {$ROOTCINT_CPPFLAGS .= " -D_BITS_TYPES_H=1 -D_STDINT_H=1"; $CXXFLAGS.= " -Wno-register";}
+if ($STAR_SYS =~ /^al9/ && $ROOT_LEVEL =~ /^5/) {
+  $ROOTCINT_CPPFLAGS .= " -D_BITS_TYPES_H=1 -D_STDINT_H=1";
+  $CXXFLAGS.= " -Wno-register";
+}
 my $EXTRA_CXXFLAGS= $env->{EXTRA_CXXFLAGS}; 
 my $CFLAGS  = $env->{CFLAGS};
 my $FC      = $env->{FC};
@@ -274,11 +278,11 @@ if ( $pkg eq "GenFit"
   $WarnOff .= " -Wno-isleading-indentation";
   $EXTRA_CXXFLAGS .= $WarnOff;
 }
-if ($env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
+#if ($ROOT_LEVEL =~ /^6/) {
   if ($pkg eq 'StMuDSTMaker' or $pkg eq 'StHbtMaker' or $pkg eq 'StBFChain') {
     $CPPFLAGS .= " -D__NO_STRANGE_MUDST__";
   }
-}
+#}
 if ($pkg eq "RTS") {
   if ($STAR_SYS =~ /darwin/) {}
   else {
@@ -550,7 +554,7 @@ if ( $pkg eq 'sim' or $pkg eq 'gen' ) {
     $LIBPKG = "";
   }
 } 
-if ($pkg eq 'Table') {# or $env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
+if ($pkg eq 'Table') {# or $ROOT_LEVEL =~ /^6/) {
   Install $env $INCLUDE, script::sortu(@h_files);
 }
 print "idlL at the end = @idlL\n"   if $param::debug;
@@ -1194,14 +1198,14 @@ TDataSet *CreateTable() {
       my $root4star = $CWD . "/" . $bin . "/" . "root4star";
       if (! -x $root4star) {
 	$root4star = $env->{ENV}->{STAR} . "/" . $bin . "/" . "root4star";
-#	print "root4star = $root3star, ROOT_LEVEL = $env->{ENV}-{ROOT_LEVEL}\n";
+#	print "root4star = $root3star, ROOT_LEVEL = $ROOT_LEVEL\n";
 	if (! -x $root4star) {
 	  $root4star = "";
 #	  print "reset root4star\n";
 	}
       }
-      print "root4star = $root4star, ROOT_LEVEL = $env->{ENV}-{ROOT_LEVEL}\n";
-      if ($root4star || $env->{ENV}-{ROOT_LEVEL} =~ /^6/) {
+      print "root4star = $root4star, ROOT_LEVEL = $ROOT_LEVEL\n";
+      if ($root4star || $ROOT_LEVEL =~ /^6/) {
 	$root4star = "";
 #	print "reset root4star\n";
       }
