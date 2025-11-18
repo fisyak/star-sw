@@ -1396,7 +1396,7 @@ Bfc_st BFC[] = { // standard chains
   {"QUtils"      ,""  ,"","PmdUtil,EmcUtil","",                      "","Load QA Libs dependencies",kFALSE},
 
 #ifndef  __NoStrangeMuDst__
-  {"MuDSTDeps"   ,"","","StEvent,Stu,StBichsel",""
+  {"MuDSTDeps"   ,"","","StEvent,Stu,StBichsel,EmcUtil,TofUtil,BTofUtil,PmdUtil",""
    ,                        "Tree,StStrangeMuDstMaker,StMuDSTMaker","Load MuDST misc. dependencies",kFALSE},
   {"MuDST"       ,"" ,"","MuDSTDeps,EmcUtil,TofUtil,BTofUtil,PmdUtil,Tree",""
    ,                                                            "StMuDSTMaker","Load MuDST library",kFALSE},
