@@ -668,8 +668,12 @@ Int_t StdEdxY2Maker::Make(){
 	}
 #endif
 	CdEdx[NdEdx].dxC    = dxC;
-	CdEdx[NdEdx].F.dE     = tpcHit->charge();
-	CdEdx[NdEdx].F.dx   = dxC;
+	if (! TMath::Finite(tpcHit->charge())) {
+	  CdEdx[NdEdx].F.dE = 1.0;
+	} else  {
+	  CdEdx[NdEdx].F.dE = tpcHit->charge();
+	}
+  	CdEdx[NdEdx].F.dx   = dxC;
 	CdEdx[NdEdx].xyz[0] = localSect[3].position().x();
 	CdEdx[NdEdx].xyz[1] = localSect[3].position().y();
 	CdEdx[NdEdx].xyz[2] = localSect[3].position().z();

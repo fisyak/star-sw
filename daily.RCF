@@ -6084,3 +6084,272 @@ spack env activate AL96x
 ================================================================================
 10/07/2025
 StChain:INFO  - TDirectoryFile::Append : Replacing existing TH1: y-#phi-dM1GeV (Potential memory leak).
+================================================================================
+11/12/2025 SL24x Jason Webb Simulation + Reconstruction with ROOT6
+https://docs.google.com/document/d/1esTAdjX1i5QthIZFmRk-yKgp8SAM_8hCu-YX0DuNabQ/edit?pli=1&tab=t.0#heading=h.nsw892ctihlv
+Software 
+[geant4star development branch]
+https://github.com/klendathu2k/star-sw-1/tree/import-geant4maker-rebased-2
+HOWTO run simple simulations, embedding jobs, QA, …
+$ starver SL24x
+$ source $STAR/StRoot/StGeant4Maker/macros/setup
+
+# Run particle gun, … pythia8.C, hijing.C, …
+$ root -q -b $STAR/StRoot/macros/geant4star/particleGun.C
+
+# Run standard starsim-based embedding under root6
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxR6.C’( … )’
+
+# Run geant4star-based embedding
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxG4.C’( … )’
+
+# Produce embedding QA
+…
+# Central tracking base QA
+…
+--------------------------------------------------------------------------------
+
+[rcas6016] ~/work/geant4star $ git clone https://github.com/klendathu2k/star-sw-1
+[rcas6016] ~/work/geant4star $ cd star-sw-1/
+[rcas6016] ~/work/geant4star/star-sw-1 $ git co import-geant4maker-rebased-2
+[rcas6016] ~/work/geant4star/star-sw-1 $ source $STAR/unsetupTFG.csh 
+
+
+
+ /star/nfs4/AFS/star/group/
+rcas6016] ~/work/geant4star/star-sw-1/> setenv GROUP_DIR /star/nfs4/AFS/star/group
+
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x
+[rcas6016] ~/work/geant4star/star-sw-1/> source  StRoot/StGeant4Maker/macros/setup
+[rcas6016] ~/work/geant4star/star-sw-1/> more StRoot/StGeant4Maker/macros/setup
+# Setup group environment
+setenv GROUP_DIR /star/u/jeromel/work/STAR/group
+
+# Setup 64 bit w/ spack overlay
+setup 64b
+..
+[rcas6016] ~/work/geant4star/star-sw-1/> setup 64b
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x00000000011a5090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7fe573621d4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7fe573623fbc]
+/usr/bin/modulecmd[0x412528]
+/usr/bin/modulecmd[0x409f7a]
+....
+
+setenv STAR .
+starver SL24x config/v0.3.0-rhel7-root6.24.06
+...
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x config/v0.3.0-rhel7-root6.24.06
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x0000000001867090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7ff4d1f1fd4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7ff4d1f21fbc]
+...
+# STILL NEED TO STRIP ROOT5 From the environment
+setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | awk -v RS=: -v ORS=: '/ROOT\/5/ {next} {print}'`
+
+module load clhep-2.4.5.1-debug
+module load vmc-1-0-p3-root-6.24.06-debug
+module load geant3-3-9-p1-root-6.24.06-debug
+module load geant4-10.5.1-debug
+module load geant4-data-10.5.1-debug
+module load geant4-vmc-5-0-p5-root-6.24.06-debug
+
+# Ensure that we use StRoot/Table 
+module unload star-table-0.1.1-root-6.24.06
+module load star-table-0.1.1-root-6.24.06
+
+setenv SKIP_DIRS "StEbyePool StEbyePool StHighptPool StAngleCorrMaker StSpinMaker StEbyeScaTagsMaker StEbye2ptMaker StDaqClfMaker StFtpcV0Maker StStrangePool GeoTestMaker StSpinPool StFgtPool PWGTools StShadowMaker"
+
+time cons
+
+
+starsub02] /star/simu/simu/g4star/simulations/rcf25000/y2023a/AuAu200/G4/hijing1p383/minbias/v001/log $ more rcf25000_y2023a_AuAu200_G4_hijing1p383_minbias_v001_job9.reco.log
+
+   ------------------------------------------------------------------
+  | Welcome to ROOT 6.24/06                        https://root.cern |
+  | (c) 1995-2021, The ROOT Team; conception: R. Brun, F. Rademakers |
+  | Built for linuxx8664gcc on Sep 02 2021, 14:20:23                 |
+  | From tags/v6-24-06@v6-24-06                                      |
+  | With g++ (GCC) 4.8.5 20150623 (Red Hat 4.8.5-11)                 |
+  | Try '.help', '.demo', '.license', '.credits', '.quit'/'.q'       |
+   ------------------------------------------------------------------
+
+This is root6
+ *** Start at Date : Sat Nov  1 06:08:13 2025
+
+Processing StRoot/macros/geant4star/run_reconstruction.C(10,"rcf25000:y2023a:AuAu200:G4:hijing1.383:minbias:v001",9)...
+....
+
+
+================================================================================
+11/13/2025 start with default .tcshrc
+HOWTO run simple simulations, embedding jobs, QA, …
+$ starver SL24x
+$ source $STAR/StRoot/StGeant4Maker/macros/setup
+
+# Run particle gun, … pythia8.C, hijing.C, …
+$ root -q -b $STAR/StRoot/macros/geant4star/particleGun.C
+
+# Run standard starsim-based embedding under root6
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxR6.C’( … )’
+
+# Run geant4star-based embedding
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxG4.C’( … )’
+
+# Produce embedding QA
+…
+# Central tracking base QA
+…
+--------------------------------------------------------------------------------
+
+[rcas6016] ~/work/geant4star $ git clone https://github.com/klendathu2k/star-sw-1
+[rcas6016] ~/work/geant4star $ cd star-sw-1/
+[rcas6016] ~/work/geant4star/star-sw-1 $ git co import-geant4maker-rebased-2
+[rcas6016] ~/work/geant4star/star-sw-1 $ source $STAR/unsetupTFG.csh 
+
+
+
+ /star/nfs4/AFS/star/group/
+rcas6016] ~/work/geant4star/star-sw-1/> setenv GROUP_DIR /star/nfs4/AFS/star/group
+
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x
+[rcas6016] ~/work/geant4star/star-sw-1/> source  StRoot/StGeant4Maker/macros/setup
+[rcas6016] ~/work/geant4star/star-sw-1/> more StRoot/StGeant4Maker/macros/setup
+# Setup group environment
+setenv GROUP_DIR /star/u/jeromel/work/STAR/group
+
+# Setup 64 bit w/ spack overlay
+setup 64b
+..
+[rcas6016] ~/work/geant4star/star-sw-1/> setup 64b
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x00000000011a5090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7fe573621d4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7fe573623fbc]
+/usr/bin/modulecmd[0x412528]
+/usr/bin/modulecmd[0x409f7a]
+....
+
+setenv STAR .
+starver SL24x config/v0.3.0-rhel7-root6.24.06
+...
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x config/v0.3.0-rhel7-root6.24.06
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x0000000001867090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7ff4d1f1fd4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7ff4d1f21fbc]
+...
+# STILL NEED TO STRIP ROOT5 From the environment
+setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | awk -v RS=: -v ORS=: '/ROOT\/5/ {next} {print}'`
+
+module load clhep-2.4.5.1-debug
+module load vmc-1-0-p3-root-6.24.06-debug
+module load geant3-3-9-p1-root-6.24.06-debug
+module load geant4-10.5.1-debug
+module load geant4-data-10.5.1-debug
+module load geant4-vmc-5-0-p5-root-6.24.06-debug
+
+# Ensure that we use StRoot/Table 
+module unload star-table-0.1.1-root-6.24.06
+module load star-table-0.1.1-root-6.24.06
+
+setenv SKIP_DIRS "StEbyePool StEbyePool StHighptPool StAngleCorrMaker StSpinMaker StEbyeScaTagsMaker StEbye2ptMaker StDaqClfMaker StFtpcV0Maker StStrangePool GeoTestMaker StSpinPool StFgtPool PWGTools StShadowMaker"
+
+time cons
+
+
+rcas6016] ~/work/geant4star/star-sw-1/> gdb root.exe 
+GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-94.el7
+...
+(gdb) run StRoot/macros/geant4star/particleGun.C
+...
+Program received signal SIGABRT, Aborted.
+0x00007ffff676e1d7 in raise () from /lib64/libc.so.6
+(gdb) bt 40
+#0  0x00007ffff676e1d7 in raise () from /lib64/libc.so.6
+#1  0x00007ffff676f8c8 in abort () from /lib64/libc.so.6
+#2  0x00007ffff6767146 in __assert_fail_base () from /lib64/libc.so.6
+#3  0x00007ffff67671f2 in __assert_fail () from /lib64/libc.so.6
+#4  0x00007fffe140c353 in setBase (addr=140736867298360) at .sl73_x8664_gcc485/obj/StarVMC/minicern/locf.c:75
+#5  0x00007fffe140c38d in locf_ (iadr=0x7fffdafb6c38 <gcbank_+88> "") at .sl73_x8664_gcc485/obj/StarVMC/minicern/locf.c:92
+#6  0x00007fffe1421bdd in mzstor_ () from /afs/rhic.bnl.gov/star/packages/release23/SL24x/.sl73_x8664_gcc485/obj/StarVMC/minicern/StarMiniCern.so
+#7  0x00007fffda9c05c0 in g3zebra (nzeb=5000000) at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/gbase/gzebra.F:39
+#8  0x00007fffda9b731a in g3cinit () at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/gcinit.F:7
+#9  0x00007fffdacc53ec in TGeant3::TGeant3 (this=0x53a7660, title=0x42121c1 "GEANT3", nwgeant=0)
+    at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/TGeant3/TGeant3.cxx:1164
+#10 0x00007fffdacd9586 in TGeant3TGeo::TGeant3TGeo (this=0x53a7660, title=0x42121c1 "GEANT3", nwgeant=0)
+    at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/TGeant3/TGeant3TGeo.cxx:558
+#11 0x00007fffcc0afc02 in StGeant4Maker::Init (this=0x1afebc0) at .sl73_x8664_gcc485/obj/StRoot/StGeant4Maker/StGeant4Maker.cxx:579
+--------------------------------------------------------------------------------
+================================================================================
+11/14/2025 rootcling vs rootcint with ROOT 6
+cmd (normal)= 
+rootcling -rootbuild -v2 -f .al96_x8664_gcc11_R6/obj/pams/sim/g2t/St_g2t_Cint.cxx 
+-s /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11_R6/lib/libSt_g2t.so 
+-excludePath /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/ginclude 
+-excludePath /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/externals 
+-excludePath /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/builtins 
+-compilerI/usr/local/include   
+-I/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -Ipams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -I.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I. -IStRoot -I.al96_x8664_gcc11_R6/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include 
+-D__ROOT__ -D__TFG__VERSION__   
+St_g2t_bbc_Module.h St_g2t_ctb_Module.h St_g2t_eem_Module.h St_g2t_emc_Module.h St_g2t_epd_Module.h St_g2t_esm_Module.h St_g2t_eto_Module.h St_g2t_etr_Module.h St_g2t_fgt_Module.h St_g2t_fpd_Module.h St_g2t_fsc_Module.h St_g2t_fst_Module.h St_g2t_ftp_Module.h St_g2t_fts_Module.h St_g2t_gem_Module.h St_g2t_get_event_Module.h St_g2t_get_kine_Module.h St_g2t_get_pythia_Module.h St_g2t_hca_Module.h St_g2t_hpd_Module.h St_g2t_igt_Module.h St_g2t_ist_Module.h St_g2t_mtd_Module.h St_g2t_mwc_Module.h St_g2t_particle_Module.h St_g2t_pix_Module.h St_g2t_pmd_Module.h St_g2t_pre_Module.h St_g2t_rch_Module.h St_g2t_smd_Module.h St_g2t_ssd_Module.h St_g2t_stg_Module.h St_g2t_svt_Module.h St_g2t_tfr_Module.h St_g2t_tof_Module.h St_g2t_tpc_Module.h St_g2t_vpd_Module.h St_g2t_wca_Module.h St_g2t_zdc_Module.h 
+ LinkDef.h
+
+
+cmd (normal)= 
+rootcint -f /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG.noCling/.al96_x8664_gcc11_R6/obj/pams/sim/g2t/St_g2t_Cint.cxx 
+-c 
+-DROOT_CINT  -I.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -Ipams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -I.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I. -IStRoot -I.al96_x8664_gcc11_R6/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include 
+-D__ROOT__ -D__TFG__VERSION__   
+.al96_x8664_gcc11_R6/include/g2t/St_g2t_bbc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ctb_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_eem_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_emc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_epd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_esm_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_eto_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_etr_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fgt_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fpd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fsc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fst_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ftp_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fts_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_gem_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_get_event_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_get_kine_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_get_pythia_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_hca_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_hpd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_igt_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ist_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_mtd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_mwc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_particle_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_pix_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_pmd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_pre_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_rch_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_smd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ssd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_stg_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_svt_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_tfr_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_tof_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_tpc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_vpd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_wca_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_zdc_Module.h  
+LinkDef.h
+
+rootcling -rootbuild -v2 -f G__Geom.cxx 
+-cxxmodule     ? --cxxmodule ?
+-s /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/lib/libGeom.so 
+-m Thread.pcm -m RIO.pcm -m MathCore.pcm -m Hist.pcm 
+-excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root -excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/ginclude -excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/externals -excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/builtins 
+-DROOT_SUPPORT_CLAD 
+-compilerI/usr/include/c++/11 -compilerI/usr/include/c++/11/x86_64-redhat-linux -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-redhat-linux/11/include -compilerI/usr/local/include -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-redhat-linux/11/include -compilerI/usr/local/include -compilerI/usr/include -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/include 
+-I/usr/include -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/geom/geom/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/unix/../clib/res -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/unix/inc -I/usr/include -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/zstd/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/lz4/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/lzma/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/zip/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/thread/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/textinput/src -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/textinput/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/rint/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/meta/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/gui/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/foundation/res -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/foundation/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/cont/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/clingutils/res -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/clingutils/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/clib/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/base/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/ginclude -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/io/io/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/math/mathcore/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/imt/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/multiproc/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/net/net/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/hist/hist/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/math/matrix/inc 
+TGDMLMatrix.h TGeoArb8.h TGeoAtt.h TGeoBBox.h TGeoBoolNode.h TGeoBranchArray.h TGeoBuilder.h TGeoCache.h TGeoCompositeShape.h TGeoCone.h TGeoElement.h TGeoEltu.h TGeoExtension.h TGeoGlobalMagField.h TGeoHalfSpace.h TGeoHelix.h TGeoHype.h TGeoManager.h TGeoMaterial.h TGeoMatrix.h TGeoMedium.h TGeoNavigator.h TGeoNode.h TGeoOpticalSurface.h TGeoPara.h TGeoParaboloid.h TGeoParallelWorld.h TGeoPatternFinder.h TGeoPcon.h TGeoPgon.h TGeoPhysicalConstants.h TGeoPhysicalNode.h TGeoPolygon.h TGeoRCPtr.h TGeoRegion.h TGeoScaledShape.h TGeoShape.h TGeoShapeAssembly.h TGeoSphere.h TGeoStateInfo.h TGeoSystemOfUnits.h TGeoTorus.h TGeoTrd1.h TGeoTrd2.h TGeoTube.h TGeoUniformMagField.h TGeoVolume.h TGeoVoxelFinder.h TGeoXtru.h TGeoTessellated.h TGeoVector3.h TVirtualGeoConverter.h TVirtualGeoChecker.h TVirtualGeoPainter.h TVirtualGeoTrack.h TVirtualMagField.h 
+/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/geom/geom/inc/LinkDef.h
+
+================================================================================
+11/15/2025  Schema evalution
+VMC.event.root created with ROOT5 ROOT6 ROOT6.noCling
+read by     ROOT5               +     -       -
+            ROOT6               -     +       +
+            ROOT6.noCling       -     +       +
+
+                                                              root.exe 'bfc.C(1,"in,analysis,nodefault","/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/root5/VMC.event.root")'
+[starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ root.exe 'bfc.C(1,"in,analysis,nodefault","/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG.noCling/VMC.event.root")'
+[starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ root.exe 'bfc.C(1,"in,analysis,nodefault","/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/VMC.event.root")'
+
+VMC.MuDst.root created with ROOT5 ROOT6 ROOT6.noCling
+read by     ROOT5              ++     -             -
+            ROOT6              --    --            --
+            ROOT6.noCling      --    --            --
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG.noCling $ root.exe lMuDst.C /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG.noCling/VMC.MuDst.root
+================================================================================
+11/17/2025 
+---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20201220.000000 --- 20371231.120000 -
+
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcCurrentCorrection/            Correction due to sagg of Voltage due to anode current  Validity:20211215.081702 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20230626.085710 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20211215.081702 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20211215.081702 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20230626.085710 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20230626.085710 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20211215.081702 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20211215.081702 --- 20371231.120000 -
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20230626.085710 --- 20240430.074640
+
+ ---------------------------------------------------------------------------------------
