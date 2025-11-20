@@ -1,11 +1,26 @@
 /*
-  ~/work/Tpc/Alignment/T05 $ root.exe  'lDb.C("y2019",0)' dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C("y2019",0)' ../dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C("y2019",0)' ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C("y2019",0)' ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C("y2019",0)' ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
+  ~/work/Tpc/Alignment/T05 $ root.exe  'lDb.C(0,"r2019,CorrZ)' dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
 __CHECK__
-   root.exe  'lDb.C("y2019",0)' ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
+__2023__
+   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dPadI*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dPadO*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dTimeI*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dTimeO*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+   foreach io (I O)
+     foreach pt (dPad dTime)
+       foreach f (RF RHF ZF)
+         root.exe  'lDb.C(0,"r2023,CorrZ)' ../${pt}${io}*${f}*.root Chain.C 'mdf4HitError.C+(tChain)'
+       end
+     end
+   end
+   cat *I*RF*.C *I*RHF*.C *I*ZF*.C > TpcInnerHitErrorMDF4.C
+   cat *O*RF*.C *O*RHF*.C *O*ZF*.C > TpcOuterHitErrorMDF4.C
+
 */
 #define __CHECK__
 #include <assert.h>
@@ -40,11 +55,11 @@ enum EMDFPolyType {
   kLegendre
 };
 #endif
-enum {kTPC = 2, kVar = 4};
-TProfile *prof[8][kVar] = {0};
-TProfile *profC[8][kVar] = {0};
-TProfile *profD[8][kVar] = {0};
-TH2F     *h2[8][kVar] = {0};     
+enum {kIO = 2, kF = 3, kPT = 2, kSM = 2, kVar = 4};
+TProfile *prof[kIO][kF][kPT][kSM][kVar] = {0};
+TProfile *profC[kIO][kF][kPT][kSM][kVar] = {0};
+TProfile *profD[kIO][kF][kPT][kSM][kVar] = {0};
+TH2F     *h2[kIO][kF][kPT][kSM][kVar] = {0};     
 TMultiDimFit* fit = 0;
 //--------------------------------------------------------------------------------
 ofstream out;
@@ -155,7 +170,11 @@ public :
   TBranch        *b_dmuJ;   //!
   
   Double_t fxx[4];
-  static Int_t    fgCase; // (fgCase%2) : 0 => sigma**2, 1 => mu, (fgCase/4)%2  : 0 = I; 1 => 0; (fgCase/2)%2 : 0 =>  Pad, 1 => Time
+  static Int_t fgIO; // 0 -> I, 1 -> O 
+  static Int_t fgF;  // 0 -> RF/FF, 1 -> RHF/FHF, 2 -> ZF
+  static Int_t fgPT; // 0 -> Pad, 1 -> Time
+  static Int_t fgSM; // 0 -> Sigma, 1 -> Mu
+  static Int_t fgCase; // = fgSM + kSM*(fgPT + kPT*(fgF + kF*fgIO))
   Double_t fval;
   Double_t fdval;
   Double_t fvalA;
@@ -314,7 +333,12 @@ Int_t FitPS::Cut(Long64_t entry)
   }
   return 1;
 }
-Int_t FitPS::fgCase = 0;
+Int_t FitPS::fgCase =  0;
+Int_t FitPS::fgIO   = -9;
+Int_t FitPS::fgF    = -9;
+Int_t FitPS::fgPT   = -9;
+Int_t FitPS::fgSM   = -9;
+
 #ifdef __CHECK__
 #include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
 #endif
@@ -322,10 +346,11 @@ Double_t mdf4(Double_t xx[4]) {
 #ifndef __CHECK__
   Double_t val = fit->Eval(xx);
 #else
-  Int_t k = FitPS::fgCase%4;
+  FitPS::fgCase = FitPS::fgSM + kSM*(FitPS::fgPT + kPT*(FitPS::fgF + kF*FitPS::fgIO));
+  Int_t k = FitPS::fgCase%12;
   Double_t val = 0;
-  if (FitPS::fgCase < 4) val = StiTpcInnerHitErrorMDF4::instance()->Eval(k,xx);
-  else                   val = StiTpcOuterHitErrorMDF4::instance()->Eval(k,xx);
+  if (FitPS::fgIO == 0) val = StiTpcInnerHitErrorMDF4::instance()->Eval(k,xx);
+  else                  val = StiTpcOuterHitErrorMDF4::instance()->Eval(k,xx);
 #endif
   if (FitPS::fgCase%2 == 0) {
     if (val < 0) val = 0;
@@ -365,30 +390,30 @@ void FitPS::Loop2()
     Int_t nx;
     Double_t xmin;
     Double_t xmax;
+    const Char_t *vTitle;
   };
   Plot_t Plots[kVar] = {
-    {"Z",        105, -210, 210},
-    {"tanP",      40,   -2,   2},
-    {"tanL",     140,   -7,   7},
-    {"AdcL",      20,    2,  12}
+    {"Z",        105, -210, 210, "; Z (cm)"},
+    {"tanP",      40,   -2,   2, "; tan #phi"},
+    {"tanL",     140,   -7,   7, "; tan #lambda"},
+    {"AdcL",      20,    2,  12, "; ln(ADC)"}
   };
-  Int_t io = 1;
   TString Var("mu");
-  if (( fgCase   %2) == 0) Var = "sigma";
-  if (((fgCase/4)%2) == 0) io = 0;
-  if (((fgCase/2)%2) == 0) Var += "Pad";
-  else                  Var += "Time";
-  const Char_t *IO[kTPC] = {"I","O"};
-  Var += IO[io];
+  TString VarT("; #mu");
+  if (fgSM == 0) {Var = "sigma"; VarT = "; #sigma";}
+  if (fgPT == 0)  Var += "Pad";
+  else            Var += "Time";
+  const Char_t *IO[kIO] = {"I","O"};
+  Var += IO[fgIO];
   for (Int_t j = 0; j < kVar; j++) {
-    TString Name(Form("%s%s",Var.Data(),Plots[j].vName));
-    TString Title(Form("%s vs %s",Var.Data(), Plots[j].vName));
-    prof[fgCase][j]  = new TProfile(Name, Title, Plots[j].nx, Plots[j].xmin,Plots[j].xmax,"s");
-    profC[fgCase][j]  = new TProfile(Name + "C", Title + " predicted", Plots[j].nx, Plots[j].xmin,Plots[j].xmax,"");
-    profC[fgCase][j]->SetMarkerColor(2); profC[fgCase][j]->SetLineColor(2); 
-    profD[fgCase][j]  = new TProfile(Name + "D", Title + " differenced", Plots[j].nx, Plots[j].xmin,Plots[j].xmax,"s");
-    profD[fgCase][j]->SetMarkerColor(4); profD[fgCase][j]->SetLineColor(4); 
-    h2[fgCase][j] = new TH2F(Name + "2D",Title + "difference",Plots[j].nx, Plots[j].xmin,Plots[j].xmax,100,-0.25,0.25);
+    TString Name = Var + Plots[j].vName; //(Form("%s%s",Var.Data(),Plots[j].vName));
+    TString Title = Var + Plots[j].vTitle + " ; " + VarT ; // (Form("%s ; %s",Var.Data(), Plots[j].vName, VarT));
+    prof[fgIO][fgF][fgPT][fgSM][j]  = new TProfile(Name, Var + Plots[j].vTitle + VarT, Plots[j].nx, Plots[j].xmin,Plots[j].xmax,"s");
+    profC[fgIO][fgF][fgPT][fgSM][j]  = new TProfile(Name + "C", Var + " predicted" + Plots[j].vTitle + VarT , Plots[j].nx, Plots[j].xmin,Plots[j].xmax,"");
+    profC[fgIO][fgF][fgPT][fgSM][j]->SetMarkerColor(2); profC[fgIO][fgF][fgPT][fgSM][j]->SetLineColor(2); 
+    profD[fgIO][fgF][fgPT][fgSM][j]  = new TProfile(Name + "D", Var + " differenced" + Plots[j].vTitle + VarT, Plots[j].nx, Plots[j].xmin,Plots[j].xmax,"s");
+    profD[fgIO][fgF][fgPT][fgSM][j]->SetMarkerColor(4); profD[fgIO][fgF][fgPT][fgSM][j]->SetLineColor(4); 
+    h2[fgIO][fgF][fgPT][fgSM][j] = new TH2F(Name + "2D",Var + "difference" + Plots[j].vTitle + VarT,Plots[j].nx, Plots[j].xmin,Plots[j].xmax,100,-0.25,0.25);
   };
   Long64_t nentries = fChain->GetEntriesFast();
   Long64_t nbytes = 0, nb = 0;
@@ -399,10 +424,10 @@ void FitPS::Loop2()
     if (Cut(jentry) < 1) continue;
     Double_t pred = mdf4(fxx);
     for (Int_t j = 0; j < kVar; j++) {
-      prof[fgCase][j]->Fill(fx(j),fvalA);
-      profC[fgCase][j]->Fill(fx(j),pred);
-      profD[fgCase][j]->Fill(fx(j),fvalA-pred);
-      h2[fgCase][j]->Fill(fx(j),fvalA-pred);
+      prof[fgIO][fgF][fgPT][fgSM][j]->Fill(fx(j),fvalA);
+      profC[fgIO][fgF][fgPT][fgSM][j]->Fill(fx(j),pred);
+      profD[fgIO][fgF][fgPT][fgSM][j]->Fill(fx(j),fvalA-pred);
+      h2[fgIO][fgF][fgPT][fgSM][j]->Fill(fx(j),fvalA-pred);
     }
   }
 }
@@ -530,24 +555,36 @@ void mdf4HitError(TChain *tChain = 0) {
   TString fName(gSystem->BaseName(tChain->GetFile()->GetName()));
   Int_t kase = 0;
   Int_t Nkase = 2;
-  Int_t nrows = 4;
+  Int_t nrows = 4*3; // for 3 field options
   const Char_t *Sets[4] = {"dPadI","dTimeI","dPadO","dTimeO"}; 
   Int_t ki = -1;
   for (Int_t k = 0; k < 4; k++) {
     if (! fName.BeginsWith(Sets[k]) ) continue;
     ki = k;
     kase = 2*ki;
+    t.fgIO = k/2;
+    t.fgPT = k%2;
     break;
   }
   if (ki < 0) return;
-  TFile *fOut = new TFile(Form("%smdf4HitError.root",Sets[ki]),"recreate");
-  TDirectory *cdir = fOut->mkdir(Sets[ki]);
+  const Char_t *FieldOpt[3] = {"RF", "RHF", "ZF"};
+  Int_t lf = 0;
+  for (Int_t l = 0; l < 3; l++) {
+    if (!  fName.Contains(FieldOpt[l])) continue;
+    lf = l;
+    t.fgF = l;
+    break;
+  }
+  TString subSet(Form("%s_%s",Sets[ki],FieldOpt[t.fgF]));
+  TString Out = subSet + "_mdf4HitError.root";
+  TFile *fOut = new TFile(Out,"recreate");;
+  TDirectory *cdir = fOut->mkdir(subSet);
   if (! cdir) return;
 #ifndef __CHECK__
   TString tableName;
   if (ki < 2) tableName = "TpcInnerHitErrorMDF4";
   else        tableName = "TpcOuterHitErrorMDF4";
-  TString cOut =  Form("%s%s.C", tableName.Data(), Sets[ki]);
+  TString cOut =  Form("%s%s_%s.C", tableName.Data(), Sets[ki], FieldOpt[lf]);
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
   out << "TDataSet *CreateTable() {" << endl;
@@ -555,17 +592,17 @@ void mdf4HitError(TChain *tChain = 0) {
   out << "  MDFCorrection4_st row;" << endl;
   out << "  St_MDFCorrection4 *tableSet = new St_MDFCorrection4(\"" << tableName.Data() << "\"," << nrows << ");" << endl;
 #endif
-  TCanvas *c1 = new TCanvas(Form("c%s",Sets[ki]),Sets[ki], 1200, 1600);
+  TString cTitle(Form("c%s%s",Sets[ki],FieldOpt[lf]));
+  TCanvas *c1 = new TCanvas(cTitle,cTitle, 1200, 1600);
   c1->Divide(Nkase,4);
   Int_t ix = 0;
-  for (t.fgCase = kase; t.fgCase < kase + Nkase; t.fgCase++) {
+  for (t.fgSM = 0; t.fgSM < kSM; t.fgSM++) {
     TString VarName("Sigma");
-    if (t.fgCase != kase) VarName = "Mu";
+    if (t.fgSM) VarName = "Mu";
     cdir->mkdir(VarName)->cd();
-    Int_t k = t.fgCase;
 #ifndef __CHECK__
     mdf4Fit(t);
-    Int_t idx = k%4;
+    Int_t idx = t.fgSM + kSM*(t.fgPT + kPT*t.fgF) + 1
     out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
     out << "  row.nrows =  " << nrows << "; //" << Sets[ki] << "\t" << fName.Data() << endl;
     out << "  row.idx   = " << Form("%2i", idx + 1) << ";//\t" << VarName.Data() <<  endl;
@@ -577,11 +614,11 @@ void mdf4HitError(TChain *tChain = 0) {
     t.Loop2();
     for (Int_t j = 0; j < kVar; j++) {
       c1->cd(Nkase*j+ix);
-      if (prof[k][j]) {
-	prof[k][j]->SetMinimum(-0.1);
-	prof[k][j]->Draw();
-	profC[k][j]->Draw("samel");
-	profD[k][j]->Draw("same");
+      if (prof[t.fgIO][t.fgF][t.fgPT][t.fgSM][j]) {
+	prof[t.fgIO][t.fgF][t.fgPT][t.fgSM][j]->SetMinimum(-0.1);
+	prof[t.fgIO][t.fgF][t.fgPT][t.fgSM][j]->Draw();
+	profC[t.fgIO][t.fgF][t.fgPT][t.fgSM][j]->Draw("samel");
+	profD[t.fgIO][t.fgF][t.fgPT][t.fgSM][j]->Draw("same");
       }
       c1->Update();
     }
@@ -594,7 +631,3 @@ void mdf4HitError(TChain *tChain = 0) {
   out.close();
   fOut->Write();
 }
-
-
-
-
