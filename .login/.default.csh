@@ -23,6 +23,7 @@ switch ($hn)
 	endif
     breaksw
     case "Yuri*":
+    case "LPO*":
     case "Mac*":
     case "yuri.star.bnl.gov":
     case "autiry.star.bnl.gov":
