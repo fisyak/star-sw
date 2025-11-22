@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job  name="Hijing" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<job  maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 <stdout URL="file:./sched$JOBID.log" />
 <stderr URL="file:./sched$JOBID.err" />
 <command> 
@@ -26,15 +26,22 @@
 #  setenv StarEndMakerShell
 # set sdt = ",sdt20200111.052520";
 #  {"AuAu_2023",	                             20230520,  23250, "y2023z", "AuAu_2023"}, // 1st run = 24139094			     
-  set sdt = ",sdt20230626.085710"
+#  set sdt = ",sdt20230626.085710"
 #  echo $Name | grep -i Ideal
 #  if ($?) set sdt = ",sdt20160301";
+  set sdt = ",sdt20230520.023250" # RF
+  echo $Name | grep RHF
+  if (! $?) set sdt = ",sdt20230601.170448" #AuAu_2023_RHF"
+  echo $Name | grep ZF
+  if (! $?) set sdt = ",FieldOff,sdt20230601.002854" #AuAu_2023_ZF"
   set KFVertex = "";
-  echo $Name | grep -i KFV
-  if (! $?) set KFVertex = ",KFVertex";
+#  echo $Name | grep -i KFV
+#  if (! $?) set KFVertex = ",KFVertex";
   if (! -r ${generF} ) then
 #    root.exe -q -b -x 'bfc.C(100,"In,P2020a,readAll,sdt20200111.052520,StiCA,StiKFVertex,-hitfilt,-geantOut,-evout,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco","'${file}'")' &gt;&amp; ${logName}
-   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2023,McTpcAna,StiCA,geantOut,evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2023,McTpcAna,StiCA,geantOut,evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2023,McTpcAna,StiCA,StiPulls,-geantOut,-evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2023,y2023z,McTpcAna,StiCA,StiPulls,-geantOut,-evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->
