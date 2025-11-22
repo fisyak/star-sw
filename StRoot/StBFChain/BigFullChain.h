@@ -1260,7 +1260,7 @@ Bfc_st BFC[] = { // standard chains
    ",OGridLeakFull,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
   {"TpcMDF4Error",""  ,"","",""                                         ,"","Activate TpcMDF4Error",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
-  {"EB1"         ,""  ,"","",""                                      ,"","Force ExB configuration 1",kFALSE},
+  {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
   {"EB2"         ,""  ,"","",""                                     ,"","Force ExB configuration 2",kFALSE},
   {"OBmap"       ,""  ,"","",""                                          ,"","ExB shape correction",kFALSE},
   {"OBmap2D"     ,""  ,"","",""                                      ,"","ExB 2 D shape correction",kFALSE},
