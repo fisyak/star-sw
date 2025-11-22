@@ -1255,11 +1255,12 @@ Bfc_st BFC[] = { // standard chains
    ",-AlignSectors,-OBmap2D,-OClock,-OTwist"                             ,"","","New Tpc Alignment",kFALSE},
   {"CorrY"       ,"" ,"","ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
    ",-OBmap2D,-OClock,-OTwist"                                           ,"","","New Tpc Alignment",kFALSE},
-  {"Alignment2024","" ,"","NewTpcAlignment"                         ,"","","Turn on Alignment 2024",kFALSE},
+  {"Alignment2024","" ,"","NewTpcAlignment,TpcMDF4Error"            ,"","","Turn on Alignment 2024",kFALSE},
   {"CorrZ","" ,"","Alignment2024,TFGdbOpt,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
    ",OGridLeakFull,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
+  {"TpcMDF4Error",""  ,"","",""                                         ,"","Activate TpcMDF4Error",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
-  {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
+  {"EB1"         ,""  ,"","",""                                      ,"","Force ExB configuration 1",kFALSE},
   {"EB2"         ,""  ,"","",""                                     ,"","Force ExB configuration 2",kFALSE},
   {"OBmap"       ,""  ,"","",""                                          ,"","ExB shape correction",kFALSE},
   {"OBmap2D"     ,""  ,"","",""                                      ,"","ExB 2 D shape correction",kFALSE},
