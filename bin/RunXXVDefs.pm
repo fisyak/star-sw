@@ -1847,6 +1847,14 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1842'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26333004',	 last => '26333004',	 list => '',  beginTime => '20251129.060111'}, # 	2025-11-29	06:01:11	2025-11-29	06:34:22	timestamp = AuAu_2025_RF
 '1843'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26333006',	 last => '26333009',	 list => '',  beginTime => '20251129.063422'}, # 	2025-11-29	06:34:22	2025-11-29	08:54:34
 '1844'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26333016',	 last => '26333019',	 list => '',  beginTime => '20251129.085434'}, # 	2025-11-29	08:54:34	2025-11-29	11:13:55	timestamp = AuAu_2025_HiLumi_RF
-'1845'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26333023',	 last => '26333025',	 list => '',  beginTime => '20251129.111355'}, # 	2025-11-29	11:13:55	2025-11-29	12:21:29
+'1845'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26333023',	 last => '26333025',	 list => '',  beginTime => '20251129.111355'}, # 	2025-11-29	11:13:55	2025-11-29	12:56:36
+'1846'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26333026',	 last => '26333029',	 list => '',  beginTime => '20251129.125636'}, # 	2025-11-29	12:56:36	2025-11-29	15:36:58	timestamp = AuAu_2025_RF
+'1847'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26333034',	 last => '26333035',	 list => '',  beginTime => '20251129.153658'}, # 	2025-11-29	15:36:58	2025-11-29	21:17:24	timestamp = AuAu_2025_HiLumi_RF
+'1848'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26333043',	 last => '26333050',	 list => '',  beginTime => '20251129.211724'}, # 	2025-11-29	21:17:24	2025-11-30	01:15:25
+'1849'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26333053',	 last => '26333059',	 list => '',  beginTime => '20251130.011525'}, # 	2025-11-30	01:15:25	2025-11-30	05:30:51	timestamp = AuAu_2025_RF
+'1850'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26334001',	 last => '26334007',	 list => '',  beginTime => '20251130.053051'}, # 	2025-11-30	05:30:51	2025-11-30	08:56:02	timestamp = AuAu_2025_HiLumi_RF
+'1851'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26334008',	 last => '26334011',	 list => '',  beginTime => '20251130.085602'}, # 	2025-11-30	08:56:02	2025-11-30	11:44:39	timestamp = AuAu_2025_RF
+'1852'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26334019',	 last => '26334019',	 list => '',  beginTime => '20251130.114439'}, # 	2025-11-30	11:44:39	2025-11-30	12:18:55	timestamp = AuAu_2025_HiLumi_RF
+'1853'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26334021',	 last => '26334021',	 list => '',  beginTime => '20251130.121855'}, # 	2025-11-30	12:18:55	2025-11-30	12:18:55
 );
 1;
