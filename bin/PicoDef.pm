@@ -40,6 +40,7 @@
 '2019/3p85GeV_fixedTarget_P24ia'               => 'production_3p85GeV_fixedTarget_2019/ReversedFullField/P24ia',    
 '2019/3p85GeV_fixedTarget_TFG24c'              => '2019/RF/3p85GeV_fixedTarget',    
 '2019/3p85GeV_fixedTarget_P24iy_calib'               => 'production_3p85GeV_fixedTarget_2019/ReversedFullField/P24iy_calib',    
+'2019/3p85GeV_fixedTarget_P24iy'               => 'production_3p85GeV_fixedTarget_2019/ReversedFullField/P24iy',    
 
 
 '2019/4p59GeV_fixedTarget' =>			  'production_4p59GeV_fixedTarget_2019/ReversedFullField/P21id',
@@ -80,8 +81,7 @@
 '2019/31GeV_fixedTarget_2019_P24ia' =>		  'production_31GeV_fixedTarget_2019/ReversedFullField/P24ia',
 '2019/31GeV_fixedTarget_P23id' 		       => 'production_31GeV_fixedTarget_2019/ReversedFullField/P23id',      
 '2019/31GeV_fixedTarget_P24iy_calib' 		       => 'production_31GeV_fixedTarget_2019/ReversedFullField/P24iy_calib',      
-
-
+'2019/31GeV_fixedTarget_P24iy' 		       => 'production_31GeV_fixedTarget_2019/ReversedFullField/P24iy',      
 
 '2019/7p7GeV' =>				  '',
 '2019/9p2GeV' =>				  '',
@@ -154,6 +154,7 @@
 '2021/3p85GeV_fixedTarget_2021a_P23id_calib'    => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
 '2021/3p85GeV_fixedTarget_2021b_P23id_calib'    => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
 '2021/3p85GeV_fixedTarget_2021_P23id_calib'     => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P23id_calib',
+'2021/3p85GeV_fixedTarget_2021_P24iy_calib6'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy_calib6',
 '2021/3p85GeV_fixedTarget_2021_P24iy'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
 '2021/3p85GeV_fixedTarget_2021_P24iy.A'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
 '2021/3p85GeV_fixedTarget_2021_P24iy.B'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
@@ -197,6 +198,7 @@
 '2023/AuAu200' =>                                  'production_AuAu_2023/ReversedHalfField/dev',
 '2023/HRF_AuAu200' =>                              'production_AuAu_HalfField_2023/ReversedHalfField/dev',
 '2023/ZF_AuAu200' =>                               'production_AuAu_ZeroField_2023/FieldOff/dev',
+'2023/AuAu200,P24iy_calib.mtd' =>                  'production_AuAu_2023/ReversedFullField/P24iy_calib',
 
 '2024/pp200_LowLuminosity_P24iy' =>                'pp200_production_LowLuminosity/ReversedFullField/P24iy'
 );

@@ -14,7 +14,7 @@
   ln -s ~/macros/.sl* .
   ln -s ~/macros/.al* .
   set rout = R${input}.root
-  if (! -r ${rout}) hadd ${rout} ${input}/All*.root >& R${input}.log
+  if (! -r ${rout}) hadd ${rout} ${input}/All*.root &gt;&amp; R${input}.log
   root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+('${input}')'  &gt;&amp; ${log}
         </command>
 <!--

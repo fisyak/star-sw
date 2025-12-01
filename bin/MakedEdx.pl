@@ -2773,7 +2773,11 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXIII31"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/26/25 check DEV
 #$hist = "RunXXIII32"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "DEV"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/29/25 move TpcEtaCorrection.r2023.C to MySQL
 #$hist = "RunXXIII33"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/23/2025 check tpcExtraGainCorrection.y2023.C
-$hist = "RunXXIII34"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/19/2025 check MySQL with mtd sample
+#$hist = "RunXXIII34"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/19/2025 check MySQL with mtd sample
+#$hist = "RunXXIII35"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/25/2025 add TcpSecRowC, BadFrac
+#$hist = "RunXXIII36"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/25/2025 add TcpSecRowC, BadFrac, use flagged hits
+$hist = "RunXXIII37"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac,  fix bug with trigger, still use only flag==0 hits
+#$hist = "RunXXIII38"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac, use flagged hits
 #################################### RunXXI OO200GeV P24iy ########################
 #$hist = "RunXXI01"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   check what is in MySQL
 #$hist = "RunXXI02"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   reset TpcSecRowB, TpcZCorrectionC, TpcEtaCorrectionB, TpcLengthCorrectionMDN
@@ -2919,7 +2923,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job name="dEdx" maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">	 <command>
+<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">	 <command>
          cd ${SUBMITTINGDIRECTORY}
 if ($?INPUTFILE0) ' . $apptainer . ' csh -x $INPUTFILE0
          </command>
