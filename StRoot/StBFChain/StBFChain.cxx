@@ -963,7 +963,6 @@ Int_t StBFChain::Instantiate()
 	SETBIT(Mode,StdEdxY2Maker::kCalibration);
 	SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS);
 	SETBIT(Mode,StdEdxY2Maker::kPadSelection); 
-	SETBIT(Mode,StdEdxY2Maker::kPadSelection);
 #if 0
 	SETBIT(Mode,StdEdxY2Maker::kAlignment);
 #endif
