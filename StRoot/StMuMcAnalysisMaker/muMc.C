@@ -5,7 +5,7 @@
 void muMc(Int_t N = 1000000, Bool_t rePlot = kTRUE,
 	  const Char_t *input = "../*.MuDst.root", 
 	  const Char_t *output = "muMc.root", 
-	  const Char_t *ChainOpt = "RMuDst,KFPInter,MuMc,quiet,mysql,nodefault,y2021") {
+	  const Char_t *ChainOpt = "RMuDst,KFPInter,MuMc,quiet,mysql,nodefault,y2023,corrZ") {
 #if !defined(__CINT__)
   std::cout << "This code cannot be compiled" << std::endl;
 #else
@@ -45,7 +45,9 @@ void muMc(Int_t N = 1000000, Bool_t rePlot = kTRUE,
     muMc->SetAttr("TrackPlots",1);
     muMc->SetAttr("VertexPlots",1);
     chain->Init();
-#if 0
+#if 1
+    StMuMcAnalysisMaker::instance()->Draw();
+#else 
     //                                      gp,pp,xx,ii,xy 
     StMuMcAnalysisMaker::instance()->DrawQA( 0, 0, 1, 6, 0); // Tracks_Global_Rec_All_EtapT_dPtiR_zx_1.png;
     StMuMcAnalysisMaker::instance()->DrawQA( 0, 0, 1, 9, 0); // Tracks_Global_Rec_All_EtapT_pDcaXY_zx_1

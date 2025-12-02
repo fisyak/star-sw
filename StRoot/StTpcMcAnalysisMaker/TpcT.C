@@ -4761,7 +4761,7 @@ void MDFerrorParameterization2(const Char_t *treeName = "FitP", Int_t iXZ = 0, I
 #endif
 }
 //________________________________________________________________________________
-void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offset") {
+void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
   /*
     root.exe lBichsel.C
       .L TpcT.C+
@@ -4948,7 +4948,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offset") {
 #ifdef __ONLY_PRIMARY_TRACKS__
     if (fRcTrack_fifPrim[0] != 1) continue;
 #endif
-    for (Int_t l = 0; l < fNoRcHit; l++) {
+    for (Int_t l = 0; l < fNoRcHit; l++) {// 
       Int_t IdTruth = fRcHit_mIdTruth[l];
       Int_t row = padrow(fRcHit_mHardwarePosition[l]);
       Int_t sec = sector(fRcHit_mHardwarePosition[l]);
@@ -4992,12 +4992,12 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offset") {
       if (psi < - TMath::Pi()/2) psi += TMath::Pi();
       Double_t ZMC  = fMcHit_mPosition_mX3[k];
       Double_t tanP = TMath::Tan(psi);
-      Double_t AdcL = TMath::Log(fRcHit_mAdc[k]);
-      Double_t dPad = fMcHit_mMcl_x[k]                                      - fRcHit_mMcl_x[k]/64.;
+      Double_t AdcL = TMath::Log(fRcHit_mAdc[l]);
+      Double_t dPad = fMcHit_mMcl_x[k]                                      - fRcHit_mMcl_x[l]/64.;
       Double_t dT   = fMcHit_mMcl_t[k]+(0.165+1e6*fMcHit_mTof[k])*Frequency - fRcHit_mMcl_t[l]/64.;
-      Double_t dTC  = fMcHit_mMcl_t[k]+(0.165+1e6*fMcHit_mTof[k])*Frequency - fRcHit_tb[k];
-      Double_t dY = fMcHit_mPosition_mX3[k] - fRcHit_mPosition_mX3[k];
-      Double_t dZ = fMcHit_mPosition_mX3[k] - fRcHit_mPosition_mX3[k];
+      Double_t dTC  = fMcHit_mMcl_t[k]+(0.165+1e6*fMcHit_mTof[k])*Frequency - fRcHit_tb[l];
+      Double_t dY = fMcHit_mPosition_mX3[k] - fRcHit_mPosition_mX3[l];
+      Double_t dZ = fMcHit_mPosition_mX3[k] - fRcHit_mPosition_mX3[l];
       T[io]->Fill(fMcHit_mPosition_mX3[k],dT);
       TC[io]->Fill(fMcHit_mPosition_mX3[k],dTC);
       Z[io]->Fill(fMcHit_mPosition_mX3[k],dZ);
