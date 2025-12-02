@@ -302,16 +302,20 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"Cosmic_2023_ZF",  			     20230508, 195057, "y2023z", "Cosmic_2023_ZF"}, 
   {"Cosmic_2023_RF",  			     20230509, 181952, "y2023z", "Cosmic_2023_RF"}, 
   {"AuAu_2023",	                             20230520,  23250, "y2023z", "AuAu_2023"},   // 1st run = 24139094			     
+  {"AuAu_2023_RHF",	                     20230601, 170448, "y2023z", "AuAu_2023_RHF"},// 1st run  24152023	     
+  {"AuAu_2023_ZF",	                     20230601,   2854, "y2023z", "AuAu_2023_ZF"},// 1st run = 24152039
+  {"AuAu_2023_RHF_2",	                     20230602, 151450, "y2023z", "AuAu_2023_RHF_2"},// 1st run  24153022
+  {"AuAu_2023_0",	                     20230603,   2332, "y2023z", "AuAu_2023_0"}, // 1st run = 24153066
   {"AuAu_2023_1",	                     20230616, 185721, "y2023z", "AuAu_2023_1"}, // 1st run = 24167041		     
   {"AuAu_2023_2",	                     20230626,  85710, "y2023z", "AuAu_2023_2"}, // 1st run = 24177017
 
-  {"y2024",       20231210,     0, "y2024a",    "y2019 first cut geometry, AgML,xgeometry"},    
-  {"y2024a",      20231210,     0, "y2024a",    "y2019 first cut geometry, AgML,xgeometry"},    
-  {"y2024b",      20231210,     1, "y2024b",   "y2019a production geometry, AgML,xgeometry"},    
-  {"y2024z",      20231210,     2, "y2024z",   "y2019z production geometry,      xgeometry"},    
-  {"r2024",       20231220,     0, "y2024z",    "y2019 first cut geometry, AgML,xgeometry"},    
-  {"r2024a",      20231220,     1, "y2024z",   "y2019a production geometry, AgML,xgeometry"},    
-  {"r2024b",      20231220,     1, "y2024z",   "y2019a production geometry, AgML,xgeometry"},    
+  {"y2024",       20231210,     0, "y2024a",    "y2024a first cut geometry, AgML,xgeometry"},    
+  {"y2024a",      20231210,     0, "y2024a",    "y2024a first cut geometry, AgML,xgeometry"},    
+  {"y2024b",      20231210,     1, "y2024b",   "y2019b production geometry, AgML,xgeometry"},    
+  {"y2024z",      20231210,     2, "y2024z",   "y2024z production geometry,      xgeometry"},    
+  {"r2024",       20231220,     0, "y2024z",   "y2024z first cut geometry, AgML,xgeometry"},    
+  {"r2024a",      20231220,     1, "y2024z",   "y2024z production geometry, AgML,xgeometry"},    
+  {"r2024b",      20231220,     1, "y2024z",   "y2024z production geometry, AgML,xgeometry"},    
   {"Cosmic_2024_ZF",  			     20240403,  20814, "y2024z", "Cosmic_2024_ZF"}, 
   {"Cosmic_2024_FF",  			     20240407, 125531, "y2024z", "Cosmic_2024_FF"}, 
   {"Cosmic_2024_RF",  			     20240416, 161358, "y2024z", "Cosmic_2024_RF"}, 
