@@ -1924,7 +1924,7 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
 		   l1Dsm, swap32(trg->L1_DSM_ofl.length));
 
 	   
-	    printf("tinfo: %llx L1Results[0..4]: 0x%x 0x%x 0x%x 0x%x\n", rdr->daqbits64, trgSum->L1Result[0], trgSum->L1Result[1], trgSum->L1Result[2], trgSum->L1Result[3]);
+	    printf("tinfo: %016llx L1Results[0..4]: 0x%08x 0x%08x %d %d %d\n", rdr->daqbits64, swap32(trgSum->L1Result[0]), swap32(trgSum->L1Result[1]), swap32(trgSum->L1Result[2]), swap32(trgSum->L1Result[3]), swap32(trgSum->L1Result[4]));
 
 
 	    // 3/7/25
