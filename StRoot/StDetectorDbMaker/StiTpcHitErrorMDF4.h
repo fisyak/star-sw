@@ -5,6 +5,8 @@
 #include "St_MDFCorrection4C.h"
 #include "StDetectorDbMaker/St_tpcDriftVelocityC.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
+#include "StDetectorDbMaker/St_starMagOnlC.h"
+#include "TMath.h"
 class StiTpcHitErrorMDF4 : public St_MDFCorrection4C {
  public:
   virtual void  calculateError(Double_t _z,  Double_t _eta, Double_t _tanl, 
@@ -15,11 +17,18 @@ class StiTpcHitErrorMDF4 : public St_MDFCorrection4C {
 			       Double_t fudgeFactor = 1,  Double_t AdcL = 5.5, Double_t *dZ = 0, Double_t *dX = 0) const {
     calculateError(pars->z(),  pars->eta(), pars->tanl(),  ecross, edip, fudgeFactor, AdcL, dZ, dX);
   }
-  Int_t IO() const {return fio;}
+  Int_t IO()    const {return fio;}
+  Int_t Field() const {return field;}
  protected:
- StiTpcHitErrorMDF4(St_MDFCorrection4 *table=0, Int_t io = -1) : St_MDFCorrection4C(table), fio(io) {}
+ StiTpcHitErrorMDF4(St_MDFCorrection4 *table=0, Int_t io = -1) : St_MDFCorrection4C(table), fio(io), field(0) {
+    if (nrows() == 12) {
+      Int_t scale = TMath::Nint(TMath::Abs(10*St_starMagOnlC::instance()->ScaleFactor())/5);
+      field = 2 - scale;
+    }
+  }
   virtual ~StiTpcHitErrorMDF4() {}
   Int_t fio; // => 0 iTPC, 1 => Tpx, -1 -> Undefined
+  Int_t field; // => 0 FF, RF; 1 => FHF, RHF; 2 => ZF
   Bool_t fifFXT;
  private:
   void convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const;
