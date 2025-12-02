@@ -1922,6 +1922,7 @@ Bfc_st BFC[] = { // standard chains
   {"dEdxCalib"    ,"","","dEdxY2,TTreeFile",""          ,"","switch on dEdx calibration histograms",kFALSE},
   {"ForcedX"     ,"","","dEdxY2","",                      "Force recalculation of dX using Helices",kFALSE},
   {"SkipdNdx", "", "", "dEdxY2", "", "",              "Option for StdEdxY2Maker to calculate dN/dx",kFALSE},
+  {"ForceUseDeConvClus", "", "", "dEdxY2", "", "",           "Force usage of Deconvoluted Clusters",kFALSE},
   // Options in need to be done after the tracker
   // second wave of BTOF options needed after Sti
   {"btofMatch" ,"","","db,BTofUtil","StBTofMatchMaker","StBTofMatchMaker","TPC-BTOF track matching",kFALSE},

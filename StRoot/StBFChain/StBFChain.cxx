@@ -958,19 +958,20 @@ Int_t StBFChain::Instantiate()
       mk->PrintAttr();
     }
     if (maker == "StdEdxY2Maker") {
+      Int_t Mode = 0;
       if (GetOption("SkipdNdx")) mk->SetAttr("SkipdNdx", kTRUE);
       if (GetOption("dEdxCalib")) {
-	Int_t Mode = 0;
 	SETBIT(Mode,StdEdxY2Maker::kCalibration);
 	SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS);
 	SETBIT(Mode,StdEdxY2Maker::kPadSelection); 
 #if 0
 	SETBIT(Mode,StdEdxY2Maker::kAlignment);
 #endif
-	LOG_INFO << " set dEdxY2 Mode " << Mode << " =======================================" << endm;
-	mk->SetMode(Mode);
       } 
       if (GetOption("ForcedX")) mk->SetAttr("ForcedX", kTRUE);
+      if (GetOption("ForceUseDeConvClus"))  SETBIT(Mode,StdEdxY2Maker::kForceUseDeConvClus);
+      LOG_INFO << " set dEdxY2 Mode " << Mode << " =======================================" << endm;
+      mk->SetMode(Mode);
     }
 #if 0
     if (maker == "StSvtDbMaker" || maker == "StSsdDbMaker"){

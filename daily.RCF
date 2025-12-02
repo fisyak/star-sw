@@ -6538,3 +6538,7 @@ CMake Warning at cmake/modules/RootMacros.cmake:926 (add_library):
 Call Stack (most recent call first):
   cmake/modules/RootMacros.cmake:1356 (ROOT_LINKER_LIBRARY)
   graf3d/gl/CMakeLists.txt:28 (ROOT_STANDARD_LIBRARY_PACKAGE)
+================================================================================
+12/01/2025 
+  freeze FixedFullField 4.98449 kG for full field
+StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98111
