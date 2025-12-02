@@ -75,6 +75,7 @@ void dEdx(Int_t First, Int_t Last,
   if (STAR_VERSION.BeginsWith("TFG") && ! STAR_VERSION.Contains("Export") || STAR_VERSION.Contains("DEV2")) {
     tfgV = kTRUE;
     //Chain += ",quiet,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
+    Chain += ",ForceUseDeConvClus";
     Chain += ",quiet"; //,TpcHitMover,OSpaceZ2,OGridLeakFull,ForcedX";
     if        (Year.Contains("2019")) { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
     } else if (Year.Contains("202"))  { Chain += ",CorrZ"; // ,analysis to add OPr40 for y2020

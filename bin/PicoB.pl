@@ -45,13 +45,14 @@ foreach my $run ( sort keys %$data ) {
     my @listB = @{$data1->{$path}};
     my $NFiles = $#listB;
     if ($NFiles < 0) {next;}
-    if (! -d $run) {`mkdir $run`;}
+#    if (! -d $run) {`mkdir $run`;}
     if ($NFiles < 20) {
-      my $ana = "R" . $run . "_" . $part; 
-      #  string:/star/data22/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy_calib6/2021/160/22160052:22160052/st_physics_22160052_raw_1500002.root:y2021:picoDst:st_physics_22160052_raw_1500002.picoDst.root
-      print "string:$run:$ana:$year:$DST:@listB\n";
-      $Njobs++;
+      my $ana = "R" . $run . "_" . $part . ".root"; 
       $part++;
+      if (-r $ana) {next}
+      #  string:/star/data22/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy_calib6/2021/160/22160052:22160052/st_physics_22160052_raw_1500002.root:y2021:picoDst:st_physics_22160052_raw_1500002.picoDst.root
+      print "string:$path:$ana:$year:$DST:@listB\n";
+      $Njobs++;
     } else {
       my @listC = ();
       my $i = 0;
@@ -59,19 +60,21 @@ foreach my $run ( sort keys %$data ) {
 	push @listC, $file;
 	$i++;
 	if ($i == 20) {
-	  my $ana = "R" . $run . "_" . $part; 
-	  print "string:$run:$ana:$year:$DST:@listC\n";
-	  $Njobs++;
+	  my $ana = "R" . $run . "_" . $part . ".root"; 
 	  $part++;
+	  if (-r $ana) {next}
+	  print "string:$path:$ana:$year:$DST:@listC\n";
+	  $Njobs++;
 	  @listC = ();
 	  $i = 0;
 	}
       }
       if ($#listC >= 0) {
-	  my $ana = "R" . $run . "_" . $part; 
-	  print "string:$run:$ana:$year:$DST:@listC\n";
-	  $Njobs++;
+	  my $ana = "R" . $run . "_" . $part . ".root"; 
 	  $part++;
+	  if (-r $ana) {next}
+	  print "string:$path:$ana:$year:$DST:@listC\n";
+	  $Njobs++;
 	  @listC = ();
 	  $i = 0;
       }
