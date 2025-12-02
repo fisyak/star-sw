@@ -22,10 +22,10 @@ void bfc (const Int_t Last,
 	  const Char_t *TreeFile);
 //R__EXTERN StBFChain *chain;
 #else
-#define BIT(n)       (1 << (n))
-#define SETBIT(n,i)  ((n) |= (1 << i))
-#define CLRBIT(n,i)  ((n) &= ~(1 << i))
-#define TESTBIT(n,i) ((Bool_t)(((n) & (1 << i)) != 0))
+#define BIT(n)       (1ULL << (n))
+#define SETBIT(n,i)  ((n) |= BIT(i))
+#define CLRBIT(n,i)  ((n) &= ~BIT(i))
+#define TESTBIT(n,i) ((Bool_t)(((n) & BIT(i)) != 0))
 #endif
 #if 0
 class StBFChain;
@@ -62,11 +62,6 @@ void dEdx(Int_t First, Int_t Last,
   if (gClassTable->GetID("TTable") < 0) {
     gSystem->Load("libTable");
   }
-#if 0
-  if (gClassTable->GetID("StTerminateNotified") < 0) {
-    gSystem->Load("libStarRoot");
-  }
-#endif
   gROOT->LoadMacro("bfc.C");
   TString Chain("in,dEdxY2,magF,StEvent,mysql,NoDefault,analysis");//,SkipdNdx
   if        (Year.Contains("2019")) {// Chain += ",CorrZ"; // ,analysis to add OPr40 for y2019
@@ -100,41 +95,35 @@ void dEdx(Int_t First, Int_t Last,
   //      RootFile.Contains("hijing",TString::IgnoreCase)) Chain += ",Simu";
   chain = bfc(-1,Chain.Data(),MainFile,0,RootFile.Data());
   StdEdxY2Maker *dEdxY2 = (StdEdxY2Maker *) chain->Maker("dEdxY2"); 
-  if (dEdxY2) {
-    //    dEdxY2->SetDebug(3);
-    Int_t tMin = 20000101;
-    Int_t tMax = 20220101;
-    for (Int_t y = 2000; y < 2026; y++) {
-      TString Y;
-      Y += y;
-      //      cout << "Year = " << Year.Data() << "\tyear " << Y.Data() << endl;
-      if (Year.Contains(Y)) {
-	tMin = 10000*(y-1) + 1101;
-	tMax = 10000* y    + 1031;
-	cout << "Year for year " << Y.Data() << "\ttMin = " << tMin << "\ttMax = " << tMax << endl;
-	dEdxY2->RemAttr("tMin"); dEdxY2->SetAttr("tMin",tMin);
-	dEdxY2->RemAttr("tMax"); dEdxY2->SetAttr("tMax",tMax);
-	dEdxY2->PrintAttr();
-	break;
-      }
-    }
-  }
+  if (! dEdxY2) return 1;
   StMaker *tofCalib = chain->Maker("tofCalib");
   if (tofCalib) chain->AddAfter("tofCalib",dEdxY2);
-  Int_t Mode = 0;
-  // Additional cailbration modes to default in TFG : kCalibration, kGASHISTOGRAMS, kPadSelection, kAlignment
+  //    dEdxY2->SetDebug(3);
+  Int_t tMin = 20000101;
+  Int_t tMax = 20220101;
+  for (Int_t y = 2000; y < 2026; y++) {
+    TString Y;
+    Y += y;
+    //      cout << "Year = " << Year.Data() << "\tyear " << Y.Data() << endl;
+    if (Year.Contains(Y)) {
+      tMin = 10000*(y-1) + 1101;
+      tMax = 10000* y    + 1031;
+      cout << "Year for year " << Y.Data() << "\ttMin = " << tMin << "\ttMax = " << tMax << endl;
+      dEdxY2->RemAttr("tMin"); dEdxY2->SetAttr("tMin",tMin);
+      dEdxY2->RemAttr("tMax"); dEdxY2->SetAttr("tMax",tMax);
+      dEdxY2->PrintAttr();
+      break;
+    }
+  }
+  Int_t Mode = dEdxY2->GetMode(); // cout << "dEdx default Mode  " << Mode << " =======================================" << endl;
+  // Additional cailbration modes to default in TFG StBFChain : kCalibration, kGASHISTOGRAMS, kPadSelection, kAlignment
   if (! tfgV) {
     if (mode%10 == 2) SETBIT(Mode,StdEdxY2Maker::kCalibration);
-    SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS);
-    SETBIT(Mode,StdEdxY2Maker::kPadSelection); 
-    SETBIT(Mode,StdEdxY2Maker::kPadSelection);
-    SETBIT(Mode,StdEdxY2Maker::kAlignment);
+    SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS); cout << "kGASHISTOGRAMS " << Mode << " =======================================" << endl;
+    SETBIT(Mode,StdEdxY2Maker::kPadSelection);  cout << "kPadSelection " << Mode << " =======================================" << endl;
+    SETBIT(Mode,StdEdxY2Maker::kAlignment);     cout << "kAlignment " << Mode << " =======================================" << endl;
   }
-  //  if (mode%10 == 2) 
-  //    SETBIT(Mode,StdEdxY2Maker::kProbabilityPlot);
-  //  SETBIT(Mode,StdEdxY2Maker::kZBGX);
-    if ((mode/100)%10) 
-      SETBIT(Mode,StdEdxY2Maker::kDoNotCorrectdEdx);
+  if ((mode/100)%10)  SETBIT(Mode,StdEdxY2Maker::kDoNotCorrectdEdx);
   if ((mode/1000)%10) SETBIT(Mode,StdEdxY2Maker::kMakeTree);
   //  SETBIT(Mode,StdEdxY2Maker::kMip);
   //  SETBIT(Mode,StdEdxY2Maker::kAdcHistos);
@@ -142,6 +131,7 @@ void dEdx(Int_t First, Int_t Last,
   //  SETBIT(Mode,StdEdxY2Maker::kV0CrossCheck);
   //  SETBIT(Mode,StdEdxY2Maker::kSpaceChargeStudy);
   //  SETBIT(Mode,StdEdxY2Maker::kCORRELATION);
+  //  SETBIT(Mode,StdEdxY2Maker::kForceUseDeConvClus); cout << "kForceUseDeConvClus " << Mode << " =======================================" << endl; // !!!!!!!!!!!!!!
   if (Mode) {
     cout << " set dEdxY2 Mode " << Mode << " =======================================" << endl;
     dEdxY2->SetMode(Mode); 
@@ -151,14 +141,6 @@ void dEdx(Int_t First, Int_t Last,
   St_db_Maker *db = (St_db_Maker *) chain->Maker("db");
   if (db) {
     db->SetDebug(1);
-#if 0 /* disable MySQl for tables under calibration */
-    //    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC", "tpcTimeDependence", 0, 0}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
-    const Char_t *TFGTables[5] = {"TpcSecRowB", "TpcZCorrectionC","TpcLengthCorrectionMDN", "TpcEtaCorrectionB", "tpcTimeDependence"}; //"TpcPadCorrectionMDC", "TpcLengthCorrectionMDN", 0};
-    for (Int_t i = 0; TFGTables[i]; i++) {
-      cout << "SetFlavor(\"TFG\",\"" << TFGTables[i] << "\"); // disable MySQL" << endl; 
-      db->SetFlavor("TFG",TFGTables[i]);
-    }
-#endif
   }
   StIOMaker *inMk = (StIOMaker *) chain->GetMaker("inputStream");
   if (inMk) {

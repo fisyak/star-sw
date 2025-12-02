@@ -28,6 +28,7 @@ switch ($hn)
     case "yuri.star.bnl.gov":
     case "autiry.star.bnl.gov":
     case "*user.vpn.bnl.local":
+    case "*.dhcp.bnl.gov":
 	if (-r /sw/bin/init.csh) source /sw/bin/init.csh
 	setenv AFS_RHIC  ~/STAR  #/afs/rhic.bnl.gov
 	setenv STAR_ROOT ~/STAR

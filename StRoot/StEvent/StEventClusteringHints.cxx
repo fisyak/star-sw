@@ -435,7 +435,9 @@ void StEventClusteringHints::Streamer(TBuffer &R__b)
       R__b >>  mDstMap;     
       R__b >>  mMiniDstMap;     
       R__b >>  mBranchIds;
-      R__b.CheckByteCount(R__s, R__c, StEventClusteringHints::IsA());  
+      //      R__b.CheckByteCount(R__s, R__c, StEventClusteringHints::IsA());  
+      const char* classname = 0;
+      R__b.CheckByteCount(R__s, R__c, classname);
       
    } else { /*writing*/   
 #if 0

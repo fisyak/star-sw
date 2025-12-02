@@ -15,6 +15,7 @@
 #  set split = (${INPUTFILE0}:as|/| |)
 foreach  evtsFile(`cat $FILELIST`)
 #  set evtsFile = $INPUTFILE0;
+#  string:/star/data22/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy_calib6/2021/160/22160052:22160052/st_physics_22160052_raw_1500002.root:y2021:picoDst:st_physics_22160052_raw_1500002.picoDst.root
   echo "${evtsFile}"
   set inputDIR     = `echo ${evtsFile} | awk -F\: '{print $1}'`
   set outputb      = `echo ${evtsFile} | awk -F\: '{print $2}'`

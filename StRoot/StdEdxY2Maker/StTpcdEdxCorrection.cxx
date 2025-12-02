@@ -114,9 +114,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kTpcRowQ               ] = dEdxCorrection_t("TpcRowQ"             ,"Gas gain correction for row versus accumulated charge,"             ,St_TpcRowQC::instance());
   m_Corrections[kTpcAccumulatedQ       ] = dEdxCorrection_t("TpcAccumulatedQ"     ,"Gas gain correction for HV channel versus accumulated charge,"      ,St_TpcAccumulatedQC::instance());
   m_Corrections[kTpcSecRowB            ] = dEdxCorrection_t("TpcSecRowB"          ,"Gas gain correction for sector/row"					,St_TpcSecRowBC::instance());		     
-  /*
-  m_Corrections[kTpcSecRowC            ] = dEdxCorrection_t("TpcSecRowC"          ,"Additional Gas gain correction for sector/row"			,St_TpcSecRowCC::instance());		     
-  */
+  m_Corrections[kTpcSecRowC            ] = dEdxCorrection_t("TpcSecRowC"          ,"Additional sector/row Gas gain correction for desired trigger"      ,St_TpcSecRowCC::instance());		     
   m_Corrections[ktpcPressure           ] = dEdxCorrection_t("tpcPressureB"        ,"Gain on Gas Density due to Pressure"			        ,St_tpcPressureBC::instance());	     
   m_Corrections[ktpcTime               ] = dEdxCorrection_t("tpcTime"       	  ,"Unregognized time dependce"						,St_tpcTimeDependenceC::instance()); 
   m_Corrections[kDrift                 ] = dEdxCorrection_t("TpcDriftDistOxygen"  ,"Correction for Electron Attachment due to O2"			,St_TpcDriftDistOxygenC::instance());	     
@@ -282,6 +280,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
       SafeDelete(m_Corrections[x].Chair);
     }
   }      
+  setDesiredTrigger(kFALSE);
 }
 //________________________________________________________________________________
 StTpcdEdxCorrection::~StTpcdEdxCorrection() {
@@ -405,6 +404,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
   VarXs[kdXdY]                 = CdEdx.dXdY;
   VarXs[kEtaCorrection]        = CdEdx.etaG*CdEdx.etaG;
   VarXs[kEtaCorrectionB]       = CdEdx.etaG;
+  VarXs[kBadFrac]              = CdEdx.BadFrac;
   Int_t NLoops = 0;
   Int_t m = 0;
   for (Int_t k = kUncorrected; k <= kTpcLast; k++) {
@@ -419,9 +419,10 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
     if (! TESTBIT(m_Mask, k)) goto ENDL;
     if (! m_Corrections[k].Chair) goto ENDL;
     chairC = dynamic_cast<const St_tpcCorrectionC *>(m_Corrections[k].Chair);
-    if (k == kTpcSecRowB || k == kTpcSecRowC ) {
+    if (k == kTpcSecRowB || k == kTpcSecRowC) {
       const St_TpcSecRowCor *table = (const St_TpcSecRowCor *) m_Corrections[k].Chair->Table();
       if (! table) goto ENDL;
+      if  (k == kTpcSecRowC && ! IsDesiredTrigger()) goto ENDL;
       const TpcSecRowCor_st *gain = table->GetTable() + sector - 1;
       gc =  gain->GainScale[row-1];
       //      gcRMS = gain->GainRms[row-1];1
