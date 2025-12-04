@@ -115,6 +115,6 @@
 <li> TFG25h fix B and E Tof Sim                                          2025-09-08 17:47:04 -0400  (HEAD -> TFG, tag: TFG25h)
 <li> TFG25i 2023 TpcRS ntune for RF, RHF, ZF                             2025-10-13 17:44:36 -0400  (HEAD -> TFG, tag: TFG25i)
 <li> TFG25j 2023 TpcRS ntune for RF, RHF, ZF freeze                      2025-10-22 10:57:24 -0400  (HEAD -> TFG, tag: TFG25j)
-<li> TFG25k 2023 TpcRS tune for RF, RHF, ZF freeze                       2025-12-02 18:07:51 -0500  (HEAD -> TFG, tag: TFG25k)
+<li> TFG25k 2023 TpcRS tune for RF, RHF, ZF freeze, back to 6.37.01      2025-12-04 18:07:51 -0500  (HEAD -> TFG, tag: TFG25k_1)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
