@@ -76,14 +76,16 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   timeP = timePitch();
   padP  = padPitch();
   convert(_z, _eta, _tanl, AdcL);
-  Double_t dPadSigmaSQ  = Eval(  0, fxx);
-  Double_t dTimeSigmaSQ = Eval(  2, fxx);
+  Double_t dPadSigmaSQ  = Eval(4*Field() +   0, fxx);
+  Double_t dTimeSigmaSQ = Eval(4*Field() +   2, fxx);
   ecross = scale*padP *padP *dPadSigmaSQ ;
   edip   = scale*timeP*timeP*dTimeSigmaSQ;
-  Double_t pulldYSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 0, _z, _eta, _tanl, AdcL);
-  Double_t pulldZSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 2, _z, _eta, _tanl, AdcL);
-  ecross *= pulldYSQ;
-  edip  *= pulldZSQ;
+  if (StiTpcPullMDF4::instance()->nrows() == 8) {
+    Double_t pulldYSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 0, _z, _eta, _tanl, AdcL);
+    Double_t pulldZSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 2, _z, _eta, _tanl, AdcL);
+    ecross *= pulldYSQ;
+    edip   *= pulldZSQ;
+  }
   Int_t fail = 0;
   if (ecross< min2Err) {ecross = min2Err; fail++;}
   if (ecross> max2Err) {ecross = max2Err; fail++;}
@@ -92,14 +94,14 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   if (dZ) {
     if (fail) *dZ = 0;
     else {
-      Double_t dTime        = Eval( 3, fxx);
+      Double_t dTime        = Eval(4*Field() +  3, fxx);
       *dZ = - timeP*dTime * TMath::Sign(1., _z);
     }
   }
   if (dX) {
     if (fail) *dX = 0;
     else {
-      Double_t dPad         = Eval( 1, fxx);
+      Double_t dPad         = Eval(4*Field() +  1, fxx);
       *dX = - padP*dPad;
     }
   }

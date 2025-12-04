@@ -929,7 +929,6 @@ Int_t St_MDFCorrection3C::IsActiveChair() const {
   return npar;
 }
 //________________________________________________________________________________
-//________________________________________________________________________________
 ClassImp(St_MDFCorrection4C);
 St_MDFCorrection4C *St_MDFCorrection4C::fgMDFCorrection4C = 0;
 //____________________________________________________________________

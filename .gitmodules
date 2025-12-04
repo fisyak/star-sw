@@ -1,0 +1,3 @@
+[submodule "garfieldpp"]
+	path = garfieldpp
+	url = https://gitlab.cern.ch/garfield/garfieldpp.git

@@ -137,6 +137,7 @@ TString InitVars() {
 
   return Tuple;
 }
+#if 0
 //________________________________________________________________________________
 void Merge(Int_t run) {
   TString targetFile(Form("R%i.root",run));
@@ -201,15 +202,18 @@ void Merge(Int_t run) {
     }
   }
 }
+#endif
 //________________________________________________________________________________
 void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
   TString targetFile(Form("R%i.root",Run));
   Char_t *tfileName = gSystem->Which(".",targetFile,kReadPermission);
+#if 0
   if (! tfileName) {
     Merge(Run);
     tfileName = gSystem->Which(".",targetFile,kReadPermission);
     if (tfileName) return;
   }
+#endif
   TFile *myDir = new TFile(tfileName);
   if (! myDir) return;
   TString OutFile;

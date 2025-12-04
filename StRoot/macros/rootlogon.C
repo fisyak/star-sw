@@ -210,6 +210,8 @@
     SysInfo_t info;
     if (gSystem->GetSysInfo(&info) >= 0) {
       printf("with %i %s CpuSpeed %i MHz",info.fCpus,info.fModel.Data(),info.fCpuSpeed);
+      if (gSystem->Getenv("STAR_HOST_SYS_OPT"))
+	printf(" on %s", gSystem->Getenv("STAR_HOST_SYS_OPT"));
     }
     printf("\n");
     // note that the above bacward support the old mode for include whenever

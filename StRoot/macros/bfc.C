@@ -84,10 +84,11 @@ void Load(const Char_t *options="");
 //TString defChain("MC.2021,3p85GeV_fixedTarget_2021,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
-TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,tags,UseCAVxFinder,evout,geantout"); //,AgML");
+//TString defChain("MC,OO_200GeV_2021,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,tags,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,OO_200GeV_2021,P2023a,gstar,AgML,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,dbSnapshot");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
+TString defChain("MC,AuAu_2023_RHF,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
 		const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
 StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,

@@ -6084,3 +6084,461 @@ spack env activate AL96x
 ================================================================================
 10/07/2025
 StChain:INFO  - TDirectoryFile::Append : Replacing existing TH1: y-#phi-dM1GeV (Potential memory leak).
+================================================================================
+11/12/2025 SL24x Jason Webb Simulation + Reconstruction with ROOT6
+https://docs.google.com/document/d/1esTAdjX1i5QthIZFmRk-yKgp8SAM_8hCu-YX0DuNabQ/edit?pli=1&tab=t.0#heading=h.nsw892ctihlv
+Software 
+[geant4star development branch]
+https://github.com/klendathu2k/star-sw-1/tree/import-geant4maker-rebased-2
+HOWTO run simple simulations, embedding jobs, QA, …
+$ starver SL24x
+$ source $STAR/StRoot/StGeant4Maker/macros/setup
+
+# Run particle gun, … pythia8.C, hijing.C, …
+$ root -q -b $STAR/StRoot/macros/geant4star/particleGun.C
+
+# Run standard starsim-based embedding under root6
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxR6.C’( … )’
+
+# Run geant4star-based embedding
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxG4.C’( … )’
+
+# Produce embedding QA
+…
+# Central tracking base QA
+…
+--------------------------------------------------------------------------------
+
+[rcas6016] ~/work/geant4star $ git clone https://github.com/klendathu2k/star-sw-1
+[rcas6016] ~/work/geant4star $ cd star-sw-1/
+[rcas6016] ~/work/geant4star/star-sw-1 $ git co import-geant4maker-rebased-2
+[rcas6016] ~/work/geant4star/star-sw-1 $ source $STAR/unsetupTFG.csh 
+
+
+
+ /star/nfs4/AFS/star/group/
+rcas6016] ~/work/geant4star/star-sw-1/> setenv GROUP_DIR /star/nfs4/AFS/star/group
+
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x
+[rcas6016] ~/work/geant4star/star-sw-1/> source  StRoot/StGeant4Maker/macros/setup
+[rcas6016] ~/work/geant4star/star-sw-1/> more StRoot/StGeant4Maker/macros/setup
+# Setup group environment
+setenv GROUP_DIR /star/u/jeromel/work/STAR/group
+
+# Setup 64 bit w/ spack overlay
+setup 64b
+..
+[rcas6016] ~/work/geant4star/star-sw-1/> setup 64b
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x00000000011a5090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7fe573621d4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7fe573623fbc]
+/usr/bin/modulecmd[0x412528]
+/usr/bin/modulecmd[0x409f7a]
+....
+
+setenv STAR .
+starver SL24x config/v0.3.0-rhel7-root6.24.06
+...
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x config/v0.3.0-rhel7-root6.24.06
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x0000000001867090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7ff4d1f1fd4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7ff4d1f21fbc]
+...
+# STILL NEED TO STRIP ROOT5 From the environment
+setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | awk -v RS=: -v ORS=: '/ROOT\/5/ {next} {print}'`
+
+module load clhep-2.4.5.1-debug
+module load vmc-1-0-p3-root-6.24.06-debug
+module load geant3-3-9-p1-root-6.24.06-debug
+module load geant4-10.5.1-debug
+module load geant4-data-10.5.1-debug
+module load geant4-vmc-5-0-p5-root-6.24.06-debug
+
+# Ensure that we use StRoot/Table 
+module unload star-table-0.1.1-root-6.24.06
+module load star-table-0.1.1-root-6.24.06
+
+setenv SKIP_DIRS "StEbyePool StEbyePool StHighptPool StAngleCorrMaker StSpinMaker StEbyeScaTagsMaker StEbye2ptMaker StDaqClfMaker StFtpcV0Maker StStrangePool GeoTestMaker StSpinPool StFgtPool PWGTools StShadowMaker"
+
+time cons
+
+
+starsub02] /star/simu/simu/g4star/simulations/rcf25000/y2023a/AuAu200/G4/hijing1p383/minbias/v001/log $ more rcf25000_y2023a_AuAu200_G4_hijing1p383_minbias_v001_job9.reco.log
+
+   ------------------------------------------------------------------
+  | Welcome to ROOT 6.24/06                        https://root.cern |
+  | (c) 1995-2021, The ROOT Team; conception: R. Brun, F. Rademakers |
+  | Built for linuxx8664gcc on Sep 02 2021, 14:20:23                 |
+  | From tags/v6-24-06@v6-24-06                                      |
+  | With g++ (GCC) 4.8.5 20150623 (Red Hat 4.8.5-11)                 |
+  | Try '.help', '.demo', '.license', '.credits', '.quit'/'.q'       |
+   ------------------------------------------------------------------
+
+This is root6
+ *** Start at Date : Sat Nov  1 06:08:13 2025
+
+Processing StRoot/macros/geant4star/run_reconstruction.C(10,"rcf25000:y2023a:AuAu200:G4:hijing1.383:minbias:v001",9)...
+....
+
+
+================================================================================
+11/13/2025 start with default .tcshrc
+HOWTO run simple simulations, embedding jobs, QA, …
+$ starver SL24x
+$ source $STAR/StRoot/StGeant4Maker/macros/setup
+
+# Run particle gun, … pythia8.C, hijing.C, …
+$ root -q -b $STAR/StRoot/macros/geant4star/particleGun.C
+
+# Run standard starsim-based embedding under root6
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxR6.C’( … )’
+
+# Run geant4star-based embedding
+$ root4star -q -b $STAR/StRoot/macros/embedding/bfcMixer_TpxG4.C’( … )’
+
+# Produce embedding QA
+…
+# Central tracking base QA
+…
+--------------------------------------------------------------------------------
+
+[rcas6016] ~/work/geant4star $ git clone https://github.com/klendathu2k/star-sw-1
+[rcas6016] ~/work/geant4star $ cd star-sw-1/
+[rcas6016] ~/work/geant4star/star-sw-1 $ git co import-geant4maker-rebased-2
+[rcas6016] ~/work/geant4star/star-sw-1 $ source $STAR/unsetupTFG.csh 
+
+
+
+ /star/nfs4/AFS/star/group/
+rcas6016] ~/work/geant4star/star-sw-1/> setenv GROUP_DIR /star/nfs4/AFS/star/group
+
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x
+[rcas6016] ~/work/geant4star/star-sw-1/> source  StRoot/StGeant4Maker/macros/setup
+[rcas6016] ~/work/geant4star/star-sw-1/> more StRoot/StGeant4Maker/macros/setup
+# Setup group environment
+setenv GROUP_DIR /star/u/jeromel/work/STAR/group
+
+# Setup 64 bit w/ spack overlay
+setup 64b
+..
+[rcas6016] ~/work/geant4star/star-sw-1/> setup 64b
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x00000000011a5090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7fe573621d4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7fe573623fbc]
+/usr/bin/modulecmd[0x412528]
+/usr/bin/modulecmd[0x409f7a]
+....
+
+setenv STAR .
+starver SL24x config/v0.3.0-rhel7-root6.24.06
+...
+[rcas6016] ~/work/geant4star/star-sw-1/> starver SL24x config/v0.3.0-rhel7-root6.24.06
+*** Error in `/usr/bin/modulecmd': malloc(): memory corruption: 0x0000000001867090 ***
+======= Backtrace: =========
+/lib64/libc.so.6(+0x7dd4d)[0x7ff4d1f1fd4d]
+/lib64/libc.so.6(__libc_malloc+0x4c)[0x7ff4d1f21fbc]
+...
+# STILL NEED TO STRIP ROOT5 From the environment
+setenv LD_LIBRARY_PATH `echo $LD_LIBRARY_PATH | awk -v RS=: -v ORS=: '/ROOT\/5/ {next} {print}'`
+
+module load clhep-2.4.5.1-debug
+module load vmc-1-0-p3-root-6.24.06-debug
+module load geant3-3-9-p1-root-6.24.06-debug
+module load geant4-10.5.1-debug
+module load geant4-data-10.5.1-debug
+module load geant4-vmc-5-0-p5-root-6.24.06-debug
+
+# Ensure that we use StRoot/Table 
+module unload star-table-0.1.1-root-6.24.06
+module load star-table-0.1.1-root-6.24.06
+
+setenv SKIP_DIRS "StEbyePool StEbyePool StHighptPool StAngleCorrMaker StSpinMaker StEbyeScaTagsMaker StEbye2ptMaker StDaqClfMaker StFtpcV0Maker StStrangePool GeoTestMaker StSpinPool StFgtPool PWGTools StShadowMaker"
+
+time cons
+
+
+rcas6016] ~/work/geant4star/star-sw-1/> gdb root.exe 
+GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-94.el7
+...
+(gdb) run StRoot/macros/geant4star/particleGun.C
+...
+Program received signal SIGABRT, Aborted.
+0x00007ffff676e1d7 in raise () from /lib64/libc.so.6
+(gdb) bt 40
+#0  0x00007ffff676e1d7 in raise () from /lib64/libc.so.6
+#1  0x00007ffff676f8c8 in abort () from /lib64/libc.so.6
+#2  0x00007ffff6767146 in __assert_fail_base () from /lib64/libc.so.6
+#3  0x00007ffff67671f2 in __assert_fail () from /lib64/libc.so.6
+#4  0x00007fffe140c353 in setBase (addr=140736867298360) at .sl73_x8664_gcc485/obj/StarVMC/minicern/locf.c:75
+#5  0x00007fffe140c38d in locf_ (iadr=0x7fffdafb6c38 <gcbank_+88> "") at .sl73_x8664_gcc485/obj/StarVMC/minicern/locf.c:92
+#6  0x00007fffe1421bdd in mzstor_ () from /afs/rhic.bnl.gov/star/packages/release23/SL24x/.sl73_x8664_gcc485/obj/StarVMC/minicern/StarMiniCern.so
+#7  0x00007fffda9c05c0 in g3zebra (nzeb=5000000) at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/gbase/gzebra.F:39
+#8  0x00007fffda9b731a in g3cinit () at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/gcinit.F:7
+#9  0x00007fffdacc53ec in TGeant3::TGeant3 (this=0x53a7660, title=0x42121c1 "GEANT3", nwgeant=0)
+    at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/TGeant3/TGeant3.cxx:1164
+#10 0x00007fffdacd9586 in TGeant3TGeo::TGeant3TGeo (this=0x53a7660, title=0x42121c1 "GEANT3", nwgeant=0)
+    at /cvmfs/star.sdcc.bnl.gov/star-spack/spack/var/spack/stage/smirnovd/spack-stage-geant3-3-9-p1-lh6uhvjsdzytrij3lwxgbynx5am25kie/spack-src/TGeant3/TGeant3TGeo.cxx:558
+#11 0x00007fffcc0afc02 in StGeant4Maker::Init (this=0x1afebc0) at .sl73_x8664_gcc485/obj/StRoot/StGeant4Maker/StGeant4Maker.cxx:579
+--------------------------------------------------------------------------------
+================================================================================
+11/14/2025 rootcling vs rootcint with ROOT 6
+cmd (normal)= 
+rootcling -rootbuild -v2 -f .al96_x8664_gcc11_R6/obj/pams/sim/g2t/St_g2t_Cint.cxx 
+-s /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11_R6/lib/libSt_g2t.so 
+-excludePath /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/ginclude 
+-excludePath /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/externals 
+-excludePath /gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/builtins 
+-compilerI/usr/local/include   
+-I/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -Ipams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -I.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I. -IStRoot -I.al96_x8664_gcc11_R6/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include 
+-D__ROOT__ -D__TFG__VERSION__   
+St_g2t_bbc_Module.h St_g2t_ctb_Module.h St_g2t_eem_Module.h St_g2t_emc_Module.h St_g2t_epd_Module.h St_g2t_esm_Module.h St_g2t_eto_Module.h St_g2t_etr_Module.h St_g2t_fgt_Module.h St_g2t_fpd_Module.h St_g2t_fsc_Module.h St_g2t_fst_Module.h St_g2t_ftp_Module.h St_g2t_fts_Module.h St_g2t_gem_Module.h St_g2t_get_event_Module.h St_g2t_get_kine_Module.h St_g2t_get_pythia_Module.h St_g2t_hca_Module.h St_g2t_hpd_Module.h St_g2t_igt_Module.h St_g2t_ist_Module.h St_g2t_mtd_Module.h St_g2t_mwc_Module.h St_g2t_particle_Module.h St_g2t_pix_Module.h St_g2t_pmd_Module.h St_g2t_pre_Module.h St_g2t_rch_Module.h St_g2t_smd_Module.h St_g2t_ssd_Module.h St_g2t_stg_Module.h St_g2t_svt_Module.h St_g2t_tfr_Module.h St_g2t_tof_Module.h St_g2t_tpc_Module.h St_g2t_vpd_Module.h St_g2t_wca_Module.h St_g2t_zdc_Module.h 
+ LinkDef.h
+
+
+cmd (normal)= 
+rootcint -f /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG.noCling/.al96_x8664_gcc11_R6/obj/pams/sim/g2t/St_g2t_Cint.cxx 
+-c 
+-DROOT_CINT  -I.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -Ipams/sim/g2t -I.al96_x8664_gcc11_R6/include/g2t -I.al96_x8664_gcc11_R6/obj/pams/sim/g2t -I. -IStRoot -I.al96_x8664_gcc11_R6/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/6.37.01b/.al96_x8664_gcc11/rootdeb/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include 
+-D__ROOT__ -D__TFG__VERSION__   
+.al96_x8664_gcc11_R6/include/g2t/St_g2t_bbc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ctb_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_eem_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_emc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_epd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_esm_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_eto_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_etr_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fgt_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fpd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fsc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fst_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ftp_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_fts_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_gem_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_get_event_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_get_kine_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_get_pythia_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_hca_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_hpd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_igt_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ist_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_mtd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_mwc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_particle_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_pix_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_pmd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_pre_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_rch_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_smd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_ssd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_stg_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_svt_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_tfr_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_tof_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_tpc_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_vpd_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_wca_Module.h .al96_x8664_gcc11_R6/include/g2t/St_g2t_zdc_Module.h  
+LinkDef.h
+
+rootcling -rootbuild -v2 -f G__Geom.cxx 
+-cxxmodule     ? --cxxmodule ?
+-s /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/lib/libGeom.so 
+-m Thread.pcm -m RIO.pcm -m MathCore.pcm -m Hist.pcm 
+-excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root -excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/ginclude -excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/externals -excludePath /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/builtins 
+-DROOT_SUPPORT_CLAD 
+-compilerI/usr/include/c++/11 -compilerI/usr/include/c++/11/x86_64-redhat-linux -compilerI/usr/include/c++/11/backward -compilerI/usr/lib/gcc/x86_64-redhat-linux/11/include -compilerI/usr/local/include -compilerI/usr/include -compilerI/usr/lib/gcc/x86_64-redhat-linux/11/include -compilerI/usr/local/include -compilerI/usr/include -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/include 
+-I/usr/include -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/geom/geom/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/unix/../clib/res -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/unix/inc -I/usr/include -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/zstd/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/lz4/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/lzma/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/zip/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/thread/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/textinput/src -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/textinput/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/rint/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/meta/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/gui/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/foundation/res -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/foundation/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/cont/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/clingutils/res -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/clingutils/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/clib/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/base/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/.al96_x8664_gcc11/root/ginclude -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/io/io/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/math/mathcore/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/imt/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/core/multiproc/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/net/net/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/hist/hist/inc -I/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/math/matrix/inc 
+TGDMLMatrix.h TGeoArb8.h TGeoAtt.h TGeoBBox.h TGeoBoolNode.h TGeoBranchArray.h TGeoBuilder.h TGeoCache.h TGeoCompositeShape.h TGeoCone.h TGeoElement.h TGeoEltu.h TGeoExtension.h TGeoGlobalMagField.h TGeoHalfSpace.h TGeoHelix.h TGeoHype.h TGeoManager.h TGeoMaterial.h TGeoMatrix.h TGeoMedium.h TGeoNavigator.h TGeoNode.h TGeoOpticalSurface.h TGeoPara.h TGeoParaboloid.h TGeoParallelWorld.h TGeoPatternFinder.h TGeoPcon.h TGeoPgon.h TGeoPhysicalConstants.h TGeoPhysicalNode.h TGeoPolygon.h TGeoRCPtr.h TGeoRegion.h TGeoScaledShape.h TGeoShape.h TGeoShapeAssembly.h TGeoSphere.h TGeoStateInfo.h TGeoSystemOfUnits.h TGeoTorus.h TGeoTrd1.h TGeoTrd2.h TGeoTube.h TGeoUniformMagField.h TGeoVolume.h TGeoVoxelFinder.h TGeoXtru.h TGeoTessellated.h TGeoVector3.h TVirtualGeoConverter.h TVirtualGeoChecker.h TVirtualGeoPainter.h TVirtualGeoTrack.h TVirtualMagField.h 
+/cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/6.37.01b/root/geom/geom/inc/LinkDef.h
+
+================================================================================
+11/15/2025  Schema evalution
+VMC.event.root created with ROOT5 ROOT6 ROOT6.noCling
+read by     ROOT5               +     -       -
+            ROOT6               -     +       +
+            ROOT6.noCling       -     +       +
+
+                                                              root.exe 'bfc.C(1,"in,analysis,nodefault","/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/root5/VMC.event.root")'
+[starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ root.exe 'bfc.C(1,"in,analysis,nodefault","/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG.noCling/VMC.event.root")'
+[starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ root.exe 'bfc.C(1,"in,analysis,nodefault","/gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/VMC.event.root")'
+
+VMC.MuDst.root created with ROOT5 ROOT6 ROOT6.noCling
+read by     ROOT5              ++     -             -
+            ROOT6              --    --            --
+            ROOT6.noCling      --    --            --
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG.noCling $ root.exe lMuDst.C /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG.noCling/VMC.MuDst.root
+================================================================================
+11/17/2025 
+---------------------------------------------------------------------------------------
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20201220.000000 --- 20371231.120000 -
+
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionC/                alternative ADC/Clustering nonlinearity correction  Validity:20190225.230108 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcAdcCorrection6MDF/         alternative ADC/Clustering nonlinearity correction MDF+4D  Validity:20190225.230108 --- 20371231.120000 
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:     TpcCurrentCorrection/            Correction due to sagg of Voltage due to anode current  Validity:20211215.081702 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20230626.085710 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcAccumulatedQ/     Gas gain correction for HV channel versus accumulated charge,  Validity:20211215.081702 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20211215.081702 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionC/                  Variation on drift distance with Gating Grid one  Validity:20230626.085710 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcEtaCorrectionB/                                                 Eta correction RC  Validity:20230626.085710 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20170101.000000 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:      TpcPadCorrectionMDC/          Gain Variation along the anode wire with track curvature  Validity:20211215.081702 --- 20240430.074640
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20211215.081702 --- 20371231.120000 -
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDN/ Variation vs Track length and <log2(dX)> for pred. with fixed dx2  Validity:20230626.085710 --- 20240430.074640
+
+ ---------------------------------------------------------------------------------------
+================================================================================
+
+################################################################################
+11/19/2025 
+[starsub02] ~/work/kfp $ dir -ltrd /star/data*/reco/pp200_production_LowLuminosity/ReversedFullField/P24iy/2024/*/* | tee pp200_LowLuminosity_P24iy.list10
+================================================================================
+11/20/25
+Empty Runs
+-rw-r--r--+ 1 fisyak rhstar 4.4M Nov 20 11:57 25132005/All_25132005_1.root
+-rw-r--r--+ 1 fisyak rhstar 4.4M Nov 20 11:57 25132007/All_25132007_1.root
+-rw-r--r--+ 1 fisyak rhstar 4.4M Nov 20 11:45 25123001/All_25123001_1.root
+
+starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ dir -d 2* | wc -l
+287
+[starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ dir -d D*.root | wc -l
+285
+[starsub02] ~/work/kfp/2024/pp200_LowLuminosity_P24iy/dEdxA $ dir -d R*.root | wc -l
+284
+================================================================================
+11/21/2025
+[starsub02] ~/work/dEdx/RunXXIII34/AuAu_2023 $ root.exe 'bfc.C(1,"in,analysis,nodefault","/star/data22/reco/production_AuAu_2023/ReversedFullField/P24iy_calib/2023/190/24190062/st_mtd_24190062_raw_1800006.event.root")'
+root.exe [1] StAnalysisMaker::instance()->PrintTpcHits(1,1)
+        Tpc s/r   1/  1 id     1 xyz:    17.719 +/- 0.100    53.636 +/- 0.200   160.078 +/- 0.100 q(keV)   2.19 idT     0 qa   0 fl  0 us 1 dX  1.88 pmin/max   2/  5 np  4 tmin/max  91/ 98 nt  8 tm  93.41 pad   3.59 adc   435
+        Tpc s/r   1/  1 id     2 xyz:    17.713 +/- 0.100    53.392 +/- 0.200    20.112 +/- 0.100 q(keV)   1.34 idT     0 qa   0 fl  2 us 1 dX  3.66 pmin/max   3/  5 np  3 tmin/max 328/332 nt  5 tm 330.05 pad   4.30 adc   266
+        Tpc s/r   1/  1 id     3 xyz:    18.835 +/- 0.100    52.751 +/- 0.200    21.804 +/- 0.100 q(keV)   0.90 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max   5/  7 np  3 tmin/max 325/329 nt  5 tm 327.19 pad   6.89 adc   178
+        Tpc s/r   1/  1 id     4 xyz:    18.057 +/- 0.100    53.355 +/- 0.200   103.787 +/- 0.100 q(keV)   4.83 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max   3/  6 np  4 tmin/max 184/203 nt 20 tm 188.58 pad   4.61 adc   959
+        Tpc s/r   1/  1 id     5 xyz:    19.546 +/- 0.100    52.484 +/- 0.200    96.422 +/- 0.100 q(keV)   0.99 idT     0 qa   0 fl  2 us 1 dX  2.42 pmin/max   7/  9 np  3 tmin/max 199/203 nt  5 tm 201.03 pad   8.09 adc   197
+        Tpc s/r   1/  1 id     6 xyz:    20.155 +/- 0.100    52.144 +/- 0.200   102.411 +/- 0.100 q(keV)   0.74 idT     0 qa   0 fl  2 us 1 dX  2.53 pmin/max   8/ 10 np  3 tmin/max 188/192 nt  5 tm 190.91 pad   9.47 adc   147
+        Tpc s/r   1/  1 id     7 xyz:    20.008 +/- 0.100    52.206 +/- 0.200    89.343 +/- 0.100 q(keV)   0.76 idT     0 qa   0 fl  2 us 1 dX  2.36 pmin/max   8/ 10 np  3 tmin/max 211/215 nt  5 tm 213.00 pad   9.20 adc   151
+        Tpc s/r   1/  1 id     8 xyz:    19.094 +/- 0.100    52.641 +/- 0.200    42.875 +/- 0.100 q(keV)   0.33 idT     0 qa   0 fl  0 us 1 dX  2.03 pmin/max   6/  9 np  4 tmin/max 290/293 nt  4 tm 291.56 pad   7.38 adc    66
+        Tpc s/r   1/  1 id     9 xyz:    19.984 +/- 0.100    52.287 +/- 0.200   129.628 +/- 0.100 q(keV)   1.43 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max   7/  9 np  3 tmin/max 142/146 nt  5 tm 144.89 pad   8.94 adc   284
+        Tpc s/r   1/  1 id    10 xyz:    21.199 +/- 0.100    51.590 +/- 0.200   132.382 +/- 0.100 q(keV)   1.10 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max  10/ 12 np  3 tmin/max 138/142 nt  5 tm 140.23 pad  11.73 adc   218
+        Tpc s/r   1/  1 id    11 xyz:    19.766 +/- 0.100    52.298 +/- 0.200    64.427 +/- 0.100 q(keV)   1.81 idT     0 qa   0 fl  2 us 1 dX  2.02 pmin/max   7/  9 np  3 tmin/max 253/257 nt  5 tm 255.12 pad   8.80 adc   360
+        Tpc s/r   1/  1 id    12 xyz:    21.094 +/- 0.100    51.519 +/- 0.200    56.082 +/- 0.100 q(keV)   1.16 idT     0 qa   0 fl  2 us 1 dX  1.89 pmin/max  10/ 12 np  3 tmin/max 267/271 nt  5 tm 269.23 pad  11.92 adc   230
+        Tpc s/r   1/  1 id    13 xyz:    19.800 +/- 0.100    52.427 +/- 0.200   153.693 +/- 0.100 q(keV)  12.01 idT     0 qa   0 fl  0 us 1 dX  4.00 pmin/max   8/  9 np  2 tmin/max 100/109 nt 10 tm 104.20 pad   8.42 adc   291
+        Tpc s/r   1/  1 id    14 xyz:    19.901 +/- 0.100    52.323 +/- 0.200   121.911 +/- 0.100 q(keV)  10.52 idT     0 qa   0 fl  0 us 1 dX  2.97 pmin/max   8/ 10 np  3 tmin/max 154/164 nt 11 tm 157.94 pad   8.78 adc   222
+        Tpc s/r   1/  1 id    15 xyz:    20.005 +/- 0.100    52.108 +/- 0.200    37.885 +/- 0.100 q(keV)  53.21 idT     0 qa   0 fl  0 us 1 dX  1.64 pmin/max   8/ 11 np  4 tmin/max 296/315 nt 20 tm 300.00 pad   9.52 adc  1543
+        Tpc s/r   1/  1 id    16 xyz:    20.110 +/- 0.100    51.996 +/- 0.200     1.722 +/- 0.100 q(keV)   0.63 idT     0 qa   0 fl  0 us 1 dX  2.51 pmin/max   8/ 12 np  5 tmin/max 359/363 nt  5 tm 361.14 pad   9.91 adc   125
+        Tpc s/r   1/  1 id    17 xyz:    21.194 +/- 0.100    51.644 +/- 0.200   170.892 +/- 0.100 q(keV)  11.56 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max   9/ 14 np  6 tmin/max  60/ 90 nt 31 tm  75.12 pad  11.59 adc  2297
+        Tpc s/r   1/  1 id    18 xyz:    20.446 +/- 0.100    51.877 +/- 0.200    48.846 +/- 0.100 q(keV)   4.04 idT     0 qa   0 fl  0 us 1 dX  1.65 pmin/max  10/ 11 np  2 tmin/max 279/284 nt  6 tm 281.47 pad  10.47 adc    86
+        Tpc s/r   1/  1 id    19 xyz:    21.097 +/- 0.100    51.659 +/- 0.200   139.748 +/- 0.100 q(keV)   1.28 idT     0 qa   0 fl  0 us 1 dX  1.58 pmin/max  11/ 12 np  2 tmin/max 122/134 nt 13 tm 127.78 pad  11.47 adc   255
+        Tpc s/r   1/  1 id    20 xyz:    21.231 +/- 0.100    51.479 +/- 0.200    76.506 +/- 0.100 q(keV)   1.71 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  11/ 13 np  3 tmin/max 230/241 nt 12 tm 234.70 pad  12.11 adc   340
+        Tpc s/r   1/  1 id    21 xyz:    22.408 +/- 0.100    50.836 +/- 0.200    94.768 +/- 0.100 q(keV)   0.93 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  14/ 16 np  3 tmin/max 200/209 nt 10 tm 203.83 pad  14.72 adc   185
+        Tpc s/r   1/  1 id    22 xyz:    22.705 +/- 0.100    50.602 +/- 0.200    59.798 +/- 0.100 q(keV)   1.22 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  14/ 17 np  4 tmin/max 260/266 nt  7 tm 262.95 pad  15.62 adc   243
+        Tpc s/r   1/  1 id    23 xyz:    22.128 +/- 0.100    50.913 +/- 0.200    48.966 +/- 0.100 q(keV)   3.98 idT     0 qa   0 fl  0 us 1 dX  1.66 pmin/max  14/ 15 np  2 tmin/max 279/284 nt  6 tm 281.27 pad  14.36 adc    84
+        Tpc s/r   1/  1 id    24 xyz:    22.894 +/- 0.100    50.674 +/- 0.200   179.728 +/- 0.100 q(keV)   1.40 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  15/ 16 np  2 tmin/max  54/ 67 nt 14 tm  60.19 pad  15.50 adc   279
+        Tpc s/r   1/  1 id    25 xyz:    22.603 +/- 0.100    50.615 +/- 0.200    34.568 +/- 0.100 q(keV)   9.32 idT     0 qa   0 fl  0 us 1 dX  1.58 pmin/max  15/ 17 np  3 tmin/max 303/310 nt  8 tm 305.61 pad  15.55 adc   244
+        Tpc s/r   1/  1 id    26 xyz:    23.476 +/- 0.100    50.322 +/- 0.200   166.623 +/- 0.100 q(keV)   1.45 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  16/ 18 np  3 tmin/max  77/ 89 nt 13 tm  82.34 pad  16.88 adc   288
+        Tpc s/r   1/  1 id    27 xyz:    23.188 +/- 0.100    50.243 +/- 0.200    10.235 +/- 0.100 q(keV)   0.69 idT     0 qa   0 fl  2 us 1 dX  1.67 pmin/max  16/ 18 np  3 tmin/max 344/348 nt  5 tm 346.75 pad  17.02 adc   138
+        Tpc s/r   1/  1 id    28 xyz:    24.418 +/- 0.100    49.535 +/- 0.200     2.324 +/- 0.100 q(keV)   2.89 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max  18/ 20 np  3 tmin/max 358/362 nt  5 tm 360.12 pad  19.88 adc   575
+        Tpc s/r   1/  1 id    29 xyz:    23.925 +/- 0.100    49.996 +/- 0.200   115.997 +/- 0.100 q(keV)   1.50 idT     0 qa   0 fl  2 us 1 dX  2.86 pmin/max  17/ 19 np  3 tmin/max 165/169 nt  5 tm 167.94 pad  18.11 adc   297
+        Tpc s/r   1/  1 id    30 xyz:    24.707 +/- 0.100    49.553 +/- 0.200   121.293 +/- 0.100 q(keV)  10.16 idT     0 qa   0 fl  2 us 1 dX  3.42 pmin/max  18/ 20 np  3 tmin/max 156/160 nt  5 tm 158.98 pad  19.89 adc  2019
+        Tpc s/r   1/  1 id    31 xyz:    24.745 +/- 0.100    49.508 +/- 0.200   104.833 +/- 0.100 q(keV)   1.25 idT     0 qa   0 fl  2 us 1 dX  1.78 pmin/max  19/ 21 np  3 tmin/max 184/188 nt  5 tm 186.81 pad  20.06 adc   249
+        Tpc s/r   1/  1 id    32 xyz:    25.930 +/- 0.100    48.840 +/- 0.200   114.269 +/- 0.100 q(keV)   1.60 idT     0 qa   0 fl  2 us 1 dX  2.86 pmin/max  21/ 23 np  3 tmin/max 168/172 nt  5 tm 170.86 pad  22.75 adc   318
+        Tpc s/r   1/  1 id    33 xyz:    26.097 +/- 0.100    48.738 +/- 0.200   110.074 +/- 0.100 q(keV)   2.62 idT     0 qa   0 fl  2 us 1 dX  2.73 pmin/max  22/ 24 np  3 tmin/max 175/179 nt  5 tm 177.95 pad  23.16 adc   521
+        Tpc s/r   1/  1 id    34 xyz:    26.884 +/- 0.100    48.295 +/- 0.200   117.061 +/- 0.100 q(keV)   0.96 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max  23/ 25 np  3 tmin/max 164/168 nt  5 tm 166.14 pad  24.94 adc   190
+        Tpc s/r   1/  1 id    35 xyz:    28.118 +/- 0.100    47.587 +/- 0.200   118.364 +/- 0.100 q(keV)   0.99 idT     0 qa   0 fl  2 us 1 dX  3.09 pmin/max  26/ 28 np  3 tmin/max 161/165 nt  5 tm 163.94 pad  27.78 adc   196
+        Tpc s/r   1/  1 id    36 xyz:    23.965 +/- 0.100    49.904 +/- 0.200    72.709 +/- 0.100 q(keV)   0.50 idT     0 qa   0 fl  2 us 1 dX  1.97 pmin/max  17/ 19 np  3 tmin/max 239/243 nt  5 tm 241.12 pad  18.45 adc   100
+        Tpc s/r   1/  1 id    37 xyz:    23.881 +/- 0.100    49.941 +/- 0.200    66.840 +/- 0.100 q(keV)   2.47 idT     0 qa   0 fl  2 us 1 dX  1.61 pmin/max  17/ 19 np  3 tmin/max 249/253 nt  5 tm 251.05 pad  18.30 adc   490
+        Tpc s/r   1/  1 id    38 xyz:    24.246 +/- 0.100    49.736 +/- 0.200    69.105 +/- 0.100 q(keV)   2.46 idT     0 qa   0 fl  2 us 1 dX  1.91 pmin/max  18/ 20 np  3 tmin/max 245/249 nt  5 tm 247.22 pad  19.12 adc   488
+        Tpc s/r   1/  1 id    39 xyz:    25.030 +/- 0.100    49.311 +/- 0.200    84.040 +/- 0.100 q(keV)   2.73 idT     0 qa   0 fl  2 us 1 dX  1.64 pmin/max  19/ 21 np  3 tmin/max 219/223 nt  5 tm 221.97 pad  20.84 adc   543
+        Tpc s/r   1/  1 id    40 xyz:    25.898 +/- 0.100    48.783 +/- 0.200    65.066 +/- 0.100 q(keV)   0.81 idT     0 qa   0 fl  2 us 1 dX  1.85 pmin/max  21/ 23 np  3 tmin/max 252/256 nt  5 tm 254.05 pad  22.97 adc   161
+        Tpc s/r   1/  1 id    41 xyz:    27.171 +/- 0.100    48.047 +/- 0.200    60.224 +/- 0.100 q(keV)   1.76 idT     0 qa   0 fl  2 us 1 dX  1.80 pmin/max  24/ 26 np  3 tmin/max 260/264 nt  5 tm 262.23 pad  25.94 adc   350
+        Tpc s/r   1/  1 id    42 xyz:    24.116 +/- 0.100    49.852 +/- 0.200    93.826 +/- 0.100 q(keV)   0.62 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  18/ 20 np  3 tmin/max 202/209 nt  8 tm 205.42 pad  18.67 adc   123
+        Tpc s/r   1/  1 id    43 xyz:    24.610 +/- 0.100    49.502 +/- 0.200    54.466 +/- 0.100 q(keV)   4.44 idT     0 qa   0 fl  0 us 1 dX  1.71 pmin/max  19/ 21 np  3 tmin/max 269/275 nt  7 tm 271.97 pad  20.06 adc   101
+        Tpc s/r   1/  1 id    44 xyz:    25.419 +/- 0.100    49.158 +/- 0.200   131.995 +/- 0.100 q(keV)   9.28 idT     0 qa   0 fl  0 us 1 dX  3.22 pmin/max  21/ 22 np  2 tmin/max 137/147 nt 11 tm 140.89 pad  21.48 adc   193
+        Tpc s/r   1/  1 id    45 xyz:    26.656 +/- 0.100    48.317 +/- 0.200    45.659 +/- 0.100 q(keV)   1.49 idT     0 qa   0 fl  2 us 1 dX  1.66 pmin/max  23/ 25 np  3 tmin/max 284/288 nt  5 tm 286.86 pad  24.84 adc   296
+        Tpc s/r   1/  1 id    46 xyz:    29.841 +/- 0.100    46.515 +/- 0.200    55.539 +/- 0.100 q(keV)   2.23 idT     0 qa   0 fl  2 us 1 dX  1.72 pmin/max  31/ 33 np  3 tmin/max 268/272 nt  5 tm 270.16 pad  32.12 adc   443
+        Tpc s/r   1/  1 id    47 xyz:    30.719 +/- 0.100    46.012 +/- 0.200    54.421 +/- 0.100 q(keV)   3.35 idT     0 qa   0 fl  2 us 1 dX  1.71 pmin/max  33/ 35 np  3 tmin/max 270/274 nt  5 tm 272.05 pad  34.16 adc   666
+        Tpc s/r   1/  1 id    48 xyz:    25.834 +/- 0.100    48.736 +/- 0.200    11.760 +/- 0.100 q(keV)   5.15 idT     0 qa   0 fl  0 us 1 dX  1.67 pmin/max  22/ 24 np  3 tmin/max 342/346 nt  5 tm 344.17 pad  23.12 adc   104
+        Tpc s/r   1/  1 id    49 xyz:    26.446 +/- 0.100    48.636 +/- 0.200   189.183 +/- 0.100 q(keV)   1.45 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  23/ 24 np  2 tmin/max  42/ 51 nt 10 tm  44.20 pad  23.69 adc   288
+        Tpc s/r   1/  1 id    50 xyz:    26.366 +/- 0.100    48.450 +/- 0.200    24.375 +/- 0.100 q(keV)   4.40 idT     0 qa   0 fl  0 us 1 dX  1.59 pmin/max  23/ 25 np  3 tmin/max 321/325 nt  5 tm 322.84 pad  24.30 adc    99
+        Tpc s/r   1/  1 id    51 xyz:    27.687 +/- 0.100    47.889 +/- 0.200   163.861 +/- 0.100 q(keV)   3.76 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max  25/ 27 np  3 tmin/max  85/ 89 nt  5 tm  87.02 pad  26.61 adc   746
+        Tpc s/r   1/  1 id    52 xyz:    28.701 +/- 0.100    47.292 +/- 0.200   152.697 +/- 0.100 q(keV)   1.15 idT     0 qa   0 fl  2 us 1 dX  3.51 pmin/max  27/ 29 np  3 tmin/max 103/107 nt  5 tm 105.89 pad  28.98 adc   228
+        Tpc s/r   1/  1 id    53 xyz:    28.543 +/- 0.100    47.376 +/- 0.200   146.699 +/- 0.100 q(keV)   0.95 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max  27/ 29 np  3 tmin/max 114/118 nt  5 tm 116.03 pad  28.64 adc   188
+        Tpc s/r   1/  1 id    54 xyz:    27.212 +/- 0.100    48.062 +/- 0.200    84.946 +/- 0.100 q(keV)  10.06 idT     0 qa   0 fl  0 us 1 dX  2.26 pmin/max  25/ 27 np  3 tmin/max 218/226 nt  9 tm 220.44 pad  25.88 adc   218
+        Tpc s/r   1/  1 id    55 xyz:    27.872 +/- 0.100    47.809 +/- 0.200   186.115 +/- 0.100 q(keV)  36.36 idT     0 qa   0 fl  0 us 1 dX  2.56 pmin/max  26/ 28 np  3 tmin/max  42/ 64 nt 23 tm  49.39 pad  26.98 adc   686
+        Tpc s/r   1/  1 id    56 xyz:    27.593 +/- 0.100    47.756 +/- 0.200    28.045 +/- 0.100 q(keV)   4.02 idT     0 qa   0 fl  0 us 1 dX  1.57 pmin/max  26/ 28 np  3 tmin/max 315/318 nt  4 tm 316.64 pad  27.11 adc    90
+        Tpc s/r   1/  1 id    57 xyz:    28.115 +/- 0.100    47.612 +/- 0.200   137.337 +/- 0.100 q(keV)   1.54 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  27/ 29 np  3 tmin/max 127/146 nt 20 tm 131.86 pad  27.69 adc   306
+        Tpc s/r   1/  1 id    58 xyz:    28.199 +/- 0.100    47.521 +/- 0.200   103.051 +/- 0.100 q(keV)  18.71 idT     0 qa   0 fl  0 us 1 dX  2.59 pmin/max  27/ 29 np  3 tmin/max 186/196 nt 11 tm 189.83 pad  28.05 adc   379
+        Tpc s/r   1/  1 id    59 xyz:    27.752 +/- 0.100    47.640 +/- 0.200     7.352 +/- 0.100 q(keV)   3.55 idT     0 qa   0 fl  0 us 1 dX  1.69 pmin/max  27/ 28 np  2 tmin/max 350/353 nt  4 tm 351.62 pad  27.56 adc    66
+        Tpc s/r   1/  1 id    60 xyz:    28.301 +/- 0.100    47.423 +/- 0.200    74.429 +/- 0.100 q(keV)   2.93 idT     0 qa   0 fl  0 us 1 dX  2.00 pmin/max  28/ 29 np  2 tmin/max 237/240 nt  4 tm 238.22 pad  28.45 adc    53
+        Tpc s/r   1/  1 id    61 xyz:    28.512 +/- 0.100    47.223 +/- 0.200    20.725 +/- 0.100 q(keV)   5.94 idT     0 qa   0 fl  0 us 1 dX  1.61 pmin/max  28/ 31 np  4 tmin/max 327/331 nt  5 tm 329.02 pad  29.27 adc   134
+        Tpc s/r   1/  1 id    62 xyz:    29.273 +/- 0.100    46.818 +/- 0.200    41.141 +/- 0.100 q(keV)   3.87 idT     0 qa   0 fl  0 us 1 dX  1.60 pmin/max  30/ 32 np  3 tmin/max 292/298 nt  7 tm 294.50 pad  30.91 adc    91
+        Tpc s/r   1/  1 id    63 xyz:    29.709 +/- 0.100    46.755 +/- 0.200   190.247 +/- 0.100 q(keV)   1.29 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  31/ 32 np  2 tmin/max  37/ 57 nt 21 tm  42.41 pad  31.22 adc   256
+        Tpc s/r   1/  1 id    64 xyz:    29.747 +/- 0.100    46.593 +/- 0.200    73.173 +/- 0.100 q(keV)   6.66 idT     0 qa   0 fl  0 us 1 dX  1.99 pmin/max  31/ 33 np  3 tmin/max 237/243 nt  7 tm 240.34 pad  31.80 adc   141
+        Tpc s/r   1/  1 id    65 xyz:    30.231 +/- 0.100    46.345 +/- 0.200    95.325 +/- 0.100 q(keV)  13.65 idT     0 qa   0 fl  0 us 1 dX  2.42 pmin/max  32/ 34 np  3 tmin/max 199/209 nt 11 tm 202.89 pad  32.78 adc   292
+        Tpc s/r   1/  1 id    66 xyz:    30.291 +/- 0.100    46.224 +/- 0.200    30.725 +/- 0.100 q(keV)   0.89 idT     0 qa   0 fl  2 us 1 dX  1.56 pmin/max  32/ 34 np  3 tmin/max 310/314 nt  5 tm 312.11 pad  33.31 adc   176
+        Tpc s/r   1/  1 id    67 xyz:    31.535 +/- 0.100    45.527 +/- 0.200    40.125 +/- 0.100 q(keV)   1.26 idT     0 qa   0 fl  2 us 1 dX  1.62 pmin/max  35/ 37 np  3 tmin/max 294/298 nt  5 tm 296.22 pad  36.12 adc   250
+        Tpc s/r   1/  1 id    68 xyz:    30.605 +/- 0.100    46.088 +/- 0.200    62.351 +/- 0.100 q(keV)   6.19 idT     0 qa   0 fl  0 us 1 dX  1.82 pmin/max  33/ 35 np  3 tmin/max 256/262 nt  7 tm 258.64 pad  33.84 adc   138
+        Tpc s/r   1/  1 id    69 xyz:    31.640 +/- 0.100    45.564 +/- 0.200   119.095 +/- 0.100 q(keV)   8.57 idT     0 qa   0 fl  0 us 1 dX  1.82 pmin/max  35/ 37 np  3 tmin/max 160/167 nt  8 tm 162.70 pad  35.91 adc   268
+        Tpc s/r   1/  1 id    70 xyz:    32.346 +/- 0.100    45.133 +/- 0.200    95.723 +/- 0.100 q(keV)   2.00 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  36/ 40 np  5 tmin/max 195/209 nt 15 tm 202.22 pad  37.66 adc   398
+        Tpc s/r   1/  1 id    71 xyz:    31.953 +/- 0.100    45.333 +/- 0.200    74.217 +/- 0.100 q(keV)   8.87 idT     0 qa   0 fl  0 us 1 dX  1.99 pmin/max  36/ 38 np  3 tmin/max 235/243 nt  9 tm 238.58 pad  36.88 adc   193
+        Tpc s/r   1/  1 id    72 xyz:    31.939 +/- 0.100    45.262 +/- 0.200     8.102 +/- 0.100 q(keV)   0.73 idT     0 qa   0 fl  2 us 1 dX  1.68 pmin/max  36/ 38 np  3 tmin/max 348/352 nt  5 tm 350.36 pad  37.20 adc   145
+        Tpc s/r   1/  1 id    73 xyz:    31.901 +/- 0.100    45.280 +/- 0.200     2.779 +/- 0.100 q(keV)   2.48 idT     0 qa   0 fl  2 us 1 dX  1.57 pmin/max  36/ 38 np  3 tmin/max 357/361 nt  5 tm 359.36 pad  37.12 adc   492
+        Tpc s/r   1/  1 id    74 xyz:    32.131 +/- 0.100    45.177 +/- 0.200    31.327 +/- 0.100 q(keV)   2.86 idT     0 qa   0 fl  0 us 1 dX  1.56 pmin/max  37/ 38 np  2 tmin/max 309/313 nt  5 tm 311.09 pad  37.55 adc    55
+        Tpc s/r   1/  1 id    75 xyz:    33.185 +/- 0.100    44.729 +/- 0.200   172.707 +/- 0.100 q(keV)   7.29 idT     0 qa   0 fl  2 us 0 dX  0.00 pmin/max  38/ 40 np  3 tmin/max  70/ 74 nt  5 tm  72.06 pad  39.28 adc  1448
+        Tpc s/r   1/  1 id    76 xyz:    33.912 +/- 0.100    44.300 +/- 0.200   163.299 +/- 0.100 q(keV)   7.94 idT     0 qa   0 fl  2 us 1 dX  2.14 pmin/max  39/ 41 np  3 tmin/max  85/ 89 nt  5 tm  87.97 pad  40.98 adc  1577
+        Tpc s/r   1/  1 id    77 xyz:    33.478 +/- 0.100    44.581 +/- 0.200   190.821 +/- 0.100 q(keV)   2.27 idT     0 qa   0 fl  0 us 0 dX  0.00 pmin/max  39/ 42 np  4 tmin/max  36/ 56 nt 21 tm  41.44 pad  39.92 adc   451
+        Tpc s/r   1/  1 id    78 xyz:    33.088 +/- 0.100    44.629 +/- 0.200    27.778 +/- 0.100 q(keV)   6.56 idT     0 qa   0 fl  0 us 1 dX  1.90 pmin/max  39/ 41 np  3 tmin/max 315/319 nt  5 tm 317.09 pad  39.77 adc   122
+        Tpc s/r   1/  1 id    79 xyz:    34.735 +/- 0.100    43.806 +/- 0.200   141.138 +/- 0.100 q(keV)  12.19 idT     0 qa   0 fl  0 us 1 dX  3.61 pmin/max  42/ 44 np  3 tmin/max 121/131 nt 11 tm 125.44 pad  42.95 adc   278
+        Tpc s/r   1/  1 id    80 xyz:    35.297 +/- 0.100    43.432 +/- 0.200    84.939 +/- 0.100 q(keV) 100.87 idT     0 qa   0 fl  0 us 1 dX  2.52 pmin/max  43/ 46 np  4 tmin/max 215/235 nt 21 tm 220.45 pad  44.52 adc  3105
+        Tpc s/r   1/  1 id    81 xyz:    36.338 +/- 0.100    42.768 +/- 0.200    12.142 +/- 0.100 q(keV)   3.21 idT     0 qa   0 fl  0 us 1 dX  1.70 pmin/max  46/ 48 np  3 tmin/max 342/345 nt  4 tm 343.53 pad  47.30 adc    62
+        Tpc s/r   1/  1 id    82 xyz:    37.709 +/- 0.100    42.080 +/- 0.200   121.916 +/- 0.100 q(keV)   0.86 idT     0 qa   0 fl  0 us 1 dX  2.90 pmin/max  49/ 51 np  3 tmin/max 154/162 nt  9 tm 157.94 pad  49.89 adc   171
+        Tpc s/r   1/  1 id    83 xyz:    37.612 +/- 0.100    42.098 +/- 0.200    74.043 +/- 0.100 q(keV)   1.37 idT     0 qa   0 fl  0 us 1 dX  1.99 pmin/max  49/ 51 np  3 tmin/max 236/242 nt  7 tm 238.88 pad  49.91 adc   273
+TotalNoOfTpcHits = 83
+================================================================================
+11/27/2025
+438           R__b.CheckByteCount(R__s, R__c, StEventClusteringHints::IsA());  
+(gdb) 
+StIOMaker:ERROR - TBufferFile::CheckByteCount : object of class StEventClusteringHints read too few bytes: 1401 instead of 3177
+439           R__b.CheckByteCount(R__s, R__c, Class());  
+(gdb) 
+StIOMaker:ERROR - TBufferFile::CheckByteCount : object of class StEventClusteringHints read too few bytes: 1401 instead of 3177
+
+default
+
+423           R__b.CheckByteCount(R__s, R__c, Class());  
+(gdb) 
+StIOMaker:ERROR - TBufferFile::CheckByteCount : object of class StEventClusteringHints read too few bytes: 1401 instead of 3177
+434     }
+dev
+(gdb) c
+Continuing.
+StIOMaker:ERROR - TBufferFile::CheckByteCount : object of class StEventClusteringHints read too few bytes: 1401 instead of 3177
+root [3] .class StEventClusteringHints
+===========================================================================
+class StEventClusteringHints
+ size=0xb0 FILE:/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so LINE:-1
+ (tagnum=5561,voffset=-1,isabstract=0,parent=-1,gcomp=0:-1,funcs(dn21=~xcpd)=77)
+List of base class--------------------------------------------------------
+0x0        public: StObject //Base class for StEvent
+  0x0        public: TObject //Basic ROOT object
+List of member variable---------------------------------------------------
+Defined in StEventClusteringHints
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1 0xffffffffffffffff private: TObject* fParent //!
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1 0xffffffffffffffff private: map<string,string>* mNameMap //!
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1 0xffffffffffffffff private: map<string,string> mDstMap , size=0 //!
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1 0xffffffffffffffff private: map<string,string> mMiniDstMap , size=0 //!
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1 0xffffffffffffffff private: map<string,int> mBranchIds , size=0 //!
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1 0x0        private: static TClass* fgIsA
+List of member function---------------------------------------------------
+filename       line:size busy function type and name  (in StEventClusteringHints)
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: virtual void ~StEventClusteringHints(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: StEventClusteringHints StEventClusteringHints(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: void setDstMode(void); //switch to DST mode
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: void setMiniDstMode(void); //switch to miniDST mode
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: const char* branchName(const char*) const; //get branch name for given class name
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: int branchId(const char*) const; //return unique ID for given branch
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: void SetParent(TObject* par);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: void setBranch(const char*,const char*,int); //assign classname with a branch name (incl. ID)
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: void print(ostream&=cout); //print current configuration
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 private: StEventClusteringHints StEventClusteringHints(const StEventClusteringHints&);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static TClass* Class(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static const char* Class_Name(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static Version_t Class_Version(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static void Dictionary(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: virtual TClass* IsA(void) const;
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: virtual void ShowMembers(TMemberInspector&);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: virtual void Streamer(TBuffer&);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: void StreamerNVirtual(TBuffer& ClassDef_StreamerNVirtual_b);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static const char* DeclFileName(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static int ImplFileLine(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static const char* ImplFileName(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: static int DeclFileLine(void);
+/afs/rhic.bnl.gov/star/packages/DEV/.sl73_x8664_gcc485/LIB/libStEvent.so  -1:-1   0 public: StEventClusteringHints& operator=(const StEventClusteringHints&);
+================================================================================
+11/28/2025
+CMake Warning at cmake/modules/RootMacros.cmake:926 (add_library):
+  Cannot generate a safe runtime search path for target RGL because files in
+  some directories may conflict with libraries in implicit directories:
+
+    runtime library [libSM.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libsm-1.2.6-om4q2xwennm7fia2a2nzqhhzlhw3wblt/lib
+    runtime library [libICE.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libice-1.1.2-htwbo63s2kn6kossoq2hckjwq6fsn3nw/lib
+    runtime library [libX11.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libx11-1.8.11-gin5ebgahluntbofi65d5i35m6xzbd4h/lib
+    runtime library [libXext.so.6] in /usr/lib64 may be hidden by files in:
+      /cvmfs/star.sdcc.bnl.gov/TFG/spack/opt/spack/linux-cascadelake/libxext-1.3.6-ambh7a42xppfdadyhrpqfpox6lu5p6xw/lib
+
+  Some of these libraries may not be found correctly.
+Call Stack (most recent call first):
+  cmake/modules/RootMacros.cmake:1356 (ROOT_LINKER_LIBRARY)
+  graf3d/gl/CMakeLists.txt:28 (ROOT_STANDARD_LIBRARY_PACKAGE)
+================================================================================
+12/01/2025 
+  freeze FixedFullField 4.98449 kG for full field
+StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98111

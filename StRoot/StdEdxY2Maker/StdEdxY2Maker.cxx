@@ -123,6 +123,8 @@ static TH1F *fTracklengthInTpcTotal = 0;
 static TH1F *fTracklengthInTpc = 0;
 static TH2F *fPadTbkAll = 0;
 static TH2F *fPadTbkBad = 0;
+static TH3F *fBadFrac = 0;
+static TH2F *fBadFracPerEvent = 0;
 #ifdef  __SpaceCharge__
 static TH2F *AdcSC = 0, *AdcOnTrack = 0, *dEOnTrack = 0;
 #endif
@@ -168,6 +170,9 @@ Int_t StdEdxY2Maker::Init(){
     }
     if (TESTBIT(m_Mode, kEmbedding)) {
       LOG_WARN << "StdEdxY2Maker::Init This is embedding run" << endm;
+    }
+    if (TESTBIT(m_Mode, kForceUseDeConvClus)) {
+      LOG_WARN << "StdEdxY2Maker::Init Force Usage of Deconvoluted Clusters" << endm;
     }
   }
   gMessMgr->SetLimit("StdEdxY2Maker:: mismatched Sector",20);
@@ -313,6 +318,69 @@ Int_t StdEdxY2Maker::Make(){
     LOG_INFO << "StdEdxY2Maker: no StEvent " << endm;
     return kStOK;        // if no event, we're done
   }
+  StTpcHitCollection* TpcHitCollection = pEvent->tpcHitCollection();
+  if (! TpcHitCollection) {
+    LOG_INFO << "StdEdxY2Maker: no TpcHitCollection " << endm;
+    return kStOK;        // if no TpcHitCollection, we're done
+  }
+  // Check for possible trigger bias
+  m_TpcdEdxCorrection->setDesiredTrigger(kFALSE);
+  if (GetRunNumber() >= 24139094 && GetRunNumber() < 25000000) {// AuAu_2023 mtd stream dimuon-vpd100 900631, 35, 60, 900601, 900611, 900621
+    const StTriggerIdCollection* triggerCol = pEvent->triggerIdCollection();
+    if (triggerCol) {
+      const StTriggerId* nominal = triggerCol->nominal();
+      if (nominal) {
+	UInt_t maxTriggers = nominal->maxTriggerIds();
+	for (UInt_t i = 0; i < maxTriggers; i++) {
+	  if (nominal->triggerId(i) == 900631 ||
+	      nominal->triggerId(i) == 900601 ||
+	      nominal->triggerId(i) == 900611 ||
+	      nominal->triggerId(i) == 900621 ||
+	      nominal->triggerId(i) ==     35 ||
+	      nominal->triggerId(i) ==     60) {
+	    m_TpcdEdxCorrection->setDesiredTrigger(kTRUE);
+	    break;
+	  }
+	}
+      }
+    }
+  }
+  if (! fBadFracPerEvent) {
+    if ((TESTBIT(m_Mode, kCalibration))) {
+      TFile *f = GetTFile();
+      if (f) {
+	f->cd();
+	fBadFrac = new TH3F("BadFrac","ratio of flagged hits ; sector; row; frac",24,0.5,24.5,72, 0.5, 72.5, 100,0.0, 1.0);
+      }
+    }
+    fBadFracPerEvent = new TH2F("BadFracPerEvent","ratio of flagged hits per event ; sector; row",24,0.5, 24.5, 72, 0.5, 72.5);
+  }
+  fBadFracPerEvent->Reset();
+  for (UInt_t i = 0; i <= TpcHitCollection->numberOfSectors(); i++) {
+    StTpcSectorHitCollection* sectorCollection = TpcHitCollection->sector(i);
+    if (sectorCollection) {
+      Int_t numberOfPadrows = sectorCollection->numberOfPadrows();
+      for (Int_t j = 0; j < numberOfPadrows; j++) {
+	StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(j);
+	if (rowCollection) {
+	  StSPtrVecTpcHit &hits = rowCollection->hits();
+	  Long_t NoHits = hits.size();
+	  if (! NoHits) continue;
+	  Int_t noBadHits = 0;
+	  for (Long64_t k = 0; k < NoHits; k++) {
+	    const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
+	    if (!tpcHit) continue;
+	    if (! tpcHit->flag()) continue; 
+	    noBadHits++;
+	  }
+	  Double_t BadFrac = noBadHits;
+	  BadFrac /= NoHits;
+	  fBadFracPerEvent->Fill(i+1,j+1,BadFrac);
+	  if (fBadFrac)  fBadFrac->Fill(i+1,j+1,BadFrac);
+	}
+      }
+    }
+  }
   if (pEvent->runInfo()) bField = pEvent->runInfo()->magneticField()*kilogauss;
   if (TMath::Abs(bField) < 1.e-5*kilogauss) return kStOK;
   UInt_t NoPV = pEvent->numberOfPrimaryVertices();
@@ -345,11 +413,6 @@ Int_t StdEdxY2Maker::Make(){
   // no of tpc hits
   Int_t TotalNoOfTpcHits = 0;
   Int_t NoOfTpcHitsUsed  = 0;
-  StTpcHitCollection* TpcHitCollection = pEvent->tpcHitCollection();
-  if (! TpcHitCollection) {
-    LOG_INFO << "StdEdxY2Maker: no TpcHitCollection " << endm;
-    return kStOK;        // if no event, we're done
-  }
   TotalNoOfTpcHits = TpcHitCollection->numberOfHits();
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
@@ -445,7 +508,7 @@ Int_t StdEdxY2Maker::Make(){
 	if (! tpcHit->usedInFit()) {
 	  BadHit(0,tpcHit->position());
 	  continue;
-	} if (  tpcHit->flag()) {
+	} if (  tpcHit->flag() && !  TESTBIT(m_Mode,kForceUseDeConvClus)) {
 	  BadHit(1,tpcHit->position());
 	  continue;
 	}
@@ -652,6 +715,7 @@ Int_t StdEdxY2Maker::Make(){
 	CdEdx[NdEdx].dXdY = dXdY;
 #endif
 	CdEdx[NdEdx].AdcI = AdcI;
+	CdEdx[NdEdx].BadFrac = fBadFracPerEvent->GetBinContent(CdEdx[NdEdx].sector, CdEdx[NdEdx].row);
 	dxC = dx;
 #if 1
 	// Scale dX to full pad length
@@ -668,8 +732,12 @@ Int_t StdEdxY2Maker::Make(){
 	}
 #endif
 	CdEdx[NdEdx].dxC    = dxC;
-	CdEdx[NdEdx].F.dE     = tpcHit->charge();
-	CdEdx[NdEdx].F.dx   = dxC;
+	if (! TMath::Finite(tpcHit->charge())) {
+	  CdEdx[NdEdx].F.dE = 1.0;
+	} else  {
+	  CdEdx[NdEdx].F.dE = tpcHit->charge();
+	}
+  	CdEdx[NdEdx].F.dx   = dxC;
 	CdEdx[NdEdx].xyz[0] = localSect[3].position().x();
 	CdEdx[NdEdx].xyz[1] = localSect[3].position().y();
 	CdEdx[NdEdx].xyz[2] = localSect[3].position().z();
@@ -1106,7 +1174,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
     f->cd();
     hMade=2004;
     // book histograms
-    Bool_t fSetDefaultSumw2 = TH1::GetDefaultSumw2();
+    TH1::GetDefaultSumw2();
     TH1::SetDefaultSumw2(kFALSE);
 #ifdef __BEST_VERTEX__
     PVxyz         = new TH3F("PVxyz","xyz for all primary vertices ; x ; y ; z",100,-10,10,100,-10,10,210,-210,210); 
@@ -1179,7 +1247,6 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
     PressureT[0] = new TH3F("PressureTP","log(dE/dx) (positive) versus Log(Pressure*298.2/outputGasTemperature)",2*NoRows+1, -NoRows-0.5, NoRows+0.5,200, 6.82, 7.02, 200, -5, 5);
     PressureT[1] = new TH3F("PressureT","log(dE/dx) (negative) versus Log(Pressure*298.2/outputGasTemperature)",2*NoRows+1, -NoRows-0.5, NoRows+0.5,200, 6.82, 7.02, 200, -5, 5);
     //    TimeP  = new THnSparseF("TimeP","log(dE/dx)_{after pressure correction} - log(I(pi)) versus Date& Time",  2, nBins, xMin, xMax); f->Add(TimeP);
-    TH1::SetDefaultSumw2(fSetDefaultSumw2);
 #ifdef __TEST_DX__
     if (! dXTest[0]) {
       dXTest[0] = new TH3F("dxTestP","dX = dX_TrackFit - dX_Helix > 1e-4 versus pad row and dX_TrackFit for Positive",145,-72.5,72.5,100,-1.,9.,100,-0.25,0.25);

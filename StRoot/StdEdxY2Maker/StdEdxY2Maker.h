@@ -47,7 +47,8 @@ class StdEdxY2Maker : public StMaker {
 	       kZBGX                 = 13,
 	       kEmbedding            = 15,
 	       kNoUsedHits           = 16,
-	       kEmbeddingShortCut    = 17
+	       kEmbeddingShortCut    = 17,
+	       kForceUseDeConvClus   = 18
   };
   StdEdxY2Maker(const char *name="dEdxY2");
   virtual       ~StdEdxY2Maker() {}

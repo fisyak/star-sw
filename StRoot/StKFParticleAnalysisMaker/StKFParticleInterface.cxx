@@ -968,7 +968,8 @@ void StKFParticleInterface::ResizeTrackPidVectors(const int nTracks)
 bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& triggeredTracks)
 {
   if (fgUseMagScaleFactor) {
-    fgMagScaleFactor = FixedFullField/TMath::Abs(picoDst->event()->bField());
+    Double_t scale = TMath::Nint(10*TMath::Abs(picoDst->event()->bField()))/10.;
+    fgMagScaleFactor = FixedFullField*scale/TMath::Abs(picoDst->event()->bField());
   }
   const Double_t field = picoDst->event()->bField() *  fgMagScaleFactor; 
   SetField(field);

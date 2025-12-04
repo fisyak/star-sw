@@ -44,7 +44,8 @@ setenv STARFPE NO
 if (! $?) then 
   set sdt = ",FieldOff"
 endif
- root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,TpcRS,McTpcAna,StiCA,evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
+# root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,TpcRS,McTpcAna,StiCA,StiPulls,evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
+ root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,CorrZ,TpcRS,McTpcAna,StiCA,StiPulls,-evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
 </command>
 <!-- <input URL="command:TpcRS_Part.pl" /> -->
 <!-- <input URL="command:daq_TpcRS.pl 1 1000 25" />  -->

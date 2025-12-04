@@ -903,6 +903,7 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("useNewLDV") ) mk->SetAttr("useNewLDV",kTRUE);// uses new laserDV
       if ( GetOption("shadow")    ) mk->SetAttr("NoReset",kTRUE);// no resetting ExB
       if ( GetOption("Alignment2024")     ) mk->SetAttr("Alignment2024",kTRUE);// uses new Alignment2024
+      if ( GetOption("TpcMDF4Error")      ) mk->SetAttr("TpcMDF4Error",kTRUE);// uses TpcMDF4Error
       if ( GetOption("Cosmics")   ) mk->SetAttr("Cosmics"    ,kTRUE);
       if (GetOption("ExB")){
 	mk->SetAttr("ExB", kTRUE);	// bit 0 is ExB ON or OFF
@@ -957,20 +958,20 @@ Int_t StBFChain::Instantiate()
       mk->PrintAttr();
     }
     if (maker == "StdEdxY2Maker") {
+      Int_t Mode = 0;
       if (GetOption("SkipdNdx")) mk->SetAttr("SkipdNdx", kTRUE);
       if (GetOption("dEdxCalib")) {
-	Int_t Mode = 0;
 	SETBIT(Mode,StdEdxY2Maker::kCalibration);
 	SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS);
 	SETBIT(Mode,StdEdxY2Maker::kPadSelection); 
-	SETBIT(Mode,StdEdxY2Maker::kPadSelection);
 #if 0
 	SETBIT(Mode,StdEdxY2Maker::kAlignment);
 #endif
-	LOG_INFO << " set dEdxY2 Mode " << Mode << " =======================================" << endm;
-	mk->SetMode(Mode);
       } 
       if (GetOption("ForcedX")) mk->SetAttr("ForcedX", kTRUE);
+      if (GetOption("ForceUseDeConvClus"))  SETBIT(Mode,StdEdxY2Maker::kForceUseDeConvClus);
+      LOG_INFO << " set dEdxY2 Mode " << Mode << " =======================================" << endm;
+      mk->SetMode(Mode);
     }
 #if 0
     if (maker == "StSvtDbMaker" || maker == "StSsdDbMaker"){

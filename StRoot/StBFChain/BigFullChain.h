@@ -1255,9 +1255,10 @@ Bfc_st BFC[] = { // standard chains
    ",-AlignSectors,-OBmap2D,-OClock,-OTwist"                             ,"","","New Tpc Alignment",kFALSE},
   {"CorrY"       ,"" ,"","ExB,OShortR,OBmap,OPr40,OIFC,OSectorAlign,NewTpcAlignment,OSpaceZ2,OGridLeakFull"
    ",-OBmap2D,-OClock,-OTwist"                                           ,"","","New Tpc Alignment",kFALSE},
-  {"Alignment2024","" ,"","NewTpcAlignment"                         ,"","","Turn on Alignment 2024",kFALSE},
+  {"Alignment2024","" ,"","NewTpcAlignment,TpcMDF4Error"            ,"","","Turn on Alignment 2024",kFALSE},
   {"CorrZ","" ,"","Alignment2024,TFGdbOpt,-CorrY,-CorrX,ExB,OShortR,OBmap,OPr40,OIFC,OSpaceZ2"
    ",OGridLeakFull,-OBmap2D,-OClock,-OTwist,-OSectorAlign"              ,"","","Tpc Alignment 2024",kFALSE},
+  {"TpcMDF4Error",""  ,"","",""                                         ,"","Activate TpcMDF4Error",kFALSE},
   {"ExB"         ,""  ,"","",""                                       ,"","Activate ExB correction",kFALSE},
   {"EB1"         ,""  ,"","",""                                     ,"","Force ExB configuration 1",kFALSE},
   {"EB2"         ,""  ,"","",""                                     ,"","Force ExB configuration 2",kFALSE},
@@ -1396,7 +1397,7 @@ Bfc_st BFC[] = { // standard chains
   {"QUtils"      ,""  ,"","PmdUtil,EmcUtil","",                      "","Load QA Libs dependencies",kFALSE},
 
 #ifndef  __NoStrangeMuDst__
-  {"MuDSTDeps"   ,"","","StEvent,Stu,StBichsel",""
+  {"MuDSTDeps"   ,"","","StEvent,Stu,StBichsel,EmcUtil,TofUtil,BTofUtil,PmdUtil",""
    ,                        "Tree,StStrangeMuDstMaker,StMuDSTMaker","Load MuDST misc. dependencies",kFALSE},
   {"MuDST"       ,"" ,"","MuDSTDeps,EmcUtil,TofUtil,BTofUtil,PmdUtil,Tree",""
    ,                                                            "StMuDSTMaker","Load MuDST library",kFALSE},
@@ -1921,6 +1922,7 @@ Bfc_st BFC[] = { // standard chains
   {"dEdxCalib"    ,"","","dEdxY2,TTreeFile",""          ,"","switch on dEdx calibration histograms",kFALSE},
   {"ForcedX"     ,"","","dEdxY2","",                      "Force recalculation of dX using Helices",kFALSE},
   {"SkipdNdx", "", "", "dEdxY2", "", "",              "Option for StdEdxY2Maker to calculate dN/dx",kFALSE},
+  {"ForceUseDeConvClus", "", "", "dEdxY2", "", "",           "Force usage of Deconvoluted Clusters",kFALSE},
   // Options in need to be done after the tracker
   // second wave of BTOF options needed after Sti
   {"btofMatch" ,"","","db,BTofUtil","StBTofMatchMaker","StBTofMatchMaker","TPC-BTOF track matching",kFALSE},

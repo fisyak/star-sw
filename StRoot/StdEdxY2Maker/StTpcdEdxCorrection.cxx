@@ -114,9 +114,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kTpcRowQ               ] = dEdxCorrection_t("TpcRowQ"             ,"Gas gain correction for row versus accumulated charge,"             ,St_TpcRowQC::instance());
   m_Corrections[kTpcAccumulatedQ       ] = dEdxCorrection_t("TpcAccumulatedQ"     ,"Gas gain correction for HV channel versus accumulated charge,"      ,St_TpcAccumulatedQC::instance());
   m_Corrections[kTpcSecRowB            ] = dEdxCorrection_t("TpcSecRowB"          ,"Gas gain correction for sector/row"					,St_TpcSecRowBC::instance());		     
-  /*
-  m_Corrections[kTpcSecRowC            ] = dEdxCorrection_t("TpcSecRowC"          ,"Additional Gas gain correction for sector/row"			,St_TpcSecRowCC::instance());		     
-  */
+  m_Corrections[kTpcSecRowC            ] = dEdxCorrection_t("TpcSecRowC"          ,"Additional sector/row Gas gain correction for desired trigger"      ,St_TpcSecRowCC::instance());		     
   m_Corrections[ktpcPressure           ] = dEdxCorrection_t("tpcPressureB"        ,"Gain on Gas Density due to Pressure"			        ,St_tpcPressureBC::instance());	     
   m_Corrections[ktpcTime               ] = dEdxCorrection_t("tpcTime"       	  ,"Unregognized time dependce"						,St_tpcTimeDependenceC::instance()); 
   m_Corrections[kDrift                 ] = dEdxCorrection_t("TpcDriftDistOxygen"  ,"Correction for Electron Attachment due to O2"			,St_TpcDriftDistOxygenC::instance());	     
@@ -282,6 +280,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
       SafeDelete(m_Corrections[x].Chair);
     }
   }      
+  setDesiredTrigger(kFALSE);
 }
 //________________________________________________________________________________
 StTpcdEdxCorrection::~StTpcdEdxCorrection() {
@@ -292,7 +291,9 @@ StTpcdEdxCorrection::~StTpcdEdxCorrection() {
 Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) { 
   //  static const Double_t Degree2Rad = TMath::Pi()/180.;
   mdEdx = &CdEdx;
-  if (CdEdx.F.dE <= 0.) CdEdx.F.dE = 1;
+  if (CdEdx.F.dE <= 0. || ! TMath::Finite(CdEdx.F.dE)) {
+    CdEdx.F.dE = 1;
+  }
   Double_t dEU = CdEdx.F.dE;
   Double_t dE  = dEU;
   Int_t sector            = CdEdx.sector; 
@@ -403,6 +404,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
   VarXs[kdXdY]                 = CdEdx.dXdY;
   VarXs[kEtaCorrection]        = CdEdx.etaG*CdEdx.etaG;
   VarXs[kEtaCorrectionB]       = CdEdx.etaG;
+  VarXs[kBadFrac]              = CdEdx.BadFrac;
   Int_t NLoops = 0;
   Int_t m = 0;
   for (Int_t k = kUncorrected; k <= kTpcLast; k++) {
@@ -417,9 +419,10 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
     if (! TESTBIT(m_Mask, k)) goto ENDL;
     if (! m_Corrections[k].Chair) goto ENDL;
     chairC = dynamic_cast<const St_tpcCorrectionC *>(m_Corrections[k].Chair);
-    if (k == kTpcSecRowB || k == kTpcSecRowC ) {
+    if (k == kTpcSecRowB || k == kTpcSecRowC) {
       const St_TpcSecRowCor *table = (const St_TpcSecRowCor *) m_Corrections[k].Chair->Table();
       if (! table) goto ENDL;
+      if  (k == kTpcSecRowC && ! IsDesiredTrigger()) goto ENDL;
       const TpcSecRowCor_st *gain = table->GetTable() + sector - 1;
       gc =  gain->GainScale[row-1];
       //      gcRMS = gain->GainRms[row-1];1
@@ -450,39 +453,39 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       goto ENDL;
     } else if (k == kAdcCorrectionMDF) {
       ADC = adcCF;
-      if (ADC <= 0) {
-	return k;
-      }
       l = kTpcOutIn;
       Int_t nrows = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->nrows();
       if (l >= nrows) l = nrows - 1;
       Double_t xx[2] = {TMath::Log(ADC), (Double_t)(CdEdx.Npads+CdEdx.Ntbks)};
       Double_t Cor = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->Eval(l,xx);
       dE = ADC*Adc2GeVReal*TMath::Exp(Cor);
+      if (! TMath::Finite(dE)) {
+	return k;
+      }
       goto ENDL;
     } else if (k == kAdcCorrection3MDF) {
       ADC = adcCF;
-      if (ADC <= 0) {
-	return k;
-      }
       l = kTpcOutIn;
       Int_t nrows = ((St_MDFCorrection3C *) m_Corrections[k].Chair)->nrows();
       if (l >= nrows) l = nrows - 1;
       Double_t xx[3] = {(Double_t)  CdEdx.Ntbks, TMath::Abs(CdEdx.zG), TMath::Log(ADC)};
       Double_t Cor = ((St_MDFCorrection3C *) m_Corrections[k].Chair)->Eval(l,xx);
       dE = ADC*Adc2GeVReal*TMath::Exp(Cor);
+      if (! TMath::Finite(dE)) {
+	return k;
+      }
       goto ENDL;
     } else if (k == kAdcCorrection4MDF) {
       ADC = adcCF;
-      if (ADC <= 0) {
-	return k;
-      }
       l = kTpcOutIn;
       Int_t nrows = ((St_TpcAdcCorrection4MDF *) m_Corrections[k].Chair)->nrows();
       if (l >= nrows) l = nrows - 1;
       Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(ADC)};
       Double_t Cor = ((St_TpcAdcCorrection4MDF *) m_Corrections[k].Chair)->Eval(l,xx);
       dE = ADC*Adc2GeVReal*TMath::Exp(Cor);
+      if (dE <= 0 || ! TMath::Finite(dE)) {
+	return k;
+      }
       goto ENDL;
     } else if (k == kAdcCorrection5MDF) {
       l = kTpcOutIn;
@@ -491,6 +494,9 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(ADC)};
       Double_t Cor = ((St_TpcAdcCorrection5MDF *) m_Corrections[k].Chair)->Eval(l,xx);
       dE *= TMath::Exp(Cor);
+      if (! TMath::Finite(dE)) {
+	return k;
+      }
       goto ENDL;
     } else if (k == kAdcCorrection6MDF) { 
       goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
@@ -513,14 +519,11 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       corl = cor + l;
       if (k == kAdcCorrection) {
 	ADC = adcCF;
-	if (ADC <= 0) {
-	  return k;
-	}
 	if (corl->type == 12) 
 	  dE = Adc2GeVReal*chairC->CalcCorrection(l,ADC,VarXs[kTanL]);
 	else 
 	  dE = Adc2GeVReal*chairC->CalcCorrection(l,ADC,TMath::Abs(CdEdx.zG));
-	if (dE <= 0) {
+	if (dE <= 0 || ! TMath::Finite(dE)) {
 	  return k;
 	}
 	goto ENDL;
@@ -528,21 +531,24 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 	goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
       } else if (k == kAdcCorrectionC) {
 	ADC = adcCF;
-	if (adcCF <= 0) {
-	  return k;
-	}
 	ADC = chairC->CalcCorrection(l,adcCF);
 	if (m_Corrections[kAdcCorrection6MDF].Chair) {
 	  Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(adcCF)};
 	  ADC += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
 	}
 	dE = Adc2GeVReal*ADC;
+	if (dE <= 0 || ! TMath::Finite(dE)) {
+	  return k;
+	}
 	goto ENDL;
       } else if (k == kTpcdCharge) {
 	if (l > 2) l = 1;
 	slope = chairC->CalcCorrection(l,row+0.5);
 	dE *=  TMath::Exp(-slope*CdEdx.dCharge);
 	dE *=  TMath::Exp(-chairC->CalcCorrection(2+l,CdEdx.dCharge));
+	if (! TMath::Finite(dE)) {
+	  return k;
+	}
 	goto ENDL;
       } else if (k == kdXCorrection) {
 	xL2 = TMath::Log2(dxC);
@@ -642,7 +648,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 #endif
   }   
 #if 0 
-  if (TMath::IsNaN(CdEdx.C[kTpcLast].dE)) {
+  if (! TMath::Finite(CdEdx.C[kTpcLast].dE)) {
     static Int_t iBreak = 0;
     iBreak++;
   }

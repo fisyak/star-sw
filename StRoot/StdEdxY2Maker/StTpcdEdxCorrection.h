@@ -80,14 +80,15 @@ class StTpcdEdxCorrection : public TObject {
       knTbk                  = 39,
       kdZdY                  = 40, 
       kdXdY                  = 41,
-      kTpcLast               = 42,//                                             
-      kTpcNoAnodeVGainC      = 43,//   					     
-      kTpcLengthCorrection   = 44,//                                             
-      kTpcLengthCorrectionMDF= 45,//   					   
-      kTpcLengthCorrectionMD2= 46,//   					   
-      kTpcLengthCorrectionMDN= 47,//   					   
-      kTpcdEdxCor            = 48,//   					   
-      kTpcAllCorrections     = 49 //                                             
+      kBadFrac               = 42,
+      kTpcLast               = 43,//                                             
+      kTpcNoAnodeVGainC      = 44,//   					     
+      kTpcLengthCorrection   = 45,//                                             
+      kTpcLengthCorrectionMDF= 46,//   					   
+      kTpcLengthCorrectionMD2= 47,//   					   
+      kTpcLengthCorrectionMDN= 48,//   					   
+      kTpcdEdxCor            = 49,//   					   
+      kTpcAllCorrections     = 50 //                                             
   };
   StTpcdEdxCorrection(Int_t Option=0, Int_t debug=0);
   ~StTpcdEdxCorrection();
@@ -123,7 +124,8 @@ class StTpcdEdxCorrection : public TObject {
   void Print(Option_t *opt = "") const;
   Bool_t            IsFixedTarget()        {return m_isFixedTarget;}
   Bool_t            IsSimulation()         {return m_IsSimulation;}
-  
+  void              setDesiredTrigger(Bool_t k) {mIsDesiredTrigger =k;}
+  Bool_t            IsDesiredTrigger()     {return mIsDesiredTrigger;}
  private:
   Long_t               m_Mask;                  //!
   St_tpcGas           *m_tpcGas;                //!
@@ -137,6 +139,7 @@ class StTpcdEdxCorrection : public TObject {
   Double_t             mTimeBinWidth; 
   Double_t             mInnerSectorzOffset;
   Double_t             mOuterSectorzOffset;
+  Bool_t               mIsDesiredTrigger;
 };
 //________________________________________________________________________________
 class dEdxY2_t {
@@ -196,6 +199,7 @@ class dEdxY2_t {
   Float_t  dX_TrackFit; // dX from local curvature obtained during track fit
   Float_t  dX_Helix;    // dX from helices from the first and last hit
   Float_t  etaG;  // eta at the first hit point
+  Float_t  BadFrac; // fraction of Tpc flagged hist to all fow a giver sector & padrow
   Char_t   last[1];
   void Reset() {memset(first, 0, last - first);}
 }; 
