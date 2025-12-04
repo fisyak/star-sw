@@ -54,6 +54,10 @@
     set PicoMode = ",PicoVtxVpdOrDefault"
     echo ${SUBMITTINGDIRECTORY} | grep fixed
     if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT,EbyET0"
+    echo ${SUBMITTINGDIRECTORY} | grep VoltageScan
+    if ($? == 0) then
+      set evout = ",evout";
+    endif
   endif
   set Chain = "";
   switch ($year)

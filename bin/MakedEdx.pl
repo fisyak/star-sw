@@ -2775,7 +2775,7 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXIII34"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/19/2025 check MySQL with mtd sample
 #$hist = "RunXXIII35"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/25/2025 add TcpSecRowC, BadFrac
 #$hist = "RunXXIII36"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/25/2025 add TcpSecRowC, BadFrac, use flagged hits
-$hist = "RunXXIII37"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac,  fix bug with trigger, still use only flag==0 hits
+#$hist = "RunXXIII37"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac,  fix bug with trigger, still use only flag==0 hits
 #$hist = "RunXXIII38"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac, use flagged hits
 #################################### RunXXI OO200GeV P24iy ########################
 #$hist = "RunXXI01"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   check what is in MySQL
@@ -2831,6 +2831,9 @@ $hist = "RunXXIII37"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/productio
 #$hist = "RunXXIV24";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/27/2025 move to MySQL
 ############################ RunXXIV ####################################################
 #$hist = "RunXXIV25";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "SL24y"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/28/2025 move to MySQL
+############################ RunXXV ####################################################
+$hist = "RunXXV01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/VoltageScan/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/03/2025  
+
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
