@@ -5,21 +5,7 @@
 // what it does: opens the ROOT session
 //=======================================================================
 {
-  // ROOT and XROOTD
-  // some rootd default dummy stuff
-  TAuthenticate::SetGlobalUser("starlib");
-  TAuthenticate::SetGlobalPasswd("ROOT4STAR");
-
-  // This will help tracing failure on XrdOpen() if any
-  gEnv->SetValue("XNet.DebugTimestamp","1");
-  gEnv->SetValue("XNet.ReconnectTimeout","15");
-  gEnv->SetValue("XNet.RequestTimeout","90");
-  //  gEnv->SetValue("XNet.ConnectDomainAllowRE","rcf.bnl.gov|usatlas.bnl.gov");
-  //  gEnv->SetValue("XNet.RedirDomainAllowRE","rcf.bnl.gov"); 
   //  cout << gSystem->GetDynamicPath() << endl;
-  // This is already implied in system.rootrc although one could use
-  // this to switch to a beta version of the client library.
-  //ROOT->GetPluginManager()->AddHandler("TFile","^root:","TXNetFile", "Netx", "TXNetFile(const char*,Option_t*,const char*,Int_t,Int_t)"); 
   if (gSystem->Getenv("LIBNEW")) {
     printf("*** load libNew ***\n");
     gSystem->Load("libNew"); 
@@ -118,8 +104,6 @@
     //    gSystem->Load("libStUtilities"); 
     gSystem->Load("libSt_base"); 
     gSystem->Load("libStStarLogger"); 
-    gSystem->Load("libStChain"); 
-    gSystem->Load("libStBFChain"); 
 #endif
   }
   gSystem->Load("libEG");
@@ -143,7 +127,6 @@
     gSystem->Load("libKFParticle");
   }
 #endif
-#if 1 /* keep for QtRoot */
   if (TString(gSystem->GetLibraries()).Contains("libTable")) {
     gROOT->ProcessLine("typedef TCL              StCL;");              
     gROOT->ProcessLine("typedef TDataSet         St_DataSet ;");       
@@ -165,10 +148,23 @@
     gROOT->ProcessLine("typedef TTableSorter     St_TableSorter;");    
     gROOT->ProcessLine("typedef TTableDescriptor St_tableDescriptor;");
   }
-#endif
   printf(" *** Start at Date : %s\n",TDatime().AsString());
-  // 	Assign bif size of hashtable for STAR I/O
-  TBufferFile::SetGlobalWriteParam(2003);
+  
+   // 	Assign bif size of hashtable for STAR I/O
+   TBufferFile::SetGlobalWriteParam(2003);
+
+
+
+
+  // This is already implied in system.rootrc although one could use
+  // this to switch to a beta version of the client library.
+  //ROOT->GetPluginManager()->AddHandler("TFile","^root:","TXNetFile", "Netx", "TXNetFile(const char*,Option_t*,const char*,Int_t,Int_t)"); 
+
+  // This will help tracing failure on XrdOpen() if any
+  gEnv->SetValue("XNet.DebugTimestamp","1"); 
+  gEnv->SetValue("XNet.ConnectDomainAllowRE","rcf.bnl.gov|usatlas.bnl.gov");
+  gEnv->SetValue("XNet.RedirDomainAllowRE","rcf.bnl.gov"); 
+  gEnv->SetValue("XNet.ReconnectTimeout","5"); 
   //  Print version
   TString STAR_GIT   = gSystem->ExpandPathName("$STAR/.git");  
   TString STAR_LEVEL = gSystem->ExpandPathName("$STAR_LEVEL"); 
@@ -208,8 +204,6 @@
     SysInfo_t info;
     if (gSystem->GetSysInfo(&info) >= 0) {
       printf("with %i %s CpuSpeed %i MHz",info.fCpus,info.fModel.Data(),info.fCpuSpeed);
-      if (gSystem->Getenv("STAR_HOST_SYS_OPT"))
-	printf(" on %s", gSystem->Getenv("STAR_HOST_SYS_OPT"));
     }
     printf("\n");
     // note that the above bacward support the old mode for include whenever
@@ -259,11 +253,4 @@
     //#endif
   }
   gInterpreter->AddIncludePath("/usr/include/mysql");
-
-  // Requested by users, allow loading a "complementary" local
-  // rootlogon if exists
-  if ( !gSystem->AccessPathName("./rootlogon.C", kFileExists ) ){
-    cout << "Found and loading local rootlogon.C" << endl;
-    gROOT->Macro("./rootlogon.C");
-  }
 }
