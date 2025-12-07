@@ -4,26 +4,27 @@
   cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
 #  set input        = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
-  set input        = `basename ${INPUTFILE0} .root`
+  set input        = `basename ${INPUTFILE0}#.root`
 #  set Routput      =  R${input}.root
 #  if (! -r ${Routput})   hadd ${Routput} *${input}*.root &gt;&amp; R${input}.log
-  set output       = D${input}.root
+  set output       = `echo ${input} | sed -e /^R/D/'`;
   set log          = D${input}.log
   if (-r ${output}) exit 0;
   if (-r ${log}) exit 0;
   ln -s ~/macros/.sl* .
   ln -s ~/macros/.al* .
   set rout = R${input}.root
-  if (! -r ${rout}) hadd ${rout} ${input}/All*.root &gt;&amp; R${input}.log
+# if (! -r ${rout}) hadd ${rout} ${input}/All*.root &gt;&amp; R${input}.log
   root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+('${input}')'  &gt;&amp; ${log}
         </command>
 <!--
     <ResourceUsage>
       <Priority>99</Priority>
     </ResourceUsage>
+      <input URL="command:kfQA.csh" /> 
 -->
     <stdout URL="file:./sched$JOBID.log" />
     <stderr URL="file:./sched$JOBID.err" />
-      <input URL="command:kfQA.csh" /> 
+      <input URL="command:/bin/ls  -1d R*.root"/> 
 </job>
 

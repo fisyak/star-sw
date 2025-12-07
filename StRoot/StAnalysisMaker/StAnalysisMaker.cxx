@@ -315,7 +315,7 @@ void StAnalysisMaker::PrintVertex(Int_t ivx) {
   }
 }
 //________________________________________________________________________________
-void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t IdTruth) {
+void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t IdTruth, Int_t pmin, Int_t pmax, Int_t tmin, Int_t tmax) {
   // plot = 1 => All hits;
   // plot = 2 => prompt hits only |z| > 175
   struct BPoint_t {
@@ -375,22 +375,16 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 	    StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(j);
 	    if (rowCollection) {
 	      StSPtrVecTpcHit &hits = rowCollection->hits();
-#if ROOT_VERSION_CODE < 334081
-	      Long_t NoHits = hits.size();
-	      TArrayL idxT(NoHits); Long_t *idx = idxT.GetArray();
-#else
 	      Long64_t NoHits = hits.size();
 	      TArrayL64 idxT(NoHits); Long64_t *idx = idxT.GetArray();
-#endif
 	      if (! NoHits) continue;
 	      TotalNoOfTpcHits += NoHits;
-#if 1
 	      TArrayD dT(NoHits);   Double_t *d = dT.GetArray();
 	      for (Long64_t k = 0; k < NoHits; k++) {
 		const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
 		if (mOnlyIdT && tpcHit->idTruth() <= 0) continue;
 		if (IdTruth >= 0 && tpcHit->idTruth() != IdTruth) continue;
-#if 0
+#if 1
 		const StThreeVectorF& xyz = tpcHit->position();
 		d[k] = xyz.z();
 #else
@@ -399,13 +393,8 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 	      }
 	      idx[0] = 0;
 	      if (NoHits > 1) TMath::Sort(NoHits,d,idx,kFALSE);
-#endif
 	      for (Long64_t k = 0; k < NoHits; k++) {
-#if 1
 		Int_t l = idx[k];
-#else
-		Int_t l = k;
-#endif
 		StTpcHit *tpcHit = static_cast<StTpcHit *> (hits[l]);
 		if (! tpcHit) continue;
 		if (mOnlyIdT && tpcHit->idTruth() <= 0) continue;
@@ -417,8 +406,14 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 		  if (g2t && g2t->id != tpcHit->idTruth() ) g2t = 0;
 		}
 		if (! plot) {
-		  if (g2t) cout << Form("ge = %2i\t",g2t->ge_pid);
-		  else     cout << "       \t";
+		  if (g2tMap) {
+		    if (g2t) cout << Form("ge = %2i\t",g2t->ge_pid);
+		    else     cout << "       \t";
+		  }
+		  if (sector && row && pmin < pmax && tmin < tmax) {
+		    if (tpcHit->pad() < pmin || tpcHit->pad() > pmax) continue;
+		    if (tpcHit->timeBucket() < tmin || tpcHit->timeBucket() > tmax) continue;
+		  }
 		  tpcHit->Print();
 		} else {
 		  if (Nt) {
