@@ -1,6 +1,10 @@
 /* 
    FPE_OFF
    root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+("J/dev","kfQAdev.P.root")'
+   foreach f (`ls -1d R*.root`)
+     echo "${f}"
+     root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+("'${f}'")' >& ${f}.log
+   end
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
@@ -204,9 +208,14 @@ void Merge(Int_t run) {
 }
 #endif
 //________________________________________________________________________________
-void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
-  TString targetFile(Form("R%i.root",Run));
+//void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
+//  TString targetFile(Form("R%i.root",Run));
+void kfQA(const Char_t *targetFile = "R22141041.root", const Char_t *Out = 0){
   Char_t *tfileName = gSystem->Which(".",targetFile,kReadPermission);
+  TString TFileName(tfileName);
+  Int_t Run;
+  Int_t n = sscanf(targetFile,"R%i.root",&Run); cout << "From " << targetFile <<" Found Run = " << Run << endl;
+  if (n != 1) return;
 #if 0
   if (! tfileName) {
     Merge(Run);
@@ -489,6 +498,7 @@ void Plot(Int_t iplot1=0, Int_t iplot2=0, const Char_t *tfg = "kfQA.K.dEdx.W.roo
 //________________________________________________________________________________
 /*
   QA->Draw("1000*(Ks_Mass-0.497611)","Ks_Mass>0")
+  QA->Draw("1000*(Ks1GeV_Mass-0.497611)","Ks1GeV_Mass>0")
 brtw: FitH3: 
 FitP->Draw("1e3*(M_S-0.497611)","chisq/NDF<5&&dM_S<2e-4&&dM_S>0&&M_S>0.495&&M_S<0.5")
 FitP->Draw("1e3*(M_S-0.497611):y","dM_S<1e-3&&dM_S>0&&M_S>0.495&&M_S<0.5&&x<0","prof")

@@ -86,7 +86,7 @@ my $tags = join '|', @tags;
 print "found tags = $#tags : tags   ==> $tags\n" if ($ARG{debug});
 #if ($#tags < 0) {die "No tags found";}
 my $glob = $ARG{files}; print "glob = $glob\n"; 
-my $outn = basename($glob); $outn =~ s#\*##g; $outn =~ s#\.root##;
+my $outn = basename($glob); $outn =~ s#\*##g; $outn =~ s#\.root##; $outn =~ s#\'##;
 my $FilesPerJob = $ARG{FilesPerJob}; print "FilesPerJob = $FilesPerJob\n";
 my $Out = $ARG{Out}; print "Out = $Out\n";
 my @Files = glob "$glob"; 
@@ -146,7 +146,7 @@ foreach my $tag (@tags) {
   }
 }
 #die;
-my $XML = "hadd" . $ARG{prefix} . $outn . ".xml";
+my $XML = "hadd" . $ARG{prefix} . $outn . ".xml"; print "XML = $XML\n";
 open (XML,">$XML") or die "Can't open $XML";
 #
 print XML '<?xml version="1.0" encoding="utf-8" ?> 
@@ -177,7 +177,7 @@ foreach my $key (sort keys %TagList) {
     my $cmd = "test -r $rootfile || hadd -k $ARG{option} -f $rootfile $list";
     $cmd .= ">&  $log";
     print "job:$jb files: $i => $cmd \n";
-    my $SCRIPT = $name . ".csh";
+    my $SCRIPT = $name . ".csh"; print "SCRIPT = $SCRIPT\n";
     open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";
     print "Create $SCRIPT\n";
     print OUT "#!/usr/bin/env tcsh \n";
