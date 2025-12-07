@@ -1033,7 +1033,8 @@ Int_t StTpcRTSHitMaker::Make23() {
 TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
   /* 
      Usage: 
-     root.exe ' bfc.C(1,"P2019a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23,TpxRaw,TPC23,USE_GAIN_FROM_FILE,tpxO,NoTpxAfterBurner","/RTS/TONKO/data/st_physics_adc_20192001_raw_5500002.daq","","Plot.root")'
+     root.exe 'bfc.C(1,"P2019a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23,USE_GAIN_FROM_FILE,tpxO,NoTpxAfterBurner","/RTS/TONKO/data/st_physics_adc_20192001_raw_5500002.daq","","Plot.root")'
+     root.exe 'bfc.C(1,"P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23,tpxO,NoTpxAfterBurner","/star/data03/daq/2023/211/24211048/st_physics_adc_24211048_raw_0400004.daq","","Plot.root")'
      TH2F *plot = StTpcRTSHitMaker::instance()->PlotSecRow(2,43,-1);
    */
   TH2F *plot = 0;
@@ -1055,7 +1056,7 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
     plot->SetTitle(Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i",sec,row, pEvent->id()));
   } else {
     Int_t npad = St_tpcPadConfigC::instance()->padsPerRow(sec,row);
-    plot = new TH2F(PlotName,Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i",sec,row, pEvent->id()), 360,-0.5,359.5,npad,0.5,npad+0.5);
+    plot = new TH2F(PlotName,Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i; timebucket ; pad",sec,row, pEvent->id()), 360,-0.5,359.5,npad,0.5,npad+0.5);
     plot->SetStats(1);
   }
   TDataSet*  tpcRawEvent = StMaker::GetChain()->GetInputDS("Event");
@@ -1090,17 +1091,24 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
   Long_t NoHits = hits.size();
   for (Long64_t k = 0; k < NoHits; k++) {
     const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
-    Int_t color = 1;
-    Int_t style = 43;
+    Int_t color  = kYellow;
+    Int_t colorM = kYellow;
+    Int_t style = 4; // https://root.cern.ch/doc/v632/classTAttMarker.html
     Double_t offset = 0.0;
     Int_t flag = tpcHit->flag();
-    if (flag & 256) {color = 2; style = 29; offset = 0.1; flag &= ~0x100;} // online kTpxO
-    if (flags > -1 && flag < flags) continue;
+    if (flag & 256)    {color  = kRed; flag &= ~0x100; offset = 0.1;} // online kTpxO
+    if      (flag & 2) {colorM = kMagenta;} // deconvoluted cluser
+    else if (flag & 4) {colorM = kGray;} // deconvoluted in the time direction
+    if      (tpcHit->usedInFit()) {
+      style = 8;
+      if (tpcHit->usedInFit() >  1) style = 47;
+    }
+    if (flags > -1 && flag > flags) continue;
     Double_t tb = tpcHit->timeBucket();
     Double_t pad = tpcHit->pad();
     TPolyMarker *pm = new TPolyMarker(1,&tb, &pad);
     pm->SetMarkerStyle(style);
-    pm->SetMarkerColor(color);
+    pm->SetMarkerColor(colorM);
     pm->SetMarkerSize(2);
     plot->GetListOfFunctions()->Add(pm);
     TBox *box = new TBox(tpcHit->minTmbk()-0.5 + offset,tpcHit->minPad()-0.5 + offset, tpcHit->maxTmbk()+0.5 + offset,tpcHit->maxPad()+0.5 + offset); 

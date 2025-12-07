@@ -123,7 +123,7 @@ public:
   static void PrintStEvent(TString opt="vpgml3");
   static void PrintVertex(Int_t ivx = -1);
   static void PrintGlobalTrack(Int_t itk = 0);
-  static void PrintTpcHits(Int_t sector = 0, Int_t row = 0, Int_t plot = 0, Int_t IdTruth=-1);
+  static void PrintTpcHits(Int_t sector = 0, Int_t row = 0, Int_t plot = 0, Int_t IdTruth=-1, Int_t pmin = 0, Int_t pmax = -1, Int_t tmin = 0, Int_t tmax = -1);
   static void PrintToFHits();
   static void PrintSvtHits();
   static void PrintSsdHits();

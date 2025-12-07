@@ -6542,3 +6542,18 @@ Call Stack (most recent call first):
 12/01/2025 
   freeze FixedFullField 4.98449 kG for full field
 StMagFMaker:INFO  - StMagFMaker::InitRun Bz(0) = -4.98111
+================================================================================
+12/03/2025 TPC23 merging 
+TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
+  /* 
+     Usage: 
+     root.exe 'bfc.C(1,"P2019a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23,TpxRaw,TPC23,USE_GAIN_FROM_FILE,tpxO,NoTpxAfterBurner","/RTS/TONKO/data/st_physics_adc_20192001_raw_5500002.daq","","Plot.root")'
+     root.exe 'bfc.C(1,"P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23,TpxRaw,TPC23,tpxO,NoTpxAfterBurner","/star/data03/daq/2023/211/24211048/st_physics_adc_24211048_raw_0400004.daq"","","Plot.root")'
+     TH2F *plot = StTpcRTSHitMaker::instance()->PlotSecRow(2,43,-1);
+   */
+================================================================================
+12/07/2025  Comparison of TPC23 and TpxClu 
+~/work/AuAu200_2023_mtd/OLD $ root.exe 'bfc.C(1,"P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TpxClu","st_mtd_adc_24211048_raw_0000016.daq","","Plot.root")'
+~/work/AuAu200_2023_mtd $     root.exe 'bfc.C(1,"P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23","st_mtd_adc_24211048_raw_0000016.daq","","Plot.root")'
+ TH2F *plot = StTpcRTSHitMaker::instance()->PlotSecRow(1,1,-1);
+StAnalysisMaker::instance()->PrintTpcHits(0,0,1)
