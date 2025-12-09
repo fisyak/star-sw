@@ -13,6 +13,7 @@
 #include "StMessMgr.h" 
 #include "StMaker.h"
 #include "StChainOpt.h"
+#include "StVMCMaker.h"
 ClassImp(StarGenPrimaryGenerator);
 //_____________________________________________________________________________
 StarGenPrimaryGenerator::StarGenPrimaryGenerator(TString mode, Int_t tune) : StarMCPrimaryGenerator() {
@@ -27,7 +28,7 @@ void StarGenPrimaryGenerator::PreSet() {
   fTree = 0;
   SetSpread(0.15, 0.15, 42.0);
   fCurOrigin = fOrigin;
-  const StChainOpt *opt = StMaker::GetTopChain()->GetChainOpt();
+  const StChainOpt *opt = StVMCMaker::instance()->GetParentChain()->GetChainOpt();
   assert(opt);
   const TString inputfile = opt->GetFileIn();
   TFile *f = new TFile(inputfile);
