@@ -158,6 +158,7 @@
 '2021/3p85GeV_fixedTarget_2021_P24iy'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
 '2021/3p85GeV_fixedTarget_2021_P24iy.A'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
 '2021/3p85GeV_fixedTarget_2021_P24iy.B'           => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy',
+'2021/3p85GeV_fixedTarget_2021_P25iy_lowlumi'     => 'production_3p85GeV_fixedTarget_2021/ReversedFullField/P25iy',
 
 '2021/17p3GeV_2021_P23id' =>                       'production_17p3GeV_2021/ReversedFullField/P23id',
 '2021/17p3GeV_2021_P24ia' =>                       'production_17p3GeV_2021/ReversedFullField/P24ia',

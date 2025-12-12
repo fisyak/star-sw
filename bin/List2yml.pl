@@ -3,6 +3,7 @@
 # awk '{print $9}' 3p85GeV_fixedTarget_2021_P24iy.list | awk -F\/ '{print $9" "$0}' | tee 3p85GeV_fixedTarget_2021_P24iy.sorted 
 # List2yml.pl p85GeV_fixedTarget_2021_P24iy.sorted
 # dir -d /star/data*/reco/pp200_production_LowLuminosity/ReversedFullField/P24iy/2024/*/* |  awk '{print $9}' | awk -F\/ '{print $10" "$0}' | sort | tee pp200_LowLuminosity_P24iy.list
+# dir -d /star/data*/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P25iy/2021/*/* | tee 3p85GeV_fixedTarget_2021_P25iy_lowkum.list
 use File::Basename;
 use Cwd;
 my $debug = 0;

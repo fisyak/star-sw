@@ -2832,7 +2832,8 @@ if ($#ARGV >= 0) {
 ############################ RunXXIV ####################################################
 #$hist = "RunXXIV25";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/pp200_production*/*/";  $Production = "P24iy_calib"; $year = "/2024/*/*/"; $FILE = "st"; $STAR_LEVEL = "SL24y"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/28/2025 move to MySQL
 ############################ RunXXV ####################################################
-$hist = "RunXXV01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/VoltageScan/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/03/2025  
+#$hist = "RunXXV01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/VoltageScan/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/03/2025  
+$hist = "RunXXV02"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/12/2025  Voltage Scan
 
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
