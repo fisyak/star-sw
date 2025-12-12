@@ -6557,3 +6557,9 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
 ~/work/AuAu200_2023_mtd $     root.exe 'bfc.C(1,"P2023a,StiCA,evout,NoHistos,noTags,noRunco,PicoVtxVpdOrDefault,TpxRaw,TPC23","st_mtd_adc_24211048_raw_0000016.daq","","Plot.root")'
  TH2F *plot = StTpcRTSHitMaker::instance()->PlotSecRow(1,1,-1);
 StAnalysisMaker::instance()->PrintTpcHits(0,0,1)
+================================================================================
+12/10/2025
+rcas6008] ~ $ diff -y --width=260 env.SL24x env.SL24x.TFG.32b
+CINTSYSDIR=/afs/rhic.bnl.gov/star/ROOT/5.34.38/.sl73_gcc485/rootdeb/cint/cint                                                 | 
+CINTSYSDIR=/afs/rhic.bnl.gov/star/ROOT/5.34.38/.sl73_gcc485/root/cint/cint
+[rcas6008] ~ $ diff -y --width=260 env.SL24x env.SL24x.TFG.32b.debug 

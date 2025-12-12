@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="false" copyInputLocally="false">
+        <command>
+  cd ${SUBMITTINGDIRECTORY}
+  setenv STARFPE NO
+#  setup cvmfs
+  starver TFG25k
+  set ext = "";
+  echo $INPUTFILE0 | grep ':'
+  if (! $?) then
+    set evtsFileF = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
+    set f         = `echo $INPUTFILE0 | awk -F\: '{print $2}'`
+    set l         = `echo $INPUTFILE0 | awk -F\: '{print $3}'`
+    set ext       =  ",${f},${l}"
+  else
+    set evtsFileF = $INPUTFILE0;
+    set f         = 1
+    set l         = 1000000
+  endif
+  if (! -r ${evtsFileF}) exit 1;
+#  cp -p ${evtsFileF} .
+#  ln -s  ${evtsFileF} .
+  set evtsFile = ${evtsFileF};
+#  set evtsFile = `basename ${evtsFileF}`;
+  echo "${evtsFile}"
+  set filel    = `basename $evtsFile .daq`${ext}
+  set output  = ${filel}.event.root
+  set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
+#  if (-r $logFile) exit 0;
+  set muFile = ${filel}.MuDst.root
+  if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
+  set tagFile = ${filel}.tags.root
+  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
+  if (-r ${bla}) exit 0;
+  touch ${bla}
+  if (-r ${SUBMITTINGDIRECTORY}/Submitted) then 
+    rm ${SUBMITTINGDIRECTORY}/Submitted
+  endif
+  cd ${SUBMITTINGDIRECTORY}
+  set year = `GetYearFromPWD.pl`
+  cd -
+  echo ${year} | grep 20
+  if ($? != 0) exit 0;
+#  set evout = ",-evout";
+  set evout = ",evout";
+  set PicoMode = "";
+  set Cosmic = "";
+  echo ${SUBMITTINGDIRECTORY} | grep Cosmic
+  if ($? == 0) then
+    set Cosmic = ",Cosmic"
+    set evout = ",evout";
+    echo ${SUBMITTINGDIRECTORY} | grep EandB
+    if ($? == 0)     set Cosmic = ",EandBDir"
+  else
+    set PicoMode = ",PicoVtxVpdOrDefault"
+    echo ${SUBMITTINGDIRECTORY} | grep fixed
+    if ($? == 0) set PicoMode = ",PicoVtxFXT,FXT,EbyET0"
+    echo ${SUBMITTINGDIRECTORY} | grep VoltageScan
+    if ($? == 0) then
+      set evout = ",evout";
+    endif
+  endif
+  set Chain = "";
+  switch ($year)
+    case "2*":
+      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco"
+    breaksw
+    default:
+      exit 0;
+  endsw
+  set WestEast = "";
+  echo "${SUBMITTINGDIRECTORY}" | grep -i WestOff
+  if ($? == 0) set WestEast = ",WestOff"
+  echo "${SUBMITTINGDIRECTORY}" | grep -i EastOff
+  if ($? == 0)  set WestEast = ",EastOff"
+#  if ($JOBINDEX > 0) then
+#    @ n =  $JOBINDEX % 20  # 05/29/2023
+#    set evout = ",-evout";
+#    if ($n == 4) set evout = ",evout";
+#  endif
+  hostname &gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}'","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
+# root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}',EbyET0","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+##
+##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
+##   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
+   rm ${bla}
+   gzip -f ${logFile}
+        </command>
+        <stdout URL="file:./sched$JOBID.log" />
+        <stderr URL="file:./sched$JOBID.err" />
+<!-- <input URL="command:daqdR.pl" /> -->
+<input URL="command:daqdR.local.pl" />
+</job>
