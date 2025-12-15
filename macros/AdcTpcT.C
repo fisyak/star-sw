@@ -6,7 +6,7 @@
   end
  */
 #include "Riostream.h"
-void AdcTpcT(const Char_t *files="*.root", const Char_t *Out = "") {
+void AdcTpcT(const Char_t *files="*.root", const Char_t *Out = "AdcSparseFlagged.root") {
 #if defined(__CINT__) && ! defined(__MAKECINT__)
   gROOT->LoadMacro("TpcT.C+");
   TpcTAdc(files,Out);

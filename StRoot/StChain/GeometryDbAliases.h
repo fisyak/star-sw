@@ -351,7 +351,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"Cosmic_2025_ZF",  			     20250402,     27, "y2025z",  "Cosmic_2025_ZF"}, 
   {"Cosmic_2025_FF",  			     20250402, 202321, "y2025z",  "Cosmic_2025_FF"}, 
   {"AuAu_2025",	                             20250609,  72555, "y2025z",  "AuAu_2025"},        // 1st run = 26160016
-  {"AuAu_2025_HiLumi",	                     20250620. 185303, "y2025z",  "AuAu_2025_HiLumi"}, // 1st run = 26171044
+  {"AuAu_2025_HiLumi",	                     20250620, 185303, "y2025z",  "AuAu_2025_HiLumi"}, // 1st run = 26171044
 
   {"athena",                                 20301220,      1,      "",         "athena"}, // 
   {"epic",                                   20301221,      1,      "",           "epic"}, // 

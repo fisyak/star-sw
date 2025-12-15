@@ -594,12 +594,12 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     } else {
       MuDraw(muPlot.Data(),"ZO", 2*ny, -yMax, yMax, "(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1)", "prof", -0.4,  1.4, "Outer", "Z", "#mu versus Z");
     }
-  } else if (Name.BeginsWith("AvCurrent") || Name.BeginsWith("Qcm") || Name.BeginsWith("VoltageP"))     {
+  } else if (Name.BeginsWith("AvCurrent") || Name.BeginsWith("Qcm") || Name.BeginsWith("Voltage"))     {
     muPlot += ":y";
     if (Opt == "" || Opt == "I") {
-      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1<=4)/dmu**2", "profg", -0.4,  1.4, Title, "Z", "#mu");
+      MuDraw(muPlot.Data(),"VI", 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1<=4)/dmu**2", "profg", -1.4,  1.4, Title, "Z", "#mu");
     } else {
-      MuDraw(muPlot.Data(),Name+Opt, 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1>4)/dmu**2", "profg", -0.4,  1.4, "Outer", "Z", "#mu");
+      MuDraw(muPlot.Data(),"VO", 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1>4)/dmu**2", "profg", -1.4,  1.4, "Outer", "Z", "#mu");
     }
   } else if (Name.BeginsWith("dX3"))      {
     muPlot += ":TMath::Sign(y,x)";

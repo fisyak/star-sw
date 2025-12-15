@@ -79,8 +79,9 @@
 #  endif
   hostname &gt;&amp; ${logFile}
 #  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
-  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}'","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
 # root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}',EbyET0","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}'","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}',dEdxCalib","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
 ##
 ##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
 ##   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}

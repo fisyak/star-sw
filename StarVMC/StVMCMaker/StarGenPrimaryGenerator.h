@@ -10,6 +10,7 @@ class StarGenPrimaryGenerator : public StarMCPrimaryGenerator  {
  private:
   virtual void GeneratePrimary();
   virtual void PreSet();
+  //  Int_t Skip(Int_t nskip);
   ClassDef(StarGenPrimaryGenerator,1)  //StarGenPrimaryGenerator
 };
 #endif //StarGenPrimaryGenerator_h
