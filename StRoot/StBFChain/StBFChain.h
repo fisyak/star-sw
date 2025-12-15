@@ -94,8 +94,8 @@ class StBFChain : public StChain {
    void                Set_IO_Files(const Char_t *infile=0, const Char_t *outfile=0); // *MENU
    void                SetInputFile(const Char_t *infile=0);                          // *MENU
    void                SetOutputFile(const Char_t *outfile=0);                        // *MENU
-   void                SetTFile(TFile *tf)			{fTFile=tf;}
-   TFile              *GetTFile() const			        {return fTFile;}
+   void                SetTFile(TFile *tf);
+   TFile              *GetTFile() const;
    virtual Int_t       kOpt(const TString *Tag, Bool_t Check = kTRUE) const;
    virtual Int_t       kOpt(const Char_t  *Tag, Bool_t Check = kTRUE) const;
    virtual void        SetDbOptions(StMaker *db=0);

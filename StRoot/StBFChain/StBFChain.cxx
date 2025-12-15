@@ -1228,15 +1228,6 @@ Int_t StBFChain::Init() {
 Int_t StBFChain::Finish() {
   if (!fBFC) return kStOK;
   Int_t ians = StChain::Finish();
-#if 0
-  TFile *tf = GetTFile();
-  if (tf) {
-    if (tf->IsWritable()) {
-      tf->Write(); tf->Flush(); 
-    }
-    tf->Close(); delete tf; SetTFile(0);
-  }
-#else
   TSeqCollection   *files = gROOT->GetListOfFiles();
   Int_t count = 0;
   if (files && files->GetSize() >0 ) {
@@ -1256,14 +1247,11 @@ Int_t StBFChain::Finish() {
   }
   if (count) Warning(__FUNCTION__, "%d files have been closed", count);
   else Print(" There was no open file to close");
-#endif
   SafeDelete(fchainOpt);
   fBFC = 0;
 //  delete gMessMgr; gMessMgr = 0;
   return ians;
 }
-
-
 //_____________________________________________________________________
 Int_t StBFChain::AddAB (const Char_t *mkname,const StMaker *maker,const Int_t Opt) {
   if (! maker || strlen(mkname) == 0) return kStErr;
@@ -2273,4 +2261,21 @@ TString StBFChain::GetGeometry() const
 void StBFChain::Clear(Option_t *option) {
   StMaker::Clear(option);
   if (GetOption("TObjTable"))  gObjectTable->Print();
+}
+//________________________________________________________________________________
+void StBFChain::SetTFile(TFile *tf) 			{
+  StBFChain *top = static_cast<StBFChain *>(GetTopChain());
+  if (top && top != GetChain()) {
+    top->SetTFile(tf); 
+  } else {
+    fTFile=tf;
+  }
+}
+//________________________________________________________________________________
+TFile *StBFChain::GetTFile() const			        {
+  StBFChain *top = static_cast<StBFChain *>(GetTopChain());
+  if (top && top != GetChain()) {
+    return top->GetTFile(); 
+  } 
+  return fTFile;
 }

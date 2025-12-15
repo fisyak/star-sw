@@ -50,7 +50,7 @@ end
 //#define __LASER__
 //#define __Cosmics__
 #ifndef __Cosmics__
-#define  __ONLY_PRIMARY_TRACKS__
+//#define  __ONLY_PRIMARY_TRACKS__
 #endif
 //#define __useGainT0__
 //#define __PADCorrection__
@@ -205,6 +205,7 @@ const  Double_t lO  = 1.95;
 #endif
 //#include "DrawList.C"
 void MakeFunctions();
+#if 0
 //________________________________________________________________________________
 struct Var_t {
   Double_t    sec;
@@ -224,6 +225,7 @@ const Char_t *NameV[NoDim] = {"sec","row","Npads", "Ntmbks",  "phiL", "eta","zL"
 const Int_t  nBins[NoDim]  = {    2,    2,      7,        7,      22,     32,  22,    12,     16,     16,  32};
 const Var_t  xMin          = {  0.5,  0.5,    0.5,      0.5,    -1.1,   -1.5,  -5,     3,   -0.5,   -0.5,-0.5};
 const Var_t  xMax          = { 24.5, 64.5,    7.5,     21.5,     1.1,    1.5, 215,     9,    0.5,    0.5, 0.5};
+#endif
 //________________________________________________________________________________
 Bool_t AcceptFile(const TString &File) {
   Bool_t ok = kTRUE;
@@ -232,6 +234,8 @@ Bool_t AcceptFile(const TString &File) {
        File.Contains("hist") || File.Contains("runco") || File.Contains("MuMc") ||
        File.Contains("minimc") || File.Contains("event") || File.Contains("geant") ||
        File.Contains("hist") || File.Contains("runco") || File.Contains("geant") ||
+       File.Contains("Sparse") ||
+       File.Contains("Test") ||
        File.Contains("QA") ||
        File.Contains("T0") ||
        File.Contains("All") ||
@@ -1046,7 +1050,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
     if (f) {
       TTree *tree = (TTree *) f->Get("TpcT");
       if (tree ) {
-      //    tree->Show(0);
+	//    tree->Show(0);
 	iter.AddFile(file); 
 	NFiles++; 
 	file1 = file;
@@ -1110,7 +1114,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   const UChar_t*&    fRcHit_mMaxpad                           = iter("fRcHit.mMaxpad");
   const UChar_t*&    fRcHit_mMintmbk                          = iter("fRcHit.mMintmbk");
   const UChar_t*&    fRcHit_mMaxtmbk                          = iter("fRcHit.mMaxtmbk");
-
+  
   if (! fOut) fOut = new TFile(output,"recreate");
   fOut->cd();
 #if 0
@@ -1139,7 +1143,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   const Char_t *vName[kVar] = {"Z","TanL","dXLog","npads","ntmbks","npadtmbks"};
   const Char_t *opName[kOpt] = {"","3D"};
   const Char_t *zName[kOpt] = {"log(simulated ADC)", "log(simulated ADC/recon. ADC)"};
-
+  
   Double_t tmBins[ktmBins+1] = {3.50, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 13.5, 15.5, 17.5, 21.5, 31.5};
   TAxis tmbAx(ktmBins,tmBins);
   struct Adc_t {
@@ -1165,30 +1169,37 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
       return ok;
     }
   };
-  TH2F *neP[2] = {0};
-  TH2F *lneP[2] = {0};
-  TH2F *neN[2] = {0};
-  TH3F *neN3D[2] = {0};
-  neP[0] = new TH2F("nePI","log(ne/nP) versus log(nP) for Inner sectors",110,1.5,12.5,500,-1,4);
-  neP[1] = new TH2F("nePO","log(ne/nP) versus log(nP) for Outer sectors",110,1.5,12.5,500,-1,4);
-  neN[0] = new TH2F("neNI","log(ne/(dN/dx*dx)) versus log((dN/dx*dx) for Inner sectors",110,1.5,12.5,500,-1,4);
-  neN[1] = new TH2F("neNO","log(ne/(dN/dx*dx)) versus log((dN/dx*dx) for Outer sectors",110,1.5,12.5,500,-1,4);
-  lneP[0] = new TH2F("lnePI","log(log(ne/nP)) versus log(nP) for Outer sectors",110,1.5,12.5,150,-1.5,1.5);
-  lneP[1] = new TH2F("lnePO","log(log(ne/nP)) versus log(nP) for Outer sectors",110,1.5,12.5,150,-1.5,1.5);
-  neN3D[0] = new TH3F("neN3DI","log(ne/(dN/dx*dx)) versus log((dN/dx*dx) and bgL10 for Inner sectors",110,1.5,12.5,500,-1,4,1000,-5.,5.);
-  neN3D[1] = new TH3F("neN3DO","log(ne/(dN/dx*dx)) versus log((dN/dx*dx) and bgL10 for Outer sectors",110,1.5,12.5,500,-1,4,1000,-5.,5.);
-  TH2F *dXdSR[2] = {0};
-  dXdSR[0] = new TH2F("dXdSRI","dX/dS - 1 versus bgL10 for Inner sectors",600,-1.5,4.5,300,-0.2,0.1);
-  dXdSR[1] = new TH2F("dXdSRO","dX/dS - 1 versus bgL10 for Outer sectors",600,-1.5,4.5,300,-0.2,0.1);
-  TH2F *dPL = new TH2F("dPL"," Log(McpIn/q/pIn) versus log_{10} (pIn)", 300,-2,1,100,-0.2,0.2);
-  TH2F *dBGL = new TH2F("dBGL","(beta*gamma)_{MC} - (beta*Gamma)_{RC} versus log(beta_{RC})", 500, -5.0, 0.0,400,-0.4,0.4);
+  TH2F *neP[2][2] = {0};
+  TH2F *lneP[2][2] = {0};
+  TH2F *Adcne[2][2] = {0};
+  TH2F *neN[2][2] = {0};
+  TH3F *neN3D[2][2] = {0};
+  TH2F *dXdSR[2][2] = {0};
+  TH1F *r1ADC[2][2] = {0};
+  const Char_t *IO[2] = {"I","O"};
+  const Char_t *IOT[2] = {"Inner", "Outer"};
+  const Char_t *F[2] = {"","2"};
+  const Char_t *FT[2] = {"flag == 0", "flag == 2"};
+  for (Int_t f = 0; f < 2; f++) {
+    for (Int_t io = 0; io < 2; io++) {
+      if (! f) {
+	neP[f][io] = new TH2F(Form("neP%s%s",IO[io],F[f]),Form("%s sector  ; ln(nP) ; ln(ne/nP)",         IOT[io]),110,1.5,12.5,500,-1,4);
+	lneP[f][io] = new TH2F(Form("lneP%s%s",IO[io],F[f]),Form("%s sector  ; ln(nP) ; ln(ln(ne/nP))",   IOT[io]),110,1.5,12.5,500,-1,4);
+	Adcne[f][io] = new TH2F(Form("Adcne%s%s",IO[io],F[f]),Form("%s sector  ; ln(ne) ; ln(AdcMc/ne)",  IOT[io]),120,1,13,140,-2,5);
+	r1ADC[f][io] = new TH1F(Form("r1ADC%s%s",IO[io],F[f]),Form("%s sector  ; ratio Adc_1/Adc for Inner",IOT[io]),100,0.5,1.5);
+      }
+#ifdef __TpcRSPart__
+      neN[f][io] = new TH2F(Form("neN%s%s",IO[io],F[f]),Form("%s sector with %s ; ln(nP) ; ln(ne/(dN/dx*dx)))",IOT[io],FT[f]),110,1.5,12.5,500,-1,4);
+      neN3D[f][io] = new TH3F(Form("nen3D%s%s",IO[io],F[f]),Form("%s sector with %s ; ln((dN/dx*dx) ; bgL10 ln(nP) ; ln(ln(ne/nP)); ln(ne/(dN/dx*dx))",  IOT[io],FT[f]), 110,1.5,12.5,500,-1,4,1000,-5.,5.);
+      dXdSR[f][io] = new TH2F(Form("dXdSR%s%s",IO[io],F[f]),Form("%s sector with %s ; bgL10 ; dX/dS - 1",       IOT[io],FT[f]),600,-1.5,4.5,300,-0.2,0.1);
+#endif /*  __TpcRSPart__ */
+    }
+  }
+#ifdef __TpcRSPart__
+  TH2F *dPL = new TH2F("dPL"," Ln(McpIn/q/pIn) versus ln_{10} (pIn)", 300,-2,1,100,-0.2,0.2);
+  TH2F *dBGL = new TH2F("dBGL","(beta*gamma)_{MC} - (beta*Gamma)_{RC} versus ln(beta_{RC})", 500, -5.0, 0.0,400,-0.4,0.4);
   TH2F *dBG = new TH2F("dBG","(beta*gamma)_{MC} - (beta*Gamma)_{RC} versus beta_{RC}", 500, 0.0, 1.0, 400,-0.4,0.4);
-  TH2F *Adcne[2] = {0};
-  Adcne[0] = new TH2F("AdcneI","log(AdcMc/ne) versus log(ne) Inner",120,1,13,140,-2,5);
-  Adcne[1] = new TH2F("AdcneO","log(AdcMc/ne) versus log(ne) Outer",120,1,13,140,-2,5);
-  TH1F *r1ADC[2] = {0};
-  r1ADC[0] = new TH1F("r1ADCI","ratio Adc_1/Adc for Inner",100,0.5,1.5);
-  r1ADC[1] = new TH1F("r1ADCO","ratio Adc_1/Adc for Outer",100,0.5,1.5);
+#endif /*  __TpcRSPart__ */
   const static Int_t NoDim = sizeof(Adc_t)/sizeof(Double_t);
   //  const Int_t  nBins[NoDim]  = {      2,      2,       25,      25, 110,    140,   250}; //,   200};
   const Char_t *NameV[NoDim] = {"secWE","rowIO", "Ntmbks", "Npads", "z",  "AdcL","ratL"}; //,ratC; 
@@ -1217,12 +1228,15 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   TH3F       *hists[kTPC][kVar];
 #define __SPARSE__
 #ifdef __SPARSE__
-  THnSparse  *sparse = new THnSparseF("Sparse", "TMath::Log(Adc_MC/Adc_RC) versus sector/row/no.tmbk/no.pads/zG/TMath::Log(Adc_RC)", NoDim, nBins, &xMin.sec, &xMax.sec);
-  for (Int_t i = 0; i < NoDim; i++) {
-    if      (i == 2) sparse->GetAxis(i)->Set(nBins[i], tmbks);
-    else if (i == 3) sparse->GetAxis(i)->Set(nBins[i], pads);
-    else if (i == 5) sparse->GetAxis(i)->Set(nBins[i], adcL);
-    sparse->GetAxis(i)->SetName(NameV[i]);
+  THnSparse  *sparse[2] = {0};
+  for (Int_t f = 0; f < 2; f++) {
+    sparse[f] = new THnSparseF(Form("Sparse%s",F[f]),Form("for %s ln(Adc_MC/Adc_RC) versus sector/row/no.tmbk/no.pads/zG/TMath::ln(Adc_RC)",FT[f]), NoDim, nBins, &xMin.sec, &xMax.sec);
+    for (Int_t i = 0; i < NoDim; i++) {
+      if      (i == 2) sparse[f]->GetAxis(i)->Set(nBins[i], tmbks); 
+      else if (i == 3) sparse[f]->GetAxis(i)->Set(nBins[i], pads);
+      else if (i == 5) sparse[f]->GetAxis(i)->Set(nBins[i], adcL);
+      sparse[f]->GetAxis(i)->SetName(NameV[i]);
+    }
   }
 #endif
 #ifdef __WE_IO_NTB__
@@ -1250,11 +1264,11 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
       for (Int_t k = 0; k < kOpt; k++) {
 	if (! k) {
 	  profs[i][j] = new TProfile2D(Form("%s%s%s",tpcName[i],opName[k],vName[j]),
-				       Form("log(simulated ADC) versus log(recon. ADC) and %s", Plots[j].vName),
+				       Form("ln(simulated ADC) versus ln(recon. ADC) and %s", Plots[j].vName),
 				       Plots[j].nx,Plots[j].xmin,Plots[j].xmax,Plots[j].ny,Plots[j].ymin,Plots[j].ymax);
 	} else if (k == 1) {
 	  hists[i][j] = new TH3F(Form("%s%s%s",tpcName[i],opName[k],vName[j]),
-				 Form("log(simulated ADC) - log(recon. ADC)  versus log(recon. ADC) and %s",Plots[j].vName),
+				 Form("ln(simulated ADC) - ln(recon. ADC)  versus ln(recon. ADC) and %s",Plots[j].vName),
 				 Plots[j].nx,Plots[j].xmin,Plots[j].xmax,Plots[j].ny,Plots[j].ymin,Plots[j].ymax,400,-2,2);
 	}
       }
@@ -1269,13 +1283,13 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
     for (Int_t k = 0; k < kdETot; k++) {
       switch (k) {
       case kdNdxLogGamma:
-	histdE[io][k] = new TH2F(Form("dNdxLogGamma%s",tpcNameN[io]),Form("dN/ds (MC) versus log10(gamma) for %sTpc",tpcNameN[io]),70,-2.0,5.0,150,0,300);
+	histdE[io][k] = new TH2F(Form("dNdxLnGamma%s",tpcNameN[io]),Form("dN/ds (MC) versus ln10(gamma) for %sTpc",tpcNameN[io]),70,-2.0,5.0,150,0,300);
 	break;
       case kdELognP:
-	histdE[io][k] = new TH2F(Form("dEdN%s",tpcNameN[io]),Form("dE (eV) per primary interaction versus log(nP) for %sTpc",tpcNameN[io]),160,3,11,500,0,500);
+	histdE[io][k] = new TH2F(Form("dEdN%s",tpcNameN[io]),Form("dE (eV) per primary interaction versus ln(nP) for %sTpc",tpcNameN[io]),160,3,11,500,0,500);
 	break;
       case kLogdELognP:
-	histdE[io][k] = new TH2F(Form("LogdEdN%s",tpcNameN[io]),Form("Log(dE (eV) per primary interaction (nP)) versus log(nP) for %sTpc",tpcNameN[io]),160,3,11,500,2.5,7.5);
+	histdE[io][k] = new TH2F(Form("LogdEdN%s",tpcNameN[io]),Form("ln(dE (eV) per primary interaction (nP)) versus ln(nP) for %sTpc",tpcNameN[io]),160,3,11,500,2.5,7.5);
 	break;
       default:
 	break;
@@ -1284,23 +1298,25 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   }
 #endif /* __LogGamma__ */
 #endif /* __ADCPLOTS__ */
-  TH2F *dNdxVsBg = new TH2F("dNdxVsBg",  "log((nP/dX)/(dN/dx)) versus log10(local beta*gamma",140,-2,5,1000,-1.,1.);
+#ifdef __TpcRSPart__
+  TH2F *dNdxVsBg = new TH2F("dNdxVsBg",  "ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma",140,-2,5,1000,-1.,1.);
   TH2F *dNdxVsBgC[3] = {0};
-  dNdxVsBgC[0] = new TH2F("dNdxVsBgC","log((nP/dX)/(dN/dx)) versus log10(local beta*gamma after dN/dx Cut",140,-2,5,1000,-1.,1.);
-  dNdxVsBgC[1] = new TH2F("dNdxVsBgCI","log((nP/dX)/(dN/dx)) versus log10(local beta*gamma after dN/dx Cut, Inner",140,-2,5,1000,-1.,1.);
-  dNdxVsBgC[2] = new TH2F("dNdxVsBgCO","log((nP/dX)/(dN/dx)) versus log10(local beta*gamma after dN/dx Cut, Outer",140,-2,5,1000,-1.,1.);
+  dNdxVsBgC[0] = new TH2F("dNdxVsBgC","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut",140,-2,5,1000,-1.,1.);
+  dNdxVsBgC[1] = new TH2F("dNdxVsBgCI","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Inner",140,-2,5,1000,-1.,1.);
+  dNdxVsBgC[2] = new TH2F("dNdxVsBgCO","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Outer",140,-2,5,1000,-1.,1.);
   TH2F *dNdxVsBgCC[3] = {0};
-  dNdxVsBgCC[0] = new TH2F("dNdxVsBgCC","log((nP/dX)/(dN/dx)) versus log10(local beta*gamma after dN/dx Cut, and NPCorrection",140,-2,5,1000,-1.,1.);
-  dNdxVsBgCC[1] = new TH2F("dNdxVsBgCCI","log((nP/dX)/(dN/dx)) versus log10(local beta*gamma after dN/dx Cut, Inner, and NPCorrection",140,-2,5,1000,-1.,1.);
-  dNdxVsBgCC[2] = new TH2F("dNdxVsBgCCO","log((nP/dX)/(dN/dx)) versus log10(local beta*gamma after dN/dx Cut, Outer, and NPCorrection",140,-2,5,1000,-1.,1.);
+  dNdxVsBgCC[0] = new TH2F("dNdxVsBgCC","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, and NPCorrection",140,-2,5,1000,-1.,1.);
+  dNdxVsBgCC[1] = new TH2F("dNdxVsBgCCI","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Inner, and NPCorrection",140,-2,5,1000,-1.,1.);
+  dNdxVsBgCC[2] = new TH2F("dNdxVsBgCCO","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Outer, and NPCorrection",140,-2,5,1000,-1.,1.);
+#endif /*  __TpcRSPart__ */
   TH2F *NpdN[3] = {0};
-  NpdN[0] = new TH2F("NpdN", "log(((dN/dx)*dX)/(nP)) versus log(nP)",140,3.0,10.0,1000,-2.,2.);
-  NpdN[1] = new TH2F("NpdNI","log(((dN/dx)*dX)/(nP)) versus log(nP) for Inner",140,3.0,10.0,1000,-2.,2.);
-  NpdN[2] = new TH2F("NpdNO","log(((dN/dx)*dX)/(nP)) versus log(nP) for Outer",140,3.0,10.0,1000,-2.,2.);
+  NpdN[0] = new TH2F("NpdN", "ln(((dN/dx)*dX)/(nP)) versus ln(nP)",140,3.0,10.0,1000,-2.,2.);
+  NpdN[1] = new TH2F("NpdNI","ln(((dN/dx)*dX)/(nP)) versus ln(nP) for Inner",140,3.0,10.0,1000,-2.,2.);
+  NpdN[2] = new TH2F("NpdNO","ln(((dN/dx)*dX)/(nP)) versus ln(nP) for Outer",140,3.0,10.0,1000,-2.,2.);
   TH2F *dNNp[3] = {0};
-  dNNp[0] = new TH2F("dNNp", "log(nP/(dN/dx)*dX)) versus log(dN/dx)*dX))",140,3.0,10.0,1000,-2.,2.);
-  dNNp[1] = new TH2F("dNNpI","log(nP/(dN/dx)*dX)) versus log(dN/dx)*dX)) for Inner",140,3.0,10.0,1000,-2.,2.);
-  dNNp[2] = new TH2F("dNNpO","log(nP/(dN/dx)*dX)) versus log(dN/dx)*dX)) for Outer",140,3.0,10.0,1000,-2.,2.);
+  dNNp[0] = new TH2F("dNNp", "ln(nP/(dN/dx)*dX)) versus ln(dN/dx)*dX))",140,3.0,10.0,1000,-2.,2.);
+  dNNp[1] = new TH2F("dNNpI","ln(nP/(dN/dx)*dX)) versus ln(dN/dx)*dX)) for Inner",140,3.0,10.0,1000,-2.,2.);
+  dNNp[2] = new TH2F("dNNpO","ln(nP/(dN/dx)*dX)) versus ln(dN/dx)*dX)) for Outer",140,3.0,10.0,1000,-2.,2.);
   TString  currentFileName;
   TChain *chain = iter.Chain();
   Double_t fMass = -1;
@@ -1310,6 +1326,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
     if (currentFileName != TString(chain->GetFile()->GetName())) {
       currentFileName = chain->GetFile()->GetName();
       cout << "Open File " << currentFileName.Data() << endl;
+#ifdef __TpcRSPart__
       fMass = -1;
       fCharge = 0;
       for (Int_t h = 0; h < NTpcRSParts; h++) {
@@ -1327,16 +1344,18 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
 	  break;
 	}
       }
+#endif /*  __TpcRSPart__ */
     }
     if (fNoMcHit != 1) continue;
+    if (fNoRcHit != 1) continue;
     //    if (fNoMcHit != 1 && fNoMcHit != 3) continue;
-    if (fMcHit_mnP[0] <= 0) continue;
-    if (fMcHit_mne[0] <= 0) continue;
+    //     if (fMcHit_mnP[0] <= 0) continue;
+    //     if (fMcHit_mne[0] <= 0) continue;
     for (Int_t k = 0; k < fNoMcHit; k++) {
-      if (fMcHit_mKey[k] > 100) continue; // secondaries   Only for TpcRS_Part
+      //      if (fMcHit_mKey[k] > 100) continue; // secondaries   Only for TpcRS_Part
       if (fMcHit_mdE[k] <= 1e-6 || fMcHit_mdE[k] > 1e-3) continue;
       if (fMcHit_mAdc[k] <= 0) continue;
-
+      
       Int_t sector = (fMcHit_mVolumeId[k]/100)%100;
       Int_t row    =  fMcHit_mVolumeId[k]%100;
       Int_t io = 0;
@@ -1350,119 +1369,127 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
       //      if (fMcHit_mdS[k] < dsCut[io]) continue;
       if (fMcHit_mdS[k] < 0.1) continue;
       if (fMcHit_mLength[k] < 55.0) continue;
-      dPL->Fill(TMath::Log10(fpIn), TMath::Log(fMcpIn/TMath::Abs(fCharge)/fpIn));
       Double_t nP = fMcHit_mnP[k];
       Double_t ne = fMcHit_mne[k];
-      neP[io]->Fill(TMath::Log(nP),TMath::Log(ne/nP));
-      if (ne > nP) lneP[io]->Fill(TMath::Log(nP),TMath::Log(TMath::Log(ne/nP)));
-      Adcne[io]->Fill(TMath::Log(ne),TMath::Log(fMcHit_mAdc[k]/ne));
+      Int_t f = 0;
+      neP[f][io]->Fill(TMath::Log(nP),TMath::Log(ne/nP));
+      if (ne > nP) lneP[f][io]->Fill(TMath::Log(nP),TMath::Log(TMath::Log(ne/nP)));
+      Adcne[f][io]->Fill(TMath::Log(ne),TMath::Log(fMcHit_mAdc[k]/ne));
       Double_t r0 =  fMcHit_mAdc0[k]/fMcHit_mAdc[k];
       Double_t r1 =  fMcHit_mAdc1[k]/fMcHit_mAdc[k];
-      r1ADC[io]->Fill(r1);
+      r1ADC[f][io]->Fill(r1);
       Double_t r2 =  fMcHit_mAdc2[k]/fMcHit_mAdc[k];
       TVector3 pxyzL(fMcHit_mLocalMomentum_mX1[k],fMcHit_mLocalMomentum_mX2[k],fMcHit_mLocalMomentum_mX3[k]);
       Double_t TanL = pxyzL.z()/pxyzL.Perp();
       // RC block
-      if (fNoRcHit != 1) continue;
-      if (fRcHit_mFlag[0]) continue;
-      if (fRcHit_mAdc[0] <= 0) continue;
-      if (! fRcHit_mFitFlag[0]) continue;
-      Double_t ratio = fMcHit_mAdc[k]/fRcHit_mAdc[0];
-      if (ratio < 0.1 || ratio > 10) continue;
-      if (fMcHit_mKey[k] != fRcHit_mIdTruth[k]) continue;
-      if (fRcHit_mQuality[k] < 95) continue;
-      if (fRcHit_mIdTruth[k] > 100) continue; // secondaries
-      if (fRcHit_mAdc[k] <= 0) continue;
-      if (fRcHit_mCharge[k] <= 0) continue;
-      if (fRcHit_mdX[0] <= 0) continue;
-      Double_t dX = (io == 1) ? fRcHit_mdX[0]*2.00/1.95 : fRcHit_mdX[0]*1.60/1.55*1.005;
-      Double_t nPdNdx = fMcHit_mdNdx[0]*dX;
-      if (fCharge && fMcHit_mnP[0] > 0) {
-	Double_t lmom = fMcpIn;
-	if (fMass > 0) {
-	  Double_t bgRC = TMath::Abs(fCharge)*fpIn/fMass;
-	  Double_t bgMC = fMcpIn/fMass;
-	  Double_t bgL10 = TMath::Log10(bgRC);
-	  neN[io]->Fill(TMath::Log(nPdNdx),TMath::Log(ne/nPdNdx));
-	  dNdxVsBg->Fill(bgL10, TMath::Log(fMcHit_mnP[0]/nPdNdx));
-	  if (bgL10 < fL10bgMin) continue;
-	  dNdxVsBgC[0]->Fill(bgL10, TMath::Log(fMcHit_mnP[0]/nPdNdx));
-	  dNdxVsBgC[io+1]->Fill(bgL10, TMath::Log(fMcHit_mnP[0]/nPdNdx));
-	  Double_t nPdNdxC = nPdNdx*StdEdxModel::instance()->NpCorrection(bgRC);
-	  dNdxVsBgCC[0]->Fill(bgL10, TMath::Log(fMcHit_mnP[0]/nPdNdxC));
-	  dNdxVsBgCC[io+1]->Fill(bgL10, TMath::Log(fMcHit_mnP[0]/nPdNdxC));
-	  neN3D[io]->Fill(TMath::Log(nPdNdx),bgL10, TMath::Log(ne/nPdNdx));
-	  dXdSR[io]->Fill(bgL10, dX/fMcHit_mdS[0] - 1.0);
-	  dPL->Fill(TMath::Log10(fpIn), TMath::Log(fMcpIn/TMath::Abs(fCharge)/fpIn));
-	  Double_t betaRC = bgRC/TMath::Sqrt(bgRC*bgRC + 1);
-	  dBGL->Fill(TMath::Log(betaRC), bgMC - bgRC);
-	  dBG->Fill(betaRC, bgMC - bgRC);
-	  NpdN[0]->Fill(   TMath::Log(fMcHit_mnP[0]), TMath::Log(nPdNdx/fMcHit_mnP[0]));
-	  NpdN[io+1]->Fill(TMath::Log(fMcHit_mnP[0]), TMath::Log(nPdNdx/fMcHit_mnP[0]));
-	  dNNp[0]->Fill(   TMath::Log(nPdNdx), TMath::Log(fMcHit_mnP[0]/nPdNdx));
-	  dNNp[io+1]->Fill(TMath::Log(nPdNdx), TMath::Log(fMcHit_mnP[0]/nPdNdx));
+      for (Int_t l = 0; l < fNoRcHit; l++) {
+	f = -1;
+	if      (fRcHit_mFlag[l] == 0) f = 0;
+	else if (fRcHit_mFlag[l] &  2) f = 1;
+	if (f < 0) continue;
+	if (fRcHit_mAdc[l] <= 0) continue;
+	Double_t ratio = fMcHit_mAdc[k]/fRcHit_mAdc[l];
+	if (ratio < 0.1 || ratio > 10) continue;
+	if (fMcHit_mKey[k] != fRcHit_mIdTruth[l]) continue;
+	if (fRcHit_mQuality[l] < 95) continue;
+	//	if (fRcHit_mIdTruth[l] > 100) continue; // secondaries
+	if (fRcHit_mAdc[l] <= 0) continue;
+	//	if (fRcHit_mCharge[l] <= 0) continue;
+	if (fRcHit_mdX[l] <= 0) continue;
+	Double_t dX = (io == 1) ? fRcHit_mdX[l]*2.00/1.95 : fRcHit_mdX[l]*1.60/1.55*1.005;
+	Double_t nPdNdx = fMcHit_mdNdx[k]*dX;
+#ifdef __TpcRSPart__
+	if (fCharge && fMcHit_mnP[k] > 0) {
+	  Double_t lmom = fMcpIn;
+	  if (fMass > 0) {
+	    Double_t bgRC = TMath::Abs(fCharge)*fpIn/fMass;
+	    Double_t bgMC = fMcpIn/fMass;
+	    Double_t bgL10 = TMath::Log10(bgRC);
+	    neN[f][io]->Fill(TMath::Log(nPdNdx),TMath::Log(ne/nPdNdx));
+	    dNdxVsBg->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdx));
+	    if (bgL10 < fL10bgMin) continue;
+	    dNdxVsBgC[0]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdx));
+	    dNdxVsBgC[io+1]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdx));
+	    Double_t nPdNdxC = nPdNdx*StdEdxModel::instance()->NpCorrection(bgRC);
+	    dNdxVsBgCC[0]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdxC));
+	    dNdxVsBgCC[io+1]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdxC));
+	    neN3D[f][io]->Fill(TMath::Log(nPdNdx),bgL10, TMath::Log(ne/nPdNdx));
+	    dXdSR[f][io]->Fill(bgL10, dX/fMcHit_mdS[k] - 1.0);
+	    
+	    dPL->Fill(TMath::Log10(fpIn), TMath::Log(fMcpIn/TMath::Abs(fCharge)/fpIn));
+	    Double_t betaRC = bgRC/TMath::Sqrt(bgRC*bgRC + 1);
+	    dBGL->Fill(TMath::Log(betaRC), bgMC - bgRC);
+	    dBG->Fill(betaRC, bgMC - bgRC);
+	  }
 	}
-      }
-      Double_t y[kVar] = { fMcHit_mPosition_mX3[k], TanL, TMath::Log(dX),
-			   (Double_t) fRcHit_mMinpad[0]+fRcHit_mMaxpad[0]+1,
-			   (Double_t) fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1,
-			   (Double_t) fRcHit_mMinpad[0]+fRcHit_mMaxpad[0]+1+fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1
-      };
-      Double_t lADCr = TMath::Log(fRcHit_mAdc[0]);
-      Double_t lADCs = TMath::Log(fMcHit_mAdc[k]);
+#endif /*  __TpcRSPart__ */
+	NpdN[0]->Fill(   TMath::Log(fMcHit_mnP[k]), TMath::Log(nPdNdx/fMcHit_mnP[k]));
+	NpdN[io+1]->Fill(TMath::Log(fMcHit_mnP[k]), TMath::Log(nPdNdx/fMcHit_mnP[k]));
+	dNNp[0]->Fill(   TMath::Log(nPdNdx), TMath::Log(fMcHit_mnP[k]/nPdNdx));
+	dNNp[io+1]->Fill(TMath::Log(nPdNdx), TMath::Log(fMcHit_mnP[k]/nPdNdx));
+	Double_t y[kVar] = { fMcHit_mPosition_mX3[k], TanL, TMath::Log(dX),
+			     (Double_t) fRcHit_mMinpad[l]+fRcHit_mMaxpad[l]+1,
+			     (Double_t) fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1,
+			     (Double_t) fRcHit_mMinpad[l]+fRcHit_mMaxpad[l]+1+fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1
+	};
+	Double_t lADCr = TMath::Log(fRcHit_mAdc[l]);
+	Double_t lADCs = TMath::Log(fMcHit_mAdc[k]);
 #if 0
-      Double_t params[3][2] = {
-	{   6.81054e-01,  -9.48271e-04}, // Inner
-	{   6.07395e-01,  -3.72945e-04}, // Outer
-	{   5.05106e-01,  -5.44289e-04}  // iTPC
-      };
-      Double_t dADC = params[io][0] + params[io][1]*TMath::Abs(y[0]);
+	Double_t params[3][2] = {
+	  {   6.81054e-01,  -9.48271e-04}, // Inner
+	  {   6.07395e-01,  -3.72945e-04}, // Outer
+	  {   5.05106e-01,  -5.44289e-04}  // iTPC
+	};
+	Double_t dADC = params[io][0] + params[io][1]*TMath::Abs(y[0]);
 #else
-      Double_t dADC = 0;
+	Double_t dADC = 0;
 #endif
 #ifdef __ADCPLOTS__
-      Double_t z[4] = {lADCs, lADCs-lADCr, lADCs - dADC, lADCs-lADCr - dADC};
-      for (Int_t j = 0; j < kVarT; j++) {
-	profs[io][j]->Fill(lADCr, y[j], z[0]);
-	hists[io][j]->Fill(lADCr, y[j], z[1]);
-	profs[io+2][j]->Fill(lADCr, y[j], z[2]);
-	hists[io+2][j]->Fill(lADCr, y[j], z[3]);
-      }
+	Double_t z[4] = {lADCs, lADCs-lADCr, lADCs - dADC, lADCs-lADCr - dADC};
+	for (Int_t j = 0; j < kVarT; j++) {
+	  profs[io][j]->Fill(lADCr, y[j], z[0]);
+	  hists[io][j]->Fill(lADCr, y[j], z[1]);
+	  profs[io+2][j]->Fill(lADCr, y[j], z[2]);
+	  hists[io+2][j]->Fill(lADCr, y[j], z[3]);
+	}
 #ifdef __LogGamma__
-      Double_t Np = fMcHit_mnP[k];
-      if (fMcHit_mdS[0] < 0.1) continue;
-      Double_t NpRC = nPdNdx;
-      histdE[io][0]->Fill(fMcHit_mLgamma[k],dNdx); 
-      histdE[io][1]->Fill(TMath::Log(NpRC),           1e9*fRcHit_mCharge[k]/NpRC);
-      histdE[io][2]->Fill(TMath::Log(NpRC),TMath::Log(1e9*fRcHit_mCharge[k]/NpRC));
-      histdE[2][0]->Fill(fMcHit_mLgamma[k],NpRC/fRcHit_mdX[k]); 
-      histdE[2][1]->Fill(TMath::Log(NpRC),           1e9*fRcHit_mCharge[k]/NpRC);
-      histdE[2][2]->Fill(TMath::Log(NpRC),TMath::Log(1e9*fRcHit_mCharge[k]/NpRC));
+	Double_t Np = fMcHit_mnP[k];
+	if (fMcHit_mdS[k] < 0.1) continue;
+	Double_t NpRC = nPdNdx;
+	histdE[io][0]->Fill(fMcHit_mLgamma[k],dNdx); 
+	histdE[io][1]->Fill(TMath::Log(NpRC),           1e9*fRcHit_mCharge[l]/NpRC);
+	histdE[io][2]->Fill(TMath::Log(NpRC),TMath::Log(1e9*fRcHit_mCharge[l]/NpRC));
+	histdE[2][0]->Fill(fMcHit_mLgamma[k],NpRC/fRcHit_mdX[l]); 
+	histdE[2][1]->Fill(TMath::Log(NpRC),           1e9*fRcHit_mCharge[l]/NpRC);
+	histdE[2][2]->Fill(TMath::Log(NpRC),TMath::Log(1e9*fRcHit_mCharge[l]/NpRC));
 #endif /* __LogGamma__ */
 #endif /*  __ADCPLOTS__ */
 #ifdef __SPARSE__
-      //________________________________________________________________________________
-      //      Adc_t AdcV = { (Double_t) sector,  (Double_t) row, (Double_t) fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1, TMath::Abs(fRcHit_mPosition_mX3[0]), lADCr, lADCs - lADCr};
-      Adc_t AdcV = { (Double_t) sector,  (Double_t) row, 
-		     (Double_t) fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1,
-		     (Double_t) fRcHit_mMinpad[0]+fRcHit_mMaxpad[0]+1, 
-		     TMath::Abs(fRcHit_mPosition_mX3[0]), lADCr, lADCs - lADCr};
-      if (AdcV.Within(xMin,xMax)) sparse->Fill(&AdcV.sec);
+	//________________________________________________________________________________
+	//      Adc_t AdcV = { (Double_t) sector,  (Double_t) row, (Double_t) fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1, TMath::Abs(fRcHit_mPosition_mX3[0]), lADCr, lADCs - lADCr};
+	Adc_t AdcV = { (Double_t) sector,  (Double_t) row, 
+		       (Double_t) fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1,
+		       (Double_t) fRcHit_mMinpad[l]+fRcHit_mMaxpad[l]+1, 
+		       TMath::Abs(fRcHit_mPosition_mX3[l]), lADCr, lADCs - lADCr};
+	if (AdcV.Within(xMin,xMax)) sparse[f]->Fill(&AdcV.sec);
 #endif
 #ifdef __WE_IO_NTB__
-      Int_t we = 0; 
-      if (sector > 12) we = 1;
-      Double_t ntb = fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1;
-      Int_t tb = tmbAx.FindBin(ntb) - 1;
-      if (tb < 0 || tb >= ktmBins) continue;
-      AdcHits[we][io][tb]->Fill(TMath::Abs(fRcHit_mPosition_mX3[0]), lADCr, lADCs - lADCr);
+	Int_t we = 0; 
+	if (sector > 12) we = 1;
+	Double_t ntb = fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1;
+	Int_t tb = tmbAx.FindBin(ntb) - 1;
+	if (tb < 0 || tb >= ktmBins) continue;
+	AdcHits[we][io][tb]->Fill(TMath::Abs(fRcHit_mPosition_mX3[l]), lADCr, lADCs - lADCr);
 #endif /* __WE_IO_NTB__ */
+      }
     }
   }
   fOut->cd();
   fOut->Write();
 #ifdef __SPARSE__
-  sparse->Write();
+  for (Int_t f = 0; f < 2; f++) {
+    sparse[f]->Write();
+  }
 #endif
 }
 //________________________________________________________________________________
@@ -1542,7 +1569,7 @@ void NormdEdN() {
       h->GetBinXYZ(binMax, binx, biny, binz);
       const Int_t nrVar  = 3;
       const Int_t nrPnts = 3;
-     
+      
       Double_t ax[3] = {ya->GetBinCenter(biny-1),ya->GetBinCenter(biny),ya->GetBinCenter(biny+1)};
       Double_t ax2[3] ={ax[0]*ax[0], ax[1]*ax[1], ax[2]*ax[2]};
       Double_t ay[3] = {h->GetBinContent(binx,biny-1),h->GetBinContent(binx,biny),h->GetBinContent(binx,biny+1)};
@@ -3460,316 +3487,6 @@ void MakeProjections(const Char_t *name="OuterXTimeMc") {
   fIn->cd();
 }
 //________________________________________________________________________________
-void TpcTPadSp(const Char_t *Out = "SpXSpZ", const Char_t *files="*.root") {
-  TDirIter Dir(files);
-  Char_t *file = 0;
-  Char_t *file1 = 0;
-  Int_t NFiles = 0;
-  TTreeIter iter("TpcT");
-  while ((file = (Char_t *) Dir.NextFile())) {
-    TString File(file);
-    if (! AcceptFile(File)) continue;
-    TFile *f = new TFile (File);
-    if (f) {
-      TTree *tree = (TTree *) f->Get("TpcT");
-      if (! tree ) continue;
-      //    tree->Show(0);
-      iter.AddFile(file); 
-      NFiles++; 
-      file1 = file;
-      MakeFunctions();
-    }
-    delete f;
-  }
-  cout << files << "\twith " << NFiles << " files" << endl; 
-  if (! file1 ) return;
-  TString output(Out);
-  if (output == "") {
-    output = file1;
-    output.ReplaceAll(".root","Sparse.root");
-  } else {
-    output += ".Sparse.root";
-  }
-  cout << "Output for " << output << endl;
-  const Int_t&       fNoRcHit                                 = iter("fNoRcHit");
-  const Int_t&       fNoMcHit                                 = iter("fNoMcHit");
-  const Int_t&       fAdcSum                                  = iter("fAdcSum");
-  const Float_t&     Frequency                                = iter("Frequency");
-#if 0
-  const Float_t&     DVelWest                                 = iter("DVelWest");
-  const Float_t&     DVelEast                                 = iter("DVelEast");
-#endif
-#if 0  
-  const UChar_t*&    fPixels_mSector                          = iter("fPixels.mSector");
-  const UChar_t*&    fPixels_mRow                             = iter("fPixels.mRow");
-  const UChar_t*&    fPixels_mPad                             = iter("fPixels.mPad");
-  const UShort_t*&   fPixels_mTimeBin                         = iter("fPixels.mTimeBin");
-  const UShort_t*&   fPixels_mAdc                             = iter("fPixels.mAdc");
-#ifdef PRINT
-  const Int_t*&   fPixels_mIdTruth                         = iter("fPixels.mIdTruth");
-#endif
-#endif
-  const Float_t*&    fMcHit_mLocalMomentum_mX1                = iter("fMcHit.mLocalMomentum.mX1");
-  const Float_t*&    fMcHit_mLocalMomentum_mX2                = iter("fMcHit.mLocalMomentum.mX2");
-  const Float_t*&    fMcHit_mLocalMomentum_mX3                = iter("fMcHit.mLocalMomentum.mX3");
-  const Float_t*&    fMcHit_mPosition_mX3                     = iter("fMcHit.mPosition.mX3");
-  //  const Float_t*&    fMcHit_mdE                               = iter("fMcHit.mdE");
-  //  const Float_t*&    fMcHit_mdS                               = iter("fMcHit.mdS");
-  const Float_t*&    fMcHit_mTof                              = iter("fMcHit.mTof");
-  const Long_t*&     fMcHit_mKey                              = iter("fMcHit.mKey");
-  const Long_t*&     fMcHit_mVolumeId                         = iter("fMcHit.mVolumeId");
-  //  const Float_t*&    fMcHit_mAdc                           = iter("fMcHit.mAdc");
-  const Float_t*&    fMcHit_mMcl_x                            = iter("fMcHit.mMcl_x");
-  const Float_t*&    fMcHit_mMcl_t                            = iter("fMcHit.mMcl_t");
-  //  const Int_t*&      fRcHit_mId                               = iter("fRcHit.mId");
-#ifdef PRINT0
-  const Float_t*&    fRcHit_mPosition_mX3                     = iter("fRcHit.mPosition.mX3");
-  const Float_t*&    fRcHit_mCharge                           = iter("fRcHit.mCharge");
-#endif
-  const UChar_t*&    fRcHit_mMinpad                           = iter("fRcHit.mMinpad");
-  const UChar_t*&    fRcHit_mMaxpad                           = iter("fRcHit.mMaxpad");
-  const UChar_t*&    fRcHit_mMintmbk                          = iter("fRcHit.mMintmbk");
-  const UChar_t*&    fRcHit_mMaxtmbk                          = iter("fRcHit.mMaxtmbk");
-  const Short_t*&    fRcHit_mMcl_x                            = iter("fRcHit.mMcl_x");
-  const Short_t*&    fRcHit_mMcl_t                            = iter("fRcHit.mMcl_t");
-  const UShort_t*&   fRcHit_mFlag                             = iter("fRcHit.mFlag");
-  const Int_t*&      fRcHit_mIdTruth                          = iter("fRcHit.mIdTruth");
-  const UShort_t*&   fRcHit_mQuality                          = iter("fRcHit.mQuality");
-#if 0
-  const Float_t*&    fRcTrack_fpx                             = iter("fRcTrack.fpx");
-  const Float_t*&    fRcTrack_fpy                             = iter("fRcTrack.fpy");
-#endif
-  TString TitleX("dX versus ");
-  TString TitleZ("dZ versus ");
-  for (Int_t i = 0; i < NoDim; i++) {
-    if (i) {TitleX += " "; TitleZ += " ";}
-    TitleX += Names[i]; TitleZ += Names[i];
-  }
-  THnSparseC *spX = 0;
-  THnSparseC *spZ = 0;
-  if (output.Contains("SpX")) spX = new THnSparseC("SpX", TitleX, NoDim, nBins, &xMin.sec, &xMax.sec);
-  if (output.Contains("SpZ")) spZ = new THnSparseC("SpZ", TitleZ, NoDim, nBins, &xMin.sec, &xMax.sec);
-  if (! spX && ! spZ) return;
-  for (Int_t i = 0; i < NoDim; i++) {
-    if (spX) spX->GetAxis(i)->SetName(Names[i]);
-    if (spZ) spZ->GetAxis(i)->SetName(Names[i]);
-  }
-  Var_t x;
-  Int_t noTTree = -1;
-  while (iter.Next()) {
-    Int_t cTTree = iter.Chain()->GetTreeNumber();
-    if (noTTree > 0 && cTTree != noTTree) {
-      TString OutF(output);
-      OutF += Form("%03i",noTTree);
-      fOut = new TFile(OutF,"recreate");
-      fOut->cd();
-      if (spX) spX->Write(); 
-      if (spZ) spZ->Write();
-      delete fOut; fOut = 0;
-      cout << OutF.Data() << " saved" << endl;
-    }
-    noTTree = cTTree;
-    if (fNoRcHit != 1) continue;
-    if (fNoMcHit != 1 && fNoMcHit != 3) continue;
-    if (fAdcSum <= 0) continue;
-    Double_t AdcL = TMath::Log(fAdcSum);
-    x.AdcL = AdcL;
-    for (Int_t k = 0; k < fNoMcHit; k++) { 
-      if (fRcHit_mFlag[k]) continue;
-      if (fMcHit_mKey[k] != fRcHit_mIdTruth[k]) continue;
-      if (fMcHit_mTof[k] > 50e-9) continue;
-      if (fRcHit_mQuality[k] < 95) continue;
-      Int_t sec = (fMcHit_mVolumeId[k]/100)%100;
-      x.sec = sec;
-      Int_t row = fMcHit_mVolumeId[k]%100;
-      if (row > xMax.row) row = xMax.row;
-      x.row = row;
-      Double_t phiL = TMath::DegToRad()*LocalPhi(fMcHit_mLocalMomentum_mX1[k],fMcHit_mLocalMomentum_mX2[k],fMcHit_mVolumeId[k]);
-      if (phiL < -TMath::Pi()/2) phiL += TMath::Pi();
-      if (phiL >  TMath::Pi()/2) phiL -= TMath::Pi();
-      x.phiL = phiL;
-      Double_t eta = Eta(fMcHit_mLocalMomentum_mX1[k],fMcHit_mLocalMomentum_mX2[k],fMcHit_mLocalMomentum_mX3[k]);
-      x.eta = eta;
-      Double_t ZL   = fMcHit_mPosition_mX3[k];
-      if (TMath::Nint(fMcHit_mVolumeId[k]/100.)%100>12) {
-	eta = -eta;
-	ZL   = - ZL;
-      }
-      x.zL = ZL;
-      Int_t npads = fRcHit_mMaxpad[k] + fRcHit_mMinpad[k] + 1;
-      if (npads > xMax.Npads) npads = xMax.Npads;
-      x.Npads = npads;
-      Int_t pad = TMath::Nint((fRcHit_mMcl_x[k])/64.);
-      Double_t xMC = fMcHit_mMcl_x[k] - pad;
-      Double_t xRC = (fRcHit_mMcl_x[k])/64. - pad;
-      x.xPad = xRC;
-      Double_t dx = xRC - xMC;
-      Int_t ntmbks = fRcHit_mMaxtmbk[k] + fRcHit_mMintmbk[k] + 1;
-      if (ntmbks > xMax.Ntmbks) ntmbks = xMax.Ntmbks;
-      x.Ntmbks = ntmbks;
-      Int_t tbin = TMath::Nint((fRcHit_mMcl_t[k])/64.);
-      Double_t zMC = fMcHit_mMcl_t[k] + Frequency*fMcHit_mTof[k] + 1.66168e+00 - tbin;
-      Double_t zRC = (fRcHit_mMcl_t[k])/64. - tbin;
-      x.zTbk = zRC;
-      x.dX = dx;
-      if (spX) spX->Fill(&x.sec);
-      Double_t dz = zRC - zMC;
-      x.dX = dz;
-      if (spZ) spZ->Fill(&x.sec);
-    }
-  }
-  fOut = new TFile(output,"recreate");
-  fOut->cd();
-  if (spX) spX->Write();
-  if (spZ) spZ->Write();
-}
-//________________________________________________________________________________
-void AnalysisSparse(const Char_t *histN = "SpX",
-		    Int_t sec = 1, Int_t row = 1, 
-		    Int_t Npads = 1, Int_t Ntbks = 1,
-		    Int_t border=1, 
-		  const Char_t *fn="") {
-  THnSparseC *h = ( THnSparseC *) gDirectory->Get(histN);
-  if (! h) return;
-  const static Int_t Ndim = h->GetNdimensions();
-  // Output Tree
-  TString out(fn);
-  if (out == "") out = Form("Fit_%s_s_%i_r_%i_p_%i_t_%i_B_%i.root",histN,sec,row,Npads,Ntbks,border);
-  TFile *fout = new TFile(out,"recreate");
-  TTree* treeOut = new TTree(Form("%s_tree",histN), "Tree for fit results");
-  TString branchCoord;
-  for (Int_t d = 0; d < Ndim - 1; d++) {
-    if (d) branchCoord += ":";
-    branchCoord += h->GetAxis(d)->GetName(); branchCoord += "/D";
-  }
-  Var_t xC;     Double_t *XC = &xC.sec; memset(XC, 0, sizeof(Var_t));
-  treeOut->Branch("coord", &xC.sec, branchCoord);
-  struct Fit_t {
-    Double_t A; Double_t dA;
-    Double_t mu; Double_t dmu;
-    Double_t sigma; Double_t dsigma;
-    Double_t chi2; 
-  };
-  Fit_t fit;
-  treeOut->Branch("fit",&fit.A,"A/D:dA/D:mu/D:dmu/D:sigma/D:dsigma/D:chi2/D");
-  StCloseFileOnTerminate::Instantiate();
-  //
-  Int_t bins[Ndim]; memset(bins, 0, sizeof(bins));
-  bins[0] = sec;
-  bins[1] = row;
-  bins[2] = Npads;
-  bins[3] = Ntbks;
-  const Int_t firstN = 4;
-  Int_t N = 1;
-  TArrayI Nbins(Ndim);
-  for (Int_t d = 0; d < Ndim; d++) {
-    TAxis *ax = h->GetAxis(d);
-    Int_t nb = ax->GetNbins();
-    Nbins[d] = nb+2;
-    if (d >= firstN && d <= Ndim - 4) N *= Nbins[d];
-  }
-  TArrayI cont(N);
-  Int_t *Bins = new Int_t[Ndim];
-  Double_t entries = 0;
-  for (Long64_t i = 0; i < h->GetNbins(); ++i) {
-    entries = h->GetBinContent(i, Bins);
-    //    Int_t jentry = h->GetBin(Bins,kFALSE);
-    if (entries <= 0) continue;
-    Int_t iok = 1;
-    for (Int_t j = 0; j < firstN; j++) {
-      if (Bins[j] != bins[j]) {iok = 0; break;}
-    }
-    if (! iok) continue;
-    Int_t bin = 0;
-    for (Int_t d = firstN; d <= Ndim - 4; d++) {
-      if (d > firstN) bin = bin*Nbins[d];
-      bin += Bins[d];
-    }
-    cont[bin] += entries;
-  }
-  for (Long64_t n = 0; n < N ; n++) {
-    if (cont[n] < 10) continue; 
-    Int_t l = n;
-    for (Int_t d = Ndim - 4; d >= firstN; d--) {
-      bins[d] = l%Nbins[d];
-      l /= Nbins[d];
-    }
-    for (Int_t d = 0; d <= Ndim - 4; d++) {
-      TAxis *ax = h->GetAxis(d);
-      if (bins[d]) {
-	if (d < firstN) ax->SetRange(        bins[d],                            bins[d]);
-	else 	   ax->SetRange(TMath::Max(1,bins[d]-border),TMath::Min(Nbins[d],bins[d]+border));
-	XC[d] = 0.5*(ax->GetBinLowEdge(ax->GetFirst()) + ax->GetBinUpEdge(ax->GetLast()));
-      }
-    }
-#if 0
-    TH3D *h3 = h->Projection(Ndim-3,Ndim-2,Ndim-1,"E");
-#else
-    TH2D *h3 = h->Projection(Ndim-3,Ndim-1,"E");
-#endif
-#if 1
-    for (Int_t k = 0; k < Ndim - 3; k++) {
-      cout << Form("%5s %2i %6.2f ", Names[k],bins[k],XC[k]);
-    }
-    cout << "\tEntries = " << h3->GetEntries() << endl;
-#endif
-    if (h3->GetEntries() < 10) {delete h3; continue;}
-#if 0
-    h3->FitSlicesZ(0,0,-1,0,-1,10);
-#else
-    h3->FitSlicesX(0,0,-1,10);
-#endif
-    TH2D *hs[4] = {0,0,0,0};
-    for (Int_t i = 0; i < 4; i++) {
-      if (i < 3) 
-	hs[i] = (TH2D *) gDirectory->Get(Form("%s_%i",h3->GetName(),i));
-      else 
-	hs[i] = (TH2D *) gDirectory->Get(Form("%s_chi2",h3->GetName()));
-    }
-    if (! hs[1] || ! hs[2]) return; 
-    Int_t nx = h3->GetNbinsX();
-    //    Int_t ny = h3->GetNbinsY();
-    TAxis *xax = h3->GetXaxis();
-    TAxis *yax = h3->GetYaxis();
-    for (Int_t i = 1; i <= nx; i++) {
-      XC[Ndim-3] = xax->GetBinCenter(i);
-#if 0      
-      for (Int_t j = 1; j <= ny; j++) {
-#else 
-	Int_t j = 0;
-#endif
-	Int_t bin = h3->GetBin(i,j);
-
-	XC[Ndim-2] = yax->GetBinCenter(j);
-	fit.A     = hs[0]->GetBinContent(bin); fit.dA     = hs[0]->GetBinError(bin);
-	if (fit.dA <= 0) continue;
-	fit.mu    = hs[1]->GetBinContent(bin); fit.dmu    = hs[1]->GetBinError(bin);
-	fit.sigma = hs[2]->GetBinContent(bin); fit.dsigma = hs[2]->GetBinError(bin);
-	fit.chi2  = hs[3]->GetBinContent(bin); 
-	treeOut->Fill();
-	for (Int_t k = 0; k < Ndim - 1; k++) {
-	  cout << Form("%5s", Names[k]);
-	  if (k < Ndim - 3) cout << Form(" %2i",bins[k]);
-	  else {
-	    if (k == Ndim - 3) cout << Form(" %2i",i);
-	    if (k == Ndim - 2) cout << Form(" %2i",j);
-	  }
-	  cout << Form(" %6.2f ",XC[k]);
-	}
-	cout << Form("\tA = %8.3f +/- %7.3f",fit.A,fit.dA)
-	     << Form(" mu = %8.3f +/- %7.3f",fit.mu,fit.dmu)
-	     << Form(" sigma = %8.3f +/- %7.3f",fit.sigma,fit.dsigma) 
-	     << "\tchi2 = " << fit.chi2 << endl;
-#if 0
-      }
-#endif
-    }
-    delete h3;
-    for (Int_t i = 0; i < 4; i++) delete hs[i];
-  }
-  fout->Write();
-}
-//________________________________________________________________________________
 const Char_t *PrintLine(Int_t N,const Int_t *Array) {
   static TString line;
   line = "{";
@@ -3806,962 +3523,7 @@ const Char_t *PrintLine(Int_t N,const TVectorD &Array) {
   return line.Data();
 }
 //________________________________________________________________________________
-void MDFerrorParameterization(const Char_t *treeName = "SpX", Int_t sec = 0, Int_t row = 0, Int_t N = 3, Int_t MS = 1, Int_t prompt = 0) {
-  const Double_t secs[3] = {0.5, 12.5, 24.5};
-  const Double_t rows[3] = {0.5, NoInnerRows + 0.5, NoOfRows + 0.5};
-  TTree *tree = (TTree *) gDirectory->Get(Form("%s_tree",treeName));
-  if (! tree) return;
-  Int_t iXZ = -1;
-#if 0
-  Char_t **names = (Char_t **) &Names;
-  Var_t  *xMin  = (Var_t  *)  &xMin;
-  Var_t  *xMax  = (Var_t  *)  &xMax;
-#endif
-  //  Int_t  *nbins = (Int_t *)   &nBins;
-  if (TString(treeName).BeginsWith("SpZ")) {
-    iXZ = 1;
-  } else {
-    iXZ = 0;
-  }
-  if (iXZ < 0) return;
-  // List of branches
-  // Init
-  tree->SetMakeClass(1);
-  TBranch        *b_coord;   //!
-  Var_t xC;
-  tree->SetBranchAddress("coord", &xC.sec, &b_coord);
-  struct Fit_t {
-    Double_t A; Double_t dA;
-    Double_t mu; Double_t dmu;
-    Double_t sigma; Double_t dsigma;
-    Double_t chi2; 
-  };
-  Fit_t fit;
-  TBranch        *b_fit;   //!
-  tree->SetBranchAddress("fit", &fit.A, &b_fit);
-  // Global data parameters 
-  Int_t nVars       = 4;
-  //  TMultiDimFit* MDfit = new TMultiDimFit(nVars, TMultiDimFit::kMonomials,"v");
-  MDfit = new TMultiDimFit(nVars, TMultiDimFit::kChebyshev,"v");
-  //                  phiL,eta,zL, X 
-  Int_t mPowers[]   = { 6 ,   6, 3, 6 };
-  if (prompt) mPowers[2] = 1;
-  MDfit->SetMaxPowers(mPowers);
-  MDfit->SetMaxFunctions(10000);
-  MDfit->SetMaxStudy(10000);
-  MDfit->SetMaxTerms(30);
-  MDfit->SetPowerLimit(1);
-  MDfit->SetMinAngle(10);
-  MDfit->SetMaxAngle(10);
-  MDfit->SetMinRelativeError(.01);
-  // Print out the start parameters
-  MDfit->Print("p");
-  Long64_t nentries = tree->GetEntriesFast();
-  Long64_t nbytes = 0, nb = 0;
-  Int_t nAccepted = 0;
-  Double_t X[4];
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    Long64_t ientry = tree->LoadTree(jentry);
-    if (ientry < 0) break;
-    nb = tree->GetEntry(jentry);   nbytes += nb;
-    if ((sec >= 0 && sec < 2) && (xC.sec < secs[sec] || xC.sec > secs[sec+1])) continue;
-    if ((row >= 0 && row < 2) && (xC.row < rows[row] || xC.row > rows[row+1])) continue;
-    if (N > 0 && TMath::Abs(xC.Npads - N) > 0.5)                               continue;
-    if (  prompt && xC.zL <  195)                                              continue;
-    if (! prompt && xC.zL >= 195)                                              continue;
-    if (fit.dA             >= 0.5*fit.A)                                       continue;
-    if (TMath::Abs(fit.mu) >= 0.5)                                             continue;
-    if (fit.dsigma         >= 0.05)                                            continue;
-    nAccepted++;
-    X[0] = TMath::Tan(xC.phiL);
-    X[1] = xC.eta;
-    X[2] = xC.zL;
-    if (iXZ) X[3] =            xC.xPad;
-    else     X[3] = TMath::Abs(xC.xPad);
-    Double_t D = fit.mu;
-    if (! iXZ) D = TMath::Sign(D,xC.xPad); // abs(xPad)
-    Double_t E = fit.dmu*fit.dmu;
-    if (MS) {D = TMath::Log(fit.sigma); E = TMath::Power(fit.dsigma/fit.sigma,2);}
-    // Add the row to the fit object
-    MDfit->AddRow(X,D,E);
-    MDfit->AddTestRow(X,D,E); // to make chi2
-  }
-  cout << "Accepted " << nAccepted << " entries and sample size " << MDfit->GetSampleSize() << endl;
-  if (nAccepted < 100) return;
-  // Reset variable limits
-  TVectorD max(4), min(4);
-  max(0) = TMath::Tan(1.1); min(0) = - max(0);
-  max(1) = TMath::Tan(1.1); min(1) = - max(1);
-  if (! prompt) {max(2) = 195; min(2) =   0;}
-  else          {max(2) = 210; min(2) = 195;}
-  max(3) = 0.5; min(3) = -0.5; 
-  if (iXZ == 0) min(3) =  0.0; // Abs(xPad) 
-  MDfit->Print("s");
-#ifdef __MUDIFI_EXT__
-  MDfit->SetMaxVariables(max);
-  MDfit->SetMinVariables(min);
-#endif
- // Print out the statistics
-  MDfit->Print("s");
-#ifdef __MUDIFI_EXT__
-  // Book histograms 
-  MDfit->MakeHistograms();
-#endif
-  // Find the parameterization 
-  MDfit->FindParameterization();
-  // Print coefficents 
-  MDfit->Print("pscr");
-  Double_t chi2 = MDfit->MakeChi2();
-  Int_t    NDF  = MDfit->GetSampleSize() - MDfit->GetNCoefficients();
-  cout << "Chi2 " << MDfit->MakeChi2() << " and Chi2/NDF = " << chi2/NDF << endl;
-  // Write code to file  
-
-  TString output(Form("MDF%s_s_%i_r_%i_N_%i_B_%i_p_%i",treeName,sec,row,N,MS,prompt));
-  //  MDfit->MakeMethod(output);
-  MDfit->MakeCode(output);
-  Int_t nV = MDfit->GetNVariables();
-  Int_t nCoef = MDfit->GetNCoefficients();
-  TArrayI nMaxP(nV);
-  TArrayI Code(nCoef);
-  TArrayD Coef(nCoef);
-  TArrayD dCoef(nCoef);
-  for (Int_t i = 0; i < nCoef; i++) {
-    Int_t code = 0;
-    for (Int_t j = 0; j < nV; j++) {
-      code *= 10;
-      Int_t p  =  MDfit->GetPowers()[MDfit->GetPowerIndex()[i]*nV + j];
-      if (nMaxP[j] < p) nMaxP[j] = p;
-      code += p;
-    }
-    Code[i] = code;
-    Coef[i] = (*MDfit->GetCoefficients())(i);
-#ifdef __MUDIFI_EXT__
-    dCoef[i] = (*MDfit->GetCoefficientsRMS())(i);
-#endif
-  }
-  TString Out("");
-  Out += gSystem->BaseName(gDirectory->GetName());
-  Out.ReplaceAll(".root","");
-  Out += ".C";
-  ofstream out;
-  if (gSystem->AccessPathName(Out)) out.open(Out, ios::out); //"Results.list",ios::out | ios::app);
-  else                              out.open(Out, ios::app);
-  out << "  { //" << output << "  parameterization with chi2/ndf = " <<  chi2/NDF << endl;
-  out << "    Double_t  minV[" << nV << "] = " << PrintLine(nV,(*MDfit->GetMinVariables())) << endl;
-  out << "    Double_t  maxV[" << nV << "] = " << PrintLine(nV,(*MDfit->GetMaxVariables())) << endl;
-  out << "    Double_t meanV[" << nV << "] = " << PrintLine(nV,(*MDfit->GetMeanVariables())) << endl;
-#ifdef __MUDIFI_EXT__
-  out << "    Int_t   MaxPow[" << nV    << "] = " << PrintLine(nV,MDfit->GetMaxPowersFinal()) << endl;
-#endif
-  out << "    Int_t     Code[" << nCoef << "] = " << PrintLine(nCoef,Code.GetArray()) << endl;
-  out << "    Double_t  Coef[" << nCoef << "] = " << PrintLine(nCoef,Coef.GetArray()) << endl;
-  out << "    Double_t dCoef[" << nCoef << "] = " << PrintLine(nCoef,dCoef.GetArray()) << endl;
-  out << "    MDFp" << treeName 
-      << "[" << sec << "][" << row << "][" << N << "][" << MS << "][" << prompt << "] = "
-      << "new TMDFParameters("<< MDfit->GetMeanQuantity() << "," << nV << ",minV,maxV,meanV,MaxPow," << nCoef << ",Code,Coef,dCoef);" << endl; 
-  out << "  }" << endl;
-  out.close();
-  delete MDfit;
-}
-//________________________________________________________________________________
-void MDFerrorParameterization2(const Char_t *treeName = "FitP", Int_t iXZ = 0, Int_t sec = 0, Int_t row = 0, Int_t MS = 1, Int_t prompt = 0) {
-#ifdef __TEST__
-  //void TpcHitErrors() {
-  //                      xz s  r  S  p
-  TMDFParameters *MDFpFitP[2][2][8][2][2]; memset(MDFpFitP, 0, sizeof(MDFpFitP));
-  { //MDFFitP_xz_0_s_0_r_0_B_0_p_0  parameterization with chi2/ndf = 3.77379
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0655,    -0.587,    -0.133,     0.401,   -0.0825,    -0.052,   0.00444};
-    Int_t   MaxPow[7] = {         4,         3,         3,         1,         2,         1,         3};
-    Int_t     Code[30] = {
-   1111111,   2112122,   5111112,   1111112,   1111122,   1111212,   2111112,   1221111,   2111122,   4111112,
-   4211112,   4121112,   3131112,   2141112,   3111114,   1131114,   1211112,   2121111,   1141111,   1211212,
-   1222111,   2121122,   2211122,   1221212,   2411112,   4111212,   2121312,   1131312,   2121114,   2111214};
-    Double_t  Coef[30] = {
-   0.00218,    -0.145,    0.0376,    0.0349,  -0.00548,   -0.0135,     0.089,   -0.0353,     0.143,    0.0593,
-    0.0613,    -0.285,    -0.061,     0.159,    0.0316,   -0.0228,    0.0119,    0.0289,   0.00836,    -0.031,
-   -0.0397,    -0.254,     0.168,   -0.0255,    0.0137,   -0.0243,   -0.0795,  -0.00601,   -0.0602,    0.0142};
-    Double_t dCoef[30] = {
-  2.11e-05,    0.0018,  0.000193,  0.000263,  0.000271,  0.000237,  0.000465,  0.000432,   0.00188,  0.000251,
-  0.000347,   0.00139,    0.0004,  0.000966,  0.000167,  0.000161,  0.000198,  0.000384,  0.000134,  0.000451,
-  0.000817,   0.00513,   0.00246,   0.00151,   0.00022,  0.000261,   0.00169,  0.000104,  0.000798,  0.000239};
-    MDFpFitP[0][0][0][0][0] = new TMDFParameters(-0.002498,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_0_B_0_p_1  parameterization with chi2/ndf = 2.65169
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.484,    -0.593,    -0.102,     0.754,    -0.328,   -0.0757,   0.00986};
-    Int_t   MaxPow[7] = {         3,         3,         2,         5,         0,         2,         4};
-    Int_t     Code[30] = {
-   1111111,   1111114,   2221111,   4111112,   3131112,   1112111,   1121111,   3111111,   1213111,   4121111,
-   2111131,   1212121,   1131121,   1222131,   2421111,   1314111,   1111122,   1321111,   1121122,   1123111,
-   1223121,   1322121,   1431111,   1116111,   1114113,   1111125,   1121112,   1111123,   2112112,   2211112};
-    Double_t  Coef[30] = {
-   -0.0998,  0.000499,    -0.492,   -0.0842,    0.0632,     0.109,    -0.117,   -0.0163,    0.0215,    0.0592,
-     0.037,     -0.13,    0.0768,     0.242,    -0.171,    0.0399,    -0.022,   -0.0403,    -0.183,   -0.0232,
-      -1.1,     0.453,   0.00757,    0.0124,  -0.00856,   -0.0257,    -0.015,   -0.0226,    0.0189,    0.0152};
-    Double_t dCoef[30] = {
-   0.00622,  0.000286,    0.0267,   0.00117,   0.00106,   0.00906,    0.0153,    0.0026,   0.00418,    0.0174,
-   0.00432,    0.0154,   0.00663,    0.0249,    0.0149,   0.00193,   0.00205,    0.0118,    0.0184,   0.00641,
-    0.0629,    0.0296,   0.00119,  0.000783,  0.000551,   0.00164,   0.00325,   0.00297,     0.003,   0.00297};
-    MDFpFitP[0][0][0][0][1] = new TMDFParameters(0.00383095,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_0_B_1_p_0  parameterization with chi2/ndf = 3.43851
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0655,    -0.587,    -0.133,     0.401,   -0.0825,    -0.052,   0.00444};
-    Int_t   MaxPow[7] = {         3,         3,         4,         2,         2,         3,         2};
-    Int_t     Code[30] = {
-   1111111,   1151111,   1111211,   1113121,   2111111,   1121121,   2111211,   1113111,   1231111,   1141111,
-   1111121,   1122111,   3211111,   1122121,   2221111,   1321111,   1331111,   1421111,   3121121,   1322111,
-   3111231,   2112141,   2151111,   4121211,   4211211,   1111113,   1111311,   2112111,   1312111,   1411111};
-    Double_t  Coef[30] = {
-      0.88,     -1.13,    -0.203,     0.339,    -0.326,      -0.3,     0.346,    0.0199,     0.193,   -0.0199,
-    -0.187,      1.44,    0.0108,     0.744,     0.852,      1.01,   -0.0959,    -0.157,      1.89,     -1.07,
-    0.0568,    -0.215,     0.531,    -0.751,     0.152,    0.0143,    0.0312,     0.128,   -0.0418,   -0.0407};
-    Double_t dCoef[30] = {
-   0.00186,   0.00137,   0.00117,   0.00274,   0.00296,    0.0199,   0.00226,  0.000818,   0.00293,   0.00192,
-   0.00198,   0.00853,   0.00129,    0.0261,   0.00723,   0.00875,   0.00198,   0.00491,    0.0158,    0.0118,
-   0.00131,   0.00192,   0.00277,   0.00444,   0.00134,   0.00025,  0.000311,   0.00276,   0.00241,  0.000838};
-    MDFpFitP[0][0][0][1][0] = new TMDFParameters(-1.96395,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_0_B_1_p_1  parameterization with chi2/ndf = 3.51555
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.484,    -0.593,    -0.102,     0.754,    -0.328,   -0.0757,   0.00986};
-    Int_t   MaxPow[7] = {         3,         4,         4,         5,         0,         2,         4};
-    Int_t     Code[30] = {
-   1111111,   1151111,   1311111,   2412111,   1121111,   1113111,   2131111,   2212121,   4121111,   1124121,
-   1111121,   1111113,   1111115,   1421111,   3211121,   1511111,   3121131,   1341111,   3221121,   1314111,
-   1111122,   1121112,   1113121,   1221113,   1321121,   4121112,   1313112,   4121121,   3222111,   1116111};
-    Double_t  Coef[30] = {
-         2,     -1.68,    0.0984,     0.461,     0.914,      0.13,     -1.02,    -0.422,     -1.46,      2.31,
-    -0.169,   -0.0325,    0.0312,      1.57,      1.27,    -0.135,      2.03,    -0.412,         3,     0.156,
-    0.0721,     0.273,   0.00366,     0.365,      1.34,    -0.498,   -0.0584,     0.984,     -1.13,    0.0504};
-    Double_t dCoef[30] = {
-    0.0241,    0.0138,    0.0238,    0.0323,     0.155,    0.0127,     0.031,      0.27,     0.138,      0.24,
-     0.071,    0.0065,   0.00285,     0.145,     0.122,    0.0161,     0.166,    0.0735,     0.492,    0.0168,
-    0.0163,    0.0662,    0.0549,    0.0595,     0.356,       0.1,    0.0134,     0.213,     0.275,   0.00767};
-    MDFpFitP[0][0][0][1][1] = new TMDFParameters(-2.36276,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_1_B_0_p_0  parameterization with chi2/ndf = 2.94159e+12
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    -0.113,    -0.373,    -0.167,     0.235,    0.0484,   -0.0397,   0.00684};
-    Int_t   MaxPow[7] = {         4,         1,         2,         3,         1,         3,         3};
-    Int_t     Code[30] = {
-   1111111,   5111112,   1121111,   3111112,   4111112,   3111114,   1111112,   2121111,   1111114,   2111114,
-   2111132,   1112112,   2111112,   1221111,   1222111,   1211131,   2212211,   1111142,   1131122,   1132112,
-   4121112,   4112112,   1112122,   1212121,   1212211,   1121114,   1124111,   1121132,   1231112,   2221112};
-    Double_t  Coef[30] = {
-   0.00334,    0.0746,   0.00125,   -0.0156,   -0.0369,   -0.0292,    -0.021,    0.0375,   -0.0125,    0.0376,
-    0.0478,  -0.00921,    0.0817,   -0.0109,    -0.129,  -0.00499,    0.0493,   -0.0161,    0.0684,   -0.0257,
-    0.0255,    0.0263,   -0.0344,    0.0361,    0.0153,    0.0101,    0.0182,   -0.0261,    0.0128,    0.0234};
-    Double_t dCoef[30] = {
-  1.03e-05,   5.8e-05,  0.000101,  0.000137,  0.000122,  4.65e-05,  0.000111,    0.0001,  5.77e-05,  9.86e-05,
-  4.22e-08,  8.59e-05,  0.000181,   0.00013,  3.99e-08,   1.5e-08,  0.000211,  2.69e-08,  9.82e-08,  5.63e-05,
-  0.000161,  9.07e-05,  1.41e-08,  2.47e-08,  0.000211,  1.69e-05,  1.29e-08,  1.49e-08,  6.53e-05,  0.000345};
-    MDFpFitP[0][0][1][0][0] = new TMDFParameters(-0.00144127,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_1_B_0_p_1  parameterization with chi2/ndf = 19.2178
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.474,    -0.342,    -0.186,     0.551,    -0.313,   -0.0705, -0.000552};
-    Int_t   MaxPow[7] = {         3,         3,         1,         3,         0,         2,         3};
-    Int_t     Code[30] = {
-   1111111,   2211111,   1212121,   2222121,   4111112,   1111121,   3111112,   2121121,   2111114,   1412111,
-   2212131,   1214121,   2321121,   1211121,   1111114,   1221121,   2222111,   3113121,   2421111,   1224111,
-   3321111,   2313111,   3111114,   2121114,   1122114,   1211111,   3111111,   1121121,   2112111,   1221111};
-    Double_t  Coef[30] = {
-   -0.0367,    -0.084,   -0.0143,      1.91,   -0.0664,  -0.00927,    -0.042,       0.4,    0.0179,   -0.0212,
-   -0.0495,    -0.112,    -0.441,   -0.0598,  -0.00452,    0.0678,     -0.96,    0.0967,    -0.151,     0.158,
-   -0.0794,   -0.0404,   -0.0259,     0.106,    0.0639,   -0.0297,    0.0102,    0.0791,   -0.0287,    0.0868};
-    Double_t dCoef[30] = {
-  0.000666,   0.00205,   0.00574,    0.0317,  0.000367,  0.000625,  0.000373,    0.0142,   0.00155,  0.000572,
-   0.00212,   0.00257,    0.0136,   0.00371,   0.00101,    0.0112,    0.0106,   0.00176,   0.00322,   0.00378,
-   0.00142,  0.000633,  0.000565,   0.00215,   0.00211,   0.00128,  0.000388,   0.00664,   0.00141,   0.00414};
-    MDFpFitP[0][0][1][0][1] = new TMDFParameters(0.0271297,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_1_B_1_p_0  parameterization with chi2/ndf = 5.55053e+15
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    -0.113,    -0.373,    -0.167,     0.235,    0.0484,   -0.0397,   0.00684};
-    Int_t   MaxPow[7] = {         3,         2,         4,         3,         1,         3,         2};
-    Int_t     Code[30] = {
-   1111111,   1131111,   1151111,   1231111,   2111131,   1121111,   1111131,   1111221,   2121111,   1341111,
-   1112121,   1211211,   2131111,   1112113,   1141111,   1132111,   1131121,   1311121,   2211121,   4111111,
-   1123111,   2114111,   2141111,   3211121,   1321121,   3121131,   4112121,   3111141,   1251111,   2151111};
-    Double_t  Coef[30] = {
-     0.549,     0.559,    -0.542,      0.13,    -0.185,      2.58,    -0.152,    0.0192,     -2.63,   -0.0899,
-     0.753,    0.0858,    -0.212,    -0.102,     0.803,    -0.141,     0.523,     0.145,    -0.234,    0.0659,
-     0.525,     0.129,    -0.929,     0.162,     0.508,    -0.405,     0.553,    0.0846,    -0.193,     0.597};
-    Double_t dCoef[30] = {
-  5.38e-12,   5.4e-12,  5.45e-12,  1.07e-11,   6.3e-12,  1.35e-10,  6.29e-12,  2.59e-11,  1.35e-10,  9.05e-11,
-  3.38e-11,  1.41e-11,  5.42e-12,  1.58e-11,  4.53e-11,  9.28e-12,  1.95e-11,  3.77e-11,  3.87e-11,  5.39e-12,
-  3.61e-10,  5.91e-12,  4.53e-11,  3.91e-11,  1.02e-09,  1.55e-10,  3.38e-11,  7.91e-12,  1.08e-11,  5.47e-12};
-    MDFpFitP[0][0][1][1][0] = new TMDFParameters(-2.05937,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_0_r_1_B_1_p_1  parameterization with chi2/ndf = 2.90869e+14
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.474,    -0.342,    -0.186,     0.551,    -0.313,   -0.0705, -0.000552};
-    Int_t   MaxPow[7] = {         4,         3,         5,         3,         0,         2,         4};
-    Int_t     Code[30] = {
-   1111111,   1121111,   2111131,   1211111,   1151111,   3311111,   2121131,   2151111,   2211111,   1312111,
-   1322111,   3211121,   1411131,   1112111,   1311111,   1112121,   1112113,   3121111,   1222111,   2114111,
-   2221121,   1161111,   1313121,   1212111,   3211111,   2221111,   3111121,   1111115,   1421111,   5111111};
-    Double_t  Coef[30] = {
-     0.869,     0.816,   -0.0305,    -0.265,    -0.941,     0.147,      1.37,      1.21,   -0.0509,     0.837,
-      1.19,     0.108,     0.117,     0.722,    0.0121,    0.0893,   -0.0541,     -1.44,     -3.42,      0.27,
-     -3.28,    -0.172,     0.593,    -0.443,     0.275,      0.46,    -0.243,    0.0243,    -0.276,    0.0332};
-    Double_t dCoef[30] = {
-  7.07e-11,  2.78e-09,  7.59e-11,  1.41e-10,  7.11e-11,  1.41e-10,  2.98e-09,  7.11e-11,  1.41e-10,  2.44e-10,
-  9.58e-09,  7.59e-10,  7.59e-11,  1.22e-10,  1.41e-10,  6.55e-10,  1.76e-10,  2.78e-09,  9.58e-09,  7.36e-11,
-  2.98e-08,  5.57e-10,  2.31e-09,  2.44e-10,  1.41e-10,  5.55e-09,  3.79e-10,  1.77e-09,  2.78e-09,  7.07e-11};
-    MDFpFitP[0][0][1][1][1] = new TMDFParameters(-2.2467,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_0_B_0_p_0  parameterization with chi2/ndf = 3.9527
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0303,     -0.69,    -0.122,     -0.36,     -0.16,   -0.0988,   0.00413};
-    Int_t   MaxPow[7] = {         4,         1,         3,         2,         1,         2,         3};
-    Int_t     Code[30] = {
-   1111111,   2111122,   2111222,   5111112,   1111122,   2111112,   1111132,   3111122,   4111112,   4211112,
-   3131112,   3121122,   1141122,   3111114,   1131114,   1111212,   1121112,   1222111,   3121112,   3122111,
-   1222121,   4121112,   2141112,   3122112,   2213112,   2122212,   4111122,   2211222,   2121222,   1211112};
-    Double_t  Coef[30] = {
- -0.000328,     0.136,    -0.126,    0.0562,    0.0278,     0.168,   -0.0301,     0.027,    0.0876,     0.025,
-   -0.0799,   -0.0481,   -0.0347,     0.036,    -0.021,  -0.00615,   -0.0288,    -0.116,    -0.164,    0.0643,
-     -0.15,    -0.315,     0.199,    -0.136,   -0.0215,     0.268,    0.0528,     -0.22,     0.536,  -0.00639};
-    Double_t dCoef[30] = {
-  2.16e-05,   0.00157,    0.0032,  0.000251,  0.000908,  0.000713,   0.00033,   0.00108,  0.000359,  0.000371,
-  0.000498,   0.00885,   0.00275,  0.000163,  0.000146,  0.000106,   0.00224,   0.00124,   0.00268,   0.00082,
-   0.00264,   0.00244,   0.00194,   0.00174,  0.000565,   0.00685,  0.000889,    0.0035,    0.0111,  0.000212};
-    MDFpFitP[0][1][0][0][0] = new TMDFParameters(0.00115137,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_0_B_0_p_1  parameterization with chi2/ndf = 1.43212
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {     -0.53,    -0.705,   -0.0781,    -0.766,    -0.333,   -0.0861,   -0.0193};
-    Int_t   MaxPow[7] = {         2,         2,         2,         3,         0,         2,         5};
-    Int_t     Code[30] = {
-   1111111,   2111112,   1111112,   1112112,   1121122,   1212112,   1211114,   2121122,   1231131,   2111111,
-   1111113,   1311111,   1112121,   1311121,   1121123,   1223111,   1214111,   1121132,   1111116,   2213112,
-   3211113,   1113123,   1121121,   1122111,   1121113,   1111115,   2311113,   3112113,   1311123,   3111121};
-    Double_t  Coef[30] = {
-    -0.133,     0.243,     0.155,     0.128,     0.178,   -0.0139,    0.0223,      1.45,    -0.227,    0.0338,
-   -0.0325,   -0.0631,     0.171,   -0.0517,    -0.985,    -0.199,    0.0677,   -0.0653,  -0.00322,     0.178,
-    0.0737,    -0.381,    -0.478,     0.136,    -0.111,   -0.0036,  0.000104,   -0.0289,    0.0581,   -0.0342};
-    Double_t dCoef[30] = {
-    0.0334,    0.0206,     0.041,    0.0424,     0.351,    0.0279,   0.00553,      0.83,    0.0489,    0.0153,
-    0.0149,     0.019,     0.046,    0.0438,     0.275,    0.0736,    0.0229,    0.0304,   0.00152,     0.103,
-    0.0397,     0.124,     0.237,    0.0465,    0.0392,   0.00315,    0.0173,    0.0244,    0.0463,    0.0744};
-    MDFpFitP[0][1][0][0][1] = new TMDFParameters(0.00408299,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_0_B_1_p_0  parameterization with chi2/ndf = 2.9514
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0303,     -0.69,    -0.122,     -0.36,     -0.16,   -0.0988,   0.00413};
-    Int_t   MaxPow[7] = {         3,         3,         4,         3,         2,         1,         0};
-    Int_t     Code[30] = {
-   1111111,   1151111,   1111211,   1111121,   1311111,   1111221,   1121121,   2112111,   1421111,   3111111,
-   2111121,   2111211,   1122111,   1411111,   1123111,   1221211,   2231111,   3113121,   1242111,   4121211,
-   2111111,   1112211,   2212111,   1312111,   1121221,   1211221,   3121111,   1112311,   1124111,   2311211};
-    Double_t  Coef[30] = {
-     0.783,    -0.876,    -0.307,    -0.326,    0.0589,     0.225,     -1.79,     -0.78,    -0.746,      0.22,
-     0.102,     0.414,     -2.16,   -0.0861,     0.526,     0.608,     0.705,    -0.256,      1.18,    -0.392,
-    -0.432,   -0.0236,    -0.797,     0.135,     -1.11,      0.44,       0.3,   -0.0463,     0.303,    0.0824};
-    Double_t dCoef[30] = {
-   0.00177,   0.00175,   0.00109,   0.00136,   0.00145,   0.00582,   0.00908,   0.00826,   0.00335,   0.00113,
-   0.00307,   0.00209,    0.0195,  0.000882,   0.00593,   0.00521,   0.00549,   0.00255,    0.0104,   0.00444,
-   0.00469,   0.00184,   0.00981,   0.00176,    0.0198,   0.00728,    0.0059,  0.000808,   0.00646,   0.00182};
-    MDFpFitP[0][1][0][1][0] = new TMDFParameters(-1.9867,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_0_B_1_p_1  parameterization with chi2/ndf = 3.96049
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {     -0.53,    -0.705,   -0.0781,    -0.766,    -0.333,   -0.0861,   -0.0193};
-    Int_t   MaxPow[7] = {         2,         2,         1,         2,         0,         2,         4};
-    Int_t     Code[30] = {
-   1111111,   2111111,   1111121,   1111122,   1113111,   1221111,   1121111,   1112112,   1121121,   1111123,
-   1111132,   1211122,   2311111,   1113121,   1311113,   1321112,   2111112,   1121113,   1211113,   3111113,
-   2311121,   1321121,   1111124,   1121124,   1121115,   1121112,   3111121,   1111115,   1211114,   1113113};
-    Double_t  Coef[30] = {
-  -0.00203,     0.513,     -1.38,     0.353,     0.379,       5.5,       1.6,     -1.56,     -9.72,     0.232,
-      1.06,     0.153,    -0.169,      2.09,     0.109,     -2.58,     0.226,    -0.556,    -0.259,     0.416,
-     -1.45,      6.58,   -0.0528,      2.03,    -0.371,    -0.347,     0.443,   -0.0285,    0.0196,   -0.0513};
-    Double_t dCoef[30] = {
-     0.128,     0.206,     0.692,     0.798,     0.237,      2.16,       1.3,     0.434,      1.98,     0.379,
-      0.36,      1.26,     0.137,      1.66,     0.127,      0.88,     0.194,     0.965,     0.307,     0.239,
-      0.57,      3.42,      0.23,      1.79,     0.384,     0.598,     0.782,    0.0565,    0.0463,      0.17};
-    MDFpFitP[0][1][0][1][1] = new TMDFParameters(-2.54197,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_1_B_0_p_0  parameterization with chi2/ndf = 3.23349e+12
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    -0.107,    -0.375,    -0.146,    -0.236,    0.0635,   -0.0319,   0.00607};
-    Int_t   MaxPow[7] = {         4,         2,         4,         2,         0,         2,         3};
-    Int_t     Code[30] = {
-   1111111,   5111112,   1121111,   1131112,   4111112,   2111124,   2121111,   1322111,   4121112,   1211122,
-   1222111,   1111124,   2111114,   2111132,   2113112,   1151112,   4112112,   3111114,   1131114,   2112114,
-   1113114,   1211111,   1121112,   1221111,   1131111,   1111132,   1212112,   2112112,   2121112,   3111112};
-    Double_t  Coef[30] = {
-  -0.00724,    0.0693, -0.000511,   0.00555,   -0.0392,   0.00282,   -0.0349,    0.0246,    0.0228,   -0.0293,
-   -0.0674,    0.0183,    0.0257,   0.00397,   -0.0386,   0.00463,   -0.0349,   -0.0261,    0.0282,    0.0429,
-  -0.00664,  -0.00523,   -0.0193,    0.0129,  -0.00447,    0.0225,    0.0184,  -0.00729,    0.0243,  -0.00949};
-    Double_t dCoef[30] = {
-  1.74e-11,  1.94e-11,  5.18e-10,  1.95e-11,  1.94e-11,  2.12e-10,  5.18e-10,   1.8e-09,  5.72e-10,  1.69e-10,
-   1.8e-09,  2.12e-10,  4.92e-11,  2.16e-11,  5.29e-11,  1.96e-11,  3.38e-11,  4.92e-11,  4.93e-11,  8.54e-11,
-  1.34e-10,  3.48e-11,  5.72e-10,  1.04e-09,  1.74e-11,  2.16e-11,  6.76e-11,  3.38e-11,  5.72e-10,  1.94e-11};
-    MDFpFitP[0][1][1][0][0] = new TMDFParameters(0.00258197,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_1_B_0_p_1  parameterization with chi2/ndf = 25.1603
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.551,    -0.486,     -0.18,    -0.546,    -0.281,    -0.148,   0.00913};
-    Int_t   MaxPow[7] = {         4,         3,         4,         4,         0,         2,         3};
-    Int_t     Code[30] = {
-   1111111,   2222111,   1322121,   2111122,   4111112,   2121131,   2111124,   1122121,   5111112,   3321111,
-   1422111,   1311111,   1111131,   2221111,   1113121,   1114111,   1132111,   1223111,   2321111,   2114111,
-   1115111,   1322111,   3121121,   1151111,   1123121,   1141131,   2113131,   2421111,   1211113,   2121112};
-    Double_t  Coef[30] = {
-    -0.073,      -1.4,         1,   -0.0572,   -0.0313,   -0.0221,   -0.0971,     0.745,    0.0218,     0.153,
-     0.136,     0.024,    0.0189,    -0.293,   -0.0321,    0.0777,      0.34,    0.0353,     0.123,    0.0483,
-    0.0778,    -0.298,   -0.0309,   -0.0579,    -0.211,     0.034,   -0.0787,     0.131,  -0.00568,   -0.0428};
-    Double_t dCoef[30] = {
-    0.0013,    0.0171,    0.0157,  0.000428,  0.000257,   0.00659,  0.000363,    0.0116,  0.000262,   0.00185,
-   0.00344,  0.000226,  0.000516,    0.0104,   0.00102,  0.000915,    0.0024,   0.00499,   0.00644,  0.000578,
-  0.000727,    0.0052,   0.00406,  0.000681,    0.0091,   0.00106,   0.00107,   0.00382,  0.000196,  0.000861};
-    MDFpFitP[0][1][1][0][1] = new TMDFParameters(-0.0291836,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_1_B_1_p_0  parameterization with chi2/ndf = 1.24986e+15
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    -0.107,    -0.375,    -0.146,    -0.236,    0.0635,   -0.0319,   0.00607};
-    Int_t   MaxPow[7] = {         2,         3,         5,         2,         1,         2,         2};
-    Int_t     Code[30] = {
-   1111111,   1131111,   1151111,   1213131,   2151111,   2111111,   1111121,   1112111,   1111221,   1121121,
-   1411111,   2111131,   1133121,   1161111,   1111211,   3111111,   2121121,   3122111,   1211111,   2121111,
-   1122111,   1112113,   3211111,   2122111,   1121131,   1121221,   1122121,   3111211,   3131111,   2141111};
-    Double_t  Coef[30] = {
-     0.408,     0.041,    -0.694,    -0.208,     0.822,    -0.155,     0.237,    -0.298,     0.121,    -0.713,
-      0.04,    -0.266,    -0.758,    -0.277,    -0.111,     0.172,      1.31,    -0.361,     0.049,     -1.06,
-    -0.663,    0.0696,   -0.0809,     0.707,    -0.394,     0.579,      1.19,   -0.0308,    0.0654,    -0.343};
-    Double_t dCoef[30] = {
-   5.9e-12,  5.92e-12,  5.97e-12,  3.51e-11,  5.97e-12,   5.9e-12,  2.15e-11,  1.02e-11,  2.87e-11,  6.04e-10,
-   5.9e-12,  6.87e-12,  5.41e-11,  3.22e-11,  7.76e-12,   5.9e-12,  6.04e-10,  2.77e-10,  1.17e-11,  1.59e-10,
-  2.77e-10,  1.73e-11,  1.17e-11,  2.77e-10,  1.82e-10,  7.93e-10,  1.05e-09,  7.76e-12,  5.92e-12,  5.32e-11};
-    MDFpFitP[0][1][1][1][0] = new TMDFParameters(-2.07811,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_0_s_1_r_1_B_1_p_1  parameterization with chi2/ndf = 9.21872
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.551,    -0.486,     -0.18,    -0.546,    -0.281,    -0.148,   0.00913};
-    Int_t   MaxPow[7] = {         4,         3,         5,         4,         0,         3,         2};
-    Int_t     Code[30] = {
-   1111111,   1121111,   2311111,   2111111,   2131131,   2151111,   2115111,   1211111,   1311111,   2122111,
-   3211121,   1151111,   1161111,   3141111,   1111113,   1112121,   1312111,   3113111,   1421111,   2121122,
-   4122111,   1311123,   3111111,   1321111,   1113112,   1111141,   1111133,   2123111,   4211111,   5121111};
-    Double_t  Coef[30] = {
-     0.804,     0.674,    -0.256,    -0.383,       0.4,      1.11,     0.474,    -0.337,    -0.313,      6.98,
-      0.54,    -0.955,    -0.642,      1.03,     0.105,    -0.666,     -0.59,   -0.0067,       0.4,     -1.14,
-      1.71,     0.282,    -0.158,     0.419,    0.0432,    0.0885,     0.152,      1.12,     0.045,     -0.33};
-    Double_t dCoef[30] = {
-     0.012,     0.041,   0.00908,    0.0204,    0.0143,    0.0174,   0.00502,     0.015,   0.00702,     0.113,
-    0.0195,    0.0131,   0.00762,    0.0172,   0.00644,    0.0289,   0.00893,   0.00486,    0.0117,    0.0344,
-    0.0449,   0.00702,   0.00968,    0.0217,    0.0025,   0.00594,    0.0072,    0.0456,   0.00808,     0.012};
-    MDFpFitP[0][1][1][1][1] = new TMDFParameters(-2.2394,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_0_B_0_p_0  parameterization with chi2/ndf = 2.17071
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0451,    -0.779,   -0.0672,     0.298,     -0.23,    -0.126,   0.00508};
-    Int_t   MaxPow[7] = {         2,         3,         4,         4,         3,         1,         1};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1211111,   1211211,   1112211,   1212111,   3211111,   1211221,   2113111,   1211311,
-   2211211,   1413111,   1251111,   1115211,   2111121,   2112111,   1111411,   1112311,   1212211,   1114111,
-   2114111,   1114211,   1114311,   2121312,   1151211,   1215111,   1211121,   2112121,   2121121,   2121211};
-    Double_t  Coef[30] = {
-    0.0716,   -0.0552,     0.142,    0.0476,    0.0349,    -0.039,    0.0054,    0.0233,    0.0293,    0.0046,
-    0.0241,   0.00798,   -0.0314,   -0.0432,   -0.0424,   -0.0136,   0.00692,   -0.0158,  -0.00193,    -0.013,
-   -0.0204,    0.0242,    0.0144,   -0.0707,    0.0186,    0.0236,   -0.0131,    0.0402,    -0.107,    0.0194};
-    Double_t dCoef[30] = {
-   0.00139,   0.00192,   0.00169,  0.000349,    0.0012,   0.00182,  0.000151,  0.000447,  0.000292,  0.000127,
-  0.000373,  0.000413,  0.000196,  0.000247,  0.000597,  0.000715,  6.47e-05,  0.000573,   0.00121,  0.000298,
-  0.000427,  0.000453,  0.000272,   0.00129,  0.000271,  0.000267,  0.000296,   0.00173,   0.00246,  0.000789};
-    MDFpFitP[1][0][0][0][0] = new TMDFParameters(-0.070464,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_0_B_0_p_1  parameterization with chi2/ndf = 1.20145
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.467,    -0.558,   -0.0612,     0.788,    -0.333,   -0.0598,    0.0125};
-    Int_t   MaxPow[7] = {         2,         2,         1,         5,         0,         2,         5};
-    Int_t     Code[30] = {
-   1111111,   1223111,   1211111,   2121112,   3111112,   1123111,   1122113,   1121132,   2111111,   1112114,
-   2122113,   1111112,   1121121,   2121111,   1221111,   1112113,   1321111,   1111115,   2111114,   1121123,
-   3111113,   1211132,   1111116,   2113131,   1321122,   1116111,   1213113,   1311123,   2121114,   1122114};
-    Double_t  Coef[30] = {
-    0.0517,      1.22,    0.0578,     -1.13,    -0.158,     0.609,     0.357,     0.238,    0.0117,    0.0437,
-     0.904,     -0.13,     0.207,     0.675,    -0.291,    0.0758,    -0.147,    0.0182,     0.186,     0.264,
-    0.0708,   -0.0542,   -0.0223,  0.000948,     0.455,  -0.00767,     0.047,    0.0333,     0.279,     0.202};
-    Double_t dCoef[30] = {
-   0.00875,     0.179,    0.0111,     0.275,    0.0184,     0.106,    0.0765,    0.0627,    0.0106,   0.00803,
-     0.181,     0.019,    0.0921,    0.0984,    0.0591,    0.0168,    0.0371,    0.0029,    0.0208,     0.124,
-    0.0174,    0.0165,   0.00255,   0.00984,     0.236,   0.00447,    0.0158,    0.0139,     0.136,    0.0561};
-    MDFpFitP[1][0][0][0][1] = new TMDFParameters(-0.0498539,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_0_B_1_p_0  parameterization with chi2/ndf = 1.70019
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0451,    -0.779,   -0.0672,     0.298,     -0.23,    -0.126,   0.00508};
-    Int_t   MaxPow[7] = {         2,         3,         1,         5,         2,         2,         0};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1111221,   1112121,   1112221,   1114111,   1115111,   1412111,   1116111,   1111121,
-   1111211,   1112211,   2111211,   3211111,   1411111,   1121111,   1121121,   1111311,   1221121,   1112311,
-   2221111,   1311211,   1124111,   3211211,   2112311,   2311121,   3122111,   1212131,   3111131,   1114121};
-    Double_t  Coef[30] = {
-    0.0237,     0.579,    0.0119,     0.508,   -0.0373,     0.432,    -0.575,     0.152,     0.358,    -0.368,
-    -0.281,     0.359,    0.0685,   -0.0786,   -0.0539,    -0.255,     -1.21,   -0.0594,    -0.958,    0.0947,
-    -0.281,    0.0254,   -0.0796,    0.0803,    -0.125,     0.102,    -0.315,    -0.211,     0.063,     -0.26};
-    Double_t dCoef[30] = {
-   0.00195,    0.0038,   0.00415,   0.00605,   0.00943,   0.00215,   0.00144,   0.00174,   0.00107,    0.0035,
-   0.00154,   0.00298,   0.00136,   0.00153,  0.000751,   0.00334,    0.0256,  0.000548,    0.0283,    0.0014,
-   0.00443,  0.000874,   0.00406,   0.00127,   0.00173,   0.00288,   0.00753,   0.00439,   0.00126,   0.00407};
-    MDFpFitP[1][0][0][1][0] = new TMDFParameters(-1.71301,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_0_B_1_p_1  parameterization with chi2/ndf = 1.01753
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.467,    -0.558,   -0.0612,     0.788,    -0.333,   -0.0598,    0.0125};
-    Int_t   MaxPow[7] = {         2,         2,         2,         3,         0,         1,         4};
-    Int_t     Code[30] = {
-   1111111,   1211111,   2311111,   2111111,   1211112,   2111115,   1111113,   1111114,   1321111,   1213111,
-   1111115,   1112123,   1311113,   3112113,   1121111,   2111112,   2121111,   1114111,   1221113,   1321113,
-   1121112,   2121112,   1123111,   2113111,   1121114,   2111123,   1113113,   2311121,   3121121,   2131121};
-    Double_t  Coef[30] = {
-     0.759,      1.56,    -0.981,     -0.35,     0.124,    -0.279,  -0.00892,   -0.0457,   -0.0959,    -0.238,
-     -0.12,     0.118,     0.175,    -0.257,    -0.182,    0.0795,    -0.474,   -0.0874,    -0.545,     0.398,
-    -0.181,   -0.0416,     0.105,    -0.135,    -0.107,      0.64,    0.0268,   -0.0646,     0.541,    -0.167};
-    Double_t dCoef[30] = {
-     0.304,     0.582,     0.298,     0.164,    0.0321,    0.0543,    0.0633,     0.011,     0.429,       0.1,
-    0.0229,     0.208,    0.0471,    0.0895,     0.253,    0.0585,      0.33,    0.0374,     0.366,     0.362,
-     0.127,     0.487,     0.141,      0.12,    0.0825,     0.367,    0.0418,     0.142,     0.431,     0.143};
-    MDFpFitP[1][0][0][1][1] = new TMDFParameters(-1.2949,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_1_B_0_p_0  parameterization with chi2/ndf = 3.86959
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {   -0.0808,    -0.663,   -0.0933,     0.185,   -0.0994,     -0.12,   0.00639};
-    Int_t   MaxPow[7] = {         3,         3,         4,         4,         3,         2,         1};
-    Int_t     Code[30] = {
-   1111111,   1211111,   2111131,   1113211,   1213211,   1112111,   2212111,   1313121,   4112112,   2111111,
-   1311111,   2111112,   1111221,   2111121,   1111311,   2111211,   1231111,   2112112,   1411111,   1111321,
-   1111411,   1112311,   1114111,   1115111,   1132211,   1133121,   1412121,   1152111,   1121122,   1211122};
-    Double_t  Coef[30] = {
-    0.0464,      0.12,   0.00296,   0.00215,    -0.063,   0.00477,   0.00217,   -0.0397,   -0.0467,   -0.0436,
-    0.0145,   -0.0027,   -0.0392,   -0.0507,   0.00412,  -0.00751,   0.00758,    0.0405,   0.00646,    0.0115,
-   0.00633,   -0.0382,   -0.0134,    0.0174,   -0.0377,   -0.0402,    0.0628,    0.0263,    0.0486,   -0.0122};
-    Double_t dCoef[30] = {
-  0.000189,  0.000197,  0.000236,  0.000142,  0.000165,  0.000764,  0.000481,  0.000166,  0.000154,  0.000251,
-   0.00013,  8.88e-05,  0.000247,  0.000317,  6.06e-05,  0.000103,  0.000131,  0.000261,  8.13e-05,   0.00014,
-  3.53e-05,  0.000236,  0.000241,  0.000162,  0.000307,  0.000242,  0.000442,  0.000252,   0.00046,  0.000144};
-    MDFpFitP[1][0][1][0][0] = new TMDFParameters(0.0256261,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_1_B_0_p_1  parameterization with chi2/ndf = 1.77406
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.548,    -0.532,     -0.16,     0.535,    -0.333,    -0.128,    0.0167};
-    Int_t   MaxPow[7] = {         3,         1,         1,         2,         0,         4,         3};
-    Int_t     Code[30] = {
-   1111111,   1211131,   2212131,   4121112,   1111121,   1121112,   2112112,   3121111,   4111111,   2121113,
-   4111112,   1111112,   1112111,   1112121,   1121121,   3113111,   2222111,   2221112,   1113141,   1112151,
-   3122121,   2221122,   3211113,   3111114,   2121114,   1212114,   1112112,   1111114,   1211113,   2111113};
-    Double_t  Coef[30] = {
-    0.0595,    -0.132,    -0.225,     0.233,     0.369,   -0.0776,     0.111,   -0.0265,      0.02,     0.066,
-    -0.023,     0.013,   -0.0563,    -0.581,    0.0707,   -0.0147,     0.352,    -0.195,   -0.0642,    0.0263,
-      0.43,    -0.647,   0.00268,   -0.0194,    -0.134,   -0.0415,    0.0346,  -0.00687,   -0.0204,    0.0191};
-    Double_t dCoef[30] = {
-   0.00278,   0.00363,   0.00771,   0.00956,    0.0204,   0.00676,   0.00634,   0.00396,  0.000888,   0.00884,
-   0.00146,   0.00261,    0.0057,    0.0281,     0.022,   0.00189,    0.0297,    0.0325,   0.00575,   0.00356,
-    0.0454,      0.08,    0.0027,   0.00101,    0.0112,   0.00433,   0.00546,   0.00143,   0.00256,   0.00264};
-    MDFpFitP[1][0][1][0][1] = new TMDFParameters(0.0470938,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_1_B_1_p_0  parameterization with chi2/ndf = 3.0262
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {   -0.0808,    -0.663,   -0.0933,     0.185,   -0.0994,     -0.12,   0.00639};
-    Int_t   MaxPow[7] = {         2,         3,         5,         5,         2,         1,         0};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1111311,   2112111,   2131111,   1312111,   1115111,   1214111,   1116111,   3111111,
-   1111221,   1112211,   3211111,   1411111,   1211221,   2111221,   1113211,   2112211,   2211211,   1331111,
-   1133111,   1114211,   2311121,   1141121,   1332111,   3132111,   1161111,   1331211,   1211211,   1221121};
-    Double_t  Coef[30] = {
-     0.596,     -2.04,   -0.0873,    -0.134,   -0.0974,    -0.173,    -0.888,     0.141,     0.525,    0.0458,
-   -0.0272,      1.93,  -0.00316,    0.0613,    -0.207,   -0.0173,  -0.00656,    -0.366,    -0.191,    -0.102,
-    -0.125,     0.596,     0.206,     0.278,     0.376,     0.199,    -0.038,    -0.113,    0.0871,    -0.295};
-    Double_t dCoef[30] = {
-   0.00153,    0.0062,  0.000228,   0.00261,  0.000766,   0.00528,   0.00137,   0.00299,     0.001,  0.000752,
-   0.00298,   0.00568,  0.000826,  0.000504,   0.00352,   0.00237,   0.00167,   0.00267,   0.00105,  0.000882,
-  0.000736,   0.00207,   0.00112,   0.00207,   0.00487,   0.00135,  0.000255,   0.00106,   0.00223,   0.00542};
-    MDFpFitP[1][0][1][1][0] = new TMDFParameters(-1.8265,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_0_r_1_B_1_p_1  parameterization with chi2/ndf = 1.25745
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.548,    -0.532,     -0.16,     0.535,    -0.333,    -0.128,    0.0167};
-    Int_t   MaxPow[7] = {         4,         3,         4,         5,         0,         4,         4};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1113111,   2111111,   1211121,   1211113,   2111113,   2212111,   1222112,   2211131,
-   2151111,   3411111,   1116111,   1221121,   1111115,   2321111,   1113122,   1111151,   5121111,   1124121,
-   4311111,   1215111,   1224111,   1143111,   1233111,   1311123,   2211114,   1111112,   1111121,   1121111};
-    Double_t  Coef[30] = {
-     -1.07,       1.8,    -0.163,    -0.141,    -0.468,    -0.159,    0.0777,     0.431,     0.489,     0.482,
-    0.0988,   -0.0387,     0.219,     -1.08,    0.0212,     0.287,     -0.14,    0.0848,    0.0839,      0.39,
-   -0.0171,     0.195,     0.405,    -0.055,   -0.0991,     0.181,   -0.0372,   -0.0087,   -0.0972,    -0.102};
-    Double_t dCoef[30] = {
-    0.0932,     0.131,    0.0774,    0.0321,    0.0592,    0.0124,   0.00998,    0.0694,    0.0508,    0.0558,
-    0.0168,    0.0119,    0.0139,     0.286,   0.00217,    0.0605,    0.0269,    0.0106,     0.015,      0.18,
-    0.0104,     0.023,    0.0992,    0.0189,    0.0323,     0.023,   0.00573,   0.00292,    0.0302,    0.0443};
-    MDFpFitP[1][0][1][1][1] = new TMDFParameters(-1.33781,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_1_r_0_B_0_p_0  parameterization with chi2/ndf = 1.94197
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0519,    -0.788,   -0.0529,    -0.294,    -0.271,     -0.13,   0.00682};
-    Int_t   MaxPow[7] = {         3,         2,         4,         4,         3,         2,         1};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1211111,   1211211,   1111311,   1112211,   1212111,   1114111,   3111211,   1151111,
-   1211231,   1121111,   2111211,   2113111,   1111411,   4111211,   1223111,   1212311,   1112411,   1121231,
-   1114311,   1123311,   1213311,   1115211,   1223211,   1313211,   1215111,   3111111,   2112112,   2121112};
-    Double_t  Coef[30] = {
-    0.0301,    -0.029,    0.0919,    -0.035,    0.0384,    0.0695,   -0.0102,  -0.00033,  -0.00307,    0.0202,
-   -0.0303,   -0.0324,  -0.00568,    0.0151,    0.0163,   0.00946,    0.0779,    -0.018,     0.039,   0.00492,
-   -0.0371,   -0.0292,   -0.0349,   -0.0363,    0.0881,    0.0303,    0.0173,  -0.00553,    0.0178,   -0.0261};
-    Double_t dCoef[30] = {
-  0.000762,  0.000915,  0.000825,  0.000705,  0.000452,   0.00114,   0.00152,  0.000409,  0.000277,   0.00021,
-  0.000282,  0.000645,  0.000543,  0.000281,  0.000122,  0.000189,   0.00115,   0.00114,  0.000414,   0.00134,
-  0.000486,  0.000758,  0.000414,  0.000357,   0.00185,  0.000487,  0.000279,  0.000201,  0.000583,  0.000973};
-    MDFpFitP[1][1][0][0][0] = new TMDFParameters(-0.0737039,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_1_r_0_B_1_p_0  parameterization with chi2/ndf = 1.67939
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {    0.0519,    -0.788,   -0.0529,    -0.294,    -0.271,     -0.13,   0.00682};
-    Int_t   MaxPow[7] = {         2,         3,         4,         4,         3,         4,         0};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1111221,   1115111,   1112121,   1114111,   1214111,   3112221,   1111121,   1111211,
-   2111211,   1212211,   2113211,   1151111,   1412111,   2111151,   1113311,   2122121,   1213121,   1114121,
-   1212221,   3111321,   1412121,   3111231,   3111411,   1115211,   2114211,   1412211,   2312211,   1143111};
-    Double_t  Coef[30] = {
-    -0.238,    -0.314,    -0.323,    -0.182,     -1.17,     0.182,     -0.11,    -0.409,     -1.01,    -0.459,
-    -0.186,      1.08,    -0.437,   -0.0407,    -0.202,    0.0426,    0.0503,      2.11,     0.568,     0.298,
-      1.52,    0.0925,    -0.286,    0.0651,    0.0242,     0.213,    -0.103,    -0.212,     0.248,    -0.029};
-    Double_t dCoef[30] = {
-   0.00237,   0.00493,   0.00662,   0.00146,    0.0147,   0.00288,   0.00432,     0.016,    0.0113,   0.00309,
-   0.00554,   0.00973,   0.00552,   0.00112,   0.00221,  0.000965,  0.000954,    0.0576,   0.00923,   0.00565,
-     0.022,   0.00237,   0.00395,   0.00165,   0.00053,   0.00207,   0.00359,   0.00272,   0.00636,  0.000757};
-    MDFpFitP[1][1][0][1][0] = new TMDFParameters(-1.70482,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_1_r_1_B_0_p_0  parameterization with chi2/ndf = 3.86645
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {   -0.0795,    -0.683,    -0.094,    -0.179,   -0.0873,    -0.124,   0.00613};
-    Int_t   MaxPow[7] = {         3,         3,         4,         3,         3,         4,         1};
-    Int_t     Code[30] = {
-   1111111,   1211111,   2111131,   1113211,   1213211,   1112111,   1111231,   4112112,   2111111,   1311111,
-   2111121,   2111211,   1141111,   1411111,   1111321,   4111111,   1114111,   1132211,   1212311,   1211411,
-   1141121,   1152111,   1151121,   1111251,   1111122,   3111111,   1112122,   1121122,   2112112,   1112221};
-    Double_t  Coef[30] = {
-    0.0585,     0.122,    0.0112,    0.0622,     -0.04,     0.144,   -0.0656,   -0.0484,   -0.0336,    0.0235,
-    -0.063,   -0.0138,   0.00521,    0.0114,    0.0118,   0.00424,    0.0666,     0.019,   -0.0561,  -0.00737,
-    0.0194,   -0.0265,   -0.0398,   -0.0252,  -0.00351,  -0.00276,    0.0172,   -0.0309,    0.0196,    0.0707};
-    Double_t dCoef[30] = {
-  0.000124,  0.000186,  0.000306,  0.000384,  0.000141,  0.000626,  0.000532,  0.000151,  0.000322,   0.00014,
-  0.000461,  9.88e-05,  4.66e-05,  8.25e-05,  0.000135,  2.74e-05,  0.000232,  0.000443,  0.000249,  3.54e-05,
-  0.000186,   0.00024,  0.000199,  0.000197,  0.000132,  4.31e-05,  0.000826,  0.000517,  0.000327,  0.000968};
-    MDFpFitP[1][1][1][0][0] = new TMDFParameters(0.0224068,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_1_r_1_B_0_p_1  parameterization with chi2/ndf = 1.83237
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.568,    -0.623,    -0.166,    -0.479,    -0.333,    -0.145,   0.00666};
-    Int_t   MaxPow[7] = {         4,         2,         1,         2,         0,         2,         5};
-    Int_t     Code[30] = {
-   1111111,   1211111,   2212111,   4121112,   1121112,   1312111,   4111111,   1111133,   3113111,   5111111,
-   3111114,   2121114,   1111112,   1112112,   2111112,   2121111,   1111114,   2121112,   1121114,   1111116,
-   1321111,   1121113,   1121122,   1113112,   2311111,   3112111,   1311121,   1222111,   1111115,   2213111};
-    Double_t  Coef[30] = {
-     0.116,     0.162,   -0.0426,    -0.549,     0.395,   -0.0693,    0.0324,   -0.0188,   -0.0449,   -0.0044,
-   0.00757,     0.607,   -0.0509,   -0.0704,   -0.0146,    -0.108,  -0.00023,     0.549,     0.145,   0.00646,
-    0.0364,   -0.0145,     0.101,    -0.025,  -0.00404,   -0.0553,     0.018,   -0.0946,   0.00461,    0.0398};
-    Double_t dCoef[30] = {
-   0.00355,   0.00291,    0.0105,    0.0121,    0.0171,   0.00434,   0.00342,   0.00124,   0.00358,   0.00173,
-    0.0016,    0.0203,   0.00717,   0.00727,   0.00456,    0.0094,   0.00125,    0.0251,   0.00945,  0.000715,
-   0.00424,   0.00402,    0.0231,   0.00472,   0.00233,   0.00603,   0.00355,    0.0214,  0.000536,   0.00661};
-    MDFpFitP[1][1][1][0][1] = new TMDFParameters(0.0338431,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_1_r_1_B_1_p_0  parameterization with chi2/ndf = 3.56451
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,         0,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       195,         9,       0.5};
-    Double_t meanV[7] = {   -0.0795,    -0.683,    -0.094,    -0.179,   -0.0873,    -0.124,   0.00613};
-    Int_t   MaxPow[7] = {         1,         3,         5,         4,         3,         2,         0};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1111311,   2112111,   2131111,   1312111,   1411111,   1212211,   1115111,   1214111,
-   1115121,   1114131,   2111111,   1311111,   2111121,   1112211,   2111221,   2311211,   1212131,   1112321,
-   1214121,   1161111,   1121121,   2121111,   1213111,   2112211,   1131211,   1141211,   2113211,   1211411};
-    Double_t  Coef[30] = {
-     0.208,     0.398,   -0.0692,    -0.101,    0.0556,   0.00448,    0.0894,      0.13,    -0.537,    -0.542,
-    -0.231,    -0.445,     0.112,    0.0856,    0.0902,   -0.0844,    -0.105,     0.074,      1.64,     0.312,
-    -0.348,   -0.0582,    -0.208,   -0.0599,    -0.058,     0.321,    0.0322,    0.0317,   -0.0613,    0.0217};
-    Double_t dCoef[30] = {
-   0.00142,   0.00564,  0.000295,   0.00243,   0.00087,   0.00337,  0.000778,   0.00413,     0.001,   0.00305,
-   0.00107,   0.00167,  0.000841,   0.00127,    0.0014,   0.00345,   0.00204,  0.000725,   0.00582,   0.00314,
-    0.0035,  0.000283,   0.00223,  0.000864,   0.00193,   0.00275,  0.000702,  0.000421,   0.00111,  0.000206};
-    MDFpFitP[1][1][1][1][0] = new TMDFParameters(-1.81515,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-  { //MDFFitP_xz_1_s_1_r_1_B_1_p_1  parameterization with chi2/ndf = 1.29515
-    Double_t  minV[7] = {         2,         5,     -1.96,     -1.96,       195,         3,      -0.5};
-    Double_t  maxV[7] = {         7,        17,      1.96,      1.96,       210,         9,       0.5};
-    Double_t meanV[7] = {    -0.568,    -0.623,    -0.166,    -0.479,    -0.333,    -0.145,   0.00666};
-    Int_t   MaxPow[7] = {         2,         3,         2,         5,         0,         2,         3};
-    Int_t     Code[30] = {
-   1111111,   1112111,   1113111,   1111121,   1321111,   1313111,   1214111,   2112111,   1411111,   1211131,
-   1232121,   1116111,   1111123,   2221111,   1113121,   1211114,   2111114,   2112113,   2412111,   2411121,
-   3311121,   1215111,   2115111,   1231113,   2313111,   3132111,   1111112,   1111113,   1121121,   2121111};
-    Double_t  Coef[30] = {
-      1.13,     0.816,      1.46,    -0.395,   -0.0613,     0.481,    -0.318,    -0.651,    -0.226,    -0.216,
-     -1.47,    -0.404,    -0.113,    0.0524,    -0.228,    0.0656,   -0.0568,     -0.05,     0.443,   -0.0629,
-    -0.113,     0.199,     0.287,    0.0955,     0.294,    -0.111,   -0.0122,   -0.0306,    -0.599,     0.234};
-    Double_t dCoef[30] = {
-     0.145,     0.206,     0.117,    0.0704,    0.0488,    0.0368,    0.0816,    0.0635,    0.0232,     0.036,
-     0.154,     0.023,    0.0177,     0.194,    0.0526,   0.00696,   0.00648,    0.0178,    0.0488,    0.0335,
-     0.035,    0.0302,    0.0258,    0.0181,     0.029,    0.0203,   0.00245,    0.0103,    0.0945,     0.126};
-    MDFpFitP[1][1][1][1][1] = new TMDFParameters(-1.41288,7,minV,maxV,meanV,MaxPow,30,Code,Coef,dCoef);
-  }
-#else
-  const Double_t secs[3] = {0.5, 12.5, 24.5};
-  const Double_t rows[3] = {0.5, 13.5, 45.5};
-#endif
-  TTree *tree = (TTree *) gDirectory->Get(treeName);
-  if (! tree) return;
-  cout << "MDFerrorParameterization2(" << treeName << "," << iXZ << "," << sec << "," << row << "," << MS << "," << prompt << ")" << endl;
-#if 0
-  Char_t **names = (Char_t **) &Names;
-  Var_t  *xMin  = (Var_t  *)  &xMin;
-  Var_t  *xMax  = (Var_t  *)  &xMax;
-#endif
-  //  Int_t  *nbins = (Int_t *)   &nBins;
-  // List of branches
-  // Init
-  struct var_t {
-    Float_t    sec;
-    Float_t    row; // 
-    Float_t  Npads; // npads or ntmbks
-    Float_t Ntmbks; // npads or ntmbks
-    Float_t   phiL;
-    Float_t   eta;
-    Float_t     zL;
-    Float_t   AdcL;
-    Float_t   xPad; // xRC hit position within pad
-    Float_t   zTbk; // zRC hit position within time bucket
-    Float_t      A; 
-    Float_t     dA;
-    Float_t     mu; 
-    Float_t    dmu;
-    Float_t  sigma; 
-    Float_t dsigma;
-    Float_t   chi2; 
-    Int_t      iXZ;
-  };
-  //  const Char_t *vars = "sec/F:row/F:Npads/F:Ntmbks/F:phiL/F:eta/F:zL/F:AdcL/F:xPad/F:zTbk/F:A/F:dA/F:mu/F:dmu/F:sigma/F:dsigma/F:chi2/F:iXZ/I";
-  tree->SetMakeClass(1);
-  var_t fit;
-  TBranch        *b_fit;   //!
-  tree->SetBranchAddress("Fit", &fit.sec, &b_fit);
-#ifndef __TEST__
-  // Global data parameters 
-  Int_t nVars       = 7;
-  //  TMultiDimFit* MDfit = new TMultiDimFit(nVars, TMultiDimFit::kMonomials,"v");
-  MDfit = new TMultiDimFit(nVars, TMultiDimFit::kChebyshev,"v");
-  //                  Npads, Ntmbks, phiL, eta, zL, AdcL, xPad 
-  Int_t mPowers[]   = {   6,      6,    6,    6,  6,    6,    6 };
-  if (prompt) mPowers[4] = 1;
-  MDfit->SetMaxPowers(mPowers);
-  MDfit->SetMaxFunctions(10000);
-  MDfit->SetMaxStudy(10000);
-  MDfit->SetMaxTerms(30);
-  MDfit->SetPowerLimit(1);
-  MDfit->SetMinAngle(10);
-  MDfit->SetMaxAngle(10);
-  MDfit->SetMinRelativeError(.01);
-  // Print out the start parameters
-  MDfit->Print("p");
-#else
-#if 0
-  TFile *fout = 
-#endif
-    new TFile("SpCheck.root","recreate");
-  TTree* treeOut = new TTree("FitC", "Tree to check fit results");
-  const Char_t *vars = "sec/F:row/F:Npads/F:Ntmbks/F:phiL/F:eta/F:zL/F:AdcL/F:xPad/F:zTbk/F:A/F:dA/F:mu/F:dmu/F:sigma/F:dsigma/F:chi2/F:iXZ/I";
-  treeOut->Branch("Fit", &fit.sec, vars);
-  TString branchCoord;
-  struct FitCheck_t {
-    Double_t muF; Double_t dmuF;
-    Double_t sigmaF; Double_t dsigmaF;
-    Double_t devMu; Double_t devSigma;
-  };
-  FitCheck_t fCheck;
-  treeOut->Branch("fitC",&fCheck.muF,"muF/D:dmuF/D:sigmaF/D:dsigmaF/D:devMu/D:devSigma/D");
-#endif
-  Long64_t nentries = tree->GetEntriesFast();
-  Long64_t nbytes = 0, nb = 0;
-  Int_t nAccepted = 0;
-  Double_t X[7];
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    Long64_t ientry = tree->LoadTree(jentry);
-    if (ientry < 0) break;
-    nb = tree->GetEntry(jentry);   nbytes += nb;
-#ifndef __TEST__
-    if (fit.iXZ != iXZ)                                                          continue;
-    if ((sec >= 0 && sec < 2) && (fit.sec < secs[sec] || fit.sec > secs[sec+1])) continue;
-    if ((row >= 0 && row < 2) && (fit.row < rows[row] || fit.row > rows[row+1])) continue;
-    if (  prompt && fit.zL <  195)                                               continue;
-    if (! prompt && fit.zL >= 195)                                               continue;
-    if (fit.dA             >= 0.5*fit.A)                                         continue;
-    if (TMath::Abs(fit.mu) >= 0.5)                                               continue;
-    if (fit.dsigma         >= 0.05)                                              continue;
-#endif
-    nAccepted++;
-    X[0] =            fit.Npads;
-    X[1] =            fit.Ntmbks;
-    X[2] = TMath::Tan(fit.phiL);
-    X[3] =            fit.eta;
-    X[4] =            fit.zL;
-    X[5] =            fit.AdcL;
-    X[6] =            fit.xPad;
-#ifndef __TEST__
-    Double_t D = fit.mu;
-    //    if (! iXZ) D = TMath::Sign(D,fit.xPad); // abs(xPad)
-    Double_t E = fit.dmu*fit.dmu;
-    if (MS) {D = TMath::Log(fit.sigma); E = TMath::Power(fit.dsigma/fit.sigma,2);}
-    // Add the row to the fit object
-    MDfit->AddRow(X,D,E);
-    MDfit->AddTestRow(X,D,E); // to make chi2
-#else /* __TEST__ */
-    fCheck.muF = -1; fCheck.dmuF = -1;
-    fCheck.sigmaF = -1; fCheck.dsigmaF = -1;
-    Int_t prmpt = 0;
-    if (fit.zL >= 195)  prmpt = 1;
-    if (MDFpFitP[iXZ][sec][row][0][prmpt]) {
-      //      MDFpFitP[iXZ][sec][row][0][prmpt]->Print();
-      fCheck.muF = MDFpFitP[iXZ][sec][row][0][prmpt]->Eval(X);
-      fCheck.dmuF = MDFpFitP[iXZ][sec][row][0][prmpt]->dEval(X);
-    } 
-    if (MDFpFitP[iXZ][sec][row][1][prmpt]) {
-      //      MDFpFitP[iXZ][sec][row][1][prmpt]->Print();
-      fCheck.sigmaF = MDFpFitP[iXZ][sec][row][1][prmpt]->Eval(X); fCheck.sigmaF = TMath::Exp(fCheck.sigmaF);
-      fCheck.dsigmaF = MDFpFitP[iXZ][sec][row][1][prmpt]->dEval(X); fCheck.dsigmaF *= fCheck.sigmaF;
-    }
-    Int_t s = 0; if (fit.sec >= 13) s = 1;
-    Int_t r = 0; if (fit.row >  NoInnerRows) r = 1;
-    cout << "MDF[" << fit.iXZ << "][" << s << "][" << r << "][" << prmpt << "] = ";
-    const Char_t *namesV[7] = {"Npads","Ntmbks","tanPhiL","eta","zL","AdcL","xPad"};
-    for (Int_t k = 0; k < 7; k++) {
-      if (k < 2) cout << Form("%s %5.0f ",namesV[k],X[k]);
-      else       cout << Form("%s %7.2f ",namesV[k],X[k]);
-    }
-    cout << Form(" mu = %8.3f +/- %7.3f muF = %8.3f +/- %7.3f",fit.mu,fit.dmu,fCheck.muF,fCheck.dmuF);
-    cout << Form(" sigma = %8.3f +/- %7.3f sigmaF = %8.3f +/- %7.3f",fit.sigma,fit.dsigma,fCheck.sigmaF,fCheck.dsigmaF);
-    fCheck.devMu = (fit.mu - fCheck.muF)/TMath::Sqrt(fit.dmu*fit.dmu + fCheck.dmuF*fCheck.dmuF);
-    fCheck.devSigma = (fit.sigma - fCheck.sigmaF)/TMath::Sqrt(fit.dsigma*fit.dsigma + fCheck.dsigmaF*fCheck.dsigmaF);
-    cout << " dm " << fCheck.devMu << " ds " << fCheck.devSigma;
-    if (TMath::Abs(fCheck.devSigma) > 5) cout << " ==========================";
-    cout << endl;
-    treeOut->Fill();
-#endif
-  }
-#ifndef __TEST__
-  cout << "Accepted " << nAccepted << " entries and sample size " << MDfit->GetSampleSize() << endl;
-  if (nAccepted < 100) return;
-  // Reset variable limits
-  TVectorD max(nVars), min(nVars);
-  max(0) =  7; min(0) = 2;
-  max(1) = 17; min(1) = 5;
-  max(2) = TMath::Tan(1.1); min(2) = - max(2);
-  max(3) = TMath::Tan(1.1); min(3) = - max(3);
-  if (! prompt) {max(4) = 195; min(4) =   0;}
-  else          {max(4) = 210; min(4) = 195;}
-  max(5) = 9.0; min(5) =  3.0; // AdcL
-  max(6) = 0.5; min(6) = -0.5; 
-  //  if (iXZ == 0) min(3) =  0.0; // Abs(xPad) 
-  MDfit->Print("s");
-  MDfit->SetMaxVariables(max);
-  MDfit->SetMinVariables(min);
- // Print out the statistics
-  MDfit->Print("s");
-#if 0
-  // Book histograms 
-  MDfit->MakeHistograms();
-#endif
-  // Find the parameterization 
-  MDfit->FindParameterization();
-  // Print coefficents 
-  MDfit->Print("pscr");
-  Double_t chi2 = MDfit->MakeChi2();
-  Int_t    NDF  = MDfit->GetSampleSize() - MDfit->GetNCoefficients();
-  cout << "Chi2 " << MDfit->MakeChi2() << " and Chi2/NDF = " << chi2/NDF << endl;
-  // Write code to file  
-
-  TString output(Form("MDF%s_xz_%i_s_%i_r_%i_B_%i_p_%i",treeName,iXZ,sec,row,MS,prompt));
-  //  MDfit->MakeMethod(output);
-  MDfit->MakeCode(output);
-  Int_t nV = MDfit->GetNVariables();
-  Int_t nCoef = MDfit->GetNCoefficients();
-  TArrayI nMaxP(nV);
-  TArrayI Code(nCoef);
-  TArrayD Coef(nCoef);
-  TArrayD dCoef(nCoef);
-  for (Int_t i = 0; i < nCoef; i++) {
-    Int_t code = 0;
-    for (Int_t j = 0; j < nV; j++) {
-      code *= 10;
-      Int_t p  =  MDfit->GetPowers()[MDfit->GetPowerIndex()[i]*nV + j];
-      if (nMaxP[j] < p) nMaxP[j] = p;
-      code += p;
-    }
-    Code[i] = code;
-    Coef[i] = (*MDfit->GetCoefficients())(i);
-    dCoef[i] = (*MDfit->GetCoefficientsRMS())(i);
-  }
-  TString Out("");
-  Out += gSystem->BaseName(gDirectory->GetName());
-  Out.ReplaceAll(".root","");
-  Out += ".C";
-  ofstream out;
-  if (gSystem->AccessPathName(Out)) out.open(Out, ios::out); //"Results.list",ios::out | ios::app);
-  else                              out.open(Out, ios::app);
-  out << "  { //" << output << "  parameterization with chi2/ndf = " <<  chi2/NDF << endl;
-  out << "    Double_t  minV[" << nV << "] = " << PrintLine(nV,(*MDfit->GetMinVariables())) << endl;
-  out << "    Double_t  maxV[" << nV << "] = " << PrintLine(nV,(*MDfit->GetMaxVariables())) << endl;
-  out << "    Double_t meanV[" << nV << "] = " << PrintLine(nV,(*MDfit->GetMeanVariables())) << endl;
-#ifdef __MUDIFI_EXT__
-  out << "    Int_t   MaxPow[" << nV    << "] = " << PrintLine(nV,MDfit->GetMaxPowersFinal()) << endl;
-#endif
-  out << "    Int_t     Code[" << nCoef << "] = " << PrintLine(nCoef,Code.GetArray()) << endl;
-  out << "    Double_t  Coef[" << nCoef << "] = " << PrintLine(nCoef,Coef.GetArray()) << endl;
-  out << "    Double_t dCoef[" << nCoef << "] = " << PrintLine(nCoef,dCoef.GetArray()) << endl;
-  out << "    MDFp" << treeName 
-      << "[" << iXZ << "]"
-      << "[" << sec << "][" << row << "][" << MS << "][" << prompt << "] = "
-      << "new TMDFParameters("<< MDfit->GetMeanQuantity() << "," << nV << ",minV,maxV,meanV,MaxPow," << nCoef << ",Code,Coef,dCoef);" << endl; 
-  out << "  }" << endl;
-  out.close();
-  delete MDfit;
-#endif
-}
-//________________________________________________________________________________
-void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
+void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2") {
   /*
     root.exe lBichsel.C
       .L TpcT.C+
@@ -4898,12 +3660,17 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
     const Int_t  nBins[NoDim]  = {  105,     40,    140,     20,  200};
     const VarS_t  xMin         = { -210,     -2,     -7,      2,   -2};
     const VarS_t  xMax         = {  210,      2,      7,     12,    2};
-    THnSparse  *dPadI = new THnSparseF("dPadI",  "dPad for iTPC ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
-    THnSparse  *dPadO = new THnSparseF("dPadO",  "dPad for  Tpx ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
-    THnSparse  *dTimeI = new THnSparseF("dTimeI",  "dTime for iTPC ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
-    THnSparse  *dTimeO = new THnSparseF("dTimeO",  "dTime for  Tpx ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
-    THnSparse  *dPadIO[2]  = { dPadI,  dPadO};
-    THnSparse  *dTimeIO[2] = {dTimeI, dTimeO};
+    THnSparse  *dPadI = new THnSparseF("dPadI",  "dPad for iTPC  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dPadO = new THnSparseF("dPadO",  "dPad for  Tpx  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dTimeI = new THnSparseF("dTimeI",  "dTime for iTPC  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dTimeO = new THnSparseF("dTimeO",  "dTime for  Tpx  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
+
+    THnSparse  *dPadI2 = new THnSparseF("dPadI2",  "dPad for iTPC  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dPadO2 = new THnSparseF("dPadO2",  "dPad for  Tpx  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dTimeI2 = new THnSparseF("dTimeI2",  "dTime for iTPC  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dTimeO2 = new THnSparseF("dTimeO2",  "dTime for  Tpx  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
+    THnSparse  *dPadIO[2][2]  = { {dPadI,  dPadO}, {dPadI2,  dPadO2}};
+    THnSparse  *dTimeIO[2][2] = { {dTimeI, dTimeO}, {dTimeI2, dTimeO2}};
 #endif
 	   
   // TpcT->Draw("fMcHit.mMcl_t+0.165*Frequency-fRcHit.mMcl_t/64:fMcHit.mPosition.mX3>>TI(210,-210,210,100,-2,3)","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mQuality>90&&fMcHit.mVolumeId%100<=13","colz"); TI->FitSlicesY(); TI_1->Fit("pol2","er","",-100,100);
@@ -4925,7 +3692,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
   const Short_t*&    fRcHit_mMcl_t                            = iter("fRcHit.mMcl_t");
   const Short_t*&    fRcHit_mMcl_x                            = iter("fRcHit.mMcl_x");
   const UShort_t*&   fRcHit_mAdc                              = iter("fRcHit.mAdc");
-  const UShort_t*&   fRcHit_mFlag                            = iter("fRcHit.mFlag");
+  const UShort_t*&   fRcHit_mFlag                             = iter("fRcHit.mFlag");
   const Float_t*&    fRcHit_tb                                = iter("fRcHit.mTimeBucket");
   const UChar_t*&    fRcHit_mMintmbk                          = iter("fRcHit.mMintmbk");
   const UChar_t*&    fRcHit_mMaxtmbk                          = iter("fRcHit.mMaxtmbk");
@@ -4966,7 +3733,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
       for (Int_t k1 = 0; k1 < fNoMcHit; k1++) {
 	Int_t key = fMcHit_mKey[k1];
 	if (key != IdTruth) continue;
-	if (fRcHit_mFlag[k1]) continue;
+	//	if (fRcHit_mFlag[k1]) continue;
 	if (fMcHit_mVolumeId[k1] > 10000) continue;
 	if (sec != fMcHit_mVolumeId[k1]/100) continue;
 	if (row != fMcHit_mVolumeId[k1]%100) continue;
@@ -5030,9 +3797,14 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
       VV.tanL = tanL;
       VV.AdcL = AdcL;
       VV.dX   = dPad;
-      dPadIO[io]->Fill(&VV.Z);
-      VV.dX = dT;
-      dTimeIO[io]->Fill(&VV.Z);
+      Int_t f = -1;
+      if      (fRcHit_mFlag[0] == 0) f = 0;
+      else if (fRcHit_mFlag[0] &  2) f = 1;
+      if (f >= 0) {
+	dPadIO[f][io]->Fill(&VV.Z);
+	VV.dX = dT;
+	dTimeIO[f][io]->Fill(&VV.Z);
+      }
 #endif
       if (! ev%1000) cout << "Processed event " << ev << endl;
       ev++;
@@ -5058,9 +3830,11 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT") {
   }
   fOut->Write();
 #ifdef __SPARSED__
-  for (Int_t io = 0; io < 2; io++) {
-    dPadIO[io]->Write();
-    dTimeIO[io]->Write();
+  for (Int_t f = 0; f < 2; f++) {
+    for (Int_t io = 0; io < 2; io++) {
+      dPadIO[f][io]->Write();
+      dTimeIO[f][io]->Write();
+    }
   }
 #endif
 }

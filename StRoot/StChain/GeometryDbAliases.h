@@ -342,6 +342,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"pp200_unpolarized_c",	             20240801, 175519, "y2024z", "pp200_unpolarized"}, // 1st run = 25214020	 	     
   {"pp200_radial_e",	              	     20240802,  70632, "y2024z", "pp200_radial"}, // 1st run = 25215009          	     
   {"AuAu_2024",	                             20241006, 124742, "y2024z", "AuAu_2024"}, // 1st run = 25280025                         
+
   {"y2025",                                  20241210,      0, "y2025",  "y2025 first cut geometry, AgML,xgeometry"},    
   {"y2025z",                                 20241210,      1, "y2025z", "y2025z first cut geometry,      xgeometry"},    
   {"r2025",                                   20241220,     0, "y2025z",  "y2025z first cut geometry"},    
@@ -349,6 +350,8 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"Cosmic_2025_RF",  			     20250318,  81438, "y2025z",  "Cosmic_2025_RF"}, //  itpcPadGainT0 => beginTime =  2025-03-18 08:14:38
   {"Cosmic_2025_ZF",  			     20250402,     27, "y2025z",  "Cosmic_2025_ZF"}, 
   {"Cosmic_2025_FF",  			     20250402, 202321, "y2025z",  "Cosmic_2025_FF"}, 
+  {"AuAu_2025",	                             20250609,  72555, "y2025z",  "AuAu_2025"},        // 1st run = 26160016
+  {"AuAu_2025_HiLumi",	                     20250620, 185303, "y2025z",  "AuAu_2025_HiLumi"}, // 1st run = 26171044
 
   {"athena",                                 20301220,      1,      "",         "athena"}, // 
   {"epic",                                   20301221,      1,      "",           "epic"}, // 

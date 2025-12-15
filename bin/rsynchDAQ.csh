@@ -5,9 +5,15 @@ set topdir = `dirname ${PWD}`;
 set top = `basename  ${topdir}`
 set log =  rsynchDAQ.`date +%m%d%y%H`.log;
 rsync -avrz -h                        \
-    --include='st_physics_adc*.daq'                  \
+    --include='st_mtd_adc*.daq'                  \
+    --include='st_zerobias_adc*.daq'                  \
     --exclude='*.*' \
-     /direct/gpfs01/star/daq/2023/15[1-3] . >>& ${log}
+     /direct/gpfs01/star/daq/2023/211/24211048 . >>& ${log}
+
+#rsync -avrz -h                        \
+#    --include='st_physics_adc*.daq'                  \
+#    --exclude='*.*' \
+#     /direct/gpfs01/star/daq/2023/15[1-3] . >>& ${log}
 
 #rsync -avrz -h                        \
 #    --include='st_cosmic*.daq'                  \

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job  maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="true" fileListSyntax="paths" copyInputLocally="false">
+<stdout URL="file:./sched$JOBID.log" />
+<stderr URL="file:./sched$JOBID.err" />
+<command> 
+  cd ${SUBMITTINGDIRECTORY}  
+  set Name = `basename $PWD`
+  set file = $INPUTFILE0;
+  set f    = `echo $file | awk -F\: '{print $1}'`
+  set l    = `echo $file | awk -F\: '{print $2}'`
+  set daq  = `echo $file | awk -F\: '{print $3}'`
+  set gen  = `echo $file | awk -F\: '{print $4}'`
+  set name  = `basename ${daq} .daq`"_"${f}"_"${l}
+  echo "${name}"
+  set logName  = ${name}B.log
+  if (-r ${logName}) exit 0;
+  set muDst   = ${name}.MuDst.root
+  set tagf     = ${name}.tags.root
+  if ( -r ${muDst} ) exit 0;
+  root.exe -q -b -x 'bfcMixerTPC23ZBHijingVMC.C('${f}','${l}',"HijingAuAu200","'${daq}'","'${gen}'","'${name}'.root")' &gt;&amp; ${logName}
+</command>
+<!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->
+<!-- <input URL="file:/gpfs01/star/subsys-tpc/fisyak/simu/Hijing/AuAu200/hijingAuAu200*.gener.root" /> -->
+<input URL="command:ZeroBiasEmbedding.pl" />
+</job>
+

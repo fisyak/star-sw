@@ -558,16 +558,22 @@
 #root.exe -q -b lDb.C  ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowB",0)' >& MakeTpcSecRowB.${b}.log
 #mv TpcSecRowB.20350101.000001.root TpcSecRowB.${b}.root
 # 10/012024 
+#
+#foreach f (`ls -1d SecRow3G4EY*.root`) 
+#    set b = `echo ${f} | sed -e 's/SecRow3G4EY//' -e 's/\.root//' -e 's/2021_2021/2021/'`
+#    root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowB",0)' >& MakeTpcSecRowB.${b}.log
+#    mv TpcSecRowB.20350101.000001.root TpcSecRowB.${b}.root
+#end
+## ~/work/Histograms/RunXXIII34
+#foreach f (`ls -1d SecRow3CG4EY*.root`) 
+#    set b = `echo ${f} | sed -e 's/SecRow3CG4EY//' -e 's/\.root//' -e 's/2021_2021/2021/'`
+#    root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowC",0)' >& MakeTpcSecRowC.${b}.log
+#    mv TpcSecRowC.20350101.000001.root TpcSecRowC.${b}.root
+#end
 
-foreach f (`ls -1d SecRow3G4EY*.root`) 
-    set b = `echo ${f} | sed -e 's/SecRow3G4EY//' -e 's/\.root//' -e 's/2021_2021/2021/'`
-    root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowB",0)' >& MakeTpcSecRowB.${b}.log
-    mv TpcSecRowB.20350101.000001.root TpcSecRowB.${b}.root
-end
-# ~/work/Histograms/RunXXIII34
-foreach f (`ls -1d SecRow3CG4EY*.root`) 
+#/work/Histograms/RunXXV02 
+foreach f (`ls -1d SecRow3G4EYAuAu_2025.root`) 
     set b = `echo ${f} | sed -e 's/SecRow3CG4EY//' -e 's/\.root//' -e 's/2021_2021/2021/'`
     root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowC",0)' >& MakeTpcSecRowC.${b}.log
     mv TpcSecRowC.20350101.000001.root TpcSecRowC.${b}.root
 end
-
