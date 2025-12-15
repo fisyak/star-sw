@@ -138,9 +138,9 @@ public:
   TimeCutMode mTimeCutMode;
   int mTimeCutLow, mTimeCutHigh;
 
-    std :: map< uint16_t , uint16_t > mMap;
-    std :: map< uint16_t , uint16_t > rMap; // reverse map 
-    std :: map< uint16_t , FttDataWindow > dwMap;
+    std :: map< UShort_t , UShort_t > mMap;
+    std :: map< UShort_t , UShort_t > rMap; // reverse map 
+    std :: map< UShort_t , FttDataWindow > dwMap;
 
   ClassDef(StFttDb,1)   //StAF chain virtual base class for Makers        
 };
