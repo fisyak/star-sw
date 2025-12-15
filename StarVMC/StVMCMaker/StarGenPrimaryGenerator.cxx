@@ -13,7 +13,7 @@
 #include "StMessMgr.h" 
 #include "StMaker.h"
 #include "StChainOpt.h"
-#include "SStVMCMaker.h"
+#include "StVMCMaker.h"
 ClassImp(StarGenPrimaryGenerator);
 //_____________________________________________________________________________
 StarGenPrimaryGenerator::StarGenPrimaryGenerator(TString mode, Int_t tune) : StarMCPrimaryGenerator() {
