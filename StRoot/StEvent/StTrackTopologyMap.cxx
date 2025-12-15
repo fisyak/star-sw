@@ -318,7 +318,7 @@ StTrackTopologyMap::bit(int i) const
 {
   if (i <= 31) return (mMap0>>i & 1U);
   if (i <= 63) return (mMap1>>(i-32) & 1U);
-  return (mMap2>>(i-64) & 1U);
+  return (mMap_iTpc>>(i-64) & 1U);
 }
 #ifndef __TFG__VERSION__
 bool

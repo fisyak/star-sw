@@ -80,9 +80,9 @@ public:
     // StTrackTopologyMap& operator=(const StTrackTopologyMap&); use default
     ~StTrackTopologyMap();  
 #else /* __TFG__VERSION__ */
-  StTrackTopologyMap(UInt_t m1 = 0, UInt_t m2 = 0, UInt_t m3 = 0) : mMap0(m1), mMap1(m2), mMap2(m3) {}
-  StTrackTopologyMap(const UInt_t*  m, UInt_t m2 = 0) : mMap0(m[0]), mMap1(m[1]), mMap2(m2) {}
-  StTrackTopologyMap(const ULong_t* m, UInt_t m2 = 0) : mMap0(m[0]), mMap1(m[1]), mMap2(m2) {}
+  StTrackTopologyMap(UInt_t m1 = 0, UInt_t m2 = 0, ULong64_t m3 = 0) : mMap0(m1), mMap1(m2), mMap_iTpc(m3) {}
+  StTrackTopologyMap(const UInt_t*  m, UInt_t m2 = 0) : mMap0(m[0]), mMap1(m[1]), mMap_iTpc(m2) {}
+  StTrackTopologyMap(const ULong_t* m, UInt_t m2 = 0) : mMap0(m[0]), mMap1(m[1]), mMap_iTpc(m2) {}
   virtual ~StTrackTopologyMap() {}
 #endif /* __TFG__VERSION__ */
     
@@ -139,17 +139,10 @@ private:
     
     ClassDef(StTrackTopologyMap,2)
 #else /* __TFG__VERSION__ */
-    UInt_t  mMap0;
-    UInt_t  mMap1;
-#ifndef __ROOT_CINT__
-    union {
-      UInt_t   mMap2;
-      Long64_t mMap_iTpc;
-    };
-#else
-      UInt_t   mMap2;
-#endif
-    ClassDef(StTrackTopologyMap,3)
+    UInt_t   mMap0;
+    UInt_t   mMap1;
+    Long64_t mMap_iTpc;
+    ClassDef(StTrackTopologyMap,4)
 #endif /* __TFG__VERSION__ */
 };
 
