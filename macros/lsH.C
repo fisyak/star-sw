@@ -11,7 +11,7 @@ void lsH(const TString reg = "TdEdx*", Bool_t plot = kFALSE) {
   TKey *key; 
   TObject *obj;
   while ((key= (TKey*)next())) { 
-    TString st = key->GetName(); cout << "st = " << st.Data() << endl;
+    TString st = key->GetName();// cout << "st = " << st.Data() << endl;
     if (st.Index(re) == kNPOS) continue;
     obj = gDirectory->Get(st);
     if (! obj) continue;
