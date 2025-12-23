@@ -464,7 +464,10 @@ Int_t TTreeIter::Next(Int_t entry)
      }
 #endif //0
   assert(!IsCorrupted());
-  if (ans) return ans;
+  if (ans > 0) return ans;
+  if (ans < 0) {
+    Error("Next","File %s is corrupted",fTree->GetDirectory()->GetName());
+  }
   fEntry=0;
   return 0;
 
