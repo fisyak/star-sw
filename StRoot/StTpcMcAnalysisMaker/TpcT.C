@@ -1322,7 +1322,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   Double_t fMass = -1;
   Double_t fCharge = 0;
   Double_t fL10bgMin = -5; //-1.5;
-  while (iter.Next()) {
+  while (iter.Next() > 0) {
     if (currentFileName != TString(chain->GetFile()->GetName())) {
       currentFileName = chain->GetFile()->GetName();
       cout << "Open File " << currentFileName.Data() << endl;
@@ -1860,7 +1860,7 @@ void TpcTPads(const Char_t *files="*.root", const Char_t *Out = "") {
       }
     }
   }
-  while (iter.Next()) {
+  while (iter.Next() > 0) {
     if (fNoRcHit != 1) continue;
     if (fNoMcHit != 1 && fNoMcHit != 3) continue;
     if (fAdcSum <= 0) continue;
@@ -3708,7 +3708,7 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2") {
   const Float_t*&    fRcTrack_fpz                             = iter("fRcTrack.fpz");
   const UInt_t*&     fRcHit_mHardwarePosition                 = iter("fRcHit.mHardwarePosition");
   Int_t ev = 0;
-  while (iter.Next()) {
+  while (iter.Next() > 0) {
     Int_t year = fRun/1e6 - 1; //  20.332.022
     if (year < 0) year = 19;
     if (fNoMcHit != 1 || fNoRcHit !=1 ) continue;
@@ -3931,7 +3931,7 @@ void TpcTQA(const Char_t *files="*.root", const Char_t *Out = "QA.root") {
   const Float_t*&    fRcTrack_fpz                             = iter("fRcTrack.fpz");
   const UInt_t*&     fRcHit_mHardwarePosition                 = iter("fRcHit.mHardwarePosition");
   Int_t ev = 0;
-  while (iter.Next()) {
+  while (iter.Next() > 0) {
     Int_t year = fRun/1e6 - 1; //  20.332.022
     for (Int_t k = 0; k < fNoRcHit; k++) {
       Int_t IdTruth = fRcHit_mIdTruth[k];
@@ -4368,7 +4368,7 @@ void TpcTEkin(const Char_t *files="*.root", const Char_t *Out = "QA.root") {
   const Float_t*&    fRcTrack_fpz                             = iter("fRcTrack.fpz");
   const UInt_t*&     fRcHit_mHardwarePosition                 = iter("fRcHit.mHardwarePosition");
   Int_t ev = 0;
-  while (iter.Next()) {
+  while (iter.Next() > 0) {
     Int_t year = fRun/1e6 - 1; //  20.332.022
     for (Int_t k = 0; k < fNoRcHit; k++) {
       Int_t IdTruth = fRcHit_mIdTruth[k];
