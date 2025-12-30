@@ -116,6 +116,6 @@
 <li> TFG25i 2023 TpcRS ntune for RF, RHF, ZF                             2025-10-13 17:44:36 -0400  (HEAD -> TFG, tag: TFG25i)
 <li> TFG25j 2023 TpcRS ntune for RF, RHF, ZF freeze                      2025-10-22 10:57:24 -0400  (HEAD -> TFG, tag: TFG25j)
 <li> TFG25k 2023 TpcRS tune for RF, RHF, ZF freeze, back to 6.37.01      2025-12-04 09:57:19 -0500  (HEAD -> TFG, tag: TFG25k_1)
-<li> TFG25l 2023 TpcRS hit errors tune for RF, RHF, ZF                   2025-12-30 09:57:19 -0500  (HEAD -> TFG, tag: TFG25l)
+<li> TFG25l 2023 TpcRS hit errors tune for RF, RHF, ZF                   2025-12-30 18:44:57 -0500  (HEAD -> TFG, tag: TFG25l)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
