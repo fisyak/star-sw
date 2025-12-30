@@ -449,7 +449,7 @@ class KFParticle : public TObject
 #endif
   
 #ifndef KFParticleStandalone
-  ClassDef( KFParticle, 4 )
+  ClassDef( KFParticle, 5 )
 #endif
 };
 
