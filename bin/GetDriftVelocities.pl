@@ -1,9 +1,10 @@
 #! /usr/bin/env perl
 use File::Basename;
 use Cwd;
-my @files = glob "tpcDriftVelocity.2007*.C";
+my @files = glob "tpcDriftVelocity.2025*.C*";
 my @words;
 foreach my $file (@files) {
+  if ($file =~ /log/) {next;}
   open(IN,"$file") or die "Can't open file $file";
   my ($DV,$dDV,$DVWest,$dDVWest,$DVEast,$dDVEast);
   my $line;

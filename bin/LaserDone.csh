@@ -1,5 +1,5 @@
 #! /bin/tcsh -f
-foreach f (`ls -1d *ofl`)
+foreach f (`ls -1d *ofl *.C`)
     set run = `grep Run ${f} | awk '{print $5}'`
     set cint = `basename ${f} .HOLD.ofl`
     echo "${f} => run ${run} => cint = ${cint}"

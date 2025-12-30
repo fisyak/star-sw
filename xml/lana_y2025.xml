@@ -4,7 +4,7 @@
 <command> 
 #  source ~/.tcshrc
   cd ${SUBMITTINGDIRECTORY}  
-  starver TFG25c
+#  starver TFG25c
 #  starver TFG
   set evtsFile = $INPUTFILE0;
   set file     = `basename $evtsFile .daq`
@@ -20,7 +20,8 @@
 #      root.exe -q -b -x 'bfc.C(99999,"lana,B2020,trgd,Tpx,LaserIT,StiCA,StiKFVertex,CorrY,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout","'${evtsFile}'")' &gt;&amp; ${logFile}
 #      root4star -q -b -x 'bfc.C(99999,"lana,B2021a,trgd,Tpx,LaserIT,StiCA,CorrY,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
 #      root.exe -q -b -x 'bfc.C(99999,"lana,B2022a,trgd,Tpx,LaserIT,StiCA,CorrY,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
-      root.exe -q -b -x 'bfc.C(99999,"lana,B2025,Agi,trgd,Tpx,LaserIT,StiCA,CorrZ,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
+#      root.exe -q -b -x 'bfc.C(99999,"lana,B2025,Agi,trgd,Tpx,LaserIT,StiCA,CorrZ,OGridLeakFull,OSpaceZ2,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
+      root.exe -q -b -x 'bfc.C(99999,"lana,B2025,Agi,trgd,Tpx,LaserIT,StiCA,CorrZ,,analysis,NoHistos,NoRunco,-evout,-picoDst,-picoEvt,-picoWrite","'${evtsFile}'")' &gt;&amp; ${logFile}
       if (-r ${logFile}.gz) rm ${logFile}.gz
       gzip  ${logFile}
   endif

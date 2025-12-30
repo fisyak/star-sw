@@ -195,7 +195,10 @@
 
 '2022/pp500' =>                                    'production_pp500_2022/ReversedFullField/dev',
 '2022/pp500_calib2' =>                             'production_pp500_2022/ReversedFullField/P24ib_calib2',
-
+#/star/data14/GRID/NFS_FileList/production_pp500_2022_P25ib_st_physics_picodst.txt
+# production=P25ib,trgsetupname=production_pp500_2022_P25ib_st_physics_mudst,filetype=daq_reco_picodst,storage=local
+# /star/data32/reco/production_pp500_2022/ReversedFullField/P25ib/2022/013/23013016/st_physics_23013016_raw_3500081.picoDst.roo
+'2022/pp500_P25ib' =>                              'production_pp500_2022/ReversedFullField/P25ib/',
 '2023/AuAu200' =>                                  'production_AuAu_2023/ReversedHalfField/dev',
 '2023/HRF_AuAu200' =>                              'production_AuAu_HalfField_2023/ReversedHalfField/dev',
 '2023/ZF_AuAu200' =>                               'production_AuAu_ZeroField_2023/FieldOff/dev',
