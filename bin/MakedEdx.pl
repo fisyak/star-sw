@@ -2837,7 +2837,8 @@ if ($#ARGV >= 0) {
 ############################ RunXXV ####################################################
 #$hist = "RunXXV01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/VoltageScan/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/03/2025  
 #$hist = "RunXXV02"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/12/2025  Voltage Scan
-$hist = "RunXXV03"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/14/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan
+#$hist = "RunXXV03"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/14/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan
+$hist = "RunXXV04"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/16/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan, change histogram binning
 
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}

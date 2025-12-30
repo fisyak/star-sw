@@ -6,8 +6,12 @@ use lib dirname $0; #
 #use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 $debug = 0;
+my @tags = qw(hlt st_physics_ st_cosmic_ st_hlt);
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
+  if ($#ARGV >= 1) {
+    @tags = ($ARGV[1]);
+  }
 }
 my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug,"");
 print "Year = $year, Field = $FIELD, runs = $runs,  Day = $Day, Run = $Run, $run2\n" if ($debug);
@@ -23,7 +27,7 @@ foreach my $currentrun (@AllRuns) {
     if (GoodRun($def,$r,$debug) < 0) {next;}
     print "$run Accepted\n" if ($debug);
 #    foreach my $tag (qw(st hlt)) {
-    foreach my $tag (qw(hlt st_physics_ st_cosmic_ st_hlt)) { # st_physics_2
+    foreach my $tag (@tags) { # st_physics_2
       my @files = glob $run . "/" . $tag . "*.daq"; print "files ($tag) = @files\n" if ($debug);
       if ($#files < 0) {next;}
       #  print "files = @files\n";

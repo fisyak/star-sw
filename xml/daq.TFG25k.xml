@@ -15,7 +15,7 @@
   else
     set evtsFileF = $INPUTFILE0;
     set f         = 1
-    set l         = 1000000
+    set l         = 10000
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .
@@ -63,7 +63,7 @@
   set Chain = "";
   switch ($year)
     case "2*":
-      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco"
+      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noRunco"  #,noTags
     breaksw
     default:
       exit 0;
@@ -73,6 +73,10 @@
   if ($? == 0) set WestEast = ",WestOff"
   echo "${SUBMITTINGDIRECTORY}" | grep -i EastOff
   if ($? == 0)  set WestEast = ",EastOff"
+  echo ${SUBMITTINGDIRECTORY} | grep TPC23
+  if ($? == 0) then 
+     set Chain = ${Chain},TpxRaw,TPC23,McTpcAna;
+   endif
 #  if ($JOBINDEX > 0) then
 #    @ n =  $JOBINDEX % 20  # 05/29/2023
 #    set evout = ",-evout";
@@ -91,5 +95,6 @@
         <stdout URL="file:./sched$JOBID.log" />
         <stderr URL="file:./sched$JOBID.err" />
 <!-- <input URL="command:daqdR.pl" /> -->
-<input URL="command:daqdR.local.pl" />
+<!-- <input URL="command:daqdR.local.pl" /> -->
+<input URL="command:daqdR.local.pl 0  st_physics_adc" />
 </job>
