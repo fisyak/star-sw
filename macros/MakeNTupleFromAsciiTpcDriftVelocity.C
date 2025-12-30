@@ -2,6 +2,7 @@
 // root.exe MakeNTupleFromAsciiTpcDriftVelocity.C+
 //  egrep -a '( found table tpcDriftVelocity|laserDriftVelocityEast)' *.C > 2025Z.list
 // root.exe 'MakeNTupleFromAsciiTpcDriftVelocity.C+("2025Z.list")'
+// ~/work/Tpc/Lana/2025/Done $ grep AddAt *.ofl > drift.list
 #include "Riostream.h"
 #include <stdio.h>
 #include "TROOT.h"
@@ -36,16 +37,18 @@ void MakeNTupleFromAsciiTpcDriftVelocity(const Char_t *FileName="drift.list") {
   TFile *fOut = new TFile(fName.Data(),"RECREATE");
   TNtuple *FitP = new TNtuple("FitP","Drift Velocity","set:usec:year:day:DV:dDV");
   char line[320];
-  Int_t i = 0;
+  Int_t k = 0;
+  Int_t l = 0;
   Float_t s, freq;
   TDatime dtime(20190101,0);
   UInt_t u0 = dtime.Convert();
   while (fgets(&line[0],320,fp)) {
     TString Line(line);
-    if (! fgets(&line[0],320,fp)) break;
-    Line += ":";
-    Line += line;
-    cout << Line.Data() << endl;
+    //    if (! fgets(&line[0],320,fp)) break;
+//     Line += ":";
+//     Line += line;
+    cout << Line.Data();
+    l++;
     TString Set;
     Int_t d = 0, t = 0;
     Float_t drift = 0;
@@ -71,8 +74,8 @@ void MakeNTupleFromAsciiTpcDriftVelocity(const Char_t *FileName="drift.list") {
     }
 #else
     TObjArray *tokens = Line.Tokenize(" :/()%\n");
-    //    for (Int_t i = 0; i <= tokens->GetLast(); i++) {
-    for (Int_t i = 0; i <= 6; i++) {
+    for (Int_t i = 0; i <= tokens->GetLast(); i++) {
+      //    for (Int_t i = 0; i <= 6; i++) {
       TString &token = ((TObjString*) ( tokens->At(i)))->String();
       cout << i << "\t" << token.Data() << endl;
       if        (i ==  0) {
@@ -80,11 +83,13 @@ void MakeNTupleFromAsciiTpcDriftVelocity(const Char_t *FileName="drift.list") {
 	year = d/10000;
 	cout << " n = " << n << " d = " << d << " t = " << t << " year = " << year << endl;
 	if (n != 2) break;
-      } else if (i ==  3) {drift  = token.Atof();
-      } else if (i ==  6) {ddrift = token.Atof();
+      } else if (i ==  7) {drift  = token.Atof();
+      } else if (i == 10) {ddrift = token.Atof();
       }
     }
 #endif
+    cout << "l = " << l << "\tk = " << k << "\td = " << d << "\tt = " << t << "\tdriftV = " << drift << " +/- " << ddrift << endl;
+    
     TDatime time(d,t);
     Int_t usec = time.Convert() - u0; 
     TDatime ty(10000*year + 101, 0);
@@ -95,7 +100,7 @@ void MakeNTupleFromAsciiTpcDriftVelocity(const Char_t *FileName="drift.list") {
     BPoint.DV = drift;
     BPoint.dDV = ddrift;
     FitP->Fill(&BPoint.set);
-    i++;
+    k++;
   }
   fclose(fp);
   fOut->Write();
