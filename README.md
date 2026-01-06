@@ -16,7 +16,24 @@ This repository is located at  git@github.com:fisyak/star-sw.git (as TFG branch)
 The list of stable releases can be found TFG_Releases.md
 
 
-<h2>How to use  TFG release </h2>
+<h2>How to use  TFG release from  cvmfs</h2>
+<ul>
+<li>  <b>setenv USE_CVMFS 1</b>
+<li>  <b>source  /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG/setupTFG.csh</b>
+<li>  <b>starver _desired_TFG_version__</b>, from TFG16a  to TFG25k, .DEV2 == TFG is check out HEAD from TFG repository, it could be unstable.
+<li>  switch between ROOT5 and ROOT6: 
+<ul>
+  <li> setup root6 (6.37.01)
+  <li> setup root5 (5.34.39)
+</ul> 
+<li> to switch between cvmfs, afs, and nfs4 version use : 
+<ul>
+  <li>  <b>setup afs </b>
+  <li>  <b>setup nfs4 </b>
+  <li>  <b>setup cvmfs </b>
+</ul>
+</ul>
+<h2>How to use  TFG release (old version from SL7 on afs) </h2>
 <ul>
 <li>  <b>starver .DEV2</b>
 <li>  <b>source $STAR/setupDEV2.csh</b>
