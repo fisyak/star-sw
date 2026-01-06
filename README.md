@@ -39,7 +39,7 @@ The list of stable releases can be found TFG_Releases.md
   <li> <b>setup opt</b>
 </ul>
 <li>To set display title to version use : <b>xtitl</b>
-<li>Sometimes it usefull to make <b>ln -s $STAR/.rootrc .</b>
+<li>Sometimes it is usefull to make <b>ln -s $STAR/.rootrc .</b>
 </ul>
 <h2>How to use  TFG release (old version from SL7 on afs) </h2>
 <ul>
