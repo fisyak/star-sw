@@ -32,6 +32,13 @@ The list of stable releases can be found TFG_Releases.md
   <li>  <b>setup nfs4 </b>
   <li>  <b>setup cvmfs </b>
 </ul>
+<li>Switch between debug and nodebug (opt) versions use
+<ul>
+  <li> <b>setup debug</b>
+  <li> <b>setup nodebug</b>
+  <li> <b>setup opt</b>
+</ul>
+<li>To set display title to version use : <b>xtitl</b>
 </ul>
 <h2>How to use  TFG release (old version from SL7 on afs) </h2>
 <ul>
