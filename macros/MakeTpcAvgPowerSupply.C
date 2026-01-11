@@ -334,7 +334,9 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
   }
   cout << "Run MakeTpcAvgPowerSupply for "; d.Print();
   Int_t u95 = d.Convert();
-  TDatime nextyear(10000*(year+1) + 101, 0);
+  Int_t nyear = year + 1;
+  if (year == 2025) nyear = 2027;
+  TDatime nextyear(10000*nyear    + 101, 0);
   Int_t uNext = nextyear.Convert();
   struct FitP_t {
     Float_t run, uBegin, uStop, uEnd, channel, module, io, sector, socket, meanV, rmsV, Vfit, meanC, rmsC, Cfit, Charge, FitStatus, AcChargeI, AcChargeO, np;
@@ -355,6 +357,10 @@ void MakeTpcAvgPowerSupply(Int_t year = 2020) {
   // List of runs
   //select beginTime,runNumber,from_unixtime(startRunRTS),from_unixtime(startRunDaq),from_unixtime(startRunTrg),from_unixtime(endRunRTS) from  runUpdateStatus limit 20;
   TSQLServer *RunLog = OnlDbServer("RunLog",year);
+  if (! RunLog) {
+    cout << "Can't open OnlDbServer for RunLog" << endl;
+    return;
+  }
   //  TString sql("SELECT runNumber,from_unixtime(startRunRTS),from_unixtime(endRunRTS) from runUpdateStatus where beginTime > \"2012-04-23 10:09:15\" order by beginTime limit 2;");
   //  TString sql("SELECT runNumber,from_unixtime(startRunRTS),from_unixtime(endRunRTS) from runUpdateStatus where beginTime > \"2016-01-13\" order by beginTime;");
   //  TString sql("SELECT runNumber,from_unixtime(startRunRTS),from_unixtime(endRunRTS) from runUpdateStatus order by beginTime;");
