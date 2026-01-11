@@ -1,6 +1,6 @@
 /*
   root.exe 'bfc.C(-1,"Sti")' StiPulls.C+
-// (1e9,"./*tags.root")'
+// ("./*tags.root")'
 
 StiPulls->Draw("mHitsR.lZPul>>Z(100,-0.02,0.02)","mHitsR.mDetector==27","colz")
 TChain *chain =  Chain.C+("*.tags.root","StiPulls")
@@ -175,7 +175,7 @@ void StiTpcPulls() {
 	   
   static TH3F *plots[NCharge][NGP][NIO][NPL] = {0};
   TString Out;
-  TString dirN(gSystem->DirName(tree->GetFile()->GetName()));
+  TString dirN(gSystem->WorkingDirectory());
   Int_t indx20 = dirN.Index("20");
   if (indx20 >= 0) {
     Out = dirN.Data() + indx20;
@@ -251,7 +251,8 @@ void StiTpcPulls() {
     THnSparse  *pullZIO[NGP][2] = {{ pullZI,  pullZO}, { pullPZI,  pullPZO}};
 #endif
   // Loop
-#if __PRINT_FILE_NAME__
+#define __PRINT_FILE_NAME__
+#ifdef __PRINT_FILE_NAME__
   TString currentFileName;
 #endif
   for (ev = 0; ev < nevent; ev++) {
@@ -259,13 +260,13 @@ void StiTpcPulls() {
      
     //    if (centry < 0) break;
     nb += tree->GetEntry(ev);        //read c[omplete event in memory
-#if __PRINT_FILE_NAME__
+#ifdef  __PRINT_FILE_NAME__
     if (currentFileName != TString(tree->GetFile()->GetName())) {
       currentFileName = tree->GetFile()->GetName();
       cout << "Open File " << currentFileName.Data() << endl;
+      cout << "Run/Event" << event->mRun << "/" << event->mEvt << endl;
+      cout << "Vtx:\t" << event->mVtx[0] << "\t" << event->mVtx[1] <<"\t" << event->mVtx[2] << endl;
     }
-    cout << "Run/Event" << event->mRun << "/" << event->mEvt << endl;
-    cout << "Vtx:\t" << event->mVtx[0] << "\t" << event->mVtx[1] <<"\t" << event->mVtx[2] << endl;
 #endif
     TClonesArray *Hits = 0;
     TClonesArray *Tracks = 0;
@@ -343,29 +344,10 @@ void StiTpcPulls() {
       }
     }
   }
-#if 0
-  fOut->cd();
-  for (Int_t l = 0; l < 2; l++) {
-    for (Int_t t = 0; t < NPL2; t++) {
-      for (Int_t s = 0; s < 3; s++) {
-	if (! plots2D[s][l][t]) plots2D[s][l][t]->FitSlicesY();
-	if (! pulls2D[s][l][t]) pulls2D[s][l][t]->FitSlicesY();
-      }
-    }
-  }  
-#endif
-#if 0
-  fOut->Write();  
-#ifdef __SPARSED__
-  for (Int_t io = 0; io < 2; io++) {
-    pullYIO[io]->Write();
-    pullZIO[io]->Write();
-  }
-#endif
-#endif
+  //  fOut->Write();  
 }
-//________________________________________________________________________________
-void StiPulls(const Char_t *files = "*stipull.root") {
+//____________________________[____________________________________________________
+void StiPulls(const Char_t *files = "*tags.root") {
   if (gClassTable->GetID("StiPullEvent") < 0) {gSystem->Load("StiUtilities");}
 #if 0
   tree = (TTree *) gDirectory->Get("StiPulls");
@@ -397,9 +379,7 @@ void StiPulls(const Char_t *files = "*stipull.root") {
     }
     delete f;
   }
-  branch = tree->GetBranch("event");
-  if (! branch) return;
-  branch->SetAddress(&event);
+  tree->SetBranchAddress("event",&event);
   Int_t nentries = (Int_t) tree->GetEntries();
   cout << "chained " << NFiles  << " files\t" 
        << "\twith total\t" << nentries << " events" << endl;

@@ -724,5 +724,15 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "tan(#lambda)"; nx = 140; xMin = 7; xMax = - xMin;}
     if (muPlot.Contains(":z1",TString::kIgnoreCase)) { var = "log(ADC))"; nx = 20, xMin = 2; xMax = 12;}
     MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, "dsigma>0&&dsigma<0.1", "prof", zMin, zMax, Title, var,muPlot);
+  } else if (Name.BeginsWith("pull",TString::kIgnoreCase)) {
+    TString muPlot = plot;
+    if (plot == "" || plot == "nomuJ") {muPlot = "sigma:x"; }
+    Double_t zMin = -0.5, zMax = 0.5;
+    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 1.0;}
+    TString var("Z (cm) "); nx = 105, xMin = -210; xMax = 210;
+    if (muPlot.Contains(":y",TString::kIgnoreCase)) { var = "tan(#phi)"; nx = 40; xMin = -2; xMax = xMin;}
+    if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "tan(#lambda)"; nx = 140; xMin = 7; xMax = - xMin;}
+    if (muPlot.Contains(":z1",TString::kIgnoreCase)) { var = "log(ADC))"; nx = 20, xMin = 2; xMax = 12;}
+    MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, "dsigma>0&&dsigma<0.1", "prof", zMin, zMax, Title, var,muPlot);
   }
 }
