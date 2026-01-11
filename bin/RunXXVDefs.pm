@@ -1934,6 +1934,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1929'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26342009',	 last => '26342014',	 list => '',  beginTime => '20251208.073809'}, # 	2025-12-08	07:38:09	2025-12-08	09:58:20	timestamp = AuAu_2025_HiLumi_RF
 '1930'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26342016',	 last => '26342016',	 list => '',  beginTime => '20251208.095820'}, # 	2025-12-08	09:58:20	2025-12-08	10:44:29
 '1931'=> {trig=>'AuAu_2025_HiLumi',      	field => 'RF',	first=> '26342019',	 last => '26342020',	 list => '',  beginTime => '20251208.104429'}, # 	2025-12-08	10:44:29	2025-12-08	11:50:19
-'1932'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26342021',	 last => '26342024',	 list => '',  beginTime => '20251208.115019'}, # 	2025-12-08	11:50:19	2025-12-08	13:18:24	timestamp = AuAu_2025_RF
+'1932'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26342021',	 last => '26342024',	 list => '',  beginTime => '20251208.115019'}, # 	2025-12-08	11:50:19	2026-01-11	01:36:48	timestamp = AuAu_2025_RF
+'1933'=> {trig=>'Cosmic',                	field => 'RHF',	first=> '27010003',	 last => '27010003',	 list => '',  beginTime => '20260111.013648'}, # 	2026-01-11	01:36:48	2026-01-11	01:36:48	timestamp = Cosmic_RHF
 );
 1;
