@@ -7,9 +7,9 @@ my @list = ();
 if (-d  "/hlt/cephfs/daq/") {
 #  @list = glob "/hlt/cephfs/daq/2021/*/*/*laser*.daq /hlt/cephfs/daq/2022/*/*/*laser*.daq";
 #  @list = glob "/hlt/cephfs/daq/2021/*/*/*laser*.daq /hlt/cephfs/daq/2025/*/*/*laser*.daq";
-  @list = glob "/hlt/cephfs/daq/2025/*/*/*laser*.daq";
+  @list = glob "/hlt/cephfs/daq/202[5-6]/*/*/*laser*.daq";
 } else {
-  @list = glob "/star/data03/daq/2025/*/*/st_laser*.daq";
+  @list = glob "/star/data03/daq/202[5-6]/*/*/st_laser*.daq";
 }
 print "list = @list\n" if ($debug);
 my $NoJobs = 0;
