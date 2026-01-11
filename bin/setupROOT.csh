@@ -29,16 +29,16 @@ setenv x11libdir /usr/X11R6/lib
 setenv xpmlibdir /usr/X11R6/lib
 setenv xftlibdir /usr/X11R6/lib
 setenv DISABLE "$DISABLE --disable-python --disable-qt --disable-qtgsi --disable-vc --disable-pythia8 --disable-xrootd"
-setenv MYSQLINCDIR /usr/include/mysql
-if ($USE_64BITS == 0) then
-    setenv MYSQLLIBDIR /usr/lib
-else 
-    setenv MYSQLLIBDIR /usr/lib64
-endif
-if (-r $XOPTSTAR/spack/include/mysql) then
-        setenv MYSQLINCDIR $XOPTSTAR/spack/include/mysql
-        setenv MYSQLLIBDIR $XOPTSTAR/spack/lib
-endif
+#setenv MYSQLINCDIR /usr/include/mysql
+#if ($USE_64BITS == 0) then
+#    setenv MYSQLLIBDIR /usr/lib
+#else 
+#    setenv MYSQLLIBDIR /usr/lib64
+#endif
+#if (-r $XOPTSTAR/spack/include/mysql) then
+#        setenv MYSQLINCDIR $XOPTSTAR/spack/include/mysql
+#        setenv MYSQLLIBDIR $XOPTSTAR/spack/lib
+#endif
 
 #setenv GSL_DIR $ROOTSYS
 setenv GSL_DIR $XOPTSTAR # $ROOTSYS
@@ -115,8 +115,8 @@ switch ( $STAR_HOST_SYS )
     breaksw
     case *darwin*:
 	setenv ARCH macosx64
- 	setenv MYSQLINCDIR /sw/include/mysql
-	setenv MYSQLCLILIB /sw/lib
+# 	setenv MYSQLINCDIR /sw/include/mysql
+#	setenv MYSQLCLILIB /sw/lib
 	setenv GSLDIR /sw
     breaksw
     case *x8664*:
@@ -231,13 +231,13 @@ echo "DISABLE = $DISABLE"
     --enable-builtin_lzma       \
     --with-gsl-incdir=$GSL_DIR/include \
     --with-gsl-libdir=$GSL_DIR/lib \
-    --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLLIBDIR \
     --with-fftw3-incdir=$XOPTSTAR/include --with-fftw3-libdir=$XOPTSTAR/lib \
     --with-f77=$F77 \
     --all \
     $DISABLE \
     $ENABLE \
     $ENABLE_CXX11 $EXTRA_FLAGS
+#    --with-mysql-incdir=$MYSQLINCDIR --with-mysql-libdir=$MYSQLLIBDIR \
 #    --with-pythia6-libdir=$XOPTSTAR/lib 
 #    --enable-opengl 
 #    --with-xrootd=$XOPTSTAR 
