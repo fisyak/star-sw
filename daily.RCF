@@ -6563,3 +6563,39 @@ rcas6008] ~ $ diff -y --width=260 env.SL24x env.SL24x.TFG.32b
 CINTSYSDIR=/afs/rhic.bnl.gov/star/ROOT/5.34.38/.sl73_gcc485/rootdeb/cint/cint                                                 | 
 CINTSYSDIR=/afs/rhic.bnl.gov/star/ROOT/5.34.38/.sl73_gcc485/root/cint/cint
 [rcas6008] ~ $ diff -y --width=260 env.SL24x env.SL24x.TFG.32b.debug 
+================================================================================
+01/09/2026 
+[starsub02] ~/TFG/TFG25h/9p95GeV_fixedTarget_2025_RHF $ root.exe /gpfs01/star/pwg_tasks/simulations/UrQMD/IMP/4p5/roots/00010.root
+root.exe [2] urqmd->Show(0)
+======> EVENT:0
+ mul             = 912
+ b               = 2.7133
+ Npart           = 369
+ pid             = 2212, 
+                  2112, 2212, 2212, 2212, 2112, 3222, 3122, 2212, 2112, 2212, 
+                  2212, 2212, 2112, 2212, 2112, 2112, 2212, 2112, 2212
+ px              = 0.218788, 
+                  0.56657, -0.0809037, 0.749423, 0.0236645, -0.00898355, 
+                  -1.37378, 0.456594, -0.0257776, 0.670783, -0.442587, 
+                  0.535091, -0.0931841, -0.150822, 0.090096, -0.534786, 
+                  0.438745, 0.217168, -0.20851, -0.20794
+ py              = -0.703237, 
+                  0.330121, -0.226138, -0.673625, -0.462141, 0.747115, 
+                  0.512181, -0.114411, -0.048818, -0.0580133, -0.00136153, 
+                  0.444266, 0.221515, -0.451454, -0.561854, 0.20565, 
+                  0.223039, 0.663994, 0.0270989, 0.227085
+ pz              = -1.21321, 
+                  1.31828, -0.0092685, -0.0727375, -0.710843, -0.472822, 
+                  -0.159152, 0.799621, 2.42354, 1.58048, -1.47948, 
+                  -1.30929, 0.206479, -1.95821, 1.11856, 1.40437, 
+                  -0.794331, 2.27657, -0.187888, 0.435219
+================================================================================
+01/10/2026 
+[starsub02] ~/work/kfp/2022/pp500_P25ib/dEdxB/Zombie   322
+[starsub02] ~/work/kfp/2022/pp500_P25ib/dEdxB/Failed   1065
+Int_t StTpcHitMover::Make() {
+  if (StMagUtilities::Instance() && StMagUtilities::Instance()->GetSpaceChargeMode() &&
+      St_spaceChargeCorR2C::instance()->IsMarked()) {
+    gMessMgr->Error() << "StTpcHitMover::Make questionable hit corrections" << endm;
+    return kStSkip;
+  }
