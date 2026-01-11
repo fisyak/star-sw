@@ -14,6 +14,7 @@ if ($#ARGV >= 0) {
 }
 my $total = 5000;
 my $ext = "";
+my $extq = "";
 my $pwd = cwd();
 my $dir = File::Basename::basename($pwd);
 if ($dir =~ /,/) {
@@ -21,6 +22,7 @@ if ($dir =~ /,/) {
   my $f = int $w[0];
   my $l = int $w[1];
   $ext = ":" . $f . ":" . $l;
+  $extq = "," . $f . "," . $l;
 #  print "f = $f, l = $l ext = $ext\n";
 #  die;
 }
@@ -30,7 +32,7 @@ foreach my $file (glob $glob .  "/*.root") {
   if ($i > $total) {last;}
   my $f = File::Basename::basename($file,".root");
 #  print "file = $file => f = $f\n";
-  my @list = glob $f . "*.root";
+  my @list = glob $f . $extq . "*.root";
   if ( $#list >= 0) {next};
   print "string:$file$ext\n";
 #  last;
