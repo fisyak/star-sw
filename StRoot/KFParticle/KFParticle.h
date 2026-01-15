@@ -71,6 +71,9 @@ class KFParticle : public TObject
 #ifdef HomogeneousField
   static void SetField( float Bz );
 #endif
+#ifdef __ROOT__
+  static Int_t FixStreamer();
+#endif
   //* Constructor (empty)
 
   KFParticle();

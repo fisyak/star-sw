@@ -41,18 +41,16 @@ float KFParticle::fgBz = -5.;  //* Bz compoment of the magnetic field
 #include "TRSymMatrix.h"
 #include "TRVector.h"
 #include <iostream>
-
+static Int_t _init__ = KFParticle::FixStreamer() ;
+Int_t KFParticle::FixStreamer() {
+  KFParticle::Class()->IgnoreTObjectStreamer(); 
+  //  cout << "KFParticle::FixStreamer KFParticle::Class()->IgnoreTObjectStreamer()" << endl;
+  return 0;
+}
 KFParticle::KFParticle() :fChi2(0), SumDaughterMass(0), fMassHypo(-1), fNDF(-3), 
                                   fId(-1), fParentID(0), fIdTruth(0), fQuality(0), fIdParentMcVx(0),  
                                   fQ(0), fConstructMethod(0), fPDG(0), fDaughtersIds()
 { 
-#if 0
-  static Bool_t first = kTRUE;
-  if (first) {
-    first = kFALSE;
-    KFParticle::Class()->IgnoreTObjectStreamer();
-  }
-#endif
   //* Constructor 
   Clear();
 }
