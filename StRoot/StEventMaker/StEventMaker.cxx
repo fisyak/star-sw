@@ -447,8 +447,8 @@ StEventMaker::makeEvent()
 	    if (triggerIdColl->nominal()) triggerIdColl->setNominal(new StTriggerId(*(triggerIdColl->nominal())));
 	    if (gStTpcDb) {
 	      Int_t TriggerId = -1; // Unknown
-	      if (triggerIdColl) {
-		static Int_t goodIds[5] = {9200,9201,310811,310812,310813};
+	      if (triggerIdColl) {    //  laser -   laser
+		static Int_t goodIds[6] = {9200,9201,  61,310811,310812,310813};
 		const StTriggerId *nominal = triggerIdColl->nominal();
 		TriggerId = 0;
 		StTpcDb::instance()->SetTriggerId(TriggerId);
@@ -456,7 +456,7 @@ StEventMaker::makeEvent()
 		  static Int_t mEventCounter = 0;
 		  mEventCounter++;
 		  if (nominal && nominal->triggerIds().size()) {
-		    for (Int_t i = 0; i < 2; i++) {
+		    for (Int_t i = 0; i < 3; i++) {
 		      if (nominal->isTrigger(goodIds[i])) {TriggerId = goodIds[i]; break;}
 		    }
 		    StTpcDb::instance()->SetTriggerId(TriggerId);
