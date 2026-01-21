@@ -1937,6 +1937,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1932'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26342021',	 last => '26342024',	 list => '',  beginTime => '20251208.115019'}, # 	2025-12-08	11:50:19	2026-01-11	01:36:48	timestamp = AuAu_2025_RF
 '1933'=> {trig=>'Cosmic',                	field => 'RHF',	first=> '27010003',	 last => '27010003',	 list => '',  beginTime => '20260111.013648'}, # 	2026-01-11	01:36:48	2026-01-11	18:21:57	timestamp = Cosmic_RHF
 '1934'=> {trig=>'Cosmic',                	field => 'RHF',	first=> '27011004',	 last => '27011004',	 list => '',  beginTime => '20260111.182157'}, # 	2026-01-11	18:21:57	2026-01-21	16:36:23
-'1935'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021017',	 last => '27021031',	 list => '',  beginTime => '20260121.163623'}, # 	2026-01-21	16:36:23	2026-01-21	21:58:57	timestamp = 9p8GeV_fixedTarget_2026_RF
+'1935'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021017',	 last => '27021031',	 list => '',  beginTime => '20260121.163623'}, # 	2026-01-21	16:36:23	2026-01-21	22:57:04	timestamp = 9p8GeV_fixedTarget_2026_RF
+'1936'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021033',	 last => '27021033',	 list => '',  beginTime => '20260121.225704'}, # 	2026-01-21	22:57:04	2026-01-21	22:57:04
 );
 1;
