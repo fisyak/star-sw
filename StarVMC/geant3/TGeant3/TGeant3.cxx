@@ -1598,14 +1598,14 @@ void TGeant3::DefineParticles()
   fPDGCode[fNPDGCodes++] = -4122; // 53 = Lambda_c-
   fPDGCode[fNPDGCodes++] = -15;                                // 56 = Tau+
   fPDGCode[fNPDGCodes++] = 15;                                 // 57 = Tau-
-  fPDGCode[fNPDGCodes++] = 511;                             // 58 = B0
-  fPDGCode[fNPDGCodes++] = -511;                                // 58 = B0bar
-  fPDGCode[fNPDGCodes++] = 521;                             // 60 = B+
-  fPDGCode[fNPDGCodes++] = -521;                            // 61 = B-
-  fPDGCode[fNPDGCodes++] = 531;                             // 62 = B_s
-  fPDGCode[fNPDGCodes++] = -531;                                // 63 = B_s bar
-  fPDGCode[fNPDGCodes++] = 5122; // 64 = Lambda_b
-  fPDGCode[fNPDGCodes++] = -5122; // 65 = Lambda_b bar
+//   fPDGCode[fNPDGCodes++] = 511;                             // 58 = B0
+//   fPDGCode[fNPDGCodes++] = -511;                                // 58 = B0bar
+//   fPDGCode[fNPDGCodes++] = 521;                             // 60 = B+
+//   fPDGCode[fNPDGCodes++] = -521;                            // 61 = B-
+//   fPDGCode[fNPDGCodes++] = 531;                             // 62 = B_s
+//   fPDGCode[fNPDGCodes++] = -531;                                // 63 = B_s bar
+//   fPDGCode[fNPDGCodes++] = 5122; // 64 = Lambda_b
+//   fPDGCode[fNPDGCodes++] = -5122; // 65 = Lambda_b bar
   fPDGCode[fNPDGCodes++] = 443;                               // 66 = J/Psi
   fPDGCode[fNPDGCodes++] = 20443; // 67 = Psi prime
   
@@ -1640,6 +1640,7 @@ void TGeant3::DefineParticles()
   fPDGCode[fNPDGCodes++] =  -313; // 95 = K*0_bar
   fPDGCode[fNPDGCodes++] =  -323; // 96 = K*-
   fPDGCode[fNPDGCodes++] =   323; // 97 = K*+
+  // Hyper Nuclear
   
   //  static Double_t GeV2Time = 3.291086E-25; // width in GeV to life time in seconds
   for (fNG3Particles = 1; fNG3Particles < fNPDGCodes; fNG3Particles++) {
@@ -1668,6 +1669,8 @@ void TGeant3::DefineParticles()
     Int_t mode[6] = {0};
     Float_t bratio[6] = {0};
     Int_t nda = 0;
+    Bool_t ifUpsilon = kFALSE;
+    if ((apdg/10)%100 == 55) ifUpsilon = kTRUE;
     for (Int_t i = 0; i < nch; i++) {
       TDecayChannel *dc = particle->DecayChannel(i);
       if (! dc) continue;
@@ -1675,6 +1678,10 @@ void TGeant3::DefineParticles()
       Int_t ig3[3] = {0};
       Int_t nd = dc->NDaughters();
       if (nd < 2 || nd > 3) continue;
+      if (ifUpsilon) {
+	if (nd != 2) continue;
+	if (dc->DaughterPdgCode(0) != - dc->DaughterPdgCode(1)) continue;
+      }
       Int_t ifK0 = -1;
       for (Int_t j = 0; j < nd; j++) {
 	Int_t dpdg = dc->DaughterPdgCode(j);
@@ -1691,13 +1698,13 @@ void TGeant3::DefineParticles()
 	   (apdg >   49 && apdg < 111) ||       //  technical
 	   (apdg >= 10000))) { // * & **
 	  ig3[j] = -1;
+	} else if (particle->Mass() > 1.8 && apdg == 12) {
+	  ig3[j] = -1;// Ignore semileptonic modes for all particles with mass > 1.8 GeV
 	} else {
 	  if (j != ifK0) {
 	    ig3[j] = IdFromPDG(dpdg);
 	  }
 	  if (ig3[j] > 99) ig3[j] = -1;
-	  // Ignore semileptonic modes for all particles with mass > 1 GeV
-	  if (particle->Mass() > 1.0 && apdg == 12) ig3[j] = -1;
 	}
       }
       if (ig3[0] < 0 || ig3[1] < 0 || ig3[2] < 0) continue;
@@ -7242,6 +7249,7 @@ Int_t TGeant3::GetIonPdg(Int_t z, Int_t a, Int_t i) const
    // http://cepa.fnal.gov/psm/stdhep/pdg/montecarlorpp-2006.pdf
 
    return 1000000000 + 10 * 1000 * z + 10 * a + i;
+   //          101 000 0030
 }
 
 //__________________________________________________________________
