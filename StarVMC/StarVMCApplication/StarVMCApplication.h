@@ -79,6 +79,7 @@ class StarVMCApplication : public TVirtualMCApplication {
   static Int_t ipartx(Int_t id);
   static Float_t dose(Float_t Z);
   static void SetFlux(Bool_t k = kTRUE) {flux = k;}
+  static TGeant3TGeo* Geant3() {return fgGeant3;}
  private:
   // methods
   
