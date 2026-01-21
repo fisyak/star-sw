@@ -587,6 +587,12 @@ using namespace std;
 #include "TRVector.h"
 #include "KFParticle/KFPTrack.h"
 #include "TMath.h"
+#ifdef __TFG__VERSION__
+#include "StDetectorDbMaker/St_beamInfoC.h"
+#include "StDetectorDbMaker/St_beamSpotC.h"
+#include "TMath.h"
+#include "StTMVARank/StTMVARanking.h"
+#endif /* __TFG__VERSION__ */
 map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::mTrkNodeMap;
 map<StTrackNode*, StiKalmanTrack*> StiStEventFiller::mNodeTrkMap;
 StiStEventFiller *StiStEventFiller::fgStiStEventFiller = 0;
@@ -898,8 +904,19 @@ void StiStEventFiller::fillEventPrimaries()
       if (pTrack) pTrack->setImpactParameter(minDca);
 
   } // kalman track loop
+#ifndef __TFG__VERSION__
   for (mVertN=0; (vertex = mEvent->primaryVertex(mVertN));mVertN++) {vertex->setTrackNumbers();}
-
+#else /* __TFG__VERSION__ */
+  Bool_t FXT =  St_beamInfoC::instance()->IsFixedTarget();
+  for (mVertN=0; (vertex = mEvent->primaryVertex(mVertN));mVertN++) {
+    vertex->setTrackNumbers();
+    Float_t rank = StTMVARanking::SimpleMindedRank(vertex);
+    if (FXT && TMath::Abs(vertex->position().z() - 200) < 2) rank += 10000.;
+    if (vertex->ranking() > 1e6) rank += 1e6; // keep StiPPVertex choise
+    vertex->setRanking(rank); 
+  }
+  mEvent->sortVerticiesByRank();
+#endif /* ! __TFG__VERSION__ */
   mTrkNodeMap.clear();  // need to reset for the next event
   cout <<"StiStEventFiller::fillEventPrimaries() -I- Primaries (1):"<< fillTrackCount1 <<endl;
   cout <<"StiStEventFiller::fillEventPrimaries() -I- Primaries (2):"<< fillTrackCount2 <<endl;
