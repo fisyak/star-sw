@@ -112,6 +112,8 @@ sub GetRuns($$) {
       $run2 = $DAQ_DIR . "/" . "2020/" . $Day . "/" .  $Run;
     } elsif ($year eq "2022") {
       $run2 = $DAQ_DIR . "/" . "2021/" . $Day . "/" .  $Run;
+    } elsif ($year eq "2025") {
+      $run2 = $DAQ_DIR . "/" . "2026/" . $Day . "/" .  $Run;
     }
   }
   print "runs = $runs\t run2 = $run2\n" if ($debug);
