@@ -123,9 +123,12 @@ C
                      CALL UCOPY(IQ(JP3+1),ITITLE3,5)
                      write(chmod3,'(5a4)') ititle3
                   endif
+#if __GNUC__ >= 7
+                  write(chmail,'(A)') chbr//' '//TRIM(chmod1)//' '//TRIM(chmod2)//' '//TRIM(chmod3)
+#else
                   chmail = chbr//' '//TRIM(chmod1)//' '//TRIM(chmod2)//' '//TRIM(chmod3)
-!                  write(chmail,'(4A)') chbr,chmod1,chmod2,chmod3
             CALL GMAIL(0,0)
+#endif
                enddo
             endif
          ENDIF
