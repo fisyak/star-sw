@@ -1083,7 +1083,6 @@ public:
    virtual void ProcessEvent(Int_t eventId, Bool_t isInterruptible);
    virtual void ProcessEvent(Int_t eventId) {ProcessEvent(eventId, kFALSE);}
    virtual Bool_t ProcessRun(Int_t nevent);
-   virtual void AddParticlesToPdgDataBase();
    virtual void SetCollectTracks(Bool_t) {}
    Bool_t IsCollectTracks() const { return kFALSE; }
 
@@ -1168,6 +1167,7 @@ protected:
    TMCProcess G3toVMC(Int_t iproc) const;
 
    void DefineParticles();
+   void DefineParticlesPDG();
    Int_t TransportMethod(TMCParticleType particleType) const;
    TString ParticleClass(TMCParticleType particleType) const;
    TMCParticleType ParticleType(Int_t itrtyp) const;

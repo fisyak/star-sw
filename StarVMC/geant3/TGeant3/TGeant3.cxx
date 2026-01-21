@@ -512,8 +512,10 @@ Cleanup of code
 #include <stdlib.h>
 #include <assert.h>
 #include "TROOT.h"
-#include "TParticle.h"
 #include "TDatabasePDG.h"
+#include "TParticlePDG.h"
+#include "TDecayChannel.h"
+#include "TParticle.h"
 #include "TLorentzVector.h"
 #include "TArrayI.h"
 #include "TArrayD.h"
@@ -522,7 +524,7 @@ Cleanup of code
 #include "TGeoMatrix.h"
 #include "TObjString.h"
 #include "RVersion.h"
-
+#include "TSystem.h"
 #include "TGeant3.h"
 #if ROOT_VERSION_CODE >= ROOT_VERSION(6, 14, 0)
 #include "TMCManager.h"
@@ -1389,167 +1391,6 @@ void TGeant3::BuildPhysics()
 }
 
 //______________________________________________________________________
-void TGeant3::AddParticlesToPdgDataBase() 
-{
-  //
-  // Add particles to the PDG data base
-  
-  TDatabasePDG *pdgDB = TDatabasePDG::Instance();
-  // Special particles
-  //
-  if (!pdgDB->GetParticle(GetSpecialPdg(50)))
-    pdgDB->AddParticle("Cherenkov","Cherenkov",0,kFALSE, 0,0,"Special",GetSpecialPdg(50));
-  
-  if (!pdgDB->GetParticle(GetSpecialPdg(51)))
-    pdgDB->AddParticle("FeedbackPhoton","FeedbackPhoton",0,kFALSE,
-		       0,0,"Special",GetSpecialPdg(51));
-  static Double_t kAu2Gev=0.9314943228;
-  
-  static Double_t khSlash = 1.0545726663e-27;
-  static Double_t kErg2Gev = 1/1.6021773349e-3;
-  static Double_t khShGev = khSlash*kErg2Gev;
-  //  static Double_t GeV2Time = 3.291086E-25; // width in GeV to life time in seconds
-  static Double_t GeV2Time = khShGev;
-#if 0
-  static Double_t kYear2Sec = 3600*24*365.25;
-  static Double_t kDay2Sec  = 3600*24;
-#endif
-  struct Particle_t {
-    const Char_t *name; 
-    const Char_t *title;
-    Double_t mass;
-    Bool_t stable;
-    Double_t width; 
-    Double_t charge;
-    TMCParticleType TrackingCod;
-    Int_t PDGcode;
-    const Char_t *decays[3];
-  };
-  static Double_t tauLambda = 2.632E-10;
-  static Double_t widthLambda = khShGev/tauLambda;
-  Particle_t Nuclei[] = { // https://periodictable.com/Isotopes
-    //name          ,title          ,mass                 ,stable,        width,charge,    TrackingCod,PDGcode           ,decays        
-    {"Lambda0R"     ,"Lambda0R"     ,1.115683             ,kFALSE, 1e10*widthLambda, 0, kPTNeutron,       2202212,  {"proton", "pi-",  0}},         
-    {"DEUTERON"     ,"DEUTERON"     ,1.87561294257        ,kTRUE ,            0,     3,    kPTIon,GetIonPdg(1, 2),  {0,  0,  0}},         
-    {"TRITON"       ,"TRITON"       ,2.80892113298        ,kTRUE ,            0,     3,    kPTIon,GetIonPdg(1, 3),  {0,  0,  0}}, // khShGev/(12.32*kYear2Sec)  
-    {"ALPHA"        ,"ALPHA"        ,3.7273794066         ,kTRUE ,            0,     6,    kPTIon,GetIonPdg(2, 4),  {0,  0,  0}},       
-    {"HE3"          ,"HE3"          ,2.80839160743        ,kTRUE ,            0,     6,    kPTIon,GetIonPdg(2, 3),  {0,  0,  0}},       
-    //    {"He3r"         ,"He3r"         ,2.815                ,kFALSE,        0.002,     6, kPTHadron,     2000020030,  {"DEUTERON", "proton"  ,     0}}, // -> d p  
-    {"He3r"         ,"He3r"         ,2.8185               ,kFALSE,       0.0002,     6, kPTHadron,     2000020030,  {"DEUTERON", "proton"  ,     0}}, // -> d p  
-    {"HE6"          ,"HE6"          ,5.6055375            ,kTRUE ,            0,     6,    kPTIon,GetIonPdg(2, 6),  {0,  0,  0}}, // khShGev/(806.7e-3) 
-    {"Li5"          ,"Li5"          ,4.6676161            ,kFALSE, 0.0021642217,     9,    kPTHadron , 1000030050,  {"ALPHA", "proton", 0}}, // -> He4 p
-    {"Li6"          ,"Li6"          ,5.6015181            ,kTRUE ,            0,     9,    kPTIon,GetIonPdg(3, 6),  {0,  0,  0}},       
-    {"Li7"          ,"Li7"          ,6.5338336            ,kTRUE ,            0,     9,    kPTIon,GetIonPdg(3, 7),  {0,  0,  0}},       
-    {"Be7"          ,"Be7"          ,6.5341844            ,kTRUE ,            0,    12,    kPTIon,GetIonPdg(4, 7),  {0,  0,  0}},       // ,khShGev/(53.218*kDay2Sec)
-    {"Be9"          ,"Be9"          ,9.012182201*kAu2Gev  ,kTRUE ,            0,    12,    kPTIon,GetIonPdg(4, 9),  {0,  0,  0}},       
-    {"Be10"         ,"Be10"         ,10.013533818*kAu2Gev ,kTRUE ,            0,    12,    kPTIon,GetIonPdg(4,10),  {0,  0,  0}},      
-    {"B11"          ,"B11"          ,11.0216577497*kAu2Gev,kTRUE ,            0,    15,    kPTIon,GetIonPdg(5,11),  {0,  0,  0}},      // ,khShGev/13.81
-    {"LN"           ,"LN"           ,2.050                ,kFALSE,  widthLambda,     0, kPTHadron,           3003,  {"DEUTERON", "pi-"     ,     0}}, //  Deuteron pi-         =>       
-    {"LNN"          ,"LNN"          ,2.9925               ,kFALSE,  widthLambda,     0, kPTHadron,     1010000030,  {"TRITON"  , "pi-"     ,     0}}, //  pi- Triton         =>                   
-    {"H2L"          ,"H2L"          ,2.0545               ,kFALSE,  widthLambda,     3, kPTHadron,           3028,  {"proton"  , "proton"  , "pi-"}}, // H2K -< p p pi-
-    {"H2Lr"         ,"H2Lr"         ,2.0545               ,kFALSE,  widthLambda,     3, kPTHadron,        1003028,  {"Lambda0R", "proton"  ,     0}}, // H2K -< p p pi-
-    {"H3L"          ,"H3L"          ,2.9908               ,kFALSE,  widthLambda,     3, kPTHadron,           3004,  {"HE3"     , "pi-"     ,     0}}, // HyperTriton -> He3 pi-    
-    {"H3Ldp"        ,"H3Ldp"        ,2.9908               ,kFALSE,  widthLambda,     3, kPTHadron,           3012,  {"DEUTERON", "proton"  , "pi-"}}, // HyperTriton -> d p pi-    
-    {"H3Lr"         ,"H3Lr"         ,2.9908               ,kFALSE,  widthLambda,     3, kPTHadron,        1003004,  {"He3r"    , "pi-"     ,     0}}, //  -> He3r pi-
-    {"H3RL"         ,"H3RL"         ,2.9908               ,kFALSE,  widthLambda,     3, kPTHadron,        2003004,  {"Lambda0R", "DEUTERON",     0}}, //  -> Lambda0R proton
-    {"H4L"          ,"H4L"          ,3.9224               ,kFALSE,  widthLambda,     3, kPTHadron,           3005,  {"ALPHA"   , "pi-"     ,     0}}, // -> He4 pi-    
-    {"H4Ltp"        ,"H4Ltp"        ,3.9224               ,kFALSE,  widthLambda,     3, kPTHadron,           3013,  {"TRITON"  , "proton"  , "pi-"}}, // -> t p pi-    		             
-    {"H4L2d"        ,"H4L2d"        ,3.9224               ,kFALSE,  widthLambda,     3, kPTHadron,           3014,  {"DEUTERON", "DEUTERON", "pi-"}}, // -> d d pi-    	             
-    {"H5L"          ,"H5L"          ,4.864                ,kFALSE,  widthLambda,     3, kPTHadron,           3015,  {"TRITON"  , "DEUTERON", "pi-"}}, // -> t d pi-    		             
-    {"H6L"          ,"H6L"          ,5.77                 ,kFALSE,  widthLambda,     3, kPTHadron,           3016,  {"HE6"     , "pi-"     ,     0}}, // -> He6 pi-    		             
-    {"H6L3"         ,"H6L3"         ,5.77                 ,kFALSE,  widthLambda,     3, kPTHadron,           3017,  {"TRITON"  , "TRITON"  , "pi-"}}, // -> t t pi-    		             
-    {"He4L"         ,"He4L"         ,3.921                ,kFALSE,  widthLambda,     6, kPTHadron,           3006,  {"HE3"     , "proton"  , "pi-"}}, // -> He3 p pi-    	             
-    {"He5L"         ,"He5L"         ,4.8393               ,kFALSE,  widthLambda,     6, kPTHadron,           3007,  {"ALPHA"   , "proton"  , "pi-"}}, // -> He4 p pi-          
-    {"He5L3"        ,"He5L3"        ,4.8393               ,kFALSE,  widthLambda,     6, kPTHadron,           3018,  {"HE3"     , "DEUTERON", "pi-"}}, // -> He3 d pi-              
-    {"He5Li5"       ,"He5Li5"       ,4.8393               ,kFALSE,  widthLambda,     6, kPTHadron,        1003007,  {"Li5"     , "pi-"     ,     0}}, // -> Li5 -> He4 pi-
-    {"He6L"         ,"He6L"         ,5.77                 ,kFALSE,  widthLambda,     6, kPTHadron,           3019,  {"Li6"     , "pi-"     ,     0}}, // -> Li6 pi-    	             
-    {"He6L3"        ,"He6L3"        ,5.77                 ,kFALSE,  widthLambda,     6, kPTHadron,           3020,  {"HE3"     , "TRITON"  , "pi-"}}, // -> He3 t pi-  	             
-    {"He6L3ad"      ,"He6L3ad"      ,5.77                 ,kFALSE,  widthLambda,     6, kPTHadron,           3021,  {"ALPHA"   , "DEUTERON", "pi-"}}, // -> He4 d pi-  	             
-    {"He7L"         ,"He7L"         ,6.717                ,kFALSE,  widthLambda,     6, kPTHadron,           3022,  {"Li7"     , "pi-"     ,     0}}, // -> Li7 pi-     	                        
-    {"He7L3"        ,"He7L3"        ,6.717                ,kFALSE,  widthLambda,     6, kPTHadron,           3023,  {"ALPHA"   , "TRITON"  , "pi-"}}, // -> He4 t pi-  	             	             
-    {"Li6L"         ,"Li6L"         ,5.77                 ,kFALSE,  widthLambda,     9, kPTHadron,           3024,  {"HE3"     , "HE3"     , "pi-"}}, // -> He3 He3 pi-	             	             
-    {"Li7L"         ,"Li7L"         ,6.711                ,kFALSE,  widthLambda,     9, kPTHadron,           3025,  {"Be7"     , "pi-"     ,     0}}, // -> Be7 pi-    	             	             
-    {"Li7L3"        ,"Li7L3"        ,6.711                ,kFALSE,  widthLambda,     9, kPTHadron,           3026,  {"ALPHA"   , "HE3"     , "pi-"}}, // -> He4 He3 pi-	             	             
-    {"Li8L"         ,"Li8L"         ,7.65                 ,kFALSE,  widthLambda,     9, kPTHadron,           3027,  {"ALPHA"   , "ALPHA"   , "pi-"}}, // -> He4 He4 pi-                              
-    {"H5LL"         ,"H5LL"         ,5.047                ,kFALSE,  widthLambda,     3, kPTHadron,        2003015,  {"He5L"    , "pi-"     ,     0}}, // -> He5L  pi-    		             
-    /* Vipul Bairathy 02/20/21
-1. Name  = "PQ1730LamK0s";
-    Decay Channel: Lambda K0s   (Strong decay)
-    Mass = 1730 MeV 
-    Width = 0.0
-    Charge = 0
-    PDG code   = 912323
-    Geant code  = 60008
-
-2. Name  = "PQ1730LamK+";
-    Decay Channel: Lambda K+   (Strong decay)
-    Mass = 1730 MeV 
-    Width = 0.0
-    Charge = 1
-    PDG code   = 912313
-    Geant code  = 60009
-     */
-    {"PQ1730LamK0s" ,"PQ1730LamK0s" ,1.730                ,kFALSE,1e10*widthLambda,     0, kPTHadron,          912323,  {"Lambda0"   , "K_S0"     ,     0}}, // -> Lambda K0s
-    {"PQ1730LamK+"  ,"PQ1730LamK+"  ,1.730                ,kFALSE,1e10*widthLambda,     3, kPTHadron,          912313,  {"Lambda0"   , "K+"       ,     0}}  // -> Lambda K+
-  };
-  Int_t nIons = sizeof(Nuclei)/sizeof(Particle_t);
-  for (Int_t i = 0; i < nIons; i++) {
-    for (Int_t s = 1; s >= -1; s -= 2) {
-      Int_t pdg = s*Nuclei[i].PDGcode;
-      TString name;
-      if (s == 1) name = Nuclei[i].name;
-      else       {name = "Anti"; name +=  Nuclei[i].name;}
-      Double_t charge =  s*Nuclei[i].charge/3.;
-      Int_t Id = IdFromPDG(pdg);
-      if (TDatabasePDG::Instance()->GetParticle(pdg)) {
-	cout << "Particle " << name.Data() << " with pdg = " << pdg << " has been taken" << endl;
-	TDatabasePDG::Instance()->GetParticle(pdg)->Print();
-      }
-      Double_t tlife = 1e20;
-      if (! Nuclei[i].stable &&  Nuclei[i].width > 0) tlife = khShGev/Nuclei[i].width;
-      // Add to GEANT
-      if (Id <= 0) {
-	// Gspart(Int_t ipart, const char *name, Int_t itrtyp, Double_t amass, Double_t charge, Double_t tlife
-	//	Gspart(fNG3Particles++,name, kPTIon, Nuclei[i].mass,  charge, tlife);
-	//	DefineParticle(pdg, name.Data(),  kPTIon, Nuclei[i].mass,  charge, tlife, name);
-// 	DefineParticle(pdg,name.Data(), kPTIon, Nuclei[i].mass,  charge, tlife,
-// 		     name /*pType*/,  Nuclei[i].width  /*width*/, 
-// 		     0 /*iSpin*/, 0 /*iParity*/, 0 /*iConjugation*/, 
-//                      0 /*iIsospin*/, 0 /*iIsospinZ*/, 0 /*gParity*/,
-// 		     0 /*lepton*/, 1 /*baryon*/,
-//                      kFALSE /*stable*/, kTRUE /*shortlived*/);
-	DefineParticle(pdg,name.Data(), Nuclei[i].TrackingCod, Nuclei[i].mass,  charge, tlife,
-		       "nucleus", 0.0, 1, 1, 0, 1, 1, 0, 0, 1, kTRUE);
-	Id = IdFromPDG(pdg);
-	assert(Id > 0);
-      } else {
-	if ( !pdgDB->GetParticle(pdg)) {
-	  pdgDB->AddParticle(name, name, Nuclei[i].mass, kFALSE, GeV2Time/tlife, 3*charge,           "", pdg, -1, Nuclei[i].TrackingCod);
-	  fPDGCode[Id] = pdg;
-	}
-      }
-      Int_t kz = 0;
-      Float_t bratio[6] = {0};
-      Int_t   mode[6] = {0};
-      kz = 0;
-      for (kz = 0; kz < 3; kz++) {
-	if (!  Nuclei[i].decays[kz]) break;
-	TParticlePDG *p = pdgDB->GetParticle(Nuclei[i].decays[kz]);
-	if (! p) break;
-	Int_t pdg = p->PdgCode();
-	if (! pdg) break;
-	Int_t ip = IdFromPDG(s*pdg);
-	mode[0] = 100*mode[0] + ip;
-	
-      }
-      if ( mode[0] ) {
-	bratio[0] = 100.;
-	Gsdk(Id, bratio, mode);
-      }
-    }
-  }
-}
-//______________________________________________________________________
 Int_t TGeant3::CurrentVolID(Int_t &copy) const
 {
    //
@@ -1660,7 +1501,7 @@ Int_t TGeant3::IdFromPDG(Int_t pdg) const
    for (Int_t i = 0; i < fNPDGCodes; ++i)
       if (pdg == fPDGCode[i])
          return i;
-   //   Warning("IdFromPDG", "Unknown to GEANT3 pdg value = %i",pdg);
+   Warning("IdFromPDG", "Unknown to GEANT3 pdg value = %i",pdg);
    return -1;
 }
 
@@ -1675,387 +1516,217 @@ Int_t TGeant3::PDGFromId(Int_t id) const
    else
       return -1;
 }
-
 //______________________________________________________________________
 void TGeant3::DefineParticles()
 {
   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
-  char *name = 0;
-  Int_t itrtyp;
-  Float_t amass, charge, tlife;
+  if (! pdgDB->ParticleList()) pdgDB->ReadPDGTable();
+  TString STAR(gSystem->Getenv("STAR"));
+  pdgDB->ReadPDGTable(STAR + "/etc/pdg_tableExtension.txt");
+  // Load standard numbers for GEANT particles and PDG conversion
+  fPDGCode[fNPDGCodes++] = -99;   //  0 = unused location
+  fPDGCode[fNPDGCodes++] = 22;    //  1 = photon
+  fPDGCode[fNPDGCodes++] = -11;   //  2 = positron
+  fPDGCode[fNPDGCodes++] = 11;    //  3 = electron
+  fPDGCode[fNPDGCodes++] = 12;    //  4 = neutrino e
+  fPDGCode[fNPDGCodes++] = -13;   //  5 = muon +
+  fPDGCode[fNPDGCodes++] = 13;    //  6 = muon -
+  fPDGCode[fNPDGCodes++] = 111;   //  7 = pi0
+  fPDGCode[fNPDGCodes++] = 211;   //  8 = pi+
+  fPDGCode[fNPDGCodes++] = -211;  //  9 = pi-
+  fPDGCode[fNPDGCodes++] = 130;   // 10 = Kaon Long
+  fPDGCode[fNPDGCodes++] = 321;   // 11 = Kaon +
+  fPDGCode[fNPDGCodes++] = -321;  // 12 = Kaon -
+  fPDGCode[fNPDGCodes++] = 2112;  // 13 = Neutron
+  fPDGCode[fNPDGCodes++] = 2212;  // 14 = Proton
+  fPDGCode[fNPDGCodes++] = -2212; // 15 = Anti Proton
+  fPDGCode[fNPDGCodes++] = 310;   // 16 = Kaon Short
+  fPDGCode[fNPDGCodes++] = 221;   // 17 = Eta
+  fPDGCode[fNPDGCodes++] = 3122;  // 18 = Lambda
+  fPDGCode[fNPDGCodes++] = 3222;  // 19 = Sigma +
+  fPDGCode[fNPDGCodes++] = 3212;  // 20 = Sigma 0
+  fPDGCode[fNPDGCodes++] = 3112;  // 21 = Sigma -
+  fPDGCode[fNPDGCodes++] = 3322;  // 22 = Xi0
+  fPDGCode[fNPDGCodes++] = 3312;  // 23 = Xi-
+  fPDGCode[fNPDGCodes++] = 3334;  // 24 = Omega-
+  fPDGCode[fNPDGCodes++] = -2112; // 25 = Anti Neutron
+  fPDGCode[fNPDGCodes++] = -3122; // 26 = Anti Lambda
+  fPDGCode[fNPDGCodes++] = -3222; // 27 = Anti Sigma -
+  fPDGCode[fNPDGCodes++] = -3212; // 28 = Anti Sigma 0
+  fPDGCode[fNPDGCodes++] = -3112; // 29 = Anti Sigma +
+  fPDGCode[fNPDGCodes++] = -3322; // 30 = Anti Xi 0
+  fPDGCode[fNPDGCodes++] = -3312; // 31 = Anti Xi +
+  fPDGCode[fNPDGCodes++] = -3334; // 32 = Anti Omega +
+  fPDGCode[fNPDGCodes++] = 223;                                   // 33 = Omega(782)
+  fPDGCode[fNPDGCodes++] = 333;                                  // 34 = PHI (1020)
+  fPDGCode[fNPDGCodes++] = 411;                             // 35 = D+
+  fPDGCode[fNPDGCodes++] = -411;                             // 36 = D-
+  fPDGCode[fNPDGCodes++] = 421;                             // 37 = D0
+  fPDGCode[fNPDGCodes++] = -421;                                 // 38 = D0 bar
+  //  fPDGCode[fNPDGCodes++] =  311; // 39 = K0
+  //  fPDGCode[fNPDGCodes++] = -311; // 40 = Kbar0
+  fPDGCode[fNPDGCodes++] = 431; // 54 = D_s+
+  fPDGCode[fNPDGCodes++] = -431;                              // 55 = D_s-
+  fPDGCode[fNPDGCodes++] =  331; // 41 = eta'
+  fPDGCode[fNPDGCodes++] = 213;                              // 42 = RHO+
+  fPDGCode[fNPDGCodes++] = -213;                              // 43 = RHO-
+  fPDGCode[fNPDGCodes++] = 113;                              //  44 = RHO0
+  
   //
-  // Define standard Geant 3 particles
-  Gpart();
+  // Ions
+  
+  fPDGCode[fNPDGCodes++] = GetIonPdg(1, 2); // 45 = Deuteron
+  fPDGCode[fNPDGCodes++] = GetIonPdg(1, 3); // 46 = Triton
+  fPDGCode[fNPDGCodes++] = GetIonPdg(2, 4); // 47 = Alpha
+  
+  fPDGCode[fNPDGCodes++] = 0; // 48 = geantino mapped to rootino
+  
+  fPDGCode[fNPDGCodes++] = GetIonPdg(2, 3); // 49 = HE3
+  fPDGCode[fNPDGCodes++] = GetSpecialPdg(50); // 50 = Cherenkov
+  fPDGCode[fNPDGCodes++] = GetSpecialPdg(51); // 51 = FeedbackPhoton
   //
-  static Double_t khSlash = 1.0545726663e-27;
-  static Double_t kErg2Gev = 1/1.6021773349e-3;
-  static Double_t khShGev = khSlash*kErg2Gev;
+  // Ions
+  fPDGCode[fNPDGCodes++] = GetIonPdg(3, 5); //  Li5
+  fPDGCode[fNPDGCodes++] = GetIonPdg(3, 6); //  Li6
+  fPDGCode[fNPDGCodes++] = GetIonPdg(3, 7); //  Li7
+  fPDGCode[fNPDGCodes++] = GetIonPdg(4, 7); //  Be7
+  fPDGCode[fNPDGCodes++] = GetIonPdg(4, 9); //  Be9
+  fPDGCode[fNPDGCodes++] = GetIonPdg(4,10); //  Be10
+  fPDGCode[fNPDGCodes++] = GetIonPdg(5,11); //  B11
+ 
+  fPDGCode[fNPDGCodes++] = 4122; // 52 = Lambda_c+
+  fPDGCode[fNPDGCodes++] = -4122; // 53 = Lambda_c-
+  fPDGCode[fNPDGCodes++] = -15;                                // 56 = Tau+
+  fPDGCode[fNPDGCodes++] = 15;                                 // 57 = Tau-
+  fPDGCode[fNPDGCodes++] = 511;                             // 58 = B0
+  fPDGCode[fNPDGCodes++] = -511;                                // 58 = B0bar
+  fPDGCode[fNPDGCodes++] = 521;                             // 60 = B+
+  fPDGCode[fNPDGCodes++] = -521;                            // 61 = B-
+  fPDGCode[fNPDGCodes++] = 531;                             // 62 = B_s
+  fPDGCode[fNPDGCodes++] = -531;                                // 63 = B_s bar
+  fPDGCode[fNPDGCodes++] = 5122; // 64 = Lambda_b
+  fPDGCode[fNPDGCodes++] = -5122; // 65 = Lambda_b bar
+  fPDGCode[fNPDGCodes++] = 443;                               // 66 = J/Psi
+  fPDGCode[fNPDGCodes++] = 20443; // 67 = Psi prime
+  
+  fPDGCode[fNPDGCodes++] = 553; // 68 = Upsilon(1S)
+  fPDGCode[fNPDGCodes++]=100553;        // 69 = Upsilon'(2S)
+  fPDGCode[fNPDGCodes++]=200553;        // 70 = Upsilon''(3S)
+//   fPDGCode[fNPDGCodes++] = -12; // 71 = anti electron neutrino
+//   fPDGCode[fNPDGCodes++] = 14; // 72 = muon neutrino
+//   fPDGCode[fNPDGCodes++] = -14; // 73 = anti muon neutrino
+//   fPDGCode[fNPDGCodes++] = 16; // 74 = tau neutrino
+//   fPDGCode[fNPDGCodes++] = -16; // 75 = anti tau neutrino
+  // extra particles
+  fPDGCode[fNPDGCodes++] =  3224; // 76 = Sigma*+
+  fPDGCode[fNPDGCodes++] =  3214; // 77 = Sigma*0
+  fPDGCode[fNPDGCodes++] =  3114; // 78 = Sigma*-
+  fPDGCode[fNPDGCodes++] = -3224; // 79 = Sigma*+_bar
+  fPDGCode[fNPDGCodes++] = -3214; // 80 = Sigma*0_bar
+  fPDGCode[fNPDGCodes++] = -3114; // 81 = Sigma*-_bar
+  fPDGCode[fNPDGCodes++] =  1114; // 82 = Delta-
+  fPDGCode[fNPDGCodes++] =  2114; // 83 = Delta0
+  fPDGCode[fNPDGCodes++] =  2214; // 84 = Delta+
+  fPDGCode[fNPDGCodes++] =  2224; // 85 = Delta++ 
+    fPDGCode[fNPDGCodes++] = -1114; // 86 = Delta-_bar
+  fPDGCode[fNPDGCodes++] = -2114; // 87 = Delta0_bar
+  fPDGCode[fNPDGCodes++] = -2214; // 88 = Delta+_bar
+  fPDGCode[fNPDGCodes++] = -2224; // 89 = Delta--
+  fPDGCode[fNPDGCodes++] =  3314; // 90 = Xi*-
+  fPDGCode[fNPDGCodes++] = -3314; // 91 = Xi*+
+  fPDGCode[fNPDGCodes++] =  3324; // 92 = Xi*0
+  fPDGCode[fNPDGCodes++] = -3324; // 93 = Xi*0_bar
+  fPDGCode[fNPDGCodes++] =   313; // 94 = K*0
+  fPDGCode[fNPDGCodes++] =  -313; // 95 = K*0_bar
+  fPDGCode[fNPDGCodes++] =  -323; // 96 = K*-
+  fPDGCode[fNPDGCodes++] =   323; // 97 = K*+
+  
   //  static Double_t GeV2Time = 3.291086E-25; // width in GeV to life time in seconds
-  static Double_t GeV2Time = khShGev;
-   // Load standard numbers for GEANT particles and PDG conversion
-   fPDGCode[fNPDGCodes++] = -99;   //  0 = unused location
-   fPDGCode[fNPDGCodes++] = 22;    //  1 = photon
-   fPDGCode[fNPDGCodes++] = -11;   //  2 = positron
-   fPDGCode[fNPDGCodes++] = 11;    //  3 = electron
-   fPDGCode[fNPDGCodes++] = 12;    //  4 = neutrino e
-   fPDGCode[fNPDGCodes++] = -13;   //  5 = muon +
-   fPDGCode[fNPDGCodes++] = 13;    //  6 = muon -
-   fPDGCode[fNPDGCodes++] = 111;   //  7 = pi0
-   fPDGCode[fNPDGCodes++] = 211;   //  8 = pi+
-   fPDGCode[fNPDGCodes++] = -211;  //  9 = pi-
-   fPDGCode[fNPDGCodes++] = 130;   // 10 = Kaon Long
-   fPDGCode[fNPDGCodes++] = 321;   // 11 = Kaon +
-   fPDGCode[fNPDGCodes++] = -321;  // 12 = Kaon -
-   fPDGCode[fNPDGCodes++] = 2112;  // 13 = Neutron
-   fPDGCode[fNPDGCodes++] = 2212;  // 14 = Proton
-   fPDGCode[fNPDGCodes++] = -2212; // 15 = Anti Proton
-   fPDGCode[fNPDGCodes++] = 310;   // 16 = Kaon Short
-   fPDGCode[fNPDGCodes++] = 221;   // 17 = Eta
-   fPDGCode[fNPDGCodes++] = 3122;  // 18 = Lambda
-   fPDGCode[fNPDGCodes++] = 3222;  // 19 = Sigma +
-   fPDGCode[fNPDGCodes++] = 3212;  // 20 = Sigma 0
-   fPDGCode[fNPDGCodes++] = 3112;  // 21 = Sigma -
-   fPDGCode[fNPDGCodes++] = 3322;  // 22 = Xi0
-   fPDGCode[fNPDGCodes++] = 3312;  // 23 = Xi-
-   fPDGCode[fNPDGCodes++] = 3334;  // 24 = Omega-
-   fPDGCode[fNPDGCodes++] = -2112; // 25 = Anti Neutron
-   fPDGCode[fNPDGCodes++] = -3122; // 26 = Anti Lambda
-   fPDGCode[fNPDGCodes++] = -3222; // 27 = Anti Sigma -
-   fPDGCode[fNPDGCodes++] = -3212; // 28 = Anti Sigma 0
-   fPDGCode[fNPDGCodes++] = -3112; // 29 = Anti Sigma +
-   fPDGCode[fNPDGCodes++] = -3322; // 30 = Anti Xi 0
-   fPDGCode[fNPDGCodes++] = -3312; // 31 = Anti Xi +
-   fPDGCode[fNPDGCodes++] = -3334; // 32 = Anti Omega +
-
-   Int_t mode[6];
-   Int_t kz, ipa;
-   Float_t bratio[6];
-
-   fNG3Particles = 33;
-
-   /* --- Define additional particles */
-   Gspart(fNG3Particles++, "OMEGA(782)", 3, 0.782, 0., 7.836e-23); // 33 = OMEGA(782)
-   fPDGCode[fNPDGCodes++] = 223;                                   // 33 = Omega(782)
-
-   Gspart(fNG3Particles++, "PHI(1020)", 3, 1.019, 0., 1.486e-22); // 34 = PHI(1020)
-   fPDGCode[fNPDGCodes++] = 333;                                  // 34 = PHI (1020)
-
-   Gspart(fNG3Particles++, "D +", 4, 1.8693, 1., 1.040e-12); // 35 = D+        // G4DMesonPlus
-   fPDGCode[fNPDGCodes++] = 411;                             // 35 = D+
-
-   Gspart(fNG3Particles++, "D -", 4, 1.8693, -1., 1.040e-12); // 36 = D-        // G4DMesonMinus
-   fPDGCode[fNPDGCodes++] = -411;                             // 36 = D-
-
-   Gspart(fNG3Particles++, "D 0", 3, 1.8645, 0., 0.415e-12); // 37 = D0        // G4DMesonZero
-   fPDGCode[fNPDGCodes++] = 421;                             // 37 = D0
-
-   Gspart(fNG3Particles++, "ANTI D 0", 3, 1.8645, 0., 0.415e-12); // 38 = Anti D0   // G4AntiDMesonZero
-   fPDGCode[fNPDGCodes++] = -421;                                 // 38 = D0 bar
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = -99; // 39 = unassigned
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = -99; // 40 = unassigned
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = -99; // 41 = unassigned
-
-   Gspart(fNG3Particles++, "RHO +", 4, 0.768, 1., 4.353e-24); // 42 = Rho+
-   fPDGCode[fNPDGCodes++] = 213;                              // 42 = RHO+
-
-   Gspart(fNG3Particles++, "RHO -", 4, 0.768, -1., 4.353e-24); // 43 = Rho-
-   fPDGCode[fNPDGCodes++] = -213;                              // 43 = RHO-
-
-   Gspart(fNG3Particles++, "RHO 0", 3, 0.768, 0., 4.353e-24); // 44 = Rho0
-   fPDGCode[fNPDGCodes++] = 113;                              //  44 = RHO0
-
-   //
-   // Ions
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = GetIonPdg(1, 2); // 45 = Deuteron
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = GetIonPdg(1, 3); // 46 = Triton
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = GetIonPdg(2, 4); // 47 = Alpha
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = 0; // 48 = geantino mapped to rootino
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = GetIonPdg(2, 3); // 49 = HE3
-
-   fNG3Particles++;
-   fPDGCode[fNPDGCodes++] = GetSpecialPdg(50); // 50 = Cherenkov
-                                               // special
-   Gspart(fNG3Particles++, "FeedbackPhoton", 7, 0., 0., 1.e20);
-   fPDGCode[fNPDGCodes++] = GetSpecialPdg(51); // 51 = FeedbackPhoton
-                                               //
-
-  Gspart(fNG3Particles++, "Lambda_c+", 4, 2.28646, +1., 2.06e-13);
-   // Gspart(fNG3Particles++, "Lambda_c+", 4, 2.28646, +1., 0.200e-12); // G4LambdacPlus
-   fPDGCode[fNPDGCodes++] = 4122; // 52 = Lambda_c+
-
-   Gspart(fNG3Particles++, "Lambda_c-", 4, 2.28646, -1., 2.06e-13);
-   // Gspart(fNG3Particles++, "Lambda_c-", 4, 2.2849, -1., 0.200e-12);  // G4AntiLamdacPlus
-   fPDGCode[fNPDGCodes++] = -4122; // 53 = Lambda_c-
-
-  Gspart(fNG3Particles++, "D_s+", 4, 1.9682, +1., 0.490e-12);       // G4DsMesonPlus * booklet (July 2006): lifetime=0.500e-12  
-   fPDGCode[fNPDGCodes++] = 431; // 54 = D_s+
-
-   Gspart(fNG3Particles++, "D_s-", 4, 1.9682, -1., 0.490e-12); // G4DsMesonMinus * booklet: lifetime=0.500e-12
-   fPDGCode[fNPDGCodes++] = -431;                              // 55 = D_s-
-
-   Gspart(fNG3Particles++, "Tau+", 5, 1.77699, +1., 290.6e-15); // G4TauPlus *
-   fPDGCode[fNPDGCodes++] = -15;                                // 56 = Tau+
-
-   Gspart(fNG3Particles++, "Tau-", 5, 1.77699, -1., 290.6e-15); // G4TauMinus *
-   fPDGCode[fNPDGCodes++] = 15;                                 // 57 = Tau-
-
-   Gspart(fNG3Particles++, "B0", 3, 5.2794, +0., 1.532e-12); // G4BMesonZero
-   fPDGCode[fNPDGCodes++] = 511;                             // 58 = B0
-
-  Gspart(fNG3Particles++, "B0 bar", 4, 5.2794, -0., 1.532e-12);     // G4AntiBMesonZero
-   fPDGCode[fNPDGCodes++] = -511;                                // 58 = B0bar
-
-   Gspart(fNG3Particles++, "B+", 4, 5.2790, +1., 1.638e-12); // G4BMesonPlus *
-   fPDGCode[fNPDGCodes++] = 521;                             // 60 = B+
-
-   Gspart(fNG3Particles++, "B-", 4, 5.2790, -1., 1.638e-12); // G4BMesonMinus *
-   fPDGCode[fNPDGCodes++] = -521;                            // 61 = B-
-
-  Gspart(fNG3Particles++, "Bs",     4, 5.3675, +0., 1.466e-12);     // G4BsMesonZero
-   fPDGCode[fNPDGCodes++] = 531;                             // 62 = B_s
-
-   Gspart(fNG3Particles++, "Bs bar", 3, 5.3675, -0., 1.466e-12); // G4AntiBsMesonZero
-   fPDGCode[fNPDGCodes++] = -531;                                // 63 = B_s bar
-
-  Gspart(fNG3Particles++, "Lambda_b",     4, 5.624, +0., 1.24e-12);
-   fPDGCode[fNPDGCodes++] = 5122; // 64 = Lambda_b
-
-   Gspart(fNG3Particles++, "Lambda_b bar", 3, 5.624, -0., 1.24e-12);
-   fPDGCode[fNPDGCodes++] = -5122; // 65 = Lambda_b bar
-
-   Gspart(fNG3Particles++, "J/Psi", 3, 3.096916, 0., 7.6e-21); // G4JPsi
-   fPDGCode[fNPDGCodes++] = 443;                               // 66 = J/Psi
-
-   Gspart(fNG3Particles++, "Psi Prime", 3, 3.686, 0., 0.);
-   fPDGCode[fNPDGCodes++] = 20443; // 67 = Psi prime
-
-  Gspart(fNG3Particles++, "Upsilon(1S)", 4, 9.46037, 0., GeV2Time / 54.02e-6);
-   fPDGCode[fNPDGCodes++] = 553; // 68 = Upsilon(1S)
-  if ( !pdgDB->GetParticle(fPDGCode[fNPDGCodes-1])) {
-    Gfpart(fPDGCode[fNPDGCodes-1], name, itrtyp, amass, charge, tlife);
-    //                 Name Title   Mass  Stable  DecayWidth      Charge   ParticleClass  PdgCode                   Anti TrackingCode
-    pdgDB->AddParticle(name, name, amass, kFALSE, GeV2Time/tlife, 3*charge,           "", fPDGCode[fNPDGCodes-1], -1, itrtyp);
+  for (fNG3Particles = 1; fNG3Particles < fNPDGCodes; fNG3Particles++) {
+    Int_t pdg = fPDGCode[fNG3Particles];
+    if (pdg == -99) continue;
+    TParticlePDG *particle = pdgDB->GetParticle(pdg);
+    assert(particle);
+    Int_t itrtyp = particle->TrackingCode();
+    Float_t charge = particle->Charge()/3.0;
+    if (itrtyp <= 0) { 
+      if                 (pdg  == 22) itrtyp = 1;
+      else if (charge == 0.0)         itrtyp = 3;
+      else if (pdg >= 50000050)       itrtyp = 7;
+      else if (TMath::Abs(pdg) == 11) itrtyp = 2;
+      else if (TMath::Abs(pdg) == 13) itrtyp = 5;
+      else                            itrtyp = 4;
+    }
+    Float_t tlife = 1e15;
+    if (particle->Width() > 0.0) tlife = particle->Lifetime();
+    //    if (TMath::Abs(pdg) == 311)  tlife = 0; // K0/K0_bar
+    //   virtual void Gspart(Int_t ipart, const char *name, Int_t itrtyp, Double_t amass, Double_t charge, Double_t tlife);
+    Gspart(fNG3Particles, particle->GetName(),  itrtyp, particle->Mass(), charge, tlife);
+    Int_t apdg = TMath::Abs(pdg);
+    Int_t nch = pdgDB->GetParticle(apdg)->NDecayChannels();
+    if (! nch) continue;
+    Int_t mode[6] = {0};
+    Float_t bratio[6] = {0};
+    Int_t nda = 0;
+    for (Int_t i = 0; i < nch; i++) {
+      TDecayChannel *dc = particle->DecayChannel(i);
+      if (! dc) continue;
+      if (dc->BranchingRatio() <= 0.0) continue;
+      Int_t ig3[3] = {0};
+      Int_t nd = dc->NDaughters();
+      if (nd < 2 || nd > 3) continue;
+      Int_t ifK0 = -1;
+      for (Int_t j = 0; j < nd; j++) {
+	Int_t dpdg = dc->DaughterPdgCode(j);
+	Int_t apdg = TMath::Abs(dpdg);
+	if (apdg == 311) ifK0 = j;
+	// Collapse all neutrinos in nu_e
+        if (apdg == 12 || apdg == 14 || apdg == 16) {
+	  apdg = 12;
+	  dpdg = apdg;
+	}
+	if ((apdg < 3000 || apdg > 3028) &&      // Maxim hypernuclear
+	  (apdg <   10 ||                       // quarks
+	   (apdg%100)/10 == 0  ||               // diquarks
+	   (apdg >   49 && apdg < 111) ||       //  technical
+	   (apdg >= 10000))) { // * & **
+	  ig3[j] = -1;
+	} else {
+	  if (j != ifK0) {
+	    ig3[j] = IdFromPDG(dpdg);
+	  }
+	  if (ig3[j] > 99) ig3[j] = -1;
+	  // Ignore semileptonic modes for all particles with mass > 1 GeV
+	  if (particle->Mass() > 1.0 && apdg == 12) ig3[j] = -1;
+	}
+      }
+      if (ig3[0] < 0 || ig3[1] < 0 || ig3[2] < 0) continue;
+      if (ifK0 == -1) {
+	mode[nda] = ig3[0] + 100*(ig3[1] + 100*ig3[2]);
+	if(mode[nda] == 0) continue;
+	bratio[nda] = dc->BranchingRatio();
+	nda++;
+	if (nda > 5) break;
+      } else {
+	Int_t ig3K0S = IdFromPDG(310);
+	Int_t ig3K0L = IdFromPDG(130);
+	ig3[ifK0] = ig3K0S;
+	mode[nda] = ig3[0] + 100*(ig3[1] + 100*ig3[2]);
+	bratio[nda] = 0.5*dc->BranchingRatio();
+	nda++;
+	if (nda > 5) break;
+	ig3[ifK0] = ig3K0L;
+	mode[nda] = ig3[0] + 100*(ig3[1] + 100*ig3[2]);
+	bratio[nda] = 0.5*dc->BranchingRatio();
+	nda++;
+	if (nda > 5) break;
+      }
+    }
+    if (! nda) continue;
+    Gsdk(fNG3Particles, bratio, mode);
   }
-  Gspart(fNG3Particles++, "Upsilon(2S)", 4, 10.0233, 0., GeV2Time / 31.98e-6);
-  fPDGCode[fNPDGCodes++]=100553;        // 69 = Upsilon(2S)
-  if ( !pdgDB->GetParticle(fPDGCode[fNPDGCodes-1])) {
-    Gfpart(fPDGCode[fNPDGCodes-1], name, itrtyp, amass, charge, tlife);
-    //                 Name Title   Mass  Stable  DecayWidth      Charge   ParticleClass  PdgCode                   Anti TrackingCode
-    pdgDB->AddParticle(name, name, amass, kFALSE, GeV2Time/tlife, 3*charge,           "", fPDGCode[fNPDGCodes-1], -1, itrtyp);
-  }
+} 
 
-  Gspart(fNG3Particles++, "Upsilon(3S)", 4, 10.3553, 0., GeV2Time / 20.32e-6);
-  fPDGCode[fNPDGCodes++]=20553;        // 70 = Upsilon(3S)
-  if ( !pdgDB->GetParticle(fPDGCode[fNPDGCodes-1])) {
-    Gfpart(fPDGCode[fNPDGCodes-1], name, itrtyp, amass, charge, tlife);
-    //                 Name Title   Mass  Stable  DecayWidth      Charge   ParticleClass  PdgCode                   Anti TrackingCode
-    pdgDB->AddParticle(name, name, amass, kFALSE, GeV2Time/tlife, 3*charge,           "", fPDGCode[fNPDGCodes-1], -1, itrtyp);
-  }
-
-   Gspart(fNG3Particles++, "Anti Neutrino (e)", 3, 0., 0., 1.e20);
-   fPDGCode[fNPDGCodes++] = -12; // 71 = anti electron neutrino
-
-   Gspart(fNG3Particles++, "Neutrino (mu)", 3, 0., 0., 1.e20);
-   fPDGCode[fNPDGCodes++] = 14; // 72 = muon neutrino
-
-   Gspart(fNG3Particles++, "Anti Neutrino (mu)", 3, 0., 0., 1.e20);
-   fPDGCode[fNPDGCodes++] = -14; // 73 = anti muon neutrino
-
-   Gspart(fNG3Particles++, "Neutrino (tau)", 3, 0., 0., 1.e20);
-   fPDGCode[fNPDGCodes++] = 16; // 74 = tau neutrino
-
-   Gspart(fNG3Particles++, "Anti Neutrino (tau)", 3, 0., 0., 1.e20);
-   fPDGCode[fNPDGCodes++] = -16; // 75 = anti tau neutrino
-
-
-
-
-
-
-   /* --- Define additional decay modes --- */
-   /* --- omega(783) --- */
-   for (kz = 0; kz < 6; ++kz) {
-      bratio[kz] = 0.;
-      mode[kz] = 0;
-   }
-   ipa = 33;
-   bratio[0] = 89.;
-   bratio[1] = 8.5;
-   bratio[2] = 2.5;
-   mode[0] = 70809;
-   mode[1] = 107;
-   mode[2] = 908;
-   Gsdk(ipa, bratio, mode);
-   /* --- phi(1020) --- */
-   for (kz = 0; kz < 6; ++kz) {
-      bratio[kz] = 0.;
-      mode[kz] = 0;
-   }
-   ipa = 34;
-   bratio[0] = 49.;
-   bratio[1] = 34.4;
-   bratio[2] = 12.9;
-   bratio[3] = 2.4;
-   bratio[4] = 1.3;
-   mode[0] = 1112;
-   mode[1] = 1610;
-   mode[2] = 4407;
-   mode[3] = 90807;
-   mode[4] = 1701;
-   Gsdk(ipa, bratio, mode);
-   /* --- D+ --- */
-   /*
-   for (kz = 0; kz < 6; ++kz) {
-  bratio[kz] = 0.;
-  mode[kz] = 0;
-   }
-   ipa = 35;
-   bratio[0] = 25.;
-   bratio[1] = 25.;
-   bratio[2] = 25.;
-   bratio[3] = 25.;
-   mode[0] = 80809;
-   mode[1] = 120808;
-   mode[2] = 111208;
-   mode[3] = 110809;
-   Gsdk(ipa, bratio, mode);
-   */
-   /* --- D- --- */
-   /*
-   for (kz = 0; kz < 6; ++kz) {
-  bratio[kz] = 0.;
-  mode[kz] = 0;
-   }
-   ipa = 36;
-   bratio[0] = 25.;
-   bratio[1] = 25.;
-   bratio[2] = 25.;
-   bratio[3] = 25.;
-   mode[0] = 90908;
-   mode[1] = 110909;
-   mode[2] = 121109;
-   mode[3] = 120908;
-   Gsdk(ipa, bratio, mode);
-   */
-   /* --- D0 --- */
-   /*
-   for (kz = 0; kz < 6; ++kz) {
-  bratio[kz] = 0.;
-  mode[kz] = 0;
-   }
-   ipa = 37;
-   bratio[0] = 33.;
-   bratio[1] = 33.;
-   bratio[2] = 33.;
-   mode[0] = 809;
-   mode[1] = 1208;
-   mode[2] = 1112;
-   Gsdk(ipa, bratio, mode);
-   */
-   /* --- Anti D0 --- */
-   /*
-   for (kz = 0; kz < 6; ++kz) {
-  bratio[kz] = 0.;
-  mode[kz] = 0;
-   }
-   ipa = 38;
-   bratio[0] = 33.;
-   bratio[1] = 33.;
-   bratio[2] = 33.;
-   mode[0] = 809;
-   mode[1] = 1109;
-   mode[2] = 1112;
-   Gsdk(ipa, bratio, mode);
-   */
-   /* --- rho+ --- */
-   for (kz = 0; kz < 6; ++kz) {
-      bratio[kz] = 0.;
-      mode[kz] = 0;
-   }
-   ipa = 42;
-   bratio[0] = 100.;
-   mode[0] = 807;
-   Gsdk(ipa, bratio, mode);
-   /* --- rho- --- */
-   for (kz = 0; kz < 6; ++kz) {
-      bratio[kz] = 0.;
-      mode[kz] = 0;
-   }
-   ipa = 43;
-   bratio[0] = 100.;
-   mode[0] = 907;
-   Gsdk(ipa, bratio, mode);
-   /* --- rho0 --- */
-   for (kz = 0; kz < 6; ++kz) {
-      bratio[kz] = 0.;
-      mode[kz] = 0;
-   }
-   ipa = 44;
-   bratio[0] = 100.;
-   mode[0] = 809;
-   Gsdk(ipa, bratio, mode);
-   /*
-// --- jpsi ---
-for (kz = 0; kz < 6; ++kz) {
-  bratio[kz] = 0.;
-  mode[kz] = 0;
-   }
-   ipa = 113;
-   bratio[0] = 50.;
-   bratio[1] = 50.;
-   mode[0] = 506;
-   mode[1] = 605;
-   Gsdk(ipa, bratio, mode);
-// --- upsilon ---
-   ipa = 114;
-   Gsdk(ipa, bratio, mode);
-// --- phi ---
-   ipa = 115;
-   Gsdk(ipa, bratio, mode);
-   */
-   //
-    // extra particles
-   const Char_t *extraPartName[] = {"Sigma*+","Sigma*-",
-				    "Delta-","Delta0","Delta+","Delta++",
-				    "Delta-_bar","Delta0_bar","Delta+_bar","Delta--",
-				    "Xi*-","Xi*+","Xi*0","Xi*0_bar"
-				    
-   };
-    Int_t Nextra = sizeof(extraPartName)/sizeof(Char_t *);
-    for (Int_t i = 0; i < Nextra; i++) {
-      TParticlePDG *p = TDatabasePDG::Instance()->GetParticle(extraPartName[i]);
-      if (! p) {cout << "Uknown particle " << extraPartName[i] << endl; continue;}
-      Double_t G = p->Width(); // GeV
-      Double_t lifetime = 0;   // second
-      if (G > 0) lifetime = TMath::H()/(TMath::TwoPi())/(TMath::Qe()*1e9*G);
-      DefineParticle(p->PdgCode(),p->GetName(), kPTHadron, p->Mass(),p->Charge()/3, lifetime,
-		     *(p->GetTitle()) /*pType*/, G /*width*/, 
-		     p->Spin() /*iSpin*/, p->Parity() /*iParity*/, 0 /*iConjugation*/, 
-                     p->Isospin() /*iIsospin*/, p->I3() /*iIsospinZ*/, 0 /*gParity*/,
-		     0 /*lepton*/, 1 /*baryon*/,
-                     kFALSE /*stable*/, kTRUE /*shortlived*/);
-      //      const TString& /*subType*/,
-      //	Int_t /*antiEncoding*/, Double_t /*magMoment*/,
-      //	Double_t /*excitation*/)
-   }
-   AddParticlesToPdgDataBase();
-}
 
 //______________________________________________________________________
 Int_t TGeant3::VolId(const Text_t *name) const
