@@ -1873,6 +1873,14 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
       	    int trgCrateMask =  (res1 & 0xfff0) << 20 | (swap16(evtDesc->npost) & 0xfff0) << 8 | (swap16(evtDesc->npre) & 0xfff0) >> 4;
       	    UINT32 bx_high = swap32(evtDesc->bunchXing_hi);
 	    UINT32 bx_low = swap32(evtDesc->bunchXing_lo);
+
+	    // TCU BX is from TCU
+	    // BunchXing is from L1 DSMs
+	    // These differ by 10   BunchXing = TCU + 10
+	    UINT32 TCU_bx_hi16 = swap16(evtDesc->tcuCtrBunch_hi);
+	    UINT32 TCU_bx_lo16 = swap16(evtDesc->DSMAddress);
+	    UINT32 TCU_bx = (TCU_bx_hi16 << 16) + TCU_bx_lo16;
+
 	    UINT64 bx64 = bx_high;
 	    bx64 = (bx64 << 32) + bx_low;
 	    float bx_sec = bx64/9.3e6;
@@ -1924,7 +1932,17 @@ static int tinfo_doer(daqReader *rdr, const char *do_print)
 		   l1Dsm, swap32(trg->L1_DSM_ofl.length));
 
 	   
-	    printf("tinfo: %016llx L1Results[0..4]: 0x%08x 0x%08x %d %d %d\n", rdr->daqbits64, swap32(trgSum->L1Result[0]), swap32(trgSum->L1Result[1]), swap32(trgSum->L1Result[2]), swap32(trgSum->L1Result[3]), swap32(trgSum->L1Result[4]));
+	    u_int age = 0;
+	    u_int age_q = 0;
+	
+	    if(swap32(trgSum->L1Result[2]) == 1) {
+		u_int bx_f = swap32(trgSum->L1Result[1]);
+		age = TCU_bx - bx_f;
+		if(bx_low < bx_f) {
+		    age_q = 1;
+		}
+	    }
+	    printf("tinfo: %016llx L1Results[0..4]: 0x%08x 0x%08x %d %d %10d %5d %d %u %u\n", rdr->daqbits64, swap32(trgSum->L1Result[0]), swap32(trgSum->L1Result[1]), swap32(trgSum->L1Result[2]), swap32(trgSum->L1Result[3]), swap32(trgSum->L1Result[4]), age, age_q, TCU_bx, swap32(trgSum->L1Result[1]));
 
 
 	    // 3/7/25
