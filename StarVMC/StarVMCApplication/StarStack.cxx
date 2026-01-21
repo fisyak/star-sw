@@ -302,12 +302,13 @@ void StarStack::PushTrack(Int_t done, Int_t parent, Int_t pdg,
       g2t_vertex_st *vertexCurrent = 0;
       for (Int_t jv = 0; jv < nv; jv++) {
 	g2t_vertex_st &vertexOld = *(g2t_vertex->GetTable() + jv);
-	if (parent != vertexOld.parent_p-1) continue;
+	// include stong decays 	if (parent != vertexOld.parent_p-1) continue;
 	TLorentzVector oldV(vertexOld.ge_x[0], vertexOld.ge_x[1], vertexOld.ge_x[2], vertexOld.ge_tof);
 	devV = newV - oldV;
 	if (devV.P() > 10e-4 || TMath::Abs(newV.T() - oldV.T()) > 1e-9) continue;
 	IdV = vertexOld.id;
 	vertexCurrent = &vertexOld;
+        break;
       }
       if (IdV < 0) {
 	g2t_vertex_st vertex;
