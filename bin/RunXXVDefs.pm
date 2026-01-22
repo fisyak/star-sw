@@ -1943,6 +1943,6 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1938'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022001',	 last => '27022006',	 list => '',  beginTime => '20260122.050504'}, # 	2026-01-22	05:05:04	2026-01-22	08:00:06
 '1939'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022008',	 last => '27022008',	 list => '',  beginTime => '20260122.080006'}, # 	2026-01-22	08:00:06	2026-01-22	08:33:44
 '1940'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022010',	 last => '27022014',	 list => '',  beginTime => '20260122.083344'}, # 	2026-01-22	08:33:44	2026-01-22	11:05:01
-'1941'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022017',	 last => '27022026',	 list => '',  beginTime => '20260122.110501'}, # 	2026-01-22	11:05:01	2026-01-22	15:27:36
+'1941'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022017',	 last => '27022031',	 list => '',  beginTime => '20260122.110501'}, # 	2026-01-22	11:05:01	2026-01-22	18:39:34
 );
 1;
