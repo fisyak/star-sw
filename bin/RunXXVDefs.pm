@@ -1937,7 +1937,12 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1932'=> {trig=>'AuAu_2025',             	field => 'RF',	first=> '26342021',	 last => '26342024',	 list => '',  beginTime => '20251208.115019'}, # 	2025-12-08	11:50:19	2026-01-11	01:36:48	timestamp = AuAu_2025_RF
 '1933'=> {trig=>'Cosmic',                	field => 'RHF',	first=> '27010003',	 last => '27010003',	 list => '',  beginTime => '20260111.013648'}, # 	2026-01-11	01:36:48	2026-01-11	18:21:57	timestamp = Cosmic_RHF
 '1934'=> {trig=>'Cosmic',                	field => 'RHF',	first=> '27011004',	 last => '27011004',	 list => '',  beginTime => '20260111.182157'}, # 	2026-01-11	18:21:57	2026-01-21	16:36:23
-'1935'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021017',	 last => '27021031',	 list => '',  beginTime => '20260121.163623'}, # 	2026-01-21	16:36:23	2026-01-21	22:57:04	timestamp = 9p8GeV_fixedTarget_2026_RF
-'1936'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021033',	 last => '27021033',	 list => '',  beginTime => '20260121.225704'}, # 	2026-01-21	22:57:04	2026-01-21	22:57:04
+'1935'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021017',	 last => '27021031',	 list => '',  beginTime => '20260121.163623'}, # 	2026-01-21	16:36:23	2026-01-21	23:14:57	timestamp = 9p8GeV_fixedTarget_2026_RF
+'1936'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021034',	 last => '27021039',	 list => '',  beginTime => '20260121.231457'}, # 	2026-01-21	23:14:57	2026-01-22	02:31:15
+'1937'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27021041',	 last => '27021045',	 list => '',  beginTime => '20260122.023115'}, # 	2026-01-22	02:31:15	2026-01-22	05:05:04
+'1938'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022001',	 last => '27022006',	 list => '',  beginTime => '20260122.050504'}, # 	2026-01-22	05:05:04	2026-01-22	08:00:06
+'1939'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022008',	 last => '27022008',	 list => '',  beginTime => '20260122.080006'}, # 	2026-01-22	08:00:06	2026-01-22	08:33:44
+'1940'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022010',	 last => '27022014',	 list => '',  beginTime => '20260122.083344'}, # 	2026-01-22	08:33:44	2026-01-22	11:05:01
+'1941'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27022017',	 last => '27022026',	 list => '',  beginTime => '20260122.110501'}, # 	2026-01-22	11:05:01	2026-01-22	15:27:36
 );
 1;
