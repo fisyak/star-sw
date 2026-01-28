@@ -2838,8 +2838,28 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXV01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/VoltageScan/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/03/2025  
 #$hist = "RunXXV02"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/12/2025  Voltage Scan
 #$hist = "RunXXV03"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/14/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan
-$hist = "RunXXV04"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/16/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan, change histogram binning
-
+#$hist = "RunXXV04"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/16/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan, change histogram binning
+############################### 2026 #################################################
+#$hist = "RunXXVI01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/21/2026 reset to default 
+#$hist = "RunXXVI02"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/22/2026 TpcSecRowB from GP
+#$hist = "RunXXVI02"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/22/2026 TpcSecRowB from GP
+#$hist = "RunXXVI03"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/22/2026 TpcEtaCorrectionB
+#$hist = "RunXXVI03"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/22/2026 TpcEtaCorrectionB
+#$hist = "RunXXVI04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026B/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 restore TpcPadCorrectionMDC, new statistics
+#$hist = "RunXXVI04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 restore TpcPadCorrectionMDC, new statistics
+#$hist = "RunXX04"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2020/RF/9p8GeV_fixedTarget/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 check code with 2020 sampel
+#$hist = "RunXXVI05"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 reset all constants to default
+#$hist = "RunXXVI05"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 reset all constants to default
+#$hist = "RunXXVI06"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 TpcSecRowB.9p8GeV_fixedTarget_2026.root
+# not done yet $hist = "RunXXVI06"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/AuAu_2025/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/23/2026 TpcSecRowB.AuAu_2025.root
+#$hist = "RunXXVI07"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/24/2026  TpcZCorrectionC.9p8GeV_fixedTarget_2026.C
+#$hist = "RunXXVI08"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/24/2026  TpcSecRowB.9p8GeV_fixedTarget_2026.root
+#$hist = "RunXXVI09"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/25/2026  TpcZCorrectionC.9p8GeV_fixedTarget_2026.C
+#$hist = "RunXXVI10"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026C/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/25/2026  TpcZCorrectionC.9p8GeV_fixedTarget_2026.C from RunXXVI08 w/o muJ and TpcSecRowB.9p8GeV_fixedTarget_2026.root, TpcLengthCorrectionMDN.9p8GeV_fixedTarget_2026.C from RunXXVI09
+#$hist = "RunXXVI11"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/25/2026  TpcEtaCorrectionB.9p8GeV_fixedTarget_2026.C TpcLengthCorrectionMDN.9p8GeV_fixedTarget_2026.C TpcSecRowB.9p8GeV_fixedTarget_2026.root
+#$hist = "RunXXVI12"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/26/2026 whole reset
+#$hist = "RunXXVI13"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/27/2026 TpcSecRowB
+$hist = "RunXXVI14"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/28/2026 TpcEtaCorrectionB
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2889,22 +2909,29 @@ my $now = time();
 if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";}
 {
   foreach my $file (@Files) {
+    my $fff = File::Basename::basename($file);
+    $fff =~ s/_adc_/_/;
+    $fff =~ s/_mtd_/_/;
+    my ($dum,$Run) = split '_', $fff; #print "fff = $fff => words = @words\n";
+
     my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, $atime, $mtime, $ctime, $blksize, $blocks ) = stat $file;
     my $dt = $now - $ctime;
     print "$file dt = $dt\n";
     if ($dt < 600) {next;}
-    my @words = split '/', $file; if ($debug > 1) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
+    my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4] . '_' . $words[5];
-    if ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
-      $dd = $words[7];
-#      print "words[5] = $words[5]\n";
-      if ($words[5] ne 'RF') {
-	$dd .= "_" . $words[5]; #print "dd = $dd\n";
-      }
-    } elsif ($words[7] =~ /TFG24b/) {
+    if ($words[7] =~ /TFG24b/) {
       $dd = $words[8];
     } elsif ($words[6] =~ /TFG24c/) {
       $dd = $words[9];
+    } elsif ($words[5] =~ /TFG26a/) {
+      $dd = $words[8];
+    } elsif ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
+      $dd = $words[7];
+#      print "words[5] = $words[5]\n";
+      if ($words[5] ne 'RF') {
+	$dd .= "_" . $words[5];#print "dd = $dd\n";
+      }
     } 
     $dd =~ s/reco_//;
     $dd =~ s/2021b_2021/2021b/;
@@ -2914,11 +2941,24 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     $dd =~ s/_RF//;
     $dd =~ s/_FullField//;
     $dd =~ s/_FF//;
+    $dd =~ s/2025_2025/2025/;
+    $dd =~ s/2026_2025/2026/;
+    $dd =~ s/2026B_2025/2026/;
+#    $dd =~ s/2026C_2025/2026C/;
+    $dd =~ s/2026C_2025/2026/;
+    if ($dd eq "9p8GeV_fixedTarget_2026") {
+      if ($Run >= 27024044) {
+	$dd .= "b";
+      } elsif ($Run >= 27024030) {
+	$dd .= "a";
+      }
+    }
     if ($dd eq "3p85GeV_fixedTarget_2021" and $words[8] >= 158) {
       $dd .= "b";
     }
+    print "dd = $dd\n" if ($debug);
     $ProdFiles{$dd} .= " " . $file;  
-    if ($debug > 1) {print "$dd => $ProdFiles{$dd}\n";}
+    if ($debug) {print "$dd => $ProdFiles{$dd}\n";}
   }
   my $apptainer = "";
   if ($STAR_LEVEL !~ "^\.DEV2" and $STAR_LEVEL !~ "^TFG") {$apptainer = "apptainer exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif";}
@@ -2931,7 +2971,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths">	 <command>
+<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">	 <command>
          cd ${SUBMITTINGDIRECTORY}
 if ($?INPUTFILE0) ' . $apptainer . ' csh -x $INPUTFILE0
          </command>
@@ -3071,16 +3111,16 @@ Queue
 print XML '
 <stdout URL="file:./sched$JOBID.log" />
 <stderr URL="file:./sched$JOBID.err" />
-<!--
- <ResourceUsage>
-    <Memory>
-      <MinMemory>2500</MinMemory>
-    </Memory>
-  </ResourceUsage>
--->
 </job>
 ';
 close (XML);
+# <!--
+#  <ResourceUsage>
+#     <Memory>
+#       <MinMemory>2500</MinMemory>
+#     </Memory>
+#   </ResourceUsage>
+# -->
     if ($countperdd < 1) {unlink $XML;}
   }
 

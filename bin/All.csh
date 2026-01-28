@@ -11,9 +11,14 @@ foreach d (`ls -1dtr ${GLOB}| sort -u`)
     echo "rm All*"
     rm All*
     hadd.pl  FilesPerJob=20
-    foreach f (`ls -1d hadd*.condor`)
-      condor_submit ${f}
-    end
+#    if (${SITE} == "JLT") then
+#    lsf hadd.xml
+    /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit hadd.xml
+#    else
+#    foreach f (`ls -1d hadd*.condor`)
+#      condor_submit ${f}
+#    end
+#    endif 
 #    if ($STAR_SYS != "x8664_al9") then
 #    switch ($domain) 
 #      case "*local":

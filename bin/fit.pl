@@ -79,15 +79,18 @@ if ($all) {
 #  push  @{ $Opts{GG} }, qw(dNdxVsBgC dNdxVsBgCI dNdxVsBgCO); 
   push  @{ $Opts{G4EY} }, qw(
 			      SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
-			      Z3 Z3P  Z3+Z3P
-			      Z3C Z3PC Z3C+Z3PC 
+			      Z3 Z3P  Z3+Z3P  Z3C Z3PC Z3C+Z3PC 
 			      xyPad3qB xyPad3qBC
-			      xyPad3+xyPad3P xyPad3C+xyPad3PC
-			      xyPad3 xyPad3P xyPad3C xyPad3PC 
 			      Pressure PressureP Pressure+PressureP PressureC PressurePC PressureC+PressurePC
 			      Temperature TemperatureP Temperature+TemperatureP TemperatureC TemperaturePC TemperatureC+TemperaturePC
-			      dX3 dx3C
+			     EtaB3 EtaB3C
+			     EtaB3P EtaB3PC
+                             EtaB3+EtaB3P  EtaB3C+EtaB3PC 
+			      Voltage  VoltageC VoltageP  VoltagePC
 			   );
+#			      xyPad3+xyPad3P xyPad3C+xyPad3PC
+#			      xyPad3 xyPad3P xyPad3C xyPad3PC 
+#			      dX3 dx3C
 #   push  @{ $Opts{G4EG} }, qw(
 # 			      SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
 # 			      Z3+Z3P  Z3C+Z3PC 
@@ -99,14 +102,16 @@ if ($all) {
 			     NPoints70+NPoints70P NPointsF+NPointsFP NPoints70U+NPoints70UP NPointsFU+NPointsFUP  NPointsN+NPointsNP NPointsNU+NPointsNUP
 			     NPoints70 NPoints70P NPointsF NPointsFP NPoints70U NPoints70UP NPointsFU NPointsFUP  NPointsN NPointsNP NPointsNU NPointsNUP
                              Time TimeC TimeF TimeF TimeFP 
-			     Eta3 Eta3C 
-			     EtaB3 EtaB3C
-			     Eta3P Eta3PC
-			     EtaB3P EtaB3PC
 			     AvCurrent AvCurrentC  AvCurrentP AvCurrentPC  
 			     Qcm       QcmC QcmP       QcmPC
-			     Voltage  VoltageC VoltageP  VoltagePC
 	      );
+#			     Eta3 Eta3C 
+#			     EtaB3 EtaB3C
+#			     Eta3P Eta3PC
+#			     EtaB3P EtaB3PC
+#                             EtaB3+EtaB3P  EtaB3C+EtaB3PC 
+#			     Voltage  VoltageC VoltageP  VoltagePC
+#                             SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
 #  TPoints70+TPoints70P TPointsF+TPointsFP TPoints70U+TPoints70UP TPointsFU+TPointsFUP  TPointsN+TPointsNP TPointsNU+TPointsNUP
 #  TPoints70 TPoints70P TPointsF TPointsFP TPoints70U TPoints70UP TPointsFU TPointsFUP  TPointsN TPointsNP TPointsNU TPointsNUP
 }
