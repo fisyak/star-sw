@@ -78,7 +78,7 @@ void MuCM(Long64_t nevent = 9999999,
   TChain *tree = maker->chain();
   if (! tree) return;
   Long64_t nentries = tree->GetEntries();
-  nevent = TMath::Min(nevent,nentries);
+  //  nevent = TMath::Min(nevent,nentries);
   cout << nentries << " events in chain " << nevent << " will be read." << endl;
   //  if (nentries < 100) return;
   tree->SetCacheSize(-1);        //by setting the read cache to -1 we set it to the AutoFlush value when writing

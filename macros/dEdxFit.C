@@ -3428,7 +3428,7 @@ TF1 *FitG4E(TH1 *proj, Option_t *opt="", Int_t IO = 2, Int_t Sign = 2) {
   if (! g2) {
     g2 = new TF1("G4E",gf4EFunc, -5, 5, 12);
     g2->SetParName(0,"norm");   g2->SetParLimits(0,-80,80); // g2->FixParameter(0,0.0); // 
-    g2->SetParName(1,"mu");     g2->SetParLimits(1,-1.2,1.2);
+    g2->SetParName(1,"mu");     g2->SetParLimits(1,-2.6,1.2);
     g2->SetParName(2,"Sigma");  g2->FixParameter(2,0.0); //g2->SetParLimits(2,-0.1,0.1);
     g2->SetParName(3,"P");      g2->SetParLimits(3,0.0,TMath::Pi()/2);
     g2->SetParName(4,"K");      g2->SetParLimits(4,0.1,TMath::Pi()/2); 

@@ -172,7 +172,7 @@ void MakeTpcEtaCorrection1(TNtuple *FitP = 0) {
     TString prof("prof");
     TString same("");
     if (idx != 1) same = "same";
-    TString cut("i&&j&&dmu>0&&dmu<0.1&&abs(mu)<0.4");
+    TString cut("i&&j&&dmu>0&&dmu<0.05&&mu>-0.5");
     if (! io) cut += "&&abs(x)>40.5";
     else      cut += "&&abs(x)<40.5";
     if (nrows >= 4) {
@@ -183,7 +183,7 @@ void MakeTpcEtaCorrection1(TNtuple *FitP = 0) {
     if (! c2 ) c2 =  new TCanvas("cTemp","cTemp");
     c2->cd(); 
     c2->Clear();
-#define __muJ__
+    //#define __muJ__
 #ifdef __muJ__
     cout << "FitP->Draw(\"" << Form("mu-muJ:y>>%s(50,-2.5,2.5)\"",histN[idx-1]) << ",\"" << cut << "\",\"" << prof << "\");" << endl;
     FitP->Draw(Form("mu-muJ:y>>%s(50,-2.5,2.5)",histN[idx-1]),cut,prof);

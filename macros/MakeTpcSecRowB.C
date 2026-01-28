@@ -94,18 +94,18 @@ void MakeTpcSecRowB(TH1 *hist, TH1 *histSigma = 0,
       }  else  {
 	if ( hist->GetBinError(i,j) <= 0) {
 #ifdef __RECOVER__
-	  if (entries && entries->GetBinContent(i,j) > 1) {
-	    row.GainScale[j-1] = 1; // <<<<<<<
+// 	  if (entries && entries->GetBinContent(i,j) > 1) {
+	    row.GainScale[j-1] = 4; // <<<<<<<
 	    cout << "Reset Sector \t" << i << "\tRow\t" << j;
-	  } else {
-	    row.GainScale[j-1] = 0;
-	    cout << "Skip Sector \t" << i << "\tRow\t" << j;
-	  }
+// 	  } else {
+// 	    row.GainScale[j-1] = 0;
+// 	    cout << "Skip Sector \t" << i << "\tRow\t" << j;
+// 	  }
 #else
 	  row.GainScale[j-1] = 0;
-	  row.GainRms[j-1]   = 0;
 	  cout << "Skip Sector \t" << i << "\tRow\t" << j;
 #endif
+	  row.GainRms[j-1]   = 0;
 	  cout << "\ti/j\t" << i << "/" << j << " is empty. Reset to "<<  row.GainScale[j-1]  << endl;
 	} else {
 	  row.GainScale[j-1] = TMath::Exp(-dev);
