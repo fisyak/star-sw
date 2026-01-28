@@ -345,13 +345,18 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 
   {"y2025",                                  20241210,      0, "y2025",  "y2025 first cut geometry, AgML,xgeometry"},    
   {"y2025z",                                 20241210,      1, "y2025z", "y2025z first cut geometry,      xgeometry"},    
-  {"r2025",                                   20241220,     0, "y2025z",  "y2025z first cut geometry"},    
+  {"r2025",                                  20241220,      0, "y2025z",  "y2025z first cut geometry"},    
   {"Cosmic_2025",  			     20250318,  81438, "y2025z",  "Cosmic_2025_RF"}, //  itpcPadGainT0 => beginTime =  2025-03-18 08:14:38
   {"Cosmic_2025_RF",  			     20250318,  81438, "y2025z",  "Cosmic_2025_RF"}, //  itpcPadGainT0 => beginTime =  2025-03-18 08:14:38
   {"Cosmic_2025_ZF",  			     20250402,     27, "y2025z",  "Cosmic_2025_ZF"}, 
   {"Cosmic_2025_FF",  			     20250402, 202321, "y2025z",  "Cosmic_2025_FF"}, 
   {"AuAu_2025",	                             20250609,  72555, "y2025z",  "AuAu_2025"},        // 1st run = 26160016
   {"AuAu_2025_HiLumi",	                     20250620, 185303, "y2025z",  "AuAu_2025_HiLumi"}, // 1st run = 26171044
+  {"9p8GeV_fixedTarget_2026" ,               20260121, 163623, "y2025z",  "9p8GeV_fixedTarget_2026 V1070"}, // 1st run = 27021017
+  {"9p8GeV_fixedTarget_2026a" ,              20260124, 153919, "y2025z",  "9p8GeV_fixedTarget_2026 V1100"}, // 1st run = 27024030
+  {"9p8GeV_fixedTarget_2026b" ,              20260124, 184723, "y2025z",  "9p8GeV_fixedTarget_2026 V1120"}, // 1st run = 27024044
+  {"8p65GeV_fixedTarget_2026",               20260125, 193046, "y2025z",  "8p65GeV_fixedTarget_2026 V1150"}, // 1st run = 27025030
+  {"13p5GeV_fixedTarget_2026",               20260127,  10925, "y2025z",  "13p5GeV_fixedTarget_2026 V1150"}, // 1st run = 27026051
 
   {"athena",                                 20301220,      1,      "",         "athena"}, // 
   {"epic",                                   20301221,      1,      "",           "epic"}, // 
