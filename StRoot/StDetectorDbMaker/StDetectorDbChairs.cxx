@@ -2630,7 +2630,7 @@ MySQL [RunLog_onl]> select DISTINCT  blueSpecies,blueMassNumber,yellowSpecies,ye
 Bool_t        St_beamInfoC::IsFixedTarget() {
   Int_t run = runNumber();
   Int_t year = 2000 + run/1000000 - 1;
-  if (year < 2018 || year > 2022) return kFALSE;
+  if (year < 2018) return kFALSE;
   if (year == 2019 && (/* 27GeV_fixedTarget_2018 */ ( run >= 19138032 && run <= 19138036 ) ||
 		       /* 27GeV_fixedTarget_2018 */ ( run >= 19148036 && run <= 19148036 ) ||
 		       /* 27GeV_fixedTarget_2018 */ ( run >= 19148038 && run <= 19148047 ) ||
@@ -2766,6 +2766,7 @@ Bool_t        St_beamInfoC::IsFixedTarget() {
 			    /* 2021: 0916 26p5GeV_fixedTarget_2021      */ ( run >= 22183024 && run <= 22183028 ) ||
 			    /* 2021: 0920 tune_26p5GeV_fixedTarget_2021 */ ( run >= 22184016 && run <= 22184016 ) ||
 			    /* 2021: 0921 26p5GeV_fixedTarget_2021      */ ( run >= 22184017 && run <= 22184019)) ) return kTRUE;
+  else if (year == 2026 && (/* 2026:      9p8GeV_fixedTarget_2026       */ ( run >= 27021017                   )) ) return kTRUE;
   return kFALSE;
 #if 0
   Float_t MaxIntensity = TMath::Max(blueIntensity(), yellowIntensity());
