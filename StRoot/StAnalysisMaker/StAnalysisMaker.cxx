@@ -866,7 +866,7 @@ void StAnalysisMaker::summarizeEvent(StEvent *event, Int_t mEventCounter) {
   if (nBeamBackTracks || nShortTrackForEEmc || nShortTrackForETOF) {LOG_QA << endm;}
   LOG_QA  << "post (C)rossing tracks :" << pcTracks << ": (P)rompt:" << promptTracks 
 	  << ": (X) membrane :" << crossMembrane
-	  << "(T)of/ctb matches:" << nToFMatched << " :Emc matches(B/E): " << nBEmcMatched << "/" << nEEmcMatched
+	  << "(T)of/ctb matches:" << nToFMatched << " :Emc matches(W/E): " << nBEmcMatched << "/" << nEEmcMatched
 	  << " :Only W:" << nWestTpcOnly << " E:" << nEastTpcOnly;
   if (event->btofCollection()) {
     if (event->btofCollection()->tofHeader() && event->btofCollection()->tofHeader()->vpdVz() > -250){
