@@ -15,7 +15,7 @@
   else
     set evtsFileF = $INPUTFILE0;
     set f         = 1
-    set l         = 1000000
+    set l         = 1000
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .
@@ -26,7 +26,7 @@
   set filel    = `basename $evtsFile .daq`${ext}
   set output  = ${filel}.event.root
   set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
-#  if (-r $logFile) exit 0;
+#  if (-r $logFile) exi t 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
   set tagFile = ${filel}.tags.root
@@ -61,6 +61,14 @@
   endif
   set Chain = "";
   switch ($year)
+    case "2025":
+      set Chain = "P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco"
+      set evout = ",evout";
+    breaksw
+    case "2020":
+      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,dEdxCalib"
+      set evout = ",evout";
+    breaksw
     case "2*":
       set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco"
     breaksw
@@ -81,7 +89,8 @@
 #  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}'","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
 # root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}',EbyET0","'${evtsFile}'","'$output'")' &gt;&gt;&amp; ${logFile}
 #  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}'","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
-  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}',dEdxCalib","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
+#  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}',dEdxCalib","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
+  root.exe -b -q -x  'bfc.C('${f}','${l}',"'${Chain}${evout}${WestEast}${PicoMode}${Cosmic}'","'${evtsFile}'","'$output'","'${tagFile}'")' &gt;&gt;&amp; ${logFile}
 ##
 ##   mv  ${filel}*.root ${logFile} ${SUBMITTINGDIRECTORY}
 ##   mv  ${filel}*.root  ${SUBMITTINGDIRECTORY}
