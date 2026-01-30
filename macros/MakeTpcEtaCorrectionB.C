@@ -1,6 +1,6 @@
 /*
-  root.exe EtaB3GP*.root MakeTpcEtaCorrectionB.C+
-  root.exe EtaB3GP*.root Chain.C 'MakeTpcEtaCorrectionB.C+(tChain)'
+  root.exe EtaB3G*.root MakeTpcEtaCorrectionB.C+
+  root.exe EtaB3G*.root Chain.C 'MakeTpcEtaCorrectionB.C+(tChain)'
 */
 #if !defined(__CINT__)
 // code that should be seen ONLY by the compiler
