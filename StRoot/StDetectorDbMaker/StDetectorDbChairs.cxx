@@ -2766,7 +2766,7 @@ Bool_t        St_beamInfoC::IsFixedTarget() {
 			    /* 2021: 0916 26p5GeV_fixedTarget_2021      */ ( run >= 22183024 && run <= 22183028 ) ||
 			    /* 2021: 0920 tune_26p5GeV_fixedTarget_2021 */ ( run >= 22184016 && run <= 22184016 ) ||
 			    /* 2021: 0921 26p5GeV_fixedTarget_2021      */ ( run >= 22184017 && run <= 22184019)) ) return kTRUE;
-  else if (year == 2026 && (/* 2026:      9p8GeV_fixedTarget_2026       */ ( run >= 27021017                   )) ) return kTRUE;
+  else if (year == 2026 && (/* 2026:      9p8GeV_fixedTarget_2026       */ ( run >= 27021017 && run <= 27028016)) ) return kTRUE;
   return kFALSE;
 #if 0
   Float_t MaxIntensity = TMath::Max(blueIntensity(), yellowIntensity());
