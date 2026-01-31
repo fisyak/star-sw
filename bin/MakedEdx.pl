@@ -2859,7 +2859,10 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI11"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/25/2026  TpcEtaCorrectionB.9p8GeV_fixedTarget_2026.C TpcLengthCorrectionMDN.9p8GeV_fixedTarget_2026.C TpcSecRowB.9p8GeV_fixedTarget_2026.root
 #$hist = "RunXXVI12"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/26/2026 whole reset
 #$hist = "RunXXVI13"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/27/2026 TpcSecRowB
-$hist = "RunXXVI14"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/28/2026 TpcEtaCorrectionB
+#$hist = "RunXXVI14"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/28/2026 TpcEtaCorrectionB
+#$hist = "RunXXVI15"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/29/2026  TpcSecRowB
+#$hist = "RunXXVI16"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/29/2026  TpcEtaCorrectionB
+$hist = "RunXXVI17"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/30/2026  TpcZCorrectionC
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
