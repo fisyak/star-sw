@@ -328,9 +328,9 @@ Bfc_st BFC[] = { // standard chains
   {"pp2013x","","","B2013x,BAna,emcDY2,trgd,ZDCvtx" //
    ,        "","",                "Production chain for 2013 data - no Corr (+     e/b-emc, no VF)",kFALSE},
   {"B2013"   ,"","","B2013_c2","","",                             "Alias for B2013 Configuration 2",kFALSE},
-  {"B2013_c2","","","ry2013_2c,in,tpcX,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
+  {"B2013_c2","","","ry2013_2c,in,tpcX,Agi,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2013 ITTF (tpc)",kFALSE},
-  {"B2013_c1","","","ry2013_1c,in,tpcX,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
+  {"B2013_c1","","","ry2013_1c,in,tpcX,Agi,tpcDB,TpcHitMover,Idst,tags,Tree,evout","",""
    ,                                                               "Base chain for 2013 ITTF (tpc)",kFALSE},
   {"pp2013a","" ,"",
    "B2013_c2,ITTF,UseXgeom,BAna,ppOpt,emcDY2,trgd,ZDCvtx,NosvtIT,NossdIT,NosstIT",
@@ -531,7 +531,7 @@ Bfc_st BFC[] = { // standard chains
    ,    "","",             "Base chain for year 2020 AA data - no Corr (+ epd, mtd, b/etof, b-emc)",kFALSE},
   // 2024 initial chains
   {"B2024a"  ,"","",
-   "ry2024a,in,tpcX,UseXgeom,iTpcIT,CorrY,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
+   "ry2024a,in,tpcX,UseXgeom,iTpcIT,CorrY,Agi,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
     "","",                                                     "Base chain for run 2024 data (tpc)",kFALSE},
 
   {"P2024a","" ,"",
@@ -546,7 +546,7 @@ Bfc_st BFC[] = { // standard chains
    "","",                "Base chain for year 2024 AA data - CorrY (+ l3, epd, mtd, b/etof, b-emc)",kFALSE},
   // 2025 initial chains
   {"B2025"  ,"","",
-   "ry2025,in,tpcX,UseXgeom,iTpcIT,CorrY,AgML,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
+   "ry2025,in,tpcX,UseXgeom,iTpcIT,CorrY,Agi,tpcDB,TpcHitMover,Idst,tags,Tree,picoWrite,picoVtxDefault,picoCovMtxWrite",
     "","",                                                     "Base chain for run 2025 data (tpc)",kFALSE},
 
   {"P2025","" ,"",
