@@ -103,13 +103,14 @@ Int_t StTpcMcAnalysisMaker::MultiCluster() {
   TDataSet*  tpcRawEvent =               GetInputDS("Event");
   StTpcRawData *tpcRawData = 0;
   if (tpcRawEvent) tpcRawData = (StTpcRawData *) tpcRawEvent->GetObject();
-  StAssociationMaker* assoc = (StAssociationMaker*) GetMaker("StAssociationMaker");
   rcTpcHitMapType* theHitMap   = 0;
-  if (assoc)       theHitMap   = assoc->rcTpcHitMap();
-  if (!theHitMap) 
-    gMessMgr->Warning() << "----------WARNING----------\n"
-			<< "No Hit Map found for this event!" << endm;
-  
+  if (mEvent) {
+    StAssociationMaker* assoc = (StAssociationMaker*) GetMaker("StAssociationMaker");
+    if (assoc)       theHitMap   = assoc->rcTpcHitMap();
+    if (!theHitMap) 
+      gMessMgr->Warning() << "----------WARNING----------\n"
+			  << "No Hit Map found for this event!" << endm;
+  }
   static StTpcCoordinateTransform transform(gStTpcDb);
   static StGlobalCoordinate                gCoord; 
   static StGlobalDirection                 dirG;
@@ -256,11 +257,12 @@ Int_t StTpcMcAnalysisMaker::SingleCluster() {
   if (tpcRawEvent) tpcRawData = (StTpcRawData *) tpcRawEvent->GetObject();
   StAssociationMaker* assoc = (StAssociationMaker*) GetMaker("StAssociationMaker");
   rcTpcHitMapType* theHitMap   = 0;
-  if (assoc)       theHitMap   = assoc->rcTpcHitMap();
-  if (!theHitMap) 
-    gMessMgr->Warning() << "----------WARNING----------\n"
-			<< "No Hit Map found for this event!" << endm;
-  
+  if (mEvent) {
+    if (assoc)       theHitMap   = assoc->rcTpcHitMap();
+    if (!theHitMap) 
+      gMessMgr->Warning() << "----------WARNING----------\n"
+			  << "No Hit Map found for this event!" << endm;
+  }
   static StTpcCoordinateTransform transform(gStTpcDb);
   static StGlobalCoordinate                gCoord; 
   static StGlobalDirection                 dirG;
@@ -530,8 +532,8 @@ Int_t StTpcMcAnalysisMaker::SingleCluster() {
 		fCluster->SetNofPV(rEvent->numberOfPrimaryVertices());
 		fCluster->SetNoTracksAtBestPV(NoTracks);
 		if (tpcRawData) {
-		  Int_t kPadMin = rHit->minPad();
-		  Int_t kPadMax = rHit->maxPad();
+		  Int_t kPadMin = TMath::Max(1, rHit->minPad());
+		  Int_t kPadMax = TMath::Min(rHit->maxPad(), St_tpcPadConfigC::instance()->padsPerRow(sector,row));
 		  Int_t kTbMin  = rHit->minTmbk();
 		  Int_t kTbMax  = rHit->maxTmbk();
 		  if (kTbMax - rHit->timeBucket() >= 15) kTbMax += 10;
