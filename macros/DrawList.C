@@ -88,7 +88,7 @@ TObjArray  GetHistList(const Char_t *pattern = "OuterPadRcNoiseConv*") {
     while ((key = (TKey*) nextkey())) {
       TString Name(key->GetName());
       if (Name.Contains(reg)) {
-	if (Name.Contains("_")) continue;
+	//	if (Name.Contains("_")) continue;
 	if (Name == oldName) continue;
 	oldName = Name;
 	obj = key->ReadObj();
@@ -433,10 +433,8 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 	TF1 *fun = 0;
 	TIter next(fl);
 	while ((fun = (TF1 *) next())) {
-	  TString Name(fun->GetName());
-	  if (Name != "stats") {
-	    fun->SetLineColor(lf+1);
-	  }
+	  if (! fun->InheritsFrom("TF1")) continue;
+	  fun->SetLineColor(lf+1);
 	}
       }
       //      h->SetNormFactor(1.);
@@ -1130,4 +1128,21 @@ void DrawFSigma() {
   DrawFList("^OuterPadRcSigmaSQNoise_p2");
   DrawFList("^InnerTimeRcSigmaSqSpreadNoise_p2");
   DrawFList("^OuterTimeRcSigmaSqSpreadNoise_p2");
+}
+//________________________________________________________________________________
+void DrawFH1(const Char_t *name = "^f1_1$") {
+  TObjArray array = GetHistList(name);
+  Int_t N = array.GetEntries();
+  if (! N) return;
+  TCanvas **c = new TCanvas*[N];
+  for (Int_t i = 0; i < N; i++) {
+    TH1 *hist = (TH1 *) array[i];
+    if (! hist) continue;
+    TString cname = "c" + i;
+    c[i] = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(cname);
+    if (c[i])  c[i]->Clear();
+    else       c[i] = new TCanvas(cname,cname);
+    c[i]->SetTitle(hist->GetDirectory()->GetName());
+    hist->Draw();
+  }
 }

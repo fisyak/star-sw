@@ -27,16 +27,16 @@ Double_t gf4EYFunc(Double_t *x, Double_t *par) {
 #ifdef __ELOSS__
   Double_t eLoss = par[16];
 #else 
-  //#define __SCALE__
+#define __SCALE__
 #ifdef __SCALE__
-  Double_t scale = 1 + par[16];
+  scale = 1 + par[16];
   //  XX[0] *= scale;
 #endif /* __SCALE__ */
 #endif /* __ELOSS__ */
   Int_t IO = par[14];
   IO = TMath::Max(0, TMath::Min(1, IO));
   Int_t sign = par[15];
-  Double_t frac[9];
+  Double_t frac[9] = {0};
 #if 0  
   Double_t ff[9] = {0};
   for (Int_t i = 1; i < Npart4EY; i++) {
@@ -678,7 +678,10 @@ minimu log10(p/m) alpga    -0.7   40 keV          -0.850  0.141 -1.9688383655156
     Double_t Sigma =                  (parMIPs[i][sign][IO].sigma + sigma)/(scale + MuShiftIO[IO]);
 #else
     Double_t Mu =    (mu    + parMIPs[i][sign][IO].mu - parMIPs[0][sign][IO].mu);
-    Double_t Sigma = (sigma + parMIPs[i][sign][IO].sigma                       );
+    //    Double_t Sigma = (sigma + parMIPs[i][sign][IO].sigma                       );
+    //    Double_t Sigma = TMath::Sqrt(sigma*sigma + parMIPs[i][sign][IO].sigma*parMIPs[i][sign][IO].sigma                       );
+    Double_t sigmaF = sigma*TMath::Exp(Mu-XX[0]);
+    Double_t Sigma = TMath::Sqrt(sigmaF*sigmaF + parMIPs[i][sign][IO].sigma*parMIPs[i][sign][IO].sigma                       );
 #endif
 #ifdef __ELOSS__ 
     Double_t eps = dNdxMIP[i]/dNdxMIP[0] - 1;
@@ -708,7 +711,8 @@ minimu log10(p/m) alpga    -0.7   40 keV          -0.850  0.141 -1.9688383655156
 	Double_t Sigma = (sigma + parMIPs[l][sign][IO].sigma                           )/(scale + MuShiftIO[IO]);
 #else
 	Double_t Mu =    (mu    + parMIPs[l][sign][IO].mu     - parMIPs[0][sign][IO].mu);
-	Double_t Sigma = (sigma + parMIPs[l][sign][IO].sigma                            );
+	//	Double_t Sigma = (sigma + parMIPs[l][sign][IO].sigma                            );
+	Double_t Sigma = TMath::Sqrt(sigma*sigma + parMIPs[l][sign][IO].sigma*parMIPs[l][sign][IO].sigma);
 #endif
 	Double_t pars[4] = {0, Mu, Sigma, parMIPs[l][sign][IO].alpha};
 	cont += frac[j]*g->EvalPar(XX, pars);
@@ -762,6 +766,13 @@ Bool_t  PreSetParametersY(TH1 *proj, TF1 *g2) { // Fit peak nearest to 0 by gaus
       Double_t yp = proj->GetBinContent(bin);
       Double_t ep = proj->GetBinError(bin);
       if (yp-5*ep < 0) continue;
+      if (nP > 0) {
+	if (TMath::Abs(xpiPd[nP-1] - xp) < 0.1*(Peaks[1].peak - Peaks[0].peak)) {
+	  xpiPd[nP-1] = 0.5*(xpiPd[nP-1] + xp);
+	  ypiPd[nP-1] = 0.5*(ypiPd[nP-1] + yp);
+	  continue;
+	}
+      }
       // take only peak associated with pion, proton and deuteron
       xpiPd[nP] = xp;
       ypiPd[nP] = yp;
@@ -770,14 +781,27 @@ Bool_t  PreSetParametersY(TH1 *proj, TF1 *g2) { // Fit peak nearest to 0 by gaus
       nP++;
       if (nP == 3) break;
     }
+    // swap pion and proton peaks
+    Int_t i0 = proj->FindFirstBinAbove(1);
+    Double_t x0 = proj->GetXaxis()->GetBinCenter(i0);
+    if (nP == 1) {// pion peak is missing ?
+      if (xpiPd[0] - x0 > 2.5) {
+	xpiPd[nP] = xpiPd[0];
+	ypiPd[nP] = ypiPd[0];
+	xpiPd[0]  = xpiPd[0] - Peaks[1].peak + Peaks[0].peak;
+	ypiPd[0]  = 0.1*ypiPd[0];
+        nP++;
+      }
+    } 
   }   
   if (nP > 0) {
     tots[0] = ypiPd[0];
     tots[1] = ypiPd[1];
     tots[5] = ypiPd[2];
     shift = shift/total;
-    Double_t xpi = ppiPd[0] + shift;
-    g2->SetParameters(1, xpi);
+    Double_t xpi = xpiPd[0]; // ppiPd[0] + shift;
+    g2->SetParameter(1, xpi);
+    g2->SetParLimits(1, xpi-0.5,xpi+0.5);
     for (Int_t l = 1; l < 5; l++) {
       if (tots[l] > 0) {
 	frac[l] = tots[l]/total;
@@ -808,10 +832,10 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
 #endif
     g2->SetParName(0,"norm");      g2->SetParLimits(0,-0.6,0.6); // g2->FixParameter(0,0.0); // 
     g2->SetParName(1,"mu");        g2->SetParLimits(1,-2.6,0.6); // g2->SetParLimits(1,-1.2,1.6);  				     
-    g2->SetParName(2,"Sigma");     g2->FixParameter(2,0.0); // g2->SetParLimits(2,-0.1,0.1);	     
+    g2->SetParName(2,"Sigma");     g2->SetParLimits(2, 0.0,1.0); // g2->FixParameter(2,0.0); // 	     
     g2->SetParName(3,"P");         g2->SetParLimits(3,0.0,TMath::Pi()/2);		     
-    g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,TMath::Pi()/2); 	     
-    g2->SetParName(5,"e");         g2->SetParLimits(5,0.0,TMath::Pi()/2);			     
+    g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,0.25);// TMath::Pi()/2); 	     
+    g2->SetParName(5,"e");         g2->SetParLimits(5,0.0,0.25);//TMath::Pi()/2);			     
     g2->SetParName(6,"d");         g2->FixParameter(6,0.0); //g2->SetParLimits(6,0.0, 1.0); // TMath::Pi()/2);             
     g2->SetParName(7,"muon");      g2->FixParameter(7,0.0); //g2->SetParLimits(7,0.0, 1.0); // TMath::Pi()/2);             
     g2->SetParName(8,"triton");    g2->FixParameter(8,0.0); //g2->SetParLimits(8,0.0, 1.0); // TMath::Pi()/2);             
@@ -826,7 +850,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
     g2->SetParName(16,"eLoss"); g2->FixParameter(16,0.0); g2->SetParLimits(16,-0.01,0.01);
 #else
 #ifdef __SCALE__
-    g2->SetParName(16,"Scale"); g2->FixParameter(16,0.0); g2->SetParLimits(16,-0.1,0.1);
+    g2->SetParName(16,"Scale"); g2->FixParameter(16,0.0); g2->SetParLimits(16,-0.5,0.5);
 #endif
 #endif
     //    g2->SetParName(15,"factor"); g2->SetParLimits(15,-.1,0.1);
@@ -855,10 +879,10 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
   Int_t iok = proj->Fit(g2,Opt.Data());
 #ifndef PIONS_ONLY
   //  g2->ReleaseParameter(2);
-  g2->ReleaseParameter(4);     g2->SetParLimits(4,0.0,TMath::Pi()/2); 
-  g2->ReleaseParameter(5);     g2->SetParLimits(5,0.0,TMath::Pi()/2);	
+  g2->ReleaseParameter(4);     g2->SetParLimits(4,0.0,0.25); // ,TMath::Pi()/2); 
+  g2->ReleaseParameter(5);     g2->SetParLimits(5,0.0,0.25); // ,TMath::Pi()/2);	
   if (Sign > 0) {
-    g2->ReleaseParameter(6);     g2->SetParLimits(6,0.0,TMath::Pi()/2);
+    g2->ReleaseParameter(6);     g2->SetParLimits(6,0.0,0.25); // ,TMath::Pi()/2);
   }
   //  Fit pion + proton + K + e + d
   iok = proj->Fit(g2,Opt.Data());
@@ -868,7 +892,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
     proj->Fit(g2,Opt.Data());
   }
 #if defined(__ELOSS__) || defined(__SCALE__)
-  g2->ReleaseParameter(16); g2->SetParLimits(16,-0.1,0.1);
+  g2->ReleaseParameter(16); g2->SetParLimits(16,-0.5,0.5);
   iok = proj->Fit(g2,Opt.Data());
 #endif
   //  g2->ReleaseParameter(7);     g2->SetParLimits(4,0.0,0.6); // TMath::Pi()/2); 
@@ -878,6 +902,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
   //  Fit pion + proton + K + e + d + mu + triton // + He3 + alpha
   //  iok = proj->Fit(g2,Opt.Data());
   // + occupancy
+#ifdef __OCCUPANCY__
   g2->ReleaseParameter(13); g2->SetParLimits(13,0.0,0.15);
   iok = proj->Fit(g2,Opt.Data());
   if ( iok < 0) {
@@ -885,6 +910,7 @@ TF1 *FitG4EY(TH1 *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2) {
 	 << proj->GetName() << "/" << proj->GetTitle() << " Try one again" << endl; 
     proj->Fit(g2,Opt.Data());
   }
+#endif
 #endif /* ! PIONS_ONLY */
   Opt += "m";
   iok = proj->Fit(g2,Opt.Data());

@@ -4907,7 +4907,7 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 //________________________________________________________________________________
 void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP", 
 	     Option_t *opt="RM", 
-	     Int_t ix = -1, Int_t jy = -1, 
+	     Int_t ix = -3, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
 	     Double_t nSigma=3, Int_t pow=1,
 	     Double_t zmin = -2, Double_t zmax = 5) {
@@ -5046,7 +5046,10 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
   Int_t ix2 = nx-mergeX+1;
   Int_t jy1 = 0;
   Int_t jy2 = ny-mergeY+1;
-  if (ix > 0) ix1 = ix2 = ix;
+  if (mergeX == 1 && nx == 24) {
+    ix1 = -2; // -2 West, -1 East, 0 All
+  }
+  if (ix > -3) ix1 = ix2 = ix;
   if (ny == 1) {
     jy1 = jy2 = 1;
   } else {
@@ -5056,15 +5059,23 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
     Int_t ir0 = i;
     Int_t ir1=i+mergeX-1;
     if (i == 0) {ir0 = 1; ir1 = nx;}
+    else if (i == -2) {ir0 = 1; ir1 = 12;}
     for (int j=jy1;j<=jy2;j++){
       Int_t jr0 = j;
       Int_t jr1 = j+mergeY-1;
-      if (j == 0) {jr0 = 1; jr1 = ny;}
+      if (j == 0) {
+	if (i != 0) continue;
+	jr0 = 1; jr1 = ny;
+      }
       if (dim == 3) {
 	if (j == 0) 
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("fX%i", ir0),ir0,ir1,1,ny); 
 	else if (i == 0) 
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("fY%i", jr0),1, nx, jr0, jr1); 
+	else if (i == -2) 
+	  proj = ((TH3 *) hist)->ProjectionZ(Form("fW%i", jr0),1, 12, jr0, jr1); 
+	else if (i == -1) 
+	  proj = ((TH3 *) hist)->ProjectionZ(Form("fE%i", jr0),13, nx, jr0, jr1); 
 	else if (ir0 == ir1 && jr0 == jr1) {
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i",      ir0,    jr0    ),ir0,ir1,jr0,jr1); 
 	} else if (ir0 == ir1) {  
@@ -5248,30 +5259,32 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
       }
       //      Fit.chisq = g3->GetChisquare();
       //      if (Fit.prob > 0) {
-      if (dim == 3) {
-	mean->SetBinContent(i,j,Fit.mean);
-	rms->SetBinContent(i,j,Fit.rms);
-	entries->SetBinContent(i,j,Fit.entries);
-	mu->SetBinContent(i,j,Fit.mu);
-	mu->SetBinError(i,j,g->GetParError(1));
-	sigma->SetBinContent(i,j,Fit.sigma);
-	sigma->SetBinError(i,j,g->GetParError(2));
-	chisq->SetBinContent(i,j,Fit.chisq);
-	if (j) {
-	  Fit.muJ = mu->GetBinContent(i,0);
-	  Fit.dmuJ = mu->GetBinError(i,0);
+      if (i > 0) {
+	if (dim == 3) {
+	  if (j > 0) {
+	    mean->SetBinContent(i,j,Fit.mean);
+	    rms->SetBinContent(i,j,Fit.rms);
+	    entries->SetBinContent(i,j,Fit.entries);
+	    mu->SetBinContent(i,j,Fit.mu);
+	    mu->SetBinError(i,j,g->GetParError(1));
+	    sigma->SetBinContent(i,j,Fit.sigma);
+	    sigma->SetBinError(i,j,g->GetParError(2));
+	    chisq->SetBinContent(i,j,Fit.chisq);
+	  } else if (j) {
+	    Fit.muJ = mu->GetBinContent(i,0);
+	    Fit.dmuJ = mu->GetBinError(i,0);
+	  }
+	} else {
+	  mean->SetBinContent(i,Fit.mean);
+	  rms->SetBinContent(i,Fit.rms);
+	  entries->SetBinContent(i,Fit.entries);
+	  mu->SetBinContent(i,Fit.mu);
+	  mu->SetBinError(i,g->GetParError(1));
+	  sigma->SetBinContent(i,Fit.sigma);
+	  sigma->SetBinError(i,g->GetParError(2));
+	  chisq->SetBinContent(i,Fit.chisq);
 	}
-      } else {
-	mean->SetBinContent(i,Fit.mean);
-	rms->SetBinContent(i,Fit.rms);
-	entries->SetBinContent(i,Fit.entries);
-	mu->SetBinContent(i,Fit.mu);
-	mu->SetBinError(i,g->GetParError(1));
-	sigma->SetBinContent(i,Fit.sigma);
-	sigma->SetBinError(i,g->GetParError(2));
-	chisq->SetBinContent(i,Fit.chisq);
-	}
-      //      }
+      }
       printf("%i/%i %f/%f mean %f rms = %f entries = %f mu = %f sigma = %f chisq = %f prob = %f\n",
 	    i,j,Fit.x,Fit.y,Fit.mean,Fit.rms,Fit.entries,Fit.mu,Fit.sigma,Fit.chisq,Fit.prob);
       if (FitP)  FitP->Fill(&Fit.i);
