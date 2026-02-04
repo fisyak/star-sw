@@ -1997,6 +1997,36 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1992'=> {trig=>'13p5GeV_fixedTarget_2026',	field => 'RF',	first=> '27027026',	 last => '27027047',	 list => '',  beginTime => '20260127.171133'}, # 	2026-01-27	17:11:33	2026-01-28	04:28:22
 '1993'=> {trig=>'13p5GeV_fixedTarget_2026',	field => 'RF',	first=> '27027049',	 last => '27027049',	 list => '',  beginTime => '20260128.042822'}, # 	2026-01-28	04:28:22	2026-01-28	05:02:15
 '1994'=> {trig=>'13p5GeV_fixedTarget_2026',	field => 'RF',	first=> '27028001',	 last => '27028013',	 list => '',  beginTime => '20260128.050215'}, # 	2026-01-28	05:02:15	2026-01-28	12:22:12
-'1995'=> {trig=>'13p5GeV_fixedTarget_2026',	field => 'RF',	first=> '27028015',	 last => '27028016',	 list => '',  beginTime => '20260128.122212'}, # 	2026-01-28	12:22:12	2026-01-28	12:49:46
+'1995'=> {trig=>'13p5GeV_fixedTarget_2026',	field => 'RF',	first=> '27028015',	 last => '27028016',	 list => '',  beginTime => '20260128.122212'}, # 	2026-01-28	12:22:12	2026-02-01	05:53:35
+'1996'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27032006',	 last => '27032006',	 list => '',  beginTime => '20260201.055335'}, # 	2026-02-01	05:53:35	2026-02-01	06:28:46	timestamp = OO_highlumi_2026_RF
+'1997'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27032007',	 last => '27032007',	 list => '',  beginTime => '20260201.062846'}, # 	2026-02-01	06:28:46	2026-02-01	06:49:26	timestamp = OO_lowlumi_2026_RF
+'1998'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27032009',	 last => '27032011',	 list => '',  beginTime => '20260201.064926'}, # 	2026-02-01	06:49:26	2026-02-01	07:15:51
+'1999'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27032013',	 last => '27032017',	 list => '',  beginTime => '20260201.071551'}, # 	2026-02-01	07:15:51	2026-02-01	16:56:06
+'2000'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27032027',	 last => '27032032',	 list => '',  beginTime => '20260201.165606'}, # 	2026-02-01	16:56:06	2026-02-01	20:08:47	timestamp = OO_highlumi_2026_RF
+'2001'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27032034',	 last => '27032034',	 list => '',  beginTime => '20260201.200847'}, # 	2026-02-01	20:08:47	2026-02-01	20:38:33
+'2002'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27032035',	 last => '27032035',	 list => '',  beginTime => '20260201.203833'}, # 	2026-02-01	20:38:33	2026-02-01	21:28:13	timestamp = OO_lowlumi_2026_RF
+'2003'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27032038',	 last => '27032040',	 list => '',  beginTime => '20260201.212813'}, # 	2026-02-01	21:28:13	2026-02-01	23:48:28
+'2004'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27032045',	 last => '27032049',	 list => '',  beginTime => '20260201.234828'}, # 	2026-02-01	23:48:28	2026-02-02	02:41:39	timestamp = OO_highlumi_2026_RF
+'2005'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27032050',	 last => '27032055',	 list => '',  beginTime => '20260202.024139'}, # 	2026-02-02	02:41:39	2026-02-02	07:46:13	timestamp = OO_lowlumi_2026_RF
+'2006'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27033008',	 last => '27033016',	 list => '',  beginTime => '20260202.074613'}, # 	2026-02-02	07:46:13	2026-02-02	10:47:30	timestamp = OO_highlumi_2026_RF
+'2007'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27033023',	 last => '27033027',	 list => '',  beginTime => '20260202.104730'}, # 	2026-02-02	10:47:30	2026-02-02	14:54:06	timestamp = OO_lowlumi_2026_RF
+'2008'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27033035',	 last => '27033038',	 list => '',  beginTime => '20260202.145406'}, # 	2026-02-02	14:54:06	2026-02-02	16:50:56	timestamp = OO_highlumi_2026_RF
+'2009'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27033040',	 last => '27033041',	 list => '',  beginTime => '20260202.165056'}, # 	2026-02-02	16:50:56	2026-02-02	17:49:16
+'2010'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27033042',	 last => '27033049',	 list => '',  beginTime => '20260202.174916'}, # 	2026-02-02	17:49:16	2026-02-03	00:47:17	timestamp = OO_lowlumi_2026_RF
+'2011'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27033059',	 last => '27033065',	 list => '',  beginTime => '20260203.004717'}, # 	2026-02-03	00:47:17	2026-02-03	03:57:59	timestamp = OO_highlumi_2026_RF
+'2012'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27033066',	 last => '27033067',	 list => '',  beginTime => '20260203.035759'}, # 	2026-02-03	03:57:59	2026-02-03	05:03:52	timestamp = OO_lowlumi_2026_RF
+'2013'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27034001',	 last => '27034003',	 list => '',  beginTime => '20260203.050352'}, # 	2026-02-03	05:03:52	2026-02-03	09:46:58
+'2014'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27034015',	 last => '27034018',	 list => '',  beginTime => '20260203.094658'}, # 	2026-02-03	09:46:58	2026-02-03	11:22:54	timestamp = OO_highlumi_2026_RF
+'2015'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27034020',	 last => '27034023',	 list => '',  beginTime => '20260203.112254'}, # 	2026-02-03	11:22:54	2026-02-03	13:24:54
+'2016'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27034024',	 last => '27034024',	 list => '',  beginTime => '20260203.132454'}, # 	2026-02-03	13:24:54	2026-02-03	13:58:23	timestamp = OO_lowlumi_2026_RF
+'2017'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27034027',	 last => '27034032',	 list => '',  beginTime => '20260203.135823'}, # 	2026-02-03	13:58:23	2026-02-03	20:29:08
+'2018'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27034058',	 last => '27034069',	 list => '',  beginTime => '20260203.202908'}, # 	2026-02-03	20:29:08	2026-02-03	23:24:12	timestamp = OO_highlumi_2026_RF
+'2019'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27034070',	 last => '27034077',	 list => '',  beginTime => '20260203.232412'}, # 	2026-02-03	23:24:12	2026-02-04	03:23:24	timestamp = OO_lowlumi_2026_RF
+'2020'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27034082',	 last => '27034088',	 list => '',  beginTime => '20260204.032324'}, # 	2026-02-04	03:23:24	2026-02-04	05:13:20	timestamp = OO_highlumi_2026_RF
+'2021'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27035001',	 last => '27035003',	 list => '',  beginTime => '20260204.051320'}, # 	2026-02-04	05:13:20	2026-02-04	06:24:49
+'2022'=> {trig=>'OO_lowlumi_2026',       	field => 'RF',	first=> '27035004',	 last => '27035010',	 list => '',  beginTime => '20260204.062449'}, # 	2026-02-04	06:24:49	2026-02-04	10:34:28	timestamp = OO_lowlumi_2026_RF
+'2023'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27035016',	 last => '27035017',	 list => '',  beginTime => '20260204.103428'}, # 	2026-02-04	10:34:28	2026-02-04	11:17:25	timestamp = OO_highlumi_2026_RF
+'2024'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27035019',	 last => '27035019',	 list => '',  beginTime => '20260204.111725'}, # 	2026-02-04	11:17:25	2026-02-04	12:29:48
+'2025'=> {trig=>'OO_highlumi_2026',      	field => 'RF',	first=> '27035028',	 last => '27035032',	 list => '',  beginTime => '20260204.122948'}, # 	2026-02-04	12:29:48	2026-02-04	14:11:17
 );
 1;
