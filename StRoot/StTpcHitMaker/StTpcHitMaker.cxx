@@ -509,7 +509,7 @@ Int_t StTpcHitMaker::Make() {
 	      case kTpcRaw: 
 	      case kTpxRaw: 
 	      case kiTPCRaw: 
-		if ( fTpc) RawTpcData(sector);
+		if ( fTpc) RawTpcData(sector); // legacy Tpc or Tpc
 		else 	   RawTpxData(sector);          
 		break;
 	      default:
