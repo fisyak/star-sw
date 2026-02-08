@@ -536,7 +536,7 @@ void TpcT(const Char_t *files="*.root", const Char_t *opt = "T", const Char_t *O
     // if (Cut(ientry) < 0) continue;
 #endif
     if (fNoRcHit != 1) continue;
-    if (fAdcSum < 100 || fAdcSum > 3.e3) continue;
+    //    if (fAdcSum < 100 || fAdcSum > 3.e3) continue;
     Int_t kPadMin = 999;
     Int_t kPadMax =   0;
     Int_t kTbMin  = 999;
