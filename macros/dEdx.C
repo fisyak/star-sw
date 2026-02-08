@@ -37,7 +37,7 @@ class StIOMaker;
 //#define OLDdEdx
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
 	 const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
-StBFChain *bfc(Int_t First, const Char_t *Chain = "MC2016,20Muons,vmc,Rung.1",
+StBFChain *bfc(Int_t First, const Char_t *Chain = "MC2016,Muons20,vmc,Rung.1",
  	       const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName = "");
 //________________________________________________________________________________
 void dEdx(Int_t First, Int_t Last,

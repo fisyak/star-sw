@@ -242,7 +242,7 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
       if (Root4Star) {
 	ChainOpt += "gstar,"; // RootFile += "gstar";
       } else {
-	ChainOpt += "20Muons,";
+	ChainOpt += "Muons20,";
       }
     }
     if (!( RunOpt.Contains("hadr_on",TString::kIgnoreCase) ||

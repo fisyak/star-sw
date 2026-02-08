@@ -27,7 +27,7 @@ Double_t gf4EYFunc(Double_t *x, Double_t *par) {
 #ifdef __ELOSS__
   Double_t eLoss = par[16];
 #else 
-#define __SCALE__
+  //#define __SCALE__
 #ifdef __SCALE__
   scale = 1 + par[16];
   //  XX[0] *= scale;
