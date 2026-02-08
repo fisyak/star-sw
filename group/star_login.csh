@@ -299,7 +299,7 @@ if ( ! $?star_cshrc_csh) then
 endif
 
 # Now, display the news if any
-if ( ! $?SILENT && $?prompt ) then
+if ( ! $?SILENT && $?prompt) then
     if ( -f $STAR_PATH/news/motd ) then
 	alias motd /bin/cat $STAR_PATH/news/motd
         /bin/cat $STAR_PATH/news/motd

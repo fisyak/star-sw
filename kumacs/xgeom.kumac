@@ -16,10 +16,10 @@ macro xgeom year=y2025z
   graphics/set fwid 6              | Width of fit lines
   satt * seen 1
 *  exec xgeom#zcutTPC [year]
-*  exec xgeom#xcut  [year] -
+  exec xcut  [year] -
 *  exec xgeom#TPCzcut [year] -100
 *  exec RDOcut
-  exec GMTcut
+*  exec GMTcut
 *   exec SCOMxcut
 return
 ********************************************************************************
