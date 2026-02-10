@@ -35,8 +35,10 @@
 #include "TLegend.h"
 #include "TList.h"
 #include "TIterator.h"
+#if __GNUC__ < 7
 #include "TQtZoomPadWidget.h"
 #include "TQtCanvas2Html.h"
+#endif
 #include "TPolynomial.h"
 #include "TROOT.h"
 #endif
@@ -293,6 +295,7 @@ void DrawList(const Char_t *pattern, const Char_t *ctitle = "",
     }
   }
   c->Update();
+#if __GNUC__ < 7
   if (zoom) {
     TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
     //  Double_t zoom = 1.;
@@ -300,6 +303,7 @@ void DrawList(const Char_t *pattern, const Char_t *ctitle = "",
     TQtCanvas2Html  TQtCanvas2Html(c,  900, 600, "./", zoomer);
     //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
   }
+#endif
 }
 //________________________________________________________________________________
 void DrawFits(const Char_t *opt="Rc") {
@@ -655,7 +659,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
       cout << Form("<%s> = %9.4f +/- %8.4f", RF[rf], XAV[rf], sigma/TMath::Sqrt(NFits[rf]-1)) << endl;
     }
   }
-#if 1
+#if __GNUC__ < 7
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;
   //  zoomer->SetZoomFactor(zoom);
@@ -729,7 +733,7 @@ void DrawP3List(const Char_t *pattern = "pullYGAvsZAdcL", const Char_t *proj = "
     }
   }
   c->Update();
-#if 1
+#if __GNUC__ < 7
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;
   //  zoomer->SetZoomFactor(zoom);
@@ -815,7 +819,7 @@ void DrawH3List(const Char_t *pattern = "T$", const Char_t * proj = "zx", const 
     l->Draw();
   }
   c->Update();
-#if 1
+#if __GNUC__ < 7
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;
   //  zoomer->SetZoomFactor(zoom);
@@ -1096,11 +1100,13 @@ void DrawLaser(const Char_t *pattern = "^SL.*", const Char_t *ctitle = "",
     }
   }
   c->Update();
+#if __GNUC__ < 7
   TQtZoomPadWidget *zoomer = new TQtZoomPadWidget();  // Create the Pad zoomer widget
   //  Double_t zoom = 1.;
   //  zoomer->SetZoomFactor(zoom);
   TQtCanvas2Html  TQtCanvas2Html(c,  900, 600, "./", zoomer);
   //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
+#endif
 }
 //________________________________________________________________________________
 void PrintFList(const Char_t *name = "/Particles/KFParticlesFinder/PrimaryVertexQA/z") {
@@ -1138,7 +1144,7 @@ void DrawFH1(const Char_t *name = "^f1_1$") {
   for (Int_t i = 0; i < N; i++) {
     TH1 *hist = (TH1 *) array[i];
     if (! hist) continue;
-    TString cname = "c" + i;
+    TString cname = "c"; cname += i;
     c[i] = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(cname);
     if (c[i])  c[i]->Clear();
     else       c[i] = new TCanvas(cname,cname);
