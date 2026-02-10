@@ -82,8 +82,8 @@
 <!-- <input URL="file:/hlt/cephfs/daq/2023/151/24151068/st_physics_adc_24151068*.daq" /> -->
 <!-- <input URL="file:/hlt/cephfs/daq/2023/152/24152031/st_physics_adc_*.daq" /> -->
 <!-- <input URL="file:/net/l403/data/fisyak/daq/2023/*/*/*st_ph*adc*.daq" /> -->
->!-- <input URL="file:/gpfs01/star/daq/2025/336/*/*adc*.daq" /> -->
-<input URL="file:/gpfs01/star/daq/2026/*/*/st_physics_adc_*.daq' />
+<!-- <input URL="file:/gpfs01/star/daq/2025/336/*/*adc*.daq" /> -->
+<input URL="file:/gpfs01/star/daq/2026/*/*/st_physics_adc_*.daq" />
    <ResourceUsage>
       <Priority>99</Priority>
     </ResourceUsage>
