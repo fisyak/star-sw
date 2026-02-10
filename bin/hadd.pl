@@ -174,8 +174,9 @@ foreach my $key (sort keys %TagList) {
     my $log      = $name. ".log";
     if ( -r $rootfile ) {print  "\tDone\n"; next;}
     else {print "\n";}
-    my $cmd = "test -r $rootfile || hadd -k $ARG{option} -f $rootfile $list";
-    $cmd .= ">&  $log";
+    my $cmd =       "test -r $rootfile || STAR_LEVELS >& $log
+test -r $rootfile || hadd -k $ARG{option} -f $rootfile $list >>& $log";
+#    $cmd .= ">&  $log";
     print "job:$jb files: $i => $cmd \n";
     my $SCRIPT = $name . ".csh"; print "SCRIPT = $SCRIPT\n";
     open (OUT,">$SCRIPT") or die "Can't open $SCRIPT";

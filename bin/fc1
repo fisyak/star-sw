@@ -5,4 +5,4 @@
 # mysql -h robinson.star.bnl.gov --port=3306 -u "" Calibrations_tpc 
 #mysql -h robinson.star.bnl.gov --port=3306 -u "" --password=""  Calibrations_tpc
 #mysql -h fc1.star.bnl.gov --port=3336 -u "FC_user" --password=FCatalog FileCatalog_BNL
-mysql -h star-fc1.sdcc.bnl.gov --port=3336 -u "FC_user" --password=FCatalog FileCatalog_BNL
+mysql --ssl-mode=DISABLED  -h star-fc1.sdcc.bnl.gov --port=3336 -u "FC_user" --password=FCatalog FileCatalog_BNL

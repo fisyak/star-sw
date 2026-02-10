@@ -12,8 +12,8 @@ foreach d (`ls -1dtr ${GLOB}| sort -u`)
     rm All*
     hadd.pl  FilesPerJob=20
 #    if (${SITE} == "JLT") then
-#    lsf hadd.xml
-    /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit hadd.xml
+    lsf hadd.xml
+#    /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit hadd.xml
 #    else
 #    foreach f (`ls -1d hadd*.condor`)
 #      condor_submit ${f}
