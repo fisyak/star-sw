@@ -24,6 +24,10 @@ void ppbarM2() {
   TLegend *l = new TLegend(0.2,0.2,0.6,0.4);
   TH2* p2 = (TH2 *) gDirectory->Get("/Tracks/p/hTofPID");
   if (! p2) return;
+  TAxis *y = p2->GetYaxis();
+  Int_t i1 = y->FindBin(0.5);
+  Int_t i2 = y->FindBin(1.5);
+  y->SetRange(i1,i2);
   TObjArray* arr =  new TObjArray(4);
   p2->FitSlicesY(0, 0, -1, 0, "QNR", arr);
   TH1D *m2p = (TH1D *) (*arr)[1]; m2p->SetMarkerColor(1); m2p->SetMarkerStyle(20);
@@ -35,6 +39,7 @@ void ppbarM2() {
   l->AddEntry(m2p,Title);
 #if 1
   TH2* pbar2 = (TH2* )gDirectory->Get("/Tracks/p-/hTofPID");
+  pbar2->GetYaxis()->SetRange(i1,i2);
   TObjArray* arr2 =  new TObjArray(4);
   pbar2->FitSlicesY(0, 0, -1, 0, "QNR", arr2);
   TH1D *m2pbar = (TH1D *) (*arr2)[1]; m2pbar->SetMarkerColor(2); m2pbar->SetMarkerStyle(20);
