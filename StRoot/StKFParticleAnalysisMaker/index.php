@@ -13,35 +13,12 @@
 $DD = ''; 
 $plots = array(
 	       "Title*.txt"
-	       ,"K0s*.png"
+	       ,"K*s*.png"
 	       ,"ppbarM2.png"
 	       ,"dEdx.png"
 	       ,"Hyperons.png"
 	       ,'Mass_H34L.png'
 	       );
-//________________________________________________________________________________
-function latest_File($directory,$pattern) {
-  // Get all files in the directory
-  $files = array_filter(scandir($directory), function($file) use ($directory) {
-      return is_file($directory . DIRECTORY_SEPARATOR . $file);
-    });
-  // Create an associative array with filename => modification time
-  $fileModTimes = [];
-  foreach ($files as $file) {
-    if (preg_match($pattern, $file)) {
-      $filePath = $directory . DIRECTORY_SEPARATOR . $file;
-      $fileModTimes[$file] = filemtime($filePath);
-    }
-  }
-  // Sort files by modification time descending (newest first)
-  arsort($fileModTimes);
-
-  // $fileModTimes now contains files ordered by time
-  foreach ($fileModTimes as $file => $modTime) {
-    echo $file . ' - ' . date('Y-m-d H:i:s', $modTime) . "<br>";
-  }
-  return $file;
-}
 //________________________________________________________________________________
 function build_page($year,$section,$figNo,$Plots,$DD,$dirs) {
   $runs = "";
@@ -63,7 +40,6 @@ function build_page($year,$section,$figNo,$Plots,$DD,$dirs) {
     $dirNo = 0;
     foreach($dirs as $dir) {
       $pattern = $dir . "/" . $fig;
-      //      $files = latest_File($dir,$fig);
       $files = [];
       exec("ls -1tr $pattern 2> /dev/null",$files);
       $count = count($files);
@@ -188,6 +164,14 @@ foreach ($years as $year) {
       $prodTotal = [];
     }
   }
+  if ($year > 2011) {
+    $total = count($prodTotal);
+    if ($total > 0) {
+      //  print("prodTotal =============== \n");
+      //  print_r($prodTotal);
+      build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+    }
+  }
 }
 $total = count($prodTotal);
 if ($total > 0) {
@@ -195,59 +179,6 @@ if ($total > 0) {
   //  print_r($prodTotal);
   build_page($year,++$section,$figNo,$plots,"",$prodTotal);
 }
-/*
-//echo $return_val;
-        // Opens directory
-        $myDirectory=opendir(".");
-        
-        // Gets each entry
-        while($entryName=readdir($myDirectory)) {
-          $dirArray[]=$entryName;
-        }
-        // Closes directory
-        closedir($myDirectory);
-        // Counts elements in array
-        $indexCount=count($dirArray);
-        
-        // Sorts files
-        sort($dirArray);
-        
-        // Loops through the array of files
-        for($index=0; $index < $indexCount; $index++) {
-          $year = $dirArray[$index];
-     	  if (! fnmatch("20??",$year)) {continue;}
-          // Gets File Names
-          $name=$dirArray[$index];
-          $namehref=$dirArray[$index];
-          // Gets file size 
-          $size=number_format(filesize($dirArray[$index]));
-          
-          // Gets Date Modified Data
-	  //          $modtime=date("M j Y g:i A", filemtime($dirArray[$index]));
-	  //          $timekey=date("YmdHis", filemtime($dirArray[$index]));
-	  $subDir = opendir($year);
-          // Gets each entry
-	  $productions = "";
-	  $count = 0;
-          while($entryName=readdir($subDir)) {
-	     $m = strncmp(".",$entryName,1);
-//	     echo "$entryName  $m\n";
-	     if ($m == 0) continue;
-             $subdirArray[]=$entryName;
-	     $productions = $productions . $entryName . " ";
-             $count++;
-	     if ($count > 4) {
-	       print("<h2>$year\t$productions</h2>\n");
-	       $productions = "";
-	       $count = 0;
-	     }
-          }
-          // Print 'em
-	  if ($count > 0) {
-	    print("<h2>$year\t$productions</h2>\n");
-	  }	
-	}
-*/
       ?>
 
    
