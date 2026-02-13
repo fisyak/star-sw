@@ -22,10 +22,10 @@ $plots = array(
 	       ,'Mass_H34L.png'
 	       );
 //________________________________________________________________________________
-function build_page($year,$section,$figNo,$Plots,$DD,$dirs) {
+function build_page($section,$figNo,$Plots,$DD,$dirs) {
   $runs = "";
   foreach ($dirs as $r) {$runs = $runs . " " . $r;}
-  $html = '  <hr>  <h3><a name="' . $year . '">' . $year . ': ' . $runs .  '</a></h3>  &nbsp;<br>  <hr>';
+  $html = '  <hr>  <h3><a name="' . $dirs[0] . '">'  . $runs .  '</a></h3>  &nbsp;<br>  <hr>';
   $figNo = 0;
   // start table
   $html .= '<table width="90%" border="1" cellspacing="2" cellpadding="0">';
@@ -71,16 +71,28 @@ function build_page($year,$section,$figNo,$Plots,$DD,$dirs) {
 ?>
 <body>
 <h1>KFParticle Analysis</h1>
-<h2>Samples</h2>
 <h2>Legend</h2>
 <p>The plots are designed to see diffrences between different datasets and different productions in Ks0, p/pbar M2, dE/dx, and hyperons including BES-I sample.
   The datasets are grouped by year of data taking  and energies.
-
   <ul>
-  <li>HLT means that these data set is available on HLT farm.
-  <li>RCF means that these data set is available on RCF farm.
+  <li>TFG productions has been done on HLT farm with TFG vesion of STAR libraries.
+  <li>P2?i? stands for thee official production done on RCF.
   <li>dev means the Fast Offline.
   </ul>
+<h2>Plots content</h2>
+  <p>For a given data samples it is provided side by side plots for different productions (earliest one is the first).
+  <ol>
+    <li>Summary of Ks0 mass fit 
+    <li>Invariant mass distribution
+    <li>Summary of Ks0 mass fit with pT > 1 GeV/c
+    <li>Invariant mass distribution with pT > 1 GeV/c
+    <li> p and pbar M<sup>2</sup> distribution from BTof versus log<sub>10</sub>p
+  <li>log<sub>10</sub>(dE/dx) versus log<sub>10</sub>(p)
+    <li>Hyperon mass fits
+    <li> H3L and H4L fits.
+  </ol>
+
+<h2>Samples</h2>
 
    
 <?php
@@ -92,6 +104,7 @@ $section = 0;
 $figNo = 0;
 $prodTotal = [];
 $year = 0;
+$tags = [];
 foreach ($years as $year) {
   //  print("<h2>$year</h2>\n");
   $runs = [];
@@ -131,38 +144,45 @@ foreach ($years as $year) {
     $total = count($prodTotal);
     //    print("count = $count, total = $total\n");
     //    print_r($prodSorted);
-    if ($total + $count <= 4) {
+    if ($total + $count <= 4){//  && ($year < 2019 || $year > 2021)) {
       foreach ($prodSorted as $p) {array_push($prodTotal, $p);}
       $total = count($prodTotal);
       if ($total >= 4) {
 	//	print("prodTotal =============== \n");
 	//	print_r($prodTotal);
-	build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+	// build_page($year,++$section,$figNo,$plots,"",$prodTotal);
 	$prodTotal = [];
       }
     } else if ($total > 0) {
       //      print("prodTotal =============== \n");
       //      print_r($prodTotal);
-      build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+      // build_page($year,++$section,$figNo,$plots,"",$prodTotal);
       $prodTotal = [];
       foreach ($prodSorted as $p) {array_push($prodTotal, $p);}
       $total = count($prodTotal);
       if ($total >= 4) {
 	//	print("prodTotal =============== \n");
 	//	print_r($prodTotal);
-	build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+	// build_page($year,++$section,$figNo,$plots,"",$prodTotal);
 	$prodTotal = [];
       }
-    } if ($total >= 4) {
+    } if ($prodTotal && $total >= 4) {
       //      print("prodTotal =============== \n");
       //      print_r($prodTotal);
-      build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+      print("total = $total\n");
+      print_r($prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+      // build_page($year,++$section,$figNo,$plots,"",$prodTotal);
       $prodTotal = [];
     } else if ($total == 0 && $count > 3) {
       foreach ($prodSorted as $p) {array_push($prodTotal, $p);}
       //      print("prodTotal =============== \n");
       //      print_r($prodTotal);
-      build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+      // build_page($year,++$section,$figNo,$plots,"",$prodTotal);
       $prodTotal = [];
     }
   }
@@ -171,7 +191,8 @@ foreach ($years as $year) {
     if ($total > 0) {
       //  print("prodTotal =============== \n");
       //  print_r($prodTotal);
-      build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+      // build_page($year,++$section,$figNo,$plots,"",$prodTotal);
     }
   }
 }
@@ -179,9 +200,23 @@ $total = count($prodTotal);
 if ($total > 0) {
   //  print("prodTotal =============== \n");
   //  print_r($prodTotal);
-  build_page($year,++$section,$figNo,$plots,"",$prodTotal);
+	$tags[$prodTotal[0]] = $prodTotal;
+  // build_page($year,++$section,$figNo,$plots,"",$prodTotal);
 }
-      ?>
+// ancor
+print "<ol>\n";
+foreach ($tags as $tag) {
+  $prods = "";
+  foreach ($tag as $p) {$prods .=  $p . ";";}
+  print '<li> <a href="#' . $tag[0] . '">' . $prods . '</a>';
+  print "\n";
+} 
+print "</ol>\n";
+
+foreach ($tags as $tag) {
+  //  print_r($tag);
+   build_page(++$section,$figNo,$plots,"",$tag);
+}?>
 
    
 </body>
