@@ -12,8 +12,10 @@
 <?php
 $DD = ''; 
 $plots = array(
-	       "Title*.txt"
-	       ,"K*s*.png"
+	       "Title*Ks_M_*.txt"
+	       ,"Ks_M*.png"
+	       ,"Title*Ks_y-phi-M*.txt"
+	       ,"Ks_y-phi-M*.png"
 	       ,"ppbarM2.png"
 	       ,"dEdx.png"
 	       ,"Hyperons.png"
@@ -51,7 +53,7 @@ function build_page($year,$section,$figNo,$Plots,$DD,$dirs) {
       } else {
 	$html .= '<td>';
       }
-      if ( $figNo == 1) {
+      if (preg_match("/.txt/",$files[0], $matches)) {
 	$html .= '<object data="' . $files[0] . '"  type="text/plain" width="400" style="height: 300px"></td>';
       } else {
 	$html .= '<img src="' . $files[0] . '" alt="" width="400" border="0"></td>';
