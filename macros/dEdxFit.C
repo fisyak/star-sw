@@ -247,44 +247,6 @@ const Char_t *Fitx_VarList = "i:j:x:y:mean:rms:peak:dpeak:entries:chisq:prob:Npa
 //const Char_t *Fit_VarList = "i:j:x:y:mean:rms:peak:mu:sigma:entries:chisq:prob:a0:a1:a2:a3:a4:a5:a6:Npar:dpeak:dmu:dsigma:da0:da1:da2:da3:da4:da5:da6:muJ:dmuJ";
 #ifndef __CINT__
 static const  peak_t Peaks[6] = {
-#if 0
-  // 06/25/10
-  //   {0.      ,       0., 0.13956995, "pion"}, // pion
-  //   {1.425822, 0.101693, 0.93827231, "proton"}, // proton - pion
-  //   {0.565455, 0.061626, 0.493677,   "kaon"  }, // Kaon   - pi
-  //   {0.424916, 0.004081, 0.51099907e-3,"e"}, // e      - pi
-  //   {2.655586, 0.123754, 1.875613,   "d"}, // d      - pi
-  //   {0.004178, 0.002484, 0.105658,   "mu"}};// mu     - pi
-  // 10/20/19 <peak postion> at p = [0.35,0.75] GeV/c wrt pion
-  // <peak position> at p = [0.35,0.75] GeV/c wrt pion : dN/dP = gaus(mean = 1.75843e-01; sigma = 2.21705e-01)
-  {            0.      ,                   0., 0.13956995,         "pion", 
-	       0, {0}, {0}},
-  {       1.39305,        0.284445,       0.938272,       "proton",
-	  7,// protonNzB
-	  { 0.7000, 0.9000, 1.1000, 1.3000, 1.5000, 1.7000, 1.9000}, // X
-	  { 0.0251, 0.0902, 0.1477, 0.2007, 0.2416, 0.2669, 0.0278}  // Y
-  },
-  {       0.557112,       0.174024,       0.493677,       "kaon",
-	  0, // 5,// kaonNzB
-	  { 0.1000, 0.3000, 0.5000, 0.7000, 0.9000}, // X
-	  { 0.0177, 0.1928, 0.3611, 0.3618, 0.0666}  // Y
-  },
-  {       0.421061,       0.0096963,      0.000510999,    "e",
-	  0, // 3,// eNzB
-	  { 0.3900, 0.4100, 0.4300}, // X
-	  { 0.0262, 0.3455, 0.6283}  // Y
-  },
-  {       2.60851,        0.347455,       1.87561,        "deuteron",
-	  0, // 8,// deuteronNzB
-	{ 1.7000, 1.9000, 2.1000, 2.3000, 2.5000, 2.7000, 2.9000, 3.1000}, // X
-	  { 0.0142, 0.0499, 0.0854, 0.1259, 0.1671, 0.1893, 0.2353, 0.1330}  // Y
-  },
-  {       0.000482817,    0.0128277,      0.105658,       "mu",
-	  0, // 4,// muNzB
-	  {-0.0300,-0.0100, 0.0100, 0.0300}, // X
-	  { 0.0452, 0.4258, 0.4626, 0.0663}  // Y
-  }
-#else
   // 06/27/10
   //   // MIP from Heed bg = 3.77 => p_pion = 0.526
   //   Double_t pMIP = 0.526;
@@ -308,7 +270,6 @@ static const  peak_t Peaks[6] = {
 	  { 0.0520, 0.1026, 0.1192, 0.1522, 0.1892, 0.2273, 0.1575}  // Y
   },
   {       0.00820447,     0.00328347,     0.105658,       "mu",   0, {0}, {0}}
-#endif
 };
 #endif
 Bichsel *gBichsel = 0;
@@ -1500,11 +1461,6 @@ TF1 *LogNor(Double_t Mean, Double_t RMS) {
 //________________________________________________________________________________
 TF1 *FitLN(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double_t zmin = -2, Double_t zmax = 5, Double_t SX = 1) { // log normal
   Double_t params[9];
-#if 0
-  Int_t binMin = proj->GetXaxis()->FindBin(zmin);
-  Int_t binMax = proj->GetXaxis()->FindBin(zmax);
-  proj->GetXaxis()->SetRange(binMin,binMax);
-#endif
   Int_t peak = proj->GetMaximumBin();
   Double_t peakX = proj->GetBinCenter(peak);
   Double_t peakY = proj->GetBinContent(peak);
@@ -1525,22 +1481,7 @@ TF1 *FitLN(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
   } else {
     g->ReleaseParameter(2);
   }
-#if 0
-  g->SetParameters(params);
-  g->SetRange(params[1]-sigma,params[1]+sigma);
-  g->SetRange(params[1]-sigma,params[1]+sigma);
-  g->SetParLimits(1, params[1]-params[2], params[1]+params[2]);
-  g->SetParLimits(2, 1e-3, proj->GetRMS());
-#endif
   Bool_t res = proj->Fit(g,opt);
-#if 0
-  if (g->GetProb() > 0.01) {
-    return g;
-  }
-  // Last attempt reduce fit range to +/- 2 sigma
-  g->GetParameters(params);
-  Bool_t res = proj->Fit(g,opt,"",params[1]-2*params[2],params[1]+2*params[2]);
-#endif
   return g;
 }
 //________________________________________________________________________________
@@ -1586,14 +1527,6 @@ Bool_t  PreSetG0Parameters(TH1 *proj, TF1 *g2) { // Fit peak nearest to 0 by gau
   if (nP <= 0) return kFALSE;
   if (ixpi < 0) return kFALSE;
   if (TMath::Abs(xpi) > 0.5) return kFALSE;
-#if 0
-  Double_t xL = 999, xH = 999;
-  if (ixpi >      0) xL = xPeak[ixpi-1];
-  if (ixpi < nP - 1) xH = xPeak[ixpi+1];
-  Int_t binMin = proj->GetXaxis()->FindBin(xL);
-  Int_t binMax = proj->GetXaxis()->FindBin(xH);
-  proj->GetXaxis()->SetRange(binMin,binMax);
-#endif
   Double_t total = proj->Integral();// *proj->GetBinWidth(5);
   if (total < 100) return kFALSE;
   g2->SetParameter(1, proj->GetMean());
@@ -2414,49 +2347,6 @@ TF1 *CrystalBall() {
   //  f->SetParLimits(3,-0.1,4.0);
   return f;
 }
-#if 0
-//--------------------------------------------------------------------------------
-Double_t gausexp(Double_t *x, Double_t *p) {
-  // Souvik Das, "A simple alternative to the Crystal Ball function"
-  // https://arxiv.org/pdf/1603.08591.pdf
-  Double_t normL = p[0];
-  Double_t mu    = p[1];
-  Double_t sigma = p[2];
-  Double_t k     = p[3];
-  Double_t t     = (x[0] - mu)/sigma;
-  Double_t V     = 0.;
-  if (t < k) {
-    V = TMath::Exp(-t*t/2); // der = - V * t => - k * V
-  } else {
-    V = TMath::Exp(k*k/2 - k*t); // der =       - k * V 
-  }
-// (%i5) integrate(exp(((-t)*t)/2),t,minf,k)
-//                                        k
-//                       sqrt(%pi) erf(-------)
-//                                     sqrt(2)    sqrt(%pi)
-// (%o5)                 ---------------------- + ---------
-//                              sqrt(2)            sqrt(2)
-// _
-
-// (%i6) integrate(exp((k*k)/2-k*t),t,k,inf)
-// Is k positive, negative or zero?
-
-// positive
-// ;
-//                                          2
-//                                         k
-//                                       - --
-//                                         2
-//                                     %e
-// (%o6)                               ------
-//                                       k
- static Double_t SQ2pi = TMath::Sqrt(TMath::Pi())/TMath::Sqrt2();
-  Double_t D = SQ2pi*(1 + TMath::Erf(k/TMath::Sqrt2()));
-  Double_t C = TMath::Exp(-k*k/2)/k;
-  Double_t N = (D + C)*sigma;
-  return TMath::Exp(normL)*V/N;
-}
-#endif
 //________________________________________________________________________________
 TF1 *GausExp() {
   static TF1 *f = 0;
@@ -2475,19 +2365,6 @@ TF1 *GausExp() {
   return f;
 }
 
-#if 0
-//________________________________________________________________________________
-Double_t ggauso(Double_t *x, Double_t *p) {
-  Double_t X = x[0];
-  Double_t NormL = p[0];
-  Double_t ksi = p[1];
-  Double_t w = p[2];
-  Double_t alpha = p[3];
-  Double_t t = (X  - ksi)/w;
-  Double_t v = t/TMath::Sqrt2();
-  return TMath::Exp(NormL)*TMath::Gaus(t,0,1,kTRUE)/w*(1. + TMath::Erf(alpha*v));
-}
-#endif
 //________________________________________________________________________________
 Double_t ggaus(Double_t *x, Double_t *p) {
   Double_t X = x[0];
@@ -2509,11 +2386,7 @@ Double_t ggaus(Double_t *x, Double_t *p) {
     //    Double_t mean = ksi + w * muz;
   }
   Double_t par[4] = {NormL, ksi, w, alpha};
-#if 0
-  return ggauso(x, par);
-#else
   return StdEdxModel::instance()->gausw(x, par);
-#endif
 }
 //________________________________________________________________________________
 TF1 *GG() {
@@ -2594,253 +2467,6 @@ TF1 *FitCB(TH1 *proj, Option_t *opt="RQ") {
   proj->Fit(g,opt);
   return g;
 }
-#if 0
-//________________________________________________________________________________
-enum EMDFPolyType {
-  kMonomials,
-  kChebyshev,
-  kLegendre
-};
-class MDFCorrection {
-public:
-  UChar_t idx; 
-  UChar_t nrows; 
-  UChar_t PolyType; 
-  UChar_t NVariables; 
-  UChar_t NCoefficients; 
-  UChar_t Power[100]; 
-  Double_t DMean; 
-  Double_t XMin[2]; 
-  Double_t XMax[2]; 
-  Double_t Coefficients[50]; 
-  Double_t CoefficientsRMS[50]; 
-  Double_t MDFunc(Double_t *x);
-  Double_t EvalFactor(Int_t p, Double_t x) const;
-};
-//____________________________________________________________________
-Double_t MDFCorrection::EvalFactor(Int_t p, Double_t x) const {
-  // Evaluate function with power p at variable value x
-  Int_t    i   = 0;
-  Double_t p1  = 1;
-  Double_t p2  = 0;
-  Double_t p3  = 0;
-  Double_t r   = 0;
-
-  switch(p) {
-  case 1:
-    r = 1;
-    break;
-  case 2:
-    r =  x;
-    break;
-  default:
-    p2 = x;
-    for (i = 3; i <= p; i++) {
-      p3 = p2 * x;
-      if (PolyType == kLegendre)
-	p3 = ((2 * i - 3) * p2 * x - (i - 2) * p1) / (i - 1);
-      else if (PolyType == kChebyshev)
-	p3 = 2 * x * p2 - p1;
-      p1 = p2;
-      p2 = p3;
-    }
-    r = p3;
-  }
-  return r;
-}
-//________________________________________________________________________________
-Double_t MDFCorrection::MDFunc(Double_t *x) {
-  Double_t returnValue = DMean;
-  Double_t term        = 0;
-  UChar_t    i, j;
-  for (i = 0; i < NCoefficients; i++) {
-    // Evaluate the ith term in the expansion
-    term = Coefficients[i];
-    for (j = 0; j < NVariables; j++) {
-      // Evaluate the factor (polynomial) in the j-th variable.
-      Int_t    p  =  Power[i * NVariables + j];
-      Double_t y  =  1 + 2. / (XMax[j] - XMin[j])
-	* (x[j] - XMax[j]);
-      term        *= EvalFactor(p,y);
-    }
-    // Add this term to the final result
-    returnValue += term;
-  }
-  return returnValue;
-}
-TMultiDimFit* fit = 0;
-MDFCorrection **rows = 0;
-//________________________________________________________________________________
-MDFCorrection *MDFcor(Int_t i = 0) {
-  if (! rows) {
-    rows = new MDFCorrection*[3];
-    Int_t k = 0;
-    rows[k] = new MDFCorrection;
-    rows[k]->nrows = 3;
-    rows[k]->idx = 1;
-    // mu
-    rows[k]->PolyType =        0;
-    rows[k]->NVariables =      2;
-    rows[k]->NCoefficients =   22;
-    rows[k]->XMin[ 0] =       3.25;  rows[k]->XMin[ 1] =     1.5272;
-    rows[k]->XMax[ 0] =      10.35;  rows[k]->XMax[ 1] =     2.6258;
-    rows[k]->Power[ 0] =  1;  rows[k]->Power[ 1] =  1;
-    rows[k]->Power[ 2] =  1;  rows[k]->Power[ 3] =  2;
-    rows[k]->Power[ 4] =  1;  rows[k]->Power[ 5] =  3;
-    rows[k]->Power[ 6] =  2;  rows[k]->Power[ 7] =  1;
-    rows[k]->Power[ 8] =  2;  rows[k]->Power[ 9] =  2;
-    rows[k]->Power[10] =  1;  rows[k]->Power[11] =  5;
-    rows[k]->Power[12] =  3;  rows[k]->Power[13] =  1;
-    rows[k]->Power[14] =  2;  rows[k]->Power[15] =  3;
-    rows[k]->Power[16] =  2;  rows[k]->Power[17] =  4;
-    rows[k]->Power[18] =  3;  rows[k]->Power[19] =  3;
-    rows[k]->Power[20] =  2;  rows[k]->Power[21] =  5;
-    rows[k]->Power[22] =  3;  rows[k]->Power[23] =  2;
-    rows[k]->Power[24] =  1;  rows[k]->Power[25] =  6;
-    rows[k]->Power[26] =  3;  rows[k]->Power[27] =  4;
-    rows[k]->Power[28] =  5;  rows[k]->Power[29] =  6;
-    rows[k]->Power[30] =  4;  rows[k]->Power[31] =  1;
-    rows[k]->Power[32] =  4;  rows[k]->Power[33] =  2;
-    rows[k]->Power[34] =  4;  rows[k]->Power[35] =  6;
-    rows[k]->Power[36] =  4;  rows[k]->Power[37] =  3;
-    rows[k]->Power[38] =  5;  rows[k]->Power[39] =  3;
-    rows[k]->Power[40] =  5;  rows[k]->Power[41] =  5;
-    rows[k]->Power[42] =  6;  rows[k]->Power[43] =  5;
-    rows[k]->DMean =   0.5915;
-    rows[k]->Coefficients[ 0]    =         0.12142;  rows[k]->Coefficients[ 1]    =           0.518;
-    rows[k]->Coefficients[ 2]    =        -0.69565;  rows[k]->Coefficients[ 3]    =        0.035468;
-    rows[k]->Coefficients[ 4]    =         0.24901;  rows[k]->Coefficients[ 5]    =         0.32729;
-    rows[k]->Coefficients[ 6]    =       -0.082096;  rows[k]->Coefficients[ 7]    =          0.2748;
-    rows[k]->Coefficients[ 8]    =        -0.15529;  rows[k]->Coefficients[ 9]    =        0.053036;
-    rows[k]->Coefficients[10]    =        -0.18635;  rows[k]->Coefficients[11]    =        -0.21226;
-    rows[k]->Coefficients[12]    =       -0.095869;  rows[k]->Coefficients[13]    =         0.46573;
-    rows[k]->Coefficients[14]    =        -0.26165;  rows[k]->Coefficients[15]    =        0.039502;
-    rows[k]->Coefficients[16]    =       -0.057019;  rows[k]->Coefficients[17]    =        0.080737;
-    rows[k]->Coefficients[18]    =        -0.10641;  rows[k]->Coefficients[19]    =        0.072822;
-    rows[k]->Coefficients[20]    =       -0.057196;  rows[k]->Coefficients[21]    =        0.072271;
-    rows[k]->CoefficientsRMS[ 0] =      2.7331e-05;  rows[k]->CoefficientsRMS[ 1] =      6.8688e-05;
-    rows[k]->CoefficientsRMS[ 2] =      0.00017815;  rows[k]->CoefficientsRMS[ 3] =      6.4463e-05;
-    rows[k]->CoefficientsRMS[ 4] =      0.00017854;  rows[k]->CoefficientsRMS[ 5] =      0.00019005;
-    rows[k]->CoefficientsRMS[ 6] =      0.00010505;  rows[k]->CoefficientsRMS[ 7] =      0.00035043;
-    rows[k]->CoefficientsRMS[ 8] =      0.00030078;  rows[k]->CoefficientsRMS[ 9] =      0.00040523;
-    rows[k]->CoefficientsRMS[10] =       0.0002739;  rows[k]->CoefficientsRMS[11] =      0.00023002;
-    rows[k]->CoefficientsRMS[12] =       9.581e-05;  rows[k]->CoefficientsRMS[13] =      0.00037056;
-    rows[k]->CoefficientsRMS[14] =      0.00044255;  rows[k]->CoefficientsRMS[15] =      9.5917e-05;
-    rows[k]->CoefficientsRMS[16] =      0.00019139;  rows[k]->CoefficientsRMS[17] =      0.00038451;
-    rows[k]->CoefficientsRMS[18] =      0.00043657;  rows[k]->CoefficientsRMS[19] =      0.00037608;
-    rows[k]->CoefficientsRMS[20] =      0.00048424;  rows[k]->CoefficientsRMS[21] =      0.00036469;
-    k = 1;
-    rows[k] = new MDFCorrection;
-    rows[k]->nrows = 3;
-    rows[k]->idx = 2;
-    // sigma
-    rows[k]->PolyType =        0;
-    rows[k]->NVariables =      2;
-    rows[k]->NCoefficients =   21;
-    rows[k]->XMin[ 0] =       3.25;  rows[k]->XMin[ 1] =     1.5272;
-    rows[k]->XMax[ 0] =      10.35;  rows[k]->XMax[ 1] =     2.6258;
-    rows[k]->Power[ 0] =  1;  rows[k]->Power[ 1] =  1;
-    rows[k]->Power[ 2] =  2;  rows[k]->Power[ 3] =  1;
-    rows[k]->Power[ 4] =  1;  rows[k]->Power[ 5] =  2;
-    rows[k]->Power[ 6] =  3;  rows[k]->Power[ 7] =  1;
-    rows[k]->Power[ 8] =  2;  rows[k]->Power[ 9] =  2;
-    rows[k]->Power[10] =  2;  rows[k]->Power[11] =  3;
-    rows[k]->Power[12] =  4;  rows[k]->Power[13] =  1;
-    rows[k]->Power[14] =  1;  rows[k]->Power[15] =  3;
-    rows[k]->Power[16] =  2;  rows[k]->Power[17] =  5;
-    rows[k]->Power[18] =  5;  rows[k]->Power[19] =  2;
-    rows[k]->Power[20] =  1;  rows[k]->Power[21] =  4;
-    rows[k]->Power[22] =  1;  rows[k]->Power[23] =  5;
-    rows[k]->Power[24] =  5;  rows[k]->Power[25] =  1;
-    rows[k]->Power[26] =  3;  rows[k]->Power[27] =  4;
-    rows[k]->Power[28] =  5;  rows[k]->Power[29] =  3;
-    rows[k]->Power[30] =  6;  rows[k]->Power[31] =  2;
-    rows[k]->Power[32] =  3;  rows[k]->Power[33] =  5;
-    rows[k]->Power[34] =  4;  rows[k]->Power[35] =  5;
-    rows[k]->Power[36] =  5;  rows[k]->Power[37] =  4;
-    rows[k]->Power[38] =  6;  rows[k]->Power[39] =  6;
-    rows[k]->Power[40] =  2;  rows[k]->Power[41] =  4;
-    rows[k]->DMean =   0.1415;
-    rows[k]->Coefficients[ 0]    =       -0.038573;  rows[k]->Coefficients[ 1]    =        -0.15368;
-    rows[k]->Coefficients[ 2]    =        0.078618;  rows[k]->Coefficients[ 3]    =        0.076764;
-    rows[k]->Coefficients[ 4]    =       -0.021717;  rows[k]->Coefficients[ 5]    =         0.18198;
-    rows[k]->Coefficients[ 6]    =       -0.080556;  rows[k]->Coefficients[ 7]    =       -0.041054;
-    rows[k]->Coefficients[ 8]    =        -0.12834;  rows[k]->Coefficients[ 9]    =      -0.0067788;
-    rows[k]->Coefficients[10]    =       -0.040617;  rows[k]->Coefficients[11]    =        0.015402;
-    rows[k]->Coefficients[12]    =         0.07045;  rows[k]->Coefficients[13]    =        0.026555;
-    rows[k]->Coefficients[14]    =       -0.074055;  rows[k]->Coefficients[15]    =       -0.034786;
-    rows[k]->Coefficients[16]    =        0.041479;  rows[k]->Coefficients[17]    =        0.023544;
-    rows[k]->Coefficients[18]    =        0.031308;  rows[k]->Coefficients[19]    =        0.017737;
-    rows[k]->Coefficients[20]    =       -0.011397;
-    rows[k]->CoefficientsRMS[ 0] =      1.9296e-05;  rows[k]->CoefficientsRMS[ 1] =      5.7026e-05;
-    rows[k]->CoefficientsRMS[ 2] =      6.0565e-05;  rows[k]->CoefficientsRMS[ 3] =      7.3436e-05;
-    rows[k]->CoefficientsRMS[ 4] =      0.00010982;  rows[k]->CoefficientsRMS[ 5] =      0.00020313;
-    rows[k]->CoefficientsRMS[ 6] =      0.00011317;  rows[k]->CoefficientsRMS[ 7] =       0.0001075;
-    rows[k]->CoefficientsRMS[ 8] =      0.00026135;  rows[k]->CoefficientsRMS[ 9] =      0.00019875;
-    rows[k]->CoefficientsRMS[10] =      9.2522e-05;  rows[k]->CoefficientsRMS[11] =      0.00012114;
-    rows[k]->CoefficientsRMS[12] =        0.000102;  rows[k]->CoefficientsRMS[13] =      0.00027102;
-    rows[k]->CoefficientsRMS[14] =      0.00017262;  rows[k]->CoefficientsRMS[15] =      0.00015424;
-    rows[k]->CoefficientsRMS[16] =      0.00021758;  rows[k]->CoefficientsRMS[17] =      0.00021629;
-    rows[k]->CoefficientsRMS[18] =      0.00030315;  rows[k]->CoefficientsRMS[19] =      0.00015055;
-    rows[k]->CoefficientsRMS[20] =       0.0001791;
-    k = 2;
-    rows[k] = new MDFCorrection;
-    rows[k]->nrows = 3;
-    rows[k]->idx = 3;
-    // 1/a0
-    rows[k]->PolyType =        0;
-    rows[k]->NVariables =      2;
-    rows[k]->NCoefficients =   21;
-    rows[k]->XMin[ 0] =       3.25;  rows[k]->XMin[ 1] =     1.5272;
-    rows[k]->XMax[ 0] =      10.35;  rows[k]->XMax[ 1] =     2.6258;
-    rows[k]->Power[ 0] =  1;  rows[k]->Power[ 1] =  1;
-    rows[k]->Power[ 2] =  1;  rows[k]->Power[ 3] =  2;
-    rows[k]->Power[ 4] =  1;  rows[k]->Power[ 5] =  3;
-    rows[k]->Power[ 6] =  3;  rows[k]->Power[ 7] =  1;
-    rows[k]->Power[ 8] =  2;  rows[k]->Power[ 9] =  2;
-    rows[k]->Power[10] =  2;  rows[k]->Power[11] =  3;
-    rows[k]->Power[12] =  4;  rows[k]->Power[13] =  1;
-    rows[k]->Power[14] =  3;  rows[k]->Power[15] =  2;
-    rows[k]->Power[16] =  1;  rows[k]->Power[17] =  5;
-    rows[k]->Power[18] =  2;  rows[k]->Power[19] =  4;
-    rows[k]->Power[20] =  3;  rows[k]->Power[21] =  3;
-    rows[k]->Power[22] =  4;  rows[k]->Power[23] =  6;
-    rows[k]->Power[24] =  2;  rows[k]->Power[25] =  1;
-    rows[k]->Power[26] =  1;  rows[k]->Power[27] =  4;
-    rows[k]->Power[28] =  4;  rows[k]->Power[29] =  2;
-    rows[k]->Power[30] =  4;  rows[k]->Power[31] =  3;
-    rows[k]->Power[32] =  5;  rows[k]->Power[33] =  5;
-    rows[k]->Power[34] =  3;  rows[k]->Power[35] =  4;
-    rows[k]->Power[36] =  4;  rows[k]->Power[37] =  5;
-    rows[k]->Power[38] =  5;  rows[k]->Power[39] =  1;
-    rows[k]->Power[40] =  5;  rows[k]->Power[41] =  6;
-    rows[k]->DMean =   0.6806;
-    rows[k]->Coefficients[ 0]    =        -0.50957;  rows[k]->Coefficients[ 1]    =          1.3324;
-    rows[k]->Coefficients[ 2]    =          2.2306;  rows[k]->Coefficients[ 3]    =        0.018721;
-    rows[k]->Coefficients[ 4]    =         -1.9494;  rows[k]->Coefficients[ 5]    =          1.4649;
-    rows[k]->Coefficients[ 6]    =         0.46458;  rows[k]->Coefficients[ 7]    =        -0.16929;
-    rows[k]->Coefficients[ 8]    =         -1.2244;  rows[k]->Coefficients[ 9]    =          2.6239;
-    rows[k]->Coefficients[10]    =         -2.0547;  rows[k]->Coefficients[11]    =         -1.8734;
-    rows[k]->Coefficients[12]    =        -0.47307;  rows[k]->Coefficients[13]    =        -0.18053;
-    rows[k]->Coefficients[14]    =         0.74014;  rows[k]->Coefficients[15]    =         -1.0493;
-    rows[k]->Coefficients[16]    =           1.299;  rows[k]->Coefficients[17]    =        -0.61577;
-    rows[k]->Coefficients[18]    =        -0.32173;  rows[k]->Coefficients[19]    =       -0.088406;
-    rows[k]->Coefficients[20]    =         0.22538;
-    rows[k]->CoefficientsRMS[ 0] =      9.0093e-05;  rows[k]->CoefficientsRMS[ 1] =      0.00054122;
-    rows[k]->CoefficientsRMS[ 2] =      0.00098388;  rows[k]->CoefficientsRMS[ 3] =       0.0005543;
-    rows[k]->CoefficientsRMS[ 4] =      0.00097002;  rows[k]->CoefficientsRMS[ 5] =       0.0018305;
-    rows[k]->CoefficientsRMS[ 6] =      0.00052539;  rows[k]->CoefficientsRMS[ 7] =       0.0014684;
-    rows[k]->CoefficientsRMS[ 8] =       0.0010563;  rows[k]->CoefficientsRMS[ 9] =       0.0019343;
-    rows[k]->CoefficientsRMS[10] =        0.002814;  rows[k]->CoefficientsRMS[11] =       0.0030169;
-    rows[k]->CoefficientsRMS[12] =      0.00026871;  rows[k]->CoefficientsRMS[13] =       0.0011874;
-    rows[k]->CoefficientsRMS[14] =       0.0016735;  rows[k]->CoefficientsRMS[15] =       0.0029385;
-    rows[k]->CoefficientsRMS[16] =       0.0035866;  rows[k]->CoefficientsRMS[17] =        0.003569;
-    rows[k]->CoefficientsRMS[18] =       0.0033066;  rows[k]->CoefficientsRMS[19] =      0.00073237;
-    rows[k]->CoefficientsRMS[20] =       0.0037895;
-  }
-  return rows[i];
-}
-#endif
 #include "GEXNor.C"
 //________________________________________________________________________________
 TF1 *FitGEX3(TH1 *proj, Option_t *opt="RQM", Fitx_t *Fit = 0) {
@@ -3304,57 +2930,6 @@ Double_t gf4EFunc(Double_t *x, Double_t *par) {
       betaL[i] = TMath::Log(beta);
     }
   }
-#if 0 
-  static Double_t parMIP[6][3][3][4] = {
-   //          particle,      norml,         mu,     sigma,           k
-   {{
-       /*    zIpionN */ {  12.42300,   -0.00664,    0.29301,    0.74215},
-       /*    zOpionN */ {  12.41324,   -0.02095,    0.28555,    0.80819},
-       /*  zAllpionN */ {  13.11166,   -0.01478,    0.28886,    0.76870} },{ 
-       /*    zIpionP */ {  12.83827,   -0.02013,    0.28956,    0.74146},
-       /*    zOpionP */ {  12.82934,   -0.03569,    0.28089,    0.79885},
-       /*  zAllpionP */ {  13.52736,   -0.02900,    0.28473,    0.76340} },{   
-       /*     zIpion */ {  13.34498,   -0.01416,    0.29125,    0.74540},
-       /*     zOpion */ {  13.33591,   -0.02949,    0.28302,    0.80502},
-       /*   zAllpion */ {  14.03383,   -0.02268,    0.28667,    0.76995} }},{{ // -0.02268
-       /*  zIprotonN */ {  12.49591,    1.15523,    0.25375,    1.03596},
-       /*  zOprotonN */ {  12.29111,    1.18479,    0.24367,    1.33151},
-       /* zAllprotonN*/ {  13.09377,    1.16757,    0.24943,    1.12090} },{
-       /*  zIprotonP */ {  12.92588,    1.15708,    0.25315,    1.01766},
-       /*  zOprotonP */ {  12.72925,    1.18975,    0.24382,    1.29504},
-       /* zAllprotonP */{  13.52698,    1.17157,    0.24949,    1.10982 }},{// 
-       /*   zIproton */ {  13.42702,    1.15650 ,    0.25351,    1.02661},
-       /*   zOproton */ {  13.22752,    1.18763,    0.24378,    1.30888},
-       /* zAllproton */ {  14.02682,    1.17009 ,    0.24952,    1.11551} }},{{ // 1.17009 - (-0.02268) = 1.19277
-       /*   zIkaonN */ {  12.90181,    0.36992,    0.28164,    0.81581},
-       /*   zOkaonN */ {  12.79121,    0.38884,    0.27210,    0.88391},
-       /* zAllkaonN */ {  13.54178,    0.37845,    0.27692,    0.84168} },{
-       /*   zIkaonP */ {  12.87831,    0.36249,    0.28037,    0.80669},
-       /*   zOkaonP */ {  12.75407,    0.38233,    0.26843,    0.87318},
-       /* zAllkaonP */ {  13.51208,    0.37188,    0.27530,    0.83466} },{
-       /*    zIkaon */ {  13.58344,    0.36643,    0.28128,    0.81239},
-       /*    zOkaon */ {  13.46610,    0.38541,    0.27003,    0.87692}, // + 5.63223e-02 + 8.13512e-02 -3.45257e-02 -1.23638e-01
-       /*  zAllkaon */ {  14.22024,    0.37560,    0.27654,    0.84091} }},{{
-       /* zIelectronN */ {  12.79014,    0.26079,    0.28365,    0.83437},
-       /* zOelectronN */ {  12.70627,    0.27283,    0.27261,    0.90759},
-       /* zAllelectronN */ {  13.44280,    0.26670,    0.27874,  0.86728} },{
-       /* zIelectronP */ {  13.06649,    0.25402,    0.28324,    0.84412},
-       /* zOelectronP */ {  12.97719,    0.26409,    0.26981,    0.89421},
-       /* zAllelectronP */ {  13.69577,    0.27292,    0.28816,  0.97473} },{
-       /* zIelectron */ {  13.63138,    0.25653,    0.28332,    0.83659},
-       /* zOelectron */ {  13.54403,    0.26806,    0.27114,    0.90162},
-       /* zAllelectron */ {  14.28232,    0.26226,    0.27796,    0.86641} }},{{
-       /* zIdeuteronP */ {  11.41663,    2.20880,    0.16037,    2.41671},
-       /* zOdeuteronP */ {   9.98541,    2.15613,    0.13790,    2.15994},
-       /* zAlldeuteronP */ {  11.63118,    2.19846,    0.15727,    2.27099} },{
-       /* zIdeuteronP */ {  11.41663,    2.20880,    0.16037,    2.41671},
-       /* zOdeuteronP */ {   9.98541,    2.15613,    0.13790,    2.15994},
-       /* zAlldeuteronP */ {  11.63118, 2.19846,    0.15727,    2.27099} },{
-       /* zIdeuteron */ {  11.41663,    2.20880,    0.16037,    2.41671},
-       /* zOdeuteron */ {   9.98541,    2.15613,    0.13790,    2.15995}, // + 1.05829e-01 - 2.00132e-02 + 6.06047e-02
-       /* zAlldeuteron */ {  11.63118,    2.19846,    0.15727,    2.27099} }}
-  };
-#else
   static Double_t parMIP[6][3][3][4] = {
     {{
 	// particle, norml, mu, sigma, alpha
@@ -3401,7 +2976,6 @@ Double_t gf4EFunc(Double_t *x, Double_t *par) {
 	/* zOdeuteron */ {   9.98441,    2.10469,    0.13408,    2.40409},
 	/* zAlldeuteron */ {  11.63081,    2.17448,    0.15585,    2.43176} }}
   };
-#endif
   Double_t Value = 0;
   Int_t icase = (Int_t) par[8];
   Int_t i1 = 0;
@@ -3496,24 +3070,9 @@ TF1 *FitGG2(TH1 *proj, Option_t *opt="RQ", Double_t fitX=0, Double_t fitY=0) {
   if (! proj) return 0;
   Double_t params[9];
   TF1 *g = GG();
-#if 0
-#if 0
-  Double_t xx = TMath::Max(3.1, TMath::Min(6.5, fitX));
-  Double_t sigma =        1.10043e+00   + xx * (-2.14927e-01   + xx * 9.77528e-03);
-#else /* 09/14/2022  all->Draw("sigma:log(x)","i&&j&&dmu<0.01&&dsigma<0.01&&dp3<0.5&&chisq<2e2","prof") */
-  Double_t xx = TMath::Log(fitX);
-#if 0
-  Double_t pars[3] = {    2.2404,    -1.8257,    0.37502}; // pol2
-#else /* 09/25/2022  */
-  Double_t pars[3] = {    2.1392,    -1.7129,    0.34465}; //
-#endif
-  Double_t sigma = pars[0] + xx * ( pars[1] + xx * pars[2]);
-#endif 
-#else /* 10/27/22 */
   Double_t parsS[3] = {    1.6924,    -1.2912,    0.24698}; //sigma versus log(x)	 
   Double_t xx = (fitX > 0) ? TMath::Log(fitX) : 0;
   Double_t sigma = parsS[0] + xx * ( parsS[1] + xx * parsS[2]);
-#endif
   g->FixParameter(2, sigma);
   proj->Fit(g,opt);
   return g;
@@ -3528,34 +3087,11 @@ TF1 *FitGG3(TH1 *proj, Option_t *opt="RQ", Double_t fitX=0, Double_t fitY=0) {
   if (! proj) return 0;
   Double_t params[9];
   TF1 *g = GG();
-#if 0
-#if 0
-  Double_t xx = TMath::Max(3.1, TMath::Min(6.5, fitX));
-  Double_t sigma =        1.10043e+00   + xx * (-2.14927e-01   + xx * 9.77528e-03);
-  // tChain->Draw("a0:x>>alpha(40,3,7)","i&&j&&dmu<0.01&&a0>-0.1&&a0<3.9&&mu>0.65","prof")
-  Double_t alpha =    -22.6936   + xx*(    16.2998   + xx*(   -3.28817   + xx*   0.209148 ));
-#else /* 09/14/2022   all->Draw("p3:x>>ap3","i&&j&&dmu<0.01&&dsigma<0.01&&dp3<0.5&&chisq<2e2","prof");  ap3->Fit("pol3","e") */
-  Double_t xx = TMath::Log(fitX);
-#if 0 
-  Double_t parsS[3] = {    2.2404,    -1.8257,    0.37502}; // pol2
-  Double_t sigma = parsS[0] + xx * ( parsS[1] + xx * parsS[2]);
-  Double_t parsA[4] = {    25.659,    -8.4331,    0.97394,  -0.037646}; //
-  xx = fitX;
-  Double_t alpha  = parsA[0] + xx * ( parsA[1] + xx * (parsA[2] + xx * parsA[3]));
-#else /* 09/25/2022 */
-  Double_t parsS[3] = {    2.1392,    -1.7129,    0.34465}; // log(x)
-  Double_t sigma = parsS[0] + xx * ( parsS[1] + xx * parsS[2]);
-  Double_t parsA[4] = {   -55.709,     106.35,    -62.082,     11.565}; // log(x)
-  Double_t alpha  = parsA[0] + xx * ( parsA[1] + xx * (parsA[2] + xx * parsA[3]));
-#endif
-#endif
-#else /* 10/27/22 */
   Double_t parsS[3] = {    1.6924,    -1.2912,    0.24698}; //sigma versus log(x)	 
   Double_t xx = (fitX > 0) ? TMath::Log(fitX) : 0;
   Double_t sigma = parsS[0] + xx * ( parsS[1] + xx * parsS[2]);
   Double_t parsA[2] = {    5.4634,   -0.57598}; //alpha x
   Double_t alpha  = parsA[0] + fitX *  parsA[1];
-#endif
   g->FixParameter(2, sigma);
   g->FixParameter(3, alpha);
   proj->Fit(g,opt);
@@ -3573,12 +3109,6 @@ TF1 *FitGG5(TH1 *proj, Option_t *opt="RQ", Double_t fitX=0, Int_t IO=1) {
   if (xx < 8.0) alpha = parsA[0] + xx * parsA[1];
   Double_t parsS[4] = {    1.2538,   -0.27805,   0.017227, -0.00012342}; //Sigma
   Double_t sigma = parsS[0] + xx * ( parsS[1] + xx * (parsS[2] + xx * parsS[3]));
-#if 0
-  Double_t parsM[3] = {  0.014451,    0.21908,  -0.013445}; //Mu
-  xx = TMath::Max(4.9, TMath::Min(9.0, xx));
-  Double_t mu     = parsM[0] + xx * ( parsM[1] + xx * parsM[2]);
-  g->SetParameter(1, mu);
-#else
   Double_t parsM[2][3] = {
     {   0.61239,   0.036834,          0}, //mu Inner
     {   0.10942,    0.19366,  -0.011761}  //mu Outer
@@ -3586,7 +3116,6 @@ TF1 *FitGG5(TH1 *proj, Option_t *opt="RQ", Double_t fitX=0, Int_t IO=1) {
   xx = TMath::Max(4.9, TMath::Min(9.0, xx));
   Double_t mu     = parsM[IO][0] + xx * ( parsM[IO][1] + xx * parsM[IO][2]);
   g->FixParameter(1, mu);
-#endif
   g->FixParameter(2, sigma);
   g->FixParameter(3, alpha);
   proj->Fit(g,opt);
@@ -4991,11 +4520,6 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
       TString Nn(name.Data()+start,length-start);
       Double_t YY = Nn.Atof();
       IY = YY;
-#if 0
-      Int_t nok = sscanf(name.Data(),"%*s %f",&YY);
-      if (nok != 1) IY = -1;
-      else          IY = YY;
-#endif
     }
   }
   Fitx_t Fit;
