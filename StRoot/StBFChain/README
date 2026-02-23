@@ -576,7 +576,7 @@ ack 4001400
   549: BAna                          :            :            :dEdxY2,CMuDst,analysis:::Turn on dEdx and MuDst
   550: ITTF                          :            :            ::::request to use one of Sti(default), StiCA, ... trackers
   551: NoHits                        :            :            ::::Don't write hits into Event.Branch
-  552: Kalman                        :            :            ::::WARNING *** Option is OBSOLETE ***
+                                                                552: Kalman                        :            :            ::::WARNING *** Option is OBSOLETE ***
   553: Eval                          :            :            ::::Turn on evaluation switch for different makers
   554: Ev03                          :            :            ::::Turn on alternative V0 method
   555: off                           :            :            ::::Turn off default chain
