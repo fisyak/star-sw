@@ -291,16 +291,19 @@ StTpcdEdxCorrection::~StTpcdEdxCorrection() {
 Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) { 
   //  static const Double_t Degree2Rad = TMath::Pi()/180.;
   mdEdx = &CdEdx;
-  if (CdEdx.F.dE <= 0. || ! TMath::Finite(CdEdx.F.dE)) {
-    CdEdx.F.dE = 1;
+  if (CdEdx.F.mdE.fdE <= 0. || ! TMath::Finite(CdEdx.F.mdE.fdE)) {
+    CdEdx.F.mdE.fdE = 1;
   }
-  Double_t dEU = CdEdx.F.dE;
-  Double_t dE  = dEU;
+  Double_t dEU = CdEdx.F.mdE.fdE;
   Int_t sector            = CdEdx.sector; 
   Int_t row       	  = CdEdx.row;   
-  Double_t dxC     	  = CdEdx.F.dx;    
+  Double_t dxC     	  = CdEdx.F.mdx;    
   Int_t qB                = CdEdx.qB;    
   Double_t adcCF = CdEdx.adc;
+  // TPC23
+  static Double_t adc20s[2] = {26, 16}; // 20;
+  static Double_t adcMax = 32768;
+  Double_t GainCorrection = 0;
   Int_t iok = 0;
   if (dxC <= 0 || dEU <= 0) {
     iok = 1;
@@ -317,52 +320,30 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
   if (! St_trigDetSumsC::GetInstance()) {
     StMaker::GetChain()->AddData(St_trigDetSumsC::instance());
   }
-#if 0
-  if ( ! St_trigDetSumsC::instance() ) {LOG_ERROR << "StTpcdEdxCorrection::dEdxCorrection Cannot find trigDetSums" << endm;}
-  else {
-    if (!St_trigDetSumsC::instance()->GetNRows()) {LOG_ERROR << "StTpcdEdxCorrection::dEdxCorrection trigDetSums has not data" << endm;}
-    else {
-      TUnixTime u2(St_trigDetSumsC::instance()->timeOffset());
-      if (u() + 30 < u2()) { 
-	LOG_ERROR << "StTpcdEdxCorrection::dEdxCorrection Illegal time for scalers = " 
-		  << u2() << "/" << u()
-		  << " Run " << St_trigDetSumsC::instance()->runNumber() << "/" << StMaker::GetChain()->GetRunNumber() << endm;
-	//	St_trigDetSumsC::instance()->Table()->Print(0,10);
-      }
-    }
-  }
-#if 0
-  // Check that we have valid time for Power Suppliers
-  if (St_TpcAvgPowerSupplyC::instance()->run() > 0) {
-    TUnixTime u2(St_trigDetSumsC::instance()->timeOffset()+5*3600); // EDT => GMT
-    if (u2() < u() + 30) {
-      LOG_ERROR <<  "StTpcdEdxCorrection::dEdxCorrection Illegal TpcAvgPowerSupply stop time = " << u2() << " GMT from local " << u2.GetGString() 
-		<< " < event time = " << u()  << " GMT\t=" << StMaker::GetChain()->GetDateTime().AsString() << endm;
-      iok = 1;
-      return iok;
-    }
-  }
-#endif
-#endif  
   Double_t ZdriftDistance = CdEdx.ZdriftDistance;
   ESector kTpcOutIn = kTpcOuter;
   Float_t gasGain = 1;
   Float_t gainNominal = 0;
   St_tss_tssparC *tsspar = St_tss_tssparC::instance();
+  Double_t adc20 = -1;
   if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) {
     kTpcOutIn = kTpcInner;
+    if (St_tpcPadConfigC::instance()->iTpc(sector)) kTpcOutIn = kiTpc;
     gainNominal = tsspar->gain_in()*tsspar->wire_coupling_in();
     gasGain = tsspar->gain_in(sector,row) *tsspar->wire_coupling_in();
+    adc20 = adc20s[0];
   } else {
     kTpcOutIn = kTpcOuter;
     gainNominal = tsspar->gain_out()*tsspar->wire_coupling_out();
     gasGain = tsspar->gain_out(sector,row)*tsspar->wire_coupling_out();
+    adc20 = adc20s[1];
   }
-  if (St_tpcPadConfigC::instance()->iTpc(sector) && row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) kTpcOutIn = kiTpc;
   if (gasGain <= 0.0) {
     iok = 1;
     return iok;
   }
+  dE_t  dE(dxC,dEU,adc20,adcMax);
+
   CdEdx.driftTime = ZdriftDistance/gStTpcDb->DriftVelocity(sector)*1e6 - m_TrigT0;// musec
   //  Double_t gainAVcorr = gasGain/gainNominal;
   mAdc2GeV = tsspar->ave_ion_pot() * tsspar->scale()/gainNominal;
@@ -442,61 +423,71 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
     } else if (k == kTpcPadMDF) {
       l = 2*(sector-1);
       if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) l += kTpcInner; // for both tpc and iTPC inner sectors
-      dE *= TMath::Exp(-((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l,CdEdx.yrow,CdEdx.xpad));
+      GainCorrection = TMath::Exp(-((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l,CdEdx.yrow,CdEdx.xpad));
+      dE *= GainCorrection;
       goto ENDL;
     } else if (k == kTpcPadMDC) {
       Int_t nrows = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->nrows();
       l = 2*(sector-1);
       if (nrows > 48 && qB) l += 48*qB;
       if (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) l += kTpcInner; // for both tpc and iTPC inner sectors
-      dE *= TMath::Exp(-((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l,CdEdx.yrow+24*qB,CdEdx.xpadR));
+      GainCorrection = TMath::Exp(-((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l,CdEdx.yrow+24*qB,CdEdx.xpadR));
+      dE *= GainCorrection;
       goto ENDL;
     } else if (k == kAdcCorrectionMDF) {
+      if (adcCF < adc20 || adcCF > adcMax) return k;
       ADC = adcCF;
       l = kTpcOutIn;
       Int_t nrows = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->nrows();
       if (l >= nrows) l = nrows - 1;
       Double_t xx[2] = {TMath::Log(ADC), (Double_t)(CdEdx.Npads+CdEdx.Ntbks)};
       Double_t Cor = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->Eval(l,xx);
-      dE = ADC*Adc2GeVReal*TMath::Exp(Cor);
-      if (! TMath::Finite(dE)) {
+      dE.mdE.fdE = ADC*Adc2GeVReal*TMath::Exp(Cor);
+      if (! TMath::Finite(dE.mdE.fdE)) {
 	return k;
       }
+      xx[0] = TMath::Log(adc20);
+      Cor = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->Eval(l,xx);
+      dE.mdE20.fdE = adc20*Adc2GeVReal*TMath::Exp(Cor);
+      xx[0] = TMath::Log(adcMax);
+      Cor = ((St_MDFCorrectionC *) m_Corrections[k].Chair)->Eval(l,xx);
+      dE.mdEmax.fdE = adcMax*Adc2GeVReal*TMath::Exp(Cor);
       goto ENDL;
     } else if (k == kAdcCorrection3MDF) {
+      if (adcCF < adc20 || adcCF > adcMax) return k;
       ADC = adcCF;
       l = kTpcOutIn;
       Int_t nrows = ((St_MDFCorrection3C *) m_Corrections[k].Chair)->nrows();
       if (l >= nrows) l = nrows - 1;
       Double_t xx[3] = {(Double_t)  CdEdx.Ntbks, TMath::Abs(CdEdx.zG), TMath::Log(ADC)};
       Double_t Cor = ((St_MDFCorrection3C *) m_Corrections[k].Chair)->Eval(l,xx);
-      dE = ADC*Adc2GeVReal*TMath::Exp(Cor);
-      if (! TMath::Finite(dE)) {
+      dE.mdE.fdE = ADC*Adc2GeVReal*TMath::Exp(Cor);
+      if (! TMath::Finite(dE.mdE.fdE)) {
 	return k;
       }
+      xx[2] = TMath::Log(adc20);
+      Cor = ((St_MDFCorrection3C *) m_Corrections[k].Chair)->Eval(l,xx);
+      dE.mdE20.fdE = adc20*Adc2GeVReal*TMath::Exp(Cor);
+      xx[2] = TMath::Log(adcMax);
+      Cor = ((St_MDFCorrection3C *) m_Corrections[k].Chair)->Eval(l,xx);
+      dE.mdEmax.fdE = adc20*Adc2GeVReal*TMath::Exp(Cor);
       goto ENDL;
-    } else if (k == kAdcCorrection4MDF) {
+    } else if (k == kAdcCorrection4MDF || k == kAdcCorrection5MDF) {
+      if (adcCF < adc20 || adcCF > adcMax) return k;
       ADC = adcCF;
       l = kTpcOutIn;
       Int_t nrows = ((St_TpcAdcCorrection4MDF *) m_Corrections[k].Chair)->nrows();
       if (l >= nrows) l = nrows - 1;
       Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(ADC)};
       Double_t Cor = ((St_TpcAdcCorrection4MDF *) m_Corrections[k].Chair)->Eval(l,xx);
-      dE = ADC*Adc2GeVReal*TMath::Exp(Cor);
-      if (dE <= 0 || ! TMath::Finite(dE)) {
+      dE.mdE.fdE = ADC*Adc2GeVReal*TMath::Exp(Cor);
+      if (dE.mdE.fdE <= 0 || ! TMath::Finite(dE.mdE.fdE)) {
 	return k;
       }
-      goto ENDL;
-    } else if (k == kAdcCorrection5MDF) {
-      l = kTpcOutIn;
-      Int_t nrows = ((St_TpcAdcCorrection5MDF *) m_Corrections[k].Chair)->nrows();
-      if (l >= nrows) l = nrows - 1;
-      Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(ADC)};
-      Double_t Cor = ((St_TpcAdcCorrection5MDF *) m_Corrections[k].Chair)->Eval(l,xx);
-      dE *= TMath::Exp(Cor);
-      if (! TMath::Finite(dE)) {
-	return k;
-      }
+      xx[3] = TMath::Log(adc20);
+      dE.mdE20.fdE = adc20*Adc2GeVReal*TMath::Exp(Cor);
+      xx[3] = TMath::Log(adcMax);
+      dE.mdEmax.fdE = adcMax*Adc2GeVReal*TMath::Exp(Cor);
       goto ENDL;
     } else if (k == kAdcCorrection6MDF) { 
       goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
@@ -518,35 +509,46 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
     if (NLoops == 1) {
       corl = cor + l;
       if (k == kAdcCorrection) {
-	ADC = adcCF;
-	if (corl->type == 12) 
-	  dE = Adc2GeVReal*chairC->CalcCorrection(l,ADC,VarXs[kTanL]);
-	else 
-	  dE = Adc2GeVReal*chairC->CalcCorrection(l,ADC,TMath::Abs(CdEdx.zG));
-	if (dE <= 0 || ! TMath::Finite(dE)) {
+	if (corl->type == 12) { 
+	  dE.mdE.fdE = Adc2GeVReal*chairC->CalcCorrection(l,adcCF,VarXs[kTanL]);
+	  dE.mdE20.fdE = Adc2GeVReal*chairC->CalcCorrection(l,adc20,VarXs[kTanL]);
+	  dE.mdEmax.fdE = Adc2GeVReal*chairC->CalcCorrection(l,adcMax,VarXs[kTanL]);
+	} else {
+	  dE.mdE.fdE = Adc2GeVReal*chairC->CalcCorrection(l,adcCF,TMath::Abs(CdEdx.zG));
+	  dE.mdE20.fdE = Adc2GeVReal*chairC->CalcCorrection(l,adc20,TMath::Abs(CdEdx.zG));
+	  dE.mdEmax.fdE = Adc2GeVReal*chairC->CalcCorrection(l,adcMax,TMath::Abs(CdEdx.zG));
+	}
+	if (dE.mdE.fdE <= 0 || ! TMath::Finite(dE.mdE.fdE)) {
 	  return k;
 	}
 	goto ENDL;
       } else if (k == kAdcCorrection6MDF) { 
 	goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
       } else if (k == kAdcCorrectionC) {
-	ADC = adcCF;
 	ADC = chairC->CalcCorrection(l,adcCF);
+	Double_t ADC20 = chairC->CalcCorrection(l,adc20);
+	Double_t ADCMax = chairC->CalcCorrection(l,adcMax);
 	if (m_Corrections[kAdcCorrection6MDF].Chair) {
 	  Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(adcCF)};
 	  ADC += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
+	  xx[3] = TMath::Log(adc20);
+	  ADC20 += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
+	  xx[3] = TMath::Log(adcMax);
+	  ADCMax += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
 	}
-	dE = Adc2GeVReal*ADC;
-	if (dE <= 0 || ! TMath::Finite(dE)) {
+	dE.mdE.fdE = Adc2GeVReal*ADC;
+	if (dE.mdE.fdE <= 0 || ! TMath::Finite(dE.mdE.fdE)) {
 	  return k;
 	}
+	dE.mdE20.fdE = Adc2GeVReal*ADC20;
+	dE.mdEmax.fdE = Adc2GeVReal*ADCMax;
 	goto ENDL;
       } else if (k == kTpcdCharge) {
 	if (l > 2) l = 1;
 	slope = chairC->CalcCorrection(l,row+0.5);
 	dE *=  TMath::Exp(-slope*CdEdx.dCharge);
 	dE *=  TMath::Exp(-chairC->CalcCorrection(2+l,CdEdx.dCharge));
-	if (! TMath::Finite(dE)) {
+	if (! TMath::Finite(dE.mdE.fdE)) {
 	  return k;
 	}
 	goto ENDL;
@@ -560,7 +562,7 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 	  dXCorr += chairC->CalcCorrection(2,xL2);
 	  dXCorr += chairC->CalcCorrection(5+kTpcOutIn,xL2);
 	}
-	dxC       = TMath::Exp(dXCorr)*CdEdx.F.dx;
+	dxC       = TMath::Exp(dXCorr)*CdEdx.F.mdx;
 	CdEdx.dxC = dxC;
 	dE *= TMath::Exp(-dXCorr); //   Check !!!!!!
 	goto ENDL;
@@ -573,7 +575,8 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       } else if (k == ktpcTime) { // use the correction if you have xmin < xmax && xmin <= x <= xmax
 	if (corl->min >= corl->max || corl->min > VarXs[ktpcTime] ||  VarXs[ktpcTime] > corl->max) goto ENDL;
 	Double_t xx = VarXs[ktpcTime];
-	dE *= TMath::Exp(-chairC->CalcCorrection(l,xx));
+	Double_t Cor = TMath::Exp(-chairC->CalcCorrection(l,xx));
+	dE *= Cor;
 	goto ENDL;
       } 
       if (k == kzCorrection || k == kzCorrectionC) {
@@ -635,24 +638,10 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       }
     }
   ENDL:
-    CdEdx.C[k].dE = dE;
-    CdEdx.C[k].dx = dxC;
-    CdEdx.C[k].dEdx    = CdEdx.C[k].dE/CdEdx.C[k].dx;
-    CdEdx.C[k].dEdxL   = TMath::Log(CdEdx.C[k].dEdx);
-    if (! k) CdEdx.C[k].ddEdxL = 0;
-    else     CdEdx.C[k].ddEdxL = CdEdx.C[k].dEdxL - CdEdx.C[k-1].dEdxL;
-#if 0
-    if (m_Debug) {
-      cout << m_Corrections[k].Name;  CdEdx.C[k].Print();
-    }
-#endif
+    CdEdx.C[k] = dE_t(dxC, dE);;
+    CdEdx.C[k].Norm();
+    if (k) CdEdx.C[k] -= CdEdx.C[k-1];
   }   
-#if 0 
-  if (! TMath::Finite(CdEdx.C[kTpcLast].dE)) {
-    static Int_t iBreak = 0;
-    iBreak++;
-  }
-#endif
   CdEdx.F = CdEdx.C[kTpcLast];
   //  memcpy (&CdEdx.dE, &CdEdx.C[kTpcLast].dE, sizeof(dE_t));
   return iok;
@@ -748,17 +737,17 @@ void StTpcdEdxCorrection::Print(Option_t *opt) const {
     Line  = Form("%2i",k);
     static Double_t log10keV = TMath::Log10(1e6);
     if (k <= (Int_t) kTpcLast) {
-      Line += Form("\tdE %10.5g keV", 1e6*mdEdx->C[k].dE);
-      Line += Form("\tdx %10.5g cm",mdEdx->C[k].dx);
-      Line += Form("\tdE/dx  %10.5g keV/cm", 1e6*mdEdx->C[k].dEdx);
-      Line += Form("\tlog(dE/dx)  %10.5g",mdEdx->C[k].dEdxL + log10keV);
-      Line += Form("\tdlog(dE/dx) %10.5g",mdEdx->C[k].ddEdxL);
+      Line += Form("\tdE %10.5g keV", 1e6*mdEdx->C[k].mdE.fdE);
+      Line += Form("\tdx %10.5g cm",mdEdx->C[k].mdx);
+      Line += Form("\tdE/dx  %10.5g keV/cm", 1e6*mdEdx->C[k].mdE.fdEdx);
+      Line += Form("\tlog(dE/dx)  %10.5g",mdEdx->C[k].mdE.fdEdxL + log10keV);
+      Line += Form("\tdlog(dE/dx) %10.5g",mdEdx->C[k].mdE.fddEdxL);
       Line += "\t"; Line += TString(m_Corrections[k].Name); Line += "\t"; Line +=  TString(m_Corrections[k].Title);
     } else {
-      Line += Form("\tdE %10.5g",mdEdx->F.dE);
-      Line += Form("\tdx  %10.5g",mdEdx->F.dx);
-      Line += Form("\tdE/dx  %10.5g",mdEdx->F.dEdx);
-      Line += Form("\tlog(dE/dx)  %10.5g",mdEdx->F.dEdxL);
+      Line += Form("\tdE %10.5g",mdEdx->F.mdE.fdE);
+      Line += Form("\tdx  %10.5g",mdEdx->F.mdx);
+      Line += Form("\tdE/dx  %10.5g",mdEdx->F.mdE.fdEdx);
+      Line += Form("\tlog(dE/dx)  %10.5g",mdEdx->F.mdE.fdEdxL);
       Line +=  "\tFinal \t "; 
     }
     cout << Line.Data() << endl;

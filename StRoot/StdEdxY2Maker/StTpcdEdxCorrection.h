@@ -11,18 +11,52 @@
 #include "StDetectorDbMaker/St_tpcCorrectionC.h"
 //class St_trigDetSums;
 //class trigDetSums_st;
+struct dEblob_t {
+dEblob_t(Float_t de = 0, Float_t dedx = 0, Float_t dedxL = 0, Float_t ddedxL = 0, Float_t dedxN = 0) : 
+  fdE(de), fdEdx(dedx), fdEdxL(dedxL), fddEdxL(ddedxL), fdEdxN(dedxN) {}
+  Float_t fdE;
+  Float_t fdEdx;
+  Float_t fdEdxL;
+  Float_t fddEdxL;
+  Float_t fdEdxN; // == z
+};
 //________________________________________________________________________________
 struct dE_t {
- public:
-  Float_t dE;
-  Float_t dx;
-  Float_t dEdx;
-  Float_t dEdxL;
-  Float_t ddEdxL;
-  Float_t dEdxN;
+dE_t(Float_t dX = 0, Float_t de = 0, Float_t de20 = 0, Float_t demax = 0) : mdx(dX), mdE(de), mdE20(de20), mdEmax(demax) {}
+  dE_t(Float_t dX, dE_t de) : mdx(dX), mdE(de.mdE.fdE), mdE20(de.mdE20.fdE), mdEmax(de.mdEmax.fdE) {}
+  Float_t  mdx;
+  dEblob_t mdE;    // measured dE
+  dEblob_t mdE20;  // low threshold due to minimul acccepted cluaste ADC
+  dEblob_t mdEmax; // upper threshold due to miximum acccepted cluaste ADC
   void    Print(Option_t *option="") const {
-    cout << Form("dE = %5.2f keV, dx = %f5.2f cm, dE/dx = %5.2f keV/cm, dEdxL = %f, ddEdxL = %f",1e6*dE,dx,1e6*dEdx,dEdxL,ddEdxL) << endl;
+    cout << Form("dE = %5.2f keV, dx = %f5.2f cm, dE/dx = %5.2f keV/cm, dEdxL = %f, ddEdxL = %f",1e6*mdE.fdE,mdx,1e6*mdE.fdEdx,mdE.fdEdxL,mdE.fddEdxL) << endl;
   }
+  dE_t operator*=(Double_t scale) {mdE.fdE *= scale; mdE20.fdE *= scale; mdEmax.fdE *= scale; return *this;}
+  void Norm() {
+    dEblob_t *blobI[3] = {&mdE, &mdE20, &mdEmax};
+    if (mdx > 0) {
+      for (Int_t i = 0; i < 3; i++) {
+	blobI[i]->fdEdx = blobI[i]->fdE/mdx;
+	if ( blobI[i]->fdEdx > 0)  blobI[i]->fdEdxL = TMath::Log(blobI[i]->fdEdx);
+      }
+    }
+  }  
+  dE_t operator/=(Double_t scale) {
+    dEblob_t *blobI[3] = {&mdE, &mdE20, &mdEmax};
+    for (Int_t i = 0; i < 3; i++) {
+      blobI[i]->fdEdxN = TMath::Log(blobI[i]->fdEdx/scale);;
+    }
+    return *this;
+  }
+  dE_t operator-=(Double_t scaleL) {
+    dEblob_t *blobI[3] = {&mdE, &mdE20, &mdEmax};
+    for (Int_t i = 0; i < 3; i++) {
+      blobI[i]->fdEdxN = blobI[i]->fdEdxL - scaleL;
+    }
+    return *this;
+  }
+  dE_t operator-=(const dE_t &old) {mdE.fddEdxL = mdE.fdEdxL - old.mdE.fdEdxL; return*this;}
+  
 };
 //________________________________________________________________________________
 struct dEdxCorrection_t {

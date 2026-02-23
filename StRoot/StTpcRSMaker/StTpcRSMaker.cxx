@@ -2144,7 +2144,6 @@ Double_t StTpcRSMaker::dEdxCorrection(HitPoint_t &TrackSegmentHits) {
     CdEdx.edge   = CdEdx.pad;
     if (CdEdx.edge > 0.5*St_tpcPadConfigC::instance()->numberOfPadsAtRow(CdEdx.sector,CdEdx.row)) 
       CdEdx.edge += 1 - St_tpcPadConfigC::instance()->numberOfPadsAtRow(CdEdx.sector,CdEdx.row);
-    CdEdx.F.dE     = 1;
 #if 0
     CdEdx.dCharge = 0;
     Int_t p1 = tpcHit->minPad();
@@ -2155,7 +2154,8 @@ Double_t StTpcRSMaker::dEdxCorrection(HitPoint_t &TrackSegmentHits) {
     if (TESTBIT(m_Mode, kEmbeddingShortCut) && 
 	(tpcHit->idTruth() && tpcHit->qaTruth() > 95)) CdEdx.lSimulated = tpcHit->idTruth();
 #endif
-    CdEdx.F.dx     = dStep;
+    CdEdx.F.mdE.fdE    = 1;
+    CdEdx.F.mdx    = dStep;
     CdEdx.xyz[0] = TrackSegmentHits.coorLS.position().x();
     CdEdx.xyz[1] = TrackSegmentHits.coorLS.position().y();
     CdEdx.xyz[2] = TrackSegmentHits.coorLS.position().z();
@@ -2177,7 +2177,7 @@ Double_t StTpcRSMaker::dEdxCorrection(HitPoint_t &TrackSegmentHits) {
       CdEdx.ZdriftDistanceO2 = CdEdx.ZdriftDistance*(*tpcGas)[0].ppmOxygenIn;
     Int_t iok = m_TpcdEdxCorrection->dEdxCorrection(CdEdx);
     if (! iok) {
-      dEdxCor = CdEdx.F.dE;
+      dEdxCor = CdEdx.F.mdE.fdE;
     } else {
       dEdxCor = 0; // reject hits with wrong correction
     }

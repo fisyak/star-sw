@@ -1,4 +1,5 @@
 // $Id: StdEdxY2Maker.cxx,v 1.101 2021/05/10 16:54:45 fisyak Exp $
+#define __ADC20__ 1
 //#define __NEGATIVE_ONLY__
   #ifndef  __NEGATIVE_ONLY__
      #define __NEGATIVE_AND_POSITIVE__
@@ -733,11 +734,11 @@ Int_t StdEdxY2Maker::Make(){
 #endif
 	CdEdx[NdEdx].dxC    = dxC;
 	if (! TMath::Finite(tpcHit->charge())) {
-	  CdEdx[NdEdx].F.dE = 1.0;
+	  CdEdx[NdEdx].F.mdE.fdE = 1.0;
 	} else  {
-	  CdEdx[NdEdx].F.dE = tpcHit->charge();
+	  CdEdx[NdEdx].F.mdE.fdE = tpcHit->charge();
 	}
-  	CdEdx[NdEdx].F.dx   = dxC;
+  	CdEdx[NdEdx].F.mdx   = dxC;
 	CdEdx[NdEdx].xyz[0] = localSect[3].position().x();
 	CdEdx[NdEdx].xyz[1] = localSect[3].position().y();
 	CdEdx[NdEdx].xyz[2] = localSect[3].position().z();
@@ -770,9 +771,9 @@ Int_t StdEdxY2Maker::Make(){
 	} 
 	if (fZOfGoodHits) fZOfGoodHits->Fill(tpcHit->position().z());
 	if (fPhiOfGoodHits!= 0) fPhiOfGoodHits->Fill(TMath::ATan2(tpcHit->position().y(),tpcHit->position().x()));
-	tpcHit->setCharge(CdEdx[NdEdx].F.dE);
+	tpcHit->setCharge(CdEdx[NdEdx].F.mdE.fdE);
 	if (NdEdx < kNdEdxMax) {
-	  TrackLength         += CdEdx[NdEdx].F.dx;
+	  TrackLength         += CdEdx[NdEdx].F.mdx;
 	  NdEdx++; 
 	  NoOfTpcHitsUsed++; 	
 	}
@@ -792,12 +793,12 @@ Int_t StdEdxY2Maker::Make(){
       if (N70 > 1) {
 	Int_t k;
 	for (k = 0; k < N70; k++) {
-	  I70 += dEdxS[k].F.dEdx;
-	  D70 += dEdxS[k].F.dEdx*dEdxS[k].F.dEdx;
-	  TrackLength70 += dEdxS[k].F.dx;
-	  if (dEdxS[k].F.dx > 0) {
-	    SumdEdX += dEdxS[k].F.dEdx;
-	    SumdX   += dEdxS[k].F.dEdx*TMath::Log2(dEdxS[k].F.dx);
+	  I70 += dEdxS[k].F.mdE.fdEdx;
+	  D70 += dEdxS[k].F.mdE.fdEdx*dEdxS[k].F.mdE.fdEdx;
+	  TrackLength70 += dEdxS[k].F.mdx;
+	  if (dEdxS[k].F.mdx > 0) {
+	    SumdEdX += dEdxS[k].F.mdE.fdEdx;
+	    SumdX   += dEdxS[k].F.mdE.fdEdx*TMath::Log2(dEdxS[k].F.mdx);
 	  }
 	}
 	I70 /= N70; D70 /= N70;
@@ -845,8 +846,8 @@ Int_t StdEdxY2Maker::Make(){
 	  SumdEdX = 0;
 	  SumdX = 0;
 	  for (k = 0; k < NdEdx; k++) {
-	    SumdEdX += dEdxS[k].F.dEdx;
-	    SumdX   += dEdxS[k].F.dEdx*TMath::Log2(dEdxS[k].F.dx);
+	    SumdEdX += dEdxS[k].F.mdE.fdEdx;
+	    SumdX   += dEdxS[k].F.mdE.fdEdx*TMath::Log2(dEdxS[k].F.mdx);
 	  }
 	  if (SumdEdX > 0) dXavLog2 = SumdX/SumdEdX;
 	  dedx.id_track  =  Id;
@@ -1054,7 +1055,7 @@ void StdEdxY2Maker::SortdEdx() {
   Int_t i;
   TArrayI idxT(NdEdx); Int_t *idx = idxT.GetArray();
   TArrayD dT(NdEdx);   Double_t *d = dT.GetArray();
-  for (i = 0; i < NdEdx; i++) d[i] = CdEdx[i].F.dEdx;
+  for (i = 0; i < NdEdx; i++) d[i] = CdEdx[i].F.mdE.fdEdx;
   TMath::Sort(NdEdx,d,idx,0);
   for (i=0;i<NdEdx;i++) dEdxS[i] = CdEdx[idx[i]];
   TArrayI rowT(NdEdx); Int_t *r = rowT.GetArray();
@@ -1122,6 +1123,18 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
   __BOOK__VARS__(P, for positive);
 #endif
 #endif
+#ifdef __ADC20__
+  Hists3D::FirstHist = 1;
+#if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
+  __BOOK__VARS__(N20,);
+#else
+  __BOOK__VARS__(N20, for negative);
+#ifdef __NEGATIVE_AND_POSITIVE__
+  __BOOK__VARS__(P20, for positive);
+#endif
+#endif
+  Hists3D::FirstHist = 0;
+#endif /* __ADC20__ */
   static TH2F *ZdcCP = 0, *BBCP = 0;
   //  static TH2F *ctbWest = 0, *ctbEast = 0, *ctbTOFp = 0, *zdcWest = 0, *zdcEast = 0;
   enum  {kTotalMethods = 6};
@@ -1348,75 +1361,61 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
     //  if (NoFitPoints >= 20) { 
     Int_t k;
     Double_t betagamma = pMomentum/StProbPidTraits::mPidParticleDefinitions[kPidPion]->mass();
-#if 0
-    Double_t bgL10 = TMath::Log10(betagamma);
-#endif
     for (k = 0; k < NdEdx; k++) {
       Int_t sector = FdEdx[k].sector;
       Int_t row    = FdEdx[k].row;
       Int_t rowS   = row;
       if (sector > 12) rowS = - rowS;
-#if 0
-      FdEdx[k].zP = // Bichsel::Instance()->GetMostProbableZ(bgL10,1.);
-	Bichsel::Instance()->GetMostProbableZ(bgL10,TMath::Log2(FdEdx[k].F.dx)); //remove dX
-      FdEdx[k].sigmaP = //Bichsel::Instance()->GetRmsZ(bgL10,1.);
-	Bichsel::Instance()->GetRmsZ(bgL10,TMath::Log2(FdEdx[k].F.dx)); //remove dX	
-      Double_t predB  = 1.e-6*TMath::Exp(FdEdx[k].zP);
-      FdEdx[k].F.dEdxN  = TMath::Log(FdEdx[k].F.dEdx /predB);
-#else
-#if 0
-      if (! PiD.fdNdx)  continue; // 
-      Double_t n_P = FdEdx[k].dxC*PiD.fdNdx->Pred(kPidPion);
-      //      Double_t zdEMPV = StdEdxModel::instance()->LogdEMPVGeV(n_P);//LogdEMPV(n_P) - Bichsel::Instance()->Parameterization()->MostProbableZShift(); 
-#else
       Double_t n_P = FdEdx[k].dxC*StdEdxModel::instance()->dNdxEff(betagamma);
-#endif
       Double_t zdEMPV = StdEdxModel::instance()->LogdEMPVGeV(n_P);//LogdEMPV(n_P) - Bichsel::Instance()->Parameterization()->MostProbableZShift(); 
       FdEdx[k].zP = zdEMPV;
       FdEdx[k].sigmaP = StdEdxModel::instance()->Sigma(n_P);
+#if 0
       Double_t predB  = TMath::Exp(FdEdx[k].zP);
-      FdEdx[k].F.dEdxN  = TMath::Log(FdEdx[k].F.dE/predB);
+      FdEdx[k].F     /= predB;
+#else
+      FdEdx[k].F     -= zdEMPV;
 #endif
       for (Int_t l = 0; l <= StTpcdEdxCorrection::kTpcLast; l++) {
 	if (l == StTpcdEdxCorrection::kzCorrection || 
 	    l == StTpcdEdxCorrection::kzCorrectionC) {
-	  FdEdx[k].C[l].dEdxN = FdEdx[k].F.dEdxN - (FdEdx[k].C[ StTpcdEdxCorrection::kzCorrectionC].ddEdxL + 
-						    FdEdx[k].C[ StTpcdEdxCorrection::kzCorrection ].ddEdxL);
+	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - (FdEdx[k].C[ StTpcdEdxCorrection::kzCorrectionC].mdE.fddEdxL + 
+						    FdEdx[k].C[ StTpcdEdxCorrection::kzCorrection ].mdE.fddEdxL);
 	} else if (l == StTpcdEdxCorrection::kTpcSecRowB ||
 	   	   l == StTpcdEdxCorrection::kTpcSecRowC ||
 	   	   l == StTpcdEdxCorrection::kTpcRowQ) {    
-	  FdEdx[k].C[l].dEdxN = FdEdx[k].F.dEdxN - (FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].ddEdxL +
-	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowC].ddEdxL +
-	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcRowQ].ddEdxL);   
+	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - (FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE.fddEdxL +
+	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowC].mdE.fddEdxL +
+	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcRowQ].mdE.fddEdxL);   
 	} else if (l == StTpcdEdxCorrection::kTpcPadMDF ||
 	   	   l == StTpcdEdxCorrection::kTpcPadMDC ) {
-	  FdEdx[k].C[l].dEdxN = FdEdx[k].F.dEdxN - (FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].ddEdxL +
-	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDC].ddEdxL);
+	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - (FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].mdE.fddEdxL +
+	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDC].mdE.fddEdxL);
 	} else {
-	  FdEdx[k].C[l].dEdxN = FdEdx[k].F.dEdxN - FdEdx[k].C[l].ddEdxL;
+	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - FdEdx[k].C[l].mdE.fddEdxL;
 	}
-	if (l) FdEdx[k].C[l].dx = FdEdx[k].C[l-1].dx;
+	if (l) FdEdx[k].C[l].mdx = FdEdx[k].C[l-1].mdx;
       }
       Int_t cs = NumberOfChannels*(sector-1)+FdEdx[k].channel;
       //      if (pMomentum > pMomin && pMomentum < pMomax &&PiD.dEdxStatus(kMethod)->TrackLength() > 40 ) continue; // { // Momentum cut
       if (pMomentum > pMomin && pMomentum < pMomax) { // Momentum cut
 	if (St_trigDetSumsC::instance()) {
-	  if (FdEdx[k].Zdc > 0 && ZdcCP) ZdcCP->Fill(TMath::Log10(FdEdx[k].Zdc), FdEdx[k].F.dEdxN);
+	  if (FdEdx[k].Zdc > 0 && ZdcCP) ZdcCP->Fill(TMath::Log10(FdEdx[k].Zdc), FdEdx[k].F.mdE.fdEdxN);
 	  if (St_trigDetSumsC::instance()->bbcX() > 0)  {
-	    if (BBCP) BBCP->Fill(TMath::Log10(St_trigDetSumsC::instance()->bbcX()), FdEdx[k].F.dEdxN);
+	    if (BBCP) BBCP->Fill(TMath::Log10(St_trigDetSumsC::instance()->bbcX()), FdEdx[k].F.mdE.fdEdxN);
 	  }
 	}
 	Double_t Vars[4] = {
-	  FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].dEdxN, 
-	  FdEdx[k].F.dEdxN,
+	  FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE.fdEdxN, 
+	  FdEdx[k].F.mdE.fdEdxN,
 	  0, 
-	  FdEdx[k].F.dx};
+	  FdEdx[k].F.mdx};
 #if 0
 	Double_t dEN = 0;
 	Double_t zdEMPV = 0;
 	if (PiD.fdNdx) {
-	  Double_t n_P = FdEdx[k].dxC*PiD.fdNdx->Pred(kPidPion);
-	  dEN = TMath::Log(FdEdx[k].F.dE); // scale to <dE/dx>_MIP = 2.4 keV/cm
+	  Double_t n_P = FdEdx[k].mdxC*PiD.fdNdx->Pred(kPidPion);
+	  dEN = TMath::Log(FdEdx[k].F.mdE.fdE); // scale to <dE/dx>_MIP = 2.4 keV/cm
 	  zdEMPV = StdEdxModel::instance()->LogdEMPV(n_P); // ? Check dx
 	  Vars[2] = dEN - zdEMPV;
 	};
@@ -1440,58 +1439,58 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 	    press = TMath::Log(p);
 	    if (temp > 0 &&PressureT[sCharge] ) {
 	      pressT = TMath::Log(p*298.2/temp);
-	      PressureT[sCharge]->Fill(rowS, pressT, FdEdx[k].F.dEdxN);
+	      PressureT[sCharge]->Fill(rowS, pressT, FdEdx[k].F.mdE.fdEdxN);
 	    }
 	  }
 	}
-	Double_t vars[2] = {tpcTime,FdEdx[k].C[ StTpcdEdxCorrection::ktpcTime].dEdxN};
+	Double_t vars[2] = {tpcTime,FdEdx[k].C[ StTpcdEdxCorrection::ktpcTime].mdE.fdEdxN};
 	if (Time)    Time->Fill(vars);
-	//	if (TimeP)  {vars[1] = FdEdx[k].C[StTpcdEdxCorrection::ktpcTime].dEdxN; TimeP->Fill(vars);}
-	if (TimeC)  {vars[1] = FdEdx[k].F.dEdxN; TimeC->Fill(vars);}
+	//	if (TimeP)  {vars[1] = FdEdx[k].C[StTpcdEdxCorrection::ktpcTime].mdE.fdEdxN; TimeP->Fill(vars);}
+	if (TimeC)  {vars[1] = FdEdx[k].F.mdE.fdEdxN; TimeC->Fill(vars);}
 	Double_t VarsY[8] = {0};
 #ifdef __dZdY_dXdY__
 #define __FILL___VARS__dZdY(SIGN) \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdZdY].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdZdY].mdE.fdEdxN;   \
 	dZdY3  ## SIGN .Fill(rowS,FdEdx[k].dZdY,Vars);       \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXdY].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXdY].mdE.fdEdxN;   \
 	dXdY3  ## SIGN .Fill(rowS,FdEdx[k].dXdY,Vars);	
 #else
 #define __FILL__VARS__dZdY(SIGN)
 #endif
 #ifdef __Pad_Tmbk__  /* skip Pad and Tbk */
 #define __FILL__VARS__PadTmbk(SIGN) \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knPad].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knPad].mdE.fdEdxN;   \
 	nPad3  ## SIGN .Fill(rowS,FdEdx[k].Npads,&Vars[1]);       \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knTbk].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knTbk].mdE.fdEdxN;   \
 	nTbk3  ## SIGN .Fill(rowS,FdEdx[k].Ntbks,&Vars[1]);      
 #else
 #define __FILL__VARS__PadTmbk(SIGN)
 #endif
 #define __FILL__VARS__(SIGN) \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].dEdxN; \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE.fdEdxN; \
 	SecRow3 ## SIGN .Fill(sector,row,Vars);			       \
 	Voltage ## SIGN .Fill(cs,VN,Vars);			       \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kzCorrection].dEdxN; \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kzCorrection].mdE.fdEdxN; \
 	Z3     ## SIGN .Fill(rowS,FdEdx[k].ZdriftDistance,Vars);     \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kGatingGrid].dEdxN; \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kGatingGrid].mdE.fdEdxN; \
 	G3     ## SIGN .Fill(rowS,FdEdx[k].driftTime,Vars);     \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].mdE.fdEdxN;   \
 	xyPad3 ## SIGN .Fill(FdEdx[k].yrow,FdEdx[k].xpad, Vars); \
-	VarsY[0] = TMath::Log2(FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].dx); \
-        VarsY[1] = TMath::Log2(FdEdx[k].F.dx); \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].dEdxN;   \
+	VarsY[0] = TMath::Log2(FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdx); \
+        VarsY[1] = TMath::Log2(FdEdx[k].F.mdx); \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdE.fdEdxN;   \
 	dX3  ## SIGN .FillY(rowS,VarsY,Vars);	\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrection].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrection].mdE.fdEdxN;   \
 	Eta3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars);	\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrectionB].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrectionB].mdE.fdEdxN;   \
 	EtaB3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars);	\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcPressure].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcPressure].mdE.fdEdxN;   \
 	Pressure ## SIGN.Fill(rowS,press,Vars); \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcGasTemperature].dEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcGasTemperature].mdE.fdEdxN;   \
 	Temperature ## SIGN.Fill(rowS,temp,Vars); \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].dEdxN; \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].mdE.fdEdxN; \
 	Qcm ## SIGN.Fill(cs,FdEdx[k].Qcm,Vars);\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].dEdxN;\
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].mdE.fdEdxN;\
 	AvCurrent ## SIGN.Fill(cs,FdEdx[k].Crow,Vars);\
 __FILL__VARS__dZdY(SIGN) \
 __FILL__VARS__PadTmbk(SIGN)
@@ -1509,7 +1508,45 @@ __FILL__VARS__PadTmbk(SIGN)
      #endif /* __NEGATIVE_AND_POSITIVE__ */
   #endif /* __NEGATIVE_ONLY__ || __NEGATIVE_AND_POSITIVE__ */
 #endif /* __NEGATIVE_AND_POSITIVE__ */
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDC].dEdxN;	
+#ifdef  __ADC20__
+	Double_t Vars20[4] {
+	  FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE20.fdEdxN, 
+	    FdEdx[k].F.mdE20.fdEdxN,
+	    0, 
+	    FdEdx[k].F.mdx
+	    };
+#define __FILL__20VARS__(SIGN) \
+	SecRow3 ## SIGN .Fill(sector,row,Vars20);			       \
+	Voltage ## SIGN .Fill(cs,VN,Vars20);			       \
+	Z3     ## SIGN .Fill(rowS,FdEdx[k].ZdriftDistance,Vars20);     \
+	G3     ## SIGN .Fill(rowS,FdEdx[k].driftTime,Vars20);     \
+	xyPad3 ## SIGN .Fill(FdEdx[k].yrow,FdEdx[k].xpad, Vars20); \
+	VarsY[0] = TMath::Log2(FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdx); \
+        VarsY[1] = TMath::Log2(FdEdx[k].F.mdx); \
+	dX3  ## SIGN .FillY(rowS,VarsY,Vars20);	\
+	Eta3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars20);	\
+	EtaB3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars20);	\
+	Pressure ## SIGN.Fill(rowS,press,Vars20); \
+	Temperature ## SIGN.Fill(rowS,temp,Vars20); \
+	Qcm ## SIGN.Fill(cs,FdEdx[k].Qcm,Vars20);\
+	AvCurrent ## SIGN.Fill(cs,FdEdx[k].Crow,Vars20);
+#if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
+	__FILL__20VARS__(N20);
+#else /* ! __NEGATIVE_AND_POSITIVE__ */
+  #if defined(__NEGATIVE_ONLY__) || defined(__NEGATIVE_AND_POSITIVE__)
+	if (sCharge == 1)  {
+	__FILL__20VARS__(N20);
+	}
+     #if defined(__NEGATIVE_AND_POSITIVE__)
+	if (sCharge == 0)  {
+	__FILL__20VARS__(P20);
+	}
+     #endif /* __NEGATIVE_AND_POSITIVE__ */
+  #endif /* __NEGATIVE_ONLY__ || __NEGATIVE_AND_POSITIVE__ */
+#endif /* __NEGATIVE_AND_POSITIVE__ */
+#endif /* __ADC20__ */
+
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDC].mdE.fdEdxN;	
 	xyPad3qB.Fill(24*FdEdx[k].qB+FdEdx[k].yrow,FdEdx[k].xpadR, Vars); 
       } // MIP momentum cut
     } // loop over dEdx points 
@@ -1533,11 +1570,11 @@ void StdEdxY2Maker::PrintdEdx(Int_t iop) {
   Double_t avrz = 0;
   for (Int_t i=0; i< NdEdx; i++) {
     dEdx = 0;
-    if (iop == 0)      {pdEdx = &CdEdx[i]; dEdx = CdEdx[i].F.dEdx;}
-    else if (iop == 1) {pdEdx = &FdEdx[i]; dEdx = FdEdx[i].F.dEdx;}
-    else if (iop == 2) {pdEdx = &dEdxS[i]; dEdx = dEdxS[i].F.dEdx;}
-    else if (iop >= 3) {pdEdx = &FdEdx[i]; dEdx = FdEdx[i].C[StTpcdEdxCorrection::kUncorrected+iop-3].dEdx;}
-    I = (i*I + 1e6*pdEdx->F.dEdx)/(i+1);
+    if (iop == 0)      {pdEdx = &CdEdx[i]; dEdx = CdEdx[i].F.mdE.fdEdx;}
+    else if (iop == 1) {pdEdx = &FdEdx[i]; dEdx = FdEdx[i].F.mdE.fdEdx;}
+    else if (iop == 2) {pdEdx = &dEdxS[i]; dEdx = dEdxS[i].F.mdE.fdEdx;}
+    else if (iop >= 3) {pdEdx = &FdEdx[i]; dEdx = FdEdx[i].C[StTpcdEdxCorrection::kUncorrected+iop-3].mdE.fdEdx;}
+    I = (i*I + 1e6*pdEdx->F.mdE.fdEdx)/(i+1);
     //     cout << Names[iop] << " " << i << " S/R " << dEdx->sector << "/" << dEdx->row
     // 	 << " dEdx(keV/cm) " << 1.e6*dEdx->dEdx << " dx " << dEdx->dx 
     //       //	 << " dx " << dEdx->dxH 
@@ -1548,7 +1585,7 @@ void StdEdxY2Maker::PrintdEdx(Int_t iop) {
     // 	 << " Prob " << dEdx->Prob << endl;
     dEdx *= 1e6;
     cout << Form("%s %2i  S/R %2i/%2i dEdx(keV/cm) %8.2f dx %5.2f dxC %5.2f x[%8.2f,%8.2f,%8.2f] Qcm %7.2f AvC %7.3f", 
-		 Names[iop],i,pdEdx->sector,pdEdx->row,dEdx, pdEdx->F.dx ,pdEdx->dxC, pdEdx->xyz[0], pdEdx->xyz[1], 
+		 Names[iop],i,pdEdx->sector,pdEdx->row,dEdx, pdEdx->F.mdx ,pdEdx->dxC, pdEdx->xyz[0], pdEdx->xyz[1], 
 		 pdEdx->xyz[2],pdEdx->Qcm,pdEdx->Crow);
     cout << Form(" d[%8.2f,%8.2f,%8.2f] Sum %8.2f Prob %8.5f", pdEdx->xyzD[0], pdEdx->xyzD[1], pdEdx->xyzD[2],
 		 I,pdEdx->Prob) << endl;
@@ -1577,12 +1614,12 @@ Double_t StdEdxY2Maker::LikeliHood(Double_t Xlog10bg, Int_t NdEdx, dEdxY2_t *dEd
   const static Double_t GeV2keV = TMath::Log(1.e-6);
   Double_t f = 0;
   for (Int_t i=0;i<NdEdx; i++) {
-    Double_t Ylog2dx = TMath::Log2(dEdx[i].F.dx);
+    Double_t Ylog2dx = TMath::Log2(dEdx[i].F.mdx);
     //    Double_t Ylog2dx = 1;
     Double_t sigmaC = 0;
     Double_t zMostProb = Bichsel::Instance()->GetMostProbableZ(Xlog10bg,Ylog2dx) + TMath::Log(chargeSq);
     Double_t sigma     = Bichsel::Instance()->GetRmsZ(Xlog10bg,Ylog2dx) + sigmaC;
-    Double_t xi = (dEdx[i].F.dEdxL - GeV2keV - zMostProb)/sigma;
+    Double_t xi = (dEdx[i].F.mdE.fdEdxL - GeV2keV - zMostProb)/sigma;
     Double_t  Phi = Bichsel::Instance()->GetProbability(Xlog10bg,Ylog2dx,xi);
     dEdx[i].Prob = Phi/sigma;
     if (dEdx[i].Prob < ProbCut) {
@@ -1625,11 +1662,11 @@ void StdEdxY2Maker::fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, 
   gin[0] = 0.;
   gin[1] = 0.;
   for (Int_t i=0;i<NdEdx; i++) {
-    //    Double_t sigma = StTpcdEdxCorrection::SumSeries(TMath::Log(FdEdx[i].dx),3,sigma_p);
-    Double_t X = TMath::Log(FdEdx[i].F.dx);
+    //    Double_t sigma = StTpcdEdxCorrection::SumSeries(TMath::Log(FdEdx[i].mdx),3,sigma_p);
+    Double_t X = TMath::Log(FdEdx[i].F.mdx);
     Double_t sigma = sigma_p[2];
     for (Int_t n = 1; n>=0; n--) sigma = X*sigma + sigma_p[n];
-    FdEdx[i].zdev    = (FdEdx[i].F.dEdxL-par[0])/sigma;
+    FdEdx[i].zdev    = (FdEdx[i].F.mdE.fdEdxL-par[0])/sigma;
     Landau(FdEdx[i].zdev,Val);
     FdEdx[i].Prob = TMath::Exp(Val[0]);
     f      -= Val[0];
@@ -1639,7 +1676,7 @@ void StdEdxY2Maker::fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, 
 //________________________________________________________________________________
 void StdEdxY2Maker::DoFitZ(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ){
   Double_t avz = 0;
-  for (Int_t i=0;i<NdEdx;i++) avz += FdEdx[i].F.dEdxL;
+  for (Int_t i=0;i<NdEdx;i++) avz += FdEdx[i].F.mdE.fdEdxL;
   if (NdEdx>5) {
     avz /= NdEdx;
     Double_t arglist[10];
@@ -1972,7 +2009,7 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
   Double_t dNdx = par[0]; // Mu
   //  Double_t sigma = par[1]; // extra sigma
   for (Int_t i = 0; i < NdEdx; i++) {
-    Double_t dE = FdEdx[i].F.dE;
+    Double_t dE = FdEdx[i].F.mdE.fdE;
     Double_t dX = FdEdx[i].dxC;
     Double_t Np = dNdx*dX;
     Double_t derivative = 0;

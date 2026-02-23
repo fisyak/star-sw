@@ -103,7 +103,7 @@ int StEvtVtxSeedMaker::GetEventData() {
       StTpcHit* hit = (StTpcHit*) (hits[hitn]);
       // TPC padrow and sector indices use 1..n
       int mask = 1<<(hit->sector()-1);
-      if (hit->padrow() <= St_tpcPadConfigC::instance()->innerPadRows(hit->sector())) itpc |= mask;
+      if ((int) hit->padrow() <= St_tpcPadConfigC::instance()->innerPadRows(hit->sector())) itpc |= mask;
       else otpc |= mask;
     }
   }
