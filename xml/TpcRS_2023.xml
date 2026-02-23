@@ -39,14 +39,15 @@ setenv STARFPE NO
   set logFile  = ${filel}B.log
   ls -l *${filel}*.root
   if (! $?) exit 0;
-  set sdt = "";
+#  set sdt = "";
+  set sdt = ",sdt20230520.023250" # RF
   echo  ${SUBMITTINGDIRECTORY} | grep TpcRS_ZF
 if (! $?) then 
   set sdt = ",FieldOff"
 endif
 # root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,TpcRS,McTpcAna,StiCA,StiPulls,evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
 # root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,CorrZ,TpcRS,McTpcAna,StiCA,StiPulls,-evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
- root.exe -q -b 'TpcRS.C(100,"MC.2023,vmc,TpcRS,McTpcAna,StiCA,-geantOut,NoHistos,noRunco,Rung.'${runG}'",0,"'${file}'")' &gt;&amp; ${logFile}
+ root.exe -q -b 'TpcRS.C(200,"MC.2023,vmc,TpcRS,McTpcAna,StiCA,-geantOut,NoHistos,noRunco,Rung.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib",0,"'${file}'")' &gt;&amp; ${logFile}
 </command>
 <!-- <input URL="command:TpcRS_Part.pl" /> -->
 <!-- <input URL="command:daq_TpcRS.pl 1 1000 25" />  -->
