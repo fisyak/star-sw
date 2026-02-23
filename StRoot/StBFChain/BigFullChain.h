@@ -1913,7 +1913,8 @@ Bfc_st BFC[] = { // standard chains
   {"skip1row"    ,""  ,"","",""                           ,"","ITTF: skip the first pad row in TPC",kFALSE},
   {"StiRnD"   ,"","","",                                  "","StiRnD", "Load StiRnD shared library",kFALSE},
   {"Alignment"   ,"","","","","", "Sti Tpc Alignment, reco. per sector*** Option is OBSOLETE ***, ",kFALSE},
-  {"Cosmics"  ,"","","","","","Sti:Reject events with no recostructed tracks,mflag Cosmics StTpcDb",kFALSE},
+  {"Cosmics"  ,"","","-OSpaceZ,-OSpaceZ2","",""
+   ,"Sti:Reject events with no recostructed tracks,mflag Cosmics StTpcDb, disable Space charge",    kFALSE},
   {"StiPulls" ,"","","",                                         "","", "Request to make Sti Pulls",kFALSE},
   {"BeamBack" ,"","","StEvent",                          "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"LdEdxY2"  ,"","","tpcDb,StEvent,MuDSTDeps", "","libMinuit,StPicoEvent,StdEdxY2Maker"

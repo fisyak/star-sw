@@ -171,6 +171,39 @@ Int_t SetPartGun(TString RootFile,TString RunOpt, TString Opt) {
         cflag->iswit[1] = 2;
         cflag->iswit[2] = 2; 
     }
+#if 1
+#if 1
+      //      gener->SetGun();
+      //      StarVMCApplication::Instance()->DoMisAlignment(kFALSE);
+      //      geant->SetSetAttr("phys_off",kTRUE); // physics off
+      gMC->SetProcess("DCAY", 0);
+      gMC->SetProcess("ANNI", 0);
+      gMC->SetProcess("BREM", 0);
+      gMC->SetProcess("COMP", 0);
+      gMC->SetProcess("HADR", 0);
+      gMC->SetProcess("MUNU", 0);
+      gMC->SetProcess("PAIR", 0);
+      gMC->SetProcess("PFIS", 0);
+      gMC->SetProcess("PHOT", 0);
+      gMC->SetProcess("RAYL", 0);
+      //      gMC->SetProcess("LOSS", 4); // no fluctuations 
+      gMC->SetProcess("DRAY", 0);
+      gMC->SetProcess("MULS", 0);
+      gMC->SetProcess("STRA", 0);
+#endif
+      gMC->SetCut("CUTGAM",	1e-5  );
+      gMC->SetCut("CUTELE", 	1e-5  );
+      gMC->SetCut("CUTHAD", 	1e-3  );
+      gMC->SetCut("CUTNEU", 	1e-14 );
+      gMC->SetCut("CUTMUO", 	1e-3  );
+      gMC->SetCut("BCUTE", 	1e-3  );
+      gMC->SetCut("BCUTM", 	1e-3  );
+      gMC->SetCut("DCUTE", 	1e-3  );
+      gMC->SetCut("DCUTM", 	1e-3  );
+      gMC->SetCut("PPCUTM", 	1e-3  );
+      gMC->SetCut("TOFMAX", 	1e3);
+      gMC->BuildPhysics();
+#endif
   }
   return 0;
 }

@@ -730,7 +730,7 @@ Int_t StTpcRTSHitMaker::Make() {
 }
 //________________________________________________________________________________
 Int_t StTpcRTSHitMaker::Make23() {
-  if (! fTpx23 && ! fiTpc23) return kStErr;
+
 #ifdef __BENCHMARK__
   TBenchmark *myBenchmark = new TBenchmark();
   myBenchmark->Reset();

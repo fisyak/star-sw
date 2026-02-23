@@ -1,11 +1,13 @@
 #include "dEdxHist.h"
 Int_t Hists3D::NtotHist = 2;
+Int_t Hists3D::FirstHist = 0;
+
 Hists3D::Hists3D(const Char_t *Name, const Char_t *Title,
 		 const Char_t *TitleX, const Char_t *TitleY,
 		 Int_t nXBins, 
 		 Int_t nYBins,  Double_t ymin, Double_t ymax,
 		 Int_t nZBins, Double_t ZdEdxMin, Double_t ZdEdxMax,
-		 Double_t xmin, Double_t xmax, Int_t nh) : fNHist(nh) {
+		 Double_t xmin, Double_t xmax, Int_t nh, Int_t i1) : fNHist(nh), fI1(i1) {
   const Char_t *Names[9] = {"","C","N","Ne","Npi","NK","NP","Nd","dX"};
   const Char_t *Titles[9] = {"uncorrected", "correctred","nP measured","nP for e","nP for pi","nP for K","nP for P","nP for d","dX"};
   memset(hists, 0, 9*sizeof(TH1*));
@@ -22,7 +24,7 @@ Hists3D::Hists3D(const Char_t *Name, const Char_t *Title,
     ymin = 0.5;
     ymax = nYBins+0.5;
   }
-  for (Int_t j = 0; j < fNHist; j++) {
+  for (Int_t j = fI1; j < fNHist; j++) {
     TString name(Name); 
     name += Names[j];
     TString title(Title); 
@@ -48,7 +50,7 @@ Hists3D::Hists3D(const Char_t *Name, const Char_t *Title,
 }
 //________________________________________________________________________________
 void Hists3D::Fill(Double_t x, Double_t y, Double_t *z) {
-  for (Int_t i = 0; i < fNHist; i++) {
+  for (Int_t i = fI1; i < fNHist; i++) {
     if (hists[i]) {
       if (i < 8) ((TH3F *) hists[i])->Fill(x,y,z[i]);
       else       ((TProfile2D *) hists[i])->Fill(x,y,z[i]);
@@ -57,7 +59,7 @@ void Hists3D::Fill(Double_t x, Double_t y, Double_t *z) {
 }
 //________________________________________________________________________________
 void Hists3D::FillY(Double_t x, Double_t *y, Double_t *z) {
-  for (Int_t i = 0; i < TMath::Min(2,fNHist); i++) {
+  for (Int_t i = fI1; i < TMath::Min(2,fNHist); i++) {
     if (hists[i]) {
       if (i < 8) ((TH3F *) hists[i])->Fill(x,y[i],z[i]);
       else       ((TProfile2D *) hists[i])->Fill(x,y[i],z[i]);

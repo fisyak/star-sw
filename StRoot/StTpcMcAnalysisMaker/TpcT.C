@@ -1036,7 +1036,9 @@ TGraphErrors *OmegaTau() {
   return gr2;
 }
 //________________________________________________________________________________
-void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root") {
+//#include "TpcTAdc.C"
+//________________________________________________________________________________
+void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD8.root") {
   gSystem->Load("StBichsel");
   TDirIter Dir(files);
   Char_t *file = 0;
@@ -1054,7 +1056,6 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
 	iter.AddFile(file); 
 	NFiles++; 
 	file1 = file;
-	MakeFunctions();
       } else {
 	cout << "TpcT Tree is missing in " << f->GetName() << endl;
       }
@@ -1065,12 +1066,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   if (! file1 ) return;
   TString output(Out);
   if (output == "") {
-#if 0
-    output = file1;
-    output.ReplaceAll(".root",".ADCut12.root");
-#else
     output = "ADCut32.root";
-#endif
   }
   cout << "Output for " << output << endl;
   const Int_t&       fNoRcHit                                 = iter("fNoRcHit");
@@ -1108,7 +1104,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   const Float_t*&    fRcHit_mdX                               = iter("fRcHit.mdX");
   const Float_t*&    fRcHit_mCharge                           = iter("fRcHit.mCharge");
   const UShort_t*&   fRcHit_mAdc                              = iter("fRcHit.mAdc");
-  const UShort_t*&    fRcHit_mFlag                            = iter("fRcHit.mFlag");
+  const UShort_t*&   fRcHit_mFlag                             = iter("fRcHit.mFlag");
   const UChar_t*&    fRcHit_mFitFlag                          = iter("fRcHit.mFitFlag");
   const UChar_t*&    fRcHit_mMinpad                           = iter("fRcHit.mMinpad");
   const UChar_t*&    fRcHit_mMaxpad                           = iter("fRcHit.mMaxpad");
@@ -1117,9 +1113,6 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
   
   if (! fOut) fOut = new TFile(output,"recreate");
   fOut->cd();
-#if 0
-  TF1* off = new TF1("off","exp(log(1.+[0]/exp(x)))",3,10);
-#endif
   // ADC block
   enum {kTPC = 4, kVar = 6, kVarT = 1, kOpt = 2, ktmBins = 13}; // kVarT no. of variables to be plotted
   const Char_t *tpcName[kTPC] = {"I","O","IC","OC"};
@@ -1169,47 +1162,38 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
       return ok;
     }
   };
-  TH2F *neP[2][2] = {0};
-  TH2F *lneP[2][2] = {0};
-  TH2F *Adcne[2][2] = {0};
-  TH2F *neN[2][2] = {0};
-  TH3F *neN3D[2][2] = {0};
-  TH2F *dXdSR[2][2] = {0};
-  TH1F *r1ADC[2][2] = {0};
+  TH2F *neP[2] = {0};
+  TH2F *lneP[2] = {0};
+  TH2F *Adcne[2] = {0};
+  TH1F *r1ADC[2] = {0};
+  TH2F *AdcneF[5][2] = {0};
+  TH2F *AdcneFRC[5][2] = {0};
   const Char_t *IO[2] = {"I","O"};
   const Char_t *IOT[2] = {"Inner", "Outer"};
-  const Char_t *F[2] = {"","2"};
-  const Char_t *FT[2] = {"flag == 0", "flag == 2"};
-  for (Int_t f = 0; f < 2; f++) {
-    for (Int_t io = 0; io < 2; io++) {
-      if (! f) {
-	neP[f][io] = new TH2F(Form("neP%s%s",IO[io],F[f]),Form("%s sector  ; ln(nP) ; ln(ne/nP)",         IOT[io]),110,1.5,12.5,500,-1,4);
-	lneP[f][io] = new TH2F(Form("lneP%s%s",IO[io],F[f]),Form("%s sector  ; ln(nP) ; ln(ln(ne/nP))",   IOT[io]),110,1.5,12.5,500,-1,4);
-	Adcne[f][io] = new TH2F(Form("Adcne%s%s",IO[io],F[f]),Form("%s sector  ; ln(ne) ; ln(AdcMc/ne)",  IOT[io]),120,1,13,140,-2,5);
-	r1ADC[f][io] = new TH1F(Form("r1ADC%s%s",IO[io],F[f]),Form("%s sector  ; ratio Adc_1/Adc for Inner",IOT[io]),100,0.5,1.5);
-      }
-#ifdef __TpcRSPart__
-      neN[f][io] = new TH2F(Form("neN%s%s",IO[io],F[f]),Form("%s sector with %s ; ln(nP) ; ln(ne/(dN/dx*dx)))",IOT[io],FT[f]),110,1.5,12.5,500,-1,4);
-      neN3D[f][io] = new TH3F(Form("nen3D%s%s",IO[io],F[f]),Form("%s sector with %s ; ln((dN/dx*dx) ; bgL10 ln(nP) ; ln(ln(ne/nP)); ln(ne/(dN/dx*dx))",  IOT[io],FT[f]), 110,1.5,12.5,500,-1,4,1000,-5.,5.);
-      dXdSR[f][io] = new TH2F(Form("dXdSR%s%s",IO[io],F[f]),Form("%s sector with %s ; bgL10 ; dX/dS - 1",       IOT[io],FT[f]),600,-1.5,4.5,300,-0.2,0.1);
-#endif /*  __TpcRSPart__ */
+  const Char_t *F[5] = {"","2", "8", "64", "128"};
+  const Char_t *FT[5] = {"flag == 0", "flag == 2", "flag == 8", "flag == 64", "flag == 128"};
+  const Int_t   flags[5] = {0, 2, 8, 64, 128};
+  for (Int_t io = 0; io < 2; io++) {
+    neP[io] = new TH2F(Form("neP%s",IO[io]),Form("%s   ; ln(nP) ; ln(ne/nP)",         IOT[io]),110,1.5,12.5,500,-1,4);
+    lneP[io] = new TH2F(Form("lneP%s",IO[io]),Form("%s   ; ln(nP) ; ln(ln(ne/nP))",   IOT[io]),110,1.5,12.5,500,-3,2);
+    Adcne[io] = new TH2F(Form("Adcne%s",IO[io]),Form("%s   ; ln(ne) ; ln(AdcMc/ne)",  IOT[io]),120,1,13,140,-2,5);
+    r1ADC[io] = new TH1F(Form("r1ADC%s",IO[io]),Form("%s   ; ratio Adc_1/Adc for Inner",IOT[io]),100,0.5,1.5);
+    for (Int_t f = 0; f <5; f++) {
+      AdcneF[f][io] = new TH2F(Form("AdcneF%s%s",IO[io],F[f]),Form("%s %s  ; ln(ne) ; ln(AdcMc/ne)",  IOT[io], FT[f]),120,1,13,140,-2,5);
+      AdcneFRC[f][io] = new TH2F(Form("AdcneF%s%sRC",IO[io],F[f]),Form("%s %s  ; ln(ne) ; ln(AdcRC/ne)",  IOT[io], FT[f]),120,1,13,140,-2,5);
     }
   }
-#ifdef __TpcRSPart__
-  TH2F *dPL = new TH2F("dPL"," Ln(McpIn/q/pIn) versus ln_{10} (pIn)", 300,-2,1,100,-0.2,0.2);
-  TH2F *dBGL = new TH2F("dBGL","(beta*gamma)_{MC} - (beta*Gamma)_{RC} versus ln(beta_{RC})", 500, -5.0, 0.0,400,-0.4,0.4);
-  TH2F *dBG = new TH2F("dBG","(beta*gamma)_{MC} - (beta*Gamma)_{RC} versus beta_{RC}", 500, 0.0, 1.0, 400,-0.4,0.4);
-#endif /*  __TpcRSPart__ */
   const static Int_t NoDim = sizeof(Adc_t)/sizeof(Double_t);
   //  const Int_t  nBins[NoDim]  = {      2,      2,       25,      25, 110,    140,   250}; //,   200};
   const Char_t *NameV[NoDim] = {"secWE","rowIO", "Ntmbks", "Npads", "z",  "AdcL","ratL"}; //,ratC; 
-  const Int_t  nBins[NoDim]  = {      2,      2,       7,       6, 110,     70,   500}; //,   200;
+  const Int_t  nBins[NoDim]  = {      2,      2,       7,       6, 110,     71,   500}; //,   200;
   const Adc_t  xMin          = {    0.5,    0.5,      2.5,     1.5,  -5,      3, -0.75}; //,   -10;
   const Adc_t  xMax          = {   24.5,   80.5,     27.5,    16.5, 215,     10,  1.75}; //,    -2;
   const Double_t tmbks[8] = {2.5, 4.5, 5.5, 6.5, 7.5, 9.5, 18.5, 27.5};
   const Double_t pads[7]  = {1.5, 2.5, 3.5, 4.5, 5.5, 8.5, 16.5};
-  const Double_t adcL[71]   = {
-    3.00,  4.14,  4.28,  4.37,  4.44, 
+  const Double_t adcL[72]   = {
+    TMath::Log(16.), TMath::Log(26.),
+           4.14,  4.28,  4.37,  4.44, 
     4.49,  4.55,  4.59,  4.63,  4.66, 
     4.70,  4.73,  4.76,  4.78,  4.81, 
     4.84,  4.86,  4.89,  4.91,  4.93, 
@@ -1223,13 +1207,13 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
     6.04,  6.12,  6.21,  6.31,  6.42, 
     6.53,  6.66,  6.79,  6.93,  7.10, 
     7.29,  7.52,  7.80,  8.16,  8.83, 
-    10.00};
+    10.04};
   TProfile2D *profs[kTPC][kVar];
   TH3F       *hists[kTPC][kVar];
 #define __SPARSE__
 #ifdef __SPARSE__
   THnSparse  *sparse[2] = {0};
-  for (Int_t f = 0; f < 2; f++) {
+  for (Int_t f = 0; f < 1; f++) {
     sparse[f] = new THnSparseF(Form("Sparse%s",F[f]),Form("for %s ln(Adc_MC/Adc_RC) versus sector/row/no.tmbk/no.pads/zG/TMath::ln(Adc_RC)",FT[f]), NoDim, nBins, &xMin.sec, &xMax.sec);
     for (Int_t i = 0; i < NoDim; i++) {
       if      (i == 2) sparse[f]->GetAxis(i)->Set(nBins[i], tmbks); 
@@ -1239,84 +1223,6 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
     }
   }
 #endif
-#ifdef __WE_IO_NTB__
-  //           WE IO NTB
-  TH3F *AdcHits[2][2][13] = {0};
-  const Char_t *WE[4] = {"W","E","West","East"};
-  const Char_t *IO[4] = {"I","O","Inner","Outer"};
-  for (Int_t we = 0; we < 2; we++) {
-    for (Int_t io = 0; io < 2; io++) {
-      for (Int_t tb = 0; tb < ktmBins; tb++) {
-	TString Name(Form("%s%s_%i",WE[we],IO[io],tb+1));
-	TString Title(Form("%s %s tb [ %5.1f,%5.1f] AdcMCL - AdcRCL  versus |Z| and AdcRCL",WE[we+2],IO[io+2],tmBins[tb],tmBins[tb+1]));
-	AdcHits[we][io][tb] = new TH3F(Name,Title,
-				       nBins[3],xMin.z,xMax.z,
-				       nBins[4],xMin.AdcL,xMax.AdcL,
-				       nBins[5],xMin.ratL,xMax.ratL);
-      }
-    }
-  }
-#endif /* __WE_IO_NTB__ */
-#define __ADCPLOTS__
-#ifdef __ADCPLOTS__
-  for (Int_t i = 0; i < kTPC; i++) 
-    for (Int_t j = 0; j < kVarT; j++) 
-      for (Int_t k = 0; k < kOpt; k++) {
-	if (! k) {
-	  profs[i][j] = new TProfile2D(Form("%s%s%s",tpcName[i],opName[k],vName[j]),
-				       Form("ln(simulated ADC) versus ln(recon. ADC) and %s", Plots[j].vName),
-				       Plots[j].nx,Plots[j].xmin,Plots[j].xmax,Plots[j].ny,Plots[j].ymin,Plots[j].ymax);
-	} else if (k == 1) {
-	  hists[i][j] = new TH3F(Form("%s%s%s",tpcName[i],opName[k],vName[j]),
-				 Form("ln(simulated ADC) - ln(recon. ADC)  versus ln(recon. ADC) and %s",Plots[j].vName),
-				 Plots[j].nx,Plots[j].xmin,Plots[j].xmax,Plots[j].ny,Plots[j].ymin,Plots[j].ymax,400,-2,2);
-	}
-      }
-#ifdef __LogGamma__
-  //  Double_t dsCut[2] = {1., 2.};
-  // dE block for dN/dx fit
-  enum {kdNdxLogGamma, kdELognP, kLogdELognP, kdETot};
-  TH2F     *histdE[3][kdETot] = {0};
-  const Char_t *VarY[4] = {"dN/dx", "dE/nP"};
-  const Char_t *tpcNameN[3] = {"I","O",""};
-  for (Int_t io = 0; io < 3; io++) {
-    for (Int_t k = 0; k < kdETot; k++) {
-      switch (k) {
-      case kdNdxLogGamma:
-	histdE[io][k] = new TH2F(Form("dNdxLnGamma%s",tpcNameN[io]),Form("dN/ds (MC) versus ln10(gamma) for %sTpc",tpcNameN[io]),70,-2.0,5.0,150,0,300);
-	break;
-      case kdELognP:
-	histdE[io][k] = new TH2F(Form("dEdN%s",tpcNameN[io]),Form("dE (eV) per primary interaction versus ln(nP) for %sTpc",tpcNameN[io]),160,3,11,500,0,500);
-	break;
-      case kLogdELognP:
-	histdE[io][k] = new TH2F(Form("LogdEdN%s",tpcNameN[io]),Form("ln(dE (eV) per primary interaction (nP)) versus ln(nP) for %sTpc",tpcNameN[io]),160,3,11,500,2.5,7.5);
-	break;
-      default:
-	break;
-      }
-    }
-  }
-#endif /* __LogGamma__ */
-#endif /* __ADCPLOTS__ */
-#ifdef __TpcRSPart__
-  TH2F *dNdxVsBg = new TH2F("dNdxVsBg",  "ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma",140,-2,5,1000,-1.,1.);
-  TH2F *dNdxVsBgC[3] = {0};
-  dNdxVsBgC[0] = new TH2F("dNdxVsBgC","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut",140,-2,5,1000,-1.,1.);
-  dNdxVsBgC[1] = new TH2F("dNdxVsBgCI","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Inner",140,-2,5,1000,-1.,1.);
-  dNdxVsBgC[2] = new TH2F("dNdxVsBgCO","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Outer",140,-2,5,1000,-1.,1.);
-  TH2F *dNdxVsBgCC[3] = {0};
-  dNdxVsBgCC[0] = new TH2F("dNdxVsBgCC","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, and NPCorrection",140,-2,5,1000,-1.,1.);
-  dNdxVsBgCC[1] = new TH2F("dNdxVsBgCCI","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Inner, and NPCorrection",140,-2,5,1000,-1.,1.);
-  dNdxVsBgCC[2] = new TH2F("dNdxVsBgCCO","ln((nP/dX)/(dN/dx)) versus ln10(local beta*gamma after dN/dx Cut, Outer, and NPCorrection",140,-2,5,1000,-1.,1.);
-#endif /*  __TpcRSPart__ */
-  TH2F *NpdN[3] = {0};
-  NpdN[0] = new TH2F("NpdN", "ln(((dN/dx)*dX)/(nP)) versus ln(nP)",140,3.0,10.0,1000,-2.,2.);
-  NpdN[1] = new TH2F("NpdNI","ln(((dN/dx)*dX)/(nP)) versus ln(nP) for Inner",140,3.0,10.0,1000,-2.,2.);
-  NpdN[2] = new TH2F("NpdNO","ln(((dN/dx)*dX)/(nP)) versus ln(nP) for Outer",140,3.0,10.0,1000,-2.,2.);
-  TH2F *dNNp[3] = {0};
-  dNNp[0] = new TH2F("dNNp", "ln(nP/(dN/dx)*dX)) versus ln(dN/dx)*dX))",140,3.0,10.0,1000,-2.,2.);
-  dNNp[1] = new TH2F("dNNpI","ln(nP/(dN/dx)*dX)) versus ln(dN/dx)*dX)) for Inner",140,3.0,10.0,1000,-2.,2.);
-  dNNp[2] = new TH2F("dNNpO","ln(nP/(dN/dx)*dX)) versus ln(dN/dx)*dX)) for Outer",140,3.0,10.0,1000,-2.,2.);
   TString  currentFileName;
   TChain *chain = iter.Chain();
   Double_t fMass = -1;
@@ -1326,25 +1232,6 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
     if (currentFileName != TString(chain->GetFile()->GetName())) {
       currentFileName = chain->GetFile()->GetName();
       cout << "Open File " << currentFileName.Data() << endl;
-#ifdef __TpcRSPart__
-      fMass = -1;
-      fCharge = 0;
-      for (Int_t h = 0; h < NTpcRSParts; h++) {
-	if (currentFileName.Contains(TpcRSPart[h].name, TString::kIgnoreCase)) {
-	  fMass = TpcRSPart[h].mass;
-	  fCharge = TpcRSPart[h].charge;
-#if 0
-	  fL10bgMin = -1,3;
-	  if (TMath::Abs(fCharge) == 2) {
-	    fL10bgMin = -1.5;
-	  } else if (fMass < 0.001) {
-	    fL10bgMin =  1.0;
-	  }
-#endif
-	  break;
-	}
-      }
-#endif /*  __TpcRSPart__ */
     }
     if (fNoMcHit != 1) continue;
     if (fNoRcHit != 1) continue;
@@ -1372,22 +1259,27 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
       Double_t nP = fMcHit_mnP[k];
       Double_t ne = fMcHit_mne[k];
       Int_t f = 0;
-      neP[f][io]->Fill(TMath::Log(nP),TMath::Log(ne/nP));
-      if (ne > nP) lneP[f][io]->Fill(TMath::Log(nP),TMath::Log(TMath::Log(ne/nP)));
-      Adcne[f][io]->Fill(TMath::Log(ne),TMath::Log(fMcHit_mAdc[k]/ne));
+      neP[io]->Fill(TMath::Log(nP),TMath::Log(ne/nP));
+      if (ne > nP) lneP[io]->Fill(TMath::Log(nP),TMath::Log(TMath::Log(ne/nP)));
+      Adcne[io]->Fill(TMath::Log(ne),TMath::Log(fMcHit_mAdc[k]/ne));
       Double_t r0 =  fMcHit_mAdc0[k]/fMcHit_mAdc[k];
       Double_t r1 =  fMcHit_mAdc1[k]/fMcHit_mAdc[k];
-      r1ADC[f][io]->Fill(r1);
+      r1ADC[io]->Fill(r1);
       Double_t r2 =  fMcHit_mAdc2[k]/fMcHit_mAdc[k];
       TVector3 pxyzL(fMcHit_mLocalMomentum_mX1[k],fMcHit_mLocalMomentum_mX2[k],fMcHit_mLocalMomentum_mX3[k]);
       Double_t TanL = pxyzL.z()/pxyzL.Perp();
       // RC block
       for (Int_t l = 0; l < fNoRcHit; l++) {
+	if (fRcHit_mAdc[l] <= 0) continue;
 	f = -1;
 	if      (fRcHit_mFlag[l] == 0) f = 0;
 	else if (fRcHit_mFlag[l] &  2) f = 1;
+	else if (fRcHit_mFlag[l] &  8) f = 2;
+	else if (fRcHit_mFlag[l] & 64) f = 3;
+	else if (fRcHit_mFlag[l] &128) f = 4;
 	if (f < 0) continue;
-	if (fRcHit_mAdc[l] <= 0) continue;
+	AdcneF[f][io]->Fill(TMath::Log(ne),TMath::Log(fMcHit_mAdc[k]/ne));
+	AdcneFRC[f][io]->Fill(TMath::Log(ne),TMath::Log(fRcHit_mAdc[l]/ne));
 	Double_t ratio = fMcHit_mAdc[k]/fRcHit_mAdc[l];
 	if (ratio < 0.1 || ratio > 10) continue;
 	if (fMcHit_mKey[k] != fRcHit_mIdTruth[l]) continue;
@@ -1398,89 +1290,23 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD6.root
 	if (fRcHit_mdX[l] <= 0) continue;
 	Double_t dX = (io == 1) ? fRcHit_mdX[l]*2.00/1.95 : fRcHit_mdX[l]*1.60/1.55*1.005;
 	Double_t nPdNdx = fMcHit_mdNdx[k]*dX;
-#ifdef __TpcRSPart__
-	if (fCharge && fMcHit_mnP[k] > 0) {
-	  Double_t lmom = fMcpIn;
-	  if (fMass > 0) {
-	    Double_t bgRC = TMath::Abs(fCharge)*fpIn/fMass;
-	    Double_t bgMC = fMcpIn/fMass;
-	    Double_t bgL10 = TMath::Log10(bgRC);
-	    neN[f][io]->Fill(TMath::Log(nPdNdx),TMath::Log(ne/nPdNdx));
-	    dNdxVsBg->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdx));
-	    if (bgL10 < fL10bgMin) continue;
-	    dNdxVsBgC[0]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdx));
-	    dNdxVsBgC[io+1]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdx));
-	    Double_t nPdNdxC = nPdNdx*StdEdxModel::instance()->NpCorrection(bgRC);
-	    dNdxVsBgCC[0]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdxC));
-	    dNdxVsBgCC[io+1]->Fill(bgL10, TMath::Log(fMcHit_mnP[k]/nPdNdxC));
-	    neN3D[f][io]->Fill(TMath::Log(nPdNdx),bgL10, TMath::Log(ne/nPdNdx));
-	    dXdSR[f][io]->Fill(bgL10, dX/fMcHit_mdS[k] - 1.0);
-	    
-	    dPL->Fill(TMath::Log10(fpIn), TMath::Log(fMcpIn/TMath::Abs(fCharge)/fpIn));
-	    Double_t betaRC = bgRC/TMath::Sqrt(bgRC*bgRC + 1);
-	    dBGL->Fill(TMath::Log(betaRC), bgMC - bgRC);
-	    dBG->Fill(betaRC, bgMC - bgRC);
-	  }
-	}
-#endif /*  __TpcRSPart__ */
-	NpdN[0]->Fill(   TMath::Log(fMcHit_mnP[k]), TMath::Log(nPdNdx/fMcHit_mnP[k]));
-	NpdN[io+1]->Fill(TMath::Log(fMcHit_mnP[k]), TMath::Log(nPdNdx/fMcHit_mnP[k]));
-	dNNp[0]->Fill(   TMath::Log(nPdNdx), TMath::Log(fMcHit_mnP[k]/nPdNdx));
-	dNNp[io+1]->Fill(TMath::Log(nPdNdx), TMath::Log(fMcHit_mnP[k]/nPdNdx));
 	Double_t y[kVar] = { fMcHit_mPosition_mX3[k], TanL, TMath::Log(dX),
 			     (Double_t) fRcHit_mMinpad[l]+fRcHit_mMaxpad[l]+1,
 			     (Double_t) fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1,
 			     (Double_t) fRcHit_mMinpad[l]+fRcHit_mMaxpad[l]+1+fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1
 	};
-	Double_t lADCr = TMath::Log(fRcHit_mAdc[l]);
-	Double_t lADCs = TMath::Log(fMcHit_mAdc[k]);
-#if 0
-	Double_t params[3][2] = {
-	  {   6.81054e-01,  -9.48271e-04}, // Inner
-	  {   6.07395e-01,  -3.72945e-04}, // Outer
-	  {   5.05106e-01,  -5.44289e-04}  // iTPC
-	};
-	Double_t dADC = params[io][0] + params[io][1]*TMath::Abs(y[0]);
-#else
-	Double_t dADC = 0;
-#endif
-#ifdef __ADCPLOTS__
-	Double_t z[4] = {lADCs, lADCs-lADCr, lADCs - dADC, lADCs-lADCr - dADC};
-	for (Int_t j = 0; j < kVarT; j++) {
-	  profs[io][j]->Fill(lADCr, y[j], z[0]);
-	  hists[io][j]->Fill(lADCr, y[j], z[1]);
-	  profs[io+2][j]->Fill(lADCr, y[j], z[2]);
-	  hists[io+2][j]->Fill(lADCr, y[j], z[3]);
-	}
-#ifdef __LogGamma__
-	Double_t Np = fMcHit_mnP[k];
-	if (fMcHit_mdS[k] < 0.1) continue;
-	Double_t NpRC = nPdNdx;
-	histdE[io][0]->Fill(fMcHit_mLgamma[k],dNdx); 
-	histdE[io][1]->Fill(TMath::Log(NpRC),           1e9*fRcHit_mCharge[l]/NpRC);
-	histdE[io][2]->Fill(TMath::Log(NpRC),TMath::Log(1e9*fRcHit_mCharge[l]/NpRC));
-	histdE[2][0]->Fill(fMcHit_mLgamma[k],NpRC/fRcHit_mdX[l]); 
-	histdE[2][1]->Fill(TMath::Log(NpRC),           1e9*fRcHit_mCharge[l]/NpRC);
-	histdE[2][2]->Fill(TMath::Log(NpRC),TMath::Log(1e9*fRcHit_mCharge[l]/NpRC));
-#endif /* __LogGamma__ */
-#endif /*  __ADCPLOTS__ */
 #ifdef __SPARSE__
 	//________________________________________________________________________________
 	//      Adc_t AdcV = { (Double_t) sector,  (Double_t) row, (Double_t) fRcHit_mMintmbk[0]+fRcHit_mMaxtmbk[0]+1, TMath::Abs(fRcHit_mPosition_mX3[0]), lADCr, lADCs - lADCr};
+	if (f != 0) continue;
+	Double_t lADCr = TMath::Log(fRcHit_mAdc[l]);
+	Double_t lADCs = TMath::Log(fMcHit_mAdc[k]);
 	Adc_t AdcV = { (Double_t) sector,  (Double_t) row, 
 		       (Double_t) fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1,
 		       (Double_t) fRcHit_mMinpad[l]+fRcHit_mMaxpad[l]+1, 
 		       TMath::Abs(fRcHit_mPosition_mX3[l]), lADCr, lADCs - lADCr};
 	if (AdcV.Within(xMin,xMax)) sparse[f]->Fill(&AdcV.sec);
 #endif
-#ifdef __WE_IO_NTB__
-	Int_t we = 0; 
-	if (sector > 12) we = 1;
-	Double_t ntb = fRcHit_mMintmbk[l]+fRcHit_mMaxtmbk[l]+1;
-	Int_t tb = tmbAx.FindBin(ntb) - 1;
-	if (tb < 0 || tb >= ktmBins) continue;
-	AdcHits[we][io][tb]->Fill(TMath::Abs(fRcHit_mPosition_mX3[l]), lADCr, lADCs - lADCr);
-#endif /* __WE_IO_NTB__ */
       }
     }
   }

@@ -357,6 +357,8 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"9p8GeV_fixedTarget_2026b" ,              20260124, 184723, "y2025z",  "9p8GeV_fixedTarget_2026 V1120"}, // 1st run = 27024044
   {"8p65GeV_fixedTarget_2026",               20260125, 193046, "y2025z",  "8p65GeV_fixedTarget_2026 V1150"}, // 1st run = 27025030
   {"13p5GeV_fixedTarget_2026",               20260127,  10925, "y2025z",  "13p5GeV_fixedTarget_2026 V1150"}, // 1st run = 27026051
+  {"OO_highlumi_2026",                       20260201,  55335, "y2025z",  "OO_highlumi_2026"}, // 1st run = 27032006
+  {"OO_lowlumi_2026",                        20260201,  62846, "y2025z",  "OO_lowlumi_2026"},  // 1st run = 27032007
 
   {"athena",                                 20301220,      1,      "",         "athena"}, // 
   {"epic",                                   20301221,      1,      "",           "epic"}, // 
