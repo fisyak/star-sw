@@ -4905,7 +4905,7 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
   FitP->Write();
 }
 //________________________________________________________________________________
-void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP", 
+void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP", 
 	     Option_t *opt="RM", 
 	     Int_t ix = -3, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
@@ -4923,18 +4923,38 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
   TFile *fRootFile = (TFile *) next(); // gDirectory->GetFile();
   if (! fRootFile ) {printf("There is no opened file\n"); return;}
   TH1 *hist = 0;// = (TH1 *) fRootFile->Get(HistName);
+  TH1 *hist20 = 0; // for threshould 
   //  fRootFile->GetObject(HistName,hist);
-  TString HName(HistName);
+  TString HistName;
+  TString HistName20;
+  TString HName(histName);
   TObjArray *objArray = HName.Tokenize("+");
   for (Int_t l = 0; l < objArray->GetEntries(); l++) {
-    const Char_t *histName = ((TObjString *) objArray->At(l))->GetName();
-    TObject *obj = fRootFile->Get(histName);
-    if (!obj) {printf("Cannot find %s\n", histName); return;}
+    HistName = TString(((TObjString *) objArray->At(l))->GetName());
+    TObject *obj = fRootFile->Get(HistName);
+    if (!obj) {printf("Cannot find %s\n", HistName.Data()); return;}
+    HistName20 = HistName;
+    if        (HistName.EndsWith("PC"))  {
+      HistName20.ReplaceAll("PC","P20C");
+    } else if (HistName.EndsWith("C"))   {
+      HistName20.ReplaceAll("CC","N20C");
+    } else if (HistName.EndsWith("P"))   {
+      HistName20 += "20";
+    } else                               {
+      HistName20 += "N20";
+    }
+    TObject *obj20 = 0;
+    if (HistName != HistName20) {
+      obj20 = fRootFile->Get(HistName20);
+    }
     if (obj->IsA()->InheritsFrom( "TH1" )) {
-      if (! hist) {hist = (TH1 *) obj; hist->SetName(HistName);}
-      else        {hist->Add((TH1 *) obj);}
+      if (! hist) {hist = (TH1 *) obj; hist->SetName(HistName); hist20 = (TH1 *) obj20;
+      } else   {
+	hist->Add((TH1 *) obj); 
+	if (hist20 && obj20) 	hist20->Add((TH1 *) obj20); 
+      }
     } else if (obj->IsA()->InheritsFrom( "THnSparse" )) {
-      if (TString(histName) == "Time" || TString(histName) == "TimeC") {
+      if (HistName == "Time" || HistName == "TimeC") {
 	if (! hist) hist = ((THnSparse *) obj)->Projection(1,0); 
 	else        hist->Add(((THnSparse *) obj)->Projection(1,0));
       } else {
@@ -5040,7 +5060,8 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
     }
   }
   Double_t params[20] = {0};
-  TH1 *proj = 0;
+  TH1D *proj = 0;
+  TH1D *proj20 = 0;
   TF1 *g = 0;
   Int_t ix1 = 0;
   Int_t ix2 = nx-mergeX+1;
@@ -5060,46 +5081,60 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
     Int_t ir1=i+mergeX-1;
     if (i == 0) {ir0 = 1; ir1 = nx;}
     else if (i == -2) {ir0 = 1; ir1 = 12;}
-    for (int j=jy1;j<=jy2;j++){
+    for (int j=jy1;j<=jy2;j++) {
       Int_t jr0 = j;
       Int_t jr1 = j+mergeY-1;
       if (j == 0) {
 	if (i != 0) continue;
 	jr0 = 1; jr1 = ny;
       }
+      proj = 0;
+      proj20 = 0;
+      TString title;
       if (dim == 3) {
-	if (j == 0) 
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("fX%i", ir0),ir0,ir1,1,ny); 
-	else if (i == 0) 
+	if (j == 0) {
+	  proj =               ((TH3 *) hist)->ProjectionZ(Form("fX%i", ir0),ir0,ir1,1,ny); 
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20X%i", ir0),ir0,ir1,1,ny); 
+	} else if (i == 0) {
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("fY%i", jr0),1, nx, jr0, jr1); 
-	else if (i == -2) 
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20Y%i", jr0),1, nx, jr0, jr1); 
+	} else if (i == -2) {
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("fW%i", jr0),1, 12, jr0, jr1); 
-	else if (i == -1) 
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20W%i", jr0),1, 12, jr0, jr1); 
+	} else if (i == -1) {
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("fE%i", jr0),13, nx, jr0, jr1); 
-	else if (ir0 == ir1 && jr0 == jr1) {
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20E%i", jr0),13, nx, jr0, jr1); 
+	} else if (ir0 == ir1 && jr0 == jr1) {
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i",      ir0,    jr0    ),ir0,ir1,jr0,jr1); 
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i",      ir0,    jr0    ),ir0,ir1,jr0,jr1); 
 	} else if (ir0 == ir1) {  
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i",ir0, jr0,jr1),ir0,ir1,jr0,jr1);
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20f%i_%i_%i",ir0, jr0,jr1),ir0,ir1,jr0,jr1);
 	} else if (jr0 == jr1) {  
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i",ir0,ir1,jr0),ir0,ir1,jr0,jr1);
-	} else {  
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i_%i",ir0,ir1,jr0),ir0,ir1,jr0,jr1);
+	}  else {  
 	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i_%i",ir0,ir1,jr0,jr1),ir0,ir1,jr0,jr1);
+	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i_%i_%i",ir0,ir1,jr0,jr1),ir0,ir1,jr0,jr1);
 	}
 	if (! proj) continue;
-	TString title(proj->GetTitle());
+	title = TString(proj->GetTitle());
 	title += Form(" in x [%5.1f,%5.1f] and y [%5.1f,%5.1f] range",
 		      xax->GetBinLowEdge(ir0), xax->GetBinUpEdge(ir1),
 		      yax->GetBinLowEdge(jr0), yax->GetBinUpEdge(jr1));
 	proj->SetTitle(title.Data());
 	cout<<"Histogram "<<proj->GetName()<<" was created"<<endl;
-      }
-      else {
+	if (proj20) {
+	  proj20->SetTitle(title.Data());
+	  cout<<"Histogram "<<proj20->GetName()<<" was created"<<endl;
+	}
+      } else {
 	if (ir0 == ir1) 
 	  {  proj = ((TH2 *) hist)->ProjectionY(Form("f%i",   ir0),    ir0,ir1);cout<<"Histogram "<<proj->GetName()<<" was created"<<endl;}
 	else 
 	  {  proj = ((TH2 *) hist)->ProjectionY(Form("f%i_%i",ir0,ir1),ir0,ir1);cout<<"Histogram "<<proj->GetName()<<" was created"<<endl;}
 	if (! proj) continue;
-	TString title(proj->GetTitle());
+	title = TString(proj->GetTitle());
 	title += Form(" in x [%5.1f,%5.1f] range",
 		      xax->GetBinLowEdge(ir0), xax->GetBinUpEdge(ir1));
 	proj->SetTitle(title.Data());
@@ -5136,7 +5171,7 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
 	}
 	g = FitG0P(proj,opt);
       } else if (TString(FitName) == "GP") {
-	if (TString(HistName).Contains("TPoint")) {
+	if (HistName.Contains("TPoint")) {
 	  g = FitGP(proj,opt,3,-1,-1,1);
 	} else {
 	  g = FitGP(proj,opt,nSigma,pow,zmin,zmax);
@@ -5212,7 +5247,7 @@ void dEdxFit(const Char_t *HistName,const Char_t *FitName = "GP",
 	}
 	if (TString(FitName) == "G4E")  	g = FitG4E(proj,opt,IO, Sign);
 	if (TString(FitName) == "G4EX") 	g = FitG4EX(proj,opt,IO, Sign);
-	if (TString(FitName) == "G4EY") 	g = FitG4EY(proj,opt,IO, Sign);
+	if (TString(FitName) == "G4EY") 	g = FitG4EY(proj,opt,IO, Sign, proj20);
 	if (TString(FitName) == "G4EG") 	g = FitG4EG(proj,opt,IO, Sign);
       }
       else if (TString(FitName) == "L5") g = FitL5(proj,opt,5);
