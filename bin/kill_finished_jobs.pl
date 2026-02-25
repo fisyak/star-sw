@@ -1,5 +1,8 @@
 #! /usr/bin/env perl
-my @JobList = `condor_q -wide | grep -w R`;# |  grep dEdx`; 
+use File::Basename;
+use Cwd;
+my $dir =  File::Basename::basename(Cwd::cwd());
+my @JobList = `condor_q -wide | grep -w R |  grep $dir`; 
 my $debug = 0;
 my @ids = ();
 foreach my $job (@JobList) {
