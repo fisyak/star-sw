@@ -732,5 +732,21 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "tan(#lambda)"; nx = 140; xMin = 7; xMax = - xMin;}
     if (muPlot.Contains(":z1",TString::kIgnoreCase)) { var = "log(ADC))"; nx = 20, xMin = 2; xMax = 12;}
     MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, "dsigma>0&&dsigma<0.1", "prof", zMin, zMax, Title, var,muPlot);
+  } else if (Name.BeginsWith("Sparse",TString::kIgnoreCase) && Name.Contains("Adc",TString::kIgnoreCase)) {
+    TString muPlot = plot;
+    TString Cut("chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2"); 
+    if (Opt == "" || Opt == "I") Cut += "&&j==1";
+    else                         Cut += "&&j==2";
+    if (plot == "" || plot == "nomuJ") {muPlot = "mu:z3"; }
+    Double_t zMin = 0.3, zMax = 0.7;
+    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 1.0;}
+    TString var("Log(Adc) "); nx = 72, xMin = 3.0; xMax = 11.5;
+    if (muPlot.Contains(":x",TString::kIgnoreCase)) { var = "Halff"; nx = 2; xMin = 0.5; xMax = 24.5;}
+    if (muPlot.Contains(":y",TString::kIgnoreCase)) { var = "In/Out"; nx = 2; xMin = 0.5; xMax = 80.5;}
+    if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "No. time buckets"; nx = 25; xMin = 2.5; xMax = - 27.5;}
+    if (muPlot.Contains(":z1",TString::kIgnoreCase)) { var = "No. pads"; nx = 15; xMin = 1.5; xMax =  16.5;}
+    if (muPlot.Contains(":z2",TString::kIgnoreCase)) { var = "drift length (cm)"; nx = 110; xMin = -5.; xMax = 215.;}
+    if (muPlot.Contains(":z3",TString::kIgnoreCase)) { var = "log(ADC))"; nx = 20, xMin = 2; xMax = 12;}
+    MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, Cut, "prof", zMin, zMax, Title, var,muPlot);
   }
 }

@@ -1036,8 +1036,6 @@ TGraphErrors *OmegaTau() {
   return gr2;
 }
 //________________________________________________________________________________
-//#include "TpcTAdc.C"
-//________________________________________________________________________________
 void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD8.root") {
   gSystem->Load("StBichsel");
   TDirIter Dir(files);
