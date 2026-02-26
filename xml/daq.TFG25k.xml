@@ -15,7 +15,7 @@
   else
     set evtsFileF = $INPUTFILE0;
     set f         = 1
-    set l         = 10000
+    set l         = 5000; #10000
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .
@@ -44,7 +44,8 @@
 #  set evout = ",-evout";
   set evout = ",evout";
   set PicoMode = "";
-  set Cosmic = "";
+  set Cosmic = ""
+#  set Cosmic = ",dEdxCalib";
   echo ${SUBMITTINGDIRECTORY} | grep Cosmic
   if ($? == 0) then
     set Cosmic = ",Cosmic"
@@ -96,5 +97,6 @@
         <stderr URL="file:./sched$JOBID.err" />
 <!-- <input URL="command:daqdR.pl" /> -->
 <!-- <input URL="command:daqdR.local.pl" /> -->
-<input URL="command:daqdR.local.pl 0  st_physics_adc" />
+<!-- <input URL="command:daqdR.local.pl 0  st_physics_adc" /> -->
+<input URL="command:daqdR.local.pl" />
 </job>
