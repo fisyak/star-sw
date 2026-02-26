@@ -17,15 +17,22 @@
 #include "Riostream.h"
 #include "TDirIter.h"
 #include "TFile.h"
+#include "Tsystem"
+#include "TDatime.h"
 #endif
 void Recover(const Char_t *files ="./*.MuDst.root", Bool_t update = kTRUE) {
   TDirIter Dir(files);
   Char_t *file = 0;
   Int_t NFiles = 0;
   TFile *f = 0;
+  FileStat_t buf;
   //  gEnv->SetValue("TFile.Recover", 0); // don't recover files
+  Long_t now = TDatime().Convert();
   while ((file = (Char_t *) Dir.NextFile())) {
-    cout << "Try to open " << file << endl;
+    Int_t iok = gSystem->GetPathInfo(file,buf);;
+    Long_t dT = buf.fMtime - now;
+    cout << "Try to open " << file << "\tdT = " << dT << endl;
+    if (dT > -600) continue;
     if (update)  f = new TFile(file,"update");// 
     else         f = new TFile(file);
     cout << "File\t" << NFiles <<"\t" << file; 

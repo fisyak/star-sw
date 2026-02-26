@@ -24,11 +24,14 @@
    2  p1          -1.49290e+00   5.04312e-02   9.08945e-04  -6.33686e-02
    3  p2          -8.55033e-04   1.51892e-04   1.51892e-04  -5.63747e+00
 ================================================================================
-04/23/2022
-~/work/Tpc/TpcRS/2019/TpcRS_ped/SparseFit
+~/work/Tpc/TpcRS/2019/TpcRS_ped/SparseFit]
   root.exe 'lDb.C("sdt20190226",0)' SparseGP.root 'mdf4ADCM.C+(1)' // Inner
   root.exe 'lDb.C("sdt20190226",0)' SparseGP.root 'mdf4ADCM.C+(2)' // Outer
   root.exe 'lDb.C("sdt20190226",0)' SparseGP.root  mdf4ADCM.C+     // Test
+================================================================================
+02/25/2026
+*/
+//root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C mdf4ADCM.C+
 */
 #include <stdlib.h>
 #include <string.h>
@@ -41,8 +44,6 @@
 #include "TLeafI.h"
 #include "TH1.h"
 #include "TH2.h"
-#include "TF2.h"
-#include "TProfile.h"
 #include "TProfile.h"
 #include "TGraph.h"
 #include "TMath.h"
@@ -50,9 +51,7 @@
 #include "TCanvas.h"
 #include "TSystem.h"
 #include "TBrowser.h"
-#include "TCanvas.h"
 #include "StDetectorDbMaker/St_tss_tssparC.h"
-#include "StDetectorDbMaker/St_TpcAdcCorrectionBC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrectionCC.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection4MDF.h"
@@ -71,7 +70,19 @@ TProfile *prof[kTPC][kVar] = {0};
 TProfile *profC[kTPC][kVar] = {0};
 TProfile *profD[kTPC][kVar] = {0};
 TH2F     *h2[kTPC][kVar] = {0};     
-Double_t extraCor[2] = {3.33398e-01+1.37760e-01, 4.68447e-02 +1.26432e-01}; // TpcAdcCorrectionC.20190225.230108.C
+struct Plot_t {
+  const Char_t *vName;
+  Int_t nx;
+  Double_t xmin;
+  Double_t xmax;
+};
+Plot_t Plots[kVar] = {
+  {"tmbks",     25, 2.5, 27.5},
+  {"pads",      15, 1.5, 16.5},
+  {"Z",        110, -5., 215.},
+  {"AdcL",      71, TMath::Log(16.),  10.04}
+};
+const Char_t *IO[kTPC] = {"I","O"};
 //--------------------------------------------------------------------------------
 Double_t mdf4(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
   return St_TpcAdcCorrection4MDF::instance()->Eval(k,z0,z1,z2,z3);
@@ -83,28 +94,6 @@ Double_t mdf6(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
 //--------------------------------------------------------------------------------
 Double_t mdf5(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
   return St_TpcAdcCorrection5MDF::instance()->Eval(k,z0,z1,z2,z3);
-}
-//--------------------------------------------------------------------------------
-Double_t adcB(Int_t k, Double_t ADC, Double_t zG) {
-  Float_t gasGain = 1;
-  Float_t gainNominal = 0;
-   St_tss_tssparC *tsspar = St_tss_tssparC::instance();
-  if (k == 1 ) {
-    // kTpcOutIn = kTpcInner;
-    gainNominal = tsspar->gain_in()*tsspar->wire_coupling_in(); // 3558 * 0.533
-    gasGain = tsspar->gain_in(1,1) *tsspar->wire_coupling_in(); // 
-  } else {
-    // kTpcOutIn = kTpcOuter;
-    gainNominal = tsspar->gain_out()*tsspar->wire_coupling_out(); // 1310 * 0.512
-    gasGain = tsspar->gain_out(1,41)*tsspar->wire_coupling_out(); // 
-  }
-  Double_t Adc2GeVReal = tsspar->ave_ion_pot() * tsspar->scale()/gasGain; // 2.85e-08 (GeV/electron) * 335 (electrons/ADC) / gasGain =
-  //                   =  2.85e-08 * 335 /( 3558 * 0.533) * 1e9 =  5.03 eV/ADC for Inner   => scale MC -> RC : -0.3542 TpcAdcCorrectionB.20190225.230054.C; MIP = 1.6 cm 2.54 keV/cm /5.03 ev/ADC = 795 ADC
-  //                   =  2.85e-08 * 335 /( 1310 * 0.512) * 1e9 = 14.23 ev/ADC for Outer                     : -0.6202                                          = 2.0    2.54        /14.23       = 361 ADC
-  Double_t adc = St_TpcAdcCorrectionBC::instance()->CalcCorrection(k,ADC,TMath::Abs(zG));
-  Double_t dE = Adc2GeVReal*adc;
-  adc *= TMath::Exp(St_TpcAdcCorrectionBC::instance()->a(k)[0]); //TMath::Exp(-cor->a[0]);
-  return adc;
 }
 //--------------------------------------------------------------------------------
 Double_t adcC(Int_t k, Double_t ADC) {
@@ -125,10 +114,6 @@ Double_t adcC(Int_t k, Double_t ADC) {
   //                   =  2.85e-08 * 335 /( 1310 * 0.512) * 1e9 = 14.23 ev/ADC for Outer                     : -0.6202
   Double_t adc = St_TpcAdcCorrectionCC::instance()->CalcCorrection(k,ADC);
   Double_t dE = Adc2GeVReal*adc;
-  //  Double_t extraCor[2] = {+3.33398e-01+1.37760e-01, 4.68447e-02 +1.26432e-01}; // TpcAdcCorrectionC.20190225.230107.C
-  //  adc *= TMath::Exp(St_TpcAdcCorrectionBC::instance()->a(k)[0]); //TMath::Exp(-cor->a[0]);
-  //  adc *= TMath::Exp(-extraCor[k]);
-  
   return adc;
 }
 TMultiDimFit* fit = 0;
@@ -409,38 +394,17 @@ void FitPS::Loop2()
 //by  b_branchname->GetEntry(ientry); //read only this branch
   if (fChain == 0) return;
   TFile *fOut = new TFile("Test.root","recreate");
-  struct Plot_t {
-    const Char_t *vName;
-    Int_t nx;
-    Double_t xmin;
-    Double_t xmax;
-  };
-  Plot_t Plots[kVar] = {
-    {"tmbks",     25, 2.5, 27.5},
-    {"pads",      15, 1.5, 16.5},
-    {"Z",        110, -5., 215.},
-    {"AdcL",      70,  3.,  10.}
-  };
-  static Double_t Adjust[2] = {
-    0.4815 - (1.0 - (-1.03976e-01)), // Outer
-    0.4948 - (1.0 - ( 1.47851e-01))  // Inner
-  };
-  const Char_t *IO[kTPC] = {"I","O"};
-  for (Int_t io = 0; io < 2; io++)
+  for (Int_t io = 0; io < 2; io++) {
     for (Int_t j = 0; j < kVar; j++) {
-#if 0
-      prof[io][j]  = new TProfile(Form("%s%s",Plots[j].vName,IO[io]),"mu-0.4",Plots[j].nx,Plots[j].xmin,Plots[j].xmax,"s");
-      profC[io][j] = new TProfile(Form("%s%sC",Plots[j].vName,IO[io]),"predicted mu - 0.4",Plots[j].nx,Plots[j].xmin,Plots[j].xmax,"s");
-#else
       prof[io][j]  = new TProfile(Form("%s%s",Plots[j].vName,IO[io]),"mu",Plots[j].nx,Plots[j].xmin,Plots[j].xmax,"s");
       profC[io][j] = new TProfile(Form("%s%sC",Plots[j].vName,IO[io]),"predicted mu",Plots[j].nx,Plots[j].xmin,Plots[j].xmax,"s");
-#endif
       profC[io][j]->SetMarkerColor(2); profC[io][j]->SetLineColor(2); 
       profD[io][j] = new TProfile(Form("%s%sD",Plots[j].vName,IO[io]),"mu - predicted",Plots[j].nx,Plots[j].xmin,Plots[j].xmax,"s");
       profD[io][j]->SetMarkerColor(4); profD[io][j]->SetLineColor(4); 
       h2[io][j] = new TH2F(Form("%s%s2D",Plots[j].vName,IO[io]),"dmu",Plots[j].nx,Plots[j].xmin,Plots[j].xmax,100,-0.25,0.25);
     }
-	 Long64_t nentries = fChain->GetEntriesFast();
+  }
+  Long64_t nentries = fChain->GetEntriesFast();
   Double_t xx[4], yy[4];
   Long64_t nbytes = 0, nb = 0;
   
@@ -450,46 +414,32 @@ void FitPS::Loop2()
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     Int_t io = j - 1;
     if (io < 0 || io > 1)    continue;
-#if 0
-    if (chisq >  200) continue;
-    if (dmu   > 0.01) continue;
-#else
-    if (prob   < 0.01) continue;
-    if (dmu    > 0.01) continue;
-    if (dsigma > 0.01) continue;
-#endif
+    // 02/24/2026 
+    //root.exe [32] FitP->Draw("mu:z3","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2","colz")
+    if (chisq <= 0.0)   continue;
+    if (chisq >  2.5e2) continue;
+    if (dsigma > 0.02)  continue;
+    if (dmu    > 0.02)  continue;
+    if (sigma >   0.1)  continue;
+    if (TMath::Abs(mu-0.5) > 0.2) continue;
     xx[0] = z0;// Ntmbks
     xx[1] = z1;// Npads
     xx[2] = z2;// z
     xx[3] = z3;// AdcL
     Int_t ioT = 1 - io;
-    Double_t muC = mu + extraCor[ioT];
-#if 0
-    //    Double_t pred = mdf4(io,z0,z1,z2,z3) + Adjust[io];
-    //    Double_t pred = mdf4(io,z0,z1,z2,z3) + Adjust[io];
-    //    Double_t pred = TMath::Log(adcB(ioT, TMath::Exp(z3), TMath::Abs(207.707 - xx[2]))) - z3;
-    Double_t pred = TMath::Log(adcB(ioT, TMath::Exp(z3), TMath::Abs(207.707 - xx[2]))) - z3 + mdf5(ioT,z0,z1,z2,z3);
-    Double_t dmu = mu - pred;
-    for (Int_t j = 0; j < kVar; j++) {
-      prof[io][j]->Fill(xx[j],mu - 0.4);
-      profC[io][j]->Fill(xx[j],pred - 0.4);
-      profD[io][j]->Fill(xx[j],dmu);
-      h2[io][j]->Fill(xx[j],dmu);
-    }
-#else
+    Double_t muC = mu;
     Double_t ADC = TMath::Exp(z3);
-    Double_t pred = adcC(ioT, ADC) + mdf5(ioT,z0,z1,z2,z3);
+    Double_t pred = adcC(ioT, ADC); // + mdf6(ioT,z0,z1,z2,z3); 
     Double_t adcM = ADC*TMath::Exp(mu);
     Double_t dval = adcM*dmu;
-    Double_t dmu  = adcM - pred;
+    Double_t devmu  = adcM - pred;
     
     for (Int_t j = 0; j < kVar; j++) {
       prof[io][j]->Fill(xx[j],adcM);
       profC[io][j]->Fill(xx[j],pred);
-      profD[io][j]->Fill(xx[j],dmu);
-      h2[io][j]->Fill(xx[j],dmu);
+      profD[io][j]->Fill(xx[j],devmu);
+      h2[io][j]->Fill(xx[j],devmu);
     }
-#endif
   }
   for (Int_t io = 0; io < 2; io++) {
     TCanvas *c1 = new TCanvas(Form("c%s",IO[io]),IO[io], 800, 800);
@@ -545,32 +495,28 @@ void FitPS::Loop()
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     if (j != fgIO)    continue; // j = 1 Inner, j = 2 Outer; fgIO = 1 Inner, = 2 Outer,  
-#if 0
-    if (chisq >  200) continue;
-    if (dmu   > 0.01) continue;
-#else
-    if (prob   < 0.01) continue;
-    if (dmu    > 0.01) continue;
-    if (dsigma > 0.01) continue;
-#endif
+    //  02/24/2026 
+    //root.exe [32] FitP->Draw("mu:z3","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2","colz")
+    if (chisq <= 0.0)   continue;
+    if (chisq >  2.5e2) continue;
+    if (dsigma > 0.02)  continue;
+    if (dmu    > 0.02)  continue;
+    if (sigma >   0.1)  continue;
+    if (TMath::Abs(mu-0.5) > 0.2) continue;
     xx[0] = z0;// Ntmbks
     xx[1] = z1;// Npads
     xx[2] = z2;// z
     xx[3] = z3;// AdcL
     Int_t ioT = 2 - fgIO;
-    Double_t muC = mu + extraCor[ioT];
+//     Double_t dval = dmu;
+//     Double_t val  = mu;
+    Double_t muC = mu;
     Double_t ADC = TMath::Exp(z3);
-#if 0
-    Double_t adc = adcB(ioT, ADC, TMath::Abs(207.707 - xx[2]));
-    Double_t shift = TMath::Log(adc/ADC);
-    fit->AddRow(xx, mu-shift, dmu*dmu);
-#else
-    Double_t adc = adcC(ioT, ADC);
-    Double_t adcM = ADC*TMath::Exp(muC);
+    Double_t pred = adcC(ioT, ADC) + mdf6(ioT,z0,z1,z2,z3); // mdf5(ioT,z0,z1,z2,z3);
+    Double_t adcM = ADC*TMath::Exp(mu);
     Double_t dval = adcM*dmu;
-    Double_t val  = adcM - adc;
+    Double_t devmu  = adcM - pred;
     fit->AddRow(xx, val, dval*dval);
-#endif
     nev++;
   }
 }
@@ -582,7 +528,14 @@ Double_t funcMDF(Double_t *x, Double_t *p=0) {
   return fit->Eval(x, p);
 }
 //________________________________________________________________________________
-void mdf4ADCM(Int_t io) {
+#include "operatorTMultiDim.h"
+//________________________________________________________________________________
+void mdf4ADCM(Int_t io) { // fit
+  TTree *tree = (TTree *) gROOT->GetListOfSpecials()->FindObject("FitP");
+  if (! tree) {
+    tree = (TTree *) gDirectory->Get("FitP");
+  }
+  if (! tree ) return;
   // Global data parameters 
   Int_t nVars      =  4;
   if (fgNP > 0) nVars = fgNP;
@@ -609,8 +562,6 @@ void mdf4ADCM(Int_t io) {
   // Print out the start parameters
   fit->Print("p");
   // Fill data  
-  TTree *tree = (TTree *) gDirectory->Get("FitP");
-  if (! tree ) return;
   if (! (io == 1 || io == 2) ) return;
   fgIO = io;
   FitPS t(tree);
@@ -633,41 +584,36 @@ void mdf4ADCM(Int_t io) {
   new TCanvas("mdfPar","mdfPar");
   mdfP->Draw();
 #endif
-  Int_t i, j;
-  // Assignment to coefficients vector.
-  cout << "  row.PolyType = \t"      << fit->GetPolyType() << ";" << endl;
-  cout << "  row.NVariables = \t"    << fit->GetNVariables() << ";" << endl;
-  cout << "  row.NCoefficients = \t" << fit->GetNCoefficients() << ";" << endl;
-  for (i = 0; i < fit->GetNVariables(); i++) {
-    cout << Form("  row.XMin[%2i] = %10.5g;", i,fit->GetMinVariables()->operator()(i));
-  }
-  cout << endl;
-  for (i = 0; i < fit->GetNVariables(); i++) {
-    cout << Form("  row.XMax[%2i] = %10.5g;", i,fit->GetMaxVariables()->operator()(i));
-  }
-  cout << endl;
-  for (i = 0; i < fit->GetNCoefficients(); i++) {
-    for (j = 0; j < fit->GetNVariables(); j++) {
-      cout << Form("  row.Power[%2i] = %2i;",i * fit->GetNVariables() + j,
-		   fit->GetPowers()[fit->GetPowerIndex()[i] * fit->GetNVariables() + j]);
-    }
-    cout << endl;
-  }
-  cout << "  row.DMean = \t"          << fit->GetMeanQuantity() << ";" << endl;
-  for (i = 0; i < fit->GetNCoefficients(); i++) {
-    cout << Form("  row.Coefficients[%2i]    = %15.5g;", i, fit->GetCoefficients()->operator()(i));
-    if ((i+1) %2 == 0) cout << endl;
-  }
-  if (fit->GetNCoefficients()%2) cout << endl;
-  for (i = 0; i < fit->GetNCoefficients(); i++) {
-    cout << Form("  row.CoefficientsRMS[%2i] = %15.5g;", i, fit->GetCoefficientsRMS()->operator()(i));
-    if ((i+1) %2 == 0) cout << endl;
-  }
-  if (fit->GetNCoefficients()%2) cout << endl;
+  Int_t nrows = 2;
+  TString tableName("TpcAdcCorrection6MDF_%s.AuAu_2023.C",IO[2-io]);
+  TString cOut =  Form("%s%s_%s.C", tableName.Data(), Sets[ki], FieldOpt[lf]);
+  cout << "Create " << cOut << endl;
+  out.open(cOut.Data());
+  out << "#ifndef __CINT__" << endl;
+  out << "#include \"tables/St_tpcCorrection_Table.h\"" << endl;
+  out << "#endif" << endl;
+  out << "TDataSet *CreateTable() {" << endl;
+  out << "  if (!gROOT->GetClass(\"St_MDFCorrection4\")) return 0;" << endl;
+  out << "  Int_t nrows = 2;" << endl
+  out << "  MDFCorrection4_st row;" << endl;
+  out << "  St_MDFCorrection4 *tableSet = new St_MDFCorrection4(\"" << tableName.Data() << "\"," << nrows << ");" << endl;
+  out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
+  out << "  row.idx      =        "<< 3 - io <<";   // mdf4ADCM(" << io << "2)" << endl;
+  out << "  row.nrows    =     nrows;" << endl;
+  cout << *fit;
+  out << *fit;
+  out << "  return (TDataSet *)tableSet;" << endl;
+  out << "}" << endl;
+  out.close();
+
 }
 //________________________________________________________________________________
-void mdf4ADCM() {
-  TTree *tree = (TTree *) gDirectory->Get("FitP");
+void mdf4ADCM() {// Test
+  
+  TTree *tree = (TTree *) gROOT->GetListOfSpecials()->FindObject("FitP");
+  if (! tree) {
+    tree = (TTree *) gDirectory->Get("FitP");
+  }
   if (! tree ) return;
   FitPS t(tree);
   t.Loop2();
