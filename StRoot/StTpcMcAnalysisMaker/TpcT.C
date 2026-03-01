@@ -109,6 +109,7 @@ end
 #endif
 #include "Ask.h"
 #include "Names.h"
+#include "StBichsel/Bichsel.h"
 #include "StBichsel/StdEdxModel.h"
 TMultiDimFit* MDfit = 0;
 TFile *fOut = 0;
@@ -1221,6 +1222,11 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD8.root
     }
   }
 #endif
+  //const static Double_t pMomax = 0.75;
+  const  Double_t pMoMIP = 0.526; // MIP from Heed bg = 3.77 => p_pion = 0.526
+  const  Double_t pMomin = pMoMIP - 0.05; // 0.45;
+  const  Double_t pMomax = pMoMIP + 0.05; // 0.55;
+  static TH3F *SecRow3  = new TH3F("SecRow3" ,Form("<log(dEdx_{MC}/Pion) for momentum in range = [%5.3f,%5.3f]",pMomin,pMomax), 24, 0.5,24.5, 72,0.5,72.5, 200,-5.,5.);
   TString  currentFileName;
   TChain *chain = iter.Chain();
   Double_t fMass = -1;
@@ -1266,6 +1272,24 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD8.root
       Double_t r2 =  fMcHit_mAdc2[k]/fMcHit_mAdc[k];
       TVector3 pxyzL(fMcHit_mLocalMomentum_mX1[k],fMcHit_mLocalMomentum_mX2[k],fMcHit_mLocalMomentum_mX3[k]);
       Double_t TanL = pxyzL.z()/pxyzL.Perp();
+      Double_t pMC = pxyzL.Mag();
+      // MIP block
+      if (pMC >= pMomin && pMC <= pMomax && fMcHit_mdS[k] > 0.0 && fMcHit_mVolumeId[k] < 10000) {
+	Double_t dEdxMC = fMcHit_mdE[k]/fMcHit_mdS[k];
+	const Double_t pion_mass = 0.13956995;
+	Double_t betagamma = pMC/pion_mass;
+#if 0 /*  TpcLengthCorrectionMD2) ||          TpcLengthCorrectionMDF) ||	  TpcLengthCorrection   */
+	Double_t dx2 = TMath::Log2(fMcHit_mdS[k]);
+	Double_t dEdxPred = 1.e-6*TMath::Exp(Bichsel::Instance()->GetMostProbableZ(TMath::Log10(betagamma),dx2));
+#else /*  TpcLengthCorrectionMDN */
+	Double_t par[4] = {TMath::Log10(betagamma), 1., 1., pion_mass};
+	Double_t dEdxPred = 1.e-6*TMath::Exp(StdEdxModel::instance()->zMP(par,&par[1]));
+#endif
+	Double_t z = TMath::Log(dEdxMC/dEdxPred);
+	Int_t sector = fMcHit_mVolumeId[k]/100;
+	Int_t row    = fMcHit_mVolumeId[k]%100;
+	SecRow3->Fill(sector,row, z);
+      }
       // RC block
       for (Int_t l = 0; l < fNoRcHit; l++) {
 	if (fRcHit_mAdc[l] <= 0) continue;
@@ -1312,7 +1336,7 @@ void TpcTAdc(const Char_t *files="*.root", const Char_t *Out = "AdcSparseD8.root
   fOut->Write();
 #ifdef __SPARSE__
   for (Int_t f = 0; f < 2; f++) {
-    sparse[f]->Write();
+    if (sparse[f])     sparse[f]->Write();
   }
 #endif
 }
