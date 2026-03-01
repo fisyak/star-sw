@@ -6,6 +6,7 @@
 #include "TF3.h"
 #include "TF2.h"
 #include "TF1.h"
+#include "TMath.h"
 class St_MDFCorrection4C : public TChair {
  public:
   enum EMDFPolyType {
@@ -19,7 +20,8 @@ class St_MDFCorrection4C : public TChair {
   UChar_t 	idx(Int_t k = 0)        	const {return Struct(k)->idx;}
   UChar_t 	nrows(Int_t k = 0) 	        const {return Struct(k)->nrows;}
   UChar_t 	PolyType(Int_t k = 0) 	        const {return Struct(k)->PolyType;}
-  UChar_t 	NVariables(Int_t k = 0) 	const {return Struct(k)->NVariables;}
+  Char_t 	NVariablesS(Int_t k = 0) 	const {return (Char_t) (Struct(k)->NVariables);}
+  Char_t  	NVariables(Int_t k = 0) 	const {return TMath::Abs(NVariablesS(k));}
   UChar_t 	NCoefficients(Int_t k = 0) 	const {return Struct(k)->NCoefficients;}
   UChar_t* 	Powers(Int_t k = 0) 	        const {return Struct(k)->Power;}
   Double_t 	DMean(Int_t k = 0)           	const {return Struct(k)->DMean;}
