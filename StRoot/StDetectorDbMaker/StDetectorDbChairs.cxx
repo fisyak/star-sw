@@ -514,6 +514,8 @@ MakeChairInstance2(tpcCorrection,St_TpcEdgeC,Calibrations/tpc/TpcEdge);
 MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectionBC,Calibrations/tpc/TpcAdcCorrectionB);
 #include "St_TpcAdcCorrectionCC.h"
 MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectionCC,Calibrations/tpc/TpcAdcCorrectionC);
+#include "St_TpcAdcCorrectPromptC.h"
+MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectPromptC,Calibrations/tpc/TpcAdcCorrectPrompt);
 #include "St_TpcAdcCorrectionMDF.h"
 MakeChairInstance2(MDFCorrection,St_TpcAdcCorrectionMDF,Calibrations/tpc/TpcAdcCorrectionMDF);
 #include "St_TpcAdcCorrection3MDF.h"

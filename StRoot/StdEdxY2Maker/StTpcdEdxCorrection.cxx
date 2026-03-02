@@ -16,6 +16,7 @@
 #include "StDetectorDbMaker/St_TpcEdgeC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrectionBC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrectionCC.h"
+#include "StDetectorDbMaker/St_TpcAdcCorrectPromptC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrectionMDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection3MDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection4MDF.h"
@@ -98,6 +99,7 @@ void StTpcdEdxCorrection::ReSetCorrections() {
   m_Corrections[kUncorrected           ] = dEdxCorrection_t("UnCorrected"         ,""                                                                   ,0); 					       
   m_Corrections[kAdcCorrection         ] = dEdxCorrection_t("TpcAdcCorrectionB"   ,"ADC/Clustering nonlinearity correction"				,St_TpcAdcCorrectionBC::instance());	     
   m_Corrections[kAdcCorrectionC        ] = dEdxCorrection_t("TpcAdcCorrectionC"   ,"alternative ADC/Clustering nonlinearity correction"			,St_TpcAdcCorrectionCC::instance());	     
+  m_Corrections[kAdcCorrectPrompt      ] = dEdxCorrection_t("TpcAdcCorrectPrompt" ,"alternative ADC/Clustering nonlinearity correction for Prompt"	,St_TpcAdcCorrectPromptC::instance());	     
   m_Corrections[kEdge                  ] = dEdxCorrection_t("TpcEdge"             ,"Gain on distance from Chamber edge"                                 ,St_TpcEdgeC::instance());		     
   m_Corrections[kAdcCorrectionMDF      ] = dEdxCorrection_t("TpcAdcCorrectionMDF" ,"ADC/Clustering nonlinearity correction MDF"				,St_TpcAdcCorrectionMDF::instance());	     
   /* used only for tests
@@ -489,8 +491,8 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       xx[3] = TMath::Log(adcMax);
       dE.mdEmax.fdE = adcMax*Adc2GeVReal*TMath::Exp(Cor);
       goto ENDL;
-    } else if (k == kAdcCorrection6MDF) { 
-      goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
+    } else if (k == kAdcCorrection6MDF || k == kAdcCorrectPrompt ) { 
+      goto ENDL; // kAdcCorrection6MDF and kAdcCorrectPrompt are in kAdcCorrectionC
     }
     cor = ((St_tpcCorrection *) m_Corrections[k].Chair->Table())->GetTable();
     if (! cor) goto ENDL;
@@ -522,19 +524,26 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
 	  return k;
 	}
 	goto ENDL;
-      } else if (k == kAdcCorrection6MDF) { 
-	goto ENDL; // kAdcCorrection6MDF is in kAdcCorrectionC
       } else if (k == kAdcCorrectionC) {
-	ADC = chairC->CalcCorrection(l,adcCF);
-	Double_t ADC20 = chairC->CalcCorrection(l,adc20);
-	Double_t ADCMax = chairC->CalcCorrection(l,adcMax);
-	if (m_Corrections[kAdcCorrection6MDF].Chair) {
-	  Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(adcCF)};
-	  ADC += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
-	  xx[3] = TMath::Log(adc20);
-	  ADC20 += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
-	  xx[3] = TMath::Log(adcMax);
-	  ADCMax += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
+	Double_t ADC20;
+	Double_t ADCMax;
+	if (TMath::Abs(CdEdx.xyz[2]) > 203. && m_Corrections[kAdcCorrectPrompt].Chair) {// prompt hits
+	  St_TpcAdcCorrectPromptC *chairP = (St_TpcAdcCorrectPromptC *) m_Corrections[kAdcCorrectPrompt].Chair;
+	  ADC = chairP->CalcCorrection(l,adcCF);
+	  ADC20 = chairP->CalcCorrection(l,adc20);
+	  ADCMax = chairP->CalcCorrection(l,adcMax);
+	} else {
+	  ADC = chairC->CalcCorrection(l,adcCF);
+	  ADC20 = chairC->CalcCorrection(l,adc20);
+	  ADCMax = chairC->CalcCorrection(l,adcMax);
+	  if (m_Corrections[kAdcCorrection6MDF].Chair) {
+	    Double_t xx[4] = {(Double_t)  CdEdx.Ntbks, (Double_t)  CdEdx.Npads, TMath::Abs(CdEdx.zG), TMath::Log(adcCF)};
+	    ADC += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
+	    xx[3] = TMath::Log(adc20);
+	    ADC20 += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
+	    xx[3] = TMath::Log(adcMax);
+	    ADCMax += ((St_MDFCorrection4C *)m_Corrections[kAdcCorrection6MDF].Chair)->Eval(l,xx);// * TMath::Exp(chairC->a(l)[0]);
+	  }
 	}
 	dE.mdE.fdE = Adc2GeVReal*ADC;
 	if (dE.mdE.fdE <= 0 || ! TMath::Finite(dE.mdE.fdE)) {
