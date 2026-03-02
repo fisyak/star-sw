@@ -143,12 +143,12 @@ StBFChain *bfc(Int_t First, Int_t Last,
 #ifndef __CLING__
   gROOT->ProcessLine(".exception");
 #endif
-  TString tChain(Chain);
-  if (tChain == "") {
-    if (Last == -2 && tChain.CompareTo("ittf",TString::kIgnoreCase)) Usage();
+  TString ChainT(Chain);
+  if (ChainT == "") {
+    if (Last == -2 && ChainT.CompareTo("ittf",TString::kIgnoreCase)) Usage();
     return 0;
   }
-  Load(tChain.Data());
+  Load(ChainT.Data());
 #ifndef __CLING__
   chain = (StBFChain *) StMaker::New("StBFChain", chainName);
 #else
@@ -158,7 +158,7 @@ StBFChain *bfc(Int_t First, Int_t Last,
   chain->cd();
   chain->SetDebug(1);
   if (Last < -3) return chain;
-  chain->SetFlags(tChain);
+  chain->SetFlags(ChainT);
 #ifndef __CLING__
   gMessMgr->QAInfo() << Form("Process [First=%6i/Last=%6i/Total=%6i] Events",First,Last,Last-First+1) << endm;
 #else
