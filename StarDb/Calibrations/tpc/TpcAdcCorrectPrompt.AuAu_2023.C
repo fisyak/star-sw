@@ -10,38 +10,36 @@ TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_tpcCorrection")) return 0;
   tpcCorrection_st row;
   Int_t nrows = 2;
-  St_tpcCorrection *tableSet = new St_tpcCorrection("TpcAdcCorrectionC",nrows);
+  St_tpcCorrection *tableSet = new St_tpcCorrection("TpcAdcCorrectPrompt",nrows);
   memset(&row,0,tableSet->GetRowSize());
   //    [l409] /hlt/cephfs/reco/TPC23/2023 $ root.exe SparseGGAdcSparse7.root */SparseGGAdcSparse7.root Chain.C
   /*
-    tChain->Draw("mu:z3>>O(72,3,10.2,200,0.2,0.9)","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&j==2&&z2<=203","colz")
-    TF1 *off3 = new TF1("off3","TMath::Log(1.+[0]*TMath::Exp(-x))+pol3(1)",3,10.2)
-    O->Fit(off3)
-  */
+    tChain->Draw("mu:z3>>OPrompt(72,3,10.2,200,0.2,0.6)","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&j==2&&z2>203","colz")
+    TF1 *off = new TF1("off4","TMath::Log(1.+[0]*TMath::Exp(-x))+pol2(1)",3,10.2)
+    OPrompt->Fit(off)
+   */
   row.type     =           10; //
   row.idx      =            1; //
   row.nrows    =        nrows; //
-  row.npar     =            4; //
-  row.OffSet   =      74.7649;   
-  row.a[0]     =     -4.53107; //
-  row.a[1]     =      1.83637; //
-  row.a[2]     =    -0.228486; //
-  row.a[3]     =   0.00927307; //
+  row.npar     =            3; //
+  row.OffSet   =     -5.83714;   
+  row.a[0]     =      1.07389; //
+  row.a[1]     =    -0.137633; //
+  row.a[2]     =    0.0048064; //
   tableSet->AddAt(&row);     // 
   memset(&row,0,tableSet->GetRowSize());
   /* 
-     tChain->Draw("mu:z3>>I(72,3,10.2,200,0.2,1.2)","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&j==1&&z2<=203","colz")
-     I->Fit(off3)
-  */
+    tChain->Draw("mu:z3>>IPrompt(72,3,10.2,200,0.2,0.6)","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&j==1&&z2>203","colz")
+    IPrompt->Fit(off)
+   */
   row.type     =           10; //
   row.idx      =            2; //
   row.nrows    =        nrows; //
-  row.npar     =            4; //
-  row.OffSet   =      88.8702;   
-  row.a[0]     =     -3.82625; //
-  row.a[1]     =      1.47097; //
-  row.a[2]     =    -0.169096; //
-  row.a[3]     =   0.00623169; //
+  row.npar     =            3; //
+  row.OffSet   =     -5.33798;   
+  row.a[0]     =      1.10012; //
+  row.a[1]     =    -0.153088; //
+  row.a[2]     =   0.00673854; //
   tableSet->AddAt(&row);     // 
 // ----------------- end of code ---------------
  return (TDataSet *)tableSet;
