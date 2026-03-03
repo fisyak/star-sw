@@ -2867,7 +2867,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI19"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/14/2026  reset all including TpcPadCorrectionMDC, add __ADC20__
 #$hist = "RunXXVI20"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/21/2026  reset all including TpcPadCorrectionMDC, add __ADC20__ new cuts 26 & 16 on adc, bug in operator /-
 #$hist = "RunXXVI21"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0#; $Mode = 2; $macro = "dEdx";# 02/21/2026  reset all including TpcPadCorrectionMDC, add __ADC20__ new cuts 26 & 16 on adc, fix bug in operator /-
-$hist = "RunXXVIIITFG25k"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/27/2026  recheck TFG25k
+#$hist = "RunXXVIIITFG25k"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/27/2026  recheck TFG25k
+$hist = "RunXXVIIITFG"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/02/2026 new ADC Correction for TPC23
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2979,7 +2980,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
     print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths">  copyInputLocally="false">
+<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
 	 <command>
          cd ${SUBMITTINGDIRECTORY}
 if ($?INPUTFILE0) ' . $apptainer . ' csh -x $INPUTFILE0
