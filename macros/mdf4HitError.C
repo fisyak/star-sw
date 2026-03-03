@@ -554,6 +554,9 @@ void mdf4HitError(TChain *tChain = 0) {
   TString cOut =  Form("%s%s_%s.C", tableName.Data(), Sets[ki], FieldOpt[lf]);
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
+  out << "#ifndef __CINT__" << endl;
+  out << "#include \"tables/St_MDFCorrection4_Table.h\"" << endl;
+  out << "#endif" << endl;
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection4\")) return 0;" << endl;
   out << "  MDFCorrection4_st row;" << endl;

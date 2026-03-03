@@ -514,6 +514,8 @@ MakeChairInstance2(tpcCorrection,St_TpcEdgeC,Calibrations/tpc/TpcEdge);
 MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectionBC,Calibrations/tpc/TpcAdcCorrectionB);
 #include "St_TpcAdcCorrectionCC.h"
 MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectionCC,Calibrations/tpc/TpcAdcCorrectionC);
+#include "St_TpcAdcCorrectPromptC.h"
+MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectPromptC,Calibrations/tpc/TpcAdcCorrectPrompt);
 #include "St_TpcAdcCorrectionMDF.h"
 MakeChairInstance2(MDFCorrection,St_TpcAdcCorrectionMDF,Calibrations/tpc/TpcAdcCorrectionMDF);
 #include "St_TpcAdcCorrection3MDF.h"
@@ -666,12 +668,22 @@ Double_t St_MDFCorrectionC::Eval(Int_t k, Double_t *x) const {
   // a vector of coefficients for the parameterisation, NCoefficients
   // elements long.
   assert(x);
+  Double_t xx[4] = {0};
+  if (NVariablesS(k) < 0) {// cut on limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      if (x[v] < XMin(k)[v] || x[v] > XMax(k)[v]) return 0;
+    }
+  } 
+  // set in limits
+  for (Int_t v = 0; v < NVariables(k); v++) {
+    xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
+  }
   if (! fFunc[k]) {
     fgMDFCorrectionC = (St_MDFCorrectionC *) this;
     if (_debug) {
       MDFCorrection_st *corK = fgMDFCorrectionC->Struct(k);
-      cout << Table()->GetName() << " k = " << k << " Idx = " << (Int_t) corK->idx << " Nvar = " << corK->NVariables << " type = " << corK->PolyType;
-      for (Int_t v = 0; v < corK->NVariables; v++) {
+      cout << Table()->GetName() << " k = " << k << " Idx = " << (Int_t) corK->idx << " Nvar = " <<fgMDFCorrectionC->NVariables(k) << " type = " << corK->PolyType;
+      for (Int_t v = 0; v <fgMDFCorrectionC->NVariables(k); v++) {
 	cout << "\t" << v << " min = " << corK->XMin[v] << " max = " << corK->XMax[v];
       }
       cout << endl;
@@ -695,10 +707,6 @@ Double_t St_MDFCorrectionC::Eval(Int_t k, Double_t *x) const {
       ((TF3 *) fFunc[k])->Save(XMin(k)[0],XMax(k)[0],XMin(k)[1],XMax(k)[1],XMin(k)[2],XMax(k)[2]);
     }
   }
-  Double_t xx[3];
-  for (Int_t v = 0; v < NVariables(k); v++) {
-    xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
-  }
   Double_t returnValue = fFunc[k]->GetSave(xx);
   return returnValue;
 }
@@ -708,6 +716,16 @@ Double_t St_MDFCorrectionC::EvalError(Int_t k, Double_t *x) const {
   // a vector of coefficients for the parameterisation, NCoefficients(k)
   // elements long.
   assert(x);
+  Double_t xx[4] = {0};
+  if (NVariablesS(k) < 0) {// cut on limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      if (x[v] < XMin(k)[v] || x[v] > XMax(k)[v]) return 0;
+    }
+  } 
+  // set in limits
+  for (Int_t v = 0; v < NVariables(k); v++) {
+    xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
+  }
   Double_t returnValue = 0;
   Double_t term        = 0;
   UChar_t    i, j;
@@ -718,7 +736,7 @@ Double_t St_MDFCorrectionC::EvalError(Int_t k, Double_t *x) const {
       // Evaluate the factor (polynomial) in the j-th variable.
       Int_t    p  =  Powers(k)[i * NVariables(k) + j];
       Double_t y  =  1 + 2. / (XMax(k)[j] - XMin(k)[j])
-	* (x[j] - XMax(k)[j]);
+	* (xx[j] - XMax(k)[j]);
       term        *= EvalFactor(p,y);
     }
     // Add this term to the final result
@@ -828,6 +846,16 @@ Double_t St_MDFCorrection3C::Eval(Int_t k, Double_t *x) const {
   // a vector of coefficients for the parameterisation, NCoefficients
   // elements long.
   assert(x);
+  Double_t xx[4] = {0};
+  if (NVariablesS(k) < 0) {// cut on limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      if (x[v] < XMin(k)[v] || x[v] > XMax(k)[v]) return 0;
+    }
+  } 
+  // set in limits
+  for (Int_t v = 0; v < NVariables(k); v++) {
+    xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
+  }
   if (! fFunc[k]) {
     fgMDFCorrection3C = (St_MDFCorrection3C *) this;
     if (NVariables(k) <= 0) {
@@ -849,10 +877,6 @@ Double_t St_MDFCorrection3C::Eval(Int_t k, Double_t *x) const {
       ((TF3 *) fFunc[k])->Save(XMin(k)[0],XMax(k)[0],XMin(k)[1],XMax(k)[1],XMin(k)[2],XMax(k)[2]);
     }
   }
-  Double_t xx[3];
-  for (Int_t v = 0; v < NVariables(k); v++) {
-    xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
-  }
   Double_t returnValue = fFunc[k]->GetSave(xx);
   return returnValue;
 }
@@ -862,6 +886,16 @@ Double_t St_MDFCorrection3C::EvalError(Int_t k, Double_t *x) const {
   // a vector of coefficients for the parameterisation, NCoefficients(k)
   // elements long.
   assert(x);
+  Double_t xx[4] = {0};
+  if (NVariablesS(k) < 0) {// cut on limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      if (x[v] < XMin(k)[v] || x[v] > XMax(k)[v]) return 0;
+    }
+  } 
+  // set in limits
+  for (Int_t v = 0; v < NVariables(k); v++) {
+    xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
+  }
   Double_t returnValue = 0;
   Double_t term        = 0;
   UChar_t    i, j;
@@ -872,7 +906,7 @@ Double_t St_MDFCorrection3C::EvalError(Int_t k, Double_t *x) const {
       // Evaluate the factor (polynomial) in the j-th variable.
       Int_t    p  =  Powers(k)[i * NVariables(k) + j];
       Double_t y  =  1 + 2. / (XMax(k)[j] - XMin(k)[j])
-	* (x[j] - XMax(k)[j]);
+	* (xx[j] - XMax(k)[j]);
       term        *= EvalFactor(p,y);
     }
     // Add this term to the final result
@@ -981,7 +1015,12 @@ Double_t St_MDFCorrection4C::Eval(Int_t k, Double_t *x) const {
   // a vector of coefficients for the parameterisation, NCoefficients
   // elements long.
   assert(x);
-  Double_t xx[4];
+  Double_t xx[4] = {0};
+  if (NVariablesS(k) < 0) {// cut on limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      if (x[v] < XMin(k)[v] || x[v] > XMax(k)[v]) return 0;
+    }
+  } 
   for (Int_t v = 0; v < NVariables(k); v++) {
     xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
   }
@@ -1021,6 +1060,16 @@ Double_t St_MDFCorrection4C::EvalError(Int_t k, Double_t *x) const {
   // a vector of coefficients for the parameterisation, NCoefficients(k)
   // elements long.
   assert(x);
+  Double_t xx[4];
+  if (NVariablesS(k) < 0) {// cut on limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      if (x[v] < XMin(k)[v] || x[v] > XMax(k)[v]) return 0;
+    }
+  } else { // set in limits
+    for (Int_t v = 0; v < NVariables(k); v++) {
+      xx[v] = TMath::Max(XMin(k)[v], TMath::Min(XMin(k)[v]+0.999*(XMax(k)[v]-XMin(k)[v]), x[v]));
+    }
+  }
   Double_t returnValue = 0;
   Double_t term        = 0;
   UChar_t    i, j;
@@ -1031,7 +1080,7 @@ Double_t St_MDFCorrection4C::EvalError(Int_t k, Double_t *x) const {
       // Evaluate the factor (polynomial) in the j-th variable.
       Int_t    p  =  Powers(k)[i * NVariables(k) + j];
       Double_t y  =  1 + 2. / (XMax(k)[j] - XMin(k)[j])
-	* (x[j] - XMax(k)[j]);
+	* (xx[j] - XMax(k)[j]);
       term        *= EvalFactor(p,y);
     }
     // Add this term to the final result

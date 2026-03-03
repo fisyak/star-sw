@@ -11,7 +11,7 @@ struct MDFCorrection3 {
   octet   idx; // row index
   octet   nrows; // total no. of real rows in the table; For Db interface (where nrows = 50)
   octet   PolyType;  // type = 0 kMonomials, type = 1 kChebyshev, type = 2 kLegendre
-  octet   NVariables;// <= 3 for now.
+  octet   NVariables;// <= 3 for now. if NVariables < 0 don't estrapolate out side of [Xmin, Xmax] ,i.e. set  0 otherwise use value at limit
   octet   NCoefficients;// <= 50
   octet   Power[150];    //  p_ijk = Power[i * NVariables + j];
   double  DMean; // 

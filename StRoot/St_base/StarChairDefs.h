@@ -27,7 +27,7 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
     if (fgInstance) return fgInstance;					\
     St_ ## STRUCT *table = (St_ ## STRUCT *) StMaker::GetChain()->GetDataBase(MakeString(PATH)); \
     if (! table) {							\
-      LOG_WARN << "St_" << # STRUCT << "C::instance " << MakeString(PATH) << "\twas not found" << endm; \
+      LOG_ERROR << "St_" << # STRUCT << "C::instance " << MakeString(PATH) << "\twas not found" << endm; \
       assert(table);							\
     }									\
     DEBUGTABLE(STRUCT);							\
@@ -55,7 +55,10 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
   CLASS *CLASS::instance() {						\
     if (fgInstance) return fgInstance;					\
     St_ ## STRUCT *table = (St_ ## STRUCT *) StMaker::GetChain()->GetDataBase(MakeString(PATH)); \
-    assert(table);	  DEBUGTABLE(STRUCT);				\
+    if (! table) {							\
+      LOG_ERROR << "St_" << # STRUCT << "C::instance " << MakeString(PATH) << "\twas not found" << endm; \
+      assert(table);							\
+    }									\
     fgInstance = new CLASS(table);					\
     return fgInstance;							\
   }
@@ -68,7 +71,7 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
     if (! table) {							\
       table = new St_ ## STRUCT(# STRUCT ,0);				\
       table->Mark();							\
-      LOG_WARN << "St_" << # STRUCT << "C::instance create optional " << # CLASS << " table" << endm; \
+      LOG_ERROR << "St_" << # STRUCT << "C::instance create optional " << # CLASS << " table" << endm; \
     }									\
     assert(table);	DEBUGTABLE(STRUCT);				\
     fgInstance = new CLASS(table);				\
@@ -85,7 +88,7 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
     if (fgInstance) return fgInstance;					\
     PATHAorPATHB(STRUCT,PATHA,PATHB,AorB); \
     if (! table) {							\
-      LOG_WARN << "St_" << # STRUCT << "C::instance "			\
+      LOG_ERROR << "St_" << # STRUCT << "C::instance "			\
 	       << ((AorB) ? MakeString(PATHA) : MakeString(PATHB))	\
 	       << "\twas not found" << endm;				\
       assert(table);							\
@@ -103,7 +106,7 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
     if (! table) {							\
       table = new St_ ## STRUCT(# STRUCT ,0);				\
       table->Mark();							\
-      LOG_WARN << "St_" << # STRUCT << "C::instance create optional " << # STRUCT << " table" << endm; \
+      LOG_ERROR << "St_" << # STRUCT << "C::instance create optional " << # STRUCT << " table" << endm; \
     }									\
     assert(table);	DEBUGTABLE(STRUCT);				\
     fgInstance = new St_ ## STRUCT ## C(table);				\
@@ -128,7 +131,7 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
     if (! table) {							\
       table = new St_ ## STRUCT(# STRUCT ,0);				\
       table->Mark();							\
-      LOG_WARN << "St_" << # STRUCT << "C::instance create optional " << # CLASS << " table" << endm; \
+      LOG_ERROR << "St_" << # STRUCT << "C::instance create optional " << # CLASS << " table" << endm; \
     }									\
     assert(table);	DEBUGTABLE(STRUCT);				\
     fgInstance = new CLASS(table);					\

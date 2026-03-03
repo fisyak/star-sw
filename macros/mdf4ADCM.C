@@ -31,8 +31,9 @@
 ================================================================================
 02/25/2026
 */
-//root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C mdf4ADCM.C+
-*/
+// root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C 'mdf4ADCM.C+(1)'
+// root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C 'mdf4ADCM.C+(2)'
+// root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C mdf4ADCM.C+
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -53,6 +54,7 @@
 #include "TBrowser.h"
 #include "StDetectorDbMaker/St_tss_tssparC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrectionCC.h"
+#include "StDetectorDbMaker/St_TpcAdcCorrectPromptC.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection4MDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection5MDF.h"
@@ -65,6 +67,7 @@ enum EMDFPolyType {
   kLegendre
 };
 #endif
+ofstream out;
 enum {kTPC = 2, kVar = 4};
 TProfile *prof[kTPC][kVar] = {0};
 TProfile *profC[kTPC][kVar] = {0};
@@ -86,10 +89,6 @@ const Char_t *IO[kTPC] = {"I","O"};
 //--------------------------------------------------------------------------------
 Double_t mdf4(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
   return St_TpcAdcCorrection4MDF::instance()->Eval(k,z0,z1,z2,z3);
-}
-//--------------------------------------------------------------------------------
-Double_t mdf6(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
-  return St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
 }
 //--------------------------------------------------------------------------------
 Double_t mdf5(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
@@ -116,6 +115,23 @@ Double_t adcC(Int_t k, Double_t ADC) {
   Double_t dE = Adc2GeVReal*adc;
   return adc;
 }
+//--------------------------------------------------------------------------------
+Double_t adcPrompt(Int_t k, Double_t ADC) {
+  Double_t adc = St_TpcAdcCorrectPromptC::instance()->CalcCorrection(k,ADC);
+  return adc;
+}
+//--------------------------------------------------------------------------------
+Double_t mdf6(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
+  Double_t ADC = TMath::Exp(z3);
+  Double_t adc = 0;
+  if (TMath::Abs(z2) > 203.0) {
+    return adcPrompt(k, ADC);
+  } else {
+    return adcC(k,ADC) + St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
+  }
+  return 0;
+}
+//--------------------------------------------------------------------------------
 TMultiDimFit* fit = 0;
 Int_t    fgIO = 0;
 Int_t    fgNP = 0;
@@ -422,6 +438,7 @@ void FitPS::Loop2()
     if (dmu    > 0.02)  continue;
     if (sigma >   0.1)  continue;
     if (TMath::Abs(mu-0.5) > 0.2) continue;
+    //    if (TMath::Abs(z2) >  203.0) continue; // no prompt
     xx[0] = z0;// Ntmbks
     xx[1] = z1;// Npads
     xx[2] = z2;// z
@@ -429,7 +446,7 @@ void FitPS::Loop2()
     Int_t ioT = 1 - io;
     Double_t muC = mu;
     Double_t ADC = TMath::Exp(z3);
-    Double_t pred = adcC(ioT, ADC); // + mdf6(ioT,z0,z1,z2,z3); 
+    Double_t pred = mdf6(ioT,z0,z1,z2,z3); 
     Double_t adcM = ADC*TMath::Exp(mu);
     Double_t dval = adcM*dmu;
     Double_t devmu  = adcM - pred;
@@ -503,6 +520,7 @@ void FitPS::Loop()
     if (dmu    > 0.02)  continue;
     if (sigma >   0.1)  continue;
     if (TMath::Abs(mu-0.5) > 0.2) continue;
+    if (TMath::Abs(z2) >  203.0) continue; // no prompt
     xx[0] = z0;// Ntmbks
     xx[1] = z1;// Npads
     xx[2] = z2;// z
@@ -512,11 +530,12 @@ void FitPS::Loop()
 //     Double_t val  = mu;
     Double_t muC = mu;
     Double_t ADC = TMath::Exp(z3);
-    Double_t pred = adcC(ioT, ADC) + mdf6(ioT,z0,z1,z2,z3); // mdf5(ioT,z0,z1,z2,z3);
+    Double_t pred = mdf6(ioT,z0,z1,z2,z3); // mdf5(ioT,z0,z1,z2,z3);
     Double_t adcM = ADC*TMath::Exp(mu);
-    Double_t dval = adcM*dmu;
-    Double_t devmu  = adcM - pred;
-    fit->AddRow(xx, val, dval*dval);
+    Double_t val  = adcM - pred;
+    //    Double_t dval = adcM*dmu;
+    Double_t dval2 = ADC*ADC + adcM*dmu*adcM*dmu;
+    fit->AddRow(xx, val, dval2);
     nev++;
   }
 }
@@ -536,6 +555,10 @@ void mdf4ADCM(Int_t io) { // fit
     tree = (TTree *) gDirectory->Get("FitP");
   }
   if (! tree ) return;
+  TString tableName("TpcAdcCorrection6MDF");
+  TString cOut =  Form("%s_%s.AuAu_2023.C", tableName.Data(),IO[io-1]);
+  TString ROut =  Form("%s_%s.AuAu_2023.root", tableName.Data(),IO[io-1]);
+  TFile *fOut = new TFile(ROut,"recreate");
   // Global data parameters 
   Int_t nVars      =  4;
   if (fgNP > 0) nVars = fgNP;
@@ -547,6 +570,7 @@ void mdf4ADCM(Int_t io) { // fit
   fit = new TMultiDimFit(nVars, type,"vk");
   Int_t max = 3;
   Int_t mPowers[]   = { max, max, max, max};
+  //  Int_t mPowers[]   = { 1, 1, 1, max};
   fit->SetMaxPowers(mPowers);
   fit->SetMaxFunctions(10000);
   fit->SetMaxStudy(10000);
@@ -575,7 +599,7 @@ void mdf4ADCM(Int_t io) { // fit
   fit->FindParameterization();
 
   // Print coefficents 
-  fit->Print("rc");
+  fit->Print("psrcfkm");
 #if 0
   //
   // Now for the data
@@ -585,27 +609,27 @@ void mdf4ADCM(Int_t io) { // fit
   mdfP->Draw();
 #endif
   Int_t nrows = 2;
-  TString tableName("TpcAdcCorrection6MDF_%s.AuAu_2023.C",IO[2-io]);
-  TString cOut =  Form("%s%s_%s.C", tableName.Data(), Sets[ki], FieldOpt[lf]);
   cout << "Create " << cOut << endl;
+  Int_t idx = 3 - io;
   out.open(cOut.Data());
   out << "#ifndef __CINT__" << endl;
-  out << "#include \"tables/St_tpcCorrection_Table.h\"" << endl;
+  out << "#include \"tables/St_MDFCorrection4_Table.h\"" << endl;
   out << "#endif" << endl;
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection4\")) return 0;" << endl;
-  out << "  Int_t nrows = 2;" << endl
+  out << "  Int_t nrows = 2;" << endl;
   out << "  MDFCorrection4_st row;" << endl;
   out << "  St_MDFCorrection4 *tableSet = new St_MDFCorrection4(\"" << tableName.Data() << "\"," << nrows << ");" << endl;
   out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
-  out << "  row.idx      =        "<< 3 - io <<";   // mdf4ADCM(" << io << "2)" << endl;
-  out << "  row.nrows    =     nrows;" << endl;
+  out << "  row.idx      =        "<< idx <<";   // mdf4ADCM(" << io << ")" << endl;
+  out << "  row.nrows    =    nrows;" << endl;
   cout << *fit;
   out << *fit;
+  out << "  tableSet->AddAt(&row); // idx = " << idx<< endl;
   out << "  return (TDataSet *)tableSet;" << endl;
   out << "}" << endl;
   out.close();
-
+  fOut->Write();
 }
 //________________________________________________________________________________
 void mdf4ADCM() {// Test
