@@ -1167,7 +1167,6 @@ protected:
    TMCProcess G3toVMC(Int_t iproc) const;
 
    void DefineParticles();
-   void DefineParticlesPDG();
    Int_t TransportMethod(TMCParticleType particleType) const;
    TString ParticleClass(TMCParticleType particleType) const;
    TMCParticleType ParticleType(Int_t itrtyp) const;
