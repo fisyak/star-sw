@@ -620,9 +620,9 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
       {"GainMc","Gas Gain after MC correction"}, // 3
       {"dEdxCor","correction of dEdx"}, // 4
       {"lgam","lgam"}, // 5
-      {"NPGEANT","no. of primary electros from GEANT"}, // 6
-      {"NP","no. of primary electros"}, // 7
-      {"Nt","total no. of electors per cluster"}, // 8
+      {"NPGEANT","no. of primary electrons from GEANT"}, // 6
+      {"NP","no. of primary electrons"}, // 7
+      {"Nt","total no. of electrons per cluster"}, // 8
       {"Qav","Gas gain flactuations"}, // 9
       {"localYDirectionCoupling","localYDirectionCoupling"}, //10
       {"n0","No. electrons per primary interaction"}, //11
@@ -632,7 +632,7 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
       {"dE","dE"}, // 15
       {"dS","dS"}, // 16
       {"adc","adc"},// 17
-      {"NE","Total no. of generated electors"}, // 18
+      {"NE","Total no. of generated electrons"}, // 18
       {"dECl","Total log(signal/Nt) in a cluster ; Wire Index"}, // 19
       {"nPdT","log(Total no. of conducting electrons) - log(no. of primary one) ; log(no. primary electrons)"}, // 20 
       {"bgVsbg","log10(bg_from_gkin) ; log10(bg_from_mom"} // 21
