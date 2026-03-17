@@ -1,10 +1,11 @@
 #include "StMDF.h"
 StMDF *StMDF::fgMDF = 0;
 //____________________________________________________________________
-StMDF::StMDF() : fFunc(0) {
-  UInt_t N = getNumRows();
-  fFunc = new TF1*[N];
-  memset(fFunc, 0, N*sizeof(TF1*));
+StMDF::StMDF(Int_t N) : fFunc(0) {
+  if (N > 0) {
+    fFunc = new TF1*[N];
+    memset(fFunc, 0, N*sizeof(TF1*));
+  }
 }
 //____________________________________________________________________
 StMDF::~StMDF() {
@@ -136,11 +137,9 @@ Double_t StMDF::EvalFactor(Int_t k, Int_t p, Double_t x) {
   default:
     p2 = x;
     for (i = 3; i <= p; i++) {
-      p3 = p2 * x;
-      if (PolyType(k) == kLegendre)
-	p3 = ((2 * i - 3) * p2 * x - (i - 2) * p1) / (i - 1);
-      else if (PolyType(k) == kChebyshev)
-	p3 = 2 * x * p2 - p1;
+      if (PolyType(k) == kLegendre)	  p3 = ((2 * i - 3) * p2 * x - (i - 2) * p1) / (i - 1);
+      else if (PolyType(k) == kChebyshev) p3 = 2 * x * p2 - p1;
+      else                                p3 = p2 * x;
       p1 = p2;
       p2 = p3;
     }
