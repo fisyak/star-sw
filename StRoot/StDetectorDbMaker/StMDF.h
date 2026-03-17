@@ -41,6 +41,5 @@ class StMDF {
   static void      SetInstance(const StMDF *p) {fgMDF = (StMDF *) p;}
   TF1    **fFunc;
   static StMDF *fgMDF;
-  ClassDef(StMDF,1)
 };
 #endif
