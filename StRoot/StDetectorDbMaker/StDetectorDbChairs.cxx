@@ -5,6 +5,7 @@
 #include "TEnv.h"
 #include "TF1.h"
 #include "TMath.h"
+#include "TROOT.h"
 #include "TString.h"
 #include "Math/SMatrix.h"
 #include "TArrayD.h"
@@ -110,6 +111,28 @@ MakeChairInstance(tpcChargeEvent,Calibrations/tpc/tpcChargeEvent);
 #include "St_tpcSCGLC.h"
 MakeChairInstance(tpcSCGL,Calibrations/tpc/tpcSCGL);
 ClassImp(St_tpcCorrectionC);
+//________________________________________________________________________________
+St_tpcCorrectionC *St_tpcCorrectionC::fgSt_tpcCorrectionC = 0;
+Double_t St_tpcCorrectionC::Func(Double_t *x, Double_t *p) {
+  Int_t k = (Int_t) p[0];
+  if (! fgSt_tpcCorrectionC) return 0;
+  return fgSt_tpcCorrectionC->CalcCorrection(k, x[0]);
+}
+//________________________________________________________________________________
+TF1 *St_tpcCorrectionC::GetFunction(Int_t k)  {
+  fgSt_tpcCorrectionC = this;
+  TString Name(Table()->GetName());
+  Name += "_"; Name += k;
+  TF1 *f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(Name);
+  if (! f) {
+    Double_t xmin = -210;
+    Double_t xmax =  210;
+    if (min(k) < max(k)) {xmin = min(k); xmax = max(k);}
+    f = new TF1(Name,St_tpcCorrectionC::Func, xmin, xmax, 1);
+    f->SetParameter(0,k);
+  }
+  return f;
+}
 //________________________________________________________________________________
 Double_t St_tpcCorrectionC::CalcCorrection(Int_t i, Double_t x, Double_t z, Int_t NparMax) const {
   tpcCorrection_st *cor =  ((St_tpcCorrection *) Table())->GetTable() + i;

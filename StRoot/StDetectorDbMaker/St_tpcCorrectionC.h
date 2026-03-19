@@ -1,6 +1,6 @@
 #ifndef St_tpcCorrectionC_h
 #define St_tpcCorrectionC_h
-
+#include "TF1.h"
 #include "TChair.h"
 #include "tables/St_tpcCorrection_Table.h"
 
@@ -23,6 +23,10 @@ class St_tpcCorrectionC : public TChair {
   Double_t      SumSeries(tpcCorrection_st *cor, Double_t x, Double_t z = 0, Int_t NparMax = -1) const;
   Double_t      SumSeriesXDerivative(tpcCorrection_st *cor, Double_t x, Double_t z = 0, Int_t NparMax = -1) const;
   Int_t         IsActiveChair() const;
+  TF1*          GetFunction(Int_t i = 0);
+ private:
+  static St_tpcCorrectionC *fgSt_tpcCorrectionC;
+  static Double_t Func(Double_t *x, Double_t *p = 0);
   ClassDefChair(St_tpcCorrection, tpcCorrection_st )
   ClassDef(St_tpcCorrectionC,1) //C++ TChair for tpcCorrection table class
 };
