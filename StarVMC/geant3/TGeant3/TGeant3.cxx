@@ -1646,24 +1646,26 @@ void TGeant3::DefineParticles()
   for (fNG3Particles = 1; fNG3Particles < fNPDGCodes; fNG3Particles++) {
     Int_t pdg = fPDGCode[fNG3Particles];
     if (pdg == -99) continue;
+    Int_t apdg = TMath::Abs(pdg);
     TParticlePDG *particle = pdgDB->GetParticle(pdg);
     assert(particle);
-    Int_t itrtyp = particle->TrackingCode();
+    Int_t itrtyp = 0; // particle->TrackingCode(); ignore it 
     Float_t charge = particle->Charge()/3.0;
     if (itrtyp <= 0) { 
-      if                 (pdg  == 22) itrtyp = 1;
-      else if (charge == 0.0)         itrtyp = 3;
-      else if (pdg >= 50000050)       itrtyp = 7;
-      else if (TMath::Abs(pdg) == 11) itrtyp = 2;
-      else if (TMath::Abs(pdg) == 13) itrtyp = 5;
-      else                            itrtyp = 4;
+      if      (pdg  == 22)            itrtyp = 1; // gamma
+      else if (apdg >= 50000050)     {itrtyp = 7; // special 
+	if (apdg >= 1000000000)       itrtyp = 8; // ion
+      } 
+      else if (apdg == 11           ) itrtyp = 2; // electron
+      else if (apdg == 13)            itrtyp = 5; // moun
+      else if (charge == 0.0)         itrtyp = 3; // neutral
+      else                            itrtyp = 4; // charged hadron 
     }
     Float_t tlife = 1e15;
     if (particle->Width() > 0.0) tlife = particle->Lifetime();
     //    if (TMath::Abs(pdg) == 311)  tlife = 0; // K0/K0_bar
     //   virtual void Gspart(Int_t ipart, const char *name, Int_t itrtyp, Double_t amass, Double_t charge, Double_t tlife);
     Gspart(fNG3Particles, particle->GetName(),  itrtyp, particle->Mass(), charge, tlife);
-    Int_t apdg = TMath::Abs(pdg);
     Int_t nch = pdgDB->GetParticle(apdg)->NDecayChannels();
     if (! nch) continue;
     Int_t mode[6] = {0};

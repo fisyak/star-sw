@@ -15,7 +15,7 @@
   else
     set evtsFileF = $INPUTFILE0;
     set f         = 1
-    set l         = 1000
+    set l         = 5000
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .
@@ -26,7 +26,7 @@
   set filel    = `basename $evtsFile .daq`${ext}
   set output  = ${filel}.event.root
   set logFile  =  ${SUBMITTINGDIRECTORY}/${filel}B.log
-#  if (-r $logFile) exi t 0;
+#  if (-r $logFile) exit 0;
   set muFile = ${filel}.MuDst.root
   if (-r ${SUBMITTINGDIRECTORY}/$muFile) exit 0;
   set tagFile = ${filel}.tags.root
@@ -41,7 +41,7 @@
   cd -
   echo ${year} | grep 20
   if ($? != 0) exit 0;
-  set evout = ",-evout";
+  set evout = ",evout";
   set PicoMode = "";
   set Cosmic = "";
   echo ${SUBMITTINGDIRECTORY} | grep Cosmic

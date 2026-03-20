@@ -34,6 +34,8 @@
 // root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C 'mdf4ADCM.C+(1)'
 // root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C 'mdf4ADCM.C+(2)'
 // root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C mdf4ADCM.C+
+// root.exe 'lDb.C(0,"AuAu_2025,Corrz")' */*/SparseGGAdcSparse8.root Chain.C mdf4ADCM.C+
+// root.exe 'lDb.C(0,"AuAu_2025,Corrz")' */*/SparseGPAdcSparse8.root Chain.C 'mdf4ADCM.C+(1)'
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -59,6 +61,8 @@
 #include "StDetectorDbMaker/St_TpcAdcCorrection4MDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection5MDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection6MDF.h"
+/* (dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02&&j==2&&z2<203 */ 
+#define __CUT__ Bool_t ok = dsigma>0 && dsigma<0.04 && dmu<0.02 && sigma<0.02
 #if 0
 class TMultiDimFit;
 enum EMDFPolyType {
@@ -85,6 +89,10 @@ Plot_t Plots[kVar] = {
   {"Z",        110, -5., 215.},
   {"AdcL",      71, TMath::Log(16.),  10.04}
 };
+//--------------------------------------------------------------------------------
+TMultiDimFit* fit = 0;
+Int_t    fgIO = -1;
+Int_t    fgNP = 0;
 const Char_t *IO[kTPC] = {"I","O"};
 //--------------------------------------------------------------------------------
 Double_t mdf4(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
@@ -125,16 +133,13 @@ Double_t mdf6(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
   Double_t ADC = TMath::Exp(z3);
   Double_t adc = 0;
   if (TMath::Abs(z2) > 203.0) {
-    return adcPrompt(k, ADC);
+    adc = adcPrompt(k, ADC);
   } else {
-    return adcC(k,ADC) + St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
+    adc = adcC(k,ADC);
+    if (fgIO != 1 && fgIO != 2) adc += St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
   }
-  return 0;
+  return adc;
 }
-//--------------------------------------------------------------------------------
-TMultiDimFit* fit = 0;
-Int_t    fgIO = 0;
-Int_t    fgNP = 0;
 // Header file for the classes stored in the TTree if any.
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
@@ -432,12 +437,8 @@ void FitPS::Loop2()
     if (io < 0 || io > 1)    continue;
     // 02/24/2026 
     //root.exe [32] FitP->Draw("mu:z3","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2","colz")
-    if (chisq <= 0.0)   continue;
-    if (chisq >  2.5e2) continue;
-    if (dsigma > 0.02)  continue;
-    if (dmu    > 0.02)  continue;
-    if (sigma >   0.1)  continue;
-    if (TMath::Abs(mu-0.5) > 0.2) continue;
+    __CUT__;
+    if (! ok) continue;
     //    if (TMath::Abs(z2) >  203.0) continue; // no prompt
     xx[0] = z0;// Ntmbks
     xx[1] = z1;// Npads
@@ -512,15 +513,11 @@ void FitPS::Loop()
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     if (j != fgIO)    continue; // j = 1 Inner, j = 2 Outer; fgIO = 1 Inner, = 2 Outer,  
+    if (TMath::Abs(z2) >  203.0) continue; // no prompt
     //  02/24/2026 
     //root.exe [32] FitP->Draw("mu:z3","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2","colz")
-    if (chisq <= 0.0)   continue;
-    if (chisq >  2.5e2) continue;
-    if (dsigma > 0.02)  continue;
-    if (dmu    > 0.02)  continue;
-    if (sigma >   0.1)  continue;
-    if (TMath::Abs(mu-0.5) > 0.2) continue;
-    if (TMath::Abs(z2) >  203.0) continue; // no prompt
+    __CUT__;
+    if (! ok) continue;  
     xx[0] = z0;// Ntmbks
     xx[1] = z1;// Npads
     xx[2] = z2;// z
@@ -568,9 +565,9 @@ void mdf4ADCM(Int_t io) { // fit
   //  TMultiDimFit::EMDFPolyType type = (TMultiDimFit::EMDFPolyType) 0;
   TMultiDimFit::EMDFPolyType type = (TMultiDimFit::EMDFPolyType) 1; // Chebyshev
   fit = new TMultiDimFit(nVars, type,"vk");
-  Int_t max = 3;
-  Int_t mPowers[]   = { max, max, max, max};
-  //  Int_t mPowers[]   = { 1, 1, 1, max};
+  Int_t max = 5;
+  //  Int_t mPowers[]   = { max, max, max, max};
+    Int_t mPowers[]   = { 3, 3, 3, 5};
   fit->SetMaxPowers(mPowers);
   fit->SetMaxFunctions(10000);
   fit->SetMaxStudy(10000);

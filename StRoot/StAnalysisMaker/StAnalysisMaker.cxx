@@ -452,7 +452,7 @@ void StAnalysisMaker::PrintTpcHits(Int_t sector, Int_t row, Int_t plot, Int_t Id
 		    BPoint.timebucket = tpcHit->timeBucket();
 		    BPoint.IdTruth =  tpcHit->idTruth();
 		    BPoint.npads   =  tpcHit->padsInHit();
-		    BPoint.ntbks   =  tpcHit->maxTmbk() - tpcHit->minTmbk() + 1;
+		    BPoint.ntbks   =  tpcHit->noTmbks(); // tpcHit->maxTmbk() - tpcHit->minTmbk() + 1;
 		    BPoint.trigId  = 0;
 		    BPoint.us      = tpcHit->usedInFit();
 		    BPoint.fl      = tpcHit->flag();

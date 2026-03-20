@@ -2870,7 +2870,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI21"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0#; $Mode = 2; $macro = "dEdx";# 02/21/2026  reset all including TpcPadCorrectionMDC, add __ADC20__ new cuts 26 & 16 on adc, fix bug in operator /-
 #$hist = "RunXXVIIITFG25k"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/27/2026  recheck TFG25k
 #$hist = "RunXXVIIITFG"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/02/2026 new ADC Correction for TPC23
-$hist = "RunXXVI22";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/06/2026 first pass 
+#$hist = "RunXXVI22";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/06/2026 first pass 
+$hist = "RunXXVIIITFGB"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFGB/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/16/2026 new ADC Correction for TPC23 & AfterBurner
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();

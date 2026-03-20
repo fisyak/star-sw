@@ -247,7 +247,7 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
   TString Current(gDirectory->GetName());
   //  gStyle->SetOptStat(0);
   Int_t icol = 0;
-  TLegend *leg = new TLegend(0.6,0.1,0.9,0.3);
+  TLegend *leg = new TLegend(0.6,0.6,0.9,0.9);
   //  gStyle->SetMarkerSize(0.4);
   for (Int_t k = 0; k < NF; k++) {
     if (! F[k]) continue;
@@ -277,7 +277,7 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       p->SetMarkerStyle(kM);
       p->SetMarkerSize(1);
     }
-#if 1
+#if 0
     cout << Form("%2i %-52s\t", k, F[k]->GetName()); //  << endl;
     cout << "FitP->Draw(\"" << Drawh << "\",\"" << cut << "\",\"" << same << "\")" << "\t"; //  endl;
 #endif
@@ -291,14 +291,20 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
     FitP->Draw(P,cut,"goff");
     TH1 *muH = (TH1 *) gDirectory->Get("muH");
     Double_t RMS = -99;
-    if (muH) RMS = 100*muH->GetRMS();
+    Double_t mean = -99;
+    if (muH) {
+      RMS = 100*muH->GetRMS(1);
+      mean = 100*muH->GetMean(1);
+    }
     c1->cd();
     FitP->Draw(Drawh,cut,same);
     TH1 *hist = (TH1 *) gDirectory->Get(histN);
     if (hist) {
       //      TString name(gSystem->BaseName(gDirectory->GetName()));
-      TString ddir(gSystem->DirName(gDirectory->GetName()));
-      TString dir(gSystem->BaseName(ddir));
+      TString dir(gSystem->DirName(gDirectory->GetName()));
+      TString pwd(gSystem->WorkingDirectory());
+      pwd += "/";
+      dir.ReplaceAll(pwd,"");
       if (dir == "./") dir = "";
       if (dir == ".") dir = "";
       dir.ReplaceAll("ZTMfl0T","");
@@ -313,6 +319,7 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
 	name.ReplaceAll("I","Inner ");
 	name.ReplaceAll("O","Outer ");
       }
+      name.ReplaceAll("SparseT0Flagged.root.T0.root","");
       name.ReplaceAll("DP","");
       name.ReplaceAll("DT","");
       name.ReplaceAll("GP"," ");
@@ -333,12 +340,13 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       name.ReplaceAll("_y3","");
       name.ReplaceAll("G4E","");
 #endif
-      leg->AddEntry(hist,Form("%s%s %s",dir.Data(), name.Data(),side));
+      //      leg->AddEntry(hist,Form("%s%s %s",dir.Data(), name.Data(),side));
+      leg->AddEntry(hist,dir.Data());
       hist->SetTitle(Form("%s : %s",hist->GetTitle(), side));
       hist->SetXTitle(var);
       //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;
-      TString nn(name);
-      cout << Form("%3i %-45s%4s: min/max = %7.2f/%7.2f rms %7.2f (\%)", k, nn.Data(), side, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS) << endl;
+      //      cout << Form("%3i : min/max = %7.2f/%7.2f rms %7.2f (\%) mean %7.2f (\%) %s %s", k, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean, dir.Data(), name.Data()) << endl;
+      cout << Form("%3i : min/max = %7.2f/%7.2f rms %7.2f (\%) mean %7.2f (\%) %s", k, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean, dir.Data()) << endl;
       if (yMin < yMax) {hist->SetMinimum(yMin); hist->SetMaximum(yMax);}
     }
   }
@@ -503,7 +511,11 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
     FitP->Draw("mu>>muH",cut,"goff");
     TH1 *muH = (TH1 *) gDirectory->Get("muH");
     Double_t RMS = -99;
-    if (muH) RMS = 100*muH->GetRMS();
+    Double_t mean = -99;
+    if (muH) {
+      RMS = 100*muH->GetRMS(1);
+      mean = 100*muH->GetMean(1);
+    }
     c1->cd();
     FitP->Draw(Drawh,cut,same);
     TH1 *hist = (TH1 *) gDirectory->Get(histN);
@@ -515,6 +527,7 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
       if (dir == "./") dir = "";
       if (dir == ".") dir = "";
       TString name = gSystem->BaseName(gDirectory->GetName());
+      name.ReplaceAll("SparseT0Flagged.root.T0.root","");
       name.ReplaceAll(".root","");
       name.ReplaceAll("DP","");
       name.ReplaceAll("DT","");
@@ -543,7 +556,7 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
       hist->SetXTitle(var);
       //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;
       TString nn(name);
-      cout << Form("%3i %-45s%4s: min/max = %7.2f/%7.2f rms %7.2f (\%)", k, nn.Data(), side, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS) << endl;
+      cout << Form("%3i %-60s%4s: min/max = %7.2f/%7.2f rms %7.2f (\%) mean = %7.2 (\%)", k, nn.Data(), side, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean) << endl;
       if (yMin < yMax) {hist->SetMinimum(yMin); hist->SetMaximum(yMax);}
     }
   }
@@ -552,8 +565,8 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
 //________________________________________________________________________________
 void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") {
   cout << "FitPDraw(\"" << Opt << "\",\"" << plot << "\",\"" << Title.Data() << "\")" << endl;
-  if (! gDirectory) {return;}
   NF = SetFileList();  
+  if (NF <= 0) return;
   gStyle->SetOptStat(0);
   Int_t nx = 0;
   Int_t ny = 0;
@@ -713,15 +726,19 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.Contains("FitH3"))      {
       MuDraw("1e3*(M_S-0.497611):x","S", 50, -2.5, 2.5, "dM_S<1e-3&&M_S>0.495&&M_S<0.505&&i", "", -10,  10.0, "", "#eta","#deltaM(MeV)");
   } else if (Name.BeginsWith("dTime",TString::kIgnoreCase) || Name.BeginsWith("dPad",TString::kIgnoreCase)) {
+    Title = "Inner";
+    if (Name.BeginsWith("dTimeO",TString::kIgnoreCase) || Name.BeginsWith("dPadO",TString::kIgnoreCase)) Title = "Outer";
     TString muPlot = plot;
+    //    TString Cut("entries>300&&chisq>0&&chisq<1e3&&dmu<0.05&&dsigma<0.05&&sigma<0.4&&abs(mu)<0.5"); //GG
+    TString Cut("chisq>0&&chisq<1000&&dsigma<0.15&&dmu<0.15&&entries>50");
     if (plot == "" || plot == "nomuJ") {muPlot = "sigma:x"; }
     Double_t zMin = -0.5, zMax = 0.5;
-    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 1.0;}
+    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 0.05;}
     TString var("Z (cm) "); nx = 105, xMin = -210; xMax = 210;
-    if (muPlot.Contains(":y",TString::kIgnoreCase)) { var = "tan(#phi)"; nx = 40; xMin = -2; xMax = xMin;}
+    if (muPlot.Contains(":y",TString::kIgnoreCase)) { var = "tan(#phi)"; nx = 40; xMin = -2; xMax = -xMin;}
     if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "tan(#lambda)"; nx = 140; xMin = 7; xMax = - xMin;}
     if (muPlot.Contains(":z1",TString::kIgnoreCase)) { var = "log(ADC))"; nx = 20, xMin = 2; xMax = 12;}
-    MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, "dsigma>0&&dsigma<0.1", "prof", zMin, zMax, Title, var,muPlot);
+    MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, Cut, "prof", zMin, zMax, Title, var,muPlot);
   } else if (Name.BeginsWith("pull",TString::kIgnoreCase)) {
     TString muPlot = plot;
     if (plot == "" || plot == "nomuJ") {muPlot = "sigma:x"; }
@@ -732,9 +749,10 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "tan(#lambda)"; nx = 140; xMin = 7; xMax = - xMin;}
     if (muPlot.Contains(":z1",TString::kIgnoreCase)) { var = "log(ADC))"; nx = 20, xMin = 2; xMax = 12;}
     MuDraw(muPlot,"T"+ Opt, nx, xMin, xMax, "dsigma>0&&dsigma<0.1", "prof", zMin, zMax, Title, var,muPlot);
-  } else if (Name.BeginsWith("Sparse",TString::kIgnoreCase) && Name.Contains("Adc",TString::kIgnoreCase)) {
+  } else if (Name.BeginsWith("Sparse",TString::kIgnoreCase) && (Name.Contains("Adc",TString::kIgnoreCase) || Name.Contains("T0Fl",TString::kIgnoreCase))) {
     TString muPlot = plot;
-    TString Cut("chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2"); 
+    //    TString Cut("chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2"); // GG
+    TString Cut("dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02"); // GP
     if (Opt == "" || Opt == "I") Cut += "&&j==1";
     else                         Cut += "&&j==2";
     if (plot == "" || plot == "nomuJ") {muPlot = "mu:z3"; }

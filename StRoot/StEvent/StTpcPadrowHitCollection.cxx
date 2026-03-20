@@ -47,3 +47,15 @@ StTpcPadrowHitCollection::hits() const { return mHits; }
 
 StSPtrVecTpcHit&
 StTpcPadrowHitCollection::hits() { return mHits; }
+//________________________________________________________________________________
+ostream&  operator<<(ostream& os, const StTpcPadrowHitCollection& v)
+{
+  const  UInt_t NoHits = v.hits().size();
+  for (UInt_t i = 0; i < NoHits; i++) {
+    if (v.hits().at(i)) os << *v.hits().at(i) << endl;
+  }
+  return os;
+}
+//________________________________________________________________________________
+void   StTpcPadrowHitCollection::Print(Option_t *option) const {cout << *this << endl;}
+//________________________________________________________________________________
