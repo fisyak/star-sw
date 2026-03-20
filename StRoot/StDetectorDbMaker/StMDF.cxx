@@ -39,6 +39,7 @@ Double_t StMDF::Eval(Double_t *x) const {
     xx[v] = TMath::Max(XMin()[v], TMath::Min(XMin()[v]+0.999*(XMax()[v]-XMin()[v]), x[v]));
   }
   Double_t returnValue = 0;
+  fgMDF = (StMDF *) this;
   if (fFunc) {
     returnValue = fFunc->GetSave(xx);
   } else  {

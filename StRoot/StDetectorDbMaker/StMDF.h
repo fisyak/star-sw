@@ -123,7 +123,5 @@ class StMDF {
   protected:								\
     StMDF **mdf;							\
   private:								\
-    ClassDefChair(St_MDFCorrection ## __VARS__, MDFCorrection ## __VARS__ ## _st ) \
-      ClassDef(St_MDFCorrection ## __VARS__ ## C,1)			\
       };
 #endif
