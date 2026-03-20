@@ -6,7 +6,7 @@ my $macro = "dEdx";
 my $hist = "";
 my $Production = "";
 my $scr = "";
-my $STAR_LEVEL = ".DEV2";
+my $STAR_LEVEL = "TFG";
 my $Mode = 2;
 my $disk = "*";
 my $keep = 0;
@@ -2779,6 +2779,7 @@ if ($#ARGV >= 0) {
 
 #$hist = "RunXXIII37"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac,  fix bug with trigger, still use only flag==0 hits
 #$hist = "RunXXIII38"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st_mtd"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 11/26/2025 add TcpSecRowC, BadFrac, use flagged hits
+#$hist = "RunXXIII39";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023*/*/";  $Production = "P25iy_calib"; $year = "/2023/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/03/2025 recheck old calibration from TFG25k
 
 #################################### RunXXI OO200GeV P24iy ########################
 #$hist = "RunXXI01"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   check what is in MySQL
@@ -2868,7 +2869,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI20"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/21/2026  reset all including TpcPadCorrectionMDC, add __ADC20__ new cuts 26 & 16 on adc, bug in operator /-
 #$hist = "RunXXVI21"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0#; $Mode = 2; $macro = "dEdx";# 02/21/2026  reset all including TpcPadCorrectionMDC, add __ADC20__ new cuts 26 & 16 on adc, fix bug in operator /-
 #$hist = "RunXXVIIITFG25k"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/27/2026  recheck TFG25k
-$hist = "RunXXVIIITFG"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/02/2026 new ADC Correction for TPC23
+#$hist = "RunXXVIIITFG"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/02/2026 new ADC Correction for TPC23
+$hist = "RunXXVI22";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/06/2026 first pass 
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2979,9 +2981,15 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     my $scrr = $scr . $dd . "/"; print "scrr = $scrr\n";
     my $XML = "jobs." . $prod . "_" . $dd . ".xml";
     open (XML,">$XML") or die "Can't open $XML";
-    print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
-	 <command>
+    print XML '<?xml version="1.0" encoding="utf-8" ?>'; 
+    print XML "\n";
+    if ($STAR_HOST_SYS =~ /^al/) {
+      print XML '<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="true" fileListSyntax="paths" copyInputLocally="false">';
+    } else {
+      print XML '<job maxFilesPerProcess="1" filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">';
+    }
+    print XML '
+  	 <command>
          cd ${SUBMITTINGDIRECTORY}
 if ($?INPUTFILE0) ' . $apptainer . ' csh -x $INPUTFILE0
          </command>
