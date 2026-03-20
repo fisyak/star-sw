@@ -92,7 +92,7 @@ class StMDF {
       Int_t N = (table ? table->GetNRows() : 0);			\
       if (N > 0) {mdf = new StMDF*[N]; memset(mdf, 0, N*sizeof(StMDF*));} \
     }									\
-    virtual ~St_MDFCorrection ## __VARS__ ## C() {for (size_t i = 0; i < sizeof(mdf)/sizeof(StMDF*); i++) SafeDelete(mdf[i]); delete [] mdf;} \
+    virtual ~St_MDFCorrection ## __VARS__ ## C() {if (mdf) {for (UInt_t i = 0; i < getNumRows(); i++) SafeDelete(mdf[i]); delete [] mdf;}} \
     MDFCorrection ## __VARS__ ## _st 	*Struct(Int_t k = 0) 	const {return ((St_MDFCorrection ## __VARS__ *) Table())->GetTable()+k;} \
     UInt_t     	getNumRows()                	const {return GetNRows();} \
     const Char_t  *getName()                      const {return Table()->GetName();} \
