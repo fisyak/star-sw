@@ -87,7 +87,7 @@ const StSPtrVecTpcHit*
 StTpcHitCollection::hits(int sectorId, int padrowId) const
 {
     const StTpcSectorHitCollection* sc = (sectorId < mNumberOfSectors ? sector(sectorId) : nullptr);
-    const StTpcPadrowHitCollection* pc = (sc && padrowId < sc->numberOfPadrows() ? sc->padrow(padrowId) : nullptr);
+    const StTpcPadrowHitCollection* pc = (sc && padrowId < (int) sc->numberOfPadrows() ? sc->padrow(padrowId) : nullptr);
     return pc ? &pc->hits() : nullptr;
 }
 
@@ -95,8 +95,8 @@ StTpcHitCollection::StTpcHitIter
 StTpcHitCollection::StTpcHitIter::begin(StTpcHitCollection& c)
 {
     // Skip to first non-empty vector
-    for (int l1 = 0; l1 < c.numberOfSectors(); ++l1)
-        for (int l2 = 0; l2 < c.numberOfPadrows(l1); ++l2)
+  for (int l1 = 0; l1 < (int) c.numberOfSectors(); ++l1)
+    for (int l2 = 0; l2 < (int) c.numberOfPadrows(l1); ++l2)
             if ( !(*c.hits(l1, l2)).empty() ) return StTpcHitCollection::StTpcHitIter(c, l1, l2);
     return end(c);
 }

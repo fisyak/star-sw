@@ -43,10 +43,12 @@ public:
     
     StSPtrVecTpcHit&       hits();
     const StSPtrVecTpcHit& hits() const;
+    void     Print(Option_t *option="") const;
 
 private:
     StSPtrVecTpcHit mHits;
     
     ClassDef(StTpcPadrowHitCollection,1)
 };
+ostream&              operator<<(ostream& os, StTpcPadrowHitCollection const & v);
 #endif

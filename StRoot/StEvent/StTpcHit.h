@@ -152,8 +152,10 @@ class StTpcHit : public StHit {
     UInt_t   pixelsInHit() const {return bits(22,10);};   // bits 22-31 obsolete (TCL only, FCF put no. of time buckets)
     UChar_t  minPad()   const {return TMath::Nint(mMcl_x/64.) - mMinpad;}
     UChar_t  maxPad()   const {return TMath::Nint(mMcl_x/64.) + mMaxpad;}
+    UChar_t  noPads()   const {return padsInHit();}
     Short_t  minTmbk()  const {return TMath::Nint(mMcl_t/64.) - mMintmbk;}
     Short_t  maxTmbk()  const {return TMath::Nint(mMcl_t/64.) + mMaxtmbk;}
+    Short_t  noTmbks()  const {return mMaxtmbk + mMintmbk + 1;}
     Int_t    volumeID() const {return 100 * sector() + padrow();}
     Short_t  timeBucketsInHit()   const {return maxTmbk() - minTmbk() + 1;} // number of time bucket fired in this hit
     Float_t  timeBucket() const {return static_cast<float>(mMcl_t)/64.;}
