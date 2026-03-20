@@ -9,8 +9,9 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 8,
 	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=TMath::PiOver2(), Double_t Phihigh=TMath::PiOver2(),	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
 	    //      Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3,	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
 	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow= 0.25, Double_t Yhigh=0.25, Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3, Double_t Zlow=170, Double_t Zhigh=0, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow= -1.5, Double_t Yhigh=-1.5, Double_t Philow=0, Double_t Phihigh=0, Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    	    Double_t pTlow=1,Double_t pThigh=1, Double_t Ylow=-0.5, Double_t Yhigh=-0.5, Double_t Philow=-TMath::Pi()/2, Double_t Phihigh=-TMath::Pi()/2, Double_t Zlow=0, Double_t Zhigh=0, Int_t Npart = 1, const Char_t *opt = "G" 
+	    //	    Double_t pTlow=0.3564,Double_t pThigh=0.3564,	    Double_t Ylow= -0.87, Double_t Yhigh=-0.87, Double_t Philow=0, Double_t Phihigh=0, Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
+	    Double_t pTlow=0.1084,Double_t pThigh=0.1084,	    Double_t Ylow= -2.20, Double_t Yhigh=-2.20, Double_t Philow=0, Double_t Phihigh=0, Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
+	    //	    Double_t pTlow=1,Double_t pThigh=1, Double_t Ylow=-0.5, Double_t Yhigh=-0.5, Double_t Philow=-TMath::Pi()/2, Double_t Phihigh=-TMath::Pi()/2, Double_t Zlow=0, Double_t Zhigh=0, Int_t Npart = 1, const Char_t *opt = "G" 
 	    )
 {
   cout << "Run1Ev(NEvents=" << NEvents 
@@ -41,7 +42,7 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 8,
     St_geant_Maker::instance()->Do(kine.Data());
     St_geant_Maker::instance()->Do("gspread 0. 0. 0.");
     }
-#if 0
+#if 1
     //                              CUTS   CUTGAM CUTELE CUTHAD CUTNEU CUTMUO BCUTE BCUTM DCUTE DCUTM PPCUTM TOFMAX GCUTS[5]
     //                          Do("CUTS     1e-5   1e-5   1e-3  1e-14   1e-3  1e-3  1e-3  1e-3  1e-3   1e-3     10");
     //                          Do("CUTS     1e-5   1e-5   1e-3  1e-14   1e-3  1e-3  1e-3  1e-3  1e-3   1e-3     1e-3");

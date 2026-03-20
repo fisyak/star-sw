@@ -4436,7 +4436,7 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 //________________________________________________________________________________
 void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP", 
 	     Option_t *opt="RM", 
-	     Int_t ix = -3, Int_t jy = -1, 
+	     Int_t ix = -1, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
 	     Double_t nSigma=3, Int_t pow=1,
 	     Double_t zmin = -2, Double_t zmax = 5) {
@@ -4589,56 +4589,53 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
   TF1 *g = 0;
   Int_t ix1 = 0;
   Int_t ix2 = nx-mergeX+1;
-  Int_t jy1 = 0;
-  Int_t jy2 = ny-mergeY+1;
-  if (mergeX == 1 && nx == 24) {
-    ix1 = -2; // -2 West, -1 East, 0 All
-  }
-  if (ix > -3) ix1 = ix2 = ix;
-  if (ny == 1) {
-    jy1 = jy2 = 1;
-  } else {
-    if (jy > 0) {jy1 = jy2 = jy;}
-  }
+  if (ix >= 0) ix1 = ix2 = ix;
   for (int i=ix1;i<=ix2;i++){
     Int_t ir0 = i;
     Int_t ir1=i+mergeX-1;
-    if (i == 0) {ir0 = 1; ir1 = nx;}
-    else if (i == -2) {ir0 = 1; ir1 = 12;}
+    Int_t jy1 = 0;
+    Int_t jy2 = ny-mergeY+1;
+    if (ny == 1) {
+      jy1 = jy2 = 1;
+    } else {
+      if (jy > 0) {jy1 = jy2 = jy;}
+    }
+    if (ny > 0 && i == 0 && jy < 0) {
+      jy1 = 1; // 1 - IW, 2 - IE, 3 - OW, 4 - EW, 5 - I, 6 - O, 7 - W, 8 - E, 9 - All
+      jy2 = 9;
+    }
     for (int j=jy1;j<=jy2;j++) {
       Int_t jr0 = j;
       Int_t jr1 = j+mergeY-1;
-      if (j == 0) {
-	if (i != 0) continue;
-	jr0 = 1; jr1 = ny;
-      }
       proj = 0;
       proj20 = 0;
       TString title;
       if (dim == 3) {
-	if (j == 0) {
-	  proj =               ((TH3 *) hist)->ProjectionZ(Form("fX%i", ir0),ir0,ir1,1,ny); 
-	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20X%i", ir0),ir0,ir1,1,ny); 
-	} else if (i == 0) {
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("fY%i", jr0),1, nx, jr0, jr1); 
-	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20Y%i", jr0),1, nx, jr0, jr1); 
-	} else if (i == -2) {
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("fW%i", jr0),1, 12, jr0, jr1); 
-	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20W%i", jr0),1, 12, jr0, jr1); 
-	} else if (i == -1) {
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("fE%i", jr0),13, nx, jr0, jr1); 
-	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20E%i", jr0),13, nx, jr0, jr1); 
-	} else if (ir0 == ir1 && jr0 == jr1) {
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i",      ir0,    jr0    ),ir0,ir1,jr0,jr1); 
+	if (i == 0) {
+	  if        (j == 1)  {ir0 =  1; ir1 = 12; jr0 =  1; jr1 = 40; // IW
+	  } else if (j == 2)  {ir0 = 13; ir1 = 24; jr0 =  1; jr1 = 40; // IE
+	  } else if (j == 3)  {ir0 =  1; ir1 = 12; jr0 = 41; jr1 = 72; // OW
+	  } else if (j == 4)  {ir0 = 13; ir1 = 24; jr0 = 41; jr1 = 72; // OE
+	  } else if (j == 5)  {ir0 =  1; ir1 = 24; jr0 =  1; jr1 = 40; // I
+	  } else if (j == 6)  {ir0 =  1; ir1 = 24; jr0 = 41; jr1 = 72; // O
+	  } else if (j == 7)  {ir0 =  1; ir1 = 12; jr0 =  1; jr1 = 72; // W
+	  } else if (j == 8)  {ir0 = 13; ir1 = 24; jr0 =  1; jr1 = 72; // E
+	  } else if (j == 9)  {ir0 =  1; ir1 = 24; jr0 =  1; jr1 = 72; // All
+	  } else {
+	    continue;
+	  }
+	}
+	if         (ir0 == ir1 && jr0 == jr1) {
+	  proj =                   ((TH3 *) hist)->ProjectionZ(Form("f%i_%i",      ir0,    jr0    ),ir0,ir1,jr0,jr1); 
 	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i",      ir0,    jr0    ),ir0,ir1,jr0,jr1); 
 	} else if (ir0 == ir1) {  
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i",ir0, jr0,jr1),ir0,ir1,jr0,jr1);
+	  proj =                    ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i",ir0, jr0,jr1),ir0,ir1,jr0,jr1);
 	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20f%i_%i_%i",ir0, jr0,jr1),ir0,ir1,jr0,jr1);
 	} else if (jr0 == jr1) {  
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i",ir0,ir1,jr0),ir0,ir1,jr0,jr1);
+	  proj =                   ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i",ir0,ir1,jr0),ir0,ir1,jr0,jr1);
 	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i_%i",ir0,ir1,jr0),ir0,ir1,jr0,jr1);
 	}  else {  
-	  proj = ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i_%i",ir0,ir1,jr0,jr1),ir0,ir1,jr0,jr1);
+	  proj =                   ((TH3 *) hist)->ProjectionZ(Form("f%i_%i_%i_%i",ir0,ir1,jr0,jr1),ir0,ir1,jr0,jr1);
 	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i_%i_%i",ir0,ir1,jr0,jr1),ir0,ir1,jr0,jr1);
 	}
 	if (! proj) continue;

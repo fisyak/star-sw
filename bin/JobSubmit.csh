@@ -32,7 +32,8 @@ foreach d (`ls -1d ???/2*`)
 #  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.TFG25c.xml
 #  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.DEV2.xml
 #  /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daqTFG.xml
-   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daq.TFG25k.xml
+#   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daq.TFG25k.xml
+   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daqTFG.xml
   touch Submitted
   cd -
 #  if ($countJ >= 40) then 

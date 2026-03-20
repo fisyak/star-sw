@@ -87,7 +87,11 @@ Int_t SetPartGun(TString RootFile,TString RunOpt, TString Opt) {
     cout << Opt.Data() << " is not identified. Abort" << endl;
     return 1;
   }
-#if 0
+#if 1
+  Double_t bgMinL10  = -3; // 3.5;// 1e2; // 1e-2;
+  Double_t bgMaxL10  =  TMath::Log10(10./mass);  // 1e2;// 1e5;
+  
+  TString optG("GBL");
   if (RootFile.Contains("MIP",TString::kIgnoreCase)) {
     Double_t pMoMIP = 0.526; // MIP from Heed bg = 3.77 => p_pion = 0.526
     Double_t pMomin = pMoMIP - 0.15; // 0.45;
@@ -96,9 +100,6 @@ Int_t SetPartGun(TString RootFile,TString RunOpt, TString Opt) {
     bgMaxL10 = TMath::Log10(pMomax/Masses[4]);
     optG += "pionMIP";
   }
-  Double_t bgMinL10  = -3; // 3.5;// 1e2; // 1e-2;
-  Double_t bgMaxL10  = 10;  // 1e2;// 1e5;
-  TString optG("GBL");
 #else
   //  TString optG("GmTsqSW");
   TString optG("GmTsq");
@@ -149,7 +150,7 @@ Int_t SetPartGun(TString RootFile,TString RunOpt, TString Opt) {
     if ( gener && ! gener->IsA()->InheritsFrom( "StarMCSimplePrimaryGenerator" ) ) {
       delete gener; gener = 0;
     }
-#if 0
+#if 1
     if (! gener) gener =  new 
       StarMCSimplePrimaryGenerator( NTRACK, ID, bgMinL10, bgMaxL10,Ylow, Yhigh, Philow, Phihigh, Zlow, Zhigh, optG);
     else
@@ -162,48 +163,47 @@ Int_t SetPartGun(TString RootFile,TString RunOpt, TString Opt) {
 #endif
     StarVMCApplication::Instance()->SetPrimaryGenerator(gener);
     cout << "Set StarMCSimplePrimaryGenerator" << endl;
+    gener->SetDebug(1);
     if (DEBUG) {
-        TGeant3TGeo *geant3 = (TGeant3TGeo *)gMC;
-        Gcflag_t* cflag = geant3->Gcflag();
-        cflag->idebug = 1;
-        cflag->idemax = 10000;
-        cflag->iswit[0] = 2;
-        cflag->iswit[1] = 2;
-        cflag->iswit[2] = 2; 
+      TGeant3TGeo *geant3 = (TGeant3TGeo *)gMC;
+      Gcflag_t* cflag = geant3->Gcflag();
+      cflag->idebug = 1;
+      cflag->idemax = 10000;
+      cflag->iswit[0] = 2;
+      cflag->iswit[1] = 2;
+      cflag->iswit[2] = 2; 
     }
 #if 1
-#if 1
-      //      gener->SetGun();
-      //      StarVMCApplication::Instance()->DoMisAlignment(kFALSE);
-      //      geant->SetSetAttr("phys_off",kTRUE); // physics off
-      gMC->SetProcess("DCAY", 0);
-      gMC->SetProcess("ANNI", 0);
-      gMC->SetProcess("BREM", 0);
-      gMC->SetProcess("COMP", 0);
-      gMC->SetProcess("HADR", 0);
-      gMC->SetProcess("MUNU", 0);
-      gMC->SetProcess("PAIR", 0);
-      gMC->SetProcess("PFIS", 0);
-      gMC->SetProcess("PHOT", 0);
-      gMC->SetProcess("RAYL", 0);
-      //      gMC->SetProcess("LOSS", 4); // no fluctuations 
-      gMC->SetProcess("DRAY", 0);
-      gMC->SetProcess("MULS", 0);
-      gMC->SetProcess("STRA", 0);
+    //      gener->SetGun();
+    //      StarVMCApplication::Instance()->DoMisAlignment(kFALSE);
+    //      geant->SetSetAttr("phys_off",kTRUE); // physics off
+    gMC->SetProcess("DCAY", 0);
+    gMC->SetProcess("ANNI", 0);
+    gMC->SetProcess("BREM", 0);
+    gMC->SetProcess("COMP", 0);
+    gMC->SetProcess("HADR", 0);
+    gMC->SetProcess("MUNU", 0);
+    gMC->SetProcess("PAIR", 0);
+    gMC->SetProcess("PFIS", 0);
+    gMC->SetProcess("PHOT", 0);
+    gMC->SetProcess("RAYL", 0);
+    //      gMC->SetProcess("LOSS", 4); // no fluctuations 
+    gMC->SetProcess("DRAY", 0);
+    gMC->SetProcess("MULS", 0);
+    gMC->SetProcess("STRA", 0);
 #endif
-      gMC->SetCut("CUTGAM",	1e-5  );
-      gMC->SetCut("CUTELE", 	1e-5  );
-      gMC->SetCut("CUTHAD", 	1e-3  );
-      gMC->SetCut("CUTNEU", 	1e-14 );
-      gMC->SetCut("CUTMUO", 	1e-3  );
-      gMC->SetCut("BCUTE", 	1e-3  );
-      gMC->SetCut("BCUTM", 	1e-3  );
-      gMC->SetCut("DCUTE", 	1e-3  );
-      gMC->SetCut("DCUTM", 	1e-3  );
-      gMC->SetCut("PPCUTM", 	1e-3  );
-      gMC->SetCut("TOFMAX", 	1e3);
-      gMC->BuildPhysics();
-#endif
+    gMC->SetCut("CUTGAM",	1e-5  );
+    gMC->SetCut("CUTELE", 	1e-5  );
+    gMC->SetCut("CUTHAD", 	1e-3  );
+    gMC->SetCut("CUTNEU", 	1e-14 );
+    gMC->SetCut("CUTMUO", 	1e-3  );
+    gMC->SetCut("BCUTE", 	1e-3  );
+    gMC->SetCut("BCUTM", 	1e-3  );
+    gMC->SetCut("DCUTE", 	1e-3  );
+    gMC->SetCut("DCUTM", 	1e-3  );
+    gMC->SetCut("PPCUTM", 	1e-3  );
+    gMC->SetCut("TOFMAX", 	1e3);
+    gMC->BuildPhysics();
   }
   return 0;
 }
@@ -360,55 +360,6 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
       //      tpcRS->SetDebug(13);
   }
 
-#if 0 /* not enough memory for dE/dx plots */
-  StMaker *dEdxY2 = chain->GetMaker("dEdxY2"); 
-  if (dEdxY2) {
-    StdEdxY2Maker *dEdx = (StdEdxY2Maker *) dEdxY2;
-    Int_t mask = 0;
-#if 0
-    //     SETBIT(mask,StTpcdEdxCorrection::ktpcPressure); 
-    //     SETBIT(mask,StTpcdEdxCorrection::kAdcCorrection); 
-    //     SETBIT(mask,StTpcdEdxCorrection::kTpcSecRow); 
-    //     SETBIT(mask,StTpcdEdxCorrection::kDrift);
-    //     SETBIT(mask,StTpcdEdxCorrection::kzCorrection);
-    //     SETBIT(mask,StTpcdEdxCorrection::kdXCorrection);
-    //     SETBIT(mask,StTpcdEdxCorrection::kTpcdEdxCor);
-    //     SETBIT(mask,StTpcdEdxCorrection::kTpcLengthCorrection);
-    // from dEdx 06/20/04
-    SETBIT(mask,StTpcdEdxCorrection::ktpcPressure); 
-    //  SETBIT(mask,StTpcdEdxCorrection::ktpcMethaneIn); 
-    //  SETBIT(mask,StTpcdEdxCorrection::ktpcGasTemperature); 
-    //  SETBIT(mask,StTpcdEdxCorrection::ktpcWaterOut); 
-    SETBIT(mask,StTpcdEdxCorrection::kAdcCorrection); 
-    SETBIT(mask,StTpcdEdxCorrection::kTpcSecRow); 
-    SETBIT(mask,StTpcdEdxCorrection::kDrift);
-    SETBIT(mask,StTpcdEdxCorrection::kzCorrection);
-    SETBIT(mask,StTpcdEdxCorrection::kdXCorrection);
-    //  SETBIT(mask,StTpcdEdxCorrection::kTpcdEdxCor);
-    //  SETBIT(mask,StTpcdEdxCorrection::kTpcLengthCorrection);
-    SETBIT(mask,StTpcdEdxCorrection::kAdcCorrection);
-    SETBIT(mask,StTpcdEdxCorrection::kTpcLast);
-    //    SETBIT(Mode,StdEdxY2Maker::kOldClusterFinder); 
-    //    SETBIT(Mode,StdEdxY2Maker::kDoNotCorrectdEdx);
-    
-    SETBIT(Mode,StdEdxY2Maker::kPadSelection); 
-    SETBIT(Mode,StdEdxY2Maker::kCalibration);
-    //    if (TString(gSystem->Getenv("STAR_VERSION")) == ".DEV2") 
-    SETBIT(Mode,StdEdxY2Maker::kZBGX);
-    SETBIT(Mode,StdEdxY2Maker::kGASHISTOGRAMS);
-#endif
-    Int_t Mode = 2;
-    if (Mode) {
-      dEdx->SetDebug(1);
-      cout << " set dEdxY2 Mode" << Mode << " =======================================" << endl;
-      dEdx->SetMode(Mode); 
-    }
-    if (mask) {
-      cout << " set dEdxY2 mask " << mask << " =======================================" << endl;
-      dEdx->SetMask(mask); 
-    }
-  }
-#endif    
   if (Last < 0) return;
   Int_t initStat = chain->Init(); // This should call the Init() method in ALL makers
   if (initStat) {
@@ -422,20 +373,6 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
   }
   if (Last > 0)  chain->EventLoop(First,Last);
 }
-#if 0
-//________________________________________________________________________________
-void TpcRS(Int_t Last=100,
-	   const Char_t *Run = "y2009,TpcRS",//trs,fcf", // "TpcRS,fcf",
-	   const Char_t *fileIn = 0,
-	   const Char_t *opt = "Bichsel", const Char_t *kuip = 0,
-	   const Char_t *fileOut = 0) {
-  //  /star/data03/daq/2004/093/st_physics_adc_5093007_raw_2050001.daq
-  //  /star/data03/daq/2004/fisyak/st_physics_adc_5114043_raw_2080001.daq
-  // nofield /star/data03/daq/2004/076/st_physics_adc_5076061_raw_2060001.daq
-  //                                   st_physics_adc_5076061_raw_4050001.daq
-  TpcRS(1,Last,Run,fileIn,opt,kuip,fileOut);
-}
-#else
 //________________________________________________________________________________
 void TpcRS(Int_t Last=1,
 	   const Char_t *Run = "mc2019",
@@ -448,4 +385,3 @@ void TpcRS(Int_t Last=1,
   //                                   st_physics_adc_5076061_raw_4050001.daq
   TpcRS(1,Last,Run,fileIn,opt,kuip,fileOut);
 }
-#endif
