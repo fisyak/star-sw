@@ -275,6 +275,7 @@
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StDetectorDbMaker/St_tpcStatusC.h"
+#include "StDetectorDbMaker/St_beamInfoC.h"
 #include "TFile.h"
 #include "TNtuple.h"
 #include "TH2.h"
@@ -1209,174 +1210,166 @@ Bool_t TpcHitLess(const StTpcHit *lhs, const StTpcHit *rhs) {
 };
 //________________________________________________________________________________
 void StTpcHitMaker::AfterBurner(StTpcHitCollection *TpcHitCollection) {
-  static Float_t padDiff = 2.5, timeBucketDiff = 5.0;
+  static Float_t padDiff = 2.5;
+  static Int_t   tmbkDiff = -6;
   static StTpcCoordinateTransform transform(gStTpcDb);
   static StTpcLocalSectorCoordinate local;
   static StTpcLocalCoordinate global;
   if (! TpcHitCollection) return;
-  
+  Double_t TimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency();
+  Double_t zVX = 0;
+  if (St_beamInfoC::instance()->IsFixedTarget()) zVX = 200.0;
 #ifdef __MAKE_NTUPLE__
   if (! tup) {
-    if (StChain::GetChain()->GetTFile()) {
-      StChain::GetChain()->GetTFile()->cd();
+    if (StMaker::GetChain()->GetTFile()) {
+      StMaker::GetChain()->GetTFile()->cd();
       tup = new TNtuple("HitT","Cluster Pair Info",vTpcHitMRPair);
     }
   }
   TpcHitPair_t pairC;
 #endif
-  Char_t mergedHits[65536];
   UInt_t numberOfSectors = TpcHitCollection->numberOfSectors();
   UInt_t TotNoHits = 0;
   UInt_t RejNoHits = 0;
   for (UInt_t sec = 1; sec <= numberOfSectors; sec++) {
     StTpcSectorHitCollection* sectorCollection = TpcHitCollection->sector(sec-1);
-    if (sectorCollection) {
-      UInt_t numberOfPadrows = sectorCollection->numberOfPadrows();
-      for (UInt_t row = 1; row <= numberOfPadrows; row++) {
-	StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(row-1);
-	if (rowCollection) {
-	  UInt_t NoHits = rowCollection->hits().size();
-	  TotNoHits += NoHits;
-	  if (NoHits < 2) continue;
-	  sort(rowCollection->hits().begin(),
-	       rowCollection->hits().end(),
-	       TpcHitLess);
-	  // Merge splitted clusters
-	  Int_t merged = 0;
-          Char_t mergePass = 0;
-          memset(mergedHits,0,65536*sizeof(Char_t));
-          Int_t newlyMerged = 1;
-          while (newlyMerged > 0) {
-           if (mergePass == 255) {
-             LOG_WARN << "Too many merging passes! Afterburner aborted for sector="
-                      << sec << " row=" << row << endm;
-             break;
-           }
-           newlyMerged = 0;
-	   for (UInt_t k = 0; k < NoHits; k++) {
-	    if (mergedHits[k] != mergePass) continue; // skip any hits not merged in previous pass
-	    StTpcHit* kHit = rowCollection->hits().at(k);
-	    if (_debug) {cout << "k " << k; kHit->Print();}
-	    if (kHit->flag())                          continue;
-	    if (kHit->adc() <= 0.0)                    continue;
+    if (! sectorCollection) continue;
+    UInt_t numberOfPadrows = sectorCollection->numberOfPadrows();
+    for (UInt_t row = 1; row <= numberOfPadrows; row++) {
+      StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(row-1);
+      if (! rowCollection) continue;
+      UInt_t NoHits = rowCollection->hits().size();
+      TotNoHits += NoHits;
+      if (NoHits < 2) continue;
+      Double_t PadRadius =  St_tpcPadConfigC::instance()->radialDistanceAtRow(sec,row);
+      Double_t PadLength =  St_tpcPadConfigC::instance()->PadLengthAtRow(sec,row);
+      Double_t zTmbk = StTpcDb::instance()->DriftVelocity(sec,row)*1e-6*TimeBinWidth;
+      for (UInt_t k = 0; k < NoHits; k++) {
+	StTpcHit* kHit = rowCollection->hits().at(k);
+	if (kHit->flag() == FCF_MERGED && kHit->noTmbks() == 5) kHit->setFlag(0);
+      }
+     // Sort over timebuckets and pads
+      if (_debug) {cout << "Before" << endl; rowCollection->Print();}
+      sort(rowCollection->hits().begin(), rowCollection->hits().end(),	TpcHitLess);
+      if (_debug) {cout << "After" << endl; rowCollection->Print();}
+      // reset flag for FCF_MERGED && oTmbks() == 5
+      // Merge splitted clusters
+      for (UInt_t k = 0; k < NoHits; k++) {
+	StTpcHit* kHit = rowCollection->hits().at(k);
+	if (! kHit) continue;
+	if (kHit->flag())  continue;
+	if (kHit->adc() <= 0.0)                    continue;
 #ifdef __MAKE_NTUPLE__
-	    pairC.sec    = sec;
-	    pairC.row    = row;
-	    pairC.qK     = kHit->charge();
-	    pairC.padK   = kHit->pad();
-	    pairC.tbkK   = kHit->timeBucket();
-	    pairC.padKmn = kHit->minPad();
-	    pairC.padKmx = kHit->maxPad();
-	    pairC.tbkKmn = kHit->minTmbk();
-	    pairC.tbkKmx = kHit->maxTmbk();
-	    pairC.IdTK   = kHit->idTruth();
-	    pairC.QAK    = kHit->qaTruth();
+	pairC.sec    = sec;
+	pairC.row    = row;
+	pairC.qK     = kHit->charge();
+	pairC.padK   = kHit->pad();
+	pairC.tbkK   = kHit->timeBucket();
+	pairC.padKmn = kHit->minPad();
+	pairC.padKmx = kHit->maxPad();
+	pairC.tbkKmn = kHit->minTmbk();
+	pairC.tbkKmx = kHit->maxTmbk();
+	pairC.IdTK   = kHit->idTruth();
+	pairC.QAK    = kHit->qaTruth();
 #endif
-	    for (UInt_t l = k+1; l < NoHits; l++) {
-	      StTpcHit* lHit = rowCollection->hits().at(l);
-	      if (_debug) {cout << "l " << l; lHit->Print();}
-	      if (lHit->flag())                          continue;
-	      if (lHit->adc() <= 0.0)                    continue;
-	      // Most stringent tests first to reduce calls
-	      // check hits near by
-	      bool notNear =  (TMath::Abs(kHit->pad()        - lHit->pad())        > padDiff ||
-		               TMath::Abs(kHit->timeBucket() - lHit->timeBucket()) > timeBucketDiff);
+	for (UInt_t l = k+1; l < NoHits; l++) {
+	  StTpcHit* lHit = rowCollection->hits().at(l);
+	  if (! lHit) continue;
+	  if (lHit->flag())  continue;
+	  if (lHit->adc() <= 0.0)                    continue;
+	  if (_debug) {cout << "================================================================================" << endl << "k " << k; kHit->Print();}
+	  Double_t dZ = PadLength/PadRadius*TMath::Abs(zVX - kHit->position().z());
+	  Float_t timeBucketDiff = dZ/zTmbk + 6;
+	  if (_debug) {cout << "l " << l; lHit->Print();}
+	  // Most stringent tests first to reduce calls
+	  // check hits near by
+
+	  bool notNear =  
+	    (TMath::Abs(kHit->pad()        - lHit->pad())        > padDiff) ||
+	    (TMath::Abs(kHit->timeBucket() - lHit->timeBucket()) > timeBucketDiff);
 #ifndef __MAKE_NTUPLE__
-	      if (notNear) continue;
+	  if (notNear) continue;
 #endif
-	      // Are extents overlapped ?
-	      Int_t padOverlap = TMath::Min(kHit->maxPad(),lHit->maxPad())
-		-                TMath::Max(kHit->minPad(),lHit->minPad());
-	      if (padOverlap < 0) continue;
-	      Int_t tmbkOverlap = TMath::Min(kHit->maxTmbk(),lHit->maxTmbk()) 
-		-                 TMath::Max(kHit->minTmbk(),lHit->minTmbk());
-	      if (tmbkOverlap < 0) continue;
+	  // Are extents overlapped ?
+	  Int_t padOverlap = TMath::Min(kHit->maxPad(),lHit->maxPad())
+	    -                TMath::Max(kHit->minPad(),lHit->minPad());
+	  if (padOverlap < 0) continue;
+	  Int_t tmbkOverlap = TMath::Min(kHit->maxTmbk(),lHit->maxTmbk()) 
+	    -                 TMath::Max(kHit->minTmbk(),lHit->minTmbk());
+	  if (_debug) {cout << "padOverlap = " << padOverlap << "\ttmbkOverlap = " << tmbkOverlap << endl;}
 #ifdef __MAKE_NTUPLE__
-	      if (tup) {
-		pairC.qL     = lHit->charge();
-		pairC.padL   = lHit->pad();
-		pairC.tbkL   = lHit->timeBucket();
-		pairC.padLmn = lHit->minPad();
-		pairC.padLmx = lHit->maxPad();
-		pairC.tbkLmn = lHit->minTmbk();
-		pairC.tbkLmx = lHit->maxTmbk();
-		pairC.IdTL   = lHit->idTruth();
-		pairC.QAL    = lHit->qaTruth();
-		pairC.padOv  = padOverlap;    
-		pairC.tbkOv  = tmbkOverlap;
-		tup->Fill(&pairC.sec);
-	      }
-	      if (notNear) continue;
+	  if (tup) {
+	    pairC.qL     = lHit->charge();
+	    pairC.padL   = lHit->pad();
+	    pairC.tbkL   = lHit->timeBucket();
+	    pairC.padLmn = lHit->minPad();
+	    pairC.padLmx = lHit->maxPad();
+	    pairC.tbkLmn = lHit->minTmbk();
+	    pairC.tbkLmx = lHit->maxTmbk();
+	    pairC.IdTL   = lHit->idTruth();
+	    pairC.QAL    = lHit->qaTruth();
+	    pairC.padOv  = padOverlap;    
+	    pairC.tbkOv  = tmbkOverlap;
+	    tup->Fill(&pairC.sec);
+	  }
+	  if (notNear) continue;
 #endif
+	  if (tmbkOverlap < tmbkDiff) continue;
 #ifdef FCF_CHOPPED
-	      UShort_t flag = lHit->flag() | FCF_CHOPPED; 
+	  UShort_t flag = lHit->flag() | FCF_CHOPPED; 
 #else
-	      UShort_t flag = lHit->flag() | 0x080;
+	  UShort_t flag = lHit->flag() | 0x080;
 #endif
-	      lHit->setFlag(flag);
-	      RejNoHits++;
-	      if (_debug) {
-		cout << "mk" << k; kHit->Print();
-		cout << "ml" << l; lHit->Print();
-	      }
-	      Float_t q          =  lHit->charge()                    + kHit->charge();	
-	      Float_t adc        =  lHit->adc()                       + kHit->adc();
-	      Float_t pad        = (lHit->adc()*lHit->pad()        + kHit->adc()*kHit->pad()       )/adc;
-	      Float_t timeBucket = (lHit->adc()*lHit->timeBucket() + kHit->adc()*kHit->timeBucket())/adc;
-	      Short_t minPad  = TMath::Min(lHit->minPad(),  kHit->minPad());
-	      Short_t maxPad  = TMath::Max(lHit->maxPad(),  kHit->maxPad());
-	      Short_t minTmbk = TMath::Min(lHit->minTmbk(), kHit->minTmbk());
-	      Short_t maxTmbk = TMath::Max(lHit->maxTmbk(), kHit->maxTmbk());
-	      Int_t IdT = lHit->idTruth();
-	      Double_t QA = lHit->adc()*lHit->qaTruth();
-	      if (IdT == kHit->idTruth()) {
-		QA += kHit->adc()*kHit->qaTruth();
-	      } else {
-		if (lHit->adc()*lHit->qaTruth() < kHit->adc()*kHit->qaTruth()) {
-		  QA = kHit->adc()*kHit->qaTruth();
-		  IdT = kHit->idTruth();
-		}
-	      }
-	      QA = QA/adc;
-	      kHit->setIdTruth(IdT, TMath::Nint(QA));
-	      kHit->setCharge(q);
-	      kHit->setExtends(pad,timeBucket,minPad,maxPad,minTmbk,maxTmbk);
-	      kHit->setAdc(adc);
-	      StTpcPadCoordinate padcoord(sec, row, pad, timeBucket);
-	      transform(padcoord,local,kFALSE);
-	      transform(local,global);
-	      kHit->setPosition(global.position());
-	      if (_debug) {
-		cout << "m " << k; kHit->Print();
-	      }
-	      merged++;
-	      newlyMerged++;
-	      mergedHits[k] = mergePass + 1;
-	      break; // done with hit k for now, will look again later
-	    } // l hit loop
-	   } // k hit loop
-	   mergePass++;
-	  } // merging pass
+	  lHit->setFlag(flag);
+	  kHit->setFlag(0);
+	  Float_t q          =  lHit->charge()                    + kHit->charge();	
+	  Float_t adc        =  lHit->adc()                       + kHit->adc();
+	  Float_t pad        = (lHit->adc()*lHit->pad()        + kHit->adc()*kHit->pad()       )/adc;
+	  Float_t timeBucket = (lHit->adc()*lHit->timeBucket() + kHit->adc()*kHit->timeBucket())/adc;
+	  Short_t minPad  = TMath::Min(lHit->minPad(),  kHit->minPad());
+	  Short_t maxPad  = TMath::Max(lHit->maxPad(),  kHit->maxPad());
+	  Short_t minTmbk = TMath::Min(lHit->minTmbk(), kHit->minTmbk());
+	  Short_t maxTmbk = TMath::Max(lHit->maxTmbk(), kHit->maxTmbk());
+	  Int_t IdT = lHit->idTruth();
+	  Double_t QA = lHit->adc()*lHit->qaTruth();
+	  if (IdT == kHit->idTruth()) {
+	    QA += kHit->adc()*kHit->qaTruth();
+	  } else {
+	    if (lHit->adc()*lHit->qaTruth() < kHit->adc()*kHit->qaTruth()) {
+	      QA = kHit->adc()*kHit->qaTruth();
+	      IdT = kHit->idTruth();
+	    }
+	  }
+	  QA = QA/adc;
+	  kHit->setIdTruth(IdT, TMath::Nint(QA));
+	  kHit->setCharge(q);
+	  kHit->setExtends(pad,timeBucket,minPad,maxPad,minTmbk,maxTmbk);
+	  kHit->setAdc(adc);
+	  StTpcPadCoordinate padcoord(sec, row, pad, timeBucket);
+	  transform(padcoord,local,kFALSE);
+	  transform(local,global);
+	  kHit->setPosition(global.position());
+	  if (_debug) {
+	    cout << "m " << k; kHit->Print();
+	    cout << "r " << l; lHit->Print();
+	  }
+	  RejNoHits++;
+	} // l hit loop
 #ifdef __CORRECT_S_SHAPE__
-	  // Correct S - shape in pad direction
-	  for (UInt_t k = 0; k < NoHits; k++) {
-	    StTpcHit* kHit = TpcHitCollection->sector(sec-1)->padrow(row-1)->hits().at(k);
-	    if (kHit->flag())                         continue;
-	    Double_t pad        = kHit->pad();
-	    Double_t timeBucket = kHit->timeBucket();
-	    Int_t io = 1;
-	    if (row > St_tpcPadConfigC::instance()->innerPadRows(sector)) io = 2;
-	    Int_t np = kHit->padsInHit();
-	    pad += St_TpcPadCorrectionC::instance()->GetCorrection(pad,io,np,0);
-	    StTpcPadCoordinate padcoord(sec, row, pad, timeBucket);
-	    transform(padcoord,local,kFALSE);
-	    transform(local,global);
-	    kHit->setPosition(global.position());
-	  } // k hit loop
+	// Correct S - shape in pad direction
+	Double_t pad        = kHit->pad();
+	Double_t timeBucket = kHit->timeBucket();
+	Int_t io = 1;
+	if (row > St_tpcPadConfigC::instance()->innerPadRows(sector)) io = 2;
+	Int_t np = kHit->padsInHit();
+	pad += St_TpcPadCorrectionC::instance()->GetCorrection(pad,io,np,0);
+	StTpcPadCoordinate padcoord(sec, row, pad, timeBucket);
+	transform(padcoord,local,kFALSE);
+	transform(local,global);
+	kHit->setPosition(global.position());
 #endif
-	} // row collection exists
-      } // rows
-    } // sector collection exists
+      } // k hit loop
+    } // rows
   } // sectors
   LOG_INFO << "StTpcHitMaker::AfterBurner from " << TotNoHits << " Total no. of hits "  << RejNoHits << " were rejected" << endm;
   return;
