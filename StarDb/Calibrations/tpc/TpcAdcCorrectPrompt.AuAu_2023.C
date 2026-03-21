@@ -14,32 +14,28 @@ TDataSet *CreateTable() {
   memset(&row,0,tableSet->GetRowSize());
   //    [l409] /hlt/cephfs/reco/TPC23/2023 $ root.exe SparseGGAdcSparse7.root */SparseGGAdcSparse7.root Chain.C
   /*
-    tChain->Draw("mu:z3>>OPrompt(72,3,10.2,200,0.2,0.6)","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&j==2&&z2>203","colz")
+    tChain->Draw("mu:z3>>OPrompt(70,3,10,200,0.,1.)","dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02&&j==2&&z2>203","colz")
     TF1 *off = new TF1("off4","TMath::Log(1.+[0]*TMath::Exp(-x))+pol2(1)",3,10.2)
-    OPrompt->Fit(off)
+    OPrompt->Fit("pol1")
    */
   row.type     =           10; //
   row.idx      =            1; //
   row.nrows    =        nrows; //
-  row.npar     =            3; //
-  row.OffSet   =     -5.83714;   
-  row.a[0]     =      1.07389; //
-  row.a[1]     =    -0.137633; //
-  row.a[2]     =    0.0048064; //
+  row.npar     =            2; //
+  row.a[0]     =     0.722057; //   +/-   0.00919842 
+  row.a[1]     =   -0.0532346; //   +/-   0.00164662-
   tableSet->AddAt(&row);     // 
   memset(&row,0,tableSet->GetRowSize());
   /* 
-    tChain->Draw("mu:z3>>IPrompt(72,3,10.2,200,0.2,0.6)","chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&j==1&&z2>203","colz")
-    IPrompt->Fit(off)
+    tChain->Draw("mu:z3>>IPrompt(70,3,10,200,0.,1.)","dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02&&j==1&&z2>203","colz")
+    IPrompt->Fit("pol1")
    */
   row.type     =           10; //
   row.idx      =            2; //
   row.nrows    =        nrows; //
-  row.npar     =            3; //
-  row.OffSet   =     -5.33798;   
-  row.a[0]     =      1.10012; //
-  row.a[1]     =    -0.153088; //
-  row.a[2]     =   0.00673854; //
+  row.npar     =            2; //
+  row.a[0]     =     0.738988; //   +/-   0.00901403 
+  row.a[1]     =   -0.0556767; //   +/-   0.00166946 
   tableSet->AddAt(&row);     // 
 // ----------------- end of code ---------------
  return (TDataSet *)tableSet;
