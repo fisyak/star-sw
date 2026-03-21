@@ -28,6 +28,11 @@
 #include "TProfile2D.h"
 #include "TH3.h"
 #include "TVirtualMC.h"
+#ifdef __TFG__VERSION__
+#include "TGeant3.h"
+#include "TDatabasePDG.h"
+#include "TParticlePDG.h"
+#endif /* __TFG__VERSION__ */
 #include "TInterpreter.h"
 #include "Math/SpecFuncMathMore.h"
 #include "TROOT.h"
@@ -827,6 +832,14 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	  continue;
 	}
       } // special treatment for electron/positron 
+#ifdef __TFG__VERSION__
+      if (ipart > 0 && gMC) {
+	Int_t pdg = ((TGeant3 *) gMC)->PDGFromId(ipart);
+	if (pdg != -1) {
+	  mass = TDatabasePDG::Instance()->GetParticle(pdg)->Mass();
+	}
+      }
+#endif /* __TFG__VERSION__ */
       // Track segment to propagate
       enum {NoMaxTrackSegmentHits = 100};
       static HitPoint_t TrackSegmentHits[NoMaxTrackSegmentHits];
