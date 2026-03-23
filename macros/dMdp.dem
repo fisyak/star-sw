@@ -1,0 +1,6 @@
+load (f90) ;
+:lisp (setq *f90-output-line-length-max* 1000000000) 
+stardisp: true$
+simplified_output: true$
+debugmode(true) $ 
+M2(alpha) := exp
