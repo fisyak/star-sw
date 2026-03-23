@@ -746,6 +746,7 @@ void StTpcdEdxCorrection::Print(Option_t *opt) const {
     Line  = Form("%2i",k);
     static Double_t log10keV = TMath::Log10(1e6);
     if (k <= (Int_t) kTpcLast) {
+      if (! m_Corrections[k].Chair) continue;
       Line += Form("\tdE %10.5g keV", 1e6*mdEdx->C[k].mdE.fdE);
       Line += Form("\tdx %10.5g cm",mdEdx->C[k].mdx);
       Line += Form("\tdE/dx  %10.5g keV/cm", 1e6*mdEdx->C[k].mdE.fdEdx);
