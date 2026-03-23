@@ -187,11 +187,16 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 8,
   }
 }
 //________________________________________________________________________________
-void Run1Ev(const Char_t *opt) { 
-  if (TString(opt).Contains("1muS03",TString::kIgnoreCase)) Run1Ev(1,5, 1,1, 0.1,0.1, 0,0, 0,0, 1,"G");
-  if (TString(opt).Contains("1muS20",TString::kIgnoreCase)) {
+void Run1Ev(TString opt) { 
+  if (opt.Contains("1muS03",TString::kIgnoreCase)) {
+    Run1Ev(1,5, 1,1, 0.1,0.1, 0,0, 0,0, 1,"G");
+  } else if (opt.Contains("1muS20",TString::kIgnoreCase)) {
     Double_t phi = -TMath::DegToRad()*30;
     Run1Ev(1,5, 1,1, -.1,-.1, phi,phi, 0,0, 1,"G");
+  } else if (opt.Contains("eta-2.2",TString::kIgnoreCase)) {
+    Run1Ev(1, 8, 0.1084,0.1084,-2.20,-2.20, 0, 0, 200, 200, 1,"G");
+  } else if (opt.Contains("eta-0.87",TString::kIgnoreCase)) {
+    Run1Ev(1, 8, 0.3564,0.3564,-0.87,-0.87, 0, 0, 200, 200, 1,"G"); 
   }
 }
 
