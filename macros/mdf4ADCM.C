@@ -36,6 +36,9 @@
 // root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C mdf4ADCM.C+
 // root.exe 'lDb.C(0,"AuAu_2025,Corrz")' */*/SparseGGAdcSparse8.root Chain.C mdf4ADCM.C+
 // root.exe 'lDb.C(0,"AuAu_2025,Corrz")' */*/SparseGPAdcSparse8.root Chain.C 'mdf4ADCM.C+(1)'
+/* 03/24/2026 
+cvmfswrite06] ~/TFG/TPC23/2025 $ root.exe 'lDb.C(0,"AuAu_2025,Corrz")' COLE/electron+/SparseGPAdcSparse8.root COLE/electron-/SparseGPAdcSparse8.root COLE/kaon+/SparseGPAdcSparse8.root COLE/kaon-/SparseGPAdcSparse8.root COLE/pion+/SparseGPAdcSparse8.root COLE/pion-/SparseGPAdcSparse8.root COLE/proton+/SparseGPAdcSparse8.root COLE/proton-/SparseGPAdcSparse8.root COLE/triton/SparseGPAdcSparse8.root FXTE/deuteron/SparseGPAdcSparse8.root FXTE/electron+/SparseGPAdcSparse8.root FXTE/electron-/SparseGPAdcSparse8.root FXTE/kaon+/SparseGPAdcSparse8.root FXTE/kaon-/SparseGPAdcSparse8.root FXTE/pion+/SparseGPAdcSparse8.root FXTE/pion-/SparseGPAdcSparse8.root FXTE/proton+/SparseGPAdcSparse8.root FXTE/proton-/SparseGPAdcSparse8.root FXTE/triton/SparseGPAdcSparse8.root Chain.C mdf4ADCM.C+ 
+ */
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -136,7 +139,7 @@ Double_t mdf6(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
     adc = adcPrompt(k, ADC);
   } else {
     adc = adcC(k,ADC);
-    if (fgIO != 1 && fgIO != 2) adc += St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
+    //    if (fgIO != 1 && fgIO != 2) adc += St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
   }
   return adc;
 }

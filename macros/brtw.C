@@ -161,8 +161,9 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
   Title.ReplaceAll(">","gt");
   Title.ReplaceAll(" ","_");
   Title.ReplaceAll("#","");
-  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
-  if (! c1) c1 = new TCanvas("c1","brtw");
+  TString cname("c"); cname += hist->GetName();
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(cname);
+  if (! c1) c1 = new TCanvas(cname,Title);
   else      c1->Clear();
   M1 = m1;
   M2 = m2;
@@ -345,7 +346,8 @@ TF1 *K0BW(TH1F *M, Bool_t saveAsPng = kTRUE) {
   TH1F *m = new TH1F(*M);
   m->SetName(Form("%s_BW",M->GetName()));
   TString Title(m->GetTitle());
-  Title.ReplaceAll("z projection","");
+  Title.ReplaceAll(" z projection","");
+#if 1
   TH1F *z = (TH1F *) gDirectory->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/z");
   if (z) {
    BRTW::nevents = z->GetEntries();
@@ -356,6 +358,7 @@ TF1 *K0BW(TH1F *M, Bool_t saveAsPng = kTRUE) {
    else 
      Title += Form(" %7.3fM",BRTW::nevents/1e6);
   }
+#endif
   m->SetTitle(Title);
   Masses[0] = 0.497611; // Initail parameters
   Widths[0] = 0.0107;

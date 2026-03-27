@@ -233,16 +233,16 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
               RunOpt.Contains("RC.20",TString::kIgnoreCase)||
 	      RunOpt.Contains("MC.20",TString::kIgnoreCase) ) {
     ChainOpt = RunOpt;
-    ChainOpt += ",MakeEvent,ITTF,NoSsdIt,NoSvtIt,Idst,VFMinuit,analysis,dEdxY2";
+    //    ChainOpt += ",MakeEvent,ITTF,NoSsdIt,NoSvtIt,Idst,VFMinuit,analysis,dEdxY2";
     //  ChainOpt += "Corr4";// no dynamical distortion ! ,OSpaceZ2,OGridLeakFull,"; // check that StTpcRSMaker::kDistortion bit is set
     //  ChainOpt += "EvOut,MuDST,MiniMcMk,McTpcAna,IdTruth,useInTracker,-hitfilt,";
     //  ChainOpt += ",CMuDst,MiniMcMk,IdTruth,useInTracker,tree,";
     //    ChainOpt += ",CMuDst,McAna,IdTruth,useInTracker,tree,KFVertex,xgeometry,";
     //    ChainOpt += ",CMuDst,IdTruth,useInTracker,tree,StiKFVertex,xgeometry,";
-    ChainOpt += ",CMuDst,IdTruth,useInTracker,tree,xgeometry,";
-    ChainOpt += "bbcSim,btofsim,btofMatch,btofCalib,";
-    ChainOpt += "EvOut,-hitfilt,";
-    ChainOpt += "McTpcAna,";
+    //    ChainOpt += ",CMuDst,IdTruth,useInTracker,tree,xgeometry,";
+    //    ChainOpt += "bbcSim,btofsim,btofMatch,btofCalib,";
+    //    ChainOpt += "EvOut,-hitfilt,";
+    //    ChainOpt += "McTpcAna,";
     // ChainOpt += ",tree,";
   }
   TString Version(gEnv->GetValue("VERSION","default"));
@@ -255,6 +255,7 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
   }
   cout << "ChainOpt\t" << ChainOpt.Data() << endl;
   // ChainOpt += "MiniMcMk,IdTruth,useInTracker,-hitfilt,CMuDst,Tree,tags,evout,";
+#if 0
   if (RunOpt.Contains("fcf",TString::kIgnoreCase)) {
     ChainOpt += ",tpl,tpcI,";
     RunOpt.ReplaceAll("TpcRS,","");
@@ -262,6 +263,7 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
   } else {
     ChainOpt += ",tpcDB,TpcHitMover,TpxClu,";
   }
+#endif
   //  Bool_t needAlias = kFALSE;
   TString FileIn(fileIn);
   //  cout << "FileIn\t" << FileIn.Data() << "========================================" << endl;
@@ -273,9 +275,9 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
     } else {
       
       if (Root4Star) {
-	ChainOpt += "gstar,"; // RootFile += "gstar";
+	ChainOpt += ",gstar,"; // RootFile += "gstar";
       } else {
-	ChainOpt += "Muons20,";
+	ChainOpt += ",Muons20,";
       }
     }
     if (!( RunOpt.Contains("hadr_on",TString::kIgnoreCase) ||
@@ -315,9 +317,11 @@ void TpcRS(Int_t First, Int_t Last, const Char_t *Run = "y2011,TpcRS",
   //  ChainOpt = RunOpt + ChainOpt;
   //  cout << "FileIn\t" << FileIn.Data() << "========================================" << endl;
   if (FileIn == "") {
-    if (RootFile != "") RootFile += "_";
-    RootFile += Form("%s_%i_%i",Opt.Data(),First,Last);
+    //    if (RootFile != "") RootFile += "_";
+    //    RootFile += Form("%s_%i_%",Opt.Data(),First,Last);
+    RootFile = Opt;
   }
+  RootFile.ReplaceAll(".event","");
   RootFile.ReplaceAll(".root","");
   RootFile.ReplaceAll(",","_");
   if (RootFile.Contains(";")) {

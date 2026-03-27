@@ -47,15 +47,17 @@ void dEdx(Int_t First, Int_t Last,
   if (Year == "") {
     Year = "y2019";
     TString input(gSystem->BaseName(MainFile));
-    TObjArray *obj = input.Tokenize("_");
-    Int_t n = obj->GetSize();
-    Int_t run = 0;
-    for (Int_t k = 0; k < n; k++) {
-      if (run = TString(obj->At(k)->GetName()).Atoi()) break;
-    }
-    Int_t yy = run/1000000 - 1;
-    if (yy > 0 && yy < 25) {
-      Year = Form("y20%02i",yy);
+    if (! input.Contains("*")) {
+      TObjArray *obj = input.Tokenize("_");
+      Int_t n = obj->GetSize();
+      Int_t run = 0;
+      for (Int_t k = 0; k < n; k++) {
+	if (run = TString(obj->At(k)->GetName()).Atoi()) break;
+      }
+      Int_t yy = run/1000000 - 1;
+      if (yy > 0 && yy < 25) {
+	Year = Form("y20%02i",yy);
+      }
     }
   }
   cout << "set from  " << MainFile << "\tyear == " << Year.Data() << endl;

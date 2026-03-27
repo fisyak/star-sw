@@ -71,7 +71,7 @@ l->AddEntry(N_pfx,"Negative")
 #include "StProbPidTraits.h"
 #endif
 #include "StdEdxY2Maker/dEdxHist.h"
-#include "StdEdxY2Maker/StPidStatus.h"
+#include "StdEdxY2Maker/StTrackCombPiD.h"
 #undef  StMessMgr
 #undef ClassStMessMgr
 #else
@@ -474,8 +474,8 @@ void MudEdx(const Char_t *files ="./*.MuDst.root",
 	   << "\tdEdx " << 1e6*pTrack->probPidTraits().dEdxTruncated() << "\tQ " << (int) pTrack->muHelix().q() << endl;
 #endif
       //#if 0
-      StPidStatus PiD(gTrack); 
-      if (PiD.PiDStatus < 0) continue;
+      StTrackCombPiD PiD(gTrack); 
+      if (PiD.Status() < 0) continue;
       memset (&Var.refMult, 0, sizeof(Var_t));
       Var.refMult = NoPrimaryTracks;
       Int_t charge = 1;
@@ -499,14 +499,14 @@ void MudEdx(const Char_t *files ="./*.MuDst.root",
       if (Var.eta < 0) phiD -= 360;
       Double_t zPred[3][KPidParticles];
       Double_t sPred[3][KPidParticles]; // errors versus bg10
-      Double_t dEdx[3] = {1e6*PiD.fI70.I(), 1e6*PiD.fFit.I(), PiD.fdNdx.I()};
+      Double_t dEdx[3] = {1e6*PiD.fI70()->I(), 1e6*PiD.fFit()->I(), PiD.fdNdx()->I()};
       if (dEdx[0] <= 0 || dEdx[1] <= 0) continue;
       Double_t dEdxL[3]   = {TMath::Log(dEdx[0]), TMath::Log(dEdx[1]), dEdx[2] > 0 ? TMath::Log(dEdx[2]):0};
       Double_t dEdxL10[3] = {TMath::Log10(dEdx[0]), TMath::Log10(dEdx[1]), dEdx[2] > 0 ? TMath::Log10(dEdx[2]):0};
       Double_t p = pOut.mag(); // gTrack->pt()*TMath::CosH(gTrack->eta());
       Double_t sigmas[3] = {pTrack->probPidTraits().dEdxErrorTruncated(), pTrack->probPidTraits().dEdxErrorFit(), pTrack->probPidTraits().dNdxErrorFit()};
-      Double_t nSigmasPi[3] = {PiD.fI70.D(), PiD.fFit.D(), PiD.fdNdx.D()};
-      Double_t Zs[3] = {PiD.fI70.dev[kPidPion], PiD.fFit.dev[kPidPion], PiD.fdNdx.dev[kPidPion]};
+      Double_t nSigmasPi[3] = {PiD.fI70()->D(), PiD.fFit()->D(), PiD.fdNdx()->D()};
+      Double_t Zs[3] = {PiD.fI70()->fdev[kPidPion], PiD.fFit()->fdev[kPidPion], PiD.fdNdx()->fdev[kPidPion]};
 #ifdef __dEdxPhi__
       pTPhiPiDL->Fill(Var.cpT,phiD, pTrack->probPidTraits().dEdxTrackLength());
       if (! HFTon) {
@@ -576,34 +576,34 @@ void MudEdx(const Char_t *files ="./*.MuDst.root",
 #if 1
       for (Int_t l = kPidElectron; l < KPidParticles; l++) {
 	Int_t k = PiD.PiDkeyU3;
-	if (PiD.fI70.fPiD) {
-	  I70.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fI70.dev[l]);
-	  I70.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fI70.dev[l]);
-	  if (Debug()) cout << "I70.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fI70.dev[l] << endl;
+	if (PiD.fI70().fPiD) {
+	  I70.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fI70().dev[l]);
+	  I70.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fI70().dev[l]);
+	  if (Debug()) cout << "I70.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fI70().dev[l] << endl;
 	  if (k >= 0) {
-	    I70.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fI70.dev[l]);
-	    I70.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fI70.dev[l]);
-	    if (Debug()) cout << "I70.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fI70.dev[l] << endl;
+	    I70.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fI70().dev[l]);
+	    I70.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fI70().dev[l]);
+	    if (Debug()) cout << "I70.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fI70().dev[l] << endl;
 	  }
 	}
-	if (PiD.fFit.fPiD) {
-	  fitZ.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fFit.dev[l]);
-	  fitZ.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fFit.dev[l]);
-	  if (Debug()) cout << "fitZ.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fFit.dev[l] << endl;
+	if (PiD.fFit().fPiD) {
+	  fitZ.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fFit().dev[l]);
+	  fitZ.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fFit().dev[l]);
+	  if (Debug()) cout << "fitZ.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fFit().dev[l] << endl;
 	  if (k >= 0) {
-	    fitZ.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fFit.dev[l]);
-	    fitZ.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fFit.dev[l]);
-	    if (Debug()) cout << "fitZ.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fFit.dev[l] << endl;
+	    fitZ.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fFit().dev[l]);
+	    fitZ.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fFit().dev[l]);
+	    if (Debug()) cout << "fitZ.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fFit().dev[l] << endl;
 	  }
 	}
-	if (PiD.fdNdx.fPiD) {
-	  fitN.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fdNdx.dev[l]);
-	  fitN.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fdNdx.dev[l]);
-	  if (Debug()) cout << "fitN.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fdNdx.dev[l] << endl;
+	if (PiD.fdNdx()->fPiD) {
+	  fitN.dev[l][sCharge]->Fill(PiD.bghyp[l],PiD.fdNdx()->fdev[l]);
+	  fitN.dev[l][      2]->Fill(PiD.bghyp[l],PiD.fdNdx()->fdev[l]);
+	  if (Debug()) cout << "fitN.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fdNdx()->fdev[l] << endl;
 	  if (k >= 0) {
-	    fitN.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fdNdx.dev[l]);
-	    fitN.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fdNdx.dev[l]);
-	    if (Debug()) cout << "fitN.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fdNdx.dev[l] << endl;
+	    fitN.devT[l][sCharge]->Fill(PiD.bghyp[l],PiD.fdNdx()->fdev[l]);
+	    fitN.devT[l][      2]->Fill(PiD.bghyp[l],PiD.fdNdx()->fdev[l]);
+	    if (Debug()) cout << "fitN.dev l = " << l << "\t bg = " << PiD.bghyp[l] << "\tdevZ = " << PiD.fdNdx()->fdev[l] << endl;
 	  }
 	}
       }

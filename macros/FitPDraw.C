@@ -340,8 +340,8 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       name.ReplaceAll("_y3","");
       name.ReplaceAll("G4E","");
 #endif
-      //      leg->AddEntry(hist,Form("%s%s %s",dir.Data(), name.Data(),side));
-      leg->AddEntry(hist,dir.Data());
+      leg->AddEntry(hist,Form("%s%s %s",dir.Data(), name.Data(),side));
+      //      leg->AddEntry(hist,dir.Data());
       hist->SetTitle(Form("%s : %s",hist->GetTitle(), side));
       hist->SetXTitle(var);
       //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;
@@ -595,7 +595,8 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   TString muPlot("mu-muJ");
   if (plot.Contains("nomuJ",TString::kIgnoreCase)) muPlot = "mu";
   if        (Name.BeginsWith("SecRow3")) { 
-    MuDraw("mu:rowsigned(y,x)", "P", 2*ny+1, -yMax-0.5, yMax+0.5, "(i&&j&&dmu>0&&dmu<0.02)", "prof", -3, 1, Title, "sector&side", "#mu versus pad row");
+    if (plot == "" || plot == "nomuJ") plot = "mu:rowsigned(y,x)";
+    MuDraw(plot, "P", 2*ny+1, -yMax-0.5, yMax+0.5, "(i&&j&&dmu>0&&dmu<0.02)", "prof", -3, 1, Title, "sector&side", "#mu versus pad row");
   } else if (Name.BeginsWith("Z3"))      {
     muPlot += ":TMath::Sign(208.707-y,x)";
     if (Opt == ""  ||  Opt == "I") {
@@ -752,11 +753,12 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   } else if (Name.BeginsWith("Sparse",TString::kIgnoreCase) && (Name.Contains("Adc",TString::kIgnoreCase) || Name.Contains("T0Fl",TString::kIgnoreCase))) {
     TString muPlot = plot;
     //    TString Cut("chisq>0&&chisq<2.5e2&&dsigma<0.02&&dmu<0.02&&sigma<0.1&&abs(mu-0.5)<0.2"); // GG
-    TString Cut("dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02"); // GP
-    if (Opt == "" || Opt == "I") Cut += "&&j==1";
-    else                         Cut += "&&j==2";
+    //    TString Cut("dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02"); // GP
+    TString Cut("dsigma>0&&dsigma<0.02&&dmu>0&&dmu<0.01");
+    if (Opt == "" || Opt == "I") {Cut += "&&j==1"; Title = "Inner";}
+    else                         {Cut += "&&j==2"; Title = "Outer";}
     if (plot == "" || plot == "nomuJ") {muPlot = "mu:z3"; }
-    Double_t zMin = 0.3, zMax = 0.7;
+    Double_t zMin = 0.2, zMax = 0.9;
     if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 1.0;}
     TString var("Log(Adc) "); nx = 72, xMin = 3.0; xMax = 11.5;
     if (muPlot.Contains(":x",TString::kIgnoreCase)) { var = "Halff"; nx = 2; xMin = 0.5; xMax = 24.5;}
