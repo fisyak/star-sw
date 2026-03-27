@@ -1,5 +1,9 @@
 //________________________________________________________________________________
+#ifndef __FitG4F__
 Double_t gfFunc(Double_t *x, Double_t *par) {
+#else /* __FitG4F__ */
+Double_t gf4Func(Double_t *x, Double_t *par) {
+#endif /* __FitG4F__ */
   // par[0] - norm
   // par[1] - pion position wrt Z_pion (Bichsel prediction)
   // par[2] - sigma 
@@ -10,6 +14,7 @@ Double_t gfFunc(Double_t *x, Double_t *par) {
   // par[7] - Total
   // par[8] - case (-1 all, >-0 hyp no.)
   // par[9] - scale 
+  Double_t mu    = par[1];
   Double_t sigma = par[2];
   Double_t scale = par[9];
   Double_t frac[5];
@@ -21,12 +26,26 @@ Double_t gfFunc(Double_t *x, Double_t *par) {
     frac[0] -= frac[i];
   }
   if (frac[0] < 0.4 && frac[1] < 0.4) return 0;
+#ifdef __FitG4F__
+  static Double_t parMIP[5][4] = {
+    /*   particle          norml,         mu,      sigma,      alpha */
+    /*       pion */ {  14.08797,   -0.07141,    0.40063,    2.91620},
+    /*     proton */ {  14.12205,    1.13661,    0.29324,    1.93451},
+    /*       kaon */ {  14.29133,    0.33162,    0.36903,    2.62903},
+    /*   electron */ {  14.33684,    0.21674,    0.36806,    2.60754},
+    /*   deuteron */ {  11.63070,    2.17617,    0.15694,    0.53711}
+  };
+#endif /* __FitG4F__ */
   Double_t Value = 0;
   Int_t icase = (Int_t) par[8];
   Int_t i1 = 0;
   Int_t i2 = 4;
   if (icase >= 0) {i1 = i2 = icase;}
+#ifdef __FitG4F__
+  TF1 *g = GG();
+#endif /* __FitG4F__ */
   for (i = i1; i <= i2; i++) { 
+#ifndef __FitG4F__
     Double_t Sigma = sigma;
     if (Peaks[i].N == 0) {
       Value += frac[i]*TMath::Gaus(x[0],scale*(par[1]+Peaks[i].peak),Sigma,1);
@@ -36,18 +55,50 @@ Double_t gfFunc(Double_t *x, Double_t *par) {
       }
     }
     //    cout << "i\t" << i << "\tx = " << x[0] << " frac " << frac[i] << "\t" << Value << endl;
+#else /* __FitG4F__ */
+    Double_t pars[4] = {0, parMIP[i][1] + mu, parMIP[i][2] + sigma, parMIP[i][3]};
+    Value += frac[i]*g->EvalPar(x, pars);
+#endif /* __FitG4F__ */
   }
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
   return par[7]*TMath::Exp(par[0])*Value;
 }
 //________________________________________________________________________________
-TF1 *FitGF(TH1 *proj, Option_t *opt="") {
-  // fit in momentum range p = 0.45 - 0.50 GeV/c
+#ifndef __FitG4F__
+// fit in momentum range p = 0.45 - 0.50 GeV/c
+ TF1 *FitGF
+#else /* __FitG4F__ */
+// fit in momentum range p = 0.526 +/- 0.05;
+ TF1 *FitG4F
+#endif /* __FitG4F__ */
+   (TH1 *proj, Option_t *opt="", TH1D *proj20 = 0) {
   if (! proj) return 0;
+  if (proj20) {
+#if 0
+    proj20->Fit("gaus");
+    TF1 *gaus = (TF1 *) proj20->GetListOfFunctions()->FindObject("gaus");
+    if (gaus) {
+      mean20 = gaus->GetParameter(1);
+      RMS20  = gaus->GetParameter(2);
+    }
+#endif
+    SafeDelete(fgITH1);
+    fgITH1 = ITH1(proj20);
+  }
+  
   TString Opt(opt);
   //  Bool_t quet = Opt.Contains("Q",TString::kIgnoreCase);
+#ifndef __FitG4F__
   TF1 *g2 = (TF1*) gROOT->GetFunction("GF");
+#else /* __FitG4F__ */
+  TF1 *g2 = (TF1*) gROOT->GetFunction("G4F");
+#endif /* __FitG4F__ */
   if (! g2) {
+#ifndef __FitG4F__
     g2 = new TF1("GF",gfFunc, -5, 5, 10);
+#else /* __FitG4F__ */
+    g2 = new TF1("G4F",gf4Func, -5, 5, 10);
+#endif /* __FitG4F__ */
     g2->SetParName(0,"norm"); g2->SetParLimits(0,-80,80);
     g2->SetParName(1,"mu");     g2->SetParLimits(1,-3.0,0.5);
     g2->SetParName(2,"Sigma");  g2->SetParLimits(2,0.05,0.8);

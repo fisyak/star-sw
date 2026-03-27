@@ -1127,7 +1127,6 @@ void PreSetParameters(TH1 *proj, TF1 *g2) {
   g2->FixParameter(8,-1);
   g2->FixParameter(9, 1);
 }
-#include "FitGF.C"
 //________________________________________________________________________________
 Double_t langaufun(Double_t *x, Double_t *par) {// $ROOTSYS/tutorials/fit/langaus.C
 
@@ -1984,6 +1983,7 @@ TF1 *FitGE4(TH1 *proj, Option_t *opt="RQ", Double_t fitX=0) {
   }
   return g;
 }
+#include "FitGF.C"
 #include "FitG4F.C"
 #include "FitG4EX.C"
 #include "FitG4EY.C"
@@ -3849,8 +3849,8 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
 	g = FitGG5(proj,opt, Fit.x, IO);
       }
       else if (TString(FitName) == "Freq") g = FitFreq(proj,opt,zmin,zmax);
-      else if (TString(FitName) == "GF") g = FitGF(proj,opt);
-      else if (TString(FitName) == "G4F") g = FitG4F(proj,opt);
+      else if (TString(FitName) == "GF") g = FitGF(proj,opt,proj20);
+      else if (TString(FitName) == "G4F") g = FitG4F(proj,opt,proj20);
       else if (TString(FitName) == "G4E" || TString(FitName) == "G4EX" || TString(FitName) == "G4EY" || TString(FitName) == "G4EG") {
 	Int_t Sign = 2;
 	Int_t IO = 1;
