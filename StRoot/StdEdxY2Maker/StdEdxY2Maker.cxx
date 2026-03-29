@@ -943,6 +943,8 @@ Int_t StdEdxY2Maker::Make(){
     } // (hvec.size() && ! TESTBIT(m_Mode, kDoNotCorrectdEdx))
     if (pTrack) QAPlots(gTrack);
     if ((TESTBIT(m_Mode, kCalibration))) {
+      static Bool_t use_Primary_Histograms = kTRUE;
+      if (use_Primary_Histograms) {
       if (! pTrack) continue; // reject non primary tracks
 #ifdef __BEST_VERTEX__
       if (! pEvent->primaryVertex()) continue; 
@@ -954,6 +956,7 @@ Int_t StdEdxY2Maker::Make(){
 	if (pVbest && pTrack->vertex() != pVbest) continue;
       }
 #endif /* __BEST_VERTEX__ */
+      }
       Histogramming(gTrack);
     }
   }
@@ -1367,15 +1370,10 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
       Int_t rowS   = row;
       if (sector > 12) rowS = - rowS;
       Double_t n_P = FdEdx[k].dxC*StdEdxModel::instance()->dNdxEff(betagamma);
-      Double_t zdEMPV = StdEdxModel::instance()->LogdEMPVGeV(n_P);//LogdEMPV(n_P) - Bichsel::Instance()->Parameterization()->MostProbableZShift(); 
-      FdEdx[k].zP = zdEMPV;
+      Double_t zdEdxMPV = StdEdxModel::instance()->LogdEMPVGeV(n_P) - TMath::Log(FdEdx[k].dxC);;//LogdEMPV(n_P) - Bichsel::Instance()->Parameterization()->MostProbableZShift(); 
+      FdEdx[k].zP = zdEdxMPV;
       FdEdx[k].sigmaP = StdEdxModel::instance()->Sigma(n_P);
-#if 0
-      Double_t predB  = TMath::Exp(FdEdx[k].zP);
-      FdEdx[k].F     /= predB;
-#else
-      FdEdx[k].F     -= zdEMPV;
-#endif
+      FdEdx[k].F     -= zdEdxMPV;
       for (Int_t l = 0; l <= StTpcdEdxCorrection::kTpcLast; l++) {
 	if (l == StTpcdEdxCorrection::kzCorrection || 
 	    l == StTpcdEdxCorrection::kzCorrectionC) {
@@ -1410,16 +1408,6 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 	  FdEdx[k].F.mdE.fdEdxN,
 	  0, 
 	  FdEdx[k].F.mdx};
-#if 0
-	Double_t dEN = 0;
-	Double_t zdEMPV = 0;
-	if (PiD.fdNdx) {
-	  Double_t n_P = FdEdx[k].mdxC*PiD.fdNdx->Pred(kPidPion);
-	  dEN = TMath::Log(FdEdx[k].F.mdE.fdE); // scale to <dE/dx>_MIP = 2.4 keV/cm
-	  zdEMPV = StdEdxModel::instance()->LogdEMPV(n_P); // ? Check dx
-	  Vars[2] = dEN - zdEMPV;
-	};
-#endif
 	// SecRow3
 	Double_t V = FdEdx[k].Voltage;
 	Double_t VN = (row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? V - 1170 : V - 1390;
@@ -1668,6 +1656,16 @@ void StdEdxY2Maker::fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, 
     for (Int_t n = 1; n>=0; n--) sigma = X*sigma + sigma_p[n];
     FdEdx[i].zdev    = (FdEdx[i].F.mdE.fdEdxL-par[0])/sigma;
     Landau(FdEdx[i].zdev,Val);
+    if (FdEdx[i].F.mdE20.fdEdxL < FdEdx[i].F.mdE.fdEdxL && 
+	FdEdx[i].F.mdE.fdEdxL   < FdEdx[i].F.mdEmax.fdEdxL) {
+      Double_t z20  =  (FdEdx[i].F.mdE20.fdEdxL-par[0])/sigma;
+      Double_t zmax =  (FdEdx[i].F.mdEmax.fdEdxL-par[0])/sigma;
+      Double_t p20  =  0;
+      if (z20 > -4) p20 = LandauI()->Eval(z20);
+      Double_t pmax = 1.0;
+      if (zmax < 10) pmax = LandauI()->Eval(zmax);
+      Val[0] -= TMath::Log(pmax - p20);
+    } 
     FdEdx[i].Prob = TMath::Exp(Val[0]);
     f      -= Val[0];
     gin[0] += Val[1]/sigma;
@@ -2010,10 +2008,16 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
   //  Double_t sigma = par[1]; // extra sigma
   for (Int_t i = 0; i < NdEdx; i++) {
     Double_t dE = FdEdx[i].F.mdE.fdE;
+    Double_t z20 = 0;
+    Double_t zmax = 0;
+    if (FdEdx[i].F.mdE20.fdE < FdEdx[i].F.mdE.fdE && FdEdx[i].F.mdE.fdE < FdEdx[i].F.mdEmax.fdE) {
+      z20  = TMath::Log(FdEdx[i].F.mdE20.fdE);
+      zmax = TMath::Log(FdEdx[i].F.mdEmax.fdE);
+    }
     Double_t dX = FdEdx[i].dxC;
     Double_t Np = dNdx*dX;
     Double_t derivative = 0;
-    Double_t Prob = StdEdxModel::instance()->ProbdEGeVlog(TMath::Log(dE),Np, &derivative);
+    Double_t Prob = StdEdxModel::instance()->ProbdEGeVlog(TMath::Log(dE),Np, &derivative, z20, zmax);
 #ifdef __DEBUG_dNdx__
     if (_debug && iflag == 3) {
       //      Double_t ee = dE + TMath::Log(1e9) -TMath::Log(Np); // to eV/Np
@@ -2164,4 +2168,26 @@ Double_t StdEdxY2Maker::IntegratedAdc(const StTpcHit* tpcHit) {
   Int_t channel = St_TpcAvgPowerSupplyC::instance()->ChannelFromRow(sector,row);
   Double_t sc = NumberOfChannels*(sector-1) + channel;
   return fIntegratedAdc->Interpolate(tpcHit->timeBucket(), sc);
+}
+//________________________________________________________________________________
+Double_t StdEdxY2Maker::landau(Double_t *x, Double_t *p) {
+  Double_t val[2];
+  StdEdxY2Maker::Landau(x[0],val);
+  return val[0];
+}
+//________________________________________________________________________________
+TF1 *StdEdxY2Maker::LandauF() {
+  static TF1 *f = 0;
+  if (! f) {
+    f = new TF1("LandauF",StdEdxY2Maker::landau,-4,10,0);
+  }
+  return f;
+}
+//________________________________________________________________________________
+TGraph *StdEdxY2Maker::LandauI() {
+  static TGraph *gr = 0;
+  if (! gr) {
+    gr = new TGraph(StdEdxY2Maker::LandauF(),"I"); // StdEdxY2Maker::LandauF()
+  }
+  return gr;
 }
