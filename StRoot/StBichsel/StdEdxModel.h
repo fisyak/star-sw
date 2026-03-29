@@ -58,14 +58,14 @@ class StdEdxModel {
   Double_t 	       LogdEMPVeV (Double_t Np)   {return LogdEMPVkeV(Np) + TMath::Log(1e3);}
   Double_t 	       LogdEMPVkeV(Double_t Np)   {return MukeV(Np);} // log(dE) (keV)  
   Double_t 	       LogdEMPVGeV(Double_t Np)   {return MukeV(Np) + TMath::Log(1e-6);} // log(dE) (keV)  
-  Double_t             Prob(Double_t ee, Double_t Np, Double_t *der = 0); // probability for give log(dE/Np) versus Np					       
+  Double_t             Prob(Double_t ee, Double_t Np, Double_t *der = 0, Double_t e20 = 0, Double_t emax = 0); // probability for give log(dE/Np) versus Np					       
   static Double_t      funcProb(Double_t *x, Double_t *p);
   TF1                 *FProb();
   static Double_t      funcProbP(Double_t *p, Double_t *x);
   TF1                 *FProbP();
   static Double_t      funcProbDer(Double_t *x, Double_t *p);
   TF1                 *FProbDer();
-  Double_t 	       ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der = 0); // probability for give log(dE(GeV)) versus Np			       
+  Double_t 	       ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der = 0, Double_t dE20GeVLog = 0, Double_t dEmaxGeVLog = 0); // probability for give log(dE(GeV)) versus Np			       
   void     	       SetScale(Double_t scale = 1.0) {fScale = scale;}								       
   Double_t 	       dNdxScale() {return fScale;}											       
   static Double_t      zMP(Double_t *x, Double_t *p); // most probable log (dE) versus x = log10(p/M) and p[0] = log2dx, p[1] =  charge, and p[2] = mass
