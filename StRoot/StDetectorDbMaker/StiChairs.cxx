@@ -56,11 +56,18 @@ MakeChairInstance2(KalmanTrackFinderParameters,StiKalmanTrackFinderParameters,Ca
 #include "StDetectorDbMaker/St_beamInfoC.h"
 //________________________________________________________________________________
 void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
-  fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
-  Double_t y = TMath::Tan(_eta);
-  fxx[1] = y*y; // tanP**2
-  fxx[2] = _tanl*_tanl; // tanL**2
-  fxx[3] = AdcL;  // AdcL
+  if (!MDF()->ConvType()) {// old conversion
+    fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
+    Double_t y = TMath::Tan(_eta);
+    fxx[1] = y*y; // tanP**2
+    fxx[2] = _tanl*_tanl; // tanL**2
+    fxx[3] = AdcL;  // AdcL
+  } else {
+    fxx[0] = _z;
+    fxx[1] = TMath::Tan(_eta);;  // tanP
+    fxx[2] = _tanl;              // tanL
+    fxx[3] = AdcL;               // AdcL
+  }
 }
 //________________________________________________________________________________
 void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _tanl, 
@@ -95,7 +102,11 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
     if (fail) *dZ = 0;
     else {
       Double_t dTime        = Eval(4*Field() +  3, fxx);
-      *dZ = - timeP*dTime * TMath::Sign(1., _z);
+      if (! MDF()->ConvType()) {
+	*dZ = - timeP*dTime * TMath::Sign(1., _z);
+      } else {
+	*dZ = - timeP*dTime;
+      }
     }
   }
   if (dX) {
@@ -136,11 +147,18 @@ StiTpcPullMDF4 *StiTpcPullMDF4::instance() {
 }
 //________________________________________________________________________________
 void StiTpcPullMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
-  fxx[0] = _z;    // 1. - TMath::Abs(_z)/207.707; // Z
-  Double_t y = TMath::Tan(_eta);
-  fxx[1] = y;     // y*y; // tanP**2
-  fxx[2] = _tanl; // _tanl*_tanl; // tanL**2
-  fxx[3] = AdcL;   // AdcL
+  if (!MDF()->ConvType()) {// old conversion
+    fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
+    Double_t y = TMath::Tan(_eta);
+    fxx[1] = y*y; // tanP**2
+    fxx[2] = _tanl*_tanl; // tanL**2
+    fxx[3] = AdcL;  // AdcL
+  } else {
+    fxx[0] = _z;
+    fxx[1] = TMath::Tan(_eta);;  // tanP
+    fxx[2] = _tanl;              // tanL
+    fxx[3] = AdcL;               // AdcL
+  }
 }
 //________________________________________________________________________________
 void StiTpcPullMDF4::calculatePull(Double_t _z,  Double_t _eta, Double_t _tanl, Int_t io, 
