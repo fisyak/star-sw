@@ -2871,7 +2871,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVIIITFG25k"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 02/27/2026  recheck TFG25k
 #$hist = "RunXXVIIITFG"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/02/2026 new ADC Correction for TPC23
 #$hist = "RunXXVI22";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/06/2026 first pass 
-$hist = "RunXXVIIITFGB"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFGB/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/16/2026 new ADC Correction for TPC23 & AfterBurner
+#$hist = "RunXXVIIITFGB"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFGB/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/16/2026 new ADC Correction for TPC23 & AfterBurner
+$hist = "RunXXVI23";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/25/2026  fix bug in StdEdxY2Maker (mising log(dx)), reset all calibration, new TpcAdcCorrectionC (w/o 4MDF)
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2931,7 +2932,7 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     print "$file dt = $dt\n";
     if ($dt < 600) {next;}
     my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
-    my $dd = $words[4] . '_' . $words[5];
+    my $dd = $words[4];# . '_' . $words[5];
     if ($words[7] =~ /TFG24b/) {
       $dd = $words[8];
     } elsif ($words[6] =~ /TFG24c/) {
@@ -2940,11 +2941,12 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
       $dd = $words[8];
     } elsif ($words[7] =~ /GeV/ || $words[7] =~ /AuAu/) {
       $dd = $words[7];
-#      print "words[5] = $words[5]\n";
-      if ($words[5] ne 'RF') {
-	$dd .= "_" . $words[5];#print "dd = $dd\n";
-      }
-    } 
+    } elsif ($words[4] =~ /GeV/ || $words[4] =~ /AuAu/) {
+      $dd = $words[4];
+      #      print "words[5] = $words[5]\n";
+      #      if ($words[5] ne 'RF') {
+      #	$dd .= "_" . $words[5];#print "dd = $dd\n";
+    }
     $dd =~ s/reco_//;
     $dd =~ s/2021b_2021/2021b/;
     $dd =~ s/2021_2021/2021/;

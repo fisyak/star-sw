@@ -65,7 +65,8 @@ cvmfswrite06] ~/TFG/TPC23/2025 $ root.exe 'lDb.C(0,"AuAu_2025,Corrz")' COLE/elec
 #include "StDetectorDbMaker/St_TpcAdcCorrection5MDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection6MDF.h"
 /* (dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02&&j==2&&z2<203 */ 
-#define __CUT__ Bool_t ok = dsigma>0 && dsigma<0.04 && dmu<0.02 && sigma<0.02
+//#define __CUT__ Bool_t ok = dsigma>0 && dsigma<0.04 && dmu<0.02 && sigma<0.02
+#define __CUT__ Bool_t ok = dsigma>0&&dsigma<0.02&&dmu>0&&dmu<0.01
 #if 0
 class TMultiDimFit;
 enum EMDFPolyType {
@@ -139,7 +140,7 @@ Double_t mdf6(Int_t k, Double_t z0, Double_t z1, Double_t z2, Double_t z3) {
     adc = adcPrompt(k, ADC);
   } else {
     adc = adcC(k,ADC);
-    //    if (fgIO != 1 && fgIO != 2) adc += St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
+    if (fgIO != 1 && fgIO != 2) adc += St_TpcAdcCorrection6MDF::instance()->Eval(k,z0,z1,z2,z3);
   }
   return adc;
 }

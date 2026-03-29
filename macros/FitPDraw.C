@@ -596,7 +596,7 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
   if (plot.Contains("nomuJ",TString::kIgnoreCase)) muPlot = "mu";
   if        (Name.BeginsWith("SecRow3")) { 
     if (plot == "" || plot == "nomuJ") plot = "mu:rowsigned(y,x)";
-    MuDraw(plot, "P", 2*ny+1, -yMax-0.5, yMax+0.5, "(i&&j&&dmu>0&&dmu<0.02)", "prof", -3, 1, Title, "sector&side", "#mu versus pad row");
+    MuDraw(plot, "P", 2*ny+1, -yMax-0.5, yMax+0.5, "(i&&j&&dmu>0&&dmu<0.02)", "prof", -3, 1, Title, "sector&side", plot);
   } else if (Name.BeginsWith("Z3"))      {
     muPlot += ":TMath::Sign(208.707-y,x)";
     if (Opt == ""  ||  Opt == "I") {
@@ -731,10 +731,11 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     if (Name.BeginsWith("dTimeO",TString::kIgnoreCase) || Name.BeginsWith("dPadO",TString::kIgnoreCase)) Title = "Outer";
     TString muPlot = plot;
     //    TString Cut("entries>300&&chisq>0&&chisq<1e3&&dmu<0.05&&dsigma<0.05&&sigma<0.4&&abs(mu)<0.5"); //GG
-    TString Cut("chisq>0&&chisq<1000&&dsigma<0.15&&dmu<0.15&&entries>50");
+    //TString Cut("chisq>0&&chisq<1000&&dsigma<0.15&&dmu<0.15&&entries>50");
+    TString Cut("chisq>0&&chisq<200&&dsigma<0.05&&dmu<0.1");
     if (plot == "" || plot == "nomuJ") {muPlot = "sigma:x"; }
     Double_t zMin = -0.5, zMax = 0.5;
-    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 0.05;}
+    if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 1.0;}
     TString var("Z (cm) "); nx = 105, xMin = -210; xMax = 210;
     if (muPlot.Contains(":y",TString::kIgnoreCase)) { var = "tan(#phi)"; nx = 40; xMin = -2; xMax = -xMin;}
     if (muPlot.Contains(":z0",TString::kIgnoreCase)) { var = "tan(#lambda)"; nx = 140; xMin = 7; xMax = - xMin;}
