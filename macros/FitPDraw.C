@@ -590,13 +590,18 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     nx = fnx; xMin = fxMin; xMax = fxMax;
     ny = fny; yMin = fyMin; yMax = fyMax;
   }
+  Double_t zMin = -0.5, zMax = 0.5;
   TString Name(gSystem->BaseName(gDirectory->GetName()));
   cout << Name << "\t";
   TString muPlot("mu-muJ");
   if (plot.Contains("nomuJ",TString::kIgnoreCase)) muPlot = "mu";
   if        (Name.BeginsWith("SecRow3")) { 
     if (plot == "" || plot == "nomuJ") plot = "mu:rowsigned(y,x)";
-    MuDraw(plot, "P", 2*ny+1, -yMax-0.5, yMax+0.5, "(i&&j&&dmu>0&&dmu<0.02)", "prof", -3, 1, Title, "sector&side", plot);
+    zMin = -3;
+    zMax =  1;
+    if (plot.Contains("sigma")) {zMin = 0.2; zMax = 1.0;}
+    if (plot.Contains("p3"))    {zMin = 1.5; zMax = 5.5;}
+    MuDraw(plot, "P", 2*ny+1, -yMax-0.5, yMax+0.5, "(i&&j&&dmu>0&&dmu<0.02)", "prof", zMin, zMax, Title, "sector&side", plot);
   } else if (Name.BeginsWith("Z3"))      {
     muPlot += ":TMath::Sign(208.707-y,x)";
     if (Opt == ""  ||  Opt == "I") {
@@ -734,7 +739,6 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     //TString Cut("chisq>0&&chisq<1000&&dsigma<0.15&&dmu<0.15&&entries>50");
     TString Cut("chisq>0&&chisq<200&&dsigma<0.05&&dmu<0.1");
     if (plot == "" || plot == "nomuJ") {muPlot = "sigma:x"; }
-    Double_t zMin = -0.5, zMax = 0.5;
     if (muPlot.Contains("sigma",TString::kIgnoreCase)) { zMin = 0; zMax = 1.0;}
     TString var("Z (cm) "); nx = 105, xMin = -210; xMax = 210;
     if (muPlot.Contains(":y",TString::kIgnoreCase)) { var = "tan(#phi)"; nx = 40; xMin = -2; xMax = -xMin;}

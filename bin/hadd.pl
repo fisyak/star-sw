@@ -150,7 +150,7 @@ my $XML = "hadd" . $ARG{prefix} . $outn . ".xml"; print "XML = $XML\n";
 open (XML,">$XML") or die "Can't open $XML";
 #
 print XML '<?xml version="1.0" encoding="utf-8" ?> 
-<job maxFilesPerProcess="1" filesPerHour="10" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false" >
+<job maxFilesPerProcess="1" filesPerHour="10" simulateSubmission="true" fileListSyntax="paths" copyInputLocally="false" >
      <command>csh -x $INPUTFILE0 </command>
      <stdout URL="file:' . $DIR . '/sched$JOBID.log" />
 ';

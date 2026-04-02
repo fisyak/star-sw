@@ -42,6 +42,7 @@
 #include "TPolynomial.h"
 #include "TROOT.h"
 #endif
+TObjArray FitFiles;
 void DrawList() {} 
 //________________________________________________________________________________
 TF1 *GausP0(){
@@ -69,6 +70,7 @@ TF1 *GausP2(){
 }
 //________________________________________________________________________________
 TObjArray  GetHistList(const Char_t *pattern = "OuterPadRcNoiseConv*") { 
+  FitFiles.Clear();
   TObjArray array;
   TObject *obj = 0;
   TKey *key = 0;
@@ -105,13 +107,14 @@ TObjArray  GetHistList(const Char_t *pattern = "OuterPadRcNoiseConv*") {
 	}
       }
     }
+    if (nh > 0) FitFiles.Add(f);
   }
   return array;
 }
 //________________________________________________________________________________
 
 void DrawList(const Char_t *pattern, const Char_t *ctitle = "", 
-	      Int_t nx = 7, Int_t ny = 2, Int_t color = 0, Int_t iSlices=2, Double_t ymin=-0.4, Double_t ymax = 0.6, Int_t NparMax = 9, Bool_t zoom=kFALSE) {
+	      Int_t nx = 4, Int_t ny = 2, Int_t color = 0, Int_t iSlices=2, Double_t ymin=-0.4, Double_t ymax = 0.6, Int_t NparMax = 9, Bool_t zoom=kFALSE) {
 #ifdef __CINT__
   cout << "Please run this script in compiled mode by running \".x DrawList.C+\"" << endl;
    return;
@@ -123,40 +126,7 @@ void DrawList(const Char_t *pattern, const Char_t *ctitle = "",
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll(".*","");
   cTitle.ReplaceAll("*","");
-  TList *listOfKeys = gDirectory->GetListOfKeys();
-  TList *listOfObjects = gDirectory->GetList();
-  if (! listOfObjects && ! listOfKeys) return;
-  TObjArray array;
-  TIter nextobj(listOfObjects); 
-  TObject *obj = 0;
-#if 1
-  while ((obj = nextobj())) {
-    TString Name(obj->GetName());
-    if (patt == "*" || Name.Contains(reg)) {
-      if (! obj) continue;
-      if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	TH1 *hist = (TH1 *) obj;
-	if (hist->GetEntries() > 0) 
-	  array.Add(obj);
-      }
-    }
-  }
-#endif
-  TKey *key = 0;
-  TIter nextkey(listOfKeys); 
-  while ((key = (TKey*) nextkey())) {
-    TString Name(key->GetName());
-    if (patt == "*" || Name.Contains(reg)) {
-      if (array.FindObject(key->GetName())) continue;
-      obj = key->ReadObj();
-      if (! obj) continue;
-      if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	TH1 *hist = (TH1 *) obj;
-	if (hist->GetEntries() > 0) 
-	  array.Add(obj);
-      }
-    }
-  }
+  TObjArray array = GetHistList(pattern);
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
   if (! nx || ! ny) {
@@ -175,7 +145,36 @@ void DrawList(const Char_t *pattern, const Char_t *ctitle = "",
     if (! hist) continue;
     c->cd(i+1)->SetLogz(1);
     if (color) hist->SetMarkerColor(color);
-    if (hist->IsA()->InheritsFrom( "TH2" ) ) {
+    if (hist->GetDimension() == 1) { //
+      hist->Draw("");
+      TH1 *fit = (TH1 *) gDirectory->Get(Form("%s_1",hist->GetName()));
+      if (fit) {
+	fit->Draw("same");
+	TList *list = fit->GetListOfFunctions();
+	if (list) {
+	  TLegend *leg = new TLegend(0.1,0.1,0.55,0.25,"");
+	  TIter iter(list);
+	  TF1 *func = 0;
+	  while ((func = (TF1*) iter())) {
+	    if (patt == "^SL") {
+	      leg->AddEntry(func, Form("SL = (%7.2f +/- %7.2f) x 10^-3",func->GetParameter(0), func->GetParError(0)));
+	    } else {
+	      leg->AddEntry(func, Form("DV = (%10.5f +/- %10.5f) cm/mksec",func->GetParameter(0), func->GetParError(0)));
+	    }
+	  }
+	  leg->Draw();
+	}
+      } else {
+	if (hist->GetDirectory()) {
+	  TString FName(gSystem->BaseName(hist->GetDirectory()->GetName()));
+	  FName.ReplaceAll(".root","");
+	  TLegend *leg = new TLegend(0.15,0.15,0.85,0.25,"");
+	  leg->AddEntry(hist,FName);
+	  leg->Draw();
+	}
+      }
+      c->Update();
+    }  else if (hist->GetDimension() == 2) { // IsA()->InheritsFrom( "TH2" ) ) {
       if (ymax > ymin) {
 	hist->GetYaxis()->SetRangeUser(ymin,ymax);
       }
@@ -271,27 +270,7 @@ void DrawList(const Char_t *pattern, const Char_t *ctitle = "",
 	if (mu) {mu->SetMarkerStyle(20);  mu->SetMarkerSize(0.4); mu->Draw("same");}
 	if (sigma) {sigma->SetMarkerStyle(21); sigma->SetMarkerSize(0.4); sigma->Draw("same");}
 	c->Update();
-	continue;
-      } else hist->Draw("colz");
-    }
-    else                                     hist->Draw("");
-    TH1 *fit = (TH1 *) gDirectory->Get(Form("%s_1",hist->GetName()));
-    if (fit) {
-      fit->Draw("same");
-      TList *list = fit->GetListOfFunctions();
-      if (list) {
-	TLegend *leg = new TLegend(0.1,0.1,0.55,0.25,"");
-	TIter iter(list);
-	TF1 *func = 0;
-	while ((func = (TF1*) iter())) {
-	  if (patt == "^SL") {
-	    leg->AddEntry(func, Form("SL = (%7.2f +/- %7.2f) x 10^-3",func->GetParameter(0), func->GetParError(0)));
-	  } else {
-	    leg->AddEntry(func, Form("DV = (%10.5f +/- %10.5f) cm/mksec",func->GetParameter(0), func->GetParError(0)));
-	  }
-	}
-	leg->Draw();
-      }
+      } 
     }
   }
   c->Update();
@@ -339,59 +318,7 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll("*","");
-  Int_t NFiles = 0;
-  TSeqCollection *files = gROOT->GetListOfFiles();
-  if (! files) return;
-  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
-  if (! nn) return;
-  TFile **FitFiles = new TFile *[nn];
-  TIter nextF(files);
-  TFile *f = 0;
-  TObjArray array;
-  TObject *obj = 0;
-  TKey *key = 0;
-  while ( (f = (TFile *) nextF()) ) { 
-    f->cd();
-    TString F(f->GetName()); cout << "File " << F << endl;
-    TList *listOfKeys = f->GetListOfKeys();
-    TList *listOfObjects = f->GetList();
-    Int_t nh = 0;
-    if (! listOfObjects && ! listOfKeys) continue;
-    TIter nextobj(listOfObjects); 
-    while ((obj = nextobj())) {
-      TString Name(obj->GetName());
-      if (Name.Contains(reg)) {
-	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	  TH1 *hist = (TH1 *) obj;
-	  if (hist->GetEntries() <= 0) continue;
-	  nh++;
-	  if (array.FindObject(obj->GetName())) continue;
-	  array.Add(obj);
-	}
-      }
-    }
-    TIter nextkey(listOfKeys); 
-    while ((key = (TKey*) nextkey())) {
-      TString Name(key->GetName());
-      if (Name.Contains(reg)) {
-	obj = key->ReadObj();
-	if (! obj) continue;
-	if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	  TH1 *hist = (TH1 *) obj;
-	  if (hist->GetEntries() > 0) {
-	    nh++;
-	    if (array.FindObject(obj->GetName())) continue;
-	    array.Add(obj);
-	  }
-	}
-      }
-    }
-    if (nh) {
-      FitFiles[NFiles] = f; 
-      cout << "Add " << NFiles << "\t" << FitFiles[NFiles]->GetName() << "\t" << nh << endl;
-      NFiles++; 
-    }
-  }
+  TObjArray array = GetHistList(pattern);
   //________________________________________________________________________________
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
@@ -407,8 +334,8 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
   THStack *hstack = 0; // new THStack("hs",histName);
 #endif
   Double_t ymax = 0.98;
-  Double_t ymin = 0.10 + 0.05*NFiles;
-  Double_t dy   = (ymax - ymin)/(NFiles + 1);
+  Double_t ymin = 0.10 + 0.05*FitFiles.GetSize();
+  Double_t dy   = (ymax - ymin)/(FitFiles.GetSize() + 1);
   if (dy > 0.25) dy = 0.25;
   TH1 *h1 = 0;
   Double_t yMin =  1e9;
@@ -420,8 +347,9 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
     Double_t yref = -1;
     Int_t nh = -1;
     TString same("");
-    for (Int_t lf = 0; lf < NFiles; lf++) {
-      f = FitFiles[lf];
+    for (Int_t lf = 0; lf < FitFiles.GetSize(); lf++) {
+      TFile *f = (TFile *) FitFiles[lf];
+      if (! f) continue;
       TH1 *h = (TH1 *) f->Get(hist->GetName());
       if (! h) continue;
       nh++;
@@ -542,8 +470,6 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll("*","");
-  TSeqCollection *files = gROOT->GetListOfFiles();
-  if (! files) return;
   TObjArray array = GetHistList(pattern);
   //________________________________________________________________________________
   Int_t NF = array.GetEntriesFast();
@@ -680,8 +606,6 @@ void DrawP3List(const Char_t *pattern = "pullYGAvsZAdcL", const Char_t *proj = "
   cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll("*","");
   cTitle += proj;
-  TSeqCollection *files = gROOT->GetListOfFiles();
-  if (! files) return;
   TObjArray array = GetHistList(pattern);
   //________________________________________________________________________________
   Int_t NF = array.GetEntriesFast();
@@ -751,52 +675,7 @@ void DrawH3List(const Char_t *pattern = "T$", const Char_t * proj = "zx", const 
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll("*","");
-  Int_t NFiles = 0;
-  TSeqCollection *files = gROOT->GetListOfFiles();
-  if (! files) return;
-  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
-  if (! nn) return;
-  TFile **FitFiles = new TFile *[nn];
-  TIter next(files);
-  TFile *f = 0;
-  TObjArray array;
-  TObject *obj = 0;
-  TKey *key = 0;
-  while ( (f = (TFile *) next()) ) { 
-    f->cd();
-    TString F(f->GetName()); cout << "File " << F << endl;
-    Int_t nh = 0;
-    TList *listOfKeys = f->GetListOfKeys();
-    if (! listOfKeys) continue;
-    TIter nextkey(listOfKeys); 
-    TString oldName;
-    while ((key = (TKey*) nextkey())) {
-      TString Name(key->GetName());
-      if (Name.Contains(reg)) {
-	if (Name == oldName) continue;
-	oldName = Name;
-	obj = key->ReadObj();
-	if (! obj) continue;
-	if ( obj->IsA()->InheritsFrom( "TH3" ) ) {
-	  TH3 *hist = (TH3 *) obj;
-	  if (hist->GetEntries() > 0) {
-	    TH2D *h2 = (TH2D *) hist->Project3D(proj);
-	    h2->SetXTitle(xTitle);
-	    h2->SetYTitle(yTitle);
-	    nh++;
-	    //	    if (array.FindObject(obj->GetName())) continue;
-	    array.Add(h2); cout << "Add " << array.GetEntriesFast() << "\t" << hist->GetName() << "\t" << hist->GetDirectory()->GetName() << endl;
-	  }
-	}
-      }
-    }
-    if (nh) {
-      FitFiles[NFiles] = f; 
-      cout << "Add " << NFiles << "\t" << FitFiles[NFiles]->GetName() << "\t" << nh << endl;
-      NFiles++; 
-    }
-  }
-  //________________________________________________________________________________
+  TObjArray array = GetHistList(pattern);
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
   if (! nx || ! ny) {
@@ -840,29 +719,7 @@ void DrawF3List(const Char_t *pattern = "f7_7", const Char_t *ctitle = "c", Int_
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll("*","");
-  Int_t NFiles = 0;
-  TSeqCollection *files = gROOT->GetListOfFiles();
-  if (! files) return;
-  Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;
-  if (! nn) return;
-  TFile **FitFiles = new TFile *[nn];
-  TIter next(files);
-  TFile *f = 0;
-  TObjArray array;
-  TObject *obj = 0;
-  TKey *key = 0;
-  Int_t nh = 0;
-  while ( (f = (TFile *) next()) ) { 
-    f->cd();
-    TString F(f->GetName()); cout << "File " << F << endl;
-    TH1 *hist = (TH1 *) f->Get(patt);
-    if (! hist) continue;
-    if (hist->GetEntries() <= 0) continue;
-    nh++;
-    array.Add(hist);
-  }
-  cout << "Found " << nh << " histograms " << patt.Data() << endl;
-  //________________________________________________________________________________
+  TObjArray array = GetHistList(pattern);
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
   if (! nx || ! ny) {
@@ -942,42 +799,7 @@ void DrawLaser(const Char_t *pattern = "^SL.*", const Char_t *ctitle = "",
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll(".*","");
   cTitle.ReplaceAll("*","");
-  TList *listOfKeys = gDirectory->GetListOfKeys();
-  TList *listOfObjects = gDirectory->GetList();
-  if (! listOfObjects && ! listOfKeys) return;
-  TObjArray array;
-  TIter nextobj(listOfObjects); 
-  TObject *obj = 0;
-#if 1
-  while ((obj = nextobj())) {
-    TString Name(obj->GetName());
-    if (Name.Contains("_")) continue;
-    if (patt == "*" || Name.Contains(reg)) {
-      if (! obj) continue;
-      if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	TH1 *hist = (TH1 *) obj;
-	if (hist->GetEntries() > 0) 
-	  array.Add(obj);
-      }
-    }
-  }
-#endif
-  TKey *key = 0;
-  TIter nextkey(listOfKeys); 
-  while ((key = (TKey*) nextkey())) {
-    TString Name(key->GetName());
-    if (Name.Contains("_")) continue;
-    if (patt == "*" || Name.Contains(reg)) {
-      if (array.FindObject(key->GetName())) continue;
-      obj = key->ReadObj();
-      if (! obj) continue;
-      if ( obj->IsA()->InheritsFrom( "TH1" ) ) {
-	TH1 *hist = (TH1 *) obj;
-	if (hist->GetEntries() > 0) 
-	  array.Add(obj);
-      }
-    }
-  }
+  TObjArray array = GetHistList(pattern);
   Int_t NF = array.GetEntriesFast();
   if (NF < 1) return;
   if (! nx || ! ny) {
@@ -1110,7 +932,6 @@ void DrawLaser(const Char_t *pattern = "^SL.*", const Char_t *ctitle = "",
 }
 //________________________________________________________________________________
 void PrintFList(const Char_t *name = "/Particles/KFParticlesFinder/PrimaryVertexQA/z") {
-  Int_t NFiles = 0;
   TSeqCollection *files = gROOT->GetListOfFiles();
   if (! files) return;
   Int_t nn = files->GetSize();  cout << "No. input files " << nn << endl;

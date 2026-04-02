@@ -55,7 +55,7 @@ void dEdx(Int_t First, Int_t Last,
 	if (run = TString(obj->At(k)->GetName()).Atoi()) break;
       }
       Int_t yy = run/1000000 - 1;
-      if (yy > 0 && yy < 25) {
+      if (yy > 0 && yy < 27) {
 	Year = Form("y20%02i",yy);
       }
     }

@@ -1593,7 +1593,9 @@ Double_t ggaus(Double_t *x, Double_t *p) {
     //    Double_t mean = ksi + w * muz;
   }
   Double_t par[4] = {NormL, ksi, w, alpha};
-  return StdEdxModel::instance()->gausw(x, par);
+  Double_t Value = StdEdxModel::instance()->gausw(x, par);
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
 }
 //________________________________________________________________________________
 TF1 *GG() {
@@ -1652,8 +1654,20 @@ TF1 *GG2() {
   return f;
 }
 //________________________________________________________________________________
-TF1 *FitGG(TH1 *proj, Option_t *opt="RQ") {
+TF1 *FitGG(TH1 *proj, Option_t *opt="RQ", TH1D *proj20 = 0) {
   if (! proj) return 0;
+  if (proj20) {
+#if 0
+    proj20->Fit("gaus");
+    TF1 *gaus = (TF1 *) proj20->GetListOfFunctions()->FindObject("gaus");
+    if (gaus) {
+      mean20 = gaus->GetParameter(1);
+      RMS20  = gaus->GetParameter(2);
+    }
+#endif
+    SafeDelete(fgITH1);
+    fgITH1 = ITH1(proj20);
+  }
   Double_t params[9];
   proj->Fit("gaus");
   TF1 *gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
@@ -3573,7 +3587,7 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
     if        (HistName.EndsWith("PC"))  {
       HistName20.ReplaceAll("PC","P20C");
     } else if (HistName.EndsWith("C"))   {
-      HistName20.ReplaceAll("CC","N20C");
+      HistName20.ReplaceAll("C","N20C");
     } else if (HistName.EndsWith("P"))   {
       HistName20 += "20";
     } else                               {
@@ -3839,7 +3853,7 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
       else if (TString(FitName) == "GEX1") g = FitGEX1(proj,opt, &Fit);
       else if (TString(FitName) == "GEX2") g = FitGEX2(proj,opt, &Fit);
       else if (TString(FitName) == "GEX3") g = FitGEX3(proj,opt, &Fit);
-      else if (TString(FitName) == "GG") g = FitGG(proj,opt);
+      else if (TString(FitName) == "GG") g = FitGG(proj,opt,proj20);
       else if (TString(FitName) == "GG2") g = FitGG2(proj,opt, Fit.x, Fit.y);
       else if (TString(FitName) == "GG3") g = FitGG3(proj,opt, Fit.x, Fit.y);
       else if (TString(FitName) == "GG4") g = FitGG4(proj,opt, Fit.x, Fit.y);

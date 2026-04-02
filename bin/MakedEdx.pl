@@ -2872,7 +2872,9 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVIIITFG"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG25k/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/02/2026 new ADC Correction for TPC23
 #$hist = "RunXXVI22";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG25k"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/06/2026 first pass 
 #$hist = "RunXXVIIITFGB"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFGB/2023/RF/*202*/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/16/2026 new ADC Correction for TPC23 & AfterBurner
-$hist = "RunXXVI23";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/25/2026  fix bug in StdEdxY2Maker (mising log(dx)), reset all calibration, new TpcAdcCorrectionC (w/o 4MDF)
+#$hist = "RunXXVI23";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_*2026/*/";  $Production = "P25iy_calib"; $year = "/2026/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/25/2026  fix bug in StdEdxY2Maker (mising log(dx)), reset all calibration, new TpcAdcCorrectionC (w/o 4MDF)
+# /star/data*/reco/production_*2026/*/P25iy_calib/2026/*/*/st*.event.root
+$hist = "RunXXVI24";  $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/"; $RECO = "";  $Production = "TFG26b"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 03/30/2026  TFG production with new Tpc Hit errors and account for cluster adc cut
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2898,18 +2900,20 @@ print "Production = $Production ==> $hist\n";
 my $glb = "";
 if ($#ARGV >= 1) {$glb = $ARGV[1];}
 else {
+  print "disk = $disk\n" if ($debug);
   if ($Production) {
-    if ($disk !~ /^\//) {
-      if (-d "/direct/star") {
-	$glb =  "/direct/star/" . $disk . $RECO . $Production . $year . $FILE . $select . ".event.root";
-      } else {
-	$glb =  "/star/" . $disk . $RECO . $Production . $year . $FILE . $select . ".event.root";
-      }
+    if (-d $disk) {
+      $glb =   $disk . $RECO . $Production . $year . $FILE . $select . ".event.root";
     } else {
-      $glb =  $disk . $RECO . $Production . "*" . $year . $FILE . $select . ".event.root";
+      if ($disk !~ /^\//) {
+	if (-d "/direct/star") {
+	  $glb =  "/direct/star/" . $disk . $RECO . $Production . $year . $FILE . $select . ".event.root";
+	} else {
+	  $glb =  "/star/" . $disk . $RECO . $Production . $year . $FILE . $select . ".event.root";
+	}
+      }
     }
-  } 
-  else { die "Production has not been defined";}
+  } else { die "Production has not been defined";}
 }
 print "glb = $glb\n";
 my @Files = glob "$glb"; 
@@ -2922,6 +2926,7 @@ my $now = time();
 if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";}
 {
   foreach my $file (@Files) {
+    if ($file =~ /TbyT/) {next;}
     my $fff = File::Basename::basename($file);
     $fff =~ s/_adc_/_/;
     $fff =~ s/_mtd_/_/;
@@ -2933,7 +2938,9 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     if ($dt < 600) {next;}
     my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4];# . '_' . $words[5];
-    if ($words[7] =~ /TFG24b/) {
+    if ($words[5] =~ /TFG26b/) {
+      $dd = $words[8];
+    } elsif ($words[7] =~ /TFG24b/) {
       $dd = $words[8];
     } elsif ($words[6] =~ /TFG24c/) {
       $dd = $words[9];

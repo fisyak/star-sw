@@ -7248,3 +7248,207 @@ rm *.condor; fit.pl pion+.root proton+.root GG=SecRow3P; lsf fit.xml; subcondor.
 03/28/2026
 [starsub02] ~/work/Histograms/RunXXVI23 $ root.exe SecRow3CGF*.root FitPDraw.C+
 [cvmfswrite07] ~/TFG/TPC23/2025 $ root.exe  */dEdx/SecRow3GF*pion-.root */dEdx/SecRow3PGF*pion+.root FitPDraw.C+
+================================================================================
+03/30/2026  TFG19j
+touch backup.log 
+foreach ver (TFG TFG19k TFG19l TFG19m TFG20a TFG20b TFG20c TFG21c TFG21d TFG21e TFG21f TFG21g TFG21j TFG21k TFG21l TFG21m TFG21n TFG22a TFG22b TFG22c TFG22d TFG22e TFG22f TFG22g TFG22j TFG23a TFG23e TFG23f TFG24a TFG24b TFG24f TFG25a TFG25b TFG25f)
+  tar czf - ${ver} | hsi put - : backup/${ver}.033026.tz | tee -a backup.log
+end
+
+Richard Witt is using TFG24e.
+================================================================================
+04/01/2026
+[starsub02] ~/work/STAR/packages $ hsi
+Warning: "Network Options" section not found in HPSS.conf file
+Username: fisyak  UID: 2764  Acct: 2764(2764) Copies: 1 COS: 0 Firewall: off [hsi.8.3.0.p0 Thu Sep 1 16:46:29 EDT 2022] 
+? ls -l backup/TFG*
+backup:
+-rw-r--r--    1 fisyak    star      1674576076 Feb  6  2025 TFG.020625.tz
+-rw-r--r--    1 fisyak    star     10061860288 Mar 30 13:29 TFG.033026.tz
+-rw-r--r--    1 fisyak    star     176140691880 Aug  2  2025 TFG.cvmfs.080125.tz
+-rw-r--r--    1 fisyak    star      6151756557 May  6  2016 TFG16a.050616.tz
+-rw-r--r--    1 fisyak    star       460547992 May  6  2016 TFG16a.git.050616.tz
+-rw-r--r--    1 fisyak    star       844129480 Dec 31  2017 TFG16b.030216.tz
+-rw-r--r--    1 fisyak    star       735107568 Dec 31  2017 TFG16e.030216.tz
+-rw-r--r--    1 fisyak    star       827601665 Dec 31  2017 TFG17a.030216.tz
+-rw-r--r--    1 fisyak    star       891343813 Dec 31  2017 TFG17b.030216.tz
+-rw-r--r--    1 fisyak    star       930894017 Dec 31  2017 TFG17c.030216.tz
+-rw-r--r--    1 fisyak    star       930321600 Dec 31  2017 TFG17d.030216.tz
+-rw-r--r--    1 fisyak    star       934791859 Dec 31  2017 TFG17e.030216.tz
+-rw-r--r--    1 fisyak    star       832924570 Dec 31  2017 TFG17f.030216.tz
+-rw-r--r--    1 fisyak    star       916420911 Dec 31  2017 TFG17g.030216.tz
+-rw-r--r--    1 fisyak    star       931428024 Dec 31  2017 TFG17h.030216.tz
+-rw-r--r--    1 fisyak    star       932941346 Dec 31  2017 TFG17i.030216.tz
+-rw-r--r--    1 fisyak    star       916167394 Dec 31  2017 TFG17j.030216.tz
+-rw-r--r--    1 fisyak    star       955947015 Dec 31  2017 TFG17k.030216.tz
+-rw-r--r--    1 fisyak    star      1005671473 Dec 31  2017 TFG17n.030216.tz
+-rw-r--r--    1 fisyak    star       987068717 Dec 31  2017 TFG17o.030216.tz
+-rw-r--r--    1 fisyak    star       986366858 Dec 31  2017 TFG17q.030216.tz
+-rw-r--r--    1 fisyak    star       984328429 Dec 31  2017 TFG17r.030216.tz
+-rw-r--r--    1 fisyak    star       999869501 Dec 31  2017 TFG17u.030216.tz
+-rw-r--r--    1 fisyak    star      1001324620 Dec 31  2017 TFG17v.030216.tz
+-rw-r--r--    1 fisyak    star      1032522303 Jul 17  2019 TFG18a.071719.tz
+-rw-r--r--    1 fisyak    star      1016221556 Jul 17  2019 TFG18a.1.071719.tz
+-rw-r--r--    1 fisyak    star      1002906481 Jul 17  2019 TFG18b.071719.tz
+-rw-r--r--    1 fisyak    star      1002010046 Jul 17  2019 TFG18c.071719.tz
+-rw-r--r--    1 fisyak    star      1004756752 Jul 17  2019 TFG18d.071719.tz
+-rw-r--r--    1 fisyak    star      1067469340 Jul 17  2019 TFG18e.071719.tz
+-rw-r--r--    1 fisyak    star      1021166724 Jul 17  2019 TFG18f.071719.tz
+-rw-r--r--    1 fisyak    star       822339756 Jul 17  2019 TFG18g.071719.tz
+-rw-r--r--    1 fisyak    star       827336705 Jul 17  2019 TFG18i.071719.tz
+-rw-r--r--    1 fisyak    star       813837469 Jul 17  2019 TFG18j.071719.tz
+-rw-r--r--    1 fisyak    star       858986601 Jul 17  2019 TFG18k.071719.tz
+-rw-r--r--    1 fisyak    star       859064941 Jul 17  2019 TFG18l.071719.tz
+-rw-r--r--    1 fisyak    star      1010891802 Jul 17  2019 TFG18m.071719.tz
+-rw-r--r--    1 fisyak    star       914496817 Jul 17  2019 TFG18n.071719.tz
+-rw-r--r--    1 fisyak    star       989156578 Jul 17  2019 TFG18p.071719.tz
+-rw-r--r--    1 fisyak    star       988846540 Jul 17  2019 TFG18q.071719.tz
+-rw-r--r--    1 fisyak    star      1030018014 Jul 17  2019 TFG19a.071719.tz
+-rw-r--r--    1 fisyak    star      1040325977 Jul 17  2019 TFG19b.071719.tz
+-rw-r--r--    1 fisyak    star      1039629298 Jul 17  2019 TFG19c.071719.tz
+-rw-r--r--    1 fisyak    star      1025274889 Jul 17  2019 TFG19d.071719.tz
+-rw-r--r--    1 fisyak    star      1063229587 Jul 17  2019 TFG19e.071719.tz
+-rw-r--r--    1 fisyak    star      1067276526 Jul 29  2020 TFG19f.072920.tz
+-rw-r--r--    1 fisyak    star      3656140641 Mar 30 12:39 TFG19j.033026.tz
+-rw-r--r--    1 fisyak    star       976497060 Mar 30 13:34 TFG19k.033026.tz
+-rw-r--r--    1 fisyak    star      4304774971 Mar 30 13:56 TFG19l.033026.tz
+-rw-r--r--    1 fisyak    star      4290700339 Mar 30 14:17 TFG19m.033026.tz
+-rw-r--r--    1 fisyak    star      4363516108 Mar 30 14:40 TFG20a.033026.tz
+-rw-r--r--    1 fisyak    star      4307764107 Mar 30 15:04 TFG20b.033026.tz
+-rw-r--r--    1 fisyak    star      4299042181 Mar 30 15:32 TFG20c.033026.tz
+-rw-r--r--    1 fisyak    star      8809827110 Mar 30 16:13 TFG21c.033026.tz
+-rw-r--r--    1 fisyak    star      8720999444 Mar 30 16:54 TFG21d.033026.tz
+-rw-r--r--    1 fisyak    star      8749843124 Mar 30 17:38 TFG21e.033026.tz
+-rw-r--r--    1 fisyak    star      8003682567 Mar 30 18:14 TFG21f.033026.tz
+-rw-r--r--    1 fisyak    star      6903969585 Mar 30 18:47 TFG21g.033026.tz
+-rw-r--r--    1 fisyak    star      8135377846 Mar 30 19:31 TFG21j.033026.tz
+-rw-r--r--    1 fisyak    star      7847472300 Mar 30 20:14 TFG21k.033026.tz
+-rw-r--r--    1 fisyak    star      8497474549 Mar 30 21:05 TFG21l.033026.tz
+-rw-r--r--    1 fisyak    star      6088768851 Mar 30 21:46 TFG21m.033026.tz
+-rw-r--r--    1 fisyak    star      6658535536 Mar 30 22:26 TFG21n.033026.tz
+-rw-r--r--    1 fisyak    star      6737199581 Mar 30 23:11 TFG22a.033026.tz
+-rw-r--r--    1 fisyak    star      6348643804 Mar 30 23:53 TFG22b.033026.tz
+-rw-r--r--    1 fisyak    star      6283810009 Mar 31 00:39 TFG22c.033026.tz
+-rw-r--r--    1 fisyak    star      6313973697 Mar 31 01:37 TFG22d.033026.tz
+-rw-r--r--    1 fisyak    star      6320871815 Mar 31 02:10 TFG22e.033026.tz
+-rw-r--r--    1 fisyak    star      6226025734 Mar 31 03:08 TFG22f.033026.tz
+-rw-r--r--    1 fisyak    star      6312422977 Mar 31 04:23 TFG22g.033026.tz
+-rw-r--r--    1 fisyak    star      6734703612 Mar 31 06:49 TFG22j.033026.tz
+-rw-r--r--    1 fisyak    star     13087524084 Mar 31 11:28 TFG23a.033026.tz
+-rw-r--r--    1 fisyak    star     11435260235 Mar 31 13:05 TFG23e.033026.tz
+-rw-r--r--    1 fisyak    star      9951982823 Mar 31 15:26 TFG23f.033026.tz
+-rw-r--r--    1 fisyak    star      9870134496 Mar 31 17:02 TFG24a.033026.tz
+-rw-r--r--    1 fisyak    star      8801420153 Mar 31 18:21 TFG24b.033026.tz
+-rw-r--r--    1 fisyak    star      6376474783 Mar 31 20:24 TFG24f.033026.tz
+-rw-r--r--    1 fisyak    star      5835417679 Mar 31 20:57 TFG25a.033026.tz
+-rw-r--r--    1 fisyak    star      7205049922 Mar 31 23:35 TFG25b.033026.tz
+-rw-r--r--    1 fisyak    star      9776997077 Apr  1 00:24 TFG25f.033026.tz
+[rcas6008] ~/pwg/STAR/packages
+touch backup.log 
+foreach ver (TFG24i  TFG25d)
+  tar czf - ${ver} | hsi put - : backup/${ver}.040126.tz | tee -a backup.log
+end
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages $ df -h .
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   12T  9.9T  2.2T  83% /gpfs/mnt/gpfs01
+rm -rf TFG16a  TFG17v  TFG19a  TFG19f  TFG19k  TFG19l  TFG20a  TFG20c  TFG21d  TFG21f  TFG21j  TFG21l  TFG21n  TFG22b  TFG22d  TFG22f  TFG22j  TFG23e  TFG24a  TFG24f  TFG25b  TFG25f TFG17j  TFG18n  TFG19e  TFG19j  TFG19l  TFG19m  TFG20b  TFG21c  TFG21e  TFG21g  TFG21k  TFG21m  TFG22a  TFG22c  TFG22e  TFG22g  TFG23a  TFG23f  TFG24b  TFG25a  TFG25c
+
+8.4G    star-cvs
+1.6G    star-mcgen
+4.1M    TFG16a
+8.0G    TFG19e5
+6.6G    TFG19g
+6.6G    TFG19h
+48G     TFG.Export
+4.8G    TFG.star-sw.MERGE
+
+foreach ver (TFG19e5 TFG19g TFG19h)
+  tar czf - ${ver} | hsi put - : backup/${ver}.040126.tz 
+end
+
+backup:
+-rw-r--r--    1 fisyak    star      1674576076 Feb  6  2025 TFG.020625.tz
+-rw-r--r--    1 fisyak    star     10061860288 Mar 30 13:29 TFG.033026.tz
+-rw-r--r--    1 fisyak    star     176140691880 Aug  2  2025 TFG.cvmfs.080125.tz
+-rw-r--r--    1 fisyak    star      6151756557 May  6  2016 TFG16a.050616.tz
+-rw-r--r--    1 fisyak    star       460547992 May  6  2016 TFG16a.git.050616.tz
+-rw-r--r--    1 fisyak    star       844129480 Dec 31  2017 TFG16b.030216.tz
+-rw-r--r--    1 fisyak    star       735107568 Dec 31  2017 TFG16e.030216.tz
+-rw-r--r--    1 fisyak    star       827601665 Dec 31  2017 TFG17a.030216.tz
+-rw-r--r--    1 fisyak    star       891343813 Dec 31  2017 TFG17b.030216.tz
+-rw-r--r--    1 fisyak    star       930894017 Dec 31  2017 TFG17c.030216.tz
+-rw-r--r--    1 fisyak    star       930321600 Dec 31  2017 TFG17d.030216.tz
+-rw-r--r--    1 fisyak    star       934791859 Dec 31  2017 TFG17e.030216.tz
+-rw-r--r--    1 fisyak    star       832924570 Dec 31  2017 TFG17f.030216.tz
+-rw-r--r--    1 fisyak    star       916420911 Dec 31  2017 TFG17g.030216.tz
+-rw-r--r--    1 fisyak    star       931428024 Dec 31  2017 TFG17h.030216.tz
+-rw-r--r--    1 fisyak    star       932941346 Dec 31  2017 TFG17i.030216.tz
+-rw-r--r--    1 fisyak    star       916167394 Dec 31  2017 TFG17j.030216.tz
+-rw-r--r--    1 fisyak    star       955947015 Dec 31  2017 TFG17k.030216.tz
+-rw-r--r--    1 fisyak    star      1005671473 Dec 31  2017 TFG17n.030216.tz
+-rw-r--r--    1 fisyak    star       987068717 Dec 31  2017 TFG17o.030216.tz
+-rw-r--r--    1 fisyak    star       986366858 Dec 31  2017 TFG17q.030216.tz
+-rw-r--r--    1 fisyak    star       984328429 Dec 31  2017 TFG17r.030216.tz
+-rw-r--r--    1 fisyak    star       999869501 Dec 31  2017 TFG17u.030216.tz
+-rw-r--r--    1 fisyak    star      1001324620 Dec 31  2017 TFG17v.030216.tz
+-rw-r--r--    1 fisyak    star      1032522303 Jul 17  2019 TFG18a.071719.tz
+-rw-r--r--    1 fisyak    star      1016221556 Jul 17  2019 TFG18a.1.071719.tz
+-rw-r--r--    1 fisyak    star      1002906481 Jul 17  2019 TFG18b.071719.tz
+-rw-r--r--    1 fisyak    star      1002010046 Jul 17  2019 TFG18c.071719.tz
+-rw-r--r--    1 fisyak    star      1004756752 Jul 17  2019 TFG18d.071719.tz
+-rw-r--r--    1 fisyak    star      1067469340 Jul 17  2019 TFG18e.071719.tz
+-rw-r--r--    1 fisyak    star      1021166724 Jul 17  2019 TFG18f.071719.tz
+-rw-r--r--    1 fisyak    star       822339756 Jul 17  2019 TFG18g.071719.tz
+-rw-r--r--    1 fisyak    star       827336705 Jul 17  2019 TFG18i.071719.tz
+-rw-r--r--    1 fisyak    star       813837469 Jul 17  2019 TFG18j.071719.tz
+-rw-r--r--    1 fisyak    star       858986601 Jul 17  2019 TFG18k.071719.tz
+-rw-r--r--    1 fisyak    star       859064941 Jul 17  2019 TFG18l.071719.tz
+-rw-r--r--    1 fisyak    star      1010891802 Jul 17  2019 TFG18m.071719.tz
+-rw-r--r--    1 fisyak    star       914496817 Jul 17  2019 TFG18n.071719.tz
+-rw-r--r--    1 fisyak    star       989156578 Jul 17  2019 TFG18p.071719.tz
+-rw-r--r--    1 fisyak    star       988846540 Jul 17  2019 TFG18q.071719.tz
+-rw-r--r--    1 fisyak    star      1030018014 Jul 17  2019 TFG19a.071719.tz
+-rw-r--r--    1 fisyak    star      1040325977 Jul 17  2019 TFG19b.071719.tz
+-rw-r--r--    1 fisyak    star      1039629298 Jul 17  2019 TFG19c.071719.tz
+-rw-r--r--    1 fisyak    star      1025274889 Jul 17  2019 TFG19d.071719.tz
+-rw-r--r--    1 fisyak    star      1063229587 Jul 17  2019 TFG19e.071719.tz
+-rw-r--r--    1 fisyak    star      1011554686 Apr  1 18:57 TFG19e5.040126.tz
+-rw-r--r--    1 fisyak    star      1067276526 Jul 29  2020 TFG19f.072920.tz
+-rw-r--r--    1 fisyak    star       939534797 Apr  1 19:03 TFG19g.040126.tz
+-rw-r--r--    1 fisyak    star       940794736 Apr  1 19:09 TFG19h.040126.tz
+-rw-r--r--    1 fisyak    star      3656140641 Mar 30 12:39 TFG19j.033026.tz
+-rw-r--r--    1 fisyak    star       976497060 Mar 30 13:34 TFG19k.033026.tz
+-rw-r--r--    1 fisyak    star      4304774971 Mar 30 13:56 TFG19l.033026.tz
+-rw-r--r--    1 fisyak    star      4290700339 Mar 30 14:17 TFG19m.033026.tz
+-rw-r--r--    1 fisyak    star      4363516108 Mar 30 14:40 TFG20a.033026.tz
+-rw-r--r--    1 fisyak    star      4307764107 Mar 30 15:04 TFG20b.033026.tz
+-rw-r--r--    1 fisyak    star      4299042181 Mar 30 15:32 TFG20c.033026.tz
+-rw-r--r--    1 fisyak    star      8809827110 Mar 30 16:13 TFG21c.033026.tz
+-rw-r--r--    1 fisyak    star      8720999444 Mar 30 16:54 TFG21d.033026.tz
+-rw-r--r--    1 fisyak    star      8749843124 Mar 30 17:38 TFG21e.033026.tz
+-rw-r--r--    1 fisyak    star      8003682567 Mar 30 18:14 TFG21f.033026.tz
+-rw-r--r--    1 fisyak    star      6903969585 Mar 30 18:47 TFG21g.033026.tz
+-rw-r--r--    1 fisyak    star      8135377846 Mar 30 19:31 TFG21j.033026.tz
+-rw-r--r--    1 fisyak    star      7847472300 Mar 30 20:14 TFG21k.033026.tz
+-rw-r--r--    1 fisyak    star      8497474549 Mar 30 21:05 TFG21l.033026.tz
+-rw-r--r--    1 fisyak    star      6088768851 Mar 30 21:46 TFG21m.033026.tz
+-rw-r--r--    1 fisyak    star      6658535536 Mar 30 22:26 TFG21n.033026.tz
+-rw-r--r--    1 fisyak    star      6737199581 Mar 30 23:11 TFG22a.033026.tz
+-rw-r--r--    1 fisyak    star      6348643804 Mar 30 23:53 TFG22b.033026.tz
+-rw-r--r--    1 fisyak    star      6283810009 Mar 31 00:39 TFG22c.033026.tz
+-rw-r--r--    1 fisyak    star      6313973697 Mar 31 01:37 TFG22d.033026.tz
+-rw-r--r--    1 fisyak    star      6320871815 Mar 31 02:10 TFG22e.033026.tz
+-rw-r--r--    1 fisyak    star      6226025734 Mar 31 03:08 TFG22f.033026.tz
+-rw-r--r--    1 fisyak    star      6312422977 Mar 31 04:23 TFG22g.033026.tz
+-rw-r--r--    1 fisyak    star      6734703612 Mar 31 06:49 TFG22j.033026.tz
+-rw-r--r--    1 fisyak    star     13087524084 Mar 31 11:28 TFG23a.033026.tz
+-rw-r--r--    1 fisyak    star     11435260235 Mar 31 13:05 TFG23e.033026.tz
+-rw-r--r--    1 fisyak    star      9951982823 Mar 31 15:26 TFG23f.033026.tz
+-rw-r--r--    1 fisyak    star      9870134496 Mar 31 17:02 TFG24a.033026.tz
+-rw-r--r--    1 fisyak    star      8801420153 Mar 31 18:21 TFG24b.033026.tz
+-rw-r--r--    1 fisyak    star      6376474783 Mar 31 20:24 TFG24f.033026.tz
+-rw-r--r--    1 fisyak    star      4661591818 Apr  1 09:57 TFG24i.040126.tz
+-rw-r--r--    1 fisyak    star      5835417679 Mar 31 20:57 TFG25a.033026.tz
+-rw-r--r--    1 fisyak    star      7205049922 Mar 31 23:35 TFG25b.033026.tz
+-rw-r--r--    1 fisyak    star     12833606472 Apr  1 12:05 TFG25d.040126.tz
+-rw-r--r--    1 fisyak    star      9776997077 Apr  1 00:24 TFG25f.033026.tz

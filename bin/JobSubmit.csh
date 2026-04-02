@@ -55,8 +55,9 @@ foreach done (`ls -1d ???/*/Done`)
   cd ${d}; pwd;
   ls -ltr | tail -1 | grep Chain	
   if ($?) then	
-    rm -rf .sl*
-    ln -s ~/macros/.sl73_* .	
+    rm -rf .sl* .al*
+    ln -s ~/macros/.sl* .	
+    ln -s ~/macros/.al* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
     @ count++;  echo "count $count";
     if ($count > 120) then 
