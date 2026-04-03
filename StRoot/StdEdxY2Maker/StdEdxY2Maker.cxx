@@ -1127,7 +1127,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 #endif
 #endif
 #ifdef __ADC20__
-  Hists3D::FirstHist = 1;
+  //  Hists3D::FirstHist = 1;
 #if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
   __BOOK__VARS__(N20,);
 #else
@@ -1136,7 +1136,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
   __BOOK__VARS__(P20, for positive);
 #endif
 #endif
-  Hists3D::FirstHist = 0;
+  //  Hists3D::FirstHist = 0;
 #endif /* __ADC20__ */
   static TH2F *ZdcCP = 0, *BBCP = 0;
   //  static TH2F *ctbWest = 0, *ctbEast = 0, *ctbTOFp = 0, *zdcWest = 0, *zdcEast = 0;
