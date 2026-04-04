@@ -1,9 +1,5 @@
 // $Id: StdEdxY2Maker.cxx,v 1.101 2021/05/10 16:54:45 fisyak Exp $
 #define __ADC20__ 1
-//#define __NEGATIVE_ONLY__
-  #ifndef  __NEGATIVE_ONLY__
-     #define __NEGATIVE_AND_POSITIVE__
-  #endif /* ! __NEGATIVE_ONLY__ */
   #define __BEST_VERTEX__
 #ifdef __TFG__VERSION__
 //#define CompareWithToF 
@@ -1118,25 +1114,12 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
   static Hists3D nTbk3 ## SIGN ("nTbk3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"row","ntimebuckets",-NoRows,35,2.5,37.5);
 #endif
   static Hists3D xyPad3qB("xyPad3qB","log(dEdx/Pion) for all","24*qB+sector+yrow[-0.5,0.5] and xpad [-1,1]"," xpad",2*numberOfSectors*20, 32,-1,1, 200, -5., 5., 0.5, 48.5);
-#if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
-  __BOOK__VARS__(,);
-#else
-  __BOOK__VARS__(, for negative);
-#ifdef __NEGATIVE_AND_POSITIVE__
+  __BOOK__VARS__(N, for negative);
   __BOOK__VARS__(P, for positive);
-#endif
-#endif
 #ifdef __ADC20__
-  //  Hists3D::FirstHist = 1;
-#if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
-  __BOOK__VARS__(N20,);
-#else
-  __BOOK__VARS__(N20, for negative);
-#ifdef __NEGATIVE_AND_POSITIVE__
-  __BOOK__VARS__(P20, for positive);
-#endif
-#endif
   //  Hists3D::FirstHist = 0;
+  __BOOK__VARS__(N20, for negative);
+  __BOOK__VARS__(P20, for positive);
 #endif /* __ADC20__ */
   static TH2F *ZdcCP = 0, *BBCP = 0;
   //  static TH2F *ctbWest = 0, *ctbEast = 0, *ctbTOFp = 0, *zdcWest = 0, *zdcEast = 0;
@@ -1375,22 +1358,23 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
       FdEdx[k].sigmaP = StdEdxModel::instance()->Sigma(n_P);
       FdEdx[k].F     -= zdEdxMPV;
       for (Int_t l = 0; l <= StTpcdEdxCorrection::kTpcLast; l++) {
+	FdEdx[k].C[l].Set(FdEdx[k].F);
 	if (l == StTpcdEdxCorrection::kzCorrection || 
 	    l == StTpcdEdxCorrection::kzCorrectionC) {
-	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - (FdEdx[k].C[ StTpcdEdxCorrection::kzCorrectionC].mdE.fddEdxL + 
-						    FdEdx[k].C[ StTpcdEdxCorrection::kzCorrection ].mdE.fddEdxL);
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kzCorrectionC]);
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kzCorrection]);
 	} else if (l == StTpcdEdxCorrection::kTpcSecRowB ||
 	   	   l == StTpcdEdxCorrection::kTpcSecRowC ||
 	   	   l == StTpcdEdxCorrection::kTpcRowQ) {    
-	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - (FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE.fddEdxL +
-	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowC].mdE.fddEdxL +
-	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcRowQ].mdE.fddEdxL);   
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kTpcSecRowB]);
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kTpcSecRowC]);
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kTpcRowQ]);
 	} else if (l == StTpcdEdxCorrection::kTpcPadMDF ||
 	   	   l == StTpcdEdxCorrection::kTpcPadMDC ) {
-	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - (FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].mdE.fddEdxL +
-	   					    FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDC].mdE.fddEdxL);
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kTpcPadMDF]);
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ StTpcdEdxCorrection::kTpcPadMDC]);
 	} else {
-	  FdEdx[k].C[l].mdE.fdEdxN = FdEdx[k].F.mdE.fdEdxN - FdEdx[k].C[l].mdE.fddEdxL;
+	  FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ l]);
 	}
 	if (l) FdEdx[k].C[l].mdx = FdEdx[k].C[l-1].mdx;
       }
@@ -1437,103 +1421,63 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 	if (TimeC)  {vars[1] = FdEdx[k].F.mdE.fdEdxN; TimeC->Fill(vars);}
 	Double_t VarsY[8] = {0};
 #ifdef __dZdY_dXdY__
-#define __FILL___VARS__dZdY(SIGN) \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdZdY].mdE.fdEdxN;   \
+#define __FILL___VARS__dZdY(SIGN,__X20__)				\
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdZdY].mdE ## __X20__.fdEdxN;   \
 	dZdY3  ## SIGN .Fill(rowS,FdEdx[k].dZdY,Vars);       \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXdY].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXdY].mdE ## __X20__.fdEdxN;   \
 	dXdY3  ## SIGN .Fill(rowS,FdEdx[k].dXdY,Vars);	
 #else
-#define __FILL__VARS__dZdY(SIGN)
+#define __FILL__VARS__dZdY(SIGN,__X20__)
 #endif
 #ifdef __Pad_Tmbk__  /* skip Pad and Tbk */
-#define __FILL__VARS__PadTmbk(SIGN) \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knPad].mdE.fdEdxN;   \
+#define __FILL__VARS__PadTmbk(SIGN,__X20_)				       \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knPad].mdE ## __X20__.fdEdxN;   \
 	nPad3  ## SIGN .Fill(rowS,FdEdx[k].Npads,&Vars[1]);       \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knTbk].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knTbk].mdE ## __X20__.fdEdxN;   \
 	nTbk3  ## SIGN .Fill(rowS,FdEdx[k].Ntbks,&Vars[1]);      
 #else
-#define __FILL__VARS__PadTmbk(SIGN)
+#define __FILL__VARS__PadTmbk(SIGN,__X20__)
 #endif
-#define __FILL__VARS__(SIGN) \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE.fdEdxN; \
+#define __FILL__VARS__(SIGN,__X20__)						\
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE ## __X20__.fdEdxN; \
 	SecRow3 ## SIGN .Fill(sector,row,Vars);			       \
 	Voltage ## SIGN .Fill(cs,VN,Vars);			       \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kzCorrection].mdE.fdEdxN; \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kzCorrection].mdE ## __X20__.fdEdxN; \
 	Z3     ## SIGN .Fill(rowS,FdEdx[k].ZdriftDistance,Vars);     \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kGatingGrid].mdE.fdEdxN; \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kGatingGrid].mdE ## __X20__.fdEdxN; \
 	G3     ## SIGN .Fill(rowS,FdEdx[k].driftTime,Vars);     \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDF].mdE ## __X20__.fdEdxN;   \
 	xyPad3 ## SIGN .Fill(FdEdx[k].yrow,FdEdx[k].xpad, Vars); \
 	VarsY[0] = TMath::Log2(FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdx); \
         VarsY[1] = TMath::Log2(FdEdx[k].F.mdx); \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdE ## __X20__.fdEdxN;   \
 	dX3  ## SIGN .FillY(rowS,VarsY,Vars);	\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrection].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrection].mdE ## __X20__.fdEdxN;   \
 	Eta3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars);	\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrectionB].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kEtaCorrectionB].mdE ## __X20__.fdEdxN;   \
 	EtaB3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars);	\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcPressure].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcPressure].mdE ## __X20__.fdEdxN;   \
 	Pressure ## SIGN.Fill(rowS,press,Vars); \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcGasTemperature].mdE.fdEdxN;   \
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::ktpcGasTemperature].mdE ## __X20__.fdEdxN;   \
 	Temperature ## SIGN.Fill(rowS,temp,Vars); \
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].mdE.fdEdxN; \
-	Qcm ## SIGN.Fill(cs,FdEdx[k].Qcm,Vars);\
-	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].mdE.fdEdxN;\
-	AvCurrent ## SIGN.Fill(cs,FdEdx[k].Crow,Vars);\
-__FILL__VARS__dZdY(SIGN) \
-__FILL__VARS__PadTmbk(SIGN)
-#if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
-	__FILL__VARS__();
-#else /* ! __NEGATIVE_AND_POSITIVE__ */
-  #if defined(__NEGATIVE_ONLY__) || defined(__NEGATIVE_AND_POSITIVE__)
-	if (sCharge == 1)  {
-	__FILL__VARS__();
-	}
-     #if defined(__NEGATIVE_AND_POSITIVE__)
-	if (sCharge == 0)  {
-	__FILL__VARS__(P);
-	}
-     #endif /* __NEGATIVE_AND_POSITIVE__ */
-  #endif /* __NEGATIVE_ONLY__ || __NEGATIVE_AND_POSITIVE__ */
-#endif /* __NEGATIVE_AND_POSITIVE__ */
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcAccumulatedQ].mdE ## __X20__.fdEdxN; \
+	Qcm ## SIGN.Fill(cs,FdEdx[k].Qcm,Vars);				\
+	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcCurrentCorrection].mdE ## __X20__.fdEdxN;\
+	AvCurrent ## SIGN.Fill(cs,FdEdx[k].Crow,Vars);			\
+	__FILL__VARS__dZdY(SIGN,__X20__);				\
+	__FILL__VARS__PadTmbk(SIGN,__X20__);
+	//--------------------------------------------------------------------------------	
+	if (sCharge == 1)  {		
+	  __FILL__VARS__(N,);		
 #ifdef  __ADC20__
-	Double_t Vars20[4] {
-	  FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE20.fdEdxN, 
-	    FdEdx[k].F.mdE20.fdEdxN,
-	    0, 
-	    FdEdx[k].F.mdx
-	    };
-#define __FILL__20VARS__(SIGN) \
-	SecRow3 ## SIGN .Fill(sector,row,Vars20);			       \
-	Voltage ## SIGN .Fill(cs,VN,Vars20);			       \
-	Z3     ## SIGN .Fill(rowS,FdEdx[k].ZdriftDistance,Vars20);     \
-	G3     ## SIGN .Fill(rowS,FdEdx[k].driftTime,Vars20);     \
-	xyPad3 ## SIGN .Fill(FdEdx[k].yrow,FdEdx[k].xpad, Vars20); \
-	VarsY[0] = TMath::Log2(FdEdx[k].C[StTpcdEdxCorrection::kdXCorrection].mdx); \
-        VarsY[1] = TMath::Log2(FdEdx[k].F.mdx); \
-	dX3  ## SIGN .FillY(rowS,VarsY,Vars20);	\
-	Eta3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars20);	\
-	EtaB3  ## SIGN .Fill(rowS,FdEdx[k].etaG,Vars20);	\
-	Pressure ## SIGN.Fill(rowS,press,Vars20); \
-	Temperature ## SIGN.Fill(rowS,temp,Vars20); \
-	Qcm ## SIGN.Fill(cs,FdEdx[k].Qcm,Vars20);\
-	AvCurrent ## SIGN.Fill(cs,FdEdx[k].Crow,Vars20);
-#if ! defined(__NEGATIVE_ONLY__) && ! defined(__NEGATIVE_AND_POSITIVE__)
-	__FILL__20VARS__(N20);
-#else /* ! __NEGATIVE_AND_POSITIVE__ */
-  #if defined(__NEGATIVE_ONLY__) || defined(__NEGATIVE_AND_POSITIVE__)
-	if (sCharge == 1)  {
-	__FILL__20VARS__(N20);
-	}
-     #if defined(__NEGATIVE_AND_POSITIVE__)
-	if (sCharge == 0)  {
-	__FILL__20VARS__(P20);
-	}
-     #endif /* __NEGATIVE_AND_POSITIVE__ */
-  #endif /* __NEGATIVE_ONLY__ || __NEGATIVE_AND_POSITIVE__ */
-#endif /* __NEGATIVE_AND_POSITIVE__ */
+	  __FILL__VARS__(N20,20);
 #endif /* __ADC20__ */
-
+	} else {			
+	  __FILL__VARS__(P,);		
+#ifdef  __ADC20__
+	  __FILL__VARS__(P20,20);
+#endif /* __ADC20__ */
+	}
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcPadMDC].mdE.fdEdxN;	
 	xyPad3qB.Fill(24*FdEdx[k].qB+FdEdx[k].yrow,FdEdx[k].xpadR, Vars); 
       } // MIP momentum cut
@@ -1665,6 +1609,7 @@ void StdEdxY2Maker::fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, 
       Double_t pmax = 1.0;
       if (zmax < 10) pmax = LandauI()->Eval(zmax);
       Val[0] -= TMath::Log(pmax - p20);
+      Val[1] -= TMath::Log(pmax - p20);
     } 
     FdEdx[i].Prob = TMath::Exp(Val[0]);
     f      -= Val[0];
