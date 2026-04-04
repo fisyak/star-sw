@@ -1,7 +1,11 @@
 ostream& operator<<(ostream& os, const TMultiDimFit& f) {
   Int_t i, j;
   // Assignment to coefficients vector.
+#ifndef __TPC23__
   os << "  row.PolyType = \t"      << f.GetPolyType() << ";" << endl;
+#else /*  __TPC23__ */
+  os << "  row.PolyType = \t"      << f.GetPolyType() +10 << ";" << endl;
+#endif /* !  __TPC23__ */
   os << "  row.NVariables = \t"    << f.GetNVariables() << ";" << endl;
   os << "  row.NCoefficients = \t" << f.GetNCoefficients() << ";" << endl;
   for (i = 0; i < f.GetNVariables(); i++) {

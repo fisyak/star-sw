@@ -9,10 +9,12 @@ foreach d (`ls -1dtr ${GLOB}| sort -u`)
   ls -ltr *.root | tail -1 | grep All 
   if ($?) then
     echo "rm All*"
-    rm All*
+    rm All* *.condor
     hadd.pl  FilesPerJob=20
 #    if (${SITE} == "JLT") then
-    lsf hadd.xml
+    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta hadd.xml
+    ~/bin/subcondor.csh
+#    lsf hadd.xml
 #    /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit hadd.xml
 #    else
 #    foreach f (`ls -1d hadd*.condor`)

@@ -33,7 +33,10 @@ foreach d (`ls -1d ???/2*`)
 #  /net/l402/data/fisyak/STAR/packages/.DEV2/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daq.DEV2.xml
 #  /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  -p bnl_condor_online_CpuModelNumber6X  ~/xml/daqTFG.xml
 #   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daq.TFG25k.xml
-   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daqTFG.xml
+#   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daqTFG.xml
+    rm *.condor
+    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
+    ~/bin/subcondor.csh
   touch Submitted
   cd -
 #  if ($countJ >= 40) then 
@@ -52,8 +55,9 @@ foreach done (`ls -1d ???/*/Done`)
   cd ${d}; pwd;
   ls -ltr | tail -1 | grep Chain	
   if ($?) then	
-    rm -rf .sl*
-    ln -s ~/macros/.sl73_* .	
+    rm -rf .sl* .al*
+    ln -s ~/macros/.sl* .	
+    ln -s ~/macros/.al* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
     @ count++;  echo "count $count";
     if ($count > 120) then 

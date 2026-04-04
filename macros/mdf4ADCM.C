@@ -36,6 +36,9 @@
 // root.exe 'lDb.C(0,"AuAu_2023,Corrz")' SparseGGAdcSparse7.root  */SparseGGAdcSparse7.root Chain.C mdf4ADCM.C+
 // root.exe 'lDb.C(0,"AuAu_2025,Corrz")' */*/SparseGGAdcSparse8.root Chain.C mdf4ADCM.C+
 // root.exe 'lDb.C(0,"AuAu_2025,Corrz")' */*/SparseGPAdcSparse8.root Chain.C 'mdf4ADCM.C+(1)'
+/* 03/24/2026 
+cvmfswrite06] ~/TFG/TPC23/2025 $ root.exe 'lDb.C(0,"AuAu_2025,Corrz")' COLE/electron+/SparseGPAdcSparse8.root COLE/electron-/SparseGPAdcSparse8.root COLE/kaon+/SparseGPAdcSparse8.root COLE/kaon-/SparseGPAdcSparse8.root COLE/pion+/SparseGPAdcSparse8.root COLE/pion-/SparseGPAdcSparse8.root COLE/proton+/SparseGPAdcSparse8.root COLE/proton-/SparseGPAdcSparse8.root COLE/triton/SparseGPAdcSparse8.root FXTE/deuteron/SparseGPAdcSparse8.root FXTE/electron+/SparseGPAdcSparse8.root FXTE/electron-/SparseGPAdcSparse8.root FXTE/kaon+/SparseGPAdcSparse8.root FXTE/kaon-/SparseGPAdcSparse8.root FXTE/pion+/SparseGPAdcSparse8.root FXTE/pion-/SparseGPAdcSparse8.root FXTE/proton+/SparseGPAdcSparse8.root FXTE/proton-/SparseGPAdcSparse8.root FXTE/triton/SparseGPAdcSparse8.root Chain.C mdf4ADCM.C+ 
+ */
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -62,7 +65,8 @@
 #include "StDetectorDbMaker/St_TpcAdcCorrection5MDF.h"
 #include "StDetectorDbMaker/St_TpcAdcCorrection6MDF.h"
 /* (dsigma>0&&dsigma<0.04&&dmu<0.02&&sigma<0.02&&j==2&&z2<203 */ 
-#define __CUT__ Bool_t ok = dsigma>0 && dsigma<0.04 && dmu<0.02 && sigma<0.02
+//#define __CUT__ Bool_t ok = dsigma>0 && dsigma<0.04 && dmu<0.02 && sigma<0.02
+#define __CUT__ Bool_t ok = dsigma>0&&dsigma<0.02&&dmu>0&&dmu<0.01
 #if 0
 class TMultiDimFit;
 enum EMDFPolyType {

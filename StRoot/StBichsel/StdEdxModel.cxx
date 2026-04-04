@@ -455,7 +455,7 @@ TF1 *StdEdxModel::FParam(Int_t l) {
   
 }
 //________________________________________________________________________________
-Double_t StdEdxModel::Prob(Double_t /* log(nE/Np) */ ee, Double_t Np, Double_t *der) { // GG: ggaus
+Double_t StdEdxModel::Prob(Double_t /* log(nE/Np) */ ee, Double_t Np, Double_t *der, Double_t e20, Double_t emax) { // GG: ggaus
   Double_t params[5] = {0};
   Double_t V = 0;
   if (! der) {
@@ -548,9 +548,15 @@ Double_t StdEdxModel::ProbEx(Double_t /* log(nE/Np) */ ee, Double_t Np, Double_t
 }
 #endif
 //________________________________________________________________________________
-Double_t StdEdxModel::ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der) {
+Double_t StdEdxModel::ProbdEGeVlog(Double_t dEGeVLog, Double_t Np, Double_t *der, Double_t dE20GeVLog, Double_t dEmaxGeVLog) {
   Double_t ee = Logne(dEGeVLog) - TMath::Log(Np);
-  return Prob(ee, Np, der);
+  Double_t e20 = 0;
+  Double_t emax = 0;
+  if (dE20GeVLog < dEmaxGeVLog) {
+    e20 = Logne(dE20GeVLog) - TMath::Log(Np);
+    emax = Logne(dEmaxGeVLog) - TMath::Log(Np);
+  }
+  return Prob(ee, Np, der, e20, emax);
 }
 //________________________________________________________________________________
 Double_t StdEdxModel::zMP(Double_t *x, Double_t *p) { // log(keV/cm)

@@ -1,4 +1,4 @@
-/*
+/*  https://en.wikipedia.org/wiki/Skew_normal_distribution
     Double_t delta =alpha/TMath::Sqrt(1 + alpha*alpha);
     Double_t muz = delta/TMath::Sqrt(TMath::PiOver2());
     Double_t sigmaz = TMath::Sqrt(1 - muz*muz);

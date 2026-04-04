@@ -1,5 +1,4 @@
 static const Int_t Npart4EY = 6;
-TH1D *fgITH1 = 0;
 //________________________________________________________________________________
 Double_t gf4EYFunc(Double_t *x, Double_t *par) {
   Double_t XX[1] = {x[0]};
@@ -562,19 +561,6 @@ TF1 *FitG4EY(TH1D *proj, Option_t *opt, Int_t IO, Int_t Sign, Double_t mean20, D
     proj->Draw();
   }
   return g2;
-}
-//________________________________________________________________________________
-// Make Histogram from Integral of hist
-TH1D *ITH1(TH1D *hist) {
-  if (! hist) return 0;
-  TH1D *ihist = new TH1D(*hist);
-  ihist->SetName(Form("I%s",hist->GetName()));
-  Int_t nbinsx = ihist->GetNbinsX();
-  Double_t *Integral = hist->GetIntegral();
-  for (Int_t i = 0; i <= nbinsx+1; i++) {
-    ihist->SetBinContent(i,Integral[i]);
-  }
-  return ihist;
 }
 //________________________________________________________________________________
 TF1 *FitG4EY(TH1D *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2, TH1D *proj20 = 0) {

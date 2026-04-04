@@ -6599,3 +6599,856 @@ Int_t StTpcHitMover::Make() {
     gMessMgr->Error() << "StTpcHitMover::Make questionable hit corrections" << endm;
     return kStSkip;
   }
+================================================================================
+02/-4/2026 
+StTpcDigitalSector::timeBinsOfRowAndPad (this=0xd624d80, rowN=8, padN=65) at .al96_x8664_gcc11/obj/StRoot/StEvent/StTpcRawData.h:50
+278               s->getTimeAdc(row,pad,ADCs,IDTs);
+(gdb) p sector
+$23 = 23
+================================================================================
+
+Run      Inner (V)  Outer (V)
+26336036      1070       1390 V1070_1390a
+26336037      1070   	 1390 V1070_1390b
+
+26336038      1070   	 1390 V1070_1390
+26336039      1050   	 1370 V1050_1370
+26336040      1030   	 1350 V1030_1350
+26336041      1010   	 1330 V1010_1330
+26336042      1070   	 1390 V1070_1390B
+
+V1070_1390 V1050_1370 V1030_1350 V1010_1330 V1070_1390B
+
+hpss backup 
+? ls -l TFG*
+-rw-r--r--    1 fisyak    star      1674576076 Feb  6  2025 TFG.020625.tz
+-rw-r--r--    1 fisyak    star     176140691880 Aug  2  2025 TFG.cvmfs.080125.tz
+
+-rw-r--r--    1 fisyak    star      6151756557 May  6  2016 TFG16a.050616.tz
+-rw-r--r--    1 fisyak    star       460547992 May  6  2016 TFG16a.git.050616.tz
+-rw-r--r--    1 fisyak    star       844129480 Dec 31  2017 TFG16b.030216.tz
+-rw-r--r--    1 fisyak    star       735107568 Dec 31  2017 TFG16e.030216.tz
+-rw-r--r--    1 fisyak    star       827601665 Dec 31  2017 TFG17a.030216.tz
+-rw-r--r--    1 fisyak    star       891343813 Dec 31  2017 TFG17b.030216.tz
+-rw-r--r--    1 fisyak    star       930894017 Dec 31  2017 TFG17c.030216.tz
+-rw-r--r--    1 fisyak    star       930321600 Dec 31  2017 TFG17d.030216.tz
+-rw-r--r--    1 fisyak    star       934791859 Dec 31  2017 TFG17e.030216.tz
+-rw-r--r--    1 fisyak    star       832924570 Dec 31  2017 TFG17f.030216.tz
+-rw-r--r--    1 fisyak    star       916420911 Dec 31  2017 TFG17g.030216.tz
+-rw-r--r--    1 fisyak    star       931428024 Dec 31  2017 TFG17h.030216.tz
+-rw-r--r--    1 fisyak    star       932941346 Dec 31  2017 TFG17i.030216.tz
+-rw-r--r--    1 fisyak    star       916167394 Dec 31  2017 TFG17j.030216.tz
+-rw-r--r--    1 fisyak    star       955947015 Dec 31  2017 TFG17k.030216.tz
+-rw-r--r--    1 fisyak    star      1005671473 Dec 31  2017 TFG17n.030216.tz
+-rw-r--r--    1 fisyak    star       987068717 Dec 31  2017 TFG17o.030216.tz
+-rw-r--r--    1 fisyak    star       986366858 Dec 31  2017 TFG17q.030216.tz
+-rw-r--r--    1 fisyak    star       984328429 Dec 31  2017 TFG17r.030216.tz
+-rw-r--r--    1 fisyak    star       999869501 Dec 31  2017 TFG17u.030216.tz
+-rw-r--r--    1 fisyak    star      1001324620 Dec 31  2017 TFG17v.030216.tz
+-rw-r--r--    1 fisyak    star      1032522303 Jul 17  2019 TFG18a.071719.tz
+-rw-r--r--    1 fisyak    star      1016221556 Jul 17  2019 TFG18a.1.071719.tz
+-rw-r--r--    1 fisyak    star      1002906481 Jul 17  2019 TFG18b.071719.tz
+-rw-r--r--    1 fisyak    star      1002010046 Jul 17  2019 TFG18c.071719.tz
+-rw-r--r--    1 fisyak    star      1004756752 Jul 17  2019 TFG18d.071719.tz
+-rw-r--r--    1 fisyak    star      1067469340 Jul 17  2019 TFG18e.071719.tz
+-rw-r--r--    1 fisyak    star      1021166724 Jul 17  2019 TFG18f.071719.tz
+-rw-r--r--    1 fisyak    star       822339756 Jul 17  2019 TFG18g.071719.tz
+-rw-r--r--    1 fisyak    star       827336705 Jul 17  2019 TFG18i.071719.tz
+-rw-r--r--    1 fisyak    star       813837469 Jul 17  2019 TFG18j.071719.tz
+-rw-r--r--    1 fisyak    star       858986601 Jul 17  2019 TFG18k.071719.tz
+-rw-r--r--    1 fisyak    star       859064941 Jul 17  2019 TFG18l.071719.tz
+-rw-r--r--    1 fisyak    star      1010891802 Jul 17  2019 TFG18m.071719.tz
+-rw-r--r--    1 fisyak    star       914496817 Jul 17  2019 TFG18n.071719.tz
+-rw-r--r--    1 fisyak    star       989156578 Jul 17  2019 TFG18p.071719.tz
+-rw-r--r--    1 fisyak    star       988846540 Jul 17  2019 TFG18q.071719.tz
+-rw-r--r--    1 fisyak    star      1030018014 Jul 17  2019 TFG19a.071719.tz
+-rw-r--r--    1 fisyak    star      1040325977 Jul 17  2019 TFG19b.071719.tz
+-rw-r--r--    1 fisyak    star      1039629298 Jul 17  2019 TFG19c.071719.tz
+-rw-r--r--    1 fisyak    star      1025274889 Jul 17  2019 TFG19d.071719.tz
+-rw-r--r--    1 fisyak    star      1063229587 Jul 17  2019 TFG19e.071719.tz
+-rw-r--r--    1 fisyak    star      1067276526 Jul 29  2020 TFG19f.072920.tz            
+
+
+[starsub02] ~/work/STAR/packages $ dir -d TFG*
+drwxr-xr-x+ 41 fisyak rhstar 256K Feb  5 11:39 TFG/
+drwxr-xr-x+ 18 fisyak rhstar 256K Jul 17  2024 TFG16a/
+drwxr-xr-x+ 26 fisyak rhstar 256K Jul 29  2020 TFG17j/
+drwxr-xr-x+ 23 fisyak rhstar 256K Aug  7  2024 TFG17v/
+drwxr-xr-x+ 34 fisyak rhstar 256K Aug  7  2024 TFG18n/
+drwxr-xr-x+ 34 fisyak rhstar 256K Jul 23  2019 TFG19a/
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19e/
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19e5/
+drwxr-xr-x+ 33 fisyak rhstar 256K Jul 29  2020 TFG19f/
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19g/
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19h/
+drwxr-xr-x+ 33 fisyak rhstar 256K May 14  2025 TFG19j/
+drwxr-xr-x+ 33 fisyak rhstar 256K Dec  6  2019 TFG19k/
+drwxr-xr-x+ 34 fisyak rhstar 256K Dec  9  2019 TFG19l/
+drwxr-xr-x+ 31 fisyak rhstar 256K Jan 16  2020 TFG19m/
+drwxr-xr-x+ 31 fisyak rhstar 256K Sep 16  2020 TFG20a/
+drwxr-xr-x+ 31 fisyak rhstar 256K Mar 12  2020 TFG20b/
+drwxr-xr-x+ 31 fisyak rhstar 256K Aug  1  2020 TFG20c/
+lrwxrwxrwx   1 fisyak rhstar   44 Aug 20  2020 TFG20g -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG20g/
+lrwxrwxrwx   1 fisyak rhstar   45 Sep  7  2020 TFG20g6 -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG20g6/
+lrwxrwxrwx   1 fisyak rhstar   44 Sep 22  2020 TFG20h -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG20h/
+lrwxrwxrwx   1 fisyak rhstar   44 Sep 30  2020 TFG20i -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG20i/
+lrwxrwxrwx   1 fisyak rhstar   44 Nov  3  2020 TFG20j -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG20j/
+lrwxrwxrwx   1 fisyak rhstar   44 Nov 16  2020 TFG20k -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG20k/
+drwxr-xr-x+ 31 fisyak rhstar 256K Feb 18  2021 TFG21c/
+drwxr-xr-x+ 31 fisyak rhstar 256K Mar 31  2021 TFG21d/
+drwxr-xr-x+ 31 fisyak rhstar 256K May 21  2021 TFG21e/
+drwxr-xr-x+ 30 fisyak rhstar 256K Jun  7  2021 TFG21f/
+drwxr-xr-x+ 30 fisyak rhstar 256K Aug 22  2021 TFG21g/
+drwxr-xr-x+ 34 fisyak rhstar 256K Aug 22  2021 TFG21j/
+drwxr-xr-x+ 35 fisyak rhstar 256K Aug 25  2021 TFG21k/
+drwxr-xr-x+ 35 fisyak rhstar 256K Sep  9  2021 TFG21l/
+drwxr-xr-x+ 32 fisyak rhstar 256K Nov  1  2021 TFG21m/
+drwxr-xr-x+ 32 fisyak rhstar 256K Nov 24  2021 TFG21n/
+drwxr-xr-x+ 32 fisyak rhstar 256K Jan 16  2022 TFG22a/
+drwxr-xr-x+ 32 fisyak rhstar 256K Apr 29  2022 TFG22b/
+drwxr-xr-x+ 32 fisyak rhstar 256K Apr 22  2022 TFG22c/
+drwxr-xr-x+ 35 fisyak rhstar 256K May 13  2022 TFG22d/
+drwxr-xr-x+ 34 fisyak rhstar 256K May 24  2022 TFG22e/
+drwxr-xr-x+ 34 fisyak rhstar 256K Jun  4  2022 TFG22f/
+drwxr-xr-x+ 35 fisyak rhstar 256K Aug 12  2022 TFG22g/
+drwxr-xr-x+ 36 fisyak rhstar 256K Jan  6  2023 TFG22j/
+drwxr-xr-x+ 42 fisyak rhstar 256K Aug 22  2023 TFG23a/
+lrwxrwxrwx   1 fisyak rhstar   44 Mar 17  2023 TFG23b -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG23b/
+lrwxrwxrwx   1 fisyak rhstar   44 Aug  1  2023 TFG23d -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG23d/
+drwxr-xr-x+ 41 fisyak rhstar 256K Sep 24  2023 TFG23e/
+drwxr-xr-x+ 41 fisyak rhstar 256K Nov  7  2023 TFG23f/
+drwxr-xr-x+ 41 fisyak rhstar 256K Jan  8  2024 TFG24a/
+drwxr-xr-x+ 40 fisyak rhstar 256K May  6  2024 TFG24b/
+lrwxrwxrwx   1 fisyak rhstar   44 Aug  8  2024 TFG24c -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG24c/
+drwxr-xr-x+ 18 fisyak rhstar 256K Sep 15  2024 TFG24c.Export.Mini/
+lrwxrwxrwx   1 fisyak rhstar   44 Nov  9  2024 TFG24e -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG24e/
+drwxr-xr-x+ 38 fisyak rhstar 256K Nov  6  2024 TFG24f/
+lrwxrwxrwx   1 fisyak rhstar   44 Nov 26  2024 TFG24g -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG24g/
+lrwxrwxrwx   1 fisyak rhstar   44 Dec 30  2024 TFG24i -> /gpfs01/star/pwg/fisyak/STAR/packages/TFG24i/
+drwxr-xr-x+ 36 fisyak rhstar 256K Mar  6  2025 TFG25a/
+drwxr-xr-x+ 40 fisyak rhstar 256K Mar 21  2025 TFG25b/
+drwxr-xr-x+ 46 fisyak rhstar 256K May 13  2025 TFG25c/
+lrwxrwxrwx   1 fisyak rhstar   44 Jun 28  2025 TFG25d -> /gpfs01/star/pwg/fisyak/STAR/packages/TFG25d/
+lrwxrwxrwx   1 fisyak rhstar   44 Jul 13  2025 TFG25e -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG25e/
+drwxr-xr-x+ 39 fisyak rhstar 256K Aug 18 10:08 TFG25f/
+lrwxrwxrwx   1 fisyak rhstar   44 Dec  5 16:23 TFG25k -> /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG25k/
+drwxr-xr-x+ 18 fisyak rhstar 256K Aug 31  2024 TFG.Export/
+lrwxrwxrwx   1 fisyak rhstar   53 Sep  1 10:04 TFG.HOLD.083025 -> /gpfs01/star/pwg/fisyak/STAR/packages/TFG.HOLD.083025/
+drwxr-xr-x+ 16 fisyak rhstar 256K Aug 15  2024 TFG.star-sw.MERGE/
+ 
+[starsub02] ~/work/STAR/packages $ dir -d TFG* | grep -v '\->'
+drwxr-xr-x+ 41 fisyak rhstar 256K Feb  5 11:39 TFG/
+    May  6  2016 TFG16a.050616.tz	    
+    May  6  2016 TFG16a.git.050616.tz    
+    Dec 31  2017 TFG16b.030216.tz	    
+    Dec 31  2017 TFG16e.030216.tz	    
+    Dec 31  2017 TFG17a.030216.tz	    
+    Dec 31  2017 TFG17b.030216.tz	    
+    Dec 31  2017 TFG17c.030216.tz	    
+    Dec 31  2017 TFG17d.030216.tz	    
+    Dec 31  2017 TFG17e.030216.tz	    
+    Dec 31  2017 TFG17f.030216.tz	    
+    Dec 31  2017 TFG17g.030216.tz	    
+    Dec 31  2017 TFG17h.030216.tz	    
+    Dec 31  2017 TFG17i.030216.tz	    
+drwxr-xr-x+ 18 fisyak rhstar 256K Jul 17  2024 TFG16a/                 Dec 31  2017 TFG17j.030216.tz	    
+drwxr-xr-x+ 26 fisyak rhstar 256K Jul 29  2020 TFG17j/		       Dec 31  2017 TFG17k.030216.tz	    
+drwxr-xr-x+ 23 fisyak rhstar 256K Aug  7  2024 TFG17v/		       Dec 31  2017 TFG17n.030216.tz	    
+drwxr-xr-x+ 34 fisyak rhstar 256K Aug  7  2024 TFG18n/		       Dec 31  2017 TFG17o.030216.tz	    
+drwxr-xr-x+ 34 fisyak rhstar 256K Jul 23  2019 TFG19a/		       Dec 31  2017 TFG17q.030216.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19e/		       Dec 31  2017 TFG17r.030216.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19e5/		       Dec 31  2017 TFG17u.030216.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K Jul 29  2020 TFG19f/		       Dec 31  2017 TFG17v.030216.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19g/		       Jul 17  2019 TFG18a.071719.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K Aug  7  2024 TFG19h/		       Jul 17  2019 TFG18a.1.071719.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K May 14  2025 TFG19j/		       Jul 17  2019 TFG18b.071719.tz	    
+drwxr-xr-x+ 33 fisyak rhstar 256K Dec  6  2019 TFG19k/		       Jul 17  2019 TFG18c.071719.tz	    
+drwxr-xr-x+ 34 fisyak rhstar 256K Dec  9  2019 TFG19l/		       Jul 17  2019 TFG18d.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K Jan 16  2020 TFG19m/		       Jul 17  2019 TFG18e.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K Sep 16  2020 TFG20a/		       Jul 17  2019 TFG18f.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K Mar 12  2020 TFG20b/		       Jul 17  2019 TFG18g.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K Aug  1  2020 TFG20c/		       Jul 17  2019 TFG18i.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K Feb 18  2021 TFG21c/		       Jul 17  2019 TFG18j.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K Mar 31  2021 TFG21d/		       Jul 17  2019 TFG18k.071719.tz	    
+drwxr-xr-x+ 31 fisyak rhstar 256K May 21  2021 TFG21e/		       Jul 17  2019 TFG18l.071719.tz	    
+drwxr-xr-x+ 30 fisyak rhstar 256K Jun  7  2021 TFG21f/		       Jul 17  2019 TFG18m.071719.tz	    
+drwxr-xr-x+ 30 fisyak rhstar 256K Aug 22  2021 TFG21g/		       Jul 17  2019 TFG18n.071719.tz	    
+drwxr-xr-x+ 34 fisyak rhstar 256K Aug 22  2021 TFG21j/		       Jul 17  2019 TFG18p.071719.tz	    
+drwxr-xr-x+ 35 fisyak rhstar 256K Aug 25  2021 TFG21k/		       Jul 17  2019 TFG18q.071719.tz	    
+drwxr-xr-x+ 35 fisyak rhstar 256K Sep  9  2021 TFG21l/		       Jul 17  2019 TFG19a.071719.tz	    
+drwxr-xr-x+ 32 fisyak rhstar 256K Nov  1  2021 TFG21m/		       Jul 17  2019 TFG19b.071719.tz	    
+drwxr-xr-x+ 32 fisyak rhstar 256K Nov 24  2021 TFG21n/		       Jul 17  2019 TFG19c.071719.tz	    
+drwxr-xr-x+ 32 fisyak rhstar 256K Jan 16  2022 TFG22a/		       Jul 17  2019 TFG19d.071719.tz	    
+drwxr-xr-x+ 32 fisyak rhstar 256K Apr 29  2022 TFG22b/		       Jul 17  2019 TFG19e.071719.tz	    
+drwxr-xr-x+ 32 fisyak rhstar 256K Apr 22  2022 TFG22c/		       Jul 29  2020 TFG19f.072920.tz        
+drwxr-xr-x+ 35 fisyak rhstar 256K May 13  2022 TFG22d/		   
+drwxr-xr-x+ 34 fisyak rhstar 256K May 24  2022 TFG22e/		   
+drwxr-xr-x+ 34 fisyak rhstar 256K Jun  4  2022 TFG22f/		   
+drwxr-xr-x+ 35 fisyak rhstar 256K Aug 12  2022 TFG22g/		   
+drwxr-xr-x+ 36 fisyak rhstar 256K Jan  6  2023 TFG22j/		   
+drwxr-xr-x+ 42 fisyak rhstar 256K Aug 22  2023 TFG23a/		   
+drwxr-xr-x+ 41 fisyak rhstar 256K Sep 24  2023 TFG23e/		   
+drwxr-xr-x+ 41 fisyak rhstar 256K Nov  7  2023 TFG23f/		   
+drwxr-xr-x+ 41 fisyak rhstar 256K Jan  8  2024 TFG24a/		   
+drwxr-xr-x+ 40 fisyak rhstar 256K May  6  2024 TFG24b/		   
+drwxr-xr-x+ 18 fisyak rhstar 256K Sep 15  2024 TFG24c.Export.Mini/ 
+drwxr-xr-x+ 38 fisyak rhstar 256K Nov  6  2024 TFG24f/		   
+drwxr-xr-x+ 36 fisyak rhstar 256K Mar  6  2025 TFG25a/		   
+drwxr-xr-x+ 40 fisyak rhstar 256K Mar 21  2025 TFG25b/		   
+drwxr-xr-x+ 46 fisyak rhstar 256K May 13  2025 TFG25c/		   
+drwxr-xr-x+ 39 fisyak rhstar 256K Aug 18 10:08 TFG25f/		   
+drwxr-xr-x+ 18 fisyak rhstar 256K Aug 31  2024 TFG.Export/	   
+drwxr-xr-x+ 16 fisyak rhstar 256K Aug 15  2024 TFG.star-sw.MERGE/  
+
+================================================================================
+02/06/2026
+[cvmfswrite07] ~/work/FastOffline2026
+foreach p 13p5GeV_fixedTarget_2026 8p65GeV_fixedTarget_2026 9p8GeV_fixedTarget_2026)
+   root.exe -q -b lMuDst.C 'MudEdx.C+("FXT/production_'${p}'/ReversedFullField/dev/2026/*/*/*MuDst.root","'${p}'.root")' >& ${p}.log &
+end
+
+================================================================================
+02/08/2026
+starsub02] ~/TFG/TFG26a/2025/RF $ root.exe V1*/*.T.root DrawList.C+
+root.exe [21] rls()
+_file0  st_physics_adc_26336041_raw_2400003.tags.Plots.T        V1010_1330/st_physics_adc_26336041_raw_2400003.tags.Plots.T.root
+_file1  st_physics_adc_26336040_raw_2400004.tags.Plots.T        V1030_1350/st_physics_adc_26336040_raw_2400004.tags.Plots.T.root
+_file2  st_physics_adc_26336039_raw_2400003.tags.Plots.T        V1050_1370/st_physics_adc_26336039_raw_2400003.tags.Plots.T.root
+_file3  st_physics_adc_26336042_raw_2400002.tags.Plots.T        V1070_1390B/st_physics_adc_26336042_raw_2400002.tags.Plots.T.root        <======= 
+_file4  st_physics_adc_26336038_raw_2400003.tags.Plots.T        V1070_1390/st_physics_adc_26336038_raw_2400003.tags.Plots.T.root
+root.exe [8] .L Gamma.C+
+root.exe [9] TF1 *g = GMP()
+root.exe [13] g->ReleaseParameter(1)
+root.exe [10] _file0->cd()
+rroot.exe [14] ADCsumOuter->Fit(g,"eri","",20,150)
+Error in <GSLError>: Error 21 in qags.c at 552 : bad integrand behavior found in the integration interval
+Error in <GSLError>: Error 18 in qags.c at 557 : roundoff error detected in the extrapolation table
+Warning in <Fit>: Abnormal termination of minimization.
+ FCN=873757 FROM MIGRAD    STATUS=FAILED        604 CALLS         605 TOTAL
+                     EDM=99388.8    STRATEGY= 1  ERROR MATRIX UNCERTAINTY 100.0 per cent
+  EXT PARAMETER                APPROXIMATE        STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.73602e+01   3.36753e+01   0.00000e+00  -1.39406e+07
+   2  mu           6.05541e+01   1.28810e+00   0.00000e+00  -7.28018e+03
+   3  sigma        2.59098e-01   1.48780e+00  -0.00000e+00   2.77047e+06
+   4  gamma        1.29002e+01   3.10333e+01   0.00000e+00  -2.09047e+06
+   5  grass        5.11731e+02   7.07613e+02  -0.00000e+00   3.85996e+02
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)28170592
+root.exe [15] _file1->cd()
+(Bool_t)1
+root.exe [16] ADCsumOuter->Fit(g,"eri","",20,150)
+ FCN=533284 FROM MINOS     STATUS=PROBLEMS       36 CALLS        1014 TOTAL
+                     EDM=5.91485e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.69356e+01   2.53503e-04   1.35110e-08  -6.02598e-02
+   2  mu           5.61557e+01   6.92913e-03   1.02603e-05   2.79423e-03
+   3  sigma        2.00000e+00   3.02884e-06   7.59843e-08** at limit **
+   4  gamma        2.45891e+00   2.47611e-04   5.13840e-08  -4.72721e-01
+   5  grass        1.00000e+03   1.94080e+00   1.94080e+00** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)28888960
+root.exe [17] _file2->cd()
+(Bool_t)1
+root.exe [18] ADCsumOuter->Fit(g,"eri","",20,150)
+ FCN=479725 FROM MINOS     STATUS=PROBLEMS       36 CALLS         318 TOTAL
+                     EDM=2.96063e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.71841e+01   2.12584e-04   1.90363e-08   1.73735e-01
+   2  mu           6.03950e+01   6.40837e-03   5.37271e-06   2.80558e-04
+   3  sigma        2.00000e+00   2.52719e-06   2.90167e-08** at limit **
+   4  gamma        2.48684e+00   2.05634e-04   3.65275e-08   2.45073e-02
+   5  grass        1.00000e+03   2.85289e+00   2.85289e+00** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)28845968
+
+root.exe [19] _file3->cd()
+(Bool_t)1
+root.exe [20] ADCsumOuter->Fit(g,"eri","",20,150)
+ FCN=479725 FROM MINOS     STATUS=PROBLEMS       36 CALLS         356 TOTAL
+                     EDM=2.05549e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.71841e+01   2.13456e-04   2.13896e-08   2.21458e+00
+   2  mu           6.03950e+01   6.49680e-03   2.83262e-06   6.95410e-03
+   3  sigma        2.00000e+00   2.52716e-06   9.47258e-08** at limit **
+   4  gamma        2.48684e+00   2.08245e-04   2.31591e-08  -9.71525e-01
+   5  grass        1.00000e+03   2.85258e+00   2.85258e+00** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)28948896
+
+[starsub02] ~/TFG/TFG26a/2025/RF $ root.exe V1*/*.T.root DrawList.C+
+Attaching file V1010_1330/st_physics_adc_26336041_raw_2400003.tags.Plots.T.root as _file0...
+Attaching file V1030_1350/st_physics_adc_26336040_raw_2400004.tags.Plots.T.root as _file1...
+Attaching file V1050_1370/st_physics_adc_26336039_raw_2400003.tags.Plots.T.root as _file2...
+Attaching file V1070_1390/st_physics_adc_26336038_raw_2400003.tags.Plots.T.root as _file4...
+
+.L Gamma.C+
+TF1 *g = GMP()
+ g->ReleaseParameter(1)
+ _file0->cd()
+root.exe [49] _file0->cd()
+(Bool_t)1
+root.exe [50]  ADCsumInner->Fit(g,"erim","",20,150)
+ FCN=25390.7 FROM MINOS     STATUS=PROBLEMS       36 CALLS         312 TOTAL
+                     EDM=1.29834e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.49709e+01   5.27494e-04   1.66034e-06  -8.63443e+00
+   2  mu           7.91081e+01   3.56126e-02   3.79252e-04   3.05734e-03
+   3  sigma        2.00000e+00   4.14247e-05  -6.80521e-07** at limit **
+   4  gamma        2.87018e+00   8.07453e-04   2.36020e-06  -2.72884e+00
+   5  grass        1.00000e+03   2.89690e+01   2.89690e+01** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)46825056
+root.exe [51] _file1->cd()
+(Bool_t)1
+root.exe [52]  ADCsumInner->Fit(g,"erim","",20,150)
+ FCN=53124.7 FROM MINOS     STATUS=PROBLEMS       37 CALLS         393 TOTAL
+                     EDM=3.82613e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.53807e+01   4.48736e-04   4.99527e-07   8.06693e+00
+   2  mu           7.37081e+01   2.54382e-02   1.46161e-04  -1.27322e-02
+   3  sigma        2.00000e+00   2.31170e-05   8.06667e-07** at limit **
+   4  gamma        2.79911e+00   6.36091e-04   7.73806e-07   8.32885e+00
+   5  grass        1.00000e+03   1.23789e+01   1.23789e+01** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)46258208
+root.exe [53] _file2->cd()
+(Bool_t)1
+root.exe [54]  ADCsumInner->Fit(g,"erim","",20,150)
+ FCN=92121.4 FROM MINOS     STATUS=PROBLEMS       36 CALLS         374 TOTAL
+                     EDM=9.63619e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.58568e+01   3.62990e-04   2.30250e-07  -1.94564e+00
+   2  mu           7.10697e+01   1.82363e-02   7.52824e-05   1.39537e-02
+   3  sigma        2.00000e+00   1.28715e-05   2.57977e-07** at limit **
+   4  gamma        2.74055e+00   4.70888e-04   3.79724e-07  -6.19363e+00
+   5  grass        1.00000e+03   9.15110e+00   9.15110e+00** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)46333536
+root.exe [55] _file3->cd()
+(Bool_t)1
+root.exe [56]  ADCsumInner->Fit(g,"erim","",20,150)
+ FCN=92121.4 FROM MINOS     STATUS=PROBLEMS       36 CALLS         295 TOTAL
+                     EDM=7.95198e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  normL        1.58568e+01   3.62964e-04   2.02303e-07  -1.16284e+00
+   2  mu           7.10697e+01   1.82359e-02   5.97504e-05   4.27257e-04
+   3  sigma        2.00000e+00   1.28717e-05  -9.68188e-07** at limit **
+   4  gamma        2.74055e+00   4.70862e-04   3.30020e-07  -6.68527e-01
+   5  grass        1.00000e+03   9.15067e+00   9.15067e+00** at limit **
+   6  sign         1.00000e+00     fixed    
+(class TFitResultPtr)41791632
+--------------------------------------------------------------------------------
+VI 1070 27024011 - 27024029
+   1100 27024030 - 27020401
+   1120 27024043 - 
+========================================================================================
+02/12/2026
+[starsub02] ~/work/kfp $ 
+foreach d (`ls -1d 2*/* | grep -v root`)
+  echo "${d}"
+  set b = `basename ${d}`
+  ls -1d ${d}/${b}*.root
+  set n = `ls -1d ${d}/${b}*.root  | wc -l`
+  if (${n} != 1) 	echo "==================== $n"
+  if (${n} == 1)	echo  "$n"
+end
+
+  
+ root.exe FF_OO_200GeV_2021.P24iy.dEdxA.root brtw.C+ K0sBW.C ppbarM2.C+ lBichsel.C DrawdEdx.C+
+ root.exe FF_OO_200GeV_2021.P24iy.dEdxA.root DrawSignalBg7.C DrawSignalBg_HL34.C
+
+foreach d (`ls -1d 2*/* | grep -v root`)
+  cd ${d}
+  ln -s ~/macros/.sl* .
+  ln -s ~/macros/.al* .
+  set b = `basename ${d}`
+  root.exe -q ${b}*.root  brtw.C+ K0sBW.C ppbarM2.C+ lBichsel.C DrawdEdx.C+
+  root.exe -q ${b}*.root  DrawSignalBg7.C DrawSignalBg_HL34.C
+  cd -
+end
+foreach d (`ls -1d 2*/* | grep -v root`)
+  cd ${d}
+  rm Ks*.png *.txt
+  set b = `basename ${d}`
+  root.exe -q ${b}*.root  brtw.C+ K0sBW.C
+  cd -
+end
+================================================================================
+03/21/2026 2026 fxt calibartion sample
+[starsub02] ~/work/daq $ dir -d /star/data*/reco/production_*2026/*/P25iy_calib/*/*/*/*event.root | tee P25iy_calib
+[starsub02] ~/work/daq $ awk -F\/ '{print "/home/starsink/raw/daq/"$8"/"$9"/"$10"/"$11}' P25iy_calib | sed -e 's/.event.root/.daq/' | tee P25iy_calib.daq.list
+================================================================================
+03/24/2026
+foreach p (muon+ muon- pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton He3 alpha)
+	if (! -d ${p}) mkdir ${p}
+        cd ${p}
+	ln -s ../${p}*200.root .
+	ln -s ~/macros/.al* .
+        if (! -r AdcSparse8.root) root.exe -q -b AdcTpcT.C >& AdcTpcT8.log &
+	if (! -r SparseT0Flagged.root.T0.root) root.exe -q -b T0offset.C >& T0offset.log &
+        if (! -r ${p}.root) hadd -T ${p}.root ${p}*[0-9].root >& hadd.log &
+        cd -
+end
+################################################################################
+foreach p (muon+ muon- pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton He3 alpha)
+	if (! -d ${p}) mkdir ${p}
+        cd ${p}
+        if (! -r AdcSparse8.root) root.exe -q -b AdcTpcT.C >& AdcTpcT8.log &
+	if (! -r SparseT0Flagged.root.T0.root) root.exe -q -b T0offset.C >& T0offset.log &
+        if (! -r ${p}.root) hadd -T ${p}.root ${p}*[0-9].root >& hadd.log &
+        cd -
+end
+
+foreach f (`grep -l fix */*/hadd.log`)
+  set d = `dirname ${f}`
+  set p = `basename ${d}`
+  cd ${d}
+  grep fix hadd.log | awk '{print $12}' | sed -e 's/,//' | sort -u | xargs rm 
+  mv ${p}.root ${p}.root1
+  hadd -T ${p}.root ${p}*[0-9].root >& hadd.log &
+  cd -
+end
+
+foreach p (muon+ muon- pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton He3 alpha)
+        cd ${p}
+   	root.exe -q -b lBichsel.C AdcSparse8*.root 'dEdxFit.C+("Sparse","GP")' >& dEdxFit.log &
+        cd -
+end
+
+foreach f (`ls -1d  */*/AdcSparse8.root`)
+  set d = `dirname ${f}`
+  cd ${d}
+  root.exe -q -b lBichsel.C AdcSparse8*.root 'dEdxFit.C+("Sparse","GP")' >& dEdxFit.log &
+  cd -
+end
+
+
+[cvmfswrite06] ~/TFG/TPC23/2025 $ root.exe */*/Sparse*Adc*.root FitPDraw.C+
+
+There is a separation between alpha & He3 and one charge particles ?
+[cvmfswrite06] ~/TFG/TPC23/2025 $ ls -1d */*/Sparse*Adc*.root | egrep -v '(alpha|He3)' | xargs
+COLE/deuteron/SparseGPAdcSparse8.root COLE/electron+/SparseGPAdcSparse8.root COLE/electron-/SparseGPAdcSparse8.root COLE/kaon+/SparseGPAdcSparse8.root COLE/kaon-/SparseGPAdcSparse8.root COLE/pion+/SparseGPAdcSparse8.root COLE/pion-/SparseGPAdcSparse8.root COLE/proton+/SparseGPAdcSparse8.root COLE/proton-/SparseGPAdcSparse8.root COLE/triton/SparseGPAdcSparse8.root FXTE/deuteron/SparseGPAdcSparse8.root FXTE/electron+/SparseGPAdcSparse8.root FXTE/electron-/SparseGPAdcSparse8.root FXTE/kaon+/SparseGPAdcSparse8.root FXTE/kaon-/SparseGPAdcSparse8.root FXTE/pion+/SparseGPAdcSparse8.root FXTE/pion-/SparseGPAdcSparse8.root FXTE/proton+/SparseGPAdcSparse8.root FXTE/proton-/SparseGPAdcSparse8.root FXTE/triton/SparseGPAdcSparse8.root
+
+
+[cvmfswrite06] ~/TFG/TPC23/2025 $ root.exe COLE/electron+/SparseGPAdcSparse8.root COLE/electron-/SparseGPAdcSparse8.root COLE/kaon+/SparseGPAdcSparse8.root COLE/kaon-/SparseGPAdcSparse8.root COLE/pion+/SparseGPAdcSparse8.root COLE/pion-/SparseGPAdcSparse8.root COLE/proton+/SparseGPAdcSparse8.root COLE/proton-/SparseGPAdcSparse8.root COLE/triton/SparseGPAdcSparse8.root FXTE/deuteron/SparseGPAdcSparse8.root FXTE/electron+/SparseGPAdcSparse8.root FXTE/electron-/SparseGPAdcSparse8.root FXTE/kaon+/SparseGPAdcSparse8.root FXTE/kaon-/SparseGPAdcSparse8.root FXTE/pion+/SparseGPAdcSparse8.root FXTE/pion-/SparseGPAdcSparse8.root FXTE/proton+/SparseGPAdcSparse8.root FXTE/proton-/SparseGPAdcSparse8.root FXTE/triton/SparseGPAdcSparse8.root Chain.C
+
+
+foreach f (`ls -1d */*/SparseT0Flagged.root.T0.root`)
+    set d = `dirname ${f}`
+    set p = `basename ${d}`;
+    cd ${d}
+    foreach h (dPadI dPadO dTimeI dTimeO)
+      root.exe -q -b lBichsel.C SparseT0Flagged*.root  'dEdxFit.C+("'${h}'","GP")' >& dEdxFitGP_${h}.log &
+    end
+    cd -
+end
+
+pion-
+root.exe [2] AdcneI->Draw("colz")
+Info in <TCanvas::MakeDefCanvas>:  created default TCanvas with name c1
+root.exe [3] c1->SetLogz(1)
+root.exe [4] AdcneI->Fit("pol0")
+
+****************************************
+Minimizer is Linear
+Chi2                      =  2.49149e+09
+NDf                       =         8584
+p0                        =     0.254062   +/-   0.00305016  
+(class TFitResultPtr)18544272
+root.exe [5] AdcneO->Draw("colz")
+root.exe [6] AdcneO->Fit("pol0")
+
+****************************************
+Minimizer is Linear
+Chi2                      =  1.87056e+09
+NDf                       =         9045
+p0                        =     0.721883   +/-   0.00290407  
+
+All
+root.exe [3]  AdcneI->Fit("pol0")
+
+****************************************
+Minimizer is Linear
+Chi2                      =  1.93036e+10
+NDf                       =        10499
+p0                        =      0.28441   +/-   0.00275706  
+(class TFitResultPtr)25265792
+root.exe [5]  AdcneO->Fit("pol0")
+
+****************************************
+Minimizer is Linear
+Chi2                      =  1.33379e+10
+NDf                       =        11132
+p0                        =     0.749607   +/-   0.0026399   
+(class TFitResultPtr)38780592
+root.exe [10] AdcneI_py->Fit("gaus")
+ FCN=2.93107e+07 FROM MIGRAD    STATUS=CONVERGED      83 CALLS          84 TOTAL
+                     EDM=4.61678e-10    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   1.4 per cent
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.57531e+07   3.06932e+03   8.88733e-01   8.95203e-09
+   2  Mean         2.76330e-01   8.99835e-06  -1.00500e-08  -2.78260e+00
+   3  Sigma        2.05861e-01   7.35153e-06  -1.68286e-09  -6.29383e-02
+root.exe [11] AdcneO_py->Fit("gaus")
+ FCN=3.30647e+07 FROM MIGRAD    STATUS=CONVERGED     105 CALLS         106 TOTAL
+                     EDM=1.8796e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     5.88718e+07   4.19099e+03   7.39184e+03  -2.40105e-08
+   2  Mean         7.50809e-01   6.75093e-06   1.89491e-05  -2.11634e+01
+   3  Sigma        1.34431e-01   6.78253e-06   2.24706e-05  -5.81408e+01
+[cvmfswrite06] ~/TFG/TPC23/2025 $ root.exe */*/dPad*.root */*/dTime*.root  Chain.C
+root.exe [102] FitP->Draw("mu","dsigma>0&&dsigma<0.1&&dmu<0.1")
+================================================================================
+03/25/2026 
+eta-2.2
+$16 = void
+(gdb) p n_P
+$18 = 208.09539289216855
+(gdb) p PiD.Print("")
+Fit     I =    3.593 keV +/-    7.847 % 
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Res.:   -0.03597   -0.7464  -0.02954    0.3117    0.2919    -1.832    -2.476    -2.825    -3.263
+Res.C:  -0.03597   -0.7464  -0.02954    0.3117    0.2919    -1.832    -2.476    -2.825    -3.263
+Pull:    -0.4584    -9.511   -0.3764     3.972      3.72    -23.35    -31.56       -36    -41.59
+PullC:   -0.4584    -9.511   -0.3764     3.972      3.72    -23.35    -31.56       -36    -41.59
+FitU    I =    3.593 keV +/-    7.847 % 
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Res.:   -0.03597   -0.7464  -0.02954    0.3117    0.2919    -1.832    -2.476    -2.825    -3.263
+Res.C:  -0.03597   -0.7464  -0.02954    0.3117    0.2919    -1.832    -2.476    -2.825    -3.263
+Pull:    -0.4584    -9.511   -0.3764     3.972      3.72    -23.35    -31.56       -36    -41.59
+PullC:   -0.4584    -9.511   -0.3764     3.972      3.72    -23.35    -31.56       -36    -41.59
+dNdx    dN/dx =   28.611 +/-    4.703 % 
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Pred:      36.43     68.61     36.23     26.91     27.37     186.2     343.3     480.7     737.7
+PredC:     36.43     68.61     36.23     26.91     27.37     186.2     343.3     480.7     737.7
+Pull:     -5.139     -18.6    -5.019     1.307    0.9433    -39.83    -52.83    -59.99    -69.09
+PullC:    -5.139     -18.6    -5.019     1.307    0.9433    -39.83    -52.83    -59.99    -69.09
+dNdxU
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Pred:      36.43     68.61     36.23     26.91     27.37     186.2     343.3     480.7     737.7
+PredC:     36.43     68.61     36.23     26.91     27.37     186.2     343.3     480.7     737.7
+Res.:    -0.2417   -0.8747    -0.236   0.06147   0.04437    -1.873    -2.485    -2.821     -3.25
+ResC:    -0.2417   -0.8747    -0.236   0.06147   0.04437    -1.873    -2.485    -2.821     -3.25
+Pull:     -5.139     -18.6    -5.019     1.307    0.9433    -39.83    -52.83    -59.99    -69.09
+PullC:    -5.139     -18.6    -5.019     1.307    0.9433    -39.83    -52.83    -59.99    -69.09
+TPC:    -11     321
+All:    -11     321
+gdb) p FdEdx[k].F
+$22 = {mdx = 7.73689127, 
+mdE = {fdE = 2.64674363e-05, fdEdx = 3.42093949e-06, fdEdxL = -12.5855951, fddEdxL = 0, fdEdxN = 0}, 
+mdE20 = {fdE = 2.10089956e-06, fdEdx = 2.71543115e-07, fdEdxL = -15.1191444, fddEdxL = 0, fdEdxN = 0}, 
+mdEmax = {fdE = 0.00129968009, fdEdx = 0.000167984792,     fdEdxL = -8.69163704, fddEdxL = 0, fdEdxN = 0}}
+(gdb) p zdEMPV
+$17 = -10.639140065318198
+(gdb) p FdEdx[k].F
+$23 = {mdx = 7.73689127, 
+mdE = {fdE = 2.64674363e-05, fdEdx = 3.42093949e-06, fdEdxL = -12.5855951, fddEdxL = 0, fdEdxN = -1.94645512}, 
+mdE20 = {fdE = 2.10089956e-06, fdEdx = 2.71543115e-07, fdEdxL = -15.1191444, fddEdxL = 0, fdEdxN = -4.48000431}, 
+mdEmax = {fdE = 0.00129968009,     fdEdx = 0.000167984792, fdEdxL = -8.69163704, fddEdxL = 0, fdEdxN = 1.94750297}}
+
+--------------------------------------------------------------------------------
+eta-0.87
+$7 = void
+(gdb) p n_P
+$9 = 62.286994689384549
+(gdb) p PiD.Print("")
+Fit     I =    3.613 keV +/-    5.554 % 
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Res.:   -0.03053   -0.9923   -0.1723    0.3216    0.3109    -2.104    -2.729    -3.084    -3.523
+Res.C:  -0.03053   -0.9923   -0.1723    0.3216    0.3109    -2.104    -2.729    -3.084    -3.523
+Pull:    -0.5497    -17.87    -3.102      5.79     5.598    -37.89    -49.13    -55.52    -63.44
+PullC:   -0.5497    -17.87    -3.102      5.79     5.598    -37.89    -49.13    -55.52    -63.44
+FitU    I =    3.613 keV +/-    5.554 % 
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Res.:   -0.03053   -0.9923   -0.1723    0.3216    0.3109    -2.104    -2.729    -3.084    -3.523
+Res.C:  -0.03053   -0.9923   -0.1723    0.3216    0.3109    -2.104    -2.729    -3.084    -3.523
+Pull:    -0.5497    -17.87    -3.102      5.79     5.598    -37.89    -49.13    -55.52    -63.44
+PullC:   -0.5497    -17.87    -3.102      5.79     5.598    -37.89    -49.13    -55.52    -63.44
+dNdx    dN/dx =   31.329 +/-    3.972 % 
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Pred:      36.44     86.17     41.29      26.8     27.05       242     440.1       622     958.7
+PredC:     36.44     86.17     41.29      26.8     27.05       242     440.1       622     958.7
+Pull:     -3.801    -25.47    -6.947     3.928     3.695    -51.46    -66.52    -75.23    -86.12
+PullC:    -3.801    -25.47    -6.947     3.928     3.695    -51.46    -66.52    -75.23    -86.12
+dNdxU
+Part:         e+       mu+       pi+        K+         p         d         t       He3       He4
+Pred:      36.44     86.17     41.29      26.8     27.05       242     440.1       622     958.7
+PredC:     36.44     86.17     41.29      26.8     27.05       242     440.1       622     958.7
+Res.:     -0.151    -1.012    -0.276     0.156    0.1468    -2.044    -2.642    -2.988    -3.421
+ResC:     -0.151    -1.012    -0.276     0.156    0.1468    -2.044    -2.642    -2.988    -3.421
+Pull:     -3.801    -25.47    -6.947     3.928     3.695    -51.46    -66.52    -75.23    -86.12
+PullC:    -3.801    -25.47    -6.947     3.928     3.695    -51.46    -66.52    -75.23    -86.12
+TPC:    -11
+All:    -11
+(gdb)  p FdEdx[k].F
+$12 = {mdx = 2.32390237, 
+mdE = {fdE = 5.46621868e-06, fdEdx = 2.35217226e-06, fdEdxL = -12.9601717, fddEdxL = 0, fdEdxN = 0}, 
+mdE20 = {fdE = 2.04974117e-06, fdEdx = 8.82025518e-07, fdEdxL = -13.9410448, fddEdxL = 0, fdEdxN = 0}, 
+mdEmax = {fdE = 0.00126803212, fdEdx = 0.000545647752, fdEdxL = -7.51353693,     fddEdxL = 0, fdEdxN = 0}}
+(gdb) p zdEMPV
+$8 = -11.986488161589392
+
+(gdb)  p FdEdx[k].F
+$13 = {mdx = 2.32390237, 
+mdE = {fdE = 5.46621868e-06, fdEdx = 2.35217226e-06, fdEdxL = -12.9601717, fddEdxL = 0, fdEdxN = -0.973683536}, 
+mdE20 = {fdE = 2.04974117e-06, fdEdx = 8.82025518e-07, fdEdxL = -13.9410448, fddEdxL = 0, 
+fdEdxN = -1.9545567}, mdEmax = {fdE = 0.00126803212, fdEdx = 0.000545647752, 
+    fdEdxL = -7.51353693, fddEdxL = 0, fdEdxN = 4.47295141}}
+================================================================================
+
+foreach p (pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton He3 alpha)
+	if (-r ${p}.root) continue;
+   	root.exe -q -b 'dEdx.C(1e6,"../'${p}'*.event.root","'${p}'.root",2,"y2025")' >& ${p}.log &
+end
+================================================================================
+03/26/2026
+foreach p (muon+ muon-)
+	if (! -d ${p}) mkdir ${p}
+        cd ${p}
+	ln -s ../${p}*200.root .
+	ln -s ~/macros/.al* .
+        if (! -r AdcSparse8.root) root.exe -q -b AdcTpcT.C >& AdcTpcT8.log &
+	if (! -r SparseT0Flagged.root.T0.root) root.exe -q -b T0offset.C >& T0offset.log &
+        if (! -r ${p}.root) hadd -T ${p}.root ${p}*[0-9].root >& hadd.log &
+        cd -
+end
+ root.exe -q -b 'Chain.C+("muon*200.root","TpcT")' | tee Chain.log
+ mv `grep missing Chain.log | awk '{print $3}' | sed -e 's/.root/*/' ` Zombie/
+
+
+--------------------------------------------------------------------------------
+root.exe -q -b  AdcSparse8.root lBichsel.C 'dEdxFit.C+("Sparse","GP")' >& dEdxFitSparse.log &
+foreach h (dPadI dPadO dTimeI dTimeO)
+ root.exe -q -b lBichsel.C T0Sparse8.root  'dEdxFit.C+("'${h}'","GP")' >& dEdxFitGP_${h}.log &
+end
+
+hadd AdcSparse8.root */AdcSparse8.root > & haddAdc.log &
+hadd T0Sparse8.root */SparseT0Flagged.root.T0.root > & haddT0.log &
+================================================================================
+03/27/2026
+[cvmfswrite07] ~/TFG/TPC23/2025/FXTE/dEdx $ root.exe pion-.root lBichsl.C 'dEdxFit.C+("SecRow3C","G4EY","R",0)'
+
+[starsub02] ~/TFG/TPC23/2025/FXTE/dEdx $ fit.pl pion-.root proton-.root GF=SecRow3
+[starsub02] ~/TFG/TPC23/2025/FXTE/dEdx $ fit.pl pion+.root proton+.root GF=SecRow3P
+
+rm *.condor; fit.pl pion-.root proton-.root GG=SecRow3; lsf fit.xml; subcondor.csh; 
+rm *.condor; fit.pl pion+.root proton+.root GG=SecRow3P; lsf fit.xml; subcondor.csh;
+
+[starsub02] ~/work/Histograms/RunXXVI23 $ fit.pl [0-9]*.root GF=SecRow3,SecRow3P,SecRow3C,SecRow3PC
+--------------------------------------------------------------------------------
+03/28/2026
+[starsub02] ~/work/Histograms/RunXXVI23 $ root.exe SecRow3CGF*.root FitPDraw.C+
+[cvmfswrite07] ~/TFG/TPC23/2025 $ root.exe  */dEdx/SecRow3GF*pion-.root */dEdx/SecRow3PGF*pion+.root FitPDraw.C+
+================================================================================
+03/30/2026  TFG19j
+touch backup.log 
+foreach ver (TFG TFG19k TFG19l TFG19m TFG20a TFG20b TFG20c TFG21c TFG21d TFG21e TFG21f TFG21g TFG21j TFG21k TFG21l TFG21m TFG21n TFG22a TFG22b TFG22c TFG22d TFG22e TFG22f TFG22g TFG22j TFG23a TFG23e TFG23f TFG24a TFG24b TFG24f TFG25a TFG25b TFG25f)
+  tar czf - ${ver} | hsi put - : backup/${ver}.033026.tz | tee -a backup.log
+end
+
+Richard Witt is using TFG24e.
+================================================================================
+04/01/2026
+[starsub02] ~/work/STAR/packages $ hsi
+Warning: "Network Options" section not found in HPSS.conf file
+Username: fisyak  UID: 2764  Acct: 2764(2764) Copies: 1 COS: 0 Firewall: off [hsi.8.3.0.p0 Thu Sep 1 16:46:29 EDT 2022] 
+? ls -l backup/TFG*
+backup:
+-rw-r--r--    1 fisyak    star      1674576076 Feb  6  2025 TFG.020625.tz
+-rw-r--r--    1 fisyak    star     10061860288 Mar 30 13:29 TFG.033026.tz
+-rw-r--r--    1 fisyak    star     176140691880 Aug  2  2025 TFG.cvmfs.080125.tz
+-rw-r--r--    1 fisyak    star      6151756557 May  6  2016 TFG16a.050616.tz
+-rw-r--r--    1 fisyak    star       460547992 May  6  2016 TFG16a.git.050616.tz
+-rw-r--r--    1 fisyak    star       844129480 Dec 31  2017 TFG16b.030216.tz
+-rw-r--r--    1 fisyak    star       735107568 Dec 31  2017 TFG16e.030216.tz
+-rw-r--r--    1 fisyak    star       827601665 Dec 31  2017 TFG17a.030216.tz
+-rw-r--r--    1 fisyak    star       891343813 Dec 31  2017 TFG17b.030216.tz
+-rw-r--r--    1 fisyak    star       930894017 Dec 31  2017 TFG17c.030216.tz
+-rw-r--r--    1 fisyak    star       930321600 Dec 31  2017 TFG17d.030216.tz
+-rw-r--r--    1 fisyak    star       934791859 Dec 31  2017 TFG17e.030216.tz
+-rw-r--r--    1 fisyak    star       832924570 Dec 31  2017 TFG17f.030216.tz
+-rw-r--r--    1 fisyak    star       916420911 Dec 31  2017 TFG17g.030216.tz
+-rw-r--r--    1 fisyak    star       931428024 Dec 31  2017 TFG17h.030216.tz
+-rw-r--r--    1 fisyak    star       932941346 Dec 31  2017 TFG17i.030216.tz
+-rw-r--r--    1 fisyak    star       916167394 Dec 31  2017 TFG17j.030216.tz
+-rw-r--r--    1 fisyak    star       955947015 Dec 31  2017 TFG17k.030216.tz
+-rw-r--r--    1 fisyak    star      1005671473 Dec 31  2017 TFG17n.030216.tz
+-rw-r--r--    1 fisyak    star       987068717 Dec 31  2017 TFG17o.030216.tz
+-rw-r--r--    1 fisyak    star       986366858 Dec 31  2017 TFG17q.030216.tz
+-rw-r--r--    1 fisyak    star       984328429 Dec 31  2017 TFG17r.030216.tz
+-rw-r--r--    1 fisyak    star       999869501 Dec 31  2017 TFG17u.030216.tz
+-rw-r--r--    1 fisyak    star      1001324620 Dec 31  2017 TFG17v.030216.tz
+-rw-r--r--    1 fisyak    star      1032522303 Jul 17  2019 TFG18a.071719.tz
+-rw-r--r--    1 fisyak    star      1016221556 Jul 17  2019 TFG18a.1.071719.tz
+-rw-r--r--    1 fisyak    star      1002906481 Jul 17  2019 TFG18b.071719.tz
+-rw-r--r--    1 fisyak    star      1002010046 Jul 17  2019 TFG18c.071719.tz
+-rw-r--r--    1 fisyak    star      1004756752 Jul 17  2019 TFG18d.071719.tz
+-rw-r--r--    1 fisyak    star      1067469340 Jul 17  2019 TFG18e.071719.tz
+-rw-r--r--    1 fisyak    star      1021166724 Jul 17  2019 TFG18f.071719.tz
+-rw-r--r--    1 fisyak    star       822339756 Jul 17  2019 TFG18g.071719.tz
+-rw-r--r--    1 fisyak    star       827336705 Jul 17  2019 TFG18i.071719.tz
+-rw-r--r--    1 fisyak    star       813837469 Jul 17  2019 TFG18j.071719.tz
+-rw-r--r--    1 fisyak    star       858986601 Jul 17  2019 TFG18k.071719.tz
+-rw-r--r--    1 fisyak    star       859064941 Jul 17  2019 TFG18l.071719.tz
+-rw-r--r--    1 fisyak    star      1010891802 Jul 17  2019 TFG18m.071719.tz
+-rw-r--r--    1 fisyak    star       914496817 Jul 17  2019 TFG18n.071719.tz
+-rw-r--r--    1 fisyak    star       989156578 Jul 17  2019 TFG18p.071719.tz
+-rw-r--r--    1 fisyak    star       988846540 Jul 17  2019 TFG18q.071719.tz
+-rw-r--r--    1 fisyak    star      1030018014 Jul 17  2019 TFG19a.071719.tz
+-rw-r--r--    1 fisyak    star      1040325977 Jul 17  2019 TFG19b.071719.tz
+-rw-r--r--    1 fisyak    star      1039629298 Jul 17  2019 TFG19c.071719.tz
+-rw-r--r--    1 fisyak    star      1025274889 Jul 17  2019 TFG19d.071719.tz
+-rw-r--r--    1 fisyak    star      1063229587 Jul 17  2019 TFG19e.071719.tz
+-rw-r--r--    1 fisyak    star      1067276526 Jul 29  2020 TFG19f.072920.tz
+-rw-r--r--    1 fisyak    star      3656140641 Mar 30 12:39 TFG19j.033026.tz
+-rw-r--r--    1 fisyak    star       976497060 Mar 30 13:34 TFG19k.033026.tz
+-rw-r--r--    1 fisyak    star      4304774971 Mar 30 13:56 TFG19l.033026.tz
+-rw-r--r--    1 fisyak    star      4290700339 Mar 30 14:17 TFG19m.033026.tz
+-rw-r--r--    1 fisyak    star      4363516108 Mar 30 14:40 TFG20a.033026.tz
+-rw-r--r--    1 fisyak    star      4307764107 Mar 30 15:04 TFG20b.033026.tz
+-rw-r--r--    1 fisyak    star      4299042181 Mar 30 15:32 TFG20c.033026.tz
+-rw-r--r--    1 fisyak    star      8809827110 Mar 30 16:13 TFG21c.033026.tz
+-rw-r--r--    1 fisyak    star      8720999444 Mar 30 16:54 TFG21d.033026.tz
+-rw-r--r--    1 fisyak    star      8749843124 Mar 30 17:38 TFG21e.033026.tz
+-rw-r--r--    1 fisyak    star      8003682567 Mar 30 18:14 TFG21f.033026.tz
+-rw-r--r--    1 fisyak    star      6903969585 Mar 30 18:47 TFG21g.033026.tz
+-rw-r--r--    1 fisyak    star      8135377846 Mar 30 19:31 TFG21j.033026.tz
+-rw-r--r--    1 fisyak    star      7847472300 Mar 30 20:14 TFG21k.033026.tz
+-rw-r--r--    1 fisyak    star      8497474549 Mar 30 21:05 TFG21l.033026.tz
+-rw-r--r--    1 fisyak    star      6088768851 Mar 30 21:46 TFG21m.033026.tz
+-rw-r--r--    1 fisyak    star      6658535536 Mar 30 22:26 TFG21n.033026.tz
+-rw-r--r--    1 fisyak    star      6737199581 Mar 30 23:11 TFG22a.033026.tz
+-rw-r--r--    1 fisyak    star      6348643804 Mar 30 23:53 TFG22b.033026.tz
+-rw-r--r--    1 fisyak    star      6283810009 Mar 31 00:39 TFG22c.033026.tz
+-rw-r--r--    1 fisyak    star      6313973697 Mar 31 01:37 TFG22d.033026.tz
+-rw-r--r--    1 fisyak    star      6320871815 Mar 31 02:10 TFG22e.033026.tz
+-rw-r--r--    1 fisyak    star      6226025734 Mar 31 03:08 TFG22f.033026.tz
+-rw-r--r--    1 fisyak    star      6312422977 Mar 31 04:23 TFG22g.033026.tz
+-rw-r--r--    1 fisyak    star      6734703612 Mar 31 06:49 TFG22j.033026.tz
+-rw-r--r--    1 fisyak    star     13087524084 Mar 31 11:28 TFG23a.033026.tz
+-rw-r--r--    1 fisyak    star     11435260235 Mar 31 13:05 TFG23e.033026.tz
+-rw-r--r--    1 fisyak    star      9951982823 Mar 31 15:26 TFG23f.033026.tz
+-rw-r--r--    1 fisyak    star      9870134496 Mar 31 17:02 TFG24a.033026.tz
+-rw-r--r--    1 fisyak    star      8801420153 Mar 31 18:21 TFG24b.033026.tz
+-rw-r--r--    1 fisyak    star      6376474783 Mar 31 20:24 TFG24f.033026.tz
+-rw-r--r--    1 fisyak    star      5835417679 Mar 31 20:57 TFG25a.033026.tz
+-rw-r--r--    1 fisyak    star      7205049922 Mar 31 23:35 TFG25b.033026.tz
+-rw-r--r--    1 fisyak    star      9776997077 Apr  1 00:24 TFG25f.033026.tz
+[rcas6008] ~/pwg/STAR/packages
+touch backup.log 
+foreach ver (TFG24i  TFG25d)
+  tar czf - ${ver} | hsi put - : backup/${ver}.040126.tz | tee -a backup.log
+end
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages $ df -h .
+Filesystem        Size  Used Avail Use% Mounted on
+/gpfs/mnt/gpfs01   12T  9.9T  2.2T  83% /gpfs/mnt/gpfs01
+rm -rf TFG16a  TFG17v  TFG19a  TFG19f  TFG19k  TFG19l  TFG20a  TFG20c  TFG21d  TFG21f  TFG21j  TFG21l  TFG21n  TFG22b  TFG22d  TFG22f  TFG22j  TFG23e  TFG24a  TFG24f  TFG25b  TFG25f TFG17j  TFG18n  TFG19e  TFG19j  TFG19l  TFG19m  TFG20b  TFG21c  TFG21e  TFG21g  TFG21k  TFG21m  TFG22a  TFG22c  TFG22e  TFG22g  TFG23a  TFG23f  TFG24b  TFG25a  TFG25c
+
+8.4G    star-cvs
+1.6G    star-mcgen
+4.1M    TFG16a
+8.0G    TFG19e5
+6.6G    TFG19g
+6.6G    TFG19h
+48G     TFG.Export
+4.8G    TFG.star-sw.MERGE
+
+foreach ver (TFG19e5 TFG19g TFG19h)
+  tar czf - ${ver} | hsi put - : backup/${ver}.040126.tz 
+end
+
+backup:
+-rw-r--r--    1 fisyak    star      1674576076 Feb  6  2025 TFG.020625.tz
+-rw-r--r--    1 fisyak    star     10061860288 Mar 30 13:29 TFG.033026.tz
+-rw-r--r--    1 fisyak    star     176140691880 Aug  2  2025 TFG.cvmfs.080125.tz
+-rw-r--r--    1 fisyak    star      6151756557 May  6  2016 TFG16a.050616.tz
+-rw-r--r--    1 fisyak    star       460547992 May  6  2016 TFG16a.git.050616.tz
+-rw-r--r--    1 fisyak    star       844129480 Dec 31  2017 TFG16b.030216.tz
+-rw-r--r--    1 fisyak    star       735107568 Dec 31  2017 TFG16e.030216.tz
+-rw-r--r--    1 fisyak    star       827601665 Dec 31  2017 TFG17a.030216.tz
+-rw-r--r--    1 fisyak    star       891343813 Dec 31  2017 TFG17b.030216.tz
+-rw-r--r--    1 fisyak    star       930894017 Dec 31  2017 TFG17c.030216.tz
+-rw-r--r--    1 fisyak    star       930321600 Dec 31  2017 TFG17d.030216.tz
+-rw-r--r--    1 fisyak    star       934791859 Dec 31  2017 TFG17e.030216.tz
+-rw-r--r--    1 fisyak    star       832924570 Dec 31  2017 TFG17f.030216.tz
+-rw-r--r--    1 fisyak    star       916420911 Dec 31  2017 TFG17g.030216.tz
+-rw-r--r--    1 fisyak    star       931428024 Dec 31  2017 TFG17h.030216.tz
+-rw-r--r--    1 fisyak    star       932941346 Dec 31  2017 TFG17i.030216.tz
+-rw-r--r--    1 fisyak    star       916167394 Dec 31  2017 TFG17j.030216.tz
+-rw-r--r--    1 fisyak    star       955947015 Dec 31  2017 TFG17k.030216.tz
+-rw-r--r--    1 fisyak    star      1005671473 Dec 31  2017 TFG17n.030216.tz
+-rw-r--r--    1 fisyak    star       987068717 Dec 31  2017 TFG17o.030216.tz
+-rw-r--r--    1 fisyak    star       986366858 Dec 31  2017 TFG17q.030216.tz
+-rw-r--r--    1 fisyak    star       984328429 Dec 31  2017 TFG17r.030216.tz
+-rw-r--r--    1 fisyak    star       999869501 Dec 31  2017 TFG17u.030216.tz
+-rw-r--r--    1 fisyak    star      1001324620 Dec 31  2017 TFG17v.030216.tz
+-rw-r--r--    1 fisyak    star      1032522303 Jul 17  2019 TFG18a.071719.tz
+-rw-r--r--    1 fisyak    star      1016221556 Jul 17  2019 TFG18a.1.071719.tz
+-rw-r--r--    1 fisyak    star      1002906481 Jul 17  2019 TFG18b.071719.tz
+-rw-r--r--    1 fisyak    star      1002010046 Jul 17  2019 TFG18c.071719.tz
+-rw-r--r--    1 fisyak    star      1004756752 Jul 17  2019 TFG18d.071719.tz
+-rw-r--r--    1 fisyak    star      1067469340 Jul 17  2019 TFG18e.071719.tz
+-rw-r--r--    1 fisyak    star      1021166724 Jul 17  2019 TFG18f.071719.tz
+-rw-r--r--    1 fisyak    star       822339756 Jul 17  2019 TFG18g.071719.tz
+-rw-r--r--    1 fisyak    star       827336705 Jul 17  2019 TFG18i.071719.tz
+-rw-r--r--    1 fisyak    star       813837469 Jul 17  2019 TFG18j.071719.tz
+-rw-r--r--    1 fisyak    star       858986601 Jul 17  2019 TFG18k.071719.tz
+-rw-r--r--    1 fisyak    star       859064941 Jul 17  2019 TFG18l.071719.tz
+-rw-r--r--    1 fisyak    star      1010891802 Jul 17  2019 TFG18m.071719.tz
+-rw-r--r--    1 fisyak    star       914496817 Jul 17  2019 TFG18n.071719.tz
+-rw-r--r--    1 fisyak    star       989156578 Jul 17  2019 TFG18p.071719.tz
+-rw-r--r--    1 fisyak    star       988846540 Jul 17  2019 TFG18q.071719.tz
+-rw-r--r--    1 fisyak    star      1030018014 Jul 17  2019 TFG19a.071719.tz
+-rw-r--r--    1 fisyak    star      1040325977 Jul 17  2019 TFG19b.071719.tz
+-rw-r--r--    1 fisyak    star      1039629298 Jul 17  2019 TFG19c.071719.tz
+-rw-r--r--    1 fisyak    star      1025274889 Jul 17  2019 TFG19d.071719.tz
+-rw-r--r--    1 fisyak    star      1063229587 Jul 17  2019 TFG19e.071719.tz
+-rw-r--r--    1 fisyak    star      1011554686 Apr  1 18:57 TFG19e5.040126.tz
+-rw-r--r--    1 fisyak    star      1067276526 Jul 29  2020 TFG19f.072920.tz
+-rw-r--r--    1 fisyak    star       939534797 Apr  1 19:03 TFG19g.040126.tz
+-rw-r--r--    1 fisyak    star       940794736 Apr  1 19:09 TFG19h.040126.tz
+-rw-r--r--    1 fisyak    star      3656140641 Mar 30 12:39 TFG19j.033026.tz
+-rw-r--r--    1 fisyak    star       976497060 Mar 30 13:34 TFG19k.033026.tz
+-rw-r--r--    1 fisyak    star      4304774971 Mar 30 13:56 TFG19l.033026.tz
+-rw-r--r--    1 fisyak    star      4290700339 Mar 30 14:17 TFG19m.033026.tz
+-rw-r--r--    1 fisyak    star      4363516108 Mar 30 14:40 TFG20a.033026.tz
+-rw-r--r--    1 fisyak    star      4307764107 Mar 30 15:04 TFG20b.033026.tz
+-rw-r--r--    1 fisyak    star      4299042181 Mar 30 15:32 TFG20c.033026.tz
+-rw-r--r--    1 fisyak    star      8809827110 Mar 30 16:13 TFG21c.033026.tz
+-rw-r--r--    1 fisyak    star      8720999444 Mar 30 16:54 TFG21d.033026.tz
+-rw-r--r--    1 fisyak    star      8749843124 Mar 30 17:38 TFG21e.033026.tz
+-rw-r--r--    1 fisyak    star      8003682567 Mar 30 18:14 TFG21f.033026.tz
+-rw-r--r--    1 fisyak    star      6903969585 Mar 30 18:47 TFG21g.033026.tz
+-rw-r--r--    1 fisyak    star      8135377846 Mar 30 19:31 TFG21j.033026.tz
+-rw-r--r--    1 fisyak    star      7847472300 Mar 30 20:14 TFG21k.033026.tz
+-rw-r--r--    1 fisyak    star      8497474549 Mar 30 21:05 TFG21l.033026.tz
+-rw-r--r--    1 fisyak    star      6088768851 Mar 30 21:46 TFG21m.033026.tz
+-rw-r--r--    1 fisyak    star      6658535536 Mar 30 22:26 TFG21n.033026.tz
+-rw-r--r--    1 fisyak    star      6737199581 Mar 30 23:11 TFG22a.033026.tz
+-rw-r--r--    1 fisyak    star      6348643804 Mar 30 23:53 TFG22b.033026.tz
+-rw-r--r--    1 fisyak    star      6283810009 Mar 31 00:39 TFG22c.033026.tz
+-rw-r--r--    1 fisyak    star      6313973697 Mar 31 01:37 TFG22d.033026.tz
+-rw-r--r--    1 fisyak    star      6320871815 Mar 31 02:10 TFG22e.033026.tz
+-rw-r--r--    1 fisyak    star      6226025734 Mar 31 03:08 TFG22f.033026.tz
+-rw-r--r--    1 fisyak    star      6312422977 Mar 31 04:23 TFG22g.033026.tz
+-rw-r--r--    1 fisyak    star      6734703612 Mar 31 06:49 TFG22j.033026.tz
+-rw-r--r--    1 fisyak    star     13087524084 Mar 31 11:28 TFG23a.033026.tz
+-rw-r--r--    1 fisyak    star     11435260235 Mar 31 13:05 TFG23e.033026.tz
+-rw-r--r--    1 fisyak    star      9951982823 Mar 31 15:26 TFG23f.033026.tz
+-rw-r--r--    1 fisyak    star      9870134496 Mar 31 17:02 TFG24a.033026.tz
+-rw-r--r--    1 fisyak    star      8801420153 Mar 31 18:21 TFG24b.033026.tz
+-rw-r--r--    1 fisyak    star      6376474783 Mar 31 20:24 TFG24f.033026.tz
+-rw-r--r--    1 fisyak    star      4661591818 Apr  1 09:57 TFG24i.040126.tz
+-rw-r--r--    1 fisyak    star      5835417679 Mar 31 20:57 TFG25a.033026.tz
+-rw-r--r--    1 fisyak    star      7205049922 Mar 31 23:35 TFG25b.033026.tz
+-rw-r--r--    1 fisyak    star     12833606472 Apr  1 12:05 TFG25d.040126.tz
+-rw-r--r--    1 fisyak    star      9776997077 Apr  1 00:24 TFG25f.033026.tz

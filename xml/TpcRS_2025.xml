@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<job maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<job maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="true" fileListSyntax="paths" copyInputLocally="false">
 <stdout URL="file:./sched$JOBID.log" />
 <stderr URL="file:./sched$JOBID.err" />
 <command> 
@@ -25,7 +25,7 @@ setenv STARFPE NO
   echo "${evtsFile}"
   echo "${file}"
   set filel = ${file}${ext};
-  set output  = ${filel}.event.root
+  set output  = ${filel}
   set logFile  = ${filel}B.log
   set sdt = AuAu_2025
   echo ${SUBMITTINGDIRECTORY} | grep FXT
@@ -34,7 +34,8 @@ setenv STARFPE NO
   if (! $?) exit 0;
 # root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,TpcRS,McTpcAna,StiCA,StiPulls,evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
 # root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,CorrZ,TpcRS,McTpcAna,StiCA,StiPulls,-evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
- root.exe -q -b -x 'TpcRS.C('${f}','${l}',"y2025z,MC.2025,'${sdt}',vmc,TpcRS,McTpcAna,StiCA,-geantOut,NoHistos,noRunco,Rung.'${runG}',-picoWrite,-picoDst,dEdxCalib",0,"'${file}'")' &gt;&amp; ${logFile}
+ root.exe -q -b -x 'TpcRS.C('${f}','${l}',"y2025z,MC.2025,'${sdt}',vmc,TpcRS,McTpcAna,StiCA,evout,-geantOut,NoHistos,noRunco,Rung.'${runG}',-picoWrite,-picoDst,dEdxCalib",0,"'${output}'")' &gt;&amp; ${logFile}
+ gzip ${logFile}
 </command>
 <!-- <input URL="command:TpcRS_Part.pl" /> -->
 <!-- <input URL="command:daq_TpcRS.pl 1 1000 25" />  -->

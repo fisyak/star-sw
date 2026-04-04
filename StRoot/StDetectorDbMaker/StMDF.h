@@ -54,7 +54,8 @@ class StMDF {
       {  } 
   const Char_t *getName()                const {return  fName.Data();}
   TF1*          GetFunction()            const;
-  UChar_t 	PolyType() 	         const {return *fPolyType;     }
+  Int_t 	PolyType() 	         const {return ((Char_t )*fPolyType)%10;     }
+  Int_t 	ConvType() 	         const {return ((Char_t )*fPolyType)/10;     }
   Char_t 	NVariablesS() 		 const {return (Char_t) *fNVariables;   }
   Char_t  	NVariables() 		 const {return TMath::Abs(NVariablesS());}	       
   UChar_t 	NCoefficients() 	 const {return *fNCoefficients;}

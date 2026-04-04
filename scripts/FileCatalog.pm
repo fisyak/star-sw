@@ -1098,11 +1098,13 @@ sub _Connect
 
 
     &print_debug("_Connect","$FC::DBRef,$user (+passwd)");
-    $FC::DBH = DBI->connect($FC::DBRef,$user,$passwd,
+    my $dsn = $FC::DBRef . ";mysql_ssl_mode=DISABLED";
+    $passwd = "FCatalog";
+#    print " $FC::DBH = DBI->connect($dsn,$user,$passwd)\n";
+    $FC::DBH = DBI->connect($dsn,$user,$passwd,
 	                     { PrintError => 0,
 			       RaiseError => 0, AutoCommit => 1 }
                            );
-
     if (! $FC::DBH ){
 	if ($DBI::err == 1045){
 	    &print_message("_Connect","Incorrect password ".($passwd eq ""?"(NULL)":""));

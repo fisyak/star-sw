@@ -25,8 +25,8 @@ void ppbarM2() {
   TH2* p2 = (TH2 *) gDirectory->Get("/Tracks/p/hTofPID");
   if (! p2) return;
   TAxis *y = p2->GetYaxis();
-  Int_t i1 = y->FindBin(0.5);
-  Int_t i2 = y->FindBin(1.5);
+  Int_t i1 = y->FindBin(m2P-0.3);
+  Int_t i2 = y->FindBin(m2P+0.3);
   y->SetRange(i1,i2);
   TObjArray* arr =  new TObjArray(4);
   p2->FitSlicesY(0, 0, -1, 0, "QNR", arr);

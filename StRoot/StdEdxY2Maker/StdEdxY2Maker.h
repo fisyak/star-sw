@@ -69,11 +69,14 @@ class StdEdxY2Maker : public StMaker {
   void    DoFitN(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ);
   static  void PrintdEdx(Int_t iop = 0);
   static  void Landau(Double_t x, Double_t *val);
+  static  Double_t  landau(Double_t *x, Double_t *p = 0);
   static  void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag);
   static  void fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag);
   static  Double_t gaus2(Double_t *x, Double_t *p);
   static  TF1 *Gaus2();
   static  TGraph *dNdxGraph(Int_t k = 0) {return fdNdxGraph[k];}
+  static  TF1 *LandauF();
+  static  TGraph *LandauI();
   void     IntegrateAdc(const StTpcHitCollection* TpcHitCollection);
   Double_t IntegratedAdc(const StTpcHit* tpcHit);
  private:
