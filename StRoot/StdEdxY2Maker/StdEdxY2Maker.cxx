@@ -1423,6 +1423,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 #ifdef __dZdY_dXdY__
 #define __FILL___VARS__dZdY(SIGN,__X20__)				\
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdZdY].mdE ## __X20__.fdEdxN;   \
+	Vars[1] = FdEdx[k].F.mdE ## __X20__.fdEdxN; \
 	dZdY3  ## SIGN .Fill(rowS,FdEdx[k].dZdY,Vars);       \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kdXdY].mdE ## __X20__.fdEdxN;   \
 	dXdY3  ## SIGN .Fill(rowS,FdEdx[k].dXdY,Vars);	
@@ -1432,6 +1433,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 #ifdef __Pad_Tmbk__  /* skip Pad and Tbk */
 #define __FILL__VARS__PadTmbk(SIGN,__X20_)				       \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knPad].mdE ## __X20__.fdEdxN;   \
+	Vars[1] = FdEdx[k].F.mdE ## __X20__.fdEdxN; \
 	nPad3  ## SIGN .Fill(rowS,FdEdx[k].Npads,&Vars[1]);       \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::knTbk].mdE ## __X20__.fdEdxN;   \
 	nTbk3  ## SIGN .Fill(rowS,FdEdx[k].Ntbks,&Vars[1]);      
@@ -1440,6 +1442,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 #endif
 #define __FILL__VARS__(SIGN,__X20__)						\
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE ## __X20__.fdEdxN; \
+	Vars[1] = FdEdx[k].F.mdE ## __X20__.fdEdxN; \
 	SecRow3 ## SIGN .Fill(sector,row,Vars);			       \
 	Voltage ## SIGN .Fill(cs,VN,Vars);			       \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kzCorrection].mdE ## __X20__.fdEdxN; \
