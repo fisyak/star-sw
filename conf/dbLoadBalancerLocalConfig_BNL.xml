@@ -24,35 +24,44 @@
 
 	<Server scope="Production" user="starreco,priv2" accessMode="read">
 
-		<Host name="star-db01.rcf.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db01.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db02.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db03.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db04.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+<!--
 		<Host name="star-db02.rcf.bnl.gov" port="3316" machinePower="1.0" /> 
 		<Host name="star-db03.rcf.bnl.gov" port="3316" machinePower="1.0" />
-
 		<Host name="star-db07.rcf.bnl.gov" port="3316" machinePower="1.0" />
 		<Host name="star-db08.rcf.bnl.gov" port="3316" machinePower="1.0" />
-
+//-->
 	</Server>
 
 	<Server scope="Analysis" accessMode="read">
 
+		<Host name="star-db05.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db06.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db07.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db08.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
 
-		<!-- <Host name="star-db04.rcf.bnl.gov" port="3316" machinePower="1.0" />  //-->
+<!--
     <Host name="star-db05.rcf.bnl.gov" port="3316" machinePower="1.0" />
 		<Host name="star-db06.rcf.bnl.gov" port="3316" machinePower="1.0" />
-
 		<Host name="star-db09.rcf.bnl.gov" port="3316" machinePower="1.0" />
-<!--		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" /> -->
-
+		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" />
+//-->
 	</Server>	
 
-	<Server scope="Analysis" user="perev,jwebb,dunlop,genevb,dmitry" accessMode="read">
+	<Server scope="Analysis" user="jwebb,dunlop,genevb,dmitry" accessMode="read">
 
+		<Host name="star-db12.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+		<Host name="star-db08.sdcc.bnl.gov" port="3316" machinePower="1.0" /> 
+<!--
 		<Host name="star-db07.rcf.bnl.gov" port="3316" machinePower="1.0" />
 		<Host name="star-db06.rcf.bnl.gov" port="3316" machinePower="1.0" />
-
 		<Host name="star-db09.rcf.bnl.gov" port="3316" machinePower="10.0" /> 
-<!--		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" />  -->
+		<Host name="star-db10.rcf.bnl.gov" port="3316" machinePower="10.0" /> 
 		<Host name="star-db11.rcf.bnl.gov" port="3316" machinePower="10.0" />
+//-->
 
 	</Server>
 
