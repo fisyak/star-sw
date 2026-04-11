@@ -1976,7 +1976,7 @@ our @Runs = ( # onl CURRENT | SortRun.pl
 '1971'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27024075',	 last => '27024078',	 list => '',  beginTime => '20260125.024545'}, # 	2026-01-25	02:45:45	2026-01-25	04:46:05
 '1972'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27024080',	 last => '27024080',	 list => '',  beginTime => '20260125.044605'}, # 	2026-01-25	04:46:05	2026-01-25	05:23:58
 '1973'=> {trig=>'9p8GeV_fixedTarget_2026',	field => 'RF',	first=> '27025001',	 last => '27025016',	 list => '',  beginTime => '20260125.052358'}, # 	2026-01-25	05:23:58	2026-01-25	19:30:46
-'1974'=> {trig=>'8p65GeV_fixedTarget_2026',	field => 'RF',	first=> '27025030',	 last => '27025030',	 list => '',  beginTime => '20260125.193046'}, # 	2026-01-25	19:30:46	2026-01-25	20:17:46	timestamp = 8p65GeV_fixedTarget_2026_RF
+'1974'=> {trig=>'8p65GeV_fixedTarget_2026',	field => 'RF',	first=> '27025032',	 last => '27025030',	 list => '',  beginTime => '20260125.201746'}, # 	2026-01-25	19:30:46	2026-01-25	20:17:46	timestamp = 8p65GeV_fixedTarget_2026_RF 2026-01-25 20:17:46 GMT ] 
 '1975'=> {trig=>'8p65GeV_fixedTarget_2026',	field => 'RF',	first=> '27025032',	 last => '27025035',	 list => '',  beginTime => '20260125.201746'}, # 	2026-01-25	20:17:46	2026-01-25	21:38:57
 '1976'=> {trig=>'8p65GeV_fixedTarget_2026',	field => 'RF',	first=> '27025037',	 last => '27025037',	 list => '',  beginTime => '20260125.213857'}, # 	2026-01-25	21:38:57	2026-01-25	22:12:58
 '1977'=> {trig=>'8p65GeV_fixedTarget_2026',	field => 'RF',	first=> '27025039',	 last => '27025039',	 list => '',  beginTime => '20260125.221258'}, # 	2026-01-25	22:12:58	2026-01-25	22:50:38

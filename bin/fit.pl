@@ -8,12 +8,13 @@ my $DIR = Cwd::cwd();
 my @liblist = glob "~/macros/.sl* ~/macros/.al*";#  print "liblist = @liblist\n";
 foreach my $lib (@liblist) {
   my $local = File::Basename::basename($lib);
+  if (-r $local) {next;}
 #  print "$lib $local\n";
   symlink($lib,$local);
 }
 $ENV{STARFPE} = "NO";
 my @histG  = ();
-my @histGF = (); #SecRow3C);
+my @histGF = (); #SecRow3NC);
 my @histGP = ();
 my @histG0P = ();
 my @histRL5 = ();
@@ -77,45 +78,47 @@ foreach my $arg (@ARGV) {
 ################################################################################
 if ($all) {
 #  push  @{ $Opts{GG} }, qw(dNdxVsBgC dNdxVsBgCI dNdxVsBgCO); 
-  push  @{ $Opts{G4EY} }, qw(
-			      SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
-			      Z3 Z3P  Z3+Z3P  Z3C Z3PC Z3C+Z3PC 
-			      xyPad3qB xyPad3qBC
-			      Pressure PressureP Pressure+PressureP PressureC PressurePC PressureC+PressurePC
-			      Temperature TemperatureP Temperature+TemperatureP TemperatureC TemperaturePC TemperatureC+TemperaturePC
-			     EtaB3 EtaB3C
-			     EtaB3P EtaB3PC
-                             EtaB3+EtaB3P  EtaB3C+EtaB3PC 
-			      Voltage  VoltageC VoltageP  VoltagePC
-			   );
-#			      xyPad3+xyPad3P xyPad3C+xyPad3PC
-#			      xyPad3 xyPad3P xyPad3C xyPad3PC 
-#			      dX3 dx3C
-#   push  @{ $Opts{G4EG} }, qw(
-# 			      SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
-# 			      Z3+Z3P  Z3C+Z3PC 
-# 			      xyPad3+xyPad3P xyPad3C+xyPad3PC
-# 			      xyPad3 xyPad3P xyPad3C xyPad3PC 
+#   push  @{ $Opts{G4EY} }, qw(
+# 			      SecRow3N SecRow3P SecRow3N+SecRow3P SecRow3NC SecRow3PC SecRow3NC+SecRow3PC
+# 			      Z3N Z3P  Z3N+Z3P  Z3NC Z3PC Z3NC+Z3PC 
+# 			      xyPad3qB xyPad3qBC
 # 			      Pressure PressureP Pressure+PressureP PressureC PressurePC PressureC+PressurePC
+# 			      Temperature TemperatureP Temperature+TemperatureP TemperatureC TemperaturePC TemperatureC+TemperaturePC
+# 			     EtaB3N EtaB3NC
+# 			     EtaB3P EtaB3PC
+#                              EtaB3N+EtaB3P  EtaB3NC+EtaB3PC 
+# 			      VoltageN  VoltageNC VoltageP  VoltagePC
+# 			   );
+#			      xyPad3N+xyPad3P xyPad3NC+xyPad3PC
+#			      xyPad3N xyPad3P xyPad3NC xyPad3PC 
+#			      dX3N dx3NC
+#   push  @{ $Opts{G4EG} }, qw(
+# 			      SecRow3N SecRow3P SecRow3N+SecRow3P SecRow3NC SecRow3PC SecRow3NC+SecRow3PC
+# 			      Z3N+Z3P  Z3NC+Z3PC 
+# 			      xyPad3N+xyPad3P xyPad3NC+xyPad3PC
+# 			      xyPad3N xyPad3P xyPad3NC xyPad3PC 
+# 			      PressureN PressureP PressureNC PressurePC PressureN+PressureP PressureNC+PressurePC
 # 			   );
  push  @{ $Opts{GP} },  qw (
-			     NPoints70+NPoints70P NPointsF+NPointsFP NPoints70U+NPoints70UP NPointsFU+NPointsFUP  NPointsN+NPointsNP NPointsNU+NPointsNUP
-			     NPoints70 NPoints70P NPointsF NPointsFP NPoints70U NPoints70UP NPointsFU NPointsFUP  NPointsN NPointsNP NPointsNU NPointsNUP
-                             Time TimeC TimeF TimeF TimeFP 
-			     AvCurrent AvCurrentC  AvCurrentP AvCurrentPC  
-			     Qcm       QcmC QcmP       QcmPC
-	      );
-#			     Eta3 Eta3C 
-#			     EtaB3 EtaB3C
+			     NPoints70+NPoints70P NPointsF+NPointsFP NPoints70U+NPoints70UP NPointsFU+NPointsFUP  NPointsN+NPointsP NPointsNU+NPointsNUP
+			     NPoints70 NPoints70P NPointsF NPointsFP NPoints70U NPoints70UP NPointsFU NPointsFUP  NPointsN NPointsP NPointsNU NPointsNUP
+                             Time TimeC TimeF TimeFP 
+			     AvCurrentN AvCurrentNC  AvCurrentP AvCurrentPC  
+			     QcmN       QcmNC QcmP       QcmPC
+			     SecRow3N SecRow3NC
+			     Z3N Z3P  Z3N+Z3P  Z3NC Z3PC Z3NC+Z3PC	      );
+ push  @{ $Opts{GG} },  qw (SecRow3N SecRow3NC Z3N Z3NC VoltageN  VoltageNC );
+#			     Eta3N Eta3NC 
+#			     EtaB3N EtaB3NC
 #			     Eta3P Eta3PC
 #			     EtaB3P EtaB3PC
-#                             EtaB3+EtaB3P  EtaB3C+EtaB3PC 
-#			     Voltage  VoltageC VoltageP  VoltagePC
-#                             SecRow3 SecRow3P SecRow3+SecRow3P SecRow3C SecRow3PC SecRow3C+SecRow3PC
-#  TPoints70+TPoints70P TPointsF+TPointsFP TPoints70U+TPoints70UP TPointsFU+TPointsFUP  TPointsN+TPointsNP TPointsNU+TPointsNUP
-#  TPoints70 TPoints70P TPointsF TPointsFP TPoints70U TPoints70UP TPointsFU TPointsFUP  TPointsN TPointsNP TPointsNU TPointsNUP
+#                             EtaB3N+EtaB3P  EtaB3NC+EtaB3PC 
+#			     VoltageN VoltageN VoltageP  VoltagePC
+#                             SecRow3N SecRow3P SecRow3N+SecRow3P SecRow3NC SecRow3PC SecRow3NC+SecRow3PC
+#  TPoints70+TPoints70P TPointsF+TPointsFP TPoints70U+TPoints70UP TPointsFU+TPointsFUP  TPointsN+TPointsP TPointsNU+TPointsNUP
+#  TPoints70 TPoints70P TPointsF TPointsFP TPoints70U TPoints70UP TPointsFU TPointsFUP  TPointsN TPointsP TPointsNU TPointsNUP
 }
-#               xyPad3 xyPad3P xyPad3+xyPad3P
+#               xyPad3N xyPad3P xyPad3N+xyPad3P
 print "fit.pl for  @rootfiles \n"; 
 my $no = 0;
 foreach my $opt ( keys %Opts) {
@@ -130,7 +133,7 @@ print XML '<?xml version="1.0" encoding="utf-8" ?>
 	 <command>
 setup 64b
 setenv NODEBUG 
-starver .DEV2
+starver TFG
 csh -x $INPUTFILE0
          </command>
 	<stdout URL="file:./sched$JOBID.log" />
@@ -149,7 +152,7 @@ foreach my $rootfile (@rootfiles) {
       for (my $sec = $sec1; $sec <= $sec2; $sec++) {
 	my $ext = "";
 	if ($sec >= 0) {$ext = "_X" . $sec;}
-#	if ($hist =~ /Edge/ || $hist =~ /xyPad/) {$ext = "_y3";}
+#	if ($hist =~ /Edge/ || $hist =~ /xyPad/) {$ext = "_y3N";}
 	my $dir = File::Basename::dirname($rootfile);
 	my $fil = File::Basename::basename($rootfile);
 	my $SCRIPT = $dirname . $hist . $fittype . $ext . $fil;
