@@ -3,6 +3,8 @@
 #pragma link off all classes;
 #pragma link off all functions;
 #pragma link C++ enum Bichsel::EParTypes;
+//IncFile=StGausSW.h
+#pargma link C++ namespace StGausSW;
 //IncFile=StdEdxPull.h
 #pragma link C++ namespace StdEdxPull;
 #pragma link C++ function StdEdxPull::EvalPred(Double_t, UChar_t, Int_t);
@@ -14,5 +16,5 @@
 #pragma link C++ function StdEdxPull::Eval2(Double_t, Double_t, Double_t, UChar_t, Int_t);
 
 #pragma link C++ class St_spline3-;     
-#pragma link C++ class spline3_st+;    
+#pragma link C++ class spline3_st+;
 #endif
