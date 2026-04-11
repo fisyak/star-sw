@@ -458,14 +458,17 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
   //  TQtCanvas2Html  TQtCanvas2Html(c, zoom, "./", zoomer);
 #endif
 }
+#include "bichselG10.C"
 //________________________________________________________________________________
 void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *opt = "colz", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
-  TString patt(pattern);
+  TString patt(pattern); patt.ReplaceAll("^",""); patt.ReplaceAll("$","");
   TPRegexp reg(pattern);
   TString cTitle("c");
   cTitle += patt;
   TString Opt(opt);
   cTitle += ctitle;
+  cTitle.ReplaceAll("^","");
+  cTitle.ReplaceAll("$","");
   cTitle.ReplaceAll(".*","");
   cTitle.ReplaceAll("^","");
   cTitle.ReplaceAll("$","");
@@ -489,8 +492,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     TH1 *hist = (TH1*) array.At(i);
     hist->GetDirectory()->cd();
     TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
-    if (dirName.EndsWith("F")) { dirName = hist->GetDirectory()->GetName();}
-    dirName.ReplaceAll("../","");
+    if (dirName == ".") dirName = hist->GetDirectory()->GetName();
     dirName.ReplaceAll(".root","");
     c->cd(i+1)->SetLogz(1);
     TF1 *gp = 0;
@@ -499,6 +501,16 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
       TH2 *h2 = (TH2 *) hist;
       if (Opt == "colz") {
 	h2->Draw(Opt);
+	if (patt.BeginsWith("TdEdxF")) {
+	   bichselG10("zN",12);
+	   //	  bichselG10("z",12);
+	} else if (patt.BeginsWith("aTdEdx")) {
+	  bichselG10("zN",12,kTRUE);
+	} else if (patt.BeginsWith("TdEdxN")) {
+	  bichselG10("dNdx",12);
+	} else if (patt.BeginsWith("aTdEdxN")) {
+	  bichselG10("dNdx",12,kTRUE);
+	}
       } else if (Opt == "projy") {
 	TH1 *proj = h2->ProjectionY(Form("_py%i",i));
 	proj->Fit("gaus",fopt);

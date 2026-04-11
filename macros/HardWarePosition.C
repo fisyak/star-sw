@@ -288,3 +288,9 @@ Double_t xPad(Double_t pad, Int_t row) {
   }
   return x;
 }
+//________________________________________________________________________________
+Double_t rowsigned(Int_t row, Int_t sector) {
+  Double_t y = row;
+  if (sector > 12) y = - row;
+  return y;
+}

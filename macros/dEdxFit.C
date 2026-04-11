@@ -1,5 +1,5 @@
 /* 
-   root.exe -q -b lBichsel.C pionMIP.root 'dEdxFit.C+("SecRow3C","GF")'
+   root.exe -q -b lBichsel.C pionMIP.root 'dEdxFit.C+("SecRow3NC","GF")'
 
 # Fit Sparse : use ~/bin/SparseSubmit.csh to fit it in parallel  
 @ count = 0
@@ -1673,7 +1673,7 @@ TF1 *FitGG(TH1 *proj, Option_t *opt="RQ", TH1D *proj20 = 0) {
   TF1 *gaus = (TF1 *) proj->GetListOfFunctions()->FindObject("gaus");
   gaus->GetParameters(params);
   params[0] = TMath::Log(params[0]);
-  params[3] = 10;
+  params[3] = 0;
   params[4] = 0;
   TF1 *g = GG();
   g->SetParameters(params);
@@ -3582,16 +3582,22 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
   for (Int_t l = 0; l < objArray->GetEntries(); l++) {
     HistName = TString(((TObjString *) objArray->At(l))->GetName());
     TObject *obj = fRootFile->Get(HistName);
-    if (!obj) {printf("Cannot find %s\n", HistName.Data()); return;}
+    if (!obj) {
+      if (HistName.Contains("N")) { // old naming
+	HistName.ReplaceAll("N",""); 
+	obj = fRootFile->Get(HistName);
+	if (! obj) {
+	  printf("Cannot find %s\n", HistName.Data()); return;
+	}
+      }    
+    }
     HistName20 = HistName;
     if        (HistName.EndsWith("PC"))  {
       HistName20.ReplaceAll("PC","P20C");
-    } else if (HistName.EndsWith("C"))   {
-      HistName20.ReplaceAll("C","N20C");
-    } else if (HistName.EndsWith("P"))   {
+    } else if (HistName.EndsWith("NC"))   {
+      HistName20.ReplaceAll("NC","N20C");
+    } else if (HistName.EndsWith("N") || HistName.EndsWith("P"))   {
       HistName20 += "20";
-    } else                               {
-      HistName20 += "N20";
     }
     TObject *obj20 = 0;
     if (HistName != HistName20) {

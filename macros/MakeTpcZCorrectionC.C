@@ -66,20 +66,22 @@ void MakeTpcZCorrection1() {
   fileIn.ReplaceAll("Z3+Z3PG4EY","");
   fileIn.ReplaceAll("Z3CG4EY","");
   fileIn.ReplaceAll("Z3G4EY","");
-
+  fileIn.ReplaceAll("Z3NGG","");
   fileIn.ReplaceAll(".root","");
   cout << "File: " << fileIn.Data() << endl;
   TString fOut =  Form("%s.%s.C", tableName, fileIn.Data());
   TF1* f[2] = {(TF1 *) gROOT->GetFunction("pol2"), (TF1 *) gROOT->GetFunction("pol5")};
   Int_t nrows = 4; // for separate West and East
-  Int_t np = 9; // 6; // 5
+  Int_t np = 5;// 9; // 6; // 5
   Int_t npO = -1;
-  Double_t min      =  15.0;
+  Double_t min      =   0.0;
   Double_t max      = 210.0;
-  Double_t minOuter =  22.5;
-  Double_t maxOuter = 208.0;
-  Double_t minInner =  20.5;
-  Double_t maxInner = 208.0;
+  Double_t minOuter =  min; // 22.5;
+  Double_t maxOuter =  max; //208.0;
+  Double_t minInner =  min; //20.5;
+  Double_t maxInner =  max; //208.0;
+  Double_t maxX[4] = {0}; // Index
+  Double_t minX[4] = {0}; // 0 -> idx = 1 -> OW, 1 -> idx = 2 -> IW,  2 -> idx = 3 -> OE, 3 -> idx = 4 -> IE, 
   const Char_t *histN[] = {"OW", "IW", "OE", "IE"};
   Int_t    nWEOI[4] = {0};
   if      (fileIn == "")                                 {nrows = 0;}
@@ -105,10 +107,16 @@ void MakeTpcZCorrection1() {
   else if (fileIn.Contains("fixed_2020"))  		 {} // {nrows = 0;}
   else if (fileIn.Contains("fixed_2021"))  		 {} // {nrows = 0;}
   else if (fileIn.Contains("fixed"))                     {} // {nrows = 0;}
-#else
+  //#else
   else if (fileIn.Contains("pp500_2022"))                {nrows = 2; minInner = 10; maxInner = 220; minOuter = 10; maxOuter = 220;}
   else if (fileIn.Contains("AuAu_2023"))                 {nrows = 2; minInner = 18; maxInner = 210; minOuter = 14; maxOuter = 210;}
 #endif
+  else if (fileIn.Contains("AuAu_2025"))                 {nrows = 2; minInner =  0; maxInner = 202;}
+  else if (fileIn.Contains("9p8GeV_fixedTarget_2026"))   {nrows = 4; minInner =  0; maxInner = 202;}
+  else if (fileIn.Contains("8p65GeV_fixedTarget_2026"))  {nrows = 4; minInner =  0; maxInner = 202;}
+  else if (fileIn.Contains("8p65GeV_fixedTarget_2026a") ||
+	   fileIn.Contains("8p65GeV_fixedTarget_2026A")) {nrows = 4; minInner =  0; maxInner = 202;}
+  else if (fileIn.Contains("13p5GeV_fixedTarget_2026A")) {nrows = 4; minInner =  0; maxInner = 202;}
   if (! nrows) {
     cout << "Reject " << fileIn.Data() << endl;
     return;
@@ -134,10 +142,14 @@ void MakeTpcZCorrection1() {
     if (idx % 2 == 1) { // Outer
       min = minOuter;
       max = maxOuter;
+      if (maxX[idx-1] > 0) max = maxX[idx-1];
+      if (minX[idx-1] > 0) min = minX[idx-1];
       if (npO > 0) Np = npO;
     } else {            // Inner
       min = minInner;
       max = maxInner;
+      if (maxX[idx-1] > 0) max = maxX[idx-1];
+      if (minX[idx-1] > 0) min = minX[idx-1];
     }
     if (nWEOI[idx-1] > 0) {Np = nWEOI[idx-1];}
     out << "  row.min = " << Form("%5.1f", min)  << ";" << endl;

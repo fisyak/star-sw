@@ -104,13 +104,14 @@ void dEdx(Int_t First, Int_t Last,
   //    dEdxY2->SetDebug(3);
   Int_t tMin = 20000101;
   Int_t tMax = 20220101;
-  for (Int_t y = 2000; y < 2026; y++) {
+  for (Int_t y = 2000; y <= 2026; y++) {
     TString Y;
     Y += y;
     //      cout << "Year = " << Year.Data() << "\tyear " << Y.Data() << endl;
     if (Year.Contains(Y)) {
       tMin = 10000*(y-1) + 1101;
-      tMax = 10000* y    + 1031;
+      tMax = 10000* y    + 1231;
+      if (y == 2026) tMax = 10000* y    +  205;
       cout << "Year for year " << Y.Data() << "\ttMin = " << tMin << "\ttMax = " << tMax << endl;
       dEdxY2->RemAttr("tMin"); dEdxY2->SetAttr("tMin",tMin);
       dEdxY2->RemAttr("tMax"); dEdxY2->SetAttr("tMax",tMax);
