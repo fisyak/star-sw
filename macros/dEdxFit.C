@@ -3604,7 +3604,10 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
       obj20 = fRootFile->Get(HistName20);
     }
     if (obj->IsA()->InheritsFrom( "TH1" )) {
-      if (! hist) {hist = (TH1 *) obj; hist->SetName(HistName); hist20 = (TH1 *) obj20;
+      if (! hist) {
+	hist = (TH1 *) obj; hist->SetName(HName); 
+	hist20 = (TH1 *) obj20;
+	if (hist20) hist20->SetName(HName + "20");
       } else   {
 	hist->Add((TH1 *) obj); 
 	if (hist20 && obj20) 	hist20->Add((TH1 *) obj20); 
