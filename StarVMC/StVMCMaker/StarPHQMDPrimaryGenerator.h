@@ -16,6 +16,7 @@ class StarPHQMDPrimaryGenerator : public StarMCPrimaryGenerator  {
   virtual void PreSet();
   TH1 *fPVX, *fPVY, *fPVZ, *fPVxyError; 
   Double_t gSpreadX, gSpreadY, gSpreadZ;
+  static Int_t fgPHQMDtree;
   ClassDef(StarPHQMDPrimaryGenerator,1)  //StarPHQMDPrimaryGenerator
 };
 #endif //StarPHQMDPrimaryGenerator_h
