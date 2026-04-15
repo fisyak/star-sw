@@ -100,11 +100,17 @@ if ($all) {
 # 			      PressureN PressureP PressureNC PressurePC PressureN+PressureP PressureNC+PressurePC
 # 			   );
  push  @{ $Opts{GP} },  qw (
-			     NPoints70+NPoints70P NPointsF+NPointsFP NPoints70U+NPoints70UP NPointsFU+NPointsFUP  NPointsN+NPointsP NPointsNU+NPointsNUP
-			     NPoints70 NPoints70P NPointsF NPointsFP NPoints70U NPoints70UP NPointsFU NPointsFUP  NPointsN NPointsP NPointsNU NPointsNUP
+NPointsFP NPointsFN 
+NPoints70P NPoints70N 
+NPointsFUP NPointsFUN 
+NPoints70UP NPoints70UN 
+NPointsNP NPointsNN 
+NPointsNUP NPointsNUN 
                              Time TimeC TimeF TimeFP 
-			     AvCurrentN AvCurrentNC  AvCurrentP AvCurrentPC  
-			     QcmN       QcmNC QcmP       QcmPC
+AvCurrentN AvCurrentP 
+AvCurrentNC AvCurrentPC 
+QcmN QcmP 
+QcmNC QcmPC 
 			     SecRow3N SecRow3NC
 			     Z3N Z3P  Z3N+Z3P  Z3NC Z3PC Z3NC+Z3PC	      );
  push  @{ $Opts{GG} },  qw (SecRow3N SecRow3NC Z3N Z3NC VoltageN  VoltageNC );

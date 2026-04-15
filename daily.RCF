@@ -7452,3 +7452,448 @@ backup:
 -rw-r--r--    1 fisyak    star      7205049922 Mar 31 23:35 TFG25b.033026.tz
 -rw-r--r--    1 fisyak    star     12833606472 Apr  1 12:05 TFG25d.040126.tz
 -rw-r--r--    1 fisyak    star      9776997077 Apr  1 00:24 TFG25f.033026.tz
+================================================================================
+rsync -avrz -h  --include="Cosmics.root" -exclude='*.*' -exclude='.*'  reco/EandB/  /direct/gpfs01/star/data100/TPC/
+================================================================================
+04/02/2026 pion simulation
+
+[starsub02] ~/TPC/TPC23/2025 $ root.exe */dEdx/*GG*.root Chain.C
+root.exe [30] tChain->Draw("mu","i&&j&&dsigma<0.01&&dsigma>0&&y<40.5")
+(Long64_t)3269
+root.exe [31] htemp->Fit("gaus")
+ FCN=353.411 FROM MIGRAD    STATUS=CONVERGED      70 CALLS          71 TOTAL
+                     EDM=4.43129e-09    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.13885e+02   2.51334e+00   1.93835e-02  -2.54887e-05
+   2  Mean         2.02141e-01   6.19579e-04   5.45171e-06   7.38667e-02
+   3  Sigma        3.17337e-02   3.86822e-04   2.89755e-05   1.09057e-02
+root.exe [32] tChain->Draw("mu>>O","i&&j&&dsigma<0.01&&dsigma>0&&y>40.5")
+(Long64_t)2944
+root.exe [33] O->Fit("gaus")
+ FCN=82.2977 FROM MIGRAD    STATUS=CONVERGED      68 CALLS          69 TOTAL
+                     EDM=1.18287e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.85098e+02   4.47164e+00   1.54190e-02  -4.36808e-06
+   2  Mean         3.41108e-01   1.96852e-04   8.75665e-07   1.61779e+00
+   3  Sigma        1.04877e-02   1.60982e-04   1.60214e-05   8.12642e-02
+root.exe [40] tChain->Draw("sigma>>I","i&&j&&dsigma<0.01&&dsigma>0&&y<40.5","")
+(Long64_t)3269
+root.exe [41] I->Fit("gaus")
+ FCN=96.1694 FROM MIGRAD    STATUS=CONVERGED      60 CALLS          61 TOTAL
+                     EDM=3.61499e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.14571e+02   2.58634e+00   9.78908e-03   2.31927e-05
+   2  Mean         4.14144e-01   1.94732e-04   9.07032e-07  -1.39739e+00
+   3  Sigma        1.05160e-02   1.49299e-04   1.71785e-05   2.81718e-02
+root.exe [44] tChain->Draw("sigma>>OO","i&&j&&dsigma<0.01&&dsigma>0&&y>40.5","")
+root.exe [46] OO->Fit("gaus")
+ FCN=109.475 FROM MIGRAD    STATUS=CONVERGED      62 CALLS          63 TOTAL
+                     EDM=5.15203e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.10716e+02   2.66152e+00   1.06725e-02  -8.73370e-05
+   2  Mean         3.97165e-01   1.48870e-04   7.43595e-07   1.29492e+00
+   3  Sigma        7.66999e-03   1.16237e-04   1.92652e-05  -2.21502e-01
+(class TFitResultPtr)40608320
+================================================================================
+04/03/2026
+[l409] /hlt/cephfs/reco $ find EandB/ -name "Cosmics.root" -o -name "MdYZ.root" | tee root.list
+foreach f (`cat root.list`)
+   set b = `basename ${f}`
+   set d = /direct/gpfs01/star/data100/TPC/reco/`dirname ${f}`;
+   if (-r ${d}/${b}) continue;
+   echo "${f} => ${d}"
+   if (! -d ${d}) mkdir -p ${d}
+   cp -p  ${f} ${d}/
+end
+
+   
+EandB/2025/RF/Cosmic/080/Cosmics.root => /direct/gpfs01/star/data100/TPC/reco/EandB/2025/RF/Cosmic/080
+
+foreach p (electron kaon proton deuteron triton muon)
+  hadd.pl option=-T files='../'${p}'*200.root'
+end
+--------------------------------------------------------------------------------
+================================================================================
+04/04/2026 
+(gdb) p  FdEdx[k].F
+$8 = {mdx = 2.90257907, 
+mdE =    {fdE = 4.88587148e-06, fdEdx = 1.68328631e-06, fdEdxL = -13.2947626, fddEdxL = 0, fdEdxN = 0}, 
+mdE20 =  {fdE = 1.08136101e-06, fdEdx = 3.72551796e-07, fdEdxL = -14.8028898, fddEdxL = 0, fdEdxN = 0}, 
+mdEmax = {fdE = 0.000650234753, fdEdx = 0.000224019648,     fdEdxL = -8.40377712, fddEdxL = 0, fdEdxN = 0}}
+(gdb) p zdEdxMPV
+$9 = -12.702244383353863
+1376          FdEdx[k].F     -= zdEdxMPV;
+(gdb) p  FdEdx[k].F
+$10 = {mdx = 2.90257907, 
+mdE =    {fdE = 4.88587148e-06, fdEdx = 1.68328631e-06, fdEdxL = -13.2947626, fddEdxL = 0, fdEdxN = -0.59251821}, 
+mdE20 =  {fdE = 1.08136101e-06, fdEdx = 3.72551796e-07, fdEdxL = -14.8028898, fddEdxL = 0, fdEdxN = -2.10064554}, 
+mdEmax = {fdE = 0.000650234753, fdEdx = 0.000224019648, fdEdxL = -8.40377712, fddEdxL = 0, fdEdxN =  4.29846716}}
+
+1361            FdEdx[k].C[l].Set(FdEdx[k].F);
+(gdb) p  FdEdx[k].C[l]
+$2 = {mdx = 2.90257907, 
+mdE = {fdE = 5.38706172e-06, fdEdx = 1.85595695e-06, fdEdxL = -13.1971102, fddEdxL = 0, fdEdxN = -0.59251821}, 
+mdE20 = {fdE = 26, fdEdx = 8.957551, fdEdxL = 2.19249678, fddEdxL = 0, fdEdxN = -2.10064554}, 
+mdEmax = {fdE = 32768, fdEdx = 11289.2705,     fdEdxL = 9.33160782, fddEdxL = 0, fdEdxN = 4.29846716}}
+1377              FdEdx[k].C[l].RemoveCorrection(FdEdx[k].C[ l]);
+(gdb) p  FdEdx[k].C[l]
+$3 = {mdx = 2.90257907, 
+mdE = {fdE = 5.38706172e-06, fdEdx = 1.85595695e-06, fdEdxL = -13.1971102, fddEdxL = 0, fdEdxN = -0.59251821}, 
+mdE20 = {fdE = 26, fdEdx = 8.957551, fdEdxL = 2.19249678, fddEdxL = 0, fdEdxN = -2.10064554}, 
+mdEmax = {fdE = 32768, fdEdx = 11289.2705,     fdEdxL = 9.33160782, fddEdxL = 0, fdEdxN = 4.29846716}}
+(gdb) p FdEdx[k].C[l]
+$5 = {mdx = 2.90257907, 
+mdE = {fdE = 5.38706172e-06, fdEdx = 1.85595695e-06, fdEdxL = -13.1971102, fddEdxL = 0, fdEdxN = 0}, 
+mdE20 = {fdE = 26, fdEdx = 8.957551, fdEdxL = 2.19249678, fddEdxL = 0, fdEdxN = 0}, 
+mdEmax = {fdE = 32768, fdEdx = 11289.2705, fdEdxL = 9.33160782,     fddEdxL = 0, fdEdxN = 0}}
+(gdb) p FdEdx[k].F
+$6 = {mdx = 2.90257907, 
+mdE = {fdE = 4.88587148e-06, fdEdx = 1.68328631e-06, fdEdxL = -13.2947626, fddEdxL = 0, fdEdxN = -0.59251821}, 
+mdE20 = {fdE = 1.08136101e-06, fdEdx = 3.72551796e-07, fdEdxL = -14.8028898, fddEdxL = 0, fdEdxN = -2.10064554}, 
+mdEmax = {fdE = 0.000650234753,     fdEdx = 0.000224019648, fdEdxL = -8.40377712, fddEdxL = 0, fdEdxN = 4.29846716}}
+1361            FdEdx[k].C[l].Set(FdEdx[k].F);
+(gdb)  p FdEdx[k].C[l]
+$7 = {mdx = 2.90257907, 
+mdE = {fdE = 5.38706172e-06, fdEdx = 1.85595695e-06, fdEdxL = -13.1971102, fddEdxL = 0, fdEdxN = -0.59251821}, 
+mdE20 = {fdE = 26, fdEdx = 8.957551, fdEdxL = 2.19249678, fddEdxL = 0, fdEdxN = -2.10064554}, 
+mdEmax = {fdE = 32768, fdEdx = 11289.2705,     fdEdxL = 9.33160782, fddEdxL = 0, fdEdxN = 4.29846716}}
+(gdb) info b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep n   0x00007fffed1ba7fa in StdEdxY2Maker::Histogramming(StGlobalTrack*) at .al96_x8664_gcc11/obj/StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx:1069
+        breakpoint already hit 3 times
+2       breakpoint     keep n   0x00007fffed1be298 in StdEdxY2Maker::Histogramming(StGlobalTrack*) at .al96_x8664_gcc11/obj/StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx:1265
+        breakpoint already hit 1 time
+3       breakpoint     keep n   0x00007fffed1beba9 in StdEdxY2Maker::Histogramming(StGlobalTrack*) at .al96_x8664_gcc11/obj/StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx:1362
+        breakpoint already hit 2 times
+4       breakpoint     keep n   0x00007fffed1bf612 in StdEdxY2Maker::Histogramming(StGlobalTrack*) at .al96_x8664_gcc11/obj/StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx:1469
+5       breakpoint     keep n   0x00007fffed1bec96 in StdEdxY2Maker::Histogramming(StGlobalTrack*) at .al96_x8664_gcc11/obj/StRoot/StdEdxY2Maker/StdEdxY2Maker.cxx:1369
+
+
+(gdb) p *this
+$3 = {_vptr.Hists3D = 0x7fffed1ef138 <vtable for Hists3D+16>, {hists = {0x3f26a80, 0x40a2750, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, h3 = 0x3f26a80}, h3C = 0x0, h3N = 0x0, h3Ne = 0x0, h3Npi = 0x0, h3NK = 0x0, h3NP = 0x0, h3Nd = 0x0, pdX = 0x0, fNHist = 2, fI1 = 0, static NtotHist = 2, 
+  static FirstHist = 0}
+(gdb) p hists[i]
+No symbol "hists" in current context.
+(gdb) p ((TH1 *) 0x3f26a80)->GetName()
+$4 = 0x3f26a99 "SecRow3P"
+(gdb) p *z@8
+$1 = {-1.734156608581543, -0.34786230325698853, 0, 2.7390000820159912, 900.05811148751309, 0.00028225212008692324, 0, 0}
+(gdb) p Vars
+$5 = {-1.734156608581543, -0.34786230325698853, 0, 2.7390000820159912}
+(gdb) p z
+$6 = (Double_t *) 0x7ffffffe7620
+(gdb) p *z@8
+$7 = {-2.8405332565307617, -0.34786230325698853, 0, 2.7390000820159912, 900.05811148751309, 0.00028225212008692324, 1.4536493092430216, 1.4536493092430216}
+(gdb) p *z@8
+$7 = {-2.8405332565307617, -0.34786230325698853, 0, 2.7390000820159912, 900.05811148751309, 0.00028225212008692324, 1.4536493092430216, 1.4536493092430216}
+(gdb) p *this
+$8 = {_vptr.Hists3D = 0x7fffed1ef138 <vtable for Hists3D+16>, {hists = {0x54186b0, 0x5594490, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0}, h3 = 0x54186b0}, h3C = 0x0, h3N = 0x0, h3Ne = 0x0, h3Npi = 0x0, h3NK = 0x0, h3NP = 0x0, h3Nd = 0x0, pdX = 0x0, fNHist = 2, fI1 = 0, static NtotHist = 2, 
+  static FirstHist = 0}
+(gdb) p ((TH1 *) 0x54186b0)->GetName()
+$9 = 0x54186c9 "SecRow3P20"
+================================================================================
+04/08/2028 
+
+starsub02] ~/work $ root.exe 'bfc.C(0)' 'Run1Ev.C("alpha1GeV@eta-1.50")'
+root.exe [3] StAnalysisMaker::instance()->PrintTpcHits()
+ge = 47 Tpc s/r   3/  3 id     1 xyz:    58.706 +/- 0.000     5.448 +/- 0.010    73.361 +/- 0.268 q(keV) 346.97 idT     1 qa 100 fl  0 us 1 dX  3.69 pmin/max  15/ 19 np  5 tmin/max 233/254 nt 22 tm 239.70 pad  16.92 adc  4690
+
+ge = 47 Tpc s/r   3/  4 id     2 xyz:    60.310 +/- 0.000     5.887 +/- 0.000    68.955 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl256 us 0 dX  0.00 pmin/max  16/ 18 np  3 tmin/max 245/249 nt  5 tm 247.14 pad  17.05 adc  1298
+ge = 47 Tpc s/r   3/  4 id     3 xyz:    60.310 +/- 0.000     5.745 +/- 0.010    70.482 +/- 0.389 q(keV) 184.92 idT     1 qa 100 fl  0 us 1 dX  3.69 pmin/max  16/ 18 np  3 tmin/max 239/249 nt 11 tm 244.56 pad  17.33 adc  2346
+
+ge = 47 Tpc s/r   3/  5 id     4 xyz:    61.913 +/- 0.000     6.051 +/- 0.083    66.345 +/- 0.369 q(keV) 824.65 idT     1 qa 100 fl  0 us 1 dX  3.69 pmin/max  16/ 20 np  5 tmin/max 244/266 nt 23 tm 251.55 pad  17.72 adc  9727
+ge = 47 Tpc s/r   3/  6 id     5 xyz:    63.517 +/- 0.000     6.373 +/- 0.089    62.485 +/- 0.385 q(keV)1011.76 idT     1 qa 100 fl  0 us 1 dX  3.70 pmin/max  12/ 25 np 14 tmin/max 243/273 nt 31 tm 258.06 pad  18.08 adc 12069
+ge = 47 Tpc s/r   3/  7 id     6 xyz:    65.122 +/- 0.000     6.764 +/- 0.090    59.477 +/- 0.379 q(keV) 961.46 idT     1 qa 100 fl  0 us 1 dX  3.70 pmin/max  11/ 21 np 11 tmin/max 248/278 nt 31 tm 263.14 pad  17.30 adc 11332
+
+ge = 47 Tpc s/r   3/  8 id     8 xyz:    66.727 +/- 0.000     6.995 +/- 0.000    47.776 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  16/ 18 np  3 tmin/max 280/284 nt  5 tm 282.89 pad  17.84 adc    92
+ge = 47 Tpc s/r   3/  8 id     7 xyz:    66.726 +/- 0.000     6.944 +/- 0.000    57.700 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  16/ 18 np  3 tmin/max 264/268 nt  5 tm 266.14 pad  17.94 adc  2920
+
+ge = 47 Tpc s/r   3/ 11 id     9 xyz:    71.541 +/- 0.000     8.190 +/- 0.020    45.722 +/- 0.460 q(keV) 130.38 idT     1 qa 100 fl  0 us 1 dX  3.72 pmin/max  17/ 20 np  4 tmin/max 280/293 nt 14 tm 286.36 pad  18.45 adc  1160
+ge = 47 Tpc s/r   3/ 12 id    10 xyz:    73.146 +/- 0.000     8.575 +/- 0.026    41.641 +/- 0.244 q(keV) 402.61 idT     1 qa 100 fl  0 us 1 dX  3.72 pmin/max  17/ 21 np  5 tmin/max 286/308 nt 23 tm 293.25 pad  18.69 adc  3766
+ge = 47 Tpc s/r   3/ 13 id    11 xyz:    74.751 +/- 0.000     8.904 +/- 0.053    38.466 +/- 0.217 q(keV) 619.05 idT     1 qa 100 fl  0 us 1 dX  3.73 pmin/max  16/ 22 np  7 tmin/max 291/313 nt 23 tm 298.61 pad  19.03 adc  5597
+ge = 47 Tpc s/r   3/ 14 id    12 xyz:    76.356 +/- 0.000     9.264 +/- 0.026    35.902 +/- 0.384 q(keV) 242.27 idT     1 qa 100 fl  0 us 1 dX  3.73 pmin/max  17/ 20 np  4 tmin/max 297/317 nt 21 tm 302.94 pad  18.31 adc  2087
+ge = 47 Tpc s/r   3/ 15 id    13 xyz:    77.962 +/- 0.000     9.687 +/- 0.045    32.163 +/- 0.458 q(keV)  87.25 idT     1 qa 100 fl  0 us 1 dX  3.74 pmin/max  17/ 20 np  4 tmin/max 304/316 nt 13 tm 309.25 pad  18.47 adc   717
+ge = 47 Tpc s/r   3/ 16 id    14 xyz:    79.567 +/- 0.000    10.212 +/- 0.037    27.729 +/- 0.384 q(keV) 240.45 idT     1 qa 100 fl  0 us 1 dX  3.74 pmin/max  16/ 20 np  5 tmin/max 310/331 nt 22 tm 316.73 pad  18.42 adc  2039
+ge = 47 Tpc s/r   3/ 17 id    15 xyz:    81.171 +/- 0.000    10.587 +/- 0.068    24.184 +/- 0.212 q(keV) 728.41 idT     1 qa 100 fl  0 us 1 dX  3.75 pmin/max  17/ 21 np  5 tmin/max 315/337 nt 23 tm 322.72 pad  18.67 adc  6340
+ge = 47 Tpc s/r   3/ 18 id    16 xyz:    82.776 +/- 0.000    10.932 +/- 0.048    21.454 +/- 0.258 q(keV) 391.93 idT     1 qa 100 fl  0 us 1 dX  3.76 pmin/max  17/ 21 np  5 tmin/max 320/342 nt 23 tm 327.33 pad  18.98 adc  3327
+ge = 47 Tpc s/r   3/ 19 id    17 xyz:    84.381 +/- 0.000    11.409 +/- 0.048    18.020 +/- 0.390 q(keV) 237.78 idT     1 qa 100 fl  0 us 1 dX  3.76 pmin/max  17/ 21 np  5 tmin/max 327/348 nt 22 tm 333.12 pad  19.03 adc  1951
+ge = 47 Tpc s/r   3/ 20 id    18 xyz:    85.985 +/- 0.000    11.886 +/- 0.051    14.336 +/- 0.380 q(keV) 251.42 idT     1 qa 100 fl  0 us 1 dX  3.77 pmin/max  17/ 21 np  5 tmin/max 333/354 nt 22 tm 339.34 pad  19.08 adc  2035
+ge = 47 Tpc s/r   3/ 23 id    19 xyz:    90.799 +/- 0.000    13.303 +/- 0.061     3.775 +/- 0.429 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.79 pmin/max  16/ 20 np  5 tmin/max 352/372 nt 21 tm 357.17 pad  18.25 adc  1504
+ge = 47 Tpc s/r   3/ 24 id    20 xyz:    92.404 +/- 0.000    13.679 +/- 0.066     1.008 +/- 0.462 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.79 pmin/max  17/ 20 np  4 tmin/max 357/367 nt 11 tm 361.84 pad  18.50 adc   762
+ge = 47 Tpc s/r  21/ 24 id     1 xyz:    92.451 +/- 0.000    14.010 +/- 0.000    -1.409 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  74/ 76 np  3 tmin/max 357/365 nt  9 tm 361.31 pad  74.98 adc   428
+ge = 47 Tpc s/r  21/ 25 id     2 xyz:    94.054 +/- 0.000    14.300 +/- 0.066    -2.963 +/- 0.391 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.80 pmin/max  75/ 79 np  5 tmin/max 352/373 nt 22 tm 358.69 pad  76.56 adc  1859
+ge = 47 Tpc s/r  21/ 26 id     3 xyz:    95.659 +/- 0.000    14.824 +/- 0.068    -6.637 +/- 0.408 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.81 pmin/max  77/ 80 np  4 tmin/max 346/367 nt 22 tm 352.48 pad  78.61 adc  1695
+ge = 47 Tpc s/r  21/ 27 id     4 xyz:    97.263 +/- 0.000    15.308 +/- 0.072   -10.218 +/- 0.455 q(keV) 143.24 idT     1 qa 100 fl  0 us 1 dX  3.82 pmin/max  79/ 82 np  4 tmin/max 340/353 nt 14 tm 346.44 pad  80.58 adc  1142
+ge = 47 Tpc s/r  21/ 28 id     5 xyz:    98.867 +/- 0.000    15.793 +/- 0.076   -13.614 +/- 0.450 q(keV)  77.73 idT     1 qa 100 fl  0 us 1 dX  3.82 pmin/max  80/ 83 np  4 tmin/max 335/347 nt 13 tm 340.70 pad  81.55 adc   588
+ge = 47 Tpc s/r  21/ 29 id     6 xyz:   100.470 +/- 0.000    16.511 +/- 0.076   -18.334 +/- 0.446 q(keV) 154.11 idT     1 qa 100 fl  0 us 1 dX  3.83 pmin/max  82/ 85 np  4 tmin/max 327/347 nt 21 tm 332.73 pad  83.98 adc  1276
+ge = 47 Tpc s/r  21/ 30 id     7 xyz:   102.072 +/- 0.000    16.870 +/- 0.078   -20.498 +/- 0.359 q(keV) 246.32 idT     1 qa 100 fl  0 us 1 dX  3.84 pmin/max  84/ 87 np  4 tmin/max 322/344 nt 23 tm 329.08 pad  85.70 adc  2100
+ge = 47 Tpc s/r  21/ 31 id     8 xyz:   103.674 +/- 0.000    17.494 +/- 0.080   -24.552 +/- 0.406 q(keV) 192.91 idT     1 qa 100 fl  0 us 1 dX  3.85 pmin/max  86/ 90 np  5 tmin/max 316/337 nt 22 tm 322.23 pad  87.95 adc  1677
+ge = 47 Tpc s/r  21/ 32 id     9 xyz:   105.276 +/- 0.000    18.165 +/- 0.084   -28.901 +/- 0.461 q(keV)  83.61 idT     1 qa 100 fl  0 us 1 dX  3.85 pmin/max  89/ 92 np  4 tmin/max 308/329 nt 22 tm 314.89 pad  90.30 adc   695
+ge = 47 Tpc s/r  21/ 33 id    10 xyz:   106.877 +/- 0.000    18.617 +/- 0.085   -31.372 +/- 0.324 q(keV) 252.91 idT     1 qa 100 fl  0 us 1 dX  3.86 pmin/max  90/ 94 np  5 tmin/max 304/325 nt 22 tm 310.72 pad  92.20 adc  2376
+ge = 47 Tpc s/r  21/ 34 id    11 xyz:   108.478 +/- 0.000    19.248 +/- 0.088   -35.545 +/- 0.465 q(keV)  93.00 idT     1 qa 100 fl  0 us 1 dX  3.87 pmin/max  93/ 96 np  4 tmin/max 296/318 nt 23 tm 303.67 pad  94.47 adc   826
+ge = 47 Tpc s/r  21/ 35 id    12 xyz:   110.079 +/- 0.000    19.832 +/- 0.089   -38.932 +/- 0.378 q(keV) 193.84 idT     1 qa 100 fl  0 us 1 dX  3.88 pmin/max  94/ 97 np  4 tmin/max 292/312 nt 21 tm 297.95 pad  95.64 adc  1909
+ge = 47 Tpc s/r  21/ 36 id    13 xyz:   111.680 +/- 0.000    20.463 +/- 0.091   -42.865 +/- 0.419 q(keV) 155.99 idT     1 qa 100 fl  0 us 1 dX  3.89 pmin/max  96/100 np  5 tmin/max 285/306 nt 22 tm 291.31 pad  97.91 adc  1547
+ge = 47 Tpc s/r  21/ 37 id    14 xyz:   113.281 +/- 0.000    21.093 +/- 0.094   -46.668 +/- 0.408 q(keV) 163.21 idT     1 qa 100 fl  0 us 1 dX  3.90 pmin/max  98/102 np  5 tmin/max 278/299 nt 22 tm 284.89 pad 100.17 adc  1653
+ge = 47 Tpc s/r  21/ 38 id    15 xyz:   114.882 +/- 0.000    21.723 +/- 0.098   -49.842 +/- 0.233 q(keV) 294.87 idT     1 qa 100 fl  0 us 1 dX  3.91 pmin/max 100/104 np  5 tmin/max 273/294 nt 22 tm 279.53 pad 102.44 adc  3114
+ge = 47 Tpc s/r  21/ 39 id    16 xyz:   116.483 +/- 0.000    22.313 +/- 0.098   -53.655 +/- 0.347 q(keV) 201.14 idT     1 qa 100 fl  0 us 1 dX  3.93 pmin/max 103/107 np  5 tmin/max 266/288 nt 23 tm 273.09 pad 104.62 adc  2152
+ge = 47 Tpc s/r  21/ 40 id    17 xyz:   118.085 +/- 0.000    22.985 +/- 0.100   -57.328 +/- 0.381 q(keV) 178.61 idT     1 qa 100 fl  0 us 1 dX  3.94 pmin/max 105/109 np  5 tmin/max 260/281 nt 22 tm 266.89 pad 106.98 adc  1878
+ge = 47 Tpc s/r  21/ 41 id    18 xyz:   127.057 +/- 0.000    26.840 +/- 0.081   -77.859 +/- 0.434 q(keV) 200.84 idT     1 qa 100 fl  0 us 1 dX  5.02 pmin/max  88/ 92 np  5 tmin/max 210/240 nt 31 tm 225.56 pad  89.94 adc  2059
+ge = 47 Tpc s/r  21/ 42 id    19 xyz:   129.054 +/- 0.000    27.763 +/- 0.086   -82.412 +/- 0.447 q(keV) 188.99 idT     1 qa 100 fl  0 us 1 dX  5.04 pmin/max  90/ 94 np  5 tmin/max 202/232 nt 31 tm 217.88 pad  92.33 adc  1967
+ge = 47 Tpc s/r  21/ 43 id    20 xyz:   131.051 +/- 0.000    28.667 +/- 0.040   -86.983 +/- 0.172 q(keV) 268.27 idT     1 qa 100 fl  0 us 1 dX  5.05 pmin/max  93/ 97 np  5 tmin/max 195/225 nt 31 tm 210.16 pad  94.69 adc  2830
+ge = 47 Tpc s/r  21/ 44 id    21 xyz:   133.048 +/- 0.000    29.592 +/- 0.069   -91.638 +/- 0.352 q(keV) 224.95 idT     1 qa 100 fl  0 us 1 dX  5.07 pmin/max  95/ 99 np  5 tmin/max 187/217 nt 31 tm 202.30 pad  97.08 adc  2380
+ge = 47 Tpc s/r  21/ 45 id    22 xyz:   135.044 +/- 0.000    30.600 +/- 0.027   -96.524 +/- 0.010 q(keV) 284.57 idT     1 qa 100 fl  0 us 1 dX  5.09 pmin/max  98/101 np  4 tmin/max 179/209 nt 31 tm 194.05 pad  99.59 adc  3087
+ge = 47 Tpc s/r  21/ 46 id    23 xyz:   137.039 +/- 0.000    31.441 +/- 0.075  -100.845 +/- 0.367 q(keV) 214.36 idT     1 qa 100 fl  0 us 1 dX  5.10 pmin/max  99/103 np  5 tmin/max 171/201 nt 31 tm 186.75 pad 100.86 adc  2312
+
+ge = 47 Tpc s/r  21/ 47 id    25 xyz:   139.032 +/- 0.000    32.511 +/- 0.058  -106.592 +/- 0.237 q(keV) 245.99 idT     1 qa 100 fl  0 us 1 dX  5.12 pmin/max 102/104 np  3 tmin/max 173/180 nt  8 tm 177.05 pad 103.47 adc  2694
+ge = 47 Tpc s/r  21/ 47 id    24 xyz:   139.032 +/- 0.000    32.302 +/- 0.000  -105.565 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl256 us 0 dX  0.00 pmin/max 102/104 np  3 tmin/max 176/180 nt  5 tm 178.78 pad 103.16 adc  1356
+
+ge = 47 Tpc s/r  22/ 63 id     1 xyz:   168.723 +/- 0.005    49.532 +/- 0.009  -178.828 +/- 0.491 q(keV) 247.06 idT     1 qa 100 fl  0 us 1 dX  4.59 pmin/max   4/  7 np  4 tmin/max  48/ 70 nt 23 tm  55.11 pad   5.95 adc  2777
+ge = 47 Tpc s/r  22/ 64 id     2 xyz:   170.416 +/- 0.019    50.618 +/- 0.032  -183.010 +/- 0.595 q(keV) 193.12 idT     1 qa 100 fl  0 us 1 dX  4.59 pmin/max   6/  8 np  3 tmin/max  41/ 63 nt 23 tm  48.05 pad   7.09 adc  2242
+ge = 47 Tpc s/r  22/ 65 id     3 xyz:   172.100 +/- 0.027    51.724 +/- 0.046  -187.276 +/- 0.652 q(keV) 128.93 idT     1 qa 100 fl  0 us 1 dX  4.59 pmin/max   7/ 10 np  4 tmin/max  34/ 55 nt 22 tm  40.84 pad   8.27 adc  1567
+ge = 47 Tpc s/r  22/ 66 id     4 xyz:   173.765 +/- 0.008    52.867 +/- 0.014  -191.450 +/- 0.587 q(keV) 196.25 idT     1 qa 100 fl  0 us 1 dX  4.60 pmin/max   7/ 10 np  4 tmin/max  26/ 48 nt 23 tm  33.80 pad   8.50 adc  2443
+ge = 47 Tpc s/r  22/ 67 id     5 xyz:   175.456 +/- 0.023    53.965 +/- 0.040  -194.929 +/- 0.581 q(keV)  66.58 idT     1 qa 100 fl  0 us 1 dX  4.60 pmin/max   8/ 11 np  4 tmin/max  24/ 42 nt 19 tm  27.92 pad   9.66 adc   806
+ge = 47 Tpc s/r  22/ 70 id     6 xyz:   180.418 +/- 0.010    57.527 +/- 0.017  -209.671 +/- 0.347 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  4.61 pmin/max  12/ 14 np  3 tmin/max   1/  6 nt  6 tm   3.03 pad  12.55 adc   304
+TotalNoOfTpcHits = 51
+
+root.exe 'bfc.C(0,"MC,9p8GeV_fixedTarget_2026,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout,McTpcAna,NoTpxAfterBurner")' 'Run1Ev.C("alpha1GeV@eta-1.50")'
+root.exe [2]  StAnalysisMaker::instance()->PrintTpcHits()
+ge = 47 Tpc s/r   3/  3 id     1 xyz:    58.706 +/- 0.000     5.448 +/- 0.010    73.361 +/- 0.268 q(keV) 346.97 idT     1 qa 100 fl  0 us 1 dX  3.68 pmin/max  15/ 19 np  5 tmin/max 233/254 nt 22 tm 239.70 pad  16.92 adc  4690
+
+ge = 47 Tpc s/r   3/  4 id     2 xyz:    60.310 +/- 0.000     5.887 +/- 0.040    68.955 +/- 1.853 q(keV)   0.00 idT     1 qa 100 fl  2 us 1 dX  3.69 pmin/max  16/ 18 np  3 tmin/max 245/249 nt  5 tm 247.14 pad  17.05 adc  1298
+ge = 47 Tpc s/r   3/  4 id     3 xyz:    60.310 +/- 0.000     5.573 +/- 0.000    72.371 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  2 us 0 dX  0.00 pmin/max  16/ 18 np  3 tmin/max 239/243 nt  5 tm 241.38 pad  17.67 adc  1048
+
+ge = 47 Tpc s/r   3/  5 id     4 xyz:    61.913 +/- 0.000     6.051 +/- 0.084    66.345 +/- 0.369 q(keV) 824.65 idT     1 qa 100 fl  0 us 1 dX  3.69 pmin/max  16/ 20 np  5 tmin/max 244/266 nt 23 tm 251.55 pad  17.72 adc  9727
+ge = 47 Tpc s/r   3/  6 id     5 xyz:    63.517 +/- 0.000     6.373 +/- 0.090    62.485 +/- 0.385 q(keV)1011.76 idT     1 qa 100 fl  0 us 1 dX  3.70 pmin/max  12/ 25 np 14 tmin/max 243/273 nt 31 tm 258.06 pad  18.08 adc 12069
+ge = 47 Tpc s/r   3/  7 id     6 xyz:    65.122 +/- 0.000     6.764 +/- 0.090    59.477 +/- 0.379 q(keV) 961.46 idT     1 qa 100 fl  0 us 1 dX  3.70 pmin/max  11/ 21 np 11 tmin/max 248/278 nt 31 tm 263.14 pad  17.30 adc 11332
+
+ge = 47 Tpc s/r   3/  8 id     8 xyz:    66.727 +/- 0.000     6.995 +/- 0.000    47.776 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  2 us 0 dX  0.00 pmin/max  16/ 18 np  3 tmin/max 280/284 nt  5 tm 282.89 pad  17.84 adc    92
+ge = 47 Tpc s/r   3/  8 id     7 xyz:    66.726 +/- 0.000     6.944 +/- 0.040    57.700 +/- 1.306 q(keV)   0.00 idT     1 qa 100 fl  2 us 1 dX  3.70 pmin/max  16/ 18 np  3 tmin/max 264/268 nt  5 tm 266.14 pad  17.94 adc  2920
+
+ge = 47 Tpc s/r   3/ 11 id     9 xyz:    71.541 +/- 0.000     8.190 +/- 0.020    45.722 +/- 0.460 q(keV) 130.38 idT     1 qa 100 fl  0 us 1 dX  3.72 pmin/max  17/ 20 np  4 tmin/max 280/293 nt 14 tm 286.36 pad  18.45 adc  1160
+ge = 47 Tpc s/r   3/ 12 id    10 xyz:    73.146 +/- 0.000     8.575 +/- 0.026    41.641 +/- 0.244 q(keV) 402.61 idT     1 qa 100 fl  0 us 1 dX  3.72 pmin/max  17/ 21 np  5 tmin/max 286/308 nt 23 tm 293.25 pad  18.69 adc  3766
+ge = 47 Tpc s/r   3/ 13 id    11 xyz:    74.751 +/- 0.000     8.904 +/- 0.053    38.466 +/- 0.217 q(keV) 619.05 idT     1 qa 100 fl  0 us 1 dX  3.73 pmin/max  16/ 22 np  7 tmin/max 291/313 nt 23 tm 298.61 pad  19.03 adc  5597
+ge = 47 Tpc s/r   3/ 14 id    12 xyz:    76.356 +/- 0.000     9.264 +/- 0.026    35.902 +/- 0.384 q(keV) 242.27 idT     1 qa 100 fl  0 us 1 dX  3.73 pmin/max  17/ 20 np  4 tmin/max 297/317 nt 21 tm 302.94 pad  18.31 adc  2087
+ge = 47 Tpc s/r   3/ 15 id    13 xyz:    77.962 +/- 0.000     9.687 +/- 0.045    32.163 +/- 0.458 q(keV)  87.25 idT     1 qa 100 fl  0 us 1 dX  3.74 pmin/max  17/ 20 np  4 tmin/max 304/316 nt 13 tm 309.25 pad  18.47 adc   717
+ge = 47 Tpc s/r   3/ 16 id    14 xyz:    79.567 +/- 0.000    10.212 +/- 0.036    27.729 +/- 0.384 q(keV) 240.45 idT     1 qa 100 fl  0 us 1 dX  3.74 pmin/max  16/ 20 np  5 tmin/max 310/331 nt 22 tm 316.73 pad  18.42 adc  2039
+ge = 47 Tpc s/r   3/ 17 id    15 xyz:    81.171 +/- 0.000    10.587 +/- 0.068    24.184 +/- 0.212 q(keV) 728.41 idT     1 qa 100 fl  0 us 1 dX  3.75 pmin/max  17/ 21 np  5 tmin/max 315/337 nt 23 tm 322.72 pad  18.67 adc  6340
+ge = 47 Tpc s/r   3/ 18 id    16 xyz:    82.776 +/- 0.000    10.932 +/- 0.048    21.454 +/- 0.258 q(keV) 391.93 idT     1 qa 100 fl  0 us 1 dX  3.75 pmin/max  17/ 21 np  5 tmin/max 320/342 nt 23 tm 327.33 pad  18.98 adc  3327
+ge = 47 Tpc s/r   3/ 19 id    17 xyz:    84.381 +/- 0.000    11.409 +/- 0.048    18.020 +/- 0.390 q(keV) 237.78 idT     1 qa 100 fl  0 us 1 dX  3.76 pmin/max  17/ 21 np  5 tmin/max 327/348 nt 22 tm 333.12 pad  19.03 adc  1951
+ge = 47 Tpc s/r   3/ 20 id    18 xyz:    85.985 +/- 0.000    11.886 +/- 0.051    14.336 +/- 0.380 q(keV) 251.42 idT     1 qa 100 fl  0 us 1 dX  3.77 pmin/max  17/ 21 np  5 tmin/max 333/354 nt 22 tm 339.34 pad  19.08 adc  2035
+ge = 47 Tpc s/r   3/ 23 id    19 xyz:    90.799 +/- 0.000    13.303 +/- 0.061     3.775 +/- 0.429 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.79 pmin/max  16/ 20 np  5 tmin/max 352/372 nt 21 tm 357.17 pad  18.25 adc  1504
+
+ge = 47 Tpc s/r   3/ 24 id    20 xyz:    92.404 +/- 0.000    13.679 +/- 0.066     1.008 +/- 0.462 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.79 pmin/max  17/ 20 np  4 tmin/max 357/367 nt 11 tm 361.84 pad  18.50 adc   762
+ge = 47 Tpc s/r  21/ 24 id     1 xyz:    92.451 +/- 0.000    14.010 +/- 0.000    -1.409 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  74/ 76 np  3 tmin/max 357/365 nt  9 tm 361.31 pad  74.98 adc   428
+
+ge = 47 Tpc s/r  21/ 25 id     2 xyz:    94.054 +/- 0.000    14.300 +/- 0.066    -2.963 +/- 0.391 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.80 pmin/max  75/ 79 np  5 tmin/max 352/373 nt 22 tm 358.69 pad  76.56 adc  1859
+ge = 47 Tpc s/r  21/ 26 id     3 xyz:    95.659 +/- 0.000    14.824 +/- 0.068    -6.637 +/- 0.408 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  3.81 pmin/max  77/ 80 np  4 tmin/max 346/367 nt 22 tm 352.48 pad  78.61 adc  1695
+ge = 47 Tpc s/r  21/ 27 id     4 xyz:    97.263 +/- 0.000    15.308 +/- 0.072   -10.218 +/- 0.455 q(keV) 143.24 idT     1 qa 100 fl  0 us 1 dX  3.82 pmin/max  79/ 82 np  4 tmin/max 340/353 nt 14 tm 346.44 pad  80.58 adc  1142
+ge = 47 Tpc s/r  21/ 28 id     5 xyz:    98.867 +/- 0.000    15.793 +/- 0.076   -13.614 +/- 0.450 q(keV)  77.73 idT     1 qa 100 fl  0 us 1 dX  3.82 pmin/max  80/ 83 np  4 tmin/max 335/347 nt 13 tm 340.70 pad  81.55 adc   588
+ge = 47 Tpc s/r  21/ 29 id     6 xyz:   100.470 +/- 0.000    16.511 +/- 0.076   -18.334 +/- 0.446 q(keV) 154.11 idT     1 qa 100 fl  0 us 1 dX  3.83 pmin/max  82/ 85 np  4 tmin/max 327/347 nt 21 tm 332.73 pad  83.98 adc  1276
+ge = 47 Tpc s/r  21/ 30 id     7 xyz:   102.072 +/- 0.000    16.870 +/- 0.078   -20.498 +/- 0.359 q(keV) 246.32 idT     1 qa 100 fl  0 us 1 dX  3.84 pmin/max  84/ 87 np  4 tmin/max 322/344 nt 23 tm 329.08 pad  85.70 adc  2100
+ge = 47 Tpc s/r  21/ 31 id     8 xyz:   103.674 +/- 0.000    17.494 +/- 0.080   -24.552 +/- 0.406 q(keV) 192.91 idT     1 qa 100 fl  0 us 1 dX  3.85 pmin/max  86/ 90 np  5 tmin/max 316/337 nt 22 tm 322.23 pad  87.95 adc  1677
+ge = 47 Tpc s/r  21/ 32 id     9 xyz:   105.276 +/- 0.000    18.165 +/- 0.084   -28.901 +/- 0.461 q(keV)  83.61 idT     1 qa 100 fl  0 us 1 dX  3.85 pmin/max  89/ 92 np  4 tmin/max 308/329 nt 22 tm 314.89 pad  90.30 adc   695
+ge = 47 Tpc s/r  21/ 33 id    10 xyz:   106.877 +/- 0.000    18.617 +/- 0.085   -31.372 +/- 0.324 q(keV) 252.91 idT     1 qa 100 fl  0 us 1 dX  3.86 pmin/max  90/ 94 np  5 tmin/max 304/325 nt 22 tm 310.72 pad  92.20 adc  2376
+ge = 47 Tpc s/r  21/ 34 id    11 xyz:   108.478 +/- 0.000    19.248 +/- 0.088   -35.545 +/- 0.465 q(keV)  93.00 idT     1 qa 100 fl  0 us 1 dX  3.87 pmin/max  93/ 96 np  4 tmin/max 296/318 nt 23 tm 303.67 pad  94.47 adc   826
+ge = 47 Tpc s/r  21/ 35 id    12 xyz:   110.079 +/- 0.000    19.832 +/- 0.089   -38.932 +/- 0.378 q(keV) 193.84 idT     1 qa 100 fl  0 us 1 dX  3.88 pmin/max  94/ 97 np  4 tmin/max 292/312 nt 21 tm 297.95 pad  95.64 adc  1909
+ge = 47 Tpc s/r  21/ 36 id    13 xyz:   111.680 +/- 0.000    20.463 +/- 0.091   -42.865 +/- 0.419 q(keV) 155.99 idT     1 qa 100 fl  0 us 1 dX  3.89 pmin/max  96/100 np  5 tmin/max 285/306 nt 22 tm 291.31 pad  97.91 adc  1547
+ge = 47 Tpc s/r  21/ 37 id    14 xyz:   113.281 +/- 0.000    21.093 +/- 0.094   -46.668 +/- 0.408 q(keV) 163.21 idT     1 qa 100 fl  0 us 1 dX  3.90 pmin/max  98/102 np  5 tmin/max 278/299 nt 22 tm 284.89 pad 100.17 adc  1653
+ge = 47 Tpc s/r  21/ 38 id    15 xyz:   114.882 +/- 0.000    21.723 +/- 0.098   -49.842 +/- 0.233 q(keV) 294.87 idT     1 qa 100 fl  0 us 1 dX  3.91 pmin/max 100/104 np  5 tmin/max 273/294 nt 22 tm 279.53 pad 102.44 adc  3114
+ge = 47 Tpc s/r  21/ 39 id    16 xyz:   116.483 +/- 0.000    22.313 +/- 0.098   -53.655 +/- 0.347 q(keV) 201.14 idT     1 qa 100 fl  0 us 1 dX  3.93 pmin/max 103/107 np  5 tmin/max 266/288 nt 23 tm 273.09 pad 104.62 adc  2152
+ge = 47 Tpc s/r  21/ 40 id    17 xyz:   118.085 +/- 0.000    22.985 +/- 0.100   -57.328 +/- 0.381 q(keV) 178.61 idT     1 qa 100 fl  0 us 1 dX  3.94 pmin/max 105/109 np  5 tmin/max 260/281 nt 22 tm 266.89 pad 106.98 adc  1878
+ge = 47 Tpc s/r  21/ 41 id    18 xyz:   127.057 +/- 0.000    26.840 +/- 0.081   -77.859 +/- 0.434 q(keV) 200.84 idT     1 qa 100 fl  0 us 1 dX  5.02 pmin/max  88/ 92 np  5 tmin/max 210/240 nt 31 tm 225.56 pad  89.94 adc  2059
+ge = 47 Tpc s/r  21/ 42 id    19 xyz:   129.054 +/- 0.000    27.763 +/- 0.086   -82.412 +/- 0.447 q(keV) 188.99 idT     1 qa 100 fl  0 us 1 dX  5.04 pmin/max  90/ 94 np  5 tmin/max 202/232 nt 31 tm 217.88 pad  92.33 adc  1967
+ge = 47 Tpc s/r  21/ 43 id    20 xyz:   131.051 +/- 0.000    28.667 +/- 0.040   -86.983 +/- 0.171 q(keV) 268.27 idT     1 qa 100 fl  0 us 1 dX  5.05 pmin/max  93/ 97 np  5 tmin/max 195/225 nt 31 tm 210.16 pad  94.69 adc  2830
+ge = 47 Tpc s/r  21/ 44 id    21 xyz:   133.048 +/- 0.000    29.592 +/- 0.069   -91.638 +/- 0.352 q(keV) 224.95 idT     1 qa 100 fl  0 us 1 dX  5.07 pmin/max  95/ 99 np  5 tmin/max 187/217 nt 31 tm 202.30 pad  97.08 adc  2380
+ge = 47 Tpc s/r  21/ 45 id    22 xyz:   135.044 +/- 0.000    30.600 +/- 0.030   -96.524 +/- 0.010 q(keV) 284.57 idT     1 qa 100 fl  0 us 1 dX  5.09 pmin/max  98/101 np  4 tmin/max 179/209 nt 31 tm 194.05 pad  99.59 adc  3087
+ge = 47 Tpc s/r  21/ 46 id    23 xyz:   137.039 +/- 0.000    31.441 +/- 0.075  -100.845 +/- 0.370 q(keV) 214.36 idT     1 qa 100 fl  0 us 1 dX  5.10 pmin/max  99/103 np  5 tmin/max 171/201 nt 31 tm 186.75 pad 100.86 adc  2312
+
+ge = 47 Tpc s/r  21/ 47 id    25 xyz:   139.031 +/- 0.000    32.730 +/- 0.000  -107.629 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  2 us 0 dX  0.00 pmin/max 102/104 np  3 tmin/max 173/177 nt  5 tm 175.30 pad 103.80 adc  1338
+ge = 47 Tpc s/r  21/ 47 id    24 xyz:   139.032 +/- 0.000    32.302 +/- 0.437  -105.565 +/- 2.036 q(keV)   0.00 idT     1 qa 100 fl  2 us 1 dX  5.12 pmin/max 102/104 np  3 tmin/max 176/180 nt  5 tm 178.78 pad 103.16 adc  1356
+
+ge = 47 Tpc s/r  22/ 63 id     1 xyz:   168.723 +/- 0.005    49.532 +/- 0.009  -178.828 +/- 0.491 q(keV) 247.06 idT     1 qa 100 fl  0 us 1 dX  4.59 pmin/max   4/  7 np  4 tmin/max  48/ 70 nt 23 tm  55.11 pad   5.95 adc  2777
+ge = 47 Tpc s/r  22/ 64 id     2 xyz:   170.416 +/- 0.019    50.618 +/- 0.032  -183.010 +/- 0.595 q(keV) 193.12 idT     1 qa 100 fl  0 us 1 dX  4.59 pmin/max   6/  8 np  3 tmin/max  41/ 63 nt 23 tm  48.05 pad   7.09 adc  2242
+ge = 47 Tpc s/r  22/ 65 id     3 xyz:   172.100 +/- 0.027    51.724 +/- 0.046  -187.276 +/- 0.652 q(keV) 128.93 idT     1 qa 100 fl  0 us 1 dX  4.59 pmin/max   7/ 10 np  4 tmin/max  34/ 55 nt 22 tm  40.84 pad   8.27 adc  1567
+ge = 47 Tpc s/r  22/ 66 id     4 xyz:   173.765 +/- 0.008    52.867 +/- 0.014  -191.450 +/- 0.587 q(keV) 196.25 idT     1 qa 100 fl  0 us 1 dX  4.60 pmin/max   7/ 10 np  4 tmin/max  26/ 48 nt 23 tm  33.80 pad   8.50 adc  2443
+ge = 47 Tpc s/r  22/ 67 id     5 xyz:   175.456 +/- 0.023    53.965 +/- 0.040  -194.929 +/- 0.581 q(keV)  66.58 idT     1 qa 100 fl  0 us 1 dX  4.60 pmin/max   8/ 11 np  4 tmin/max  24/ 42 nt 19 tm  27.92 pad   9.66 adc   806
+ge = 47 Tpc s/r  22/ 70 id     6 xyz:   180.418 +/- 0.010    57.527 +/- 0.017  -209.671 +/- 0.347 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  4.62 pmin/max  12/ 14 np  3 tmin/max   1/  6 nt  6 tm   3.03 pad  12.55 adc   304
+
+TotalNoOfTpcHits = 51
+================================================================================
+04/09/2026
+root.exe -q -b 'Chain.C+("*200.root","TpcT")' | tee Chain.log
+mv `grep missing Chain.log | awk '{print $3}' | sed -e 's/.root/*/'` Zombie/
+cd dE/dx
+foreach p (pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton muon+ muon-)
+  hadd -T ${p}.root ../${p}*200.root >& ${p}.log &
+end
+#        if (! -r ${p}.root) hadd -T ${p}.root ${p}*[0-9].root >& hadd.log &
+
+foreach  p (pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton muon+ muon-)
+	if (! -d ${p}) mkdir ${p}
+        cd ${p}
+	ln -s ~/macros/.al* .
+        if (! -r AdcSparse8_${p}.root) root.exe -q -b 'AdcTpcT.C("../../'${p}'*00.root","AdcSparse8_'${p}'.root")' >& AdcTpcT8_${p}.log &
+	if (! -r SparseT0Flagged_${p}.root) root.exe -q -b 'T0offset.C("../../'${p}'*00.root","SparseT0Flagged_${p}.root")'  >& T0offset_${p}.log &
+        cd -
+end
+
+root.exe -q -b 'Chain.C+("*00.root","TpcT")' | tee Chain.log
+================================================================================
+04/12/2026
+ root.exe 'muMc.C(1e6,kTRUE,"../pion*.MuDst.root")'
+St_db_Maker:ERROR - MysqlDb::ExecQuery() line=667  Query Failed  Malformed packet
+St_db_Maker:FATAL - TUnixSystem::DispatchSignals : segmentation violation
+
+
+
+===========================================================
+There was a crash.
+This is the entire stack trace of all threads:
+===========================================================
+#0  0x00007f1e136a42c9 in waitpid () from /usr/lib64/libc.so.6
+#1  0x00007f1e13627c72 in do_system () from /usr/lib64/libc.so.6
+#2  0x00007f1e13628021 in system () from /usr/lib64/libc.so.6
+#3  0x00007f1e1435cd89 in TUnixSystem::StackTrace (this=0xb8c0d0) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/core/unix/src/TUnixSystem.cxx:2419
+#4  0x00007f1e1435e8fc in TUnixSystem::DispatchSignals (this=0xb8c0d0, sig=kSigSegmentationViolation) at /cvmfs/star.sdcc.bnl.gov/TFG/ROOT/5.99.99/.sl73_x8664_gcc485/root/Build/core/unix/src/TUnixSystem.cxx:1294
+#5  <signal handler called>
+#6  0x00007f1dfbb13103 in mysql_fetch_row () from /usr/lib64/mysql/libmysqlclient.so
+#7  0x00007f1df49f8811 in MysqlDb::Output (this=0x2d52228, aBuff=0x2d53118) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/MysqlDb.cc:933
+#8  0x00007f1df4a15cb3 in StDbSql::queryNode (this=0x2d43350, node=0x2d43260) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbSql.cc:1202
+#9  0x00007f1df4a16809 in StDbSql::QueryDb (this=0x2d43350, node=0x2d43260) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbSql.cc:221
+#10 0x00007f1df4a01ac2 in StDbConfigNodeImpl::buildTree (this=0x2d43260, opt=1) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbConfigNodeImpl.cc:158
+#11 0x00007f1df4a05ae5 in StDbManagerImpl::initConfig (this=0xbbc580, type=<optimized out>, domain=<optimized out>, configName=0x7f1df4227a3f "reconV0", opt=1) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbManagerImpl.cc:1116
+#12 0x00007f1df4a03e1b in StDbManagerImpl::initConfig (this=0xbbc580, dbName=<optimized out>, configName=0x7f1df4227a3f "reconV0", opt=1) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbManagerImpl.cc:1095
+#13 0x00007f1df421cfed in StDbBroker::InitConfig (this=0xbbc490, configName=configName
+entry=0x7ffdc4e3a34f "StarDb", numRows=
+0x7ffdc4e3a2cc: 32542, versionName=versionName
+The lines below might hint at the cause of the crash.
+If they do not help you then please submit a bug report at
+http://root.cern.ch/bugs. Please post the ENTIRE stack trace
+from above as an attachment in addition to anything else
+that might help us fixing this issue.
+===========================================================
+#6  0x00007f1dfbb13103 in mysql_fetch_row () from /usr/lib64/mysql/libmysqlclient.so
+#7  0x00007f1df49f8811 in MysqlDb::Output (this=0x2d52228, aBuff=0x2d53118) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/MysqlDb.cc:933
+#8  0x00007f1df4a15cb3 in StDbSql::queryNode (this=0x2d43350, node=0x2d43260) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbSql.cc:1202
+#9  0x00007f1df4a16809 in StDbSql::QueryDb (this=0x2d43350, node=0x2d43260) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbSql.cc:221
+#10 0x00007f1df4a01ac2 in StDbConfigNodeImpl::buildTree (this=0x2d43260, opt=1) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbConfigNodeImpl.cc:158
+#11 0x00007f1df4a05ae5 in StDbManagerImpl::initConfig (this=0xbbc580, type=<optimized out>, domain=<optimized out>, configName=0x7f1df4227a3f "reconV0", opt=1) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbManagerImpl.cc:1116
+#12 0x00007f1df4a03e1b in StDbManagerImpl::initConfig (this=0xbbc580, dbName=<optimized out>, configName=0x7f1df4227a3f "reconV0", opt=1) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbLib/StDbManagerImpl.cc:1095
+#13 0x00007f1df421cfed in StDbBroker::InitConfig (this=0xbbc490, configName=configName
+entry=0x7ffdc4e3a34f "StarDb", numRows=
+0x7ffdc4e3a2cc: 32542, versionName=versionName
+entry=0x0) at .sl73_x8664_gcc485_opt/obj/StRoot/StDbBroker/StDbBroker.cxx:835
+#14 0x00007f1df3fe811f in St_db_Maker::OpenMySQL (this=0x2633bd0, dbname=0x7ffdc4e3a34f "StarDb") at .sl73_x8664_gcc485_opt/obj/StRoot/St_db_Maker/St_db_Maker.cxx:609
+#15 0x00007f1df3feb58c in St_db_Maker::Init (this=0x2633bd0) at .sl73_x8664_gcc485_opt/obj/StRoot/St_db_Maker/St_db_Maker.cxx:433
+#16 0x00007f1dfa9ead01 in StMaker::Init (this=this
+entry=0x1a9b5e0) at .sl73_x8664_gcc485_opt/obj/StRoot/StChain/StMaker.cxx:702
+#17 0x00007f1dfa9e2925 in StChain::Init (this=this
+entry=0x1a9b5e0) at .sl73_x8664_gcc485_opt/obj/StRoot/StChain/StChain.cxx:109
+#18 0x00007f1dfa3a64ba in StBFChain::Init (this=0x1a9b5e0) at .sl73_x8664_gcc485_opt/obj/StRoot/StBFChain/StBFChain.cxx:1224
+===========================================================
+
+[cvmfswrite01] ~/TPC/TPC23/2025/COLF/muMc $ echo $STAR_HOST_SYS
+sl73_x8664_gcc485
+================================================================================
+04/13/2026
+grep 'Server Connecting: DB=StarDb ' */2*.log |  awk '{print $8}' | sort -u
+
+[cvmfswrite07] ~/TPC/TPC23/2025/COLF/Pulls $ root.exe 'bfc.C(-1,"Sti")' 'StiPulls.C+("../pion*200.root")'
+mv 2025_COLF_PullsGP.PullsH.root pionPull.root
+
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullYI","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullYI_COL.log &
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullYO","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullYO_COL.log &
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullZI","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullZI_COL.log &
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullZO","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullZO_COL.log &
+
+[cvmfswrite07] ~/TPC/TPC23/2025/FXTF/Pulls $ root.exe -q -b 'bfc.C(-1,"Sti")' 'StiPulls.C+("../pion*200.root")' > & pion.log &
+[cvmfswrite07] ~/TPC/TPC23/2025/FXTF/Pulls $ mv 2025_FXTF_PullsGP.PullsH.root pionPull.root
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullYI","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullYI_COL.log &
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullYO","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullYO_COL.log &
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullZI","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullZI_COL.log &
+root.exe -q -b pionPull.root lBichsel.C 'dEdxFit.C+("pullZO","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullZO_COL.log &
+
+================================================================================
+04/14/2026
+[cvmfswrite07] ~/TPC/reco/CheckPulls/2025/RF $ 
+foreach d (`ls -1d *GeV*`)
+  cd ${d}
+  ln -s ~/macros/.al* .
+  root.exe -q -b 'bfc.C(-1,"Sti")' 'StiPulls.C+("*/*/*tags.root")' > & ${d}Pull.log &
+  cd -
+end
+
+Greek fonts:
+[starsub02] ~/work/Histograms/RunXXVI30 $ fc-list :lang=el
+
+
+[cvmfswrite01] ~/TPC/reco/CheckPulls/2025/RF $ root.exe 'bfc.C(-1,"Sti")'  */*.root
+
+root.exe [4] .L StiPulls.C+
+root.exe [5] LoopOverHistogr()
+
+foreach f (`ls -1d */*.root`) 
+  set d = `dirname ${f}`
+  set b = `basename ${f}`
+  cd ${d}
+root.exe -q -b ${b} lBichsel.C 'dEdxFit.C+("pullZI","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullZI_FXT.log &
+root.exe -q -b ${b} lBichsel.C 'dEdxFit.C+("pullYI","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullYI_FXT.log &
+root.exe -q -b ${b} lBichsel.C 'dEdxFit.C+("pullYO","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullYO_FXT.log &
+root.exe -q -b ${b} lBichsel.C 'dEdxFit.C+("pullZO","GP","M",-1,-1,1,1,-3,1,-5,5)' >& pullZO_FXT.log &
+  cd -
+end
+
+
+[cvmfswrite06] ~/work/Histograms/RunXXVI30 $  
+foreach f (`ls -1d *.csh | grep -v sched`)
+  set r = `basename ${f}`.root
+  if (-r ${r}) continue;
+  csh -x ${f} >& ${f}.log &
+end
+[7]    Exit 1                        csh -x NPoints70NGP9p8GeV_fixedTarget_2026.csh >& ${f}.log
+[4]    Exit 1                        csh -x NPoints70NGP13p5GeV_fixedTarget_2026A.csh >& ${f}.log
+[17]   Exit 1                        csh -x NPointsNNGP8p65GeV_fixedTarget_2026.csh >& ${f}.log
+[21]   Exit 1                        csh -x NPointsNPGP8p65GeV_fixedTarget_2026A.csh >& ${f}.log
+[30]   Exit 1                        csh -x QcmNCGPAuAu_2025.csh >& ${f}.log
+[31]   Exit 1                        csh -x QcmNGP13p5GeV_fixedTarget_2026A.csh >& ${f}.log
+[33]   Exit 1                        csh -x QcmNGPAuAu_2025.csh >& ${f}.log
+[17]   Exit 1                        csh -x SecRow3NCGP8p65GeV_fixedTarget_2026A.csh >& ${f}.log
+[34]   Exit 1                        csh -x QcmPCGP8p65GeV_fixedTarget_2026.csh >& ${f}.log
+[37]   Exit 1                        csh -x SecRow3NGG8p65GeV_fixedTarget_2026A.csh >& ${f}.log
+[38]   Exit 1                        csh -x SecRow3NGP8p65GeV_fixedTarget_2026A.csh >& ${f}.log
+[53]   Exit 1                        csh -x Z3PCGP8p65GeV_fixedTarget_2026.csh >& ${f}.log
+[17]   Exit 1                        csh -x Z3NGP8p65GeV_fixedTarget_2026A.csh >& ${f}.log
+[46]   Exit 1                        csh -x VoltageNCGG9p8GeV_fixedTarget_2026.csh >& ${f}.log
+[44]   Exit 1                        csh -x TimeGPAuAu_2025.csh >& ${f}.log
+[42]   Exit 1                        csh -x TimeFPGP8p65GeV_fixedTarget_2026A.csh >& ${f}.log
+[41]   Exit 1                        csh -x TimeFGPAuAu_2025.csh >& ${f}.log
+[39]   Exit 1                        csh -x SecRow3NGP8p65GeV_fixedTarget_2026.csh >& ${f}.log
+foreach f (`ls -1d *.csh | grep -v sched`)
+  set r = `echo ${f} | sed -e 's/csh/root/'`
+  if (-r ${r}) continue;
+  echo "${f}"
+end
+================================================================================
+04/15/2026 
+./StDetectorDbMaker/St_pidCorrectionC.h
+./StEvent/StDedxPidTraits.cxx:134:    case kLikelihoodFitId:
+./StEvent/StDedxPidTraits.cxx:135:        return kLikelihoodFitId;
+./StEvent/StGlobalTrack.cxx:95: if (pid->method() == kLikelihoodFitId) {
+./StEvent/StPrimaryTrack.cxx:117:       if (pid->method() == kLikelihoodFitId) {
+./StEvent/StTpcDedxPidAlgorithm.cxx:17: * Add numberOfSigma() for kLikelihoodFitId method
+./StEvent/StTpcDedxPidAlgorithm.cxx:213:        } else if (mDedxMethod == kLikelihoodFitId) {
+./StEvent/StTpcDedxPidAlgorithm.h:18: * change default from kTruncatedMeanId => kLikelihoodFitId
+./StEvent/StTpcDedxPidAlgorithm.h:64:    StTpcDedxPidAlgorithm(StDedxMethod = kLikelihoodFitId);
+./StMiniMcMaker/StMiniMcMaker.cxx:2101:    if (pid && pid->method() == kLikelihoodFitId) break;
+./StMiniMcMaker/StMiniMcMaker.cxx:2362: * kTruncatedMeanId to kLikelihoodFitId since SL14a.
+./StMiniMcMaker/StMiniMcMaker.cxx:2366: * It is changed now to kLikelihoodFitId and to be back propagated to all releases >= SL14a
+./StMuDSTMaker/COMMON/StMuTrack.cxx:492:      if (dedxPidTraits->method() == kLikelihoodFitIdentifier)  {
+./StPicoDstMaker/StPicoDstMaker.cxx:1148:    static StDedxMethod defaultdEdxMethod = (defY > 0 && defY < 14) ? kTruncatedMeanId : kLikelihoodFitId;
+./StPicoDstMaker/StPicoDstMaker.cxx:1150:    static StDedxMethod defaultdEdxMethod = kLikelihoodFitId;
+./StdEdxY2Maker
+
+/StDetectorDbMaker/St_pidCorrectionC.h StdEdxY2Maker

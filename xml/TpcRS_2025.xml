@@ -34,7 +34,7 @@ setenv STARFPE NO
   if (! $?) exit 0;
 # root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,TpcRS,McTpcAna,StiCA,StiPulls,evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
 # root.exe -q -b 'bfc.C('${f}','${l}',"mtin,MC.2023,CorrZ,TpcRS,McTpcAna,StiCA,StiPulls,-evout,-geantOut,NoHistos,noRunco,RunG.'${runG}${sdt}',-picoWrite,-picoDst,dEdxCalib","'${evtsFile}'","'$output'")'  &gt;&amp;  ${logFile}
- root.exe -q -b -x 'TpcRS.C('${f}','${l}',"y2025z,MC.2025,'${sdt}',vmc,TpcRS,McTpcAna,StiCA,evout,-geantOut,NoHistos,noRunco,Rung.'${runG}',-picoWrite,-picoDst,dEdxCalib",0,"'${output}'")' &gt;&amp; ${logFile}
+ root.exe -q -b -x 'TpcRS.C('${f}','${l}',"y2025z,MC.2025,'${sdt}',vmc,TpcRS,McTpcAna,StiCA,StiPulls,evout,-geantOut,NoHistos,noRunco,Rung.'${runG}',-picoWrite,-picoDst,dEdxCalib",0,"'${output}'")' &gt;&amp; ${logFile}
  gzip ${logFile}
 </command>
 <!-- <input URL="command:TpcRS_Part.pl" /> -->

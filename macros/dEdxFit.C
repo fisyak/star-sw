@@ -3656,7 +3656,7 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
   //  TString NewRootFile(gSystem->DirName(fRootFile->GetName()));
   TString NewRootFile(gSystem->BaseName(gSystem->DirName(fRootFile->GetName())));
   NewRootFile += "/";
-  NewRootFile += HistName;
+  NewRootFile += HName;
   NewRootFile += FitName;
   //  NewRootFile += Opt;
   if (ix >= 0) NewRootFile += Form("_X%i",ix);
