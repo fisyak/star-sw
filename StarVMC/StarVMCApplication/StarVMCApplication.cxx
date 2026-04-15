@@ -90,6 +90,8 @@ StarVMCApplication::~StarVMCApplication() {  // Destructor
 }
 //_____________________________________________________________________________
 void StarVMCApplication::InitMC(const Char_t *setup) {  // Initialize MC.
+  Int_t debugSaved = gDebug;
+  gDebug = 1;
   if (setup && TString(setup) != "" && gSystem->AccessPathName(setup,kReadPermission)) {
     gROOT->LoadMacro(setup);
     gInterpreter->ProcessLine("Config()");
@@ -98,6 +100,7 @@ void StarVMCApplication::InitMC(const Char_t *setup) {  // Initialize MC.
   fgGeant3->Init();
   fgGeant3->BuildPhysics(); 
   //  MisalignGeometry(); // Called from TGeant3TGeo::FinishGeometry
+  gDebug = debugSaved;
 }
 //_____________________________________________________________________________
 Bool_t StarVMCApplication::RunMC(Int_t nofEvents) {    // MC run.
