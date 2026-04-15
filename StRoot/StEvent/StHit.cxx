@@ -214,7 +214,7 @@ ostream&  operator<<(ostream& os, const StHit& v)
 {
   os << Form("id %5i ",v.id()) << *((const StMeasuredPoint *)&v );
   if (v.charge() > 1) os << Form(" q(ADC) %6.1f", v.charge());
-  else                os << Form(" q(keV) %6.2f", 1e6*v.charge());
+  else                os << Form(" q(keV)%7.2f", 1e6*v.charge());
   os << Form(" idT %5i qa %3i fl%3i us %1i",v.idTruth(), v.qaTruth(), v.flag(), v.usedInFit());
   return os;
 }
