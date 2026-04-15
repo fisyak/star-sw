@@ -815,6 +815,7 @@ Int_t StdEdxY2Maker::Make(){
 #endif	
 	if (SumdEdX > 0) dXavLog2 = SumdX/SumdEdX;
 	dst_dedx_st dedx;
+	if (! fUsedNdx) {// use I70 to convert dNdx to dE/dx 
 	dedx.id_track  =  Id;
 	dedx.det_id    =  kTpcId;    // TPC track 
 	dedx.method    =  kEnsembleTruncatedMeanId; // == kTruncatedMeanId+1;
@@ -830,6 +831,7 @@ Int_t StdEdxY2Maker::Make(){
 	  dedx.det_id    = kTpcId;    // TPC track 
 	  dedx.method    = kTruncatedMeanId;
 	  AddEdxTraits(tracks, dedx);
+	}
 	}
 	// likelihood fit
 	Double_t chisq, fitZ, fitdZ;
@@ -893,11 +895,12 @@ Int_t StdEdxY2Maker::Make(){
 #endif /* __BENCHMARKS__DOFIT_ZN__ */
 	    DoFitN(chisqN, fitN, fitdN);
 	    if (chisqN > -900.0 &&chisqN < 10000.0) {
+	      Double_t dNdx = fitN;
 	      dedx.id_track  =  Id;
 	      dedx.det_id    =  kTpcId;    // TPC track 
 	      dedx.method    =  kOtherMethodId2;
 	      dedx.ndedx     =  TMath::Min(99,NdEdx) + 100*((int) TrackLength);
-	      dedx.dedx[0]   =  fitN;
+	      dedx.dedx[0]   =  dNdx; // fitN;
 	      dedx.dedx[1]   =  fitdN/fitN; 
 	      dedx.dedx[2]   =  dXavLog2;
 	      AddEdxTraits(tracks, dedx);
@@ -908,7 +911,7 @@ Int_t StdEdxY2Maker::Make(){
 	      AddEdxTraits(tracks, dedx);
 #ifdef  __DEBUG_dNdx__1
 	      Double_t dEdxL10 = TMath::LogE()*fitZ + 6;
-	      Double_t dNdxL10 = TMath::Log10(fitN);
+	      Double_t dNdxL10 = TMath::Log10(dNdx);
 	      if (dNdxL10 > 3.70 && dEdxL10 > -0.4) {
 		static Int_t ibreak = 0;
 		cout << "DEBUG dN/dx: dE/dx = " << TMath::Power(10.,dEdxL10) << " keV, N = " << fitN << endl;
@@ -916,13 +919,34 @@ Int_t StdEdxY2Maker::Make(){
 		ibreak++;
 	      }
 #endif
-	    }
 #ifdef __BENCHMARKS__DOFIT_ZN__
-	    myBenchmark.Stop("StdEdxY2Maker::DoFitN");
+	      myBenchmark.Stop("StdEdxY2Maker::DoFitN");
 #endif /* __BENCHMARKS__DOFIT_ZN__ */
+	      AddEdxTraits(tracks, dedx);
+	      // recalculate dE/dx from dN/dx
+	      Double_t dX = 2.0; // reference dX
+	      Double_t Np = dNdx*dX;
+	      Double_t mu    = StdEdxModel::instance()->Parameter(Np, 0);
+	      Double_t ne = Np*TMath::Exp(mu);
+	      Double_t dEdx = StdEdxModel::instance()->neTodEGeV(ne)/dX;
+	      dedx.id_track  =  Id;
+	      dedx.det_id    =  kTpcId;    // TPC track 
+	      dedx.method    =  kEnsembleTruncatedMeanId; // == kTruncatedMeanId+1;
+	      dedx.ndedx     =  TMath::Min(99,NdEdx) + 100*((int) TrackLength);
+	      dedx.dedx[0]   =  dEdx;
+	      dedx.dedx[2]   =  1.;
+	      if ((TESTBIT(m_Mode, kCalibration)))  // uncorrected dEdx
+		AddEdxTraits(tracks, dedx);
+	      if (! TESTBIT(m_Mode, kDoNotCorrectdEdx)) { 
+		dedx.det_id    = kTpcId;    // TPC track
+		m_TpcdEdxCorrection->dEdxTrackCorrection(0,dedx, etaG); 
+		dedx.det_id    = kTpcId;    // TPC track 
+		dedx.method    = kTruncatedMeanId;
+		AddEdxTraits(tracks, dedx);
+	      }
+	    }
 	  }
 	}
-
 #ifdef __ADD_PROB__
 	if (! TESTBIT(m_Mode, kDoNotCorrectdEdx)) { 
 	  StThreeVectorD g3 = gTrack->geometry()->momentum(); // p of global track
@@ -969,9 +993,9 @@ Int_t StdEdxY2Maker::Make(){
   if ((TESTBIT(m_Mode, kCalibration))) {
 #ifdef  __SpaceCharge__
     if (! AdcSC) {
-      AdcSC      = new TH2F("AdcSC","ADC total versus z and row (-ve for East)",210,-210,210, 145, -72.5, 72.5);
-      AdcOnTrack = new TH2F("AdcOnTrack","ADC on Track versus z and row (-ve for East)",210,-210,210, 145, -72.5, 72.5);
-      dEOnTrack  = new TH2F("dEOnTrack","dE (keV) on Track versus z and row (-ve for East)",210,-210,210, 145, -72.5, 72.5);
+      AdcSC      = new TH2F("AdcSC","ADC total versus z and row (-ve for East); Z (cm) ; +/- row; Adc",210,-210,210, 145, -72.5, 72.5);
+      AdcOnTrack = new TH2F("AdcOnTrack","ADC on Track versus z and row (-ve for East); Z (cm) ; +/- row; Adc",210,-210,210, 145, -72.5, 72.5);
+      dEOnTrack  = new TH2F("dEOnTrack","dE (keV) on Track versus z and row (-ve for East); Z (cm) ; +/- row; Adc",210,-210,210, 145, -72.5, 72.5);
     }
 #endif
 #ifdef __CHECK_RDOMAP_AND_VOLTAGE__
@@ -1193,7 +1217,7 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
     ZdcCP  = new TH2F("ZdcCP","ZdcCoincidenceRate :                log_{10} Zdc ",100,0,10,nZBins,ZdEdxMin,ZdEdxMax);
     BBCP   = new TH2F("BBCP","BbcCoincidenceRate : log_{10} Bbc",60,0,6,nZBins,ZdEdxMin,ZdEdxMax);
     // TPoints block
-    const Char_t *NS[2] = {"P",""};
+    const Char_t *NS[2] = {"P","N"};
     const Char_t *TS[2] = {"Positive","Negative"};
     const Char_t *N[kTotalMethods] = {"F","70","FU","70U","N", "NU"};
     const Char_t *T[kTotalMethods] = {"dEdx(fit)/Pion",
@@ -1597,12 +1621,12 @@ void StdEdxY2Maker::fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, 
   gin[0] = 0.;
   gin[1] = 0.;
   for (Int_t i=0;i<NdEdx; i++) {
-    //    Double_t sigma = StTpcdEdxCorrection::SumSeries(TMath::Log(FdEdx[i].mdx),3,sigma_p);
     Double_t X = TMath::Log(FdEdx[i].F.mdx);
     Double_t sigma = sigma_p[2];
     for (Int_t n = 1; n>=0; n--) sigma = X*sigma + sigma_p[n];
     FdEdx[i].zdev    = (FdEdx[i].F.mdE.fdEdxL-par[0])/sigma;
     Landau(FdEdx[i].zdev,Val);
+#if 1
     if (FdEdx[i].F.mdE20.fdEdxL < FdEdx[i].F.mdE.fdEdxL && 
 	FdEdx[i].F.mdE.fdEdxL   < FdEdx[i].F.mdEmax.fdEdxL) {
       Double_t z20  =  (FdEdx[i].F.mdE20.fdEdxL-par[0])/sigma;
@@ -1614,6 +1638,7 @@ void StdEdxY2Maker::fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, 
       Val[0] -= TMath::Log(pmax - p20);
       Val[1] -= TMath::Log(pmax - p20);
     } 
+#endif
     FdEdx[i].Prob = TMath::Exp(Val[0]);
     f      -= Val[0];
     gin[0] += Val[1]/sigma;
@@ -1956,7 +1981,8 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
   //  Double_t sigma = par[1]; // extra sigma
   for (Int_t i = 0; i < NdEdx; i++) {
     Double_t dE = FdEdx[i].F.mdE.fdE;
-    Double_t z20 = 0;
+    Double_t z    = TMath::Log(dE);
+    Double_t z20  = 0;
     Double_t zmax = 0;
     if (FdEdx[i].F.mdE20.fdE < FdEdx[i].F.mdE.fdE && FdEdx[i].F.mdE.fdE < FdEdx[i].F.mdEmax.fdE) {
       z20  = TMath::Log(FdEdx[i].F.mdE20.fdE);
@@ -1964,12 +1990,16 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
     }
     Double_t dX = FdEdx[i].dxC;
     Double_t Np = dNdx*dX;
+    Double_t ee = StdEdxModel::instance()->Logne(z)  -TMath::Log(Np); // to eV/Np
+#if 0
     Double_t derivative = 0;
-    Double_t Prob = StdEdxModel::instance()->ProbdEGeVlog(TMath::Log(dE),Np, &derivative, z20, zmax);
+    Double_t Prob = StdEdxModel::instance()->ProbdEGeVlog(z,Np, &derivative, z20, zmax);
+#else
+    Double_t Prob = StdEdxModel::instance()->PDF(Np, z20, zmax)->Eval(ee);
+#endif
 #ifdef __DEBUG_dNdx__
     if (_debug && iflag == 3) {
       //      Double_t ee = dE + TMath::Log(1e9) -TMath::Log(Np); // to eV/Np
-      Double_t ee = StdEdxModel::instance()->Logne(TMath::Log(dE))  -TMath::Log(Np); // to eV/Np
       E.push_back(ee);
       P.push_back(Prob);
       //      Double_t In = StdEdxModel::instance()->GGaus()->Integral(-1.,ee);
@@ -1983,7 +2013,9 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
     }
     f -= TMath::Log(Prob);
     // d(dNdx) = dNp/dx
+#if 0
     gin[0] -= derivative/dX/Prob;
+#endif
     FdEdx[i].Prob = Prob;
   }
   if (_debug > 0) {
@@ -2006,7 +2038,7 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
       }
       if (fdNdxGraph[0]) delete fdNdxGraph[0];
       fdNdxGraph[0] = new TGraph(N, XA.GetArray(), YA.GetArray());
-      fdNdxGraph[0]->SetTitle("fcn");
+      fdNdxGraph[0]->SetTitle("fcn"); fdNdxGraph[0]->GetXaxis()->SetTitle("dN/dx");
       fdNdxGraph[0]->Draw("axp");
       TArrayD EA(NdEdx);
       TArrayD PA(NdEdx);
@@ -2018,8 +2050,8 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
       }
       if (fdNdxGraph[1]) delete fdNdxGraph[1];
       fdNdxGraph[1] = new TGraph(NdEdx, EA.GetArray(), PA.GetArray());
-      fdNdxGraph[1]->SetTitle("Prob");
-      c1->cd(2);
+      fdNdxGraph[1]->SetTitle("Prob"); fdNdxGraph[1]->GetXaxis()->SetTitle("log(n_{e}/N_{P})");
+      c1->cd(2)->SetLogy();
       fdNdxGraph[1]->Draw("axp");
       if (fdNdxGraph[2]) delete fdNdxGraph[2];
 //       fdNdxGraph[2] = new TGraph(N, EA.GetArray(), IA.GetArray());
@@ -2052,9 +2084,11 @@ void StdEdxY2Maker::DoFitN(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ){
   //  m_Minuit->DefineParameter(1, "sigma", 0.01, 0.01, 0.0, 0.5);
   arglist[0] = 1.0;
   m_Minuit->mnexcm("CALLfcn", arglist ,1,ierflg);
+#if 0
   if (Debug() < 4)       arglist[0] = 1.;   // 1.
   else                   arglist[0] = 0.;   // Check gradient 
   m_Minuit->mnexcm("SET GRAD",arglist,1,ierflg);
+#endif
   arglist[0] = 500;
   arglist[1] = 1.;
   m_Minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
@@ -2121,7 +2155,7 @@ Double_t StdEdxY2Maker::IntegratedAdc(const StTpcHit* tpcHit) {
 Double_t StdEdxY2Maker::landau(Double_t *x, Double_t *p) {
   Double_t val[2];
   StdEdxY2Maker::Landau(x[0],val);
-  return val[0];
+  return TMath::Exp(val[0]);
 }
 //________________________________________________________________________________
 TF1 *StdEdxY2Maker::LandauF() {
