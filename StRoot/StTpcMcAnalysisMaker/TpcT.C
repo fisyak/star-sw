@@ -3371,7 +3371,7 @@ const Char_t *PrintLine(Int_t N,const TVectorD &Array) {
   return line.Data();
 }
 //________________________________________________________________________________
-void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2") {
+void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2.root") {
   /*
     root.exe lBichsel.C
       .L TpcT.C+
@@ -3402,8 +3402,6 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2") {
   if (output == "") {
     output = file1;
     output.ReplaceAll(".root","T0.root");
-  } else {
-    output += ".T0.root";
   }
   cout << "Output for " << output << endl;
   if (! fOut) fOut = new TFile(output,"recreate");
