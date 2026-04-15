@@ -908,7 +908,6 @@ Int_t StdEdxY2Maker::Make(){
 	      m_TpcdEdxCorrection->dEdxTrackCorrection(1,dedx, etaG); 
 	      dedx.det_id    =  kTpcId;    // TPC track 
 	      dedx.method    =  kOtherMethodId;
-	      AddEdxTraits(tracks, dedx);
 #ifdef  __DEBUG_dNdx__1
 	      Double_t dEdxL10 = TMath::LogE()*fitZ + 6;
 	      Double_t dNdxL10 = TMath::Log10(dNdx);
