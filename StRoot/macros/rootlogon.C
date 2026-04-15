@@ -168,7 +168,8 @@
   //  Print version
   TString STAR_GIT   = gSystem->ExpandPathName("$STAR/.git");  
   TString STAR_LEVEL = gSystem->ExpandPathName("$STAR_LEVEL"); 
-  TString STAR_LIB   = gSystem->ExpandPathName("$STAR_LIB");   
+  TString STAR_LIB   = gSystem->ExpandPathName("$STAR_LIB"); 
+  TString STAR_HOST_SYS = gSystem->ExpandPathName("$STAR_HOST_SYS");
   TString STAR_GIT_VERSION; 
   if (! gSystem->AccessPathName(STAR_GIT,kReadPermission)) {
     STAR_GIT_VERSION = ", git = ";
@@ -205,7 +206,7 @@
     if (gSystem->GetSysInfo(&info) >= 0) {
       printf("with %i %s CpuSpeed %i MHz",info.fCpus,info.fModel.Data(),info.fCpuSpeed);
     }
-    printf("\n");
+    printf(" with %s\n",STAR_HOST_SYS.Data());
     // note that the above bacward support the old mode for include whenever
     // it was not in .$STAR_HOST_SYS_OPT but one level up. The backward compatibility
     // can be removed only at the net root release ... 
