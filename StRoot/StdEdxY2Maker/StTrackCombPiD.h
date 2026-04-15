@@ -177,11 +177,11 @@ class StTrackCombPiD : public TObject {
   enum PiDStatusIDs {
     kUndef = kUndefinedMethodId,        // 0
     kI70   = kTruncatedMeanId,          // 1
-    kI70U  = kEnsembleTruncatedMeanId,  // 2
+    kI70U  = kTruncatedMeanUncorrectedId,  // 2
     kFit   = kLikelihoodFitId,          // 3
-    kFitU  = kWeightedTruncatedMeanId,  // 4
-    kdNdx  = kOtherMethodId,            // 5
-    kdNdxU = kOtherMethodId2,           // 6
+    kFitU  = kLikelihoodFitUncorrectedId,  // 4
+    kdNdx  = kdNdxFitMethodId,            // 5
+    kdNdxU = kdNdxFitMethodUncorrectedId,           // 6
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
   StTrackCombPiD();

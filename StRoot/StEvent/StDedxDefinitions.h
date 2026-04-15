@@ -13,9 +13,16 @@
 #define kUndefinedMethodIdentifier           0
 #define kTruncatedMeanIdentifier             1
 #define kEnsembleTruncatedMeanIdentifier     2
+#define kTruncatedMeanUncorrectedIdentifier  2
 #define kLikelihoodFitIdentifier             3
 #define kWeightedTruncatedMeanIdentifier     4
+#define kLikelihoodFitUncorrectedIdentifier  4
 #define kOtherMethodIdentifier               5
+#define kdNdxFitMethodIdentifier             5
 #define kOtherMethodIdentifier2              6
+#define kdNdxFitMethodUncorrectedIdentifier  6
+#define kdEdxFromdNdxMethodIdentifier        7
+#define kdEdxFromdNdxUncorrectedIdentifier   8
+
 #endif
 

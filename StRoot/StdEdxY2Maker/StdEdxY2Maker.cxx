@@ -818,7 +818,7 @@ Int_t StdEdxY2Maker::Make(){
 	if (! fUsedNdx) {// use I70 to convert dNdx to dE/dx 
 	dedx.id_track  =  Id;
 	dedx.det_id    =  kTpcId;    // TPC track 
-	dedx.method    =  kEnsembleTruncatedMeanId; // == kTruncatedMeanId+1;
+	dedx.method    =  kTruncatedMeanUncorrectedId; // == kTruncatedMeanId+1;
 	dedx.ndedx     =  TMath::Min(99,N70) + 100*((int) TrackLength);
 	dedx.dedx[0]   =  I70;
 	dedx.dedx[1]   =  D70;
@@ -850,7 +850,7 @@ Int_t StdEdxY2Maker::Make(){
 	  if (SumdEdX > 0) dXavLog2 = SumdX/SumdEdX;
 	  dedx.id_track  =  Id;
 	  dedx.det_id    =  kTpcId;    // TPC track 
-	  dedx.method    =  kWeightedTruncatedMeanId;// == kLikelihoodFitId+1;
+	  dedx.method    =  kLikelihoodFitUncorrectedId;// == kLikelihoodFitId+1;
 	  dedx.ndedx     =  TMath::Min(99,NdEdx) + 100*((int) TrackLength);
 	  dedx.dedx[0]   =  TMath::Exp(fitZ);
 	  dedx.dedx[1]   =  fitdZ; 
@@ -898,7 +898,7 @@ Int_t StdEdxY2Maker::Make(){
 	      Double_t dNdx = fitN;
 	      dedx.id_track  =  Id;
 	      dedx.det_id    =  kTpcId;    // TPC track 
-	      dedx.method    =  kOtherMethodId2;
+	      dedx.method    =  kdNdxFitMethodUncorrectedId;
 	      dedx.ndedx     =  TMath::Min(99,NdEdx) + 100*((int) TrackLength);
 	      dedx.dedx[0]   =  dNdx; // fitN;
 	      dedx.dedx[1]   =  fitdN/fitN; 
@@ -907,7 +907,7 @@ Int_t StdEdxY2Maker::Make(){
 	      dedx.det_id    = kTpcId;    // TPC track
 	      m_TpcdEdxCorrection->dEdxTrackCorrection(1,dedx, etaG); 
 	      dedx.det_id    =  kTpcId;    // TPC track 
-	      dedx.method    =  kOtherMethodId;
+	      dedx.method    =  kdNdxFitMethodId;
 #ifdef  __DEBUG_dNdx__1
 	      Double_t dEdxL10 = TMath::LogE()*fitZ + 6;
 	      Double_t dNdxL10 = TMath::Log10(dNdx);
@@ -930,7 +930,7 @@ Int_t StdEdxY2Maker::Make(){
 	      Double_t dEdx = StdEdxModel::instance()->neTodEGeV(ne)/dX;
 	      dedx.id_track  =  Id;
 	      dedx.det_id    =  kTpcId;    // TPC track 
-	      dedx.method    =  kEnsembleTruncatedMeanId; // == kTruncatedMeanId+1;
+	      dedx.method    =  kTruncatedMeanUncorrectedId; // == kTruncatedMeanId+1;
 	      dedx.ndedx     =  TMath::Min(99,NdEdx) + 100*((int) TrackLength);
 	      dedx.dedx[0]   =  dEdx;
 	      dedx.dedx[2]   =  1.;
@@ -1153,10 +1153,10 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
   static StDedxMethod kTPoints[kTotalMethods] = {// {"F","70","FU","70U","N", "NU"};
     kLikelihoodFitId,         // F
     kTruncatedMeanId,         // 70
-    kWeightedTruncatedMeanId, // FU
-    kEnsembleTruncatedMeanId  // 70U
-    ,kOtherMethodId           // N
-    ,kOtherMethodId2          // NU
+    kLikelihoodFitUncorrectedId, // FU
+    kTruncatedMeanUncorrectedId  // 70U
+    ,kdNdxFitMethodId           // N
+    ,kdNdxFitMethodUncorrectedId          // NU
   };
 #ifdef  __FIT_PULLS__
   static TH2F *Pulls[2][kTotalMethods] = {0};
@@ -1763,7 +1763,7 @@ void StdEdxY2Maker::QAPlots(StGlobalTrack* gTrack) {
   static TH2F *fqTdEdx[3];
   static StTpcDedxPidAlgorithm PidAlgorithm70(kTruncatedMeanId);
   static StTpcDedxPidAlgorithm PidAlgorithmFitZ(kLikelihoodFitId);
-  static StTpcDedxPidAlgorithm PidAlgorithmFitN(kOtherMethodId);
+  static StTpcDedxPidAlgorithm PidAlgorithmFitN(kdNdxFitMethodId);
   static StElectron* Electron = StElectron::instance();
   static StPionPlus* Pion = StPionPlus::instance();
   static StKaonPlus* Kaon = StKaonPlus::instance();
@@ -1866,7 +1866,7 @@ void StdEdxY2Maker::QAPlots(StGlobalTrack* gTrack) {
 	    if (TMath::Abs(PidAlgorithmFitZ.numberOfSigma(Proton))   < 1) fTdEdx[k][4]->Fill(TMath::Log10(pMomentum), Log10E*fitZ + 6.);
 	  }
 	}
-	if (pid->method() == kOtherMethodId) {
+	if (pid->method() == kdNdxFitMethodId) {
 	  fitN = pid->mean(); 
 	  TrackLength = pid->length(); 
 	  if (TrackLength < 40) continue;

@@ -281,10 +281,10 @@ StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack) : StTrackCombPiD() {
 	switch (pid->method()) {
 	case kTruncatedMeanId:         fStatus[kI70]   = new StdEdxStatus(pid); break;
 	case kLikelihoodFitId:         fStatus[kFit]   = new StdEdxStatus(pid); break;
-	case kEnsembleTruncatedMeanId: fStatus[kI70U]  = new StdEdxStatus(pid); break;// == kTruncatedMeanId+1 uncorrected
-	case kWeightedTruncatedMeanId: fStatus[kFitU]  = new StdEdxStatus(pid); break;  // == kLikelihoodFitId+1; uncorrected
-	case kOtherMethodId:           fStatus[kdNdx]  = new StdEdxStatus(pid); break;
-	case kOtherMethodId2:          fStatus[kdNdxU] = new StdEdxStatus(pid); break;
+	case kTruncatedMeanUncorrectedId: fStatus[kI70U]  = new StdEdxStatus(pid); break;// == kTruncatedMeanId+1 uncorrected
+	case kLikelihoodFitUncorrectedId: fStatus[kFitU]  = new StdEdxStatus(pid); break;  // == kLikelihoodFitId+1; uncorrected
+	case kdNdxFitMethodId:           fStatus[kdNdx]  = new StdEdxStatus(pid); break;
+	case kdNdxFitMethodUncorrectedId:          fStatus[kdNdxU] = new StdEdxStatus(pid); break;
 	default: break;
 	}
       } else {
@@ -329,7 +329,7 @@ StTrackCombPiD::StTrackCombPiD(StMuTrack *gTrack) : StTrackCombPiD() {
     fStatus[kFit] = new StdEdxStatus(&pidFit);
   }
   if (probPidTraits.dNdxFit() > 0) {
-    pidNdx = StDedxPidTraits(kTpcId, kOtherMethodId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + gTrack->nHitsDedx(), 
+    pidNdx = StDedxPidTraits(kTpcId, kdNdxFitMethodId, 100*((UShort_t)probPidTraits.dEdxTrackLength()) + gTrack->nHitsDedx(), 
 			     probPidTraits.dNdxFit(), probPidTraits.dNdxErrorFit(),probPidTraits.log2dX());
     fStatus[kdNdx] = new StdEdxStatus(&pidNdx);
   }
@@ -406,7 +406,7 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) 
     fStatus[kFit] = new StdEdxStatus(&pidFit);
   }
   if (gTrack->dNdx() > 0) {
-    pidNdx = StDedxPidTraits(kTpcId, kOtherMethodId, gTrack->nHitsDedx(),
+    pidNdx = StDedxPidTraits(kTpcId, kdNdxFitMethodId, gTrack->nHitsDedx(),
 			     gTrack->dNdx(), gTrack->dNdxError());
     fStatus[kdNdx] = new StdEdxStatus(&pidNdx);
   }
@@ -484,12 +484,12 @@ void StTrackCombPiD::SetCombPiD() {
     //    Double_t beta = betagamma/TMath::Sqrt(1. + betagamma*betagamma);
     fbgs[l] = betagamma;
     fbghyp[l] = TMath::Log10(fbgs[l]);
-    for (Int_t k = kI70; k <= kOtherMethodId2; k++) {
+    for (Int_t k = kI70; k <= kdNdxFitMethodUncorrectedId; k++) {
       if (! fStatus[k]) continue;
       if (dEdxStatus(k)->I() > 0 && dEdxStatus(k)->D() > 0.01 && dEdxStatus(k)->D() < 0.15) {
 	UChar_t fit = 0;
-	if (k == kLikelihoodFitId || k == kWeightedTruncatedMeanId) fit = 1;
-	else if (k == kOtherMethodId || k == kOtherMethodId2) fit = 2;
+	if (k == kLikelihoodFitId || k == kLikelihoodFitUncorrectedId) fit = 1;
+	else if (k == kdNdxFitMethodId || k == kdNdxFitMethodUncorrectedId) fit = 2;
 	if (fgUsedx2) {
 	  fStatus[k]->Pred(l)  = StdEdxPull::EvalPred2(betagamma, dEdxStatus(k)->log2dX(), fit, charge);
 	  fStatus[k]->PredC(l) = fStatus[k]->Pred(l);
