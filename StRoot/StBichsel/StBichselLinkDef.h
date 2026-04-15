@@ -4,7 +4,7 @@
 #pragma link off all functions;
 #pragma link C++ enum Bichsel::EParTypes;
 //IncFile=StGausSW.h
-#pargma link C++ namespace StGausSW;
+#pragma link C++ namespace StGausSW;
 //IncFile=StdEdxPull.h
 #pragma link C++ namespace StdEdxPull;
 #pragma link C++ function StdEdxPull::EvalPred(Double_t, UChar_t, Int_t);

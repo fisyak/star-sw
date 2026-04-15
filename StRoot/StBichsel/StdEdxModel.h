@@ -10,6 +10,7 @@
 #include "TFile.h"
 #include "TString.h"
 #include "TF1.h"
+#include "TF2.h"
 #include "TSpline.h"
 class StdEdxParamerization {
 };
@@ -46,7 +47,8 @@ class StdEdxModel {
   Double_t             E(Double_t ne) {return ne*GeVperElectron();} // deposited energy GeV from ne					       
   Double_t 	       n(Double_t e) {return e/GeVperElectron();}   // ne  from energy (GeV)					       
   Double_t 	       LogE(Double_t Logne) {return fLogkeVperElectron  + Logne + TMath::Log(1e-6);} // deposited energy GeV from ne			       
-  Double_t 	       Logne(Double_t LogE) {return LogE - fLogkeVperElectron - TMath::Log(1e-6);}   // ne  from energy (GeV)				       
+  Double_t 	       Logne(Double_t LogE) {return LogE - fLogkeVperElectron - TMath::Log(1e-6);}   // ne  from energy (GeV)
+  Double_t             neTodEGeV(Double_t ne) {return ne*GeVperElectron();}
   void     	       Parameters(Double_t Np, Double_t *pars, Double_t *dPardNp = 0); 						       
   Double_t 	       Parameter(Double_t Np, Int_t k = 0, Double_t *dPardNp = 0);										       
   static Double_t      funParam(Double_t *x, Double_t *p);
@@ -76,6 +78,9 @@ class StdEdxModel {
   Double_t bgCorrected(Double_t bg); // Correction for reconstructed bega*gamma
   Double_t NpCorrection(Double_t betagamma); // Correction for effective no. of primary clusters which produce conducting electrons 
   TH1D    *protonEff();
+  static TF1     *CDF(); // 
+  static TF1     *PDF(Double_t Np,  Double_t z20, Double_t zmax); // z = Tmath::Log(dE [GeV]);
+  static TF2     *OwenTFunc(); 
  private:
   StdEdxModel();
   static StdEdxModel  *fgStdEdxModel; //! last instance          

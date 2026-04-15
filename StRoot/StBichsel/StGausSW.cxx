@@ -243,18 +243,21 @@ TF1 *GauswPDF1() {
   static TF1 *f = 0;
   if (! f) {
     f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(name);
-    if (! f) f = new TF1(name,gauswPDFunc1,-5,5,1);
+    if (! f) {
+      f = new TF1(name,gauswPDFunc1,-5,5,1);
+      f->SetParameter(0,0);
+    }
   }
-  f->SetParameter(0,0);
   return f;
 }
 //________________________________________________________________________________
 Double_t  PDFfunc(Double_t *x, Double_t *p) {
-  Double_t ksi   = p[0];
-  Double_t w     = p[1];
-  Double_t alpha = p[2];
+  Double_t Norm  = p[0];
+  Double_t ksi   = p[1];
+  Double_t w     = p[2];
+  Double_t alpha = p[3];
   Double_t t  = {(x[0] - ksi)/w};
-  return GauswPDF1()->EvalPar(&t,&alpha);
+  return Norm*GauswPDF1()->EvalPar(&t,&alpha);
 }
 //________________________________________________________________________________
 TF1 *PDF() {
@@ -262,18 +265,20 @@ TF1 *PDF() {
   static TF1 *f = 0;
   if (! f) {
     f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(name);
-    if (! f) f = new TF1(name,PDFfunc,-5,5,3);
-    f->SetParameter(0,0);
-    f->SetParameter(1,1);
-    f->SetParameter(2,0);
+    if (! f) {
+      f = new TF1(name,PDFfunc,-5,5,4);
+      f->SetParNames("Norm","#ksi","w","#alpha");
+      f->SetParameters(1, 0, 1, 0);
+    }
   }
   return f;
 }
 //________________________________________________________________________________
 Double_t CDFfunc(Double_t *x, Double_t *p) {
-  Double_t ksi   = p[0];
-  Double_t w     = p[1];
-  Double_t alpha = p[2];
+  //  Double_t Norm  = p[0];
+  Double_t ksi   = p[1];
+  Double_t w     = p[2];
+  Double_t alpha = p[3];
   Double_t t     = (x[0]-ksi)/w;
   Double_t u     = TMath::Abs(t);
   return Phi(t) - 2*OwenTFunc()->EvalPar(&u,&alpha);
@@ -284,10 +289,11 @@ TF1 *CDF() {
   static TF1 *f = 0;
   if (! f) {
     f = (TF1 *) gROOT->GetListOfFunctions()->FindObject(name);
-    if (! f) f = new TF1(name,CDFfunc,-5,5,3);
-    f->SetParameter(0,0);
-    f->SetParameter(1,1);
-    f->SetParameter(2,0);
+    if (! f) {
+      f = new TF1(name,CDFfunc,-5,5,4);
+      f->SetParNames("Norm","#ksi","w","#alpha");
+      f->SetParameters(1, 0, 1, 0);
+    }
   }
   return f;
 }
