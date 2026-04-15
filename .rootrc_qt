@@ -23,6 +23,8 @@ Plugin.TVirtualViewer3D:    ^ogl   TQtRootViewer3D  RQTGL    "TQtRootViewer3D(TV
 Gui.Style:                  windows
 Gui.Backend:                qt
 Gui.Factory:                qtgui
+#Gui.DefaultFont:            DejaVu Sans
+#Gui.DefaultFont:            fixed
 Plugin.TVirtualX            ^qt      TGQt          GQt          "TGQt(const char*,const char*)"
 Plugin.TGuiFactory          ^qtgui   TQtGUIFactory  QtRootGui       "TQtGUIFactory()"
 #Plugin.TGuiFactory         ^qtgui    TQtRootGuiFactory QtRoot       "TQtRootGuiFactory()"
