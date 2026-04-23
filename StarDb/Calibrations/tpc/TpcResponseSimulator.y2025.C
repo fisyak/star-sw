@@ -36,12 +36,18 @@ TDataSet *CreateTable() {
   row.SigmaJitterXO         = 0.; //0.13 + 0.025; 
   row.longitudinalDiffusion = 0.0362; // 0.03624*1.3*0.92; 
   row.NoElPerAdc            = 335.;   // No. of electrons per 1 ADC count
+  // mu                                      
+  row.SecRowCorOW[0] = row.SecRowCorOE[0] =    0.340639;//   +/-   0.000674273 
+
+  row.SecRowCorIW[0] = row.SecRowCorIE[0] =    0.173899;//   +/-   0.00468008 
+  row.SecRowCorIW[1] = row.SecRowCorIE[1] = -0.00178139;//   +/-   0.000957809
+  row.SecRowCorIW[2] = row.SecRowCorIE[2] = 0.000252021;//   +/-   5.33899e-05
+  row.SecRowCorIW[3] = row.SecRowCorIE[3] = -4.5171e-06;//   +/-   8.51233e-07
 #if 0
-  //                                                      -RC            +MC
-  row.SecRowCorIW[0] = row.SecRowCorIE[0] =  0.3195      + 0.1200      + 0.1611;
-  row.SecRowCorIW[1] = row.SecRowCorIE[1] = -5.40702e-04 - 1.91101e-03  -8.72089e-04;
-  row.SecRowCorOW[0] = row.SecRowCorOE[0] =  0.8987      + 0.0642      + 0.2517;
-  row.SecRowCorOW[1] = row.SecRowCorOE[1] = -3.73511e-04 - 1.07959e-03  -1.35275e-03;
+  // sigma  MC: sigmaI = 0.414444; sigmaO = 0.397108;
+  // 
+  row.SecRowSigOW[0] = row.SecRowSigOE[0] = 
+  row.SecRowSigOW[1] = row.SecRowSigOE[1] =
 #endif
   row.PolyaInner = 1.38;
   row.PolyaOuter = 1.38;
