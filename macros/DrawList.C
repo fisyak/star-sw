@@ -481,6 +481,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     ny = TMath::Ceil(TMath::Sqrt(NF));
     nx = NF/ny;
     if (nx*ny != NF) nx++;
+    if (NF <= 3) {nx =1; ny = NF;} 
   }
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
   TCanvas *c = new TCanvas(cTitle,cTitle,200*nx,200*ny);
@@ -501,15 +502,14 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
       TH2 *h2 = (TH2 *) hist;
       if (Opt == "colz") {
 	h2->Draw(Opt);
-	if (patt.BeginsWith("TdEdxF")) {
-	   bichselG10("zN",12);
-	   //	  bichselG10("z",12);
-	} else if (patt.BeginsWith("aTdEdx")) {
-	  bichselG10("zN",12,kTRUE);
-	} else if (patt.BeginsWith("TdEdxN")) {
-	  bichselG10("dNdx",12);
-	} else if (patt.BeginsWith("aTdEdxN")) {
-	  bichselG10("dNdx",12,kTRUE);
+        Bool_t rigidity = kFALSE;
+	if (patt.BeginsWith("a")) rigidity = kTRUE;
+	if (patt.Contains("TdEdxF") || patt.BeginsWith("TdEdxE")) {
+	  bichselG10("zN",12,rigidity);
+	} else if (patt.Contains("TdEdxN")) {
+	  bichselG10("dNdx",12, rigidity);
+	} else if (patt.Contains("TdEdxI70")) {
+	  bichselG10("I70",12,rigidity);
 	}
       } else if (Opt == "projy") {
 	TH1 *proj = h2->ProjectionY(Form("_py%i",i));

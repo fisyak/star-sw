@@ -1,8 +1,8 @@
 // @(#)root/main:$Name:  $:$Id: h2mdf.C,v 1.3 2014/12/22 23:50:53 fisyak Exp $
 /*
-  foreach b (`ls -1d NPoints*UGP*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
+  foreach b (`ls -1d NPoints*UNGP*.root | sed -e 's/.*GP//' -e 's/.root//' | sort -u`)
     echo "${b}"
-    root.exe -q -b NPoints*UGP${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
+    root.exe -q -b NPoints*UNGP${b}.root  MakeTpcLengthCorrectionMDN.C+ | tee ${b}.log
   end   
 */
 #ifndef __CINT__
@@ -124,6 +124,8 @@ Int_t h2mdf(const Char_t  *total = "mu") {
   if (! total2D) {
     cout << "Histogram  has not been found " << endl;
     return 1;
+  } else {
+    cout << "Histogram " << total2D->GetName() << " has been found" << endl;
   }
   TDirectory *dir = total2D->GetDirectory();
   if (!dir) return 1;
@@ -203,7 +205,8 @@ Int_t h2mdf(const Char_t  *total = "mu") {
 }
 //____________________________________________________________________________
 void  MakeTpcLengthCorrectionMDN(Int_t date = 0, Int_t time = 0){
-  TFile *fIn[3] = {0};
+  enum {Ncases = 4};
+  TFile *fIn[Ncases] = {0};
   const Char_t *histN[2] = {"mu","sigma"};
   TSeqCollection *files = gROOT->GetListOfFiles();
   if (! files) return;
@@ -217,6 +220,7 @@ void  MakeTpcLengthCorrectionMDN(Int_t date = 0, Int_t time = 0){
     if (F.Contains("70U")) l = 0;
     else if (F.Contains("NU")) l = 1;
     else if (F.Contains("FU")) l = 2;
+    else if (F.Contains("EU")) l = 3;
     if (l < 0) continue;
     TH2D *mu = (TH2D *) f->Get("mu");
     TH2D *sigma = (TH2D *) f->Get("sigma");
@@ -225,9 +229,15 @@ void  MakeTpcLengthCorrectionMDN(Int_t date = 0, Int_t time = 0){
       tag = f->GetName();
       tag.ReplaceAll("NPoints70","");
       tag.ReplaceAll("NPointsF","");
+      tag.ReplaceAll("NPointsE","");
       tag.ReplaceAll("NPointsN","");
       tag.ReplaceAll("U+UPGP","");
+      tag.ReplaceAll("U+UPGP","");
       tag.ReplaceAll("UGP","");
+      tag.ReplaceAll("UN+UPGP","");
+      tag.ReplaceAll("UN+UPGP","");
+      tag.ReplaceAll("UNGP","");
+      tag.ReplaceAll("UPGP","");
       tag.ReplaceAll(".root","");
     }
     fIn[l] = f;
@@ -239,18 +249,21 @@ void  MakeTpcLengthCorrectionMDN(Int_t date = 0, Int_t time = 0){
   else          fOut =  Form("TpcLengthCorrectionMDN.%s.C",tag.Data());
   cout << "Create " << fOut << endl;
   out.open(fOut.Data());
+  out << "#ifndef __CINT__" << endl;
+  out << "#include \"tables/St_MDFCorrection_Table.h\"" << endl;
+  out << "#endif" << endl;
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection\")) return 0;" << endl;
   out << "  MDFCorrection_st row;" << endl;
   out << "  St_MDFCorrection *tableSet = new St_MDFCorrection(\"TpcLengthCorrectionMDN\",6);" << endl;
-  out << "  Int_t nrows = 6;" << endl;
+  out << "  Int_t nrows = "<< 2*Ncases <<"8;" << endl;
   Int_t idx = 0;
-  for (Int_t l = 0; l < 3; l++) {
+  for (Int_t l = 0; l < Ncases; l++) {
     fIn[l]->cd();
     for (Int_t m = 0; m < 2; m++) {
       Sigma = (m == 1);
       out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
-      out << "  row.nrows =  6; //" << gDirectory->GetName() << endl;
+      out << "  row.nrows =  " << 2*Ncases << "; //" << gDirectory->GetName() << endl;
       idx++;
       out << "  row.idx   = " << Form("%2i", idx) << ";" << endl;
       if (fIn[l]) {

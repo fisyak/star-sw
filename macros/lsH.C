@@ -6,6 +6,10 @@ void lsH(const TString reg = "TdEdx*", Bool_t plot = kFALSE) {
     TString st = obj->GetName(); 
     if (st.Index(re) == kNPOS) continue;
     obj->Print(); 
+    if (obj->IsA()->InheritsFrom( "TH1" )) {
+      Double_t entries = ((TH1 *) obj)->GetEntries();
+      if (entries == 0.0) cout << "================================================================================ Empty" << endl;
+    }
   } 
   TIter next(gDirectory->GetListOfKeys()); 
   TKey *key; 

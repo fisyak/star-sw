@@ -514,7 +514,7 @@ void Draw3D(const Char_t *histName="lYDifVsZAG", Int_t NF = 0, TFile **Files = 0
 	sigma->Draw("same");
 	Line.ReplaceAll("mu","sigma");
 	l[xy]->AddEntry(mu,Line);
-	l[xy]->Draw();
+	//	l[xy]->Draw();
 	c1->Update();
       }
     }

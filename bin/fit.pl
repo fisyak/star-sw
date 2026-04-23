@@ -106,6 +106,7 @@ NPointsFUP NPointsFUN
 NPoints70UP NPoints70UN 
 NPointsNP NPointsNN 
 NPointsNUP NPointsNUN 
+NPointsEUP NPointsEUN 
                              Time TimeC TimeF TimeFP 
 AvCurrentN AvCurrentP 
 AvCurrentNC AvCurrentPC 
