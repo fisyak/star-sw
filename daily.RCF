@@ -7885,7 +7885,7 @@ end
 ./StEvent/StGlobalTrack.cxx:95: if (pid->method() == kLikelihoodFitId) {
 ./StEvent/StPrimaryTrack.cxx:117:       if (pid->method() == kLikelihoodFitId) {
 ./StEvent/StTpcDedxPidAlgorithm.cxx:17: * Add numberOfSigma() for kLikelihoodFitId method
-./StEvent/StTpcDedxPidAlgorithm.cxx:213:        } else if (mDedxMethod == kLikelihoodFitId) {
+ ./StEvent/StTpcDedxPidAlgorithm.cxx:213:        } else if (mDedxMethod == kLikelihoodFitId) {
 ./StEvent/StTpcDedxPidAlgorithm.h:18: * change default from kTruncatedMeanId => kLikelihoodFitId
 ./StEvent/StTpcDedxPidAlgorithm.h:64:    StTpcDedxPidAlgorithm(StDedxMethod = kLikelihoodFitId);
 ./StMiniMcMaker/StMiniMcMaker.cxx:2101:    if (pid && pid->method() == kLikelihoodFitId) break;
@@ -7897,3 +7897,497 @@ end
 ./StdEdxY2Maker
 
 /StDetectorDbMaker/St_pidCorrectionC.h StdEdxY2Maker
+
+
+define kEnsembleTruncatedMeanIdentifier     2
+#define kTruncatedMeanUncorrectedIdentifier  2
+#define kLikelihoodFitIdentifier             3
+#define kWeightedTruncatedMeanIdentifier     4
+#define kLikelihoodFitUncorrectedIdentifier  4
+#define kOtherMethodIdentifier               5
+#define kdNdxFitMethodIdentifier             5
+#define kOtherMethodIdentifier2              6
+#define kdNdxFitMethodUncorrectedIdentifier  6
+
+
+subst kEnsembleTruncatedMeanId=kTruncatedMeanUncorrectedId kWeightedTruncatedMeanId=kLikelihoodFitUncorrectedId kOtherMethodId=kLikelihoodFitUncorrectedId kOtherMethodId=kdNdxFitMethodId kOtherMethodId2=kdNdxFitMethodUncorrectedId StDetectorDbMaker/St_pidCorrectionC.h StdEdxY2Maker/*.*
+
+subst kdNdxFitMethodId2=kdNdxFitMethodUncorrectedId StDetectorDbMaker/St_pidCorrectionC.h StdEdxY2Maker/*.*
+================================================================================
+04/16/2026 
+root.exe [11] .x lsH.C("")
+reg = 
+TH1.Print Name  = BarPressure, Entries= 1005, Total sum= 1015.49
+TH1.Print Name  = inputTPCGasPressure, Entries= 1005, Total sum= 1.8365
+TH1.Print Name  = nitrogenPressure, Entries= 1005, Total sum= 0.847
+TH1.Print Name  = gasPressureDiff, Entries= 1005, Total sum= 1.0985
+TH1.Print Name  = outputGasTemperature, Entries= 1005, Total sum= 298.663
+TH1.Print Name  = flowRateArgon1, Entries= 1005, Total sum= 17.6485
+TH1.Print Name  = flowRateArgon2, Entries= 1005, Total sum= -0.141
+TH1.Print Name  = flowRateMethane, Entries= 1005, Total sum= 1.7205
+TH1.Print Name  = percentMethaneIn, Entries= 1005, Total sum= 10.1291
+TH1.Print Name  = ppmOxygenIn, Entries= 1005, Total sum= 2.474
+TH1.Print Name  = flowRateExhaust, Entries= 1005, Total sum= 5.832
+TH1.Print Name  = ppmWaterOut, Entries= 1005, Total sum= 6.047
+TH1.Print Name  = ppmOxygenOut, Entries= 1005, Total sum= 0.01
+TH1.Print Name  = flowRateRecirculation, Entries= 1005, Total sum= 462.82
+TH1.Print Name  = ZdcC, Entries= 0, Total sum= 0  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = Multiplicity, Entries= 1005, Total sum= 1005
+TH1.Print Name  = BBC, Entries= 1005, Total sum= 1005
+TH1.Print Name  = ADC3, Entries= 206772, Total sum= 206772
+TH1.Print Name  = xyPad3qB, Entries= 206772, Total sum= 206772
+TH1.Print Name  = xyPad3qBC, Entries= 206772, Total sum= 206772
+TH1.Print Name  = SecRow3N, Entries= 67527, Total sum= 67527
+TH1.Print Name  = SecRow3NC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = PressureN, Entries= 67527, Total sum= 67527
+TH1.Print Name  = PressureNC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = TemperatureN, Entries= 67527, Total sum= 67527
+TH1.Print Name  = TemperatureNC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = VoltageN, Entries= 67527, Total sum= 67527
+TH1.Print Name  = VoltageNC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Z3N, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Z3NC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = G3N, Entries= 67527, Total sum= 17296
+TH1.Print Name  = G3NC, Entries= 67527, Total sum= 17296
+TH1.Print Name  = xyPad3N, Entries= 67527, Total sum= 67527
+TH1.Print Name  = xyPad3NC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = dX3N, Entries= 67527, Total sum= 67527
+TH1.Print Name  = dX3NC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Eta3N, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Eta3NC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = EtaB3N, Entries= 67527, Total sum= 67527
+TH1.Print Name  = EtaB3NC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = AvCurrentN, Entries= 67527, Total sum= 67527
+TH1.Print Name  = AvCurrentNC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = QcmN, Entries= 67527, Total sum= 67527
+TH1.Print Name  = QcmNC, Entries= 67527, Total sum= 67527
+TH1.Print Name  = SecRow3P, Entries= 139245, Total sum= 139245
+TH1.Print Name  = SecRow3PC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = PressureP, Entries= 139245, Total sum= 139245
+TH1.Print Name  = PressurePC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = TemperatureP, Entries= 139245, Total sum= 139245
+TH1.Print Name  = TemperaturePC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = VoltageP, Entries= 139245, Total sum= 139245
+TH1.Print Name  = VoltagePC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Z3P, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Z3PC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = G3P, Entries= 139245, Total sum= 56445
+TH1.Print Name  = G3PC, Entries= 139245, Total sum= 56445
+TH1.Print Name  = xyPad3P, Entries= 139245, Total sum= 139245
+TH1.Print Name  = xyPad3PC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = dX3P, Entries= 139245, Total sum= 139245
+TH1.Print Name  = dX3PC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Eta3P, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Eta3PC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = EtaB3P, Entries= 139245, Total sum= 139245
+TH1.Print Name  = EtaB3PC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = AvCurrentP, Entries= 139245, Total sum= 139245
+TH1.Print Name  = AvCurrentPC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = QcmP, Entries= 139245, Total sum= 139245
+TH1.Print Name  = QcmPC, Entries= 139245, Total sum= 139245
+TH1.Print Name  = SecRow3N20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = SecRow3N20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = PressureN20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = PressureN20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = TemperatureN20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = TemperatureN20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = VoltageN20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = VoltageN20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Z3N20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Z3N20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = G3N20, Entries= 67527, Total sum= 17296
+TH1.Print Name  = G3N20C, Entries= 67527, Total sum= 17296
+TH1.Print Name  = xyPad3N20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = xyPad3N20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = dX3N20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = dX3N20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Eta3N20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = Eta3N20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = EtaB3N20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = EtaB3N20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = AvCurrentN20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = AvCurrentN20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = QcmN20, Entries= 67527, Total sum= 67527
+TH1.Print Name  = QcmN20C, Entries= 67527, Total sum= 67527
+TH1.Print Name  = SecRow3P20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = SecRow3P20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = PressureP20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = PressureP20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = TemperatureP20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = TemperatureP20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = VoltageP20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = VoltageP20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Z3P20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Z3P20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = G3P20, Entries= 139245, Total sum= 56445
+TH1.Print Name  = G3P20C, Entries= 139245, Total sum= 56445
+TH1.Print Name  = xyPad3P20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = xyPad3P20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = dX3P20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = dX3P20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Eta3P20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = Eta3P20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = EtaB3P20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = EtaB3P20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = AvCurrentP20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = AvCurrentP20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = QcmP20, Entries= 139245, Total sum= 139245
+TH1.Print Name  = QcmP20C, Entries= 139245, Total sum= 139245
+TH1.Print Name  = PVxyz, Entries= 8098, Total sum= 7849
+TH1.Print Name  = PVxyzC, Entries= 862, Total sum= 862
+TH1.Print Name  = EtaVspTGlP, Entries= 174605, Total sum= 174560
+TH1.Print Name  = EtaVspTGlN, Entries= 97453, Total sum= 97414
+TH1.Print Name  = EtaVspTPrP, Entries= 82604, Total sum= 82603
+TH1.Print Name  = EtaVspTPrN, Entries= 39089, Total sum= 39089
+TH1.Print Name  = EtaVspTPC, Entries= 49999, Total sum= 49999
+TH1.Print Name  = EtaVspTNC, Entries= 26150, Total sum= 26148
+TH1.Print Name  = HitsUsage, Entries= 1005, Total sum= 1005
+TH1.Print Name  = ZdcCP, Entries= 0, Total sum= 0             <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = BBCP, Entries= 206772, Total sum= 206772
+TH1.Print Name  = TPointsFP, Entries= 34041, Total sum= 30850
+TH1.Print Name  = NPointsFP, Entries= 34041, Total sum= 34040
+TH1.Print Name  = TPointsFN, Entries= 14362, Total sum= 13548
+TH1.Print Name  = NPointsFN, Entries= 14362, Total sum= 14362
+TH1.Print Name  = TPoints70P, Entries= 38755, Total sum= 35551
+TH1.Print Name  = NPoints70P, Entries= 38755, Total sum= 38753
+TH1.Print Name  = TPoints70N, Entries= 16906, Total sum= 16092
+TH1.Print Name  = NPoints70N, Entries= 16906, Total sum= 16906
+TH1.Print Name  = TPointsFUP, Entries= 41847, Total sum= 38655
+TH1.Print Name  = NPointsFUP, Entries= 41847, Total sum= 41845
+TH1.Print Name  = TPointsFUN, Entries= 18756, Total sum= 17941
+TH1.Print Name  = NPointsFUN, Entries= 18756, Total sum= 18755
+TH1.Print Name  = TPoints70UP, Entries= 1349, Total sum= 1317
+TH1.Print Name  = NPoints70UP, Entries= 1349, Total sum= 1347
+TH1.Print Name  = TPoints70UN, Entries= 397, Total sum= 395
+TH1.Print Name  = NPoints70UN, Entries= 397, Total sum= 397
+TH1.Print Name  = TPointsNP, Entries= 33019, Total sum= 0   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = NPointsNP, Entries= 33019, Total sum= 0   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = TPointsNN, Entries= 13777, Total sum= 0
+TH1.Print Name  = NPointsNN, Entries= 13777, Total sum= 0
+TH1.Print Name  = TPointsNUP, Entries= 41919, Total sum= 0
+TH1.Print Name  = NPointsNUP, Entries= 41919, Total sum= 0
+TH1.Print Name  = TPointsNUN, Entries= 18812, Total sum= 0
+TH1.Print Name  = NPointsNUN, Entries= 18812, Total sum= 0
+TH1.Print Name  = TPointsEP, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEP, Entries= 0, Total sum= 0
+TH1.Print Name  = TPointsEN, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEN, Entries= 0, Total sum= 0
+TH1.Print Name  = TPointsEUP, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEUP, Entries= 0, Total sum= 0
+TH1.Print Name  = TPointsEUN, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEUN, Entries= 0, Total sum= 0       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+THnSparseT<TArrayF> (*0x385e1c0): "Time" "log(dE/dx)_{uncorrected} - log(I(pi)) versus Date& Time"
+  2 dimensions, 206772 entries in 130 filled bins
+THnSparseT<TArrayF> (*0x385ef30): "TimeC" "log(dE/dx)_{corrected} - log(I(pi)) versus Date& Time after correction"
+  2 dimensions, 206772 entries in 130 filled bins
+THnSparseT<TArrayF> (*0x3732bc0): "TimeFP" "log(dE/dx)_{trackF} positive - log(I(pi)) versus Date& Time after correction"
+  2 dimensions, 40989 entries in 121 filled bins
+THnSparseT<TArrayF> (*0x47549c0): "TimeF" "log(dE/dx)_{trackF} negative - log(I(pi)) versus Date& Time after correction"
+  2 dimensions, 20715 entries in 59 filled bins
+TH1.Print Name  = PressureTP, Entries= 139245, Total sum= 139245
+TH1.Print Name  = PressureT, Entries= 67527, Total sum= 67527
+TH1.Print Name  = ZOfBadHits0, Entries= 829205, Total sum= 827841
+TH1.Print Name  = ZOfGoodHits, Entries= 6612854, Total sum= 6.61285e+06
+TH1.Print Name  = PhiOfGoodHits, Entries= 6612854, Total sum= 6.61285e+06
+TH1.Print Name  = PhiOfBadHits, Entries= 829205, Total sum= 829205
+TH1.Print Name  = TracklengthInTpcTotal, Entries= 272058, Total sum= 256195
+TH1.Print Name  = TracklengthInTpc, Entries= 272058, Total sum= 266267
+TH1.Print Name  = PadTbkAll, Entries= 7430080, Total sum= 7.42999e+06
+TH1.Print Name  = PadTbkBad, Entries= 817226, Total sum= 817223
+TH1.Print Name  = TdEdxI70, Entries= 110350, Total sum= 110322
+TH1.Print Name  = TdEdxI70pi, Entries= 23644, Total sum= 23644
+TH1.Print Name  = TdEdxI70e, Entries= 6311, Total sum= 6311
+TH1.Print Name  = TdEdxI70K, Entries= 18256, Total sum= 18254
+TH1.Print Name  = TdEdxI70P, Entries= 19726, Total sum= 19723
+TH1.Print Name  = aTdEdxI70, Entries= 110350, Total sum= 110196
+TH1.Print Name  = TdEdxF, Entries= 110340, Total sum= 110262
+TH1.Print Name  = TdEdxFpi, Entries= 45321, Total sum= 45316
+TH1.Print Name  = TdEdxFe, Entries= 9839, Total sum= 9835
+TH1.Print Name  = TdEdxFK, Entries= 26057, Total sum= 26049
+TH1.Print Name  = TdEdxFP, Entries= 26387, Total sum= 26377
+TH1.Print Name  = aTdEdxF, Entries= 110340, Total sum= 110137
+TH1.Print Name  = TdEdxN, Entries= 110340, Total sum= 0         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = TdEdxNpi, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxNe, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxNK, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxNP, Entries= 0, Total sum= 0
+TH1.Print Name  = aTdEdxN, Entries= 110340, Total sum= 0       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = BadFrac, Entries= 1478769, Total sum= 1.47872e+06
+TH1.Print Name  = BadFracPerEvent, Entries= 458, Total sum= 16.5392
+TH1.Print Name  = ZOfBadHits_33, Entries= 504941, Total sum= 503621
+TH1.Print Name  = ZOfBadHits_15, Entries= 312285, Total sum= 312247
+TH1.Print Name  = ZOfBadHits_1, Entries= 3285, Total sum= 3284
+TH1.Print Name  = ZOfBadHits_5, Entries= 8584, Total sum= 8579
+TH1.Print Name  = AdcSC, Entries= 14065144, Total sum= 9.36433e+09
+TH1.Print Name  = AdcOnTrack, Entries= 8466202, Total sum= 4.71828e+09
+TH1.Print Name  = dEOnTrack, Entries= 8466202, Total sum= 2.13921e+08
+TH1.Print Name  = AlivePads, Entries= 159758, Total sum= 159945
+TH1.Print Name  = AlivePadsdEdx, Entries= 159758, Total sum= 695005
+TH1.Print Name  = ActivePads, Entries= 14065144, Total sum= 9.18859e+07
+TH1.Print Name  = ZOfBadHits_2, Entries= 110, Total sum= 110
+
+
+TH1.Print Name  = ZdcC, Entries= 0, Total sum= 0  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = ZdcCP, Entries= 0, Total sum= 0             <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = TPointsNP, Entries= 33019, Total sum= 0   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = NPointsNP, Entries= 33019, Total sum= 0   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = NPointsNP, Entries= 33019, Total sum= 0   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = TPointsNN, Entries= 13777, Total sum= 0
+TH1.Print Name  = NPointsNN, Entries= 13777, Total sum= 0
+TH1.Print Name  = TPointsNUP, Entries= 41919, Total sum= 0
+TH1.Print Name  = NPointsNUP, Entries= 41919, Total sum= 0
+TH1.Print Name  = TPointsNUN, Entries= 18812, Total sum= 0
+TH1.Print Name  = NPointsNUN, Entries= 18812, Total sum= 0
+TH1.Print Name  = TPointsEP, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEP, Entries= 0, Total sum= 0
+TH1.Print Name  = TPointsEN, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEN, Entries= 0, Total sum= 0
+TH1.Print Name  = TPointsEUP, Entries= 0, Total sum= 0
+TH1.Print Name  = NPointsEUP, Entries= 0, Total sum= 0
+TH1.Print Name  = TPointsEUN, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxN, Entries= 110340, Total sum= 0         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+TH1.Print Name  = TdEdxNpi, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxNe, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxNK, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxNP, Entries= 0, Total sum= 0
+TH1.Print Name  = aTdEdxN, Entries= 110340, Total sum= 0       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+--------------------------------------------------------------------------------
+$2 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.50540824e-06, 0.301120609, 1.11855328}, id_track = 1, det_id = 1, method = 2, ndedx = 3310}
+$5 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.05444939e-06, 0.0887441486, 1.11855328}, id_track = 1, det_id = 1, method = 1, ndedx = 3310}
+$6 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.61274134e-06, 0.101326153, 1.06078875}, id_track = 1, det_id = 1, method = 4, ndedx = 3314}
+$7 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.13237717e-06, 0.126625821, 1.06078875}, id_track = 1, det_id = 1, method = 3, ndedx = 3314}
+8 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {44.3778229, 0.0781005248, 1.06078875}, id_track = 1, det_id = 1, method = 6, ndedx = 3314}
+$9 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {4.65744097e-06, 0.0781005248, 1}, id_track = 1, det_id = 1, method = 6, ndedx = 3314}
+$13 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {4.53852954e-06, 0.105141178, 1}, id_track = 1, det_id = 1, method = 5, ndedx = 3314}
+$14 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {0, 0.105141178, 1}, id_track = 1, det_id = 1, method = 7, ndedx = 3314}
+================================================================================
+04/17/2026
+#define kUndefinedMethodIdentifier           0
+#define kTruncatedMeanIdentifier             1
+$3 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.05444939e-06, 0.0887441486, 1.11855328}, id_track = 1, det_id = 1, method = 1, ndedx = 3310}
+#define kEnsembleTruncatedMeanIdentifier     2
+#define kTruncatedMeanUncorrectedIdentifier  2
+$2 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.50540824e-06, 0.301120609, 1.11855328}, id_track = 1, det_id = 1, method = 2, ndedx = 3310}
+#define kLikelihoodFitIdentifier             3
+$5 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.13237717e-06, 0.126625821, 1.06078875}, id_track = 1, det_id = 1, method = 3, ndedx = 3314}
+#define kWeightedTruncatedMeanIdentifier     4
+#define kLikelihoodFitUncorrectedIdentifier  4
+$4 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {6.61274134e-06, 0.101326153, 1.06078875}, id_track = 1, det_id = 1, method = 4, ndedx = 3314}
+#define kOtherMethodIdentifier               5
+#define kdNdxFitMethodIdentifier             5
+$8 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {43.2447891, 0.105141178, 1.06078875}, id_track = 1, det_id = 1, method = 5, ndedx = 3314}
+#define kOtherMethodIdentifier2              6
+#define kdNdxFitMethodUncorrectedIdentifier  6
+$6 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {44.3778229, 0.0781005248, 1.06078875}, id_track = 1, det_id = 1, method = 6, ndedx = 3314}
+#define kdEdxFromdNdxMethodIdentifier        7
+$9 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {4.52350469e-06, 0.105141178, 1}, id_track = 1, det_id = 1, method = 7, ndedx = 3314}
+#define kdEdxFromdNdxUncorrectedIdentifier   8
+$7 = (dst_dedx_st &) @0x7ffffffe70e0: {dedx = {4.65744097e-06, 0.0781005248, 1}, id_track = 1, det_id = 1, method = 8, ndedx = 3314}
+--------------------------------------------------------------------------------
+Empty histograms 
+TH1.Print Name  = ZdcCP, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxE, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxEpi, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxEe, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxEK, Entries= 0, Total sum= 0
+TH1.Print Name  = TdEdxEP, Entries= 0, Total sum= 0
+TH1.Print Name  = aTdEdxE, Entries= 0, Total sum= 0
+================================================================================
+04/18/2026   Fix Qt4 greek fonts on AlmaLinux
+[cvmfswrite01] /usr/share/fonts $ tar cf - . | ( cd ~/.fonts/ ; tar xfv - )
+================================================================================
+04/19/2026
+pull 2026 FXT
+PadI sigma ~ 0.75, mu ~ 0.05 ?
+================================================================================
+04/20/2026
+starsub02] ~/work/dEdx/RunXXVI32 $ grep 'Server Connecting: DB=StarDb  Host=' `find . -name "*.root" -size -400c | sed -e 's/root/log/'` | awk '{print $8}' | sort -u 
+Host=star-db07.sdcc.bnl.gov:3316
+
+
+[starsub02] ~/work/dEdx/RunXXVI32 $ more AuAu_2025/26336042_2100002_1_5000.log
+...
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServers(): config file name is /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/conf/dbLoadBalancerLocalConfig_BNL.xml
+There is no 1  /star/u/fisyak/dbServers.xml
+ looking at 2 /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+DB OVERRIDE default user with: fisyak
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServer() line=713 
+******** Order of Files searched for dbServers ********* 
+  3. /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+********************************************************
+
+StHyperCacheManager: reading cache config from /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/conf/hyperconfig.json
+WARNING: MYSQL_OPT_RECONNECT is deprecated and will be removed in a future version.
+St_db_Maker:INFO  - StDbLib: db server found in 3 iterations
+St_db_Maker:INFO  - MysqlDb::Connect: Load balancer took 0 ms, will use star-db07.sdcc.bnl.gov:3316
+St_db_Maker:INFO  - Ssl_cipher = 
+St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db07.sdcc.bnl.gov:3316
+ --> Connection Time=0.0146689 sec    MysqlVersion=5.7.44
+...
+StTpcDbMaker:ERROR - St_tpcDimensionsC::instance Geometry/tpc/tpcDimensions     was not found
+root.exe: .al96_x8664_gcc11_opt/obj/StRoot/StDetectorDbMaker/StDetectorDbChairs.cxx:2517: static St_tpcDimensionsC* St_tpcDimensionsC::instance(): Assertion `table' failed.
+
+Summary List of RHIC Runs
+
+Run Number	Year(s)	Collision System	Collision Energy (√sNN)	Key Physics Focus
+Run-1	2000	Au+Au	130 GeV	First heavy ion collisions at RHIC
+Run-2	2001-2002	Au+Au	200 GeV	Quark-gluon plasma properties
+Run-3	2003	d+Au	200 GeV	Cold nuclear matter effects
+Run-4	2004	Au+Au	200 GeV	Detailed QGP studies
+Run-5	2005	p+p	200 GeV	Spin physics baseline
+Run-6	2006	Au+Au	200 GeV	QGP and jet quenching
+Run-7	2007	p+p	200 GeV	Spin structure of proton
+Run-8	2008	Cu+Cu	200 GeV	System size dependence of QGP
+Run-9	2009	p+p	500 GeV	High energy spin physics
+Run-10	2010	Au+Au	200 GeV	QGP tomography and flow measurements
+Run-11	2011	p+p	500 GeV	Spin physics
+Run-12	2012	Au+Au	200 GeV	Heavy flavor and jet studies
+Run-13	2013	p+p	510 GeV	Spin physics
+Run-14	2014	U+U	193 GeV	High density QGP studies
+Run-15	2015	p+Au, He3+Au	200 GeV	Small system collectivity
+Run-16	2016	Au+Au	200 GeV	Precision QGP measurements
+Run-17	2017	p+p	510 GeV	Spin physics
+Run-18	2018	Au+Au	200 GeV	QGP and heavy flavor
+Run-19	2019	Au+Au	7.7 – 62.4 GeV (Beam Energy Scan II)	QCD phase diagram, critical point search
+Run-20	2020 (planned, limited due to COVID-19)	p+p, Au+Au (limited)	Various	Continued spin and QGP studies
+Notes
+
+Beam Energy Scan (BES): Runs like Run-19 focused on varying collision energies to explore the QCD phase diagram and search for the critical point.
+Small Systems: Runs with p+Au, d+Au, He3+Au collisions study collective effects in small systems.
+Spin Physics: Proton-proton runs with polarized beams are dedicated to understanding proton spin structure.
+System Size Variation: Runs with Cu+Cu and U+U collisions explore how system size and shape affect QGP formation.
+This list highlights the evolution of RHIC’s physics program, showcasing its versatility in collision species and energies to address diverse questions in nuclear and particle physics.
+
+...
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServers(): config file name is /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/conf/dbLoadBalancerLocalConfig_BNL.xml.db07
+There is no 1  /star/u/fisyak/dbServers.xml
+ looking at 2 /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+DB OVERRIDE default user with: fisyak
+St_db_Maker:INFO  - StDbManagerImpl::lookUpServer() line=713 
+******** Order of Files searched for dbServers ********* 
+  3. /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StDb/servers/dbServers.xml
+********************************************************
+
+StHyperCacheManager: reading cache config from /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/conf/hyperconfig.json
+WARNING: MYSQL_OPT_RECONNECT is deprecated and will be removed in a future version.
+St_db_Maker:INFO  - MysqlDb::Connect: Load balancer took 0 ms, will use star-db07.sdcc.bnl.gov:3316
+St_db_Maker:INFO  - Ssl_cipher = 
+St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db07.sdcc.bnl.gov:3316
+ --> Connection Time=0.00911283 sec    MysqlVersion=5.7.44
+St_db_Maker:INFO  - St_db_Maker::OpenMySQL : Unknown table tpc/tpcDedxPidAmpDb..tpcDedxPidAmpDb
+St_db_Maker:INFO  - St_db_Maker::OpenMySQL : Unknown table tpc/tpcGainNorms..tpcGainNorms
+St_db_Maker:INFO  - St_db_Maker::OpenMySQL : Unknown table tpc/tpcChargeStepCalib..tpcChargeStepCalib
+St_db_Maker:INFO  - St_db_Maker::OpenMySQL : Unknown table tpc/tpcHitErrors..tpcHitErrors
+...
+
+[starsub02] ~/work/dEdx/RunXXVI32 $ grep 'Server Connecting: DB=StarDb  Host=' `dir -S */*.root | tail -6 | awk '{print $9}' | sed -e 's/root/log/'` | sort
+8p65GeV_fixedTarget_2026/27026028_1300004_1_5000.log:St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db05.sdcc.bnl.gov:3316
+AuAu_2025/26336038_2000001_1_5000.log:St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db08.sdcc.bnl.gov:3316
+AuAu_2025/26336038_2000004_1_5000.log:St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db08.sdcc.bnl.gov:3316
+AuAu_2025/26336039_0200013_1_5000.log:St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db08.sdcc.bnl.gov:3316
+AuAu_2025/26336039_1000007_1_5000.log:St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db08.sdcc.bnl.gov:3316
+AuAu_2025/26336042_0100022_1_5000.log:St_db_Maker:INFO  - MysqlDb::Connect(host,user,pw,database,port) line=529 Server Connecting: DB=StarDb  Host=star-db08.sdcc.bnl.gov:3316
+================================================================================
+04/21/2026
+#1  0x00007fffeb72400a in MysqlDb::Connect (this=0x1f16788, aHost=0x1f1f820 "dbx.star.bnl.gov", aUser=0x0, aPasswd=0x0, aDb=0x1f1afb0 "StarDb", aPort=3316) at .al96_x8664_gcc11/obj/StRoot/StDbLib/MysqlDb.cc:521
+
+
+[cvmfswrite01] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG $ echo $STAR_HOST_SYS
+sl73_x8664_gcc485
+rpm -qf /usr/lib64/mysql
+mariadb-libs-5.5.52-1.el7.x86_64
+rpm -qf /usr/lib64/mysql/libmysqlclient.so
+mariadb-devel-5.5.52-1.el7.x86_64
+
+[cvmfswrite06] /gpfs/mnt/gpfs01/star/pwg/fisyak/STAR/spack $ echo $STAR_HOST_SYS
+al96_x8664_gcc11
+rpm -qf  /usr/lib64/libmysqlclient.so
+mariadb-connector-c-devel-3.2.6-1.el9_0.x86_64
+[l409] /net/l402/data/fisyak/STAR/packages/TFG $ rpm -qf /usr/lib64/mysql/libmysqlclient.so
+mariadb-devel-5.5.56-2.el7.x86_64
+================================================================================
+04/22/2026
+RunXXVI33
+#sigma(@41 npts) =  7.36% for 70-NAuAu_2025
+#sigma(@41 npts) =  7.35% for 70-PAuAu_2025
+#sigma(@41 npts) =  7.35% for U70-NAuAu_2025
+#sigma(@41 npts) =  7.31% for U70-PAuAu_2025
+#sigma(@61 npts) =  6.34% for NPointsEUNAuAu_2025
+#sigma(@61 npts) =  6.38% for NPointsEUPAuAu_2025
+#sigma(@61 npts) =  7.08% for F-NAuAu_2025
+#sigma(@61 npts) =  7.06% for F-PAuAu_2025
+#sigma(@61 npts) =  7.11% for UF-NAuAu_2025
+#sigma(@61 npts) =  7.07% for UF-PAuAu_2025
+#sigma(@61 npts) =  5.51% for UN-PAuAu_2025
+#sigma(@61 npts) =  5.47% for N-NAuAu_2025
+#sigma(@61 npts) =  5.50% for N-PAuAu_2025
+#sigma(@61 npts) =  5.48% for UN-NAuAu_2025
+#sigma(@61 npts) =  5.51% for UN-PAuAu_2025
+
+
+#sigma(@41 npts) =  7.35% for 70U- AuAu_2025
+#sigma(@41 npts) =  7.31% for 70U+ AuAu_2025
+#sigma(@61 npts) =  6.34% for EU- AuAu_2025
+#sigma(@61 npts) =  6.38% for EU+ AuAu_2025
+#sigma(@61 npts) =  7.11% for FU- AuAu_2025
+#sigma(@61 npts) =  7.07% for FU+ AuAu_2025
+#sigma(@61 npts) =  5.48% for NU- AuAu_2025
+#sigma(@61 npts) =  5.51% for NU+ AuAu_2025
+
+
+
+#sigma(@41 npts) =  7.84% for 70U- 13p5GeV_fixedTarget_2026
+#sigma(@41 npts) =  9.31% for 70U+ 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.90% for EU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.88% for EU+ 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.08% for FU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.22% for FU+ 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.00% for NU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.58% for NU+ 13p5GeV_fixedTarget_2026
+
+
+#sigma(@41 npts) = 13.54% for 70U+ 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.40% for EU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) = 16.15% for EU+ 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.76% for FU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) = 14.05% for FU+ 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  4.58% for NU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) = 13.28% for NU+ 9p8GeV_fixedTarget_2026
+
+
+
+#sigma(@41 npts) =  9.49% for 70U- 8p65GeV_fixedTarget_2026
+#sigma(@41 npts) = 12.79% for 70U+ 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.38% for EU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 14.05% for EU+ 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.43% for FU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 13.88% for FU+ 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.97% for NU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 12.12% for NU+ 8p65GeV_fixedTarget_2026
+================================================================================
+04/23/2026
+foreach d (`ls -1d *GeV*`)
+  cd ${d}
+  cpu_per_event.csh '*/*/*.gz' | tee cpu_per_event &
+  cd -
+end
+cvmfswrite07] ~/TPC/reco $ grep CPU CheckPulls*/2025/RF/*/cpu_per_event
+CheckPulls/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:      CPU/event = 4.07518(sec) and    Total/event = 4.17412(sec)      97.6298 %       for 13167 events
+CheckPulls/2025/RF/8p65GeV_fixedTarget_2026/cpu_per_event:      CPU/event = 3.8705(sec) and     Total/event = 3.9653(sec)       97.6092 %       for 13959 events
+CheckPulls/2025/RF/9p8GeV_fixedTarget_2026/cpu_per_event:       CPU/event = 2.71106(sec) and    Total/event = 2.78437(sec)      97.367 %        for 38214 events
+                                                                                                                                                                  cpu/cpu2
+CheckPulls2/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:     CPU/event = 2.91248(sec) and    Total/event = 2.96617(sec)      98.19 %         for 13167 events  1.40
+CheckPulls2/2025/RF/8p65GeV_fixedTarget_2026/cpu_per_event:     CPU/event = 2.7727(sec) and     Total/event = 2.82296(sec)      98.2195 %       for 13959 events  1.40
+CheckPulls2/2025/RF/9p8GeV_fixedTarget_2026/cpu_per_event:      CPU/event = 2.24356(sec) and    Total/event = 2.28603(sec)      98.1419 %       for 38214 events  1.24
+
+
+
+[cvmfswrite07] ~/TPC/reco/CheckPulls2/2025/RF $ 
+foreach d (`ls -1d *GeV*`)
+  cd ${d}
+  ln -s ~/macros/.al* .
+  root.exe -q -b 'bfc.C(-1,"Sti")' 'StiPulls.C+("*/*/*tags.root")' > & ${d}Pull.log &
+  cd -
+end
+
+ root.exe 'bfc.C(-1,"Sti")'  *2026/*.root 'StiDraw.C("pullYP")'
