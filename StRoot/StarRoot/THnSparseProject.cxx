@@ -35,9 +35,10 @@ THnSparseProject::THnSparseProject(const THnSparse *hs, Int_t select) : fHs(hs),
     TH1D *proj = (TH1D *) fProjMap->FindObject(pName);
     if (! proj) {
       proj = new TH1D(pName, fHs->GetTitle(), fAxis->GetNbins(), fAxis->GetXmin(), fAxis->GetXmax());
-#if 0
-      std::cout << "Histogram " << proj->GetName() << " has been created" << std::endl;
-#endif      
+      if (_debug) {
+	//	std::cout << "Histogram " << proj->GetName() << " has been created" << std::endl;
+	proj->Print("base");
+      }
       proj->SetDirectory(0);
       fProjMap->AddLast(proj);
       NoProj++;
@@ -45,28 +46,7 @@ THnSparseProject::THnSparseProject(const THnSparse *hs, Int_t select) : fHs(hs),
     Int_t bin = coord[fNdim-1];
     proj->AddBinContent(bin, v);
   }
-  std::cout << "THnSparseProject::THnSparseProject made " << NoProj << " porjection with select = " << fSelect << std::endl;
+  std::cout << "THnSparseProject::THnSparseProject made " << NoProj << " projection with select = " << fSelect << std::endl;
 }
-//________________________________________________________________________________
-TH1D* THnSparseProject::Next() {
-  static TIter next(fProjMap);
-  TH1D *proj = (TH1D *) next();
-  if (proj) {
-    TString Name(proj->GetName());
-    TObjArray *obj = Name.Tokenize("_");
-    Int_t nParsed = obj->GetEntries();
-    Int_t j = 0;
-    for (Int_t k = 1; k < nParsed; k++) {
-      if (obj->At(k)) {
-	TString A(((TObjString *) obj->At(k))->GetName());
-	Int_t bin = A.Atoi();
-	fBins[j] = bin;
-	TAxis *axis = (TAxis *) (*(fHs->GetListOfAxes()))[j];
-	fX[j] = axis->GetBinCenter(bin);
-      }
-      j++;
-    }
-    delete obj;
-  }
-  return proj;
-}
+
+
