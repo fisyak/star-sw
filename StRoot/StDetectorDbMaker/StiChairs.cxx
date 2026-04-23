@@ -55,7 +55,7 @@ MakeChairInstance2(KalmanTrackFinderParameters,StiKalmanTrackFinderParameters,Ca
 #include "StiTpcPullMDF4.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
 //________________________________________________________________________________
-void StiTpcHitErrorMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
+void StiTpcMDF4::convert(Double_t _z,  Double_t _eta, Double_t _tanl, Double_t AdcL) const {
   if (!MDF()->ConvType()) {// old conversion
     fxx[0] = 1. - TMath::Abs(_z)/207.707; // Z
     Double_t y = TMath::Tan(_eta);
@@ -87,11 +87,18 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   Double_t dTimeSigmaSQ = Eval(4*Field() +   2, fxx);
   ecross = scale*padP *padP *dPadSigmaSQ ;
   edip   = scale*timeP*timeP*dTimeSigmaSQ;
-  if (StiTpcPullMDF4::instance()->nrows() == 8) {
-    Double_t pulldYSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 0, _z, _eta, _tanl, AdcL);
-    Double_t pulldZSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 2, _z, _eta, _tanl, AdcL);
-    ecross *= pulldYSQ;
-    edip   *= pulldZSQ;
+  if (!MDF()->ConvType()) {// old conversion, sigle table for Inner and Outer
+    if (StiTpcPullMDF4::instance()->nrows() == 8) {
+      Double_t pulldYSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 0, _z, _eta, _tanl, AdcL);
+      Double_t pulldZSQ = StiTpcPullMDF4::instance()->Eval(4*IO() + 2, _z, _eta, _tanl, AdcL);
+      ecross *= pulldYSQ;
+      edip   *= pulldZSQ;
+    }
+  } else if (pullChair()) {
+      Double_t pulldYSQ = pullChair()->Eval(4*Field() +   0, fxx);
+      Double_t pulldZSQ = pullChair()->Eval(4*Field() +   2, fxx);
+      ecross *= pulldYSQ;
+      edip   *= pulldZSQ;
   }
   Int_t fail = 0;
   if (ecross< min2Err) {ecross = min2Err; fail++;}
@@ -182,3 +189,5 @@ void StiTpcPullMDF4::calculatePull(Double_t _z,  Double_t _eta, Double_t _tanl, 
   }
 }
 //--------------------------------------------------------------------------------
+MakeChairInstance2(MDFCorrection4,StiTpcInnerPullMDF4,Calibrations/tracker/TpcInnerPullMDF4);
+MakeChairInstance2(MDFCorrection4,StiTpcOuterPullMDF4,Calibrations/tracker/TpcOuterPullMDF4);
