@@ -175,13 +175,15 @@ struct Particle_t { // for positive particles
 class StTrackCombPiD : public TObject {
  public:
   enum PiDStatusIDs {
-    kUndef = kUndefinedMethodId,        // 0
-    kI70   = kTruncatedMeanId,          // 1
-    kI70U  = kTruncatedMeanUncorrectedId,  // 2
-    kFit   = kLikelihoodFitId,          // 3
-    kFitU  = kLikelihoodFitUncorrectedId,  // 4
+    kUndef = kUndefinedMethodId,          // 0
+    kI70   = kTruncatedMeanId,            // 1
+    kI70U  = kTruncatedMeanUncorrectedId, // 2
+    kFit   = kLikelihoodFitId,            // 3
+    kFitU  = kLikelihoodFitUncorrectedId, // 4
     kdNdx  = kdNdxFitMethodId,            // 5
-    kdNdxU = kdNdxFitMethodUncorrectedId,           // 6
+    kdNdxU = kdNdxFitMethodUncorrectedId, // 6
+    kdEdxE = kdEdxFromdNdxMethodId,       // 7
+    kdEdxEU = kdEdxFromdNdxUncorrectedId, // 8
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
   StTrackCombPiD();
@@ -194,7 +196,7 @@ class StTrackCombPiD : public TObject {
 #endif /* __TFG__VERSION__ */
   virtual ~StTrackCombPiD() {
     for (Int_t k = kI70; k < kTotal; k++) {SafeDelete(fStatus[k]);}
-    fProb = 0;
+    //    fProb = 0;
   }
   void Clear(Option_t * /*option*/ ="") {memset(mBeg,0,mEnd-mBeg+1);}
   Int_t Status() {return fPiDStatus;}
@@ -232,6 +234,10 @@ class StTrackCombPiD : public TObject {
   Double_t bghyp(Int_t l) {return fbghyp[l];}
   Double_t pMomentum() {return fg3.Mag();}
   void SetG3(TVector3 &g3) {fg3 = g3;}
+  static void SetSigmaCut(Double_t p = 3)        {fgSigmaCut  = p;}
+  static void SetdEdxErrorCut(Double_t p = 0.15) {fgdEdxErrorCut = p;}
+  static Double_t SigmaCut()     {return fgSigmaCut;}
+  static Double_t dEdxErrorCut() {return fgdEdxErrorCut;}
   // ________________________________________________________________________________
   void        Print(Option_t *option="") const;
   const StdEdxStatus    *fI70	 () const  {return (const StdEdxStatus    *) fStatus[kI70  ];} 
@@ -240,6 +246,8 @@ class StTrackCombPiD : public TObject {
   const StdEdxStatus 	*fFitU   () const  {return (const StdEdxStatus    *) fStatus[kFitU ];}  
   const StdEdxStatus 	*fdNdx   () const  {return (const StdEdxStatus    *) fStatus[kdNdx ];}  
   const StdEdxStatus 	*fdNdxU  () const  {return (const StdEdxStatus    *) fStatus[kdNdxU];}  
+  const StdEdxStatus 	*fdEdxE  () const  {return (const StdEdxStatus    *) fStatus[kdEdxE ];}  
+  const StdEdxStatus 	*fdEdxEU () const  {return (const StdEdxStatus    *) fStatus[kdEdxEU];}  
   const StBTofStatus 	*fBTof   () const  {return (const StBTofStatus    *) fStatus[kBTof ];}  
   const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
   const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
@@ -261,6 +269,7 @@ class StTrackCombPiD : public TObject {
  private:
   static Int_t       fgDebug;
   static Double_t    fgSigmaCut;
+  static Double_t    fgdEdxErrorCut;
   static Int_t       fgl2p[KPidAllParticles];
   static Particle_t  fgParticles[KPidAllParticles];
   std::vector<Int_t> fTPCPDG;
@@ -282,7 +291,7 @@ class StTrackCombPiD : public TObject {
   Double_t         fpL10;
   Double_t         fbghyp[kTotal]; //! log10(bg)
   Double_t         fbgs[kTotal];   //! bg
-  StProbPidTraits *fProb;
+  //  StProbPidTraits *fProb;
   Char_t           mEnd[1];        //!
   StDcaGeometry    fDca;
   KFParticle       fParticle;
