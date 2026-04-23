@@ -360,7 +360,10 @@ enum StDedxMethod {kUndefinedMethodId          = kUndefinedMethodIdentifier,
 		   kOtherMethodId2             = kOtherMethodIdentifier2,             
 		   kdNdxFitMethodUncorrectedId = kdNdxFitMethodUncorrectedIdentifier, 
 		   kdEdxFromdNdxMethodId       = kdEdxFromdNdxMethodIdentifier,        
-		   kdEdxFromdNdxUncorrectedId  = kdEdxFromdNdxUncorrectedIdentifier};   
+		   kdEdxFromdNdxUncorrectedId  = kdEdxFromdNdxUncorrectedIdentifier,
+                   kTotaldEdxMethods           = kdEdxFromdNdxUncorrectedIdentifier,
+                   kTotalFitMethods            = kdEdxFromdNdxUncorrectedIdentifier/2
+};   
 /*!
  * \enum StTrackFittingMethod
  */
