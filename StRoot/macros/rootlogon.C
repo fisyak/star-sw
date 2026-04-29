@@ -169,7 +169,8 @@
   TString STAR_GIT   = gSystem->ExpandPathName("$STAR/.git");  
   TString STAR_LEVEL = gSystem->ExpandPathName("$STAR_LEVEL"); 
   TString STAR_LIB   = gSystem->ExpandPathName("$STAR_LIB"); 
-  TString STAR_HOST_SYS = gSystem->ExpandPathName("$STAR_HOST_SYS");
+  TString STAR_HOST_SYS = gSystem->ExpandPathName("$STAR_HOST_SYS_OPT");
+  if (STAR_HOST_SYS == "") STAR_HOST_SYS = gSystem->ExpandPathName("$STAR_HOST_SYS");
   TString STAR_GIT_VERSION; 
   if (! gSystem->AccessPathName(STAR_GIT,kReadPermission)) {
     STAR_GIT_VERSION = ", git = ";
