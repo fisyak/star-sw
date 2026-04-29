@@ -1146,7 +1146,7 @@ void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
   static Hists3D SecRow3 ## SIGN ("SecRow3" MakeString(SIGN) ,"<log(dEdx/Pion)>"  MakeString(NEGPOS) ,"sector","row",numberOfSectors,NoRows); \
   static Hists3D Pressure ## SIGN ("Pressure" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"row","Log(Pressure)",-NoRows,150, 6.84, 6.99); \
   static Hists3D Temperature ## SIGN ("Temperature" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"row","outputTemperature (T5)",-NoRows,60, 294,300); \
-  static Hists3D Voltage ## SIGN ("Voltage" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"Sector*Channels","Voltage - Voltage_{nominal}", numberOfSectors*NumberOfChannels,23,-215,15); \
+  static Hists3D Voltage ## SIGN ("Voltage" MakeString(SIGN) ,"log(dE/dx)" MakeString(NEGPOS) ,"(Sector+1)*Channels","Voltage - Voltage_{nominal}", (numberOfSectors+1)*NumberOfChannels,23,-215,15); \
   static Hists3D Z3 ## SIGN ("Z3" MakeString(SIGN) ,"<log(dEdx/Pion)>" MakeString(NEGPOS) ,"row","Drift Distance",-NoRows,220,-5,215); \
   static Hists3D G3 ## SIGN ("G3" MakeString(SIGN) ,"<log(dEdx/Pion)>" MakeString(NEGPOS) ,"row","drift time to Gating Grid (us)",-NoRows,100,-5,15); \
   static Hists3D xyPad3 ## SIGN ("xyPad3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"sector+yrow[-0.5,0.5] and xpad [-1,1]"," xpad",numberOfSectors*20, 32,-1,1, 200, -5., 5., 0.5, 24.5); \
@@ -1154,9 +1154,9 @@ void StdEdxY2Maker::Histogramming(StGlobalTrack* gTrack) {
   static Hists3D Eta3 ## SIGN ("Eta3" MakeString(SIGN) ,"log(dEdx/Pion) MC" MakeString(NEGPOS) ,"row","#eta_{G}",-NoRows,50,-2.5,2.5); \
   static Hists3D EtaB3 ## SIGN ("EtaB3" MakeString(SIGN) ,"log(dEdx/Pion) RC" MakeString(NEGPOS) ,"row","#eta_{G}",-NoRows,50,-2.5,2.5); \
 __BOOK__VARS__dZdY(SIGN,NEGPOS) \
-__BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
-  static Hists3D AvCurrent ## SIGN ("AvCurrent" MakeString(SIGN) ,"log(dEdx/Pion)"  MakeString(NEGPOS) ,"Sector*Channels","Average Current [#{mu}A]",numberOfSectors*NumberOfChannels,200,0.,1.0); \
-  static Hists3D Qcm ## SIGN ("Qcm" MakeString(SIGN) ,"log(dEdx/Pion)"  MakeString(NEGPOS) ,"Sector*Channels","Accumulated Charge [uC/cm]",numberOfSectors*NumberOfChannels,200,0.,1000);
+__BOOK__VARS__PadTmbk(SIGN,NEGPOS)			\
+  static Hists3D AvCurrent ## SIGN ("AvCurrent" MakeString(SIGN) ,"log(dEdx/Pion)"  MakeString(NEGPOS) ,"(Sector+1)*Channels","Average Current [#{mu}A]",(numberOfSectors+1)*NumberOfChannels,200,0.,1.0); \
+  static Hists3D Qcm ## SIGN ("Qcm" MakeString(SIGN) ,"log(dEdx/Pion)"  MakeString(NEGPOS) ,"Sector*Channels","Accumulated Charge [uC/cm]",(numberOfSectors+1)*NumberOfChannels,200,0.,1000);
 #if 0 /* skip Pad and Tbk */
   static Hists3D nPad3 ## SIGN ("nPad3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"row","npad",-NoRows,18,0.5,18.5); \
   static Hists3D nTbk3 ## SIGN ("nTbk3" MakeString(SIGN) ,"log(dEdx/Pion)" MakeString(NEGPOS) ,"row","ntimebuckets",-NoRows,35,2.5,37.5);
@@ -1412,7 +1412,9 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 	}
 	if (l) FdEdx[k].C[l].mdx = FdEdx[k].C[l-1].mdx;
       }
-      Int_t cs = NumberOfChannels*(sector-1)+FdEdx[k].channel;
+      Int_t channel = FdEdx[k].channel;
+      Int_t channelBySector = NumberOfChannels*sector + channel;
+      Int_t cs = NumberOfChannels*(sector-1) + channel;
       //      if (pMomentum > pMomin && pMomentum < pMomax &&PiD.dEdxStatus(kMethod)->TrackLength() > 40 ) continue; // { // Momentum cut
       if (pMomentum > pMomin && pMomentum < pMomax) { // Momentum cut
 	if (St_trigDetSumsC::instance()) {
@@ -1486,7 +1488,8 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS) \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kTpcSecRowB].mdE ## __X20__.fdEdxN; \
 	Vars[1] = FdEdx[k].F.mdE ## __X20__.fdEdxN; \
 	SecRow3 ## SIGN .Fill(sector,row,Vars);			       \
-	Voltage ## SIGN .Fill(cs,VN,Vars);			       \
+	Voltage ## SIGN .Fill(channel,VN,Vars);			       \
+	Voltage ## SIGN .Fill(channelBySector,VN,Vars);			       \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kzCorrection].mdE ## __X20__.fdEdxN; \
 	Z3     ## SIGN .Fill(rowS,FdEdx[k].ZdriftDistance,Vars);     \
 	Vars[0] = FdEdx[k].C[StTpcdEdxCorrection::kGatingGrid].mdE ## __X20__.fdEdxN; \
