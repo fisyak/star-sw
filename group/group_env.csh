@@ -25,7 +25,7 @@ set tty_output = `tty`
 #    echo "DEBUG [$tty_output] [$?prompt]"
 #    # "$tty_output" == "not a tty"
 #    if (  ! $?prompt || "$tty_output" == "not a tty" ) then
-#	echo "DEBUG not a tty"
+#	echo "DEBUG not a tty"96
 #    else
 #	echo "DEBUG thinks it is fine"
 #    endif
@@ -371,6 +371,7 @@ endif
 
 
 # db related
+if ($?DECHO) echo "======================================== DB ========================================"
 if ( $?SITE ) then
     #if ( ! $?DB_SERVER_LOCAL_CONFIG ) then
 	if ( -r ${STAR_PATH}/conf/dbLoadBalancerLocalConfig_${SITE}.xml ) then
@@ -388,11 +389,11 @@ if ( $?SITE ) then
 	    setenv DB_SERVER_LOCAL_CONFIG ${STAR}/StDb/servers/dbLoadBalancerLocalConfig_${SITE}.xml
 	endif
     #endif
-    if ($ECHO) echo   "Setting up DB_SERVER_LOCAL_CONFIG = ${DB_SERVER_LOCAL_CONFIG}" 
 endif
+    if ($?DECHO) echo   "Setting up DB_SERVER_LOCAL_CONFIG = ${DB_SERVER_LOCAL_CONFIG}" 
 
 
-if ($ECHO)    echo   "Setting up STAR_BIN  = ${STAR_BIN}"
+if ($?DECHO)    echo   "Setting up STAR_BIN  = ${STAR_BIN}"
 
 # Common stuff
 setenv STAR_SCRIPTS ${STAR_PATH}/scripts
