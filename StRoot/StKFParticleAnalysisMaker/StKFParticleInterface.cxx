@@ -535,7 +535,7 @@ void StKFParticleInterface::CollectPVHistograms()
 
   title = "ZR";
   fPVHistograms2D[1] = (TH2F *) pvDir->Get(title);
-  if (! fPVHistograms2D[1]) fPVHistograms2D[1] = new TH2F(title, title + " ; Z [cm] ; R [cm]", 4400, -220, 220, 400, -40, 40);
+  if (! fPVHistograms2D[1]) fPVHistograms2D[1] = new TH2F(title, title + " ; Z [cm] ; sign(Y) *  R [cm]", 4400, -220, 220, 400, -40, 40);
 
   title = "ZRTracks";
   fPVHistograms2D[2] = (TH2F *) pvDir->Get(title);
@@ -998,10 +998,10 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   KFVertex myPV;
   std::vector<bool> isPileup;
   std::vector<KFVertex> pileupPv;
-  if (IsFixedTarget()) {
+  //  if (IsFixedTarget()) {
     if(!FindFixedTargetPV(picoDst, myPV, pileupPv, isPileup)) return 0;
     primaryVertex = myPV;
-  }
+    //  }
 #endif /* __FXT_PV_REFIT__ */
   
   Int_t nGlobalTracks = picoDst->numberOfTracks( );
@@ -1035,7 +1035,8 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     const UInt_t index = gTrack->id();
 
 #ifdef __FXT_PV_REFIT__
-    if(IsFixedTarget() && isPileup[index]) continue;
+    if(//IsFixedTarget() && 
+       isPileup[index]) continue;
 #endif
     
     if(index >= ftrackIdToI.size()) ftrackIdToI.resize(index+1);
