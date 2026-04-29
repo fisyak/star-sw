@@ -1,23 +1,24 @@
+#ifndef __PULL__
 /*
-  ~/work/Tpc/Alignment/T05 $ root.exe  'lDb.C(0,"r2019,CorrZ)' dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
+~/work/Tpc/Alignment/T05 $ root.exe  'lDb.C(0,"r2019,CorrZ)' dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2019,CorrZ)' ../dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2019,CorrZ)' ../dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
 __CHECK__
-   root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2019,CorrZ)' ../dPadIGP11p5GeV.root Chain.C 'mdf4HitError.C+(tChain)'
 __2023__
-   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dPadI*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dPadO*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dTimeI*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
-   root.exe  'lDb.C(0,"r2023,CorrZ)' ../dTimeO*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
-   foreach io (I O)
-     foreach pt (dPad dTime)
-       foreach f (RF RHF ZF)
-         root.exe  'lDb.C(0,"r2023,CorrZ)' ../${pt}${io}*${f}*.root Chain.C 'mdf4HitError.C+(tChain)'
-       end
-     end
-   end
+root.exe  'lDb.C(0,"r2023,CorrZ)' ../dPadI*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2023,CorrZ)' ../dPadO*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2023,CorrZ)' ../dTimeI*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+root.exe  'lDb.C(0,"r2023,CorrZ)' ../dTimeO*RF*.root Chain.C 'mdf4HitError.C+(tChain)'
+foreach io (I O)
+  foreach pt (dPad dTime)
+    foreach f (RF RHF ZF)
+      root.exe  'lDb.C(0,"r2023,CorrZ)' ../${pt}${io}*${f}*.root Chain.C 'mdf4HitError.C+(tChain)'
+    end
+  end
+end
    cat *I*RF*.C *I*RHF*.C *I*ZF*.C > TpcInnerHitErrorMDF4.C
    cat *O*RF*.C *O*RHF*.C *O*ZF*.C > TpcOuterHitErrorMDF4.C
 --------------------------------------------------------------------------------
@@ -29,6 +30,7 @@ __2023__
         end
      end
    end
+
    cat *I*RF.C  > $STAR/StarDb/Calibrations/tracker/TpcInnerHitErrorMDF4.r2023.C
    cat *O*RF.C  > $STAR/StarDb/Calibrations/tracker/TpcOuterHitErrorMDF4.r2023.C
    cat *I*RFFXT.C  > $STAR/StarDb/Calibrations/tracker/TpcInnerHitErrorMDF4.9p8GeV_fixedTarget_2026.C
@@ -42,9 +44,19 @@ __2023__
          root.exe 'lDb.C(0,"'${sdt}',CorrZ")' ${t}/${pt}${io}*.root Chain.C 'mdf4HitError.C+(tChain)' 
         end
      end
-   end
-  
 */
+#else /* __PULL__ */
+/* 04/19/2026
+/gpfs/mnt/gpfs01/star/data100/TPC/reco/CheckPulls/2025/RF
+   root.exe  'lDb.C(0,"9p8GeV_fixedTarget_2026")' *2026/pullYI*.root Chain.C  mdf4Pull.C+
+   root.exe  'lDb.C(0,"9p8GeV_fixedTarget_2026")' *2026/pullZI*.root Chain.C  mdf4Pull.C+
+   root.exe  'lDb.C(0,"9p8GeV_fixedTarget_2026")' *2026/pullYO*.root Chain.C  mdf4Pull.C+
+   root.exe  'lDb.C(0,"9p8GeV_fixedTarget_2026")' *2026/pullZO*.root Chain.C  mdf4Pull.C+
+   cat TpcInner*RF.C  > $STAR/StarDb/Calibrations/tracker/TpcInnerPullMDF4.9p8GeV_fixedTarget_2026.C
+   cat TpcOuter*RF.C  > $STAR/StarDb/Calibrations/tracker/TpcOuterPullMDF4.9p8GeV_fixedTarget_2026.C
+__CHECK__
+*/
+#endif /* __PULL__ */
 #define __CHECK__
 #define __TPC23__
 #include <assert.h>
@@ -85,6 +97,7 @@ TProfile *profC[kIO][kF][kPT][kSM][kVar] = {0};
 TProfile *profD[kIO][kF][kPT][kSM][kVar] = {0};
 TH2F     *h2[kIO][kF][kPT][kSM][kVar] = {0};     
 TMultiDimFit* fit = 0;
+TFile *fgOut = 0;
 //--------------------------------------------------------------------------------
 ofstream out;
 
@@ -339,6 +352,7 @@ Int_t FitPS::Cut(Long64_t entry)
   // returns -1 otherwise.
 #ifndef __TPC23__
   //   tChain->Draw("sigma","i&&j&&k0&&k1&&chisq>0&&chisq<100&&dmu<0.05&&dsigma<0.05&&abs(mu)<0.4","colz")
+  //   tChain->Draw("sigma:z1","chisq>0&&dmu>0&&dmu<0.5&&dsigma>1e-3&&dsigma<0.1&&abs(mu)<1&&sigma>0.5&&abs(y)<1.5","colz")
   if (i == 0 || j == 0 || k0 == 0 || k1 == 0) return -1;
   if (chisq <= 0 || chisq >  100) return -1;
   if (dmu   > 0.05) return -1;
@@ -360,8 +374,15 @@ Int_t FitPS::Cut(Long64_t entry)
 #else /* TPC23 03/28/2026 */
   //   chisq>0&&chisq<200&&dsigma<0.05&&dmu<0.1
   if (i == 0 || j == 0 || k0 == 0 || k1 == 0) return -1;
+#ifndef __PULL__
   if (chisq <= 0 || chisq >  200) return -1;
   if (dsigma <= 0 || dsigma > 0.05) return -1;
+#else 
+  if (chisq <= 0  || chisq  >  100) return -1;
+  if (dsigma <= 0 || dsigma > 0.05) return -1;
+  if (dmu <= 0    || dmu    > 0.25) return -1;
+  if (sigma < 0.5) return -1;
+#endif
   if (TMath::Abs(x) > 203.0) return -1;
   if (TMath::Abs(x) < 2) return -1;
   fxx[0] = x;
@@ -388,17 +409,22 @@ Int_t FitPS::fgSM   = -9;
 
 #ifdef __CHECK__
 #include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
-#endif
+#endif /* __CHECK__ */
 Double_t mdf4(Double_t xx[4]) {
 #ifndef __CHECK__
   Double_t val = fit->Eval(xx);
-#else
+#else /* ! __CHECK__ */
   FitPS::fgCase = FitPS::fgSM + kSM*(FitPS::fgPT + kPT*(FitPS::fgF + kF*FitPS::fgIO));
   Int_t k = FitPS::fgCase%12;
   Double_t val = 0;
+#ifndef __PULL__
   if (FitPS::fgIO == 0) val = StiTpcInnerHitErrorMDF4::instance()->Eval(k,xx);
   else                  val = StiTpcOuterHitErrorMDF4::instance()->Eval(k,xx);
-#endif
+#else /* __PULL__ */
+  if (FitPS::fgIO == 0) val = StiTpcInnerPullMDF4::instance()->Eval(k,xx);
+  else                  val = StiTpcOuterPullMDF4::instance()->Eval(k,xx);
+#endif /* __PULL__ */
+#endif /* __CHECK */
   if (FitPS::fgCase%2 == 0) {
     if (val < 0) val = 0;
     val = TMath::Sqrt(val);
@@ -529,7 +555,6 @@ Double_t funcMDF(Double_t *x, Double_t *p=0) {
 void mdf4Fit(FitPS &t) {
   // Global data parameters 
   Int_t nVars      =  4;
-  Int_t maxTerm    = 20;
   // make fit object and set parameters on it. 
   //  fit = new TMultiDimFit(nVars, TMultiDimFit::kMonomials,"vk");
   //  TMultiDimFit::EMDFPolyType type = (TMultiDimFit::EMDFPolyType) 0;
@@ -537,6 +562,11 @@ void mdf4Fit(FitPS &t) {
   fit = new TMultiDimFit(nVars, type,"vk");
   Int_t max = 5;
   Int_t mPowers[]   = { max, max+1, max+1, max};
+#ifndef __PULL__
+  Int_t maxTerm    = 20;
+#else /* __PULL__ */
+  Int_t maxTerm    = 15;
+#endif /* __PULL__ */
   fit->SetMaxPowers(mPowers);
   fit->SetMaxFunctions(10000);
   fit->SetMaxStudy(10000);
@@ -555,7 +585,6 @@ void mdf4Fit(FitPS &t) {
   fit->Print("s");
   // Book histograms 
   fit->MakeHistograms();
-  
   // Find the parameterization 
   fit->FindParameterization();
   
@@ -576,9 +605,13 @@ void mdf4HitError(TChain *tChain = 0) {
   Int_t kase = 0;
   Int_t Nkase = 2;
   Int_t nrows = 4;// *3; // for 3 field options
+#ifndef __PULL__
   const Char_t *Sets[4] = {"dPadI","dTimeI","dPadO","dTimeO"}; 
+#else /* __PULL__ */
+  const Char_t *Sets[4] = {"pullYI","pullZI","pullYO","pullZO"}; 
+#endif /* __PULL__ */
   Int_t ki = -1;
-  for (Int_t k = 0; k < 4; k++) {
+  for (Int_t k = 0; k < nrows; k++) {
     if (! fName.Contains(Sets[k]) ) continue;
     ki = k;
     kase = 2*ki;
@@ -599,14 +632,23 @@ void mdf4HitError(TChain *tChain = 0) {
   TString Target;
   if (fName.Contains("FXT")) Target = "FXT";
   TString subSet(Form("%s_%s%s",Sets[ki],FieldOpt[t.fgF],Target.Data()));
+#ifndef __PULL__
   TString Out = subSet + "_mdf4HitError.root";
+#else /* __PULL__ */
+  TString Out = subSet + "_mdf4Pull.root";
+#endif /* __PULL__ */
   TFile *fOut = new TFile(Out,"recreate");;
   TDirectory *cdir = fOut->mkdir(subSet);
   if (! cdir) return;
 #ifndef __CHECK__
   TString tableName;
+#ifndef __PULL__
   if (ki < 2) tableName = "TpcInnerHitErrorMDF4";
   else        tableName = "TpcOuterHitErrorMDF4";
+#else /* __PULL__ */
+  if (ki < 2) tableName = "TpcInnerPullMDF4";
+  else        tableName = "TpcOuterPullMDF4";
+#endif /* __PULL__ */
   TString cOut =  Form("%s%s_%s%s.C", tableName.Data(), Sets[ki], FieldOpt[lf],Target.Data());
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());
@@ -617,7 +659,7 @@ void mdf4HitError(TChain *tChain = 0) {
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection4\")) return 0;" << endl;
   out << "  MDFCorrection4_st row;" << endl;
   out << "  St_MDFCorrection4 *tableSet = new St_MDFCorrection4(\"" << tableName.Data() << "\"," << nrows << ");" << endl;
-#endif
+#endif /* ! __CHECK__ */
   TString cTitle(Form("c%s%s%s",Sets[ki],FieldOpt[lf],Target.Data()));
   TCanvas *c1 = new TCanvas(cTitle,cTitle, 1200, 1600);
   c1->Divide(Nkase,4);
@@ -636,7 +678,7 @@ void mdf4HitError(TChain *tChain = 0) {
     cout << *fit;
     out << *fit;
     out << "  tableSet->AddAt(&row); // idx = " << idx + 1  << endl;
-#endif
+#endif /* ! __CHECK__ */
     ix++;
     t.Loop2();
     for (Int_t j = 0; j < kVar; j++) {

@@ -824,3 +824,39 @@ TF1 *StdEdxModel::ExValG() {
   f->SetParameters(0., 0., 2.5, 0.75, 1.0);
   return f;
 }
+//________________________________________________________________________________
+#include "StGausSW.h"
+TF1 *StdEdxModel::CDF() {return StGausSW::CDF();}
+TF1 *StdEdxModel::PDF(Double_t Np, Double_t z20, Double_t zmax) { // z = Tmath::Log(dE [GeV]);
+  static TF1 *pdf = StGausSW::PDF();
+  static TF1 *cdf = StGausSW::CDF();
+  Double_t Norm  = 1;
+  Double_t alpha = StdEdxModel::instance()->Parameter(Np, 2);
+  Double_t sigma = StdEdxModel::instance()->Parameter(Np, 1);
+  Double_t mu    = StdEdxModel::instance()->Parameter(Np, 0);
+  Double_t ksi   = mu;
+  Double_t w     = sigma;
+  if (TMath::Abs(alpha) > 1e-7) {
+    Double_t delta  = alpha/TMath::Sqrt(1 + alpha*alpha);
+    Double_t muz    = delta/TMath::Sqrt(TMath::PiOver2());
+    Double_t sigmaz = TMath::Sqrt(1 - muz*muz);
+    Double_t gamma1 = (4 - TMath::Pi())/2 * TMath::Power(delta*TMath::Sqrt(2./TMath::Pi()), 3) 
+      /                                     TMath::Power(1 - 2*delta*delta/TMath::Pi(), 1.5);
+    Double_t m_0 = muz - gamma1*sigmaz/2 - TMath::Sign(1.,alpha)/2*TMath::Exp(-2*TMath::Pi()/TMath::Abs(alpha));
+    w   = sigma/TMath::Sqrt(1 - 2* delta*delta/TMath::Pi()); 
+    ksi = mu - w*m_0;
+    //    Double_t mean = ksi + w * muz;
+  }
+  Double_t params[4] = {Norm, ksi, w, alpha}; 
+  //  Double_t ne = StdEdxModel::instance()->Logne(z) - TMath::Log(Np);
+  if (z20 < zmax && z20 < 0) {
+    cdf->SetParameters(params);
+    Double_t ne20  = StdEdxModel::instance()->Logne(z20)  - TMath::Log(Np);
+    Double_t nemax = StdEdxModel::instance()->Logne(zmax) - TMath::Log(Np);
+    Norm = cdf->Eval(nemax) - cdf->Eval(ne20);
+    params[0] = Norm;
+  }
+  pdf->SetParameters(params);
+  return pdf;
+}
+TF2 *StdEdxModel::OwenTFunc() {return StGausSW::OwenTFunc();}

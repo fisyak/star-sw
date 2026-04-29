@@ -19,7 +19,7 @@
 #include "TCanvas.h"
 #include "tables/St_TpcSecRowCor_Table.h"
 #endif
-#define __RECOVER__
+//#define __RECOVER__
 #define __NO_TpcRowQ__
 //________________________________________________________________________________
 void MakeTpcSecRowB(TH1 *hist, TH1 *histSigma = 0,

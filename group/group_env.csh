@@ -25,7 +25,7 @@ set tty_output = `tty`
 #    echo "DEBUG [$tty_output] [$?prompt]"
 #    # "$tty_output" == "not a tty"
 #    if (  ! $?prompt || "$tty_output" == "not a tty" ) then
-#	echo "DEBUG not a tty"
+#	echo "DEBUG not a tty"96
 #    else
 #	echo "DEBUG thinks it is fine"
 #    endif
@@ -371,11 +371,16 @@ endif
 
 
 # db related
+if ($?DECHO) echo "======================================== DB ========================================"
 if ( $?SITE ) then
     #if ( ! $?DB_SERVER_LOCAL_CONFIG ) then
 	if ( -r ${STAR_PATH}/conf/dbLoadBalancerLocalConfig_${SITE}.xml ) then
 	    # 2008/08 new location and unique for all libraries - SL08e or above
+	    if ($STAR_SYS == "x8664_sl7") then
+	    setenv DB_SERVER_LOCAL_CONFIG ${STAR_PATH}/conf/dbLoadBalancerLocalConfig_${SITE}.xml.sl7
+            else 
 	    setenv DB_SERVER_LOCAL_CONFIG ${STAR_PATH}/conf/dbLoadBalancerLocalConfig_${SITE}.xml
+	    endif
 	else
 	    # old method and value for backward compat - this is the part preventing
 	    # from protecting against redefining. In fact, if not in the global
@@ -384,11 +389,11 @@ if ( $?SITE ) then
 	    setenv DB_SERVER_LOCAL_CONFIG ${STAR}/StDb/servers/dbLoadBalancerLocalConfig_${SITE}.xml
 	endif
     #endif
-  if ($ECHO) echo   "Setting up DB_SERVER_LOCAL_CONFIG = ${DB_SERVER_LOCAL_CONFIG}" 
 endif
+    if ($?DECHO) echo   "Setting up DB_SERVER_LOCAL_CONFIG = ${DB_SERVER_LOCAL_CONFIG}" 
 
 
-if ($ECHO)    echo   "Setting up STAR_BIN  = ${STAR_BIN}"
+if ($?DECHO)    echo   "Setting up STAR_BIN  = ${STAR_BIN}"
 
 # Common stuff
 setenv STAR_SCRIPTS ${STAR_PATH}/scripts

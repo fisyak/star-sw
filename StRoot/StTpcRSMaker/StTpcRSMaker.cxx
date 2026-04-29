@@ -923,8 +923,8 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	// switch between Inner / Outer Sector paramters
 	// Extra correction for simulation with respect to data
 	Int_t iowe = 0;
-	if (sector  > 12) iowe += 4;
-	if (io) iowe += 2;
+	if (sector  > 12) iowe += 8;
+	if (io) iowe += 4;
 	Float_t  *AdditionalMcCorrection = St_TpcResponseSimulatorC::instance()->SecRowCor();
 	Float_t  *AddSigmaMcCorrection   = St_TpcResponseSimulatorC::instance()->SecRowSig();
 	// Generate signal 
@@ -939,9 +939,9 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	if (ClusterProfile) {
 	  checkList[io][2]->Fill(TrackSegmentHits[iSegHits].xyzG.position().z(),Gain);
 	}
-	Double_t GainXCorrectionL = AdditionalMcCorrection[iowe] + row*AdditionalMcCorrection[iowe+1];
+	Double_t GainXCorrectionL = SumSeries(4, AdditionalMcCorrection + iowe,row);
 	Gain *= TMath::Exp(-GainXCorrectionL);
-	Double_t GainXSigma = AddSigmaMcCorrection[iowe] + row*AddSigmaMcCorrection[iowe+1];
+	Double_t GainXSigma = SumSeries(4, AddSigmaMcCorrection + iowe, row);
 	if (GainXSigma > 0) Gain *= TMath::Exp(gRandom->Gaus(0.,GainXSigma));
 	if (ClusterProfile) {
 	  checkList[io][3]->Fill(TrackSegmentHits[iSegHits].xyzG.position().z(),Gain);
@@ -2196,6 +2196,12 @@ Double_t StTpcRSMaker::dEdxCorrection(HitPoint_t &TrackSegmentHits) {
     }
   }
   return dEdxCor;
+}
+//________________________________________________________________________________
+Double_t StTpcRSMaker::SumSeries(Int_t N, Float_t *par, Float_t x) {
+ Double_t Sum = par[N-1];
+ for (int n = N-2; n>=0; n--) Sum = x*Sum + par[n];
+ return Sum;
 }
 //________________________________________________________________________________
 #undef PrPP

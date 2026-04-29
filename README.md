@@ -21,6 +21,7 @@ The list of stable releases can be found TFG_Releases.md
 <li>  <b>setenv USE_CVMFS 1</b>
 <li>  <b>source  /cvmfs/star.sdcc.bnl.gov/TFG/packages/TFG/setupTFG.csh</b>
 <li>  <b>starver _desired_TFG_version__</b>, from TFG16a  to TFG25k, .DEV2 == TFG is check out HEAD from TFG repository, it could be unstable.
+<li>  <b>ln -s $STAR/.rootrc .
 <li>  switch between ROOT5 and ROOT6: 
 <ul>
   <li> setup root6 (6.37.01)

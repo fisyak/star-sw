@@ -129,20 +129,30 @@ StDedxPidTraits::method() const
         return kTruncatedMeanId;
         break;
     case kEnsembleTruncatedMeanId:
+      //    case kTruncatedMeanUncorrectedId:
         return kEnsembleTruncatedMeanId;
         break;
     case kLikelihoodFitId:
         return kLikelihoodFitId;
         break;
     case kWeightedTruncatedMeanId:
+      //    case kLikelihoodFitUncorrectedI:
         return kWeightedTruncatedMeanId;
         break;
     case kOtherMethodId:
+      //    case kdNdxFitMethodId:
         return kOtherMethodId;
         break;
     case kOtherMethodId2:
+      //    case kdNdxFitMethodUncorrectedId:
         return kOtherMethodId2;
         break;
+    case kdEdxFromdNdxMethodId:
+      return kdEdxFromdNdxMethodId;
+      break;
+    case kdEdxFromdNdxUncorrectedId:
+      return kdEdxFromdNdxUncorrectedId;
+      break;
     default:
         return kUndefinedMethodId;
         break;
@@ -150,13 +160,14 @@ StDedxPidTraits::method() const
 }
 //________________________________________________________________________________
 void StDedxPidTraits::Print(Option_t *opt) const {
-  cout << "StDedxPidTraits : \t method" << method()
-       << "\t encodedMethod :  " << encodedMethod()
-       << "\t numberOfPoints : " << numberOfPoints() 
-       << "\t length : "         << length()         
-       << "\t mean : "           << mean()           
-       << "\t errorOnMean : "    << errorOnMean()  
+  cout << "StDedxPidTraits : \t method :" << method()
+       << " ( " << encodedMethod() << " ),"
+       << " No.dEdx points = " << numberOfPoints() 
+       << " length = "         << length() << "(cm) ";
+  if (method() == kdNdxFitMethodId || method() == kdNdxFitMethodUncorrectedId)
+    cout << "dN/dx = " << mean();
+  else  cout << "dE/dx = " << 1e6*mean() << "(keV/cm)";
+  cout << " +/-  "    << 1e2*errorOnMean() << "%%"  
        << "\t Log2<dX> : "       << log2dX() << endl;
-       
  }
 

@@ -484,22 +484,25 @@ void StMuTrack::fillMuProbPidTraits(const StEvent* e, const StTrack* t) {
       if (StMuDebug::level()>=3) {
 	  cout << " " << dedxPidTraits->method();
       }
-      if (dedxPidTraits->method() == kTruncatedMeanIdentifier)  {
-	  mProbPidTraits.setdEdxTruncated( dedxPidTraits->mean() ); 
-	  mProbPidTraits.setdEdxErrorTruncated( dedxPidTraits->errorOnMean() ); 
-	  mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
-      }
-      if (dedxPidTraits->method() == kLikelihoodFitIdentifier)  {
-	  mProbPidTraits.setdEdxFit( dedxPidTraits->mean() ); 
-	  mProbPidTraits.setdEdxErrorFit( dedxPidTraits->errorOnMean() ); 
-	  mProbPidTraits.setdEdxTrackLength( dedxPidTraits->length() ); 
-	  mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
-      }
-      if (dedxPidTraits->method() == kOtherMethodIdentifier)  {
-         mProbPidTraits.setdNdxFit( dedxPidTraits->mean() ); 
-         mProbPidTraits.setdNdxErrorFit( dedxPidTraits->errorOnMean() ); 
-         mProbPidTraits.setdEdxTrackLength( dedxPidTraits->length() ); 
-         mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
+      if        (dedxPidTraits->method() == kTruncatedMeanIdentifier)  {
+	mProbPidTraits.setdEdxTruncated( dedxPidTraits->mean() ); 
+	mProbPidTraits.setdEdxErrorTruncated( dedxPidTraits->errorOnMean() ); 
+	mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
+      } else if (dedxPidTraits->method() == kLikelihoodFitIdentifier)  {
+	mProbPidTraits.setdEdxFit( dedxPidTraits->mean() ); 
+	mProbPidTraits.setdEdxErrorFit( dedxPidTraits->errorOnMean() ); 
+	mProbPidTraits.setdEdxTrackLength( dedxPidTraits->length() ); 
+	mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
+      } else if (dedxPidTraits->method() == kdNdxFitMethodId)  {
+	mProbPidTraits.setdNdxFit( dedxPidTraits->mean() ); 
+	mProbPidTraits.setdNdxErrorFit( dedxPidTraits->errorOnMean() ); 
+	mProbPidTraits.setdEdxTrackLength( dedxPidTraits->length() ); 
+	mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
+      } else if (dedxPidTraits->method() == kdEdxFromdNdxMethodId) {
+	mProbPidTraits.setdEdxEFit( dedxPidTraits->mean() ); 
+	mProbPidTraits.setdEdxEErrorFit( dedxPidTraits->errorOnMean() ); 
+	mProbPidTraits.setdEdxTrackLength( dedxPidTraits->length() ); 
+	mProbPidTraits.setLog2dX( dedxPidTraits->log2dX() );
       }
   }
   if (StMuDebug::level()>=3) {
@@ -813,6 +816,10 @@ Double_t StMuTrack::dEdxPull(Double_t mass, UChar_t fit, Int_t charge) const {
       dedx_measured = probPidTraits().dEdxFit();
       dedx_expected = 1.e-6*charge*charge*TMath::Exp(Bichsel::Instance()->GetMostProbableZ(TMath::Log10(momentum*TMath::Abs(charge)/mass)));
       dedx_resolution = probPidTraits().dEdxErrorFit();
+    } else  if ( fit == 4) {     // dEdxE
+      dedx_measured = probPidTraits().dEdxEFit();
+      dedx_expected = StdEdxModel::instance()->dEdxE(momentum*TMath::Abs(charge)/mass,charge);
+      dedx_resolution = probPidTraits().dEdxEErrorFit();
     } else {     // dNdx
       dedx_measured = probPidTraits().dNdxFit();
       dedx_expected = StdEdxModel::instance()->dNdx(momentum*TMath::Abs(charge)/mass,charge);

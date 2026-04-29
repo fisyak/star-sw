@@ -19,7 +19,7 @@ void lBichsel() {
       }
       cout << endl;
     }
-    gROOT->LoadMacro("bichselG10.C");
+    //    gROOT->LoadMacro("bichselG10.C+");
   }
 #else
   cout << "Please don't run it with AClick" << endl;

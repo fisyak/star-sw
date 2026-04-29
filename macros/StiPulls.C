@@ -347,7 +347,9 @@ void StiTpcPulls() {
   //  fOut->Write();  
 }
 //____________________________[____________________________________________________
-void StiPulls(const Char_t *files = "*tags.root") {
+void StiPulls() {}
+//____________________________[____________________________________________________
+void StiPulls(const Char_t *files) { // = "*tags.root") {
   if (gClassTable->GetID("StiPullEvent") < 0) {gSystem->Load("StiUtilities");}
 #if 0
   tree = (TTree *) gDirectory->Get("StiPulls");
@@ -441,11 +443,12 @@ void Draw3D(const Char_t *histName="lYDifVsZAG", Int_t NF = 0, TFile **Files = 0
 	cout << "Files[" << i << "} = 0" << endl;
 	continue;
       }
-      TString FT(f->GetName());
+      TString FT(gSystem->BaseName(gSystem->DirName(f->GetName())));
       FT.ReplaceAll("GP.PullsH.root","");
       f->cd();
       TH3F *h3 = (TH3F *) f->Get(histName);
       if (! h3) continue;
+      if (! h3->IsA()->InheritsFrom( "TH3" ) ) continue;
       //    cout << "Found " << h3->GetName() << "\t in " << f->GetName() << endl;
       if ( h3->GetDimension() != 3) continue;
       TH2D *h2;
@@ -486,15 +489,15 @@ void Draw3D(const Char_t *histName="lYDifVsZAG", Int_t NF = 0, TFile **Files = 0
             if (ymax < s + ds) ymax = s + ds;
 	  }
 	  frames[xy] = pad->DrawFrame(xmin,1.5*ymin,xmax,1.2*ymax);
-	  l[xy] = new TLegend(0.7,0.3,0.8,0.5);
+	  l[xy] = new TLegend(0.15,0.65,0.8,0.95);
 	}
       }
       c1->cd(2*i+xy+1)->SetLogz(1);
       h2->Draw("colz");
       mu->Draw("same");
       sigma->Draw("same");
-      TPaveText *pt = new TPaveText(.1,.8,.2,.9, "brNDC");
-      pt->SetTextSize(0.10);
+      TPaveText *pt = new TPaveText(.15,.8,.85,.9, "brNDC");
+      pt->SetTextSize(0.05);
       pt->SetTextFont(22);
       pt->SetTextColor(1);
       pt->SetFillColor(0);
@@ -511,7 +514,7 @@ void Draw3D(const Char_t *histName="lYDifVsZAG", Int_t NF = 0, TFile **Files = 0
 	sigma->Draw("same");
 	Line.ReplaceAll("mu","sigma");
 	l[xy]->AddEntry(mu,Line);
-	l[xy]->Draw();
+	//	l[xy]->Draw();
 	c1->Update();
       }
     }
@@ -521,8 +524,8 @@ void Draw3D(const Char_t *histName="lYDifVsZAG", Int_t NF = 0, TFile **Files = 0
   return;
 }
 //________________________________________________________________________________
-void LoopOverHistogr( const Char_t *pattern = "dYIPNvsrowpTinv") {
-  TPRegexp Pattern(pattern);
+void LoopOverHistogr( const Char_t *pattern = "dYGAvsZAdcL") {
+  //  TPRegexp Pattern(pattern);
   TSeqCollection *files = gROOT->GetListOfFiles();
   if (! files) return;
   Int_t nn = files->GetSize();
@@ -539,6 +542,8 @@ void LoopOverHistogr( const Char_t *pattern = "dYIPNvsrowpTinv") {
   }
   f = Files[0];
   if (! f) return;
+  f->cd();
+#if 1
   TList *keys = f->GetListOfKeys();
   if (! keys) return;
   keys->Sort();
@@ -547,8 +552,18 @@ void LoopOverHistogr( const Char_t *pattern = "dYIPNvsrowpTinv") {
   TKey *key = 0;
   while ((key = (TKey *) nextk())) {
     TString F(key->GetName());
-    if (Pattern.GetPattern() != ""  && !  F.Contains(Pattern)) continue;
+    if (! F.Contains(pattern)) continue;
     Draw3D(F, NF, Files);
   }
+#else 
+  TIter nextO(gDirectory->GetList()); 
+  TObject *obj;
+  while ((obj = nextO())) { 
+    TString F(obj->GetName());
+    if (Pattern.GetPattern() != ""  && !  F.Contains(Pattern)) continue;
+    if (! obj->IsA()->InheritsFrom( "TH3" ) ) continue;
+    Draw3D(F, NF, Files);
+  } 
+#endif
 }
 //________________________________________________________________________________

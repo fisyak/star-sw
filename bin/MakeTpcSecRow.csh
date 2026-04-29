@@ -590,8 +590,14 @@
 #   root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowB",0)' >& MakeTpcSecRowB.${b}.log
 #   mv TpcSecRowB.20350101.000001.root TpcSecRowB.${b}.root
 #end
-foreach f (`ls -1d SecRow3G4EY*.root`) 
-    set b = `echo ${f} | sed -e 's/SecRow3G4EY//' -e 's/.root//'`
+#foreach f (`ls -1d SecRow3G4EY*.root`) 
+#    set b = `echo ${f} | sed -e 's/SecRow3G4EY//' -e 's/.root//'`
+#    root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowB",0)' >& MakeTpcSecRowB.${b}.log
+#    mv TpcSecRowB.20350101.000001.root TpcSecRowB.${b}.root
+#end
+# 04/02/2026
+foreach f (`ls -1d SecRow3NGG*.root`) 
+    set b = `echo ${f} | sed -e 's/SecRow3NGG//' -e 's/.root//'`
     root.exe -q -b lDb.C ${f} 'MakeTpcSecRowB.C+(20350101,1,"TpcSecRowB",0)' >& MakeTpcSecRowB.${b}.log
     mv TpcSecRowB.20350101.000001.root TpcSecRowB.${b}.root
 end

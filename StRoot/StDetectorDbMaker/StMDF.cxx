@@ -5,8 +5,9 @@ Double_t StMDF::MDFunc(Double_t *x, Double_t *p) {
   // Evaluate parameterization at point x. Optional argument coeff is
   // a vector of coefficients for the parameterisation, NCoefficients
   // elements long.
-  assert(x);
   Double_t returnValue = fgMDF->DMean();
+  if ( fgMDF->NCoefficients() == 0) return returnValue;
+  assert(x);
   Double_t term        = 0;
   UChar_t    i, j;
   for (i = 0; i < fgMDF->NCoefficients(); i++) {
@@ -28,6 +29,9 @@ Double_t StMDF::Eval(Double_t *x) const {
   // Evaluate parameterization at point x. Optional argument coeff is
   // a vector of coefficients for the parameterisation, NCoefficients
   // elements long.
+  Double_t returnValue = DMean();
+  if (NCoefficients() == 0) return returnValue;
+  if (NVariablesS() == 0) return returnValue;
   assert(x);
   Double_t xx[4] = {0};
   if (NVariablesS() < 0) {// cut on limits
@@ -38,7 +42,6 @@ Double_t StMDF::Eval(Double_t *x) const {
   for (Int_t v = 0; v < NVariables(); v++) {
     xx[v] = TMath::Max(XMin()[v], TMath::Min(XMin()[v]+0.999*(XMax()[v]-XMin()[v]), x[v]));
   }
-  Double_t returnValue = 0;
   fgMDF = (StMDF *) this;
   if (fFunc) {
     returnValue = fFunc->GetSave(xx);
@@ -72,6 +75,9 @@ Double_t StMDF::EvalError( Double_t *x) const {
   // Evaluate parameterization error at point x. Optional argument coeff is
   // a vector of coefficients for the parameterisation, NCoefficients()
   // elements long.
+  Double_t returnValue = DMean();
+  if (NCoefficients() == 0) return returnValue;
+  if (NVariablesS() == 0) return returnValue;
   assert(x);
   Double_t xx[4] = {0};
   if (NVariablesS() < 0) {// cut on limits
@@ -83,7 +89,6 @@ Double_t StMDF::EvalError( Double_t *x) const {
   for (Int_t v = 0; v < NVariables(); v++) {
     xx[v] = TMath::Max(XMin()[v], TMath::Min(XMin()[v]+0.999*(XMax()[v]-XMin()[v]), x[v]));
   }
-  Double_t returnValue = 0;
   Double_t term        = 0;
   UChar_t    i, j;
   for (i = 0; i < NCoefficients(); i++) {

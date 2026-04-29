@@ -18,10 +18,10 @@ class THnSparseProject: public TObject {
   THnSparseProject(const THnSparse *hs = 0, Int_t select = -1);
   ~THnSparseProject() {} // SafeDelete(fProjMap);}
   static void SetDebug(Int_t k = 0) {_debug = k;}
-  TH1D    *Next();
-  Int_t   *GetBins() {return fBins.GetArray();}
-  Float_t *GetVars() {return fX.GetArray();}
-  Int_t    Ndim()    {return fNdim;}
+  Int_t   *GetBins()  {return fBins.GetArray();}
+  Float_t *GetVars()  {return fX.GetArray();}
+  Int_t    Ndim()     {return fNdim;}
+  THashList* ProjMap(){return fProjMap;}
  private:
   const THnSparse *fHs;
   Int_t    fNdim;

@@ -96,11 +96,11 @@ class StMDF {
     virtual ~St_MDFCorrection ## __VARS__ ## C() {if (mdf) {for (UInt_t i = 0; i < getNumRows(); i++) SafeDelete(mdf[i]); delete [] mdf;}} \
     MDFCorrection ## __VARS__ ## _st 	*Struct(Int_t k = 0) 	const {return ((St_MDFCorrection ## __VARS__ *) Table())->GetTable()+k;} \
     UInt_t     	getNumRows()                	const {return GetNRows();} \
-    const Char_t  *getName()                      const {return Table()->GetName();} \
+    const Char_t  *getName()                    const {return Table()->GetName();} \
     UChar_t 	idx(Int_t k = 0)        	const {return Struct(k)->idx;} \
     UChar_t 	nrows(Int_t k = 0) 	        const {return Struct(k)->nrows;} \
-    StMDF*        MDF(Int_t k = 0)                const {		\
-      if (! mdf[k])    mdf[k] = new StMDF(Struct(k), Form("%s_%i",Table()->GetName(),k)); \
+    StMDF*        MDF(Int_t k = 0)              const {		\
+      if (! mdf[k]  && idx(k)) mdf[k] = new StMDF(Struct(k), Form("%s_%i",Table()->GetName(),k)); \
       return mdf[k];							\
     }									\
     Double_t      Eval(Int_t k = 0, Double_t *x = 0) const  {return MDF(k)->Eval(x);} \

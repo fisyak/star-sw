@@ -348,14 +348,22 @@ enum StTrackFinderMethod {svtGrouper    = ksvtGrouperIdentifier,
 /*!
  * \enum StDedxMethod
  */
-enum StDedxMethod {kUndefinedMethodId        = kUndefinedMethodIdentifier,
-                  kTruncatedMeanId           = kTruncatedMeanIdentifier,
-                  kEnsembleTruncatedMeanId   = kEnsembleTruncatedMeanIdentifier,
-                  kLikelihoodFitId           = kLikelihoodFitIdentifier,
-                  kWeightedTruncatedMeanId   = kWeightedTruncatedMeanIdentifier,
-                  kOtherMethodId             = kOtherMethodIdentifier,
-                  kOtherMethodId2            = kOtherMethodIdentifier2};
-
+enum StDedxMethod {kUndefinedMethodId          = kUndefinedMethodIdentifier,          
+		   kTruncatedMeanId            = kTruncatedMeanIdentifier,            
+		   kEnsembleTruncatedMeanId    = kEnsembleTruncatedMeanIdentifier,    
+		   kTruncatedMeanUncorrectedId = kTruncatedMeanUncorrectedIdentifier, 
+		   kLikelihoodFitId            = kLikelihoodFitIdentifier,            
+		   kWeightedTruncatedMeanId    = kWeightedTruncatedMeanIdentifier,    
+		   kLikelihoodFitUncorrectedId = kLikelihoodFitUncorrectedIdentifier, 
+		   kOtherMethodId              = kOtherMethodIdentifier,              
+		   kdNdxFitMethodId            = kdNdxFitMethodIdentifier,            
+		   kOtherMethodId2             = kOtherMethodIdentifier2,             
+		   kdNdxFitMethodUncorrectedId = kdNdxFitMethodUncorrectedIdentifier, 
+		   kdEdxFromdNdxMethodId       = kdEdxFromdNdxMethodIdentifier,        
+		   kdEdxFromdNdxUncorrectedId  = kdEdxFromdNdxUncorrectedIdentifier,
+                   kTotaldEdxMethods           = kdEdxFromdNdxUncorrectedIdentifier,
+                   kTotalFitMethods            = kdEdxFromdNdxUncorrectedIdentifier/2
+};   
 /*!
  * \enum StTrackFittingMethod
  */

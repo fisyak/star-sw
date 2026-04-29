@@ -43,6 +43,12 @@
   if ($? != 0) exit 0;
   set evout = ",evout";
   set PicoMode = "";
+  set tags = ",noTags";
+  echo ${SUBMITTINGDIRECTORY} | grep CheckPulls
+  if ($? == 0) then
+    set tags = ",StiPulls"
+    set l = 100
+  endif
   set Cosmic = "";
   echo ${SUBMITTINGDIRECTORY} | grep Cosmic
   if ($? == 0) then
@@ -62,15 +68,15 @@
   set Chain = "";
   switch ($year)
     case "2025":
-      set Chain = "P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco"
+      set Chain = "P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos"${tags}",noRunco"
       set evout = ",evout";
     breaksw
     case "2020":
-      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,dEdxCalib"
+      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos"${tags}",noRunco,dEdxCalib"
       set evout = ",evout";
     breaksw
     case "2*":
-      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco"
+      set Chain = "P"${year}"a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos"${tags}",noRunco"
     breaksw
     default:
       exit 0;

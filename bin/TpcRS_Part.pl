@@ -20,10 +20,11 @@ use Cwd;
 #my @particles = qw(muon+ muon- pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton He3 alpha); #  pionMIP);
 #my @particles = qw(pion+ pion-);
 #my @particles = qw(electron- electron+ kaon+ kaon- proton+ proton- deuteron triton He3 alpha); #  pionMIP);
-my @particles = qw(pion+ pion- );
+#my @particles = qw(pion+ pion- );
+#my @particles = qw(electron- electron+ kaon+ kaon- proton+ proton- deuteron triton muon+ muon-); #  pionMIP);
+my @particles = qw(pion+ pion- electron- electron+ kaon+ kaon- proton+ proton- deuteron triton muon+ muon-); #  pionMIP);
 my $i1 = 1;
-my $N  = 500; #100; # 400;# 00;
-
+my $N  = 100; #500; #100; # 400;# 00;
 for (my $i = $i1; $i <= $N; $i++) {
   foreach my $part (@particles) {
     #    my $log = $part . "_" . $i . "B.log";

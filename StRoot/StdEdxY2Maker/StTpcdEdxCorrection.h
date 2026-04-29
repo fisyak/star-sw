@@ -55,8 +55,25 @@ dE_t(Float_t dX = 0, Float_t de = 0, Float_t de20 = 0, Float_t demax = 0) : mdx(
     }
     return *this;
   }
-  dE_t operator-=(const dE_t &old) {mdE.fddEdxL = mdE.fdEdxL - old.mdE.fdEdxL; return*this;}
-  
+  dE_t operator-=(const dE_t &old) {
+    mdE.fddEdxL    = mdE.fdEdxL    - old.mdE.fdEdxL;
+    mdE20.fddEdxL  = mdE20.fdEdxL  - old.mdE20.fdEdxL;
+    mdEmax.fddEdxL = mdEmax.fdEdxL - old.mdEmax.fdEdxL;
+    return*this;
+  }
+  dE_t RemoveCorrection(const dE_t &current) {
+    mdE.fdEdxN    -= current.mdE.fddEdxL;
+    mdE20.fdEdxN  -= current.mdE20.fddEdxL;
+    mdEmax.fdEdxN -= current.mdEmax.fddEdxL;
+    return*this;
+  }
+  dE_t Set(const dE_t& old) {
+    if (this == &old) return *this;
+    mdE.fdEdxN    = old.mdE.fdEdxN;   
+    mdE20.fdEdxN  = old.mdE20.fdEdxN; 
+    mdEmax.fdEdxN = old.mdEmax.fdEdxN;
+    return *this;
+  }
 };
 //________________________________________________________________________________
 struct dEdxCorrection_t {

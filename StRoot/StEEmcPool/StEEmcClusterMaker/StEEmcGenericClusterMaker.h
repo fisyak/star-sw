@@ -144,8 +144,8 @@ public:
   /// @param sector specifies the sector id [0,11]
   /// @param plane specifies which smd plane 0=U 1=V (note difference from "layer" definition)
   /// @param index specifies which cluster to return
-  StEEmcSmdCluster &smdcluster(Int_t sector, Int_t plane, Int_t index) { if ( plane < 2 ) return mSmdClusters[sector][plane][index]; else assert(0); /* please specify an smd plane 0=U or 1=V */}
-  const StEEmcSmdCluster &smdcluster(Int_t sector, Int_t plane, Int_t index) const { if ( plane < 2 ) return mSmdClusters[sector][plane][index]; else assert(0); /* please specify an smd plane 0=U or 1=V */}
+    StEEmcSmdCluster &smdcluster(Int_t sector, Int_t plane, Int_t index) { assert ( plane < 2 ); return mSmdClusters[sector][plane][index];  /* please specify an smd plane 0=U or 1=V */ }
+    const StEEmcSmdCluster &smdcluster(Int_t sector, Int_t plane, Int_t index) const { assert ( plane < 2 ); return mSmdClusters[sector][plane][index]; /* please specify an smd plane 0=U or 1=V */ }
 
   /// returns the number of tracks pointing at the specified cluster
   /// @param cluster

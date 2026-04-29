@@ -13,6 +13,7 @@
 #include "StMaker.h"
 #include "StChainOpt.h"
 ClassImp(StarPHQMDPrimaryGenerator);
+Int_t StarPHQMDPrimaryGenerator::fgPHQMDtree = -1;
 //_____________________________________________________________________________
 StarPHQMDPrimaryGenerator::StarPHQMDPrimaryGenerator(TString mode, Int_t tune) : StarMCPrimaryGenerator() {
   PreSet(); 
@@ -35,9 +36,13 @@ void StarPHQMDPrimaryGenerator::PreSet() {
   Int_t i = 0;
   for (; i < 2; i++) {
     fTree = (TTree *) f->Get(treeNames[i]);
-    if (fTree) break;
+    if (fTree) {
+      fgPHQMDtree = i;
+      break;
+    }
   }
   assert(fTree);
+  assert(fgPHQMDtree >= 0);
   fTreeIter = new TTreeIter(treeNames[i]);
   fTreeIter->AddFile(inputfile);
 }
@@ -47,7 +52,9 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
   // Track ID (filled by stack)
   // Option: to be tracked
   TTreeIter &iter = *fTreeIter;
+#define __PHQMDtree__
 #ifdef __PHQMDtree__
+  assert(fgPHQMDtree == 0);
   static const Int_t&       fNpart                                   = iter("fNpart");
   //  static const Int_t&       fNparticipants                           = iter("fNparticipants");
   //  static const Float_t*&    fPsi                                     = iter("fPsi[4]");
@@ -64,6 +71,7 @@ void StarPHQMDPrimaryGenerator::GeneratePrimary() {
   //  static const Bool_t*&     fParticles_fIsInMST                      = iter("fParticles.fIsInMST");
   //  static const Bool_t*&     fParticles_fIsInSACA                     = iter("fParticles.fIsInSACA");
 #else
+  assert(fgPHQMDtree == 1);
 #if 0
         static const Int_t&       fEventNr                                 = iter("fEventNr");
         static const Double_t&    fB                                       = iter("fB");

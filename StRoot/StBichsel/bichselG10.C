@@ -140,8 +140,8 @@ Part_t Part[NMasses] = {// https://periodictable.com/Isotopes/
   {"2#pi",    3,     -1,     -2, -0.13956995},       	      //18 2*pi
   {"2p",      1,     -1,      0, -0.93827231}        	      //19 2*p 
 };
-const Int_t NF =   9; //          0,      1,  2,    3,    4,     5.     6,   7,    8.     9,     10,
-const Char_t *FNames[11] = {"Girrf","Sirrf","z","I70","I60","I70M","dNdx","zM", "zN", "70Trs","zTrs"};
+const Int_t NF =   7; //         0,      1,  2,    3,    4,     5.     6,   7,    8.     9,     10,
+const Char_t *FNames[11] = {"Girrf","Sirrf","z","I70","I60","I70M","dNdx","zM", "zN"};//, "70Trs","zTrs"};
 const Int_t Nlog2dx = 3;
 const Double_t log2dx[Nlog2dx] = {0,1,2};
 static Bool_t fgRigidity = kFALSE;
@@ -157,13 +157,9 @@ Double_t bichselZ(Double_t *x,Double_t *par) {
   Double_t mass = par[0];
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) {
-    charge = par[1];
-    poverm *= charge;
-    dx2 = TMath::Log2(5.);
-  }
+  Double_t charge = par[1];
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
   return  TMath::Log10(scale*charge*charge*TMath::Exp(Bichsel::Instance()->GetMostProbableZ(TMath::Log10(poverm),dx2)));//TMath::Exp(7.81779499999999961e-01));
   //  Charge*Charge* (TMath::Exp(Bichsel::Instance()->GetMostProbableZM(TMath::Log10(TMath::Abs(Charge)*p/M),dx2)))
   // return TMath::Log10(1e6*scale*StdEdxPull::EvalPred(poverm, 1, charge));
@@ -186,13 +182,9 @@ Double_t bichselZM(Double_t *x,Double_t *par) {
   Double_t mass = par[0];
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) {
-    charge = par[1];
-    poverm *= TMath::Abs(charge);
-    dx2 = TMath::Log2(5.);
-  }
+  Double_t charge = par[1];
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
   return TMath::Log10(1e6*scale*StdEdxPull::EvalPred(poverm, 1, charge));
 }
 //________________________________________________________________________________
@@ -202,13 +194,9 @@ Double_t bichsel70(Double_t *x,Double_t *par) {
   Double_t mass = par[0];
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) {
-    charge = par[1];
-    poverm *= charge;
-    dx2 = TMath::Log2(5.);
-  }
+  Double_t charge = par[1];
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
   return TMath::Log10(1e6*scale*StdEdxPull::EvalPred(poverm, 0, charge));
 }
 //________________________________________________________________________________
@@ -218,52 +206,11 @@ Double_t bichsel70M(Double_t *x,Double_t *par) {
   Double_t mass = par[0];
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) {
-    charge = par[1];
-    poverm *= charge;
-    dx2 = TMath::Log2(5.);
-  }
+  Double_t charge = par[1];
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
   return TMath::Log10(1e6*scale*StdEdxPull::EvalPred(poverm, 0, charge));
 }
-#if 0
-//________________________________________________________________________________
-Double_t bichsel70Trs(Double_t *x,Double_t *par) {
-  Double_t pove   = pOverM(x[0]);
-  Double_t scale  = 1;
-  Double_t mass   = par[0];
-  Int_t    charge = par[1];
-  if (mass < 0) {mass = - mass; scale = 2;}
-  Double_t poverm = pove/mass; 
-  Double_t dx2 = 1;
-  if (charge > 1) {
-    poverm *= charge;
-    dx2 = TMath::Log2(5.);
-  }
-  scale *= charge*charge;
-  return TMath::Log10(scale*TMath::Exp(Bichsel::Instance()->I70Trs(part,TMath::Log10(poverm))));
-}
-//________________________________________________________________________________
-Double_t bichselZTrs(Double_t *x,Double_t *par) {
-  Double_t pove   = pOverM(x[0]);
-  Double_t scale = 1;
-  Double_t mass = par[0];
-  Int_t    part = par[2];
-  if (part < 0 || part > 9) part = 0;
-  if (mass < 0) {mass = - mass; scale = 2;}
-  Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) {
-    charge = par[1];
-    poverm *= charge;
-    dx2 = TMath::Log2(5.);
-  }
-  scale *= charge*charge;
-  return  TMath::Log10(scale*TMath::Exp(Bichsel::Instance()->IfitTrs(part,TMath::Log10(poverm))));//TMath::Exp(7.81779499999999961e-01));
-}
-#endif
 //________________________________________________________________________________
 Double_t dNdx(Double_t *x,Double_t *par) {
   Double_t pove   = pOverM(x[0]);
@@ -272,9 +219,8 @@ Double_t dNdx(Double_t *x,Double_t *par) {
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
   Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) charge = par[1];
-  poverm *= charge;
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
   return TMath::Log10(scale*StdEdxPull::EvalPred(poverm, 2, charge));
 }
 //________________________________________________________________________________
@@ -284,12 +230,12 @@ Double_t dNdxOld(Double_t *x,Double_t *par) {
   Double_t mass = par[0];
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
-  Double_t dx2 = 1;
-  if (par[1] > 1.0) charge = par[1];
-  poverm *= charge;
+  Double_t charge = par[1];
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
   return TMath::Log10(scale*StdEdxPull::EvalPred2(poverm, dx2, 2, charge));
 }
+#if 0
 #if !defined(__CINT__) && !defined(__CLING__)
 //________________________________________________________________________________
 Double_t aleph70P(Double_t *x,Double_t *par) {
@@ -366,6 +312,7 @@ Double_t aleph70(Double_t *x,Double_t *par) {
   return 2*TMath::Log10(charge) + dEdxL10 + ScaleL10;
 }
 #endif /* __CINT__ */
+#endif
 //________________________________________________________________________________
 void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFALSE, Bool_t plot = kTRUE) {
   fgRigidity = rigidity;
@@ -388,6 +335,7 @@ void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFAL
   }
   if (Nhyps < 9) Nhyps = 9;
   if (Nhyps > NMasses)  Nhyps = NMasses;
+  Double_t dx2 = 1;
   TH1D *FHyps[20] = {0};
   for (int h = 0; h < Nhyps; h++) { // Masses
   //  for (int h = 0; h < 7; h++) { // Masses
@@ -412,8 +360,8 @@ void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFAL
     else {
       return;
     }
-    func->SetParameter(0,Part[h].Mass);
-    func->SetParameter(1,Part[h].Charge);
+    func->SetParNames("mass","charge","dxLog2");
+    func->SetParameters(Part[h].Mass, Part[h].Charge,dx2); 
     Int_t color = h+1;
     if (color > 8) color -= 8;
     //    if (color > 7) color++;

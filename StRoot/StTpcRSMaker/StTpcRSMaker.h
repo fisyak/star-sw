@@ -91,6 +91,7 @@ class StTpcRSMaker : public StMaker {
   static Double_t Gatti(Double_t *x, Double_t *p);
   static Double_t InducedCharge(Double_t s, Double_t h, Double_t ra, Double_t Va, Double_t &t0);
   static Float_t  GetCutEle();
+  static Double_t SumSeries(Int_t N, Float_t *par, Float_t x);
 #if defined(__CINT__) 
   Bool_t TrackSegment2Propagate(g2t_tpc_hit_st *tpc_hitC, g2t_vertex_st *gver, HitPoint_t *TrackSegmentHits);
   void   GenerateSignal(HitPoint_t *TrackSegmentHits,Int_t sector, Int_t rowMin, Int_t rowMax, Double_t sigmaJitterT, Double_t sigmaJitterX);

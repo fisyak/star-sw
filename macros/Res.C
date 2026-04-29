@@ -57,47 +57,19 @@ void bichselG10(const Char_t *type, Int_t Nhyps=9);
 void SetTitle(TString &Title) {
   //      if (Title.Contains("602P03ih"))  Title.ReplaceAll("602P03ih"," default ");
   //  cout << "Set Title: " << Title.Data();
-  Title.ReplaceAll("TPoints70U+TPoints70UP", "U70+-");
-  Title.ReplaceAll("TPointsNU+TPointsNUP",   "UN+-");
-  Title.ReplaceAll("TPointsFU+TPointsFUP",   "UF+-");
-  Title.ReplaceAll("TPoints70+TPoints70P" ,  "70+-");
-  Title.ReplaceAll("TPointsN+TPointsNP" ,    "N+-");
-  Title.ReplaceAll("TPointsF+TPointsFP" ,    "F+-");
-
-  Title.ReplaceAll("TPoints70U", "U70-");
-  Title.ReplaceAll("TPointsNU",   "UN-");
-  Title.ReplaceAll("TPointsFU",   "UF-");
-  Title.ReplaceAll("TPoints70" ,  "70-");
-  Title.ReplaceAll("TPointsN" ,    "N-");
-  Title.ReplaceAll("TPointsF" ,    "F-");
-
-  Title.ReplaceAll("TPoints70UP", "U70+");
-  Title.ReplaceAll("TPointsNUP",   "UN+");
-  Title.ReplaceAll("TPointsFUP",   "UF+");
-  Title.ReplaceAll("TPoints70P" ,  "70+");
-  Title.ReplaceAll("TPointsNP" ,    "N+");
-  Title.ReplaceAll("TPointsFP" ,    "F+");
-
-  Title.ReplaceAll("NPoints70U+NPoints70UP", "U70+-");
-  Title.ReplaceAll("NPointsNU+NPointsNUP",   "UN+-");
-  Title.ReplaceAll("NPointsFU+NPointsFUP",   "UF+-");
-  Title.ReplaceAll("NPoints70+NPoints70P" ,  "70+-");
-  Title.ReplaceAll("NPointsN+NPointsNP" ,    "N+-");
-  Title.ReplaceAll("NPointsF+NPointsFP" ,    "F+-");
-
-  Title.ReplaceAll("NPoints70U", "U70-");
-  Title.ReplaceAll("NPointsNU",   "UN-");
-  Title.ReplaceAll("NPointsFU",   "UF-");
-  Title.ReplaceAll("NPoints70" ,  "70-");
-  Title.ReplaceAll("NPointsN" ,    "N-");
-  Title.ReplaceAll("NPointsF" ,    "F-");
-
-  Title.ReplaceAll("NPoints70UP", "U70+");
-  Title.ReplaceAll("NPointsNUP",   "UN+");
-  Title.ReplaceAll("NPointsFUP",   "UF+");
-  Title.ReplaceAll("NPoints70P" ,  "70+");
-  Title.ReplaceAll("NPointsNP" ,    "N+");
-  Title.ReplaceAll("NPointsFP" ,    "F+");
+  Title.ReplaceAll("TPoints","");  
+  Title.ReplaceAll("NPoints","");
+  Title.ReplaceAll("GP"," ");
+  Title.ReplaceAll("70UN+70UP", "70U+-");
+  Title.ReplaceAll("70N+70P"  , "70+-");
+  Title.ReplaceAll("NUN+NUP"  , "UN+-");
+  Title.ReplaceAll("NN+NP"    , "N+-");
+  Title.ReplaceAll("FUN+FUP"  , "UF+-");
+  Title.ReplaceAll("FN+FP"    , "F+-");
+  Title.ReplaceAll("EUN+EUP"  , "UE+-");
+  Title.ReplaceAll("EN+EP"    , "E+-");
+  Title.ReplaceAll("N ","- "); 
+  Title.ReplaceAll("P ","+ "); 
 
   Title.ReplaceAll("production_","");
   Title.ReplaceAll("_ReversedFullField","");
@@ -314,7 +286,7 @@ void Res(const Char_t *select="x", const Char_t *name="sigma", const Char_t *pat
 	  ltit = Form("#sigma(@%5.1fcm) = %5.2f%\%",Title.Data(),L,100*powfit->Eval(L));
 	} else {
 	  Double_t L = 72.0 * 0.85; // 
-	  if (Title.Contains("Points70")) L *= 2./3.;
+	  if (Title.Contains("70")) L *= 2./3.;
 	  Double_t r = powfit->Eval(L);
 	  ltit = Form("#sigma(@%2.0f npts) = %5.2f%\%",L,100*r);
 	}

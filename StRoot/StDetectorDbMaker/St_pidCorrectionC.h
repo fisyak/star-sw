@@ -11,11 +11,11 @@ class St_pidCorrectionC : public TChair {
  enum PiDStatusIDs { // from StdEdxY2Maker/StTrackCombPiD.h
     kUndef = kUndefinedMethodId,
     kI70   = kTruncatedMeanId,        
-    kI70U  = kEnsembleTruncatedMeanId,
+    kI70U  = kTruncatedMeanUncorrectedId,
     kFit   = kLikelihoodFitId,        
-    kFitU  = kWeightedTruncatedMeanId,
-    kdNdx  = kOtherMethodId,          
-    kdNdxU = kOtherMethodId2,         
+    kFitU  = kLikelihoodFitUncorrectedId,
+    kdNdx  = kdNdxFitMethodId,          
+    kdNdxU = kdNdxFitMethodUncorrectedId,         
     kBTof,   kETof,   kMtd, kBEmc, kTotal
   };
   static St_pidCorrectionC* 	instance();

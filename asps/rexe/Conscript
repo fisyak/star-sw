@@ -20,7 +20,7 @@ my $CPPFLAGS = $env->{CPPFLAGS};
 my $CXXFLAGS = $env->{CXXFLAGS};
 #$CXXFLAGS .= " -Wno-error=strict-aliasing  -Wno-error=stringop-truncation";
 if ($env->{CXX_MAJOR} > 6) {
-  $CXXFLAGS .= " -Wno-error=stringop-truncation"; print "CXXFLAGS = $CXXFLAGS ========================================\n";
+  $CXXFLAGS .= " -Wno-error=stringop-truncation";# print "CXXFLAGS = $CXXFLAGS ========================================\n";
 }
 my $FLIBS = $env->{FLIBS};
 my $LD = $env->{LD};
