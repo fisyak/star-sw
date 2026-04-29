@@ -196,7 +196,7 @@
     TString QTDIR         = gSystem->ExpandPathName("$QTDIR");                  
     printf("QAInfo:You are using STAR_LEVEL : %s%s, ROOT_LEVEL : %s and node : %s ",  
 		  STAR_LEVEL.Data(),STAR_GIT_VERSION.Data(),ROOT_LEVEL.Data(),gSystem->HostName());
-#ifndef __CLING__1
+#ifndef __CLING__
     // ROOT and XROOTD
     // some rootd default dummy stuff
     TAuthenticate::SetGlobalUser("starlib");
