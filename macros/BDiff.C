@@ -25,16 +25,16 @@ void BDiff() {
   Double_t pmin = 0.35;
   Double_t pmax = 0.75;
 #endif
-  //                 pi p  k  e  d mu
-  enum {nh = 6};
-  Int_t index[nh] = {3, 1, 2, 0, 5, 4};
-  Int_t kpi = 3;
+  //                 pi p  k  e  d mu t He3 alpha 
+  enum {nh = 9};
+  Int_t idx[nh] = {2, 8, 6, 5,10, 0,11,12, 13};
+  Int_t kpi = idx[0];
   TH1D *hyps[nh] = {0};
   TH2F *hypsp[nh] = {0};
   for (Int_t h = 1; h < nh; h++) {
-    Int_t i = index[h];
-    hyps[i] = new TH1D(HistNameP[i],Names[i],340,-0.2,3.2);
-    hypsp[i] = new TH2F(Form("%sP",HistNameP[i]),Names[i],40,pmin,pmax,340,-0.2,3.2);
+    Int_t i = idx[h];
+    hyps[h] = new TH1D(TpcRSPart[i].name,TpcRSPart[i].name,1440,-0.2,14.2);
+    hypsp[h] = new TH2F(Form("%sP",TpcRSPart[i].name),TpcRSPart[i].name,40,pmin,pmax,1440,-0.2,14.2);
   }
   TH2F *zpiP = new TH2F("zpiP","zP vs zpi",100,7.8,8.0,100,8,10);
   //  TF1::InitStandardFunctions();
@@ -48,28 +48,19 @@ void BDiff() {
   for (Int_t iev = 0; iev < 10000; iev++) {
     //    Double_t p = pmin + (pmax - pmin)*gRandom->Rndm();
     Double_t p = f->GetRandom();
-    Double_t bgpi = p/Masses[kpi];
-#ifdef __Bichsel__1   
-    Double_t zpi  = m_Bichsel->GetMostProbableZ(TMath::Log10(bgpi),1.);
-#else
-    Double_t dX = 2.0;
-    Double_t dXLog = TMath::Log(dX);
-    Double_t n_Ppi = dX*StdEdxModel::instance()->dNdx(bgpi);
-    StdEdxModel::instance()->zMPV()->SetParameter(0,2);
-    Double_t n_PLpi = TMath::Log(n_Ppi);
-    Double_t logdEMPVpi = StdEdxModel::instance()->zMPV()->Eval(n_PLpi);
-    Double_t zpi = logdEMPVpi - dXLog;
-#endif
+    Double_t bgpi = p/TpcRSPart[kpi].mass;
+    Double_t dX = 4.0; // 2.0;
+    Double_t dXLog2 = TMath::Log2(dX);
+    StdEdxModel::instance()->ZMP()->SetParameter(0,dXLog2);
+    StdEdxModel::instance()->ZMP()->SetParameter(1,TpcRSPart[kpi].charge);
+    StdEdxModel::instance()->ZMP()->SetParameter(2,TpcRSPart[kpi].mass);
+    Double_t zpi =  StdEdxModel::instance()->ZMP()->Eval(TMath::Log10(bgpi));
     for (Int_t h = 1; h < nh; h++) {
-      Int_t i = index[h];
-      Double_t bg = p/Masses[i];
-#ifdef __Bichsel__1
-      Double_t z  = m_Bichsel->GetMostProbableZ(TMath::Log10(bg),1.);
-#else
-      Double_t n_P = dX*StdEdxModel::instance()->dNdx(bg);
-      Double_t n_PL = TMath::Log(n_P);
-      Double_t logdEMPV = StdEdxModel::instance()->zMPV()->Eval(n_PL);
-      Double_t z = logdEMPV - dXLog;
+     Int_t i = idx[h];
+     Double_t bg = p/TpcRSPart[i].mass;
+     StdEdxModel::instance()->ZMP()->SetParameter(1,TpcRSPart[i].charge);
+     StdEdxModel::instance()->ZMP()->SetParameter(2,TpcRSPart[i].mass);
+     Double_t z =  StdEdxModel::instance()->ZMP()->Eval(TMath::Log10(bg));
       if (h == 1) {
 	zpiP->Fill(zpi, z);
 #if 0
@@ -77,14 +68,23 @@ void BDiff() {
 	cout                <<  "\t\tbg = " << bg << "\tn_P = " << n_P << "\tlogdEMPV = " << logdEMPV << "\tz = " << z << "\tdz = " << z - zpi <<  endl;
 #endif
       }
-#endif
-      hyps[i]->Fill(z-zpi);
-      hypsp[i]->Fill(p,z-zpi);
+      hyps[h]->Fill(z-zpi);
+      hypsp[h]->Fill(p,z-zpi);
     }
   }
   for (Int_t h = 1; h < nh; h++) {
-    Int_t i = index[h];
-    
-    cout << "\t{\t" << hyps[i]->GetMean() << ",\t" <<  hyps[i]->GetRMS() << ",\t" << Masses[i] << ",\t\"" << PidNames[i] << "\"}," << endl;
+    Int_t i = idx[h];
+    cout << "\t{\t" << hyps[h]->GetMean() << ",\t" <<  hyps[h]->GetRMS() << ",\t" << TpcRSPart[i].mass << ",\t\"" << hyps[h]->GetName() << "\"}," << endl;
   }
 }
+/* dX = 2cm
+        {       1.25585,        0.0819109,      0.938272,       "proton+"},
+        {       0.458602,       0.0504055,      0.493677,       "kaon+"},
+        {       0.351404,       0.000874124,    0.000510999,    "electron+"},
+        {       2.36284,        0.088633,       1.87561,        "deuteron"},
+        {       0.0129274,      0.00328871,     0.105658,       "muon+"},
+        {       2.9919, 0.0814963,      2.80892,        "triton"},
+        {       4.39986,        0.079048,       2.80839,        "He3"},
+        {       4.78636,        0.0707888,      3.72738,        "alpha"},
+
+ */

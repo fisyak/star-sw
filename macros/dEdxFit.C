@@ -22,26 +22,6 @@ end
 // code that should always be seen
 #endif
 #endif
-//    ROOT5
-#if defined(__CINT__) && !defined(__MAKECINT__)
-// source code being actually interpreted by cint
-#elif defined(__MAKECINT__)
-// source code seen by rootcint only
-#elif defined(__ACLIC__)
-// source code being actually compiled by ACLiC
-#else
-// source code suitable for a standalone executable
-#endif
-//    ROOT6 
-#if defined(__CLING__) && !defined(__ROOTCLING__)
-// source code being actually interpreted by Cling
-#elif defined(__ROOTCLING__)
-// source code seen by rootcling only
-#elif defined(__ACLIC__)
-// source code being actually compiled by ACLiC
-#else
-// source code suitable for a standalone executable
-#endif
 //________________________________________________________________________________
 #if !defined(__CINT__) || defined(__MAKECINT__)
 //#include <map>
@@ -861,6 +841,10 @@ Bool_t  PreSetG0Parameters(TH1 *proj, TF1 *g2) { // Fit peak nearest to 0 by gau
 //________________________________________________________________________________
 TF1 *FitG0P(TH1 *proj, Option_t *opt="R", Int_t pow=-1, Double_t zmin = -0.4, Double_t zmax = 0.4) {
   if (! proj) return 0;
+  if (! canvas && ! gROOT->IsBatch() ) {
+    canvas = new TCanvas("FitG0P","FitG0P Canvas");
+    canvas->SetGrid();
+  }
   TF1 *g = 0;
   Double_t params[9];
   Int_t binMin = proj->GetXaxis()->FindBin(zmin);
@@ -903,9 +887,12 @@ TF1 *FitG0P(TH1 *proj, Option_t *opt="R", Int_t pow=-1, Double_t zmin = -0.4, Do
 //________________________________________________________________________________
 TF1 *FitG(TH1 *proj, Option_t *opt="R") {
   if (! proj) return 0;
-  TString fName("gaus");
+  if (! canvas && ! gROOT->IsBatch() ) {
+    canvas = new TCanvas("FitG","FitG Canvas");
+    canvas->SetGrid();
+  }
+  TString fName("lgaus");
   TF1 *g = (TF1 *) gROOT->GetListOfFunctions()->FindObject(fName);
-#if 0
   if (! g) {
     TString Func("TMath::Exp([0])*TMath::Gaus(x, [1], [2],1)");
     g = new TF1(fName,Func,-5,5);
@@ -917,18 +904,16 @@ TF1 *FitG(TH1 *proj, Option_t *opt="R") {
   g->SetParameters(1,proj->GetMean());
   g->SetParameters(2,proj->GetRMS());
   // Last attempt reduce fit range to +/- 2 sigma
-#endif
-  if (! g) {
-    TF1::InitStandardFunctions();
-    g = (TF1 *) gROOT->GetListOfFunctions()->FindObject(fName);
-  }
-  g->SetRange(-5,5);
   Bool_t res = proj->Fit(g,opt);
   return g;
 }
 //________________________________________________________________________________
 TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double_t zmin = -2, Double_t zmax = 2) {
   if (! proj) return 0;
+  if (! canvas && ! gROOT->IsBatch() ) {
+    canvas = new TCanvas("FitGP","FitGP Canvas");
+    canvas->SetGrid();
+  }
   Double_t params[9];
   Int_t binMin = proj->GetXaxis()->FindBin(zmin);
   if (binMin < 1) binMin = 1;
@@ -980,6 +965,125 @@ TF1 *FitGP(TH1 *proj, Option_t *opt="RQ", Double_t nSigma=3, Int_t pow=3, Double
   // Last attempt reduce fit range to +/- 2 sigma
   g->GetParameters(params);
   Bool_t res = proj->Fit(g,opt,"",params[1]-2*params[2],params[1]+2*params[2]);
+  return g;
+}
+//________________________________________________________________________________
+Double_t lgausT(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]);
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+Double_t lgausT0(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]) + p[3];
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+Double_t lgausT1(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]) + p[3] + x[0]*p[4];
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+Double_t lgausT2(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]) + p[3] + x[0]*((p[4] + x[0]*p[5]));;
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+Double_t lgausT3(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]) + p[3] + x[0]*((p[4] + x[0]*(p[5] + x[0]*p[6])));;
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+Double_t lgausT4(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]) + p[3] + x[0]*((p[4] + x[0]*(p[5] + x[0]*(p[6] + x[0]*p[7]))));;
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+Double_t lgausT5(Double_t *x, Double_t *p) {
+  Double_t  Value = TMath::Exp(p[0])*TMath::Gaus(x[0], p[1], p[2]) + p[3] + x[0]*((p[4] + x[0]*(p[5] + x[0]*(p[6] + x[0]*(p[7] + x[0]*p[8])))));;
+  if (fgITH1)         Value *= fgITH1->Interpolate(x[0]);
+  return Value;
+}
+//________________________________________________________________________________
+TF1 *FitGT(TH1 *proj, Option_t *opt="RQ", TH1D *proj20 = 0, Double_t nSigma=3, Int_t pow=3, Double_t zmin = -5, Double_t zmax = 5) {
+  if (! proj) return 0;
+  if (! canvas && ! gROOT->IsBatch() ) {
+    canvas = new TCanvas("FitGT","FitGT Canvas");
+    canvas->SetGrid();
+  }
+  if (proj20) {
+#if 0
+    proj20->Fit("gaus");
+    TF1 *gaus = (TF1 *) proj20->GetListOfFunctions()->FindObject("gaus");
+    if (gaus) {
+      mean20 = gaus->GetParameter(1);
+      RMS20  = gaus->GetParameter(2);
+    }
+#endif
+    SafeDelete(fgITH1);
+    fgITH1 = ITH1(proj20);
+  }
+  Double_t params[9] = {0};
+#if 0
+  Int_t binMin = proj->GetXaxis()->FindBin(zmin);
+  if (binMin < 1) binMin = 1;
+  Int_t binMax = proj->GetXaxis()->FindBin(zmax);
+  if (binMax > proj->GetNbinsX()) binMax = proj->GetNbinsX();
+  proj->GetXaxis()->SetRange(binMin,binMax);
+#endif
+  Int_t peak = proj->GetMaximumBin();
+  Double_t peakX = proj->GetBinCenter(peak);
+  Double_t peakY = proj->GetBinContent(peak);
+  if (peakY <= 0.) return 0;
+  params[0] = TMath::Log(peakY);
+  params[1] = peakX; // proj->GetMean();
+  params[2] = 0.5*proj->GetRMS();
+  Double_t sigma = nSigma*params[2];
+  TF1 *g = 0;
+  for (Int_t p = -1; p <= pow; p++) {
+    TString fName("FgausT");
+    if (p >= 0) fName += p;
+    g = (TF1 *) gROOT->GetListOfFunctions()->FindObject(fName);
+    if (! g) {
+      if (p < 0)       g = new TF1(fName, lgausT , zmin, zmax, 3);
+      else if (p == 0) g = new TF1(fName, lgausT0, zmin, zmax, 4+p);
+      else if (p == 1) g = new TF1(fName, lgausT1, zmin, zmax, 4+p);
+      else if (p == 2) g = new TF1(fName, lgausT2, zmin, zmax, 4+p);
+      else if (p == 3) g = new TF1(fName, lgausT3, zmin, zmax, 4+p);
+      else if (p == 4) g = new TF1(fName, lgausT4, zmin, zmax, 4+p);
+      else if (p == 5) g = new TF1(fName, lgausT5, zmin, zmax, 4+p);
+      assert(g);
+      g->SetParName(0,"log(Const)");
+      g->SetParName(1,"Mean");
+      g->SetParName(2,"sigma");
+      for (Int_t i = 0; i <= p; i++) {
+	g->SetParName(3+i,Form("a[%i]",i));
+      }
+    }
+    g->SetParameters(params);
+    if (sigma > 0) {
+#if 0
+      g->SetRange(params[1]-sigma,params[1]+sigma);
+      g->SetRange(params[1]-sigma,params[1]+sigma);
+#endif
+      g->SetParLimits(1, params[1]-params[2], params[1]+params[2]);
+      g->SetParLimits(2, 1e-3, proj->GetRMS());
+    }
+    Bool_t res = proj->Fit(g,opt);
+    if (g->GetProb() > 0.01) {
+      return g;
+    }
+  }
+#if 0
+  // Last attempt reduce fit range to +/- 2 sigma
+  g->GetParameters(params);
+  Bool_t res = proj->Fit(g,opt,"",params[1]-2*params[2],params[1]+2*params[2]);
+#endif
   return g;
 }
 //________________________________________________________________________________
@@ -3554,14 +3658,11 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 	    if (FitP)  FitP->Fill(&Fit.i);
 	    delete proj; continue;
 	  }
-	  if (TString(FitName) == "GP") {
-	    g = FitGP(proj,opt,nSigma,0,zmin,zmax);
-	  } else if (TString(FitName) == "LN") { 
-	    g = FitLN(proj,opt,nSigma,0,zmin,zmax);
-	  }
-	  else if (TString(FitName) == "ADC") g = FitADC(proj,opt,nSigma,pow);
-	  else if (TString(FitName) == "G2") g = FitG2(proj,opt);
-	  else if (TString(FitName) == "GG") g = FitGG(proj,opt);
+	  if (TString(FitName) == "GP")        g = FitGP(proj,opt,nSigma,0,zmin,zmax);
+	  else if (TString(FitName) == "LN")   g = FitLN(proj,opt,nSigma,0,zmin,zmax);
+	  else if (TString(FitName) == "ADC")  g = FitADC(proj,opt,nSigma,pow);
+	  else if (TString(FitName) == "G2")   g = FitG2(proj,opt);
+	  else if (TString(FitName) == "GG")   g = FitGG(proj,opt);
 	  else if (TString(FitName) == "Freq") g = FitFreq(proj,opt,zmin,zmax);
 	  else {cout << FitName << " has not been definded" << endl; break;}
 	  if ( g ) {
@@ -3616,10 +3717,10 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 //________________________________________________________________________________
 void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP", 
 	     Option_t *opt="RM", 
+	     Double_t nSigma=3, Int_t pow=5,
+	     Double_t zmin = -15, Double_t zmax = 15,
 	     Int_t ix = -1, Int_t jy = -1, 
-	     Int_t mergeX=1, Int_t mergeY=1, 
-	     Double_t nSigma=3, Int_t pow=1,
-	     Double_t zmin = -2, Double_t zmax = 5) {
+	     Int_t mergeX=1, Int_t mergeY=1) {
   TString Opt(opt);
   TList *list = (TList *) gROOT->GetListOfFiles();
   if (! list) {printf("File list is empty\n"); return;}
@@ -3646,9 +3747,9 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
       }    
     }
     HistName20 = HistName;
-    if        (HistName.EndsWith("PC"))  {
+    if        (HistName.Contains("PC"))  {
       HistName20.ReplaceAll("PC","P20C");
-    } else if (HistName.EndsWith("NC"))   {
+    } else if (HistName.Contains("NC"))   {
       HistName20.ReplaceAll("NC","N20C");
     } else if (HistName.EndsWith("N") || HistName.EndsWith("P"))   {
       HistName20 += "20";
@@ -3800,7 +3901,7 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
       proj20 = 0;
       TString title;
       if (dim == 3) {
-	if (i == 0) {
+	if (i == 0 && nx == 24 && ny == 72) {
 	  if        (j == 1)  {ir0 =  1; ir1 = 12; jr0 =  1; jr1 = 40; // IW
 	  } else if (j == 2)  {ir0 = 13; ir1 = 24; jr0 =  1; jr1 = 40; // IE
 	  } else if (j == 3)  {ir0 =  1; ir1 = 12; jr0 = 41; jr1 = 72; // OW
@@ -3828,6 +3929,11 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
 	  if (hist20) proj20 = ((TH3 *) hist20)->ProjectionZ(Form("f20%i_%i_%i_%i",ir0,ir1,jr0,jr1),ir0,ir1,jr0,jr1);
 	}
 	if (! proj) continue;
+	if (proj->GetEntries() < 1) {
+	  SafeDelete(proj);
+	  SafeDelete(proj20);
+	  continue;
+	}
 	title = TString(proj->GetTitle());
 	title += Form(" in x [%5.1f,%5.1f] and y [%5.1f,%5.1f] range",
 		      xax->GetBinLowEdge(ir0), xax->GetBinUpEdge(ir1),
@@ -3849,11 +3955,11 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
 		      xax->GetBinLowEdge(ir0), xax->GetBinUpEdge(ir1));
 	proj->SetTitle(title.Data());
       }
-      if      (Opt.Contains("B2",TString::kIgnoreCase)) proj->Rebin(2); 
-      else if (Opt.Contains("B3",TString::kIgnoreCase)) proj->Rebin(3); 
-      else if (Opt.Contains("B4",TString::kIgnoreCase)) proj->Rebin(4); 
-      else if (Opt.Contains("B5",TString::kIgnoreCase)) proj->Rebin(5); 
-      else if (Opt.Contains("B6",TString::kIgnoreCase)) proj->Rebin(6); 
+      if      (Opt.Contains("B2",TString::kIgnoreCase)) {proj->Rebin(2); if (proj20) proj20->Rebin(2);}
+      else if (Opt.Contains("B3",TString::kIgnoreCase)) {proj->Rebin(3); if (proj20) proj20->Rebin(3);}
+      else if (Opt.Contains("B4",TString::kIgnoreCase)) {proj->Rebin(4); if (proj20) proj20->Rebin(4);}
+      else if (Opt.Contains("B5",TString::kIgnoreCase)) {proj->Rebin(5); if (proj20) proj20->Rebin(5);}
+      else if (Opt.Contains("B6",TString::kIgnoreCase)) {proj->Rebin(6); if (proj20) proj20->Rebin(6);}
       //      continue;
       memset (&Fit, 0, sizeof(Fitx_t));
       Fit.i = (2.*i+mergeX-1.)/2;
@@ -3980,6 +4086,8 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
 	Double_t dX = 2.0; // <dX> Outer
 	g = FitGB(proj,opt,dX);
       }
+      else if (TString(FitName) == "GT")   g = FitGT(proj,opt,proj20,nSigma,pow,zmin,zmax);
+
       else {cout << FitName << " has not been definded" << endl; break;}
       if ( g ) {
 	Int_t kpeak = 0;
@@ -4040,6 +4148,7 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
 	if (Ask()) goto ENDL;
       }
       SafeDelete(proj);
+      SafeDelete(proj20);
     }
   }
  ENDL:

@@ -238,7 +238,7 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
 	    const Char_t *var  = "sector*side", // log_{10}(#Sigma Adc)"
 	    const Char_t *title = "#mu versus pad row"
 	    ) {
-  cout << "MuDraw(\"" << draw << "\",\"" << ext << "\"," << nx << "," << xMin << "," << xMax << ",\"" << cut << ",\"" << opt << "\"," << yMin << "," << yMax 
+  cout << "MuDraw(\"" << draw << "\",\"" << ext << "\"," << nx << "," << xMin << "," << xMax << ",\"" << cut << "\",\"" << opt << "\"," << yMin << "," << yMax 
        << ",\"" <<  side << "\",\"" << var << "\",\"" << title << "\")" << endl;
   TCanvas *c1 = (TCanvas*)gROOT->GetListOfCanvases()->FindObject("c1");
   if (! c1)  c1 = new TCanvas("c1","c1",1400,1200);
@@ -614,7 +614,7 @@ void FitPDraw(TString Opt = "I", TString plot = "nomuJ", TString Title = "All") 
     TString xVar("Z");
     if (Opt == "" || Opt == "I") {
       if (Name.BeginsWith("Voltage")) xVar = "Voltage - 1170 (V)";
-      MuDraw(muPlot.Data(),"VI", 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1<=4)", "prof", -1.4,  1.4, Title, xVar, "#mu");
+      MuDraw(muPlot.Data(),"VI", ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1<=4)", "prof", -1.4,  1.4, Title, xVar, "#mu");
     } else {
       if (Name.BeginsWith("Voltage")) xVar = "Voltage - 1390 (V)";
       MuDraw(muPlot.Data(),"VO", 2*ny, yMin, yMax, "(i&&j&&dmu>0&&dmu<0.1&&(i-1)%8+1>4)", "prof", -1.4,  1.4, "Outer", xVar, "#mu");

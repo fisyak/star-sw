@@ -8391,3 +8391,36 @@ foreach d (`ls -1d *GeV*`)
 end
 
  root.exe 'bfc.C(-1,"Sti")'  *2026/*.root 'StiDraw.C("pullYP")'
+================================================================================
+04/24/2026
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Histograms/RunXXVI34
+
+#sigma(@41 npts) =  7.49% for 70- 13p5GeV_fixedTarget_2026
+#sigma(@41 npts) =  9.18% for 70- 8p65GeV_fixedTarget_2026
+#sigma(@41 npts) =  6.20% for 70- 9p8GeV_fixedTarget_2026
+#sigma(@41 npts) =  7.28% for 70- AuAu_2025
+
+#sigma(@61 npts) =  6.92% for EU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.99% for EU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.11% for EU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.33% for EU- AuAu_2025
+
+#sigma(@61 npts) =  6.88% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.38% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.66% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.06% for F- AuAu_2025
+
+#sigma(@61 npts) =  6.22% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.60% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  4.61% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.45% for N- AuAu_2025
+
+#sigma(@61 npts) =  5.92% for NU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.31% for NU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  4.61% for NU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.45% for NU- AuAu_2025
+=================================================================================  
+04/27/2026
+  {"9p8GeV_fixedTarget_2026" ,               20260121, 173043, "y2025z",  "9p8GeV_fixedTarget_2026 V1070"}, // 1st run = 27021018
+  {"9p8GeV_fixedTarget_2026a" ,              20260124, 153919, "y2025z",  "9p8GeV_fixedTarget_2026 V1100"}, // 1st run = 27024030
+  {"9p8GeV_fixedTarget_2026b" ,              20260124, 184723, "y2025z",  "9p8GeV_fixedTarget_2026 V1120"}, // 1st run = 27024044

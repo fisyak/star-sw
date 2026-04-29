@@ -276,7 +276,7 @@ Double_t gf4EYFunc(Double_t *x, Double_t *par) {
     Double_t Mu =    (mu    + parMIPs[i][sign][IO].mu - parMIPs[0][sign][IO].mu);
     //    Double_t Sigma = (sigma + parMIPs[i][sign][IO].sigma                       );
     //    Double_t Sigma = TMath::Sqrt(sigma*sigma + parMIPs[i][sign][IO].sigma*parMIPs[i][sign][IO].sigma                       );
-    Double_t sigmaF = sigma*TMath::Exp(Mu-XX[0]);
+    Double_t sigmaF = sigma; // *TMath::Exp(Mu-XX[0]);
     Double_t Sigma = TMath::Sqrt(sigmaF*sigmaF + parMIPs[i][sign][IO].sigma*parMIPs[i][sign][IO].sigma                       );
 #endif
 #ifdef __ELOSS__ 
@@ -425,8 +425,8 @@ TF1 *FitG4EY(TH1D *proj, Option_t *opt, Int_t IO, Int_t Sign, Double_t mean20, D
   if (! g2) {
     g2 = new TF1("G4EY",gf4EYFunc, -5, 5, 18);
     g2->SetParName(0,"norm");      g2->SetParLimits(0,-0.6,0.6); // g2->FixParameter(0,0.0); // 
-    g2->SetParName(1,"mu");        g2->SetParLimits(1,-2.6,0.6); // g2->SetParLimits(1,-1.2,1.6);  				     
-    g2->SetParName(2,"Sigma");     g2->SetParLimits(2, 0.0,0.2); // g2->FixParameter(2,0.0); // 	     
+    g2->SetParName(1,"mu");        g2->SetParLimits(1,-0.2,0.2); // g2->SetParLimits(1,-1.2,1.6);  				     
+    g2->SetParName(2,"Sigma");     g2->SetParLimits(2, 0.0,1.2); // g2->FixParameter(2,0.0); // 	     
     g2->SetParName(3,"P");         g2->SetParLimits(3,0.0,TMath::Pi()/2);		     
     g2->SetParName(4,"K");         g2->SetParLimits(4,0.0,0.25);// TMath::Pi()/2); 	     
     g2->SetParName(5,"e");         g2->SetParLimits(5,0.0,0.25);//TMath::Pi()/2);			     
@@ -456,7 +456,7 @@ TF1 *FitG4EY(TH1D *proj, Option_t *opt, Int_t IO, Int_t Sign, Double_t mean20, D
     }
     g2->SetParName(17,"RMS20");      g2->FixParameter(17,RMS20); 
   }
-  PreSetParametersY(proj, g2);
+  //  PreSetParametersY(proj, g2);
   //  g2->ReleaseParameter(2);  g2->SetParLimits(2,-0.1,0.1);
   //#define PIONS_ONLY
 #ifndef PIONS_ONLY
@@ -566,6 +566,10 @@ TF1 *FitG4EY(TH1D *proj, Option_t *opt, Int_t IO, Int_t Sign, Double_t mean20, D
 TF1 *FitG4EY(TH1D *proj, Option_t *opt="RM", Int_t IO = 0, Int_t Sign = 2, TH1D *proj20 = 0) {
   Double_t mean20 = 0;
   Double_t RMS20 = -1;
+  if (! canvas && ! gROOT->IsBatch() ) {
+    canvas = new TCanvas("FitG4EY","FitG4EY Canvas");
+    canvas->SetGrid();
+  }
   if (proj20) {
     proj20->Fit("gaus");
     TF1 *gaus = (TF1 *) proj20->GetListOfFunctions()->FindObject("gaus");

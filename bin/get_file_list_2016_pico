@@ -1,2 +1,4 @@
-get_file_list.pl -keys path,filename,size,events -cond production=P16ij,trgsetupname=AuAu_200_production_2016,filetype=daq_reco_picoDst,filename~st_physics,storage!=hpss -limit 0 -delim / -distinct > picoEnoHpss.list
-get_file_list.pl -keys      filename,size -cond production=P16ij,trgsetupname=AuAu_200_production_2016,filetype=daq_reco_picoDst,filename~st_physics,storage=nfs-limit 10 -delim : -distinct
+#get_file_list.pl -keys path,filename,size,events -cond production=P16ij,trgsetupname=AuAu_200_production_2016,filetype=daq_reco_picoDst,filename~st_physics,storage!=hpss -limit 0 -delim / -distinct > picoEnoHpss.list
+#get_file_list.pl -keys      filename,size -cond production=P16ij,trgsetupname=AuAu_200_production_2016,filetype=daq_reco_picoDst,filename~st_physics,storage=nfs-limit 10 -delim : -distinct
+# Vipul production=P17id,path,library=SL18f,storage=local,trgsetupname=dAu200_production_2016,filetype=daq_reco_picoDst,filename~st_physics,runnumber[]17138004-17140005,sanity=1
+get_file_list.pl -keys path,filename -cond production=P17id,library=SL18f,storage=local,trgsetupname=dAu200_production_2016,filetype=daq_reco_picoDst,filename~st_physics,runnumber[]17138004-17140005,sanity=1 -limit 0 -delim /   -distinct
