@@ -19,6 +19,7 @@
 #pragma cling load("StBFChain")
 #pragma cling load("geant3")
 #pragma cling load("StDb_Tables")
+#pragma cling load("StDetectorDbMaker")
 #pragma cling load("StBichsel")
 #pragma cling load("libKFParticle")
 #else
