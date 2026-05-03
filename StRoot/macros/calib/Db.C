@@ -1,3 +1,7 @@
+/* 
+   root6:  root     'bfc.C(-1,"tpcDb,detDb,mysql,nodefault,CorrZ")' 'Db.C("Calibrations/tpc/TpcAdcCorrectPrompt","AuAu_2023")'
+   root5:  root.exe 'bfc.C(-1,"tpcDb,detDb,mysql,nodefault,CorrZ")' 'Db.C("Calibrations/tpc/TpcAdcCorrectPrompt","AuAu_2023")'
+ */
 #if !defined(__CINT__) && !defined(__CLING__) && ! defined(__MAKECINT__)
 // code that should be seen ONLY by the compiler
 #else
@@ -67,41 +71,20 @@ class Bichsel;
 class St_db_Maker;
 class TTable;
 class StBFChain;
-#ifdef __CLING__
-#include "macros/bfc.C"
-#endif
 // Refer to a class implemented in libRooFit to force its loading
 // via the autoloader.
 #ifdef __USE_ROOFIT__
 class Roo2DKeysPdf;
 #endif /* __USE_ROOFIT__ */
 #endif
-St_db_Maker *dbMk = 0;
+//St_db_Maker *dbMk = 0;
 TTable *table = 0;
-#if 0
-//________________________________________________________________________________
-StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
-	 const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
-StBFChain *bfc(Int_t First, const Char_t *Chain = "MC2016,Muons20,vmc,Rung.1",
- 	       const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName = "");
-#endif
-//________________________________________________________________________________
-void DbLoad() {
-  //  if (gClassTable->GetID("StDbManager") < 0) {
-#ifdef __CINT__
-    gROOT->LoadMacro("bfc.C");
-#endif
-    //    bfc(-1,"tpcDb,detDb,CorrX,nodefault");
-    chain = bfc(-1,"tpcDb,detDb,mysql,nodefault,CorrZ"); // ,dbV20151120");
-    dbMk = (St_db_Maker *) chain->Maker("db");
-    //  }    
-}
 //________________________________________________________________________________
 //void Db(const Char_t *tabNam  = "Calibrations/tpc/noiseElim", 
-void Db(const Char_t *tabNam  = 	"Geometry/tpc/tpcPadConfig",  Int_t date, Int_t time, const Char_t *flavor="sim+ofl+laserDV+TFG+FXT") {
+void Db(const Char_t *tabNam,  Int_t date, Int_t time, const Char_t *flavor="sim+ofl+laserDV+TFG+FXT") {
   Int_t debugL = 1;
   Int_t run = 0;
-  if (dbMk == 0) DbLoad();
+  St_db_Maker *dbMk = (St_db_Maker *) StMaker::GetChain()->Maker("db");
   dbMk->SetDebug(debugL);
   Int_t D = date;
   Int_t T = time;
@@ -172,7 +155,6 @@ void Db(const Char_t *tabNam  = 	"Geometry/tpc/tpcPadConfig",  Int_t date, Int_t
 //________________________________________________________________________________
 void Db(const Char_t *tabNam="Geometry/tpc/tpcPadConfig", const Char_t *tag="3p85GeV_fixedTarget_2019", const Char_t *flavor="sim+ofl+laserDV+TFG+FXT"){ 
   cout << "Db(\"" << tabNam << "\",\"" << tag << "\")" << endl;
-  if (dbMk == 0) DbLoad();
   Int_t date = -1;
   Int_t time =  0;
   TString Tag(tag);
