@@ -47,6 +47,8 @@
 #include "AliHLTTPCCAGBTracker.h"
 // ---
 
+#include "mdf4hitError.h"
+
 //#include "AliHLTTPCCASliceTrackVector.h"
 //#include "AliHLTTPCCAMergedTrackVector.h"
 
@@ -673,6 +675,7 @@ void AliHLTTPCCAMerger::UnpackSlices()
           clu.SetX( slice.ClusterUnpackedX( ic ) );
           clu.SetY( yz.x );
           clu.SetZ( yz.y );
+          clu.SetAdcL( float(slice.ClusterPackedAmp(ic)) * 12.f / 256.f );
           hits[iTrClu][iV] = nClustersCurrent + nCluNew + iTrClu;
           nHits[iV]++;
         }
@@ -804,9 +807,9 @@ void AliHLTTPCCAMerger::UnpackSlices()
 }
 
 #if 1
-float_m AliHLTTPCCAMerger::FitTrack( AliHLTTPCCATrackParamVector &t, float_v &Alpha0V,
-                                      int hits[2000][uint_v::Size], uint_v &firstHits, uint_v &NTrackHits,
-                                      int &nTracksV, float_m active0, bool dir )
+float_m AliHLTTPCCAMerger::FitTrack(AliHLTTPCCATrackParamVector &t, float_v &Alpha0V,
+                                    int hits[2000][uint_v::Size], uint_v &firstHits, uint_v &NTrackHits,
+                                    int &nTracksV, float_m active0, bool dir )
 {
   // Fit the track
   AliHLTTPCCATrackParamVector::AliHLTTPCCATrackFitParam fitPar;
@@ -830,6 +833,7 @@ float_m AliHLTTPCCAMerger::FitTrack( AliHLTTPCCATrackParamVector &t, float_v &Al
   float_v zVs[MaxNHits];
   float_v sliceAlphaVs[MaxNHits];
   uint_v RowVs[MaxNHits];
+  float_v adcLs[MaxNHits];
 
   for ( int ihit = 0; ihit < nHitsMax; ihit++ ) {
     const float_m &active = static_cast<float_m>( ihit < nHits ) && active0;
@@ -845,6 +849,7 @@ float_m AliHLTTPCCAMerger::FitTrack( AliHLTTPCCATrackParamVector &t, float_v &Al
       yVs[ihit][iV] = h.Y();
       zVs[ihit][iV] = h.Z();
       RowVs[ihit][iV] = h.IRow();
+      adcLs[ihit][iV] = h.AdcL();
     }
   }
 
@@ -861,6 +866,7 @@ float_m AliHLTTPCCAMerger::FitTrack( AliHLTTPCCATrackParamVector &t, float_v &Al
     const float_v& zV = zVs[ihit];
     const float_v& sliceAlphaV = sliceAlphaVs[ihit];
     const uint_v& RowV = RowVs[ihit];
+    const float_v& adcL = adcLs[ihit];
 
     const float_m savedActive = active;
     const float_v rotateA = sliceAlphaV - Alpha0V;
@@ -882,9 +888,12 @@ float_m AliHLTTPCCAMerger::FitTrack( AliHLTTPCCATrackParamVector &t, float_v &Al
       first = false;
     }
 
-    float_v err2Y, err2Z;
-    fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
-    const float_m &filtered = t.FilterWithMaterial(yV, zV, err2Y, err2Z, 0.999f, active);
+    float_v err2Y, err2Z, dy, dz;
+//     fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+//     std::cout << "old " << err2Y << " " << err2Z << "    new ";
+    GetMdf4ClusterErrors2(RowV, adcL, t, err2Y, err2Z, dy, dz);
+//     std::cout << err2Y << " " << err2Z << '\n';
+    const float_m &filtered = t.FilterWithMaterial(yV + dy, zV + dz, err2Y, err2Z, 0.999f, active);
 
     const float_m broken = savedActive && (!rotated || !transported /*|| !filtered*/);
     if ( !broken.isEmpty() ) {
@@ -1063,6 +1072,7 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
   float zVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
   float sliceAlphaVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
   unsigned int RowVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
+  float adcLs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
 
   // ---
 //  float slVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
@@ -1083,6 +1093,7 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
       yVs[ihit*float_v::Size+iV] = h.Y();
       zVs[ihit*float_v::Size+iV] = h.Z();
       RowVs[ihit*uint_v::Size+iV] = (unsigned int)h.IRow();
+      adcLs[ihit*uint_v::Size+iV] = h.AdcL();
     }
   }
 
@@ -1099,6 +1110,7 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
     const float_v &zV = reinterpret_cast<float_v&>(zVs[ihit*float_v::Size]);
     const float_v &sliceAlphaV = reinterpret_cast<float_v&>(sliceAlphaVs[ihit*float_v::Size]);
     const uint_v &RowV = reinterpret_cast<uint_v&>(RowVs[ihit*uint_v::Size]);
+    const float_v &adcL = reinterpret_cast<float_v&>(adcLs[ihit*float_v::Size]);
 
     const float_m savedActive = active;
     const float_v rotateA = sliceAlphaV - Alpha0V;
@@ -1123,9 +1135,10 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
       first = false;
     }
 
-    float_v err2Y, err2Z;
-    fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
-    const float_m &filtered = t.FilterWithMaterial(yV, zV, err2Y, err2Z, 0.999f, active);
+    float_v err2Y, err2Z, dy, dz;
+    // fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+    GetMdf4ClusterErrors2(RowV, adcL, t, err2Y, err2Z, dy, dz);
+    const float_m &filtered = t.FilterWithMaterial(yV + dy, zV + dz, err2Y, err2Z, 0.999f, active);
 
     const float_m broken = savedActive && (!rotated || !transported || !filtered);
     if ( !broken.isEmpty() ) {

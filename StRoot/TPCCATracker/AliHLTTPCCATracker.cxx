@@ -290,10 +290,11 @@ void AliHLTTPCCATracker::WriteOutput()
       const float origX = fClusterData->X( inpIdtot );
       const float origY = fClusterData->Y( inpIdtot );
       const float origZ = fClusterData->Z( inpIdtot );
+      const float adcL  = std::max(std::min(fClusterData->AdcL( inpIdtot ), 12.f) , 0.f);
 
       const DataCompressor::RowCluster rc( rowIndex, inpId );
       unsigned int hPackedYZ = 0;
-      UChar_t hPackedAmp = 0;
+      UChar_t hPackedAmp = UChar_t(adcL * (256.f / 12.f) );
       float2 hUnpackedYZ;
       hUnpackedYZ.x = origY;
       hUnpackedYZ.y = origZ;
@@ -326,13 +327,13 @@ void AliHLTTPCCATracker::WriteOutput()
 
 }
 
-void AliHLTTPCCATracker::GetErrors2( int iRow, const AliHLTTPCCATrackParam &t, float *Err2Y, float *Err2Z ) const
+void AliHLTTPCCATracker::GetErrors2(AliHLTTPCCAGBHit &h, const AliHLTTPCCATrackParam &t, float *Err2Y, float *Err2Z ) const
 {
   //
   // Use calibrated cluster error from OCDB
   //
 
-  fParam.GetClusterErrors2( iRow, t, *Err2Y, *Err2Z );
+  fParam.GetClusterErrors2( h, t, *Err2Y, *Err2Z );
 }
 
 void AliHLTTPCCATracker::WriteTracks( std::ostream &out )

@@ -51,16 +51,6 @@ class AliHLTTPCCAClusterData
     //     int numberOfClusters, double ClusterZCut );
     void readEvent( const AliHLTTPCCAGBHit *hits, int *offset, int numberOfClusters, int nRows8 );
 
-    /**
-     * "remove" two clusters and "add" a new one, keeping history.
-     */
-    void Merge( int index1, int index2 );
-
-    /**
-     * "remove" one cluster and "add" two new ones, keeping history.
-     */
-    //void Split( int index, /* TODO: need some parameters how to split */ );
-
     // TODO: some access to history of merges and splits
 
     /**
@@ -106,35 +96,48 @@ class AliHLTTPCCAClusterData
     /**
      * Return the x coordinate of the given cluster.
      */
-    float X( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].fX; }
+    float X( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].Hit().X(); }
 
     /**
      * Return the y coordinate of the given cluster.
      */
-    float Y( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].fY; }
+    float Y( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].Hit().Y(); }
 
     /**
      * Return the z coordinate of the given cluster.
      */
-    float Z( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].fZ; }
+    float Z( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].Hit().Z(); }
+
+    /**
+     * Return the log(ADC) of the given cluster.
+     */
+    float AdcL( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].Hit().AdcL(); }
 
     /**
      * Return the global ID of the given cluster.
      */
-    int Id( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].fId; }
+    int Id( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].Hit().ID(); }
 
     /**
      * Return the row number/index of the given cluster.
      */
-    int RowNumber( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].fRow; }
+    int RowNumber( int index ) const { assert( index < static_cast<int>( fData.size() ) ); return fData[index].Hit().IRow(); }
 
   private:
     struct Data {
+      Data(AliHLTTPCCAGBHit *f) : fHit(f) {}
+    Data(const AliHLTTPCCAGBHit *f) : fHit((AliHLTTPCCAGBHit *)f) {}
+      Data() : fHit(nullptr) {}
+      AliHLTTPCCAGBHit *fHit;
+      AliHLTTPCCAGBHit &Hit() {return *fHit;}
+      const AliHLTTPCCAGBHit &Hit() const {return *fHit;}
+      /*
       float fX;
       float fY;
       float fZ;
       int fId;
       int fRow;
+      */
     };
 
     int fSlice;    // the slice index this data belongs to

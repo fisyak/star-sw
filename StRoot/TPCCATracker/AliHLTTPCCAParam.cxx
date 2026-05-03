@@ -195,7 +195,7 @@ void AliHLTTPCCAParam::Global2Slice( float X, float Y,  float Z,
   *y = Y * fCosAlpha - X * fSinAlpha;
   *z = Z;
 }
-
+#if 0
 float AliHLTTPCCAParam::GetClusterError2( int yz, int type, float z, float angle ) const
 {
   //* recalculate the cluster error wih respect to the track slope
@@ -205,10 +205,13 @@ float AliHLTTPCCAParam::GetClusterError2( int yz, int type, float z, float angle
 //std::cout << v << std::endl;
   return CAMath::Abs( v );
 }
-
-void AliHLTTPCCAParam::GetClusterErrors2( int iRow, const AliHLTTPCCATrackParam &t, float &Err2Y, float &Err2Z ) const
+#endif
+#if 1
+void AliHLTTPCCAParam::GetClusterErrors2(AliHLTTPCCAGBHit &h, const AliHLTTPCCATrackParam &t, float &Err2Y, float &Err2Z ) const
 {
 enum {kYErr=0,kZErr=1,kWidTrk=2,kThkDet=3,kYDiff=4,kZDiff=5};
+#ifndef StiTpcHitErrorMDF4_h 
+ int iRow = h.IRow();
   float z = t.Z();
   const int type = errorType( iRow );
   z = (200. - CAMath::Abs(z)) * 0.01;
@@ -220,7 +223,6 @@ enum {kYErr=0,kZErr=1,kWidTrk=2,kThkDet=3,kYDiff=4,kZDiff=5};
   float tg2Phi = sin2Phi/cos2Phi;
 
   float tg2Lambda = t.DzDs()*t.DzDs();
- 
   const float *c = fParamS0Par[0][type];
   switch (fRecoType) {
   case 0: {/*Sti*/
@@ -240,6 +242,23 @@ enum {kYErr=0,kZErr=1,kWidTrk=2,kThkDet=3,kYDiff=4,kZDiff=5};
    break; }  
    default: assert(0);
   }  
+#else  /* StiTpcHitErrorMDF4_h */
+  Double_t dZ, dX;
+  Double_t _z    = t.Z();
+  Double_t _eta  = TMath::ASin(t.GetSinPhi());
+  Double_t _tanl = t.DzDs();
+  Double_t ecross, edip;
+  Double_t fudgeFactor = 1;
+  Double_t AdcL = h.AdcL();
+  if (h.IRow() <= NInnerRows()) {
+    StiTpcInnerHitErrorMDF4::instance()->calculateError(_z,_eta,_tanl, ecross, edip, fudgeFactor, AdcL, &dZ, &dX);
+  } else {
+    StiTpcOuterHitErrorMDF4::instance()->calculateError(_z,_eta,_tanl, ecross, edip, fudgeFactor, AdcL, &dZ, &dX);
+  }  
+  Err2Y = ecross;
+  Err2Z = edip;
+
+#endif /* ! StiTpcHitErrorMDF4_h */
     
     
   if(Err2Y<1e-6) Err2Y = 1e-6;
@@ -251,7 +270,7 @@ enum {kYErr=0,kZErr=1,kWidTrk=2,kThkDet=3,kYDiff=4,kZDiff=5};
 //  std::cout <<Err2Y<<"  "<<Err2Z<< std::endl;
 }
 ///mvz end 20.01.2010
-
+#endif
 std::ostream &operator<<( std::ostream &out, const AliHLTTPCCAParam &p )
 {
   // write settings to the file

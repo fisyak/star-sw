@@ -45,7 +45,7 @@ void AliHLTTPCCAClusterData::readEvent( const AliHLTTPCCAGBHit *hits, int *offse
       fRowOffset.push_back( fData.size() );
       ++row;
     }
-    Data d = { hit.X(), hit.Y(), hit.Z(), hit.ID(), hit.IRow() };
+    Data d = Data(&hit); //  hit.X(), hit.Y(), hit.Z(), hit.ID(), hit.IRow() };
     fData.push_back( d );
   }
   fNumberOfClusters.push_back( fData.size() - fRowOffset.back() );

@@ -58,6 +58,7 @@ class AliHLTTPCCAGBHit
     int ISlice() const { return fISlice; }
     int IRow() const { return fIRow; }
     int ID() const { return fID; }
+    float AdcL() const {return fAdcL;}
     bool IsUsed() const { return fIsUsed; };
 
     void SetX( float v ) {  fX = v; }
@@ -71,6 +72,7 @@ class AliHLTTPCCAGBHit
     void SetIRow( int v ) {  fIRow = v; }
     void SetID( int v ) {  fID = v; }
     void SetIsUsed( bool v ) {  fIsUsed = v; };
+    void SetAdcL(float v) {fAdcL = v;}
 
     static bool Compare( const AliHLTTPCCAGBHit &a, const AliHLTTPCCAGBHit &b );
 
@@ -95,7 +97,7 @@ class AliHLTTPCCAGBHit
     float fX; //* X position
     float fY; //* Y position
     float fZ; //* Z position
-
+    float fAdcL; // TMath::Log(Adc);		  
     float fErrX; //* X position error
     float fErrY; //* Y position error
     float fErrZ; //* Z position error

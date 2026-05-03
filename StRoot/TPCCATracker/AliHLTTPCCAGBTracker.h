@@ -28,7 +28,7 @@
 #include "AliHLTTPCCADef.h"
 #include "AliHLTTPCCATrackParam.h"
 #include "AliHLTArray.h"
-#include "AliHLTTPCCAGBHit.h"
+
 #include "AliHLTTPCCAGBTrack.h"
 #include "AliHLTTPCCATracker.h"
 

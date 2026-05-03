@@ -705,12 +705,13 @@ class AliHLTTPCCAClusterInfo
 
  public:
 
-  unsigned char  ISlice()    const { return fISlice;    }
-  unsigned char  IRow()      const { return fIRow;      }
-  unsigned int  IClu()      const { return fIClu;      }
-  float X()         const { return fX;         }
-  float Y()         const { return fY;         }
-  float Z()         const { return fZ;         }
+  unsigned char  ISlice() const { return fISlice;    }
+  unsigned char  IRow()   const { return fIRow;      }
+  unsigned int  IClu()    const { return fIClu;      }
+  float X()               const { return fX;         }
+  float Y()               const { return fY;         }
+  float Z()               const { return fZ;         }
+  float AdcL()            const { return fAdcL;      }
 
   void SetISlice    ( unsigned char v  ) { fISlice    = v; }
   void SetIRow      ( unsigned char v  ) { fIRow      = v; }
@@ -718,6 +719,7 @@ class AliHLTTPCCAClusterInfo
   void SetX         ( float v ) { fX         = v; }
   void SetY         ( float v ) { fY         = v; }
   void SetZ         ( float v ) { fZ         = v; }
+  void SetAdcL      ( float v ) { fAdcL      = v; }
 
  public:
 
@@ -727,6 +729,7 @@ class AliHLTTPCCAClusterInfo
   float fX;                // x position (slice coord.system)
   float fY;                // y position (slice coord.system)
   float fZ;                // z position (slice coord.system)
+  float fAdcL;
 };
 
 class TrackHitsCompare {

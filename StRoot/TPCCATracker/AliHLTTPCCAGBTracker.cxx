@@ -678,7 +678,7 @@ bool AliHLTTPCCAGBTracker::FitTrack( AliHLTTPCCATrackParam &T, AliHLTTPCCATrackP
     float err2Y, err2Z;
 ///mvz start 20.01.2010
     //fSlices[0].Param().GetClusterErrors2( h.IRow(), h.Z(), l.SinPhi(), l.CosPhi(), l.DzDs(), err2Y, err2Z );
-    fSlices[0].Param().GetClusterErrors2( h.IRow(), t0, err2Y, err2Z );
+      fSlices[0].Param().GetClusterErrors2( h, t0, err2Y, err2Z);
 ///mvz end 20.01.2010
     if ( !t.Filter( h.Y(), h.Z(), err2Y, err2Z ) ) continue;
 

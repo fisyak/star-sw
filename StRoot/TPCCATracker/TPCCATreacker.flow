@@ -1,16 +1,18 @@
-#0  AliHLTTPCCAParam::GetClusterErrors2 (this=0x10154d70, iRow=5, t=..., Err2Y=0x7ffffffd0e20, Err2Z=0x7ffffffd0e10) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:256
-#1  0x00007fffdd5bd39a in AliHLTTPCCATracker::GetErrors2 (this=0x10154d60, iRow=5, t=..., Err2Y=0x7ffffffd0e20, Err2Z=0x7ffffffd0e10) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.h:213
-#2  0x00007fffdd5a0993 in InitTracklets::operator() (this=0x7ffffffd2c30, rowIndex=5) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:1218
-#3  0x00007fffdd5bec51 in Vc_1::Vector<int, Vc_1::VectorAbi::Sse>::callWithValuesSorted<InitTracklets&> (this=0x7ffffffd2c70, f=...)
-    at /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include/Vc/sse/vector.h:367
-#4  0x00007fffdd597929 in 								 AliHLTTPCCATrackletConstructor::run (this=0x7ffffffd8600, firstRow=0, tracksSaved=@0x7ffffffd850c: 0)
-    at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:893
-#5  0x00007fffdd5c9030 in 								AliHLTTPCCATracker::Reconstructor::execute (this=0x7ffffffd8d68) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/Reconstructor.cpp:449
-#6  0x00007fffdd576297 in 							AliHLTTPCCATracker::Reconstruct (this=0x10154d60) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.cxx:183
-#7  0x00007fffdd4a0fd4 in 						AliHLTTPCCAGBTracker::FindTracks (this=0xf210a30) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:301
-#8  0x00007fffdd5ccae9 in 					StTPCCAInterface::Run (this=0x100ae920) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
-#9  0x00007fffdd3013a9 in 				StiCATpcSeedFinder::findTrack (this=0x100a4050, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
-#10 0x00007fffdd3469f5 in 			StiKalmanTrackFinder::extendSeeds (this=0x107ce520, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#0                                                 AliHLTTPCCAParam::GetClusterErrors2 (this=0x10154d70, iRow=5, t=..., Err2Y=0x7ffffffd0e20, Err2Z=0x7ffffffd0e10) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:256
+#1  0x00007fffdd5bd39a in                        AliHLTTPCCATracker::GetErrors2 (this=0x10154d60, iRow=5, t=..., Err2Y=0x7ffffffd0e20, Err2Z=0x7ffffffd0e10) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.h:213
+#2  0x00007fffdd5a0993 in                      InitTracklets::operator() (this=0x7ffffffd2c30, rowIndex=5) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:1218
+#3  0x00007fffdd5bec51 in                    Vc_1::Vector<int, Vc_1::VectorAbi::Sse>::callWithValuesSorted<InitTracklets&> (this=0x7ffffffd2c70, f=...)    at /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include/Vc/sse/vector.h:367
+#4  0x00007fffdd597929 in 		    AliHLTTPCCATrackletConstructor::run (this=0x7ffffffd8600, firstRow=0, tracksSaved=@0x7ffffffd850c: 0)    at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:893
+#5  0x00007fffdd5c9030 in 		  AliHLTTPCCATracker::Reconstructor::execute (this=0x7ffffffd8d68) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/Reconstructor.cpp:449
+#6  0x00007fffdd576297 in 		AliHLTTPCCATracker::Reconstruct (this=0x10154d60) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.cxx:183
+#7  0x00007fffdd4a0fd4 in 	      AliHLTTPCCAGBTracker::FindTracks (this=0xf210a30) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:301
+                                      AliHLTTPCCAGBTracker::SetHits
+                                      AliHLTTPCCAGBTracker::SetSettings
+                                                        MakeHists
+                                                        MakeSettings
+#8  0x00007fffdd5ccae9 in 	    StTPCCAInterface::Run (this=0x100ae920) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+#9  0x00007fffdd3013a9 in 	  StiCATpcSeedFinder::findTrack (this=0x100a4050, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#10 0x00007fffdd3469f5 in 	StiKalmanTrackFinder::extendSeeds (this=0x107ce520, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
 #11 0x00007fffdd3463f1 in     StiKalmanTrackFinder::findTracks (this=0x107ce520) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
 #12 0x00007fffdd0c0f78 in   StiMaker::MakeGlobalTracks (this=0x1d3cff0, event=0x51099c0) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:461
 #13 0x00007fffdd0c0cf9 in StiMaker::Make (this=0x1d3cff0) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:436

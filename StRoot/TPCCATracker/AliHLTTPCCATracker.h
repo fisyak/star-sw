@@ -39,7 +39,7 @@
 #include <cstdio>
 #include "AliHLTTPCCASliceDataVector.h"
 #include <vector>
-
+#include "AliHLTTPCCAGBHit.h"
 #include "AliHLTTPCCASliceOutput.h"
 
 class AliHLTTPCCATrack;
@@ -80,7 +80,7 @@ class AliHLTTPCCATracker
     void Reconstruct();
     void WriteOutput();
 
-    void GetErrors2( int iRow,  const AliHLTTPCCATrackParam &t, float *Err2Y, float *Err2Z ) const;
+    void GetErrors2(AliHLTTPCCAGBHit &h,  const AliHLTTPCCATrackParam &t, float *Err2Y, float *Err2Z ) const;
     void GetErrors2( int iRow,  const AliHLTTPCCATrackParamVector &t, float_v *Err2Y, float_v *Err2Z ) const;
     void GetErrors2( const uint_v &rowIndexes, const AliHLTTPCCATrackParamVector &t, float_v *Err2Y, float_v *Err2Z ) const;
 
