@@ -103,9 +103,9 @@ class StMDF {
       if (! mdf[k]  && idx(k)) mdf[k] = new StMDF(Struct(k), Form("%s_%i",Table()->GetName(),k)); \
       return mdf[k];							\
     }									\
-    Double_t      Eval(Int_t k = 0, Double_t *x = 0) const  {return MDF(k)->Eval(x);} \
-    Double_t      Eval(Int_t k, Double_t x0, Double_t x1, Double_t x2 = 0, Double_t x3 = 0) const  {return MDF(k)->Eval(x0,x1,x2,x3);} \
-    Double_t      EvalError(Int_t k = 0, Double_t *x = 0) const  {return MDF(k)->EvalError(x);}	\
+    Double_t      Eval(Int_t k = 0, Double_t *x = 0) const  {return MDF(k) ? MDF(k)->Eval(x) : 0;} \
+    Double_t      Eval(Int_t k, Double_t x0, Double_t x1, Double_t x2 = 0, Double_t x3 = 0) const  {return MDF(k) ? MDF(k)->Eval(x0,x1,x2,x3) : 0;} \
+    Double_t      EvalError(Int_t k = 0, Double_t *x = 0) const  {return MDF(k) ? MDF(k)->EvalError(x) : 0;} \
     Int_t IsActiveChair() const {					\
       Int_t npar = 0;							\
       const St_MDFCorrection ## __VARS__  *tableMDF = (const St_MDFCorrection ## __VARS__  *) Table(); \
