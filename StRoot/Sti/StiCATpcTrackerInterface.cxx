@@ -139,6 +139,7 @@ void StiCATpcTrackerInterface::MakeHits() {
       if ( ! tpcHit) continue;
       Int_t Id = fSeedHits.size();
       StGlobalCoordinate glob(tpcHit->position());
+      
       //      tran(glob,loc,tpcHit->sector(),tpcHit->padrow());
       Int_t sector = tpcHit->sector();
       //      Double_t beta = (sector <= 12) ? (60 - 30*(sector - 1)) : (120 + 30 *(sector - 13));
@@ -160,13 +161,17 @@ void StiCATpcTrackerInterface::MakeHits() {
       hitc.track_key=tpcHit->idTruth();
       hitc.hit  = hit;
       fSeedHits.push_back(hitc);
-
+      Double_t Adc = tpcHit->adc();
+      Double_t AdcL = 5.5;
+      if (Adc > 0) AdcL = TMath::Log(Adc);
+      
       // convert to CA Hit
       AliHLTTPCCAGBHit caHit;
 //      caHit.SetX( hit->x() );
       caHit.SetX(   xL ); // take position of the row
       caHit.SetY( - yL );
       caHit.SetZ( - zL );
+      caHit.SetAdcL(AdcL);
         // caHit.SetErrX(   );
       caHit.SetErrY( 0.12 );// TODO: read parameters from somewhere 
       caHit.SetErrZ( 0.16 );
