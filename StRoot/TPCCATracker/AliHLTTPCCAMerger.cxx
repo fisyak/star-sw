@@ -866,7 +866,6 @@ float_m AliHLTTPCCAMerger::FitTrack(AliHLTTPCCATrackParamVector &t, float_v &Alp
     const float_v& zV = zVs[ihit];
     const float_v& sliceAlphaV = sliceAlphaVs[ihit];
     const uint_v& RowV = RowVs[ihit];
-    const float_v& adcL = adcLs[ihit];
 
     const float_m savedActive = active;
     const float_v rotateA = sliceAlphaV - Alpha0V;
@@ -888,12 +887,19 @@ float_m AliHLTTPCCAMerger::FitTrack(AliHLTTPCCATrackParamVector &t, float_v &Alp
       first = false;
     }
 
-    float_v err2Y, err2Z, dy, dz;
-//     fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+    float_v err2Y, err2Z;
+    //#define __OLD_HIST_ERRORS__
+#ifdef __OLD_HIST_ERRORS__
+     fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
 //     std::cout << "old " << err2Y << " " << err2Z << "    new ";
+    const float_m &filtered = t.FilterWithMaterial(yV, zV, err2Y, err2Z, 0.999f, active);
+#else /* ! __OLD_HIST_ERRORS__ */
+    float_v  dy, dz;
+    const float_v& adcL = adcLs[ihit];
     GetMdf4ClusterErrors2(RowV, adcL, t, err2Y, err2Z, dy, dz);
 //     std::cout << err2Y << " " << err2Z << '\n';
     const float_m &filtered = t.FilterWithMaterial(yV + dy, zV + dz, err2Y, err2Z, 0.999f, active);
+#endif /* __OLD_HIST_ERRORS__ */
 
     const float_m broken = savedActive && (!rotated || !transported /*|| !filtered*/);
     if ( !broken.isEmpty() ) {
