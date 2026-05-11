@@ -97,8 +97,10 @@ void StiTpcHitErrorMDF4::calculateError(Double_t _z,  Double_t _eta, Double_t _t
   } else if (pullChair()) {
       Double_t pulldYSQ = pullChair()->Eval(4*Field() +   0, fxx);
       Double_t pulldZSQ = pullChair()->Eval(4*Field() +   2, fxx);
-      ecross *= pulldYSQ;
-      edip   *= pulldZSQ;
+      if (pulldYSQ > 0.5 && pulldZSQ > 0.5) {
+	ecross *= pulldYSQ;
+	edip   *= pulldZSQ;
+      }
   }
   Int_t fail = 0;
   if (ecross< min2Err) {ecross = min2Err; fail++;}
