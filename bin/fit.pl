@@ -115,9 +115,7 @@ QcmN QcmP
 QcmNC QcmPC 
 			     SecRow3N SecRow3NC
 			     Z3N Z3P  Z3N+Z3P  Z3NC Z3PC Z3NC+Z3PC	      );
- push  @{ $Opts{GG} },  qw (SecRow3N SecRow3NC Z3N Z3NC VoltageN  VoltageNC );
-#			     Eta3N Eta3NC 
-#			     EtaB3N EtaB3NC
+ push  @{ $Opts{GG} },  qw (SecRow3N SecRow3NC Z3N Z3NC VoltageN  VoltageNC  Eta3N Eta3NCEtaB3N EtaB3NC);
 #			     Eta3P Eta3PC
 #			     EtaB3P EtaB3PC
 #                             EtaB3N+EtaB3P  EtaB3NC+EtaB3PC 

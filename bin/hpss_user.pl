@@ -15,8 +15,12 @@
 #   [perl] hpss_user.pl -r //treat-as-rr.rcf.bnl.gov//dev/null/ blop.dat 
 #   [perl] hpss_user.pl -r //treat-as-rr.rcf.bnl.gov//dev/null/ blop.dat,blip.dat 
 #
+use File::Basename;
+use Cwd;
 
-use lib "/opt/star/lib";
+#use lib "/opt/star/lib";
+use lib dirname $0; # 
+
 use hpss;
 
 

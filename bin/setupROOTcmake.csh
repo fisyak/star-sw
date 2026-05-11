@@ -98,6 +98,8 @@ cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD
 -Droot7=ON \
 -Ddavix=OFF \
 -Dbuiltin_clang=ON \
+-Dbuiltin_xxhash=ON \
+-Dbuiltin_gl2ps=ON \
 ${EXTRA_OFF}
 #
 #-DCMAKE_VERBOSE_MAKEFILE=ON \

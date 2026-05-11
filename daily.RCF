@@ -47,7 +47,7 @@ foreach dd (`ls -1d */*P21ib/dEdx`)
   set b = `basename ${d}`; echo "${d} => ${b}"
   set rootf =  ../${b}.root
   cd ${dd}
-  ls -1d ${rootf}
+  lb -1d ${rootf}
   if ( -r ${rootf} ) then
 	  root.exe ${rootf} brtw.C+ ppbarM2.C+
 	  root.exe ${rootf} DrawSignalBg7.C
@@ -8424,3 +8424,957 @@ end
   {"9p8GeV_fixedTarget_2026" ,               20260121, 173043, "y2025z",  "9p8GeV_fixedTarget_2026 V1070"}, // 1st run = 27021018
   {"9p8GeV_fixedTarget_2026a" ,              20260124, 153919, "y2025z",  "9p8GeV_fixedTarget_2026 V1100"}, // 1st run = 27024030
   {"9p8GeV_fixedTarget_2026b" ,              20260124, 184723, "y2025z",  "9p8GeV_fixedTarget_2026 V1120"}, // 1st run = 27024044
+================================================================================
+04/29/2026
+ root.exe 9p8GeV_fixedTarget_2026_1070.root lBichsel.C 'dEdxFit.C+("VoltageNC","GT")'
+ root.exe 9p8GeV_fixedTarget_2026_1100.root lBichsel.C 'dEdxFit.C+("VoltageNC","GT")'
+ root.exe 9p8GeV_fixedTarget_2026_1120.root lBichsel.C 'dEdxFit.C+("VoltageNC","GT")'
+--------------------------------------------------------------------------------
+Hit Errors in TPCCA
+(gdb) info b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   <PENDING>          AliHLTTPCCAParam::ErrZ
+2       breakpoint     keep y   <PENDING>          AliHLTTPCCAParam::ErrX
+3       breakpoint     keep y   <PENDING>          AliHLTTPCCAParam::ErrY
+4       breakpoint     keep y   0x00007fffdd5cf9a7 in AliHLTTPCCAParam::SetErrZ(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:124
+5       breakpoint     keep y   0x00007fffdd5cf9e3 in AliHLTTPCCAParam::SetErrY(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:126
+6       breakpoint     keep y   0x00007fffdd5cf9c5 in AliHLTTPCCAParam::SetErrX(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:125
+        breakpoint already hit 1 time
+7       breakpoint     keep y   <MULTIPLE>         
+7.1                         y   0x00007fffdd495ae0 <AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParam const&, float&, float&) const@plt>
+7.2                         y   0x00007fffdd497b50 <AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt>
+7.3                         y   0x00007fffdd499240 <AliHLTTPCCAParam::GetClusterErrors2(Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt>
+7.4                         y   0x00007fffdd4f2967 in AliHLTTPCCAParam::GetClusterErrors2(Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:261
+7.5                         y   0x00007fffdd532121 in AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParam const&, float&, float&) const at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.cxx:212
+7.6                         y   0x00007fffdd5b8702 in AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const 
+
+Breakpoint 6, AliHLTTPCCAParam::SetErrX (this=0x7ffffffc75d0, v=0) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:125
+125         void SetErrX( float v ) {  fErrX = v;}
+(gdb) bt 10
+#0  AliHLTTPCCAParam::SetErrX (this=0x7ffffffc75d0, v=0) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:125
+#1  0x00007fffdd5cdd2a in StTPCCAInterface::MakeSettings (this=0x1020bfe0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:254
+    SlicePar.SetErrX     (   0. );                                        //TODO initialize from StRoot
+    SlicePar.SetErrY     (   0.12 ); // 0.06  for Inner                        //TODO initialize from StRoot
+    SlicePar.SetErrZ     (   0.16 ); // 0.12  for Inner                NodePar->fitPars()        //TODO initialize from StRoot
+#2  0x00007fffdd5cca35 in StTPCCAInterface::Run (this=0x1020bfe0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:70
+#3  0x00007fffdd3013a9 in StiCATpcSeedFinder::findTrack (this=0x101fcce0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#4  0x00007fffdd3469f5 in StiKalmanTrackFinder::extendSeeds (this=0x109271b0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#5  0x00007fffdd3463f1 in StiKalmanTrackFinder::findTracks (this=0x109271b0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+#6  0x00007fffdd0c0f78 in StiMaker::MakeGlobalTracks (this=0x1d26f20, event=0x513e390) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:461
+#7  0x00007fffdd0c0cf9 in StiMaker::Make (this=0x1d26f20) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:436
+#8  0x00007fffee105e06 in StMaker::Make (this=0x19ace70) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.cxx:932
+#9  0x00007fffee0fde40 in StChain::Make (this=0x19ace70) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:117
+Breakpoint 5, AliHLTTPCCAParam::SetErrY (this=0x7ffffffc75d0, v=0.119999997) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:126
+126         void SetErrY( float v ) {  fErrY = v;}
+(gdb) dis 4
+(gdb) dis 5
+(gdb) dis 6
+
+Breakpoint 7.6, AliHLTTPCCAParam::GetClusterErrors2 (this=0x10247e50, iRow=3, t=..., Err2Y=0x7ffffffbf6d0, Err2Z=0x7ffffffbf6c0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:230
+230       const float_v one = float_v(Vc::One);
+(gdb) bt 10
+#0  AliHLTTPCCAParam::GetClusterErrors2 (this=0x10247e50, iRow=3, t=..., Err2Y=0x7ffffffbf6d0, Err2Z=0x7ffffffbf6c0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:230
+#1  0x00007fffdd5bd39a in AliHLTTPCCATracker::GetErrors2 (this=0x10247e40, iRow=3, t=..., Err2Y=0x7ffffffbf6d0, Err2Z=0x7ffffffbf6c0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.h:213
+#2  0x00007fffdd5a0993 in InitTracklets::operator() (this=0x7ffffffc14e0, rowIndex=3) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:1218
+#3  0x00007fffdd5bec51 in Vc_1::Vector<int, Vc_1::VectorAbi::Sse>::callWithValuesSorted<InitTracklets&> (this=0x7ffffffc1520, f=...) at /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include/Vc/sse/vector.h:367
+#4  0x00007fffdd597929 in AliHLTTPCCATrackletConstructor::run (this=0x7ffffffc6eb0, firstRow=0, tracksSaved=@0x7ffffffc6dbc: 0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:893
+#5  0x00007fffdd5c9030 in AliHLTTPCCATracker::Reconstructor::execute (this=0x7ffffffc7618) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/Reconstructor.cpp:449
+#6  0x00007fffdd576297 in AliHLTTPCCATracker::Reconstruct (this=0x10247e40) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.cxx:183
+#7  0x00007fffdd4a0fd4 in AliHLTTPCCAGBTracker::FindTracks (this=0xf3696e0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:301
+#8  0x00007fffdd5ccae9 in StTPCCAInterface::Run (this=0x1020bfe0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+
+Breakpoint 7.2, 0x00007fffdd497b50 in AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt ()
+   from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libTPCCATracker.so
+(gdb) bt 10
+#0  0x00007fffdd497b50 in AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt ()
+   from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libTPCCATracker.so
+#1  0x00007fffdd5bd39a in AliHLTTPCCATracker::GetErrors2 (this=0x10247e40, iRow=3, t=..., Err2Y=0x7ffffffbf6d0, Err2Z=0x7ffffffbf6c0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.h:213
+#2  0x00007fffdd5a0b8e in InitTracklets::operator() (this=0x7ffffffc14e0, rowIndex=3) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:1224
+#3  0x00007fffdd5bec51 in Vc_1::Vector<int, Vc_1::VectorAbi::Sse>::callWithValuesSorted<InitTracklets&> (this=0x7ffffffc1520, f=...) at /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include/Vc/sse/vector.h:367
+#4  0x00007fffdd597929 in AliHLTTPCCATrackletConstructor::run (this=0x7ffffffc6eb0, firstRow=0, tracksSaved=@0x7ffffffc6dbc: 0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:893
+#5  0x00007fffdd5c9030 in AliHLTTPCCATracker::Reconstructor::execute (this=0x7ffffffc7618) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/Reconstructor.cpp:449
+#6  0x00007fffdd576297 in AliHLTTPCCATracker::Reconstruct (this=0x10247e40) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.cxx:183
+#7  0x00007fffdd4a0fd4 in AliHLTTPCCAGBTracker::FindTracks (this=0xf3696e0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:301
+#8  0x00007fffdd5ccae9 in StTPCCAInterface::Run (this=0x1020bfe0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+#9  0x00007fffdd3013a9 in StiCATpcSeedFinder::findTrack (this=0x101fcce0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+(gdb) dis 7.2
+(gdb) dis 7.6
+Breakpoint 7.3, 0x00007fffdd499240 in AliHLTTPCCAParam::GetClusterErrors2(Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt () from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libTPCCATracker.so
+(gdb) c
+Continuing.
+
+Breakpoint 7.3, 0x00007fffdd499240 in AliHLTTPCCAParam::GetClusterErrors2(Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt () from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libTPCCATracker.so
+Breakpoint 7.4, AliHLTTPCCAParam::GetClusterErrors2 (this=0x1020c340, rowIndexes=..., t=..., Err2Y=0x7ffffffb4b00, Err2Z=0x7ffffffb4af0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:261
+261       const float_v one = float_v(Vc::One);
+(gdb) bt 10
+#0  AliHLTTPCCAParam::GetClusterErrors2 (this=0x1020c340, rowIndexes=..., t=..., Err2Y=0x7ffffffb4b00, Err2Z=0x7ffffffb4af0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:261
+#1  0x00007fffdd4c1115 in AliHLTTPCCAMerger::FitTrack (this=0x1020c340, t=..., Alpha0V=..., hits=0x7ffffffc1f50, firstHits=..., NTrackHits=..., nTracksV=@0x7ffffffc6048: 2, active0=..., dir=false)
+    at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAMerger.cxx:886
+#2  0x00007fffdd4bd68b in AliHLTTPCCAMerger::UnpackSlices (this=0x1020c340) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAMerger.cxx:711
+#3  0x00007fffdd4bbe2a in AliHLTTPCCAMerger::Reconstruct (this=0x1020c340) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAMerger.cxx:167
+#4  0x00007fffdd4a149a in AliHLTTPCCAGBTracker::Merge (this=0xf3696e0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:376
+#5  0x00007fffdd4a1280 in AliHLTTPCCAGBTracker::FindTracks (this=0xf3696e0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:320
+#6  0x00007fffdd5ccae9 in StTPCCAInterface::Run (this=0x1020bfe0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+#7  0x00007fffdd3013a9 in StiCATpcSeedFinder::findTrack (this=0x101fcce0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#8  0x00007fffdd3469f5 in StiKalmanTrackFinder::extendSeeds (this=0x109271b0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#9  0x00007fffdd3463f1 in StiKalmanTrackFinder::findTracks (this=0x109271b0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+(gdb) dis 7.3
+(gdb) dis 7.4
+
+[starsub02] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StRoot/TPCCATracker $ grep -rn GetClusterErrors2 .
+./AliHLTTPCCAGBTracker.cxx:680:    //fSlices[0].Param().GetClusterErrors2( h.IRow(), h.Z(), l.SinPhi(), l.CosPhi(), l.DzDs(), err2Y, err2Z );
+./AliHLTTPCCAGBTracker.cxx:681:    fSlices[0].Param().GetClusterErrors2( h.IRow(), t0, err2Y, err2Z );
+./AliHLTTPCCAMerger.cxx:886:    fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+./AliHLTTPCCAMerger.cxx:1002:    fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+./AliHLTTPCCAMerger.cxx:1127:    fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+./AliHLTTPCCANeighboursCleaner.cxx:167:          param.GetClusterErrors2(upIndexes,Xdown,Ydown,Zdown,err2Y, err2Z);
+./AliHLTTPCCANeighboursCleaner.cxx:205:          param.GetClusterErrors2(upIndexes,Xup,Yup,Zup,err2Y, err2Z);
+./AliHLTTPCCAParam.cxx:209:void AliHLTTPCCAParam::GetClusterErrors2( int iRow, const AliHLTTPCCATrackParam &t, float &Err2Y, float &Err2Z ) const
+================================================================================
+05/01/2026
+(gdb) info b
+Num     Type           Disp Enb Address            What
+2       breakpoint     keep y   <PENDING>          AliHLTTPCCAParam::ErrZ
+3       breakpoint     keep y   <PENDING>          AliHLTTPCCAParam::ErrY
+4       breakpoint     keep y   <PENDING>          AliHLTTPCCAParam::ErrX
+5       breakpoint     keep y   0x00007fffdd5d0973 in AliHLTTPCCAParam::SetErrZ(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:129
+6       breakpoint     keep y   0x00007fffdd5d09af in AliHLTTPCCAParam::SetErrY(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:131
+7       breakpoint     keep y   0x00007fffdd5d0991 in AliHLTTPCCAParam::SetErrX(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:130
+8       breakpoint     keep y   <MULTIPLE>         
+8.1                         y   0x00007fffdd499840 <AliHLTTPCCAParam::GetClusterErrors2(AliHLTTPCCAGBHit&, AliHLTTPCCATrackParam const&, float&, float&) const@plt>
+8.2                         y   0x00007fffdd49abe0 <AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt>
+8.3                         y   0x00007fffdd49c320 <AliHLTTPCCAParam::GetClusterErrors2(Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt>
+8.4                         y   0x00007fffdd4f709c in AliHLTTPCCAParam::GetClusterErrors2(Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:270
+8.5                         y   0x00007fffdd5348cf in AliHLTTPCCAParam::GetClusterErrors2(AliHLTTPCCAGBHit&, AliHLTTPCCATrackParam const&, float&, float&) const at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.cxx:247
+8.6                         y   0x00007fffdd5badd3 in AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const 
+                                                   at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAParam.h:237
+9       breakpoint     keep y   0x00007fffdd598316 in AliHLTTPCCATrackletConstructor::run(unsigned int, unsigned int&) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:829
+10      breakpoint     keep y   0x00007fffdd5d0973 in AliHLTTPCCAParam::SetErrZ(float) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:129
+11      breakpoint     keep y   0x00007fffdd4a4463 in AliHLTTPCCAGBTracker::Merge() at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:366
+12      breakpoint     keep y   0x00007fffdd4a3ced in AliHLTTPCCAGBTracker::FindTracks() at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:207
+13      breakpoint     keep y   0x00007fffdd4c32b0 in AliHLTTPCCAMerger::FitTrack(AliHLTTPCCATrackParamVector&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>&, int (*) [4], Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>&, Vc_1::Vector<unsigned int, Vc_1::VectorAbi::Sse>&, int&, Vc_1::Mask<float, Vc_1::VectorAbi::Sse>, bool) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAMerger.cxx:815
+14      breakpoint     keep y   0x00007fffdd4a3ced in AliHLTTPCCAGBTracker::FindTracks() at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:207
+15      breakpoint     keep y   0x00007fffdd4a4463 in AliHLTTPCCAGBTracker::Merge() at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:366
+
+
+Breakpoint 7, AliHLTTPCCAParam::SetErrX (this=0x7ffffffe84a0, v=0) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:130
+130         void SetErrX( float v ) {  fErrX = v;}
+Breakpoint 6, AliHLTTPCCAParam::SetErrY (this=0x7ffffffe84a0, v=0.119999997) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:131
+131         void SetErrY( float v ) {  fErrY = v;}
+(gdb) 
+Continuing.
+
+Breakpoint 5, AliHLTTPCCAParam::SetErrZ (this=0x7ffffffe84a0, v=0.159999996) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:129
+129         void SetErrZ( float v ) {  fErrZ = v;}
+(gdb) dis 7
+(gdb) dis 6
+(gdb) dis 5
+(gdb) dis 10
+#0  AliHLTTPCCAParam::SetErrX (this=0x7ffffffe84a0, v=0) at StRoot/TPCCATracker/AliHLTTPCCAParam.h:130
+#1  0x00007fffdd5cec92 in StTPCCAInterface::MakeSettings (this=0x108b1eb0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:254
+#2  0x00007fffdd5cd99d in StTPCCAInterface::Run (this=0x108b1eb0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:70
+#3  0x00007fffdd3043b9 in StiCATpcSeedFinder::findTrack (this=0x1087d9b0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#4  0x00007fffdd349ab3 in StiKalmanTrackFinder::extendSeeds (this=0x10fa7a90, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#5  0x00007fffdd3494af in StiKalmanTrackFinder::findTracks (this=0x10fa7a90) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+#6  0x00007fffdd0c2f78 in StiMaker::MakeGlobalTracks (this=0x1d27730, event=0x50e7210) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:461
+#7  0x00007fffdd0c2cf9 in StiMaker::Make (this=0x1d27730) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:436
+#8  0x00007fffee105e06 in StMaker::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.cxx:932
+#9  0x00007fffee0fde40 in StChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:117
+#10 0x00007fffede2573c in StBFChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:85
+#11 0x00007fffee0feb64 in StMaker::IMake (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.h:110
+#12 0x00007fffee0ff249 in StChain::Make (this=0x19ad680, num=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.h:49
+#13 0x00007fffede25722 in StBFChain::Make (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:84
+#14 0x00007fffee0fe213 in StChain::EventLoop (this=0x19ad680, jBeg=1, jEnd=1, outMk=0x0) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:238
+#15 0x00007fffee0fde7d in StChain::MakeEvent (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:129
+#16 0x00007fffee119635 in G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int) () from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libStChain.so
+#17 0x00007ffff64b946b in Cint::G__ExceptionWrapper (funcp=0x7fffee119607 <G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int)>, result7=0x7fffffff4710, funcname=0x19a5b60 "", libp=0x7ffffffe9d00, hash=0) at cint/cint/src/Api.cxx:385
+#18 0x00007ffff658b671 in G__execute_call (result7=0x7fffffff4710, libp=0x7ffffffe9d00, ifunc=0x19a5b60, ifn=0) at cint/cint/src/newlink.cxx:2408
+#19 0x00007ffff658bff5 in G__call_cppfunc (result7=0x7fffffff4710, libp=0x7ffffffe9d00, ifunc=0x19a5b60, ifn=0) at cint/cint/src/newlink.cxx:2612
+Continuing.
+ - CA FindTracks() start -
+
+Breakpoint 12, AliHLTTPCCAGBTracker::FindTracks (this=0xf9ea350) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:207
+207       fTime = 0;
+(gdb) bt 20
+#0  AliHLTTPCCAGBTracker::FindTracks (this=0xf9ea350) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:207
+#1  0x00007fffdd5cda51 in StTPCCAInterface::Run (this=0x108b1eb0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+#2  0x00007fffdd3043b9 in StiCATpcSeedFinder::findTrack (this=0x1087d9b0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#3  0x00007fffdd349ab3 in StiKalmanTrackFinder::extendSeeds (this=0x10fa7a90, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#4  0x00007fffdd3494af in StiKalmanTrackFinder::findTracks (this=0x10fa7a90) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+#5  0x00007fffdd0c2f78 in StiMaker::MakeGlobalTracks (this=0x1d27730, event=0x50e7210) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:461
+#6  0x00007fffdd0c2cf9 in StiMaker::Make (this=0x1d27730) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:436
+#7  0x00007fffee105e06 in StMaker::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.cxx:932
+#8  0x00007fffee0fde40 in StChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:117
+#9  0x00007fffede2573c in StBFChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:85
+#10 0x00007fffee0feb64 in StMaker::IMake (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.h:110
+#11 0x00007fffee0ff249 in StChain::Make (this=0x19ad680, num=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.h:49
+#12 0x00007fffede25722 in StBFChain::Make (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:84
+#13 0x00007fffee0fe213 in StChain::EventLoop (this=0x19ad680, jBeg=1, jEnd=1, outMk=0x0) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:238
+#14 0x00007fffee0fde7d in StChain::MakeEvent (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:129
+#15 0x00007fffee119635 in G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int) () from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libStChain.so
+#16 0x00007ffff64b946b in Cint::G__ExceptionWrapper (funcp=0x7fffee119607 <G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int)>, result7=0x7fffffff4710, funcname=0x19a5b60 "", libp=0x7ffffffe9d00, hash=0) at cint/cint/src/Api.cxx:385
+#17 0x00007ffff658b671 in G__execute_call (result7=0x7fffffff4710, libp=0x7ffffffe9d00, ifunc=0x19a5b60, ifn=0) at cint/cint/src/newlink.cxx:2408
+#18 0x00007ffff658bff5 in G__call_cppfunc (result7=0x7fffffff4710, libp=0x7ffffffe9d00, ifunc=0x19a5b60, ifn=0) at cint/cint/src/newlink.cxx:2612
+#19 0x00007ffff6564f08 in G__interpret_func (result7=0x7fffffff4710, funcname=0x45b0e0 "MakeEvent", libp=0x7ffffffe9d00, hash=896, p_ifunc=0x19a5b60, funcmatch=1, memfunc_flag=1) at cint/cint/src/ifunc.cxx:5791
+(More stack frames follow...)
+217      if ( fNHits <= 0 ) return; // TODO rid of it. Can be problems with performance
+(gdb) 
+227       TStopwatch timer1;
+(gdb) p fNHits
+$1 = 794
+
+
+Breakpoint 16, AliHLTTPCCAGBHit::Compare (a=..., b=...) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBHit.h:124
+124       if ( a.fISlice < b.fISlice ) return 1;
+(gdb) p a
+$2 = (const AliHLTTPCCAGBHit &) @0x1098e130: {fX = 163.189285, fY = -40.5142174, fZ = 16.2567024, fAdcL = 3.91202307, fErrX = 0, fErrY = 0.119999997, fErrZ = 0.159999996, fAmp = 0, fISlice = 14, fIRow = 58, fID = 1, fIsUsed = false}
+(gdb) p b
+$3 = (const AliHLTTPCCAGBHit &) @0x10992b70: {fX = 163.288345, fY = 23.431488, fZ = -55.8788795, fAdcL = 3.95124364, fErrX = 0, fErrY = 0.119999997, fErrZ = 0.159999996, fAmp = 0, fISlice = 3, fIRow = 58, fID = 397, fIsUsed = false}
+
+(gdb) p numberOfUsedSlices
+$6 = 1
+263           const int iSlice = fHits.Data()[offset].ISlice();
+(gdb) ptyp fClusterData
+type = class AliHLTResizableArray<AliHLTTPCCAClusterData, 1, -1> [with T = AliHLTTPCCAClusterData] : public AliHLTArray<AliHLTInternal::CacheLineSizeHelper<T>, 1> {
+
+  public:
+    AliHLTResizableArray(void);
+    AliHLTResizableArray(int);
+    AliHLTResizableArray(int, int);
+    AliHLTResizableArray(int, int, int);
+  private:
+    AliHLTResizableArray(const AliHLTResizableArray<T, 1, -1> &);
+  public:
+    ~AliHLTResizableArray(void);
+    void Resize(int);
+    void Resize(int, int);
+    void Resize(int, int, int);
+  private:
+    static void * operator new(size_t);
+    AliHLTResizableArray<T, 1, -1> & operator=(const AliHLTResizableArray<T, 1, -1> &);
+}
+264           data.readEvent( fHits.Data(), &offset, fNHits, fSlices[iSlice].Param().NRows8() );
+(gdb) p iSlice
+$7 = 1
+(gdb) s
+AliHLTInternal::ArrayBase<AliHLTTPCCATracker, 1>::operator[] (this=0xf9ea350, x=1) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTArray.h:249
+249           inline R &operator[]( int x ) { BOUNDS_CHECK( x, fData[0] ); return fData[x]; }
+(gdb) ptyp  fData[x]
+type = class AliHLTTPCCATracker {
+  public:
+    int fNOutTracks1;
+...
+(gdb) bt 2
+#0  AliHLTInternal::ArrayBase<AliHLTTPCCATracker, 1>::operator[] (this=0xf9ea350, x=1) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTArray.h:249
+#1  0x00007fffdd4a3eab in AliHLTTPCCAGBTracker::FindTracks (this=0xf9ea350) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:264
+(gdb) p fData
+$10 = (AliHLTTPCCATracker *) 0x10900e00
+
+
+#0  AliHLTTPCCASliceData::InitFromClusterData (this=0x109067c8, data=...) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCASliceDataVector.cxx:236
+#1  0x00007fffdd578843 in AliHLTTPCCATracker::ReadEvent (this=0x109065e0, clusterData=0x108f0180) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.cxx:168
+#2  0x00007fffdd4a3f82 in AliHLTTPCCAGBTracker::FindTracks (this=0xf9ea350) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:273
+#3  0x00007fffdd5cda51 in StTPCCAInterface::Run (this=0x108b1eb0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+#4  0x00007fffdd3043b9 in StiCATpcSeedFinder::findTrack (this=0x1087d9b0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#5  0x00007fffdd349ab3 in StiKalmanTrackFinder::extendSeeds (this=0x10fa7a90, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#6  0x00007fffdd3494af in StiKalmanTrackFinder::findTracks (this=0x10fa7a90) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+#7  0x00007fffdd0c2f78 in StiMaker::MakeGlobalTracks (this=0x1d27730, event=0x50e7210) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:461
+#8  0x00007fffdd0c2cf9 in StiMaker::Make (this=0x1d27730) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:436
+#9  0x00007fffee105e06 in StMaker::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.cxx:932
+#10 0x00007fffee0fde40 in StChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:117
+#11 0x00007fffede2573c in StBFChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:85
+#12 0x00007fffee0feb64 in StMaker::IMake (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.h:110
+#13 0x00007fffee0ff249 in StChain::Make (this=0x19ad680, num=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.h:49
+#14 0x00007fffede25722 in StBFChain::Make (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:84
+#15 0x00007fffee0fe213 in StChain::EventLoop (this=0x19ad680, jBeg=1, jEnd=1, outMk=0x0) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:238
+#16 0x00007fffee0fde7d in StChain::MakeEvent (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:129
+#17 0x00007fffee119635 in G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int) () from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libStChain.so
+#18 0x00007ffff64b946b in Cint::G__ExceptionWrapper (funcp=0x7fffee119607 <G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int)>, result7=0x7fffffff4710, funcname=0x19a5b60 "", libp=0x7ffffffe9d00, hash=0) at cint/cint/src/Api.cxx:385
+#19 0x00007ffff658b671 in G__execute_call (result7=0x7fffffff4710, libp=0x7ffffffe9d00, ifunc=0x19a5b60, ifn=0) at cint/cint/src/newlink.cxx:2408
+
+
+#0  AliHLTTPCCATrackletConstructor::run (this=0x7ffffffe7d80, firstRow=0, tracksSaved=@0x7ffffffe7c8c: 0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:840
+#1  0x00007fffdd5c9f98 in AliHLTTPCCATracker::Reconstructor::execute (this=0x7ffffffe84e8) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/Reconstructor.cpp:449
+#2  0x00007fffdd5788c3 in AliHLTTPCCATracker::Reconstruct (this=0x109065e0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.cxx:183
+#3  0x00007fffdd4a4066 in AliHLTTPCCAGBTracker::FindTracks (this=0xf9ea350) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCAGBTracker.cxx:301
+#4  0x00007fffdd5cda51 in StTPCCAInterface::Run (this=0x108b1eb0) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/StTPCCAInterface.cxx:79
+#5  0x00007fffdd3043b9 in StiCATpcSeedFinder::findTrack (this=0x1087d9b0, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiCATpcSeedFinder.cxx:40
+#6  0x00007fffdd349ab3 in StiKalmanTrackFinder::extendSeeds (this=0x10fa7a90, rMin=0) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:224
+#7  0x00007fffdd3494af in StiKalmanTrackFinder::findTracks (this=0x10fa7a90) at .al96_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:162
+#8  0x00007fffdd0c2f78 in StiMaker::MakeGlobalTracks (this=0x1d27730, event=0x50e7210) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:461
+#9  0x00007fffdd0c2cf9 in StiMaker::Make (this=0x1d27730) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiMaker.cxx:436
+#10 0x00007fffee105e06 in StMaker::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.cxx:932
+#11 0x00007fffee0fde40 in StChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:117
+#12 0x00007fffede2573c in StBFChain::Make (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:85
+#13 0x00007fffee0feb64 in StMaker::IMake (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.h:110
+#14 0x00007fffee0ff249 in StChain::Make (this=0x19ad680, num=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.h:49
+#15 0x00007fffede25722 in StBFChain::Make (this=0x19ad680, number=1) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:84
+#16 0x00007fffee0fe213 in StChain::EventLoop (this=0x19ad680, jBeg=1, jEnd=1, outMk=0x0) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:238
+#17 0x00007fffee0fde7d in StChain::MakeEvent (this=0x19ad680) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:129
+#18 0x00007fffee119635 in G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int) () from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libStChain.so
+#19 0x00007ffff64b946b in Cint::G__ExceptionWrapper (funcp=0x7fffee119607 <G__StChain_Cint_579_0_8(G__value*, char const*, G__param*, int)>, result7=0x7fffffff4710, funcname=0x19a5b60 "", libp=0x7ffffffe9d00, hash=0) at cint/cint/src/Api.cxx:385
+
+
+(gdb) bt 10
+#0  0x00007fffdd49abe0 in AliHLTTPCCAParam::GetClusterErrors2(int, AliHLTTPCCATrackParamVector const&, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*, Vc_1::Vector<float, Vc_1::VectorAbi::Sse>*) const@plt ()
+   from /gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG/.al96_x8664_gcc11/lib/libTPCCATracker.so
+#1  0x00007fffdd5be3f0 in AliHLTTPCCATracker::GetErrors2 (this=0x109065e0, iRow=42, t=..., Err2Y=0x7ffffffe05a0, Err2Z=0x7ffffffe0590) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATracker.h:213
+#2  0x00007fffdd5a308d in InitTracklets::operator() (this=0x7ffffffe23b0, rowIndex=42) at .al96_x8664_gcc11/obj/StRoot/TPCCATracker/AliHLTTPCCATrackletConstructor.cxx:1218
+#3  0x00007fffdd5bfba5 in Vc_1::Vector<int, Vc_1::VectorAbi::Sse>::callWithValuesSorted<InitTracklets&> (this=0x7ffffffe23f0, f=...) at /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include/Vc/sse/vector.h:367
+old [0.00, 0.00, 0.00, 0.00] [0.23, 0.23, 0.02, 0.02]    new [0.01, 0.01, 0.02, 0.02] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.23, 0.23, 0.02, 0.02]    new [0.01, 0.01, 0.02, 0.02] [0.04, 0.04, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.31, 0.31, 0.02, 0.02]    new [0.01, 0.01, 0.02, 0.02] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.26, 0.26, 0.02, 0.02]    new [0.01, 0.01, 0.02, 0.02] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.25, 0.25, 0.02, 0.02]    new [0.01, 0.01, 0.02, 0.02] [0.02, 0.02, 0.00, 0.00]
+...
+old [0.00, 0.00, 0.00, 0.00] [0.17, 0.17, 0.02, 0.02]    new [0.01, 0.01, 0.00, 0.00] [0.04, 0.04, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.11, 0.11, 0.02, 0.02]    new [0.00, 0.00, 0.00, 0.00] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.20, 0.20, 0.02, 0.02]    new [0.00, 0.00, 0.00, 0.00] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.22, 0.22, 0.02, 0.02]    new [0.00, 0.00, 0.00, 0.00] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.18, 0.18, 0.02, 0.02]    new [0.00, 0.00, 0.00, 0.00] [0.05, 0.05, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.18, 0.18, 0.02, 0.02]    new [0.01, 0.01, 0.00, 0.00] [0.00, 0.00, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.18, 0.18, 0.02, 0.02]    new [0.01, 0.01, 0.00, 0.00] [0.03, 0.03, 0.00, 0.00]
+old [0.00, 0.00, 0.00, 0.00] [0.18, 0.18, 0.02, 0.02]    new [0.00, 0.00, 0.00, 0.00] [0.05, 0.05, 0.00, 0.00]
+...
+old [0.01, 0.01, 0.01, 0.00] [0.24, 0.24, 0.24, 0.02]    new [0.01, 0.01, 0.01, 0.00] [0.04, 0.04, 0.04, 0.00]
+old [0.01, 0.01, 0.01, 0.00] [0.24, 0.24, 0.24, 0.02]    new [0.01, 0.01, 0.01, 0.00] [0.04, 0.04, 0.04, 0.00]
+old [0.02, 0.02, 0.02, 0.00] [0.24, 0.24, 0.24, 0.02]    new [0.01, 0.01, 0.01, 0.00] [0.03, 0.03, 0.03, 0.00]
+old [0.02, 0.02, 0.02, 0.00] [0.24, 0.24, 0.24, 0.02]    new [0.00, 0.00, 0.00, 0.00] [0.05, 0.05, 0.05, 0.00]
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.461+-  1.5, sy 0.233, x =    3.94 z =  189.36   105 cm( 4.25%) -1.87 MeV  0.946 GeV
+StiMaker:INFO  -                   Tpc/Padrow_45/Sector_3  find pT  0.444+-  3.9, sy 0.018, x =  135.05 z =  -95.99 chi2 =   7.08
+StiMaker:INFO  -                   Tpc/Padrow_29/Sector_3  find pT  0.455+-  1.9, sy 0.031, x =  100.47 z =  -17.35 chi2 =  12.69
+StiMaker:INFO  -                   Tpc/Padrow_17/Sector_3  find pT  0.459+-  1.6, sy 0.022, x =   81.17 z =   25.09 chi2 =  16.24
+StiMaker:INFO  -                   Tpc/Padrow_17/Sector_3  dE pT  0.459+-  1.6, sy 0.022, x =   81.17 z =   25.09 chi2 =  16.24  3.92 cm( 0.03%)  9.93 keV  0.949 GeV
+StiMaker:INFO  -                   Tpc/Padrow_17/Sector_3  U  pT  0.459+-  1.6, sy 0.022, x =   81.17 z =   25.09 chi2 =  16.24
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  dE pT  0.487+-  4.0, sy 0.021, x =   82.78 z =   21.58 chi2 =  19.75  3.81 cm( 0.03%) -9.63 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  U  pT  0.487+-  4.0, sy 0.021, x =   82.78 z =   21.58 chi2 =  19.75
+StiKalmanTrack::refit iter = 0 qA = 2.02
+StiMaker:INFO  -                   Tpc/Padrow_11/Sector_3  dE pT  0.461+-  1.2, sy 0.006, x =   71.54 z =   45.97 chi2 =  16.30  3.82 cm( 0.03%)  9.68 keV  0.944 GeV
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  dE pT  0.461+-  1.1, sy 0.010, x =   82.78 z =   21.58 chi2 =  16.31  3.95 cm( 0.03%)  9.99 keV  0.947 GeV
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  U  pT  0.461+-  1.1, sy 0.010, x =   82.78 z =   21.58 chi2 =  16.31
+StiMaker:INFO  -                   Tpc/Padrow_11/Sector_3  U  pT  0.461+-  1.2, sy 0.006, x =   71.54 z =   45.97 chi2 =  16.30
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.463+-  1.4, sy 0.228, x =    3.94 z =  189.54   105 cm( 4.25%) -1.87 MeV  0.946 GeV
+StiMaker:INFO  -                   Tpc/Padrow_29/Sector_3  dE pT  0.470+-  2.5, sy 0.028, x =  100.47 z =  -17.33 chi2 =  13.91  4.11 cm( 0.03%) -10.4 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_29/Sector_3  U  pT  0.470+-  2.5, sy 0.028, x =  100.47 z =  -17.33 chi2 =  13.91
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  dE pT  0.482+-  3.5, sy 0.020, x =   82.78 z =   21.59 chi2 =  19.64  3.81 cm( 0.03%) -9.63 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  U  pT  0.482+-  3.5, sy 0.020, x =   82.78 z =   21.59 chi2 =  19.64
+StiKalmanTrack::refit iter = 1 qA = 0.02
+StiMaker:INFO  -                   Tpc/Padrow_11/Sector_3  dE pT  0.461+-  1.1, sy 0.006, x =   71.54 z =   45.98 chi2 =  16.32  3.82 cm( 0.03%)  9.68 keV  0.944 GeV
+StiMaker:INFO  -                   Tpc/Padrow_29/Sector_3  dE pT  0.470+-  2.5, sy 0.028, x =  100.47 z =  -17.33 chi2 =  13.90  4.11 cm( 0.03%) -10.4 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_29/Sector_3  U  pT  0.470+-  2.5, sy 0.028, x =  100.47 z =  -17.33 chi2 =  13.90
+StiMaker:INFO  -                   Tpc/Padrow_11/Sector_3  U  pT  0.461+-  1.1, sy 0.006, x =   71.54 z =   45.98 chi2 =  16.32
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  dE pT  0.481+-  3.4, sy 0.020, x =   82.78 z =   21.59 chi2 =  19.62  3.81 cm( 0.03%) -9.64 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  U  pT  0.481+-  3.4, sy 0.020, x =   82.78 z =   21.59 chi2 =  19.62
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.463+-  1.4, sy 0.228, x =    3.94 z =  189.54   105 cm( 4.25%) -1.87 MeV  0.946 GeV
+StiKalmanTrack::refit iter = 2 qA = 0.00
+================================================================================
+05/03/2026
+[starsub02] ~/TPC/TPC23/2025/Hijing.AuAu200 $ cpu_per_event.csh '*.gz' | tee cpu_per_event
+*.gz
+        CPU/event = 319.515(sec) and    Total/event = 323.836(sec)      98.6656 %       for 9900 events
+QAInfo:You are using STAR_LEVEL : TFG, git = heads/TFG,tag:27153b7025, ROOT_LEVEL : 5.34.39 and node : spool1498.sdcc.bnl.gov with 96 Intel(R) Xeon(R) Gold 6336Y CPU @ 2.40GHz CpuSpeed 2823 MHz
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =38219.25        Cpu =37709.09  cpu/event = 377.09
+QA :INFO  - QAInfo:Maker          St_db_Maker::db                   Ast =  3.09( 0.0%) Cpu =  2.67( 0.0%) 
+QA :INFO  - QAInfo:Maker          StMagFMaker::MagField             Ast =  2.23( 0.0%) Cpu =  2.13( 0.0%) 
+QA :INFO  - QAInfo:Maker    StDetectorDbMaker::detDb                Ast =  2.23( 0.0%) Cpu =  2.24( 0.0%) 
+QA :INFO  - QAInfo:Maker         StTpcDbMaker::tpcDB                Ast =  2.24( 0.0%) Cpu =  2.25( 0.0%) 
+QA :INFO  - QAInfo:Maker        StEEmcDbMaker::eeDb                 Ast =  2.25( 0.0%) Cpu =  2.20( 0.0%) 
+QA :INFO  - QAInfo:Maker         StEpdDbMaker::epdDb                Ast =  2.25( 0.0%) Cpu =  2.16( 0.0%) 
+QA :INFO  - QAInfo:Maker           StVMCMaker::geant                Ast =1792.38( 4.7%) Cpu =1758.64( 4.7%) 
+QA :INFO  - QAInfo:Maker   StTriggerDataMaker::trgd                 Ast =  2.51( 0.0%) Cpu =  2.45( 0.0%) 
+QA :INFO  - QAInfo:Maker         StEventMaker::0Event               Ast =  5.35( 0.0%) Cpu =  5.24( 0.0%) 
+QA :INFO  - QAInfo:Maker        StMtdHitMaker::mtd_raw              Ast =  2.99( 0.0%) Cpu =  3.00( 0.0%) 
+QA :INFO  - QAInfo:Maker      StGmtRaw25Maker::GmtRaw               Ast =  3.01( 0.0%) Cpu =  2.95( 0.0%) 
+QA :INFO  - QAInfo:Maker        StEpdHitMaker::epdHit               Ast =  3.01( 0.0%) Cpu =  2.93( 0.0%) 
+QA :INFO  - QAInfo:Maker              StMaker::tpcChain             Ast =35388.19(92.6%) Cpu =34955.11(92.7%) 
+QA :INFO  - QAInfo:Maker       StMcEventMaker::StMcEventMaker       Ast = 10.71( 0.0%) Cpu = 10.40( 0.0%) 
+QA :INFO  - QAInfo:Maker     StZdcVertexMaker::StZdcVertexMaker     Ast =  3.24( 0.0%) Cpu =  3.24( 0.0%) 
+QA :INFO  - QAInfo:Maker        StEmcRawMaker::emcRaw               Ast =  5.58( 0.0%) Cpu =  4.53( 0.0%) 
+QA :INFO  - QAInfo:Maker        StPreEclMaker::preecl               Ast =  3.24( 0.0%) Cpu =  3.11( 0.0%) 
+QA :INFO  - QAInfo:Maker           StEpcMaker::epc                  Ast =  3.18( 0.0%) Cpu =  3.18( 0.0%) 
+QA :INFO  - QAInfo:Maker       StBTofSimMaker::TofSim               Ast =  6.78( 0.0%) Cpu =  6.62( 0.0%) 
+QA :INFO  - QAInfo:Maker       StETofSimMaker::etofSim              Ast =  4.37( 0.0%) Cpu =  4.03( 0.0%) 
+QA :INFO  - QAInfo:Maker StBbcSimulationMaker::BbcSimulation        Ast =  3.96( 0.0%) Cpu =  3.75( 0.0%) 
+QA :INFO  - QAInfo:Maker StGenericVertexMaker::GenericVertex        Ast =  3.30( 0.0%) Cpu =  3.34( 0.0%) 
+QA :INFO  - QAInfo:Maker             StiMaker::Sti                  Ast =283.88( 0.7%) Cpu =271.83( 0.7%) 
+QA :INFO  - QAInfo:Maker        StdEdxY2Maker::dEdxY2               Ast =208.46( 0.5%) Cpu =206.24( 0.5%) 
+QA :INFO  - QAInfo:Maker     StBTofMatchMaker::btofMatch            Ast =  9.63( 0.0%) Cpu =  9.38( 0.0%) 
+QA :INFO  - QAInfo:Maker     StBTofCalibMaker::btofCalib            Ast =  3.36( 0.0%) Cpu =  3.30( 0.0%) 
+QA :INFO  - QAInfo:Maker       StETofHitMaker::etofHit              Ast =  3.22( 0.0%) Cpu =  3.15( 0.0%) 
+QA :INFO  - QAInfo:Maker     StETofMatchMaker::etofMatch            Ast =  4.97( 0.0%) Cpu =  4.90( 0.0%) 
+QA :INFO  - QAInfo:Maker      StMtdMatchMaker::MtdMatch             Ast =  3.24( 0.0%) Cpu =  3.21( 0.0%) 
+QA :INFO  - QAInfo:Maker      StGmtMatchMaker::GmtMatch             Ast =  3.15( 0.0%) Cpu =  3.16( 0.0%) 
+QA :INFO  - QAInfo:Maker StEventCompendiumMaker::StEventCompendiumMaker Ast =  3.20( 0.0%) Cpu =  3.19( 0.0%) 
+QA :INFO  - QAInfo:Maker      StHeavyTagMaker::HeavyTag             Ast =  3.38( 0.0%) Cpu =  3.25( 0.0%) 
+QA :INFO  - QAInfo:Maker    StHighPtTagsMaker::HighPtTags           Ast =  3.15( 0.0%) Cpu =  3.12( 0.0%) 
+QA :INFO  - QAInfo:Maker          StTagsMaker::tags                 Ast =  3.20( 0.0%) Cpu =  3.11( 0.0%) 
+QA :INFO  - QAInfo:Maker         StMuDstMaker::MuDst                Ast = 47.22( 0.1%) Cpu = 43.30( 0.1%) 
+QA :INFO  - QAInfo:Maker   StTriggerSimuMaker::StarTrigSimu         Ast =  3.35( 0.0%) Cpu =  3.27( 0.0%) 
+QA :INFO  - QAInfo:Maker       StPicoDstMaker::PicoDst              Ast = 30.90( 0.1%) Cpu = 29.04( 0.1%) 
+QA :INFO  - QAInfo:Maker              StMaker::McChain              Ast = 25.65( 0.1%) Cpu = 25.16( 0.1%) 
+QA :INFO  - QAInfo:Maker StTpcMcAnalysisMaker::StTpcMcAnalysisMaker Ast =319.02( 0.8%) Cpu =300.44( 0.8%) 
+QA :INFO  - QAInfo:Maker       StEventQAMaker::EventQA              Ast =  1.22( 0.0%) Cpu =  1.22( 0.0%) 
+QA :INFO  - QAInfo:Maker          StTreeMaker::outputStream         Ast =  1.21( 0.0%) Cpu =  1.12( 0.0%) 
+QA :INFO  - QAInfo:Maker      StAnalysisMaker::analysis             Ast =  1.77( 0.0%) Cpu =  1.53( 0.0%) 
+St_db_Maker::Init Real time 0:00:00, CP time 0.120, 3 slices
+[starsub02] ~/TPC/TPC23/2025/Hijing.AuAu200 $ cd ../Hi
+Hijing.AuAu200/   Hijing.AuAu200.B/ 
+[starsub02] ~/TPC/TPC23/2025/Hijing.AuAu200 $ cd ../Hijing.AuAu200.B/
+[starsub02] ~/TPC/TPC23/2025/Hijing.AuAu200.B $ cpu_per_event.csh '*.gz' | tee cpu_per_event
+*.gz
+        CPU/event = 391.72(sec) and     Total/event = 404.466(sec)      96.8488 %       for 9900 events
+QAInfo:You are using STAR_LEVEL : TFG, git = heads/TFG,tag:27153b7025, ROOT_LEVEL : 5.34.39 and node : spool0120.sdcc.bnl.gov with 96 Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz CpuSpeed 2798 MHz with al97_x8664_gcc11_opt
+QA :INFO  - QAInfo:Maker             StiMaker::Sti                  Ast =448.21( 0.9%) Cpu =383.60( 0.8%) 
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =48892.10        Cpu =47306.15  cpu/event = 473.06
+QA :INFO  - QAInfo:Maker          St_db_Maker::db                   Ast =  6.47( 0.0%) Cpu =  1.12( 0.0%) 
+QA :INFO  - QAInfo:Maker          StMagFMaker::MagField             Ast =  0.64( 0.0%) Cpu =  0.77( 0.0%) 
+QA :INFO  - QAInfo:Maker    StDetectorDbMaker::detDb                Ast =  0.65( 0.0%) Cpu =  0.62( 0.0%) 
+QA :INFO  - QAInfo:Maker         StTpcDbMaker::tpcDB                Ast =  0.66( 0.0%) Cpu =  0.66( 0.0%) 
+QA :INFO  - QAInfo:Maker        StEEmcDbMaker::eeDb                 Ast =  0.67( 0.0%) Cpu =  0.68( 0.0%) 
+QA :INFO  - QAInfo:Maker         StEpdDbMaker::epdDb                Ast =  0.72( 0.0%) Cpu =  0.66( 0.0%) 
+QA :INFO  - QAInfo:Maker           StVMCMaker::geant                Ast =2387.68( 4.9%) Cpu =2226.07( 4.7%) 
+QA :INFO  - QAInfo:Maker   StTriggerDataMaker::trgd                 Ast =  1.04( 0.0%) Cpu =  0.98( 0.0%) 
+QA :INFO  - QAInfo:Maker         StEventMaker::0Event               Ast =  4.50( 0.0%) Cpu =  4.10( 0.0%) 
+QA :INFO  - QAInfo:Maker        StMtdHitMaker::mtd_raw              Ast =  1.51( 0.0%) Cpu =  1.44( 0.0%) 
+QA :INFO  - QAInfo:Maker      StGmtRaw25Maker::GmtRaw               Ast =  1.84( 0.0%) Cpu =  1.52( 0.0%) 
+QA :INFO  - QAInfo:Maker        StEpdHitMaker::epdHit               Ast =  1.85( 0.0%) Cpu =  1.52( 0.0%) 
+QA :INFO  - QAInfo:Maker              StMaker::tpcChain             Ast =45078.33(92.2%) Cpu =43914.31(92.8%) 
+QA :INFO  - QAInfo:Maker       StMcEventMaker::StMcEventMaker       Ast = 10.01( 0.0%) Cpu =  9.25( 0.0%) 
+QA :INFO  - QAInfo:Maker     StZdcVertexMaker::StZdcVertexMaker     Ast =  1.77( 0.0%) Cpu =  1.31( 0.0%) 
+QA :INFO  - QAInfo:Maker        StEmcRawMaker::emcRaw               Ast =  5.89( 0.0%) Cpu =  3.27( 0.0%) 
+QA :INFO  - QAInfo:Maker        StPreEclMaker::preecl               Ast =  1.42( 0.0%) Cpu =  1.36( 0.0%) 
+QA :INFO  - QAInfo:Maker           StEpcMaker::epc                  Ast =  1.34( 0.0%) Cpu =  1.24( 0.0%) 
+QA :INFO  - QAInfo:Maker       StBTofSimMaker::TofSim               Ast =  8.04( 0.0%) Cpu =  5.98( 0.0%) 
+QA :INFO  - QAInfo:Maker       StETofSimMaker::etofSim              Ast = 22.26( 0.0%) Cpu =  2.49( 0.0%) 
+QA :INFO  - QAInfo:Maker StBbcSimulationMaker::BbcSimulation        Ast = 18.01( 0.0%) Cpu =  2.18( 0.0%) 
+QA :INFO  - QAInfo:Maker StGenericVertexMaker::GenericVertex        Ast =  1.77( 0.0%) Cpu =  1.45( 0.0%) 
+QA :INFO  - QAInfo:Maker             StiMaker::Sti                  Ast =448.21( 0.9%) Cpu =383.60( 0.8%) 
+QA :INFO  - QAInfo:Maker        StdEdxY2Maker::dEdxY2               Ast =198.81( 0.4%) Cpu =192.25( 0.4%) 
+QA :INFO  - QAInfo:Maker     StBTofMatchMaker::btofMatch            Ast =  8.60( 0.0%) Cpu =  7.42( 0.0%) 
+QA :INFO  - QAInfo:Maker     StBTofCalibMaker::btofCalib            Ast =  3.17( 0.0%) Cpu =  1.26( 0.0%) 
+QA :INFO  - QAInfo:Maker       StETofHitMaker::etofHit              Ast =  1.69( 0.0%) Cpu =  1.30( 0.0%) 
+QA :INFO  - QAInfo:Maker     StETofMatchMaker::etofMatch            Ast =  3.90( 0.0%) Cpu =  3.52( 0.0%) 
+QA :INFO  - QAInfo:Maker      StMtdMatchMaker::MtdMatch             Ast =  1.69( 0.0%) Cpu =  1.33( 0.0%) 
+QA :INFO  - QAInfo:Maker      StGmtMatchMaker::GmtMatch             Ast =  1.36( 0.0%) Cpu =  1.25( 0.0%) 
+QA :INFO  - QAInfo:Maker StEventCompendiumMaker::StEventCompendiumMaker Ast =  1.39( 0.0%) Cpu =  1.37( 0.0%) 
+QA :INFO  - QAInfo:Maker      StHeavyTagMaker::HeavyTag             Ast =  1.72( 0.0%) Cpu =  1.45( 0.0%) 
+QA :INFO  - QAInfo:Maker    StHighPtTagsMaker::HighPtTags           Ast =  1.43( 0.0%) Cpu =  1.41( 0.0%) 
+QA :INFO  - QAInfo:Maker          StTagsMaker::tags                 Ast =  1.44( 0.0%) Cpu =  1.30( 0.0%) 
+QA :INFO  - QAInfo:Maker         StMuDstMaker::MuDst                Ast = 59.92( 0.1%) Cpu = 46.32( 0.1%) 
+QA :INFO  - QAInfo:Maker   StTriggerSimuMaker::StarTrigSimu         Ast =  1.65( 0.0%) Cpu =  1.47( 0.0%) 
+QA :INFO  - QAInfo:Maker       StPicoDstMaker::PicoDst              Ast = 34.61( 0.1%) Cpu = 27.57( 0.1%) 
+QA :INFO  - QAInfo:Maker              StMaker::McChain              Ast = 20.30( 0.0%) Cpu = 18.75( 0.0%) 
+QA :INFO  - QAInfo:Maker StTpcMcAnalysisMaker::StTpcMcAnalysisMaker Ast =489.90( 1.0%) Cpu =387.06( 0.8%) 
+QA :INFO  - QAInfo:Maker       StEventQAMaker::EventQA              Ast =  0.94( 0.0%) Cpu =  0.50( 0.0%) 
+QA :INFO  - QAInfo:Maker          StTreeMaker::outputStream         Ast = 50.76( 0.1%) Cpu = 43.07( 0.1%) 
+QA :INFO  - QAInfo:Maker      StAnalysisMaker::analysis             Ast =  3.56( 0.0%) Cpu =  0.97( 0.0%) 
+
+
+starsub02] ~/TPC/reco/CheckPulls2/2025/RF $ 
+foreach d ( `ls -1d  *GeV*` )
+  cd ${d}; pwd;
+  cpu_per_event.csh '*/*/*.gz' | tee ../${d}.cpu_per_event
+  cd -
+end
+/star/u/fisyak/TPC/reco/CheckPulls2/2025/RF/13p5GeV_fixedTarget_2026
+        CPU/event = 2.91248(sec) and    Total/event = 2.96617(sec)      98.19 %         for 13167 events
+/star/u/fisyak/TPC/reco/CheckPulls2/2025/RF/8p65GeV_fixedTarget_2026
+        CPU/event = 2.7727(sec) and     Total/event = 2.82296(sec)      98.2195 %       for 13959 events
+/star/u/fisyak/TPC/reco/CheckPulls2/2025/RF/9p8GeV_fixedTarget_2026
+        CPU/event = 2.24356(sec) and    Total/event = 2.28603(sec)      98.1419 %       for 38214 events
+[starsub02] ~/TPC/reco/CheckPulls3/2025/RF $
+foreach d ( `ls -1d  *GeV*` )
+  cd ${d}; pwd;
+  cpu_per_event.csh '*/*/*B.log' | tee ../${d}.cpu_per_event
+  cd -
+end
+13p5GeV_fixedTarget_2026/*/*/*.gz
+        CPU/event = 3.36766(sec) and    Total/event = 3.50193(sec)      96.1659 %       for 13167 events
+/star/u/fisyak/TPC/reco/CheckPulls3/2025/RF/8p65GeV_fixedTarget_2026
+        CPU/event = 2.73545(sec) and    Total/event = 2.78061(sec)      98.3762 %       for 33 events
+/star/u/fisyak/TPC/reco/CheckPulls3/2025/RF/9p8GeV_fixedTarget_2026
+        CPU/event = 1.93711(sec) and    Total/event = 1.96934(sec)      98.3635 %       for 166 events
+
+
+
+Run26      fxt-blue	20	6	[CP]	100	2813735	2.81 M
+02/06/2026 fxt-blue	20	6	22	679644	679.64 K  day 37 
+02/05/2026 fxt-blue	20	6	51	1369743	1.37 M    day 36
+02/04/2026 fxt-blue	20	6	27	764348	764.35 K  day 355
+[starsub02] ~/TPC/reco/TFG26b/2025/RF $ grep -a TriggerIds OO_highlumi_2026/036/27036037/st_physics_27036037_raw_1900011B.log | awk -F: '{print $7}' | sort -u 
+ 6|
+ 9|
+ 990001|18|19|
+ 990001|990201|990205|18|19|
+ 990001|990205|18|19|
+ 990002|
+ 990101|
+ 990101|990104|
+ 990104|
+ 990104|39|
+ 990104|9|
+ 990104|990201|
+ 990104|990201|990202|
+ 990104|990202|
+ 990104|990202|990203|
+ 990112|
+ 990112|990104|
+ 990113|
+ 990114|
+ 990701|6|
+================================================================================
+05/04/2026
+[starsub02] ~/TPC/reco/CheckPulls3/2025/RF $ zdifw380 ../../../CheckPulls2/2025/RF/13p5GeV_fixedTarget_2026/027/27027047/st_physics_27027047_raw_1500008B.log.gz 13p5GeV_fixedTarget_2026/027/27027047/st_physics_27027047_raw_1500008B.log.gz | more
+QAInfo:You are using STAR_LEVEL : TFG, git = heads/TFG,tag:27153b7025, ROOT_LEVEL : 5.34.39 and node : spool0674.sdcc.bnl.gov with 72 Intel(R) Xeon(R) Gold 6150 CPU @ 2.70GHz CpuSpeed 3700 |  
+QAInfo:You are using STAR_LEVEL : TFG, git = heads/TFG,tag:27153b7025, ROOT_LEVEL : 5.34.39 and node : spool1803.sdcc.bnl.gov with 96 Intel(R) Xeon(R) Gold 6336Y CPU @ 2.40GHz CpuSpeed 280
+================================================================================
+05/05/2026
+  {"AuAu_2023",	                             20230520,  23250, "y2023z", "AuAu_2023"},   // 1st run = 24139094			     
+  {"AuAu_2023_RHF",	                     20230601, 170448, "y2023z", "AuAu_2023_RHF"},// 1st run  24152023	     
+  {"AuAu_2023_ZF",	                     20230601,   2854, "y2023z", "AuAu_2023_ZF"},// 1st run = 24152039
+  {"AuAu_2023_RHF_2",	                     20230602, 151450, "y2023z", "AuAu_2023_RHF_2"},// 1st run  24153022
+  {"AuAu_2023_0",	                     20230603,   2332, "y2023z", "AuAu_2023_0"}, // 1st run = 24153066
+  {"AuAu_2023_1",	                     20230616, 185721, "y2023z", "AuAu_2023_1"}, // 1st run = 24167041		     
+  {"AuAu_2023_2",	                     20230626,  85710, "y2023z", "AuAu_2023_2"}, // 1st run = 24177017
+
+MySQL [Calibrations_tpc]> select entryTime,beginTime,flavor,deactive from TpcSecRowB where elementID=1 and beginTime > "2023"  order by beginTime;
++---------------------+---------------------+--------+----------+
+| entryTime           | beginTime           | flavor | deactive |
++---------------------+---------------------+--------+----------+
+| 2025-05-25 20:25:56 | 2023-05-20 02:32:50 | ofl    |        0 | AuAu_2023
+| 2025-05-25 20:27:50 | 2023-06-16 18:57:21 | ofl    |        0 | AuAu_2023_1
+| 2025-05-25 20:27:57 | 2023-06-26 08:57:10 | ofl    |        0 | AuAu_2023_2
+| 2025-08-27 14:38:36 | 2024-04-30 07:46:40 | ofl    |        0 |
++---------------------+---------------------+--------+----------+
+4 rows in set, 1 warning (0.00 sec)
+[cvmfswrite01] ~/TPC/reco/CheckPulls3/2025/RF 
+foreach d ( `ls -1d  *GeV*26` )
+  cd ${d}; pwd;
+  cpu_per_event.csh '*/*/*.gz' | tee ../${d}.cpu_per_event
+  cd -
+end
+/star/u/fisyak/TPC/reco/CheckPulls3/2025/RF/13p5GeV_fixedTarget_2026
+*/*/*.gz
+        CPU/event = 3.36766(sec) and    Total/event = 3.50193(sec)      96.1659 %       for 13167 events
+/star/u/fisyak/TPC/reco/CheckPulls3/2025/RF/8p65GeV_fixedTarget_2026
+*/*/*.gz
+        CPU/event = 3.22353(sec) and    Total/event = 3.32617(sec)      96.9142 %       for 13794 events
+/star/u/fisyak/TPC/reco/CheckPulls3/2025/RF/9p8GeV_fixedTarget_2026
+*/*/*.gz
+        CPU/event = 2.44854(sec) and    Total/event = 2.53059(sec)      96.7579 %       for 38083 events
+[cvmfswrite01] ~/TPC/reco $ grep CPU  CheckPulls*/*/*/*event
+CheckPulls2/2025/RF/13p5GeV_fixedTarget_2026.cpu_per_event:     CPU/event = 2.91248(sec) and    Total/event = 2.96617(sec)      98.19 %         for 13167 events
+CheckPulls2/2025/RF/8p65GeV_fixedTarget_2026.cpu_per_event:     CPU/event = 2.7727(sec) and     Total/event = 2.82296(sec)      98.2195 %       for 13959 events
+CheckPulls2/2025/RF/9p8GeV_fixedTarget_2026.cpu_per_event:      CPU/event = 2.24356(sec) and    Total/event = 2.28603(sec)      98.1419 %       for 38214 events
+
+CheckPulls3/2025/RF/13p5GeV_fixedTarget_2026.cpu_per_event:     CPU/event = 3.36766(sec) and    Total/event = 3.50193(sec)      96.1659 %       for 13167 events
+CheckPulls3/2025/RF/8p65GeV_fixedTarget_2026.cpu_per_event:     CPU/event = 3.22353(sec) and    Total/event = 3.32617(sec)      96.9142 %       for 13794 events
+CheckPulls3/2025/RF/9p8GeV_fixedTarget_2026.cpu_per_event:      CPU/event = 2.44854(sec) and    Total/event = 2.53059(sec)      96.7579 %       for 38083 events
+--------------------------------------------------------------------------------
+#sigma(@61 npts) =  7.21% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.95% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.11% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.65% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.55% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.15% for F- AuAu_2025
+#mu =  0.69% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.31% for F- 8p65GeV_fixedTarget_2026
+#mu =  4.28% for F- 9p8GeV_fixedTarget_2026a
+#mu =  2.73% for F- 9p8GeV_fixedTarget_2026b
+#mu =  5.76% for F- 9p8GeV_fixedTarget_2026
+#mu = -0.25% for F- AuAu_2025
+
+#sigma(@61 npts) =  7.34% for FU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.01% for FU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.12% for FU- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.41% for FU- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.80% for FU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.15% for FU- AuAu_2025
+#mu =  7.74% for FU- 13p5GeV_fixedTarget_2026
+#mu =  7.71% for FU- 8p65GeV_fixedTarget_2026
+#mu = 14.28% for FU- 9p8GeV_fixedTarget_2026a
+#mu = 11.22% for FU- 9p8GeV_fixedTarget_2026b
+#mu = 21.19% for FU- 9p8GeV_fixedTarget_2026
+#mu = 10.57% for FU- AuAu_2025
+
+
+====================
+#sigma(@61 npts) =  7.01% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.79% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.65% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.47% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.92% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.47% for E- AuAu_2025
+#mu =  0.77% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.31% for E- 8p65GeV_fixedTarget_2026
+#mu =  5.57% for E- 9p8GeV_fixedTarget_2026a
+#mu =  2.64% for E- 9p8GeV_fixedTarget_2026b
+#mu = 26.20% for E- 9p8GeV_fixedTarget_2026
+#mu = -0.16% for E- AuAu_2025
+
+
+
+
+#sigma(@61 npts) =  7.14% for EU- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.33% for EU- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.17% for EU- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.06% for EU- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 13.43% for EU- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.46% for EU- AuAu_2025
+#mu = -10.58% for EU- 13p5GeV_fixedTarget_2026
+#mu = -9.32% for EU- 8p65GeV_fixedTarget_2026
+#mu = -3.46% for EU- 9p8GeV_fixedTarget_2026a
+#mu = -3.85% for EU- 9p8GeV_fixedTarget_2026b
+#mu = 15.21% for EU- 9p8GeV_fixedTarget_2026
+
+
+#sigma(@61 npts) =  6.19% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.70% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.17% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  5.43% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 12.55% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.55% for N- AuAu_2025
+#mu =  0.61% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.23% for N- 8p65GeV_fixedTarget_2026
+#mu =  4.66% for N- 9p8GeV_fixedTarget_2026a
+#mu =  2.30% for N- 9p8GeV_fixedTarget_2026b
+#mu = 21.63% for N- 9p8GeV_fixedTarget_2026
+#mu = -0.15% for N- AuAu_2025
+
+================================================================================
+05/07/2026
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Histograms/RunXXVI38
+#sigma(@61 npts) =  7.30% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.02% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.17% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.99% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.07% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.12% for F- AuAu_2025
+
+#mu =  0.33% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.11% for F- 8p65GeV_fixedTarget_2026
+#mu =  0.01% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.10% for F- 9p8GeV_fixedTarget_2026b
+#mu = -0.70% for F- 9p8GeV_fixedTarget_2026
+#mu = -0.28% for F- AuAu_2025
+
+#sigma(@61 npts) =  6.93% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.00% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.62% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.63% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.97% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.45% for E- AuAu_2025
+
+#mu =  0.36% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.13% for E- 8p65GeV_fixedTarget_2026
+#mu =  0.06% for E- 9p8GeV_fixedTarget_2026a
+#mu =  0.32% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.18% for E- 9p8GeV_fixedTarget_2026
+#mu = -0.13% for E- AuAu_2025
+
+Z3NCGGAuAu_2025.root    MuDraw("mu:TMath::Sign(208.707-y,x)","ZI",440,-215,215,"(i&&j&&abs(x)<40.5&&dmu>0&&dmu<0.1)","prof",-0.4,1.4,"Inner","Z","#mu versus Z")
+  0 : min/max =   -5.35/   2.33 rms    8.54 (%) mean   -0.35 (%) 
+  1 : min/max =   -8.34/   4.66 rms    8.61 (%) mean   -0.69 (%) 
+  2 : min/max =    0.00/   0.00 rms  -99.00 (%) mean  -99.00 (%) 
+  3 : min/max =  -29.13/  14.62 rms   10.09 (%) mean   -0.44 (%) 
+  4 : min/max =   -6.71/   6.07 rms    6.68 (%) mean   -1.33 (%) 
+  5 : min/max =   -2.52/   0.00 rms    2.39 (%) mean   -1.37 (%) 
+
+
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Histograms/RunXXIII42
+#sigma(@61 npts) =  6.33% for F- AuAu_2023_1
+#sigma(@61 npts) =  6.66% for F- AuAu_2023_2
+
+#mu =  2.85% for F- AuAu_2023_1
+#mu =  0.27% for F- AuAu_2023_2
+
+#sigma(@61 npts) =  6.00% for E- AuAu_2023_1
+#sigma(@61 npts) =  6.44% for E- AuAu_2023_2
+
+#mu =  1.66% for E- AuAu_2023_1
+#mu = -0.92% for E- AuAu_2023_2
+
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Histograms/RunXXIII41
+
+#sigma(@61 npts) =  6.56% for F- AuAu_2023_1
+#sigma(@61 npts) =  6.69% for F- AuAu_2023_2
+#sigma(@61 npts) =  7.87% for F- AuAu_2023
+#mu = -3.26% for F- AuAu_2023_1
+#mu =  3.29% for F- AuAu_2023_2
+#mu =  1.13% for F- AuAu_2023
+
+#sigma(@61 npts) =  6.13% for E- AuAu_2023_1
+#sigma(@61 npts) =  6.49% for E- AuAu_2023_2
+#sigma(@61 npts) =  7.37% for E- AuAu_2023
+#mu =  2.08% for E- AuAu_2023_2
+#mu = -0.57% for E- AuAu_2023
+
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Histograms/RunXXIII39
+#sigma(@61 npts) =  6.35% for F AuAu_2023
+#mu = -0.15% for F AuAu_2023
+================================================================================
+05/08/2026
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/Histograms/RunXXVI39
+#sigma(@61 npts) =  7.25% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.76% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.78% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.75% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.37% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.07% for F- AuAu_2025
+
+#mu = -0.94% for F- 13p5GeV_fixedTarget_2026
+#mu = -0.90% for F- 8p65GeV_fixedTarget_2026
+#mu = -13.49% for F- 9p8GeV_fixedTarget_2026a
+#mu = -4.38% for F- 9p8GeV_fixedTarget_2026b
+#mu = -2.17% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.87% for F- AuAu_2025
+
+#sigma(@61 npts) =  6.94% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.57% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.50% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.11% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 12.18% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.42% for E- AuAu_2025
+
+#mu = -0.89% for E- 13p5GeV_fixedTarget_2026
+#mu = -0.89% for E- 8p65GeV_fixedTarget_2026
+#mu = -14.82% for E- 9p8GeV_fixedTarget_2026a
+#mu = -5.80% for E- 9p8GeV_fixedTarget_2026b
+#mu = -1.52% for E- 9p8GeV_fixedTarget_2026
+#mu =  1.06% for E- AuAu_2025
+
+
+~/work/Histograms/RunXXIII43 
+#sigma(@61 npts) =  6.36% for F- AuAu_2023_1
+#sigma(@61 npts) =  6.66% for F- AuAu_2023_2
+#mu =  4.12% for F- AuAu_2023_1
+#mu =  1.72% for F- AuAu_2023_2
+
+#sigma(@61 npts) =  5.99% for E- AuAu_2023_1
+#sigma(@61 npts) =  6.38% for E- AuAu_2023_2
+#mu =  2.90% for E- AuAu_2023_1
+#mu =  0.42% for E- AuAu_2023_2
+
+foreach d (`ls -1d /gpfs01/star/data100/TPC/daq/2023/*/*`)
+  set dir = `dirname ${d}`
+  set b = `echo ${d} | sed -e 's#/gpfs01/star/data100/TPC/daq/2023/##'`
+  echo "${b}"
+  if (-r ${b}) continue;
+  set c = `dirname ${b}`
+  set a = `basename ${b}`
+  if (-r ${c}) then 
+    cd ${c}
+    ln -s ${d} .
+    echo "${d} => ${b} => ${c} => ${a}"
+    cd -
+  else 
+    ln -s ${dir} . 
+    echo "${d} => ${dir} => ${c} "
+  endif 
+end
+
+ln: failed to create symbolic link './167': File exists
+ln: failed to create symbolic link './168': File exists
+ln: failed to create symbolic link './169': File exists
+ln: failed to create symbolic link './170': File exists
+ln: failed to create symbolic link './172': File exists
+ln: failed to create symbolic link './174': File exists
+ln: failed to create symbolic link './175': File exists
+ln: failed to create symbolic link './176': File exists
+ln: failed to create symbolic link './177': File exists
+ln: failed to create symbolic link './178': File exists
+ln: failed to create symbolic link './181': File exists
+ln: failed to create symbolic link './184': File exists
+ln: failed to create symbolic link './185': File exists
+ln: failed to create symbolic link './188': File exists
+ln: failed to create symbolic link './189': File exists
+ln: failed to create symbolic link './190': File exists
+ln: failed to create symbolic link './192': File exists
+ln: failed to create symbolic link './194': File exists
+ln: failed to create symbolic link './205': File exists
+ln: failed to create symbolic link './207': File exists
+ln: failed to create symbolic link './211': File exists
+ln: failed to create symbolic link './213': File exists
+================================================================================
+05/09/2026
+cvmfswrite07] ~/work/Histograms/RunXXIII44 $ root.exe SecRow3NCGGAuAu_2023_*.root FitPDraw.C+ ok
+  0 : min/max =   -0.02/   0.02 rms    0.02 (%) mean    0.00 (%) SecRow3NCGGAuAu_2023_1.root
+  1 : min/max =   -0.01/   0.00 rms    0.01 (%) mean   -0.00 (%) SecRow3NCGGAuAu_2023_2.root
+[cvmfswrite07] ~/work/Histograms/RunXXIII44 $ root.exe Z3NCGGAuAu_2023_*.root FitPDraw.C+
+  0 : min/max =   -1.30/   0.44 rms    1.74 (%) mean   -0.28 (%) Z3NCGGAuAu_2023_1.root
+  1 : min/max =   -4.01/   1.48 rms    3.63 (%) mean   -0.86 (%) Z3NCGGAuAu_2023_2.root
+[cvmfswrite07] ~/work/Histograms/RunXXIII44 $ root.exe NPointsFNG*.root Res.C
+#sigma(@61 npts) =  6.35% for F- AuAu_2023_1
+#sigma(@61 npts) =  6.60% for F- AuAu_2023_2
+#mu =  3.99% for F- AuAu_2023_1
+#mu =  1.33% for F- AuAu_2023_2
+cvmfswrite07] ~/work/Histograms/RunXXIII44 $ root.exe NPointsENG*.root Res.C
+#sigma(@61 npts) =  5.99% for E- AuAu_2023_1
+#sigma(@61 npts) =  6.31% for E- AuAu_2023_2
+#mu =  2.83% for E- AuAu_2023_1
+#mu =  0.14% for E- AuAu_2023_2
+[cvmfswrite07] ~/work/Histograms/RunXXIII44 $ root.exe TimeG*.root FitPDraw.C+
+ 0 : min/max =   -2.57/   5.90 rms    1.48 (%) mean    0.54 (%) TimeGPAuAu_2023_1.root
+ 1 : min/max =   -7.90/   8.70 rms    1.85 (%) mean    0.28 (%) TimeGPAuAu_2023_2.root
+[starsub02] ~/work/Histograms/RunXXVI40 $ root.exe SecRow3NCGG*.root FitPDraw.C+
+  0 : min/max =   -0.31/   2.44 rms    0.54 (%) mean    0.49 (%) SecRow3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -0.05/   0.68 rms    0.32 (%) mean    0.23 (%) SecRow3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -2.10/  14.11 rms    1.79 (%) mean    0.20 (%) SecRow3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -0.83/   0.37 rms    0.48 (%) mean   -0.19 (%) SecRow3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =   -3.02/   2.29 rms    0.71 (%) mean   -0.26 (%) SecRow3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -0.15/   0.15 rms    0.11 (%) mean   -0.01 (%) SecRow3NCGGAuAu_2025.root
+[starsub02] ~/work/Histograms/RunXXVI40 $ root.exe Z3NCGG*.root FitPDraw.C+
+  0 : min/max =   -9.49/   8.21 rms   11.91 (%) mean    2.41 (%) Z3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -9.15/   9.06 rms   12.00 (%) mean    3.07 (%) Z3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -2.44/  27.39 rms    7.80 (%) mean   13.91 (%) Z3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =  -13.95/  13.47 rms   11.53 (%) mean    7.26 (%) Z3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =  -13.76/  12.52 rms   11.78 (%) mean    3.45 (%) Z3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -1.97/   0.31 rms    2.40 (%) mean   -0.86 (%) Z3NCGGAuAu_2025.root
+Z3NCGGAuAu_2025.root    MuDraw("mu:TMath::Sign(208.707-y,x)","ZO",440,-215,215,"(i&&j&&abs(x)>40.5&&dmu>0&&dmu<0.1)","prof",-0.4,1.4,"Outer","Z","#mu versus Z")
+  0 : min/max =   -5.50/   7.43 rms    3.85 (%) mean    0.79 (%) Z3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -4.56/   9.09 rms    4.26 (%) mean    0.75 (%) Z3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =    0.00/  21.23 rms    6.14 (%) mean   11.58 (%) Z3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -1.12/  19.81 rms    6.66 (%) mean    3.27 (%) Z3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =   -6.42/  13.34 rms    3.24 (%) mean   -0.57 (%) Z3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -2.52/   0.98 rms    1.31 (%) mean   -0.57 (%) Z3NCGGAuAu_2025.root
+
+[starsub02] ~/work/Histograms/RunXXVI40 $ root.exe NPointsFNG*.root Res.C
+#sigma(@61 npts) =  7.17% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.22% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.92% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.64% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.25% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.09% for F- AuAu_2025
+
+#mu =  0.31% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.62% for F- 8p65GeV_fixedTarget_2026
+#mu = -2.45% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.41% for F- 9p8GeV_fixedTarget_2026b
+#mu = -3.32% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.11% for F- AuAu_2025
+
+[starsub02] ~/work/Histograms/RunXXVI40 $ root.exe NPointsFNG*.root Res.C
+#sigma(@61 npts) =  7.17% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.22% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.92% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.64% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.25% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.09% for F- AuAu_2025
+#mu =  0.31% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.62% for F- 8p65GeV_fixedTarget_2026
+#mu = -2.45% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.41% for F- 9p8GeV_fixedTarget_2026b
+#mu = -3.32% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.11% for F- AuAu_2025
+
+[starsub02] ~/work/Histograms/RunXXVI40 $ root.exe NPointsENG*.root Res.C
+#sigma(@61 npts) =  6.89% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.79% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.36% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.10% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 12.44% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.39% for E- AuAu_2025
+#mu =  0.34% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.61% for E- 8p65GeV_fixedTarget_2026
+#mu = -2.10% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.70% for E- 9p8GeV_fixedTarget_2026b
+#mu = -1.05% for E- 9p8GeV_fixedTarget_2026
+#mu =  0.41% for E- AuAu_2025
+================================================================================
+05/10/2026 
+ ~/work/Histograms/RunXXVI41
+[starsub02] ~/work/Histograms/RunXXVI41 $  root.exe NPointsFNG*.root Res.C
+#sigma(@61 npts) =  7.19% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.22% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.11% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.92% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.60% for F- 9p8GeV_fixedTarget_2026    <<<<<<<
+#sigma(@61 npts) =  7.11% for F- AuAu_2025
+#mu = -0.21% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.34% for F- 8p65GeV_fixedTarget_2026
+#mu = -2.11% for F- 9p8GeV_fixedTarget_2026a
+#mu =  1.13% for F- 9p8GeV_fixedTarget_2026b
+#mu = -5.98% for F- 9p8GeV_fixedTarget_2026     <<<<<
+#mu =  0.18% for F- AuAu_2025
+[starsub02] ~/work/Histograms/RunXXVI41 $ root.exe NPointsENG*.root Res.C
+#sigma(@61 npts) =  7.06% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.09% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.61% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.01% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.67% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.40% for E- AuAu_2025
+#mu = -0.36% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.37% for E- 8p65GeV_fixedTarget_2026
+#mu = -2.24% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.40% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.84% for E- 9p8GeV_fixedTarget_2026
+#mu =  0.46% for E- AuAu_2025
+[starsub02] ~/work/Histograms/RunXXVI41 $ root.exe NPointsNNG*.root Res.C
+#sigma(@61 npts) =  6.30% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.58% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.21% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  5.93% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.41% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.52% for N- AuAu_2025
+#mu = -0.20% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.31% for N- 8p65GeV_fixedTarget_2026
+#mu = -1.79% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.23% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.90% for N- 9p8GeV_fixedTarget_2026
+#mu =  0.38% for N- AuAu_2025
+
+[starsub02] ~/work/Histograms/RunXXVI41 $ root.exe SecRow3NCGG*.root FitPDraw.C+
+  0 : min/max =   -0.76/   2.10 rms    0.63 (%) mean   -0.23 (%) SecRow3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -1.41/   0.48 rms    0.42 (%) mean    0.05 (%) SecRow3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -3.85/  21.77 rms    3.20 (%) mean    0.73 (%) SecRow3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -0.52/  17.80 rms    0.64 (%) mean    0.14 (%) SecRow3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =   -5.23/  14.55 rms    0.81 (%) mean   -0.15 (%) SecRow3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -0.25/   0.14 rms    0.15 (%) mean   -0.06 (%) SecRow3NCGGAuAu_2025.root
+[starsub02] ~/work/Histograms/RunXXVI41 $ root.exe Z3NCGG*.root FitPDraw.C+                           Problemm 
+  0 : min/max =   -6.81/   7.33 rms   11.95 (%) mean    1.89 (%) Z3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -9.39/   8.83 rms   11.96 (%) mean    2.76 (%) Z3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -5.30/  30.58 rms    7.84 (%) mean   14.58 (%) Z3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -7.22/  13.03 rms   11.69 (%) mean    7.52 (%) Z3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =  -11.29/  12.44 rms   11.67 (%) mean    3.49 (%) Z3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -2.07/   0.14 rms    2.53 (%) mean   -0.98 (%) Z3NCGGAuAu_2025.root
+[starsub02] ~/work/Histograms/RunXXVI41 $ root.exe Z3NCGP*.root FitPDraw.C+
+  0 : min/max =   -6.58/  13.45 rms   11.21 (%) mean    6.69 (%) Z3NCGP13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -7.16/  12.29 rms   11.08 (%) mean    6.71 (%) Z3NCGP8p65GeV_fixedTarget_2026.root
+  2 : min/max =  -21.57/  40.68 rms   11.82 (%) mean    7.69 (%) Z3NCGP9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -2.94/  16.21 rms   10.58 (%) mean    9.69 (%) Z3NCGP9p8GeV_fixedTarget_2026b.root
+  4 : min/max =  -10.62/  13.91 rms   10.62 (%) mean    7.77 (%) Z3NCGP9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -1.75/   4.76 rms    3.38 (%) mean    2.22 (%) Z3NCGPAuAu_2025.root
+[starsub02] ~/work/Histograms/RunXXVI41 $ root.exe Z3NCGG*.root 'FitPDraw.C+("I","")'  mu-muJ
+  0 : min/max =   -6.81/   7.33 rms   11.95 (%) mean    1.89 (%) Z3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -9.39/   8.83 rms   11.96 (%) mean    2.76 (%) Z3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -5.30/  30.58 rms    7.84 (%) mean   14.58 (%) Z3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -7.22/  13.03 rms   11.69 (%) mean    7.52 (%) Z3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =  -11.29/  12.44 rms   11.67 (%) mean    3.49 (%) Z3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -2.07/   0.14 rms    2.53 (%) mean   -0.98 (%) Z3NCGGAuAu_2025.root
+starsub02] ~/work/Histograms/RunXXVI41 $ root.exe Z3N*GG*13*.root 'lDb.C(0,"13p5GeV_fixedTarget_2026")'
+================================================================================
+05/11/2026
+starsub02] ~/work/Histograms/RunXXIII45
+[starsub02] ~/work/Histograms/RunXXIII45 $  root.exe SecRow3NCGG*.root FitPDraw.C+
+  0 : min/max =   -0.02/   0.02 rms    0.02 (%) mean    0.00 (%) SecRow3NCGGAuAu_2023_1.root
+  1 : min/max =   -0.06/   0.09 rms    0.07 (%) mean   -0.00 (%) SecRow3NCGGAuAu_2023_2.root
+[starsub02] ~/work/Histograms/RunXXIII45 $ root.exe Z3NCGG*.root FitPDraw.C+
+  0 : min/max =   -1.30/   0.44 rms    1.75 (%) mean   -0.29 (%) Z3NCGGAuAu_2023_1.root  rows = 4 
+  1 : min/max =   -3.99/   1.42 rms    3.63 (%) mean   -0.82 (%) Z3NCGGAuAu_2023_2.root
+[starsub02] ~/work/Histograms/RunXXIII45 $ root.exe NPointsFNG*.root Res.C
+#sigma(@61 npts) =  6.35% for F- AuAu_2023_1
+#sigma(@61 npts) =  6.62% for F- AuAu_2023_2
+#mu =  0.05% for F- AuAu_2023_1
+#mu = -0.01% for F- AuAu_2023_2
+[starsub02] ~/work/Histograms/RunXXIII45 $ root.exe NPointsENG*.root Res.C
+#sigma(@61 npts) =  5.99% for E- AuAu_2023_1
+#sigma(@61 npts) =  6.32% for E- AuAu_2023_2
+#mu =  0.14% for E- AuAu_2023_1
+#mu =  0.11% for E- AuAu_2023_2
+[starsub02] ~/work/Histograms/RunXXIII45 $ root.exe NPointsNNG*.root Res.C
+#sigma(@61 npts) =  5.15% for N- AuAu_2023_1
+#sigma(@61 npts) =  5.47% for N- AuAu_2023_2
+#mu =  0.03% for N- AuAu_2023_1
+#mu =  0.04% for N- AuAu_2023_2
+[starsub02] ~/work/Histograms/RunXXIII45 $ root.exe AuAu*.root lBichsel.C DrawList.C+
+root.exe [5] DrawF2List("^TdEdx.$","colz","","",3,2)
