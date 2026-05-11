@@ -44,6 +44,7 @@ void lDb(Int_t Last = -1, const Char_t *date = "r2024,TFGdbOpt,CorrZ") {
   if (Last < 0) return;
   StMaker *dbMk = chain->Maker("db");
   if (! dbMk) return;
+  dbMk->SetDebug(1);
   chain->Init();
   if (Last == 0) return;
   chain->Make();

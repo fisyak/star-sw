@@ -110,8 +110,8 @@ void MakeTpcZCorrection1() {
   else if (fileIn.Contains("fixed"))                     {} // {nrows = 0;}
   //#else
   else if (fileIn.Contains("pp500_2022"))                {nrows = 2; minInner = 10; maxInner = 220; minOuter = 10; maxOuter = 220;}
-  else if (fileIn.Contains("AuAu_2023"))                 {nrows = 2; minInner = 18; maxInner = 210; minOuter = 14; maxOuter = 210;}
 #endif
+  else if (fileIn.Contains("AuAu_2023"))                 {nrows = 2;}//  minInner = 18; maxInner = 210; minOuter = 14; maxOuter = 210;}
   else if (fileIn.Contains("AuAu_2025"))                 {nrows = 2;}
   else if (fileIn.Contains("9p8GeV_fixedTarget_2026"))   {}
   else if (fileIn.Contains("8p65GeV_fixedTarget_2026"))  {}

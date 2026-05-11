@@ -193,6 +193,8 @@ void StiTpcPulls() {
   if (! fOut) {
     fOut = new TFile(Out,"recreate");
     cout << "Open " << Out.Data() << endl;
+    //#define __TH3F__
+#ifdef __TH3F__
     for (Int_t s = 0; s < NCharge; s++) {
       for (Int_t l = 0; l < NGP; l++) { // no. primary tracks l < NGP; l++) {
 	for (Int_t i = 0; i < NIO; i++) {
@@ -223,6 +225,7 @@ void StiTpcPulls() {
 	}
       }
     }
+#endif /* __TH3F__ */
   }
 #define __SPARSED__
 #ifdef __SPARSED__
@@ -323,6 +326,7 @@ void StiTpcPulls() {
 	S.dX = pullZ;
 	pullZIO[l][io]->Fill(&S.Z);
 #endif
+#ifdef __TH3F__
 	Int_t s = 1;
 	if (q < 0) s = 2;
 	Int_t         j = 0;
@@ -341,10 +345,11 @@ void StiTpcPulls() {
 	  plots[0][l][0][t]->Fill(v[ix],v[iy],z[iz]);
 	  //	  plots[s][l][0][t]->Fill(v[ix],v[iy],z[iz]);
 	}
+#endif /* __TH3F__ */
       }
     }
   }
-  //  fOut->Write();  
+  fOut->Write();  
 }
 //____________________________[____________________________________________________
 void StiPulls() {}

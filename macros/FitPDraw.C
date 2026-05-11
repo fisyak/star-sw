@@ -301,7 +301,7 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
     TH1 *hist = (TH1 *) gDirectory->Get(histN);
     if (hist) {
       //      TString name(gSystem->BaseName(gDirectory->GetName()));
-      TString dir(gSystem->DirName(gDirectory->GetName()));
+      TString dir(gSystem->BaseName(gDirectory->GetName()));
       TString pwd(gSystem->WorkingDirectory());
       pwd += "/";
       dir.ReplaceAll(pwd,"");
@@ -345,8 +345,8 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       hist->SetTitle(Form("%s : %s",hist->GetTitle(), side));
       hist->SetXTitle(var);
       //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;
-      //      cout << Form("%3i : min/max = %7.2f/%7.2f rms %7.2f (\%) mean %7.2f (\%) %s %s", k, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean, dir.Data(), name.Data()) << endl;
-      cout << Form("%3i : min/max = %7.2f/%7.2f rms %7.2f (\%) mean %7.2f (\%) %s", k, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean, dir.Data()) << endl;
+      //      cout << Form("%3i : min/max = %7.2f/%7.2f rms %7.2f (%%) mean %7.2f (%%) %s %s", k, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean, dir.Data(), name.Data()) << endl;
+       cout << Form("%3i : min/max = %7.2f/%7.2f rms %7.2f (%%) mean %7.2f (%%) %s", k, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean, dir.Data()) << endl;
       if (yMin < yMax) {hist->SetMinimum(yMin); hist->SetMaximum(yMax);}
     }
   }
@@ -556,7 +556,7 @@ void Mu2Draw(const Char_t *draw="mu:rowsigned(y,x)",
       hist->SetXTitle(var);
       //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;
       TString nn(name);
-      cout << Form("%3i %-60s%4s: min/max = %7.2f/%7.2f rms %7.2f (\%) mean = %7.2 (\%)", k, nn.Data(), side, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean) << endl;
+      cout << Form("%3i %-60s%4s: min/max = %7.2f/%7.2f rms %7.2f (%%) mean = %7.2f (%%)", k, nn.Data(), side, 100*hist->GetMinimum(), 100*hist->GetMaximum(), RMS, mean) << endl;
       if (yMin < yMax) {hist->SetMinimum(yMin); hist->SetMaximum(yMax);}
     }
   }

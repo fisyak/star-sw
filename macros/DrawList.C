@@ -500,15 +500,16 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     if (hist->GetDimension() == 3) {
     } else if (hist->GetDimension() == 2) {
       TH2 *h2 = (TH2 *) hist;
+      TString HistName(h2->GetName());
       if (Opt == "colz") {
 	h2->Draw(Opt);
         Bool_t rigidity = kFALSE;
-	if (patt.BeginsWith("a")) rigidity = kTRUE;
-	if (patt.Contains("TdEdxF") || patt.BeginsWith("TdEdxE")) {
+	if (HistName.BeginsWith("a")) rigidity = kTRUE;
+	if (HistName.Contains("TdEdxF") || HistName.Contains("TdEdxE")) {
 	  bichselG10("zN",12,rigidity);
-	} else if (patt.Contains("TdEdxN")) {
+	} else if (HistName.Contains("TdEdxN")) {
 	  bichselG10("dNdx",12, rigidity);
-	} else if (patt.Contains("TdEdxI70")) {
+	} else if (HistName.Contains("TdEdxI70")) {
 	  bichselG10("I70",12,rigidity);
 	}
       } else if (Opt == "projy") {

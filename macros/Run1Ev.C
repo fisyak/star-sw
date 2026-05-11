@@ -1,19 +1,8 @@
-//void Run1Ev(Int_t NEvents=1, Int_t iD = 47, 
-//void Run1Ev(Int_t NEvents=1, Int_t iD = 5, 
-void Run1Ev(Int_t NEvents=1, Int_t iD = 8, 
-	    //	    Double_t pTlow=1.0,Double_t pThigh=1.0, // Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=0.1, Double_t Yhigh=0.1,
-	    //	    Double_t Philow=0, Double_t Phihigh=0,	    Double_t Zlow=100, Double_t Zhigh=100.0, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t Philow=-TMath::DegToRad()*35, Double_t Phihigh=-TMath::DegToRad()*35,	    Double_t Zlow=10, Double_t Zhigh=10, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.0, Double_t Yhigh=-1.0,	    Double_t Philow=-TMath::DegToRad()*15, Double_t Phihigh=TMath::DegToRad()*15,	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 5, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=0, Double_t Phihigh=0,	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=TMath::PiOver2(), Double_t Phihigh=TMath::PiOver2(),	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //      Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow=-1.5, Double_t Yhigh=-1.5,	    Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3,	    Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=1,Double_t pThigh=1,	    Double_t Ylow= 0.25, Double_t Yhigh=0.25, Double_t Philow=TMath::Pi()/3, Double_t Phihigh=TMath::Pi()/3, Double_t Zlow=170, Double_t Zhigh=0, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=0.3564,Double_t pThigh=0.3564,	    Double_t Ylow= -0.87, Double_t Yhigh=-0.87, Double_t Philow=0, Double_t Phihigh=0, Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    Double_t pTlow=0.1084,Double_t pThigh=0.1084,	    Double_t Ylow= -2.20, Double_t Yhigh=-2.20, Double_t Philow=0, Double_t Phihigh=0, Double_t Zlow=200, Double_t Zhigh=200, Int_t Npart = 1, const Char_t *opt = "G" 
-	    //	    Double_t pTlow=1,Double_t pThigh=1, Double_t Ylow=-0.5, Double_t Yhigh=-0.5, Double_t Philow=-TMath::Pi()/2, Double_t Phihigh=-TMath::Pi()/2, Double_t Zlow=0, Double_t Zhigh=0, Int_t Npart = 1, const Char_t *opt = "G" 
-	    )
-{
+void Run1Ev(Int_t NEvents, Int_t iD, 
+	    Double_t pTlow,Double_t pThigh,	    
+	    Double_t Ylow, Double_t Yhigh, 
+	    Double_t Philow, Double_t Phihigh, 
+	    Double_t Zlow, Double_t Zhigh, Int_t Npart, const Char_t *opt) {
   cout << "Run1Ev(NEvents=" << NEvents 
        << ",iD=" << iD 
        << ",pTlow=" << pTlow  << ",pThigh=" << pThigh
@@ -187,7 +176,7 @@ void Run1Ev(Int_t NEvents=1, Int_t iD = 8,
   }
 }
 //________________________________________________________________________________
-void Run1Ev(TString opt) { 
+void Run1Ev(TString opt="alpha1GeV@eta-1.50") { 
   if (opt == "1muS03") {
     Run1Ev(1,5, 1,1, 0.1,0.1, 0,0, 0,0, 1,"G");
   } else if (opt == "1muS20") {
