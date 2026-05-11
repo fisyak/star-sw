@@ -2062,21 +2062,20 @@ void StBFChain::SetDbOptions(StMaker *mk){
   } else {
     if (GetOption("simu") && ! NoMakersWithInput) {
       const DbAlias_t *DbAlias = GetDbAliases();
-      Int_t found = 0;
-      for (Int_t i = 0; DbAlias[i].tag; i++) {
+      Int_t found = -1;
+      for (Int_t i = 0; DbAlias[i].tag; i++) {// find the latest activate time stamp
 	for (Int_t r = 0; r < 2; r++) {
 	  TString dbTag("");
 	  if (r) dbTag += "r";
 	  dbTag += DbAlias[i].tag;
 	  if (GetOption(dbTag,kFALSE)) {
-	    db->SetDateTime(DbAlias[i].tag);
 	    found = i;
-	    break;
 	  }
-	  if (found) break;
 	}
       }
-      if (! found) {gMessMgr->QAInfo() << "StBFChain::SetDbOptions() Chain has not set a time-stamp" << endm;}
+      if ( found < 0) {gMessMgr->QAInfo() << "StBFChain::SetDbOptions() Chain has not set a time-stamp" << endm;} 
+      else db->SetDateTime(DbAlias[found].tag);
+
       // Show date settings
       gMessMgr->QAInfo() << db->GetName()
 			 << " Maker set time = "
