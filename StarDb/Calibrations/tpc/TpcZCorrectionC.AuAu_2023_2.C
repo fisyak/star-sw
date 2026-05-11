@@ -8,24 +8,24 @@ TDataSet *CreateTable() {
   row.nrows = nrows;
   row.min =  18.0;
   row.max = 202.0;
-  row.npar =            5;// AuAu_2025
-  row.a[0] =    -0.089635;
-  row.a[1] =  -0.00078796;
-  row.a[2] =   9.0264e-06;
-  row.a[3] =   1.7041e-08;
-  row.a[4] =  -1.3548e-10;
+  row.npar =            5;// AuAu_2023_2
+  row.a[0] =      0.14396;
+  row.a[1] =    0.0012006;
+  row.a[2] =  -3.0213e-05;
+  row.a[3] =   8.4378e-08;
+  row.a[4] =  -4.5346e-12;
   tableSet->AddAt(&row);
   memset(&row,0,tableSet->GetRowSize());
   row.idx   = 2;
   row.nrows = nrows;
   row.min =  18.0;
   row.max = 202.0;
-  row.npar =            5;// AuAu_2025
-  row.a[0] =    -0.027516;
-  row.a[1] =    0.0005154;
-  row.a[2] =  -2.6815e-05;
-  row.a[3] =   2.3059e-07;
-  row.a[4] =  -5.5249e-10;
+  row.npar =            5;// AuAu_2023_2
+  row.a[0] =     0.055374;
+  row.a[1] =     -0.00297;
+  row.a[2] =   9.1542e-05;
+  row.a[3] =   -7.318e-07;
+  row.a[4] =   1.6359e-09;
   tableSet->AddAt(&row);
   return (TDataSet *)tableSet;
 }
