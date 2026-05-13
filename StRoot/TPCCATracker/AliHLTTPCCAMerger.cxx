@@ -889,7 +889,7 @@ float_m AliHLTTPCCAMerger::FitTrack(AliHLTTPCCATrackParamVector &t, float_v &Alp
 
     float_v err2Y, err2Z;
     //#define __OLD_HIST_ERRORS__
-#ifdef __OLD_HIST_ERRORS__
+#ifndef MDF4HITERROR_H /* __OLD_HIST_ERRORS__*/
      fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
 //     std::cout << "old " << err2Y << " " << err2Z << "    new ";
     const float_m &filtered = t.FilterWithMaterial(yV, zV, err2Y, err2Z, 0.999f, active);
