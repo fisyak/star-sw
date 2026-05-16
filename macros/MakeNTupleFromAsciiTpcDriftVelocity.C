@@ -83,8 +83,10 @@ void MakeNTupleFromAsciiTpcDriftVelocity(const Char_t *FileName="drift.list") {
 	year = d/10000;
 	cout << " n = " << n << " d = " << d << " t = " << t << " year = " << year << endl;
 	if (n != 2) break;
-      } else if (i ==  7) {drift  = token.Atof();
-      } else if (i == 10) {ddrift = token.Atof();
+//       } else if (i ==  7) {drift  = token.Atof();
+//       } else if (i == 10) {ddrift = token.Atof();
+      } else if (i ==  3) {drift  = token.Atof();
+      } else if (i ==  6) {ddrift = token.Atof();
       }
     }
 #endif

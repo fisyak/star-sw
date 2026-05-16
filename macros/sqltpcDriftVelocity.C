@@ -25,7 +25,7 @@ void sqltpcDriftVelocity()
    static tpcDriftVelocity_t driftVelocity;
    static Int_t   *m = &driftVelocity.utime;
    static Float_t *x = &driftVelocity.lDvEast;
-   TFile *fOut = new TFile("tpcDriftVelocity.root","recreate");
+   TFile *fOut = new TFile("tpcDriftVelocity2025.root","recreate");
    TTree *tree = new TTree("T","driftVelocity Seed");
    tree->Branch("driftVelocity",&driftVelocity,
 		"utime/I:date/I:time/I:flavor/I:deactive/I:"
@@ -37,7 +37,8 @@ void sqltpcDriftVelocity()
    const char *sql = "select UNIX_TIMESTAMP(beginTime),DATE_FORMAT(beginTime,\"%Y%m%d\") AS date,DATE_FORMAT(beginTime,\"%H%i%s\") AS time,"
      "flavor,deactive,laserDriftVelocityEast as lDvEast,laserDriftVelocityWest as lDvWest, "
      "cathodeDriftVelocityEast as cDvEast,cathodeDriftVelocityWest as cDvWest from Calibrations_tpc.tpcDriftVelocity"
-     " where beginTime > \"2023\" and  beginTime < \"2023-12-31\"";
+     " where beginTime > \"2025\"";
+   //     " where beginTime > \"2023\" and  beginTime < \"2023-12-31\"";
    //     " where beginTime > \"2019\" and  beginTime < \"2019-11-01\"";
 
      ";";
@@ -93,5 +94,6 @@ void sqltpcDriftVelocity()
   T->Draw("lDvWest:utime-788936400>>DV(19000,756e6,775e6)","deactive==0&&utime>1420088400","prof")
 2023
   T->Draw("lDvWest:utime-788936400>>DV(60000,893e6,899e6)","deactive==0","prof")
+2025
 
  */
