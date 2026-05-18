@@ -888,7 +888,6 @@ float_m AliHLTTPCCAMerger::FitTrack(AliHLTTPCCATrackParamVector &t, float_v &Alp
     }
 
     float_v err2Y, err2Z;
-    //#define __OLD_HIST_ERRORS__
 #ifndef MDF4HITERROR_H /* __OLD_HIST_ERRORS__*/
      fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
 //     std::cout << "old " << err2Y << " " << err2Z << "    new ";
@@ -1078,8 +1077,9 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
   float zVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
   float sliceAlphaVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
   unsigned int RowVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
+#ifdef MDF4HITERROR_H /* __OLD_HIST_ERRORS__*/
   float adcLs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
-
+#endif /* _! _OLD_HIST_ERRORS__ */
   // ---
 //  float slVs[MaxNHits*float_v::Size] __attribute__ ((aligned(float_v::Size*4)));
   // ---
@@ -1099,7 +1099,9 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
       yVs[ihit*float_v::Size+iV] = h.Y();
       zVs[ihit*float_v::Size+iV] = h.Z();
       RowVs[ihit*uint_v::Size+iV] = (unsigned int)h.IRow();
+#ifdef MDF4HITERROR_H /* __OLD_HIST_ERRORS__*/
       adcLs[ihit*uint_v::Size+iV] = h.AdcL();
+#endif /* _! _OLD_HIST_ERRORS__ */
     }
   }
 
@@ -1116,8 +1118,9 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
     const float_v &zV = reinterpret_cast<float_v&>(zVs[ihit*float_v::Size]);
     const float_v &sliceAlphaV = reinterpret_cast<float_v&>(sliceAlphaVs[ihit*float_v::Size]);
     const uint_v &RowV = reinterpret_cast<uint_v&>(RowVs[ihit*uint_v::Size]);
+#ifdef MDF4HITERROR_H /* ! __OLD_HIST_ERRORS__*/
     const float_v &adcL = reinterpret_cast<float_v&>(adcLs[ihit*float_v::Size]);
-
+#endif /* _! _OLD_HIST_ERRORS__ */
     const float_m savedActive = active;
     const float_v rotateA = sliceAlphaV - Alpha0V;
     float_m rotated(active);
@@ -1141,11 +1144,15 @@ float_m AliHLTTPCCAMerger::FitTrackMerged( AliHLTTPCCATrackParamVector &t, float
       first = false;
     }
 
-    float_v err2Y, err2Z, dy, dz;
-    // fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+    float_v err2Y, err2Z;
+#ifndef MDF4HITERROR_H /* __OLD_HIST_ERRORS__*/
+    fSliceParam.GetClusterErrors2( RowV, t, &err2Y, &err2Z );
+    const float_m &filtered = t.FilterWithMaterial(yV, zV, err2Y, err2Z, 0.999f, active);
+#else /* ! __OLD_HIST_ERRORS__ */
+    float_v  dy, dz;
     GetMdf4ClusterErrors2(RowV, adcL, t, err2Y, err2Z, dy, dz);
     const float_m &filtered = t.FilterWithMaterial(yV + dy, zV + dz, err2Y, err2Z, 0.999f, active);
-
+#endif /* __OLD_HIST_ERRORS__ */
     const float_m broken = savedActive && (!rotated || !transported || !filtered);
     if ( !broken.isEmpty() ) {
       t.TransportToXWithMaterial( xLast, linearization, fitPar, fSliceParam.cBz( ), 0.999f, transported && !filtered ); // transport back if hit can't be added. TODO with out material
