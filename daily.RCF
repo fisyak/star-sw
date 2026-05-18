@@ -9378,3 +9378,193 @@ starsub02] ~/work/Histograms/RunXXIII45
 #mu =  0.04% for N- AuAu_2023_2
 [starsub02] ~/work/Histograms/RunXXIII45 $ root.exe AuAu*.root lBichsel.C DrawList.C+
 root.exe [5] DrawF2List("^TdEdx.$","colz","","",3,2)
+================================================================================
+~/work/Histograms/RunXXVI41
+[cvmfswrite07] ~/work/Histograms/RunXXVI41 $ root.exe SecRow3NCGG*.root FitPDraw.C+
+  0 : min/max =   -0.76/   2.10 rms    0.63 (%) mean   -0.23 (%) SecRow3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -1.41/   0.48 rms    0.42 (%) mean    0.05 (%) SecRow3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -3.85/  21.77 rms    3.20 (%) mean    0.73 (%) SecRow3NCGG9p8GeV_fixedTarget_2026a.root << low statistics ?
+  3 : min/max =   -0.52/  17.80 rms    0.64 (%) mean    0.14 (%) SecRow3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =   -5.23/  14.55 rms    0.81 (%) mean   -0.15 (%) SecRow3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -0.25/   0.14 rms    0.15 (%) mean   -0.06 (%) SecRow3NCGGAuAu_2025.root
+[cvmfswrite07] ~/work/Histograms/RunXXVI41 $ root.exe Z3NCGG*.root FitPDraw.C+
+  0 : min/max =   -6.81/   7.33 rms   11.95 (%) mean    1.89 (%) Z3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -9.39/   8.83 rms   11.96 (%) mean    2.76 (%) Z3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -5.30/  30.58 rms    7.84 (%) mean   14.58 (%) Z3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -7.22/  13.03 rms   11.69 (%) mean    7.52 (%) Z3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =  -11.29/  12.44 rms   11.67 (%) mean    3.49 (%) Z3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -2.07/   0.14 rms    2.53 (%) mean   -0.98 (%) Z3NCGGAuAu_2025.root
+root.exe [7] .x FitPDraw.C+("O")
+  0 : min/max =   -6.00/  14.35 rms    3.89 (%) mean    0.22 (%) Z3NCGG13p5GeV_fixedTarget_2026.root
+  1 : min/max =   -5.58/  12.11 rms    4.24 (%) mean    0.62 (%) Z3NCGG8p65GeV_fixedTarget_2026.root
+  2 : min/max =   -1.64/  22.95 rms    6.18 (%) mean   11.70 (%) Z3NCGG9p8GeV_fixedTarget_2026a.root
+  3 : min/max =   -1.78/  24.00 rms    6.54 (%) mean    3.22 (%) Z3NCGG9p8GeV_fixedTarget_2026b.root
+  4 : min/max =   -6.47/  13.48 rms    3.24 (%) mean   -0.49 (%) Z3NCGG9p8GeV_fixedTarget_2026.root
+  5 : min/max =   -2.38/   1.16 rms    1.32 (%) mean   -0.62 (%) Z3NCGGAuAu_2025.root
+[cvmfswrite07] ~/work/Histograms/RunXXVI41 $  root.exe NPointsFNG*.root Res.C
+#sigma(@61 npts) =  7.19% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.22% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.11% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.92% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.60% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.11% for F- AuAu_2025
+#mu = -0.21% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.34% for F- 8p65GeV_fixedTarget_2026
+#mu = -2.11% for F- 9p8GeV_fixedTarget_2026a
+#mu =  1.13% for F- 9p8GeV_fixedTarget_2026b
+#mu = -5.98% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.18% for F- AuAu_2025
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI41 $ root.exe NPointsENG*.root Res.C
+#sigma(@61 npts) =  7.06% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.09% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.61% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.01% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.67% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.40% for E- AuAu_2025
+
+#mu = -0.36% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.37% for E- 8p65GeV_fixedTarget_2026
+#mu = -2.24% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.40% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.84% for E- 9p8GeV_fixedTarget_2026
+#mu =  0.46% for E- AuAu_2025
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI41 $ root.exe NPointsNNG*.root Res.C
+#sigma(@61 npts) =  6.30% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.58% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.21% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  5.93% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.41% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.52% for N- AuAu_2025
+
+#mu = -0.20% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.31% for N- 8p65GeV_fixedTarget_2026
+#mu = -1.79% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.23% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.90% for N- 9p8GeV_fixedTarget_2026
+#mu =  0.38% for N- AuAu_2025
+================================================================================
+05/12/2026
+[cvmfswrite07] ~/TPC/reco/CheckPulls3/2023/RF/AuAu_2023/152 
+foreach d (`ls -1d 2*[0-9]`)
+ if (-r ${d}.root) continue;
+ root.exe -q -b 'bfc.C(-1,"Sti")' 'StiPulls.C+("'${d}'/*tags.root","'${d}'.root")' >& ${d}.log &
+end
+
+root.exe -q -b -x 'bfc.C(1,100,"P2023a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,StiPulls,noRunco,evout,PicoVtxVpdOrDefault","/gpfs01/star/daq/2023/151/24151068/st_physics_adc_24151068_raw_0700006.daq","st_physics_adc_24151068_raw_0700006.event.root","st_physics_adc_24151068_raw_0700006.tags.root")' >& st_physics_adc_24151068_raw_0700006B.log &
+[cvmfswrite07] ~/TPC/reco/CheckPulls3/2023/RF/AuAu_2023 $ tail -500 oldCA/st_physics_adc_24151068_raw_0700006B.log
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =774.09        Cpu =758.58      cpu/event =   7.59
+[cvmfswrite07] ~/TPC/reco/CheckPulls3/2023/RF/AuAu_2023 $ tail -500 newCA/st_physics_adc_24151068_raw_0700006B.log
+QA :INFO  - QAInfo:Chain            StBFChain::bfc                  Ast =774.47        Cpu =762.38      cpu/event =   7.62
+================================================================================
+05/15/2026
+root.exe -q -b -x 'bfc.C(1,100,"P2023a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,StiPulls,noRunco,evout,PicoVtxVpdOrDefault","/gpfs01/star/daq/2023/213/24213024/st_physics_24213024_raw_0300002.daq","st_physics_24213024_raw_0300002.event.root","st_physics_24213024_raw_0300002.tags.root")' >& st_physics_24213024_raw_0300002B.log &
+
+SL25y
+
+ls -1d  /gpfs01/star/daq/2023/181/2418100?/*.daq
+
+/star/u/fisyak/bin/startsingularity
+source $STAR_PATH/TFG/unsetupTFG.csh 
+setenv USE_NFS4 1
+setenv GROUP_DIR /star/nfs4/AFS/star/group
+source $GROUP_DIR/star_cshrc.csh
+unset noclobber
+setup 64bits
+setenv NODEBUG yes
+
+starver SL25y
+
+foreach f (`ls -1d  /gpfs01/star/daq/2023/181/2418100?/*.daq`)
+  set log = `basename ${f} .daq`.log;
+  root4star -q -b -x 'bfc.C(100,"DbV20260211 P2023a StiCA CorrZ evout BEmcChkStat","'${f}'")' >& ${log} &
+end
+
+
+TFG25k
+foreach f (`ls -1d  /gpfs01/star/daq/2023/181/2418100?/*.daq`)
+  set log = `basename ${f} .daq`.log;
+  root.exe -q -b -x 'bfc.C(100,"P2023a StiCA CorrZ evout BEmcChkStat","'${f}'")' >& ${log} &
+end
+
+[cvmfswrite07] ~/TPC/reco/CheckPulls3/2023/RF/AuAu_2023 $ grep CPU */cpu*
+
+SL25y/cpu_per_event:    CPU/event = 7.87338(sec) and    Total/event = 7.9744(sec)       98.7332 %       for 990 events
+TFG25k/cpu_per_event:   CPU/event = 6.73755(sec) and    Total/event = 6.88355(sec)      97.879 %        for 990 events
+TFG/cpu_per_event:      CPU/event = 6.59689(sec) and    Total/event = 6.84031(sec)      96.4413 %       for 990 events
+
+[cvmfswrite07] ~/TPC/reco/CheckPulls3/2023/RF/AuAu_2023/TbyT_SL24y_TFG $ 
+foreach f (`ls -1d *.csh`)
+  csh -x ${f} >& ${f}.log &
+end
+
+TFGnoMDF4noAB 
+foreach f (`ls -1d  /gpfs01/star/daq/2023/181/2418100?/*.daq`)
+  set log = `basename ${f} .daq`.log;
+  root.exe -q -b -x 'bfc.C(100,"P2023a StiCA CorrZ evout BEmcChkStat NoTpxAfterBurner","'${f}'")' >& ${log} &
+end
+
+================================================================================
+05/17/2026
+cvmfswrite07|/<9>RF/AuAu_2023/SL25y/Test/> gdb root4star
+gdb: symbol lookup error: gdb: undefined symbol: PyUnicodeUCS4_FromEncodedObject
+
+cvmfswrite07|/<9>RF/AuAu_2023/SL25y/Test/> module unload python-2.7.18
+
+cvmfswrite07|/<9>RF/AuAu_2023/SL25y/Test/> gdb root4star
+GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-94.el7
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+(gdb) run 'bfc.C(0,"DbV20260211 P2023a StiCA CorrZ evout BEmcChkStat","/gpfs01/star/daq/2023/181/24181001/st_physics_24181001_raw_1500031.daq")'
+
+
+StGenericVertexMaker:WARN  - St_VertexCutsC::instance found table PrimaryVertexCuts with NRows = 1 in db                                                                                     |  StChain:WARN  - StDbSql::QueryDb(table,time) line=439 PrimaryVertexCuts  has No data for query
+StGenericVertexMaker:WARN  - Validity:20211010/0 -----   20231208/0                                                                                                                          |  LoadTable: .L /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StarDb/Calibrations/tracker/PrimaryVertexCuts.C
+                                                                                                                                                                                             >  StGenericVertexMaker:WARN  - St_VertexCutsC::instance found table PrimaryVertexCuts with NRows = 1 in db        Validity:19950101/0 - 20380101/0
+ ---------------------------------------------------------------------------------------                                                                                                         ---------------------------------------------------------------------------------------
+ bfc/.make/db/.const/StarDb/Calibrations/tracker/.PrimaryVertexCuts/PrimaryVertexCuts  Allocated rows: 1         Used rows: 1    Row size: 40 bytes                                              bfc/.make/db/.const/StarDb/Calibrations/tracker/.PrimaryVertexCuts/PrimaryVertexCuts  Allocated rows: 1         Used rows: 1    Row size: 40 bytes
+ Table: VertexCuts_st        [0] :                                                                                                                                                               Table: VertexCuts_st        [0] :
+ ======================================================================================                                                                                                          ======================================================================================
+int     MinNumberOfFitPointsOnTrack           20 :                                             psfc                                                                                                 int     MinNumberOfFitPointsOnTrack           20 : 
+int     MinTrack               2 :                                                                                                                                                              int     MinTrack               2 : 
+float   DcaZMax          3.00000 :                                                                                                                                                           |  float   DcaZMax                6 : 
+double  RImpactMax       2.00000 :                                                                                                                                                           |  double  RImpactMax             6 : 
+float   MinFracOfPossFitPointsOnTrack    0.51000 :                                                                                                                                           |  float   MinFracOfPossFitPointsOnTrack          0 : 
+float   MinTrackPt       0.20000 :                                                                                                                                                           |  float   MinTrackPt             0 : 
+float   ZMin             0.00000 :                                                                                                                                                           |  float   ZMin                -200 : 
+float   ZMax             0.00000 :                                                                                                                                                           |  float   ZMax                 225 : 
+
+mysql> select * from PrimaryVertexCuts where deactive = 0 order by beginTime;
+mysql> select * from PrimaryVertexCuts where deactive = 0 order by beginTime;
++--------+---------------------+--------+-----------+---------------------+---------------------+----------+----------+----------+-----------------------------+----------+------------+--------------+-------------------------------+------------+---------------+--------------+
+| dataID | entryTime           | nodeID | elementID | beginTime           | endTime             | flavor   | schemaID | deactive | MinNumberOfFitPointsOnTrack | MinTrack | DcaZMax    | RImpactMax   | MinFracOfPossFitPointsOnTrack | MinTrackPt | ZMin          | ZMax         |
++--------+---------------------+--------+-----------+---------------------+---------------------+----------+----------+----------+-----------------------------+----------+------------+--------------+-------------------------------+------------+---------------+--------------+
+|     15 | 1996-01-01 00:00:00 |     14 |         0 | 1996-01-01 00:00:00 | 2037-01-01 00:00:00 | ofl      |        1 |        0 |                          20 |        5 | 3.00000000 | 1.5000000000 |                          NULL |       NULL |          NULL |         NULL |
+|     23 | 2007-05-16 00:00:00 |     14 |         0 | 1996-01-01 00:00:03 | 2037-01-01 00:00:00 | ofl      |        1 |        0 |                          20 |        5 | 3.00000000 | 1.5000000000 |                          NULL |       NULL |          NULL |         NULL |
+...
+|    157 | 2022-01-13 04:15:31 |     14 |         0 | 2021-10-10 00:00:00 | 2037-01-01 00:00:00 | ofl      |        3 |        0 |                          20 |        2 | 3.00000000 | 2.0000000000 |                    0.50999999 | 0.20000000 |    0.00000000 |   0.00000000 |
+
+|    171 | 2025-12-11 00:00:00 |     14 |         0 | 2021-10-10 00:01:00 | 2037-01-01 00:00:00 | upc      |        1 |        0 |                          20 |        2 | 3.00000000 | 3.0000000000 |                    0.69999999 | 0.20000000 |          NULL |         NULL |
+|    172 | 2026-03-18 15:16:41 |     14 |         0 | 2023-04-10 00:00:00 | 2037-01-01 00:00:00 | ofl      |        3 |        0 |                          20 |        5 | 3.00000000 | 1.5000000000 |                    0.00000000 | 0.00000000 | -200.00000000 | 200.00000000 |
+|    159 | 2023-05-22 17:32:42 |     14 |         0 | 2023-04-10 00:01:00 | 2037-01-01 00:00:00 | upc      |        1 |        0 |                          20 |        2 | 3.00000000 | 3.0000000000 |                    0.69999999 | 0.20000000 |          NULL |         NULL |
+|    166 | 2024-06-27 23:59:59 |     14 |         0 | 2023-12-08 00:00:00 | 2037-01-01 00:00:00 | ofl      |        3 |        0 |                          20 |        2 | 8.00000000 | 8.0000000000 |                    0.50999999 | 0.20000000 | -600.00000000 | 600.00000000 |
+|    165 | 2024-06-28 23:59:59 |     14 |         0 | 2023-12-09 00:00:00 | 2037-01-01 00:00:00 | ofl      |        3 |        0 |                          20 |        2 | 6.00000000 | 6.0000000000 |                    0.50999999 | 0.20000000 | -300.00000000 | 300.00000000 |
+|    164 | 2024-06-29 01:56:20 |     14 |         0 | 2023-12-10 00:00:00 | 2037-01-01 00:00:00 | ofl      |        3 |        0 |                          20 |        2 | 3.00000000 | 2.0000000000 |                    0.50999999 | 0.20000000 |    0.00000000 |   0.00000000 |
+|    173 | 2026-03-18 15:19:14 |     14 |         0 | 2024-10-01 00:00:00 | 2037-01-01 00:00:00 | ofl      |        3 |        0 |                          20 |        5 | 3.00000000 | 1.5000000000 |                    0.00000000 | 0.00000000 | -200.00000000 | 200.00000000 |
+|    174 | 2026-03-18 15:22:26 |     14 |         0 | 2024-10-01 00:01:00 | 2037-01-01 00:00:00 | upc      |        1 |        0 |                          20 |        2 | 3.00000000 | 3.0000000000 |                    0.69999999 | 0.20000000 |          NULL |         NULL |
+|    170 | 2026-01-21 17:06:52 |     14 |         0 | 2026-01-20 00:00:00 | 2037-01-01 00:00:00 | FXT      |        3 |        0 |                          20 |        2 | 3.00000000 | 3.0000000000 |                    0.69999999 | 0.20000000 | -200.00000000 | 225.00000000 |
++--------+---------------------+--------+-----------+---------------------+---------------------+----------+----------+----------+-----------------------------+----------+------------+--------------+-------------------------------+------------+---------------+--------------+
+146 rows in set (0.00 sec)
+
+================================================================================
+05/18/2-26
+
+foreach f (`ls -1d  /gpfs01/star/daq/2023/181/2418100?/*.daq`)
+  set log = `basename ${f} .daq`.log;
+  root.exe -q -b -x 'bfc.C(100,"P2023a KFVertex StiCA CorrZ evout BEmcChkStat","'${f}'")' >& ${log} &
+end

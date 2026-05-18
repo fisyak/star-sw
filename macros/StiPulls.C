@@ -174,84 +174,64 @@ void StiTpcPulls() {
   };
 	   
   static TH3F *plots[NCharge][NGP][NIO][NPL] = {0};
-  TString Out;
-  TString dirN(gSystem->WorkingDirectory());
-  Int_t indx20 = dirN.Index("20");
-  if (indx20 >= 0) {
-    Out = dirN.Data() + indx20;
-    Out.ReplaceAll("/","_");
-  } else {
-    TString tt(gSystem->BaseName(tree->GetFile()->GetName()));
-    Int_t dot = tt.Index(".");
-    if (dot < 1) {
-      cout << "Bad input file " << tt << endl;
-      return;
-    }
-    Out = tt.Data() + dot;
-  }
-  Out += "GP.PullsH.root";
-  if (! fOut) {
-    fOut = new TFile(Out,"recreate");
-    cout << "Open " << Out.Data() << endl;
-    //#define __TH3F__
+  //#define __TH3F__
 #ifdef __TH3F__
-    for (Int_t s = 0; s < NCharge; s++) {
-      for (Int_t l = 0; l < NGP; l++) { // no. primary tracks l < NGP; l++) {
-	for (Int_t i = 0; i < NIO; i++) {
-	  for (Int_t t = 0; t < NPL; t++) {
-	    Int_t iz = xyzplots[t].z;
-	    Int_t ix = xyzplots[t].x;
-	    Int_t iy = xyzplots[t].y;
-	    TString Name(Diff_Name[iz]); Name += InOut[i]; Name += GP[l]; Name += Charge[s]; Name += "vs"; Name += VarName[ix];  Name += VarName[iy];
-	    TString Title(Diff_Name[iz]); Title += " for ", Title += InOutT[i]; Title += " "; Title += GPT[l]; Title += ChargeT[s]; 
-	    Title += " versus "; Title += VarName[ix]; Title += " and "; Title += VarName[iy];
-	    Title += "; "; Title += VarNamA[ix];
-	    Title += "; "; Title += VarNamA[iy];
-	    Title += "; "; Title += Diff_Name[iz];
-	    Double_t *min = &vMin.Z;
-	    Double_t *max = &vMax.Z;
-	    Double_t *zmax = &zMax.dy;
-	    plots[s][l][i][t] = new TH3F(Name,Title, 
-					 nBin[ix], min[ix], max[ix],
-					 nBin[iy], min[iy], max[iy],
-					 NzBin, -zmax[iz], zmax[iz]);
-	    plots[s][l][i][t]->SetMarkerStyle(20);
-	    // 	  plots[s][l][i][t]->SetMarkerColor(s+1);
-	    // 	  plots[s][l][i][t]->SetLineColor(s+1);
-// 	    plots[s][l][i][t]->SetXTitle(VarNamA[ix]);
-// 	    plots[s][l][i][t]->SetYTitle(VarNamA[iy]);
-// 	    plots[s][l][i][t]->SetZTitle(Diff_Name[iz]);
-	  }
+  for (Int_t s = 0; s < NCharge; s++) {
+    for (Int_t l = 0; l < NGP; l++) { // no. primary tracks l < NGP; l++) {
+      for (Int_t i = 0; i < NIO; i++) {
+	for (Int_t t = 0; t < NPL; t++) {
+	  Int_t iz = xyzplots[t].z;
+	  Int_t ix = xyzplots[t].x;
+	  Int_t iy = xyzplots[t].y;
+	  TString Name(Diff_Name[iz]); Name += InOut[i]; Name += GP[l]; Name += Charge[s]; Name += "vs"; Name += VarName[ix];  Name += VarName[iy];
+	  TString Title(Diff_Name[iz]); Title += " for ", Title += InOutT[i]; Title += " "; Title += GPT[l]; Title += ChargeT[s]; 
+	  Title += " versus "; Title += VarName[ix]; Title += " and "; Title += VarName[iy];
+	  Title += "; "; Title += VarNamA[ix];
+	  Title += "; "; Title += VarNamA[iy];
+	  Title += "; "; Title += Diff_Name[iz];
+	  Double_t *min = &vMin.Z;
+	  Double_t *max = &vMax.Z;
+	  Double_t *zmax = &zMax.dy;
+	  plots[s][l][i][t] = new TH3F(Name,Title, 
+				       nBin[ix], min[ix], max[ix],
+				       nBin[iy], min[iy], max[iy],
+				       NzBin, -zmax[iz], zmax[iz]);
+	  plots[s][l][i][t]->SetMarkerStyle(20);
+	  // 	  plots[s][l][i][t]->SetMarkerColor(s+1);
+	  // 	  plots[s][l][i][t]->SetLineColor(s+1);
+	  // 	    plots[s][l][i][t]->SetXTitle(VarNamA[ix]);
+	  // 	    plots[s][l][i][t]->SetYTitle(VarNamA[iy]);
+	  // 	    plots[s][l][i][t]->SetZTitle(Diff_Name[iz]);
 	}
       }
     }
-#endif /* __TH3F__ */
   }
+#endif /* __TH3F__ */
 #define __SPARSED__
 #ifdef __SPARSED__
-    struct VarS_t {
-      Double_t      Z;
-      Double_t   tanP; // tan(Psi) 
-      Double_t   tanL; // tan(lambda)
-      Double_t   AdcL; // log(Adc)
-      Double_t     dX; // pullY ot PullZ
-    };
-    const static Int_t NoDim = sizeof(VarS_t)/sizeof(Double_t);
-    const Char_t *NameV[NoDim] = {  "Z", "tanP", "tanL", "AdcL", "dX"};
-    const Int_t  nBins[NoDim]  = {  105,     40,    100,     35,  200};
-    const VarS_t  xMin         = { -210,     -2,     -5,      3,   -5};
-    const VarS_t  xMax         = {  210,      2,      5,     10,    5};
-    THnSparse  *pullYI = new THnSparseF("pullYI",  "pullY Global tracks for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYI);
-    THnSparse  *pullYO = new THnSparseF("pullYO",  "pullY Global tracks for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYO);
-    THnSparse  *pullZI = new THnSparseF("pullZI",  "pullZ Global tracks for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZI);
-    THnSparse  *pullZO = new THnSparseF("pullZO",  "pullZ Global tracks for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZO);
-
-    THnSparse  *pullPYI = new THnSparseF("pullPYI",  "pullY Primary tracks for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPYI);
-    THnSparse  *pullPYO = new THnSparseF("pullPYO",  "pullY Primary tracks for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPYO);
-    THnSparse  *pullPZI = new THnSparseF("pullPZI",  "pullZ Primary tracks for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPZI);
-    THnSparse  *pullPZO = new THnSparseF("pullPZO",  "pullZ Primary tracks for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPZO);
-    THnSparse  *pullYIO[NGP][2] = {{ pullYI,  pullYO}, { pullPYI,  pullPYO}};
-    THnSparse  *pullZIO[NGP][2] = {{ pullZI,  pullZO}, { pullPZI,  pullPZO}};
+  struct VarS_t {
+    Double_t      Z;
+    Double_t   tanP; // tan(Psi) 
+    Double_t   tanL; // tan(lambda)
+    Double_t   AdcL; // log(Adc)
+    Double_t     dX; // pullY ot PullZ
+  };
+  const static Int_t NoDim = sizeof(VarS_t)/sizeof(Double_t);
+  const Char_t *NameV[NoDim] = {  "Z", "tanP", "tanL", "AdcL", "dX"};
+  const Int_t  nBins[NoDim]  = {  105,     40,    100,     35,  200};
+  const VarS_t  xMin         = { -210,     -2,     -5,      3,   -5};
+  const VarS_t  xMax         = {  210,      2,      5,     10,    5};
+  THnSparse  *pullYI = new THnSparseF("pullYI",  "pullY Global tracks for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYI);
+  THnSparse  *pullYO = new THnSparseF("pullYO",  "pullY Global tracks for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullYO);
+  THnSparse  *pullZI = new THnSparseF("pullZI",  "pullZ Global tracks for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZI);
+  THnSparse  *pullZO = new THnSparseF("pullZO",  "pullZ Global tracks for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullZO);
+  
+  THnSparse  *pullPYI = new THnSparseF("pullPYI",  "pullY Primary tracks for iTPC : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPYI);
+  THnSparse  *pullPYO = new THnSparseF("pullPYO",  "pullY Primary tracks for  Tpx : Z : tanP : tanL : AdcL : pullY", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPYO);
+  THnSparse  *pullPZI = new THnSparseF("pullPZI",  "pullZ Primary tracks for iTPC : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPZI);
+  THnSparse  *pullPZO = new THnSparseF("pullPZO",  "pullZ Primary tracks for  Tpx : Z : tanP : tanL : AdcL : pullZ", NoDim, nBins, &xMin.Z, &xMax.Z); fOut->Add(pullPZO);
+  THnSparse  *pullYIO[NGP][2] = {{ pullYI,  pullYO}, { pullPYI,  pullPYO}};
+  THnSparse  *pullZIO[NGP][2] = {{ pullZI,  pullZO}, { pullPZI,  pullPZO}};
 #endif
   // Loop
 #define __PRINT_FILE_NAME__
@@ -349,12 +329,11 @@ void StiTpcPulls() {
       }
     }
   }
-  fOut->Write();  
 }
 //____________________________[____________________________________________________
 void StiPulls() {}
 //____________________________[____________________________________________________
-void StiPulls(const Char_t *files) { // = "*tags.root") {
+void StiPulls(const Char_t *files, TString Out = "") { // = "*tags.root") {
   if (gClassTable->GetID("StiPullEvent") < 0) {gSystem->Load("StiUtilities");}
 #if 0
   tree = (TTree *) gDirectory->Get("StiPulls");
@@ -393,7 +372,27 @@ void StiPulls(const Char_t *files) { // = "*tags.root") {
   if (! nentries) return;
   nevent = nentries;
   cout << "It will be read " << nevent << " events." << endl;
+  if (Out == "") {
+    TString dirN(gSystem->WorkingDirectory());
+    Int_t indx20 = dirN.Index("20");
+    if (indx20 >= 0) {
+      Out = dirN.Data() + indx20;
+      Out.ReplaceAll("/","_");
+    } else {
+      TString tt(gSystem->BaseName(tree->GetFile()->GetName()));
+      Int_t dot = tt.Index(".");
+      if (dot < 1) {
+	cout << "Bad input file " << tt << endl;
+	return;
+      }
+      Out = tt.Data() + dot;
+    }
+    Out += "GP.PullsH.root";
+  }
+  fOut = new TFile(Out,"recreate");
+  cout << "Open " << Out.Data() << endl;
   StiTpcPulls();
+  fOut->Write();  
 }
 //______________________________________________________________________________
 Int_t FindFirstSignificantBin(TH1 *h, Double_t threshold=1, Int_t axis=1)
