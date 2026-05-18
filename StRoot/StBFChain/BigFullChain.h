@@ -1888,7 +1888,7 @@ Bfc_st BFC[] = { // standard chains
   {"Stx","","","VMCAppl,TPCCA" ,"StxMaker",       "libEve,GenFit,StxMaker","eXpress Reconstruction",kFALSE},
   {"StxCA","","","Stx"                                 ,"","","eXpress Reconstruction with CA only",kFALSE},
   {"UseCAVxFinder","","",""    ,"","","Use CA Vertex reconstruction for West and East parts of TPC",kFALSE},
-  {"KFVertex",""  ,"Stx","-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2,TMVARank"
+  {"KFVertex",""  ,"Stx","-genvtx,-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2,TMVARank"
    ,"StKFVertexMaker","MathMore,Spectrum,StKFVertexMaker"
    ,                                                 "KFParticle based multi vertex reconstruction",kFALSE},
   {"StiKFVertex","StiKFVertex","Sti","StiLibs,-VFMinuit,-VFppLMV,-VFPPVnoCTB,-VFPPV,-Kink2,-V02,-Xi2"
