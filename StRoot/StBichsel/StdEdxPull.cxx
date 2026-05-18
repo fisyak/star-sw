@@ -12,9 +12,11 @@ Double_t StdEdxPull::EvalPred(Double_t betagamma, UChar_t fit, Int_t charge, Dou
     //    dedx_expected = 1.e-6*charge*charge*TMath::Exp(Bichsel::Instance()->GetMostProbableZ(TMath::Log10(betagamma),dx2));
     Double_t par[4] = {TMath::Log10(betagamma), 1., (Double_t) charge, mass};
     dedx_expected = 1.e-6*TMath::Exp(StdEdxModel::instance()->zMP(par,&par[1]));
-  } else {     // dNdx_eff
+  } else if ( fit == 2) {     // dNdx_eff
     //    dedx_expected = StdEdxModel::instance()->dNdx(betagamma,charge);
-    dedx_expected = StdEdxModel::instance()->dNdxEff(betagamma,charge, mass);
+    dedx_expected = StdEdxModel::instance()->dNdxEff(betagamma,charge);
+  } else {     // dNdxU
+    dedx_expected = 0.9031*StdEdxModel::instance()->dNdx(betagamma,charge);
   }
   return dedx_expected;
 }

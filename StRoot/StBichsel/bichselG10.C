@@ -140,8 +140,8 @@ Part_t Part[NMasses] = {// https://periodictable.com/Isotopes/
   {"2#pi",    3,     -1,     -2, -0.13956995},       	      //18 2*pi
   {"2p",      1,     -1,      0, -0.93827231}        	      //19 2*p 
 };
-const Int_t NF =   9; //         0,      1,  2,    3,    4,     5.     6,   7,    8.     9,     10,
-const Char_t *FNames[11] = {"Girrf","Sirrf","z","I70","I60","I70M","dNdx","zM", "zN"};//, "70Trs","zTrs"};
+const Int_t NF =   10; //         0,      1,  2,    3,    4,     5.     6,   7,    8.     9,     10,
+const Char_t *FNames[11] = {"Girrf","Sirrf","z","I70","I60","I70M","dNdx","zM", "zN", "dNdxU"};//, "70Trs","zTrs"};
 const Int_t Nlog2dx = 3;
 const Double_t log2dx[Nlog2dx] = {0,1,2};
 static Bool_t fgRigidity = kFALSE;
@@ -218,10 +218,22 @@ Double_t dNdx(Double_t *x,Double_t *par) {
   Double_t mass = par[0];
   if (mass < 0) {mass = - mass; scale = 2;}
   Double_t poverm = pove/mass; 
-  Double_t charge = 1.;
+  Double_t charge = par[1];
   Double_t dx2 = par[2];
   poverm *= TMath::Abs(charge);
   return TMath::Log10(scale*StdEdxPull::EvalPred(poverm, 2, charge));
+}
+//________________________________________________________________________________
+Double_t dNdxU(Double_t *x,Double_t *par) {
+  Double_t pove   = pOverM(x[0]);
+  Double_t scale = 1;
+  Double_t mass = par[0];
+  if (mass < 0) {mass = - mass; scale = 2;}
+  Double_t poverm = pove/mass; 
+  Double_t charge = par[1];
+  Double_t dx2 = par[2];
+  poverm *= TMath::Abs(charge);
+  return TMath::Log10(scale*StdEdxPull::EvalPred(poverm, 3, charge));
 }
 //________________________________________________________________________________
 Double_t dNdxOld(Double_t *x,Double_t *par) {
@@ -328,7 +340,8 @@ void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFAL
   Double_t xmax = 4;
   Int_t f = 3;
   for (Int_t i = NF-1; i >=0; i--) {
-    if (Type.Contains(FNames[i],TString::kIgnoreCase)) {
+    //    if (Type.Contains(FNames[i],TString::kIgnoreCase)) {
+    if (Type == FNames[i]) {
       f = i;
       break;
     }
@@ -353,10 +366,7 @@ void bichselG10(const Char_t *type="zN", Int_t Nhyps = 9, Bool_t rigidity = kFAL
     else if (f == 6) func = new TF1(FunName,dNdx ,xmin, xmax,3);
     else if (f == 7) func = new TF1(FunName,bichselZM,xmin, xmax,3);
     else if (f == 8) func = new TF1(FunName,dEdxModelZ,xmin, xmax,3);
-#if 0
-    else if (f == 9) func = new TF1(FunName,bichsel70Trs,xmin, xmax,3);
-    else if (f ==10) func = new TF1(FunName,bichselZTrs,xmin, xmax,3);
-#endif
+    else if (f == 9) func = new TF1(FunName,dNdxU,xmin, xmax,3);
     else {
       return;
     }
