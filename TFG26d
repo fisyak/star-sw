@@ -1,0 +1,16 @@
+Plans for TFG26d:
+ 1. Update StTpcHitMaker::AfterBurner, 
+due to observed very agressive cluster splitting in TFG23 version of cluster finder 
+(see, for example,  https://www.star.bnl.gov/protected/lfsupc/fisyak/star/Tpc/TPC23/Cluster/NTbk_FXTB2.png) 
+from 10% to 20 % of cluters have size 5 time buckets and flags as ( FCF_MERGED == 2,  deconvoluted cluser).
+   The priliminary verion of AfterBurner exists, and probably needs some optimization.
+ 2. Update Tpc hit errors with new AfterBurner (based on simumlation with StTpcRSMaker) (Done https://www.star.bnl.gov/protected/lfsupc/fisyak/star/Tpc/TPC23/CheckHitError/)
+Check pulls with respect to real data (Done see https://www.star.bnl.gov/protected/lfsupc/fisyak/star/Tpc/TPC23/Pulls_Student_Gaus/)
+ 3. Reprocess tpc drift velocities with new hit errors and Afterburner for 2025 - 2026 (Done, see https://drupal.star.bnl.gov/STAR/blog/fisyak/2025-laser-drift-velocities)
+ 4. Upgrade dE/dx fitting method with accounting ADC threshould (20 ADC) => dN/dx.
+ 5. Update Sti Geometry with acounting new beam line support structure and FST
+ 6. Build TFG26d release.
+ 7. Process, at least fixed target data sample to see the quality.
+ 8. Recheck results of new dEdx for AuAu_2023 sample to see consistency with previous data.
+ 9. New TPC survey and alignment based on 2025-2026 Cosmics. 
+ 
