@@ -1953,6 +1953,10 @@ void StPicoDstMaker::fillEvent() {
 
     // Set bunch crossing ID
   picoEvent->setBunchId( ev->l0Trigger().bunchCrossingId7bit(ev->runNumber()) );
+
+  //set past and future guardians 
+  picoEvent->setPastCorruption( ev->triggerData()->pastCorruption() );
+  picoEvent->setFutureCorruption( ev->triggerData()->futureCorruption() );
 }
 
 //_________________
