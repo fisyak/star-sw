@@ -1,0 +1,2 @@
+#
+apptainer exec --env DISPLAY=$DISPLAY -e -B /cvmfs  -B /direct -B /star -B /gpfs01 -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif csh
