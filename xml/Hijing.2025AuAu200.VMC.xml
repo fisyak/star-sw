@@ -42,7 +42,8 @@
 #    root.exe -q -b -x 'bfc.C(100,"In,P2020a,readAll,sdt20200111.052520,StiCA,StiKFVertex,-hitfilt,-geantOut,-evout,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco","'${file}'")' &gt;&amp; ${logName}
 #   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2023,McTpcAna,StiCA,geantOut,evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2023,McTpcAna,StiCA,StiPulls,-geantOut,-evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
-   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2025,McTpcAna,StiCA,StiPulls,-geantOut,evout,vmc,VMCAlignment,dEdxCalib,NoHistos,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2025,McTpcAna,StiCA,StiPulls,-geantOut,evout,vmc,VMCAlignment,dEdxCalib,NoHistos,noRunco'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+   root.exe -q -b -x 'bfc.C(100,"HijingAuAu200,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,NoHistos,noRunco'${sdt}',RunG.1,KFVertex","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
    gzip  ${logName}
   endif
 </command>

@@ -97,10 +97,12 @@ cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD
 -Dvmc=ON \
 -Droot7=ON \
 -Ddavix=OFF \
--Dbuiltin_clang=ON \
 -Dbuiltin_xxhash=ON \
 -Dbuiltin_gl2ps=ON \
+-Dbuiltin_ftgl=ON \
+-Dbuiltin_clang=ON \
 ${EXTRA_OFF}
 #
 #-DCMAKE_VERBOSE_MAKEFILE=ON \
 #cmake --build . -- install -j8
+# root 6.40.00 disable clang and clang++ from spack !!!

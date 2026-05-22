@@ -2303,8 +2303,8 @@ void StMuMcAnalysisMaker::DrawH3s(TH3F *h3[2], Int_t animate, Double_t min, Doub
       if (animate) ForceAnimate(0,200);
       c->Update();
       DrawPng(c);
-#if 0
-      //      delete c;
+      delete c;
+#if 1
       for (Int_t i = 0; i < 2; i++) {
 	//	SafeDelete(cpm[i]);
 	SafeDelete(h2[1]);
