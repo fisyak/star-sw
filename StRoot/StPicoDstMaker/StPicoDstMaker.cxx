@@ -478,17 +478,17 @@ Bool_t StPicoDstMaker::initMtd(Int_t const runnumber) {
   TDataSet* dataset = GetDataBase("Geometry/mtd/mtdModuleToQTmap");
   if(!dataset) {
     LOG_ERROR << "No database (mtdModuleToQTmap) was found" << endm;
-    return kStErr;
+    return kFALSE;
   }
   St_mtdModuleToQTmap* mtdModuleToQTmap = static_cast<St_mtdModuleToQTmap*>(dataset->Find("mtdModuleToQTmap"));
   if (!mtdModuleToQTmap) {
     LOG_ERROR << "No mtdModuleToQTmap table was found in database" << endm;
-    return kStErr;
+    return kFALSE;
   }
   mtdModuleToQTmap_st* mtdModuleToQTtable = static_cast<mtdModuleToQTmap_st*>(mtdModuleToQTmap->GetTable());
   if(!mtdModuleToQTtable) {
     LOG_ERROR << "No mtdModuleToQTtable was found in mtdModuleToQTmap" << endm;
-    return kStErr;
+    return kFALSE;
   }
 
   for (Int_t i = 0; i < 30; ++i) {
@@ -529,7 +529,7 @@ Bool_t StPicoDstMaker::initMtd(Int_t const runnumber) {
   St_mtdQTSlewingCorr* mtdQTSlewingCorr = dataset ? static_cast<St_mtdQTSlewingCorr*>(dataset->Find("mtdQTSlewingCorr")) : nullptr;
   if (!mtdQTSlewingCorr) {
     LOG_ERROR << "No mtdQTSlewingCorr table found in database" << endm;
-    return kStErr;
+    return kFALSE;
   }
   mtdQTSlewingCorr_st* mtdQTSlewingCorrtable = static_cast<mtdQTSlewingCorr_st*>(mtdQTSlewingCorr->GetTable());
   for (int j = 0; j < 4; ++j) {
@@ -546,7 +546,7 @@ Bool_t StPicoDstMaker::initMtd(Int_t const runnumber) {
     St_mtdQTSlewingCorrPart2* mtdQTSlewingCorr2 = dataset ? static_cast<St_mtdQTSlewingCorrPart2*>(dataset->Find("mtdQTSlewingCorrPart2")) : nullptr;
     if (!mtdQTSlewingCorr2) {
       LOG_ERROR << "No mtdQTSlewingCorr2 table found in database for year " << year << endm;
-      return kStErr;
+      return kFALSE;
     }
     mtdQTSlewingCorrPart2_st* mtdQTSlewingCorrtable2 = static_cast<mtdQTSlewingCorrPart2_st*>(mtdQTSlewingCorr2->GetTable());
     for (int j = 0; j < 4; ++j) {
@@ -1955,8 +1955,10 @@ void StPicoDstMaker::fillEvent() {
   picoEvent->setBunchId( ev->l0Trigger().bunchCrossingId7bit(ev->runNumber()) );
 
   //set past and future guardians 
-  picoEvent->setPastCorruption( ev->triggerData()->pastCorruption() );
-  picoEvent->setFutureCorruption( ev->triggerData()->futureCorruption() );
+  if (ev->triggerData()) {
+    picoEvent->setPastCorruption( ev->triggerData()->pastCorruption() );
+    picoEvent->setFutureCorruption( ev->triggerData()->futureCorruption() );
+  }
 }
 
 //_________________
