@@ -15,6 +15,7 @@
 #include "Riostream.h"
 #include <assert.h>
 #include <stdio.h>
+#include <vector>
 #include "TROOT.h"
 #include "TSystem.h"
 #include "TMath.h"
@@ -40,6 +41,9 @@
 #include "TNtuple.h"
 #include "TFile.h"
 #include "HardWarePosition.C"
+#include "TVector3.h"
+#include "TDecompSVD.h"
+#include "TMatrixD.h"
 #endif
 struct FitP_t {
   Int_t set, side, sector, io, row, ndf;
@@ -50,10 +54,19 @@ const Char_t *vFitP = "set/I:side/I:sector/I:io/I:row/I:ndf/I:z:dz:alpha:dalpha:
 struct SurveyData_t {
   TString system;
   TString target;
-  Double_t XSurvey, YSurvey, ZSurvey; // (X, Z, Y)_star
+  Double_t XSurvey, YSurvey, ZSurvey; // (X,-Z, Y)_star
   Double_t dXSurvey, dYSurvey, dZSurvey;
   const Char_t *comment;
+  Double_t X_STAR()  const {return  XSurvey;}
+  Double_t Y_STAR()  const {return  ZSurvey;}
+  Double_t Z_STAR()  const {return  YSurvey;} // flip sign has been accounted in scaling from mm to cm
+  Double_t dX_STAR() const {return dXSurvey;}
+  Double_t dY_STAR() const {return dZSurvey;}
+  Double_t dZ_STAR() const {return dYSurvey;}
+  TVector3 xyz()           {return TVector3(X_STAR(),Y_STAR(),Z_STAR());}
+  void Print(const Char_t *opt = "") const;
 };
+#include "Survey_05_21_2026.h"
 #include "Survey_01_08_2024.h"
 #include "Survey_01_13_2023.h"
 #include "Survey_02_01_2013.h"
@@ -84,17 +97,19 @@ std::ostream&  operator<<(std::ostream& os,  const SurveyData_t& v) {
   os << Form("%10s",v.system.Data());
   os << Form("%10s X = %10.3f +/- %6.3f Y = %10.3f +/- %6.3f Z = %10.3f +/- %6.3f %s",
 	     v.target.Data(),
-	     v.XSurvey,v.dXSurvey,
-	     v.YSurvey,v.dYSurvey,
-	     v.ZSurvey,v.dZSurvey,
+	     v.X_STAR(),v.dX_STAR(),
+	     v.Y_STAR(),v.dY_STAR(),
+	     v.Z_STAR(),v.dZ_STAR(),
 	     v.comment);
-  Double_t x = v.XSurvey;
-  Double_t y = v.ZSurvey;
+  Double_t x = v.X_STAR();
+  Double_t y = v.Y_STAR();
   os << Form(" R =%6.2f phi = %8.3f",TMath::Sqrt(x*x + y*y),TMath::RadToDeg()*TMath::ATan2(y,x));
 
-  //  if (TMath::Abs(TMath::Abs(v.YSurvey) - 120) < 20) os << " ++++++++++++++";
+  //  if (TMath::Abs(TMath::Abs(v.Z_STAR()) - 120) < 20) os << " ++++++++++++++";
   return os;
 }
+//________________________________________________________________________________
+void SurveyData_t::Print(const Char_t *opt) const {cout << *this << endl;}
 //________________________________________________________________________________
 void RotParameters(Int_t indx, const TGeoHMatrix &rot, const Char_t *Comment) {
     TString Out("Results.data");
@@ -163,6 +178,12 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
     cout << "This file contains the last survey for TPC (01/08/2024)" << endl;
     N = sizeof(Survey_01_08_2024)/sizeof(SurveyData_t);
     surv = &Survey_01_08_2024[0];
+  } else if (y == 2026) {
+    scale = 0.10; // mm
+    year = "2026";
+    cout << "This file contains the last survey for TPC (05/21/2026)" << endl;
+    N = sizeof(Survey_05_21_2026)/sizeof(SurveyData_t);
+    surv = &Survey_05_21_2026[0];
   } else {
     cout << "There is no survey for year " << y << endl;
     return 0;
@@ -184,10 +205,14 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
       survey[i].ZSurvey *=  scale; survey[i].dZSurvey *= scale; 
     }
     if (y == 2024) {
-      if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.015; // A.Lebedev estimation 02/20/204;
-      if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.015; // A.Lebedev estimation 02/20/204;
-      if (survey[i].dZSurvey < 1e-10) survey[i].dZSurvey = 0.015; // A.Lebedev estimation 02/20/204;
-      survey[i].ZSurvey += 0.0189; // A.Lebedev estimation 02/20/204;
+      if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.015; // A.Lebedev estimation 02/20/2024;
+      if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.015; // A.Lebedev estimation 02/20/2024;
+      if (survey[i].dZSurvey < 1e-10) survey[i].dZSurvey = 0.015; // A.Lebedev estimation 02/20/2024;
+      survey[i].ZSurvey += 0.0189; // A.Lebedev estimation 02/20/2024;
+    } else if (y == 2026) {
+      if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.0010; 
+      if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.0010; 
+      if (survey[i].dZSurvey < 1e-10) survey[i].dZSurvey = 0.0010; 
     } else if (y < 2024) {
       if (survey[i].dXSurvey < 1e-10) survey[i].dXSurvey = 0.01;
       if (survey[i].dYSurvey < 1e-10) survey[i].dYSurvey = 0.01;
@@ -211,6 +236,10 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
 	sscanf(survey[i].target,"WTPC%i_%i",&sector,&row);
 	survey[i].target = Form("W%i_%i",sector,row);
       }
+    } else if (y == 2026 && survey[i].system.Contains("Tpc")) {
+	sscanf(survey[i].target,"S%i_%i",&sector,&row);
+	if (sector > 0 && sector <= 12)	survey[i].target = Form("W%i_%i",sector,row);
+	else if (sector > 12)           survey[i].target = Form("E%i_%i",sector,row);
     }
     // to Old notations
     const Char_t *ABCD[5] = {"?","A", "B", "C", "D"}; 
@@ -716,7 +745,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
   prof2DRphi = (TProfile2D *) gDirectory->Get(name);
   if (prof2DRphi) prof2DRphi->Reset();
   else            prof2DRphi = new TProfile2D(name,name,36,-180,180,50,50,200);
-  //    graph->SetPoint(n,survey->XSurvey,survey->ZSurvey,survey->YSurvey);
+  //    graph->SetPoint(n,survey->X_STAR(),survey->Y_STAR(),survey->Z_STAR());
   Int_t n = 0;
   for (Int_t i = 0; i < N; i++, survey++) {
     if (! System.Contains(survey->system,TString::kIgnoreCase)) {
@@ -726,7 +755,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
     TString Target(survey->target);
     TString Comment(survey->comment);
 #if 1
-    if (survey->YSurvey < zmin || survey->YSurvey > zmax) {
+    if (survey->Z_STAR() < zmin || survey->Z_STAR() > zmax) {
       //      cout << "Z " << *survey << " skipped" << endl;
       continue;
     }
@@ -738,7 +767,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
 #if 1
     cout << *survey << endl;
 #endif
-    Double_t xyzG[3] = {survey->XSurvey,survey->ZSurvey,survey->YSurvey};
+    Double_t xyzG[3] = {survey->X_STAR(),survey->Y_STAR(),survey->Z_STAR()};
     Double_t xyzL[3];
     if (Comment.Contains("Membrane") || Comment.Contains("Strip")) {
       xyzL[0] = xyzG[0];
@@ -751,8 +780,8 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
 	if (_debug) {
 	  WheelCS[side][l].Print();
 	  cout << Form("xyzG: %8.3f  %8.3f  %8.3f => xyzL:  %8.3f  %8.3f  %8.3f",xyzG[0],xyzG[1],xyzG[2],xyzL[0],xyzL[1],xyzL[2]) << endl;
-	  //    Double_t x = survey->XSurvey;
-	  //    Double_t y = survey->ZSurvey;
+	  //    Double_t x = survey->X_STAR();
+	  //    Double_t y = survey->Y_STAR();
 	  Double_t x = xyzL[0];
 	  Double_t y = xyzL[1];
 	  cout << Form(" R =%6.2f phi = %8.3f",TMath::Sqrt(x*x + y*y),TMath::RadToDeg()*TMath::ATan2(y,x));
@@ -761,7 +790,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
       }
     }
     graph->SetPoint(n,xyzL[0],xyzL[1],xyzL[2]);
-    graph->SetPointError(n,survey->dXSurvey,survey->dZSurvey,survey->dYSurvey);
+    graph->SetPointError(n,survey->dX_STAR(),survey->dY_STAR(),survey->dZ_STAR());
     prof2D->Fill(xyzL[0],xyzL[1],xyzL[2]);
     prof2DRphi->Fill(TMath::RadToDeg()*TMath::ATan2(xyzL[1],xyzL[0]),TMath::Sqrt(xyzL[0]*xyzL[0]+xyzL[1]*xyzL[1]),xyzL[2]);
     zPlot->Fill(xyzL[2]);
@@ -1002,11 +1031,12 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
   Double_t rmax = 200;
   Int_t l = -1;
   if (iY == 2003) l = 0;
-  if (iY == 2004) l = 1;
-  if (iY == 2013) l = 2;
-  if (iY == 2022) l = 3;
-  if (iY == 2023) l = 4;
-  if (iY == 2024) l = 5;
+  else if (iY == 2004) l = 1;
+  else if (iY == 2013) l = 2;
+  else if (iY == 2022) l = 3;
+  else if (iY == 2023) l = 4;
+  else if (iY == 2024) l = 5;
+  else if (iY == 2026) l = 6;
   if (l < 0) {
     cout << "Illegal year" << endl;
     return 0;
@@ -1045,7 +1075,7 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
 #if 0
     TString Target(survey->target);
 #endif
-    Double_t xyzG[3] = {survey->XSurvey,survey->ZSurvey,survey->YSurvey};
+    Double_t xyzG[3] = {survey->X_STAR(),survey->Y_STAR(),survey->Z_STAR()};
     Double_t xyzL[3];
     WheelCS[side][l].MasterToLocal(xyzG,xyzL);
     if (_debug) {
@@ -1053,8 +1083,8 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
       cout << Form("xyzG: %8.3f  %8.3f  %8.3f => xyzL:  %8.3f  %8.3f  %8.3f",xyzG[0],xyzG[1],xyzG[2],xyzL[0],xyzL[1],xyzL[2]) << endl;
       
     }
-    //    Double_t x = survey->XSurvey;
-    //    Double_t y = survey->ZSurvey;
+    //    Double_t x = survey->X_STAR();
+    //    Double_t y = survey->Y_STAR();
     Double_t x = xyzL[0];
     Double_t y = xyzL[1];
     Double_t r = TMath::Sqrt(x*x + y*y);
@@ -1067,9 +1097,9 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
       TString Title(Form("MakeRGraph(%i,\"%s\",%i)", iY, pattern, (Int_t)ellipse));
       graph->SetTitle(Title);
     }
-    //    graph->SetPoint(n,survey->XSurvey,survey->ZSurvey);
+    //    graph->SetPoint(n,survey->X_STAR(),survey->Y_STAR());
     graph->SetPoint(n,xyzL[0],xyzL[1]);
-    graph->SetPointError(n,survey->dXSurvey,survey->dZSurvey);
+    graph->SetPointError(n,survey->dX_STAR(),survey->dY_STAR());
 #if 0
     cout << Form("%10s",graph->GetName()) << "                ";
     cout << Form(" %10.3f +/- %8.3f %10.3f +/- %8.3f %10.3f +/- %8.3f",
@@ -1098,15 +1128,15 @@ TGraphErrors *MakeRGraph(Int_t iY=2004, const Char_t *pattern = "^EAO", Bool_t e
     if (nread != 1) continue;
     if (! survey->target.Contains(reg)) continue;
     cout << *survey;
-    Double_t xyzG[3] = {survey->XSurvey,survey->ZSurvey,survey->YSurvey};
+    Double_t xyzG[3] = {survey->X_STAR(),survey->Y_STAR(),survey->Z_STAR()};
     Double_t xyzL[3];
     if (patt.BeginsWith("^W")) WheelCS[0][l].MasterToLocal(xyzG,xyzL);
     else                       WheelCS[1][l].MasterToLocal(xyzG,xyzL);
-    //    Double_t x = survey->XSurvey - x0;
-    //    Double_t y = survey->ZSurvey - y0;
+    //    Double_t x = survey->X_STAR() - x0;
+    //    Double_t y = survey->Y_STAR() - y0;
     Double_t x = xyzL[0] - x0;
     Double_t y = xyzL[1] - y0;
-    //    Double_t z = survey->YSurvey;
+    //    Double_t z = survey->Z_STAR();
     Double_t r = TMath::Sqrt(x*x + y*y);
     Double_t phiSec;
     if (patt.BeginsWith("^W")) phiSec = 30*(3 - sec);
@@ -1166,6 +1196,8 @@ void TpcSurveyAll(Int_t d0 = -1, Int_t l0 = -1) {
   //                                    3 -> 2022
   //                                    4 -> 2023
   //                                    5 -> 2024
+  //                                    6 -> 2026
+
   memset(graphs, 0, sizeof(graphs));
   const Char_t *systems[5] = {"Magnet","Tpc" ,"AO", "BO","DO"};
   const Char_t *site[5][2] = 
@@ -1298,3 +1330,87 @@ void PlotAllR(Int_t y = 2024) {
   MakeRGraph(y,"^ECO");
   MakeRGraph(y,"^EDO");
 }
+//________________________________________________________________________________
+void Compare_2024_2026() {
+  TString y2024, y2026;
+  Int_t N24, N26;
+  SurveyData_t *s2024 = GetSurvey(2024, y2024, N24);
+  SurveyData_t *s2026 = GetSurvey(2026, y2026, N26);
+  vector<TVector3> Q;
+  vector<TVector3> P;
+  vector<Int_t>    sectors;
+  for (Int_t i24 = 0; i24 < N24; i24++) {
+    for (Int_t i26 = 1; i26 < N26; i26 += 2) {
+      if (s2024[i24].target != s2026[i26].target) continue;
+      cout << "================================================================================" << endl;
+      Int_t sec;
+      Char_t name[4];
+      sscanf(s2026[i26].target,"%3s%02i",name,&sec);
+      cout << "sector = " << sec << endl;
+      sectors.push_back(sec);
+      cout << sec << " 2024\t"; s2024[i24].Print();
+      cout << sec << " 2026\t"; s2026[i26].Print();
+      P.push_back(s2024[i24].xyz());
+      Q.push_back(s2026[i26].xyz());
+    }
+  }
+  UInt_t N = Q.size();
+  assert(N == P.size());
+  if (N < 3) return;
+  for (Int_t we = 0; we < 2; we++) {
+    if (we == 0) cout << "West" << endl;
+    else         cout << "East" << endl;
+    TVector3 Qav, Pav;
+    Double_t D = 0;
+    for (UInt_t i = 0; i < N; i++) {
+      Int_t sec = sectors[i];
+      if (we == 0 && sec >  12 ||
+	  we == 1 && sec <= 12) continue;
+      D++; 
+      Qav  += Q[i];
+      Pav  += P[i];
+    }
+    if (D <= 0.0) continue;
+    Double_t DN = 1./D;
+    Qav *= DN; cout << "Qav\t"; Qav.Print();
+    Pav *= DN; cout << "Pav\t"; Pav.Print();
+#if 1
+    Double_t mat[3][3] = {0};
+#else
+    TMatrixD Mat(3,3);
+#endif
+    for (UInt_t i = 0; i < N; i++) {
+      Int_t sec = sectors[i];
+      if (we == 0 && sec >  12 ||
+	  we == 1 && sec <= 12) continue;
+      TVector3 q = Q[i] - Qav;
+      TVector3 p = P[i] - Pav;
+#if 1
+      for (Int_t k = 0; k < 3; k++) {
+	for (Int_t l = 0; l < 3; l++) {
+	  mat[k][l] += p[k]*q[l];
+	}
+      }
+#else
+      Mat += p.OuterProduct(q);
+#endif
+    }
+#if 1
+    TMatrixD Mat(3,3, &mat[0][0]); cout << "Mat\t"; Mat.Print();
+#else
+    cout << "Mat\t"; Mat.Print();
+#endif
+    TDecompSVD svd(Mat);           cout << "svd\t"; svd.Print();
+    TMatrixD U = svd.GetU();       cout << "U\t"; U.Print();
+    TMatrixD V = svd.GetV();       cout << "V\t"; V.Print();
+    TVectorD S = svd.GetSig();     cout << "S\t"; S.Print();
+    TMatrixD Rot(V,TMatrixD::kMultTranspose,U);  cout << "Rot\t"; Rot.Print();
+    Double_t xyz[3] = {0};
+    Pav.GetXYZ(xyz);
+    TMatrixD pav(3,1,xyz);   cout << "pav\t";  pav.Print();
+    TMatrixD w(Rot,TMatrixD::kMult,pav); cout << "w\n"; w.Print();
+    TVector3 t = Qav - TVector3(w.GetMatrixArray()); cout << "t\t"; t.Print();
+  }
+  return;
+}
+
