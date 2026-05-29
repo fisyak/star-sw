@@ -41,16 +41,25 @@
 #include "TNtuple.h"
 #include "TFile.h"
 #include "HardWarePosition.C"
-#include "TVector3.h"
-#include "TDecompSVD.h"
 #include "TMatrixD.h"
+#include "TVectorD.h"
+#include "TDecompSVD.h"
+
 #endif
+#define PrPP(A) {cout << (#A) << "\t"; A.Print();}
+#define PrP(A) {cout << (#A) << "\t =" << A << endl;}
+
 struct FitP_t {
   Int_t set, side, sector, io, row, ndf;
   Float_t z, dz, alpha, dalpha, beta, dbeta, gamma, dgamma, chisq, res, dres;
 };
 FitP_t BP;
 const Char_t *vFitP = "set/I:side/I:sector/I:io/I:row/I:ndf/I:z:dz:alpha:dalpha:beta:dbeta:gamma:dgamma:chisq:res:dres";
+// Define a simple 3D point struct
+struct Point3D {
+  Point3D(Double_t _x = 0, Double_t _y = 0, Double_t _z = 0) : x(_x), y(_y), z(_z) {}
+  Double_t x, y, z;
+};
 struct SurveyData_t {
   TString system;
   TString target;
@@ -64,6 +73,7 @@ struct SurveyData_t {
   Double_t dY_STAR() const {return dZSurvey;}
   Double_t dZ_STAR() const {return dYSurvey;}
   TVector3 xyz()           {return TVector3(X_STAR(),Y_STAR(),Z_STAR());}
+  Point3D  p3D()           {return  Point3D(X_STAR(),Y_STAR(),Z_STAR());}
   void Print(const Char_t *opt = "") const;
 };
 #include "Survey_05_21_2026.h"
@@ -76,8 +86,9 @@ struct SurveyData_t {
 //                 MagCS       : MagCS => SurCS, survey coordinate system => magnet, index l : 0 => 2003, 1 => 2004, 2 => 2013 data
 //                 TpcCS       : Tpc as Whole SurCS; TpcCS => SurCS = (MagCS => SurCS) * (survTpc == TpcCS => MagCS) =  MagCS * survTpc
 //                 WheelCS[2]  : Wheel in Tpc  (0 => West, 1 => East) : (MagCS => SurCS) * (TpcCS => MagCS) * (survWheelW == WheelCS => TpcCS) = TpcCS * survWheelW
-enum {kSurveySets = 6};
+enum {kSurveySets = 7};
 static TGeoHMatrix MagCS[kSurveySets], TpcCS[kSurveySets], WheelCS[2][kSurveySets];
+static Int_t years[kSurveySets] = {2003,2004,2013,2022,2023,2024,2026};
 using namespace std;
 TLinearFitter *lf = 0;
 static Int_t _debug = 0; 
@@ -194,7 +205,7 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
   survey = new SurveyData_t[N];
   for (Int_t i = 0; i < N; i++) {
     survey[i] = surv[i];
-    cout << "Survey:    " << survey[i] << endl;
+    //    cout << "Survey:    " << survey[i] << endl;
     if (y < 2022) {
       survey[i].XSurvey *=  scale; survey[i].dXSurvey *= scale; 
       survey[i].YSurvey *=  scale; survey[i].dYSurvey *= scale; 
@@ -272,7 +283,6 @@ Bool_t InitMatrices(Int_t y = 0) {
 
     xyzG => xyzL: WheelCS[side][l].MasterToLocal(xyzG,xyzL);
    */
-  Int_t years[kSurveySets] = {2003,2004,2013,2022,2023,2024};
   Int_t ly = -1;
   for (Int_t lY = 0; lY < kSurveySets; lY++) {
     if (y == years[lY]) {
@@ -304,6 +314,8 @@ Bool_t InitMatrices(Int_t y = 0) {
        {0, 0, 0, 0, 0, 0}}, // y2023e
       {{0, 0, 0, 0, 0, 0},  // y2024w 
        {0, 0, 0, 0, 0, 0}}, // y2024e
+      {{0, 0, 0, 0, 0, 0},  // y2026w 
+       {0, 0, 0, 0, 0, 0}}, // y2026e
 #else
       {{0, 0, 0, 0, 0, 0},  // y2022w Coordinates are in STAR magent system << 2013
        {0, 0, 0, 0, 0, 0}}, // y2022e
@@ -318,6 +330,8 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
        {0, 0, 0.9074, 0, 0.86, 0}}, // y2023e
       {{0, 0, 0, 0, 0, 0},  // y2024w, y2024 measurements are in STAR magnet Coordinate system
        {0, 0, 0, 0, 0, 0}}, // y2024e
+      {{0, 0, 0, 0, 0, 0},  // y2026w
+       {0, 0, 0, 0, 0, 0}}, // y2026e
 #endif
     };
     
@@ -349,7 +363,8 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
       {0,   0, 0, 0, 0, 0}, //  2022,"Tpc","^E..." 
 //       {0,   0, 0.771450, 0, 0.61, 0}  //  2023,"Tpc","^E..." 
       {0,   0, 0, 0, 0, 0},  //  2023,"Tpc","^E..." 
-      {0,   0, 0, 0, 0, 0}  //  2024,"Tpc","^E..." 
+      {0,   0, 0, 0, 0, 0},  //  2024,"Tpc","^E..." 
+      {0,   0, 0, 0, 0, 0}   //  2026,"Tpc","^E..." 
 #else
 //       {0,   0, 0, 0, 0.00, 0}  //  2023,"Tpc","^E..."  2023
 //       {0,   0, 0, 1.6277, 0.00, 0}  //  2023,"Tpc","^E..."  2023
@@ -362,8 +377,9 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 //      {0,   0, -0.3062, 0, -0.37 , 0} //  MakeGraph(2024,"Tpc","^E")      z =   0.0000 +/- 0.0002 (cm) alpha = -0.14 +/- 0.00 [mrad] beta =  0.00 +/- 0.00 [mrad] chi2/ndf    16011.70/  31 res. =  73.3 +/- 473.1 (mkm)
 //      { -0.1100, -0.2881, -0.3062, -0.14, -0.37 ,  0.37 } //  From East Wheel
 //      {0,   0, 0, 0, 0, 0}//   2024,"Tpc", Ideal
-        {-0.1423,  -0.2979, -0.1618,  0.135, -0.558, 0}//   2024,"Tpc",  03/04/2024 average of West and East, 
+      {-0.1423,  -0.2979, -0.1618,  0.135, -0.558, 0},//   2024,"Tpc",  03/04/2024 average of West and East, 
 //      {-0.1423,  -0.2979, -0.1618,  0.135, -0.558+0.175, 0}//   2024,"Tpc",  03/05/2024 average of West and East, add beta rotation, don't use it for now
+      {0,   0, 0, 0, 0, 0}//   2026,"Tpc", Ideal
 #endif
     };
     Double_t transTpc[3]  = {Tpcxyzabg[ly][0], Tpcxyzabg[ly][1], Tpcxyzabg[ly][2]}; // 3-rd iteration
@@ -411,7 +427,9 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 	{{ 0, 0,   (zWheel+27.007), 0, 0, 0},  //0 2023  Alexei: 27.007 cm          => 25.3791 cm
 	 { 0, 0,  -(zWheel+27.007), 0, 0, 0}}, //0 
 	{{ 0, 0,   (zWheel+27.007), 0, 0, 0},  //0 2024
-	 { 0, 0,  -(zWheel+27.007), 0, 0, 0}}  //0 
+	 { 0, 0,  -(zWheel+27.007), 0, 0, 0}}, //0 
+	{{ 0, 0,   (zWheel), 0, 0, 0},  //0 2026
+	 { 0, 0,  -(zWheel), 0, 0, 0}}  //0 
 #else
 // 	{{ 0, 0,   (zWheel+1.7780+27.007), 0.00, 0, 0},  //0  Alexei: 27.007 cm          => 25.3791 cm
 // 	 { 0, 0,  -(zWheel+1.7780+27.007), 0.00, 0, 0}}  //0 
@@ -433,7 +451,9 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 	 { -0.1490,  0.0564,  -(zWheel+27.007)       , 0   , 0, 0.52+0.074}},  //0 2023E 	           MakeRGraph
 #ifdef __IDEAL__
 	{{ 0, 0,   (zWheel+27.007), 0, 0, 0},  //0 2024 
-	 { 0, 0,  -(zWheel+27.007), 0, 0, 0}}  //0 
+	 { 0, 0,  -(zWheel+27.007), 0, 0, 0}}, //0 
+	{{ 0, 0,   (zWheel), 0, 0, 0},  //0 2026 
+	 { 0, 0,  -(zWheel), 0, 0, 0}}  //0 
 #else /* Averaged */ 
 // 	{{ -0.1767, -0.3501,   (zWheel+27.007), 0, 0, 0    },  //2024  West <x0>= -0.1767 +/-  0.0022;<y0>=-0.3501 +/-  0.0026; N/A               ;   <gamma>=  0.02+/- 0.11
 // 	 { -0.1100, -0.2881,  -(zWheel+27.007), 0, 0, 0.37}}   //      East <x0>= -0.1100 +/-  0.0022;<y0>=-0.2881 +/-  0.0025; N/A               ;   <gamma>=  0.37 +/- 0.08
@@ -451,7 +471,9 @@ MakeGraph(2023,"Magnet","^E", -500,  -10)       z =-365.0538 +/- 0.0349 (cm) alp
 // 	{{ 0.0140, 0.0018,   (zWheel+27.007)-0.1444, 0, 0, 0.00},  //0 2024  West  03/04/2024
 // 	 {-0.0160,-0.0063,  -(zWheel+27.007)+0.1441, 0, 0, 0.37}}  //0       East
 	{{ 0.0140, 0.0018,   (zWheel+27.007)+0.1444, 0, 0, 0.00},  //0 2024  West  03/04/2024 swap z sign
-	 {-0.0160,-0.0063,  -(zWheel+27.007)-0.1441, 0, 0, 0.37}}  //0       East
+	 {-0.0160,-0.0063,  -(zWheel+27.007)-0.1441, 0, 0, 0.37}}, //0       East
+	{{ 0, 0,   (zWheel), 0, 0, 0},  //0 2026 
+	 { 0, 0,  -(zWheel), 0, 0, 0}}  //0 
 #endif
       };
       cout << Form("%4i,Wheel xyz (cm) = %8.4f %8.4f %8.4f abg[mrad] = %6.2f  %6.2f  %6.2f",
@@ -694,6 +716,7 @@ TGraph2DErrors *MakeGraph(Int_t iY=2013, const Char_t *system = "Magnet", const 
   if (iY == 2022) l = 3;
   if (iY == 2023) l = 4;
   if (iY == 2024) l = 5;
+  if (iY == 2026) l = 6;
   if (l < 0) {
     cout << "Illegal year" << endl;
     return 0;
@@ -1207,7 +1230,7 @@ void TpcSurveyAll(Int_t d0 = -1, Int_t l0 = -1) {
      {"^WAO"    ,"^EAO"     },
      {"^WBO"    ,"^EBO"     },
      {"^WDO"    ,"^EDO"     }};
-  const Int_t ys[kSurveySets] = {2003, 2004, 2013, 2022, 2023, 2024};
+
   InitMatrices();
   Int_t d1 = 0, d2 = 5;
   Int_t l1 = 0, l2 =kSurveySets - 1 ;
@@ -1217,11 +1240,11 @@ void TpcSurveyAll(Int_t d0 = -1, Int_t l0 = -1) {
     for (Int_t l = l1; l <= l2; l++) {// year
       for (Int_t s = 0; s < 2; s++) { // side
 	if (d < 2) {// magnet and wheel
-	  //	  MakeGraph(ys[l],systems[d],site[d][s]);
-	  MakeGraph(ys[l],systems[d],site[0][s]);
+	  //	  MakeGraph(years[l],systems[d],site[d][s]);
+	  MakeGraph(years[l],systems[d],site[0][s]);
 	} else  {// TpcR
-	  //	  MakeRGraph(ys[l],site[d][s]);
-	  MakeRGraph(ys[l],site[0][s]);
+	  //	  MakeRGraph(years[l],site[d][s]);
+	  MakeRGraph(years[l],site[0][s]);
 	}
 	if (! gROOT->IsBatch() && Ask()) return;
       }
@@ -1330,14 +1353,110 @@ void PlotAllR(Int_t y = 2024) {
   MakeRGraph(y,"^ECO");
   MakeRGraph(y,"^EDO");
 }
+
+// Compute centroid of points
+TVectorD ComputeCentroid(const std::vector<Point3D>& points) {
+    TVectorD centroid(3);
+    centroid.Zero();
+    for (const auto& p : points) {
+        centroid(0) += p.x;
+        centroid(1) += p.y;
+        centroid(2) += p.z;
+    }
+    centroid *= (1.0 / points.size()); PrPP(centroid);
+    return centroid;
+}
+
+// Convert vector of Point3D to TMatrixD with points as columns
+TMatrixD PointsToMatrix(const std::vector<Point3D>& points) {
+    TMatrixD mat(3, points.size());
+    for (size_t i = 0; i < points.size(); ++i) {
+        mat(0, i) = points[i].x;
+        mat(1, i) = points[i].y;
+        mat(2, i) = points[i].z;
+    }
+    TMatrixD mat_T(TMatrixD::kTransposed,mat);
+    PrPP(mat_T);
+    return mat;
+}
+
+// Kabsch algorithm implementation
+void KabschAlgorithm(const std::vector<Point3D>& P, const std::vector<Point3D>& Q,
+                     TMatrixD& outRotation, TVectorD& outTranslation) {
+    if (P.size() != Q.size() || P.empty()) {
+        std::cerr << "Point sets must be of same size and non-empty." << std::endl;
+        return;
+    }
+
+    // Step 1: Compute centroids
+    TVectorD centroidP = ComputeCentroid(P);
+    TVectorD centroidQ = ComputeCentroid(Q);
+
+    // Step 2: Center the points
+    TMatrixD matP = PointsToMatrix(P);
+    TMatrixD matQ = PointsToMatrix(Q);
+
+    for (int i = 0; i < matP.GetNcols(); ++i) {
+        matP(0, i) -= centroidP(0);
+        matP(1, i) -= centroidP(1);
+        matP(2, i) -= centroidP(2);
+
+        matQ(0, i) -= centroidQ(0);
+        matQ(1, i) -= centroidQ(1);
+        matQ(2, i) -= centroidQ(2);
+    }
+    //    PrPP(matP); PrPP(matQ);
+    // Step 3: Compute covariance matrix H = P * Q^T
+    TMatrixD matQ_T(TMatrixD::kTransposed,matQ);
+    PrPP(matQ_T);
+    
+    TMatrixD H = matP * matQ_T;  // 3x3 covariance matrix
+    PrPP(H);
+
+    // Step 4: Compute SVD of H
+    TDecompSVD svd(H);
+    TMatrixD U = svd.GetU(); PrPP(U);
+    TMatrixD V = svd.GetV(); PrPP(V);
+    TVectorD S = svd.GetSig();  PrPP(S); // singular values
+
+    // Step 5: Compute rotation matrix R = V * U^T
+    TMatrixD U_T(TMatrixD::kTransposed,U); PrPP(U_T);
+
+    TMatrixD R = V * U_T; PrPP(R);
+
+    // Step 6: Correct for reflection if det(R) < 0
+    double detR = R.Determinant();  PrP(detR);
+    if (detR < 0) {
+        // Flip sign of last column of V
+        for (int i = 0; i < 3; ++i) {
+            V(i, 2) *= -1;
+        }
+        R = V * U_T; PrPP(R);
+    }
+
+    // Step 7: Compute translation t = centroidQ - R * centroidP
+    TVectorD R_centroidP(3);
+    R_centroidP.Zero();
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            R_centroidP(i) += R(i, j) * centroidP(j);
+        }
+    }
+    TVectorD t = centroidQ - R_centroidP; PrPP(t);
+
+    // Output results
+    outRotation = R;
+    outTranslation = t;
+}
+#if 0
 //________________________________________________________________________________
 void Compare_2024_2026() {
   TString y2024, y2026;
   Int_t N24, N26;
   SurveyData_t *s2024 = GetSurvey(2024, y2024, N24);
   SurveyData_t *s2026 = GetSurvey(2026, y2026, N26);
-  vector<TVector3> Q;
-  vector<TVector3> P;
+  vector<Point3D> Q;
+  vector<Point3D> P;
   vector<Int_t>    sectors;
   for (Int_t i24 = 0; i24 < N24; i24++) {
     for (Int_t i26 = 1; i26 < N26; i26 += 2) {
@@ -1374,32 +1493,20 @@ void Compare_2024_2026() {
     Double_t DN = 1./D;
     Qav *= DN; cout << "Qav\t"; Qav.Print();
     Pav *= DN; cout << "Pav\t"; Pav.Print();
-#if 1
     Double_t mat[3][3] = {0};
-#else
-    TMatrixD Mat(3,3);
-#endif
     for (UInt_t i = 0; i < N; i++) {
       Int_t sec = sectors[i];
       if (we == 0 && sec >  12 ||
 	  we == 1 && sec <= 12) continue;
       TVector3 q = Q[i] - Qav;
       TVector3 p = P[i] - Pav;
-#if 1
       for (Int_t k = 0; k < 3; k++) {
 	for (Int_t l = 0; l < 3; l++) {
 	  mat[k][l] += p[k]*q[l];
 	}
       }
-#else
-      Mat += p.OuterProduct(q);
-#endif
     }
-#if 1
     TMatrixD Mat(3,3, &mat[0][0]); cout << "Mat\t"; Mat.Print();
-#else
-    cout << "Mat\t"; Mat.Print();
-#endif
     TDecompSVD svd(Mat);           cout << "svd\t"; svd.Print();
     TMatrixD U = svd.GetU();       cout << "U\t"; U.Print();
     TMatrixD V = svd.GetV();       cout << "V\t"; V.Print();
@@ -1408,9 +1515,58 @@ void Compare_2024_2026() {
     Double_t xyz[3] = {0};
     Pav.GetXYZ(xyz);
     TMatrixD pav(3,1,xyz);   cout << "pav\t";  pav.Print();
-    TMatrixD w(Rot,TMatrixD::kMult,pav); cout << "w\n"; w.Print();
+    TMatrixD w(Rot,TMatrixD::kMult,pav); cout << "w\n"1; w.Print();
     TVector3 t = Qav - TVector3(w.GetMatrixArray()); cout << "t\t"; t.Print();
   }
   return;
 }
+#endif
+//________________________________________________________________________________
+void Compare_2024_2026(Int_t we = 0) {// we = 0 => west, 1 => east, otherwise all
+  TString y2024, y2026;
+  Int_t N24, N26;
+  SurveyData_t *s2024 = GetSurvey(2024, y2024, N24);
+  SurveyData_t *s2026 = GetSurvey(2026, y2026, N26);
+  vector<Point3D> Q;
+  vector<Point3D> P;
+  cout << "N24 = " << N24 << "\tN26 = " << N26 << endl;
+  if      (we == 0) cout << "West ==================================================" <<endl;
+  else if (we == 1) cout << "East ==================================================" <<endl;
+  else              cout << "All  ==================================================" <<endl;
+  for (Int_t i24 = 0; i24 < N24; i24++) {
+    Int_t sec;
+    Char_t name[4];
+    sscanf(s2024[i24].target.Data(),"%3s%02d",name,&sec);
+    if (sec <= 0) {
+      s2024[i24].Print("");
+      cout << "skipped" << endl;
+      continue;
+    }
+    if (we == 0 && sec  > 12) continue;
+    if (we == 1 && sec <= 12) continue;
+    for (Int_t i26 = 1; i26 < N26; i26 += 2) {
+      if (s2024[i24].target != s2026[i26].target) continue;
+      cout << "================================================================================" << endl;
+      cout << sec << " 2024\t"; s2024[i24].Print();
+      cout << sec << " 2026\t"; s2026[i26].Print();
+      P.push_back(s2024[i24].p3D());
+      Q.push_back(s2026[i26].p3D());
+    }
+  }
+  UInt_t N = Q.size();
+  assert(N == P.size());
+  if (N < 3) return;
 
+  TMatrixD rotation(3, 3);
+  TVectorD translation(3);
+
+  KabschAlgorithm(P, Q, rotation, translation);
+
+  std::cout << "Rotation matrix R:" << std::endl;
+  rotation.Print();
+  
+  std::cout << "Translation vector t:" << std::endl;
+  translation.Print();
+  
+  return;
+}
