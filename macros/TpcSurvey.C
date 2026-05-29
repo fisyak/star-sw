@@ -1375,8 +1375,7 @@ TMatrixD PointsToMatrix(const std::vector<Point3D>& points) {
         mat(1, i) = points[i].y;
         mat(2, i) = points[i].z;
     }
-    TMatrixD mat_T(TMatrixD::kTransposed,mat);
-    PrPP(mat_T);
+    //    TMatrixD mat_T(TMatrixD::kTransposed,mat);    PrPP(mat_T);
     return mat;
 }
 
@@ -1408,10 +1407,10 @@ void KabschAlgorithm(const std::vector<Point3D>& P, const std::vector<Point3D>& 
     //    PrPP(matP); PrPP(matQ);
     // Step 3: Compute covariance matrix H = P * Q^T
     TMatrixD matQ_T(TMatrixD::kTransposed,matQ);
-    PrPP(matQ_T);
+    //    PrPP(matQ_T);
     
     TMatrixD H = matP * matQ_T;  // 3x3 covariance matrix
-    PrPP(H);
+    //    PrPP(H);
 
     // Step 4: Compute SVD of H
     TDecompSVD svd(H);
@@ -1564,9 +1563,18 @@ void Compare_2024_2026(Int_t we = 0) {// we = 0 => west, 1 => east, otherwise al
 
   std::cout << "Rotation matrix R:" << std::endl;
   rotation.Print();
-  
+#if 0  
   std::cout << "Translation vector t:" << std::endl;
   translation.Print();
-  
+  TMatrixD t(3,1,translation.GetMatrixArray());
+  // dq = rotation p + translation  - q
+  for (UInt_t i = 0; i < N; i++) {
+    TMatrixD q(3, 1, &Q[i].x);
+    TMatrixD p(3, 1, &P[i].x);
+    TMatrixD dq(rotation.TMatrixT::kMult, p);
+    dq += t; dq -= q;
+    cout << i << "\t"; dq.Print();
+  }
+#endif
   return;
 }
