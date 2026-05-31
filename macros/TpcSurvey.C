@@ -44,7 +44,7 @@
 #include "TMatrixD.h"
 #include "TVectorD.h"
 #include "TDecompSVD.h"
-
+#include "TGeoMatrix.h"
 #endif
 #define PrPP(A) {cout << (#A) << "\t"; A.Print();}
 #define PrP(A) {cout << (#A) << "\t =" << A << endl;}
@@ -89,6 +89,13 @@ struct SurveyData_t {
 enum {kSurveySets = 7};
 static TGeoHMatrix MagCS[kSurveySets], TpcCS[kSurveySets], WheelCS[2][kSurveySets];
 static Int_t years[kSurveySets] = {2003,2004,2013,2022,2023,2024,2026};
+struct SurveySets_t {
+  SurveySets_t() : year(0), N(0), survey(0) {}
+  Int_t year;
+  Int_t N;
+  SurveyData_t *survey;
+};
+static SurveySets_t SurveySets[kSurveySets];
 using namespace std;
 TLinearFitter *lf = 0;
 static Int_t _debug = 0; 
@@ -142,18 +149,17 @@ void RotParameters(Int_t indx, const TGeoHMatrix &rot, const Char_t *Comment) {
 }
 //________________________________________________________________________________
 SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
-  static Int_t yold = -1;
-  static SurveyData_t *survey = 0;
-  static TString Y;
-  static Int_t Nold = -1;
-  if (yold == y) {
-    year = Y;
-    N = Nold;
-    assert(survey);
+  Int_t lset = -1;
+  for (Int_t i = 0; i < kSurveySets; i++) {
+    if (y == years[i]) {lset = i;break;}
+  }
+  assert(lset >= 0);
+  SurveyData_t *survey = SurveySets[lset].survey;
+  if (survey) {
+    N =  SurveySets[lset].N;
+    year = SurveySets[lset].year;
     return survey;
   }
-  if (survey) {delete [] survey; survey = 0;}
-  yold = y;
   SurveyData_t *surv;
   Double_t scale = 100;
   if (y == 2003) {
@@ -199,8 +205,6 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
     cout << "There is no survey for year " << y << endl;
     return 0;
   }
-  Y = year;
-  Nold = N;
   if (survey) delete [] survey;
   survey = new SurveyData_t[N];
   for (Int_t i = 0; i < N; i++) {
@@ -260,8 +264,11 @@ SurveyData_t *GetSurvey(Int_t y, TString &year, Int_t &N) {
       survey[i].target = Form("%s%sO%02i",WE,ABCD[row],sector);
     }
     //    cout << survey[i] << endl;
-    cout << "GetSurvey: " << survey[i] << endl;
+    cout << "GetSurvey: " << i << "\t" << survey[i] << endl;
   }
+  SurveySets[lset].survey = survey;
+  SurveySets[lset].year = y;
+  SurveySets[lset].N = N;
   return survey;
 }
 //________________________________________________________________________________
@@ -1447,83 +1454,18 @@ void KabschAlgorithm(const std::vector<Point3D>& P, const std::vector<Point3D>& 
     outRotation = R;
     outTranslation = t;
 }
-#if 0
-//________________________________________________________________________________
-void Compare_2024_2026() {
-  TString y2024, y2026;
-  Int_t N24, N26;
-  SurveyData_t *s2024 = GetSurvey(2024, y2024, N24);
-  SurveyData_t *s2026 = GetSurvey(2026, y2026, N26);
-  vector<Point3D> Q;
-  vector<Point3D> P;
-  vector<Int_t>    sectors;
-  for (Int_t i24 = 0; i24 < N24; i24++) {
-    for (Int_t i26 = 1; i26 < N26; i26 += 2) {
-      if (s2024[i24].target != s2026[i26].target) continue;
-      cout << "================================================================================" << endl;
-      Int_t sec;
-      Char_t name[4];
-      sscanf(s2026[i26].target,"%3s%02i",name,&sec);
-      cout << "sector = " << sec << endl;
-      sectors.push_back(sec);
-      cout << sec << " 2024\t"; s2024[i24].Print();
-      cout << sec << " 2026\t"; s2026[i26].Print();
-      P.push_back(s2024[i24].xyz());
-      Q.push_back(s2026[i26].xyz());
-    }
-  }
-  UInt_t N = Q.size();
-  assert(N == P.size());
-  if (N < 3) return;
-  for (Int_t we = 0; we < 2; we++) {
-    if (we == 0) cout << "West" << endl;
-    else         cout << "East" << endl;
-    TVector3 Qav, Pav;
-    Double_t D = 0;
-    for (UInt_t i = 0; i < N; i++) {
-      Int_t sec = sectors[i];
-      if (we == 0 && sec >  12 ||
-	  we == 1 && sec <= 12) continue;
-      D++; 
-      Qav  += Q[i];
-      Pav  += P[i];
-    }
-    if (D <= 0.0) continue;
-    Double_t DN = 1./D;
-    Qav *= DN; cout << "Qav\t"; Qav.Print();
-    Pav *= DN; cout << "Pav\t"; Pav.Print();
-    Double_t mat[3][3] = {0};
-    for (UInt_t i = 0; i < N; i++) {
-      Int_t sec = sectors[i];
-      if (we == 0 && sec >  12 ||
-	  we == 1 && sec <= 12) continue;
-      TVector3 q = Q[i] - Qav;
-      TVector3 p = P[i] - Pav;
-      for (Int_t k = 0; k < 3; k++) {
-	for (Int_t l = 0; l < 3; l++) {
-	  mat[k][l] += p[k]*q[l];
-	}
-      }
-    }
-    TMatrixD Mat(3,3, &mat[0][0]); cout << "Mat\t"; Mat.Print();
-    TDecompSVD svd(Mat);           cout << "svd\t"; svd.Print();
-    TMatrixD U = svd.GetU();       cout << "U\t"; U.Print();
-    TMatrixD V = svd.GetV();       cout << "V\t"; V.Print();
-    TVectorD S = svd.GetSig();     cout << "S\t"; S.Print();
-    TMatrixD Rot(V,TMatrixD::kMultTranspose,U);  cout << "Rot\t"; Rot.Print();
-    Double_t xyz[3] = {0};
-    Pav.GetXYZ(xyz);
-    TMatrixD pav(3,1,xyz);   cout << "pav\t";  pav.Print();
-    TMatrixD w(Rot,TMatrixD::kMult,pav); cout << "w\n"1; w.Print();
-    TVector3 t = Qav - TVector3(w.GetMatrixArray()); cout << "t\t"; t.Print();
-  }
-  return;
-}
-#endif
 //________________________________________________________________________________
 void Compare_2024_2026(Int_t we = 0) {// we = 0 => west, 1 => east, otherwise all
   TString y2024, y2026;
   Int_t N24, N26;
+  TGeoHMatrix R26to24;
+  Double_t r26to24[9] = {
+    1,          -8.297e-05,     0.00111, 
+    8.283e-05,           1,   0.0001303, 
+    -0.00111,   -0.0001302,           1};
+  Double_t t26to24[3] = {-0.0408996, 0.386268, 0.997113 };
+  R26to24.SetRotation(r26to24);
+  R26to24.SetTranslation(t26to24);
   SurveyData_t *s2024 = GetSurvey(2024, y2024, N24);
   SurveyData_t *s2026 = GetSurvey(2026, y2026, N26);
   vector<Point3D> Q;
@@ -1536,6 +1478,7 @@ void Compare_2024_2026(Int_t we = 0) {// we = 0 => west, 1 => east, otherwise al
     Int_t sec;
     Char_t name[4];
     sscanf(s2024[i24].target.Data(),"%3s%02d",name,&sec);
+    cout << i24 << "\t" << s2024[i24].target.Data() << " => name " << name << "\tsec = " << sec << endl;
     if (sec <= 0) {
       s2024[i24].Print("");
       cout << "skipped" << endl;
@@ -1543,13 +1486,20 @@ void Compare_2024_2026(Int_t we = 0) {// we = 0 => west, 1 => east, otherwise al
     }
     if (we == 0 && sec  > 12) continue;
     if (we == 1 && sec <= 12) continue;
-    for (Int_t i26 = 1; i26 < N26; i26 += 2) {
+    //    for (Int_t i26 = 0; i26 < N26; i26 += 2) {
+    for (Int_t i26 = 1; i26 < N26; i26 += 2) { // Projected
       if (s2024[i24].target != s2026[i26].target) continue;
       cout << "================================================================================" << endl;
       cout << sec << " 2024\t"; s2024[i24].Print();
       cout << sec << " 2026\t"; s2026[i26].Print();
-      P.push_back(s2024[i24].p3D());
-      Q.push_back(s2026[i26].p3D());
+      Point3D p = s2024[i24].p3D();
+      if (sec <= 12) p.z -= 27.2153;
+      else           p.z += 27.2153;
+      P.push_back(p);
+      Point3D q0 = s2026[i26].p3D();
+      Point3D q;
+      R26to24.MasterToLocal(&q0.x, &q.x);
+      Q.push_back(q);
     }
   }
   UInt_t N = Q.size();
@@ -1563,18 +1513,32 @@ void Compare_2024_2026(Int_t we = 0) {// we = 0 => west, 1 => east, otherwise al
 
   std::cout << "Rotation matrix R:" << std::endl;
   rotation.Print();
-#if 0  
   std::cout << "Translation vector t:" << std::endl;
   translation.Print();
-  TMatrixD t(3,1,translation.GetMatrixArray());
+  TVectorD t(translation);
+  const Char_t *Names[4] = {"dX", "dY", "dZ", "dR"};
+  TH1D *hists[4] = {0};
+  for (Int_t i = 0; i < 4; i++) {
+    hists[i] = (TH1D *) gDirectory->Get(Names[i]);
+    if (hists[i]) hists[i]->Reset();
+    else {
+      if (i < 3) hists[i] = new TH1D(Names[i],Names[i],100, -0.25, 0.25);
+      else       hists[i] = new TH1D(Names[i],Names[i],100,  0.0, 0.25);
+    }
+  }
   // dq = rotation p + translation  - q
   for (UInt_t i = 0; i < N; i++) {
-    TMatrixD q(3, 1, &Q[i].x);
-    TMatrixD p(3, 1, &P[i].x);
-    TMatrixD dq(rotation.TMatrixT::kMult, p);
-    dq += t; dq -= q;
-    cout << i << "\t"; dq.Print();
+    TVectorD q(3, &Q[i].x);
+    TVectorD p(3, &P[i].x);
+    TVectorD dq(t); dq -= q;
+    for (Int_t k = 0; k < 3; k++) {
+      for (Int_t l = 0; l < 3; l++) {
+	dq(k) += rotation(k,l)*p(l); 
+      }
+    }
+    //    cout << i << "\t" << Form("%11.4g %11.4g %11.4g %11.4g",dq(0),dq(1),dq(2),TMath::Sqrt(dq.Norm2Sqr())) << endl;
+    for (Int_t i = 0; i < 3; i++) hists[i]->Fill(dq(i));
+    hists[3]->Fill(TMath::Sqrt(dq.Norm2Sqr()));
   }
-#endif
   return;
 }
