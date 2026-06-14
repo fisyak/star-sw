@@ -258,7 +258,9 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
   if (St_tpcPadConfigC::instance()->iTPC(1)) { // iTpc for all TPC sectors
     NoOfPads = St_tpcPadConfigC::instance()->numberOfPadsAtRow(1,72);
   } 
-  St_TpcAvgPowerSupplyC::instance()->PrintC("V");
+  if (! St_TpcAvgPowerSupplyC::instance()->Table()->IsMarked()) {
+    St_TpcAvgPowerSupplyC::instance()->PrintC("V");
+  }
   // Shapers
   const Char_t *Names[2] = {"I","O"};
   Double_t CathodeAnodeGap[2] = {0.2, 0.4};
