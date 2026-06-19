@@ -827,11 +827,6 @@ Int_t StBFChain::Instantiate()
       if ( GetOption("DbRichSca") ) mk->SetMode(1);
     }
     if (maker == "StTpcRSMaker") {
-      if (! GetOption("TrsToF")) {
-	Int_t mode = mk->GetMode();
-	mode |= (1 << 10); // kNoToflight   //10 don't account for particle time of flight
-	mk->SetMode(mode);
-      }
       if (GetOption("EbyET0")) mk->SetAttr("EbyET0", kTRUE);
    }
     if (maker == "StTrsMaker") {
