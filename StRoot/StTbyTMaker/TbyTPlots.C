@@ -623,7 +623,7 @@ void Draw(const Char_t *file="Plots.root") {
 #endif
 }
 //________________________________________________________________________________
-void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
+void TbyTPlots(const Char_t *files = ".", const Char_t *out = "", Long64_t Nentries=0) {
   TString TreeName("trackMateComp");
   fChain = new TChain(TreeName);
   TDirIter Dir(files);
@@ -631,6 +631,7 @@ void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
   TFile *f = 0;
   Int_t FileNo = 0;
   ULong64_t  Ntotal = 0;
+  TString PFile;
   while ( (file = (Char_t *) Dir.NextFile()) ) {   
     TString Name(file);
     if (! Name.EndsWith(".root")) continue;
@@ -638,13 +639,13 @@ void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
     f = new TFile(Name);
     TChain *tree = (TChain *) f->Get(TreeName);
     if (tree) {
-      const Char_t *pFile = f->GetName();
+      PFile = f->GetName();
       ULong64_t nEvents = tree->GetEntries();
       if (nEvents > 0) {
 	FileNo++; 
 	Ntotal += nEvents;
 	cout << "\tAdd "<< FileNo << "\t" << Name.Data() << "\t"<< nEvents << "\tEvents, Total = " << Ntotal << endl;
-	fChain->Add(pFile);
+	fChain->Add(PFile);
       }
     }
     delete f;
@@ -652,9 +653,13 @@ void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
   if (! FileNo) return;
   TrackMatch *T = new TrackMatch;
   fChain->SetBranchAddress("TrackMatch", &T);
-  TString Out;
+  TString Out(out);
   if (Out == "") {
-    Out += "Plots.root";
+    if (FileNo == 1 && PFile != "") {
+      Out = "Plots"; Out += PFile;
+    } else {
+      Out += "Plots.root";
+    }
   }
   TFile *fOut = new TFile(Out.Data(),"recreate");
   cout << "Opened " << Out << endl;
@@ -798,6 +803,8 @@ void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
   etaphi[1] = new TH2D(Form("EtaPhi%s",New.Data()),Form("#phi versus #eta for %s",New.Data()),
 		       200,-2,2,90,-180,180);
   // Loop
+  Int_t TreeNo = -1;
+  TString currentFile("");
   Long64_t nentries = fChain->GetEntriesFast();
   if (Nentries > 0 && nentries > Nentries) nentries = Nentries;
   Int_t nbytes = 0, nb = 0;
@@ -805,7 +812,13 @@ void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
     Long64_t ientry = fChain->LoadTree(jentry);
     if (ientry < 0) break;
-    if (jentry%100000 == 0) cout << "Read entry " << jentry << endl;
+    if (! jentry%10000 || TreeNo != fChain->GetTreeNumber()) {
+      cout << "Read event \t" << jentry << " so far, switch to file ";
+      if (TreeNo != fChain->GetTreeNumber()) cout << fChain->GetCurrentFile()->GetName();
+      cout << endl;
+      //      cout << " current TreeNo: " << TreeNo	   <<  " new TreeNo: " << fChain->GetTreeNumber() << endl;
+      TreeNo = fChain->GetTreeNumber();
+    }
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     for (Int_t gp = 0; gp < 2; gp++) {// Global Primary
       Double_t Vars[2][kVAR] = {0}; // 2 -> New/Old; 3 -> pT/Eta/Phi
@@ -881,6 +894,7 @@ void TbyTPlots(const Char_t *files = ".", Long64_t Nentries=0) {
       else                   PhiDiffR[2][gp][chsign]->Fill(Vars[knew][kPhi],pTdiffR);
     } // Global Primary loop 
   } // entires loop
+  if (FileNo == 1) return;
   if (fOut) {
     fOut->Write();
     fOut->cd();
