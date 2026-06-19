@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<job maxFilesPerProcess="10" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="true" copyInputLocally="false">
+<job maxFilesPerProcess="1" filesPerHour="1.0" fileListSyntax="paths" simulateSubmission ="true" copyInputLocally="false">
         <command>
  set CURRENT_DIR = `pwd`
 #C       cd ${SUBMITTINGDIRECTORY}
@@ -32,19 +32,19 @@
 #  touch ${bla}
   if ("${filelist}" != "") then
     foreach f (${filelist}) 
-      if (${SITE} == "HLT") then
+#      if (${SITE} == "HLT") then
         ln -s  ${inputDIR}/${f} .
-      else 
+#      else 
 #        rsync  ${inputDIR}/${f} .
-       xrdcp  ${inputDIR}/${f} .
-      endif
+#       xrdcp  ${inputDIR}/${f} .
+#      endif
     end
   else 
-      if (${SITE} == "HLT") then
+#      if (${SITE} == "HLT") then
         ln -s  ${inputDIR}.root .
-      else 
-        rsync  ${inputDIR}  .
-      endif
+#      else 
+#        rsync  ${inputDIR}  .
+#      endif
   endif
   echo echo "`hostname` $STAR_HOST_SYS $STAR $ROOTSYS"  &gt;&amp; ${log} 
 #  printenv | sort &gt;&gt;&amp; ${log} 

@@ -9795,3 +9795,142 @@ StVMCMaker:INFO  - 18   HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGL[1]
 StVMCMaker:INFO  - 19   HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGS[1]
 --------------------------------------------------------------------------------
 root 6.40.00 disable clang and clang++ from spack !!!
+================================================================================
+06/06/2026
+foreach f (`ls -1d *st*.root`)
+  set log = `basename ${f} .root`;
+  root.exe -q -b 'TbyTPlots.C+("'${f}'")' >& ${log}.log
+  if (! $?) mv ${f} Done
+end
+================================================================================
+06/16/2026
+.x bfc.C(1,50,"MC.2014VMC,emcAtoE,StiCA,StiHftC,KFVertex,-geantOut,-evout,picoWrite,PicoVtxVpd,noRunco,noHistos,noTags,CorrX,OSpaceZ2,OGridLeakFull,-FieldOn,K_S0:Lambda0,VFMCE,AuAu_200_2014,Rung.10000",0,"Ks0Lambda_10000_1_50.MuDst.root","Ks0Lambda_10000_1_50.tags.root")
+
+ bfc.C(1,"MC.2014VMC,emcAtoE,StiCA,StiHftC,KFVertex,-geantOut,-evout,picoWrite,PicoVtxVpd,noRunco,noHistos,noTags,CorrX,OSpaceZ2,OGridLeakFull,-FieldOn,K_S0:Lambda0,VFMCE,AuAu_200_2014,Rung.10000",0,"Ks0Lambda_10000_1_50.MuDst.root","Ks0Lambda_10000_1_50.tags.root")
+
+
+StTreeMaker:INFO  - *** StTreeMaker::Make() == StOK(0) ***
+QA :INFO  - +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+QA :INFO  - StAnalysisMaker,  Reading Event: 1  Type: Collision  Run: 1  EventId: 1
+QA :INFO  - # track nodes:      29: good globals with NFitP>=15: 17
+QA :INFO  - : Short tracks pointing to EEMC : 2
+QA :INFO  - post (C)rossing tracks :0: (P)rompt:0: (X) membrane :0(T)of/ctb matches:18 :Emc matches(W/E): 0/0 :Only W:6 E:11
+QA :INFO  - #V[  0] :0/0/0/*/0/6/*   0.141+/-0.057,  -0.092+/-0.053,  -2.013+/-0.049, Prob/Chi2: 0.000/ 123.33 Rank:     70.0 U/T/F/G:   15,  17,  16,  16 IdT:     1 Q:  100
+QA :INFO  - # TPC hits:          782:   Bad ones (! flag):     0:       Used in Fit:      691
+QA :INFO  - # BTof hits:          25:   Bad ones (! flag):     0:        Matched with tracks:      8:   Mc 9:    Matched with tracks:      1
+QA :INFO  - *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+StAnalysisMaker:INFO  - *** StAnalysisMaker::Make() == StOK(0) ***
+StTreeMaker:INFO  - *** StTreeMaker::Make() == StOK(0) ***
+QA :INFO  - +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+QA :INFO  - StAnalysisMaker,  Reading Event: 1  Type: Collision  Run: 1  EventId: 1
+QA :INFO  - # track nodes:      29: good globals with NFitP>=15: 17
+QA :INFO  - : Short tracks pointing to EEMC : 2
+QA :INFO  - post (C)rossing tracks :0: (P)rompt:0: (X) membrane :0(T)of/ctb matches:18 :Emc matches(W/E): 0/0 :Only W:6 E:11
+QA :INFO  - #V[  0] :0/0/0/*/0/6/*   0.141+/-0.057,  -0.092+/-0.053,  -2.013+/-0.049, Prob/Chi2: 0.000/ 123.33 Rank:     70.0 U/T/F/G:   15,  17,  16,  16 IdT:     1 Q:  100
+QA :INFO  - # TPC hits:          782:   Bad ones (! flag):     0:       Used in Fit:      691
+QA :INFO  - # BTof hits:          25:   Bad ones (! flag):     0:        Matched with tracks:      8:   Mc 9:    Matched with tracks:      1
+QA :INFO  - *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+StAnalysisMaker:INFO  - *** StAnalysisMaker::Make() == StOK(0) ***
+================================================================================
+06/17/2026
+Y2014
+StVMCMaker:INFO  - 1    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/SFMO[1]/SFSW[1]/SFSL[1]/SFSD[1]
+StVMCMaker:INFO  - 2    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/IBMO[1]/IBSS[1]
+StVMCMaker:INFO  - 3    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXSI[1]/PLAC[1]
+StVMCMaker:INFO  - 4    HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[73]
+StVMCMaker:INFO  - 5    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+StVMCMaker:INFO  - 6    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+StVMCMaker:INFO  - 7    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+StVMCMaker:INFO  - 8    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+StVMCMaker:INFO  - 9    HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+StVMCMaker:INFO  - 10   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+StVMCMaker:INFO  - 11   HALL[1]/CAVE[1]/BBCM[2]/BBCA[2]/THXM[6]/SHXT[3]/BPOL[1]
+StVMCMaker:INFO  - 12   HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+StVMCMaker:INFO  - 13   HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+StVMCMaker:INFO  - 14   HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+
+StiStarDetectorBuilder::buildDetectors() -I- Use VMC HFT beam pipe geometry
+StiDetector::splitIt /PIPI_1/PBES_1 Non splitable Rnormal < thickness/2 0.280751 2.07645
+StiDetector::splitIt /PIPI_1/SSCF_1 Non splitable Rnormal < thickness/2 0.484034 3.4925
+StiDetector::splitIt /PIPI_1/SSCF_2 Non splitable Rnormal < thickness/2 0.340621 3.4925
+StiDetector::splitIt /PIPE_1/SSCG_1 Non splitable Rnormal < thickness/2 1.34939 5.87375
+StiDetector::splitIt /PIPE_1/SSCG_2 Non splitable Rnormal < thickness/2 1.15453 5.87375
+StiDetector::splitIt /PIPE_1/SSCG_3 Non splitable Rnormal < thickness/2 1.15699 5.87375
+StiDetector::splitIt /PIPE_1/SSCF_1 Non splitable Rnormal < thickness/2 0.485658 3.4925
+StiDetector::splitIt /PIPW_1/SSCG_1 Non splitable Rnormal < thickness/2 0.908557 5.87375
+StiDetector::splitIt /PIPW_1/SSCG_2 Non splitable Rnormal < thickness/2 0.59182 5.87375
+StiDetector::splitIt /PIPW_1/SSCG_3 Non splitable Rnormal < thickness/2 0.594288 5.87375
+
+
+StiMaker:INFO  - StiSstDetectorBuilder::buildDetectors() - Will build SST geometry from DB tables
+StiMaker:ERROR - TGeoNavigator::cd : Path /HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/SFMO_1/SFLM_1/SFSW_8/SFSL_1/SFSD_1 not valid
+StiMaker:ERROR - TGeoNavigator::cd : Path /HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/SFMO_1/SFSW_8/SFSL_1/SFSD_1 not valid
+StiMaker:WARN  - StiSstDetectorBuilder::useVMCGeometry() - Cannot find path to SFSD (SST sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/SFMO_1/SFSW_8/SFSL_1/SFSD_1 Skipping to next ladder...
+
+(gdb) run 'bfc.C(1,"MC.2014VMC,StiCA,StiHftC,StiKFVertex,-geantOut,-evout,picoWrite,PicoVtxVpd,noRunco,noHistos,noTags,CorrX,OSpaceZ2,OGridLeakFull,-FieldOn,K_S0:Lambda0,VFMCE,AuAu_200_2014,Rung.10000",0,"Ks0Lambda_10000_1_50.MuDst.root","Ks0Lambda_10000_1_50.tags.root")'
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_1/LADR_1/LADX_5/PXSI_1/PLAC_1/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_1/LADR_1/LADX_5/PXSI_1/PLAC_1PXLA_1/LADR_1/PXSI_5/PLAC_1                                                        Skipping to next ladder...                                                                                                                                                                                                                                                                                                                     
+StVMCMaker:INFO  - Create detector path for volume VRAD
+StVMCMaker:INFO  - 1    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/SFMO[1]/SFLM[20]/SFSW[16]/SFSL[1]/SFSD[1]
+StVMCMaker:INFO  - 2    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/IBMO[1]/IBAM[24]/IBLM[6]/IBSS[1]
+StVMCMaker:INFO  - 3    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXSI[1]/PLAC[1]
+StVMCMaker:INFO  - 4    HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[73]
+StVMCMaker:INFO  - 5    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+StVMCMaker:INFO  - 6    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+StVMCMaker:INFO  - 7    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+StVMCMaker:INFO  - 8    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+StVMCMaker:INFO  - 9    HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+StVMCMaker:INFO  - 10   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+StVMCMaker:INFO  - 11   HALL[1]/CAVE[1]/BBCM[2]/BBCA[2]/THXM[6]/SHXT[3]/BPOL[1]
+StVMCMaker:INFO  - 12   HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+StVMCMaker:INFO  - 13   HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+StVMCMaker:INFO  - 14   HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+================================================================================
+06/18/2026
+StVMCMaker:INFO  - 1    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/SFMO[1]/SFLM[20]/SFSW[16]/SFSL[1]/SFSD[1]
+StVMCMaker:INFO  - 2    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/IBMO[1]/IBAM[24]/IBLM[6]/IBSS[1]
+StVMCMaker:INFO  - 3    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXLA[10]/LADR[4]/PXSI[10]/PLAC[1]
+StVMCMaker:INFO  - 4    HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[73]
+StVMCMaker:INFO  - 5    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+StVMCMaker:INFO  - 6    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+StVMCMaker:INFO  - 7    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+StVMCMaker:INFO  - 8    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+StVMCMaker:INFO  - 9    HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+StVMCMaker:INFO  - 10   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+StVMCMaker:INFO  - 11   HALL[1]/CAVE[1]/BBCM[2]/BBCA[2]/THXM[6]/SHXT[3]/BPOL[1]
+StVMCMaker:INFO  - 12   HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+StVMCMaker:INFO  - 13   HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+StVMCMaker:INFO  - 14   HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+                                                                                                          HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXLA[10]/LADR[4]       /PXSI[10]/PLAC[1]
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1 /CAVE_1 /TpcRefSys_1 /IDSM_1 /PXMO_1 /PXLA_1  /LADR_1 /LADX_5/PXSI_1  /PLAC_1 /HALL_1/CAVE_1/TpcRefSys_1/I                                                                                                                   DSM_1/PXMO_1/PXLA_1/LADR_1/LADX_5/PXSI_1/PLAC_1PXLA_1/LADR_1/PXSI_5/PLAC_1 Skipping to next ladder...                                                                                                                                                                                                                              
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_1/LADR_2/LADX_5/PXSI_1/PLAC_1/HALL_1/C AVE_1/TpcRefSys_1/I                                                                                                                   DSM_1/PXMO_1/PXLA_1/LADR_2/LADX_5/PXSI_1/PLAC_1PXLA_1/LADR_2/PXSI_5/PLAC_1 Skipping to next ladder...                                                                                                                                                                                                                              
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_1/LADR_3/LADX_5/PXSI_1/PLAC_1/HALL_1/CAVE_1/TpcRefSys_1/I                                                                                                                   DSM_1/PXMO_1/PXLA_1/LADR_3/LADX_5/PXSI_1/PLAC_1PXLA_1/LADR_3/PXSI_5/PLAC_1 Skipping to next ladder...                                                                                                                                                                                                                              
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_1/LADR_4/LADX_5/PXSI_1/PLAC_1/HALL_1/CAVE_1/TpcRefSys_1/I                                                                                                                   DSM_1/PXMO_1/PXLA_1/LADR_4/LADX_5/PXSI_1/PLAC_1PXLA_1/LADR_4/PXSI_5/PLAC_1 Skipping to next ladder...                                                                                                                                                                                                                              
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_2/LADR_1/LADX_5/PXSI_1/PLAC_1/HALL_1/CAVE_1/TpcRefSys_1/I                                                                                                                   DSM_1/PXMO_1/PXLA_2/LADR_1/LADX_5/PXSI_1/PLAC_1PXLA_2/LADR_1/PXSI_5/PLAC_1 Skipping to next ladder...                                                                                                                                                                                                                              
+StiMaker:WARN  - StiPxlDetectorBuilder::useVMCGeometry() - Cannot find path to PLAC (PXL sensitive) node:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/PXMO_1/PXLA_2/LADR_2/LADX_5/PXSI_1/PLAC_1/HALL_1/CAVE_1/TpcRefSys_1/I                                                                                                                /home/fisyak/reco/Pico/2016/063/17063008   DSM_1/PXMO_1/PXLA_2/LADR_2/LADX_5/PXSI_1/PLAC_1PXLA_2/LADR_2/PXSI_5/PLAC_1 Skipping to next ladder...                                                                                                                                                                                                                              
+
+
+StPxlUtil/StPxlConstants.h
+HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXLA[10]/LADR[4]/PXSI[10]/PLAC[1]
+const int kNumberOfPxlSectors = 10;
+const int kNumberOfPxlLaddersPerSector = 4;
+const int kNumberOfPxlSensorsPerLadder = 10;
+const int kNumberOfPxlColumnsOnSensor = 960;
+const int kNumberOfPxlRowsOnSensor = 928;
+
+namespace StPxlConsts
+{
+
+const double kPixelSize = 20.7e-4;       ///< Nominal size of a pixel in the PXL detector, in cm. Must be greater than 0
+const int kPxlNumColumnsPerSensor = 960; ///< Number of pixels in a single row of a PXL sensor
+const int kPxlNumRowsPerSensor = 928;    ///< Number of pixels in a single column of a PXL sensor
+
+//@{
+/**
+ * Dimensions of PXL sensor active area. E.g. the values are used to restrict
+ * smeared hits to active area see
+ * StPxlSimMaker/doc/PXL_ultimate_sensor_flemming.pdf
+ */
+const double kPxlActiveLengthX = 1.921;   ///< in cm
+const double kPxlActiveLengthY = 1.9872;  ///< in cm
+//@}
+

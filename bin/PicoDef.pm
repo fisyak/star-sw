@@ -205,6 +205,7 @@
 '2023/ZF_AuAu200' =>                               'production_AuAu_ZeroField_2023/FieldOff/dev',
 '2023/AuAu200,P24iy_calib.mtd' =>                  'production_AuAu_2023/ReversedFullField/P24iy_calib',
 '2023/AuAu200,P25iy_calib'     =>                  'production_AuAu_2023/ReversedFullField/P25iy_calib',
+'2023/AuAu200_TFG26d'     =>                       '2023/RF/AuAu_2023',
 
 '2024/pp200_LowLuminosity_P24iy' =>                'pp200_production_LowLuminosity/ReversedFullField/P24iy',
 

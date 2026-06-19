@@ -32,7 +32,7 @@ void Recover(const Char_t *files ="./*.MuDst.root", Bool_t update = kTRUE) {
     Int_t iok = gSystem->GetPathInfo(file,buf);;
     Long_t dT = buf.fMtime - now;
     cout << "Try to open " << file << "\tdT = " << dT << endl;
-    if (dT > -600) continue;
+    //    if (dT > -600) continue;
     if (update)  f = new TFile(file,"update");// 
     else         f = new TFile(file);
     cout << "File\t" << NFiles <<"\t" << file; 

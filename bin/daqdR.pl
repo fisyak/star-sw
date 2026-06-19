@@ -3,7 +3,6 @@ use File::Basename;
 use Cwd;
 use Env;
 use lib dirname $0; # 
-#use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 $debug = 0;
 if ($#ARGV >= 0) {
@@ -65,6 +64,7 @@ sub MuCount($$$$) {# daqName, first, last,
   my $N = `cat $fileN`;
   chomp($N);
   print "$file N = $N\n" if ($debug);
+  if ($N == "") {return $no;}
   $last = $N;
   my $f = $first;
   my $l = $last;
@@ -209,3 +209,15 @@ foreach my $currentrun (@AllRuns) {
 }
 if (! $fNo) {die "Don't have input files\n";}
 
+__END__
+
+run CreateRunDirs.pl for data set 
+
+startsingularty
+ 
+ ~/TPC/reco/TFG26d/2025/RF $ 
+foreach d (`ls -1d */*/27*`)
+  cd ${d}
+  daqdR.pl
+  cd -
+end

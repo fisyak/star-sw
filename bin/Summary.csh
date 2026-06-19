@@ -13,7 +13,7 @@ foreach done (`ls -1d ???/*`)
   cd ${d}; pwd;
   ls -ltr *.root *.gz *B.log *Chain.log  | tail -1 | grep Chain	
   if ($?) then	
-    rm -rf .sl*
+    rm -rf .sl* .al*
     set n = `ls -1d *MuDst.root | wc -l`
     if ($n > 0) then
       ln -s ~fisyak/macros/.sl* ~fisyak/macros/.al* .	

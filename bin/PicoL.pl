@@ -100,11 +100,12 @@ elsif ($pwd =~ /2013/) { $year = "y2013";}
 elsif ($pwd =~ /2012/) { $year = "y2012";} 
 elsif ($pwd =~ /2011/) { $year = "y2011";} 
 elsif ($pwd =~ /2010/) { $year = "y2010";} 
-if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24/) {
+if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24/ or $pwd =~ /TFG26d/) {
 #  $PICOPATH = "/gpfs01/star/data*"; print "PICOPATH = $PICOPATH \n" if ($debug);
   if    ($pwd =~ /TFG24c/) {$PICOPATH = "/gpfs01/star/subsysg/TFG/reco/TFG24c/";}
   elsif ($pwd =~ /TFG24d/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24d/";}
   elsif ($pwd =~ /TFG24e/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24e/";}
+  elsif ($pwd =~ /TFG26d/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26d/"}
   elsif ($pwd =~ /2026.dev/) {$PICOPATH = "/star/data99/TEMP/FXT/";}
   else                     {$PICOPATH = "/star/data*";}
   print "PICOPATH = $PICOPATH \n" if ($debug);
@@ -248,7 +249,7 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-my $GLOB = $PICOPATH . $glob . "/*/???/*";
+my $GLOB = $PICOPATH . $glob . "/[0-9]??/*";
 if ($pwd =~ /TFG24/) {$GLOB = $PICOPATH . $glob . "/???/*";}
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day

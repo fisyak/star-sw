@@ -13,7 +13,8 @@ foreach d (`ls -1d ???/2*`)
    continue
   endif
   @ countJ++;  
-  daqdR.local.pl
+#  daqdR.local.pl
+  daqdR.pl
   if ($?) then
     ls -1d *bla.root
     if ($?) then
@@ -35,7 +36,9 @@ foreach d (`ls -1d ???/2*`)
 #   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daq.TFG25k.xml
 #   /net/l402/data/fisyak/STAR/packages/TFG/scripts/star-submit  ~/xml/daqTFG.xml
     rm *.condor
-    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
+#    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
+#    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26d.xml
+    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26d.FXT.xml
     ~/bin/subcondor.csh
   touch Submitted
   cd -
@@ -60,6 +63,8 @@ foreach done (`ls -1d ???/*/Done`)
     ln -s ~/macros/.al* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
     @ count++;  echo "count $count";
+    root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
+    @ count++;  echo "count $count";
     if ($count > 120) then 
         cd -
 	break;
@@ -70,4 +75,5 @@ end
 if ($count > 0) then
   sleep 10; 
   touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
+  touch `grep total ???/2*/PChain.log | grep -v 'chained 0' | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
 endif

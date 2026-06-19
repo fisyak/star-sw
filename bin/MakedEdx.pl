@@ -2786,7 +2786,9 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXIII43";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023*/*/";  $Production = "P25iy_calib"; $year = "/2023/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/07/2026 new TpcZCorrectionC
 #$hist = "RunXXIII44";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023*/*/";  $Production = "P25iy_calib"; $year = "/2023/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2026 new TpcSecRowB
 #$hist = "RunXXIII45";  $NEvents = 50000; $disk = "data*/"; $RECO = "reco/production_AuAu_2023*/*/";  $Production = "P25iy_calib"; $year = "/2023/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/09/2026 new TpcLengthCorrectionMDN
-
+#$hist = "RunXXIII46";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26d"; $year = "/2023/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/04/2026 recheck with TFG26d
+#$hist = "RunXXIII47";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26d"; $year = "/2023/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/06/2026  new TpcSecRowB.AuAu_2023
+#$hist = "RunXXIII48";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26d"; $year = "/2023/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/07/2026  new TpcSecRowB.AuAu_2023
 #################################### RunXXI OO200GeV P24iy ########################
 #$hist = "RunXXI01"; $NEvents = 5000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   check what is in MySQL
 #$hist = "RunXXI02"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_*OO_200GeV_2021/*/";  $Production = "P24iy_calib"; $year = "/20*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/20/25   reset TpcSecRowB, TpcZCorrectionC, TpcEtaCorrectionB, TpcLengthCorrectionMDN
@@ -2846,6 +2848,7 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXV02"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/12/2025  Voltage Scan
 #$hist = "RunXXV03"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/14/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan
 #$hist = "RunXXV04"; $NEvents = 50000; $disk = "/gpfs01/star/subsysg/TFG/TFG25k/"; $RECO = "";  $Production = "2025/AuAu_2025/RF/"; $year = "*/*/"; $FILE = "st_phys*"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 12/16/2025  Add TpcSecRowB for nominal Vltage, Voltage Scan, change histogram binning
+$hist = "RunXXV05";  $NEvents = 1000; $disk = "data*/"; $RECO = "reco/production_*2025*/*/";  $Production = "P25iy_calib"; $year = "/2025/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 06/16/2026 check status
 ############################### 2026 #################################################
 #$hist = "RunXXVI01"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "/";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/21/2026 reset to default 
 #$hist = "RunXXVI02"; $NEvents = 5000; $disk = "/hlt/cephfs/"; $RECO = "";  $Production = "reco/TFG26a/2025/RF/9p8GeV_fixedTarget_2026/"; $year = "*/*/"; $FILE = "hlt_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 01/22/2026 TpcSecRowB from GP
@@ -2897,7 +2900,7 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI38";  $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/"; $RECO = "";  $Production = "TFG26b"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/05/2026  TpcLengthCorrectionMDN 
 #$hist = "RunXXVI39";  $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/"; $RECO = "";  $Production = "TFG26b"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/07/2026 TpcZCorrectionC
 #$hist = "RunXXVI40";  $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/"; $RECO = "";  $Production = "TFG26b"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/08/2026 TpcSecRowB
-$hist = "RunXXVI41";  $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/"; $RECO = "";  $Production = "TFG26b"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/09/2026 redo TpcSecRowB (?)
+#$hist = "RunXXVI41";  $NEvents = 5000; $disk = "/gpfs01/star/subsysg/TFG/"; $RECO = "";  $Production = "TFG26b"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 05/09/2026 redo TpcSecRowB (?)
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
@@ -2911,7 +2914,8 @@ my $script = "";
 
 my @files = ();
 $script = $prod;# . "O";
-my $SCR = "/gpfs01/star/pwg/fisyak/dEdx/";
+my $SCR = "/gpfs01/star/data100/TPC/dEdx/";
+#my $SCR = "/gpfs01/star/pwg/fisyak/dEdx/";
 if (! -r $SCR) {
   $SCR = "/net/l404/data/fisyak/dEdx/";
 #  $SCR = "/hlt/cephfs/fisyak/dEdx/";
@@ -2962,7 +2966,10 @@ if ($#badruns > -1) {$badruns = join "|", @badruns; print "Badruns: $badruns\n";
     if ($dt < 600) {next;}
     my @words = split '/', $file; if ($debug) {for (my $i = 0; $i < $#words; $i++) {print "$i $words[$i]\n";}}
     my $dd = $words[4];# . '_' . $words[5];
-    if ($words[5] =~ /TFG26b/) {
+    if ($words[6] =~ /TFG26d/) {
+      $dd = $words[9];
+      $Run = $words[11];
+    } elsif ($words[5] =~ /TFG26b/) {
       $dd = $words[8];
       $Run = $words[10];
     } elsif ($words[7] =~ /TFG24b/) {
