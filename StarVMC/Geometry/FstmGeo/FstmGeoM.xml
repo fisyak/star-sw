@@ -444,7 +444,7 @@ to avoid interference. This is equivalent to rotate the middle ring by 180 deg a
             <var name="y"        value="0.0" />
             <var name="z"        value="134.0" />
             <var name="rmin"     value="4.1" />
-            <var name="rmax"     value="34.00" />
+            <var name="rmax"     value="33.80" />
             <var name="dz"       value="30.0" />
 	    <var name="zdisk"    value="{151.750, 165.248, 178.781}" />
         </Fill>
