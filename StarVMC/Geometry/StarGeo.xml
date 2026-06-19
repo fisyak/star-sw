@@ -80,6 +80,7 @@
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" /> 
     <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -106,6 +107,7 @@
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" /> 
     <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -131,7 +133,9 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" /> 
-    <Construct sys="fstm" config="FSTMv1" />
+<!--     <Construct sys="fstm" config="FSTMv1" /> -->
+    <Construct sys="fstm" config="FSTMv1sm" />
+    <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -210,6 +214,7 @@
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" /> 
     <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -1064,10 +1069,12 @@
   </Geometry>
 
   <Geometry tag="y2016z" comment="STAR y2016 with pams/geometry/tpcegeo/ tpcegeo5.g">
+
     <Construct sys="cave" config="CAVE05" />
-    <Construct sys="idsm" config="IDSM14a" />
+    <Construct sys="idsm" config="IDSM14" />
     <Construct sys="pipe" config="PIPEv3" />
     <Construct sys="upst" config="UPSTon" />
+<!--    <Construct sys="tpce" config="TPCE31" /> -->
     <Construct sys="tpce" config="TPCEv5O" />
     <Construct sys="btof" config="BTOFv8" />
     <Construct sys="vpdd" config="VPDD08" />
@@ -1077,11 +1084,11 @@
     <Construct sys="fpdm" config="FPDM04" />
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
-    <Construct sys="sisd" config="SISD85a" />
-    <Construct sys="istd" config="ISTD02a" />
+    <Construct sys="sisd" config="SISD85" />
+    <Construct sys="istd" config="ISTD03" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD16" />
-    <Construct sys="pixl" config="PIXL62b" />
+    <Construct sys="pixl" config="PIXL62" />
     <Construct sys="dtub" config="DTUB01" />
     <Construct sys="psup" config="PSUP01" />
 
@@ -1249,7 +1256,7 @@
     <Construct sys="fpdm" config="FPDM04at" />
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
-    <Construct sys="sisd" config="SISD85a" />
+    <Construct sys="sisd" config="SISD85" />
     <Construct sys="istd" config="ISTD02a" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD16" />
@@ -1260,26 +1267,29 @@
   </Geometry>
 
   <Geometry tag="y2015z" comment="STAR y2015 with pams/geometry/tpcegeo/ tpcegeo5.g">
-    <Construct sys="cave" config="CAVE05" />
-    <Construct sys="idsm" config="IDSM14a" />
+
+    <Construct sys="cave" config="CAVE05" /> <Construct sys="klud" config="KLUDon" />
+    <Construct sys="idsm" config="IDSM14" />
     <Construct sys="pipe" config="PIPEv3" />
     <Construct sys="upst" config="UPSTon" />
+<!--    <Construct sys="tpce" config="TPCE31" /> -->
     <Construct sys="tpce" config="TPCEv5O" />
     <Construct sys="btof" config="BTOFv8" />
     <Construct sys="vpdd" config="VPDD08" />
     <Construct sys="calb" config="CALB02" />
     <Construct sys="ecal" config="ECALv6" />
     <Construct sys="bbcm" config="BBCMon" />
-    <Construct sys="fpdm" config="FPDM04at" />
+    <Construct sys="fpdm" config="FPDM04" />
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
-    <Construct sys="sisd" config="SISD85a" />
-    <Construct sys="istd" config="ISTD02a" />
+    <Construct sys="sisd" config="SISD85" />
+    <Construct sys="istd" config="ISTD03" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD16" />
-    <Construct sys="pixl" config="PIXL62b" />
+    <Construct sys="pixl" config="PIXL62" />
     <Construct sys="dtub" config="DTUB01" />
     <Construct sys="psup" config="PSUP01" />
+
 
   </Geometry>
 
@@ -1401,10 +1411,12 @@
   </Geometry>
 
   <Geometry tag="y2014z" comment="STAR y2014 with pams/geometry/tpcegeo/ tpcegeo5.g">
+ 
     <Construct sys="cave" config="CAVE05" />
-    <Construct sys="idsm" config="IDSM14a" />
+    <Construct sys="idsm" config="IDSM14" />
     <Construct sys="pipe" config="PIPEv3" />
     <Construct sys="upst" config="UPSTon" />
+<!--    <Construct sys="tpce" config="TPCE31" /> -->
     <Construct sys="tpce" config="TPCEv5O" />
     <Construct sys="btof" config="BTOFv8" />
     <Construct sys="vpdd" config="VPDD07" />
@@ -1413,15 +1425,15 @@
     <Construct sys="bbcm" config="BBCMon" />
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
-    <Construct sys="sisd" config="SISD85a" />
-    <Construct sys="istd" config="ISTD02a" />
+    <Construct sys="sisd" config="SISD85" />
+    <Construct sys="istd" config="ISTD03" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD14" />
-    <Construct sys="pixl" config="PIXL06b" />
+    <Construct sys="pixl" config="PIXL06" />
     <Construct sys="dtub" config="DTUB01" />
     <Construct sys="psup" config="PSUP01" />
 
-  </Geometry>
+   </Geometry>
 
   <!-- y2013 series geometry tags -->
   <Geometry tag="y2013"   check="false" comment="Y2013 rough cut geometry">
