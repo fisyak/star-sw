@@ -1205,7 +1205,7 @@ TDataSet *CreateTable() {
 	}
       }
       print "root4star = $root4star, ROOT_LEVEL = $ROOT_LEVEL\n";
-      if ($root4star || $ROOT_LEVEL =~ /^6/) {
+      if ($root4star &&  $ROOT_LEVEL =~ /^6/) {
 	$root4star = "";
 #	print "reset root4star\n";
       }
