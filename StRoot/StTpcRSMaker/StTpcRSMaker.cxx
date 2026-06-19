@@ -1990,7 +1990,6 @@ Bool_t StTpcRSMaker::TrackSegment2Propagate(g2t_tpc_hit_st *tpc_hitC, g2t_vertex
   transform( dirLT, TrackSegmentHits.dirLS); PrPP(Make,TrackSegmentHits.dirLS); 
   transform(   BLT,   TrackSegmentHits.BLS); PrPP(Make,TrackSegmentHits.BLS);   
   Double_t tof = gver->ge_tof  + fgTriggerT0;
-  //	if (! TESTBIT(m_Mode, kNoToflight)) 
   tof += tpc_hitC->tof;
   Double_t driftLength = TrackSegmentHits.coorLS.position().z() + tof*gStTpcDb->DriftVelocity(sector); // ,row); 
 #if 0 /* don't use sign swap for hits behind zGG */
