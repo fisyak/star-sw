@@ -626,9 +626,8 @@ Bfc_st BFC[] = { // standard chains
   {"MC.2014","","","MC,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,emcY2,eefs,TpxClu,y2014z,useXgeom,NoSsdIt"
    ",NoSvtIt,StiHftC,Idst,BAna,VFMinuit,tpcDB,TpcHitMover,btofMatch,btofCalib,tags,emcY2,evout,IdTruth"
    ",geantout,big,MiniMcMk,Sti"                           ,"","","no l0 and trg any more, +BTof RC",kFALSE},
-  {"MC.2014VMC","","","MC,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,emcY2,eefs,TpxClu,y2014z,useXgeom,NoSsdIt"
-   ",NoSvtIt,Idst,BAna,VFMinuit,tpcDB,TpcHitMover,btofMatch,btofCalib,tags,emcY2,evout,IdTruth"
-   ",geantout,big,MiniMcMk,vmc"                           ,"","","no l0 and trg any more, +BTof RC",kFALSE},
+  {"MC.2014VMC","","","MC,P2014a,StiCA,-in,TpcRS,bbcSim,btofsim,pxlFastSim,istSim,sstfast,TpxClu,y2014z"
+   ",useXgeom,NoSsdIt,NoSvtIt,geantout,MiniMcMk,vmc"     ,"","","no l0 and trg any more, +BTof RC",kFALSE},
   {"MC.2015","","","MC,TpcRS,pxlFastSim,istSim,emcY2,EEfs,TpxClu,y2015z,useXgeom,NoSsdIt,NoSvtIt,StiHftC,Idst,BAna"
    ",VFMinuit,tpcDB,TpcHitMover,bbcSim,btofsim,btofMatch,btofCalib,tags,evout,IdTruth,geantout,big,Sti"
    ,                                                                                      "","","",kFALSE},
