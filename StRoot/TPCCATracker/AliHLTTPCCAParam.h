@@ -31,11 +31,8 @@
 #include "AliHLTTPCCAParameters.h"
 #include <cstdio>
 #include <vector>
-//#include "StDetectorDbMaker/StiTpcHitErrorMDF4.h"
 #include "AliHLTTPCCAGBHit.h"
-
 using std::vector;
-
 namespace std
 {
   template<typename T> struct char_traits;
@@ -95,11 +92,6 @@ class AliHLTTPCCAParam
     float RMax() const { return fRMax;}
     float ZMin() const { return fZMin;}
     float ZMax() const { return fZMax;}
-#if 0
-    float ErrZ() const { return fErrZ;}
-    float ErrX() const { return fErrX;}
-    float ErrY() const { return fErrY;}
-#endif
     float Bz() const { return fBz;}
     float cBz() const { return fBz*0.000299792458;}
 
@@ -136,9 +128,7 @@ class AliHLTTPCCAParam
     void SetMaxTrackMatchDRow( int v ) {  fMaxTrackMatchDRow = v; }
     void SetHitPickUpFactor( float v ) {  fHitPickUpFactor = v; }
     void SetRecoType( int reco)        {  fRecoType = reco; }
-#if 1
     void GetClusterErrors2(AliHLTTPCCAGBHit &h , const AliHLTTPCCATrackParam &t, float &Err2Y, float &Err2Z ) const;
-#endif
     void GetClusterErrors2( uint_v rowIndexes, const float_v &X, const float_v &Y, float_v &Z, float_v &Err2Y, float_v &Err2Z ) const;
 
     void GetClusterErrors2( int iRow, const TrackParamVector &t, float_v *Err2Y, float_v *Err2Z ) const;
@@ -158,10 +148,6 @@ class AliHLTTPCCAParam
     void RestoreFromFile( FILE *f );
 
   protected:
-#if 0
-    float GetClusterError2( int yz, int type, float z, float angle ) const;
-    float_v GetClusterError2( int yz, int type, float_v z, float_v angle ) const;
-#endif
     int fISlice; // slice number
     int fNRows; // number of rows
     int fNTpcRows; // total number of Tpc rows  
@@ -235,7 +221,6 @@ inline float_v AliHLTTPCCAParam::GetBz( const AliHLTTPCCATrackParamVector &t ) c
 inline void AliHLTTPCCAParam::GetClusterErrors2( int iRow, const TrackParamVector &t, float_v *Err2Y, float_v *Err2Z ) const
 {
   const float_v one = float_v(Vc::One);
-#ifndef StiTpcHitErrorMDF4_h
   const float_v zero = float_v(Vc::Zero);
   float_v z = t.Z();
   const int type = errorType( iRow);// , z);
@@ -252,11 +237,6 @@ inline void AliHLTTPCCAParam::GetClusterErrors2( int iRow, const TrackParamVecto
   const float *c = fParamS0Par[0][type];
   float_v v = c[0] + c[1]*z/cos2Phi + c[2]*tg2Phi;
   float_v w = c[3] + c[4]*z*(one + tg2Lambda) + c[5]*tg2Lambda;
-#else  /* StiTpcHitErrorMDF4_h */
-  float_v v, w;
-  v(v>one) = one;
-  w(w>one) = one;
-#endif /* ! StiTpcHitErrorMDF4_h */
   const float_v errmin=1e-6f;
   v(v<errmin) = errmin;
   w(w<errmin) = errmin;
@@ -269,7 +249,6 @@ inline void AliHLTTPCCAParam::GetClusterErrors2( uint_v rowIndexes, const TrackP
 {
   const float_v one = float_v(Vc::One);
   const float_v errmin=1e-6f;
-#ifndef StiTpcHitErrorMDF4_h
   const float_v zero = float_v(Vc::Zero);
   float_v z = t.Z();
   z = (200.f - CAMath::Abs(z)) * 0.01f;
@@ -296,9 +275,6 @@ inline void AliHLTTPCCAParam::GetClusterErrors2( uint_v rowIndexes, const TrackP
     v5[i] = c_temp[5];
   }
   v += z * v1/cos2Phi +  v2 *tg2Phi;
-#if 0
-  v(v>one) = one;
-#endif
   v(v<errmin) = errmin;
   *Err2Y = CAMath::Abs( v );
 #ifdef VC_GATHER_SCATTER
@@ -309,10 +285,6 @@ inline void AliHLTTPCCAParam::GetClusterErrors2( uint_v rowIndexes, const TrackP
   }
 #endif
   v += z * v4*(one + tg2Lambda) + v5*tg2Lambda;
-#else  /* StiTpcHitErrorMDF4_h */
-  float_v v;
-  v(v>one) = one;
-#endif /* ! StiTpcHitErrorMDF4_h */
   v(v<errmin) = errmin;
   *Err2Z = CAMath::Abs( v );
 }
