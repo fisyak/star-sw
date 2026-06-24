@@ -103,7 +103,7 @@ TDataSet *CreateTable() {
     7.92159e-02, 0.};
   Float_t *b = &row.SecRowSigIW[0];
   for (Int_t i = 0; i < 8; i++) {
-    b[i] = RowSigmaTrs[i%4];
+    b[i%2+4*(i/2)] = RowSigmaTrs[i%4];
   }
   row.PolyaInner = 1.38;
   row.PolyaOuter = 1.38;

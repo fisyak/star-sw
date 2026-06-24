@@ -32,12 +32,12 @@ TDataSet *CreateTable() {
     cflag->iswit[2] = 2; 
 #endif
     const Char_t *nameP = "B+";
-    TGeant3TGeo *g3 = (TGeant3TGeo *)TVirtualMC::GetMC();
     TParticlePDG *p = TDatabasePDG::Instance()->GetParticle(nameP);
     if (! p) return;
     Int_t pdg = p->PdgCode();
     if (!pdg) return 0;
     Int_t iD  = g3->IdFromPDG(pdg);
+    if (! iD) return 0;
     StarVMCApplication::Instance()->ForceDecay(nameP, "D0_bar", "pi+", "", 100);
     StarVMCApplication::Instance()->ForceDecay("D0_bar", "K+", "pi-", "", 100);
     StarMCSimplePrimaryGenerator *gener = (StarMCSimplePrimaryGenerator *) StarVMCApplication::Instance()->GetPrimaryGenerator();
