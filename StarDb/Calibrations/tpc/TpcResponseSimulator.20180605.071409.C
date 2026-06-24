@@ -133,7 +133,7 @@ TDataSet *CreateTable() {
     -1.76e-02, 0};  // Outer E
   Float_t *b = &row.SecRowSigIW[0];
   for (Int_t i = 0; i < 8; i++) {
-    b[i] = RowSigmaTrs[i%8];
+    b[i%2+4*(i/2)] = RowSigmaTrs[i%8];
   }
   /* Sigmas 
      Tpx inner = 0.395

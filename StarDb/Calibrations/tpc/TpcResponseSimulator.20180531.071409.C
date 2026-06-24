@@ -130,7 +130,7 @@ TDataSet *CreateTable() {
     -9.11388e-03-9.1492e-02-1.222e-01+9.01563105819495891e-02+0.09564, 2.63198e-03-1.972e-03};  // Outer E
   Float_t *a = &row.SecRowCorIW[0];
   for (Int_t i = 0; i < 8; i++) {
-    a[i] = RowMuTrs[i];
+    a[i%2+4*(i/2)] = RowMuTrs[i];
   }
   // row.SecRowCorIW[0] = row.SecRowCorIE[0] = 6.99114715017355337e-01;//- TMath::Log(0.533*0.843485) -5.84129e-01 + 4.52885e-01 + 3.09117e-02;
   // row.SecRowCorOW[0] = row.SecRowCorOE[0] = 9.79357470004933006e-01;//- TMath::Log(0.512*0.725267) -5.47141e-01 + 5.23937e-01 + 1.19154e-02;
@@ -146,7 +146,7 @@ TDataSet *CreateTable() {
     -1.76e-02, 0};  // Outer E
   Float_t *b = &row.SecRowSigIW[0];
   for (Int_t i = 0; i < 8; i++) {
-    b[i] = RowSigmaTrs[i];
+    b[i%2+4*(i/2)] = RowSigmaTrs[i];
   }
   /* Sigmas 
      Tpx inner = 0.395

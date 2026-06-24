@@ -126,7 +126,7 @@ TDataSet *CreateTable() {
     -9.11388e-03, 2.63198e-03};  // Outer E
   Float_t *a = &row.SecRowCorIW[0];
   for (Int_t i = 0; i < 8; i++) {
-    a[i] = RowMuTrs[i];
+    a[i%2+4*(i/2)] = RowMuTrs[i];
   }
 #endif
   row.PolyaInner = 1.38;
