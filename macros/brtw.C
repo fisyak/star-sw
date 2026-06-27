@@ -34,7 +34,7 @@ static       Int_t NoParameters = 3*NoSignals + 3; // 4;
 static Bool_t Baryon = kFALSE; 
 static Bool_t reject = kFALSE;
 static const Char_t  *SignalNames[3] = {"S","V","T"};
-static Double_t Masses[3] = {0.497611, -1, -1}; // Initail parameters
+static Double_t MasseV0s[3] = {0.497611, -1, -1}; // Initail parameters
 static Double_t Widths[3] = {0.0107, -1, -1};
 static const Char_t  *FuncNames[3] = {"Total","Background","Signal"};
 static Bool_t NoBackground = kFALSE;
@@ -185,17 +185,17 @@ TF1 *brtw(TH1 *hist, Double_t MMin=0.3, Double_t MMax = 1.3, Double_t m1 = mpi, 
 	f[k]->SetParLimits(3*s,-90,90);
 	if (l < 0) {
 	  f[k]->SetParName(3*s+1,"#mu");   
-	  f[k]->FixParameter(3*s+1,Masses[s]);
+	  f[k]->FixParameter(3*s+1,MasseV0s[s]);
 	  f[k]->SetParName(3*s+2,"#sigma");   
 	  f[k]->FixParameter(3*s+2, Widths[s]);
 	} else if (l + s < 3) {
 	  f[k]->SetParName(3*s+1,Form("M_{%s}",SignalNames[l+s]));   
-	  f[k]->FixParameter(3*s+1,Masses[s]);
+	  f[k]->FixParameter(3*s+1,MasseV0s[s]);
 	  f[k]->SetParName(3*s+2,Form("#Gamma_{%s}",SignalNames[l+s]));   
 	  f[k]->FixParameter(3*s+2, Widths[s]);
 	} else {
 	  f[k]->SetParName(3*s+1,"M");   
-	  f[k]->FixParameter(3*s+1,Masses[s]);
+	  f[k]->FixParameter(3*s+1,MasseV0s[s]);
 	  f[k]->SetParName(3*s+2,"#Gamma");
 	  f[k]->FixParameter(3*s+2, Widths[s]);
 	}
@@ -360,7 +360,7 @@ TF1 *K0BW(TH1F *M, Bool_t saveAsPng = kTRUE) {
   }
 #endif
   m->SetTitle(Title);
-  Masses[0] = 0.497611; // Initail parameters
+  MasseV0s[0] = 0.497611; // Initail parameters
   Widths[0] = 0.0107;
   nameP = "K_S0";
   return brtw(m,0.45,0.55,mpi, mpi, 0, kFALSE, saveAsPng);
@@ -377,7 +377,7 @@ TF1 *K0G(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Ks/Parame
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
   m->SetName(Form("%s_Gaus",M->GetName()));
-  Masses[0] = 0.497611; // Initail parameters
+  MasseV0s[0] = 0.497611; // Initail parameters
   Widths[0] = 0.0107;
   nameP = "K_S0";
   return brtw(m,0.45,0.55,mpi, mpi, -1, kFALSE, saveAsPng);
@@ -388,7 +388,7 @@ TF1 *LambdaBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lamb
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
   m->SetName(Form("%s_BW",M->GetName()));
-  Masses[0] = 1.115683; // Initail parameters
+  MasseV0s[0] = 1.115683; // Initail parameters
   Widths[0] = 0.0020;
   nameP = "Lambda";
   NoParameters = 3*NoSignals + 3;
@@ -400,7 +400,7 @@ TF1 *Lambda(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambda
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
   m->SetName(Form("%s_Gaus",M->GetName()));
-  Masses[0] = 1.115683; // Initail parameters
+  MasseV0s[0] = 1.115683; // Initail parameters
   Widths[0] = 0.0020;
   nameP = "Lambda";
   NoParameters = 3*NoSignals + 3;
@@ -412,7 +412,7 @@ TF1 *Lambdab(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/Lambd
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
   m->SetName(Form("%s_Gaus",M->GetName()));
-  Masses[0] = 1.115683; // Initail parameters
+  MasseV0s[0] = 1.115683; // Initail parameters
   Widths[0] = 0.0020;
   nameP = "Lambdab";
   NoParameters = 3*NoSignals + 3;
@@ -423,7 +423,7 @@ TF1 *phiBW(const Char_t *histN = "/Particles/KFParticlesFinder/Particles/phi_KK/
   TH1F *M = (TH1F *) gDirectory->Get(histN);
   if (! M) return 0;
   TH1F *m = new TH1F(*M);
-  Masses[0] = 1.020; // Initail parameters
+  MasseV0s[0] = 1.020; // Initail parameters
   Widths[0] = 0.004;
   m->SetName(Form("%s_BW",M->GetName()));
   nameP = "phi";
