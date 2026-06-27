@@ -24,8 +24,7 @@ void kfpAnalysis(Int_t N = 10000000,
   Bool_t isPico = kTRUE;
   if (TString(input).Contains("MuDst")) isPico = kFALSE;
   gROOT->LoadMacro("lMuDst.C");
-  TString Chain("r");
-  Chain += triggerSet;
+  TString Chain; // ("r");   Chain += triggerSet;
   //  if (! isPico) Chain += ",RMuDst";
   if (! isPico) {Chain += ",RMuDst";} //,PicoWrite"; isPico = kTRUE;}
   else          {Chain += ",RpicoDst";}
