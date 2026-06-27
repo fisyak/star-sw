@@ -37,6 +37,7 @@ Remove the inner support tubes as it could not be attached to detector.
         <Created date="09 March, 2020"/>
         <CDE>AGECOM,GCONST,GCUNIT</CDE>
         <Content>
+            FSTA,   <!-- mother volume of FST assembly -->
             FSTM,   <!-- mother volume of FST, a disk -->
             FSTD,   <!-- FST disk container -->
             FSTW,   <!-- Whole wedge container -->
@@ -812,8 +813,23 @@ Remove the inner support tubes as it could not be attached to detector.
                 Place the volumes
         -->
         zcenter = mothervol_z+mothervol_dz
+        <Create    block="FSTA" />
+        <Placement block="FSTA" in="CAVE" x="0.0" y="0.0" z="0.0" />
+        <!-- FST assembly -->
+        <Volume name="FSTA" comment="FST mother">
+            <Material  name="air" />               <!-- access material   -->
+            <Material  name="air" isvol="0" />     <!-- hack to create local copy -->
+            <Medium    name="standard"      />     <!-- can change medium paramters here -->
+            <Attribute for="FSTA" seen="0" colo="1" />
+
+            <!-- Shape should be sized to include all disks placed -->
+            <Shape     type="PCON"   nz="3" phi1="0" dphi="360" 
+                                     zi="{59.6, 149.0, 240.0}"
+                                     rmn="{4.8,4.8,4.8}"
+                                     rmx="{21.6, 38.5, 38.5}" />
         <Create    block="FSTM" />
-        <Placement block="FSTM" in="CAVE" x="0.0" y="0.0" z="zcenter" />
+        <Placement block="FSTM" in="FSTA" x="0.0" y="0.0" z="zcenter" />
+        </Volume>
 
         <!-- FST mother container -->
         <Volume name="FSTM" comment="FST mother">

@@ -319,6 +319,7 @@
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" /> 
     <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -423,6 +424,7 @@
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>

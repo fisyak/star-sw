@@ -22,6 +22,7 @@ The outer radius could be make slightly bigger to adjust this.
       <Content>
 	OFSR,   <!-- OFSR Outer support ring for FST -->
         OFSB,   <!-- OFSB Outer support bars (4) for FST -->
+	OFSD,   <!-- outer support bar (4) for FST -->
 	OFSC,   <!-- OFSC Outer extended support bars (4) for FST -->    <!-- extension bar for OSB Al rather the SS -->
 	OFCA,   <!-- Cable trays master vol - contains air and cables wide trays -->
 	OFCB,    <!-- air to contain cables -->
@@ -129,13 +130,13 @@ The outer radius could be make slightly bigger to adjust this.
       
       <Fill name="supbar" comment="outer supportbar">
 	<var name="version"   value="1.0" /> 
-	<var name="rpos"    value="36.83-1.28" />
-	<var name="ri"       value="0.0" />
-	<var name="ro"      value="1.28" />
-	<var name="ra"      value="1.28"/>
+	<var name="rpos"    value="36.83-1.40" />
+	<var name="ri"       value="1.45/2" /> <!-- increased to get to correct weight -->
+	<var name="ro"      value="2.21/2" />
+	<var name="ra"      value="2.80/2"/>
 	<var name="angle"   value="{55.0,125.0, 235.0, 305.0}"/>
-	<var name="dz1"     value="43.60" />
-	<var name="dz2"     value="86.4-43.60"/>
+	<var name="dz1"     value="42.13" />
+	<var name="dz2"     value="86.4-42.13"/>
 	<!--	  <var name="dz"      value="88.90/2"/>-->
       </Fill>
 	
@@ -218,82 +219,98 @@ The outer radius could be make slightly bigger to adjust this.
                 Place the volumes
         -->
  	<Create block="OFSR" />
-	<Info format="Create of OFSR at {6.2f}">coolt_dz</Info>
-	<Placement block="OFSR" in="CAVE" x="0.0" y="0.0" z="supring_z1" />
-	<Placement block="OFSR" in="CAVE" x="0.0" y="0.0" z="supring_z2" />
+	<Placement block="OFSR" in="FSTA" x="0.0" y="0.0" z="supring_z1" />
+	<Placement block="OFSR" in="FSTA" x="0.0" y="0.0" z="supring_z2" />
 
 	<Create block="OFSB" />
 
-	<Info format="Create_of_OFSB at {6.2f}">coolt_dz</Info>
 	ang= supbar_angle(1)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Info format="Placement_of_OFSB_at {6.2f}">x</Info>
-	<Placement block="OFSB" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	<Placement block="OFSB" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
 	ang= supbar_angle(2)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSB" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	<Placement block="OFSB" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
 	ang= supbar_angle(3)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSB" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	<Placement block="OFSB" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
 	ang= supbar_angle(4)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSB" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	<Placement block="OFSB" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+
+
+	<!-- suppart bar Al part where the SS inner bar sits -->
+	<Create block="OFSD" />
+
+	ang= supbar_angle(1)*(PI/180.0)
+	x=supbar_rpos*cos(ang)
+	y=supbar_rpos*sin(ang)
+	<Placement block="OFSD" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	ang= supbar_angle(2)*(PI/180.0)
+	x=supbar_rpos*cos(ang)
+	y=supbar_rpos*sin(ang)
+	<Placement block="OFSD" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	ang= supbar_angle(3)*(PI/180.0)
+	x=supbar_rpos*cos(ang)
+	y=supbar_rpos*sin(ang)
+	<Placement block="OFSD" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
+	ang= supbar_angle(4)*(PI/180.0)
+	x=supbar_rpos*cos(ang)
+	y=supbar_rpos*sin(ang)
+	<Placement block="OFSD" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1/2"/>
 
 	<Create block="OFSC" />
-	<Info format="Create_of_OFSC_at_{6.2f}">coolt_dz</Info>
 	ang= supbar_angle(1)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSC" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
+	<Placement block="OFSC" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
 	ang= supbar_angle(2)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSC" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
+	<Placement block="OFSC" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
 	ang= supbar_angle(3)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSC" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
+	<Placement block="OFSC" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
 	ang= supbar_angle(4)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-	<Placement block="OFSC" in="CAVE" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
+	<Placement block="OFSC" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
 
 	<!-- 4 wide cable tray to be placed -->
 	<Create block="OFCA" />
-	<Placement block="OFCA" in="CAVE" x="cabt_x(1)" y="cabt_y(1)" z="cabt_dz+outsuprefpoint">
+	<Placement block="OFCA" in="FSTA" x="cabt_x(1)" y="cabt_y(1)" z="cabt_dz+outsuprefpoint">
 	  <Rotation alphaz="cabt_rot(1)" />
 	</Placement>
-	<Placement block="OFCA" in="CAVE" x="cabt_x(2)" y="cabt_y(2)" z="cabt_dz+outsuprefpoint">
+	<Placement block="OFCA" in="FSTA" x="cabt_x(2)" y="cabt_y(2)" z="cabt_dz+outsuprefpoint">
 	  <Rotation alphaz="cabt_rot(2)" />
 	</Placement>
 
-	<Placement block="OFCA" in="CAVE" x="cabt_x(3)" y="cabt_y(3)" z="cabt_dz+outsuprefpoint">
+	<Placement block="OFCA" in="FSTA" x="cabt_x(3)" y="cabt_y(3)" z="cabt_dz+outsuprefpoint">
 	  <Rotation alphaz="cabt_rot(3)" />
 	</Placement>
 
-	<Placement block="OFCA" in="CAVE" x="cabt_x(4)" y="cabt_y(4)" z="cabt_dz+outsuprefpoint">
+	<Placement block="OFCA" in="FSTA" x="cabt_x(4)" y="cabt_y(4)" z="cabt_dz+outsuprefpoint">
 	  <Rotation alphaz="cabt_rot(4)" />
 	</Placement>
 
 	<!-- 4 narrow cable tray to be placed - cooling lines -->
 	<Create block="OFCC" />
-	  <Info format="Create of OFCD at {6.2f}">coolt_dz</Info>
-	<Placement block="OFCC" in="CAVE" x="coolt_x(1)" y="coolt_y(1)" z="coolt_dz+outsuprefpoint">
+	<Placement block="OFCC" in="FSTA" x="coolt_x(1)" y="coolt_y(1)" z="coolt_dz+outsuprefpoint">
 	  <Rotation alphaz="coolt_rot(1)" />
 	</Placement>
-	<Placement block="OFCC" in="CAVE" x="coolt_x(2)" y="coolt_y(2)" z="coolt_dz+outsuprefpoint">
+	<Placement block="OFCC" in="FSTA" x="coolt_x(2)" y="coolt_y(2)" z="coolt_dz+outsuprefpoint">
 	  <Rotation alphaz="coolt_rot(2)" />
 	</Placement>
 
-	<Placement block="OFCC" in="CAVE" x="coolt_x(3)" y="coolt_y(3)" z="coolt_dz+outsuprefpoint">
+	<Placement block="OFCC" in="FSTA" x="coolt_x(3)" y="coolt_y(3)" z="coolt_dz+outsuprefpoint">
 	  <Rotation alphaz="coolt_rot(3)" />
 	</Placement>
 
-	<Placement block="OFCC" in="CAVE" x="coolt_x(4)" y="coolt_y(4)" z="cabt_dz+outsuprefpoint">
+	<Placement block="OFCC" in="FSTA" x="coolt_x(4)" y="coolt_y(4)" z="cabt_dz+outsuprefpoint">
 	  <Rotation alphaz="coolt_rot(4)" />
 	</Placement>
 
@@ -311,13 +328,19 @@ The outer radius could be make slightly bigger to adjust this.
 
 	<Volume name ="OFSB" comment="Support bar inner part">
 	  <Material name="StainlessSteel316"/>
-	  <Shape type="TUBE" rmin="supbar_ri" rmax="supbar_ro" dz="supbar_dz1/2.0" />
+	  <Shape type="TUBE" rmin="0.0" rmax="supbar_ri" dz="supbar_dz1/2.0" />
 	  <Attribute for="OFSB" seen="1" colo="2" />
+	</Volume>
+
+	<Volume name ="OFSD" comment="Support bar inner part Al">
+	  <Material name="Aluminium"/>
+	  <Shape type="TUBE" rmin="supbar_ro" rmax="supbar_ra" dz="supbar_dz1/2.0" />
+	  <Attribute for="OFSD" seen="1" colo="7" />
 	</Volume>
 
 	<Volume name ="OFSC" comment="Support bar outer part">
 	  <Material name="Aluminium"/>
-	  <Shape type="TUBE" rmin="supbar_ri" rmax="supbar_ro" dz="supbar_dz2/2.0" />
+	  <Shape type="TUBE" rmin="0.0" rmax="supbar_ra" dz="supbar_dz2/2.0" />
 	  <Attribute for="OFSC" seen="1" colo="3" />
 	</Volume>
 
@@ -372,14 +395,12 @@ The outer radius could be make slightly bigger to adjust this.
 	</Volume>
 
 	<Volume name="OFCD" comment="air  volume for cooling">
-	  <Info format="End_of_OFCD_at {6.2f}">coolt_dz</Info>
 	  <Material name="Air"/>
 	  <Shape type="BOX" dx="coolt_dxi" dy="coolt_dyi" dz="coolt_dz"/>
 	  <Attribute for="OFCD" seen="1" colo="4"/>
 
 	  <!-- Place 6 cooling lines -->
 	  <Create block="OFCE" />
-	  <Info format="Create of OFCE at {6.2f}">coolt_cro</Info>
 	  <Placement block="OFCE" in="OFCD" x="-coolt_cro*2-0.2" y="-coolt_dyi+coolt_cro" z="0"/>
 	  <Placement block="OFCE" in="OFCD" x="0" y="-coolt_dyi+coolt_cro" z="0"/>
 	  <Placement block="OFCE" in="OFCD" x="+coolt_cro*2+0.2" y="-coolt_dyi+coolt_cro" z="0"/>
