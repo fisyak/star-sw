@@ -9934,3 +9934,571 @@ const double kPxlActiveLengthX = 1.921;   ///< in cm
 const double kPxlActiveLengthY = 1.9872;  ///< in cm
 //@}
 
+================================================================================
+06/21/2026
+[starsub07] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/flemming/StarVMC/Geometry $ egrep -i '(Fst|Geometry tag)'  StarGeo.xml
+  <Geometry tag="y2025" comment="STAR initial production tag y2025">
+    <Construct sys="fstm" config="FSTMv1sm" />
+  <Geometry tag="y2024" comment="STAR initial cut tag y2024">
+    <Construct sys="fstm" config="FSTMv1sm" />
+    <Construct sys="fsto" config="FSTOon"/>
+  <Geometry tag="y2024a" comment="STAR initial production tag y2024">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2024b" comment="STAR initial production tag y2024"> 
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2023" comment="STAR initial cut tag y2023">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2023a" comment="STAR initial production tag y2023">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2023b" comment="STAR initial production tag y2023">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022" comment="STAR initial cut tag">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022a" comment="STAR production tag y2022">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022b" comment="STAR production tag y2022">
+    <Construct sys="fstm" config="FSTMv1" />
+
+[starsub07] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StarVMC/Geometry $ egrep -i '(Fst|Geometry tag)' StarGeo.xml
+  <Geometry tag="y2025" comment="STAR initial production tag y2025">
+    <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
+  <Geometry tag="y2025z" comment="STAR y2025 with pams/geometry/tpcegeo/ tpcegeo5.g">
+    <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
+  <Geometry tag="y2024" comment="STAR initial cut tag y2024">
+<!--     <Construct sys="fstm" config="FSTMv1" /> -->
+    <Construct sys="fstm" config="FSTMv1sm" />
+    <Construct sys="fsto" config="FSTOon"/>
+  <Geometry tag="y2024a" comment="STAR initial production tag y2024">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2024b" comment="STAR initial production tag y2024"> 
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2024z" comment="STAR y2024 with pams/geometry/tpcegeo/ tpcegeo5.g">
+    <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fsto" config="FSTOon" />
+  <Geometry tag="y2023" comment="STAR initial cut tag y2023">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2023a" comment="STAR initial production tag y2023">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2023b" comment="STAR initial production tag y2023">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2023z" comment="STAR y2023 with pams/geometry/tpcegeo/ tpcegeo5.g">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022" comment="STAR initial cut tag">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022a" comment="STAR production tag y2022">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022b" comment="STAR production tag y2022">
+    <Construct sys="fstm" config="FSTMv1" />
+  <Geometry tag="y2022z" comment="STAR y2022 with pams/geometry/tpcegeo/ tpcegeo5.g">
+    <Construct sys="fstm" config="FSTMv1" />
+
+.al96_x8664_gcc11/include/Ttypes.h: In member function 'virtual TClass* ROOT::Internal::TTableInitBehavior<T>::CreateClass(const char*, Version_t, const std::type_info&, TVirtualIsAProxy*, const char*, const char*, Int_t, Int_t) const':
+.al96_x8664_gcc11/include/Ttypes.h:140:56: error: no matching function for call to 'ROOT::Internal::TTableInitBehavior<T>::CreateClass(const char*&, Version_t&, const std::type_info&, TVirtualIsAProxy*&, const char*&, const char*&, Int_t&, Int_t&) const'
+  140 |          TClass *cl = TDefaultInitBehavior::CreateClass(cname, id, info, isa,
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+  141 |                                                         dfil, ifil,dl, il);
+      |                                                         ~~~~~~~~~~~~~~~~~~
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/include/Rtypes.h:254:23: note: candidate: 
+'virtual TClass* ROOT::TDefaultInitBehavior::CreateClass(const char*, Version_t, const std::type_info&, TVirtualIsAProxy*, 
+                            ShowMembersFunc_t, const char*, const char*, Int_t, Int_t) const'
+================================================================================
+06/22/2026
+/gpfs/mnt/gpfs01/star/subsys-tpc/fisyak/STAR/packages/TFG.star-sw
+ConstructTable.pl pams/sim/idl/g2t_ctf_hit.idl .al96_x8664_gcc11/include/tables/St_g2t_ctf_hit_Table.h
+ConstructTable.pl pams/sim/idl/g2t_track.idl .al96_x8664_gcc11/include/tables/St_g2t_track_Table.h
+g++ -pthread -m64 -fdiagnostics-color=always -msse4.2 -Wno-cast-function-type -Wno-format-truncation -Wno-misleading-indentation -fPIC -Wno-register -Wno-ignored-attributes -Wno-error=bool-operation -Wno-error=class-memaccess 
+-Wno-error=deprecated-declarations -Wno-error=format-overflow= -Wno-error=format-truncation= -Wno-error=int-in-bool-context -Wno-error=memset-elt-size -Wno-error=parentheses -Wno-error=restrict -Wall -Wno-overloaded-virtual 
+-Wcast-align -fno-threadsafe-statics -Wno-strict-aliasing -Wno-error=sign-compare -Wno-register -Werror 
+-g -D__ROOT__ -D__TFG__VERSION__ -I.al96_x8664_gcc11/include/g2t -I.al96_x8664_gcc11/obj/pams/sim/g2t -I. -IStRoot -I.al96_x8664_gcc11/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/include 
+
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include 
+-c .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.cxx -o .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.o
+In file included from .al96_x8664_gcc11/include/TTable.h:29,
+                 from .al96_x8664_gcc11/include/St_table_header_Table.h:7,
+                 from .al96_x8664_gcc11/include/St_Module.h:50,
+                 from .al96_x8664_gcc11/include/g2t/St_g2t_bbc_Module.h:4,
+                 from .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.cxx:2:
+.al96_x8664_gcc11/include/Ttypes.h: In member function 'virtual TClass* ROOT::Internal::TTableInitBehavior<T>::CreateClass(const char*, Version_t, const std::type_info&, TVirtualIsAProxy*, const char*, const char*, Int_t, Int_t) const':
+.al96_x8664_gcc11/include/Ttypes.h:140:56: error: no matching function for call to 'ROOT::Internal::TTableInitBehavior<T>::CreateClass(const char*&, Version_t&, const std::type_info&, TVirtualIsAProxy*&, const char*&, const char*&, Int_t&, Int_t&) const'
+  140 |          TClass *cl = TDefaultInitBehavior::CreateClass(cname, id, info, isa,
+      |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+  141 |                                                         dfil, ifil,dl, il);
+      |                                                         ~~~~~~~~~~~~~~~~~~
+In file included from .al96_x8664_gcc11/include/St_Module.h:49,
+                 from .al96_x8664_gcc11/include/g2t/St_g2t_bbc_Module.h:4,
+                 from .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.cxx:2:
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/include/Rtypes.h:254:23: note: candidate: 'virtual TClass* ROOT::TDefaultInitBehavior::CreateClass(const char*, Version_t, const std::type_info&, TVirtualIsAProxy*, ShowMembersFunc_t, const char*, const char*, Int_t, Int_t) const'
+  254 |       virtual TClass *CreateClass(const char *cname, Version_t id,
+      |                       ^~~~~~~~~~~
+/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/include/Rtypes.h:254:23: note:   candidate expects 9 arguments, 8 provided
+cons: *** [.al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.o] Error 1
+cons: errors constructing .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.o
+
+Run Conscript-standard in pams/sim/g2t                                   for St_g2t                           
+g++ -pthread -m64 -fdiagnostics-color=always -msse4.2 -Wno-cast-function-type -Wno-format-truncation -Wno-misleading-indentation -fPIC -Wno-register -Wno-ignored-attributes -Wno-error=bool-operation -Wno-error=class-memaccess 
+-Wno-error=deprecated-declarations -Wno-error=format-overflow= -Wno-error=format-truncation= -Wno-error=int-in-bool-context -Wno-error=memset-elt-size -Wno-error=parentheses -Wno-error=restrict -Wall -Wno-overloaded-virtual 
+-Wcast-align -fno-threadsafe-statics -Wno-strict-aliasing -Wno-error=sign-compare -Wno-register -Werror 
+-g -D__ROOT__ -D__TFG__VERSION__ -I.al96_x8664_gcc11/include/g2t -I.al96_x8664_gcc11/obj/pams/sim/g2t -I. -IStRoot -I.al96_x8664_gcc11/include 
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/include 
+
+-I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include -I/gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/include 
+-c .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.cxx -o .al96_x8664_gcc11/obj/pams/sim/g2t/St_g2t_bbc_Module.o
+================================================================================
+06/23/2026
+.x bfc.C(0,"MC.2014VMC,StiCA,StiHftC,KFVertex,-geantOut,-evout,picoWrite,PicoVtxVpd,noRunco,noHistos,noTags,CorrX,OSpaceZ2,OGridLeakFull,-FieldOn,Muons20")
+.x Run1Ev.C("1muS15")
+ PicoDst->Draw("Track.mNHitsFit:Track.gMom().Eta()")
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:        TpcAdcCorrectionB/                            ADC/Clustering nonlinearity correction  Validity:20131210.000100 --- 20131220.000100
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:                  TpcEdge/                                Gain on distance from Chamber edge  Validity:20070321.000102 --- 20371231.120000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowB/                                Gas gain correction for sector/row  Validity:20131215.000000 --- 20131220.000100
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:               TpcSecRowC/     Additional sector/row Gas gain correction for desired trigger  Validity:19950101.000000 --- 20380101.000000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:             tpcPressureB/                               Gain on Gas Density due to Pressure  Validity:20131210.000100 --- 20140101.000004
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:          TpcZCorrectionB/               Variation on drift distance without Gating Gird one  Validity:20131210.000100 --- 20131220.000100
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:         TpcdXCorrectionB/                                                     dX correction  Validity:20120423.112410 --- 20140101.000000
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:           TpcEffectivedX/                      dEdx correction wrt Bichsel parameterization  Validity:20000101.000000 --- 20160207.000102
+StdEdxY2Maker:WARN  - StTpcdEdxCorrection:   TpcLengthCorrectionMDF/  Variation vs Track length and <log2(dX)> and rel. error in dE/dx  Validity:20130305.000013 --- 20140101.000008
+
+StdEdxY2Maker:WARN  - With TpcLengthCorrectionMDF activated => Deactivate TpcLengthCorrectionB
+StdEdxY2Maker:WARN  - StdEdxY2Maker::InitRun Force NOT to USE dx2L in dE/dx predictions 
+StdEdxY2Maker:WARN  - StTrackCombPiD::SetdEdxErrorCut( 0.5)
+SL24g
+float   SecRowSigIW[0]  0.091367 : parameterization of Inner West gain sigma vs row 
+                   [1]         0 :
+float   SecRowSigOW[0]  0.062985 : parameterization of Outer West gain sigma vs row 
+                   [1]         0 :
+float   SecRowSigIE[0]  0.091367 : parameterization of Inner East gain sigma vs row 
+                   [1]         0 :
+float   SecRowSigOE[0]  0.062985 : parameterization of Outer East gain sigma vs row 
+                   [1]         0 :
+--------------------------------------------------------------------------------
+TFG26d
+float   SecRowSigIW[0]  0.091367 : parameterization of Inner West gain sigma vs row 
+                   [1]         0 :
+                   [2]  0.062985 :
+                   [3]         0 :
+float   SecRowSigOW[0]  0.091367 : parameterization of Outer West gain sigma vs row 
+                   [1]         0 :
+                   [2]  0.062985 :
+                   [3]         0 :
+float   SecRowSigIE[0]         0 : parameterization of Inner East gain sigma vs row 
+                   [1]         0 :
+...
+                   [3]         0 :
+float   SecRowSigOE[0]         0 : parameterization of Outer East gain sigma vs row 
+                   [1]         0 :
+...
+                   [3]         0 :
+TFG
+float   SecRowSigIW[0]  0.091367 : parameterization of Inner West gain sigma vs row 
+                   [1]         0 :
+...
+                   [3]         0 :
+float   SecRowSigOW[0]  0.062985 : parameterization of Outer West gain sigma vs row 
+                   [1]         0 :
+...
+                   [3]         0 :
+float   SecRowSigIE[0]  0.091367 : parameterization of Inner East gain sigma vs row 
+                   [1]         0 :
+...
+                   [3]         0 :
+float   SecRowSigOE[0]  0.062985 : parameterization of Outer East gain sigma vs row 
+                   [1]         0 :
+...
+                   [3]         0 :
+================================================================================
+06/24/2026
+[cvmfswrite07] /cvmfs/star.sdcc.bnl.gov/TFG/star/packages/TFG/StarDb/Calibrations/tpc
+foreach f (`find . -name "TpcRes*.C" -type f`)
+  grep  'b\[i\]' ${f}
+  if ($?) continue;
+  mv ${f} ${f}.BAK
+  sed -e 's#b\[i\]#b\[i%2+4*\(i/2\)\]#' ${f}.BAK > ${f}
+  diff -u ${f}.BAK  ${f}
+end
+
+
+foreach f (`ls -1d TpcResponseSimulator.*.C`)
+  root.exe -q lDb.C 'TestTable.C("'${f}'")'
+end
+
+foreach f (`find . -name "TpcRes*.C" -type f`)
+  grep  'a\[i\]' ${f}
+  if ($?) continue;
+  mv ${f} ${f}.BAK
+  sed -e 's#a\[i\]#a\[i%2+4*\(i/2\)\]#' ${f}.BAK > ${f}
+  diff -u ${f}.BAK  ${f}
+end
+================================================================================
+06/25/2026
+   FSTM -> FSTD -> FTUO
+                -> FSTW -> 
+	OFSR,   <!-- OFSR Outer support ring for FST -->
+        OFSB,   <!-- OFSB Outer support bars (4) for FST -->
+	OFSD,   <!-- outer support bar (4) for FST -->
+	OFSC,   <!-- OFSC Outer extended support bars (4) for FST -->    <!-- extension bar for OSB Al rather the SS -->
+
+	OFCA,   <!-- Cable trays master vol - contains air and cables wide trays -->
+	OFCB,    <!-- air to contain cables -->
+	OFCG,      <!-- cable -->
+	OFCC,    <!-- cooling tray -->
+	OFCD,      <!--  air ditto -->
+	OFCE,        <!-- tubings 6 tubes per trays-->
+	OFCF           <!-- novex cooling fluid -->
+================================================================================
+06/26/2026
+[cvmfswrite07] ~/work/kfp/2025/AuAu_2025.P25iy_calib/dEdx $ 
+
+foreach  f (`ls -1d  2*.root`)
+  set log = D`basename ${f} .root`.log
+  root.exe -q -b lBichsel.C 'kfQA.C+("'${f}'")' >& ${log}
+end
+
+starsim > gprint volu scom
+0VOLUME NAME  NUMED SHAPE NPAR  PARAMETERS
+     53 SCOM   17   PCON   45   0.000E+00 0.360E+03 0.140E+02
+-0.230E+03 0.385E+02 0.389E+02
+-0.149E+03 0.385E+02 0.389E+02
+-0.596E+02 0.216E+02 0.220E+02
+-0.596E+02 0.214E+02 0.220E+02
+-0.596E+02 0.410E+01 0.220E+02
+-0.556E+02 0.410E+01 0.220E+02
+-0.556E+02 0.410E+01 0.226E+02
+ 0.556E+02 0.410E+01 0.226E+02
+ 0.556E+02 0.410E+01 0.220E+02
+ 0.596E+02 0.410E+01 0.220E+02 
+ 0.596E+02 0.214E+02 0.220E+02 
+
+ 0.596E+02 0.216E+02 0.220E+02
+ 0.149E+03 0.385E+02 0.389E+02 
+ 0.230E+03 0.385E+02 0.389E+02
+
+FSTA 
+ 0.596E+02 0.216E+02 0.220E+02
+ 0.149E+03 0.385E+02 0.389E+02 
+ 0.240E+03 0.385E+02 0.389E+02
+ 
+
+gGeoManager->cd("/HALL_1")
+gGeoManager->GetCurrentNode()->CheckOverlaps(1e-2)
+Info in <TGeoNodeMatrix::CheckOverlaps>: Number of illegal overlaps/extrusions : 325
+gGeoManager->PrintOverlaps(); 
+=== Overlaps for y2025z ===
+ = Overlap ov00000: GMTS extruded by: GMTS/GHVB_1 ovlp=1.8424
+ = Overlap ov00001: GMTS extruded by: GMTS/GVBC_1 ovlp=1.6974
+ = Overlap ov00002: GMTS extruded by: GMTS/GFBC_1 ovlp=0.8374
+ = Overlap ov00003: GMTS extruded by: GMTS/GFBC_2 ovlp=0.8374
+ = Overlap ov00004: MSEC extruded by: MSEC/MBAR_1 ovlp=0.727278
+ = Overlap ov00005: GMTS extruded by: GMTS/GFBO_2 ovlp=0.5674
+ = Overlap ov00006: GMTS extruded by: GMTS/GFBO_1 ovlp=0.5674
+ = Overlap ov00007: SBSP extruded by: SBSP/SAKM_1 ovlp=0.48
+ = Overlap ov00008: CSUP extruded by: CSUP/CSMD_1 ovlp=0.2151
+ = Overlap ov00009: TPSS extruded by: TPSS/TPAD_49 ovlp=0.11701
+ = Overlap ov00010: TPSS extruded by: TPSS/TPAD_51 ovlp=0.11701
+ = Overlap ov00011: TPSS extruded by: TPSS/TPAD_52 ovlp=0.11701
+ = Overlap ov00012: TPSS extruded by: TPSS/TPAD_53 ovlp=0.11701
+ = Overlap ov00013: TPSS extruded by: TPSS/TPAD_54 ovlp=0.11701
+ = Overlap ov00014: TPSS extruded by: TPSS/TPAD_55 ovlp=0.11701
+ = Overlap ov00015: TPSS extruded by: TPSS/TPAD_56 ovlp=0.11701
+ = Overlap ov00016: TPSS extruded by: TPSS/TPAD_57 ovlp=0.11701
+ = Overlap ov00017: TPSS extruded by: TPSS/TPAD_58 ovlp=0.11701
+ = Overlap ov00018: TPSS extruded by: TPSS/TPAD_59 ovlp=0.11701
+ = Overlap ov00019: TPSS extruded by: TPSS/TPAD_60 ovlp=0.11701
+ = Overlap ov00020: TPSS extruded by: TPSS/TPAD_61 ovlp=0.11701
+ = Overlap ov00021: TPSS extruded by: TPSS/TPAD_62 ovlp=0.11701
+ = Overlap ov00022: TPSS extruded by: TPSS/TPAD_63 ovlp=0.11701
+ = Overlap ov00023: TPSS extruded by: TPSS/TPAD_64 ovlp=0.11701
+ = Overlap ov00024: TPSS extruded by: TPSS/TPAD_65 ovlp=0.11701
+ = Overlap ov00025: TPSS extruded by: TPSS/TPAD_66 ovlp=0.11701
+ = Overlap ov00026: TPSS extruded by: TPSS/TPAD_67 ovlp=0.11701
+ = Overlap ov00027: TPSS extruded by: TPSS/TPAD_68 ovlp=0.11701
+ = Overlap ov00028: TPSS extruded by: TPSS/TPAD_69 ovlp=0.11701
+ = Overlap ov00029: TPSS extruded by: TPSS/TPAD_70 ovlp=0.11701
+ = Overlap ov00030: TPSS extruded by: TPSS/TPAD_71 ovlp=0.11701
+ = Overlap ov00031: TPSS extruded by: TPSS/TPAD_72 ovlp=0.11701
+ = Overlap ov00032: TPSS extruded by: TPSS/TPAD_73 ovlp=0.11701
+ = Overlap ov00033: TPSS extruded by: TPSS/TPAD_74 ovlp=0.11701
+ = Overlap ov00034: TPSS extruded by: TPSS/TPAD_75 ovlp=0.11701
+ = Overlap ov00035: TPSS extruded by: TPSS/TPAD_76 ovlp=0.11701
+ = Overlap ov00036: TPSS extruded by: TPSS/TPAD_48 ovlp=0.11701
+ = Overlap ov00037: TPSS extruded by: TPSS/TPAD_50 ovlp=0.11701
+ = Overlap ov00038: TPSS extruded by: TPSS/TPAD_47 ovlp=0.11701
+ = Overlap ov00039: TPSS extruded by: TPSS/TPAD_46 ovlp=0.11701
+ = Overlap ov00040: TPSS extruded by: TPSS/TPAD_45 ovlp=0.11701
+ = Overlap ov00041: TPSS extruded by: TPSS/TPAD_44 ovlp=0.11701
+ = Overlap ov00042: TPSS extruded by: TPSS/TPAD_43 ovlp=0.11701
+ = Overlap ov00043: SAKM extruded by: SAKM/SAKH_1 ovlp=0.0999985
+ = Overlap ov00044: SAKM extruded by: SAKM/SAKH_2 ovlp=0.0999985
+ = Overlap ov00045: SAKM extruded by: SAKM/SAKH_3 ovlp=0.0999985
+ = Overlap ov00046: CSMD extruded by: CSMD/CSMB_2 ovlp=0.09846
+ = Overlap ov00047: CSMD extruded by: CSMD/CSMB_1 ovlp=0.09846
+ = Overlap ov00048: EMOD extruded by: EMOD/ESEC_3 ovlp=0.0590888
+ = Overlap ov00049: TSAS extruded by: TSAS/TWIR_1 ovlp=0.0547
+ = Overlap ov00050: TSAS extruded by: TSAS/TWIR_2 ovlp=0.0547
+ = Overlap ov00051: ESEC extruded by: ESEC/EMGT_1 ovlp=0.0438603
+ = Overlap ov00052: ESEC extruded by: ESEC/EMGT_6 ovlp=0.0432233
+ = Overlap ov00053: ESEC extruded by: ESEC/EMGT_1 ovlp=0.0432192
+ = Overlap ov00054: ESEC extruded by: ESEC/EMGT_2 ovlp=0.0432146
+ = Overlap ov00055: EXSG extruded by: EXSG/EHMS_43 ovlp=0.0363308
+ = Overlap ov00056: EXSG extruded by: EXSG/EBLS_22 ovlp=0.0363308
+ = Overlap ov00057: EXSG extruded by: EXSG/EHMS_43 ovlp=0.0363308
+ = Overlap ov00058: EXSG extruded by: EXSG/EBLS_22 ovlp=0.0363308
+ = Overlap ov00059: EXSG extruded by: EXSG/EFLS_22 ovlp=0.0362821
+ = Overlap ov00060: EXSG extruded by: EXSG/EHMS_44 ovlp=0.0362821
+ = Overlap ov00061: EXSG extruded by: EXSG/EFLS_22 ovlp=0.0362821
+ = Overlap ov00062: EXSG extruded by: EXSG/EHMS_44 ovlp=0.0362821
+ = Overlap ov00063: EXSG extruded by: EXSG/EFLS_21 ovlp=0.0361285
+ = Overlap ov00064: EXSG extruded by: EXSG/EFLS_21 ovlp=0.0361285
+ = Overlap ov00065: EXSG extruded by: EXSG/EHMS_42 ovlp=0.0361285
+ = Overlap ov00066: EXSG extruded by: EXSG/EHMS_42 ovlp=0.0361285
+ = Overlap ov00067: EXSG extruded by: EXSG/EBLS_23 ovlp=0.03592
+ = Overlap ov00068: EXSG extruded by: EXSG/EHMS_45 ovlp=0.03592
+ = Overlap ov00069: EXSG extruded by: EXSG/EBLS_23 ovlp=0.03592
+ = Overlap ov00070: EXSG extruded by: EXSG/EHMS_45 ovlp=0.03592
+ = Overlap ov00071: EXSG extruded by: EXSG/EBLS_21 ovlp=0.0356349
+ = Overlap ov00072: EXSG extruded by: EXSG/EHMS_41 ovlp=0.0356349
+ = Overlap ov00073: EXSG extruded by: EXSG/EBLS_21 ovlp=0.0356349
+ = Overlap ov00074: EXSG extruded by: EXSG/EHMS_41 ovlp=0.0356349
+ = Overlap ov00075: EXSG extruded by: EXSG/EHMS_46 ovlp=0.035251
+ = Overlap ov00076: EXSG extruded by: EXSG/EFLS_23 ovlp=0.035251
+ = Overlap ov00077: EXSG extruded by: EXSG/EFLS_23 ovlp=0.035251
+ = Overlap ov00078: EXSG extruded by: EXSG/EHMS_46 ovlp=0.035251
+ = Overlap ov00079: EXSG extruded by: EXSG/EFLS_20 ovlp=0.0348952
+ = Overlap ov00080: EXSG extruded by: EXSG/EHMS_40 ovlp=0.0348952
+ = Overlap ov00081: EXSG extruded by: EXSG/EFLS_20 ovlp=0.0348952
+ = Overlap ov00082: EXSG extruded by: EXSG/EHMS_40 ovlp=0.0348952
+ = Overlap ov00083: EXSG extruded by: EXSG/EHMS_47 ovlp=0.0342553
+ = Overlap ov00084: EXSG extruded by: EXSG/EBLS_24 ovlp=0.0342553
+ = Overlap ov00085: EXSG extruded by: EXSG/EBLS_24 ovlp=0.0342553
+ = Overlap ov00086: EXSG extruded by: EXSG/EHMS_47 ovlp=0.0342553
+ = Overlap ov00087: EXSG extruded by: EXSG/EBLS_20 ovlp=0.0338984
+ = Overlap ov00088: EXSG extruded by: EXSG/EHMS_39 ovlp=0.0338984
+ = Overlap ov00089: EXSG extruded by: EXSG/EBLS_20 ovlp=0.0338984
+ = Overlap ov00090: EXSG extruded by: EXSG/EHMS_39 ovlp=0.0338984
+ = Overlap ov00091: ESEC extruded by: ESEC/EMGT_1 ovlp=0.0338937
+ = Overlap ov00092: ESEC extruded by: ESEC/ERAD_18 ovlp=0.0336
+ = Overlap ov00093: EXSG extruded by: EXSG/EFLS_24 ovlp=0.0329291
+ = Overlap ov00094: EXSG extruded by: EXSG/EHMS_48 ovlp=0.0329291
+ = Overlap ov00095: EXSG extruded by: EXSG/EHMS_48 ovlp=0.0329291
+ = Overlap ov00096: EXSG extruded by: EXSG/EFLS_24 ovlp=0.0329291
+ = Overlap ov00097: ESEC extruded by: ESEC/EMGT_1 ovlp=0.0327726
+ = Overlap ov00098: EXSG extruded by: EXSG/EFLS_19 ovlp=0.0326773
+ = Overlap ov00099: EXSG extruded by: EXSG/EFLS_19 ovlp=0.0326773
+ = Overlap ov00100: EXSG extruded by: EXSG/EHMS_38 ovlp=0.0326773
+ = Overlap ov00101: EXSG extruded by: EXSG/EHMS_38 ovlp=0.0326773
+ = Overlap ov00102: EXSG extruded by: EXSG/EBLS_25 ovlp=0.031227
+ = Overlap ov00103: EXSG extruded by: EXSG/EHMS_49 ovlp=0.031227
+ = Overlap ov00104: EXSG extruded by: EXSG/EHMS_49 ovlp=0.031227
+ = Overlap ov00105: EXSG extruded by: EXSG/EBLS_25 ovlp=0.031227
+ = Overlap ov00106: EXSG extruded by: EXSG/EBLS_19 ovlp=0.0312181
+ = Overlap ov00107: EXSG extruded by: EXSG/EBLS_19 ovlp=0.0312181
+ = Overlap ov00108: EXSG extruded by: EXSG/EHMS_37 ovlp=0.0312181
+ = Overlap ov00109: EXSG extruded by: EXSG/EHMS_37 ovlp=0.0312181
+ = Overlap ov00110: ESEC extruded by: ESEC/EMGT_1 ovlp=0.0304331
+ = Overlap ov00111: ESEC extruded by: ESEC/EMGT_2 ovlp=0.0304323
+ = Overlap ov00112: EXSG extruded by: EXSG/EHMS_36 ovlp=0.0295363
+ = Overlap ov00113: EXSG extruded by: EXSG/EHMS_36 ovlp=0.0295363
+ = Overlap ov00114: EXSG extruded by: EXSG/EFLS_18 ovlp=0.0295363
+ = Overlap ov00115: EXSG extruded by: EXSG/EFLS_18 ovlp=0.0295363
+ = Overlap ov00116: EXSG extruded by: EXSG/EHMS_50 ovlp=0.0291478
+ = Overlap ov00117: EXSG extruded by: EXSG/EFLS_25 ovlp=0.0291478
+ = Overlap ov00118: EXSG extruded by: EXSG/EHMS_50 ovlp=0.0291478
+ = Overlap ov00119: EXSG extruded by: EXSG/EFLS_25 ovlp=0.0291478
+ = Overlap ov00120: EXSG extruded by: EXSG/EHMS_35 ovlp=0.0276466
+ = Overlap ov00121: EXSG extruded by: EXSG/EBLS_18 ovlp=0.0276466
+ = Overlap ov00122: EXSG extruded by: EXSG/EBLS_18 ovlp=0.0276466
+ = Overlap ov00123: EXSG extruded by: EXSG/EHMS_35 ovlp=0.0276466
+ = Overlap ov00124: EXSG extruded by: EXSG/EBLS_26 ovlp=0.0266647
+ = Overlap ov00125: EXSG extruded by: EXSG/EBLS_26 ovlp=0.0266647
+ = Overlap ov00126: EXSG extruded by: EXSG/EHMS_51 ovlp=0.0266647
+ = Overlap ov00127: EXSG extruded by: EXSG/EHMS_51 ovlp=0.0266647
+ = Overlap ov00128: EXSG extruded by: EXSG/EHMS_34 ovlp=0.0255705
+ = Overlap ov00129: EXSG extruded by: EXSG/EFLS_17 ovlp=0.0255705
+ = Overlap ov00130: EXSG extruded by: EXSG/EHMS_34 ovlp=0.0255705
+ = Overlap ov00131: EXSG extruded by: EXSG/EFLS_17 ovlp=0.0255705
+ = Overlap ov00132: EXSG extruded by: EXSG/EHMS_52 ovlp=0.0237323
+ = Overlap ov00133: EXSG extruded by: EXSG/EFLS_26 ovlp=0.0237323
+ = Overlap ov00134: EXSG extruded by: EXSG/EBLS_17 ovlp=0.0232701
+ = Overlap ov00135: EXSG extruded by: EXSG/EBLS_17 ovlp=0.0232701
+ = Overlap ov00136: EXSG extruded by: EXSG/EHMS_33 ovlp=0.0232701
+ = Overlap ov00137: EXSG extruded by: EXSG/EHMS_33 ovlp=0.0232701
+ = Overlap ov00138: EXSG extruded by: EXSG/EHMS_32 ovlp=0.020791
+ = Overlap ov00139: EXSG extruded by: EXSG/EFLS_16 ovlp=0.020791
+ = Overlap ov00140: EXSG extruded by: EXSG/EHMS_32 ovlp=0.020791
+ = Overlap ov00141: EXSG extruded by: EXSG/EFLS_16 ovlp=0.020791
+ = Overlap ov00142: EXSG extruded by: EXSG/EBLS_27 ovlp=0.0203565
+ = Overlap ov00143: EXSG extruded by: EXSG/EHMS_53 ovlp=0.0203565
+ = Overlap ov00144: EXSG extruded by: EXSG/EHMS_31 ovlp=0.0181242
+ = Overlap ov00145: EXSG extruded by: EXSG/EBLS_16 ovlp=0.0181242
+ = Overlap ov00146: EXSG extruded by: EXSG/EHMS_31 ovlp=0.0181242
+ = Overlap ov00147: EXSG extruded by: EXSG/EBLS_16 ovlp=0.0181242
+ = Overlap ov00148: EXSG extruded by: EXSG/EFLS_27 ovlp=0.0164625
+ = Overlap ov00149: EXSG extruded by: EXSG/EHMS_54 ovlp=0.0164625
+ = Overlap ov00150: EXSG extruded by: EXSG/EFLS_15 ovlp=0.0152855
+ = Overlap ov00151: EXSG extruded by: EXSG/EFLS_15 ovlp=0.0152855
+ = Overlap ov00152: EXSG extruded by: EXSG/EHMS_30 ovlp=0.0152855
+ = Overlap ov00153: EXSG extruded by: EXSG/EHMS_30 ovlp=0.0152855
+ = Overlap ov00154: EXSG extruded by: EXSG/EHMS_29 ovlp=0.0122609
+ = Overlap ov00155: EXSG extruded by: EXSG/EBLS_15 ovlp=0.0122609
+ = Overlap ov00156: EXSG extruded by: EXSG/EBLS_15 ovlp=0.0122609
+ = Overlap ov00157: EXSG extruded by: EXSG/EHMS_29 ovlp=0.0122609
+ = Overlap ov00158: EXSG extruded by: EXSG/EBLS_28 ovlp=0.0120519
+ = Overlap ov00159: EXSG extruded by: EXSG/EHMS_55 ovlp=0.0120519
+ = Overlap ov00160: COIL extruded by: COIL/MCSE_12 ovlp=0.01144
+ = Overlap ov00161: COIL extruded by: COIL/MCSE_11 ovlp=0.01144
+ = Overlap ov00162: TSAW/TWAS_2 overlapping TSAW/TWMR_1 ovlp=4.3822
+ = Overlap ov00163: TSAW/TWAS_2 overlapping TSAW/TWRB_3 ovlp=3.67051
+ = Overlap ov00164: TSAW/TWAS_1 overlapping TSAW/TWRB_1 ovlp=3.67051
+ = Overlap ov00165: TSAW/TWAS_1 overlapping TSAW/TWMR_1 ovlp=3.2178
+ = Overlap ov00166: CPHI/CBTW_1 overlapping CPHI/CSLG_28 ovlp=0.95245
+ = Overlap ov00167: CPHI/CBTW_1 overlapping CPHI/CSLG_1 ovlp=0.95245
+ = Overlap ov00168: CPHI/CBTW_1 overlapping CPHI/CSLG_2 ovlp=0.95245
+ = Overlap ov00169: CPHI/CBTW_1 overlapping CPHI/CSLG_3 ovlp=0.95245
+ = Overlap ov00170: CPHI/CBTW_1 overlapping CPHI/CSLG_4 ovlp=0.95245
+ = Overlap ov00171: CPHI/CBTW_1 overlapping CPHI/CSLG_5 ovlp=0.95245
+ = Overlap ov00172: CPHI/CBTW_1 overlapping CPHI/CSLG_6 ovlp=0.95245
+ = Overlap ov00173: CPHI/CBTW_1 overlapping CPHI/CSLG_7 ovlp=0.95245
+ = Overlap ov00174: CPHI/CBTW_1 overlapping CPHI/CSLG_8 ovlp=0.95245
+ = Overlap ov00175: CPHI/CBTW_1 overlapping CPHI/CSLG_9 ovlp=0.95245
+ = Overlap ov00176: CPHI/CBTW_1 overlapping CPHI/CSLG_10 ovlp=0.95245
+ = Overlap ov00177: CPHI/CBTW_1 overlapping CPHI/CSLG_11 ovlp=0.95245
+ = Overlap ov00178: CPHI/CBTW_1 overlapping CPHI/CSLG_12 ovlp=0.95245
+ = Overlap ov00179: CPHI/CBTW_1 overlapping CPHI/CSLG_13 ovlp=0.95245
+ = Overlap ov00180: CPHI/CBTW_1 overlapping CPHI/CSLG_14 ovlp=0.95245
+ = Overlap ov00181: CPHI/CBTW_1 overlapping CPHI/CSLG_15 ovlp=0.95245
+ = Overlap ov00182: CPHI/CBTW_1 overlapping CPHI/CSLG_16 ovlp=0.95245
+ = Overlap ov00183: CPHI/CBTW_1 overlapping CPHI/CSLG_17 ovlp=0.95245
+ = Overlap ov00184: CPHI/CBTW_1 overlapping CPHI/CSLG_18 ovlp=0.95245
+ = Overlap ov00185: CPHI/CBTW_1 overlapping CPHI/CSLG_19 ovlp=0.95245
+ = Overlap ov00186: CPHI/CBTW_1 overlapping CPHI/CSLG_20 ovlp=0.95245
+ = Overlap ov00187: CPHI/CBTW_1 overlapping CPHI/CSLG_21 ovlp=0.95245
+ = Overlap ov00188: CPHI/CBTW_1 overlapping CPHI/CSLG_22 ovlp=0.95245
+ = Overlap ov00189: CPHI/CBTW_1 overlapping CPHI/CSLG_23 ovlp=0.95245
+ = Overlap ov00190: CPHI/CBTW_1 overlapping CPHI/CSLG_24 ovlp=0.95245
+ = Overlap ov00191: CPHI/CBTW_1 overlapping CPHI/CSLG_25 ovlp=0.95245
+ = Overlap ov00192: CPHI/CBTW_1 overlapping CPHI/CSLG_26 ovlp=0.95245
+ = Overlap ov00193: CPHI/CBTW_1 overlapping CPHI/CSLG_27 ovlp=0.95245
+ = Overlap ov00194: CPHI/CBTW_1 overlapping CPHI/CSLG_30 ovlp=0.95245
+ = Overlap ov00195: CPHI/CBTW_1 overlapping CPHI/CSLG_29 ovlp=0.95245
+ = Overlap ov00196: TSAW/TWAS_2 overlapping TSAW/TWRB_4 ovlp=0.917623
+ = Overlap ov00197: TSAW/TWRB_2 overlapping TSAW/TWAS_2 ovlp=0.917623
+ = Overlap ov00198: TSAW/TWAS_1 overlapping TSAW/TWRB_2 ovlp=0.917623
+ = Overlap ov00199: TSAW/TWRB_1 overlapping TSAW/TWBT_1 ovlp=0.858062
+ = Overlap ov00200: SPOA/SPOK_1 overlapping SPOA/SPOB_1 ovlp=0.748847
+ = Overlap ov00201: TSAW/TWAS_1 overlapping TSAW/TWBT_1 ovlp=0.61
+ = Overlap ov00202: CPHI/CSTP_1 overlapping CPHI/CSUP_1 ovlp=0.454234
+ = Overlap ov00203: FSTD/FTUO_17 overlapping FSTD/FSTW_11 ovlp=0.3969
+ = Overlap ov00204: FSTD/FSTW_6 overlapping FSTD/FTUO_33 ovlp=0.3969
+ = Overlap ov00205: FSTD/FSTW_6 overlapping FSTD/FTUO_31 ovlp=0.3969
+ = Overlap ov00206: FSTD/FTUO_14 overlapping FSTD/FSTW_10 ovlp=0.3969
+ = Overlap ov00207: FSTD/FSTW_5 overlapping FSTD/FTUO_32 ovlp=0.3969
+ = Overlap ov00208: FSTD/FSTW_5 overlapping FSTD/FTUO_31 ovlp=0.3969
+ = Overlap ov00209: FSTD/FSTW_6 overlapping FSTD/FTUO_34 ovlp=0.3969
+ = Overlap ov00210: FSTD/FTUO_18 overlapping FSTD/FSTW_12 ovlp=0.3969
+ = Overlap ov00211: FSTD/FSTW_6 overlapping FSTD/FTUO_35 ovlp=0.3969
+ = Overlap ov00212: FSTD/FSTW_5 overlapping FSTD/FTUO_30 ovlp=0.3969
+ = Overlap ov00213: FSTD/FSTW_5 overlapping FSTD/FTUO_28 ovlp=0.3969
+ = Overlap ov00214: FSTD/FTUO_12 overlapping FSTD/FSTW_10 ovlp=0.3969
+ = Overlap ov00215: FSTD/FTUO_11 overlapping FSTD/FSTW_9 ovlp=0.3969
+ = Overlap ov00216: FSTD/FSTW_4 overlapping FSTD/FTUO_29 ovlp=0.3969
+ = Overlap ov00217: FSTD/FSTW_4 overlapping FSTD/FTUO_28 ovlp=0.3969
+ = Overlap ov00218: FSTD/FSTW_4 overlapping FSTD/FTUO_27 ovlp=0.3969
+ = Overlap ov00219: FSTD/FSTW_4 overlapping FSTD/FTUO_25 ovlp=0.3969
+ = Overlap ov00220: FSTD/FTUO_9 overlapping FSTD/FSTW_9 ovlp=0.3969
+ = Overlap ov00221: FSTD/FTUO_8 overlapping FSTD/FSTW_8 ovlp=0.3969
+ = Overlap ov00222: FSTD/FSTW_3 overlapping FSTD/FTUO_26 ovlp=0.3969
+ = Overlap ov00223: FSTD/FSTW_3 overlapping FSTD/FTUO_25 ovlp=0.3969
+ = Overlap ov00224: FSTD/FSTW_3 overlapping FSTD/FTUO_24 ovlp=0.3969
+ = Overlap ov00225: FSTD/FSTW_3 overlapping FSTD/FTUO_22 ovlp=0.3969
+ = Overlap ov00226: FSTD/FTUO_5 overlapping FSTD/FSTW_7 ovlp=0.3969
+ = Overlap ov00227: FSTD/FSTW_2 overlapping FSTD/FTUO_23 ovlp=0.3969
+ = Overlap ov00228: FSTD/FSTW_2 overlapping FSTD/FTUO_22 ovlp=0.3969
+ = Overlap ov00229: FSTD/FSTW_2 overlapping FSTD/FTUO_21 ovlp=0.3969
+ = Overlap ov00230: FSTD/FSTW_2 overlapping FSTD/FTUO_19 ovlp=0.3969
+ = Overlap ov00231: FSTD/FTUO_3 overlapping FSTD/FSTW_7 ovlp=0.3969
+ = Overlap ov00232: FSTD/FSTW_1 overlapping FSTD/FTUO_36 ovlp=0.3969
+ = Overlap ov00233: FSTD/FSTW_1 overlapping FSTD/FTUO_34 ovlp=0.3969
+ = Overlap ov00234: FSTD/FSTW_1 overlapping FSTD/FTUO_20 ovlp=0.3969
+ = Overlap ov00235: FSTD/FSTW_1 overlapping FSTD/FTUO_19 ovlp=0.3969
+ = Overlap ov00236: GMTS/GSBA_1 overlapping GMTS/GFBC_2 ovlp=0.37462
+ = Overlap ov00237: GMTS/GSBA_1 overlapping GMTS/GFBC_1 ovlp=0.37462
+ = Overlap ov00238: TSAS/TALS_1 overlapping TSAS/TWIR_2 ovlp=0.2836
+ = Overlap ov00239: TSAS/TALS_1 overlapping TSAS/TWIR_1 ovlp=0.2836
+ = Overlap ov00240: TSAS/TALS_1 overlapping TSAS/TWIR_1 ovlp=0.2836
+ = Overlap ov00241: TSAS/TALS_1 overlapping TSAS/TWIR_2 ovlp=0.2836
+ = Overlap ov00242: SPOA/SPOB_1 overlapping SPOA/SBRX_1 ovlp=0.239883
+ = Overlap ov00243: SPOA/SPOB_1 overlapping SPOA/SBRL_1 ovlp=0.221827
+ = Overlap ov00244: IBEM/IBEV_1 overlapping IBEM/IBST_1 ovlp=0.2159
+ = Overlap ov00245: TSAW/TWRB_4 overlapping TSAW/TWBT_1 ovlp=0.18051
+ = Overlap ov00246: TSAW/TWRB_2 overlapping TSAW/TWBT_1 ovlp=0.18051
+ = Overlap ov00247: GMTS/GSBA_1 overlapping GMTS/GFBO_2 ovlp=0.135
+ = Overlap ov00248: GMTS/GSBA_1 overlapping GMTS/GFBO_1 ovlp=0.135
+ = Overlap ov00249: FSTD/FTUO_4 overlapping FSTD/FSTW_7 ovlp=0.1323
+ = Overlap ov00250: FSTD/FTUO_1 overlapping FSTD/FSTW_12 ovlp=0.1323
+ = Overlap ov00251: FSTD/FTUO_2 overlapping FSTD/FSTW_12 ovlp=0.1323
+ = Overlap ov00252: FSTD/FTUO_13 overlapping FSTD/FSTW_10 ovlp=0.1323
+ = Overlap ov00253: FSTD/FTUO_7 overlapping FSTD/FSTW_8 ovlp=0.1323
+ = Overlap ov00254: FSTD/FTUO_16 overlapping FSTD/FSTW_11 ovlp=0.1323
+ = Overlap ov00255: FSTD/FTUO_10 overlapping FSTD/FSTW_9 ovlp=0.1323
+ = Overlap ov00256: GMTS/GSBA_1 overlapping GMTS/GHVB_1 ovlp=0.13
+ = Overlap ov00257: BUND/BASE_1 overlapping BUND/BCOV_1 ovlp=0.127006
+ = Overlap ov00258: FSTD/FTUO_7 overlapping FSTD/FSTW_9 ovlp=0.1134
+ = Overlap ov00259: FSTD/FTUO_13 overlapping FSTD/FSTW_11 ovlp=0.1134
+ = Overlap ov00260: FSTD/FTUO_6 overlapping FSTD/FSTW_8 ovlp=0.1134
+ = Overlap ov00261: FSTD/FTUO_4 overlapping FSTD/FSTW_8 ovlp=0.1134
+ = Overlap ov00262: FSTD/FTUO_15 overlapping FSTD/FSTW_11 ovlp=0.1134
+ = Overlap ov00263: FSTD/FTUO_10 overlapping FSTD/FSTW_10 ovlp=0.1134
+ = Overlap ov00264: FSTD/FTUO_16 overlapping FSTD/FSTW_12 ovlp=0.1134
+ = Overlap ov00265: FSTD/FTUO_1 overlapping FSTD/FSTW_7 ovlp=0.1134
+ = Overlap ov00266: GMTS/GINO_1 overlapping GMTS/GHVB_1 ovlp=0.111807
+ = Overlap ov00267: GMTS/GINO_1 overlapping GMTS/GFBO_1 ovlp=0.110542
+ = Overlap ov00268: TWAS/TCOO_2 overlapping TWAS/TCOO_4 ovlp=0.094587
+ = Overlap ov00269: TWAS/TCOO_1 overlapping TWAS/TCOO_4 ovlp=0.094587
+ = Overlap ov00270: GMTS/GINO_1 overlapping GMTS/GFBC_1 ovlp=0.0830557
+ = Overlap ov00271: GMTS/GINO_1 overlapping GMTS/GFBC_2 ovlp=0.0830557
+ = Overlap ov00272: TWAS/TCOO_1 overlapping TWAS/TCOO_5 ovlp=0.0808533
+ = Overlap ov00273: TWAS/TCOO_2 overlapping TWAS/TCOO_5 ovlp=0.0808533
+ = Overlap ov00274: TWAS/TCOO_2 overlapping TWAS/TCOO_6 ovlp=0.0671669
+ = Overlap ov00275: TWAS/TCOO_1 overlapping TWAS/TCOO_6 ovlp=0.0671669
+ = Overlap ov00276: GMTS/GINO_1 overlapping GMTS/GVBC_1 ovlp=0.0610159
+ = Overlap ov00277: TWAS/TCOO_2 overlapping TWAS/TCOO_7 ovlp=0.0534587
+ = Overlap ov00278: TWAS/TCOO_1 overlapping TWAS/TCOO_7 ovlp=0.0534587
+ = Overlap ov00279: FSTA/FSTM_1 overlapping FSTA/OFCA_4 ovlp=0.0497678
+ = Overlap ov00280: EPSS/EPDT_7 overlapping EPSS/EPDT_8 ovlp=0.0488376
+ = Overlap ov00281: TWAS/TCOO_1 overlapping TWAS/TCOO_3 ovlp=0.0455683
+ = Overlap ov00282: TWAS/TCOO_2 overlapping TWAS/TCOO_3 ovlp=0.0455683
+ = Overlap ov00283: TWAS/TCOO_2 overlapping TWAS/TCOO_8 ovlp=0.0397287
+ = Overlap ov00284: TWAS/TCOO_1 overlapping TWAS/TCOO_8 ovlp=0.0397287
+ = Overlap ov00285: TWAS/TCOO_1 overlapping TWAS/TCOO_4 ovlp=0.0360225
+ = Overlap ov00286: TWAS/TCOO_2 overlapping TWAS/TCOO_4 ovlp=0.0360225
+ = Overlap ov00287: EPSS/EPDT_19 overlapping EPSS/EPDT_20 ovlp=0.0297349
+ = Overlap ov00288: TWAS/TCOO_2 overlapping TWAS/TCOO_5 ovlp=0.0289269
+ = Overlap ov00289: TWAS/TCOO_1 overlapping TWAS/TCOO_5 ovlp=0.0289269
+ = Overlap ov00290: TWAS/TCOO_2 overlapping TWAS/TCOO_9 ovlp=0.0260461
+ = Overlap ov00291: TWAS/TCOO_1 overlapping TWAS/TCOO_9 ovlp=0.0260461
+ = Overlap ov00292: TWAS/TCOO_2 overlapping TWAS/TCOO_6 ovlp=0.0218526
+ = Overlap ov00293: TWAS/TCOO_1 overlapping TWAS/TCOO_6 ovlp=0.0218526
+ = Overlap ov00294: CAVE/IBSB_1 overlapping CAVE/IBSC_1 ovlp=0.02
+ = Overlap ov00295: CAVE/IBSB_2 overlapping CAVE/IBSC_1 ovlp=0.02
+ = Overlap ov00296: TARM/HLDR_1 overlapping TARM/FOIL_1 ovlp=0.017
+ = Overlap ov00297: EPSS/EPDT_11 overlapping EPSS/EPDT_12 ovlp=0.0151988
+ = Overlap ov00298: TWAS/TCOO_1 overlapping TWAS/TCOO_7 ovlp=0.0147467
+ = Overlap ov00299: TWAS/TCOO_2 overlapping TWAS/TCOO_7 ovlp=0.0147467
+ = Overlap ov00300: EPSS/EPDT_53 overlapping EPSS/EPDT_54 ovlp=0.0139549
+ = Overlap ov00301: EPSS/EPDT_51 overlapping EPSS/EPDT_52 ovlp=0.0139548
+ = Overlap ov00302: EPSS/EPDT_57 overlapping EPSS/EPDT_58 ovlp=0.013802
+ = Overlap ov00303: EPSS/EPDT_55 overlapping EPSS/EPDT_56 ovlp=0.0138019
+ = Overlap ov00304: TWAS/TCOO_1 overlapping TWAS/TCOO_10 ovlp=0.0123379
+ = Overlap ov00305: TWAS/TCOO_2 overlapping TWAS/TCOO_10 ovlp=0.0123379
+ = Overlap ov00306: HTOW/HWSP_1 overlapping HTOW/HSPC_1 ovlp=0.0100002
+ = Overlap ov00307: HTOW/HSCI_1 overlapping HTOW/HSPC_1 ovlp=0.0100002
+ = Overlap ov00308: HTOW/HRSP_1 overlapping HTOW/HSPC_1 ovlp=0.0100002
+================================================================================
+06/27/2026
+root.exe [4] Info in <TGeoManager::Weight>: Computing analytically weight of FSTA
+Info in <TGeoManager::Weight>: Computed weight: 32.047049 [kg]
+
+Info in <TGeoManager::Weight>: Computing analytically weight of FSTM
+Info in <TGeoManager::Weight>: Computed weight: 9.904374 [kg]

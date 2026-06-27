@@ -47,11 +47,11 @@
 #include "TFileMerger.h"
 #include "TDirIter.h"
 #include "TInterpreter.h"
-//#include "dEdxFit.C"
+#include "dEdxFit.C"
 #include "brtw.C"
 #endif
-TF1 *FitGF(TH1 *proj, Option_t *opt="");
-TF1* FitGP(TH1* proj, Option_t* opt = "RQ", Double_t nSigma = 3, Int_t pow = 3, Double_t zmin = -0.2, Double_t zmax = 0.2);
+// TF1 *FitGF(TH1 *proj, Option_t *opt="");
+// TF1* FitGP(TH1* proj, Option_t* opt = "RQ", Double_t nSigma = 3, Int_t pow = 3, Double_t zmin = -0.2, Double_t zmax = 0.2);
 enum {NTVar = 12};     // bits   1      2     3        4      5       6       7          8       9       10              11          12
 const Char_t *Var[NTVar] = {"mean", "RMS", "mu", "sigma","sg10","sg100", "muGP", "sigmaGP", "Mass", "Gamma", "Significance", "PerEvent"};
 class Plot_t {
@@ -210,11 +210,11 @@ void Merge(Int_t run) {
 //________________________________________________________________________________
 //void kfQA(Int_t Run = 22141041, const Char_t *Out = 0){
 //  TString targetFile(Form("R%i.root",Run));
-void kfQA(const Char_t *targetFile = "R22141041.root", const Char_t *Out = 0){
+void kfQA(const Char_t *targetFile = "26339050.root", const Char_t *Out = 0){
   Char_t *tfileName = gSystem->Which(".",targetFile,kReadPermission);
   TString TFileName(tfileName);
   Int_t Run;
-  Int_t n = sscanf(targetFile,"R%i.root",&Run); cout << "From " << targetFile <<" Found Run = " << Run << endl;
+  Int_t n = sscanf(targetFile,"%i.root",&Run); cout << "From " << targetFile <<" Found Run = " << Run << endl;
   if (n != 1) return;
 #if 0
   if (! tfileName) {

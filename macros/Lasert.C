@@ -1,1 +1,0 @@
-../StRoot/StLaserAnalysisMaker/Lasert.C

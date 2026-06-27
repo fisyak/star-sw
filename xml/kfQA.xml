@@ -15,7 +15,8 @@
   ln -s ~/macros/.al* .
   set rout = R${input}.root
 # if (! -r ${rout}) hadd ${rout} ${input}/All*.root &gt;&amp; R${input}.log
-  root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+('${input}')'  &gt;&amp; ${log}
+#  root.exe -q -b lBichsel.C dEdxFit.C+  'kfQA.C+('${input}')'  &gt;&amp; ${log}
+  root.exe -q -b lBichsel.C 'kfQA.C+('${input}')'  &gt;&amp; ${log}
         </command>
 <!--
     <ResourceUsage>
@@ -25,6 +26,6 @@
 -->
     <stdout URL="file:./sched$JOBID.log" />
     <stderr URL="file:./sched$JOBID.err" />
-      <input URL="command:/bin/ls  -1d R*.root"/> 
+      <input URL="command:/bin/ls  -1d 2*.root"/> 
 </job>
 

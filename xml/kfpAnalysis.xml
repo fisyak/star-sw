@@ -16,17 +16,18 @@
 #foreach  evtsFile(`cat $FILELIST`)
   set evtsFile = "$INPUTFILE0";
 #  string:/star/data22/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy_calib6/2021/160/22160052:22160052/st_physics_22160052_raw_1500002.root:y2021:picoDst:st_physics_22160052_raw_1500002.picoDst.root
+#         /gpfs01/star/data100/TPC/reco/TFG26d/2025/RF/13p5GeV_fixedTarget_2026/027/27027002:27027002.root:y2026:picoDst:
   echo "${evtsFile}"
-  set inputDIR     = `echo ${evtsFile} | awk -F\, '{print $1}'`; echo "inputDIR     = $inputDIR";
-  set outputb      = `echo ${evtsFile} | awk -F\, '{print $2}'`; echo "outputb      = $outputb ";
-  set year         = `echo ${evtsFile} | awk -F\, '{print $3}'`; echo "year         = $year    ";
-  set dstype       = `echo ${evtsFile} | awk -F\, '{print $4}'`; echo "dstype       = $dstype  ";
-  set filelist     = `echo ${evtsFile} | awk -F\, '{print $5}'`; echo "filelist     = $filelist";
+  set inputDIR     = `echo ${evtsFile} | awk -F\: '{print $1}'`; echo "inputDIR     = $inputDIR";
+  set outputb      = `echo ${evtsFile} | awk -F\: '{print $2}'`; echo "outputb      = $outputb ";
+  set year         = `echo ${evtsFile} | awk -F\: '{print $3}'`; echo "year         = $year    ";
+  set dstype       = `echo ${evtsFile} | awk -F\: '{print $4}'`; echo "dstype       = $dstype  ";
+  set filelist     = `echo ${evtsFile} | awk -F\: '{print $5}'`; echo "filelist     = $filelist";
   set filel = `basename ${outputb} .root`;
   set logb = ${filel}B.log
   set log  = ${SUBMITTINGDIRECTORY}/${logb}
   set output  =  ${SUBMITTINGDIRECTORY}/${outputb};
-  if (-r ${output}) continue
+  if (-r ${output}) exit 0;
 #  set bla = ${SUBMITTINGDIRECTORY}/${filel}.bla.root
 #  if (-r ${bla}) continue;
 #  touch ${bla}
@@ -41,7 +42,7 @@
     end
   else 
 #      if (${SITE} == "HLT") then
-        ln -s  ${inputDIR}.root .
+        ln -s  ${inputDIR}/*${dstype}.root .
 #      else 
 #        rsync  ${inputDIR}  .
 #      endif

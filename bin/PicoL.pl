@@ -21,7 +21,7 @@ use PicoDef;
 #my $glob =  "/net/l401/data/scratch2/kehw/reco/2019/14GeV_2019_StiCA/0??/*";
 #my $glob =  "./Pico*/???/*/*.picoDst.root";
 my $debug = 0;
-my $step = 1;
+my $step = 0;
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
   if ($#ARGV >= 1) {
@@ -84,7 +84,8 @@ my $dayMax =  0;
 my $year = "y2020";
 my $Njobs = 0;
 my $DST = "picoDst";
-if    ($pwd =~ /2025/) { $year = "y2025";}
+if    ($pwd =~ /2026/) { $year = "y2026";}
+elsif ($pwd =~ /2025/) { $year = "y2025";}
 elsif ($pwd =~ /2024/) { $year = "y2024";}
 elsif ($pwd =~ /2023/) { $year = "y2023";}
 elsif ($pwd =~ /2022/) { $year = "y2022";}
@@ -249,7 +250,7 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-my $GLOB = $PICOPATH . $glob . "/[0-9]??/*";
+my $GLOB = $PICOPATH . $glob . "/*/*/2*";
 if ($pwd =~ /TFG24/) {$GLOB = $PICOPATH . $glob . "/???/*";}
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day
@@ -269,7 +270,11 @@ foreach my $run (@Files) {
 #  my $glb = $run . "/*/*" . $DST . ".root"; # per day
   my @files =  glob $glb; print "glb = $glb, no. files = $#files\n" if ($debug);
   my $NF = $#files + 1;
-#  my $step = 10;
+  if ($step <= 0) {
+    $ana = $f . ".root";
+    print "string:$run:$ana:$year:$DST:\n";
+    $Njobs++;
+  } else {
   my $part = 0;
   for (my $i = 0; $i < $NF; $i += $step) {
     my @list = ();
@@ -327,8 +332,9 @@ foreach my $run (@Files) {
       print "$cmd \n" if ($debug);
       my $flag = system($cmd);
     }
-    print "string:$run,$ana,$year,$DST,@listB\n";
+    print "string:$run:$ana:$year:$DST:@listB\n";
     $Njobs++;
   }
+}
 }
 if (! $Njobs) {die "Don't have input files\n";}

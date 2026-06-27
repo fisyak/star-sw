@@ -179,6 +179,8 @@ void Run1Ev(Int_t NEvents, Int_t iD,
 void Run1Ev(TString opt="alpha1GeV@eta-1.50") { 
   if (opt == "1muS03") {
     Run1Ev(1,5, 1,1, 0.1,0.1, 0,0, 0,0, 1,"G");
+  } else   if (opt == "1muS15") {
+    Run1Ev(1,5, 1,1, -0.1,-0.1, 0,0, 0,0, 1,"G");
   } else if (opt == "1muS20") {
     Double_t phi = -TMath::DegToRad()*30;
     Run1Ev(1,5, 1,1, -.1,-.1, phi,phi, 0,0, 1,"G");
