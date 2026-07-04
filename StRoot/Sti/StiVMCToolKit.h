@@ -51,7 +51,7 @@ namespace StiVMCToolKit {
   void              TestVMC4Reconstruction();
   void              GetVMC4Reconstruction(const Char_t *pathT=0, const Char_t *nameT=0);
   Double_t          GetShapeVolume(TGeoShape *shape);
-  void              MakeVolume(TGeoPhysicalNode *nodeP);
+  void              PrintNewNode(TGeoPhysicalNode *nodeP);
   Double_t          GetPotI(const TGeoMaterial *mat);
   Double_t          Nice(Double_t phi);
   void              SetDebug(Int_t m);
