@@ -17,7 +17,10 @@ class StiStarDetectorBuilder : public StiDetectorBuilder
   void         OldBeamPipe();
   void         HftBeamPipe();
   void         NewSuppCone();
+  void         SconWithSVT();
+  void         SconWithoutSVT();
   void         Fgt();
+  void         Fst();
   void         MakePipe(Int_t iflag, const VolumeMap_t *ptube, const VolumeMap_t *pvacu);
  protected:
   StiMaterial         * _pipeMaterial;

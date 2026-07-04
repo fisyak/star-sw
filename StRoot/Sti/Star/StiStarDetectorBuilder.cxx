@@ -36,10 +36,15 @@ void StiStarDetectorBuilder::useVMCGeometry() {
   } else {                                                     
     HftBeamPipe();     
   }
-  TGeoVolume *osca = gGeoManager->GetVolume("OSCA"); 
-  if (osca) NewSuppCone();
+  TGeoVolume *idsm = gGeoManager->GetVolume("IDSM"); 
+  if (idsm) NewSuppCone();
+  TGeoVolume *svtt = gGeoManager->GetVolume("SVTT"); 
+  if (svtt) SconWithSVT();
+  else      SconWithoutSVT();
   TGeoVolume *fgtm = gGeoManager->GetVolume("FGTM"); 
   if (fgtm) Fgt();
+  TGeoVolume *fsta = gGeoManager->GetVolume("FSTA"); 
+  if (fsta) Fst();
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::OldBeamPipe() {
@@ -52,22 +57,7 @@ void StiStarDetectorBuilder::OldBeamPipe() {
     {"PVAC","the Vacuum Volume of Be section of pipe","HALL_1/CAVE_1/PIPE_%d/PIPC_1/PVAC_1","",""}, //tube
     {"PIPO","Steel pipe from Be to 1st flanges","HALL_1/CAVE_1/PIPE_%d/PIPO_1/PVAO_1","",""}, //tube
     {"PVAO","its cavity","HALL_1/CAVE_1/PIPE_%d/PIPO_1/PVAO_1","",""}, // tube
-  //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
-    {"SROD", "Support rod","HALL_1/CAVE_1/SVTT_1/SROD_1-2","",""},
-    {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SVTT_1/SBSP_1-2","",""},
-    {"SROD", "Support rod","HALL_1/CAVE_1/SROD_1-2","",""},
-    {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SBSP_1-2","",""},
-  //{"SCON", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_1-2","",""},
-    {"SCMY", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_%d/SCMY_1","",""},
-    {"SGRA", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_%d/GRA_1","",""},
-#if 0    
-  //{"FGTM", "Beampipe support mother","HALL_1/CAVE_1/FGTM_1","",""},
-    {"FGCM", "FGT nylon and Al ring","HALL_1/CAVE_1/FGTM_1","",""},
-    {"FGTH", "mother volume for FGT disk","HALL_1/CAVE_1/FGTM_1","",""},
-    {"FGTD", "mother volume for FGT disk","HALL_1/CAVE_1/FGTM_1","",""},
-    {"FGCN", "FGT nylon 1st ring","HALL_1/CAVE_1/FGTM_1","",""},
-    {"FGCT", "FGT inner cooling tube","HALL_1/CAVE_1/FGTM_1","",""}
-#endif
+    {"PWRP","the beampipe wrap of Kapton and aluminum","HALL_1/CAVE_1/PIPE_%d/PWRP_1","",""}, // tube
   };
   
   for (Int_t i = 1; i < 5; i += 2) {// loop over Be and Steel pipes
@@ -408,7 +398,7 @@ void StiStarDetectorBuilder::MakePipe(Int_t iflag, const VolumeMap_t *ptube,cons
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::Fgt() {
-  cout << "StiStarDetectorBuilder::buildDetectors() -I- Use VMC old beam pipe geometry" << endl;
+  cout << "StiStarDetectorBuilder::Fgt()  -I- " << endl;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t FgtVolumes[] = { 
     //{"FGTM", "Beampipe support mother","HALL_1/CAVE_1/FGTM_1","",""},
@@ -429,5 +419,84 @@ void StiStarDetectorBuilder::Fgt() {
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
     StiVMCToolKit::LoopOverNodes(nodeT, path, FgtVolumes[i].name, MakeAverageVolume);
+  }
+}
+//________________________________________________________________________________
+void StiStarDetectorBuilder::Fst() {
+  cout << "StiStarDetectorBuilder::Fst() -I- " << endl;
+  SetCurrentDetectorBuilder(this);
+  const VolumeMap_t FstVolumes[] = { 
+    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
+    {"OFSR", "OFSR Outer support ring for FST",   "HALL_1/CAVE_1/FSTA_1/OFSR_1","",""},       
+    {"OFSB", "OFSB Outer support bars",           "HALL_1/CAVE_1/FSTA_1/OFSB_1-4","",""},       
+    {"OFSD", "outer support",                     "HALL_1/CAVE_1/FSTA_1/OFSD_1-4","",""},       
+    {"OFSC", " OFSC Outer extended support bars", "HALL_1/CAVE_1/FSTA_1/OFSC_1-4","",""},       
+    {"OFCA", "Cable trays master vol",            "HALL_1/CAVE_1/FSTA_1/OFCA_1-4","",""}       
+  };
+  if (! gGeoManager->GetVolume("FSTA")) return;
+  Int_t NoExtraVols = sizeof(FstVolumes)/sizeof(VolumeMap_t);
+  TString pathT("HALL_1/CAVE_1");
+  TString path("");
+  for (Int_t i = 0; i < NoExtraVols; i++) {
+    gGeoManager->RestoreMasterVolume(); 
+    gGeoManager->CdTop();
+    gGeoManager->cd(pathT); path = pathT;
+    TGeoNode *nodeT = gGeoManager->GetCurrentNode();
+    if (! nodeT) continue;
+    StiVMCToolKit::LoopOverNodes(nodeT, path, FstVolumes[i].name, MakeAverageVolume);
+  }
+}
+//________________________________________________________________________________
+void StiStarDetectorBuilder::SconWithSVT() {
+  cout << "StiStarDetectorBuilder::SconWithSVT() -I-" << endl;
+  SetCurrentDetectorBuilder(this);
+  const VolumeMap_t SconWithSVTVolumes[] = { 
+  //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
+    {"SROD", "Support rod","HALL_1/CAVE_1/SVTT_1/SROD_1-2","",""},
+    {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SVTT_1/SBSP_1-2","",""},
+    {"SROD", "Support rod","HALL_1/CAVE_1/SROD_1-2","",""},
+    {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SBSP_1-2","",""},
+    {"SCON", "Support cone mother","HALL_1/CAVE_1/TpcResSys_1/SCON_1-2","",""}
+  };
+  if (! gGeoManager->GetVolume("SVTT")) return;
+  Int_t NoExtraVols = sizeof(SconWithSVTVolumes)/sizeof(VolumeMap_t);
+  TString pathT("HALL_1/CAVE_1");
+  TString path("");
+  for (Int_t i = 0; i < NoExtraVols; i++) {
+    gGeoManager->RestoreMasterVolume(); 
+    gGeoManager->CdTop();
+    gGeoManager->cd(pathT); path = pathT;
+    TGeoNode *nodeT = gGeoManager->GetCurrentNode();
+    if (! nodeT) continue;
+    StiVMCToolKit::LoopOverNodes(nodeT, path, SconWithSVTVolumes[i].name, MakeAverageVolume);
+  }
+}
+//________________________________________________________________________________
+void StiStarDetectorBuilder::SconWithoutSVT() {
+  cout << "StiStarDetectorBuilder::SconWithoutSVT() -I- " << endl;
+  SetCurrentDetectorBuilder(this);
+  const VolumeMap_t SconWithoutSVTVolumes[] = { 
+    {"SCON", "Support cone half",                             "HALL_1/CAVE_1/SCOM_1/SCON_1-2","",""},       
+    {"SROD", "Support rod",                                   "HALL_1/CAVE_1/SCOM_1/SROD_1-2","",""},       
+    {"SAKM", "beampipe support aluminum kinematic mount",     "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SAKM_1","",""},
+    {"SASH", "beampipe support aluminum EM shield",           "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SASH_1","",""},
+    {"SDSA", "G10 support Disk",                              "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SDSA_1","",""},
+    {"SPOK", "spoke to support beam pipe assembly 4 sectors ","HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOK_1","",""},
+    {"SPOB", "beam spoke assemblyS",                          "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOB_1","",""},
+    {"SPOC", "beam spoke assembly upper part",                "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOC_1","",""},
+    {"SBRL", "ceramic roller supporting the beampipeS",       "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRL_1","",""},
+    {"SBRX", " stainless steel roller axis",                  "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRX_1","",""}
+  };
+  if (! gGeoManager->GetVolume("SCOM")) return;
+  Int_t NoExtraVols = sizeof(SconWithoutSVTVolumes)/sizeof(VolumeMap_t);
+  TString pathT("HALL_1/CAVE_1");
+  TString path("");
+  for (Int_t i = 0; i < NoExtraVols; i++) {
+    gGeoManager->RestoreMasterVolume(); 
+    gGeoManager->CdTop();
+    gGeoManager->cd(pathT); path = pathT;
+    TGeoNode *nodeT = gGeoManager->GetCurrentNode();
+    if (! nodeT) continue;
+    StiVMCToolKit::LoopOverNodes(nodeT, path, SconWithoutSVTVolumes[i].name, MakeAverageVolume);
   }
 }
