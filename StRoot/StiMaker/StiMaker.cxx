@@ -748,6 +748,19 @@ void CountHits()
    } }
 }
 
+//_____________________________________________________________________________
+void StiMaker::PrintDetectors () {
+  StiDetectorContainer * detectorContainer = _toolkit->getDetectorContainer();
+  StiDetector * detector;
+  for (vector<StiDetector*>::const_iterator i=detectorContainer->getDetectors().begin();
+       i!=detectorContainer->getDetectors().end();
+       ++i)
+    {
+      detector = *i;
+      detector->Print();
+      
+    }
+}
 
 // $Id: StiMaker.cxx,v 1.239 2018/06/21 01:48:42 perev Exp $
 // $Log: StiMaker.cxx,v $
