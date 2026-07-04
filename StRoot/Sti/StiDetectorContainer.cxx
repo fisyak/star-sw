@@ -60,14 +60,14 @@ void StiDetectorContainer::initialize()
   vector<StiDetectorBuilder*>::iterator bIter;
   for (bIter=_masterDetectorBuilder->begin(); bIter!=_masterDetectorBuilder->end(); ++bIter)
     {
-    string name = (*bIter)->getName();
-    //cout << "Detector:"<< name<<endl;
-    ULong_t where = name.find("Tpc");
-    if (where==name.npos)
-      {
-      cout <<"StiDetectorContainer::initialize() -I- Skipping group: "<<name<<endl;
-      continue;
-      }
+//     string name = (*bIter)->getName();
+//     //cout << "Detector:"<< name<<endl;
+//     ULong_t where = name.find("Tpc");
+//     if (where==name.npos)
+//       {
+//       cout <<"StiDetectorContainer::initialize() -I- Skipping group: "<<name<<endl;
+//       continue;
+//       }
     int nRows = (*bIter)->getNRows();
     for (int row=0;row<nRows;row++)
       {
@@ -76,11 +76,11 @@ void StiDetectorContainer::initialize()
         {
         StiDetector* detector = (*bIter)->getDetector(row,sector);
 	if(!detector) continue;
-        if (detector->isActive()) 
+//         if (detector->isActive()) 
 	  add(detector);
-        else 
-	  cout <<"StiDetectorContainer::initialize() -I-  Not Adding detector unit: "<< detector->getName()<<endl;
-        }
+//         else 
+// 	  cout <<"StiDetectorContainer::initialize() -I-  Not Adding detector unit: "<< detector->getName()<<endl;
+         }
       }
     }
   cout << "StiDetectorContainer::initialize() -I- Done" << endl;
