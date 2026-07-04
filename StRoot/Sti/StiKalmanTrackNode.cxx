@@ -1269,13 +1269,14 @@ StiDebug::Break(nCall);
     mFP._sinCA   = mgP.sinCA2;
     mFP._cosCA   = mgP.cosCA2;
     ians = locate(); 
+#if 0
     do {
       if (ians!=kOutZ)	break;
       const auto *gemini = getDetector()->getSplit(); 
       if (!gemini) 	break;
       ians = 0;
     } while(0);
-    		
+#endif    		
     if (!ians ) 	break;
   }
 
@@ -1802,7 +1803,6 @@ ostream& operator<<(ostream& os, const StiKalmanTrackNode& n)
 		<< " null:"<<n.nullCount
 		<< endl<<"\t hit:"<<*hit;
   }
-  else os << endl;
   return os;
 }
 
@@ -1862,13 +1862,21 @@ int StiKalmanTrackNode::locate()
   double yOff, zOff,ang;
   //fast way out for projections going out of fiducial volume
   const StiDetector *tDet = getDetector();
-  if (!tDet) return 0;
+  if (!tDet) {
+    if (debug() & 8) cout << "StiKalmanTrackNode::locate(): no tDet" << endl;
+    return 0;
+  }
   const StiPlacement *place = tDet->getPlacement();
   const StiShape     *sh    = tDet->getShape();
 
-  if (fabs(mFP.z())>kMaxZ) return kBigZ;
-  if (    mFP.rxy()>kMaxR) return kBigRxy;
-  
+  if (fabs(mFP.z())>kMaxZ) {
+    if (debug() & 8) cout << "StiKalmanTrackNode::locate(): z =" << mFP.z() << "\tkBigZ" <<  endl;
+    return kBigZ;
+  }
+  if (    mFP.rxy()>kMaxR) {
+    if (debug() & 8) cout << "StiKalmanTrackNode::locate(): rxy =" << mFP.rxy() << "\tkBigRxy" <<  endl;
+    return kBigRxy;
+  }
   
   //YF edge is tolerance when we consider that detector is hit. //  edge = 0; //VP the meaning of edge is not clear
   int ians = 0;
@@ -1880,18 +1888,26 @@ int StiKalmanTrackNode::locate()
   case kSector: 	// cylinder sector
     ang = atan2(mFP.y(),mFP.x());
     yOff    = nice(ang +_alpha - place->getLayerAngle());
-    ians = kOutAng;
-    if (fabs(yOff)>kYFactor*sh->getOpeningAngle()/2)ians = kOutAng;
+    if (fabs(yOff)>kYFactor*sh->getOpeningAngle()/2) {
+      if (debug() & 8) cout << "StiKalmanTrackNode::locate(): Sector  yOff = " << yOff << "\tOpen angle = " << sh->getOpeningAngle() <<  "\tkOutAng" <<  endl;
+      ians = kOutAng;
+    }    
     break;
   case kPlanar: 
     yOff = mFP.y() - place->getNormalYoffset();
-    if (fabs(yOff)> kYFactor*sh->getHalfWidth()) 	ians = kOutY;
+    if (fabs(yOff)> kYFactor*sh->getHalfWidth()) {
+      if (debug() & 8) cout << "StiKalmanTrackNode::locate(): Planar  yOff = " << yOff << "\tHalfWidth  = " << sh->getHalfWidth() <<  "\tkOutY" <<  endl;
+      ians = kOutY;
+    }
     break;
   default: assert(0 && "Wrong Shape code");
   }
   if (ians) return ians;
   zOff = mFP.z() - place->getZcenter();
-  if (fabs(zOff)>kZFactor*sh->getHalfDepth()) 		ians = kOutZ;
+  if (fabs(zOff)>kZFactor*sh->getHalfDepth()) 		{
+    if (debug() & 8) cout << "StiKalmanTrackNode::locate():  zOff = " << zOff << "\tHalfDepth  = " << sh->getHalfDepth() <<  "\tkOutZ" <<  endl;
+    ians = kOutZ;
+  }
   return ians;
  }
 
