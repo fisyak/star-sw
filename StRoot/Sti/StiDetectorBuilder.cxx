@@ -193,6 +193,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
   Double_t      Phi    = 0;
   //  Double_t xc,yc,zc,rc,rn, nx,ny,nz,yOff;
   StiPlacement *pPlacement = 0;
+  StiDetector *pDetector = 0;
   do {//only once
     if (!shapeP->TestShapeBit(TGeoShape::kGeoTube)) 	break;
     TGeoTube *shapeC = (TGeoTube *)shapeP;
@@ -209,11 +210,11 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       Double_t gloV[3];
       Double_t Phi1 = TMath::DegToRad()*shapeS->GetPhi1();
       Double_t Phi2 = TMath::DegToRad()*shapeS->GetPhi2();
-      if (Phi2<Phi1) Phi2+=M_PI*2;
+      if (Phi2<Phi1) Phi2+=TMath::Pi()*2;
       Double_t PhiM = (Phi2+Phi1)/2;
       dPhi        = (Phi2-Phi1);
       Double_t locV[3]={cos(PhiM),sin(PhiM),0};
-      hmat->LocalToMaster(locV,gloV);	       	       
+      hmat->LocalToMasterVect(locV,gloV);	       	       
       Phi = atan2(gloV[1],gloV[0]);
     }
     
@@ -232,6 +233,92 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     pPlacement->setNormalRep(Phi,0.5*(Rmin+Rmax), 0); 
   } while(0);
 
+  if (!pPlacement && shapeP->TestShapeBit(TGeoShape::kGeoPcon))  {// Pcon
+    TGeoPcon *pcon = (TGeoPcon *) shapeP;
+    Double_t gloV[3];
+#if 0
+    Double_t PhiM = 0;
+    Double_t dPhi = TMath::TwoPi();
+#else
+    Double_t Phi1 = TMath::DegToRad()*pcon->GetPhi1();
+    Double_t Phi2 = Phi1 + TMath::DegToRad()*pcon->GetDphi();
+    if (Phi2<Phi1) Phi2+=TMath::TwoPi();
+    Double_t PhiM = (Phi2+Phi1)/2;
+    Double_t dPhi = (Phi2-Phi1);
+#endif    
+    Double_t locV[3]={cos(PhiM),sin(PhiM),0};
+    hmat->LocalToMasterVect(locV,gloV);	       	       
+    Phi = atan2(gloV[1],gloV[0]);
+    Int_t Nz = pcon->GetNz();
+    for (Int_t iz = 0; iz < Nz - 1; iz++) {
+      Double_t z0 = pcon->GetZ(iz); 
+      Double_t r0min = pcon->GetRmin(iz); 
+      Double_t r0max = pcon->GetRmax(iz);
+      Double_t z1 = pcon->GetZ(iz+1); 
+      Double_t r1min = pcon->GetRmin(iz+1); 
+      Double_t r1max = pcon->GetRmax(iz+1);
+      Double_t thick = TMath::Max(TMath::Abs(r0max - r0min), TMath::Abs(r1max - r1min));
+      Double_t dr    = TMath::Max(TMath::Abs(r0max - r1max), TMath::Abs(r0min - r1min));
+      Int_t N = 1;
+      if (thick > 0) N = TMath::Nint(dr/thick);
+      if (N < 1) N = 1;
+      Double_t height = (z1 - z0) / N;
+      if (TMath::Abs(height) < 1e-7) continue;
+      for (Int_t i = 0; i < N; ++i) {
+        double z_start = z0 + i * height;
+        double z_end = z_start + height;
+        double z_mid = (z_start + z_end) / 2.0;
+	auto  radiusAtZ = [](double z, double z0, double z1, double r0, double r1) {return r0 + (z - z0) * (r1 - r0) / (z1 - z0);};
+        double r_min = radiusAtZ(z_mid, z0, z1, r0min, r1min);
+        double r_max = radiusAtZ(z_mid, z0, z1, r0max, r1max);
+	Double_t r_mid = 0.5*(r_min + r_max);
+	TString Name(nodeP->GetName());
+	Name.ReplaceAll("HALL_1/CAVE_1/","");
+	Name.ReplaceAll("TpcRefSys_1/","");
+	Name.ReplaceAll("IDSM_1/","");
+	Name.ReplaceAll("PXMO_1/","");
+	Name.ReplaceAll("IBMO_1/","");
+	Name.ReplaceAll("TPCE_1/","");
+	Name.Strip(); // GVB: Do not truncate the name: it needs to be unique
+	if (iz > 0) {Name += "_", Name += iz;}
+	if (i  > 0) {Name += "_", Name += i;}
+	
+	sh = new StiCylindricalShape(Name.Data(),   // Name
+				     height/2.,     	// halfDepth
+				     (r_max - r_min),         	// thickness
+				     r_max,	// outerRadius
+				     dPhi);    	// openingAngle
+	add(sh);
+	pPlacement = new StiPlacement;
+	Double_t xyzL[3] = {0, 0, z_mid};
+	Double_t xyzG[3];
+	hmat->LocalToMaster(xyzL, xyzG);
+
+	pPlacement->setZcenter(xyzG[2]);
+	pPlacement->setLayerRadius(r_mid);
+	pPlacement->setLayerAngle(Phi);
+	pPlacement->setRegion(StiPlacement::kMidRapidity);
+	pPlacement->setNormalRep(Phi,r_mid, 0); 
+
+	pDetector = getDetectorFactory()->getInstance();
+	pDetector->setName(Name.Data());
+	pDetector->setIsActive(new StiNeverActiveFunctor);
+	pDetector->setShape(sh);
+	pDetector->setPlacement(pPlacement); 
+	pDetector->setGas(GetCurrentDetectorBuilder()->getGasMat());
+	pDetector->setMaterial(matS);
+	int layer = getNRows();
+	add(layer,0,pDetector); 
+	if (debug()) {
+	  cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
+	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
+	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
+	}
+      }
+    }
+    return;
+  }
+
   if (!pPlacement)  {// BBox
 
     shapeP->ComputeBBox();
@@ -240,7 +327,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     TGeoRotation geoRotation(*hmat);
 
     // Sti geometry deals only with simple object rotated about the z axis
-    double euler_phi = geoRotation.GetPhiRotation()/180*M_PI;
+    double euler_phi = geoRotation.GetPhiRotation()/180*TMath::Pi();
 
     // Define "center" and normal vectors for the considered volume
     TVector3 centerVec(xyz);
@@ -292,40 +379,45 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     pPlacement->setNormalRep(normVec.Phi(), normVecMag, normVecOffset);
   }
   assert(pPlacement);
-  StiDetector *pDetector = getDetectorFactory()->getInstance();
-  TString nameP(nodeP->GetName());
-  nameP.ReplaceAll("HALL_1/CAVE_1/","");
-  nameP.ReplaceAll("TpcRefSys_1/","");
-  nameP.ReplaceAll("IDSM_1/","");
-  nameP.ReplaceAll("PXMO_1/","");
-  nameP.ReplaceAll("IBMO_1/","");
-  nameP.ReplaceAll("TPCE_1/","");
-  nameP.Strip(); // GVB: Do not truncate the name: it needs to be unique
-  pDetector->setName(nameP.Data());
-  pDetector->setIsActive(new StiNeverActiveFunctor);
-  pDetector->setShape(sh);
-  pDetector->setPlacement(pPlacement); 
-  pDetector->setGas(GetCurrentDetectorBuilder()->getGasMat());
-  pDetector->setMaterial(matS);
-
-  if (mThkSplit>0 && mMaxSplit>1) {//	try to split 
-    StiDetVect dv;
-    pDetector->splitIt(dv,mThkSplit,mMaxSplit);
-    for (int i=0;i<(int)dv.size();i++) {
+  if (! pDetector) {
+    pDetector = getDetectorFactory()->getInstance();
+    TString nameP(nodeP->GetName());
+    nameP.ReplaceAll("HALL_1/CAVE_1/","");
+    nameP.ReplaceAll("TpcRefSys_1/","");
+    nameP.ReplaceAll("IDSM_1/","");
+    nameP.ReplaceAll("PXMO_1/","");
+    nameP.ReplaceAll("IBMO_1/","");
+    nameP.ReplaceAll("TPCE_1/","");
+    nameP.Strip(); // GVB: Do not truncate the name: it needs to be unique
+    pDetector->setName(nameP.Data());
+    pDetector->setIsActive(new StiNeverActiveFunctor);
+    pDetector->setShape(sh);
+    pDetector->setPlacement(pPlacement); 
+    pDetector->setGas(GetCurrentDetectorBuilder()->getGasMat());
+    pDetector->setMaterial(matS);
+    
+    if (mThkSplit>0 && mMaxSplit>1) {//	try to split 
+      StiDetVect dv;
+      pDetector->splitIt(dv,mThkSplit,mMaxSplit);
+      for (int i=0;i<(int)dv.size();i++) {
+	int layer = getNRows();
+	add(layer,0,dv[i]); 
+	if (debug()) {
+	  cout << "StiDetectorBuilder::AverageVolume build detector " << dv[i]->getName() << " at layer " << layer 
+	       << "\tZ = " <<  dv[i]->getPlacement()->getZcenter() << "\tdZ = " << dv[i]->getShape()->getHalfDepth()
+	       << "\tR = " <<  dv[i]->getPlacement()->getNormalRadius() << endl;
+	    }
+      } }
+    else {  
       int layer = getNRows();
-      add(layer,0,dv[i]); 
+      add(layer,0,pDetector); 
       if (debug()) {
-	cout << "StiDetectorBuilder::AverageVolume build detector " << dv[i]->getName() << " at layer " << layer << endl;
+	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
+	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
+	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
       }
-    } }
-  else {  
-   int layer = getNRows();
-   add(layer,0,pDetector); 
-   if (debug()) {
-     cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer << endl;
-   }
+    }
   }
-
 }
 
 ///Returns the number of sectors (or segments) in a the
