@@ -55,8 +55,8 @@ void StiDetector::copy(StiDetector &detector){
 ostream& operator<<(ostream& os, const StiDetector& d)
 {
   os   << d.getName()
-       << "\t" << *d.getShape()
        << "\t" << *d.getPlacement()
+       << "\t" << *d.getShape()
        << "\t" << *d.getMaterial()
        << "\t" << *d.getGas();
   return os;

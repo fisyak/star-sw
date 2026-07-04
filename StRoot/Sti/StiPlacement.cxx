@@ -110,20 +110,10 @@ void StiPlacement::setLayerAngle(float layerAng)
 }
 //______________________________________________________________________________	
 ostream& operator<<(ostream& os, const StiPlacement& m) {
-#if 0
-   os << "StiPlacement:" << endl
-      << "normalRefAngle: " << p.normalRefAngle << " rad, "
-      << "normalRadius: " << p.normalRadius << " cm, "
-      << "normalYoffset: " << p.normalYoffset << " cm" << endl
-      << "centerRefAngle: " << p.centerRefAngle << " rad, "
-      << "centerRadius: "   << p.centerRadius << " cm, "
-      << "centerOrientation: "  << p.centerOrientation << " rad" << endl
-      << "zCenter: " << p.zCenter << " cm, "
-      << "layerRadius: " << p.layerRadius << " cm, "
-      << "layerAngle: " << p.layerAngle << " rad" << endl;
-#else
-  os << Form(" Z:%7.2f Y:%7.2f R:%7.2f",m.getZcenter(),m.getNormalYoffset(),m.getCenterRadius());
-#endif
+  //   os << Form(" cZ:%7.2f nY:%7.2f cR:%7.2f cA:%7.2f lR:%7.2f lA:%7.2f",m.zCenter,m.normalYoffset,m.centerRadius,m.centerRefAngle,m.layerRadius,m.layerAngle) ;
+  os << Form("lR:%7.2f lA:%7.2f cZ:%7.2f nY:%7.2f",m.layerRadius,m.layerAngle,m.zCenter,m.normalYoffset);
+  if (m.centerRadius !=  m.layerRadius) os << Form(" cR:%7.2f", m.centerRadius);
+  if (m.centerRefAngle != m.layerAngle) os << Form(" cA:%7.2f ", m.centerRefAngle);
   return os;
 }
 //______________________________________________________________________________

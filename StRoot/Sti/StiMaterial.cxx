@@ -89,25 +89,18 @@ void StiMaterial::set(const string& name,
 }
 ostream& operator<<(ostream& os, const StiMaterial& m)
 {
-#if 0
-  os << "StiMaterial:" << endl
-     << "Name:"		<< m.getName()
-     << " Density:"	<< m.getDensity()<< " g/cm^3"
-     << " X0:"		<<m.getX0()
-     << " Z: "		<<m.getZ()
-     << " A: "		<<m.getA();
-     << endl;
-#else
   os << m.getName();
   if (m.getDensity() > 0) {
-    os << " :"	<< m.getDensity()<< " g/cm^3";
+    if (m.getDensity() > 0.01)
+      os << " :"	<< m.getDensity()<< " g/cm^3";
+    else
+      os << " :"	<< 1e3*m.getDensity()<< "mg/cm^3";
     if (m.getX0() < 10000) {
       os << " X0:"		<<m.getX0();
     }
     os << " Z: "		<<m.getZ()
        << " A: "		<<m.getA();
   }
-#endif    
     return os;
 }
 StiElossCalculator *StiMaterial::getElossCalculator() const 
