@@ -491,28 +491,25 @@ assert(direction || leadNode==track->getLastNode());
   double projAngle = atan2(yg,xg);
   StiHit *leadHit = leadNode->getHit();
   
-  if(debug() > 2)cout << "Projection Angle:"<<projAngle*180/3.1415<<endl;
+  if (debug() & 8) cout << "lead node:" << *leadNode << /* "\tlead det:"<<*leadDet << */"\tleadRaius = " << leadRadius  << "\tProjection Angle:"<<projAngle*180/3.1415;
     
   vector<StiDetectorNode*>::const_iterator layer;
   vector<StiDetectorNode*>::const_reverse_iterator rlayer;
 
   if ((!direction)) {
-    if (debug() > 2) cout <<endl<< "out-in"<<endl;
     rlayer=_detectorContainer->rbeginRadial(leadDet); rlayer++;
+    if (debug() & 8) cout << "\tout-in " << endl;
   } else {
-    if (debug() > 2) cout <<endl<< "in-out"<<endl;
     layer=_detectorContainer->beginRadial(leadDet);    layer++;
+    if (debug() & 8) cout << "\tin-out " << endl;
   }
 
-  if (debug() > 2) cout <<endl<< "lead node:" << *leadNode<<endl<<"lead det:"<<*leadDet<<endl;
 
   
   while (((!direction)? rlayer!=_detectorContainer->rendRadial() : layer!=_detectorContainer->endRadial()))
   {do{//technical do
     vector<StiDetectorNode*>::const_iterator sector;
     vector<StiDetector*> detectors;
-    if (debug() > 2) cout << endl<<"lead node:" << *leadNode<<endl<<" lead det:"<<*leadDet;
-
       //find all relevant detectors to visit.
     sector = (!direction)? _detectorContainer->beginPhi(rlayer):_detectorContainer->beginPhi(layer);
     for ( ; (!direction)? sector!=_detectorContainer->endPhi(rlayer):sector!=_detectorContainer->endPhi(layer); ++sector)
@@ -558,10 +555,10 @@ assert(direction || leadNode==track->getLastNode());
     {
       tDet = *d;
       if ((tDet->isActive() != nowActive)) continue;
-      if (debug() > 2) {
-	cout << endl<< "target det:"<< *tDet;
-	cout << endl<< "lead angle:" << projAngle*radToDeg 
-	     <<" this angle:" << radToDeg*(*d)->getPlacement()->getNormalRefAngle()<<endl;
+      if (debug() & 8) {
+	cout << "target det:"<< *tDet;
+	cout << "\tlead angle:" << projAngle*radToDeg 
+	     <<" \tthis angle:" << radToDeg*(*d)->getPlacement()->getNormalRefAngle()<<endl;
       }
       //begin tracking here...
       testNode.reduce();testNode.reset();
@@ -580,7 +577,7 @@ assert(direction || leadNode==track->getLastNode());
 
       if (active) {
 
-	if (debug() > 2)cout<<" search hits";
+	if (debug() & 8)cout<<" search hits";
 	// active detector may have a hit
 	vector<StiHit*> & candidateHits = _hitContainer->getHits(testNode);//,true);
 	vector<StiHit*>::iterator hitIter;
@@ -607,7 +604,7 @@ assert(direction || leadNode==track->getLastNode());
 	  }
 #endif
 	  hitCont.add(stiHit,chi2,testNode.getDeterm());
-	  if (debug() > 2) cout << " hit selected"<<endl;
+	  if (debug() & 8) cout << " hit selected"<<endl;
 	}// for (hitIter)
       }//if(active)
 
@@ -679,7 +676,7 @@ void StiKalmanTrackFinder::nodeQA(StiKalmanTrackNode *node, int position
 //		Check and count node
   StiHit *hit = node->getHit();
   if (hit) {
-    if (debug() > 2)cout << " got Hit! "<<endl ;
+    if (debug() & 8)cout << " got Hit! "<<endl ;
 //  const StiDetector *detector = hit->detector();
     qa.addXi2(node->getChi2() + log(node->getDeterm()));
     qa.addHit(hit);
@@ -693,7 +690,7 @@ void StiKalmanTrackFinder::nodeQA(StiKalmanTrackNode *node, int position
     qa.setQA(0);
 
   } else {// there should have been a hit but we found none
-      if (debug() > 2) cout << " no hit but expected one"<<endl;
+      if (debug() & 8) cout << " no hit but expected one"<<endl;
       node->incNullCount(); 
       node->incContigNullCount();
       node->setContigHitCount();
