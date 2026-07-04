@@ -150,22 +150,18 @@ void Run1Ev(Int_t NEvents, Int_t iD,
 #if 1
   if (gClassTable->GetID("StiMaker") >= 0) {
     // Old Sti
-    StiKalmanTrackNode::setDebug(8+32+16);
-    StiKalmanTrackFinder::setDebug(2);
+    //    StiKalmanTrackNode::setDebug(8+32+16);
+    StiKalmanTrackNode::setDebug(32+16);
+//     StiKalmanTrackFinder::setDebug(2+8);  // 
+    StiKalmanTrackFinder::setDebug(2);  // 
     //    StiKalmanTrackFinder::setDebug(3);
     StiKalmanTrackFitter::setDebug(1);
     //    StiKalmanTrack::setDebug(2);
-    StiKalmanTrack::setDebug(3);
-    StiTrackNodeHelper::setDebug(8);
+//     StiKalmanTrack::setDebug(3);
+//     StiTrackNodeHelper::setDebug(8);
+//     StiVMCToolKit::SetDebug(1);
+     StiDetectorBuilder::setDebug(1);
   }
-  if (gClassTable->GetID("StiVMCMaker") >= 0) {
-    chain->Maker("StiVMC")->SetDebug(1);
-    StiKalmanTrackNode::SetDebug(8+32+16);
-    //    StiKalmanTrackFinder::SetDebug(2);
-    //    StiKalmanTrackFitter::SetDebug(1);
-    StiKalmanTrack::SetDebug(2);
-    //    StiTrackNodeHelper::SetDebug(8);
-  }  
 #endif
   StMaker *trs = chain->Maker("TpcRS");
   if (trs) {
@@ -181,6 +177,15 @@ void Run1Ev(TString opt="alpha1GeV@eta-1.50") {
     Run1Ev(1,5, 1,1, 0.1,0.1, 0,0, 0,0, 1,"G");
   } else   if (opt == "1muS15") {
     Run1Ev(1,5, 1,1, -0.1,-0.1, 0,0, 0,0, 1,"G");
+  } else   if (opt == "1muz55S12") {
+    Double_t phi = TMath::DegToRad()*90;
+    Run1Ev(1,5, 1,1, 0.,0..,phi, phi, 55.0,55.0, 1,"G");
+  } else   if (opt == "1mue-0.5z200-0.5S12") {
+    Double_t phi = TMath::DegToRad()*90;
+    Run1Ev(1,5, 1,1, -0.50, -0.50, phi, phi, 200.0,200.0, 1,"G");
+  } else   if (opt == "1mue+0.5z-200-0.5S12") {
+    Double_t phi = TMath::DegToRad()*90;
+    Run1Ev(1,5, 1,1, 0.50, 0.50, phi, phi, -200.0,-200.0, 1,"G");
   } else if (opt == "1muS20") {
     Double_t phi = -TMath::DegToRad()*30;
     Run1Ev(1,5, 1,1, -.1,-.1, phi,phi, 0,0, 1,"G");

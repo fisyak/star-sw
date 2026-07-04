@@ -74,14 +74,15 @@
 #set  dirlist  = $STAR_LIB
 #set dirlist = "/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/"
 #set dirlist = $PGILIB
-set dirlist = $STAR_LIB
+#set dirlist = $STAR_LIB
 #set dirlist = $XOPTSTAR/lib
+set dirlist = /gpfs01/star/subsys-tpc/fisyak/STAR/opt/star/al96_x8664_gcc11/spack/lib64
 foreach p ($dirlist) 
     set list = `echo ${p}/*.so* ${p}/*.a ${p}/*.o` 
 #    set list = `echo ${p}/libboost*.so`
 #    set list = `echo $STAR/.sl44_gcc346/lib/*.so` #echo ${p}/lib*.so*`
     foreach lib ($list) 
 	echo "lib = " $lib 
-	nm -p $lib |  grep StarMagField
+	nm -p $lib |  grep gluProject
     end
 end
