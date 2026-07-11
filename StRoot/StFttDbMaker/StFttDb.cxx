@@ -447,7 +447,7 @@ namespace {
         63.0f, 59.8f, 56.6f, 53.4f, 50.2f, 47.0f
     };
 
-    // Row4_StripLength.txt: diagonal strip lengths for Row 3, 0..150
+    // Row4_StripLength.txt: diagonal strip lengths for Row 3, 0..151
     constexpr Float_t kStripLengthRow4[] = {
         6.6f, 9.8f, 13.0f, 16.2f, 19.4f, 22.6f, 25.8f, 29.0f,
         32.2f, 35.4f, 38.6f, 41.8f, 45.0f, 48.2f, 51.4f, 54.6f,
@@ -467,7 +467,9 @@ namespace {
         371.4f, 368.2f, 365.0f, 361.8f, 358.6f, 355.4f, 352.2f, 349.0f,
         345.8f, 342.6f, 339.4f, 336.2f, 333.0f, 329.8f, 326.6f, 323.4f,
         320.2f, 317.0f, 313.8f, 310.6f, 307.4f, 304.2f, 301.0f, 297.8f,
-        294.6f, 291.4f, 288.2f, 285.0f, 281.8f, 278.6f, 275.4f
+        294.6f, 291.4f, 288.2f, 285.0f, 281.8f, 278.6f, 275.4f,
+        272.2f // strip 151: missing from the original calibration data (debug#26);
+               // linearly extrapolated from strips 149 (278.6) & 150 (275.4), delta -3.2
     };
 
     // Row5_StripLength.txt: diagonal strip lengths for Row 4, 0..58
