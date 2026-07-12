@@ -14,6 +14,7 @@
   l->Draw()
   l->AddEntry(N_pfx,"Negative")
 */
+#define __VxOnly__
 //#define DEBUG
 //#define __TFG__VERSION__
 #if !defined(__CINT__) || defined(__MAKECINT__)
@@ -25,6 +26,7 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TH3.h"
+#include "TArrayD.h"
 #include "TLorentzVector.h"
 #include "TProfile.h"
 #include "TStyle.h"
@@ -231,7 +233,7 @@ Int_t IndexH(const Char_t *name) {
 }
 #if 1
 //________________________________________________________________________________
-void Pico1(const Char_t *files ="./*.picoDst.root",
+void Pico(const Char_t *files ="./*.picoDst.root",
 	      const Char_t *Out = "Pico.root"){
 #ifndef __CINT__
   //  static const Double_t sigmaB[2] = {6.26273e-01, -5.80915e-01}; // Global Tracks, wrt Bichsel
@@ -245,21 +247,36 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
   TString OutFName(Out);
   if (fOut) fOut->cd();
   else      fOut = new TFile(OutFName,"RECREATE");
+  Double_t zMin  = -220, zMax  = 220, dZ  = 0.2;      // 0.20 cm
+  Double_t zMin1 =  195, zMax1 = 205, dZ1 = 0.0050;; // 0.005 cm
+  Int_t nbins = (zMax - zMin)/dZ + (zMax1 - zMin1)/dZ1 + 1;
+  TArrayD Z(nbins);
+  Double_t z = zMin;
+  Int_t i = 0;
+  while (z < zMax) {
+    Z[i] = z; i++;
+    if (z < zMin1 || z > zMax1) {
+      z += dZ;
+    } else {
+      z += dZ1;
+    }
+  }
   Int_t      nZBins = 200;
   Double_t ZdEdxMin = -5;
   Double_t ZdEdxMax =  5;
-  TH1F *VxZ     = new TH1F("VxZ","Vertex Z",210,-210.,210.);
-  TH2F *Vxy     = new TH2F("Vxy","Vertex XY",200,-2.,2.,200,-2.,2.);
-  TH2F *VxErrXYmultL = new TH2F("VxErrXYmultL","VxErr_{XY} versus log_{10}(Mult)", 100,0,3, 250, 0, 10.0);
-  TH2F *VxErrZmultL = new TH2F("VxErrZmultL","VxErr_{Z} versus log_{10}(Mult)",    100,0,3, 250, 0, 10.0);
-  TH2F *EtapT   = new TH2F("EtapT","tracks versus  #eta pT/q",100,-2.5,2.5,100,-5,5.);
+  TH1F *VxZ     = new TH1F("VxZ","Vertex Z",i-1, Z.GetArray());
+  TH2F *Vxy     = new TH2F("Vxy","Vertex XY",800,-40.,40.,800,-40.,40.);
   TH1F *PrimMult = new TH1F("PrimMult","No. of total Primary tracks in event",5000,0,5000);
   TH1F *RefMultPos = new TH1F("RefMultPos","Ref. multiplicity the first vertex",500,0,500);
   TH1F *RefMultNeg = new TH1F("RefMultNeg","Ref. multiplicity the first vertex",500,0,500);
+  TH2F *zZ       = new TH2F("zZ","zTpc - zVpd versus zTpc for highest rank vertex", 210, -210, 210, 100, -50, 50);
+#ifndef __VxOnly__
+  TH2F *VxErrXYmultL = new TH2F("VxErrXYmultL","VxErr_{XY} versus log_{10}(Mult)", 100,0,3, 250, 0, 10.0);
+  TH2F *VxErrZmultL = new TH2F("VxErrZmultL","VxErr_{Z} versus log_{10}(Mult)",    100,0,3, 250, 0, 10.0);
+  TH2F *EtapT   = new TH2F("EtapT","tracks versus  #eta pT/q",100,-2.5,2.5,100,-5,5.);
   TH1F *GoodPrimTracks = new TH1F("GoodPrimTracks","No. of good Primary track at the first vertex",2000,0,2000);
   TH2F *dcaXYInvpT = new TH2F("dcaXYInvpT","dca_{XY} versus 1/pT", 100,0,10, 500, -2.5, 2.5);
   TH2F *dcaZInvpT = new TH2F("dcaZInvpT","dca_{Z} versus 1/pT", 100,0,10, 500, -2.5, 2.5);
-  TH2F *zZ       = new TH2F("zZ","zTpc - zVpd versus zTpc for highest rank vertex", 210, -210, 210, 100, -50, 50);
   TH2F *dEdxP  = new TH2F("dEdxP","dEdx vesus regidity",250,-2.5,2.5,500,0,100);
   TH2F *betaToF  = new TH2F("beta","BToF 1/beta -1 versus regity",350,-3.5,3.5,500,-0.6,4.4);
   TH2F *betaEToF  = new TH2F("Ebeta","EToF 1/beta -1 versus regity",350,-3.5,3.5,500,-0.6,4.4);
@@ -355,6 +372,7 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
 		      100,-2.5,2.5,500,-1.,4.);
   }
 #endif /* __fit__ */
+#endif /* __VxOnly__ */
 #if 1
   maker = new StPicoDstMaker(StPicoDstMaker::IoRead,files);
   maker->Init();
@@ -422,7 +440,8 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
     PrimMult->Fill(NoGlobalTracks);
     RefMultPos->Fill(picoEvent->refMultPos());
     RefMultNeg->Fill(picoEvent->refMultNeg());
-    
+ #ifndef __VxOnly__
+   
     // Count no. of good primary tracks
     Int_t noGoodPrimTracks = 0;
     for (Int_t k = 0; k < NoGlobalTracks; k++) {
@@ -604,6 +623,7 @@ void Pico1(const Char_t *files ="./*.picoDst.root",
 	betaEToF->Fill(rigity, 1./beta - 1); 
       }
     } // track loop
+#endif /* __VxOnly__ */
   } // event loop
   if (fOut) fOut->Write();
 #endif /* !__CINT__ */
