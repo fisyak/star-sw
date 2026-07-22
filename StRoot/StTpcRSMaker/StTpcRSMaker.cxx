@@ -86,7 +86,6 @@ struct HitPoint_t {
 };
 //#define ElectronHack
 //#define Old_dNdx_Table
-//#define __ELECTRONS_TUPLE__
 #ifdef __TFG__VERSION__
 #define __DEBUG__
 #define __CHECK_RDOMAP_AND_VOLTAGE__
