@@ -16,6 +16,7 @@
 #include "StiMasterDetectorBuilder.h"
 
 ostream& operator<<(ostream&, const StiDetector&);
+Int_t StiLocalTrackSeedFinder::_debug = 0;
 
 //______________________________________________________________________________
 StiLocalTrackSeedFinder::StiLocalTrackSeedFinder(const string& name,
@@ -47,6 +48,9 @@ StiLocalTrackSeedFinder::~StiLocalTrackSeedFinder()
 //______________________________________________________________________________
 StiTrack* StiLocalTrackSeedFinder::findTrack(double rMin)
 {
+  if (_debug) {
+    cout << "StiLocalSeedFinder::findTrack(" << rMin << ");" << endl;
+  }
   fRxyMin = rMin;
   StiKalmanTrack* track = 0;  
   if (isReset())
