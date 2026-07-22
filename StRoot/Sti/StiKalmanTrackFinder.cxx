@@ -593,16 +593,6 @@ assert(direction || leadNode==track->getLastNode());
           if (status)		continue;
 	  chi2 = testNode.evaluateChi2(stiHit);
 	  if (chi2>maxChi2) 	continue;
-#if 0
-	  // Aligment part
-	  if (DoAlignment()) {
-	    UInt_t sector = track->getTpcSector();
-	    if (sector) {
-	      const StTpcHit *tpcHit = dynamic_cast<const StTpcHit *>(stiHit->stHit());
-	      if (tpcHit && tpcHit->sector() != sector) continue;
-	    }
-	  }
-#endif
 	  hitCont.add(stiHit,chi2,testNode.getDeterm());
 	  if (debug() & 8) cout << " hit selected"<<endl;
 	}// for (hitIter)
@@ -641,28 +631,33 @@ assert(direction || leadNode==track->getLastNode());
 
         qaTry = qa;
 	track->add(node,direction,leadNode);
+#define __Take_All_Hits__
+#ifdef __Take_All_Hits__ 
+	if (node->getDetector() && node->getDetector()->getGroupId() == kTpcId) leadNode = node;
+#endif /* __Take_All_Hits__  */
         nodeQA(node,position,active,qaTry);
 	find(track,direction,node,qaTry);
-#if 0
 	if (debug()) {
-	  if (node->getDetector()) 
-	    StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));
-	  else 
-	    StiKalmanTrackNode::ResetComment("Vx                            ");
-	  node->PrintpT("H "); StiKalmanTrackNode::PrintStep();
+	  node->PrintpT("H "); 
 	}
-#endif
+#ifdef __Take_All_Hits__ 
+	if (! (node->getDetector() && node->getDetector()->getGroupId() == kTpcId) ) {
+#endif /*  ! __Take_All_Hits__ */
         if (jHit==0) { qaBest=qaTry; continue;}
         int igor = qaBest.compQA(qaTry);
         if (igor<0)  { leadNode->remove(0);}
         else         { leadNode->remove(1);qaBest=qaTry;}
+#ifdef __Take_All_Hits__ 
+	}
+#endif /*  ! __Take_All_Hits__ */
       }
       qa = qaBest; gLevelOfFind--; qa.setQA(-4); return;
     }//End Detectors
     if (foundInDetLoop) break;		//activeNonActive
     } //End of activeNonActive loop;
-  }while(0);
-  if(!direction){++rlayer;}else{++layer;}}
+  } while(0);
+  if(!direction){++rlayer;}else{++layer;}
+  }
 //end layers
   gLevelOfFind--;qa.setQA(-4);
   return;
