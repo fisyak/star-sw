@@ -37,6 +37,8 @@ class StiCATpcSeedFinder: public StiTrackFinder
   virtual StiTrack *findTrack(double rMin=0); 
   static Bool_t   SeedsCompareStatus(const Seed_t a, const Seed_t b);
 //??  static void     findTpcTracks(StiCATpcTrackerInterface &caTrackerInt);
+  static void SetDebug(Int_t k) {_debug = k;}
+  static Int_t _debug;
   protected:
   int mEnded;
   std::vector<Seed_t> *mSeeds;
