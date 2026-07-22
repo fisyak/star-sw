@@ -75,6 +75,7 @@ Int_t StTpcRTSHitMaker::Init() {
   memset(maxHits,0,sizeof(maxHits));
   maxBin0Hits = 0;
   bin0Hits = 0;
+  if (IAttr("NTuple2Hits")) StTpcHitMaker::fgNTuple2Hits = kTRUE;
   return StMaker::Init();
 }
 //________________________________________________________________________________
@@ -1056,7 +1057,7 @@ TH2F *StTpcRTSHitMaker::PlotSecRow(Int_t sec, Int_t row, Int_t flags) {
     plot->SetTitle(Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i",sec,row, pEvent->id()));
   } else {
     Int_t npad = St_tpcPadConfigC::instance()->padsPerRow(sec,row);
-    plot = new TH2F(PlotName,Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i; timebucket ; pad",sec,row, pEvent->id()), 360,-0.5,359.5,npad,0.5,npad+0.5);
+    plot = new TH2F(PlotName,Form("ADC versus  pad and time buckets for sec = %i and row = %i in event %i; timebucket ; pad",sec,row, pEvent->id()), 401,-0.5,400.5,npad,0.5,npad+0.5);
     plot->SetStats(1);
   }
   TDataSet*  tpcRawEvent = StMaker::GetChain()->GetInputDS("Event");
