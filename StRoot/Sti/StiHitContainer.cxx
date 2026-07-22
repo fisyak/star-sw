@@ -13,7 +13,8 @@
 #include "StiDetector.h"
 #include "StiHitContainer.h"
 #include <float.h>
-
+#include "StTpcHit.h"
+#include "TMath.h"
 using std::sort;
 using std::find;
 using std::lower_bound;
@@ -21,7 +22,7 @@ using std::upper_bound;
 using std::stable_partition;
 ostream& operator<<(ostream& os, const StiHit& hit);
 ostream& operator<<(ostream&, const HitMapKey&);
-
+int StiHitContainer::_debug = 0;
 int VectorAndEnd::fIdCounter = 0;
 //________________________________________
 VectorAndEnd::VectorAndEnd(): fEffectiveEndValid(false)
@@ -437,4 +438,51 @@ void StiHitContainer::setMaxTimes(int nTimes)
         (*it)->setMaxTimes(nTimes);
    }  
 }
-
+//________________________________________________________________________________
+vector<StiHit*> & StiHitContainer::getTpc2Hits(StiHit& ref, double dY, double dZ) {
+  _selectedHits.clear();
+  vector<StiHit*> Hits;
+  StiHit *hit = &ref;
+  if ( hit->detector()->getGroupId() == kTpcId) {
+    Hits.push_back(hit);
+    UInt_t i1 = 0;
+    UInt_t N  = 0;
+    do {
+      if (N == Hits.size()) break;
+      i1 = N;
+      N = Hits.size();
+      for (UInt_t i = i1; i < N; i++) {
+	StiHit *k = Hits[i];
+	const StTpcHit *kHit = dynamic_cast<const StTpcHit*>(k->stHit());
+	if (! kHit) continue;
+	if (kHit->flag() != 2 || kHit->timeBucketsInHit() != 5) continue;  // Splitted ?
+	vector<StiHit*> & hits = getHits(*hit, dY, dZ, kFALSE);
+	for (auto l : hits) {
+	  if (! l) continue;
+	  Bool_t have  = kFALSE;
+	  for (auto n : Hits) {
+	    if (l == n) {have = kTRUE; break;}
+	  }
+	  if (have ) continue;
+	  const StTpcHit *lHit = dynamic_cast<const StTpcHit*>(l->stHit());
+	  if (! lHit) continue;
+	  if (lHit == kHit) continue;
+	  if (lHit->flag() != 2 || lHit->timeBucketsInHit() != 5) continue;  // Splitted ?
+	  Int_t padOverlap = TMath::Min(kHit->maxPad(),lHit->maxPad())
+	    -                TMath::Max(kHit->minPad(),lHit->minPad());
+	  Int_t tmbkOverlap = TMath::Min(kHit->maxTmbk(),lHit->maxTmbk()) 
+	    -                 TMath::Max(kHit->minTmbk(),lHit->minTmbk());
+	  // Cut
+	  if (padOverlap  < -1 ) continue;  // two empty time buckets between clusters. no.gap in pads
+	  if (tmbkOverlap < -6 ) continue;
+	  if (_debug) {
+	    cout << "StiHitContainer::getTpc2Hits kHit: "; kHit->Print();
+	    cout << "StiHitContainer::getTpc2Hits lHit: "; lHit->Print();}
+	  Hits.push_back(l);
+	}
+      } 
+    } while (1);
+    _selectedHits = Hits;
+  }
+  return _selectedHits;
+}

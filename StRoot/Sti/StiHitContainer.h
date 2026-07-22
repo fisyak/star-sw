@@ -164,6 +164,7 @@ public:
   vector<StiHit*> & getHits();
   vector<StiHit*> & getHits(Filter<StiHit> & filter);
   vector<StiHit*> & getHits(StiHit& ref, double dY, double dZ, bool fetchAll=false);
+  vector<StiHit*> & getTpc2Hits(StiHit& ref, double dY, double dZ);
   vector<StiHit*> & getHits(double position, double refAngle, double y, double z, 
 			    double dY, double dZ, bool fetchAll=false);
   vector<StiHit*> & getHits(StiKalmanTrackNode &, bool fetchAll=false);
@@ -183,6 +184,8 @@ public:
   bool hasKey(double refangle, double position);
   bool hasDetector(const StiDetector* layer);
   void print();
+  static void SetDebug(int k) {_debug = k;}
+  static int _debug;
  protected:
   // Utility key used in hit retrieval (avoid constructor call per search)
   HitMapToVectorAndEndType::key_type _key; 
@@ -203,7 +206,6 @@ public:
   Factory<StiHit> * _hitFactory;
   // Utility ostream operator
   friend ostream& operator<<(ostream&, const StiHitContainer&);
-
  private:
   StiHitContainer();
 };
