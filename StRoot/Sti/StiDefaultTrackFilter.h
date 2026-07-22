@@ -10,7 +10,7 @@ class StiDefaultTrackFilter : public EditableFilter<StiTrack>
   StiDefaultTrackFilter();
   StiDefaultTrackFilter(const string & name, const string & description);
   virtual ~StiDefaultTrackFilter();
-  bool accept(const StiTrack *filtered) const;
+  int           accept(const StiTrack *filtered) const;
   virtual void initialize();
   virtual void setDefaults();
 };
