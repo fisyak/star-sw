@@ -12,11 +12,12 @@
 #pragma link C++ class StiHit;
 #pragma link C++ class StiIsActiveFunctor;
 #pragma link C++ class StiKalmanTrackFinder;
+#pragma link C++ class StiLocalTrackSeedFinder;
+#pragma link C++ class StiCATpcSeedFinder;
 #pragma link C++ class StiKalmanTrackFitter;
 #pragma link C++ class StiKalmanTrack;
 #pragma link C++ class StiKalmanTrackNode;
 #pragma link C++ class StiKTNIterator;
-#pragma link C++ class StiLocalTrackSeedFinder;
 #pragma link C++ class StiMasterDetectorBuilder;
 #pragma link C++ class StiMaterial;
 #pragma link C++ class StiNeverActiveFunctor;
@@ -37,4 +38,5 @@
 #pragma link C++ class StiVertexFinder;
 #pragma link C++ class StiTrackNodeHelper;
 #pragma link C++ namespace StiVMCToolKit;
+#pragma link C++ class StiHitContainer;
 #endif
