@@ -31,11 +31,12 @@ class StiTpcHitLoader : public StiHitLoader<StEvent,StiDetectorBuilder>
   void         setMinSector(UInt_t r= 1) {_minSector = r;}
   void         setMaxSector(UInt_t r=24) {_maxSector = r;}
   void         setMaxZ(Double_t z) {_maxZ = z;}
-  UInt_t        minRow() {return _minRow;}
-  UInt_t        maxRow() {return _maxRow;}
-  UInt_t        minSector() {return _minSector;}
-  UInt_t        maxSector() {return _maxSector;}
-  
+  UInt_t       minRow() {return _minRow;}
+  UInt_t       maxRow() {return _maxRow;}
+  UInt_t       minSector() {return _minSector;}
+  UInt_t       maxSector() {return _maxSector;}
+  static void  SetDebug(Int_t k) {_debug = k;}
+  static Int_t _debug;
  protected:
   UInt_t         _minRow;
   UInt_t         _maxRow;

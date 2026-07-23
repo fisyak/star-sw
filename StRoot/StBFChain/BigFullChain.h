@@ -1598,6 +1598,7 @@ Bfc_st BFC[] = { // standard chains
   {"TpcMixer","","tpcChain","StEvent,rts,-Mixer,-tpx"  ,"StTpcMixerMaker","StTpcHitMaker","",kFALSE},
   {"TpxClu","tpc_hits","tpcChain","rts,tpcDb,detDb,-tpx,-tpc_daq,-fcf,MakeEvent","StTpcRTSHitMaker"
    ,"StTpcHitMaker",                                                    "RTS(online) cluster maker",kFALSE},
+  {"NTuple2Hits"       ,"","","","","",                              "Activate NTuple for two hits",kFALSE},
   {"TPC23"       ,"","","TpxClu","","",                    "RTS(online, daq5k) tpc23-cluster maker",kFALSE},
   {"TpxClu2D"    ,"","","TpxClu","","",                              "RTS(online) 2D-cluster maker",kFALSE},
   {"USE_GAIN_FROM_FILE","","","TpxClu","","","RTS(online) force use gain from Tonko's online files",kFALSE},

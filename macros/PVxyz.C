@@ -43,26 +43,41 @@ void PVxyz() {
   cOut += tag;
   TFile *fOut = new TFile(fName,"recreate");
   TH1 *x = (TH1 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/x");
+  TH1 *y = (TH1 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/y");
+  TH1 *z = (TH1 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/z");
+  TH2 *xy = (TH2 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/xy");
+  TH1 *e = (TH1 *) dir->Get("/Tracks/hPVError");
+  if (! x || ! y || ! z || ! xy) {
+    TH2 *Vxy = (TH2 *) dir->Get("Vxy");
+    if (! Vxy) {
+      cout << "Vxy does not exist" << endl;
+      return;
+    }
+    x = Vxy->ProjectionX("x");
+    y = Vxy->ProjectionY("y");
+    z = (TH1 *) dir->Get("VxZ");
+    if (! z) {
+      cout << "VxZ does esist" << endl;
+      return;
+    }
+    z->SetName("z");
+  }
   if (x) x->Write();
   TF1 *gaus = FitGaus(x);
   if (! gaus) return;
   Double_t X = gaus->GetParameter(1);
   Double_t sigma_X = gaus->GetParameter(2);
-  TH1 *y = (TH1 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/y");
   if (y) y->Write();
   gaus = FitGaus(y);
   if (! gaus) return;
   Double_t Y = gaus->GetParameter(1);
   Double_t sigma_Y = gaus->GetParameter(2);
-  TH1 *z = (TH1 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/z");
   if (z) z->Write();
   gaus = FitGaus(z);
   if (! gaus) return;
   Double_t Z = gaus->GetParameter(1);
   Double_t sigma_Z = gaus->GetParameter(2);
-  TH1 *e = (TH1 *) dir->Get("/Tracks/hPVError");
   if (e) e->Write();
-  TH2 *xy = (TH2 *) dir->Get("/Particles/KFParticlesFinder/PrimaryVertexQA/xy");
   if (xy) xy->Write();
   cout << "Create " << cOut << endl;
   out.open(cOut.Data());

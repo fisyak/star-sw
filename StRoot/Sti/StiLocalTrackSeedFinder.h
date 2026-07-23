@@ -48,6 +48,8 @@ public:
   bool find(StiTrack *track, int direction,double rmin=0){return false;};
 
   friend ostream& operator<<(ostream& os, const StiLocalTrackSeedFinder & f);
+  static void SetDebug(Int_t k) {_debug = k;}
+  static Int_t _debug;
 
 protected:
   StiKalmanTrack *makeTrack(StiHit* hit);

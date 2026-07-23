@@ -118,7 +118,7 @@ namespace AliHLTTPCCAParameters
    * different for different iteration of finding
    */
   static const float NeighbourAreaSizeTgY[3] = {.6,  2., 2.}; // TODO choose appropriate and use > 1 iterations
-  static const float NeighbourAreaSizeTgZ[3] = {2.,  2., 2.};
+  static const float NeighbourAreaSizeTgZ[3] = {32.,  32., 32.}; // {2.,  2., 2.};
 
    // TODO describe
     // curv = 1/R = (1/pt[GeV] * Bz[kGauss] * c[=0.00028])  . 1GeV -> curv = 0.0014

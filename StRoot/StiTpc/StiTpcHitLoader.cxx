@@ -22,6 +22,7 @@
 #include "StDetectorDbMaker/St_tpcAnodeHVavgC.h"
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
 #include "StiTpcIsActiveFunctor.h"
+Int_t StiTpcHitLoader::_debug = 0;
 //________________________________________________________________________________
 StiTpcHitLoader::StiTpcHitLoader(): StiHitLoader<StEvent,StiDetectorBuilder>("TpcHitLoader"),
   _minRow(1), _maxRow(72), _minSector(1), _maxSector(24), _maxZ(1000)   { }
@@ -37,7 +38,6 @@ void StiTpcHitLoader::loadHits(StEvent* source,
                                Filter<StiTrack> * trackFilter,
                                Filter<StiHit> * hitFilter)
 {
-  static Int_t debug = 0;
 //  cout << "StiTpcHitLoader::loadHits(StEvent*) -I- Started" << endl;
   assert(_detector);
   assert(_hitContainer);
@@ -75,25 +75,11 @@ void StiTpcHitLoader::loadHits(StEvent* source,
       for (iter = hitvec.begin();iter != hitvec.end();++iter)        {
         StTpcHit*hit=*iter;
 	if (StiKalmanTrackNode::IsLaser() && hit->flag()) continue;
-	if (hit->flag() & FCF_CHOPPED || hit->flag() & FCF_SANITY || hit->flag() & 256)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
+	if (hit->flag() & FCF_CHOPPED || hit->flag() & FCF_SANITY)     continue; // ignore hits marked by AfterBurner as chopped or bad sanity
 	if (hit->pad() > 182 || hit->timeBucket() > 511) continue; // some garbadge  for y2001 daq
 	if (TMath::Abs( hit->position().z() ) > _maxZ) continue;
 	Int_t iRdo    = StDetectorDbTpcRDOMasks::instance()->rdoForPadrow(sector+1,row+1,hit->pad());
 	if ( ! StDetectorDbTpcRDOMasks::instance()->isOn(sector+1,iRdo)) continue;
-#if 0 /*VP*/
-{        
-        double x = hit->position().x();
-        double y = hit->position().y();
-//      double z = hit->position().z();
-        double ang = atan2(y,x);
-        int sec = StiTpcDetectorBuilder::sector(ang,hit->sector()>12);
-        sec -= (int)hit->sector();
-	if (sec> 6) sec-=12;
-	if (sec<-6) sec+=12;
-        assert(abs(sec)<=1);
-
-}
-#endif
 	assert(_hitFactory);
         stiHit = _hitFactory->getInstance();
         assert(stiHit);
@@ -105,8 +91,8 @@ void StiTpcHitLoader::loadHits(StEvent* source,
 	else                     stiHit->setVz(-driftvel);
         _hitContainer->add( stiHit );
 	noHitsLoaded++;
-	if (debug) {
-	  cout << "add hit S/R =" << sector + 1 << "/" << row + 1 << " to detector " << *detector << endl;
+	if (_debug) {
+	  hit->Print();
 	}
       }
       if (hitTest.width()>0.2) {// distortions 

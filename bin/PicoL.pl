@@ -250,7 +250,7 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-my $GLOB = $PICOPATH . $glob . "/*/*/2*";
+my $GLOB = $PICOPATH . $glob . "/*/2*";
 if ($pwd =~ /TFG24/) {$GLOB = $PICOPATH . $glob . "/???/*";}
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day

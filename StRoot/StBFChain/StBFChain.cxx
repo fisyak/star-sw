@@ -878,6 +878,9 @@ Int_t StBFChain::Instantiate()
     if (GetOption("NoTpxAfterBurner") && (maker == "StTpcHitMaker" || maker == "StTpcRTSHitMaker")) {
       mk->SetAttr("NoTpxAfterBurner", kTRUE);
     }
+    if (GetOption("NTuple2Hits") && (maker == "StTpcHitMaker" || maker == "StTpcRTSHitMaker")) {
+      mk->SetAttr("NTuple2Hits", kTRUE);
+    }
     if (maker == "StTpcHitMaker"  && GetOption("NoAnnotateCL")) {
       mk->SetAttr("UseTonkoClusterAnnotation", kFALSE);
     }

@@ -239,7 +239,6 @@
  * StTpcHitMaker - class to fille the StEvewnt from DAQ reader
  *
  **************************************************************************/
-//#define __MAKE_NTUPLE__
 //#define __CORRECT_S_SHAPE__
 //#define __TOKENIZED__
 //#define __USE__THnSparse__
@@ -255,7 +254,7 @@
 #include "StEvent.h"
 #include "StEvent/StTpcHitCollection.h"
 #include "StEvent/StTpcHit.h"
-#include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
+
 #include "StTpcRawData.h"
 #include "StThreeVectorF.hh"
 #define TRANS_TABLE_10TO8_HH
@@ -276,6 +275,7 @@
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
 #include "StDetectorDbMaker/St_tpcStatusC.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
 #include "TFile.h"
 #include "TNtuple.h"
 #include "TH2.h"
@@ -295,6 +295,7 @@ Float_t StTpcHitMaker::fgDp    = .1;             // hardcoded errors
 Float_t StTpcHitMaker::fgDt    = .2;
 Float_t StTpcHitMaker::fgDperp = .1;
 Bool_t  StTpcHitMaker::fgCosmics = kFALSE;
+Bool_t  StTpcHitMaker::fgNTuple2Hits = kFALSE;
 static Int_t _debug = 0;
 #ifdef  __TOKENIZED__
 #define __NOT_ZERO_SUPPRESSED_DATA__
@@ -327,6 +328,8 @@ Int_t StTpcHitMaker::Init() {
   memset(maxHits,0,sizeof(maxHits));
   maxBin0Hits = 0;
   bin0Hits = 0;
+  if (IAttr("NTuple2Hits")) fgNTuple2Hits = kTRUE;
+
   return kStOK ;
 }
 //________________________________________________________________________________
@@ -1191,43 +1194,35 @@ Int_t StTpcHitMaker::RawTpcData(Int_t sector) {
     return Total_data;
 }
 //________________________________________________________________________________
-#ifdef __MAKE_NTUPLE__
-static TNtuple *tup = 0;
-struct TpcHitPair_t {
-  Float_t sec, row, 
-    qK, padK, tbkK, padKmn, padKmx, tbkKmn, tbkKmx, IdTK, QAK,
-    qL, padL, tbkL, padLmn, padLmx, tbkLmn, tbkLmx, IdTL, QAL,
-    padOv, tbkOv;
-};
-static const Char_t *vTpcHitMRPair = "sec:row:"
-  "qK:padK:tbkK:padKmn:padKmx:tbkKmn:tbkKmx:IdTK:QAK:"
-  "qL:padL:tbkL:padLmn:padLmx:tbkLmn:tbkLmx:IdTL:QAL:"
-  "padOv:tbkOv";
-#endif
-//________________________________________________________________________________
 Bool_t TpcHitLess(const StTpcHit *lhs, const StTpcHit *rhs) {
   return (200*lhs->timeBucket() + lhs->pad()) < (200*rhs->timeBucket() + rhs->pad());
-};
+}
 //________________________________________________________________________________
 void StTpcHitMaker::AfterBurner(StTpcHitCollection *TpcHitCollection) {
-  static Float_t padDiff = 2.5;
-  static Int_t   tmbkDiff = -6;
   static StTpcCoordinateTransform transform(gStTpcDb);
   static StTpcLocalSectorCoordinate local;
   static StTpcLocalCoordinate global;
   if (! TpcHitCollection) return;
-  Double_t TimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency();
-  Double_t zVX = 0;
-  if (St_beamInfoC::instance()->IsFixedTarget()) zVX = 200.0;
-#ifdef __MAKE_NTUPLE__
-  if (! tup) {
-    if (StMaker::GetChain()->GetTFile()) {
-      StMaker::GetChain()->GetTFile()->cd();
-      tup = new TNtuple("HitT","Cluster Pair Info",vTpcHitMRPair);
+  static TNtuple *tup = 0;
+  struct TpcHitPair_t {
+    Float_t sec, row, 
+      qK, padK, tbkK, padKmn, padKmx, tbkKmn, tbkKmx, IdTK, QAK, flagK, zK, adcK,
+      qL, padL, tbkL, padLmn, padLmx, tbkLmn, tbkLmx, IdTL, QAL, flagL, zL, adcL,
+      padOv, tbkOv;
+  };
+  static const Char_t *vTpcHitMRPair ="sec:row:"
+    "qK:padK:tbkK:padKmn:padKmx:tbkKmn:tbkKmx:IdTK:QAK:flagK:zK:adcK:"
+    "qL:padL:tbkL:padLmn:padLmx:tbkLmn:tbkLmx:IdTL:QAL:flagL:zL:adcL:"
+    "padOv:tbkOv";
+  TpcHitPair_t pairC;
+  if (fgNTuple2Hits) {
+    if (! tup) {
+      if (StMaker::GetChain()->GetTFile()) {
+	StMaker::GetChain()->GetTFile()->cd();
+	tup = new TNtuple("HitT","Cluster Pair Info",vTpcHitMRPair);
+      }
     }
   }
-  TpcHitPair_t pairC;
-#endif
   UInt_t numberOfSectors = TpcHitCollection->numberOfSectors();
   UInt_t TotNoHits = 0;
   UInt_t RejNoHits = 0;
@@ -1239,66 +1234,41 @@ void StTpcHitMaker::AfterBurner(StTpcHitCollection *TpcHitCollection) {
       StTpcPadrowHitCollection *rowCollection = sectorCollection->padrow(row-1);
       if (! rowCollection) continue;
       UInt_t NoHits = rowCollection->hits().size();
-      TotNoHits += NoHits;
       if (NoHits < 2) continue;
-      Double_t PadRadius =  St_tpcPadConfigC::instance()->radialDistanceAtRow(sec,row);
-      Double_t PadLength =  St_tpcPadConfigC::instance()->PadLengthAtRow(sec,row);
-      Double_t zTmbk = StTpcDb::instance()->DriftVelocity(sec,row)*1e-6*TimeBinWidth;
-      for (UInt_t k = 0; k < NoHits; k++) {
-	StTpcHit* kHit = rowCollection->hits().at(k);
-	if (kHit->flag() == FCF_MERGED && kHit->noTmbks() == 5) kHit->setFlag(0);
-      }
-     // Sort over timebuckets and pads
+      // Sort over timebuckets and pads
       if (_debug) {cout << "Before" << endl; rowCollection->Print();}
       sort(rowCollection->hits().begin(), rowCollection->hits().end(),	TpcHitLess);
       if (_debug) {cout << "After" << endl; rowCollection->Print();}
-      // reset flag for FCF_MERGED && oTmbks() == 5
-      // Merge splitted clusters
-      for (UInt_t k = 0; k < NoHits; k++) {
-	StTpcHit* kHit = rowCollection->hits().at(k);
-	if (! kHit) continue;
-	if (kHit->flag())  continue;
-	if (kHit->adc() <= 0.0)                    continue;
-#ifdef __MAKE_NTUPLE__
-	pairC.sec    = sec;
-	pairC.row    = row;
-	pairC.qK     = kHit->charge();
-	pairC.padK   = kHit->pad();
-	pairC.tbkK   = kHit->timeBucket();
-	pairC.padKmn = kHit->minPad();
-	pairC.padKmx = kHit->maxPad();
-	pairC.tbkKmn = kHit->minTmbk();
-	pairC.tbkKmx = kHit->maxTmbk();
-	pairC.IdTK   = kHit->idTruth();
-	pairC.QAK    = kHit->qaTruth();
-#endif
-	for (UInt_t l = k+1; l < NoHits; l++) {
-	  StTpcHit* lHit = rowCollection->hits().at(l);
-	  if (! lHit) continue;
-	  if (lHit->flag())  continue;
-	  if (lHit->adc() <= 0.0)                    continue;
-	  if (_debug) {cout << "================================================================================" << endl << "k " << k; kHit->Print();}
-	  Double_t dZ = PadLength/PadRadius*TMath::Abs(zVX - kHit->position().z());
-	  Float_t timeBucketDiff = dZ/zTmbk + 6;
-	  if (_debug) {cout << "l " << l; lHit->Print();}
-	  // Most stringent tests first to reduce calls
-	  // check hits near by
-
-	  bool notNear =  
-	    (TMath::Abs(kHit->pad()        - lHit->pad())        > padDiff) ||
-	    (TMath::Abs(kHit->timeBucket() - lHit->timeBucket()) > timeBucketDiff);
-#ifndef __MAKE_NTUPLE__
-	  if (notNear) continue;
-#endif
-	  // Are extents overlapped ?
-	  Int_t padOverlap = TMath::Min(kHit->maxPad(),lHit->maxPad())
-	    -                TMath::Max(kHit->minPad(),lHit->minPad());
-	  if (padOverlap < 0) continue;
-	  Int_t tmbkOverlap = TMath::Min(kHit->maxTmbk(),lHit->maxTmbk()) 
-	    -                 TMath::Max(kHit->minTmbk(),lHit->minTmbk());
-	  if (_debug) {cout << "padOverlap = " << padOverlap << "\ttmbkOverlap = " << tmbkOverlap << endl;}
-#ifdef __MAKE_NTUPLE__
-	  if (tup) {
+      TotNoHits += NoHits;
+      if (fgNTuple2Hits) {
+	for (UInt_t k = 0; k < NoHits; k++) {
+	  StTpcHit* kHit = rowCollection->hits().at(k);
+	  if (! kHit) continue;
+	  if (kHit->flag() != 2) continue;
+	  pairC.sec    = sec;
+	  pairC.row    = row;
+	  pairC.qK     = kHit->charge();
+	  pairC.padK   = kHit->pad();
+	  pairC.tbkK   = kHit->timeBucket();
+	  pairC.padKmn = kHit->minPad();
+	  pairC.padKmx = kHit->maxPad();
+	  pairC.tbkKmn = kHit->minTmbk();
+	  pairC.tbkKmx = kHit->maxTmbk();
+	  pairC.IdTK   = kHit->idTruth();
+	  pairC.QAK    = kHit->qaTruth();
+	  pairC.QAK    = kHit->qaTruth();
+	  pairC.flagK  = kHit->flag();
+	  pairC.zK     = kHit->position().z();
+	  pairC.adcK   = kHit->adc();
+	  for (UInt_t l = k+1; l < NoHits; l++) {
+	    StTpcHit* lHit = rowCollection->hits().at(l);
+ 	    if (! lHit) continue;
+	    if (lHit->flag() != 2) continue;
+	    Int_t padOverlap = TMath::Min(kHit->maxPad(),lHit->maxPad())
+	      -                TMath::Max(kHit->minPad(),lHit->minPad());
+	    Int_t tmbkOverlap = TMath::Min(kHit->maxTmbk(),lHit->maxTmbk()) 
+	      -                 TMath::Max(kHit->minTmbk(),lHit->minTmbk());
+	    if (_debug) {cout << "padOverlap = " << padOverlap << "\ttmbkOverlap = " << tmbkOverlap << endl;}
 	    pairC.qL     = lHit->charge();
 	    pairC.padL   = lHit->pad();
 	    pairC.tbkL   = lHit->timeBucket();
@@ -1310,11 +1280,43 @@ void StTpcHitMaker::AfterBurner(StTpcHitCollection *TpcHitCollection) {
 	    pairC.QAL    = lHit->qaTruth();
 	    pairC.padOv  = padOverlap;    
 	    pairC.tbkOv  = tmbkOverlap;
+	    pairC.flagL  = lHit->flag();
+	    pairC.zL     = lHit->position().z();
+	    pairC.adcL   = lHit->adc();
 	    tup->Fill(&pairC.sec);
 	  }
-	  if (notNear) continue;
-#endif
-	  if (tmbkOverlap < tmbkDiff) continue;
+	}
+      }
+      // Merge splitted clusters
+      for (UInt_t k = 0; k < NoHits; k++) {
+	StTpcHit* kHit = rowCollection->hits().at(k);
+	if (! kHit) continue;
+	if (kHit->flag() && ! kHit->flag() & FCF_MERGED )  continue;
+	if (kHit->adc() <= 0.0)                    continue;
+	for (UInt_t l = k+1; l < NoHits; l++) {
+	  StTpcHit* lHit = rowCollection->hits().at(l);
+	  if (! lHit) continue;
+	  if (lHit->flag() && ! lHit->flag() & FCF_MERGED )  continue;
+	  if (lHit->adc() <= 0.0)                    continue;
+	  if (_debug) {cout << "================================================================================" << endl << "k " << k; kHit->Print();}
+	  if (_debug) {cout << "l " << l; lHit->Print();}
+	  Int_t padOverlap = TMath::Min(kHit->maxPad(),lHit->maxPad())
+	    -                TMath::Max(kHit->minPad(),lHit->minPad());
+	  Int_t tmbkOverlap = TMath::Min(kHit->maxTmbk(),lHit->maxTmbk()) 
+	    -                 TMath::Max(kHit->minTmbk(),lHit->minTmbk());
+	  if ( padOverlap < 0) continue;
+	  if ( padOverlap < 1 && tmbkOverlap < -1) continue;
+	  if ( padOverlap < 3 && tmbkOverlap < -3) continue;
+	  Short_t minTmbk = TMath::Min(lHit->minTmbk(), kHit->minTmbk());
+	  Short_t maxTmbk = TMath::Max(lHit->maxTmbk(), kHit->maxTmbk());
+#ifdef __TIME_BUCKET_Length_CUT__
+	  if (maxTmbk - minTmbk + 1 > 15) continue; // clusters can't be larger than 15 time bucket
+#endif /* __TIME_BUCKET_Length_CUT__ */
+	  // save original cluster and mark is  FCF_CHOPPED
+	  StTpcHit *nHit = new StTpcHit(*kHit);
+	  nHit->setFlag(nHit->flag() | FCF_CHOPPED); 
+	  rowCollection->hits().push_back(nHit);          
+          if (_debug) {cout << "nHit :"; nHit->Print("");}
 #ifdef FCF_CHOPPED
 	  UShort_t flag = lHit->flag() | FCF_CHOPPED; 
 #else
@@ -1328,8 +1330,6 @@ void StTpcHitMaker::AfterBurner(StTpcHitCollection *TpcHitCollection) {
 	  Float_t timeBucket = (lHit->adc()*lHit->timeBucket() + kHit->adc()*kHit->timeBucket())/adc;
 	  Short_t minPad  = TMath::Min(lHit->minPad(),  kHit->minPad());
 	  Short_t maxPad  = TMath::Max(lHit->maxPad(),  kHit->maxPad());
-	  Short_t minTmbk = TMath::Min(lHit->minTmbk(), kHit->minTmbk());
-	  Short_t maxTmbk = TMath::Max(lHit->maxTmbk(), kHit->maxTmbk());
 	  Int_t IdT = lHit->idTruth();
 	  Double_t QA = lHit->adc()*lHit->qaTruth();
 	  if (IdT == kHit->idTruth()) {
@@ -1373,16 +1373,16 @@ void StTpcHitMaker::AfterBurner(StTpcHitCollection *TpcHitCollection) {
   } // sectors
   LOG_INFO << "StTpcHitMaker::AfterBurner from " << TotNoHits << " Total no. of hits "  << RejNoHits << " were rejected" << endm;
   return;
-};
+}
 //________________________________________________________________________________
 StTpcHit* StTpcHitMaker::StTpcHitFlag(const StThreeVectorF& p,
-             const StThreeVectorF& e,
-             UInt_t hw, float q, UChar_t c,
-             Int_t idTruth, UShort_t quality,
-             UShort_t id,
-             UShort_t mnpad, UShort_t mxpad, UShort_t mntmbk,
-             UShort_t mxtmbk, Float_t cl_x, Float_t cl_t, UShort_t adc,
-             UShort_t flag) {
+				      const StThreeVectorF& e,
+				      UInt_t hw, float q, UChar_t c,
+				      Int_t idTruth, UShort_t quality,
+				      UShort_t id,
+				      UShort_t mnpad, UShort_t mxpad, UShort_t mntmbk,
+				      UShort_t mxtmbk, Float_t cl_x, Float_t cl_t, UShort_t adc,
+				      UShort_t flag) {
   // New hit
   StTpcHit* hit = new StTpcHit(p,e,hw,q,c,idTruth,quality,id,mnpad,mxpad,mntmbk,mxtmbk,cl_x,cl_t,adc);
   // Check for sanity

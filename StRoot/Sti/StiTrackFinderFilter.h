@@ -10,7 +10,7 @@ class StiTrackFinderFilter : public Filter<StiTrack>
   StiTrackFinderFilter();
   StiTrackFinderFilter(const string & name, const string & description);
   virtual ~StiTrackFinderFilter();
-  bool accept(const StiTrack *filtered) const;
+  Int_t   accept(const StiTrack *filtered) const;
   virtual void initialize();
   virtual void setDefaults();
 

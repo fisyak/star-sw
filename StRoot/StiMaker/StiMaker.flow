@@ -47,169 +47,98 @@ union{double A[1];double _cXX;};
  StiNodePars  mFP; // fitPars
  StiNodeErrs  mFE; // fitErrs	
  StiNodeExt *_ext; {mPP, mPE, mMtx, // ? Prediction
-________________________________________________________________________________
-StiMaker::Init	
-	_loaderHitFilter = 0
-	_loaderTrackFilter = new StiDefaultTrackFilter("LoaderTrackFilter","MC Tracks Filter"); 
-		_loaderTrackFilter->add(new EditableParameter(..) instead of StiDefaultTrackFilter::initialize() initialize parameters for 
-	_loaderTrackFilter->add(....)
-...
-	_loaderTrackFilter = StiDefaultTrackFilter
-
-	InitDetectors()	
-		_toolkit->add(group = new StiTpcDetectorGroup(bool active,...))
-						active?new StiTpcHitLoader():0,
-						new StiTpcDetectorBuilder(active,inputFile)	
-		_toolkit->add(group = new StiSvtDetectorGroup(...))
-		_toolkit->add(group = new StiSsdDetectorGroup(...))
-		_toolkit->add(group = new StiFtpcDetectorGroup(...))
-		_toolkit->add(group = new StiPixelDetectorGroup(...))
-		...
-StiMaker::InitRun
-
-	StiDetectorContainer * detectorContainer = _toolkit->getDetectorContainer();
-	detectorContainer->initialize(); // order detector in R and Phi
-	detectorContainer->reset();
-		..
-	_seedFinder->initialize();
-	_hitLoader  = _toolkit->getHitLoader();
-	
-
-
-	masterBuilder->build(*this);
-		 (*iter)->build(source) // loop over  DetectorGroups
-			buildDetectors(StMaker&) - beam pipe ; radius = 4; thickness = 0.076;
-						  PN pipegeo.g: BeInnR    = 3.9l  BeOutR    = 4.0  BeLeng    = 76.2
-							 Al   : S1InnR    = 3.875 S1OutR    = 4.0  S1Leng    = 153.4
-						setThickness(thickness)
-						setOuterRadius(radius+thickness/2.)
-				StiDetectorBuilder data members
-				   int                 _groupId;
-                                   bool                _active;		        
-  				   materialMap         mMaterialMap;	      
-  				   shapeMap            mShapeMap;	      
-  				   detectorMap         mDetectorMap;	      
-  				   detectorIterator    mDetectorIterator;      
-  				   unsigned int        _nRows;		      
-  				   vector< unsigned int> _nSectors;	      
-  				   vector< vector<StiDetector*> > _detectors;  
-  				   Factory<StiDetector>*_detectorFactory;      
-  				   StiTrackingParameters _trackingParameters;  // ?
-   				         string _inputFile;                    
-                               StiTpcDetectorBuilder::buildDetectors // only 12 sectors, alignment West used for East
-				StiDetectorBuilder::load
-					Loadable::loadM	
-						StiTpcDetectorBuilder::loadDS
-	...
-	
-OLD================================================================================
-
-StiMaker::Make
-	// StiLocalTrackSeedFinder*       _seedFinder
-	// StiLocalTrackSeedFinder*       _trackSeedFinder
-	// StiKalmanTrackFinder*          _tracker;
-	// StiKalmanTrackFitter*          _fitter
-	// 04/23/09 StiHitLoader::loadEvent(event,_loaderTrackFilter,_loaderHitFilter);
-	StiKalmanTrackFinder::clear()
-	loadHits(); // 04/23/09
-	MyClear()
-	StiKalmanTrackFinder::reset()
-	StiKalmanTrackFinder::findTracks()
-		StiTrackFinder::reset()
-		StiTrackContainer::clear()
-	StiKalmanTrackFinder::findTpcTracks()
-	
-	StiKalmanTrackFinder::findAllTracks()
-                StiKalmanTrackFinder::extendSeeds(rMin=0)
-			StiLocalTrackSeedFinder::findTrack(rMin) <
-				StiLocalTrackSeedFinder::makeTrack
-					StiLocalTrackSeedFinder::extendHit
-					StiLocalTrackSeedFinder::extrapolate
-					StiLocalTrackSeedFinder::initializeTrack
-						StiLocalTrackSeedFinder::fit	
-							StiKalmanTrack::initialize(vector<StiHit*> &hits)
-								StiKalmanTrackNode::initialize(hit)
-									StiKalmanTrackNode::setHit(hit)
-									StiKalmanTrackNode::setHitErrors()
-										StiTrackNodeHelper::getHitErrors(hit,&mFP,&mHrr);
-											calc = StiDetector::getHitErrorCalculator
-											if (calc) calc->calculateError(pars,hrr->hYY,hrr->hZZ);
-											else      hrr->A[i]=hit->errMtx() [6]
-										StiHitErrs::rotate(_alpha);
-								StiKalmanTrack::add(StiTrackNode * node,int direction) 
-                        track->setFlag(-1);
-			track->approx(0); 
-			StiTrack::fit(kInsideOut)
-				 StiKalmanTrackFitter::fit(track,fitDirection)
-					// refit
-					for (source=first;source!=last;source++) {
-						targetNode = &(*source);	
-  						targetDet = targetNode->getDetector();
-      						targetHit = targetNode->getHit();
-						
-					}
-			StiKalmanTrackFinder::extendTrack(track,rMin);
-				StiKalmanTrackFinder::find(track,kOutsideIn,rMin)
-					StiKalmanTrackFinder::StiKalmanTrackFinder::find(track,direction,leadNode,qa)
-				StiKalmanTrackFinder::find(track,kInsideOut);
-				track->StiKalmanTrack::approx(); // 
-				track->StiKalmanTrack::refit()	
-			StiTrackNode *extenDca = track->extendToVertex(&dcaHit);
-			track->add(extenDca,kOutsideIn);
-			track->reduce();
-			track->setFlag(1);
-		        _trackContainer->push_back(track);
-        		track->setId(_trackContainer->size());
-        		track->reserveHits();
-			BFactory::Free(track);
-	StiStEventFiller::fillEvent(event, _trackContainer);
-	"GenericVertex"::fit(event);                              /// findVertex()
-	StiKalmanTrackFinder::extendTracksToVertex(vertex)
-========================================================================
-			StiTrackFinder::findTrack(double rMin)
-				StiLocalTrackSeedFinder::findTrack(rMin)	
-				StiKalmanTrack::find(); <<<<<<<<<<<<<<<<<<<< ?
-
-3   breakpoint     keep y   0x06b172cf in StiKalmanTrackFinder::findTrack(double) at .sl44_gcc346/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:810
-4   breakpoint     keep y   0x06b0d12e in StiKalmanTrack::find(int) at .sl44_gcc346/obj/StRoot/Sti/StiKalmanTrack.cxx:1128
-
-					
-				track->StiKalmanTrackFinder::find(); // direction=kOutsideIn
-					fit()
-					if(StiTrackFinder::find(this,kOutsideIn,radSvt)) {
-						StiKalmanTrack::approx(1);
-						StiKalmanTrack::refit()
-							StiKalmanTrack::refitL()
-								StiTrackNodeHelper::set(pNode,targetNode)
-								StiTrackNodeHelper::makeFit(0)
-									StiTrackNodeHelper::propagatePars
-									StiTrackNodeHelper::propagateMtx
-									StiTrackNodeHelper::propagateMCS
-									StiTrackNodeHelper::propagateFitd
-									StiTrackNodeHelper::propagateError
-									StiTrackNodeHelper::resetError
-									StiTrackNodeHelper::setHitErrs()
-									StiTrackNodeHelper::evalChi2()
-									StiTrackNodeHelper::updateNode()
-								StiTrackNodeHelper::makeFit(1)
-					}
-					if (trackFinder->find(this,kOutsideIn,0.)) {
-						StiKalmanTrack::refit()
-					}				
-					if (trackExtendedOut= trackFinder->find(this,kInsideOut)) {
-						StiKalmanTrack::refit()
-					}
-
 NEW================================================================================
 StiMaker::Make
-      StiMaker::MakeGlobalTracks(event)
-        StiKalmanTrackFinder::findTracks();
-	  StiKalmanTrackFinder::extendSeeds
-	     StiCATpcSeedFinder::findTrack
-		StiCATpcTrackerInterface::Run
-		   AliHLTTPCCAGBTracker::FindTracks
-                   StiCATpcTrackerInterface::MakeSeeds
-                StiCATpcTrackerInterface::GetSeeds
+|      StiMaker::MakeGlobalTracks(event)
+|      |  StiKalmanTrackFinder::findTracks();
+|      |  |  StiKalmanTrackFinder::extendSeeds (0.)    loop over Seed Finders
+|      |  |  | StiCATpcSeedFinder::findTrack                   CA
+|      |  |  | |  StiCATpcTrackerInterface::SetNewEvent
+|      |  |  | |  StiCATpcTrackerInterface::SetHits
+|      |  |  | |  StiCATpcTrackerInterface::Run
+|      |  |  | |  | AliHLTTPCCAGBTracker::FindTracks
+|      |  |  | |  | |    AliHLTTPCCATracker::Reconstruct
+|      |  |  | |  | |    AliHLTTPCCATracker::Reconstructor::Reconstruct
+|      |  |  | |  | |      AliHLTTPCCATracker::Reconstructor::execute 
+|      |  |  | |  | |	AliHLTTPCCATracker::NeighboursFinder::NeighboursFinder
+|      |  |  | |  | |	AliHLTTPCCATracker::NeighboursFinder::execute
+|      |  |  | |  | |            AliHLTTPCCATracker::NeighboursFinder::executeOnRow
+|      |  |  | |  | |	   AliHLTTPCCAHitAreaScalar:: AliHLTTPCCAHitAreaScalar
+|      |  |  | |  | |      AliHLTTPCCAStartHitsFinder::run
+|      |  |  | |  | |	AliHLTTPCCASliceData::HitLinkUpData
+|      |  |  | |  | |
+|      |  |  | |  | |  StiCATpcTrackerInterface::MakeSeeds
+|      |  |  | |  | |  StiCATpcTrackerInterface::GetSeeds
+|      |  |  | |  | |  sort(mSeeds->begin(), mSeeds->end(),SeedsCompareStatus );
+|      |  |  | |  | |  _seedHits.push_back(hit);  
+|      |  |  | |  | |  StiKalmanTrack::initialize0
+|      |  |  | |  | |  |  StiKalmanTrackNode::AddHit
+|      |  |  | |  | |  |  |  StiHitContainer::getTpc2Hits
+|      |  |  | |  | |  |  |  StiKalmanTrackNode::initialize(hit)
+|      |  |  | |
+|      |  |  | StiLocalTrackSeedFinder::findTrack(0)            Local
+|      |  |  | |  StiLocalTrackSeedFinder::makeTrack
+|      |  |  | |  | StiLocalTrackSeedFinder::extendHit(*_seedHits.back())
+|      |  |  | |  | | StiHitContainer::getNearestHit(LayerRadius,LayerAngle,hit.y, hit.z, StiLocalTrackSeedFinderParameters::instance()->deltaY(), StiLocalTrackSeedFinderParameters::instance()->deltaZ())
+|      |  |  | |  StiLocalTrackSeedFinder::extrapolate
+|      |  |  | |  | StiLocalTrackSeedFinder::initializeTrack
+|      |  |  | |  | |  StiLocalTrackSeedFinder::fit	
+|      |  |  | |  | |  |  StiKalmanTrack::initialize(vector<StiHit*> &hits)
+|      |  |  | |  | |  |  |     StiKalmanTrackNode::AddHit
+|      |  |  | |  | |  |  |     |  StiHitContainer::getTpc2Hits
+|      |  |  | |  | |  |  |     |  StiKalmanTrackNode::initialize(hit)
+|      |  |  | |          
+|      |  |  | StiKalmanTrackFinder::Fit
+|      |  |  | |  StiTrack::fit
+|      |  |  | |  | StiTrackFitter::fit
+|      |  |  | |  | | StiKalmanTrackNode::propagate
+|      |  |  | |  | |  StiKalmanTrackNode::updateNode
+|      |  |  | |  StiKalmanTrackFinder::extendTrack
+|      |  |  | |  | | StiKalmanTrackFinder::find
+|      |  |  | |  | | | |      StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction,StiKalmanTrackNode *leadNode,QAFind &qa(recursive)
+
+|      |  |  | |  | | | |      StiHitContainer::getHits(StiKalmanTrackNode *testNode)
+|      |  |  | |  | | | |          StiKalmanTrackNode::evaluateChi2(stiHit)
+|      |  |  | |  | | StiKalmanTrackFinder::refit           
+|      |  |  | |  | | StiKalmanTrackFinder::find
+       |  |  | |  | | StiKalmanTrackFinder::refit           
+|      |  |      							StiKalmanTrackNode::setHit(hit)
+|      |  |      							StiKalmanTrackNode::setHitErrors()
+|      |  |      								StiTrackNodeHelper::getHitErrors(hit,&mFP,&mHrr);
+|      |  |      									calc = StiDetector::getHitErrorCalculator
+|      |  |      									if (calc) calc->calculateError(pars,hrr->hYY,hrr->hZZ);
+|      |  |      									else      hrr->A[i]=hit->errMtx() [6]
+|      |  |      								StiHitErrs::rotate(_alpha);
+|      |  |      						StiKalmanTrack::add(StiTrackNode * node,int direction) 
+|      |  |                track->setFlag(-1);
+|      |  |      	track->approx(0); 
+|      |  |      	StiTrack::fit(kInsideOut)
+|      |  |      		 StiKalmanTrackFitter::fit(track,fitDirection)
+|      |  |      			// refit
+|      |  |      			for (source=first;source!=last;source++) {
+|      |  |      				targetNode = &(*source);	
+|      |  |      				targetDet = targetNode->getDetector();
+|      |  |      					targetHit = targetNode->getHit();
+|      |  |      				
+|      |  |      			}
+|      |  |      	StiKalmanTrackFinder::extendTrack(track,rMin);
+|      |  |      		StiKalmanTrackFinder::find(track,kOutsideIn,rMin)
+|      |  |      			StiKalmanTrackFinder::StiKalmanTrackFinder::find(track,direction,leadNode,qa)
+|      |  |      		StiKalmanTrackFinder::find(track,kInsideOut);
+|      |  |      		track->StiKalmanTrack::approx(); // 
+|      |  |      		track->StiKalmanTrack::refit()	
+|      |  |      	StiTrackNode *extenDca = track->extendToVertex(&dcaHit);
+|      |  |      	track->add(extenDca,kOutsideIn);
+|      |  |      	track->reduce();
+|      |  |      	track->setFlag(1);
+|      |  |              _trackContainer->push_back(track);
+|      |  |		track->setId(_trackContainer->size());
+|      |  |		track->reserveHits();
+|      |  |      	BFactory::Free(track);
+|      | StiStEventFiller::fillEvent(event, _trackContainer);
+|      | "GenericVertex"::fit(event);                              /// findVertex()
+|	StiKalmanTrackFinder::extendTracksToVertex(vertex)
+
 ========================================================================
     //  PREDICTION
     //  ----------

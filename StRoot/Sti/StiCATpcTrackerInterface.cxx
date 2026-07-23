@@ -268,11 +268,12 @@ void StiCATpcTrackerInterface::ConvertPars(const AliHLTTPCCATrackParam& caPar, d
 void StiCATpcTrackerInterface::MakeSeeds()
 {
   // Save CA results
-  const int NRecoTracks = fTracker->NTracks();
+  const UInt_t NRecoTracks = fTracker->NTracks();
+  if (! NRecoTracks) return; 
   if (fSpectrum) {
     TriggerOffSet();
   }
-  for ( int iTr = 0; iTr < NRecoTracks; iTr++ ) {
+  for ( UInt_t iTr = 0; iTr < NRecoTracks; iTr++ ) {
     // get seed
     const AliHLTTPCCAGBTrack tr = fTracker->Track( iTr );
     Seed_t seed;

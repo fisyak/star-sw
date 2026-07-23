@@ -55,6 +55,7 @@
 #include "StBichsel/StdEdxPull.h"
 #include "StDetectorId.h"
 #include "StDedxMethod.h"
+#include "RTS/src/DAQ_TPX/tpxFCF_flags.h" // for FCF flag definition
 // StarClassLibrary
 #include "SystemOfUnits.h"
 #ifndef ST_NO_NAMESPACES
@@ -140,7 +141,7 @@ static const Char_t *NS[2] = {"P","N"};
 static const Char_t *TS[2] = {"Positive","Negative"};
 //______________________________________________________________________________
 // QA histograms
-const static Int_t  fNZOfBadHits = 10 + StTpcdEdxCorrection::kTpcAllCorrections;
+const static Int_t  fNZOfBadHits = 11 + StTpcdEdxCorrection::kTpcAllCorrections;
 static TH1F **fZOfBadHits = 0;
 static TH1F *fZOfGoodHits = 0;
 static TH1F *fPhiOfGoodHits = 0;
@@ -398,7 +399,10 @@ Int_t StdEdxY2Maker::Make(){
 	  for (Long64_t k = 0; k < NoHits; k++) {
 	    const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
 	    if (!tpcHit) continue;
-	    if (! tpcHit->flag()) continue; 
+	    if (! tpcHit->flag() && ! tpcHit->flag() & FCF_MERGED) continue; 
+#ifdef __TIME_BUCKET_Length_CUT__
+	    if (tpcHit->timeBucketsInHit() < 16) continue;
+#endif /* __TIME_BUCKET_Length_CUT__ */
 	    noBadHits++;
 	  }
 	  Double_t BadFrac = noBadHits;
@@ -536,10 +540,17 @@ Int_t StdEdxY2Maker::Make(){
 	if (! tpcHit->usedInFit()) {
 	  BadHit(0,tpcHit->position());
 	  continue;
-	} if (  tpcHit->flag() && !  TESTBIT(m_Mode,kForceUseDeConvClus)) {
+	} if (  tpcHit->flag() && ! tpcHit->flag() & FCF_MERGED  && !  TESTBIT(m_Mode,kForceUseDeConvClus)) {
 	  BadHit(1,tpcHit->position());
 	  continue;
+	} 
+#ifdef __TIME_BUCKET_Length_CUT__
+	if (tpcHit->timeBucketsInHit() > 15) {
+	  BadHit(10,tpcHit->position());
+	  continue;
 	}
+#endif /* __TIME_BUCKET_Length_CUT__ */
+
 	Int_t sector = tpcHit->sector();
 	if (sector < sectorMin || sector > sectorMax) continue;
 	Int_t row    = tpcHit->padrow();
@@ -797,7 +808,7 @@ Int_t StdEdxY2Maker::Make(){
 	if (fPadTbkAll) fPadTbkAll->Fill(CdEdx[NdEdx].Ntbks, CdEdx[NdEdx].Npads);
 	Int_t iok = m_TpcdEdxCorrection->dEdxCorrection(CdEdx[NdEdx],doIT);
 	if (iok) {
-	  BadHit(10+iok, tpcHit->position()); 
+	  BadHit(11+iok, tpcHit->position()); 
 	  if (fPadTbkBad) fPadTbkBad->Fill(CdEdx[NdEdx].Ntbks, CdEdx[NdEdx].Npads);
 	  continue;
 	} 
@@ -1833,7 +1844,6 @@ void StdEdxY2Maker::QAPlots(StGlobalTrack* gTrack) {
       } 
     }
     if (! f && !first) {
-      //      for (Int_t i = 0; i < fNZOfBadHits; i++) AddHist(fZOfBadHits[i]);           
       AddHist(fZOfGoodHits);
       AddHist(fPhiOfGoodHits);         
       AddHist(fPhiOfBadHits);         
@@ -1947,7 +1957,7 @@ void StdEdxY2Maker::BadHit(Int_t iFlag, const StThreeVectorF &xyz) {
     ibreak++;
   }
 #endif
-  static const Char_t *BadCaseses[11] = 
+  static const Char_t *BadCaseses[12] = 
     {"Total no.of rejected clusters",   // 0
      "it is not used in track fit",     // 1
      "it is flagged ",                  // 2
@@ -1957,7 +1967,8 @@ void StdEdxY2Maker::BadHit(Int_t iFlag, const StThreeVectorF &xyz) {
      "drift distance < min || drift distance > max", // 7
      "dE < 0 or dx < 0",                // 8
      "Edge effect",                     // 9
-     "Anode Voltage problem"            // 10
+     "Anode Voltage problem",           // 10
+     "No. of time buckets > 15"         // 11
     };
   if (fZOfBadHits[0]) {
     fZOfBadHits[0]->Fill(xyz.z());
@@ -1967,11 +1978,11 @@ void StdEdxY2Maker::BadHit(Int_t iFlag, const StThreeVectorF &xyz) {
       fZOfBadHits[iFlag+1] = new TH1F(*fZOfBadHits[0]);
       fZOfBadHits[iFlag+1]->Reset();
       fZOfBadHits[iFlag+1]->SetName(Form("ZOfBadHits_%i",iFlag+1));
-      if (iFlag < 11) {
+      if (iFlag < 12) {
 	fZOfBadHits[iFlag+1]->SetTitle(BadCaseses[iFlag+1]);
       } else {
 	assert(m_TpcdEdxCorrection);
-	fZOfBadHits[iFlag+1]->SetTitle(m_TpcdEdxCorrection->CorrectionStatus(iFlag-10).Title);
+	fZOfBadHits[iFlag+1]->SetTitle(m_TpcdEdxCorrection->CorrectionStatus(iFlag-11).Title);
       }
       //      AddHist(fZOfBadHits[iFlag+1]);
     }

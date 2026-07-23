@@ -1108,14 +1108,15 @@ int StiTrackNodeHelper::getHitErrors(const StiHit *hit,const StiNodePars *pars,S
   const StiDetector *det = hit->detector();
   const StiTpcHitErrorMDF4 *calcMDF4 = (det)? det->getHitErrorCalculatorMDF4() : 0;
   const StiHitErrorCalculator  *calc = (det)? det->getHitErrorCalculator()     : 0;
-  if (calc || calcMDF4) {//calculate it
+  if (calc || calcMDF4 ) {//calculate it
     Double_t fudgeFactor = 1;
-    StTpcHit *tpcHit = (StTpcHit*) hit->stHit();
+    StTpcHit *tpcHit = 0;
+    if (det->getGroupId() == kTpcId) {
+      tpcHit = (StTpcHit*) hit->stHit();
+    }
     if (tpcHit) {
-      if ((tpcHit->detector() == kTpcId || tpcHit->detector() == kiTpcId)) {
-	if (tpcHit->flag() == 2) {
-	  fudgeFactor = 16.;
-	}
+      if (tpcHit->flag() != 0) {
+	fudgeFactor = 16.;
       }
     }
     if (calcMDF4) {

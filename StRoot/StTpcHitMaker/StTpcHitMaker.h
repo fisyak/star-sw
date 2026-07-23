@@ -176,6 +176,7 @@ class StTpcHitMaker : public StRTSBaseMaker {
   static Float_t fgDt;
   static Float_t fgDperp;
   static Bool_t  fgCosmics;
+  static Bool_t  fgNTuple2Hits;
   TH2C   *fThr;
   TH2C   *fSeq;
   // cvs

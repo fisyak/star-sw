@@ -31,6 +31,7 @@ StarMCPrimaryGenerator::StarMCPrimaryGenerator() : fStatus(kStOK)  {
       fPVX = (TH1 *) PVfile->Get("x"); assert(fPVX); fPVX->SetDirectory(0);
       fPVY = (TH1 *) PVfile->Get("y"); assert(fPVY); fPVY->SetDirectory(0);
       fPVZ = (TH1 *) PVfile->Get("z"); assert(fPVZ); fPVZ->SetDirectory(0);
+      fPVxy = (TH2 *) PVfile->Get("xy"); if (fPVxy) fPVxy->SetDirectory(0);
       fPVxyError = (TH1 *) PVfile->Get("hPVError"); if (fPVxyError) fPVxyError->SetDirectory(0);
       delete PVfile;
       LOG_WARN << "PVxyz.root with x, y and z histograms has been found. These histogram will be use to generate primary vertex x, y, z." << endm;
@@ -97,8 +98,12 @@ void StarMCPrimaryGenerator::SetGenerator(Int_t nprim, Int_t Id,
   }
   LOG_INFO << fPhi_min<< " < phi < " << fPhi_max<< endm;
   if (fPVZ) {
-    if (fPVX) {LOG_INFO << "X from histogram " <<  fPVX->GetName() << "\t";}
-    if (fPVY) {LOG_INFO << "Y from histogram " <<  fPVY->GetName() << "\t";}
+    if (fPVxy) {
+      if (fPVxy) {LOG_INFO << "X & Y from histogram " <<  fPVxy->GetName() << "\t";}
+    } else {
+      if (fPVX) {LOG_INFO << "X from histogram " <<  fPVX->GetName() << "\t";}
+      if (fPVY) {LOG_INFO << "Y from histogram " <<  fPVY->GetName() << "\t";}
+    }
     LOG_INFO << "Z from histogram " <<  fPVZ->GetName();
     if (fPVxyError) {LOG_INFO << "\tadn their errors from " << fPVxyError->GetName();}
     LOG_INFO << endm;
@@ -166,10 +171,17 @@ void StarMCPrimaryGenerator::GeneratePrimaries() {
   if (fSetVertex) {
     TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
     fCurOrigin = fOrigin + dR;
-  } else if (fPVX && fPVY && fPVZ) {
-    fCurOrigin.SetX(fPVX->GetRandom());
-    fCurOrigin.SetY(fPVY->GetRandom());
+  } else if (fPVZ) {
     fCurOrigin.SetZ(fPVZ->GetRandom());
+    if (fPVxy) {
+      Double_t x, y;
+      fPVxy->GetRandom2(x,y);
+      fCurOrigin.SetX(x);
+      fCurOrigin.SetY(y);
+    } else {
+      if (fPVX) fCurOrigin.SetX(fPVX->GetRandom());
+      if (fPVY) fCurOrigin.SetY(fPVY->GetRandom());
+    }
     if (fPVxyError) {
       Double_t dxy = fPVxyError->GetRandom()/TMath::Sqrt(2.);
       gEnv->SetValue("FixedSigmaX", dxy);
