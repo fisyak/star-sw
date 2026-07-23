@@ -4,11 +4,14 @@ if ($#argv > 0)   set GLOB = "$argv";
 switch ($STAR_HOST_SYS) 
   case "al*":
 #    cat ${GLOB} | sed '/Priority         = +10/a requirements = (Microarch == "x86_64-v4")\nGetEnv          = True' > submit.condor; 
-    cat ${GLOB} | sed '/Priority/a requirements = (Microarch == "x86_64-v4")\nrequest_memory = 2800M\n' > submit.condor; 
-#    cat ${GLOB} | sed '/Priority/a requirements = (Microarch == "x86_64-v4")\nrequest_memory = 4000M\n' > submit.condor; 
+#    cat ${GLOB} | sed '/Priority/a requirements = (Microarch == "x86_64-v4")\nrequest_memory = 2800M\n' > submit.condor; 
+    cat ${GLOB} | sed '/Priority/a requirements = (Microarch == "x86_64-v4")\nrequest_memory = 4000M\n' > submit.condor; 
     breaksw
   default:
 #    cat ${GLOB} | sed '/Priority         = +10/a GetEnv          = True' > submit.condor; 
     cat ${GLOB}  > submit.condor; 
 endsw 
 if (! $?) condor_submit submit.condor
+foreach  job ($GLOB) 
+  mv ${job} ${job}.submitted
+end

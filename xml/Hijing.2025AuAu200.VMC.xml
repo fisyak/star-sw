@@ -22,7 +22,7 @@
   set logName  = ${name}B.log
   if (-r ${logName}) exit 0;
   set generF   = ${name}.MuDst.root
-  set tagf     = ${name}.root
+  set tagf     = ${name}.tags.root
 #  setenv StarEndMakerShell
 # set sdt = ",sdt20200111.052520";
 #  {"AuAu_2023",	                             20230520,  23250, "y2023z", "AuAu_2023"}, // 1st run = 24139094			     

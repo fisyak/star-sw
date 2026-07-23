@@ -23,7 +23,7 @@
   echo "${name}"
   set logName  = ${name}B.log
   set generF   = ${name}.MuDst.root
-  set tagf     = ${name}.root
+  set tagf     = ${name}.tags.root
 #  setenv StarEndMakerShell
 #  set sdt = "";
 #  echo $Name | grep -i Ideal
@@ -38,8 +38,9 @@
 #     root.exe -q -b -x 'bfc.C(101,1000,"PHQMDFXT,vmc,MC.2019,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,vmc,MC.2019,StiPulls,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,-geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
-#     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,KFVertex","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
-     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,KFVertex","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,NTuple2Hits","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,KFVertex","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+     root.exe -q -b -x 'bfc.C(200,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,NTuple2Hits","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->

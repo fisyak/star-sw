@@ -30,14 +30,14 @@ setenv Qt4 ${QTDIR}
 switch ( $STAR_HOST_SYS )  
     case *gcc6*: # does not work with ROOT >+ 6.30.00
     setenv EXTRA_OFF " -Dtbb=OFF"
-    setenv CMAKE_CXX_FLAGS " -std=c++17 -fdiagnostics-color=always -msse4.2"
+    setenv CMAKE_CXX_FLAGS " -std=c++17 -fdiagnostics-color=always"# -msse4.2"
     setenv CMAKE_C_FLAGS " -fdiagnostics-color=always -msse4.2"
     breaksw
     default:
 #     exit 1
     setenv EXTRA_OFF ""
-    setenv CMAKE_CXX_FLAGS " -fdiagnostics-color=always -msse4.2"
-    setenv CMAKE_C_FLAGS " -fdiagnostics-color=always -msse4.2"
+    setenv CMAKE_CXX_FLAGS " -fdiagnostics-color=always"# -msse4.2"
+    setenv CMAKE_C_FLAGS " -fdiagnostics-color=always"# -msse4.2"
  endsw  
 # Find and then delete all files under current directory (.) that:
 #  1. contains "cmake" (case-&insensitive) in its path (wholename)
@@ -82,11 +82,12 @@ rm -f CMakeCache.txt
 #-DCMAKE_C_FLAGS="-fdiagnostics-color=always -msse -msse2 -msse3 -msse4.1 -mssse3" \
 # cmake --build . -- install -j8
 if ($?CMAKE_PREFIX_PATH) then 
-  setenv EXTRA_OFF "${EXTRA_OFF} -DCMAKE_PREFIX_PATH=${XOPTSTAR}/spack} -DZSTD_INCLUDE_DIR=${XOPTSTAR}/spack}/include -DZSTD_LIBRARIES=${XOPTSTAR}/spack}/lib -DMYSQL_CONFIG_EXECUTABLE=${XOPTSTAR}/spack}/bin"
+  setenv EXTRA_OFF "${EXTRA_OFF}  -DCMAKE_PREFIX_PATH=${XOPTSTAR}/spack} -DZSTD_INCLUDE_DIR=${XOPTSTAR}/spack}/include -DZSTD_LIBRARIES=${XOPTSTAR}/spack}/lib -DMYSQL_CONFIG_EXECUTABLE=${XOPTSTAR}/spack}/bin"
   echo "EXTRA_OFF = ${EXTRA_OFF}, CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}, CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}"
 endif
 #setenv DAVIX_INCLUDE_DIRS ${XOPTSTAR}/spack/include
 #setenv DAVIX_INCLUDE_DIRS ${XOPTSTAR}/spack/include
+if ($?CMAKE_INCLUDE_PATH) unsetenv CMAKE_INCLUDE_PATH
 cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD_TYPE="${ROOT_BUILD}" \
 -DCMAKE_C_COMPILER="${CC}" -DCMAKE_CXX_COMPILER="${CXX}" -DCMAKE_Fortran_COMPILER="${FC}" -Dfortran=ON \
 -DPYTHIA6_DIR=${XOPTSTAR} -Dpythia6=ON  -Dpythia8=ON \
@@ -100,7 +101,7 @@ cmake ${ROOT}/${ROOT_LEVEL}/root -DCMAKE_INSTALL_PREFIX=${ROOTSYS} -DCMAKE_BUILD
 -Dbuiltin_xxhash=ON \
 -Dbuiltin_gl2ps=ON \
 -Dbuiltin_ftgl=ON \
--Dbuiltin_clang=ON \
+-Dbuiltin_llvm=ON \
 ${EXTRA_OFF}
 #
 #-DCMAKE_VERBOSE_MAKEFILE=ON \
