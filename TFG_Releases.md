@@ -123,6 +123,6 @@
 <li> TFG26b Update Tpc hit Error for TPC23, account TPC adc cut          2026-03-29 19:46:24 -0400  (HEAD -> TFG, tag: TFG26b)
 <li> TFG26c Revise Tpc Hit Errors, dEdx for RunXXV-RunXXV                2026-04-23 16:22:31 -0400  (HEAD -> TFG, tag: TFG26c)
 <li> TFG26d Release for 2023-2026 (re)production                         2026-05-31 18:32:32 -0400  (HEAD -> TFG, tag: TFG26d)
-<li> TFG26e TpcHit AfterBrner, multiple hits from TPC pad row            2026-07-22 18:32:32 -0400  (HEAD -> TFG, tag: TFG26e)
+<li> TFG26e TpcHit AfterBrner, multiple hits from TPC pad row            2026-07-22 20:05:23 -0400  (HEAD -> TFG, tag: TFG26e)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
