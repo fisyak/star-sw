@@ -162,7 +162,7 @@ void Run1Ev(Int_t NEvents, Int_t iD,
 //     StiVMCToolKit::SetDebug(1);
 //     StiDetectorBuilder::setDebug(1);
     StiTpcHitLoader::SetDebug(1);
-    StiHitContainer::SetDebug(1);
+    //    StiHitContainer::SetDebug(1);
     StiLocalTrackSeedFinder::SetDebug(1);
     StiCATpcSeedFinder::SetDebug(1);
   }

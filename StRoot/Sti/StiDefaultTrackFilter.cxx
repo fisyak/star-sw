@@ -59,9 +59,9 @@ void StiDefaultTrackFilter::initialize()
 }
 
 
-int StiDefaultTrackFilter::accept(const StiTrack * t) const
+bool StiDefaultTrackFilter::accept(const StiTrack * t) const
 {
-  return 1; // true
+  return true;
 }
 
 
