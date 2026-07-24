@@ -14,7 +14,7 @@ open(IN,$list_sorted) or die "Can't open $list_sorted";
 my $run_old = 0;
 my $done = 0;
 my $nofiles = 0;
-my $daq_list = $list . ".daq";
+my $daq_list = $list . ".daq2";
 open(DAQ,">$daq_list") or die "Can't open $daq_list";
 while (my $line =  <IN>) {
 #  print "$line";
