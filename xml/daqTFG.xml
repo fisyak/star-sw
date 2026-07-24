@@ -4,7 +4,8 @@
   cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
 #  setup cvmfs
-#  starver TFG25e
+  starver TFG26d
+#  starver TFG26f
   set ext = "";
   echo $INPUTFILE0 | grep ':'
   if (! $?) then

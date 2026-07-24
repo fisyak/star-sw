@@ -588,6 +588,7 @@
 //Sti
 #include "StiKalmanTrack.h"
 #include "StiKalmanTrackFinder.h"
+#include "StiToolkit.h"
 #include "StiDetectorContainer.h"
 #include "StiHit.h"
 #include "StiKalmanTrackNode.h"
@@ -602,8 +603,6 @@
 #include "StHelix.hh"
 #include "StDetectorDbMaker/StiKalmanTrackFitterParameters.h"
 #include "StDetectorDbMaker/StiKalmanTrackFinderParameters.h"
-#include "StDetectorDbMaker/StiLocalTrackSeedFinderParameters.h"
-#include "StiToolkit.h"
 #include "StiHitContainer.h"
 #include "StiTrackNodeHelper.h"
 #include "StiUtilities/StiDebug.h"
@@ -696,42 +695,6 @@ void StiKalmanTrack::setKalmanTrackNodeFactory(Factory<StiKalmanTrackNode>* val)
 <li>Throws a logic error exception if hits do not have a valid pointer to a detector object.</li>
 </OL>
 */
-//________________________________________________________________________________
-void StiKalmanTrack::AddHit(StiHit *hit, Bool_t AddSelf) {
-    assert(hit->detector());
-    StiKalmanTrackNode * n = 0;
-    if (AddSelf) {
-      n = trackNodeFactory->getInstance();
-      n->initialize(hit);
-      add(n,kOutsideIn);
-      if (debug()) {
-	cout << " StiKalmanTrack::AddHit " << hit->timesUsed() << ":";
-	const StTpcHit *kHit = dynamic_cast<const StTpcHit*>(hit->stHit());
-	if (kHit) kHit->Print("");
-	else      cout << endl;
-      }
-    }
-    // Handle flag == 2 TPC hit (splitted)
-    if ( hit->detector()->getGroupId() == kTpcId) {
-      vector<StiHit*> & hits = StiToolkit::instance()->getHitContainer()->getTpc2Hits(*hit, 
-										      StiLocalTrackSeedFinderParameters::instance()->deltaY(), 
-										      StiLocalTrackSeedFinderParameters::instance()->deltaZ());
-      if (hits.size() < 2) return;
-      for (auto l : hits) {
-	if (! l) continue;
-	if (hit == l) continue;
-	n = trackNodeFactory->getInstance();
-	n->initialize(l);
-	add(n,kOutsideIn);
-	if (debug()) {
-	  cout << " StiKalmanTrack::AddHit " << l->timesUsed() << ":";
-	  const StTpcHit *kHit = dynamic_cast<const StTpcHit*>(l->stHit());
-	  if (kHit) kHit->Print("");
-	  else      cout << endl;
-	}
-      }
-    }
-}
 //_____________________________________________________________________________
 int StiKalmanTrack::initialize(const std::vector<StiHit*> &hits)
 {
@@ -746,7 +709,10 @@ int StiKalmanTrack::initialize(const std::vector<StiHit*> &hits)
     StiHit *hit = hits[ihit];
     //    detector = hit->detector();
     //    assert(detector);
-    AddHit(hit);
+    assert(hit->detector());
+    StiKalmanTrackNode * n = trackNodeFactory->getInstance();
+    n->initialize(hit);
+    add(n,kOutsideIn);
   }
   int ierr = approx(0);
   if (!ierr) return 0;
@@ -765,7 +731,12 @@ int StiKalmanTrack::initialize0(const std::vector<StiHit*> &hits, StiNodePars *f
 
   for (UInt_t ihit = 0; ihit < nhits; ihit++)  {
     StiHit *hit = hits[ihit];
-    AddHit(hit);
+    //    detector = hit->detector();
+    //    assert(detector);
+    assert( hit->detector() );
+    StiKalmanTrackNode * n = trackNodeFactory->getInstance();
+    n->initialize(hit);
+    add(n,kOutsideIn);
   }  
   if (!firstPars)      {approx(); return 0;}
   else                         {firstNode->fitPars() = *firstPars;}

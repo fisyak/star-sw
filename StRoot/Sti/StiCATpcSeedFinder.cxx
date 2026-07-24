@@ -1,9 +1,6 @@
-#include <assert.h>
-#include <string.h>
-#include "TVector3.h"
+#include "Stiostream.h"
 #include "Sti/StiToolkit.h"
 #include "Sti/StiHit.h"
-#include "StiUtilities/StiDebug.h"
 #include "StMessMgr.h"
 #include "StEvent/StTpcHit.h"
 #include "Sti/StiKalmanTrack.h"
@@ -57,19 +54,6 @@ StiTrack *StiCATpcSeedFinder::findTrack(double rMin)
       StiHit *hit = aSeed.vhit[iHit]->hit;if (!hit) continue;
       if (hit->timesUsed()) nHitsUsed++;
       _seedHits.push_back(hit);
-#if 0 /* move to initialize0 */
-      if ( hit->detector()->getGroupId() == kTpcId) {
-	vector<StiHit*> & hits = StiToolkit::instance()->getHitContainer()->getTpc2Hits(*hit, 
-											StiLocalTrackSeedFinderParameters::instance()->deltaY(), 
-											StiLocalTrackSeedFinderParameters::instance()->deltaZ());
-	if (hits.size() < 2) continue;
-	for (auto l : hits) {
-	  if (! l) continue;
-	  if (hit == l) continue;
-	  _seedHits.push_back(l);
-	}
-      }
-#endif
     }
     if (_seedHits.size() >=4 && nHitsUsed < 0.1*nHits)  {
       StiKalmanTrack* track = static_cast<StiKalmanTrack*>(StiToolkit::instance()->getTrackFactory()->getInstance());

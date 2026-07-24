@@ -14,9 +14,18 @@ TCanvas *c1 = 0;
 ofstream out;
 //________________________________________________________________________________
 TF1 *FitGaus(TH1 *hist) {
+#if 0
+  TF1 *G = gROOT->GetListOfFunctions()->FindObject("gaus");
+  if (! G) {
+    TF1::InitStandardFunctions();
+    G = gROOT->GetListOfFunctions()->FindObject("gaus");
+  }
+#endif
   TF1 *gaus = 0;
   if (! hist) return gaus;
-  Int_t iok = hist->Fit("gaus","i");
+  Double_t mean = hist->GetMean();
+  Double_t RMS  = hist->GetRMS();
+  Int_t iok = hist->Fit("gaus","ir","",mean-3*RMS,mean+3*RMS);
   if (iok) return gaus;
   if (c1) c1->Update();
   if (Ask()) return gaus;

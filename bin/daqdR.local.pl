@@ -7,20 +7,32 @@ use lib dirname $0; #
 use GetYearFromPWD;
 $debug = 0;
 my @tags = qw(hlt st_physics_ st_cosmic_ st_hlt);
+my $match = "";
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
   if ($#ARGV >= 1) {
-    @tags = ($ARGV[1]);
+    $tags = ($ARGV[1]); print "tags = $tags\n" if $debug;
+  }
+  if ($#ARGV >= 2) {
+    $match = ($ARGV[2]); print "match = $match\n" if $debug;
   }
 }
 my ($year,$FIELD,$runs,$def,$Day,$Run,$run2) = GetRuns($debug,"");
 print "Year = $year, Field = $FIELD, runs = $runs,  Day = $Day, Run = $Run, $run2\n" if ($debug);
 if (! $year || ! $FIELD) {die "wrong directory $pwd";}
 my $def = {@Runs};# print "Runs = @Runs\n";
-PrintHash($def,"Runs") if ($debug);
+#PrintHash($def,"Runs") if ($debug);
 my $fNo = 0;
 my @AllRuns = ($runs);
 if ($run2) {push @AllRuns, $run2;}
+my $pwd = cwd();
+my $oldpwd = "";
+if ($match) {
+  $oldpwd = $pwd;
+  $oldpwd =~ s/TFG.../$match/;
+  $oldpwd =~ s#/2026/#/2025/#;
+   print "$pwd => $oldpwd\n" if $debug;
+}
 foreach my $currentrun (@AllRuns) {
   foreach my $run (glob $currentrun) {
     my $r = File::Basename::basename($run); print "$run => run = $r\n" if ($debug);
@@ -57,6 +69,16 @@ foreach my $currentrun (@AllRuns) {
 	my $logfile = $b . "B.log.gz"  ; print "logfile = $logfile \n"   if ($debug);
 	if (-r $logfile) {next;}			         		                   
 	my $evfile = $b . ".event.root"  ; print "evfile = $evfile \n"   if ($debug);
+	if ($oldpwd) {
+	  my $oldevfile = $oldpwd . "/" . $evfile;
+	  if (! -r $oldevfile) {
+	    print "oldevefile = $oldevfile does not exist. Skip it.\n" if ($debug);
+	    next;
+	  } else {
+	    print "oldevefile = $oldevfile exists.\n" if ($debug);
+	    die;
+	  }
+	}
 	if (-r $evfile) {next;}			         		                   
 	my $mufile = $b . ".MuDst.root"  ; print "mufile = $mufile \n"   if ($debug);
 	if (-r $mufile) {next;}			         		                   

@@ -18,7 +18,7 @@ StiTrackFinderFilter::StiTrackFinderFilter(const string & name, const string & d
 StiTrackFinderFilter::~StiTrackFinderFilter()
 {}
 
-Int_t StiTrackFinderFilter::accept(const StiTrack *track) const
+bool StiTrackFinderFilter::accept(const StiTrack *track) const
 {
   int npts = track->getPointCount();
   int fitNpts = track->getFitPointCount();
@@ -63,7 +63,7 @@ Int_t StiTrackFinderFilter::accept(const StiTrack *track) const
     else
       return kNoEnoughFittedValidHits;    
   }
-  return 0; // false;
+    return false;
 }
 
 void StiTrackFinderFilter::initialize()
