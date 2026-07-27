@@ -590,11 +590,6 @@ Int_t  StTpcdEdxCorrection::dEdxCorrection(dEdxY2_t &CdEdx, Bool_t doIT) {
       } 
       if (k == kzCorrection || k == kzCorrectionC) {
 	// Take care about prompt hits and Gating Grid region in Simulation
-	if ((corl->min < corl->max) && (corl->min > VarXs[k] || VarXs[k] > corl->max)) {
-	  if (! IsSimulation()) {
-	    return k;
-	  }
-	}
 	if (ZdriftDistance < -0.6) {// prompt hits after cathode wire plane 
 	  dE *= TMath::Exp(1.2);
 	  goto ENDL;
