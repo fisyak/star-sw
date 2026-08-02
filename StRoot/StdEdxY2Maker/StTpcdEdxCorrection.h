@@ -248,10 +248,9 @@ class dEdxY2_t {
   Float_t  dZdY;  // cluster projection on on Z
   Float_t  dXdY;  // cluster projection on Wire
   Float_t  driftTime; // in microsecconds 
-  Float_t  dX_TrackFit; // dX from local curvature obtained during track fit
-  Float_t  dX_Helix;    // dX from helices from the first and last hit
   Float_t  etaG;  // eta at the first hit point
   Float_t  BadFrac; // fraction of Tpc flagged hist to all fow a giver sector & padrow
+  Float_t  LengthInTpc; // track length in TPC from the first hit
   Char_t   last[1];
   void Reset() {memset(first, 0, last - first);}
 }; 

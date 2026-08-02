@@ -966,7 +966,6 @@ Int_t StBFChain::Instantiate()
 	SETBIT(Mode,StdEdxY2Maker::kAlignment);
 #endif
       } 
-      if (GetOption("ForcedX")) mk->SetAttr("ForcedX", kTRUE);
       if (GetOption("ForceUseDeConvClus"))  SETBIT(Mode,StdEdxY2Maker::kForceUseDeConvClus);
       LOG_INFO << " set dEdxY2 Mode " << Mode << " =======================================" << endm;
       mk->SetMode(Mode);
