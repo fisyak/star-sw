@@ -253,6 +253,10 @@ StBFChain *bfc(Int_t First, Int_t Last,
   chain->SetAttr(".Privilege",1,"StEventMaker::*");       //May be allowed to act upon trigger IDs (filtering)
   //  if (TString(Chain).Contains("gmtCosmics",TString::kIgnoreCase)) chain->SetAttr(".Privilege",1,"StGmtRawMaker::*");  
 #endif
+  // Switch off histogram in etofSim
+  if (chain->Maker("etofSim")) {
+    ((StETofSimMaker *) chain->Maker("etofSim"))->setWriteHistos(kFALSE);
+  }
   Int_t iInit = chain->Init();
   if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return chain;}
   if (Last == 0) return chain;

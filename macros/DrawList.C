@@ -460,7 +460,7 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 }
 #include "bichselG10.C"
 //________________________________________________________________________________
-void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *opt = "colz", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
+void DrawF2List(const Char_t *pattern = "aTdEdxF", const Char_t *opt = "colz", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
   TString patt(pattern); patt.ReplaceAll("^",""); patt.ReplaceAll("$","");
   TPRegexp reg(pattern);
   TString cTitle("c");
@@ -484,7 +484,7 @@ void DrawF2List(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *op
     if (NF <= 3) {nx =1; ny = NF;} 
   }
   cout << "no. of histograms " << NF << " nx x ny " << nx << " x " << ny << endl;
-  TCanvas *c = new TCanvas(cTitle,cTitle,200*nx,200*ny);
+  TCanvas *c = new TCanvas(cTitle,cTitle,600*nx,600*ny);
   c->Divide(nx,ny);
   Int_t NFits[2] = {0}; // RF FF
   Double_t XAV[2] = {0};

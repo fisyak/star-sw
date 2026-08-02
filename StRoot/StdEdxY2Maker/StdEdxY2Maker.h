@@ -81,9 +81,6 @@ class StdEdxY2Maker : public StMaker {
   Double_t IntegratedAdc(const StTpcHit* tpcHit);
  private:
   void   AddEdxTraits(StTrack *tracks[2], dst_dedx_st &dedx);
-  static Int_t Propagate(const StThreeVectorD &middle,const StThreeVectorD &normal,
-			 const StPhysicalHelixD &helixI, const StPhysicalHelixD &helixO,
-			 StThreeVectorD &xyz, StThreeVectorD &dirG, Double_t s[2], Double_t w[2]);
   static Int_t     NdEdx;
   static dEdxY2_t *CdEdx; // corrected
   static dEdxY2_t *FdEdx; // fit

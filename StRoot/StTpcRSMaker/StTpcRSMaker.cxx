@@ -1071,20 +1071,20 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	mGainLocal = Gain/dEdxCor/NoElPerAdc; // Account dE/dx calibration
 	// end of dE/dx correction
 	// generate electrons: No. of primary clusters per cm
-	NP = StdEdxModel::instance()->dNdx(betaGamma,charge); // per cm
+	Double_t dNdx = StdEdxModel::instance()->dNdx(betaGamma,charge); // per cm
 	if (ClusterProfile) {
-	  checkList[io][7]->Fill(TrackSegmentHits[iSegHits].xyzG.position().z(),NP);
+	  checkList[io][7]->Fill(TrackSegmentHits[iSegHits].xyzG.position().z(),dNdx);
 	}
 	memset (padsdE, 0, sizeof(padsdE));
 	memset (tbksdE,  0, sizeof(tbksdE));
 	Float_t dEr = 0;
-	tpc_hitC->dNdx = NP;
+	tpc_hitC->dNdx = dNdx;
 	do {// Clusters
 	  Float_t dS = 0;
 	  Float_t dE = 0;
-	  NP = tpc_hitC->dNdx;
+	  dNdx = tpc_hitC->dNdx;
 	  if (charge) {
-	    dS = zIntDr/NP;
+	    dS = zIntDr/dNdx;
 	    dE = StdEdxModel::instance()->dNdE();
 	  } else { // charge == 0 geantino
 	    // for Laserino assume dE/dx = 25 keV/cm;
@@ -1094,7 +1094,7 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	  Double_t E = dE*eV;
 	  Double_t step = dStep - tpc_hitC->dSSum;
 	  if (dS > step) {
-	    zIntDr -= step*NP;
+	    zIntDr -= step*dNdx;
 	    tpc_hitC->dSSum += step;
 #ifdef __DEBUG__
 	    if (Debug() > 12) {

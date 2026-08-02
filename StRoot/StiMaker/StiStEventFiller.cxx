@@ -564,6 +564,7 @@ using namespace std;
 #include "StHelix.hh"
 #include "StDcaGeometry.h"
 #include "StHit.h"
+#include "StTpcHit.h"
 
 
 #include "StEventUtilities/StEventHelper.h"
@@ -588,9 +589,13 @@ using namespace std;
 #include "KFParticle/KFPTrack.h"
 #include "TMath.h"
 #ifdef __TFG__VERSION__
+#include "StTpcDb/StTpcDb.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
 #include "StDetectorDbMaker/St_beamSpotC.h"
-#include "TMath.h"
+#include "StDetectorDbMaker/St_tpcDimensionsC.h"
+#include "StDetectorDbMaker/St_tpcPadConfigC.h"
+#include "StDetectorDbMaker/St_GatingGridBC.h"
+#include "StDetectorDbMaker/St_starTriggerDelayC.h"
 #include "StTMVARank/StTMVARanking.h"
 #endif /* __TFG__VERSION__ */
 map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::mTrkNodeMap;
@@ -946,6 +951,9 @@ void StiStEventFiller::fillDetectorInfo(StTrackDetectorInfo* detInfo, StiKalmanT
   StiKTNIterator tNode = track->rbegin();
   StiKTNIterator eNode = track->rend();
   StiKalmanTrackNode *lastNode=0,*fistNode=0;
+  Double_t x[2][4] = {0};
+  Int_t iready = 0;
+  Double_t len = 0;
   for (;tNode!=eNode;++tNode) 
   {
       StiKalmanTrackNode *node = &(*tNode);
@@ -983,7 +991,30 @@ void StiStEventFiller::fillDetectorInfo(StTrackDetectorInfo* detInfo, StiKalmanT
       if (!refCountIncr) 	continue;
       hh->setFitFlag(stiHit->timesUsed());
       // TPC dX base on local track position
-      FillTpcdX(track,node,hh);
+      StTpcHit *tpcHit = dynamic_cast<StTpcHit*>(hh); 
+      if (tpcHit) {
+	FillTpcdX(track,node,tpcHit);
+	// Length in TPC up to the hit (copy from StiKalmanTrack::getTrackRadLength())
+	x[1][0]=node->x_g();
+	x[1][1]=node->y_g();
+	x[1][2]=node->z_g();
+	x[1][3]=node->getCurvature();
+	if (iready) {
+	  double dlen = sqrt(pow(x[1][0]-x[0][0],2) + pow(x[1][1]-x[0][1],2));
+	  double curv = fabs(0.5*(x[0][3]+x[1][3]));
+	  double dsin = (0.5*dlen*curv);
+	  if (dsin>0.9) {
+	    LOG_DEBUG <<
+	      Form("StiKalmanTrack::getTrackLength ***ERROR*** dsin %g >.9",dsin)
+		      << endm;
+	    dsin = 0.9;
+	  }
+	  dlen = (dsin<0.1)? dlen*(1.+dsin*dsin/6) : 2*asin(dsin)/curv; 
+	  len +=sqrt(dlen*dlen + pow(x[1][2]-x[0][2],2));
+	}
+	memcpy(x[0],x[1],4*sizeof(double)); iready=2005;
+	tpcHit->setLengthInTpc(len);
+      }
 //Kind of HACK, save residials into StiHack 
       fillResHack(hh,stiHit,node);
   }
@@ -1005,7 +1036,7 @@ void StiStEventFiller::fillGeometry(StTrack* gTrack, StiKalmanTrack* track, bool
   assert(gTrack);
   assert(track) ;
 
-  StiKalmanTrackNode* node = track->getInnOutMostNode(outer,3);
+  StiKalmanTrackNode* node = track->getInnOutMostNode(outer,kKeepHit+kGoodHit+kTpcOnly);
   StiHit *ihit = node->getHit();
   StThreeVectorF origin(node->x_g(),node->y_g(),node->z_g());
   StThreeVectorF hitpos(ihit->x_g(),ihit->y_g(),ihit->z_g());
@@ -1498,11 +1529,21 @@ void StiStEventFiller::fillDca(StTrack* stTrack, StiKalmanTrack* track)
 
 }
 //_____________________________________________________________________________
-void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTrackNode *node, StHit *hh)
+void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTrackNode *node, StTpcHit *tpcHit)
 {
-  StTpcHit *tpcHit = dynamic_cast<StTpcHit*>(hh); 
+#ifdef __TFG__VERSION__
+  static Double_t zGG     = St_tpcDimensionsC::instance()->gatingGridZ();
+  static Double_t zMem    = StTpcDb::instance()->Tpc2GlobalMatrix().GetTranslation()[2];
+  static Double_t DV      = 1e-6*StTpcDb::instance()->DriftVelocity(1); // cm/usec
+  static Double_t GGdelay = St_GatingGridBC::instance()->t0(0); // usec
+  static Double_t GGslope = St_GatingGridBC::instance()->settingTime(0)/4.6; 
+  static Double_t trig[2] = {St_starTriggerDelayC::instance()->TrigT0GG(0),  // Inner
+			     St_starTriggerDelayC::instance()->TrigT0GG(1)}; // Outer 
+  static Double_t GGregion= (TMath::Max(trig[0], trig[1]) + GGdelay + 10*GGslope) * DV;
+#endif /* __TFG__VERSION__ */
+
   if (! tpcHit) return;
-  if (! node || ! hh) return;
+  if (! node) return;
   originD->setX(node->x_g());
   originD->setY(node->y_g());
   originD->setZ(node->z_g());
@@ -1520,8 +1561,46 @@ void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTra
   Double_t s[2];
   s[0] = physicalHelix->pathLength(upper, normal);
   s[1] = physicalHelix->pathLength(lower, normal);
-  Double_t dx = TMath::Abs(s[0]) + TMath::Abs(s[1]); 
-  tpcHit->setdX(dx);
+  Double_t dX = TMath::Abs(s[0]) + TMath::Abs(s[1]); 
+  tpcHit->setdX(dX);
+#ifdef __TFG__VERSION__
+  Double_t z[2] = {
+    physicalHelix->z(s[0]) - zMem,
+    physicalHelix->z(s[1]) - zMem
+  };
+  Double_t zM = originD->z() - zMem; // z from membrane
+  Double_t dZ = TMath::Abs(z[0] - z[1]); 
+  Double_t GG = 1;
+  if (dZ > 1e-7) {
+    if        (z[0] < 0 && z[1] > 0) {    // Membrane
+      if (zM > 0) GG =   z[1]/dZ;
+      else        GG = - z[0]/dZ;
+    } else if (z[0] > 0 && z[1] < 0) {
+      if (zM > 0) GG =   z[0]/dZ;
+      else        GG = - z[1]/dZ;
+    } else { // Gating Grid
+      Double_t drift = zGG - TMath::Abs(zM);
+      if (drift > -0.6 && drift < GGregion) {// not prompt hits
+	Int_t io = 0;
+	if (tpcHit->padrow() > (UInt_t) St_tpcPadConfigC::instance()->numberOfInnerRows(tpcHit->sector())) io = 1;
+	Double_t t0 = GGdelay + trig[io];
+	Double_t t[2]  = {(zGG - TMath::Abs(z[0]))/DV - t0,
+			  (zGG - TMath::Abs(z[1]))/DV - t0};
+	Double_t dT = TMath::Abs(t[0] - t[1]);
+	Double_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])};
+	if (tO[1] < 0.0) {
+	  GG = 0;
+	} else {
+	  if (tO[0] < 0.0) tO[0] = 0.0;
+	  Double_t loss = GGslope*(TMath::Exp(-tO[0]/GGslope) - TMath::Exp(-tO[1]/GGslope));
+	  GG =  (tO[1] - tO[0] - loss)/dT; 
+	  if (GG < 0.0) GG = 0.0;
+	}
+      }
+    }
+  }
+  tpcHit->setGG(GG);
+#endif /* __TFG__VERSION__ */
 }
 //_____________________________________________________________________________
 void StiStEventFiller::FillStHitErr(StHit *hh,const StiKalmanTrackNode *node)

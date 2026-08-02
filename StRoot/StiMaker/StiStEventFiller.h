@@ -173,6 +173,7 @@ class StiTrack;
 class StiKalmanTrack;
 class StHelix;
 class StHelixModel;
+class StTpcHit;
 #include "StPhysicalHelixD.hh"
 class StTrack2FastDetectorMatcher;
 /*! \class StiStEventFiller
@@ -214,7 +215,7 @@ private:
  void fillPulls  (StiKalmanTrack *ktrack,const StGlobalTrack *gTrack,int gloPri);
  bool accept(StiKalmanTrack* kTrack);
  void FillStHitErr(StHit *hh,const StiKalmanTrackNode *node);
- void FillTpcdX(const StiKalmanTrack* track, const StiKalmanTrackNode *node, StHit *hh);
+ void FillTpcdX(const StiKalmanTrack* track, const StiKalmanTrackNode *node, StTpcHit *tpcHit);
 private:
     StEvent* mEvent;
     StiTrackContainer* mTrackStore;

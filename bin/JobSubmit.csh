@@ -13,8 +13,8 @@ foreach d (`ls -1d ???/2*`)
    continue
   endif
   @ countJ++;  
-#  daqdR.local.pl
-  daqdR.pl
+  daqdR.local.pl
+#  daqdR.pl
   if ($?) then
     ls -1d *bla.root
     if ($?) then
@@ -38,7 +38,9 @@ foreach d (`ls -1d ???/2*`)
     rm *.condor
 #    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
 #    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26d.xml
-    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26d.FXT.xml
+#    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26d.FXT.xml
+# TFG26f_calib
+    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
     ~/bin/subcondor.csh
   touch Submitted
   cd -
@@ -62,12 +64,14 @@ foreach done (`ls -1d ???/*/Done`)
     ln -s ~/macros/.sl* .	
     ln -s ~/macros/.al* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
-    @ count++;  echo "count $count";
+#    @ count++;  echo "count $count";
     root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
-    @ count++;  echo "count $count";
+    @ count = `ps au | grep root.exe | wc -l`;   echo "count $count";
+#    @ count++;  echo "count $count";
     if ($count > 120) then 
-        cd -
-	break;
+#        cd -
+#	break;
+    sleep 300
     endif
   endif
   cd -;

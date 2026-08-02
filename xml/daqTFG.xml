@@ -4,7 +4,7 @@
   cd ${SUBMITTINGDIRECTORY}
   setenv STARFPE NO
 #  setup cvmfs
-  starver TFG26d
+#  starver TFG26d
 #  starver TFG26f
   set ext = "";
   echo $INPUTFILE0 | grep ':'
@@ -15,8 +15,9 @@
     set ext       =  ",${f},${l}"
   else
     set evtsFileF = $INPUTFILE0;
-    set f         = 1
-    set l         = 5000
+    set f         = 1; #1001; #1
+    set l         = 5000; #1000; # 5000; # 1000 # 5000
+    set ext       =  ",${f},${l}"
   endif
   if (! -r ${evtsFileF}) exit 1;
 #  cp -p ${evtsFileF} .

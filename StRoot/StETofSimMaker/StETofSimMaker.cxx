@@ -88,7 +88,7 @@ StETofSimMaker::Init()
 {
     LOG_INFO << "StETofSimMaker::Init()" << endm;
 
-    bookHistograms();
+    if (mWriteHistos) bookHistograms();
 
     TFile* totFile = nullptr;
 

@@ -346,8 +346,8 @@ protected:
     UShort_t                mQuality; // quality of this information (percentage of hits coming from the above MC track)
     Int_t                   mIdParentVx; // MC Parent vertex Id
     Char_t                  mEndT[1]; //!
-    StTrackGeometry*        mGeometry;
-    StTrackGeometry*        mOuterGeometry;
+    StTrackGeometry*        mGeometry;       // @ the first Tpc hit
+    StTrackGeometry*        mOuterGeometry;  // @ the last  Tpc hit
     StExtGeometry*          mExtGeometry;
     StVertex               *mEndVertex;
 #ifdef  __kfpAtFirstHit__

@@ -4,7 +4,6 @@
 #ifdef __TFG__VERSION__
 //#define CompareWithToF 
 //#define __CHECK_LargedEdx__
-//#define __TEST_DX__
   #define __SpaceCharge__
 //#define __LogProb__
 //#define __DEBUG_dEdx__
@@ -322,14 +321,13 @@ Int_t StdEdxY2Maker::Make(){
 #ifdef __BENCHMARKS__DOFIT_ZN__
   TBenchmark myBenchmark;
 #endif /* __BENCHMARKS__DOFIT_ZN__ */
-  static Bool_t ForcedX = IAttr("ForcedX");
   tpcTime = GetDateTime().Convert() - timeOffSet;
   static  StTpcLocalSectorCoordinate        localSect[4];
   static  StTpcPadCoordinate                PadOfTrack, Pad;
   static  StTpcLocalSectorDirection         localDirectionOfTrack;
   static  StThreeVectorD xyz[4];
   static  StThreeVectorD dirG;
-  static  Double_t s[2], s_in[2], s_out[2], w[2], w_in[2], w_out[2], dx, AdcI, dxC;
+  static  Double_t  dx, AdcI, dxC;
 #ifdef __dZdY_dXdY__
   static  Double dZdY, dXdY;
 #endif
@@ -399,10 +397,7 @@ Int_t StdEdxY2Maker::Make(){
 	  for (Long64_t k = 0; k < NoHits; k++) {
 	    const StTpcHit *tpcHit = static_cast<const StTpcHit *> (hits[k]);
 	    if (!tpcHit) continue;
-	    if (! tpcHit->flag() && ! tpcHit->flag() & FCF_MERGED) continue; 
-#ifdef __TIME_BUCKET_Length_CUT__
-	    if (tpcHit->timeBucketsInHit() < 16) continue;
-#endif /* __TIME_BUCKET_Length_CUT__ */
+	    if (! tpcHit->flag() && ! (tpcHit->flag() & FCF_MERGED)) continue; 
 	    noBadHits++;
 	  }
 	  Double_t BadFrac = noBadHits;
@@ -540,7 +535,7 @@ Int_t StdEdxY2Maker::Make(){
 	if (! tpcHit->usedInFit()) {
 	  BadHit(0,tpcHit->position());
 	  continue;
-	} if (  tpcHit->flag() && ! tpcHit->flag() & FCF_MERGED  && !  TESTBIT(m_Mode,kForceUseDeConvClus)) {
+	} if (  tpcHit->flag() && ! (tpcHit->flag() & FCF_MERGED)  && !  TESTBIT(m_Mode,kForceUseDeConvClus)) {
 	  BadHit(1,tpcHit->position());
 	  continue;
 	} 
@@ -559,158 +554,25 @@ Int_t StdEdxY2Maker::Make(){
 	if ( ! StDetectorDbTpcRDOMasks::instance()->isOn(sector,iRdo)) continue;
 	if (! St_tpcAnodeHVavgC::instance()->livePadrow(sector,row)) continue;
 	xyz[3] = StThreeVectorD(tpcHit->position().x(),tpcHit->position().y(),tpcHit->position().z());
+	
 	//________________________________________________________________________________      
-	Float_t dX_TrackFit = tpcHit->dX();
-	Float_t dX_Helix = 0;
-	dx = dX_TrackFit; 
 	AdcI = 0;
 #ifdef __dZdY_dXdY__
 	dZdY = dXdY = 0;
 #endif
 	static StGlobalDirection  globalDirectionOfTrack;
 	Int_t iokCheck = 0;
-#ifdef __TEST_DX__
-	static Bool_t TestdX = kTRUE;
-#else
-	static Bool_t TestdX = kFALSE;
-#endif /* __TEST_DX__ */
+	dx = tpcHit->dX();
+	if (dx <= 0.0) continue;
+	TrackLengthTotal += dx;
 	// use cluster position for precalculated dx
 	transform(xyz[3],localSect[3],sector,row);
 	transform(localSect[3],Pad);
-	while ((ForcedX || dX_TrackFit <= 0.0 || TestdX)) {
-	  dX_Helix = -13;
-	  StThreeVectorD middle = xyz[3];
-	  StThreeVectorD upper(tpcHit->positionU().x(),tpcHit->positionU().y(),tpcHit->positionU().z());
-	  StThreeVectorD lower(tpcHit->positionL().x(),tpcHit->positionL().y(),tpcHit->positionL().z());
-	  StThreeVectorD dif = upper - lower;
-	  StThreeVectorD normal = dif.unit();
-	  StGlobalCoordinate globalOfTrack;
-	  Double_t pad;
-#if 0
-	  StThreeVectorD &V = *&normal;
-	  Double_t zd = sector <=12 ? 1: -1;
-	  StThreeVectorD W = StThreeVectorD(0,0,zd);
-	  StThreeVectorD U = V.cross(W);
-	  StThreeVectorD D = dif.unit();
-	  Double_t dY = 0;
-#endif
-	  // check that helix prediction is consistent with measurement
-	  if (Propagate(middle,normal,helixI,helixO,xyz[0],dirG,s,w)) break;
-	    if (Debug() > 1) {
-	    cout << " Prediction:\t" << xyz[0] 
-		 << "\tat s=\t" << s[0] << "/" << s[1] 
-		 << "\tw = " << w[0] << "/" << w[1] << endl;
-	    }
-	    dif = xyz[3] - xyz[0];
-	    if (dif.perp() > 2.0) {
-	      if (Debug() > 1) {cout << "Prediction is to far from hit:\t" << xyz[3] << endl;}
-	      break;
-	    }
-	    if (Propagate(upper,normal,helixI,helixO,xyz[1],dirG,s_out,w_out)) break;
-	    if (Propagate(lower,normal,helixI,helixO,xyz[2],dirG,s_in ,w_in )) break;
-	    dX_Helix = ((s_out[0] - s_in[0])*w[1] + (s_out[1] - s_in[1])*w[0]);
-	    dif = xyz[1] - xyz[2];
-	    // Check for Membernane
-	    if (xyz[1].z() * xyz[2].z() < 0) {
-	      Double_t dZ = TMath::Abs(xyz[1].z()) + TMath::Abs(xyz[2].z());
-	      Double_t scaledX = 1;
-	      if        (xyz[1].z() * xyz[3].z() > 0) {
-		scaledX = TMath::Abs(xyz[1].z())/dZ;
-	      } else if (xyz[2].z() * xyz[3].z() > 0) {
-		scaledX = TMath::Abs(xyz[2].z())/dZ;
-	      }
-	      static Int_t ibreak = 0;
-	      if (Debug() > 1) {
-		cout << "Cross Membrane : upper " << xyz[1] << endl;
-		cout << "                 hit   " << xyz[3] << endl;
-		cout << "                 lower " << xyz[2] << "\tscale dX = " << scaledX << endl;
-	      }
-	      dX_Helix *= scaledX;
-	    ibreak++;
-	  }
-	  if (dX_Helix <= 0.0) {
-	    if (Debug() > 1) {cout << "negative dX_Helix " << dX_Helix << endl;}
-	    break;
-	  }
-	  // Consistency check
-	  globalDirectionOfTrack = StGlobalDirection(dirG);
-	  for (Int_t l = 0; l < 4; l++) {
-	    globalOfTrack = StGlobalCoordinate(xyz[l].x(),xyz[l].y(),xyz[l].z());
-	    transform(globalOfTrack,localSect[l],sector,row);
-	  }
-	  if (ForcedX || dX_TrackFit <= 0.0 ) 
-	    tpcHit->setdX(dx);
-	  transform(localSect[0],PadOfTrack);
-	  transform(globalDirectionOfTrack,localDirectionOfTrack,sector,row);
-	  transform(localSect[3],Pad);
-	  if (sector != Pad.sector() || // ? && TMath::Abs(xyz[0].x()) > 20.0 ||
-	      row    != Pad.row()) {
-	    LOG_WARN << "StdEdxY2Maker:: mismatched Sector " 
-		     << Pad.sector() << " / " << sector
-		     << " Row " << Pad.row() << " / " << row 
-		     << "pad " << Pad.pad() << " TimeBucket :" << Pad.timeBucket() 
-		     << endm;
-	    iokCheck++;
-	  }
-	  pad = tpcHit->pad();
-	  if (pad == 0) pad = Pad.pad();
-	  if (Pad.timeBucket() < 0         ||
-	      Pad.timeBucket() >= numberOfTimeBins) {
-	    LOG_WARN << "StdEdxY2Maker:: TimeBucket out of range: " 
-		     << Pad.timeBucket() << endm;
-	    iokCheck++;
-	  }
-	  if (sector != PadOfTrack.sector() || 
-	      row != PadOfTrack.row() ||	
-	      TMath::Abs(Pad.pad()-PadOfTrack.pad()) > 5) {
-	    if (Debug() > 1) {
-	      LOG_WARN << "StdEdxY2Maker::	Helix Prediction " 
-		       << "Sector = " 
-		       << PadOfTrack.sector() << "/" 
-		       << sector 
-		       << " Row = " << PadOfTrack.row() << "/" 
-		       << row 
-		       << " Pad = " << PadOfTrack.pad() << "/" 
-		       << Pad.pad() 
-		       << " from Helix  is not matched with point/" << endm;;
-	      LOG_WARN << "StdEdxY2Maker:: Coordinates Preiction: " 
-		       << xyz[0] << "/Hit " << tpcHit->position()
-		       << endm;
-	    }
-	    iokCheck++;
-	  }
-	  if (iokCheck) {
-	    dX_Helix = -13;
-	    break;
-	  }
-#ifdef __dZdY_dXdY__
-	  dY = D.dot(V);
-	  if (TMath::Abs(dY) > 1e-7) {
-	    dZdY = D.dot(W)/dY;
-	    dXdY = D.dot(U)/dY;
-	  } else {
-	    dZdY = dXdY = 0;
-	  }
-#endif
-	  if (Debug() > 1) {
-	    cout << "Helix Prediction with dX = " << dX_Helix << endl;
-	  }
-	  break;
-	} // end of dx calculation
-	if (dX_Helix < 0) {
-	  if (Debug() > 1) {
-	    cout << "Helix Prediction Failed" << endl;
-	  }
-	}
-	dx = tpcHit->dX();
-	if ((ForcedX || dX_TrackFit <= 0.0)) {
-	  if (dX_Helix <= 0.0) continue;
-	  dx = dX_Helix;
-	  if (ForcedX) tpcHit->setdX(dx);
-	} else {
-	  dx =  dX_TrackFit;
-	}
-	TrackLengthTotal += dx;
+	Double_t slength = tpcHit->lengthInTpc();
+	dirG = helixI.momentumAt(slength,bField); // p of global track at hit
+	globalDirectionOfTrack = StGlobalDirection(dirG);
+	transform(globalDirectionOfTrack,localDirectionOfTrack,sector,row);
+
 	//________________________________________________________________________________      
 	if (tpcHit->adc() <= 0) {
 	  LOG_WARN << "StdEdxY2Maker:: adc : " <<  tpcHit->adc() 
@@ -741,8 +603,6 @@ Int_t StdEdxY2Maker::Make(){
 	CdEdx[NdEdx].yrow = sector + 0.5*((row <= St_tpcPadConfigC::instance()->innerPadRows(sector)) ? 
 					  (row - St_tpcPadConfigC::instance()->innerPadRows(sector) - 0.5)/St_tpcPadConfigC::instance()->innerPadRows(sector) : 
 					  (row - St_tpcPadConfigC::instance()->innerPadRows(sector) - 0.5)/(St_tpcPadConfigC::instance()->numberOfRows(sector) - St_tpcPadConfigC::instance()->innerPadRows(sector)));
-	CdEdx[NdEdx].dX_TrackFit = dX_TrackFit;
-	CdEdx[NdEdx].dX_Helix = dX_Helix;
 	CdEdx[NdEdx].Npads = tpcHit->padsInHit();
 	CdEdx[NdEdx].Ntbks = tpcHit->timeBucketsInHit();
 	CdEdx[NdEdx].dCharge = 0;
@@ -755,6 +615,7 @@ Int_t StdEdxY2Maker::Make(){
 #endif
 	CdEdx[NdEdx].AdcI = AdcI;
 	CdEdx[NdEdx].BadFrac = fBadFracPerEvent->GetBinContent(CdEdx[NdEdx].sector, CdEdx[NdEdx].row);
+	CdEdx[NdEdx].LengthInTpc = tpcHit->lengthInTpc();
 	dxC = dx;
 #if 1
 	// Scale dX to full pad length
@@ -1203,9 +1064,6 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)			\
     PullH[3].histograms = new Hists2D("fitE");
   }
 #endif /*  __FIT_PULLS__ */
-#ifdef __TEST_DX__
-  static TH3F *dXTest[2] = {0};
-#endif /* __TEST_DX__ */
   const static Int_t Nlog2dx = 80;
   const static Double_t log2dxLow = 0.0, log2dxHigh = 4.0;
   // ProbabilityPlot
@@ -1291,12 +1149,6 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)			\
     PressureT[0] = new TH3F("PressureTP","log(dE/dx) (positive) versus Log(Pressure*298.2/outputGasTemperature)",2*NoRows+1, -NoRows-0.5, NoRows+0.5,200, 6.82, 7.02, 200, -5, 5);
     PressureT[1] = new TH3F("PressureT","log(dE/dx) (negative) versus Log(Pressure*298.2/outputGasTemperature)",2*NoRows+1, -NoRows-0.5, NoRows+0.5,200, 6.82, 7.02, 200, -5, 5);
     //    TimeP  = new THnSparseF("TimeP","log(dE/dx)_{after pressure correction} - log(I(pi)) versus Date& Time",  2, nBins, xMin, xMax); f->Add(TimeP);
-#ifdef __TEST_DX__
-    if (! dXTest[0]) {
-      dXTest[0] = new TH3F("dxTestP","dX = dX_TrackFit - dX_Helix > 1e-4 versus pad row and dX_TrackFit for Positive",145,-72.5,72.5,100,-1.,9.,100,-0.25,0.25);
-      dXTest[1] = new TH3F("dxTest" ,"dX = dX_TrackFit - dX_Helix > 1e-4 versus pad row and dX_TrackFit for Negative",145,-72.5,72.5,100,-1.,9.,100,-0.25,0.25);
-    }
-#endif /* __TEST_DX__ */
     return;
   }
   // fill histograms 
@@ -1314,23 +1166,6 @@ __BOOK__VARS__PadTmbk(SIGN,NEGPOS)			\
 #ifdef __BEST_VERTEX__
   if (EtaVspTC[sCharge])  EtaVspTC[sCharge]->Fill(TMath::Log10(g3.perp()), g3.pseudoRapidity());
 #endif /* __BEST_VERTEX__ */
-#ifdef __TEST_DX__
-  if (dXTest[0]) {
-    for (Int_t k = 0; k < NdEdx; k++) {
-      Int_t sector = FdEdx[k].sector;
-      Int_t row    = FdEdx[k].row;
-      Int_t rowS   = row;
-      if (sector > 12) rowS = - rowS;
-      if (FdEdx[k].dX_TrackFit > 0 && FdEdx[k].dX_Helix > 0) {
-	if (TMath::Abs(FdEdx[k].dX_TrackFit - FdEdx[k].dX_Helix) > 1e-4) dXTest[sCharge]->Fill(rowS, FdEdx[k].dX_TrackFit, FdEdx[k].dX_Helix - FdEdx[k].dX_TrackFit);
-      } else {
-	if (FdEdx[k].dX_TrackFit  > 1e-4) dXTest[sCharge]->Fill(0., FdEdx[k].dX_TrackFit, 0.1);
-	if (FdEdx[k].dX_Helix     > 1e-4) dXTest[sCharge]->Fill(0., FdEdx[k].dX_Helix,   -0.1);
-      }
-    }
-    
-  }
-#endif /* __TEST_DX__ */
   StDedxMethod kMethod = kLikelihoodFitId;
   if ( PiD.dEdxStatus(kMethod)) {
     Double_t tvars[2] = {tpcTime,  PiD.dEdxStatus(kMethod)->Residual(kPidPion)}; 
@@ -1990,35 +1825,10 @@ void StdEdxY2Maker::BadHit(Int_t iFlag, const StThreeVectorF &xyz) {
   }
 }
 //________________________________________________________________________________
-Int_t StdEdxY2Maker::Propagate(const StThreeVectorD &middle,const StThreeVectorD &normal,
-			       const StPhysicalHelixD &helixI, const StPhysicalHelixD &helixO,
-			       StThreeVectorD &xyz, StThreeVectorD &dirG, Double_t s[2], Double_t w[2]) {
-  xyz  = StThreeVectorD();
-  dirG = StThreeVectorD();
-  s[0] = helixI.pathLength(middle, normal);
-  s[1] = helixO.pathLength(middle, normal);
-  w[0] = w[1] = 0;
-  Double_t sA[2] = {0};
-  if (s[0] > 1e6 && s[1] > 1e6) {
-    return 1;
-  } else if (s[0] <= 1e6 && s[1] < 1e6) {
-    sA[0] = s[0]*s[0];
-    sA[1] = s[1]*s[1];
-    Double_t sN = sA[0] + sA[1];
-    w[0] = sA[0]/sN;
-    w[1] = sA[1]/sN;
-  } else if (s[0] <= 1e6) {
-    w[1] = 1.;
-  } else {
-    w[0] = 1.;
-  }
-  if (w[0] > 1.e-4) {xyz += w[0]*helixO.at(s[1]); dirG += w[0]*helixO.momentumAt(s[1],bField);}
-  if (w[1] > 1.e-4) {xyz += w[1]*helixI.at(s[0]); dirG += w[1]*helixI.momentumAt(s[0],bField);}
-  return 0;
-}
-//________________________________________________________________________________
 void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag) {
   static Int_t _debug = 0; 
+  Int_t ix = 0;
+  if (TMath::Abs(par[1]) > 1e-7) ix = 2; 
 #ifdef __DEBUG_dNdx__
   static TCanvas *c1 = 0;
   static vector<Double_t> X;
@@ -2033,17 +1843,27 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
     P.clear();
     //    I.clear();
     //    if (!c1) c1 = new TCanvas("fcn","fcn",500,1500);
-    if (!c1) c1 = new TCanvas("fcn","fcn",500,1000);
+    if (ix == 0) {
+    if (!c1) c1 = new TCanvas("fcn","fcn",1000,1000);
     else     c1->Clear();
     //    c1->Divide(1,3);
-    c1->Divide(1,2);
+    c1->Divide(2,2);
+    }
   }
 #endif /* __DEBUG_dNdx__ */
   f = 0;
   gin[0] = 0.;
-  Double_t dNdx = par[0]; // Mu
+  Double_t dNdx0 = par[0]; // Mu
   //  Double_t sigma = par[1]; // extra sigma
   for (Int_t i = 0; i < NdEdx; i++) {
+    Double_t length = FdEdx[i].LengthInTpc;
+    Double_t scale = (1 + par[1]*length);
+    if (scale < 0.5 || scale > 1.5) {
+      f += 100;
+      FdEdx[i].Prob = 0;
+      continue;
+    }
+    Double_t dNdx = dNdx0*scale;
     Double_t dE = FdEdx[i].F.mdE.fdE;
     Double_t z    = TMath::Log(dE);
     Double_t z20  = 0;
@@ -2084,15 +1904,15 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
   }
   if (_debug > 0) {
     if (_debug > 2) {
-      cout << " dNdx = " << dNdx << "\tf = " << f << endl;
+      cout << " dNdx0 = " << dNdx0 << "\tf = " << f << endl;
       PrintdEdx(1);
       cout << "===================" << endl;
     }
 #ifdef __DEBUG_dNdx__
-    X.push_back(dNdx);
+    X.push_back(dNdx0);
     F.push_back(f);
     if (iflag == 3) {
-      c1->cd(1);
+      c1->cd(1 + ix);
       Int_t N = X.size();
       TArrayD XA(N);
       TArrayD YA(N);
@@ -2115,7 +1935,7 @@ void StdEdxY2Maker::fcnN(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par,
       if (fdNdxGraph[1]) delete fdNdxGraph[1];
       fdNdxGraph[1] = new TGraph(NdEdx, EA.GetArray(), PA.GetArray());
       fdNdxGraph[1]->SetTitle("Prob"); fdNdxGraph[1]->GetXaxis()->SetTitle("log(n_{e}/N_{P})");
-      c1->cd(2)->SetLogy();
+      c1->cd(2+ix)->SetLogy();
       fdNdxGraph[1]->Draw("axp");
       if (fdNdxGraph[2]) delete fdNdxGraph[2];
 //       fdNdxGraph[2] = new TGraph(N, EA.GetArray(), IA.GetArray());
@@ -2145,7 +1965,9 @@ void StdEdxY2Maker::DoFitN(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ){
   m_Minuit->mnexcm("SET ERR", arglist ,1,ierflg);
   //    m_Minuit->mnparm(0, "LogdNdx", TMath::Log(dNdx), 0.5, 0.,0.,ierflg); //First Guess
   m_Minuit->DefineParameter(0, "dNdx", dNdx, 0.5, 0.2*dNdx, 5*dNdx);
-  //  m_Minuit->DefineParameter(1, "sigma", 0.01, 0.01, 0.0, 0.5);
+  static Double_t slopeMin = -1e-3, slopeMax = 5e-2;
+  m_Minuit->DefineParameter(1, "slope", 0.00, 0.01, slopeMin, slopeMax);
+  m_Minuit->FixParameter(1);
   arglist[0] = 1.0;
   m_Minuit->mnexcm("CALLfcn", arglist ,1,ierflg);
 #if 0
@@ -2164,6 +1986,21 @@ void StdEdxY2Maker::DoFitN(Double_t &chisq, Double_t &fitZ, Double_t &fitdZ){
   Int_t nvpar,nparx,icstat;
   m_Minuit->mnstat(chisq,edm,errdef,nvpar,nparx,icstat);
   m_Minuit->GetParameter(0, fitZ, fitdZ);
+#if 0
+  // 2.
+  arglist[0] = 1.0;
+  m_Minuit->mnexcm("CALLfcn", arglist ,1,ierflg);
+  m_Minuit->Release(1);
+  arglist[0] = 500;
+  arglist[1] = 1.;
+  m_Minuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+  //  m_Minuit->mnexcm("MINIMIZE", arglist ,2,ierflg);
+  m_Minuit->mnexcm("HESSE  ",arglist,0,ierflg);
+  arglist[0] = 3.0;
+  m_Minuit->mnexcm("CALLfcn", arglist ,1,ierflg);
+  m_Minuit->mnstat(chisq,edm,errdef,nvpar,nparx,icstat);
+  m_Minuit->GetParameter(0, fitZ, fitdZ);
+#endif
 }
 //________________________________________________________________________________
 void StdEdxY2Maker::IntegrateAdc(const StTpcHitCollection* TpcHitCollection) {

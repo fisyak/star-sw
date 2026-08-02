@@ -10,13 +10,13 @@ TDataSet *CreateTable() {
   memset(&row,0,tableSet->GetRowSize());
   row.idx   = 1;
   row.nrows = nrows;
-  row.min =  18.0;
+  row.min =   0.0;
   row.max = 220.0;
   tableSet->AddAt(&row);
   memset(&row,0,tableSet->GetRowSize());
   row.idx   = 2;
   row.nrows = nrows;
-  row.min =  18.0;
+  row.min =   0.0;
   row.max = 220.0;
   tableSet->AddAt(&row);
   return (TDataSet *)tableSet;
