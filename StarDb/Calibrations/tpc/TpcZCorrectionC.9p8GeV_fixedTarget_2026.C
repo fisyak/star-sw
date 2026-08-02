@@ -1,6 +1,3 @@
-#ifndef __CINT__
-#include "tables/St_tpcCorrection_Table.h"
-#endif
 TDataSet *CreateTable() {
   if (!gROOT->GetClass("St_tpcCorrection")) return 0;
   Int_t nrows = 4;
@@ -11,45 +8,54 @@ TDataSet *CreateTable() {
   row.nrows = nrows;
   row.min =  18.0;
   row.max = 202.0;
-  row.npar =            5;// 9p8GeV_fixedTarget_2026
-  row.a[0] =      0.61465;
-  row.a[1] =     -0.01265;
-  row.a[2] =   9.1944e-05;
-  row.a[3] =  -3.3903e-07;
-  row.a[4] =   5.0017e-10;
+  row.type =          300;// Use correction in the range
+  row.npar =            7;// Z3NCGG9p8GeV_fixedTarget_2026
+  row.a[0] =      0.61111;
+  row.a[1] =    -0.028218;
+  row.a[2] =    0.0007299;
+  row.a[3] =  -1.0399e-05;
+  row.a[4] =   7.7068e-08;
+  row.a[5] =  -2.8247e-10;
+  row.a[6] =   4.0555e-13;
   tableSet->AddAt(&row);
   memset(&row,0,tableSet->GetRowSize());
   row.idx   = 2;
   row.nrows = nrows;
   row.min =  18.0;
   row.max = 202.0;
-  row.npar =            5;// 9p8GeV_fixedTarget_2026
-  row.a[0] =       1.0633;
-  row.a[1] =    0.0063969;
-  row.a[2] =  -0.00029066;
-  row.a[3] =   1.8567e-06;
-  row.a[4] =  -3.7163e-09;
+  row.type =          300;// Use correction in the range
+  row.npar =            5;// Z3NCGG9p8GeV_fixedTarget_2026
+  row.a[0] =       1.4732;
+  row.a[1] =   -0.0092141;
+  row.a[2] =   -8.931e-05;
+  row.a[3] =   7.8937e-07;
+  row.a[4] =  -1.7209e-09;
   tableSet->AddAt(&row);
   memset(&row,0,tableSet->GetRowSize());
   row.idx   = 3;
   row.nrows = nrows;
   row.min =  18.0;
   row.max = 202.0;
-  row.npar =            3;// 9p8GeV_fixedTarget_2026
-  row.a[0] =     0.059668;
-  row.a[1] =   -0.0012654;
-  row.a[2] =   2.7567e-06;
+  row.type =          300;// Use correction in the range
+  row.npar =            7;// Z3NCGG9p8GeV_fixedTarget_2026
+  row.a[0] =     -0.13023;
+  row.a[1] =     0.011845;
+  row.a[2] =  -0.00035277;
+  row.a[3] =   4.7654e-06;
+  row.a[4] =  -3.3571e-08;
+  row.a[5] =   1.1897e-10;
+  row.a[6] =  -1.6708e-13;
   tableSet->AddAt(&row);
   memset(&row,0,tableSet->GetRowSize());
   row.idx   = 4;
   row.nrows = nrows;
   row.min =  18.0;
   row.max = 202.0;
-  row.npar =            4;// 9p8GeV_fixedTarget_2026
-  row.a[0] =      0.23305;
-  row.a[1] =   -4.984e-05;
-  row.a[2] =  -2.4791e-05;
-  row.a[3] =   8.8474e-08;
+  row.type =          300;// Use correction in the range
+  row.npar =            3;// Z3NCGG9p8GeV_fixedTarget_2026
+  row.a[0] =      0.34522;
+  row.a[1] =   -0.0031712;
+  row.a[2] =    5.608e-06;
   tableSet->AddAt(&row);
   return (TDataSet *)tableSet;
 }
