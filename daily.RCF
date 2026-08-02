@@ -15209,3 +15209,141 @@ ge = 47 Tpc s/r  22/ 66 id     5 xyz:   173.761 +/- 0.005    52.877 +/- 0.009  -
 ge = 47 Tpc s/r  22/ 67 id     6 xyz:   175.466 +/- 0.028    53.947 +/- 0.048  -194.919 +/- 0.481 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  4.60 pmin/max   8/ 11 np  4 tmin/max  24/ 32 nt  9 tm  27.94 pad   9.62 adc   374
 ge = 47 Tpc s/r  22/ 70 id     7 xyz:   180.439 +/- 0.028    57.491 +/- 0.048  -209.727 +/- 0.421 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  4.61 pmin/max  11/ 13 np  3 tmin/max   1/  6 nt  6 tm   2.94 pad  12.48 adc   281
 TotalNoOfTpcHits = 58
+================================================================================
+07/28/2026
+.x Run1Ev.C("alpha1GeV@eta-1.50")
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.0003     0.0017   200.0000     0.0018 PVAO    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL
+...
+     53.0235     4.4021    86.5748    53.2060 TPAD    1   125.3112    0.0000    0.0  eV  581.780 MeV NULL
+     54.8248     4.7132    82.6826    55.0270 TPAD    1   129.6113    4.3001   99.6 keV  581.680 MeV FIEL LOSS      -98 MeV
+
+...
+    179.5727    56.8949  -207.6356   188.3704 TPAD   73   450.3517    0.0000    0.0  eV  574.105 MeV NULL
+    180.5929    57.6242  -210.3064   189.5636 TPAD   73   453.3023    2.9506   67.5 keV  574.037 MeV FIEL NEXT LOSS -106 MeV   -8 MeV
+StiMaker:INFO  -                   Tpc/Padrow_72/Sector_2  dE pT  0.452+-  1.2, sy 0.025, x =  188.85 z = -216.88  4.72 cm( 0.04%)  11.9 keV  0.932 GeV  pT = 1% => p = 2.3 %
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.457+-  1.2, sy 0.014, x =   55.61 z =   79.97  3.78 cm( 0.03%) -9.56 keV  0.933 GeV
+ 
+
+.x Run1Ev.C("alpha2.34GeV@eta-0.1")
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.0003     0.0017     0.0000     0.0018 PVAC    1     0.0000    0.0000    0.0  eV  679.872 MeV NULL
+      0.0007     0.0017    -0.0001     0.0019 PVAC    1     0.0010    0.0010    0.0  eV  679.872 MeV NEXT LOSS
+...
+     53.0448     1.8056    -5.3175    53.0755 TPAD    1    53.3516    0.0000    0.0  eV  670.971 MeV NULL
+     54.8447     1.9303    -5.4982    54.8787 TPAD    1    55.1649    1.8133   38.1 keV  670.933 MeV FIEL NEXT LOSS -8.9 MeV 
+...
+    189.9606    23.5206   -19.2217   191.4112 TPAD   76   192.8575    0.0000    0.0  eV  668.044 MeV NULL
+    190.9612    23.7731   -19.3251   192.4353 TPAD   76   193.8947    1.0372   21.8 keV  668.022 MeV FIEL NEXT LOSS -11 MeV    -2 MeV
+StiMaker:INFO  -                   Tpc/Padrow_72/Sector_3  dE pT  1.159+-  1.5, sy 0.044, x =  189.10 z =  -18.96 chi2 =   3.05  1.96 cm( 0.02%)  5.01 keV  1.035 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  1.165+-  4.0, sy 0.056, x =   55.61 z =   -5.54 chi2 =  12.93  1.62 cm( 0.01%) -4.14 keV  1.034 GeV pT = 0.5% => 0.5%
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  1.160+-  1.5, sy 0.040, x =   47.28 z =   -4.69  8.41 cm( 0.86%)  -435 keV  1.034 GeV
+StiMaker:INFO  -                            PIPE_1/PWRP_1  dE pT  1.161+-  1.5, sy 0.123, x =    4.01 z =   -0.37  43.5 cm( 1.20%)  -561 keV  1.034 GeV
+
+
+N = dN/dx = f(p/M,L);
+      p = sqrt((Ekin + M)**2 - M**2) = sqrt (Ekin**2 + 2*M*Ekin)
+      p**2 = Ekin**2 + 2*M*Ekin
+      Ekin' = Ekin - k N * L;       k = no. of ev per primary interaction (~100 ev)
+      dEkin/dL = -k N - k * L *dN/dL
+      2*p*dp/dL = 2*(Ekin+M)*dEkin/dL
+      dp/dL     = (Ekin + M)/p * dEkin/dL = 1/beta * (-k*N - k * L * dN/dL)
+
+dN/dL = df/d(p/M) * dP/dL/M = df/d(p/M) /M * (1/beta * (-k*N - k * L * dN/dL)), A = df/d(p/M) /M /beta *k
+
+dN/dL = -  A (N  + L * dN/dL)
+
+dN/dL * (1 + A*L) = - A * N;
+
+1/N * dN/dL = - A /(1 + A*L)
+                                        x = 1 + A*L; x_0 = 1; 
+d(ln N) / dL = - A /(1 + A*L); I_0^L dL* A */(1 + A*L)  = I_1^1+A*L (dx/x) = ln (1+A*L) 
+
+N = N_0*(1 + A*L);
+================================================================================
+07/29/2026
+root.exe [23] TpcT->Draw("fMcHit.mnP/fMcHit.mdS:fRcHit.mLength>>p2","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mdX>0","prof")
+root.exe [26] p2->Fit("pol1","e")
+ FCN=104.584 FROM MINOS     STATUS=SUCCESSFUL      8 CALLS          67 TOTAL
+                     EDM=2.04974e-21    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  p0           3.07399e+02   2.91581e-01   0.00000e+00  -1.05375e-07
+   2  p1           4.52417e-03   1.88889e-03   1.88889e-03   4.02620e-04
+root.exe [27] p2->Fit("pol0","e")
+ FCN=110.321 FROM MINOS     STATUS=SUCCESSFUL      2 CALLS          22 TOTAL
+                     EDM=3.41481e-13    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  p0           3.07989e+02   1.55820e-01   1.55820e-01   5.30365e-06
+================================================================================
+07/20/2026
+Found table TpcPosition with NRows = 1 in db
+Validity:20181220/0 -----   20210303/193715
+
+ ---------------------------------------------------------------------------------------
+ bfc/.make/db/.const/StarDb/Geometry/tpc/.TpcPosition/TpcPosition  Allocated rows: 1     Used rows: 1    Row size: 184 bytes
+ Table: Survey_st            [0] :
+ ======================================================================================
+int     Id                     0 : 
+double  r00                    1 : 
+double  r01                    0 : -gamma 
+double  r02             -0.00056 : beta  
+double  r10                    0 : gamma 
+double  r11                    1 : 
+double  r12             -0.00013 : -alpha 
+double  r20              0.00056 : -beta  
+double  r21              0.00013 : alpha 
+double  r22                    1 : 
+double  t0               -0.1423 : 
+double  t1               -0.2979 : 
+double  t2               -0.1618 : 
+double  sigmaRotX              0 : 
+double  sigmaRotY              0 : 
+double  sigmaRotZ              0 : 
+double  sigmaTrX               0 : 
+double  sigmaTrY               0 : 
+double  sigmaTrZ               0 : 
+char    comment[0]      "2024 TPC 0 . . . " 
+
+
+
+ge = 47 Tpc s/r  22/ 65 id     3 xyz:   172.094 +/- 0.005    51.733 +/- 0.009  -187.035 +/- 0.859 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  1.05 pmin/max   7/ 10 np  4 tmin/max  34/ 56 nt 23 tm  41.25 pad   8.28 adc  4052 lTpc 284.29
+ge = 47 Tpc s/r  22/ 66 id     4 xyz:   173.761 +/- 0.005    52.877 +/- 0.009  -191.792 +/- 0.832 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  0.00 pmin/max   7/ 10 np  4 tmin/max  27/ 48 nt 22 tm  33.22 pad   8.52 adc  3135 lTpc 289.04
+ge = 47 Tpc s/r  22/ 67 id     5 xyz:   175.466 +/- 0.028    53.947 +/- 0.048  -194.919 +/- 0.481 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  0.00 pmin/max   8/ 11 np  4 tmin/max  24/ 32 nt  9 tm  27.94 pad   9.62 adc   374 lTpc 293.77
+ge = 47 Tpc s/r  22/ 70 id     6 xyz:   180.439 +/- 0.028    57.491 +/- 0.048  -209.755 +/- 0.419 q(keV)   0.00 idT     1 qa 100 fl  0 us 1 dX  0.00 pmin/max  11/ 13 np  3 tmin/max   1/  5 nt  5 tm   2.89 pad  12.48 adc   279 lTpc 308.10
+
+
+================================================================================
+07/31/2026
+(gdb) p row
+$7 = 61
+(gdb) p lGGTransperency
+$8 = -4.8434643424291654e-05
+(gdb) p driftTime
+$9 = 4.5597041062084953
+(gdb) p zGG
+$10 = 35.768552996641823
+Double_t St_GatingGridC::CalcCorrection(Int_t i, Double_t x) {// drift time in microseconds
+  Double_t corD = 1. - TMath::Exp(-(x-cor->t0)/(cor->settingTime/4.6));
+
+integral_x1^x2 (1 - Exp(-x/tau)) dx = x + tau*Exp(-x/tau) |_x1^x2 = ((x2 - x1) 
+================================================================================
+08/02/2026
+[starsub05] ~/TFG/TFG26g_calib/2025/RF/13p5GeV_fixedTarget_2026 $ cpu_per_event.csh '*/*/*.log.gz' | tee cpu_per_event
+*/*/*.log.gz
+        CPU/event = 3.99654(sec) and    Total/event = 4.38359(sec)      91.1705 %       for 1845633 events
+[starsub05] ~/TFG/TFG26f_calib/2025/RF/13p5GeV_fixedTarget_2026 $ cpu_per_event.csh '*/*/*.log.gz' | tee cpu_per_event
+*/*/*.log.gz
+        CPU/event = 3.18187(sec) and    Total/event = 3.23391(sec)      98.3908 %       for 1382483 events
+
+[cvmfswrite07] ~/work/Histograms $ root.exe RunXXVI49/NPoints?NGP*13*.root  Res.C
+#sigma(@61 npts) =  8.17% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.57% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.06% for N- 13p5GeV_fixedTarget_2026
+[cvmfswrite07] ~/work/Histograms $ root.exe RunXXVI50/NPoints?NGP*13*.root Res.C
+#sigma(@61 npts) =  7.97% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.38% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.87% for N- 13p5GeV_fixedTarget_2026

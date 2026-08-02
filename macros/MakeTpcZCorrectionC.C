@@ -68,7 +68,9 @@ void MakeTpcZCorrection1() {
   fileIn.ReplaceAll("Z3CG4EY","");
   fileIn.ReplaceAll("Z3G4EY","");
   fileIn.ReplaceAll("Z3NGG","");
+  fileIn.ReplaceAll("Z3NCGG","");
   fileIn.ReplaceAll(".root","");
+  TString PWD = gSystem->BaseName(gSystem->WorkingDirectory());
   cout << "File: " << fileIn.Data() << endl;
   TString fOut =  Form("%s.%s.C", tableName, fileIn.Data());
   TF1* f[2] = {(TF1 *) gROOT->GetFunction("pol2"), (TF1 *) gROOT->GetFunction("pol5")};
@@ -167,12 +169,12 @@ void MakeTpcZCorrection1() {
     if (! c2 ) c2 =  new TCanvas("cTemp","cTemp");
     c2->cd(); 
     c2->Clear();
-    //#define __muJ__
+#define __muJ__
 #ifdef __muJ__
-    cout << "FitP->Draw(\"" << Form("mu-muJ:y>>%s(105,0,210)\"",histN[idx-1]) << ",\"" << cut << "\",\"" << prof << "\");" << endl;
+    cout << "FitP->Draw(\"" << Form("mu-muJ:y>>%s(110,0,220)\"",histN[idx-1]) << ",\"" << cut << "\",\"" << prof << "\");" << endl;
     FitP->Draw(Form("mu-muJ:y>>%s(110,0,220)",histN[idx-1]),cut,prof);
 #else
-    cout << "FitP->Draw(\"" << Form("mu:y>>%s(105,0,210)\"",histN[idx-1]) << ",\"" << cut << "\",\"" << prof << "\");" << endl;
+    cout << "FitP->Draw(\"" << Form("mu:y>>%s(110,0,220)\"",histN[idx-1]) << ",\"" << cut << "\",\"" << prof << "\");" << endl;
     FitP->Draw(Form("mu:y>>%s(110,0,220)",histN[idx-1]),cut,prof);
 #endif
     c2->Update();
@@ -187,11 +189,12 @@ void MakeTpcZCorrection1() {
       f[io] = (TF1 *) gROOT->GetFunction(Form("pol%i",p-1));
       hists[idx-1]->Fit(f[io],"er","",min,max);
       Double_t prob = f[io]->GetProb();
-      cout << "Fit " << hists[idx-1]->GetName() << " with " << f[io]->GetName() << " prob = " << prob << endl;
+      cout << "Fit " << hists[idx-1]->GetName() << " with " << PWD.Data() << "/" << f[io]->GetName() << " prob = " << prob << endl;
       if (f[io]->GetProb() > 1e-3) break;
     }
     Int_t npar = f[io]->GetNpar();
-    out << "  row.npar = " << Form("%12i",npar) << ";// " << fileIn.Data()  << endl;
+    out << "  row.type =          300;// Use correction in the range" << endl;
+    out << "  row.npar = " << Form("%12i",npar) << ";// " << PWD.Data() << "/" << fileIn.Data()  << endl;
     for (Int_t p = 0; p < npar; p++) { 
       out << "  row.a[" << p << "] = " << Form("%12.5g",f[io]->GetParameter(p)) << ";" << endl;
     }

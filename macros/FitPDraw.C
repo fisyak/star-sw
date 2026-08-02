@@ -340,8 +340,8 @@ void MuDraw(const Char_t *draw="mu:rowsigned(y,x)",
       name.ReplaceAll("_y3","");
       name.ReplaceAll("G4E","");
 #endif
-      leg->AddEntry(hist,Form("%s%s %s",dir.Data(), name.Data(),side));
-      //      leg->AddEntry(hist,dir.Data());
+      //      leg->AddEntry(hist,Form("%s%s %s",dir.Data(), name.Data(),side));
+      leg->AddEntry(hist,name.Data());
       hist->SetTitle(Form("%s : %s",hist->GetTitle(), side));
       hist->SetXTitle(var);
       //      cout << k << "\t" << name.Data() << "\tmin = " << 100*hist->GetMinimum() << "\tmax = " <<  100*hist->GetMaximum() << " %" << endl;

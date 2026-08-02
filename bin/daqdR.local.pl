@@ -6,7 +6,8 @@ use lib dirname $0; #
 #use lib "/net/l402/data/fisyak/STAR/packages/.DEV2/bin";
 use GetYearFromPWD;
 $debug = 0;
-my @tags = qw(hlt st_physics_ st_cosmic_ st_hlt);
+#my @tags = qw(hlt st_physics_ st_cosmic_ st_hlt);
+my @tags = qw(st_physics);
 my $match = "";
 if ($#ARGV >= 0) {
   $debug = $ARGV[0];
@@ -22,6 +23,9 @@ print "Year = $year, Field = $FIELD, runs = $runs,  Day = $Day, Run = $Run, $run
 if (! $year || ! $FIELD) {die "wrong directory $pwd";}
 my $def = {@Runs};# print "Runs = @Runs\n";
 #PrintHash($def,"Runs") if ($debug);
+my $f            = 1; #1001; #1;
+my $l            = 5000; # 1000; #5000; # 5000
+my $ext       =  "," . $f . "," .  $l;
 my $fNo = 0;
 my @AllRuns = ($runs);
 if ($run2) {push @AllRuns, $run2;}
@@ -55,7 +59,7 @@ foreach my $currentrun (@AllRuns) {
       for (my $i = 0; $i < $NF; $i = $i +  $step) {
 	print "i = $i, step = $step \n" if ($debug);
 	my $file = $files[$i];
-	my $b = File::Basename::basename($file,".daq");
+	my $b = File::Basename::basename($file,".daq") . $ext;
 	print "$b\n" if ($debug);
 # 	my $evfile = $b . ",1,10000.event.root"  ; print "evfile = $evfile \n"   if ($debug);
 # 	if (-r $evfile) {next;}			         		                   

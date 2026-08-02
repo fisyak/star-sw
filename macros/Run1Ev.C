@@ -197,8 +197,10 @@ void Run1Ev(TString opt="alpha1GeV@eta-1.50") {
     Run1Ev(1, 8, 0.3564,0.3564,-0.87,-0.87, 0, 0, 200, 200, 1,"G"); 
   } else if (opt == "alpha1GeV@eta-0.87") {
     Run1Ev(1, 47,1, 1,-0.87,-0.87, 0, 0, 200, 200, 1,"G"); 
-  } else if (opt == "alpha1GeV@eta-1.50") {
+  } else if (opt == "alpha1GeV@eta-1.50") {// p = 2.352 GeV/c => pTPC = 
     Run1Ev(1, 47,1, 1,-1.50,-1.50, 0, 0, 200, 200, 1,"G"); 
+  } else if (opt == "alpha2.34GeV@eta-0.1") {// p = 2.352 GeV/c
+    Run1Ev(1, 47, 2.34, 2.34,-0.1,-0.1, 0, 0, 0, 0, 1,"G"); 
   }
 }
 
