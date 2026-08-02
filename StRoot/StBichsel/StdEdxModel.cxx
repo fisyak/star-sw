@@ -827,7 +827,7 @@ TF1 *StdEdxModel::ExValG() {
 //________________________________________________________________________________
 #include "StGausSW.h"
 TF1 *StdEdxModel::CDF() {return StGausSW::CDF();}
-TF1 *StdEdxModel::PDF(Double_t Np, Double_t z20, Double_t zmax) { // z = Tmath::Log(dE [GeV]);
+TF1 *StdEdxModel::PDF(Double_t Np, Double_t z20, Double_t zmax) { // z = TMath::Log(dE [GeV]);
   static TF1 *pdf = StGausSW::PDF();
   static TF1 *cdf = StGausSW::CDF();
   Double_t Norm  = 1;
@@ -851,8 +851,8 @@ TF1 *StdEdxModel::PDF(Double_t Np, Double_t z20, Double_t zmax) { // z = Tmath::
   //  Double_t ne = StdEdxModel::instance()->Logne(z) - TMath::Log(Np);
   if (z20 < zmax && z20 < 0) {
     cdf->SetParameters(params);
-    Double_t ne20  = StdEdxModel::instance()->Logne(z20)  - TMath::Log(Np);
-    Double_t nemax = StdEdxModel::instance()->Logne(zmax) - TMath::Log(Np);
+    Double_t ne20  = TMath::Max(cdf->GetXmin(), StdEdxModel::instance()->Logne(z20)  - TMath::Log(Np));
+    Double_t nemax = TMath::Min(cdf->GetXmax(), StdEdxModel::instance()->Logne(zmax) - TMath::Log(Np));
     Norm = cdf->Eval(nemax) - cdf->Eval(ne20);
     params[0] = Norm;
   }
