@@ -125,6 +125,6 @@
 <li> TFG26d Release for 2023-2026 (re)production                         2026-05-31 18:32:32 -0400  (HEAD -> TFG, tag: TFG26d)
 <li> TFG26e TpcHit AfterBrner, multiple hits from TPC pad row            2026-07-22 20:05:23 -0400  (HEAD -> TFG, tag: TFG26e)
 <li> TFG26f TpcHit AfterBrner, disable multiple hits from TPC pad row    2026-07-24 12:50:33 -0400  (HEAD -> TFG, tag: TFG26f)
-<li> TFG26g Modify dX calculation with accountin Membrane and GG         2026-08-02 12:50:33 -0400  (HEAD -> TFG, tag: TFG26g)
+<li> TFG26g Modify dX calculation with accountin Membrane and GG         2026-08-02 11:11:38 -0400  (HEAD -> TFG, tag: TFG26g)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
