@@ -1147,6 +1147,10 @@ StiKalmanTrackNode * StiKalmanTrack::getInnOutMostNode(int inot,int qua)  const
     StiHit *hit = node->getHit();
     if (qua&kKeepHit) {if (!hit) continue;}
     if (qua&kGoodHit) {if (!hit || node->getChi2()>Chi2HitCut()/0.003)continue;}
+    if (qua&kTpcOnly) {
+      if (! hit->detector()) continue;
+      if (hit->detector()->getGroupId() != kTpcId) continue;
+    }
     return node;
   }
   return 0;

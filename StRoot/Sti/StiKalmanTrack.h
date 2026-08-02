@@ -76,7 +76,7 @@ class StiKalmanTrackNode;
   \see StiKalmanTrackFinder
   \author Claude A Pruneau (Wayne State University)
 */
-enum nodeQA {kKeepHit=1,kGoodHit=2};
+enum nodeQA {kKeepHit=1,kGoodHit=2,kTpcOnly=4};
 
 
 class StiKalmanTrack : public StiTrack 
