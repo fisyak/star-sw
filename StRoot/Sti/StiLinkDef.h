@@ -39,4 +39,5 @@
 #pragma link C++ class StiTrackNodeHelper;
 #pragma link C++ namespace StiVMCToolKit;
 #pragma link C++ class StiHitContainer;
+#pragma link C++ class StiTrackContainer;
 #endif
