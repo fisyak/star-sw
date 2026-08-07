@@ -1535,13 +1535,14 @@ void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTra
 {
 #ifdef __TFG__VERSION__
   static Int_t _debug = 0;
-  static Double_t zGG     = St_tpcDimensionsC::instance()->gatingGridZ();
+  //  static Double_t zGG     = St_tpcDimensionsC::instance()->gatingGridZ();
   static Double_t DV      = 1e-6*StTpcDb::instance()->DriftVelocity(1); // cm/usec
-  static Double_t GGdelay = St_GatingGridBC::instance()->t0(0); // usec
-  static Double_t GGslope = St_GatingGridBC::instance()->settingTime(0)/4.6; 
-  static Double_t trig[2] = {St_starTriggerDelayC::instance()->TrigT0GG(0),  // Inner
-			     St_starTriggerDelayC::instance()->TrigT0GG(1)}; // Outer 
-  static Double_t GGregion= (TMath::Max(trig[0], trig[1]) + GGdelay + 10*GGslope) * DV;
+  static Double_t TimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency(); // MHz => usec
+  static Double_t GGdelay = St_GatingGridBC::instance()->t0(0)/TimeBinWidth;              // usec => time buckets
+  static Double_t GGslope = St_GatingGridBC::instance()->settingTime(0)/4.6/TimeBinWidth; // usec => time buckets
+  static Double_t trig[2] = {St_starTriggerDelayC::instance()->TrigT0GG(0)/TimeBinWidth,  // Inner // usec => time buckets
+			     St_starTriggerDelayC::instance()->TrigT0GG(1)/TimeBinWidth}; // Outer // usec => time buckets
+  static Double_t GGregion= (TMath::Max(trig[0], trig[1]) + GGdelay + 10*GGslope) * DV * TimeBinWidth;
 #endif /* __TFG__VERSION__ */
 
   if (! tpcHit) return;
@@ -1567,35 +1568,49 @@ void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTra
   tpcHit->setdX(dX);
 #ifdef __TFG__VERSION__
   if (_debug) {cout << "pT = " << node->getPt() << "\t"; tpcHit->Print();}
+  Int_t sector = tpcHit->sector();
+  Int_t row    = tpcHit->padrow();
   static StTpcCoordinateTransform transform(StTpcDb::instance());
-  static StTpcLocalSectorCoordinate        localSect[3]; // upper, lower, middle
-  transform(physicalHelix->at(s[0]),localSect[0],tpcHit->sector(),tpcHit->padrow());
-  transform(physicalHelix->at(s[1]),localSect[1],tpcHit->sector(),tpcHit->padrow());
-  transform(middle,                 localSect[2],tpcHit->sector(),tpcHit->padrow());
-  Double_t drifts[3] = {localSect[0].position().z(),localSect[1].position().z(),localSect[2].position().z()};
-  Double_t dDrift = TMath::Abs(drifts[0] - drifts[1]); 
-  Double_t GG = 1;
-  if (dDrift > 1e-7) {
-    Double_t z[3] = {zGG - drifts[0],zGG - drifts[1],zGG - drifts[2]};
-    if (z[0] < 0 && z[1] > 0) {    // Membrane
-      GG =   z[1]/dDrift;
-    } else if (z[0] > 0 && z[1] < 0) {
-      GG =   z[0]/dDrift;
+  static StTpcLocalCoordinate     localTpc;
+  static StTpcLocalSectorCoordinate        localSect[4]; // upper, lower, middle, membrane
+  transform(physicalHelix->at(s[0]),localSect[0],sector,row);
+  transform(physicalHelix->at(s[1]),localSect[1],sector,row);
+  transform(middle,                 localSect[2],sector,row);
+  transform(middle,                 localTpc, sector, row);
+  StThreeVectorD xyz(localTpc.position().x(), localTpc.position().y(), 0.0);
+  localTpc.setPosition(xyz);
+  transform(localTpc,               localSect[3]);
+  static StTpcPadCoordinate Pad[4];
+  Float_t times[3]  = {0};
+  for (Int_t i = 3; i >=  0; i--) {
+    transform(localSect[i], Pad[i]);
+    if(i < 3) {
+      times[i] = TMath::Nint(Pad[3].timeBucket()) - TMath::Nint(Pad[i].timeBucket()) + 1;
+    }
+  }
+  Float_t dDrift = TMath::Abs(times[0] - times[1]) + 1;
+  Float_t GG = 1;
+  if (dDrift > 1) {
+    if (times[0] < 1 && times[1] > 1) {    // Membrane
+      GG =   times[1]/dDrift;
+    } else if (times[0] > 1 && times[1] < 1) {
+      GG =   times[0]/dDrift;
     } else { // Gating Grid
-      Double_t drift = drifts[2];
+      Float_t drift = localSect[2].position().z();
       if (drift > -0.6 && drift < GGregion) {// not prompt hits and not affected by GG
 	Int_t io = 0;
-	if (tpcHit->padrow() > (UInt_t) St_tpcPadConfigC::instance()->numberOfInnerRows(tpcHit->sector())) io = 1;
-	Double_t t0 = GGdelay + trig[io];
-	Double_t t[2]  = {drifts[0]/DV - t0, drifts[1]/DV - t0};
-	Double_t dT = TMath::Abs(t[0] - t[1]);
-	Double_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])};
+	if (row > St_tpcPadConfigC::instance()->numberOfInnerRows(sector)) io = 1;
+	Float_t t0 = GGdelay + trig[io];
+	Float_t t[2] = {0};
+	for (Int_t j = 0; j < 2; j++) 	t[j] = TMath::Nint(Pad[j].timeBucket() - t0);
+	Float_t dT = TMath::Abs(t[0] - t[1]) + 1;
+	Float_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])};
 	if (tO[1] < 0.0) {
 	  GG = 0;
 	} else {
 	  if (tO[0] < 0.0) tO[0] = 0.0;
-	  Double_t loss = GGslope*(TMath::Exp(-tO[0]/GGslope) - TMath::Exp(-tO[1]/GGslope));
-	  GG =  (tO[1] - tO[0] - loss)/dT; 
+	  Float_t loss = GGslope*(TMath::Exp(-tO[0]/GGslope) - TMath::Exp(-tO[1]/GGslope));
+	  GG =  (tO[1] - tO[0] + 1 - loss)/dT; 
 	  if (GG < 0.0) GG = 0.0;
 	}
       }
