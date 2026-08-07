@@ -128,5 +128,6 @@
 <li> TFG26g Modify dX calculation with accounting Membrane and GG        2026-08-02 11:11:38 -0400  (HEAD -> TFG, tag: TFG26g)
 <li> TFG26g Modify dX calculation with stTpcLocalSectorCoordinate        2026-08-04 16:16:14 -0400  (HEAD -> TFG, tag: TFG26g1)
 <li> TFG26g dX++, fix StEventClusteringHints stremaer                    2026-08-07 10:35:34 -0400  (HEAD -> TFG, tag: TFG26g2)
+<li> TFG26g dX++, fix StEventClusteringHints stremaer                    2026-08-07 10:37:58 -0400  (HEAD -> TFG, tag: TFG26g3, origin/TFG)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
