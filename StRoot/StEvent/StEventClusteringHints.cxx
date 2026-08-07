@@ -189,8 +189,6 @@ StEventClusteringHints::StEventClusteringHints()
     setBranch("StSPtrVecXiVertex",           "evt_vertices", 5);
     setBranch("StSPtrVecCalibrationVertex",  "evt_vertices", 5);
     setBranch("StEmcCollection",             "evt_emc",      6);
-    setBranch("StFcsCollection",             "evt_emc",      6);
-    setBranch("StStgcCollection",            "evt_emc",      6);
     setBranch("StFmsCollection",             "evt_emc",      6);
     setBranch("StFcsCollection",             "evt_emc",      6);
     setBranch("StRHICfCollection",           "evt_emc",      6);
@@ -203,9 +201,9 @@ StEventClusteringHints::StEventClusteringHints()
     setBranch("StFpdCollection",             "evt_aux",      7);
     setBranch("StPhmdCollection",            "evt_aux",      7);
     setBranch("StRpsCollection",             "evt_aux",      7);
-    setBranch("StGmtCollection",             "evt_aux",      7);
     setBranch("StFttCollection",             "evt_aux",      7);
     setBranch("StFstEvtCollection",          "evt_aux",      7);
+    setBranch("StGmtCollection",             "evt_aux",      7);
     setBranch("StSsdHitCollection",          "evt_hits",     8);
     setBranch("StSstHitCollection",          "evt_hits",     8);
     setBranch("StSvtHitCollection",          "evt_hits",     8);
@@ -215,9 +213,6 @@ StEventClusteringHints::StEventClusteringHints()
     setBranch("StTpcHitCollection",          "evt_hits",     8);
     setBranch("StFtpcHitCollection",         "evt_hits",     8);
     setBranch("StRnDHitCollection",          "evt_hits",     8);
-    setBranch("StGmtHitCollection",          "evt_hits",     8);
-    setBranch("StGmtStripCollection",        "evt_hits",     8);
-    setBranch("StGmtPointCollection",        "evt_hits",     8);
     setBranch("StHltEvent",                  "evt_hlt",      9);
     setBranch("StFgtCollection",             "evt_fgt",      9);
     
@@ -228,8 +223,6 @@ StEventClusteringHints::StEventClusteringHints()
     setBranch("StSPtrVecDetectorState",      "event", 1);
     setBranch("StEventClusteringHints",      "event", 1);
     setBranch("StEmcCollection",             "event", 1);
-    setBranch("StFcsCollection",             "event", 1);
-    setBranch("StStgcCollection",            "event", 1);
     setBranch("StFmsCollection",             "event", 1);
     setBranch("StFcsCollection",             "event", 1);
     setBranch("StFttCollection",             "event", 1);
@@ -371,7 +364,6 @@ StEventClusteringHints::print(ostream& os)
     }
 }
 
-#if 1
 static TBuffer&  operator<<(TBuffer& buf, const map<string,string> &s)
 {
   TString ts1,ts2;
@@ -424,23 +416,29 @@ void StEventClusteringHints::Streamer(TBuffer &R__b)
    UChar_t mode;
    UInt_t R__s, R__c;
    if (R__b.IsReading()) {
-      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); 
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
+#if 0 /* version 2 */
       if (R__v > 1) { 
 	R__b.ReadClassBuffer(StEventClusteringHints::Class(),this, R__v, R__s, R__c);
 	return;
       }
       //====process old versions before automatic schema evolution
    //      TObject::Streamer(R__b);
+#endif
       R__b >> mode; mNameMap=(mode)? &mMiniDstMap:&mDstMap;
       R__b >>  mDstMap;     
       R__b >>  mMiniDstMap;     
       R__b >>  mBranchIds;
-      //      R__b.CheckByteCount(R__s, R__c, StEventClusteringHints::IsA());  
+#if 1
+      R__b.CheckByteCount(R__s, R__c, Class());  
+
+#else
+      R__b.CheckByteCount(R__s, R__c, StEventClusteringHints::IsA());  
       const char* classname = 0;
       R__b.CheckByteCount(R__s, R__c, classname);
-      
+#endif       
    } else { /*writing*/   
-#if 0
+#if 1
       R__c = R__b.WriteVersion(Class(), kTRUE);
       mode = (mNameMap == &mMiniDstMap);
       R__b <<  mode;     
@@ -453,4 +451,3 @@ void StEventClusteringHints::Streamer(TBuffer &R__b)
 #endif
    }
 }
-#endif
