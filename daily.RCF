@@ -15982,3 +15982,185 @@ Program received signal SIGSEGV, Segmentation fault.
 256                     if (t->type() == type) j++;
 
 t is broken
+================================================================================
+08/05/2026
+(gdb) info b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x00007fffdd1ad48a in StiStEventFiller::FillTpcdX(StiKalmanTrack const*, StiKalmanTrackNode const*, StTpcHit*) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiStEventFiller.cxx:1539
+        breakpoint already hit 1 time
+2       breakpoint     keep y   0x00007fffee6ccfd1 in StXRefManager::StXRefManager(StUUId const&) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:284
+3       breakpoint     keep y   0x00007fffee6cd2d5 in StXRefManager::Cd(StXRef*) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:316
+4       breakpoint     keep y   0x00007fffee6cd41f in StXRefManager::Open(StXRef*) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:335
+5       breakpoint     keep y   0x00007fffee6cd5b0 in StXRefManager::Close(StXRef*) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:358
+6       breakpoint     keep y   <MULTIPLE>         
+6.1                         y   0x00007fffee6cd72c in StXRefManager::AddColl(StProxyUrr*) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:376
+6.2                         y   0x00007fffee6cd762 in StXRefManager::AddColl(StStrArray const*) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:381
+7       breakpoint     keep y   0x00007fffee6cd88b in StXRefManager::Update() at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:402
+8       breakpoint     keep y   0x00007fffee6cdc71 in TPageMap::Get(unsigned int) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:479
+9       breakpoint     keep y   0x00007fffee6cdd51 in TPageMap::GET(unsigned int) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:501
+10      breakpoint     keep y   0x00007fffdd1ae141 in StiStEventFiller::FillTpcdX(StiKalmanTrack const*, StiKalmanTrackNode const*, StTpcHit*) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiStEventFiller.cxx:1592
+        breakpoint already hit 1 time
+11      breakpoint     keep y   0x00007fffdd1ae191 in StiStEventFiller::FillTpcdX(StiKalmanTrack const*, StiKalmanTrackNode const*, StTpcHit*) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiStEventFiller.cxx:1595
+12      breakpoint     keep y   0x00007fffdd1ae1d4 in StiStEventFiller::FillTpcdX(StiKalmanTrack const*, StiKalmanTrackNode const*, StTpcHit*) at .al96_x8664_gcc11/obj/StRoot/StiMaker/StiStEventFiller.cxx:1597
+
+--------------------------------------------------------------------------------
+#
+'save breakpoints [FILENAME]'
+source
+tac 
+
+StChain::EventLoop
+  StBFChain::Make 
+    StChain::Make 
+      StMaker::IMake
+        StBFChain::Make 
+          StChain::Make
+            StMaker::Make
+              StTreeMaker::Make
+                StTreeMaker::MakeWrite 
+StTree::WriteEvent (this=0x4bd2b70, ukey=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:648
+StBranch::WriteEvent (this=0x4bdd410, ukey=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:448
+StIO::Write (file=0x4c0c320, ukey=..., obj=0x6133ba00) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:90
+TObject::Write (this=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", option=3, bufsize=0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TObject.cxx:811
+TObject::Write (this=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", option=3, bufsize=0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TObject.cxx:795
+l.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TDirectoryFile.cxx:1839
+TDirectoryFile::WriteTObject (this=0x4c0c320, obj=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", option=0x613a3790 "SingleKeyOverWrite", bufsize=0)
+TFile::CreateKey (this=0x4c0c320, mother=0x4c0c320, obj=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", bufsize=879) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TFile.cxx:960
+TKey::TKey (this=0x470de00, obj=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", bufsize=879, motherDir=0x4c0c320) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TKey.cxx:253
+StIOEvent::Streamer (this=0x7ffffffc59c0, R__b=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:74
+operator<< (buf=..., obj=0x6133ba00) at include/TBuffer.h:407
+TBufferFile::WriteObjectAny (this=0x6133bcf0, obj=0x6133ba00, ptrClass=0xa90380) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2699
+TBufferFile::WriteObjectClass (this=0x6133bcf0, actualObjectStart=0x6133ba00, actualClass=0x4c32dc0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2645
+TClass::Streamer (this=0x4c32dc0, obj=0x6133ba00, b=..., onfile_class=0x0) at include/TClass.h:451
+TClass::StreamerTObjectInitialized (this=0x4c32dc0, object=0x6133ba00, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/meta/src/TClass.cxx:5446
+TList::Streamer (this=0x6133ba00, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:1070
+operator<< (buf=..., obj=0x5e6b680) at include/TBuffer.h:407
+TBufferFile::WriteObjectAny (this=0x6133bcf0, obj=0x5e6b680, ptrClass=0xa90380) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2699
+TBufferFile::WriteObjectClass (this=0x6133bcf0, actualObjectStart=0x5e6b680, actualClass=0x5e8f3f0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2645
+TClass::Streamer (this=0x5e8f3f0, obj=0x5e6b680, b=..., onfile_class=0x0) at include/TClass.h:451
+TClass::StreamerDefault (this=0x5e8f3f0, object=0x5e6b680, b=..., onfile_class=0x0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/meta/src/TClass.cxx:5500
+TClass::StreamerTObject (this=0x5e8f3f0, object=0x5e6b680, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/meta/src/TClass.cxx:5437
+StEvent::Streamer (this=0x5e6b680, R__b=...) at .al96_x8664_gcc11/obj/StRoot/StEvent/StEvent.cxx:1785
+StXRefMain::Streamer (this=0x5e6b680, R__b=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:281
+StXRef::Streamer (this=0x5e6b680, R__b=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:234
+#0  StXRefManager::Open (xref=0x5e6b680) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:335
+--------------------------------------------------------------------------------
+StChain::EventLoop (this=0x1a2c8d0, jBeg=1, jEnd=1, outMk=0x0) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:238
+  StBFChain::Make (this=0x1a2c8d0, number=1) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:84
+    StChain::Make (this=0x1a2c8d0, num=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.h:49
+      StMaker::IMake (this=0x1a2c8d0, number=1) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.h:110
+        StBFChain::Make (this=0x1a2c8d0) at .al96_x8664_gcc11/obj/StRoot/StBFChain/StBFChain.h:85
+          StChain::Make (this=0x1a2c8d0) at .al96_x8664_gcc11/obj/StRoot/StChain/StChain.cxx:117
+            StMaker::Make (this=0x1a2c8d0) at .al96_x8664_gcc11/obj/StRoot/StChain/StMaker.cxx:932
+              StTreeMaker::Make (this=0x2725f10) at .al96_x8664_gcc11/obj/StRoot/StTreeMaker/StTreeMaker.cxx:178
+                StTreeMaker::MakeWrite (this=0x2725f10) at .al96_x8664_gcc11/obj/StRoot/StTreeMaker/StTreeMaker.cxx:235
+                  StTree::WriteEvent (this=0x4bd2b70, ukey=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:648
+                    StBranch::WriteEvent (this=0x4bdd410, ukey=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:448
+                      StIO::Write (file=0x4c0c320, ukey=..., obj=0x6133ba00) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:90
+                        TObject::Write (this=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", option=3, bufsize=0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TObject.cxx:811			    
+			  TObject::Write (this=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", option=3, bufsize=0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/base/src/TObject.cxx:795			    
+			    TDirectoryFile::WriteTObject (this=0x4c0c320, obj=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", option=0x613a3790 "SingleKeyOverWrite", bufsize=0)									          
+			      TFile::CreateKey (this=0x4c0c320, mother=0x4c0c320, obj=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", bufsize=879) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TFile.cxx:960    
+			        TKey::TKey (this=0x470de00, obj=0x7ffffffc59c0, name=0x6133bbe0 "eventBranch.0000000001", bufsize=879, motherDir=0x4c0c320) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TKey.cxx:253            	 
+			      	  StIOEvent::Streamer (this=0x7ffffffc59c0, R__b=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StTree.cxx:74																       	         
+			      	    operator<< (buf=..., obj=0x6133ba00) at include/TBuffer.h:407																					            	     
+			      	      TBufferFile::WriteObjectAny (this=0x6133bcf0, obj=0x6133ba00, ptrClass=0xa90380) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2699					       	       
+			      	        TBufferFile::WriteObjectClass (this=0x6133bcf0, actualObjectStart=0x6133ba00, actualClass=0x4c32dc0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2645		                   
+			      	          TClass::Streamer (this=0x4c32dc0, obj=0x6133ba00, b=..., onfile_class=0x0) at include/TClass.h:451																	       	     
+			      	            TClass::StreamerTObjectInitialized (this=0x4c32dc0, object=0x6133ba00, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/meta/src/TClass.cxx:5446					                     
+			      	      	      TList::Streamer (this=0x6133ba00, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/cont/src/TList.cxx:1070										                   
+			      	                operator<< (buf=..., obj=0x5e6b680) at include/TBuffer.h:407																					                   
+			      	      	      	  TBufferFile::WriteObjectAny (this=0x6133bcf0, obj=0x5e6b680, ptrClass=0xa90380) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2699					       	         
+			      	                    TBufferFile::WriteObjectClass (this=0x6133bcf0, actualObjectStart=0x5e6b680, actualClass=0x5e8f3f0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/io/io/src/TBufferFile.cxx:2645		                     
+			      	      	      	    TClass::Streamer (this=0x5e8f3f0, obj=0x5e6b680, b=..., onfile_class=0x0) at include/TClass.h:451																	       	     
+			      	                      TClass::StreamerDefault (this=0x5e8f3f0, object=0x5e6b680, b=..., onfile_class=0x0) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/meta/src/TClass.cxx:5500					       	       
+			      	      	      	        TClass::StreamerTObject (this=0x5e8f3f0, object=0x5e6b680, b=...) at /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/Build/core/meta/src/TClass.cxx:5437							       	       	 
+			      	                          StEvent::Streamer (this=0x5e6b680, R__b=...) at .al96_x8664_gcc11/obj/StRoot/StEvent/StEvent.cxx:1785																                   
+			      	      	      	      	    StXRefMain::Streamer (this=0x5e6b680, R__b=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:281																       	     	 
+			      	                              StXRef::Streamer (this=0x5e6b680, R__b=...) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:234																                     
+			      	      	      	      	        StXRefManager::Open (xref=0x5e6b680) at .al96_x8664_gcc11/obj/StRoot/St_base/StObject.cxx:335                                                                                                                                                 E
+                                                                  335       if (fgRWmode==1) {            //Writing    
+								  336         if (xref->IsMain()) StObject::fgTally=1; 
+								  337         return;				     
+								  338       }                                          
+
+
+
+mysql> select dataID,entryTime,beginTime,flavor,deactive,Id,r00,r01,r02,r10,r11,r12,r20,r21,r22,t0,t1,t2,comment  from TpcPosition order by beginTime;
++--------+---------------------+---------------------+--------+----------+------+--------------+---------------+---------------+--------------+--------------+---------------+---------------+---------------+--------------+---------------+---------------+---------------+-----------------------------+
+| dataID | entryTime           | beginTime           | flavor | deactive | Id   | r00          | r01           | r02           | r10          | r11          | r12           | r20           | r21           | r22          | t0            | t1            | t2            | comment                     |
++--------+---------------------+---------------------+--------+----------+------+--------------+---------------+---------------+--------------+--------------+---------------+---------------+---------------+--------------+---------------+---------------+---------------+-----------------------------+
+|      4 | 2014-09-29 19:56:17 | 2000-01-01 00:00:00 | ofl    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|      1 | 2014-09-29 19:56:14 | 2002-11-15 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004600000 | 0.0003600000 | 1.0000000000 |  0.0000400000 |  0.0004600000 | -0.0000400000 | 1.0000000000 | -0.2686000000 | -0.1590000000 | -0.1775000000 | 2003 Tpc                    |
+|      2 | 2014-09-29 19:56:15 | 2003-11-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0005200000 | -0.0005500000 | 0.0005200000 | 1.0000000000 | -0.0001000000 |  0.0005500000 |  0.0001000000 | 1.0000000000 | -0.2355000000 | -0.1375000000 | -0.1796000000 | 2004 Tpc                    |
+|     16 | 2017-02-06 17:16:48 | 2003-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     25 | 2017-02-06 17:18:48 | 2003-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|      3 | 2014-09-29 19:56:16 | 2004-10-30 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     17 | 2017-02-06 17:16:52 | 2004-10-30 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     26 | 2017-02-06 17:18:52 | 2004-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     18 | 2017-02-06 17:16:56 | 2005-12-01 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     27 | 2017-02-06 17:18:56 | 2005-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     19 | 2017-02-06 17:16:59 | 2006-11-05 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     28 | 2017-02-06 17:19:00 | 2006-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     20 | 2017-02-06 17:17:03 | 2007-11-01 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     29 | 2017-02-06 17:19:04 | 2007-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     21 | 2017-02-06 17:17:07 | 2008-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     30 | 2017-02-06 17:19:07 | 2008-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     22 | 2017-02-06 17:17:10 | 2009-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     31 | 2017-02-06 17:19:11 | 2009-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     23 | 2017-02-06 17:17:14 | 2010-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     32 | 2017-02-06 17:19:15 | 2010-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     24 | 2017-02-06 17:17:17 | 2011-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     33 | 2017-02-06 17:19:18 | 2011-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|      7 | 2017-02-06 17:02:42 | 2012-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     13 | 2017-02-06 17:08:11 | 2012-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|      8 | 2017-02-06 17:02:46 | 2013-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     14 | 2017-02-06 17:08:15 | 2013-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|      9 | 2017-02-06 17:02:49 | 2014-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     15 | 2017-02-06 17:09:55 | 2014-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     10 | 2017-02-06 17:02:53 | 2015-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|      6 | 2016-01-13 14:20:56 | 2015-12-15 00:00:00 | ofl    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|      5 | 2016-01-13 14:20:53 | 2015-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     11 | 2017-02-06 17:02:56 | 2016-12-15 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     12 | 2017-02-06 17:06:06 | 2016-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     36 | 2019-04-16 16:12:41 | 2017-12-10 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     34 | 2019-04-16 16:12:32 | 2017-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     37 | 2019-04-16 16:12:45 | 2018-12-10 00:00:00 | sim    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     46 | 2024-07-14 18:30:47 | 2018-12-15 00:00:00 | TFG    |        0 |    0 | 1.0000000000 |  0.0000000000 |  0.0000000000 | 0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | 1.0000000000 |  0.0000000000 |  0.0000000000 |  0.0000000000 | Ideal Tpc                   |
+|     35 | 2019-04-16 16:12:36 | 2018-12-20 00:00:00 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     44 | 2024-07-14 18:30:40 | 2018-12-20 00:00:00 | TFG    |        0 |    0 | 1.0000000000 |  0.0000000000 | -0.0005600000 | 0.0000000000 | 1.0000000000 | -0.0001300000 |  0.0005600000 |  0.0001300000 | 1.0000000000 | -0.1423000000 | -0.2979000000 | -0.1618000000 | 2024 TPC 03/04/2024 av. W&E |
+|     38 | 2023-06-27 21:51:20 | 2021-03-03 19:37:15 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 |  0.0005200000 | 0.0003600000 | 1.0000000000 | -0.0001000000 | -0.0005200000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | FF_OO_2021 Tpc              |
+|     39 | 2023-06-27 21:51:22 | 2021-03-04 21:35:06 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     40 | 2023-06-27 21:51:24 | 2021-05-21 17:00:11 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 |  0.0005200000 | 0.0003600000 | 1.0000000000 | -0.0001000000 | -0.0005200000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | FF_OO_2021 Tpc              |
+|     41 | 2023-06-27 21:51:26 | 2021-05-24 17:17:27 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     42 | 2023-06-27 21:51:29 | 2021-07-08 14:33:51 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 |  0.0005200000 | 0.0003600000 | 1.0000000000 | -0.0001000000 | -0.0005200000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | FF_OO_2021 Tpc              |
+|     43 | 2023-06-27 21:51:31 | 2021-07-09 15:36:15 | ofl    |        0 |    0 | 1.0000000000 | -0.0003600000 | -0.0004800000 | 0.0003600000 | 1.0000000000 | -0.0001000000 |  0.0004800000 |  0.0001000000 | 1.0000000000 | -0.2383000000 | -0.1732000000 | -0.1957000000 | 2013 Tpc                    |
+|     45 | 2024-07-14 18:30:43 | 2023-12-20 00:00:00 | TFG    |        0 |    0 | 1.0000000000 |  0.0000000000 | -0.0005600000 | 0.0000000000 | 1.0000000000 | -0.0001300000 |  0.0005600000 |  0.0001300000 | 1.0000000000 | -0.1423000000 | -0.2979000000 | -0.1618000000 | 2024 TPC 03/04/2024 av. W&E |
++--------+---------------------+---------------------+--------+----------+------+--------------+---------------+---------------+--------------+--------------+---------------+---------------+---------------+--------------+---------------+---------------+---------------+-----------------------------+
+46 rows in set (0.01 sec)
+
+================================================================================
+08/06/2026
+[starsub05] /gpfs01/star/subsysg/TFG $ grep CPU TFG26*_calib/2025/RF/*/cpu_per_event
+TFG26f_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:    CPU/event = 3.18187(sec) and    Total/event = 3.23391(sec)      98.3908 %       for 1382483 events
+TFG26g_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:    CPU/event = 3.99654(sec) and    Total/event = 4.38359(sec)      91.1705 %       for 1845633 events
+TFG26g1_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:   CPU/event = 3.91161(sec) and    Total/event = 4.08261(sec)      95.8115 %       for 1845633 events
+TFG26g2_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:   CPU/event = 3.69146(sec) and    Total/event = 3.78063(sec)      97.6416 %       for 1845633 events
+================================================================================
+08/07/2026
+[cvmfswrite07] ~/work/Histograms $ root.exe RunXXVI49/NPoints?NGP*13*.root  Res.C TFG26f
+#sigma(@61 npts) =  8.17% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.57% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.06% for N- 13p5GeV_fixedTarget_2026
+[cvmfswrite07] ~/work/Histograms $ root.exe RunXXVI50/NPoints?NGP*13*.root Res.C TFG26g
+#sigma(@61 npts) =  7.97% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.38% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.87% for N- 13p5GeV_fixedTarget_2026
+[starsub05] ~/work/Histograms $ root.exe RunXXVI51/NPoints?NGP*13*.root Res.C  TFG26g1
+#sigma(@61 npts) =  7.88% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.35% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.83% for N- 13p5GeV_fixedTarget_2026
+[starsub05] ~/work/Histograms $ root.exe RunXXVI52/NPoints?NGP*13*.root Res.C  TFG26g2
+#sigma(@61 npts) =  7.89% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.32% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.83% for N- 13p5GeV_fixedTarget_2026

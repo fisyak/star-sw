@@ -2911,7 +2911,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI48";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26f_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 07/27/2026 new TpcSecRowB
 #$hist = "RunXXVI49";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26f_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 07/27/2026 check effect of CDF
 #$hist = "RunXXVI50";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 07/27/2026 check effect of new dX
-$hist = "RunXXVI51";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g1_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/04/2026 check effect ofof the newset dX
+#$hist = "RunXXVI51";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g1_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/04/2026 check effect ofof the newset dX
+$hist = "RunXXVI52";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g2_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/06/2026 check effect ofof the newset dX
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();
