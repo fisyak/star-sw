@@ -10,6 +10,7 @@
 #include "StMessMgr.h"
 #include "TArrayD.h"
 #include "TSystem.h"
+#include "StiTrack.h"
 #if ROOT_VERSION_CODE < 331013
 #include "TCL.h"
 #else
@@ -703,7 +704,9 @@ int StiTrackNodeHelper::propagateMCS()
   if (!mDetector) 		return 0;
   mMcs._ptinCorr =  0;
   if (fabs(mBestPars.ptin())<=1e-3)	return 0;
-  double pt     = 1./(fabs(mBestPars.ptin())+1e-6);
+  double z      = TMath::Abs(StiTrack::getCharge());
+  double z2 = z*z;
+  double pt     = z/(fabs(mBestPars.ptin())+1e-6);
 assert(pt<1e3);
   double relRadThickness;
   // Half path length in previous node
@@ -717,16 +720,16 @@ assert(pt<1e3);
   double x0p = 1e11,x0Gas=1e11,x0=1e11;
   dx = mBestPars.x() - mBestParentRotPars.x();
   double tanl   = mBestPars.tanl();
-  double pti    = mBestPars.ptin(); 
+  double pti    = mBestPars.ptin(); // ?? should be devide by z ?? 
   double p2     = (1.+tanl*tanl)*pt*pt;
-  double m      = StiKalmanTrackFinderParameters::instance()->getMassHypothesis();
+  double m      = StiTrack::getMass();
   double m2     = m*m;
   double e2     = p2+m2;
   double beta2  = p2/e2;
 
   const StiMaterial 		*curMat = mDetector->getMaterial();
   const StiElossCalculator	*curLos = curMat->getElossCalculator();
-  d3 =(curLos) ? curLos->calculate(1.,m, beta2):0;
+  d3 =(curLos) ? curLos->calculate(z2,m, beta2):0;
   x0 = curMat->getX0();
   const StiMaterial		*curGas = mDetector->getGas();
 
@@ -741,7 +744,7 @@ assert(pt<1e3);
       preLos = preMat->getElossCalculator();
       x0p    = preMat->getX0();
       if (preLos) {
-        d1  = preLos->calculate(1.,m, beta2);
+        d1  = preLos->calculate(z2,m, beta2);
   } } }
 //		Gas is UNDER detector
   const StiMaterial		*gasMat = (dx>0)?curGas : preGas;
@@ -749,7 +752,7 @@ assert(pt<1e3);
     x0Gas = gasMat->getX0();
     const StiElossCalculator	*gasLos = gasMat->getElossCalculator();
     if (gasLos) {
-      d2 = gasLos->calculate(1.,m, beta2);
+      d2 = gasLos->calculate(z2,m, beta2);
   } }
 
 
@@ -758,7 +761,7 @@ assert(pt<1e3);
 
   dxEloss         =  d1*pL1+ d2*pL2  + d3*pL3;
 
-  double theta2 = StiKalmanTrackNode::mcs2(relRadThickness,beta2,p2);
+  double theta2 = z2*StiKalmanTrackNode::mcs2(relRadThickness,beta2,p2);
   double cos2Li = (1.+ tanl*tanl);  // 1/cos(lamda)**2
   double f = mHitsErrFactor; 
   mMcs._cEE = cos2Li 		*theta2*f;
