@@ -651,6 +651,7 @@ Int_t StBFChain::Instantiate()
       if (GetOption("Alignment")) mk->SetAttr("Alignment"  ,kTRUE);
 #endif
       if (GetOption("Cosmics"))   mk->SetAttr("Cosmics"    ,kTRUE);
+      if (GetOption("MassFit"))   mk->SetAttr("keepSti"    ,kTRUE);
       mk->PrintAttr();
     }
     if (maker== "StGmtClusterMaker" or maker== "StGmtRaw25Maker") {
