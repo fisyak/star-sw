@@ -16005,7 +16005,7 @@ Num     Type           Disp Enb Address            What
 
 --------------------------------------------------------------------------------
 #
-'save breakpoints [FILENAME]'
+save breakpoints [FILENAME]'
 source
 tac 
 
@@ -16164,3 +16164,551 @@ TFG26g2_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:   CPU/event = 3.69
 #sigma(@61 npts) =  7.89% for E- 13p5GeV_fixedTarget_2026
 #sigma(@61 npts) =  7.32% for F- 13p5GeV_fixedTarget_2026
 #sigma(@61 npts) =  6.83% for N- 13p5GeV_fixedTarget_2026
+================================================================================
+08/08/2026
+[starsub05] ~/work/Histograms $ root.exe  RunXXVI49/NPointsFNGP13p5GeV_fixedTarget_2026.root RunXXVI5?/NPointsFNGP13p5GeV_fixedTarget_2026.root Res.C
+#sigma(@61 npts) =  7.57% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.38% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.36% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.32% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.28% for F- 13p5GeV_fixedTarget_2026
+starsub05] ~/work/Histograms $ root.exe RunXXVI49/NPointsENGP13p5GeV_fixedTarget_2026.root RunXXVI5?/NPointsENGP13p5GeV_fixedTarget_2026.root Res.C
+#sigma(@61 npts) =  8.17% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.97% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.88% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.89% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.22% for E- 13p5GeV_fixedTarget_2026
+[starsub05] ~/work/Histograms $ root.exe RunXXVI49/NPointsNNGP13p5GeV_fixedTarget_2026.root RunXXVI5?/NPointsNNGP13p5GeV_fixedTarget_2026.root Res.C
+#sigma(@61 npts) =  7.06% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.87% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.84% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.83% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.84% for N- 13p5GeV_fixedTarget_2026
+
+#mu = -3.10% for N- 13p5GeV_fixedTarget_2026
+#mu = -2.33% for N- 13p5GeV_fixedTarget_2026
+#mu = -1.95% for N- 13p5GeV_fixedTarget_2026
+#mu = -2.77% for N- 13p5GeV_fixedTarget_2026
+#mu = -2.69% for N- 13p5GeV_fixedTarget_2026
+================================================================================
+TFG26f_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:    CPU/event = 3.18187(sec) and    Total/event = 3.23391(sec)      98.3908 %       for 1382483 events
+TFG26g_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:    CPU/event = 3.99654(sec) and    Total/event = 4.38359(sec)      91.1705 %       for 1845633 events
+TFG26g1_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:   CPU/event = 3.91161(sec) and    Total/event = 4.08261(sec)      95.8115 %       for 1845633 events
+TFG26g2_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:   CPU/event = 3.69146(sec) and    Total/event = 3.78063(sec)      97.6416 %       for 1845633 events
+TFG26g3_calib/2025/RF/13p5GeV_fixedTarget_2026/cpu_per_event:   CPU/event = 3.96275(sec) and    Total/event = 4.13115(sec)      95.9237 %       for 1845633 events
+======================================================================
+08/09/2026
+(gdb) p kTrack
+$20 = (StiKalmanTrack *) 0x10468660
+(gdb) p node
+$21 = (StTrackNode *) 0x11206ca0
+(gdb) p fgTrack2NodeMap
+$19 = {_M_t = {
+    _M_impl = {<std::allocator<std::_Rb_tree_node<std::pair<StiKalmanTrack* const, StTrackNode*> > >> = {<__gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<StiKalmanTrack* const, StTrackNode*> > >> = {<No data fields>}, <No data fields>}, <std::_Rb_tree_key_compare<std::less<StiKalmanTrack*> >> = {
+        _M_key_compare = {<std::binary_function<StiKalmanTrack*, StiKalmanTrack*, bool>> = {<No data fields>}, <No data fields>}}, <std::_Rb_tree_header> = {_M_header = {_M_color = std::_S_red, _M_parent = 0x10485210, 
+          _M_left = 0x10485210, _M_right = 0x10485210}, _M_node_count = 1}, <No data fields>}}}
+(gdb) p kTrack
+$20 = (StiKalmanTrack *) 0x10468660
+(gdb) p node
+$21 = (StTrackNode *) 0x11206ca0
+(gdb) p fgNode2TrackMap
+$22 = {_M_t = {
+    _M_impl = {<std::allocator<std::_Rb_tree_node<std::pair<StTrackNode* const, StiKalmanTrack*> > >> = {<__gnu_cxx::new_allocator<std::_Rb_tree_node<std::pair<StTrackNode* const, StiKalmanTrack*> > >> = {<No data fields>}, <No data fields>}, <std::_Rb_tree_key_compare<std::less<StTrackNode*> >> = {
+        _M_key_compare = {<std::binary_function<StTrackNode*, StTrackNode*, bool>> = {<No data fields>}, <No data fields>}}, <std::_Rb_tree_header> = {_M_header = {_M_color = std::_S_red, _M_parent = 0x10485300, 
+          _M_left = 0x10485300, _M_right = 0x10485300}, _M_node_count = 1}, <No data fields>}}}
+(gdb) p fgNode2TrackMap[node]
+$23 = (std::map<StTrackNode*, StiKalmanTrack*, std::less<StTrackNode*>, std::allocator<std::pair<StTrackNode* const, StiKalmanTrack*> > >::mapped_type &) @0x10485328: 0x10468660
+
+
+739           StGlobalTrack* gTrack = new StGlobalTrack;
+(gdb) p  Track2NodeMap()[kTrack]
+$4 = (std::map<StiKalmanTrack*, StTrackNode*, std::less<StiKalmanTrack*>, std::allocator<std::pair<StiKalmanTrack* const, StTrackNode*> > >::mapped_type &) @0x104671e8: 0x110894b0
+(gdb) p node
+$5 = (StTrackNode *) 0x110894b0
+(gdb) p Node2TrackMap()[node]
+$6 = (std::map<StTrackNode*, StiKalmanTrack*, std::less<StTrackNode*>, std::allocator<std::pair<StTrackNode* const, StiKalmanTrack*> > >::mapped_type &) @0x104672d8: 0x1044a6e0
+(gdb) p kTrack
+$7 = (StiKalmanTrack *) 0x1044a6e0
+
+
+25          if (! kTrack) continue;
+(gdb) p node
+$9 = (StTrackNode *) 0x110894b0
+(gdb) p kTrack
+$10 = (StiKalmanTrack *) 0x1044a6e0
+
+
+(gdb) p Track2NodeMap()[kTrack]
+$13 = (std::map<StiKalmanTrack*, StTrackNode*, std::less<StiKalmanTrack*>, std::allocator<std::pair<StiKalmanTrack* const, StTrackNode*> > >::mapped_type &) @0x104691e8: 0x111f2230
+(gdb) p Node2TrackMap()[node]
+$14 = (std::map<StTrackNode*, StiKalmanTrack*, std::less<StTrackNode*>, std::allocator<std::pair<StTrackNode* const, StiKalmanTrack*> > >::mapped_type &) @0x104692d8: 0x1044c670
+(gdb) p node
+$15 = (StTrackNode *) 0x111f2230
+(gdb) p kTrack
+$16 = (StiKalmanTrack *) 0x1044c670
+
+(gdb) p kTrack->print("")
+Track 0x1044c670
+  1 - 0x1044f7c8(*)     ch2=0   x=203.865       h=-0.00148895 /TOFC_1_2
+  2 - 0x1044f9b0(*)     ch2=0   x=188.852       h=-0.00149389 Tpc/Padrow_72/Sector_2
+  3 - 0x1044fb98(*)     ch2=0   x=186.852       h=-0.00149446 Tpc/Padrow_71/Sector_2
+  4 - 0x1044fd80(H)     ch2=12.1016     x=184.978       h=-0.00149505 valid Tpc/Padrow_70/Sector_2
+  5 - 0x1044ff68()      ch2=0   x=182.852       h=-0.00149538 valid Tpc/Padrow_69/Sector_2
+  6 - 0x10450150()      ch2=0   x=180.852       h=-0.00149572 valid Tpc/Padrow_68/Sector_2
+  7 - 0x10450338(H)     ch2=4.15044     x=178.899       h=-0.00149599 valid Tpc/Padrow_67/Sector_2
+  8 - 0x10450520(H)     ch2=1.41073     x=176.887       h=-0.00149635 valid Tpc/Padrow_66/Sector_2
+  9 - 0x10450708(H)     ch2=0.963648    x=174.872       h=-0.00149658 valid Tpc/Padrow_65/Sector_2
+ 10 - 0x104508f0(H)     ch2=0.448996    x=172.861       h=-0.00149683 valid Tpc/Padrow_64/Sector_2
+ 11 - 0x10450ad8(H)     ch2=0.0168584   x=170.851       h=-0.00149703 valid Tpc/Padrow_63/Sector_2
+ 12 - 0x10450cc0()      ch2=0   x=168.852       h=-0.00149713 valid Tpc/Padrow_62/Sector_2
+ 13 - 0x10450ea8()      ch2=0   x=166.852       h=-0.00149722 valid Tpc/Padrow_61/Sector_2
+ 14 - 0x10451090()      ch2=0   x=164.852       h=-0.00149723 valid Tpc/Padrow_60/Sector_2
+ 15 - 0x10451278()      ch2=0   x=162.852       h=-0.00149725 valid Tpc/Padrow_59/Sector_2
+ 16 - 0x10451460()      ch2=0   x=160.852       h=-0.0014972 valid Tpc/Padrow_58/Sector_2
+ 17 - 0x10451648()      ch2=0   x=158.852       h=-0.00149715 valid Tpc/Padrow_57/Sector_2
+ 18 - 0x10451830()      ch2=0   x=156.985       h=-0.00149703 valid Tpc/Padrow_56/Sector_3
+ 19 - 0x10451a18()      ch2=0   x=154.985       h=-0.00149684 valid Tpc/Padrow_55/Sector_3
+ 20 - 0x10451c00()      ch2=0   x=152.985       h=-0.00149674 valid Tpc/Padrow_54/Sector_3
+ 21 - 0x10451de8()      ch2=0   x=150.985       h=-0.00149663 valid Tpc/Padrow_53/Sector_3
+ 22 - 0x10451fd0()      ch2=0   x=148.985       h=-0.00149651 valid Tpc/Padrow_52/Sector_3
+ 23 - 0x104521b8()      ch2=0   x=146.985       h=-0.00149634 valid Tpc/Padrow_51/Sector_3
+ 24 - 0x104523a0()      ch2=0   x=144.985       h=-0.00149617 valid Tpc/Padrow_50/Sector_3
+ 25 - 0x10452588()      ch2=0   x=142.985       h=-0.00149596 valid Tpc/Padrow_49/Sector_3
+ 26 - 0x10452770()      ch2=0   x=140.985       h=-0.00149577 valid Tpc/Padrow_48/Sector_3
+ 27 - 0x10459418(H)     ch2=0.135533    x=139.039       h=-0.00149553 valid Tpc/Padrow_47/Sector_3
+ 28 - 0x10459230(H)     ch2=1.63421     x=137.045       h=-0.00149527 valid Tpc/Padrow_46/Sector_3
+ 29 - 0x10459048(H)     ch2=0.438942    x=135.05        h=-0.00149505 valid Tpc/Padrow_45/Sector_3
+ 30 - 0x10458e60(H)     ch2=5.67736     x=133.054       h=-0.0014948 valid Tpc/Padrow_44/Sector_3
+ 31 - 0x10459600(H)     ch2=0.654086    x=131.057       h=-0.00149461 valid Tpc/Padrow_43/Sector_3
+ 32 - 0x10458c78(H)     ch2=5.62751     x=129.06        h=-0.00149439 valid Tpc/Padrow_42/Sector_3
+ 33 - 0x10458a90(H)     ch2=0.0839056   x=127.062       h=-0.00149421 valid Tpc/Padrow_41/Sector_3
+ 34 - 0x104588a8(H)     ch2=0.798185    x=118.087       h=-0.00149348 valid Tpc/Padrow_40/Sector_3
+ 35 - 0x104586c0(H)     ch2=0.894626    x=116.486       h=-0.00149336 valid Tpc/Padrow_39/Sector_3
+ 36 - 0x104584d8(H)     ch2=0.50113     x=114.885       h=-0.00149328 valid Tpc/Padrow_38/Sector_3
+ 37 - 0x104582f0(H)     ch2=0.0646286   x=113.284       h=-0.00149322 valid Tpc/Padrow_37/Sector_3
+ 38 - 0x10458108(H)     ch2=0.900887    x=111.683       h=-0.00149316 valid Tpc/Padrow_36/Sector_3
+ 39 - 0x10457f20(H)     ch2=5.73519     x=110.083       h=-0.00149312 valid Tpc/Padrow_35/Sector_3
+ 40 - 0x10457d38(H)     ch2=1.10773     x=108.482       h=-0.00149309 valid Tpc/Padrow_34/Sector_3
+ 41 - 0x10457b50(H)     ch2=0.936121    x=106.881       h=-0.00149308 valid Tpc/Padrow_33/Sector_3
+ 42 - 0x10457968(H)     ch2=0.013054    x=105.28        h=-0.00149308 valid Tpc/Padrow_32/Sector_3
+ 43 - 0x10457780(H)     ch2=13.2905     x=103.679       h=-0.00149309 valid Tpc/Padrow_31/Sector_3
+ 44 - 0x10457598(H)     ch2=0.865136    x=102.077       h=-0.00149309 valid Tpc/Padrow_30/Sector_3
+ 45 - 0x104573b0(H)     ch2=0.584369    x=100.475       h=-0.00149312 valid Tpc/Padrow_29/Sector_3
+ 46 - 0x104571c8(H)     ch2=0.314928    x=98.8734       h=-0.00149315 valid Tpc/Padrow_28/Sector_3
+ 47 - 0x10456fe0(H)     ch2=4.28494     x=97.2699       h=-0.00149318 valid Tpc/Padrow_27/Sector_3
+ 48 - 0x10456df8(H)     ch2=1.51248     x=95.6665       h=-0.00149324 valid Tpc/Padrow_26/Sector_3
+ 49 - 0x10456c10(H)     ch2=0.193089    x=94.0624       h=-0.00149329 valid Tpc/Padrow_25/Sector_3
+ 50 - 0x10456a28(H)     ch2=6.17357     x=92.4109       h=-0.00149335 valid Tpc/Padrow_24/Sector_3
+ 51 - 0x10456840(H)     ch2=3.44774     x=90.8072       h=-0.00149343 valid Tpc/Padrow_23/Sector_3
+ 52 - 0x10456658()      ch2=0   x=89.2076       h=-0.00149352 valid Tpc/Padrow_22/Sector_3
+ 53 - 0x10456470()      ch2=0   x=87.6076       h=-0.00149362 valid Tpc/Padrow_21/Sector_3
+ 54 - 0x10456288(H)     ch2=12.7044     x=85.9953       h=-0.00149372 valid Tpc/Padrow_20/Sector_3
+ 55 - 0x104560a0(H)     ch2=4.21593     x=84.3914       h=-0.00149382 valid Tpc/Padrow_19/Sector_3
+ 56 - 0x10455eb8(H)     ch2=6.38042     x=82.7875       h=-0.00149392 valid Tpc/Padrow_18/Sector_3
+ 57 - 0x10455cd0(H)     ch2=0.137755    x=81.1835       h=-0.00149402 valid Tpc/Padrow_17/Sector_3
+ 58 - 0x10455ae8(H)     ch2=0.532709    x=79.5795       h=-0.00149411 valid Tpc/Padrow_16/Sector_3
+ 59 - 0x10455900(H)     ch2=1.76833     x=77.9752       h=-0.00149422 valid Tpc/Padrow_15/Sector_3
+ 60 - 0x10455718(H)     ch2=0.334825    x=76.3706       h=-0.00149433 valid Tpc/Padrow_14/Sector_3
+ 61 - 0x10455530(H)     ch2=0.490376    x=74.766        h=-0.00149444 valid Tpc/Padrow_13/Sector_3
+ 62 - 0x10455348(H)     ch2=1.48644     x=73.1615       h=-0.00149456 valid Tpc/Padrow_12/Sector_3
+ 63 - 0x10455160()      ch2=0   x=71.6076       h=-0.00149467 valid Tpc/Padrow_11/Sector_3
+ 64 - 0x10454f78()      ch2=0   x=70.0076       h=-0.00149478 valid Tpc/Padrow_10/Sector_3
+ 65 - 0x10454d90()      ch2=0   x=68.4076       h=-0.00149489 valid Tpc/Padrow_9/Sector_3
+ 66 - 0x10454ba8(H)     ch2=7.29029     x=66.7437       h=-0.001495 valid Tpc/Padrow_8/Sector_3
+ 67 - 0x104549c0(H)     ch2=1.7842      x=65.1395       h=-0.00149511 valid Tpc/Padrow_7/Sector_3
+ 68 - 0x104547d8(H)     ch2=0.168329    x=63.5356       h=-0.00149523 valid Tpc/Padrow_6/Sector_3
+ 69 - 0x104545f0(H)     ch2=6.6563      x=61.9318       h=-0.00149534 valid Tpc/Padrow_5/Sector_3
+ 70 - 0x10454408(H)     ch2=5.13286     x=60.3287       h=-0.00149544 valid Tpc/Padrow_4/Sector_3
+ 71 - 0x10454220()      ch2=0   x=58.8076       h=-0.00149554 valid Tpc/Padrow_3/Sector_3
+ 72 - 0x10454038()      ch2=0   x=57.2076       h=-0.00149565 valid Tpc/Padrow_2/Sector_3
+ 73 - 0x10453e50()      ch2=0   x=55.6076       h=-0.00149575 valid Tpc/Padrow_1/Sector_3
+ 74 - 0x10453c68()      ch2=0   x=47.2845       h=-0.00149625 valid /TIFC_1_2
+ 75 - 0x10453a80()      ch2=0   x=34.135        h=-0.00149686 valid SCOM_1/SCON_1_2_28
+ 76 - 0x10453898()      ch2=0   x=22.3464       h=-0.00149707 valid FSTA_1/FSTM_1/FSTD_4_8
+ 77 - 0x104536b0()      ch2=0   x=20.2821       h=-0.00149704 valid FSTA_1/FSTM_1/FSTD_4_7
+ 78 - 0x104534c8()      ch2=0   x=16.1535       h=-0.00149692 valid FSTA_1/FSTM_1/FSTD_5_5
+ 79 - 0x104532e0()      ch2=0   x=14.0892       h=-0.00149678 valid FSTA_1/FSTM_1/FSTD_5_4
+ 80 - 0x104530f8()      ch2=0   x=9.96051       h=-0.00149635 valid FSTA_1/FSTM_1/FSTD_6_2
+ 81 - 0x10452f10()      ch2=0   x=7.89614       h=-0.00149607 valid FSTA_1/FSTM_1/FSTD_6_1
+ 82 - 0x10452d28()      ch2=0   x=5.8317        h=-0.0014956 valid FSTA_1/FSTM_1/FSTD_6
+ 83 - 0x10452b40()      ch2=0   x=4.01071       h=-0.00149515 valid PIPE_1/PWRP_1
+ 84 - 0x10452958()      ch2=0   x=3.93676       h=-0.00149513 valid PIPE_1/PIPO_1/PVAO_1
+ 85 - 0x1044f5e0()      ch2=0   x=0     h=-0.00149361 valid
+$17 = void
+(gdb) p kTrack->firstNode
+$18 = (StiKalmanTrackNode *) 0x1044f7c8
+(gdb) p kTrack->lstNode
+There is no member or method named lstNode.
+(gdb) p kTrack->lastNode
+$19 = (StiKalmanTrackNode *) 0x1044f5e0
+(gdb) p kTrack->firstNode
+$18 = (StiKalmanTrackNode *) 0x1044f7c8
+(gdb) p &kTrack->lastNode
+$22 = (StiKalmanTrackNode **) 0x1044c688
+
+
+(gdb) p kTrack
+$32 = (StiKalmanTrack *) 0x104583d0
+
+(gdb) p kTrack->print()
+Too few arguments in function call.
+(gdb) p kTrack->print("")
+Track 0x1044bec0
+  1 - 0x1044f018(*)     ch2=0   x=203.865       h=-0.00148895 /TOFC_1_2
+  2 - 0x1044f200(*)     ch2=0   x=188.852       h=-0.00149389 Tpc/Padrow_72/Sector_2
+  3 - 0x1044f3e8(*)     ch2=0   x=186.852       h=-0.00149446 Tpc/Padrow_71/Sector_2
+  4 - 0x1044f5d0(H)     ch2=12.1016     x=184.978       h=-0.00149505 valid Tpc/Padrow_70/Sector_2
+  5 - 0x1044f7b8()      ch2=0   x=182.852       h=-0.00149538 valid Tpc/Padrow_69/Sector_2
+  6 - 0x1044f9a0()      ch2=0   x=180.852       h=-0.00149572 valid Tpc/Padrow_68/Sector_2
+  7 - 0x1044fb88(H)     ch2=4.15044     x=178.899       h=-0.00149599 valid Tpc/Padrow_67/Sector_2
+  8 - 0x1044fd70(H)     ch2=1.41073     x=176.887       h=-0.00149635 valid Tpc/Padrow_66/Sector_2
+  9 - 0x1044ff58(H)     ch2=0.963648    x=174.872       h=-0.00149658 valid Tpc/Padrow_65/Sector_2
+ 10 - 0x10450140(H)     ch2=0.448996    x=172.861       h=-0.00149683 valid Tpc/Padrow_64/Sector_2
+ 11 - 0x10450328(H)     ch2=0.0168584   x=170.851       h=-0.00149703 valid Tpc/Padrow_63/Sector_2
+ 12 - 0x10450510()      ch2=0   x=168.852       h=-0.00149713 valid Tpc/Padrow_62/Sector_2
+ 13 - 0x104506f8()      ch2=0   x=166.852       h=-0.00149722 valid Tpc/Padrow_61/Sector_2
+ 14 - 0x104508e0()      ch2=0   x=164.852       h=-0.00149723 valid Tpc/Padrow_60/Sector_2
+ 15 - 0x10450ac8()      ch2=0   x=162.852       h=-0.00149725 valid Tpc/Padrow_59/Sector_2
+ 16 - 0x10450cb0()      ch2=0   x=160.852       h=-0.0014972 valid Tpc/Padrow_58/Sector_2
+ 17 - 0x10450e98()      ch2=0   x=158.852       h=-0.00149715 valid Tpc/Padrow_57/Sector_2
+ 18 - 0x10451080()      ch2=0   x=156.985       h=-0.00149703 valid Tpc/Padrow_56/Sector_3
+ 19 - 0x10451268()      ch2=0   x=154.985       h=-0.00149684 valid Tpc/Padrow_55/Sector_3
+ 20 - 0x10451450()      ch2=0   x=152.985       h=-0.00149674 valid Tpc/Padrow_54/Sector_3
+ 21 - 0x10451638()      ch2=0   x=150.985       h=-0.00149663 valid Tpc/Padrow_53/Sector_3
+ 22 - 0x10451820()      ch2=0   x=148.985       h=-0.00149651 valid Tpc/Padrow_52/Sector_3
+ 23 - 0x10451a08()      ch2=0   x=146.985       h=-0.00149634 valid Tpc/Padrow_51/Sector_3
+ 24 - 0x10451bf0()      ch2=0   x=144.985       h=-0.00149617 valid Tpc/Padrow_50/Sector_3
+ 25 - 0x10451dd8()      ch2=0   x=142.985       h=-0.00149596 valid Tpc/Padrow_49/Sector_3
+ 26 - 0x10451fc0()      ch2=0   x=140.985       h=-0.00149577 valid Tpc/Padrow_48/Sector_3
+ 27 - 0x10458c68(H)     ch2=0.135533    x=139.039       h=-0.00149553 valid Tpc/Padrow_47/Sector_3
+ 28 - 0x10458a80(H)     ch2=1.63421     x=137.045       h=-0.00149527 valid Tpc/Padrow_46/Sector_3
+ 29 - 0x10458898(H)     ch2=0.438942    x=135.05        h=-0.00149505 valid Tpc/Padrow_45/Sector_3
+ 30 - 0x104586b0(H)     ch2=5.67736     x=133.054       h=-0.0014948 valid Tpc/Padrow_44/Sector_3
+ 31 - 0x10458e50(H)     ch2=0.654086    x=131.057       h=-0.00149461 valid Tpc/Padrow_43/Sector_3
+ 32 - 0x104584c8(H)     ch2=5.62751     x=129.06        h=-0.00149439 valid Tpc/Padrow_42/Sector_3
+ 33 - 0x104582e0(H)     ch2=0.0839056   x=127.062       h=-0.00149421 valid Tpc/Padrow_41/Sector_3
+ 34 - 0x104580f8(H)     ch2=0.798185    x=118.087       h=-0.00149348 valid Tpc/Padrow_40/Sector_3
+ 35 - 0x10457f10(H)     ch2=0.894626    x=116.486       h=-0.00149336 valid Tpc/Padrow_39/Sector_3
+ 36 - 0x10457d28(H)     ch2=0.50113     x=114.885       h=-0.00149328 valid Tpc/Padrow_38/Sector_3
+ 37 - 0x10457b40(H)     ch2=0.0646286   x=113.284       h=-0.00149322 valid Tpc/Padrow_37/Sector_3
+ 38 - 0x10457958(H)     ch2=0.900887    x=111.683       h=-0.00149316 valid Tpc/Padrow_36/Sector_3
+ 39 - 0x10457770(H)     ch2=5.73519     x=110.083       h=-0.00149312 valid Tpc/Padrow_35/Sector_3
+ 40 - 0x10457588(H)     ch2=1.10773     x=108.482       h=-0.00149309 valid Tpc/Padrow_34/Sector_3
+ 41 - 0x104573a0(H)     ch2=0.936121    x=106.881       h=-0.00149308 valid Tpc/Padrow_33/Sector_3
+ 42 - 0x104571b8(H)     ch2=0.013054    x=105.28        h=-0.00149308 valid Tpc/Padrow_32/Sector_3
+ 43 - 0x10456fd0(H)     ch2=13.2905     x=103.679       h=-0.00149309 valid Tpc/Padrow_31/Sector_3
+ 44 - 0x10456de8(H)     ch2=0.865136    x=102.077       h=-0.00149309 valid Tpc/Padrow_30/Sector_3
+ 45 - 0x10456c00(H)     ch2=0.584369    x=100.475       h=-0.00149312 valid Tpc/Padrow_29/Sector_3
+ 46 - 0x10456a18(H)     ch2=0.314928    x=98.8734       h=-0.00149315 valid Tpc/Padrow_28/Sector_3
+ 47 - 0x10456830(H)     ch2=4.28494     x=97.2699       h=-0.00149318 valid Tpc/Padrow_27/Sector_3
+ 48 - 0x10456648(H)     ch2=1.51248     x=95.6665       h=-0.00149324 valid Tpc/Padrow_26/Sector_3
+ 49 - 0x10456460(H)     ch2=0.193089    x=94.0624       h=-0.00149329 valid Tpc/Padrow_25/Sector_3
+ 50 - 0x10456278(H)     ch2=6.17357     x=92.4109       h=-0.00149335 valid Tpc/Padrow_24/Sector_3
+ 51 - 0x10456090(H)     ch2=3.44774     x=90.8072       h=-0.00149343 valid Tpc/Padrow_23/Sector_3
+ 52 - 0x10455ea8()      ch2=0   x=89.2076       h=-0.00149352 valid Tpc/Padrow_22/Sector_3
+ 53 - 0x10455cc0()      ch2=0   x=87.6076       h=-0.00149362 valid Tpc/Padrow_21/Sector_3
+ 54 - 0x10455ad8(H)     ch2=12.7044     x=85.9953       h=-0.00149372 valid Tpc/Padrow_20/Sector_3
+ 55 - 0x104558f0(H)     ch2=4.21593     x=84.3914       h=-0.00149382 valid Tpc/Padrow_19/Sector_3
+ 56 - 0x10455708(H)     ch2=6.38042     x=82.7875       h=-0.00149392 valid Tpc/Padrow_18/Sector_3
+ 57 - 0x10455520(H)     ch2=0.137755    x=81.1835       h=-0.00149402 valid Tpc/Padrow_17/Sector_3
+ 58 - 0x10455338(H)     ch2=0.532709    x=79.5795       h=-0.00149411 valid Tpc/Padrow_16/Sector_3
+ 59 - 0x10455150(H)     ch2=1.76833     x=77.9752       h=-0.00149422 valid Tpc/Padrow_15/Sector_3
+ 60 - 0x10454f68(H)     ch2=0.334825    x=76.3706       h=-0.00149433 valid Tpc/Padrow_14/Sector_3
+ 61 - 0x10454d80(H)     ch2=0.490376    x=74.766        h=-0.00149444 valid Tpc/Padrow_13/Sector_3
+ 62 - 0x10454b98(H)     ch2=1.48644     x=73.1615       h=-0.00149456 valid Tpc/Padrow_12/Sector_3
+ 63 - 0x104549b0()      ch2=0   x=71.6076       h=-0.00149467 valid Tpc/Padrow_11/Sector_3
+ 64 - 0x104547c8()      ch2=0   x=70.0076       h=-0.00149478 valid Tpc/Padrow_10/Sector_3
+ 65 - 0x104545e0()      ch2=0   x=68.4076       h=-0.00149489 valid Tpc/Padrow_9/Sector_3
+ 66 - 0x104543f8(H)     ch2=7.29029     x=66.7437       h=-0.001495 valid Tpc/Padrow_8/Sector_3
+ 67 - 0x10454210(H)     ch2=1.7842      x=65.1395       h=-0.00149511 valid Tpc/Padrow_7/Sector_3
+ 68 - 0x10454028(H)     ch2=0.168329    x=63.5356       h=-0.00149523 valid Tpc/Padrow_6/Sector_3
+ 69 - 0x10453e40(H)     ch2=6.6563      x=61.9318       h=-0.00149534 valid Tpc/Padrow_5/Sector_3
+ 70 - 0x10453c58(H)     ch2=5.13286     x=60.3287       h=-0.00149544 valid Tpc/Padrow_4/Sector_3
+ 71 - 0x10453a70()      ch2=0   x=58.8076       h=-0.00149554 valid Tpc/Padrow_3/Sector_3
+ 72 - 0x10453888()      ch2=0   x=57.2076       h=-0.00149565 valid Tpc/Padrow_2/Sector_3
+ 73 - 0x104536a0()      ch2=0   x=55.6076       h=-0.00149575 valid Tpc/Padrow_1/Sector_3
+ 74 - 0x104534b8()      ch2=0   x=47.2845       h=-0.00149625 valid /TIFC_1_2
+ 75 - 0x104532d0()      ch2=0   x=34.135        h=-0.00149686 valid SCOM_1/SCON_1_2_28
+ 76 - 0x104530e8()      ch2=0   x=22.3464       h=-0.00149707 valid FSTA_1/FSTM_1/FSTD_4_8
+ 77 - 0x10452f00()      ch2=0   x=20.2821       h=-0.00149704 valid FSTA_1/FSTM_1/FSTD_4_7
+ 78 - 0x10452d18()      ch2=0   x=16.1535       h=-0.00149692 valid FSTA_1/FSTM_1/FSTD_5_5
+ 79 - 0x10452b30()      ch2=0   x=14.0892       h=-0.00149678 valid FSTA_1/FSTM_1/FSTD_5_4
+ 80 - 0x10452948()      ch2=0   x=9.96051       h=-0.00149635 valid FSTA_1/FSTM_1/FSTD_6_2
+ 81 - 0x10452760()      ch2=0   x=7.89614       h=-0.00149607 valid FSTA_1/FSTM_1/FSTD_6_1
+ 82 - 0x10452578()      ch2=0   x=5.8317        h=-0.0014956 valid FSTA_1/FSTM_1/FSTD_6
+ 83 - 0x10452390()      ch2=0   x=4.01071       h=-0.00149515 valid PIPE_1/PWRP_1
+ 84 - 0x104521a8()      ch2=0   x=3.93676       h=-0.00149513 valid PIPE_1/PIPO_1/PVAO_1
+ 85 - 0x1044ee30()      ch2=0   x=0     h=-0.00149361 valid
+$6 = void
+(gdb) p kTrack->firstNode
+$7 = (StiKalmanTrackNode *) 0x1044f018
+(gdb) p &kTrack->firstNode
+$8 = (StiKalmanTrackNode **) 0x1044bed0
+(gdb) watch *(0x1044bed0)
+Hardware watchpoint 8: *(0x1044bed0)
+(gdb) p &kTrack->lastNode
+$9 = (StiKalmanTrackNode **) 0x1044bed8
+(gdb) watch *(0x1044bed8)
+Hardware watchpoint 9: *(0x1044bed8)
+
+
+================================================================================
+08/10/2026
+pion
+StiKalmanTrack::refit 
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.468+-  1.7, sy 0.018, x =   61.93 z =   66.22 chi2 =   4.38  3.98 cm( 0.03%)  10.1 keV  0.942 GeV
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.466+-  1.7, sy 0.018, x =   63.54 z =   62.76 chi2 =   0.03  3.97 cm( 0.03%)  10.1 keV  0.952 GeV
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.466+-  1.8, sy 0.018, x =   65.14 z =   59.32 chi2 =   4.03  3.97 cm( 0.03%)    10 keV  0.947 GeV
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.470+-  1.8, sy 0.018, x =   66.74 z =   55.88 chi2 =   5.33  3.97 cm( 0.03%)    10 keV  0.948 GeV
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.466+-  1.9, sy 0.020, x =   68.41 z =   52.20  3.96 cm( 0.03%)    10 keV  0.950 GeV
+StiMaker:INFO  -                   Tpc/Padrow_10/Sector_3  dE pT  0.466+-  1.9, sy 0.017, x =   70.01 z =   48.77  3.81 cm( 0.03%)  9.63 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_11/Sector_3  dE pT  0.466+-  1.9, sy 0.015, x =   71.56 z =   45.44  3.81 cm( 0.03%)  9.64 keV  0.946 GeV
+StiMaker:INFO  -                   Tpc/Padrow_12/Sector_3  dE pT  0.466+-  1.9, sy 0.013, x =   73.16 z =   41.98 chi2 =   0.99   3.9 cm( 0.03%)  9.87 keV  0.947 GeV
+StiMaker:INFO  -                   Tpc/Padrow_13/Sector_3  dE pT  0.468+-  2.0, sy 0.013, x =   74.77 z =   38.56 chi2 =   1.01  3.93 cm( 0.03%)  9.95 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_14/Sector_3  dE pT  0.468+-  2.0, sy 0.016, x =   76.37 z =   35.06 chi2 =   0.35  3.93 cm( 0.03%)  9.94 keV  0.945 GeV
+StiMaker:INFO  -                   Tpc/Padrow_15/Sector_3  dE pT  0.468+-  2.1, sy 0.019, x =   77.98 z =   31.57 chi2 =   1.93  3.92 cm( 0.03%)  9.92 keV  0.946 GeV
+StiMaker:INFO  -                   Tpc/Padrow_16/Sector_3  dE pT  0.473+-  2.3, sy 0.024, x =   79.58 z =   28.13 chi2 =   0.77  3.92 cm( 0.03%)   9.9 keV  0.941 GeV
+StiMaker:INFO  -                   Tpc/Padrow_17/Sector_3  dE pT  0.473+-  2.3, sy 0.022, x =   81.18 z =   24.66 chi2 =   1.15  3.91 cm( 0.03%)   9.9 keV  0.949 GeV
+StiMaker:INFO  -                   Tpc/Padrow_18/Sector_3  dE pT  0.478+-  2.5, sy 0.025, x =   82.79 z =   21.18 chi2 =   8.49  3.91 cm( 0.03%)  9.89 keV  0.950 GeV
+StiMaker:INFO  -                   Tpc/Padrow_19/Sector_3  dE pT  0.483+-  2.7, sy 0.028, x =   84.39 z =   17.83 chi2 =  13.14  3.91 cm( 0.03%)   9.9 keV  0.951 GeV
+StiMaker:INFO  -                   Tpc/Padrow_20/Sector_3  dE pT  0.495+-  2.9, sy 0.032, x =   86.00 z =   14.53 chi2 =   4.55  3.92 cm( 0.03%)  9.92 keV  0.953 GeV
+StiMaker:INFO  -                   Tpc/Padrow_21/Sector_3  dE pT  0.489+-  3.2, sy 0.038, x =   87.61 z =   10.90  3.91 cm( 0.03%)  9.94 keV  0.979 GeV
+...
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.456+-  3.7, sy 0.021, x =   68.41 z =   52.60  3.81 cm( 0.03%) -9.63 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.456+-  3.7, sy 0.017, x =   66.74 z =   56.17 chi2 =   5.81  3.81 cm( 0.03%) -9.62 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.457+-  3.7, sy 0.017, x =   65.14 z =   59.47 chi2 =   1.87  3.69 cm( 0.03%) -9.31 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.456+-  3.7, sy 0.013, x =   63.54 z =   62.90 chi2 =   0.36  3.68 cm( 0.03%)  -9.3 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.457+-  3.7, sy 0.010, x =   61.93 z =   66.28 chi2 =   7.37  3.68 cm( 0.03%) -9.29 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.458+-  3.7, sy 0.009, x =   60.33 z =   69.65 chi2 =   0.92  3.67 cm( 0.03%) -9.28 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.457+-  1.2, sy 0.010, x =   58.81 z =   73.14  3.67 cm( 0.03%) -9.27 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.457+-  1.2, sy 0.012, x =   57.21 z =   76.55  3.79 cm( 0.03%) -9.56 keV  0.933 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.457+-  1.2, sy 0.014, x =   55.61 z =   79.97  3.78 cm( 0.03%) -9.55 keV  0.933 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.457+-  1.3, sy 0.027, x =   47.28 z =   97.96  19.9 cm( 2.00%)  -999 keV  0.933 GeV
+StiMaker:INFO  -                       SCOM_1/SCON_1_2_28  dE pT  0.458+-  1.4, sy 0.078, x =   34.13 z =  125.64  30.7 cm( 2.52%) -1.38 MeV  0.934 GeV
+StiMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_4_8  dE pT  0.458+-  1.4, sy 0.147, x =   22.35 z =  150.42  27.4 cm( 1.37%)  -825 keV  0.935 GeV
+StiMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_4_7  dE pT  0.459+-  1.4, sy 0.161, x =   20.28 z =  154.76   4.8 cm( 1.71%)  -823 keV  0.936 GeV
+StiMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_5_5  dE pT  0.459+-  1.5, sy 0.190, x =   16.15 z =  163.43  9.61 cm( 1.72%)  -834 keV  0.937 GeV
+StiMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_5_4  dE pT  0.460+-  1.5, sy 0.206, x =   14.09 z =  167.77   4.8 cm( 1.71%)  -823 keV  0.938 GeV
+StiMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_6_2  dE pT  0.460+-  1.6, sy 0.241, x =    9.96 z =  176.44  9.61 cm( 1.72%)  -834 keV  0.939 GeV
+StiMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_6_1  dE pT  0.460+-  1.6, sy 0.260, x =    7.90 z =  180.78   4.8 cm( 1.71%)  -823 keV  0.939 GeV
+StiMaker:INFO  -                     FSTA_1/FSTM_1/FSTD_6  dE pT  0.461+-  1.7, sy 0.279, x =    5.83 z =  185.11   4.8 cm( 1.71%)  -823 keV  0.940 GeV
+StiMaker:INFO  -                            PIPE_1/PWRP_1  dE pT  0.461+-  1.7, sy 0.298, x =    4.01 z =  188.94  4.24 cm( 1.02%)  -500 keV  0.941 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.461+-  1.7, sy 0.298, x =    3.94 z =  189.10 0.172 cm( 1.80%)  -745 keV  0.942 GeV
+
+
+(gdb) p pdg
+$2 = 1000020030
+(gdb) n
+StiMassFitMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.457+-  1.1, sy 0.008, x =   61.93 z =   66.45 chi2 =   6.66  3.98 cm( 0.03%)  71.4 keV  0.714 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.457+-  1.1, sy 0.007, x =   63.54 z =   63.01 chi2 =   0.17  3.97 cm( 0.03%)  71.4 keV  0.713 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.457+-  1.1, sy 0.007, x =   65.14 z =   59.57 chi2 =   1.78  3.97 cm( 0.03%)  71.3 keV  0.713 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.457+-  1.1, sy 0.007, x =   66.74 z =   56.13 chi2 =   7.29  3.97 cm( 0.03%)  71.2 keV  0.714 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.457+-  1.1, sy 0.008, x =   68.41 z =   52.55  3.96 cm( 0.03%)  71.1 keV  0.713 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_10/Sector_3  dE pT  0.457+-  1.1, sy 0.008, x =   70.01 z =   49.10  3.81 cm( 0.03%)  68.5 keV  0.713 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_11/Sector_3  dE pT  0.457+-  1.1, sy 0.008, x =   71.61 z =   45.66  3.82 cm( 0.03%)  68.6 keV  0.713 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_12/Sector_3  dE pT  0.457+-  1.1, sy 0.008, x =   73.16 z =   42.30 chi2 =   1.49  3.82 cm( 0.03%)  68.7 keV  0.713 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_13/Sector_3  dE pT  0.457+-  1.1, sy 0.008, x =   74.77 z =   38.83 chi2 =   0.49  3.94 cm( 0.03%)  70.8 keV  0.712 GeV
+...
+StiMassFitMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.458+-  5.3, sy 0.025, x =   68.41 z =   52.65  3.81 cm( 0.03%) -68.3 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.458+-  5.3, sy 0.019, x =   66.74 z =   56.20 chi2 =   5.23  3.81 cm( 0.03%) -68.2 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.458+-  5.3, sy 0.020, x =   65.14 z =   59.49 chi2 =   2.09  3.69 cm( 0.03%)   -66 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.456+-  5.3, sy 0.016, x =   63.54 z =   62.91 chi2 =   0.35  3.68 cm( 0.03%) -65.9 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.457+-  5.3, sy 0.011, x =   61.93 z =   66.28 chi2 =   7.30  3.68 cm( 0.03%) -65.8 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.459+-  5.3, sy 0.009, x =   60.33 z =   69.65 chi2 =   0.68  3.67 cm( 0.03%) -65.8 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.458+-  1.9, sy 0.011, x =   58.81 z =   73.11  3.67 cm( 0.03%) -65.7 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.458+-  1.9, sy 0.013, x =   57.21 z =   76.53  3.78 cm( 0.03%) -67.7 keV  0.717 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  1.9, sy 0.016, x =   55.61 z =   79.94  3.78 cm( 0.03%) -67.7 keV  0.717 GeV
+StiMassFitMaker:INFO  -                                /TIFC_1_2  dE pT  0.461+-  2.0, sy 0.036, x =   47.28 z =   97.92  19.9 cm( 2.00%) -7.25 MeV  0.717 GeV
+StiMassFitMaker:INFO  -                       SCOM_1/SCON_1_2_28  dE pT  0.464+-  2.2, sy 0.120, x =   34.13 z =  125.59  30.6 cm( 2.52%)   -10 MeV  0.725 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_4_8  dE pT  0.467+-  2.2, sy 0.232, x =   22.35 z =  150.36  27.4 cm( 1.37%) -5.93 MeV  0.735 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_4_7  dE pT  0.469+-  2.3, sy 0.255, x =   20.28 z =  154.70   4.8 cm( 1.71%) -5.77 MeV  0.741 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_5_5  dE pT  0.471+-  2.4, sy 0.303, x =   16.15 z =  163.37   9.6 cm( 1.72%) -5.82 MeV  0.747 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_5_4  dE pT  0.473+-  2.4, sy 0.328, x =   14.09 z =  167.70   4.8 cm( 1.71%) -5.72 MeV  0.753 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_6_2  dE pT  0.475+-  2.5, sy 0.384, x =    9.96 z =  176.37   9.6 cm( 1.72%) -5.77 MeV  0.758 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_6_1  dE pT  0.477+-  2.6, sy 0.414, x =    7.90 z =  180.70   4.8 cm( 1.71%) -5.67 MeV  0.764 GeV
+StiMassFitMaker:INFO  -                     FSTA_1/FSTM_1/FSTD_6  dE pT  0.479+-  2.6, sy 0.446, x =    5.83 z =  185.04   4.8 cm( 1.71%) -5.64 MeV  0.770 GeV
+StiMassFitMaker:INFO  -                            PIPE_1/PWRP_1  dE pT  0.480+-  2.7, sy 0.475, x =    4.01 z =  188.87  4.24 cm( 1.02%) -3.45 MeV  0.775 GeV
+StiMassFitMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.482+-  2.7, sy 0.476, x =    3.94 z =  189.02 0.172 cm( 1.80%) -5.35 MeV  0.779 GeV
+StiKalmanTrack::refit iter = 1 qA = 0.00
+
+alpha
+StiMassFitMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.458+-  5.7, sy 0.025, x =   68.41 z =   52.66  3.81 cm( 0.03%) -95.2 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.459+-  5.7, sy 0.020, x =   66.74 z =   56.21 chi2 =   5.18  3.81 cm( 0.03%) -95.1 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.458+-  5.7, sy 0.021, x =   65.14 z =   59.49 chi2 =   2.13  3.69 cm( 0.03%) -91.9 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.457+-  5.7, sy 0.017, x =   63.54 z =   62.92 chi2 =   0.36  3.68 cm( 0.03%) -91.8 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.457+-  5.7, sy 0.012, x =   61.93 z =   66.29 chi2 =   7.28  3.68 cm( 0.03%) -91.7 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.459+-  5.7, sy 0.009, x =   60.33 z =   69.65 chi2 =   0.63  3.67 cm( 0.03%) -91.6 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.458+-  1.9, sy 0.011, x =   58.81 z =   73.11  3.67 cm( 0.03%) -91.5 keV  0.568 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.458+-  1.9, sy 0.013, x =   57.21 z =   76.53  3.78 cm( 0.03%) -94.3 keV  0.569 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  1.9, sy 0.016, x =   55.61 z =   79.94  3.78 cm( 0.03%) -94.2 keV  0.569 GeV
+StiMassFitMaker:INFO  -                                /TIFC_1_2  dE pT  0.461+-  2.0, sy 0.036, x =   47.28 z =   97.92  19.9 cm( 2.00%) -10.1 MeV  0.569 GeV
+StiMassFitMaker:INFO  -                       SCOM_1/SCON_1_2_28  dE pT  0.464+-  2.2, sy 0.120, x =   34.13 z =  125.59  30.6 cm( 2.52%) -13.9 MeV  0.579 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_4_8  dE pT  0.467+-  2.2, sy 0.232, x =   22.35 z =  150.36  27.4 cm( 1.37%) -8.17 MeV  0.593 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_4_7  dE pT  0.469+-  2.3, sy 0.255, x =   20.28 z =  154.69   4.8 cm( 1.71%)  -7.9 MeV  0.601 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_5_5  dE pT  0.471+-  2.4, sy 0.303, x =   16.15 z =  163.37   9.6 cm( 1.72%) -7.94 MeV  0.609 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_5_4  dE pT  0.473+-  2.4, sy 0.329, x =   14.09 z =  167.70   4.8 cm( 1.71%) -7.76 MeV  0.617 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_6_2  dE pT  0.475+-  2.5, sy 0.384, x =    9.96 z =  176.37   9.6 cm( 1.72%)  -7.8 MeV  0.625 GeV
+StiMassFitMaker:INFO  -                   FSTA_1/FSTM_1/FSTD_6_1  dE pT  0.477+-  2.6, sy 0.414, x =    7.90 z =  180.70   4.8 cm( 1.71%) -7.63 MeV  0.633 GeV
+StiMassFitMaker:INFO  -                     FSTA_1/FSTM_1/FSTD_6  dE pT  0.479+-  2.6, sy 0.446, x =    5.83 z =  185.04   4.8 cm( 1.71%) -7.57 MeV  0.641 GeV
+StiMassFitMaker:INFO  -                            PIPE_1/PWRP_1  dE pT  0.480+-  2.7, sy 0.475, x =    4.01 z =  188.87  4.24 cm( 1.02%) -4.61 MeV  0.648 GeV
+StiMassFitMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.482+-  2.7, sy 0.476, x =    3.94 z =  189.02 0.172 cm( 1.80%) -7.13 MeV  0.653 GeV
+
+
+StiMassFitMaker:INFO  - pdg = 211
+   1  L  308.102 global   101P   X   NP 70 IdT:    1 Q:100 Dca: imp    0.24 +/-   0.34, Z: 197.35 +/-   0.83, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.7%, TanL:  -2.101 +/-   0.032 NF 45 chi2     1.46 gId  8 NdEdx 45  33.68 keV +/-   8.2 %
+                                                           Dca: imp    0.21 +/-   0.53, Z: 197.28 +/-   1.30, psi:  -0.00 +/-   0.02, pT/q:   0.48 +/-   2.7%, TanL:  -2.100 +/-   0.050
+                                                           Dca: imp    0.17 +/-   0.63, Z: 197.30 +/-   1.55, psi:  -0.00 +/-   0.03, pT/q:   0.50 +/-   3.3%, TanL:  -2.100 +/-   0.059
+
+p(   1,   0,   0) x:   0.002+/- 0.006 y:   0.245+/- 0.340 z: 197.351+/- 0.830 px:   0.461+/- 0.008 py:  -0.004+/- 0.006 pz:  -0.969+/- 0.012 M:   0.140 p:   1.073+/-  0.013 pdg:  211 Q: 1  chi2/NDF :   -1.00/ 1
+(gdb) p kTrack->print("")
+Track 0x1044cbb0
+  1 - 0x1044fce8(*)     ch2=0   x=203.865       h=-0.00148895 /TOFC_1_2
+  2 - 0x1044fed0(*)     ch2=0   x=188.852       h=-0.00149389 Tpc/Padrow_72/Sector_2
+  3 - 0x104500b8(*)     ch2=0   x=186.852       h=-0.00149446 Tpc/Padrow_71/Sector_2
+  4 - 0x104502a0(H)     ch2=8.72316     x=184.978       h=-0.00149505 valid Tpc/Padrow_70/Sector_2
+  5 - 0x10450488()      ch2=0   x=182.852       h=-0.00149538 valid Tpc/Padrow_69/Sector_2
+  6 - 0x10450670()      ch2=0   x=180.852       h=-0.00149572 valid Tpc/Padrow_68/Sector_2
+  7 - 0x10450858(H)     ch2=5.93556     x=178.899       h=-0.00149599 valid Tpc/Padrow_67/Sector_2
+  8 - 0x10450a40(H)     ch2=1.18997     x=176.887       h=-0.00149635 valid Tpc/Padrow_66/Sector_2
+  9 - 0x10450c28(H)     ch2=0.99793     x=174.872       h=-0.00149658 valid Tpc/Padrow_65/Sector_2
+ 10 - 0x10450e10(H)     ch2=0.465701    x=172.861       h=-0.00149683 valid Tpc/Padrow_64/Sector_2
+ 11 - 0x10450ff8(H)     ch2=0.0171599   x=170.851       h=-0.00149703 valid Tpc/Padrow_63/Sector_2
+ 12 - 0x104511e0()      ch2=0   x=168.852       h=-0.00149713 valid Tpc/Padrow_62/Sector_2
+ 13 - 0x104513c8()      ch2=0   x=166.852       h=-0.00149722 valid Tpc/Padrow_61/Sector_2
+ 14 - 0x104515b0()      ch2=0   x=164.852       h=-0.00149723 valid Tpc/Padrow_60/Sector_2
+ 15 - 0x10451798()      ch2=0   x=162.852       h=-0.00149725 valid Tpc/Padrow_59/Sector_2
+ 16 - 0x10451980()      ch2=0   x=160.852       h=-0.0014972 valid Tpc/Padrow_58/Sector_2
+ 17 - 0x10451b68()      ch2=0   x=158.852       h=-0.00149715 valid Tpc/Padrow_57/Sector_2
+ 18 - 0x10451d50()      ch2=0   x=156.985       h=-0.00149703 valid Tpc/Padrow_56/Sector_3
+ 19 - 0x10451f38()      ch2=0   x=154.985       h=-0.00149684 valid Tpc/Padrow_55/Sector_3
+ 20 - 0x10452120()      ch2=0   x=152.985       h=-0.00149674 valid Tpc/Padrow_54/Sector_3
+ 21 - 0x10452308()      ch2=0   x=150.985       h=-0.00149663 valid Tpc/Padrow_53/Sector_3
+ 22 - 0x104524f0()      ch2=0   x=148.985       h=-0.00149651 valid Tpc/Padrow_52/Sector_3
+ 23 - 0x104526d8()      ch2=0   x=146.985       h=-0.00149634 valid Tpc/Padrow_51/Sector_3
+ 24 - 0x104528c0()      ch2=0   x=144.985       h=-0.00149617 valid Tpc/Padrow_50/Sector_3
+ 25 - 0x10452aa8()      ch2=0   x=142.985       h=-0.00149596 valid Tpc/Padrow_49/Sector_3
+ 26 - 0x10452c90()      ch2=0   x=140.985       h=-0.00149577 valid Tpc/Padrow_48/Sector_3
+ 27 - 0x10459938(H)     ch2=0.24859     x=139.039       h=-0.00149553 valid Tpc/Padrow_47/Sector_3
+ 28 - 0x10459750(H)     ch2=1.40819     x=137.045       h=-0.00149527 valid Tpc/Padrow_46/Sector_3
+ 29 - 0x10459568(H)     ch2=0.38183     x=135.05        h=-0.00149505 valid Tpc/Padrow_45/Sector_3
+ 30 - 0x10459380(H)     ch2=4.79109     x=133.054       h=-0.0014948 valid Tpc/Padrow_44/Sector_3
+ 31 - 0x10459b20(H)     ch2=0.625983    x=131.057       h=-0.00149461 valid Tpc/Padrow_43/Sector_3
+ 32 - 0x10459198(H)     ch2=4.31097     x=129.06        h=-0.00149439 valid Tpc/Padrow_42/Sector_3
+ 33 - 0x10458fb0(H)     ch2=0.0336452   x=127.062       h=-0.00149421 valid Tpc/Padrow_41/Sector_3
+ 34 - 0x10458dc8(H)     ch2=1.03984     x=118.087       h=-0.00149348 valid Tpc/Padrow_40/Sector_3
+ 35 - 0x10458be0(H)     ch2=1.24801     x=116.486       h=-0.00149336 valid Tpc/Padrow_39/Sector_3
+ 36 - 0x104589f8(H)     ch2=0.715414    x=114.885       h=-0.00149328 valid Tpc/Padrow_38/Sector_3
+ 37 - 0x10458810(H)     ch2=0.196086    x=113.284       h=-0.00149322 valid Tpc/Padrow_37/Sector_3
+ 38 - 0x10458628(H)     ch2=0.512336    x=111.683       h=-0.00149316 valid Tpc/Padrow_36/Sector_3
+ 39 - 0x10458440(H)     ch2=4.73206     x=110.083       h=-0.00149312 valid Tpc/Padrow_35/Sector_3
+ 40 - 0x10458258(H)     ch2=0.716903    x=108.482       h=-0.00149309 valid Tpc/Padrow_34/Sector_3
+ 41 - 0x10458070(H)     ch2=1.23536     x=106.881       h=-0.00149308 valid Tpc/Padrow_33/Sector_3
+ 42 - 0x10457e88(H)     ch2=0.0877275   x=105.28        h=-0.00149308 valid Tpc/Padrow_32/Sector_3
+ 43 - 0x10457ca0(H)     ch2=12.558      x=103.679       h=-0.00149309 valid Tpc/Padrow_31/Sector_3
+ 44 - 0x10457ab8(H)     ch2=0.583319    x=102.077       h=-0.00149309 valid Tpc/Padrow_30/Sector_3
+ 45 - 0x104578d0(H)     ch2=0.615824    x=100.475       h=-0.00149312 valid Tpc/Padrow_29/Sector_3
+ 46 - 0x104576e8(H)     ch2=0.48641     x=98.8734       h=-0.00149315 valid Tpc/Padrow_28/Sector_3
+ 47 - 0x10457500(H)     ch2=3.70526     x=97.2699       h=-0.00149318 valid Tpc/Padrow_27/Sector_3
+ 48 - 0x10457318(H)     ch2=1.82396     x=95.6665       h=-0.00149324 valid Tpc/Padrow_26/Sector_3
+ 49 - 0x10457130(H)     ch2=0.282296    x=94.0624       h=-0.00149329 valid Tpc/Padrow_25/Sector_3
+ 50 - 0x10456f48(H)     ch2=6.32636     x=92.4109       h=-0.00149335 valid Tpc/Padrow_24/Sector_3
+ 51 - 0x10456d60(H)     ch2=3.42926     x=90.8072       h=-0.00149343 valid Tpc/Padrow_23/Sector_3
+ 52 - 0x10456b78()      ch2=0   x=89.2076       h=-0.00149352 valid Tpc/Padrow_22/Sector_3
+ 53 - 0x10456990()      ch2=0   x=87.6076       h=-0.00149362 valid Tpc/Padrow_21/Sector_3
+ 54 - 0x104567a8(H)     ch2=13.1038     x=85.9953       h=-0.00149372 valid Tpc/Padrow_20/Sector_3
+ 55 - 0x104565c0(H)     ch2=3.76717     x=84.3914       h=-0.00149382 valid Tpc/Padrow_19/Sector_3
+ 56 - 0x104563d8(H)     ch2=5.78227     x=82.7875       h=-0.00149392 valid Tpc/Padrow_18/Sector_3
+ 57 - 0x104561f0(H)     ch2=0.113718    x=81.1835       h=-0.00149402 valid Tpc/Padrow_17/Sector_3
+ 58 - 0x10456008(H)     ch2=0.541996    x=79.5795       h=-0.00149411 valid Tpc/Padrow_16/Sector_3
+ 59 - 0x10455e20(H)     ch2=1.60359     x=77.9752       h=-0.00149422 valid Tpc/Padrow_15/Sector_3
+ 60 - 0x10455c38(H)     ch2=0.36992     x=76.3706       h=-0.00149433 valid Tpc/Padrow_14/Sector_3
+ 61 - 0x10455a50(H)     ch2=0.724824    x=74.766        h=-0.00149444 valid Tpc/Padrow_13/Sector_3
+ 62 - 0x10455868(H)     ch2=1.17899     x=73.1615       h=-0.00149456 valid Tpc/Padrow_12/Sector_3
+ 63 - 0x10455680()      ch2=0   x=71.6076       h=-0.00149467 valid Tpc/Padrow_11/Sector_3
+ 64 - 0x10455498()      ch2=0   x=70.0076       h=-0.00149478 valid Tpc/Padrow_10/Sector_3
+ 65 - 0x104552b0()      ch2=0   x=68.4076       h=-0.00149489 valid Tpc/Padrow_9/Sector_3
+ 66 - 0x104550c8(H)     ch2=7.99269     x=66.7437       h=-0.001495 valid Tpc/Padrow_8/Sector_3
+ 67 - 0x10454ee0(H)     ch2=1.87829     x=65.1395       h=-0.00149511 valid Tpc/Padrow_7/Sector_3
+ 68 - 0x10454cf8(H)     ch2=0.165631    x=63.5356       h=-0.00149523 valid Tpc/Padrow_6/Sector_3
+ 69 - 0x10454b10(H)     ch2=6.76204     x=61.9318       h=-0.00149534 valid Tpc/Padrow_5/Sector_3
+ 70 - 0x10454928(H)     ch2=4.67415     x=60.3287       h=-0.00149544 valid Tpc/Padrow_4/Sector_3
+ 71 - 0x10454740()      ch2=0   x=58.8076       h=-0.00149554 valid Tpc/Padrow_3/Sector_3
+ 72 - 0x10454558()      ch2=0   x=57.2076       h=-0.00149565 valid Tpc/Padrow_2/Sector_3
+ 73 - 0x10454370()      ch2=0   x=55.6076       h=-0.00149575 valid Tpc/Padrow_1/Sector_3
+ 74 - 0x10454188()      ch2=0   x=47.2845       h=-0.00149625 valid /TIFC_1_2
+ 75 - 0x10453fa0()      ch2=0   x=34.135        h=-0.00149686 valid SCOM_1/SCON_1_2_28
+ 76 - 0x10453db8()      ch2=0   x=22.3464       h=-0.00149707 valid FSTA_1/FSTM_1/FSTD_4_8
+ 77 - 0x10453bd0()      ch2=0   x=20.2821       h=-0.00149704 valid FSTA_1/FSTM_1/FSTD_4_7
+ 78 - 0x104539e8()      ch2=0   x=16.1535       h=-0.00149692 valid FSTA_1/FSTM_1/FSTD_5_5
+ 79 - 0x10453800()      ch2=0   x=14.0892       h=-0.00149678 valid FSTA_1/FSTM_1/FSTD_5_4
+ 80 - 0x10453618()      ch2=0   x=9.96059       h=-0.00149635 valid FSTA_1/FSTM_1/FSTD_6_2
+ 81 - 0x10453430()      ch2=0   x=7.89627       h=-0.00149607 valid FSTA_1/FSTM_1/FSTD_6_1
+ 82 - 0x10453248()      ch2=0   x=5.83193       h=-0.0014956 valid FSTA_1/FSTM_1/FSTD_6
+ 83 - 0x10453060()      ch2=0   x=4.01112       h=-0.00149515 valid PIPE_1/PWRP_1
+ 84 - 0x10452e78()      ch2=0   x=3.93718       h=-0.00149513 valid PIPE_1/PIPO_1/PVAO_1
+ 85 - 0x1044fb00()      ch2=0   x=60.3287       h=-0.00149361 valid
+ 86 - 0x1044f918()      ch2=0   x=0     h=-0.00149362 valid
+(gdb) p kTrack->getChi2()
+$5 = 1.3892153666671374
+(gdb) p kTrack->getChi2()
+$8 = 1.3685686828241446
+----------------------------------------------------------------------------------------
+Track 0x1044aad0: chi2/NDF= 1.459356, no.Hits = 45
+Track 0x1044aad0: chi2/NDF= 1.389215, no.Hits = 45
+Track 0x1044aad0: chi2/NDF= 1.368569, no.Hits = 45
+
+
+Dca: imp    0.21 +/-   0.53, Z: 197.28 +/-   1.30, psi:  -0.00 +/-   0.02, pT/q:   0.48 +/-   2.7%, TanL:  -2.100 +/-   0.050
+
+
+
+ 85 - 0x1044f140()      ch2=0   x=0     h=-0.00149361 valid
+ 85 - 0x1044f140()      ch2=0   x=60.3287       h=-0.00149361 valid
+ 84 - 0x10452a38()      ch2=0   x=3.93676       h=-0.00149513 valid PIPE_1/PIPO_1/PVAO_1
+ 85 - 0x1044f6c0()      ch2=0   x=0     h=-0.00149361 valid
+
+ 81 - 0x588ab1d8()      ch2=0   x=3.93676       h=-0.00149513 valid PIPE_1/PIPO_1/PVAO_1
+ 82 - 0x588aaff0()      ch2=0   x=0     h=-0.00149361 valid
+
+Track 0x1044bdb0: chi2/NDF= 1.459356, no.Hits = 45
+   1  L  308.102 global   101P   X   NP 70 IdT:    1 Q:100 Dca: imp    0.24 +/-   0.34, Z: 197.35 +/-   0.83, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.7%, TanL:  -2.101 +/-   0.032 NF 45 chi2     1.46 gId  8 NdEdx 45  33.68 keV +/-   8.2 %
+p(   1,   0,   0) x:   0.002+/- 0.006 y:   0.245+/- 0.340 z: 197.351+/- 0.830 px:   0.461+/- 0.008 py:  -0.004+/- 0.006 pz:  -0.969+/- 0.012 M:   0.140 p:   1.073+/-  0.013 pdg:  211 Q: 1  chi2/NDF :   -1.00/ 1
+Track 0x1044bd68: chi2/NDF= 1.389215, no.Hits = 45
+Dca: imp    0.21 +/-   0.54, Z: 197.28 +/-   1.30, psi:  -0.00 +/-   0.02, pT/q:   0.48 +/-   2.7%, TanL:  -2.100 +/-   0.050
+Dca: imp    0.18 +/-   0.65, Z: 197.30 +/-   1.55, psi:  -0.00 +/-   0.03, pT/q:   0.50 +/-   3.3%, TanL:  -2.100 +/-   0.059
+================================================================================
+08/11/2026
+   1  L  308.102 global   101P   X   NP 70 IdT:    1 Q:100 Dca: imp    0.24 +/-   0.34, Z: 197.35 +/-   0.83, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.7%, TanL:  -2.101 +/-   0.032 NF 45 chi2     1.46 gId  8 NdEdx 45  33.50 keV +/-   8.2 %
+p(   1,   0,   0) x:   0.002+/- 0.006 y:   0.245+/- 0.340 z: 197.351+/- 0.830 px:   0.461+/- 0.008 py:  -0.004+/- 0.006 pz:  -0.969+/- 0.012 M:   0.140 p:   1.073+/-  0.013 pdg:  211 Q: 1  chi2/NDF :   -1.00/ 1
+Track 0x104670e0: chi2/NDF= 1.459356, no.Hits = 45
+Track 0x10467098: chi2/NDF= 1.459356, no.Hits = 45
+Dca: imp    0.21 +/-   0.54, Z: 197.28 +/-   1.30, psi:  -0.00 +/-   0.02, pT/q:   0.48 +/-   2.7%, TanL:  -2.100 +/-   0.050
+Track 0x10467098: chi2/NDF= 1.459356, no.Hits = 45
+Dca: imp    0.18 +/-   0.65, Z: 197.30 +/-   1.55, psi:  -0.00 +/-   0.03, pT/q:   0.50 +/-   3.3%, TanL:  -2.100 +/-   0.059
+
+
+(gdb) p kTrack->print("")
+Track 0x10a5c588: chi2/NDF= 3.155569, no.Hits = 33
+  2  L  135.628 global   101 T  W   NP 59 IdT:    6 Q:100 Dca: imp    0.04 +/-   0.14, Z:  -5.36 +/-   0.14, psi:   0.24 +/-   0.00, pT/q:  -1.02 +/-   1.1%, TanL:   0.275 +/-   0.003 NF 33 chi2      3.1 gId  8 NdEdx 32   1.81 keV +/-  14.6 %
+Track 0x10a5c588: chi2/NDF= 3.155569, no.Hits = 33
+All:    -321    -211
+(gdb) p pdg
+(gdb) p cTrack->print("")
+Track 0x10a5be38: chi2/NDF= 3.134121, no.Hits = 33
+$17 = -321
+                                                           Dca: imp   -0.11 +/-   0.05, Z:  -4.82 +/-   0.05, psi:   0.25 +/-   0.00, pT/q:  -1.01 +/-   0.8%, TanL:   0.268 +/-   0.002
+StiMassFitMaker:INFO  - pdg = -321
+   3  L   54.149 global   111     S  NP 64 IdT:   19 Q:100 Dca: imp  -16.61 +/-   1.27, Z:  -0.67 +/-   0.46, psi:   0.71 +/-   0.01, pT/q:  -0.56 +/-   3.4%, TanL:   1.046 +/-   0.004 NF  8 chi2     5.81 gId  8 NdEdx  8   1.87 keV +/-  15.1 %
+p(   3,   0,   0) x:  10.872+/- 1.020 y: -12.557+/- 0.802 z:  -0.665+/- 0.457 px:   0.427+/- 0.020 py:   0.369+/- 0.006 pz:   0.590+/- 0.020 M:   0.140+/-  0.000 p:   0.816+/-  0.027 pdg:  211 Q:-1  chi2/NDF :   -1.00/ 1
+Track 0x10a5c540: chi2/NDF= 5.807882, no.Hits = 8
+All:    -211    13
+  3  L   54.149 global   111     S  NP 64 IdT:   19 Q:100 Dca: imp  -16.61 +/-   1.27, Z:  -0.67 +/-   0.46, psi:   0.71 +/-   0.01, pT/q:  -0.56 +/-   3.4%, TanL:   1.046 +/-   0.004 NF  8 chi2     5.81 gId  8 NdEdx  8   1.87 keV +/-  15.1 %
+p(   3,   0,   0) x:  10.872+/- 1.020 y: -12.557+/- 0.802 z:  -0.665+/- 0.457 px:   0.427+/- 0.020 py:   0.369+/- 0.006 pz:   0.590+/- 0.020 M:   0.140+/-  0.000 p:   0.816+/-  0.027 pdg:  211 Q:-1  chi2/NDF :   -1.00/ 1
+
+Track 0x10a5be38: chi2/NDF= 5.807882, no.Hits = 8
+(gdb) n
+                                                          Dca: imp  -16.90 +/-   1.28, Z:  -0.57 +/-   0.46, psi:   0.72 +/-   0.01, pT/q:  -0.56 +/-   3.4%, TanL:   1.046 +/-   0.004
+   4  L   54.914 global   101 T  E   NP 68 IdT:   13 Q:100 Dca: imp   -1.29 +/-   1.38, Z:  -5.00 +/-   0.74, psi:  -1.74 +/-   0.02, pT/q:  -0.95 +/-   6.3%, TanL:  -0.329 +/-   0.005 NF 20 chi2    0.785 gId  8 NdEdx 20   3.36 keV +/-   8.7 %
+p(   4,   0,   0) x:  -1.274+/- 1.359 y:   0.223+/- 0.216 z:  -5.000+/- 0.744 px:  -0.163+/- 0.026 py:  -0.934+/- 0.056 pz:  -0.312+/- 0.020 M:   0.140 p:   0.998+/-  0.063 pdg:  211 Q:-1  chi2/NDF :   -1.00/ 1
+Track 0x10a5c4f8: chi2/NDF= 0.744380, no.Hits = 20
+All:    11      -2212   -321    -211    13
