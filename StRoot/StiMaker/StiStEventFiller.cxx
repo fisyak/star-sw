@@ -600,8 +600,8 @@ using namespace std;
 #include "StDetectorDbMaker/St_starTriggerDelayC.h"
 #include "StTMVARank/StTMVARanking.h"
 #endif /* __TFG__VERSION__ */
-map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::mTrkNodeMap;
-map<StTrackNode*, StiKalmanTrack*> StiStEventFiller::mNodeTrkMap;
+map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::fgTrack2NodeMap;
+map<StTrackNode*, StiKalmanTrack*> StiStEventFiller::fgNode2TrackMap;
 StiStEventFiller *StiStEventFiller::fgStiStEventFiller = 0;
 Int_t StiStEventFiller::_debug = 0;
 #define PrPP(A,B) if (_debug) {LOG_INFO << "StiStEventFiller::" << (#A) << "\t" << (#B) << " = \t" << (B) << endm;}
@@ -713,8 +713,6 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
   mTrackStore = t;
   memset(mUsedHits,0,sizeof(mUsedHits));
   memset(mUsedGits,0,sizeof(mUsedGits));
-  mTrkNodeMap.clear();  // need to reset for this event
-  mNodeTrkMap.clear();
   StSPtrVecTrackNode& trNodeVec = mEvent->trackNodes(); 
   StSPtrVecTrackDetectorInfo& detInfoVec = mEvent->trackDetectorInfo(); 
   int errorCount=0; 
@@ -732,7 +730,11 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
       StTrackDetectorInfo* detInfo = new StTrackDetectorInfo;
       fillDetectorInfo(detInfo,kTrack,true); //3d argument used to increase/not increase the refCount. MCBS oct 04.
       // track node where the new StTrack will reside
-      StTrackNode* trackNode = new StTrackNode;
+      StTrackNode* trackNode = new StTrackNode; 
+      trNodeVec.push_back(trackNode);
+      StTrackNode* node = trackNode;
+      Track2NodeMap()[kTrack] = node;
+      Node2TrackMap()[node]   = kTrack ;
       // actual filling of StTrack from StiKalmanTrack
       StGlobalTrack* gTrack = new StGlobalTrack;
       try 
@@ -745,15 +747,11 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
 	  //cout <<"Setting key: "<<(unsigned short)(trNodeVec.size())<<endl;
           gTrack->setIdTruth();
 	  trackNode->addTrack(gTrack);
-	  trNodeVec.push_back(trackNode);
 	  // reuse the utility to fill the topology map
 	  // this has to be done at the end as it relies on
 	  // having the proper track->detectorInfo() relationship
 	  // and a valid StDetectorInfo object.
 	  //cout<<"Tester: Event Track Node Entries: "<<trackNode->entries()<<endl;
-	  StTrackNode* node = trNodeVec.back();
-	  mTrkNodeMap.insert(pair<StiKalmanTrack*,StTrackNode*> (kTrack,node) );
-	  mNodeTrkMap.insert(pair<StTrackNode*,StiKalmanTrack*> (node,kTrack) );
 	  if (trackNode->entries(global)<1)
 	    cout << "StiStEventFiller::fillEvent() -E- Track Node has no entries!! -------------------------" << endl;  
           int ibad = gTrack->bad();
@@ -815,7 +813,7 @@ void StiStEventFiller::fillEventPrimaries()
 {
   //cout <<"StiStEventFiller::fillEventPrimaries() -I- Started"<<endl;
   mGloPri=1;
-  if (!mTrkNodeMap.size()) 
+  if (!Track2NodeMap().size()) 
     {
       cout <<"StiStEventFiller::fillEventPrimaries(). ERROR:\t"
 	   << "Mapping between the StTrackNodes and the StiKalmanTracks is empty.  Exit." << endl;
@@ -839,8 +837,8 @@ void StiStEventFiller::fillEventPrimaries()
   for (mTrackN=0; mTrackN<nTracks;++mTrackN) {
     kTrack = (StiKalmanTrack*)(*mTrackStore)[mTrackN];
     if (!accept(kTrack)) 			continue;
-    map<StiKalmanTrack*, StTrackNode*>::iterator itKtrack = mTrkNodeMap.find(kTrack);
-    if (itKtrack == mTrkNodeMap.end())  	continue;//Sti global was rejected
+    map<StiKalmanTrack*, StTrackNode*>::iterator itKtrack = Track2NodeMap().find(kTrack);
+    if (itKtrack == Track2NodeMap().end())  	continue;//Sti global was rejected
     mTrackNumber++;
 
     nTRack = (*itKtrack).second;
@@ -924,7 +922,6 @@ void StiStEventFiller::fillEventPrimaries()
   }
   mEvent->sortVerticiesByRank();
 #endif /* ! __TFG__VERSION__ */
-  mTrkNodeMap.clear();  // need to reset for the next event
   cout <<"StiStEventFiller::fillEventPrimaries() -I- Primaries (1):"<< fillTrackCount1 <<endl;
   cout <<"StiStEventFiller::fillEventPrimaries() -I- Primaries (2):"<< fillTrackCount2 <<endl;
   cout <<"StiStEventFiller::fillEventPrimaries() -I- GOOD:"<< fillTrackCountG <<endl;
@@ -1581,20 +1578,20 @@ void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTra
   localTpc.setPosition(xyz);
   transform(localTpc,               localSect[3]);
   static StTpcPadCoordinate Pad[4];
-  Float_t times[3]  = {0};
+  Float_t times[4]  = {0};
   for (Int_t i = 3; i >=  0; i--) {
     transform(localSect[i], Pad[i]);
-    if(i < 3) {
-      times[i] = TMath::Nint(Pad[3].timeBucket()) - TMath::Nint(Pad[i].timeBucket()) + 1;
-    }
+    times[i] = TMath::Floor(Pad[i].timeBucket());
   }
   Float_t dDrift = TMath::Abs(times[0] - times[1]) + 1;
   Float_t GG = 1;
   if (dDrift > 1) {
-    if (times[0] < 1 && times[1] > 1) {    // Membrane
-      GG =   times[1]/dDrift;
-    } else if (times[0] > 1 && times[1] < 1) {
-      GG =   times[0]/dDrift;
+    if (times[0] > times[3] && times[1] > times[3]) {
+      GG = 0;
+    } else  if (times[0] <= times[3] && times[1] >= times[3]) {    // Membrane
+      GG =   (times[3] - times[0] + 1)/dDrift;
+    } else if (times[0] >= times[3] && times[1] <= times[3]) {
+      GG =   (times[3] - times[1] + 1)/dDrift;
     } else { // Gating Grid
       Float_t drift = localSect[2].position().z();
       if (drift > -0.6 && drift < GGregion) {// not prompt hits and not affected by GG
@@ -1602,15 +1599,15 @@ void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTra
 	if (row > St_tpcPadConfigC::instance()->numberOfInnerRows(sector)) io = 1;
 	Float_t t0 = GGdelay + trig[io];
 	Float_t t[2] = {0};
-	for (Int_t j = 0; j < 2; j++) 	t[j] = TMath::Nint(Pad[j].timeBucket() - t0);
-	Float_t dT = TMath::Abs(t[0] - t[1]) + 1;
-	Float_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])};
+	for (Int_t j = 0; j < 2; j++) 	t[j] = TMath::Floor(Pad[j].timeBucket() - t0);
+	Float_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])+1};
+	Float_t dT = tO[1] - tO[0];
 	if (tO[1] < 0.0) {
 	  GG = 0;
 	} else {
 	  if (tO[0] < 0.0) tO[0] = 0.0;
 	  Float_t loss = GGslope*(TMath::Exp(-tO[0]/GGslope) - TMath::Exp(-tO[1]/GGslope));
-	  GG =  (tO[1] - tO[0] + 1 - loss)/dT; 
+	  GG =  (tO[1] - tO[0] - loss)/dT; 
 	  if (GG < 0.0) GG = 0.0;
 	}
       }
