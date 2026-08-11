@@ -24,8 +24,9 @@ Int_t    StiTrack::_pdgId = 211;
 //________________________________________________________________________________
 Double_t StiTrack::getMass() {return TDatabasePDG::Instance()->GetParticle(_pdgId)->Mass();}
 //________________________________________________________________________________
+Double_t StiTrack::getCharge() {return TDatabasePDG::Instance()->GetParticle(_pdgId)->Charge()/3.0;}
+//________________________________________________________________________________
 Int_t StiTrack::geantId() {return TDatabasePDG::Instance()->ConvertPdgToGeant3(_pdgId);}
-
 //______________________________________________________________________________
 ostream& operator<<(ostream& os, const StiTrack& track)
 {

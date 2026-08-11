@@ -116,9 +116,6 @@ public:
   virtual void    setSeedHitCount(UShort_t c)=0;
   virtual double  getTrackLength() const=0;
   virtual vector<const StMeasuredPoint*> stHits() const=0;
-  /// Get mass of the particle that produced this track
-  /// Get charge of the particle that produced this track
-  virtual int     getCharge() const=0;
   /// Get chi2 of this track
   virtual double  getChi2()    const=0;
   virtual double  getChi2Max() const=0;   // maximal chi2 
@@ -135,8 +132,9 @@ public:
   virtual int  refit()=0;
   virtual int  refitL()=0;
   StiTrack &operator=(const StiTrack &tk);
-   static void setPDG(Int_t pdg=221) {_pdgId = pdg;}
+   static void setPDG(Int_t pdg=211) {_pdgId = pdg;}
    static Double_t  getMass();                   // mass for pdg
+   static Double_t  getCharge();                 // charge for pdg
    static Int_t     pdgId()   {return _pdgId;}   // 
    static Int_t     geantId();                   // geantId for pdg
  protected:
