@@ -288,6 +288,7 @@ class StTrackCombPiD : public TObject {
   Int_t            fPiDStatus;     //
   Int_t            fId;            // Track Id > 0
   StTrackPiD      *fStatus[kTotal];
+  Double_t         fpIn;           //! momentum at the first TPC hit
   Double_t         fpL10;
   Double_t         fbghyp[kTotal]; //! log10(bg)
   Double_t         fbgs[kTotal];   //! bg

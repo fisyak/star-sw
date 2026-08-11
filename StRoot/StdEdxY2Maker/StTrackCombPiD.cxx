@@ -247,6 +247,7 @@ StTrackCombPiD::StTrackCombPiD(StGlobalTrack *gTrack) : StTrackCombPiD() {
   if (fgDebug) gTrack->Print();
   fId = gTrack->key();
   fDca = *dca;
+  fpIn = gTrack->geometry()->momentum().mag();
   StSPtrVecTrackPidTraits &traits = gTrack->pidTraits();
   if (! traits.size()) return;
   for (UInt_t i = 0; i < traits.size(); i++) {
@@ -299,6 +300,7 @@ StTrackCombPiD::StTrackCombPiD(StMuTrack *gTrack) : StTrackCombPiD() {
   const StMuETofPidTraits &etofPidTraits = gTrack->etofPidTraits();
   const StMuMtdPidTraits  &mtdPidTraits = gTrack->mtdPidTraits();
   fg3 = TVector3(gTrack->p().xyz()); // p of global track
+  fpIn = gTrack->muHelix().p().mag();
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
@@ -387,6 +389,7 @@ StTrackCombPiD::StTrackCombPiD(StPicoTrack *gTrack, StPicoTrackCovMatrix *cov ) 
     cout << "StTrackCombPiD::StTrackCombPiD(StPicoTrack " << gTrack << ", StPicoTrackCovMatrix *" << cov << ")   Not valid DCA" << endl; 
     return;
   }
+  fpIn = gTrack->pIn();
   static StDedxPidTraits pidI70; //!
   static StDedxPidTraits pidFit; //!
   static StDedxPidTraits pidI70U; //!
@@ -464,8 +467,10 @@ void StTrackCombPiD::SetCombPiD() {
   if (fId <= 0) return;
   fParticle = fDca.Particle(fId);
   fg3 = TVector3(fParticle.GetPx(),fParticle.GetPy(),fParticle.GetPz());
+  if (fpIn <= 0.0) fpIn = fg3.Mag();
   fPiDStatus = 0;
-  Double_t pMomentum = fg3.Mag();
+  //  Double_t pMomentum = fg3.Mag();
+  Double_t pMomentum = fpIn;
   fpL10 = TMath::Log10(pMomentum);
   // Set up Tof
   Float_t betaTof = -999;
