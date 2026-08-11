@@ -121,6 +121,13 @@ class StPicoTrack : public TObject {
   /// Return relative dE/dx error of the track 
   Float_t dEdxError() const              { return mDedxError; }
 #else /* __TFG__VERSION__ */
+ /// Return momentum at the first TPC hit
+  Float_t pIn() const                { return mpIn; }
+  /// Return momentum at the last TPC hit
+  Float_t pOut() const                { return mpOut; }
+  /// Set momentum at the first and last TPC hits
+  void setPin(Float_t p)     { mpIn = (Float16_t)p; }
+  void setPout(Float_t p)     { mpOut = (Float16_t)p; }
   /// Return dE/dx (keV/cm) of the track
   Float_t dEdx(UChar_t fit = 1) const  { return (fit == 2) ? mDnDx : mDedx; }
   Float_t dEdxError(UChar_t fit = 1) const  { return (fit == 2) ?  mDnDxError: fgdEdxErrorScale*mDedxError; }
@@ -404,7 +411,10 @@ class StPicoTrack : public TObject {
   /// Topology map for the iTPC
   ULong64_t mTopoMap_iTpc;
 #else
-    Char_t mStatus; // =1 if fitted in a vertex
+  Char_t mStatus; // =1 if fitted in a vertex
+  /// Momenta at the first and last TPC hits
+  Float16_t mpIn;
+  Float16_t mpOut;
 #endif
 
   /// MC track id
@@ -415,7 +425,7 @@ class StPicoTrack : public TObject {
   Char_t   mVertexIndex;
 
 #if !defined (__TFG__VERSION__)
-  ClassDef(StPicoTrack, 8)
+  ClassDef(StPicoTrack, 9)
 #else
   ClassDef(StPicoTrack, 11)
 #endif
