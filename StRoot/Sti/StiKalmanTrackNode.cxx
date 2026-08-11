@@ -2269,11 +2269,12 @@ double StiKalmanTrackNode::getTime() const
     }
     d *= sqrt(1.+mFP.tanl()*mFP.tanl());
     double beta = 1;   
+    double z      = TMath::Abs(StiTrack::getCharge());
     double pt = fabs(mFP.ptin());
     if (pt>0.1) {
-      pt = 1./pt;
+      pt = z/pt;
       double p2=(1.+mFP.tanl()*mFP.tanl())*pt*pt;
-      double m=StiKalmanTrackFinderParameters::instance()->massHypothesis();
+      double m= StiTrack::getMass();//;StiKalmanTrackFinderParameters::instance()->massHypothesis();
       double m2=m*m;
       double e2=p2+m2;
       double beta2=p2/e2;
