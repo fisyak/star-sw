@@ -59,10 +59,6 @@
 #include "StDetectorDbMaker/St_beamInfoC.h"
 #include "StDetectorDbMaker/St_GatingGridBC.h"
 #include "StDetectorDbMaker/St_starTriggerDelayC.h"
-#if 0
-#include "StParticleTable.hh"
-#include "StParticleDefinition.hh"
-#endif
 #include "Altro.h"
 #include "TRVector.h"
 #include "StBichsel/Bichsel.h"
@@ -221,15 +217,6 @@ Int_t StTpcRSMaker::InitRun(Int_t /* runnumber */) {
     CLRBIT(Mask,StTpcdEdxCorrection::knTbk);
     CLRBIT(Mask,StTpcdEdxCorrection::kzCorrectionC);
     CLRBIT(Mask,StTpcdEdxCorrection::kzCorrection);
-#if 0
-    CLRBIT(Mask,StTpcdEdxCorrection::kdXCorrection);
-    CLRBIT(Mask,StTpcdEdxCorrection::kTpcPadTBins);
-    CLRBIT(Mask,StTpcdEdxCorrection::kTanL);
-    CLRBIT(Mask,StTpcdEdxCorrection::kAdcI);
-    CLRBIT(Mask,StTpcdEdxCorrection::knPad);
-    CLRBIT(Mask,StTpcdEdxCorrection::kdZdY);
-    CLRBIT(Mask,StTpcdEdxCorrection::kdXdY);
-#endif
     m_TpcdEdxCorrection = new StTpcdEdxCorrection(Mask, Debug());
     m_TpcdEdxCorrection->SetSimulation();
   }
@@ -436,13 +423,6 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
 	mPadResponseFunction[io][sector-1]->GetYaxis()->SetTitle("Signal");
 	// Cut tails
 	Double_t x = 2.5;//cm   xmaxP;
-#if 0
-	Double_t ymax = mPadResponseFunction[io][sector-1]->Eval(0);
-	for (; x > 1.5; x -= 0.05) {
-	  Double_t r = mPadResponseFunction[io][sector-1]->Eval(x)/ymax;
-	  if (r > 1e-2) break;
-	}
-#endif
 	mPadResponseFunction[io][sector-1]->SetRange(-x,x);
 	mPadResponseFunction[io][sector-1]->Save(xminP,xmaxP,0,0,0,0);
 	if (GetTFile()) mPadResponseFunction[io][sector-1]->Write();
@@ -498,7 +478,6 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
       Int_t l = 0;
       if (St_tpcAltroParamsC::instance()->Table()->GetNRows() > sector) l = sector - 1;
       if (io == 0 && St_tpcAltroParamsC::instance()->Table()->GetNRows() > 24 + sector) l += 24;
-#if 1
       // Check that Shaper has initialized before
       tpcAltroParams_st *Ssector = St_tpcAltroParamsC::instance()->Struct(l);
       for (Int_t sec = 1; sec < sector; sec++) {	 
@@ -515,7 +494,6 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
 	}
       }
       if (mShaperResponses[io][sector-1]) continue;
-#endif
       if (St_tpcAltroParamsC::instance()->N(l) < 0) {// old TPC
 	mShaperResponses[io][sector-1] = new TF1F(Form("ShaperFunc_%s_S%02i",Names[io],sector), 
 						  StTpcRSMaker::shapeEI3_I,timeBinMin,timeBinMax,9);  
@@ -554,7 +532,7 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
 	  mAltro[io][sector-1]->ConfigZerosuppression(St_tpcAltroParamsC::instance()->Threshold(l),
 						      St_tpcAltroParamsC::instance()->MinSamplesaboveThreshold(l),
 						      0,0);
-	  mAltro[io][sector-1]->PrintParameters();
+	  if (Debug()) mAltro[io][sector-1]->PrintParameters();
 	}
       }
       // Cut tails
@@ -753,11 +731,6 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
       } else if (pEvent && IAttr("EbyET0")) {
         // StEbyET0 returns microsec, will need it in seconds
         fgTriggerT0 = - StEbyET0::Instance()->getT0(pEvent)*1e-6;
-#if 0
-      } else if (g2t_ver->GetNRows() > 0) {
-      Double_t beta  = St_beamInfoC::instance()->BetaYellow();
-      fgTriggerT0 = gver->ge_x[2]/(beta*TMath::Ccgs()); // swap sign 01/11/21
-#endif
     }
   }
   g2t_tpc_hit_st *tpc_hit_begin = g2t_tpc_hit->GetTable();
@@ -1483,11 +1456,6 @@ StTpcDigitalSector  *StTpcRSMaker::DigitizeSector(Int_t sector){
 	// Digits : gain + ped
 	//  GG TF1F *ff = new TF1F("ff","TMath::Sqrt(4.76658e+01*TMath::Exp(-2.87987e-01*(x-1.46222e+01)))",21,56)
 	Double_t pRMS = pedRMSpad;
-#if 0
-	if (bin >= 21 && bin <= 56) {
-	  pRMS = TMath::Sqrt(pedRMSpad*pedRMSpad + 4.76658e+01*TMath::Exp(-2.87987e-01*(bin-1.46222e+01)));
-	}
-#endif
 	if (pRMS > 0) {
 	  adc = (Int_t) (SignalSum[index].Sum/gain + gRandom->Gaus(ped,pRMS));
 	  adc = adc - (Int_t) ped;
@@ -1647,27 +1615,6 @@ Int_t StTpcRSMaker::SearchT(const void *elem1, const void **elem2) {
 Int_t StTpcRSMaker::CompareT(const void **elem1, const void **elem2) {
   return SearchT(*elem1, elem2);
 }                                                     
-#if 0
-//________________________________________________________________________________
-Double_t StTpcRSMaker::DriftLength(Double_t x, Double_t y) {
-  static const Double_t Step = 5e-2;
-  Double_t r = TMath::Sqrt(x*x + y*y);
-  if (r < 0.25) return r;
-  x = TMath::Abs(x);
-  y = TMath::Abs(y);
-  Int_t Nstep = 0;
-  while (x > Step || y > Step) {
-    Double_t Slope = TMath:SinH(TMath::Pi()*y/s)/TMath:Sin(TMath::Pi()*x/s);
-    Double_t Co2 = 1./(1. + Slope*Slope);
-    Double_t Si  = TMath::Sqrt(1. - Co2);
-    Double_t Co  = TMath::Sqrt(Co2);
-    x = TMath::Abs(x - Step*Co);
-    y = TMath::Abs(y - Step*Si);
-    NStep++;
-  }
-  return NStep*Step;
-}
-#endif
 //________________________________________________________________________________
 TF1 *StTpcRSMaker::Fei() {
   TF1 *f = (TF1 *) gROOT->GetListOfFunctions()->FindObject("Fei");
@@ -1991,13 +1938,6 @@ Bool_t StTpcRSMaker::TrackSegment2Propagate(g2t_tpc_hit_st *tpc_hitC, g2t_vertex
   Double_t tof = gver->ge_tof  + fgTriggerT0;
   tof += tpc_hitC->tof;
   Double_t driftLength = TrackSegmentHits.coorLS.position().z() + tof*gStTpcDb->DriftVelocity(sector); // ,row); 
-#if 0 /* don't use sign swap for hits behind zGG */
-  if (driftLength > -1.0 && driftLength <= 0) {
-    if ((row >  St_tpcPadConfigC::instance()->numberOfInnerRows(sector) && driftLength > -gStTpcDb->WirePlaneGeometry()->outerSectorAnodeWirePadPlaneSeparation()) ||
-	(row <= St_tpcPadConfigC::instance()->numberOfInnerRows(sector) && driftLength > -gStTpcDb->WirePlaneGeometry()->innerSectorAnodeWirePadPlaneSeparation())) 
-      driftLength = TMath::Abs(driftLength);
-  }
-#endif
   TrackSegmentHits.coorLS.position().setZ(driftLength); PrPP(Make,TrackSegmentHits.coorLS);
   // useT0, don't useTau
   transform(TrackSegmentHits.coorLS,TrackSegmentHits.Pad,kFALSE,kFALSE); // don't use T0, don't use Tau
@@ -2157,16 +2097,6 @@ Double_t StTpcRSMaker::dEdxCorrection(HitPoint_t &TrackSegmentHits) {
     CdEdx.edge   = CdEdx.pad;
     if (CdEdx.edge > 0.5*St_tpcPadConfigC::instance()->numberOfPadsAtRow(CdEdx.sector,CdEdx.row)) 
       CdEdx.edge += 1 - St_tpcPadConfigC::instance()->numberOfPadsAtRow(CdEdx.sector,CdEdx.row);
-#if 0
-    CdEdx.dCharge = 0;
-    Int_t p1 = tpcHit->minPad();
-    Int_t p2 = tpcHit->maxPad();
-    Int_t t1 = tpcHit->minTmbk();
-    Int_t t2 = tpcHit->maxTmbk();
-    CdEdx.rCharge=  0.5*m_TpcdEdxCorrection->Adc2GeV()*TMath::Pi()/4.*(p2-p1+1)*(t2-t1+1);
-    if (TESTBIT(m_Mode, kEmbeddingShortCut) && 
-	(tpcHit->idTruth() && tpcHit->qaTruth() > 95)) CdEdx.lSimulated = tpcHit->idTruth();
-#endif
     CdEdx.F.mdE.fdE    = 1;
     CdEdx.F.mdx    = dStep;
     CdEdx.xyz[0] = TrackSegmentHits.coorLS.position().x();
