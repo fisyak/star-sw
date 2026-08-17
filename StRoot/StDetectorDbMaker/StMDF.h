@@ -124,5 +124,6 @@ class StMDF {
   protected:								\
     StMDF **mdf;							\
   private:								\
+  ClassDef(St_MDFCorrection ## __VARS__ ## C,1)				\
       };
 #endif
