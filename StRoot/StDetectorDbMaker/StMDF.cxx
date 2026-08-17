@@ -1,5 +1,38 @@
 #include "StMDF.h"
 StMDF *StMDF::fgMDF = 0;
+StMDF::StMDF(MDFCorrection_st 	*Struc, const Char_t *name) : fName(name), fFunc(0),
+    fPolyType(&Struc->PolyType),
+    fNVariables(&Struc->NVariables),
+    fNCoefficients(&Struc->NCoefficients),
+    fPower(Struc->Power),        
+    fDMean(&Struc->DMean),         
+    fXMin(Struc->XMin),        	
+    fXMax(Struc->XMax),        	
+    fCoefficients(Struc->Coefficients), 	
+    fCoefficientsRMS(Struc->CoefficientsRMS)
+      {  } 
+StMDF::StMDF(MDFCorrection3_st 	*Struc, const Char_t *name) : fName(name), fFunc(0),
+    fPolyType(&Struc->PolyType),
+    fNVariables(&Struc->NVariables),
+    fNCoefficients(&Struc->NCoefficients),
+    fPower(Struc->Power),        
+    fDMean(&Struc->DMean),         
+    fXMin(Struc->XMin),        	
+    fXMax(Struc->XMax),        	
+    fCoefficients(Struc->Coefficients), 	
+    fCoefficientsRMS(Struc->CoefficientsRMS)
+      {  } 
+StMDF::StMDF(MDFCorrection4_st 	*Struc, const Char_t *name) : fName(name), fFunc(0),
+    fPolyType(&Struc->PolyType),
+    fNVariables(&Struc->NVariables),
+    fNCoefficients(&Struc->NCoefficients),
+    fPower(Struc->Power),        
+    fDMean(&Struc->DMean),         
+    fXMin(Struc->XMin),        	
+    fXMax(Struc->XMax),        	
+    fCoefficients(Struc->Coefficients), 	
+    fCoefficientsRMS(Struc->CoefficientsRMS)
+      {  } 
 //____________________________________________________________________
 Double_t StMDF::MDFunc(Double_t *x, Double_t *p) {
   // Evaluate parameterization at point x. Optional argument coeff is
@@ -67,6 +100,7 @@ TF1 *StMDF::GetFunction() const {
 		      XMin()[0],XMax()[0],XMin()[1],XMax()[1],XMin()[2],XMax()[2]);
       ((TF3 *) fFunc)->Save(XMin()[0],XMax()[0],XMin()[1],XMax()[1],XMin()[2],XMax()[2]);
     }
+    fFunc->SetTitle(getName());
   }
   return fFunc;
 }

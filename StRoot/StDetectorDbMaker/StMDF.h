@@ -19,39 +19,9 @@ class StMDF {
     kLegendre
   };
   StMDF() {}
- StMDF(MDFCorrection_st 	*Struc, const Char_t *name = "") : fName(name), fFunc(0),
-    fPolyType(&Struc->PolyType),
-    fNVariables(&Struc->NVariables),
-    fNCoefficients(&Struc->NCoefficients),
-    fPower(Struc->Power),        
-    fDMean(&Struc->DMean),         
-    fXMin(Struc->XMin),        	
-    fXMax(Struc->XMax),        	
-    fCoefficients(Struc->Coefficients), 	
-    fCoefficientsRMS(Struc->CoefficientsRMS)
-      {  } 
- StMDF(MDFCorrection3_st 	*Struc, const Char_t *name = "") : fName(name), fFunc(0),
-    fPolyType(&Struc->PolyType),
-    fNVariables(&Struc->NVariables),
-    fNCoefficients(&Struc->NCoefficients),
-    fPower(Struc->Power),        
-    fDMean(&Struc->DMean),         
-    fXMin(Struc->XMin),        	
-    fXMax(Struc->XMax),        	
-    fCoefficients(Struc->Coefficients), 	
-    fCoefficientsRMS(Struc->CoefficientsRMS)
-      {  } 
- StMDF(MDFCorrection4_st 	*Struc, const Char_t *name = "") : fName(name), fFunc(0),
-    fPolyType(&Struc->PolyType),
-    fNVariables(&Struc->NVariables),
-    fNCoefficients(&Struc->NCoefficients),
-    fPower(Struc->Power),        
-    fDMean(&Struc->DMean),         
-    fXMin(Struc->XMin),        	
-    fXMax(Struc->XMax),        	
-    fCoefficients(Struc->Coefficients), 	
-    fCoefficientsRMS(Struc->CoefficientsRMS)
-      {  } 
+ StMDF(MDFCorrection_st 	*Struc, const Char_t *name = "");
+ StMDF(MDFCorrection3_st 	*Struc, const Char_t *name = "");
+ StMDF(MDFCorrection4_st 	*Struc, const Char_t *name = "");
   const Char_t *getName()                const {return  fName.Data();}
   TF1*          GetFunction()            const;
   Int_t 	PolyType() 	         const {return ((Char_t )*fPolyType)%10;     }
