@@ -101,7 +101,7 @@ StKinkMuDst::StKinkMuDst(StKinkVertex* kinkVertex) : StKinkBase()
   StTrackMassFit* parent = kinkVertex->parent();
   if (!parent) {gMessMgr->Error("StKinkMuDst: parent missing!");
   } else {
-    KFParticle *particle = parent->kfParticle();
+    KFParticle *particle = parent->Particle();
     if (particle) {
       mParentPrimMomentumX = particle->GetPx();
       mParentPrimMomentumY = particle->GetPy();
