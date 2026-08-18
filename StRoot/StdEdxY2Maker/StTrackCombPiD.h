@@ -63,7 +63,7 @@ class StdEdxStatus : public StTrackPiD {
   virtual ~StdEdxStatus() {}
   StDedxPidTraits *fPiD; //!
   Double_t I() const {return (fPiD) ? fPiD->mean() : 0;}
-  Double_t D() const {return (fPiD) ? fPiD->errorOnMean() : 0;}
+  Double_t D() const {return (fPiD) ? TMath::Max(0.04f, fPiD->errorOnMean()) : 0;}
   Double_t TrackLength() const {return (fPiD) ? fPiD->length() : 0;}
   Double_t log2dX() const {return (fPiD) ? fPiD->log2dX() : 0;}
   Int_t    N() const {return (fPiD) ? fPiD->numberOfPoints() : 0;}
@@ -199,45 +199,14 @@ class StTrackCombPiD : public TObject {
     //    fProb = 0;
   }
   void Clear(Option_t * /*option*/ ="") {memset(mBeg,0,mEnd-mBeg+1);}
-  Int_t Status() {return fPiDStatus;}
-  StTrackPiD     *Status(Int_t k) {return fStatus[k];}
-  StdEdxStatus   *dEdxStatus(Int_t k) {return ( StdEdxStatus   *)  fStatus[k];}
-  StBTofPidTraits SetBTofPidTraits(const StMuBTofPidTraits &pid);
-  StETofPidTraits SetETofPidTraits(const StMuETofPidTraits &pid);
-  StMtdPidTraits  SetMtdPidTraits(const StMuMtdPidTraits &pid);
-#ifdef __TFG__VERSION__
-  StBTofPidTraits SetBTofPidTraits(const StPicoBTofPidTraits &pid, StPicoTrack *gTrack = 0);
-  StETofPidTraits SetETofPidTraits(const StPicoETofPidTraits &pid);
-  StMtdPidTraits  SetMtdPidTraits(const StPicoMtdPidTraits &pid);
-  StPicoBEmcPidTraits  SetBEmcPidTraits(const StPicoBEmcPidTraits &pid);
-#endif /* __TFG__VERSION__ */
-  void SetCombPiD();
-  const std::vector<Int_t> &GetPDG()        {return *&fPDGList;}
-  const std::vector<Int_t> &GetPDGfromTPC() {return *&fTPCPDG;}
-  const std::vector<Int_t> &GetPDGfromdNdx() {return *&fdNdxPDG;}
-  const std::vector<Int_t> &GetPDGfromTof() {return *&fTofPDG;}
-  StDcaGeometry& Dca() {return fDca;}
-  KFParticle&    Particle()   {return fParticle;}
-  KFVertex&      BestVertex() {return fgBestVx;}
-  Int_t GetQ() {return fParticle.GetQ();}
-  void SetPDG();
-  void SetPDGfromTPC();
-  void SetPDGfromdNdx();
-  void SetPDGfromTof();
-  Int_t Id() {return fId;}
-  static void SetUsedx2(Bool_t k = kTRUE) {fgUsedx2 = k;}
-  static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
-  static void SetUsedNdx(Bool_t k = kTRUE) {fgUsedNdx = k;}
-  static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
-  static void SetCalibrationMode(Bool_t k = kTRUE) {fCalibrationMode = k;}
-  static Int_t Nparticles() {return fgNparticles;}
-  Double_t bghyp(Int_t l) {return fbghyp[l];}
-  Double_t pMomentum() {return fg3.Mag();}
-  void SetG3(TVector3 &g3) {fg3 = g3;}
-  static void SetSigmaCut(Double_t p = 3)        {fgSigmaCut  = p;}
-  static void SetdEdxErrorCut(Double_t p = 0.15) {fgdEdxErrorCut = p;}
-  static Double_t SigmaCut()     {return fgSigmaCut;}
-  static Double_t dEdxErrorCut() {return fgdEdxErrorCut;}
+  static const KFVertex &BestVX() {return fgBestVx;}
+  KFVertex&              BestVertex() {return fgBestVx;}
+  Double_t               bghyp(Int_t l) {return fbghyp[l];}
+  StDcaGeometry&         Dca() {return fDca;}
+  static Int_t           Debug() {return fgDebug;}
+  static Double_t        dEdxErrorCut() {return fgdEdxErrorCut;}
+  StdEdxStatus          *dEdxStatus(Int_t k) {return ( StdEdxStatus   *)  fStatus[k];}
+  static PiDStatusIDs    DefaulTpcMethod() {return kDefaultTpcMethod;}
   // ________________________________________________________________________________
   void        Print(Option_t *option="") const;
   const StdEdxStatus    *fI70	 () const  {return (const StdEdxStatus    *) fStatus[kI70  ];} 
@@ -252,19 +221,56 @@ class StTrackCombPiD : public TObject {
   const StETofStatus 	*fETof   () const  {return (const StETofStatus    *) fStatus[kETof ];}  
   const StMtdStatus  	*fMtd    () const  {return (const StMtdStatus     *) fStatus[kMtd  ];} 
   const StBEmcStatus    *fBEmc   () const  {return (const StBEmcStatus    *) fStatus[kBEmc ];} 
-  static Particle_t &l2par(Int_t l) {return *&fgParticles[l];}
-  static const KFVertex &BestVX() {return fgBestVx;}
-  static void  SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
-  static void  SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
-  static void  SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]);
-  static void  SetBestVx(const StVertex *bestVx);
-  static void  SetBestVx(const StMuPrimaryVertex *bestVx);
-  static void  SetBestVx(const StPicoEvent *event);
-  static void  SetPiDCorrection(Int_t k = 1) {fgUsePiDCorrection = k;}
-  static Int_t PiDCorrection() {return fgUsePiDCorrection;}
-  static void  ResetBestVx();
-  static Int_t Debug() {return fgDebug;}
-  static void  SetDebug(Int_t k = 1) {fgDebug = k;}
+  const std::vector<Int_t> &GetPDG()        {return *&fPDGList;}
+  const std::vector<Int_t> &GetPDGfromTPC() {return *&fTPCPDG;}
+  const std::vector<Int_t> &GetPDGfromdNdx() {return *&fdNdxPDG;}
+  const std::vector<Int_t> &GetPDGfromTof() {return *&fTofPDG;}
+  Int_t                  GetQ() {return fParticle.GetQ();}
+  Int_t                  Id() {return fId;}
+  static Bool_t          IsCalibrationMode() {return fCalibrationMode;}
+  static Particle_t     &l2par(Int_t l) {return *&fgParticles[l];}
+  static Int_t           Nparticles() {return fgNparticles;}
+  KFParticle&            Particle()   {return fParticle;}
+  static Int_t           PiDCorrection() {return fgUsePiDCorrection;}
+  Double_t               pMomentum() {return fg3.Mag();}
+  static void            ResetBestVx();
+  static Double_t        SigmaCut()     {return fgSigmaCut;}
+  Int_t                  Status() {return fPiDStatus;}
+  StTrackPiD            *Status(Int_t k) {return fStatus[k];}
+
+  StBTofPidTraits SetBTofPidTraits(const StMuBTofPidTraits &pid);
+  StETofPidTraits SetETofPidTraits(const StMuETofPidTraits &pid);
+  StMtdPidTraits  SetMtdPidTraits(const StMuMtdPidTraits &pid);
+#ifdef __TFG__VERSION__
+  StBTofPidTraits SetBTofPidTraits(const StPicoBTofPidTraits &pid, StPicoTrack *gTrack = 0);
+  StETofPidTraits SetETofPidTraits(const StPicoETofPidTraits &pid);
+  StMtdPidTraits  SetMtdPidTraits(const StPicoMtdPidTraits &pid);
+  StPicoBEmcPidTraits  SetBEmcPidTraits(const StPicoBEmcPidTraits &pid);
+#endif /* __TFG__VERSION__ */
+  void SetCombPiD();
+  void SetPDG();
+  void SetPDGfromTPC();
+  void SetPDGfromdNdx();
+  void SetPDGfromTof();
+  void SetG3(TVector3 &g3) {fg3 = g3;}
+  static void SetBestVx(const Float_t xyz[3], const Float_t xyzErrors[3]);
+  static void SetBestVx(const Double_t xyz[3], const Double_t xyzErrors[3]);
+  static void SetBestVx(const StVertex *bestVx);
+  static void SetBestVx(const StMuPrimaryVertex *bestVx);
+  static void SetBestVx(const StPicoEvent *event);
+  static void SetBestVxCov(const Float_t xyz[3], const Float_t covVx[6]);
+  static void SetCalibrationMode(Bool_t k = kTRUE) {fCalibrationMode = k;}
+  static void SetdEdxErrorCut(Double_t p = 0.15) {fgdEdxErrorCut = p;}
+  static void SetDebug(Int_t k = 1) {fgDebug = k;}
+  static void SetDefaulTpcMethod(PiDStatusIDs k = kFit) {kDefaultTpcMethod = k;}
+  static void SetNparticles(Int_t k = KPidAllParticles) {fgNparticles = k;}
+  static void SetPiDCorrection(Int_t k = 1) {fgUsePiDCorrection = k;}
+  static void SetSigmaCut(Double_t p = 3)        {fgSigmaCut  = p;}
+  static void SetUsedx2(Bool_t k = kTRUE) {fgUsedx2 = k;}
+  static void SetUseTof(Bool_t k = kTRUE) {fgUseTof = k;}
+  static void SetUsedNdx(Bool_t k = kTRUE) {fgUsedNdx = k;}
+
+
   static const Char_t *fgPiDStatusNames[kTotal+1];
  private:
   static Int_t       fgDebug;
@@ -283,9 +289,10 @@ class StTrackCombPiD : public TObject {
   static Int_t       fgNparticles;
   static Int_t       fgUsePiDCorrection;
   static KFVertex    fgBestVx;
+  static PiDStatusIDs kDefaultTpcMethod;
   TVector3 fg3; //!
-  Char_t           mBeg[1];        //!
   Int_t            fPiDStatus;     //
+  Char_t           mBeg[1];        //!
   Int_t            fId;            // Track Id > 0
   StTrackPiD      *fStatus[kTotal];
   Double_t         fpIn;           //! momentum at the first TPC hit
@@ -296,6 +303,19 @@ class StTrackCombPiD : public TObject {
   Char_t           mEnd[1];        //!
   StDcaGeometry    fDca;
   KFParticle       fParticle;
+  static StDedxPidTraits pidI70; //!
+  static StDedxPidTraits pidFit; //!
+  static StDedxPidTraits pidI70U; //!
+  static StDedxPidTraits pidFitU; //!
+  static StDedxPidTraits pidNdx; //!
+  static StDedxPidTraits pidNdxU;//!
+  static StDedxPidTraits pidEdxE; //!
+  static StDedxPidTraits pidEdxEU;//!
+  static StBTofPidTraits pidBTof; //!
+  static StETofPidTraits pidETof; //!
+  static StMtdPidTraits  pidMtd; //!
+  static StPicoBEmcPidTraits pidBEmc; //!
+  
   //  ClassDef(StTrackCombPiD,0);
 };
 

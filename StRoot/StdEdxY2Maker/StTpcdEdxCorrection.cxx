@@ -711,7 +711,7 @@ Int_t StTpcdEdxCorrection::dEdxTrackCorrection(EOptions opt, Int_t type, dst_ded
     case 2: // fit
       if (nrows > l+1) {
 	dedx.dedx[0]   *= TMath::Exp(-((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(  l,xx));
-	dEdxError = ((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l+1,xx);
+	dEdxError       =             ((St_MDFCorrectionC *)m_Corrections[k].Chair)->Eval(l+1,xx);
 	if (dEdxError > 0) dedx.dedx[1]    = dEdxError; 
       }
       break;
