@@ -125,6 +125,9 @@
 <li> TFG26d Release for 2023-2026 (re)production                         2026-05-31 18:32:32 -0400  (HEAD -> TFG, tag: TFG26d)
 <li> TFG26e TpcHit AfterBrner, multiple hits from TPC pad row            2026-07-22 20:05:23 -0400  (HEAD -> TFG, tag: TFG26e)
 <li> TFG26f TpcHit AfterBrner, disable multiple hits from TPC pad row    2026-07-24 12:50:33 -0400  (HEAD -> TFG, tag: TFG26f)
-<li> TFG26g Modify dX calculation with accountin Membrane and GG         2026-08-02 11:11:38 -0400  (HEAD -> TFG, tag: TFG26g)
+<li> TFG26g Modify dX calculation with accounting Membrane and GG        2026-08-02 11:11:38 -0400  (HEAD -> TFG, tag: TFG26g)
+<li> TFG26g Modify dX calculation with stTpcLocalSectorCoordinate        2026-08-04 16:16:14 -0400  (HEAD -> TFG, tag: TFG26g1)
+<li> TFG26g dX++, fix StEventClusteringHints stremaer                    2026-08-07 10:37:58 -0400  (HEAD -> TFG, tag: TFG26g3, origin/TFG)
+<li> TFG26g dX++, add StiMassFitMaker                                    2026-08-11 17:06:49 -0400  (HEAD -> TFG, tag: TFG26g4)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>

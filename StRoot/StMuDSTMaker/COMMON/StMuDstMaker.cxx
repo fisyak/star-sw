@@ -1951,7 +1951,7 @@ void StMuDstMaker::fillVertices(StEvent* ev) {
 #ifdef __TFG__VERSION__
     const StTrackMassFit* parent = vtx->parent();
     if (! parent) continue;
-    const KFParticle* particle = parent->kfParticle();
+    const KFParticle* particle = parent->Particle();
     if (! particle) continue;
     fillKFVertices(particle);
 #endif /* __TFG__VERSION__ */
@@ -2130,7 +2130,7 @@ void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMu
     track = node->track(j);
     if (! track || (track->type() == global) || (track->type() == primary) ) continue; // exclude global and primary tracks
     if (track->type() == massFitAtVx || track->type() == massFit) {
-      KFParticle *particle = ((StTrackMassFit *) track)-> kfParticle();
+      KFParticle *particle = ((StTrackMassFit *) track)-> Particle();
       if (! particle) continue;
       fillKFTracks(particle);
     }

@@ -1235,6 +1235,12 @@ void StPicoDstMaker::fillTracks() {
 			  globOrigin.y(),
 			  globOrigin.z() );
     }
+#if !defined(__TFG__VERSION__)
+    Float_t pIn =  gTrk->muHelix().p().mag();
+    Float_t pOut =  gTrk->muOuterHelix().p().mag();
+    picoTrk->setPin(pIn);
+    picoTrk->setPout(pOut);
+#endif
 
     /*
     // Old picoDst style
@@ -1301,10 +1307,6 @@ void StPicoDstMaker::fillTracks() {
 	// Set sigma and correlation arrays
 	covMatrix->setSigmas( SigmaArr );
 	covMatrix->setCorrelations( CorrArr );
-	Float_t pIn =  gTrk->muHelix().p().mag();
-	Float_t pOut =  gTrk->muOuterHelix().p().mag();
-	covMatrix->setPin(pIn);
-	covMatrix->setPout(pOut);
       } //if(dcaG)
     } //if( mCovMtxMode == PicoCovMtxMode::Write )
 

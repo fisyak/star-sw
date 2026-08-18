@@ -44,6 +44,7 @@
  * Initial Revision.
  *
  **************************************************************************/
+#include <cassert>
 #include "StDcaGeometry.h"
 #if ROOT_VERSION_CODE < 331013
 #include "TCL.h"
@@ -180,7 +181,7 @@ void   StDcaGeometry::GetXYZ(Double_t xyzp[6], Double_t CovXyzp[21]) const {
   TCL::ucopy(Cov.GetArray(),CovXyzp,21);
 }
 //________________________________________________________________________________
-KFParticle& StDcaGeometry::Particle(Int_t kg, Int_t pdg)  const {
+KFParticle& StDcaGeometry::Particle(Int_t kg, Int_t pdg, Float_t chi2, Int_t ndf)  const {
   static KFParticle fParticle;
   static KFPTrack track;
   Double_t xyzp[6], CovXyzp[21];
@@ -194,16 +195,41 @@ KFParticle& StDcaGeometry::Particle(Int_t kg, Int_t pdg)  const {
   //    track.SetChi2(GlobalTracks_mChiSqXY[k]);
   //  track.SetId(kg);
   Int_t q   = 1;
-  if (! pdg) pdg = 211;
-  if (charge() < 0) {
-    q = -1;
-    pdg = -pdg;
-  } 
+  if (pdg) {
+    q = TDatabasePDG::Instance()->GetParticle(pdg)->Charge()/3;
+    assert(q);
+    if (TMath::Abs(q) != 1) {
+      Float_t scale = TMath::Abs(q);
+      track.SetPx( track.GetPx()*scale );
+      track.SetPy( track.GetPy()*scale );
+      track.SetPz( track.GetPz()*scale );
+      static Int_t index2[9] = { 6,7,8, 10,11,12, 15,16,17 };
+      for(Int_t iIndex=0; iIndex<9; iIndex++){
+        const Int_t iC = index2[iIndex];
+        track.SetCovariance( iC, track.GetCovariance(iC)*scale );
+      }
+      static Int_t index4[6] = { 9, 13,14, 18,19,20 };
+      for(Int_t iIndex=0; iIndex<6; iIndex++){
+        const Int_t iC = index4[iIndex];
+        track.SetCovariance( iC, track.GetCovariance(iC)*scale*scale );
+      }
+    }
+  } else {
+    pdg = 211;
+    if (charge() < 0) {
+      q = -1;
+      pdg = -pdg;
+    }  
+  }
   track.SetCharge(q);
   fParticle = KFParticle(track, pdg);
   fParticle.SetPDG(pdg);
   fParticle.SetId(kg);
   fParticle.AddDaughterId(kg);
+  if (ndf) {
+    fParticle.Chi2() = chi2;
+    fParticle.NDF()  = ndf;;
+  }
 #if 0
   Float_t d = fParticle.GetCovariance(0) + fParticle.GetCovariance(2) + fParticle.GetCovariance(5);
   if (d <= 0 || d >= 1e6) {

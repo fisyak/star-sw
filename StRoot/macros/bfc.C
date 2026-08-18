@@ -90,7 +90,9 @@ void Load(const Char_t *options="");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout,dbSnapshot");
 //TString defChain("MC,r2023a,P2023a,StiCA,-in,TpcRS,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,UseCAVxFinder,evout,geantout"); //,AgML");
 //TString defChain("MC,AuAu_2023,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout"); //,AgML");
-TString defChain("MC,9p8GeV_fixedTarget_2026,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout,McTpcAna,NTuple2Hits"); //,AgML");
+//TString defChain("MC,9p8GeV_fixedTarget_2026,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout,McTpcAna,NTuple2Hits,MassFit"); //,AgML");
+TString defChain("MC,9p8GeV_fixedTarget_2026,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,tags,UseCAVxFinder,evout,geantout,McTpcAna,NTuple2Hits,MassFit"); //,AgML");
+//TString defChain("MC,9p8GeV_fixedTarget_2026,P2023a,Agi,StiCA,-in,TpcRS,corrZ,TpxClu,TPC23,bbcSim,btofsim,ETofSim,Muons20,vmc,Rung.1,dEdxCalib,tags,UseCAVxFinder,evout,geantout,McTpcAna,NTuple2Hits"); //,AgML");
 StBFChain * bfc(Int_t First, Int_t Last,const Char_t *Chain = "", // + ",Display",
 		const Char_t *infile=0, const Char_t *outfile=0, const Char_t *TreeFile=0, const Char_t *chainName=0);
 StBFChain *bfc(Int_t First, const Char_t *Chain = defChain,
@@ -252,11 +254,11 @@ StBFChain *bfc(Int_t First, Int_t Last,
   chain->SetAttr(".Privilege",1,"StEandBDirMaker::*");    // just for debuggin purpose
   chain->SetAttr(".Privilege",1,"StEventMaker::*");       //May be allowed to act upon trigger IDs (filtering)
   //  if (TString(Chain).Contains("gmtCosmics",TString::kIgnoreCase)) chain->SetAttr(".Privilege",1,"StGmtRawMaker::*");  
-#endif
   // Switch off histogram in etofSim
   if (chain->Maker("etofSim")) {
     ((StETofSimMaker *) chain->Maker("etofSim"))->setWriteHistos(kFALSE);
   }
+#endif
   Int_t iInit = chain->Init();
   if (iInit >=  kStEOF) {chain->FatalErr(iInit,"on init"); return chain;}
   if (Last == 0) return chain;

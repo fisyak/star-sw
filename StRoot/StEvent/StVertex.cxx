@@ -166,7 +166,7 @@ StVertex::positionError() const
       else                 sigma[i] = -13.;
     }
   } else {
-    KFParticle *kf = (KFParticle *) mKFVertex->kfParticle();
+    KFParticle *kf = (KFParticle *) mKFVertex->Particle();
     for (Int_t i = 0; i < 3; i++) {
       sigma[i] = kf->GetCovariance(i,i);
       if (sigma[i] >= 0.0) sigma[i] = TMath::Sqrt(sigma[i]);
@@ -181,7 +181,7 @@ void StVertex::setParent(StTrackMassFit* val) {
   mParent = val; 
   StTrackMassFit *mKFVertex = parent();
   if (mKFVertex) {
-    KFParticle *kf = (KFParticle *) mKFVertex->kfParticle();
+    KFParticle *kf = (KFParticle *) mKFVertex->Particle();
     mPosition.set(kf->X(),kf->Y(),kf->Z());
 //     assert (  TMath::Abs(mCovariantMatrix[0]) < 1e-7 ||
 // 	     (TMath::Abs(mCovariantMatrix[0] - kf->GetCovariance(0,0)) < 1e-7 &&
@@ -305,8 +305,8 @@ void StVertex::removeMassFit(StTrackMassFit* p) {
 //________________________________________________________________________________
 ostream&  operator<<(ostream& os,  const StVertex& v) {
     const StTrackMassFit *mF = v.parent();
-    if (mF && mF->kfParticle()) {
-      KFParticle p = *mF->kfParticle();
+    if (mF && mF->Particle()) {
+      KFParticle p = *mF->Particle();
       if (p.GetParameter(7) != 0.0) {
 	//	p.TransportToDecayVertex();
 	/** Transports the particle to its decay vertex */

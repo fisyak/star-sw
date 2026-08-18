@@ -1985,7 +1985,9 @@ Bfc_st BFC[] = { // standard chains
   {"SCEbyE"      ,"scebye","","MuDSTDeps","StSpaceChargeEbyEMaker"
    ,        "StMuDSTMaker,StPicoEvent,StPass0CalibMaker","Determine EbyE SpaceCharge using StEvent",kFALSE},
   {"SCScalerCal" ,"scscalercal","","MuDSTDeps,picoDst","StSpaceChargeEbyEMaker"
-   ,                              "StMuDSTMaker,StPass0CalibMaker","Calibrate SpaceCharge scalers",kFALSE},
+   ,                               "StMuDSTMaker,StPass0CalibMaker","Calibrate SpaceCharge scalers",kFALSE},
+  {"MassFit"     ,"","","event,StiLibs","StiMassFitMaker","StiMassFitMaker"
+   ,                                                        "Refit SitTrack with mass hypothesises",kFALSE},
   {"compend"     ,"","","event,detDb","StEventCompendiumMaker","StEventCompendiumMaker"
    ,                                                             "Fill event summary in ITTF Chain",kFALSE},
   {"shadow"      ,"","","event,compend"                         ,"StShadowMaker","StShadowMaker","",kFALSE},

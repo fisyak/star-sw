@@ -77,12 +77,12 @@ void MakeTpcZCorrection1() {
   Int_t nrows = 4; // for separate West and East
   Int_t np = 7;// 9; // 6; // 5
   Int_t npO = -1;
-  Double_t min      =  18.0;
-  Double_t max      = 202.0;
+  Double_t min      =  13.0;
+  Double_t max      = 208.0;
   Double_t minOuter =  min; // 22.5;
-  Double_t maxOuter =  max; //208.0;
+  Double_t maxOuter = 208.0;
   Double_t minInner =  min; //20.5;
-  Double_t maxInner =  max; //208.0;
+  Double_t maxInner = 203.0;; //208.0;
   Double_t maxX[4] = {0}; // Index
   Double_t minX[4] = {0}; // 0 -> idx = 1 -> OW, 1 -> idx = 2 -> IW,  2 -> idx = 3 -> OE, 3 -> idx = 4 -> IE, 
   const Char_t *histN[] = {"OW", "IW", "OE", "IE"};

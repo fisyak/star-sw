@@ -30,9 +30,14 @@ using namespace ROOT::Math;
     Int_t shift = 0;							\
     Int_t NrowSize = t->GetRowSize();					\
     if (! strcmp(makeSTRING(C_STRUCT),"Survey")) {shift = 4; NrowSize = 12*8;} \
-    if (! strcmp(makeSTRING(C_STRUCT),"tofTrayConfig")) {def.entries = 120; for (Int_t i = 0; i < 120; i++) {def.iTray[i] = i+1; def.nModules[i] = 32;} \
-      for (Int_t i = 0; i < table->GetNRows(); i++, s++) {		\
-	if (memcmp(&def+shift, s+shift,  NrowSize)) {iprt = kTRUE; break;} \
+    if (! strcmp(makeSTRING(C_STRUCT),"tofTrayConfig")) {		\
+      for (Int_t j = 0; j < table->GetNRows(); j++, s++) {		\
+	if (s->entries != 120)      {iprt = kTRUE; break;}		\
+	for (Int_t i = 0; i < 120; i++) {				\
+	  if (s->iTray[i] != i+1)   {iprt = kTRUE; break;}		\
+	  if (s->nModules[i] != 32} {iprt = kTRUE; break;}		\
+	}								\
+	if (iprt) break;						\
       }									\
     }
 }
@@ -539,6 +544,12 @@ MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectionBC,Calibrations/tpc/TpcAdcCo
 MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectionCC,Calibrations/tpc/TpcAdcCorrectionC);
 #include "St_TpcAdcCorrectPromptC.h"
 MakeChairInstance2(tpcCorrection,St_TpcAdcCorrectPromptC,Calibrations/tpc/TpcAdcCorrectPrompt);
+#include "St_MDFCorrectionC.h"
+ClassImp(St_MDFCorrectionC);
+#include "St_MDFCorrection3C.h"
+ClassImp(St_MDFCorrection3C);
+#include "St_MDFCorrection4C.h"
+ClassImp(St_MDFCorrection4C);
 #include "St_TpcAdcCorrectionMDF.h"
 MakeChairInstance2(MDFCorrection,St_TpcAdcCorrectionMDF,Calibrations/tpc/TpcAdcCorrectionMDF);
 #include "St_TpcAdcCorrection3MDF.h"

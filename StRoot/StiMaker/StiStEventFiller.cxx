@@ -589,6 +589,8 @@ using namespace std;
 #include "KFParticle/KFPTrack.h"
 #include "TMath.h"
 #ifdef __TFG__VERSION__
+#include "StDbUtilities/StTpcCoordinateTransform.hh"
+#include "StDbUtilities/StCoordinates.hh" 
 #include "StTpcDb/StTpcDb.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
 #include "StDetectorDbMaker/St_beamSpotC.h"
@@ -598,8 +600,8 @@ using namespace std;
 #include "StDetectorDbMaker/St_starTriggerDelayC.h"
 #include "StTMVARank/StTMVARanking.h"
 #endif /* __TFG__VERSION__ */
-map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::mTrkNodeMap;
-map<StTrackNode*, StiKalmanTrack*> StiStEventFiller::mNodeTrkMap;
+map<StiKalmanTrack*, StTrackNode*> StiStEventFiller::fgTrack2NodeMap;
+map<StTrackNode*, StiKalmanTrack*> StiStEventFiller::fgNode2TrackMap;
 StiStEventFiller *StiStEventFiller::fgStiStEventFiller = 0;
 Int_t StiStEventFiller::_debug = 0;
 #define PrPP(A,B) if (_debug) {LOG_INFO << "StiStEventFiller::" << (#A) << "\t" << (#B) << " = \t" << (B) << endm;}
@@ -711,8 +713,6 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
   mTrackStore = t;
   memset(mUsedHits,0,sizeof(mUsedHits));
   memset(mUsedGits,0,sizeof(mUsedGits));
-  mTrkNodeMap.clear();  // need to reset for this event
-  mNodeTrkMap.clear();
   StSPtrVecTrackNode& trNodeVec = mEvent->trackNodes(); 
   StSPtrVecTrackDetectorInfo& detInfoVec = mEvent->trackDetectorInfo(); 
   int errorCount=0; 
@@ -730,7 +730,11 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
       StTrackDetectorInfo* detInfo = new StTrackDetectorInfo;
       fillDetectorInfo(detInfo,kTrack,true); //3d argument used to increase/not increase the refCount. MCBS oct 04.
       // track node where the new StTrack will reside
-      StTrackNode* trackNode = new StTrackNode;
+      StTrackNode* trackNode = new StTrackNode; 
+      trNodeVec.push_back(trackNode);
+      StTrackNode* node = trackNode;
+      Track2NodeMap()[kTrack] = node;
+      Node2TrackMap()[node]   = kTrack ;
       // actual filling of StTrack from StiKalmanTrack
       StGlobalTrack* gTrack = new StGlobalTrack;
       try 
@@ -743,15 +747,11 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
 	  //cout <<"Setting key: "<<(unsigned short)(trNodeVec.size())<<endl;
           gTrack->setIdTruth();
 	  trackNode->addTrack(gTrack);
-	  trNodeVec.push_back(trackNode);
 	  // reuse the utility to fill the topology map
 	  // this has to be done at the end as it relies on
 	  // having the proper track->detectorInfo() relationship
 	  // and a valid StDetectorInfo object.
 	  //cout<<"Tester: Event Track Node Entries: "<<trackNode->entries()<<endl;
-	  StTrackNode* node = trNodeVec.back();
-	  mTrkNodeMap.insert(pair<StiKalmanTrack*,StTrackNode*> (kTrack,node) );
-	  mNodeTrkMap.insert(pair<StTrackNode*,StiKalmanTrack*> (node,kTrack) );
 	  if (trackNode->entries(global)<1)
 	    cout << "StiStEventFiller::fillEvent() -E- Track Node has no entries!! -------------------------" << endl;  
           int ibad = gTrack->bad();
@@ -762,8 +762,8 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
             continue;
           }
 	  fillTrackCount2++;
-if (kTrack->getPointCount(kTpcId)>10)
-StiHftHits::hftHist("HFTAfterAll",kTrack);
+	  if (kTrack->getPointCount(kTpcId)>10)
+	    StiHftHits::hftHist("HFTAfterAll",kTrack);
           fillPulls(kTrack,gTrack,0);
           if (kTrack->getPointCount()<15) continue;
 	  fillTrackCountG++;
@@ -813,7 +813,7 @@ void StiStEventFiller::fillEventPrimaries()
 {
   //cout <<"StiStEventFiller::fillEventPrimaries() -I- Started"<<endl;
   mGloPri=1;
-  if (!mTrkNodeMap.size()) 
+  if (!Track2NodeMap().size()) 
     {
       cout <<"StiStEventFiller::fillEventPrimaries(). ERROR:\t"
 	   << "Mapping between the StTrackNodes and the StiKalmanTracks is empty.  Exit." << endl;
@@ -837,8 +837,8 @@ void StiStEventFiller::fillEventPrimaries()
   for (mTrackN=0; mTrackN<nTracks;++mTrackN) {
     kTrack = (StiKalmanTrack*)(*mTrackStore)[mTrackN];
     if (!accept(kTrack)) 			continue;
-    map<StiKalmanTrack*, StTrackNode*>::iterator itKtrack = mTrkNodeMap.find(kTrack);
-    if (itKtrack == mTrkNodeMap.end())  	continue;//Sti global was rejected
+    map<StiKalmanTrack*, StTrackNode*>::iterator itKtrack = Track2NodeMap().find(kTrack);
+    if (itKtrack == Track2NodeMap().end())  	continue;//Sti global was rejected
     mTrackNumber++;
 
     nTRack = (*itKtrack).second;
@@ -922,7 +922,6 @@ void StiStEventFiller::fillEventPrimaries()
   }
   mEvent->sortVerticiesByRank();
 #endif /* ! __TFG__VERSION__ */
-  mTrkNodeMap.clear();  // need to reset for the next event
   cout <<"StiStEventFiller::fillEventPrimaries() -I- Primaries (1):"<< fillTrackCount1 <<endl;
   cout <<"StiStEventFiller::fillEventPrimaries() -I- Primaries (2):"<< fillTrackCount2 <<endl;
   cout <<"StiStEventFiller::fillEventPrimaries() -I- GOOD:"<< fillTrackCountG <<endl;
@@ -1014,6 +1013,8 @@ void StiStEventFiller::fillDetectorInfo(StTrackDetectorInfo* detInfo, StiKalmanT
 	}
 	memcpy(x[0],x[1],4*sizeof(double)); iready=2005;
 	tpcHit->setLengthInTpc(len);
+	if (_debug) 
+	  tpcHit->Print();
       }
 //Kind of HACK, save residials into StiHack 
       fillResHack(hh,stiHit,node);
@@ -1532,14 +1533,15 @@ void StiStEventFiller::fillDca(StTrack* stTrack, StiKalmanTrack* track)
 void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTrackNode *node, StTpcHit *tpcHit)
 {
 #ifdef __TFG__VERSION__
-  static Double_t zGG     = St_tpcDimensionsC::instance()->gatingGridZ();
-  static Double_t zMem    = StTpcDb::instance()->Tpc2GlobalMatrix().GetTranslation()[2];
+  static Int_t _debug = 0;
+  //  static Double_t zGG     = St_tpcDimensionsC::instance()->gatingGridZ();
   static Double_t DV      = 1e-6*StTpcDb::instance()->DriftVelocity(1); // cm/usec
-  static Double_t GGdelay = St_GatingGridBC::instance()->t0(0); // usec
-  static Double_t GGslope = St_GatingGridBC::instance()->settingTime(0)/4.6; 
-  static Double_t trig[2] = {St_starTriggerDelayC::instance()->TrigT0GG(0),  // Inner
-			     St_starTriggerDelayC::instance()->TrigT0GG(1)}; // Outer 
-  static Double_t GGregion= (TMath::Max(trig[0], trig[1]) + GGdelay + 10*GGslope) * DV;
+  static Double_t TimeBinWidth = 1./StTpcDb::instance()->Electronics()->samplingFrequency(); // MHz => usec
+  static Double_t GGdelay = St_GatingGridBC::instance()->t0(0)/TimeBinWidth;              // usec => time buckets
+  static Double_t GGslope = St_GatingGridBC::instance()->settingTime(0)/4.6/TimeBinWidth; // usec => time buckets
+  static Double_t trig[2] = {St_starTriggerDelayC::instance()->TrigT0GG(0)/TimeBinWidth,  // Inner // usec => time buckets
+			     St_starTriggerDelayC::instance()->TrigT0GG(1)/TimeBinWidth}; // Outer // usec => time buckets
+  static Double_t GGregion= (TMath::Max(trig[0], trig[1]) + GGdelay + 10*GGslope) * DV * TimeBinWidth;
 #endif /* __TFG__VERSION__ */
 
   if (! tpcHit) return;
@@ -1564,35 +1566,49 @@ void StiStEventFiller::FillTpcdX(const StiKalmanTrack* track, const StiKalmanTra
   Double_t dX = TMath::Abs(s[0]) + TMath::Abs(s[1]); 
   tpcHit->setdX(dX);
 #ifdef __TFG__VERSION__
-  Double_t z[2] = {
-    physicalHelix->z(s[0]) - zMem,
-    physicalHelix->z(s[1]) - zMem
-  };
-  Double_t zM = originD->z() - zMem; // z from membrane
-  Double_t dZ = TMath::Abs(z[0] - z[1]); 
-  Double_t GG = 1;
-  if (dZ > 1e-7) {
-    if        (z[0] < 0 && z[1] > 0) {    // Membrane
-      if (zM > 0) GG =   z[1]/dZ;
-      else        GG = - z[0]/dZ;
-    } else if (z[0] > 0 && z[1] < 0) {
-      if (zM > 0) GG =   z[0]/dZ;
-      else        GG = - z[1]/dZ;
+  if (_debug) {cout << "pT = " << node->getPt() << "\t"; tpcHit->Print();}
+  Int_t sector = tpcHit->sector();
+  Int_t row    = tpcHit->padrow();
+  static StTpcCoordinateTransform transform(StTpcDb::instance());
+  static StTpcLocalCoordinate     localTpc;
+  static StTpcLocalSectorCoordinate        localSect[4]; // upper, lower, middle, membrane
+  transform(physicalHelix->at(s[0]),localSect[0],sector,row);
+  transform(physicalHelix->at(s[1]),localSect[1],sector,row);
+  transform(middle,                 localSect[2],sector,row);
+  transform(middle,                 localTpc, sector, row);
+  StThreeVectorD xyz(localTpc.position().x(), localTpc.position().y(), 0.0);
+  localTpc.setPosition(xyz);
+  transform(localTpc,               localSect[3]);
+  static StTpcPadCoordinate Pad[4];
+  Float_t times[4]  = {0};
+  for (Int_t i = 3; i >=  0; i--) {
+    transform(localSect[i], Pad[i]);
+    times[i] = TMath::Floor(Pad[i].timeBucket());
+  }
+  Float_t dDrift = TMath::Abs(times[0] - times[1]) + 1;
+  Float_t GG = 1;
+  if (dDrift > 1) {
+    if (times[0] > times[3] && times[1] > times[3]) {
+      GG = 0;
+    } else  if (times[0] <= times[3] && times[1] >= times[3]) {    // Membrane
+      GG =   (times[3] - times[0] + 1)/dDrift;
+    } else if (times[0] >= times[3] && times[1] <= times[3]) {
+      GG =   (times[3] - times[1] + 1)/dDrift;
     } else { // Gating Grid
-      Double_t drift = zGG - TMath::Abs(zM);
-      if (drift > -0.6 && drift < GGregion) {// not prompt hits
+      Float_t drift = localSect[2].position().z();
+      if (drift > -0.6 && drift < GGregion) {// not prompt hits and not affected by GG
 	Int_t io = 0;
-	if (tpcHit->padrow() > (UInt_t) St_tpcPadConfigC::instance()->numberOfInnerRows(tpcHit->sector())) io = 1;
-	Double_t t0 = GGdelay + trig[io];
-	Double_t t[2]  = {(zGG - TMath::Abs(z[0]))/DV - t0,
-			  (zGG - TMath::Abs(z[1]))/DV - t0};
-	Double_t dT = TMath::Abs(t[0] - t[1]);
-	Double_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])};
+	if (row > St_tpcPadConfigC::instance()->numberOfInnerRows(sector)) io = 1;
+	Float_t t0 = GGdelay + trig[io];
+	Float_t t[2] = {0};
+	for (Int_t j = 0; j < 2; j++) 	t[j] = TMath::Floor(Pad[j].timeBucket() - t0);
+	Float_t tO[2] = {TMath::Min(t[0],t[1]), TMath::Max(t[0],t[1])+1};
+	Float_t dT = tO[1] - tO[0];
 	if (tO[1] < 0.0) {
 	  GG = 0;
 	} else {
 	  if (tO[0] < 0.0) tO[0] = 0.0;
-	  Double_t loss = GGslope*(TMath::Exp(-tO[0]/GGslope) - TMath::Exp(-tO[1]/GGslope));
+	  Float_t loss = GGslope*(TMath::Exp(-tO[0]/GGslope) - TMath::Exp(-tO[1]/GGslope));
 	  GG =  (tO[1] - tO[0] - loss)/dT; 
 	  if (GG < 0.0) GG = 0.0;
 	}

@@ -538,8 +538,8 @@ StSPtrVecObject& V = ev->content();
     if (!to) continue;
     if (!strstr(to->ClassName(),className)) continue;
     if  (strstr(to->ClassName(),"StSPtrVecTrackNode")) {
-    // Clean assoicated track
-      static const Char_t *ClassWithAssoiatedTracks[] = {"StRichPidTraits","StMtdHit","StTofSlat","StTofCell","StTofHit","StBTofHit","StETofHit","StETofDigi"};
+      // Clean assoicated track
+      //      static const Char_t *ClassWithAssoiatedTracks[] = {"StRichPidTraits","StMtdHit","StTofSlat","StTofCell","StTofHit","StBTofHit","StETofHit","StETofDigi"};
       //      if (event->richCollection() && event->richCollection()->getRichHits().size()) {}
       const StMtdCollection* mtd = ev->mtdCollection();
       if (mtd) {

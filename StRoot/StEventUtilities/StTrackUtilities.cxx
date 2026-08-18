@@ -51,7 +51,7 @@ void StTrackUtilities::FillPrimaryTrack(StPrimaryTrack *pTrack) {
   if (! gTrack) return;
   StTrackMassFit *mfp = (StTrackMassFit *) node->track(massFitAtVx);
   if (! mfp) return;
-  const KFParticle &P = *mfp->kfParticle();
+  const KFParticle &P = *mfp->Particle();
   pTrack->setKey( gTrack->key());
   pTrack->setFlagExtension( gTrack->flagExtension());
   pTrack->setIdTruth(gTrack->idTruth(),gTrack->qaTruth());

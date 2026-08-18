@@ -188,10 +188,20 @@ StiMaker::StiMaker(const Char_t *name) :
   if (  strstr(gSystem->Getenv("STAR"),".DEV") &&
       ! strstr(gSystem->Getenv("STAR"),".DEV2") )
      SetAttr("useAux",kTRUE); // Auxiliary info added to output for evaluation
+  SetAttr("keepSti"             ,kFALSE);
 }
 //_____________________________________________________________________________
 void StiMaker::Clear(const char*)
 {
+  if (IAttr("keepSti")) {
+//    LOG_INFO << ": Perform Yuri's clear... ;-)" << endm;
+//      StMemStat::PrintMem("Before StiFactory clear()");
+      _toolkit->getHitFactory()->clear();
+      _toolkit->getTrackNodeFactory()->clear();
+      _toolkit->getTrackNodeExtFactory()->clear();
+      _toolkit->getTrackNodeInfFactory()->clear();
+      _toolkit->getTrackFactory()->clear();
+  }
   if (_tracker  ) _tracker->clear();
   if (mPullEvent) mPullEvent->Clear();
   StMaker::Clear();
@@ -509,6 +519,7 @@ Int_t StiMaker::MakePrimaryTracks(StEvent   * event) {
 //_____________________________________________________________________________
 void StiMaker::MyClear()
 {
+  if (IAttr("keepSti")) return;
 //    LOG_INFO << ": Perform Yuri's clear... ;-)" << endm;
 //      StMemStat::PrintMem("Before StiFactory clear()");
       _toolkit->getHitFactory()->clear();

@@ -235,10 +235,10 @@ class StMuTrack : public TObject {
     const StThreeVectorF &firstPoint() const  {return mFirstPoint;} ///< Returns positions of first measured point.
     const StThreeVectorF &lastPoint()  const  {return mLastPoint;}///< Returns positions of last measured point.
 #endif /* __TFG__VERSION__ */
-    StPhysicalHelixD helix() const;       ///< Returns inner helix (first measured point)
-    StPhysicalHelixD outerHelix() const;  ///< Returns outer helix (last measured point)
-    const StMuHelix &muHelix()      const {return mHelix;}      ///< Returns inner helix (first measured point)
-    const StMuHelix &muOuterHelix() const {return mOuterHelix;} ///< Returns outer helix (last measured point)
+    StPhysicalHelixD helix() const;       ///< Returns inner helix (first measured TPC  point)
+    StPhysicalHelixD outerHelix() const;  ///< Returns outer helix (last measured TPC  point)
+    const StMuHelix &muHelix()      const {return mHelix;}      ///< Returns inner helix (first measured TPC  point)
+    const StMuHelix &muOuterHelix() const {return mOuterHelix;} ///< Returns outer helix (last measured TPC  point)
 #ifndef __TFG__VERSION__
     const StMuProbPidTraits &probPidTraits() const; ///< Returns Yuri Fisyak new pid probabilities. 
     const StMuBTofPidTraits &btofPidTraits() const; /// dongx

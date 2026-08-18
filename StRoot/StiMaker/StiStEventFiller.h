@@ -204,8 +204,8 @@ public:
     double impactParameter(StiKalmanTrack* kTrack, StThreeVectorD &vertexPosition);
     double impactParameter(StTrack* strack, StThreeVectorD &vertexPosition);
     void setPullEvent(StiPullEvent *pe) 		{mPullEvent=pe;}
- static map<StiKalmanTrack*, StTrackNode*> *Track2NodeMap() {return &mTrkNodeMap;}
- static map<StTrackNode*, StiKalmanTrack*> *Node2TrackMap() {return &mNodeTrkMap;}
+    static map<StTrackNode*, StiKalmanTrack*> &Node2TrackMap() {return *&fgNode2TrackMap;}
+    static map<StiKalmanTrack*, StTrackNode*> &Track2NodeMap() {return *&fgTrack2NodeMap;}  
 private:
  void fillResHack(StHit *hh,const StiHit *stiHit, const StiKalmanTrackNode *node);
  void fillPulls  (StHit *hh,const StiHit *stiHit
@@ -226,8 +226,8 @@ private:
     int mTrackNumber;
     int mUsedHits[100];
     int mUsedGits[100];
-    static map<StiKalmanTrack*, StTrackNode*> mTrkNodeMap;
-    static map<StTrackNode*, StiKalmanTrack*> mNodeTrkMap;
+    static map<StiKalmanTrack*, StTrackNode*> fgTrack2NodeMap;
+    static map<StTrackNode*, StiKalmanTrack*> fgNode2TrackMap;
     unsigned short mStiEncoded;
     //helix parameters
     StThreeVectorD *originD;

@@ -28,6 +28,7 @@ class TMultiDimFit;
 ofstream out;
 TMultiDimFit* fit = 0;
 static Bool_t Sigma = kFALSE;
+static Int_t ConvType = 0;  // => 10 for Sigma
 // enum EMDFPolyType {
 //   kMonomials,
 //   kChebyshev,
@@ -72,7 +73,7 @@ void FitPP::Loop()
       nb = fChain->GetEntry(jentry);   nbytes += nb;
       if (Cut(ientry) < 0) continue;
       // FitP->Draw("mu:x>>MuX","i&&j&&dmu<0.1&&prob>1e-5&&dsigma>0&&dsigma<0.01&&abs(mu)<0.1","prof")
-      if (! (i&&j&&dmu<0.01&&dsigma>0&&dsigma<0.01&&abs(mu)<0.5)) continue;
+      if (! (i&&j&&dmu<0.01&&dsigma>0&&dsigma<0.01&&abs(mu)<0.5&&sigma>0.01)) continue;
       Double_t NodEdx = x;
       Double_t EtaG = y;
       xx[0] = TMath::Log(NodEdx);
@@ -80,7 +81,11 @@ void FitPP::Loop()
       if (! Sigma) {
 	fit->AddRow(xx, mu, dmu*dmu);
       } else {
-	fit->AddRow(xx, sigma, dsigma*dsigma);
+	if (ConvType) {
+	  fit->AddRow(xx, TMath::Log(sigma), dsigma*dsigma/(sigma*sigma));
+	} else {
+	  fit->AddRow(xx, sigma, dsigma*dsigma);
+	}
       }
    }
 }
@@ -88,7 +93,7 @@ void FitPP::Loop()
 void PrintRow() {
   Int_t i, j;
   // Assignment to coefficients vector.
-  out << "  row.PolyType = \t"      << fit->GetPolyType() << ";" << endl;
+  out << "  row.PolyType = \t"      << ConvType + fit->GetPolyType() << ";" << endl;
   out << "  row.NVariables = \t"    << fit->GetNVariables() << ";" << endl;
   out << "  row.NCoefficients = \t" << fit->GetNCoefficients() << ";" << endl;
   for (i = 0; i < fit->GetNVariables(); i++) {
@@ -255,15 +260,17 @@ void  MakeTpcLengthCorrectionMDN(Int_t date = 0, Int_t time = 0){
   out << "TDataSet *CreateTable() {" << endl;
   out << "  if (!gROOT->GetClass(\"St_MDFCorrection\")) return 0;" << endl;
   out << "  MDFCorrection_st row;" << endl;
-  out << "  St_MDFCorrection *tableSet = new St_MDFCorrection(\"TpcLengthCorrectionMDN\",6);" << endl;
-  out << "  Int_t nrows = "<< 2*Ncases <<"8;" << endl;
+  out << "  Int_t nrows = "<< 2*Ncases << ";" << endl;
+  out << "  St_MDFCorrection *tableSet = new St_MDFCorrection(\"TpcLengthCorrectionMDN\",nrows);" << endl;
   Int_t idx = 0;
   for (Int_t l = 0; l < Ncases; l++) {
     fIn[l]->cd();
     for (Int_t m = 0; m < 2; m++) {
       Sigma = (m == 1);
+      ConvType = 0;
+      if (Sigma) ConvType = 10;
       out << "  memset(&row,0,tableSet->GetRowSize());" << endl;
-      out << "  row.nrows =  " << 2*Ncases << "; //" << gDirectory->GetName() << endl;
+      out << "  row.nrows =  nrows; //" << gDirectory->GetName() << endl;
       idx++;
       out << "  row.idx   = " << Form("%2i", idx) << ";" << endl;
       if (fIn[l]) {

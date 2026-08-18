@@ -1723,7 +1723,7 @@ void StiKalmanTrack::unset()
 //_____________________________________________________________________________
 void StiKalmanTrack::print(const char *opt) const
 {
-  printf("Track %p\n",(void*)this);
+  printf("Track %p: chi2/NDF= %f, no.Hits = %i\n",(void*)this, getChi2(), getFitPointCount(0));
 
   StiKTNIterator it;
   int n=0;

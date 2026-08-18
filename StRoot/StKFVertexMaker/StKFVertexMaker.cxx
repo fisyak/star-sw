@@ -168,7 +168,7 @@ KFParticle *StKFVertexMaker::AddTrackAt(const StGlobalTrack *gTrack) {
   StTrackMassFit *mf = (StTrackMassFit *) node->track(massFit,0);
   if (mf) {
     mf->setLength(gTrack->length());
-    particle = AddTrackAt(mf->kfParticle(),kg);
+    particle = AddTrackAt(mf->Particle(),kg);
   } 
   if (! particle) {
     const StDcaGeometry* dca = gTrack->dcaGeometry();
@@ -817,7 +817,7 @@ void StKFVertexMaker::ReFitToStVertex() {
     if (pTrack) continue;
     StTrackMassFit *mf = static_cast<StTrackMassFit*>(node->track(massFit));
     if (! mf) continue;
-    KFParticle *T = mf->kfParticle();
+    KFParticle *T = mf->Particle();
     Int_t kg = T->Id();
     if (kg <= 0) {
       assert(!beam);
@@ -830,7 +830,7 @@ void StKFVertexMaker::ReFitToStVertex() {
     if (! primV) continue;
     StTrackMassFit *pf = primV->parentMF();
     if (! pf) continue;
-    KFParticle *V = pf->kfParticle();
+    KFParticle *V = pf->Particle();
     if (! V) continue;
     for (Int_t itk = 0; itk < NoTracks; itk++) {
       StTrackNode *node = nodes[itk]; 
@@ -841,7 +841,7 @@ void StKFVertexMaker::ReFitToStVertex() {
       if (pTrack) continue;
       StTrackMassFit *mf = static_cast<StTrackMassFit*>(node->track(massFit));
       if (! mf) continue;
-      KFParticle *T = mf->kfParticle();
+      KFParticle *T = mf->Particle();
       if (! T) continue;
       KFParticle P = *T;
       FitTrack2Vertex(*V, P, primV);

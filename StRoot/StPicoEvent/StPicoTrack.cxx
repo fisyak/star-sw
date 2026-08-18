@@ -50,6 +50,8 @@ StPicoTrack::StPicoTrack() : TObject(),
   mBEmcMatchedTowerIndex(-1)
 #if !defined (__TFG__VERSION__)
   , mTopoMap_iTpc(0)
+#else
+  , mpIn(0), mpOut(0)
 #endif
   , mIdTruth(0), mQATruth(0), mVertexIndex(-1) {
   // Default constructor
@@ -97,6 +99,9 @@ StPicoTrack::StPicoTrack(const StPicoTrack &track) : TObject() {
   mETofPidTraitsIndex = track.mETofPidTraitsIndex;
 #if !defined (__TFG__VERSION__)
   mTopoMap_iTpc = track.mTopoMap_iTpc;
+#else
+  mpIn = track.pIn();
+  mpOut = track.pOut();
 #endif
   mIdTruth = track.mIdTruth;
   mQATruth = track.mQATruth;
@@ -241,7 +246,12 @@ StPicoPhysicalHelix StPicoTrack::helix(Float_t const B) const {
 //_________________
 Float_t StPicoTrack::dEdxPull(Float_t mass, UChar_t fit, Int_t charge) const {
   Float_t z = -999.;
+#if defined(__TFG__VERSION__)
+  Float_t momentum  = pIn();
+  if (momentum <= 0.0) momentum  = gMom().Mag();
+#else
   Float_t momentum  = gMom().Mag();
+#endif
   Float_t betagamma = momentum * TMath::Abs(charge) / mass;
   Float_t dedx_measured, dedx_resolution = -1;
   if (! fit) { // I70
