@@ -23,9 +23,13 @@
 
 #include "KFParticle.h"
 #include "KFParticleDatabase.h"
+#include "KFParticleDatabase.h"
 
 #include "KFPTrack.h"
 #include "KFPVertex.h"
+#ifdef __ROOT__
+#include "TDatabasePDG.h"
+#endif
 
 #ifndef KFParticleStandalone
 ClassImp(KFParticle);
@@ -65,11 +69,12 @@ void KFParticle::Clear(Option_t *option) {
 
 void KFParticle::Print(Option_t *opt) const {
   std::cout << *this << std::endl;
+#ifdef __ROOT__
   if (opt && (opt[0] == 'a' || opt[0] == 'A')) {
     TRVector P(8,fP); std::cout << "par. " << P << std::endl;
     TRSymMatrix C(8,fC); std::cout << "cov. " << C << std::endl;
-    
   }
+#endif
 }
 
 std::ostream&  operator<<(std::ostream& os, const KFParticle& particle) {
@@ -85,15 +90,21 @@ std::ostream&  operator<<(std::ostream& os, const KFParticle& particle) {
       os << Form(" %s:%8.3f", vn[i], particle.GetParameter(i));
   }
   float Mtp[3] = {0.f, 0.f, 0.f}, MtpErr[3] = {0.f, 0.f, 0.f};
-  particle.GetMass(Mtp[0], MtpErr[0]);     if (MtpErr[0] < 1e-7 || MtpErr[0] > 1e10) MtpErr[0] = -13;
-  particle.GetLifeTime(Mtp[1], MtpErr[1]); if (MtpErr[1] <=   0 || MtpErr[1] > 1e10) MtpErr[1] = -13;
+  if (particle.NDaughters() > 1) {
+    particle.GetMass(Mtp[0], MtpErr[0]);    if (MtpErr[0] < 1e-3 || MtpErr[0] > 1e10) MtpErr[0] = -13;
+    particle.GetLifeTime(Mtp[1], MtpErr[1]); if (MtpErr[1] <=   0 || MtpErr[1] > 1e10) MtpErr[1] = -13;
+  }
   particle.GetMomentum(Mtp[2], MtpErr[2]); if (MtpErr[2] <=   0 || MtpErr[2] > 1e10) MtpErr[2] = -13;
   for (Int_t i = 8; i < 11; i++) {
     if (i == 9 && Mtp[i-8] <= 0.0) continue; // t
     if (MtpErr[i-8] > 0 && MtpErr[i-8] <  9e2) os << Form(" %s:%8.3f+/-%7.3f", vn[i],Mtp[i-8],MtpErr[i-8]);
     else                                       os << Form(" %s:%8.3f", vn[i],Mtp[i-8]);
   }
+#ifdef __ROOT__
+  os << Form("%10s Q:%2i  chi2/NDF :%8.2f/%2i",TDatabasePDG::Instance()->GetParticle(particle.GetPDG())->GetName(),particle.GetQ(),particle.GetChi2(),particle.GetNDF());
+#else
   os << Form(" pdg:%5i Q:%2i  chi2/NDF :%8.2f/%2i",particle.GetPDG(),particle.GetQ(),particle.GetChi2(),particle.GetNDF());
+#endif  
   if (particle.IdTruth()) os << Form(" IdT:%4i/%3i",particle.IdTruth(),particle.QaTruth());
   int nd = particle.NDaughters();
   if (nd > 1) {
