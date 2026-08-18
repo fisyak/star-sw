@@ -16712,3 +16712,512 @@ Track 0x10a5be38: chi2/NDF= 5.807882, no.Hits = 8
 p(   4,   0,   0) x:  -1.274+/- 1.359 y:   0.223+/- 0.216 z:  -5.000+/- 0.744 px:  -0.163+/- 0.026 py:  -0.934+/- 0.056 pz:  -0.312+/- 0.020 M:   0.140 p:   0.998+/-  0.063 pdg:  211 Q:-1  chi2/NDF :   -1.00/ 1
 Track 0x10a5c4f8: chi2/NDF= 0.744380, no.Hits = 20
 All:    11      -2212   -321    -211    13
+================================================================================
+08/12/2026
+[starsub05] ~/work/Histograms/RunXXVI55 $ root.exe NPointsFNGP*.root Res.C
+#sigma(@61 npts) =  7.24% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.92% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.93% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.28% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.32% for F- 9p8GeV_fixedTarget_2026
+
+#mu = -2.28% for F- 13p5GeV_fixedTarget_2026
+#mu = -2.48% for F- 8p65GeV_fixedTarget_2026
+#mu = -2.19% for F- 9p8GeV_fixedTarget_2026a
+#mu = -2.54% for F- 9p8GeV_fixedTarget_2026b
+#mu = -5.06% for F- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI55 $ root.exe NPointsENGP*.root Res.C
+#sigma(@61 npts) =  7.70% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.06% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 12.41% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.55% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 10.91% for E- 9p8GeV_fixedTarget_2026
+
+#mu = -2.81% for E- 13p5GeV_fixedTarget_2026
+#mu = -2.69% for E- 8p65GeV_fixedTarget_2026
+#mu = -3.58% for E- 9p8GeV_fixedTarget_2026a
+#mu = -4.08% for E- 9p8GeV_fixedTarget_2026b
+#mu = -3.69% for E- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI55 $ root.exe NPointsNNGP*.root Res.C
+#sigma(@61 npts) =  6.72% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.17% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  2.47% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.19% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  8.84% for N- 9p8GeV_fixedTarget_2026
+
+#mu = -2.45% for N- 13p5GeV_fixedTarget_2026
+#mu = -2.48% for N- 8p65GeV_fixedTarget_2026
+#mu = -2.97% for N- 9p8GeV_fixedTarget_2026a
+#mu = -3.84% for N- 9p8GeV_fixedTarget_2026b
+#mu = -3.16% for N- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI56 $  root.exe NPointsFNGP*.root Res.C
+#sigma(@61 npts) =  7.39% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.98% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.82% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.02% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.33% for F- 9p8GeV_fixedTarget_2026
+
+#mu =  0.23% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.17% for F- 8p65GeV_fixedTarget_2026
+#mu =  0.31% for F- 9p8GeV_fixedTarget_2026a
+#mu = -0.10% for F- 9p8GeV_fixedTarget_2026b
+#mu = -3.28% for F- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI56 $ root.exe NPointsNNGP*.root Res.C
+#sigma(@61 npts) =  6.87% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.43% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.87% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.87% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  8.81% for N- 9p8GeV_fixedTarget_2026
+
+#mu =  0.41% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.20% for N- 8p65GeV_fixedTarget_2026
+#mu =  0.09% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.10% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.47% for N- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI56 $ root.exe NPointsENGP*.root Res.C
+#sigma(@61 npts) =  7.84% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.35% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.89% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.44% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.93% for E- 9p8GeV_fixedTarget_2026
+
+#mu =  0.46% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.25% for E- 8p65GeV_fixedTarget_2026
+#mu =  0.04% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.04% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.56% for E- 9p8GeV_fixedTarget_2026
+
+--------------------------------------------------------------------------------
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+...
+     90.0677    13.0745     5.5121    91.0117 TPAD   23   214.8684    3.9287   91.1 keV  579.704 MeV FIEL LOSS
+     90.0690    13.0748     5.5092    91.0130 TPAD   23   214.8716    0.0032   73.4  eV  579.704 MeV FIEL NEXT LOSS
+     91.6696    13.5605     1.9474    92.6672 TPAD   24   218.8067    3.9350   91.3 keV  579.612 MeV FIEL LOSS
+     91.6710    13.5609     1.9444    92.6686 TPAD   24   218.8099    0.0033   75.2  eV  579.612 MeV FIEL NEXT LOSS
+     91.6710    13.5609     1.9444    92.6686 TPAD   25   218.8099    0.0000    0.0  eV  579.612 MeV NULL
+     92.5260    13.8243     0.0393    93.5531 TPAD   25   220.9147    2.1048   48.9 keV  579.563 MeV FIEL NEXT LOSS
+
+     92.5260    13.8243     0.0393    93.5531 TPCE    1   220.9147    0.0000    0.0  eV  579.563 MeV NULL
+     92.5908    13.8444    -0.1051    93.6201 TPCE    1   221.0742    0.1595    3.8 keV  579.560 MeV FIEL NEXT LOSS
+     92.5908    13.8444    -0.1051    93.6201 TPCM    1   221.0742    0.0000    0.0  eV  579.560 MeV NULL
+     92.5942    13.8454    -0.1127    93.6236 TPCM    1   221.0826    0.0084  247.2 keV  579.312 MeV FIEL NEXT LOSS
+     92.5942    13.8454    -0.1127    93.6236 TPCE    1   221.0826    0.0000    0.0  eV  579.312 MeV NULL
+     92.6589    13.8655    -0.2568    93.6905 TPCE    1   221.2418    0.1591    3.8 keV  579.309 MeV FIEL NEXT LOSS
+
+     92.6589    13.8655    -0.2568    93.6905 TPAD   25   221.2418    0.0000    0.0  eV  579.309 MeV NULL
+     93.2374    14.0455    -1.5471    94.2894 TPAD   25   222.6673    1.4255   33.1 keV  579.276 MeV FIEL NEXT LOSS
+     93.2374    14.0455    -1.5471    94.2894 TPAD   26   222.6673    0.0000    0.0  eV  579.276 MeV NULL
+     94.8381    14.5501    -5.1207    95.9477 TPAD   26   226.6153    3.9481   91.7 keV  579.184 MeV FIEL LOSS
+...
+Tpc s/r   3/ 23 id    20 xyz:    90.805 +/- 0.000    13.366 +/- 0.000     3.331 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  16/ 20 np  5 tmin/max 352/372 nt 21 tm 357.91 pad  18.11 adc  1241 lTpc   0.00
+Tpc s/r   3/ 24 id    21 xyz:    92.409 +/- 0.000    13.688 +/- 0.000     0.767 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  17/ 20 np  4 tmin/max 357/377 nt 21 tm 362.23 pad  18.47 adc  1540 lTpc   0.00
+Tpc s/r  21/ 24 id     1 xyz:    92.457 +/- 0.000    14.009 +/- 0.000    -1.187 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  74/ 76 np  3 tmin/max 359/365 nt  7 tm 361.67 pad  75.00 adc   202 lTpc   0.00
+Tpc s/r  21/ 25 id     2 xyz:    94.060 +/- 0.000    14.323 +/- 0.000    -3.342 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  75/ 78 np  4 tmin/max 353/365 nt 13 tm 358.03 pad  76.62 adc   791 lTpc   0.00
+Tpc s/r  21/ 26 id     3 xyz:    95.664 +/- 0.000    14.863 +/- 0.000    -7.127 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  77/ 80 np  4 tmin/max 346/366 nt 21 tm 351.64 pad  78.70 adc  1457 lTpc   0.00
+Tpc s/r  21/ 27 id     4 xyz:    97.267 +/- 0.000    15.279 +/- 0.000    -9.931 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl  0 us 0 dX  0.00 pmin/max  79/ 82 np  4 tmin/max 341/361 nt 21 tm 346.91 pad  80.53 adc  1808 lTpc   0.00
+
+StiMaker:INFO  -                   Tpc/Padrow_27/Sector_3  dE pT  0.508+-  4.4, sy 0.040, x =   97.21 z =  -10.18 -1.67 cm( 0.03%) -10.5 keV  1.052 GeV
+StiMaker:INFO  -                   Tpc/Padrow_27/Sector_3  find pT  0.511+-  4.2, sy 0.034, x =   97.27 z =  -10.27 chi2 =   1.57
+
+StiMaker:INFO  -                   Tpc/Padrow_26/Sector_3  dE pT  0.511+-  4.2, sy 0.038, x =   95.61 z =   -6.59 -1.66 cm( 0.03%) -10.5 keV  1.058 GeV
+StiMaker:INFO  -                   Tpc/Padrow_26/Sector_3  find pT  0.499+-  3.9, sy 0.033, x =   95.67 z =   -6.77 chi2 =   3.69
+
+StiMaker:INFO  -                   Tpc/Padrow_25/Sector_3  dE pT  0.499+-  3.9, sy 0.037, x =   94.01 z =   -3.10 -1.66 cm( 0.03%) -10.4 keV  1.032 GeV
+StiMaker:INFO  -                   Tpc/Padrow_25/Sector_3  find pT  0.495+-  3.7, sy 0.033, x =   94.06 z =   -3.24 chi2 =   0.69
+
+StiMaker:INFO  -                   Tpc/Padrow_24/Sector_3  dE pT  0.495+-  3.7, sy 0.037, x =   92.41 z =    0.41 -1.65 cm( 0.03%) -10.3 keV  1.021 GeV
+StiMaker:INFO  -                   Tpc/Padrow_24/Sector_3  find pT  0.501+-  3.5, sy 0.031, x =   92.41 z =    0.45 chi2 =   2.03
+
+StiMaker:INFO  -                   Tpc/Padrow_23/Sector_3  dE pT  0.501+-  3.5, sy 0.035, x =   90.81 z =    3.99  -1.6 cm( 0.03%)   -10 keV  1.037 GeV
+StiMaker:INFO  -                   Tpc/Padrow_23/Sector_3  find pT  0.490+-  3.2, sy 0.030, x =   90.81 z =    3.91 chi2 =   7.47
+
+StiMaker:INFO  -                   Tpc/Padrow_22/Sector_3  dE pT  0.490+-  3.2, sy 0.034, x =   89.21 z =    7.43  -1.6 cm( 0.03%) -9.93 keV  1.009 GeV
+StiMaker:INFO  -                   Tpc/Padrow_22/Sector_3  dE pT  0.490+-  3.2, sy 0.034, x =   89.21 z =    7.43  -1.6 cm( 0.03%) -9.93 keV  1.009 GeV
+
+StiMaker:INFO  -                   Tpc/Padrow_21/Sector_3  dE pT  0.490+-  3.2, sy 0.038, x =   87.61 z =   10.94  -1.6 cm( 0.03%) -9.91 keV  1.009 GeV
+
+StiMaker:INFO  -                   Tpc/Padrow_20/Sector_3  dE pT  0.490+-  3.2, sy 0.042, x =   86.01 z =   14.45  -1.6 cm( 0.03%)  -9.9 keV  1.009 GeV
+StiMaker:INFO  -                   Tpc/Padrow_20/Sector_3  find pT  0.496+-  3.0, sy 0.032, x =   86.00 z =   14.57 chi2 =   4.35
+
+
+StiMassFitMaker:INFO  -                   Tpc/Padrow_22/Sector_3  dE pT  0.457+-  1.1, sy 0.012, x =   89.21 z =    7.40  3.88 cm( 0.03%)  97.3 keV  0.564 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_23/Sector_3  dE pT  0.457+-  1.1, sy 0.012, x =   90.81 z =    3.89 chi2 =   3.19  3.89 cm( 0.03%)  97.5 keV  0.564 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_24/Sector_3  dE pT  0.457+-  1.1, sy 0.013, x =   92.41 z =    0.36 chi2 =   6.73   3.9 cm( 0.03%)  97.9 keV  0.562 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_25/Sector_3  dE pT  0.457+-  1.1, sy 0.013, x =   94.06 z =   -3.27 chi2 =   0.14  3.89 cm( 0.03%)  97.6 keV  0.564 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_26/Sector_3  dE pT  0.456+-  1.1, sy 0.013, x =   95.67 z =   -6.81 chi2 =   1.35  3.79 cm( 0.03%)    95 keV  0.563 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_27/Sector_3  dE pT  0.456+-  1.1, sy 0.013, x =   97.27 z =  -10.36 chi2 =   4.10  3.79 cm( 0.03%)  95.3 keV  0.562 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_28/Sector_3  dE pT  0.456+-  1.1, sy 0.014, x =   98.87 z =  -13.91 chi2 =   0.33   3.8 cm( 0.03%)  95.4 keV  0.563 GeV
+
+StiMassFitMaker:INFO  -                   Tpc/Padrow_22/Sector_3  dE pT  0.458+-  1.9, sy 0.015, x =   89.21 z =    7.41  3.88 cm( 0.03%)  97.2 keV  0.564 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_23/Sector_3  dE pT  0.457+-  1.9, sy 0.015, x =   90.81 z =    3.90 chi2 =   3.12  3.89 cm( 0.03%)  97.4 keV  0.564 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_24/Sector_3  dE pT  0.457+-  1.9, sy 0.016, x =   92.41 z =    0.38 chi2 =   7.06   3.9 cm( 0.03%)    98 keV  0.561 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_25/Sector_3  dE pT  0.457+-  1.9, sy 0.016, x =   94.06 z =   -3.26 chi2 =   0.24  3.89 cm( 0.03%)  97.4 keV  0.565 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_26/Sector_3  dE pT  0.457+-  1.9, sy 0.016, x =   95.67 z =   -6.79 chi2 =   1.78  3.78 cm( 0.03%)  94.9 keV  0.564 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_27/Sector_3  dE pT  0.457+-  1.9, sy 0.017, x =   97.27 z =  -10.34 chi2 =   3.32  3.79 cm( 0.03%)  95.4 keV  0.561 GeV
+
+
+TPGV dZ = 103.993 TPSS 
+TPCM dZ =   0.004
+TPAD dZ = 104.852
+
+TGeoVolume *TPCE = gGeoManager->MakeTube("TPCE",GetMed("TPCE_STANDARD"),46.107,207.75,268); TPCE->SetTitle("TPCE");
+TGeoVolume *TPGV = gGeoManager->MakeTube("TPGV",GetMed("TPCE_P10"),47.969,200,104.9931); TPGV->SetTitle("TPGV");
+TGeoVolume *TPSS = gGeoManager->MakeTubs("TPSS",GetMed("TPCE_P10"),47.969,200,104.9931,-15,15); TPSS->SetTitle("TPSS");
+TGeoVolume *TPCM = gGeoManager->MakeTube("TPCM",GetMed("TPCE_MYLAR"),47.969,200,0.3810000E-02); TPCM->SetTitle("TPCM");
+TGeoVolumeMulti *TPAD = gGeoManager->MakeVolumeMulti("TPAD", GetMed("TPCE_SENSITIVE_GAS")); TPAD->SetTitle("TPAD");
+ TPAD->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),0.8999996,13,104.8516));
+ TPA1->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),1.700001,32.83,105.0516));
+ TPA1->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),1,32.83,105.0516));
+...
+        MembTHK =       0.00762         !// MembTHK    => Central membrane thickness
+        LengthV =       2*209.99 !// 2*210.107       !// LengthV    => TPC (Outer) gas volume length 
+ tpgvLeng = (TPCG_LengthV-tpcg_MembTHK)/2 	!// active gas:                  tpgvLeng = (LengthV - MembTHK)/2 = 209.986190000000022  /2 = 104.993095000000011
+ tpgvz  = (tpcg_MembTHK + tpgvLeng)/2 = (LengthV +  MembTHK)/2                                                    = 209.993809999999996  /2 = 104.996904999999998
+ TPA1->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),1,48.24,105.0516));  105.0516-104.9969 = 5.46999999999968622e-02 0.3810000E-02
+   rot = new TGeoRotation("next",90,75,90,345,0,0);
+   TPCE->AddNode(TPGV,1,new TGeoCombiTrans(0,0,104.9969,rot)); tpgvz  = (tpcg_MembTHK + tpgvLeng)/2
+   TPCE->AddNode(TPGV,2,new TGeoCombiTrans(0,0,-104.9969,rot));
+   TPCE->AddNode(TPCM,1,gGeoIdentity);
+    TPGV->AddNode(TPSS,1,GetRot("R015"));
+...
+--------------------------------------------------------------------------------
+   1  L  308.103 global   101P   X   NP 70 IdT:    1 Q:100 Dca: imp    0.24 +/-   0.34, Z: 197.35 +/-   0.83, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.7%, TanL:  -2.101 +/-   0.032 NF 45 chi2     1.45 gId  8 NdEdx 45  34.53 keV +/-   8.2 %
+p(   1,   0,   0) x:   0.002+/- 0.006 y:   0.241+/- 0.340 z: 197.348+/- 0.825 px:   1.383+/- 0.024 py:  -0.011+/- 0.019 pz:  -2.906+/- 0.036 M:   0.140 p:   3.219+/-  0.038 pdg:  211 Q: 3  chi2/NDF :   -1.00/ 1
+Track 0x1044a350: chi2/NDF= 1.446478, no.Hits = 45
+All:    1000020040
+Track 0x1044a308: chi2/NDF= 1.446478, no.Hits = 45
+                                                           Dca: imp    0.19 +/-   0.65, Z: 197.30 +/-   1.54, psi:  -0.00 +/-   0.03, pT/q:   0.50 +/-   3.3%, TanL:  -2.100 +/-   0.059
+8.0 +/- 3.7 %
+
+
+   1  L  308.103 global   101P   X   NP 70 IdT:    1 Q:100 Dca: imp    0.24 +/-   0.34, Z: 197.35 +/-   0.83, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.7%, TanL:  -2.101 +/-   0.032 NF 45 chi2     1.45 gId  8 NdEdx 45  34.53 keV +/-   8.2 %
+p(   1,   0,   0) x:   0.002+/- 0.006 y:   0.241+/- 0.340 z: 197.348+/- 0.825 px:   1.383+/- 0.024 py:  -0.011+/- 0.019 pz:  -2.906+/- 0.036 M:   0.140 p:   3.219+/-  0.038 pdg:  211 Q: 3  chi2/NDF :   -1.00/ 1
+kTrack: chi2/NDF= 1.446478, no.Hits = 45
+I70     I =   35.999 keV +/-    7.814 % 
+StiMassFitMaker:INFO  -  Fit pT  0.497+-  3.3, sy 0.651, x =    0.00 z =  197.30
+cTrack: pdg = 1000020040, chi2/NDF= 1.356288, no.Hits = 45
+Dca: imp    0.19 +/-   0.65, Z: 197.30 +/-   1.54, psi:  -0.00 +/-   0.03, pT/q:   0.50 +/-   3.3%, TanL:  -2.100 +/-   0.059
+
+================================================================================
+08/13/2026 Compare RunXXVI dE/dx 
+[cvmfswrite07] ~/work/Histograms/RunXXVI38 $ root.exe NPointsFNGP*.root Res.C
+#sigma(@61 npts) =  7.30% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.02% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.17% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.99% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.07% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.12% for F- AuAu_2025
+
+#mu =  0.33% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.11% for F- 8p65GeV_fixedTarget_2026
+#mu =  0.01% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.10% for F- 9p8GeV_fixedTarget_2026b
+#mu = -0.70% for F- 9p8GeV_fixedTarget_2026
+#mu = -0.28% for F- AuAu_2025
+[cvmfswrite07] ~/work/Histograms/RunXXVI38 $ root.exe NPointsNNGP*.root Res.C
+#sigma(@61 npts) =  6.40% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.96% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.81% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  5.96% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.27% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  5.52% for N- AuAu_2025
+
+#mu =  0.28% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.04% for N- 8p65GeV_fixedTarget_2026
+#mu =  0.01% for N- 9p8GeV_fixedTarget_2026a
+#mu =  0.26% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.25% for N- 9p8GeV_fixedTarget_2026
+#mu = -0.09% for N- AuAu_2025
+[cvmfswrite07] ~/work/Histograms/RunXXVI38 $ root.exe NPointsENGP*.root Res.C
+#sigma(@61 npts) =  6.93% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.00% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.62% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.63% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) = 11.97% for E- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  6.45% for E- AuAu_2025
+
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI56 $ root.exe NPointsFNGP*.root Res.C
+#sigma(@61 npts) =  7.39% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.98% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.82% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.02% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.33% for F- 9p8GeV_fixedTarget_2026
+
+#mu =  0.23% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.17% for F- 8p65GeV_fixedTarget_2026
+#mu =  0.31% for F- 9p8GeV_fixedTarget_2026a
+#mu = -0.10% for F- 9p8GeV_fixedTarget_2026b
+#mu = -3.28% for F- 9p8GeV_fixedTarget_2026
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI56 $ root.exe NPointsNNGP*.root Res.C
+#sigma(@61 npts) =  6.87% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.43% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.87% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.87% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  8.81% for N- 9p8GeV_fixedTarget_2026
+
+#mu =  0.41% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.20% for N- 8p65GeV_fixedTarget_2026
+#mu =  0.09% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.10% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.47% for N- 9p8GeV_fixedTarget_2026
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI56 $ root.exe NPointsENGP*.root Res.C
+#sigma(@61 npts) =  7.84% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.35% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.89% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.44% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.93% for E- 9p8GeV_fixedTarget_2026
+
+#mu =  0.46% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.25% for E- 8p65GeV_fixedTarget_2026
+#mu =  0.04% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.04% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.56% for E- 9p8GeV_fixedTarget_2026
+
+Check dNdx fit.
+
+--------------------------------------------------------------------------------
+Tpc s/r  18/ 11 id   328 xyz:     6.368 +/- 0.258   -71.875 +/- 0.000     6.946 +/- 0.582 q(keV)  96.81 idT     0 qa   0 fl  2 us 1 dX  1.60 pmin/max  47/ 49 np  3 tmin/max 372/376 nt  5 tm 374.50 pad  48.20 adc  2873 lTpc   3.30
+
+Tpc s/r  18/ 13 id   423 xyz:     6.315 +/- 0.290   -75.085 +/- 0.000     7.931 +/- 0.267 q(keV)  11.39 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  49/ 51 np  3 tmin/max 374/378 nt  5 tm 376.16 pad  50.11 adc  2263 lTpc   6.53
+
+Tpc s/r  18/ 17 id   577 xyz:     6.390 +/- 0.211   -81.505 +/- 0.000     9.798 +/- 0.705 q(keV)  99.11 idT     0 qa   0 fl  2 us 1 dX  1.63 pmin/max  52/ 54 np  3 tmin/max 377/381 nt  5 tm 379.30 pad  53.28 adc  3293 lTpc  13.27
+
+Tpc s/r  18/ 18 id   618 xyz:     6.614 +/- 0.267   -83.108 +/- 0.000    10.189 +/- 0.422 q(keV)  12.55 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  53/ 55 np  3 tmin/max 377/381 nt  5 tm 379.95 pad  54.73 adc  2493 lTpc  14.94
+Tpc s/r  18/ 19 id   658 xyz:     6.706 +/- 0.265   -84.712 +/- 0.000    10.718 +/- 0.425 q(keV)  12.58 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  54/ 56 np  3 tmin/max 378/382 nt  5 tm 380.84 pad  55.92 adc  2499 lTpc  16.61
+Tpc s/r  18/ 22 id   740 xyz:     7.153 +/- 0.214   -89.524 +/- 0.000    11.954 +/- 0.668 q(keV)  15.90 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  57/ 59 np  3 tmin/max 380/384 nt  5 tm 382.92 pad  58.83 adc  3158 lTpc  21.72
+Tpc s/r  18/ 25 id   854 xyz:     7.749 +/- 0.010   -94.335 +/- 0.000    13.914 +/- 0.234 q(keV)  26.48 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  61/ 65 np  5 tmin/max 383/401 nt 19 tm 386.22 pad  63.03 adc  5259 lTpc  26.76
+Tpc s/r  18/ 26 id   903 xyz:     8.029 +/- 0.036   -95.938 +/- 0.000    14.295 +/- 0.205 q(keV)  19.71 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  63/ 66 np  4 tmin/max 383/401 nt 19 tm 386.86 pad  64.59 adc  3915 lTpc  28.44
+Tpc s/r  18/ 28 id   966 xyz:     8.597 +/- 0.034   -99.145 +/- 0.000    15.252 +/- 0.208 q(keV)  20.15 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  65/ 68 np  4 tmin/max 385/403 nt 19 tm 388.47 pad  66.73 adc  4002 lTpc  31.81
+Tpc s/r  18/ 29 id  1000 xyz:     8.877 +/- 0.010  -100.747 +/- 0.000    15.587 +/- 0.224 q(keV)  23.18 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  67/ 70 np  4 tmin/max 385/404 nt 20 tm 389.03 pad  68.30 adc  4605 lTpc  33.50
+Tpc s/r  18/ 30 id  1039 xyz:     9.219 +/- 0.054  -102.349 +/- 0.000    15.940 +/- 0.166 q(keV)  15.91 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  68/ 71 np  4 tmin/max 386/404 nt 19 tm 389.62 pad  69.98 adc  3160 lTpc  35.19
+
+Tpc s/r  18/ 31 id  1073 xyz:     9.584 +/- 0.229  -103.951 +/- 0.000    16.033 +/- 0.629 q(keV)  62.64 idT     0 qa   0 fl  2 us 1 dX  1.64 pmin/max  70/ 72 np  3 tmin/max 387/391 nt  5 tm 389.78 pad  71.72 adc  3044 lTpc  36.88
+
+Tpc s/r  18/ 33 id  1152 xyz:    10.253 +/- 0.053  -107.154 +/- 0.000    17.288 +/- 0.174 q(keV)  16.61 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  73/ 77 np  5 tmin/max 388/406 nt 19 tm 391.89 pad  75.06 adc  3300 lTpc  40.27
+Tpc s/r  18/ 34 id  1206 xyz:    10.704 +/- 0.038  -108.755 +/- 0.000    17.882 +/- 0.207 q(keV)  20.29 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  75/ 79 np  5 tmin/max 389/407 nt 19 tm 392.89 pad  76.97 adc  4030 lTpc  41.97
+
+Tpc s/r  18/ 35 id  1256 xyz:    11.124 +/- 0.182  -110.356 +/- 0.000    17.957 +/- 0.787 q(keV)  83.69 idT     0 qa   0 fl  2 us 1 dX  1.66 pmin/max  76/ 78 np  3 tmin/max 391/395 nt  5 tm 393.02 pad  77.81 adc  3765 lTpc  43.68
+
+Tpc s/r  18/ 36 id  1299 xyz:    11.239 +/- 0.239  -111.958 +/- 0.000    18.208 +/- 0.645 q(keV)  15.72 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  78/ 80 np  3 tmin/max 391/395 nt  5 tm 393.44 pad  79.05 adc  3123 lTpc  45.39
+
+Tpc s/r  18/ 38 id  1367 xyz:    12.430 +/- 0.058  -115.161 +/- 0.000    19.620 +/- 0.173 q(keV)  68.36 idT     0 qa   0 fl  0 us 1 dX  1.67 pmin/max  82/ 85 np  4 tmin/max 392/410 nt 19 tm 395.81 pad  83.44 adc  3316 lTpc  48.83
+
+Tpc s/r  18/ 39 id  1386 xyz:    12.840 +/- 0.010  -116.764 +/- 0.000    20.196 +/- 0.225 q(keV)  34.78 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  83/ 87 np  5 tmin/max 392/411 nt 20 tm 396.78 pad  85.27 adc  6908 lTpc  50.55
+Tpc s/r  18/ 40 id  1422 xyz:    13.374 +/- 0.282  -118.367 +/- 0.000    19.956 +/- 0.558 q(keV)  14.46 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  86/ 88 np  3 tmin/max 394/398 nt  5 tm 396.38 pad  87.34 adc  2872 lTpc  52.29
+Tpc s/r  18/ 41 id  1456 xyz:    16.610 +/- 0.153  -127.366 +/- 0.000    22.849 +/- 0.314 q(keV)  15.90 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  73/ 76 np  4 tmin/max 392/398 nt  7 tm 394.47 pad  74.39 adc  1117 lTpc  62.15
+Tpc s/r  18/ 42 id  1480 xyz:    17.506 +/- 0.637  -129.367 +/- 0.000    23.351 +/- 1.190 q(keV)  11.36 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  75/ 77 np  3 tmin/max 393/397 nt  5 tm 395.31 pad  76.73 adc   798 lTpc  64.37
+Tpc s/r  18/ 44 id  1549 xyz:    19.079 +/- 0.144  -133.368 +/- 0.000    24.801 +/- 0.314 q(keV)  24.88 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  79/ 83 np  5 tmin/max 395/402 nt  8 tm 397.75 pad  81.09 adc  1748 lTpc  68.87
+Tpc s/r  18/ 45 id  1574 xyz:    20.082 +/- 0.158  -135.368 +/- 0.000    25.201 +/- 0.313 q(keV)  20.31 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  81/ 85 np  5 tmin/max 396/402 nt  7 tm 398.42 pad  83.59 adc  1427 lTpc  71.14
+Tpc s/r  18/ 46 id  1596 xyz:    21.063 +/- 0.171  -137.368 +/- 0.000    25.759 +/- 0.301 q(keV)  14.05 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  83/ 87 np  5 tmin/max 397/403 nt  7 tm 399.36 pad  85.06 adc   987 lTpc  73.43
+Tpc s/r  18/ 47 id  1616 xyz:    21.981 +/- 0.138  -139.367 +/- 0.000    26.623 +/- 0.309 q(keV)  30.82 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  86/ 90 np  5 tmin/max 398/415 nt 18 tm 400.81 pad  87.44 adc  2165 lTpc  75.74
+
+Tpc s/r  18/ 48 id  1633 xyz:    23.066 +/- 0.171  -141.365 +/- 0.000    26.959 +/- 0.306 q(keV) 131.40 idT     0 qa   0 fl  0 us 1 dX  2.28 pmin/max  88/ 92 np  5 tmin/max 399/405 nt  7 tm 401.38 pad  90.06 adc  1307 lTpc  78.06
+
+Tpc s/r  18/ 49 id  1654 xyz:    24.132 +/- 0.176  -143.365 +/- 0.000    27.526 +/- 0.303 q(keV)  17.38 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  91/ 95 np  5 tmin/max 400/406 nt  7 tm 402.33 pad  92.66 adc  1221 lTpc  80.41
+Tpc s/r  18/ 50 id  1675 xyz:    25.355 +/- 0.180  -145.365 +/- 0.000    28.140 +/- 0.299 q(keV)  17.00 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  92/ 97 np  6 tmin/max 401/407 nt  7 tm 403.36 pad  94.48 adc  1194 lTpc  82.78
+Tpc s/r  18/ 51 id  1697 xyz:    26.556 +/- 0.179  -147.366 +/- 0.000    28.753 +/- 0.301 q(keV)  20.00 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  95/100 np  6 tmin/max 402/408 nt  7 tm 404.39 pad  97.28 adc  1405 lTpc  85.17
+Tpc s/r  18/ 52 id  1717 xyz:    27.757 +/- 0.184  -149.368 +/- 0.000    29.385 +/- 0.297 q(keV)  18.80 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max  98/102 np  5 tmin/max 403/409 nt  7 tm 405.45 pad 100.08 adc  1321 lTpc  87.59
+Tpc s/r  18/ 53 id  1741 xyz:    29.064 +/- 0.172  -151.369 +/- 0.000    30.018 +/- 0.301 q(keV)  26.58 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 101/105 np  5 tmin/max 404/410 nt  7 tm 406.52 pad 103.03 adc  1867 lTpc  90.03
+Tpc s/r  18/ 54 id  1763 xyz:    30.381 +/- 0.190  -153.370 +/- 0.000    30.622 +/- 0.291 q(keV)  18.69 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 103/108 np  6 tmin/max 405/411 nt  7 tm 407.53 pad 106.00 adc  1313 lTpc  92.50
+Tpc s/r  18/ 55 id  1777 xyz:    31.824 +/- 0.197  -155.371 +/- 0.000    31.245 +/- 0.281 q(keV)  15.94 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 107/112 np  6 tmin/max 406/412 nt  7 tm 408.58 pad 109.16 adc  1120 lTpc  95.00
+Tpc s/r  18/ 56 id  1791 xyz:    33.403 +/- 0.196  -157.372 +/- 0.000    31.915 +/- 0.286 q(keV)  19.86 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 109/114 np  6 tmin/max 407/413 nt  7 tm 409.70 pad 111.52 adc  1395 lTpc  97.53
+Tpc s/r  18/ 57 id  1806 xyz:    34.815 +/- 0.194  -159.373 +/- 0.000    32.520 +/- 0.287 q(keV)  23.67 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 112/117 np  6 tmin/max 408/414 nt  7 tm 410.72 pad 114.62 adc  1663 lTpc 100.09
+Tpc s/r  18/ 58 id  1819 xyz:    36.218 +/- 0.200  -161.376 +/- 0.000    33.096 +/- 0.282 q(keV)  22.70 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 115/120 np  6 tmin/max 409/414 nt  6 tm 411.69 pad 117.72 adc  1595 lTpc 102.68
+Tpc s/r  18/ 59 id  1837 xyz:    38.050 +/- 0.206  -163.381 +/- 0.000    33.692 +/- 0.275 q(keV)  20.91 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 119/124 np  6 tmin/max 410/414 nt  5 tm 412.69 pad 121.45 adc  1469 lTpc 105.32
+Tpc s/r  18/ 60 id  1863 xyz:    39.485 +/- 0.213  -165.386 +/- 0.000    34.027 +/- 0.243 q(keV)  13.08 idT     0 qa   0 fl  0 us 1 dX  0.00 pmin/max 121/126 np  6 tmin/max 411/414 nt  4 tm 413.25 pad 123.59 adc   919 lTpc 107.99
+
+
+(gdb) p PrintdEdx(1)
+FdEdx  0  S/R 18/11 dEdx(keV/cm)    60.03 dx  1.65 dxC  1.65 x[   -6.52,   71.69,  215.80] Qcm  469.10 AvC   0.105 d[    0.00,    0.21,    0.05] Sum    60.03 Prob  0.15932
+FdEdx  1  S/R 18/17 dEdx(keV/cm)    60.67 dx  1.68 dxC  1.68 x[   -6.54,   81.32,  218.65] Qcm  469.10 AvC   0.105 d[   -0.01,    0.21,    0.05] Sum    60.35 Prob  0.14314
+FdEdx  2  S/R 18/31 dEdx(keV/cm)    37.56 dx  1.70 dxC  1.70 x[   -9.72,  103.77,  224.88] Qcm  208.76 AvC   0.095 d[   -0.05,    0.21,    0.05] Sum    52.75 Prob  0.11244
+FdEdx  3  S/R 18/35 dEdx(keV/cm)    49.78 dx  1.71 dxC  1.71 x[  -11.26,  110.17,  226.80] Qcm  208.76 AvC   0.095 d[   -0.06,    0.21,    0.05] Sum    52.01 Prob  0.51406
+FdEdx  4  S/R 18/38 dEdx(keV/cm)    40.28 dx  1.73 dxC  1.73 x[  -12.57,  114.98,  228.47] Qcm  208.76 AvC   0.095 d[   -0.06,    0.20,    0.05] Sum    49.66 Prob  0.27571
+FdEdx  5  S/R 18/48 dEdx(keV/cm)    57.96 dx  2.34 dxC  2.34 x[  -23.22,  141.17,  235.80] Qcm  167.77 AvC   0.000 d[   -0.10,    0.19,    0.05] Sum    51.05 Prob  0.17520
+.x dEdx.C(0,"/gpfs01/star/data100/TPC/reco/TFG26g3_calib/2025/RF/13p5GeV_fixedTarget_2026/028/27028003/st_physics_27028003_raw_0100006,1,5000.event.root","27028003_0100006,1,5000_1_5000.root",2)
+
+EbyET0 ???
+
+Processing bfc.C(1,5000,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,EbyET0","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006,1,5000.event.root","st_physics_27028003_raw_0100006,1,5000.tags.root")...
+
+bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,EbyET0,dEdxCalib","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006.event.root","st_physics_27028003_raw_0100006.tags.root")
+================================================================================
+08/14/2026
+Tpc s/r  17/ 11 id   219 xyz:   -49.609 +/- 0.036   -54.421 +/- 0.021    -9.801 +/- 0.177 q(keV)  16.93 idT     0 qa   0 fl  0 us 1 dX  2.42 pmin/max   2/  5 np  4 tmin/max 341/361 nt 21 tm 346.38 pad   3.66 adc  3362 lTpc   0.00
+Tpc s/r  17/ 12 id   235 xyz:   -50.327 +/- 0.042   -55.859 +/- 0.024   -11.955 +/- 0.196 q(keV)  12.70 idT     0 qa   0 fl  0 us 1 dX  2.42 pmin/max   4/  6 np  3 tmin/max 338/357 nt 20 tm 342.75 pad   4.86 adc  2523 lTpc   2.49
+Tpc s/r  17/ 13 id   253 xyz:   -51.059 +/- 0.179   -57.290 +/- 0.103   -14.303 +/- 0.818 q(keV)  11.07 idT     0 qa   0 fl  2 us 1 dX  2.42 pmin/max   5/  7 np  3 tmin/max 336/340 nt  5 tm 338.80 pad   6.03 adc  2198 lTpc   4.99
+Tpc s/r  17/ 15 id   288 xyz:   -52.412 +/- 0.009   -60.213 +/- 0.005   -17.785 +/- 0.140 q(keV)  27.04 idT     0 qa   0 fl  0 us 1 dX  2.43 pmin/max   6/ 10 np  5 tmin/max 317/347 nt 31 tm 332.94 pad   7.62 adc  5371 lTpc   9.99
+Tpc s/r  17/ 16 id   304 xyz:   -53.075 +/- 0.121   -61.682 +/- 0.070   -20.105 +/- 0.644 q(keV)  20.21 idT     0 qa   0 fl  2 us 1 dX  2.43 pmin/max   7/  9 np  3 tmin/max 327/331 nt  5 tm 329.03 pad   8.95 adc  4014 lTpc  12.50
+Tpc s/r  17/ 17 id   321 xyz:   -53.683 +/- 0.021   -63.182 +/- 0.012   -21.470 +/- 0.147 q(keV)  24.36 idT     0 qa   0 fl  0 us 1 dX  2.43 pmin/max   9/ 12 np  4 tmin/max 322/341 nt 20 tm 326.73 pad  10.41 adc  4838 lTpc  15.00
+Tpc s/r  17/ 18 id   349 xyz:   -54.339 +/- 0.038   -64.655 +/- 0.022   -23.308 +/- 0.173 q(keV)  17.38 idT     0 qa   0 fl  0 us 1 dX  2.44 pmin/max  10/ 13 np  4 tmin/max 319/338 nt 20 tm 323.64 pad  11.75 adc  3452 lTpc  17.52
+Tpc s/r  17/ 19 id   366 xyz:   -54.920 +/- 0.045   -66.171 +/- 0.026   -25.573 +/- 0.189 q(keV)  14.02 idT     0 qa   0 fl  0 us 1 dX  2.44 pmin/max  12/ 15 np  4 tmin/max 315/334 nt 20 tm 319.83 pad  13.27 adc  2784 lTpc  20.03
+Tpc s/r  17/ 20 id   385 xyz:   -55.467 +/- 0.045   -67.707 +/- 0.026   -27.495 +/- 0.187 q(keV)  14.36 idT     0 qa   0 fl  0 us 1 dX  2.45 pmin/max  13/ 16 np  4 tmin/max 312/331 nt 20 tm 316.59 pad  14.86 adc  2852 lTpc  22.56
+Tpc s/r  17/ 22 id   419 xyz:   -56.526 +/- 0.042   -70.798 +/- 0.024   -31.338 +/- 0.173 q(keV)  17.57 idT     0 qa   0 fl  0 us 1 dX  2.46 pmin/max  15/ 19 np  5 tmin/max 305/325 nt 21 tm 310.12 pad  17.12 adc  3490 lTpc  27.63
+Tpc s/r  17/ 23 id   443 xyz:   -57.045 +/- 0.037   -72.349 +/- 0.021   -33.055 +/- 0.158 q(keV)  21.58 idT     0 qa   0 fl  0 us 1 dX  2.47 pmin/max  17/ 20 np  4 tmin/max 302/322 nt 21 tm 307.23 pad  18.78 adc  4287 lTpc  30.17
+Tpc s/r  17/ 24 id   469 xyz:   -57.496 +/- 0.045   -73.940 +/- 0.026   -35.144 +/- 0.174 q(keV)  17.69 idT     0 qa   0 fl  0 us 1 dX  2.48 pmin/max  19/ 22 np  4 tmin/max 299/318 nt 20 tm 303.72 pad  20.59 adc  3514 lTpc  32.73
+Tpc s/r  17/ 25 id   490 xyz:   -57.995 +/- 0.051   -75.503 +/- 0.030   -37.102 +/- 0.186 q(keV)  15.22 idT     0 qa   0 fl  0 us 1 dX  2.49 pmin/max  21/ 24 np  4 tmin/max 296/315 nt 20 tm 300.42 pad  22.30 adc  3024 lTpc  35.29
+Tpc s/r  17/ 26 id   513 xyz:   -58.391 +/- 0.058   -77.125 +/- 0.033   -39.247 +/- 0.201 q(keV)  12.54 idT     0 qa   0 fl  0 us 1 dX  2.50 pmin/max  23/ 26 np  4 tmin/max 292/311 nt 20 tm 296.81 pad  24.23 adc  2491 lTpc  37.86
+Tpc s/r  17/ 27 id   538 xyz:   -58.720 +/- 0.027   -78.786 +/- 0.016   -41.382 +/- 0.144 q(keV)  37.13 idT     0 qa   0 fl  0 us 1 dX  2.51 pmin/max  24/ 28 np  5 tmin/max 288/308 nt 21 tm 293.22 pad  26.33 adc  7375 lTpc  40.44
+Tpc s/r  17/ 28 id   557 xyz:   -59.306 +/- 0.045   -80.298 +/- 0.026   -43.229 +/- 0.159 q(keV)  22.89 idT     0 qa   0 fl  0 us 1 dX  2.52 pmin/max  22/ 29 np  8 tmin/max 273/305 nt 33 tm 290.11 pad  26.83 adc  4547 lTpc  43.03xf
+Tpc s/r  17/ 31 id   611 xyz:   -60.209 +/- 0.061   -85.322 +/- 0.035   -48.919 +/- 0.186 q(keV)  17.05 idT     0 qa   0 fl  0 us 1 dX  2.56 pmin/max  31/ 35 np  5 tmin/max 275/295 nt 21 tm 280.53 pad  33.30 adc  3386 lTpc  50.87
+Tpc s/r  17/ 32 id   626 xyz:   -60.456 +/- 0.062   -87.027 +/- 0.036   -51.091 +/- 0.183 q(keV)  18.31 idT     0 qa   0 fl  0 us 1 dX  2.57 pmin/max  34/ 37 np  4 tmin/max 272/291 nt 20 tm 276.88 pad  35.58 adc  3637 lTpc  53.52
+Tpc s/r  17/ 33 id   644 xyz:   -60.722 +/- 0.066   -88.721 +/- 0.038   -52.976 +/- 0.189 q(keV)  17.52 idT     0 qa   0 fl  0 us 1 dX  2.59 pmin/max  36/ 40 np  5 tmin/max 268/288 nt 21 tm 273.70 pad  37.81 adc  3480 lTpc  56.18
+Tpc s/r  17/ 34 id   665 xyz:   -60.928 +/- 0.056   -90.450 +/- 0.032   -54.878 +/- 0.166 q(keV)  35.36 idT     0 qa   0 fl  0 us 1 dX  2.61 pmin/max  38/ 42 np  5 tmin/max 265/285 nt 21 tm 270.50 pad  40.19 adc  7024 lTpc  58.87
+Tpc s/r  17/ 35 id   688 xyz:   -61.161 +/- 0.063   -92.163 +/- 0.036   -56.930 +/- 0.170 q(keV)  26.73 idT     0 qa   0 fl  0 us 1 dX  2.63 pmin/max  39/ 43 np  5 tmin/max 262/282 nt 21 tm 267.05 pad  41.50 adc  5310 lTpc  61.57
+Tpc s/r  17/ 36 id   702 xyz:   -61.361 +/- 0.064   -93.896 +/- 0.037   -59.037 +/- 0.171 q(keV)  31.43 idT     0 qa   0 fl  0 us 1 dX  2.66 pmin/max  42/ 46 np  5 tmin/max 258/278 nt 21 tm 263.50 pad  43.89 adc  6242 lTpc  64.30
+Tpc s/r  17/ 37 id   717 xyz:   -61.506 +/- 0.074   -95.660 +/- 0.043   -61.200 +/- 0.188 q(keV)  20.93 idT     0 qa   0 fl  0 us 1 dX  2.68 pmin/max  44/ 49 np  6 tmin/max 253/274 nt 22 tm 259.86 pad  46.41 adc  4157 lTpc  67.06
+Tpc s/r  17/ 39 id   750 xyz:   -61.710 +/- 0.075   -99.238 +/- 0.043   -65.265 +/- 0.186 q(keV)  34.61 idT     0 qa   0 fl  0 us 1 dX  2.74 pmin/max  49/ 54 np  6 tmin/max 247/268 nt 22 tm 253.02 pad  51.64 adc  6875 lTpc  72.65
+Tpc s/r  17/ 40 id   765 xyz:   -61.731 +/- 0.077  -101.075 +/- 0.044   -67.558 +/- 0.185 q(keV)  28.62 idT     0 qa   0 fl  0 us 1 dX  2.78 pmin/max  52/ 57 np  6 tmin/max 243/264 nt 22 tm 249.16 pad  54.45 adc  5684 lTpc  75.49
+Tpc s/r  17/ 41 id   783 xyz:   -61.283 +/- 0.083  -111.700 +/- 0.048   -80.989 +/- 0.577 q(keV)  40.07 idT     0 qa   0 fl  0 us 1 dX  3.76 pmin/max  51/ 56 np  6 tmin/max 214/234 nt 21 tm 219.77 pad  53.48 adc  2815 lTpc  92.12
+Tpc s/r  17/ 43 id   809 xyz:   -60.624 +/- 0.121  -116.693 +/- 0.070   -86.994 +/- 0.560 q(keV)  24.68 idT     0 qa   0 fl  0 us 1 dX  3.90 pmin/max  58/ 62 np  5 tmin/max 204/215 nt 12 tm 209.66 pad  60.08 adc  1734 lTpc  99.95
+Tpc s/r  17/ 44 id   821 xyz:   -60.365 +/- 0.118  -119.148 +/- 0.068   -89.806 +/- 0.575 q(keV)  29.84 idT     0 qa   0 fl  0 us 1 dX  3.98 pmin/max  61/ 66 np  6 tmin/max 200/210 nt 11 tm 204.92 pad  63.25 adc  2096 lTpc 103.99
+Tpc s/r  17/ 45 id   837 xyz:   -59.825 +/- 0.134  -121.764 +/- 0.078   -93.212 +/- 0.560 q(keV)  21.88 idT     0 qa   0 fl  0 us 1 dX  4.07 pmin/max  64/ 69 np  6 tmin/max 194/205 nt 12 tm 199.19 pad  66.91 adc  1537 lTpc 108.10
+Tpc s/r  17/ 46 id   879 xyz:   -59.240 +/- 0.128  -124.407 +/- 0.074   -96.767 +/- 0.593 q(keV)  33.96 idT     0 qa   0 fl  0 us 1 dX  4.17 pmin/max  68/ 71 np  4 tmin/max 190/196 nt  7 tm 193.20 pad  69.64 adc  2386 lTpc 112.32
+Tpc s/r  17/ 48 id   937 xyz:   -57.914 +/- 0.153  -129.777 +/- 0.088  -103.440 +/- 0.598 q(keV)  29.27 idT     0 qa   0 fl  0 us 1 dX  4.39 pmin/max  75/ 78 np  4 tmin/max 178/184 nt  7 tm 181.97 pad  77.38 adc  2056 lTpc 121.06
+Tpc s/r  17/ 49 id   957 xyz:   -57.518 +/- 0.154  -132.307 +/- 0.089  -106.401 +/- 0.626 q(keV)  45.17 idT     0 qa   0 fl  0 us 1 dX  4.53 pmin/max  78/ 84 np  7 tmin/max 171/183 nt 13 tm 176.98 pad  80.78 adc  3173 lTpc 125.62
+Tpc s/r  17/ 50 id   973 xyz:   -56.452 +/- 0.176  -135.225 +/- 0.101  -110.225 +/- 0.612 q(keV)  29.05 idT     0 qa   0 fl  0 us 1 dX  4.69 pmin/max  81/ 88 np  8 tmin/max 164/177 nt 14 tm 170.55 pad  84.34 adc  2041 lTpc 130.33
+Tpc s/r  17/ 51 id   987 xyz:   -55.395 +/- 0.190  -138.138 +/- 0.110  -114.086 +/- 0.638 q(keV)  42.75 idT     0 qa   0 fl  0 us 1 dX  4.87 pmin/max  86/ 92 np  7 tmin/max 158/171 nt 14 tm 164.05 pad  88.89 adc  3003 lTpc 135.22
+Tpc s/r  17/ 53 id  1022 xyz:   -53.202 +/- 0.231  -144.012 +/- 0.133  -121.483 +/- 0.645 q(keV)  37.18 idT     0 qa   0 fl  0 us 1 dX  5.32 pmin/max  95/102 np  8 tmin/max 144/166 nt 23 tm 151.59 pad  98.12 adc  2612 lTpc 145.63
+Tpc s/r  17/ 54 id  1038 xyz:   -51.402 +/- 0.262  -147.355 +/- 0.151  -126.448 +/- 0.649 q(keV)  32.43 idT     0 qa   0 fl  0 us 1 dX  5.62 pmin/max 100/108 np  9 tmin/max 136/150 nt 15 tm 143.23 pad 103.95 adc  2278 lTpc 151.23
+Tpc s/r  17/ 55 id  1050 xyz:   -49.856 +/- 0.303  -150.551 +/- 0.175  -130.764 +/- 0.653 q(keV)  42.02 idT     0 qa   0 fl  0 us 1 dX  5.97 pmin/max 106/114 np  9 tmin/max 128/150 nt 23 tm 135.97 pad 109.34 adc  2952 lTpc 157.17
+Tpc s/r  17/ 56 id  1063 xyz:   -47.350 +/- 0.372  -154.302 +/- 0.215  -136.499 +/- 0.648 q(keV)  40.17 idT     0 qa   0 fl  0 us 1 dX  6.42 pmin/max 111/120 np 10 tmin/max 119/141 nt 23 tm 126.31 pad 115.39 adc  2822 lTpc 163.53
+Tpc s/r  17/ 57 id  1075 xyz:   -46.375 +/- 0.433  -157.169 +/- 0.250  -139.831 +/- 0.693 q(keV)  22.92 idT     0 qa   0 fl  0 us 1 dX  7.02 pmin/max 117/121 np  5 tmin/max 115/126 nt 12 tm 120.70 pad 119.80 adc  1610 lTpc 170.43
+Tpc s/r  18/ 60 id  1117 xyz:   -39.740 +/- 0.139  -165.284 +/- 0.000  -153.345 +/- 0.582 q(keV)  26.73 idT     0 qa   0 fl  0 us 1 dX  4.02 pmin/max   3/  8 np  6 tmin/max  91/104 nt 14 tm  97.95 pad   5.27 adc  1878 lTpc 185.67
+Tpc s/r  18/ 61 id  1129 xyz:   -38.233 +/- 0.111  -167.284 +/- 0.000  -156.342 +/- 0.619 q(keV)  49.31 idT     0 qa   0 fl  0 us 1 dX  4.12 pmin/max   6/ 11 np  6 tmin/max  88/107 nt 20 tm  92.91 pad   8.52 adc  3464 lTpc 189.86
+Tpc s/r  18/ 64 id  1167 xyz:   -32.621 +/- 0.164  -173.290 +/- 0.000  -166.633 +/- 0.607 q(keV)  29.78 idT     0 qa   0 fl  0 us 1 dX  4.47 pmin/max  18/ 21 np  4 tmin/max  71/ 78 nt  8 tm  75.58 pad  19.89 adc  2092 lTpc 203.10
+Tpc s/r  18/ 65 id  1183 xyz:   -30.087 +/- 0.170  -175.297 +/- 0.000  -171.003 +/- 0.626 q(keV)  37.15 idT     0 qa   0 fl  0 us 1 dX  4.61 pmin/max  21/ 28 np  8 tmin/max  63/ 75 nt 13 tm  68.22 pad  24.67 adc  2610 lTpc 207.78
+Tpc s/r  18/ 66 id  1198 xyz:   -28.171 +/- 0.172  -177.301 +/- 0.000  -174.269 +/- 0.645 q(keV)  50.82 idT     0 qa   0 fl  0 us 1 dX  4.77 pmin/max  26/ 29 np  4 tmin/max  59/ 65 nt  7 tm  62.72 pad  27.53 adc  3570 lTpc 212.61
+Tpc s/r  18/ 67 id  1217 xyz:   -25.301 +/- 0.194  -179.310 +/- 0.000  -178.825 +/- 0.654 q(keV)  54.43 idT     0 qa   0 fl  0 us 1 dX  4.96 pmin/max  29/ 36 np  8 tmin/max  49/ 76 nt 28 tm  55.05 pad  32.81 adc  3824 lTpc 217.63
+Tpc s/r  18/ 68 id  1231 xyz:   -22.797 +/- 0.225  -181.320 +/- 0.000  -182.982 +/- 0.654 q(keV)  44.23 idT     0 qa   0 fl  0 us 1 dX  5.16 pmin/max  33/ 42 np 10 tmin/max  33/ 63 nt 31 tm  48.05 pad  37.55 adc  3107 lTpc 222.83
+Tpc s/r  18/ 71 id  1300 xyz:   -14.725 +/- 0.348  -187.366 +/- 0.000  -195.304 +/- 0.654 q(keV)  14.55 idT     0 qa   0 fl  0 us 1 dX  4.59 pmin/max  48/ 53 np  6 tmin/max  23/ 32 nt 10 tm  27.30 pad  50.58 adc  1022 lTpc 240.10
+
+old
+Tpc s/r  18/ 13 id   423 xyz:     6.315 +/- 0.290   -75.085 +/- 0.000     7.931 +/- 0.267 q(keV)  11.39 idT     0 qa   0 fl  2 us 1 dX  0.00 pmin/max  49/ 51 np  3 tmin/max 374/378 nt  5 tm 376.16 pad  50.11 adc  2263 lTpc   6.53
+new
+
+
+Tpc s/r   8/ 32 id   373 xyz:   -86.502 +/- 0.082   -61.702 +/- 0.141   165.712 +/- 0.083 q(keV)   0.36 idT     0 qa   0 fl  0 us 1 dX  2.38 pmin/max  33/ 34 np  2 tmin/max  82/ 85 nt  4 tm  83.36 pad  33.38 adc    72 lTpc   0.00
+Tpc s/r   8/ 34 id   393 xyz:   -91.049 +/- 0.088   -60.227 +/- 0.153   166.331 +/- 0.157 q(keV)   1.34 idT     0 qa   0 fl  0 us 1 dX  2.03 pmin/max  41/ 43 np  3 tmin/max  81/ 85 nt  5 tm  82.31 pad  42.47 adc   267 lTpc   4.59
+Tpc s/r   8/ 37 id   415 xyz:   -96.716 +/- 0.060   -60.010 +/- 0.104   167.060 +/- 0.195 q(keV)   1.03 idT     0 qa   0 fl  0 us 1 dX  1.75 pmin/max  50/ 51 np  2 tmin/max  80/ 83 nt  4 tm  81.08 pad  50.50 adc   205 lTpc  10.40
+Tpc s/r   8/ 38 id   429 xyz:   -98.447 +/- 0.054   -60.212 +/- 0.094   167.309 +/- 0.152 q(keV)   1.75 idT     0 qa   0 fl  0 us 1 dX  1.70 pmin/max  52/ 54 np  3 tmin/max  79/ 84 nt  6 tm  80.66 pad  52.88 adc   347 lTpc  12.17
+Tpc s/r   8/ 39 id   442 xyz:  -100.120 +/- 0.048   -60.516 +/- 0.083   167.689 +/- 0.207 q(keV)   0.86 idT     0 qa   0 fl  0 us 1 dX  1.66 pmin/max  54/ 56 np  3 tmin/max  79/ 82 nt  4 tm  80.02 pad  55.02 adc   171 lTpc  13.90
+Tpc s/r   8/ 40 id   465 xyz:  -101.753 +/- 0.047   -60.892 +/- 0.082   167.836 +/- 0.201 q(keV)   1.06 idT     0 qa   0 fl  0 us 1 dX  1.63 pmin/max  56/ 58 np  3 tmin/max  78/ 83 nt  6 tm  79.77 pad  56.98 adc   210 lTpc  15.59
+Tpc s/r   8/ 42 id   520 xyz:  -111.555 +/- 0.017   -65.873 +/- 0.030   169.468 +/- 0.010 q(keV)   0.68 idT     0 qa   0 fl  0 us 1 dX  1.98 pmin/max  48/ 49 np  2 tmin/max  69/ 72 nt  4 tm  70.41 pad  48.80 adc    48 lTpc  26.80
+Tpc s/r   8/ 43 id   559 xyz:  -113.114 +/- 0.047   -67.169 +/- 0.082   169.699 +/- 0.213 q(keV)   5.58 idT     0 qa   0 fl  0 us 1 dX  2.00 pmin/max  48/ 50 np  3 tmin/max  68/ 73 nt  6 tm  70.02 pad  49.28 adc   392 lTpc  28.85
+Tpc s/r   8/ 44 id   609 xyz:  -114.631 +/- 0.045   -68.538 +/- 0.077   170.004 +/- 0.010 q(keV)   3.23 idT     0 qa   0 fl  0 us 1 dX  2.03 pmin/max  49/ 51 np  3 tmin/max  68/ 72 nt  5 tm  69.50 pad  49.64 adc   227 lTpc  30.91
+Tpc s/r   8/ 45 id   635 xyz:  -116.063 +/- 0.041   -70.052 +/- 0.070   170.225 +/- 0.010 q(keV)   2.38 idT     0 qa   0 fl  0 us 1 dX  2.09 pmin/max  49/ 51 np  3 tmin/max  68/ 71 nt  4 tm  69.12 pad  49.75 adc   167 lTpc  33.02
+Tpc s/r   8/ 47 id   664 xyz:  -118.572 +/- 0.029   -73.696 +/- 0.051   171.002 +/- 0.010 q(keV)   1.47 idT     0 qa   0 fl  0 us 1 dX  2.27 pmin/max  47/ 49 np  3 tmin/max  66/ 69 nt  4 tm  67.81 pad  47.91 adc   103 lTpc  37.50
+Tpc s/r   8/ 48 id   679 xyz:  -119.637 +/- 0.057   -75.844 +/- 0.099   171.317 +/- 0.010 q(keV)   2.68 idT     0 qa   0 fl  0 us 1 dX  2.40 pmin/max  45/ 49 np  5 tmin/max  66/ 69 nt  4 tm  67.28 pad  46.92 adc   188 lTpc  39.89
+Tpc s/r   8/ 52 id   747 xyz:  -122.058 +/- 0.271   -87.626 +/- 0.470   173.140 +/- 0.395 q(keV)   3.13 idT     0 qa   0 fl  0 us 1 dX  4.30 pmin/max  34/ 38 np  5 tmin/max  63/ 66 nt  4 tm  64.20 pad  36.48 adc   220 lTpc  52.20
+dEdxS  0  S/R  8/32 dEdx(keV/cm)     1.03 dx  2.46 dxC  2.46 x[   10.08,  105.44,   42.91] Qcm  263.70 AvC   0.094 d[   -0.03,    0.03,   -0.01] Sum     1.03 Prob  0.00000
+dEdxS  1  S/R  8/42 dEdx(keV/cm)     2.41 dx  2.03 dxC  2.03 x[    1.15,  129.21,   39.14] Qcm  162.25 AvC   0.000 d[    0.00,    0.04,   -0.01] Sum     1.72 Prob  0.00000
+dEdxS  2  S/R  8/39 dEdx(keV/cm)     2.88 dx  1.71 dxC  1.71 x[    2.24,  116.64,   40.92] Qcm  263.70 AvC   0.094 d[   -0.01,    0.04,   -0.01] Sum     2.11 Prob  0.00000
+dEdxS  3  S/R  8/37 dEdx(keV/cm)     3.17 dx  1.80 dxC  1.80 x[    3.50,  113.44,   41.55] Qcm  263.70 AvC   0.094 d[   -0.02,    0.04,   -0.01] Sum     2.37 Prob  0.00000
+dEdxS  4  S/R  8/40 dEdx(keV/cm)     3.53 dx  1.68 dxC  1.68 x[    1.75,  118.24,   40.77] Qcm  263.70 AvC   0.094 d[   -0.01,    0.04,   -0.01] Sum     2.60 Prob  0.00000
+dEdxS  5  S/R  8/34 dEdx(keV/cm)     3.62 dx  2.10 dxC  2.10 x[    6.52,  108.64,   42.29] Qcm  263.70 AvC   0.094 d[   -0.03,    0.03,   -0.01] Sum     2.77 Prob  0.00000
+dEdxS  6  S/R  8/47 dEdx(keV/cm)     3.89 dx  2.33 dxC  2.33 x[    4.41,  139.20,   37.60] Qcm  162.25 AvC   0.000 d[    0.02,    0.04,   -0.01] Sum     2.93 Prob  0.00000
+dEdxS  7  S/R  8/52 dEdx(keV/cm)     4.01 dx  4.41 dxC  4.41 x[   14.73,  149.18,   35.46] Qcm  265.41 AvC   0.052 d[    0.04,    0.02,   -0.01] Sum     3.07 Prob  0.00000
+ ======================= I60    3.07
+dEdxS  8  S/R  8/38 dEdx(keV/cm)     5.25 dx  1.75 dxC  1.75 x[    2.81,  115.04,   41.30] Qcm  263.70 AvC   0.094 d[   -0.02,    0.04,   -0.01] Sum     3.31 Prob  0.00000
+ ======================= I70    3.31
+dEdxS  9  S/R  8/48 dEdx(keV/cm)     6.30 dx  2.47 dxC  2.47 x[    5.74,  141.19,   37.28] Qcm  162.25 AvC   0.000 d[    0.02,    0.04,   -0.01] Sum     3.61 Prob  0.00000
+dEdxS 10  S/R  8/45 dEdx(keV/cm)     6.46 dx  2.14 dxC  2.14 x[    2.51,  135.20,   38.38] Qcm  162.25 AvC   0.000 d[    0.01,    0.04,   -0.01] Sum     3.87 Prob  0.00000
+dEdxS 11  S/R  8/44 dEdx(keV/cm)     9.12 dx  2.09 dxC  2.09 x[    1.92,  133.20,   38.60] Qcm  162.25 AvC   0.000 d[    0.01,    0.04,   -0.01] Sum     4.30 Prob  0.00000
+dEdxS 12  S/R  8/43 dEdx(keV/cm)    15.72 dx  2.05 dxC  2.05 x[    1.49,  131.21,   38.91] Qcm  162.25 AvC   0.000 d[    0.01,    0.04,   -0.01] Sum     5.18 Prob  0.00000
+
+
+bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,EbyET0,MassFit","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006.event.root","st_physics_27028003_raw_0100006.tags.root")
+13p5GeV_fixedTarget_2026
+St_TpcLengthCorrectionMDN::instance()->MDF(6)->GetFunction()->Draw("colz")
+================================================================================
+08/17/2026
+[cvmfswrite07] ~/work/Histograms/RunXXVI56 $ root.exe NPointsFNGP*.root Res.C
+#sigma(@61 npts) =  7.39% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.98% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.82% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.02% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.33% for F- 9p8GeV_fixedTarget_2026
+
+#mu =  0.23% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.17% for F- 8p65GeV_fixedTarget_2026
+#mu =  0.31% for F- 9p8GeV_fixedTarget_2026a
+#mu = -0.10% for F- 9p8GeV_fixedTarget_2026b
+#mu = -3.28% for F- 9p8GeV_fixedTarget_2026
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI56 $ root.exe NPointsNNGP*.root Res.C
+#sigma(@61 npts) =  6.87% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.43% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.87% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.87% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  8.81% for N- 9p8GeV_fixedTarget_2026
+
+#mu =  0.41% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.20% for N- 8p65GeV_fixedTarget_2026
+#mu =  0.09% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.10% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.47% for N- 9p8GeV_fixedTarget_2026
+
+[cvmfswrite07] ~/work/Histograms/RunXXVI56 $ root.exe NPointsENGP*.root Res.C
+#sigma(@61 npts) =  7.84% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.35% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.89% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.44% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.93% for E- 9p8GeV_fixedTarget_2026
+
+#mu =  0.46% for E- 13p5GeV_fixedTarget_2026
+#mu =  0.25% for E- 8p65GeV_fixedTarget_2026
+#mu =  0.04% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.04% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.56% for E- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI57 $ root.exe NPointsFNGP*.root Res.C
+#sigma(@61 npts) =  7.47% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.11% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.48% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  9.35% for F- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.37% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.13% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.01% for F- 8p65GeV_fixedTarget_2026
+#mu = -0.19% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.75% for F- 9p8GeV_fixedTarget_2026b
+#mu = -0.86% for F- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI57 $  root.exe NPointsNNGP*.root Res.C
+#sigma(@61 npts) =  6.98% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.49% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.87% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  6.84% for N- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  8.74% for N- 9p8GeV_fixedTarget_2026
+
+#mu = -0.08% for N- 13p5GeV_fixedTarget_2026
+#mu = -0.27% for N- 8p65GeV_fixedTarget_2026
+#mu = -0.28% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.16% for N- 9p8GeV_fixedTarget_2026b
+#mu = -0.26% for N- 9p8GeV_fixedTarget_2026
+
+[starsub05] ~/work/Histograms/RunXXVI57 $  root.exe NPointsENGP*.root Res.C
+#sigma(@61 npts) =  8.05% for E- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.74% for E- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 10.85% for E- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  8.22% for E- 9p8GeV_fixedTarget_2026b
+#sigma(@61 npts) =  9.49% for E- 9p8GeV_fixedTarget_2026
+
+#mu =  0.06% for E- 13p5GeV_fixedTarget_2026
+#mu = -0.23% for E- 8p65GeV_fixedTarget_2026
+#mu = -0.32% for E- 9p8GeV_fixedTarget_2026a
+#mu = -0.27% for E- 9p8GeV_fixedTarget_2026b
+#mu = -0.22% for E- 9p8GeV_fixedTarget_2026
+
+bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,EbyET0,MassFit","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006.event.root","st_physics_27028003_raw_0100006.tags.root")
+================================================================================
+08/18/2026 
+bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,MassFit","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006.event.root","st_physics_27028003_raw_0100006.tags.root")

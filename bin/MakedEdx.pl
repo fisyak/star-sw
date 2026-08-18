@@ -2915,7 +2915,9 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI52";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g2_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/06/2026 check effect ofof the newset dX
 #$hist = "RunXXVI53";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/07/2026 check effect ofof the newset dX
 #$hist = "RunXXVI54";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/11/2026 new TpcZCorrectionC
-$hist = "RunXXVI55";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/11/2026 new TpcSecRowB
+#$hist = "RunXXVI55";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/11/2026 new TpcSecRowB
+#$hist = "RunXXVI56";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/12/2026 new TpcLengthCorrectionMDN
+$hist = "RunXXVI57";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/17/2026 newest (log error) TpcLengthCorrectionMDN
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();

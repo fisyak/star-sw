@@ -1,4 +1,9 @@
 /* 
+   aTdEdx: 
+    ~/work/Histograms/RunXXVI38 $ root.exe  [0-9]*.root AuAu_2025.root lBichsel.C DrawList.C+
+   DrawF2List("aTdEdxF","colz","qm","",6,1)
+   ~/work/Histograms/RunXXVI38 $ root.exe SecRow3NCGG*.root lBichsel.C DrawList.C+
+    DrawF2List("^mu$","colz","qm","",6,1)
    Draw Pads:
    root.exe AuAu200_9_20evts_Bichsel_1_20.Pads.BT.root
    .L DrawList.C+
@@ -460,7 +465,7 @@ void DrawFList(const Char_t *pattern = "OuterPadRcNoiseConv*", const Char_t *cti
 }
 #include "bichselG10.C"
 //________________________________________________________________________________
-void DrawF2List(const Char_t *pattern = "aTdEdxF", const Char_t *opt = "colz", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 0, Int_t ny = 0) {
+void DrawF2List(const Char_t *pattern = "aTdEdxF", const Char_t *opt = "colz", const Char_t *fopt = "qm", const Char_t *ctitle = "", Int_t nx = 4, Int_t ny = 1) {
   TString patt(pattern); patt.ReplaceAll("^",""); patt.ReplaceAll("$","");
   TPRegexp reg(pattern);
   TString cTitle("c");
@@ -495,7 +500,8 @@ void DrawF2List(const Char_t *pattern = "aTdEdxF", const Char_t *opt = "colz", c
     TString dirName(gSystem->DirName(hist->GetDirectory()->GetName()));
     if (dirName == ".") dirName = hist->GetDirectory()->GetName();
     dirName.ReplaceAll(".root","");
-    c->cd(i+1)->SetLogz(1);
+    if (patt.Contains("dEdx") || patt.Contains("dNdx"))  c->cd(i+1)->SetLogz(1);
+    else                                                 c->cd(i+1);
     TF1 *gp = 0;
     if (hist->GetDimension() == 3) {
     } else if (hist->GetDimension() == 2) {
