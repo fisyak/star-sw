@@ -7,7 +7,8 @@
 #include "Sti/StiHit.h"
 #include "Sti/StiToolkit.h"
 #include "StdEdxY2Maker/StTrackCombPiD.h"
-#include "StRoot/StiMaker/StiStEventFiller.h"
+#include "StiMaker/StiStEventFiller.h"
+#include "StEvent/StTrackMassFit.h"
 ClassImp(StiMassFitMaker)
 //_____________________________________________________________________________
 Int_t StiMassFitMaker::Make() {
@@ -18,6 +19,9 @@ Int_t StiMassFitMaker::Make() {
   }
   StEvent* pEvent = (StEvent*) StMaker::GetChain()->GetInputDS("StEvent");
   if (!pEvent) return kStOk;
+  // Save StTrackCombPiD state
+  Bool_t IsCalibrationModeSave = StTrackCombPiD::IsCalibrationMode(); StTrackCombPiD::SetCalibrationMode(kFALSE);
+  StTrackCombPiD::PiDStatusIDs DefaulTpcMethodSave = StTrackCombPiD::DefaulTpcMethod(); StTrackCombPiD::SetDefaulTpcMethod(StTrackCombPiD::kdNdx);
   StSPtrVecTrackNode& trackNode = pEvent->trackNodes();
   UInt_t nTracks = trackNode.size();
   for (UInt_t  i=0; i < nTracks; i++) {
@@ -37,19 +41,36 @@ Int_t StiMassFitMaker::Make() {
     //    kTrack->setFirstNode(kTrack->getInnerMostNode());
     //    kTrack->setLastNode(kTrack->getOuterMostNode());
     if (Debug()) {
-      LOG_INFO << "pdg = " << kTrack->pdgId() << endm;
       gTrack->Print();
-      kTrack->print("");
+      if (Debug() > 1) {
+	kTrack->print("");
+      }
       PiD.Print();
+    }
+    StiKalmanTrackNode* stinode = kTrack->getInnOutMostNode(0,kKeepHit+kGoodHit+kTpcOnly);
+    Int_t   NDF = 2*kTrack->getFitPointCount(0) - 5;
+    Int_t pdg = 211;
+    if (kTrack->getCharge() < 0) pdg = -211;
+    Float_t Chi2 = kTrack->getChi2()*NDF;
+    StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), stinode->getMomentumF().mag(), pdg,  Chi2, NDF);
+    node->addTrack(mf);
+    if (Debug()) {
+      cout << "pdg = " << pdg << "\tpInTpc = " <<   stinode->getMomentumF().mag() << endl;
+      if (Debug() > 1) {
+	mf->Print();
+      }
     }
     const std::vector<Int_t> &PDGList = PiD.GetPDG();
     for (auto pdg : PDGList) {
-      if (TMath::Abs(pdg) == 211) continue;
+      if (pdg == -1) continue;
+      if (TMath::Abs(pdg) == 211 ||
+	  TMath::Abs(pdg) ==  13) {
+	continue;
+      }
       StiTrack::setPDG(pdg);
       StiKalmanTrack *cTrack = StiToolkit::instance()->getTrackFactory()->getInstance();
       *cTrack = *kTrack;
       if (cTrack->getLastNode()->isDca()) cTrack->removeLastNode();
-      if (Debug()) cTrack->print();
       Int_t errType = cTrack->refit();
       if (errType) continue;
       StiHit dcaHit; dcaHit.makeDca();
@@ -57,6 +78,7 @@ Int_t StiMassFitMaker::Make() {
       if (extenDca) {
 	cTrack->add(extenDca,kOutsideIn);
 	if (Debug() >= 1) ((StiKalmanTrackNode *)extenDca)->PrintpT("Fit");
+	if (Debug() >  1) cTrack->print();
 	cTrack->reduce();
 	StiKalmanTrackNode *tNode = cTrack->getInnerMostNode();
 	if (!tNode->isDca()) continue;
@@ -74,10 +96,23 @@ Int_t StiMassFitMaker::Make() {
 	if (Debug()) {
 	  dca->Print();
 	}
+	NDF = 2*cTrack->getFitPointCount(0) - 5;
+	Chi2 = cTrack->getChi2()*NDF;
+	StiKalmanTrackNode* stinode = cTrack->getInnOutMostNode(0,kKeepHit+kGoodHit+kTpcOnly);
+	StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), stinode->getMomentumF().mag(), pdg, Chi2, NDF, dca);
+	node->addTrack(mf);
+	if (Debug() > 1) {
+	  cTrack->print();
+	  mf->setNode(node);
+	}
       }
       BFactory::Free(cTrack);
     }
+    if (Debug()) 
+      node->Print();
   }
   StiTrack::setPDG(); // back to default
+  if (IsCalibrationModeSave) StTrackCombPiD::SetCalibrationMode(kTRUE);
+  StTrackCombPiD::SetDefaulTpcMethod(DefaulTpcMethodSave);
   return kStOK;
 }

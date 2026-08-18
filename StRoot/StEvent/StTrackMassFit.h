@@ -10,47 +10,42 @@
  *
  * Description: Keep results of track mass fit
  *
- ***************************************************************************
- *
- * $Log: StTrackMassFit.h,v $
- * Revision 1.2  2014/01/14 14:48:24  fisyak
- * Freeze
- *
- * Revision 1.1.1.1  2013/07/23 14:13:30  fisyak
- *
- *
- * Revision 2.3  2013/07/16 14:29:04  fisyak
- * Restore mass fit tracks
- *
- * Revision 2.1  2013/04/05 15:08:41  ullrich
- * Initial Revision.
- *
- **************************************************************************/
+ ***************************************************************************/
 #ifndef StTrackMassFit_hh
 #define StTrackMassFit_hh
 
 #include "StTrack.h"
 #include "KFParticle/KFParticle.h"
-
-class StTrackMassFit;
-ostream&  operator<<(ostream& os,  const StTrackMassFit& t);
+#include "StDcaGeometry.h"
 class StTrackMassFit : public StTrack {
 public:
-  StTrackMassFit(int key = 0, KFParticle *particle = 0)  : mKFParticle((particle) ? new KFParticle(*particle) : 0) {setKey(key);}
-    StTrackMassFit(const StTrackMassFit&);
-    StTrackMassFit& operator=(const StTrackMassFit&);
-    ~StTrackMassFit()  {SafeDelete(mKFParticle);}
-    
-    virtual StTrackType     type() const {return (!vertex()) ? massFit : massFitAtVx; }
-    const KFParticle* kfParticle() const {return mKFParticle;}
-    KFParticle*       kfParticle()       {return mKFParticle;}
-    void SetParentID(Int_t id) {mKFParticle->SetParentID(id);}
-    void setKFParticle(KFParticle* particle = 0) {mKFParticle = (particle) ? new KFParticle(*particle) : 0;}
-    virtual void Print(Option_t *option="") const {cout << option << *this << endl; }
-    
-protected:
-    KFParticle *mKFParticle;
-    
-    ClassDef(StTrackMassFit,2)
+ StTrackMassFit(Int_t key = 0, Float_t pInTpc = 0, Int_t pdg = 0, Float_t chi2 = 0, Int_t ndf = 0, StDcaGeometry *dca  = 0)  : 
+  mPDG(pdg), mpInTpc(pInTpc),  mChi2(chi2), mNDF(ndf), mKFParticle(0), mDca((dca) ? new StDcaGeometry(*dca) : 0) {setKey(key);}
+ StTrackMassFit(Int_t key, StDcaGeometry *dca)  : StTrackMassFit(key, 0.0, 0, 0.0, 0, dca) {}
+ StTrackMassFit(Int_t key, KFParticle* particle) : StTrackMassFit()  {mKFParticle = particle; setKey(key);}
+  StTrackMassFit(const StTrackMassFit&);
+  StTrackMassFit& operator=(const StTrackMassFit&);
+  ~StTrackMassFit()  {SafeDelete(mKFParticle);}
+  
+  virtual StTrackType     type() const {return (!vertex()) ? massFit : massFitAtVx; }
+  KFParticle* Particle() const;
+  StDcaGeometry *dca() const;
+  void SetParticle(KFParticle *particle = 0) {mKFParticle = particle;}
+  void SetParentID(Int_t id) {if (mKFParticle) mKFParticle->SetParentID(id);}
+  virtual void Print(Option_t *option="") const;
+  Int_t pdg() const {return mPDG;}
+  Float_t pInTpc() const {return mpInTpc;}
+  Int_t   NDF()    const {return mNDF;}
+  Float_t Chi2()   const {return mChi2;}
+ protected:
+  Int_t         mPDG;
+  Float_t       mpInTpc; // momentum at the first TPC hit
+  Float_t       mChi2;
+  Int_t         mNDF;
+  KFParticle    *mKFParticle;
+  StDcaGeometry *mDca;
+  ClassDef(StTrackMassFit,3)
 };
+
+ostream&  operator<<(ostream& os,  const StTrackMassFit& t);
 #endif
