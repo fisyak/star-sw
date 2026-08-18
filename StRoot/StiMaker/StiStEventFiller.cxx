@@ -762,8 +762,8 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
             continue;
           }
 	  fillTrackCount2++;
-if (kTrack->getPointCount(kTpcId)>10)
-StiHftHits::hftHist("HFTAfterAll",kTrack);
+	  if (kTrack->getPointCount(kTpcId)>10)
+	    StiHftHits::hftHist("HFTAfterAll",kTrack);
           fillPulls(kTrack,gTrack,0);
           if (kTrack->getPointCount()<15) continue;
 	  fillTrackCountG++;
@@ -1013,6 +1013,8 @@ void StiStEventFiller::fillDetectorInfo(StTrackDetectorInfo* detInfo, StiKalmanT
 	}
 	memcpy(x[0],x[1],4*sizeof(double)); iready=2005;
 	tpcHit->setLengthInTpc(len);
+	if (_debug) 
+	  tpcHit->Print();
       }
 //Kind of HACK, save residials into StiHack 
       fillResHack(hh,stiHit,node);
