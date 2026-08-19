@@ -713,6 +713,8 @@ void StiStEventFiller::fillEvent(StEvent* e, StiTrackContainer* t)
   mTrackStore = t;
   memset(mUsedHits,0,sizeof(mUsedHits));
   memset(mUsedGits,0,sizeof(mUsedGits));
+  Track2NodeMap().clear();  // need to reset for this event
+  Node2TrackMap().clear();
   StSPtrVecTrackNode& trNodeVec = mEvent->trackNodes(); 
   StSPtrVecTrackDetectorInfo& detInfoVec = mEvent->trackDetectorInfo(); 
   int errorCount=0; 
