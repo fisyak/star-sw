@@ -48,6 +48,11 @@ Int_t StiMassFitMaker::Make() {
       PiD.Print();
     }
     StiKalmanTrackNode* stinode = kTrack->getInnOutMostNode(0,kKeepHit+kGoodHit+kTpcOnly);
+    if (! stinode) {
+      static Int_t iBreak = 0;
+      iBreak++;
+      continue;
+    }
     Int_t   NDF = 2*kTrack->getFitPointCount(0) - 5;
     Int_t pdg = 211;
     if (kTrack->getCharge() < 0) pdg = -211;
@@ -81,7 +86,8 @@ Int_t StiMassFitMaker::Make() {
 	if (Debug() >  1) cTrack->print();
 	cTrack->reduce();
 	StiKalmanTrackNode *tNode = cTrack->getInnerMostNode();
-	if (!tNode->isDca()) continue;
+	if (! tNode) continue;
+	if (! tNode->isDca()) continue;
 	const StiNodePars &pars = tNode->fitPars(); 
 	const StiNodeErrs &errs = tNode->fitErrs();
 	Double_t alfa = tNode->getAlpha();
