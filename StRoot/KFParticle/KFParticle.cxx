@@ -96,7 +96,8 @@ std::ostream&  operator<<(std::ostream& os, const KFParticle& particle) {
   }
   particle.GetMomentum(Mtp[2], MtpErr[2]); if (MtpErr[2] <=   0 || MtpErr[2] > 1e10) MtpErr[2] = -13;
   for (Int_t i = 8; i < 11; i++) {
-    if (i == 9 && Mtp[i-8] <= 0.0) continue; // t
+    if (i == 8 && TMath::Abs(Mtp[0]) < 1e-4) continue; // m
+    if (i == 9 && Mtp[1] <= 0.0) continue; // t
     if (MtpErr[i-8] > 0 && MtpErr[i-8] <  9e2) os << Form(" %s:%8.3f+/-%7.3f", vn[i],Mtp[i-8],MtpErr[i-8]);
     else                                       os << Form(" %s:%8.3f", vn[i],Mtp[i-8]);
   }

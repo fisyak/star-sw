@@ -181,8 +181,7 @@ void   StDcaGeometry::GetXYZ(Double_t xyzp[6], Double_t CovXyzp[21]) const {
   TCL::ucopy(Cov.GetArray(),CovXyzp,21);
 }
 //________________________________________________________________________________
-KFParticle& StDcaGeometry::Particle(Int_t kg, Int_t pdg, Float_t chi2, Int_t ndf)  const {
-  static KFParticle fParticle;
+KFPTrack& StDcaGeometry::Track(Int_t pdg) const {
   static KFPTrack track;
   Double_t xyzp[6], CovXyzp[21];
   GetXYZ(xyzp,CovXyzp);
@@ -222,6 +221,12 @@ KFParticle& StDcaGeometry::Particle(Int_t kg, Int_t pdg, Float_t chi2, Int_t ndf
     }  
   }
   track.SetCharge(q);
+  return *&track;
+}
+//________________________________________________________________________________
+KFParticle& StDcaGeometry::Particle(Int_t kg, Int_t pdg, Float_t chi2, Int_t ndf)  const {
+  static KFParticle fParticle;
+  KFPTrack &track = Track(pdg);
   fParticle = KFParticle(track, pdg);
   fParticle.SetPDG(pdg);
   fParticle.SetId(kg);

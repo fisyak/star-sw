@@ -17,6 +17,8 @@
 #include "StEvent/StEvent.h"
 #include "StEvent/StTrack.h"
 #include "StEvent/StTrackNode.h"
+#include "StEvent/StMassFit.h"
+#include "StEvent/StTrackMassFit.h"
 #include "StEvent/StRichSpectra.h"
 #include "StEvent/StDetectorState.h"
 #else /* __TFG__VERSION__ */
@@ -295,9 +297,12 @@ void StMuDstMaker::assignArrays()
   mEpdArrays      = mETofArrays    + __NETOFARRAYS__;   /// MALisa
   mMtdArrays      = mEpdArrays     + __NEPDARRAYS__;   /// dongx  
   mFgtArrays      = mMtdArrays     + __NMTDARRAYS__;      
-  mEztArrays      = mFgtArrays     + __NFGTARRAYS__;
 #ifdef __TFG__VERSION__
-  mGmtArrays      = mEztArrays     + __NEZTARRAYS__;
+  mGmtArrays      = mFgtArrays     + __NFGTARRAYS__;
+  mMftArrays      = mGmtArrays     + __NGMTARRAYS__;
+  mEztArrays      = mMftArrays     + __NMFTARRAYS__;
+#else
+  mEztArrays      = mFgtArrays     + __NFGTARRAYS__;
 #endif /* __TFG__VERSION__ */
 }
 
@@ -322,6 +327,9 @@ void StMuDstMaker::clearArrays()
     __NEPDARRAYS__+     // MALisa
 #ifndef __TFG__VERSION__
     __NMTDARRAYS__+__NFGTARRAYS__;
+#else
+    __NMTDARRAYS__+__NFGTARRAYS__ + __NGMTARRAYS__ + __NMFTARRAYS__;
+#endif /* ! __TFG__VERSION__ */
   for ( int i=0; i<ezIndex; i++) {
     mAArrays[i]->Clear("C");
     StMuArrays::arrayCounters[i]=0;
@@ -331,11 +339,6 @@ void StMuDstMaker::clearArrays()
     mAArrays[i]->Delete();
     StMuArrays::arrayCounters[i]=0;
   }
-#else /* __TFG__VERSION__ */
-  __NMTDARRAYS__+__NFGTARRAYS__+__NGMTARRAYS__;
-  for ( int i=0; i<ezIndex; i++)     mAArrays[i]->Clear("C");
-  for ( int i=ezIndex; i<__NALLARRAYS__; i++)  mAArrays[i]->Delete();
-#endif /* __TFG__VERSION__ */
 }
 
 void StMuDstMaker::zeroArrays()
@@ -361,8 +364,8 @@ void StMuDstMaker::zeroArrays()
             __NETOFARRAYS__+ //jdb
             __NEPDARRAYS__+  // MALisa
             __NMTDARRAYS__+
-#ifndef __TFG__VERSION__
-            __NGMTARRAYS__+
+#ifdef __TFG__VERSION__
+            __NGMTARRAYS__+ __NMFTARRAYS__ +
 #endif /* __TFG__VERSION__ */
             __NFGTARRAYS__],(char)0,__NEZTARRAYS__);
   
@@ -382,6 +385,7 @@ void StMuDstMaker::zeroArrays()
    ETofAll    - all branches related to ETof  /// fseck
    MTDAll     - all branches related to MTD
    GMTAll     - all branches related to GMT
+   MFTAll     - all branches related to Mass Fit
    FgtAll     - all branches related to Fgt
 
   By default all branches of MuDst are read. If user wants to read only some of
@@ -397,6 +401,7 @@ void StMuDstMaker::zeroArrays()
    SetStatus("EpdAll"    ,1)  // all standard Epd     branches ON  /// MALisa
    SetStatus("MTDAll"    ,1)  // all standard Mtd     branches ON
    SetStatus("GMTAll"    ,1)  // all standard Gmt     branches ON
+   SetStatus("MFTAll"    ,1)  // all standard Mft     branches ON
    SetStatus("FgtAll"    ,1)  // all standard Fgt     branches ON
  
    SetStatus("XiAssoc"    ,1) // Strange branch "XiAssoc" is ON  
@@ -411,7 +416,7 @@ void StMuDstMaker::SetStatus(const char *arrType,int status)
 #endif
 				 ,"MCAll","EmcAll","PmdAll","FMSAll","RHICfAll","FcsAll","FttAll","FstAll","TofAll","BTofAll","ETofAll","EpdAll","MTDAll","FgtAll","EztAll"
 #ifdef __TFG__VERSION__
-				 ,"GMTAll"
+				 ,"GMTAll","MFTAll"
 #endif /* __TFG__VERSION__ */
 				 ,0};  
    static const int   specIndex[]={
@@ -421,7 +426,7 @@ void StMuDstMaker::SetStatus(const char *arrType,int status)
   #endif
   __NMCARRAYS__,__NEMCARRAYS__,__NPMDARRAYS__,__NFMSARRAYS__,__NRHICFARRAYS__,__NFCSARRAYS__,__NFTTARRAYS__,__NFSTARRAYS__,__NFWDTRACKARRAYS__,__NTOFARRAYS__,__NBTOFARRAYS__,__NETOFARRAYS__,__NEPDARRAYS__,__NMTDARRAYS__,__NFGTARRAYS__,__NEZTARRAYS__,
 #ifdef __TFG__VERSION__
-  __NGMTARRAYS__,
+  __NGMTARRAYS__, __NMFTARRAYS__
 #endif /* __TFG__VERSION__ */
   -1};
 
@@ -615,10 +620,13 @@ void  StMuDstMaker::streamerOff() {
   StMuFgtCluster::Class()->IgnoreTObjectStreamer();
   StMuFgtStripAssociation::Class()->IgnoreTObjectStreamer();
   StMuFgtAdc::Class()->IgnoreTObjectStreamer();
-#if defined(__TFG__VERSION__) && defined(__kfpAtFirstHit__)
+#if defined(__TFG__VERSION__) 
+#if defined(__kfpAtFirstHit__)
   KFPTrack::Class()->IgnoreTObjectStreamer();
+#endif /* __kfpAtFirstHit__ */
   StGmtPoint::Class()->IgnoreTObjectStreamer();
   StMuGmtPidTraits::Class()->IgnoreTObjectStreamer();
+  StMassFit::Class()->IgnoreTObjectStreamer();
 #endif /* __TFG__VERSION__ */
 }
 //-----------------------------------------------------------------------
@@ -630,16 +638,15 @@ void StMuDstMaker::createArrays() {
     DEBUGVALUE2(mAArrays[i]);
 #ifdef __TFG__VERSION__
     if (Debug()) {
-      cout << "tMuDstMaker::createArrays\t ,StMuArrays::arrayTypes[" << i << "] = " << StMuArrays::arrayTypes[i]
-	   << "\tStMuArrays::arrayNames[" << i << "] = " << StMuArrays::arrayNames[i] 
-	   << "\tStMuArrays::arraySizes[" << i << "] = " << StMuArrays::arraySizes[i] 
-	   << endl;
+      cout << "StMuDstMaker::createArrays\t ,StMuArrays Types[" << i << "] = " << StMuArrays::arrayTypes[i]
+	   << "\tNames[" << i << "] = " << StMuArrays::arrayNames[i] 
+	   << "\tSizes[" << i << "] = " << StMuArrays::arraySizes[i]; 
     }
-      clonesArray(mAArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i]);
+    clonesArray(mAArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i]);
 #else /* ! __TFG__VERSION__ */
-	clonesArray(mAArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i],StMuArrays::arrayCounters[i]);
+    clonesArray(mAArrays[i],StMuArrays::arrayTypes[i],StMuArrays::arraySizes[i],StMuArrays::arrayCounters[i]);
 #endif /* __TFG__VERSION__ */
-	DEBUGVALUE2(mAArrays[i]);
+    DEBUGVALUE2(mAArrays[i]);
   }
   mStMuDst->set(this);
   // commented to include tof again (subhasis) 
@@ -661,7 +668,8 @@ TClonesArray* StMuDstMaker::clonesArray(TClonesArray*& p, const char* type, int 
 #ifdef __TFG__VERSION__
   p->SetOwner(kTRUE);
   if (Debug()) {
-    cout << "StMuDstMaker::clonesArray(" << type << "," << size << ") => " << p << endl;
+    cout << "\tStMuDstMaker::clonesArray(" << type << "," << size << ") => ";
+    p->Print();
   }
 #else /* ! __TFG__VERSION__ */
   counter=0;
@@ -1344,9 +1352,6 @@ void StMuDstMaker::fillTrees(StEvent* ev, StMuCut* cut){
   mStMuDst->fixTofTrackIndices();
   mStMuDst->fixETofTrackIndices();
   mStMuDst->fixMtdTrackIndices();
-#ifdef __TFG__VERSION__
-  mStMuDst->fixGmtTrackIndices();
-#endif /* __TFG__VERSION__ */
 
   mStMuDst->fixTrackIndicesG(mStMuDst->numberOfPrimaryVertices());
 }
@@ -1986,7 +1991,7 @@ void StMuDstMaker::fillTracks(StEvent* ev, StMuCut* cut) {
   StSPtrVecTrackNode& nodes= ev->trackNodes();
   DEBUGVALUE2(nodes.size());
   for (StSPtrVecTrackNodeConstIterator iter=nodes.begin(); iter!=nodes.end(); iter++) {
-    addTrackNode(ev, *iter, cut, mArrays[muGlobal], mArrays[muPrimary], mArrays[muOther], mArrays[muCovGlobTrack], mArrays[muCovPrimTrack], false);
+    addTrackNode(ev, *iter, cut, mArrays[muGlobal], mArrays[muPrimary], mArrays[muOther], mArrays[muCovGlobTrack], mArrays[muCovPrimTrack], mMftArrays[0], false);
   }
   timer.stop();
   DEBUGVALUE2(timer.elapsedTime());
@@ -2025,9 +2030,9 @@ void StMuDstMaker::fillL3Tracks(StEvent* ev, StMuCut* cut) {
   DEBUGVALUE2(nodes.size());
   for (StSPtrVecTrackNodeConstIterator iter=nodes.begin(); iter!=nodes.end(); iter++) {
 #ifndef __TFG__VERSION__
-    addTrackNode(ev, *iter, cut, mArrays[muL3], 0, 0, 0, 0, true );
+    addTrackNode(ev, *iter, cut, mArrays[muL3], 0, 0, 0, 0, 0, true );
 #else /* __TFG__VERSION__ */
-    addTrackNode(ev, *iter, cut, mArrays[muL3], 0, 0, mArrays[muCovGlobTrack], 0, true );
+    addTrackNode(ev, *iter, cut, mArrays[muL3], 0, 0, mArrays[muCovGlobTrack], 0, 0, true );
 #endif /* __TFG__VERSION__ */
   }
   timer.stop();
@@ -2054,7 +2059,7 @@ void StMuDstMaker::fillDetectorStates(StEvent* ev) {
 //-----------------------------------------------------------------------
 #ifndef  __TFG__VERSION__
 void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMuCut* cut,
-				  TClonesArray* gTCA, TClonesArray* pTCA, TClonesArray* oTCA, TClonesArray* covgTCA, TClonesArray* covpTCA, bool l3) {
+				  TClonesArray* gTCA, TClonesArray* pTCA, TClonesArray* oTCA, TClonesArray* covgTCA, TClonesArray* covpTCA, TClonesArray* mftTCA, bool l3) {
   DEBUGMESSAGE3("");
   const StTrack* tr=0;
 
@@ -2081,7 +2086,7 @@ void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMu
     size_t nEntries = node->entries();
     for (size_t j=0; j<nEntries; j++) { /// loop over all tracks in tracknode
       tr = node->track(j);
-      if (tr && !tr->bad() && (tr->type()!=global) && (tr->type()!=primary) ) { /// exclude global and primary tracks
+      if (tr && !tr->bad() && (tr->type()!=global) && (tr->type()!=primary)) { /// exclude global and primary tracks
 	addTrack(oTCA, ev, tr, tr->vertex(), cut, index2Global, l3);
       }
     }
@@ -2089,7 +2094,7 @@ void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMu
 }
 #else /* __TFG__VERSION__ */
 void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMuCut* cut,
-				  TClonesArray* gTCA, TClonesArray* pTCA, TClonesArray* oTCA, TClonesArray* covgTCA, TClonesArray* covpTCA, bool l3) {
+				  TClonesArray* gTCA, TClonesArray* pTCA, TClonesArray* oTCA, TClonesArray* covgTCA, TClonesArray* covpTCA, TClonesArray* mftTCA, bool l3) {
   DEBUGMESSAGE3("");
   const StTrack* gTrack=0;
   const StTrack *pTrack=0;
@@ -2113,6 +2118,23 @@ void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMu
       vtx = ev->primaryVertex();	
     
     if (gTrack && !gTrack->bad()) index2Global = addTrack(gTCA, ev, gTrack, vtx, cut, -1, l3, covgTCA, covpTCA);
+    if (mftTCA) {
+      UInt_t noMF = node->entries(massFit);
+      if (noMF > 0) {
+	StMuTrack *gTrack = (StMuTrack *) (*gTCA)[index2Global];
+	Int_t countmftTCA = mftTCA->GetEntries();
+	gTrack->setIndex2MFbegin(countmftTCA);
+	for (UInt_t m = 0; m < noMF; m++) {
+	  StTrackMassFit *TrackMF = (StTrackMassFit *) node->track(massFit, m);
+	  if (! TrackMF) continue;
+	  StMassFit *mf = TrackMF->mf();
+	  if (! mf) continue;
+	  new((*mftTCA)[countmftTCA]) StMassFit(*mf);
+	  gTrack->setIndex2MFend(countmftTCA);
+	  countmftTCA = mftTCA->GetEntries();
+	}
+      }
+    }
     // do primary track
     if (pTCA) {
       if (pTrack && !pTrack->bad())      {
@@ -2124,25 +2146,12 @@ void StMuDstMaker::addTrackNode(const StEvent* ev, const StTrackNode* node, StMu
     }
   }
   // all other tracks
-#if 0
-  const StTrack* track=0;
-  for (size_t j=0; j<nEntries; j++) { /// loop over all tracks in tracknode
-    track = node->track(j);
-    if (! track || (track->type() == global) || (track->type() == primary) ) continue; // exclude global and primary tracks
-    if (track->type() == massFitAtVx || track->type() == massFit) {
-      KFParticle *particle = ((StTrackMassFit *) track)-> Particle();
-      if (! particle) continue;
-      fillKFTracks(particle);
-    }
-  }
-#endif
-  /// all other tracks
   if (oTCA) {
     const StTrack* tr=0;
     size_t nEntries = node->entries();
     for (size_t j=0; j<nEntries; j++) { /// loop over all tracks in tracknode
       tr = node->track(j);
-      if (tr && !tr->bad() && (tr->type()!=global) && (tr->type()!=primary) ) { /// exclude global and primary tracks
+      if (tr && !tr->bad() && (tr->type()!=global)  && (tr->type()!=primary) && (tr->type()!=massFit) ) { /// exclude global and primary tracks, mass fit
 	addTrack(oTCA, ev, tr, tr->vertex(), cut, index2Global, l3);
       }
     }

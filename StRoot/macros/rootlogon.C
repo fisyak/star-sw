@@ -108,6 +108,13 @@
   }
   gSystem->Load("libEG");
   gSystem->Load("libVMC");
+  TString STAR(gSystem->Getenv("STAR"));
+  TString STAR_pdgExt = STAR + "/etc/pdg_tableExtension.txt";
+  if (! gSystem->AccessPathName(STAR_pdgExt,kReadPermission)) {
+    TDatabasePDG *pdgDB = TDatabasePDG::Instance();
+    if (! pdgDB->ParticleList()) pdgDB->ReadPDGTable();
+    pdgDB->ReadPDGTable(STAR_pdgExt);
+  }
   if (gSystem->DynamicPathName("StarClassLibrary",kTRUE)) gSystem->Load("StarClassLibrary");
   else if (gSystem->DynamicPathName("libStarClassLibrary",kTRUE)) gSystem->Load("libStarClassLibrary");
   //#ifndef __CLING__

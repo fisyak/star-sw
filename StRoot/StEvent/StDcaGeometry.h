@@ -46,6 +46,7 @@
 #include "StPhysicalHelixD.hh"
 #include "THelixTrack.h"
 #include "KFParticle/KFParticle.h"
+#include "KFParticle/KFPTrack.h"
 class StDcaGeometry : public StObject {
 public:
     StDcaGeometry();
@@ -68,6 +69,8 @@ public:
     const float*     errMatrix() const {return &mImpImp;} 
     void GetXYZ(Double_t xyzp[6], Double_t CovXyzp[21]) const;
     virtual void     Print(Option_t *option = "") const;
+
+    KFPTrack&        Track(Int_t pdg) const;
     KFParticle&      Particle(Int_t kg = 0, Int_t pdg = 0, Float_t chi2 = 0, Int_t ndf = 0)  const;
     //
     // Experts only set function

@@ -93,6 +93,8 @@ class StMuTrack : public TObject {
     Int_t index2BTofHit() const {return mIndex2BTofHit;}  /// dongx
     Int_t index2ETofHit() const {return mIndex2ETofHit;}
     Int_t index2MtdHit()  const {return mIndex2MtdHit;}   ///
+    Int_t index2MFbegin() const {return mIndex2MFbegin;}   ///
+    Int_t index2MFend()   const {return mIndex2MFend;}   ///
 #endif /* __TFG__VERSION__ */
     Int_t vertexIndex() const; ///< Returns index of associated primary vertex.
     void setVertexIndex(Int_t i) { mVertexIndex=i; } ///< Set index of primary vertex for which dca is stored
@@ -269,6 +271,8 @@ class StMuTrack : public TObject {
     void setIndex2Cov(Int_t i) {mIndex2Cov=i;}    ///< Set index of associated DCA geoemtry for the global track.
 
 #ifdef __TFG__VERSION__
+      void setIndex2MFbegin(Int_t i) {mIndex2MFbegin = i;}
+      void setIndex2MFend(Int_t i)   {mIndex2MFend   = i;}
 #ifdef  __kfpAtFirstHit__
     void         setKFPTrackatFirstHit(KFPTrack t) {mkfpTrackAtFirstHit = t;}
     void         setKFPTrackatLastHit (KFPTrack t) {mkfpTrackAtLastHit  = t;}
@@ -327,6 +331,10 @@ protected:
   Int_t mIndex2RichSpectra;
   Int_t mIndex2BTofHit;     // dongx
   Int_t mIndex2MtdHit;
+#ifdef __TFG__VERSION__
+  Int_t mIndex2MFbegin;
+  Int_t mIndex2MFend;
+#endif /* __TFG__VERSION__ */
   Int_t mVertexIndex;       // Primary vertex id for this track's dca
   UChar_t mNHits;           // Total number of points (was (F)tpc only)
   UChar_t mNHitsPoss;       // Total possible points (was (F)tpc only)
@@ -401,9 +409,9 @@ protected:
   ClassDef(StMuTrack,16)
 #else /* __TFG__VERSION__ */
 #ifdef  __kfpAtFirstHit__
-  ClassDef(StMuTrack,23)
+  ClassDef(StMuTrack,25)
 #else
-  ClassDef(StMuTrack,22)
+  ClassDef(StMuTrack,24)
 #endif
 #endif /* __TFG__VERSION__ */
 };

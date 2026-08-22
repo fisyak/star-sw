@@ -89,6 +89,7 @@ class StMuMtdHit;
 class StMuMtdRawHit;
 class StMuMtdHeader;
 
+class StMassFit;
 #include "StPhysicalHelixD.hh"
 
 #include "TObject.h"
@@ -148,7 +149,8 @@ public:
 	     StMuFwdTrackCollection *fwd_track_col=0, 
 	     TClonesArray *pmd_tca=0, 
 	     StMuPmdCollection *pmd_col=0,
-	     TClonesArray** gmt_ptca=0
+	     TClonesArray** gmt_ptca=0,
+	     TClonesArray** mft_ptca=0
 	     );
   /// set pointer to current StEmcCollection
   static void setEmcCollection(StEmcCollection *emc_coll) { instance()->mEmcCollection=emc_coll; }
@@ -176,12 +178,10 @@ public:
   static void fixTofTrackIndices(TClonesArray* btofHit, TClonesArray* primary, TClonesArray* global);
   static void fixETofTrackIndices(TClonesArray* btofHit, TClonesArray* primary, TClonesArray* global);
   static void fixMtdTrackIndices(TClonesArray* mtdHit, TClonesArray* primary, TClonesArray* global);
-  static void fixGmtTrackIndices(TClonesArray* gmtPoint, TClonesArray* primary, TClonesArray* global);
   ///
   void fixTofTrackIndices();
   void fixETofTrackIndices();
   void fixMtdTrackIndices();
-  void fixGmtTrackIndices();
 
   void setMtdArray(StMtdCollection *mtd_coll); 
   void setGmtArray(StGmtCollection *gmt_coll); 
@@ -283,6 +283,8 @@ public:
   StRHICfCollection *mRHICfCollection;
   /// array of TClonesArrays for the stuff inherited from the Gmt
   TClonesArray** gmtArrays;  
+  /// array of TClonesArrays for the stuff inherited from the Mft
+  TClonesArray** mftArrays;  
 
   /// array of TClonesArrays for the stuff inherited from the EZT (ezTree)
   TClonesArray** eztArrays;
@@ -363,6 +365,8 @@ public:
   static TClonesArray* KFVertices() ;
   /// returns pointer to the n-th TClonesArray from the gmt arrays
   static TClonesArray* gmtArray(Int_t type) ;
+  /// returns pointer to the n-th TClonesArray from the mft arrays
+  static TClonesArray* mftArray(Int_t type) ;
 
   /// returns pointer to current StMuEvent (class holding the event wise information, e.g. event number, run number)
   static StMuEvent* event() ;
@@ -495,6 +499,7 @@ public:
   static StMuMtdHeader* mtdHeader() ;
     
   static StGmtPoint* gmtPoint(Int_t  i) ;
+  static StMassFit*  massFit(Int_t  i) ;
     
   /// returns pointer to eztHeader 
   static  EztEventHeader* eztHeader() ;
@@ -563,6 +568,8 @@ public:
   static unsigned int numberOfBMTDRawHit()    ;
     
   static unsigned int numberOfGMTPoint()       ;
+  static unsigned int numberOfMassFit()       ;
+  //  static unsigned int numberOfMassFit()       ;
 
   static UInt_t GetNPrimaryVertex()    ;
   static UInt_t GetNPrimaryTrack()    ;
@@ -602,6 +609,7 @@ public:
   static unsigned int GetNMTDRawHit()      ;
     
   static unsigned int GetNGMTPoint()         ;
+  static unsigned int GetNMassFit()         ;
 
   virtual void Print(Option_t *option = "") const; ///< Print basic event info
   static void printPrimaryTracks();

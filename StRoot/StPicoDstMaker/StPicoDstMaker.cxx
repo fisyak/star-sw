@@ -45,6 +45,7 @@
 #include "StEvent/StFwdTrack.h"
 #include "StEvent/StFcsCluster.h"
 #include "StEvent/StPrimaryVertex.h"
+#include "StEvent/StMassFit.h"
 
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
@@ -272,6 +273,7 @@ void StPicoDstMaker::streamerOff() {
   StPicoFcsCluster::Class()->IgnoreTObjectStreamer();
   StPicoMcVertex::Class()->IgnoreTObjectStreamer();
   StPicoMcTrack::Class()->IgnoreTObjectStreamer();
+  StMassFit::Class()->IgnoreTObjectStreamer();
 }
 
 //_________________
@@ -1311,22 +1313,21 @@ void StPicoDstMaker::fillTracks() {
     } //if( mCovMtxMode == PicoCovMtxMode::Write )
 
 #if defined(__TFG__VERSION__)
+    // Add StMassFit
+    if (gTrk->index2MFbegin() <= gTrk->index2MFend()) {
+      Int_t countMFT = mPicoArrays[StPicoArrays::MassFit]->GetEntries();
+      picoTrk->setIndex2MFbegin(countMFT);
+      for (Int_t i = gTrk->index2MFbegin(); i <= gTrk->index2MFend(); i++) {
+	StMassFit *mf = mMuDst->massFit(i);
+	if (! mf) continue;
+	new((*mPicoArrays[StPicoArrays::MassFit])[countMFT]) StMassFit(*mf);
+	picoTrk->setIndex2MFend(countMFT);
+	countMFT = mPicoArrays[StPicoArrays::MassFit]->GetEntries();
+      }
+    }
     if (_debug) {
-      std::cout << "StPicoDstMaker::fillTracks: MuTrack "
-		<< Form( "%4i %8.3f %8.3f %8.3f", i, gTrk->p().x(), gTrk->p().y(), gTrk->p().z() )
-		<< Form( "\te/pi/K/p\t%8.3f %8.3f %8.3f %8.3f",
-			 gTrk->nSigmaElectron(),gTrk->nSigmaPion(),
-			 gTrk->nSigmaKaon(),
-			 gTrk->nSigmaProton())
-		<< std::endl
-		<< "                          PicoTrack "
-		<< Form( "%4i %8.3f %8.3f %8.3f",
-			i, picoTrk->gMom().x(), picoTrk->gMom().y(), picoTrk->gMom().z() )
-		<< Form( "\te/pi/K/p\t%8.3f %8.3f %8.3f %8.3f",
-			 picoTrk->nSigmaElectron(),
-			 picoTrk->nSigmaPion(),
-			 picoTrk->nSigmaKaon(),
-			 picoTrk->nSigmaProton()) << std::endl;
+      gTrk->Print();
+      picoTrk->Print();
     }
 #endif /* __TFG__VERSION__ */   
 

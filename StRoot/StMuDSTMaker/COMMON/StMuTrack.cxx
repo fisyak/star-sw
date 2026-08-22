@@ -255,15 +255,12 @@ StMuTrack::StMuTrack(const StEvent* event, const StTrack* track, const StVertex 
   mIndex2ETofHit = -1;    
   fillMuETofPidTraits(track);
 
-#ifdef __TFG__VERSION__
-  mIndex2ETofHit = -1;    
-  fillMuETofPidTraits(track);
-
-#endif /* __TFG__VERSION__ */
   mIndex2MtdHit = -1;    
   fillMuMtdPidTraits(track);
 #ifdef __TFG__VERSION__
  fillMuGmtPidTraits(track);
+ mIndex2MFbegin = -1;
+ mIndex2MFend   = -2;
 #endif /* __TFG__VERSION__ */
 
   if ( track->outerGeometry() ) 
@@ -637,6 +634,13 @@ ostream&  operator<<(ostream& os, const StMuTrack& v) {
 	     v.lastPoint().x(),v.lastPoint().y(),v.lastPoint().z());
   os << Form(" idT %4i qa %2i",v.idTruth(), v.qaTruth());
   os << Form(" idParentVx %d", v.idParentVx());
+#ifdef __TFG__VERSION__
+  if (v.index2MFbegin() <= v.index2MFend()) {
+    for (Int_t i = v.index2MFbegin(); i <= v.index2MFend(); i++) {
+      os << endl << *(StMuDst::instance()->massFit(i));
+    }
+  }
+#endif
   return os;
 }
 

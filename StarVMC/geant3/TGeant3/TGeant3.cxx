@@ -1521,8 +1521,10 @@ void TGeant3::DefineParticles()
 {
   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
   if (! pdgDB->ParticleList()) pdgDB->ReadPDGTable();
-  TString STAR(gSystem->Getenv("STAR"));
-  pdgDB->ReadPDGTable(STAR + "/etc/pdg_tableExtension.txt");
+  if (! pdgDB->GetParticle(1000020040)) {
+    TString STAR(gSystem->Getenv("STAR"));
+    pdgDB->ReadPDGTable(STAR + "/etc/pdg_tableExtension.txt");
+  }
   // Load standard numbers for GEANT particles and PDG conversion
   fPDGCode[fNPDGCodes++] = -99;   //  0 = unused location
   fPDGCode[fNPDGCodes++] = 22;    //  1 = photon

@@ -394,7 +394,7 @@ virtual   void closeRead();
   template <class T>          int addType(TClonesArray* tcaFrom, TClonesArray* &tcaTo ,T *t);
   template <class T>          int addType(TClonesArray* tcaTo  , T &t);
   void addTrackNode(const StEvent* ev, const StTrackNode* node, StMuCut* cut, TClonesArray* gTCA=0, TClonesArray* pTCA=0, TClonesArray* oTCA=0, 
-		    TClonesArray* covgTCA=0, TClonesArray* covpTCA=0, bool l3=false);
+		    TClonesArray* covgTCA=0, TClonesArray* covpTCA=0, TClonesArray* mfTCA=0, bool l3=false);
   int  addTrack(TClonesArray* tca, const StEvent* event, const StTrack* track, const StVertex *vtx, StMuCut* cut, int index2Global, bool l3=false, 
 		TClonesArray* covgTCA=0, TClonesArray* covpTCA=0);
 /*   int addType(TClonesArray* tcaTo , StMuEmcCollection t); */
@@ -454,6 +454,7 @@ virtual   void closeRead();
   TClonesArray** mEztArrays;    //[__NEZTARRAYS__    ];
 #ifdef __TFG__VERSION__
   TClonesArray** mGmtArrays;    //[__NGMTARRAYS__    ];
+  TClonesArray** mMftArrays;    //[__NMFTARRAYS__    ];
 #endif /* __TFG__VERSION__ */
     
     char           mStatusArrays    [__NALLARRAYS__    ];
