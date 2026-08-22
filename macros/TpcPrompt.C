@@ -514,9 +514,11 @@ void TpcPrompt(Int_t Nevents = 1000000,
   //  TString Chain("in,TpcHitMover,StEvent,tpcDb,detDb,CorrX,OSpaceZ2,OGridLeakFull,quiet,analysis,mysql,NoDefault");
   TString Chain("in");
   if (TString(daqfile).Contains("daq")) {
-    Chain += ",tpx";
+    //    Chain += ",tpx";
+    Chain += ",TPC23";
   }
-  Chain += ",ReadAll,TpcHitMover,StEvent,tpcDb,detDb,CorrY,quiet,analysis,mysql,NoDefault";
+  //  Chain += ",ReadAll,TpcHitMover,StEvent,tpcDb,detDb,CorrY,quiet,analysis,mysql,NoDefault";
+  Chain += ",ReadAll,TpcHitMover,StEvent,tpcDb,detDb,CorrZ,quiet,analysis,mysql,NoDefault";
   //  TString Chain("in,StEvent,tpcDb,analysis,magF,NoDefault,tpcHitMover,OSpaceZ2,OGridLeakFull,CorrX");
   TString TreeFile(treefile);
   if (TreeFile == "") {
@@ -529,8 +531,8 @@ void TpcPrompt(Int_t Nevents = 1000000,
   for (Int_t ev = 0; ev < Nevents; ev++) {
     Int_t iMake = chain->MakeEvent();
     if (iMake%10 == kStEOF || iMake%10==kStFatal)	break;
-    //    StAnalysisMaker::PrintTpcHits(0,0,2);
-    StAnalysisMaker::PrintTpcHits(0,0,1);
+    StAnalysisMaker::PrintTpcHits(0,0,2); // Membrane & Prompt
+    //    StAnalysisMaker::PrintTpcHits(0,0,1);
   }
 }
 #endif 

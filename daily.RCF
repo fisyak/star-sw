@@ -17221,3 +17221,356 @@ bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,
 ================================================================================
 08/18/2026 
 bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,MassFit","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006.event.root","st_physics_27028003_raw_0100006.tags.root")
+================================================================================
+08/21/2026
+StMuDstMaker::createArrays       ,StMuArrays Types[0] = StMuEvent       	Names[0] = MuEvent      Sizes[0] = 1    StMuDstMaker::clonesArray(StMuEvent,1) => Collection name='StMuEvents', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[1] = StMuPrimaryVertex       Names[1] = PrimaryVertices      Sizes[1] = 10   StMuDstMaker::clonesArray(StMuPrimaryVertex,10) => Collection name='StMuPrimaryVertexs', class='TClonesArray', size=10
+StMuDstMaker::createArrays       ,StMuArrays Types[2] = StMuTrack      		Names[2] = PrimaryTracks        Sizes[2] = 1000 StMuDstMaker::clonesArray(StMuTrack,1000) => Collection name='StMuTracks', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[3] = StMuTrack       	Names[3] = GlobalTracks Sizes[3] = 1000 StMuDstMaker::clonesArray(StMuTrack,1000) => Collection name='StMuTracks', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[4] = StMuTrack       	Names[4] = OtherTracks  Sizes[4] = 1000 StMuDstMaker::clonesArray(StMuTrack,1000) => Collection name='StMuTracks', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[5] = StMuTrack       	Names[5] = L3Tracks     Sizes[5] = 1000 StMuDstMaker::clonesArray(StMuTrack,1000) => Collection name='StMuTracks', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[6] = StRichSpectra   	Names[6] = RichSpectra  Sizes[6] = 100  StMuDstMaker::clonesArray(StRichSpectra,100) => Collection name='StRichSpectras', class='TClonesArray', size=100
+
+StMuDstMaker::createArrays       ,StMuArrays Types[7] = StDetectorState 	Names[7] = DetectorStates       Sizes[7] = 100  StMuDstMaker::clonesArray(StDetectorState,100) => Collection name='StDetectorStates', class='TClonesArray', size=100
+
+StMuDstMaker::createArrays       ,StMuArrays Types[8] = StL3AlgorithmInfo       Names[8] = L3AlgoAccept Sizes[8] = 100  StMuDstMaker::clonesArray(StL3AlgorithmInfo,100) => Collection name='StL3AlgorithmInfos', class='TClonesArray', size=100
+StMuDstMaker::createArrays       ,StMuArrays Types[9] = StL3AlgorithmInfo       Names[9] = L3AlgoReject Sizes[9] = 100  StMuDstMaker::clonesArray(StL3AlgorithmInfo,100) => Collection name='StL3AlgorithmInfos', class='TClonesArray', size=100
+StMuDstMaker::createArrays       ,StMuArrays Types[10] = StDcaGeometry  	Names[10] = CovGlobTrack        Sizes[10] = 1000        StMuDstMaker::clonesArray(StDcaGeometry,1000) => Collection name='StDcaGeometrys', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[11] = StMuPrimaryTrackCovariance     Names[11] = CovPrimTrack        Sizes[11] = 1000        StMuDstMaker::clonesArray(StMuPrimaryTrackCovariance,1000) => Collection name='StMuPrimaryTrackCovariances', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[12] = StMuRpsCollection      Names[12] = pp2pp       Sizes[12] = 1   StMuDstMaker::clonesArray(StMuRpsCollection,1) => Collection name='StMuRpsCollections', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[13] = StMuMtdCollection      Names[13] = mtd Sizes[13] = 1   StMuDstMaker::clonesArray(StMuMtdCollection,1) => Collection name='StMuMtdCollections', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[14] = KFParticle     	Names[14] = KFTracks    Sizes[14] = 10  StMuDstMaker::clonesArray(KFParticle,10) => Collection name='KFParticles', class='TClonesArray', size=10
+StMuDstMaker::createArrays       ,StMuArrays Types[15] = KFVertex       	Names[15] = KFVertices  Sizes[15] = 1000        StMuDstMaker::clonesArray(KFVertex,1000) => Collection name='KFVertexs', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[16] = StMuMcVertex   	Names[16] = StMuMcVertex        Sizes[16] = 1   StMuDstMaker::clonesArray(StMuMcVertex,1) => Collection name='StMuMcVertexs', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[17] = StMuMcTrack    	Names[17] = StMuMcTrack Sizes[17] = 1000        StMuDstMaker::clonesArray(StMuMcTrack,1000) => Collection name='StMuMcTracks', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[18] = StMuEmcTowerData       Names[18] = EmcTow      Sizes[18] = 1000        StMuDstMaker::clonesArray(StMuEmcTowerData,1000) => Collection name='StMuEmcTowerDatas', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[19] = StMuEmcHit     	Names[19] = EmcPrs      Sizes[19] = 1000        StMuDstMaker::clonesArray(StMuEmcHit,1000) => Collection name='StMuEmcHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[20] = StMuEmcHit     	Names[20] = EmcSmde     Sizes[20] = 1000        StMuDstMaker::clonesArray(StMuEmcHit,1000) => Collection name='StMuEmcHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[21] = StMuEmcHit     	Names[21] = EmcSmdp     Sizes[21] = 1000        StMuDstMaker::clonesArray(StMuEmcHit,1000) => Collection name='StMuEmcHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[22] = StMuEmcHit    	 	Names[22] = EEmcPrs     Sizes[22] = 1000        StMuDstMaker::clonesArray(StMuEmcHit,1000) => Collection name='StMuEmcHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[23] = StMuEmcHit     	Names[23] = EEmcSmdu    Sizes[23] = 1000        StMuDstMaker::clonesArray(StMuEmcHit,1000) => Collection name='StMuEmcHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[24] = StMuEmcHit     	Names[24] = EEmcSmdv    Sizes[24] = 1000        StMuDstMaker::clonesArray(StMuEmcHit,1000) => Collection name='StMuEmcHits', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[25] = StMuPmdHit     	Names[25] = PmdHit      Sizes[25] = 1000        StMuDstMaker::clonesArray(StMuPmdHit,1000) => Collection name='StMuPmdHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[26] = StMuPmdHit     	Names[26] = CpvHit      Sizes[26] = 1000        StMuDstMaker::clonesArray(StMuPmdHit,1000) => Collection name='StMuPmdHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[27] = StMuPmdCluster 	Names[27] = PmdCluster  Sizes[27] = 1   StMuDstMaker::clonesArray(StMuPmdCluster,1) => Collection name='StMuPmdClusters', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[28] = StMuPmdCluster 	Names[28] = CpvCluster  Sizes[28] = 1   StMuDstMaker::clonesArray(StMuPmdCluster,1) => Collection name='StMuPmdClusters', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[29] = StMuFmsHit     	Names[29] = FmsHit      Sizes[29] = 1   StMuDstMaker::clonesArray(StMuFmsHit,1) => Collection name='StMuFmsHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[30] = StMuFmsCluster 	Names[30] = FmsCluster  Sizes[30] = 1   StMuDstMaker::clonesArray(StMuFmsCluster,1) => Collection name='StMuFmsClusters', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[31] = StMuFmsPoint   	Names[31] = FmsPoint    Sizes[31] = 1   StMuDstMaker::clonesArray(StMuFmsPoint,1) => Collection name='StMuFmsPoints', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[32] = StMuFmsInfo    	Names[32] = FmsInfo     Sizes[32] = 1   StMuDstMaker::clonesArray(StMuFmsInfo,1) => Collection name='StMuFmsInfos', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[33] = StMuRHICfRawHit        Names[33] = RHICfRawHit Sizes[33] = 1   StMuDstMaker::clonesArray(StMuRHICfRawHit,1) => Collection name='StMuRHICfRawHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[34] = StMuRHICfHit   	Names[34] = RHICfHit    Sizes[34] = 1   StMuDstMaker::clonesArray(StMuRHICfHit,1) => Collection name='StMuRHICfHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[35] = StMuRHICfPoint 	Names[35] = RHICfPoint  Sizes[35] = 1   StMuDstMaker::clonesArray(StMuRHICfPoint,1) => Collection name='StMuRHICfPoints', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[36] = StMuFcsHit     	Names[36] = FcsHit      Sizes[36] = 1   StMuDstMaker::clonesArray(StMuFcsHit,1) => Collection name='StMuFcsHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[37] = StMuFcsCluster 	Names[37] = FcsCluster  Sizes[37] = 1   StMuDstMaker::clonesArray(StMuFcsCluster,1) => Collection name='StMuFcsClusters', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[38] = StMuFcsPoint   	Names[38] = FcsPoint    Sizes[38] = 1   StMuDstMaker::clonesArray(StMuFcsPoint,1) => Collection name='StMuFcsPoints', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[39] = StMuFcsInfo    	Names[39] = FcsInfo     Sizes[39] = 1   StMuDstMaker::clonesArray(StMuFcsInfo,1) => Collection name='StMuFcsInfos', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[40] = StMuFttRawHit  	Names[40] = FttRawHit   Sizes[40] = 1   StMuDstMaker::clonesArray(StMuFttRawHit,1) => Collection name='StMuFttRawHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[41] = StMuFttCluster 	Names[41] = FttCluster  Sizes[41] = 1   StMuDstMaker::clonesArray(StMuFttCluster,1) => Collection name='StMuFttClusters', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[42] = StMuFttPoint   	Names[42] = FttPoint    Sizes[42] = 1   StMuDstMaker::clonesArray(StMuFttPoint,1) => Collection name='StMuFttPoints', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[43] = StMuFstRawHit  	Names[43] = FstRawHit   Sizes[43] = 1   StMuDstMaker::clonesArray(StMuFstRawHit,1) => Collection name='StMuFstRawHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[44] = StMuFstHit     	Names[44] = FstHit      Sizes[44] = 100 StMuDstMaker::clonesArray(StMuFstHit,100) => Collection name='StMuFstHits', class='TClonesArray', size=100
+
+StMuDstMaker::createArrays       ,StMuArrays Types[45] = StMuFwdTrack   	Names[45] = FwdTrack    Sizes[45] = 200 StMuDstMaker::clonesArray(StMuFwdTrack,200) => Collection name='StMuFwdTracks', class='TClonesArray', size=200
+
+StMuDstMaker::createArrays       ,StMuArrays Types[46] = StMuTofHit     	Names[46] = TofHit      Sizes[46] = 1000        StMuDstMaker::clonesArray(StMuTofHit,1000) => Collection name='StMuTofHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[47] = StTofData      	Names[47] = TofData     Sizes[47] = 1000        StMuDstMaker::clonesArray(StTofData,1000) => Collection name='StTofDatas', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[48] = StTofRawData   	Names[48] = TofRawData  Sizes[48] = 1000        StMuDstMaker::clonesArray(StTofRawData,1000) => Collection name='StTofRawDatas', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[49] = StMuBTofHit    	Names[49] = BTofHit     Sizes[49] = 1   StMuDstMaker::clonesArray(StMuBTofHit,1) => Collection name='StMuBTofHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[50] = StBTofRawHit   	Names[50] = BTofRawHit  Sizes[50] = 1000        StMuDstMaker::clonesArray(StBTofRawHit,1000) => Collection name='StBTofRawHits', class='TClonesArray', size=1000
+StMuDstMaker::createArrays       ,StMuArrays Types[51] = StBTofHeader   	Names[51] = BTofHeader  Sizes[51] = 1000        StMuDstMaker::clonesArray(StBTofHeader,1000) => Collection name='StBTofHeaders', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[52] = StMuETofDigi   	Names[52] = ETofDigi    Sizes[52] = 1   StMuDstMaker::clonesArray(StMuETofDigi,1) => Collection name='StMuETofDigis', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[53] = StMuETofHit    	Names[53] = ETofHit     Sizes[53] = 744 StMuDstMaker::clonesArray(StMuETofHit,744) => Collection name='StMuETofHits', class='TClonesArray', size=744
+Download failed: Invalid argument.  Continuing without separate debug info for /cvmfs/star.sdcc.bnl.gov/TFG/star/ROOT/5.34.39/.al96_x8664_gcc11/rootdeb/cint/cint/stl/vectorbool.dll.
+StMuDstMaker::createArrays       ,StMuArrays Types[54] = StMuETofHeader 	Names[54] = ETofHeader  Sizes[54] = 1000        StMuDstMaker::clonesArray(StMuETofHeader,1000) => Collection name='StMuETofHeaders', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[55] = StMuEpdHit     	Names[55] = EpdHit      Sizes[55] = 1000        StMuDstMaker::clonesArray(StMuEpdHit,1000) => Collection name='StMuEpdHits', class='TClonesArray', size=1000
+
+StMuDstMaker::createArrays       ,StMuArrays Types[56] = StMuMtdHit     	Names[56] = MTDHit      Sizes[56] = 1   StMuDstMaker::clonesArray(StMuMtdHit,1) => Collection name='StMuMtdHits', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[57] = StMuMtdRawHit 	 	Names[57] = MTDRawHit   Sizes[57] = 500 StMuDstMaker::clonesArray(StMuMtdRawHit,500) => Collection name='StMuMtdRawHits', class='TClonesArray', size=500
+StMuDstMaker::createArrays       ,StMuArrays Types[58] = StMuMtdHeader  	Names[58] = MTDHeader   Sizes[58] = 50  StMuDstMaker::clonesArray(StMuMtdHeader,50) => Collection name='StMuMtdHeaders', class='TClonesArray', size=50
+
+StMuDstMaker::createArrays       ,StMuArrays Types[59] = StMuFgtStrip   	Names[59] = FgtStrip    Sizes[59] = 500 StMuDstMaker::clonesArray(StMuFgtStrip,500) => Collection name='StMuFgtStrips', class='TClonesArray', size=500
+StMuDstMaker::createArrays       ,StMuArrays Types[60] = StMuFgtCluster 	Names[60] = FgtCluster  Sizes[60] = 2000        StMuDstMaker::clonesArray(StMuFgtCluster,2000) => Collection name='StMuFgtClusters', class='TClonesArray', size=2000
+StMuDstMaker::createArrays       ,StMuArrays Types[61] = StMuFgtStripAssociation        Names[61] = FgtStripAssociation Sizes[61] = 1   StMuDstMaker::clonesArray(StMuFgtStripAssociation,1) => Collection name='StMuFgtStripAssociations', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[62] = StMuFgtAdc     	Names[62] = FgtAdc      Sizes[62] = 1   StMuDstMaker::clonesArray(StMuFgtAdc,1) => Collection name='StMuFgtAdcs', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[63] = StGmtPoint     	Names[63] = GmtPoint    Sizes[63] = 1   StMuDstMaker::clonesArray(StGmtPoint,1) => Collection name='StGmtPoints', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[64] = StMassFit      	Names[64] = MassFit     Sizes[64] = 1   StMuDstMaker::clonesArray(StMassFit,1) => Collection name='StMassFits', class='TClonesArray', size=1
+
+StMuDstMaker::createArrays       ,StMuArrays Types[65] = EztEventHeader 	Names[65] = EztHead     Sizes[65] = 1   StMuDstMaker::clonesArray(EztEventHeader,1) => Collection name='EztEventHeaders', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[66] = EztTrigBlob    	Names[66] = EztTrig     Sizes[66] = 1   StMuDstMaker::clonesArray(EztTrigBlob,1) => Collection name='EztTrigBlobs', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[67] = EztEmcRawData  	Names[67] = EztETow     Sizes[67] = 1   StMuDstMaker::clonesArray(EztEmcRawData,1) => Collection name='EztEmcRawDatas', class='TClonesArray', size=1
+StMuDstMaker::createArrays       ,StMuArrays Types[68] = EztEmcRawData  	Names[68] = EztESmd     Sizes[68] = 0   StMuDstMaker::clonesArray(EztEmcRawData,0) => Collection name='EztEmcRawDatas', class='TClonesArray', size=16
+StMuDstMaker::createArrays       ,StMuArrays Types[69] = EztFpdBlob     	Names[69] = EztFpd      Sizes[69] = 0   StMuDstMaker::clonesArray(EztFpdBlob,0) => Collection name='EztFpdBlobs', class='TClonesArray', size=16
+--------------------------------------------------------------------------------
+mysql> show tables;
++-----------------------------+
+| Tables_in_Calibrations_etof |
++-----------------------------+
+| NodeRelation                |
+| Nodes                       |
+| etofCalibParam              |
+| etofDetResolution           |
+| etofDigiSlewCorr            |
+| etofDigiTimeCorr            |  <<======
+| etofDigiTotCorr             |
+| etofGet4State               |
+| etofHitParam                |
+| etofMatchParam              |
+| etofPulserTimeDiffGbtx      |
+| etofPulserTotPeak           |
+| etofResetTimeCorr           |
+| etofSignalVelocity          |
+| etofSimEfficiency           |
+| etofStatusMap               |
+| etofTimingWindow            |
+| schema                      |
+| structure                   |
++-----------------------------+
+mysql> select entryTime,beginTime,flavor from etofCalibParam order by beginTime desc limit 10;
+mysql> select entryTime,beginTime,flavor from etofCalibParam order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2022-07-20 11:24:48 | 2020-12-21 00:00:05 | ofl    |
+| 2021-02-01 13:36:20 | 2020-12-21 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.01 sec)
+
+mysql> select entryTime,beginTime,flavor from etofDetResolution order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:23 | 2020-12-21 00:00:00 | ofl    |
+| 2019-11-29 11:30:33 | 2019-11-25 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+mysql> select entryTime,beginTime,flavor from etofDigiSlewCorr order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2023-08-08 18:12:09 | 2021-05-25 00:00:00 | ofl    |
+| 2022-07-22 14:55:52 | 2020-12-21 00:00:05 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+mysql> select entryTime,beginTime,flavor from etofDigiTimeCorr order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2026-08-20 17:32:55 | 2026-01-28 12:49:16 | FXT    |
+| 2026-08-20 17:32:55 | 2026-01-28 12:21:42 | FXT    |   <<======
++---------------------+---------------------+--------+
+2 rows in set (0.11 sec)
+mysql> select entryTime,beginTime,flavor from etofDigiTotCorr order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2023-08-08 18:10:21 | 2021-05-25 00:00:00 | ofl    |
+| 2022-07-22 14:53:25 | 2020-12-21 00:00:05 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+mysql> select entryTime,beginTime,flavor from etofGet4State order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2024-12-20 17:24:49 | 2020-02-14 13:17:55 | FXT    |
+| 2024-12-20 17:24:27 | 2020-02-14 13:07:32 | FXT    |
++---------------------+---------------------+--------+
+2 rows in set (0.01 sec)
+mysql> select entryTime,beginTime,flavor from etofHitParam order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2022-07-20 11:32:29 | 2020-12-21 00:00:05 | ofl    |
+| 2021-02-01 13:36:33 | 2020-12-21 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+mysql> select entryTime,beginTime,flavor from etofMatchParam  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:37 | 2020-12-21 00:00:00 | ofl    |
+| 2020-01-16 04:04:25 | 2019-11-25 00:00:01 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+mysql> select entryTime,beginTime,flavor from etofPulserTimeDiffGbtx  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:39 | 2020-12-21 00:00:00 | ofl    |
+| 2019-12-18 15:20:44 | 2019-11-25 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.01 sec)
+mysql> select entryTime,beginTime,flavor from etofPulserTotPeak  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:41 | 2020-12-21 00:00:00 | ofl    |
+| 2019-11-29 11:32:11 | 2019-11-25 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select entryTime,beginTime,flavor from etofResetTimeCorr  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:43 | 2020-12-21 00:00:00 | ofl    |
+| 2020-06-29 09:19:34 | 2020-06-28 20:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+mysql> select entryTime,beginTime,flavor from etofSignalVelocity  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2022-07-23 10:55:28 | 2020-12-21 00:00:05 | ofl    |
+| 2021-02-01 13:36:44 | 2020-12-21 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select entryTime,beginTime,flavor from etofSimEfficiency  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:47 | 2020-12-21 00:00:00 | ofl    |
+| 2019-11-29 11:32:54 | 2019-11-25 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.01 sec)
+mysql> select entryTime,beginTime,flavor from etofStatusMap  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:50 | 2020-12-21 00:00:00 | ofl    |
+| 2019-11-29 11:33:06 | 2019-11-25 00:00:00 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select entryTime,beginTime,flavor from etofTimingWindow  order by beginTime desc limit 2;
++---------------------+---------------------+--------+
+| entryTime           | beginTime           | flavor |
++---------------------+---------------------+--------+
+| 2021-02-01 13:36:52 | 2020-12-21 00:00:00 | ofl    |
+| 2019-12-10 17:10:55 | 2019-11-25 00:00:01 | ofl    |
++---------------------+---------------------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select entryTime,elementID,beginTime,flavor,deactive  from etofDigiTimeCorr where entryTime>"2026" order by beginTime desc limit 200;
++---------------------+-----------+---------------------+--------+----------+
+| entryTime           | elementID | beginTime           | flavor | deactive |
++---------------------+-----------+---------------------+--------+----------+
+| 2026-08-20 17:32:55 |         0 | 2026-01-28 12:49:16 | FXT    |        0 |
+| 2026-08-20 17:32:55 |         0 | 2026-01-28 12:21:42 | FXT    |        0 |
+...
+mysql> select entryTime,elementID,beginTime,flavor,deactive  from etofDigiTimeCorr where entryTime>"2026" and beginTime > "2026" order by beginTime limit 200;
++---------------------+-----------+---------------------+--------+----------+
+| entryTime           | elementID | beginTime           | flavor | deactive |
++---------------------+-----------+---------------------+--------+----------+
+| 2026-08-20 16:33:35 |         0 | 2026-01-21 16:46:41 | FXT    |        0 |
+| 2026-08-20 16:33:35 |         0 | 2026-01-21 17:16:12 | FXT    |        0 |
+| 2026-08-20 16:33:35 |         0 | 2026-01-21 17:20:02 | FXT    |        0 |
+
+2026-01-21 17:20:02 - 2026-01-28 12:49:16 
+20260121.163623  - 9p8GeV_fixedTarget_2026  2026-02-01	05:53:35 - 13p5GeV_fixedTarget_2026
+
+
+
+ GlobalTracks.mIndex2MFbegin = 0, 2, 3, 4, 5, 8,  9, 11, 12, 13, 14, 17, 19, 20, 22, 26, 28, 31, 32, 33
+ GlobalTracks.mIndex2MFend   = 1, 2, 3, 4, 7, 8, 10, 11, 12, 13, 16, 18, 19, 21, 25, 27, 30, 31, 32, 34
+
+bfc.C(10,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,NoHistos,noTags,noRunco,evout,PicoVtxFXT,FXT,EbyET0,MassFit","/gpfs01/star/daq/2026/028/27028003/st_physics_27028003_raw_0100006.daq","st_physics_27028003_raw_0100006.event.root","st_physics_27028003_raw_0100006.tags.root")
+================================================================================
+08/22/2026 
+put2DB.pl 'StarDb/Calibrations/tpc/*.root'
+mysql> select entryTime,elementID,beginTime,flavor,deactive from TpcSecRowB where elementID=1 order by beginTime desc limit 20;
++---------------------+-----------+---------------------+--------+------------+
+| entryTime           | elementID | beginTime           | flavor | deactive   |
++---------------------+-----------+---------------------+--------+------------+
+| 2026-08-22 21:10:58 |         1 | 2026-01-27 01:09:25 | ofl    |          0 |
+| 2026-08-22 21:10:58 |         1 | 2026-01-25 20:17:46 | ofl    |          0 |
+| 2026-08-22 21:10:59 |         1 | 2026-01-24 18:47:23 | ofl    |          0 |
+| 2026-08-22 21:10:59 |         1 | 2026-01-24 15:39:19 | ofl    |          0 |
+| 2026-08-22 21:10:59 |         1 | 2026-01-21 17:30:43 | ofl    |          0 |
+| 2025-08-27 14:38:36 |         1 | 2024-04-30 07:46:40 | ofl    |          0 |
+| 2025-05-25 20:27:57 |         1 | 2023-06-26 08:57:10 | ofl    |          0 |
+| 2025-05-25 20:27:50 |         1 | 2023-06-16 18:57:21 | ofl    |          0 |
+| 2025-05-25 20:25:56 |         1 | 2023-05-20 02:32:50 | ofl    |          0 |
+| 2023-03-14 13:39:05 |         1 | 2022-03-13 14:15:09 | ofl    | 1740610772 |
+| 2022-12-11 22:18:05 |         1 | 2022-03-13 14:15:08 | ofl    | 1740610772 |
+| 2023-03-14 13:39:02 |         1 | 2022-03-05 04:21:27 | ofl    | 1740610772 |
+| 2022-12-11 22:18:02 |         1 | 2022-03-05 04:21:26 | ofl    | 1740610772 |
+| 2023-03-14 13:38:59 |         1 | 2022-02-10 11:26:20 | ofl    | 1740610772 |
+| 2022-12-11 22:17:59 |         1 | 2022-02-10 11:26:19 | ofl    | 1740610772 |
+| 2023-03-14 13:38:55 |         1 | 2022-02-08 03:37:48 | ofl    | 1740610772 |
+| 2022-12-11 22:17:57 |         1 | 2022-02-08 03:37:47 | ofl    | 1740610772 |
+| 2023-03-14 13:38:52 |         1 | 2021-12-15 08:17:03 | ofl    | 1740610772 |
+| 2022-12-11 22:17:54 |         1 | 2021-12-15 08:17:02 | ofl    | 1740610772 |
+| 2025-03-25 23:21:08 |         1 | 2021-12-15 08:17:02 | ofl    |          0 |
++---------------------+-----------+---------------------+--------+------------+
+20 rows in set (0.05 sec)
+
+[cvmfswrite07] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG $ put2DB.pl 'StarDb/Calibrations/tpc/TpcLengthCorrectionMDN*2026*.C'
+mysql> select entryTime,elementID,beginTime,flavor,deactive from TpcLengthCorrectionMDN  where elementID=1 order by beginTime desc limit 20;
++---------------------+-----------+---------------------+--------+------------+
+| entryTime           | elementID | beginTime           | flavor | deactive   |
++---------------------+-----------+---------------------+--------+------------+
+| 2026-08-22 21:22:08 |         1 | 2026-01-27 01:09:25 | ofl    |          0 |
+| 2026-08-22 21:22:09 |         1 | 2026-01-25 20:17:46 | ofl    |          0 |
+| 2026-08-22 21:22:09 |         1 | 2026-01-24 18:47:23 | ofl    |          0 |
+| 2026-08-22 21:22:09 |         1 | 2026-01-24 15:39:19 | ofl    |          0 |
+| 2026-08-22 21:22:09 |         1 | 2026-01-21 17:30:43 | ofl    |          0 |
+| 2025-08-27 14:39:37 |         1 | 2024-04-30 07:46:40 | ofl    |          0 |
+| 2025-05-25 20:27:01 |         1 | 2023-06-26 08:57:10 | ofl    |          0 |
+| 2025-05-25 20:26:53 |         1 | 2023-06-16 18:57:21 | ofl    |          0 |
+| 2025-05-25 20:23:50 |         1 | 2023-05-20 02:32:50 | ofl    |          0 |
+| 2023-03-14 13:46:04 |         1 | 2022-03-13 14:15:09 | ofl    | 1740610772 |
+| 2022-12-11 22:11:14 |         1 | 2022-03-13 14:15:08 | ofl    | 1740610772 |
+| 2023-03-14 13:46:01 |         1 | 2022-03-05 04:21:27 | ofl    | 1740610772 |
+| 2022-12-11 22:11:12 |         1 | 2022-03-05 04:21:26 | ofl    | 1740610772 |
+| 2023-03-14 13:45:58 |         1 | 2022-02-10 11:26:20 | ofl    | 1740610772 |
+| 2022-12-11 22:11:09 |         1 | 2022-02-10 11:26:19 | ofl    | 1740610772 |
+| 2023-03-14 13:45:55 |         1 | 2022-02-08 03:37:48 | ofl    | 1740610772 |
+| 2022-12-11 22:11:06 |         1 | 2022-02-08 03:37:47 | ofl    | 1740610772 |
+| 2023-03-14 13:45:52 |         1 | 2021-12-15 08:17:03 | ofl    | 1740610772 |
+| 2025-03-25 23:19:00 |         1 | 2021-12-15 08:17:02 | ofl    |          0 |
+| 2022-12-11 22:11:03 |         1 | 2021-12-15 08:17:02 | ofl    | 1740610772 |
++---------------------+-----------+---------------------+--------+------------+
+20 rows in set (0.06 sec)
+root.exe -q -b  lDb.C 'put2DB.C("StarDb/Calibrations/tpc/TpcLengthCorrectionMDN*2026*.C","ofl")' >& StarDb/Calibrations/tpc/TpcLengthCorrectionMDN2026*.C_`date +%m%d%y:%H%M`.log
+mysql> select entryTime,elementID,beginTime,flavor,deactive from TpcZCorrectionC  where elementID=1 order by beginTime desc limit 20;
++---------------------+-----------+---------------------+--------+------------+
+| entryTime           | elementID | beginTime           | flavor | deactive   |
++---------------------+-----------+---------------------+--------+------------+
+| 2026-08-22 21:24:38 |         1 | 2026-01-27 01:09:25 | ofl    |          0 |
+| 2026-08-22 21:24:38 |         1 | 2026-01-25 20:17:46 | ofl    |          0 |
+| 2026-08-22 21:24:39 |         1 | 2026-01-24 18:47:23 | ofl    |          0 |
+| 2026-08-22 21:24:39 |         1 | 2026-01-24 15:39:19 | ofl    |          0 |
+| 2026-08-22 21:24:38 |         1 | 2026-01-21 17:30:43 | ofl    |          0 |
+| 2025-08-27 14:40:37 |         1 | 2024-04-30 07:46:40 | ofl    |          0 |
+| 2025-05-25 20:27:16 |         1 | 2023-06-26 08:57:10 | ofl    |          0 |
+| 2025-05-25 20:27:08 |         1 | 2023-06-16 18:57:21 | ofl    |          0 |
+| 2025-05-25 20:23:58 |         1 | 2023-05-20 02:32:50 | ofl    |          0 |
+| 2022-12-11 22:27:01 |         1 | 2022-03-13 14:15:08 | ofl    | 1740610772 |
+| 2022-12-11 22:26:58 |         1 | 2022-03-05 04:21:26 | ofl    | 1740610772 |
+| 2022-12-11 22:26:56 |         1 | 2022-02-10 11:26:19 | ofl    | 1740610772 |
+| 2022-12-11 22:26:54 |         1 | 2022-02-08 03:37:47 | ofl    | 1740610772 |
+| 2022-12-11 22:26:51 |         1 | 2021-12-15 08:17:02 | ofl    | 1740610772 |
+| 2025-03-25 23:10:38 |         1 | 2021-12-15 08:17:02 | ofl    |          0 |
+| 2022-05-16 22:02:15 |         1 | 2021-12-06 21:04:02 | ofl    | 1668275117 |
+| 2023-08-04 00:17:56 |         1 | 2021-07-04 03:40:48 | ofl    |          0 |
+| 2022-12-11 22:26:49 |         1 | 2021-07-04 03:40:46 | ofl    |          0 |
+| 2023-09-15 19:53:32 |         1 | 2021-07-03 23:06:59 | ofl    | 1728320291 |
+| 2024-12-15 23:37:39 |         1 | 2021-07-03 23:06:57 | ofl    |          0 |
++---------------------+-----------+---------------------+--------+------------+
+20 rows in set (0.04 sec)
