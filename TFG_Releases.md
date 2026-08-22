@@ -129,6 +129,6 @@
 <li> TFG26g Modify dX calculation with stTpcLocalSectorCoordinate        2026-08-04 16:16:14 -0400  (HEAD -> TFG, tag: TFG26g1)
 <li> TFG26g dX++, fix StEventClusteringHints stremaer                    2026-08-07 10:37:58 -0400  (HEAD -> TFG, tag: TFG26g3, origin/TFG)
 <li> TFG26g dX++, add StiMassFitMaker                                    2026-08-11 17:06:49 -0400  (HEAD -> TFG, tag: TFG26g4)
-<li> TFG26h Add Mass Fit to Mu & Pico Dsts. 2026 FXT production          2026-08-22 17:06:49 -0400  (HEAD -> TFG, tag: TFG26h)
+<li> TFG26h Add Mass Fit to Mu & Pico Dsts. 2026 FXT production          2026-08-22 17:29:02 -0400  (tag: TFG26h)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
