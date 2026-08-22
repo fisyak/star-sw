@@ -57,7 +57,8 @@ Int_t StiMassFitMaker::Make() {
     Int_t pdg = 211;
     if (kTrack->getCharge() < 0) pdg = -211;
     Float_t Chi2 = kTrack->getChi2()*NDF;
-    StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), stinode->getMomentumF().mag(), pdg,  Chi2, NDF);
+    StDcaGeometry *dcaG =  gTrack->dcaGeometry();
+    StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), pdg, stinode->getMomentumF().mag(),  Chi2, NDF, dcaG);
     node->addTrack(mf);
     if (Debug()) {
       cout << "pdg = " << pdg << "\tpInTpc = " <<   stinode->getMomentumF().mag() << endl;
@@ -105,7 +106,7 @@ Int_t StiMassFitMaker::Make() {
 	NDF = 2*cTrack->getFitPointCount(0) - 5;
 	Chi2 = cTrack->getChi2()*NDF;
 	StiKalmanTrackNode* stinode = cTrack->getInnOutMostNode(0,kKeepHit+kGoodHit+kTpcOnly);
-	StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), stinode->getMomentumF().mag(), pdg, Chi2, NDF, dca);
+	StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), pdg, stinode->getMomentumF().mag(), Chi2, NDF, dca);
 	node->addTrack(mf);
 	if (Debug() > 1) {
 	  cTrack->print();
