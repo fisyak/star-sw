@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- <job  name="TpcPrompt" maxFilesPerProcess="10"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false"> -->
-<job  name="TpcPrompt" maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="false" fileListSyntax="paths" copyInputLocally="false">
+<job maxFilesPerProcess="1"  filesPerHour="1" simulateSubmission="true" fileListSyntax="paths" copyInputLocally="false">
 <stdout URL="file:./sched$JOBID.log" />
 <stderr URL="file:./sched$JOBID.err" />
 <command> 
@@ -62,6 +62,8 @@
 <input URL="file:/hlt/cephfs/daq/2024/119/25119106/*.daq" />
 <input URL="file:/hlt/cephfs/daq/2024/121/25121083/*.daq" />
 <input URL="file:/hlt/cephfs/daq/2024/123/25123012/*.daq" />
---> 
 <input URL="file:/hlt/cephfs/daq/2024/123/*/*.daq" />
+<input URL="file:/star/data115/reco/production_AuAu_2025/ReversedFullField/P25iy_calib/2025/*/*/*.event.root" />
+--> 
+<input URL="file:/star/data115/reco/production_AuAu_2025_HiLumi/ReversedFullField/P25iy_calib/2025/*/*/st_phy*.event.root" />
 </job>
