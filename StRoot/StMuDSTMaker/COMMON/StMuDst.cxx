@@ -46,6 +46,7 @@
 #include "KFParticle/KFVertex.h"
 #include "StGmtCollection.h"
 #include "StGmtPoint.h"
+#include "StMassFit.h"
 #endif /* __TFG__VERSION__ */
 ///dongx
 #include "StBTofCollection.h"
@@ -186,6 +187,7 @@ void StMuDst::unset() {
     mtdArrays = 0;
 #ifdef __TFG__VERSION__
     gmtArrays     = 0;   // YF
+    mftArrays     = 0;   // YF
 #endif /* __TFG__VERSION__ */
 }
 //-----------------------------------------------------------------------
@@ -214,6 +216,7 @@ void StMuDst::set(StMuDstMaker* maker) {
   mtdArrays     = maker->mMtdArrays;
 #ifdef __TFG__VERSION__
   gmtArrays     = maker->mGmtArrays;
+  mftArrays     = maker->mMftArrays;
 #endif /* __TFG__VERSION__ */
   fgtArrays     = maker->mFgtArrays;
 
@@ -310,6 +313,7 @@ void StMuDst::set(TClonesArray** theArrays,
 		  StMuPmdCollection *pmd
 #ifdef  __TFG__VERSION__
 		  ,TClonesArray** theGMTArrays
+		  ,TClonesArray** theMFTArrays
 #endif /* __TFG__VERSION__ */
 		  )
 {
@@ -348,6 +352,7 @@ void StMuDst::set(TClonesArray** theArrays,
   mtdArrays = theMTDArrays;
 #ifdef  __TFG__VERSION__
   gmtArrays = theGMTArrays;
+  mftArrays = theMFTArrays;
 #endif /* __TFG__VERSION__ */
 }
 //-----------------------------------------------------------------------
@@ -760,83 +765,6 @@ void StMuDst::setMtdArray(StMtdCollection *mtd_coll) {
       new((*mtdArrays[muMTDHeader])[0]) StMuMtdHeader(*mtdHead);
     }
 }
-#ifdef __TFG__VERSION__
-//-----------------------------------------------------------------------
-//-----------------------------------------------------------------------
-//-----------------------------------------------------------------------
-void StMuDst::fixGmtTrackIndices() {
-  /// global and primary tracks share the same id, so we can fix the 
-  /// index2Global up in case they got out of order (e.g. by removing 
-  /// a track from the TClonesArrays
-    fixGmtTrackIndices( gmtArrays[muGMTPoint], arrays[muPrimary], arrays[muGlobal] );  
-}
-//-----------------------------------------------------------------------
-//-----------------------------------------------------------------------
-//-----------------------------------------------------------------------
-void StMuDst::fixGmtTrackIndices(TClonesArray* gmtHit, TClonesArray* primary, TClonesArray* global) {
-  if ( !(primary&&global&&gmtHit) ) return;
-//DEBUGMESSAGE1("");
-  StTimer timer;
-  timer.start();
-#if 0
-
- int nPrimarys = primary->GetEntriesFast();
-  int nGlobals = global->GetEntriesFast();
-  int nGmtPoints = gmtHit->GetEntriesFast();
-  // map to keep track of index numbers, key is track->id(), value is index of track in MuDst
-  map<short,unsigned short> gmtIndex;
-  map<short,unsigned short> globalIndex;
-  map<short,unsigned short> primaryIndex;
-
-  for (int i=0; i<nGmtPoints; i++) {
-    StGmtPoint *t = (StGmtPoint*) gmtHit->UncheckedAt(i);
-    if (t) {
-      gmtIndex[t->associatedTrackKey()] = i+1;  // starting from 1
-    }
-  }
-
-  for (Int_t i=0; i<nGlobals; i++) {
-    StMuTrack *g = (StMuTrack*) global->UncheckedAt(i);
-    if (g) {
-      globalIndex[g->id()] = i+1;
-
-      if(gmtIndex[g->id()])
-        g->setIndex2GmtPoint( gmtIndex[g->id()]-1 );
-      else
-        g->setIndex2GmtPoint(-1);
-    }
-  }
-  for (int i=0; i<nPrimarys; i++) {
-    StMuTrack *p = (StMuTrack*) primary->UncheckedAt(i);
-    if (p) {
-      primaryIndex[p->id()] = i+1;
-
-      if(gmtIndex[p->id()])
-        p->setIndex2GmtPoint( gmtIndex[p->id()]-1 );
-      else
-        p->setIndex2GmtPoint(-1);
-    }
-  }
-
-  /// set the indices for GmtPoints
-  for (int i=0; i<nGmtPoints; i++) {
-    StGmtPoint *t = (StGmtPoint*) gmtHit->UncheckedAt(i);
-    if (t) {
-      if(globalIndex[t->associatedTrackKey()])
-        t->setIndex2Global( globalIndex[t->associatedTrackKey()]-1 );
-      else
-        t->setIndex2Global(-1);
-
-      if(primaryIndex[t->associatedTrackKey()])
-        t->setIndex2Primary( primaryIndex[t->associatedTrackKey()]-1 );
-      else
-        t->setIndex2Primary(-1);
-    }
-  }
-#endif
-//DEBUGVALUE2(timer.elapsedTime());
-}
-#endif /* __TFG__VERSION__ */
 
 //-----------------------------------------------------------------------
 void StMuDst::setETofArray( const StETofCollection* etof_coll ) {
@@ -2177,6 +2105,8 @@ TClonesArray* StMuDst::mtdArray(Int_t type) { return instance()->mtdArrays[type]
 #ifdef __TFG__VERSION__
   // returns pointer to the n-th TClonesArray from the gmt arrays
 TClonesArray* StMuDst::gmtArray(Int_t type) { return instance()->gmtArrays[type]; }
+  // returns pointer to the n-th TClonesArray from the mft arrays
+TClonesArray* StMuDst::mftArray(Int_t type) { return instance()->mftArrays[type]; }
 #endif /* __TFG__VERSION__ */
   // returns pointer to the n-th TClonesArray from the fgt arrays
 TClonesArray* StMuDst::fgtArray(Int_t type) { return instance()->fgtArrays[type]; }
@@ -2234,7 +2164,7 @@ StL3AlgorithmInfo* StMuDst::l3AlgoReject(Int_t i) { return (StL3AlgorithmInfo*)i
 StMuRpsCollection* StMuDst::RpsCollection() { return (StMuRpsCollection*)instance()->arrays[mupp2pp]->UncheckedAt(0); }
 StMuMtdCollection* StMuDst::MtdCollection() { return (StMuMtdCollection*)instance()->arrays[muMtd]->UncheckedAt(0); }
 #ifdef __TFG__VERSION__
-StGmtCollection* StMuDst::GmtCollection() { return (StGmtCollection*)instance()->arrays[muGmt]->UncheckedAt(0); }
+StGmtCollection* StMuDst::GmtCollection() { return (StGmtCollection*)instance()->gmtArrays[0]->UncheckedAt(0); }
 #endif /* __TFG__VERSION__ */
 
 StDcaGeometry* StMuDst::covGlobTracks(Int_t i) { return (StDcaGeometry*)instance()->arrays[muCovGlobTrack]->UncheckedAt(i); }
@@ -2331,6 +2261,7 @@ StMuMtdHit* StMuDst::mtdHit(Int_t  i) { return (StMuMtdHit*)instance()->mtdArray
   StMuMtdHeader* StMuDst::mtdHeader() { return (StMuMtdHeader*)instance()->mtdArrays[muMTDHeader]->UncheckedAt(0); } 
 #ifdef __TFG__VERSION__
 StGmtPoint* StMuDst::gmtPoint(Int_t  i) { return (StGmtPoint*)instance()->gmtArrays[muGMTPoint]->UncheckedAt(i); }
+StMassFit*  StMuDst::massFit(Int_t  i) { return (StMassFit*)instance()->mftArrays[muMFTPoint]->UncheckedAt(i); }
 #endif /* __TFG__VERSION__ */
     
   // returns pointer to eztHeader 
@@ -2398,6 +2329,7 @@ UInt_t StMuDst::numberOfMTDHit()       { return instance()->mtdArrays[muMTDHit]-
 UInt_t StMuDst::numberOfBMTDRawHit()    { return instance()->mtdArrays[muMTDRawHit]->GetEntriesFast(); }
 #ifdef __TFG__VERSION__
 UInt_t StMuDst::numberOfGMTPoint()       { return instance()->gmtArrays[muGMTPoint]->GetEntriesFast(); }
+UInt_t StMuDst::numberOfMassFit()        { return instance()->mftArrays[0]->GetEntriesFast(); }
 #endif /* __TFG__VERSION__ */        
 UInt_t StMuDst::GetNPrimaryVertex()    { return instance()->numberOfPrimaryVertices(); }  
 UInt_t StMuDst::GetNPrimaryTrack()    { return instance()->numberOfPrimaryTracks(); }  
@@ -2441,7 +2373,8 @@ UInt_t StMuDst::GetNEpdHit()         { return instance()->numberOfEpdHit(); }
 #ifdef __TFG__VERSION__
 UInt_t StMuDst::GetNMTDHit()         { return instance()->numberOfMTDHit(); }
 UInt_t StMuDst::GetNMTDRawHit()      { return instance()->numberOfBMTDRawHit(); }
-UInt_t StMuDst::GetNGMTPoint()         { return instance()->numberOfGMTPoint(); }
+UInt_t StMuDst::GetNGMTPoint()       { return instance()->numberOfGMTPoint(); }
+UInt_t StMuDst::GetNMassFit()        { return instance()->numberOfMassFit(); }
 #endif /* __TFG__VERSION__ */
 /***************************************************************************
  *

@@ -41,7 +41,7 @@ enum MCTypes {MCVertex=0, MCTrack};
 #ifndef __TFG__VERSION__
 enum muDstTypes {muEvent=0, muPrimaryVertex, muPrimary, muGlobal, muOther, muL3, muRich, muState, muAccept, muReject, muCovGlobTrack, muCovPrimTrack, mupp2pp, muMtd}; 
 #else /* __TFG__VERSION__ */
-enum muDstTypes {muEvent=0, muPrimaryVertex, muPrimary, muGlobal, muOther, muL3, muRich, muState, muAccept, muReject, muCovGlobTrack, muCovPrimTrack, mupp2pp, muMtd, muKFTracks, muKFVertices, muGmt}; 
+enum muDstTypes {muEvent=0, muPrimaryVertex, muPrimary, muGlobal, muOther, muL3, muRich, muState, muAccept, muReject, muCovGlobTrack, muCovPrimTrack, mupp2pp, muMtd, muKFTracks, muKFVertices}; 
 #endif /* __TFG__VERSION__ */
 
 /// @enum pmdTypes enumeration to to index the pmdArrays
@@ -61,6 +61,8 @@ enum mtdTypes {muMTDHit=0, muMTDRawHit, muMTDHeader};
 
 enum gmtTypes {muGMTPoint=0};
 
+enum mftTypes {muMFTPoint=0};
+
 enum epdTypes {muEpdHit=0};    // MALisa
 
 /// @enum eztTypes enumeration to to index the eztArrays (IUCF-ezTree)
@@ -71,7 +73,7 @@ enum NARRAYS {
 __NARRAYS__        =14,	///< size of the 'regular stuff' arrays, i.e. number of TClonesArrays  (add two more for global and primary track covariance matrices)
 #else /* __TFG__VERSION__ */
 __NARRAYS__        =16,	///< size of the 'regular stuff' arrays, i.e. number of TClonesArrays  (add two more for global and primary track covariance matrices)
-#endif /* __TFG__VERSION__ */
+#endif /* ! __TFG__VERSION__ */
 #ifndef __NO_STRANGE_MUDST__
 __NSTRANGEARRAYS__ =12,	///< size of the strangeness arrays, i.e. number of TClonesArrays  
 #endif
@@ -90,19 +92,29 @@ __NBTOFARRAYS__    =3 ,  /// dongx
 __NETOFARRAYS__    =3 ,  /// jdb
 __NEPDARRAYS__     =1,   /// MALisa
 __NMTDARRAYS__     =3,
-__NFGTARRAYS__     =4 ,	///< size of the fgt arrays, i.e. number of TClonesArrays  
-__NEZTARRAYS__     =5 ,  ///< size of the ez arrays >
+__NFGTARRAYS__     =4,	///< size of the fgt arrays, i.e. number of TClonesArrays  
+#ifdef __TFG__VERSION__
 __NGMTARRAYS__     =1,  /// YF
+__NMFTARRAYS__     =1,  /// YF Mass Fit
+#endif /* __TFG__VERSION__ */
+__NEZTARRAYS__     =5,  ///< size of the ez arrays >
      
 /// dongx
 __NALLARRAYS__     =  __NARRAYS__
 #ifndef __NO_STRANGE_MUDST__
 +__NSTRANGEARRAYS__
 #endif /* ! __NO_STRANGE_MUDST__ */
-+__NMCARRAYS__+__NEMCARRAYS__+__NFMSARRAYS__+__NRHICFARRAYS__+__NFCSARRAYS__+__NFTTARRAYS__+__NFSTARRAYS__+__NFWDTRACKARRAYS__+__NPMDARRAYS__+__NTOFARRAYS__+__NBTOFARRAYS__+__NETOFARRAYS__+__NEPDARRAYS__+__NMTDARRAYS__+__NFGTARRAYS__+__NEZTARRAYS__
++__NMCARRAYS__
++__NEMCARRAYS__
++__NFMSARRAYS__+__NRHICFARRAYS__
++__NFCSARRAYS__+__NFTTARRAYS__+__NFSTARRAYS__
++__NFWDTRACKARRAYS__+__NPMDARRAYS__
++__NTOFARRAYS__+__NBTOFARRAYS__+__NETOFARRAYS__+__NEPDARRAYS__+__NMTDARRAYS__+__NFGTARRAYS__
 #ifdef __TFG__VERSION__
 +__NGMTARRAYS__
++__NMFTARRAYS__
 #endif /* __TFG__VERSION__ */
++__NEZTARRAYS__
 };
 class StMuArrays {
  public:
@@ -131,10 +143,11 @@ class StMuArrays {
     static const char**     epdArrayNames; //[__NEPDARRAYS__    ] // MALisa
     static const char**      mtdArrayNames;//[__NMTDARRAYS__    ]
     static const char**      fgtArrayNames;//[__NFGTARRAYS__    ]
-    static const char**      eztArrayNames;//[__NEZARRAYS__     ]
 #ifdef __TFG__VERSION__
     static const char**      gmtArrayNames;//[__NGMTARRAYS__    ]
+    static const char**      mftArrayNames;//[__NMFTARRAYS__    ]
 #endif /* __TFG__VERSION__ */
+    static const char**      eztArrayNames;//[__NEZARRAYS__     ]
     
 ///< names of the classes, the TClonesArrays are arrays of this type
     static const char*   arrayTypes          [__NALLARRAYS__    ];
@@ -156,10 +169,11 @@ class StMuArrays {
     static const char**  epdArrayTypes;//    [__NEPDARRAYS__    ]  // MALisa
     static const char**  mtdArrayTypes;//    [__NMTDARRAYS__    ]
     static const char**  fgtArrayTypes;//    [__NFGTARRAYS__    ]
-    static const char**  eztArrayTypes;//    [__NEZARRAYS__     ]
 #ifdef __TFG__VERSION__
     static const char**  gmtArrayTypes;//    [__NGMTARRAYS__    ]
+    static const char**  mftArrayTypes;//    [__NMFTARRAYS__    ]
 #endif /* __TFG__VERSION__ */
+    static const char**  eztArrayTypes;//    [__NEZARRAYS__     ]
     
 ///< maximum sizes of the TClonesArrays
     static int        arraySizes    [__NALLARRAYS__    ];
@@ -181,17 +195,17 @@ class StMuArrays {
     static int*       epdArraySizes;// [__NEPDARRAYS__    ]  // MALisa
     static int*       mtdArraySizes;// [__NMTDARRAYS__     ]
     static int*       fgtArraySizes;// [__NFGTARRAYS__    ]
-    static int*       eztArraySizes;// [__NEZARRAYS__     ]
 #ifdef __TFG__VERSION__
     static int*       gmtArraySizes;// [__NGMTARRAYS__     ]
+    static int*       mftArraySizes;// [__NMFTARRAYS__     ]
 #endif /* __TFG__VERSION__ */
-#ifndef __TFG__VERSION__    
+    static int*       eztArraySizes;// [__NEZARRAYS__     ]
 ///< number of entries in current event, currently not used
     static int        arrayCounters    [__NALLARRAYS__    ];
 #ifndef __NO_STRANGE_MUDST__
     static int*strangeArrayCounters;// [__NSTRANGEARRAYS__]
 #endif /* __NO_STRANGE_MUDST__ */
-    static int*mcArrayCounters;// [__NMCARRAYS__]
+    static int*     mcArrayCounters;// [__NMCARRAYS__]
     static int*    emcArrayCounters;// [__NEMCARRAYS__    ]
     static int*    pmdArrayCounters;// [__NPMDARRAYS__    ]
     static int*    fmsArrayCounters;// [__NFMSARRAYS__    ]
@@ -206,9 +220,12 @@ class StMuArrays {
     static int*    epdArrayCounters;// [__NEPDARRAYS__    ]  // MALisa
     static int*    mtdArrayCounters;// [__NMTDARRAYS__    ]
     static int*    fgtArrayCounters;// [__NFGTARRAYS__    ]
+#ifdef __TFG__VERSION__
+    static int*    gmtArrayCounters;// [__NGMTARRAYS__    ]
+    static int*    mftArrayCounters;// [__NMFTARRAYS__    ]
+#endif /* __TFG__VERSION__ */
     static int*    eztArrayCounters;// [__NEZARRAYS__    ]
 #endif  /* !defined(__CINT__) || defined(__TFG__VERSION__)  && !defined(__CLING__) */
-#endif /* ! __TFG__VERSION__ */
     ClassDef(StMuArrays,0)
 };
 

@@ -41,7 +41,7 @@ class StPicoFcsHit;
 class StPicoFcsCluster;
 class StPicoMcVertex;
 class StPicoMcTrack;
-
+class StMassFit;
 //_________________
 class StPicoDst {
 
@@ -155,7 +155,12 @@ class StPicoDst {
   /// Return number of MC tracks
   UInt_t numberOfMcTracks() { return picoArrays[StPicoArrays::McTrack]->GetEntriesFast(); }
   UShort_t numberOfPrimaryTracksRecorded() const;
-
+#if defined (__TFG__VERSION__)
+  /// Return pointer to i-th Mass Fit
+  StMassFit* massFit(Int_t i) { return (StMassFit*)picoArrays[StPicoArrays::MassFit]->UncheckedAt(i); }
+  /// Return number of track track Mass Fit
+  UInt_t numberOfMassFit() { return picoArrays[StPicoArrays::MassFit]->GetEntriesFast(); }
+#endif
   /// Print information
   void print() const;
   /// Print track info

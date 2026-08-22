@@ -123,17 +123,13 @@ class StPicoTrack : public TObject {
 #else /* __TFG__VERSION__ */
  /// Return momentum at the first TPC hit
   Float_t pIn() const                { return mpIn; }
-  /// Return momentum at the last TPC hit
-  Float_t pOut() const                { return mpOut; }
   /// Set momentum at the first and last TPC hits
   void setPin(Float_t p)     { mpIn = (Float16_t)p; }
-  void setPout(Float_t p)     { mpOut = (Float16_t)p; }
   /// Return dE/dx (keV/cm) of the track
   Float_t dEdx(UChar_t fit = 1) const  { return (fit == 2) ? mDnDx : mDedx; }
   Float_t dEdxError(UChar_t fit = 1) const  { return (fit == 2) ?  mDnDxError: fgdEdxErrorScale*mDedxError; }
   static  void    setdEdxErrorScale(Float_t scale = 1) {fgdEdxErrorScale = scale;}
   Float_t dEdxPull(Float_t mass, UChar_t fit = 1, Int_t charge = 1) const;
-  Float_t dEdxPullToF(Float_t mass, UChar_t fit = 1, Int_t charge = 1) const;
   Float_t dEdxPullPion(UChar_t fit = 1)      const { return dEdxPull(0.13956995, fit); }
   Float_t dEdxPullKaon(UChar_t fit = 1)      const { return dEdxPull(0.493677, fit); }
   Float_t dEdxPullProton(UChar_t fit = 1)    const { return dEdxPull(0.93827231, fit); }
@@ -218,6 +214,10 @@ class StPicoTrack : public TObject {
   Int_t qaTruth() const                  { return mQATruth; }
   /// Return parent vertex index (-2 if not fitted to any vertex)
   Int_t vertexIndex() const              { return (Int_t)mVertexIndex; }
+#if defined (__TFG__VERSION__)
+  Int_t index2MFbegin() const {return mIndex2MFbegin;}   //
+  Int_t index2MFend()   const {return mIndex2MFend;}     //
+#endif
 
   //
   // Setters
@@ -331,6 +331,10 @@ class StPicoTrack : public TObject {
   void setMcTruth(Int_t index, Int_t qa)   { mIdTruth = (UShort_t)index; mQATruth = (UShort_t)qa; }
   /// Set vertex index to which the track was fitted
   void setVertexIndex(Int_t index);
+#ifdef __TFG__VERSION__
+  void setIndex2MFbegin(Int_t i) {mIndex2MFbegin = i;}
+  void setIndex2MFend(Int_t i)   {mIndex2MFend   = i;}
+#endif /* __TFG__VERSION__ */
 
  protected:
 
@@ -414,7 +418,8 @@ class StPicoTrack : public TObject {
   Char_t mStatus; // =1 if fitted in a vertex
   /// Momenta at the first and last TPC hits
   Float16_t mpIn;
-  Float16_t mpOut;
+  Int_t mIndex2MFbegin;
+  Int_t mIndex2MFend;
 #endif
 
   /// MC track id
@@ -427,7 +432,7 @@ class StPicoTrack : public TObject {
 #if !defined (__TFG__VERSION__)
   ClassDef(StPicoTrack, 9)
 #else
-  ClassDef(StPicoTrack, 11)
+  ClassDef(StPicoTrack, 12)
 #endif
 };
 
