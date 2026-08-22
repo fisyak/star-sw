@@ -11,53 +11,41 @@ ClassImp(StTrackMassFit)
 
 static const char rcsid[] = "$Id: StTrackMassFit.cxx,v 1.1.1.1 2013/07/23 14:13:30 fisyak Exp $";
 //________________________________________________________________________________
+StTrackMassFit::StTrackMassFit(Int_t key, Int_t pdg, Float_t pInTpc, Float_t chi2, Int_t ndf, const StDcaGeometry *dcaG )  : mKFParticle(0) {
+  setKey(key); 
+  mMF = 0;
+  if (dcaG) mMF = new StMassFit(key, pdg, pInTpc, chi2, ndf, dcaG);
+}
+//________________________________________________________________________________
 StTrackMassFit::StTrackMassFit(const StTrackMassFit& track) : StTrack(track) {
-  mPDG    = track.pdg();
-  mpInTpc = track.pInTpc();
-  mNDF = track.NDF();
-  mChi2 = track.Chi2();
   mKFParticle=0;
   if (track.mKFParticle) mKFParticle = new KFParticle(*(track.mKFParticle));
-  mDca = 0;
-  if (track.mDca) mDca = new StDcaGeometry(*(track.mDca));
+  mMF = 0;
+  if (track.mf()) mMF = new StMassFit(*(track.mf()));
 }
 //________________________________________________________________________________
 StTrackMassFit& StTrackMassFit::operator=(const StTrackMassFit& track) {
   if (this != &track) {
-    mPDG    = track.pdg();
-    mNDF = track.NDF();
-    mChi2 = track.Chi2();
     SafeDelete(mKFParticle);
     static_cast<StTrack&>(*this) = track;
     if (track.mKFParticle) mKFParticle = new KFParticle(*(track.mKFParticle));
-    SafeDelete(mDca);
-    if (track.mDca) mDca = new StDcaGeometry(*(track.mDca));
+    SafeDelete(mMF);
+    if (track.mf()) mMF = new StMassFit(*(track.mf()));
   }
   return *this;
 }
 //________________________________________________________________________________
-StDcaGeometry *StTrackMassFit::dca() const {
-  if (mDca) return mDca;
-  if (! node()) return 0;
-  StGlobalTrack *gTrack = (StGlobalTrack *)  node()->track(global);
-  if (gTrack) return gTrack->dcaGeometry();  
-  return 0;
-  
-}
-//________________________________________________________________________________
 KFParticle *StTrackMassFit::Particle() const {
-  if (! dca()) return 0;
-  return &dca()->Particle(key(),pdg(),mChi2,mNDF);
+  if (! mf()) return 0;
+  return &mf()->Particle();
 }
 //________________________________________________________________________________
 ostream&  operator<<(ostream& os,  const StTrackMassFit& track) {
     os << *((StTrack *) &track);
-    if (track.dca()) {
-      KFParticle *particle = track.Particle();
-      if (particle) 
-	os << " " << *particle;
+    if (track.mf())  os << " " << *track.mf();
+    else {
+      if (track.Particle()) os << " " << *track.Particle();
     }
-    os << Form("\t p/q in TPC %8.3f",track.pInTpc());
     return os;
 }
 //________________________________________________________________________________

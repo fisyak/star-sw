@@ -15,36 +15,31 @@
 #define StTrackMassFit_hh
 
 #include "StTrack.h"
-#include "KFParticle/KFParticle.h"
+#include "StMassFit.h"
 #include "StDcaGeometry.h"
 class StTrackMassFit : public StTrack {
 public:
- StTrackMassFit(Int_t key = 0, Float_t pInTpc = 0, Int_t pdg = 0, Float_t chi2 = 0, Int_t ndf = 0, StDcaGeometry *dca  = 0)  : 
-  mPDG(pdg), mpInTpc(pInTpc),  mChi2(chi2), mNDF(ndf), mKFParticle(0), mDca((dca) ? new StDcaGeometry(*dca) : 0) {setKey(key);}
- StTrackMassFit(Int_t key, StDcaGeometry *dca)  : StTrackMassFit(key, 0.0, 0, 0.0, 0, dca) {}
+ StTrackMassFit(Int_t key = 0, Int_t pdg = 0, Float_t pInTpc = 0, Float_t chi2 = 0, Int_t ndf = 0, const StDcaGeometry *dcaG  = 0);
+ StTrackMassFit(Int_t key, const StDcaGeometry *dcaG)  : StTrackMassFit(key, 0, 0.0, 0.0, 0, dcaG) {}
  StTrackMassFit(Int_t key, KFParticle* particle) : StTrackMassFit()  {mKFParticle = particle; setKey(key);}
   StTrackMassFit(const StTrackMassFit&);
   StTrackMassFit& operator=(const StTrackMassFit&);
-  ~StTrackMassFit()  {SafeDelete(mKFParticle);}
+  ~StTrackMassFit()  {SafeDelete(mKFParticle); SafeDelete(mMF);}
   
   virtual StTrackType     type() const {return (!vertex()) ? massFit : massFitAtVx; }
-  KFParticle* Particle() const;
-  StDcaGeometry *dca() const;
+  KFParticle*         Particle() const;
+  StMassFit               *mf()  const {return mMF;}
   void SetParticle(KFParticle *particle = 0) {mKFParticle = particle;}
   void SetParentID(Int_t id) {if (mKFParticle) mKFParticle->SetParentID(id);}
   virtual void Print(Option_t *option="") const;
-  Int_t pdg() const {return mPDG;}
-  Float_t pInTpc() const {return mpInTpc;}
-  Int_t   NDF()    const {return mNDF;}
-  Float_t Chi2()   const {return mChi2;}
+  Int_t   pdg()    const {return (mMF) ? mMF->pdg() : 0;}
+  Float_t pInTpc() const {return (mMF) ? mMF->pInTpc() : 0;}
+  Int_t   ndf()    const {return (mMF) ? mMF->ndf() : 0;}
+  Float_t chi2()   const {return (mMF) ? mMF->chi2() : 0;}
  protected:
-  Int_t         mPDG;
-  Float_t       mpInTpc; // momentum at the first TPC hit
-  Float_t       mChi2;
-  Int_t         mNDF;
   KFParticle    *mKFParticle;
-  StDcaGeometry *mDca;
-  ClassDef(StTrackMassFit,3)
+  StMassFit     *mMF;
+  ClassDef(StTrackMassFit,4)
 };
 
 ostream&  operator<<(ostream& os,  const StTrackMassFit& t);
