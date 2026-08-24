@@ -220,9 +220,13 @@
 '2026/8p65GeV_fixedTarget_2026.P25iy_calib'   =>	   'production_8p65GeV_fixedTarget_2026/ReversedFullField/P25iy_calib/2026',
 '2026/9p8GeV_fixedTarget_2026.P25iy_calib'    =>      	   'production_9p8GeV_fixedTarget_2026/ReversedFullField/P25iy_calib/2026',  
 
-'2026/13p5GeV_fixedTarget_2026.TFG26d'   =>           '2025/RF/13p5GeV_fixedTarget_2026',
+'2026/13p5GeV_fixedTarget_2026.TFG26d'   =>        '2025/RF/13p5GeV_fixedTarget_2026',
 '2026/8p65GeV_fixedTarget_2026.TFG26d'   =>	   '2025/RF/8p65GeV_fixedTarget_2026',
-'2026/9p8GeV_fixedTarget_2026.TFG26d'    =>      	   '2025/RF/9p8GeV_fixedTarget_2026'  
+'2026/9p8GeV_fixedTarget_2026.TFG26d'    =>        '2025/RF/9p8GeV_fixedTarget_2026',  
+
+'2026/13p5GeV_fixedTarget_2026.TFG26h'   =>        '2025/RF/13p5GeV_fixedTarget_2026',
+'2026/8p65GeV_fixedTarget_2026.TFG26h'   =>	   '2025/RF/8p65GeV_fixedTarget_2026',
+'2026/9p8GeV_fixedTarget_2026.TFG26h'    =>        '2025/RF/9p8GeV_fixedTarget_2026'  
 
 );
 1
