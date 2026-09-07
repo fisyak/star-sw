@@ -1,12 +1,13 @@
-//  root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault")' picoEbyE.C+
-//   root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault")' 'picoEbyE.C+("old/*picoDst.root","new/*picoDst.root")'
+//  root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault,quiet")' picoEbyE.C+
+//   root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault,quiet")' 'picoEbyE.C+("old/*picoDst.root","new/*picoDst.root")'
+// root.exe 'lMuDst.C(-1,"","StEvent,Stu,MuDst,PicoDeps,mysql,tpcDb,detDb,TFGdbOpt,CorrZ,magF,nodefault,quiet")' 'picoEbyE.C+("TFG26d/2025/RF/13p5GeV_fixedTarget_2026/026/27026051/st_physics_27026051_raw_0100001,10001,15000.picoDst.root","TFG26h/2025/RF/13p5GeV_fixedTarget_2026/026/27026051/st_physics_27026051_raw_0100001,10001,15000.picoDst.root")'
 #if ! defined(__CINT__) && ! defined(__CLING__)
 #include "StBFChain/StBFChain.h"
 #include "StPicoEvent/StPicoDst.h"
 #include "StPicoEvent/StPicoEvent.h"
 #include "StPicoEvent/StPicoTrack.h"
 #include "StPicoDstMaker/StPicoDstMaker.h"
-#include "StTpcDb/StTpcDb.h"
+//#include "StTpcDb/StTpcDb.h"
 #include "TMath.h"
 #include "TTree.h"
 #include "TChain.h"
@@ -14,6 +15,7 @@
 #include "TVector3.h"
 #include "TLorentzVector.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "TH2.h"
 #else
 class StPicoDstMaker;
 #endif
@@ -91,7 +93,7 @@ void picoEbyE(const Char_t *oldF = "old.root", const Char_t *newF = "new.root",
     TVector3 xyzNew = newEv->primaryVertex(); 
     TVector3 xyzD = 0.5*(xyzNew - xyzOld);
     TVector3 xyzA = 0.5*(xyzNew + xyzOld);
-    Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
+    //    Double_t driftVel = StTpcDb::instance()->DriftVelocity()*1e-6;
     dX->Fill(xyzD.x());
     dY->Fill(xyzD.y());
     dZ->Fill(xyzD.z());
