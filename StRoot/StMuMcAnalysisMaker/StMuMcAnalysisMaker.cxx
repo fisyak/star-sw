@@ -2603,7 +2603,7 @@ void StMuMcAnalysisMaker::DrawEff(Double_t ymax, Double_t pTmin, Int_t animate) 
 	    if (animate) ForceAnimate(0,200);
 	    DrawPng(c);
 	    if (Break) return;
-	    //	    delete c;
+	    delete c;
 	  }
 	  for (Int_t i = 0; i < 8; i++) {SafeDelete(heff[i]);}
 	}
