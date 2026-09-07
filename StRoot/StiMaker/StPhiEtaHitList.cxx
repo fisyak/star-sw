@@ -378,7 +378,7 @@ void StBemcHitList::initRun() {
     //........... querry BTOW DB/geom
     Int_t  status;
     myTable->getStatus(BTOW, id, status);
-    Int_t m,e,s;
+    Int_t m = 0, e = 0, s = 0;
     geomB->getBin(id,m,e,s);
     Float_t eta=0,phi=0;
     geomB->getEta(m,e,eta);

@@ -16,6 +16,10 @@
 #include "StiMapUtilities.h"
 #include "TMath.h"
 #include "TString.h"
+#include "TObjString.h"
+#include "TGeoManager.h"
+#include "TGeoMaterial.h"
+#include "TGeoMedium.h"
 int    StiDetector::mgIndex=0;
 double StiDetector::mgValue[3]={0};
 
@@ -52,18 +56,143 @@ void StiDetector::copy(StiDetector &detector){
 }
  
 //______________________________________________________________________________
-ostream& operator<<(ostream& os, const StiDetector& d)
-{
-  os   << d.getName()
+ostream& operator<<(ostream& os, const StiDetector& d) {
+  Double_t xyzD[2] = {0};
+  const StiShape *shape = d.getShape();
+  const StiPlacement *place = d.getPlacement();
+  if (shape->getShapeCode() == kPlanar) {
+    xyzD[0] = place->getNormalRadius()*TMath::Cos(place->getNormalRefAngle());
+    xyzD[1] = place->getNormalRadius()*TMath::Sin(place->getNormalRefAngle()) + place->getNormalYoffset();
+  }
+  os   << Form("%25s xy %7.2f %7.2f",d.getName().c_str(), xyzD[0], xyzD[1])
        << "\t" << *d.getPlacement()
        << "\t" << *d.getShape()
-       << "\t" << *d.getMaterial()
-       << "\t" << *d.getGas();
+       << "\tMat:" << *d.getMaterial()
+       << "\tGas:" << *d.getGas();
   return os;
 }
 //______________________________________________________________________________
 void StiDetector::Print(const char *opt) const {
-  cout << *this << endl;
+  TString Opt(opt);
+  if (! Opt.Contains("TGeo",TString::kIgnoreCase)) {
+    cout << *this << endl;
+  } else {
+//     Int_t imat = gGeoManager->GetListOfMaterials()->GetEntries();
+//     Int_t imed = gGeoManager->GetListOfMedia()->GetEntries();
+    Int_t indx = 0;
+    cout << "//" << *this << endl;
+    static TString Top, Vol, medname;
+    static Int_t entry = 0;
+    TString name(getName().c_str());
+#if 0
+    if (name.Contains("Tpc") || 
+	name.Contains("TIFC") || 
+	name.Contains("TOFC")	) return;
+#endif
+    TObjArray *obj = name.Tokenize("/");
+    Int_t nParsed = obj->GetEntries();
+    TString top = ((TObjString *) obj->At(0))->GetName();
+    if (top.Contains("_")) {
+      indx = top.Index("_");
+      top = TString(top,indx);
+    }
+    if (top != Top) {
+      Top = top;
+      cout << "  TGeoVolumeAssembly *" << Top.Data() << " = new TGeoVolumeAssembly(\"" << Top.Data() << "\");" << endl;
+      cout << "  CAVE->AddNode(" << Top.Data() << ",1,gGeoIdentity);" << endl;
+    }
+    TString vol = ((TObjString *) obj->At(nParsed-1))->GetName();
+    if (vol.Contains("_")) {
+      indx = vol.Index("_");
+      vol = TString(vol,indx);
+    }
+    if (vol != Vol) {
+      Vol = vol;
+      entry = 0;
+      // TGeoVolumeMulti *TPAD = gGeoManager->MakeVolumeMulti("TPAD", GetMed("TPCE_SENSITIVE_GAS")); TPAD->SetTitle("TPAD");
+      medname = TString(getMaterial()->getName().c_str());
+      cout << "  med = gGeoManager->GetMedium(\"" << medname.Data() << "\");" << endl;
+      cout << "  if (! med) {" << endl;
+      cout << "    imat = gGeoManager->GetListOfMaterials()->GetEntries();" << endl;
+      cout << "    imed = gGeoManager->GetListOfMedia()->GetEntries();" << endl;
+      cout << "     mat = new TGeoMaterial(\"" << medname.Data() << "\","
+	   << getMaterial()->getA() << "," << getMaterial()->getZ()<< "," << getMaterial()->getDensity() << "," 
+	   << getMaterial()->getX0() << "); mat->SetUniqueID(imat);" << endl;
+      //	   << getMaterial()->getX0() << "); mat->SetUniqueID(" << imat << ");" << endl;
+      cout << "     med = new TGeoMedium(\"" << medname.Data() << "\",0, imat" // gGeoManager->GetMaterial(\"" << medname.Data() << "\")->GetUniqueID()"
+	   << ",0,0,20,20,10,0.2488534,0.1000000E-01,1.15055); "
+	//	   << ",0); "
+	   << "med->SetUniqueID(imed);" << endl;
+      //	   << "med->SetUniqueID(" << imed << ");" << endl;
+
+      cout << "  }" << endl;
+      cout << "  TGeoVolumeMulti *" << Vol.Data() << " = gGeoManager->MakeVolumeMulti(\"" << Vol.Data() << "\", GetMed(\"" << medname.Data() << "\")); " 
+	   << Vol.Data() << "->SetTitle(\"" << Vol.Data() << "\");" << endl;
+      //      cout << "  " << Top.Data() << "->AddNodeOverlap(" << Vol.Data() << ",1,gGeoIdentity);" << endl;
+      //      cout << "  " << Top.Data() << "->AddNode(" << Vol.Data() << ",1,gGeoIdentity);" << endl;
+    } else {
+      entry++;
+    }
+    /*
+      TPAD->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),0.8999996,13,104.8516));
+      TPAD->SetLineColor(2);
+      TPAD->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),0.8,13,104.8516));
+      TPAD->AddVolume(gGeoManager->MakeBox("TPAD",GetMed("TPCE_SENSITIVE_GAS"),0.8,13.5,104.8516));
+      ...
+      TPSS->AddNode(TPAD->GetVolume(0),1,new TGeoTranslation(54.1,0,-0.1414948));
+      TPSS->AddNode(TPAD->GetVolume(1),2,new TGeoTranslation(55.8,0,-0.1414948));
+      ...
+    */
+    const StiShape *shape = getShape();
+    switch (shape->getShapeCode()) {
+    case kPlanar:
+      cout << "  " <<  Vol.Data() << "->AddVolume(gGeoManager->MakeBox(\"" << Vol.Data() << "\", gGeoManager->GetMedium(\"" << medname.Data() << "\")";
+      cout << "," << shape->getHalfWidth() 
+	   << "," << shape->getThickness()/2
+	   << "," << shape->getHalfDepth();
+      break;
+    case kCylindrical:
+      if (shape->getOpeningAngle() < (TMath::TwoPi()-0.001) ) {
+	cout << "  " <<  Vol.Data() << "->AddVolume(gGeoManager->MakeTubs(\"" << Vol.Data() << "\", gGeoManager->GetMedium(\"" << medname.Data() << "\")";
+	cout << "," <<  shape->getOuterRadius() - shape->getThickness() // rmin
+	     << "," <<  shape->getOuterRadius()                         // rmax
+	     << "," <<  shape->getHalfDepth()                           // Dz
+	     << "," << -shape->getOpeningAngle()*TMath::RadToDeg()/2
+	     << "," << +shape->getOpeningAngle()*TMath::RadToDeg()/2;
+      } else {
+	cout << "  " <<  Vol.Data() << "->AddVolume(gGeoManager->MakeTube(\"" << Vol.Data() << "\", gGeoManager->GetMedium(\"" << medname.Data() << "\")";
+	cout << "," <<  shape->getOuterRadius() - shape->getThickness() // rmin
+	     << "," <<  shape->getOuterRadius()                         // rmax
+	     << "," <<  shape->getHalfDepth();                          // Dz
+      }
+      break;
+    default: assert(0);
+    }
+    cout <<  "));" << endl;
+    const StiPlacement *place = getPlacement();
+    Double_t xyzD[3] = {0};
+    if (shape->getShapeCode() == kPlanar) {
+      xyzD[0] = place->getNormalRadius()*TMath::Cos(place->getNormalRefAngle());
+      xyzD[1] = place->getNormalRadius()*TMath::Sin(place->getNormalRefAngle()) + place->getNormalYoffset();
+    }
+    xyzD[2] = place->getZcenter();
+    if (TMath::Abs(place->getNormalRefAngle()) < 1e-7) {
+      cout << "  " << Top.Data() << "->AddNode(" << Vol.Data() << "->GetVolume(" << entry << ")," << entry+1
+	   << ", new TGeoTranslation(" 
+	   <<         xyzD[0] // place->getNormalYoffset()
+	   << ", " << xyzD[1] // place->getNormalRadius()
+	   << ", " << xyzD[2] //place->getZcenter()
+	   << "));" << endl;
+    } else {
+      cout << "  rot = new TGeoRotation(\"next\"); rot->RotateZ(" << TMath::RadToDeg()*place->getNormalRefAngle() << ");" << endl;
+      cout << "  " << Top.Data() << "->AddNode(" << Vol.Data() << "->GetVolume(" << entry << ")," << entry+1
+	   << ", new TGeoCombiTrans(" 
+	   <<          xyzD[0] //place->getNormalYoffset()
+	   <<  ", " << xyzD[1] //", " << place->getNormalRadius()
+	   <<  ", " << xyzD[2] //", " << place->getZcenter()
+	   << ", rot));" << endl;
+    }
+  }
 }
 //______________________________________________________________________________
 int StiDetector::splitIt(StiDetVect &vect,double dXdY,int nMax)
@@ -77,8 +206,6 @@ static int nCall=0; nCall++;
   int iShape = shape->getShapeCode();
   float deltaX = shape->getThickness();
   float halfZ  = shape->getHalfDepth(); 
-  float halfY  = shape->getHalfWidth(); 
-  float angle  = shape->getOpeningAngle(); 
   float nRadius = placement->getNormalRadius();
   if (iShape >= kCylindrical)  nRadius = shape->getOuterRadius()-deltaX/2;
 
@@ -87,9 +214,7 @@ static int nCall=0; nCall++;
           ,getName().c_str(),nRadius,deltaX/2);
     return 1;
   }
-  int ny = deltaX/(halfY*2*dXdY)+0.5;
-  int nz = deltaX/(halfZ*2*dXdY)+0.5;
-  int nSplit = (ny>nz)? ny:nz;
+  int nSplit = deltaX/dXdY + 0.5;
   if (nSplit<=1) return 1;
   if (nSplit>nMax) nSplit=nMax;
 
@@ -114,9 +239,11 @@ static int nCall=0; nCall++;
      float myRadius = nRadius+xc;
 assert(myRadius>1e-2 && myRadius < 1e3);
      if (iShape==kPlanar) 	{//Planar shape
+       Float_t halfY = shape->getHalfWidth();
        myShape = new StiPlanarShape(ts.Data(),halfZ,dX,halfY);
 
      } else if (iShape>=kCylindrical) {//Cylinder shape
+       float angle  = shape->getOpeningAngle(); 
        myShape = new StiCylindricalShape(ts.Data(),halfZ,dX,myRadius+dX/2,angle);
 
      } else { assert(0 && "Wrong shape type");}

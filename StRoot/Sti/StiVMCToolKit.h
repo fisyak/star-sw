@@ -1,6 +1,7 @@
 #ifndef StiVMCToolKit_h
 #define StiVMCToolKit_h
-
+#include <vector>
+#include "Riostream.h"
 #include "TString.h"
 #include "TGeoManager.h"
 #include "TGeoPhysicalNode.h"
@@ -24,7 +25,6 @@
 #include "TGeoTube.h"
 #include "TGeoXtru.h"
 #include "TGeoEltu.h"
-class Elem_t;
 struct VolumeMap_t {
   const Char_t *name;
   const Char_t *comment;
@@ -32,29 +32,36 @@ struct VolumeMap_t {
   const Char_t *set;
   const Char_t *det;
 };
-
-namespace StiVMCToolKit {
+struct MaterialMap_t {
+ MaterialMap_t(const Char_t *n, const TGeoMaterial *m, Double_t w) : name(n), mat(m), weight(w) {
+   Print();
+ }
+  const Char_t *name;
+  const TGeoMaterial *mat;
+  Double_t weight;
+  void Print(const Char_t *opt = "") {	cout << name << "\t" << mat->GetName() << "\t" << weight << endl;}
+};
+class  StiVMCToolKit {
+ public:
   void              PrintShape(TGeoShape *shape);							 
-  Int_t             Add2ElementList(Int_t NElem,const TGeoMaterial *mat, Elem_t *ElementList);	 
-  Int_t             Merge2ElementList(Int_t NElem,  Elem_t *ElementList, 				 
-  				    Int_t NElemD, Elem_t *ElementListD, Double_t weight);		 
-  Int_t             NormolizeElementList(Int_t NElem, Elem_t *ElementList);				 
-  Double_t          GetWeight(TGeoNode *nodeT = 0, const TString &pathT = "HALL_1/CAVE_1/SVTT_1", 		 
-			      Int_t *NElem = 0, Elem_t *ElementList = 0);				 
-  Double_t          GetVolumeWeight(TGeoVolume *volT, Int_t *NElem = 0, Elem_t *ElementList = 0);		 
-  void              MakeAverageVolume(TGeoVolume *volT, TGeoShape *&newshape, TGeoMedium *&newmed, 
-        			      Double_t *xyzM=0);	 
-  TGeoManager      *GetVMC();                                                                        
+  static StiVMCToolKit    *instance() {if (! fgStiVMCToolKit) fgStiVMCToolKit = new StiVMCToolKit; return fgStiVMCToolKit;}
+  TGeoManager      *GetVMC(); 
+  TGeoShape        *MakeAverageShape(TGeoVolume *volT, Double_t *master);
   TGeoPhysicalNode *Alignment(const TGeoNode *nodeT,const Char_t *pathT, TGeoVolume *volT, 
         		      TGeoShape *newshape, TGeoMedium* newmed);
   TGeoPhysicalNode *LoopOverNodes(const TGeoNode *nodeT, const Char_t *pathT, const Char_t *name = 0, void ( *callback)(TGeoPhysicalNode *nodeP)=0);
   void              TestVMC4Reconstruction();
   void              GetVMC4Reconstruction(const Char_t *pathT=0, const Char_t *nameT=0);
-  Double_t          GetShapeVolume(TGeoShape *shape);
   void              PrintNewNode(TGeoPhysicalNode *nodeP);
   Double_t          GetPotI(const TGeoMaterial *mat);
   Double_t          Nice(Double_t phi);
-  void              SetDebug(Int_t m);
-  Int_t             Debug();
-}
+  TGeoPhysicalNode *MakePhysicalNode(const Char_t *path); // find physical node or create new one
+  void              MakeListOfMaterials(TGeoVolume *volT, vector<MaterialMap_t> &materials);
+  static void       SetDebug(Int_t m) {m_Debug = m;}
+  static Int_t      Debug() {return m_Debug;}
+ private:
+  StiVMCToolKit() {}
+  static StiVMCToolKit *fgStiVMCToolKit;
+  static           Int_t m_Debug;
+};
 #endif

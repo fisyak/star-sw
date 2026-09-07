@@ -15,26 +15,8 @@
 #else
 #define BIT(n)       (1 << (n))
 #endif
-static Int_t __addelement__(Int_t NElem,const TGeoMaterial *mat, Elem_t *ElementList) {
-   return StiVMCToolKit::Add2ElementList(NElem, mat, ElementList);
-}
-
-struct Elem_t {
-  Int_t    index;
-  Double_t W;
-  Double_t A;
-  Double_t Z;
-  Elem_t() : index(0),W(0),A(0),Z(0) {}
-};
-struct ElemV_t {
-  const Char_t   *name;
-  Double_t     A;
-  Double_t     Z;
-  Double_t     V; // by  volume 
-  Double_t     W;
-};
-static Int_t m_Debug = 0;
-static const Int_t NoElemMax = 10000;
+Int_t      StiVMCToolKit::m_Debug = 0;
+StiVMCToolKit *StiVMCToolKit::fgStiVMCToolKit = 0;
 static VolumeMap_t VolumesToBeAveraged[] = { 
   {"PIPE","the STAR beam pipe mother volume","HALL_1/CAVE_1/PIPE_1-2/*","",""},
   {"PIPC","the Central Beam PIPe Volum","HALL_1/CAVE_1/PIPE_1-2/PIPC_1/*","",""},
@@ -140,30 +122,6 @@ static Int_t nTopVol = sizeof(TopVolumes)/sizeof(VolumeMap_t);
     "Argon"             1.29            #. Weight fraction
     "Hydrogen"          0.08            #. Weight fraction
   */
-static ElemV_t Air[] = {
-  {"N_2", 14.00674, 7, 2*78.084, 0},
-  {"O_2", 15.9994 , 8, 2*(20.946 + 0.033), 0},//    {"CO_2",  0, 0, 2*0.033, 0}, 2*(20.946 + 0.033), 0},
-  {"C",   12.011, 6,  0.033, 0},
-  {"Ar",  39.948, 18, 0.934, 0}
-};
-static Int_t NAir = 0;
-static ElemV_t P10[] = {
-  {"Ar",  40,18,0.95744680,0},
-  {"C" ,  12, 6,0.03191489,0},
-  {"H" ,   1, 1,0.01063830,0}
-};
-static Int_t NP10 = 3;
-// {"Ne", 20.1797, 10, 18.18e-6, 0},
-// {"He",  4.002602, 2, 5.24e-6, 0},
-// {"Kr", 0., 0, 1.14e-6, 0}
-// {"Xe", 0., 0, 0.087e-6, 0}
-// {H_2", 0., 0, 0.5e-6}
-// {"CH_4",0., 0, 2e-6}
-// {N_2 O", 0., 0, 0.5-e6}
-//________________________________________________________________________________
-void StiVMCToolKit::SetDebug(Int_t m) {m_Debug = m;}
-//________________________________________________________________________________
-Int_t StiVMCToolKit::Debug() {return m_Debug;}
 //________________________________________________________________________________
 void StiVMCToolKit::PrintShape(TGeoShape *shape) {
   TGeoBBox *box = 0;//, *Box = 0;
@@ -286,474 +244,35 @@ void StiVMCToolKit::PrintShape(TGeoShape *shape) {
   }
 }
 //________________________________________________________________________________
-Double_t StiVMCToolKit::GetShapeVolume(TGeoShape *shape) {
-  TGeoBBox *box = 0, *Box = 0; 
-  TGeoTrd1 *trd1 = 0;
-  TGeoTrd2 *trd2 = 0;
-  TGeoTube *tube = 0;
-  TGeoTubeSeg *tubs = 0;
-  TGeoPcon *pcon = 0;
-  TGeoPgon *pgon = 0;
-  TGeoCone *cone = 0;
-  TGeoConeSeg *cons = 0;
-  TGeoEltu *eltu = 0;
-  Double_t volume = 0;
-  Double_t paramsBC[4];
-  Double_t volBB = 0;
-  Double_t volBC = 0;
-  Int_t i;
-  Int_t Nz = 0;
-  shape->GetBoundingCylinder(paramsBC);
-  shape->ComputeBBox();
-  Box = (TGeoBBox *) shape;
-  volBB = 8*Box->GetDX()*Box->GetDY()*Box->GetDZ();
-  volBC = 2*TMath::Pi()*(paramsBC[1] - paramsBC[0])*Box->GetDZ();;
-  for (Int_t bit = 24; bit >= 9; bit--) {//cout << bit << "\t"; 
-    if (shape->TestShapeBit(BIT(bit))) {
-      Int_t kbit = BIT(bit);
-      switch (kbit) {
-      case TGeoShape::kGeoBox: 
-	box = (TGeoBBox *) shape;  
-	volume = 8*box->GetDX()*box->GetDY()*box->GetDZ();
-	break;
-      case TGeoShape::kGeoTrd1:
-	trd1 = (TGeoTrd1 *) shape; 
-	volume = 4*(trd1->GetDx1()+trd1->GetDx2())*trd1->GetDy()*trd1->GetDz();
-	break;   
-      case TGeoShape::kGeoTrd2:
-	trd2 = (TGeoTrd2 *) shape; 
-	volume = 2*(trd2->GetDx1() + trd2->GetDx2())*(trd2->GetDy1() + trd2->GetDy2())*trd2->GetDz();
-	break;   
-      case TGeoShape::kGeoTubeSeg:  
-      case TGeoShape::kGeoTube:
-	tube = (TGeoTube *) shape; 
-	volume = 2*TMath::Pi()*(tube->GetRmax()* tube->GetRmax() - tube->GetRmin()*tube->GetRmin())*
-	  tube->GetDz();
-	if (kbit == TGeoShape::kGeoTubeSeg) {
-	  tubs = (TGeoTubeSeg *) shape; 
-	  volume *= TMath::Abs(tubs->GetPhi2()-tubs->GetPhi1())/360.;
-	}
-	break;
-      case TGeoShape::kGeoPcon:    
-      case TGeoShape::kGeoPgon:    
-	pcon = (TGeoPcon *) shape;
-	Nz = pcon->GetNz();
-	volume = 0;
-	for (i = 1; i < Nz; i++) {
-	  volume +=
-	    ((pcon->GetRmax(i)*pcon->GetRmax(i) + pcon->GetRmax(i-1)*pcon->GetRmax(i-1) + pcon->GetRmax(i)*pcon->GetRmax(i-1)) -
-	     (pcon->GetRmin(i)*pcon->GetRmin(i) + pcon->GetRmin(i-1)*pcon->GetRmin(i-1) + pcon->GetRmin(i)*pcon->GetRmin(i-1)))*
-	    TMath::Abs((pcon->GetZ(i) - pcon->GetZ(i-1)));
-	}
-	if (kbit == TGeoShape::kGeoPgon) {
-	  pgon = (TGeoPgon *) shape;
-	  volume *= TMath::Tan(TMath::Pi()/180.*TMath::Abs(pgon->GetDphi()/pgon->GetNedges()/2.))/3.*pgon->GetNedges();
-	}
-	else {
-	  volume *= TMath::Pi()/3.*TMath::Abs(pcon->GetDphi())/360.;
-	}
-	break;
-      case TGeoShape::kGeoCone:    
-      case TGeoShape::kGeoConeSeg: 
-	cone = (TGeoCone *) shape;
-	volume = TMath::Pi()*2./3.*
-	  ((cone->GetRmax2()*cone->GetRmax2() + cone->GetRmax1()*cone->GetRmax1() + cone->GetRmax2()*cone->GetRmax1()) -
-	   (cone->GetRmin2()*cone->GetRmin2() + cone->GetRmin1()*cone->GetRmin1() + cone->GetRmin2()*cone->GetRmin1()))*
-	  cone->GetDz();
-	if (kbit == TGeoShape::kGeoConeSeg) {
-	  cons = (TGeoConeSeg *) shape;
-	  volume *= TMath::Abs(cons->GetPhi2() - cons->GetPhi1())/360.;
-	}
-	break;
-      case TGeoShape::kGeoEltu:    
-	eltu = (TGeoEltu *) shape;
-	volume = 2*TMath::Pi()*eltu->GetA()*eltu->GetB()*eltu->GetDz();
-	break;
-      case TGeoShape::kGeoArb8:    
-      case TGeoShape::kGeoTrap:    
-      case TGeoShape::kGeoTorus:
-      case TGeoShape::kGeoPara:    
-      case TGeoShape::kGeoSph:     
-      case TGeoShape::kGeoCtub:    
-      default:
-	if (Debug()) 
-	  cout << bit << "\t has not yet implemented for " << shape->GetName() << endl;
-	volume = TMath::Min(volBB,volBC);
-	break;
-      }
-      break;
-    }
-  }
-  if (Debug())
-    cout << " =============> Volume = " << volume 
-	 << "\t" << shape->GetName() << "\tBB\t" << volBB << "\tBC\t" << volBC << endl;
-  assert(volume >= 0);
-  if (Debug() && ! (volBB - volume > -1e-7 && volBC - volume > -1.e-7) ) {
-    PrintShape(shape);
-    cout << "volume\t" << volume << "\tvolBB\t" <<  volBB << "\tvolBC\t" << volBC << endl;
-    cout << "\tBoundingBox dX\t" << Box->GetDX() << "\tdY\t" << Box->GetDY() << "\tdZ\t" << Box->GetDZ() << endl;
-    cout  << "\tBoundingCylinder\trMin\t" << TMath::Sqrt(paramsBC[0]) << "\trMax\t" << TMath::Sqrt(paramsBC[1])  
-	  << "\tdZ\t" << Box->GetDZ() << endl;
-   
-    assert(volBB - volume > -1e-7 && volBC - volume > -1.e-7);
-  }
-  return volume;
-  }
-//________________________________________________________________________________ 
-Int_t StiVMCToolKit::Add2ElementList(Int_t NElem,const TGeoMaterial *mat, Elem_t *ElementList) {
-  assert(NElem>=0 && NElem<NoElemMax);
-  if (! NAir) {
-    NAir = sizeof(Air)/sizeof(ElemV_t);
-    Double_t W = 0;
-    for (Int_t i = 0; i < NAir; i++) W += Air[i].A*Air[i].V;
-    for (Int_t i = 0; i < NAir; i++) Air[i].W = Air[i].A*Air[i].V/W;
-  }
-  if (mat->InheritsFrom("TGeoMixture")) {
-    TGeoMixture *mix = (TGeoMixture *) mat;
-    Int_t N = mix->GetNelements();
-    Double_t *A = mix->GetAmixt();
-    Double_t *Z = mix->GetZmixt();
-    Double_t *W = mix->GetWmixt();
-    for (Int_t i = 0; i < N; i++) {
-      if (TMath::Abs(Z[i] -  7.30) < 1.e-3 &&
-	  TMath::Abs(A[i] - 14.61) < 1.e-3) {
-	for (Int_t j = 0; j < NAir; j++) {
-	  ElementList[NElem].index = NElem+1;
-	  ElementList[NElem].W = W[i]*Air[j].W;
-	  ElementList[NElem].A = Air[j].A;
-	  ElementList[NElem].Z = Air[j].Z;
-	  NElem++;
-	}
-      } else {
-	if (TMath::Abs(Z[i] - 17.436 ) < 1.e-3 &&
-	    TMath::Abs(A[i] - 38.691)  < 1.e-3) {
-	  for (Int_t j = 0; j < NP10; j++) {
-	    ElementList[NElem].index = NElem+1;
-	    ElementList[NElem].W = W[i]*P10[j].W;
-	    ElementList[NElem].A = P10[j].A;
-	    ElementList[NElem].Z = P10[j].Z;
-	    NElem++;
-	  }
-	} else {
-	  ElementList[NElem].index = NElem+1;
-	  ElementList[NElem].W = W[i];
-	  ElementList[NElem].A = A[i];
-	  ElementList[NElem].Z = Z[i];
-	  NElem++;
-	}
-      }
-    }
-  } else  {
-    Double_t A = mat->GetA();
-    Double_t Z = mat->GetZ();
-    if (TMath::Abs(Z -  7.30) < 1.e-3 &&
-	TMath::Abs(A - 14.61) < 1.e-3) {
-      for (Int_t j = 0; j < NAir; j++) {
-	ElementList[NElem].index = NElem+1;
-	ElementList[NElem].W = Air[j].W;
-	ElementList[NElem].A = Air[j].A;
-	ElementList[NElem].Z = Air[j].Z;
-	NElem++;
-      }
-    } else {
-      if (TMath::Abs(Z - 17.436 ) < 1.e-3 &&
-	  TMath::Abs(A - 38.691)  < 1.e-3) {
-	for (Int_t j = 0; j < NP10; j++) {
-	  ElementList[NElem].index = NElem+1;
-	  ElementList[NElem].W = P10[j].W;
-	  ElementList[NElem].A = P10[j].A;
-	  ElementList[NElem].Z = P10[j].Z;
-	  NElem++;
-	}
-      } else {
-	ElementList[NElem].index = NElem+1;
-	ElementList[NElem].W = 1.;
-	ElementList[NElem].A = A;
-	ElementList[NElem].Z = Z;
-	NElem++;
-      }
-    }
-  }
-  assert(NElem < NoElemMax);
-  return NElem;
-}
-//________________________________________________________________________________ 
-Int_t StiVMCToolKit::Merge2ElementList(Int_t NElem, Elem_t *ElementList, 
-						Int_t NElemD, Elem_t *ElementListD, Double_t weight) {
-  assert(NElem>=0 && NElem<NoElemMax);
-      for (Int_t i = 0; i < NElemD; i++) {
-	ElementList[NElem].index = NElem+1;
-	ElementList[NElem].W = weight*ElementListD[i].W;
-	ElementList[NElem].A = ElementListD[i].A;
-	ElementList[NElem].Z = ElementListD[i].Z;
-	NElem++;
-	assert(NElem < NoElemMax);
-      }
-  return NElem;
-}
-//________________________________________________________________________________
-Int_t StiVMCToolKit::NormolizeElementList(Int_t NElem, Elem_t *ElementList){
-  assert(NElem>=0 && NElem<NoElemMax);
-  Double_t W = 0;
-  for (Int_t i = 0; i < NElem; i++) W += ElementList[i].W ;
-  for (Int_t i = 0; i < NElem; i++) ElementList[i].W /= W;
-  for (Int_t k = 0; k < NElem; k++) {
-    if (ElementList[k].W > 0) {
-      for (Int_t l = k+1; l < NElem; l++) {
-	if (ElementList[l].W > 0                 &&
-	    ElementList[k].A == ElementList[l].A &&
-	    ElementList[k].Z == ElementList[l].Z) {
-	  ElementList[k].W += ElementList[l].W;
-	  ElementList[l].W = -1;
-	}
-      }
-    }
-  }
-  Int_t N = 0;
-  
-  for (Int_t k = 0; k < NElem; k++) {
-    if (ElementList[k].W <= 0) 	continue;
-    if (k != N)
-      ElementList[N] = ElementList[k];
-    N++;
-  }
-  return N;
-}
-//________________________________________________________________________________ 
-Double_t StiVMCToolKit::GetWeight(TGeoNode *nodeT, const TString &pathT, 
-					     Int_t *NElem, Elem_t *ElementList) {
-  Double_t Weight  = 0;
-  Double_t WeightT = 0;
-  if (! nodeT) {
-    if (! gGeoManager) return Weight;
-    gGeoManager->RestoreMasterVolume(); 
-    gGeoManager->CdTop();
-    gGeoManager->cd(pathT.Data());
-    nodeT = gGeoManager->GetCurrentNode();
-    if (! nodeT) return Weight;
-  }
-  TGeoVolume *volT = nodeT->GetVolume();
-  const TGeoMaterial *mat = volT->GetMaterial();
-
-  Double_t dens = mat->GetDensity();
+TGeoShape * StiVMCToolKit::MakeAverageShape(TGeoVolume *volT, Double_t *xyzM) {
+  TGeoShape *newshape = 0;
+  if (! volT) return newshape;
   TGeoShape *shapeT = (TGeoShape *) volT->GetShape();
-  if (! shapeT) return Weight;
-  Double_t volume = GetShapeVolume(shapeT);
-  WeightT = Weight = dens*volume;
-#if 0  
-  if (! ElementList ) {
-    ElementList = new Elem_t[NoElemMax];
-    NElem = new Int_t[1]; NElem[0] = 0;
-  }
-#else
-  assert(ElementList && NElem);
-#endif  
-  Int_t im1 = NElem[0];
-  NElem[0] = __addelement__(NElem[0], mat, ElementList);
-  Int_t im2 = NElem[0];
-  //  Double_t x0 = mat->GetRadLen();
-  //  cout << mat->GetName() << "\tdens = " << dens << "\tx0 = " << x0 << endl;
-  TObjArray *nodes = volT->GetNodes();
-  Int_t nd = nodeT->GetNdaughters();
-  //
-  if (nd > 0) {
-    vector<Double_t> weights(nd);
-    for (Int_t id = 0; id < nd; id++) {
-      TGeoNode *node = (TGeoNode*)nodes->UncheckedAt(id);
-      if (! node) continue;
-      //    if (node->IsOverlapping()) continue;
-      TGeoVolume *vol = node->GetVolume();
-      if (! vol) continue; 
-      TString name(TString(vol->GetName())); //cout << "Ask for " << name << endl;
-      //      if (name.BeginsWith("FTPC")) continue;
-      TGeoShape *shapeD = (TGeoShape *) vol->GetShape();
-      if (! shapeD ) continue;
-      Double_t weight = dens*GetShapeVolume(shapeD);// cout << "\tWeight\t" << Weight << endl;
-      WeightT -= weight;
-      Weight  -= weight;
-      TString path = pathT;
-      if (path != "") path += "/";
-      path += node->GetName();
-      Int_t  NElemD[1] = {0};
-      Elem_t ElementListD[NoElemMax];
-      weights[id] = GetWeight(node,path,NElemD,ElementListD);
-      Weight += weights[id]; // cout << "\tWeight\t" << Weight << endl;
-      NElem[0] = Merge2ElementList(NElem[0], ElementList, NElemD[0], ElementListD, weights[id]);
-    }
-  } // nd > 0
-  for (Int_t i = im1; i < im2; i++) {// update mother weight fraction
-    ElementList[i].W *= WeightT;
-  }
-  NElem[0] = NormolizeElementList(NElem[0],ElementList);
-  return Weight;
-}
-
-//________________________________________________________________________________ 
-Double_t StiVMCToolKit::GetVolumeWeight(TGeoVolume *volT, Int_t *NElem, Elem_t *ElementList) 
-{
-  if (! volT || !volT->GetShape()) return 0;
-  
-  Double_t Weight = 0;
-  Double_t WeightT = 0;
-  const TGeoMaterial *mat = volT->GetMaterial();
-  TGeoShape *shapeT = (TGeoShape *) volT->GetShape();
-  if (! shapeT) return 0;
-
-  Double_t dens = mat->GetDensity();
-  if (Debug())
-    cout << "volT \t" << volT->GetName() << "\t" << volT->GetTitle() << endl;
-  Double_t volume = GetShapeVolume(shapeT);
-  Weight = dens*volume;
-  WeightT = Weight;
-#if 0  
-  if (! ElementList ) {
-     
-    ElementList = new Elem_t[NoElemMax];
-    NElem = new Int_t[1]; NElem[0] = 0;
-  }
-#else
-  assert(ElementList && "StiVMCToolKit::GetWeight: Create the the array first!");
-#endif
-  Int_t im1 = *NElem;
-  Int_t im2 = __addelement__(im1, mat, ElementList);
-  *NElem    = im2;
-  //  Double_t x0 = mat->GetRadLen();
-  //  cout << mat->GetName() << "\tdens = " << dens << "\tx0 = " << x0 << endl;
-  TObjArray *nodes = volT->GetNodes();
-  Int_t nd = volT->GetNdaughters();
-  //
-  if (nd > 0) {
-    vector<Double_t>  weights(nd);
-    for (Int_t id = 0; id < nd; id++) {
-      TGeoNode *node = (TGeoNode*) nodes->UncheckedAt(id);
-      if (! node) continue;
-      //    if (node->IsOverlapping()) continue;
-      TGeoVolume *vol = node->GetVolume();
-      if (! vol) continue; 
-      TString name(TString(vol->GetName())); //cout << "Ask for " << name << endl;
-      //      if (name.BeginsWith("FTPC")) continue;
-      TGeoShape *shapeD = (TGeoShape *) vol->GetShape();
-      if (! shapeD ) continue;
-      Double_t weight = dens*GetShapeVolume(shapeD);// cout << "\tWeight\t" << Weight << endl;
-      WeightT -= weight;
-      Weight  -= weight;
-      Int_t  NElemD[1] = {0};
-      Elem_t ElementListD[NoElemMax];
-      weights[id] = GetVolumeWeight(vol,NElemD,ElementListD);
-      Weight += weights[id]; // cout << "\tWeight\t" << Weight << endl;
-      Int_t im =*NElem;
-      Int_t imm = Merge2ElementList(im, ElementList, NElemD[0], ElementListD, weights[id]);
-      *NElem = imm;
-    }
-  } // nd > 0
-  for (Int_t i = im1; i < im2; i++) {// update mother weight fraction
-    ElementList[i].W *= WeightT;
-  }
-  Int_t in = *NElem;
-  Int_t inn= NormolizeElementList(in,ElementList);
-  *NElem = inn;
-  return Weight;
-}
-//________________________________________________________________________________
-void StiVMCToolKit::MakeAverageVolume(TGeoVolume *volT, TGeoShape *&newshape, TGeoMedium *&newmed, Double_t *xyzM) {
-  if (! volT) return;
-  vector<Elem_t> ElementList(NoElemMax);
-  Int_t NElem = 0;
-  // NElem = ElementList.size()-1;
-  Int_t *al = &NElem;
-  Elem_t *el = &ElementList[0];
-  TGeoVolume *v = volT;
-//  Double_t Weight = GetWeight(volT, &NElem, &ElementList[0]); 
-  Double_t Weight = 
-                GetVolumeWeight(v
-                , al
-                , el
-  );
-  const TGeoMedium   *med = volT->GetMedium(); 
-  const TGeoMaterial *mat = volT->GetMaterial();
-  if (Debug()) {
-    if (med->GetParam(0)) cout << "===================" << endl; 
-    else                  cout << "+++++++++++++++++++" << endl;
-    cout << volT->GetName() << " === "   
-	 << " Weight " << Weight << "[g]\t";
-    cout << "material\t" << mat->GetName() << "\tmedium\t" << med->GetName() << endl;
-  }
-  TGeoShape *shapeT = (TGeoShape *) volT->GetShape();
-  Double_t volume = GetShapeVolume(shapeT);
-  if (Debug()) PrintShape(shapeT);
-  shapeT->ComputeBBox();  
-  TGeoBBox * Box = (TGeoBBox *) shapeT; 
-  Double_t dx=-2001, dy=-2002, dz=-2003, rmin=-2009, rmax=-2010;
-  Double_t paramsBC[4];
-  shapeT->GetBoundingCylinder(paramsBC);  //   ! Note that parms[0] = Rmin*Rmin and param[1] = Rmax*Rmax !
-  Double_t volBB = 8*Box->GetDX()*Box->GetDY()*Box->GetDZ();
-  Double_t volBC = 2*TMath::Pi()*(paramsBC[1] - paramsBC[0])*Box->GetDZ();
-  Double_t volB = 0;
-  if (Debug()) cout << shapeT->GetName();
-  enum ShapeId {kBox = 1, kTube, kKeep};
-  Int_t iShape = 3;
-  volB  = volume;
-  TString name(volT->GetName());
-  if (shapeT->TestShapeBit(TGeoShape::kGeoPcon)) {
-    // do nothing
-  } else if (shapeT->TestShapeBit(TGeoShape::kGeoEltu)) {
-    //  if (name == "SROD") {// replace oval road by box
-    iShape = 1;
-    Double_t S = TMath::Pi()*(paramsBC[1] - paramsBC[0]);
-    dy = TMath::Sqrt(paramsBC[1]) - TMath::Sqrt(paramsBC[0]);
-    dx = S/(4*dy);
-    dz = Box->GetDZ();
-    Box->SetBoxDimensions(dx,dy,dz);
-    volB = volBB = volBC;
-  } else if (shapeT->TestShapeBit(TGeoShape::kGeoTube) ||
-	     shapeT->TestShapeBit(TGeoShape::kGeoTubeSeg)) {
-    if (xyzM && xyzM[0]*xyzM[0] + xyzM[1]*xyzM[1] < 1.e-3) {
-      iShape = 2;
-      volB = volBC;
-      rmin = TMath::Sqrt(paramsBC[0]);
-      rmax = TMath::Sqrt(paramsBC[1]);
-      dz = Box->GetDZ();
-      if (Debug()) cout  << "\tBoundingCylinder\trMin\t" << rmin << "\trMax\t" << rmax << "\tdZ\t" << dz;
-    } else if ( (volBB <= volBC) || (xyzM && xyzM[0]*xyzM[0] + xyzM[1]*xyzM[1] > 1.e-3) ) {
-      iShape = 1;
-      volB = volBB;
-      dx = Box->GetDX();
-      dy = Box->GetDY();
-      dz = Box->GetDZ();
-      if (Debug()) cout << "\tBoundingBox dX\t" << dx << "\tdY\t" << dy << "\tdZ\t" << dz;
-    } else {
-      if (Debug()) cout << "\tKeep shape ===========\t";
-     }
-  }
-  Double_t Dens = Weight/volB;
-  if (Debug()) cout << "\tvolume\t" << volume << "\tvolB\t" << volB << "\tDens\t" << Dens << endl;
-  TString newmatname(mat->GetName());
-  newmatname += "_";
-  newmatname += name;
-  TGeoMixture *newmat = new  TGeoMixture(newmatname.Data(),NElem, Dens);
-  for (Int_t i = 0; i < NElem; i++) {
-    if (Debug()) 
-      cout << Form("id%3i\tW%10.3g\tA%5.1f\t%5.1f\n",
-		   ElementList[i].index,ElementList[i].W,ElementList[i].A,ElementList[i].Z);
-    //    cout << "id\t" << ElementList[i].index << "\tW\t" << ElementList[i].W
-    //	 << "\tA\t" <<  ElementList[i].A << "\tZ\t" << ElementList[i].Z << endl;
-    newmat->DefineElement(i,ElementList[i].A,ElementList[i].Z,ElementList[i].W);
-  }
-  newmat->SetUniqueID(gGeoManager->AddMaterial(newmat));
-  Int_t matid = newmat->GetUniqueID();
-  //                                  name              numed  imat, 
-  Double_t params[10];
-  for (Int_t i = 0; i < 10; i++) params[i] = med->GetParam(i);
-  newmed = new TGeoMedium(newmatname.Data(),matid,newmat,params);
-  if (Debug() && xyzM) {
-    cout << "\txyzM  x\t" << xyzM[0] << "\ty\t" << xyzM[1] << "\tz\t" << xyzM[2] << endl;
+  if (shapeT->TestShapeBit(TGeoShape::kGeoPgon)) {
+    LOG_ERROR << "StiVMCToolKit::MakeAverageShape TGeoShape::kGeoPgon is not yet implemented" << endm;
   }
   newshape = shapeT;
-  if (iShape == 1)  newshape = new TGeoBBox(dx, dy, dz);
-  else if (iShape == 2) {
-    newshape = new TGeoTube(rmin, rmax, dz);
+  if (Debug()) PrintShape(shapeT);
+  Double_t rOffSet = 0;
+  if (xyzM) rOffSet = TMath::Sqrt(xyzM[0]*xyzM[0] + xyzM[1]*xyzM[1]);
+  if (rOffSet < 1e-3) {
+    volT->ClearNodes();
+    return newshape;
   }
-  if (newshape != shapeT) newshape->SetName(shapeT->GetName());
+  TGeoBBox *BBox = (TGeoBBox *) shapeT;
+  Double_t dx = BBox->GetDX();
+  Double_t dy = BBox->GetDY();
+  Double_t dz = BBox->GetDZ();
+  if (shapeT->TestShapeBit(TGeoShape::kGeoEltu)) {
+    TGeoEltu *eltu = (TGeoEltu *) shapeT;
+    //  if (name == "SROD") {// replace oval road by box
+    dx = eltu->GetA();
+    dy = eltu->GetB();
+    dz = eltu->GetDZ();
+  }
+  newshape = new TGeoBBox(dx, dy, dz);
+  newshape->SetName(shapeT->GetName());
+  return newshape;
 }
 //________________________________________________________________________________
 TGeoManager  *StiVMCToolKit::GetVMC() {
@@ -796,8 +315,9 @@ void StiVMCToolKit::TestVMC4Reconstruction(){
       //      volT = (TGeoVolume *) volumes->FindObject(list[j].name);
       if (! volT) {cout << "Can't find " << list[j].name << "\t" << list[j].comment << endl; continue;}
       TGeoShape *shapeT = volT->GetShape();
-      Double_t volume = GetShapeVolume(shapeT);
-      Double_t weight = GetVolumeWeight(volT, 0, 0);  // it leads to the memory leak !!!
+      Double_t volume = shapeT->Capacity();
+      Double_t weight = volT->WeightA(); // GetVolumeWeight(volT, 0, 0);  // it leads to the memory leak !!!
+      
       cout << "<tr><td>"<< list[j].name << "</td><td>" << list[j].comment << "</td>"
 	   << "<td>" << Form("%10.3g",volume) << "</td>" 
 	   << "<td>" << Form("%10.3g",weight) << "</td>" 
@@ -808,12 +328,9 @@ void StiVMCToolKit::TestVMC4Reconstruction(){
   cout << "</table>" << endl;
 }
 //________________________________________________________________________________
-TGeoPhysicalNode *StiVMCToolKit::Alignment(const TGeoNode *nodeT, const Char_t *pathT, 
-					   TGeoVolume *volT, TGeoShape *newshape, TGeoMedium* newmed) {
-  // Alignment
+TGeoPhysicalNode *StiVMCToolKit::MakePhysicalNode(const Char_t *pathT) {
   TObjArray *listP = gGeoManager->GetListOfPhysicalNodes();
   TGeoPhysicalNode *nodeP = 0;
-  TGeoCombiTrans *trP = 0;
   if (listP) {
     Int_t N = listP->GetEntries();
     for (Int_t i = 0; i < N; i++) {
@@ -823,6 +340,15 @@ TGeoPhysicalNode *StiVMCToolKit::Alignment(const TGeoNode *nodeT, const Char_t *
       }
     }
   }
+  if (!nodeP) nodeP = gGeoManager->MakePhysicalNode(pathT);
+  return nodeP;
+}
+//________________________________________________________________________________
+TGeoPhysicalNode *StiVMCToolKit::Alignment(const TGeoNode *nodeT, const Char_t *pathT, 
+					   TGeoVolume *volT, TGeoShape *newshape, TGeoMedium* newmed) {
+  TGeoPhysicalNode *nodeP = MakePhysicalNode(pathT);
+  if (! nodeP) return nodeP;
+ // Alignment
   Double_t local[3] = {0,0,0};
   TGeoShape *shapeT = volT->GetShape();
   if (Debug()) {
@@ -841,40 +367,68 @@ TGeoPhysicalNode *StiVMCToolKit::Alignment(const TGeoNode *nodeT, const Char_t *
   nodeT->LocalToMaster(local,master);
   if (Debug()) 
     cout << "\tmaster  x\t" << master[0] << "\ty\t" << master[1] << "\tz\t" << master[2] << endl;
-  if (!nodeP) nodeP = gGeoManager->MakePhysicalNode(pathT);
-  if (!nodeP) return nodeP;
-#if 0
-  if (nodeP->IsAligned()) {
-    trP = nodeP->GetNode()->GetMatrix();
-    trP->SetTranslation(master[0], master[1], master[2]);
-  } else {  
-    trP = new TGeoCombiTrans(master[0], master[1], master[2], nodeP->GetNode()->GetMatrix());
-  }  
-#endif 
+  TGeoCombiTrans *trP = 0;
   nodeP->Align(trP,newshape);//,kTRUE);
   TGeoVolume *newvol = nodeP->GetNode(-1)->GetVolume();
-  if (Debug()) 
-    cout << "newvol\t" << newvol->GetName() << "\tmed\t" << newvol->GetMedium()->GetName() << endl;
   newvol->SetMedium(newmed);
   newvol->SetTitle("AVERAGED");
   newvol->SetLineColor(1);
   newvol->SetVisibility(1);
+  if (Debug()) 
+    cout << "newvol\t" << newvol->GetName() << "\tmed\t" << newvol->GetMedium()->GetName() << endl;
   TObjArray *nodes = newvol->GetNodes();
   if (nodes && ! newvol->TObject::TestBit(TGeoVolume::kVolumeImportNodes)) {
     nodes->Delete(); 
     delete nodes;
     newvol->ClearNodes();
   }
+  // Reset original volume
+  if (volT->GetMedium() != newmed) {
+    volT->SetMedium(newmed);
+    TObjArray *nodes = volT->GetNodes();
+    if (nodes && ! volT->TObject::TestBit(TGeoVolume::kVolumeImportNodes)) {
+      nodes->Delete(); 
+      delete nodes;
+      volT->ClearNodes();
+    }
+  }
   return nodeP;
+}
+//________________________________________________________________________________
+void StiVMCToolKit::MakeListOfMaterials(TGeoVolume *volT, vector<MaterialMap_t> &materials) {
+  if (! volT) return;
+  const TGeoMedium   *med = volT->GetMedium();
+  const TGeoMaterial *mat = med->GetMaterial();
+  Double_t weight  = volT->WeightA();
+  if (Debug()) {
+   cout << volT->GetName() << " === "   
+	<< " Weight " << weight << "[g]\t"
+	<< "material\t" << mat->GetName() << "\tmedium\t" << med->GetName() << endl;
+  }
+  TObjArray *nodes = volT->GetNodes();
+  Int_t nd = volT->GetNdaughters();
+  for (Int_t id = 0; id < nd; id++) {
+    const TGeoNode *node = (TGeoNode*) nodes->UncheckedAt(id);
+    if (! node) continue;
+    TGeoVolume *vol = node->GetVolume(); 
+    weight -= vol->WeightA();
+    MakeListOfMaterials(vol, materials);
+  }
+  materials.push_back(MaterialMap_t(volT->GetName(), mat, weight)); 
 }
 //________________________________________________________________________________
 TGeoPhysicalNode *StiVMCToolKit::LoopOverNodes(const TGeoNode *nodeT, const Char_t *pathT, 
 					       const Char_t *name,void ( *callback)(TGeoPhysicalNode *)){
+  enum EVolueStatus {
+    kAvaraged  = BIT(22) // if the volume is avaraged
+  };
   TGeoVolume *volT = nodeT->GetVolume(); 
   const Char_t *nameT = volT->GetName();
+  TGeoMedium   *med = volT->GetMedium(); 
+  TGeoMaterial *mat = med->GetMaterial();
   TGeoPhysicalNode *nodeP = 0;
-  TGeoShape *newshape = 0;
-  TGeoMedium* newmed = 0;
+  TGeoMedium   *newmed = 0;
+  TGeoMixture  *newmat = 0;
   if (nameT && name && ! strncmp(nameT,name,4)) {
     //    if (TString(nameT) == TString(VolumesToBeAveraged[i].name)) {
     Double_t local[3] = {0, 0, 0};
@@ -884,10 +438,48 @@ TGeoPhysicalNode *StiVMCToolKit::LoopOverNodes(const TGeoNode *nodeT, const Char
       Int_t Nz = pcon->GetNz();
       local[2] = 0.5*(pcon->GetZ(0) + pcon->GetZ(Nz-1));
     }
-    Double_t master[3]; 
-    nodeT->LocalToMaster(local,master);
-    MakeAverageVolume(volT, newshape, newmed, master);
+    nodeP = MakePhysicalNode(pathT);
+    Double_t master[3] = {0};
+    TGeoHMatrix  *hmat   = nodeP->GetMatrix(); 
+    hmat->LocalToMaster(local,master);
+    Double_t WeightT = volT->WeightA(); // weight before avaraing
+    // Averging of material
+    vector<MaterialMap_t> materials;
+    MakeListOfMaterials(volT, materials);
+
+    if (volT->TestBit(kAvaraged)) cout << nameT << " has been averaged !!!" << endl;
+    TGeoShape *newshape = MakeAverageShape(volT, master);
+
+    Double_t Volume = newshape->Capacity();
+    Double_t weightT = 0;
+    for (auto m : materials) weightT += m.weight;
+    Double_t density = 1e3*weightT/Volume; // gm/cm^3
+    if (Debug()) {
+      cout  << "Weight before " << WeightT << " and after " << weightT 
+	<< "\tDensity before = " << mat->GetDensity() << "  [g/cm^3] and after " << density << " [g/cm^3]" << endl;
+    }
+    Int_t imed  = gGeoManager->GetListOfMedia()->GetEntries();
+    Int_t imat  = imed = gGeoManager->GetListOfMedia()->GetEntries();
+    TString newmatName(mat->GetName()); newmatName += "_Averaged";
+    TString newmedName(med->GetName()); newmedName += "_Averaged";
+    Double_t params[44] = {0};
+    for (Int_t i = 0; i < 44; i++) params[i] = med->GetParam(i);
+    if (materials.size() == 1 && TMath::Abs(density - mat->GetDensity()) < 1e-5) {
+      newmed = med; 
+    } else {
+      newmat = new TGeoMixture(newmatName,0); newmat->SetUniqueID(imat);
+      for (auto m : materials) {
+	if (Debug()) {newmat->Print(); m.Print();}
+	newmat->AddElement((TGeoMaterial *)m.mat,m.weight/weightT);
+	if (Debug()) newmat->Print();
+      }
+      newmat->SetDensity(density);
+      if (Debug()) newmat->Print();
+      newmed = new TGeoMedium(newmedName,imed,newmat, params); 
+      newmed->SetUniqueID(imed); 
+    }
     nodeP = Alignment(nodeT,pathT, volT, newshape, newmed);
+    volT->SetBit(kAvaraged);
     if (nodeP) {
       if (! callback) PrintNewNode(nodeP);
       else            callback(nodeP);

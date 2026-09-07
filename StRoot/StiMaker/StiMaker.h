@@ -38,7 +38,7 @@ class StiMaker : public StMaker
     virtual void  Clear(const char* opt="");
     virtual Int_t Init();
             Int_t InitDetectors();
-            void  PrintDetectors();
+            void  PrintDetectors(const char* opt="");
             Int_t InitPulls();
             Int_t FillPulls();
     virtual Int_t InitRun(int);

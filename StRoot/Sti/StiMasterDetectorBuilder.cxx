@@ -25,7 +25,7 @@ void StiMasterDetectorBuilder::build(StMaker&source)
 {
   //#define __Physics_Node_Clear__
 #ifndef __Physics_Node_Clear__
-  if (! gGeoManager) StiVMCToolKit::GetVMC();
+  if (! gGeoManager) StiVMCToolKit::instance()->GetVMC();
 
   TGeoManager *gGeoManagerSV = gGeoManager; gGeoManager = 0;
   StMaker *chain=StMaker::GetChain();
@@ -124,6 +124,12 @@ void StiMasterDetectorBuilder::build(StMaker&source)
     }
     //    delete gGeoManager;
 #endif /* __CHECK_SHARED_OBJECTS__ */
+#define __SAVE__Average_Geometry__
+#ifdef  __SAVE__Average_Geometry__
+    TString file(gGeoManager->GetName());
+    file += "_Avg.root";
+    gGeoManager->Export(file);
+#endif /*  __SAVE__Average_Geometry__ */
     gGeoManager = gGeoManagerSV;
   }
 #else /* __Physics_Node_Clear__ */

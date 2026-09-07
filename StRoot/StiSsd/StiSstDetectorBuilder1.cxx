@@ -50,7 +50,7 @@ void StiSstDetectorBuilder1::buildInactiveVolumes()
       LOG_DEBUG << "Current node : " << i << "/" << nVolumes << " path is : " << volumes[i].name << endm;
       LOG_DEBUG << "Number of daughters : " << geoNode->GetNdaughters() << " weight : " << geoNode->GetVolume()->Weight() << endm;
 
-      StiVMCToolKit::LoopOverNodes(geoNode, volumes[i].path, volumes[i].name, MakeAverageVolume);
+      StiVMCToolKit::instance()->LoopOverNodes(geoNode, volumes[i].path, volumes[i].name, MakeAverageVolume);
 
       // Access last added volume
       int row = getNRows() - 1;

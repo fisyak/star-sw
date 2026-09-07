@@ -64,7 +64,7 @@ void StiBTofDetectorBuilder::useVMCGeometry() {
   for (Int_t i = 0; i < M; i++)     {
     const TGeoMaterial *mat =  gGeoManager->GetMaterial(map[i].name); 
     if (! mat) continue;
-    Double_t PotI = StiVMCToolKit::GetPotI(mat);
+    Double_t PotI = StiVMCToolKit::instance()->GetPotI(mat);
     *map[i].p = add(new StiMaterial(mat->GetName(),
 				    mat->GetZ(),
 				    mat->GetA(),

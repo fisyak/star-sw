@@ -99,6 +99,7 @@ More detailed: 				<br>
 #include "Sti/StiHitLoader.h"
 #include "Sti/StiVertexFinder.h"
 #include "Sti/StiDetectorContainer.h"
+#include "Sti/StiDetectorGroups.h"
 #include "StiMaker/StiStEventFiller.h"
 #include "Sti/StiDefaultToolkit.h"
 #include "StiMaker.h"
@@ -760,7 +761,8 @@ void CountHits()
 }
 
 //_____________________________________________________________________________
-void StiMaker::PrintDetectors () {
+void StiMaker::PrintDetectors (const char* opt) {
+#if 0
   StiDetectorContainer * detectorContainer = _toolkit->getDetectorContainer();
   StiDetector * detector;
   for (vector<StiDetector*>::const_iterator i=detectorContainer->getDetectors().begin();
@@ -771,8 +773,27 @@ void StiMaker::PrintDetectors () {
       detector->Print();
       
     }
+#endif
+   StiDetectorGroups *groups=_toolkit->getDetectorGroups();
+   vector<StiGenericDetectorGroup *>::iterator it = groups->begin();
+   for (; it != groups->end(); ++it) {
+      StiGenericDetectorGroup *group = *it;
+      const StiDetectorBuilder &builder = *group->getDetectorBuilder();
+      
+      TString builderName = (const char*)builder.getName().c_str();
+      unsigned int nRows = builder.getNRows();
+      //   LOG_INFO << "Builder: " << builder.getName().c_str() << " has " << nRows << " rows" << endm;
+      for (unsigned int i=0; i < nRows; i++) {
+	unsigned int nSectors = builder.getNSectors(i);
+	//	Int_t iColor  = 3 + i%6;
+	for (unsigned int j=0;j<nSectors;j++) 	  {
+	  StiDetector *next = builder.getDetector(i,j) ;
+	  if (!next) continue;
+	  next->Print(opt);
+	}
+      }
+   }
 }
-
 // $Id: StiMaker.cxx,v 1.239 2018/06/21 01:48:42 perev Exp $
 // $Log: StiMaker.cxx,v $
 // Revision 1.239  2018/06/21 01:48:42  perev

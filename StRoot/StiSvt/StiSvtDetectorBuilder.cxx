@@ -235,7 +235,7 @@ void StiSvtDetectorBuilder::buildDetectors(StMaker & source)
       add(layer,ladder,pLadder);
     } // for ladder
   } // for layer
-  if (StiVMCToolKit::GetVMC()) {useVMCGeometry();}
+  if (StiVMCToolKit::instance()->GetVMC()) {useVMCGeometry();}
   if (debug()) {
     cout << "StiSvtDetectorBuilder::buildDetectors list of built detectors" << endl;
     Int_t nlayers = _detectors.size(); 
@@ -264,7 +264,7 @@ void StiSvtDetectorBuilder::useVMCGeometry() {
   for (Int_t i = 0; i < M; i++) {
     const TGeoMaterial *mat =  gGeoManager->GetMaterial(map[i].name); 
     if (! mat) continue;
-    Double_t PotI = StiVMCToolKit::GetPotI(mat);
+    Double_t PotI = StiVMCToolKit::instance()->GetPotI(mat);
     *map[i].p = add(new StiMaterial(mat->GetName(),
 				    mat->GetZ(),
 				    mat->GetA(),
@@ -326,6 +326,6 @@ void StiSvtDetectorBuilder::useVMCGeometry() {
     gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, SvtVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, SvtVolumes[i].name, MakeAverageVolume);
   }
 }
