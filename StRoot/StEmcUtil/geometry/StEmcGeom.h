@@ -374,7 +374,7 @@ inline Int_t StEmcGeom::getBin(const Float_t phi, const Float_t eta, Int_t &m, I
 // _____________________________________________________________________
 inline Int_t StEmcGeom::getId(const Float_t phi, const Float_t eta, Int_t &softId) const
 {
-	Int_t m,e,s=-1;
+        Int_t m=0,e=0,s=-1;
 	if(getBin(phi,eta,m,e,s) == 0 && s != -1) {
 		return getId(m,e,s,softId);
 	}
