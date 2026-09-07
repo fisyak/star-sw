@@ -1498,11 +1498,15 @@ Int_t TGeant3::IdFromPDG(Int_t pdg) const
    //
    // Return Geant3 code from PDG and pseudo ENDF code
    //
-   for (Int_t i = 0; i < fNPDGCodes; ++i)
-      if (pdg == fPDGCode[i])
-         return i;
-   Warning("IdFromPDG", "Unknown to GEANT3 pdg value = %i",pdg);
-   return -1;
+  if (pdg == 311) {                       // K0
+    if (gRandom->Rndm() > 0.5) pdg = 310; // K_S0
+    else                       pdg = 130; // K_L0
+  }
+  for (Int_t i = 0; i < fNPDGCodes; ++i)
+    if (pdg == fPDGCode[i])
+      return i;
+  Warning("IdFromPDG", "Unknown to GEANT3 pdg value = %i",pdg);
+  return -1;
 }
 
 //______________________________________________________________________
