@@ -25,6 +25,7 @@
 #include "TGeoTube.h"
 #include "TGeoXtru.h"
 #include "TGeoEltu.h"
+using namespace std;
 struct VolumeMap_t {
   const Char_t *name;
   const Char_t *comment;
