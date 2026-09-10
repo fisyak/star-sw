@@ -17847,3 +17847,1006 @@ $3 = void
 OBJ: TGeoMedium SCON_CARBONFIBER
 (gdb) p volT->GetMedium()->Print("")
 OBJ: TGeoMedium SCON_CARBONFIBER_Averaged
+================================================================================
+09/08/2026
+[starsub05] ~/WWW/star/kfp $ grep W\ = */*fixed*/Title_*Ks_M__*.txt
+2019/31GeV_fixedTarget_2019_P21id/Title_31GeV_fixedTarget_2019_P21id.dEdxW21Ks_M__51.260M.txt:  		M =  497.23 +/-  0.00   W =    8.99 +/-  0.01 (MeV)
+2019/31GeV_fixedTarget_2019_P24ia/Title_31GeV_fixedTarget_2019_P24ia_dEdx.BKs_M___2.745M.txt:   		M =  497.87 +/-  0.01   W =    8.92 +/-  0.02 (MeV)
+2019/31GeV_fixedTarget_2019_TFG19l.Minuit/Title_31GeV_fixedTarget_2019_TFG19l.Minuit.AKs_M___9.769M.txt:        M =  497.52 +/-  0.01   W =   11.04 +/-  0.02 (MeV)
+2019/31GeV_fixedTarget_P23id/Title_31GeV_fixedTarget_P23id.dEdxKs_M__43.524M.txt:       			M =  497.87 +/-  0.00   W =    8.64 +/-  0.01 (MeV)
+2019/31GeV_fixedTarget_P24iy/Title_31GeV_fixedTarget_P24iy.dEdxAKs_M__53.201M.txt:      			M =  497.56 +/-  0.00   W =    8.13 +/-  0.00 (MeV)
+2019/3p85GeV_fixedTarget_2019_P21id/Title_3p85GeV_fixedTarget_2019_P21id.dEdxW21Ks_M___4.111M.txt:     		M =  496.81 +/-  0.02   W =    8.05 +/-  0.06 (MeV)
+2019/3p85GeV_fixedTarget_P23id/Title_3p85GeV_fixedTarget_P23id.dEdxBKs_M___3.067M.txt:  			M =  497.46 +/-  0.03   W =    7.85 +/-  0.06 (MeV)
+2019/3p85GeV_fixedTarget_P24ia/Title_3p85GeV_fixedTarget_P24ia_dEdxH3Ks_M___3.048M.txt: 			M =  497.48 +/-  0.03   W =    8.04 +/-  0.07 (MeV)
+2019/3p85GeV_fixedTarget_P24iy/Title_3p85GeV_fixedTarget_P24iy.dEdxAKs_M___8.314M.txt:  			M =  497.34 +/-  0.01   W =    7.26 +/-  0.03 (MeV)
+2019/3p85GeV_fixedTarget_TFG24c/Title_3p85GeV_fixedTarget_TFG24c.dEdxHKs_M___2.051M.txt:        		M =  497.45 +/-  0.03   W =    7.10 +/-  0.06 (MeV)
+2019/3p85GeV_fixedTarget/Title_3p85GeV_fixedTarget.JKs_M__10.710M.txt:  					M =  498.18 +/-  0.01   W =    7.29 +/-  0.03 (MeV)
+2019/4p59GeV_fixedTarget_P24ia/Title_4p59GeV_fixedTarget_P24ia.dEdxH2Ks_M__99.718M.txt: 			M =  497.74 +/-  0.00   W =    8.05 +/-  0.01 (MeV)
+2019/4p59GeV_fixedTarget/Title_4p59GeV_fixedTarget.dEdxWKs_M__29.328M.txt:      				M =  498.85 +/-  0.01   W =    9.17 +/-  0.03 (MeV)
+2019/7.3GeV_fixedTarget_2019_P21id/Title_7.3GeV_fixedTarget_2019_P21id.dEdxW21Ks_M__59.752M.txt:        	M =  497.13 +/-  0.00   W =    8.39 +/-  0.01 (MeV)
+2019/7.3GeV_fixedTarget_P23id/Title_7.3GeV_fixedTarget_P23id.dEdxKs_M__50.968M.txt:     			M =  497.76 +/-  0.00   W =    8.20 +/-  0.01 (MeV)
+2019/7.3GeV_fixedTarget_P24ia/Title_7.3GeV_fixedTarget_P24ia_dEdxH2Ks_M__31.458M.txt:   			M =  497.77 +/-  0.00   W =    8.41 +/-  0.01 (MeV)
+2019/7.3GeV_fixedTarget_TFG24c/Title_7.3GeV_fixedTarget_TFG24c.dEdxH2Ks_M__56.374M.txt: 			M =  497.49 +/-  0.00   W =    7.38 +/-  0.01 (MeV)
+
+2020/13p5GeV_fixedTarget_P24ia/Title_13p5GeV_fixedTarget_P24ia_dEdx.BKs_M___6.692M.txt: 			M =  497.79 +/-  0.01   W =    8.79 +/-  0.02 (MeV)
+2020/13p5GeV_fixedTarget_P24iy/Title_13p5GeV_fixedTarget_P24iy.dEdxKs_M__92.804M.txt:   			M =  497.43 +/-  0.00   W =    7.76 +/-  0.00 (MeV)
+2020/13p5GeV_fixedTarget/Title_13p5GeV_fixedTarget.dEdxW21Ks_M__15.074M.txt:    				M =  497.33 +/-  0.01   W =    8.34 +/-  0.02 (MeV)
+
+2020/19p5GeV_fixedTarget/Title_19p5GeV_fixedTarget.dEdxWKs_M___7.928M.txt:      				M =  498.03 +/-  0.01   W =   10.27 +/-  0.02 (MeV)
+2020/31p2GeV_fixedTarget_P23id/Title_31p2GeV_fixedTarget_P23id.dEdxKs_M__82.161M.txt:   			M =  498.06 +/-  0.00   W =    8.75 +/-  0.00 (MeV)
+2020/31p2GeV_fixedTarget_P24ia/Title_31p2GeV_fixedTarget_P24ia_dEdxKs_M___5.311M.txt:   			M =  498.07 +/-  0.01   W =    9.03 +/-  0.02 (MeV)
+2020/5p75GeV_fixedTargetC/Title_5p75GeV_fixedTargetC.dEdxWKs_M__13.144M.txt:    				M =  498.13 +/-  0.01   W =    9.40 +/-  0.02 (MeV)
+2020/5p75GeV_fixedTarget_P23id/Title_5p75GeV_fixedTarget_P23id.dEdxKs_M__94.258M.txt:   			M =  497.93 +/-  0.00   W =    8.06 +/-  0.01 (MeV)
+2020/5p75GeV_fixedTarget_P23ie/Title_5p75GeV_fixedTarget_P23ie.dEdxKs_M__23.113M.txt:   			M =  497.94 +/-  0.01   W =    8.06 +/-  0.01 (MeV)
+2020/5p75GeV_fixedTarget_P24ia/Title_5p75GeV_fixedTarget_P24ia_dEdxH3Ks_M__89.081M.txt: 			M =  497.95 +/-  0.00   W =    8.24 +/-  0.01 (MeV)
+2020/5p75GeV_fixedTarget_P24iy/Title_5p75GeV_fixedTarget_P24iy.dEdxJ2Ks_M__82.767M.txt: 			M =  497.62 +/-  0.00   W =    7.40 +/-  0.01 (MeV)
+2020/5p75GeV_fixedTarget_TFG24c/Title_5p75GeV_fixedTarget_TFG24c.dEdxH2Ks_M__49.214M.txt:       		M =  497.68 +/-  0.00   W =    7.22 +/-  0.01 (MeV)
+2020/7p3GeV_fixedTarget_2020_P23ie_protonTest/Title_7p3GeV_fixedTarget_2020_P23ie_protonTestKs_M__23.442M.txt:  M =  501.48 +/-  0.01   W =   13.23 +/-  0.03 (MeV)
+2020/7p3GeV_fixedTarget_P24ia/Title_7p3GeV_fixedTarget_P24ia_dEdxHKs_M__53.120M.txt:    			M =  497.74 +/-  0.00   W =    8.43 +/-  0.01 (MeV)
+2020/7p3GeV_fixedTarget_TFG24c/Title_7p3GeV_fixedTarget_TFG24c.dEdx3Ks_M___4.660M.txt:  			M =  497.47 +/-  0.01   W =    7.29 +/-  0.02 (MeV)
+2020/7p3GeV_fixedTarget/Title_7p3GeV_fixedTarget.dEdxWKs_M___7.744M.txt:        				M =  498.03 +/-  0.01   W =    9.63 +/-  0.03 (MeV)
+2020/9p8GeV_fixedTarget_P24ia/Title_9p8GeV_fixedTarget_P24ia_dEdxKs_M___8.621M.txt:     			M =  497.93 +/-  0.01   W =    8.59 +/-  0.02 (MeV)
+2020/9p8GeV_fixedTarget/Title_9p8GeV_fixedTarget.dEdxWKs_M___7.607M.txt:        				M =  498.20 +/-  0.01   W =    9.72 +/-  0.03 (MeV)
+2021/3p85GeV_fixedTarget_2021_P24iy.A/Title_3p85GeV_fixedTarget_2021_P24iy.A.dEdxB.d121-125BKs_M__23.907M.txt:  M =  497.47 +/-  0.01   W =    7.19 +/-  0.02 (MeV)
+2021/3p85GeV_fixedTarget_2021.TFG21f/Title_3p85GeV_fixedTarget_2021.TFG21f.dEdxNDKs_M___6.005M.txt:     	M =  497.97 +/-  0.02   W =    8.80 +/-  0.05 (MeV)
+2021/3p85GeV_fixedTarget_2021.TFG21g/Title_3p85GeV_fixedTarget_2021.TFG21g.dEdxWKs_M___6.706M.txt:      	M =  497.95 +/-  0.02   W =    9.10 +/-  0.06 (MeV)
+2021/3p85GeV_fixedTarget_2021/Title_3p85GeV_fixedTarget_2021.dEdxWKs_M__33.638M.txt:    			M =  497.94 +/-  0.01   W =    8.94 +/-  0.02 (MeV)
+
+2026/13p5GeV_fixedTarget_2026.TFG26d/Title_13p5GeV_fixedTarget_2026.TFG26d.dEdxCKs_M__22.014M.txt:      	M =  496.01 +/-  0.01   W =   13.88 +/-  0.03 (MeV)
+2026/13p5GeV_fixedTarget_2026.TFG26h/Title_13p5GeV_fixedTarget_2026.TFG26h.dEdxCKs_M__15.930M.txt:      	M =  499.86 +/-  0.02   W =   16.06 +/-  0.08 (MeV)
+
+2026/8p65GeV_fixedTarget_2026.TFG26d/Title_8p65GeV_fixedTarget_2026.TFG26d.dEdxCKs_M__18.443M.txt:      	M =  495.94 +/-  0.01   W =   13.48 +/-  0.04 (MeV)
+2026/9p8GeV_fixedTarget_2026.TFG26d/Title_9p8GeV_fixedTarget_2026.TFG26d.dEdxCKs_M__75.737M.txt:        	M =  495.91 +/-  0.01   W =   14.87 +/-  0.03 (MeV)
+
+
+
+
+[starsub05] ~/work/kfp/2020/13p5GeV_fixedTarget_P25iy/dEdx $ dir /star/data110/reco/production_19p5GeV_fixedTarget_2020/ReversedFullField/P25iy/2020/033/21033017/st_physics_21033017_raw_5000018.picoDst.root
+-rw-r--r-- 1 starreco rhstar 1.2G Sep  4 23:35 /star/data110/reco/production_19p5GeV_fixedTarget_2020/ReversedFullField/P25iy/2020/033/21033017/st_physics_21033017_raw_5000018.picoDst.root
+                                               /star/data*  /reco/production_13p5GeV_fixedTarget_2020/ReversedFullField/P25iy/*/2*
+                                               /star/data*/reco/production_13p5GeV_fixedTarget_2020/ReversedFullField/P25iy/2*/*
+Breakpoint 6, StiVMCToolKit::Alignment (this=0x10ac9e80, nodeT=0xf1ada90, pathT=0xf1c5870 "HALL_1/CAVE_1/SCOM_1/SCON_1", volT=0xf1adb20, newshape=0xf0f8290, newmed=0xf1ae180) at .al96_x8664_gcc11/obj/StRoot/Sti/StiVMCToolKit.cxx:394
+(gdb) p p newvol
+No symbol "p" in current context.
+(gdb) p newvol
+$7 = (TGeoVolume *) 0xf1c3ef0
+(gdb) p newvol->Print("")
+== Volume: SCON type TGeoVolume positioned 0 times
+*** Shape SCON: TGeoPcon ***
+    Nz    = 5
+    phi1  =     0.00000
+    dphi  =   360.00000
+     plane 0: z=   55.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 1: z=   59.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 2: z=   59.62400 Rmin=   21.57000 Rmax=   22.00000
+     plane 3: z=  148.62400 Rmin=   38.47000 Rmax=   38.90000
+     plane 4: z=  230.32400 Rmin=   38.47000 Rmax=   38.90000
+ Bounding box:
+*** Shape SCON: TGeoBBox ***
+    dX =    38.90000
+    dY =    38.90000
+    dZ =    87.35000
+    origin: x=    0.00000 y=    0.00000 z=  142.97400
+Material SCON_CARBONFIBER    A=12.01 Z=6 rho=1.78 radlen=23.8731 intlen=45.0569 index=29
+$8 = void
+(gdb) p volT
+$9 = (TGeoVolume *) 0xf1adb20
+(gdb) p volT->Print("")
+== Volume: SCON type TGeoVolume positioned 3 times
+*** Shape SCON: TGeoPcon ***
+    Nz    = 5
+    phi1  =     0.00000
+    dphi  =   360.00000
+     plane 0: z=   55.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 1: z=   59.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 2: z=   59.62400 Rmin=   21.57000 Rmax=   22.00000
+     plane 3: z=  148.62400 Rmin=   38.47000 Rmax=   38.90000
+     plane 4: z=  230.32400 Rmin=   38.47000 Rmax=   38.90000
+ Bounding box:
+*** Shape SCON: TGeoBBox ***
+    dX =    38.90000
+    dY =    38.90000
+    dZ =    87.35000
+    origin: x=    0.00000 y=    0.00000 z=  142.97400
+Material SCON_CARBONFIBER    A=12.01 Z=6 rho=1.78 radlen=23.8731 intlen=45.0569 index=29
+(gdb) p volT
+$12 = (TGeoVolume *) 0xf1adb20
+(gdb) p volT->Print("")
+== Volume: SCON type TGeoVolume positioned 3 times
+*** Shape SCON: TGeoPcon ***
+    Nz    = 5
+    phi1  =     0.00000
+    dphi  =   360.00000
+     plane 0: z=   55.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 1: z=   59.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 2: z=   59.62400 Rmin=   21.57000 Rmax=   22.00000
+     plane 3: z=  148.62400 Rmin=   38.47000 Rmax=   38.90000
+     plane 4: z=  230.32400 Rmin=   38.47000 Rmax=   38.90000
+ Bounding box:
+*** Shape SCON: TGeoBBox ***
+    dX =    38.90000
+    dY =    38.90000
+    dZ =    87.35000
+    origin: x=    0.00000 y=    0.00000 z=  142.97400
+Material SCON_CARBONFIBER    A=12.01 Z=6 rho=1.78 radlen=23.8731 intlen=45.0569 index=29
+$13 = void
+
+
+#2  0x00007fffdd5c0bf9 in StiVMCToolKit::LoopOverNodes (this=0x10ac8fd0, nodeT=0xf1acbe0, pathT=0xf1c49c0 "HALL_1/CAVE_1/SCOM_1/SCON_1", name=0x7fffdd6203da "SCON", callback=0x7fffdd54da71 <StiDetectorBuilder::MakeAverageVolume(TGeoPhysicalNode*)>)
+
+(gdb) p volT
+$1 = (TGeoVolume *) 0xf1acc70
+(gdb) p volT->Print("")
+== Volume: SCON type TGeoVolume positioned 3 times
+*** Shape SCON: TGeoPcon ***
+    Nz    = 5
+    phi1  =     0.00000
+    dphi  =   360.00000
+     plane 0: z=   55.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 1: z=   59.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 2: z=   59.62400 Rmin=   21.57000 Rmax=   22.00000
+     plane 3: z=  148.62400 Rmin=   38.47000 Rmax=   38.90000
+     plane 4: z=  230.32400 Rmin=   38.47000 Rmax=   38.90000
+ Bounding box:
+*** Shape SCON: TGeoBBox ***
+    dX =    38.90000
+    dY =    38.90000
+    dZ =    87.35000
+    origin: x=    0.00000 y=    0.00000 z=  142.97400
+Mixture SCON_CARBONFIBER_Averaged    Aeff=12.0521 Zeff=6.02547 rho=0.368597 radlen=114.841 intlen=217.585 index=128
+   Element #0 : C  Z=  6.00 A= 12.01 w= 0.064
+   Element #1 : H  Z=  1.00 A=  1.01 w= 0.008
+   Element #2 : O  Z=  8.00 A= 16.00 w= 0.034
+   Element #3 : C  Z=  6.00 A= 12.01 w= 0.894
+$2 = void
+Breakpoint 4, StiVMCToolKit::LoopOverNodes (this=0x10ac8fd0, nodeT=0xf1ad5b0, pathT=0xf1c49c0 "HALL_1/CAVE_1/SCOM_1/SCON_2", name=0x7fffdd6203da "SCON", callback=0x7fffdd54da71 <StiDetectorBuilder::MakeAverageVolume(TGeoPhysicalNode*)>)
+    at .al96_x8664_gcc11/obj/StRoot/Sti/StiVMCToolKit.cxx:445
+445         if (! volT->TestBit(kAveraged)) {
+(gdb) n
+493         nodeP = Alignment(nodeT,pathT, volT, newshape, newmed);
+(gdb) p volT
+$3 = (TGeoVolume *) 0xf1acc70
+(gdb) p volT->Print("")
+== Volume: SCON type TGeoVolume positioned 3 times
+*** Shape SCON: TGeoPcon ***
+    Nz    = 5
+    phi1  =     0.00000
+    dphi  =   360.00000
+     plane 0: z=   55.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 1: z=   59.62400 Rmin=   21.42000 Rmax=   22.00000
+     plane 2: z=   59.62400 Rmin=   21.57000 Rmax=   22.00000
+     plane 3: z=  148.62400 Rmin=   38.47000 Rmax=   38.90000
+     plane 4: z=  230.32400 Rmin=   38.47000 Rmax=   38.90000
+ Bounding box:
+*** Shape SCON: TGeoBBox ***
+    dX =    38.90000
+    dY =    38.90000
+    dZ =    87.35000
+    origin: x=    0.00000 y=    0.00000 z=  142.97400
+Mixture SCON_CARBONFIBER_Averaged    Aeff=12.0521 Zeff=6.02547 rho=0.368597 radlen=114.841 intlen=217.585 index=128
+   Element #0 : C  Z=  6.00 A= 12.01 w= 0.064
+   Element #1 : H  Z=  1.00 A=  1.01 w= 0.008
+   Element #2 : O  Z=  8.00 A= 16.00 w= 0.034
+   Element #3 : C  Z=  6.00 A= 12.01 w= 0.894
+
+
+Breakpoint 4, StiVMCToolKit::LoopOverNodes (this=0x10ac8fd0, nodeT=0xf1ad640, pathT=0xf1c49c0 "HALL_1/CAVE_1/SCOM_1/SROD_1", name=0x7fffdd620342 "SROD", callback=0x7fffdd54da71 <StiDetectorBuilder::MakeAverageVolume(TGeoPhysicalNode*)>)
+    at .al96_x8664_gcc11/obj/StRoot/Sti/StiVMCToolKit.cxx:445
+Eltu    dZ      55.62   A       4.79    B       2.25
+Mixture SCON_CARBONFIBER_Averaged    Aeff=12.0518 Zeff=6.02533 rho=0.0766861 radlen=552 intlen=1100.53 index=129
+   Element #0 : N  Z=  7.30 A= 14.61 w= 0.000
+   Element #1 : C  Z=  6.00 A= 12.01 w= 0.958
+   Element #2 : H  Z=  1.00 A=  1.01 w= 0.008
+   Element #3 : O  Z=  8.00 A= 16.00 w= 0.034
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SROD_1 at layer 85      Z = 0.00        dZ = 55.62      R = 20.10
+            SCOM_1/SROD_1 xy   -0.00   20.10     z    0.00 R:  20.10 phi:  90.0  dX: 2.25 dY: 4.79 dZ: 55.62    Mat:SCON_CARBONFIBER_Averaged :0.08 g/cm^3 X0:552.00 Z: 6.03 A: 12.05   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+Breakpoint 4, StiVMCToolKit::LoopOverNodes (this=0x10ac8fd0, nodeT=0xf1ae0a0, pathT=0xf1c49c0 "HALL_1/CAVE_1/SCOM_1/SROD_2", name=0x7fffdd620342 "SROD", callback=0x7fffdd54da71 <StiDetectorBuilder::MakeAverageVolume(TGeoPhysicalNode*)>)
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SROD_2 at layer 86      Z = 0.00        dZ = 55.62      R = 20.10
+            SCOM_1/SROD_2 xy   -0.00  -20.10     z    0.00 R:  20.10 phi: -90.0  dX: 2.25 dY: 4.79 dZ: 55.62    Mat:SCON_CARBONFIBER_Averaged :0.08 g/cm^3 X0:552.00 Z: 6.03 A: 12.05   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+Breakpoint 4, StiVMCToolKit::LoopOverNodes (this=0x10ac8fd0, nodeT=0xf1ae390, pathT=0xf0f05d0 "HALL_1/CAVE_1/SCOM_1/SBSP_1/SAKM_1", name=0x7fffdd6204a1 "SAKM", callback=0x7fffdd54da71 <StiDetectorBuilder::MakeAverageVolume(TGeoPhysicalNode*)>)
+
+
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SBSP_1/SPOA_1/SPOB_1 at layer 95        Z = 54.72       dZ = 1.25       R = 4.90
+SCOM_1/SBSP_1/SPOA_1/SPOB_1 xy    3.46    3.46   z   54.72 R:   4.90 phi:  45.0  dX: 0.80 dY: 1.60 dZ: 1.25     Mat:SCON_G10_Averaged :2.08 g/cm^3 X0:11.49 Z: 12.99 A: 26.87   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SBSP_1/SPOA_2/SPOB_1 at layer 96        Z = 54.72       dZ = 1.25       R = 4.90
+SCOM_1/SBSP_1/SPOA_2/SPOB_1 xy   -3.46    3.46   z   54.72 R:   4.90 phi: 135.0  dX: 0.80 dY: 1.60 dZ: 1.25     Mat:SCON_G10_Averaged :2.08 g/cm^3 X0:11.49 Z: 12.99 A: 26.87   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SBSP_1/SPOA_3/SPOB_1 at layer 97        Z = 54.72       dZ = 1.25       R = 4.90
+SCOM_1/SBSP_1/SPOA_3/SPOB_1 xy   -3.46   -3.46   z   54.72 R:   4.90 phi:-135.0  dX: 0.80 dY: 1.60 dZ: 1.25     Mat:SCON_G10_Averaged :2.08 g/cm^3 X0:11.49 Z: 12.99 A: 26.87   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SBSP_1/SPOA_4/SPOB_1 at layer 98        Z = 54.72       dZ = 1.25       R = 4.90
+SCOM_1/SBSP_1/SPOA_4/SPOB_1 xy    3.46   -3.46   z   54.72 R:   4.90 phi: -45.0  dX: 0.80 dY: 1.60 dZ: 1.25     Mat:SCON_G10_Averaged :2.08 g/cm^3 X0:11.49 Z: 12.99 A: 26.87   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+
+
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SBSP_1/SPOA_1/SPOC_1 at layer 103       Z = 54.92       dZ = 0.63       R = 17.40
+SCOM_1/SBSP_1/SPOA_1/SPOC_1 xy   12.30   12.30   z   54.92 R:  17.40 phi:  45.0  dX: 0.70 dY: 1.25 dZ: 0.63     Mat:SCON_AIR_Averaged :2.87 g/cm^3 X0:6.66 Z: 17.38 A: 36.64    Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+StiDetectorBuilder::AverageVolume build detector SCOM_1/SBSP_1/SPOA_2/SPOC_1 at layer 104       Z = 54.92       dZ = 0.63       R = 17.40
+SCOM_1/SBSP_1/SPOA_2/SPOC_1 xy  -12.30   12.30   z   54.92 R:  17.40 phi: 135.0  dX: 0.70 dY: 1.25 dZ: 0.63     Mat:SCON_AIR_Averaged :2.87 g/cm^3 X0:6.66 Z: 17.38 A: 36.64    Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+
+StiDetectorBuilder::AverageVolume build detector FSTA_1/FSTM_1/FSTD_4/FTUO_1 at layer 111       Z = 151.95      dZ = 0.20       R = 32.87
+FSTA_1/FSTM_1/FSTD_4/FTUO_1 xy    0.00    0.00   z  151.95 R:  32.87 phi:  15.0  rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20        Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98       Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+================================================================================
+09/09/2026
+y2025z
+TGeoVolume *OFSB = gGeoManager->MakeTube("OFSB",GetMed("FSTO_STAINLESSSTEEL3"),0,0.725,21.065); OFSB->SetTitle("OFSB");
+   FSTA->AddNode(OFSB,1,new TGeoTranslation(20.32181,29.02256,162.865));
+   FSTA->AddNode(OFSB,2,new TGeoTranslation(-20.32181,29.02256,162.865));
+   FSTA->AddNode(OFSB,3,new TGeoTranslation(-20.32181,-29.02256,162.865));
+   FSTA->AddNode(OFSB,4,new TGeoTranslation(20.32181,-29.02256,162.865));
+
+
+sti29
+  OFSB->AddVolume(gGeoManager->MakeBox("OFSB", gGeoManager->GetMedium("FSTO_STAINLESSSTEEL3_Averaged"),0.73,0.73,21.07));   <<<<<<<< problem
+  FSTA->AddNode(OFSB->GetVolume(0),1, new TGeoCombiTrans(-0.00, 8.70, 162.87, rot));
+  FSTA->AddNode(OFSB->GetVolume(1),2, new TGeoCombiTrans(-0.00, 49.34, 162.87, rot));
+  FSTA->AddNode(OFSB->GetVolume(2),3, new TGeoCombiTrans(-0.00, -49.34, 162.87, rot));
+  FSTA->AddNode(OFSB->GetVolume(3),4, new TGeoCombiTrans(-0.00, -8.70, 162.87, rot));
+
+
+TGeoVolume *OFSD = gGeoManager->MakeTube("OFSD",GetMed("FSTO_ALUMINIUM"),1.105,1.4,21.065); OFSD->SetTitle("OFSD");   <<<<<<<< problem
+   FSTA->AddNode(OFSD,1,new TGeoTranslation(20.32181,29.02256,162.865));
+   FSTA->AddNode(OFSD,2,new TGeoTranslation(-20.32181,29.02256,162.865));
+   FSTA->AddNode(OFSD,3,new TGeoTranslation(-20.32181,-29.02256,162.865));
+   FSTA->AddNode(OFSD,4,new TGeoTranslation(20.32181,-29.02256,162.865));
+
+  OFSD->AddVolume(gGeoManager->MakeBox("OFSD", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.40,1.40,21.07));
+  OFSD->AddVolume(gGeoManager->MakeBox("OFSD", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.40,1.40,21.07));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFSB->GetVolume(3),4, new TGeoCombiTrans(-0.00, -8.70, 162.87, rot));
+
+TGeoVolume *OFSC = gGeoManager->MakeTube("OFSC",GetMed("FSTO_ALUMINIUM"),0,1.4,22.135); OFSC->SetTitle("OFSC");   <<<<<<<< problem
+   FSTA->AddNode(OFSC,1,new TGeoTranslation(20.32181,29.02256,206.065));
+   FSTA->AddNode(OFSC,2,new TGeoTranslation(-20.32181,29.02256,206.065));
+   FSTA->AddNode(OFSC,3,new TGeoTranslation(-20.32181,-29.02256,206.065));
+   FSTA->AddNode(OFSC,4,new TGeoTranslation(20.32181,-29.02256,206.065));
+
+  OFSC->AddVolume(gGeoManager->MakeBox("OFSC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.40,1.40,22.14));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFSC->GetVolume(0),1, new TGeoCombiTrans(-0.00, 8.70, 206.07, rot));
+
+TGeoVolume *OFCA = gGeoManager->MakeBox("OFCA",GetMed("FSTO_ALUMINIUM"),3.175,1.25,43.18); OFCA->SetTitle("OFCA"); ====== ok 
+   rot = new TGeoRotation("next",90,336,90,66,0,0);
+   FSTA->AddNode(OFCA,1,new TGeoCombiTrans(14.64,31.87,191.12,rot));
+   FSTA->AddNode(OFCA,2,new TGeoCombiTrans(34.9,-3.3,191.12,GetRot("R270")));
+   rot = new TGeoRotation("next",90,24,90,114,0,0);
+   FSTA->AddNode(OFCA,3,new TGeoCombiTrans(-14.64,31.87,191.12,rot));
+   FSTA->AddNode(OFCA,4,new TGeoCombiTrans(-34.9,-3.3,191.12,GetRot("R090")));
+
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),3.17,1.25,43.18));
+  rot = new TGeoRotation("next"); rot->RotateZ(66.00);
+  FSTA->AddNode(OFCA->GetVolume(0),1, new TGeoCombiTrans(14.26, 31.63, 191.12, rot));
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),3.17,1.25,43.18));
+  rot = new TGeoRotation("next"); rot->RotateZ(114.00);
+  FSTA->AddNode(OFCA->GetVolume(2),3, new TGeoCombiTrans(-14.26, 32.45, 191.12, rot));
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),3.17,1.25,43.18));
+  rot = new TGeoRotation("next"); rot->RotateZ(-180.00);
+  FSTA->AddNode(OFCA->GetVolume(3),4, new TGeoCombiTrans(-34.90, 3.30, 191.12, rot));
+
+TGeoVolume *OFCC = gGeoManager->MakeBox("OFCC",GetMed("FSTO_ALUMINIUM"),2.54,1.11,43.2); OFCC->SetTitle("OFCC");    <<<<<<<< problem
+   FSTA->AddNode(OFCC,1,new TGeoTranslation(3.86,34.93,191.14));
+   FSTA->AddNode(OFCC,2,new TGeoCombiTrans(3.86,-34.93,191.14,GetRot("R180")));
+   FSTA->AddNode(OFCC,3,new TGeoTranslation(-3.86,34.93,191.14));
+   FSTA->AddNode(OFCC,4,new TGeoCombiTrans(-3.86,-34.93,191.12,GetRot("R180")));
+
+  TGeoVolumeMulti *OFCC = gGeoManager->MakeVolumeMulti("OFCC", GetMed("FSTO_ALUMINIUM_Averaged")); OFCC->SetTitle("OFCC");
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),2.54,1.11,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFCC->GetVolume(0),1, new TGeoCombiTrans(-0.00, 31.07, 191.14, rot));
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),2.54,1.11,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFCC->GetVolume(0),1, new TGeoCombiTrans(-0.00, 31.07, 191.14, rot));
+//            FSTA_1/OFCC_2 xy   -0.00  -31.07	 z  191.14 R:  34.93 phi: -90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),2.54,1.11,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(-90.00);
+  FSTA->AddNode(OFCC->GetVolume(1),2, new TGeoCombiTrans(-0.00, -31.07, 191.14, rot));
+//            FSTA_1/OFCC_3 xy   -0.00   38.79	 z  191.14 R:  34.93 phi:  90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),2.54,1.11,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFCC->GetVolume(2),3, new TGeoCombiTrans(-0.00, 38.79, 191.14, rot));
+//            FSTA_1/OFCC_4 xy   -0.00  -38.79	 z  191.12 R:  34.93 phi: -90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),2.54,1.11,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(-90.00);
+  FSTA->AddNode(OFCC->GetVolume(3),4, new TGeoCombiTrans(-0.00, -38.79, 191.12, rot));
+
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),32.23,33.5,0.19845,-15,15));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,-15,-7.08451));
+ FTUO->AddVolume(gGeoManager->MakeTubs("FTUO",GetMed("FSTM_ALUMINIUM"),30,32.23,0.19845,7.08451,15));
+TGeoVolume *FSTW = gGeoManager->MakeTubs("FSTW",GetMed("FSTM_AIR"),5,33.7,2,-17,17); FSTW->SetTitle("FSTW");
+
+     FSTD->AddNode(FTUO->GetVolume(0),1,new TGeoCombiTrans(0,0,0.19845,GetRot("R015")));
+     FSTD->AddNode(FTUO->GetVolume(1),2,new TGeoCombiTrans(0,0,0.19845,GetRot("R015")));
+     FSTD->AddNode(FTUO->GetVolume(2),3,new TGeoCombiTrans(0,0,0.19845,GetRot("R015")));
+     FSTD->AddNode(FSTW,2,new TGeoCombiTrans(0,0,-2,GetRot("075T")));
+     FSTD->AddNode(FTUO->GetVolume(3),4,new TGeoCombiTrans(0,0,0.19845,GetRot("R075")));
+     FSTD->AddNode(FTUO->GetVolume(4),5,new TGeoCombiTrans(0,0,0.19845,GetRot("R075")));
+     FSTD->AddNode(FTUO->GetVolume(5),6,new TGeoCombiTrans(0,0,0.19845,GetRot("R075")));
+     FSTD->AddNode(FSTW,3,new TGeoCombiTrans(0,0,-2,GetRot("135T")));
+     FSTD->AddNode(FTUO->GetVolume(6),7,new TGeoCombiTrans(0,0,0.19845,GetRot("R135")));
+     FSTD->AddNode(FTUO->GetVolume(7),8,new TGeoCombiTrans(0,0,0.19845,GetRot("R135")));
+     FSTD->AddNode(FTUO->GetVolume(8),9,new TGeoCombiTrans(0,0,0.19845,GetRot("R135")));
+     FSTD->AddNode(FSTW,4,new TGeoCombiTrans(0,0,-2,GetRot("195T")));
+     FSTD->AddNode(FTUO->GetVolume(9),10,new TGeoCombiTrans(0,0,0.19845,GetRot("R195")));
+     FSTD->AddNode(FTUO->GetVolume(10),11,new TGeoCombiTrans(0,0,0.19845,GetRot("R195")));
+     FSTD->AddNode(FTUO->GetVolume(11),12,new TGeoCombiTrans(0,0,0.19845,GetRot("R195")));
+     FSTD->AddNode(FSTW,5,new TGeoCombiTrans(0,0,-2,GetRot("255T")));
+     FSTD->AddNode(FTUO->GetVolume(12),13,new TGeoCombiTrans(0,0,0.19845,GetRot("R255")));
+     FSTD->AddNode(FTUO->GetVolume(13),14,new TGeoCombiTrans(0,0,0.19845,GetRot("R255")));
+     FSTD->AddNode(FTUO->GetVolume(14),15,new TGeoCombiTrans(0,0,0.19845,GetRot("R255")));
+     FSTD->AddNode(FSTW,6,new TGeoCombiTrans(0,0,-2,GetRot("315T")));
+     FSTD->AddNode(FTUO->GetVolume(15),16,new TGeoCombiTrans(0,0,0.19845,GetRot("R315")));
+     FSTD->AddNode(FTUO->GetVolume(16),17,new TGeoCombiTrans(0,0,0.19845,GetRot("R315")));
+     FSTD->AddNode(FTUO->GetVolume(17),18,new TGeoCombiTrans(0,0,0.19845,GetRot("R315")));
+     FSTD->AddNode(FTUO->GetVolume(18),19,new TGeoCombiTrans(0,0,-0.19845,GetRot("R045")));
+     FSTD->AddNode(FTUO->GetVolume(19),20,new TGeoCombiTrans(0,0,-0.19845,GetRot("R045")));
+     FSTD->AddNode(FTUO->GetVolume(20),21,new TGeoCombiTrans(0,0,-0.19845,GetRot("R045")));
+     FSTD->AddNode(FSTW,7,new TGeoCombiTrans(0,0,2,GetRot("R045")));
+     FSTD->AddNode(FTUO->GetVolume(21),22,new TGeoCombiTrans(0,0,-0.19845,GetRot("R105")));
+     FSTD->AddNode(FTUO->GetVolume(22),23,new TGeoCombiTrans(0,0,-0.19845,GetRot("R105")));
+     FSTD->AddNode(FTUO->GetVolume(23),24,new TGeoCombiTrans(0,0,-0.19845,GetRot("R105")));
+     FSTD->AddNode(FSTW,8,new TGeoCombiTrans(0,0,2,GetRot("R105")));
+     FSTD->AddNode(FTUO->GetVolume(24),25,new TGeoCombiTrans(0,0,-0.19845,GetRot("R165")));
+     FSTD->AddNode(FTUO->GetVolume(25),26,new TGeoCombiTrans(0,0,-0.19845,GetRot("R165")));
+     FSTD->AddNode(FTUO->GetVolume(26),27,new TGeoCombiTrans(0,0,-0.19845,GetRot("R165")));
+     FSTD->AddNode(FSTW,9,new TGeoCombiTrans(0,0,2,GetRot("R165")));
+     FSTD->AddNode(FTUO->GetVolume(27),28,new TGeoCombiTrans(0,0,-0.19845,GetRot("R225")));
+     FSTD->AddNode(FTUO->GetVolume(28),29,new TGeoCombiTrans(0,0,-0.19845,GetRot("R225")));
+     FSTD->AddNode(FTUO->GetVolume(29),30,new TGeoCombiTrans(0,0,-0.19845,GetRot("R225")));
+     FSTD->AddNode(FSTW,10,new TGeoCombiTrans(0,0,2,GetRot("R225")));
+     FSTD->AddNode(FTUO->GetVolume(30),31,new TGeoCombiTrans(0,0,-0.19845,GetRot("R285")));
+     FSTD->AddNode(FTUO->GetVolume(31),32,new TGeoCombiTrans(0,0,-0.19845,GetRot("R285")));
+     FSTD->AddNode(FTUO->GetVolume(32),33,new TGeoCombiTrans(0,0,-0.19845,GetRot("R285")));
+     FSTD->AddNode(FSTW,11,new TGeoCombiTrans(0,0,2,GetRot("R285")));
+     FSTD->AddNode(FTUO->GetVolume(33),34,new TGeoCombiTrans(0,0,-0.19845,GetRot("R345")));
+     FSTD->AddNode(FTUO->GetVolume(34),35,new TGeoCombiTrans(0,0,-0.19845,GetRot("R345")));
+     FSTD->AddNode(FTUO->GetVolume(35),36,new TGeoCombiTrans(0,0,-0.19845,GetRot("R345")));
+     FSTD->AddNode(FSTW,12,new TGeoCombiTrans(0,0,2,GetRot("R345")));
+
+
+  TGeoVolumeMulti *FTUO = gGeoManager->MakeVolumeMulti("FTUO", GetMed("FSTM_ALUMINIUM")); FTUO->SetTitle("FTUO");
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(15.00);
+  FSTA->AddNode(FTUO->GetVolume(0),1, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_2 xy    0.00    0.00	 z  151.95 R:  31.11 phi:   4.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(3.96);
+  FSTA->AddNode(FTUO->GetVolume(1),2, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_3 xy    0.00    0.00	 z  151.95 R:  31.11 phi:  26.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(26.04);
+  FSTA->AddNode(FTUO->GetVolume(2),3, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_4 xy    0.00    0.00	 z  151.95 R:  32.87 phi:  75.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(75.00);
+  FSTA->AddNode(FTUO->GetVolume(3),4, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_5 xy    0.00    0.00	 z  151.95 R:  31.11 phi:  64.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(63.96);
+  FSTA->AddNode(FTUO->GetVolume(4),5, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_6 xy    0.00    0.00	 z  151.95 R:  31.11 phi:  86.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(86.04);
+  FSTA->AddNode(FTUO->GetVolume(5),6, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_7 xy    0.00    0.00	 z  151.95 R:  32.87 phi: 135.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(135.00);
+  FSTA->AddNode(FTUO->GetVolume(6),7, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_8 xy    0.00    0.00	 z  151.95 R:  31.11 phi: 124.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(123.96);
+  FSTA->AddNode(FTUO->GetVolume(7),8, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_9 xy    0.00    0.00	 z  151.95 R:  31.11 phi: 146.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(146.04);
+  FSTA->AddNode(FTUO->GetVolume(8),9, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_10 xy    0.00    0.00	 z  151.95 R:  32.87 phi:-165.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-165.00);
+  FSTA->AddNode(FTUO->GetVolume(9),10, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_11 xy    0.00    0.00	 z  151.95 R:  31.11 phi:-176.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-176.04);
+  FSTA->AddNode(FTUO->GetVolume(10),11, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_12 xy    0.00    0.00	 z  151.95 R:  31.11 phi:-154.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-153.96);
+  FSTA->AddNode(FTUO->GetVolume(11),12, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_13 xy    0.00    0.00	 z  151.95 R:  32.87 phi:-105.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-105.00);
+  FSTA->AddNode(FTUO->GetVolume(12),13, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_14 xy    0.00    0.00	 z  151.95 R:  31.11 phi:-116.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-116.04);
+  FSTA->AddNode(FTUO->GetVolume(13),14, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_15 xy    0.00    0.00	 z  151.95 R:  31.11 phi: -94.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-93.96);
+  FSTA->AddNode(FTUO->GetVolume(14),15, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_16 xy    0.00    0.00	 z  151.95 R:  32.87 phi: -45.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-45.00);
+  FSTA->AddNode(FTUO->GetVolume(15),16, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_17 xy    0.00    0.00	 z  151.95 R:  31.11 phi: -56.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-56.04);
+  FSTA->AddNode(FTUO->GetVolume(16),17, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_18 xy    0.00    0.00	 z  151.95 R:  31.11 phi: -34.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-33.96);
+  FSTA->AddNode(FTUO->GetVolume(17),18, new TGeoCombiTrans(0.00, 0.00, 151.95, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_19 xy    0.00    0.00	 z  151.55 R:  32.87 phi:  45.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(45.00);
+  FSTA->AddNode(FTUO->GetVolume(18),19, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_20 xy    0.00    0.00	 z  151.55 R:  31.11 phi:  34.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(33.96);
+  FSTA->AddNode(FTUO->GetVolume(19),20, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_21 xy    0.00    0.00	 z  151.55 R:  31.11 phi:  56.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(56.04);
+  FSTA->AddNode(FTUO->GetVolume(20),21, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_22 xy    0.00    0.00	 z  151.55 R:  32.87 phi: 105.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(105.00);
+  FSTA->AddNode(FTUO->GetVolume(21),22, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_23 xy    0.00    0.00	 z  151.55 R:  31.11 phi:  94.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(93.96);
+  FSTA->AddNode(FTUO->GetVolume(22),23, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_24 xy    0.00    0.00	 z  151.55 R:  31.11 phi: 116.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(116.04);
+  FSTA->AddNode(FTUO->GetVolume(23),24, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_25 xy    0.00    0.00	 z  151.55 R:  32.87 phi: 165.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(165.00);
+  FSTA->AddNode(FTUO->GetVolume(24),25, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_26 xy    0.00    0.00	 z  151.55 R:  31.11 phi: 154.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(153.96);
+  FSTA->AddNode(FTUO->GetVolume(25),26, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_27 xy    0.00    0.00	 z  151.55 R:  31.11 phi: 176.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(176.04);
+  FSTA->AddNode(FTUO->GetVolume(26),27, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_28 xy    0.00    0.00	 z  151.55 R:  32.87 phi:-135.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-135.00);
+  FSTA->AddNode(FTUO->GetVolume(27),28, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_29 xy    0.00    0.00	 z  151.55 R:  31.11 phi:-146.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-146.04);
+  FSTA->AddNode(FTUO->GetVolume(28),29, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_30 xy    0.00    0.00	 z  151.55 R:  31.11 phi:-124.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-123.96);
+  FSTA->AddNode(FTUO->GetVolume(29),30, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_31 xy    0.00    0.00	 z  151.55 R:  32.87 phi: -75.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-75.00);
+  FSTA->AddNode(FTUO->GetVolume(30),31, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_32 xy    0.00    0.00	 z  151.55 R:  31.11 phi: -86.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-86.04);
+  FSTA->AddNode(FTUO->GetVolume(31),32, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_33 xy    0.00    0.00	 z  151.55 R:  31.11 phi: -64.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-63.96);
+  FSTA->AddNode(FTUO->GetVolume(32),33, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_34 xy    0.00    0.00	 z  151.55 R:  32.87 phi: -15.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-15.00);
+  FSTA->AddNode(FTUO->GetVolume(33),34, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_35 xy    0.00    0.00	 z  151.55 R:  31.11 phi: -26.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-26.04);
+  FSTA->AddNode(FTUO->GetVolume(34),35, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_4/FTUO_36 xy    0.00    0.00	 z  151.55 R:  31.11 phi:  -4.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-3.96);
+  FSTA->AddNode(FTUO->GetVolume(35),36, new TGeoCombiTrans(0.00, 0.00, 151.55, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_1 xy    0.00    0.00	 z  165.45 R:  32.87 phi:  45.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(45.00);
+  FSTA->AddNode(FTUO->GetVolume(36),37, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_2 xy    0.00    0.00	 z  165.45 R:  31.11 phi:  34.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(33.96);
+  FSTA->AddNode(FTUO->GetVolume(37),38, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_3 xy    0.00    0.00	 z  165.45 R:  31.11 phi:  56.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(56.04);
+  FSTA->AddNode(FTUO->GetVolume(38),39, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_4 xy    0.00    0.00	 z  165.45 R:  32.87 phi: 105.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(105.00);
+  FSTA->AddNode(FTUO->GetVolume(39),40, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_5 xy    0.00    0.00	 z  165.45 R:  31.11 phi:  94.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(93.96);
+  FSTA->AddNode(FTUO->GetVolume(40),41, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_6 xy    0.00    0.00	 z  165.45 R:  31.11 phi: 116.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(116.04);
+  FSTA->AddNode(FTUO->GetVolume(41),42, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_7 xy    0.00    0.00	 z  165.45 R:  32.87 phi: 165.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(165.00);
+  FSTA->AddNode(FTUO->GetVolume(42),43, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_8 xy    0.00    0.00	 z  165.45 R:  31.11 phi: 154.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(153.96);
+  FSTA->AddNode(FTUO->GetVolume(43),44, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_9 xy    0.00    0.00	 z  165.45 R:  31.11 phi: 176.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(176.04);
+  FSTA->AddNode(FTUO->GetVolume(44),45, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_10 xy    0.00    0.00	 z  165.45 R:  32.87 phi:-135.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-135.00);
+  FSTA->AddNode(FTUO->GetVolume(45),46, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_11 xy    0.00    0.00	 z  165.45 R:  31.11 phi:-146.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-146.04);
+  FSTA->AddNode(FTUO->GetVolume(46),47, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_12 xy    0.00    0.00	 z  165.45 R:  31.11 phi:-124.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-123.96);
+  FSTA->AddNode(FTUO->GetVolume(47),48, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_13 xy    0.00    0.00	 z  165.45 R:  32.87 phi: -75.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-75.00);
+  FSTA->AddNode(FTUO->GetVolume(48),49, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_14 xy    0.00    0.00	 z  165.45 R:  31.11 phi: -86.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-86.04);
+  FSTA->AddNode(FTUO->GetVolume(49),50, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_15 xy    0.00    0.00	 z  165.45 R:  31.11 phi: -64.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-63.96);
+  FSTA->AddNode(FTUO->GetVolume(50),51, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_16 xy    0.00    0.00	 z  165.45 R:  32.87 phi: -15.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-15.00);
+  FSTA->AddNode(FTUO->GetVolume(51),52, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_17 xy    0.00    0.00	 z  165.45 R:  31.11 phi: -26.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-26.04);
+  FSTA->AddNode(FTUO->GetVolume(52),53, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_18 xy    0.00    0.00	 z  165.45 R:  31.11 phi:  -4.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-3.96);
+  FSTA->AddNode(FTUO->GetVolume(53),54, new TGeoCombiTrans(0.00, 0.00, 165.45, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_19 xy    0.00    0.00	 z  165.05 R:  32.87 phi:  75.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(75.00);
+  FSTA->AddNode(FTUO->GetVolume(54),55, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_20 xy    0.00    0.00	 z  165.05 R:  31.11 phi:  64.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(63.96);
+  FSTA->AddNode(FTUO->GetVolume(55),56, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_21 xy    0.00    0.00	 z  165.05 R:  31.11 phi:  86.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(86.04);
+  FSTA->AddNode(FTUO->GetVolume(56),57, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_22 xy    0.00    0.00	 z  165.05 R:  32.87 phi: 135.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(135.00);
+  FSTA->AddNode(FTUO->GetVolume(57),58, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_23 xy    0.00    0.00	 z  165.05 R:  31.11 phi: 124.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(123.96);
+  FSTA->AddNode(FTUO->GetVolume(58),59, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_24 xy    0.00    0.00	 z  165.05 R:  31.11 phi: 146.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(146.04);
+  FSTA->AddNode(FTUO->GetVolume(59),60, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_25 xy    0.00    0.00	 z  165.05 R:  32.87 phi:-165.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-165.00);
+  FSTA->AddNode(FTUO->GetVolume(60),61, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_26 xy    0.00    0.00	 z  165.05 R:  31.11 phi:-176.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-176.04);
+  FSTA->AddNode(FTUO->GetVolume(61),62, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_27 xy    0.00    0.00	 z  165.05 R:  31.11 phi:-154.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-153.96);
+  FSTA->AddNode(FTUO->GetVolume(62),63, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_28 xy    0.00    0.00	 z  165.05 R:  32.87 phi:-105.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-105.00);
+  FSTA->AddNode(FTUO->GetVolume(63),64, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_29 xy    0.00    0.00	 z  165.05 R:  31.11 phi:-116.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-116.04);
+  FSTA->AddNode(FTUO->GetVolume(64),65, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_30 xy    0.00    0.00	 z  165.05 R:  31.11 phi: -94.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-93.96);
+  FSTA->AddNode(FTUO->GetVolume(65),66, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_31 xy    0.00    0.00	 z  165.05 R:  32.87 phi: -45.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-45.00);
+  FSTA->AddNode(FTUO->GetVolume(66),67, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_32 xy    0.00    0.00	 z  165.05 R:  31.11 phi: -56.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-56.04);
+  FSTA->AddNode(FTUO->GetVolume(67),68, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_33 xy    0.00    0.00	 z  165.05 R:  31.11 phi: -34.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-33.96);
+  FSTA->AddNode(FTUO->GetVolume(68),69, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_34 xy    0.00    0.00	 z  165.05 R:  32.87 phi:  15.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(15.00);
+  FSTA->AddNode(FTUO->GetVolume(69),70, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_35 xy    0.00    0.00	 z  165.05 R:  31.11 phi:   4.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(3.96);
+  FSTA->AddNode(FTUO->GetVolume(70),71, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_5/FTUO_36 xy    0.00    0.00	 z  165.05 R:  31.11 phi:  26.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(26.04);
+  FSTA->AddNode(FTUO->GetVolume(71),72, new TGeoCombiTrans(0.00, 0.00, 165.05, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_1 xy    0.00    0.00	 z  178.98 R:  32.87 phi:  15.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(15.00);
+  FSTA->AddNode(FTUO->GetVolume(72),73, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_2 xy    0.00    0.00	 z  178.98 R:  31.11 phi:   4.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(3.96);
+  FSTA->AddNode(FTUO->GetVolume(73),74, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_3 xy    0.00    0.00	 z  178.98 R:  31.11 phi:  26.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(26.04);
+  FSTA->AddNode(FTUO->GetVolume(74),75, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_4 xy    0.00    0.00	 z  178.98 R:  32.87 phi:  75.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(75.00);
+  FSTA->AddNode(FTUO->GetVolume(75),76, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_5 xy    0.00    0.00	 z  178.98 R:  31.11 phi:  64.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(63.96);
+  FSTA->AddNode(FTUO->GetVolume(76),77, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_6 xy    0.00    0.00	 z  178.98 R:  31.11 phi:  86.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(86.04);
+  FSTA->AddNode(FTUO->GetVolume(77),78, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_7 xy    0.00    0.00	 z  178.98 R:  32.87 phi: 135.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(135.00);
+  FSTA->AddNode(FTUO->GetVolume(78),79, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_8 xy    0.00    0.00	 z  178.98 R:  31.11 phi: 124.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(123.96);
+  FSTA->AddNode(FTUO->GetVolume(79),80, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_9 xy    0.00    0.00	 z  178.98 R:  31.11 phi: 146.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(146.04);
+  FSTA->AddNode(FTUO->GetVolume(80),81, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_10 xy    0.00    0.00	 z  178.98 R:  32.87 phi:-165.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-165.00);
+  FSTA->AddNode(FTUO->GetVolume(81),82, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_11 xy    0.00    0.00	 z  178.98 R:  31.11 phi:-176.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-176.04);
+  FSTA->AddNode(FTUO->GetVolume(82),83, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_12 xy    0.00    0.00	 z  178.98 R:  31.11 phi:-154.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-153.96);
+  FSTA->AddNode(FTUO->GetVolume(83),84, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_13 xy    0.00    0.00	 z  178.98 R:  32.87 phi:-105.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-105.00);
+  FSTA->AddNode(FTUO->GetVolume(84),85, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_14 xy    0.00    0.00	 z  178.98 R:  31.11 phi:-116.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-116.04);
+  FSTA->AddNode(FTUO->GetVolume(85),86, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_15 xy    0.00    0.00	 z  178.98 R:  31.11 phi: -94.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-93.96);
+  FSTA->AddNode(FTUO->GetVolume(86),87, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_16 xy    0.00    0.00	 z  178.98 R:  32.87 phi: -45.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-45.00);
+  FSTA->AddNode(FTUO->GetVolume(87),88, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_17 xy    0.00    0.00	 z  178.98 R:  31.11 phi: -56.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-56.04);
+  FSTA->AddNode(FTUO->GetVolume(88),89, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_18 xy    0.00    0.00	 z  178.98 R:  31.11 phi: -34.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-33.96);
+  FSTA->AddNode(FTUO->GetVolume(89),90, new TGeoCombiTrans(0.00, 0.00, 178.98, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_19 xy    0.00    0.00	 z  178.58 R:  32.87 phi:  45.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(45.00);
+  FSTA->AddNode(FTUO->GetVolume(90),91, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_20 xy    0.00    0.00	 z  178.58 R:  31.11 phi:  34.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(33.96);
+  FSTA->AddNode(FTUO->GetVolume(91),92, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_21 xy    0.00    0.00	 z  178.58 R:  31.11 phi:  56.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(56.04);
+  FSTA->AddNode(FTUO->GetVolume(92),93, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_22 xy    0.00    0.00	 z  178.58 R:  32.87 phi: 105.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(105.00);
+  FSTA->AddNode(FTUO->GetVolume(93),94, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_23 xy    0.00    0.00	 z  178.58 R:  31.11 phi:  94.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(93.96);
+  FSTA->AddNode(FTUO->GetVolume(94),95, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_24 xy    0.00    0.00	 z  178.58 R:  31.11 phi: 116.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(116.04);
+  FSTA->AddNode(FTUO->GetVolume(95),96, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_25 xy    0.00    0.00	 z  178.58 R:  32.87 phi: 165.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(165.00);
+  FSTA->AddNode(FTUO->GetVolume(96),97, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_26 xy    0.00    0.00	 z  178.58 R:  31.11 phi: 154.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(153.96);
+  FSTA->AddNode(FTUO->GetVolume(97),98, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_27 xy    0.00    0.00	 z  178.58 R:  31.11 phi: 176.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(176.04);
+  FSTA->AddNode(FTUO->GetVolume(98),99, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_28 xy    0.00    0.00	 z  178.58 R:  32.87 phi:-135.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-135.00);
+  FSTA->AddNode(FTUO->GetVolume(99),100, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_29 xy    0.00    0.00	 z  178.58 R:  31.11 phi:-146.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-146.04);
+  FSTA->AddNode(FTUO->GetVolume(100),101, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_30 xy    0.00    0.00	 z  178.58 R:  31.11 phi:-124.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-123.96);
+  FSTA->AddNode(FTUO->GetVolume(101),102, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_31 xy    0.00    0.00	 z  178.58 R:  32.87 phi: -75.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-75.00);
+  FSTA->AddNode(FTUO->GetVolume(102),103, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_32 xy    0.00    0.00	 z  178.58 R:  31.11 phi: -86.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-86.04);
+  FSTA->AddNode(FTUO->GetVolume(103),104, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_33 xy    0.00    0.00	 z  178.58 R:  31.11 phi: -64.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-63.96);
+  FSTA->AddNode(FTUO->GetVolume(104),105, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_34 xy    0.00    0.00	 z  178.58 R:  32.87 phi: -15.0	 rO: 33.50 dR: 1.27 dPhi: 30.00 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),32.23,33.50,0.20,-15.00,15.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-15.00);
+  FSTA->AddNode(FTUO->GetVolume(105),106, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_35 xy    0.00    0.00	 z  178.58 R:  31.11 phi: -26.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-26.04);
+  FSTA->AddNode(FTUO->GetVolume(106),107, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_6/FTUO_36 xy    0.00    0.00	 z  178.58 R:  31.11 phi:  -4.0	 rO: 32.23 dR: 2.23 dPhi: 7.92 dZ: 0.20	Mat:FSTM_ALUMINIUM :2.70 g/cm^3 X0:8.88 Z: 13.00 A: 26.98	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FTUO->AddVolume(gGeoManager->MakeTubs("FTUO", gGeoManager->GetMedium("FSTM_ALUMINIUM"),30.00,32.23,0.20,-3.96,3.96));
+  rot = new TGeoRotation("next"); rot->RotateZ(-3.96);
+  FSTA->AddNode(FTUO->GetVolume(107),108, new TGeoCombiTrans(0.00, 0.00, 178.58, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_1 xy    0.00    0.00	 z  149.75 R:  19.35 phi:  15.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  med = gGeoManager->GetMedium("FSTM_AIR_Averaged");
+  if (! med) {
+    imat = gGeoManager->GetListOfMaterials()->GetEntries();
+    imed = gGeoManager->GetListOfMedia()->GetEntries();
+     mat = new TGeoMaterial("FSTM_AIR_Averaged",22.88,11.04,0.18,155.87); mat->SetUniqueID(imat);
+     med = new TGeoMedium("FSTM_AIR_Averaged",0, imat,0,0,20,20,10,0.2488534,0.1000000E-01,1.15055); med->SetUniqueID(imed);
+  }
+  TGeoVolumeMulti *FSTW = gGeoManager->MakeVolumeMulti("FSTW", GetMed("FSTM_AIR_Averaged")); FSTW->SetTitle("FSTW");
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(15.00);
+  FSTA->AddNode(FSTW->GetVolume(0),1, new TGeoCombiTrans(0.00, 0.00, 149.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_2 xy    0.00    0.00	 z  149.75 R:  19.35 phi:  75.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(75.00);
+  FSTA->AddNode(FSTW->GetVolume(1),2, new TGeoCombiTrans(0.00, 0.00, 149.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_3 xy    0.00    0.00	 z  149.75 R:  19.35 phi: 135.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(135.00);
+  FSTA->AddNode(FSTW->GetVolume(2),3, new TGeoCombiTrans(0.00, 0.00, 149.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_4 xy    0.00    0.00	 z  149.75 R:  19.35 phi:-165.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-165.00);
+  FSTA->AddNode(FSTW->GetVolume(3),4, new TGeoCombiTrans(0.00, 0.00, 149.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_5 xy    0.00    0.00	 z  149.75 R:  19.35 phi:-105.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-105.00);
+  FSTA->AddNode(FSTW->GetVolume(4),5, new TGeoCombiTrans(0.00, 0.00, 149.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_6 xy    0.00    0.00	 z  149.75 R:  19.35 phi: -45.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-45.00);
+  FSTA->AddNode(FSTW->GetVolume(5),6, new TGeoCombiTrans(0.00, 0.00, 149.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_7 xy    0.00    0.00	 z  153.75 R:  19.35 phi:  45.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(45.00);
+  FSTA->AddNode(FSTW->GetVolume(6),7, new TGeoCombiTrans(0.00, 0.00, 153.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_8 xy    0.00    0.00	 z  153.75 R:  19.35 phi: 105.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(105.00);
+  FSTA->AddNode(FSTW->GetVolume(7),8, new TGeoCombiTrans(0.00, 0.00, 153.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_9 xy    0.00    0.00	 z  153.75 R:  19.35 phi: 165.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(165.00);
+  FSTA->AddNode(FSTW->GetVolume(8),9, new TGeoCombiTrans(0.00, 0.00, 153.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_10 xy    0.00    0.00	 z  153.75 R:  19.35 phi:-135.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-135.00);
+  FSTA->AddNode(FSTW->GetVolume(9),10, new TGeoCombiTrans(0.00, 0.00, 153.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_11 xy    0.00    0.00	 z  153.75 R:  19.35 phi: -75.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-75.00);
+  FSTA->AddNode(FSTW->GetVolume(10),11, new TGeoCombiTrans(0.00, 0.00, 153.75, rot));
+//FSTA_1/FSTM_1/FSTD_4/FSTW_12 xy    0.00    0.00	 z  153.75 R:  19.35 phi: -15.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-15.00);
+  FSTA->AddNode(FSTW->GetVolume(11),12, new TGeoCombiTrans(0.00, 0.00, 153.75, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_1 xy    0.00    0.00	 z  163.25 R:  19.35 phi:  45.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(45.00);
+  FSTA->AddNode(FSTW->GetVolume(12),13, new TGeoCombiTrans(0.00, 0.00, 163.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_2 xy    0.00    0.00	 z  163.25 R:  19.35 phi: 105.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(105.00);
+  FSTA->AddNode(FSTW->GetVolume(13),14, new TGeoCombiTrans(0.00, 0.00, 163.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_3 xy    0.00    0.00	 z  163.25 R:  19.35 phi: 165.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(165.00);
+  FSTA->AddNode(FSTW->GetVolume(14),15, new TGeoCombiTrans(0.00, 0.00, 163.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_4 xy    0.00    0.00	 z  163.25 R:  19.35 phi:-135.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-135.00);
+  FSTA->AddNode(FSTW->GetVolume(15),16, new TGeoCombiTrans(0.00, 0.00, 163.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_5 xy    0.00    0.00	 z  163.25 R:  19.35 phi: -75.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-75.00);
+  FSTA->AddNode(FSTW->GetVolume(16),17, new TGeoCombiTrans(0.00, 0.00, 163.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_6 xy    0.00    0.00	 z  163.25 R:  19.35 phi: -15.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-15.00);
+  FSTA->AddNode(FSTW->GetVolume(17),18, new TGeoCombiTrans(0.00, 0.00, 163.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_7 xy    0.00    0.00	 z  167.25 R:  19.35 phi:  75.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(75.00);
+  FSTA->AddNode(FSTW->GetVolume(18),19, new TGeoCombiTrans(0.00, 0.00, 167.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_8 xy    0.00    0.00	 z  167.25 R:  19.35 phi: 135.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(135.00);
+  FSTA->AddNode(FSTW->GetVolume(19),20, new TGeoCombiTrans(0.00, 0.00, 167.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_9 xy    0.00    0.00	 z  167.25 R:  19.35 phi:-165.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-165.00);
+  FSTA->AddNode(FSTW->GetVolume(20),21, new TGeoCombiTrans(0.00, 0.00, 167.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_10 xy    0.00    0.00	 z  167.25 R:  19.35 phi:-105.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-105.00);
+  FSTA->AddNode(FSTW->GetVolume(21),22, new TGeoCombiTrans(0.00, 0.00, 167.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_11 xy    0.00    0.00	 z  167.25 R:  19.35 phi: -45.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-45.00);
+  FSTA->AddNode(FSTW->GetVolume(22),23, new TGeoCombiTrans(0.00, 0.00, 167.25, rot));
+//FSTA_1/FSTM_1/FSTD_5/FSTW_12 xy    0.00    0.00	 z  167.25 R:  19.35 phi:  15.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(15.00);
+  FSTA->AddNode(FSTW->GetVolume(23),24, new TGeoCombiTrans(0.00, 0.00, 167.25, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_1 xy    0.00    0.00	 z  176.78 R:  19.35 phi:  15.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(15.00);
+  FSTA->AddNode(FSTW->GetVolume(24),25, new TGeoCombiTrans(0.00, 0.00, 176.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_2 xy    0.00    0.00	 z  176.78 R:  19.35 phi:  75.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(75.00);
+  FSTA->AddNode(FSTW->GetVolume(25),26, new TGeoCombiTrans(0.00, 0.00, 176.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_3 xy    0.00    0.00	 z  176.78 R:  19.35 phi: 135.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(135.00);
+  FSTA->AddNode(FSTW->GetVolume(26),27, new TGeoCombiTrans(0.00, 0.00, 176.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_4 xy    0.00    0.00	 z  176.78 R:  19.35 phi:-165.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-165.00);
+  FSTA->AddNode(FSTW->GetVolume(27),28, new TGeoCombiTrans(0.00, 0.00, 176.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_5 xy    0.00    0.00	 z  176.78 R:  19.35 phi:-105.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-105.00);
+  FSTA->AddNode(FSTW->GetVolume(28),29, new TGeoCombiTrans(0.00, 0.00, 176.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_6 xy    0.00    0.00	 z  176.78 R:  19.35 phi: -45.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-45.00);
+  FSTA->AddNode(FSTW->GetVolume(29),30, new TGeoCombiTrans(0.00, 0.00, 176.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_7 xy    0.00    0.00	 z  180.78 R:  19.35 phi:  45.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(45.00);
+  FSTA->AddNode(FSTW->GetVolume(30),31, new TGeoCombiTrans(0.00, 0.00, 180.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_8 xy    0.00    0.00	 z  180.78 R:  19.35 phi: 105.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(105.00);
+  FSTA->AddNode(FSTW->GetVolume(31),32, new TGeoCombiTrans(0.00, 0.00, 180.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_9 xy    0.00    0.00	 z  180.78 R:  19.35 phi: 165.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(165.00);
+  FSTA->AddNode(FSTW->GetVolume(32),33, new TGeoCombiTrans(0.00, 0.00, 180.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_10 xy    0.00    0.00	 z  180.78 R:  19.35 phi:-135.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-135.00);
+  FSTA->AddNode(FSTW->GetVolume(33),34, new TGeoCombiTrans(0.00, 0.00, 180.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_11 xy    0.00    0.00	 z  180.78 R:  19.35 phi: -75.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-75.00);
+  FSTA->AddNode(FSTW->GetVolume(34),35, new TGeoCombiTrans(0.00, 0.00, 180.78, rot));
+//FSTA_1/FSTM_1/FSTD_6/FSTW_12 xy    0.00    0.00	 z  180.78 R:  19.35 phi: -15.0	 rO: 33.70 dR: 28.70 dPhi: 34.00 dZ: 2.00	Mat:FSTM_AIR_Averaged :0.18 g/cm^3 X0:155.87 Z: 11.04 A: 22.88	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  FSTW->AddVolume(gGeoManager->MakeTubs("FSTW", gGeoManager->GetMedium("FSTM_AIR_Averaged"),5.00,33.70,2.00,-17.00,17.00));
+  rot = new TGeoRotation("next"); rot->RotateZ(-15.00);
+  FSTA->AddNode(FSTW->GetVolume(35),36, new TGeoCombiTrans(0.00, 0.00, 180.78, rot));
+
+--------------------------------------------------------------------------------
+Breakpoint 6, StiVMCToolKit::LoopOverNodes (this=0x10ac8a00, nodeT=0xf1a2800, pathT=0xf1c43f0 "HALL_1/CAVE_1/FSTA_1/OFSB_1", name=0x7fffdd6201f6 "OFSB", callback=0x7fffdd54da71 <StiDetectorBuilder::MakeAverageVolume(TGeoPhysicalNode*)>)
+    at .al96_x8664_gcc11/obj/StRoot/Sti/StiVMCToolKit.cxx:445
+(gdb) p master
+$4 = {20.321809999999999, 29.022559999999999, 162.86500000000001}
+
+ ((StiMaker *) chain->Maker("Sti"))->PrintDetectors("TGeo");
+
+
+StiMassFitMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.458+- 12.8, sy 0.516, x =   58.73 z =   73.36 chi2 =   0.33  3.68 cm( 0.03%) -92.6 keV  0.561 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.454+-  4.8, sy 0.272, x =   57.21 z =   76.27  3.68 cm( 0.03%) -92.5 keV  0.561 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.454+-  4.8, sy 0.286, x =   55.61 z =   79.70  3.79 cm( 0.03%) -95.4 keV  0.561 GeV
+StiMassFitMaker:INFO  -                                /TIFC_1_2  dE pT  0.459+-  4.9, sy 0.367, x =   47.28 z =   97.76    20 cm( 2.00%) -10.2 MeV  0.561 GeV
+StiMassFitMaker:INFO  -                       SCOM_1/SCON_1_2_28  dE pT  0.465+-  5.0, sy 0.534, x =   34.13 z =  125.53  30.7 cm( 2.52%) -14.1 MeV  0.572 GeV
+StiMassFitMaker:INFO  -           FSTA_1/FSTM_1/FSTD_4/FSTW_1_12  dE pT  0.469+-  5.0, sy 0.716, x =   22.93 z =  149.16  26.1 cm( 1.59%) -9.37 MeV  0.586 GeV
+StiMassFitMaker:INFO  -          FSTA_1/FSTM_1/FSTD_4/FSTW_12_11  dE pT  0.473+-  5.1, sy 0.742, x =   21.50 z =  152.18  3.35 cm( 2.15%) -10.2 MeV  0.595 GeV
+StiMassFitMaker:INFO  -          FSTA_1/FSTM_1/FSTD_4/FSTW_12_10  dE pT  0.478+-  5.2, sy 0.768, x =   20.06 z =  155.21  3.35 cm( 2.15%) -10.1 MeV  0.606 GeV
+StiMassFitMaker:INFO  -            FSTA_1/FSTM_1/FSTD_5/FSTW_6_8  dE pT  0.482+-  5.2, sy 0.824, x =   17.19 z =  161.26   6.7 cm( 2.16%)   -10 MeV  0.616 GeV
+StiMassFitMaker:INFO  -            FSTA_1/FSTM_1/FSTD_5/FSTW_6_7  dE pT  0.486+-  5.3, sy 0.853, x =   15.75 z =  164.29  3.35 cm( 2.15%) -9.85 MeV  0.626 GeV
+StiMassFitMaker:INFO  -           FSTA_1/FSTM_1/FSTD_5/FSTW_12_6  dE pT  0.490+-  5.3, sy 0.884, x =   14.32 z =  167.31  3.35 cm( 2.15%) -9.75 MeV  0.636 GeV
+StiMassFitMaker:INFO  -            FSTA_1/FSTM_1/FSTD_6/FSTW_1_3  dE pT  0.494+-  5.4, sy 0.981, x =   10.01 z =  176.39    10 cm( 2.17%) -9.79 MeV  0.646 GeV
+StiMassFitMaker:INFO  -           FSTA_1/FSTM_1/FSTD_6/FSTW_12_2  dE pT  0.498+-  5.4, sy 1.016, x =    8.57 z =  179.41  3.35 cm( 2.15%) -9.55 MeV  0.656 GeV
+StiMassFitMaker:INFO  -           FSTA_1/FSTM_1/FSTD_6/FSTW_12_1  dE pT  0.502+-  5.5, sy 1.052, x =    7.13 z =  182.44  3.35 cm( 2.15%) -9.46 MeV  0.666 GeV
+StiMassFitMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.506+-  5.5, sy 1.140, x =    3.88 z =  189.22  7.51 cm( 2.74%)   -11 MeV  0.675 GeV
+StiKalmanTrack::refit iter = 1 qA = 0.00
+StiMassFitMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  DC pT  0.506+-  5.5, sy 1.141, x =    3.88 z =  189.22
+StiMassFitMaker:INFO  -  Fit pT  0.506+-  5.5, sy 1.243, x =    0.00 z =  197.51
+Dca: imp    0.24 +/-   1.24, Z: 197.51 +/-   1.82, psi:  -0.00 +/-   0.03, pT/q:   0.51 +/-   5.5%, TanL:  -2.108 +/-   0.069
+   1  L  311.614 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.52 +/-   1.02, Z: 197.46 +/-   1.04, psi:  -0.01 +/-   0.02, pT/q:   0.46 +/-   4.4%, TanL:  -2.108 +/-   0.038 NF 47 chi2    0.165 gId  8 NdEdx 47  34.55 keV +/-   8.2 %
+p(   1,   0,   0) x:   0.007+/- 0.024 y:   0.520+/- 1.025 z: 197.461+/- 1.037 px:   0.455+/- 0.020 py:  -0.006+/- 0.010 pz:  -0.960+/- 0.039 p:   1.062+/-  0.043       pi+ Q: 1  chi2/NDF :   -1.00/ 1
+   1 massFit  p(   1,   0,   0) x:   0.007+/- 0.024 y:   0.520+/- 1.025 z: 197.461+/- 1.037 px:   0.455+/- 0.020 py:  -0.006+/- 0.010 pz:  -0.960+/- 0.039 p:   1.062+/-  0.043       pi+ Q: 1  chi2/NDF :   14.67/89    p/q in TPC    1.049
+   1 massFit  p(   1,   0,   0) x:   0.001+/- 0.011 y:   0.236+/- 1.243 z: 197.507+/- 1.817 px:   1.013+/- 0.056 py:  -0.003+/- 0.035 pz:  -2.136+/- 0.102 p:   2.364+/-  0.113     Alpha Q: 2  chi2/NDF :   14.12/89    p/q in TPC    1.060

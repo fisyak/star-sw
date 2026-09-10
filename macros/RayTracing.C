@@ -38,10 +38,11 @@ void RayTracing(Double_t zStart = 200,
 		Double_t rmax = 45,
 		Double_t zmin = -210, Double_t zmax = 210) {
 
-  Int_t neta = 100;
-  Double_t emin=-2.0;
-  Double_t emax=0.5;
+  Int_t    neta =  240;;
+  Double_t emin = -2.0;
+  Double_t emax =  0.4;
   if (TMath::Abs(zStart) < 1) {
+    neta =  400;
     emin = -2.0;
     emax =  2.0;
   }
@@ -62,7 +63,8 @@ void RayTracing(Double_t zStart = 200,
   TH2F    **hist = new TH2F*[NV];
 // Generate a lego plot #include "TGeoVoxelFinder.h"
   for (Int_t v = 0; v < NV; v++) {
-    hist[v] = new TH2F(VolumeNames[v], Form("Integrated Rad.Length in %s for R < %5.0f and Z in [%5.0f,%5.0f] with Z start = %5.0f ; #phi ; #eta",VolumeNames[v],rmax,zmin,zmax,zStart), nphi, phimin, phimax, neta, emin, emax);
+    hist[v] = new TH2F(VolumeNames[v], Form("Integrated Rad.Length in %s for R < %5.0f and Z in [%5.0f,%5.0f] with Z start = %5.0f ; #phi ; #eta",
+					    VolumeNames[v],rmax,zmin,zmax,zStart), nphi, phimin, phimax, neta, emin, emax);
   }
    Double_t degrad = TMath::Pi()/180.;
    Double_t eta, phi, step, matprop;
@@ -88,9 +90,9 @@ void RayTracing(Double_t zStart = 200,
        eta = hist[0]->GetYaxis()->GetBinCenter(j);
        Double_t sinL = TMath::TanH(eta);
        Double_t cosL = 1./TMath::CosH(eta); // TMath::Sqrt(1 - sinL*sinL);
-       Double_t tanL = TMath::SinH(eta);    // sinL/cosL;
-       phi   = hist[0]->GetXaxis()->GetBinCenter(i)+1E-3;
-       start[0] = start[1] =  1E-3;
+       Double_t tanL = sinL/cosL;
+       phi   = hist[0]->GetXaxis()->GetBinCenter(i);//+1e-2;
+       start[0] = start[1] =  1e-2;
        start[2] = zStart;
        Double_t Phi =  TMath::DegToRad()*phi;
        dir[0] = cosL*TMath::Cos(Phi);
@@ -119,8 +121,8 @@ void RayTracing(Double_t zStart = 200,
 	 iloop=0;
 	 while (!gGeoManager->IsEntering()) {
 	   iloop++;
-	   gGeoManager->SetStep(1E-2);
-	   step += 1E-2;
+	   gGeoManager->SetStep(1e-2);
+	   step += 1e-2;
 	   endnode = gGeoManager->Step();
 	   step = gGeoManager->GetStep();
 	   length += step;
