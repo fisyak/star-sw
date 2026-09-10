@@ -13,7 +13,7 @@
 #include "TGeoNode.h"
 #include "TGeoVolume.h"
 #include "TObjArray.h"
-#include "Tenv.h"
+#include "TEnv.h"
 #endif
 //#include "Rotations+"
 //________________________________________________________________________________
