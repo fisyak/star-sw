@@ -58,7 +58,7 @@ void StiTpcDetectorBuilder::buildDetectors(StMaker&source)
 void StiTpcDetectorBuilder::useVMCGeometry() {
   Int_t debug = 0;
 
-  if (debug>1) StiVMCToolKit::SetDebug(1);
+  if (debug>1) StiVMCToolKit::instance()->SetDebug(1);
   cout << "StiTpcDetectorBuilder::buildDetectors() -I- Use VMC geometry" << endl;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t TpcVolumes[] = {
@@ -85,9 +85,10 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
   TGeoVolume *volT = gGeoManager->GetVolume("TPAD"); 
   if (! volT) volT = gGeoManager->GetVolume("tpad"); 
   assert (volT);
-  TGeoMaterial *mat = volT->GetMaterial(); assert(mat); if (debug>1) mat->Print();
-  Double_t PotI = StiVMCToolKit::GetPotI(mat); if (debug>1) cout << "PotI " << PotI << endl;
-  _gasMat = add(new StiMaterial(mat->GetName(),
+  TGeoMedium   *med = volT->GetMedium();
+  TGeoMaterial *mat = med->GetMaterial(); assert(mat); if (debug>1) mat->Print();
+  Double_t PotI = StiVMCToolKit::instance()->GetPotI(mat); if (debug>1) cout << "PotI " << PotI << endl;
+  _gasMat = add(new StiMaterial(med->GetName(),
 				mat->GetZ(),
 				mat->GetA(),
 				mat->GetDensity(),
@@ -259,7 +260,7 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
     nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
     path = gGeoManager->GetPath();
-    StiVMCToolKit::LoopOverNodes(nodeT, path, TpcVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, TpcVolumes[i].name, MakeAverageVolume);
   }
   cout << "StiTpcDetectorBuilder::buildDetectors() -I- Done" << endl;
 }

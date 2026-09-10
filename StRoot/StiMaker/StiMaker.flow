@@ -1241,3 +1241,19 @@ StiMaker::Make
 									StiTrackNodeHelper::makeFit
 										StiTrackNodeHelper::evalChi2
 										StiTrackNodeHelper::updateNode
+================================================================================
+08/29/2026
+
+StiMaker::InitRun
+  StiMaker::InitDetectors();
+  StiMasterDetectorBuilder::build
+    StiStarDetectorBuilder::buildDetectors
+      StiStarDetectorBuilder::useVMCGeometry
+        StiStarDetectorBuilder::OldBeamPipe
+          StiVMCToolKit::LoopOverNodes
+            StiVMCToolKit::LoopOverNodes
+              StiVMCToolKit::LoopOverNodes 
+                StiVMCToolKit::MakeAverageVolume
+                StiVMCToolKit::Alignment
+         	  TGeoPhysicalNode::Align
+                StiDetectorBuilder::MakeAverageVolume

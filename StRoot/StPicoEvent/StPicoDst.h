@@ -154,13 +154,13 @@ class StPicoDst {
   UInt_t numberOfMcVertices() { return picoArrays[StPicoArrays::McVertex]->GetEntriesFast(); }
   /// Return number of MC tracks
   UInt_t numberOfMcTracks() { return picoArrays[StPicoArrays::McTrack]->GetEntriesFast(); }
-  UShort_t numberOfPrimaryTracksRecorded() const;
 #if defined (__TFG__VERSION__)
+  UShort_t numberOfPrimaryTracksRecorded() const;
   /// Return pointer to i-th Mass Fit
   StMassFit* massFit(Int_t i) { return (StMassFit*)picoArrays[StPicoArrays::MassFit]->UncheckedAt(i); }
   /// Return number of track track Mass Fit
   UInt_t numberOfMassFit() { return picoArrays[StPicoArrays::MassFit]->GetEntriesFast(); }
-#endif
+#endif /* __TFG__VERSION__ */
   /// Print information
   void print() const;
   /// Print track info

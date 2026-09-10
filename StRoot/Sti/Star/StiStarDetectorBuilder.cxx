@@ -13,7 +13,7 @@
 #include "TSystem.h"
 //________________________________________________________________________________
 void StiStarDetectorBuilder::buildDetectors(StMaker&s) {
-  /*  TGeoManager *geo = */ StiVMCToolKit::GetVMC();
+  /*  TGeoManager *geo = */ StiVMCToolKit::instance()->GetVMC();
   //  assert(geo);
   useVMCGeometry(); 
   cout << "StiStarDetectorBuilder::buildDetectors() -I- Done" << endl;
@@ -28,9 +28,30 @@ void StiStarDetectorBuilder::useVMCGeometry() {
     assert(0);
     return;
   }
-  //  setNSectors(0,0);
-  _vacuumMaterial = add(new StiMaterial("Vacuum",0., 1., 0., 1e30, 0.)  );
-  _gasMat = (add(new StiMaterial("Air",7.3, 14.61, 0.001205, 30420.*0.001205, 7.3*12.e-9)));
+  TGeoMedium *medP = gGeoManager->GetMedium("PIPE_PVACUUM");
+  if (medP) {
+    TGeoMaterial *matP = medP->GetMaterial();
+    _vacuumMaterial = add(new StiMaterial(medP->GetName(),
+					  matP->GetZ(),
+					  matP->GetA(),
+					  matP->GetDensity(),
+					  matP->GetDensity()*matP->GetRadLen(),
+					  0.));
+  } else {
+    _vacuumMaterial = add(new StiMaterial("Vacuum",0., 1., 0., 1e30, 0.)  );
+  }
+  medP = gGeoManager->GetMedium("PIPE_STANDARD");
+  if (medP) {
+    TGeoMaterial *matP = medP->GetMaterial();
+    _gasMat = add(new StiMaterial(medP->GetName(),
+				  matP->GetZ(),
+				  matP->GetA(),
+				  matP->GetDensity(),
+				  matP->GetDensity()*matP->GetRadLen(),
+				  0.));
+  } else {
+    _gasMat = (add(new StiMaterial("Air",7.3, 14.61, 0.001205, 30420.*0.001205, 7.3*12.e-9)));
+  }
   if (pipc->GetShape()->TestShapeBit(TGeoShape::kGeoTube)) {
     OldBeamPipe();
   } else {                                                     
@@ -56,8 +77,8 @@ void StiStarDetectorBuilder::OldBeamPipe() {
     {"PIPC","the Central Beam PIPe Volume","HALL_1/CAVE_1/PIPE_%d/PIPC_1","",""}, // tube
     {"PVAC","the Vacuum Volume of Be section of pipe","HALL_1/CAVE_1/PIPE_%d/PIPC_1/PVAC_1","",""}, //tube
     {"PIPO","Steel pipe from Be to 1st flanges","HALL_1/CAVE_1/PIPE_%d/PIPO_1/PVAO_1","",""}, //tube
-    {"PVAO","its cavity","HALL_1/CAVE_1/PIPE_%d/PIPO_1/PVAO_1","",""}, // tube
-    {"PWRP","the beampipe wrap of Kapton and aluminum","HALL_1/CAVE_1/PIPE_%d/PWRP_1","",""}, // tube
+    {"PVAO","its cavity","HALL_1/CAVE_1/PIPE_%d/PIPO_1/PVAO_1","",""} // tube
+    //    {"PWRP","the beampipe wrap of Kapton and aluminum","HALL_1/CAVE_1/PIPE_%d/PWRP_1","",""}  // tube
   };
   
   for (Int_t i = 1; i < 5; i += 2) {// loop over Be and Steel pipes
@@ -72,7 +93,7 @@ void StiStarDetectorBuilder::OldBeamPipe() {
     gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, PipeVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, PipeVolumes[i].name, MakeAverageVolume);
   }
 }
 //________________________________________________________________________________
@@ -193,7 +214,7 @@ void StiStarDetectorBuilder::HftBeamPipe() {
 	gGeoManager->cd(pathT); path = pathT;
 	TGeoNode *nodeT = gGeoManager->GetCurrentNode();
 	if (! nodeT) continue;
-	StiVMCToolKit::LoopOverNodes(nodeT, path, PipeVolumes[i].name, MakeAverageVolume);
+	StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, PipeVolumes[i].name, MakeAverageVolume);
       }
       continue;
     }
@@ -203,10 +224,11 @@ void StiStarDetectorBuilder::HftBeamPipe() {
       continue;
     }
     TGeoPcon *pcon = (TGeoPcon*) pipe->GetShape();
-    TGeoMaterial *pipeMaterial = pipe->GetMaterial();
-    Double_t PotI = StiVMCToolKit::GetPotI(pipeMaterial);
+    TGeoMedium   *pipeMedium   = pipe->GetMedium();
+    TGeoMaterial *pipeMaterial = pipeMedium->GetMaterial();
+    Double_t PotI = StiVMCToolKit::instance()->GetPotI(pipeMaterial);
     Double_t density = pipeMaterial->GetDensity();
-    _pipeMaterial = add(new StiMaterial(pipeMaterial->GetName(),
+    _pipeMaterial = add(new StiMaterial(pipeMedium->GetName(),
 					pipeMaterial->GetZ(),
 					pipeMaterial->GetA(),
 					density,
@@ -239,7 +261,7 @@ void StiStarDetectorBuilder::HftBeamPipe() {
 	         pcon->GetRmax(k  )*pcon->GetRmax(k  ) - pcon->GetRmin(k  )*pcon->GetRmin(k  ))/
 	  (Rmax*Rmax - Rmin*Rmin);
 	Double_t dens = density*scale;
-	_pipeMaterial2 = add(new StiMaterial(pipeMaterial->GetName(),
+	_pipeMaterial2 = add(new StiMaterial(pipeMedium->GetName(),
 					pipeMaterial->GetZ(),
 					pipeMaterial->GetA(),
 					dens,
@@ -313,7 +335,7 @@ void StiStarDetectorBuilder::NewSuppCone() {
    gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, PipeVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, PipeVolumes[i].name, MakeAverageVolume);
   }
 }
 //________________________________________________________________________________
@@ -326,9 +348,10 @@ void StiStarDetectorBuilder::MakePipe(Int_t iflag, const VolumeMap_t *ptube,cons
     assert(0);
    return;
   }
-  TGeoMaterial *pipeMaterial = pipe->GetMaterial();
-  Double_t PotI = StiVMCToolKit::GetPotI(pipeMaterial);
-  _pipeMaterial = add(new StiMaterial(pipeMaterial->GetName(),
+  TGeoMedium   *pipeMedium   = pipe->GetMedium();
+  TGeoMaterial *pipeMaterial = pipeMedium->GetMaterial();
+  Double_t PotI = StiVMCToolKit::instance()->GetPotI(pipeMaterial);
+  _pipeMaterial = add(new StiMaterial(pipeMedium->GetName(),
 				      pipeMaterial->GetZ(),
 				      pipeMaterial->GetA(),
 				      pipeMaterial->GetDensity(),
@@ -418,7 +441,7 @@ void StiStarDetectorBuilder::Fgt() {
     gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, FgtVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, FgtVolumes[i].name, MakeAverageVolume);
   }
 }
 //________________________________________________________________________________
@@ -426,12 +449,15 @@ void StiStarDetectorBuilder::Fst() {
   cout << "StiStarDetectorBuilder::Fst() -I- " << endl;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t FstVolumes[] = { 
-    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
-    {"OFSR", "OFSR Outer support ring for FST",   "HALL_1/CAVE_1/FSTA_1/OFSR_1","",""},       
-    {"OFSB", "OFSB Outer support bars",           "HALL_1/CAVE_1/FSTA_1/OFSB_1-4","",""},       
-    {"OFSD", "outer support",                     "HALL_1/CAVE_1/FSTA_1/OFSD_1-4","",""},       
-    {"OFSC", " OFSC Outer extended support bars", "HALL_1/CAVE_1/FSTA_1/OFSC_1-4","",""},       
-    {"OFCA", "Cable trays master vol",            "HALL_1/CAVE_1/FSTA_1/OFCA_1-4","",""}       
+    //    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
+    {"FTUO", "FST half ring outside wedge container", "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FTUO_1-36","",""},       
+    {"FSTW", "Whole wedge container",                 "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12","",""},       
+    {"OFSR", "OFSR Outer support ring for FST",       "HALL_1/CAVE_1/FSTA_1/OFSR_1-2","",""},   
+    {"OFSB", "OFSB Outer support bars",               "HALL_1/CAVE_1/FSTA_1/OFSB_1-4","",""},   
+    {"OFSD", "outer support",                         "HALL_1/CAVE_1/FSTA_1/OFSD_1-4","",""},   
+    {"OFSC", "OFSC Outer extended support bars",      "HALL_1/CAVE_1/FSTA_1/OFSC_1-4","",""},   
+    {"OFCA", "Cable trays master vol",                "HALL_1/CAVE_1/FSTA_1/OFCA_1-4","",""}, // y 
+    {"OFCC", "Cooling tray",                          "HALL_1/CAVE_1/FSTA_1/OFCC_1-4","",""}  // y 
   };
   if (! gGeoManager->GetVolume("FSTA")) return;
   Int_t NoExtraVols = sizeof(FstVolumes)/sizeof(VolumeMap_t);
@@ -443,7 +469,7 @@ void StiStarDetectorBuilder::Fst() {
     gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, FstVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, FstVolumes[i].name, MakeAverageVolume);
   }
 }
 //________________________________________________________________________________
@@ -452,7 +478,7 @@ void StiStarDetectorBuilder::SconWithSVT() {
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t SconWithSVTVolumes[] = { 
   //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
-    {"SROD", "Support rod","HALL_1/CAVE_1/SVTT_1/SROD_1-2","",""},
+    {"SROD", "Support rod","HALL_1/CAVE_1/SVTT_1/SROD_1-2","",""},            // y
     {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SVTT_1/SBSP_1-2","",""},
     {"SROD", "Support rod","HALL_1/CAVE_1/SROD_1-2","",""},
     {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SBSP_1-2","",""},
@@ -468,7 +494,7 @@ void StiStarDetectorBuilder::SconWithSVT() {
     gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, SconWithSVTVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, SconWithSVTVolumes[i].name, MakeAverageVolume);
   }
 }
 //________________________________________________________________________________
@@ -477,15 +503,15 @@ void StiStarDetectorBuilder::SconWithoutSVT() {
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t SconWithoutSVTVolumes[] = { 
     {"SCON", "Support cone half",                             "HALL_1/CAVE_1/SCOM_1/SCON_1-2","",""},       
-    {"SROD", "Support rod",                                   "HALL_1/CAVE_1/SCOM_1/SROD_1-2","",""},       
+    {"SROD", "Support rod",                                   "HALL_1/CAVE_1/SCOM_1/SROD_1-2","",""},       // y 
     {"SAKM", "beampipe support aluminum kinematic mount",     "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SAKM_1","",""},
     {"SASH", "beampipe support aluminum EM shield",           "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SASH_1","",""},
     {"SDSA", "G10 support Disk",                              "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SDSA_1","",""},
-    {"SPOK", "spoke to support beam pipe assembly 4 sectors ","HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOK_1","",""},
-    {"SPOB", "beam spoke assemblyS",                          "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOB_1","",""},
-    {"SPOC", "beam spoke assembly upper part",                "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOC_1","",""},
-    {"SBRL", "ceramic roller supporting the beampipeS",       "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRL_1","",""},
-    {"SBRX", " stainless steel roller axis",                  "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRX_1","",""}
+    //    {"SPOK", "spoke to support beam pipe assembly 4 sectors ","HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOK_1","",""},
+    {"SPOB", "beam spoke assemblyS",                          "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOB_1","",""},  // y
+    {"SPOC", "beam spoke assembly upper part",                "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOC_1","",""}   // y 
+    //    {"SBRL", "ceramic roller supporting the beampipeS",       "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRL_1","",""},
+    //    {"SBRX", " stainless steel roller axis",                  "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRX_1","",""}
   };
   if (! gGeoManager->GetVolume("SCOM")) return;
   Int_t NoExtraVols = sizeof(SconWithoutSVTVolumes)/sizeof(VolumeMap_t);
@@ -497,6 +523,6 @@ void StiStarDetectorBuilder::SconWithoutSVT() {
     gGeoManager->cd(pathT); path = pathT;
     TGeoNode *nodeT = gGeoManager->GetCurrentNode();
     if (! nodeT) continue;
-    StiVMCToolKit::LoopOverNodes(nodeT, path, SconWithoutSVTVolumes[i].name, MakeAverageVolume);
+    StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, SconWithoutSVTVolumes[i].name, MakeAverageVolume);
   }
 }

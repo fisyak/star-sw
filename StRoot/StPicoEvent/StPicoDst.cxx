@@ -349,3 +349,13 @@ void StPicoDst::printFwdTracks() {
 
   LOG_INFO << endm;
 }
+#if defined (__TFG__VERSION__)
+//_________________
+UShort_t StPicoDst::numberOfPrimaryTracksRecorded() const {
+  UShort_t NoPrTracksR = 0;
+  for(UInt_t iTrk=0; iTrk<numberOfTracks(); iTrk++) {
+    if (track(iTrk)->isPrimary()) NoPrTracksR++;
+  }
+  return NoPrTracksR;
+}
+#endif /* __TFG__VERSION__ */

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "StiPlacement.h"
 #include "TString.h"
+#include "TMath.h"
 using namespace std;
 
 
@@ -110,10 +111,7 @@ void StiPlacement::setLayerAngle(float layerAng)
 }
 //______________________________________________________________________________	
 ostream& operator<<(ostream& os, const StiPlacement& m) {
-  //   os << Form(" cZ:%7.2f nY:%7.2f cR:%7.2f cA:%7.2f lR:%7.2f lA:%7.2f",m.zCenter,m.normalYoffset,m.centerRadius,m.centerRefAngle,m.layerRadius,m.layerAngle) ;
-  os << Form("lR:%7.2f lA:%7.2f cZ:%7.2f nY:%7.2f",m.layerRadius,m.layerAngle,m.zCenter,m.normalYoffset);
-  if (m.centerRadius !=  m.layerRadius) os << Form(" cR:%7.2f", m.centerRadius);
-  if (m.centerRefAngle != m.layerAngle) os << Form(" cA:%7.2f ", m.centerRefAngle);
+  os << Form(" z %7.2f R:%7.2f phi:%6.1f",m.zCenter,m.getNormalRadius(),TMath::RadToDeg()*m.getNormalRefAngle());
   return os;
 }
 //______________________________________________________________________________

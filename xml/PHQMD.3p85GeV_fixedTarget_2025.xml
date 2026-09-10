@@ -11,6 +11,7 @@
 #  starver .DEV2 
 #  starver TFG17u 
 #  starver TFG17v 
+#  starver TFG26h
   set file = $INPUTFILE0;
 #  set rung = `echo $file | awk -F\: '{print $1}'`
 #  set f    = `echo $file | awk -F\: '{print $2}'`
@@ -29,7 +30,8 @@
 #  echo $Name | grep -i Ideal
 #  if ($?) set sdt = ",sdt20160301";
 #  set sdt = ",sdt20230520.023250" # RF
-   set sdt = ",8p65GeV_fixedTarget_2026"
+#   set sdt = ",8p65GeV_fixedTarget_2026"
+   set sdt = ",13p5GeV_fixedTarget_2026"
 #  set KFVertex = "";
 #  echo $Name | grep -i KFV
 #  if (! $?) set KFVertex = ",KFVertex";
@@ -40,7 +42,8 @@
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,-geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,NTuple2Hits","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,KFVertex","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
-     root.exe -q -b -x 'bfc.C(200,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,NTuple2Hits","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+#     root.exe -q -b -x 'bfc.C(200,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,geantOut,evout,vmc,VMCAlignment,CorrZ,dEdxCalib,NoHistos,noTags,noRunco,FXT'${sdt}',RunG.1,NTuple2Hits","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
+     root.exe -q -b -x 'bfc.C(200,"PHQMDFXT,MC.2025,McTpcAna,StiCA,StiPulls,-geantOut,-evout,vmc,CorrZ,Agi,BEmcChkStat,MassFit,NoHistos,noTags,noRunco,PicoVtxFXT,FXT'${sdt}',RunG.1","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
   endif
 </command>
 <!-- <input URL="file:/net/l404/data/fisyak/reco/2019/hijingAuAu200.DEV2.StiCA.Minuit.newCut/*.event.root" /> -->

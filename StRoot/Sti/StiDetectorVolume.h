@@ -1,5 +1,5 @@
-#ifndef STAR_StiGeomMake
-#define STAR_StiGeomMake
+#ifndef STAR_StiDetectorVolume
+#define STAR_StiDetectorVolume
 // $Id: StiDetectorVolume.h,v 2.3 2008/04/03 20:04:04 fisyak Exp $
 // Author: Valeri Fine, Dec 2006
 

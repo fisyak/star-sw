@@ -78,7 +78,7 @@ void StiSstDetectorBuilder::buildDetectors(StMaker &source)
    _gasMat = geoMat ? add(new StiMaterial(geoMat->GetName(), geoMat->GetZ(), geoMat->GetA(), geoMat->GetDensity(), geoMat->GetRadLen()))
                     : add(new StiMaterial("AIR", 7.3, 14.61, 0.001205, 30420.));
 
-   if (StiVMCToolKit::GetVMC()) {
+   if (StiVMCToolKit::instance()->GetVMC()) {
       useVMCGeometry();
       buildInactiveVolumes();
    }

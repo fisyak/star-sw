@@ -125,7 +125,7 @@ void StiSsdDetectorBuilder::buildDetectors(StMaker & source)
     StSsdBarrel *mySsd = StSsdBarrel::Instance();
     if (! mySsd) {// no active SSD
       gMessMgr->Info() << "StiSsdDetectorBuilder::buildDetectors() - I - there is no SSD barrel - take whatever exist in GEANT" << endm;
-      StiVMCToolKit::GetVMC();
+      StiVMCToolKit::instance()->GetVMC();
       return;
     }
     int nRows = 1 ;
@@ -217,7 +217,7 @@ void StiSsdDetectorBuilder::useVMCGeometry() {
   for (Int_t i = 0; i < M; i++) {
     const TGeoMaterial *mat =  gGeoManager->GetMaterial(map[i].name); 
     if (! mat) continue;
-    Double_t PotI = StiVMCToolKit::GetPotI(mat);
+    Double_t PotI = StiVMCToolKit::instance()->GetPotI(mat);
     *map[i].p = add(new StiMaterial(mat->GetName(),
 				    mat->GetZ(),
 				    mat->GetA(),
@@ -254,7 +254,7 @@ void StiSsdDetectorBuilder::useVMCGeometry() {
       path = pathT;
       TGeoNode *nodeT = gGeoManager->GetCurrentNode();
       if (! nodeT) continue;;
-      StiVMCToolKit::LoopOverNodes(nodeT, path, SsdVolumes[i].name, MakeAverageVolume);
+      StiVMCToolKit::instance()->LoopOverNodes(nodeT, path, SsdVolumes[i].name, MakeAverageVolume);
     } else gMessMgr->Info() << "StiSsdDetectorBuilder::useVMCGeometry skip node " << pathT.Data() << endm;
   }
 }
