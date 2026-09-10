@@ -313,6 +313,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
 	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
 	  cout << *pDetector << endl;
+	  if (debug() > 1) pDetector->Print("TGeo");
 	}
       }
     }
@@ -336,6 +337,8 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     hmat->LocalToMasterVect(zAxis, zAG);
     // Define "center" and normal vectors for the considered volume
     TVector3 centerVec(xyz[0],xyz[1],0.0);
+    Double_t r             = centerVec.Perp();
+    Double_t phi           = centerVec.Phi();
     TVector3 normX(xAG);
     TVector3 normY(yAG);
     TVector3 normZ(zAG);
@@ -347,24 +350,27 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     Double_t halfWidth     = box->GetDY();
     Double_t normVecMag    = RtX;
     Double_t dz            = box->GetDZ();
-    if (TMath::Abs(RtY) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtZ))) {
+    if (TMath::Abs(halfThickness - halfWidth) < 1e-3) {// come from tube
+      normVecMag = r;
+      normVec = TVector3(xyz[0]/r,xyz[1]/r,0.);
+    } else {
+      if (TMath::Abs(RtY) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtZ))) {
 	halfThickness = box->GetDY();
 	halfWidth     = box->GetDX();
-      normVecMag = RtY;
-      normVec    = normY;
-    } else if (TMath::Abs(RtZ) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtY))) {
-      halfThickness = box->GetDZ();
-      halfWidth     = box->GetDX();
-      dz            = box->GetDY();
-      normVecMag = RtZ;
-      normVec    = normZ;
+	normVecMag = RtY;
+	normVec    = normY;
+      } else if (TMath::Abs(RtZ) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtY))) {
+	halfThickness = box->GetDY();
+	halfWidth     = box->GetDX();
+	//	dz            = box->GetDY();
+	normVecMag = RtZ;
+	normVec    = normZ;
+      }
     }
     if (normVecMag < 0) {
       normVecMag = - normVecMag;
       normVec *= -1;
     }
-    Double_t r             = centerVec.Perp();
-    Double_t phi           = centerVec.Phi();
     if (!sh) {
        // name, halfDepth, thickness, halfWidth
        sh = new StiPlanarShape(volP->GetName(), dz, 2*halfThickness, halfWidth);
@@ -399,7 +405,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     pDetector->setPlacement(pPlacement); 
     pDetector->setGas(GetCurrentDetectorBuilder()->getGasMat());
     pDetector->setMaterial(matS);
-#ifdef __SPLIT__
+#ifndef __noSPLIT__
     if (mThkSplit>0 && mMaxSplit>1) {//	try to split 
       StiDetVect dv;
       pDetector->splitIt(dv,mThkSplit,mMaxSplit);
@@ -412,9 +418,10 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	       << "\tR = " <<  dv[i]->getPlacement()->getNormalRadius() << endl;
 
 	  cout << *dv[i] << endl;
+	  if (debug() > 1) dv[i]->Print("TGeo");
 	}
-      } }
-    else {  
+      } 
+    } else {  
       int layer = getNRows();
       add(layer,0,pDetector); 
       if (debug()) {
@@ -422,6 +429,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
 	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
 	cout << *pDetector << endl;
+	if (debug() > 1) pDetector->Print("TGeo");
       }
     }
 #else
@@ -432,6 +440,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
 	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
 	cout << *pDetector << endl;
+	if (debug() > 1) pDetector->Print("TGeo");
       }
 #endif
   }

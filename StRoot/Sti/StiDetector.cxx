@@ -147,8 +147,8 @@ void StiDetector::Print(const char *opt) const {
     switch (shape->getShapeCode()) {
     case kPlanar:
       cout << "  " <<  Vol.Data() << "->AddVolume(gGeoManager->MakeBox(\"" << Vol.Data() << "\", gGeoManager->GetMedium(\"" << medname.Data() << "\")";
-      cout << "," << shape->getHalfWidth() 
-	   << "," << shape->getThickness()/2
+      cout << "," << shape->getThickness()/2
+	   << "," << shape->getHalfWidth() 
 	   << "," << shape->getHalfDepth();
       break;
     case kCylindrical:

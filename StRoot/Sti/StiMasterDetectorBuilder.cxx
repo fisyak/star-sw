@@ -23,8 +23,6 @@ void StiMasterDetectorBuilder::reset()
  */
 void StiMasterDetectorBuilder::build(StMaker&source)
 {
-  //#define __Physics_Node_Clear__
-#ifndef __Physics_Node_Clear__
   if (! gGeoManager) StiVMCToolKit::instance()->GetVMC();
 
   TGeoManager *gGeoManagerSV = gGeoManager; gGeoManager = 0;
@@ -42,7 +40,6 @@ void StiMasterDetectorBuilder::build(StMaker&source)
   } else {
     LOG_INFO << "Could not get a pointer to gGeoManager " << endm;
   }
-#endif /* ! __Physics_Node_Clear__ */
   LOG_INFO << "StiMasterDetectorBuilder::build() -I- Started"<<endm;
   vector<StiDetectorBuilder*>::iterator iter;
   UInt_t nRows=0;
@@ -71,72 +68,14 @@ void StiMasterDetectorBuilder::build(StMaker&source)
       row++;
     }
   }
-#ifndef __Physics_Node_Clear__
   if (gGeoManagerSV) {
-    //#define __CHECK_SHARED_OBJECTS__
-#ifdef __CHECK_SHARED_OBJECTS__
-    // Clean up shared objects 
-    enum {NoLists = 12};
-    TSeqCollection *listSV[NoLists] = {
-      gGeoManagerSV->GetListOfMaterials(),      // TList                 
-      gGeoManagerSV->GetListOfMedia(),	        // TList                 
-      gGeoManagerSV->GetListOfNodes(),          // TObjArray             
-      gGeoManagerSV->GetListOfPhysicalNodes(),  // TObjArray             
-      gGeoManagerSV->GetListOfOverlaps(),	// TObjArray             
-      gGeoManagerSV->GetListOfMatrices(),       // TObjArray             
-      gGeoManagerSV->GetListOfVolumes(),        // TObjArray             
-      gGeoManagerSV->GetListOfGVolumes(),       // TObjArray             
-      gGeoManagerSV->GetListOfShapes(),	        // TObjArray             
-      gGeoManagerSV->GetListOfGShapes(),	// TObjArray             
-      gGeoManagerSV->GetListOfUVolumes(),       // TObjArray             
-      gGeoManagerSV->GetListOfTracks()};        // TObjArray             
-    TSeqCollection *list[NoLists] = {
-      gGeoManager->GetListOfMaterials(),      // TList                 
-      gGeoManager->GetListOfMedia(),	      // TList                 
-      gGeoManager->GetListOfNodes(),          // TObjArray             
-      gGeoManager->GetListOfPhysicalNodes(),  // TObjArray             
-      gGeoManager->GetListOfOverlaps(),       // TObjArray             
-      gGeoManager->GetListOfMatrices(),       // TObjArray             
-      gGeoManager->GetListOfVolumes(),        // TObjArray             
-      gGeoManager->GetListOfGVolumes(),       // TObjArray             
-      gGeoManager->GetListOfShapes(),	      // TObjArray             
-      gGeoManager->GetListOfGShapes(),	      // TObjArray             
-      gGeoManager->GetListOfUVolumes(),       // TObjArray             
-      gGeoManager->GetListOfTracks()};	      // TObjArray             
-    for (Int_t l = 0; l < NoLists; l++) {
-      if (listSV[l] && list[l]) {
-	TIter nextSV(listSV[l]);
-	TObject *oSV = 0;
-	while ((oSV = nextSV())) {
-	  TIter next(list[l]);
-	  TObject *o = 0;
-	  while ((o = next())) {
-	    if (o == oSV) {
-	      LOG_INFO << "Duplicate object " << o->GetName() << "\t" << o->GetTitle() << endm;
-	      Int_t indx = list[l]->IndexOf(o);
-	      if (indx >= 0) {
-		list[l]->RemoveAt(indx);
-	      }
-	    }
-	  }
-	}
-      }
+    if (debug()) {
+      TString file(gGeoManager->GetName());
+      file += "_Avg.root";
+      gGeoManager->Export(file);
     }
-    //    delete gGeoManager;
-#endif /* __CHECK_SHARED_OBJECTS__ */
-#define __SAVE__Average_Geometry__
-#ifdef  __SAVE__Average_Geometry__
-    TString file(gGeoManager->GetName());
-    file += "_Avg.root";
-    gGeoManager->Export(file);
-#endif /*  __SAVE__Average_Geometry__ */
     gGeoManager = gGeoManagerSV;
   }
-#else /* __Physics_Node_Clear__ */
-  LOG_INFO << "StiMasterDetectorBuilder::build() -I- ClearPhysicalNodes"<<endm;
-  gGeoManager->ClearPhysicalNodes(kTRUE);
-#undef __Physics_Node_Clear__
-#endif /* !  __Physics_Node_Clear__ */
   LOG_INFO << "StiMasterDetectorBuilder::build() -I- Done"<<endm;
 }
 

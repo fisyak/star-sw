@@ -34,7 +34,7 @@ struct VolumeMap_t {
 };
 struct MaterialMap_t {
  MaterialMap_t(const Char_t *n, const TGeoMaterial *m, Double_t w) : name(n), mat(m), weight(w) {
-   Print();
+   //   Print();
  }
   const Char_t *name;
   const TGeoMaterial *mat;
@@ -46,10 +46,8 @@ class  StiVMCToolKit {
   void              PrintShape(TGeoShape *shape);							 
   static StiVMCToolKit    *instance() {if (! fgStiVMCToolKit) fgStiVMCToolKit = new StiVMCToolKit; return fgStiVMCToolKit;}
   TGeoManager      *GetVMC(); 
-  TGeoShape        *MakeAverageShape(TGeoVolume *volT, Double_t *master);
-  TGeoPhysicalNode *Alignment(const TGeoNode *nodeT,const Char_t *pathT, TGeoVolume *volT, 
-        		      TGeoShape *newshape, TGeoMedium* newmed);
-  TGeoPhysicalNode *LoopOverNodes(const TGeoNode *nodeT, const Char_t *pathT, const Char_t *name = 0, void ( *callback)(TGeoPhysicalNode *nodeP)=0);
+  TGeoPhysicalNode *LoopOverNodes(const TGeoNode *nodeT, const Char_t *pathT, const Char_t *name = 0, void ( *callback)
+				  (TGeoPhysicalNode *nodeP)=0);
   void              TestVMC4Reconstruction();
   void              GetVMC4Reconstruction(const Char_t *pathT=0, const Char_t *nameT=0);
   void              PrintNewNode(TGeoPhysicalNode *nodeP);
