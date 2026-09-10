@@ -332,7 +332,7 @@ foreach my $dir( "pams", "StRoot", "StPiD", "StarVMC" ) {
     print "items = $items sub_dir = $sub_dir $param::include\n" if ($param::debug);
     if ($items and $sub_dir =~ /$items/ and ( ! $param::include or  $sub_dir !~ /$param::include/o )    ) { 
       print "====== param::include = $param::include $subsub_dir \n" if ($param::debug);
-      if ($STAR_LEVEL !~ /\.dev/ and $STAR_LEVEL !~ /\.DEV/) {
+      if ($STAR_LEVEL !~ /\.dev/ and $STAR_LEVEL !~ /\.DEV/  and $STAR_LEVEL !~ /TFG/) {
 	print  "skip ";
 	printf("%40s","$sub_dir");
 	printf("\tto build it you need to add %25s","+$sub_dir");

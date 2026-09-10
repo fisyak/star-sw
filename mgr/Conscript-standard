@@ -156,6 +156,7 @@ if ( $pkg eq "GenFit"
      || $pkg =~ m/^StStarLogger/
      || $pkg =~ m/^RTS/
      || $pkg =~ m/StJetFinder/
+     || $pkg =~ m/PWGTools/
    ) {
   #  print "pkg = $pkg, CXX_MAJOR = $env->{CXX_MAJOR}, CXX_MAJOR = $env->{CXX_MINOR} ================================================================================\n";
   if ( $pkg eq "GenFit") {# and ($env->{CXX_MAJOR} > 4 or ($env->{CXX_MAJOR} == 4 and $env->{CXX_MINOR} >= 6)) {
