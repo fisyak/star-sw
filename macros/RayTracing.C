@@ -20,7 +20,7 @@
 #include "TBuffer3D.h"
 #include "TBuffer3DTypes.h"
 #include "TMath.h"
-
+#include "TROOT.h"
 #include <stdlib.h>
 //________________________________________________________________________________
 void Import(const Char_t *name = "") {
@@ -173,4 +173,40 @@ void RayTracing(Double_t zStart = 200,
    }
    fOut->Write();
    return;          
+}
+//________________________________________________________________________________
+void Plot(const Char_t *volume = "FSTA") {
+  TSeqCollection *files = gROOT->GetListOfFiles();
+  if (! files) return;
+  Int_t nn = files->GetSize();
+  if (! nn) return;
+  TFile **FitFiles = new TFile *[nn];
+  TIter next(files);
+  TFile *f = 0;
+  TH2 *hist[10] = {0};
+  Int_t NH = 0;
+  Double_t ymin = 1e8, ymax = 0;
+  while (f = (TFile *) next()) {
+    TH2 *h2 = (TH2 *) f->Get(volume);
+    if (! h2) continue;
+    if (h2->GetMinimum() < ymin) ymin = h2->GetMinimum();
+    if (h2->GetMaximum() > ymax) ymax = h2->GetMaximum();
+    hist[NH] = h2;
+    NH++;
+  }
+  if (ymin < 1e-3) ymin = 1e-3;
+  if (! NH) return;
+  gStyle->SetOptStat(0);
+  TCanvas *can[10] = {0};
+  for (Int_t i = 0; i < NH; i++) {
+    TString Title(hist[i]->GetDirectory()->GetName()); Title.ReplaceAll(".root","");
+    TString Name("c"); Name += i;
+    can[i] = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(Name);
+    if (can[i])  can[i]->Clear();
+    else         can[i] = new TCanvas(Name,Title);
+    can[i]->SetLogz(1);
+    hist[i]->SetMinimum(ymin);
+    hist[i]->SetMaximum(ymax);
+    hist[i]->Draw("colz");
+  }
 }

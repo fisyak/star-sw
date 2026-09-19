@@ -41,7 +41,8 @@ foreach d (`ls -1d ???/2*`)
 #    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26d.FXT.xml
 # TFG26f_calib
 #    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
-    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26h.FXT.xml
+#    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26h.FXT.xml
+    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26i.FXT.xml
     ~/bin/subcondor.csh
   touch Submitted
   cd -

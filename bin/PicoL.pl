@@ -31,38 +31,16 @@ if ($#ARGV >= 0) {
 my $now = time();
 # string:/star/data102/reco/production_pp500_2022/ReversedFullField/P25ib/2021/355/22355068:22355068/st_physics_22355068_raw_2000052.root:y2022:picoDst:st_physics_22355068_raw_2000052.picoDst.root
 my @lists = glob "../*.list"; print "$#lists :@lists\n" if ($debug);
+my $PWD = cwd();
 if ($#lists >= 0) {
-  my %Hash = ();
   foreach my $l (@lists) {
-    print "$l\n" if ($debug);
-    open(IN,$l) or die "Can't open $l";
-    while (my $line = <IN>) {
-#      print $line;
-      chomp($line);
-      my $dir  = File::Basename::dirname($line);
-      my $file = File::Basename::basename($line);
-      if ($Hash{$dir}) {$Hash{$dir} .= " " . $file;}
-      else             {$Hash{$dir} = $file;}
-    }
-    close (IN);
-  }
-  foreach my $key (sort keys %Hash ) {
-    print "{ $key }\t=> $Hash{$key}\n" if ($debug);
-    my $run = File::Basename::basename($key);# print "run = $run\n";
-    my @w = split('/',$key);
-#    for (my $i = 0; $i <= $#w; $i++) {print "$i => $w[$i]\n";}
-    my $year = $w[$#w-2]; #  print "year = $year\n";
-    if (! -d $run) {mkdir $run;}
-    my @files = split ' ',$Hash{$key};# print "$#files files = @files\n";
-    foreach my $f (@files) {
-      my $file = $f;
-      $file =~ s/picoDst\.//;# print "f = $f, file = $file\n";
-      my $output = $run . "/" . $file;
-      if (-r $output) {next;}
-      print "string:root://xrdstar.rcf.bnl.gov:1095/$key,$output,$year,picoDst,$f\n";
-    }
-#    die;
-  }
+    my $r = File::Basename::basename($l,"list") . "root";
+    my $f = $PWD . "/" . $l;
+    print "$f  => $r\n" if ($debug);
+    if (-r $r) {next;}
+    print "string:$f\n";
+  }  
+  
   exit 0;
 }
 #____________________________________________________________
@@ -101,13 +79,14 @@ elsif ($pwd =~ /2013/) { $year = "y2013";}
 elsif ($pwd =~ /2012/) { $year = "y2012";} 
 elsif ($pwd =~ /2011/) { $year = "y2011";} 
 elsif ($pwd =~ /2010/) { $year = "y2010";} 
-if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24/ or $pwd =~ /TFG26d/  or $pwd =~ /TFG26h/) {
+if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /TFG24/ or $pwd =~ /TFG26d/  or $pwd =~ /TFG26h/  or $pwd =~ /TFG26i/) {
 #  $PICOPATH = "/gpfs01/star/data*"; print "PICOPATH = $PICOPATH \n" if ($debug);
   if    ($pwd =~ /TFG24c/) {$PICOPATH = "/gpfs01/star/subsysg/TFG/reco/TFG24c/";}
   elsif ($pwd =~ /TFG24d/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24d/";}
   elsif ($pwd =~ /TFG24e/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24e/";}
   elsif ($pwd =~ /TFG26d/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26d/"}
   elsif ($pwd =~ /TFG26h/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26h/"}
+  elsif ($pwd =~ /TFG26i/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26i/"}
   elsif ($pwd =~ /2026.dev/) {$PICOPATH = "/star/data99/TEMP/FXT/";}
   else                     {$PICOPATH = "/star/data*";}
   print "PICOPATH = $PICOPATH \n" if ($debug);
@@ -251,7 +230,8 @@ if (! $PICOPATH) {die "PICOPATH = $PICOPATH";}
 #if ($glob == "" or $PICOPATH == "") {die "glob = $glob, PICOPATH = $PICOPATH";}
 #per run 
 
-my $GLOB = $PICOPATH . $glob . "/2*/*/*";
+my $GLOB = $PICOPATH . $glob . "/???/2*";
+#my $GLOB = $PICOPATH . $glob . "/2*/*/*";
 if ($pwd =~ /TFG24/) {$GLOB = $PICOPATH . $glob . "/???/*";}
 print "GLOB = $GLOB\n" if ($debug);
 # my $GLOB = $PICOPATH . $glob . "/*/???"; # per day

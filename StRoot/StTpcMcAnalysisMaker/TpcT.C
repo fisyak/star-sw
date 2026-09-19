@@ -59,6 +59,7 @@ end
 //#define __REAL_DATA__
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <assert.h>
+#include <map>
 #include "Riostream.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -3371,7 +3372,8 @@ const Char_t *PrintLine(Int_t N,const TVectorD &Array) {
   return line.Data();
 }
 //________________________________________________________________________________
-void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2.root") {
+void T0Offsets(const Char_t *opt = "", const Char_t *files="*.root", const Char_t *Out = "offsetT2.root") {
+  TString Opt(opt);
   /*
     root.exe lBichsel.C
       .L TpcT.C+
@@ -3506,17 +3508,27 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2.root"
     const Int_t  nBins[NoDim]  = {  105,     40,    140,     20,  200};
     const VarS_t  xMin         = { -210,     -2,     -7,      2,   -2};
     const VarS_t  xMax         = {  210,      2,      7,     12,    2};
+#if 0
+    TH1D       *dHist[2][2][105*40*140*20] = {0}; // [dPad, dTime], [I, O], z, tanP, tanL, AdcL
+#else 
+    std::map<size_t,TH1F*> mapdPad[2];
+    std::map<size_t,TH1F*> mapdTime[2];
+#endif
     THnSparse  *dPadI = new THnSparseF("dPadI",  "dPad for iTPC  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
     THnSparse  *dPadO = new THnSparseF("dPadO",  "dPad for  Tpx  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
     THnSparse  *dTimeI = new THnSparseF("dTimeI",  "dTime for iTPC  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
     THnSparse  *dTimeO = new THnSparseF("dTimeO",  "dTime for  Tpx  flag == 0 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
-
+#if 0
     THnSparse  *dPadI2 = new THnSparseF("dPadI2",  "dPad for iTPC  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
     THnSparse  *dPadO2 = new THnSparseF("dPadO2",  "dPad for  Tpx  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dPad", NoDim, nBins, &xMin.Z, &xMax.Z);
     THnSparse  *dTimeI2 = new THnSparseF("dTimeI2",  "dTime for iTPC  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
     THnSparse  *dTimeO2 = new THnSparseF("dTimeO2",  "dTime for  Tpx  flag == 2 ; Z ; tanP ; tanL ; AdcL ; dTime", NoDim, nBins, &xMin.Z, &xMax.Z);
-    THnSparse  *dPadIO[2][2]  = { {dPadI,  dPadO}, {dPadI2,  dPadO2}};
-    THnSparse  *dTimeIO[2][2] = { {dTimeI, dTimeO}, {dTimeI2, dTimeO2}};
+    THnSparse  *dPadIO[2][2]  = { {dPadI,  dPadO},  {dPadI2,  dPadO2}};
+    THnSparse  *dTimeIO[2][2] = { {dTimeI, dTimeO},{dTimeI2, dTimeO2}};
+#else
+    THnSparse  *dPadIO[2][2]  = { {dPadI,  dPadO}, {0,0}};  // {dPadI2,  dPadO2}};
+    THnSparse  *dTimeIO[2][2] = { {dTimeI, dTimeO}, {0,0}}; //{dTimeI2, dTimeO2}};
+#endif
 #endif
 	   
   // TpcT->Draw("fMcHit.mMcl_t+0.165*Frequency-fRcHit.mMcl_t/64:fMcHit.mPosition.mX3>>TI(210,-210,210,100,-2,3)","fNoMcHit==1&&fNoRcHit==1&&fRcHit.mQuality>90&&fMcHit.mVolumeId%100<=13","colz"); TI->FitSlicesY(); TI_1->Fit("pol2","er","",-100,100);
@@ -3646,12 +3658,56 @@ void T0Offsets(const Char_t *files="*.root", const Char_t *Out = "offsetT2.root"
       Int_t f = -1;
       if      (fRcHit_mFlag[0] == 0) f = 0;
       else if (fRcHit_mFlag[0] &  2) f = 1;
-      if (f >= 0) {
+      if (f >= 0 && dPadIO[f][io]) {
+#define __MAKE_TH1__
+#ifndef __MAKE_TH1__
 	dPadIO[f][io]->Fill(&VV.Z);
 	VV.dX = dT;
 	dTimeIO[f][io]->Fill(&VV.Z);
-      }
+#else /* __MAKE_TH1__ */
+	if (NoDim == 5) {
+	  Int_t fIndex[4] = {0};
+	  size_t indx = 0;
+	  for (Int_t i = 0; i < NoDim - 1; ++i) {
+	    fIndex[i] = dPadIO[f][io]->GetAxis(i)->FindBin((&VV.Z)[i]);
+            if (i > 0) indx *= nBins[i-1]+2;
+	    indx += fIndex[i];
+	  }
+	  std::size_t i0 = fIndex[0], i1 = fIndex[1], i2 = fIndex[2], i3 = fIndex[3];
+#if 0
+	  if (! dHist[0][io][indx]) {
+
+            dHist[0][io][indx] = new TH1D(Form("%s_%i_%_%i_%i_%i", dPadIO[f][io]->GetName(),i0,i1,i2,i3), dPadIO[f][io]->GetTitle(), nBins[4], xMin.dX, xMax.dX);
+            dHist[1][io][indx] = new TH1D(Form("%s_%i_%_%i_%i_%i",dTimeIO[f][io]->GetName(),i0,i1,i2,i3), dTimeIO[f][io]->GetTitle(), nBins[4], xMin.dX, xMax.dX);
+	  }
+	  dHist[0][io][indx]->Fill(dPad);
+	  dHist[1][io][indx]->Fill(dT);
+#else 
+	  TH1F *pad = 0;
+	  if (Opt == "" ||  Opt.Contains(dPadIO[f][io]->GetName())) {
+	    if (mapdPad[io].find(indx) != mapdPad[io].end()) {
+	      pad = mapdPad[io].find(indx)->second;
+	    } else {
+	      pad = new TH1F(Form("%s_%i_%i_%i_%i",dPadIO[f][io]->GetName(),i0,i1,i2,i3), dPadIO[f][io]->GetTitle(), nBins[4], xMin.dX, xMax.dX);
+	      mapdPad[io][indx] = pad;
+	    }
+	    pad->Fill(dPad);
+	  }
+	  if (Opt == "" ||  Opt.Contains(dTimeIO[f][io]->GetName())) {
+	    TH1F *time = 0;
+	    if (mapdTime[io].find(indx) != mapdTime[io].end()) {
+	      time = mapdTime[io].find(indx)->second;
+	    } else {
+	      time = new TH1F(Form("%s_%i_%i_%i_%i",dTimeIO[f][io]->GetName(),i0,i1,i2,i3), dTimeIO[f][io]->GetTitle(), nBins[4], xMin.dX, xMax.dX);
+	      mapdTime[io][indx] = time;
+	    }
+	    time->Fill(dT);
+	  }
 #endif
+	}
+#endif /* ! __MAKE_TH1__ */
+      }
+#endif /* __SPARSED__ */
       if (! ev%1000) cout << "Processed event " << ev << endl;
       ev++;
     }

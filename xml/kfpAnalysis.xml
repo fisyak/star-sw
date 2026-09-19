@@ -15,6 +15,8 @@
 #  set split = (${INPUTFILE0}:as|/| |)
 #foreach  evtsFile(`cat $FILELIST`)
   set evtsFile = "$INPUTFILE0";
+  echo  ${evtsFile} | grep .list
+  if ($?) then
 #  string:/star/data22/reco/production_3p85GeV_fixedTarget_2021/ReversedFullField/P24iy_calib6/2021/160/22160052:22160052/st_physics_22160052_raw_1500002.root:y2021:picoDst:st_physics_22160052_raw_1500002.picoDst.root
 #         /gpfs01/star/data100/TPC/reco/TFG26d/2025/RF/13p5GeV_fixedTarget_2026/027/27027002:27027002.root:y2026:picoDst:
   echo "${evtsFile}"
@@ -47,10 +49,19 @@
 #        rsync  ${inputDIR}  .
 #      endif
   endif
+  set input = "./*."${dstype}".root"
   echo echo "`hostname` $STAR_HOST_SYS $STAR $ROOTSYS"  &gt;&amp; ${log} 
 #  printenv | sort &gt;&gt;&amp; ${log} 
-  root.exe -q -b -x  'kfpAnalysis.C(1000000,"./*.'${dstype}'.root","'${output}'","'${year}'",'${idNdx}')' &gt;&gt;&amp; ${log}
-  rm ./*.${dstype}.root
+else # list
+cd ${SUBMITTINGDIRECTORY}
+  set input = $evtsFile
+  set b = `basename ${input} .list`
+  set output = ${b}.root
+  if (-r ${output}) exit 0;
+  set log    = ${b}B.log
+  set year = "2020"
+endif
+  root.exe -q -b -x  'kfpAnalysis.C(1000000,"'${input}'","'${output}'","'${year}'",'${idNdx}')' &gt;&gt;&amp; ${log}
 #end 
  rm -rf ${CURRENT_DIR}
         </command>
@@ -68,5 +79,10 @@ requirements = (Microarch >= "x86_64-v4")
     <stdout URL="file:./sched$JOBID.log" />
     <stderr URL="file:./sched$JOBID.err" />
      <input URL="command:PicoL.pl" /> 
+<!--
+   <input URL="command:lscsh '../*.list'" />
+<input URL="file:/gpfs01/star/subsys-tpc/fisyak/kfp/2020/19p5GeV_fixedTarget_P25iy/*.list" />
+-->
+
 </job>
 

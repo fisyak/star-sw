@@ -31,7 +31,7 @@ void lsH(const TString reg = "TdEdx*", Bool_t plot = kFALSE) {
   }
   TList *listOfKey = gDirectory->GetListOfKeys(); 
   if (listOfKey) {
-    cout << "List of objects\t" << listOfKey->GetEntries() << endl;
+    cout << "List of keys\t" << listOfKey->GetEntries() << endl;
     TIter next(listOfKey);
     TKey *key; 
     while ((key= (TKey*)next())) { 

@@ -2497,6 +2497,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXI311"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_17p3GeV_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/14/2023 split TpcSecRowB  dAu to A (day 180-182) and B (183-188) new TpcLengthCorrectionMDN
 #$hist = "RunXXI312"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_dAu200_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/15/2023 split TpcSecRowB  dAu to A (day 180-182) and B (183-188) check MySQL
 #$hist = "RunXXI312"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_17p3GeV_2021/*FullField/";  $Production = "P23id_calib"; $year = "/2021/*/*/"; $FILE = "st_"; $STAR_LEVEL = "SL23d"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  08/15/2023 split TpcSecRowB  dAu to A (day 180-182) and B (183-188) check MySQL
+####################   RunXX + RunXXI
+$hist = "RunXXI313"; $NEvents = 10000; $disk = "data*/"; $RECO = "reco/production_7p7GeV_202?/*FullField/";  $Production = "P25iy_calib"; $year = "/202?/*/*/"; $FILE = "st_"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";#  09/17/2026 check dE/dx calibration
 
 ################################################################################
 # Run XXII pp510_2022
@@ -2917,7 +2919,7 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI54";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/11/2026 new TpcZCorrectionC
 #$hist = "RunXXVI55";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/11/2026 new TpcSecRowB
 #$hist = "RunXXVI56";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/12/2026 new TpcLengthCorrectionMDN
-$hist = "RunXXVI57";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/17/2026 newest (log error) TpcLengthCorrectionMDN
+#$hist = "RunXXVI57";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26g3_calib"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 08/17/2026 newest (log error) TpcLengthCorrectionMDN
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();

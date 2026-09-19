@@ -35,7 +35,7 @@
 #  set KFVertex = "";
 #  echo $Name | grep -i KFV
 #  if (! $?) set KFVertex = ",KFVertex";
-#  if (! -r ${generF} ) then
+   if (! -r ${generF} ) then
 #    root.exe -q -b -x 'bfc.C(100,"hIn,P2019a,readAll,sdt20190311,StiCA,StiKFVertex,-hitfilt,-geantOut,-evout,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco","'${file}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(101,1000,"PHQMDFXT,vmc,MC.2019,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}
 #     root.exe -q -b -x 'bfc.C(500,"PHQMDFXT,vmc,MC.2019,StiPulls,sdt20190609.130006,McTpcAna,-bbcSim,StiCA,-hitfilt,geantOut,evout,vmc,VMCAlignment,CorrY,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,UseCAVxFinder,FXT","'${file}'",0,"'${tagf}'")' &gt;&amp; ${logName}

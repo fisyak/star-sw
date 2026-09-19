@@ -18850,3 +18850,115 @@ Dca: imp    0.24 +/-   1.24, Z: 197.51 +/-   1.82, psi:  -0.00 +/-   0.03, pT/q:
 p(   1,   0,   0) x:   0.007+/- 0.024 y:   0.520+/- 1.025 z: 197.461+/- 1.037 px:   0.455+/- 0.020 py:  -0.006+/- 0.010 pz:  -0.960+/- 0.039 p:   1.062+/-  0.043       pi+ Q: 1  chi2/NDF :   -1.00/ 1
    1 massFit  p(   1,   0,   0) x:   0.007+/- 0.024 y:   0.520+/- 1.025 z: 197.461+/- 1.037 px:   0.455+/- 0.020 py:  -0.006+/- 0.010 pz:  -0.960+/- 0.039 p:   1.062+/-  0.043       pi+ Q: 1  chi2/NDF :   14.67/89    p/q in TPC    1.049
    1 massFit  p(   1,   0,   0) x:   0.001+/- 0.011 y:   0.236+/- 1.243 z: 197.507+/- 1.817 px:   1.013+/- 0.056 py:  -0.003+/- 0.035 pz:  -2.136+/- 0.102 p:   2.364+/-  0.113     Alpha Q: 2  chi2/NDF :   14.12/89    p/q in TPC    1.060
+================================================================================
+09/13/2026 
+[starsub05] ~/TPC/reco $ zdifw380  TFG26d/2025/RF/13p5GeV_fixedTarget_2026/026/27026051/st_physics_27026051_raw_0100001,10001,15000B.log.gz TFG26i/2025/RF/13p5GeV_fixedTarget_2026/026/27026051/st_physics_27026051_raw_0100001,10001,15000B.log.gz | more
+QA :INFO  - #V[  0] :0/2/7/4/2/6/6  -0.375+/-0.079,  -2.124+/-0.070, 200.108+/-0.086, Prob/Chi2: 0.000/ 140.45 Rank:  10075.0 U/T/G:   18,  22,  20                                          |  
+QA :INFO  - #V[  0] :0/4/7/4/2/6/4  -0.935+/-0.190,  -1.931+/-0.190, 199.356+/-0.221, Prob/Chi2: 0.000/  53.15 Rank:  10075.0 U/T/G:   22,  20,  20
+
+
+
+1272        int centralityHisto[3] = {2,3,16};
+(gdb) p histoParameters3D[iPart][16] 
+$2 = (TH3F *) 0x443a5a0
+(gdb) p iPart
+$3 = 41
+(gdb) p path.Data()
+$4 = 0x441f490 "gamma "
+(gdb) p histoParameters3D[0][iParticle][16]
+$5 = (TH3F *) 0x443a5a0
+
+
+ge = 47 Tpc s/r   3/ 11 id     9 xyz:    71.555 +/- 0.000     7.949 +/- 0.000    48.104 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl258 us 0 dX  0.00 pmin/max  17/ 19 np  3 tmin/max 280/284 nt  5 tm 282.33 pad  18.89 adc  1194 lTpc   0.00
+ge = 47 Tpc s/r   3/ 11 id     8 xyz:    71.556 +/- 0.000     8.254 +/- 0.000    45.956 +/- 0.000 q(keV)   0.00 idT     1 qa 100 fl258 us 0 dX  0.00 pmin/max  17/ 19 np  3 tmin/max 283/287 nt  5 tm 285.95 pad  18.28 adc  1517 lTpc   0.00
+ge = 47 Tpc s/r   3/ 11 id     9 xyz:    71.555 +/- 0.000     8.121 +/- 0.693    46.900 +/- 0.792 q(keV) 267.52 idT     1 qa 100 fl  0 us 1 dX  3.72 pmin/max  17/ 19 np  3 tmin/max 280/287 nt  8 tm 284.36 pad  18.55 adc  2711 lTpc  30.58
+
+
+fl258 us 0 dX  0.00 pmin/max  17/ 19 np  3 tmin/max 280/284 nt  5 tm 282.33 pad  18.89 adc  1194 
+fl258 us 0 dX  0.00 pmin/max  17/ 19 np  3 tmin/max 283/287 nt  5 tm 285.95 pad  18.28 adc  1517 
+fl  0 us 1 dX  3.72 pmin/max  17/ 19 np  3 tmin/max 280/287 nt  8 tm 284.36 pad  18.55 adc  2711 
+================================================================================
+09/14/2026
+foreach h (dPadI dPadO dTimeI dTimeO)
+ root.exe -q -b lBichsel.C SparseT0Flagged.root  'dEdxFit.C+("'${h}'","GP")' >& dEdxFitGP_${h}.log &
+end
+================================================================================
+09/16/2026
+root.exe -q -b 'T0offset.C("dPadI","*.root","SparsedPadI.root")' >& dPadI.log &
+root.exe -q -b 'T0offset.C("dPadO","*.root","SparsedPadO.root")' >& dPadO.log &
+root.exe -q -b 'T0offset.C("dTimeI","*.root","SparsedTimeI.root")' >& dTimeI.log &
+root.exe -q -b 'T0offset.C("dTimeO","*.root","SparsedTimeO.root")' >& dTimeO.log &
+
+================================================================================
+09/17/2026
+ run lBichsel.C SparsedPadI.root dEdxFit.C+
+
+
+ ~/TPC/reco/TFG26i/2025/RF/PHQMD_13p5GeV_fixedTarget_2026/new3
+
+root.exe -q -b lBichsel.C SparsedPadI.root 'dEdxFit.C+("dPadI","GP")' >& dPadIFit.log &
+root.exe -q -b lBichsel.C SparsedPadO.root 'dEdxFit.C+("dPadO","GP")' >& dPadOFit.log &
+root.exe -q -b lBichsel.C SparsedTimeI.root 'dEdxFit.C+("dTimeI","GP")' >& dTimeIFit.log &
+root.exe -q -b lBichsel.C SparsedTimeO.root 'dEdxFit.C+("dTimeO","GP")' >& dTimeOFit.log &
+
+
+
+[cvmfswrite07] ~/TPC/reco $ grep W  */*/RF/K_S*/*.txt
+TFG26d/2025/RF/K_S0Fixed/Title_AnaKs_M___9.999K.txt:Ana.root    M_BW     S = 1975.38    B = 36.5549
+TFG26d/2025/RF/K_S0Fixed/Title_AnaKs_M___9.999K.txt:    M =  497.10 +/-  0.19   W =    9.14 +/-  0.25 (MeV)
+TFG26d/2025/RF/K_S0Fixed/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.999K.txt:Ana.root     y-#phi-M1GeV_z_BW        S = 173.572    B = 0
+TFG26d/2025/RF/K_S0Fixed/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.999K.txt:     M =  498.50 +/-  0.69   W =   12.53 +/-  1.65 (MeV)
+TFG26i/2021/RF/K_S0Fixed.TFG25e/Title_AnaKs_M___9.500K.txt:Ana.root     M_BW     S = 1290.26    B = 0
+TFG26i/2021/RF/K_S0Fixed.TFG25e/Title_AnaKs_M___9.500K.txt:     M =  497.18 +/-  0.14   W =    5.77 +/-  0.19 (MeV)
+TFG26i/2021/RF/K_S0Fixed.TFG25e/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.500K.txt:Ana.root      y-#phi-M1GeV_z_BW        S = 127.068    B = 4.65466
+TFG26i/2021/RF/K_S0Fixed.TFG25e/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.500K.txt:      M =  496.87 +/- 60252.61        W =    7.46 +/- 594.85 (MeV)
+TFG26i/2021/RF/K_S0Fixed.TFG26i/Title_AnaKs_M___9.993K.txt:Ana.root     M_BW     S = 1214.77    B = 45.9736
+TFG26i/2021/RF/K_S0Fixed.TFG26i/Title_AnaKs_M___9.993K.txt:     M =  502.48 +/-  0.28   W =   11.49 +/-  0.43 (MeV)
+TFG26i/2021/RF/K_S0Fixed.TFG26i/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.993K.txt:Ana.root      y-#phi-M1GeV_z_BW        S = 127.894    B = 0
+TFG26i/2021/RF/K_S0Fixed.TFG26i/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.993K.txt:      M =  500.98 +/-  0.83   W =   14.76 +/-  3.49 (MeV)
+TFG26i/2021/RF/K_S0Fixed/Title_AnaKs_M___1.200K.txt:Ana.root    M_BW     S = 276.504    B = 0
+TFG26i/2021/RF/K_S0Fixed/Title_AnaKs_M___1.200K.txt:    M =  496.34 +/-  0.45   W =   11.28 +/-  1.21 (MeV)
+TFG26i/2021/RF/K_S0Fixed/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____1.200K.txt:Ana.root     y-#phi-M1GeV_z_BW        S = 216.578    B = 0.274908
+TFG26i/2021/RF/K_S0Fixed/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____1.200K.txt:     M =  314.63 +/- 58503.32        W =    0.02 +/- 586.91 (MeV)
+TFG26i/2025/RF/K_S0Fixed/Title_AnaKs_M___9.993K.txt:Ana.root    M_BW     S = 1214.77    B = 45.9736
+TFG26i/2025/RF/K_S0Fixed/Title_AnaKs_M___9.993K.txt:    M =  502.48 +/-  0.28   W =   11.49 +/-  0.43 (MeV)
+TFG26i/2025/RF/K_S0Fixed/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.993K.txt:Ana.root     y-#phi-M1GeV_z_BW        S = 127.894    B = 0
+TFG26i/2025/RF/K_S0Fixed/Title_AnaKs_y-phi-M1GeV_pT_gt_1_GeV____9.993K.txt:     M =  500.98 +/-  0.83   W =   14.76 +/-  3.49 (MeV)
+
+
+[cvmfswrite07] ~/TPC/reco $ grep -w W */*/RF/K_S*/*M__*.txt
+TFG26i/2021/RF/K_S0Fixed.TFG25e/Title_AnaKs_M___9.500K.txt:     M =  497.18 +/-  0.14   W =    5.77 +/-  0.19 (MeV)
+TFG26d/2025/RF/K_S0Fixed/Title_AnaKs_M___9.999K.txt:    	M =  497.10 +/-  0.19   W =    9.14 +/-  0.25 (MeV)
+TFG26i/2021/RF/K_S0Fixed/Title_AnaKs_M___1.200K.txt:    	M =  496.34 +/-  0.45   W =   11.28 +/-  1.21 (MeV)
+TFG26i/2025/RF/K_S0Fixed/Title_AnaKs_M___9.993K.txt:   		M =  502.48 +/-  0.28   W =   11.49 +/-  0.43 (MeV)
+TFG26i/2021/RF/K_S0Fixed.TFG26i/Title_AnaKs_M___9.993K.txt:     M =  502.48 +/-  0.28   W =   11.49 +/-  0.43 (MeV)
+================================================================================
+09/18/2026
+-rw-r--r--+ 1 starreco rhstar 6.4K Sep 17 11:11 NFS_FileList/production_26p5GeV_fixedTarget_2021_P25iy_calib_picodst.txt
+-rw-r--r--+ 1 starreco rhstar  13K Sep 17 11:12 NFS_FileList/production_26p5GeV_fixedTarget_2020_P25iy_calib_picodst.txt
+-rw-r--r--+ 1 starreco rhstar  53K Sep 17 11:12 NFS_FileList/production_7p7GeV_2020_P25iy_calib_picodst.txt
+-rw-r--r--+ 1 starreco rhstar 479K Sep 17 11:14 NFS_FileList/production_7p7GeV_2021_P25iy_calib_picodst.txt
+
+-rw-r--r--+ 1 starreco rhstar  52K Sep 17 11:13 NFS_FileList/production_7p7GeV_2020_P25iy_calib_event.txt
+-rw-r--r--+ 1 starreco rhstar 472K Sep 17 11:14 NFS_FileList/production_7p7GeV_2021_P25iy_calib_event.txt
+
+
+[cvmfswrite07] ~/work/kfp $ dir -ltrdd */*P25iy_calib | grep Sep\ 18 | awk '{print $9}'
+2020/26p5GeV_fixedTarget_2020_P25iy_calib/
+2020/7p7GeV_2020_P25iy_calib/
+2021/26p5GeV_fixedTarget_2021_P25iy_calib/
+2021/7p7GeV_2021_P25iy_calib/
+
+foreach d (`dir -ltrdd */*P25iy_calib | grep Sep\ 18 | awk '{print $9}'`)
+   tar cf - ${d}/*.txt ${d}/*.png | (cd ~/WWW/star/kfp/; tar xf -)
+end
+------------------------------------------ CHECK --------------------------------------
+                                                                                            root.exe 'lDb.C(0,"9p8GeV_fixedTarget_2026")' dPadI*.root Chain.C 'mdf4HitError.C+(tChain)'
+[starsub05] ~/WWW/star/Tpc/HitError/TFG26i_PHQMD_13p5GeV_fixedTarget_2026/Check_wrt_y2024 $ root.exe 'lDb.C(0,"9p8GeV_fixedTarget_2026")' dTimeI*.root Chain.C 'mdf4HitError.C+(tChain)'
+[cvmfswrite07] ~/WWW/star/Tpc/HitError/TFG26i_PHQMD_13p5GeV_fixedTarget_2026/Check_wrt_y2024 $ root.exe 'lDb.C(0,"9p8GeV_fixedTarget_2026")' dPadO*.root Chain.C 'mdf4HitError.C+(tChain)'
+[cvmfswrite07] ~/WWW/star/Tpc/HitError/TFG26i_PHQMD_13p5GeV_fixedTarget_2026/Check_wrt_y2024 $  root.exe 'lDb.C(0,"9p8GeV_fixedTarget_2026")' dTimeO*.root Chain.C 'mdf4HitError.C+(tChain)'
+
+  cat *I*RF*.C *I*RHF*.C *I*ZF*.C > TpcInnerHitErrorMDF4.9p8GeV_fixedTarget_2026.C
+  cat *O*RF*.C *O*RHF*.C *O*ZF*.C > TpcOuterHitErrorMDF4.9p8GeV_fixedTarget_2026.C
+
+
