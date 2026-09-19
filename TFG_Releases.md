@@ -130,6 +130,6 @@
 <li> TFG26g dX++, fix StEventClusteringHints stremaer                    2026-08-07 10:37:58 -0400  (HEAD -> TFG, tag: TFG26g3, origin/TFG)
 <li> TFG26g dX++, add StiMassFitMaker                                    2026-08-11 17:06:49 -0400  (HEAD -> TFG, tag: TFG26g4)
 <li> TFG26h Add Mass Fit to Mu & Pico Dsts. 2026 FXT production          2026-08-22 17:29:02 -0400  (tag: TFG26h)
-<li> TFG26i Revise Sti materails                                         2026-09-10 18:08:16 -0400  (HEAD -> TFG, tag: TFG26i)
+<li> TFG26i Revise Sti materails, fix bug with MDF4                      2026-09-19 10:00:07 -0400  (HEAD -> TFG, tag: TFG26i_1)                                        
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
