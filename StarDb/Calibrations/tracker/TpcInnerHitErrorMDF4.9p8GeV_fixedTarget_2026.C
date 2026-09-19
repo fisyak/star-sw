@@ -8,7 +8,7 @@ TDataSet *CreateTable() {
   memset(&row,0,tableSet->GetRowSize());
   row.nrows =  4; //dPadI	dPadIGPSparsedPadI.root
   row.idx   =  1;//	Sigma
-  row.PolyType = 	 1;
+  row.PolyType = 	11;
   row.NVariables = 	4;
   row.NCoefficients = 	17;
   row.XMin[ 0] =       -196;  row.XMin[ 1] =      -0.85;  row.XMin[ 2] =      -6.95;  row.XMin[ 3] =       3.75;
@@ -53,7 +53,7 @@ TDataSet *CreateTable() {
   memset(&row,0,tableSet->GetRowSize());
   row.nrows =  4; //dPadI	dPadIGPSparsedPadI.root
   row.idx   =  2;//	Mu
-  row.PolyType = 	 1;
+  row.PolyType = 	11;
   row.NVariables = 	4;
   row.NCoefficients = 	20;
   row.XMin[ 0] =       -196;  row.XMin[ 1] =      -0.85;  row.XMin[ 2] =      -6.95;  row.XMin[ 3] =       3.75;
@@ -103,7 +103,7 @@ TDataSet *CreateTable() {
   memset(&row,0,tableSet->GetRowSize());
   row.nrows =  4; //dTimeI	dTimeIGPSparsedTimeI.root
   row.idx   =  3;//	Sigma
-  row.PolyType = 	 1;
+  row.PolyType = 	11;
   row.NVariables = 	4;
   row.NCoefficients = 	20;
   row.XMin[ 0] =       -192;  row.XMin[ 1] =      -0.85;  row.XMin[ 2] =      -6.95;  row.XMin[ 3] =       3.75;
@@ -153,7 +153,7 @@ TDataSet *CreateTable() {
   memset(&row,0,tableSet->GetRowSize());
   row.nrows =  4; //dTimeI	dTimeIGPSparsedTimeI.root
   row.idx   =  4;//	Mu
-  row.PolyType = 	 1;
+  row.PolyType = 	11;
   row.NVariables = 	4;
   row.NCoefficients = 	20;
   row.XMin[ 0] =       -192;  row.XMin[ 1] =      -0.85;  row.XMin[ 2] =      -6.95;  row.XMin[ 3] =       3.75;
