@@ -677,7 +677,7 @@ void mdf4HitError(TChain *tChain = 0) {
     out << "  row.idx   = " << Form("%2i", idx) << ";//\t" << VarName.Data() <<  endl;
     cout << *fit;
     out << *fit;
-    out << "  tableSet->AddAt(&row); // idx = " << idx + 1  << endl;
+    out << "  tableSet->AddAt(&row); // idx = " << idx  << endl;
 #endif /* ! __CHECK__ */
     ix++;
     t.Loop2();
