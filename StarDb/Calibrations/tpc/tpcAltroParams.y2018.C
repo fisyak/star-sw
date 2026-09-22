@@ -40,7 +40,7 @@ Run18, iTPC;      mysql -h dbbak.starp.bnl.gov -P 3417 -e 'select asic_thr_lo as
   row.Altro_L2  =   37911; //L2 coefficient of the TCF
   row.Altro_L3  =   58775; //L3 coefficient of the TCF
 
-  cout << "sector != 20 [ALTRO] : Usin local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl;
+  cout << "sector != 20 [ALTRO] : Using local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl;
   rowiTPC.N         =       6;
   rowiTPC.Altro_thr =       4; // iTPC, Tonko 12/12/2019, 
   rowiTPC.Altro_seq =       2; // confirmed by Jef 01/14/2023
@@ -56,7 +56,7 @@ Run18, iTPC;      mysql -h dbbak.starp.bnl.gov -P 3417 -e 'select asic_thr_lo as
   }
   for (Int_t i  = 0; i < 24; i++)		{
     if (i == 20 - 1) {// SAMPA in sector 20
-      cout << "sector == 20 [SAMPA] : Usin local configuration with Inner row.Altro_thr = " << rowiTPC.Altro_thr << " row.Altro_seq = " << rowiTPC.Altro_seq << endl;
+      cout << "sector == 20 [SAMPA] : Using local configuration with Inner row.Altro_thr = " << rowiTPC.Altro_thr << " row.Altro_seq = " << rowiTPC.Altro_seq << endl;
       tableSet->AddAt(&rowiTPC);
     } else {
       tableSet->AddAt(&row);
