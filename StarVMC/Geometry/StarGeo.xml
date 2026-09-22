@@ -1087,7 +1087,7 @@
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
     <Construct sys="sisd" config="SISD85" />
-    <Construct sys="istd" config="ISTD03" />
+    <Construct sys="istd" config="ISTD02" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD16" />
     <Construct sys="pixl" config="PIXL62" />
@@ -1285,7 +1285,7 @@
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
     <Construct sys="sisd" config="SISD85" />
-    <Construct sys="istd" config="ISTD03" />
+    <Construct sys="istd" config="ISTD02" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD16" />
     <Construct sys="pixl" config="PIXL62" />
@@ -1428,7 +1428,7 @@
     <Construct sys="zcal" config="ZCALon" />
     <Construct sys="magp" config="MAGPon" />
     <Construct sys="sisd" config="SISD85" />
-    <Construct sys="istd" config="ISTD03" />
+    <Construct sys="istd" config="ISTD02" />
     <Construct sys="pxst" config="PXST01" />
     <Construct sys="mutd" config="MUTD14" />
     <Construct sys="pixl" config="PIXL06" />
