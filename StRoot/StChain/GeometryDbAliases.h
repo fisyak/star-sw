@@ -142,7 +142,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"y2018z",      20171215,     4, "y2018z",   "y2018z physics production geometry version A,      xgeometry"},   
   {"r2018",       20171220,     0, "y2018z",   "y2018z, no HFT"}, // 
   {"isobar_2018",	              	     20180312, 162439, "y2018z", "isobar_2018"}, // 1st run = 19071038			 
-  {"27GeV_2018",	              	     20180510, 201552, "y2018z", "27GeV_2018"}, // 1st run = 19130060			 x1
+  {"27GeV_2018",	              	     20180510, 201552, "y2018z", "27GeV_2018"}, // 1st run = 19130060	
   {"27GeV_fixedTarget_2018",	      	     20180518, 231602, "y2018z", "27GeV_fixedTarget_2018"}, // 1st run = 19138032	 
   {"27GeV_2018b",	              	     20180519,  82150, "y2018z", "27GeV_2018"}, // 1st run = 19139022			 
   {"27GeV_2018c",	              	     20180529,  23458, "y2018z", "27GeV_2018"}, // 1st run = 19148050			 
