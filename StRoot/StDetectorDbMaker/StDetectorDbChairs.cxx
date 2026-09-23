@@ -3082,6 +3082,41 @@ Float_t  St_vpdTotCorrC::Corr(Int_t i, Float_t x) {
   }
   return dcorr;
 }
+//_____________________________________ Geometry/etof ___________________________________________
+#include "St_etofAlignC.h"
+MakeChairInstance(etofAlign,Geometry/etof/etofAlign);
+#include "St_etofElectronicsMapC.h"
+MakeChairInstance(etofElectronicsMap,Geometry/etof/etofElectronicsMap);
+#include "St_etofModCounterC.h"
+MakeChairInstance(etofModCounter,Geometry/etof/etofModCounter);
+//_____________________________________ Calibrations/etof ___________________________________________
+#include "St_etofCalibParamC.h"
+MakeChairInstance(etofCalibParam,Calibrations/etof/etofCalibParam);
+#include "St_etofDigiSlewCorrC.h"
+MakeChairInstance(etofDigiSlewCorr,Calibrations/etof/etofDigiSlewCorr);
+#include "St_etofDigiTimeCorrC.h"
+MakeChairInstance(etofDigiTimeCorr,Calibrations/etof/etofDigiTimeCorr);
+#include "St_etofDigiTotCorrC.h"
+MakeChairInstance(etofDigiTotCorr,Calibrations/etof/etofDigiTotCorr);
+#include "St_etofGet4StateC.h"
+MakeChairInstance(etofGet4State,Calibrations/etof/etofGet4State);
+#include "St_etofHitParamC.h"
+MakeChairInstance(etofHitParam,Calibrations/etof/etofHitParam);
+#include "St_etofMatchParamC.h"
+MakeChairInstance(etofMatchParam,Calibrations/etof/etofMatchParam);
+#include "St_etofPulserTimeDiffGbtxC.h"
+MakeChairInstance(etofPulserTimeDiffGbtx,Calibrations/etof/etofPulserTimeDiffGbtx);
+#include "St_etofPulserTotPeakC.h"
+MakeChairInstance(etofPulserTotPeak,Calibrations/etof/etofPulserTotPeak);
+#include "St_etofResetTimeCorrC.h"
+MakeChairInstance(etofResetTimeCorr,Calibrations/etof/etofResetTimeCorr);
+#include "St_etofSignalVelocityC.h"
+MakeChairInstance(etofSignalVelocity,Calibrations/etof/etofSignalVelocity);
+#include "St_etofStatusMapC.h"
+MakeChairInstance(etofStatusMap,Calibrations/etof/etofStatusMap);
+#include "St_etofTimingWindowC.h"
+MakeChairInstance(etofTimingWindow,Calibrations/etof/etofTimingWindow);
+//_____________________________________ vpd  ___________________________________________
 #include "St_vpdSimParamsC.h"
 MakeChairInstance(vpdSimParams,Calibrations/tof/vpdSimParams);
 //____________________________Calibrations/emc____________________________________________________
@@ -3097,7 +3132,6 @@ MakeChairInstance2(emcCalib,St_bprsCalibC,Calibrations/emc/y3bprs/bprsCalib);
 #include "St_emcGainC.h"
 MakeChairInstance2(emcGain,St_bemcGainC,Calibrations/emc/y3bemc/bemcGain);
 MakeChairInstance2(emcGain,St_bprsGainC,Calibrations/emc/y3bprs/bprsGain);
-
 #include "St_smdPedC.h"
 MakeChairInstance2(smdPed,St_bsmdePedC,Calibrations/smd/y3bsmde/bsmdePed);
 MakeChairInstance2(smdPed,St_bsmdpPedC,Calibrations/smd/y3bsmdp/bsmdpPed);
