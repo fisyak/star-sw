@@ -19,12 +19,12 @@
 #include "TString.h"
 #include "TLegend.h"
 #endif
-void T0offset(const Char_t *files="*.root", const Char_t *Out = "SparseT0Flagged.root") {
+void T0offset(const Char_t *opt = "dPadI", const Char_t *files="*.root", const Char_t *Out = "SparseT0dPadI.root") {
 #if defined(__CINT__) && ! defined(__MAKECINT__)
   gROOT->LoadMacro("lBichsel.C");
   lBichsel();
   gROOT->LoadMacro("TpcT.C+");
-  T0Offsets(files,Out);
+  T0Offsets(opt,files,Out);
 #else
   cout << " T0offset.C does not work with AClick" << endl;
 #endif

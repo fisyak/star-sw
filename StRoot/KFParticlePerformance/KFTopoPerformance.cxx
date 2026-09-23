@@ -1679,6 +1679,11 @@ void KFTopoPerformance::FillParticleParameters(KFParticle& TempPart,
       histoParameters3D[0][iParticle][14]->Fill(Rapidity, Phi, M, 1);
       histoParameters3D[0][iParticle][15]->Fill(Rapidity,Pt,ErrM,1);
     }
+    if (histoParameters3D[0][iParticle][16] && (index1 >= 0 && index2 >= 0)) {
+      Double_t PhiD = TMath::RadToDeg()*Phi;
+      if (PhiD < 0) PhiD += 360;
+      histoParameters3D[0][iParticle][16]->Fill(Z,R,PhiD);
+    }
 #endif /* __TFG__VERSION__ */
     
     if(IsCollectDalitz(iParticle))

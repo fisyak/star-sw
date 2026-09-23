@@ -36,7 +36,7 @@ Run9, TPX;        mysql -h dbbak.starp.bnl.gov -P 3408 -e 'select asic_thr_lo as
   row.Altro_L1  =       0; //L1 coefficient of the TCF
   row.Altro_L2  =       0; //L2 coefficient of the TCF
   row.Altro_L3  =       0; //L3 coefficient of the TCF
-  cout << "[ALTRO] : Usin local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl;
+  cout << "[ALTRO] : Using local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl;
   for (Int_t i  = 0; i < 24; i++) {
     tableSet->AddAt(&row);
   }

@@ -69,18 +69,18 @@
 #include "StETofUtil/StETofHardwareMap.h"
 #include "StETofUtil/StETofConstants.h"
 
-#include "tables/St_etofCalibParam_Table.h"
-#include "tables/St_etofElectronicsMap_Table.h"
-#include "tables/St_etofStatusMap_Table.h"
-#include "tables/St_etofTimingWindow_Table.h"
-#include "tables/St_etofSignalVelocity_Table.h"
-#include "tables/St_etofDigiTotCorr_Table.h"
-#include "tables/St_etofDigiTimeCorr_Table.h"
-#include "tables/St_etofDigiSlewCorr_Table.h"
-#include "tables/St_etofResetTimeCorr_Table.h"
-#include "tables/St_etofPulserTotPeak_Table.h"
-#include "tables/St_etofPulserTimeDiffGbtx_Table.h"
-#include "tables/St_etofGet4State_Table.h"
+#include "StDetectorDbMaker/St_etofCalibParamC.h"
+#include "StDetectorDbMaker/St_etofElectronicsMapC.h"
+#include "StDetectorDbMaker/St_etofStatusMapC.h"
+#include "StDetectorDbMaker/St_etofTimingWindowC.h"
+#include "StDetectorDbMaker/St_etofSignalVelocityC.h"
+#include "StDetectorDbMaker/St_etofDigiTotCorrC.h"
+#include "StDetectorDbMaker/St_etofDigiTimeCorrC.h"
+#include "StDetectorDbMaker/St_etofDigiSlewCorrC.h"
+#include "StDetectorDbMaker/St_etofResetTimeCorrC.h"
+#include "StDetectorDbMaker/St_etofPulserTotPeakC.h"
+#include "StDetectorDbMaker/St_etofPulserTimeDiffGbtxC.h"
+#include "StDetectorDbMaker/St_etofGet4StateC.h"
 
 namespace etofSlewing {
     const unsigned int nTotBins = 30;
@@ -214,10 +214,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
     // electronics-to-hardware map
     if( mFileNameElectronicsMap.empty() ) {
         LOG_INFO << "etofElectronicsMap: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Geometry/etof/etofElectronicsMap" );
 
         St_etofElectronicsMap* etofElectronicsMap = static_cast< St_etofElectronicsMap* > ( dbDataSet->Find( "etofElectronicsMap" ) );
+#else
+        St_etofElectronicsMap* etofElectronicsMap = ( St_etofElectronicsMap* ) ( St_etofElectronicsMapC::instance()->Table());
+#endif
         if( !etofElectronicsMap ) {
             LOG_ERROR << "unable to get the electronics map from the database" << endm;
             return kStFatal;
@@ -294,10 +297,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
     if( mFileNameTimingWindow.empty() ) {
         LOG_INFO << "etofTimingWindow: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofTimingWindow" );
 
         St_etofTimingWindow* etofTimingWindow = static_cast< St_etofTimingWindow* > ( dbDataSet->Find( "etofTimingWindow" ) );
+#else
+        St_etofTimingWindow* etofTimingWindow = ( St_etofTimingWindow* ) ( St_etofTimingWindowC::instance()->Table());
+#endif
         if( !etofTimingWindow ) {
             LOG_ERROR << "unable to get the timing window from the database" << endm;
             return kStFatal;
@@ -377,10 +383,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
     // calib param
     if( mFileNameCalibParam.empty() ) {
         LOG_INFO << "etofCalibParam: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofCalibParam" );
 
         St_etofCalibParam* etofCalibParam = static_cast< St_etofCalibParam* > ( dbDataSet->Find( "etofCalibParam" ) );
+#else
+        St_etofCalibParam* etofCalibParam = ( St_etofCalibParam* ) ( St_etofCalibParamC::instance()->Table());
+#endif
         if( !etofCalibParam ) {
             LOG_ERROR << "unable to get the calibration params from the database" << endm;
             return kStFatal;
@@ -451,10 +460,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
     if( mFileNameSignalVelocity.empty() ) {
         LOG_INFO << "etofSignalVelocity: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofSignalVelocity" );
 
         St_etofSignalVelocity* etofSignalVelocity = static_cast< St_etofSignalVelocity* > ( dbDataSet->Find( "etofSignalVelocity" ) );
+#else
+        St_etofSignalVelocity* etofSignalVelocity = ( St_etofSignalVelocity* ) ( St_etofSignalVelocityC::instance()->Table());
+#endif
         if( !etofSignalVelocity ) {
             LOG_ERROR << "unable to get the signal velocity from the database" << endm;
             return kStFatal;
@@ -515,10 +527,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
         // digi tot corr
         //-------------------
         LOG_INFO << "etofDigiTotCorr: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofDigiTotCorr" );
 
         St_etofDigiTotCorr* etofDigiTotCorr = static_cast< St_etofDigiTotCorr* > ( dbDataSet->Find( "etofDigiTotCorr" ) );
+#else
+        St_etofDigiTotCorr* etofDigiTotCorr = ( St_etofDigiTotCorr* ) ( St_etofDigiTotCorrC::instance()->Table());
+#endif
         if( !etofDigiTotCorr ) {
             LOG_ERROR << "unable to get the digi tot correction from the database" << endm;
             return kStFatal;
@@ -556,9 +571,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
         LOG_INFO << "etofDigiTimeCorr: no filename provided --> load database table" << endm;
 
         // (1) position offset +  (2) T0 offset
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofDigiTimeCorr" );
 
         St_etofDigiTimeCorr* etofDigiTimeCorr = static_cast< St_etofDigiTimeCorr* > ( dbDataSet->Find( "etofDigiTimeCorr" ) );
+#else
+        St_etofDigiTimeCorr* etofDigiTimeCorr = ( St_etofDigiTimeCorr* ) ( St_etofDigiTimeCorrC::instance()->Table());
+#endif
         if( !etofDigiTimeCorr ) {
             LOG_ERROR << "unable to get the digi time correction from the database" << endm;
             return kStFatal;
@@ -594,10 +613,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
         // digi slewing corr
         //-------------------
         LOG_INFO << "etofDigiSlewCorr: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofDigiSlewCorr" );
 
         St_etofDigiSlewCorr* etofDigiSlewCorr = static_cast< St_etofDigiSlewCorr* > ( dbDataSet->Find( "etofDigiSlewCorr" ) );
+#else
+        St_etofDigiSlewCorr* etofDigiSlewCorr = ( St_etofDigiSlewCorr* ) ( St_etofDigiSlewCorrC::instance()->Table());
+#endif
         if( !etofDigiSlewCorr ) {
             LOG_ERROR << "unable to get the digi slewing correction from the database" << endm;
             return kStFatal;
@@ -877,10 +899,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
     if( mFileNameResetTimeCorr.empty() ) {
         LOG_INFO << "etofResetTimeCorr: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofResetTimeCorr" );
 
         St_etofResetTimeCorr* etofResetTimeCorr = static_cast< St_etofResetTimeCorr* > ( dbDataSet->Find( "etofResetTimeCorr" ) );
+#else
+        St_etofResetTimeCorr* etofResetTimeCorr = ( St_etofResetTimeCorr* ) ( St_etofResetTimeCorrC::instance()->Table());
+#endif
         if( !etofResetTimeCorr ) {
             LOG_ERROR << "unable to get the reset time correction from the database" << endm;
             return kStFatal;
@@ -928,10 +953,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
     if( mFileNamePulserTotPeak.empty() ) {
         LOG_INFO << "etofPulserPeakTot: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofPulserTotPeak" );
 
         St_etofPulserTotPeak* etofPulserTotPeak = static_cast< St_etofPulserTotPeak* > ( dbDataSet->Find( "etofPulserTotPeak" ) );
+#else
+        St_etofPulserTotPeak* etofPulserTotPeak = ( St_etofPulserTotPeak* ) ( St_etofPulserTotPeakC::instance()->Table());
+#endif
         if( !etofPulserTotPeak ) {
             LOG_ERROR << "unable to get the pulser tot peak parameters from the database" << endm;
             return kStFatal;
@@ -987,10 +1015,13 @@ StETofCalibMaker::InitRun( Int_t runnumber )
 
     if( mFileNamePulserTimeDiffGbtx.empty() ) {
         LOG_INFO << "etofPulserTimeDiffGbtx: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofPulserTimeDiffGbtx" );
 
         St_etofPulserTimeDiffGbtx* etofPulserTimeDiffGbtx = static_cast< St_etofPulserTimeDiffGbtx* > ( dbDataSet->Find( "etofPulserTimeDiffGbtx" ) );
+#else
+        St_etofPulserTimeDiffGbtx* etofPulserTimeDiffGbtx = ( St_etofPulserTimeDiffGbtx* ) ( St_etofPulserTimeDiffGbtxC::instance()->Table());
+#endif
         if( !etofPulserTimeDiffGbtx ) {
             LOG_ERROR << "unable to get the pulser time difference parameters from the database" << endm;
             return kStFatal;
@@ -2718,7 +2749,7 @@ void StETofCalibMaker::readGet4State(int fileNr, short forward){
     }
     
     if(mFileNameGet4State.empty()){
-         
+#if 0         
       TDataSet* dbDataSet = GetDataBase( "Calibrations/etof/etofGet4State" );
       if( ! dbDataSet ) {
 	LOG_ERROR << "unable to get the get4 state map database" << endm;	  
@@ -2727,6 +2758,11 @@ void StETofCalibMaker::readGet4State(int fileNr, short forward){
       const int intsPerEntry = 1000000;
       
       St_etofGet4State* etofStateMap = static_cast< St_etofGet4State* > ( dbDataSet->Find( "etofGet4State" ) );
+#else
+      const int intsPerEntry = 1000000;
+      
+      St_etofGet4State* etofStateMap = ( St_etofGet4State* ) ( St_etofGet4StateC::instance()->Table());
+#endif
       if( !etofStateMap ) {
 	LOG_ERROR << "unable to get the get4 state map from the database" << endm;	  
 	return;

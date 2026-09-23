@@ -46,7 +46,7 @@ Run8, TPX;        mysql -h dbbak.starp.bnl.gov -P 3407 -e 'select asic_thr_lo as
       row.N         =       0;
       row.Altro_thr =       3;
       row.Altro_seq =       1;
-      cout << "[ALTRO] in secor " << i+1 << ": Usin local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl;
+      cout << "[ALTRO] in secor " << i+1 << ": Using local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl;
     }
     tableSet->AddAt(&row);
   }

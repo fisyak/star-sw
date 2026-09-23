@@ -1,4 +1,3 @@
-#include "TMath.h"
 #include "StMDF.h"
 StMDF *StMDF::fgMDF = 0;
 StMDF::StMDF(MDFCorrection_st 	*Struc, const Char_t *name) : fName(name), fFunc(0),
@@ -56,7 +55,6 @@ Double_t StMDF::MDFunc(Double_t *x, Double_t *p) {
     // Add this term to the final result
     returnValue += term;
   }
-  if (fgMDF->ConvType()) returnValue = TMath::Exp(returnValue);
   return returnValue;
 }
 //____________________________________________________________________

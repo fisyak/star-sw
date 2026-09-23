@@ -710,7 +710,7 @@ void KFParticlePerformanceBase::CreateEfficiencyHistograms(TProfile* histo[3][nP
     int nBinsEff[nPartEfficiency]  = { 100 , 100 , 40 ,  360 ,  60 ,  60 ,  140 ,  60 , 100 };
     float xMinEff[nPartEfficiency] = {   0.,   0.,  0.,  -10., -10., -10.,    0.,   0. ,  0.};
     float xMaxEff[nPartEfficiency] = {  20.,   5.,  4.,   80.,  50.,  50.,   70.,  30. ,  4.};
-#else
+#else                               /*   p    pT     y       z   ctau     dL      L    Rxy    mT */
     int nBinsEff[nPartEfficiency]  = { 100 , 100 ,  60 ,   100 ,   60 ,   60 ,  100 ,  100 , 100  };
     float xMinEff[nPartEfficiency] = {   0.,   0.,  -3.,  -230.,  -10.,  -10.,    0.,    0.,   0. };
     float xMaxEff[nPartEfficiency] = {  10.,  10.,   3.,   230.,   50.,   50.,   50.,   50.,  10. };
@@ -951,8 +951,8 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
   TString parName2D[nHistoPartParam2D] = {"y-p_{t}", "Z-R", "Armenteros", "y-m_{t}", "dalitz1", "dalitz2", "dalitz3"};
   TString parTitle2D[nHistoPartParam2D];
   TString parName3D[nHistoPartParam3D] = {"y-p_{t}-M", "y-m_{t}-M", "centrality-pt-M", "centrality-y-M", "centrality-mt-M", "ct-pt-M", "dalitz", "dalitz2","dalitz3","dalitzM2", "dalitz2M2", "dalitz3M2"
-#if __TFG__VERSION__             /*                   12,         13,        14 */   
-					  ,"y-#phi-M1GeV","y-#phi-dM1GeV","y-#phi-M","y-#phi-dM"
+#if __TFG__VERSION__             /*                   12,              13,        14,        15,        16  */   
+					  ,"y-#phi-M1GeV","y-#phi-dM1GeV","y-#phi-M","y-#phi-dM", "zRhoPhi"
 #endif /* __TFG__VERSION__ */
   };
   TString parTitle3D[nHistoPartParam3D];
@@ -1260,6 +1260,12 @@ void KFParticlePerformanceBase::CreateParameterHistograms(TH1F* histoParameters[
 					      nBins[3],xMin[3],xMax[3],
 					      nBins[9],xMin[9],xMax[9],
 					      nBins[25],xMin[25],xMax[25]);
+    }
+    if (path.Contains("gamma")) {
+      histoParameters3D[iPart][16] = new TH3F(parName3D[16],parTitle3D[16] + " Vertex ; Z (cm) ; R (cm) ; #phi (degree;", 
+					      210,-210,210,
+					      100,   0, 60,
+					      180,   0, 360);
     }
 #endif /* __TFG__VERSION__ */
     

@@ -56,14 +56,14 @@ Run19, iTPC;      mysql -h dbbak.starp.bnl.gov -P 3418 -e 'select asic_thr_lo as
   row.Altro_L2  =   37911; //L2 coefficient of the TCF
   row.Altro_L3  =   58775; //L3 coefficient of the TCF
   
-  cout << "[ALTRO] : Usin local configuration with Outer row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl; 
+  cout << "[ALTRO] : Using local configuration with Outer row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl; 
 
   for (Int_t i  = 0; i < 24; i++)		{
     tableSet->AddAt(&row);
   }
   row.Altro_thr =       4; // instead 3, iTPC, Tonko 12/12/2019,       checked by StTpcHitMaker::CheckThrSeq
   row.Altro_seq =       2; // instead 1, confirmed by Jef 01/14/2023    -"-
-  cout << "[SAMPA] : Usin local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl; 
+  cout << "[SAMPA] : Using local configuration with Inner row.Altro_thr = " << row.Altro_thr << " row.Altro_seq = " << row.Altro_seq << endl; 
 
   for (Int_t i  = 0; i < 24; i++)		{
     tableSet->AddAt(&row);

@@ -147,7 +147,7 @@ void Run1Ev(Int_t NEvents, Int_t iD,
       cout << "You have to use root4star with St_geant_Maker already loaded" << endl;
     }
   }
-#if 0
+#if 1
   if (gClassTable->GetID("StiMaker") >= 0) {
     // Old Sti
     //    StiKalmanTrackNode::setDebug(8+32+16);

@@ -59,6 +59,7 @@ class TRMatrix : public TRArray {
   }
   const Double_t *GetRow(UInt_t col = 0) const {return GetArray() + col*fNcols;}
   virtual void Print(Option_t *opt="") const;
+#if 0
   friend TRMatrix operator*(const TRMatrix &source, Double_t scalar) {TRMatrix s(source); s *= scalar; return s;}
   friend TRMatrix operator*(Double_t scalar, const TRMatrix &source) {TRMatrix s(source); s *= scalar; return s;}
   friend TRMatrix operator/(const TRMatrix &source, Double_t scalar) {TRMatrix s(source); s /= scalar; return s;}
@@ -66,6 +67,7 @@ class TRMatrix : public TRArray {
   friend TRMatrix operator+(Double_t scalar, const TRMatrix &source) {TRMatrix s(source); s += scalar; return s;}
   friend TRMatrix operator-(const TRMatrix &source, Double_t scalar) {TRMatrix s(source); s -= scalar; return s;}
   friend TRMatrix operator-(Double_t scalar, const TRMatrix &source) {TRMatrix s(source); s -= scalar; return s;}
+#endif
   ClassDef(TRMatrix,1)  // TRMatrix class (double precision)
 };
 std::ostream& operator<<(std::ostream& s,const TRMatrix &target);

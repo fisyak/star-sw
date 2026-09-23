@@ -39,6 +39,7 @@ end
 #include "TStyle.h"
 #include "TF1.h"
 #include "TProfile.h"
+#include "TPRegexp.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "TFile.h"
@@ -3534,7 +3535,7 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
 	     Option_t *opt="R", 
 	     Int_t ix = -1, Int_t jy = -1, 
 	     Int_t mergeX=1, Int_t mergeY=1, 
-	     Double_t nSigma=3, Int_t pow=0,
+	     Double_t nSigma=5, Int_t pow=0,
 	     Double_t zmin = -1, Double_t zmax = 2) {
   if (! hist) return;
   struct Fit_t {
@@ -3575,6 +3576,7 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
   };
   TString varList("i:j");
   TString kS, zS;
+  TDirectory *OrigDir = gDirectory;
   for (Int_t i = 0; i < 7; i++) {
     kS += ":k"; kS += i;
     zS += ":z"; zS += i;
@@ -3585,7 +3587,7 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
   varList += ":mean:rms:peak:mu:sigma:entries:chisq:prob:a0:a1:a2:a3:a4:a5:a6:Npar:dpeak:dmu:dsigma:da0:da1:da2:da3:da4:da5:da6:muJ:dmuJ";
   Fit_t Fit;
   //  TString NewRootFile(gSystem->DirName(fRootFile->GetName()));
-  TFile *fRootFile = (TFile *) gDirectory->GetFile();
+  TFile *fRootFile = (TFile *) OrigDir->GetFile();
   TString NewRootFile(gSystem->DirName(gSystem->BaseName(fRootFile->GetName())));
   NewRootFile += "/";
   NewRootFile += hist->GetName();
@@ -3608,6 +3610,9 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
     canvas = new TCanvas("canvas","dEdxFitSparse");
   }
   THnSparse *fHs = hist;
+  TString reg  = hist->GetName();
+  reg += "_*";
+  TPRegexp re(reg);
   Int_t   fNdim = fHs->GetNdimensions();
   TArrayI fCoord(fNdim);
   TArrayI fBins(fNdim);
@@ -3617,24 +3622,35 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
   TArrayI findex(fNdim-1);
   Long64_t total = 1;
   TAxis *fAxes[10] = {0};
-  for (Int_t i = 0; i < fNdim; i++) {
-    fAxes[i] = (TAxis *) (*(fHs->GetListOfAxes()))[i];
+  for (Int_t i = 0; i < fNdim - 1; i++) {
+    fAxes[i] = fHs->GetAxis(i);
     fnBins[i] = fAxes[i]->GetNbins();
-    if (i < fNdim  - 1) total *= fnBins[i];
+    if (i < fNdim  - 1) total *= (fnBins[i] + 2);
   }
-  for (Long64_t idx = 0; idx < total; idx++) {
-    Long64_t reminder = idx;
-    TString Name(fHs->GetName());
-    for (Int_t i = fNdim - 1; i >= 0; i--) {
-      findex[i] = reminder % fnBins[i] + 1;
-      fAxes[i]->SetRange(findex[i],findex[i]);
-      Name += "_"; Name += findex[i];
-      reminder /=  fnBins[i];
+  TList *listOfKey = OrigDir->GetListOfKeys(); 
+  if (! listOfKey) return;
+  cout << "List of keys\t" << listOfKey->GetEntries() << endl;
+  TIter next(listOfKey);
+  TKey *key; 
+  while ((key = (TKey*) next())) { 
+    TString Name(key->GetName());
+    if (Name.Index(re) == kNPOS) continue;
+//   for (Long64_t idx = 0; idx < total; idx++) {
+//     Long64_t reminder = idx;
+//     TString Name(fHs->GetName());
+//     for (Int_t i = fNdim - 2; i >= 0; i--) {
+//       findex[i] = reminder % (fnBins[i]+2) + 1;
+//       fAxes[i]->SetRange(findex[i],findex[i]);
+//       Name += "_"; Name += findex[i];
+//       reminder /=  fnBins[i];
+//     }
+    TH1F *proj = (TH1F*) OrigDir->Get(Name);
+#if 0
+    if (! proj) {
+      proj = fHs->Projection(fNdim-1);
+      proj->SetName(Name);
     }
-    TH1D *proj = fHs->Projection(fNdim);
-    proj->SetName(Name);
-    Double_t params[20] = {0};
-    TF1 *g = 0;
+#endif
     if (! proj) continue;
     if (proj->GetSumOfWeights() < 100) {
       delete proj;
@@ -3643,10 +3659,18 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
     memset (&Fit, 0, sizeof(Fit_t));
     Float_t *idxF = &Fit.i;
     Float_t *xx   = &Fit.x;
-    for (Int_t k = 0; k < fNdim - 1; k++) {
-      idxF[k] = fBins[k];
-      xx[k]   = fX[k];
+    TObjArray *obj = Name.Tokenize("_");
+    Int_t nParsed = obj->GetEntries();
+    for (Int_t k = 1; k < nParsed; k++) {
+      Int_t i = k - 1;
+      if (obj->At(k)) {
+	idxF[i] = ((TObjString *) obj->At(k))->GetString().Atoi();
+	xx[i]   = fAxes[i]->GetBinCenter(idxF[i]);
+      }
     }
+    delete obj;
+    Double_t params[20] = {0};
+    TF1 *g = 0;
     Fit.mean = proj->GetMean();
     Fit.rms  = proj->GetRMS();
     Fit.chisq = -100;
@@ -3695,8 +3719,18 @@ void dEdxFitSparse(THnSparse *hist, const Char_t *FitName = "GP",
       if (FitP)  FitP->Fill(&Fit.i);
       delete proj; continue;
     }
-    printf("%i/%i %f/%f mean %f rms = %f entries = %f mu = %f sigma = %f chisq = %f prob = %f\n",
-	   Fit.i,Fit.j,Fit.x,Fit.y,Fit.mean,Fit.rms,Fit.entries,Fit.mu,Fit.sigma,Fit.chisq,Fit.prob);
+//     cout << Form("%i/%i %f/%f mean %f rms = %f entries = %f mu = %f sigma = %f chisq = %f prob = %f",
+// 		 Fit.i,Fit.j,Fit.x,Fit.y,Fit.mean,Fit.rms,Fit.entries,Fit.mu,Fit.sigma,Fit.chisq,Fit.prob) << endl;
+    cout << Fit.i << "," << Fit.j << " "
+	 << Fit.x << "/" << Fit.y 
+	 << " mean = " << Fit.mean 
+	 << " rms = " << Fit.rms
+	 << " entries = " << Fit.entries
+	 << " mu = " << Fit.mu 
+	 << " sigma = " << Fit.sigma
+	 << " chisq = " << Fit.chisq
+	 << " prob = " << Fit.prob 
+	 << endl;
     if (FitP)  FitP->Fill(&Fit.i);
     fOut->cd();
     proj->Write();
@@ -3728,6 +3762,7 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
   //  fRootFile->GetObject(HistName,hist);
   TString HistName;
   TString HistName20;
+  TObject *obj = fRootFile->Get(HistName);
   TString HName(histName);
   TObjArray *objArray = HName.Tokenize("+");
   for (Int_t l = 0; l < objArray->GetEntries(); l++) {
@@ -3742,6 +3777,8 @@ void dEdxFit(const Char_t *histName,const Char_t *FitName = "GP",
 	}
       }    
     }
+    if (! obj)  continue;
+
     HistName20 = HistName;
     if        (HistName.Contains("PC"))  {
       HistName20.ReplaceAll("PC","P20C");

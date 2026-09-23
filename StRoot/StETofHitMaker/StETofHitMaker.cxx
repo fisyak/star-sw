@@ -78,9 +78,9 @@
 #include "StETofUtil/StETofConstants.h"
 #include "StETofUtil/StETofGeometry.h"
 
-#include "tables/St_etofHitParam_Table.h"
-#include "tables/St_etofSignalVelocity_Table.h"
-#include "tables/St_etofModCounter_Table.h"
+#include "StDetectorDbMaker/St_etofHitParamC.h"
+#include "StDetectorDbMaker/St_etofSignalVelocityC.h"
+#include "StDetectorDbMaker/St_etofModCounterC.h"
 
 #include "StarClassLibrary/SystemOfUnits.h"
 #include "StarClassLibrary/PhysicalConstants.h"
@@ -201,8 +201,9 @@ StETofHitMaker::InitRun( Int_t runnumber )
 	mGet4DefaultMap[i] = 0;
       }
     }
-
+#if 0
     TDataSet* dbDataSet = nullptr;
+#endif
     std::ifstream paramFile;
 
 
@@ -215,10 +216,13 @@ StETofHitMaker::InitRun( Int_t runnumber )
     // hit param
     if( mFileNameHitParam.empty() ) {
         LOG_INFO << "etofHitParam: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofHitParam" );
 
         St_etofHitParam* etofHitParam = static_cast< St_etofHitParam* > ( dbDataSet->Find( "etofHitParam" ) );
+#else
+        St_etofHitParam* etofHitParam = ( St_etofHitParam* ) St_etofHitParamC::instance()->Table();
+#endif
         if( !etofHitParam ) {
             LOG_ERROR << "unable to get the hit params from the database" << endm;
             return kStFatal;
@@ -264,11 +268,13 @@ StETofHitMaker::InitRun( Int_t runnumber )
 
     if( mFileNameSignalVelocity.empty() ) {
         LOG_INFO << "etofSignalVelocity: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofSignalVelocity" );
 
         St_etofSignalVelocity* etofSignalVelocity = static_cast< St_etofSignalVelocity* > ( dbDataSet->Find( "etofSignalVelocity" ) );
-       
+#else
+        St_etofSignalVelocity* etofSignalVelocity = ( St_etofSignalVelocity* ) St_etofSignalVelocityC::instance()->Table();
+#endif       
 	
         if( !etofSignalVelocity ) {
             LOG_ERROR << "unable to get the signal velocity from the database" << endm;
@@ -355,7 +361,7 @@ StETofHitMaker::InitRun( Int_t runnumber )
       }
       
     }else{ //from Db
-      
+#if 0      
       dbDataSet = GetDataBase( "Geometry/etof/etofModCounter" );
 
       //  TDataSet* dbDataSet = StMaker::GetChain()->GetDataBase("Geometry/etof/etofModCounter");
@@ -365,7 +371,9 @@ StETofHitMaker::InitRun( Int_t runnumber )
         }
                  
       St_etofModCounter* etofModCounter = static_cast< St_etofModCounter* > ( dbDataSet->Find("etofModCounter") );
-       
+#else
+      St_etofModCounter* etofModCounter = ( St_etofModCounter* ) St_etofModCounterC::instance()->Table();
+#endif       
       if( !etofModCounter ) {
 	LOG_WARN << "unable to get the ModMap from the database" << endm;
         return kStFatal;

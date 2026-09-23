@@ -94,7 +94,7 @@
 #include "StETofUtil/StETofGeometry.h"
 #include "StETofUtil/StETofConstants.h"
 
-#include "tables/St_etofMatchParam_Table.h"
+#include "StDetectorDbMaker/St_etofMatchParamC.h"
 
 
 // *******************************************************************************************************
@@ -204,8 +204,9 @@ Int_t
 StETofMatchMaker::InitRun( Int_t runnumber )
 {
     LOG_INFO << "StETofMatchMaker::InitRun()" << endm;
-
+#if 0
     TDataSet* dbDataSet = nullptr;
+#endif
     std::ifstream paramFile;
 
     // --------------------------------------------------------------------------------------------
@@ -216,7 +217,7 @@ StETofMatchMaker::InitRun( Int_t runnumber )
     // match param
     if( mFileNameMatchParam.empty() ) {
         LOG_INFO << "etofMatchParam: no filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Calibrations/etof/etofMatchParam" );
 
         St_etofMatchParam* etofMatchParam = static_cast< St_etofMatchParam* > ( dbDataSet->Find( "etofMatchParam" ) );
@@ -226,7 +227,9 @@ StETofMatchMaker::InitRun( Int_t runnumber )
         }
 
         etofMatchParam_st* matchParamTable = etofMatchParam->GetTable();
-
+#else
+        etofMatchParam_st* matchParamTable = St_etofMatchParamC::instance()->Struct();
+#endif
         mMatchRadius       = matchParamTable->matchRadius; 
 
         mTrackCuts.at( 0 ) = matchParamTable->trackCutNHitsFit;

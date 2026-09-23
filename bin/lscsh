@@ -1,2 +1,4 @@
 #! /bin/tcsh -f
-ls -1d $PWD/*.csh | grep -v sched
+set LOG = '*.csh'
+if ($#argv > 0)   set LOG = "$argv";
+ls -1d $PWD/${LOG} | grep -v sched
