@@ -18962,3 +18962,217 @@ end
   cat *O*RF*.C *O*RHF*.C *O*ZF*.C > TpcOuterHitErrorMDF4.9p8GeV_fixedTarget_2026.C
 
 
+================================================================================
+09/19/2026  ETof tables
+
+etofAlign
+etofCalibParam
+etofDigiSlewCorr
+etofDigiTimeCorr
+etofDigiTotCorr
+etofElectronicsMap
+etofGet4State
+etofHitParam
+etofMatchParam
+etofModCounter
+etofPulserTimeDiffGbtx
+etofPulserTotPeak
+etofResetTimeCorr
+etofSignalVelocity
+etofStatusMap
+etofTimingWindow
+
+
+Calibrations/etof/etofStatusMap
+Calibrations/etof/etofTimingWindow
+Calibrations/etof/etofCalibParam
+Calibrations/etof/etofSignalVelocity
+Calibrations/etof/etofDigiTotCorr
+Calibrations/etof/etofDigiTimeCorr
+Calibrations/etof/etofDigiSlewCorr
+Calibrations/etof/etofResetTimeCorr
+Calibrations/etof/etofPulserTotPeak
+Calibrations/etof/etofPulserTimeDiffGbtx
+Calibrations/etof/etofGet4State
+Geometry/etof/etofElectronicsMap
+Calibrations/etof/etofHitParam
+Calibrations/etof/etofSignalVelocity
+Geometry/etof/etofModCounter
+Geometry/etof/etofModCounter
+VmcGeometry
+Calibrations/etof/etofMatchParam
+VmcGeometry
+Geometry/etof/etofAlign
+
+
+[starsub05] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG26i/StRoot $ grep -r tables StET* | awk -F\" '{print $2}' | sort -u | sed -e 's#tables/St_##' -e 's/_Table.h//' | xargs
+etofAlign etofCalibParam etofDigiSlewCorr etofDigiTimeCorr etofDigiTotCorr etofElectronicsMap etofGet4State etofHitParam etofMatchParam etofModCounter etofPulserTimeDiffGbtx etofPulserTotPeak etofResetTimeCorr etofSignalVelocity etofStatusMap etofTimingWindow g2t_ctf_hit g2t_track
+
+etofAlign etofCalibParam etofDigiSlewCorr etofDigiTimeCorr etofDigiTotCorr etofElectronicsMap etofGet4State etofHitParam etofMatchParam etofModCounter etofPulserTimeDiffGbtx etofPulserTotPeak etofResetTimeCorr etofSignalVelocity etofStatusMap etofTimingWindow)
+ 
+etofAlign
+etofCalibParam
+etofDigiSlewCorr
+etofDigiTimeCorr
+etofDigiTotCorr
+etofElectronicsMap
+etofGet4State
+etofHitParam
+etofMatchParam
+etofModCounter
+etofPulserTimeDiffGbtx
+etofPulserTotPeak
+etofResetTimeCorr
+etofSignalVelocity
+etofStatusMap
+etofTimingWindow
+
+
+[starsub05] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG26i/StRoot $ grep -r tables StET* | awk -F\" '{print $2}' | sort -u | sed -e 's#tables/St_#MakeChair("#' -e 's/_Table.h/")/'
+
+MakeChair("etofAlign")
+MakeChair("etofCalibParam")
+MakeChair("etofDigiSlewCorr")
+MakeChair("etofDigiTimeCorr")
+MakeChair("etofDigiTotCorr")
+MakeChair("etofElectronicsMap")
+MakeChair("etofGet4State")
+MakeChair("etofHitParam")
+MakeChair("etofMatchParam")
+MakeChair("etofModCounter")
+MakeChair("etofPulserTimeDiffGbtx")
+MakeChair("etofPulserTotPeak")
+MakeChair("etofResetTimeCorr")
+MakeChair("etofSignalVelocity")
+MakeChair("etofStatusMap")
+MakeChair("etofTimingWindow")
+
+================================================================================
+09/21/2026
+
+.x bfc.C(1,"genIn,simu,MC.2016a,AuAu_200_2016,verybig,StiCA,-hitfilt,StiHftC,-geantOut,-evout,Corr4,OSpaceZ2,OGridLeakFull,useXgeom,NoHistos,noTags,noRunco,,Rung.1","/gpfs01/star/subsys-tpc/fisyak/simu/Hijing/AuAu200/hijingAuAu200_99_1000.gener.root")
+
+root.exe 'bfc.C(1,"genIn,MC.2016a,istSlowSim,-bbcSim,StiCA,-hitfilt,StiHftC,-geantOut,-evout,vmc,VMCAlignment,CorrX,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,AuAu_200_2016,RunG.1,McTpcAna","/gpfs01/star/subsys-tpc/fisyak/simu/Hijing/AuAu200/hijingAuAu200_99_1000.gener.root")'
+
+StVMCMaker:INFO  - StarVMCDetectorSet::Init() -I- Get Detectors
+StVMCMaker:INFO  - Create detector path for volume SFSD
+StVMCMaker:INFO  - Create detector path for volume IBSS
+StVMCMaker:INFO  - Create detector path for volume PLAC
+StVMCMaker:INFO  - Create detector path for volume TPAD
+StVMCMaker:INFO  - Create detector path for volume BRSG
+StVMCMaker:INFO  - Create detector path for volume GMTG
+StVMCMaker:INFO  - Create detector path for volume VRAD
+StVMCMaker:INFO  - Create detector path for volume CSCI
+StVMCMaker:INFO  - Create detector path for volume CSHI
+StVMCMaker:INFO  - Create detector path for volume ESCI
+StVMCMaker:INFO  - Create detector path for volume EHMS
+StVMCMaker:INFO  - Create detector path for volume BPOL
+StVMCMaker:INFO  - Create detector path for volume QSCI
+StVMCMaker:INFO  - Create detector path for volume MIGG
+StVMCMaker:INFO  - Create detector path for volume FLGR
+StVMCMaker:ERROR - Ignore sensitive volume: FPCT
+StVMCMaker:INFO  - Create detector path for volume FPCT
+StVMCMaker:ERROR - Ignore sensitive volume: FHMS
+StVMCMaker:INFO  - Create detector path for volume FHMS
+StVMCMaker:INFO  - Create detector path for volume FLXF
+StVMCMaker:INFO  - Create detector path for volume FPSC
+StVMCMaker:INFO  - 1    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/SFMO[1]/SFLM[20]/SFSW[16]/SFSL[1]/SFSD[1]
+StVMCMaker:INFO  - 2    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/IBMO[1]/IBSS[1]
+StVMCMaker:INFO  - 3    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXLA[10]/LADR[4]/PXSI[10]/PLAC[1]
+StVMCMaker:INFO  - 4    HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[73]
+StVMCMaker:INFO  - 5    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+StVMCMaker:INFO  - 6    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+StVMCMaker:INFO  - 7    HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+StVMCMaker:INFO  - 8    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+StVMCMaker:INFO  - 9    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+StVMCMaker:INFO  - 10   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+StVMCMaker:INFO  - 11   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+StVMCMaker:INFO  - 12   HALL[1]/CAVE[1]/BBCM[2]/BBCA[2]/THXM[6]/SHXT[3]/BPOL[1]
+StVMCMaker:INFO  - 13   HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+StVMCMaker:INFO  - 14   HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+StVMCMaker:INFO  - 15   HALL[1]/CAVE[1]/FBOX[4]/FTOW[238]/FWAL[1]/FLGR[1]
+StVMCMaker:INFO  - 16   HALL[1]/CAVE[1]/FBOX[4]/FTOW[238]/FPCT[1]
+StVMCMaker:INFO  - 17   HALL[1]/CAVE[1]/FBOX[2]/FSHM[1]/FHMS[100]
+StVMCMaker:INFO  - 18   HALL[1]/CAVE[1]/FBOX[4]/FLXF[394]
+StVMCMaker:INFO  - 19   HALL[1]/CAVE[1]/FPRS[1]/FPLY[4]/FPSC[80]
+
+
+StiMaker:INFO  - StiMasterDetectorBuilder::build() -I- Calling Group Builder named:IstBuilder
+StiMaker:INFO  - StiIstDetectorBuilder::buildDetectors() - Will build IST geometry from DB tables
+StiMaker:ERROR - TGeoNavigator::cd : Path /HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/IBMO_1/IBAM_1/IBLM_3/IBSS_1 not valid
+StiMaker:INFO  -   [Not found]:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/IBMO_1/IBAM_1/IBLM_3/IBSS_1
+StiMaker:INFO  -   [Try path]: /HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/IBMO_1/IBSS_3
+StiMaker:ERROR - TGeoNavigator::cd : Path /HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/IBMO_1/IBSS_3 not valid
+StiMaker:WARN  - StiIstDetectorBuilder::useVMCGeometry() - Cannot find path to IBSS (IST sensitive) node. Skipping to next ladder...
+StiMaker:WARN  -   [Not found]:/HALL_1/CAVE_1/TpcRefSys_1/IDSM_1/IBMO_1/IBSS_3
+
+
+================================================================================
+09/22/2026
+root.exe 'bfc.C(1,"genIn,MC.2016a,istSlowSim,-bbcSim,StiCA,-hitfilt,StiHftC,-geantOut,-evout,vmc,VMCAlignment,CorrX,OSpaceZ2,OGridLeakFull,-useXgeom,NoHistos,noTags,noRunco,AuAu_200_2016,RunG.1,McTpcAna","/gpfs01/star/subsys-tpc/fisyak/simu/Hijing/AuAu200/hijingAuAu200_99_1000.gener.root")'
+
+StVMCMaker:INFO  - 1    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/SFMO[1]/SFLM[20]/SFSW[16]/SFSL[1]/SFSD[1]
+StVMCMaker:INFO  - 2    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/IBMO[1]/IBAM[24]/IBLM[6]/IBSS[1]
+StVMCMaker:INFO  - 3    HALL[1]/CAVE[1]/TpcRefSys[1]/IDSM[1]/PXMO[1]/PXLA[10]/LADR[4]/PXSI[10]/PLAC[1]
+StVMCMaker:INFO  - 4    HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[73]
+StVMCMaker:INFO  - 5    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+StVMCMaker:INFO  - 6    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+StVMCMaker:INFO  - 7    HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+StVMCMaker:INFO  - 8    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+StVMCMaker:INFO  - 9    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+StVMCMaker:INFO  - 10   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+StVMCMaker:INFO  - 11   HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+StVMCMaker:INFO  - 12   HALL[1]/CAVE[1]/BBCM[2]/BBCA[2]/THXM[6]/SHXT[3]/BPOL[1]
+StVMCMaker:INFO  - 13   HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+StVMCMaker:INFO  - 14   HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+StVMCMaker:INFO  - 15   HALL[1]/CAVE[1]/FBOX[4]/FTOW[238]/FWAL[1]/FLGR[1]
+StVMCMaker:INFO  - 16   HALL[1]/CAVE[1]/FBOX[4]/FTOW[238]/FPCT[1]
+StVMCMaker:INFO  - 17   HALL[1]/CAVE[1]/FBOX[2]/FSHM[1]/FHMS[100]
+StVMCMaker:INFO  - 18   HALL[1]/CAVE[1]/FBOX[4]/FLXF[394]
+StVMCMaker:INFO  - 19   HALL[1]/CAVE[1]/FPRS[1]/FPLY[4]/FPSC[80]
+
+QA :INFO  - +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+QA :INFO  - StAnalysisMaker,  Reading Event: 1  Type: Collision  Run: 1  EventId: 1
+QA :INFO  - # track nodes:      162: good globals with NFitP>=15: 109
+QA :INFO  - : Short tracks pointing to EEMC : 16
+QA :INFO  - post (C)rossing tracks :0: (P)rompt:10: (X) membrane :4(T)of/ctb matches:48 :Emc matches(W/E): 76/0 :Only W:48 E:53
+QA :INFO  - #V[  0] :0/9/4/*/*/*/*   0.010+/-0.032,   0.034+/-0.026,  21.618+/-0.033, Prob/Chi2: 0.000/ 138.85 Rank:    550.0 U/T/F/G:   73, 110, 100,  79 IdT:     1 Q:   97
+QA :INFO  - # TPC hits:          5101:  Bad ones (! flag):     619:     Used in Fit:      4081
+QA :INFO  - # PXL hits:          50:    Bad ones (! flag):     0:       Used in Fit:      4
+QA :INFO  - # IST hits:          91:    Bad ones (! flag):     0:       Used in Fit:      4
+QA :INFO  - # SST hits:          82:    Bad ones (! flag):     0:       Used in Fit:      4
+QA :INFO  - # EMC  points:  490: Adc(T/p/E/P) 4540/   0/   27/   45: Cls(T/p/E/P)  491/   0/    6/   13
+QA :INFO  - # BTof hits:          107:  Bad ones (! flag):     0:        Matched with tracks:      49:  Mc 31:   Matched with tracks:      8
+QA :INFO  - *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+[cvmfswrite07] /gpfs01/star/subsys-tpc/fisyak/STAR/star/packages/TFG/StarVMC/Geometry $ git diff StarGeo.xml
+diff --git a/StarVMC/Geometry/StarGeo.xml b/StarVMC/Geometry/StarGeo.xml
+index 7e3c14388f..9b69387454 100644
+--- a/StarVMC/Geometry/StarGeo.xml
++++ b/StarVMC/Geometry/StarGeo.xml
+@@ -1087,7 +1087,7 @@
+     <Construct sys="zcal" config="ZCALon" />
+     <Construct sys="magp" config="MAGPon" />
+     <Construct sys="sisd" config="SISD85" />
+-    <Construct sys="istd" config="ISTD03" />
++    <Construct sys="istd" config="ISTD02" />
+     <Construct sys="pxst" config="PXST01" />
+     <Construct sys="mutd" config="MUTD16" />
+     <Construct sys="pixl" config="PIXL62" />
+@@ -1285,7 +1285,7 @@
+     <Construct sys="zcal" config="ZCALon" />
+     <Construct sys="magp" config="MAGPon" />
+     <Construct sys="sisd" config="SISD85" />
+-    <Construct sys="istd" config="ISTD03" />
++    <Construct sys="istd" config="ISTD02" />
+     <Construct sys="pxst" config="PXST01" />
+     <Construct sys="mutd" config="MUTD16" />
+     <Construct sys="pixl" config="PIXL62" />
+@@ -1428,7 +1428,7 @@
+     <Construct sys="zcal" config="ZCALon" />
+     <Construct sys="magp" config="MAGPon" />
+     <Construct sys="sisd" config="SISD85" />
+-    <Construct sys="istd" config="ISTD03" />
++    <Construct sys="istd" config="ISTD02" />
+     <Construct sys="pxst" config="PXST01" />
+     <Construct sys="mutd" config="MUTD14" />
+     <Construct sys="pixl" config="PIXL06" />

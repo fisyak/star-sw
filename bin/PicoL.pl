@@ -86,6 +86,7 @@ if ($pwd =~ /dev/ or $pwd  =~ /DEV/ or $pwd =~ /P2/ or $pwd =~ /SL/ or $pwd =~ /
   elsif ($pwd =~ /TFG24e/) {$PICOPATH = "/gpfs01/star/data25/TpcAlignment/TFG24e/";}
   elsif ($pwd =~ /TFG26d/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26d/"}
   elsif ($pwd =~ /TFG26h/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26h/"}
+  elsif ($pwd =~ /TFG26i2/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26i2/"}
   elsif ($pwd =~ /TFG26i/) {$PICOPATH = "/gpfs01/star/data100/TPC/reco/TFG26i/"}
   elsif ($pwd =~ /2026.dev/) {$PICOPATH = "/star/data99/TEMP/FXT/";}
   else                     {$PICOPATH = "/star/data*";}

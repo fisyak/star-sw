@@ -1,4 +1,5 @@
-// root.exe 
+// root.exe  y2025z.root 'RayTracing.C+(0)'      z =    0
+// root.exe  y2025z.root 'RayTracing.C+(200)'    z = +200;
 #include <cstring>
 #include "Riostream.h"
 #include "TCanvas.h"

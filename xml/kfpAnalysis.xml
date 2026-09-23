@@ -51,7 +51,9 @@
   endif
   set input = "./*."${dstype}".root"
   echo echo "`hostname` $STAR_HOST_SYS $STAR $ROOTSYS"  &gt;&amp; ${log} 
+  STAR_LEVELS  &gt;&gt;&amp; ${log} 
 #  printenv | sort &gt;&gt;&amp; ${log} 
+  root.exe -q -b -x  'kfpAnalysis.C(1000000,"'${input}'","'${output}'","'${year}'",'${idNdx}')' &gt;&gt;&amp; ${log}
 else # list
 cd ${SUBMITTINGDIRECTORY}
   set input = $evtsFile
@@ -60,8 +62,8 @@ cd ${SUBMITTINGDIRECTORY}
   if (-r ${output}) exit 0;
   set log    = ${b}B.log
   set year = "2020"
-endif
   root.exe -q -b -x  'kfpAnalysis.C(1000000,"'${input}'","'${output}'","'${year}'",'${idNdx}')' &gt;&gt;&amp; ${log}
+endif
 #end 
  rm -rf ${CURRENT_DIR}
         </command>
