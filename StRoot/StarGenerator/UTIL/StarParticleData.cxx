@@ -74,7 +74,7 @@ StarParticleData::StarParticleData( const Char_t *_name, TDataSet *parent ) :
   // Intiailze the particle data from TDatabasePDG
   //
   TDatabasePDG *pdg = TDatabasePDG::Instance();
-  pdg -> ReadPDGTable(); // because it's too much to expect from a singleton
+  if (! pdg->ParticleList()) pdg -> ReadPDGTable(); // because it's too much to expect from a singleton
 
 
   //
