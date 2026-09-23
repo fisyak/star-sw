@@ -45,7 +45,7 @@
 #include "StMuDSTMaker/COMMON/StMuETofHit.h"
 #include "StPicoEvent/StPicoETofHit.h"
 
-#include "tables/St_etofAlign_Table.h"
+#include "StDetectorDbMaker/St_etofAlignC.h"
 
 #include "StarMagField.h"
 
@@ -1532,7 +1532,7 @@ StETofGeometry::readAlignmentDatabase(){
     LOG_INFO << "No etof alignment file provided --> use database: " << endm;
     
     //add check for no alignment set here.
-
+#if 0
     TDataSet* dbDataSet = StMaker::GetChain()->GetDataBase("Geometry/etof/etofAlign");
     if( !dbDataSet ) {
         LOG_ERROR << "unable to get the dataset from the database" << endm;
@@ -1546,6 +1546,9 @@ StETofGeometry::readAlignmentDatabase(){
     }
 
     etofAlign_st* table = etofAlign->GetTable();
+#else 
+    etofAlign_st* table = St_etofAlignC::instance()->Struct();
+#endif
     StThreeVectorD counterAlignmentParameter;
     float tempX;
     float tempY;

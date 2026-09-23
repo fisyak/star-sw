@@ -49,7 +49,7 @@
 #include "StETofUtil/StETofHardwareMap.h"
 #include "StETofUtil/StETofMessageFormat.h"
 
-#include "tables/St_etofElectronicsMap_Table.h"
+#include "StDetectorDbMaker/St_etofElectronicsMapC.h"
 
 
 //_____________________________________________________________
@@ -92,12 +92,13 @@ StETofDigiMaker::InitRun( Int_t runnumber )
     LOG_INFO << "runnumber: " << runnumber << "  --> year: " << mRunYear << endm;
 
 	 mGet4ActiveMap.clear();
+#if 0
     TDataSet* dbDataSet = nullptr;
-
+#endif
     //load electronics-to-hardware map for missmatch pattern. PW
     if( mFileNameElectronicsMap.empty() ) {
         LOG_INFO << "StETofDigiMaker::InitRun: no electronics map filename provided --> load database table" << endm;
-
+#if 0
         dbDataSet = GetDataBase( "Geometry/etof/etofElectronicsMap" );
 
         St_etofElectronicsMap* etofElectronicsMap = static_cast< St_etofElectronicsMap* > ( dbDataSet->Find( "etofElectronicsMap" ) );
@@ -105,7 +106,9 @@ StETofDigiMaker::InitRun( Int_t runnumber )
             LOG_ERROR << "unable to get the electronics map from the database" << endm;
             return kStFatal;
         }
-
+#else
+        St_etofElectronicsMap* etofElectronicsMap = ( St_etofElectronicsMap* ) (St_etofElectronicsMapC::instance()->Table()); 
+#endif
         mHwMap = new StETofHardwareMap( etofElectronicsMap, mRunYear );
 			//debug PW
 			 etofElectronicsMap_st* table = etofElectronicsMap->GetTable();
