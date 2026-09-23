@@ -479,7 +479,7 @@ Int_t StBFChain::Instantiate()
     }
     if ((maker == "StarGenEventReader" || maker == "StarMuEventReader") &&  fInFile != "") {
       mk->SetAttr("InputFile",fInFile.Data());
-      NoMakersWithInput++;
+      if (maker != "StarGenEventReader") NoMakersWithInput++;
     }
     if ((maker == "StVMCMaker" && GetOption("mtin")) &&  fInFile != "") {
       mk->SetAttr("InputFile",fInFile.Data());
