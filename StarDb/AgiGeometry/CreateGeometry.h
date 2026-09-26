@@ -104,7 +104,7 @@ TDataSet *CreateGeometry(const Char_t *name, TEnv *configGeom) {
   Char_t *file = gSystem->Which(path,geomF,kReadPermission);
   if (! file) Fatal("CreateGeometry","File %s has not found in path %s",geomF.Data(),path.Data());
   else        Warning("CreateGeometry","File %s has been found as %s",geomF.Data(),file);
-  TString command = ".L "; command += file;
+  TString command = ".L "; command += file;// command += "+";
   gInterpreter->ProcessLine(command);
   TString cmd(name); cmd += "()";
   gInterpreter->Calc(cmd);
