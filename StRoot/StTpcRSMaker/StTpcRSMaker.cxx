@@ -298,27 +298,28 @@ select firstInnerSectorAnodeWire,lastInnerSectorAnodeWire,numInnerSectorAnodeWir
     }
 #endif /* __CHECK_RDOMAP_AND_VOLTAGE__ */
     for (Int_t io = 0; io < 2; io++) {// In/Out
-      if (io == 0) {
-	if (sector > 1 && TMath::Abs(innerSectorAnodeVoltage[sector-1] - innerSectorAnodeVoltage[sector-2]) < 1) {
-	  InnerAlphaVariation[sector-1] = InnerAlphaVariation[sector-2];
+      for (Int_t secO = 1; secO < sector; secO++) {// Check sector initaited so far
+	if (io == 0) {
+	  if (TMath::Abs(innerSectorAnodeVoltage[sector-1] - innerSectorAnodeVoltage[secO-1]) < 1) 
+	    InnerAlphaVariation[sector-1] = InnerAlphaVariation[secO-1];
 	} else {
-	  LOG_INFO << "Inner Sector " << sector << " ======================" << endm;
-	  InnerAlphaVariation[sector-1] = InducedCharge(anodeWirePitch,
-							CathodeAnodeGap[io],
-							anodeWireRadius,
-							innerSectorAnodeVoltage[sector-1], t0IO[io]);
+	  if (TMath::Abs(outerSectorAnodeVoltage[sector-1] - outerSectorAnodeVoltage[secO-1]) < 1) 
+	    OuterAlphaVariation[sector-1] = OuterAlphaVariation[secO-1];
 	}
+      } // secO 
+      if (io == 0 && InnerAlphaVariation[sector-1] == 0.0) {
+	LOG_INFO << "Inner Sector " << sector << " ======================" << endm;
+	InnerAlphaVariation[sector-1] = InducedCharge(anodeWirePitch,
+						      CathodeAnodeGap[io],
+						      anodeWireRadius,
+						      innerSectorAnodeVoltage[sector-1], t0IO[io]);
       }
-      else {
-	if (sector > 1 && TMath::Abs(outerSectorAnodeVoltage[sector-1] - outerSectorAnodeVoltage[sector-2]) < 1) {
-	  OuterAlphaVariation[sector-1] = OuterAlphaVariation[sector-2];
-	} else {
-	  LOG_INFO << "Outer Sector " << sector << " ======================" << endm;
-	  OuterAlphaVariation[sector-1] = InducedCharge(anodeWirePitch,
-							CathodeAnodeGap[io],
-							anodeWireRadius,
-							outerSectorAnodeVoltage[sector-1], t0IO[io]);
-	}
+      if (io == 1 && OuterAlphaVariation[sector-1] == 0.0) {
+	LOG_INFO << "Outer Sector " << sector << " ======================" << endm;
+	OuterAlphaVariation[sector-1] = InducedCharge(anodeWirePitch,
+						      CathodeAnodeGap[io],
+						      anodeWireRadius,
+						      outerSectorAnodeVoltage[sector-1], t0IO[io]);
       }
     } // IO
   } // sector
@@ -708,8 +709,9 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
     gver = g2t_ver->GetTable();
     NV = g2t_ver->GetNRows();
     StEvent* pEvent = dynamic_cast<StEvent*> (GetInputDS("StEvent")); 
-    if (pEvent && StTpcBXT0CorrEPDC::instance()->nrows() && pEvent->epdCollection() ) {
-        int TAC = 0;
+    if (! gStTpcDb->Alignment2024()) {
+      if (pEvent && StTpcBXT0CorrEPDC::instance()->nrows() && pEvent->epdCollection() ) {
+	int TAC = 0;
 	int maxTAC = -1;
 	StEpdCollection * epdCol = pEvent->epdCollection();
 	if (epdCol) {
@@ -729,8 +731,9 @@ Int_t StTpcRSMaker::Make(){  //  PrintInfo();
 	}
 	fgTriggerT0 = - StTpcBXT0CorrEPDC::instance()->getCorrection(maxTAC, driftVelocity, mTimeBinWidth)*mTimeBinWidth*1e-6;
       } else if (pEvent && IAttr("EbyET0")) {
-        // StEbyET0 returns microsec, will need it in seconds
-        fgTriggerT0 = - StEbyET0::Instance()->getT0(pEvent)*1e-6;
+	// StEbyET0 returns microsec, will need it in seconds
+	fgTriggerT0 = - StEbyET0::Instance()->getT0(pEvent)*1e-6;
+      }
     }
   }
   g2t_tpc_hit_st *tpc_hit_begin = g2t_tpc_hit->GetTable();
