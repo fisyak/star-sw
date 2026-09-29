@@ -24,7 +24,7 @@ foreach root (root6 root5)
 #   if ($gcc == "gcc8" || gcc == "gcc631") set opts = "debug opt opt3"
     foreach optt ($opts)
       set bits = "64b";
-      if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
+#     if ($gcc == "gcc" && $root == "root5") set bits = "32b 64b";
 #      echo "gcc = $gcc, optt = $optt, bits = $bits"
       foreach bit (${bits})
         unsetenv NODEBUG
@@ -32,11 +32,11 @@ foreach root (root6 root5)
 #        if ($optt == "opt3") setenv NODEBUG -O3 
         setup ${gcc}
 #        echo "setup gcc = $gcc, optt = $optt, bit = $bit"
-	if (${gcc} == "gcc/12") then
+#	if (${gcc} == "gcc/12") then
 #    setup spackTFG
 #    spack env activate x86_64_gcc12
 #    spack env view enable
-        endif
+#        endif
         setup ${bit}
 #        echo "setup bit gcc = $gcc, optt = $optt, bit = $bit"
         setup ${root}

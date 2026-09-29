@@ -166,7 +166,7 @@ void Run1Ev(Int_t NEvents, Int_t iD,
     StiLocalTrackSeedFinder::SetDebug(1);
     StiCATpcSeedFinder::SetDebug(1);
     StiVMCToolKit::SetDebug(1);
-    StiDetectorBuilder::setDebug(1);
+    StiDetectorBuilder::setDebug(2);
   }
   if (chain->GetMaker("MassFit")) {
     chain->GetMaker("MassFit")->SetDebug(1);
