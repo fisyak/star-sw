@@ -77,7 +77,7 @@ void TpcRefSys() {
 }
 
 //________________________________________________________________________________
-TDataSet *CreateGeometry(const Char_t *name, TEnv *configGeom) {
+TDataSet *CreateGeometry(const Char_t *name, TEnv *configGeom, const Char_t *opt = "") {
   TDataSet *geometry = 0;
   TObjectSet *geom = 0;
   if (gGeoManager) {
@@ -104,7 +104,7 @@ TDataSet *CreateGeometry(const Char_t *name, TEnv *configGeom) {
   Char_t *file = gSystem->Which(path,geomF,kReadPermission);
   if (! file) Fatal("CreateGeometry","File %s has not found in path %s",geomF.Data(),path.Data());
   else        Warning("CreateGeometry","File %s has been found as %s",geomF.Data(),file);
-  TString command = ".L "; command += file;
+  TString command = ".L "; command += file; command += opt;
   gInterpreter->ProcessLine(command);
   TString cmd(name); cmd += "()";
   gInterpreter->Calc(cmd);

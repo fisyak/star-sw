@@ -1,15 +1,16 @@
 #! /bin/tcsh -f
 @ countJ = 0
-foreach done (`ls -1d ???/*`)
+#foreach done (`ls -1d ???/*/Done`)
 #  set d = `dirname ${done}`
 #  ls -ltr Chain.log
+#  set d = ${done}
+foreach d (`ls -1d ???/*`)
     @ count = `ps au | grep root.exe | wc -l`; # ++;  echo "count $count";
     if ($count > 120) then 
         cd -
 	echo "$count limit reached"
 	break;
     endif
-  set d = ${done}
   cd ${d}; pwd;
   ls -ltr *.root *.gz *B.log *Chain.log  | tail -1 | grep Chain	
   if ($?) then	

@@ -821,12 +821,11 @@ extern "C" type_of_call
       Double_t x, y, z, rmax;
       geant3->TrackPosition(x, y, z);
 
+      Int_t nstep = geant3->Gctrak()->nstep;
+      Int_t cpdg = geant3->PDGFromId(geant3->Gckine()->ipart);
+      Bool_t isnew = kFALSE; // geant3->IsNewTrack() returns true just for new used indices
+      if (nstep == 0) isnew = kTRUE;
       if (geant3->IsCollectTracks()) {
-         Int_t nstep = geant3->Gctrak()->nstep;
-         Int_t cpdg = geant3->PDGFromId(geant3->Gckine()->ipart);
-         Bool_t isnew = kFALSE; // geant3->IsNewTrack() returns true just for new used indices
-         if (nstep == 0)
-            isnew = kTRUE;
          Int_t cid = stack->GetCurrentTrackNumber();
          Int_t mid = stack->GetCurrentParentTrackNumber();
          Double_t tofg = geant3->Gctrak()->tofg;
@@ -925,10 +924,13 @@ extern "C" type_of_call
 
       // --- Standard GEANT debug routine
       // g3pcxyz();
-      if (geant3->Gcflag()->idebug)
-         geant3->Gdebug();
+      // if (geant3->Gcflag()->idebug) geant3->Gdebug();
+      if (geant3->Gcflag()->idebug && (isnew || geant3->Edep() > 0)) {
+	  geant3->Gdebug();
+      }
+        
    }
-
+   
    //______________________________________________________________________
    void gukine()
    {

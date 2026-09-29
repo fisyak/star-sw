@@ -56,9 +56,10 @@ St_ ## STRUCT ## C *St_ ## STRUCT ## C::instance() { \
     if (fgInstance) return fgInstance;					\
     St_ ## STRUCT *table = (St_ ## STRUCT *) StMaker::GetChain()->GetDataBase(MakeString(PATH)); \
     if (! table) {							\
-      LOG_ERROR << "St_" << # STRUCT << "C::instance " << MakeString(PATH) << "\twas not found" << endm; \
+      LOG_ERROR << # CLASS << "::instance " << MakeString(PATH) << "\twas not found" << endm; \
       assert(table);							\
     }									\
+    DEBUGTABLE(STRUCT);							\
     fgInstance = new CLASS(table);					\
     return fgInstance;							\
   }

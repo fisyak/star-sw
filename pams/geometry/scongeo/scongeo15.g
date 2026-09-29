@@ -103,7 +103,7 @@ Module  SCONGEO15 is Support structures from SVTT moved into CAVE:
       rbolt     = 0.3        ! bolt 	
       dZBolt    = 0.7        ! bolt    
       SpokeLen  = 12.5       ! spoke
-      SpokeOD   =  0.2       ! spoke
+      SpokeOD   =  0.318     ! spoke change on 09/23/2026 from 0,2 => 0.318 (Flemming)
    EndFill
 
 *
@@ -299,7 +299,12 @@ Rmx={ssub_KMountOd/2, ssub_KMountOd/2,  coneRi(1)+0.1,
       Position SDSA  z=-SSUB_dZBolt
       Create    SPOA  " spoke to support beam pipe assembly 4 sectors"
       do i = 1, 4
-	 phi = 45  + 90*(i-1) 
+*	 phi = 45  + 90*(i-1)     modifiecation from Flemming 09/23/2026
+	if (i .eq. 1) phi =  52.5
+	if (i .eq. 2) phi =  52.5 + 75
+	if (i .eq. 3) phi = -52.5 - 75
+	if (i .eq. 4) phi = -52.5
+        
          rr = svtg_RSizeMin + SSUB_SpokeLen/2 + 0.8
          xx = rr*cos(degrad*phi)
          yy = rr*sin(degrad*phi)

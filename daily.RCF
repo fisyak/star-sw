@@ -19176,3 +19176,399 @@ index 7e3c14388f..9b69387454 100644
      <Construct sys="pxst" config="PXST01" />
      <Construct sys="mutd" config="MUTD14" />
      <Construct sys="pixl" config="PIXL06" />
+================================================================================
+09/24/2026
+ ((StiMaker *) chain->Maker("Sti"))->PrintDetectors("TGeo"); >> StiGeom32.h
+================================================================================
+08/25/2026
+StVMCMaker:INFO  - 1    HALL[1]/CAVE[1]/TpcRefSys[1]/TPCE[1]/TPGV[2]/TPSS[12]/TPAD[76]
+StVMCMaker:INFO  - 2    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[60]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/BRMD[32]/BRDT[1]/BRSG[6]
+StVMCMaker:INFO  - 3    HALL[1]/CAVE[1]/TpcRefSys[1]/BTOF[1]/BTOH[2]/BSEC[48]/BTRA[1]/BXTR[1]/BRTC[1]/BGMT[1]/GMTS[2]/GSBA[1]/GSBE[1]/GETE[1]/GMTB[1]/GMTG[1]
+StVMCMaker:INFO  - 4    HALL[1]/CAVE[1]/ZCAL[2]/QCAL[1]/QDIV[260]/QSCI[1]
+StVMCMaker:INFO  - 5    HALL[1]/CAVE[1]/VPDD[2]/VRNG[1]/VDET[19]/VDTI[1]/VCNV[1]/VRAD[1]
+StVMCMaker:INFO  - 6    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSCI[19]
+StVMCMaker:INFO  - 7    HALL[1]/CAVE[1]/CALB[1]/CHLV[2]/CPHI[60]/CSUP[2]/CSMD[1]/CSDA[4]/CSME[30]/CSHI[2]
+StVMCMaker:INFO  - 8    HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ECVO[2]/EMOD[6]/ESEC[3]/EMGT[17]/EPER[5]/ETAR[12]/ESCI[1]
+StVMCMaker:INFO  - 9    HALL[1]/CAVE[1]/ECAL[1]/EAGA[2]/EMSS[1]/ESHM[1]/ESPL[3]/EXSG[6]/EHMS[288]
+StVMCMaker:INFO  - 10   HALL[1]/CAVE[1]/BBCM[2]/BBCA[1]/THXM[6]/SHXT[3]/BPOL[1]
+StVMCMaker:INFO  - 11   HALL[1]/CAVE[1]/MUTD[1]/MTTG[28]/MTRA[5]/MIGS[1]/MIGG[5]
+StVMCMaker:INFO  - 12   HALL[1]/CAVE[1]/WMOD[2]/WTOW[748]/WSCI[1]
+StVMCMaker:INFO  - 13   HALL[1]/CAVE[1]/HMOD[2]/HTOW[260]/HSCI[1]
+StVMCMaker:INFO  - 14   HALL[1]/CAVE[1]/FSTA[1]/FSTM[1]/FSTD[6]/FSTW[12]/FTUS[3]
+StVMCMaker:INFO  - 15   HALL[1]/CAVE[1]/ETOF[324]/EGAS[1]/ECOU[3]/EGAP[12]/ECEL[32]
+StVMCMaker:INFO  - 16   HALL[1]/CAVE[1]/EPDM[2]/EPSS[12]/EPDT[62]
+StVMCMaker:INFO  - 17   HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGP[1]
+StVMCMaker:INFO  - 18   HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGL[1]
+StVMCMaker:INFO  - 19   HALL[1]/CAVE[1]/STGM[1]/STFM[16]/STMG[2]/STGS[1]
+...
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+      1.9376     0.0073   195.8738     1.9376 PVAO    1     4.5586    4.5586    1.0  eV  680.246 MeV FIEL SCUT LOSS
+      3.8753     0.0242   191.7476     3.8754 PVAO    1     9.1172    4.5586    1.0  eV  680.246 MeV FIEL NEXT LOSS
+      4.0003     0.0257   191.4814     4.0004 PIPO    1     9.4113    0.2941   12.7 MeV  667.516 MeV FIEL NEXT LOSS
+      4.0232     0.0259   191.4327     4.0233 PWRP    1     9.4651    0.0538    1.7 MeV  665.772 MeV FIEL NEXT LOSS
+      4.0311     0.0260   191.4159     4.0312 PIPE    1     9.4836    0.0185  401.6  eV  665.772 MeV FIEL NEXT LOSS
+      4.8003     0.0362   189.7779     4.8004 CAVE    1    11.2933    1.8097   39.6 keV  665.732 MeV FIEL NEXT LOSS
+      6.2085     0.0594   186.7790     6.2088 FSTM    1    14.6064    3.3132   72.6 keV  665.660 MeV FIEL SCUT LOSS
+      7.6166     0.0887   183.7801     7.6171 FSTM    1    17.9196    3.3132   72.6 keV  665.587 MeV FIEL NEXT LOSS
+      8.0861     0.0998   182.7801     8.0867 FSTD    6    19.0244    1.1048   24.2 keV  665.563 MeV FIEL NEXT LOSS
+      9.1533     0.1275   180.5070     9.1542 FSTW   12    21.5357    2.5113   55.0 keV  665.508 MeV FIEL NEXT LOSS
+      9.1697     0.1279   180.4720     9.1706 FTIH    1    21.5744    0.0387    1.0 MeV  664.466 MeV FIEL NEXT LOSS
+      9.2636     0.1305   180.2720     9.2645 FTUW    1    21.7953    0.2210    5.7 MeV  658.784 MeV FIEL NEXT LOSS
+      9.9640     0.1508   178.7801     9.9651 FSTW   12    23.4436    1.6482   36.4 keV  658.748 MeV FIEL NEXT LOSS
+     10.6643     0.1726   177.2882    10.6657 FSTW    1    25.0918    1.6482   36.4 keV  658.711 MeV FIEL NEXT LOSS
+     10.7582     0.1757   177.0882    10.7596 FTUW    1    25.3128    0.2210    5.7 MeV  652.993 MeV FIEL NEXT LOSS
+     10.7746     0.1762   177.0532    10.7761 FTIH    1    25.3514    0.0387    1.1 MeV  651.936 MeV FIEL NEXT LOSS
+ g2t_volume_id: TPC version =   5.00000000     , tpcg_tpadconfig =    6.00000000    
+               : TOF version =   6.00000000      choice  =          13
+               : CALB patch  =          60          60
+               : ECAL version=   6.09999990      onoff   =           1           3
+     10.7887     0.1767   177.0232    10.7902 FTUS    3    25.3846    0.0331    1.3 MeV  650.626 MeV FIEL NEXT LOSS
+     11.8416     0.2126   174.7801    11.8435 FSTW    1    27.8627    2.4782   55.2 keV  650.571 MeV FIEL NEXT LOSS
+     12.3109     0.2298   173.7801    12.3130 FSTD    6    28.9675    1.1048   24.6 keV  650.546 MeV FIEL NEXT LOSS
+     13.9688     0.2957   170.2471    13.9719 FSTM    1    32.8708    3.9032   87.0 keV  650.459 MeV FIEL NEXT LOSS
+     14.4380     0.3159   169.2471    14.4415 FSTD    5    33.9756    1.1048   24.6 keV  650.434 MeV FIEL NEXT LOSS
+     15.4904     0.3637   167.0040    15.4947 FSTW   12    36.4537    2.4782   55.3 keV  650.379 MeV FIEL NEXT LOSS
+     15.5045     0.3644   166.9740    15.5088 FTUS    3    36.4869    0.0331    1.3 MeV  649.067 MeV FIEL NEXT LOSS
+     15.5209     0.3651   166.9390    15.5252 FTIH    1    36.5255    0.0387    1.1 MeV  648.005 MeV FIEL NEXT LOSS
+     15.6147     0.3696   166.7390    15.6191 FTUW    1    36.7465    0.2210    5.8 MeV  642.219 MeV FIEL NEXT LOSS
+     15.6429     0.3709   166.6790    15.6473 FTIA    1    36.8128    0.0663    1.7 MeV  640.476 MeV FIEL NEXT LOSS
+     16.0346     0.3897   165.8440    16.0393 FSTW   12    37.7353    0.9225   20.8 keV  640.456 MeV FIEL NEXT LOSS
+     16.1284     0.3943   165.6440    16.1332 FTRO    1    37.9563    0.2210    5.8 MeV  634.622 MeV FIEL NEXT LOSS
+     16.1448     0.3951   165.6090    16.1496 FTOH    1    37.9949    0.0387    1.1 MeV  633.544 MeV FIEL NEXT LOSS
+     16.3146     0.4035   165.2471    16.3195 FSTW   12    38.3947    0.3998    9.1 keV  633.535 MeV FIEL NEXT LOSS
+     16.5007     0.4128   164.8502    16.5059 FSTW    6    38.8332    0.4385   10.0 keV  633.525 MeV FIEL NEXT LOSS
+     16.5945     0.4175   164.6502    16.5998 FTRO    1    39.0542    0.2210    5.9 MeV  627.649 MeV FIEL NEXT LOSS
+     16.9862     0.4375   163.8152    16.9918 FSTW    6    39.9767    0.9225   21.0 keV  627.628 MeV FIEL NEXT LOSS
+     17.0143     0.4389   163.7552    17.0200 FTIA    1    40.0430    0.0663    1.8 MeV  625.857 MeV FIEL NEXT LOSS
+     17.1081     0.4438   163.5552    17.1139 FTUW    1    40.2639    0.2210    5.9 MeV  619.933 MeV FIEL NEXT LOSS
+     18.1905     0.5020   161.2471    18.1975 FSTW    6    42.8139    2.5500   58.7 keV  619.875 MeV FIEL NEXT LOSS
+     18.6594     0.5284   160.2471    18.6669 FSTD    5    43.9187    1.1048   25.4 keV  619.849 MeV FIEL NEXT LOSS
+     20.2993     0.6261   156.7491    20.3090 FSTM    1    47.7833    3.8646   89.0 keV  619.760 MeV FIEL NEXT LOSS
+     20.7681     0.6555   155.7491    20.7784 FSTD    4    48.8881    1.1048   25.4 keV  619.735 MeV FIEL NEXT LOSS
+     22.2691     0.7546   152.5460    22.2819 FSTW   12    52.4268    3.5388   81.4 keV  619.653 MeV FIEL NEXT LOSS
+     22.3628     0.7611   152.3460    22.3758 FSBW    3    52.6478    0.2210    6.0 MeV  613.692 MeV FIEL NEXT LOSS
+     22.4565     0.7675   152.1460    22.4696 FTRO    1    52.8687    0.2210    6.0 MeV  607.694 MeV FIEL NEXT LOSS
+     22.6425     0.7804   151.7491    22.6559 FSTW   12    53.3072    0.4385   10.2 keV  607.683 MeV FIEL NEXT LOSS
+     22.7980     0.7913   151.4172    22.8117 FSTW    1    53.6739    0.3667    8.6 keV  607.675 MeV FIEL NEXT LOSS
+     22.8120     0.7923   151.3872    22.8258 FTUS    2    53.7071    0.0331    1.4 MeV  606.304 MeV FIEL NEXT LOSS
+     22.8284     0.7934   151.3522    22.8422 FTOH    1    53.7457    0.0387    1.1 MeV  605.194 MeV FIEL NEXT LOSS
+     22.9221     0.8000   151.1522    22.9361 FTRO    1    53.9667    0.2210    6.0 MeV  599.145 MeV FIEL NEXT LOSS
+     24.5161     0.9165   147.7491    24.5332 FSTW    1    57.7264    3.7597   88.4 keV  599.056 MeV FIEL NEXT LOSS
+     24.9844     0.9522   146.7491    25.0025 FSTD    4    58.8312    1.1048   25.9 keV  599.031 MeV FIEL NEXT LOSS
+     27.9683     1.1969   140.3741    27.9939 FSTM    1    65.8742    7.0430  165.5 keV  598.865 MeV FIEL SCUT LOSS
+     29.4594     1.3299   137.1866    29.4894 FSTM    1    69.3958    3.5215   82.8 keV  598.782 MeV FIEL SCUT LOSS
+     30.9498     1.4702   133.9991    30.9847 FSTM    1    72.9173    3.5215   82.8 keV  598.699 MeV FIEL NEXT LOSS
+     34.2721     1.8087   126.8883    34.3198 FSTA    1    80.7732    7.8559  184.7 keV  598.515 MeV FIEL LOSS
+     34.2727     1.8088   126.8870    34.3204 FSTA    1    80.7747    0.0014   33.0  eV  598.515 MeV FIEL NEXT LOSS
+     34.2887     1.8105   126.8527    34.3365 CAVE    1    80.8126    0.0379  881.3  eV  598.514 MeV FIEL NEXT LOSS
+     34.3171     1.8136   126.7920    34.3650 SCON    1    80.8796    0.0671    2.4 MeV  596.147 MeV FIEL NEXT LOSS
+     34.5651     1.8403   126.2607    34.6141 SNMX    1    81.4665    0.5869  615.0 keV  595.532 MeV FIEL NEXT LOSS
+     34.5935     1.8434   126.2000    34.6426 SCON    1    81.5336    0.0671    2.4 MeV  593.158 MeV FIEL NEXT LOSS
+     45.7602     3.2588   102.2313    45.8761 CAVE    1   108.0140   26.4804  626.1 keV  592.531 MeV FIEL LOSS
+     45.7693     3.2601   102.2118    45.8852 CAVE    1   108.0356    0.0216  505.2  eV  592.531 MeV FIEL NEXT LOSS
+     46.2588     3.3316   101.1585    46.3786 TPCE    1   109.1993    1.1637   27.5 keV  592.503 MeV FIEL NEXT LOSS
+     46.2608     3.3319   101.1542    46.3806 TIFC    1   109.2041    0.0048  225.4 keV  592.278 MeV FIEL NEXT LOSS
+     46.2757     3.3341   101.1221    46.3956 TIKA    1   109.2395    0.0354    1.0 MeV  591.250 MeV FIEL NEXT LOSS
+     47.5361     3.5220    98.4086    47.6664 TINX    1   112.2373    2.9979    4.2 MeV  587.035 MeV FIEL NEXT LOSS
+     47.6157     3.5340    98.2373    47.7467 TIAD    1   112.4266    0.1893    4.8 MeV  582.259 MeV FIEL NEXT LOSS
+     47.6177     3.5343    98.2330    47.7487 TIFC    1   112.4314    0.0047  225.0 keV  582.034 MeV FIEL NEXT LOSS
+     47.6317     3.5364    98.2029    47.7628 TPCE    1   112.4647    0.0333  791.3  eV  582.034 MeV FIEL NEXT LOSS
+================================================================================
+09/26/2026
+...
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.0003     0.0017   200.0000     0.0018 PVAO    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL
+      1.9376     0.0073   195.8738     1.9376 PVAO    1     4.5586    4.5586    1.0  eV  680.246 MeV FIEL SCUT LOSS
+      3.8753     0.0242   191.7476     3.8754 PVAO    1     9.1172    4.5586    1.0  eV  680.246 MeV FIEL NEXT LOSS
+      4.0003     0.0257   191.4814     4.0004 PIPO    1     9.4113    0.2941   12.7 MeV  667.516 MeV FIEL NEXT LOSS
+      4.0232     0.0259   191.4327     4.0233 PWRP    1     9.4651    0.0538    1.7 MeV  665.772 MeV FIEL NEXT LOSS
+      4.0311     0.0260   191.4159     4.0312 PIPE    1     9.4836    0.0185  401.6  eV  665.772 MeV FIEL NEXT LOSS
+      4.8003     0.0362   189.7779     4.8004 CAVE    1    11.2933    1.8097   39.6 keV  665.732 MeV FIEL NEXT LOSS
+      6.2085     0.0594   186.7790     6.2088 FSTM    1    14.6064    3.3132   72.6 keV  665.660 MeV FIEL SCUT LOSS
+      7.6166     0.0887   183.7801     7.6171 FSTM    1    17.9196    3.3132   72.6 keV  665.587 MeV FIEL NEXT LOSS
+      8.0861     0.0998   182.7801     8.0867 FSTD    6    19.0244    1.1048   24.2 keV  665.563 MeV FIEL NEXT LOSS
+      9.1533     0.1275   180.5070     9.1542 FSTW   12    21.5357    2.5113   55.0 keV  665.508 MeV FIEL NEXT LOSS
+      9.1697     0.1279   180.4720     9.1706 FTIH    1    21.5744    0.0387    1.0 MeV  664.466 MeV FIEL NEXT LOSS
+      9.2636     0.1305   180.2720     9.2645 FTUW    1    21.7953    0.2210    5.7 MeV  658.784 MeV FIEL NEXT LOSS
+      9.9640     0.1508   178.7801     9.9651 FSTW   12    23.4436    1.6482   36.4 keV  658.748 MeV FIEL NEXT LOSS
+     10.6643     0.1726   177.2882    10.6657 FSTW    1    25.0918    1.6482   36.4 keV  658.711 MeV FIEL NEXT LOSS
+     10.7582     0.1757   177.0882    10.7596 FTUW    1    25.3128    0.2210    5.7 MeV  652.993 MeV FIEL NEXT LOSS
+     10.7746     0.1762   177.0532    10.7761 FTIH    1    25.3514    0.0387    1.1 MeV  651.936 MeV FIEL NEXT LOSS
+  g2t_volume_id: TPC version =   5.00000000     , tpcg_tpadconfig =    6.00000000    
+               : TOF version =   6.00000000      choice  =          13
+               : CALB patch  =          60          60
+               : ECAL version=   6.09999990      onoff   =           1           3
+     10.7887     0.1767   177.0232    10.7902 FTUS    3    25.3846    0.0331    1.3 MeV  650.626 MeV FIEL NEXT LOSS
+     11.8416     0.2126   174.7801    11.8435 FSTW    1    27.8627    2.4782   55.2 keV  650.571 MeV FIEL NEXT LOSS
+     12.3109     0.2298   173.7801    12.3130 FSTD    6    28.9675    1.1048   24.6 keV  650.546 MeV FIEL NEXT LOSS
+     13.9688     0.2957   170.2471    13.9719 FSTM    1    32.8708    3.9032   87.0 keV  650.459 MeV FIEL NEXT LOSS
+     14.4380     0.3159   169.2471    14.4415 FSTD    5    33.9756    1.1048   24.6 keV  650.434 MeV FIEL NEXT LOSS
+     15.4904     0.3637   167.0040    15.4947 FSTW   12    36.4537    2.4782   55.3 keV  650.379 MeV FIEL NEXT LOSS
+     15.5045     0.3644   166.9740    15.5088 FTUS    3    36.4869    0.0331    1.3 MeV  649.067 MeV FIEL NEXT LOSS
+     15.5209     0.3651   166.9390    15.5252 FTIH    1    36.5255    0.0387    1.1 MeV  648.005 MeV FIEL NEXT LOSS
+     15.6147     0.3696   166.7390    15.6191 FTUW    1    36.7465    0.2210    5.8 MeV  642.219 MeV FIEL NEXT LOSS
+     15.6429     0.3709   166.6790    15.6473 FTIA    1    36.8128    0.0663    1.7 MeV  640.476 MeV FIEL NEXT LOSS
+     16.0346     0.3897   165.8440    16.0393 FSTW   12    37.7353    0.9225   20.8 keV  640.456 MeV FIEL NEXT LOSS
+     16.1284     0.3943   165.6440    16.1332 FTRO    1    37.9563    0.2210    5.8 MeV  634.622 MeV FIEL NEXT LOSS
+     16.1448     0.3951   165.6090    16.1496 FTOH    1    37.9949    0.0387    1.1 MeV  633.544 MeV FIEL NEXT LOSS
+     16.3146     0.4035   165.2471    16.3195 FSTW   12    38.3947    0.3998    9.1 keV  633.535 MeV FIEL NEXT LOSS
+     16.5007     0.4128   164.8502    16.5059 FSTW    6    38.8332    0.4385   10.0 keV  633.525 MeV FIEL NEXT LOSS
+     16.5945     0.4175   164.6502    16.5998 FTRO    1    39.0542    0.2210    5.9 MeV  627.649 MeV FIEL NEXT LOSS
+     16.9862     0.4375   163.8152    16.9918 FSTW    6    39.9767    0.9225   21.0 keV  627.628 MeV FIEL NEXT LOSS
+     17.0143     0.4389   163.7552    17.0200 FTIA    1    40.0430    0.0663    1.8 MeV  625.857 MeV FIEL NEXT LOSS
+     17.1081     0.4438   163.5552    17.1139 FTUW    1    40.2639    0.2210    5.9 MeV  619.933 MeV FIEL NEXT LOSS
+     18.1905     0.5020   161.2471    18.1975 FSTW    6    42.8139    2.5500   58.7 keV  619.875 MeV FIEL NEXT LOSS
+     18.6594     0.5284   160.2471    18.6669 FSTD    5    43.9187    1.1048   25.4 keV  619.849 MeV FIEL NEXT LOSS
+     20.2993     0.6261   156.7491    20.3090 FSTM    1    47.7833    3.8646   89.0 keV  619.760 MeV FIEL NEXT LOSS
+     20.7681     0.6555   155.7491    20.7784 FSTD    4    48.8881    1.1048   25.4 keV  619.735 MeV FIEL NEXT LOSS
+     22.2691     0.7546   152.5460    22.2819 FSTW   12    52.4268    3.5388   81.4 keV  619.653 MeV FIEL NEXT LOSS
+     22.3628     0.7611   152.3460    22.3758 FSBW    3    52.6478    0.2210    6.0 MeV  613.692 MeV FIEL NEXT LOSS
+     22.4565     0.7675   152.1460    22.4696 FTRO    1    52.8687    0.2210    6.0 MeV  607.694 MeV FIEL NEXT LOSS
+     22.6425     0.7804   151.7491    22.6559 FSTW   12    53.3072    0.4385   10.2 keV  607.683 MeV FIEL NEXT LOSS
+     22.7980     0.7913   151.4172    22.8117 FSTW    1    53.6739    0.3667    8.6 keV  607.675 MeV FIEL NEXT LOSS
+     22.8120     0.7923   151.3872    22.8258 FTUS    2    53.7071    0.0331    1.4 MeV  606.304 MeV FIEL NEXT LOSS
+     22.8284     0.7934   151.3522    22.8422 FTOH    1    53.7457    0.0387    1.1 MeV  605.194 MeV FIEL NEXT LOSS
+     22.9221     0.8000   151.1522    22.9361 FTRO    1    53.9667    0.2210    6.0 MeV  599.145 MeV FIEL NEXT LOSS
+     24.5161     0.9165   147.7491    24.5332 FSTW    1    57.7264    3.7597   88.4 keV  599.056 MeV FIEL NEXT LOSS
+     24.9844     0.9522   146.7491    25.0025 FSTD    4    58.8312    1.1048   25.9 keV  599.031 MeV FIEL NEXT LOSS
+     27.9683     1.1969   140.3741    27.9939 FSTM    1    65.8742    7.0430  165.5 keV  598.865 MeV FIEL SCUT LOSS
+     29.4594     1.3299   137.1866    29.4894 FSTM    1    69.3958    3.5215   82.8 keV  598.782 MeV FIEL SCUT LOSS
+     30.9498     1.4702   133.9991    30.9847 FSTM    1    72.9173    3.5215   82.8 keV  598.699 MeV FIEL NEXT LOSS
+     34.2721     1.8087   126.8883    34.3198 FSTA    1    80.7732    7.8559  184.7 keV  598.515 MeV FIEL LOSS
+     34.2727     1.8088   126.8870    34.3204 FSTA    1    80.7747    0.0014   33.0  eV  598.515 MeV FIEL NEXT LOSS
+     34.2887     1.8105   126.8527    34.3365 CAVE    1    80.8126    0.0379  881.3  eV  598.514 MeV FIEL NEXT LOSS
+     34.3171     1.8136   126.7920    34.3650 SCON    1    80.8796    0.0671    2.4 MeV  596.147 MeV FIEL NEXT LOSS
+     34.5651     1.8403   126.2607    34.6141 SNMX    1    81.4665    0.5869  615.0 keV  595.532 MeV FIEL NEXT LOSS
+     34.5935     1.8434   126.2000    34.6426 SCON    1    81.5336    0.0671    2.4 MeV  593.158 MeV FIEL NEXT LOSS
+     45.7602     3.2588   102.2313    45.8761 CAVE    1   108.0140   26.4804  626.1 keV  592.531 MeV FIEL LOSS
+     45.7693     3.2601   102.2118    45.8852 CAVE    1   108.0356    0.0216  505.2  eV  592.531 MeV FIEL NEXT LOSS
+     46.2588     3.3316   101.1585    46.3786 TPCE    1   109.1993    1.1637   27.5 keV  592.503 MeV FIEL NEXT LOSS
+     46.2608     3.3319   101.1542    46.3806 TIFC    1   109.2041    0.0048  225.4 keV  592.278 MeV FIEL NEXT LOSS
+     46.2757     3.3341   101.1221    46.3956 TIKA    1   109.2395    0.0354    1.0 MeV  591.250 MeV FIEL NEXT LOSS
+     47.5361     3.5220    98.4086    47.6664 TINX    1   112.2373    2.9979    4.2 MeV  587.035 MeV FIEL NEXT LOSS
+     47.6157     3.5340    98.2373    47.7467 TIAD    1   112.4266    0.1893    4.8 MeV  582.259 MeV FIEL NEXT LOSS
+     47.6177     3.5343    98.2330    47.7487 TIFC    1   112.4314    0.0047  225.0 keV  582.034 MeV FIEL NEXT LOSS
+     47.6317     3.5364    98.2029    47.7628 TPCE    1   112.4647    0.0333  791.3  eV  582.034 MeV FIEL NEXT LOSS
+--------------------------------------------------------------------------------
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.0003     0.0017   200.0000     0.0018 PVAO    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL
+      1.9376     0.0073   195.8738     1.9376 PVAO    1     4.5586    4.5586    1.0  eV  680.246 MeV FIEL SCUT LOSS
+      3.8753     0.0242   191.7476     3.8754 PVAO    1     9.1172    4.5586    1.0  eV  680.246 MeV FIEL NEXT LOSS
+      4.0003     0.0257   191.4814     4.0004 PIPO    1     9.4113    0.2941   12.7 MeV  667.516 MeV FIEL NEXT LOSS
+      4.0232     0.0259   191.4327     4.0233 PWRP    1     9.4651    0.0538    1.7 MeV  665.772 MeV FIEL NEXT LOSS
+      4.0311     0.0260   191.4159     4.0312 PIPE    1     9.4836    0.0185  401.6  eV  665.772 MeV FIEL NEXT LOSS
+      4.8003     0.0362   189.7779     4.8004 CAVE    1    11.2933    1.8097   39.6 keV  665.732 MeV FIEL NEXT LOSS
+      6.2085     0.0594   186.7790     6.2088 FSTM    1    14.6064    3.3132   72.6 keV  665.660 MeV FIEL SCUT LOSS
+      7.6166     0.0887   183.7801     7.6171 FSTM    1    17.9196    3.3132   72.6 keV  665.587 MeV FIEL NEXT LOSS
+      8.0861     0.0998   182.7801     8.0867 FSTD    6    19.0244    1.1048   24.2 keV  665.563 MeV FIEL NEXT LOSS
+      9.1533     0.1275   180.5070     9.1542 FSTW   12    21.5357    2.5113   55.0 keV  665.508 MeV FIEL NEXT LOSS
+      9.1697     0.1279   180.4720     9.1706 FTIH    1    21.5744    0.0387    1.0 MeV  664.466 MeV FIEL NEXT LOSS
+      9.2636     0.1305   180.2720     9.2645 FTUW    1    21.7953    0.2210    5.7 MeV  658.784 MeV FIEL NEXT LOSS
+      9.9640     0.1508   178.7801     9.9651 FSTW   12    23.4436    1.6482   36.4 keV  658.748 MeV FIEL NEXT LOSS
+     10.6643     0.1726   177.2882    10.6657 FSTW    1    25.0918    1.6482   36.4 keV  658.711 MeV FIEL NEXT LOSS
+     10.7582     0.1757   177.0882    10.7596 FTUW    1    25.3128    0.2210    5.7 MeV  652.993 MeV FIEL NEXT LOSS
+     10.7746     0.1762   177.0532    10.7761 FTIH    1    25.3514    0.0387    1.1 MeV  651.936 MeV FIEL NEXT LOSS
+  g2t_volume_id: TPC version =   5.00000000     , tpcg_tpadconfig =    6.00000000    
+               : TOF version =   6.00000000      choice  =          13
+               : CALB patch  =          60          60
+               : ECAL version=   6.09999990      onoff   =           1           3
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  1.3, sy 0.030, x =   55.61 z =   80.64   3.8 cm( 0.03%) -9.62 keV  0.941 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.458+-  1.3, sy 0.046, x =   47.28 z =   98.75    20 cm( 2.01%) -1.01 MeV  0.941 GeV
+StiMaker:INFO  -                       SCOM_1/SCON_1_2_28  dE pT  0.459+-  1.4, sy 0.096, x =   34.13 z =  126.62  30.8 cm( 2.53%) -1.39 MeV  0.942 GeV
+
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_4/FSTW_1/FSBW_15  dE pT  0.459+-  1.4, sy 0.169, x =   21.74 z =  151.66  27.7 cm( 0.86%)  -674 keV  0.943 GeV
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTUW_1_14  dE pT  0.460+-  1.5, sy 0.217, x =   14.79 z =  167.57  17.6 cm( 3.12%) -2.31 MeV  0.944 GeV
+
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.462+-  1.6, sy 0.304, x =    3.94 z =  190.52  25.4 cm( 4.47%) -2.74 MeV  0.946 GeV
+     10.7887     0.1767   177.0232    10.7902 FTUS    3    25.3846    0.0331    1.3 MeV  650.626 MeV FIEL NEXT LOSS
+     11.8416     0.2126   174.7801    11.8435 FSTW    1    27.8627    2.4782   55.2 keV  650.571 MeV FIEL NEXT LOSS
+     12.3109     0.2298   173.7801    12.3130 FSTD    6    28.9675    1.1048   24.6 keV  650.546 MeV FIEL NEXT LOSS
+     13.9688     0.2957   170.2471    13.9719 FSTM    1    32.8708    3.9032   87.0 keV  650.459 MeV FIEL NEXT LOSS
+     14.4380     0.3159   169.2471    14.4415 FSTD    5    33.9756    1.1048   24.6 keV  650.434 MeV FIEL NEXT LOSS
+     15.4904     0.3637   167.0040    15.4947 FSTW   12    36.4537    2.4782   55.3 keV  650.379 MeV FIEL NEXT LOSS
+     15.5045     0.3644   166.9740    15.5088 FTUS    3    36.4869    0.0331    1.3 MeV  649.067 MeV FIEL NEXT LOSS
+     15.5209     0.3651   166.9390    15.5252 FTIH    1    36.5255    0.0387    1.1 MeV  648.005 MeV FIEL NEXT LOSS
+     15.6147     0.3696   166.7390    15.6191 FTUW    1    36.7465    0.2210    5.8 MeV  642.219 MeV FIEL NEXT LOSS
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTUW_1_14  dE pT  0.460+-  1.5, sy 0.217, x =   14.79 z =  167.57  17.6 cm( 3.12%) -2.31 MeV  0.944 GeV
+     15.6429     0.3709   166.6790    15.6473 FTIA    1    36.8128    0.0663    1.7 MeV  640.476 MeV FIEL NEXT LOSS
+     16.0346     0.3897   165.8440    16.0393 FSTW   12    37.7353    0.9225   20.8 keV  640.456 MeV FIEL NEXT LOSS
+     16.1284     0.3943   165.6440    16.1332 FTRO    1    37.9563    0.2210    5.8 MeV  634.622 MeV FIEL NEXT LOSS
+     16.1448     0.3951   165.6090    16.1496 FTOH    1    37.9949    0.0387    1.1 MeV  633.544 MeV FIEL NEXT LOSS
+     16.3146     0.4035   165.2471    16.3195 FSTW   12    38.3947    0.3998    9.1 keV  633.535 MeV FIEL NEXT LOSS
+     16.5007     0.4128   164.8502    16.5059 FSTW    6    38.8332    0.4385   10.0 keV  633.525 MeV FIEL NEXT LOSS
+     16.5945     0.4175   164.6502    16.5998 FTRO    1    39.0542    0.2210    5.9 MeV  627.649 MeV FIEL NEXT LOSS
+     16.9862     0.4375   163.8152    16.9918 FSTW    6    39.9767    0.9225   21.0 keV  627.628 MeV FIEL NEXT LOSS
+     17.0143     0.4389   163.7552    17.0200 FTIA    1    40.0430    0.0663    1.8 MeV  625.857 MeV FIEL NEXT LOSS
+     17.1081     0.4438   163.5552    17.1139 FTUW    1    40.2639    0.2210    5.9 MeV  619.933 MeV FIEL NEXT LOSS
+     18.1905     0.5020   161.2471    18.1975 FSTW    6    42.8139    2.5500   58.7 keV  619.875 MeV FIEL NEXT LOSS
+     18.6594     0.5284   160.2471    18.6669 FSTD    5    43.9187    1.1048   25.4 keV  619.849 MeV FIEL NEXT LOSS
+     20.2993     0.6261   156.7491    20.3090 FSTM    1    47.7833    3.8646   89.0 keV  619.760 MeV FIEL NEXT LOSS
+     20.7681     0.6555   155.7491    20.7784 FSTD    4    48.8881    1.1048   25.4 keV  619.735 MeV FIEL NEXT LOSS
+     22.2691     0.7546   152.5460    22.2819 FSTW   12    52.4268    3.5388   81.4 keV  619.653 MeV FIEL NEXT LOSS
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_4/FSTW_1/FSBW_15  dE pT  0.459+-  1.4, sy 0.169, x =   21.74 z =  151.66  27.7 cm( 0.86%)  -674 keV  0.943 GeV
+     22.3628     0.7611   152.3460    22.3758 FSBW    3    52.6478    0.2210    6.0 MeV  613.692 MeV FIEL NEXT LOSS
+     22.4565     0.7675   152.1460    22.4696 FTRO    1    52.8687    0.2210    6.0 MeV  607.694 MeV FIEL NEXT LOSS
+     22.6425     0.7804   151.7491    22.6559 FSTW   12    53.3072    0.4385   10.2 keV  607.683 MeV FIEL NEXT LOSS
+     22.7980     0.7913   151.4172    22.8117 FSTW    1    53.6739    0.3667    8.6 keV  607.675 MeV FIEL NEXT LOSS
+     22.8120     0.7923   151.3872    22.8258 FTUS    2    53.7071    0.0331    1.4 MeV  606.304 MeV FIEL NEXT LOSS
+     22.8284     0.7934   151.3522    22.8422 FTOH    1    53.7457    0.0387    1.1 MeV  605.194 MeV FIEL NEXT LOSS
+     22.9221     0.8000   151.1522    22.9361 FTRO    1    53.9667    0.2210    6.0 MeV  599.145 MeV FIEL NEXT LOSS
+     24.5161     0.9165   147.7491    24.5332 FSTW    1    57.7264    3.7597   88.4 keV  599.056 MeV FIEL NEXT LOSS
+     24.9844     0.9522   146.7491    25.0025 FSTD    4    58.8312    1.1048   25.9 keV  599.031 MeV FIEL NEXT LOSS
+     27.9683     1.1969   140.3741    27.9939 FSTM    1    65.8742    7.0430  165.5 keV  598.865 MeV FIEL SCUT LOSS
+     29.4594     1.3299   137.1866    29.4894 FSTM    1    69.3958    3.5215   82.8 keV  598.782 MeV FIEL SCUT LOSS
+     30.9498     1.4702   133.9991    30.9847 FSTM    1    72.9173    3.5215   82.8 keV  598.699 MeV FIEL NEXT LOSS
+     34.2721     1.8087   126.8883    34.3198 FSTA    1    80.7732    7.8559  184.7 keV  598.515 MeV FIEL LOSS
+     34.2727     1.8088   126.8870    34.3204 FSTA    1    80.7747    0.0014   33.0  eV  598.515 MeV FIEL NEXT LOSS
+     34.2887     1.8105   126.8527    34.3365 CAVE    1    80.8126    0.0379  881.3  eV  598.514 MeV FIEL NEXT LOSS
+     34.3171     1.8136   126.7920    34.3650 SCON    1    80.8796    0.0671    2.4 MeV  596.147 MeV FIEL NEXT LOSS
+     34.5651     1.8403   126.2607    34.6141 SNMX    1    81.4665    0.5869  615.0 keV  595.532 MeV FIEL NEXT LOSS
+     34.5935     1.8434   126.2000    34.6426 SCON    1    81.5336    0.0671    2.4 MeV  593.158 MeV FIEL NEXT LOSS
+     45.7602     3.2588   102.2313    45.8761 CAVE    1   108.0140   26.4804  626.1 keV  592.531 MeV FIEL LOSS
+     45.7693     3.2601   102.2118    45.8852 CAVE    1   108.0356    0.0216  505.2  eV  592.531 MeV FIEL NEXT LOSS
+     46.2588     3.3316   101.1585    46.3786 TPCE    1   109.1993    1.1637   27.5 keV  592.503 MeV FIEL NEXT LOSS
+     46.2608     3.3319   101.1542    46.3806 TIFC    1   109.2041    0.0048  225.4 keV  592.278 MeV FIEL NEXT LOSS
+     46.2757     3.3341   101.1221    46.3956 TIKA    1   109.2395    0.0354    1.0 MeV  591.250 MeV FIEL NEXT LOSS
+     47.5361     3.5220    98.4086    47.6664 TINX    1   112.2373    2.9979    4.2 MeV  587.035 MeV FIEL NEXT LOSS
+     47.6157     3.5340    98.2373    47.7467 TIAD    1   112.4266    0.1893    4.8 MeV  582.259 MeV FIEL NEXT LOSS
+     47.6177     3.5343    98.2330    47.7487 TIFC    1   112.4314    0.0047  225.0 keV  582.034 MeV FIEL NEXT LOSS
+     47.6317     3.5364    98.2029    47.7628 TPCE    1   112.4647    0.0333  791.3  eV  582.034 MeV FIEL NEXT LOSS
+     53.0160     4.4008    86.5911    53.1983 TPSS    3   125.2932   12.8286  253.3 keV  581.780 MeV FIEL LOSS
+     53.0235     4.4021    86.5748    53.2060 TPSS    3   125.3112    0.0180  353.1  eV  581.780 MeV FIEL NEXT LOSS
+     54.8248     4.7132    82.6826    55.0270 TPAD    1   129.6113    4.3001   99.6 keV  581.680 MeV FIEL LOSS
+     54.8257     4.7134    82.6806    55.0280 TPAD    1   129.6135    0.0022   50.7  eV  581.680 MeV FIEL NEXT LOSS
+--------------------------------------------------------------------------------
+~/work/Histograms/RunXXVI58
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  9.83% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.84% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.16% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 10.60% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.59% for F- 9p8GeV_fixedTarget_2026b
+
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#mu = -0.20% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.85% for F- 13p5GeV_fixedTarget_2026
+#mu = -0.33% for F- 8p65GeV_fixedTarget_2026
+#mu = -2.18% for F- 9p8GeV_fixedTarget_2026a
+#mu = -0.75% for F- 9p8GeV_fixedTarget_2026b
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  8.21% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.18% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.48% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.64% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.38% for N- 9p8GeV_fixedTarget_2026b
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#mu = -1.53% for N- 9p8GeV_fixedTarget_2026
+#mu =  0.17% for N- 13p5GeV_fixedTarget_2026
+#mu = -0.73% for N- 8p65GeV_fixedTarget_2026
+#mu = -2.15% for N- 9p8GeV_fixedTarget_2026a
+#mu = -1.30% for N- 9p8GeV_fixedTarget_2026b
+
+/star/u/fisyak/work/Histograms/RunXXVI59   
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  9.67% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.73% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.00% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 10.40% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  8.05% for F- 9p8GeV_fixedTarget_2026b
+
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#mu =  0.83% for F- 9p8GeV_fixedTarget_2026
+#mu =  1.39% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.01% for F- 8p65GeV_fixedTarget_2026
+#mu = -0.44% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.80% for F- 9p8GeV_fixedTarget_2026b
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  8.02% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.52% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.59% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.76% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.38% for N- 9p8GeV_fixedTarget_2026b
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#mu = -3.94% for N- 9p8GeV_fixedTarget_2026
+#mu =  0.36% for N- 13p5GeV_fixedTarget_2026
+#mu = -0.51% for N- 8p65GeV_fixedTarget_2026
+#mu = -0.81% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.01% for N- 9p8GeV_fixedTarget_2026b
+
+[starsub05] ~/work/Histograms/RunXXVI61 $ root.exe NPointsFNGP*.root Res.C
+
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  9.15% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.80% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.30% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.68% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.67% for F- 9p8GeV_fixedTarget_2026b
+
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#mu =  0.04% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.82% for F- 13p5GeV_fixedTarget_2026
+#mu = -0.07% for F- 8p65GeV_fixedTarget_2026
+#mu = -0.78% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.97% for F- 9p8GeV_fixedTarget_2026b
+[starsub05] ~/work/Histograms/RunXXVI61 $ root.exe NPointsNNGP*.root Res.C
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  8.11% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.19% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.64% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 10.98% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.39% for N- 9p8GeV_fixedTarget_2026b
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#mu = -0.90% for N- 9p8GeV_fixedTarget_2026
+#mu =  0.08% for N- 13p5GeV_fixedTarget_2026
+#mu = -0.40% for N- 8p65GeV_fixedTarget_2026
+#mu = -1.25% for N- 9p8GeV_fixedTarget_2026a
+#mu = -0.03% for N- 9p8GeV_fixedTarget_2026b
+
+
+[starsub05] ~/work/Histograms/RunXXVI62 $ root.exe NPointsFNG*.root Res.C
+
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) = 10.02% for F- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.70% for F- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.18% for F- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) = 10.14% for F- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.80% for F- 9p8GeV_fixedTarget_2026b
+
+NPointsFNGP9p8GeV_fixedTarget_2026.root
+#mu = -0.06% for F- 9p8GeV_fixedTarget_2026
+#mu =  0.05% for F- 13p5GeV_fixedTarget_2026
+#mu =  0.03% for F- 8p65GeV_fixedTarget_2026
+#mu =  0.02% for F- 9p8GeV_fixedTarget_2026a
+#mu =  0.02% for F- 9p8GeV_fixedTarget_2026b
+
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#sigma(@61 npts) =  8.24% for N- 9p8GeV_fixedTarget_2026
+#sigma(@61 npts) =  7.28% for N- 13p5GeV_fixedTarget_2026
+#sigma(@61 npts) =  8.17% for N- 8p65GeV_fixedTarget_2026
+#sigma(@61 npts) =  9.92% for N- 9p8GeV_fixedTarget_2026a
+#sigma(@61 npts) =  7.47% for N- 9p8GeV_fixedTarget_2026b
+
+NPointsNNGP9p8GeV_fixedTarget_2026.root
+#mu = -0.15% for N- 9p8GeV_fixedTarget_2026
+#mu =  0.08% for N- 13p5GeV_fixedTarget_2026
+#mu =  0.10% for N- 8p65GeV_fixedTarget_2026
+#mu =  0.02% for N- 9p8GeV_fixedTarget_2026a
+#mu =  0.07% for N- 9p8GeV_fixedTarget_2026b
+
+ ((StiMaker *) chain->Maker("Sti"))->PrintDetectors("TGeo"); >> StiGeom33.h
+
+
+FTRO
+================================================================================
+09/27/2026
+
+ ((StiMaker *) chain->Maker("Sti"))->PrintDetectors("TGeo"); >> StiGeom34.h
+Problem with 
+OFCC position
+FSCT rotation

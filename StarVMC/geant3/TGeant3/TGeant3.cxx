@@ -1526,8 +1526,16 @@ void TGeant3::DefineParticles()
   TDatabasePDG *pdgDB = TDatabasePDG::Instance();
   if (! pdgDB->ParticleList()) pdgDB->ReadPDGTable();
   if (! pdgDB->GetParticle(1000020040)) {
-    TString STAR(gSystem->Getenv("STAR"));
-    pdgDB->ReadPDGTable(STAR + "/etc/pdg_tableExtension.txt");
+    const Char_t *path  = ".:./etc:$STAR/etc";
+    const Char_t *File  = "pdg_tableExtension.txt";
+    Char_t *file = gSystem->Which(path,File,kReadPermission);
+    if (! file) {
+      Fatal("TGeant3::DefineParticles","File %s has not been found in path %s",File,path);
+    } else       {
+      Warning("TGeant3::DefineParticles","File %s has been found as %s",File,file);
+      pdgDB->ReadPDGTable(file);
+    }
+    delete [] file;
   }
   // Load standard numbers for GEANT particles and PDG conversion
   fPDGCode[fNPDGCodes++] = -99;   //  0 = unused location
@@ -1634,7 +1642,7 @@ void TGeant3::DefineParticles()
   fPDGCode[fNPDGCodes++] =  2114; // 83 = Delta0
   fPDGCode[fNPDGCodes++] =  2214; // 84 = Delta+
   fPDGCode[fNPDGCodes++] =  2224; // 85 = Delta++ 
-    fPDGCode[fNPDGCodes++] = -1114; // 86 = Delta-_bar
+  fPDGCode[fNPDGCodes++] = -1114; // 86 = Delta-_bar
   fPDGCode[fNPDGCodes++] = -2114; // 87 = Delta0_bar
   fPDGCode[fNPDGCodes++] = -2214; // 88 = Delta+_bar
   fPDGCode[fNPDGCodes++] = -2224; // 89 = Delta--
@@ -1647,7 +1655,39 @@ void TGeant3::DefineParticles()
   fPDGCode[fNPDGCodes++] =  -323; // 96 = K*-
   fPDGCode[fNPDGCodes++] =   323; // 97 = K*+
   // Hyper Nuclear
-  
+#if 0
+  fPDGCode[fNPDGCodes++] =          3003; //  98 = LN          
+  fPDGCode[fNPDGCodes++] =    1010000030; //  99 = LNN             
+  fPDGCode[fNPDGCodes++] =          3028; // 100  = H2L         
+  fPDGCode[fNPDGCodes++] =       1003028; // 101  = H2Lr        
+  fPDGCode[fNPDGCodes++] =          3004; // 102  = H3L         
+  fPDGCode[fNPDGCodes++] =          3012; // 103  = H3Ldp       
+  fPDGCode[fNPDGCodes++] =       1003004; // 104  = H3Lr        
+  fPDGCode[fNPDGCodes++] =       2003004; // 105  = H3RL        
+  fPDGCode[fNPDGCodes++] =          3005; // 106  = H4L         
+  fPDGCode[fNPDGCodes++] =          3013; // 107  = H4Ltp            
+  fPDGCode[fNPDGCodes++] =          3014; // 108  = H4L2d       
+  fPDGCode[fNPDGCodes++] =          3015; // 109  = H5L              
+  fPDGCode[fNPDGCodes++] =          3016; // 110  = H6L              
+  fPDGCode[fNPDGCodes++] =          3017; // 111  = H6L3             
+  fPDGCode[fNPDGCodes++] =          3006; // 112  = He4L        
+  fPDGCode[fNPDGCodes++] =          3007; // 113  = He5L        
+  fPDGCode[fNPDGCodes++] =          3018; // 114  = He5L3       
+  fPDGCode[fNPDGCodes++] =       1003007; // 115  = He5Li5      
+  fPDGCode[fNPDGCodes++] =          3019; // 116  = He6L        
+  fPDGCode[fNPDGCodes++] =          3020; // 117  = He6L3       
+  fPDGCode[fNPDGCodes++] =          3021; // 118  = He6L3ad     
+  fPDGCode[fNPDGCodes++] =          3022; // 119  = He7L                
+  fPDGCode[fNPDGCodes++] =          3023; // 120  = He7L3                    
+  fPDGCode[fNPDGCodes++] =          3024; // 121  = Li6L                     
+  fPDGCode[fNPDGCodes++] =          3025; // 122  = Li7L                     
+  fPDGCode[fNPDGCodes++] =          3026; // 123  = Li7L3                    
+  fPDGCode[fNPDGCodes++] =          3027; // 124  = Li8L               
+  fPDGCode[fNPDGCodes++] =       2003015; // 125  = H5LL             
+#endif
+  fPDGCode[fNPDGCodes++] =        912323; // 126  = PQ1730LamK0s
+  fPDGCode[fNPDGCodes++] =        912313; // 127  = PQ1730LamK+ 
+  					     
   //  static Double_t GeV2Time = 3.291086E-25; // width in GeV to life time in seconds
   for (fNG3Particles = 1; fNG3Particles < fNPDGCodes; fNG3Particles++) {
     Int_t pdg = fPDGCode[fNG3Particles];
@@ -1701,8 +1741,8 @@ void TGeant3::DefineParticles()
 	  dpdg = apdg;
 	}
 	if ((apdg < 3000 || apdg > 3028) &&      // Maxim hypernuclear
-	  (apdg <   10 ||                       // quarks
-	   (apdg%100)/10 == 0  ||               // diquarks
+	  (apdg <   10 ||                        // quarks
+	   (apdg%100)/10 == 0  ||               //  diquarks
 	   (apdg >   49 && apdg < 111) ||       //  technical
 	   (apdg >= 10000))) { // * & **
 	  ig3[j] = -1;
@@ -1719,7 +1759,7 @@ void TGeant3::DefineParticles()
       if (ifK0 == -1) {
 	mode[nda] = ig3[0] + 100*(ig3[1] + 100*ig3[2]);
 	if(mode[nda] == 0) continue;
-	bratio[nda] = dc->BranchingRatio();
+	bratio[nda] = 100.*dc->BranchingRatio();
 	nda++;
 	if (nda > 5) break;
       } else {
@@ -1727,12 +1767,12 @@ void TGeant3::DefineParticles()
 	Int_t ig3K0L = IdFromPDG(130);
 	ig3[ifK0] = ig3K0S;
 	mode[nda] = ig3[0] + 100*(ig3[1] + 100*ig3[2]);
-	bratio[nda] = 0.5*dc->BranchingRatio();
+	bratio[nda] = 0.5*100.*dc->BranchingRatio();
 	nda++;
 	if (nda > 5) break;
 	ig3[ifK0] = ig3K0L;
 	mode[nda] = ig3[0] + 100*(ig3[1] + 100*ig3[2]);
-	bratio[nda] = 0.5*dc->BranchingRatio();
+	bratio[nda] = 0.5*100.*dc->BranchingRatio();
 	nda++;
 	if (nda > 5) break;
       }

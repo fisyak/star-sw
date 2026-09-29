@@ -1,17 +1,20 @@
 // root.exe  y2025z.root 'RayTracing.C+(0)'      z =    0
 // root.exe  y2025z.root 'RayTracing.C+(200)'    z = +200;
 #include <cstring>
+#include <stdlib.h>
 #include "Riostream.h"
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TFile.h"
 #include "TString.h"
 #include "TH2.h"
+#include "TH3.h"
 #include "TRandom3.h"
 #include "TPolyMarker3D.h"
 #include "TPolyLine3D.h"
 #include "TStopwatch.h"
 #include "TGeoBBox.h"
+#include "TGeoTube.h"
 #include "TGeoNode.h"
 #include "TGeoManager.h"
 #include "TGeoOverlap.h"
@@ -22,7 +25,7 @@
 #include "TBuffer3DTypes.h"
 #include "TMath.h"
 #include "TROOT.h"
-#include <stdlib.h>
+#include "Ask.h"
 //________________________________________________________________________________
 void Import(const Char_t *name = "") {
   if (!gFile) return;
@@ -209,5 +212,185 @@ void Plot(const Char_t *volume = "FSTA") {
     hist[i]->SetMinimum(ymin);
     hist[i]->SetMaximum(ymax);
     hist[i]->Draw("colz");
+  }
+}
+//________________________________________________________________________________
+void AverageTubs(const Char_t *volName = "FSTW") {
+  if (!gGeoManager) Import();
+  if (!gGeoManager) return;
+  TGeoVolume *volume = gGeoManager->GetVolume(volName);
+  if (! volume) return;
+  TGeoShape *shape = volume->GetShape();
+  if (! shape->IsA()->InheritsFrom( "TGeoTubeSeg")) return;
+  //  if (! shape->TestBit(TGeoShape::kGeoTubeSeg)) return;
+  TGeoTubeSeg *shapeC = (TGeoTubeSeg *) shape;
+  Double_t Rmax = shapeC->GetRmax();
+  Double_t Rmin = shapeC->GetRmin();
+  Double_t dZ   = shapeC->GetDz();
+  Double_t Phi1 = shapeC->GetPhi1();
+  Double_t Phi2 = shapeC->GetPhi2();
+  if (Phi2 < Phi1) Phi2 += 360.0;
+  if (Phi2 > 360.0) {
+    Phi1 -= 360;
+    Phi2 -= 360;
+  }
+  TGeoVolume *tvol = gGeoManager->GetTopVolume();
+  gGeoManager->SetTopVolume(volume);
+  Int_t nR = 2*(Rmax - Rmin)/0.1;
+  Int_t nZ = 2*2*dZ/0.1;
+  Int_t nPhi = 2*(Phi2 - Phi1);
+  TFile *fOut = new TFile(Form("%s.root",volName), "recreate");
+  TH3F *No    = new TH3F("No","no. entries ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TH3F *Dens  = new TH3F("Dens","Density ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TH3F *A     = new TH3F("A","A*Dens ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TH3F *Z     = new TH3F("Z","Z*Dens ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TH3F *RadlI = new TH3F("RadlI","Inverse RadL*Dens ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TList *matlist = gGeoManager->GetListOfMaterials();
+
+   Int_t nmat = matlist->GetSize();
+   if (!nmat) return;
+   Double_t x,y,z;
+   TGeoNode *node;
+   TGeoMaterial *mat;
+   Long64_t igen = 0;
+   Long64_t N = 100*nR*nZ*nPhi;
+   Long64_t n10 = N/10;
+   for (Long64_t i = 0; i < N; i++) {
+     z = dZ*(2*gRandom->Rndm() - 1);
+     Double_t r = Rmin + (Rmax - Rmin)*gRandom->Rndm();
+     Double_t phi = Phi1 + (Phi2 - Phi1)*gRandom->Rndm();
+     Double_t Phi = TMath::DegToRad()*phi;
+     x = r*TMath::Cos(Phi);
+     y = r*TMath::Sin(Phi);
+     No->Fill(z,r,phi);
+     node = gGeoManager->FindNode(x,y,z);
+     igen++;
+     if (n10) {
+       if ((igen%n10) == 0) printf("%i percent\n", Long64_t(100*igen/N));
+     }  
+     if (!node) continue;
+     mat = node->GetVolume()->GetMedium()->GetMaterial();
+     if (! mat) continue;
+     Double_t dens = mat->GetDensity();
+     if (dens  < 2e-2) continue;
+     Dens->Fill(z,r,phi,dens);
+     A->Fill(z,r,phi,mat->GetA()*dens);
+     Z->Fill(z,r,phi,mat->GetZ()*dens);
+     if (mat->GetRadLen() > 1e-2) RadlI->Fill(z,r,phi,dens/mat->GetRadLen());
+   }
+   fOut->Write();
+   gGeoManager->SetTopVolume(tvol);
+   
+   return;
+}
+//______________________________________________________________________________
+void Average() {
+/*
+    z = [-2.00, -1.70]
+        [-1.70, -1.40]
+        [-1.40, -0.55]
+        [-0.55,  0.20]
+        [ 0.20,  1.50]
+r_phi = [ 5.00, 15.00], 
+        [15.00, 16.20]  [ -8.00, -5.00], [ -1.50, 1.50], [  5.00, 8.00]
+        [16.20, 17.80]  [-15.00, 15.00]
+        [17.80, 18.60]  [-12.00,-10,00], [ 10.00, 12.00]  
+        [18.60, 27.80]  [-15.00,-13.00], 
+        [18.60, 33.00]  [ 13.00, 15.00]
+        [27.80, 33.00]  [ 12.00, 13.00]
+        [27.80, 29.00]  [-16.00, 13.00]
+        [29.00, 30.00]  [-10.50, -9.00]  [  9.00, 10.50]
+        [30.00, 35.00]  [-15.00, 15.00]                                
+
+*/
+  struct Limits_t {
+    Double_t min; 
+    Double_t max;
+  };
+  Limits_t Z[] = {
+    {-2.00, -1.70},
+//     {-2.00, -1.90},
+//     {-1.85, -1.70},
+    {-1.70, -1.40},
+    {-1.40, -0.55},
+    {-0.55,  0.20},
+    { 0.20,  1.50}
+  };
+  Limits_t R[] = {
+    { 5.00, 15.00},
+    {15.00, 16.20}, 
+    {16.20, 17.80}, 
+    {17.80, 18.60}, 
+    {18.60, 27.80}, 
+    {18.60, 33.00}, 
+    {27.80, 33.00}, 
+    {27.80, 29.00}, 
+    {29.00, 30.00}, 
+    {30.00, 35.00},
+    { 5.00, 35.00}
+  };
+  Limits_t Phi[] = {
+    { -8.00, -5.00}, 
+    { -1.50,  1.50}, 
+    {  5.00,  8.00},
+    {-15.00, 15.00},				       
+    {-12.00,-10.00}, 
+    { 10.00, 12.00},  	       
+    {-15.00,-13.00}, 			       
+    { 13.00, 15.00},				       
+    { 12.00, 13.00},				       
+    {-16.00, 13.00},				       
+    {-10.50, -9.00},  
+    {  9.00, 10.50},	       
+    {-15.00, 15.00},                                
+    {-17.00, 17.00}
+  };
+  Int_t nZ = sizeof(Z)/sizeof(Limits_t);
+  Int_t nR = sizeof(R)/sizeof(Limits_t);
+  Int_t nPhi = sizeof(Phi)/sizeof(Limits_t);
+  TH3F *No = (TH3F *) gDirectory->Get("No");
+  if (! No) return;
+  TH3F *Dens = (TH3F *) gDirectory->Get("Dens");
+  if (! Dens) return;
+  TCanvas *c1 = new TCanvas("c1","c1",1200,400);
+  c1->Divide(3,1);
+  for (Int_t iz = 0; iz < nZ; iz++) {
+    Int_t iz1 = No->GetXaxis()->FindBin(Z[iz].min);
+    Int_t iz2 = No->GetXaxis()->FindBin(Z[iz].max) - 1;
+    No->GetXaxis()->SetRange(iz1,iz2);
+    Dens->GetXaxis()->SetRange(iz1,iz2);
+    for (Int_t ir = 0; ir < nR; ir++) {
+      Int_t ir1 = No->GetYaxis()->FindBin(R[ir].min);
+      Int_t ir2 = No->GetYaxis()->FindBin(R[ir].max) - 1;
+      No->GetYaxis()->SetRange(ir1,ir2);
+      Dens->GetYaxis()->SetRange(ir1,ir2);
+      for (Int_t iphi = 0; iphi < nPhi; iphi++) {
+	Int_t iphi1 = No->GetYaxis()->FindBin(Phi[iphi].min);
+	Int_t iphi2 = No->GetYaxis()->FindBin(Phi[iphi].max) -1;
+	No->GetYaxis()->SetRange(iphi1,iphi2);
+	Dens->GetYaxis()->SetRange(iphi1,iphi2);
+	TString Title(Form("z_%i [%5.1f,%5.1f] r_%i [%5.1f,%5.1f] phi_%i [%5.1f,%5.1f]",
+			   iz,Z[iz].min,Z[iz].max,
+					  ir,R[ir].min,R[ir].max,
+							 iphi,Phi[iphi].min,Phi[iphi].max));
+	c1->SetTitle(Title);
+	//
+	TH1 *Nox = No->Project3D("x");
+	TH1 *Densx = Dens->Project3D("x");
+	if (Densx->GetEntries() <= 0.0) continue;
+	Densx->Divide(Nox);
+	c1->cd(1); Densx->Draw();
+	TH1 *Noy = No->Project3D("y");
+	TH1 *Densy = Dens->Project3D("y");
+	Densy->Divide(Noy);
+	c1->cd(2); Densy->Draw();
+	TH1 *Noz = No->Project3D("z");
+	TH1 *Densz = Dens->Project3D("z");
+	Densz->Divide(Noz);
+	c1->cd(3); Densz->Draw();
+	c1->Update();
+	if (! gROOT->IsBatch() && Ask()) return;
+      }
+    }
   }
 }
