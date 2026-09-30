@@ -1,0 +1,46 @@
+# Map migrated GitHub handles to their Gitea equivalents.
+#
+# Syntax: github-handle = gitea-handle
+# Do not include the leading @ sign. Organization teams use org/team.
+# Edit only the right-hand side when a migrated handle differs. Handles not
+# listed here remain unchanged.
+#
+# Current handles are initialized as identity mappings for an easy audit.
+akioogawa = akioogawa
+DanielWielanek = DanielWielanek
+dmarkh = dmarkh
+Femtoscopist = Femtoscopist
+fgeurts = fgeurts
+fisyak = fisyak
+genevb = genevb
+ggfdsa10 = ggfdsa10
+GuannanXie = GuannanXie
+ideppner = ideppner
+iraklic = iraklic
+jdbrice = jdbrice
+jml985 = jml985
+JohnTheBlindMilkman = JohnTheBlindMilkman
+kkauder = kkauder
+klendathu2k = klendathu2k
+lbavinh = lbavinh
+marrbnl = marrbnl
+mrosales2016 = mrosales2016
+Navagyan = Navagyan
+nigmatkulov = nigmatkulov
+perevbnlgov = perevbnlgov
+PhilippWeidenkaff = PhilippWeidenkaff
+plexoos = smirnovd
+R-Witt = R-Witt
+rkunnawa = rkunnawa
+starsdong = dongx
+sunxuhit = sunxuhit
+techuan-huang = tchuang
+tinglin-physics = tinglin-physics
+tonko-lj = tonko-lj
+veprbl = veprbl
+YannickSoehngen = YannickSoehngen
+yezhenyu2003 = yezhenyu2003
+ZaochenYe = ZaochenYe
+zhux97 = zhux97
+zlchang = zlchang
+zsweger = sweger
