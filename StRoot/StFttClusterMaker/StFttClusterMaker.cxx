@@ -368,7 +368,7 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
     clu->setSumAdc( m0Sum );
     clu->setX( m1Sum / m0Sum );
     float var = (m2Sum - m1Sum*m1Sum / m0Sum) / m0Sum;
-    clu->setSigma( sqrt( var ) );
+    clu->setSigma( sqrt( var < 0 ? 0 : var ) );
 }
 
 
