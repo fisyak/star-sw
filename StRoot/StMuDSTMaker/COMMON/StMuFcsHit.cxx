@@ -12,7 +12,6 @@
  **************************************************************************/
 #include "StMuFcsHit.h"
 #include "TString.h"
-#include <algorithm>
 
 #include "StMuFcsCluster.h"
 ClassImp(StMuFcsHit)
@@ -34,6 +33,11 @@ StMuFcsHit::StMuFcsHit(unsigned short zs, unsigned short det, unsigned short id,
 
 StMuFcsHit::~StMuFcsHit() {
     mData.Set(0);
+}
+
+void StMuFcsHit::Clear(Option_t *) {
+    mData.Set(0);
+    mGeantIdMap.clear();
 }
 
 unsigned short StMuFcsHit::zs()         const {return (mDetId >> 15 ) & 0x0001;}
@@ -144,11 +148,9 @@ const StMuFcsCluster* StMuFcsHit::cluster() const {
     return static_cast<StMuFcsCluster*>( mCluster.GetObject() );
 }
 void StMuFcsHit::addGeantTrack(unsigned int id, float e){    
-    auto cmp = [id](decltype(mGeantTracks)::value_type t){ return t.first == id; };
-    auto trk = std::find_if(mGeantTracks.rbegin(), mGeantTracks.rend(), cmp);
-    if(trk == mGeantTracks.rend()){
-      mGeantTracks.push_back(std::make_pair(id, e));
-    }else{
-      trk->second += e;
-    }
+        mGeantIdMap[id] += e;
+}
+
+std::vector<std::pair<unsigned int, float>> StMuFcsHit::getGeantTracks() const {
+    return std::vector<std::pair<unsigned int, float>>(mGeantIdMap.begin(), mGeantIdMap.end());
 }
