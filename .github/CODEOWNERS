@@ -1,3 +1,6 @@
+# This is the canonical ownership list. Keep it in GitHub CODEOWNERS syntax.
+# After editing it or .gitea/codeowners.map, run: python3 mgr/sync_codeowners.py
+
 *                                                  @plexoos           @nigmatkulov
 .github/                                           @plexoos           @veprbl
 /OnlTools                                          @plexoos           @jml985
