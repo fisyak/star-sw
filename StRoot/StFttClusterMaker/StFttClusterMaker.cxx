@@ -13,13 +13,18 @@
 #include <set>
 #include <map>
 #include <array>
-#include <algorithm>    // std::is_sorted
+#include <algorithm>    // std::is_sorted, std::max
 #include <climits>
 
 #include "StEvent.h"
 #include "StEnumerations.h"
 
 #include "StFttClusterMaker.h"
+
+// Value written to a cluster's x / sigma when no charge was accumulated, so the
+// divide-by-zero never happens and downstream consumers have one value to test
+// against instead of a bare -999 appearing twice.
+static const float kNoChargeSentinel = -999.0f;
 
 
 #include "StEvent/StFttRawHit.h"
@@ -110,6 +115,17 @@ StFttClusterMaker::Make()
     }
     // Clear any clusters from a previous event so the collection doesn't
     // accumulate across events when it survives event boundaries.
+    //
+    // Points MUST go first. StFttCollection::clusters() is an StSPtrVec, i.e. an
+    // owning container whose clear() deletes the elements (StStrArray::clear), while
+    // StFttPoint keeps its parents as raw StFttCluster* (StFttPoint::mClusters[4]).
+    // Clearing clusters alone therefore leaves every surviving point pointing at freed
+    // memory, and point->cluster(i) reads it. That is exactly the case this clear()
+    // exists for -- a collection that survived the event boundary, or an StEvent
+    // rebuilt from a MuDst that already carries production points -- so the two must
+    // be cleared together. Downstream point makers rebuild points from the new
+    // clusters in the same event.
+    mFttCollection->points().clear();
     mFttCollection->clusters().clear();
 
     mFttDb = static_cast<StFttDb*>(GetDataSet("fttDb"));
@@ -162,8 +178,10 @@ StFttClusterMaker::Make()
     LOG_DEBUG << "StFttClusterMaker::Make{ nStripsHit = " << nStripsHit << " }" << endm;
 
     // Look up per-ROB hits without mutating the maps. std::map::operator[] would
-    // insert empty entries for missing ROB keys, which leaks across events and
-    // breaks const-correctness on later passes.
+    // default-construct an empty vector for every missing ROB key, growing the map
+    // while merely reading it. The maps are local to Make(), so nothing escapes the
+    // call; the benefit is avoiding the needless insertions and allowing the lookup
+    // to take the map by const reference.
     static const std::vector<StFttRawHit*> emptyHits;
     auto getHits = [&]( const std::map<UChar_t, std::vector<StFttRawHit*>>& m, UChar_t key ) -> const std::vector<StFttRawHit*>& {
         auto it = m.find( key );
@@ -381,12 +399,15 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
     clu->setSumAdc( m0Sum );
     if ( m0Sum > 0 ){
         clu->setX( m1Sum / m0Sum );
+        // (m2Sum - m1Sum^2/m0Sum)/m0Sum is a difference of two nearly equal numbers for
+        // a narrow cluster and can come out slightly negative from rounding alone, even
+        // though the true variance cannot be. sqrt() of that is NaN, so clamp at zero.
         float var = (m2Sum - m1Sum*m1Sum / m0Sum) / m0Sum;
-        clu->setSigma( sqrt( var ) );
+        clu->setSigma( sqrt( std::max( var, 0.0f ) ) );
     } else {
-        // No charge accumulated; assign sentinels rather than NaN from divide-by-zero.
-        clu->setX( -999 );
-        clu->setSigma( -999 );
+        // No charge accumulated; assign a sentinel rather than NaN from divide-by-zero.
+        clu->setX( kNoChargeSentinel );
+        clu->setSigma( kNoChargeSentinel );
     }
 }
 
