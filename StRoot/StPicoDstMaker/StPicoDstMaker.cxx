@@ -173,8 +173,13 @@ StPicoDstMaker::~StPicoDstMaker() {
 
 //_________________
 void StPicoDstMaker::clearArrays() {
+  // Use Delete() rather than Clear() so destructors run on stored TClonesArray
+  // elements. Several pico classes (StPicoFwdTrack, StPicoFcsCluster,
+  // StPicoEmcTrigger, StPicoEvent) hold std::vector members; with plain Clear()
+  // the next event's placement-new constructs over the slot without freeing the
+  // previous vector heap allocation, producing a steady per-event leak.
   for(Int_t i=0; i<StPicoArrays::NAllPicoArrays; i++) {
-    mPicoArrays[i]->Clear();
+    mPicoArrays[i]->Delete();
   }
 }
 
@@ -1962,6 +1967,10 @@ void StPicoDstMaker::fillEvent() {
 
     // Set bunch crossing ID
   picoEvent->setBunchId( ev->l0Trigger().bunchCrossingId7bit(ev->runNumber()) );
+
+  //set past and future guardians 
+  picoEvent->setPastCorruption( ev->triggerData()->pastCorruption() );
+  picoEvent->setFutureCorruption( ev->triggerData()->futureCorruption() );
 }
 
 //_________________
@@ -2736,6 +2745,10 @@ bool StPicoDstMaker::selectVertex() {
   }
   else if ( mVtxMode == PicoVtxMode::FXT ) {
     
+    // Target z at west-side location until the final OO200 dataset
+    float z_tgt = (mMuDst->event()->runNumber() < 27032000 ? 200.0 : -180.0);
+    float z_tgtTolerance = 2.0;
+
     // Loop over primary vertices
     for (unsigned int iVtx = 0; iVtx < mMuDst->numberOfPrimaryVertices(); ++iVtx) {
       
@@ -2744,7 +2757,7 @@ bool StPicoDstMaker::selectVertex() {
       if (!vtx) continue;
       
       // Check TpcVz and VpdVz difference
-      if (vtx->position().z() > 198. && vtx->position().z() < 202.) {
+      if (TMath::Abs(vtx->position().z() - z_tgt) < z_tgtTolerance) {
 	// Reset vertex index
 	mMuDst->setVertexIndex( iVtx );
 	// Reset pointer to the primary vertex

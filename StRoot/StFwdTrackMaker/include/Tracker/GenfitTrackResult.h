@@ -10,7 +10,7 @@
 // Utility class for evaluating ID and QA truth
 struct MCTruthUtils {
 
-    static int dominantContribution(Seed_t hits, double &qa) {
+    static int dominantContribution(const Seed_t &hits, double &qa) {
         // track_id, hits on track
         std::unordered_map<int,int> truth;
         for ( auto hit : hits ) {
@@ -158,12 +158,14 @@ public:
         set( seed, track );
     }
     ~GenfitTrackResult(){
-        // Clear();
+        Clear();
     }
     void Clear() {
         if ( mTrack ){
-            mTrack->Clear();
-            mTrack.reset(); // inform the shared pointer to release the memory
+            // Only clear the genfit::Track internals if we are the sole owner
+            if ( mTrack.use_count() == 1 )
+                mTrack->Clear();
+            mTrack.reset();
         }
     }
     void set(   Seed_t &seeds, std::shared_ptr<genfit::Track> track ){
@@ -173,7 +175,6 @@ public:
     void setSeed( Seed_t &seed, TVector3 seedP = TVector3(0,0,0), double seedQ = 0 ) {
         mSeed = seed;
         mIdTruth = MCTruthUtils::dominantContribution( seed, mQaTruth );
-        LOG_INFO << "GenFitTrackResult::mIdTruth = " << mIdTruth << ", QaTruth = " << mQaTruth << endm;
 
         this->mIsFitConverged           = false;
         this->mIsFitConvergedFully      = false;
@@ -221,10 +222,8 @@ public:
             mChi2                    = mTrack->getFitStatus()->getChi2();
 
             if ( mIsFitConverged ){
-                LOG_INFO << "GTR Setting momentum from track" << endm;
                 mMomentum = mTrack->getCardinalRep()->getMom( mTrack->getFittedState(0, mTrack->getCardinalRep()) );
             }
-            LOG_DEBUG << "GenfitTrackResult::set Track successful" << endm;
         } catch ( genfit::Exception &e ) {
             LOG_ERROR << "Unable to set track -> GenfitException: " << e.what() << endm;
             this->mTrack                    = nullptr;
