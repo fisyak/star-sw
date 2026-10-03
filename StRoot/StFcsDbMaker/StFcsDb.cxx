@@ -2383,27 +2383,27 @@ const StMuMcTrack* StFcsDb::getParentMcTrack(const StMuFcsHit* h, const TClonesA
   return getMcTrack(h, mcTracks, nullptr, fraction, ntrk, order, 0);
 }
 const StMuMcTrack* StFcsDb::getParentMcTrack(const StMuFcsHit* h, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) const {
-  return mu ? getParentMcTrack(h, mu->mcArray(1), fraction, ntrk, order) : nullptr;
+  return mu ? getParentMcTrack(h, mu->mcArray(MCTrack), fraction, ntrk, order) : nullptr;
 }
 //_____________________________________________________________________________
 const StMuMcTrack* StFcsDb::getParentMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, float& fraction, int& ntrk, unsigned int order) const {
   return getMcTrack(c, mcTracks, nullptr, fraction, ntrk, order, 0);
 }
 const StMuMcTrack* StFcsDb::getParentMcTrack(const StMuFcsCluster* c, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) const {
-  return mu ? getParentMcTrack(c, mu->mcArray(1), fraction, ntrk, order) : nullptr;
+  return mu ? getParentMcTrack(c, mu->mcArray(MCTrack), fraction, ntrk, order) : nullptr;
 }
 //_____________________________________________________________________________
 const StMuMcTrack* StFcsDb::getPrimaryMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order) const {
   return getMcTrack(h, mcTracks, mcVertices, fraction, ntrk, order, 1);
 }
 const StMuMcTrack* StFcsDb::getPrimaryMcTrack(const StMuFcsHit* h, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) const {
-  return mu ? getPrimaryMcTrack(h, mu->mcArray(1), mu->mcArray(0), fraction, ntrk, order) : nullptr;
+  return mu ? getPrimaryMcTrack(h, mu->mcArray(MCTrack), mu->mcArray(MCVertex), fraction, ntrk, order) : nullptr;
 }
 //_____________________________________________________________________________
 const StMuMcTrack* StFcsDb::getPrimaryMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order) const {
   return getMcTrack(c, mcTracks, mcVertices, fraction, ntrk, order, 1);
 }
 const StMuMcTrack* StFcsDb::getPrimaryMcTrack(const StMuFcsCluster* c, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) const {
-  return mu ? getPrimaryMcTrack(c, mu->mcArray(1), mu->mcArray(0), fraction, ntrk, order) : nullptr;
+  return mu ? getPrimaryMcTrack(c, mu->mcArray(MCTrack), mu->mcArray(MCVertex), fraction, ntrk, order) : nullptr;
 }
 //_____________________________________________________________________________
