@@ -22,4 +22,5 @@
 
 #pragma link C++ class pair<unsigned int,float>+;
 #pragma link C++ class vector<pair<unsigned int,float>>+;
+#pragma link C++ class map<unsigned int, float>+;
 #endif
