@@ -1,10 +1,12 @@
 #include "StEvent/StFcsCluster.h"
+#include "StMuDSTMaker/COMMON/StMuArrays.h"
 #include "StMuDSTMaker/COMMON/StMuFcsCluster.h"
 #include "StMuDSTMaker/COMMON/StMuFcsHit.h"
 #include "StMuDSTMaker/COMMON/StMuFcsPoint.h"
 #include "StMuDSTMaker/COMMON/StMuFcsUtil.h"
 #include "StMuDSTMaker/COMMON/StMuFcsInfo.h"
 #include "StMuDSTMaker/COMMON/StMuFcsCollection.h"
+#include "StMuDSTMaker/COMMON/StMuMcUtil.h"
 #include "StMuDSTMaker/COMMON/StMuDst.h"
 #include "StMuDSTMaker/COMMON/StMuEvent.h"
 #include "StEvent/StEvent.h"
@@ -12,12 +14,13 @@
 #include "StEvent/StEventTypes.h"
 #include "StEvent/StTriggerData.h"
 
-#include <algorithm>  // For std::find
+#include <algorithm>  // For std::find, std::nth_element
 #include <iterator>  // For std::distance
 
 #include "TCollection.h"  // For TIter
 #include "TRefArray.h"
 #include "TVector3.h"
+#include "TClonesArray.h"
 
 ClassImp(StMuFcsUtil)
 
@@ -303,3 +306,102 @@ void StMuFcsUtil::fillFcsHits(StFcsCollection* fcscol,
     }
   }  // while
 } // fillFcsHits
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getMcTrackFromTracks(const std::vector<std::pair<unsigned int, float>>& rawTracks,
+                                                const TClonesArray* mcTracks,
+                                                const TClonesArray* mcVertices,
+                                                float& fraction, int& ntrk,
+                                                unsigned int order, int mode) {
+  float detot = 0.0f;
+  std::vector<std::pair<unsigned int, float>> parents;
+
+  for (const auto& gt : rawTracks) {
+    unsigned int id = 0;
+    switch (mode) {
+      case 0: id = gt.first; break;
+      case 1: id = StMuMcUtil::backTraceMcTrack(gt.first, mcTracks, mcVertices); break;
+    }
+
+    float de = gt.second;
+    bool found = false;
+    for (auto& p : parents) {
+      if (p.first == id) {
+        p.second += de;
+        found = true;
+        break;
+      }
+    }
+    if (!found) parents.emplace_back(id, de);
+    detot += de;
+  }
+
+  ntrk = static_cast<int>(parents.size());
+  if (order >= static_cast<unsigned int>(ntrk) || detot <= 0.0f) {
+    fraction = 0.0f;
+    return nullptr;
+  }
+
+  // Sort contributors descending by energy
+  std::nth_element(parents.begin(), parents.begin() + order, parents.end(),
+                   [](const std::pair<unsigned int, float>& a, const std::pair<unsigned int, float>& b) {
+                     return b.second < a.second;
+                   });
+
+  fraction = parents[order].second / detot;
+
+  return StMuMcUtil::findTrack(parents[order].first, mcTracks);
+}
+
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order, int mode) {
+  if (!h || !mcTracks) { fraction = 0; ntrk = 0; return nullptr; }
+  return getMcTrackFromTracks(h->getGeantTracks(), mcTracks, mcVertices, fraction, ntrk, order, mode);
+}
+
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order, int mode) {
+  if (!c || !mcTracks) { fraction = 0; ntrk = 0; return nullptr; }
+  const TRefArray* hits = c->hits();
+  if (!hits) { fraction = 0; ntrk = 0; return nullptr; }
+
+  std::vector<std::pair<unsigned int, float>> allTracks;
+  int nHits = hits->GetEntriesFast();
+  for (int i = 0; i < nHits; ++i) {
+    const StMuFcsHit* hit = static_cast<const StMuFcsHit*>(hits->At(i));
+    if (!hit) continue;
+    const std::vector<std::pair<unsigned int, float>>& gts = hit->getGeantTracks();
+    allTracks.insert(allTracks.end(), gts.begin(), gts.end());
+  }
+
+  return getMcTrackFromTracks(allTracks, mcTracks, mcVertices, fraction, ntrk, order, mode);
+}
+
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getParentMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, float& fraction, int& ntrk, unsigned int order) {
+  return getMcTrack(h, mcTracks, nullptr, fraction, ntrk, order, 0);
+}
+const StMuMcTrack* StMuFcsUtil::getParentMcTrack(const StMuFcsHit* h, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) {
+  return mu ? getParentMcTrack(h, mu->mcArray(MCTrack), fraction, ntrk, order) : nullptr;
+}
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getParentMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, float& fraction, int& ntrk, unsigned int order) {
+  return getMcTrack(c, mcTracks, nullptr, fraction, ntrk, order, 0);
+}
+const StMuMcTrack* StMuFcsUtil::getParentMcTrack(const StMuFcsCluster* c, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) {
+  return mu ? getParentMcTrack(c, mu->mcArray(MCTrack), fraction, ntrk, order) : nullptr;
+}
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getPrimaryMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order) {
+  return getMcTrack(h, mcTracks, mcVertices, fraction, ntrk, order, 1);
+}
+const StMuMcTrack* StMuFcsUtil::getPrimaryMcTrack(const StMuFcsHit* h, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) {
+  return mu ? getPrimaryMcTrack(h, mu->mcArray(MCTrack), mu->mcArray(MCVertex), fraction, ntrk, order) : nullptr;
+}
+//_____________________________________________________________________________
+const StMuMcTrack* StMuFcsUtil::getPrimaryMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order) {
+  return getMcTrack(c, mcTracks, mcVertices, fraction, ntrk, order, 1);
+}
+const StMuMcTrack* StMuFcsUtil::getPrimaryMcTrack(const StMuFcsCluster* c, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order) {
+  return mu ? getPrimaryMcTrack(c, mu->mcArray(MCTrack), mu->mcArray(MCVertex), fraction, ntrk, order) : nullptr;
+}
+//_____________________________________________________________________________
