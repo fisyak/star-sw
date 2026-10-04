@@ -113,12 +113,6 @@
 class StFcsHit;
 class StFcsCluster;
 class StFcsPoint;
-class StMuFcsHit;
-class StMuFcsCluster;
-class StMuMcTrack;
-class StMuMcVertex;
-class StMuDst;
-class TClonesArray;
 using namespace std;
 
 class StFcsDb : public TDataSet {
@@ -296,11 +290,6 @@ public:
   // Tracing back from a given g2t_track_id to primary track's g2t_track_id
   unsigned int backTraceG2tTrack(unsigned int id, g2t_track_st* g2ttrk);
 
-  // MC track ancestor back-tracing via vertex parentage
-  unsigned int backTraceMcTrack(unsigned int id, const TClonesArray* mcTracks, const TClonesArray* mcVertices) const;
-
-
-
   /// Getting pointer to parent & primary g2t_track from StFcsHit & StFcsCluster
   /// User need to provide g2t_track_st table from geant.root file
   /// order=0 (default) gives the top contributing g2t_track for the hit/cluster. 1,2... for lower contributer
@@ -310,19 +299,6 @@ public:
   const g2t_track_st* getParentG2tTrack(StFcsCluster* c,  g2t_track_st* g2ttrk, float& fraction, int& ntrk, unsigned int order=0);
   const g2t_track_st* getPrimaryG2tTrack(StFcsHit* h,     g2t_track_st* g2ttrk, float& fraction, int& ntrk, unsigned int order=0);
   const g2t_track_st* getPrimaryG2tTrack(StFcsCluster* c, g2t_track_st* g2ttrk, float& fraction, int& ntrk, unsigned int order=0);
-
-
-  // StMuMcTrack, StMuFcsHit and StMuFcsCluster accessors
-  const StMuMcTrack* getParentMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getParentMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getPrimaryMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getPrimaryMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getMcTrack(const StMuFcsHit* h, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order = 0, int mode = 0) const;
-  const StMuMcTrack* getMcTrack(const StMuFcsCluster* c, const TClonesArray* mcTracks, const TClonesArray* mcVertices, float& fraction, int& ntrk, unsigned int order = 0, int mode = 0) const;
-  const StMuMcTrack* getParentMcTrack(const StMuFcsHit* h, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getParentMcTrack(const StMuFcsCluster* c, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getPrimaryMcTrack(const StMuFcsHit* h, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order = 0) const;
-  const StMuMcTrack* getPrimaryMcTrack(const StMuFcsCluster* c, const StMuDst* mu, float& fraction, int& ntrk, unsigned int order = 0) const;
 
   StThreeVectorD projectTrackToEcal(const g2t_track_st* g2ttrk, const g2t_vertex_st* g2tvert=0) const;//!< project a g2t track to Ecal with a given track and vertex. If no vertex given assume a vertex of (0,0,0)
   StThreeVectorD projectTrackToHcal(const g2t_track_st* g2ttrk, const g2t_vertex_st* g2tvert=0) const;//!< project a g2t track to Hcal with a given track and vertex. If no vertex given assume a vertex of (0,0,0)
@@ -399,15 +375,7 @@ public:
   /// Getting pointer to parent & primary g2t_track from StFcsCluster
   /// mode=0 for parent, and mode=1 for primary
   const g2t_track_st* getG2tTrack(StFcsCluster* c, g2t_track_st* g2ttrk, float& fraction, int& ntrk, unsigned int order=0, int mode=0);
-  
-  const StMuMcTrack*  findMcTrack(unsigned int id, const TClonesArray* mcTracks) const;
-  const StMuMcVertex* findMcVertex(unsigned int id, const TClonesArray* mcVertices) const;
-  const StMuMcTrack*  getMcTrackFromTracks(const std::vector<std::pair<unsigned int, float>>& rawTracks,
-                                           const TClonesArray* mcTracks,
-                                           const TClonesArray* mcVertices,
-                                           float& fraction, int& ntrk,
-                                           unsigned int order, int mode) const;
-  
+
   virtual const Char_t *GetCVS() const {static const Char_t cvs[]="Tag " __DATE__ " " __TIME__ ; return cvs;}
 
   ClassDef(StFcsDb,1)   //StAF chain virtual base class for Makers        
