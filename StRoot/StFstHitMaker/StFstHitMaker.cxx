@@ -101,7 +101,21 @@ Int_t StFstHitMaker::Make()
 			unsigned short idTruth = 0;
 			unsigned char  nRawHits = -1, nRawHitsR = -1, nRawHitsPhi = -1;
 			unsigned char  disk = -1, wedge = -1, sensor = -1, apv = -1;
-			int  meanRStrip = -1, meanPhiStrip = -1;
+			// meanRStrip stays int: it indexes kFstrStart[] below, and the cluster
+			// algorithm only ever puts a whole strip in it (meanRStrip = maxRStrip).
+			// meanPhiStrip must be FLOAT. When two clusters merge,
+			// StFstScanRadiusClusterAlgo computes it as a charge-weighted average
+			// (meanPhiStrip = phi1*q1/qtot + phi2*q2/qtot), which is genuinely
+			// fractional -- the one place the algorithm gets sub-strip phi resolution.
+			// Declaring it int truncated that away, both in the stored StFstHit and in
+			// the local[1] position computed below. Measured on 20 events of run
+			// 23063032: 15% of clusters carried a fractional phi, uniform on [0,1)
+			// strips, mean 0.48 and max 0.96 -- up to 0.22 deg, ~0.5 mm at the outer
+			// radius, discarded. Nothing else has to change: StFstHit's ctor parameter
+			// and mMeanPhiStrip, and StMuFstHit's, are all already Float_t, so this is
+			// not a MuDst format change.
+			int    meanRStrip = -1;
+			float  meanPhiStrip = -1;
                         float  charge = 0., chargeErr = 0.;
 			unsigned char  maxTb = -1;
 			int	 key = -1;
