@@ -3,9 +3,9 @@ void Tokenize(TString opt = "gstar,Y2004,tfs,tcl,SvtSlowSim,tpcI,svtIT,ITTF,Phys
 #if 1
 
   TObjArray *array = opt.Tokenize(separator);
-  cout << "GetEntriesFast\t" << array->GetEntriesFast() << endl;
+  //  cout << "GetEntriesFast\t" << array->GetEntriesFast() << endl;
   cout << "GetEntries\t" << array->GetEntries() << endl;
-  cout << "GetSize\t" << array->GetSize() << endl;
+  //  cout << "GetSize\t" << array->GetSize() << endl;
   TIter next(array);
   TObjString *objs;
   while ((objs = (TObjString *) next())) {cout << objs->GetString() << endl;}
