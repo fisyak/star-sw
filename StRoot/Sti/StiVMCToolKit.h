@@ -49,8 +49,6 @@ class  StiVMCToolKit {
   TGeoManager      *GetVMC(); 
   TGeoPhysicalNode *LoopOverNodes(const TGeoNode *nodeT, const Char_t *pathT, const Char_t *name = 0, void ( *callback)
 				  (TGeoPhysicalNode *nodeP)=0);
-  void              TestVMC4Reconstruction();
-  void              GetVMC4Reconstruction(const Char_t *pathT=0, const Char_t *nameT=0);
   void              PrintNewNode(TGeoPhysicalNode *nodeP);
   Double_t          GetPotI(const TGeoMaterial *mat);
   Double_t          Nice(Double_t phi);

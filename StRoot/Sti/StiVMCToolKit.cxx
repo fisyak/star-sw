@@ -17,111 +17,6 @@
 #endif
 Int_t      StiVMCToolKit::m_Debug = 0;
 StiVMCToolKit *StiVMCToolKit::fgStiVMCToolKit = 0;
-static VolumeMap_t VolumesToBeAveraged[] = { 
-  {"PIPE","the STAR beam pipe mother volume","HALL_1/CAVE_1/PIPE_1-2/*","",""},
-  {"PIPC","the Central Beam PIPe Volum","HALL_1/CAVE_1/PIPE_1-2/PIPC_1/*","",""},
-  {"PVAC","the Vacuum Volume of Be section of pipe","HALL_1/CAVE_1/PIPE_1-2/PIPC_1/PVAC_1","",""},
-  {"PIPO","Steel pipe from Be to 1st flanges","HALL_1/CAVE_1/PIPE_1-2/PIPO_1/PVAO_1","",""},
-  {"PVAO","its cavity","HALL_1/CAVE_1/PIPE_1-2/PIPO_1/PVAO_1","",""},
-  //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
-  // Pixel
-  {"PXBX","Extrenal Berillium tube","HALL_1/CAVE_1/PXBX_1","",""},
-  // SVT
-  {"SOUM", "Outer shileding structure","HALL_1/CAVE_1/SVTT_1/SOUM_1/*","",""},
-  {"SXRL", "Circular water feeds","HALL_1/CAVE_1/SVTT_1/SXRL_1-2/*","",""}, 
-  {"SXR1", "Circular water feeds","HALL_1/CAVE_1/SVTT_1/SXR1_3-4/*","",""}, 
-  {"SXR2", "Circular water feeds","HALL_1/CAVE_1/SVTT_1/SXR2_5-6/*","",""},
-  {"SCBM", "Mother of All Cables","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/*","",""},
-  {"SCBL", "The bundles of cables connecting PCBs with the transition boards","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SCBL_1","",""},
-  {"SCB1", "The bundles of cables connecting PCBs with the transition boards","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SCB1_2","",""},
-  {"SCB2", "The bundles of cables connecting PCBs with the transition boards","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SCB2_3","",""},
-  {"SCB3", "The bundles of cables connecting PCBs with the transition boards","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SCB3_4","",""},
-  {"SFED", "bundles of water pipes","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SFED_1","",""},
-  {"SFE1", "bundles of water pipes","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SFE1_2","",""},
-  {"SFE2", "bundles of water pipes","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SFE2_3","",""},
-  {"SPLS", "plastic of the water pipes","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SPLS_1","",""},
-  {"SPL1", "plastic of the water pipes","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SPL1_2","",""},
-  {"SPL2", "plastic of the water pipes","HALL_1/CAVE_1/SVTT_1/SCBM_1-2/SPL2_3","",""},
-  {"SALM", "aluminum shield mesh","HALL_1/CAVE_1/SVTT_1/SALM_1-2","",""},
-  {"SOSH", "SVT outer shield","HALL_1/CAVE_1/SVTT_1/SOSH_1","",""},
-  {"SISH", "SVT inner shield","HALL_1/CAVE_1/SVTT_1/SISH_1","",""},
-  {"SLYD", "layer mother","HALL_1/CAVE_1/SVTT_1/SLYD_1/*","",""},
-  {"SLY1", "layer mother","HALL_1/CAVE_1/SVTT_1/SLY1_2/*","",""},
-  {"SLY2", "layer mother","HALL_1/CAVE_1/SVTT_1/SLY2_3/*","",""},
-  {"SLY3", "layer mother","HALL_1/CAVE_1/SVTT_1/SLY3_4/*","",""},
-  {"SLY4", "layer mother","HALL_1/CAVE_1/SVTT_1/SLY4_5/*","",""},
-  {"SLY5", "layer mother","HALL_1/CAVE_1/SVTT_1/SLY5_6/*","",""},
-  {"SVTD", "an active wafer volume","HALL_1/CAVE_1/SVTT_1/SLY*/SLS*/SLD*/STL*/STS*/SVTD_1","svt","SVTD"}, // <+++
-  {"SROD", "Support rod","HALL_1/CAVE_1/SVTT_1/SROD_1-2","",""},
-  {"SBSP", "Beampipe support mother","HALL_1/CAVE_1/SVTT_1/SBSP_1-2","",""},
-  //  {"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
-  {"SBWC", "water manifold to support cone bracket mother","HALL_1/CAVE_1/SVTT_1/SBWC_1-2/*","",""},
-  {"SWMM", "water manifold mother","HALL_1/CAVE_1/SVTT_1/SWMM_1-2/*","",""},
-  {"SIES", "Volume to hold inner endring screws","HALL_1/CAVE_1/SVTT_1/SIES_1-2/*","",""},
-  {"SOES", "Volume to hold outer endring screws","HALL_1/CAVE_1/SVTT_1/SOES_1-2/*","",""},
-  {"SBRG", "Bracket joining the end rungs","HALL_1/CAVE_1/SVTT_1/SBRG_1-2/*","",""},
-  {"SOER", "outer end ring","HALL_1/CAVE_1/SVTT_1/SOER_1-2/*","",""},
-  {"SIRT", "inner end ring tube piece ","HALL_1/CAVE_1/SVTT_1/SIRT_1-2","",""},
-  {"SIRP", "inner end ring polygon piece ","HALL_1/CAVE_1/SVTT_1/SIRP_1-2","",""},
-  {"STAC", "twinax cable approximation, copper","HALL_1/CAVE_1/SVTT_1/SCON_1/STAC_1-2","",""},
-  // SSD
-  //  {"SFMO", "the mother of all Silicon Strip Detector volumes","HALL_1/CAVE_1/SVTT_1/SFMO_1","",""},
-  {"SCMP","SSD mounting plate inserted in the cone","HALL_1/CAVE_1/SVTT_1/SFMO_1/SCMP_1-8","",""},
-  {"SCVM","SSD V-shape mouting piece","HALL_1/CAVE_1/SVTT_1/SFMO_1/SCVM_1-8/*","",""},
-  {"SSLT","the linking (sector to the cone) tube","HALL_1/CAVE_1/SVTT_1/SFMO_1/SSLT_1-8","",""},
-  {"SSLB","the linking (sector to the cone)","HALL_1/CAVE_1/SVTT_1/SFMO_1/SSLB_1-8","",""},
-  {"SSRS","the side of the small rib","HALL_1/CAVE_1/SVTT_1/SFMO_1/SSRS_1-4","",""},
-  {"SSRT","the top of the side rib","HALL_1/CAVE_1/SVTT_1/SFMO_1/SSRT_1-4","",""},
-  {"SSSS","Side parts of the small sectors","HALL_1/CAVE_1/SVTT_1/SFMO_1/SSSS_1-4","",""},
-  {"SSST","Top parts of the small sectors","HALL_1/CAVE_1/SVTT_1/SFMO_1/SSST_1-4","",""},
-  //  {"SFLM","the mother of the ladder","HALL_1/CAVE_1/SVTT_1/SFMO_1/SFLM_1-20/*","",""}, 
-  {"SFSM","the structure mother volume","HALL_1/CAVE_1/SVTT_1/SFMO_1/SFLM_1-20/SFSM_1/*","",""},
-  {"SFDM","the detectors and adcs mother volume","HALL_1/CAVE_1/SVTT_1/SFMO_1/SFLM_1-20/SFDM_1/*","",""},
-  {"SFSD","the strip detector",      "HALL_1/CAVE_1/SVTT_1/SFMO_1/SFLM_1-20/SFDM_1/SFSW_1-16/SFSD_1","ssd",""},// <+++
-  // TPC
-  //  {"TPCE","the TPC system in STAR","HALL_1/CAVE_1/TPCE_1","",""},
-  {"TPCW","the TPC supporting endcap Wheel","HALL_1/CAVE_1/TPCE_1/TPCW_1-2/*","",""},
-  {"TPEA","one endcap placed in TPC","HALL_1/CAVE_1/TPCE_1/TPEA_1-2/*","",""},
-  {"TPCM","the Central Membrane placed in TPC","HALL_1/CAVE_1/TPCE_1/TPCM_1","",""},
-  {"TOFC","defines outer field cage - fill it with insulating gas already","HALL_1/CAVE_1/TPCE_1/TOFC_1/*","",""},
-  {"TIFC","defines the Inner Field Cage placed in TPC","HALL_1/CAVE_1/TPCE_1/TIFC_1/*","",""},
-  {"TPGV","the Gas Volume placed in TPC","HALL_1/CAVE_1/TPCE_1/TPGV_1-2/*","",""},
-  {"TPSS","a division of gas volume corresponding to a supersectors","HALL_1/CAVE_1/TPCE_1/TPGV_1-2/TPSS_1-12/*","",""},
-  {"TPAD","(inner) real padrow with dimensions defined at positioning time","HALL_1/CAVE_1/TPCE_1/TPGV_1-2/TPSS_1-12/TPAD_1-39","tpc",""},// <+++
-  {"TPA1","(outer) real padrow with dimensions defined at positioning time","HALL_1/CAVE_1/TPCE_1/TPGV_1-2/TPSS_1-12/TPA1_40-73","tpc",""}
-};
-static Int_t NofVolToBEAveraged = sizeof(VolumesToBeAveraged)/sizeof(VolumeMap_t);
-static VolumeMap_t TopVolumes[] = {// Mother volume and sensitive detectors
-  {"BBCM","Beam Beam Counter Modules Geometry","","",""},
-  {"BTOF","the whole CTF system envelope","","",""},
-  {"CALB","the geometry of the Barrel EM Calorimeter","","",""},
-  {"ECAL","the EM EndCap Calorimeter GEOmetry","","",""},
-  {"FBOX","one Pb-Glass fpd detector","","",""},
-  {"FBO1","an other Pb-Glass fpd detector","","",""},
-  {"FTMO","the mother of the single FTPC RO barrel","","",""},
-  {"IBEM","the IBeam structure beneath the Bell reducer cone","","",""},
-  {"MAGP","the geometry of the STAR magnet","","",""},
-  {"PHMD","the Photon Multiplicity Detector","","",""},
-  {"SUPO","the geometry of the Forward TPC supports in STAR","","",""},
-
-  {"SVTT","the SVT geometry for STAR","","",""},
-
-  {"SFMO","the mother of all Silicon Strip Detector volumes (inside of SVTT)","","",""},
-  
-  {"FTPC","the geometry of the Forward TPC in STAR (inside of SVTT)","","",""},
-
-  {"UPST","the geometry  of the UPSTREAM AreA.","","",""},
-  {"VPDD","the Pseudo Vertex Position Detector of STAR","","",""},
-  {"ZCAL","the geometry of the Zero deg. Quartz Calorimeter","","",""}
-};
-static Int_t nTopVol = sizeof(TopVolumes)/sizeof(VolumeMap_t);
-  /*
-    "Air"                    4    1.214e-3        #. Huhtinen, Air 18 degr.C and 58% humidity
-    "Nitrogen"         74.94            #. Weight fraction
-    "Oxygen"           23.69            #. Weight fraction
-    "Argon"             1.29            #. Weight fraction
-    "Hydrogen"          0.08            #. Weight fraction
-  */
 //________________________________________________________________________________
 void StiVMCToolKit::PrintShape(TGeoShape *shape) {
   TGeoBBox *box = 0;//, *Box = 0;
@@ -271,37 +166,6 @@ TGeoManager  *StiVMCToolKit::GetVMC() {
   return gGeo;
 }
 //________________________________________________________________________________
-void StiVMCToolKit::TestVMC4Reconstruction(){
-  /*! test with calculation volumes, weights and average densities
-   */
-  GetVMC();
-  //  TObjArray *volumes = gGeoManager->GetListOfVolumes();
-  Int_t NV[2] = {nTopVol,NofVolToBEAveraged};
-  VolumeMap_t *list = 0;
-  TGeoVolume *volT = 0;
-  cout << "<table>" << endl;
-  cout << "<tr><td>name</td><td>Comment </td><td>Volume[cm**3]</td><td>Weight[g]</td><td>Av.Dens.[g/cm**3]</td></tr>" << endl;
-  for (Int_t i = 0; i < 2; i++) {
-    if (i == 0) list = TopVolumes;
-    else        list = VolumesToBeAveraged;
-    for (Int_t j = 0; j < NV[i]; j++) {
-      volT =  gGeoManager->GetVolume(list[j].name);
-      //      volT = (TGeoVolume *) volumes->FindObject(list[j].name);
-      if (! volT) {cout << "Can't find " << list[j].name << "\t" << list[j].comment << endl; continue;}
-      TGeoShape *shapeT = volT->GetShape();
-      Double_t volume = shapeT->Capacity();
-      Double_t weight = volT->WeightA(); // GetVolumeWeight(volT, 0, 0);  // it leads to the memory leak !!!
-      
-      cout << "<tr><td>"<< list[j].name << "</td><td>" << list[j].comment << "</td>"
-	   << "<td>" << Form("%10.3g",volume) << "</td>" 
-	   << "<td>" << Form("%10.3g",weight) << "</td>" 
-	   << "<td>" << Form("%10.3g",weight/volume) << "</td></tr>" 
-	   << endl;
-    }
-  }
-  cout << "</table>" << endl;
-}
-//________________________________________________________________________________
 TGeoPhysicalNode *StiVMCToolKit::MakePhysicalNode(const Char_t *pathT) {
   TObjArray *listP = gGeoManager->GetListOfPhysicalNodes();
   TGeoPhysicalNode *nodeP = 0;
@@ -324,11 +188,6 @@ void StiVMCToolKit::MakeListOfMaterials(TGeoVolume *volT, vector<MaterialMap_t> 
   const TGeoMedium   *med = volT->GetMedium();
   const TGeoMaterial *mat = med->GetMaterial();
   Double_t weight  = volT->WeightA();
-  if (Debug()) {
-   cout << volT->GetName() << " === "   
-	<< " Weight " << weight << "[g]\t"
-	<< "material\t" << mat->GetName() << "\tmedium\t" << med->GetName() << endl;
-  }
   TObjArray *nodes = volT->GetNodes();
   Int_t nd = volT->GetNdaughters();
   for (Int_t id = 0; id < nd; id++) {
@@ -337,6 +196,12 @@ void StiVMCToolKit::MakeListOfMaterials(TGeoVolume *volT, vector<MaterialMap_t> 
     TGeoVolume *vol = node->GetVolume(); 
     weight -= vol->WeightA();
     MakeListOfMaterials(vol, materials);
+  }
+  if (Debug()) {
+    cout << "StiVMCToolKit::MakeListOfMaterials\t"
+	 << volT->GetName() << " === "   
+	 << " Weight " << weight << "[kg]\t"
+	 << "material\t" << mat->GetName() << "\tmedium\t" << med->GetName() << endl;
   }
   materials.push_back(MaterialMap_t(volT->GetName(), mat, weight)); 
 }
@@ -390,7 +255,8 @@ TGeoPhysicalNode *StiVMCToolKit::LoopOverNodes(const TGeoNode *nodeT, const Char
       for (auto m : materials) weightT += m.weight;
       Double_t density = 1e3*weightT/Volume; // gm/cm^3
       if (Debug()) {
-	cout  << "Weight before " << WeightT << " and after " << weightT 
+	cout  << "StiVMCToolKit::LoopOverNodes\t"
+	      << "Weight before " << WeightT << "[kg]  and after " << weightT << "[kg]"
 	      << "\tDensity before = " << mat->GetDensity() << "  [g/cm^3] and after " << density << " [g/cm^3]" << endl;
       }
       Int_t imed  = gGeoManager->GetListOfMedia()->GetEntries();
@@ -404,9 +270,8 @@ TGeoPhysicalNode *StiVMCToolKit::LoopOverNodes(const TGeoNode *nodeT, const Char
       } else {
 	newmat = new TGeoMixture(newmatName,0); newmat->SetUniqueID(imat);
 	for (auto m : materials) {
-	  if (Debug()) {newmat->Print(); m.Print();}
+	  if (Debug()) {m.Print();}
 	  newmat->AddElement((TGeoMaterial *)m.mat,m.weight/weightT);
-	  if (Debug()) newmat->Print();
 	}
 	newmat->SetDensity(density);
 	if (Debug()) newmat->Print();
@@ -482,42 +347,6 @@ Double_t StiVMCToolKit::GetPotI(const TGeoMaterial *mat) {
   }
   return PotI;
 }
-//________________________________________________________________________________
-void StiVMCToolKit::GetVMC4Reconstruction(const Char_t *pathT, const Char_t *nameT){
-  /*! Loop over nodes. 
-    For selected volumes make average geometry base on Boxes and 
-    Tubes to match with Sti Geometry set
-    Put new volumes in PhysicalNode structure
-  */
-  GetVMC();
-  gGeoManager->RestoreMasterVolume(); 
-  gGeoManager->CdTop();
-  TString path("");
-  if (pathT) {gGeoManager->cd(pathT); path = pathT;}
-  else       {path = gGeoManager->GetCurrentNode()->GetName();}
-  TGeoNode *nodeT = gGeoManager->GetCurrentNode();
-  if (! nodeT) return;
-#if 1
-  LoopOverNodes(nodeT, path, nameT);
-#else
-  for (Int_t i = 0; i < NofVolToBEAveraged; i++) {
-    LoopOverNodes(nodeT, path, VolumesToBeAveraged[i].name);
-  }
-#endif
-}
-#ifndef __ROOT__
-//________________________________________________________________________________
-void TestVMCTK() {
-  /*! Test VMC Tool Kit
-   */
-  // SVT weight
-  TString path("HALL_1/CAVE_1/SVTT_1");
-  Double_t weight = 1.e-3*StiVMCToolKit::GetWeight(0,path, 0, 0);  // It leads to the memory leak
-  cout << "StiVMCToolKit::TestVMCTK() -I- total weight for " 
-       << path.Data() << "\t" << weight << "[kg]" << endl;
-  StiVMCToolKit::TestVMC4Reconstruction();
-}
-#endif
 //________________________________________________________________________________
 Double_t StiVMCToolKit::Nice(Double_t phi) {
   while (phi <   2*TMath::Pi()) phi += 2*TMath::Pi();
