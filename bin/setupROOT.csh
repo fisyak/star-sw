@@ -132,14 +132,14 @@ switch ( $STAR_HOST_SYS )
 endsw
     setenv ENABLE_CXX11 ""
     setenv EXTRA_FLAGS " --cflags=-fdiagnostics-color=always --cxxflags=-fdiagnostics-color=always"
-switch ( $STAR_HOST_SYS )  
-    case *AVX*:
-	setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-mavx";
-	breaksw
-    default:
-	setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-msse4.2";
-        breaksw
-endsw
+#switch ( $STAR_HOST_SYS )  
+#    case *AVX*:
+#	setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-mavx";
+#	breaksw
+#    default:
+#	setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-msse4.2";
+#        breaksw
+#endsw
      echo "STAR_HOST_SYS = $STAR_HOST_SYS"
 switch ( $STAR_HOST_SYS )  
     case *al9*_x8664_*:
@@ -155,6 +155,7 @@ switch ( $STAR_HOST_SYS )
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-cast-function-type  "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-format-truncation  "
      setenv EXTRA_FLAGS " $EXTRA_FLAGS --cflags=-Wno-misleading-indentation  "
+     setenv ENABLE_CXX11 "--enable-cxx14"
     breaksw
     case *gcc12*:
      setenv DISABLE "$DISABLE --disable-python --disable-xrootdxs --disable-pythia8"
@@ -167,7 +168,7 @@ switch ( $STAR_HOST_SYS )
     case *gcc9*:
     case *gcc8*:
     case *gcc7*:
-     setenv ENABLE_CXX11 "--enable-cxx17"
+     setenv ENABLE_CXX11 "--enable-cxx14"
      setenv EXTRA_FLAGS " $EXTRA_FLAGS" # --cflags=--std=c++17"
      breaksw 
      case *gcc631:
@@ -221,6 +222,7 @@ switch ( $STAR_HOST_SYS )
  endsw  
 echo "EXTRA_FLAGS = $EXTRA_FLAGS"
 echo "DISABLE = $DISABLE"
+echo "ENABLE_CXX11 = $ENABLE_CXX11"
 ./configure $ARCH \
     --build=$ROOTBUILD \
     --enable-builtin_ftgl       \
