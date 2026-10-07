@@ -25,6 +25,7 @@
 #include "TBuffer3DTypes.h"
 #include "TMath.h"
 #include "TROOT.h"
+#include "TSystem.h"
 #include "Ask.h"
 //________________________________________________________________________________
 void Import(const Char_t *name = "") {
@@ -206,7 +207,7 @@ void Plot(const Char_t *volume = "FSTA") {
     TString Title(hist[i]->GetDirectory()->GetName()); Title.ReplaceAll(".root","");
     TString Name("c"); Name += i;
     can[i] = (TCanvas *) gROOT->GetListOfCanvases()->FindObject(Name);
-    if (can[i])  can[i]->Clear();
+      if (can[i])  can[i]->Clear();
     else         can[i] = new TCanvas(Name,Title);
     can[i]->SetLogz(1);
     hist[i]->SetMinimum(ymin);
@@ -234,17 +235,33 @@ void AverageTubs(const Char_t *volName = "FSTW") {
     Phi1 -= 360;
     Phi2 -= 360;
   }
+  const Char_t *FSTWVol[] = {
+    "FSTW",
+    "FTUR", "FTRO", "FSBW", "FSWT", "FTUW", "FTIA", "FTIB", "FTRB", "FSCT", "FSCL",
+    "FHTS", "FCHT", "FCHB", "FSHA", "FSHB", "FSHC", "FSHD", "FSHE", "FSHF", "FSHG",
+    "FSHH", "FSAC", "FSTB", "FTHC", "FTOH", "FSBH", "FTIH", "FTUS"
+  };
+  TH1::SetDefaultSumw2();
+  Int_t NV = sizeof(FSTWVol)/sizeof(const Char_t*);
   TGeoVolume *tvol = gGeoManager->GetTopVolume();
   gGeoManager->SetTopVolume(volume);
-  Int_t nR = 2*(Rmax - Rmin)/0.1;
-  Int_t nZ = 2*2*dZ/0.1;
+  Int_t nR = (Rmax - Rmin)/0.1;
+  Int_t nZ = 2*dZ/0.1;
   Int_t nPhi = 2*(Phi2 - Phi1);
   TFile *fOut = new TFile(Form("%s.root",volName), "recreate");
   TH3F *No    = new TH3F("No","no. entries ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
   TH3F *Dens  = new TH3F("Dens","Density ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
   TH3F *A     = new TH3F("A","A*Dens ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
   TH3F *Z     = new TH3F("Z","Z*Dens ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
-  TH3F *RadlI = new TH3F("RadlI","Inverse RadL*Dens ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TH3F *RadlI = new TH3F("RadlI","Inverse RadL ; Z (cm) ; R (cm) ; #phi (degree)", nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2);
+  TH3F **DensV = new TH3F*[NV];
+  TH3F **RadlIV = new TH3F*[NV];
+  for (Int_t v = 0; v < NV; v++) {
+    DensV[v] = new TH3F(Form("Dens_%s",FSTWVol[v]), Form("Density in %s; Z (cm) ; R (cm) ; #phi (degree)",FSTWVol[v]),
+			nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2); 
+    RadlIV[v] = new TH3F(Form("RadlI_%s",FSTWVol[v]), Form("Inverse RadL in %s; Z (cm) ; R (cm) ; #phi (degree)",FSTWVol[v]),
+			nZ, -dZ, dZ, nR, Rmin, Rmax, nPhi, Phi1, Phi2); 
+  }
   TList *matlist = gGeoManager->GetListOfMaterials();
 
    Int_t nmat = matlist->GetSize();
@@ -276,7 +293,14 @@ void AverageTubs(const Char_t *volName = "FSTW") {
      Dens->Fill(z,r,phi,dens);
      A->Fill(z,r,phi,mat->GetA()*dens);
      Z->Fill(z,r,phi,mat->GetZ()*dens);
-     if (mat->GetRadLen() > 1e-2) RadlI->Fill(z,r,phi,dens/mat->GetRadLen());
+     if (mat->GetRadLen() > 1e-2) RadlI->Fill(z,r,phi,1./mat->GetRadLen());
+     TString path(gGeoManager->GetPath());
+     for (Int_t v = 0; v < NV; v++) {
+       if (path.Contains(FSTWVol[v])) {
+	 DensV[v]->Fill(z,r,phi,dens);
+	 if (mat->GetRadLen() > 1e-2) RadlIV[v]->Fill(z,r,phi,1./mat->GetRadLen());
+       }
+     }
    }
    fOut->Write();
    gGeoManager->SetTopVolume(tvol);
@@ -284,7 +308,7 @@ void AverageTubs(const Char_t *volName = "FSTW") {
    return;
 }
 //______________________________________________________________________________
-void Average() {
+void Average1() {
 /*
     z = [-2.00, -1.70]
         [-1.70, -1.40]
@@ -394,3 +418,141 @@ r_phi = [ 5.00, 15.00],
     }
   }
 }
+//________________________________________________________________________________
+Double_t Average(const TString VolName ="FSTW", 
+	     Double_t Zmin   =  -2.00, Double_t Zmax =     1.5,  
+	     Double_t Rmin   =   5.00, Double_t Rmax =   35.00,  
+	     Double_t Phimin = -17.00, Double_t Phimax = 17.00,
+	     TString HistName = "RadlI") {  
+   gStyle->SetOptStat(0);
+  TH3F *No = (TH3F *) gDirectory->Get("No");
+  if (! No) return 0;
+  TH3F *Dens = (TH3F *) gDirectory->Get("Dens");
+  if (! Dens) return 0;
+  TH3F *divider = No;
+  if (HistName == "A" || HistName == "Z") divider = Dens;
+  if (VolName != "") {HistName += "_"; HistName += VolName;}
+  TH3F *hist = (TH3F *) gDirectory->Get(HistName);
+  if (! hist) {
+    cout << "Histograsm " << HistName.Data() << " has not been found." << endl;
+    return 0;
+  }
+  TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
+  if (c1) c1->Clear();
+  else    c1 = new TCanvas("c1","c1",1800,600);
+  c1->Divide(4,1);
+  Int_t iz1 = divider->GetXaxis()->FindBin(Zmin + 1e-2);
+  Int_t iz2 = divider->GetXaxis()->FindBin(Zmax - 1e-2);
+  Int_t ir1 = divider->GetYaxis()->FindBin(Rmin + 1e-2);
+  Int_t ir2 = divider->GetYaxis()->FindBin(Rmax - 1e-2);
+  Int_t iphi1 = divider->GetZaxis()->FindBin(Phimin + 1e-2);
+  Int_t iphi2 = divider->GetZaxis()->FindBin(Phimax - 1e-2);;
+
+  TString Title(Form("%s z_%i %i [%5.1f,%5.1f] r_%i_%i [%5.1f,%5.1f] phi_%i_%i [%5.1f,%5.1f]", VolName.Data(),
+		     iz1,iz2,Zmin,Zmax,
+		     ir1,ir2,Rmin,Rmax,
+		     iphi1,iphi2,Phimin,Phimax));
+  cout << Title.Data() << endl;
+  c1->SetTitle(Title);
+  divider->GetXaxis()->SetRange(iz1,iz2);
+  divider->GetYaxis()->SetRange(ir1,ir2);
+  divider->GetZaxis()->SetRange(iphi1,iphi2);
+  hist->GetXaxis()->SetRange(iz1,iz2);
+  hist->GetYaxis()->SetRange(ir1,ir2);
+  hist->GetZaxis()->SetRange(iphi1,iphi2);
+  TH1 *dividerx = divider->Project3D("x");
+  TH1 *histx = hist->Project3D("x");
+  if (histx->GetEntries() <= 0.0) return 0;
+  histx->Divide(dividerx);
+//   histx->GetXaxis()->SetRange(iz1,iz2);
+  c1->cd(1); histx->Draw();
+  TH1 *dividery = divider->Project3D("y");
+  TH1 *histy = hist->Project3D("y");
+  histy->Divide(dividery);
+//   histy->GetXaxis()->SetRange(ir1,ir2);
+  c1->cd(2); histy->Draw();
+  TH1 *dividerz = divider->Project3D("z");
+  TH1 *histz = hist->Project3D("z");
+  histz->Divide(dividerz);
+  c1->cd(3); histz->Draw();
+  TH2 *divideryz = (TH2*) divider->Project3D("yz");
+  TH2 *histyz = (TH2*) hist->Project3D("yz");
+  histyz->Divide(divideryz);
+//   histz->GetXaxis()->SetRange(iphi1,iphi2);
+  c1->cd(4); histyz->Draw("colz");
+  Double_t av = histyz->Integral()/histyz->GetNbinsX()/histyz->GetNbinsY();
+  cout << "Maximum of " << HistName << "yz\t = " << histyz->GetMaximum() << endl;
+  cout << "Average of " << HistName << "yz\t = " << av << endl;
+  c1->Update();
+  return av;
+}
+//________________________________________________________________________________
+void LoopOeveVolumes() {
+  const Char_t *FSTWVol[] = {
+    "FSTW",
+    "FTUR", "FTRO", "FSBW", "FSWT", "FTUW", "FTIA", "FTIB", "FTRB", "FSCT", "FSCL",
+    "FHTS", "FCHT", "FCHB", "FSHA", "FSHB", "FSHC", "FSHD", "FSHE", "FSHF", "FSHG",
+    "FSHH", "FSAC", "FSTB", "FTHC", "FTOH", "FSBH", "FTIH", "FTUS"
+  };
+  struct Avr_t {
+    const Char_t *name;
+    Double_t zMin, zMax;
+    Double_t rMin, rMax;
+    Double_t phiMin, phiMax;
+    Double_t RadlI;
+    Double_t Dens;
+    Double_t A;
+    Double_t Z;
+    void Print() {
+      TString Line = Form("{\"%s\",%5.1f,%5.1f,%5.1f,%5.1f,%5.1f,%5.1f, %8.3f, %8.3f, %8.3f, %8.3f },",
+			  name, zMin, zMax, rMin, rMax, phiMin, phiMax,
+			  RadlI, Dens, A, Z);
+      cout << Line.Data() << endl;
+      const Char_t *Out = "FSTW.txt";
+      ofstream out;
+      if (gSystem->AccessPathName(Out)) out.open(Out, ios::out); //"Results.list",ios::out | ios::app);
+      else                              out.open(Out, ios::app);
+      out << Line.Data() << endl;
+      out.close();
+	
+    }
+  };
+  const Char_t *V[4] = {"RadlI", "Dens", "A", "Z"};
+  Avr_t av[] = {
+    //                z           r        Phi
+    {"FSTW", -1.7, -0.2, 16.2,   18,  -15,   15,  0, 0, 0, 0},
+    {"FSTW", -1.7, -0.2,   28,   29,  -15,   15,  0, 0, 0, 0},
+    {"FSTW", -1.3, -0.6  , 17,   28,-14.5,  -13,  0, 0, 0, 0},
+    {"FSTW", -1.3, -0.6,   17,   28,   13, 14.5,  0, 0, 0, 0},
+    {"FSTW", -1.0, -0.9,   30,   32,   -7,    7,  0, 0, 0, 0},
+    {"FSTW", -1.7, -1.6, 16.5,   28,  -15,   15,  0, 0, 0, 0},
+    {"FSTW", -0.3, -0.2,    5, 15.5,  -15,   15,  0, 0, 0, 0},
+    {"FTUR", -2.0, -1.6,   30, 33.5,  -14,   -7,  0, 0, 0, 0},
+    {"FTUR", -2.0, -1.6, 32.2, 33.5,   -7,    7,  0, 0, 0, 0},
+    {"FTUR", -2.0, -1.6,   30, 33.5,    7,   14,  0, 0, 0, 0},
+  };
+  Int_t Nav = sizeof(av)/sizeof(Avr_t);
+  const Char_t *VName[4] = {"RadlI","Dens","A","Z"};
+  Int_t NV = sizeof(FSTWVol)/sizeof(const Char_t*);
+  for (Int_t v = 0; v < 1; v++) {
+    for (Int_t i = 0; i < Nav; i++) {
+      Double_t *x = &av[i].RadlI;
+      for (Int_t j = 0; j < 4; j++) {
+	x[j] = Average("",av[i].zMin,av[i].zMax,av[i].rMin,av[i].rMax,av[i].phiMin,av[i].phiMax,VName[j]);
+	if (! gROOT->IsBatch() && Ask()) return;
+      }
+      av[i].Print();
+    }
+  }
+}  
+/*
+//      z Min   Max r Min Max Phi Min   Max     RadlI      Dens         A         Z 
+{"FSTW", -1.7, -0.2, 16.2, 18.0,-15.0, 15.0,    0.038,    0.979,   24.742,   11.843 }.
+{"FSTW", -1.7, -0.2, 28.0, 29.0,-15.0, 15.0,    0.045,    1.023,   30.518,   14.471 }.
+{"FSTW", -1.3, -0.6, 17.0, 28.0,-14.5,-13.0,    0.092,    1.709,   67.756,   31.707 }.
+{"FSTW", -1.3, -0.6, 17.0, 28.0, 13.0, 14.5,    0.095,    1.754,   69.536,   32.540 }.
+{"FSTW", -1.0, -0.9, 30.0, 32.0, -7.0,  7.0,    0.046,    1.436,   25.847,   12.931 }.
+{"FSTW", -1.7, -1.6, 16.5, 28.0,-15.0, 15.0,    0.044,    1.214,   25.803,   12.876 }.
+{"FSTW", -0.3, -0.2,  5.0, 15.5,-15.0, 15.0,    0.042,    1.081,   24.471,   12.208 }.
+
+*/

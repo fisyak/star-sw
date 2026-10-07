@@ -19572,3 +19572,317 @@ FTRO
 Problem with 
 OFCC position
 FSCT rotation
+================================================================================
+10/02/2026
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.0003     0.0017   200.0000     0.0018 PVAO    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL
+      1.9376     0.0073   195.8738     1.9376 PVAO    1     4.5586    4.5586    1.0  eV  680.246 MeV FIEL SCUT LOSS
+      3.8753     0.0242   191.7476     3.8754 PVAO    1     9.1172    4.5586    1.0  eV  680.246 MeV FIEL NEXT LOSS
+      4.0003     0.0257   191.4814     4.0004 PIPO    1     9.4113    0.2941   12.7 MeV  667.516 MeV FIEL NEXT LOSS
+      4.0232     0.0259   191.4327     4.0233 PWRP    1     9.4651    0.0538    1.7 MeV  665.772 MeV FIEL NEXT LOSS
+      4.0311     0.0260   191.4159     4.0312 PIPE    1     9.4836    0.0185  401.6  eV  665.772 MeV FIEL NEXT LOSS
+      4.8003     0.0362   189.7779     4.8004 CAVE    1    11.2933    1.8097   39.6 keV  665.732 MeV FIEL NEXT LOSS
+      6.2085     0.0594   186.7790     6.2088 FSTM    1    14.6064    3.3132   72.6 keV  665.660 MeV FIEL SCUT LOSS
+      7.6166     0.0887   183.7801     7.6171 FSTM    1    17.9196    3.3132   72.6 keV  665.587 MeV FIEL NEXT LOSS
+      8.0861     0.0998   182.7801     8.0867 FSTD    6    19.0244    1.1048   24.2 keV  665.563 MeV FIEL NEXT LOSS
+      9.1533     0.1275   180.5070     9.1542 FSTW   12    21.5357    2.5113   55.0 keV  665.508 MeV FIEL NEXT LOSS
+      9.1697     0.1279   180.4720     9.1706 FTIH    1    21.5744    0.0387    1.0 MeV  664.466 MeV FIEL NEXT LOSS
+      9.2636     0.1305   180.2720     9.2645 FTUW    1    21.7953    0.2210    5.7 MeV  658.784 MeV FIEL NEXT LOSS
+      9.9640     0.1508   178.7801     9.9651 FSTW   12    23.4436    1.6482   36.4 keV  658.748 MeV FIEL NEXT LOSS
+     10.6643     0.1726   177.2882    10.6657 FSTW    1    25.0918    1.6482   36.4 keV  658.711 MeV FIEL NEXT LOSS
+     10.7582     0.1757   177.0882    10.7596 FTUW    1    25.3128    0.2210    5.7 MeV  652.993 MeV FIEL NEXT LOSS
+     10.7746     0.1762   177.0532    10.7761 FTIH    1    25.3514    0.0387    1.1 MeV  651.936 MeV FIEL NEXT LOSS
+  g2t_volume_id: TPC version =   5.00000000     , tpcg_tpadconfig =    6.00000000    
+               : TOF version =   6.00000000      choice  =          13
+               : CALB patch  =          60          60
+               : ECAL version=   6.09999990      onoff   =           1           3
+     10.7887     0.1767   177.0232    10.7902 FTUS    3    25.3846    0.0331    1.3 MeV  650.626 MeV FIEL NEXT LOSS
+     11.8416     0.2126   174.7801    11.8435 FSTW    1    27.8627    2.4782   55.2 keV  650.571 MeV FIEL NEXT LOSS
+     12.3109     0.2298   173.7801    12.3130 FSTD    6    28.9675    1.1048   24.6 keV  650.546 MeV FIEL NEXT LOSS
+     13.9688     0.2957   170.2471    13.9719 FSTM    1    32.8708    3.9032   87.0 keV  650.459 MeV FIEL NEXT LOSS
+     14.4380     0.3159   169.2471    14.4415 FSTD    5    33.9756    1.1048   24.6 keV  650.434 MeV FIEL NEXT LOSS
+     15.4904     0.3637   167.0040    15.4947 FSTW   12    36.4537    2.4782   55.3 keV  650.379 MeV FIEL NEXT LOSS
+     15.5045     0.3644   166.9740    15.5088 FTUS    3    36.4869    0.0331    1.3 MeV  649.067 MeV FIEL NEXT LOSS
+     15.5209     0.3651   166.9390    15.5252 FTIH    1    36.5255    0.0387    1.1 MeV  648.005 MeV FIEL NEXT LOSS
+     15.6147     0.3696   166.7390    15.6191 FTUW    1    36.7465    0.2210    5.8 MeV  642.219 MeV FIEL NEXT LOSS
+     15.6429     0.3709   166.6790    15.6473 FTIA    1    36.8128    0.0663    1.7 MeV  640.476 MeV FIEL NEXT LOSS
+     16.0346     0.3897   165.8440    16.0393 FSTW   12    37.7353    0.9225   20.8 keV  640.456 MeV FIEL NEXT LOSS
+     16.1284     0.3943   165.6440    16.1332 FTRO    1    37.9563    0.2210    5.8 MeV  634.622 MeV FIEL NEXT LOSS
+     16.1448     0.3951   165.6090    16.1496 FTOH    1    37.9949    0.0387    1.1 MeV  633.544 MeV FIEL NEXT LOSS
+     16.3146     0.4035   165.2471    16.3195 FSTW   12    38.3947    0.3998    9.1 keV  633.535 MeV FIEL NEXT LOSS
+     16.5007     0.4128   164.8502    16.5059 FSTW    6    38.8332    0.4385   10.0 keV  633.525 MeV FIEL NEXT LOSS
+     16.5945     0.4175   164.6502    16.5998 FTRO    1    39.0542    0.2210    5.9 MeV  627.649 MeV FIEL NEXT LOSS
+     16.9862     0.4375   163.8152    16.9918 FSTW    6    39.9767    0.9225   21.0 keV  627.628 MeV FIEL NEXT LOSS
+     17.0143     0.4389   163.7552    17.0200 FTIA    1    40.0430    0.0663    1.8 MeV  625.857 MeV FIEL NEXT LOSS
+     17.1081     0.4438   163.5552    17.1139 FTUW    1    40.2639    0.2210    5.9 MeV  619.933 MeV FIEL NEXT LOSS
+     18.1905     0.5020   161.2471    18.1975 FSTW    6    42.8139    2.5500   58.7 keV  619.875 MeV FIEL NEXT LOSS
+     18.6594     0.5284   160.2471    18.6669 FSTD    5    43.9187    1.1048   25.4 keV  619.849 MeV FIEL NEXT LOSS
+     20.2993     0.6261   156.7491    20.3090 FSTM    1    47.7833    3.8646   89.0 keV  619.760 MeV FIEL NEXT LOSS
+     20.7681     0.6555   155.7491    20.7784 FSTD    4    48.8881    1.1048   25.4 keV  619.735 MeV FIEL NEXT LOSS
+     22.2691     0.7546   152.5460    22.2819 FSTW   12    52.4268    3.5388   81.4 keV  619.653 MeV FIEL NEXT LOSS
+     22.3628     0.7611   152.3460    22.3758 FSBW    3    52.6478    0.2210    6.0 MeV  613.692 MeV FIEL NEXT LOSS
+     22.4565     0.7675   152.1460    22.4696 FTRO    1    52.8687    0.2210    6.0 MeV  607.694 MeV FIEL NEXT LOSS
+     22.6425     0.7804   151.7491    22.6559 FSTW   12    53.3072    0.4385   10.2 keV  607.683 MeV FIEL NEXT LOSS
+     22.7980     0.7913   151.4172    22.8117 FSTW    1    53.6739    0.3667    8.6 keV  607.675 MeV FIEL NEXT LOSS
+     22.8120     0.7923   151.3872    22.8258 FTUS    2    53.7071    0.0331    1.4 MeV  606.304 MeV FIEL NEXT LOSS
+     22.8284     0.7934   151.3522    22.8422 FTOH    1    53.7457    0.0387    1.1 MeV  605.194 MeV FIEL NEXT LOSS
+     22.9221     0.8000   151.1522    22.9361 FTRO    1    53.9667    0.2210    6.0 MeV  599.145 MeV FIEL NEXT LOSS
+     24.5161     0.9165   147.7491    24.5332 FSTW    1    57.7264    3.7597   88.4 keV  599.056 MeV FIEL NEXT LOSS
+     24.9844     0.9522   146.7491    25.0025 FSTD    4    58.8312    1.1048   25.9 keV  599.031 MeV FIEL NEXT LOSS
+     27.9683     1.1969   140.3741    27.9939 FSTM    1    65.8742    7.0430  165.5 keV  598.865 MeV FIEL SCUT LOSS
+     29.4594     1.3299   137.1866    29.4894 FSTM    1    69.3958    3.5215   82.8 keV  598.782 MeV FIEL SCUT LOSS
+     30.9498     1.4702   133.9991    30.9847 FSTM    1    72.9173    3.5215   82.8 keV  598.699 MeV FIEL NEXT LOSS
+     34.2721     1.8087   126.8883    34.3198 FSTA    1    80.7732    7.8559  184.7 keV  598.515 MeV FIEL LOSS
+     34.2727     1.8088   126.8870    34.3204 FSTA    1    80.7747    0.0014   33.0  eV  598.515 MeV FIEL NEXT LOSS
+     34.2887     1.8105   126.8527    34.3365 CAVE    1    80.8126    0.0379  881.3  eV  598.514 MeV FIEL NEXT LOSS
+     34.3171     1.8136   126.7920    34.3650 SCON    1    80.8796    0.0671    2.4 MeV  596.147 MeV FIEL NEXT LOSS
+     34.5651     1.8403   126.2607    34.6141 SNMX    1    81.4665    0.5869  615.0 keV  595.532 MeV FIEL NEXT LOSS
+     34.5935     1.8434   126.2000    34.6426 SCON    1    81.5336    0.0671    2.4 MeV  593.158 MeV FIEL NEXT LOSS
+     45.7602     3.2588   102.2313    45.8761 CAVE    1   108.0140   26.4804  626.1 keV  592.531 MeV FIEL LOSS
+     45.7693     3.2601   102.2118    45.8852 CAVE    1   108.0356    0.0216  505.2  eV  592.531 MeV FIEL NEXT LOSS
+     46.2588     3.3316   101.1585    46.3786 TPCE    1   109.1993    1.1637   27.5 keV  592.503 MeV FIEL NEXT LOSS
+     46.2608     3.3319   101.1542    46.3806 TIFC    1   109.2041    0.0048  225.4 keV  592.278 MeV FIEL NEXT LOSS
+     46.2757     3.3341   101.1221    46.3956 TIKA    1   109.2395    0.0354    1.0 MeV  591.250 MeV FIEL NEXT LOSS
+     47.5361     3.5220    98.4086    47.6664 TINX    1   112.2373    2.9979    4.2 MeV  587.035 MeV FIEL NEXT LOSS
+     47.6157     3.5340    98.2373    47.7467 TIAD    1   112.4266    0.1893    4.8 MeV  582.259 MeV FIEL NEXT LOSS
+     47.6177     3.5343    98.2330    47.7487 TIFC    1   112.4314    0.0047  225.0 keV  582.034 MeV FIEL NEXT LOSS
+     47.6317     3.5364    98.2029    47.7628 TPCE    1   112.4647    0.0333  791.3  eV  582.034 MeV FIEL NEXT LOSS
+     53.0160     4.4008    86.5911    53.1983 TPSS    3   125.2932   12.8286  253.3 keV  581.780 MeV FIEL LOSS
+     53.0235     4.4021    86.5748    53.2060 TPSS    3   125.3112    0.0180  353.1  eV  581.780 MeV FIEL NEXT LOSS
+     54.8248     4.7132    82.6826    55.0270 TPAD    1   129.6113    4.3001   99.6 keV  581.680 MeV FIEL LOSS
+     54.8257     4.7134    82.6806    55.0280 TPAD    1   129.6135    0.0022   50.7  eV  581.680 MeV FIEL NEXT LOSS
+
+
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.458+-  1.3, sy 0.025, x =   57.21 z =   77.21  3.69 cm( 0.03%) -9.33 keV  0.941 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  1.3, sy 0.028, x =   55.61 z =   80.65   3.8 cm( 0.03%) -9.62 keV  0.941 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.459+-  1.3, sy 0.044, x =   47.28 z =   98.77    20 cm( 2.01%) -1.01 MeV  0.941 GeV
+StiMaker:INFO  -                       SCOM_1/SCON_1_2_28  dE pT  0.459+-  1.4, sy 0.094, x =   34.13 z =  126.64  30.8 cm( 2.53%) -1.39 MeV  0.942 GeV
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_4/FSTW_1/FSCT_90  dE pT  0.461+-  1.7, sy 0.161, x =   22.61 z =  151.03    27 cm(10.63%) -3.29 MeV  0.944 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.462+-  1.9, sy 0.348, x =    3.94 z =  190.55  43.7 cm(11.90%) -3.64 MeV  0.947 GeV
+
+ ((StiMaker *) chain->Maker("Sti"))->PrintDetectors("TGeo"); >> StiGeom35.h
+
+OFCA
+//            FSTA_1/OFCA_1 xy   14.26   31.63	 z  191.12 R:  35.07 phi:  66.0	 dX: 1.25 dY: 3.17 dZ: 43.18	Mat:FSTO_ALUMINIUM_Averaged :1.21 g/cm^3 X0:19.46 Z: 13.55 A: 28.53	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+//            FSTA_1/OFCA_2 xy   34.90   -3.30	 z  191.12 R:  34.90 phi:   0.0	 dX: 1.25 dY: 3.17 dZ: 43.18	Mat:FSTO_ALUMINIUM_Averaged :1.21 g/cm^3 X0:19.46 Z: 13.55 A: 28.53	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+//            FSTA_1/OFCA_3 xy  -14.26   32.45	 z  191.12 R:  35.07 phi: 114.0	 dX: 1.25 dY: 3.17 dZ: 43.18	Mat:FSTO_ALUMINIUM_Averaged :1.21 g/cm^3 X0:19.46 Z: 13.55 A: 28.53	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+//            FSTA_1/OFCA_4 xy  -34.90    3.30	 z  191.12 R:  34.90 phi:-180.0	 dX: 1.25 dY: 3.17 dZ: 43.18	Mat:FSTO_ALUMINIUM_Averaged :1.21 g/cm^3 X0:19.46 Z: 13.55 A: 28.53	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  TGeoVolumeMulti *OFCA = gGeoManager->MakeVolumeMulti("OFCA", GetMed("FSTO_ALUMINIUM_Averaged")); OFCA->SetTitle("OFCA");
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.25,3.17,43.18));  
+   rot = new TGeoRotation("next"); rot->RotateZ(66.00);
+  FSTA->AddNode(OFCA->GetVolume(0),1, new TGeoCombiTrans(14.26, 31.63, 191.12, rot));
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.25,3.17,43.18));
+  FSTA->AddNode(OFCA->GetVolume(1),2, new TGeoTranslation(34.90, -3.30, 191.12));
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.25,3.17,43.18));
+  rot = new TGeoRotation("next"); rot->RotateZ(114.00);
+  FSTA->AddNode(OFCA->GetVolume(2),3, new TGeoCombiTrans(-14.26, 32.45, 191.12, rot));
+  OFCA->AddVolume(gGeoManager->MakeBox("OFCA", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.25,3.17,43.18));
+  rot = new TGeoRotation("next"); rot->RotateZ(-180.00);
+  FSTA->AddNode(OFCA->GetVolume(3),4, new TGeoCombiTrans(-34.90, 3.30, 191.12, rot));
+
+
+
+
+OFCC
+
+  FSTA->AddNode(OFCA->GetVolume(3),4, new TGeoCombiTrans(-34.90, 3.30, 191.12, rot));
+//            FSTA_1/OFCC_1 xy   -0.00   31.07	 z  191.14 R:  34.93 phi:  90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+//            FSTA_1/OFCC_2 xy   -0.00  -31.07	 z  191.14 R:  34.93 phi: -90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+//            FSTA_1/OFCC_3 xy   -0.00   38.79	 z  191.14 R:  34.93 phi:  90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+//            FSTA_1/OFCC_4 xy   -0.00  -38.79	 z  191.12 R:  34.93 phi: -90.0	 dX: 1.11 dY: 2.54 dZ: 43.20	Mat:FSTO_ALUMINIUM_Averaged :0.83 g/cm^3 X0:37.88 Z: 9.27 A: 19.09	Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+  med = gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged");
+  if (! med) {
+    imat = gGeoManager->GetListOfMaterials()->GetEntries();
+    imed = gGeoManager->GetListOfMedia()->GetEntries();
+     mat = new TGeoMaterial("FSTO_ALUMINIUM_Averaged",19.09,9.27,0.83,37.88); mat->SetUniqueID(imat);
+     med = new TGeoMedium("FSTO_ALUMINIUM_Averaged",0, imat,0,0,20,20,10,0.2488534,0.1000000E-01,1.15055); med->SetUniqueID(imed);
+  }
+  TGeoVolumeMulti *OFCC = gGeoManager->MakeVolumeMulti("OFCC", GetMed("FSTO_ALUMINIUM_Averaged")); OFCC->SetTitle("OFCC");
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.11,2.54,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFCC->GetVolume(0),1, new TGeoCombiTrans(-0.00, 31.07, 191.14, rot));
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.11,2.54,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(-90.00);
+  FSTA->AddNode(OFCC->GetVolume(1),2, new TGeoCombiTrans(-0.00, -31.07, 191.14, rot));
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.11,2.54,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(90.00);
+  FSTA->AddNode(OFCC->GetVolume(2),3, new TGeoCombiTrans(-0.00, 38.79, 191.14, rot));
+  OFCC->AddVolume(gGeoManager->MakeBox("OFCC", gGeoManager->GetMedium("FSTO_ALUMINIUM_Averaged"),1.11,2.54,43.20));
+  rot = new TGeoRotation("next"); rot->RotateZ(-90.00);
+  FSTA->AddNode(OFCC->GetVolume(3),4, new TGeoCombiTrans(-0.00, -38.79, 191.12, rot));
+
+
+
+
+FSCT 
+
+FTUO to manny in FSTD
+
+FSTW very strange box
+================================================================================\10/04/2026
+TFG26i
+   1  L  312.226 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.12 +/-   0.39, Z: 198.90 +/-   0.94, psi:  -0.01 +/-   0.02, pT/q:   0.46 +/-   1.9%, TanL:  -2.115 +/-   0.037 NF 47 chi2    0.892 gId  8 NdEdx 47  34.12 keV +/-   6.1 %                                                                                                                                                                                                                                                   
+p(   1,   0,   0) x:   0.001+/- 0.004 y:   0.118+/- 0.388 z: 198.897+/- 0.942 px:   0.464+/- 0.009 py:  -0.003+/- 0.008 pz:  -0.981+/- 0.013 p:   1.085+/-  0.013       pi+ Q: 1  chi2/NDF :   -1.00/ 1                                                                
+dNdx    dN/dx =  344.736 +/-    4.000 %                                                                                                                                                                                                                                
+Part:         e+         p        K+       pi+       mu+         d         t       He3       He4                                                                                                                                                                       
+Pred:      36.45     37.52     28.11     28.08     28.85     78.23     139.8     218.5     310.3                                                                                                                                                                       
+PredC:     36.45     37.52     28.11     28.08     28.85     78.23     139.8     218.5     310.3                                                                                                                                                                       
+Res.:      2.247     2.218     2.507     2.508     2.481     1.483    0.9028    0.4558    0.1054                                                                                                                                                                       
+Res.C:     2.247     2.218     2.507     2.508     2.481     1.483    0.9028    0.4558    0.1054                                                                                                                                                                       
+Pull:      56.17     55.45     62.66     62.69     62.02     37.08     22.57      11.4     2.634                                                                                                                                                                       
+PullC:     56.17     55.45     62.66     62.69     62.02     37.08     22.57      11.4     2.634                                                                                                                                                                       
+TPC:    1000020040                                                                                                                                                                                                                                                     
+All:    1000020040                                                                                                                                                                                                                                                     
+pdg = 211       pInTpc = 1.07                                                                                                                                                                                                                                       
+...
+StiMassFitMaker:INFO  -  Fit pT  0.510+-  3.5, sy 0.719, x =    0.00 z =  199.21
+Dca: imp   -0.01 +/-   0.72, Z: 199.21 +/-   1.71, psi:   0.00 +/-   0.03, pT/q:   0.51 +/-   3.5%, TanL:  -2.119 +/-   0.068
+   1  L  312.226 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.12 +/-   0.39, Z: 198.90 +/-   0.94, psi:  -0.01 +/-   0.02, pT/q:   0.46 +/-   1.9%, TanL:  -2.115 +/-   0.037 NF 47 chi2    0.892 gId  8 NdEdx 47  34.12 keV +/-   6.1 %
+p(   1,   0,   0) x:   0.001+/- 0.004 y:   0.118+/- 0.388 z: 198.897+/- 0.942 px:   0.464+/- 0.009 py:  -0.003+/- 0.008 pz:  -0.981+/- 0.013 p:   1.085+/-  0.013       pi+ Q: 1  chi2/NDF :   -1.00/ 1
+   1 massFit  p(   1,   0,   0) x:   0.001+/- 0.004 y:   0.118+/- 0.388 z: 198.897+/- 0.942 px:   0.464+/- 0.009 py:  -0.003+/- 0.008 pz:  -0.981+/- 0.013 p:   1.085+/-  0.013       pi+ Q: 1  chi2/NDF :   79.42/89    p/q in TPC    1.072
+   1 massFit  p(   1,   0,   0) x:   0.000+/- 0.001 y:  -0.011+/- 0.719 z: 199.213+/- 1.714 px:   1.021+/- 0.036 py:   0.001+/- 0.030 pz:  -2.163+/- 0.051 p:   2.392+/-  0.055     Alpha Q: 2  chi2/NDF :   79.45/89    p/q in TPC    1.077
+--------------------------------------------------------------------------------
+
+TFG
+
+   1  L  312.177 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.12 +/-   0.40, Z: 198.87 +/-   0.96, psi:  -0.01 +/-   0.02, pT/q:   0.46 +/-   1.9%, TanL:  -2.115 +/-   0.038 NF 47 chi2    0.906 gId  8 NdEdx 47  37.09 keV +/-   6.0 %
+p(   1,   0,   0) x:   0.001+/- 0.004 y:   0.119+/- 0.396 z: 198.872+/- 0.958 px:   0.462+/- 0.009 py:  -0.003+/- 0.008 pz:  -0.978+/- 0.013 p:   1.081+/-  0.013       pi+ Q: 1  chi2/NDF :   -1.00/ 1
+dNdx    dN/dx =  371.192 +/-    4.000 % 
+Part:         e+         p        K+       pi+       mu+         d         t       He3       He4
+Pred:      36.45     37.52     28.11     28.08     28.85     78.23     139.8     218.5     310.3
+PredC:     36.45     37.52     28.11     28.08     28.85     78.23     139.8     218.5     310.3
+Res.:      2.321     2.292     2.581     2.582     2.555     1.557    0.9767    0.5297    0.1793
+Res.C:     2.321     2.292     2.581     2.582     2.555     1.557    0.9767    0.5297    0.1793
+Pull:      58.02      57.3     64.51     64.54     63.86     38.93     24.42     13.24     4.482
+PullC:     58.02      57.3     64.51     64.54     63.86     38.93     24.42     13.24     4.482
+All:    -1
+pdg = 211       pInTpc = 1.07
+   1  L  312.177 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.12 +/-   0.40, Z: 198.87 +/-   0.96, psi:  -0.01 +/-   0.02, pT/q:   0.46 +/-   1.9%, TanL:  -2.115 +/-   0.038 NF 47 chi2    0.906 gId  8 NdEdx 47  37.09 keV +/-   6.0 %
+p(   1,   0,   0) x:   0.001+/- 0.004 y:   0.119+/- 0.396 z: 198.872+/- 0.958 px:   0.462+/- 0.009 py:  -0.003+/- 0.008 pz:  -0.978+/- 0.013 p:   1.081+/-  0.013       pi+ Q: 1  chi2/NDF :   -1.00/ 1
+   1 massFit  p(   1,   0,   0) x:   0.001+/- 0.004 y:   0.119+/- 0.396 z: 198.872+/- 0.958 px:   0.462+/- 0.009 py:  -0.003+/- 0.008 pz:  -0.978+/- 0.013 p:   1.081+/-  0.013       pi+ Q: 1  chi2/NDF :   80.67/89    p/q in TPC    1.072
+--------------------------------------------------------------------------------
+TFG with Calibrations/tpc from TFG26i
+   1  L  312.221 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.12 +/-   0.32, Z: 198.90 +/-   0.80, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.5%, TanL:  -2.115 +/-   0.020 NF 47 chi2    0.892 gId  8 NdEdx 47  34.11 keV +/-   6.1 %
+p(   1,   0,   0) x:   0.001+/- 0.003 y:   0.121+/- 0.323 z: 198.895+/- 0.797 px:   0.460+/- 0.007 py:  -0.003+/- 0.004 pz:  -0.972+/- 0.012 p:   1.075+/-  0.013       pi+ Q: 1  chi2/NDF :   -1.00/ 1
+dNdx    dN/dx =  344.768 +/-    4.000 % 
+Part:         e+         p        K+       pi+       mu+         d         t       He3       He4
+Pred:      36.45     37.52     28.11     28.08     28.85     78.23     139.8     218.5     310.3
+PredC:     36.45     37.52     28.11     28.08     28.85     78.23     139.8     218.5     310.3
+Res.:      2.247     2.218     2.507     2.508     2.481     1.483    0.9028    0.4559    0.1054
+Res.C:     2.247     2.218     2.507     2.508     2.481     1.483    0.9028    0.4559    0.1054
+Pull:      56.18     55.45     62.67      62.7     62.02     37.08     22.57      11.4     2.636
+PullC:     56.18     55.45     62.67      62.7     62.02     37.08     22.57      11.4     2.636
+TPC:    1000020040
+All:    1000020040
+pdg = 211       pInTpc = 1.07
+Dca: imp    0.02 +/-   0.60, Z: 199.21 +/-   1.44, psi:  -0.00 +/-   0.02, pT/q:   0.48 +/-   2.8%, TanL:  -2.119 +/-   0.038
+   1  L  312.221 global   101P   X   NP 66 IdT:    1 Q:100 Dca: imp    0.12 +/-   0.32, Z: 198.90 +/-   0.80, psi:  -0.01 +/-   0.01, pT/q:   0.46 +/-   1.5%, TanL:  -2.115 +/-   0.020 NF 47 chi2    0.892 gId  8 NdEdx 47  34.11 keV +/-   6.1 %
+p(   1,   0,   0) x:   0.001+/- 0.003 y:   0.121+/- 0.323 z: 198.895+/- 0.797 px:   0.460+/- 0.007 py:  -0.003+/- 0.004 pz:  -0.972+/- 0.012 p:   1.075+/-  0.013       pi+ Q: 1  chi2/NDF :   -1.00/ 1
+   1 massFit  p(   1,   0,   0) x:   0.001+/- 0.003 y:   0.121+/- 0.323 z: 198.895+/- 0.797 px:   0.460+/- 0.007 py:  -0.003+/- 0.004 pz:  -0.972+/- 0.012 p:   1.075+/-  0.013       pi+ Q: 1  chi2/NDF :   79.42/89    p/q in TPC    1.072
+   1 massFit  p(   1,   0,   0) x:   0.000+/- 0.002 y:   0.019+/- 0.600 z: 199.211+/- 1.444 px:   0.950+/- 0.026 py:  -0.002+/- 0.016 pz:  -2.014+/- 0.047 p:   2.227+/-  0.051     Alpha Q: 2  chi2/NDF :   79.45/89    p/q in TPC    1.077
+--------------------------------------------------------------------------------
+================================================================================
+.L adaptive_rebin_th3.C+
+TH3F *R = new TH3F(*RadlI)
+R->Sumw2()
+R->Divide(No)
+adaptive_rebin_th3(R)
+Number of merged blocks: 64
+
+Block 0 | bins x:[1,80] y:[1,79] z:[1,16] | coords x:[-2,2] y:[5,8.95] z:[-17,-9] | content=273.618 | error=1.69436
+Block 1 | bins x:[1,80] y:[80,161] z:[1,16] | coords x:[-2,2] y:[8.95,13.05] z:[-17,-9] | content=273.791 | error=1.69672
+Block 2 | bins x:[1,30] y:[162,245] z:[1,16] | coords x:[-2,-0.5] y:[13.05,17.25] z:[-17,-9] | content=273.395 | error=1.75026
+Block 3 | bins x:[31,80] y:[162,245] z:[1,16] | coords x:[-0.5,2] y:[13.05,17.25] z:[-17,-9] | content=271.859 | error=1.69599
+Block 4 | bins x:[1,80] y:[246,261] z:[1,16] | coords x:[-2,2] y:[17.25,18.05] z:[-17,-9] | content=269.31 | error=1.75098
+Block 5 | bins x:[1,80] y:[262,286] z:[1,16] | coords x:[-2,2] y:[18.05,19.3] z:[-17,-9] | content=281.799 | error=1.78528
+Block 6 | bins x:[1,16] y:[287,344] z:[1,16] | coords x:[-2,-1.2] y:[19.3,22.2] z:[-17,-9] | content=267.931 | error=1.72866
+Block 7 | bins x:[17,80] y:[287,344] z:[1,16] | coords x:[-1.2,2] y:[19.3,22.2] z:[-17,-9] | content=274.134 | error=1.79516
+Block 8 | bins x:[1,80] y:[1,68] z:[17,34] | coords x:[-2,2] y:[5,8.4] z:[-9,0] | content=277.008 | error=1.70784
+Block 9 | bins x:[1,80] y:[69,136] z:[17,34] | coords x:[-2,2] y:[8.4,11.8] z:[-9,0] | content=273.752 | error=1.69719
+Block 10 | bins x:[1,80] y:[137,202] z:[17,34] | coords x:[-2,2] y:[11.8,15.1] z:[-9,0] | content=274.134 | error=1.69804
+Block 11 | bins x:[1,80] y:[203,228] z:[17,34] | coords x:[-2,2] y:[15.1,16.4] z:[-9,0] | content=273.194 | error=1.69129
+Block 12 | bins x:[1,21] y:[229,243] z:[17,34] | coords x:[-2,-0.95] y:[16.4,17.15] z:[-9,0] | content=264.909 | error=1.83224
+Block 13 | bins x:[22,80] y:[229,243] z:[17,34] | coords x:[-0.95,2] y:[16.4,17.15] z:[-9,0] | content=272.45 | error=1.83379
+Block 14 | bins x:[1,80] y:[244,277] z:[17,34] | coords x:[-2,2] y:[17.15,18.85] z:[-9,0] | content=278.223 | error=1.72422
+Block 15 | bins x:[1,80] y:[278,344] z:[17,34] | coords x:[-2,2] y:[18.85,22.2] z:[-9,0] | content=275.755 | error=1.69953
+Block 16 | bins x:[1,80] y:[1,68] z:[35,52] | coords x:[-2,2] y:[5,8.4] z:[0,9] | content=276.946 | error=1.70712
+Block 17 | bins x:[1,80] y:[69,136] z:[35,52] | coords x:[-2,2] y:[8.4,11.8] z:[0,9] | content=274.018 | error=1.69707
+Block 18 | bins x:[1,80] y:[137,202] z:[35,52] | coords x:[-2,2] y:[11.8,15.1] z:[0,9] | content=274.136 | error=1.69813
+Block 19 | bins x:[1,80] y:[203,228] z:[35,52] | coords x:[-2,2] y:[15.1,16.4] z:[0,9] | content=273.43 | error=1.68996
+Block 20 | bins x:[1,21] y:[229,243] z:[35,52] | coords x:[-2,-0.95] y:[16.4,17.15] z:[0,9] | content=263.551 | error=1.82983
+Block 21 | bins x:[22,80] y:[229,243] z:[35,52] | coords x:[-0.95,2] y:[16.4,17.15] z:[0,9] | content=272.467 | error=1.83607
+Block 22 | bins x:[1,80] y:[244,277] z:[35,52] | coords x:[-2,2] y:[17.15,18.85] z:[0,9] | content=278.012 | error=1.72518
+Block 23 | bins x:[1,80] y:[278,344] z:[35,52] | coords x:[-2,2] y:[18.85,22.2] z:[0,9] | content=275.976 | error=1.70029
+Block 24 | bins x:[1,80] y:[1,79] z:[53,68] | coords x:[-2,2] y:[5,8.95] z:[9,17] | content=273.501 | error=1.69407
+Block 25 | bins x:[1,80] y:[80,161] z:[53,68] | coords x:[-2,2] y:[8.95,13.05] z:[9,17] | content=273.464 | error=1.69485
+Block 26 | bins x:[1,30] y:[162,245] z:[53,68] | coords x:[-2,-0.5] y:[13.05,17.25] z:[9,17] | content=273.474 | error=1.75317
+Block 27 | bins x:[31,80] y:[162,245] z:[53,68] | coords x:[-0.5,2] y:[13.05,17.25] z:[9,17] | content=271.881 | error=1.69693
+Block 28 | bins x:[1,80] y:[246,261] z:[53,68] | coords x:[-2,2] y:[17.25,18.05] z:[9,17] | content=269.638 | error=1.75227
+Block 29 | bins x:[1,80] y:[262,286] z:[53,68] | coords x:[-2,2] y:[18.05,19.3] z:[9,17] | content=280.837 | error=1.7815
+Block 30 | bins x:[1,80] y:[287,314] z:[53,68] | coords x:[-2,2] y:[19.3,20.7] z:[9,17] | content=268.833 | error=1.75855
+Block 31 | bins x:[1,80] y:[315,344] z:[53,68] | coords x:[-2,2] y:[20.7,22.2] z:[9,17] | content=276.414 | error=1.77716
+Block 32 | bins x:[1,80] y:[345,365] z:[1,34] | coords x:[-2,2] y:[22.2,23.25] z:[-17,0] | content=271.794 | error=1.7343
+Block 33 | bins x:[1,80] y:[366,387] z:[1,34] | coords x:[-2,2] y:[23.25,24.35] z:[-17,0] | content=275.529 | error=1.74389
+Block 34 | bins x:[1,11] y:[388,432] z:[1,34] | coords x:[-2,-1.45] y:[24.35,26.6] z:[-17,0] | content=272.061 | error=1.68849
+Block 35 | bins x:[12,80] y:[388,432] z:[1,34] | coords x:[-1.45,2] y:[24.35,26.6] z:[-17,0] | content=282.653 | error=1.7983
+Block 36 | bins x:[1,16] y:[433,475] z:[1,18] | coords x:[-2,-1.2] y:[26.6,28.75] z:[-17,-8] | content=275.946 | error=1.77571
+Block 37 | bins x:[1,16] y:[433,475] z:[19,34] | coords x:[-2,-1.2] y:[26.6,28.75] z:[-8,0] | content=271.426 | error=1.78732
+Block 38 | bins x:[17,80] y:[433,465] z:[1,34] | coords x:[-1.2,2] y:[26.6,28.25] z:[-17,0] | content=272.687 | error=1.83075
+Block 39 | bins x:[17,80] y:[466,475] z:[1,34] | coords x:[-1.2,2] y:[28.25,28.75] z:[-17,0] | content=270.132 | error=1.83145
+Block 40 | bins x:[1,80] y:[345,365] z:[35,68] | coords x:[-2,2] y:[22.2,23.25] z:[0,17] | content=271.149 | error=1.72773
+Block 41 | bins x:[1,80] y:[366,387] z:[35,68] | coords x:[-2,2] y:[23.25,24.35] z:[0,17] | content=277.117 | error=1.74929
+Block 42 | bins x:[1,80] y:[388,409] z:[35,68] | coords x:[-2,2] y:[24.35,25.45] z:[0,17] | content=273.09 | error=1.73391
+Block 43 | bins x:[1,80] y:[410,431] z:[35,68] | coords x:[-2,2] y:[25.45,26.55] z:[0,17] | content=272.5 | error=1.72661
+Block 44 | bins x:[1,80] y:[432,454] z:[35,68] | coords x:[-2,2] y:[26.55,27.7] z:[0,17] | content=275.002 | error=1.73243
+Block 45 | bins x:[1,80] y:[455,464] z:[35,68] | coords x:[-2,2] y:[27.7,28.2] z:[0,17] | content=279.155 | error=1.84522
+Block 46 | bins x:[1,17] y:[465,475] z:[35,68] | coords x:[-2,-1.15] y:[28.2,28.75] z:[0,17] | content=275.739 | error=1.83873
+Block 47 | bins x:[18,80] y:[465,475] z:[35,68] | coords x:[-1.15,2] y:[28.2,28.75] z:[0,17] | content=272.123 | error=1.82137
+Block 48 | bins x:[1,5] y:[476,535] z:[1,18] | coords x:[-2,-1.75] y:[28.75,31.75] z:[-17,-8] | content=276.053 | error=1.76047
+Block 49 | bins x:[1,5] y:[536,574] z:[1,18] | coords x:[-2,-1.75] y:[31.75,33.7] z:[-17,-8] | content=276.053 | error=1.7649
+Block 50 | bins x:[6,80] y:[476,519] z:[1,18] | coords x:[-1.75,2] y:[28.75,30.95] z:[-17,-8] | content=272.273 | error=1.7275
+Block 51 | bins x:[6,80] y:[520,574] z:[1,18] | coords x:[-1.75,2] y:[30.95,33.7] z:[-17,-8] | content=269.359 | error=1.73177
+Block 52 | bins x:[1,80] y:[476,574] z:[19,24] | coords x:[-2,2] y:[28.75,33.7] z:[-8,-5] | content=272.476 | error=1.73294
+Block 53 | bins x:[1,80] y:[476,574] z:[25,31] | coords x:[-2,2] y:[28.75,33.7] z:[-5,-1.5] | content=275.035 | error=1.74158
+Block 54 | bins x:[1,80] y:[476,547] z:[32,44] | coords x:[-2,2] y:[28.75,32.35] z:[-1.5,5] | content=268.028 | error=1.69156
+Block 55 | bins x:[1,80] y:[548,574] z:[32,44] | coords x:[-2,2] y:[32.35,33.7] z:[-1.5,5] | content=267.441 | error=1.73105
+Block 56 | bins x:[1,80] y:[476,503] z:[45,58] | coords x:[-2,2] y:[28.75,30.15] z:[5,12] | content=268.465 | error=1.74329
+Block 57 | bins x:[1,80] y:[504,526] z:[45,58] | coords x:[-2,2] y:[30.15,31.3] z:[5,12] | content=280.614 | error=1.76346
+Block 58 | bins x:[1,80] y:[527,550] z:[45,58] | coords x:[-2,2] y:[31.3,32.5] z:[5,12] | content=279.055 | error=1.76751
+Block 59 | bins x:[1,80] y:[551,574] z:[45,58] | coords x:[-2,2] y:[32.5,33.7] z:[5,12] | content=266.498 | error=1.72766
+Block 60 | bins x:[1,17] y:[476,523] z:[59,68] | coords x:[-2,-1.15] y:[28.75,31.15] z:[12,17] | content=272.54 | error=1.75463
+Block 61 | bins x:[1,17] y:[524,574] z:[59,68] | coords x:[-2,-1.15] y:[31.15,33.7] z:[12,17] | content=274.394 | error=1.74969
+Block 62 | bins x:[18,29] y:[476,574] z:[59,68] | coords x:[-1.15,-0.55] y:[28.75,33.7] z:[12,17] | content=273.555 | error=1.76767
+Block 63 | bins x:[30,80] y:[476,574] z:[59,68] | coords x:[-0.55,2] y:[28.75,33.7] z:[12,17] | content=269.357 | error=1.76952
+
+Total histogram content = 17501.1
+Requested target/block = 437.528
+================================================================================
+10/06/2026 
+(gdb) p seed
+$2 = (const Voxel &) @0x7fffe5e91010: {ix = 17, iy = 469, iz = 31, content = 0.52946114540100098}
+ | nVoxels = 1 | content = 0.529461 | mu = 0.529461 +- 0 | centroid = (, [17,17] , [469,469] , [31,31] )
+(gdb) p seed
+$7 = (const Voxel &) @0x7fffe5e91028: {ix = 15, iy = 245, iz = 57, content = 0.5293763279914856}
+ | nVoxels = 1 | content = 0.529376 | mu = 0.529376 +- 0 | centroid = (, [15,15] , [245,245] , [57,57] )
+$8 = (const Voxel &) @0x7fffe5e91040: {ix = 16, iy = 465, iz = 20, content = 0.52886766195297241}
+ | nVoxels = 1 | content = 0.528868 | mu = 0.528868 +- 0 | centroid = (, [16,16] , [465,465] , [20,20] )
+(gdb) p seed
+$9 = (const Voxel &) @0x7fffe5e91058: {ix = 22, iy = 459, iz = 29, content = 0.52860724925994873}
+ | nVoxels = 1 | content = 0.528607 | mu = 0.528607 +- 0 | centroid = (, [22,22] , [459,459] , [29,29] )
+$10 = (const Voxel &) @0x7fffe5e91070: {ix = 24, iy = 233, iz = 18, content = 0.52683788537979126}
+(gdb) p seed
+$11 = (const Voxel &) @0x7fffe5e91088: {ix = 15, iy = 467, iz = 25, content = 0.52662032842636108}
+ | nVoxels = 1 | content = 0.52662 | mu = 0.52662 +- 0 | centroid = (, [15,15] , [467,467] , [25,25] )
+(gdb) p seed
+$12 = (const Voxel &) @0x7fffe5e910a0: {ix = 15, iy = 236, iz = 34, content = 0.52571147680282593}
+| nVoxels = 1 | content = 0.525711 | mu = 0.525711 +- 0 | centroid = (, [15,15] , [236,236] , [34,34] )
+================================================================================
+Average("FSTW",-2,-0.2,15,35,-15,15)
+       
+ Average("FSTW",-1.6,-0.2,16.2,18,-15,15)   Z [-1.6,-0.2]    R [15,16.2] Phi [-15, 15]
+ Average("FSTW",-1.7,-0.2,16.2,18,-15,15)                     R [16.2,18] Phi [-15, 15]
+ Average("FSTW",-1.7,-0.2,28,29,-15,15)     R [28,29] Phi [-15, 15]
+ Average("FSTW",-1.3,-0.6,17,28,-14.5,-13)  
+ Average("FSTW",-1.3,-0.6,17,28,13,14.5) 
+ Average("FSTW",-1,-0.9,30,32.,-7,7)       R [30,33] Phi [-15, 15]
