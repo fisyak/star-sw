@@ -6,7 +6,11 @@ For each year, the baseline tag is the entry without a trailing letter (for exam
 
 | Year | Geometry tag | Detector modules / baseline and differences |
 |---|---|---|
+| 2027 | `y2027` | Baseline 2027 geometry: end-of-line placeholder tag with the cave-only setup retained as the current `y2027` configuration. |
+| 2026 | `y2026` | Baseline 2026 geometry: same production configuration as `y2025`, with the fixed-target geometry (`PIPE12ft` + `TARGv1b`), FST/STGC/ETOF, and the 2026 standard support stack. |
+| 2026 | `y2026a` | Same as `y2026`; production geometry alias identical to the `y2026` configuration. |
 | 2025 | `y2025` | Baseline 2025 geometry: TPC + BTOF + barrel/endcap EMC + MTD/forward support in the current first-cut `y2025` configuration. |
+| 2025 | `y2025a` | Same as `y2025`; production geometry alias identical to the 2025 production configuration. |
 | 2024 | `y2024` | Baseline 2024 geometry: TPC + BTOF + barrel/endcap EMC + MTD as the standard 2024 setup. |
 | 2024 | `y2024a` | Same as `y2024`; this is the 2024 production tag in the standard detector layout. |
 | 2024 | `y2024b` | Same as `y2024`, but the 2024 production geometry includes the 200.0 cm FXT option. |
