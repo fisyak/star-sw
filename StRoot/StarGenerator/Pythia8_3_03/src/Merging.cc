@@ -7,7 +7,7 @@
 // Function definitions (not found in the header) for the Merging class.
 
 #include "Pythia8/Merging.h"
-
+#include <limits>
 namespace Pythia8 {
 
 //==========================================================================
