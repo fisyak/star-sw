@@ -1609,7 +1609,7 @@ assert(mFE._cTT>0);
   mELoss[1].mX0    = x0Gas;
   
   if (fabs(dE)>0)    {
-    if (debug()) PrintpT("dE",mgP.dx, relRadThickness,dE, TMath::Sqrt(e2) - m);
+    if (debug()) PrintpT("dE",pL1+pL2+pL3,pL2, relRadThickness,dE, TMath::Sqrt(e2) - m - dE);
     double correction =1. + ::sqrt(e2)*dE/p2;
     if (correction>1.1) correction = 1.1;
     else if (correction<0.9) correction = 0.9;
