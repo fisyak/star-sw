@@ -222,7 +222,8 @@ TGeoPhysicalNode *StiVMCToolKit::LoopOverNodes(const TGeoNode *nodeT, const Char
     TGeoMixture  *newmat = 0;
     TGeoShape    *newshape = shapeT;
     nodeP = MakePhysicalNode(pathT);
-    if (! volT->TestBit(kAveraged)) {
+    TString NameT(nameT);
+    if (! volT->TestBit(kAveraged) && NameT != "FSTW") {
       Double_t local[3] = {0};
       if (shapeT->TestShapeBit(TGeoShape::kGeoPcon) || shapeT->TestShapeBit(TGeoShape::kGeoPgon)) {
 	TGeoPcon *pcon = (TGeoPcon *) shapeT;
@@ -232,8 +233,7 @@ TGeoPhysicalNode *StiVMCToolKit::LoopOverNodes(const TGeoNode *nodeT, const Char
       Double_t master[3] = {0};
       TGeoHMatrix  *hmat   = nodeP->GetMatrix(); 
       hmat->LocalToMaster(local,master); 
-      Double_t rOffSet = 0;
-      if (master) rOffSet = TMath::Sqrt(master[0]*master[0] + master[1]*master[1]);
+      Double_t rOffSet = TMath::Sqrt(master[0]*master[0] + master[1]*master[1]);
       // Averging of material
       Double_t WeightT = volT->WeightA(); // weight before avaraing
       vector<MaterialMap_t> materials;

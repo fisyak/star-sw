@@ -68,8 +68,8 @@ public:
   virtual bool hasMore() const;
   virtual StiDetector* next();
   virtual void build(StMaker&source);
-  virtual void buildDetectors(StMaker&source);
-
+  virtual void buildDetectors(StMaker&source) {}
+  void build_FSTW(TGeoPhysicalNode *nodeP);
   double nice(double angle) const;
   void setGroupId(int id) 		{ _groupId = id;}
   int  getGroupId() const 		{return _groupId;}

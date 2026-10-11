@@ -35,7 +35,7 @@ void StiStarDetectorBuilder::useVMCGeometry() {
 					  matP->GetZ(),
 					  matP->GetA(),
 					  matP->GetDensity(),
-					  matP->GetDensity()*matP->GetRadLen(),
+					  matP->GetRadLen(),
 					  0.));
   } else {
     _vacuumMaterial = add(new StiMaterial("Vacuum",0., 1., 0., 1e30, 0.)  );
@@ -47,7 +47,7 @@ void StiStarDetectorBuilder::useVMCGeometry() {
 				  matP->GetZ(),
 				  matP->GetA(),
 				  matP->GetDensity(),
-				  matP->GetDensity()*matP->GetRadLen(),
+				  matP->GetRadLen(),
 				  0.));
   } else {
     _gasMat = (add(new StiMaterial("Air",7.3, 14.61, 0.001205, 30420.*0.001205, 7.3*12.e-9)));
@@ -232,7 +232,7 @@ void StiStarDetectorBuilder::HftBeamPipe() {
 					pipeMaterial->GetZ(),
 					pipeMaterial->GetA(),
 					density,
-					density*pipeMaterial->GetRadLen(),
+					pipeMaterial->GetRadLen(),
 					PotI));
     StiMaterial *_pipeMaterial2 = 0;
     Double_t Rmax, Rmin, radius, dZ, Z;
@@ -265,7 +265,7 @@ void StiStarDetectorBuilder::HftBeamPipe() {
 					pipeMaterial->GetZ(),
 					pipeMaterial->GetA(),
 					dens,
-					density*pipeMaterial->GetRadLen(),
+					pipeMaterial->GetRadLen(),
 					PotI));
       }
       radius = (Rmin + Rmax)/2;
@@ -355,7 +355,7 @@ void StiStarDetectorBuilder::MakePipe(Int_t iflag, const VolumeMap_t *ptube,cons
 				      pipeMaterial->GetZ(),
 				      pipeMaterial->GetA(),
 				      pipeMaterial->GetDensity(),
-				      pipeMaterial->GetDensity()*pipeMaterial->GetRadLen(),
+				      pipeMaterial->GetRadLen(),
 				      PotI));
   TGeoTube *pipeShape = (TGeoTube *) pipe->GetShape();
   Double_t Rmax = pipeShape->GetRmax();
@@ -451,7 +451,38 @@ void StiStarDetectorBuilder::Fst() {
   const VolumeMap_t FstVolumes[] = { 
     //    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
     {"FTUO", "FST half ring outside wedge container", "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FTUO_1-36","",""},       
+#if 1
     {"FSTW", "Whole wedge container",                 "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12","",""},       
+#else
+    {"FTUR", "Tube segment for FST half ring inside wedge container",          "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTUR_1-3","",""},   
+    {"FTRO", "Trapizoid for FST mechanical strucutre (wedge) -> FHO[A-C]",     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTRO_1","",""},     
+    {"FSBW", "Box for the ribs in FST wedge",                                  "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSBW_1-2","",""},     
+    {"FSWT", "Tube for the FST support tubes between inner and outer",         "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSWT_1-7","",""},     
+    {"FTUW", "Tube segment for FST mechanical structure (wedge) -> FHB[E-H]",  "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTUW_1","",""},
+    {"FTIA", "Trapizoid for FST mechanical strucutre (inner wedge A) FHA[E-H]","HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTIA_1","",""},
+    //    {"FTIB", "Trapizoid for FST mechanical strucutre (inner wedge B)",         "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTIB_1","",""},
+    //    {"FTRB", "Tube segment for the ribs in FST wedges",                        "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTRB_1","",""},
+    {"FSCT", "Tube for the FST cooling tube",                                  "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSCT_1-97","",""},
+    //    {"FSCL", "Tube for the FST coolant",                                       "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSCL_1-97","",""},
+    {"FHTS", "Tube segment for the FST cooling tube holder",                   "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FHTS_1","",""},
+    {"FCHT", "Tube for the FST cooling tube holder",                           "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FCHT_1-4","",""},
+    //    {"FCHB", "Box Tube for the FST cooling tube holder",                       "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FCHT_1-2","",""},
+    //    {"FSHA", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHA_1","",""},
+    //    {"FSHB", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHB_1","",""},
+    //    {"FSHC", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHC_1","",""},
+    //    {"FSHD", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHD_1","",""},
+    //    {"FSHE", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHE_1","",""},
+    {"FSHF", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHF_1","",""},
+    {"FSHG", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHG_1","",""},
+    {"FSHH", "Box for FST heat sinks (outside mechanical",                     "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSHH_1","",""},
+    //    {"FSAC", "Box for FST APV chips",                                          "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSAC_1-8",""},
+    //    {"FSTB", "Box for FST T-board ",                                           "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSTB_1",""},
+    {"FTHC", "Box for FST T-board connectors",                                 "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTHC_1-21",""},
+    //    {"FTOH", "Tube segment for FST inner hybrid",                              "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTHC_1",""},
+    //    {"FSBH", "Box for FST hybrid",                                             "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FSBH_1-2",""},
+    //    {"FTIH", "Tube segment for FST outer hybrid",                              "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTIH_1",""},
+    {"FTUS", "Tube segment for FST silicon",                                   "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTUS_3",""},
+#endif
     {"OFSR", "OFSR Outer support ring for FST",       "HALL_1/CAVE_1/FSTA_1/OFSR_1-2","",""},   
     {"OFSB", "OFSB Outer support bars",               "HALL_1/CAVE_1/FSTA_1/OFSB_1-4","",""},   
     {"OFSD", "outer support",                         "HALL_1/CAVE_1/FSTA_1/OFSD_1-4","",""},   
@@ -507,7 +538,7 @@ void StiStarDetectorBuilder::SconWithoutSVT() {
     {"SAKM", "beampipe support aluminum kinematic mount",     "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SAKM_1","",""},
     {"SASH", "beampipe support aluminum EM shield",           "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SASH_1","",""},
     {"SDSA", "G10 support Disk",                              "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SDSA_1","",""},
-    //    {"SPOK", "spoke to support beam pipe assembly 4 sectors ","HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOK_1","",""},
+    {"SPOK", "spoke to support beam pipe assembly 4 sectors ","HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOK_1","",""},
     {"SPOB", "beam spoke assemblyS",                          "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOB_1","",""},  // y
     {"SPOC", "beam spoke assembly upper part",                "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SPOC_1","",""}   // y 
     //    {"SBRL", "ceramic roller supporting the beampipeS",       "HALL_1/CAVE_1/SCOM_1/SBSP_1-2/SPOA_1-4/SBRL_1","",""},

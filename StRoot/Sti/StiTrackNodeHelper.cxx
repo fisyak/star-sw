@@ -788,7 +788,7 @@ assert(mMcs._cEE>=0);
 
   mMcs._ptinCorr = ::sqrt(e2)*dE/p2;
   if (fabs(mMcs._ptinCorr)>0.1) mMcs._ptinCorr = (dE<0)? -0.1:0.1;
-  if (debug()) mTargetNode->PrintpT("dE",pL1+pL2+pL3, relRadThickness,dE, TMath::Sqrt(e2) - m);
+  if (debug()) mTargetNode->PrintpT("dE",pL1+pL2+pL3, pL2, relRadThickness,dE, TMath::Sqrt(e2) - m - dE);
 
 
 

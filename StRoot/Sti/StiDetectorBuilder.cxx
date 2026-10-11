@@ -1,3 +1,4 @@
+//#define __noSPLIT__
 #include "Stiostream.h"
 #include "Sti/Base/Factory.h"
 #include "Sti/StiDetector.h"
@@ -165,16 +166,147 @@ void StiDetectorBuilder::build(StMaker& source)
 
   mDetectorIterator = mDetectorMap.begin();
 }
-
 //________________________________________________________________________________
-void StiDetectorBuilder::buildDetectors(StMaker& source)
-{}
+void StiDetectorBuilder::build_FSTW(TGeoPhysicalNode *nodeP) {
+  struct Avr_t {
+    const Char_t *name;
+    Double_t zMin, zMax;
+    Double_t rMin, rMax;
+    Double_t phiMin, phiMax;
+    Double_t RadlI;
+    Double_t Dens;
+    Double_t A;
+    Double_t Z;
+  };
+  enum {NVA = 10};
+  Avr_t av[NVA] = {
+    //  name  z min   max r min   max phi min max     RadlI      Dens         A         Z
+    {"FSTW_1", -1.7, -0.2, 16.2, 18.0,-15.0, 15.0,    0.038,    0.979,   21.055,   10.188 },
+    {"FSTW_2", -1.7, -0.2, 28.0, 29.0,-15.0, 15.0,    0.045,    1.023,   25.472,   12.159 },
+    {"FSTW_3", -1.3, -0.6, 17.0, 28.0,-14.5,-13.0,    0.092,    1.709,   39.640,   18.545 },
+    {"FSTW_4", -1.3, -0.6, 17.0, 28.0, 13.0, 14.5,    0.095,    1.754,   40.109,   18.764 },
+    {"FSTW_5", -1.0, -0.9, 30.0, 32.0, -7.0,  7.0,    0.046,    1.436,   17.084,    8.546 },
+    {"FTUS_1", -1.7, -1.6, 16.5, 28.0,-15.0, 15.0,    0.044,    1.214,   21.082,   10.521 },
+    {"FTUS_2", -0.3, -0.2,  5.0, 15.5,-15.0, 15.0,    0.042,    1.081,   22.632,   11.290 },
+    {"FTUR_1", -2.0, -1.6, 30.0, 33.5,-14.0, -7.0,    0.111,    2.662,   26.959,   12.990 },
+    {"FTUR_2", -2.0, -1.6, 32.2, 33.5, -7.0,  7.0,    0.109,    2.618,   26.980,   13.000 },
+    {"FTUR_3", -2.0, -1.6, 30.0, 33.5,  7.0, 14.0,    0.111,    2.662,   26.958,   12.990 }
+  };
+  TGeoVolume   *volP   = nodeP->GetVolume();
+  TString NameV(volP->GetName());
+  TGeoShape    *shapeP = volP->GetShape();    if (debug()) {cout << "New Shape\t"; StiVMCToolKit::instance()->PrintShape(shapeP);}
+  if ( ! (NameV == "FSTW" &&  shapeP->TestShapeBit(TGeoShape::kGeoTubeSeg))) {
+    cout << "StiDetectorBuilder::build_FSTW illegal name " << NameV.Data() << " or shpae" << endl;
+    return;
+  }
+  TGeoHMatrix  *hmat   = nodeP->GetMatrix();  if (debug()) hmat->Print("");
+  TGeoTubeSeg *shapeS = (TGeoTubeSeg *) shapeP;
+  Double_t gloV[3];
+  Double_t Phi1 = TMath::DegToRad()*shapeS->GetPhi1();
+  Double_t Phi2 = TMath::DegToRad()*shapeS->GetPhi2();
+  if (Phi2 < Phi1) Phi2 += TMath::TwoPi();
+  Double_t PhiM = (Phi2+Phi1)/2;
+  //  Double_t dPhi = (Phi2-Phi1);
+  Double_t locV[3]={cos(PhiM),sin(PhiM),0};
+  hmat->LocalToMasterVect(locV,gloV);	       	       
+  Double_t Phi = TMath::ATan2(gloV[1],gloV[0]);
+  Double_t Zshift =  hmat->GetTranslation()[2];
+  Double_t Zsign  =  hmat->GetRotationMatrix()[8];
+  TGeoMedium   *medP   = volP->GetMedium();   if (debug()) medP->Print("");
+  TGeoMaterial *matP   = medP->GetMaterial(); if (debug()) matP->Print("");
+  StiCylindricalShape *sh = 0;
+  StiPlacement *pPlacement = 0;
+  StiDetector *pDetector = 0;
+  for (Int_t va = 0; va < NVA; va++) {
+    Double_t PotI = 16.e-9*TMath::Power(av[va].Z,0.9);// StiVMCToolKit::instance()->GetPotI(matP);
+    StiMaterial *matS = add(new StiMaterial(av[va].name,
+					    av[va].Z,
+					    av[va].A,
+					    av[va].Dens,
+					    1./av[va].RadlI,
+					    PotI));
+    TString NameP(nodeP->GetName()); NameP += ":"; NameP += av[va].name;
+    Double_t dZ = av[va].zMax - av[va].zMin;
+    Double_t Rmax = av[va].rMax;
+    Double_t Rmin = av[va].rMin;
+    Double_t dR = Rmax - Rmin;
+    Double_t dphi = TMath::DegToRad()*(av[va].phiMax - av[va].phiMin);
+    Double_t phi = Phi + 0.5*TMath::DegToRad()*(av[va].phiMax + av[va].phiMin);
+    sh = new StiCylindricalShape(NameP.Data(),  // Name
+				 dZ,     	// halfDepth
+				 dR,         	// thickness
+				 Rmax,	        // outerRadius
+				 dphi);    	// openingAngle
+    add(sh);
+    pPlacement = new StiPlacement;
+    pPlacement->setZcenter(Zshift + Zsign*0.5*(av[va].zMin + av[va].zMax));
+    pPlacement->setLayerRadius((Rmin+Rmax)*0.5);
+    pPlacement->setLayerAngle(phi);
+    pPlacement->setRegion(StiPlacement::kMidRapidity);
+    pPlacement->setNormalRep(phi,0.5*(Rmin+Rmax), 0); 
+    pDetector = getDetectorFactory()->getInstance();
+    NameP.ReplaceAll("HALL_1/CAVE_1/","");
+    NameP.ReplaceAll("TpcRefSys_1/","");
+    NameP.Strip(); // GVB: Do not truncate the name: it needs to be unique
+    pDetector->setName(NameP.Data());
+    pDetector->setIsActive(new StiNeverActiveFunctor);
+    pDetector->setShape(sh);
+    pDetector->setPlacement(pPlacement); 
+    pDetector->setGas(GetCurrentDetectorBuilder()->getGasMat());
+    pDetector->setMaterial(matS);
+#ifndef __noSPLIT__
+    if (mThkSplit>0 && mMaxSplit>1) {//	try to split 
+      StiDetVect dv;
+      pDetector->splitIt(dv,mThkSplit,mMaxSplit);
+      for (int i=0;i<(int)dv.size();i++) {
+	int layer = getNRows();
+	add(layer,0,dv[i]); 
+	if (debug()) {
+#if 0
+	  cout << "StiDetectorBuilder::AverageVolume build detector " << dv[i]->getName() << " at layer " << layer 
+	       << "\tZ = " <<  dv[i]->getPlacement()->getZcenter() << "\tdZ = " << dv[i]->getShape()->getHalfDepth()
+	       << "\tR = " <<  dv[i]->getPlacement()->getNormalRadius() << endl;
+#endif
+	  cout << *dv[i] << endl;
+	  if (debug() > 1) dv[i]->Print("TGeo");
+	}
+      } 
+    } else {  
+      int layer = getNRows();
+      add(layer,0,pDetector); 
+      if (debug()) {
+#if 0
+	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
+	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
+	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
+#endif
+	cout << *pDetector << endl;
+	if (debug() > 1) pDetector->Print("TGeo");
+      }
+    }
+#else
+      int layer = getNRows();
+      add(layer,0,pDetector); 
+      if (debug()) {
+	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
+	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
+	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
+	cout << *pDetector << endl;
+	if (debug() > 1) pDetector->Print("TGeo");
+      }
+#endif
+  }
+}
 //________________________________________________________________________________
 void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP) 
 {
   if (debug()) {cout << "StiDetectorBuilder::AverageVolume -I TGeoPhysicalNode\t" << nodeP->GetName() << endl;}
   TGeoVolume   *volP   = nodeP->GetVolume();
   TString NameV(volP->GetName());
+  if (NameV == "FSTW") {
+    build_FSTW(nodeP);
+    return;
+  }
   NameV += "_"; NameV += volP->GetUniqueID();
   TGeoMedium   *medP   = volP->GetMedium();   if (debug()) medP->Print("");
   TGeoMaterial *matP   = medP->GetMaterial(); if (debug()) matP->Print("");
@@ -185,7 +317,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 						matP->GetZ(),
 						matP->GetA(),
 						matP->GetDensity(),
-						matP->GetDensity()*matP->GetRadLen(),
+						matP->GetRadLen(),
 						PotI));
 //  Double_t ionization = matS->getIonization();
 //   StiElossCalculator *ElossCalculator = 
@@ -219,7 +351,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       dPhi          = (Phi2-Phi1);
       Double_t locV[3]={cos(PhiM),sin(PhiM),0};
       hmat->LocalToMasterVect(locV,gloV);	       	       
-      Phi = atan2(gloV[1],gloV[0]);
+      Phi = TMath::ATan2(gloV[1],gloV[0]);
     }
     
     TString Name(nodeP->GetName());
@@ -309,9 +441,11 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	int layer = getNRows();
 	add(layer,0,pDetector); 
 	if (debug()) {
+#if 0
 	  cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
 	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
 	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
+#endif
 	  cout << *pDetector << endl;
 	  if (debug() > 1) pDetector->Print("TGeo");
 	}
@@ -319,13 +453,21 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     }
     return;
   }
-
+  
   if (!pPlacement)  {// BBox
 
     shapeP->ComputeBBox();
 
     TGeoBBox *box = (TGeoBBox*) shapeP;
+    hmat->LocalToMaster(box->GetOrigin(), xyz);
     TGeoRotation geoRotation(*hmat);
+    // Define "center" and normal vectors for the considered volume
+    TVector3 centerVec(xyz[0],xyz[1],0.0);
+    Double_t r             = centerVec.Perp();
+    Double_t phi           = centerVec.Phi();
+    Double_t halfThickness = box->GetDX(); // x,y,z 
+    Double_t halfWidth     = box->GetDY();
+    Double_t dz            = box->GetDZ();
     static Double_t xAxis[3] = {1, 0, 0};
     static Double_t yAxis[3] = {0, 1, 0};
     static Double_t zAxis[3] = {0, 0, 1};
@@ -335,36 +477,34 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     hmat->LocalToMasterVect(xAxis, xAG);
     hmat->LocalToMasterVect(yAxis, yAG);
     hmat->LocalToMasterVect(zAxis, zAG);
-    // Define "center" and normal vectors for the considered volume
-    TVector3 centerVec(xyz[0],xyz[1],0.0);
-    Double_t r             = centerVec.Perp();
-    Double_t phi           = centerVec.Phi();
     TVector3 normX(xAG);
     TVector3 normY(yAG);
     TVector3 normZ(zAG);
-    TVector3 normVec = normX;
     Double_t RtX = centerVec.Dot(normX);
     Double_t RtY = centerVec.Dot(normY);
     Double_t RtZ = centerVec.Dot(normZ);
-    Double_t halfThickness = box->GetDX();
-    Double_t halfWidth     = box->GetDY();
-    Double_t normVecMag    = RtX;
-    Double_t dz            = box->GetDZ();
-    if (TMath::Abs(halfThickness - halfWidth) < 1e-3) {// come from tube
-      normVecMag = r;
-      normVec = TVector3(xyz[0]/r,xyz[1]/r,0.);
+    Double_t normVecMag    = r;
+    TVector3 normVec       = centerVec.Unit();
+    if (TMath::Abs(box->GetDX() - box->GetDY()) < 1e-3 && 
+	TMath::Abs(RtZ) < TMath::Max(TMath::Abs(RtX), TMath::Abs(RtY))) {// from from tube parallel to z  
+#if 0
+      static Int_t iBreak = 0;
+      iBreak++;
+#endif
     } else {
-      if (TMath::Abs(RtY) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtZ))) {
+      normVec = normX;
+      normVecMag    = RtX;
+      if (TMath::Abs(RtY) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtZ))) { // y, -x, z
 	halfThickness = box->GetDY();
 	halfWidth     = box->GetDX();
-	normVecMag = RtY;
-	normVec    = normY;
-      } else if (TMath::Abs(RtZ) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtY))) {
-	halfThickness = box->GetDY();
+	normVecMag    = RtY;
+	normVec    =   normY;
+      } else if (TMath::Abs(RtZ) > TMath::Max(TMath::Abs(RtX), TMath::Abs(RtY))) { // z, x, y
+	halfThickness = box->GetDZ();
 	halfWidth     = box->GetDX();
-	//	dz            = box->GetDY();
-	normVecMag = RtZ;
-	normVec    = normZ;
+	dz            = box->GetDY();
+	normVecMag    = RtZ;
+	normVec       = normZ;
       }
     }
     if (normVecMag < 0) {
@@ -425,9 +565,11 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       int layer = getNRows();
       add(layer,0,pDetector); 
       if (debug()) {
+#if 0
 	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
 	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
 	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
+#endif
 	cout << *pDetector << endl;
 	if (debug() > 1) pDetector->Print("TGeo");
       }
@@ -436,9 +578,11 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       int layer = getNRows();
       add(layer,0,pDetector); 
       if (debug()) {
+#if 0
 	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
 	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
 	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
+#endif
 	cout << *pDetector << endl;
 	if (debug() > 1) pDetector->Print("TGeo");
       }
