@@ -71,6 +71,7 @@ void StKFParticleInterface::SetMagScaleFactor(Double_t scale) {
 }
 Bool_t StKFParticleInterface::fgUsedx2 = kFALSE;
 Bool_t StKFParticleInterface::fgUseTof = kFALSE;
+Bool_t StKFParticleInterface::fgFXT_PV_REFIT = kTRUE;
 
 ClassImp(StKFParticleInterface);
 
@@ -991,18 +992,16 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
   double dz = picoPVError.z();
   primVtx_tmp.SetCovarianceMatrix( dx*dx, 0, dy*dy, 0, 0, dz*dz );
   primaryVertex = KFVertex(primVtx_tmp);
-#define  __FXT_PV_REFIT__
-#ifdef __FXT_PV_REFIT__
-//   if(!IsGoodPV(primaryVertex)) return 0;
-  
-  KFVertex myPV;
   std::vector<bool> isPileup;
   std::vector<KFVertex> pileupPv;
-  //  if (IsFixedTarget()) {
+  if (FXT_PV_REFIT()) {
+    //   if(!IsGoodPV(primaryVertex)) return 0;
+    
+    KFVertex myPV;
+    //  if (IsFixedTarget()) {
     if(!FindFixedTargetPV(picoDst, myPV, pileupPv, isPileup)) return 0;
     primaryVertex = myPV;
-    //  }
-#endif /* __FXT_PV_REFIT__ */
+  }
   
   Int_t nGlobalTracks = picoDst->numberOfTracks( );
   if (_debug) {std::cout << "ProcessEventStPicoDst*) with " << nGlobalTracks << " global tracks" << std::endl;}
@@ -1034,10 +1033,10 @@ bool StKFParticleInterface::ProcessEvent(StPicoDst* picoDst, std::vector<int>& t
     }
     const UInt_t index = gTrack->id();
 
-#ifdef __FXT_PV_REFIT__
-    if(//IsFixedTarget() && 
-       isPileup[index]) continue;
-#endif
+    if (FXT_PV_REFIT()) {
+      if(//IsFixedTarget() && 
+	 isPileup[index]) continue;
+    }
     
     if(index >= ftrackIdToI.size()) ftrackIdToI.resize(index+1);
     ftrackIdToI[index] = iTrack;
