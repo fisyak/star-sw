@@ -98,8 +98,8 @@ void StiDetector::Print(const char *opt) const {
     }
     if (top != Top) {
       Top = top;
-      cout << "  TGeoVolumeAssembly *" << Top.Data() << " = new TGeoVolumeAssembly(\"" << Top.Data() << "\");" << endl;
-      cout << "  CAVE->AddNode(" << Top.Data() << ",1,gGeoIdentity);" << endl;
+//       cout << "  TGeoVolumeAssembly *" << Top.Data() << " = new TGeoVolumeAssembly(\"" << Top.Data() << "\");" << endl;
+//       cout << "  CAVE->AddNode(" << Top.Data() << ",1,gGeoIdentity);" << endl;
     }
     TString vol = ((TObjString *) obj->At(nParsed-1))->GetName();
     if (vol.Contains("_")) {
