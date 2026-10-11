@@ -16,7 +16,7 @@ class StGoodTrigger;
 void kfpAnalysis(Int_t N = 10000000, 
 		 //		 const Char_t *input = "/star/data102/reco/production_OO_200GeV_2021/ReversedFullField/P23ib/2021/136/22136010/st_physics_22136010_raw_1500002.picoDst.root", 
 		 const Char_t *input = "*.picoDst.root", 
-		 const Char_t *output = "Ana.root", const Char_t *triggerSet = "y2021", Bool_t idNdx = kFALSE) {
+		 const Char_t *output = "Ana.root", const Char_t *triggerSet = "y2021", Bool_t idNdx = kFALSE, Bool_t FXT_PV_ReFit = kFALSE) {
 #if !defined(__CINT__)
   std::cout << "This code cannot be compiled" << std::endl;
 #else
@@ -151,7 +151,7 @@ void kfpAnalysis(Int_t N = 10000000,
   StKFParticleInterface::instance()->SetChi2CutCharmManybodyDecays(3);
   StKFParticleInterface::instance()->SetChi2TopoCutCharmManybodyDecays(3);
   StKFParticleInterface::instance()->SetLdLCutCharmManybodyDecays(5);
-
+  StKFParticleInterface::instance()->Set_FXT_PV_REFIT(FXT_PV_ReFit);
   //  StKFParticleInterface::instance()->SetBeamSpot(beamSpotMode);
   //  StKFParticleInterface::instance()->SetBeamSpot();
   
