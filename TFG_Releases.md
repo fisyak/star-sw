@@ -131,6 +131,6 @@
 <li> TFG26g dX++, add StiMassFitMaker                                    2026-08-11 17:06:49 -0400  (HEAD -> TFG, tag: TFG26g4)
 <li> TFG26h Add Mass Fit to Mu & Pico Dsts. 2026 FXT production          2026-08-22 17:29:02 -0400  (tag: TFG26h)
 <li> TFG26i Revise Sti materails, fix bug with MDF4                      2026-09-19 12:08:15 -0400  (HEAD -> TFG, tag: TFG26i_2)
-<li> TFG26j Revise FST geometry for Sti                                  2026-10-11 12:08:15 -0400  (HEAD -> TFG, tag: TFG26j)
+<li> TFG26j Revise FST geometry for Sti                                  2026-10-11 12:58:53 -0400  (HEAD -> TFG, tag: TFG26j)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
