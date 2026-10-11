@@ -420,7 +420,7 @@ r_phi = [ 5.00, 15.00],
 }
 //________________________________________________________________________________
 Double_t Average(const TString VolName ="FSTW", 
-	     Double_t Zmin   =  -2.00, Double_t Zmax =     1.5,  
+	     Double_t Zmin   =  -1.70, Double_t Zmax =    -0.2,  
 	     Double_t Rmin   =   5.00, Double_t Rmax =   35.00,  
 	     Double_t Phimin = -17.00, Double_t Phimax = 17.00,
 	     TString HistName = "RadlI") {  
@@ -439,8 +439,8 @@ Double_t Average(const TString VolName ="FSTW",
   }
   TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("c1");
   if (c1) c1->Clear();
-  else    c1 = new TCanvas("c1","c1",1800,600);
-  c1->Divide(4,1);
+  else    c1 = new TCanvas("c1","c1",1600,1200);
+  c1->Divide(3,2);
   Int_t iz1 = divider->GetXaxis()->FindBin(Zmin + 1e-2);
   Int_t iz2 = divider->GetXaxis()->FindBin(Zmax - 1e-2);
   Int_t ir1 = divider->GetYaxis()->FindBin(Rmin + 1e-2);
@@ -466,23 +466,31 @@ Double_t Average(const TString VolName ="FSTW",
   histx->Divide(dividerx);
 //   histx->GetXaxis()->SetRange(iz1,iz2);
   c1->cd(1); histx->Draw();
+  TH2 *divideryz = (TH2*) divider->Project3D("yz");
+  TH2 *histyz = (TH2*) hist->Project3D("yz");
+  histyz->Divide(divideryz); histyz->SetMinimum(2e-2);
+  c1->cd(4); histyz->Draw("colz");
   TH1 *dividery = divider->Project3D("y");
-  TH1 *histy = hist->Project3D("y");
+  TH1 *histy = hist->Project3D("y"); 
   histy->Divide(dividery);
 //   histy->GetXaxis()->SetRange(ir1,ir2);
   c1->cd(2); histy->Draw();
+  TH2 *dividerzx = (TH2*) divider->Project3D("zx");
+  TH2 *histzx = (TH2*) hist->Project3D("zx");
+  histzx->Divide(dividerzx);  histzx->SetMinimum(2e-2);
+  c1->cd(5); histzx->Draw("colz");
   TH1 *dividerz = divider->Project3D("z");
   TH1 *histz = hist->Project3D("z");
   histz->Divide(dividerz);
   c1->cd(3); histz->Draw();
-  TH2 *divideryz = (TH2*) divider->Project3D("yz");
-  TH2 *histyz = (TH2*) hist->Project3D("yz");
-  histyz->Divide(divideryz);
+  TH2 *divideryx = (TH2*) divider->Project3D("yx");
+  TH2 *histyx = (TH2*) hist->Project3D("yx");
+  histyx->Divide(divideryx); histyx->SetMinimum(2e-2);
 //   histz->GetXaxis()->SetRange(iphi1,iphi2);
-  c1->cd(4); histyz->Draw("colz");
-  Double_t av = histyz->Integral()/histyz->GetNbinsX()/histyz->GetNbinsY();
-  cout << "Maximum of " << HistName << "yz\t = " << histyz->GetMaximum() << endl;
-  cout << "Average of " << HistName << "yz\t = " << av << endl;
+  c1->cd(6); histyx->Draw("colz");
+  Double_t av = histyx->Integral()/histyx->GetNbinsX()/histyx->GetNbinsY();
+  cout << "Maximum of " << HistName << "yx\t = " << histyx->GetMaximum() << endl;
+  cout << "Average of " << HistName << "yx\t = " << av << endl;
   c1->Update();
   return av;
 }
