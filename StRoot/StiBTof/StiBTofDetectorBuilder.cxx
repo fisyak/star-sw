@@ -69,7 +69,7 @@ void StiBTofDetectorBuilder::useVMCGeometry() {
 				    mat->GetZ(),
 				    mat->GetA(),
 				    mat->GetDensity(),
-				    mat->GetDensity()*mat->GetRadLen(),
+				    mat->GetRadLen(),
 				    PotI));
     matS = *map[i].p;
 #if 0

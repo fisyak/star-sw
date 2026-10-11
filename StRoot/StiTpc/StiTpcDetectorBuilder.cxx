@@ -92,7 +92,7 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 				mat->GetZ(),
 				mat->GetA(),
 				mat->GetDensity(),
-				mat->GetDensity()*mat->GetRadLen(),
+				mat->GetRadLen(),
 				PotI));
 //  Double_t ionization = _gasMat->getIonization();
 //   StiElossCalculator *gasElossCalculator =  new StiElossCalculator(_gasMat->getZOverA(), ionization*ionization,

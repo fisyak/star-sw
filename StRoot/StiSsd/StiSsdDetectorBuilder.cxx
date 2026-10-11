@@ -222,7 +222,7 @@ void StiSsdDetectorBuilder::useVMCGeometry() {
 				    mat->GetZ(),
 				    mat->GetA(),
 				    mat->GetDensity(),
-				    mat->GetDensity()*mat->GetRadLen(),
+				    mat->GetRadLen(),
 				    PotI));
   }
   const VolumeMap_t SsdVolumes[] = { 
