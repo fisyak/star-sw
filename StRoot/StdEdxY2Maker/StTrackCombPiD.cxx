@@ -828,39 +828,41 @@ Double_t StTrackCombPiD::M2BTofSigma(Double_t pL10, Int_t code)  {
 }
 #endif
 //________________________________________________________________________________
-void StTrackCombPiD::SetPDGfromTPC() {
-  Int_t k = kDefaultTpcMethod;
-  if (! fStatus[k]) return;
-  for (Int_t l = kPidElectron; l < fgNparticles; l++) {
-    if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-      //      Int_t p = fgParticles[l].code;
-      fTPCPDG.push_back(GetQ()*fgParticles[l].pdg);
+std::vector<Int_t> StTrackCombPiD::SetPDGfrom(Int_t k) {
+  std::vector<Int_t> pdgVec;
+  if (fStatus[k]) {
+    Int_t lBest = -1;
+    Double_t pullBest = 999;
+    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
+      Double_t pull = TMath::Abs(fStatus[k]->PullC(l));
+      if (pull < pullBest) {
+	pullBest = pull;
+	lBest = l;
+      }
+      if (pull  < fgSigmaCut) {
+	pdgVec.push_back(GetQ()*fgParticles[l].pdg);
+      }
+    }
+    if (pdgVec.size() == 0 && pullBest < 2*fgSigmaCut) {
+      pdgVec.push_back(GetQ()*fgParticles[lBest].pdg);
     }
   }
+  return pdgVec;
+}
+//________________________________________________________________________________
+void StTrackCombPiD::SetPDGfromTPC() {
+  fTPCPDG = SetPDGfrom(kDefaultTpcMethod);
 }
 //________________________________________________________________________________
 void StTrackCombPiD::SetPDGfromTof() {
   for (Int_t k = kBTof; k <= kETof; k++) {
     if (! fStatus[k]) continue;
-    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
-      if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-	//	Int_t p = fgParticles[l].code;
-	fTofPDG.push_back(GetQ()*fgParticles[l].pdg);
-      }
-    }
+    fTofPDG = SetPDGfrom(k);
   }
 }
 //________________________________________________________________________________
 void StTrackCombPiD::SetPDGfromdNdx() {
-  Int_t k = kdNdx;
-  if (fStatus[k]) {
-    for (Int_t l = kPidElectron; l < fgNparticles; l++) {
-      if (TMath::Abs(fStatus[k]->PullC(l)) < fgSigmaCut) {
-	//	Int_t p = fgParticles[l].code;
-	fdNdxPDG.push_back(GetQ()*fgParticles[l].pdg);
-      }
-    }
-  }
+  fdNdxPDG = SetPDGfrom(kdNdx);
 }
 //________________________________________________________________________________
 void StTrackCombPiD::SetPDG() {

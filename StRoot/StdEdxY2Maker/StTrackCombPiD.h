@@ -249,6 +249,7 @@ class StTrackCombPiD : public TObject {
 #endif /* __TFG__VERSION__ */
   void SetCombPiD();
   void SetPDG();
+  std::vector<Int_t> SetPDGfrom(Int_t k);
   void SetPDGfromTPC();
   void SetPDGfromdNdx();
   void SetPDGfromTof();
