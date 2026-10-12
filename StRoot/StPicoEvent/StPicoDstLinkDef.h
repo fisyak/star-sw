@@ -35,4 +35,12 @@
 #pragma link C++ class StPicoHelix+;
 #pragma link C++ class StPicoPhysicalHelix+;
 
+// Schema evolution for the mVtxIndex repacking. Version 1 packed 6 bits of vertex
+// index + 2 bits of track type; version 2 packs 5 + 3, because the track type
+// outgrew two bits. Without this rule an old picoDst decodes wrongly and
+// silently -- a Global track with an odd vertex index reads as BLCVertexConstrained.
+// MUST STAY ON ONE LINE: rootcint in ROOT 5.34 aborts with std::out_of_range if
+// the pragma is split across continuation lines.
+#pragma read sourceClass="StPicoFwdTrack" version="[1]" source="UChar_t mVtxIndex" targetClass="StPicoFwdTrack" target="mVtxIndex" code="{ mVtxIndex = (UChar_t)((((onfile.mVtxIndex >> 2) & 0x1F) << 3) | (onfile.mVtxIndex & 0x03)); }"
+
 #endif
