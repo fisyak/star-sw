@@ -411,6 +411,7 @@ Remove the inner support tubes as it could not be attached to detector.
             <var name="dz"        type="float" />
         </Structure>
 
+
         <!-- ////////////////////////////////////////////////////////////////////////////
                 Fill some variables with actual offsets
                 Fill the structures
@@ -433,7 +434,7 @@ Remove the inner support tubes as it could not be attached to detector.
             <var name="y"        value="0.0" />
             <var name="z"        value="134.0" />
             <var name="rmin"     value="4.1" />
-            <var name="rmax"     value="34.00" />
+            <var name="rmax"     value="33.70" />
             <var name="dz"       value="30.0" />
             <var name="zdisk"    value="{151.750, 165.248, 178.781}" />
         </Fill>
@@ -441,7 +442,7 @@ Remove the inner support tubes as it could not be attached to detector.
         <Fill name="wholewedge" comment="whole wedge shape" >
             <var name="version"  value="1.0" />
             <var name="rmin"     value="5" />
-            <var name="rmax"     value="34" />
+            <var name="rmax"     value="33.7" />
             <var name="phi1"     value="-17" />
             <var name="phi2"     value="17" />
             <var name="dz"       value="4.0/2" />  <!-- cooling tube connect at z=3.018 -->
@@ -835,9 +836,7 @@ Remove the inner support tubes as it could not be attached to detector.
             <Medium    name="standard"      />     <!-- can change medium paramters here -->
             <Attribute for="FSTD" seen="1" colo="1" />
 
-            <!-- Shape will be dynamically sized to include all disks placed -->
-            <!--  not so from the geant 3 version  -->
-            <Shape     type="TUBE" rmin="4.8" rmax="34" dz="5" />
+            <Shape     type="TUBE" dz="5" /><!-- inherit rmin/rmax from FSTM -->
 
             <!-- 12 wedges -->
             <Create block="FTUO" />
