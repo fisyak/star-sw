@@ -1,6 +1,6 @@
 <Document  file="StarVMC/Geometry/SconGeo/SconConfig.xml">
 
-  <Detector name="SCON" comment="Beam Beam Counter configurations"> 
+  <Detector name="SCON" comment="Support Cone configurations"> 
  
     <Modules>SconGeo</Modules>
 
