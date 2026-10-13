@@ -4,6 +4,20 @@ This table summarizes the standard STAR detector geometry tags in `StarVMC/Geome
 
 For each year, the baseline tag is the entry without a trailing letter (for example, `y2015` is the baseline for `y2015a`, `y2015b`, ...). Each later tag row describes what changed relative to that baseline. Non-standard `dev*`, `upgr*`, and experimental variants are omitted.
 
+## Forward tracking geometry aliases
+
+The `StarGeo.xml` file also includes a separate family of forward-tracking aliases with the prefix `ft20...`, such as `ft2022c`, `ft2023c`, `ft2024c`, `ft2025b`, and `ft2026a`. These are not the standard production `y20xxy` tags; they are special tracking-oriented aliases that carry the same year-specific detector stack but explicitly select the forward-tracking variant of the FST geometry.
+
+In practice, these tags mirror the corresponding standard-year production configuration while keeping the forward branch distinct from the regular detector tags. The pattern is:
+
+- `ft2022c` tracks the `y2022c` / `SCON15` detector stack with the forward-tracking geometry variant.
+- `ft2023c` tracks the `y2023c` / `SCON15` detector stack with the forward-tracking geometry variant.
+- `ft2024c` tracks the `y2024c` / `SCON15` detector stack with the forward-tracking geometry variant.
+- `ft2025b` tracks the `y2025b` / `SCON15` detector stack with the forward-tracking geometry variant.
+- `ft2026a` tracks the `y2026a` / `SCON15` detector stack with the forward-tracking geometry variant.
+
+These aliases are used to separate the forward-tracking setup from the main production geometry labels, and they should be read as a special-purpose geometry family rather than as part of the standard yearly alias list.
+
 | Year | Geometry tag | Detector modules / baseline and differences |
 |---|---|---|
 | 2027 | `y2027` | Baseline 2027 geometry: end-of-line placeholder tag with the cave-only setup retained as the current `y2027` configuration. |
