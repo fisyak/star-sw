@@ -53,7 +53,7 @@
 #      endif
   endif
   set input = "./*."${dstype}".root"
-  echo echo "`hostname` $STAR_HOST_SYS $STAR $ROOTSYS"  &gt;&amp; ${log} 
+  echo "`hostname` $STAR_HOST_SYS $STAR $ROOTSYS"  &gt;&amp; ${log} 
   STAR_LEVELS  &gt;&gt;&amp; ${log} 
 #  printenv | sort &gt;&gt;&amp; ${log} 
   root.exe -q -b -x  'kfpAnalysis.C(1000000,"'${input}'","'${output}'","'${year}'",'${idNdx}','${FXT_PV_ReFit}')' &gt;&gt;&amp; ${log}
