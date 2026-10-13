@@ -87,33 +87,7 @@
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
 
-    <Geometry tag="y2026a" comment="STAR production tag y2026a (ident to y2026).">
-    <Construct sys="cave" config="CAVE06"  />
-    <Construct sys="upst" config="UPSTon"  />
-    <Construct sys="shld" config="SHLDon"  />
-    <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
-    <Construct sys="pipe" config="PIPE12ft" />
-    <Construct sys="targ" config="TARGv1b"  /> 
-    <Construct sys="tpce" config="TPCEv61"  />
-    <Construct sys="btof" config="BTOFv8"  />
-    <Construct sys="vpdd" config="VPDD08"  />
-    <Construct sys="calb" config="CALB02"  />
-    <Construct sys="ecal" config="ECALv6"  />
-    <Construct sys="bbcm" config="BBCMin"  />
-    <Construct sys="epdm" config="EPDMv1"  />
-    <Construct sys="magp" config="MAGPon"  />
-    <Construct sys="mutd" config="MUTD16"  />
-    <Construct sys="wcal" config="WCALv1" simu="1" />
-    <Construct sys="hcal" config="HCALv1" simu="1" />
-    <Construct sys="plat" config="PLATon" simu="2" />
-    <Construct sys="pres" config="PRESof" simu="2" /> 
-    <Construct sys="fstm" config="FSTMv1" />
-    <Construct sys="stgm" config="STGCv1" />
-    <Construct sys="etof" config="ETOFv14f"  />
-  </Geometry>
-
-
+  <Geometry tag="y2026a" comment="STAR production tag y2026a (ident to y2026).">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b"  />     <Construct sys="tpce" config="TPCEv61"  />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv2m" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
 
   <Geometry tag="y2025" comment="STAR initial production tag y2025">
     <Construct sys="cave" config="CAVE06"  />
@@ -168,7 +142,7 @@
   </Geometry>
 
 
-  <Geometry tag="y2025b" comment="STAR production tag y2025a (ident to y2025).">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b"  />     <Construct sys="tpce" config="TPCEv61"  />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv1" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
+  <Geometry tag="y2025b" comment="STAR production tag y2025a (ident to y2025).">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b"  />     <Construct sys="tpce" config="TPCEv61"  />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv2m" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
 
 
   <Geometry tag="y2024" comment="STAR initial cut tag y2024">
@@ -249,7 +223,7 @@
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
 
-  <Geometry tag="y2024c" comment="STAR initial production tag y2024">     <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b" />     <Construct sys="tpce" config="TPCEv61" />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv1" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
+  <Geometry tag="y2024c" comment="STAR initial production tag y2024">     <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b" />     <Construct sys="tpce" config="TPCEv61" />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv2m" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
 
 
   <Geometry tag="y2023" comment="STAR initial cut tag y2023">
@@ -330,7 +304,7 @@
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
 
-  <Geometry tag="y2023c" comment="STAR initial production tag y2023">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b" />     <Construct sys="tpce" config="TPCEv61" />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv1" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
+  <Geometry tag="y2023c" comment="STAR initial production tag y2023">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b" />     <Construct sys="tpce" config="TPCEv61" />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="plat" config="PLATon" simu="2" />    <Construct sys="pres" config="PRESof" simu="2" />     <Construct sys="fstm" config="FSTMv2m" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
 
   <Geometry tag="y2022" comment="STAR initial cut tag">
     <!-- Note:  Current version of sTGC has overlaps which are being resolved.  
@@ -410,7 +384,7 @@
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
 
-  <Geometry tag="y2022c" comment="STAR production tag y2022">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b" />     <Construct sys="tpce" config="TPCEv61" />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="fstm" config="FSTMv1" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
+  <Geometry tag="y2022c" comment="STAR production tag y2022">    <Construct sys="cave" config="CAVE06"  />    <Construct sys="upst" config="UPSTon"  />    <Construct sys="shld" config="SHLDon"  />    <Construct sys="zcal" config="ZCALon"  />    <Construct sys="scon" config="SCON15"  />    <Construct sys="pipe" config="PIPE12ft" />    <Construct sys="targ" config="TARGv1b" />     <Construct sys="tpce" config="TPCEv61" />    <Construct sys="btof" config="BTOFv8"  />    <Construct sys="vpdd" config="VPDD08"  />    <Construct sys="calb" config="CALB02"  />    <Construct sys="ecal" config="ECALv6"  />    <Construct sys="bbcm" config="BBCMin"  />    <Construct sys="epdm" config="EPDMv1"  />    <Construct sys="magp" config="MAGPon"  />    <Construct sys="mutd" config="MUTD16"  />    <Construct sys="wcal" config="WCALv1" simu="1" />    <Construct sys="hcal" config="HCALv1" simu="1" />    <Construct sys="fstm" config="FSTMv2m" />    <Construct sys="stgm" config="STGCv1" />    <Construct sys="etof" config="ETOFv14f"  />  </Geometry>
 
 
   <Geometry tag="dev2022m" comment="development tag for the 2022 forward star upgrade (misaligned FST)">
