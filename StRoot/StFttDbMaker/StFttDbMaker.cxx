@@ -75,15 +75,15 @@ int StFttDbMaker::InitRun(int runNumber) {
 // in StFttDb unless setUseDbGeometry(false) was called. Missing tables are not an
 // error -- StFttDb keeps the hardcoded values and says so.
 //
-// Namespace is Geometry/stgc for now. Dmitry: stgc is not a DB namespace and this
-// moves to Geometry/ftt together with the StgmGeo1.xml <Misalign> paths, agreed for
-// October after the GitHub/Gitea migration.
+// Namespace is Geometry/ftt, matching the <Misalign> paths in StgmGeo1.xml and the
+// fttHardwareMap lookup above. Dmitry: stgc is not a DB namespace. Table names are
+// unchanged -- only the namespace moved.
 void StFttDbMaker::setUseDbGeometry( bool v ){ if ( mFttDb ) mFttDb->setUseDbGeometry( v ); }
 
 void StFttDbMaker::loadGeometry(){
-  const char *nm[3] = { "Geometry/stgc/stgcOnTpc",
-                        "Geometry/stgc/stationOnStgc",
-                        "Geometry/stgc/pentOnStation" };
+  const char *nm[3] = { "Geometry/ftt/stgcOnTpc",
+                        "Geometry/ftt/stationOnStgc",
+                        "Geometry/ftt/pentOnStation" };
   St_Survey *t[3] = { 0, 0, 0 };
   for ( int i = 0; i < 3; i++ ) {
     TDataSet *ds = GetDataBase( nm[i] );
