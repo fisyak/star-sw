@@ -19,4 +19,8 @@
 #pragma link C++ enum mtdTypes;
 #pragma link C++ enum eztTypes;
 #pragma link C++ enum NARRAYS;
+
+#pragma link C++ class pair<unsigned int,float>+;
+#pragma link C++ class vector<pair<unsigned int,float>>+;
+#pragma link C++ class map<unsigned int, float>+;
 #endif
