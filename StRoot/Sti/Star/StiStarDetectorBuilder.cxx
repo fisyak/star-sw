@@ -8,15 +8,14 @@
 #include "Sti/StiDetector.h"
 #include "Sti/StiNeverActiveFunctor.h"
 #include "Sti/Star/StiStarDetectorBuilder.h"
+#include "StMessMgr.h"
 #include "TMath.h"
 #include "TError.h"
 #include "TSystem.h"
 //________________________________________________________________________________
 void StiStarDetectorBuilder::buildDetectors(StMaker&s) {
-  /*  TGeoManager *geo = */ StiVMCToolKit::instance()->GetVMC();
-  //  assert(geo);
   useVMCGeometry(); 
-  cout << "StiStarDetectorBuilder::buildDetectors() -I- Done" << endl;
+  LOG_INFO << "StiStarDetectorBuilder::buildDetectors() : Done" << endm;
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::useVMCGeometry() {
@@ -69,7 +68,7 @@ void StiStarDetectorBuilder::useVMCGeometry() {
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::OldBeamPipe() {
-  cout << "StiStarDetectorBuilder::buildDetectors() -I- Use VMC old beam pipe geometry" << endl;
+  LOG_INFO << "StiStarDetectorBuilder::buildDetectors() : Use VMC old beam pipe geometry" << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t PipeVolumes[] = { 
     {"PIPE","the STAR beam pipe mother volume","HALL_1/CAVE_1/PIPE_%d","",""}, // pcon
@@ -98,7 +97,7 @@ void StiStarDetectorBuilder::OldBeamPipe() {
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::HftBeamPipe() {
-  cout << "StiStarDetectorBuilder::buildDetectors() -I- Use VMC HFT beam pipe geometry" << endl;
+  LOG_INFO << "StiStarDetectorBuilder::buildDetectors() : Use VMC HFT beam pipe geometry" << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t PipeVolumes[] = { 
     /* new beam pipe in IDSM
@@ -237,12 +236,6 @@ void StiStarDetectorBuilder::HftBeamPipe() {
     StiMaterial *_pipeMaterial2 = 0;
     Double_t Rmax, Rmin, radius, dZ, Z;
     Int_t Nz = pcon->GetNz();
-#if 0
-    cout << pathT.Data() << "\t" << PipeVolumes[i].name << endl;
-    for (Int_t k = 0; k < Nz; k++) {
-      cout << k << "\tZ\t" << pcon->GetZ(k) << "\tRmin\t" << pcon->GetRmin(k) << "\tRmax\t" << pcon->GetRmax(k) << endl;
-    }    
-#endif
     Int_t section = 0;
     for (Int_t k = 0; k < Nz-1; k++) {// replace pcon by tubes
       dZ  = TMath::Abs(pcon->GetZ(k) - pcon->GetZ(k+1))/2;
@@ -307,7 +300,7 @@ void StiStarDetectorBuilder::HftBeamPipe() {
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::NewSuppCone() {
-  cout << "StiStarDetectorBuilder::buildDetectors() -I- Use VMC Support Cone geometry" << endl;
+  LOG_INFO << "StiStarDetectorBuilder::buildDetectors() : Use VMC Support Cone geometry" << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t PipeVolumes[] = { 
     // cone 
@@ -421,7 +414,7 @@ void StiStarDetectorBuilder::MakePipe(Int_t iflag, const VolumeMap_t *ptube,cons
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::Fgt() {
-  cout << "StiStarDetectorBuilder::Fgt()  -I- " << endl;
+  LOG_INFO << "StiStarDetectorBuilder::Fgt()  : " << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t FgtVolumes[] = { 
     //{"FGTM", "Beampipe support mother","HALL_1/CAVE_1/FGTM_1","",""},
@@ -446,11 +439,12 @@ void StiStarDetectorBuilder::Fgt() {
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::Fst() {
-  cout << "StiStarDetectorBuilder::Fst() -I- " << endl;
+  LOG_INFO << "StiStarDetectorBuilder::Fst() : " << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t FstVolumes[] = { 
     //    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
     {"FTUO", "FST half ring outside wedge container", "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FTUO_1-36","",""},       
+#if 0 /* switch off FSTW */
 #if 1
     {"FSTW", "Whole wedge container",                 "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12","",""},       
 #else
@@ -483,6 +477,7 @@ void StiStarDetectorBuilder::Fst() {
     //    {"FTIH", "Tube segment for FST outer hybrid",                              "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTIH_1",""},
     {"FTUS", "Tube segment for FST silicon",                                   "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTUS_3",""},
 #endif
+#endif /* switch off FSTW */
     {"OFSR", "OFSR Outer support ring for FST",       "HALL_1/CAVE_1/FSTA_1/OFSR_1-2","",""},   
     {"OFSB", "OFSB Outer support bars",               "HALL_1/CAVE_1/FSTA_1/OFSB_1-4","",""},   
     {"OFSD", "outer support",                         "HALL_1/CAVE_1/FSTA_1/OFSD_1-4","",""},   
@@ -505,7 +500,7 @@ void StiStarDetectorBuilder::Fst() {
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::SconWithSVT() {
-  cout << "StiStarDetectorBuilder::SconWithSVT() -I-" << endl;
+  LOG_INFO << "StiStarDetectorBuilder::SconWithSVT() :" << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t SconWithSVTVolumes[] = { 
   //{"SCON", "Support cone mother","HALL_1/CAVE_1/SVTT_1/SCON_1-2/*","",""},
@@ -530,7 +525,7 @@ void StiStarDetectorBuilder::SconWithSVT() {
 }
 //________________________________________________________________________________
 void StiStarDetectorBuilder::SconWithoutSVT() {
-  cout << "StiStarDetectorBuilder::SconWithoutSVT() -I- " << endl;
+  LOG_INFO << "StiStarDetectorBuilder::SconWithoutSVT() : " << endm;
   SetCurrentDetectorBuilder(this);
   const VolumeMap_t SconWithoutSVTVolumes[] = { 
     {"SCON", "Support cone half",                             "HALL_1/CAVE_1/SCOM_1/SCON_1-2","",""},       
