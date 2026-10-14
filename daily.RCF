@@ -20347,3 +20347,16 @@ p(   1,   0,   0) x:   0.001+/- 0.005 y:   0.185+/- 0.264 z: 198.943+/- 0.634 px
    1 massFit  p(   1,   0,   0) x:   0.000+/- 0.003 y:   0.088+/- 0.483 z: 199.064+/- 1.141 px:   1.009+/- 0.027 py:  -0.001+/- 0.029 pz:  -2.137+/- 0.014 p:   2.364+/-  0.009     Alpha Q: 2  chi2/NDF :   77.78/89    p/q in TPC    1.073
  } else if (opt == "alpha1GeV@eta-1.50") {//
     Run1Ev(1, 47,1, 1,-1.50,-1.50, 0, 0, 200, 200, 1,"G"); 
+================================================================================
+10/11/2026
+[cvmfswrite07] ~/work/kfp $ dir -ltr NFS_FileList/*picodst.txt
+...
+Done -rw-r--r--+ 1 starreco rhstar 845K Sep  8 14:41 NFS_FileList/production_19p5GeV_fixedTarget_2020_P25iy_SL25y_picodst.txt
+Done -rw-r--r--+ 1 starreco rhstar 6.4K Sep 17 11:11 NFS_FileList/production_26p5GeV_fixedTarget_2021_P25iy_calib_picodst.txt
+Done -rw-r--r--+ 1 starreco rhstar  13K Sep 17 11:12 NFS_FileList/production_26p5GeV_fixedTarget_2020_P25iy_calib_picodst.txt
+-rw-r--r--+ 1 starreco rhstar  53K Sep 17 11:12 NFS_FileList/production_7p7GeV_2020_P25iy_calib_picodst.txt
+-rw-r--r--+ 1 starreco rhstar 479K Sep 17 11:14 NFS_FileList/production_7p7GeV_2021_P25iy_calib_picodst.txt
+================================================================================
+10/13/2026
+   Check StiDetectorContainer::movein  ?
+   What is  StiKalmanTrack::legal ?

@@ -46,7 +46,7 @@ kill_sig         = SIGINT
 PeriodicRemove   = (NumJobStarts >=1 && JobStatus==1) || (JobStatus == 2 && (CurrentTime - JobCurrentStartDate > (54000)) && ((RemoteUserCpu+RemoteSysCpu)/(CurrentTime-JobCurrentStartDate) < 0.10)) || (((CurrentTime - EnteredCurrentStatus) > (2*24*3600)) && JobStatus == 5) || (JobRunCount >= 1 && JobStatus == 1)
 Priority         = +10
 requirements     = (Microarch == \"x86_64-v4\")
-equest_memory    = 2800M
+request_memory    = 2800M
 GetEnv           = True
 Queue
 ";

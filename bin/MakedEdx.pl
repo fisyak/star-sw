@@ -2924,7 +2924,8 @@ if ($#ARGV >= 0) {
 #$hist = "RunXXVI59";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26i2"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 09/26/2026 new TpcSecRowB
 #$hist = "RunXXVI60";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26i2"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 09/26/2026 new TpcZCorrectionC
 #$hist = "RunXXVI61";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26i2"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 09/27/2026 new TpcSecRowB
-$hist = "RunXXVI62";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26i2"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 09/27/2026 new TpcLengthCorrectionMDN
+#$hist = "RunXXVI62";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26i2"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 09/27/2026 new TpcLengthCorrectionMDN
+$hist = "RunXXVI63";  $NEvents = 5000; $disk = "/gpfs01/star/data100/TPC/reco/"; $RECO = "";  $Production = "TFG26j"; $year = "/2025/RF/*/*/*/"; $FILE = "st"; $STAR_LEVEL = "TFG"; $select = "*";  $keep = 0; $Mode = 2; $macro = "dEdx";# 10/12/2026 check with TFG26j
 ################################################################################
 if ($Year eq "/") {$Year = "2020";}
 my @badruns = ();

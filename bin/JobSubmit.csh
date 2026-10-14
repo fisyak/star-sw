@@ -42,7 +42,9 @@ foreach d (`ls -1d ???/2*`)
 # TFG26f_calib
 #    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daqTFG.xml
 #    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26h.FXT.xml
-    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26i.FXT.xml
+#    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26i.FXT.xml
+#    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26j.FXT.xml
+    /star/nfs4/AFS/star/packages/scripts/sums-submit-beta ~/xml/daq.TFG26k.FXT.xml
     ~/bin/subcondor.csh
   touch Submitted
   cd -
@@ -57,19 +59,21 @@ end
 #================================= Summurizing  ===============================================
 #exit 0;
 @ count = 0
+@ jobs = 0
 foreach done (`ls -1d ???/*/Done`)
   set d = `dirname ${done}`
   cd ${d}; pwd;
   ls -ltr | tail -1 | grep Chain	
   if ($?) then	
-    rm -rf .sl* .al*
-    ln -s ~/macros/.sl* .	
+#    rm -rf .sl* .al*
+#    ln -s ~/macros/.sl* .	
+    rm -rf .al*
     ln -s ~/macros/.al* .	
     root.exe -q -b 'Chain.C+("./*MuDst.root","MuDst")' >&  Chain.log  &
-#    @ count++;  echo "count $count";
+    @ jobs++;  echo "count $jobs";
     root.exe -q -b 'Chain.C+("./*picoDst.root","PicoDst")' >&  PChain.log  &
+    @ jobs++;  echo "count $jobs";
     @ count = `ps au | grep root.exe | wc -l`;   echo "count $count";
-#    @ count++;  echo "count $count";
     if ($count > 120) then 
 #        cd -
 #	break;
@@ -78,7 +82,7 @@ foreach done (`ls -1d ???/*/Done`)
   endif
   cd -;
 end
-if ($count > 0) then
+if ($jobs > 0) then
   sleep 10; 
   touch `grep total ???/2*/Chain.log | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`
   touch `grep total ???/2*/PChain.log | grep -v 'chained 0' | awk 'BEGIN{n= 0; s = 0}{n += $6; s += $10}END{printf("%7.3fM_%fGB\n", n/1.e6,s)}'`P
