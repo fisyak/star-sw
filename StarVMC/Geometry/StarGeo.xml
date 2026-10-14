@@ -111,28 +111,28 @@
   </Geometry>
 
     <Geometry tag="ft2026a" comment="y2026a forward tracking.">         <Construct sys="cave" config="CAVE06"  />
-    <Construct sys="upst" config="UPSTon"  />
-    <Construct sys="shld" config="SHLDon"  />
-    <Construct sys="zcal" config="ZCALon"  />
+    <Construct sys="upst" config="UPSTof"  />
+    <Construct sys="shld" config="SHLDof"  />
+    <Construct sys="zcal" config="ZCALof"  />
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
-    <Construct sys="tpce" config="TPCEv61"  />
-    <Construct sys="btof" config="BTOFv8"  />
+    <Construct sys="tpce" config="TPCEof"  />
+    <Construct sys="btof" config="BTOFof"  />
     <Construct sys="vpdd" config="VPDD08"  />
-    <Construct sys="calb" config="CALB02"  />
-    <Construct sys="ecal" config="ECALv6"  />
+    <Construct sys="calb" config="CALBof"  />
+    <Construct sys="ecal" config="ECALof"  />
     <Construct sys="bbcm" config="BBCMin"  />
     <Construct sys="epdm" config="EPDMv1"  />
-    <Construct sys="magp" config="MAGPon"  />
-    <Construct sys="mutd" config="MUTD16"  />
+    <Construct sys="magp" config="MAGPof"  />
+    <Construct sys="mutd" config="MUTDof"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
     <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
-    <Construct sys="etof" config="ETOFv14f"  />
+    <Construct sys="etof" config="ETOFof"  />
   </Geometry>
 
 
@@ -210,28 +210,28 @@
   </Geometry>
 
     <Geometry tag="ft2025b" comment="y2025b forward tracking geometry">         <Construct sys="cave" config="CAVE06"  />
-    <Construct sys="upst" config="UPSTon"  />
-    <Construct sys="shld" config="SHLDon"  />
-    <Construct sys="zcal" config="ZCALon"  />
+    <Construct sys="upst" config="UPSTof"  />
+    <Construct sys="shld" config="SHLDof"  />
+    <Construct sys="zcal" config="ZCALof"  />
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
-     <Construct sys="tpce" config="TPCEv61"  />
-    <Construct sys="btof" config="BTOFv8"  />
+    <Construct sys="tpce" config="TPCEof"  />
+    <Construct sys="btof" config="BTOFof"  />
     <Construct sys="vpdd" config="VPDD08"  />
-    <Construct sys="calb" config="CALB02"  />
-    <Construct sys="ecal" config="ECALv6"  />
+    <Construct sys="calb" config="CALBof"  />
+    <Construct sys="ecal" config="ECALof"  />
     <Construct sys="bbcm" config="BBCMin"  />
     <Construct sys="epdm" config="EPDMv1"  />
-    <Construct sys="magp" config="MAGPon"  />
-    <Construct sys="mutd" config="MUTD16"  />
+    <Construct sys="magp" config="MAGPof"  />
+    <Construct sys="mutd" config="MUTDof"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
     <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
-    <Construct sys="etof" config="ETOFv14f"  />
+    <Construct sys="etof" config="ETOFof"  />
   </Geometry>
 
 
@@ -338,28 +338,28 @@
   </Geometry>
 
     <Geometry tag="ft2024c" comment="y2024 forward tracking geometry">     <Construct sys="cave" config="CAVE06"  />
-    <Construct sys="upst" config="UPSTon"  />
-    <Construct sys="shld" config="SHLDon"  />
-    <Construct sys="zcal" config="ZCALon"  />
+    <Construct sys="upst" config="UPSTof"  />
+    <Construct sys="shld" config="SHLDof"  />
+    <Construct sys="zcal" config="ZCALof"  />
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
-    <Construct sys="tpce" config="TPCEv61" />
-    <Construct sys="btof" config="BTOFv8"  />
+    <Construct sys="tpce" config="TPCEof" />
+    <Construct sys="btof" config="BTOFof"  />
     <Construct sys="vpdd" config="VPDD08"  />
-    <Construct sys="calb" config="CALB02"  />
-    <Construct sys="ecal" config="ECALv6"  />
+    <Construct sys="calb" config="CALBof"  />
+    <Construct sys="ecal" config="ECALof"  />
     <Construct sys="bbcm" config="BBCMin"  />
     <Construct sys="epdm" config="EPDMv1"  />
-    <Construct sys="magp" config="MAGPon"  />
-    <Construct sys="mutd" config="MUTD16"  />
+    <Construct sys="magp" config="MAGPof"  />
+    <Construct sys="mutd" config="MUTDof"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
     <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
-    <Construct sys="etof" config="ETOFv14f"  />
+    <Construct sys="etof" config="ETOFof"  />
   </Geometry>
 
 
@@ -467,28 +467,28 @@
   </Geometry>
 
     <Geometry tag="ft2023c" comment="y2023 forward tracking geometry">    <Construct sys="cave" config="CAVE06"  />
-    <Construct sys="upst" config="UPSTon"  />
-    <Construct sys="shld" config="SHLDon"  />
-    <Construct sys="zcal" config="ZCALon"  />
+    <Construct sys="upst" config="UPSTof"  />
+    <Construct sys="shld" config="SHLDof"  />
+    <Construct sys="zcal" config="ZCALof"  />
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
-    <Construct sys="tpce" config="TPCEv61" />
-    <Construct sys="btof" config="BTOFv8"  />
+    <Construct sys="tpce" config="TPCEof" />
+    <Construct sys="btof" config="BTOFof"  />
     <Construct sys="vpdd" config="VPDD08"  />
-    <Construct sys="calb" config="CALB02"  />
-    <Construct sys="ecal" config="ECALv6"  />
+    <Construct sys="calb" config="CALBof"  />
+    <Construct sys="ecal" config="ECALof"  />
     <Construct sys="bbcm" config="BBCMin"  />
     <Construct sys="epdm" config="EPDMv1"  />
-    <Construct sys="magp" config="MAGPon"  />
-    <Construct sys="mutd" config="MUTD16"  />
+    <Construct sys="magp" config="MAGPof"  />
+    <Construct sys="mutd" config="MUTDof"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
     <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
-    <Construct sys="etof" config="ETOFv14f"  />
+a    <Construct sys="etof" config="ETOFof"  />
   </Geometry>
 
   <Geometry tag="y2022" comment="STAR initial cut tag">
@@ -593,26 +593,26 @@
   </Geometry>
 
     <Geometry tag="ft2022c" comment="y2022 forward tracking geometry">    <Construct sys="cave" config="CAVE06"  />
-    <Construct sys="upst" config="UPSTon"  />
-    <Construct sys="shld" config="SHLDon"  />
-    <Construct sys="zcal" config="ZCALon"  />
+    <Construct sys="upst" config="UPSTof"  />
+    <Construct sys="shld" config="SHLDof"  />
+    <Construct sys="zcal" config="ZCALof"  />
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
-    <Construct sys="tpce" config="TPCEv61" />
-    <Construct sys="btof" config="BTOFv8"  />
+    <Construct sys="tpce" config="TPCEof" />
+    <Construct sys="btof" config="BTOFof"  />
     <Construct sys="vpdd" config="VPDD08"  />
-    <Construct sys="calb" config="CALB02"  />
-    <Construct sys="ecal" config="ECALv6"  />
+    <Construct sys="calb" config="CALBof"  />
+    <Construct sys="ecal" config="ECALof"  />
     <Construct sys="bbcm" config="BBCMin"  />
     <Construct sys="epdm" config="EPDMv1"  />
-    <Construct sys="magp" config="MAGPon"  />
-    <Construct sys="mutd" config="MUTD16"  />
+    <Construct sys="magp" config="MAGPof"  />
+    <Construct sys="mutd" config="MUTDof"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
-    <Construct sys="etof" config="ETOFv14f"  />
+    <Construct sys="etof" config="ETOFof"  />
   </Geometry>
 
 
