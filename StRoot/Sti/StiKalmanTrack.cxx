@@ -569,9 +569,7 @@
  * Added getTrackRadLength function to return radiation thickness along track (%).
  *
  */
-#include <assert.h>
-// #include <bits/stdc++.h> 
-// using namespace std; 
+#include <cassert>
 //Std
 #include <stdexcept>
 #include <cmath>
@@ -698,17 +696,13 @@ void StiKalmanTrack::setKalmanTrackNodeFactory(Factory<StiKalmanTrackNode>* val)
 //_____________________________________________________________________________
 int StiKalmanTrack::initialize(const std::vector<StiHit*> &hits)
 {
-  //cout << "StiKalmanTrack::initialize() -I- Started"<<endl;
   reset();
-  //StiKalmanTrackNode * node  = 0;
-  //  const StiDetector* detector=0;
   UInt_t nhits = hits.size();
   setSeedHitCount(nhits);
+
   for (UInt_t ihit=0;ihit<nhits;ihit++)
   {
     StiHit *hit = hits[ihit];
-    //    detector = hit->detector();
-    //    assert(detector);
     assert(hit->detector());
     StiKalmanTrackNode * n = trackNodeFactory->getInstance();
     n->initialize(hit);
@@ -724,8 +718,6 @@ int StiKalmanTrack::initialize(const std::vector<StiHit*> &hits)
 int StiKalmanTrack::initialize0(const std::vector<StiHit*> &hits, StiNodePars *firstPars, StiNodePars *lastPars, StiNodeErrs *firstErrs, StiNodeErrs *lastErrs)
 {
   reset();
-  //StiKalmanTrackNode * node  = 0;
-  //  const StiDetector* detector=0;
   UInt_t nhits = hits.size();
   setSeedHitCount(nhits);
 
@@ -1607,12 +1599,7 @@ int StiKalmanTrack::refit()
     StiKalmanTrackNode *worstNode= sTNH.getWorst();
     if (worstNode && worstNode->getChi2()>Chi2HitCut())     
     { //worstNode->getHit()->subTimesUsed();
-#if 0      
-      worstNode->setHit(0); worstNode->setChi2(3e33); 
-      continue;
-#else
       if (ClearWorstHits(nNEnd/20+1)) continue;
-#endif
     }
     if (rejectByHitSet()) { releaseHits()            ;continue;}
     
@@ -1958,9 +1945,6 @@ int StiKalmanTrack::releaseHits(double rMin,double rMax)
   }
   return sum;
 }
-#if __GNUC__ <= 4
-Bool_t StiKalmanTrack_ClearWorstHits_comp(pair<StiKalmanTrackNode *, Double_t> a, pair<StiKalmanTrackNode *, Double_t> b) {  return a.second > b.second;}
-#endif
 //_____________________________________________________________________________
 Int_t StiKalmanTrack::ClearWorstHits(Int_t max) {
   // Clear up to max hits with chi2 > Chi2HitCut()

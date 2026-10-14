@@ -56,12 +56,6 @@ class StiMaker : public StMaker
     StiToolkit * getToolkit();
     void load(TDataSet *);
 
- protected:
-    virtual TDataSet  *FindDataSet (const char* logInput,
-                                    const StMaker *uppMk=0,
-                                    const StMaker *dowMk=0) const ;
-  TDataSet*   fVolume;   //!
-    
  private:
     void  MyClear();
 

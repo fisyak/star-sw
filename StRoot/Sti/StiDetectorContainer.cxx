@@ -1,7 +1,7 @@
 //StiDetectorContainer.cxx
 //M.L. Miller (Yale Software)
 //02/02/01
-#include <assert.h>
+#include <cassert>
 #include <Stiostream.h>
 #include <math.h>
 #include <stdio.h>
@@ -61,7 +61,6 @@ void StiDetectorContainer::initialize()
   for (bIter=_masterDetectorBuilder->begin(); bIter!=_masterDetectorBuilder->end(); ++bIter)
     {
     string name = (*bIter)->getName();
-    //cout << "Detector:"<< name<<endl;
     ULong_t where = name.find("Tpc");
     if (where==name.npos)
       {

@@ -1167,6 +1167,12 @@ StiMaker::Make
 	MakeGlobalTracks
 	  StiKalmanTrackFinder::reset()
 	  StiKalmanTrackFinder::findTracks()
+            StiKalmanTrackFinder::extendSeeds
+              StiLocalTrackSeedFinder::findTrack
+                StiLocalTrackSeedFinder::makeTrack
+                  StiLocalTrackSeedFinder::extendHit
+                    StiDetectorContainer::moveIn 
+
 		 	track = StiCATpcSeedFinder::findTrack
 			StiKalmanTrackFinder::extendTrack(track,rMin);
 				StiKalmanTrackFinder::find(track,kOutsideIn,rMin)

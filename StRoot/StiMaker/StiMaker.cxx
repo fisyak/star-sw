@@ -124,7 +124,6 @@ More detailed: 				<br>
 #include "TDataSet.h"
 #include "TGeometry.h"
 #include "Sti/StiTimer.h"
-#include "Sti/StiDetectorVolume.h"
 #include "StarMagField.h"
 #include "StG2TrackVertexMap.h"
 #include "StTpcDb/StTpcDb.h"
@@ -148,7 +147,6 @@ ClassImp(StiMaker)
 //_____________________________________________________________________________
 StiMaker::StiMaker(const Char_t *name) :
     StMaker(name),
-    fVolume(0),
     _initialized(false),
     _toolkit(0),
     _hitLoader(0),
@@ -588,31 +586,6 @@ Int_t StiMaker::FillPulls()
   k = mPullHits[k]<<(k*3);
   if (k>1000000) return kStSTOP;
   return kStOK;
-}
-//_____________________________________________________________________________
-TDataSet  *StiMaker::FindDataSet (const char* logInput,const StMaker *uppMk,
-                                        const StMaker *dowMk) const
-{
-  TDataSet *ds = StMaker::FindDataSet(logInput,uppMk,dowMk);
-
-  if (ds || strcmp(logInput,"STIGEOM")) return ds;
-
-//  if (!fVolume && _toolkit) ((StiMaker *)this)->fVolume = new StiDetectorVolume(*_toolkit->getDetectorBuilder(), kActive);
-  if (!fVolume && _toolkit) ((StiMaker *)this)->fVolume = new StiDetectorVolume(*_toolkit, TString(), 0);
-
-  if (fVolume) {
-     if (gGeometry) {
-        TList *listOfVolume = gGeometry->GetListOfNodes();
-
-        // Remove hall from the list of ROOT nodes to make it free of ROOT control
-        listOfVolume->Remove(fVolume);
-        listOfVolume->Remove(fVolume);
-     }
-     // Add "hall" into ".const" area of this maker
-     ((StiMaker *)this)->AddConst(fVolume);
-     if (Debug()) fVolume->ls(3);
-  }
-  return fVolume;
 }
 //________________________________________________________________________________
 static Bool_t TrackCompareStatus(const StiTrack *a, const StiTrack *b)

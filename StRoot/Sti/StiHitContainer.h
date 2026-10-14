@@ -94,7 +94,7 @@
 
 #ifndef StiHitContainer_HH
 #define StiHitContainer_HH
-#include <assert.h>
+#include <cassert>
 #include <vector>
 #include <map>
 #include <time.h>
