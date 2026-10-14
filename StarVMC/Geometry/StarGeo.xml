@@ -117,7 +117,7 @@
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
-     <Construct sys="tpce" config="TPCEv61"  />
+    <Construct sys="tpce" config="TPCEv61"  />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -130,7 +130,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -229,7 +229,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -344,7 +344,7 @@
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
-     <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv61" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -357,7 +357,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -473,7 +473,7 @@
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
-     <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv61" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -486,7 +486,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -599,7 +599,7 @@
     <Construct sys="scon" config="SCON15"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
-     <Construct sys="tpce" config="TPCEv61" />
+    <Construct sys="tpce" config="TPCEv61" />
     <Construct sys="btof" config="BTOFv8"  />
     <Construct sys="vpdd" config="VPDD08"  />
     <Construct sys="calb" config="CALB02"  />
@@ -610,7 +610,7 @@
     <Construct sys="mutd" config="MUTD16"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
-    <Construct sys="fstm" config="FSTMv2m" />
+    <Construct sys="fstm" config="FSTMv2sm" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
