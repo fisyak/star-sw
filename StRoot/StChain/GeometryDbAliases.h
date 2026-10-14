@@ -140,7 +140,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 
   {"y2017",       20161215,     0, "y2017",    "y2017 development geometry, AgML,xgeometry"},   
   {"y2017a",      20161215,     1, "y2017a",   "y2017 production  geometry, AgML,xgeometry"},   
-  {"y2017b",      20161215,     1, "y2017b",   "Updated support cone, AgML,xgeometry"},   
+  {"y2017b",      20161215,     2, "y2017b",   "Updated support cone, AgML,xgeometry"},   
 
  
   {"y2018x",      20171215,     0, "y2018x",   "y2018x experimental TPC geometry, AgML,xgeometry"},   
@@ -178,7 +178,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
  { "y2024",       20231210,     0, "y2024",    "y2024 first cut geometry, AgML,xgeometry"},    
  { "y2024a",      20231210,     1, "y2024a",   "y2024a production geometry, AgML,xgeometry"},    
  { "y2024b",      20231210,     2, "y2024b",   "y2024b production geometry (FXT @ 200.0 cm), AgML,xgeometry"},    
- { "y2024c",      20231210,     3, "y2024c",   "y2024b updated support cone, AgML,xgeometry"},    
+ { "y2024c",      20231210,     3, "y2024c",   "y2024c updated support cone, AgML,xgeometry"},    
 
  { "y2025",       20241210,     0, "y2025",    "y2025 first cut geometry, AgML,xgeometry"},
  { "y2025a",      20241210,     1, "y2025a",   "y2025a production (ident w/ y2025), AgML,xgeometry"},     
