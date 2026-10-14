@@ -31,7 +31,7 @@ macro xcuteta  year=y2025z fst=FSTA
   meta 67 -111
   title_g 'STAR Wide Angle Hall ('//[year]'//)  x-cut'
 *  null  -300 300 0 250
-  null  100 200 0 50
+  null  0 200 0 50
   atitle 'Z (cm)' 'Y (cm)'
   dcut hall x 0 0 0 1 1
 *  eta = 0.5    tanl^-1 =  1.91903 
@@ -44,11 +44,11 @@ macro xcuteta  year=y2025z fst=FSTA
 *  eta = -1.5   tanl^-1 = -0.469642
 *  eta = -2     tanl^-1 = -0.275721
 *  eta = -2.5   tanl^-1 = -0.165284
-fun/plot  1.919030*x  0 300 sc
-fun/plot  0.850918*x  0 300 sc
-fun/plot  0.469642*x  0 300 sc
-fun/plot  0.275721*x  0 300 sc
-fun/plot  0.165284*x  0 300 sc
+* fun/plot  1.919030*x  0 300 sc
+* fun/plot  0.850918*x  0 300 sc
+* fun/plot  0.469642*x  0 300 sc
+* fun/plot  0.275721*x  0 300 sc
+* fun/plot  0.165284*x  0 300 sc
 fun/plot -1.919030*(x-200) -300 300 sc
 fun/plot -0.850918*(x-200) -300 300 sc
 fun/plot -0.469642*(x-200) -300 300 sc
