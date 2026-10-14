@@ -7,55 +7,58 @@ For each year, the baseline tag is the entry without a trailing letter (for exam
 | Year | Geometry tag | Detector modules / baseline and differences |
 |---|---|---|
 | 2027 | `y2027` | Baseline 2027 geometry: end-of-line placeholder tag with the cave-only setup retained as the current `y2027` configuration. |
-| 2026 | `y2026` | Baseline 2026 geometry: same production configuration as `y2025`, with the fixed-target geometry (`PIPE12ft` + `TARGv1b`), FST/STGC/ETOF, and the 2026 standard support stack. |
+| 2026 | `y2026` | Baseline 2026 geometry: same as `y2025/y2025a`. |
 | 2026 | `y2026a` | Updated 2026 production geometry: same overall detector layout as `y2026`, but uses the `SCON15` support configuration instead of `SCON14`. |
-| 2025 | `y2025` | Baseline 2025 geometry: TPC + BTOF + barrel/endcap EMC + MTD/forward support in the current first-cut `y2025` configuration. |
+| 2025 | `y2025` | Baseline 2025 geometry.|
 | 2025 | `y2025a` | Same as `y2025`; production geometry alias identical to the 2025 production configuration. |
 | 2025 | `y2025b` | Updated 2025 production geometry: same detector stack as `y2025`, but with the `SCON15` support configuration replacing `SCON14`. |
-| 2024 | `y2024` | Baseline 2024 geometry: TPC + BTOF + barrel/endcap EMC + MTD as the standard 2024 setup. |
+| 2024 | `y2024` | Baseline 2024 geometry. |
 | 2024 | `y2024a` | Same as `y2024`; this is the 2024 production tag in the standard detector layout. |
 | 2024 | `y2024b` | Same as `y2024`, but the 2024 production geometry includes the 200.0 cm FXT option. |
 | 2024 | `y2024c` | Current best 2024 tag: same detector stack as `y2024b`, but with the updated support configuration and the standard production fixed-target setup. |
-| 2023 | `y2023` | Baseline 2023 geometry: TPC + BTOF + barrel/endcap EMC + MTD; standard 2023 detector stack. |
+| 2023 | `y2023` | Baseline 2023 geometry. |
 | 2023 | `y2023a` | Same as `y2023`; first production release for the 2023 configuration. |
 | 2023 | `y2023b` | Same as `y2023a`; production geometry with the 200.0 cm FXT option. |
 | 2023 | `y2023c` | Current best 2023 tag: same production stack as `y2023b`, but with the updated support configuration in the fixed-target setup. |
-| 2022 | `y2022` | Baseline 2022 geometry: TPC + BTOF + barrel/endcap EMC + MTD. |
+| 2022 | `y2022` | Baseline 2022 geometry: Forward tracking and calorimetry added. |
 | 2022 | `y2022a` | Same as `y2022`; production geometry for the 2022 run setup. |
 | 2022 | `y2022b` | Same as `y2022`; production version with the 200.0 cm FXT option. |
 | 2022 | `y2022c` | Current best 2022 tag: same detector stack as `y2022b`, with the updated support configuration for the current production geometry. |
-| 2021 | `y2021` | Baseline 2021 geometry: TPC + BTOF + barrel/endcap EMC + MTD. |
+| 2021 | `y2021` | Baseline 2021 geometry. |
 | 2021 | `y2021a` | Same as `y2021`; first production geometry for 2021. |
 | 2021 | `y2021b` | Same as `y2021`; production geometry with the 200.0 cm FXT option. |
 | 2021 | `y2021c` | Current best 2021 tag: same production stack as `y2021b`, with the updated support configuration. |
-| 2020 | `y2020` | Baseline 2020 geometry: TPC + BTOF + barrel/endcap EMC + MTD. |
+| 2020 | `y2020` | Baseline 2020 geometry. |
 | 2020 | `y2020a` | Same as `y2020`; fast-offline geometry for the 2020 run period. |
 | 2020 | `y2020b` | Same as `y2020`; production geometry with the 200.0 cm FXT option. |
 | 2020 | `y2020c` | Current best 2020 tag: same fixed-target setup as `y2020b`, but using the updated `SCON15` support model. |
-| 2019 | `y2019` | Baseline 2019 geometry: TPC + BTOF + barrel/endcap EMC + MTD for the standard 2019 layout. |
+| 2019 | `y2019` | Baseline 2019 geometry. |
 | 2019 | `y2019a` | Same as `y2019`; first production release geometry. |
 | 2019 | `y2019b` | Same as `y2019a`; 2019 production geometry with the FXT option. |
 | 2019 | `y2019c` | Current best 2019 tag: same fixed-target configuration as `y2019b`, but with the updated `SCON15` support model. |
-| 2018 | `y2018` | Baseline 2018 geometry: TPC + BTOF + barrel/endcap EMC + MTD in the development configuration. |
+| 2018 | `y2018` | Baseline 2018 geometry. |
 | 2018 | `y2018a` | Same as `y2018`; physics production geometry A. |
 | 2018 | `y2018b` | Same as `y2018`; physics production geometry B. |
 | 2018 | `y2018c` | Same as `y2018`; physics production geometry C with the 200.7 cm FXT setup. |
 | 2018 | `y2018d` | Current best 2018 tag: same fixed-target geometry as `y2018c`, with the corrected production support configuration. |
-| 2017 | `y2017` | Baseline 2017 geometry: TPC + BTOF + barrel/endcap EMC + MTD; development geometry for 2017. |
+| 2017 | `y2017` | Baseline 2017 geometry:  HFT removed.  Return to the old support cone. |
 | 2017 | `y2017a` | Same as `y2017`; production geometry for the 2017 run period. |
 | 2017 | `y2017b` | Current best 2017 tag: same production stack as `y2017a`, with the updated support configuration in the current best geometry. |
-| 2016 | `y2016` | Baseline 2016 geometry: TPC + TOF/BTOF + barrel/endcap EMC; development geometry for 2016. |
+| 2016 | `y2016` | Baseline 2016 geometry. |
 | 2016 | `y2016a` | Same as `y2016`; production geometry for the 2016 run period. |
-| 2015 | `y2015` | Baseline 2015 geometry: TPC + TOF/BTOF + barrel/endcap EMC + MTD. |
+| 2016 | `y2016x` | Same as `y2016`; production geometry for the 2016 run period, with misalignment support. |
+| 2015 | `y2015` | Baseline 2015 geometry. |
 | 2015 | `y2015a` | Same as `y2015`; production geometry A. |
 | 2015 | `y2015b` | Same as `y2015`; production geometry with the corrected MTD radii. |
 | 2015 | `y2015c` | Same as `y2015b`; revised MTD radii corrections. |
-| 2015 | `y2015d` | Same as `y2015`; production geometry with the IST overlap correction. |
+| 2015 | `y2015d` | Same as `y2015c`; production geometry with the IST overlap correction. |
+| 2015 | `y2015x` | Same as `y2015c`; production geometry with the IST overlap correction with misalignment support. |
 | 2014 | `y2014` | Baseline 2014 geometry: TPC + TOF/BTOF + barrel/endcap EMC + MTD. |
 | 2014 | `y2014a` | Same as `y2014`; production geometry A. |
-| 2014 | `y2014b` | Same as `y2014`; production geometry B. |
-| 2014 | `y2014c` | Same as `y2014`; production geometry with the IST overlap correction applied. |
-| 2013 | `y2013` | Baseline 2013 geometry: TPC + TOF/BTOF + barrel/endcap EMC + MTD + PIXEL/IST in the first-cut configuration. |
+| 2014 | `y2014b` | Same as `y2014a`; production geometry B. |
+| 2014 | `y2014c` | Same as `y2014b`; production geometry with the IST overlap correction applied. |
+| 2014 | `y2014x` | Same as `y2014b`; production geometry with the IST overlap correction applied with misaligment support. |
+| 2013 | `y2013` | Baseline 2013 geometry: Adds PIXEL/IST in the first-cut configuration. Replace support cone with IDSM.|
 | 2013 | `y2013_1` | Same as `y2013`; pixel-included 2013 geometry. |
 | 2013 | `y2013_2` | Same as `y2013` but without the pixel detector; only the silicon tracker/SSD/IST layout for the no-pixel variant. |
 | 2013 | `y2013_1a` | Same as `y2013_1`; first production geometry with the pixel detector. |
@@ -64,7 +67,7 @@ For each year, the baseline tag is the entry without a trailing letter (for exam
 | 2013 | `y2013_2b` | Same as `y2013_2`; second production no-pixel geometry. |
 | 2013 | `y2013_1c` | Same as `y2013_1`; final 2013 production geometry with the pixel detector. |
 | 2013 | `y2013_2c` | Same as `y2013_2`; final 2013 production no-pixel geometry. |
-| 2012 | `y2012` | Baseline 2012 geometry: TPC + TOF/BTOF + barrel/endcap EMC; MTD not yet included in the preliminary layout. |
+| 2012 | `y2012` | Baseline 2012 geometry. |
 | 2012 | `y2012a` | Same as `y2012`; MTD missing in the preliminary geometry. |
 | 2012 | `y2012b` | Same as `y2012a`; adds the MTD to the 2012 geometry. |
 | 2011 | `y2011` | Baseline 2011 geometry: TPC + TOF/BTOF + barrel/endcap EMC; standard 2011 detector layout. |
