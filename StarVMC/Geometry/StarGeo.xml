@@ -105,7 +105,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2m" />
+    <Construct sys="fstm" config="FSTMv2m" />            <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -130,7 +130,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-    <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />              <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFof"  />
   </Geometry>
@@ -156,8 +156,8 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv1" />
-     <Construct sys="stgm" config="STGCv1" />
+    <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
   <Geometry tag="y2025a" comment="STAR production tag y2025a (ident to y2025).">         <Construct sys="cave" config="CAVE06"  />
@@ -180,8 +180,8 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv1" />
-     <Construct sys="stgm" config="STGCv1" />
+    <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
   <Geometry tag="y2025b" comment="STAR production tag y2025a (ident to y2025).">         <Construct sys="cave" config="CAVE06"  />
@@ -204,7 +204,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2m" />
+    <Construct sys="fstm" config="FSTMv2m" />           <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -229,7 +229,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-    <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />           <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFof"  />
   </Geometry>
@@ -255,7 +255,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv1" />
+    <Construct sys="fstm" config="FSTMv1" />
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -332,7 +332,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2m" />
+    <Construct sys="fstm" config="FSTMv2m" />            <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -357,7 +357,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-    <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />              <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFof"  />
   </Geometry>
@@ -461,7 +461,7 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-     <Construct sys="fstm" config="FSTMv2m" />
+    <Construct sys="fstm" config="FSTMv2m" />              <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -486,9 +486,9 @@
     <Construct sys="hcal" config="HCALv1" simu="1" />
     <Construct sys="plat" config="PLATon" simu="2" />
     <Construct sys="pres" config="PRESof" simu="2" />
-    <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />             <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
-a    <Construct sys="etof" config="ETOFof"  />
+    <Construct sys="etof" config="ETOFof"  />
   </Geometry>
 
   <Geometry tag="y2022" comment="STAR initial cut tag">
@@ -587,7 +587,7 @@ a    <Construct sys="etof" config="ETOFof"  />
     <Construct sys="mutd" config="MUTD16"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
-    <Construct sys="fstm" config="FSTMv2m" />
+    <Construct sys="fstm" config="FSTMv2m" />             <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFv14f"  />
   </Geometry>
@@ -610,7 +610,7 @@ a    <Construct sys="etof" config="ETOFof"  />
     <Construct sys="mutd" config="MUTDof"  />
     <Construct sys="wcal" config="WCALv1" simu="1" />
     <Construct sys="hcal" config="HCALv1" simu="1" />
-    <Construct sys="fstm" config="FSTMv2sm" />
+    <Construct sys="fstm" config="FSTMv2sm" />         <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <Construct sys="etof" config="ETOFof"  />
   </Geometry>
@@ -635,7 +635,7 @@ a    <Construct sys="etof" config="ETOFof"  />
     <Construct sys="epdm" config="EPDMv1"  />
     <Construct sys="magp" config="MAGPon"  />
     <Construct sys="mutd" config="MUTD16"  />
-    <Construct sys="fstm" config="FSTMv1m" />
+    <Construct sys="fstm" config="FSTMv1m" />            <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <!-- Construct sys="etof" config="ETOFv14f"  -->
     <Construct sys="wcal" config="WCALv1" simu="1" />
@@ -663,7 +663,7 @@ a    <Construct sys="etof" config="ETOFof"  />
     <Construct sys="epdm" config="EPDMv1"  />
     <Construct sys="magp" config="MAGPon"  />
     <Construct sys="mutd" config="MUTD16"  />
-    <Construct sys="fstm" config="FSTMv1sm" />
+    <Construct sys="fstm" config="FSTMv1sm" />           <Construct sys="fsto" config="FSTOon"/>
     <Construct sys="stgm" config="STGCv1" />
     <!-- Construct sys="etof" config="ETOFv14f"  -->
     <Construct sys="wcal" config="WCALv1" simu="1" />
