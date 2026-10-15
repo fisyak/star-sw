@@ -294,7 +294,7 @@
       Integer          nEndcap,nFpd,depth,shift,nv
       Integer          itpc/0/,ibtf/0/,ical/0/,ivpd/0/,ieem/0/,isvt/0/,istb/0/
       Integer          ifpd/0/,ifms/0/,ifpdmgeo/0/,ifsc/0/,imtd/0/,ipxl/0/
-      Integer          iist/0/,isst/0/, ifst/0/
+      Integer          iist/0/,isst/0/, ifst/0/, ibbc/0/
       Integer          istVersion/0/,istLayer/0/
       Integer          j	
 *     FPD
@@ -367,6 +367,8 @@
 
       Structure  FSTG { Version }
 
+      Structure BBCG { Version }
+
       Structure  GDAT {real mfscale, char gtag(2)}
 
       logical    first/.true./
@@ -404,6 +406,8 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
           USE  /DETM/ISTD/ISTC  stat=iist
           USE  /DETM/SISD/SSDP  stat=isst
           USE  /DETM/FSTM/FSTG  stat=ifst
+
+          USE /DETM/BBCM/BBCG stat=ibbc
         
           call RBPOPD
 #else /* __STAR_VMC__ *//* __STAR_VMC__ */
@@ -467,6 +471,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 *             print *,'              : ISTB version of code=', ismg_code
              istVersion=ismg_code
           endif
+          if (ibbc>=0) print *,' : BBC version =',bbcg_version
 #ifndef __G2T_VERSION__
 
 #ifndef  __STAR_VMC__
@@ -1087,7 +1092,11 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       else if (Csys=='bbc') then
 * 
 *       BBC has 4 levels: west/east, annulus, triple module, single module
-        volume_id = numbv(1)*1000 + numbv(2)*100 + numbv(3)*10 + numbv(4)    
+        if (bbcg_version.eq.1) then
+            volume_id = numbv(1)*1000 + numbv(2)*100 + numbv(3)*10 + numbv(4)    
+        else if (bbcg_version.eq.2) then
+            volume_id = numbv(1)*1000 + 1*100 + numbv(2)*10 + numbv(3)    
+         endif
 *17*                                 Kai Schweda
       else if (Csys=='pix') then
 #ifdef __STAR_VMC__
