@@ -16,6 +16,9 @@
 #include "TArrayS.h"
 #include "Stiostream.h"
 #include <TRef.h>
+#include <map>
+#include <vector>
+#include <utility>
 
 class StMuFcsCluster;
 
@@ -30,9 +33,7 @@ public:
              float e);
     ~StMuFcsHit();
 
-    virtual void Clear (Option_t * opt=""){
-        mData.Set(0);
-    }
+    virtual void Clear (Option_t * opt="");
     
     unsigned short zs() const;
     unsigned short detectorId() const;
@@ -91,6 +92,9 @@ public:
     const StMuFcsCluster *cluster() const;
     StMuFcsCluster *cluster();
 
+    std::vector<std::pair<unsigned int, float>> getGeantTracks() const;
+    void addGeantTrack(unsigned int id, float e);
+
     void print(Option_t *option="") const;
 
 protected:
@@ -105,8 +109,9 @@ protected:
     // StMuFcsCluster* mCluster=0; // pointer to cluster this hit belongs
     TRef mCluster;
     TArrayS mData=0;         // 12bit ADC values + flag at highest 4 bits, array of timebin
-    
-    ClassDef(StMuFcsHit,2)
+    std::map<unsigned int, float> mGeantIdMap; // parent G2T track id and dE
+
+    ClassDef(StMuFcsHit,3)
 };
 
 ostream& operator<<(ostream&, const StMuFcsHit&);
