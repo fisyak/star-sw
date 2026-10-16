@@ -72,8 +72,6 @@ public:
     void setPlacement(StiPlacement *val);
     void setProperties(std::string name, StiIsActiveFunctor* activeFunctor, StiShape* shape, StiPlacement* placement,
             StiMaterial* gas, StiMaterial* material);
-    void setSplit(StiDetector *gemini);
-    const StiDetector *getSplit() const {return mGemini;}
 
     //action
     //    virtual void build(){}  //for now, build from SCL parsable ascii file
@@ -140,7 +138,6 @@ public:
     int _groupId;
     const StiTrackingParameters * _pars;
     int _key[2];
-    StiDetector *mGemini;
     char mEnd[1];
 };
 
@@ -164,8 +161,4 @@ inline int StiDetector::getKey(int index) const
 return  _key[index-1];
 }
 
-inline void StiDetector::setSplit(StiDetector *gemini)
-{
-  mGemini = gemini; gemini->mGemini= this;
-}
 #endif

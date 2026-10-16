@@ -1270,12 +1270,6 @@ StiDebug::Break(nCall);
     mFP._sinCA   = mgP.sinCA2;
     mFP._cosCA   = mgP.cosCA2;
     ians = locate(); 
-    do {
-      if (ians!=kOutZ)	break;
-      const auto *gemini = getDetector()->getSplit(); 
-      if (!gemini) 	break;
-      ians = 0;
-    } while(0);
     		
     if (!ians ) 	break;
   }
