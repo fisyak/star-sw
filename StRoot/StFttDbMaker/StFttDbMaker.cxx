@@ -78,7 +78,7 @@ int StFttDbMaker::InitRun(int runNumber) {
 // Namespace is Geometry/ftt, matching the <Misalign> paths in StgmGeo1.xml and the
 // fttHardwareMap lookup above. Dmitry: stgc is not a DB namespace. Table names are
 // unchanged -- only the namespace moved.
-void StFttDbMaker::setUseDbGeometry( bool v ){ if ( mFttDb ) mFttDb->setUseDbGeometry( v ); }
+void StFttDbMaker::setUseDbGeometry( bool v ){ mFttDb->setUseDbGeometry( v ); }
 
 void StFttDbMaker::loadGeometry(){
   const char *nm[3] = { "Geometry/ftt/stgcOnTpc",

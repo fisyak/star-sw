@@ -166,16 +166,38 @@ public:
     // t2 adds straight to the z locations, which are already cm.
     //
     // Rows are taken in table order, which is what AGML's <Misalign row="N"/> indexes.
+    /// Choose where the per-quadrant offsets come from. Call before InitRun.
+    /// \param v true (default) = AGML placeholder plus the Geometry/ftt survey
+    ///          tables; false = the original hardcoded numbers.
     void setUseDbGeometry( bool v ) { mUseDbGeometry = v; }
+
+    /// Which source was REQUESTED. \sa geometryFromDb for what actually happened.
     bool useDbGeometry() const      { return mUseDbGeometry; }
-    bool geometryFromDb() const     { return mGeoFromDb; }   // a DB load actually happened
+
+    /// True once survey tables have actually been applied. False means the
+    /// hardcoded numbers are in use, either because setUseDbGeometry(false) was
+    /// called or because the tables were missing.
+    bool geometryFromDb() const     { return mGeoFromDb; }
+
+    /// Put the hardcoded offsets back and clear geometryFromDb().
     void resetGeometryToHardcoded();
+
+    /// Apply the three Geometry/ftt survey tables to the offsets returned by
+    /// xShift(), yShift() and zLoc(). Called by StFttDbMaker::InitRun; there is no
+    /// need to call it directly.
+    /// \param stgcOnTpc      whole-detector placement, 1 row
+    /// \param stationOnStgc  one row per station
+    /// \param pentOnStation  one row per pentagon, indexed 4*station + pent
+    /// \return the number of tables applied, 0 if none were usable
     int  loadGeometryFromDb( St_Survey *stgcOnTpc, St_Survey *stationOnStgc, St_Survey *pentOnStation );
     // The values getGloablOffset*() actually uses. Prefer these over the statics, which
     // are only the placeholder once the DB is in play.
-    double xShift( int quad, int plane ) const { return mXShift[quad][plane]; }  // mm
-    double yShift( int quad, int plane ) const { return mYShift[quad][plane]; }  // mm
-    double zLoc  ( int quad, int plane ) const { return mZLoc  [quad][plane]; }  // cm
+    /// Effective x offset of a quadrant, in mm. \param quad 0..3 \param plane 0..3
+    double xShift( int quad, int plane ) const { return mXShift[quad][plane]; }
+    /// Effective y offset of a quadrant, in mm. \param quad 0..3 \param plane 0..3
+    double yShift( int quad, int plane ) const { return mYShift[quad][plane]; }
+    /// Effective z position of a quadrant, in cm. \param quad 0..3 \param plane 0..3
+    double zLoc  ( int quad, int plane ) const { return mZLoc  [quad][plane]; }
 
     void getGloablOffset( UChar_t plane, UChar_t quad, float &dx, float &sx, float &dy, float &sy, float &dz, float &sz );
     void getGloablOffset_ClusterPoint( UChar_t plane, UChar_t quad, float &dx, float &sx, float &dy, float &sy, float &dz, float &sz );
@@ -204,22 +226,37 @@ public:
     // entry. Hence the RUN STAMP written by script/fttDataWindow_db.C into the spare
     // slot 384 (uuid -1, min = run/10000, max = run%10000), and anchors are used only
     // when StFttDbMaker has confirmed stamp == run being reconstructed.
+    /// Run number the loaded data-window entry was measured for, -1 if the entry
+    /// carries no stamp (the legacy global entry).
     int  dataWindowStampRun() const            { return mDwStampRun; }
+
+    /// Declare whether the loaded anchors may be used. Set by StFttDbMaker once it
+    /// has compared dataWindowStampRun() with the run being reconstructed; do not
+    /// call it from anywhere else.
     void setDataWindowAnchorsValid( bool v )   { mDwAnchorsValid = v; }
+
+    /// True if getAnchor() can return a stored anchor for this run.
     bool dataWindowAnchorsValid() const        { return mDwAnchorsValid; }
     // true, with the anchor, only if anchors are validated for this run AND this VMM
     // has one (anchor -1 in the table = no usable calibration for that VMM)
+    /// Stored dbcid anchor for a hit's VMM.
+    /// \param hit     the raw hit, used only for its VMM id
+    /// \param anchor  set to the stored anchor on success, untouched otherwise
+    /// \return true only if the anchors are valid for this run AND this VMM has one;
+    ///         false means the caller must derive the anchor itself.
     bool getAnchor( StFttRawHit * hit, Short_t &anchor );
     // Forget any previously loaded windows/anchors/stamp. Called before every load so a
     // run whose fetch fails cannot silently keep the previous run's entry.
+    /// Forget the loaded windows, anchors and stamp. Called before every load so a
+    /// failed one cannot leave the previous run's values in place.
     void clearDataWindows() { dwMap.clear(); mDwStampRun = -1; mDwAnchorsValid = false; mDwFallbackWarned = false; }
 
  private:
-  bool   mUseDbGeometry = true;          //! true = placeholder + DB survey tables (default)
-  bool   mGeoFromDb     = false;         //! set once a DB load has actually been applied
-  double mXShift[nQuadPerPlane][nPlane]; //! mm, effective per quadrant/plane
-  double mYShift[nQuadPerPlane][nPlane]; //! mm
-  double mZLoc  [nQuadPerPlane][nPlane]; //! cm
+  bool   mUseDbGeometry = true;          //!< requested source, \sa setUseDbGeometry
+  bool   mGeoFromDb     = false;         //!< true once survey tables were applied
+  double mXShift[nQuadPerPlane][nPlane]; //!< effective x offset per [quad][plane], mm
+  double mYShift[nQuadPerPlane][nPlane]; //!< effective y offset per [quad][plane], mm
+  double mZLoc  [nQuadPerPlane][nPlane]; //!< effective z position per [quad][plane], cm
 
   int   mDbAccess=1;                     //! enable(1) or disabe(0) DB access
   int   mRun=0;                          //! run#
@@ -238,14 +275,14 @@ public:
   TimeCutMode mTimeCutMode = CalibratedBunchCrossingMode;
   int mTimeCutLow  = -65;
   int mTimeCutHigh = 100;
-  bool mDwFallbackWarned = false;  //! warn once per load, not once per hit
+  bool mDwFallbackWarned = false;  //!< getTimeCut() has already warned about a missing entry
 
   std :: map< uint16_t , uint16_t > mMap;
   std :: map< uint16_t , std::vector<uint16_t> > rMap; // reverse map -- a given (row,strip) has one channel per orientation (H and V both exist at the same row/strip in the real hardware map, confirmed by scanning the forward map), so this must hold all of them, not just the last one loaded
   //  data windows map
   std :: map< uint16_t , FttDataWindow > dwMap;
-  int  mDwStampRun = -1;          //! run stamped into the loaded data-window entry, -1 = unstamped
-  bool mDwAnchorsValid = false;   //! set by StFttDbMaker only when the stamp matches the run
+  int  mDwStampRun = -1;          //!< run the loaded entry was measured for, -1 = unstamped
+  bool mDwAnchorsValid = false;   //!< anchors may be used, \sa setDataWindowAnchorsValid
   std :: map< int , Float_t > scMapXY; // strip center map 
   std :: map< int , Float_t > scMapDiag; // strip center map 
   std :: map< int , Float_t > slMapRow1; // strip length map Row1
