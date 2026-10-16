@@ -222,22 +222,29 @@
             <Component name="N"  a="14.00643"       z="7"   w="0.0001" />
         </Mixture>
 
-        <Create block="SCOM"  />
-        <Placement konly="'MANY'" block="SCOM" in="Cave" x="0.0" y="0.0" z="0.0"  >
+        <Create    block="SCOM" />
+        <Placement block="SCOM" in="Cave" x="0.0" y="0.0" z="0.0" konly="MANY" >
+	  <!--
+	      TODO: Apply TPC global position and fst relative to TPC
+	      <Misalign table="Geometry/fst/fstOnTpc"                opts="left,print" />
+	      <Misalign table="Geometry/tpc/TpcPosition"             opts="left,print" />	  
+	  -->
         </Placement>
  
-	<!-- looks like master volume added for cone structure being a very long cone The  
-        <varlist type="REAL"  >
-            ag_phi, ag_dphi, ag_nz, ag_zi(14), ag_rmn(14), ag_rmx(14)
-        </varlist>
-	-->
-	
         <Volume name="SCOM" comment="is supporting cone mother volume">
           <Material name="Air"  />
           <Attribute for="SCOM" seen="0" colo="1"  />
 	  
-	  <Shape type="PCON"  zi="{ -conez(5), -conez(4), -conez(3), -conez(2), -conez(2) , -conez(6), -conez(6), conez(6),  conez(6),  conez(2),  conez(2),  conez(3) ,  conez(4),  conez(5) }" rmn="{coneRi(5), coneRi(4),coneRi(3),coneRi(2),svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin, coneRi(2), coneRi(3), coneRi(4),coneRi(5) }" rmx="{coneRo(5), coneRo(4), coneRo(3), coneRo(2), coneRo(2), coneRo(1), coneRo(1)+0.6, 
-																																														       coneRo(1)+0.6, coneRo(1), coneRo(2), coneRo(2), coneRo(3), coneRo(4), coneRo(5)}" nz="14" phi1="0" dphi="360" />
+	  <Shape type="PCON"  
+		 zi="{ -conez(5), -conez(4), -conez(3), -conez(2), -conez(2) , -conez(6), -conez(6), 
+		        conez(6),  conez(6),  conez(2),  conez(2),  conez(3) ,  conez(4),  conez(5) }" 
+		 rmn="{coneRi(5), coneRi(4),coneRi(3),coneRi(2),svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin,
+		      svtg_RSizeMin,svtg_RSizeMin,svtg_RSizeMin, coneRi(2), coneRi(3), coneRi(4),coneRi(5) }" 
+		 rmx="{coneRo(5), coneRo(4), coneRo(3), coneRo(2), coneRo(2), coneRo(1), coneRo(1)+0.6,coneRo(1)+0.6, 
+		      coneRo(1), coneRo(2), coneRo(2), coneRo(3), coneRo(4), coneRo(5)}" 
+		 nz="14" 
+		 phi1="0" 
+		 dphi="360" />
 	  
           <Create block="SCON"  />
           <Placement block="SCON" in="SCOM" x="0.0" y="0.0" z="0.0" >

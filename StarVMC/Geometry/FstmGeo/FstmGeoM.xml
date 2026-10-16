@@ -832,7 +832,10 @@ to avoid interference. This is equivalent to rotate the middle ring by 180 deg a
 	zcenter = mothervol_z+mothervol_dz
         <Create    block="FSTM" />
         <Placement block="FSTM" in="CAVE" x="0.0" y="0.0" z="zcenter" >
-            <Misalign table="Geometry/fst/fstOnTpc" row="0"/>
+            <Misalign table="Geometry/fst/fstOnTpc" row="0"  opts="print"/><!-- opts="left" probably needed -->
+	    <!-- TODO 
+		 <Misalign table="Geometry/tpc/TpcPosition" opts="left" />
+	    -->
         </Placement>
 
         <!-- FST mother container -->
