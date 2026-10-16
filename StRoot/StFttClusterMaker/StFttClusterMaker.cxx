@@ -10,10 +10,9 @@
  *
  ***************************************************************************/
 #include <vector>
-#include <set>
 #include <map>
 #include <array>
-#include <algorithm>    // std::is_sorted, std::max
+#include <algorithm>
 #include <climits>
 
 #include "StEvent.h"
@@ -159,16 +158,13 @@ StFttClusterMaker::Make()
         if ( kFttHorizontal == so ){
             hStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
-        }
-        if ( kFttVertical   == so ){
+        } else if ( kFttVertical   == so ){
             vStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
-        }
-        if ( kFttDiagonalH   == so ){
+        } else if ( kFttDiagonalH  == so ){
             dhStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
-        }
-        if ( kFttDiagonalV   == so ){
+        } else if ( kFttDiagonalV  == so ){
             dvStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
         }
@@ -183,7 +179,7 @@ StFttClusterMaker::Make()
     // call; the benefit is avoiding the needless insertions and allowing the lookup
     // to take the map by const reference.
     static const std::vector<StFttRawHit*> emptyHits;
-    auto getHits = [&]( const std::map<UChar_t, std::vector<StFttRawHit*>>& m, UChar_t key ) -> const std::vector<StFttRawHit*>& {
+    auto getHits = []( const std::map<UChar_t, std::vector<StFttRawHit*>>& m, UChar_t key ) -> const std::vector<StFttRawHit*>& {
         auto it = m.find( key );
         return it != m.end() ? it->second : emptyHits;
     };
@@ -403,7 +399,7 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
         // a narrow cluster and can come out slightly negative from rounding alone, even
         // though the true variance cannot be. sqrt() of that is NaN, so clamp at zero.
         float var = (m2Sum - m1Sum*m1Sum / m0Sum) / m0Sum;
-        clu->setSigma( sqrt( std::max( var, 0.0f ) ) );
+        clu->setSigma( sqrt( var < 0 ? 0 : var ) );
     } else {
         // No charge accumulated; assign a sentinel rather than NaN from divide-by-zero.
         clu->setX( kNoChargeSentinel );
@@ -416,29 +412,8 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
 std::vector<StFttCluster*> StFttClusterMaker::FindClusters( std::vector< StFttRawHit * > hits ){
     std::vector<StFttCluster*> clusters;
 
-    /* early data (i.e. cosmic data pre dec 10 2021)
-     * had duplicates where the hits are identical except 
-     * a different tb. Tonko fixed at some point
-     * So this could be wrapped in a run range block, but
-     * does no harm.
-     */
-    const bool dedup = false;
-    if ( dedup ){
-        auto cmp = [](StFttRawHit* a, StFttRawHit* b) { 
-            
-            return  a->plane() < b->plane() ||
-                    a->quadrant() < b->quadrant() ||
-                    a->row() < b->row() ||
-                    a->strip() < b->strip() ||
-                    a->orientation() < b->orientation(); 
-        };
-    
-        // NOTE according to SO this is faster than using ctor
-        set<StFttRawHit*, decltype(cmp)> s(cmp);
-        unsigned size = hits.size();
-        for( auto h : hits ) s.insert( h );
-        hits.assign( s.begin(), s.end() );
-    }
+    // No de-duplication here: early cosmic data (pre 2021-12-10) had hits that were
+    // identical except for the timebin, but Tonko fixed that in the DAQ reader.
 
     // Sort the hits by row and strip
     sort(hits.begin(), hits.end(), [](const StFttRawHit * a, const StFttRawHit * b) -> bool { 
