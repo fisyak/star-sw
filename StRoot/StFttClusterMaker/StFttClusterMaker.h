@@ -11,7 +11,6 @@
 
 
 class StFttDb;
-class StEvent;
 class StFttCollection;
 class StFttRawHit;
 class StFttCluster;
@@ -51,7 +50,6 @@ private:
     float GetThresholdFor( StFttRawHit * hit ) { return 0.0;}
     bool PassTimeCut( StFttRawHit * hit );
 
-    StEvent*             mEvent;
     StFttCollection*     mFttCollection;
     int                  mRunYear;
     bool                 mDebug;

@@ -48,7 +48,6 @@ static const float kNoChargeSentinel = -999.0f;
 //_____________________________________________________________
 StFttClusterMaker::StFttClusterMaker( const char* name )
 : StMaker( name ),
-  mEvent( 0 ),          /// pointer to StEvent
   mRunYear( 0 ),        /// year in which the data was taken (switch at 1st Oct)
   mDebug( false ),       /// print out of all full messages for debugging
   mFttDb( nullptr )
@@ -101,13 +100,12 @@ StFttClusterMaker::Finish()
 Int_t
 StFttClusterMaker::Make()
 { 
-    mEvent = (StEvent*)GetInputDS("StEvent");
-    if(mEvent) {
-    } else {
+    StEvent *event = (StEvent*)GetInputDS("StEvent");
+    if(!event) {
         LOG_WARN<<"No StEvent!"<<endm;
         return kStWarn;
     }
-    mFttCollection=mEvent->fttCollection();
+    mFttCollection=event->fttCollection();
     if(!mFttCollection) {
         LOG_WARN << "No StFttCollection" << endm;
         return kStOk;
