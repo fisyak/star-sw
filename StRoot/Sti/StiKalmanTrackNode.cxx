@@ -1121,6 +1121,7 @@ StiDebug::Break(nCall);
   }
    
   position = propagate(endVal,shapeCode,dir); 
+  if (debug() & 64) cout << "StiKalmanTrackNode::propagate to " << endVal << " with code = " << position << endl;
 //		if out of the volume but is not active, ignore it(VP)
   if (position>=kOutX && position<=kOutX && !tDet->isActive()) position=0;
   if (position) return position;
@@ -1536,6 +1537,9 @@ static int nCall=0; nCall++;
     mPP() = mFP; mPE() = mFE;
     return;
   }
+  double z      = TMath::Abs(StiTrack::getCharge());
+  double z2 = z*z;
+  pt     *= z;
   double relRadThickness;
   // Half path length in previous node
   double pL1,pL2,pL3,d1,d2,d3,dxEloss=0;
@@ -1560,12 +1564,12 @@ static int nCall=0; nCall++;
   const StiDetector 		*preDet = previousNode->getDetector();
   const StiMaterial 		*preMat = preDet->getMaterial();
   const StiElossCalculator	*preLos = preMat->getElossCalculator();
-  d1 =(preLos) ? preLos->calculate(1.,m, beta2):0;
+  d1 =(preLos) ? preLos->calculate(z2,m, beta2):0;
   x0p = preMat->getX0();
 
   const StiMaterial 		*curMat = tDet->getMaterial();
   const StiElossCalculator	*curLos = curMat->getElossCalculator();
-  d3 =(curLos) ? curLos->calculate(1.,m, beta2):0;
+  d3 =(curLos) ? curLos->calculate(z2,m, beta2):0;
   x0 = curMat->getX0();
   double sign = (mgP.dx>0)? 1:-1;
 
@@ -1573,14 +1577,14 @@ static int nCall=0; nCall++;
   const StiMaterial		*gasMat = (sign>0)? tDet->getGas() : preDet->getGas();
   x0Gas = gasMat->getX0();
   const StiElossCalculator	*gasLos = gasMat->getElossCalculator();
-  d2 =(gasLos) ? gasLos->calculate(1.,m, beta2):0;
+  d2 =(gasLos) ? gasLos->calculate(z2,m, beta2):0;
 
   pL2=pL2-pL1-pL3; if (pL2<0) pL2=0;
   relRadThickness = pL1/x0p+pL2/x0Gas+pL3/x0;
   dxEloss         =  d1*pL1+ d2*pL2  + d3*pL3;
 
   //cout << " m2:"<<m2<<" p2:"<<p2<<" beta2:"<<beta2;
-  double theta2=mcs2(relRadThickness,beta2,p2);
+  double theta2=z2*mcs2(relRadThickness,beta2,p2);
   //cout << " theta2:"<<theta2;
   double pti = mFP.ptin(), tanl = mFP.tanl(); 
   
