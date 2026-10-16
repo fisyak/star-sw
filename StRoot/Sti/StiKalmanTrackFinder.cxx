@@ -261,7 +261,7 @@ int StiKalmanTrackFinder::extendTrack(StiKalmanTrack *track,double rMin)
   // invoke tracker to find or extend this track
   //cout <<"StiKalmanTrack::find(int) -I- Outside-in"<<endl;
   {
-    if (debug()) cout << "StiKalmanTrack::find kOutsideIn " << *((StiTrack *) track);
+    if (debug()) cout << "StiKalmanTrackFinder::extendTrack  kOutsideIn " << *((StiTrack *) track);
     trackExtended = find(track,kOutsideIn,rMin);
     if (trackExtended){/* in CA case not extended is ok*/}
     if (debug()) cout << "StiKalmanTrack::refit " << endl;
@@ -448,19 +448,16 @@ static int nCall=0; nCall++;
 }
 //______________________________________________________________________________
 void StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction
-                              ,StiKalmanTrackNode *leadNode,QAFind &qa) 
+				,StiKalmanTrackNode *leadNode,QAFind &qa) 
 {
-static int nCall=0; nCall++;
-
-static const double degToRad = 3.1415927/180.;
-static const double radToDeg = 180./3.1415927;
-static const double ref1  = 50.*degToRad;
-//static  const double ref2  = 2.*3.1415927-ref1;
-static  const double ref1a  = 110.*degToRad;
-assert(direction || leadNode==track->getLastNode());
-
-
-
+  static int nCall=0; nCall++;
+  
+  static const double degToRad = 3.1415927/180.;
+  static const double radToDeg = 180./3.1415927;
+  static const double ref1  = 50.*degToRad;
+  //static  const double ref2  = 2.*3.1415927-ref1;
+  static  const double ref1a  = 110.*degToRad;
+  assert(direction || leadNode==track->getLastNode());
   //  const double ref2a  = 2.*3.1415927-ref1a;
   gLevelOfFind++;
   --mEventPerm;
@@ -473,14 +470,14 @@ assert(direction || leadNode==track->getLastNode());
   }
 #endif /* ! __TFG__VERSION__ */
   if (--mTrackPerm==0) { mUseComb = 0; }
-
+  
   StiDetector *tDet=0;
   int status;
   StiKalmanTrackNode testNode;
   int position;
   StiHit * stiHit;
   double  leadRadius;
-
+  
   const StiDetector *leadDet = leadNode->getDetector();
   leadRadius = leadDet->getPlacement()->getLayerRadius();
   assert(leadRadius>0 && leadRadius<1000);
@@ -491,182 +488,182 @@ assert(direction || leadNode==track->getLastNode());
   double projAngle = atan2(yg,xg);
   StiHit *leadHit = leadNode->getHit();
   
-  if(debug() > 2)cout << "Projection Angle:"<<projAngle*180/3.1415<<endl;
-    
+  if(debug() > 2) cout << "Projection Angle:"<<projAngle*180/3.1415<<endl;
+  
   vector<StiDetectorNode*>::const_iterator layer;
   vector<StiDetectorNode*>::const_reverse_iterator rlayer;
-
+  
   if ((!direction)) {
-    if (debug() > 2) cout <<endl<< "out-in"<<endl;
+    if (debug() > 2) cout <<  "out-in"<<endl;
     rlayer=_detectorContainer->rbeginRadial(leadDet); rlayer++;
   } else {
-    if (debug() > 2) cout <<endl<< "in-out"<<endl;
+    if (debug() > 2) cout << "in-out"<<endl;
     layer=_detectorContainer->beginRadial(leadDet);    layer++;
   }
-
-  if (debug() > 2) cout <<endl<< "lead node:" << *leadNode<<endl<<"lead det:"<<*leadDet<<endl;
-
   
   while (((!direction)? rlayer!=_detectorContainer->rendRadial() : layer!=_detectorContainer->endRadial()))
-  {do{//technical do
-    vector<StiDetectorNode*>::const_iterator sector;
-    vector<StiDetector*> detectors;
-    if (debug() > 2) cout << endl<<"lead node:" << *leadNode<<endl<<" lead det:"<<*leadDet;
-
-      //find all relevant detectors to visit.
-    sector = (!direction)? _detectorContainer->beginPhi(rlayer):_detectorContainer->beginPhi(layer);
-    for ( ; (!direction)? sector!=_detectorContainer->endPhi(rlayer):sector!=_detectorContainer->endPhi(layer); ++sector)
-    {
-       StiDetector * detector = (*sector)->getData();
-       if (detector == leadDet) continue;
-       double angle  = detector->getPlacement()->getLayerAngle();
-       double radius = detector->getPlacement()->getLayerRadius();
-       if (radius < qa.rmin()) {gLevelOfFind--; qa.setQA(-4);return;}
-       double diff = radius-leadRadius;if (!direction) diff = -diff;
-       if (diff<-1e-6 && debug()>3) {
-          LOG_DEBUG << Form("TrackFinder: Wrong order: (%s).(%g) and (%s).(%g)"
-	  ,leadDet->getName().c_str(),leadRadius 
-	  ,detector->getName().c_str(),radius) << endm;
-       }
-       
-       
-       Int_t shapeCode = detector->getShape()->getShapeCode();
-       Double_t OpenAngle = ref1;
-       if (shapeCode >= kCylindrical) {
-	 OpenAngle = ((StiCylindricalShape *) detector->getShape())->getOpeningAngle();
-       } else {
-	 if (radius <= 50 )  OpenAngle = ref1a;
-       }
-       diff = projAngle-angle;
-       if (diff >  M_PI) diff -= 2*M_PI;
-       if (diff < -M_PI) diff += 2*M_PI;
-       if (fabs(diff) > OpenAngle)	continue;
-       detectors.push_back(detector);
-    }
-
-//		list of detectors candidates created
-    int nDets = detectors.size(); 
-    if (!nDets) continue;
-//             and sorted by Phi angle
-    if (nDets>1) sort(detectors.begin(),detectors.end(),CloserAngle(projAngle) );
-
-//		There is additional loop. 1st loop for active only, second for non active
-    int foundInDetLoop = 0;
-    for (int nowActive=1; nowActive>=0; nowActive--) { //Additional activeNonActive loop
-
-    for (vector<StiDetector*>::const_iterator d=detectors.begin();d!=detectors.end();++d)
-    {
-      tDet = *d;
-      if ((tDet->isActive() != nowActive)) continue;
-      if (debug() > 2) {
-	cout << endl<< "target det:"<< *tDet;
-	cout << endl<< "lead angle:" << projAngle*radToDeg 
-	     <<" this angle:" << radToDeg*(*d)->getPlacement()->getNormalRefAngle()<<endl;
-      }
-      //begin tracking here...
-      testNode.reduce();testNode.reset();
-      testNode.setChi2(1e55);
-      position = testNode.propagate(leadNode,tDet,direction);
-      if (position) { 
-	continue; //  missed, will try the next available volume on this layer
-      }
-      testNode.setDetector(tDet);
-      foundInDetLoop = 2016;
-      int active = tDet->isActive(testNode.getY(),testNode.getZ());
-
-      double maxChi2 = tDet->getTrackingParameters()->getMaxChi2ForSelection();
-
-      StiHitContino hitCont;
-
-      if (active) {
-
-	if (debug() > 2)cout<<" search hits";
-	// active detector may have a hit
-	vector<StiHit*> & candidateHits = _hitContainer->getHits(testNode);//,true);
-	vector<StiHit*>::iterator hitIter;
-	for (hitIter=candidateHits.begin();hitIter!=candidateHits.end();++hitIter)
-	{
-	  stiHit = *hitIter;
-          if (leadHit == stiHit) 				continue;
-          if (leadHit && leadHit->stHit()==stiHit->stHit())	continue;
-          if (!track->legal(stiHit))				continue;
-
-          status = testNode.nudge(stiHit);
-          testNode.setReady();
-          if (status)		continue;
-	  chi2 = testNode.evaluateChi2(stiHit);
-	  if (chi2>maxChi2) 	continue;
-#if 0
-	  // Aligment part
-	  if (DoAlignment()) {
-	    UInt_t sector = track->getTpcSector();
-	    if (sector) {
-	      const StTpcHit *tpcHit = dynamic_cast<const StTpcHit *>(stiHit->stHit());
-	      if (tpcHit && tpcHit->sector() != sector) continue;
+    {do{//technical do
+	vector<StiDetectorNode*>::const_iterator sector;
+	vector<StiDetector*> detectors;
+	if (debug() > 2) cout << "lead node:" << *leadNode << "lead det:"<<*leadDet<<endl;
+	
+	//find all relevant detectors to visit.
+	sector = (!direction)? _detectorContainer->beginPhi(rlayer):_detectorContainer->beginPhi(layer);
+	for ( ; (!direction)? sector!=_detectorContainer->endPhi(rlayer):sector!=_detectorContainer->endPhi(layer); ++sector)
+	  {
+	    StiDetector * detector = (*sector)->getData();
+	    if (detector == leadDet) continue;
+	    double angle  = detector->getPlacement()->getLayerAngle();
+	    double radius = detector->getPlacement()->getLayerRadius();
+	    if (radius < qa.rmin()) {gLevelOfFind--; qa.setQA(-4);return;}
+	    double diff = radius-leadRadius;if (!direction) diff = -diff;
+	    if (diff<-1e-6 && debug()>3) {
+	      LOG_ERROR << Form("TrackFinder: Wrong order: (%s).(%g) and (%s).(%g)"
+				,leadDet->getName().c_str(),leadRadius 
+				,detector->getName().c_str(),radius) << endm;
 	    }
+       
+       
+	    Int_t shapeCode = detector->getShape()->getShapeCode();
+	    Double_t OpenAngle = ref1;
+	    if (shapeCode >= kCylindrical) {
+	      OpenAngle = ((StiCylindricalShape *) detector->getShape())->getOpeningAngle();
+	    } else {
+	      if (radius <= 50 )  OpenAngle = ref1a;
+	    }
+	    diff = projAngle-angle;
+	    if (diff >  M_PI) diff -= 2*M_PI;
+	    if (diff < -M_PI) diff += 2*M_PI;
+	    if (fabs(diff) > OpenAngle)	continue;
+	    if (debug() > 2) cout <<"add  det:" << *detector << endl;
+	    detectors.push_back(detector);
 	  }
-#endif
-	  hitCont.add(stiHit,chi2,testNode.getDeterm());
-	  if (debug() > 2) cout << " hit selected"<<endl;
-	}// for (hitIter)
-      }//if(active)
-
-      int nHits = hitCont.getNHits();
-
-      testNode.setHitCand(nHits);
-      if (direction) {
-        nHits=1;
-      } else {
-        int flg = (testNode.getX()< kMinRadTpc)? mUseComb &3:mUseComb>>2;
-        if ((flg&2) || !nHits) 	nHits++;
-        if ((flg&1)==0) 	nHits=1;
-        
-      }
-
-      QAFind qaBest(qa),qaTry;
-      for (int jHit=0;jHit<nHits; jHit++)
-      {//Loop over Hits
-        stiHit = hitCont.getHit(jHit);
-	StiKalmanTrackNode * node = _trackNodeFactory->getInstance();
-	*node = testNode;
-        status = 0;
-        do {//fake do
-          if (!stiHit) break;
-          node->setIHitCand(jHit);
-          node->setHit(stiHit);
-          status = node->updateNode();
-          if (status)  break; 
-	  node->setChi2(hitCont.getChi2(jHit));
-          if (!direction && node->getX()< kMinRadTpc) node->saveInfo(); //Save info for pulls 
-	  if (debug() > 0) node->PrintpT("find");
-        }while(0);
-        if (status)  {_trackNodeFactory->free(node); continue;}
-
-        qaTry = qa;
-	track->add(node,direction,leadNode);
-        nodeQA(node,position,active,qaTry);
-	find(track,direction,node,qaTry);
+	
+	//		list of detectors candidates created
+	int nDets = detectors.size(); 
+	if (!nDets) continue;
+	//             and sorted by Phi angle
+	if (nDets>1) sort(detectors.begin(),detectors.end(),CloserAngle(projAngle) );
+	
+	//		There is additional loop. 1st loop for active only, second for non active
+	int foundInDetLoop = 0;
+	for (int nowActive=1; nowActive>=0; nowActive--) { //Additional activeNonActive loop
+	  
+	  for (vector<StiDetector*>::const_iterator d=detectors.begin();d!=detectors.end();++d)
+	    {
+	      tDet = *d;
+	      if ((tDet->isActive() != nowActive)) continue;
+	      if (debug() > 2) {
+		cout << "target det:"<< *tDet << endl;
+		if (debug() > 3) {
+		  cout << "lead angle:" << projAngle*radToDeg 
+		       <<" this angle:" << radToDeg*tDet->getPlacement()->getNormalRefAngle()<< " radius: " << tDet->getPlacement()->getNormalRadius() << endl;
+		}
+	      }
+	      //begin tracking here...
+	      testNode.reduce();testNode.reset();
+	      testNode.setChi2(1e55);
+	      position = testNode.propagate(leadNode,tDet,direction);
+	      if (position) { 
+		continue; //  missed, will try the next available volume on this layer
+	      }
+	      testNode.setDetector(tDet);
+	      foundInDetLoop = 2016;
+	      int active = tDet->isActive(testNode.getY(),testNode.getZ());
+	      
+	      double maxChi2 = tDet->getTrackingParameters()->getMaxChi2ForSelection();
+	      
+	      StiHitContino hitCont;
+	      
+	      if (active) {
+		
+		if (debug() > 2)cout<<" search hits";
+		// active detector may have a hit
+		vector<StiHit*> & candidateHits = _hitContainer->getHits(testNode);//,true);
+		vector<StiHit*>::iterator hitIter;
+		for (hitIter=candidateHits.begin();hitIter!=candidateHits.end();++hitIter)
+		  {
+		    stiHit = *hitIter;
+		    if (leadHit == stiHit) 				continue;
+		    if (leadHit && leadHit->stHit()==stiHit->stHit())	continue;
+		    if (!track->legal(stiHit))				continue;
+		    
+		    status = testNode.nudge(stiHit);
+		    testNode.setReady();
+		    if (status)		continue;
+		    chi2 = testNode.evaluateChi2(stiHit);
+		    if (chi2>maxChi2) 	continue;
 #if 0
-	if (debug()) {
-	  if (node->getDetector()) 
-	    StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));
-	  else 
-	    StiKalmanTrackNode::ResetComment("Vx                            ");
-	  node->PrintpT("H "); StiKalmanTrackNode::PrintStep();
-	}
+		    // Aligment part
+		    if (DoAlignment()) {
+		      UInt_t sector = track->getTpcSector();
+		      if (sector) {
+			const StTpcHit *tpcHit = dynamic_cast<const StTpcHit *>(stiHit->stHit());
+			if (tpcHit && tpcHit->sector() != sector) continue;
+		      }
+		    }
 #endif
-        if (jHit==0) { qaBest=qaTry; continue;}
-        int igor = qaBest.compQA(qaTry);
-        if (igor<0)  { leadNode->remove(0);}
-        else         { leadNode->remove(1);qaBest=qaTry;}
-      }
-      qa = qaBest; gLevelOfFind--; qa.setQA(-4); return;
-    }//End Detectors
-    if (foundInDetLoop) break;		//activeNonActive
-    } //End of activeNonActive loop;
-  }while(0);
-  if(!direction){++rlayer;}else{++layer;}}
-//end layers
+		    hitCont.add(stiHit,chi2,testNode.getDeterm());
+		    if (debug() > 2) cout << " hit selected"<<endl;
+		  }// for (hitIter)
+	      }//if(active)
+	      
+	      int nHits = hitCont.getNHits();
+
+	      testNode.setHitCand(nHits);
+	      if (direction) {
+		nHits=1;
+	      } else {
+		int flg = (testNode.getX()< kMinRadTpc)? mUseComb &3:mUseComb>>2;
+		if ((flg&2) || !nHits) 	nHits++;
+		if ((flg&1)==0) 	nHits=1;
+		
+	      }
+
+	      QAFind qaBest(qa),qaTry;
+	      for (int jHit=0;jHit<nHits; jHit++)
+		{//Loop over Hits
+		  stiHit = hitCont.getHit(jHit);
+		  StiKalmanTrackNode * node = _trackNodeFactory->getInstance();
+		  *node = testNode;
+		  status = 0;
+		  do {//fake do
+		    if (!stiHit) break;
+		    node->setIHitCand(jHit);
+		    node->setHit(stiHit);
+		    status = node->updateNode();
+		    if (status)  break; 
+		    node->setChi2(hitCont.getChi2(jHit));
+		    if (!direction && node->getX()< kMinRadTpc) node->saveInfo(); //Save info for pulls 
+		    if (debug() > 0) node->PrintpT("find");
+		  }while(0);
+		  if (status)  {_trackNodeFactory->free(node); continue;}
+		  
+		  qaTry = qa;
+		  track->add(node,direction,leadNode);
+		  nodeQA(node,position,active,qaTry);
+		  find(track,direction,node,qaTry);
+#if 0
+		  if (debug()) {
+		    if (node->getDetector()) 
+		      StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));
+		    else 
+		      StiKalmanTrackNode::ResetComment("Vx                            ");
+		    node->PrintpT("H "); StiKalmanTrackNode::PrintStep();
+		  }
+#endif
+		  if (jHit==0) { qaBest=qaTry; continue;}
+		  int igor = qaBest.compQA(qaTry);
+		  if (igor<0)  { leadNode->remove(0);}
+		  else         { leadNode->remove(1);qaBest=qaTry;}
+		}
+	      qa = qaBest; gLevelOfFind--; qa.setQA(-4); return;
+	    }//End Detectors
+	  if (foundInDetLoop) break;		//activeNonActive
+	} //End of activeNonActive loop;
+      }while(0);
+      if(!direction){++rlayer;}else{++layer;}}
+  //end layers
   gLevelOfFind--;qa.setQA(-4);
   return;
 }

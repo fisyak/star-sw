@@ -188,7 +188,7 @@ void StiDetectorTreeBuilder::loopOnDetectors()
       //mDetectorBuilder->fillNext(layer);
       StiDetector* detector = mDetectorBuilder->next();
       assert(detector);
-      detector->build();
+      //      detector->build();
       addToTree(detector);
       // add to by-name map
     }

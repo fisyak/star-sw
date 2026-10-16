@@ -21,7 +21,6 @@ using std::binary_search;
 #include "Sti/StiDetectorContainer.h"
 ostream& operator<<(ostream&, const NameMapKey&);
 ostream& operator<<(ostream*, const StiDetector&);
-
 //______________________________________________________________________________
 StiDetectorContainer::StiDetectorContainer(const string & name,
                                            const string & description,
@@ -147,7 +146,11 @@ being 'movedIn' from.  Therefore, a call to moveIn() usually need not be
 followed by a call to movePlusPhi() or moveMinusPhi(), except in cases of
 extreme assymetry, such as navigation through the Silicon Vertex Tracker.
 */
+#if 0
+bool StiDetectorContainer::moveIn(double phiCut, double zCut, double rMin)
+#else
 bool StiDetectorContainer::moveIn()
+#endif
 {
 
   //remember where we started:

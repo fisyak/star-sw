@@ -444,7 +444,7 @@ void StiStarDetectorBuilder::Fst() {
   const VolumeMap_t FstVolumes[] = { 
     //    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
     {"FTUO", "FST half ring outside wedge container", "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FTUO_1-36","",""},       
-#if 0 /* switch off FSTW */
+#if 1 /* switch off FSTW */
 #if 1
     {"FSTW", "Whole wedge container",                 "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12","",""},       
 #else

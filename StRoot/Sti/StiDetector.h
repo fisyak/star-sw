@@ -76,7 +76,7 @@ public:
     const StiDetector *getSplit() const {return mGemini;}
 
     //action
-    virtual void build(){}  //for now, build from SCL parsable ascii file
+    //    virtual void build(){}  //for now, build from SCL parsable ascii file
 
     virtual void copy(StiDetector &detector);
     

@@ -57,18 +57,21 @@ void StiDetector::copy(StiDetector &detector){
  
 //______________________________________________________________________________
 ostream& operator<<(ostream& os, const StiDetector& d) {
-  Double_t xyzD[2] = {0};
+  os   << Form("%25s",d.getName().c_str());
   const StiShape *shape = d.getShape();
   const StiPlacement *place = d.getPlacement();
-  if (shape->getShapeCode() == kPlanar) {
-    xyzD[0] = place->getNormalRadius()*TMath::Cos(place->getNormalRefAngle());
-    xyzD[1] = place->getNormalRadius()*TMath::Sin(place->getNormalRefAngle()) + place->getNormalYoffset();
+  if (shape && place) {
+    Double_t xyzD[2] = {0};
+    if (shape->getShapeCode() == kPlanar) {
+      xyzD[0] = place->getNormalRadius()*TMath::Cos(place->getNormalRefAngle());
+      xyzD[1] = place->getNormalRadius()*TMath::Sin(place->getNormalRefAngle()) + place->getNormalYoffset();
+    }
+    os   << Form(" xy %7.2f %7.2f", xyzD[0], xyzD[1])
+	 << "\t" << *d.getPlacement()
+	 << "\t" << *d.getShape()
+	 << "\tMat:" << *d.getMaterial()
+	 << "\tGas:" << *d.getGas();
   }
-  os   << Form("%25s xy %7.2f %7.2f",d.getName().c_str(), xyzD[0], xyzD[1])
-       << "\t" << *d.getPlacement()
-       << "\t" << *d.getShape()
-       << "\tMat:" << *d.getMaterial()
-       << "\tGas:" << *d.getGas();
   return os;
 }
 //______________________________________________________________________________
@@ -77,8 +80,6 @@ void StiDetector::Print(const char *opt) const {
   if (! Opt.Contains("TGeo",TString::kIgnoreCase)) {
     cout << *this << endl;
   } else {
-//     Int_t imat = gGeoManager->GetListOfMaterials()->GetEntries();
-//     Int_t imed = gGeoManager->GetListOfMedia()->GetEntries();
     Int_t indx = 0;
     cout << "//" << *this << endl;
     static TString Top, Vol, medname;
