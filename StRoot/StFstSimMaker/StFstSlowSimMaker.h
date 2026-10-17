@@ -110,12 +110,35 @@ protected:
    StripSource  mStripSource;
 
    Long64_t  mNHitsSeen, mNHitsUsed, mNHitsBadGeo;
+   mutable Long64_t mNModuleMismatch;  //!< volume_id module != phi-derived module; 0 in an ideal geometry
+   mutable Long64_t mNSensorMismatch;  //!< volume_id sensor != phi-guessed sensor; 0 in an ideal geometry
 
 private:
 
    /// global (x,y,z) of a GEANT hit -> (wedge 1-36, sensor 0-2, rStrip 0-7,
    /// phiStrip 0-127). Returns false if the hit is outside the active area.
-   Bool_t getStripsFromConsts(Double_t x, Double_t y, Double_t z, Int_t disk,
+   // GEANT volume_id -> reco module index 1-12. volume_id = disk*1000 +
+   // geantWedge*10 + sensor, and the GEANT wedge IS a 30-degree module, one
+   // for one with a reco module -- but the numbering differs, and differs
+   // per disk. Measured on the geometry in use (see summary_20261017.txt):
+   //
+   //   disk 4: gw 1-6 -> phi sectors 0,2,4,6,8,10   gw 7-12 -> 1,3,5,7,9,11
+   //   disk 5: gw 1-6 -> phi sectors 1,3,5,7,9,11   gw 7-12 -> 2,4,6,8,10,0
+   //   disk 6: same as disk 4
+   //
+   // i.e. 1-6 and 7-12 are the two z layers of a disk, interleaved in phi,
+   // and disk 5 is rotated by one sector relative to disks 4 and 6.
+   Int_t  moduleFromVolumeId(Int_t volumeId) const;
+
+   // GEANT volume_id -> reco sensor. The sensor digit separates cleanly in r:
+   // 1 = inner (5.00-16.50 cm), 2 and 3 = the two outer halves (16.51-27.99).
+   // Measured against the maker's own two-pass guess: digit 2 -> sensor 1
+   // (1128/1128) and digit 3 -> sensor 2 (1079/1079), no disagreement. Taking
+   // it from volume_id removes the guess, which the code itself notes is
+   // ambiguous for strips right at the inter-sensor gap.
+   Int_t  sensorFromVolumeId(Int_t volumeId) const;
+
+   Bool_t getStripsFromConsts(Double_t x, Double_t y, Double_t z, Int_t disk, Int_t moduleIn, Int_t sensorIn,
                               Int_t &wedge, Int_t &sensor,
                               Int_t &rStrip, Int_t &phiStrip) const;
 
