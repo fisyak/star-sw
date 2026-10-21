@@ -278,7 +278,7 @@
  * getPt non positive bug fix. introduces 3 month ago
  *
  * Revision 2.112  2007/08/30 19:13:27  fine
- * replace the repmaining cout with LOG_DEBUG
+ * replace the repmaining cout with LOG_INFO
  *
  * Revision 2.111  2007/08/16 20:21:24  fine
  * replace printf with logger
@@ -1334,7 +1334,7 @@ int StiKalmanTrackNode::nudge(StiHit *hitp)
 
 //  assert(fabs(mFP._sinCA) <  1.);
   if (fabs(mFP._sinCA)>=1) {
-    LOG_DEBUG << Form("StiKalmanTrackNode::nudge WRONG WRONG WRONG sinCA=%g",mFP._sinCA)
+    LOG_INFO << Form("StiKalmanTrackNode::nudge WRONG WRONG WRONG sinCA=%g",mFP._sinCA)
     << endm;          
     mFP.print();
     return -13;
@@ -1485,7 +1485,7 @@ double StiKalmanTrackNode::evaluateChi2(const StiHit * hit)
 
   _det=r00*r11 - r01*r01;
   if (_det<r00*r11*1.e-5) {
-    LOG_DEBUG << Form("StiKalmanTrackNode::evalChi2 *** zero determinant %g",_det)<< endm;
+    LOG_INFO << Form("StiKalmanTrackNode::evalChi2 *** zero determinant %g",_det)<< endm;
     return 1e60;
   }
   double tmp=r00; r00=r11; r11=tmp; r01=-r01;  
@@ -1651,7 +1651,7 @@ static int nCall=0; nCall++;
   r11 = mHrr.hZZ + mFE._cZZ;
   _det=r00*r11 - r01*r01;
   if (!finite(_det) || _det<(r00*r11)*1.e-5) {
-    LOG_DEBUG << Form("StiKalmanTrackNode::updateNode *** zero determinant %g",_det)
+    LOG_INFO << Form("StiKalmanTrackNode::updateNode *** zero determinant %g",_det)
     << endm;
     return -11;
   }
@@ -1681,13 +1681,13 @@ static int nCall=0; nCall++;
 //VP  mFP.y() += k00*dy + k01*dz;
   if (fabs(p0)>kMaxR) 
     {
-      LOG_DEBUG << "updateNode()[1] -W- _y:"<<mFP.y()<<" _z:"<<mFP.z()<<endm;
+      LOG_INFO << "updateNode()[1] -W- _y:"<<mFP.y()<<" _z:"<<mFP.z()<<endm;
       return -12;
     }
   double p1 = mFP.z() + k10*dyt + k11*dzt;
   if (fabs(p1)>kMaxZ) 
     {
-      LOG_DEBUG << "updateNode()[2] -W- _y:"<<mFP.y()<<" _z:"<<mFP.z()<<endm;
+      LOG_INFO << "updateNode()[2] -W- _y:"<<mFP.y()<<" _z:"<<mFP.z()<<endm;
       return -13;
     }
   //mFP.tanl() += k40*dyt + k41*dzt;
@@ -1855,7 +1855,7 @@ StThreeVector<double> StiKalmanTrackNode::getHelixCenter() const
 //______________________________________________________________________________
 int StiKalmanTrackNode::locate()
 {
-  static const double kYFactor = 1.2, kZFactor=1.2;
+  static const double kYFactor = 1.2, kZFactor=1.2, kZoffset = 2.0;
 //  static const double kYFactor = 1.0, kZFactor=1.0;
   double yOff, zOff,ang;
   //fast way out for projections going out of fiducial volume
@@ -1871,14 +1871,15 @@ int StiKalmanTrackNode::locate()
   //YF edge is tolerance when we consider that detector is hit. //  edge = 0; //VP the meaning of edge is not clear
   int ians = 0;
   int shapeCode  = sh->getShapeCode();
+  zOff = mFP.z() - place->getZcenter();
+  if (fabs(zOff)>kZFactor*sh->getHalfDepth() + kZoffset) return kOutZ;
   switch (shapeCode) {
   case kDisk:
   case kCylindrical: // cylinder
-    break;
   case kSector: 	// cylinder sector
+    if (sh->getOpeningAngle() >= TMath::TwoPi()) break;
     ang = atan2(mFP.y(),mFP.x());
     yOff    = nice(ang +_alpha - place->getLayerAngle());
-    ians = kOutAng;
     if (fabs(yOff)>kYFactor*sh->getOpeningAngle()/2)ians = kOutAng;
     break;
   case kPlanar: 
@@ -1888,8 +1889,6 @@ int StiKalmanTrackNode::locate()
   default: assert(0 && "Wrong Shape code");
   }
   if (ians) return ians;
-  zOff = mFP.z() - place->getZcenter();
-  if (fabs(zOff)>kZFactor*sh->getHalfDepth()) 		ians = kOutZ;
   return ians;
  }
 
@@ -1969,12 +1968,12 @@ int StiKalmanTrackNode::testError(double *emx, int begend)
   for (j1=0; j1<5;j1++){
     jj = idx55[j1][j1];
     if (!(emx[jj]>0)) {;
-      LOG_DEBUG << Form("<StiKalmanTrackNode::testError> Negative diag %g[%d][%d]",emx[jj],j1,j1)
+      LOG_INFO << Form("<StiKalmanTrackNode::testError> Negative diag %g[%d][%d]",emx[jj],j1,j1)
       << endm;
  	continue;}
     if (emx[jj]<=10*dia[j1] )	continue;
     assert(finite(emx[jj]));
-    LOG_DEBUG << Form("<StiKalmanTrackNode::testError> Huge diag %g[%d][%d]",emx[jj],j1,j1)
+    LOG_INFO << Form("<StiKalmanTrackNode::testError> Huge diag %g[%d][%d]",emx[jj],j1,j1)
     << endm;
     				continue;
 //    ians++; emx[jj]=dia[j1];
@@ -2061,7 +2060,7 @@ int StiKalmanTrackNode::testDeriv(double *der)
      if (fabs(dif) <= 1.e-5) 				continue;
      if (fabs(dif) <= 0.2*0.5*fabs(num[i]+der[i]))	continue;
      nerr++;
-     LOG_DEBUG << Form("***Wrong deriv [%d][%d] = %g %g %g",ipar,jpar,num[i],der[i],dif)
+     LOG_INFO << Form("***Wrong deriv [%d][%d] = %g %g %g",ipar,jpar,num[i],der[i],dif)
      << endm;
   }
   fDerivTestOn=0;
@@ -2352,7 +2351,7 @@ double StiKalmanTrackNode::evaluateChi2Info(const StiHit * hit) const
 
   det=r00*r11 - r01*r01;
   if (det<r00*r11*1.e-5) {
-    LOG_DEBUG << Form("StiKalmanTrackNode::evalChi2 *** zero determinant %g",_det)<< endm;
+    LOG_INFO << Form("StiKalmanTrackNode::evalChi2 *** zero determinant %g",_det)<< endm;
     return 1e60;
   }
   double tmp=r00; r00=r11; r11=tmp; r01=-r01;  

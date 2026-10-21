@@ -16,7 +16,7 @@
 #else
 #include "TCernLib.h"
 #endif
-
+#include "TMath.h"
 //#define __CHECKIT__ // Enable unused paramter and error checks
 
 #define NICE(a) ( ((a) <= -M_PI)? ((a)+2*M_PI) :\
@@ -79,7 +79,7 @@ assert(!pNode || pNode->fitPars().hz());
   mParentHz = mTargetHz;
   if (mParentNode) {
     mParentHz = mParentNode->getHz();
-    assert(fabs(mParentHz-mParentNode->mFP.hz()) < EC*0.1); // allow the difference in 100 Gauss. TODO check why 10 is not enough
+    assert(TMath::Abs(mParentHz-mParentNode->mFP.hz()) < EC*0.1); // allow the difference in 100 Gauss. TODO check why 10 is not enough
 #ifdef __CHECKIT__
     mParentNode->mFP.check("2StiTrackNodeHelper::set");
 #endif
@@ -88,7 +88,7 @@ assert(!pNode || pNode->fitPars().hz());
 #ifdef __CHECKIT__
     mTargetNode->mFP.check("1StiTrackNodeHelper::set");
 #endif
-    //yf    assert(fabs(mTargetHz-mTargetNode->mFP.hz()) < EC*0.1);
+    //yf    assert(TMath::Abs(mTargetHz-mTargetNode->mFP.hz()) < EC*0.1);
   }
 
   mDetector   = mTargetNode->getDetector();
@@ -115,7 +115,7 @@ int StiTrackNodeHelper::propagatePars(const StiNodePars &parPars
   alpha = mTargetNode->_alpha - mParentNode->_alpha;
   ca=1;sa=0;
   rotPars = parPars;
-  if (fabs(alpha) > 1.e-6) { //rotation part
+  if (TMath::Abs(alpha) > 1.e-6) { //rotation part
 
     double xt1=parPars.x(); 
     double yt1=parPars.y(); 
@@ -170,28 +170,28 @@ int StiTrackNodeHelper::propagatePars(const StiNodePars &parPars
   }
 
   dx = x2-x1;
-  if (fabs(dx)<1e-5) { proPars = rotPars; return 0;}
+  if (TMath::Abs(dx)<1e-5) { proPars = rotPars; return 0;}
   rho = 0.5*(mTargetHz*rotPars.ptin()+rotPars.curv());
   dsin = rho*dx;
   sinCA2=rotPars._sinCA + dsin; 
-  if (fabs(sinCA2) > kMaxSin)  {
+  if (TMath::Abs(sinCA2) > kMaxSin)  {
     sinCA2 = (sinCA2<0) ? -kMaxSin:kMaxSin;
     dsin = sinCA2-rotPars._sinCA;
-    dx = (fabs(rho)>1e-5)? dsin/rho:0;
+    dx = (TMath::Abs(rho)>1e-5)? dsin/rho:0;
     x2 = x1 + dx;
   }
-  cosCA2 = ::sqrt((1.-sinCA2)*(1.+sinCA2));
+  cosCA2 = TMath::Sqrt((1.-sinCA2)*(1.+sinCA2));
   sumSin   = rotPars._sinCA+sinCA2;
   sumCos   = rotPars._cosCA+cosCA2;
-  dy = (fabs(sumCos)>1e-5) ? dx*(sumSin/sumCos):0;
+  dy = (TMath::Abs(sumCos)>1e-5) ? dx*(sumSin/sumCos):0;
   y2 = rotPars.y()+dy;
   dl0 = rotPars._cosCA*dx+rotPars._sinCA*dy;
   sind = dl0*rho;
-  if (fabs(dsin) < 0.02 && rotPars._cosCA >0) { //tiny angle
+  if (TMath::Abs(dsin) < 0.02 && rotPars._cosCA >0) { //tiny angle
     dl = dl0*(1.+sind*sind/6);
   } else {
     double cosd = cosCA2*rotPars._cosCA+sinCA2*rotPars._sinCA;
-    dl = atan2(sind,cosd)/rho;
+    dl = TMath::ATan2(sind,cosd)/rho;
   }
   proPars.x() = x2;
   proPars.y() = y2;
@@ -280,7 +280,7 @@ int StiTrackNodeHelper::propagateError()
 {
   mPredErrs = mFitdParentErrs;
   StiTrackNode::errPropag6(mPredErrs.G(),mMtx.A,kNPars);
-  int force = fabs(dl)> StiNodeErrs::kBigLen;
+  int force = TMath::Abs(dl)> StiNodeErrs::kBigLen;
   mPredErrs.recov(force);
   mPredErrs._cEE+=mMcs._cEE;		//add err to <eta*eta> eta crossing angle//add err to <eta*eta> eta crossing angle
   mPredErrs._cPP+=mMcs._cPP;    	//add err to <curv*curv>		 //add err to <curv*curv>
@@ -395,10 +395,10 @@ int StiTrackNodeHelper::makeFit(int smooth)
     if (!mParentNode) 			break;
     double accu,errr;
     accu = mJoinPars.ptin() - mBestParentPars.ptin()*(1+mMcs._ptinCorr);
-    errr = sqrt(0.5*(fabs(mJoinErrs._cPP)+fabs(mBestParentErrs._cPP)));
+    errr = sqrt(0.5*(TMath::Abs(mJoinErrs._cPP)+TMath::Abs(mBestParentErrs._cPP)));
     if (errr > 0) mCurvQa.add(accu/errr);    
     accu = mJoinPars.tanl() - mBestParentPars.tanl();
-    errr = sqrt(0.5*(fabs(mJoinErrs._cTT)+fabs(mBestParentErrs._cTT)));
+    errr = sqrt(0.5*(TMath::Abs(mJoinErrs._cTT)+TMath::Abs(mBestParentErrs._cTT)));
     if (errr > 0) mTanlQa.add(accu/errr);    
   }while(0);
     
@@ -451,12 +451,12 @@ int StiTrackNodeHelper::join()
 
 	if (kase == (kOLdValid|kNewFitd)) {	//Check errors improvements
           if (mHrr.hYY <= mJoinErrs._cYY) {
-            LOG_DEBUG << Form("StiTrackNodeHelper::updateNode() WRONG hYY(%g) < nYY(%g)"
+            LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hYY(%g) < nYY(%g)"
                    ,mHrr.hYY,mFitdErrs._cYY)<< endm;
             return -13;
 	  }
           if (mHrr.hZZ <= mJoinErrs._cZZ) {
-            LOG_DEBUG << Form("StiTrackNodeHelper::updateNode() WRONG hZZ(%g) < nZZ(%g)"
+            LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hZZ(%g) < nZZ(%g)"
                   ,mHrr.hZZ,mFitdErrs._cZZ) << endm;
             return -14;
 	  }
@@ -479,8 +479,8 @@ int StiTrackNodeHelper::join()
      }//end Switch
   } while(kase>=0);
    mJoinPars.hz()=mTargetHz;//////////////////////???????????????????????????????????????????????????
-   assert(fabs(mJoinPars.hz()-mTargetHz)<=1e-10);
-   assert(fabs(mTargetNode->getHz()-mTargetHz)<=1e-10);
+   assert(TMath::Abs(mJoinPars.hz()-mTargetHz)<=1e-10);
+   assert(TMath::Abs(mTargetNode->getHz()-mTargetHz)<=1e-10);
 
 
   mTargetNode->mFE   = mJoinErrs;
@@ -526,7 +526,7 @@ double StiTrackNodeHelper::joinTwo(int nP1,const double *P1,const double *E1
   double choice = (nP1==nP2)? 0:1;
   if (!choice   ) {
     for (int i=0,n=1;i<nE2;i+=(++n)) {
-    p=fabs(e1[i]);q=fabs(e2[i]);choice += (p-q)/(p+q+1e-10);
+    p=TMath::Abs(e1[i]);q=TMath::Abs(e2[i]);choice += (p-q)/(p+q+1e-10);
   }}
   if ( choice >0) {t = p2; p2 = p1; p1 = t; t = e2; e2 = e1; e1 = t;}
 
@@ -673,10 +673,10 @@ double StiTrackNodeHelper::joinVtx(const double      *Y,const StiHitErrs  &B
 int StiTrackNodeHelper::save()
 {
 mPredPars.hz()=mTargetHz;///????????????????????????????
-   assert(fabs(mPredPars.hz()-mTargetHz)<=1e-10);
+   assert(TMath::Abs(mPredPars.hz()-mTargetHz)<=1e-10);
 mFitdPars.hz()=mTargetHz;///???????????????????????????
-   assert(fabs(mFitdPars.hz()-mTargetHz)<=1e-10);
-   assert(fabs(mTargetNode->getHz()-mTargetHz)<=1e-10);
+   assert(TMath::Abs(mFitdPars.hz()-mTargetHz)<=1e-10);
+   assert(TMath::Abs(mTargetNode->getHz()-mTargetHz)<=1e-10);
    
    mTargetNode->mPP() = mPredPars;
    mTargetNode->mFP   = mFitdPars;
@@ -703,20 +703,20 @@ int StiTrackNodeHelper::propagateMCS()
   mMcs.reset();
   if (!mDetector) 		return 0;
   mMcs._ptinCorr =  0;
-  if (fabs(mBestPars.ptin())<=1e-3)	return 0;
+  if (TMath::Abs(mBestPars.ptin())<=1e-3)	return 0;
   double z      = TMath::Abs(StiTrack::getCharge());
   double z2 = z*z;
-  double pt     = z/(fabs(mBestPars.ptin())+1e-6);
+  double pt     = z/(TMath::Abs(mBestPars.ptin())+1e-6);
 assert(pt<1e3);
   double relRadThickness;
   // Half path length in previous node
   double pL1=0,pL2=0,pL3=0,d1=0,d2=0,d3=0,dxEloss=0,dx=0;
-  pL1=0.5*pathIn(mParentNode->getDetector(),&mBestParentPars);
+  pL1= pathIn(mParentNode->getDetector(),&mBestParentPars);
   // Half path length in this node
-  pL3=0.5*pathIn(mDetector,&mBestPars);
+  pL3= pathIn(mDetector,&mBestPars,0); // kOutsideIn
   // Gap path length
   double t = mBestPars.tanl();
-  pL2= fabs(dl*sqrt(1+t*t));
+  pL2= TMath::Abs(dl*sqrt(1+t*t));
   double x0p = 1e11,x0Gas=1e11,x0=1e11;
   dx = mBestPars.x() - mBestParentRotPars.x();
   double tanl   = mBestPars.tanl();
@@ -786,8 +786,8 @@ assert(mMcs._cEE>=0);
   el[1].mDens  = gasMat->getDensity();
   el[1].mX0    = x0Gas;
 
-  mMcs._ptinCorr = ::sqrt(e2)*dE/p2;
-  if (fabs(mMcs._ptinCorr)>0.1) mMcs._ptinCorr = (dE<0)? -0.1:0.1;
+  mMcs._ptinCorr = TMath::Sqrt(e2)*dE/p2;
+  if (TMath::Abs(mMcs._ptinCorr)>0.1) mMcs._ptinCorr = (dE<0)? -0.1:0.1;
   if (debug()) mTargetNode->PrintpT("dE",pL1+pL2+pL3, pL2, relRadThickness,dE, TMath::Sqrt(e2) - m - dE);
 
 
@@ -814,9 +814,9 @@ double StiTrackNodeHelper::evalChi2()
   double r00, r01,r11,chi2;
   //If required, recalculate the errors of the detector hits.
   //Do not attempt this calculation for the main vertex.
-  if (fabs(mPredPars._sinCA)>0.99        )	return 1e41;
-  if (fabs(mPredPars.eta())       >kMaxEta) 	return 1e41;
-  if (fabs(mPredPars.curv())      >kMaxCur)      return 1e41;
+  if (TMath::Abs(mPredPars._sinCA)>0.99        )	return 1e41;
+  if (TMath::Abs(mPredPars.eta())       >kMaxEta) 	return 1e41;
+  if (TMath::Abs(mPredPars.curv())      >kMaxCur)      return 1e41;
   if (!mDetector) 	{ //Primay vertex
     mHitPars[0] = mPredPars.x();
     chi2 = joinVtx(mHitPars,mHrr,mPredPars,mPredErrs);
@@ -827,7 +827,7 @@ double StiTrackNodeHelper::evalChi2()
     r11=mPredErrs._cZZ+mHrr.hZZ;
     mDetm = r00*r11 - r01*r01;
     if (mDetm<r00*r11*1.e-5) {
-      LOG_DEBUG << Form("StiTrackNodeHelper::evalChi2 *** zero determinant %g",mDetm)<< endm;
+      LOG_INFO << Form("StiTrackNodeHelper::evalChi2 *** zero determinant %g",mDetm)<< endm;
       return 1e60;
     }
     double tmp=r00; r00=r11; r11=tmp; r01=-r01;  
@@ -864,9 +864,9 @@ double StiTrackNodeHelper::evalChi2()
 //______________________________________________________________________________
 double StiTrackNodeHelper::recvChi2() 
 {
-  if (fabs(mJoinPars._sinCA)>0.99        )	return 1e41;
-  if (fabs(mJoinPars.eta())       >kMaxEta) 	return 1e41;
-  if (fabs(mJoinPars.curv())      >kMaxCur)     return 1e41;
+  if (TMath::Abs(mJoinPars._sinCA)>0.99        )	return 1e41;
+  if (TMath::Abs(mJoinPars.eta())       >kMaxEta) 	return 1e41;
+  if (TMath::Abs(mJoinPars.curv())      >kMaxCur)     return 1e41;
   if (!mDetector) {//Primary vertex
     double chi2 =joinVtx(mHitPars,mHrr    ,mPredPars  ,mPredErrs    );
     return chi2;
@@ -927,7 +927,7 @@ int StiTrackNodeHelper::updateNode()
     mHitPars[0] = mPredPars.x();
     /* double chi2 = */ joinVtx(mHitPars,mHrr,mPredPars,mPredErrs,&mFitdPars,&mFitdErrs);
     mFitdPars.curv() = mTargetHz*mFitdPars.ptin();
-    assert(chi2>900 || fabs(mChi2-chi2)<1e-10);
+    assert(chi2>900 || TMath::Abs(mChi2-chi2)<1e-10);
   } else 		{ //Normal Hit
     r00=mHrr.hYY+mPredErrs._cYY;
     r01=mHrr.hZY+mPredErrs._cZY;
@@ -976,9 +976,9 @@ int StiTrackNodeHelper::updateNode()
     mFitdPars.curv()  = mTargetHz*pti;
     mFitdPars.tanl()  = tanl;
     mFitdPars._sinCA = sinCA;
-    mFitdPars._cosCA = ::sqrt((1.-mFitdPars._sinCA)*(1.+mFitdPars._sinCA)); 
+    mFitdPars._cosCA = TMath::Sqrt((1.-mFitdPars._sinCA)*(1.+mFitdPars._sinCA)); 
     if (!mDetector) 
-      assert(fabs(mFitdPars.y()-mHitPars[1])>1e-10 ||  fabs(mHitPars[0])<4);
+      assert(TMath::Abs(mFitdPars.y()-mHitPars[1])>1e-10 ||  TMath::Abs(mHitPars[0])<4);
     assert(mFitdPars.x()>0);
     if (mFitdPars.check()) return -11;
   // update error matrix
@@ -1007,12 +1007,12 @@ if(ERRTEST) errTest(mPredPars,mPredErrs,mHit,mHrr,mFitdPars,mFitdErrs,mChi2);
 //prod  assert(mHrr.hZZ > mFitdErrs._cZZ);
   if (mDetector) { //Not a primary
     if (mHrr.hYY <= mFitdErrs._cYY) {
-      LOG_DEBUG << Form("StiTrackNodeHelper::updateNode() WRONG hYY(%g) < nYY(%g)"
+      LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hYY(%g) < nYY(%g)"
             ,mHrr.hYY,mFitdErrs._cYY)<< endm;
       return -13;
     }  
     if (mHrr.hZZ <= mFitdErrs._cZZ) {
-      LOG_DEBUG << Form("StiTrackNodeHelper::updateNode() WRONG hZZ(%g) < nZZ(%g)"
+      LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hZZ(%g) < nZZ(%g)"
             ,mHrr.hZZ,mFitdErrs._cZZ)<< endm;
       return -14;
     }  
@@ -1053,7 +1053,7 @@ int StiTrackNodeHelper::cutStep(StiNodePars *pars,StiNodePars *base)
   if (mBestDelta<DY) {cuts[1]=mBestDelta;cuts[2]=mBestDelta;} 
 
   for (int jx=0;jx<kNPars;jx++) {
-    dif =(fabs((*pars)[jx]-(*base)[jx]));
+    dif =(TMath::Abs((*pars)[jx]-(*base)[jx]));
     fak = (dif >cuts[jx]) ? cuts[jx]/dif:1;
     if (fak < fact) fact = fak;
   }
@@ -1073,7 +1073,7 @@ int StiTrackNodeHelper::nudge()
   StiNodePars *pars = &mBestPars;
   for (int i=0;i<2;i++,pars =&mPredPars) {
     double deltaX = mHitPars[0]-pars->x();
-    if (fabs(deltaX) <1e-6) continue;
+    if (TMath::Abs(deltaX) <1e-6) continue;
     double deltaL = deltaX/pars->_cosCA;
     double deltaE = pars->curv()*deltaL;
     pars->x()      = mHitPars[0];
@@ -1083,26 +1083,52 @@ int StiTrackNodeHelper::nudge()
     double cosCA = pars->_cosCA;
     pars->_cosCA -= pars->_sinCA *deltaE;
     pars->_sinCA +=        cosCA *deltaE;
-    if (fabs(pars->_cosCA)>=0.99
-      ||fabs(pars->_sinCA)>=0.99) pars->ready();
+    if (TMath::Abs(pars->_cosCA)>=0.99
+      ||TMath::Abs(pars->_sinCA)>=0.99) pars->ready();
     if (pars->check()) return 1;
   }
   return 0;
 }
 //______________________________________________________________________________
-double StiTrackNodeHelper::pathIn(const StiDetector *det,StiNodePars *pars)
+double StiTrackNodeHelper::pathIn(const StiDetector *det,StiNodePars *pars, Int_t dir)
 {
-  if (!det) return 0.; 
-  double thickness = det->getShape()->getThickness();
+  double dS = 0.0;
+  if (!det) return dS; 
+  const StiShape *shape = det->getShape();
+  const StiPlacement *place = det->getPlacement();
+  double thickness = shape->getThickness();
+  double  dX = 0.5*thickness;
+  if (dir == 0) dX = - dX;
+  Double_t dZ = shape->getHalfDepth();
   double t = pars->tanl();
-  double c = fabs(pars->_cosCA);
-  if (det->getShape()->getShapeCode()!=kPlanar) {
-    double CA = pars->eta()-atan2(pars->y(),pars->x());
-    c = cos(CA);
+  double c = TMath::Abs(pars->_cosCA);
+  if (TMath::Abs(c)<kMinCos) return 0.;
+  //  Double_t zOff = pars->z() - place->getZcenter();
+  //  Double_t alpha = mParentNode->getAlpha();
+  Double_t psi =  pars->eta(); // -TMath::ATan2(pars->y(),pars->x()); 
+  Double_t dZdX = TMath::Cos(psi)/t;
+  Double_t dYdX = TMath::Tan(psi);
+  Double_t zz = pars->z() - place->getZcenter();
+  if (TMath::Abs(zz) > dZ) {// Prediction messed detector in z
+    zz = 0; 
   }
-  if (fabs(c)<kMinCos) return 0.;
-//  if (fabs(c)<kMinCos) c=kMinCos;
-  return (thickness*::sqrt(1.+t*t)) / fabs(c);
+  Double_t z = zz + dZdX*dX;
+  if (TMath::Abs(z) > dZ) {
+    dX = (dZ - TMath::Abs(zz))/dZdX;
+  }
+  if (det->getShape()->getShapeCode() == kPlanar) {
+    Double_t dY = shape->getHalfWidth();
+    Double_t yy = pars->y() - place->getNormalYoffset(); 
+    if (TMath::Abs(yy) > dY) {// Prediction messed detector in 
+      yy = 0;
+    }
+    Double_t y = yy + dYdX*dX ;
+    if (TMath::Abs(y) > dY) {
+      dX = (dY - TMath::Abs(yy))/dYdX;
+    }
+  }
+  dS = TMath::Abs(dX)*TMath::Sqrt(1.+t*t) / TMath::Abs(c);
+  return dS;
 }
 //______________________________________________________________________________
 int StiTrackNodeHelper::getHitErrors(const StiHit *hit,const StiNodePars *pars,StiHitErrs *hrr)
@@ -1160,29 +1186,29 @@ int errTest(StiNodePars &predP,StiNodeErrs &predE,
 
   int ndif = 0;
   for (int i=0;i<kNPars;i++) {
-    double diff = fabs(mineP.P[i]-fitdP.P[i]);
+    double diff = TMath::Abs(mineP.P[i]-fitdP.P[i]);
     if (diff < 1e-10) continue;
-    diff/=0.5*(fabs(mineP.P[i])+fabs(fitdP.P[i]));
+    diff/=0.5*(TMath::Abs(mineP.P[i])+TMath::Abs(fitdP.P[i]));
     if (diff < 1e-5 ) continue;
     ndif++;
-    LOG_DEBUG << Form("errTest(P): %g(%d) - %g(%d) = %g",mineE.G()[i],i,fitdE.G()[i],i,diff)<< endm;
+    LOG_INFO << Form("errTest(P): %g(%d) - %g(%d) = %g",mineE.G()[i],i,fitdE.G()[i],i,diff)<< endm;
   }
   if (ndif){ mineP.print();fitdP.print();}
 
   for (int i=0;i<kNErrs;i++) {
-    double diff = fabs(mineE.G()[i]-fitdE.G()[i]);
+    double diff = TMath::Abs(mineE.G()[i]-fitdE.G()[i]);
     if (diff < 1e-10) continue;
-    diff/=0.5*(fabs(mineE.G()[i])+fabs(fitdE.G()[i]));
+    diff/=0.5*(TMath::Abs(mineE.G()[i])+TMath::Abs(fitdE.G()[i]));
     if (diff < 1e-5 ) continue;
     ndif+=100;
-    LOG_DEBUG << Form("errTest(E): %g(%d) - %g(%d) = %g",mineE.G()[i],i,fitdE.G()[i],i,diff)<< endm;
+    LOG_INFO << Form("errTest(E): %g(%d) - %g(%d) = %g",mineE.G()[i],i,fitdE.G()[i],i,diff)<< endm;
   }
   if (ndif>=100){ mineE.print();fitdE.print();}
   
-  double diff = fabs((chi2-myChi2)/(chi2+myChi2));
+  double diff = TMath::Abs((chi2-myChi2)/(chi2+myChi2));
   if (diff > 1e-5 ) {
     ndif+=1000;
-    LOG_DEBUG << Form("errTest(C): %g() - %g() = %g",myChi2,chi2,diff)<< endm;
+    LOG_INFO << Form("errTest(C): %g() - %g() = %g",myChi2,chi2,diff)<< endm;
   }
 
   return ndif;
@@ -1197,7 +1223,7 @@ void QaFit::add(double val)
   for (int i=0;i<n;i++) {
     mAver[i] +=v;
     mErrr[i] +=v*v;
-    if (mMaxi[i]<fabs(v)) mMaxi[i]=fabs(v);
+    if (mMaxi[i]<TMath::Abs(v)) mMaxi[i]=TMath::Abs(v);
     if (v<0) mNega[i]++;
     v = v*p;
   }

@@ -97,10 +97,10 @@ void StiHitContino::print(const char* tit) const
 {
   if (!tit || !*tit) tit ="print()";
   int n=getNHits();	
-  LOG_DEBUG << Form(" ****	StiHitContino::%s nHits=%d",tit,n)<< endm;
+  LOG_INFO << Form(" ****	StiHitContino::%s nHits=%d",tit,n)<< endm;
   for (int i=0;i<n;i++) {
-    LOG_DEBUG << Form("%3d - hit=%p chi2 = %g",i,(void*)mHits[i],mChi2[i]);}
-    LOG_DEBUG << endm;
+    LOG_INFO << Form("%3d - hit=%p chi2 = %g",i,(void*)mHits[i],mChi2[i]);}
+    LOG_INFO << endm;
 }
 //______________________________________________________________________________
 int StiHitContino::getNHits() const
@@ -425,8 +425,8 @@ void StiNodeErrs::print() const
 {
    const double *d = G();
    for (int n=1;n<=6;n++) {
-     LOG_DEBUG << Form("%d - ",n);
-     for (int i=0;i<n;i++){LOG_DEBUG << Form("%g\t",*(d++));}; LOG_DEBUG << endm;
+     LOG_INFO << Form("%d - ",n);
+     for (int i=0;i<n;i++){LOG_INFO << Form("%g\t",*(d++));}; LOG_INFO << endm;
    }  
 }     
 
@@ -459,12 +459,12 @@ RETN:
   if (!pri ) 	return kase;
   switch(kase) {
   
-    case 1: LOG_DEBUG << Form("StiNodeErrs::check(%s) FAILED: Negative diagonal %g[%d][%d]",pri,aii,i,i)<< endm;  
+    case 1: LOG_INFO << Form("StiNodeErrs::check(%s) FAILED: Negative diagonal %g[%d][%d]",pri,aii,i,i)<< endm;  
           break;
-    case 2: LOG_DEBUG << Form("StiNodeErrs::check(%s) FAILED: Correlation too big %g[%d][%d]>%g"
+    case 2: LOG_INFO << Form("StiNodeErrs::check(%s) FAILED: Correlation too big %g[%d][%d]>%g"
                 ,pri,aij,i,j,sqrt(aii*ajj))<<endm; 	  
           break;
-    case 3: LOG_DEBUG << Form("StiNodeErrs::check(%s) FAILED: Non Positive matrix",pri)<<endm;  
+    case 3: LOG_INFO << Form("StiNodeErrs::check(%s) FAILED: Non Positive matrix",pri)<<endm;  
   }    
   return kase;
 }  
@@ -657,7 +657,7 @@ int StiNodePars::check(const char *pri) const
 FAILED: 
   if (!ierr) return ierr;
   if (!pri ) return ierr;
-  LOG_DEBUG << Form("StiNodePars::check(%s) == FAILED(%d)",pri,ierr)<<endm;
+  LOG_INFO << Form("StiNodePars::check(%s) == FAILED(%d)",pri,ierr)<<endm;
   print();
   return ierr;
 } 
@@ -713,8 +713,8 @@ void StiNodePars::print() const
 {
 static const char* tit[]={"cosCA","sinCA","X","Y","Z","Eta","Ptin","TanL","Curv",0};
   const double *d = P-2;
-  for (int i=-2;i<kNPars+1;i++) {LOG_DEBUG << Form("%s = %g, ",tit[i+2],*(d++));}
-  LOG_DEBUG << endm;
+  for (int i=-2;i<kNPars+1;i++) {LOG_INFO << Form("%s = %g, ",tit[i+2],*(d++));}
+  LOG_INFO << endm;
 }   
 //______________________________________________________________________________
 void StiHitErrs::rotate(double angle)

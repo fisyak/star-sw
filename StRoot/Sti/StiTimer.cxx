@@ -46,7 +46,7 @@ void StiTimer::Clear(const char *)
 void StiTimer::Print(const char *option)
 {
 
- LOG_DEBUG << Form("**** StiTimer::Print ****")<<endm;
+ LOG_INFO << Form("**** StiTimer::Print ****")<<endm;
  TListIter next(fgList);
  MyHolder *mh=0;
  int n = 0;
@@ -58,7 +58,7 @@ void StiTimer::Print(const char *option)
    double cpu = mh->fSW->CpuTime()/tally;
    double rte = mh->fSW->RealTime()/tally;
 
-   LOG_DEBUG << Form("StiTimer for <%s> Evts =%d CPU/Evts = %g Time/Evts = %g"
+   LOG_INFO << Form("StiTimer for <%s> Evts =%d CPU/Evts = %g Time/Evts = %g"
          ,mh->GetName(),tally,cpu,rte) << endm;
    mh->fSW->Print("u");
 

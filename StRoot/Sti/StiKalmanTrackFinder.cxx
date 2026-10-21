@@ -199,9 +199,9 @@ Int_t StiKalmanTrackFinder::Fit(StiKalmanTrack *track, Double_t rMin) {
     nIstHits+=track->getFitPointCount(kIstId);
     nPxlHits+=track->getFitPointCount(kPxlId);
     //cout << "  ++++++++++++++++++++++++++++++ Added Track"<<endl;
-    LOG_DEBUG << Form("StiKalmanTrackFinder::Fit:nbSeed=%d nTFail=%d nTFilt=%d nTAdd=%d", 
+    LOG_INFO << Form("StiKalmanTrackFinder::Fit:nbSeed=%d nTFail=%d nTFilt=%d nTAdd=%d", 
 		      nTSeed,nTFail,nTFilt,nTAdd) << endm;
-    LOG_DEBUG << Form("StiKalmanTrackFinder::Fit:nTpcHits=%d nSvtHits=%d  nSsdHits=%d nPxlHits=%d nIstHits=%d",
+    LOG_INFO << Form("StiKalmanTrackFinder::Fit:nTpcHits=%d nSvtHits=%d  nSsdHits=%d nPxlHits=%d nIstHits=%d",
 		      nTpcHits,nSvtHits,nSsdHits,nPxlHits,nIstHits)
 	      << endm;
   } while(0);
@@ -474,6 +474,7 @@ void StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction
   StiDetector *tDet=0;
   int status;
   StiKalmanTrackNode testNode;
+
   int position;
   StiHit * stiHit;
   double  leadRadius;
@@ -546,7 +547,8 @@ void StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction
 	if (nDets>1) sort(detectors.begin(),detectors.end(),CloserAngle(projAngle) );
 	
 	//		There is additional loop. 1st loop for active only, second for non active
-	int foundInDetLoop = 0;
+	//	int foundInDetLoop = 0;
+	StiKalmanTrackNode *lastNode = 0;
 	for (int nowActive=1; nowActive>=0; nowActive--) { //Additional activeNonActive loop
 	  
 	  for (vector<StiDetector*>::const_iterator d=detectors.begin();d!=detectors.end();++d)
@@ -568,7 +570,7 @@ void StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction
 		continue; //  missed, will try the next available volume on this layer
 	      }
 	      testNode.setDetector(tDet);
-	      foundInDetLoop = 2016;
+	      //	      foundInDetLoop = 2016;
 	      int active = tDet->isActive(testNode.getY(),testNode.getZ());
 	      
 	      double maxChi2 = tDet->getTrackingParameters()->getMaxChi2ForSelection();
@@ -586,7 +588,6 @@ void StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction
 		    stiHit = *hitIter;
 		    if (leadHit == stiHit) 				continue;
 		    if (leadHit && leadHit->stHit()==stiHit->stHit())	continue;
-		    if (!track->legal(stiHit))				continue;
 		    
 		    status = testNode.nudge(stiHit);
 		    testNode.setReady();
@@ -642,28 +643,37 @@ void StiKalmanTrackFinder::find(StiKalmanTrack * track, int direction
 		  qaTry = qa;
 		  track->add(node,direction,leadNode);
 		  nodeQA(node,position,active,qaTry);
-		  find(track,direction,node,qaTry);
-#if 0
-		  if (debug()) {
-		    if (node->getDetector()) 
-		      StiKalmanTrackNode::ResetComment(::Form("%40s ",node->getDetector()->getName().c_str()));
-		    else 
-		      StiKalmanTrackNode::ResetComment("Vx                            ");
-		    node->PrintpT("H "); StiKalmanTrackNode::PrintStep();
+		  if (! active) {
+		    lastNode = node;
+		  } else {
+		    find(track,direction,node,qaTry);
+		    if (hitCont.getNHits() > 0) {
+		      if (jHit==0) { 
+			qaBest=qaTry;
+		      } else {
+			int igor = qaBest.compQA(qaTry);
+			if (igor<0)  { leadNode->remove(0);}
+			else         { leadNode->remove(1);qaBest=qaTry;}
+		      }
+		    }
+		    qa = qaBest; gLevelOfFind--; qa.setQA(-4); return;
 		  }
-#endif
-		  if (jHit==0) { qaBest=qaTry; continue;}
-		  int igor = qaBest.compQA(qaTry);
-		  if (igor<0)  { leadNode->remove(0);}
-		  else         { leadNode->remove(1);qaBest=qaTry;}
 		}
-	      qa = qaBest; gLevelOfFind--; qa.setQA(-4); return;
 	    }//End Detectors
-	  if (foundInDetLoop) break;		//activeNonActive
+	  //	  if (foundInDetLoop) break;		//activeNonActive
 	} //End of activeNonActive loop;
+	if (lastNode) {
+	  find(track,direction,lastNode,qa);
+	  gLevelOfFind--;qa.setQA(-4);
+	  return;
+	}
       }while(0);
-      if(!direction){++rlayer;}else{++layer;}}
-  //end layers
+      if(!direction){
+	++rlayer;
+      } else{
+	++layer;
+      }
+    }  //end layers
   gLevelOfFind--;qa.setQA(-4);
   return;
 }

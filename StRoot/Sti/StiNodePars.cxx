@@ -12,13 +12,3 @@ std::ostream&  operator<<(std::ostream& os, StiNodePars const & pars) {
 
 
 
-
-
-
-
-
-
-
-
-
-
