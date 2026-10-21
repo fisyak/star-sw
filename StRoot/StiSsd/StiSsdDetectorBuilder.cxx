@@ -89,7 +89,6 @@ using namespace std;
 
 #include "Sti/Base/Factory.h"
 #include "Sti/StiPlanarShape.h"
-#include "Sti/StiCylindricalShape.h"
 #include "Sti/StiMaterial.h"
 #include "Sti/StiPlacement.h"
 #include "Sti/StiDetector.h"

@@ -1,3 +1,4 @@
+
                                                        P[8]
 _x                                                      _p0;  kX/// local X-coordinate of this track (reference plane)
 y(x) = y_0 - (1 - (C*x - eta)**2)**1/2/C 		_p1;  kY/// local Y-coordinate of this track (reference plane)	
@@ -1172,7 +1173,7 @@ StiMaker::Make
                 StiLocalTrackSeedFinder::makeTrack
                   StiLocalTrackSeedFinder::extendHit
                     StiDetectorContainer::moveIn 
-
+              
 		 	track = StiCATpcSeedFinder::findTrack
 			StiKalmanTrackFinder::extendTrack(track,rMin);
 				StiKalmanTrackFinder::find(track,kOutsideIn,rMin)
@@ -1180,9 +1181,40 @@ StiMaker::Make
 						StiTrack::fit
 							 StiKalmanTrackFitter::fit
 								StiKalmanTrackNode::propagate
+                                                                  StiKalmanTrackNode::rotate  
+              StiKalmanTrackFinder::Fit
+                 StiKalmanTrackFinder::extendTrack  S Id: 0 Chi2: 1.43 q: 1.00 pt: 1.00 eta: -1.50 tanLambda: -2.12 phi: 0.09 points/fit/max: 48/48/48
+                   StiKalmanTrackFinder::find  kOutsideIn
+                     StiTreeNode::cutTail
+                     StiKalmanTrackFinder::find  (recursive)
+	               make list of detectors
+                       StiKalmanTrackNode::propagate( pNode )
+                         StiKalmanTrackNode::propagate( xk )
+	                 StiKalmanTrackNode::propagateError
+                           StiKalmanTrackNode::propagateMtx
+                           StiKalmanTrackNode::errPropag6
+                           StiKalmanTrackNode::setHitErrors
+                         StiKalmanTrackNode::propagateMCS
+                           StiKalmanTrackNode::propagateCurv
+                         StiKalmanTrack::add(node,...)
+                          StiKalmanTrackFinder::find
+  
+                   StiKalmanTrack::refit
+                     StiTrackNodeHelpe::set
+                     StiKalmanTrack::refitL
+                       StiTrackNodeHelpe::set
+                       StiTrackNodeHelpe::makeFit(smooth=0)
+                          StiTrackNodeHelpe::propagatePars
+                          StiTrackNodeHelpe::propagateMtx
+                          StiTrackNodeHelpe::propagateMCS
+                          StiTrackNodeHelpe::propagateFitd
+                          StiTrackNodeHelpe::propagateError
 
+                       StiTrackNodeHelpe::set
+                       StiTrackNodeHelpe::makeFit(smooth=1)
 
-
+                   StiKalmanTrackFinder::find  kInsideOut
+                   StiKalmanTrack::refit
 
 
 					StiKalmanTrackFinder::StiKalmanTrackFinder::find(track,direction,leadNode,qa)
@@ -1197,6 +1229,7 @@ StiMaker::Make
         		track->setId(_trackContainer->size());
         		track->reserveHits();
 			BFactory::Free(track);
+               
 	  FinishTracks()
 	  StiStEventFiller::fillEvent()
 	  StEvent::setIdTruth()
@@ -1263,3 +1296,11 @@ StiMaker::InitRun
                 StiVMCToolKit::Alignment
          	  TGeoPhysicalNode::Align
                 StiDetectorBuilder::MakeAverageVolume
+  StiDetectorContainer::initialize
+    StiDetectorContainer::build
+      StiDetectorTreeBuilder::build
+        StiDetectorTreeBuilder::buildRoot
+        StiDetectorTreeBuilder::loopOnDetectors
+           StiDetectorTreeBuilder::addToTree	 
+        SortDaughters<StiDetector>::mysorter
+        IndexDaughters<StiDetector>::myindexer

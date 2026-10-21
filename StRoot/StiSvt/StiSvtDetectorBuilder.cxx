@@ -315,7 +315,6 @@ void StiSvtDetectorBuilder::useVMCGeometry() {
     {"SIRT", "inner end ring tube piece ","HALL_1/CAVE_1/SVTT_1/SIRT_1-2","",""},
     {"SIRP", "inner end ring polygon piece ","HALL_1/CAVE_1/SVTT_1/SIRP_1-2","",""}
     //?    {"STAC", "twinax cable approximation, copper","HALL_1/CAVE_1/SVTT_1/SCON_1/STAC_1-2","",""} 
-    // StiDetectorVolume	SVTT_1_SCON_1_STAC_1	StiDetector OBJ: TTUBE	STAC	StiCylindricalShape Rmin 21.935 Rmax 37.77 dz 86.9 
   };
   Int_t NoSvtVols = sizeof(SvtVolumes)/sizeof(VolumeMap_t);
   TString pathT("HALL_1/CAVE_1");
