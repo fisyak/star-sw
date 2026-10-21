@@ -426,6 +426,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       iist     = getValue('iist')
       isst     = getValue('isst')
       ifst     = getValue('ifst')
+      ibbc     = getValue('ibbc')
       svtg_version      =       getValue('svtg_version')
       tpcg_version      =       getValue('tpcg_version')
       tpcg_tpadconfig   =       getValue('tpcg_tpadconfig')
@@ -458,6 +459,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       fpdg_version      =       getValue('fpdg_version')
       fscg_version      =       getValue('fscg_version')
       mtdg_version      =       getValue('mtdg_version')
+      bbcg_version      =       getValue('bbcg_version')
         
 #endif /* ! __STAR_VMC__ */
           if (itpc>=0) print *,' g2t_volume_id: TPC version =',tpcg_version, ', tpcg_tpadconfig = ', tpcg_tpadconfig
@@ -471,7 +473,7 @@ c - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 *             print *,'              : ISTB version of code=', ismg_code
              istVersion=ismg_code
           endif
-          if (ibbc>=0) print *,' : BBC version =',bbcg_version
+          if (ibbc>=0) print *,'              : BBC version =',bbcg_version
 #ifndef __G2T_VERSION__
 
 #ifndef  __STAR_VMC__
