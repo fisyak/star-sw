@@ -151,9 +151,9 @@ void Run1Ev(Int_t NEvents, Int_t iD,
   if (gClassTable->GetID("StiMaker") >= 0) {
     // Old Sti
     //    StiKalmanTrackNode::setDebug(8+32+16);
-    StiKalmanTrackNode::setDebug(32+16);
+    StiKalmanTrackNode::setDebug(32+16); // 64 - check locate
 //     StiKalmanTrackFinder::setDebug(2+8);  // 
-    StiKalmanTrackFinder::setDebug(2);  // 
+//    StiKalmanTrackFinder::setDebug(4);  //  2
     //    StiKalmanTrackFinder::setDebug(3);
     StiKalmanTrackFitter::setDebug(1);
      StiKalmanTrack::setDebug(2);
@@ -161,13 +161,13 @@ void Run1Ev(Int_t NEvents, Int_t iD,
 //     StiTrackNodeHelper::setDebug(8);
 //     StiVMCToolKit::SetDebug(1);
 //     StiDetectorBuilder::setDebug(1);
-    StiTpcHitLoader::SetDebug(1);
+//    StiTpcHitLoader::SetDebug(1);
     //    StiHitContainer::SetDebug(1);
     StiLocalTrackSeedFinder::SetDebug(1);
     StiCATpcSeedFinder::SetDebug(1);
-    StiVMCToolKit::SetDebug(1);
+    //    StiVMCToolKit::SetDebug(1);
     //    StiDetectorBuilder::setDebug(2);
-    StiDetectorBuilder::setDebug(1);
+    //    StiDetectorBuilder::setDebug(1);
   }
   if (chain->GetMaker("MassFit")) {
     chain->GetMaker("MassFit")->SetDebug(1);
@@ -183,6 +183,8 @@ void Run1Ev(TString opt="alpha1GeV@eta-1.50") {
     Run1Ev(1,5, 1,1, 0.1,0.1, 0,0, 0,0, 1,"G");
   } else   if (opt == "1muS15") {
     Run1Ev(1,5, 1,1, -0.1,-0.1, 0,0, 0,0, 1,"G");
+  } else   if (opt == "1piS15") {
+    Run1Ev(1,8, 1,1, -0.1,-0.1, 0,0, 0,0, 1,"G");
   } else   if (opt == "1muz55S12") {
     Double_t phi = TMath::DegToRad()*90;
     Run1Ev(1,5, 1,1, 0.,0..,phi, phi, 55.0,55.0, 1,"G");
@@ -209,6 +211,8 @@ void Run1Ev(TString opt="alpha1GeV@eta-1.50") {
     Run1Ev(1, 47,1, 1,-1.50,-1.50, 0, 0, 200, 200, 1,"G"); 
   } else if (opt == "1mu1GeV@eta-1.50") {//
     Run1Ev(1,  5,1, 1,-1.50,-1.50, 0, 0, 200, 200, 1,"G"); 
+  } else if (opt == "1pi1GeV@eta-1.50") {//
+    Run1Ev(1,  8,1, 1,-1.50,-1.50, 0, 0, 200, 200, 1,"G"); 
   } else if (opt == "alpha2.34GeV@eta-0.1") {// p = 2.352 GeV/c
     Run1Ev(1, 47, 2.34, 2.34,-0.1,-0.1, 0, 0, 0, 0, 1,"G"); 
   }
