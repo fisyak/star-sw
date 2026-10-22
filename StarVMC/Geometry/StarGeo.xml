@@ -89,7 +89,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
      <Construct sys="tpce" config="TPCEv61"  />
@@ -114,7 +114,7 @@
     <Construct sys="upst" config="UPSTof"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="zcal" config="ZCALof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
     <Construct sys="tpce" config="TPCEof"  />
@@ -188,7 +188,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
      <Construct sys="tpce" config="TPCEv61"  />
@@ -213,7 +213,7 @@
     <Construct sys="upst" config="UPSTof"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="zcal" config="ZCALof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
     <Construct sys="tpce" config="TPCEof"  />
@@ -316,7 +316,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
      <Construct sys="tpce" config="TPCEv61" />
@@ -341,7 +341,7 @@
     <Construct sys="upst" config="UPSTof"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="zcal" config="ZCALof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
     <Construct sys="tpce" config="TPCEof" />
@@ -445,7 +445,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
      <Construct sys="tpce" config="TPCEv61" />
@@ -470,7 +470,7 @@
     <Construct sys="upst" config="UPSTof"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="zcal" config="ZCALof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
     <Construct sys="tpce" config="TPCEof" />
@@ -573,7 +573,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
      <Construct sys="tpce" config="TPCEv61" />
@@ -596,7 +596,7 @@
     <Construct sys="upst" config="UPSTof"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="zcal" config="ZCALof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b" />
     <Construct sys="tpce" config="TPCEof" />
@@ -756,7 +756,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft"/>
     <Construct sys="targ" config="TARGv1b"  />
      <Construct sys="tpce" config="TPCEv61" />
@@ -844,7 +844,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
  <!-- fixed target geometry -->    <Construct sys="tpce" config="TPCEv61"  />
@@ -928,7 +928,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12ft" />
     <Construct sys="targ" config="TARGv1b"  />
     <Construct sys="tpce" config="TPCEv61"  />
@@ -1059,7 +1059,7 @@
     <Construct sys="upst" config="UPSTon"  />
      <Construct sys="shld" config="SHLDon"  />
     <Construct sys="zcal" config="ZCALon"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12"  />
     <Construct sys="tpce" config="TPCE32a"  />
     <Construct sys="btof" config="BTOFv8"  />
@@ -1134,7 +1134,7 @@
   </Geometry>
 
   <Geometry tag="y2017b"  check="false" comment="Y2017a production geometry">    <Construct sys="cave" config="CAVE05"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="pipe" config="PIPE12"  />
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="tpce" config="TPCE31"  />
@@ -2014,7 +2014,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="quad" config="QUADof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="tpce" config="TPCE04r"  />
     <Construct sys="ftpc" config="FTPC01"  />
     <Construct sys="supo" config="SUPO01"  />
@@ -2126,7 +2126,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="quad" config="QUADof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="tpce" config="TPCE04r"  />
     <Construct sys="ftpc" config="FTPC01"  />
     <Construct sys="supo" config="SUPO01"  />
@@ -2260,7 +2260,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="quad" config="QUADof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="tpce" config="TPCE04r"  />
     <Construct sys="ftpc" config="FTPC01"  />
     <Construct sys="supo" config="SUPO01"  />
@@ -2417,7 +2417,7 @@
     <Construct sys="upst" config="UPSTon"  />
     <Construct sys="shld" config="SHLDof"  />
     <Construct sys="quad" config="QUADof"  />
-    <Construct sys="scon" config="SCON15"  />
+    <Construct sys="scon" config="SCON14a"  />
     <Construct sys="tpce" config="TPCE04r"  />
     <Construct sys="ftpc" config="FTPC01"  />
     <Construct sys="supo" config="SUPO01"  />

@@ -225,10 +225,9 @@
         <Create    block="SCOM" />
         <Placement block="SCOM" in="Cave" x="0.0" y="0.0" z="0.0" konly="MANY" >
 	  <!--
-	      TODO: Apply TPC global position and fst relative to TPC
-	      <Misalign table="Geometry/fst/fstOnTpc"                opts="left,print" />
-	      <Misalign table="Geometry/tpc/TpcPosition"             opts="left,print" />	  
+	  TODO... need to apply sconOnTpc
 	  -->
+	  <Misalign table="Geometry/tpc/TpcPosition"             opts="left,print" />	  
         </Placement>
  
         <Volume name="SCOM" comment="is supporting cone mother volume">
