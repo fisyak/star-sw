@@ -2544,16 +2544,24 @@ If LL>0
   case y2022 { y2022: y2022 first cut geometry; Geom =        'y2022     '; call geom_y2022;} 
   case y2022a { y2022a: y2022 first production geometry; Geom =        'y2022a    '; call geom_y2022a;} 
   case y2022b { y2022b: y2022 first production geometry; Geom =        'y2022b    '; call geom_y2022b;} 
+  case y2022c { y2022c: y2022 first production geometry; Geom =        'y2022c    '; call geom_y2022c;} 
 
   case y2023 { y2023: y2023 first cut geometry; Geom =        'y2023     '; call geom_y2023;} 
   case y2023a { y2023a: y2023a production tag; Geom =         'y2023a    '; call geom_y2023a;} 
   case y2023b { y2023b: y2023b production tag; Geom =         'y2023b    '; call geom_y2023b;} 
+  case y2023c { y2023c: y2023b production tag; Geom =         'y2023c    '; call geom_y2023c;} 
 
   case y2024 { y2024: y2024 first cut geometry; Geom =        'y2024     '; call geom_y2024;} 
   case y2024a { y2024a: y2024a production tag; Geom =         'y2024a    '; call geom_y2024a;}
   case y2024b { y2024b: y2024b production tag; Geom =         'y2024b    '; call geom_y2024b;}
+  case y2024c { y2024c: y2024c production tag; Geom =         'y2024c    '; call geom_y2024c;}
 
   case y2025 { y2025: y2025 first cut geometry; Geom =        'y2025     '; call geom_y2025;}  
+  case y2025a { y2025a: y2025a first cut geometry; Geom =        'y2025a    '; call geom_y2025a;}  
+  case y2025b { y2025b: y2025b first cut geometry; Geom =        'y2025b    '; call geom_y2025b;}  
+
+  case y2026 { y2026: y2026 first cut geometry; Geom =        'y2026     '; call geom_y2026;}  
+  case y2026a { y2026a: y2026a first cut geometry; Geom =        'y2026a    '; call geom_y2026a;}  
 
   case dev2021 { dev2021:  First cut forward upgrades; Geom =        'dev2021   '; call geom_dev2021;} 
   case dev2022 { dev2022:  First cut forward upgrades; Geom =        'dev2022   '; call geom_dev2022;} 
