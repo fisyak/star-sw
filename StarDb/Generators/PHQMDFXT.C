@@ -11,8 +11,8 @@ TDataSet *CreateTable() {
   }
   if (! gener) gener =  new 		 StarPHQMDPrimaryGenerator();
   else         gener->SetGenerator();
-  gener->SetVertex(0,-2.,200.);
-  gener->SetSpread(0.1,0.1,0.0025);
+  gener->SetVertex(-0.266,-2.304,   200.);  //  beamSpot.13p5GeV_fixedTarget_2026.TFG26i.dEdx.txt
+  gener->SetSpread( 0.280, 0.200, 0.0025);
   StarVMCApplication::Instance()->SetPrimaryGenerator(gener);
   cout << "Set StarPHQMDPrimaryGenerator" << endl;
   TDataSet *tableSet = new TDataSet("StarPHQMDPrimaryGenerator");
