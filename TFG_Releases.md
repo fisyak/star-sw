@@ -133,5 +133,6 @@
 <li> TFG26i Revise Sti materails, fix bug with MDF4                      2026-09-19 12:08:15 -0400  (HEAD -> TFG, tag: TFG26i_2)
 <li> TFG26j Revise FST geometry for Sti                                  2026-10-11 12:58:53 -0400  (HEAD -> TFG, tag: TFG26j)
 <li> TFG26k Clean up Sti, disable FSTW averaging                         2026-10-14 10:01:43 -0400  (HEAD -> TFG, tag: TFG26k)
+<li> TFG26l Revise Sti, allow multiple dead detector to be added         2026-10-22 10:01:43 -0400  (HEAD -> TFG, tag: TFG2lk)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
