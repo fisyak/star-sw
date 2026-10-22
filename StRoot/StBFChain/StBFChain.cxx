@@ -1028,10 +1028,16 @@ Int_t StBFChain::Init() {
 	  TString path("./StarDb/AgiGeometry:$STAR/StarDb/AgiGeometry");
 	  if (GetOption("AgML")) {
 	    path  = "./StarDb/AgMLGeometry:$STAR/StarDb/AgMLGeometry";
+	    LOG_INFO << "Standard AgML Geometry models enabled" << endm;
 	  }
 	  if (GetOption("VmcGeo")) {
 	    path  = "./StarDb/VmcGeo:$STAR/StarDb/VmcGeo";
+	    LOG_WARN << "Deprecated root/cint file geometries enabled" << endm;
 	  }
+	  if (GetOption("FwdGeo")) {
+	    path  = "./StarDb/FwdGeo:$STAR/StarDb/FwdGeo";
+	    LOG_INFO << "Simplified forward geometry tracking models enabled" << endm;
+	  }	  
 	  TString geom("Geometry.");
 	  geom +=  DbAlias[i].geometry;
 	  geom += ".C";
