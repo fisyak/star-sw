@@ -712,8 +712,10 @@ assert(pt<1e3);
   // Half path length in previous node
   double pL1=0,pL2=0,pL3=0,d1=0,d2=0,d3=0,dxEloss=0,dx=0;
   pL1= pathIn(mParentNode->getDetector(),&mBestParentPars);
+  if (pL1 < 0) return 3;
   // Half path length in this node
   pL3= pathIn(mDetector,&mBestPars,0); // kOutsideIn
+  if (pL3 < 0) return 3;
   // Gap path length
   double t = mBestPars.tanl();
   pL2= TMath::Abs(dl*sqrt(1+t*t));
@@ -1092,39 +1094,54 @@ int StiTrackNodeHelper::nudge()
 //______________________________________________________________________________
 double StiTrackNodeHelper::pathIn(const StiDetector *det,StiNodePars *pars, Int_t dir)
 {
-  double dS = 0.0;
+  static const Double_t kYFactor = 1.2, kZFactor=1.2;
+  Double_t dS = 0.0;
   if (!det) return dS; 
+  Double_t c = TMath::Abs(pars->_cosCA);
+  if (TMath::Abs(c)<kMinCos) return -1;
+  Double_t t = pars->tanl();
   const StiShape *shape = det->getShape();
   const StiPlacement *place = det->getPlacement();
-  double thickness = shape->getThickness();
-  double  dX = 0.5*thickness;
+  Double_t thickness = shape->getThickness();
+  Double_t  dX = 0.5*thickness;
   if (dir == 0) dX = - dX;
   Double_t dZ = shape->getHalfDepth();
-  double t = pars->tanl();
-  double c = TMath::Abs(pars->_cosCA);
-  if (TMath::Abs(c)<kMinCos) return 0.;
-  //  Double_t zOff = pars->z() - place->getZcenter();
-  //  Double_t alpha = mParentNode->getAlpha();
-  Double_t psi =  pars->eta(); // -TMath::ATan2(pars->y(),pars->x()); 
-  Double_t dZdX = TMath::Cos(psi)/t;
-  Double_t dYdX = TMath::Tan(psi);
-  Double_t zz = pars->z() - place->getZcenter();
-  if (TMath::Abs(zz) > dZ) {// Prediction messed detector in z
-    zz = 0; 
-  }
-  Double_t z = zz + dZdX*dX;
-  if (TMath::Abs(z) > dZ) {
-    dX = (dZ - TMath::Abs(zz))/dZdX;
-  }
-  if (det->getShape()->getShapeCode() == kPlanar) {
-    Double_t dY = shape->getHalfWidth();
-    Double_t yy = pars->y() - place->getNormalYoffset(); 
-    if (TMath::Abs(yy) > dY) {// Prediction messed detector in 
-      yy = 0;
+  if (dZ < 100.0) {
+    //  Double_t zOff = pars->z() - place->getZcenter();
+    //  Double_t alpha = mParentNode->getAlpha();
+    Double_t psi =  pars->eta(); // -TMath::ATan2(pars->y(),pars->x()); 
+    Double_t dZdX = TMath::Cos(psi)/t;
+    Double_t dYdX = TMath::Tan(psi);
+    Double_t zz = pars->z() - place->getZcenter();
+    if (TMath::Abs(zz) > dZ * kZFactor) {// Prediction missed detector in z
+      if (debug() & 64) {
+	cout << "StiTrackNodeHelper::pathIn missed det " <<  Form("%25s",det->getName().c_str()) << "\tZ = " << pars->z() 
+	     << "\tZcen = " << place->getZcenter() 
+	     << "\tdZ = " << zz
+	     << "\tdz = " << dZ << endl;
+      }
+      return -1; 
     }
-    Double_t y = yy + dYdX*dX ;
-    if (TMath::Abs(y) > dY) {
-      dX = (dY - TMath::Abs(yy))/dYdX;
+    Double_t z = zz + dZdX*dX;
+    if (TMath::Abs(z) > dZ) {
+      dX = (dZ - TMath::Abs(zz))/dZdX;
+    }
+    if (det->getShape()->getShapeCode() == kPlanar) {
+      Double_t dY = shape->getHalfWidth();
+      Double_t yy = pars->y() - place->getNormalYoffset(); 
+      if (TMath::Abs(yy) > dY * kYFactor) {// Prediction missed detector in 
+	if (debug() & 64) {
+	  cout << "StiTrackNodeHelper::pathIn missed det " <<  Form("%25s",det->getName().c_str()) << "\tY = " << pars->y() 
+	       << "\tYcen = " << place->getNormalYoffset()
+	       << "\tdY = " << yy
+	       << "\tdy = " << dY << endl;
+	}
+	return -1;
+      }
+      Double_t y = yy + dYdX*dX ;
+      if (TMath::Abs(y) > dY) {
+	dX = (dY - TMath::Abs(yy))/dYdX;
+      }
     }
   }
   dS = TMath::Abs(dX)*TMath::Sqrt(1.+t*t) / TMath::Abs(c);
@@ -1277,6 +1294,3 @@ void QaFit::getInfo(double *info)
     info[l+3]=getMaxi(i);
   }
 }  
-  
-  
-  

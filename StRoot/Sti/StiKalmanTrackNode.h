@@ -208,7 +208,7 @@ const StiELoss *getELoss()const		{return mELoss;}
     comment += ::Form(" %s pT %6.3f+-%5.1f, sy %5.3f, x = %7.2f z = %7.2f",opt,getPt(),dpTOverpT,TMath::Sqrt(mFE._cYY), mFP.x(), mFP.z());
     if (getHit() &&  getChi2() < 1e10) {comment += Form(" chi2 = %6.2f", getChi2());}
     if (dE != 0.0) {
-      comment  += Form("%6.3g ( %6.3g ) cm(%5.2f%%)", dx,dx2,100*relRadThickness);
+      comment  += Form(" %6.3f ( %6.3f ) cm(%5.2f%%)", dx,dx2,100*relRadThickness);
       if (TMath::Abs(dE) < 1e-3) comment += Form("%6.3g keV", 1e6*dE);
       else                       comment += Form("%6.3g MeV", 1e3*dE);
       if (T != 0.0) comment += Form(" %6.3f GeV",T); 
