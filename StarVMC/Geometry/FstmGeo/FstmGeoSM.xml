@@ -744,7 +744,7 @@ The factors are the weights fraction for stainless and NOVEC
                         </If-->
 
                         halfid = 0
-                        <If expr="iwedgem.ge.5">
+                        <If expr="iwedgem.ge.6">
                             halfid = 1
                         </If>
                                            

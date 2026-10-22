@@ -885,7 +885,7 @@ to avoid interference. This is equivalent to rotate the middle ring by 180 deg a
                     </If-->
 
                     halfid = 0
-                    <If expr="iwedgem.ge.5">
+                    <If expr="iwedgem.ge.6">
                         halfid = 1
                     </If>
                                        
