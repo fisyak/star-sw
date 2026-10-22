@@ -391,7 +391,7 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       Double_t thick = TMath::Max(TMath::Abs(r0max - r0min), TMath::Abs(r1max - r1min));
       Double_t dr    = TMath::Max(TMath::Abs(r0max - r1max), TMath::Abs(r0min - r1min));
       Int_t N = 1;
-      if (thick > 0) N = TMath::Nint(dr/thick);
+      if (thick > 0) N = TMath::Nint((z1 - z0)/dr);
       if (N < 1) N = 1;
       Double_t height = (z1 - z0) / N;
       if (TMath::Abs(height) < 1e-7) continue;
