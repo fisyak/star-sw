@@ -199,11 +199,13 @@ Int_t StiKalmanTrackFinder::Fit(StiKalmanTrack *track, Double_t rMin) {
     nIstHits+=track->getFitPointCount(kIstId);
     nPxlHits+=track->getFitPointCount(kPxlId);
     //cout << "  ++++++++++++++++++++++++++++++ Added Track"<<endl;
-    LOG_INFO << Form("StiKalmanTrackFinder::Fit:nbSeed=%d nTFail=%d nTFilt=%d nTAdd=%d", 
-		      nTSeed,nTFail,nTFilt,nTAdd) << endm;
-    LOG_INFO << Form("StiKalmanTrackFinder::Fit:nTpcHits=%d nSvtHits=%d  nSsdHits=%d nPxlHits=%d nIstHits=%d",
-		      nTpcHits,nSvtHits,nSsdHits,nPxlHits,nIstHits)
-	      << endm;
+    if (debug() > 2) {
+      LOG_INFO << Form("StiKalmanTrackFinder::Fit:nbSeed=%d nTFail=%d nTFilt=%d nTAdd=%d", 
+		       nTSeed,nTFail,nTFilt,nTAdd) << endm;
+      LOG_INFO << Form("StiKalmanTrackFinder::Fit:nTpcHits=%d nSvtHits=%d  nSsdHits=%d nPxlHits=%d nIstHits=%d",
+		       nTpcHits,nSvtHits,nSsdHits,nPxlHits,nIstHits)
+	       << endm;
+    }
   } while(0);
   return errType;
 }

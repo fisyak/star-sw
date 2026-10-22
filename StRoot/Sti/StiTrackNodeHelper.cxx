@@ -451,13 +451,17 @@ int StiTrackNodeHelper::join()
 
 	if (kase == (kOLdValid|kNewFitd)) {	//Check errors improvements
           if (mHrr.hYY <= mJoinErrs._cYY) {
-            LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hYY(%g) < nYY(%g)"
-                   ,mHrr.hYY,mFitdErrs._cYY)<< endm;
+	    if (debug() & 64) {
+	      LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hYY(%g) < nYY(%g)"
+			       ,mHrr.hYY,mFitdErrs._cYY)<< endm;
+	    }
             return -13;
 	  }
           if (mHrr.hZZ <= mJoinErrs._cZZ) {
-            LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hZZ(%g) < nZZ(%g)"
-                  ,mHrr.hZZ,mFitdErrs._cZZ) << endm;
+	    if (debug() & 64) {
+	      LOG_INFO << Form("StiTrackNodeHelper::updateNode() WRONG hZZ(%g) < nZZ(%g)"
+			       ,mHrr.hZZ,mFitdErrs._cZZ) << endm;
+	    }
             return -14;
 	  }
         } //End  Check errors improvements
