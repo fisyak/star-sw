@@ -528,6 +528,7 @@ void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt
 //________________________________________________________________________________
 void StiCATpcTrackerInterface::FindCAWEPrimaryVertices() {
   if (fSpectrum) {
+
     // --- DCA test ---
     std::cout<<" ------- FindTracks - done - dca test -------\n";
     auto dca_left = fTracker->GetLeft();	// dca_right, GetRight

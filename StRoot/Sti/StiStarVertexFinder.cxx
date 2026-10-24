@@ -9,7 +9,7 @@
 #include "StGenericVertexMaker/StGenericVertexMaker.h"
 #include "StGenericVertexMaker/StGenericVertexFinder.h"
 #include "StMaker.h"
-
+#include "TString.h"
 
 //______________________________________________________________________________
 StiStarVertexFinder::StiStarVertexFinder(const string & name)
@@ -81,10 +81,11 @@ StiHit * StiStarVertexFinder::getVertex(int idx)
   const StThreeVectorF& vp = spv->position();
   StMatrixF cov = spv->covariantMatrix();
 
-  cout <<"StiStarVertexFinder::getVertex("<<idx<< ") -I- set hit parameters"<<endl;
-  cout << "x:"<< vp.x() << "+-" << sqrt(cov[0][0])<<endl;
-  cout << "y:"<< vp.y() << "+-" << sqrt(cov[1][1])<<endl;
-  cout << "z:"<< vp.z() << "+-" << sqrt(cov[2][2])<<endl;
+  cout << "StiStarVertexFinder::getVertex("<<idx<< ")"
+       << "\tx:"<< Form("7.2f +/- 5.2f",vp.x(),sqrt(cov[0][0]))
+       << "\ty:"<< Form("7.2f +/- 5.2f",vp.y(),sqrt(cov[1][1]))
+       << "\tz:"<< Form("7.2f +/- 5.2f",vp.z(),sqrt(cov[2][2]))
+       << endl;
   vertex->set(0, spv, 
 	   0., 
 	   vp.x(),vp.y(),vp.z(),
