@@ -82,9 +82,9 @@ StiHit * StiStarVertexFinder::getVertex(int idx)
   StMatrixF cov = spv->covariantMatrix();
 
   cout << "StiStarVertexFinder::getVertex("<<idx<< ")"
-       << "\tx:"<< Form("7.2f +/- 5.2f",vp.x(),sqrt(cov[0][0]))
-       << "\ty:"<< Form("7.2f +/- 5.2f",vp.y(),sqrt(cov[1][1]))
-       << "\tz:"<< Form("7.2f +/- 5.2f",vp.z(),sqrt(cov[2][2]))
+       << "\tx:"<< Form("%7.2f +/- %5.2f",vp.x(),sqrt(cov[0][0]))
+       << "\ty:"<< Form("%7.2f +/- %5.2f",vp.y(),sqrt(cov[1][1]))
+       << "\tz:"<< Form("%7.2f +/- %5.2f",vp.z(),sqrt(cov[2][2]))
        << endl;
   vertex->set(0, spv, 
 	   0., 
