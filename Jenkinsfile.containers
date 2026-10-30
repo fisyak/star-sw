@@ -1,0 +1,220 @@
+// Separate Gitea multibranch job: discover branches and tags, with no PR discovery.
+// Select this Script Path and configure build strategies for main, SL*, and tags.
+// GHCR publishing uses a username/password credential (GitHub username and PAT).
+def publishingRef() {
+  if (env.CHANGE_ID?.trim()) {
+    return null
+  }
+  if (env.TAG_NAME?.trim()) {
+    return env.TAG_NAME
+  }
+  def branch = env.BRANCH_NAME
+  return (branch == 'main' || branch?.startsWith('SL')) ? branch : null
+}
+
+def imageTags(String starBase, String compiler) {
+  def ref = publishingRef()
+  if (!ref) {
+    error('Container publishing requires main, an SL* branch, or a Git tag; PRs cannot publish.')
+  }
+
+  def tags = ["${ref}-${starBase}-${compiler}".toString()]
+  if (starBase == 'root5' && compiler == 'gcc485') {
+    tags << (env.TAG_NAME ? ref : (ref == 'main' ? 'latest' : ref))
+  }
+  tags.each { tag ->
+    // Reject invalid names instead of silently mapping different Git refs to the same image.
+    if (!(tag ==~ /[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}/)) {
+      error("Git ref cannot be used as a Docker tag: ${tag}")
+    }
+  }
+  return tags
+}
+
+def buildAndPushImage(String starBase, String compiler) {
+  withEnv([
+    "STAR_BASE=${starBase}",
+    "COMPILER=${compiler}",
+    "IMAGE_TAGS=${imageTags(starBase, compiler).join(' ')}"
+  ]) {
+    withCredentials([usernamePassword(
+      credentialsId: params.GHCR_CREDENTIALS_ID.trim(),
+      usernameVariable: 'GHCR_USERNAME',
+      passwordVariable: 'GHCR_TOKEN'
+    )]) {
+      sh(label: "Publish ${starBase}-${compiler}", script: '''#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+
+# Each matrix cell owns its login; credentials never enter the checkout or build context.
+original_config="${DOCKER_CONFIG:-${HOME}/.docker}"
+export DOCKER_CONFIG
+DOCKER_CONFIG="$(mktemp -d)"
+trap 'rm -rf -- "${DOCKER_CONFIG}"' EXIT
+python3 - "${original_config}" "${DOCKER_CONFIG}" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+original, isolated = (Path(p).resolve() for p in sys.argv[1:])
+config_file = original / 'config.json'
+config = json.loads(config_file.read_text()) if config_file.exists() else {}
+# Preserve the daemon context and plugin lookup, without copying auth or credential helpers.
+isolated_config = {k: config[k] for k in ('currentContext', 'cliPluginsExtraDirs') if k in config}
+# A registry entry also prevents Docker from automatically selecting a persistent credential store.
+isolated_config['auths'] = {'ghcr.io': {}}
+(isolated / 'config.json').write_text(json.dumps(isolated_config))
+for directory in ('cli-plugins', 'contexts'):
+    if (original / directory).is_dir():
+        (isolated / directory).symlink_to(original / directory, target_is_directory=True)
+PY
+printf '%s' "${GHCR_TOKEN}" | docker login ghcr.io --username "${GHCR_USERNAME}" --password-stdin
+
+tag_args=()
+for tag in ${IMAGE_TAGS}; do
+  tag_args+=(--tag "${IMAGE_PREFIX}:${tag}")
+done
+
+docker buildx build \
+  --builder default \
+  --progress plain \
+  --build-arg "starenv=${STAR_BASE}" \
+  --build-arg "compiler=${COMPILER}" \
+  "${tag_args[@]}" \
+  --push \
+  .
+''')
+    }
+  }
+}
+
+def cleanupUntaggedImages() {
+  withCredentials([string(
+    credentialsId: params.GHCR_CLEANUP_CREDENTIALS_ID.trim(),
+    variable: 'GHCR_CLEANUP_TOKEN'
+  )]) {
+    sh(label: 'Remove untagged GHCR versions', script: '''#!/usr/bin/env bash
+set -euo pipefail
+python3 - <<'PY'
+import json
+import os
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+
+api_url = 'https://api.github.com/orgs/star-bnl/packages/container/star-sw/versions'
+headers = {
+    'Authorization': 'Bearer ' + os.environ['GHCR_CLEANUP_TOKEN'],
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+}
+
+# Gather all pages before deletion so changing page boundaries cannot skip versions.
+untagged = []
+page = 1
+while True:
+    request = Request(f'{api_url}?per_page=100&page={page}', headers=headers)
+    with urlopen(request, timeout=60) as response:
+        versions = json.load(response)
+    untagged.extend(v['id'] for v in versions if not v['metadata']['container']['tags'])
+    if len(versions) < 100:
+        break
+    page += 1
+
+for version_id in dict.fromkeys(untagged):
+    request = Request(f'{api_url}/{version_id}', headers=headers, method='DELETE')
+    try:
+        with urlopen(request, timeout=60) as response:
+            print('Deleted untagged container version', version_id, response.status)
+    except HTTPError as error:
+        # Another branch/tag build may have cleaned the same version concurrently.
+        if error.code != 404:
+            raise
+        print('Untagged container version already removed', version_id)
+PY
+''')
+  }
+}
+
+pipeline {
+  agent any
+
+  options {
+    timestamps()
+    skipDefaultCheckout(true)
+    // Serialize updates of a ref's published aliases; do not interrupt an in-progress push.
+    disableConcurrentBuilds()
+  }
+
+  parameters {
+    string(name: 'GHCR_CREDENTIALS_ID', defaultValue: 'ghcr-star-sw',
+      description: 'Username/password credential: GitHub username and PAT with write:packages.')
+    string(name: 'GHCR_CLEANUP_CREDENTIALS_ID', defaultValue: '',
+      description: 'Optional secret-text PAT with read:packages and delete:packages; blank skips cleanup.')
+  }
+
+  environment {
+    IMAGE_PREFIX = 'ghcr.io/star-bnl/star-sw'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        script {
+          // Validate the ref and tag before checkout, Docker builds, or credential binding.
+          imageTags('root5', 'gcc485')
+          if (!params.GHCR_CREDENTIALS_ID?.trim()) {
+            error('GHCR_CREDENTIALS_ID must identify a Jenkins username/password credential.')
+          }
+          checkout scm
+        }
+      }
+    }
+
+    stage('Prepare Docker') {
+      steps {
+        sh '''#!/usr/bin/env bash
+set -euo pipefail
+docker --version
+docker buildx version
+docker buildx inspect default --bootstrap
+python3 --version
+'''
+      }
+    }
+
+    stage('Build and Push Containers') {
+      matrix {
+        axes {
+          axis {
+            name 'STAR_BASE'
+            values 'root5', 'root6'
+          }
+          axis {
+            name 'COMPILER'
+            values 'gcc485', 'gcc11'
+          }
+        }
+        stages {
+          stage('Build and Push') {
+            steps {
+              script {
+                buildAndPushImage(env.STAR_BASE, env.COMPILER)
+              }
+            }
+          }
+        }
+      }
+    }
+
+    stage('Remove Untagged Images') {
+      when {
+        expression { params.GHCR_CLEANUP_CREDENTIALS_ID?.trim() }
+      }
+      steps {
+        script {
+          cleanupUntaggedImages()
+        }
+      }
+    }
+  }
+}
