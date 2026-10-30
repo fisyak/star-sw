@@ -9,6 +9,8 @@
 # ls -1d /gpfs01/star/data100/TPC/reco/TFG26i2/2025/RF/9p8GeV_fixedTarget_2026/*/*/*picoDst.root | awk -F\/ '{print $12" "$0}' | tee list.sorted
 # ~/work/kfp/2026/13p5GeV_fixedTarget_2026.TFG26j $ ls -1d /gpfs01/star/data100/TPC/reco/TFG26j/2025/RF/13p5GeV_fixedTarget_2026/*/*/*picoDst.root | awk -F\/ '{print $12" "$0}' | tee list.sorted
 # starsub05] ~/work/kfp/2026/13p5GeV_fixedTarget_2026.TFG26k $  ls -1d /gpfs01/star/data100/TPC/reco/TFG26k/2025/RF/13p5GeV_fixedTarget_2026/*/*/*picoDst.root | awk -F\/ '{print $12" "$0}' | tee list.sorted
+# [starsub05] ~/work/kfp/2026/13p5GeV_fixedTarget_2026.TFG26l $ ls -1d /gpfs01/star/data100/TPC/reco/TFG26l/2025/RF/13p5GeV_fixedTarget_2026/*/*/*picoDst.root | awk -F\/ '{print $12" "$0}' | tee list.sorted
+
 use File::Basename;
 use Cwd;
 use File::stat;
