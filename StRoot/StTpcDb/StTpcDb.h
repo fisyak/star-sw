@@ -26,7 +26,7 @@
 #include "StMessMgr.h"
 #include "StEnumerations.h"
 #include "StDetectorDbMaker/St_tpcPadConfigC.h"
-#include "StDetectorDbMaker/St_tpcWirePlanesC.h"
+
 #include "StDetectorDbMaker/St_tpcDimensionsC.h"
 #include "StDetectorDbMaker/St_tpcElectronicsC.h"
 #include "StDetectorDbMaker/St_tpcSlowControlSimC.h"
