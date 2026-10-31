@@ -1668,7 +1668,7 @@ static int nCall=0;nCall++;
     }
     sTNH.set(pNode,targetNode);
     status = sTNH.makeFit(0);
-    if (status) {targetNode->setInvalid();continue;}
+    if (status) {targetNode->setInvalid(); targetNode->setChi2(1e+62); continue;}
     if (!targetNode->isValid()) 	continue;
     isStarted = true;
     pNode = targetNode;
@@ -1898,7 +1898,7 @@ StiKalmanTrack &StiKalmanTrack::operator=(const StiKalmanTrack &tk)
   StiKTNIterator it;
   for (it=tk.begin();it!=tk.end();it++){
     const StiKalmanTrackNode *node = &(*it);
-    if (!node->isValid()) continue;
+    //    if (!node->isValid()) continue;
     StiKalmanTrackNode *myNode=trackNodeFactory->getInstance();
     *myNode=*node;
     add(myNode,kOutsideIn);
