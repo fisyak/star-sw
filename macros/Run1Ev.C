@@ -1,3 +1,13 @@
+//________________________________________________________________________________
+void SetOrigin(Double_t x = 0, Double_t y = 0, Double_t z = 0) {
+  StarMCSimplePrimaryGenerator *gener = (StarMCSimplePrimaryGenerator *) StarVMCApplication::Instance()->GetPrimaryGenerator();
+  if (gener) {
+    gener->UnSetVertex();
+    gener->SetOrigin(x, y, z);
+    cout << "Set Origin "; gener->GetOrigin().Print();
+  }
+}
+//________________________________________________________________________________
 void Run1Ev(Int_t NEvents, Int_t iD, 
 	    Double_t pTlow,Double_t pThigh,	    
 	    Double_t Ylow, Double_t Yhigh, 
@@ -92,16 +102,13 @@ void Run1Ev(Int_t NEvents, Int_t iD,
     if (StarVMCApplication::Instance()) {
       if (NEvents) {
 	StarMCSimplePrimaryGenerator *gener = (StarMCSimplePrimaryGenerator *) StarVMCApplication::Instance()->GetPrimaryGenerator();
-	if ( gener && ! gener->IsA()->InheritsFrom( "StarMCSimplePrimaryGenerator" ) ) {
-	  delete gener; gener = 0;
-	}
+	//	if ( gener && ! gener->IsA()->InheritsFrom( "StarMCSimplePrimaryGenerator" ) ) {
+	//	  delete gener; gener = 0;
+	//	}
 	if (! gener) gener =  new StarMCSimplePrimaryGenerator( Npart, iD, pTlow,pThigh,Ylow, Yhigh, Philow, Phihigh, Zlow, Zhigh, opt);
 	else         gener->SetGenerator( Npart, iD, pTlow,pThigh,Ylow, Yhigh, Philow, Phihigh, Zlow, Zhigh, opt);
 	StarVMCApplication::Instance()->SetPrimaryGenerator(gener);
 	cout << "Set StarMCSimplePrimaryGenerator" << endl;
-	//	gener->SetOrigin(1,-2,0);
-	// gener->SetOrigin(0,190,100);
-	cout << "Set Origin "; gener->GetOrigin().Print();
       }
 #if 1
       //      gener->SetGun();
@@ -151,7 +158,7 @@ void Run1Ev(Int_t NEvents, Int_t iD,
   if (gClassTable->GetID("StiMaker") >= 0) {
     // Old Sti
     //    StiKalmanTrackNode::setDebug(8+32+16);
-    StiKalmanTrackNode::setDebug(32+16); // 64 - check locate
+    StiKalmanTrackNode::setDebug(8+32+16);// +64); // 64 - check locate
 //     StiKalmanTrackFinder::setDebug(2+8);  // 
 //    StiKalmanTrackFinder::setDebug(4);  //  2
     //    StiKalmanTrackFinder::setDebug(3);
