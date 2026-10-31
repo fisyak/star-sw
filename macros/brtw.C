@@ -440,8 +440,8 @@ void FitH3(
   if (! h3 && HistN.Contains("1GeV")) {
     HistN.ReplaceAll("1GeV","");
     h3 = (TH3F *) gDirectory->Get(HistN);
-    if (! h3) return;
   }
+  if (! h3) return;
   if (h3->GetDimension() != 3) return;
   TString nOut(h3->GetName());
   nOut.ReplaceAll("#","");
@@ -522,6 +522,8 @@ void FitH3(
       vars[7+2*Npar] = proj->GetRMS();
       vars[8+2*Npar] = proj->GetEntries();
       FitP->Fill(vars);
+      proj->Write();
+      delete proj;
     }
   }
   fOut->Write();
