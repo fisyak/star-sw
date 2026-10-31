@@ -20879,3 +20879,1036 @@ Pcon    Phi1    0.00    Dphi    360.00  Nz      5
 2       Z       59.62   Rmin    21.57   Rmax    22.00
 3       Z       148.62  Rmin    38.47   Rmax    38.90
 4       Z       230.32  Rmin    38.47   Rmax    38.90
+================================================================================
+10/23/2026
+       vtxErr
+TFG26j  {0.000609201146, -7.2586532e-05,  0.000631626346, 1.11455229e-05, 0.000105282255, 0.00133474928}
+TFG26l  {0.000532785547, -7.16626091e-05, 0.000548571115, 7.28559655e-07, 5.4784552e-05,  0.00114692398}
+
+
+run 'bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,MassFit,UseCAVxFinder,NoHistos,noTags,noRunco,-evout,PicoVtxFXT,FXT","/gpfs01/star/daq/2026/026/27026051/st_physics_27026051_raw_0100001.daq","st_physics_27026051_raw_0100001,10001,15000.event.root","st_physics_27026051_raw_0100001,10001,15000.tags.root")'
+TFG26j
+QA :INFO  - +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+QA :INFO  - StAnalysisMaker,  Reading Event: 1  Type: Collision  Run: 1  EventId: 1
+QA :INFO  - # track nodes:      20: good globals with NFitP>=15: 18
+QA :INFO  - post (C)rossing tracks :0: (P)rompt:0: (X) membrane :4(T)of/ctb matches:9 :Emc matches(W/E): 0/0 :Only W:10 E:3
+QA :INFO  - #V[  0] :0/0/4/9/0/*/2  -0.359+/-0.070,  -2.193+/-0.057, 199.914+/-0.074, Prob/Chi2: 0.000/  13.75 Rank:  10060.0 U/T/G:   15,  19,  17 IdT:     1 Q:  100
+QA :INFO  - # TPC hits:          803:   Bad ones (! flag):     12:      Used in Fit:      715
+QA :INFO  - # BTof hits:          16:   Bad ones (! flag):     0:        Matched with tracks:      6:   Mc 3:    Matched with tracks:      2
+QA :INFO  - # ETof hits:          4:    Bad ones (! flag):     0:        Matched with tracks:      4
+QA :INFO  - *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+TFG26l
+QA :INFO  - +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-                                                                                 
+QA :INFO  - StAnalysisMaker,  Reading Event: 1  Type: Collision  Run: 1  EventId: 1                                                                                          
+QA :INFO  - # track nodes:      20: good globals with NFitP>=15: 16                                                                                                          
+QA :INFO  - post (C)rossing tracks :0: (P)rompt:1: (X) membrane :4(T)of/ctb matches:6 :Emc matches(W/E): 0/0 :Only W:9 E:2                                                   
+QA :INFO  - #V[  0] :0/1/4/7/0/9/2  -0.404+/-0.054,  -2.269+/-0.046, 200.050+/-0.044, Prob/Chi2: 0.000/  44.55 Rank:  10053.0 U/T/F/G:   15,  18,  16,  16 IdT:     1 Q:  100
+QA :INFO  - # TPC hits:          780:   Bad ones (! flag):     8:       Used in Fit:      700                                                                                
+QA :INFO  - # BTof hits:          13:   Bad ones (! flag):     0:        Matched with tracks:      5:   Mc 1:    Matched with tracks:      1                                 
+QA :INFO  - # ETof hits:          4:    Bad ones (! flag):     0:        Matched with tracks:      4                                                                         
+QA :INFO  - *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-                                                                                 
+
+TFG26j
+Vertex:   0 #V[  0] :0/0/4/9/0/*/2  -0.359+/-0.070,  -2.193+/-0.057, 199.914+/-0.074, Prob/Chi2: 0.000/  13.75 Rank:  10060.0 U/T/G:   15,  19,  17 IdT:     1 Q:  100
+   1  L  341.862 primary  301    X   NP 66 IdT:    5 Q:100 q/pT   -1.001 eta   -1.198 phi   -0.488 pxyz    0.882  -0.468  -1.505 NF 66 chi2    1.007/   0.146 NdEdx 65   2.25 keV +/-   4.9 %
+   2  L  436.674 primary  301    X   NP 65 IdT:   18 Q:100 q/pT   -0.992 eta   -1.455 phi    0.972 pxyz    0.568   0.833  -2.041 NF 65 chi2    0.621/   0.063 NdEdx 64   1.94 keV +/-   4.2 %
+   3  L  270.546 primary  301 T  W   NP 61 IdT:   11 Q:100 q/pT   -1.033 eta   -0.882 phi    2.620 pxyz   -0.840   0.482  -0.969 NF 61 chi2    0.620/   0.121 NdEdx 60   1.44 keV +/-   5.1 %
+   4  L  258.967 primary  301 T  W   NP 56 IdT:   20 Q:100 q/pT   -0.995 eta   -0.812 phi    2.565 pxyz   -0.842   0.548  -0.909 NF 56 chi2    0.513/   0.995 NdEdx 55   1.52 keV +/-   5.3 %
+   5  L  356.120 primary  301 T      NP 55 IdT:    4 Q:100 q/pT   -1.016 eta   -1.230 phi    2.069 pxyz   -0.471   0.865  -1.540 NF 55 chi2    0.595/   0.152 NdEdx 54   2.67 keV +/-   5.0 %
+   6  L  319.867 primary  301 T  X   NP 62 IdT:    8 Q:100 q/pT   -1.026 eta   -1.112 phi   -0.879 pxyz    0.622  -0.751  -1.321 NF 51 chi2    0.574/   0.332 NdEdx 50   2.83 keV +/-   5.5 %
+   7  L  228.415 primary  301 T  W   NP 69 IdT:    7 Q:100 q/pT   -1.017 eta   -0.628 phi   -3.129 pxyz   -0.983  -0.012  -0.658 NF 47 chi2    0.500/   0.152 NdEdx 46   2.13 keV +/-   5.7 %
+   8  L  227.988 primary  301 T  W   NP 68 IdT:   15 Q:100 q/pT   -1.005 eta   -0.627 phi    3.128 pxyz   -0.995   0.014  -0.666 NF 46 chi2    0.502/   2.161 NdEdx 45   2.27 keV +/-   6.0 %
+   9  L  412.624 primary  301    X   NP 39 IdT:    3 Q:100 q/pT   -0.995 eta   -1.811 phi    2.408 pxyz   -0.746   0.673  -2.991 NF 38 chi2    0.601/   4.761 NdEdx 37   2.57 keV +/-   6.4 %
+  10  L  416.794 primary  301    E   NP 40 IdT:   17 Q:100 q/pT   -1.022 eta   -1.826 phi   -1.163 pxyz    0.388  -0.898  -2.959 NF 32 chi2    1.882/   1.739 NdEdx 31   2.03 keV +/-   6.9 %
+  11  L  200.760 primary  301 T  W   NP 64 IdT:   16 Q:100 q/pT   -0.987 eta   -0.268 phi   -0.773 pxyz    0.726  -0.708  -0.275 NF 20 chi2    2.864/   1.412 NdEdx  6   3.80 keV +/-  13.2 %
+  12  L  322.460 primary  301    E   NP 21 IdT:    9 Q:100 q/pT   -1.025 eta   -1.945 phi   -3.013 pxyz   -0.967  -0.125  -3.341 NF 18 chi2    1.858/   7.378 NdEdx 15   4.17 keV +/-   9.3 %
+  14  L  177.026 primary  301 T  W   NP 54 IdT:   14 Q:100 q/pT   -1.016 eta   -0.396 phi    1.884 pxyz   -0.303   0.936  -0.400 NF 24 chi2    1.536/   0.554 NdEdx 19   2.33 keV +/-   9.3 %
+
+  15  L  201.257 primary  301    W   NP 72 IdT:    6 Q:100 q/pT   -0.995 eta   -0.308 phi    2.435 pxyz   -0.764   0.652  -0.314 NF 27 chi2    0.580/   0.415 NdEdx 26   2.62 keV +/-   6.7 %
+  19  L  155.972 primary  301    W   NP 44 IdT:    6 Q:100 q/pT   -1.002 eta   -0.304 phi    2.544 pxyz   -0.825   0.561  -0.308 NF 13 chi2    1.846/  16.728 NdEdx 12   2.11 keV +/-  13.1 %
+
+  16  L  206.021 primary  301    W   NP 73 IdT:   13 Q:100 q/pT   -0.999 eta   -0.397 phi   -1.941 pxyz   -0.362  -0.933  -0.408 NF 31 chi2    0.572/   2.642 NdEdx 27   2.88 keV +/-   7.5 %
+  17  L  194.690 primary  301 T  W   NP 71 IdT:   19 Q:100 q/pT   -1.012 eta   -0.235 phi   -2.204 pxyz   -0.585  -0.796  -0.235 NF 31 chi2    0.632/   5.329 NdEdx 30   2.35 keV +/-   6.2 %
+
+  18  L  195.313 primary  301    W   NP 71 IdT:   10 Q:100 q/pT   -0.992 eta   -0.173 phi    2.426 pxyz   -0.761   0.661  -0.176 NF 22 chi2    0.530/   0.356 NdEdx 21   2.80 keV +/-   8.3 %
+  20  L  138.962 primary  301    W   NP 39 IdT:   10 Q:100 q/pT   -1.044 eta   -0.174 phi    2.528 pxyz   -0.783   0.552  -0.168 NF 14 chi2    4.590/  11.721 NdEdx 13   2.23 keV +/-  10.0 %
+TFG26l
+Event: Run 1 Event No: 1                                                                                                                                                                                                                       
+Vertex:   0 #V[  0] :0/1/4/7/0/9/2  -0.404+/-0.054,  -2.269+/-0.046, 200.050+/-0.044, Prob/Chi2: 0.000/  44.55 Rank:  10053.0 U/T/F/G:   15,  18,  16,  16 IdT:     1 Q:  100                                                                  
+
+   8  L  342.404 primary  301    X   NP 68 IdT:    5 Q:100 q/pT   -1.010 eta   -1.200 phi   -0.485 pxyz    0.876  -0.461  -1.495 NF 68 chi2    0.583/   0.422 NdEdx 67   1.67 keV +/-   4.6 %                                                  
+   1  L  434.256 primary  301    X   NP 67 IdT:   18 Q:100 q/pT   -1.002 eta   -1.451 phi    0.987 pxyz    0.551   0.833  -2.013 NF 67 chi2    0.718/   0.348 NdEdx 66   1.91 keV +/-   5.0 %                                                  
+   4  L  270.288 primary  301 T  W   NP 55 IdT:   11 Q:100 q/pT   -0.994 eta   -0.880 phi    2.617 pxyz   -0.870   0.504  -1.005 NF 55 chi2    0.614/   7.130 NdEdx 54   1.92 keV +/-   5.8 %                                                  
+   2  L  259.880 primary  301    W   NP 64 IdT:   20 Q:100 q/pT   -0.988 eta   -0.818 phi    2.560 pxyz   -0.845   0.556  -0.923 NF 64 chi2    0.510/   3.008 NdEdx 63   1.27 keV +/-   5.4 %                                                  
+   3  L  356.138 primary  301 T      NP 56 IdT:    4 Q:100 q/pT   -1.016 eta   -1.229 phi    2.069 pxyz   -0.471   0.865  -1.538 NF 56 chi2    0.709/   0.051 NdEdx 55   2.59 keV +/-   5.0 %                                                  
+   5  L  320.094 primary  301 T  X   NP 59 IdT:    8 Q:100 q/pT   -1.027 eta   -1.112 phi   -0.872 pxyz    0.626  -0.745  -1.319 NF 49 chi2    0.871/   0.359 NdEdx 47   2.47 keV +/-   5.9 %                                                  
+   6  L  229.182 primary  301 T  W   NP 70 IdT:    7 Q:100 q/pT   -1.036 eta   -0.634 phi   -3.141 pxyz   -0.965  -0.001  -0.654 NF 46 chi2    0.437/   0.108 NdEdx 45   2.43 keV +/-   5.5 %                                                  
+   7  L  226.821 primary  301    W   NP 65 IdT:   15 Q:100 q/pT   -1.014 eta   -0.614 phi    3.118 pxyz   -0.985   0.023  -0.644 NF 43 chi2    0.381/   0.183 NdEdx 42   2.54 keV +/-   5.4 %                                                  
+  10  L  413.135 primary  301    X   NP 32 IdT:    3 Q:100 q/pT   -1.063 eta   -1.813 phi    2.409 pxyz   -0.699   0.629  -2.805 NF 32 chi2    1.343/  10.331 NdEdx 31   2.22 keV +/-   6.8 %                                                  
+   9  L  432.745 primary  301P   E   NP 40 IdT:   17 Q:100 q/pT   -1.012 eta   -1.833 phi   -1.164 pxyz    0.391  -0.907  -3.009 NF 33 chi2    1.897/   4.542 NdEdx 32   2.46 keV +/-   6.8 %                                                  
+
+  17  L  201.018 primary -302 T    R NP 73 IdT:   16 Q:100 q/pT   -1.021 eta   -0.273 phi   -0.801 pxyz    0.682  -0.704  -0.271 NF 11 chi2    1.260/  16.758                                                                                  
+
+  12  L  325.251 primary  301    E   NP 20 IdT:    9 Q:100 q/pT   -1.092 eta   -1.957 phi   -3.017 pxyz   -0.908  -0.114  -3.176 NF 18 chi2    2.850/   0.039 NdEdx 15   4.16 keV +/-   8.3 %                                                  
+  11  L  174.488 primary  301 T  W   NP 25 IdT:   14 Q:100 q/pT   -1.010 eta   -0.393 phi    1.887 pxyz   -0.308   0.941  -0.399 NF 23 chi2    1.163/   2.883 NdEdx 22   2.73 keV +/-   9.9 %                                                  
+
+  14  L  201.482 primary  301    W   NP 73 IdT:    6 Q:100 q/pT   -0.998 eta   -0.311 phi    2.523 pxyz   -0.816   0.581  -0.317 NF 36 chi2    0.977/   4.729 NdEdx 35   2.20 keV +/-   6.6 %                                                  
+
+  16  L  205.939 primary  301    W   NP 73 IdT:   13 Q:100 q/pT   -1.002 eta   -0.397 phi   -1.944 pxyz   -0.363  -0.929  -0.406 NF 37 chi2    0.450/   6.637 NdEdx 31   2.57 keV +/-   6.4 %                                                  
+  18  L  194.877 primary  301 T  W   NP 71 IdT:   19 Q:100 q/pT   -1.011 eta   -0.241 phi   -2.166 pxyz   -0.555  -0.819  -0.241 NF 28 chi2    1.043/  15.353 NdEdx 27   2.70 keV +/-   7.0 %                                                  
+
+  15  L  195.436 primary  301    W   NP 73 IdT:   10 Q:100 q/pT   -0.997 eta   -0.173 phi    2.419 pxyz   -0.752   0.663  -0.175 NF 26 chi2    0.628/   2.093 NdEdx 25   2.30 keV +/-   7.4 %                                                  
+
+  19  L  119.795 primary -302      R NP 33 IdT:   10 Q:100 q/pT   -1.032 eta   -0.172 phi    2.491 pxyz   -0.771   0.587  -0.168 NF  6 chi2    1.950/  75.928                                                                                  
+================================================================================
+10/24/2026
+MuEvent.mEventSummary.mPrimaryVertexPos.mX3
+MuEvent.mEventSummary.L4VxWest.Mu
+MuEvent.mEventSummary.L4VxEast.Mu
+MuDst->Draw("MuEvent.mEventSummary.L4VxEast.Mu-MuEvent.mEventSummary.mPrimaryVertexPos.mX3:MuEvent.mEventSummary.L4VxWest.Mu-MuEvent.mEventSummary.mPrimaryVertexPos.mX3>>EWZ(100,-5.0,5,100,-5,5)","","colz")
+
+[starsub05] ~/TPC/reco/TFG26l/2025/RF/13p5GeV_fixedTarget_2026 $ root.exe 'Chain.C+("*/*/*.MuDst.root")'
+
+
+run 'bfc.C(0,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,MassFit,UseCAVxFinder,NoHistos,noTags,noRunco,-evout,PicoVtxFXT,FXT","/gpfs01/star/daq/2026/026/27026051/st_physics_27026051_raw_0100001.daq","st_physics_27026051_raw_0100001,10001,15000.event.root","st_physics_27026051_raw_0100001,10001,15000.tags.root")'
+p    StiKalmanTrackNode::setDebug(32+16+64)
+p    StiKalmanTrackFitter::setDebug(1)
+p     StiKalmanTrack::setDebug(2)
+
+
+64 - 0x130a2838(*H)    ch2=1.8126      x=57.6879       h=-0.00149665 Tpc/Padrow_2/Sector_6
+ 65 - 0x130a2650(*)     ch2=0   x=56.0798       h=-0.00149671 Tpc/Padrow_1/Sector_6
+ 66 - 0x130a2468(*)     ch2=0   x=47.2845       h=-0.00149701 /TIFC_1_2
+ 67 - 0x130a2280(*)     ch2=0   x=38.685        h=-0.00149715 SCOM_1/SCON_1_3
+ 68 - 0x130a2098(*)     ch2=0   x=36.995        h=-0.00149716 SCOM_1/SCON_1_2_4
+ 69 - 0x130a1eb0(*)     ch2=0   x=35.5355       h=-0.00149717 FSTA_1/OFCC_2_8
+ 70 - 0x130a1cc8(*)     ch2=0   x=35.3336       h=-0.00149717 FSTA_1/OFCC_2_7
+ 71 - 0x130a1ae0(*)     ch2=0   x=35.1318       h=-0.00149717 FSTA_1/OFCC_2_6
+ 72 - 0x130a18f8(*)     ch2=0   x=34.93 h=-0.00149717 FSTA_1/OFCC_2_5
+ 73 - 0x130a1710(*)     ch2=0   x=34.7282       h=-0.00149717 FSTA_1/OFCC_2_4
+ 74 - 0x130a1528(*)     ch2=0   x=34.5264       h=-0.00149717 FSTA_1/OFCC_2_3
+ 75 - 0x130a1340(*)     ch2=0   x=34.3245       h=-0.00149718 FSTA_1/OFCC_2_2
+ 76 - 0x130a1158(*)     ch2=0   x=34.1227       h=-0.00149718 FSTA_1/OFCC_2_1
+ 77 - 0x130a0f70(*)     ch2=0   x=33.9209       h=-0.00149718 FSTA_1/OFCC_2
+ 78 - 0x130b8920(*)     ch2=0   x=33.3942       h=-0.00149717 FSTA_1/FSTM_1/FSTD_4/FTUO_31_5
+ 79 - 0x130b8550(*)     ch2=0   x=33.1825       h=-0.00149717 FSTA_1/FSTM_1/FSTD_4/FTUO_31_4
+ 80 - 0x130b8180(*)     ch2=1e+62       x=32.9708       h=-0.00149717 FSTA_1/FSTM_1/FSTD_4/FTUO_31_3
+ 81 - 0x130b7f98(*)     ch2=1e+62       x=32.7592       h=-0.00149717 FSTA_1/FSTM_1/FSTD_4/FTUO_31_2
+ 82 - 0x130b7db0(*)     ch2=0   x=32.7417       h=-0.00149717 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FTUR_2_2
+ 83 - 0x130b79e0(*)     ch2=1e+62       x=32.5475       h=-0.00149717 FSTA_1/FSTM_1/FSTD_4/FTUO_31_1
+ 84 - 0x130b77f8(*)     ch2=1e+62       x=32.3358       h=-0.00149716 FSTA_1/FSTM_1/FSTD_4/FTUO_31
+ 85 - 0x130b7610(*)     ch2=1e+62       x=32.3083       h=-0.00149716 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FTUR_2
+ 86 - 0x130b7428(*)     ch2=1e+62       x=31.9  h=-0.00149716 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_9
+ 87 - 0x130b7240(*)     ch2=1e+62       x=31.7  h=-0.00149716 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_8
+ 88 - 0x130b7058(*)     ch2=1e+62       x=31.5  h=-0.00149716 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_7
+ 89 - 0x130b6e70(*)     ch2=1e+62       x=31.3  h=-0.00149715 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_6
+ 90 - 0x130b6c88(*)     ch2=1e+62       x=31.1  h=-0.00149715 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_5
+ 91 - 0x130b6aa0(*)     ch2=1e+62       x=30.9  h=-0.00149715 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_4
+ 92 - 0x130b68b8(*)     ch2=1e+62       x=30.7  h=-0.00149715 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_3
+ 93 - 0x130b66d0(*)     ch2=1e+62       x=30.5  h=-0.00149714 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_2
+ 94 - 0x130b64e8(*)     ch2=1e+62       x=30.3  h=-0.00149714 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1_1
+ 95 - 0x130b6300(*)     ch2=1e+62       x=30.1  h=-0.00149714 FSTA_1/FSTM_1/FSTD_4/FSTW_11:FHTS_1
+ 96 - 0x130b5f30(*)     ch2=1e+62       x=28.9  h=-0.00149712 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FSTW_2_4
+ 97 - 0x130b5b60(*)     ch2=1e+62       x=28.7  h=-0.00149712 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FSTW_2_3
+ 98 - 0x130b5790(*)     ch2=1e+62       x=28.5  h=-0.00149712 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FSTW_2_2
+ 99 - 0x130b53c0(*)     ch2=1e+62       x=28.3  h=-0.00149711 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FSTW_2_1
+100 - 0x130b51d8(*)     ch2=1e+62       x=28.1  h=-0.00149711 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FSTW_2
+101 - 0x130b4ff0(*)     ch2=1e+62       x=27.7125       h=-0.0014971 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_19
+102 - 0x130b4e08(*)     ch2=1e+62       x=27.1375       h=-0.00149708 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_18
+103 - 0x130b4c20(*)     ch2=1e+62       x=26.5625       h=-0.00149706 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_17
+104 - 0x130b4a38(*)     ch2=1e+62       x=25.9875       h=-0.00149704 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_16
+105 - 0x130b4850(*)     ch2=1e+62       x=25.4125       h=-0.00149702 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_15
+106 - 0x130b4668(*)     ch2=0   x=24.8375       h=-0.001497 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_14
+107 - 0x130b4480(*)     ch2=1e+62       x=24.2625       h=-0.00149698 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_13
+108 - 0x130b4298(*)     ch2=1e+62       x=23.6875       h=-0.00149696 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_12
+109 - 0x130b40b0(*)     ch2=1e+62       x=23.1125       h=-0.00149694 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_11
+110 - 0x130b3ec8(*)     ch2=1e+62       x=22.5375       h=-0.00149692 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_10
+111 - 0x130b3ce0(*)     ch2=1e+62       x=21.9625       h=-0.00149689 FSTA_1/FSTM_1/FSTD_5/FSTW_5:FTUS_1_9
+112 - 0x130b3af8(*)     ch2=1e+62       x=18.5125       h=-0.00149665 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_1_3
+113 - 0x130b3910(*)     ch2=1e+62       x=17.9375       h=-0.00149661 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_1_2
+114 - 0x130b3728(*)     ch2=1e+62       x=17.9  h=-0.0014966 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_8
+115 - 0x130b3540(*)     ch2=1e+62       x=17.7  h=-0.00149659 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_7
+116 - 0x130b3358(*)     ch2=1e+62       x=17.5  h=-0.00149657 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_6
+117 - 0x130b3170(*)     ch2=1e+62       x=17.3625       h=-0.00149656 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_1_1
+118 - 0x130b2f88(*)     ch2=1e+62       x=17.3  h=-0.00149655 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_5
+119 - 0x130b2da0(*)     ch2=1e+62       x=17.1  h=-0.00149654 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_4
+120 - 0x130b2bb8(*)     ch2=1e+62       x=16.9  h=-0.00149652 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_3
+121 - 0x130b29d0(*)     ch2=1e+62       x=16.7875       h=-0.00149651 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_1
+122 - 0x130b27e8(*)     ch2=1e+62       x=16.7  h=-0.0014965 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_2
+123 - 0x130b2600(*)     ch2=0   x=16.4999       h=-0.00149648 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1_1
+124 - 0x130b2418(*)     ch2=0   x=16.2999       h=-0.00149646 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FSTW_1
+125 - 0x130b2230(*)     ch2=1e+62       x=15.2375       h=-0.00149636 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_19
+126 - 0x130b2048(*)     ch2=0   x=14.712        h=-0.00149629 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_18
+127 - 0x130b1e60(*)     ch2=1e+62       x=14.1875       h=-0.00149621 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_17
+128 - 0x130b1c78(*)     ch2=1e+62       x=13.6625       h=-0.00149613 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_16
+129 - 0x130b1a90(*)     ch2=1e+62       x=13.1375       h=-0.00149604 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_15
+130 - 0x130b18a8(*)     ch2=1e+62       x=12.6125       h=-0.00149596 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_14
+131 - 0x130b16c0(*)     ch2=1e+62       x=12.0875       h=-0.00149587 FSTA_1/FSTM_1/FSTD_6/FSTW_11:FTUS_2_13
+132 - 0x130b14d8(*)     ch2=0   x=3.93094       h=-0.00149382 PIPE_1/PIPO_1/PVAO_1
+133 - 0x130b1108(H)     ch2=0.0779354   x=1.9947        h=-0.00149316 valid
+(gdb) p iTrack
+$56 = 15
+================================================================================
+10/27/2026
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_13  dE pT  0.688+-  0.2, sy 0.508, x =   24.26 z =  151.49  0.575 (  0.575 ) cm( 0.00%) -2.36 keV  0.532 GeV
+StiTrackNodeHelper::pathIn missed det FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_13     Z = 151.53      Zcen = 151.40   dZ = 0.13       dz = 0.10       dl = -0.58
+StiTrackNodeHelper::pathIn missed det FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_13     Z = 151.53      Zcen = 151.40   dZ = 0.13       dz = 0.10       dl = -1.15
+StiTrackNodeHelper::pathIn missed det FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_13     Z = 151.53      Zcen = 151.40   dZ = 0.13       dz = 0.10       dl = -1.73
+
+(gdb) p targetNode->getDetector()->Print("")
+FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_9 xy    0.00    0.00  z  151.40 R:  21.96 phi:-105.0  rO: 22.25 dR: 0.57 dPhi: 30.00 dZ: 0.10        Mat:FTUS_1 :1.21 g/cm^3 X0:18.72 Z: 10.52 A: 21.08      Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+
+StiTrackNodeHelper::pathIn missed det FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_13     Z = 151.53      Zcen = 151.40   dZ = 0.13       dz = 0.10       dl = -2.30
+
+(gdb) p targetNode->getDetector()->Print("")
+FSTA_1/FSTM_1/FSTD_4/FSTW_5:FTUS_1_8 xy    0.00    0.00  z  151.40 R:  21.39 phi:-105.0  rO: 21.68 dR: 0.57 dPhi: 30.00 dZ: 0.10        Mat:FTUS_1 :1.21 g/cm^3 X0:18.72 Z: 10.52 A: 21.08      Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+(gdb) p proPars.print()
+StiMaker:INFO  - cosCA = 0.999779, sinCA = 0.0210282, X = 21.3875, Y = 0.0316328, Z = 151.616, Eta = 0.0203082, Ptin = -1.52261, TanL = -0.0313213, Curv = 0.00227944, 
+$74 = void
+(gdb) p rotPars.print()
+StiMaker:INFO  - cosCA = 0.999639, sinCA = 0.0268598, X = 24.2623, Y = 0.0994498, Z = 151.526, Eta = 0.026863, Ptin = -1.52261, TanL = -0.0313213, Curv = 0.00227946, 
+$75 = void
+================================================================================
+   0:Done:0;Dau:1;Tra:1;TParticle: Alpha          p: 1.000000 0.000000 -2.129279 Vertex: -2.666017e-01 -2.305792e+00 2.000018e+02    -1    -1
+     -0.2666    -2.3058   200.0018     2.3212 FOIL    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL             -          
+     -0.2595    -2.3058   199.9866     2.3203 FOIL    1     0.0168    0.0168    0.0  eV  680.246 MeV FIEL NEXT LOSS   -  
+      3.1147    -2.2887   192.8019     3.8652 PVAO    1     7.9544    7.9376    1.7  eV  680.246 MeV FIEL LOSS	                   
+      3.1274    -2.2886   192.7749     3.8753 PVAO    1     7.9842    0.0298    0.0  eV  680.246 MeV FIEL NEXT LOSS                
+      3.2821    -2.2870   192.4455     4.0003 PIPO    1     8.3482    0.3640   15.8 MeV  664.463 MeV FIEL NEXT LOSS                
+      3.3102    -2.2867   192.3857     4.0232 PWRP    1     8.4142    0.0660    2.1 MeV  662.315 MeV FIEL NEXT LOSS                
+      3.3198    -2.2866   192.3652     4.0311 PIPE    1     8.4369    0.0227  493.0  eV  662.315 MeV FIEL NEXT LOSS  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.516+-  9.4, sy 1.536, x =    3.94 z =  191.06  6.451 (  5.565 ) cm(23.02%) -3.73 MeV  1.080 GeV               
+      4.2260    -2.2756   190.4355     4.7998 CAVE    1    10.5688    2.1319   46.9 keV  662.268 MeV FIEL LOSS	                  
+      4.2267    -2.2756   190.4340     4.8004 CAVE    1    10.5704    0.0016   35.3  eV  662.268 MeV FIEL NEXT LOSS               
+      5.7890    -2.2508   187.1071     6.2112 FSTM    1    14.2460    3.6756   80.8 keV  662.187 MeV FIEL SCUT LOSS               
+      7.3512    -2.2187   183.7801     7.6787 FSTM    1    17.9216    3.6756   80.9 keV  662.106 MeV FIEL NEXT LOSS               
+      7.8207    -2.2076   182.7801     8.1263 FSTD    6    19.0264    1.1048   24.3 keV  662.082 MeV FIEL NEXT LOSS               
+      8.8738    -2.1802   180.5370     9.1377 FSTW   12    21.5046    2.4782   54.5 keV  662.027 MeV FIEL NEXT LOSS               
+      8.8879    -2.1798   180.5070     9.1513 FTUS    3    21.5377    0.0331    1.3 MeV  660.732 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_2  dE pT  0.514+-  9.3, sy 1.131, x =    6.44 z =  185.23  1.546 (  0.000 ) cm(21.75%) -5.07 MeV  1.076 GeV               
+      8.9043    -2.1794   180.4720     9.1671 FTIH    1    21.5764    0.0387    1.0 MeV  659.684 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_2  dE pT  0.512+-  9.2, sy 1.103, x =    6.69 z =  184.67  1.540 (  0.000 ) cm(21.59%) -5.04 MeV  1.071 GeV               
+      8.9982    -2.1767   180.2720     9.2578 FTUW    1    21.7974    0.2210    5.7 MeV  653.972 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_3  dE pT  0.509+-  9.1, sy 1.069, x =    7.01 z =  183.95  1.532 (  0.000 ) cm(21.56%) -5.02 MeV  1.066 GeV               
+      9.6986    -2.1564   178.7801     9.9354 FSTW   12    23.4456    1.6482   36.6 keV  653.935 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_3  dE pT  0.507+-  9.0, sy 1.033, x =    7.36 z =  183.17  1.527 (  0.000 ) cm(21.43%)    -5 MeV  1.061 GeV               
+     12.0455    -2.0773   173.7801    12.2233 FSTD    6    28.9696    5.5240  122.7 keV  653.813 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_4  dE pT  0.505+-  8.9, sy 1.011, x =    7.59 z =  182.68  1.298 (  0.000 ) cm(20.00%) -4.35 MeV  1.056 GeV               
+     13.7034    -2.0112   170.2471    13.8502 FSTM    1    32.8728    3.9032   86.7 keV  653.726 MeV FIEL NEXT LOSS  -   FSTA_1/FSTM_1/FSTD_6/FSTW_12/FSBW_24_5  dE pT  0.504+-  8.8, sy 0.989, x =    7.82 z =  182.17  1.416 (  0.000 ) cm( 6.44%) -3.58 MeV  1.051 GeV               
+     16.0492    -1.9033   165.2471    16.1616 FSTD    5    38.3968    5.5240  122.7 keV  653.603 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_4  dE pT  0.502+-  8.7, sy 0.968, x =    8.04 z =  181.68  1.518 (  0.000 ) cm(21.31%) -4.96 MeV  1.048 GeV               
+     16.2189    -1.8949   164.8852    16.3293 FSTW    6    38.7966    0.3998    8.9 keV  653.594 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_5  dE pT  0.500+-  8.6, sy 0.956, x =    8.16 z =  181.41  0.832 (  0.029 ) cm(17.84%) -3.12 MeV  1.043 GeV               
+     16.2354    -1.8941   164.8502    16.3455 FTOH    1    38.8353    0.0387    1.1 MeV  652.538 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_6/FSTW_12/FSBW_27  dE pT  0.499+-  8.5, sy 0.931, x =    8.50 z =  180.66  0.922 (  0.000 ) cm( 4.35%) -2.36 MeV  1.039 GeV               
+     16.3292    -1.8893   164.6502    16.4381 FTRO    1    39.0562    0.2210    5.8 MeV  646.781 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_5  dE pT  0.497+-  8.5, sy 0.907, x =    8.71 z =  180.21  1.511 (  0.000 ) cm(21.22%) -4.94 MeV  1.037 GeV               
+     16.4775    -1.8818   164.3339    16.5846 FSTW    6    39.4056    0.3494    7.8 keV  646.773 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_6  dE pT  0.495+-  8.3, sy 0.904, x =    8.74 z =  180.15  1.387 (  0.000 ) cm(34.57%) -5.67 MeV  1.032 GeV               
+     16.5062    -1.8804   164.2728    16.6129 FSCT    5    39.4731    0.0675    8.0 MeV  638.768 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_7  dE pT  0.493+-  8.1, sy 0.854, x =    9.31 z =  178.90  1.505 (  0.000 ) cm(21.14%) -4.91 MeV  1.026 GeV               
+     16.6337    -1.8738   164.0010    16.7389 FSCL    5    39.7735    0.3004    7.9 MeV  630.871 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_6  dE pT  0.490+-  8.0, sy 0.848, x =    9.39 z =  178.73  1.503 (  0.000 ) cm(21.09%)  -4.9 MeV  1.022 GeV               
+     16.6623    -1.8724   163.9399    16.7672 FSCT    5    39.8409    0.0675    8.1 MeV  622.736 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_8  dE pT  0.488+-  7.9, sy 0.806, x =    9.89 z =  177.65  1.500 (  0.000 ) cm(21.08%) -4.89 MeV  1.017 GeV               
+     16.7208    -1.8693   163.8152    16.8250 FSTW    6    39.9787    0.1378    3.1 keV  622.733 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_7  dE pT  0.486+-  7.8, sy 0.791, x =   10.06 z =  177.27  1.498 (  0.000 ) cm(21.03%) -4.89 MeV  1.012 GeV               
+     16.7489    -1.8679   163.7552    16.8528 FTIA    1    40.0450    0.0663    1.8 MeV  620.954 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_9  dE pT  0.484+-  7.6, sy 0.759, x =   10.46 z =  176.40  1.496 (  0.000 ) cm(21.02%) -4.88 MeV  1.007 GeV               
+     16.8428    -1.8630   163.5552    16.9455 FTUW    1    40.2660    0.2210    6.0 MeV  615.000 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_8  dE pT  0.482+-  7.5, sy 0.737, x =   10.74 z =  175.81  8.040 (  6.431 ) cm( 7.70%) -4.13 MeV  1.002 GeV               
+     16.8592    -1.8622   163.5202    16.9617 FTIH    1    40.3046    0.0387    1.1 MeV  613.900 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_13  dE pT  0.480+-  7.5, sy 0.484, x =   14.11 z =  168.54  1.483 (  0.000 ) cm(20.83%) -4.83 MeV  0.998 GeV               
+     17.9252    -1.8048   161.2471    18.0158 FSTW    6    42.8159    2.5113   58.2 keV  613.841 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_16  dE pT  0.478+-  7.3, sy 0.459, x =   14.49 z =  167.73  1.483 (  0.000 ) cm(20.83%) -4.83 MeV  0.993 GeV               
+     18.3941    -1.7784   160.2471    18.4799 FSTD    5    43.9207    1.1048   25.6 keV  613.816 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_14  dE pT  0.477+-  7.2, sy 0.439, x =   14.79 z =  167.09  0.923 (  0.000 ) cm( 4.35%) -2.35 MeV  0.988 GeV               
+     20.0340    -1.6807   156.7491    20.1044 FSTM    1    47.7853    3.8646   89.5 keV  613.726 MeV FIEL NEXT LOSS  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSBW_2  dE pT  0.477+-  7.2, sy 0.430, x =   14.99 z =  166.31  2.328 (  1.970 ) cm( 1.80%)  -913 keV  0.986 GeV               
+     20.5027    -1.6512   155.7491    20.5691 FSTD    4    48.8901    1.1048   25.6 keV  613.701 MeV FIEL NEXT LOSS  -      FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1  dE pT  0.478+-  7.2, sy 0.361, x =   15.04 z =  164.21  2.533 (  1.616 ) cm(18.27%)  3.39 MeV  0.985 GeV               
+     22.0486    -1.5489   152.4504    22.1029 FSTW   12    52.5345    3.6444   84.4 keV  613.616 MeV FIEL LOSS	     -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1  dE pT  0.478+-  7.2, sy 0.427, x =   15.04 z =  166.22  0.923 (  0.000 ) cm(18.30%)   3.4 MeV  0.985 GeV               
+     22.0499    -1.5489   152.4477    22.1042 FSTW   12    52.5375    0.0030   69.0  eV  613.616 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_17  dE pT  0.477+-  7.1, sy 0.421, x =   15.06 z =  166.50  3.005 (  2.087 ) cm(18.27%) -3.39 MeV  0.988 GeV               
+     22.0975    -1.5456   152.3460    22.1515 FSBW   15    52.6498    0.1123    3.0 MeV  610.571 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_1  dE pT  0.477+-  7.0, sy 0.350, x =   15.23 z =  163.78  2.544 (  2.071 ) cm( 1.82%)  1.05 MeV  0.985 GeV               
+     22.1912    -1.5391   152.1460    22.2445 FTRO    1    52.8708    0.2210    6.0 MeV  604.554 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_1  dE pT  0.477+-  7.0, sy 0.415, x =   15.23 z =  165.78  0.479 (  0.000 ) cm( 1.85%)  1.06 MeV  0.985 GeV               
+     22.2076    -1.5380   152.1110    22.2608 FTOH    1    52.9095    0.0387    1.1 MeV  603.442 MeV FIEL NEXT LOSS  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7  dE pT  0.476+-  7.0, sy 0.412, x =   15.25 z =  166.08  2.799 (  1.613 ) cm( 3.07%) -2.27 MeV  0.986 GeV               
+     22.2217    -1.5370   152.0810    22.2747 FTUS    2    52.9426    0.0331    1.4 MeV  602.066 MeV FIEL NEXT LOSS  -      FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTRO_1  dE pT  0.475+-  6.9, sy 0.344, x =   15.34 z =  163.55  1.183 (  0.000 ) cm( 3.82%) -2.43 MeV  0.984 GeV               
+     22.3772    -1.5262   151.7491    22.4291 FSTW   12    53.3093    0.3667    8.6 keV  602.057 MeV FIEL NEXT LOSS  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1  dE pT  0.475+-  6.9, sy 0.408, x =   15.34 z =  165.55  2.423 (  1.218 ) cm( 3.88%) -2.48 MeV  0.984 GeV               
+     24.7191    -1.3542   146.7491    24.7561 FSTD    4    58.8333    5.5240  129.4 keV  601.928 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_2  dE pT  0.476+-  6.9, sy 0.339, x =   15.43 z =  163.36  2.539 (  2.065 ) cm( 1.82%)  1.05 MeV  0.981 GeV               
+     27.7031    -1.1094   140.3741    27.7253 FSTM    1    65.8763    7.0431  165.1 keV  601.763 MeV FIEL SCUT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_2  dE pT  0.476+-  6.9, sy 0.403, x =   15.43 z =  165.35  0.479 (  0.000 ) cm( 1.85%)  1.06 MeV  0.981 GeV               
+     29.1941    -0.9763   137.1866    29.2104 FSTM    1    69.3979    3.5215   82.5 keV  601.680 MeV FIEL SCUT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_1  dE pT  0.475+-  6.9, sy 0.400, x =   15.45 z =  165.65  1.038 (  0.000 ) cm( 4.37%) -2.48 MeV  0.982 GeV               
+     30.6845    -0.8360   133.9991    30.6959 FSTM    1    72.9194    3.5215   82.6 keV  601.598 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_15  dE pT  0.473+-  6.8, sy 0.397, x =   15.46 z =  165.64  2.999 (  1.963 ) cm( 5.11%) -2.65 MeV  0.980 GeV               
+     34.2262    -0.4738   126.4185    34.2295 FSTA    1    81.2944    8.3750  196.3 keV  601.401 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_3  dE pT  0.474+-  6.8, sy 0.329, x =   15.63 z =  162.93  2.534 (  2.060 ) cm( 1.82%)  1.05 MeV  0.977 GeV               
+     34.2279    -0.4736   126.4150    34.2312 FSTA    1    81.2983    0.0039   90.2  eV  601.401 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_18  dE pT  0.474+-  6.9, sy 0.387, x =   15.64 z =  165.27  0.919 (  0.000 ) cm(17.51%) -3.21 MeV  0.981 GeV               
+     34.2437    -0.4719   126.3811    34.2469 CAVE    1    81.3357    0.0374  865.8  eV  601.400 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_3  dE pT  0.474+-  6.8, sy 0.391, x =   15.63 z =  164.91  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV               
+     34.2722    -0.4688   126.3202    34.2754 SCON    1    81.4030    0.0674    2.4 MeV  599.030 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_2  dE pT  0.473+-  6.8, sy 0.388, x =   15.65 z =  165.22  3.005 (  2.531 ) cm( 1.82%) -1.05 MeV  0.978 GeV               
+     34.5212    -0.4418   125.7867    34.5241 SNMX    1    81.9924    0.5894  615.8 keV  598.414 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_4  dE pT  0.474+-  6.8, sy 0.319, x =   15.82 z =  162.50  2.528 (  2.055 ) cm( 1.82%)  1.05 MeV  0.977 GeV               
+     34.5497    -0.4387   125.7257    34.5525 SCON    1    82.0598    0.0674    2.4 MeV  596.036 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_4  dE pT  0.474+-  6.8, sy 0.379, x =   15.82 z =  164.47  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV               
+     45.8696     1.0066   101.4257    45.8807 CAVE    1   108.9063   26.8466  633.1 keV  595.403 MeV FIEL LOSS	     -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_3  dE pT  0.473+-  6.8, sy 0.377, x =   15.85 z =  164.79  2.999 (  2.526 ) cm( 1.82%) -1.05 MeV  0.978 GeV               
+     45.8893     1.0095   101.3832    45.9004 CAVE    1   108.9532    0.0469    1.1 keV  595.402 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_5  dE pT  0.474+-  6.8, sy 0.309, x =   16.02 z =  162.08  2.523 (  2.049 ) cm( 1.82%)  1.05 MeV  0.977 GeV               
+     46.3810     1.0818   100.3251    46.3936 TPCE    1   110.1222    1.1690   27.6 keV  595.374 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_5  dE pT  0.474+-  6.8, sy 0.368, x =   16.02 z =  164.04  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV               
+     46.3830     1.0821   100.3207    46.3956 TIFC    1   110.1270    0.0048  227.9 keV  595.147 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.473+-  6.8, sy 0.366, x =   16.05 z =  164.36  2.787 (  1.602 ) cm( 3.07%) -2.27 MeV  0.978 GeV               
+     46.3980     1.0844   100.2885    46.4107 TIKA    1   110.1626    0.0356    1.0 MeV  594.117 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTRO_1_1  dE pT  0.475+-  6.8, sy 0.304, x =   16.13 z =  161.84  2.606 (  0.860 ) cm( 6.36%)  3.87 MeV  0.976 GeV               
+     47.6639     1.2745    97.5629    47.6809 TINX    1   113.1738    3.0112    4.2 MeV  589.894 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_1  dE pT  0.475+-  6.8, sy 0.361, x =   16.13 z =  163.79  1.770 (  0.000 ) cm( 6.42%)  3.92 MeV  0.976 GeV               
+     47.7439     1.2867    97.3905    47.7612 TIAD    1   113.3643    0.1905    4.8 MeV  585.103 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_16  dE pT  0.472+-  6.7, sy 0.359, x =   16.14 z =  164.20  1.480 (  0.000 ) cm(20.79%) -4.81 MeV  0.980 GeV               
+     47.7459     1.2870    97.3862    47.7632 TIFC    1   113.3690    0.0047  225.3 keV  584.878 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_19  dE pT  0.471+-  6.6, sy 0.355, x =   16.21 z =  164.04  0.963 (  0.041 ) cm(18.28%) -3.39 MeV  0.975 GeV               
+     47.7599     1.2891    97.3561    47.7773 TPCE    1   113.4024    0.0333  789.2  eV  584.877 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_6  dE pT  0.471+-  6.5, sy 0.356, x =   16.22 z =  163.60  0.483 (  0.000 ) cm( 2.63%) -1.24 MeV  0.973 GeV               
+     53.0167     2.1380    86.0179    53.0597 TPSS    3   125.9287   12.5264  246.6 keV  584.630 MeV FIEL LOSS	     -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_7  dE pT  0.470+-  6.5, sy 0.345, x =   16.41 z =  163.16  0.483 (  0.000 ) cm( 2.63%) -1.24 MeV  0.971 GeV               
+     53.0239     2.1392    86.0023    53.0670 TPSS    3   125.9459    0.0172  336.6  eV  584.630 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_8  dE pT  0.471+-  6.5, sy 0.333, x =   16.61 z =  162.73  0.492 (  0.000 ) cm( 5.51%)  1.23 MeV  0.970 GeV               
+     54.8251     2.4516    82.1096    54.8799 TPAD    1   130.2465    4.3006   99.3 keV  584.531 MeV FIEL LOSS	     -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23  dE pT  0.470+-  6.4, sy 0.327, x =   16.71 z =  162.97  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.971 GeV               
+     54.8261     2.4518    82.1077    54.8809 TPAD    1   130.2487    0.0022   50.5  eV  584.531 MeV FIEL NEXT LOSS  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24  dE pT  0.469+-  6.3, sy 0.324, x =   16.75 z =  162.88  0.931 (  0.000 ) cm(21.15%) -3.38 MeV  0.970 GeV               
+     56.4272     2.7388    78.6440    56.4937 TPAD    2   134.0753    3.8266   88.4 keV  584.442 MeV FIEL LOSS	     -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1  dE pT  0.468+-  6.2, sy 0.323, x =   16.79 z =  162.80  0.922 (  0.000 ) cm(18.27%) -3.39 MeV  0.967 GeV               
+     56.4280     2.7389    78.6423    56.4944 TPAD    2   134.0771    0.0018   41.4  eV  584.442 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_9  dE pT  0.466+-  6.1, sy 0.322, x =   16.81 z =  162.29  1.213 (  0.000 ) cm( 3.91%) -2.49 MeV  0.963 GeV               
+     58.0292     3.0346    75.1754    58.1085 TPAD    3   137.9074    3.8303   88.5 keV  584.354 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_17  dE pT  0.466+-  6.1, sy 0.322, x =   16.81 z =  162.75  1.770 (  0.000 ) cm( 6.42%) -3.91 MeV  0.965 GeV               
+     58.0299     3.0347    75.1737    58.1092 TPAD    3   137.9093    0.0019   42.6  eV  584.354 MeV FIEL NEXT LOSS  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25  dE pT  0.466+-  6.1, sy 0.321, x =   16.81 z =  162.74  1.222 (  0.000 ) cm( 6.79%) -2.48 MeV  0.963 GeV               
+     59.6311     3.3392    71.7034    59.7245 TPAD    4   141.7433    3.8340   88.5 keV  584.265 MeV FIEL LOSS	     -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_2  dE pT  0.467+-  6.1, sy 0.316, x =   16.92 z =  162.04  1.222 (  0.000 ) cm( 6.79%)  2.49 MeV  0.961 GeV               
+     59.6319     3.3393    71.7016    59.7253 TPAD    4   141.7452    0.0019   44.2  eV  584.265 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23_1  dE pT  0.467+-  6.1, sy 0.316, x =   16.92 z =  162.52  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.965 GeV               
+     61.2330     3.6525    68.2278    61.3419 TPAD    5   145.5831    3.8379   88.7 keV  584.176 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24_1  dE pT  0.467+-  6.0, sy 0.313, x =   16.97 z =  162.42  0.630 (  0.137 ) cm( 5.51%) -1.23 MeV  0.963 GeV               
+     61.2338     3.6527    68.2260    61.3427 TPAD    5   145.5851    0.0020   45.4  eV  584.176 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_10  dE pT  0.467+-  6.0, sy 0.312, x =   17.00 z =  161.85  0.492 (  0.000 ) cm( 5.50%)  1.23 MeV  0.962 GeV               
+     62.8349     3.9747    64.7485    62.9605 TPAD    6   149.4270    3.8419   88.8 keV  584.088 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25_1  dE pT  0.467+-  5.9, sy 0.310, x =   17.03 z =  162.29  0.501 (  0.000 ) cm( 8.39%) -1.22 MeV  0.963 GeV               
+     62.8358     3.9749    64.7467    62.9614 TPAD    6   149.4290    0.0020   46.8  eV  584.088 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23_2  dE pT  0.466+-  5.9, sy 0.305, x =   17.13 z =  162.07  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.962 GeV               
+     64.4369     4.3058    61.2655    64.5806 TPAD    7   153.2750    3.8460   88.9 keV  583.999 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24_2  dE pT  0.466+-  5.8, sy 0.302, x =   17.18 z =  161.97  0.612 (  0.120 ) cm( 5.51%) -1.23 MeV  0.961 GeV               
+     64.4377     4.3060    61.2636    64.5814 TPAD    7   153.2771    0.0021   48.5  eV  583.999 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_11  dE pT  0.466+-  5.8, sy 0.301, x =   17.20 z =  161.42  0.492 (  0.000 ) cm( 5.50%)  1.23 MeV  0.960 GeV               
+     66.0388     4.6457    57.7786    66.2020 TPAD    8   157.1273    3.8502   88.9 keV  583.910 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25_2  dE pT  0.465+-  5.7, sy 0.299, x =   17.24 z =  161.84  0.930 (  0.000 ) cm(21.13%) -3.38 MeV  0.961 GeV               
+     66.0397     4.6459    57.7766    66.2029 TPAD    8   157.1295    0.0022   49.9  eV  583.910 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1_1  dE pT  0.464+-  5.6, sy 0.293, x =   17.36 z =  161.57  0.922 (  0.000 ) cm(18.26%) -3.38 MeV  0.957 GeV               
+     67.6407     4.9945    54.2876    67.8249 TPAD    9   160.9840    3.8546   89.1 keV  583.821 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_12  dE pT  0.465+-  5.5, sy 0.291, x =   17.40 z =  160.98  1.040 (  0.000 ) cm( 5.14%)  2.66 MeV  0.954 GeV               
+     67.6416     4.9947    54.2856    67.8258 TPAD    9   160.9862    0.0022   50.9  eV  583.820 MeV FIEL NEXT LOSS  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_18  dE pT  0.464+-  5.4, sy 0.287, x =   17.49 z =  161.31  1.040 (  0.000 ) cm( 5.14%) -2.66 MeV  0.957 GeV               
+     69.2427     5.3523    50.7926    69.4492 TPAD   10   164.8452    3.8590   89.2 keV  583.731 MeV FIEL LOSS	     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_13  dE pT  0.462+-  5.4, sy 0.280, x =   17.59 z =  160.54  1.214 (  0.000 ) cm( 3.92%) -2.49 MeV  0.954 GeV               
+     69.2436     5.3525    50.7906    69.4502 TPAD   10   164.8475    0.0023   52.6  eV  583.731 MeV FIEL NEXT LOSS  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_3  dE pT  0.464+-  5.4, sy 0.274, x =   17.71 z =  160.28  1.652 (  0.000 ) cm(19.54%)  4.64 MeV  0.952 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1_2  dE pT  0.462+-  5.2, sy 0.265, x =   17.94 z =  160.35  1.478 (  0.000 ) cm(20.76%)  -4.8 MeV  0.956 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_19  dE pT  0.461+-  5.0, sy 0.254, x =   18.16 z =  159.86  5.381 (  3.638 ) cm( 6.34%) -3.86 MeV  0.951 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_5  dE pT  0.463+-  5.0, sy 0.165, x =   19.29 z =  155.00  1.836 (  0.212 ) cm(19.45%)  4.58 MeV  0.947 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_5  dE pT  0.463+-  5.0, sy 0.200, x =   19.29 z =  156.76  1.653 (  0.000 ) cm(19.53%) -4.64 MeV  0.957 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_5  dE pT  0.461+-  4.8, sy 0.190, x =   19.66 z =  156.66  3.725 (  2.102 ) cm(19.45%) -4.58 MeV  0.952 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_6  dE pT  0.463+-  4.7, sy 0.143, x =   20.08 z =  153.29  2.367 (  0.744 ) cm(19.44%)  4.58 MeV  0.947 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_6  dE pT  0.463+-  4.7, sy 0.170, x =   20.08 z =  155.00  1.654 (  0.000 ) cm(19.52%)  4.64 MeV  0.947 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_6  dE pT  0.460+-  4.5, sy 0.169, x =   20.24 z =  155.43  1.358 (  0.000 ) cm(33.83%) -5.51 MeV  0.952 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_7  dE pT  0.458+-  4.2, sy 0.151, x =   20.81 z =  154.20  2.897 (  1.275 ) cm(19.44%) -4.58 MeV  0.946 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_7  dE pT  0.460+-  4.0, sy 0.125, x =   20.88 z =  151.58  1.622 (  0.000 ) cm(19.43%)  4.57 MeV  0.942 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_7  dE pT  0.460+-  4.0, sy 0.146, x =   20.88 z =  153.23  1.655 (  0.000 ) cm(19.52%) -4.64 MeV  0.951 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_8  dE pT  0.458+-  3.8, sy 0.137, x =   21.39 z =  152.98  3.427 (  1.805 ) cm(19.43%) -4.57 MeV  0.946 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_8  dE pT  0.460+-  3.6, sy 0.115, x =   21.67 z =  149.88  2.070 (  0.448 ) cm(19.43%)  4.57 MeV  0.942 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_8  dE pT  0.460+-  3.6, sy 0.128, x =   21.67 z =  151.47  1.655 (  0.000 ) cm(19.52%)  4.64 MeV  0.942 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_9  dE pT  0.459+-  3.4, sy 0.125, x =   21.96 z =  151.75  0.785 (  0.000 ) cm(17.35%) -3.02 MeV  0.946 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_4/FSTW_12/FSBW_15  dE pT  0.458+-  3.2, sy 0.127, x =   21.74 z =  151.30  3.455 (  2.406 ) cm( 2.97%) -2.08 MeV  0.943 GeV               
+														     -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_9  dE pT  0.460+-  3.1, sy 0.111, x =   22.46 z =  148.17  2.599 (  0.978 ) cm(19.42%)  4.57 MeV  0.941 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_9  dE pT  0.460+-  3.1, sy 0.118, x =   22.46 z =  149.70  1.656 (  0.000 ) cm(19.52%)  4.64 MeV  0.941 GeV               
+														     -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_10  dE pT  0.458+-  2.9, sy 0.116, x =   22.54 z =  150.52  1.357 (  0.000 ) cm(33.80%) -5.51 MeV  0.946 GeV               
+														     -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_11  dE pT  0.456+-  2.3, sy 0.111, x =   23.11 z =  149.30  3.127 (  1.507 ) cm(19.42%) -4.57 MeV  0.940 GeV               
+														     -    FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_10  dE pT  0.458+-  2.0, sy 0.105, x =   23.25 z =  146.47  1.771 (  0.150 ) cm(19.42%)  4.57 MeV  0.936 GeV               
+														     -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_10  dE pT  0.458+-  2.0, sy 0.112, x =   23.25 z =  147.93  1.657 (  0.000 ) cm(19.51%)  4.64 MeV  0.936 GeV               
+														     -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_12  dE pT  0.456+-  1.6, sy 0.107, x =   23.69 z =  148.07 23.399 ( 22.214 ) cm(17.06%) -3.16 MeV  0.940 GeV               
+														     -                        SCOM_1/SCON_1_2_3  dE pT  0.456+-  1.0, sy 0.071, x =   33.62 z =  126.92 32.212 ( 30.092 ) cm( 0.79%)  -1.4 MeV  0.937 GeV               
+														     -                                /TIFC_1_2  dE pT  0.455+-  1.0, sy 0.037, x =   47.28 z =   97.79 19.775 ( 16.319 ) cm( 0.63%) -1.01 MeV  0.936 GeV               
+														     -                    Tpc/Padrow_1/Sector_3  dE pT  0.455+-  1.0, sy 0.025, x =   55.61 z =   79.91  3.804 (  0.119 ) cm( 0.00%) -9.61 keV  0.935 GeV               
+														     -                    Tpc/Padrow_2/Sector_3  dE pT  0.455+-  1.0, sy 0.023, x =   57.21 z =   76.47  3.808 (  0.119 ) cm( 0.00%) -9.62 keV  0.935 GeV               
+														     -                    Tpc/Padrow_3/Sector_3  dE pT  0.455+-  1.0, sy 0.022, x =   58.81 z =   73.03  3.693 (  0.000 ) cm( 0.00%) -9.33 keV  0.935 GeV               
+														     -                    Tpc/Padrow_4/Sector_3  F  pT  0.455+-  1.0, sy 0.020, x =   60.33 z =   69.76 chi2 =   1.25                                                   
+														     -                    Tpc/Padrow_4/Sector_3  dE pT  0.454+-  1.0, sy 0.023, x =   60.41 z =   69.55  3.696 (  0.000 ) cm( 0.00%) -9.33 keV  0.932 GeV               
+														     -                    Tpc/Padrow_5/Sector_3  F  pT  0.454+-  1.0, sy 0.021, x =   61.93 z =   66.26 chi2 =   5.02                                                   
+														     -                    Tpc/Padrow_5/Sector_3  dE pT  0.452+-  1.1, sy 0.023, x =   62.01 z =   66.03  3.697 (  0.000 ) cm( 0.00%) -9.33 keV  0.927 GeV 
+														     -                    Tpc/Padrow_6/Sector_3  F  pT  0.452+-  1.1, sy 0.021, x =   63.54 z =   62.74 chi2 =   0.76                                     
+														     -                    Tpc/Padrow_6/Sector_3  dE pT  0.453+-  1.1, sy 0.023, x =   63.61 z =   62.61  3.702 (  0.000 ) cm( 0.00%) -9.35 keV  0.929 GeV 
+														     -                    Tpc/Padrow_7/Sector_3  F  pT  0.453+-  1.1, sy 0.022, x =   65.14 z =   59.30 chi2 =   1.64                                     
+														     -                    Tpc/Padrow_7/Sector_3  dE pT  0.454+-  1.2, sy 0.024, x =   65.21 z =   59.20  3.708 (  0.000 ) cm( 0.00%) -9.36 keV  0.931 GeV 
+														     -                    Tpc/Padrow_8/Sector_3  F  pT  0.454+-  1.2, sy 0.022, x =   66.74 z =   55.88 chi2 =   1.01                                     
+														     -                    Tpc/Padrow_8/Sector_3  dE pT  0.453+-  1.2, sy 0.024, x =   66.81 z =   55.77  3.713 (  0.000 ) cm( 0.00%) -9.37 keV  0.930 GeV 
+														     -                    Tpc/Padrow_9/Sector_3  F  pT  0.453+-  1.2, sy 0.022, x =   68.35 z =   52.43 chi2 =   1.19                                     
+														     -                    Tpc/Padrow_9/Sector_3  dE pT  0.453+-  1.3, sy 0.025, x =   68.41 z =   52.34  3.718 (  0.000 ) cm( 0.00%) -9.39 keV  0.930 GeV 
+														     -                   Tpc/Padrow_10/Sector_3  F  pT  0.453+-  1.3, sy 0.023, x =   69.95 z =   48.99 chi2 =   2.39                                     
+
+StiMaker:INFO  -                   Tpc/Padrow_10/Sector_3  F  pT  0.453+-  1.3, sy 0.023, x =   69.95 z =   48.99 chi2 =   2.39                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.453+-  1.3, sy 0.025, x =   68.41 z =   52.34  3.718 (  0.000 ) cm( 0.00%) -9.39 keV  0.930 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  F  pT  0.453+-  1.2, sy 0.022, x =   68.35 z =   52.43 chi2 =   1.19                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.453+-  1.2, sy 0.024, x =   66.81 z =   55.77  3.713 (  0.000 ) cm( 0.00%) -9.37 keV  0.930 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  F  pT  0.454+-  1.2, sy 0.022, x =   66.74 z =   55.88 chi2 =   1.01                                                                                                                .   
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.454+-  1.2, sy 0.024, x =   65.21 z =   59.20  3.708 (  0.000 ) cm( 0.00%) -9.36 keV  0.931 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  F  pT  0.453+-  1.1, sy 0.022, x =   65.14 z =   59.30 chi2 =   1.64                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.453+-  1.1, sy 0.023, x =   63.61 z =   62.61  3.702 (  0.000 ) cm( 0.00%) -9.35 keV  0.929 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  F  pT  0.452+-  1.1, sy 0.021, x =   63.54 z =   62.74 chi2 =   0.76                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.452+-  1.1, sy 0.023, x =   62.01 z =   66.03  3.697 (  0.000 ) cm( 0.00%) -9.33 keV  0.927 GeV                                                                            .   
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  F  pT  0.454+-  1.0, sy 0.021, x =   61.93 z =   66.26 chi2 =   5.02                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.454+-  1.0, sy 0.023, x =   60.41 z =   69.55  3.696 (  0.000 ) cm( 0.00%) -9.33 keV  0.932 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  F  pT  0.455+-  1.0, sy 0.020, x =   60.33 z =   69.76 chi2 =   1.25                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.455+-  1.0, sy 0.022, x =   58.81 z =   73.03  3.693 (  0.000 ) cm( 0.00%) -9.33 keV  0.935 GeV                                                                            .   
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.455+-  1.0, sy 0.023, x =   57.21 z =   76.47  3.808 (  0.119 ) cm( 0.00%) -9.62 keV  0.935 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.455+-  1.0, sy 0.025, x =   55.61 z =   79.91  3.804 (  0.119 ) cm( 0.00%) -9.61 keV  0.935 GeV                                                                                
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.455+-  1.0, sy 0.037, x =   47.28 z =   97.79 19.775 ( 16.319 ) cm( 0.63%) -1.01 MeV  0.936 GeV                                                                                
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.456+-  1.0, sy 0.071, x =   33.62 z =  126.92 32.212 ( 30.092 ) cm( 0.79%)  -1.4 MeV  0.937 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_12  dE pT  0.456+-  1.6, sy 0.107, x =   23.69 z =  148.07 23.399 ( 22.214 ) cm(17.06%) -3.16 MeV  0.940 GeV                                                                            .   
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_10  dE pT  0.458+-  2.0, sy 0.112, x =   23.25 z =  147.93  1.657 (  0.000 ) cm(19.51%)  4.64 MeV  0.936 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_10  dE pT  0.458+-  2.0, sy 0.105, x =   23.25 z =  146.47  1.771 (  0.150 ) cm(19.42%)  4.57 MeV  0.936 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_11  dE pT  0.456+-  2.3, sy 0.111, x =   23.11 z =  149.30  3.127 (  1.507 ) cm(19.42%) -4.57 MeV  0.940 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_10  dE pT  0.458+-  2.9, sy 0.116, x =   22.54 z =  150.52  1.357 (  0.000 ) cm(33.80%) -5.51 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_9  dE pT  0.460+-  3.1, sy 0.118, x =   22.46 z =  149.70  1.656 (  0.000 ) cm(19.52%)  4.64 MeV  0.941 GeV                                                                            .   
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_9  dE pT  0.460+-  3.1, sy 0.111, x =   22.46 z =  148.17  2.599 (  0.978 ) cm(19.42%)  4.57 MeV  0.941 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_12/FSBW_15  dE pT  0.458+-  3.2, sy 0.127, x =   21.74 z =  151.30  3.455 (  2.406 ) cm( 2.97%) -2.08 MeV  0.943 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_9  dE pT  0.459+-  3.4, sy 0.125, x =   21.96 z =  151.75  0.785 (  0.000 ) cm(17.35%) -3.02 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_8  dE pT  0.460+-  3.6, sy 0.128, x =   21.67 z =  151.47  1.655 (  0.000 ) cm(19.52%)  4.64 MeV  0.942 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_8  dE pT  0.460+-  3.6, sy 0.115, x =   21.67 z =  149.88  2.070 (  0.448 ) cm(19.43%)  4.57 MeV  0.942 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_8  dE pT  0.458+-  3.8, sy 0.137, x =   21.39 z =  152.98  3.427 (  1.805 ) cm(19.43%) -4.57 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_7  dE pT  0.460+-  4.0, sy 0.146, x =   20.88 z =  153.23  1.655 (  0.000 ) cm(19.52%) -4.64 MeV  0.951 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_7  dE pT  0.460+-  4.0, sy 0.125, x =   20.88 z =  151.58  1.622 (  0.000 ) cm(19.43%)  4.57 MeV  0.942 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_7  dE pT  0.458+-  4.2, sy 0.151, x =   20.81 z =  154.20  2.897 (  1.275 ) cm(19.44%) -4.58 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_6  dE pT  0.460+-  4.5, sy 0.169, x =   20.24 z =  155.43  1.358 (  0.000 ) cm(33.83%) -5.51 MeV  0.952 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_6  dE pT  0.463+-  4.7, sy 0.170, x =   20.08 z =  155.00  1.654 (  0.000 ) cm(19.52%)  4.64 MeV  0.947 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_6  dE pT  0.463+-  4.7, sy 0.143, x =   20.08 z =  153.29  2.367 (  0.744 ) cm(19.44%)  4.58 MeV  0.947 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_5  dE pT  0.461+-  4.8, sy 0.190, x =   19.66 z =  156.66  3.725 (  2.102 ) cm(19.45%) -4.58 MeV  0.952 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_5  dE pT  0.463+-  5.0, sy 0.200, x =   19.29 z =  156.76  1.653 (  0.000 ) cm(19.53%) -4.64 MeV  0.957 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_5  dE pT  0.463+-  5.0, sy 0.165, x =   19.29 z =  155.00  1.836 (  0.212 ) cm(19.45%)  4.58 MeV  0.947 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_19  dE pT  0.461+-  5.0, sy 0.254, x =   18.16 z =  159.86  5.381 (  3.638 ) cm( 6.34%) -3.86 MeV  0.951 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1_2  dE pT  0.462+-  5.2, sy 0.265, x =   17.94 z =  160.35  1.478 (  0.000 ) cm(20.76%)  -4.8 MeV  0.956 GeV                                                                            .   
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_3  dE pT  0.464+-  5.4, sy 0.274, x =   17.71 z =  160.28  1.652 (  0.000 ) cm(19.54%)  4.64 MeV  0.952 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_13  dE pT  0.462+-  5.4, sy 0.280, x =   17.59 z =  160.54  1.214 (  0.000 ) cm( 3.92%) -2.49 MeV  0.954 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_18  dE pT  0.464+-  5.4, sy 0.287, x =   17.49 z =  161.31  1.040 (  0.000 ) cm( 5.14%) -2.66 MeV  0.957 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_12  dE pT  0.465+-  5.5, sy 0.291, x =   17.40 z =  160.98  1.040 (  0.000 ) cm( 5.14%)  2.66 MeV  0.954 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1_1  dE pT  0.464+-  5.6, sy 0.293, x =   17.36 z =  161.57  0.922 (  0.000 ) cm(18.26%) -3.38 MeV  0.957 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25_2  dE pT  0.465+-  5.7, sy 0.299, x =   17.24 z =  161.84  0.930 (  0.000 ) cm(21.13%) -3.38 MeV  0.961 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_11  dE pT  0.466+-  5.8, sy 0.301, x =   17.20 z =  161.42  0.492 (  0.000 ) cm( 5.50%)  1.23 MeV  0.960 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24_2  dE pT  0.466+-  5.8, sy 0.302, x =   17.18 z =  161.97  0.612 (  0.120 ) cm( 5.51%) -1.23 MeV  0.961 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23_2  dE pT  0.466+-  5.9, sy 0.305, x =   17.13 z =  162.07  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.962 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25_1  dE pT  0.467+-  5.9, sy 0.310, x =   17.03 z =  162.29  0.501 (  0.000 ) cm( 8.39%) -1.22 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_10  dE pT  0.467+-  6.0, sy 0.312, x =   17.00 z =  161.85  0.492 (  0.000 ) cm( 5.50%)  1.23 MeV  0.962 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24_1  dE pT  0.467+-  6.0, sy 0.313, x =   16.97 z =  162.42  0.630 (  0.137 ) cm( 5.51%) -1.23 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23_1  dE pT  0.467+-  6.1, sy 0.316, x =   16.92 z =  162.52  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.965 GeV                                                                            .   
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_2  dE pT  0.467+-  6.1, sy 0.316, x =   16.92 z =  162.04  1.222 (  0.000 ) cm( 6.79%)  2.49 MeV  0.961 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25  dE pT  0.466+-  6.1, sy 0.321, x =   16.81 z =  162.74  1.222 (  0.000 ) cm( 6.79%) -2.48 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_17  dE pT  0.466+-  6.1, sy 0.322, x =   16.81 z =  162.75  1.770 (  0.000 ) cm( 6.42%) -3.91 MeV  0.965 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_9  dE pT  0.466+-  6.1, sy 0.322, x =   16.81 z =  162.29  1.213 (  0.000 ) cm( 3.91%) -2.49 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1  dE pT  0.468+-  6.2, sy 0.323, x =   16.79 z =  162.80  0.922 (  0.000 ) cm(18.27%) -3.39 MeV  0.967 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24  dE pT  0.469+-  6.3, sy 0.324, x =   16.75 z =  162.88  0.931 (  0.000 ) cm(21.15%) -3.38 MeV  0.970 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23  dE pT  0.470+-  6.4, sy 0.327, x =   16.71 z =  162.97  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.971 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_8  dE pT  0.471+-  6.5, sy 0.333, x =   16.61 z =  162.73  0.492 (  0.000 ) cm( 5.51%)  1.23 MeV  0.970 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_7  dE pT  0.470+-  6.5, sy 0.345, x =   16.41 z =  163.16  0.483 (  0.000 ) cm( 2.63%) -1.24 MeV  0.971 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_6  dE pT  0.471+-  6.5, sy 0.356, x =   16.22 z =  163.60  0.483 (  0.000 ) cm( 2.63%) -1.24 MeV  0.973 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_19  dE pT  0.471+-  6.6, sy 0.355, x =   16.21 z =  164.04  0.963 (  0.041 ) cm(18.28%) -3.39 MeV  0.975 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_16  dE pT  0.472+-  6.7, sy 0.359, x =   16.14 z =  164.20  1.480 (  0.000 ) cm(20.79%) -4.81 MeV  0.980 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_1  dE pT  0.475+-  6.8, sy 0.361, x =   16.13 z =  163.79  1.770 (  0.000 ) cm( 6.42%)  3.92 MeV  0.976 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTRO_1_1  dE pT  0.475+-  6.8, sy 0.304, x =   16.13 z =  161.84  2.606 (  0.860 ) cm( 6.36%)  3.87 MeV  0.976 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.473+-  6.8, sy 0.366, x =   16.05 z =  164.36  2.787 (  1.602 ) cm( 3.07%) -2.27 MeV  0.978 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_5  dE pT  0.474+-  6.8, sy 0.368, x =   16.02 z =  164.04  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_5  dE pT  0.474+-  6.8, sy 0.309, x =   16.02 z =  162.08  2.523 (  2.049 ) cm( 1.82%)  1.05 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_3  dE pT  0.473+-  6.8, sy 0.377, x =   15.85 z =  164.79  2.999 (  2.526 ) cm( 1.82%) -1.05 MeV  0.978 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_4  dE pT  0.474+-  6.8, sy 0.379, x =   15.82 z =  164.47  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_4  dE pT  0.474+-  6.8, sy 0.319, x =   15.82 z =  162.50  2.528 (  2.055 ) cm( 1.82%)  1.05 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_2  dE pT  0.473+-  6.8, sy 0.388, x =   15.65 z =  165.22  3.005 (  2.531 ) cm( 1.82%) -1.05 MeV  0.978 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_3  dE pT  0.474+-  6.8, sy 0.391, x =   15.63 z =  164.91  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_18  dE pT  0.474+-  6.9, sy 0.387, x =   15.64 z =  165.27  0.919 (  0.000 ) cm(17.51%) -3.21 MeV  0.981 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_3  dE pT  0.474+-  6.8, sy 0.329, x =   15.63 z =  162.93  2.534 (  2.060 ) cm( 1.82%)  1.05 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_15  dE pT  0.473+-  6.8, sy 0.397, x =   15.46 z =  165.64  2.999 (  1.963 ) cm( 5.11%) -2.65 MeV  0.980 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_1  dE pT  0.475+-  6.9, sy 0.400, x =   15.45 z =  165.65  1.038 (  0.000 ) cm( 4.37%) -2.48 MeV  0.982 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_2  dE pT  0.476+-  6.9, sy 0.403, x =   15.43 z =  165.35  0.479 (  0.000 ) cm( 1.85%)  1.06 MeV  0.981 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_2  dE pT  0.476+-  6.9, sy 0.339, x =   15.43 z =  163.36  2.539 (  2.065 ) cm( 1.82%)  1.05 MeV  0.981 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1  dE pT  0.475+-  6.9, sy 0.408, x =   15.34 z =  165.55  2.423 (  1.218 ) cm( 3.88%) -2.48 MeV  0.984 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTRO_1  dE pT  0.475+-  6.9, sy 0.344, x =   15.34 z =  163.55  1.183 (  0.000 ) cm( 3.82%) -2.43 MeV  0.984 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7  dE pT  0.476+-  7.0, sy 0.412, x =   15.25 z =  166.08  2.799 (  1.613 ) cm( 3.07%) -2.27 MeV  0.986 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_1  dE pT  0.477+-  7.0, sy 0.415, x =   15.23 z =  165.78  0.479 (  0.000 ) cm( 1.85%)  1.06 MeV  0.985 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_1  dE pT  0.477+-  7.0, sy 0.350, x =   15.23 z =  163.78  2.544 (  2.071 ) cm( 1.82%)  1.05 MeV  0.985 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_17  dE pT  0.477+-  7.1, sy 0.421, x =   15.06 z =  166.50  3.005 (  2.087 ) cm(18.27%) -3.39 MeV  0.988 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1  dE pT  0.478+-  7.2, sy 0.427, x =   15.04 z =  166.22  0.923 (  0.000 ) cm(18.30%)   3.4 MeV  0.985 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1  dE pT  0.478+-  7.2, sy 0.361, x =   15.04 z =  164.21  2.533 (  1.616 ) cm(18.27%)  3.39 MeV  0.985 GeV                                                                            .   
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSBW_2  dE pT  0.477+-  7.2, sy 0.430, x =   14.99 z =  166.31  2.328 (  1.970 ) cm( 1.80%)  -913 keV  0.986 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_14  dE pT  0.477+-  7.2, sy 0.439, x =   14.79 z =  167.09  0.923 (  0.000 ) cm( 4.35%) -2.35 MeV  0.988 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_16  dE pT  0.478+-  7.3, sy 0.459, x =   14.49 z =  167.73  1.483 (  0.000 ) cm(20.83%) -4.83 MeV  0.993 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_13  dE pT  0.480+-  7.5, sy 0.484, x =   14.11 z =  168.54  1.483 (  0.000 ) cm(20.83%) -4.83 MeV  0.998 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_8  dE pT  0.482+-  7.5, sy 0.737, x =   10.74 z =  175.81  8.040 (  6.431 ) cm( 7.70%) -4.13 MeV  1.002 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_9  dE pT  0.484+-  7.6, sy 0.759, x =   10.46 z =  176.40  1.496 (  0.000 ) cm(21.02%) -4.88 MeV  1.007 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_7  dE pT  0.486+-  7.8, sy 0.791, x =   10.06 z =  177.27  1.498 (  0.000 ) cm(21.03%) -4.89 MeV  1.012 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_8  dE pT  0.488+-  7.9, sy 0.806, x =    9.89 z =  177.65  1.500 (  0.000 ) cm(21.08%) -4.89 MeV  1.017 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_6  dE pT  0.490+-  8.0, sy 0.848, x =    9.39 z =  178.73  1.503 (  0.000 ) cm(21.09%)  -4.9 MeV  1.022 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_7  dE pT  0.493+-  8.1, sy 0.854, x =    9.31 z =  178.90  1.505 (  0.000 ) cm(21.14%) -4.91 MeV  1.026 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_6  dE pT  0.495+-  8.3, sy 0.904, x =    8.74 z =  180.15  1.387 (  0.000 ) cm(34.57%) -5.67 MeV  1.032 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_5  dE pT  0.497+-  8.5, sy 0.907, x =    8.71 z =  180.21  1.511 (  0.000 ) cm(21.22%) -4.94 MeV  1.037 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_6/FSTW_12/FSBW_27  dE pT  0.499+-  8.5, sy 0.931, x =    8.50 z =  180.66  0.922 (  0.000 ) cm( 4.35%) -2.36 MeV  1.039 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_5  dE pT  0.500+-  8.6, sy 0.956, x =    8.16 z =  181.41  0.832 (  0.029 ) cm(17.84%) -3.12 MeV  1.043 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_4  dE pT  0.502+-  8.7, sy 0.968, x =    8.04 z =  181.68  1.518 (  0.000 ) cm(21.31%) -4.96 MeV  1.048 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_6/FSTW_12/FSBW_24_5  dE pT  0.504+-  8.8, sy 0.989, x =    7.82 z =  182.17  1.416 (  0.000 ) cm( 6.44%) -3.58 MeV  1.051 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_4  dE pT  0.505+-  8.9, sy 1.011, x =    7.59 z =  182.68  1.298 (  0.000 ) cm(20.00%) -4.35 MeV  1.056 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_3  dE pT  0.507+-  9.0, sy 1.033, x =    7.36 z =  183.17  1.527 (  0.000 ) cm(21.43%)    -5 MeV  1.061 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_3  dE pT  0.509+-  9.1, sy 1.069, x =    7.01 z =  183.95  1.532 (  0.000 ) cm(21.56%) -5.02 MeV  1.066 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_2  dE pT  0.512+-  9.2, sy 1.103, x =    6.69 z =  184.67  1.540 (  0.000 ) cm(21.59%) -5.04 MeV  1.071 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_2  dE pT  0.514+-  9.3, sy 1.131, x =    6.44 z =  185.23  1.546 (  0.000 ) cm(21.75%) -5.07 MeV  1.076 GeV                                                                                
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.516+-  9.4, sy 1.536, x =    3.94 z =  191.06  6.451 (  5.565 ) cm(23.02%) -3.73 MeV  1.080 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.454+-  1.0, sy 0.021, x =   61.93 z =   66.26 chi2 =   5.02  4.005 (  0.307 ) cm( 0.00%)  10.1 keV  0.936 GeV                                                              .   
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.452+-  1.1, sy 0.021, x =   63.54 z =   62.74 chi2 =   0.76  4.001 (  0.299 ) cm( 0.00%)  10.1 keV  0.936 GeV                                                                  
+ tac -
+
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.452+-  1.1, sy 0.021, x =   63.54 z =   62.74 chi2 =   0.76  4.001 (  0.299 ) cm( 0.00%)  10.1 keV  0.936 GeV                                                                  
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.454+-  1.0, sy 0.021, x =   61.93 z =   66.26 chi2 =   5.02  4.005 (  0.307 ) cm( 0.00%)  10.1 keV  0.936 GeV                                                              .   
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.516+-  9.4, sy 1.536, x =    3.94 z =  191.06  6.451 (  5.565 ) cm(23.02%) -3.73 MeV  1.080 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_2  dE pT  0.514+-  9.3, sy 1.131, x =    6.44 z =  185.23  1.546 (  0.000 ) cm(21.75%) -5.07 MeV  1.076 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_2  dE pT  0.512+-  9.2, sy 1.103, x =    6.69 z =  184.67  1.540 (  0.000 ) cm(21.59%) -5.04 MeV  1.071 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_3  dE pT  0.509+-  9.1, sy 1.069, x =    7.01 z =  183.95  1.532 (  0.000 ) cm(21.56%) -5.02 MeV  1.066 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_3  dE pT  0.507+-  9.0, sy 1.033, x =    7.36 z =  183.17  1.527 (  0.000 ) cm(21.43%)    -5 MeV  1.061 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_4  dE pT  0.505+-  8.9, sy 1.011, x =    7.59 z =  182.68  1.298 (  0.000 ) cm(20.00%) -4.35 MeV  1.056 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_6/FSTW_12/FSBW_24_5  dE pT  0.504+-  8.8, sy 0.989, x =    7.82 z =  182.17  1.416 (  0.000 ) cm( 6.44%) -3.58 MeV  1.051 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_4  dE pT  0.502+-  8.7, sy 0.968, x =    8.04 z =  181.68  1.518 (  0.000 ) cm(21.31%) -4.96 MeV  1.048 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_5  dE pT  0.500+-  8.6, sy 0.956, x =    8.16 z =  181.41  0.832 (  0.029 ) cm(17.84%) -3.12 MeV  1.043 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_6/FSTW_12/FSBW_27  dE pT  0.499+-  8.5, sy 0.931, x =    8.50 z =  180.66  0.922 (  0.000 ) cm( 4.35%) -2.36 MeV  1.039 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_5  dE pT  0.497+-  8.5, sy 0.907, x =    8.71 z =  180.21  1.511 (  0.000 ) cm(21.22%) -4.94 MeV  1.037 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_6  dE pT  0.495+-  8.3, sy 0.904, x =    8.74 z =  180.15  1.387 (  0.000 ) cm(34.57%) -5.67 MeV  1.032 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_7  dE pT  0.493+-  8.1, sy 0.854, x =    9.31 z =  178.90  1.505 (  0.000 ) cm(21.14%) -4.91 MeV  1.026 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_6  dE pT  0.490+-  8.0, sy 0.848, x =    9.39 z =  178.73  1.503 (  0.000 ) cm(21.09%)  -4.9 MeV  1.022 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_8  dE pT  0.488+-  7.9, sy 0.806, x =    9.89 z =  177.65  1.500 (  0.000 ) cm(21.08%) -4.89 MeV  1.017 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_7  dE pT  0.486+-  7.8, sy 0.791, x =   10.06 z =  177.27  1.498 (  0.000 ) cm(21.03%) -4.89 MeV  1.012 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUS_3_9  dE pT  0.484+-  7.6, sy 0.759, x =   10.46 z =  176.40  1.496 (  0.000 ) cm(21.02%) -4.88 MeV  1.007 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_6/FSTW_12/FTUW_1_8  dE pT  0.482+-  7.5, sy 0.737, x =   10.74 z =  175.81  8.040 (  6.431 ) cm( 7.70%) -4.13 MeV  1.002 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_13  dE pT  0.480+-  7.5, sy 0.484, x =   14.11 z =  168.54  1.483 (  0.000 ) cm(20.83%) -4.83 MeV  0.998 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_16  dE pT  0.478+-  7.3, sy 0.459, x =   14.49 z =  167.73  1.483 (  0.000 ) cm(20.83%) -4.83 MeV  0.993 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_14  dE pT  0.477+-  7.2, sy 0.439, x =   14.79 z =  167.09  0.923 (  0.000 ) cm( 4.35%) -2.35 MeV  0.988 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSBW_2  dE pT  0.477+-  7.2, sy 0.430, x =   14.99 z =  166.31  2.328 (  1.970 ) cm( 1.80%)  -913 keV  0.986 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1  dE pT  0.478+-  7.2, sy 0.361, x =   15.04 z =  164.21  2.533 (  1.616 ) cm(18.27%)  3.39 MeV  0.985 GeV                                                                            .   
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1  dE pT  0.478+-  7.2, sy 0.427, x =   15.04 z =  166.22  0.923 (  0.000 ) cm(18.30%)   3.4 MeV  0.985 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_17  dE pT  0.477+-  7.1, sy 0.421, x =   15.06 z =  166.50  3.005 (  2.087 ) cm(18.27%) -3.39 MeV  0.988 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_1  dE pT  0.477+-  7.0, sy 0.350, x =   15.23 z =  163.78  2.544 (  2.071 ) cm( 1.82%)  1.05 MeV  0.985 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_1  dE pT  0.477+-  7.0, sy 0.415, x =   15.23 z =  165.78  0.479 (  0.000 ) cm( 1.85%)  1.06 MeV  0.985 GeV                                                                            .   
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7  dE pT  0.476+-  7.0, sy 0.412, x =   15.25 z =  166.08  2.799 (  1.613 ) cm( 3.07%) -2.27 MeV  0.986 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTRO_1  dE pT  0.475+-  6.9, sy 0.344, x =   15.34 z =  163.55  1.183 (  0.000 ) cm( 3.82%) -2.43 MeV  0.984 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1  dE pT  0.475+-  6.9, sy 0.408, x =   15.34 z =  165.55  2.423 (  1.218 ) cm( 3.88%) -2.48 MeV  0.984 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_2  dE pT  0.476+-  6.9, sy 0.339, x =   15.43 z =  163.36  2.539 (  2.065 ) cm( 1.82%)  1.05 MeV  0.981 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_2  dE pT  0.476+-  6.9, sy 0.403, x =   15.43 z =  165.35  0.479 (  0.000 ) cm( 1.85%)  1.06 MeV  0.981 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_1  dE pT  0.475+-  6.9, sy 0.400, x =   15.45 z =  165.65  1.038 (  0.000 ) cm( 4.37%) -2.48 MeV  0.982 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_15  dE pT  0.473+-  6.8, sy 0.397, x =   15.46 z =  165.64  2.999 (  1.963 ) cm( 5.11%) -2.65 MeV  0.980 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_3  dE pT  0.474+-  6.8, sy 0.329, x =   15.63 z =  162.93  2.534 (  2.060 ) cm( 1.82%)  1.05 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_18  dE pT  0.474+-  6.9, sy 0.387, x =   15.64 z =  165.27  0.919 (  0.000 ) cm(17.51%) -3.21 MeV  0.981 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_3  dE pT  0.474+-  6.8, sy 0.391, x =   15.63 z =  164.91  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_2  dE pT  0.473+-  6.8, sy 0.388, x =   15.65 z =  165.22  3.005 (  2.531 ) cm( 1.82%) -1.05 MeV  0.978 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_4  dE pT  0.474+-  6.8, sy 0.319, x =   15.82 z =  162.50  2.528 (  2.055 ) cm( 1.82%)  1.05 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_4  dE pT  0.474+-  6.8, sy 0.379, x =   15.82 z =  164.47  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_3  dE pT  0.473+-  6.8, sy 0.377, x =   15.85 z =  164.79  2.999 (  2.526 ) cm( 1.82%) -1.05 MeV  0.978 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTIA_1_5  dE pT  0.474+-  6.8, sy 0.309, x =   16.02 z =  162.08  2.523 (  2.049 ) cm( 1.82%)  1.05 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_5  dE pT  0.474+-  6.8, sy 0.368, x =   16.02 z =  164.04  0.480 (  0.000 ) cm( 1.85%)  1.06 MeV  0.977 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.473+-  6.8, sy 0.366, x =   16.05 z =  164.36  2.787 (  1.602 ) cm( 3.07%) -2.27 MeV  0.978 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_12/FTRO_1_1  dE pT  0.475+-  6.8, sy 0.304, x =   16.13 z =  161.84  2.606 (  0.860 ) cm( 6.36%)  3.87 MeV  0.976 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_1  dE pT  0.475+-  6.8, sy 0.361, x =   16.13 z =  163.79  1.770 (  0.000 ) cm( 6.42%)  3.92 MeV  0.976 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_16  dE pT  0.472+-  6.7, sy 0.359, x =   16.14 z =  164.20  1.480 (  0.000 ) cm(20.79%) -4.81 MeV  0.980 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_3_19  dE pT  0.471+-  6.6, sy 0.355, x =   16.21 z =  164.04  0.963 (  0.041 ) cm(18.28%) -3.39 MeV  0.975 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_6  dE pT  0.471+-  6.5, sy 0.356, x =   16.22 z =  163.60  0.483 (  0.000 ) cm( 2.63%) -1.24 MeV  0.973 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_7  dE pT  0.470+-  6.5, sy 0.345, x =   16.41 z =  163.16  0.483 (  0.000 ) cm( 2.63%) -1.24 MeV  0.971 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_8  dE pT  0.471+-  6.5, sy 0.333, x =   16.61 z =  162.73  0.492 (  0.000 ) cm( 5.51%)  1.23 MeV  0.970 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23  dE pT  0.470+-  6.4, sy 0.327, x =   16.71 z =  162.97  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.971 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24  dE pT  0.469+-  6.3, sy 0.324, x =   16.75 z =  162.88  0.931 (  0.000 ) cm(21.15%) -3.38 MeV  0.970 GeV                                                                                
+StiMaker:INFO  -       FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1  dE pT  0.468+-  6.2, sy 0.323, x =   16.79 z =  162.80  0.922 (  0.000 ) cm(18.27%) -3.39 MeV  0.967 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_9  dE pT  0.466+-  6.1, sy 0.322, x =   16.81 z =  162.29  1.213 (  0.000 ) cm( 3.91%) -2.49 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_17  dE pT  0.466+-  6.1, sy 0.322, x =   16.81 z =  162.75  1.770 (  0.000 ) cm( 6.42%) -3.91 MeV  0.965 GeV                                                                                
+StiMaker:INFO  -      FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25  dE pT  0.466+-  6.1, sy 0.321, x =   16.81 z =  162.74  1.222 (  0.000 ) cm( 6.79%) -2.48 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_2  dE pT  0.467+-  6.1, sy 0.316, x =   16.92 z =  162.04  1.222 (  0.000 ) cm( 6.79%)  2.49 MeV  0.961 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23_1  dE pT  0.467+-  6.1, sy 0.316, x =   16.92 z =  162.52  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.965 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24_1  dE pT  0.467+-  6.0, sy 0.313, x =   16.97 z =  162.42  0.630 (  0.137 ) cm( 5.51%) -1.23 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_10  dE pT  0.467+-  6.0, sy 0.312, x =   17.00 z =  161.85  0.492 (  0.000 ) cm( 5.50%)  1.23 MeV  0.962 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25_1  dE pT  0.467+-  5.9, sy 0.310, x =   17.03 z =  162.29  0.501 (  0.000 ) cm( 8.39%) -1.22 MeV  0.963 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_23_2  dE pT  0.466+-  5.9, sy 0.305, x =   17.13 z =  162.07  0.501 (  0.000 ) cm( 8.39%) -1.23 MeV  0.962 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_24_2  dE pT  0.466+-  5.8, sy 0.302, x =   17.18 z =  161.97  0.612 (  0.120 ) cm( 5.51%) -1.23 MeV  0.961 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_11  dE pT  0.466+-  5.8, sy 0.301, x =   17.20 z =  161.42  0.492 (  0.000 ) cm( 5.50%)  1.23 MeV  0.960 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FSCT_25_2  dE pT  0.465+-  5.7, sy 0.299, x =   17.24 z =  161.84  0.930 (  0.000 ) cm(21.13%) -3.38 MeV  0.961 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1_1  dE pT  0.464+-  5.6, sy 0.293, x =   17.36 z =  161.57  0.922 (  0.000 ) cm(18.26%) -3.38 MeV  0.957 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_12  dE pT  0.465+-  5.5, sy 0.291, x =   17.40 z =  160.98  1.040 (  0.000 ) cm( 5.14%)  2.66 MeV  0.954 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_18  dE pT  0.464+-  5.4, sy 0.287, x =   17.49 z =  161.31  1.040 (  0.000 ) cm( 5.14%) -2.66 MeV  0.957 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTIA_1_13  dE pT  0.462+-  5.4, sy 0.280, x =   17.59 z =  160.54  1.214 (  0.000 ) cm( 3.92%) -2.49 MeV  0.954 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTRO_1_3  dE pT  0.464+-  5.4, sy 0.274, x =   17.71 z =  160.28  1.652 (  0.000 ) cm(19.54%)  4.64 MeV  0.952 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUS_1_2  dE pT  0.462+-  5.2, sy 0.265, x =   17.94 z =  160.35  1.478 (  0.000 ) cm(20.76%)  -4.8 MeV  0.956 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_5/FSTW_6/FTUW_1_19  dE pT  0.461+-  5.0, sy 0.254, x =   18.16 z =  159.86  5.381 (  3.638 ) cm( 6.34%) -3.86 MeV  0.951 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_5  dE pT  0.463+-  5.0, sy 0.165, x =   19.29 z =  155.00  1.836 (  0.212 ) cm(19.45%)  4.58 MeV  0.947 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_5  dE pT  0.463+-  5.0, sy 0.200, x =   19.29 z =  156.76  1.653 (  0.000 ) cm(19.53%) -4.64 MeV  0.957 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_5  dE pT  0.461+-  4.8, sy 0.190, x =   19.66 z =  156.66  3.725 (  2.102 ) cm(19.45%) -4.58 MeV  0.952 GeV                                                                            .   
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_6  dE pT  0.463+-  4.7, sy 0.143, x =   20.08 z =  153.29  2.367 (  0.744 ) cm(19.44%)  4.58 MeV  0.947 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_6  dE pT  0.463+-  4.7, sy 0.170, x =   20.08 z =  155.00  1.654 (  0.000 ) cm(19.52%)  4.64 MeV  0.947 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_6  dE pT  0.460+-  4.5, sy 0.169, x =   20.24 z =  155.43  1.358 (  0.000 ) cm(33.83%) -5.51 MeV  0.952 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_7  dE pT  0.458+-  4.2, sy 0.151, x =   20.81 z =  154.20  2.897 (  1.275 ) cm(19.44%) -4.58 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_7  dE pT  0.460+-  4.0, sy 0.125, x =   20.88 z =  151.58  1.622 (  0.000 ) cm(19.43%)  4.57 MeV  0.942 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_7  dE pT  0.460+-  4.0, sy 0.146, x =   20.88 z =  153.23  1.655 (  0.000 ) cm(19.52%) -4.64 MeV  0.951 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_8  dE pT  0.458+-  3.8, sy 0.137, x =   21.39 z =  152.98  3.427 (  1.805 ) cm(19.43%) -4.57 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_8  dE pT  0.460+-  3.6, sy 0.115, x =   21.67 z =  149.88  2.070 (  0.448 ) cm(19.43%)  4.57 MeV  0.942 GeV                                                                            .   
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_8  dE pT  0.460+-  3.6, sy 0.128, x =   21.67 z =  151.47  1.655 (  0.000 ) cm(19.52%)  4.64 MeV  0.942 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_9  dE pT  0.459+-  3.4, sy 0.125, x =   21.96 z =  151.75  0.785 (  0.000 ) cm(17.35%) -3.02 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_12/FSBW_15  dE pT  0.458+-  3.2, sy 0.127, x =   21.74 z =  151.30  3.455 (  2.406 ) cm( 2.97%) -2.08 MeV  0.943 GeV                                                                                
+StiMaker:INFO  -     FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_9  dE pT  0.460+-  3.1, sy 0.111, x =   22.46 z =  148.17  2.599 (  0.978 ) cm(19.42%)  4.57 MeV  0.941 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_9  dE pT  0.460+-  3.1, sy 0.118, x =   22.46 z =  149.70  1.656 (  0.000 ) cm(19.52%)  4.64 MeV  0.941 GeV                                                                            .   
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_10  dE pT  0.458+-  2.9, sy 0.116, x =   22.54 z =  150.52  1.357 (  0.000 ) cm(33.80%) -5.51 MeV  0.946 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_11  dE pT  0.456+-  2.3, sy 0.111, x =   23.11 z =  149.30  3.127 (  1.507 ) cm(19.42%) -4.57 MeV  0.940 GeV                                                                                
+StiMaker:INFO  -    FSTA_1/FSTM_1/FSTD_4/FSTW_1/FTRO_1_10  dE pT  0.458+-  2.0, sy 0.105, x =   23.25 z =  146.47  1.771 (  0.150 ) cm(19.42%)  4.57 MeV  0.936 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTRO_1_10  dE pT  0.458+-  2.0, sy 0.112, x =   23.25 z =  147.93  1.657 (  0.000 ) cm(19.51%)  4.64 MeV  0.936 GeV                                                                                
+StiMaker:INFO  -   FSTA_1/FSTM_1/FSTD_4/FSTW_12/FTUS_2_12  dE pT  0.456+-  1.6, sy 0.107, x =   23.69 z =  148.07 23.399 ( 22.214 ) cm(17.06%) -3.16 MeV  0.940 GeV                                                                            .   
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.456+-  1.0, sy 0.071, x =   33.62 z =  126.92 32.212 ( 30.092 ) cm( 0.79%)  -1.4 MeV  0.937 GeV                                                                                
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.455+-  1.0, sy 0.037, x =   47.28 z =   97.79 19.775 ( 16.319 ) cm( 0.63%) -1.01 MeV  0.936 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.455+-  1.0, sy 0.025, x =   55.61 z =   79.91  3.804 (  0.119 ) cm( 0.00%) -9.61 keV  0.935 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.455+-  1.0, sy 0.023, x =   57.21 z =   76.47  3.808 (  0.119 ) cm( 0.00%) -9.62 keV  0.935 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.455+-  1.0, sy 0.022, x =   58.81 z =   73.03  3.693 (  0.000 ) cm( 0.00%) -9.33 keV  0.935 GeV                                                                            .   
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  F  pT  0.455+-  1.0, sy 0.020, x =   60.33 z =   69.76 chi2 =   1.25                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.454+-  1.0, sy 0.023, x =   60.41 z =   69.55  3.696 (  0.000 ) cm( 0.00%) -9.33 keV  0.932 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  F  pT  0.454+-  1.0, sy 0.021, x =   61.93 z =   66.26 chi2 =   5.02                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.452+-  1.1, sy 0.023, x =   62.01 z =   66.03  3.697 (  0.000 ) cm( 0.00%) -9.33 keV  0.927 GeV                                                                            .   
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  F  pT  0.452+-  1.1, sy 0.021, x =   63.54 z =   62.74 chi2 =   0.76                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.453+-  1.1, sy 0.023, x =   63.61 z =   62.61  3.702 (  0.000 ) cm( 0.00%) -9.35 keV  0.929 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  F  pT  0.453+-  1.1, sy 0.022, x =   65.14 z =   59.30 chi2 =   1.64                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.454+-  1.2, sy 0.024, x =   65.21 z =   59.20  3.708 (  0.000 ) cm( 0.00%) -9.36 keV  0.931 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  F  pT  0.454+-  1.2, sy 0.022, x =   66.74 z =   55.88 chi2 =   1.01                                                                                                                .   
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.453+-  1.2, sy 0.024, x =   66.81 z =   55.77  3.713 (  0.000 ) cm( 0.00%) -9.37 keV  0.930 GeV                                                                                
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  F  pT  0.453+-  1.2, sy 0.022, x =   68.35 z =   52.43 chi2 =   1.19                                                                                                                    
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.453+-  1.3, sy 0.025, x =   68.41 z =   52.34  3.718 (  0.000 ) cm( 0.00%) -9.39 keV  0.930 GeV                                                                                
+StiMaker:INFO  -                   Tpc/Padrow_10/Sector_3  F  pT  0.453+-  1.3, sy 0.023, x =   69.95 z =   48.99 chi2 =   2.39                                                                                                                    
+
+
+================================================================================
+root.exe [3] .x Run1Ev.C("1pi1GeV@eta-1.50")
+   0:Done:0;Dau:1;Tra:1;TParticle: pi+            p: 1.000000 0.000000 -2.129279 Vertex: -2.654275e-01 -2.301807e+00 1.999997e+02    -1    -1
+     -0.2654    -2.3018   199.9997     2.3171 FOIL    1     0.0000    0.0000    0.0  eV    2.217 GeV NULL
+     -0.2593    -2.3018   199.9866     2.3164 FOIL    1     0.0145    0.0145    0.0  eV    2.217 GeV FIEL NEXT LOSS
+      3.1177    -2.2933   192.7961     3.8703 PVAO    1     7.9585    7.9440    0.2  eV    2.217 GeV FIEL LOSS
+      3.1240    -2.2932   192.7827     3.8753 PVAO    1     7.9734    0.0148    0.0  eV    2.217 GeV FIEL NEXT LOSS
+      3.2783    -2.2924   192.4540     4.0003 PIPO    1     8.3364    0.3631    1.4 MeV    2.216 GeV FIEL NEXT LOSS
+      3.3063    -2.2923   192.3945     4.0232 PWRP    1     8.4022    0.0658  200.3 keV    2.215 GeV FIEL NEXT LOSS
+      3.3159    -2.2922   192.3740     4.0311 PIPE    1     8.4248    0.0226   49.0  eV    2.215 GeV FIEL NEXT LOSS
+      4.2204    -2.2868   190.4482     4.8001 CAVE    1    10.5525    2.1276    4.6 keV    2.215 GeV FIEL NEXT LOSS
+      7.3519    -2.2584   183.7801     7.6909 FSTM    1    17.9193    7.3669   16.0 keV    2.215 GeV FIEL NEXT LOSS
+      7.8215    -2.2529   182.7801     8.1395 FSTD    6    19.0241    1.1048    2.4 keV    2.215 GeV FIEL NEXT LOSS
+      8.8748    -2.2393   180.5370     9.1530 FSTW   12    21.5023    2.4782    5.4 keV    2.215 GeV FIEL NEXT LOSS
+      8.8889    -2.2392   180.5070     9.1666 FTUS    3    21.5354    0.0331  145.6 keV    2.215 GeV FIEL NEXT LOSS
+      8.9054    -2.2389   180.4720     9.1825 FTIH    1    21.5741    0.0387   95.4 keV    2.215 GeV FIEL NEXT LOSS
+      8.9993    -2.2376   180.2720     9.2733 FTUW    1    21.7950    0.2210  508.5 keV    2.215 GeV FIEL NEXT LOSS
+      9.6999    -2.2276   178.7801     9.9524 FSTW   12    23.4433    1.6482    3.6 keV    2.215 GeV FIEL NEXT LOSS
+     12.0478    -2.1884   173.7801    12.2449 FSTD    6    28.9672    5.5240   12.0 keV    2.215 GeV FIEL NEXT LOSS
+     13.7067    -2.1558   170.2471    13.8752 FSTM    1    32.8705    3.9032    8.5 keV    2.215 GeV FIEL NEXT LOSS
+     16.0543    -2.1025   165.2471    16.1914 FSTD    5    38.3944    5.5240   12.0 keV    2.215 GeV FIEL NEXT LOSS
+     16.2242    -2.0984   164.8852    16.3594 FSTW    6    38.7943    0.3998  866.6  eV    2.215 GeV FIEL NEXT LOSS
+     16.2407    -2.0979   164.8502    16.3756 FTOH    1    38.8329    0.0387   95.4 keV    2.214 GeV FIEL NEXT LOSS
+     16.3346    -2.0956   164.6502    16.4684 FTRO    1    39.0539    0.2210  508.5 keV    2.214 GeV FIEL NEXT LOSS
+     16.4526    -2.0927   164.3989    16.5851 FSTW    6    39.3316    0.2777  601.8  eV    2.214 GeV FIEL NEXT LOSS
+     16.4746    -2.0921   164.3520    16.6069 FSCT    5    39.3833    0.0517  580.1 keV    2.213 GeV FIEL NEXT LOSS
+     16.6559    -2.0876   163.9657    16.7862 FSCL    5    39.8100    0.4268    1.0 MeV    2.212 GeV FIEL NEXT LOSS
+     16.6779    -2.0870   163.9189    16.8080 FSCT    5    39.8618    0.0517  579.9 keV    2.212 GeV FIEL NEXT LOSS
+     16.7266    -2.0858   163.8152    16.8561 FSTW    6    39.9764    0.1146  248.4  eV    2.212 GeV FIEL NEXT LOSS
+     16.7548    -2.0850   163.7552    16.8840 FTIA    1    40.0427    0.0663  152.5 keV    2.212 GeV FIEL NEXT LOSS
+     16.8487    -2.0826   163.5552    16.9769 FTUW    1    40.2636    0.2210  508.5 keV    2.211 GeV FIEL NEXT LOSS
+     16.8651    -2.0822   163.5202    16.9931 FTIH    1    40.3023    0.0387   95.4 keV    2.211 GeV FIEL NEXT LOSS
+     17.9323    -2.0540   161.2471    18.0495 FSTW    6    42.8136    2.5113    5.4 keV    2.211 GeV FIEL NEXT LOSS
+     18.4017    -2.0410   160.2471    18.5146 FSTD    5    43.9184    1.1048    2.4 keV    2.211 GeV FIEL NEXT LOSS
+     20.0439    -1.9931   156.7491    20.1427 FSTM    1    47.7830    3.8646    8.4 keV    2.211 GeV FIEL NEXT LOSS
+     20.5133    -1.9786   155.7491    20.6085 FSTD    4    48.8878    1.1048    2.4 keV    2.211 GeV FIEL NEXT LOSS
+     22.0168    -1.9301   152.5460    22.1013 FSTW   12    52.4265    3.5388    7.7 keV    2.211 GeV FIEL NEXT LOSS
+     22.0369    -1.9294   152.5032    22.1212 FSBW   15    52.4738    0.0473  108.9 keV    2.211 GeV FIEL NEXT LOSS
+     22.1107    -1.9270   152.3460    22.1945 FSTW   12    52.6475    0.1737  376.3  eV    2.211 GeV FIEL NEXT LOSS
+     22.2046    -1.9238   152.1460    22.2878 FTRO    1    52.8684    0.2210  508.4 keV    2.210 GeV FIEL NEXT LOSS
+     22.2210    -1.9232   152.1110    22.3041 FTOH    1    52.9071    0.0387   95.3 keV    2.210 GeV FIEL NEXT LOSS
+     22.2351    -1.9228   152.0810    22.3181 FTUS    2    52.9403    0.0331  145.6 keV    2.210 GeV FIEL NEXT LOSS
+     22.3909    -1.9175   151.7491    22.4728 FSTW   12    53.3069    0.3667  794.7  eV    2.210 GeV FIEL NEXT LOSS
+     24.7376    -1.8337   146.7491    24.8055 FSTD    4    58.8309    5.5240   12.0 keV    2.210 GeV FIEL NEXT LOSS
+     27.7292    -1.7148   140.3741    27.7822 FSTM    1    65.8740    7.0431   15.3 keV    2.210 GeV FIEL SCUT LOSS
+     30.7203    -1.5824   133.9991    30.7610 FSTM    1    72.9170    7.0431   15.2 keV    2.210 GeV FIEL NEXT LOSS
+     34.2233    -1.4103   126.5313    34.2523 FSTA    1    81.1674    8.2504   17.9 keV    2.210 GeV FIEL LOSS
+     34.2239    -1.4102   126.5300    34.2529 FSTA    1    81.1688    0.0014    3.0  eV    2.210 GeV FIEL NEXT LOSS
+     34.2398    -1.4094   126.4961    34.2688 CAVE    1    81.2063    0.0375   81.2  eV    2.210 GeV FIEL NEXT LOSS
+     34.2683    -1.4079   126.4352    34.2972 SCON    1    81.2735    0.0672  192.3 keV    2.210 GeV FIEL NEXT LOSS
+     34.5180    -1.3950   125.9029    34.5461 SNMX    1    81.8616    0.5881   56.0 keV    2.210 GeV FIEL NEXT LOSS
+     34.5465    -1.3935   125.8421    34.5746 SCON    1    81.9288    0.0672  192.2 keV    2.210 GeV FIEL NEXT LOSS
+     45.8999    -0.7029   101.6226    45.9053 CAVE    1   108.6863   26.7575   58.0 keV    2.210 GeV FIEL LOSS
+     45.9065    -0.7024   101.6086    45.9118 CAVE    1   108.7017    0.0155   33.5  eV    2.210 GeV FIEL NEXT LOSS
+     46.4003    -0.6680   100.5545    46.4052 TPCE    1   109.8663    1.1646    2.5 keV    2.210 GeV FIEL NEXT LOSS
+     46.4024    -0.6678   100.5502    46.4072 TIFC    1   109.8711    0.0048   18.9 keV    2.210 GeV FIEL NEXT LOSS
+     46.4174    -0.6668   100.5181    46.4222 TIKA    1   109.9065    0.0354   86.4 keV    2.209 GeV FIEL NEXT LOSS
+     47.6894    -0.5763    97.8027    47.6929 TINX    1   112.9065    2.9999  381.3 keV    2.209 GeV FIEL NEXT LOSS
+     47.7697    -0.5705    97.6315    47.7731 TIAD    1   113.0957    0.1892  400.6 keV    2.209 GeV FIEL NEXT LOSS
+     47.7717    -0.5704    97.6272    47.7751 TIFC    1   113.1004    0.0047   18.9 keV    2.209 GeV FIEL NEXT LOSS
+     47.7857    -0.5693    97.5973    47.7891 TPCE    1   113.1334    0.0330   71.6  eV    2.209 GeV FIEL NEXT LOSS
+     53.0221    -0.1703    86.4152    53.0224 TPSS    3   125.4874   12.3539   23.2 keV    2.209 GeV FIEL LOSS
+     53.0236    -0.1702    86.4119    53.0239 TPSS    3   125.4910    0.0037    6.9  eV    2.209 GeV FIEL NEXT LOSS
+     54.8256    -0.0232    82.5622    54.8256 TPAD    1   129.7441    4.2530    8.9 keV    2.209 GeV FIEL NEXT LOSS
+     56.4276     0.1115    79.1392    56.4277 TPAD    2   133.5258    3.7818    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     58.0295     0.2501    75.7155    58.0300 TPAD    3   137.3083    3.7824    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     59.6314     0.3927    72.2911    59.6327 TPAD    4   141.0915    3.7832    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     61.2333     0.5391    68.8660    61.2357 TPAD    5   144.8755    3.7841    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     62.8352     0.6894    65.4401    62.8390 TPAD    6   148.6605    3.7849    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     64.4371     0.8436    62.0134    64.4427 TPAD    7   152.4462    3.7858    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     66.0391     1.0017    58.5859    66.0467 TPAD    8   156.2329    3.7867    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     67.6410     1.1638    55.1576    67.6510 TPAD    9   160.0205    3.7876    7.9 keV    2.209 GeV FIEL NEXT LOSS
+     69.2429     1.3297    51.7284    69.2557 TPAD   10   163.8090    3.7885    7.9 keV    2.209 GeV FIEL NEXT LOSS
+Breakpoint 3, StiKalmanTrackFinder::Fit (this=0x1189c1d0, track=0x297a290, rMin=0) at .al98_x8664_gcc11/obj/StRoot/Sti/StiKalmanTrackFinder.cxx:173
+173         status = track->fit(kOutsideIn);
+(gdb) p track->print("")
+Track 0x297a290: chi2/NDF= 0.052525, no.Hits = 52
+  1 - 0x16634640(H)     ch2=0.1 x=183.048       h=-0.00149622 valid Tpc/Padrow_69/Sector_3
+  2 - 0x16634458(H)     ch2=0.1 x=172.997       h=-0.00149717 valid Tpc/Padrow_64/Sector_3
+  3 - 0x16634270(H)     ch2=0.1 x=170.992       h=-0.00149723 valid Tpc/Padrow_63/Sector_3
+  4 - 0x16634088(H)     ch2=0.1 x=168.985       h=-0.00149731 valid Tpc/Padrow_62/Sector_3
+  5 - 0x16633ea0(H)     ch2=0.1 x=166.983       h=-0.00149726 valid Tpc/Padrow_61/Sector_3
+  6 - 0x16633cb8(H)     ch2=0.1 x=156.986       h=-0.00149672 valid Tpc/Padrow_56/Sector_3
+  7 - 0x16633ad0(H)     ch2=0.1 x=154.989       h=-0.00149662 valid Tpc/Padrow_55/Sector_3
+  8 - 0x166338e8(H)     ch2=0.1 x=152.992       h=-0.00149651 valid Tpc/Padrow_54/Sector_3
+  9 - 0x16633700(H)     ch2=0.1 x=150.996       h=-0.00149637 valid Tpc/Padrow_53/Sector_3
+ 10 - 0x16633518(H)     ch2=0.1 x=149   h=-0.00149621 valid Tpc/Padrow_52/Sector_3
+ 11 - 0x16633330(H)     ch2=0.1 x=147.005       h=-0.00149603 valid Tpc/Padrow_51/Sector_3
+ 12 - 0x16633148(H)     ch2=0.1 x=145.009       h=-0.00149585 valid Tpc/Padrow_50/Sector_3
+ 13 - 0x16632f60(H)     ch2=0.1 x=143.015       h=-0.00149561 valid Tpc/Padrow_49/Sector_3
+ 14 - 0x16632d78(H)     ch2=0.1 x=141.022       h=-0.00149538 valid Tpc/Padrow_48/Sector_3
+ 15 - 0x16632b90(H)     ch2=0.1 x=139.029       h=-0.00149516 valid Tpc/Padrow_47/Sector_3
+ 16 - 0x166329a8(H)     ch2=0.1 x=137.035       h=-0.00149491 valid Tpc/Padrow_46/Sector_3
+ 17 - 0x166327c0(H)     ch2=0.1 x=135.039       h=-0.00149475 valid Tpc/Padrow_45/Sector_3
+ 18 - 0x166325d8(H)     ch2=0.1 x=133.043       h=-0.00149454 valid Tpc/Padrow_44/Sector_3
+ 19 - 0x166323f0(H)     ch2=0.1 x=131.047       h=-0.00149435 valid Tpc/Padrow_43/Sector_3
+ 20 - 0x16632208(H)     ch2=0.1 x=129.05        h=-0.00149416 valid Tpc/Padrow_42/Sector_3
+ 21 - 0x16632020(H)     ch2=0.1 x=127.053       h=-0.00149399 valid Tpc/Padrow_41/Sector_3
+ 22 - 0x16631e38(H)     ch2=0.1 x=114.886       h=-0.00149322 valid Tpc/Padrow_38/Sector_3
+ 23 - 0x16631c50(H)     ch2=0.1 x=113.285       h=-0.00149319 valid Tpc/Padrow_37/Sector_3
+ 24 - 0x16631a68(H)     ch2=0.1 x=111.684       h=-0.00149312 valid Tpc/Padrow_36/Sector_3
+ 25 - 0x16631880(H)     ch2=0.1 x=108.483       h=-0.00149308 valid Tpc/Padrow_34/Sector_3
+ 26 - 0x16631698(H)     ch2=0.1 x=106.882       h=-0.00149309 valid Tpc/Padrow_33/Sector_3
+ 27 - 0x166314b0(H)     ch2=0.1 x=105.281       h=-0.00149309 valid Tpc/Padrow_32/Sector_3
+ 28 - 0x166312c8(H)     ch2=0.1 x=103.679       h=-0.00149309 valid Tpc/Padrow_31/Sector_3
+ 29 - 0x166310e0(H)     ch2=0.1 x=102.077       h=-0.0014931 valid Tpc/Padrow_30/Sector_3
+ 30 - 0x16630ef8(H)     ch2=0.1 x=100.476       h=-0.00149314 valid Tpc/Padrow_29/Sector_3
+ 31 - 0x16630d10(H)     ch2=0.1 x=98.8728       h=-0.00149317 valid Tpc/Padrow_28/Sector_3
+ 32 - 0x16630b28(H)     ch2=0.1 x=97.2689       h=-0.00149322 valid Tpc/Padrow_27/Sector_3
+ 33 - 0x16630940(H)     ch2=0.1 x=95.6652       h=-0.00149327 valid Tpc/Padrow_26/Sector_3
+ 34 - 0x16630758(H)     ch2=0.1 x=92.4157       h=-0.00149339 valid Tpc/Padrow_24/Sector_3
+ 35 - 0x16630570(H)     ch2=0.1 x=90.8117       h=-0.00149347 valid Tpc/Padrow_23/Sector_3
+ 36 - 0x16630388(H)     ch2=0.1 x=89.2077       h=-0.00149356 valid Tpc/Padrow_22/Sector_3
+ 37 - 0x166301a0(H)     ch2=0.1 x=87.6035       h=-0.00149366 valid Tpc/Padrow_21/Sector_3
+ 38 - 0x1662ffb8(H)     ch2=0.1 x=85.9992       h=-0.00149377 valid Tpc/Padrow_20/Sector_3
+ 39 - 0x1662fdd0(H)     ch2=0.1 x=84.3951       h=-0.00149386 valid Tpc/Padrow_19/Sector_3
+ 40 - 0x1662fbe8(H)     ch2=0.1 x=82.7911       h=-0.00149394 valid Tpc/Padrow_18/Sector_3
+ 41 - 0x1662fa00(H)     ch2=0.1 x=79.5823       h=-0.00149418 valid Tpc/Padrow_16/Sector_3
+ 42 - 0x1662f818(H)     ch2=0.1 x=77.978        h=-0.00149425 valid Tpc/Padrow_15/Sector_3
+ 43 - 0x1662f630(H)     ch2=0.1 x=76.3731       h=-0.00149437 valid Tpc/Padrow_14/Sector_3
+ 44 - 0x1662f448(H)     ch2=0.1 x=74.7683       h=-0.00149448 valid Tpc/Padrow_13/Sector_3
+ 45 - 0x1662f260(H)     ch2=0.1 x=73.1638       h=-0.00149455 valid Tpc/Padrow_12/Sector_3
+ 46 - 0x1662f078(H)     ch2=0.1 x=71.5588       h=-0.00149471 valid Tpc/Padrow_11/Sector_3
+ 47 - 0x1662ee90(H)     ch2=0.1 x=69.9542       h=-0.00149481 valid Tpc/Padrow_10/Sector_3
+ 48 - 0x1662eca8(H)     ch2=0.1 x=68.3496       h=-0.00149493 valid Tpc/Padrow_9/Sector_3
+ 49 - 0x1662eac0(H)     ch2=0.1 x=66.7448       h=-0.00149507 valid Tpc/Padrow_8/Sector_3
+ 50 - 0x1662e8d8(H)     ch2=0.1 x=65.1406       h=-0.00149516 valid Tpc/Padrow_7/Sector_3
+ 51 - 0x1662e6f0(H)     ch2=0.1 x=63.5366       h=-0.00149527 valid Tpc/Padrow_6/Sector_3
+ 52 - 0x1662e508(H)     ch2=0.1 x=61.9329       h=-0.00149537 valid Tpc/Padrow_5/Sector_3
+================================================================================
+10/29/2026
+.x Run1Ev.C("1pi1GeV@eta-1.50")
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.996+-  0.9, sy 0.021, x =   57.21 z =   77.88  3.775 (  0.000 ) cm( 0.00%) -10.6 keV  2.203 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.996+-  0.9, sy 0.022, x =   55.61 z =   81.29  3.774 (  0.000 ) cm( 0.00%) -10.6 keV  2.203 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.997+-  0.9, sy 0.029, x =   47.28 z =   99.09 19.690 ( 16.194 ) cm( 0.62%)  -1.1 MeV  2.204 GeV
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.997+-  0.9, sy 0.045, x =   33.62 z =  128.15 32.142 ( 30.027 ) cm( 0.79%) -1.51 MeV  2.206 GeV
+StiMaker:INFO  -                   FSTD_4/FSTW_1/FSCT_1_7  dE pT  0.998+-  1.0, sy 0.062, x =   23.20 z =  150.29 24.491 ( 23.293 ) cm(11.75%) -2.29 MeV  2.208 GeV
+StiMaker:INFO  -                 FSTD_5/FSTW_12/FTUW_1_15  dE pT  1.011+-  2.2, sy 0.150, x =   15.46 z =  166.73 18.180 ( 17.320 ) cm(12.39%) -2.35 MeV  2.211 GeV
+StiMaker:INFO  -                   FSTD_6/FSTW_1/FTUW_1_8  dE pT  1.014+-  2.5, sy 0.246, x =   10.74 z =  176.77 11.834 ( 10.975 ) cm( 4.11%) -2.36 MeV  2.213 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  1.026+-  3.0, sy 0.418, x =    3.94 z =  191.22 15.254 ( 14.314 ) cm( 8.26%) -2.91 MeV  2.216 GeV
+StiKalmanTrack::refit iter = 0 qA = 1.18
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.995+-  0.8, sy 0.020, x =   57.21 z =   77.97  3.775 (  0.000 ) cm( 0.00%) -10.6 keV  2.203 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.995+-  0.8, sy 0.021, x =   55.61 z =   81.38  3.774 (  0.000 ) cm( 0.00%) -10.6 keV  2.203 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.996+-  0.8, sy 0.028, x =   47.28 z =   99.20 19.690 ( 16.194 ) cm( 0.62%)  -1.1 MeV  2.204 GeV
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.996+-  0.8, sy 0.043, x =   33.62 z =  128.29 32.142 ( 30.027 ) cm( 0.79%) -1.51 MeV  2.206 GeV
+StiMaker:INFO  -                   FSTD_4/FSTW_1/FSCT_1_7  dE pT  0.997+-  0.9, sy 0.060, x =   23.20 z =  150.45 24.491 ( 23.293 ) cm(11.75%) -2.29 MeV  2.208 GeV
+StiMaker:INFO  -                 FSTD_5/FSTW_12/FTUW_1_15  dE pT  0.998+-  1.0, sy 0.083, x =   15.46 z =  166.91 18.180 ( 17.329 ) cm(12.35%) -2.32 MeV  2.211 GeV
+StiMaker:INFO  -                   FSTD_6/FSTW_1/FTUW_1_8  dE pT  0.999+-  1.1, sy 0.106, x =   10.43 z =  177.10 11.829 ( 10.966 ) cm( 4.13%) -2.37 MeV  2.213 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  1.000+-  1.1, sy 0.146, x =    3.94 z =  190.91 15.259 ( 14.319 ) cm( 8.26%) -2.91 MeV  2.216 GeV
+StiKalmanTrack::refit iter = 1 qA = 0.02
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.995+-  0.8, sy 0.020, x =   57.21 z =   77.97  3.775 (  0.000 ) cm( 0.00%) -10.6 keV  2.203 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.995+-  0.8, sy 0.021, x =   55.61 z =   81.38  3.774 (  0.000 ) cm( 0.00%) -10.6 keV  2.203 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.996+-  0.8, sy 0.028, x =   47.28 z =   99.20 19.690 ( 16.194 ) cm( 0.62%)  -1.1 MeV  2.204 GeV
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.996+-  0.8, sy 0.043, x =   33.62 z =  128.29 32.142 ( 30.027 ) cm( 0.79%) -1.51 MeV  2.206 GeV
+StiMaker:INFO  -                   FSTD_4/FSTW_1/FSCT_1_7  dE pT  0.997+-  0.9, sy 0.060, x =   23.20 z =  150.46 24.491 ( 23.293 ) cm(11.75%) -2.29 MeV  2.208 GeV
+StiMaker:INFO  -                 FSTD_5/FSTW_12/FTUW_1_15  dE pT  0.998+-  1.0, sy 0.083, x =   15.46 z =  166.91 18.180 ( 17.330 ) cm(12.35%) -2.32 MeV  2.211 GeV
+StiMaker:INFO  -                   FSTD_6/FSTW_1/FTUW_1_8  dE pT  0.999+-  1.1, sy 0.106, x =   10.43 z =  177.10 11.828 ( 10.965 ) cm( 4.13%) -2.37 MeV  2.213 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  1.000+-  1.1, sy 0.146, x =    3.94 z =  190.91 15.260 ( 14.319 ) cm( 8.26%) -2.91 MeV  2.216 GeV
+      4.0004     0.0154   191.4828     4.0004 PIPO    1     9.4097    0.2941    1.2 MeV    2.216 GeV FIEL NEXT LOSS
+      4.0233     0.0155   191.4341     4.0233 PWRP    1     9.4635    0.0538  163.7 keV    2.216 GeV FIEL NEXT LOSS
+      9.1713     0.0663   180.4720     9.1715 FTIH    1    21.5744    0.0387   95.4 keV    2.216 GeV FIEL NEXT LOSS
+      9.2652     0.0676   180.2720     9.2654 FTUW    1    21.7953    0.2210  508.5 keV    2.215 GeV FIEL NEXT LOSS
+      10.7603     0.0900   177.0882    10.7606 FTUW    1    25.3128    0.2210  508.5 keV    2.214 GeV FIEL NEXT LOSS
+     10.7767     0.0903   177.0532    10.7771 FTIH    1    25.3514    0.0387   95.5 keV    2.214 GeV FIEL NEXT LOSS
+     10.7908     0.0905   177.0232    10.7912 FTUS    3    25.3846    0.0331  145.6 keV    2.214 GeV FIEL NEXT LOSS
+      15.5094     0.1834   166.9740    15.5105 FTUS    3    36.4869    0.0331  145.5 keV    2.214 GeV FIEL NEXT LOSS
+     15.5259     0.1838   166.9390    15.5269 FTIH    1    36.5256    0.0387   95.5 keV    2.214 GeV FIEL NEXT LOSS
+     15.6198     0.1860   166.7390    15.6209 FTUW    1    36.7465    0.2210  508.5 keV    2.213 GeV FIEL NEXT LOSS
+     15.6479     0.1866   166.6790    15.6490 FTIA    1    36.8128    0.0663  152.6 keV    2.213 GeV FIEL NEXT LOSS
+     16.0400     0.1959   165.8440    16.0412 FSTW   12    37.7353    0.9225    2.0 keV    2.213 GeV FIEL NEXT LOSS
+     16.1339     0.1982   165.6440    16.1351 FTRO    1    37.9563    0.2210  508.5 keV    2.213 GeV FIEL NEXT LOSS
+     16.1503     0.1986   165.6090    16.1515 FTOH    1    37.9949    0.0387   95.5 keV    2.213 GeV FIEL NEXT LOSS
+     16.3202     0.2027   165.2471    16.3215 FSTW   12    38.3948    0.3998  866.6  eV    2.213 GeV FIEL NEXT LOSS
+     16.4901     0.2069   164.8852    16.4914 FSTW    6    38.7946    0.3998  866.6  eV    2.213 GeV FIEL NEXT LOSS
+     16.5066     0.2073   164.8502    16.5079 FTOH    1    38.8332    0.0387   95.4 keV    2.213 GeV FIEL NEXT LOSS
+     16.6005     0.2096   164.6502    16.6018 FTRO    1    39.0542    0.2210  508.5 keV    2.212 GeV FIEL NEXT LOSS
+     16.9925     0.2195   163.8152    16.9939 FSTW    6    39.9767    0.9225    2.0 keV    2.212 GeV FIEL NEXT LOSS
+     17.0207     0.2202   163.7552    17.0221 FTIA    1    40.0430    0.0663  152.6 keV    2.212 GeV FIEL NEXT LOSS
+     17.1146     0.2226   163.5552    17.1160 FTUW    1    40.2640    0.2210  508.4 keV    2.211 GeV FIEL NEXT LOSS
+     17.1310     0.2230   163.5202    17.1324 FTIH    1    40.3026    0.0387   95.4 keV    2.211 GeV FIEL NEXT LOSS
+     18.1982     0.2513   161.2471    18.1999 FSTW    6    42.8139    2.5113    5.4 keV    2.211 GeV FIEL NEXT LOSS
+     18.6676     0.2642   160.2471    18.6695 FSTD    5    43.9187    1.1048    2.4 keV    2.211 GeV FIEL NEXT LOSS
+     20.3097     0.3122   156.7491    20.3121 FSTM    1    47.7833    3.8646    8.4 keV    2.211 GeV FIEL NEXT LOSS
+     20.7792     0.3266   155.7491    20.7817 FSTD    4    48.8881    1.1048    2.4 keV    2.211 GeV FIEL NEXT LOSS
+     22.3766     0.3783   152.3460    22.3798 FSTW   12    52.6478    3.7597    8.1 keV    2.211 GeV FIEL NEXT LOSS
+     22.4704     0.3814   152.1460    22.4737 FTRO    1    52.8688    0.2210  508.5 keV    2.211 GeV FIEL NEXT LOSS
+     22.4869     0.3820   152.1110    22.4901 FTOH    1    52.9074    0.0387   95.5 keV    2.211 GeV FIEL NEXT LOSS
+     22.6567     0.3877   151.7491    22.6601 FSTW   12    53.3073    0.3998  866.5  eV    2.211 GeV FIEL NEXT LOSS
+     22.8125     0.3931   151.4172    22.8159 FSTW    1    53.6739    0.3667  794.7  eV    2.211 GeV FIEL NEXT LOSS
+     22.8266     0.3935   151.3872    22.8300 FTUS    2    53.7071    0.0331  145.6 keV    2.211 GeV FIEL NEXT LOSS
+     22.8430     0.3941   151.3522    22.8464 FTOH    1    53.7457    0.0387   95.3 keV    2.210 GeV FIEL NEXT LOSS
+     22.9369     0.3973   151.1522    22.9403 FTRO    1    53.9667    0.2210  508.5 keV    2.210 GeV FIEL NEXT LOSS
+     22.9838     0.3989   151.0522    22.9873 FSTW    1    54.0772    0.1105  239.4  eV    2.210 GeV FIEL NEXT LOSS
+     23.0031     0.3996   151.0112    23.0065 FSCT    1    54.1225    0.0453  507.8 keV    2.209 GeV FIEL NEXT LOSS
+     23.2631     0.4086   150.4572    23.2667 FSCL    1    54.7345    0.6120    1.4 MeV    2.208 GeV FIEL NEXT LOSS
+     23.2823     0.4093   150.4162    23.2859 FSCT    1    54.7798    0.0453  507.9 keV    2.208 GeV FIEL NEXT LOSS
+     24.5341     0.4542   147.7491    24.5383 FSTW    1    57.7264    2.9466    6.4 keV    2.208 GeV FIEL NEXT LOSS
+     25.0034     0.4716   146.7491    25.0079 FSTD    4    58.8312    1.1048    2.4 keV    2.208 GeV FIEL NEXT LOSS
+     27.9950     0.5905   140.3741    28.0013 FSTM    1    65.8742    7.0430   15.3 keV    2.207 GeV FIEL SCUT LOSS
+     30.9861     0.7229   133.9991    30.9945 FSTM    1    72.9173    7.0431   15.2 keV    2.207 GeV FIEL NEXT LOSS
+     34.3126     0.8859   126.9074    34.3241 FSTA    1    80.7521    7.8348   17.0 keV    2.207 GeV FIEL NEXT LOSS
+ 
+     34.3289     0.8868   126.8728    34.3403 CAVE    1    80.7903    0.0382   82.8  eV    2.207 GeV FIEL NEXT LOSS
+     34.3573     0.8883   126.8122    34.3688 SCON    1    80.8574    0.0670  191.7 keV    2.207 GeV FIEL NEXT LOSS
+     34.6063     0.9011   126.2814    34.6180 SNMX    1    81.4438    0.5864   55.9 keV    2.207 GeV FIEL NEXT LOSS
+     34.6347     0.9026   126.2207    34.6465 SCON    1    81.5108    0.0670  191.7 keV    2.207 GeV FIEL NEXT LOSS
+
+     45.8672     1.5821   102.2596    45.8945 CAVE    1   107.9828   26.4720   57.4 keV    2.207 GeV FIEL LOSS
+     45.8689     1.5822   102.2560    45.8962 CAVE    1   107.9868    0.0039    8.5  eV    2.207 GeV FIEL NEXT LOSS
+     46.3615     1.6164   101.2046    46.3896 TPCE    1   109.1483    1.1616    2.5 keV    2.207 GeV FIEL NEXT LOSS
+     46.3635     1.6165   101.2004    46.3917 TIFC    1   109.1531    0.0047   18.7 keV    2.207 GeV FIEL NEXT LOSS
+     46.3785     1.6176   101.1684    46.4067 TIKA    1   109.1884    0.0353   86.1 keV    2.207 GeV FIEL NEXT LOSS
+     47.6473     1.7073    98.4599    47.6779 TINX    1   112.1807    2.9923  380.3 keV    2.206 GeV FIEL NEXT LOSS
+     47.7273     1.7130    98.2892    47.7580 TIAD    1   112.3693    0.1886  399.3 keV    2.206 GeV FIEL NEXT LOSS
+     47.7293     1.7132    98.2849    47.7600 TIFC    1   112.3740    0.0047   18.7 keV    2.206 GeV FIEL NEXT LOSS
+     47.7433     1.7142    98.2549    47.7741 TPCE    1   112.4071    0.0331   71.8  eV    2.206 GeV FIEL NEXT LOSS
+     53.0218     2.1144    86.9834    53.0639 TPSS    3   124.8598   12.4527   23.5 keV    2.206 GeV FIEL LOSS
+     53.0233     2.1145    86.9800    53.0655 TPSS    3   124.8635    0.0037    6.9  eV    2.206 GeV FIEL NEXT LOSS
+     54.8253     2.2608    83.1305    54.8719 TPAD    1   129.1165    4.2529    8.9 keV    2.206 GeV FIEL NEXT LOSS
+     56.4273     2.3950    79.7075    56.4781 TPAD    2   132.8981    3.7817    7.9 keV    2.206 GeV FIEL NEXT LOSS
+================================================================================
+10/30/2026
+(gdb) p dE
+$1 = 0.0045430110028567899
+(gdb) p mgP.dx
+$2 = 0.41595966604679901
+(gdb) p tDet->Print("")
+   FSTD_4/FSTW_1/FTRO_1_9 xy   21.69    5.81     z  151.25 R:  22.46 phi:  15.0  dX: 0.40 dY: 9.40 dZ: 0.10     Mat:FSTM_PEEK_Averaged :1.03 g/cm^3 X0:37.39 Z: 6.58 A: 13.20   Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+$3 = void
+(gdb) p previousNode->getDetector()
+$4 = (const StiDetector *) 0x11be2e60
+(gdb) p previousNode->getDetector()->Print("")
+  FSTD_4/FSTW_1/FTUS_2_10 xy    0.00    0.00     z  151.40 R:  22.54 phi:   7.0  rO: 22.83 dR: 0.57 dPhi: 15.00 dZ: 0.01        Mat:FSTM_SILICON :2.33 g/cm^3 X0:4.01 Z: 14.00 A: 28.09 Gas:PIPE_STANDARD :1.20mg/cm^3 Z: 7.30 A: 14.61
+
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.0013     0.0008   200.0000     0.0015 PVAO    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL
+      4.0003     0.0247   191.4792     4.0004 PIPO    1     9.4137    0.2941   12.9 MeV  667.328 MeV FIEL NEXT LOSS MULS
+      4.0232     0.0249   191.4305     4.0233 PWRP    1     9.4675    0.0539    1.6 MeV  665.737 MeV FIEL NEXT LOSS MULS    PIPE_1/PIPO_1/PVAO_1  dE pT  0.458+-  1.5, sy 0.293, x =    3.90 z =  191.37 69.828 ( 69.175 ) cm( 4.64%) -12.5 MeV  0.578 GeV
+      4.8003     0.0339   189.7708     4.8004 CAVE    1    11.3001    1.8140   55.6 keV  665.681 MeV FIEL NEXT LOSS MULS
+      6.2030     0.0549   186.7755     6.2032 FSTM    1    14.6077    3.3076   57.8 keV  665.624 MeV FIEL SCUT LOSS MULS
+      7.6053     0.0827   183.7801     7.6057 FSTM    1    17.9152    3.3075  165.2 keV  665.458 MeV FIEL NEXT LOSS MULS
+      8.0742     0.0935   182.7801     8.0747 FSTD    6    19.0197    1.1045   29.9 keV  665.428 MeV FIEL NEXT LOSS MULS
+      9.1397     0.1204   180.5070     9.1405 FSTW   12    21.5303    2.5106   34.6 keV  665.394 MeV FIEL NEXT LOSS MULS
+      9.1561     0.1209   180.4720     9.1569 FTIH    1    21.5689    0.0387  898.7 keV  664.495 MeV FIEL NEXT LOSS MULS
+      9.2499     0.1234   180.2720     9.2507 FTUW    1    21.7899    0.2209    6.8 MeV  657.660 MeV FIEL NEXT LOSS MULS
+      9.9500     0.1460   178.7801     9.9511 FSTW   12    23.4380    1.6481   49.7 keV  657.610 MeV FIEL NEXT LOSS MULS
+     10.6502     0.1701   177.2882    10.6515 FSTW    1    25.0862    1.6482   15.6 keV  657.594 MeV FIEL NEXT LOSS MULS
+     10.7441     0.1734   177.0882    10.7455 FTUW    1    25.3072    0.2210    5.2 MeV  652.441 MeV FIEL NEXT LOSS MULS
+     10.7605     0.1740   177.0532    10.7619 FTIH    1    25.3459    0.0387  334.4 keV  652.106 MeV FIEL NEXT LOSS MULS
+     10.7746     0.1745   177.0232    10.7760 FTUS    3    25.3790    0.0332  594.8 keV  651.511 MeV FIEL NEXT LOSS MULS
+     11.8308     0.2133   174.7801    11.8328 FSTW    1    27.8587    2.4796   44.1 keV  651.467 MeV FIEL NEXT LOSS MULS
+     12.3017     0.2315   173.7801    12.3038 FSTD    6    28.9641    1.1055   17.9 keV  651.449 MeV FIEL NEXT LOSS MULS
+     13.9649     0.3014   170.2471    13.9681 FSTM    1    32.8697    3.9056   45.0 keV  651.404 MeV FIEL NEXT LOSS MULS
+     14.4355     0.3228   169.2471    14.4391 FSTD    5    33.9751    1.1054   25.8 keV  651.379 MeV FIEL NEXT LOSS MULS
+     15.4911     0.3731   167.0040    15.4955 FSTW   12    36.4547    2.4796  130.7 keV  651.248 MeV FIEL NEXT LOSS MULS
+     15.5052     0.3738   166.9740    15.5097 FTUS    3    36.4878    0.0332    1.1 MeV  650.106 MeV FIEL NEXT LOSS MULS
+     15.5216     0.3746   166.9390    15.5262 FTIH    1    36.5265    0.0387    2.4 MeV  647.669 MeV FIEL NEXT LOSS MULS
+     15.6158     0.3793   166.7390    15.6204 FTUW    1    36.7476    0.2211    7.0 MeV  640.629 MeV FIEL NEXT LOSS MULS
+     15.6441     0.3806   166.6790    15.6488 FTIA    1    36.8140    0.0664    1.7 MeV  638.946 MeV FIEL NEXT LOSS MULS
+     16.0400     0.4029   165.8440    16.0451 FSTW   12    37.7383    0.9244   12.2 keV  638.934 MeV FIEL NEXT LOSS MULS
+     16.1348     0.4083   165.6440    16.1400 FTRO    1    37.9597    0.2214    4.6 MeV  634.318 MeV FIEL NEXT LOSS MULS
+     16.1513     0.4093   165.6090    16.1565 FTOH    1    37.9984    0.0387  135.0 keV  634.183 MeV FIEL NEXT LOSS MULS
+     16.3223     0.4197   165.2471    16.3277 FSTW   12    38.3988    0.4004    6.0 keV  634.177 MeV FIEL NEXT LOSS MULS
+     16.5098     0.4311   164.8502    16.5154 FSTW    6    38.8380    0.4391    6.4 keV  634.171 MeV FIEL NEXT LOSS MULS
+     16.6043     0.4369   164.6502    16.6101 FTRO    1    39.0593    0.2213    5.6 MeV  628.585 MeV FIEL NEXT LOSS MULS
+     16.9997     0.4610   163.8152    17.0059 FSTW    6    39.9834    0.9242   14.1 keV  628.571 MeV FIEL NEXT LOSS MULS
+     17.0281     0.4628   163.7552    17.0344 FTIA    1    40.0499    0.0664    1.1 MeV  627.449 MeV FIEL NEXT LOSS MULS
+     17.1226     0.4687   163.5552    17.1290 FTUW    1    40.2711    0.2213    7.0 MeV  620.479 MeV FIEL NEXT LOSS MULS
+     18.2123     0.5344   161.2471    18.2202 FSTW    6    42.8244    2.5533   38.3 keV  620.441 MeV FIEL NEXT LOSS MULS
+     18.6843     0.5639   160.2471    18.6928 FSTD    5    43.9306    1.1062   17.9 keV  620.423 MeV FIEL NEXT LOSS MULS
+     20.3353     0.6723   156.7491    20.3464 FSTM    1    47.8001    3.8696   33.7 keV  620.389 MeV FIEL NEXT LOSS MULS
+     20.8075     0.7044   155.7491    20.8195 FSTD    4    48.9065    1.1064   12.9 keV  620.376 MeV FIEL NEXT LOSS MULS
+     21.4695     0.7504   154.3476    21.4826 FSTW   12    50.4572    1.5507   25.8 keV  620.350 MeV FIEL NEXT LOSS MULS
+     22.6968     0.8393   151.7491    22.7123 FSTD    4    53.3323    2.8751   64.2 keV  620.286 MeV FIEL NEXT LOSS MULS
+     22.8536     0.8510   151.4172    22.8695 FSTW    1    53.6996    0.3673   11.5 keV  620.275 MeV FIEL NEXT LOSS MULS
+     22.8678     0.8521   151.3872    22.8837 FTUS    2    53.7328    0.0332  579.2 keV  619.695 MeV FIEL NEXT LOSS MULS
+     22.8843     0.8533   151.3522    22.9002 FTOH    1    53.7715    0.0387    1.2 MeV  618.533 MeV FIEL NEXT LOSS MULS
+     22.9789     0.8602   151.1522    22.9950 FTRO    1    53.9928    0.2213    8.1 MeV  610.457 MeV FIEL NEXT LOSS MULS
+     24.5902     0.9852   147.7491    24.6099 FSTW    1    57.7602    3.7674  984.8  eV  610.456 MeV FIEL NEXT LOSS MULS
+     25.0636     1.0234   146.7491    25.0845 FSTD    4    58.8673    1.1071   17.7 keV  610.438 MeV FIEL NEXT LOSS MULS
+     28.0809     1.2826   140.3741    28.1101 FSTM    1    65.9250    7.0577    9.6 keV  610.428 MeV FIEL SCUT LOSS MULS
+     29.5874     1.4229   137.1866    29.6216 FSTM    1    69.4534    3.5284   23.5 keV  610.405 MeV FIEL SCUT LOSS MULS
+     31.0921     1.5705   133.9991    31.1317 FSTM    1    72.9813    3.5279  126.3 keV  610.278 MeV FIEL NEXT LOSS MULS
+     34.3183     1.9111   127.1612    34.3714 FSTA    1    80.5497    7.5684  135.7 keV  610.143 MeV FIEL LOSS MULS
+     34.3635     1.9161   127.0653    34.4169 SCON    1    80.6559    0.0667    2.8 MeV  607.337 MeV FIEL NEXT LOSS MULS
+     34.6123     1.9436   126.5383    34.6668 SNMX    1    81.2393    0.5835  287.6 keV  607.050 MeV FIEL NEXT LOSS MULS
+     34.6407     1.9468   126.4780    34.6953 SCON    1    81.3060    0.0667    2.2 MeV  604.800 MeV FIEL NEXT LOSS MULS
+     45.7530     3.3546   102.8306    45.8758 CAVE    1   107.4724   26.1664  374.8 keV  604.425 MeV FIEL LOSS MULS
+     45.7614     3.3558   102.8127    45.8843 CAVE    1   107.4922    0.0198   53.8  eV  604.425 MeV FIEL NEXT LOSS MULS
+     46.2509     3.4269   101.7700    46.3776 TPCE    1   108.6463    1.1541   24.5 keV  604.401 MeV FIEL NEXT LOSS MULS
+     46.2529     3.4272   101.7657    46.3797 TIFC    1   108.6510    0.0047  130.1 keV  604.271 MeV FIEL NEXT LOSS MULS
+     46.2678     3.4294   101.7340    46.3947 TIKA    1   108.6861    0.0351  572.2 keV  603.698 MeV FIEL NEXT LOSS MULS
+     47.5281     3.6162    99.0487    47.6655 TINX    1   111.6584    2.9722    7.6 MeV  596.078 MeV FIEL NEXT LOSS MULS
+     47.6077     3.6278    98.8795    47.7457 TIAD    1   111.8457    0.1873    3.8 MeV  592.287 MeV FIEL NEXT LOSS MULS
+     47.6097     3.6280    98.8753    47.7477 TIFC    1   111.8504    0.0047  159.8 keV  592.127 MeV FIEL NEXT LOSS MULS
+     47.6237     3.6301    98.8456    47.7618 TPCE    1   111.8833    0.0329  462.5  eV  592.127 MeV FIEL NEXT LOSS MULS
+     54.8244     4.7505    83.5449    55.0298 TPAD    1   128.8308    4.2430   89.7 keV  592.037 MeV FIEL LOSS MULS
+     56.4265     5.0241    80.1342    56.6497 TPAD    2   132.6089    3.7762   68.8 keV  591.968 MeV FIEL LOSS MULS
+     58.0284     5.3063    76.7197    58.2705 TPAD    3   136.3911    3.7805   69.5 keV  591.899 MeV FIEL LOSS MULS
+     58.0291     5.3064    76.7182    58.2712 TPAD    3   136.3928    0.0017  119.6  eV  591.898 MeV FIEL NEXT LOSS MULS
+     59.6302     5.5994    73.3024    59.8926 TPAD    4   140.1766    3.7838   77.9 keV  591.821 MeV FIEL LOSS MULS
+     61.2321     5.9005    69.8802    61.5158 TPAD    5   143.9671    3.7888   99.1 keV  591.721 MeV FIEL LOSS MULS
+     62.8340     6.2108    66.4555    63.1402 TPAD    6   147.7606    3.7917  137.8 keV  591.584 MeV FIEL LOSS MULS
+     64.4359     6.5286    63.0205    64.7658 TPAD    7   151.5641    3.8015   55.6 keV  591.528 MeV FIEL LOSS MULS
+     66.0378     6.8552    59.5821    66.3927 TPAD    8   155.3714    3.8054   61.0 keV  591.467 MeV FIEL LOSS MULS
+     67.6397     7.1906    56.1390    68.0209 TPAD    9   159.1836    3.8102  275.7 keV  591.191 MeV FIEL LOSS MULS
+     69.2416     7.5347    52.6910    69.6504 TPAD   10   163.0011    3.8154   77.2 keV  591.114 MeV FIEL LOSS MULS
+
+
+StiMassFitMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.458+-  1.5, sy 0.293, x =    3.90 z =  191.37 69.828 ( 69.175 ) cm( 4.64%) -12.5 MeV  0.578 GeV
+StiMassFitMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.453+-  0.8, sy 0.083, x =   33.61 z =  128.18 32.209 ( 30.089 ) cm( 0.79%) -14.6 MeV  0.565 GeV
+StiMassFitMaker:INFO  -                                /TIFC_1_2  dE pT  0.447+-  0.6, sy 0.030, x =   47.28 z =   99.04 20.301 ( 16.770 ) cm( 0.63%) -10.6 MeV  0.550 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.442+-  0.3, sy 0.023, x =   55.61 z =   80.67  3.837 (  0.000 ) cm( 0.00%) -99.2 keV  0.540 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.442+-  0.3, sy 0.022, x =   57.21 z =   77.19  3.842 (  0.000 ) cm( 0.00%) -99.3 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.441+-  0.8, sy 0.040, x =   58.73 z =   73.90 chi2 =   0.19  3.846 (  0.000 ) cm( 0.00%) -99.4 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.440+-  0.8, sy 0.029, x =   60.33 z =   70.49 chi2 =   0.51  3.851 (  0.000 ) cm( 0.00%) -99.6 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.440+-  0.8, sy 0.025, x =   61.93 z =   66.97 chi2 =   0.12  3.856 (  0.000 ) cm( 0.00%) -99.7 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.440+-  0.8, sy 0.024, x =   63.54 z =   63.48 chi2 =   0.09  3.861 (  0.000 ) cm( 0.00%) -99.8 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.440+-  0.8, sy 0.023, x =   65.14 z =   59.98 chi2 =   0.08  3.866 (  0.000 ) cm( 0.00%)  -100 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.440+-  0.8, sy 0.021, x =   66.74 z =   56.58 chi2 =   3.32  3.871 (  0.000 ) cm( 0.00%)  -100 keV  0.539 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.440+-  0.8, sy 0.019, x =   68.35 z =   53.06 chi2 =   0.02  7.635 (  3.756 ) cm( 0.00%)  -198 keV  0.539 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_11/Sector_3  dE pT  0.440+-  0.8, sy 0.019, x =   71.56 z =   46.02 chi2 =   0.02  3.887 (  0.000 ) cm( 0.00%)  -101 keV  0.538 GeV
+StiMassFitMaker:INFO  -                   Tpc/Padrow_12/Sector_3  dE pT  0.440+-  0.8, sy 0.019, x =   73.16 z =   42.46 chi2 =   0.42  3.893 (  0.000 ) cm( 0.00%)  -101 keV  0.538 GeV
+
+              /TIFC_1_2  dE pT  0.447+-  0.6, sy 0.030, x =   47.28 z =   99.04 20.301 ( 16.770 ) cm( 0.63%) -10.6 MeV  0.550 GeV
+  Tpc/Padrow_1/Sector_3  dE pT  0.442+-  0.3, sy 0.023, x =   55.61 z =   80.67  3.837 (  0.000 ) cm( 0.00%) -99.2 keV  0.540 GeV
+  Tpc/Padrow_2/Sector_3  dE pT  0.442+-  0.3, sy 0.022, x =   57.21 z =   77.19  3.842 (  0.000 ) cm( 0.00%) -99.3 keV  0.539 GeV
+  Tpc/Padrow_3/Sector_3  dE pT  0.441+-  0.8, sy 0.040, x =   58.73 z =   73.90 chi2 =   0.19  3.846 (  0.000 ) cm( 0.00%) -99.4 keV  0.539 GeV
+  Tpc/Padrow_4/Sector_3  dE pT  0.440+-  0.8, sy 0.029, x =   60.33 z =   70.49 chi2 =   0.51  3.851 (  0.000 ) cm( 0.00%) -99.6 keV  0.539 GeV
+  Tpc/Padrow_5/Sector_3  dE pT  0.440+-  0.8, sy 0.025, x =   61.93 z =   66.97 chi2 =   0.12  3.856 (  0.000 ) cm( 0.00%) -99.7 keV  0.539 GeV
+  Tpc/Padrow_6/Sector_3  dE pT  0.440+-  0.8, sy 0.024, x =   63.54 z =   63.48 chi2 =   0.09  3.861 (  0.000 ) cm( 0.00%) -99.8 keV  0.539 GeV
+  Tpc/Padrow_7/Sector_3  dE pT  0.440+-  0.8, sy 0.023, x =   65.14 z =   59.98 chi2 =   0.08  3.866 (  0.000 ) cm( 0.00%)  -100 keV  0.539 GeV
+  Tpc/Padrow_8/Sector_3  dE pT  0.440+-  0.8, sy 0.021, x =   66.74 z =   56.58 chi2 =   3.32  3.871 (  0.000 ) cm( 0.00%)  -100 keV  0.539 GeV
+  Tpc/Padrow_9/Sector_3  dE pT  0.440+-  0.8, sy 0.019, x =   68.35 z =   53.06 chi2 =   0.02  7.635 (  3.756 ) cm( 0.00%)  -198 keV  0.539 GeV
+ Tpc/Padrow_11/Sector_3  dE pT  0.440+-  0.8, sy 0.019, x =   71.56 z =   46.02 chi2 =   0.02  3.887 (  0.000 ) cm( 0.00%)  -101 keV  0.538 GeV
+ Tpc/Padrow_12/Sector_3  dE pT  0.440+-  0.8, sy 0.019, x =   73.16 z =   42.46 chi2 =   0.42  3.893 (  0.000 ) cm( 0.00%)  -101 keV  0.538 GeV
+
+
+ 60 - 0x16589e58(H)     ch2=0.0188921   x=61.9325       h=-0.00149533 valid Tpc/Padrow_5/Sector_3
+ 61 - 0x16589c68()      ch2=0   x=60.4076       h=-0.00149544 valid Tpc/Padrow_4/Sector_3
+ 62 - 0x16589a78()      ch2=0   x=58.8076       h=-0.00149555 valid Tpc/Padrow_3/Sector_3
+ 63 - 0x16589888()      ch2=0   x=57.2076       h=-0.00149566 valid Tpc/Padrow_2/Sector_3
+ 64 - 0x16589698()      ch2=0   x=55.6076       h=-0.00149576 valid Tpc/Padrow_1/Sector_3
+ 65 - 0x165894a8()      ch2=0   x=47.2845       h=-0.00149625 valid /TIFC_1_2
+ 66 - 0x165892b8()      ch2=0   x=33.615        h=-0.00149689 valid SCOM_1/SCON_1_2_3
+ 67 - 0x165890c8(*)     ch2=0   x=20.8753       h=-0.00149706 FSTD_4/FSTW_1/FTRO_1_7
+ 68 - 0x16588ed8(*)     ch2=0   x=16.4133       h=-0.00149692 FSTD_5/FSTW_6/FTIA_1_7
+ 69 - 0x16588ce8(*)     ch2=0   x=8.7375        h=-0.00149613 FSTD_6/FSTW_12/FTUS_3_6
+ 70 - 0x16588af8(*)     ch2=0   x=3.93367       h=-0.00149486 PIPE_1/PIPO_1/PVAO_1
+$
+================================================================================
+10/31/2026
+(gdb) p ((StiKalmanTrack*)(*(StiToolkit::instance()->getTrackContainer()))[0])->print("")
+
+
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  U  pT  0.458+-  1.4, sy 0.042, x =   61.93 z =   66.39 chi2 =   0.01
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.458+-  0.5, sy 0.022, x =   60.41 z =   69.67  3.811 (  0.000 ) cm( 0.00%) -9.63 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.458+-  0.5, sy 0.023, x =   58.81 z =   73.11  3.807 (  0.000 ) cm( 0.00%) -9.63 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.458+-  0.5, sy 0.024, x =   57.21 z =   76.55  3.804 (  0.000 ) cm( 0.00%) -9.62 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  0.5, sy 0.026, x =   55.61 z =   79.98  3.800 (  0.000 ) cm( 0.00%) -9.61 keV  0.940 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.459+-  0.5, sy 0.034, x =   47.28 z =   97.83 19.748 ( 16.237 ) cm( 0.62%) -1.01 MeV  0.941 GeV
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.459+-  0.6, sy 0.061, x =   33.61 z =  126.91 32.177 ( 30.059 ) cm( 0.79%)  -1.4 MeV  0.943 GeV
+StiMaker:INFO  -                   FSTD_4/FSTW_1/FTRO_1_7  dE pT  0.460+-  0.6, sy 0.098, x =   21.23 z =  151.33 26.365 ( 25.757 ) cm( 0.44%)  -617 keV  0.943 GeV
+StiMaker:INFO  -                   FSTD_5/FSTW_6/FTIA_1_7  dE pT  0.460+-  0.8, sy 0.124, x =   16.33 z =  163.76 13.909 ( 12.918 ) cm( 2.79%) -1.97 MeV  0.945 GeV
+StiMaker:INFO  -                  FSTD_6/FSTW_12/FTUS_3_6  dE pT  0.461+-  0.9, sy 0.162, x =    8.80 z =  180.52 18.425 ( 18.104 ) cm( 3.28%)  -981 keV  0.946 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.462+-  1.6, sy 0.225, x =    3.94 z =  191.61 12.275 ( 11.407 ) cm(22.57%) -3.63 MeV  0.950 GeV
+
+
+StiMassFitMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.458+-  0.5, sy 0.023, x =   58.81 z =   73.11  3.810 (  0.000 ) cm( 0.00%) -94.2 keV  0.576 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.458+-  0.5, sy 0.024, x =   57.21 z =   76.55  3.806 (  0.000 ) cm( 0.00%) -94.1 keV  0.576 GeV
+StiMassFitMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  0.5, sy 0.026, x =   55.61 z =   79.98  3.802 (  0.000 ) cm( 0.00%)   -94 keV  0.576 GeV
+StiMassFitMaker:INFO  -                                /TIFC_1_2  dE pT  0.459+-  0.5, sy 0.034, x =   47.28 z =   97.83 19.761 ( 16.248 ) cm( 0.63%) -10.1 MeV  0.586 GeV
+StiMassFitMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.459+-  0.6, sy 0.061, x =   33.61 z =  126.91 32.199 ( 30.080 ) cm( 0.79%)   -14 MeV  0.600 GeV
+StiMassFitMaker:INFO  -                   FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.474+-  6.8, sy 0.370, x =   16.05 z =  164.26 41.434 ( 40.689 ) cm( 0.70%) -9.07 MeV  0.609 GeV
+
+
+ =====> TRACK    1 STACK NR   0 NTMULT=         1     Alpha                    TOFG =     0.000 NS
+       X          Y          Z          R     NAME  NUMBER   SLENG      STEP      DESTEP     GEKIN   MECHANISMS
+     -0.2647    -2.3043   200.0018     2.3194 FOIL    1     0.0000    0.0000    0.0  eV  680.246 MeV NULL
+     -0.2576    -2.3043   199.9866     2.3186 FOIL    1     0.0168    0.0168    0.0  eV  680.246 MeV FIEL NEXT LOSS
+      3.1159    -2.2872   192.8034     3.8652 PVAO    1     7.9527    7.9359    1.7  eV  680.246 MeV FIEL LOSS
+      3.1285    -2.2871   192.7765     3.8753 PVAO    1     7.9824    0.0297    0.0  eV  680.246 MeV FIEL NEXT LOSS
+      3.2832    -2.2855   192.4472     4.0003 PIPO    1     8.3463    0.3639   15.8 MeV  664.468 MeV FIEL NEXT LOSS
+      3.3112    -2.2852   192.3874     4.0232 PWRP    1     8.4122    0.0660    2.1 MeV  662.322 MeV FIEL NEXT LOSS
+      3.3209    -2.2851   192.3669     4.0311 PIPE    1     8.4349    0.0227  492.9  eV  662.321 MeV FIEL NEXT LOSS  -     PIPE_1/PIPO_1/PVAO_1  dE pT  0.492+-  2.0, sy 0.355, x =    3.93 z =  191.34 12.175 ( 11.185 ) cm( 9.19%) -29.1 MeV  0.652 GeV
+      4.2268    -2.2741   190.4377     4.7998 CAVE    1    10.5663    2.1314   46.9 keV  662.274 MeV FIEL LOSS  
+      4.2275    -2.2741   190.4362     4.8004 CAVE    1    10.5679    0.0016   35.2  eV  662.274 MeV FIEL NEXT LOSS
+      5.7903    -2.2493   187.1082     6.2119 FSTM    1    14.2447    3.6768   80.9 keV  662.193 MeV FIEL SCUT LOSS
+      7.3530    -2.2172   183.7801     7.6800 FSTM    1    17.9216    3.6768   80.9 keV  662.112 MeV FIEL NEXT LOSS
+      7.8225    -2.2061   182.7801     8.1277 FSTD    6    19.0264    1.1048   24.3 keV  662.088 MeV FIEL NEXT LOSS
+      8.8756    -2.1787   180.5370     9.1391 FSTW   12    21.5045    2.4782   54.5 keV  662.034 MeV FIEL NEXT LOSS
+      8.8897    -2.1783   180.5070     9.1527 FTUS    3    21.5377    0.0331    1.3 MeV  660.738 MeV FIEL NEXT LOSS
+      8.9062    -2.1778   180.4720     9.1686 FTIH    1    21.5763    0.0387    1.0 MeV  659.690 MeV FIEL NEXT LOSS
+      9.0000    -2.1752   180.2720     9.2592 FTUW    1    21.7973    0.2210    5.7 MeV  653.978 MeV FIEL NEXT LOSS  -   FSTD_6/FSTW_12/FTUW_1_5  dE pT  0.480+-  1.2, sy 0.262, x =    8.71 z =  180.33 17.562 ( 17.005 ) cm( 2.06%) -13.2 MeV  0.623 GeV
+      9.7004    -2.1549   178.7801     9.9369 FSTW   12    23.4455    1.6482   36.6 keV  653.942 MeV FIEL NEXT LOSS
+     12.0473    -2.0758   173.7801    12.2248 FSTD    6    28.9695    5.5240  122.6 keV  653.819 MeV FIEL NEXT LOSS
+     13.7053    -2.0097   170.2471    13.8518 FSTM    1    32.8727    3.9032   86.7 keV  653.733 MeV FIEL NEXT LOSS
+     16.0510    -1.9018   165.2471    16.1633 FSTD    5    38.3967    5.5240  122.7 keV  653.610 MeV FIEL NEXT LOSS
+     16.2208    -1.8934   164.8852    16.3309 FSTW    6    38.7965    0.3998    8.9 keV  653.601 MeV FIEL NEXT LOSS  -    FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.474+-  0.9, sy 0.199, x =   16.05 z =  164.46 41.434 ( 40.689 ) cm( 0.70%) -9.07 MeV  0.609 GeV
+     16.2372    -1.8925   164.8502    16.3471 FTOH    1    38.8352    0.0387    1.1 MeV  652.545 MeV FIEL NEXT LOSS
+     16.3310    -1.8878   164.6502    16.4398 FTRO    1    39.0562    0.2210    5.8 MeV  646.788 MeV FIEL NEXT LOSS
+     16.4785    -1.8803   164.3357    16.5855 FSTW    6    39.4036    0.3475    7.8 keV  646.780 MeV FIEL NEXT LOSS
+     16.5069    -1.8789   164.2751    16.6135 FSCT    5    39.4705    0.0669    7.9 MeV  638.847 MeV FIEL NEXT LOSS
+     16.6361    -1.8723   163.9997    16.7411 FSCL    5    39.7748    0.3043    8.0 MeV  630.846 MeV FIEL NEXT LOSS
+     16.6645    -1.8708   163.9392    16.7692 FSCT    5    39.8417    0.0669    8.1 MeV  622.785 MeV FIEL NEXT LOSS
+     16.7226    -1.8678   163.8152    16.8266 FSTW    6    39.9786    0.1370    3.2 keV  622.782 MeV FIEL NEXT LOSS
+     16.7508    -1.8664   163.7552    16.8544 FTIA    1    40.0449    0.0663    1.8 MeV  621.003 MeV FIEL NEXT LOSS
+     16.8446    -1.8615   163.5552    16.9471 FTUW    1    40.2659    0.2210    6.0 MeV  615.049 MeV FIEL NEXT LOSS
+     16.8610    -1.8606   163.5202    16.9634 FTIH    1    40.3046    0.0387    1.1 MeV  613.949 MeV FIEL NEXT LOSS
+     17.9270    -1.8033   161.2471    18.0175 FSTW    6    42.8159    2.5113   58.1 keV  613.891 MeV FIEL NEXT LOSS
+     18.3959    -1.7769   160.2471    18.4816 FSTD    5    43.9207    1.1048   25.6 keV  613.865 MeV FIEL NEXT LOSS
+     20.0359    -1.6792   156.7491    20.1061 FSTM    1    47.7853    3.8646   89.5 keV  613.776 MeV FIEL NEXT LOSS
+     20.5046    -1.6497   155.7491    20.5708 FSTD    4    48.8901    1.1048   25.6 keV  613.750 MeV FIEL NEXT LOSS
+     22.0490    -1.5475   152.4535    22.1032 FSTW   12    52.5310    3.6409   84.3 keV  613.666 MeV FIEL LOSS
+     22.0502    -1.5474   152.4508    22.1045 FSTW   12    52.5340    0.0030   68.9  eV  613.666 MeV FIEL NEXT LOSS
+     22.0993    -1.5441   152.3460    22.1532 FSBW   15    52.6498    0.1158    3.1 MeV  610.528 MeV FIEL NEXT LOSS
+     22.1930    -1.5376   152.1460    22.2462 FTRO    1    52.8707    0.2210    6.0 MeV  604.510 MeV FIEL NEXT LOSS
+     22.2094    -1.5365   152.1110    22.2625 FTOH    1    52.9094    0.0387    1.1 MeV  603.398 MeV FIEL NEXT LOSS
+     22.2235    -1.5355   152.0810    22.2765 FTUS    2    52.9425    0.0331    1.4 MeV  602.022 MeV FIEL NEXT LOSS
+     22.3790    -1.5247   151.7491    22.4309 FSTW   12    53.3092    0.3667    8.6 keV  602.013 MeV FIEL NEXT LOSS
+     24.7209    -1.3527   146.7491    24.7579 FSTD    4    58.8332    5.5240  129.4 keV  601.884 MeV FIEL NEXT LOSS
+     27.7049    -1.1079   140.3741    27.7270 FSTM    1    65.8763    7.0431  165.1 keV  601.719 MeV FIEL SCUT LOSS
+     29.1960    -0.9748   137.1866    29.2122 FSTM    1    69.3978    3.5215   82.5 keV  601.636 MeV FIEL SCUT LOSS
+     30.6864    -0.8345   133.9991    30.6977 FSTM    1    72.9193    3.5215   82.6 keV  601.553 MeV FIEL NEXT LOSS
+     34.2268    -0.4724   126.4213    34.2301 FSTA    1    81.2912    8.3719  196.3 keV  601.357 MeV FIEL LOSS
+     34.2284    -0.4723   126.4178    34.2317 FSTA    1    81.2951    0.0039   90.0  eV  601.357 MeV FIEL NEXT LOSS
+     34.2442    -0.4705   126.3839    34.2475 CAVE    1    81.3325    0.0374  866.0  eV  601.356 MeV FIEL NEXT LOSS
+     34.2727    -0.4675   126.3229    34.2759 SCON    1    81.3999    0.0674    2.4 MeV  598.986 MeV FIEL NEXT LOSS
+     34.5218    -0.4404   125.7895    34.5246 SNMX    1    81.9893    0.5894  615.8 keV  598.370 MeV FIEL NEXT LOSS
+     34.5503    -0.4373   125.7285    34.5530 SCON    1    82.0566    0.0674    2.4 MeV  595.992 MeV FIEL NEXT LOSS  -         SCOM_1/SCON_1_2_3  dE pT  0.470+-  0.8, sy 0.084, x =   33.61 z =  127.00 32.199 ( 30.080 ) cm( 0.79%)   -14 MeV  0.600 GeV
+     45.8696     1.0078   101.4297    45.8807 CAVE    1   108.9018   26.8452  633.0 keV  595.359 MeV FIEL LOSS
+     45.8893     1.0107   101.3873    45.9004 CAVE    1   108.9486    0.0468    1.1 keV  595.358 MeV FIEL NEXT LOSS
+     46.3809     1.0831   100.3292    46.3936 TPCE    1   110.1176    1.1690   27.6 keV  595.330 MeV FIEL NEXT LOSS
+     46.3830     1.0834   100.3248    46.3956 TIFC    1   110.1225    0.0049  228.2 keV  595.102 MeV FIEL NEXT LOSS
+     46.3979     1.0856   100.2926    46.4106 TIKA    1   110.1581    0.0356    1.0 MeV  594.073 MeV FIEL NEXT LOSS
+     47.6638     1.2757    97.5670    47.6809 TINX    1   113.1693    3.0112    4.2 MeV  589.850 MeV FIEL NEXT LOSS
+     47.7438     1.2879    97.3946    47.7612 TIAD    1   113.3598    0.1905    4.8 MeV  585.058 MeV FIEL NEXT LOSS
+     47.7458     1.2882    97.3903    47.7632 TIFC    1   113.3645    0.0047  225.2 keV  584.833 MeV FIEL NEXT LOSS
+     47.7598     1.2904    97.3601    47.7773 TPCE    1   113.3978    0.0333  789.2  eV  584.832 MeV FIEL NEXT LOSS
+     53.0167     2.1392    86.0218    53.0598 TPSS    3   125.9243   12.5264  246.6 keV  584.586 MeV FIEL LOSS
+     53.0239     2.1405    86.0063    53.0671 TPSS    3   125.9415    0.0172  336.7  eV  584.585 MeV FIEL NEXT LOSS
+     54.8251     2.4529    82.1136    54.8800 TPAD    1   130.2421    4.3006   99.3 keV  584.486 MeV FIEL LOSS
+     54.8261     2.4530    82.1116    54.8809 TPAD    1   130.2443    0.0022   50.6  eV  584.486 MeV FIEL NEXT LOSS
+     56.4272     2.7400    78.6479    56.4937 TPAD    2   134.0709    3.8266   88.4 keV  584.397 MeV FIEL LOSS
+     56.4280     2.7401    78.6463    56.4945 TPAD    2   134.0727    0.0018   41.3  eV  584.397 MeV FIEL NEXT LOSS
+     58.0292     3.0358    75.1793    58.1085 TPAD    3   137.9030    3.8303   88.5 keV  584.309 MeV FIEL LOSS
+     58.0299     3.0359    75.1776    58.1093 TPAD    3   137.9049    0.0019   42.7  eV  584.309 MeV FIEL NEXT LOSS
+
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  dE pT  0.459+-  1.3, sy 0.022, x =   68.35 z =   52.62 chi2 =   0.20  3.833 (  0.000 ) cm( 0.00%) -9.69 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_9/Sector_3  U  pT  0.459+-  1.3, sy 0.022, x =   68.35 z =   52.62 chi2 =   0.20
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  dE pT  0.459+-  1.3, sy 0.023, x =   66.74 z =   56.09 chi2 =   0.08  3.828 (  0.000 ) cm( 0.00%) -9.68 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_8/Sector_3  U  pT  0.459+-  1.3, sy 0.023, x =   66.74 z =   56.09 chi2 =   0.08
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  dE pT  0.459+-  1.3, sy 0.024, x =   65.14 z =   59.56 chi2 =   1.19  3.824 (  0.000 ) cm( 0.00%) -9.67 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_7/Sector_3  U  pT  0.459+-  1.3, sy 0.024, x =   65.14 z =   59.56 chi2 =   1.19
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  dE pT  0.460+-  1.3, sy 0.030, x =   63.54 z =   63.09 chi2 =   1.41  3.819 (  0.000 ) cm( 0.00%) -9.66 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_6/Sector_3  U  pT  0.460+-  1.3, sy 0.030, x =   63.54 z =   63.09 chi2 =   1.41
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  dE pT  0.458+-  1.4, sy 0.042, x =   61.93 z =   66.39 chi2 =   0.01  3.815 (  0.000 ) cm( 0.00%) -9.65 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_5/Sector_3  U  pT  0.458+-  1.4, sy 0.042, x =   61.93 z =   66.39 chi2 =   0.01
+StiMaker:INFO  -                    Tpc/Padrow_4/Sector_3  dE pT  0.458+-  0.5, sy 0.022, x =   60.41 z =   69.67  3.811 (  0.000 ) cm( 0.00%) -9.63 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_3/Sector_3  dE pT  0.458+-  0.5, sy 0.023, x =   58.81 z =   73.11  3.807 (  0.000 ) cm( 0.00%) -9.63 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_2/Sector_3  dE pT  0.458+-  0.5, sy 0.024, x =   57.21 z =   76.55  3.804 (  0.000 ) cm( 0.00%) -9.62 keV  0.940 GeV
+StiMaker:INFO  -                    Tpc/Padrow_1/Sector_3  dE pT  0.458+-  0.5, sy 0.026, x =   55.61 z =   79.98  3.800 (  0.000 ) cm( 0.00%) -9.61 keV  0.940 GeV
+StiMaker:INFO  -                                /TIFC_1_2  dE pT  0.459+-  0.5, sy 0.034, x =   47.28 z =   97.83 19.748 ( 16.237 ) cm( 0.62%) -1.01 MeV  0.941 GeV
+StiMaker:INFO  -                        SCOM_1/SCON_1_2_3  dE pT  0.459+-  0.6, sy 0.061, x =   33.61 z =  126.91 32.177 ( 30.059 ) cm( 0.79%)  -1.4 MeV  0.943 GeV
+StiMaker:INFO  -                   FSTD_4/FSTW_1/FTRO_1_7  dE pT  0.460+-  0.6, sy 0.098, x =   21.23 z =  151.33 26.365 ( 25.757 ) cm( 0.44%)  -617 keV  0.943 GeV
+StiMaker:INFO  -                   FSTD_5/FSTW_6/FTIA_1_7  dE pT  0.460+-  0.8, sy 0.124, x =   16.33 z =  163.76 13.909 ( 12.918 ) cm( 2.79%) -1.97 MeV  0.945 GeV
+StiMaker:INFO  -                  FSTD_6/FSTW_12/FTUS_3_6  dE pT  0.461+-  0.9, sy 0.162, x =    8.80 z =  180.52 18.425 ( 18.104 ) cm( 3.28%)  -981 keV  0.946 GeV
+StiMaker:INFO  -                     PIPE_1/PIPO_1/PVAO_1  dE pT  0.462+-  1.6, sy 0.225, x =    3.94 z =  191.61 12.275 ( 11.407 ) cm(22.57%) -3.63 MeV  0.950 GeV
+StiKalmanTrack::refit iter = 1 qA = 0.00
+
+  -     Tpc/Padrow_7/Sector_3  U  pT  0.460+-  1.3, sy 0.024, x =   65.14 z =   59.59 chi2 =   1.20
+  -     Tpc/Padrow_6/Sector_3  dE pT  0.461+-  1.3, sy 0.030, x =   63.54 z =   63.12 chi2 =   1.38  3.822 (  0.000 ) cm( 0.00%) -94.5 keV  0.575 GeV
+  -     Tpc/Padrow_6/Sector_3  U  pT  0.461+-  1.3, sy 0.030, x =   63.54 z =   63.12 chi2 =   1.38
+  -     Tpc/Padrow_5/Sector_3  dE pT  0.459+-  1.4, sy 0.042, x =   61.93 z =   66.43 chi2 =   0.01  3.818 (  0.000 ) cm( 0.00%) -94.4 keV  0.575 GeV
+  -     Tpc/Padrow_5/Sector_3  U  pT  0.459+-  1.4, sy 0.042, x =   61.93 z =   66.43 chi2 =   0.01
+  -     Tpc/Padrow_4/Sector_3  dE pT  0.460+-  0.5, sy 0.022, x =   60.41 z =   69.71  3.814 (  0.000 ) cm( 0.00%) -94.3 keV  0.575 GeV
+  -     Tpc/Padrow_3/Sector_3  dE pT  0.460+-  0.5, sy 0.023, x =   58.81 z =   73.16  3.810 (  0.000 ) cm( 0.00%) -94.2 keV  0.576 GeV
+  -     Tpc/Padrow_2/Sector_3  dE pT  0.460+-  0.5, sy 0.024, x =   57.21 z =   76.60  3.806 (  0.000 ) cm( 0.00%) -94.1 keV  0.576 GeV
+  -     Tpc/Padrow_1/Sector_3  dE pT  0.460+-  0.5, sy 0.026, x =   55.61 z =   80.04  3.802 (  0.000 ) cm( 0.00%)   -94 keV  0.576 GeV
+  -                 /TIFC_1_2  dE pT  0.464+-  0.7, sy 0.034, x =   47.28 z =   97.90 19.761 ( 16.248 ) cm( 0.63%) -10.1 MeV  0.586 GeV
+  -         SCOM_1/SCON_1_2_3  dE pT  0.470+-  0.8, sy 0.084, x =   33.61 z =  127.00 32.199 ( 30.080 ) cm( 0.79%)   -14 MeV  0.600 GeV
+  -    FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.474+-  0.9, sy 0.199, x =   16.05 z =  164.46 41.434 ( 40.689 ) cm( 0.70%) -9.07 MeV  0.609 GeV
+  -   FSTD_6/FSTW_12/FTUW_1_5  dE pT  0.480+-  1.2, sy 0.262, x =    8.71 z =  180.33 17.562 ( 17.005 ) cm( 2.06%) -13.2 MeV  0.623 GeV
+  -      PIPE_1/PIPO_1/PVAO_1  dE pT  0.492+-  2.0, sy 0.355, x =    3.93 z =  191.34 12.175 ( 11.185 ) cm( 9.19%) -29.1 MeV  0.652 GeV
