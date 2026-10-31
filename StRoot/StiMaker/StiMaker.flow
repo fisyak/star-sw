@@ -51,6 +51,7 @@ union{double A[1];double _cXX;};
 NEW================================================================================
 StiMaker::Make
 |      StiMaker::MakeGlobalTracks(event)
+	  StiKalmanTrackFinder::reset()
 |      |  StiKalmanTrackFinder::findTracks();
 |      |  |  StiKalmanTrackFinder::extendSeeds (0.)    loop over Seed Finders
 |      |  |  | StiCATpcSeedFinder::findTrack                   CA
@@ -76,10 +77,11 @@ StiMaker::Make
 |      |  |  | |  | |  |  StiKalmanTrackNode::AddHit
 |      |  |  | |  | |  |  |  StiHitContainer::getTpc2Hits
 |      |  |  | |  | |  |  |  StiKalmanTrackNode::initialize(hit)
-|      |  |  | |
+|      |  |  | |  StiKalmanTrack::initialize0
 |      |  |  | StiLocalTrackSeedFinder::findTrack(0)            Local
 |      |  |  | |  StiLocalTrackSeedFinder::makeTrack
 |      |  |  | |  | StiLocalTrackSeedFinder::extendHit(*_seedHits.back())
+                      StiDetectorContainer::moveIn 
 |      |  |  | |  | | StiHitContainer::getNearestHit(LayerRadius,LayerAngle,hit.y, hit.z, StiLocalTrackSeedFinderParameters::instance()->deltaY(), StiLocalTrackSeedFinderParameters::instance()->deltaZ())
 |      |  |  | |  StiLocalTrackSeedFinder::extrapolate
 |      |  |  | |  | StiLocalTrackSeedFinder::initializeTrack
