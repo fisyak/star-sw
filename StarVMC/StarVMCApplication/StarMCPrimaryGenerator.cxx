@@ -13,13 +13,21 @@
 #include "StarMCPrimaryGenerator.h"
 StarMCPrimaryGenerator *StarMCPrimaryGenerator::fgInstance = 0;
 Double_t StarMCPrimaryGenerator::fTemperature = 0.457;; // GeV/c
+Bool_t   StarMCPrimaryGenerator::fgSetVertex = kFALSE;
+TVector3  StarMCPrimaryGenerator::fgOrigin(0,0,0);
+TVector3  StarMCPrimaryGenerator::fgSigmasOrigin(0,0,0);
 ClassImp(StarMCPrimaryGenerator);
+//________________________________________________________________________________
+void  StarMCPrimaryGenerator::SetOrigin(const TVector3 &xyz) {
+  fgOrigin = xyz;
+  fgSetVertex = kTRUE;
+  LOG_INFO << "Use origin: " << fgOrigin.X() << "\t" << fgOrigin.Y() << "\t" << fgOrigin.Z() << endm;
+}
 //________________________________________________________________________________
 StarMCPrimaryGenerator::StarMCPrimaryGenerator() : fStatus(kStOK)  {
   memset(mBeg,0,mEnd-mBeg+1);
   fOption = "";
-  fOrigin = TVector3(0,0,0);
-  fCurOrigin = fOrigin;
+  fCurOrigin = fgOrigin;
   fgInstance = this;
   if (! fStarStack) fStarStack = StarVMCApplication::Instance()->GetStack();
   TString path(".");
@@ -107,6 +115,8 @@ void StarMCPrimaryGenerator::SetGenerator(Int_t nprim, Int_t Id,
     LOG_INFO << "Z from histogram " <<  fPVZ->GetName();
     if (fPVxyError) {LOG_INFO << "\tadn their errors from " << fPVxyError->GetName();}
     LOG_INFO << endm;
+  } else if (fgSetVertex) {
+    LOG_INFO << "Use origin: " << fgOrigin.X() << "\t" << fgOrigin.Y() << "\t" << fgOrigin.Z() << endm;
   } else {
     LOG_INFO << fZ_min  << " < zVer< " << fZ_max  << endm;
   }
@@ -168,9 +178,9 @@ void StarMCPrimaryGenerator::GeneratePrimaries() {
   static Double_t sigmaX = gEnv->GetValue("FixedSigmaX", 0.00176);
   static Double_t sigmaY = gEnv->GetValue("FixedSigmaY", 0.00176);
   static Double_t sigmaZ = gEnv->GetValue("FixedSigmaZ", 0.00176);
-  if (fSetVertex) {
+  if (fgSetVertex) {
     TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), gRandom->Gaus(0, sigmaZ));
-    fCurOrigin = fOrigin + dR;
+    fCurOrigin = fgOrigin + dR;
   } else if (fPVZ) {
     fCurOrigin.SetZ(fPVZ->GetRandom());
     if (fPVxy) {
@@ -189,7 +199,7 @@ void StarMCPrimaryGenerator::GeneratePrimaries() {
     }
   } else {
     TVector3 dR(gRandom->Gaus(0, sigmaX), gRandom->Gaus(0, sigmaY), fZ_min + (fZ_max - fZ_min)*gRandom->Rndm());
-    fCurOrigin = fOrigin + dR;
+    fCurOrigin = fgOrigin + dR;
   }
   GeneratePrimary();  
   fStarStack->SetNprimaries(fNofPrimaries);

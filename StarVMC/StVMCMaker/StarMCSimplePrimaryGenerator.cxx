@@ -22,9 +22,11 @@ StarMCSimplePrimaryGenerator::StarMCSimplePrimaryGenerator(Int_t    nprim,   Int
   PreSet(); 
   SetGenerator(nprim, Id, pT_min, pT_max, Eta_min, Eta_max, 
 	       Phi_min, Phi_max,  Z_min, Z_max, option);
+  
 }
 //_____________________________________________________________________________
 void StarMCSimplePrimaryGenerator::PreSet() {
+  UnSetVertex();
 }
 //_____________________________________________________________________________
 void StarMCSimplePrimaryGenerator::GeneratePrimary() {     

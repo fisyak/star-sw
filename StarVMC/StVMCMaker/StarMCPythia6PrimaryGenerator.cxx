@@ -52,9 +52,8 @@ StarMCPythia6PrimaryGenerator::StarMCPythia6PrimaryGenerator(TString mode, Int_t
 void StarMCPythia6PrimaryGenerator::PreSet() {
   fNofPrimaries = 0; fId = 0;
   fOption = "";
-  fOrigin = TVector3(0,0,0);
   fPVX = fPVY = fPVZ = fPVxyError = 0;
-  fCurOrigin = fOrigin;
+  fCurOrigin = fgOrigin;
   fPythia6 = 0;
   SetSpread(0.15, 0.15, 42.0);
 }

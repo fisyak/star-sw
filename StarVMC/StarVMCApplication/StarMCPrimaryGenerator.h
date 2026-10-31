@@ -57,13 +57,13 @@ class StarMCPrimaryGenerator : public TObject {
   void  SetStack(StarParticleStack *stack);
   void  SetOption(const Char_t *opt)          { fOption = opt;}
   void  SetDebug(Int_t m)                     { fDebug = m;}
-  void  SetOrigin(Double_t x, Double_t y, Double_t z) {fOrigin = TVector3(x,y,z);}
-  void  SetOrigin(const TVector3 &xyz)        { fOrigin = xyz;}
-  void  SetVertex(Double_t x, Double_t y, Double_t z) {SetOrigin(x,y,z); fSetVertex = kTRUE;}
-  void  SetVertex(const TVector3 &xyz)        {SetOrigin(xyz); fSetVertex = kTRUE;}
-  void  UnSetVertex()                         {fSetVertex = kFALSE;}
-  void  SetSigmasOrigin(Double_t sigma_x, Double_t sigma_y, Double_t sigma_z) {fSigmasOrigin = TVector3(sigma_x,sigma_y,sigma_z);}
-  void  SetSigmasOrigin(const TVector3 &xyz)  { fSigmasOrigin = xyz;}
+  static void  SetOrigin(const TVector3 &xyz);      
+  static void  SetOrigin(Double_t x, Double_t y, Double_t z) {SetOrigin(TVector3(x,y,z));}
+  static void  SetVertex(Double_t x, Double_t y, Double_t z) {SetOrigin(x,y,z);}
+  static void  SetVertex(const TVector3 &xyz)                {SetOrigin(xyz);}
+  static void  UnSetVertex()                                 {fgSetVertex = kFALSE;}
+  static void  SetSigmasOrigin(Double_t sigma_x, Double_t sigma_y, Double_t sigma_z) {fgSigmasOrigin = TVector3(sigma_x,sigma_y,sigma_z);}
+  void  SetSigmasOrigin(const TVector3 &xyz)  { fgSigmasOrigin = xyz;}
   void  SetBeamLine(Bool_t k = kTRUE)         {fUseBeamLine = k;}
   void  SetStatus(Int_t status = 0)           {fStatus = status;}
   virtual void SetSpread(Double_t xs = 0.15, Double_t ys = 0.15, Double_t zs = 42.0) { gSpreadX = xs; gSpreadY = ys; gSpreadZ = zs;}
@@ -78,9 +78,9 @@ class StarMCPrimaryGenerator : public TObject {
   StarStack *GetStack()                       { return fStarStack;}
   Int_t Debug()                               { return fDebug;}
   Int_t Status()                              { return fStatus;}
-  TVector3 &GetOrigin()                       { return fOrigin;}
+  TVector3 &GetOrigin()                       { return fgOrigin;}
   TVector3 &GetCurOrigin()                    { return fCurOrigin;}
-  TVector3 &GetSigmasOrigin()                 { return fSigmasOrigin;}
+  TVector3 &GetSigmasOrigin()                 { return fgSigmasOrigin;}
   virtual void SetGenerator(Int_t nprim=1, Int_t Id=6, 
 			    Double_t pT_min = 0,Double_t pT_max = 1000,
 			    Double_t Eta_min=-10, Double_t Eta_max=10, 
@@ -92,13 +92,12 @@ class StarMCPrimaryGenerator : public TObject {
   virtual void Print(Option_t *option="") const;
  protected:
   static StarMCPrimaryGenerator *fgInstance;
-  Char_t                mBeg[1];        //!
+  Char_t            mBeg[1];        //!
   StarStack        *fStarStack;    
   Bool_t            fIsRandom;
   Int_t             fNofPrimaries;
   Int_t             fDebug;
   Int_t             fId;
-  Bool_t            fSetVertex;
   Bool_t            fUseBeamLine;
   TTreeIter        *fTreeIter;
   TTree            *fTree;
@@ -109,11 +108,12 @@ class StarMCPrimaryGenerator : public TObject {
   Bool_t            fGun;
   Double_t          fGunpX, fGunpY, fGunpZ, fGunX, fGunY, fGunZ;
   Int_t             fGunId;
-  Char_t                mEnd[1];        //!
+  Char_t            mEnd[1];        //!
+  static Bool_t     fgSetVertex;
   Int_t             fStatus;
   TString           fOption;  
-  TVector3          fOrigin;
-  TVector3          fSigmasOrigin;
+  static TVector3   fgOrigin;
+  static TVector3   fgSigmasOrigin;
   TVector3          fCurOrigin; // Currrent origin
   vector<Int_t>     fGunIds;
   static Double_t fTemperature;

@@ -22,11 +22,10 @@ StarPHQMDPrimaryGenerator::StarPHQMDPrimaryGenerator(TString mode, Int_t tune) :
 void StarPHQMDPrimaryGenerator::PreSet() {
   fNofPrimaries = 0; fId = 0;
   fOption = "";
-  fOrigin = TVector3(0,0,0);
   fPVX = fPVY = fPVZ = fPVxyError = 0;
   fTree = 0;
   SetSpread(0.15, 0.15, 42.0);
-  fCurOrigin = fOrigin;
+  fCurOrigin = fgOrigin;
   const StChainOpt *opt = StMaker::GetTopChain()->GetChainOpt();
   assert(opt);
   const TString inputfile = opt->GetFileIn();
