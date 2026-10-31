@@ -108,9 +108,12 @@ Int_t StiMassFitMaker::Make() {
 	StiKalmanTrackNode* stinode = cTrack->getInnOutMostNode(0,kKeepHit+kGoodHit+kTpcOnly);
 	StTrackMassFit *mf = new StTrackMassFit(gTrack->key(), pdg, stinode->getMomentumF().mag(), Chi2, NDF, dca);
 	node->addTrack(mf);
-	if (Debug() > 1) {
-	  cTrack->print();
-	  mf->setNode(node);
+	if (Debug()) {
+	  cout << "pdg = " << pdg << "\tpInTpc = " <<   stinode->getMomentumF().mag() << endl;
+	  if (Debug() > 1) {
+	    cTrack->print();
+	    mf->setNode(node);
+	  }
 	}
       }
       BFactory::Free(cTrack);
