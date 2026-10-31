@@ -1,6 +1,6 @@
 #ifndef STI_DETECTOR_BUILDER_H
 #define STI_DETECTOR_BUILDER_H
-
+// #define __USE_AVERAGE_FSTW__
 #include <map>
 #include <vector>
 #include <string>
@@ -69,7 +69,9 @@ public:
   virtual StiDetector* next();
   virtual void build(StMaker&source);
   virtual void buildDetectors(StMaker&source) {}
+#ifdef __USE_AVERAGE_FSTW__
   void build_FSTW(TGeoPhysicalNode *nodeP);
+#endif /* __USE_AVERAGE_FSTW__ */
   double nice(double angle) const;
   void setGroupId(int id) 		{ _groupId = id;}
   int  getGroupId() const 		{return _groupId;}

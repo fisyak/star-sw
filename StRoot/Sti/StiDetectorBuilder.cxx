@@ -166,6 +166,7 @@ void StiDetectorBuilder::build(StMaker& source)
 
   mDetectorIterator = mDetectorMap.begin();
 }
+#ifdef __USE_AVERAGE_FSTW__
 //________________________________________________________________________________
 void StiDetectorBuilder::build_FSTW(TGeoPhysicalNode *nodeP) {
   struct Avr_t {
@@ -247,6 +248,8 @@ void StiDetectorBuilder::build_FSTW(TGeoPhysicalNode *nodeP) {
     pDetector = getDetectorFactory()->getInstance();
     NameP.ReplaceAll("HALL_1/CAVE_1/","");
     NameP.ReplaceAll("TpcRefSys_1/","");
+    NameP.ReplaceAll("FSTA_1/","");
+    NameP.ReplaceAll("FSTM_1/","");
     NameP.Strip(); // GVB: Do not truncate the name: it needs to be unique
     pDetector->setName(NameP.Data());
     pDetector->setIsActive(new StiNeverActiveFunctor);
@@ -262,11 +265,6 @@ void StiDetectorBuilder::build_FSTW(TGeoPhysicalNode *nodeP) {
 	int layer = getNRows();
 	add(layer,0,dv[i]); 
 	if (debug()) {
-#if 0
-	  cout << "StiDetectorBuilder::AverageVolume build detector " << dv[i]->getName() << " at layer " << layer 
-	       << "\tZ = " <<  dv[i]->getPlacement()->getZcenter() << "\tdZ = " << dv[i]->getShape()->getHalfDepth()
-	       << "\tR = " <<  dv[i]->getPlacement()->getNormalRadius() << endl;
-#endif
 	  cout << *dv[i] << endl;
 	  if (debug() > 1) dv[i]->Print("TGeo");
 	}
@@ -275,11 +273,6 @@ void StiDetectorBuilder::build_FSTW(TGeoPhysicalNode *nodeP) {
       int layer = getNRows();
       add(layer,0,pDetector); 
       if (debug()) {
-#if 0
-	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
-	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
-	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
-#endif
 	cout << *pDetector << endl;
 	if (debug() > 1) pDetector->Print("TGeo");
       }
@@ -297,16 +290,19 @@ void StiDetectorBuilder::build_FSTW(TGeoPhysicalNode *nodeP) {
 #endif
   }
 }
+#endif /* __USE_AVERAGE_FSTW__ */
 //________________________________________________________________________________
 void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP) 
 {
   if (debug()) {cout << "StiDetectorBuilder::AverageVolume -I TGeoPhysicalNode\t" << nodeP->GetName() << endl;}
   TGeoVolume   *volP   = nodeP->GetVolume();
   TString NameV(volP->GetName());
+#ifdef __USE_AVERAGE_FSTW__
   if (NameV == "FSTW") {
     build_FSTW(nodeP);
     return;
   }
+#endif /* __USE_AVERAGE_FSTW__ */
   NameV += "_"; NameV += volP->GetUniqueID();
   TGeoMedium   *medP   = volP->GetMedium();   if (debug()) medP->Print("");
   TGeoMaterial *matP   = medP->GetMaterial(); if (debug()) matP->Print("");
@@ -410,6 +406,8 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	Name.ReplaceAll("PXMO_1/","");
 	Name.ReplaceAll("IBMO_1/","");
 	Name.ReplaceAll("TPCE_1/","");
+	Name.ReplaceAll("FSTA_1/","");
+	Name.ReplaceAll("FSTM_1/","");
 	Name.Strip(); // GVB: Do not truncate the name: it needs to be unique
 	if (iz > 0) {Name += "_", Name += iz;}
 	if (i  > 0) {Name += "_", Name += i;}
@@ -441,11 +439,6 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
 	int layer = getNRows();
 	add(layer,0,pDetector); 
 	if (debug()) {
-#if 0
-	  cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
-	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
-	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
-#endif
 	  cout << *pDetector << endl;
 	  if (debug() > 1) pDetector->Print("TGeo");
 	}
@@ -538,6 +531,8 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
     nameP.ReplaceAll("PXMO_1/","");
     nameP.ReplaceAll("IBMO_1/","");
     nameP.ReplaceAll("TPCE_1/","");
+    nameP.ReplaceAll("FSTA_1/","");
+    nameP.ReplaceAll("FSTM_1/","");
     nameP.Strip(); // GVB: Do not truncate the name: it needs to be unique
     pDetector->setName(nameP.Data());
     pDetector->setIsActive(new StiNeverActiveFunctor);
@@ -565,11 +560,6 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       int layer = getNRows();
       add(layer,0,pDetector); 
       if (debug()) {
-#if 0
-	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
-	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
-	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
-#endif
 	cout << *pDetector << endl;
 	if (debug() > 1) pDetector->Print("TGeo");
       }
@@ -578,11 +568,6 @@ void StiDetectorBuilder::AverageVolume(TGeoPhysicalNode *nodeP)
       int layer = getNRows();
       add(layer,0,pDetector); 
       if (debug()) {
-#if 0
-	cout << "StiDetectorBuilder::AverageVolume build detector " << pDetector->getName() << " at layer " << layer 
-	       << "\tZ = " <<  pDetector->getPlacement()->getZcenter() << "\tdZ = " << pDetector->getShape()->getHalfDepth()
-	       << "\tR = " <<  pDetector->getPlacement()->getNormalRadius() << endl;
-#endif
 	cout << *pDetector << endl;
 	if (debug() > 1) pDetector->Print("TGeo");
       }
