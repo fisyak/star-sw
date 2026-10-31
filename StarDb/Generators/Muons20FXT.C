@@ -1,0 +1,60 @@
+#include "Riostream.h"
+#include "TMath.h"
+#ifndef __CINT__
+// #include "StarVMC/geant3/TGeant3/TGeant3f77.h"
+// #include "StarVMC/geant3/TGeant3/TGeant3TGeo.h"
+// #include "StarVMC/geant3/TGeant3/TGeant3.h"
+// #include "StarVMC/StVMCMaker/StVMCMaker.h"
+// #include "StarVMC/StarVMCApplication/StarVMCApplication.h"
+// #include "StarVMC/StarVMCApplication/StarMCPrimaryGenerator.h"
+// #include "StarVMC/StarVMCApplication/StarMCSimplePrimaryGenerator.h"
+#endif
+TDataSet *CreateTable() {
+  Int_t    iD     =   6; 
+  Double_t pTlow  =   1;
+  Double_t pThigh =   1;
+  Double_t Ylow   =  -2; 
+  Double_t Yhigh  =   0;
+  Double_t Philow =   0;
+  Double_t Phihigh= 2*TMath::Pi();
+  Double_t Zlow   = 200; 
+  Double_t Zhigh  = 200; 
+  Int_t    Npart  =  20;
+#ifdef __CINT__
+  if ( gClassTable->GetID("TGiant3") >= 0) { // root4star
+    if (gClassTable->GetID("St_geant_Maker") < 0) {
+      cout << "You have to use root4star with St_geant_Maker already loaded" << endl; 
+      return 0;
+    }
+    if (! St_geant_Maker::instance()) return 0;
+    // gkine #particles partid ptrange yrange phirange vertexrange
+    TString kine(Form("gkine %i %i %f %f %f %f %f %f %f %f",Npart,iD, pTlow,pThigh,Ylow, Yhigh, Philow, Phihigh, Zlow, Zhigh));
+    cout << "Set kine : " << kine.Data() << endl;
+    St_geant_Maker::instance()->Do(kine.Data());
+    //    St_geant_Maker::instance()->Do("gspread   0.015 0.015 42.00");
+    TDataSet *tableSet = new TDataSet("20muons");
+    return (TDataSet *)tableSet;
+  }
+#endif
+  if (! StVMCMaker::instance()) return 0;
+  if (! StarVMCApplication::Instance()) return 0;
+  StarMCSimplePrimaryGenerator *gener = (StarMCSimplePrimaryGenerator *) StarVMCApplication::Instance()->GetPrimaryGenerator();
+  if (! gener) {
+    cout << "Create StarMCSimplePrimaryGenerator(" <<  Npart << "," <<  iD << "," 
+	 << pTlow << "," << pThigh<< "," <<Ylow<< "," << Yhigh<< "," 
+	 << Philow<< "," << Phihigh<< "," << Zlow<< "," << Zhigh<< "," << "G)" << endl;
+    gener =  new 
+    StarMCSimplePrimaryGenerator( Npart, iD, pTlow,pThigh,Ylow, Yhigh, Philow, Phihigh, Zlow, Zhigh, "G");
+  } else {
+    cout << "Set StarMCSimplePrimaryGenerator(" <<  Npart << "," <<  iD << "," 
+	 << pTlow << "," << pThigh<< "," <<Ylow<< "," << Yhigh<< "," 
+	 << Philow<< "," << Phihigh<< "," << Zlow<< "," << Zhigh<< "," << "G)" << endl;
+    gener->SetGenerator( Npart, iD, pTlow,pThigh,Ylow, Yhigh, Philow, Phihigh, Zlow, Zhigh, "G");
+  }
+  gener->SetVertex(-0.266,-2.304,   200.);  //  beamSpot.13p5GeV_fixedTarget_2026.TFG26i.dEdx.txt
+  gener->SetSpread( 0.280, 0.200, 0.0025);
+  StarVMCApplication::Instance()->SetPrimaryGenerator(gener);
+  cout << "Set StarMCSimplePrimaryGenerator" << endl;
+  TDataSet *tableSet = new TDataSet("20muons");
+  return (TDataSet *)tableSet;
+}
