@@ -1855,7 +1855,7 @@ StThreeVector<double> StiKalmanTrackNode::getHelixCenter() const
 //______________________________________________________________________________
 int StiKalmanTrackNode::locate()
 {
-  static const double kYFactor = 1.2, kZFactor=1.2, kZoffset = 5.0;
+  static const double kYFactor = 1.2, kZFactor=1.2, kZoffset = 5.0; //Tolerance
 //  static const double kYFactor = 1.0, kZFactor=1.0;
   double yOff, zOff,ang;
   //fast way out for projections going out of fiducial volume
@@ -1872,7 +1872,9 @@ int StiKalmanTrackNode::locate()
   int ians = 0;
   int shapeCode  = sh->getShapeCode();
   zOff = mFP.z() - place->getZcenter();
-  if (fabs(zOff)>kZFactor*sh->getHalfDepth() + kZoffset) return kOutZ;
+  if (fabs(zOff)>kZFactor*sh->getHalfDepth() + kZoffset) {
+    return kOutZ;
+  }
   switch (shapeCode) {
   case kDisk:
   case kCylindrical: // cylinder
