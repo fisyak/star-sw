@@ -44,12 +44,16 @@ class StiNodePars {
   double &hz()   	{return P[kHz];}
   double *A(Int_t i)    {return &P[i];}
   double *A()           {return P;}
+  Double_t dZdX()       {return TMath::Cos(eta())/tanl();}
+  Double_t dYdX()       {return TMath::Tan(eta());}
+  Double_t &dXeff()     {return _dXeff;}
   Int_t     check(const char *pri=0) const;
   void      print() const;
 
     /// sine and cosine of cross angle
   double _cosCA;
   double _sinCA;
+  double _dXeff; // effective dX with account Z bounds
   double P[8]; // array of parameters. see below
 };
 
