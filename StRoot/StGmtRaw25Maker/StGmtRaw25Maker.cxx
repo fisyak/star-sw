@@ -302,10 +302,11 @@ TF1* StGmtRaw25Maker::FindPeaks(TH1D* hist) {
   fitFunc->FixParameter(0,(double)npx);
   fitFunc->SetNpx(1000);
   fitFunc->SetLineColor(kGreen);
-  
+  const Char_t *defaultFitter = TVirtualFitter::GetDefaultFitter();
   TVirtualFitter::SetDefaultFitter("Fumili");
   int isOk=hist->Fit(fitFunc, FitOpt);
   if(isOk) isOk=hist->Fit(fitFunc, FitOpt);
+  TVirtualFitter::SetDefaultFitter(defaultFitter);
   if(isOk) return 0;
   
   return fitFunc;
