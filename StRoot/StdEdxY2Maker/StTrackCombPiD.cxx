@@ -830,9 +830,10 @@ Double_t StTrackCombPiD::M2BTofSigma(Double_t pL10, Int_t code)  {
 //________________________________________________________________________________
 std::vector<Int_t> StTrackCombPiD::SetPDGfrom(Int_t k) {
   std::vector<Int_t> pdgVec;
+  Int_t lBest = -1;
+  Int_t lPion = -1;
+  Double_t pullBest = 999;
   if (fStatus[k]) {
-    Int_t lBest = -1;
-    Double_t pullBest = 999;
     for (Int_t l = kPidElectron; l < fgNparticles; l++) {
       Double_t pull = TMath::Abs(fStatus[k]->PullC(l));
       if (pull < pullBest) {
@@ -840,11 +841,24 @@ std::vector<Int_t> StTrackCombPiD::SetPDGfrom(Int_t k) {
 	lBest = l;
       }
       if (pull  < fgSigmaCut) {
+	if (l == kPidPion) lPion = l;
 	pdgVec.push_back(GetQ()*fgParticles[l].pdg);
       }
     }
+    // Take the best if all others are below fgSigmaCut
     if (pdgVec.size() == 0 && pullBest < 2*fgSigmaCut) {
+      if (lBest == kPidPion) lPion = lBest;
       pdgVec.push_back(GetQ()*fgParticles[lBest].pdg);
+    }
+  }
+  // for TPC require that hypothesis outside on pion band by fgSigmaCut
+  if (k == kDefaultTpcMethod) {
+    if (pdgVec.size() > 1) {
+      if  (lBest == lPion ||
+	  (lPion > 0 && (TMath::Abs(fStatus[k]->PullC(lPion) - fStatus[k]->PullC(lBest)) < fgSigmaCut))) {
+	pdgVec.clear(); 
+	pdgVec.push_back(GetQ()*fgParticles[lPion].pdg);
+      }
     }
   }
   return pdgVec;
