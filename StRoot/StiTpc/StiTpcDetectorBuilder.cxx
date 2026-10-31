@@ -5,7 +5,6 @@
 #include <stdexcept>
 #include "StDbUtilities/StTpcLocalCoordinate.hh"
 #include "StDbUtilities/StTpcCoordinateTransform.hh"
-#include "StTpcDb/StTpcDb.h"
 #include "Sti/StiPlanarShape.h"
 #include "Sti/StiMaterial.h"
 #include "Sti/StiPlacement.h"
@@ -20,6 +19,7 @@
 #include "StDetectorDbMaker/StiTpcInnerHitErrorCalculator.h"
 #include "StDetectorDbMaker/StiTpcOuterHitErrorCalculator.h"
 #include "StDetectorDbMaker/StiTPCHitErrorCalculator.h"
+#include "StDetectorDbMaker/St_tpcWirePlanesC.h"
 #include "StiTpcDetectorBuilder.h"
 #include "StiTpcIsActiveFunctor.h"
 //#include "Sti/StiElossCalculator.h"
@@ -129,13 +129,21 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	float fRadius = St_tpcPadConfigC::instance()->radialDistanceAtRow(sector,row);
 	TString name(Form("Tpc/Sector_%d,Padrow_%d", StiSector,StiRow));
 	pShape = new StiPlanarShape;
-	assert(pShape);
-	Double_t dZ = 0;
+	//	pShape->setThickness(St_tpcPadConfigC::instance()->innerSectorPadLength(sector));
+	Int_t nInnerPadrows = St_tpcPadConfigC::instance()->numberOfInnerRows(sector);
+	//	Double_t dZ = St_tpcPadConfigC::instance()->innerSectorPadPlaneZ(sector);
+	Double_t dZ =  StTpcDb::instance()->Dimensions()->gatingGridZ(); // zGG
+	Double_t dX = 0.0;
+	if (row <= nInnerPadrows) {// include prompt hits
+	  dZ += St_tpcWirePlanesC::instance()->innerSectorGatingGridPadSep();
+	  dX  = St_tpcPadConfigC::instance()->innerSectorRowPitch1(sector);
+	} else {
+	  dZ += St_tpcWirePlanesC::instance()->outerSectorGatingGridPadSep();
+	  dX  = St_tpcPadConfigC::instance()->outerSectorRowPitch(sector);
+	}
 	Double_t Zshift = 0; // 
 	Double_t Zdepth = dZ;
 	Double_t zc = 0;
-	pShape->setThickness(St_tpcPadConfigC::instance()->innerSectorPadLength(sector));
-	dZ = St_tpcPadConfigC::instance()->innerSectorPadPlaneZ(sector);
 	if(Nsectors == 2) {
 	  Zdepth = (dZ + Zshift)/2;
 	  zc     = (dZ - Zshift)/2;
@@ -144,6 +152,7 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	  Zdepth = dZ;
 	  zc     =  0;
 	}
+	pShape->setThickness(dX);
 	pShape->setHalfDepth(Zdepth);
 	pShape->setHalfWidth(St_tpcPadConfigC::instance()->PadPitchAtRow(sector,row) * St_tpcPadConfigC::instance()->numberOfPadsAtRow(sector,row) / 2.);
 	pShape->setName(name.Data()); if (debug>1) cout << *pShape << endl;
@@ -222,7 +231,6 @@ void StiTpcDetectorBuilder::useVMCGeometry() {
 	pDetector->setGas(_gasMat);
 	pDetector->setShape(pShape);
 	pDetector->setPlacement(pPlacement);
-	Int_t nInnerPadrows = St_tpcPadConfigC::instance()->numberOfInnerRows(sector);
 	if (row <= nInnerPadrows) {
 	  if (! St_tpcPadConfigC::instance()->iTPC(sector)) {
 	    pDetector->setHitErrorCalculator(StiTpcInnerHitErrorCalculator::instance());
