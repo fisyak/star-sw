@@ -134,6 +134,6 @@
 <li> TFG26j Revise FST geometry for Sti                                  2026-10-11 12:58:53 -0400  (HEAD -> TFG, tag: TFG26j)
 <li> TFG26k Clean up Sti, disable FSTW averaging                         2026-10-14 10:01:43 -0400  (HEAD -> TFG, tag: TFG26k)
 <li> TFG26l Revise Sti, allow multiple dead detector to be added         2026-10-22 16:01:43 -0400  (HEAD -> TFG, tag: TFG26l_1) 
-<li> TFG26m Revise Sti, -"- next iteration                               2026-10-31 16:01:43 -0400  (HEAD -> TFG, tag: TFG26m) 
+<li> TFG26m Revise Sti, -"- next iteration                               2026-10-31 16:42:27 -0400  (HEAD -> TFG, tag: TFG26m)
 <li> TFG    previous .DEV2(afs)   head of TFG git repository
 </ul>
