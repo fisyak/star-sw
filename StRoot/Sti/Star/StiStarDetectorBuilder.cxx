@@ -444,8 +444,7 @@ void StiStarDetectorBuilder::Fst() {
   const VolumeMap_t FstVolumes[] = { 
     //    {"FSTD", "FST disk container",                "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3","",""},       
     {"FTUO", "FST half ring outside wedge container", "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FTUO_1-36","",""},       
-#if 1 /* switch off FSTW */
-#if 1
+#if 0
     {"FSTW", "Whole wedge container",                 "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12","",""},       
 #else
     {"FTUR", "Tube segment for FST half ring inside wedge container",          "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTUR_1-3","",""},   
@@ -477,7 +476,6 @@ void StiStarDetectorBuilder::Fst() {
     //    {"FTIH", "Tube segment for FST outer hybrid",                              "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTIH_1",""},
     {"FTUS", "Tube segment for FST silicon",                                   "HALL_1/CAVE_1/FSTA_1/FSTM_1/FSTD_1-3/FSTW_1-12/FTUS_3",""},
 #endif
-#endif /* switch off FSTW */
     {"OFSR", "OFSR Outer support ring for FST",       "HALL_1/CAVE_1/FSTA_1/OFSR_1-2","",""},   
     {"OFSB", "OFSB Outer support bars",               "HALL_1/CAVE_1/FSTA_1/OFSB_1-4","",""},   
     {"OFSD", "outer support",                         "HALL_1/CAVE_1/FSTA_1/OFSD_1-4","",""},   
