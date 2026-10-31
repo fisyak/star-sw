@@ -76,8 +76,8 @@ Remove the inner support tubes as it could not be attached to detector.
             FHBG,   <!-- Box for FST heat sinks (inside inner wedge tube) -->
             FHBH,   <!-- Box for FST heat sinks (inside inner wedge tube) -->
 
-            FSCT,   <!-- Tube for the FST cooling tube -->
-            FSCL,   <!-- Tube for the FST coolant -->
+            FSCT,   <!-- Tube for the FST cooling tube averaged with FSCL -->
+<!--        FSCL,        Tube for the FST coolant -->
             FHTS,   <!-- Tube segment for the FST cooling tube holder -->
             FCHT,   <!-- Tube for the FST cooling tube holder -->
             FCHB,   <!-- Box Tube for the FST cooling tube holder -->
@@ -544,7 +544,7 @@ Remove the inner support tubes as it could not be attached to detector.
 
         <Fill name="coolingtubes" comment="cooling tube (straight part)">
             <var name="version"   value="1.0" />
-            <var name="rmin"      value="0.277" />
+            <var name="rmin"      value="0" /> <!-- "0.277" -->
             <var name="rmax"      value="0.318" />
             <var name="phi1"      value="0.0" />
             <var name="phi2"      value="360.0" />
@@ -985,6 +985,7 @@ Remove the inner support tubes as it could not be attached to detector.
                     <Rotation alphax="coolingtubes_rotx(itube)"/>
                 </Placement>
             </For>
+<!--
             <Create block="FSCL" />
             <For var="itube" from="1" to="7">
                 <Placement block="FSCL" in="FSTW" x="coolingtubes_x(itube)" y="coolingtubes_y(itube)" z="-wholewedge_dz+coolingtubes_z(itube)" rmin="0.0001" rmax="coolingtubes_rmin" dz="coolingtubes_dz(itube)" >
@@ -993,7 +994,7 @@ Remove the inner support tubes as it could not be attached to detector.
                     <Rotation alphax="coolingtubes_rotx(itube)"/>
                 </Placement>
             </For>
-
+-->
             <!-- curved part -->
             <For var="itube" from="1" to="90">
                 <Placement block="FSCT" in="FSTW" x="coolingtubec_x(itube)" y="coolingtubec_y(itube)" z="-wholewedge_dz+coolingtubec_z(itube)" rmin="coolingtubes_rmin" rmax="coolingtubes_rmax" dz="coolingtubec_dz(itube)" >
@@ -1001,13 +1002,14 @@ Remove the inner support tubes as it could not be attached to detector.
                     <Rotation alphaz="coolingtubec_rotz(itube)"/>
                 </Placement>
             </For>
+<!--
             <For var="itube" from="1" to="90">
                 <Placement block="FSCL" in="FSTW" x="coolingtubec_x(itube)" y="coolingtubec_y(itube)" z="-wholewedge_dz+coolingtubec_z(itube)" rmin="0.0001" rmax="coolingtubes_rmin" dz="coolingtubec_dz(itube)" >
                     <Rotation alphay="90.0+coolingtubec_roty(itube)"/>
                     <Rotation alphaz="coolingtubec_rotz(itube)"/>
                 </Placement>
             </For>
-
+-->
             <!-- ///////////////////////////// -->
             <!--    Cooling tube holder -->
             <!-- ///////////////////////////// -->
@@ -1359,15 +1361,41 @@ Remove the inner support tubes as it could not be attached to detector.
 
         <Volume name="FSCT" comment="Tube for FST cooling tube">
             <Attribute for="FSCT" seen="1" colo="795" />
-            <Material name="StainlessSteel316" />
+<!--            <Material name="StainlessSteel316" /> -->
+<!--
+Mixture STAINLESSSTEEL3+NOVEC7200_Averaged    Aeff=42.0475 Zeff=19.6513 rho=3.02252 radlen=5.78302 intlen=44.1797 index=128
+   Element #0 : FE  Z= 26.00 A= 55.84 w= 0.396
+   Element #1 : C   Z=  6.00 A= 12.01 w= 0.099
+   Element #2 : MN  Z= 25.00 A= 54.94 w= 0.013
+   Element #3 : SI  Z= 14.00 A= 28.09 w= 0.005
+   Element #6 : CR  Z= 24.00 A= 52.00 w= 0.115
+   Element #7 : MO  Z= 42.00 A= 95.94 w= 0.019
+   Element #8 : NI  Z= 28.00 A= 58.69 w= 0.089
+   Element #10 : O  Z=  8.00 A= 16.00 w= 0.022
+   Element #11 : H  Z=  1.00 A=  1.01 w= 0.007
+   Element #12 : F  Z=  9.00 A= 19.00 w= 0.234
+-->
+       <Mixture name="STEEL3_NOV_Ave" dens="3.02252" radl="5.78302" >
+            <Component name="FE"  z= "26.00" a= "55.84" w= "0.396"  />
+            <Component name="C"   z= " 6.00" a= "12.01" w= "0.099"  />
+            <Component name="MN"  z= "25.00" a= "54.94" w= "0.013"  />
+            <Component name="SI"  z= "14.00" a= "28.09" w= "0.005"  />
+            <Component name="CR"  z= "24.00" a= "52.00" w= "0.115"  />
+            <Component name="MO"  z= "42.00" a= "95.94" w= "0.019"  />
+            <Component name="NI"  z= "28.00" a= "58.69" w= "0.089"  />
+            <Component name="O"   z= " 8.00" a= "16.00" w= "0.022"  />
+            <Component name="H"   z= " 1.00" a= " 1.01" w= "0.007"  />
+            <Component name="F"   z= " 9.00" a= "19.00" w= "0.234"  />
+        </Mixture>
             <Shape type="TUBE" rmin="0" rmax="0" dz="0" />
         </Volume>
+<!--
         <Volume name="FSCL" comment="Tube for FST coolant">
             <Attribute for="FSCL" seen="1" colo="432" />
             <Material name="NOVEC7200" />
             <Shape type="TUBE" rmin="0" rmax="0" dz="0" />
         </Volume>
-
+-->
         <Volume name="FHTS" comment="Tube segment for FST cooling tube holder">
             <Attribute for="FHTS" seen="1" colo="428" />
             <Material name="ABS" />
