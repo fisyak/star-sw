@@ -22,6 +22,7 @@ class KFPTrack;
 class KFPTrackVector;
 class TH1F;
 class TH2F;
+class TH3F;
 
 class StTrackCombPiD;
 class StKFParticleInterface: public TObject
@@ -213,14 +214,17 @@ class StKFParticleInterface: public TObject
    khdEdXETofPID,
    kEtaVspT, kEtaVspTAll,
    kfTrackHistograms2D};
+  static const int NTrackHistoFolders = 27; // +0 for pdg = -1 "Uknown"
+  Char_t                mBeg[1];        //!
+
   TH2F* fTrackHistograms2D[kfTrackHistograms2D];
   
   
   TH1F* fPVHistograms[11];
   TH2F* fPVHistograms2D[4];
+  TH3F* fPVHistograms3D[1]; // zRhoPhi
   
   //PID histograms
-  static const int NTrackHistoFolders = 27; // +0 for pdg = -1 "Uknown"
   TH2F* fHistodEdXTracks[NTrackHistoFolders];
   TH2F* fHistodEdXwithToFTracks[NTrackHistoFolders];
   TH2F* fHistoTofPIDTracks[NTrackHistoFolders][3];
@@ -232,6 +236,7 @@ class StKFParticleInterface: public TObject
   TH2F* fHistodNdXTracks[NTrackHistoFolders];
   TH2F* fHistodNdXwithTofTracks[NTrackHistoFolders];
   TH2F* fHistodNdXPull[NTrackHistoFolders];
+  Char_t                mEnd[1];        //!
   std::map<int, int> fTrackPdgToHistoIndex;
   
   //PID information with respect to the trackID
@@ -263,7 +268,7 @@ class StKFParticleInterface: public TObject
   static Bool_t     fgFXT_PV_REFIT;
   std::vector<float> fm2TofArray;
   std::vector<int>   ftrackIdToI; // [trackId] => track index on [Mu|Pico]Dst track array
-  ClassDef(StKFParticleInterface,1)
+  ClassDef(StKFParticleInterface,2)
 };
 
 #endif //#ifndef StKFParticleInterface_H

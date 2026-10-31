@@ -7,6 +7,7 @@
 #include "TArrayD.h"
 #include "TH1F.h"
 #include "TH2F.h"
+#include "TH3F.h"
 #include "TDirectory.h"
 
 #include "StPicoDstMaker/StPicoDstMaker.h"
@@ -90,6 +91,7 @@ StKFParticleInterface::StKFParticleInterface():
   fChiPrimaryCut(18.6f), fChiPrimaryCutFragments(0.f), fChiPrimaryMaxCut(2e4f), fCleanLowPVTrackEvents(false), fUseHFTTracksOnly(false)
   , fIsFixedTarget(kFALSE), fIsFixedTarget2018(kFALSE), fPidQA(kTRUE)
 {
+  memset(mBeg,0,mEnd-mBeg+1);
   fKFParticleTopoReconstructor = new KFParticleTopoReconstructor();
   fgStKFParticleInterface = this;
   StTrackCombPiD::SetUsedx2(fgUsedx2);
@@ -546,6 +548,10 @@ void StKFParticleInterface::CollectPVHistograms()
   fPVHistograms2D[3] = (TH2F *) pvDir->Get(title);
   if (! fPVHistograms2D[3]) fPVHistograms2D[3] = new TH2F(title, title + " ; Z [cm] ; R [cm]", 440, -220, 220, 400, 0, 200);
 
+  if (! fPVHistograms3D[0]) fPVHistograms3D[0] = new TH3F("zRhoPhi", " Vertex ; Z (cm) ; R (cm) ; #phi (degree;", 
+							  210,-210, 210,
+							  100,   0,  60,
+							  180,   0, 360);
   mainDir->cd();
   
   fCollectPVHistograms = true;
@@ -2191,6 +2197,10 @@ void StKFParticleInterface::FillPVHistos(const KFVertex& vertex, const std::vect
     
     fPVHistograms2D[0]->Fill(vertex.X(), vertex.Y());
     fPVHistograms2D[1]->Fill(vertex.Z(), vertex.GetR() * vertex.Y()/fabs(vertex.Y()));    
+    Double_t PhiD = TMath::RadToDeg()*TMath::ATan2(vertex.Y(),vertex.X());
+    if (PhiD < 0) PhiD += 360;
+    Double_t R = TMath::Sqrt(vertex.X()*vertex.X() + vertex.Y()*vertex.Y());
+    fPVHistograms3D[0]->Fill(vertex.Z(),R,PhiD);
   }
 }
 
