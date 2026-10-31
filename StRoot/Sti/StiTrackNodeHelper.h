@@ -102,7 +102,7 @@ private:
   int join();
   int save();
   int cutStep(StiNodePars *pars,StiNodePars *base);
-  double pathIn(const StiDetector *det,StiNodePars *pars, Int_t dir = 1); // default dir = kInsideOut
+  double pathIn(const StiDetector *det,StiNodePars *pars, Int_t dir = 1, Bool_t check = kFALSE); // default dir = kInsideOut
 //	Static methods
 public:
 static double joinTwo(int nP1,const double *P1  ,const double *E1
@@ -178,7 +178,7 @@ StiNode2Pars mUnTouch;
   double dl0;
   double sind;
   double dl;
-  
+  double z2;
   double mDetm;
   double mChi2;
   int    mState;
