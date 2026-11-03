@@ -241,13 +241,16 @@ void StFttDb::loadHardwareMapFromFile( std::string fn ){
     std::ifstream inf;
     inf.open( fn.c_str() );
 
+    // Both maps, and before the early return: the file-not-found path used to
+    // empty mMap and leave rMap holding the previous load, so a failed reload
+    // left the forward and reverse maps disagreeing with each other.
     mMap.clear();
+    rMap.clear();
     if ( !inf ) {
         LOG_WARN << "sTGC Hardware map file not found" << endm;
         return;
     }
 
-    rMap.clear();
     string hs0, hs1, hs2, hs3, hs4;
     // HEADER:
     // Row_num    FEB_num    VMM_num    VMM_ch         strip_ch
@@ -592,7 +595,11 @@ bool StFttDb::hardwareMap( StFttRawHit * hit ) const{
         UChar_t orientation = getOrientation( rob, hit->feb()+1, hit->vmm()+1, row );
         hit->setMapping( iPlane, iQuad, row, strip, orientation );
 
-        // set strip info
+        // Strip geometry, all in mm. -1 means "not set": it is outside the
+        // quadrant, so it can never be read as a position by accident. Only the
+        // diagonal rows below fill the left/right edges -- a horizontal or
+        // vertical strip keeps -1 for them and has to be bounded from its centre
+        // and the pitch. See the note on hardwareMap() in StFttDb.h.
         Float_t stripCenter = -1;
         Float_t stripLeftEdge = -1;
         Float_t stripRightEdge = -1;
@@ -754,9 +761,13 @@ void StFttDb::getGloablOffset( UChar_t plane, UChar_t quad,
 
     if ( plane < 4 )
     {
-        // upper quadrants are not displace
-        // there have a issue, for the xy shift, the unit is mm, but for the z, the unit is cm 
-        // for Z location, suppose that z at the center of the chamber
+        // upper quadrants are not displaced.
+        // UNITS, and they are mixed on purpose: dx,dy are mm (they are added to a
+        // quadrant-local x,y, which is mm everywhere in the FTT chain) while dz is
+        // cm (it is added to a STAR z). The caller packing all three into one
+        // global vector must scale x,y by 1/10 and leave z alone -- see the block
+        // over the declaration in StFttDb.h.
+        // For z, take the centre of the chamber.
         if ( quad == 0 )
         {dx = StFttDb::X_shift_QuadA[plane]; dy = StFttDb::Y_shift_QuadA[plane]; dz = StFttDb::idealPlaneZLocations_QuadA[plane]-(LocalStripZLocations[2]+LocalStripZLocations[3])/2.;} 
         else if ( quad == 1 )
@@ -801,8 +812,8 @@ void StFttDb::getGloablOffset_ClusterPoint( UChar_t plane, UChar_t quad,
     if ( plane < 4 )
         dz = StFttDb::idealPlaneZLocations[plane];
 
-    // upper quadrants are not displace
-    // there have a issue, for the xy shift, the unit is mm, but for the z, the unit is cm 
+    // upper quadrants are not displaced.
+    // Mixed units, as above: dx,dy in mm, dz in cm. See StFttDb.h.
     if ( quad == 0 )
     {dx = StFttDb::X_shift_QuadA[plane]; dy = StFttDb::Y_shift_QuadA[plane]; dz = StFttDb::idealPlaneZLocations_QuadA[plane];} 
     else if ( quad == 1 )
