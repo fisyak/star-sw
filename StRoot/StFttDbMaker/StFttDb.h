@@ -144,6 +144,13 @@ public:
     UChar_t orientation( StFttRawHit * hit );
     UChar_t getOrientation( int rob, int feb, int vmm, int row ) const;
     bool hardwareMap( int rob, int feb, int vmm, int ch, int &row, int &strip, UChar_t &orientation ) const;
+    // Fills the raw hit's mapping and, from the strip tables, its centre, edges
+    // and length -- all in mm. NOTE the edge convention: only the DIAGONAL rows
+    // (3,4) have measured left/right edges, because only there do the strips
+    // need individual pad bounds. Horizontal and vertical strips keep the
+    // initial -1, i.e. "not set", and must be bounded from the centre and the
+    // pitch instead. -1 is outside the quadrant, so it cannot be mistaken for a
+    // position; nothing in the chain reads the edges today.
     bool hardwareMap( StFttRawHit * rawHit ) const;
 
     // ---- geometry offsets: from the DB (default) or the original hardcoded numbers ----
@@ -199,9 +206,35 @@ public:
     /// Effective z position of a quadrant, in cm. \param quad 0..3 \param plane 0..3
     double zLoc  ( int quad, int plane ) const { return mZLoc  [quad][plane]; }
 
+    // ---- quadrant-local -> global: UNITS ARE MIXED, and deliberately so ------
+    // Both functions return a translation (dx,dy,dz) and a reflection (sx,sy,sz),
+    // with sx,sy,sz in {+1,-1}. The translation is NOT in one unit:
+    //
+    //     dx, dy : MILLIMETRES, from X_shift_Quad* / Y_shift_Quad*
+    //     dz     : CENTIMETRES, from idealPlaneZLocations_Quad*
+    //
+    // That is not a choice we made here: every quadrant-local x/y in the FTT
+    // chain is in mm (StFttDb's strip map, StFttCluster::x(), StFttPoint::x()/y())
+    // while every z in STAR is in cm, so dx,dy match what they are added to and
+    // dz matches what it is added to. The mix only becomes a trap at the point
+    // where the three are packed into one global vector, because
+    // StFttPoint::xyz() is documented as cm.
+    //
+    // A CALLER MUST THEREFORE SCALE x AND y, NOT z:
+    //
+    //     global.set( ((x*sx)+dx)/10.0, ((y*sy)+dy)/10.0, z+dz );   // cm
+    //
+    // and must scale any covariance built from mm lengths by 1/100, since
+    // variance goes as length squared.
     void getGloablOffset( UChar_t plane, UChar_t quad, float &dx, float &sx, float &dy, float &sy, float &dz, float &sz );
     void getGloablOffset_ClusterPoint( UChar_t plane, UChar_t quad, float &dx, float &sx, float &dy, float &sy, float &dz, float &sz );
     bool reverseHardwareMap(int &rob, int &feb, int &vmm, int &ch, int plane, int quad, int row, int strip, UChar_t &orientation) const;
+    // (row,strip) is AMBIGUOUS: the same pair exists once per orientation in the
+    // real map (H and V, or DiagonalH and DiagonalV on rows 3,4). This 5-argument
+    // form has no rob and so cannot resolve it -- it returns the first channel on
+    // record, which is the pre-existing behaviour. Simulation and embedding, where
+    // the wrong orientation means charge on the wrong strip, must use the
+    // 9-argument form above and pre-set orientation.
     bool reverseHardwareMap( int &feb, int &vmm, int &ch, int row, int strip ) const;
 
     enum TimeCutMode {
@@ -293,7 +326,7 @@ public:
   std :: map< int , Float_t > seMapDiagLeft; // strip left edge map, just for the diagonal strips 
   std :: map< int , Float_t > seMapDiagRight; // strip right edge map, just for the diagonal strips
 
-  ClassDef(StFttDb,0)   //StAF chain virtual base class for Makers        
+  ClassDef(StFttDb,1)   //StAF chain virtual base class for Makers        
 };
 
 #endif
