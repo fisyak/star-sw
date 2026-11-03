@@ -397,7 +397,17 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
         // a narrow cluster and can come out slightly negative from rounding alone, even
         // though the true variance cannot be. sqrt() of that is NaN, so clamp at zero.
         float var = (m2Sum - m1Sum*m1Sum / m0Sum) / m0Sum;
-        clu->setSigma( sqrt( var < 0 ? 0 : var ) );
+        // Clamping the variance at zero stops the NaN but still allows sigma == 0
+        // exactly, and that is not an edge case -- it is every SINGLE-STRIP cluster.
+        // All the charge sits in one strip, so m2Sum/m0Sum is exactly the mean
+        // squared and the variance is 0, not merely negative from rounding. A zero
+        // sigma gives GenFit an infinite weight in the precise direction, forcing
+        // the track through the strip centre exactly and making the fit unstable.
+        // Floor it at the resolution one strip actually carries, pitch/sqrt(12).
+        // StFttDb::stripPitch is mm, which is the unit setX()/setSigma() use here.
+        const float kSigmaMin = StFttDb::stripPitch / sqrt( 12.0 ); // 0.924 mm
+        const float sig = sqrt( var < 0 ? 0 : var );
+        clu->setSigma( sig < kSigmaMin ? kSigmaMin : sig );
     } else {
         // No charge accumulated; assign a sentinel rather than NaN from divide-by-zero.
         clu->setX( kNoChargeSentinel );
