@@ -137,12 +137,12 @@ public:
     UShort_t qaTruth() const { return mQATruth; }
     StThreeVectorD dca() const { return StThreeVectorD( mDCA[0], mDCA[1], mDCA[2] ); }
     UChar_t vertexIndex() const {
-        // extract bits 7…2:
-        return (mVtxIndex >> 2) & 0x3F;
+        // high 5 bits (0-31); was 6 bits before the track type needed a third bit
+        return (mVtxIndex >> 3) & 0x1F;
     }
     UChar_t trackType() const {
-        // extract bits 1…0:
-        return mVtxIndex & 0x03;
+        // low 3 bits (0-7); was 2 bits, which could not hold kBLCVertexConstrained=4
+        return mVtxIndex & 0x07;
     }
     UChar_t vertexIndexRaw() const { return mVtxIndex; }
     UShort_t globalTrackIndex() const { return mGlobalTrackIndex; }
@@ -151,6 +151,8 @@ public:
     bool isBeamLineConstrainedTrack() const { return (trackType() == StFwdTrack::kBeamlineConstrained); }
     bool isPrimaryTrack() const { return (trackType() == StFwdTrack::kPrimaryVertexConstrained); }
     bool isFwdVertexConstrainedTrack() const { return (trackType() == StFwdTrack::kForwardVertexConstrained); }
+    bool isBLCVertexConstrainedTrack() const { return (trackType() == StFwdTrack::kBLCVertexConstrained); }
+    bool isFCSConstrainedTrack() const { return (trackType() == StFwdTrack::kFCSConstrained); }
 
     void setPrimaryMomentum( StThreeVectorD mom ) { mPrimaryMomentum = mom; }
     void setDidFitConverge( bool lDidFitConverge ) { mDidFitConverge = lDidFitConverge; }
@@ -165,9 +167,9 @@ public:
     void setMc( UShort_t idt, UShort_t qual ) { mIdTruth = idt; mQATruth = qual; }
     void setDCA( StThreeVectorD dca ) { mDCA[0] = dca.x(); mDCA[1] = dca.y(); mDCA[2] = dca.z(); }
     void setDCA( float dcaX, float dcaY, float dcaZ ) { mDCA[0] = dcaX; mDCA[1] = dcaY; mDCA[2] = dcaZ; }
-    void setVtxIndex( UChar_t vtxIndex ) { mVtxIndex = pack6and2( vtxIndex, trackType() ); }
-    void setTrackType( UChar_t trackType ) { mVtxIndex = pack6and2( vertexIndex(), trackType ); }
-    void setVtxIndexAndTrackType( UChar_t vtxIndex, UChar_t trackType ) { mVtxIndex = pack6and2( vtxIndex, trackType ); }
+    void setVtxIndex( UChar_t vtxIndex ) { mVtxIndex = pack5and3( vtxIndex, trackType() ); }
+    void setTrackType( UChar_t trackType ) { mVtxIndex = pack5and3( vertexIndex(), trackType ); }
+    void setVtxIndexAndTrackType( UChar_t vtxIndex, UChar_t trackType ) { mVtxIndex = pack5and3( vtxIndex, trackType ); }
     void setGlobalTrackIndex( UShort_t index ) { mGlobalTrackIndex = index; }
 
     // ECAL clusters
@@ -181,15 +183,15 @@ public:
     void addHcalCluster(StFcsCluster* p);
     void sortHcalClusterByET();
 
-    enum StFwdTrackType { kGlobal=0, kBeamlineConstrained=1, kPrimaryVertexConstrained=2, kForwardVertexConstrained=3 };
+    // kBLCVertexConstrained and kFCSConstrained take the type past 3, so mVtxIndex
+    // is packed 5+3 rather than 6+2. The vertex index needs at most 31.
+    enum StFwdTrackType { kGlobal=0, kBeamlineConstrained=1, kPrimaryVertexConstrained=2, kForwardVertexConstrained=3, kBLCVertexConstrained=4, kFCSConstrained=5 };
 
-    static unsigned char inline pack6and2(unsigned int A, unsigned int B) {
-        // mask to ensure they fit:
-        A &= 0x3F;       // 0x3F = 0b00111111
-        B &= 0x03;       // 0x03 = 0b00000011
-
-        // put A in the **high** 6 bits, B in the **low** 2 bits
-        return static_cast<unsigned char>((A << 2) | B);
+    static unsigned char inline pack5and3(unsigned int A, unsigned int B) {
+        // A = vertex index in the high 5 bits (0-31), B = track type in the low 3 (0-7)
+        A &= 0x1F;       // 0x1F = 0b00011111
+        B &= 0x07;       // 0x07 = 0b00000111
+        return static_cast<unsigned char>((A << 3) | B);
     }
 
 protected:
@@ -212,11 +214,20 @@ protected:
     UShort_t mQATruth; // MC track quality (percentage of hits coming from corresponding MC track)
 
     float mDCA[3]; // DCA to the primary vertex
-    // vtx index is used to pack the vertex index and the track type 
+    // vtx index is used to pack the vertex index and the track type: 5 bits of
+    // vertex index (0-31) in bits 7..3, 3 bits of track type (0-7) in bits 2..0.
+    // Class version 4 and earlier packed 6+2 -- see the ClassDef note below.
     UChar_t mVtxIndex;
     UShort_t mGlobalTrackIndex;
     
-    ClassDef(StFwdTrack,4)
+    // Version 5: mVtxIndex repacked from 6+2 bits to 5+3, because the track type
+    // outgrew two bits (kBLCVertexConstrained=4, kFCSConstrained=5). The member
+    // LAYOUT is unchanged, so ROOT's schema evolution cannot see the difference by
+    // itself -- the class version is the only thing that tells a 6+2 byte from a
+    // 5+3 one, and so the only thing that makes a "#pragma read" rule for older
+    // files possible. Do not put this back to 4. StPicoFwdTrack carries the same
+    // byte and the same repacking, and goes 1 -> 2 for the same reason.
+    ClassDef(StFwdTrack,5)
 };
 
 #endif

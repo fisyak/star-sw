@@ -243,5 +243,29 @@
 #pragma link C++ class pair<unsigned int,float>+;
 #pragma link C++ class vector<pair<unsigned int,float>>+;
 
+// Schema evolution for the StFwdTrack mVtxIndex repacking. Version 4 packed 6 bits
+// of vertex index + 2 bits of track type; version 5 packs 5 + 3, because the track
+// type outgrew two bits. The member layout is identical either way -- one UChar_t --
+// so without this rule an old event.root decodes wrongly and silently: a Global
+// track with an odd vertex index reads back as kBLCVertexConstrained.
+//
+// version="[4]" and ONLY 4. Version 3 is a different thing again -- a plain
+// unpacked index with UCHAR_MAX meaning "not primary" and no track type at all --
+// so running it through the 6+2 unpacking would corrupt it. (#746 changed the
+// meaning of this byte from 3 to 4 and added no rule, so version 3 files already
+// misdecode with current main; that gap is older than this branch and is left
+// alone here.) Versions 1 and 2 have no mVtxIndex, so they never match.
+//
+// The >31 clamp: six bits hold 0-63, five hold 0-31, so the top half of the old
+// range has nowhere to go. It is pinned to 31 rather than masked, because masking
+// aliases 32-63 onto a real, wrong vertex (32 would read as vertex 0). 31 is not a
+// value reco ever writes -- forward vertices come a handful per event -- so a 31
+// means "index was out of range on disk", not vertex 31. An unset genfit vertex id
+// (-1, which pack6and2 masked to 63) also lands on 31, same as a bare mask.
+//
+// MUST STAY ON ONE LINE: rootcint in ROOT 5.34 aborts with std::out_of_range if
+// the pragma is split across continuation lines.
+#pragma read sourceClass="StFwdTrack" version="[4]" source="UChar_t mVtxIndex" targetClass="StFwdTrack" target="mVtxIndex" code="{ unsigned int oldIdx = (onfile.mVtxIndex >> 2) & 0x3F; if (oldIdx > 31) oldIdx = 31; mVtxIndex = (UChar_t)((oldIdx << 3) | (onfile.mVtxIndex & 0x03)); }"
+
 #endif
 
