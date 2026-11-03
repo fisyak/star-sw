@@ -1,5 +1,5 @@
 void na27(Char_t *dstname="mppnobc") {
-  TString Dstname(Form("/star/data07/calib/fisyak/na27/%s.root",dstname));
+  TString Dstname(Form("/gpfs01/star/subsys-tpc/fisyak/public/na27/%s.root",dstname));
   TFile *dst = new TFile(Dstname.Data());
   if (! dst->IsOpen()) {cout << "Can't open " << Dstname << " and die\n"; return;}
   TTree *tree = (TTree*) dst->Get("h100");
@@ -11,5 +11,5 @@ void na27(Char_t *dstname="mppnobc") {
   TFile *f = new TFile(Form("%sKpAna.root",dstname),"recreate");
   t.Loop();
   f->Write();
-  delete f;
+  //  delete f;
 }

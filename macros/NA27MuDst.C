@@ -9,7 +9,7 @@
 void NA27MuDst::Loop()
 {
 //   In a ROOT session, you can do:
-//      Root > .L NA27MuDst.C
+//      Root > .L NA27MuDst.C+
 //      Root > NA27MuDst t
 //      Root > t.GetEntry(12); // Fill t data members with entry number 12
 //      Root > t.Show();       // Show values of entry 12
@@ -67,6 +67,7 @@ void NA27MuDst::Loop()
     nb = fChain->GetEntry(jentry);   nbytes += nb;
     // if (Cut(ientry) < 0) continue;
     //    cout << "no_trak\t" << no_trak << endl;
+    if (jentry%100000 == 0) Print();
     if (no_trak < 2) continue;
     Double_t bmass = amP;
     if (krll < 300) bmass = amPi;

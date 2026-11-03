@@ -12,7 +12,8 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-
+#include "TString.h"
+#include <string>
 class NA27MuDst {
    public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -104,7 +105,7 @@ NA27MuDst::NA27MuDst(TTree *tree)
    if (tree == 0) {
       TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("mppnobc.root");
       if (!f) {
-         f = new TFile("/usatlas/data03/fisyak/na27/mppnobc.root");
+	f = new TFile("/gpfs01/star/subsys-tpc/fisyak/public/na27/mppnobc.root");
       }
       tree = (TTree*)gDirectory->Get("h100");
 
@@ -235,17 +236,35 @@ Int_t NA27MuDst::Cut(Int_t entry)
 }
 //________________________________________________________________________________
 void NA27MuDst::Print() {
+  static Char_t labg1[8], labg2[8], ich[1], chatot[4];
+  static Double_t pxyz[3]; 
+  static const Char_t *igdev[5] = {" ","IGD","FGD"," "," "};
+  static const Char_t *mgg[3] = {"pi0","eta","etap"};
   cout << "--------------------------------------------------------------------------------" << endl;
-  cout << "ROLL\t" << krll << "\tFRAME\t" << kfram << endl;
-  cout << "PRIMARY VERTEX " << LabEHS() << " AT X,Y,Z :";
-  for (int i = 0; i < 3; i++) cout << xyzp[i] << ",\t"; cout << endl;
-  cout << "Beam momentum:"; for (int i = 0; i < 3; i++) cout << pxyzb[i] << ",\t"; 
-  cout << "\t  EQMKB = " << eqmkb << "MKB/EV." << endl;
-  cout << "PRIMARY TRACKS" << endl;
+  //  cout << "ROLL\t" << krll << "\tFRAME\t" << kfram << endl;
+  const Char_t *label = LabEHS(labpri);
+  cout << Form(" Event r/f=%5i%5i primary vertex = %s  micro barn equivalent = %8.3f", krll, kfram, label, eqmkb);
+  cout << " at X,Y,Z :";
+  for (int i = 0; i < 3; i++) cout << "\t" << xyzp[i]; cout << endl;
+  cout << "Beam momentum:"; for (int i = 0; i < 3; i++) cout << "\t" << pxyzb[i]; 
+  cout << "\tno.tracks = " << no_trak << "\tno.gammas = " << no_gam << "\tno.of gamma-gamma = " << no_gg << endl;
+  cout << "Primary Tracks" << endl
+       << setw(10) << "TRK CHG" << setw(10) << "PX" << setw(10) << "PY" << setw(10) << " PZ" << setw(5) << "pId" << setw(10) << "WSP" << setw(10) << "wPid" << endl;
+  Int_t nch = 0;
+  memset(pxyz, 0, sizeof(pxyz));
   for (int i = 0; i < no_trak; i++) {
-    cout << "lab/charge: \t/" << kchar[i] 
-	 << "\tpxyz\t" << Form("\t%7.3f",pxt[i]) << Form("\t%7.3f",pyt[i]) << Form("\t%7.3f",pzt[i]);
-    cout << Form("\twsp\t%4.2f",wsp[i]) << Form("\twpid\t%4.2f",wpid[i]) << "\tCls\t"; 
+    label = LabEHS(labdtf[i]);
+    nch += TMath::Sign(1,kchar[i]);
+    Char_t ich;
+    ich = ' ';
+    if      (kchar[i] <  0) ich = '-';
+    else if (kchar[i] == 0) ich = '0';
+    else if (kchar[i] >  0) ich = '+';
+    pxyz[0] += pxt[i];
+    pxyz[1] += pyt[i];
+    pxyz[2] += pzt[i];
+    Int_t idc = TMath::Abs(kchar[i])/1000;
+    //    if (isrll  <= 202) idc = TMath::Max(1, idc - 1);
     TString Cls("");
     for (int j = 0; j<4; j++) {
       if (Clvs[i][j] < 0.01) Cls += "-";
@@ -258,45 +277,85 @@ void NA27MuDst::Print() {
 	}
       }
     }
-    cout << Cls << endl;
+    cout << setw(2) << labdtf[i] << setw(8) << kchar[i]  // label << setw(2) << idc << setw(2) << ich 
+	 << setw(10) << setprecision(3) << pxt[i] 
+	 << setw(10) << setprecision(3) << pyt[i] 
+	 << setw(10) << setprecision(3) << pzt[i] 
+	 << setw(5)  << Cls.Data() 
+	 << setw(10) << setprecision(3) << wsp[i] 
+	 << setw(10) << setprecision(3) << wpid[i] << endl;
   }
+  if (no_gam > 0) {
+    cout << " gammas" << endl
+	 << setw(10) << "label" << setw(10) << "px" << setw(10) << "py" << setw(10) << "pz" << endl;
+    for (Int_t i = 0; i < no_gam; i++) {
+      label = LabEHS(labgam[i]);
+      cout << setw(10) << label 
+	   << setw(10) << setprecision(3) << pxg[i]
+	   << setw(10) << setprecision(3) << pyg[i]
+	   << setw(10) << setprecision(3) << pzg[i] << endl;
+      pxyz[0] += pxg[i];
+      pxyz[1] += pyg[i];
+      pxyz[2] += pzg[i];
+    }
+  }
+  if (no_gg > 0) {
+    cout << " pi0 & eta" << endl
+	 << setw(10) << "label"  
+	 << setw(10) << "gamma1"
+	 << setw(10) << "gamma1"
+	 << setw(10) << "px" << setw(10) << "py" << setw(10) << "pz" 
+	 << setw(10) << "mass" 
+	 << setw(10) << "prob" << endl;
+    for (Int_t i = 0; i < no_gg; i++) {
+      cout << setw(10) << LabEHS(labgg[i])
+	   << setw(10) << LabEHS(labgams[i][0])
+	   << setw(10) << LabEHS(labgams[i][1])
+	   << setw(10) << setprecision(3) << pxgg[i]
+	   << setw(10) << setprecision(3) << pygg[i]
+	   << setw(10) << setprecision(3) << pzgg[i] 
+	   << setw(10) << setprecision(3) << ggmss[i] 
+	   << setw(10) << setprecision(3) << ggprb[i] 
+	   << endl;
+    }
+  }
+  cout << "total momentum: " 
+       << setw(10) << setprecision(3) << pxyz[0] 
+       << setw(10) << setprecision(3) << pxyz[1] 
+       << setw(10) << setprecision(3) << pxyz[2]  << endl;
 }
 //________________________________________________________________________________
+UInt_t bits(UInt_t mHardwarePosition, UInt_t bit, UInt_t nbits=1) {return (mHardwarePosition>>bit) & ~(~0UL<<nbits);};
+//________________________________________________________________________________
 const Char_t *NA27MuDst::LabEHS(Int_t i) {
+  static Int_t _debug = 0;
   static TString lab("");
-  static Char_t *itype[] = {"U", "B", "V", "C", "S", "D", "N", "I","G",
-			    "L", "E", "J", "P", "W", "*", "X", "M"};
-  static Char_t *jtype[] = {"IGD", "FGD", "PI0", "ETA", "ETP"};
+  static const Char_t *itype[] = {"U", "B", "V", "C", "S", "D", "N", "I","G",
+				  "L", "E", "J", "P", "W", "*", "X", "M"};
+  static const Char_t *jtype[] = {"IGD", "FGD", "PI0", "ETA", "ETP"};
   static Int_t   ntrk[]  = {0,  -1,  -1,   1,   0,  -1,  -1,  -1,   2,
                             0,   0,   0,   0,   1,   0,  -1,   0};
   Int_t Lab = i;
   if (i <= 0) Lab = labpri;
-  UInt_t il = Lab       & 0377;
-  UInt_t it = Lab >>  8 &  037;
-  if (krll > 1000 && it >= 16)  it += 2;
-  UInt_t nt = Lab >> 15 &  077;
+  UInt_t il = bits(Lab, 0, 8);
+  UInt_t it = bits(Lab, 8, 5);
+  //  if (krll > 1000 && it >= 16)  it += 2;
+  UInt_t nt = bits(Lab,15,6);
+  if (_debug) cout << "Lab - " << Lab << "\til = " << il << "\tit = " << it << "\tnt = " << nt << endl;
   lab = "";
   if (it <= 16) {//GET VERTEX TYPE AND NUMBER OF TRACKS.
     lab += itype[it];
     if (ntrk[it] < 0 && nt > 0) {
-      lab += Form("%i",nt);
+      lab += nt;
     }
+  } else {// SPECIAL TREATMENT FOR SHOWERS, PI0S, AND ETAS.
+    if (it < 23) {
+      lab += jtype[it-17];
+    } 
   }
-  else {// SPECIAL TREATMENT FOR SHOWERS, PI0S, AND ETAS.
-    lab += jtype[it-16];
-  }
-  lab += Form(".%i",il);
-  //      CONSTRUCT VERTEX LABEL. ( NOTE REVERSE ORDER FOR PI0S )
-  UInt_t i1 = il%26;
-  UInt_t i2 = i1/26;
-  if (it <= 16) {
-    lab += (Char_t) (il + 64);
-    if (i2 > 0) lab += (Char_t) (i2 + 64);
-  }
-  else {
-    if (i2 > 0) lab += (Char_t) (i2 + 64);
-    lab += (Char_t) (il + 64);
-  }
+  lab += ".";
+  if (il > 0) lab += il;
+  if (_debug) cout << "LabEHS(" << i << ") = " << lab.Data() << endl;
   return lab.Data();
 }
 #endif // #ifdef NA27MuDst_cxx
