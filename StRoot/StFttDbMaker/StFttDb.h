@@ -173,14 +173,14 @@ public:
     // variance goes as length squared.
     void getGloablOffset( UChar_t plane, UChar_t quad, float &dx, float &sx, float &dy, float &sy, float &dz, float &sz );
     void getGloablOffset_ClusterPoint( UChar_t plane, UChar_t quad, float &dx, float &sx, float &dy, float &sy, float &dz, float &sz );
+    // The inverse of hardwareMap(): which channel reads a given strip. Note that
+    // (row,strip) is AMBIGUOUS on its own -- the same pair exists once per
+    // orientation in the real map (H and V, or DiagonalH and DiagonalV on rows
+    // 3,4) -- so rob is needed to resolve it, and orientation is in/out: pre-set
+    // it to pick a specific one, or leave it kFttUnknownOrientation to take
+    // whichever comes first. A caller that gets this wrong puts charge on the
+    // wrong strip, which is why there is no overload that drops rob.
     bool reverseHardwareMap(int &rob, int &feb, int &vmm, int &ch, int plane, int quad, int row, int strip, UChar_t &orientation) const;
-    // (row,strip) is AMBIGUOUS: the same pair exists once per orientation in the
-    // real map (H and V, or DiagonalH and DiagonalV on rows 3,4). This 5-argument
-    // form has no rob and so cannot resolve it -- it returns the first channel on
-    // record, which is the pre-existing behaviour. Simulation and embedding, where
-    // the wrong orientation means charge on the wrong strip, must use the
-    // 9-argument form above and pre-set orientation.
-    bool reverseHardwareMap( int &feb, int &vmm, int &ch, int row, int strip ) const;
 
     enum TimeCutMode {
       CalibratedBunchCrossingMode = 0,
