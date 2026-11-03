@@ -662,18 +662,27 @@ bool StFttDb::hardwareMap( StFttRawHit * hit ) const{
         UChar_t orientation = getOrientation( rob, hit->feb()+1, hit->vmm()+1, row );
         hit->setMapping( iPlane, iQuad, row, strip, orientation );
 
-        // Strip geometry, all in mm. -1 means "not set": it is outside the
-        // quadrant, so it can never be read as a position by accident. Only the
-        // diagonal rows below fill the left/right edges -- a horizontal or
-        // vertical strip keeps -1 for them and has to be bounded from its centre
-        // and the pitch. See the note on hardwareMap() in StFttDb.h.
+        // Strip geometry, all in mm. -1 means "not set", and is outside the
+        // quadrant, so a missing value can never be read as a position.
         Float_t stripCenter = -1;
         Float_t stripLeftEdge = -1;
         Float_t stripRightEdge = -1;
         Float_t stripLength = -1;
         if (orientation == kFttHorizontal || orientation == kFttVertical){
-            if ( scMapXY.count( strip ) > 0 )
+            if ( scMapXY.count( strip ) > 0 ) {
                 stripCenter = scMapXY.at(strip);
+                // Pad bounds, by the same rule the diagonal rows use below: the
+                // copper is stripWidth across and the dead gap to the neighbour is
+                // gapPitch, so the boundary sits half a gap outside the copper,
+                // which is exactly stripPitch/2 from the centre (1.35 + 0.25 = 1.6).
+                // Checked against the tables rather than assumed -- all 152
+                // diagonal strips in Row4_edge.txt have copper width 2.700 and
+                // left/right = centre -+ 1.6 with no exception, and the 167 H/V
+                // centres in Row1.txt are a uniform 3.200 apart from 15.95 to
+                // 547.15, so the identical rule applies here.
+                stripLeftEdge  = stripCenter - stripPitch/2.;
+                stripRightEdge = stripCenter + stripPitch/2.;
+            }
             else {
                 LOG_ERROR << "Cannot find StripCenter for " << strip << endm;
             }
