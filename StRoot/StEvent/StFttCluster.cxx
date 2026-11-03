@@ -9,20 +9,10 @@
  *
  ***************************************************************************/ 
 #include "StEvent/StFttCluster.h"
+#include "St_base/StMessMgr.h"
+#include "StEvent/StFttRawHit.h"
 
-
-StFttCluster::StFttCluster() :
-mId(-1),
-mOrientation(kFttUnknownOrientation),
-mNStrips(0),
-mSumAdc(0.0),
-mX(0.0),
-mSigma(0.0),
-mRawHits(0),
-mNeighbors(0),
-mPoints(0),
-mIdTruth(0),
-mQaTruth(0)
+StFttCluster::StFttCluster()
 {
 
 }
@@ -65,4 +55,14 @@ operator<<( std::ostream &os, const StFttCluster& rh )
     os << "\tqaTruth     = " << rh.qaTruth()          << endl;
     os << ")"                << endl;
     return os;
+}
+
+void StFttCluster::print() {
+    LOG_INFO << " Cluster with " << this->nRawHits() << " Hits" << endm;
+    int i = 0;
+    for (auto rawhit : mRawHits )
+    {
+        LOG_INFO << "Hit " << i << " with strip center = " << rawhit->stripCenter() << " with ADC = " << rawhit->adc() << endm;
+        i++;
+    }
 }
