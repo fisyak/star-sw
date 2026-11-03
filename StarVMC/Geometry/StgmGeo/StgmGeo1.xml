@@ -107,11 +107,20 @@
         </Structure>
 
   
+        <!-- zplane MUST be float. Declared int since c1ee4ea52f (#447), which
+             silently truncated every station z toward zero: the survey offsets
+             -26.4965 / -8.8855 / +8.7985 / +26.5835 became -26 / -8 / +8 / +26, so the
+             stations were built at 312.8385 / 330.8385 / 346.8385 / 364.8385 instead of
+             312.342 / 329.953 / 347.637 / 365.422, up to 8.9 mm out, and the real
+             17.61 / 17.68 / 17.79 cm spacing came out uniform. The survey z added in
+             8ec42e6cc9 and 7551fb9c4d (#707) therefore never reached the geometry.
+             StFttDb carries the same numbers at full precision, so this was also a
+             5-9 mm plane-vs-hit z disagreement in forward tracking. -->
         <varlist type="int">
-            ndisk/0/, idisk/0/, i, j, k, station, zplane
+            ndisk/0/, idisk/0/, i, j, k, station
         </varlist>
         <varlist type="float" >
-            feeSO/2.133333333/, feeId/0/
+            feeSO/2.133333333/, feeId/0/, zplane
         </varlist>
 
       
@@ -216,7 +225,10 @@
 
         <Create    block="STGM" />
         <Placement block="STGM" in="CAVE" konly="MANY" x="0" y="5.9" z="338.8385" >
-            <Misalign table="Geometry/stgc/stgcOnTpc" row="0"/>
+            <!-- DB namespace is Geometry/ftt, not Geometry/stgc: stgc is not a
+                 detector namespace in the offline DB. The table names are unchanged.
+                 StFttDbMaker reads the same paths and must stay in step. -->
+            <Misalign table="Geometry/ftt/stgcOnTpc" row="0"/>
         </Placement>
 
         <Volume name="STGM" comment="STGC Mother volume" assembly="true" >
@@ -230,25 +242,25 @@
             <!-- z relative to Mother zcenter -->
             zplane = -26.4965; 
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
-                <Misalign table="Geometry/stgc/pentOnStation"  row="0" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="0" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="0" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="0" />
             </Placement>
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY" >
                 <Rotation matrix="{0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="1" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="0" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="1" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="0" />
             </Placement>
 
             <Placement in="STGM" y="0" x="-6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="2" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="0" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="2" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="0" />
             </Placement>
 
             <Placement in="STGM" y="0" x="6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="3" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="0" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="3" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="0" />
             </Placement>
 
             station = 1;
@@ -257,25 +269,25 @@
 
             zplane = -8.8855; 
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
-                <Misalign table="Geometry/stgc/pentOnStation"  row="4" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="1" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="4" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="1" />
             </Placement>
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="5" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="1" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="5" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="1" />
             </Placement>
 
             <Placement in="STGM" y="0" x="-6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="6" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="1" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="6" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="1" />
             </Placement>
 
             <Placement in="STGM" y="0" x="6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="7" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="1" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="7" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="1" />
             </Placement>
 
             station = 2;
@@ -283,25 +295,25 @@
 
             zplane = +8.7985; 
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
-                <Misalign table="Geometry/stgc/pentOnStation"  row="8" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="2" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="8" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="2" />
             </Placement>
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="9" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="2" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="9" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="2" />
             </Placement>
 
             <Placement in="STGM" y="0" x="-6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="10" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="2" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="10" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="2" />
             </Placement>
 
             <Placement in="STGM" y="0" x="6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="11" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="2" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="11" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="2" />
             </Placement>
 
             station = 3;
@@ -309,25 +321,25 @@
 
             zplane = +26.5835; 
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
-                <Misalign table="Geometry/stgc/pentOnStation"  row="12" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="3" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="12" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="3" />
             </Placement>
             <Placement in="STGM" y="0" x="0" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="13" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="3" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="13" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="3" />
             </Placement>
 
             <Placement in="STGM" y="0" x="-6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="14" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="3" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="14" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="3" />
             </Placement>
 
             <Placement in="STGM" y="0" x="6.5" z="zplane" block="STFM" konly="MANY"  >
                 <Rotation matrix="{0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 1.0}"  />
-                <Misalign table="Geometry/stgc/pentOnStation"  row="15" />
-                <Misalign table="Geometry/stgc/stationOnStgc"  row="3" />
+                <Misalign table="Geometry/ftt/pentOnStation"  row="15" />
+                <Misalign table="Geometry/ftt/stationOnStgc"  row="3" />
             </Placement>
 
             station = 4;

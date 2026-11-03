@@ -137,6 +137,7 @@ class StMuPrimaryVertex : public TObject {
    void             setIdTruth(Int_t idtru,Int_t qatru=0) {mIdTruth = idtru; mQuality = (UShort_t) qatru;}
    void             setIdParent(Int_t id) {mIdParent = id;}                                                          
 #endif /* __TFG__VERSION__ */
+   Bool_t        isBLCVtx()         const {return TESTBIT(mFlag,kBLCVtxId);}
    virtual void     Print(Option_t *option="") const; ///< Print essential vertex info
 
 #ifndef __TFG__VERSION__

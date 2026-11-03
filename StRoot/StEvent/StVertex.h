@@ -154,6 +154,7 @@ public:
     Bool_t        isBeamConstrained() const {return TESTBIT(mFlag,kBEAMConstrVtxId);}
     Bool_t        isRejected()        const {return TESTBIT(mFlag,kRejectedVtxId);}
     Bool_t        isFwdVtx()          const {return TESTBIT(mFlag,kFwdVtxId);}
+    Bool_t        isBLCVertex()       const {return TESTBIT(mFlag,kBLCVtxId);}
     virtual  void Print(Option_t *option="") const {cout << option << *this << endl; }
     static void   SetNoFitPointCutForGoodTrack(UInt_t val) {fgNoFitPointCutForGoodTrack = val;}
     static UInt_t NoFitPointCutForGoodTrack() {return fgNoFitPointCutForGoodTrack;}
