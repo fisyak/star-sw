@@ -158,14 +158,15 @@ public:
     void setDCA( TVector3 dca ) { mDCA[0] = dca.X(); mDCA[1] = dca.Y(); mDCA[2] = dca.Z(); }
     void setDCA( float dcaX, float dcaY, float dcaZ ) { mDCA[0] = dcaX; mDCA[1] = dcaY; mDCA[2] = dcaZ; }
     void setVtxIndex( UChar_t vtxIndex ) { mVtxIndex = vtxIndex; }
-
+    void setTrackType( UChar_t trackType ) { mTrackType = trackType; }
 
     UShort_t idTruth() const { return mIdTruth; }
     UShort_t qaTruth() const { return mQATruth; }
     TVector3 dca() const { return TVector3( mDCA[0], mDCA[1], mDCA[2] ); }
     UChar_t vertexIndex() const { return mVtxIndex; }
+    UChar_t trackType() const { return mTrackType; }
     bool isPrimary() const { return mVtxIndex != UCHAR_MAX; }
-    
+
 protected:
 
     // Track quality and convergence
@@ -184,8 +185,14 @@ protected:
 
     float mDCA[3]; // DCA to the primary vertex
     UChar_t mVtxIndex;
-    
-    ClassDef(StMuFwdTrack,3)
+    // StFwdTrack::StFwdTrackType value -- see StEvent/StFwdTrack.h, which is the
+    // single definition. Deliberately not duplicated as a StMu enum here: two
+    // copies would be free to drift. 0=Global, 1=BeamlineConstrained,
+    // 2=PrimaryVertexConstrained, 3=ForwardVertexConstrained,
+    // 4=BLCVertexConstrained, 5=FCSConstrained
+    UChar_t mTrackType = 0;
+
+    ClassDef(StMuFwdTrack,4) // version 4 adds mTrackType
 
 };
 

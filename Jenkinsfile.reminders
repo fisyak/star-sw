@@ -1,0 +1,117 @@
+// Standalone Pipeline job: SCM fixed to main, Script Path Jenkinsfile.reminders.
+// Uses the existing Jenkins executors and global E-mail Notification settings.
+pipeline {
+  agent any
+
+  options {
+    timestamps()
+    skipDefaultCheckout(true)
+    disableConcurrentBuilds()
+    timeout(time: 10, unit: 'MINUTES')
+    buildDiscarder(logRotator(numToKeepStr: '30'))
+  }
+
+  triggers {
+    cron('TZ=America/New_York\n0 9 * * 1-5')
+  }
+
+  parameters {
+    booleanParam(name: 'DRY_RUN', defaultValue: false,
+      description: 'Print personalized reminder bodies without sending email. Use for the first run.')
+    string(name: 'MIN_AGE_HOURS', defaultValue: '24',
+      description: 'Minimum age of the PR and its outstanding review request, in hours.')
+    string(name: 'GITEA_CREDENTIALS_ID', defaultValue: 'gitea-test-ci-http2',
+      description: 'Jenkins username/password credential; password is the Gitea API token.')
+    text(name: 'REVIEWER_EMAIL_OVERRIDES', defaultValue: '{}',
+      description: 'Optional JSON mapping of Gitea handles to deliverable email addresses when profiles hide them.')
+  }
+
+  environment {
+    GITEA_BASE_URL = 'https://git.racf.bnl.gov/gitea'
+    GITEA_REPOSITORY = 'STAR/star-sw'
+    PYTHONDONTWRITEBYTECODE = '1'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        script {
+          if (env.CHANGE_ID?.trim()) {
+            error('Use a standalone reminder job with SCM fixed to main.')
+          }
+          if (!params.GITEA_CREDENTIALS_ID?.trim()) {
+            error('GITEA_CREDENTIALS_ID must identify the Gitea API credential.')
+          }
+        }
+        checkout scm
+      }
+    }
+
+    stage('Prepare reminders') {
+      steps {
+        dir('reviewer-reminders') {
+          deleteDir()
+        }
+        withCredentials([usernamePassword(
+          credentialsId: params.GITEA_CREDENTIALS_ID.trim(),
+          usernameVariable: 'GITEA_USERNAME',
+          passwordVariable: 'GITEA_TOKEN'
+        )]) {
+          // Newly installed parameter defaults exist in params on the first
+          // build but are not necessarily exported into its shell environment.
+          withEnv([
+            "MIN_AGE_HOURS=${params.MIN_AGE_HOURS}",
+            "REVIEWER_EMAIL_OVERRIDES=${params.REVIEWER_EMAIL_OVERRIDES}"
+          ]) {
+            sh(label: 'Read Gitea review requests', script: '''#!/bin/sh
+set -eu
+set +x
+python3 mgr/reviewer_reminders.py \
+  --base-url "$GITEA_BASE_URL" \
+  --repository "$GITEA_REPOSITORY" \
+  --min-age-hours "$MIN_AGE_HOURS" \
+  --output-dir reviewer-reminders
+''')
+          }
+        }
+      }
+    }
+
+    stage('Send reminders') {
+      steps {
+        script {
+          def count = readFile(file: 'reviewer-reminders/count.txt', encoding: 'UTF-8').trim().toInteger()
+          for (int index = 0; index < count; index++) {
+            def prefix = "reviewer-reminders/message-${index}"
+            def body = readFile(file: "${prefix}.txt", encoding: 'UTF-8')
+            if (params.DRY_RUN) {
+              echo "DRY RUN: ${body}"
+            } else {
+              mail(
+                to: readFile(file: "${prefix}.to", encoding: 'UTF-8').trim(),
+                subject: readFile(file: "${prefix}.subject", encoding: 'UTF-8'),
+                body: body,
+                mimeType: 'text/plain',
+                charset: 'UTF-8'
+              )
+            }
+          }
+          echo "${params.DRY_RUN ? 'Prepared' : 'Sent'} ${count} personalized reviewer reminder(s)."
+          def unresolved = readFile(file: 'reviewer-reminders/unresolved.txt', encoding: 'UTF-8').trim()
+          if (unresolved) {
+            unstable("No deliverable email for: ${unresolved.replace('\n', ', ')}. Configure REVIEWER_EMAIL_OVERRIDES.")
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      // Addresses stay out of build artifacts and are removed even after a failed send.
+      dir('reviewer-reminders') {
+        deleteDir()
+      }
+    }
+  }
+}

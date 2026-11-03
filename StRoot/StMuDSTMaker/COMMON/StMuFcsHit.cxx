@@ -35,6 +35,11 @@ StMuFcsHit::~StMuFcsHit() {
     mData.Set(0);
 }
 
+void StMuFcsHit::Clear(Option_t *) {
+    mData.Set(0);
+    mGeantIdMap.clear();
+}
+
 unsigned short StMuFcsHit::zs()         const {return (mDetId >> 15 ) & 0x0001;}
 unsigned short StMuFcsHit::detectorId() const {return (mDetId >> 12 ) & 0x0007;}
 unsigned short StMuFcsHit::id()         const {return (mDetId       ) & 0x0fff;}
@@ -141,4 +146,11 @@ StMuFcsCluster* StMuFcsHit::cluster() {
 
 const StMuFcsCluster* StMuFcsHit::cluster() const {
     return static_cast<StMuFcsCluster*>( mCluster.GetObject() );
+}
+void StMuFcsHit::addGeantTrack(unsigned int id, float e){    
+        mGeantIdMap[id] += e;
+}
+
+std::vector<std::pair<unsigned int, float>> StMuFcsHit::getGeantTracks() const {
+    return std::vector<std::pair<unsigned int, float>>(mGeantIdMap.begin(), mGeantIdMap.end());
 }
