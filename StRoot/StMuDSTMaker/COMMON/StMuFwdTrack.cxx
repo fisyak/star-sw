@@ -47,6 +47,7 @@ void StMuFwdTrack::set( StFwdTrack * evTrack) {
     mIdTruth = evTrack->idTruth();
     mQATruth = evTrack->qaTruth();
     mVtxIndex = evTrack->vertexIndex();
+    mTrackType = evTrack->trackType();
 
 }
 

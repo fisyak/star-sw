@@ -94,9 +94,23 @@ docker image rm "${IMAGE_TAG}" >/dev/null 2>&1 || true
   }
 }
 
+// The shell EXIT trap is the fast path; post cleanup also covers interrupted tests.
+// Restrict removal to this build so concurrent PRs keep their containers and data.
+def cleanupContainers() {
+  withEnv(["CI_BUILD_ID=${env.BUILD_TAG}"]) {
+    bash '''
+containers="$(docker ps -aq --filter "label=org.star.bnl.ci-build=${CI_BUILD_ID}")"
+if [[ -n "${containers}" ]]; then
+  docker rm -fv ${containers}
+fi
+'''
+  }
+}
+
 def runExecutest(String testId, String starBase, String compiler) {
   withEnv([
     "TEST_ID=${testId}",
+    "CI_BUILD_ID=${env.BUILD_TAG}",
     "STAR_BASE=${starBase}",
     "COMPILER=${compiler}",
     "IMAGE_TAG=${imageTag(starBase, compiler)}",
@@ -107,10 +121,10 @@ data_container="star-test-data-${DATA_CONTAINER}"
 
 docker rm -fv "${data_container}" >/dev/null 2>&1 || true
 trap 'docker rm -fv "${data_container}" >/dev/null 2>&1 || true' EXIT
-docker run --name "${data_container}" --volume /star "${TEST_DATA_IMAGE}"
+docker run --label "org.star.bnl.ci-build=${CI_BUILD_ID}" --name "${data_container}" --volume /star "${TEST_DATA_IMAGE}"
 
-TEST_CMD="$(docker run --rm --network host "${IMAGE_TAG}" tests/executest.py -c "${TEST_ID}")"
-docker run --rm --network host --volumes-from "${data_container}" "${IMAGE_TAG}" \
+TEST_CMD="$(docker run --rm --label "org.star.bnl.ci-build=${CI_BUILD_ID}" --network host "${IMAGE_TAG}" tests/executest.py -c "${TEST_ID}")"
+docker run --rm --label "org.star.bnl.ci-build=${CI_BUILD_ID}" --network host --volumes-from "${data_container}" "${IMAGE_TAG}" \
   sh -c "set -e; MALLOC_CHECK_=3 ${TEST_CMD} 2>&1 | tee log; grep 'Run completed' log"
 '''
   }
@@ -119,6 +133,7 @@ docker run --rm --network host --volumes-from "${data_container}" "${IMAGE_TAG}"
 def runRoot5MacroTest(String label, String testId, String compiler, String macroCall, String grepPattern) {
   withEnv([
     "TEST_ID=${testId}",
+    "CI_BUILD_ID=${env.BUILD_TAG}",
     "COMPILER=${compiler}",
     "IMAGE_TAG=${imageTag('root5', compiler)}",
     "MACRO_CALL=${macroCall}",
@@ -130,12 +145,12 @@ data_container="star-test-data-${DATA_CONTAINER}"
 
 docker rm -fv "${data_container}" >/dev/null 2>&1 || true
 trap 'docker rm -fv "${data_container}" >/dev/null 2>&1 || true' EXIT
-docker run --name "${data_container}" --volume /star "${TEST_DATA_IMAGE}"
+docker run --label "org.star.bnl.ci-build=${CI_BUILD_ID}" --name "${data_container}" --volume /star "${TEST_DATA_IMAGE}"
 
-TEST_FILE="$(docker run --rm --network host "${IMAGE_TAG}" tests/executest.py "${TEST_ID}" -a fullpath | sed -E 's/\\.(daq|fzd)$/.event.root/')"
+TEST_FILE="$(docker run --rm --label "org.star.bnl.ci-build=${CI_BUILD_ID}" --network host "${IMAGE_TAG}" tests/executest.py "${TEST_ID}" -a fullpath | sed -E 's/\\.(daq|fzd)$/.event.root/')"
 TEST_CMD="root4star -b -q -l '${MACRO_CALL}'"
 TEST_CMD="${TEST_CMD//\\$TEST_FILE/${TEST_FILE}}"
-docker run --rm --network host --volumes-from "${data_container}" "${IMAGE_TAG}" \
+docker run --rm --label "org.star.bnl.ci-build=${CI_BUILD_ID}" --network host --volumes-from "${data_container}" "${IMAGE_TAG}" \
   sh -c "set -e; ${TEST_CMD} 2>&1 | tee log; grep '${GREP_PATTERN}' log"
 '''
   }
@@ -277,6 +292,10 @@ pipeline {
       echo "Branch: ${env.BRANCH_NAME ?: 'unknown'}"
       echo "Pull request: ${env.CHANGE_ID ?: 'none'}"
       script {
+        // Report cleanup failures without skipping the remaining image cleanup.
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          cleanupContainers()
+        }
         ['root5-gcc485', 'root5-gcc11', 'root6-gcc485', 'root6-gcc11'].each { combo ->
           def parts = combo.split('-')
           removeImage(parts[0], parts[1])
