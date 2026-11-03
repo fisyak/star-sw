@@ -143,12 +143,12 @@ public:
     UChar_t getOrientation( int rob, int feb, int vmm, int row ) const;
     bool hardwareMap( int rob, int feb, int vmm, int ch, int &row, int &strip, UChar_t &orientation ) const;
     // Fills the raw hit's mapping and, from the strip tables, its centre, edges
-    // and length -- all in mm. NOTE the edge convention: only the DIAGONAL rows
-    // (3,4) have measured left/right edges, because only there do the strips
-    // need individual pad bounds. Horizontal and vertical strips keep the
-    // initial -1, i.e. "not set", and must be bounded from the centre and the
-    // pitch instead. -1 is outside the quadrant, so it cannot be mistaken for a
-    // position; nothing in the chain reads the edges today.
+    // and length -- all in mm, for every orientation. The edges are the PAD
+    // bounds, half a dead gap outside the copper, so neighbouring pads tile
+    // without overlap: the diagonal rows take them from the measured table,
+    // the horizontal and vertical rows from centre -+ stripPitch/2, which is
+    // the same quantity (the two agree exactly on all 152 diagonal strips).
+    // A value of -1 means the strip is not in the map at all.
     bool hardwareMap( StFttRawHit * rawHit ) const;
 
     // ---- quadrant-local -> global: UNITS ARE MIXED, and deliberately so ------
