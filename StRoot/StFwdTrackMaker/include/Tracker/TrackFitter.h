@@ -114,7 +114,11 @@ class TrackFitter {
             mBField = std::unique_ptr<genfit::AbsBField>(new genfit::ConstField(0., 0., 0.)); // ZERO FIELD
             LOG_INFO << "StFwdTrackMaker: Tracking with ZERO magnetic field" << endm;
         } else {
-            mBField = std::unique_ptr<genfit::AbsBField>(new StarFieldAdaptor());
+            // The FST-box shortcut and the far-z cutoff are both options now; see
+            // STARField.h. Defaults keep the previous behaviour apart from the sign.
+            const bool   fstConstBz = mConfig.get<bool>("TrackFitter:fieldFstConstBz", true);
+            const double zMaxField  = mConfig.get<double>("TrackFitter:fieldZMax", 450.);
+            mBField = std::unique_ptr<genfit::AbsBField>(new StarFieldAdaptor(fstConstBz, zMaxField));
             LOG_INFO << "StFwdTrackMaker: Tracking with StarFieldAdapter" << endm;
         }
         // we must have one of the two available fields at this point
