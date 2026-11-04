@@ -21912,3 +21912,283 @@ StiKalmanTrack::refit iter = 1 qA = 0.00
   -    FSTD_5/FSTW_6/FSWT_7_4  dE pT  0.474+-  0.9, sy 0.199, x =   16.05 z =  164.46 41.434 ( 40.689 ) cm( 0.70%) -9.07 MeV  0.609 GeV
   -   FSTD_6/FSTW_12/FTUW_1_5  dE pT  0.480+-  1.2, sy 0.262, x =    8.71 z =  180.33 17.562 ( 17.005 ) cm( 2.06%) -13.2 MeV  0.623 GeV
   -      PIPE_1/PIPO_1/PVAO_1  dE pT  0.492+-  2.0, sy 0.355, x =    3.93 z =  191.34 12.175 ( 11.185 ) cm( 9.19%) -29.1 MeV  0.652 GeV
+================================================================================
+11/02/2026 NA27 
+root.exe [7] h100->Show(12)
+======> EVENT:12
+ krll            = 306
+ kfram           = 54
+ labpri          = 393473
+ xyzp            = 2.73213, 
+                  0.771038, -0.267796
+ pxyzb           = 400, 
+                  0.0471115, -0.0402706
+ eqmkb           = 0.0540169
+ no_trak         = 11
+ labdtf          = 1, 
+                  2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+ kchar           = 1001, 
+                  -3002, 3003, 3004, -3005, -3006, -3007, 5008, 6009, -6010, 6011
+ pxt             = 17.178, 
+                  3.2981, 20.3733, 11.5425, 7.59106, 14.8125, 
+                  12.2583, 35.5884, 47.332, 50.6704, 52.3525
+ pyt             = -0.0452723, 
+                  0.371207, 0.200604, 0.116, 0.0855971, -0.146763, 
+                  0.243441, 0.195715, -0.41838, -0.273804, -0.0227066
+ pzt             = -0.0678405, 
+                  -0.125512, -0.156775, -0.058406, -0.0318478, 0.0559946, 
+                  0.193966, -0.0231349, -0.00455662, -0.203297, 0.0601501
+ Clvs            = 0.697947, 
+                  0.302053, 0, 0, 0, 0, 
+                  0, 0, 0, 0.998045, 0.00195503, 
+                  0, 0, 0.99609, 0.00391007, 0, 
+                  0, 1, 0, 0
+ wpid            = 2.85044, 
+                  5.51613, 2.25806, 2.55425, 1.86315, 1.96188, 
+                  1.86315, -1, -1, 1.17204, 1.17204
+ wsp             = 1.0374, 
+                  1.15902, 1.03759, 1.03711, 1.03566, 1.0376, 
+                  1.03446, 1.03592, 1.03737, 1.03629, 1.03172
+ no_gam          = 6
+ labgam          = 4609, 
+                  4610, 4611, 4612, 4357, 4358
+ pxg             = 26.0861, 
+                  12.4982, 11.5992, 10.437, 4.28741, 4.11181
+ pyg             = -0.0502093, 
+                  0.0686191, 0.0346261, 0.0779818, 0.0134461, 0.00482222
+ pzg             = 0.0705411, 
+                  0.0237848, 0.0131641, 0.011043, 0.0559145, 0.152577
+ kgamtyp         = 3, 
+                  3, 3, 3, 2, 2
+ gamflg          = 4865.1, 
+                  4865.1, 0, 0, 0, 0
+ no_gg           = 1
+ labgg           = 4865
+ labgams         = 4610, 
+                  4609
+ ggmss           = 0.134963
+ pxgg            = 38.5843
+ pygg            = 0.0184098
+ pzgg            = 0.0943259
+ ggprb           = 100.824
+================================================================================
+11/03/2026 TFG26m
+00.event.root","st_physics_27026005_raw_0100006,55001,60000.tags.root")
+ run 'bfc.C(55001,55003,"P2025a,CorrZ,StiCA,gmt25,Agi,BEmcChkStat,MassFit,UseCAVxFinder,NoHistos,noTags,noRunco,-evout,PicoVtxFXT,FXT","/gpfs01/star/daq/2026/026/27026005/st_physics_27026005_raw_0100006.daq","st_physics_27026005_raw_0100006,55001,60000.event.root","st_physics_27026005_raw_0100006,55001,60000.tags.root")'
+
+ETOF
+StETofDigiMaker:WARN   - St_etofElectronicsMapC::instance found table etofElectronicsMap with NRows = 1 in db    	Validity:20201221/0 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofGet4StateC::instance found table etofGet4State with NRows = 1 in db    		 	Validity:20200214/131755 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofTimingWindowC::instance found table etofTimingWindow with NRows = 1 in db        	Validity:20201221/0 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofCalibParamC::instance found table etofCalibParam with NRows = 1 in db   	 	Validity:20201221/5 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofSignalVelocityC::instance found table etofSignalVelocity with NRows = 1 in db    	Validity:20201221/5 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofDigiTotCorrC::instance found table etofDigiTotCorr with NRows = 1 in db 	 	Validity:20210525/0 - 20371231/120000
+
+StETofCalibMaker:WARN  - St_etofDigiTimeCorrC::instance found table etofDigiTimeCorr with NRows = 1 in db        	Validity:20260125/123923 - 20260127/10855
+
+StETofCalibMaker:WARN  - St_etofDigiSlewCorrC::instance found table etofDigiSlewCorr with NRows = 1 in db        	Validity:20210525/0 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofResetTimeCorrC::instance found table etofResetTimeCorr with NRows = 1 in db      	Validity:20201221/0 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofPulserTotPeakC::instance found table etofPulserTotPeak with NRows = 1 in db      	Validity:20201221/0 - 20371231/120000
+StETofCalibMaker:WARN  - St_etofPulserTimeDiffGbtxC::instance found table etofPulserTimeDiffGbtx with NRows = 1 in db   Validity:20201221/0 - 20371231/120000
+StETofHitMaker:WARN    - St_etofHitParamC::instance found table etofHitParam with NRows = 1 in db              		Validity:20201221/5 - 20371231/120000
+StETofHitMaker:WARN    - St_etofModCounterC::instance found table etofModCounter with NRows = 1 in db     		Validity:20210606/11705 - 20371231/120000
+
+StETofHitMaker:WARN    - St_etofAlignC::instance found table etofAlign with NRows = 1 in db       			Validity:20260125/201716 - 20260127/10855
+
+StETofMatchMaker:WARN  - St_etofMatchParamC::instance found table etofMatchParam with NRows = 1 in db   		Validity:20201221/0 - 20371231/120000
+
+StETofCalibMaker:WARN  - St_etofDigiTimeCorrC::instance found table etofDigiTimeCorr with NRows = 1 in db        	Validity:20260125/123923 - 20260127/10855
+StETofHitMaker:WARN    - St_etofAlignC::instance found table etofAlign with NRows = 1 in db       			Validity:20260125/201716 - 20260127/10855
+
+
+TFG
+left  - > i: 0  sector = 13     alpha = 2.09    DCA x = 0.13    y = -3.41       z = -109.57     Inner Z = 1.60  chi2/NDF = 354.95/117
+left  - > i: 1  sector = 13     alpha = 2.09    DCA x = 0.18    y = -3.58       z = -109.58     Inner Z = 1.55  chi2/NDF = 234.92/117
+left  - > i: 2  sector = 13     alpha = 2.09    DCA x = 8.40    y = 1.07        z = 203.35      Inner Z = 107.87        chi2/NDF = 15.45/21
+left  - > i: 3  sector = 13     alpha = 2.09    DCA x = 15.20   y = 2.77        z = 200.13      Inner Z = 116.42        chi2/NDF = 9.99/19
+left  - > i: 4  sector = 13     alpha = 2.09    DCA x = 21.59   y = 3.52        z = 205.80      Inner Z = 89.51 chi2/NDF = 7.40/17
+left  - > i: 5  sector = 13     alpha = 2.09    DCA x = 55.03   y = 1.47        z = 200.47      Inner Z = 70.74 chi2/NDF = 33.11/9
+left  - > i: 6  sector = 14     alpha = 2.62    DCA x = 13.78   y = 12.57       z = 197.93      Inner Z = 113.93        chi2/NDF = 54.05/71
+left  - > i: 7  sector = 14     alpha = 2.62    DCA x = 17.44   y = 14.02       z = 205.48      Inner Z = 66.22 chi2/NDF = 21.52/53
+left  - > i: 8  sector = 14     alpha = 2.62    DCA x = 15.63   y = 13.42       z = 198.96      Inner Z = 87.52 chi2/NDF = 26.24/49
+left  - > i: 9  sector = 14     alpha = 2.62    DCA x = 15.31   y = 13.94       z = 196.46      Inner Z = 106.11        chi2/NDF = 73.02/49
+left  - > i: 10 sector = 14     alpha = 2.62    DCA x = -1.33   y = 0.60        z = -115.38     Inner Z = 138.44        chi2/NDF = 63.78/15
+left  - > i: 11 sector = 14     alpha = 2.62    DCA x = -16.57  y = -12.90      z = 410.43      Inner Z = 27.20 chi2/NDF = 17.39/15
+left  - > i: 12 sector = 14     alpha = 2.62    DCA x = -65.64  y = 49.87       z = 253.90      Inner Z = 100.10        chi2/NDF = 6.53/5
+left  - > i: 13 sector = 15     alpha = 3.14    DCA x = 0.19    y = -3.26       z = -65.40      Inner Z = 85.59 chi2/NDF = 36.11/59
+left  - > i: 14 sector = 15     alpha = 3.14    DCA x = -0.99   y = 0.38        z = -96.66      Inner Z = 45.45 chi2/NDF = 26.12/59
+left  - > i: 15 sector = 15     alpha = 3.14    DCA x = 0.89    y = -4.85       z = -64.43      Inner Z = 1.39  chi2/NDF = 106.25/35
+left  - > i: 16 sector = 15     alpha = 3.14    DCA x = 0.89    y = -4.85       z = -64.43      Inner Z = 1.39  chi2/NDF = 106.24/35
+left  - > i: 17 sector = 16     alpha = 3.67    DCA x = 8.06    y = -7.88       z = 377.87      Inner Z = 132.58        chi2/NDF = 102.33/49
+left  - > i: 18 sector = 16     alpha = 3.67    DCA x = -0.51   y = 0.23        z = 130.68      Inner Z = 149.94        chi2/NDF = 11.75/39
+left  - > i: 19 sector = 16     alpha = 3.67    DCA x = 0.74    y = -5.89       z = 132.11      Inner Z = 142.56        chi2/NDF = 7.48/15
+left  - > i: 20 sector = 17     alpha = 4.19    DCA x = 0.33    y = -1.18       z = -70.91      Inner Z = 81.01 chi2/NDF = 85.94/51
+left  - > i: 21 sector = 17     alpha = 4.19    DCA x = -0.22   y = -2.16       z = 98.28       Inner Z = 105.65        chi2/NDF = 19.25/47
+left  - > i: 22 sector = 17     alpha = 4.19    DCA x = -2.89   y = 3.80        z = -110.13     Inner Z = 92.96 chi2/NDF = 91.02/45
+left  - > i: 23 sector = 17     alpha = 4.19    DCA x = 14.97   y = -14.33      z = 129.35      Inner Z = 163.24        chi2/NDF = 20.50/41
+left  - > i: 24 sector = 17     alpha = 4.19    DCA x = -0.87   y = -1.43       z = 121.45      Inner Z = 169.74        chi2/NDF = 21.48/25
+left  - > i: 25 sector = 17     alpha = 4.19    DCA x = 4.68    y = -11.84      z = 224.88      Inner Z = 66.78 chi2/NDF = 13.41/23
+left  - > i: 26 sector = 18     alpha = 4.71    DCA x = 0.56    y = -3.46       z = 97.20       Inner Z = 115.31        chi2/NDF = 19.42/59
+left  - > i: 27 sector = 18     alpha = 4.71    DCA x = 7.74    y = -14.25      z = -71.75      Inner Z = 1.41  chi2/NDF = 214.31/35
+left  - > i: 28 sector = 18     alpha = 4.71    DCA x = 9.58    y = -8.43       z = 222.10      Inner Z = 90.76 chi2/NDF = 124.07/25
+left  - > i: 29 sector = 18     alpha = 4.71    DCA x = 13.76   y = -10.06      z = 216.51      Inner Z = 84.09 chi2/NDF = 7.78/17
+left  - > i: 30 sector = 18     alpha = 4.71    DCA x = 19.99   y = 32.15       z = -93.73      Inner Z = 1.02  chi2/NDF = 20.18/11
+left  - > i: 31 sector = 19     alpha = 5.24    DCA x = -0.15   y = -1.21       z = -134.89     Inner Z = 7.91  chi2/NDF = 184.29/67
+left  - > i: 32 sector = 19     alpha = 5.24    DCA x = 8.44    y = -18.57      z = -60.63      Inner Z = -0.22 chi2/NDF = 46.26/61
+left  - > i: 33 sector = 19     alpha = 5.24    DCA x = 5.00    y = -19.41      z = 35.77       Inner Z = 23.81 chi2/NDF = 21.53/27
+left  - > i: 34 sector = 19     alpha = 5.24    DCA x = -0.25   y = -3.34       z = -110.72     Inner Z = 103.23        chi2/NDF = 21.53/15
+left  - > i: 35 sector = 19     alpha = 5.24    DCA x = 13.45   y = -9.51       z = -85.26      Inner Z = 69.22 chi2/NDF = 2.57/5
+left  - > i: 36 sector = 19     alpha = 5.24    DCA x = 142.86  y = -60.79      z = 156.31      Inner Z = 146.27        chi2/NDF = 0.86/3
+left  - > i: 37 sector = 20     alpha = 5.76    DCA x = 19.37   y = -17.82      z = 33.99       Inner Z = 12.47 chi2/NDF = 35.85/57
+left  - > i: 38 sector = 20     alpha = 5.76    DCA x = 0.66    y = -3.77       z = -103.81     Inner Z = 80.80 chi2/NDF = 47.50/53
+left  - > i: 39 sector = 20     alpha = 5.76    DCA x = -0.74   y = -3.36       z = -101.43     Inner Z = 95.88 chi2/NDF = 92.98/49
+left  - > i: 40 sector = 20     alpha = 5.76    DCA x = 10.39   y = 4.01        z = 221.60      Inner Z = 170.77        chi2/NDF = 9.00/17
+left  - > i: 41 sector = 20     alpha = 5.76    DCA x = 1.16    y = 0.35        z = -95.86      Inner Z = 11.46 chi2/NDF = 4.86/15
+left  - > i: 42 sector = 21     alpha = 0.00    DCA x = -0.01   y = 1.36        z = -201.07     Inner Z = 4.52  chi2/NDF = 152.83/49
+left  - > i: 43 sector = 21     alpha = 0.00    DCA x = 9.78    y = 11.46       z = 202.94      Inner Z = 20.13 chi2/NDF = 17.41/27
+left  - > i: 44 sector = 21     alpha = 0.00    DCA x = 7.35    y = 9.31        z = 210.92      Inner Z = 28.07 chi2/NDF = 10.13/21
+left  - > i: 45 sector = 22     alpha = 0.52    DCA x = -0.77   y = 1.07        z = -106.73     Inner Z = 2.25  chi2/NDF = 32.36/39
+left  - > i: 46 sector = 22     alpha = 0.52    DCA x = -0.79   y = 1.47        z = -115.20     Inner Z = 146.09        chi2/NDF = 68.15/23
+left  - > i: 47 sector = 22     alpha = 0.52    DCA x = -0.79   y = 1.46        z = -115.19     Inner Z = 146.09        chi2/NDF = 68.11/23
+left  - > i: 48 sector = 22     alpha = 0.52    DCA x = 1.44    y = 18.41       z = -196.76     Inner Z = 3.87  chi2/NDF = 17.04/13
+left  - > i: 49 sector = 23     alpha = 1.05    DCA x = 12.96   y = -14.26      z = 199.55      Inner Z = 112.84        chi2/NDF = 42.87/57
+left  - > i: 50 sector = 23     alpha = 1.05    DCA x = 12.96   y = -14.26      z = 199.54      Inner Z = 112.84        chi2/NDF = 42.88/57
+left  - > i: 51 sector = 23     alpha = 1.05    DCA x = 14.40   y = -16.10      z = 197.60      Inner Z = 101.53        chi2/NDF = 70.36/51
+left  - > i: 52 sector = 23     alpha = 1.05    DCA x = 11.87   y = -13.60      z = 195.13      Inner Z = 28.64 chi2/NDF = 13.36/37
+left  - > i: 53 sector = 23     alpha = 1.05    DCA x = 11.87   y = -13.60      z = 195.12      Inner Z = 28.64 chi2/NDF = 13.36/37
+left  - > i: 54 sector = 23     alpha = 1.05    DCA x = 14.03   y = -17.08      z = 197.55      Inner Z = 82.37 chi2/NDF = 19.24/35
+left  - > i: 55 sector = 23     alpha = 1.05    DCA x = 0.96    y = -7.59       z = -101.04     Inner Z = 33.21 chi2/NDF = 3.04/9
+left  - > i: 56 sector = 24     alpha = 1.57    DCA x = 0.39    y = 0.04        z = -119.98     Inner Z = 40.20 chi2/NDF = 105.41/57
+left  - > i: 57 sector = 24     alpha = 1.57    DCA x = -0.40   y = -2.59       z = -107.60     Inner Z = 33.22 chi2/NDF = 66.00/55
+left  - > i: 58 sector = 24     alpha = 1.57    DCA x = 0.04    y = -2.58       z = -109.60     Inner Z = 109.29        chi2/NDF = 23.21/35
+left  - > i: 59 sector = 24     alpha = 1.57    DCA x = -0.11   y = -1.23       z = -33.63      Inner Z = 112.97        chi2/NDF = 31.02/29
+left  - > i: 60 sector = 24     alpha = 1.57    DCA x = -2.27   y = 2.83        z = -106.34     Inner Z = 0.21  chi2/NDF = 32.19/29
+left  - > i: 61 sector = 24     alpha = 1.57    DCA x = 16.34   y = -7.88       z = 191.86      Inner Z = 79.16 chi2/NDF = 71.91/19
+left  - > i: 62 sector = 24     alpha = 1.57    DCA x = 29.79   y = 124.27      z = 118.98      Inner Z = 119.08        chi2/NDF = 3.13/5
+ - sca_right.size: 29
+right - > i: 0  sector = 1      alpha = 1.05    DCA x = -0.27   y = -2.73       z = -105.70     Inner Z = -68.66        chi2/NDF = 23.51/33
+right - > i: 1  sector = 1      alpha = 1.05    DCA x = 17.07   y = -15.88      z = 237.70      Inner Z = -116.03       chi2/NDF = 18.68/19
+right - > i: 2  sector = 1      alpha = 1.05    DCA x = 20.85   y = -16.01      z = 161.24      Inner Z = -111.44       chi2/NDF = 9.79/7
+right - > i: 3  sector = 3      alpha = 0.00    DCA x = -0.14   y = -1.25       z = -106.34     Inner Z = -125.28       chi2/NDF = 18.50/41
+right - > i: 4  sector = 4      alpha = 5.76    DCA x = 10.77   y = 3.35        z = 212.64      Inner Z = -1.58 chi2/NDF = 17.98/17
+right - > i: 5  sector = 5      alpha = 5.24    DCA x = 8.59    y = -18.62      z = -61.69      Inner Z = -24.98        chi2/NDF = 25.80/53
+right - > i: 6  sector = 5      alpha = 5.24    DCA x = 64.96   y = 1.22        z = 224.08      Inner Z = -51.78        chi2/NDF = 22.04/7
+right - > i: 7  sector = 6      alpha = 4.71    DCA x = -1.61   y = 1.74        z = -104.90     Inner Z = -104.84       chi2/NDF = 95.08/131
+right - > i: 8  sector = 6      alpha = 4.71    DCA x = 0.05    y = 2.68        z = -104.07     Inner Z = -63.66        chi2/NDF = 42.25/89
+right - > i: 9  sector = 7      alpha = 4.19    DCA x = -0.11   y = -1.80       z = 209.93      Inner Z = -67.89        chi2/NDF = 55.60/25
+right - > i: 10 sector = 7      alpha = 4.19    DCA x = -0.11   y = -1.80       z = 209.97      Inner Z = -67.89        chi2/NDF = 55.56/25
+right - > i: 11 sector = 7      alpha = 4.19    DCA x = 4.15    y = -9.93       z = 174.17      Inner Z = -96.65        chi2/NDF = 18.25/23
+right - > i: 12 sector = 8      alpha = 3.67    DCA x = -2.00   y = -4.26       z = 233.72      Inner Z = -43.41        chi2/NDF = 31.31/47
+right - > i: 13 sector = 8      alpha = 3.67    DCA x = -2.40   y = 62.38       z = -130.59     Inner Z = -91.19        chi2/NDF = 46.44/47
+right - > i: 14 sector = 8      alpha = 3.67    DCA x = -2.40   y = 62.38       z = -130.59     Inner Z = -91.19        chi2/NDF = 46.44/47
+right - > i: 15 sector = 8      alpha = 3.67    DCA x = -2.87   y = -7.00       z = 65.27       Inner Z = -25.23        chi2/NDF = 12.29/19
+right - > i: 16 sector = 8      alpha = 3.67    DCA x = -2.34   y = -6.06       z = 66.80       Inner Z = -3.54 chi2/NDF = 48.20/17
+right - > i: 17 sector = 9      alpha = 3.14    DCA x = -1.34   y = 2.75        z = -95.17      Inner Z = -15.51        chi2/NDF = 12.51/15
+right - > i: 18 sector = 9      alpha = 3.14    DCA x = 84.52   y = -55.89      z = -24.79      Inner Z = -73.69        chi2/NDF = 23.70/7
+right - > i: 19 sector = 10     alpha = 2.62    DCA x = 12.96   y = 12.28       z = 189.50      Inner Z = -71.23        chi2/NDF = 34.82/41
+right - > i: 20 sector = 10     alpha = 2.62    DCA x = 13.79   y = 12.92       z = 174.02      Inner Z = -192.86       chi2/NDF = 7.86/17
+right - > i: 21 sector = 10     alpha = 2.62    DCA x = 13.74   y = 12.90       z = 174.46      Inner Z = -192.86       chi2/NDF = 7.80/17
+right - > i: 22 sector = 11     alpha = 2.09    DCA x = 17.31   y = 3.57        z = 195.08      Inner Z = -48.70        chi2/NDF = 15.49/17
+right - > i: 23 sector = 11     alpha = 2.09    DCA x = -0.29   y = -1.91       z = -107.63     Inner Z = -20.71        chi2/NDF = 8.73/13
+right - > i: 24 sector = 11     alpha = 2.09    DCA x = 6.14    y = 0.86        z = 260.02      Inner Z = -178.77       chi2/NDF = 2.85/9
+right - > i: 25 sector = 12     alpha = 1.57    DCA x = 0.25    y = -0.34       z = -119.44     Inner Z = -39.92        chi2/NDF = 26.78/27
+right - > i: 26 sector = 12     alpha = 1.57    DCA x = 2.50    y = -7.02       z = -105.02     Inner Z = -19.51        chi2/NDF = 127.91/27
+right - > i: 27 sector = 12     alpha = 1.57    DCA x = 29.49   y = -5.41       z = 194.46      Inner Z = -129.68       chi2/NDF = 26.85/9
+right - > i: 28 sector = 12     alpha = 1.57    DCA x = 7.42    y = -4.34       z = 180.81      Inner Z = -136.66       chi2/NDF = 8.88/3
+
+TFG26m
+ ------- FindTracks - done - dca test -------
+left  - > i: 0  sector = 13     alpha = 2.09    DCA x = 0.91    y = -3.19       z = -108.32     Inner Z = 1.60  chi2/NDF = 354.95/117
+left  - > i: 1  sector = 13     alpha = 2.09    DCA x = 0.97    y = -3.35       z = -108.32     Inner Z = 1.55  chi2/NDF = 234.92/117
+left  - > i: 2  sector = 13     alpha = 2.09    DCA x = 7.78    y = 2.76        z = -3.43       Inner Z = 107.87        chi2/NDF = 15.45/21
+left  - > i: 3  sector = 13     alpha = 2.09    DCA x = 14.69   y = 4.40        z = -5.85       Inner Z = 116.42        chi2/NDF = 9.99/19
+left  - > i: 4  sector = 13     alpha = 2.09    DCA x = 21.20   y = 5.05        z = -3.17       Inner Z = 89.51 chi2/NDF = 7.40/17
+left  - > i: 5  sector = 13     alpha = 2.09    DCA x = 54.97   y = 2.48        z = 0.32        Inner Z = 70.74 chi2/NDF = 33.11/9
+left  - > i: 6  sector = 14     alpha = 2.62    DCA x = 12.99   y = 13.33       z = -4.32       Inner Z = 113.93        chi2/NDF = 54.05/71
+left  - > i: 7  sector = 14     alpha = 2.62    DCA x = 16.70   y = 14.84       z = 3.34        Inner Z = 66.22 chi2/NDF = 21.52/53
+left  - > i: 8  sector = 14     alpha = 2.62    DCA x = 14.86   y = 14.20       z = 4.27        Inner Z = 87.52 chi2/NDF = 26.24/49
+left  - > i: 9  sector = 14     alpha = 2.62    DCA x = 14.54   y = 14.69       z = -3.24       Inner Z = 106.11        chi2/NDF = 73.02/49
+left  - > i: 10 sector = 14     alpha = 2.62    DCA x = -0.38   y = 0.97        z = -112.27     Inner Z = 138.44        chi2/NDF = 63.78/15
+left  - > i: 11 sector = 14     alpha = 2.62    DCA x = -17.87  y = -10.84      z = -130.13     Inner Z = 27.20 chi2/NDF = 17.39/15
+left  - > i: 12 sector = 14     alpha = 2.62    DCA x = -62.79  y = 53.34       z = 251.46      Inner Z = 100.10        chi2/NDF = 6.53/5
+left  - > i: 13 sector = 15     alpha = 3.14    DCA x = 1.11    y = -2.91       z = -64.25      Inner Z = 85.59 chi2/NDF = 36.11/59
+left  - > i: 14 sector = 15     alpha = 3.14    DCA x = -0.18   y = 0.62        z = -95.74      Inner Z = 45.45 chi2/NDF = 26.12/59
+left  - > i: 15 sector = 15     alpha = 3.14    DCA x = 1.84    y = -4.45       z = -63.23      Inner Z = 1.39  chi2/NDF = 106.25/35
+left  - > i: 16 sector = 15     alpha = 3.14    DCA x = 1.84    y = -4.45       z = -63.23      Inner Z = 1.39  chi2/NDF = 106.24/35
+left  - > i: 17 sector = 16     alpha = 3.67    DCA x = 9.07    y = -6.43       z = 374.90      Inner Z = 132.58        chi2/NDF = 102.33/49
+left  - > i: 18 sector = 16     alpha = 3.67    DCA x = -0.03   y = 0.29        z = 130.78      Inner Z = 149.94        chi2/NDF = 11.75/39
+left  - > i: 19 sector = 16     alpha = 3.67    DCA x = 1.46    y = -5.71       z = 132.25      Inner Z = 142.56        chi2/NDF = 7.48/15
+left  - > i: 20 sector = 17     alpha = 4.19    DCA x = -0.42   y = -0.77       z = -72.94      Inner Z = 81.01 chi2/NDF = 85.94/51
+left  - > i: 21 sector = 17     alpha = 4.19    DCA x = 0.02    y = -2.16       z = 98.31       Inner Z = 105.65        chi2/NDF = 19.25/47
+left  - > i: 22 sector = 17     alpha = 4.19    DCA x = -1.86   y = 4.26        z = -107.43     Inner Z = 92.96 chi2/NDF = 91.02/45
+left  - > i: 23 sector = 17     alpha = 4.19    DCA x = 15.99   y = -13.07      z = 129.73      Inner Z = 163.24        chi2/NDF = 20.50/41
+left  - > i: 24 sector = 17     alpha = 4.19    DCA x = 0.35    y = -0.45       z = 122.70      Inner Z = 169.74        chi2/NDF = 21.48/25
+left  - > i: 25 sector = 17     alpha = 4.19    DCA x = 5.59    y = -11.38      z = 47.45       Inner Z = 66.78 chi2/NDF = 13.41/23
+left  - > i: 26 sector = 18     alpha = 4.71    DCA x = 1.69    y = -2.75       z = 97.38       Inner Z = 115.31        chi2/NDF = 19.42/59
+left  - > i: 27 sector = 18     alpha = 4.71    DCA x = 8.71    y = -13.62      z = -70.42      Inner Z = 1.41  chi2/NDF = 214.31/35
+left  - > i: 28 sector = 18     alpha = 4.71    DCA x = 10.50   y = -7.00       z = 48.45       Inner Z = 90.76 chi2/NDF = 124.07/25
+left  - > i: 29 sector = 18     alpha = 4.71    DCA x = 14.58   y = -8.64       z = 48.26       Inner Z = 84.09 chi2/NDF = 7.78/17
+left  - > i: 30 sector = 18     alpha = 4.71    DCA x = 19.21   y = 32.61       z = -94.32      Inner Z = 1.02  chi2/NDF = 20.18/11
+left  - > i: 31 sector = 19     alpha = 5.24    DCA x = -0.09   y = -1.22       z = -134.75     Inner Z = 7.91  chi2/NDF = 184.29/67
+left  - > i: 32 sector = 19     alpha = 5.24    DCA x = 9.44    y = -18.04      z = -60.03      Inner Z = -0.22 chi2/NDF = 46.26/61
+left  - > i: 33 sector = 19     alpha = 5.24    DCA x = 5.72    y = -19.19      z = 35.63       Inner Z = 23.81 chi2/NDF = 21.53/27
+left  - > i: 34 sector = 19     alpha = 5.24    DCA x = -0.07   y = -3.35       z = -110.05     Inner Z = 103.23        chi2/NDF = 21.53/15
+left  - > i: 35 sector = 19     alpha = 5.24    DCA x = 14.26   y = -8.02       z = -83.04      Inner Z = 69.22 chi2/NDF = 2.57/5
+left  - > i: 36 sector = 19     alpha = 5.24    DCA x = 143.59  y = -59.02      z = 155.59      Inner Z = 146.27        chi2/NDF = 0.86/3
+left  - > i: 37 sector = 20     alpha = 5.76    DCA x = 20.35   y = -16.62      z = 33.72       Inner Z = 12.47 chi2/NDF = 35.85/57
+left  - > i: 38 sector = 20     alpha = 5.76    DCA x = 1.76    y = -3.15       z = -102.06     Inner Z = 80.80 chi2/NDF = 47.50/53
+left  - > i: 39 sector = 20     alpha = 5.76    DCA x = -1.39   y = -3.07       z = -102.50     Inner Z = 95.88 chi2/NDF = 92.98/49
+left  - > i: 40 sector = 20     alpha = 5.76    DCA x = 9.61    y = 5.37        z = 44.12       Inner Z = 170.77        chi2/NDF = 9.00/17
+left  - > i: 41 sector = 20     alpha = 5.76    DCA x = 0.41    y = 0.76        z = -97.09      Inner Z = 11.46 chi2/NDF = 4.86/15
+left  - > i: 42 sector = 21     alpha = 0.00    DCA x = 0.08    y = 1.36        z = -200.75     Inner Z = 4.52  chi2/NDF = 152.83/49
+left  - > i: 43 sector = 21     alpha = 0.00    DCA x = 9.03    y = 12.02       z = 47.45       Inner Z = 20.13 chi2/NDF = 17.41/27
+left  - > i: 44 sector = 21     alpha = 0.00    DCA x = 6.61    y = 9.81        z = 47.76       Inner Z = 28.07 chi2/NDF = 10.13/21
+left  - > i: 45 sector = 22     alpha = 0.52    DCA x = -0.19   y = 1.17        z = -105.61     Inner Z = 2.25  chi2/NDF = 32.36/39
+left  - > i: 46 sector = 22     alpha = 0.52    DCA x = -0.23   y = 1.55        z = -114.08     Inner Z = 146.09        chi2/NDF = 68.15/23
+left  - > i: 47 sector = 22     alpha = 0.52    DCA x = -0.23   y = 1.55        z = -114.07     Inner Z = 146.09        chi2/NDF = 68.11/23
+left  - > i: 48 sector = 22     alpha = 0.52    DCA x = 1.49    y = 18.40       z = -196.63     Inner Z = 3.87  chi2/NDF = 17.04/13
+left  - > i: 49 sector = 23     alpha = 1.05    DCA x = 13.92   y = -13.22      z = -0.01       Inner Z = 112.84        chi2/NDF = 42.87/57
+left  - > i: 50 sector = 23     alpha = 1.05    DCA x = 13.92   y = -13.22      z = 0.01        Inner Z = 112.84        chi2/NDF = 42.88/57
+left  - > i: 51 sector = 23     alpha = 1.05    DCA x = 15.33   y = -15.14      z = -8.88       Inner Z = 101.53        chi2/NDF = 70.36/51
+left  - > i: 52 sector = 23     alpha = 1.05    DCA x = 12.79   y = -12.65      z = 50.06       Inner Z = 28.64 chi2/NDF = 13.36/37
+left  - > i: 53 sector = 23     alpha = 1.05    DCA x = 12.79   y = -12.65      z = 50.06       Inner Z = 28.64 chi2/NDF = 13.36/37
+left  - > i: 54 sector = 23     alpha = 1.05    DCA x = 14.94   y = -16.22      z = -3.96       Inner Z = 82.37 chi2/NDF = 19.24/35
+left  - > i: 55 sector = 23     alpha = 1.05    DCA x = 1.58    y = -7.46       z = -99.57      Inner Z = 33.21 chi2/NDF = 3.04/9
+left  - > i: 56 sector = 24     alpha = 1.57    DCA x = 0.04    y = 0.14        z = -120.44     Inner Z = 40.20 chi2/NDF = 105.41/57
+left  - > i: 57 sector = 24     alpha = 1.57    DCA x = -1.08   y = -2.27       z = -108.41     Inner Z = 33.22 chi2/NDF = 66.00/55
+left  - > i: 58 sector = 24     alpha = 1.57    DCA x = 1.21    y = -1.77       z = -106.28     Inner Z = 109.29        chi2/NDF = 23.21/35
+left  - > i: 59 sector = 24     alpha = 1.57    DCA x = -0.15   y = -1.23       z = -33.74      Inner Z = 112.97        chi2/NDF = 31.02/29
+left  - > i: 60 sector = 24     alpha = 1.57    DCA x = -1.30   y = 3.22        z = -105.65     Inner Z = 0.21  chi2/NDF = 32.19/29
+left  - > i: 61 sector = 24     alpha = 1.57    DCA x = 16.92   y = -6.26       z = 7.69        Inner Z = 79.16 chi2/NDF = 71.91/19
+left  - > i: 62 sector = 24     alpha = 1.57    DCA x = 28.88   y = 124.48      z = 118.98      Inner Z = 119.08        chi2/NDF = 3.13/5
+ - sca_right.size: 29
+right - > i: 0  sector = 1      alpha = 1.05    DCA x = -0.24   y = -2.73       z = -105.68     Inner Z = -68.66        chi2/NDF = 23.51/33
+right - > i: 1  sector = 1      alpha = 1.05    DCA x = 17.85   y = -14.93      z = 17.19       Inner Z = -116.03       chi2/NDF = 18.68/19
+right - > i: 2  sector = 1      alpha = 1.05    DCA x = 21.51   y = -15.04      z = -10.26      Inner Z = -111.44       chi2/NDF = 9.79/7
+right - > i: 3  sector = 3      alpha = 0.00    DCA x = -0.10   y = -1.25       z = -106.35     Inner Z = -125.28       chi2/NDF = 18.50/41
+right - > i: 4  sector = 4      alpha = 5.76    DCA x = 10.05   y = 4.82        z = 48.41       Inner Z = -1.58 chi2/NDF = 17.98/17
+right - > i: 5  sector = 5      alpha = 5.24    DCA x = 9.60    y = -18.08      z = -61.07      Inner Z = -24.98        chi2/NDF = 25.80/53
+right - > i: 6  sector = 5      alpha = 5.24    DCA x = 64.92   y = 2.17        z = 12.24       Inner Z = -51.78        chi2/NDF = 22.04/7
+right - > i: 7  sector = 6      alpha = 4.71    DCA x = -0.71   y = 2.06        z = -104.90     Inner Z = -104.84       chi2/NDF = 95.08/131
+right - > i: 8  sector = 6      alpha = 4.71    DCA x = 0.15    y = 2.68        z = -104.00     Inner Z = -63.66        chi2/NDF = 42.25/89
+right - > i: 9  sector = 7      alpha = 4.19    DCA x = -0.46   y = -1.70       z = -99.41      Inner Z = -67.89        chi2/NDF = 55.60/25
+right - > i: 10 sector = 7      alpha = 4.19    DCA x = -0.46   y = -1.71       z = -99.42      Inner Z = -67.89        chi2/NDF = 55.56/25
+right - > i: 11 sector = 7      alpha = 4.19    DCA x = 5.13    y = -9.38       z = 29.33       Inner Z = -96.65        chi2/NDF = 18.25/23
+right - > i: 12 sector = 8      alpha = 3.67    DCA x = -3.00   y = -3.38       z = -100.14     Inner Z = -43.41        chi2/NDF = 31.31/47
+right - > i: 13 sector = 8      alpha = 3.67    DCA x = -2.03   y = 62.39       z = -130.49     Inner Z = -91.19        chi2/NDF = 46.44/47
+right - > i: 14 sector = 8      alpha = 3.67    DCA x = -2.03   y = 62.39       z = -130.49     Inner Z = -91.19        chi2/NDF = 46.44/47
+right - > i: 15 sector = 8      alpha = 3.67    DCA x = -3.72   y = -6.52       z = 66.27       Inner Z = -25.23        chi2/NDF = 12.29/19
+right - > i: 16 sector = 8      alpha = 3.67    DCA x = -3.17   y = -5.60       z = 67.80       Inner Z = -3.54 chi2/NDF = 48.20/17
+right - > i: 17 sector = 9      alpha = 3.14    DCA x = -0.65   y = 2.91        z = -94.41      Inner Z = -15.51        chi2/NDF = 12.51/15
+right - > i: 18 sector = 9      alpha = 3.14    DCA x = 85.47   y = -54.39      z = -26.66      Inner Z = -73.69        chi2/NDF = 23.70/7
+right - > i: 19 sector = 10     alpha = 2.62    DCA x = 12.23   y = 12.96       z = 49.11       Inner Z = -71.23        chi2/NDF = 34.82/41
+right - > i: 20 sector = 10     alpha = 2.62    DCA x = 13.09   y = 13.58       z = 43.04       Inner Z = -192.86       chi2/NDF = 7.86/17
+right - > i: 21 sector = 10     alpha = 2.62    DCA x = 13.04   y = 13.56       z = 43.33       Inner Z = -192.86       chi2/NDF = 7.80/17
+right - > i: 22 sector = 11     alpha = 2.09    DCA x = 16.85   y = 5.03        z = 51.21       Inner Z = -48.70        chi2/NDF = 15.49/17
+right - > i: 23 sector = 11     alpha = 2.09    DCA x = 0.41    y = -1.74       z = -106.54     Inner Z = -20.71        chi2/NDF = 8.73/13
+right - > i: 24 sector = 11     alpha = 2.09    DCA x = 5.41    y = 2.41        z = -62.93      Inner Z = -178.77       chi2/NDF = 2.85/9
+right - > i: 25 sector = 12     alpha = 1.57    DCA x = -0.07   y = -0.26       z = -119.84     Inner Z = -39.92        chi2/NDF = 26.78/27
+right - > i: 26 sector = 12     alpha = 1.57    DCA x = 3.59    y = -6.40       z = -104.20     Inner Z = -19.51        chi2/NDF = 127.91/27
+right - > i: 27 sector = 12     alpha = 1.57    DCA x = 29.65   y = -4.14       z = -0.23       Inner Z = -129.68       chi2/NDF = 26.85/9
+right - > i: 28 sector = 12     alpha = 1.57    DCA x = 7.96    y = -2.52       z = 46.09       Inner Z = -136.66       chi2/NDF = 8.88/3
+
