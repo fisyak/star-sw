@@ -71,10 +71,10 @@ Double_t rowVolume(Double_t *x, Double_t *p) {
   Double_t Volume = 0.0;
   if (row == 0) return Volume;
   Double_t dZ = p[0];
-  Double_t dY = St_tpcPadConfigC::instance()->innerSectorRowPitch1();
+  Double_t dY =  St_tpcPadConfigC::instance()->innerSectorRowPitch1(); // St_tpcPadConfigC::instance()->innerSectorPadLength(); //
   Double_t dX = St_tpcPadConfigC::instance()->padsPerRow(1,row)*St_tpcPadConfigC::instance()->innerSectorPadPitch();
   if (row > St_tpcPadConfigC::instance()->innerPadRows(20)) {
-    dY = St_tpcPadConfigC::instance()->outerSectorRowPitch();
+    dY = St_tpcPadConfigC::instance()->outerSectorRowPitch();; // St_tpcPadConfigC::instance()->outerSectorPadLength();//  
     dX = St_tpcPadConfigC::instance()->padsPerRow(1,row)*St_tpcPadConfigC::instance()->outerSectorPadPitch();
   }
   Volume = 12*dX*dY*dZ;
@@ -134,6 +134,7 @@ TF1 *SCFun() {
   static TF1 *f = 0;
   if (! f) {
     f = new TF1("SC", SpaceCharge, -72.5, 72.5, 3);
+    f->SetNpx(145);
     f->SetParName(0,"case");
     f->FixParameter(0,0.0);
     f->SetParName(1,"scale");
@@ -147,7 +148,7 @@ TF1 *SCFun() {
 TF2 *RowVolume() {
   static TF2 *f = 0;
   if (! f) {
-    f = new TF2("RowVolue", rowVolume, -210, 210, -72.5, 72.5, 1);
+    f = new TF2("RowVolue", rowVolume, -210, 210, -72, 72, 1);
     f->SetNpx(210);
     f->SetNpy(145);
     f->SetParName(0,"dZ");
@@ -212,7 +213,7 @@ void Adc2Sc(Int_t nx = 0, Int_t ny = 0){
       TAxis *ay = dESC->GetYaxis();
       Int_t nx = ax->GetNbins();
       Int_t ny = ay->GetNbins();
-      dESCy = new TH1D("dESCy","<dE> [keV/cm^{3}/event] ; row (+W/-E)", ny, ay->GetXmin(), ay->GetXmax());
+      dESCy = new TH1D("dESCy","<dE> [eV/cm^{3}/event] ; row (+W/-E)", ny, ay->GetXmin(), ay->GetXmax());
       for (Int_t iy = 1; iy <= ny; iy++) {
 	Double_t row = ay->GetBinCenter(iy);
 	Double_t dETavY = 0.0;
@@ -228,7 +229,7 @@ void Adc2Sc(Int_t nx = 0, Int_t ny = 0){
 	  dETavY += dET;
 	}
 	if (nyentry > 0) {
-	  dESCy->SetBinContent(iy, dETavY/nyentry);
+	  dESCy->SetBinContent(iy, 1e3*dETavY/nyentry/noEvents);
 	}
       }
      } else {    // Real Data
@@ -244,10 +245,10 @@ void Adc2Sc(Int_t nx = 0, Int_t ny = 0){
       Int_t ny = ay->GetNbins();
       TH2F *dESC = new TH2F(*AdcSC);
       dESC->SetName("dESC");
-      TString Title("dE [keV/cm^{3}/event] ; Z [cm] ; row (+W/-E)");
+      TString Title("dE [keV/cm^{3} ; Z [cm] ; row (+W/-E)");
       dESC->SetTitle(Title);
       dESC->Reset();
-      dESCy = new TH1D("dESCy","<dE> [keV/cm^{3}/event] ; row (+W/-E)", ny, ay->GetXmin(), ay->GetXmax());
+      dESCy = new TH1D("dESCy","<dE> [eV/cm^{3}/event] ; row (+W/-E)", ny, ay->GetXmin(), ay->GetXmax());
       for (Int_t iy = 1; iy <= ny; iy++) {
 	Double_t row = ay->GetBinCenter(iy);
 	Double_t dETavY = 0.0;
@@ -268,7 +269,7 @@ void Adc2Sc(Int_t nx = 0, Int_t ny = 0){
 	  dESC->SetBinContent(ix,iy,dET);
 	}
 	if (nyentry > 0) {
-	  dESCy->SetBinContent(iy, dETavY/nyentry);
+	  dESCy->SetBinContent(iy, 1e3*dETavY/nyentry/noEvents);
 	}
       }
     }
@@ -293,18 +294,18 @@ void Adc2Sc(Int_t nx = 0, Int_t ny = 0){
     Double_t west = dESCy->Integral(73,145);
     SC->FixParameter(2,-2.0);
     SC->SetParameter(1,east);
-    dESCy->Fit(SC,"er","",-72.5,-0.5);
+    dESCy->Fit(SC,"er","",-72,-1);
     SC->SetParameter(1,west);
-    dESCy->Fit(SC,"er+","",0.5,72.5);
+    dESCy->Fit(SC,"er+","",10,72);
     SC->SetLineColor(2);
     SC->SetParameter(0,2);
     SC->ReleaseParameter(2);
-    dESCy->Fit(SC,"er+","",-72.5,-0.5);
+    dESCy->Fit(SC,"er+","",-72,-10);
     l2->AddEntry(SC,Form("East slope = %7.3f +/- %6.3f", SC->GetParameter(2), SC->GetParError(2))); 
     //    summary->AddText(Form("East slope = %7.3f +/- %6.3f", SC->GetParameter(2), SC->GetParError(2))); 
     Line += Form("\tEast slope = %7.3f +/- %6.3f", SC->GetParameter(2), SC->GetParError(2));
     SC->SetLineColor(3);
-    dESCy->Fit(SC,"er+","",0.5,72.5);
+    dESCy->Fit(SC,"er+","",15,72);
     l2->AddEntry(SC,Form("West slope = %7.3f +/- %6.3f", SC->GetParameter(2), SC->GetParError(2))); 
     //    summary->AddText(Form("west slope = %7.3f +/- %6.3f", SC->GetParameter(2), SC->GetParError(2))); 
     Line += Form("\tWest slope = %7.3f +/- %6.3f", SC->GetParameter(2), SC->GetParError(2));
