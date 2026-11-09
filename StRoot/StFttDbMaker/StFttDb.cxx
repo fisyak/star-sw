@@ -876,6 +876,17 @@ int StFttDb::loadGeometryFromDb( St_Survey *stgcOnTpc, St_Survey *stationOnStgc,
     // so placeholder + table reproduces the true position exactly, and it is the same
     // quantity AGML itself computes -- the geometry and the hit positions then come
     // from one source instead of two that have to be kept in step by hand.
+    // stgcOnTpc and stationOnStgc are additive corrections on top of
+    // pentOnStation, so a missing one is survivable -- but it must not be
+    // SILENT. Warned once here rather than inside fttSurveyRow, which is called
+    // per row and would repeat itself four times for stationOnStgc.
+    if ( !stgcOnTpc )
+        LOG_WARN << "StFttDb: no Geometry/ftt/stgcOnTpc table; the global "
+                 << "sTGC-on-TPC term is IDENTITY" << endm;
+    if ( !stationOnStgc )
+        LOG_WARN << "StFttDb: no Geometry/ftt/stationOnStgc table; the "
+                 << "per-station terms are IDENTITY" << endm;
+
     Survey_st *glob = fttSurveyRow( stgcOnTpc, 0, "stgcOnTpc" );
     const int quad2pent[4] = { 0, 3, 2, 1 };   // StFttDb A,B,C,D -> AGML pent order A,D,C,B
 
@@ -896,7 +907,13 @@ int StFttDb::loadGeometryFromDb( St_Survey *stgcOnTpc, St_Survey *stationOnStgc,
     mGeoFromDb = true;
 
     const char *qn[4] = { "A", "B", "C", "D" };
-    LOG_INFO << "StFttDb: quadrant offsets built from AGML placeholder + DB survey tables"
+    // Name which tables actually contributed. This line used to say "built from
+    // ... DB survey tables" whatever happened, which was untrue the moment one
+    // of the three was missing and identity was used in its place.
+    LOG_INFO << "StFttDb: quadrant offsets built from AGML placeholder + DB survey"
+             << " (stgcOnTpc " << ( stgcOnTpc ? "used" : "IDENTITY" )
+             << ", stationOnStgc " << ( stationOnStgc ? "used" : "IDENTITY" )
+             << ", pentOnStation used)"
              << " (hardcoded origins NOT used)" << endm;
     for ( size_t jq = 0; jq < nQuadPerPlane; jq++ )
         LOG_INFO << "  quad " << qn[jq]

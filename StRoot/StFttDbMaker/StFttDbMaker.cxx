@@ -86,6 +86,12 @@ void StFttDbMaker::loadGeometry(){
                         "Geometry/ftt/pentOnStation" };
   St_Survey *t[3] = { 0, 0, 0 };
   for ( int i = 0; i < 3; i++ ) {
+    // A null table is passed on deliberately rather than aborting here: the
+    // three are not equally important, and loadGeometryFromDb() is the one that
+    // knows which. pentOnStation carries the per-quadrant position and its
+    // absence triggers a wholesale fallback to the hardcoded survey; the other
+    // two are additive and degrade to identity, each with its own warning. A
+    // short or empty table is caught per row by fttSurveyRow().
     TDataSet *ds = GetDataBase( nm[i] );
     if ( !ds ) { LOG_WARN << "Cannot access " << nm[i] << endm; continue; }
     const char *leaf = strrchr( nm[i], '/' ) + 1;
