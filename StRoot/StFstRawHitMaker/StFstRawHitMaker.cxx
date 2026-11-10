@@ -272,13 +272,6 @@ Int_t StFstRawHitMaker::InitRun(Int_t runnumber)
 }
 
 
-/**
- * Make(): main functional part of the raw hit maker, which contains the below three functions:
- * (1) un-pack the FST raw ADC data (ZS or non-ZS) from daq data via daq reader;
- * (2) pedestal subtraction for the non-ZS data and dynamical common-mode noise calculation;
- * (3) raw hit decision and ADC-to-dE/dx translation, then written to corresponding collection in physics mode;
- *     While in offline calibrarion mode, ADC information was directly saved without any raw hit processing.
- */
 Int_t StFstRawHitMaker::Finish()
 {
     if (mMaxRawHits > 0) {
@@ -350,6 +343,13 @@ Int_t StFstRawHitMaker::readMuDst()
 }
 
 //____________________________________________________________________________
+/**
+ * Make(): main functional part of the raw hit maker, which contains the below three functions:
+ * (1) un-pack the FST raw ADC data (ZS or non-ZS) from daq data via daq reader;
+ * (2) pedestal subtraction for the non-ZS data and dynamical common-mode noise calculation;
+ * (3) raw hit decision and ADC-to-dE/dx translation, then written to corresponding collection in physics mode;
+ *     While in offline calibrarion mode, ADC information was directly saved without any raw hit processing.
+ */
 Int_t StFstRawHitMaker::Make()
 {
     Int_t ierr = kStOk;
