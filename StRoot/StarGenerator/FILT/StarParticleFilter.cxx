@@ -9,15 +9,17 @@ StarParticleFilter::StarParticleFilter( const char* name ) : StarFilterMaker(nam
 
 }
 //______________________________________________________________________________________________
-void StarParticleFilter::AddTrigger( int id, double mnpt, double mxpt, double mneta, double mxeta, int idm )
+void StarParticleFilter::AddTrigger( int id, double mnpt, double mxpt, double mneta, double mxeta, int idm, int count )
 {
-  mTriggers.push_back( Trigger_t( id, mnpt, mxpt, mneta, mxeta, idm ) );
+  mTriggers.push_back( Trigger_t( id, mnpt, mxpt, mneta, mxeta, idm, count ) );
 }
 //______________________________________________________________________________________________
 int StarParticleFilter::Filter( StarGenEvent *_event ) 
 {
   // Get a reference to the current event
   StarGenEvent& event = (_event)? *_event : *mEvent;
+
+  std::map<int,int> trigcount; // count number of times each trigger fires
 
   // Loop over tracks to find particles of interest
   int npart = event.GetNumberOfParticles();
@@ -35,10 +37,15 @@ int StarParticleFilter::Filter( StarGenEvent *_event )
       TLorentzVector momentum = part->momentum();
       double pT  = momentum.Perp();
       if ( pT < 0.05 ) continue;
+
       double eta = momentum.Eta();
+
+      int trigid = 0;
 
       for ( auto trig : mTriggers )
 	{
+	  trigid++;
+
 	  if ( trig.pdgid != part->GetId() )              continue;
 	  if ( trig.pdgid_parent ) {
 	    int idx = part->GetFirstMother();
@@ -49,6 +56,13 @@ int StarParticleFilter::Filter( StarGenEvent *_event )
 	  if ( pT  > trig.ptmx && trig.ptmn < trig.ptmx ) continue;
 	  if ( eta < trig.etamn )                         continue;
 	  if ( eta > trig.etamx )                         continue;
+
+
+	  int count = ++trigcount[trigid] ;                          // increment count for firing this trigger
+
+	  if ( count < trig.count )                       continue;   // skip if we have not reached the minimum number of triggers
+
+	  LOG_INFO << GetName() << " kAccept at count=" << count << endm;
 
 	  return StarGenEvent::kAccept;	  
 	}

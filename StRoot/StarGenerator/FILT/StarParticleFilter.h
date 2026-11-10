@@ -26,7 +26,7 @@ public:
   /// @param _etamn Minimum eta of particle
   /// @param _etamx Maximum eta of particle 
   /// @param _pdgidParent The PDG id of the parent particle (0 accepts any)
-  void AddTrigger( int _pdgid, double _ptmn=0, double _ptmx=-1, double _etamn=-1, double _etamx=1, int _pdgidParent=0 );
+  void AddTrigger( int _pdgid, double _ptmn=0, double _ptmx=-1, double _etamn=-1, double _etamx=1, int _pdgidParent=0, int _count=1 );
 
 private:
 protected:
@@ -38,21 +38,24 @@ protected:
     double etamn;
     double etamx;
     int    pdgid_parent;
+    int    count;
     Trigger_t() :
       pdgid(0), 
       ptmn (0.), 
       ptmx (0.), 
       etamn(0.), 
       etamx(0.),
-      pdgid_parent(0)
+      pdgid_parent(0),
+      count(0)
     { };
-    Trigger_t( int _pdgid, double _ptmn, double _ptmx, double _etamn, double _etamx, int _pdgid_parent ) : 
-      pdgid(_pdgid), 
-      ptmn (_ptmn), 
-      ptmx (_ptmx), 
-      etamn(_etamn), 
-      etamx(_etamx),
-      pdgid_parent(_pdgid_parent)
+  Trigger_t( int _pdgid, double _ptmn, double _ptmx, double _etamn, double _etamx, int _pdgid_parent, int _count ) : 
+        pdgid(_pdgid), 
+	ptmn (_ptmn), 
+	ptmx (_ptmx), 
+	etamn(_etamn), 
+	etamx(_etamx),
+	pdgid_parent(_pdgid_parent),
+	count(_count)
     {
     };
   };
