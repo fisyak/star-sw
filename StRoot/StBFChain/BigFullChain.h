@@ -1738,8 +1738,8 @@ Bfc_st BFC[] = { // standard chains
                                                                              "sTGC Point maker",    kFALSE},
   {"FttQA","","fttChain","","StFttQAMaker","StFttQAMaker", "sTGC Raw hit QA maker",                 kFALSE},
 
-  {"FwdTrack","","","fcsDb","StFwdTrackMaker",
-   "XMLIO,genfit2,KiTrack,StarGeneratorUtil,libMathMore,StEventUtilities,StEpdUtil,StFwdTrackMaker",
+  {"FwdTrack","","","fcsDb,fstDb","StFwdTrackMaker",
+   "XMLIO,genfit2,KiTrack,StarGeneratorUtil,libMathMore,StEventUtilities,StEpdUtil,StFstDbMaker,StFwdTrackMaker",
                                                                              "Forward Track Maker", kFALSE},
 
 #if 0
