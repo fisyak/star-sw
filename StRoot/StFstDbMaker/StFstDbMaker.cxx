@@ -79,7 +79,13 @@ Int_t StFstDbMaker::InitRun(Int_t runNumber)
    Survey_st *tables[4] = {st_fstOnTpc->GetTable(), st_fstHssOnFst->GetTable(),
                            st_fstWedgeOnHss->GetTable(), st_fstSensorOnWedge->GetTable()
                           };
-   mFstDb->setGeoHMatrices(tables);
+   // hssOnFst is one row per half and fstWedgeOnHss one per wedge, so the row
+   // counts go with the tables -- StFstDb indexes them instead of taking row 0.
+   // GetNRows() returns Long_t; these counts are 1..36, so narrow explicitly
+   const int nRows[4] = {(int) st_fstOnTpc->GetNRows(),      (int) st_fstHssOnFst->GetNRows(),
+                         (int) st_fstWedgeOnHss->GetNRows(), (int) st_fstSensorOnWedge->GetNRows()
+                        };
+   mFstDb->setGeoHMatrices(tables, nRows);
 
    // Now access FST pedestal and noise tables
    St_fstPedNoise *mPedNoise = (St_fstPedNoise *) GetDataBase("Calibrations/fst/fstPedNoise");
