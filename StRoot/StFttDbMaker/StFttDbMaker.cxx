@@ -1,6 +1,6 @@
 /***************************************************************************
  * StFttDbMaker.cxx
- * jdb
+ * jdb & Zhen
  ***************************************************************************
  * Description: This maker is the interface between FTT and the STAR database
  ***************************************************************************/
@@ -38,12 +38,17 @@ int StFttDbMaker::Make(){
 int StFttDbMaker::InitRun(int runNumber) {
   LOG_INFO << "StFttDbMaker::InitRun - run = " << runNumber << endm;
 
+    // Strip geometry (centers / edges / lengths) for the retired FTT hardware
+    // is compiled into StFttDb and loaded in its constructor — no external
+    // text files are required.
+
     std::ifstream file("vmm_map.dat");
     if(file.is_open()){ // debugging / calibration only
         file.close();
-        std::cout << "Loading Hardware Map from FILE!!" << std::endl;
-        std::cout << "Remove / rename file to load from DB" << std::endl;
+        LOG_INFO << "Loading Hardware Map from FILE!!" << endm;
+        LOG_INFO << "Remove / rename file to load from DB" << endm;
         mFttDb->loadHardwareMapFromFile( "vmm_map.dat" );
+        // mFttDb->loadHardwareMapFromFile( "/star/u/wangzhen/sTGC/Commissioning/ClusterFinder/PointMaker_building_test_0616/star-sw-1/StRoot/StFwdTrackMaker/macro/vmm_map.dat" );
     } else { // default
 
         TDataSet *mDbDataSet = GetDataBase("Geometry/ftt/fttHardwareMap");
@@ -51,7 +56,7 @@ int StFttDbMaker::InitRun(int runNumber) {
           St_fttHardwareMap *dataset = (St_fttHardwareMap*) mDbDataSet->Find("fttHardwareMap");
           mFttDb->loadHardwareMapFromDb( dataset );
         } else {
-          LOG_WARN << "Cannot access `Geometry/ftt/fttHardwareMap` and no local `vmm_map.dat` file provided. Cannot load ftt hardware mapping" << endm;
+          LOG_WARN << "Cannot access Geometry/ftt/fttHardwareMap and no local map given" << endm;
         }
     }
 
@@ -64,6 +69,7 @@ void StFttDbMaker::loadDataWindows(){
   TDataSet *mDbDataSetDW = GetDataBase("Calibrations/ftt/fttDataWindowsB");
 
     if ( mDbDataSetDW ) {
+        LOG_INFO << "StFttDbMaker::loadDataWindows from database" << endm;
         St_fttDataWindowsB *dataset = (St_fttDataWindowsB*) mDbDataSetDW->Find("fttDataWindowsB");
         mFttDb->loadDataWindowsFromDb( dataset );
     } else {
