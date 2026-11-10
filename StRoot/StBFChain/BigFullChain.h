@@ -1577,6 +1577,8 @@ Bfc_st BFC[] = { // standard chains
   {"fst","fstChain","","fstRawHit,fstCluster,fstHit", "StMaker","StChain","FST chain"              ,kFALSE},
   {"fstFastSim","","fstChain","StMcEvent,StEvent","StFstFastSimMaker","StFstSimMaker","FST fast simulator", 
                                                                                                     kFALSE},
+  {"fstSlowSim","","fstChain","FstUtil,fstDb","StFstSlowSimMaker","StFstSimMaker","FST slow simulator",
+                                                                                                    kFALSE},
   {"fstRawHit", "", "fstChain", "FstUtil,fstDb","StFstRawHitMaker", "StFstRawHitMaker","FST raw hit maker", 
                                                                                                     kFALSE},
   {"fstCluster", "", "fstChain", "fstRawHit","StFstClusterMaker",  "StFstClusterMaker","FST Cluster maker", 
@@ -1732,14 +1734,16 @@ Bfc_st BFC[] = { // standard chains
                                                             "sTGC Raw hit maker",                   kFALSE},
   {"FttHitCalib","","fttChain","StEvent,MuDST","StFttHitCalibMaker","StFttHitCalibMaker,StFttRawHitMaker,StEvent",
                                                             "sTGC hit calib maker",                 kFALSE},
+  {"fttSlowSim","","fttChain","StEvent,fttDb","StFttSlowSimMaker","StFttSimMaker,StEvent,StFttDbMaker",
+                                                            "sTGC slow simulator",                  kFALSE},
   {"FttClu","","fttChain","StEvent,fttDb","StFttClusterMaker","StFttClusterMaker,StEvent,StFttDbMaker", 
                                                                            "sTGC Cluster maker",    kFALSE},
   {"FttPoint","","fttChain","StEvent,fttDb","StFttPointMaker","StFttPointMaker,StEvent,StFttDbMaker", 
                                                                              "sTGC Point maker",    kFALSE},
   {"FttQA","","fttChain","","StFttQAMaker","StFttQAMaker", "sTGC Raw hit QA maker",                 kFALSE},
 
-  {"FwdTrack","","","fcsDb","StFwdTrackMaker",
-   "XMLIO,genfit2,KiTrack,StarGeneratorUtil,libMathMore,StEventUtilities,StEpdUtil,StFwdTrackMaker",
+  {"FwdTrack","","","fcsDb,fstDb","StFwdTrackMaker",
+   "XMLIO,genfit2,KiTrack,StarGeneratorUtil,libMathMore,StEventUtilities,StEpdUtil,StFstDbMaker,StFwdTrackMaker",
                                                                              "Forward Track Maker", kFALSE},
 
 #if 0

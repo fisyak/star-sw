@@ -54,6 +54,7 @@
 
 #include "StRoot/StEpdUtil/StEpdGeom.h"
 #include "StFcsDbMaker/StFcsDb.h"
+#include "StFstDbMaker/StFstDb.h"
 #include "StFstUtil/StFstCollection.h"
 
 #include "StEvent/StFwdTrack.h"
@@ -276,12 +277,22 @@ int StFwdTrackMaker::Init() {
     // Setup the mFwdHitLoader
 
 
+    // FST disk z from StFstDb, which owns it. No geometry navigation and no
+    // fallback array: diskNominalZ is a constant of the detector, the same three
+    // numbers FstmGeoSM.xml carries, and it does not depend on which FST
+    // geometry variant happens to be loaded. The per-SENSOR z that a
+    // measurement needs is in the GenFit planes, from the survey matrices; this
+    // list is the per-disk one the seeding and projection use.
+    mFstZ.clear();
+    for ( int disk = 1; disk <= kFstNumDisk; disk++ )
+        mFstZ.push_back( StFstDb::diskNominalZ( disk ) );
+
     // geometry should be available from here (mForwardTracker will initialize cache if needed)
     if (gGeoManager) {
         FwdGeomUtils fwdGeoUtils( gGeoManager );
-        // get the z-locations from geometry model and fallback to the defaults
-        auto fstZ = fwdGeoUtils.fstZ( {151.750000, 165.248001, 178.781006} );
-        mFstZFromGeom.assign( fstZ.begin(), fstZ.end() );
+        // FTT still comes from the geometry model, with the defaults as a
+        // fallback. It moves to StFttDb the same way once that class owns the
+        // sTGC geometry.
         auto fttZ = fwdGeoUtils.fttZ( {280.904999, 303.704987, 326.605011, 349.404999} );
         mFttZFromGeom.assign( fttZ.begin(), fttZ.end() );
     }
@@ -680,9 +691,9 @@ StFwdTrack * StFwdTrackMaker::makeStFwdTrack( GenfitTrackResult &gtr, size_t ind
     // TODO: update FCS to use correct z + angle
     map<int, float> mapDetectorToZPlane = {
         { kTpcId, 0.0 },
-        { kFstId, mFstZFromGeom[0] },
-        { kFstId, mFstZFromGeom[1] },
-        { kFstId, mFstZFromGeom[2] },
+        { kFstId, mFstZ[0] },
+        { kFstId, mFstZ[1] },
+        { kFstId, mFstZ[2] },
         { kFttId, mFttZFromGeom[0] },
         { kFttId, mFttZFromGeom[1] },
         { kFttId, mFttZFromGeom[2] },
