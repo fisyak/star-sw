@@ -54,6 +54,7 @@
 
 #include "StRoot/StEpdUtil/StEpdGeom.h"
 #include "StFcsDbMaker/StFcsDb.h"
+#include "StFstDbMaker/StFstDb.h"
 #include "StFstUtil/StFstCollection.h"
 
 #include "StEvent/StFwdTrack.h"
@@ -276,12 +277,22 @@ int StFwdTrackMaker::Init() {
     // Setup the mFwdHitLoader
 
 
+    // FST disk z from StFstDb, which owns it. No geometry navigation and no
+    // fallback array: diskNominalZ is a constant of the detector, the same three
+    // numbers FstmGeoSM.xml carries, and it does not depend on which FST
+    // geometry variant happens to be loaded. The per-SENSOR z that a
+    // measurement needs is in the GenFit planes, from the survey matrices; this
+    // list is the per-disk one the seeding and projection use.
+    mFstZ.clear();
+    for ( int disk = 1; disk <= kFstNumDisk; disk++ )
+        mFstZ.push_back( StFstDb::diskNominalZ( disk ) );
+
     // geometry should be available from here (mForwardTracker will initialize cache if needed)
     if (gGeoManager) {
         FwdGeomUtils fwdGeoUtils( gGeoManager );
-        // get the z-locations from geometry model and fallback to the defaults
-        auto fstZ = fwdGeoUtils.fstZ( {151.750000, 165.248001, 178.781006} );
-        mFstZFromGeom.assign( fstZ.begin(), fstZ.end() );
+        // FTT still comes from the geometry model, with the defaults as a
+        // fallback. It moves to StFttDb the same way once that class owns the
+        // sTGC geometry.
         auto fttZ = fwdGeoUtils.fttZ( {280.904999, 303.704987, 326.605011, 349.404999} );
         mFttZFromGeom.assign( fttZ.begin(), fttZ.end() );
     }
@@ -680,9 +691,9 @@ StFwdTrack * StFwdTrackMaker::makeStFwdTrack( GenfitTrackResult &gtr, size_t ind
     // TODO: update FCS to use correct z + angle
     map<int, float> mapDetectorToZPlane = {
         { kTpcId, 0.0 },
-        { kFstId, mFstZFromGeom[0] },
-        { kFstId, mFstZFromGeom[1] },
-        { kFstId, mFstZFromGeom[2] },
+        { kFstId, mFstZ[0] },
+        { kFstId, mFstZ[1] },
+        { kFstId, mFstZ[2] },
         { kFttId, mFttZFromGeom[0] },
         { kFttId, mFttZFromGeom[1] },
         { kFttId, mFttZFromGeom[2] },
@@ -824,15 +835,30 @@ std::string StFwdTrackMaker::defaultConfig = R"(
             <SegmentBuilder>
                 <!-- <Criteria name="Crit2_RZRatio" min="0" max="1.20" /> -->
                 <!-- <Criteria name="Crit2_DeltaRho" min="-50" max="50.9"/> -->
+                <!-- Fix (Issue #22): require adjacent-disk r-strip change to be physical.
+                     deltaRho = rhoParent - rhoChild (parent=outer disk, child=inner).
+                     Same strip (s,s): deltaRho~0; adjacent strip (s,s+1): deltaRho~2.875 cm.
+                     Rejects looping/backward hits (deltaRho < -0.3) and multi-strip jumps
+                     (deltaRho > 3.1). 0.3 cm buffer for floating-point + disk misalignment.
+                     Recommended by Barak Schmookler 2026-06-22. -->
+                <Criteria name="Crit2_DeltaRho" min="-0.3" max="3.1" />
                 <Criteria name="Crit2_DeltaPhi" min="0" max="2.0" />
                 <!-- <Criteria name="Crit2_StraightTrackRatio" min="0.01" max="5.85"/> -->
             </SegmentBuilder>
 
             <ThreeHitSegments>
-				<Criteria name="Crit3_3DAngle" min="0" max="1" />
+                <!-- Fix (Issue #22): Crit3_3DAngle/Crit3_2DAngle parameters are in
+                     DEGREES, not radians. max="1" means 1 degree, not 1 radian. For a
+                     seed with r-segments (s,s,s+1) -- one r-strip change between
+                     adjacent disks, geometrically expected at eta~2.5-3 -- the 3D kink
+                     angle is ~21 deg and the 2D angle is ~90 deg, both far above the 1
+                     deg cut, so every valid seed with any r-strip change was rejected.
+                     Removed both; replaced by Crit2_DeltaRho above.
+                     [Barak Schmookler 2026-06-22] -->
+                <!-- <Criteria name="Crit3_3DAngle" min="0" max="1" /> -->
                 <!-- <Criteria name="Crit3_PT" min="0" max="100" /> -->
 				<!-- <Criteria name="Crit3_ChangeRZRatio" min="0.8" max="1.21" /> -->
-				<Criteria name="Crit3_2DAngle" min="0" max="1" />
+                <!-- <Criteria name="Crit3_2DAngle" min="0" max="1" /> -->
             </ThreeHitSegments>
 
         </Iteration>

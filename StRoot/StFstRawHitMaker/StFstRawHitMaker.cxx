@@ -9,6 +9,9 @@
 #include "StFstUtil/StFstCollection.h"
 #include "StFstUtil/StFstRawHitCollection.h"
 #include "StEvent/StFstRawHit.h"
+#include "StMuDSTMaker/COMMON/StMuTypes.hh"
+#include "StMuDSTMaker/COMMON/StMuFstCollection.h"
+#include "StMuDSTMaker/COMMON/StMuFstRawHit.h"
 #include "StEvent/StFstEvtCollection.h"
 #include "StFstDbMaker/StFstDb.h"
 #include "StEvent/StFstConsts.h"
@@ -187,9 +190,67 @@ Int_t StFstRawHitMaker::InitRun(Int_t runnumber)
  * (3) raw hit decision and ADC-to-dE/dx translation, then written to corresponding collection in physics mode;
  *     While in offline calibrarion mode, ADC information was directly saved without any raw hit processing.
  */
+// Rebuild the per-wedge raw-hit collections from a MuDst written with fstMuRawHit.
+//
+// StFstClusterMaker reads the "fstRawHitAndCluster" dataset this maker owns, so filling
+// it here is what makes FST re-clustering from a MuDst possible at all. The wedge index
+// is derived from geoId exactly as the DAQ path does a few lines below
+// (wedge = 1 + geoId/(kFstApvsPerWedge*kFstNumApvChannels)), so both paths land in the
+// same place.
+Int_t StFstRawHitMaker::readMuDst()
+{
+    StMuDst *mudst = (StMuDst *)GetInputDS("MuDst");
+    if ( !mudst ) { LOG_ERROR << "StFstRawHitMaker::readMuDst - no MuDst" << endm; return kStErr; }
+    StMuFstCollection *muFst = StMuDst::muFstCollection();
+    if ( !muFst ) { LOG_ERROR << "StFstRawHitMaker::readMuDst - no StMuFstCollection" << endm; return kStErr; }
+
+    const unsigned int nraw = muFst->numberOfRawHits();
+    if ( nraw == 0 ) {
+        LOG_WARN << "StFstRawHitMaker::readMuDst - the MuDst has no FST raw hits. "
+                 << "It was written without the fstMuRawHit chain option, so FST cannot "
+                 << "be re-clustered from it." << endm;
+        return kStWarn;
+    }
+
+    int nadded = 0, nbad = 0;
+    for ( unsigned int i = 0; i < nraw; i++ ) {
+        StMuFstRawHit *m = muFst->getRawHit( i );
+        if ( !m ) continue;
+        const Int_t geoId = m->getGeoId();
+        // getWedge() decodes the same 1-36 wedge from the geoId; guard the geoId
+        // itself, since getWedge() returns UChar_t and a wild geoId would wrap
+        // into an apparently valid wedge.
+        if ( geoId < 0 || geoId >= (Int_t)( kFstNumWedges * kFstApvsPerWedge * kFstNumApvChannels ) ) { nbad++; continue; }
+        const Int_t wedge = m->getWedge();
+        if ( wedge < 1 || wedge > (Int_t)kFstNumWedges ) { nbad++; continue; }
+        StFstRawHitCollection *coll = mFstCollectionPtr->getRawHitCollection( wedge - 1 );
+        if ( !coll ) { nbad++; continue; }
+
+        StFstRawHit *h = new StFstRawHit();
+        h->setChannelId( m->getChannelId() );
+        h->setGeoId( geoId );
+        h->setSeedhitflag( m->getSeedhitflag() );
+        for ( int tb = 0; tb < kFstNumTimeBins; tb++ ) {
+            h->setCharge( m->getCharge(tb), tb );
+            h->setChargeErr( m->getChargeErr(tb), tb );
+        }
+        h->setMaxTimeBin( m->getMaxTimeBin() );
+        h->setIdTruth( m->getIdTruth() );
+        coll->addRawHit( h );
+        nadded++;
+    }
+    LOG_INFO << "StFstRawHitMaker::readMuDst - " << nadded << " FST raw hits from the MuDst"
+             << ( nbad ? Form(", %d skipped with an out-of-range wedge", nbad) : "" ) << endm;
+    return kStOk;
+}
+
 Int_t StFstRawHitMaker::Make()
 {
     Int_t ierr = kStOk;
+
+    // MuDst input: no DAQ to read, just fill the collections and let
+    // StFstClusterMaker run on them as usual.
+    if ( mMuDstInput ) return readMuDst();
 
     //access raw ADC containers from simu data
     TObjectSet* fstSimuDataSet = (TObjectSet*)GetDataSet("fstRawAdcSimu");

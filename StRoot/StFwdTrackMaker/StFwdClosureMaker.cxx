@@ -5,6 +5,10 @@
 
 #include "StFwdTrackMaker/include/Tracker/FwdTracker.h"
 #include "StFwdTrackMaker/include/Tracker/ObjExporter.h"
+#include "GenFit/Exception.h"
+#include "GenFit/IO.h"
+#include <fstream>
+#include <cmath>
 // StEvent includes
 #include "StEvent/StBTofCollection.h"
 #include "StEvent/StBTofHeader.h"
@@ -163,9 +167,15 @@ double computeCurvature(const Point& p1, const Point& p2, const Point& p3) {
     // Area of the triangle formed by the three points
     double area = std::abs(det) / 2.0;
 
+    // Collinear points -- which includes the common case of two of the three
+    // space points being the same hit. The circle through them is a straight
+    // line, so the curvature is ZERO. Returning -1 here (as this used to) is
+    // not a sentinel: -1 cm^-1 is an ordinary curvature value, and the caller
+    // turns it into a 1.5 MeV/c seed momentum that RKTrackRep cannot propagate.
+    // The caller treats 0 as "no usable curvature" and keeps its straight-line
+    // seed. Silent on purpose: this fires often enough to bury a log.
     if (area == 0) {
-        std::cerr << "The points are collinear, curvature is undefined." << std::endl;
-        return -1; // Curvature is undefined for collinear points
+        return 0; // straight line: zero curvature, charge undetermined
     }
 
     // Calculate the radius of the circumcircle using the formula:
@@ -200,6 +210,24 @@ int StFwdClosureMaker::Init() {
     ));
 
     mFitter->setRelChi2Change( mRelChi2 );
+
+    // Low-pT and looper tracks routinely fail RKTrackRep propagation, and
+    // GenFit's own catch sites print the full RKutta diagnostic
+    // ("Do not get closer to plane!") to genfit::errorOut -- std::cerr by
+    // default -- unconditionally, once per occurrence. Exception::quiet(true)
+    // only suppresses the separate info() dump of numbers and matrices, so
+    // errorOut itself has to be redirected; KalmanFitterRefTrack.cc is one of
+    // the catch sites in question. Fit-failure bookkeeping is unaffected --
+    // only the stderr spam goes away.
+    // (static ofstream: it must outlive the rdbuf link.)
+    // Guarded per Gene's review: silenced in normal running, left alone when
+    // the maker is in debug mode, so the diagnostic is still there for whoever
+    // is actually debugging the propagation.
+    if ( !Debug() ) {
+        genfit::Exception::quiet(true);
+        static std::ofstream sClosureGenfitErrNull("/dev/null");
+        genfit::errorOut.rdbuf(sClosureGenfitErrNull.rdbuf());
+    }
 
     // Setup the histograms
     addHistogram2D( "PtCorrelation", "PtCorrelation; MC; RC;", 100, 0, 1, 100, 0, 1 );
@@ -426,10 +454,28 @@ int StFwdClosureMaker::Make() {
                                             {spoints[2]->getRawHitCoords()[0], spoints[2]->getRawHitCoords()[1]} );
         const double K = 0.00029979; //K depends on the units used for Bfield
         const double BStrength = 5; // 0.5 T
-        double pt = fabs((K*BStrength)/curve); // pT from average measured curv
-        qCurve = curve > 0 ? 1 : -1;
-        ptCurve = pt;
-        LOG_INFO << "Curve: " << curve << ", Pt: " << pt << endm;
+        // curve == 0 is the collinear/duplicate-points case from
+        // computeCurvature(): a straight track, so keep the straight-line seed
+        // set above rather than dividing by zero. Near-collinear points give a
+        // huge radius and a correspondingly huge pT, which is the same physical
+        // statement, so clamp it to the same default.
+        if ( curve == 0 ) {
+            // The collinear/duplicate-points case. computeCurvature() is a free
+            // function and cannot reach Debug(), so the report lives here, where
+            // it is one line per affected track instead of one per call.
+            LOG_DEBUG << "Collinear or duplicate space points, curvature undefined: "
+                      << "keeping the straight-line seed" << endm;
+        }
+        if ( curve != 0 ) {
+            double pt = fabs((K*BStrength)/curve); // pT from average measured curv
+            if ( !std::isfinite(pt) || pt > 9999.0 ) pt = 9999.0;
+            qCurve = curve > 0 ? 1 : -1;
+            ptCurve = pt;
+        }
+        // Per-track, so LOG_DEBUG rather than LOG_INFO (Gene's review). The
+        // log4cxx level is INFO by default, so this costs a stream and prints
+        // nothing until someone lowers it.
+        LOG_DEBUG << "Curve: " << curve << ", Pt: " << ptCurve << endm;
     }
 
 
