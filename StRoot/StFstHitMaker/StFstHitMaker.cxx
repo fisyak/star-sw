@@ -22,7 +22,7 @@
 ClassImp(StFstHitMaker);
 
 
-StFstHitMaker::StFstHitMaker( const char *name ) : StMaker(name), mSensorTransforms(0)
+StFstHitMaker::StFstHitMaker( const char *name ) : StMaker(name), mSensorTransforms(0), mApplySurvey(kFALSE)
 {}
 
 
@@ -101,25 +101,10 @@ Int_t StFstHitMaker::Make()
 			unsigned short idTruth = 0;
 			unsigned char  nRawHits = -1, nRawHitsR = -1, nRawHitsPhi = -1;
 			unsigned char  disk = -1, wedge = -1, sensor = -1, apv = -1;
-			// meanRStrip stays int: it indexes kFstrStart[] below, and the cluster
-			// algorithm only ever puts a whole strip in it (meanRStrip = maxRStrip).
-			// meanPhiStrip must be FLOAT. When two clusters merge,
-			// StFstScanRadiusClusterAlgo computes it as a charge-weighted average
-			// (meanPhiStrip = phi1*q1/qtot + phi2*q2/qtot), which is genuinely
-			// fractional -- the one place the algorithm gets sub-strip phi resolution.
-			// Declaring it int truncated that away, both in the stored StFstHit and in
-			// the local[1] position computed below. Measured on 20 events of run
-			// 23063032: 15% of clusters carried a fractional phi, uniform on [0,1)
-			// strips, mean 0.48 and max 0.96 -- up to 0.22 deg, ~0.5 mm at the outer
-			// radius, discarded. Nothing else has to change: StFstHit's ctor parameter
-			// and mMeanPhiStrip, and StMuFstHit's, are all already Float_t, so this is
-			// not a MuDst format change.
-			int    meanRStrip = -1;
-			float  meanPhiStrip = -1;
+			int  meanRStrip = -1, meanPhiStrip = -1;
                         float  charge = 0., chargeErr = 0.;
 			unsigned char  maxTb = -1;
 			int	 key = -1;
-			float phiInner = -999.9, phiOuter = -999.9;
 
 			for (std::vector< StFstCluster * >::iterator clusterIter = clusterCollectionPtr->getClusterVec().begin(); clusterIter != clusterCollectionPtr->getClusterVec().end(); ++clusterIter) {
 				idTruth         = (*clusterIter)->getIdTruth();
@@ -142,47 +127,28 @@ Int_t StFstHitMaker::Make()
 				newHit->setId(key);
 				newHit->setIdTruth(idTruth);
 
-                                int moduleIdx = -1;
-				if(disk == 1) // Disk 1
-					moduleIdx = wedge;
-				else if(disk == 2)// Disk 2
-					moduleIdx = wedge-12;
-				else if(disk == 3)// Disk 3
-					moduleIdx = wedge-24;
-				// The simple transformation will be updated with the geomtry table in database later
-				if(disk == 1 || disk == 3)
-				{// Disk 1 & 3
-					phiInner = kFstphiStart[moduleIdx-1]*TMath::Pi()/6.0 + 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
-					phiOuter = kFstphiStop[moduleIdx-1]*TMath::Pi()/6.0  - 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
+				// strip -> nominal position, from the ONE place that owns the
+				// convention. This block used to hold it inline: phiInner and
+				// phiOuter from kFstphiStart/kFstphiStop, the per-wedge and
+				// per-disk flips from kFstzFilp x kFstzDirct, and the
+				// outer-sensor kFstStripGapPhi -- all of which
+				// StFstSlowSimMaker restates inverted and StFwdHitLoader
+				// patches afterwards. StFstDb::stripPosition() is that algebra
+				// moved verbatim, so the producer, the simulation and anything
+				// rebuilding a hit from its strips cannot drift apart. The z it
+				// returns is sensorZ(), so it follows fstmConfig(): the silicon
+				// the strip is on, on the face the wedge is really mounted.
+				Double_t g[3] = {0, 0, 0};
+				if (!StFstDb::stripPosition(disk, (int)newHit->getWedge(), sensor,
+				                            meanRStrip, meanPhiStrip, g)) {
+					LOG_WARN << "Make() - no strip position for disk " << (int)disk
+					         << " wedge " << (int)newHit->getWedge() << " sensor "
+					         << (int)sensor << " rStrip " << meanRStrip
+					         << "; hit dropped" << endm;
+					delete newHit;
+					continue;
 				}
-				else if(disk == 2)
-				{ // Disk 2
-					phiInner = kFstphiStop[moduleIdx-1]*TMath::Pi()/6.0  - 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
-					phiOuter = kFstphiStart[moduleIdx-1]*TMath::Pi()/6.0 + 0.5*kFstzDirct[moduleIdx-1]*kFstStripPitchPhi;
-				}
-				double local[3] = {0};
-				if(meanRStrip < kFstNumRStripsPerWedge/2)
-				{ // inner
-					local[0] = kFstrStart[meanRStrip] + 0.5*kFstStripPitchR;
-					local[1] = phiInner + kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi;
-				}
-				else
-				{// outer
-					if(sensor == 1){
-						local[0] = kFstrStart[meanRStrip] + 0.5*kFstStripPitchR;
-						local[1] = phiOuter - kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi - kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*0.5*kFstStripGapPhi;
-					}
-					if(sensor == 2){
-						local[0] = kFstrStart[meanRStrip] + 0.5*kFstStripPitchR;
-						local[1] = phiOuter - kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*meanPhiStrip*kFstStripPitchPhi + kFstzFilp[disk-1]*kFstzDirct[moduleIdx-1]*0.5*kFstStripGapPhi;
-					}
-				}
-
-				if(disk == 1) local[2] = 151.750; //unit: cm
-				else if(disk == 2) local[2] = 165.248; //unit: cm
-				else if(disk == 3) local[2] = 178.781; //unit: cm
-				newHit->setLocalPosition(local[0], local[1], local[2]); //set local position on sensor
-
+				newHit->setLocalPosition(g[0], g[1], g[2]); //nominal-frame position
 				fstHitCollection->addHit(newHit);
 			} //cluster loop over
 		}//end clusterCollectionPtr
@@ -200,15 +166,45 @@ Int_t StFstHitMaker::Make()
 				local[1] = newHit->localPosition(1);
 				local[2] = newHit->localPosition(2);
 
-                //Ye: simple transformation. Need to revisit
-		// The simple transformation will be updated with the geomtry table in database later
-				int sensorId = 1000 + ((int)newHit->getWedge() - 1) * kFstNumSensorsPerWedge + (int)newHit->getSensor();
-				TGeoHMatrix *geoMSensorOnGlobal = (TGeoHMatrix *) mSensorTransforms->FindObject(Form("R%04i", sensorId));
-				geoMSensorOnGlobal->LocalToMaster(local, global);
+				// nominal -> global. The survey matrix is applied ONLY when asked
+				// for: see SetApplySurvey() in the header for the two reasons
+				// behind that default. Both are about the simulated geometry and
+				// the measured residuals; the frame question that used to be the
+				// first of them is settled -- StFstDb no longer puts tpcOnGlobal
+				// in the product, so this matrix is exactly the displacement AGML
+				// gives the TGeo nodes the GenFit planes are built from.
+				//
+				// Both of the things that used to live here hid the survey rather
+				// than applying it. Before 9e70bfd0a9 the LocalToMaster result was
+				// overwritten by three lines converting (local[0], local[1]) as
+				// polar (r, phi), which was consistent with a producer that stored
+				// the global (r, phi, z) but discarded the matrix. 9e70bfd0a9 moved
+				// the producer to cartesian via MasterToLocal, which made this an
+				// exact round trip -- so the matrix cancelled either way, and no
+				// FST hit has ever carried the survey. For the Run 22 tables that
+				// is (+0.7126, -3.0102) mm for the x>0 half and (+2.2626, -3.3302)
+				// mm for the x<0 half -- which is, to the bit, how far the
+				// misaligned AGML geometry moves the sensors of those same two
+				// groups (d4378cbde9; measured off the fGeom.root cache, 54 nodes
+				// each).
+				if (mApplySurvey) {
+					int sensorId = StFstDb::sensorSurveyId((int)newHit->getWedge(), (int)newHit->getSensor());
+					TGeoHMatrix *geoMSensorOnGlobal = (TGeoHMatrix *) mSensorTransforms->FindObject(Form("R%04i", sensorId));
 
-                                global[0] = local[0]*cos(local[1]);
-                                global[1] = local[0]*sin(local[1]);
-                                global[2] = local[2];
+					if (geoMSensorOnGlobal) {
+						geoMSensorOnGlobal->LocalToMaster(local, global);
+					}
+					else {
+						LOG_WARN << "StFstHitMaker: no survey matrix R" << sensorId
+						         << ", leaving the hit at its nominal position" << endm;
+						global[0] = local[0]; global[1] = local[1]; global[2] = local[2];
+					}
+				}
+				else {
+					global[0] = local[0];
+					global[1] = local[1];
+					global[2] = local[2];
+				}
 
 				StThreeVectorF vecGlobal(global);
 				newHit->setPosition(vecGlobal); //set global position

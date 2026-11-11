@@ -12,6 +12,7 @@ TDataSet *CreateTable() {
  configGeom ->SetValue("ipxl",-1);
  configGeom ->SetValue("iist",-1);
  configGeom ->SetValue("isst",-1);
+ configGeom ->SetValue("ifst",3);
  configGeom ->SetValue("tpcg_version",5);
  configGeom ->SetValue("tpcg_tpadconfig",6);
  configGeom ->SetValue("btog_version",6);

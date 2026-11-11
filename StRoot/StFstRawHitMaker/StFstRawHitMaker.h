@@ -36,7 +36,19 @@ public:
    ~StFstRawHitMaker();
    Int_t Init();
    Int_t InitRun(Int_t runNumber);
+   Bool_t mMuDstInput = kFALSE;   ///< read raw hits from a MuDst rather than DAQ
    Int_t Make();
+
+   /** Fill the per-wedge raw-hit collections from a MuDst instead of from DAQ.
+    *  Mirrors StFttRawHitMaker::readMuDst(), which is what lets the FTT chain re-run
+    *  from a MuDst today. Needed because FST clustering is the one thing a production
+    *  MuDst cannot otherwise recover: StFstClusterMaker consumes the
+    *  "fstRawHitAndCluster" dataset that THIS maker owns, so the hook has to be here.
+    *  Requires the MuDst to have been written with the fstMuRawHit chain option. */
+   Int_t readMuDst();
+   /** false (default) = DAQ input, production behaviour unchanged.
+    *  true = take raw hits from the MuDst. */
+   void setMuDstInput( Bool_t v = kTRUE ) { mMuDstInput = v; }
    void Clear( Option_t *opts = "" );
 
    void setIsCalibrationMode( bool isCaliMode = false )  { mIsCaliMode = isCaliMode; }

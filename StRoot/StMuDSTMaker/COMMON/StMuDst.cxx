@@ -949,6 +949,14 @@ StEvent* StMuDst::createStEvent() {
   if(fst) { // transform to StEvent format and fill it
      StFstHitCollection *FST = mFstUtil->getFst(fst);
      if(FST) ev->setFstHitCollection(FST);
+     // Raw hits as well, but only when the MuDst actually carries them, i.e. it was
+     // written with the fstMuRawHit chain option. Without the guard every StMuDst
+     // user would get an empty StFstEvtCollection attached. With them present,
+     // anything driven by createStEvent() can re-cluster FST from the MuDst.
+     if(fst->numberOfRawHits() > 0) {
+        StFstEvtCollection *FSTEVT = mFstUtil->getFstEvt(fst);
+        if(FSTEVT) ev->setFstEvtCollection(FSTEVT);
+     }
   }
  // now get the FWD Tracks and put it in the StEvent
   static StMuFwdTrackUtil* mFwdTrackUtil = new StMuFwdTrackUtil();

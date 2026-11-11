@@ -695,6 +695,11 @@ The factors are the weights fraction for stainless and NOVEC
             <Create block="FSTW" />
             <For var="iwedge" from="0" to="5">  <!-- even wedges -->
                 <!-- Wedge -->
+			<If expr="iwedge.le.1">
+			  <Info format=" FSTW wedgeno {2I}">iwedge</Info>
+			  <Info format=" FSTW z {6.2f}">-wholewedge_dz</Info>
+			</If>
+
                 <Placement block="FSTW" in="FSTD" x="0" y="0" z="-wholewedge_dz" >
                     <Rotation alphax="180"/>
                     <Rotation alphaz="15+30*2*iwedge"/>
