@@ -19,8 +19,16 @@ public:
     ~StMuFstUtil();
     StMuFstCollection* getMuFst(StFstHitCollection*,StFstEvtCollection*);
     StFstHitCollection*   getFst(StMuFstCollection*);
+    /** Rebuild the StEvent raw-hit collection from the MuDst.
+     *  Counterpart of getMuFst()'s raw-hit half, which had no reverse until now:
+     *  fillFst() restored only the hits, so FST raw hits written with the
+     *  fstMuRawHit option could never be read back. Mirrors StMuFttUtil, where the
+     *  equivalent has always existed (fillFttRawHits) and is what lets the FTT
+     *  chain re-run from a MuDst. */
+    StFstEvtCollection*   getFstEvt(StMuFstCollection*);
     void               fillMuFst(StMuFstCollection*,StFstHitCollection*,StFstEvtCollection*);
     void               fillFst(StFstHitCollection*,StMuFstCollection*);
+    void               fillFstEvt(StFstEvtCollection*,StMuFstCollection*);
 
 
 private:
@@ -30,6 +38,9 @@ private:
 
     /** fill the StFstHits from MuDst */
     void fillFstHits(StFstHitCollection*, StMuFstCollection*);
+
+    /** fill the StFstRawHits from MuDst */
+    void fillFstRawHits(StFstEvtCollection*, StMuFstCollection*);
 
     ClassDef(StMuFstUtil,1)
 };

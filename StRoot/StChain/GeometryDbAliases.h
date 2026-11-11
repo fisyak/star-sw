@@ -41,23 +41,23 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"r2007",       20061220,     0, "y2007z",   "y2007g + TPC2009"},
 
   // SVT/SSD is out
+  {"y2008",       20071101,     0, "y2008",    "base for y2008: SVT/SSD out, cone is lost,AgML"},
   {"y2008a",      20071101,     1, "y2008a",   "base for y2008: SVT/SSD out, cone in separate SCON,AgML,xgeometry"},
-  {"y2008",       20071101,     5, "y2008e",   "LOW_EM central calorimter cuts,AgML,xgeometry"},
   {"y2008e",      20071101,     5, "y2008e",   "LOW_EM central calorimter cuts,AgML,xgeometry"},
   {"y2008z",      20071101,     6, "y2008z",   "LOW_EM central calorimter cuts,     xgeometry"},
   {"r2008",       20071120,     0, "y2008z",   "LOW_EM central calorimter cuts"},
   {"dAu2008",	  20071130,  54621, "y2008z", "dAu2008"}, // 1st run = 8334001
 
+  {"y2009",       20081215,     0, "y2009",    "based on TGeomanager of YF,AgML"},
   {"y2009a",      20081215,     1, "y2009a",   "y2009+ecalgeo6(JW),AgML,xgeometry"},
-  {"y2009",       20081215,     4, "y2009d",   "Honey sandwich fix,AgML,xgeometry"},
   {"y2009d",      20081215,     4, "y2009d",   "Honey sandwich fix,AgML,xgeometry"},
   {"y2009z",      20081215,     5, "y2009z",   "Honey sandwich fix,     xgeometry"},
   {"r2009",       20081220,     0, "y2009z",   "Honey sandwich fix"},
   {"pp2009_500GeV",	                     20090320,   4556, "y2009z", "production2009_500GeV"}, // 1st run = 10078069
   {"pp2009_200GeV",	                     20090423,   5903, "y2009z", "production2009_200GeV_Hi"}, // 1st run = 10112099
 
+  {"y2010",       20091215,     0, "y2010",    "y2009+full BTOF,AgML"},
   {"y2010a",      20091215,     1, "y2010a",   "y2010 production tag,AgML,xgeometry"},
-  {"y2010",       20091215,     3, "y2010c",   "Honey sandwich fix,AgML,xgeometry"},
   {"y2010c",      20091215,     3, "y2010c",   "Honey sandwich fix,AgML,xgeometry"},
   {"y2010z",      20091215,     4, "y2010z",   "Honey sandwich fix,     xgeometry"},
   {"r2010",       20091220,     0, "y2010z",   "Honey sandwich fix"},
@@ -70,7 +70,7 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
   {"AuAu7_2010b",	              	     20100423,  24916, "y2010z", "AuAu7"}, // 1st run = 11112066 
   {"AuAu11_2010",	            	     20100528,  33641, "y2010z", "AuAu11"}, // 1st run = 11147048
 
-  {"y2011",       20101215,     2, "y2011b",   "y2011a + new TPC + Extended Cave and tunnel,AgML,xgeometry"},
+  {"y2011",       20101215,     0, "y2011",    "y2011 TOF fix & TPCE redused & honey,AgML"},
   {"y2011b",      20101215,     2, "y2011b",   "y2011a + new TPC + Extended Cave and tunnel,AgML,xgeometry"},
   {"y2011z",      20101215,     3, "y2011z",   "y2011a + new TPC + Extended Cave and tunnel,xgeometry"},
   {"r2011",       20101220,     0, "y2011z",   "y2011a + new TPC + Extended Cave and tunnel"},
@@ -132,7 +132,8 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 
   {"y2017",       20161215,     1, "y2017a",   "y2017 production  geometry, AgML,xgeometry"},   
   {"y2017a",      20161215,     1, "y2017a",   "y2017 production  geometry, AgML,xgeometry"},   
-  {"y2017z",      20161215,     2, "y2017z",   "y2017 production  geometry,      xgeometry"},   
+  {"y2017b",      20161215,     2, "y2017b",   "Updated support cone, AgML,xgeometry"},   
+  {"y2017z",      20161215,     3, "y2017z",   "y2017 production  geometry,      xgeometry"},   
   {"r2017a",      20161220,     1, "y2017z",   "y2017 production  geometry, AgML,xgeometry"},   
   {"AuAu54_2017",	              	     20170602, 181634, "y2017z", "AuAu54_2017"}, // 1st run = 18153035			 
   {"pp500_rhicf_2017",	              	     20170624,  23811, "y2017z", "pp500_rhicf_2017"}, // 1st run = 18174051		 

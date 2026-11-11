@@ -10,6 +10,8 @@ March 18, 2026  F.Videbaek
  There is a bit of missing material at the outer edge of the inner mech structure. I will adjust the outer radiues so the total mateerial should be ok.(approximately
 The outer radius could be make slightly bigger to adjust this.
 
+Work Completed in July
+
 -->
     <Replace match="GeV">*1.0E+0;</Replace>
     <Replace match="MeV">*1.0E-3;</Replace>
@@ -266,6 +268,7 @@ The outer radius could be make slightly bigger to adjust this.
 	ang= supbar_angle(1)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
+<<<<<<< HEAD
 	<Placement block="OFSC" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
 	ang= supbar_angle(2)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
