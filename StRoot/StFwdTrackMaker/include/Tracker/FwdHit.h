@@ -100,15 +100,10 @@ class FwdHit : public KiTrack::IHit {
         }
     };
 
-    static int fstGlobalSensorIndex( int disk, int wedge, int sensor ) {
-        return (disk * kFstNumWedgePerDisk * kFstNumSensorsPerWedge) + (wedge * kFstNumSensorsPerWedge) + sensor;
-    }
-    static int fstSensorWedgeDiskFromGlobalIndex( int globalIndex, int &disk, int &wedge, int &sensor ) {
-        disk   = globalIndex / (kFstNumWedgePerDisk * kFstNumSensorsPerWedge);
-        wedge  = (globalIndex / kFstNumSensorsPerWedge) % kFstNumWedgePerDisk;
-        sensor = globalIndex % kFstNumSensorsPerWedge;
-        return 0;
-    }
+    // The FST sensor index lives in StFstDb: sensorIndex(wedge, sensor) /
+    // decodeSensorIndex(). The pair that used to be here packed a 0-based disk
+    // with a per-disk 0-11 wedge, while StMuFstHit and StFstDb both number the
+    // wedge 1-36 -- two conventions for one number, which is what went wrong.
 
     // Set basic props for e.g. Primary Vertex type hits
     void setXYZDetId( float x, float y, float z, int detid ){

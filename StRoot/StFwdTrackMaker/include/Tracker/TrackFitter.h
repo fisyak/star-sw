@@ -26,6 +26,7 @@
 #include "StFwdTrackMaker/include/Tracker/TrackFitter.h"
 #include "StFwdTrackMaker/include/Tracker/STARField.h"
 #include "StFwdTrackMaker/include/Tracker/FwdGeomUtils.h"
+#include "StFstDbMaker/StFstDb.h"   // FST sensor planes come from the DB, not the geometry
 
 #include "StarGenerator/UTIL/StarRandom.h"
 #include "FitterUtils.h"
@@ -130,8 +131,9 @@ class TrackFitter {
         // FwdGeomUtils looks into the loaded geometry and gets detector z locations if present
         FwdGeomUtils fwdGeoUtils( gMan );
 
-        // Create the genfit Planes for the FST sensors
-        createAllFstPlanes( fwdGeoUtils );
+        // Create the genfit Planes for the FST sensors (from StFstDb, not the
+        // geometry -- fwdGeoUtils below is still the FTT's source)
+        createAllFstPlanes();
         createAllFttPlanes( fwdGeoUtils );
         // create the EPD plane at z=375
         mEpdPlane = genfit::SharedPlanePtr(
@@ -646,14 +648,46 @@ class TrackFitter {
      *
      * @return std::vector<genfit::SharedPlanePtr>
      */
-    void createAllFstPlanes( FwdGeomUtils &fwdGeoUtils )
+    // One GenFit plane per FST sensor, from StFstDb.
+    //
+    // The sensor placement is StFstDb's: getHMatrixSensorOnGlobal(wedge, sensor)
+    // is the survey chain fstOnTpc -> hssOnFst -> wedgeOnHss -> sensorOnWedge,
+    // composed the way AGML composes the same nodes. It is also what
+    // StFstHitMaker puts the hit on, so plane and measurement come from one
+    // source and cannot drift apart.
+    //
+    // This used to ask FwdGeomUtils, which navigated to
+    // /HALL_1/CAVE_1/FSTM_1/FSTD_<4+d>/FSTW_<w>/FTUS_<s>. That path does not
+    // exist in FstmGeoM or FstmGeoSM (dev2022m, dev2022sm, dev2026): those drop
+    // the FSTD disk mother and lift the sensors straight into FSTM so that each
+    // of the 108 can carry its own <Misalign> matrix. The lookup failed there and
+    // every plane sat at the origin. The database has no such variant
+    // dependence, and unlike the geometry it is per run.
+    //
+    // Index convention: the GenFit plane index IS StFstDb's flat sensor index,
+    // so there is no conversion to do here -- StFstDb::getHMatrixSensorOnGlobal
+    // takes it directly, and StFstDb::decodeSensorIndex is the one place that
+    // knows it unpacks to wedge 1-36 and sensor 0-2.
+    void createAllFstPlanes()
     {
-        // create FWD GeomUtils to get the plane locations
         for (int globalSensorIndex = 0; globalSensorIndex < kFstNumSensors; globalSensorIndex++)
         {
-            TVector3 u(1, 0, 0); 
-            TVector3 v(0, 1, 0);
-            TVector3 o = fwdGeoUtils.getFstSensorOrigin(globalSensorIndex, u, v);
+            const TGeoHMatrix *m = StFstDb::getHMatrixSensorOnGlobal( globalSensorIndex );
+            if ( m == nullptr ) {
+                LOG_ERROR << "No StFstDb matrix for FST sensor " << globalSensorIndex
+                          << " (wedge " << StFstDb::sensorIndexWedge( globalSensorIndex )
+                          << ", sensor " << StFstDb::sensorIndexSensor( globalSensorIndex )
+                          << ") -- is StFstDbMaker in the chain?" << endm;
+                mFstSensorPlanes.push_back(
+                    genfit::SharedPlanePtr(
+                        new genfit::DetPlane( TVector3(0, 0, 0), TVector3(1, 0, 0), TVector3(0, 1, 0) )));
+                continue;
+            }
+
+            const TVector3 o = StFstDb::matrixOrigin( *m );
+            const TVector3 u = StFstDb::matrixLocalX( *m );
+            const TVector3 v = StFstDb::matrixLocalY( *m );
+
             if (kVerbose > 1) {
                 LOG_INFO << "Adding FST Sensor " << globalSensorIndex << " at " << o.X() << ", " << o.Y() << ", " << o.Z() << endm;
                 LOG_INFO << "\tSensor " << globalSensorIndex << " U = " << u.X() << ", " << u.Y() << ", " << u.Z() << endm;
