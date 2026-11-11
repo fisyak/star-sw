@@ -55,22 +55,41 @@ Int_t StFstRawHitMaker::Init()
 {
     ToWhiteConst("fstRawHitAndCluster", mFstCollectionPtr);
 
-    // Production route for the threshold. BFC chain-string options are boolean
-    // presence flags -- StBFChain special-cases each one as
-    // "if (GetOption(x)) mk->SetAttr(x, value)" and there is no generic way for
-    // an option to carry a number -- so the value comes through an attribute:
+    // Three ways to set the threshold, most specific first. IAttr() returns 0
+    // when an attribute is unset and 0 is our "no cut" value, so an absent
+    // attribute can never switch the gate on by accident.
     //
-    //     chain->SetAttr("fstMaxRawHits", 1000, "fst_raw_hit");
+    //  1. setMaxRawHits() in code -- always wins, so a steering macro is never
+    //     overridden by the chain.
+    //  2. chain->SetAttr("fstMaxRawHits", 1000, "fst_raw_hit") -- the explicit
+    //     per-maker attribute.
+    //  3. the BFC GLOBAL option, which needs no change to StBFChain at all
+    //     (Gene's review of PR #45): the chain option goptFMH1nnnnn sets
+    //     .gopt.fmh, and FMH is "Fst Max Hits".
     //
-    // from a steering macro today, and from a named chain option later by
-    // having StBFChain set this same attribute. IAttr() returns 0 when the
-    // attribute is unset, and 0 is our "no cut" value, so an absent attribute
-    // can never switch the gate on by accident. An explicit setMaxRawHits()
-    // wins, which is why this only fills in when nothing was set in code.
+    //         goptFMH101000   ->  fstMaxRawHits = 1000   (our recommended cut)
+    //
+    //     *** THE LEADING DIGIT IS DISCARDED. *** The option value must be six
+    //     digits and the first must be non-zero, or it can be read as octal
+    //     rather than decimal; the 1 is padding, not part of the number. So
+    //     101000 means 1000, NOT 101000, and %100000 below is what drops it.
+    //     The usable range is therefore 1 to 99999. Say "fstMaxRawHits=1000"
+    //     in the comment next to any chain that uses it -- goptFMH101000 is
+    //     neither pretty nor obvious, and the 1 invites exactly this mistake.
+    //     Same idiom as goptSCE in StSpaceChargeEbyEMaker.
     if (mMaxRawHits <= 0 && IAttr("fstMaxRawHits") > 0) {
         mMaxRawHits = IAttr("fstMaxRawHits");
         LOG_INFO << "StFstRawHitMaker: occupancy gate threshold " << mMaxRawHits
                  << " taken from the chain attribute fstMaxRawHits" << endm;
+    }
+    if (mMaxRawHits <= 0) {
+        Int_t attrMode = IAttr(".gopt.fmh");
+        if (attrMode > 0) {
+            mMaxRawHits = attrMode % 100000;   // drops the leading padding digit
+            LOG_INFO << "StFstRawHitMaker: occupancy gate threshold " << mMaxRawHits
+                     << " taken from the BFC global option goptFMH" << attrMode
+                     << " (leading digit discarded)" << endm;
+        }
     }
 
     // The gate's makers are NOT resolved here. setMaxRawHits() can legitimately
@@ -97,7 +116,12 @@ Int_t StFstRawHitMaker::Init()
 void StFstRawHitMaker::resolveGateMakers()
 {
     mNGateMaker = 0;
-    StMaker *top = GetChain();
+    // GetTopChain(), not GetChain(): if this maker sits in a subchain of its
+    // own, GetChain() stops at that subchain and the gate would then look for
+    // StFwdTrackMaker and friends in the wrong place and silently control
+    // nothing. Gene's review of PR #45.
+    StMaker *top = GetTopChain();
+    if (!top) top = GetChain();   // belt and braces: never worse than before
     if (!top) {
         LOG_ERROR << "StFstRawHitMaker: occupancy gate is ON but there is no chain to "
                   << "resolve makers from -- the gate will NOT switch anything off" << endm;
@@ -138,6 +162,21 @@ void StFstRawHitMaker::resolveGateMakers()
 }
 
 //____________________________________________________________________________
+// SIDE EFFECT OF GATING WITH SetActive(), worth knowing when reading a log
+// (Gene's review of PR #45). A maker that is inactive does not get InitRun()
+// either, so for a controlled maker InitRun() is deferred to the first event
+// that actually PASSES the cut, not the first event of the job. Two visible
+// consequences, neither a malfunction:
+//
+//   * that first passing event takes longer than its neighbours -- it carries
+//     the initialisation and the database reads for every gated maker;
+//   * the initialisation messages appear at that point in the log rather than
+//     at the top, so "no StFwdTrackMaker banner at the start" means the early
+//     events were gated, not that the maker is missing.
+//
+// This is why the gate switches everything back ON at the top of each event
+// rather than leaving makers off: a maker that is never re-enabled would never
+// initialise at all.
 void StFstRawHitMaker::setGateMakersActive(Bool_t on)
 {
     for (int ia = 0; ia < mNGateMaker; ia++)
@@ -619,6 +658,16 @@ Int_t StFstRawHitMaker::Make()
     if (mGated) {
         mNEventsGated++;
         setGateMakersActive(kFALSE);
+        // Clear() is called below to drop this event's raw hits. It is the
+        // maker's own Clear(), so if it ever grows actions beyond emptying the
+        // wedge collections -- resetting counters, releasing a dataset -- this
+        // call would acquire them too, which is not what the gate wants. The
+        // fix then is to split a ClearWedges() out of Clear() and call that
+        // from both places. Deliberately NOT done now: today Clear() does
+        // exactly and only the thing the gate needs, and the split would be
+        // structure without purpose. Gene's review of PR #45 raised it, and
+        // agreed it belongs if and when that situation arises. This comment is
+        // the tripwire for whoever adds the first such action.
         LOG_INFO << "FST OCCUPANCY GATE: event dropped from the forward chain, "
                  << "more than " << mMaxRawHits << " FST raw hits ("
                  << nGateRows << " DAQ rows). Switched OFF for this event:";
