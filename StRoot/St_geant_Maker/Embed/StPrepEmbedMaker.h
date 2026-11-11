@@ -146,6 +146,16 @@ class StPrepEmbedMaker : public StMaker {
   TFile *mMoreFile;
   TTree *mTree;
   TTree *mMoreTree;
+
+  /// Current event data from the tags and moretags trees
+  UInt_t   mNumberOfPrimaries;
+  Short_t  mPrimaryVertexFlag;
+  Double_t mPrimaryVertexX, mPrimaryVertexY, mPrimaryVertexZ;
+  UInt_t   mTriggerId[32];
+  Double_t mSigmaPVX, mSigmaPVY, mSigmaPVZ;
+  Int_t    mMoreNumberOfPrimaries;
+  Double_t mMoreVertexX, mMoreVertexY, mMoreVertexZ;
+  Double_t mMoreSigmaPVX, mMoreSigmaPVY, mMoreSigmaPVZ;
   Bool_t mSkipMode;
   Bool_t mSpreadMode;
   Bool_t mOpenFzFile; /// Flag to enable/disable writing .fz file (default is false)
