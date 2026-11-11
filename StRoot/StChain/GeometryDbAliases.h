@@ -132,7 +132,6 @@ static const DbAlias_t fDbAlias[] = {// geometry  Comment            old
 
   {"y2017",       20161215,     1, "y2017a",   "y2017 production  geometry, AgML,xgeometry"},   
   {"y2017a",      20161215,     1, "y2017a",   "y2017 production  geometry, AgML,xgeometry"},   
-  {"y2017b",      20161215,     2, "y2017b",   "Updated support cone, AgML,xgeometry"},   
   {"y2017z",      20161215,     3, "y2017z",   "y2017 production  geometry,      xgeometry"},   
   {"r2017a",      20161220,     1, "y2017z",   "y2017 production  geometry, AgML,xgeometry"},   
   {"AuAu54_2017",	              	     20170602, 181634, "y2017z", "AuAu54_2017"}, // 1st run = 18153035			 

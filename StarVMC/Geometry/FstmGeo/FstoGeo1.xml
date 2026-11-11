@@ -268,7 +268,7 @@ Work Completed in July
 	ang= supbar_angle(1)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
 	y=supbar_rpos*sin(ang)
-<<<<<<< HEAD
+
 	<Placement block="OFSC" in="FSTA" x="x" y="y" z="outframeref+supbar_dz1+supbar_dz2/2"/>
 	ang= supbar_angle(2)*(PI/180.0)
 	x=supbar_rpos*cos(ang)
