@@ -52,9 +52,9 @@ public:
   static size_t vmmId( StFttRawHit * h ) ;
 
   // HARDWARE Mapping StFttRawHits
-    uint16_t packKey( int feb, int vmm, int ch ) const;
+    UShort_t packKey( int feb, int vmm, int ch ) const;
     void unpackKey( int key, int &feb, int &vmm, int &ch ) const;
-    uint16_t packVal( int row, int strip ) const;
+    UShort_t packVal( int row, int strip ) const;
     void unpackVal( int val, int &row, int &strip ) const;
     void loadHardwareMapFromFile( std::string fn );
     void loadHardwareMapFromDb( St_fttHardwareMap * );
@@ -207,10 +207,10 @@ public:
   TimeCutMode mTimeCutMode;
   int mTimeCutLow, mTimeCutHigh;
 
-  std :: map< uint16_t , uint16_t > mMap;
-  std :: map< uint16_t , std::vector<uint16_t> > rMap; // reverse map -- a given (row,strip) has one channel per orientation (H and V both exist at the same row/strip in the real hardware map, confirmed by scanning the forward map), so this must hold all of them, not just the last one loaded
+  std :: map< UShort_t , UShort_t > mMap;
+  std :: map< UShort_t , std::vector<UShort_t> > rMap; // reverse map -- a given (row,strip) has one channel per orientation (H and V both exist at the same row/strip in the real hardware map, confirmed by scanning the forward map), so this must hold all of them, not just the last one loaded
   //  data windows map
-  std :: map< uint16_t , FttDataWindow > dwMap;
+  std :: map< UShort_t , FttDataWindow > dwMap;
   std :: map< int , Float_t > scMapXY; // strip center map 
   std :: map< int , Float_t > scMapDiag; // strip center map 
   std :: map< int , Float_t > slMapRow1; // strip length map Row1

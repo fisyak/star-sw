@@ -147,7 +147,7 @@ void StFttDb::getTimeCut( StFttRawHit * hit, int &mode, int &l, int &h ){
     }
 
 
-uint16_t StFttDb::packKey( int feb, int vmm, int ch ) const{
+UShort_t StFttDb::packKey( int feb, int vmm, int ch ) const{
     // feb = [1 - 6] = 3 bits
     // vmm = [1 - 4] = 3 bits
     // ch  = [1 - 64] = 7 bits
@@ -159,7 +159,7 @@ void StFttDb::unpackKey( int key, int &feb, int &vmm, int &ch ) const{
     ch  = (key >> 6) & 0b1111111;
     return;
 }
-uint16_t StFttDb::packVal( int row, int strip ) const{
+UShort_t StFttDb::packVal( int row, int strip ) const{
     // row = [1 - 4] = 3 bits
     // strip = [1 - 152] = 8 bits
     return row + ( strip << 3 );
@@ -185,8 +185,8 @@ void StFttDb::loadDataWindowsFromDb( St_fttDataWindowsB * dataset ) {
                 // printf( "[feb=%d, vmm=%d, ch=%d] ==> [row=%d, strip%d]\n", table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j], table[i].row[j], table[i].strip[j] );
 
 
-                // uint16_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
-                // uint16_t val = packVal( table[i].row[j], table[i].strip[j] );
+                // UShort_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
+                // UShort_t val = packVal( table[i].row[j], table[i].strip[j] );
                 // mMap[ key ] = val;
                 // rMap[ val ] = key;
                 FttDataWindow fdw;
@@ -224,8 +224,8 @@ void StFttDb::loadHardwareMapFromDb( St_fttHardwareMap * dataset ) {
         const int nEntries = sizeof(table[0].feb) / sizeof(table[0].feb[0]);
         for (Int_t i = 0; i < rows; i++) {
             for ( int j = 0; j < nEntries; j++ ) {
-                uint16_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
-                uint16_t val = packVal( table[i].row[j], table[i].strip[j] );
+                UShort_t key = packKey( table[i].feb[j], table[i].vmm[j], table[i].vmm_ch[j] );
+                UShort_t val = packVal( table[i].row[j], table[i].strip[j] );
                 mMap[ key ] = val;
                 rMap[ val ].push_back( key ); // a given (row,strip) has one channel per orientation -- keep all of them
             }
@@ -261,11 +261,11 @@ void StFttDb::loadHardwareMapFromFile( std::string fn ){
         puts("");
     }
     
-    uint16_t row, feb, vmm, ch, strip;
+    UShort_t row, feb, vmm, ch, strip;
     while( inf >> row >> feb >> vmm >> ch >> strip ){
         // pack the key (feb, vmm, ch)
-        uint16_t key = packKey( feb, vmm, ch );
-        uint16_t val = packVal( row, strip );
+        UShort_t key = packKey( feb, vmm, ch );
+        UShort_t val = packVal( row, strip );
         mMap[ key ] = val;
         rMap[ val ].push_back( key ); // a given (row,strip) has one channel per orientation -- keep all of them
         if ( mDebug ){
@@ -571,9 +571,9 @@ UChar_t StFttDb::getOrientation( int rob, int feb, int vmm, int row ) const {
  *
  */
 bool StFttDb::hardwareMap( int rob, int feb, int vmm, int ch, int &row, int &strip, UChar_t &orientation ) const{
-    uint16_t key = packKey( feb, vmm, ch );
+    UShort_t key = packKey( feb, vmm, ch );
     if ( mMap.count( key ) ){
-        uint16_t val = mMap.at( key );
+        UShort_t val = mMap.at( key );
         unpackVal( val, row, strip );
         orientation = getOrientation( rob, feb, vmm, row );
         return true;
@@ -582,9 +582,9 @@ bool StFttDb::hardwareMap( int rob, int feb, int vmm, int ch, int &row, int &str
 }
 
 bool StFttDb::hardwareMap( StFttRawHit * hit ) const{
-    uint16_t key = packKey( hit->feb()+1, hit->vmm()+1, hit->channel() );
+    UShort_t key = packKey( hit->feb()+1, hit->vmm()+1, hit->channel() );
     if ( mMap.count( key ) ){
-        uint16_t val = mMap.at( key );
+        UShort_t val = mMap.at( key );
         int row=-1, strip=-1;
         unpackVal( val, row, strip );
         
@@ -668,7 +668,7 @@ bool StFttDb::hardwareMap( StFttRawHit * hit ) const{
 // plane, quad, row and strip can be calculated from the simulation maker
 // the key issue if to figure out which feb, row, and strip is for the selected channel
 bool StFttDb::reverseHardwareMap( int &rob, int &feb, int &vmm, int &ch, int plane, int quad, int row, int strip, UChar_t &orientation ) const {
-    uint16_t val = packVal( row, strip );
+    UShort_t val = packVal( row, strip );
     if ( !rMap.count( val ) ) return false;
 
     rob = quad + ( plane *nQuadPerPlane ) + 1;// input plane and quad should start from 0;
@@ -679,7 +679,7 @@ bool StFttDb::reverseHardwareMap( int &rob, int &feb, int &vmm, int &ch, int pla
     // if left at kFttUnknownOrientation, return whichever comes first (matches
     // the old, pre-multi-channel behavior for callers that don't care).
     UChar_t wantOrientation = orientation;
-    for ( uint16_t key : rMap.at( val ) ) {
+    for ( UShort_t key : rMap.at( val ) ) {
         int f, v, c;
         unpackKey( key, f, v, c );
         UChar_t o = getOrientation( rob, f, v, row );

@@ -26,6 +26,7 @@
  *
  */
 #include <math.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "comis/pilot.h"
 #if !defined(CERNLIB_ALPHA_OSF)
