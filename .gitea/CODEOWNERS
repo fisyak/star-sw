@@ -6,8 +6,8 @@
 .* @smirnovd @gnigmat @jeromel
 \\.github(/.*)? @smirnovd @veprbl
 OnlTools(/.*)? @smirnovd @jml
-StDb(/.*)? @dmitryh
-StDb/idl(/.*)? @akio @dmitryh @geurts @iraklic @fisyak @witt
+StDb(/.*)? @dmitry
+StDb/idl(/.*)? @akio @dmitry @geurts @iraklic @fisyak @witt
 StRoot/PWGTools(/.*)? @gnigmat @sweger @marr @lbavinh
 StRoot/RTS(/.*)? @akio @jml @tonko
 StRoot/StAnalysisMaker(/.*)? @fisyak @witt @iraklic
@@ -29,10 +29,10 @@ StRoot/StDaqLib/SSD(/.*)? @dongx
 StRoot/StDaqLib/TOF(/.*)? @ZaochenYe @geurts @dongx @jdbrice
 StRoot/StDaqLib/TRG(/.*)? @akio
 StRoot/StDataFilterMaker(/.*)? @genevb
-StRoot/StDb.* @dmitryh
+StRoot/StDb.* @dmitry
 StRoot/StDbUtilities(/.*)? @fisyak @witt @iraklic
 StRoot/StDbUtilities/StMagUtilities.* @genevb
-StRoot/StDetectorDbMaker(/.*)? @dmitryh @fisyak @witt @iraklic @jeromel
+StRoot/StDetectorDbMaker(/.*)? @dmitry @fisyak @witt @iraklic @jeromel
 StRoot/StDetectorDbMaker/StDetectorDbBeamInfo.* @genevb
 StRoot/StDetectorDbMaker/StDetectorDbGridLeak.* @genevb
 StRoot/StDetectorDbMaker/StDetectorDbRichScalers.* @genevb
@@ -109,7 +109,7 @@ StRoot/StXTrakMaker(/.*)? @jeromel
 StRoot/St_QA_Maker(/.*)? @genevb
 StRoot/St_TLA_Maker(/.*)? @jeromel
 StRoot/St_base.* @jeromel @fisyak @witt @iraklic
-StRoot/St_db_Maker(/.*)? @dmitryh @jeromel
+StRoot/St_db_Maker(/.*)? @dmitry @jeromel
 StRoot/St_geant_Maker(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/St_geant_Maker/Embed(/.*)? @zhux97
 StRoot/St_l3Clufi_Maker(/.*)? @jml @tonko
@@ -129,7 +129,7 @@ StRoot/TPCCATracker(/.*)? @fisyak @witt @iraklic
 StRoot/macros(/.*)? @genevb @smirnovd @fisyak @witt @iraklic
 StRoot/macros/embedding(/.*)? @zhux97
 StRoot/macros/mudst(/.*)? @gnigmat @smirnovd
-StarDb(/.*)? @dmitryh @jeromel @fisyak @witt @iraklic
+StarDb(/.*)? @dmitry @jeromel @fisyak @witt @iraklic
 StarDb/AgML.* @jwebb
 StarDb/AgiGeometry(/.*)? @jwebb
 StarDb/Calibrations(/.*)? @genevb
@@ -154,5 +154,5 @@ StarVMC/xgeometry(/.*)? @jwebb
 mgr(/.*)? @genevb @jwebb @fisyak @witt @iraklic @smirnovd
 pams(/.*)? @jwebb @fisyak @witt @iraklic
 pams/sim(/.*)? @akio @jwebb
-pams/tables(/.*)? @dmitryh @jeromel
+pams/tables(/.*)? @dmitry @jeromel
 asps(/.*)? @jwebb @jeromel
