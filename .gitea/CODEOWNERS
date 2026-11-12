@@ -87,7 +87,7 @@ StRoot/StPass0CalibMaker(/.*)? @genevb @iraklic
 StRoot/StPico.* @gnigmat @marr @smirnovd
 StRoot/StPxl.* @dongx @xgn1992
 StRoot/StRefMultCorr(/.*)? @gnigmat @sweger @lbavinh
-StRoot/StRHICf.* @ggfdsa10
+StRoot/StRHICf.* @slee5
 StRoot/StRTSClient(/.*)? @jml @tonko
 StRoot/StShadowMaker(/.*)? @genevb
 StRoot/StSpinPool(/.*)? @akio @zchang @veprbl @mrosales2016
