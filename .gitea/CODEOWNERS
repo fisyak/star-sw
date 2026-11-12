@@ -66,7 +66,7 @@ StRoot/StFst.* @jdbrice @sunxuhit @yezhenyu2003 @tchuang
 StRoot/StFtt.* @jdbrice
 StRoot/StFwd.* @jdbrice
 StRoot/StGenericVertexMaker(/.*)? @smirnovd @jeromel @akio @jwebb @fisyak @witt @iraklic
-StRoot/StHbtMaker(/.*)? @JohnTheBlindMilkman @DanielWielanek
+StRoot/StHbtMaker(/.*)? @JohnTheBlindMilkman @wielanek
 StRoot/StHeavyPool(/.*)? @dongx @geurts
 StRoot/StIOMaker(/.*)? @smirnovd @jeromel
 StRoot/StIst.* @smirnovd @dongx
