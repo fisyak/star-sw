@@ -15,7 +15,7 @@ StRoot/StAnalysisUtilities/StHistUtil.* @genevb
 StRoot/StAssociationMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
 StRoot/StBFChain(/.*)? @genevb @smirnovd @jwebb @fisyak @witt @iraklic
 StRoot/StBichsel(/.*)? @fisyak @witt @iraklic
-StRoot/StBTof.* @ZaochenYe @geurts @dongx @jdbrice
+StRoot/StBTof.* @ZaochenYe @geurts @dongx @jdb
 StRoot/StBbcSimulationMaker(/.*)? @akio
 StRoot/StChain(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/StDAQMaker(/.*)? @jeromel @akio
@@ -26,7 +26,7 @@ StRoot/StDaqLib/FPD(/.*)? @akio
 StRoot/StDaqLib/L3(/.*)? @jml @tonko
 StRoot/StDaqLib/SC(/.*)? @genevb
 StRoot/StDaqLib/SSD(/.*)? @dongx
-StRoot/StDaqLib/TOF(/.*)? @ZaochenYe @geurts @dongx @jdbrice
+StRoot/StDaqLib/TOF(/.*)? @ZaochenYe @geurts @dongx @jdb
 StRoot/StDaqLib/TRG(/.*)? @akio
 StRoot/StDataFilterMaker(/.*)? @genevb
 StRoot/StDb.* @dmitry
@@ -59,12 +59,12 @@ StRoot/StEventUtilities/StEbyET0.* @genevb
 StRoot/StEventUtilities/StRedoTracks.* @genevb
 StRoot/StEventUtilities/StuFixTopoMap.* @genevb
 StRoot/StEventUtilities/TwistPatch.* @genevb
-StRoot/StFcs.* @akio @jdbrice @mrosales2016
+StRoot/StFcs.* @akio @jdb @mrosales2016
 StRoot/StFms.* @akio
 StRoot/StFpd.* @akio
-StRoot/StFst.* @jdbrice @sunxuhit @yezhenyu2003 @tchuang
-StRoot/StFtt.* @jdbrice
-StRoot/StFwd.* @jdbrice
+StRoot/StFst.* @jdb @sunxuhit @yezhenyu2003 @tchuang
+StRoot/StFtt.* @jdb
+StRoot/StFwd.* @jdb
 StRoot/StGenericVertexMaker(/.*)? @smirnovd @jeromel @akio @jwebb @fisyak @witt @iraklic
 StRoot/StHbtMaker(/.*)? @JohnTheBlindMilkman @wielanek
 StRoot/StHeavyPool(/.*)? @dongx @geurts
@@ -80,7 +80,7 @@ StRoot/StMcAnalysisMaker(/.*)? @jwebb
 StRoot/StMcEvent.* @jwebb
 StRoot/StMiniMc.* @jwebb @fisyak @witt @iraklic @zhux97
 StRoot/StMtd.* @marr
-StRoot/StMuDSTMaker(/.*)? @jdbrice
+StRoot/StMuDSTMaker(/.*)? @jdb
 StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
 StRoot/StMuDSTMaker/RICHTOF(/.*)? @geurts @dongx
 StRoot/StPass0CalibMaker(/.*)? @genevb @iraklic
@@ -96,7 +96,7 @@ StRoot/StSst.* @dongx @smirnovd
 StRoot/StStarLogger(/.*)? @fisyak @witt @iraklic
 StRoot/StTableUtilities(/.*)? @fisyak @witt @iraklic
 StRoot/StTagsMaker(/.*)? @fisyak @witt @iraklic
-StRoot/StTof.* @jdbrice @geurts @dongx
+StRoot/StTof.* @jdb @geurts @dongx
 StRoot/StTpc.* @fisyak @witt @iraklic
 StRoot/StTreeMaker(/.*)? @jeromel
 StRoot/StTriggerDataMaker(/.*)? @akio
