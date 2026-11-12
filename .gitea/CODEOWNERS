@@ -20,7 +20,7 @@ StRoot/StBbcSimulationMaker(/.*)? @akio
 StRoot/StChain(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/StDAQMaker(/.*)? @jeromel @akio
 StRoot/StDaqLib(/.*)? @jml
-StRoot/StDaqLib/EEMC(/.*)? @kkauder @rkunnawa @zlchang
+StRoot/StDaqLib/EEMC(/.*)? @kkauder @rkunnawa @zchang
 StRoot/StDaqLib/EMC(/.*)? @kkauder @rkunnawa @nghimire
 StRoot/StDaqLib/FPD(/.*)? @akio
 StRoot/StDaqLib/L3(/.*)? @jml @tonko
@@ -45,12 +45,12 @@ StRoot/StDetectorDbMaker/St_tpcOmegaTau.* @genevb
 StRoot/StDetectorDbMaker/St_tpcSCGLC.* @genevb
 StRoot/StDetectorDbMaker/St_trigDetSums.* @genevb
 StRoot/StDetectorDbMaker/St_vertexSeed.* @genevb
-StRoot/StEEmc.* @kkauder @rkunnawa @zlchang
-StRoot/StEEmcSimulatorMaker(/.*)? @kkauder @rkunnawa @jwebb @zlchang
-StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin @zlchang
-StRoot/StEEmcPool(/.*)? @tinglin @zlchang
+StRoot/StEEmc.* @kkauder @rkunnawa @zchang
+StRoot/StEEmcSimulatorMaker(/.*)? @kkauder @rkunnawa @jwebb @zchang
+StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin @zchang
+StRoot/StEEmcPool(/.*)? @tinglin @zchang
 StRoot/StETof.* @weidenkaff @ideppner @ysoehngen
-StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zlchang
+StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zchang
 StRoot/StEmbeddingUtilities(/.*)? @zhux
 StRoot/StEpd.* @lisa
 StRoot/StEvent.* @jwebb @jeromel
@@ -70,8 +70,8 @@ StRoot/StHbtMaker(/.*)? @jkolas @wielanek
 StRoot/StHeavyPool(/.*)? @dongx @geurts
 StRoot/StIOMaker(/.*)? @smirnovd @jeromel
 StRoot/StIst.* @smirnovd @dongx
-StRoot/StJetFinder(/.*)? @zlchang @veprbl
-StRoot/StJetMaker(/.*)? @zlchang @veprbl
+StRoot/StJetFinder(/.*)? @zchang @veprbl
+StRoot/StJetMaker(/.*)? @zchang @veprbl
 StRoot/StLaser.* @fisyak @witt @iraklic
 StRoot/StMCFilter(/.*)? @jwebb
 StRoot/StMagF(/.*)? @fisyak @witt @iraklic
@@ -90,7 +90,7 @@ StRoot/StRefMultCorr(/.*)? @gnigmat @sweger @lbavinh
 StRoot/StRHICf.* @ggfdsa10
 StRoot/StRTSClient(/.*)? @jml @tonko
 StRoot/StShadowMaker(/.*)? @genevb
-StRoot/StSpinPool(/.*)? @akio @zlchang @veprbl @mrosales2016
+StRoot/StSpinPool(/.*)? @akio @zchang @veprbl @mrosales2016
 StRoot/StSsd.* @dongx @smirnovd
 StRoot/StSst.* @dongx @smirnovd
 StRoot/StStarLogger(/.*)? @fisyak @witt @iraklic
@@ -100,7 +100,7 @@ StRoot/StTof.* @jdb @geurts @dongx
 StRoot/StTpc.* @fisyak @witt @iraklic
 StRoot/StTreeMaker(/.*)? @jeromel
 StRoot/StTriggerDataMaker(/.*)? @akio
-StRoot/StTriggerUtilities(/.*)? @zlchang @akio @jml
+StRoot/StTriggerUtilities(/.*)? @zchang @akio @jml
 StRoot/StTrsMaker(/.*)? @fisyak @witt @iraklic
 StRoot/StUtilities/StMess.* @genevb
 StRoot/StUtilities/StMultiH.* @genevb
