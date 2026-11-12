@@ -62,7 +62,7 @@ StRoot/StEventUtilities/TwistPatch.* @genevb
 StRoot/StFcs.* @akio @jdb @mrosales2016
 StRoot/StFms.* @akio
 StRoot/StFpd.* @akio
-StRoot/StFst.* @jdb @sunxuhit @yezhenyu2003 @tchuang
+StRoot/StFst.* @jdb @sunxuhit @yezhenyu @tchuang
 StRoot/StFtt.* @jdb
 StRoot/StFwd.* @jdb
 StRoot/StGenericVertexMaker(/.*)? @smirnovd @jeromel @akio @jwebb @fisyak @witt @iraklic
