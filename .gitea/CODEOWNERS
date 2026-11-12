@@ -49,7 +49,7 @@ StRoot/StEEmc.* @kkauder @rkunnawa @zlchang
 StRoot/StEEmcSimulatorMaker(/.*)? @kkauder @rkunnawa @jwebb @zlchang
 StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin @zlchang
 StRoot/StEEmcPool(/.*)? @tinglin @zlchang
-StRoot/StETof.* @weidenkaff @ideppner @YannickSoehngen
+StRoot/StETof.* @weidenkaff @ideppner @ysoehngen
 StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zlchang
 StRoot/StEmbeddingUtilities(/.*)? @zhux
 StRoot/StEpd.* @Femtoscopist
