@@ -15,7 +15,7 @@ StRoot/StAnalysisUtilities/StHistUtil.* @genevb
 StRoot/StAssociationMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
 StRoot/StBFChain(/.*)? @genevb @smirnovd @jwebb @fisyak @witt @iraklic
 StRoot/StBichsel(/.*)? @fisyak @witt @iraklic
-StRoot/StBTof.* @ZaochenYe @geurts @dongx @jdb
+StRoot/StBTof.* @zye20 @geurts @dongx @jdb
 StRoot/StBbcSimulationMaker(/.*)? @akio
 StRoot/StChain(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/StDAQMaker(/.*)? @jeromel @akio
@@ -26,7 +26,7 @@ StRoot/StDaqLib/FPD(/.*)? @akio
 StRoot/StDaqLib/L3(/.*)? @jml @tonko
 StRoot/StDaqLib/SC(/.*)? @genevb
 StRoot/StDaqLib/SSD(/.*)? @dongx
-StRoot/StDaqLib/TOF(/.*)? @ZaochenYe @geurts @dongx @jdb
+StRoot/StDaqLib/TOF(/.*)? @zye20 @geurts @dongx @jdb
 StRoot/StDaqLib/TRG(/.*)? @akio
 StRoot/StDataFilterMaker(/.*)? @genevb
 StRoot/StDb.* @dmitry
@@ -104,7 +104,7 @@ StRoot/StTriggerUtilities(/.*)? @zlchang @akio @jml
 StRoot/StTrsMaker(/.*)? @fisyak @witt @iraklic
 StRoot/StUtilities/StMess.* @genevb
 StRoot/StUtilities/StMultiH.* @genevb
-StRoot/StVpd.* @ZaochenYe @geurts
+StRoot/StVpd.* @zye20 @geurts
 StRoot/StXTrakMaker(/.*)? @jeromel
 StRoot/St_QA_Maker(/.*)? @genevb
 StRoot/St_TLA_Maker(/.*)? @jeromel
@@ -134,7 +134,7 @@ StarDb/AgML.* @jwebb
 StarDb/AgiGeometry(/.*)? @jwebb
 StarDb/Calibrations(/.*)? @genevb
 StarDb/Calibrations/emc(/.*)? @kkauder @rkunnawa @nghimire
-StarDb/Calibrations/tof(/.*)? @ZaochenYe @geurts
+StarDb/Calibrations/tof(/.*)? @zye20 @geurts
 StarDb/Calibrations/tpc(/.*)? @fisyak @witt @iraklic
 StarDb/Calibrations/tracker(/.*)? @jwebb
 StarDb/Geometry(/.*)? @genevb @jwebb
