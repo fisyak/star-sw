@@ -32,7 +32,7 @@ StRoot/StDataFilterMaker(/.*)? @genevb
 StRoot/StDb.* @dmarkh
 StRoot/StDbUtilities(/.*)? @fisyak @R-Witt @iraklic
 StRoot/StDbUtilities/StMagUtilities.* @genevb
-StRoot/StDetectorDbMaker(/.*)? @dmarkh @fisyak @R-Witt @iraklic
+StRoot/StDetectorDbMaker(/.*)? @dmarkh @fisyak @R-Witt @iraklic @jeromel
 StRoot/StDetectorDbMaker/StDetectorDbBeamInfo.* @genevb
 StRoot/StDetectorDbMaker/StDetectorDbGridLeak.* @genevb
 StRoot/StDetectorDbMaker/StDetectorDbRichScalers.* @genevb
@@ -53,7 +53,7 @@ StRoot/StETof.* @PhilippWeidenkaff @ideppner @YannickSoehngen
 StRoot/StEmc.* @kkauder @rkunnawa @Navagyan @zlchang
 StRoot/StEmbeddingUtilities(/.*)? @zhux97
 StRoot/StEpd.* @Femtoscopist
-StRoot/StEvent.* @jwebb
+StRoot/StEvent.* @jwebb @jeromel
 StRoot/StEvent/StTpc.* @fisyak @R-Witt @iraklic
 StRoot/StEventUtilities/StEbyET0.* @genevb
 StRoot/StEventUtilities/StRedoTracks.* @genevb
@@ -116,7 +116,7 @@ StRoot/St_l3Clufi_Maker(/.*)? @jml985 @tonko-lj
 StRoot/St_l3t_Maker(/.*)? @jml985 @tonko-lj
 StRoot/St_tcl_Maker(/.*)? @fisyak @R-Witt @iraklic
 StRoot/Star2Root(/.*)? @jeromel @fisyak @R-Witt @iraklic
-StRoot/StarClassLibrary(/.*)? @jwebb
+StRoot/StarClassLibrary(/.*)? @jwebb @jeromel
 StRoot/StarGenerator(/.*)? @jwebb @jeromel
 StRoot/StarMagField(/.*)? @fisyak @R-Witt @iraklic
 StRoot/StarRoot(/.*)? @jwebb @jeromel @fisyak @R-Witt @iraklic
@@ -154,5 +154,5 @@ StarVMC/xgeometry(/.*)? @jwebb
 mgr(/.*)? @genevb @jwebb @fisyak @R-Witt @iraklic @smirnovd
 pams(/.*)? @jwebb @fisyak @R-Witt @iraklic
 pams/sim(/.*)? @akio @jwebb
-pams/tables(/.*)? @dmarkh
+pams/tables(/.*)? @dmarkh @jeromel
 asps(/.*)? @jwebb @jeromel
