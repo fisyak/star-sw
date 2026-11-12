@@ -85,7 +85,7 @@ StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
 StRoot/StMuDSTMaker/RICHTOF(/.*)? @geurts @dongx
 StRoot/StPass0CalibMaker(/.*)? @genevb @iraklic
 StRoot/StPico.* @gnigmat @marr @smirnovd
-StRoot/StPxl.* @dongx @GuannanXie
+StRoot/StPxl.* @dongx @xgn1992
 StRoot/StRefMultCorr(/.*)? @gnigmat @sweger @lbavinh
 StRoot/StRHICf.* @ggfdsa10
 StRoot/StRTSClient(/.*)? @jml @tonko
