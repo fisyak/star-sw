@@ -12,7 +12,7 @@ StRoot/PWGTools(/.*)? @gnigmat @sweger @marr @lbavinh
 StRoot/RTS(/.*)? @akio @jml @tonko
 StRoot/StAnalysisMaker(/.*)? @fisyak @witt @iraklic
 StRoot/StAnalysisUtilities/StHistUtil.* @genevb
-StRoot/StAssociationMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
+StRoot/StAssociationMaker/EMC(/.*)? @kkauder @elayavalli @nghimire
 StRoot/StBFChain(/.*)? @genevb @smirnovd @jwebb @fisyak @witt @iraklic
 StRoot/StBichsel(/.*)? @fisyak @witt @iraklic
 StRoot/StBTof.* @zye20 @geurts @dongx @jdb
@@ -20,8 +20,8 @@ StRoot/StBbcSimulationMaker(/.*)? @akio
 StRoot/StChain(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/StDAQMaker(/.*)? @jeromel @akio
 StRoot/StDaqLib(/.*)? @jml
-StRoot/StDaqLib/EEMC(/.*)? @kkauder @rkunnawa @zchang
-StRoot/StDaqLib/EMC(/.*)? @kkauder @rkunnawa @nghimire
+StRoot/StDaqLib/EEMC(/.*)? @kkauder @elayavalli @zchang
+StRoot/StDaqLib/EMC(/.*)? @kkauder @elayavalli @nghimire
 StRoot/StDaqLib/FPD(/.*)? @akio
 StRoot/StDaqLib/L3(/.*)? @jml @tonko
 StRoot/StDaqLib/SC(/.*)? @genevb
@@ -45,12 +45,12 @@ StRoot/StDetectorDbMaker/St_tpcOmegaTau.* @genevb
 StRoot/StDetectorDbMaker/St_tpcSCGLC.* @genevb
 StRoot/StDetectorDbMaker/St_trigDetSums.* @genevb
 StRoot/StDetectorDbMaker/St_vertexSeed.* @genevb
-StRoot/StEEmc.* @kkauder @rkunnawa @zchang
-StRoot/StEEmcSimulatorMaker(/.*)? @kkauder @rkunnawa @jwebb @zchang
-StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin @zchang
+StRoot/StEEmc.* @kkauder @elayavalli @zchang
+StRoot/StEEmcSimulatorMaker(/.*)? @kkauder @elayavalli @jwebb @zchang
+StRoot/StEEmcUtil(/.*)? @kkauder @elayavalli @jwebb @tinglin @zchang
 StRoot/StEEmcPool(/.*)? @tinglin @zchang
 StRoot/StETof.* @weidenkaff @ideppner @ysoehngen
-StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zchang
+StRoot/StEmc.* @kkauder @elayavalli @nghimire @zchang
 StRoot/StEmbeddingUtilities(/.*)? @zhux
 StRoot/StEpd.* @lisa
 StRoot/StEvent.* @jwebb @jeromel
@@ -81,7 +81,7 @@ StRoot/StMcEvent.* @jwebb
 StRoot/StMiniMc.* @jwebb @fisyak @witt @iraklic @zhux
 StRoot/StMtd.* @marr
 StRoot/StMuDSTMaker(/.*)? @jdb
-StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
+StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @elayavalli @nghimire
 StRoot/StMuDSTMaker/RICHTOF(/.*)? @geurts @dongx
 StRoot/StPass0CalibMaker(/.*)? @genevb @iraklic
 StRoot/StPico.* @gnigmat @marr @smirnovd
@@ -133,14 +133,14 @@ StarDb(/.*)? @dmitry @jeromel @fisyak @witt @iraklic
 StarDb/AgML.* @jwebb
 StarDb/AgiGeometry(/.*)? @jwebb
 StarDb/Calibrations(/.*)? @genevb
-StarDb/Calibrations/emc(/.*)? @kkauder @rkunnawa @nghimire
+StarDb/Calibrations/emc(/.*)? @kkauder @elayavalli @nghimire
 StarDb/Calibrations/tof(/.*)? @zye20 @geurts
 StarDb/Calibrations/tpc(/.*)? @fisyak @witt @iraklic
 StarDb/Calibrations/tracker(/.*)? @jwebb
 StarDb/Geometry(/.*)? @genevb @jwebb
 StarDb/Geometry/tpc(/.*)? @fisyak @witt @iraklic
 StarDb/VmcGeometry(/.*)? @jwebb
-StarDb/emc(/.*)? @kkauder @rkunnawa @nghimire
+StarDb/emc(/.*)? @kkauder @elayavalli @nghimire
 StarVMC(/.*)? @jwebb
 StarVMC/geant3(/.*)? @fisyak @witt @iraklic
 StarVMC/Geometry(/.*)? @jwebb
