@@ -51,7 +51,7 @@ StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin @zlchang
 StRoot/StEEmcPool(/.*)? @tinglin @zlchang
 StRoot/StETof.* @weidenkaff @ideppner @YannickSoehngen
 StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zlchang
-StRoot/StEmbeddingUtilities(/.*)? @zhux97
+StRoot/StEmbeddingUtilities(/.*)? @zhux
 StRoot/StEpd.* @Femtoscopist
 StRoot/StEvent.* @jwebb @jeromel
 StRoot/StEvent/StTpc.* @fisyak @witt @iraklic
@@ -78,7 +78,7 @@ StRoot/StMagF(/.*)? @fisyak @witt @iraklic
 StRoot/StMc.* @jwebb @jeromel
 StRoot/StMcAnalysisMaker(/.*)? @jwebb
 StRoot/StMcEvent.* @jwebb
-StRoot/StMiniMc.* @jwebb @fisyak @witt @iraklic @zhux97
+StRoot/StMiniMc.* @jwebb @fisyak @witt @iraklic @zhux
 StRoot/StMtd.* @marr
 StRoot/StMuDSTMaker(/.*)? @jdb
 StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
@@ -111,7 +111,7 @@ StRoot/St_TLA_Maker(/.*)? @jeromel
 StRoot/St_base.* @jeromel @fisyak @witt @iraklic
 StRoot/St_db_Maker(/.*)? @dmitry @jeromel
 StRoot/St_geant_Maker(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
-StRoot/St_geant_Maker/Embed(/.*)? @zhux97
+StRoot/St_geant_Maker/Embed(/.*)? @zhux
 StRoot/St_l3Clufi_Maker(/.*)? @jml @tonko
 StRoot/St_l3t_Maker(/.*)? @jml @tonko
 StRoot/St_tcl_Maker(/.*)? @fisyak @witt @iraklic
@@ -127,7 +127,7 @@ StRoot/Stv.* @jeromel
 StRoot/StvUtil(/.*)? @jwebb @jeromel
 StRoot/TPCCATracker(/.*)? @fisyak @witt @iraklic
 StRoot/macros(/.*)? @genevb @smirnovd @fisyak @witt @iraklic
-StRoot/macros/embedding(/.*)? @zhux97
+StRoot/macros/embedding(/.*)? @zhux
 StRoot/macros/mudst(/.*)? @gnigmat @smirnovd
 StarDb(/.*)? @dmitry @jeromel @fisyak @witt @iraklic
 StarDb/AgML.* @jwebb
