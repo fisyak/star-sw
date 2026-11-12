@@ -52,7 +52,7 @@ StRoot/StEEmcPool(/.*)? @tinglin @zlchang
 StRoot/StETof.* @weidenkaff @ideppner @ysoehngen
 StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zlchang
 StRoot/StEmbeddingUtilities(/.*)? @zhux
-StRoot/StEpd.* @Femtoscopist
+StRoot/StEpd.* @lisa
 StRoot/StEvent.* @jwebb @jeromel
 StRoot/StEvent/StTpc.* @fisyak @witt @iraklic
 StRoot/StEventUtilities/StEbyET0.* @genevb
