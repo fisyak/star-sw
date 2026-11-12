@@ -5,34 +5,34 @@
 
 .* @smirnovd @gnigmat @jeromel
 \\.github(/.*)? @smirnovd @veprbl
-OnlTools(/.*)? @smirnovd @jml985
-StDb(/.*)? @dmarkh
-StDb/idl(/.*)? @akio @dmarkh @fgeurts @iraklic @fisyak @R-Witt
-StRoot/PWGTools(/.*)? @gnigmat @sweger @marrbnl @lbavinh
-StRoot/RTS(/.*)? @akio @jml985 @tonko-lj
-StRoot/StAnalysisMaker(/.*)? @fisyak @R-Witt @iraklic
+OnlTools(/.*)? @smirnovd @jml
+StDb(/.*)? @dmitryh
+StDb/idl(/.*)? @akio @dmitryh @geurts @iraklic @fisyak @witt
+StRoot/PWGTools(/.*)? @gnigmat @sweger @marr @lbavinh
+StRoot/RTS(/.*)? @akio @jml @tonko
+StRoot/StAnalysisMaker(/.*)? @fisyak @witt @iraklic
 StRoot/StAnalysisUtilities/StHistUtil.* @genevb
-StRoot/StAssociationMaker/EMC(/.*)? @kkauder @rkunnawa @Navagyan
-StRoot/StBFChain(/.*)? @genevb @smirnovd @jwebb @fisyak @R-Witt @iraklic
-StRoot/StBichsel(/.*)? @fisyak @R-Witt @iraklic
-StRoot/StBTof.* @ZaochenYe @fgeurts @dongx @jdbrice
+StRoot/StAssociationMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
+StRoot/StBFChain(/.*)? @genevb @smirnovd @jwebb @fisyak @witt @iraklic
+StRoot/StBichsel(/.*)? @fisyak @witt @iraklic
+StRoot/StBTof.* @ZaochenYe @geurts @dongx @jdbrice
 StRoot/StBbcSimulationMaker(/.*)? @akio
-StRoot/StChain(/.*)? @jwebb @jeromel @fisyak @R-Witt @iraklic
+StRoot/StChain(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/StDAQMaker(/.*)? @jeromel @akio
-StRoot/StDaqLib(/.*)? @jml985
+StRoot/StDaqLib(/.*)? @jml
 StRoot/StDaqLib/EEMC(/.*)? @kkauder @rkunnawa @zlchang
-StRoot/StDaqLib/EMC(/.*)? @kkauder @rkunnawa @Navagyan
+StRoot/StDaqLib/EMC(/.*)? @kkauder @rkunnawa @nghimire
 StRoot/StDaqLib/FPD(/.*)? @akio
-StRoot/StDaqLib/L3(/.*)? @jml985 @tonko-lj
+StRoot/StDaqLib/L3(/.*)? @jml @tonko
 StRoot/StDaqLib/SC(/.*)? @genevb
 StRoot/StDaqLib/SSD(/.*)? @dongx
-StRoot/StDaqLib/TOF(/.*)? @ZaochenYe @fgeurts @dongx @jdbrice
+StRoot/StDaqLib/TOF(/.*)? @ZaochenYe @geurts @dongx @jdbrice
 StRoot/StDaqLib/TRG(/.*)? @akio
 StRoot/StDataFilterMaker(/.*)? @genevb
-StRoot/StDb.* @dmarkh
-StRoot/StDbUtilities(/.*)? @fisyak @R-Witt @iraklic
+StRoot/StDb.* @dmitryh
+StRoot/StDbUtilities(/.*)? @fisyak @witt @iraklic
 StRoot/StDbUtilities/StMagUtilities.* @genevb
-StRoot/StDetectorDbMaker(/.*)? @dmarkh @fisyak @R-Witt @iraklic @jeromel
+StRoot/StDetectorDbMaker(/.*)? @dmitryh @fisyak @witt @iraklic @jeromel
 StRoot/StDetectorDbMaker/StDetectorDbBeamInfo.* @genevb
 StRoot/StDetectorDbMaker/StDetectorDbGridLeak.* @genevb
 StRoot/StDetectorDbMaker/StDetectorDbRichScalers.* @genevb
@@ -47,14 +47,14 @@ StRoot/StDetectorDbMaker/St_trigDetSums.* @genevb
 StRoot/StDetectorDbMaker/St_vertexSeed.* @genevb
 StRoot/StEEmc.* @kkauder @rkunnawa @zlchang
 StRoot/StEEmcSimulatorMaker(/.*)? @kkauder @rkunnawa @jwebb @zlchang
-StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin-physics @zlchang
-StRoot/StEEmcPool(/.*)? @tinglin-physics @zlchang
-StRoot/StETof.* @PhilippWeidenkaff @ideppner @YannickSoehngen
-StRoot/StEmc.* @kkauder @rkunnawa @Navagyan @zlchang
+StRoot/StEEmcUtil(/.*)? @kkauder @rkunnawa @jwebb @tinglin @zlchang
+StRoot/StEEmcPool(/.*)? @tinglin @zlchang
+StRoot/StETof.* @weidenkaff @ideppner @YannickSoehngen
+StRoot/StEmc.* @kkauder @rkunnawa @nghimire @zlchang
 StRoot/StEmbeddingUtilities(/.*)? @zhux97
 StRoot/StEpd.* @Femtoscopist
 StRoot/StEvent.* @jwebb @jeromel
-StRoot/StEvent/StTpc.* @fisyak @R-Witt @iraklic
+StRoot/StEvent/StTpc.* @fisyak @witt @iraklic
 StRoot/StEventUtilities/StEbyET0.* @genevb
 StRoot/StEventUtilities/StRedoTracks.* @genevb
 StRoot/StEventUtilities/StuFixTopoMap.* @genevb
@@ -65,94 +65,94 @@ StRoot/StFpd.* @akio
 StRoot/StFst.* @jdbrice @sunxuhit @yezhenyu2003 @tchuang
 StRoot/StFtt.* @jdbrice
 StRoot/StFwd.* @jdbrice
-StRoot/StGenericVertexMaker(/.*)? @smirnovd @jeromel @akio @jwebb @fisyak @R-Witt @iraklic
+StRoot/StGenericVertexMaker(/.*)? @smirnovd @jeromel @akio @jwebb @fisyak @witt @iraklic
 StRoot/StHbtMaker(/.*)? @JohnTheBlindMilkman @DanielWielanek
-StRoot/StHeavyPool(/.*)? @dongx @fgeurts
+StRoot/StHeavyPool(/.*)? @dongx @geurts
 StRoot/StIOMaker(/.*)? @smirnovd @jeromel
 StRoot/StIst.* @smirnovd @dongx
 StRoot/StJetFinder(/.*)? @zlchang @veprbl
 StRoot/StJetMaker(/.*)? @zlchang @veprbl
-StRoot/StLaser.* @fisyak @R-Witt @iraklic
+StRoot/StLaser.* @fisyak @witt @iraklic
 StRoot/StMCFilter(/.*)? @jwebb
-StRoot/StMagF(/.*)? @fisyak @R-Witt @iraklic
+StRoot/StMagF(/.*)? @fisyak @witt @iraklic
 StRoot/StMc.* @jwebb @jeromel
 StRoot/StMcAnalysisMaker(/.*)? @jwebb
 StRoot/StMcEvent.* @jwebb
-StRoot/StMiniMc.* @jwebb @fisyak @R-Witt @iraklic @zhux97
-StRoot/StMtd.* @marrbnl
+StRoot/StMiniMc.* @jwebb @fisyak @witt @iraklic @zhux97
+StRoot/StMtd.* @marr
 StRoot/StMuDSTMaker(/.*)? @jdbrice
-StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @rkunnawa @Navagyan
-StRoot/StMuDSTMaker/RICHTOF(/.*)? @fgeurts @dongx
+StRoot/StMuDSTMaker/EMC(/.*)? @kkauder @rkunnawa @nghimire
+StRoot/StMuDSTMaker/RICHTOF(/.*)? @geurts @dongx
 StRoot/StPass0CalibMaker(/.*)? @genevb @iraklic
-StRoot/StPico.* @gnigmat @marrbnl @smirnovd
+StRoot/StPico.* @gnigmat @marr @smirnovd
 StRoot/StPxl.* @dongx @GuannanXie
 StRoot/StRefMultCorr(/.*)? @gnigmat @sweger @lbavinh
 StRoot/StRHICf.* @ggfdsa10
-StRoot/StRTSClient(/.*)? @jml985 @tonko-lj
+StRoot/StRTSClient(/.*)? @jml @tonko
 StRoot/StShadowMaker(/.*)? @genevb
 StRoot/StSpinPool(/.*)? @akio @zlchang @veprbl @mrosales2016
 StRoot/StSsd.* @dongx @smirnovd
 StRoot/StSst.* @dongx @smirnovd
-StRoot/StStarLogger(/.*)? @fisyak @R-Witt @iraklic
-StRoot/StTableUtilities(/.*)? @fisyak @R-Witt @iraklic
-StRoot/StTagsMaker(/.*)? @fisyak @R-Witt @iraklic
-StRoot/StTof.* @jdbrice @fgeurts @dongx
-StRoot/StTpc.* @fisyak @R-Witt @iraklic
+StRoot/StStarLogger(/.*)? @fisyak @witt @iraklic
+StRoot/StTableUtilities(/.*)? @fisyak @witt @iraklic
+StRoot/StTagsMaker(/.*)? @fisyak @witt @iraklic
+StRoot/StTof.* @jdbrice @geurts @dongx
+StRoot/StTpc.* @fisyak @witt @iraklic
 StRoot/StTreeMaker(/.*)? @jeromel
 StRoot/StTriggerDataMaker(/.*)? @akio
-StRoot/StTriggerUtilities(/.*)? @zlchang @akio @jml985
-StRoot/StTrsMaker(/.*)? @fisyak @R-Witt @iraklic
+StRoot/StTriggerUtilities(/.*)? @zlchang @akio @jml
+StRoot/StTrsMaker(/.*)? @fisyak @witt @iraklic
 StRoot/StUtilities/StMess.* @genevb
 StRoot/StUtilities/StMultiH.* @genevb
-StRoot/StVpd.* @ZaochenYe @fgeurts
+StRoot/StVpd.* @ZaochenYe @geurts
 StRoot/StXTrakMaker(/.*)? @jeromel
 StRoot/St_QA_Maker(/.*)? @genevb
 StRoot/St_TLA_Maker(/.*)? @jeromel
-StRoot/St_base.* @jeromel @fisyak @R-Witt @iraklic
-StRoot/St_db_Maker(/.*)? @dmarkh @jeromel
-StRoot/St_geant_Maker(/.*)? @jwebb @jeromel @fisyak @R-Witt @iraklic
+StRoot/St_base.* @jeromel @fisyak @witt @iraklic
+StRoot/St_db_Maker(/.*)? @dmitryh @jeromel
+StRoot/St_geant_Maker(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
 StRoot/St_geant_Maker/Embed(/.*)? @zhux97
-StRoot/St_l3Clufi_Maker(/.*)? @jml985 @tonko-lj
-StRoot/St_l3t_Maker(/.*)? @jml985 @tonko-lj
-StRoot/St_tcl_Maker(/.*)? @fisyak @R-Witt @iraklic
-StRoot/Star2Root(/.*)? @jeromel @fisyak @R-Witt @iraklic
+StRoot/St_l3Clufi_Maker(/.*)? @jml @tonko
+StRoot/St_l3t_Maker(/.*)? @jml @tonko
+StRoot/St_tcl_Maker(/.*)? @fisyak @witt @iraklic
+StRoot/Star2Root(/.*)? @jeromel @fisyak @witt @iraklic
 StRoot/StarClassLibrary(/.*)? @jwebb @jeromel
 StRoot/StarGenerator(/.*)? @jwebb @jeromel
-StRoot/StarMagField(/.*)? @fisyak @R-Witt @iraklic
-StRoot/StarRoot(/.*)? @jwebb @jeromel @fisyak @R-Witt @iraklic
-StRoot/StdEdx.* @fisyak @R-Witt @iraklic
-StRoot/Sti.* @jwebb @smirnovd @dongx @jeromel @fisyak @R-Witt @iraklic
-StRoot/Stl3.* @jml985 @tonko-lj
+StRoot/StarMagField(/.*)? @fisyak @witt @iraklic
+StRoot/StarRoot(/.*)? @jwebb @jeromel @fisyak @witt @iraklic
+StRoot/StdEdx.* @fisyak @witt @iraklic
+StRoot/Sti.* @jwebb @smirnovd @dongx @jeromel @fisyak @witt @iraklic
+StRoot/Stl3.* @jml @tonko
 StRoot/Stv.* @jeromel
 StRoot/StvUtil(/.*)? @jwebb @jeromel
-StRoot/TPCCATracker(/.*)? @fisyak @R-Witt @iraklic
-StRoot/macros(/.*)? @genevb @smirnovd @fisyak @R-Witt @iraklic
+StRoot/TPCCATracker(/.*)? @fisyak @witt @iraklic
+StRoot/macros(/.*)? @genevb @smirnovd @fisyak @witt @iraklic
 StRoot/macros/embedding(/.*)? @zhux97
 StRoot/macros/mudst(/.*)? @gnigmat @smirnovd
-StarDb(/.*)? @dmarkh @jeromel @fisyak @R-Witt @iraklic
+StarDb(/.*)? @dmitryh @jeromel @fisyak @witt @iraklic
 StarDb/AgML.* @jwebb
 StarDb/AgiGeometry(/.*)? @jwebb
 StarDb/Calibrations(/.*)? @genevb
-StarDb/Calibrations/emc(/.*)? @kkauder @rkunnawa @Navagyan
-StarDb/Calibrations/tof(/.*)? @ZaochenYe @fgeurts
-StarDb/Calibrations/tpc(/.*)? @fisyak @R-Witt @iraklic
+StarDb/Calibrations/emc(/.*)? @kkauder @rkunnawa @nghimire
+StarDb/Calibrations/tof(/.*)? @ZaochenYe @geurts
+StarDb/Calibrations/tpc(/.*)? @fisyak @witt @iraklic
 StarDb/Calibrations/tracker(/.*)? @jwebb
 StarDb/Geometry(/.*)? @genevb @jwebb
-StarDb/Geometry/tpc(/.*)? @fisyak @R-Witt @iraklic
+StarDb/Geometry/tpc(/.*)? @fisyak @witt @iraklic
 StarDb/VmcGeometry(/.*)? @jwebb
-StarDb/emc(/.*)? @kkauder @rkunnawa @Navagyan
+StarDb/emc(/.*)? @kkauder @rkunnawa @nghimire
 StarVMC(/.*)? @jwebb
-StarVMC/geant3(/.*)? @fisyak @R-Witt @iraklic
+StarVMC/geant3(/.*)? @fisyak @witt @iraklic
 StarVMC/Geometry(/.*)? @jwebb
 StarVMC/GeoTestMaker(/.*)? @jeromel
 StarVMC/minicern(/.*)? @jeromel
 StarVMC/StarAgml.* @jwebb
 StarVMC/StarBASE(/.*)? @jwebb
 StarVMC/StarGeometry(/.*)? @jwebb
-StarVMC/StarVMCApplication(/.*)? @fisyak @R-Witt @iraklic
+StarVMC/StarVMCApplication(/.*)? @fisyak @witt @iraklic
 StarVMC/xgeometry(/.*)? @jwebb
-mgr(/.*)? @genevb @jwebb @fisyak @R-Witt @iraklic @smirnovd
-pams(/.*)? @jwebb @fisyak @R-Witt @iraklic
+mgr(/.*)? @genevb @jwebb @fisyak @witt @iraklic @smirnovd
+pams(/.*)? @jwebb @fisyak @witt @iraklic
 pams/sim(/.*)? @akio @jwebb
-pams/tables(/.*)? @dmarkh @jeromel
+pams/tables(/.*)? @dmitryh @jeromel
 asps(/.*)? @jwebb @jeromel
