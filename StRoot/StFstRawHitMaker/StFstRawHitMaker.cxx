@@ -34,8 +34,11 @@ StFstRawHitMaker::StFstRawHitMaker( const char *name ): StRTSBaseMaker( "fst", n
     mGainVec(kFstNumElecIds, 0),
     mMappingVec(kFstNumElecIds, 0),
     mConfigVec(kFstNumApvs, 1),
-    mDataType(0)
+    mDataType(0),
+    mMaxRawHits(-1), mGated(kFALSE), mGateResolved(kFALSE), mNGateMaker(0),
+    mNEventsSeen(0), mNEventsGated(0), mMuDstGateWarned(kFALSE)
 {
+    for (int ig = 0; ig < kNGateMakers; ig++) mGateMaker[ig] = 0;
 }
 
 StFstRawHitMaker::~StFstRawHitMaker()
@@ -52,7 +55,132 @@ Int_t StFstRawHitMaker::Init()
 {
     ToWhiteConst("fstRawHitAndCluster", mFstCollectionPtr);
 
+    // Three ways to set the threshold, most specific first. IAttr() returns 0
+    // when an attribute is unset and 0 is our "no cut" value, so an absent
+    // attribute can never switch the gate on by accident.
+    //
+    //  1. setMaxRawHits() in code -- always wins, so a steering macro is never
+    //     overridden by the chain.
+    //  2. chain->SetAttr("fstMaxRawHits", 1000, "fst_raw_hit") -- the explicit
+    //     per-maker attribute.
+    //  3. the BFC GLOBAL option, which needs no change to StBFChain at all
+    //     (Gene's review of PR #45): the chain option goptFMH1nnnnn sets
+    //     .gopt.fmh, and FMH is "Fst Max Hits".
+    //
+    //         goptFMH101000   ->  fstMaxRawHits = 1000   (our recommended cut)
+    //
+    //     *** THE LEADING DIGIT IS DISCARDED. *** The option value must be six
+    //     digits and the first must be non-zero, or it can be read as octal
+    //     rather than decimal; the 1 is padding, not part of the number. So
+    //     101000 means 1000, NOT 101000, and %100000 below is what drops it.
+    //     The usable range is therefore 1 to 99999. Say "fstMaxRawHits=1000"
+    //     in the comment next to any chain that uses it -- goptFMH101000 is
+    //     neither pretty nor obvious, and the 1 invites exactly this mistake.
+    //     Same idiom as goptSCE in StSpaceChargeEbyEMaker.
+    if (mMaxRawHits <= 0 && IAttr("fstMaxRawHits") > 0) {
+        mMaxRawHits = IAttr("fstMaxRawHits");
+        LOG_INFO << "StFstRawHitMaker: occupancy gate threshold " << mMaxRawHits
+                 << " taken from the chain attribute fstMaxRawHits" << endm;
+    }
+    if (mMaxRawHits <= 0) {
+        Int_t attrMode = IAttr(".gopt.fmh");
+        if (attrMode > 0) {
+            mMaxRawHits = attrMode % 100000;   // drops the leading padding digit
+            LOG_INFO << "StFstRawHitMaker: occupancy gate threshold " << mMaxRawHits
+                     << " taken from the BFC global option goptFMH" << attrMode
+                     << " (leading digit discarded)" << endm;
+        }
+    }
+
+    // The gate's makers are NOT resolved here. setMaxRawHits() can legitimately
+    // arrive after Init() -- from an attribute, a .call or a steering macro --
+    // and resolving too early would silently leave the gate controlling
+    // nothing. Done lazily on the first event that needs it instead.
+
     return kStOk;
+}
+
+//____________________________________________________________________________
+/**
+ * Find the makers the occupancy gate switches off. Done once, here, rather than
+ * by name on every event: a GetMaker() that silently returns null would mean the
+ * gate quietly does nothing while the log still says it is enabled, i.e. we
+ * would believe we were saving CPU that we were not. So anything missing is
+ * reported, loudly, at Init.
+ *
+ * Resolved by CLASS where the class is unique, because the BFC maker NAMES come
+ * from the option table and are easier to get wrong; the FTT chain is the one
+ * exception, taken by name since switching the parent StChain off covers
+ * FttDat/FttHitCalib/FttClu/FttPoint/FttQA in a single call.
+ */
+void StFstRawHitMaker::resolveGateMakers()
+{
+    mNGateMaker = 0;
+    // GetTopChain(), not GetChain(): if this maker sits in a subchain of its
+    // own, GetChain() stops at that subchain and the gate would then look for
+    // StFwdTrackMaker and friends in the wrong place and silently control
+    // nothing. Gene's review of PR #45.
+    StMaker *top = GetTopChain();
+    if (!top) top = GetChain();   // belt and braces: never worse than before
+    if (!top) {
+        LOG_ERROR << "StFstRawHitMaker: occupancy gate is ON but there is no chain to "
+                  << "resolve makers from -- the gate will NOT switch anything off" << endm;
+        return;
+    }
+
+    const char *byClass[] = { "StFstClusterMaker", "StFstHitMaker",
+                              "StFwdTrackMaker",   "StFcsTrackMatchMaker" };
+    for (int ic = 0; ic < 4; ic++) {
+        StMaker *mk = top->GetMakerInheritsFrom(byClass[ic]);
+        if (mk) { if (mNGateMaker < kNGateMakers) mGateMaker[mNGateMaker++] = mk; }
+        else      LOG_INFO  << "StFstRawHitMaker: occupancy gate -- no " << byClass[ic]
+                            << " in this chain, nothing to switch off for it" << endm;
+    }
+
+    StMaker *ftt = top->GetMaker("fttChain");
+    if (ftt) { if (mNGateMaker < kNGateMakers) mGateMaker[mNGateMaker++] = ftt; }
+    else {
+        // No parent chain: fall back to the individual FTT makers so an FTT
+        // chain built some other way is still covered.
+        const char *fttClass[] = { "StFttRawHitMaker", "StFttHitCalibMaker",
+                                   "StFttClusterMaker", "StFttPointMaker" };
+        int nf = 0;
+        for (int jf = 0; jf < 4; jf++) {
+            StMaker *mk = top->GetMakerInheritsFrom(fttClass[jf]);
+            if (mk && mNGateMaker < kNGateMakers) { mGateMaker[mNGateMaker++] = mk; nf++; }
+        }
+        LOG_INFO << "StFstRawHitMaker: occupancy gate -- no 'fttChain', took "
+                 << nf << " FTT makers individually" << endm;
+    }
+
+    LOG_INFO << "StFstRawHitMaker: OCCUPANCY GATE ENABLED, maxRawHits = " << mMaxRawHits
+             << ", controlling " << mNGateMaker << " makers:";
+    for (int il = 0; il < mNGateMaker; il++)
+        LOG_INFO << " " << mGateMaker[il]->GetName()
+                 << "(" << mGateMaker[il]->ClassName() << ")";
+    LOG_INFO << endm;
+}
+
+//____________________________________________________________________________
+// SIDE EFFECT OF GATING WITH SetActive(), worth knowing when reading a log
+// (Gene's review of PR #45). A maker that is inactive does not get InitRun()
+// either, so for a controlled maker InitRun() is deferred to the first event
+// that actually PASSES the cut, not the first event of the job. Two visible
+// consequences, neither a malfunction:
+//
+//   * that first passing event takes longer than its neighbours -- it carries
+//     the initialisation and the database reads for every gated maker;
+//   * the initialisation messages appear at that point in the log rather than
+//     at the top, so "no StFwdTrackMaker banner at the start" means the early
+//     events were gated, not that the maker is missing.
+//
+// This is why the gate switches everything back ON at the top of each event
+// rather than leaving makers off: a maker that is never re-enabled would never
+// initialise at all.
+void StFstRawHitMaker::setGateMakersActive(Bool_t on)
+{
+    for (int ia = 0; ia < mNGateMaker; ia++)
+        if (mGateMaker[ia]) mGateMaker[ia]->SetActive(on);
 }
 
 
@@ -183,13 +311,22 @@ Int_t StFstRawHitMaker::InitRun(Int_t runnumber)
 }
 
 
-/**
- * Make(): main functional part of the raw hit maker, which contains the below three functions:
- * (1) un-pack the FST raw ADC data (ZS or non-ZS) from daq data via daq reader;
- * (2) pedestal subtraction for the non-ZS data and dynamical common-mode noise calculation;
- * (3) raw hit decision and ADC-to-dE/dx translation, then written to corresponding collection in physics mode;
- *     While in offline calibrarion mode, ADC information was directly saved without any raw hit processing.
- */
+Int_t StFstRawHitMaker::Finish()
+{
+    if (mMaxRawHits > 0) {
+        LOG_INFO << "StFstRawHitMaker: occupancy gate (maxRawHits " << mMaxRawHits
+                 << ") dropped " << mNEventsGated << " of " << mNEventsSeen
+                 << " events from the forward chain";
+        if (mNEventsSeen > 0)
+            LOG_INFO << " (" << (100.0 * mNEventsGated) / mNEventsSeen << "%)";
+        LOG_INFO << endm;
+    }
+    // Chain to the base: StMaker::Finish() runs FinishRun() and the timing
+    // summary, so returning kStOk here instead would quietly skip both.
+    return StRTSBaseMaker::Finish();
+}
+
+//____________________________________________________________________________
 // Rebuild the per-wedge raw-hit collections from a MuDst written with fstMuRawHit.
 //
 // StFstClusterMaker reads the "fstRawHitAndCluster" dataset this maker owns, so filling
@@ -244,13 +381,51 @@ Int_t StFstRawHitMaker::readMuDst()
     return kStOk;
 }
 
+//____________________________________________________________________________
+/**
+ * Make(): main functional part of the raw hit maker, which contains the below three functions:
+ * (1) un-pack the FST raw ADC data (ZS or non-ZS) from daq data via daq reader;
+ * (2) pedestal subtraction for the non-ZS data and dynamical common-mode noise calculation;
+ * (3) raw hit decision and ADC-to-dE/dx translation, then written to corresponding collection in physics mode;
+ *     While in offline calibrarion mode, ADC information was directly saved without any raw hit processing.
+ */
 Int_t StFstRawHitMaker::Make()
 {
     Int_t ierr = kStOk;
 
     // MuDst input: no DAQ to read, just fill the collections and let
     // StFstClusterMaker run on them as usual.
-    if ( mMuDstInput ) return readMuDst();
+    //
+    // This return is deliberately AHEAD of the occupancy gate, and the gate
+    // cannot simply be moved above it: the gate decides from the DAQ rows this
+    // maker unpacks, and on the MuDst path there are none. Skipping it leaves
+    // nothing in a bad state -- the gate only ever switches makers off from
+    // inside the DAQ loop, so if that loop never runs they stay on -- but the
+    // two options first coexist in this merge, and a maxRawHits that silently
+    // does nothing is worse than one that says so.
+    if ( mMuDstInput ) {
+        if ( mMaxRawHits > 0 && !mMuDstGateWarned ) {
+            LOG_WARN << "StFstRawHitMaker: setMaxRawHits(" << mMaxRawHits << ") has NO "
+                     << "effect with MuDst input -- the occupancy gate counts DAQ rows, "
+                     << "and there are none on this path. Cut on the MuDst side instead."
+                     << endm;
+            mMuDstGateWarned = kTRUE;
+        }
+        return readMuDst();
+    }
+
+    // Occupancy gate: start EVERY event from a known state. Without this the
+    // first central event would switch the forward chain off for the rest of
+    // the job, because SetActive() is sticky.
+    mNEventsSeen++;
+    mGated = kFALSE;
+    if (mMaxRawHits > 0) {
+        if (!mGateResolved) { resolveGateMakers(); mGateResolved = kTRUE; }
+        setGateMakersActive(kTRUE);
+    }
+    Long64_t nGateRows = 0;   // DAQ rows seen, including after gating: an
+                              // occupancy proxy for the record, since once we
+                              // stop building hits the true count is unknown
 
     //access raw ADC containers from simu data
     TObjectSet* fstSimuDataSet = (TObjectSet*)GetDataSet("fstRawAdcSimu");
@@ -302,6 +477,12 @@ Int_t StFstRawHitMaker::Make()
         }
 
         if (!rts_tbl) break;
+
+        // Counting rows is free -- it is fBank->ncontent, no row is touched.
+        nGateRows += rts_tbl->GetNRows();
+        // Already over threshold: keep walking the DAQ (the iterator cannot be
+        // rewound, and the elements must be consumed) but build nothing.
+        if (mGated) continue;
 
         apv_meta_t *meta = (apv_meta_t *)rts_tbl->Meta();
 
@@ -442,15 +623,58 @@ Int_t StFstRawHitMaker::Make()
 
 	nIdTruth_Fst += FillRawHitCollectionFromAPVData(dataFlag, ntimebin, counterAdcPerRgroupPerEvent, sumAdcPerRgroupPerEvent, apvElecId, signalUnCorrected, signalCorrected, seedFlag, idTruth);
 
+        // Test the REAL raw-hit count, not a row count: hits are built per DAQ
+        // element just above, so this is exact and needs no rows-to-hits
+        // calibration. Crossing the threshold here stops the build immediately,
+        // so we never hold more than one APV's worth of hits beyond it.
+        if (mMaxRawHits > 0 && !mGated &&
+            (Int_t)mFstCollectionPtr->getNumRawHits() > mMaxRawHits) {
+            mGated = kTRUE;
+            // This maker's own Clear() is exactly the loop over the wedges,
+            // with a null guard on top, so call it instead of repeating it.
+            // NOTE it is StFstRawHitMaker::Clear, not StFstCollection's --
+            // StFstCollection has no Clear() of its own and would inherit
+            // TObject::Clear(), which leaves the wedge collections untouched.
+            Clear("");
+        }
+
     }//end while
     LOG_INFO << " Total number of FST Raw Hits - Step I = " << mFstCollectionPtr->getNumRawHits() << " w/ idTruth = " << nIdTruth_Fst << endm;
 
     // In case of pure simulation mode when neither real data hits from DAQ
     // records is available nor embedding is requested fill the output container
     // with simulated hits
-    if(!mDoEmbedding && !nRawAdcFromData) nIdTruth_Fst += FillRawHitCollectionFromSimData();
+    // NOTE the !mGated: a gated event never incremented nRawAdcFromData, so
+    // without it this would mistake a dropped AuAu event for "no DAQ data" and
+    // fill the collection from the simulated hits instead.
+    if(!mDoEmbedding && !nRawAdcFromData && !mGated) nIdTruth_Fst += FillRawHitCollectionFromSimData();
 
     LOG_INFO << " Total number of FST Raw Hits - Step II = " << mFstCollectionPtr->getNumRawHits() << " w/ idTruth = " << nIdTruth_Fst << endm;
+
+    // ---- occupancy gate: act on the decision --------------------------------
+    // The event is NOT aborted. We return kStOk so FCS, the TPC and everything
+    // else still run and the event is still written -- it simply carries no
+    // forward hits and no forward tracks.
+    if (mGated) {
+        mNEventsGated++;
+        setGateMakersActive(kFALSE);
+        // Clear() is called below to drop this event's raw hits. It is the
+        // maker's own Clear(), so if it ever grows actions beyond emptying the
+        // wedge collections -- resetting counters, releasing a dataset -- this
+        // call would acquire them too, which is not what the gate wants. The
+        // fix then is to split a ClearWedges() out of Clear() and call that
+        // from both places. Deliberately NOT done now: today Clear() does
+        // exactly and only the thing the gate needs, and the split would be
+        // structure without purpose. Gene's review of PR #45 raised it, and
+        // agreed it belongs if and when that situation arises. This comment is
+        // the tripwire for whoever adds the first such action.
+        LOG_INFO << "FST OCCUPANCY GATE: event dropped from the forward chain, "
+                 << "more than " << mMaxRawHits << " FST raw hits ("
+                 << nGateRows << " DAQ rows). Switched OFF for this event:";
+        for (int ig2 = 0; ig2 < mNGateMaker; ig2++)
+            LOG_INFO << " " << mGateMaker[ig2]->GetName();
+        LOG_INFO << ". FCS and the rest of the chain are unaffected." << endm;
+    }
 
     // Fill Fst raw hits we got so far into StEvent if the chain option is called
     if(IAttr("fstEvtRawHit")) {//True for storing FST Raw hits

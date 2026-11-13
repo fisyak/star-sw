@@ -9,6 +9,10 @@
 #include "StFttDb.h"
 #include "St_db_Maker/St_db_Maker.h"
 #include "StMessMgr.h"
+#include "TSystem.h"
+#include "TDatime.h"
+#include "tables/St_fttDataWindowsB_Table.h"
+#include "tables/St_Survey_Table.h"
 
 ClassImp(StFttDbMaker)
 
@@ -60,19 +64,112 @@ int StFttDbMaker::InitRun(int runNumber) {
         }
     }
 
-    loadDataWindows();
+    loadGeometry();
+
+    loadDataWindows( runNumber );
 
   return kStOK;
 }
 
-void StFttDbMaker::loadDataWindows(){
-  TDataSet *mDbDataSetDW = GetDataBase("Calibrations/ftt/fttDataWindowsB");
+// Per-quadrant sTGC offsets from the survey tables, replacing the hardcoded numbers
+// in StFttDb unless setUseDbGeometry(false) was called. Missing tables are not an
+// error -- StFttDb keeps the hardcoded values and says so.
+//
+// Namespace is Geometry/ftt, matching the <Misalign> paths in StgmGeo1.xml and the
+// fttHardwareMap lookup above. Dmitry: stgc is not a DB namespace. Table names are
+// unchanged -- only the namespace moved.
+void StFttDbMaker::setUseDbGeometry( bool v ){ mFttDb->setUseDbGeometry( v ); }
 
+void StFttDbMaker::loadGeometry(){
+  const char *nm[3] = { "Geometry/ftt/stgcOnTpc",
+                        "Geometry/ftt/stationOnStgc",
+                        "Geometry/ftt/pentOnStation" };
+  St_Survey *t[3] = { 0, 0, 0 };
+  for ( int i = 0; i < 3; i++ ) {
+    // A null table is passed on deliberately rather than aborting here: the
+    // three are not equally important, and loadGeometryFromDb() is the one that
+    // knows which. pentOnStation carries the per-quadrant position and its
+    // absence triggers a wholesale fallback to the hardcoded survey; the other
+    // two are additive and degrade to identity, each with its own warning. A
+    // short or empty table is caught per row by fttSurveyRow().
+    TDataSet *ds = GetDataBase( nm[i] );
+    if ( !ds ) { LOG_WARN << "Cannot access " << nm[i] << endm; continue; }
+    const char *leaf = strrchr( nm[i], '/' ) + 1;
+    t[i] = (St_Survey *) ds->Find( leaf );
+    if ( !t[i] ) LOG_WARN << "No " << leaf << " table in " << nm[i] << endm;
+  }
+  mFttDb->loadGeometryFromDb( t[0], t[1], t[2] );
+}
+
+void StFttDbMaker::loadDataWindows( int runNumber ){
+  mFttDb->clearDataWindows();
+  // A local per-run file overrides the DB -- for calibration and testing, same
+  // convention as vmm_map.dat above. Condor jobs run in a scratch directory without
+  // it, so production is unaffected.
+  TString localFile = Form( "fttDataWindow/fttDataWindow.%d.txt", runNumber );
+  if ( !gSystem->AccessPathName( localFile.Data() ) ) {
+    LOG_WARN << "StFttDbMaker::loadDataWindows - LOADING DATA WINDOWS FROM LOCAL FILE " << localFile
+             << " (remove/rename it to use the DB)" << endm;
+    mFttDb->loadDataWindowsFromFile( localFile.Data() );
+  } else {
+    TDataSet *mDbDataSetDW = GetDataBase("Calibrations/ftt/fttDataWindowsB");
     if ( mDbDataSetDW ) {
-        LOG_INFO << "StFttDbMaker::loadDataWindows from database" << endm;
-        St_fttDataWindowsB *dataset = (St_fttDataWindowsB*) mDbDataSetDW->Find("fttDataWindowsB");
-        mFttDb->loadDataWindowsFromDb( dataset );
+      St_fttDataWindowsB *dataset = (St_fttDataWindowsB*) mDbDataSetDW->Find("fttDataWindowsB");
+      mFttDb->loadDataWindowsFromDb( dataset );
+      if ( dataset ) {
+        TDatime val[2];
+        int iv = St_db_Maker::GetValidity( dataset, val );
+        // The DB query time is the St_db_Maker's own clock (SetDateTime), NOT this
+        // maker's StMaker::GetDateTime(), which reads the event header and is never
+        // set in a hand-built MuDst chain.
+        StMaker *dbmk = GetMakerInheritsFrom( "St_db_Maker" );
+        TString qt = dbmk ? TString( dbmk->GetDateTime().AsSQLString() ) : TString( "(no St_db_Maker)" );
+        LOG_INFO << "StFttDbMaker::loadDataWindows - DB entry validity rc=" << iv
+                 << " begin " << val[0].AsSQLString() << " end " << val[1].AsSQLString()
+                 << " ; DB query time " << qt << endm;
+      }
     } else {
       LOG_WARN << "Cannot access Calibrations/ftt/fttDataWindowsB" << endm;
     }
+  }
+
+  // Run-stamp guard. VMM anchors are reset at random at every run start, so an entry
+  // measured for another run must never supply anchors. St_db_Maker correctly returns
+  // the latest entry at or before this run's start -- which for a run without its own
+  // entry is the previous run's.
+  //
+  // THE WINDOWS ARE GATED TOO, not just the anchors. A per-VMM window is a few ticks
+  // wide and is only meaningful against the anchor it was measured with; applied to a
+  // run whose anchors come from StFttHitCalibMaker on the fly, an anchor off by one
+  // tick throws away real in-time hits. The wide default is the safe answer for a run
+  // with no calibration of its own, and dropping the entry gives exactly that:
+  // StFttDb::getTimeCut falls back to mode CalibratedBunchCrossing, [-65, 100], which
+  // is the global DB entry that has been in use since 2021-10-01.
+  //
+  // Without this, pushing per-run calibrations silently changes the time cut of every
+  // LATER run as well, for years, since resolution is "latest entry at or before".
+  // Measured after the first 56 runs went in: run 24192017, sixteen months after the
+  // newest of them, was being served run 23081064's windows.
+  //
+  // An UNSTAMPED entry is different and still applies: it is a global default by
+  // construction, not a measurement of one run.
+  int stamp = mFttDb->dataWindowStampRun();
+  bool valid = ( stamp == runNumber );
+  if ( stamp >= 0 && !valid ) {
+    LOG_WARN << "StFttDbMaker::loadDataWindows - data-window entry is stamped for run " << stamp
+             << " but this is run " << runNumber << ": it is IGNORED ENTIRELY (anchors are not "
+             << "valid across runs, and its windows were measured against those anchors). This "
+             << "run falls back to the default time cut and to anchors derived on the fly by "
+             << "StFttHitCalibMaker." << endm;
+    mFttDb->clearDataWindows();
+    return;
+  }
+  mFttDb->setDataWindowAnchorsValid( valid );
+  if ( valid ) {
+    LOG_INFO << "StFttDbMaker::loadDataWindows - per-VMM time anchors ENABLED: entry stamped for run "
+             << stamp << endm;
+  } else {
+    LOG_INFO << "StFttDbMaker::loadDataWindows - unstamped (legacy) data-window entry: windows used, "
+             << "anchors ignored; StFttHitCalibMaker derives anchors on the fly" << endm;
+  }
 }
