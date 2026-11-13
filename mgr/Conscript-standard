@@ -326,8 +326,13 @@ if ( $pkg !~ /^sim$/ && $pkg !~ /^gen$/ ) {
             my($cpppath) = $env->_subst($env->{CPPPATH});
             my($cscanner) = find scan::cpp($env->{_cwd}, $cpppath);
             $env->{_IFLAGS} = "%(" . $cscanner->iflags($env) . "%)";
-            Command $env ["$OBJ/StarVMC/StarGeometry/StarGeo_Cint.cxx", "$OBJ/StarVMC/StarGeometry/StarGeo_Cint.h"],
-                         ("$OBJ/StarVMC/StarGeometry/StarGeo.h", "#StarVMC/Geometry/StarGeoLinkDef.h"), qq(rootcint -f %> -c %_IFLAGS %1 %2);
+			my @StarGeoCintTargets = ("$OBJ/StarVMC/StarGeometry/StarGeo_Cint.cxx");
+			if ($env->{ENV}->{ROOT_VERSION_MAJOR} < 6) {
+				push @StarGeoCintTargets, "$OBJ/StarVMC/StarGeometry/StarGeo_Cint.h";
+			}
+			Command $env [@StarGeoCintTargets],
+				("$OBJ/StarVMC/StarGeometry/StarGeo.h", "#StarVMC/Geometry/StarGeoLinkDef.h"),
+				qq(rootcint -f %> -c %_IFLAGS %1 %2);
             push(@srcL, "$OBJ/StarVMC/StarGeometry/StarGeo_Cint.cxx");
         }
 
@@ -1171,12 +1176,17 @@ if ( $pkg !~ /^sim$/ && $pkg !~ /^gen$/ ) {
     }
 
     if ( $#Defs > -1 && $pkg !~ m/Geometry/ ) {
-	my @CintFiles = ( $PKG . "_Cint.cxx", $PKG . "_Cint.h", "LinkDef.h" );
 
-        if ($env->{ENV}->{ROOT_VERSION_MAJOR} >= 6) {
-            push @CintFiles, $PKG."_Cint_rdict.pcm";
-            Install $env $LIB, File::Basename::basename($CintFiles[3]);
-        }
+	my @CintFiles = ($PKG . "_Cint.cxx");
+	if ($env->{ENV}->{ROOT_VERSION_MAJOR} < 6) {
+		push @CintFiles, $PKG . "_Cint.h";
+	}
+	push @CintFiles, "LinkDef.h";
+	if ($env->{ENV}->{ROOT_VERSION_MAJOR} >= 6) {
+		my $pcm = $PKG . "_Cint_rdict.pcm";
+		push @CintFiles, $pcm;
+		Install $env $LIB, File::Basename::basename($pcm);
+	}
 
 	@Defs = script::sortu(@Defs);
 	my @defs = ();
@@ -1343,13 +1353,22 @@ if ( $#idlL > -1 ) {
 	push @Deps, $idlh;
 	push @Deps, $idli;
 
-	Command $env3 [ ($idlCintC , $idlCintH) ], @Deps,
-	  qq (rootcint -f %> -c $ROOTCINT_CPPPATH -D__ROOT__ %1 %2);
+	my @CintTargets = ($idlCintC);
+	if ($env->{ENV}->{ROOT_VERSION_MAJOR} < 6) {
+		push @CintTargets, $idlCintH;
+	}
+	Command $env3 [@CintTargets], @Deps,
+		qq (rootcint -f %> -c $ROOTCINT_CPPPATH -D__ROOT__ %1 %2);
 
 	push @Deps, $idlCintC;
-	push @Deps, $idlCintH;
+	push @Deps, $idlCintH
+		if ($env->{ENV}->{ROOT_VERSION_MAJOR} < 6);
 	push @Deps, $idlC;
-	my @src = ( $idlC, $idlCintH, $idlCintC );
+	my @src = ($idlC);
+	push @src, $idlCintH
+		if ($env->{ENV}->{ROOT_VERSION_MAJOR} < 6);
+	push @src, $idlCintC;
+
 	#               Install $env3 $objT, @src;
       }
       my $s;
