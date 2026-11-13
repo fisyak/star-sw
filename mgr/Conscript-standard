@@ -58,6 +58,10 @@ my $FCPATH  = $env->{FCPATH};
 my $FEXTEND = $env->{FEXTEND};
 my $FPPFLAGS= $env->{FPPFLAGS};
 my $FCCOM   = $env->{FCCOM};
+my $F90     = $env1->{F90};
+my $F90FLAGS= $env1->{F90FLAGS};
+my $F90PATH = $env1->{F90PATH};
+my $F90COM  = $env1->{F90COM};
 my $AGETOFCOM   = $env->{AGETOFCOM};
 my $AGETOFLAGS   = $env->{AGETOFLAGS};
 my $LIBS    = $env->{LIBS}; #  print "LIBS  = $LIBS ========================================\n";
@@ -284,6 +288,13 @@ if ( $pkg eq "GenFit"
     $CPPFLAGS .= " -D__NO_STRANGE_MUDST__";
   }
 #}
+# Initialize F90PATH with current directory for include files
+# Package-specific conditions below may override this
+if ($F90PATH) {
+    $F90PATH = "#" . $Dir . $main::PATH_SEPARATOR . $F90PATH;
+} else {
+    $F90PATH = "#" . $Dir;
+}
 if ($pkg eq "RTS") {
   if ($STAR_SYS =~ /darwin/) {}
   else {
@@ -718,6 +729,7 @@ if ( $pkg =~ m/^StEventDisplay/ || $#uiQT >= 0 || $OnlinePackage ) {
 	my $py8ver = "Pythia8_1_86";
 
         $FCPATH   .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg";
+        $F90PATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg";
         $CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg";
         $CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/HepMC2_06_09";
         $CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/${py8ver}/include";
@@ -739,6 +751,15 @@ if ( $pkg =~ m/^StEventDisplay/ || $#uiQT >= 0 || $OnlinePackage ) {
 
         #print "DEBUG ".join(" ",@srcL)."\n";
 
+
+
+    } elsif ( $pkg =~ m/^UrQMD/ and $Dir =~ m/StarGenerator/ ){
+
+        $FCPATH   .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg";
+        $F90PATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg";
+        $CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg";
+
+	$FEXTEND = "-ffixed-line-length-72";
 
     } elsif ( $pkg =~ m/^HepMC/ and $Dir =~ m/StarGenerator/ ){
         # Append HepMC include path and define version
@@ -789,6 +810,7 @@ if ( $pkg =~ m/^StEventDisplay/ || $#uiQT >= 0 || $OnlinePackage ) {
         $CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/HepMC2_06_09";
         $CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/Tauola1_1_5/include/Tauola";
         $FCPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg/tauola-fortran/tauola-modified/new-currents/RChL-currents/rcht_3pi";
+        $F90PATH .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg/tauola-fortran/tauola-modified/new-currents/RChL-currents/rcht_3pi";
         #$CPPPATH  .= $main::PATH_SEPARATOR . "#StRoot/StarGenerator/$pkg/tauola-fortran/tauola-modified/new-currents/RChL-currents/rcht_3pi";
         $CXXFLAGS .= " -DTauola_version=\\\"$pkg\\\" ";
         $CPPFLAGS .= " -x c++";
@@ -1405,7 +1427,7 @@ if ($#srcX >= 0) {
   push @src, @srcX;
 }
 if ( $#Defs > -1) {# &&  $pkg !~ m/^GenFit$/ ) {
-  my @CintFiles = ( $PKG . "_Cint.cxx", $PKG . "_Cint.h", "LinkDef.h" );
+  my @CintFiles = ( $PKG . "_Cint.cxx", "LinkDef.h" );
   @Defs = script::sortu(@Defs);# print "Defs = @Defs\n";
   my @defs = ();
   foreach my $def(@Defs) {    
@@ -1800,7 +1822,7 @@ sub script::Tables {
 	  push @LinkDefsT, $LinkDef;
 	  push @Deps, $idlh;
 	  push @Deps, $idli;
-	  Command $env3 [ ($idlCintC , $idlCintH) ], @Deps,
+	  Command $env3 [ ($idlCintC) ], @Deps,
 	    qq (rootcint -f %> -c $ROOTCINT_CPPPATH -D__ROOT__ %1 %2);
 	}
 	push @sourcesT, $idlC;
