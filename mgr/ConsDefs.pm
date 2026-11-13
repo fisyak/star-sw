@@ -15,7 +15,7 @@
  *topino   = *File::Find::topino;
  *topmode  = *File::Find::topmode;
  *topnlink = *File::Find::topnlink;
- 
+  
  if ( !$ROOT_LEVEL )   { print "ROOT_LEVEL has to be defined\n"; exit 1;}
  if ( !$ROOTSYS )      { print "ROOT_SYS   has to be defined\n"; exit 1;}
  if ( !$STAR_HOST_SYS) { print "STAR_HOST_SYS   has to be defined\n"; exit 1;}
@@ -41,6 +41,8 @@
  if ($PGI) {
    $FC    = "pgf77";
  }
+ $AR            = "ar";
+ $ARFLAGS       = "rvu";
  $LD           = `root-config  --ld`; chomp($LD);
  $LDFLAGS      = `root-config  --ldflags`; chomp($LDFLAGS); 
  $LDFLAGS     .= " -rdynamic";
@@ -76,7 +78,6 @@
  $F77LDFLAGS    = $LDFLAGS;
  $STIC          = "stic";
  $STICFLAGS     = "";
-#$AGETOF        = `which agetof`; chop ($AGETOF); # print "AGETOF = $AGETOF ================================================================================\n";
  $AGETOF        = $STAR_BIN . "/agetof";
  $AGETOFLAGS    = "-V 1";
  
@@ -96,18 +97,6 @@
    $RCINTPL = cwd() . "/mgr/RootCling.pl";
    if (! -x $RCINTPL) {$RCINTPL= $STAR . "/mgr/RootCling.pl";}
  }
-#  if (! -e $ROOTCLING) {
-#    $RCINTPL = cwd() . "/mgr/RootCint.pl";
-#    if (! -e $RCINTPL) {
-#      $RCINTPL = $STAR . "/mgr/RootCint.pl";
-#    }
-#  } else {q
-#    $ROOTCLING  = "";q
-#    $RCINTPL = cwd() . "/mgr/RootCling.pl";
-#    if (! -e $RCINTPL) {
-#      $RCINTPL = $STAR . "/mgr/RootCling.pl";
-#    }
-#  }
  if ($RLIBMAP) {
    my ($M,$S,$V) = split('\.',$ROOT_LEVEL);
    if ($M <4 or $M == 4 and $S == 0) {$RLIBMAP = "";}
@@ -127,7 +116,6 @@
    if ($CXX_MAJOR >= 10) {
      if ($ROOT_LEVEL =~ /^5/) {$CXXFLAGS .= " -Wno-register -Wno-misleading-indentation";}
    }
-#  if ($CXX_MAJOR > 4 or $CXX_MAJOR == 4 and $CXX_MINOR >= 6) {$CXXFLAGS .= " -fpermissive";}
    if ($CXX_MAJOR > 6 or $CXX_MAJOR == 6 and $CXX_MINOR >= 3) {$CXXFLAGS .= " -Wno-misleading-indentation -Wno-ignored-attributes";}
    if ($CXX_MAJOR > 10)  {$CXXFLAGS .= " -Wno-error=bool-operation -Wno-error=class-memaccess -Wno-error=deprecated-declarations -Wno-error=format-overflow= -Wno-error=format-truncation= -Wno-error=int-in-bool-context -Wno-error=memset-elt-size -Wno-error=parentheses -Wno-error=restrict";}
    if ($CXX_MAJOR > 11)  {$CXXFLAGS .= " -Wno-error=dangling-pointer=";}
@@ -170,18 +158,6 @@
  $FINK_LDFLAGS = "";
  $CERNLIB_FPPFLAGS = "-DCERNLIB_TYPE -DCERNLIB_UNIX -DCERNLIB_BSLASH -DCERNLIB_DZDOC -DCERNLIB_SHL -DCERNLIB_NONEWL -DCERNLIB_HIGZ -DCERNLIB_CG -DCERNLIB_HADRON -DCERNLIB_COMIS -DCERNLIB_BLDLIB -DCERNLIB_CZ -DCERNLIB_QMGLIBC";# -DCERNLIB_GCALOR;
  my $LLIB = "lib";
- if (! $USE_64BITS and $STAR_HOST_SYS =~ /darwin/) { $USE_64BITS = "yes";}
- if (  $USE_64BITS) { $LLIB = "lib64";}
- if ($USE_64BITS){
-#    $CXXFLAGS .= " -m64";
-#    $CFLAGS   .= " -m64";
-#    $FFLAGS   .= " -m64";
-   $CERNLIB_FPPFLAGS .= " -DCERNLIB_QMLXIA64 -DCERNLIB_LXIA64";
- } else {
-#    $CXXFLAGS .= " -m32";
-#    $CFLAGS   .= " -m32";
-#   $FFLAGS   .= " -m32";
- }
  # Vc: gcc :  -Wno-unused-function  -Wno-parentheses  -Wno-strict-aliasing -Wno-uninitialized 
  if ($CXX eq "g++" or $CXX eq "gcc") {
     $CXXFLAGS .= " -Wall -Wno-overloaded-virtual -Wcast-align -fno-threadsafe-statics -Wno-strict-aliasing -Wno-error=sign-compare"; #-Wno-error=strict-aliasing";
@@ -203,26 +179,45 @@
      $SOFLAGS      .= " -shared -u*";
 	$PGI           = "";
 	$PGILIB        = "";
-     if ($USE_64BITS){
-       $LDFLAGS  .= " -m64";
-       $SOFLAGS  .= " -m64";
-       $CXXFLAGS .= " -m64";
-       $CFLAGS   .= " -m64";
-       $FFLAGS   .= " -m64";
-     } else {
-       $LDFLAGS  .= " -m32";
-       $SOFLAGS  .= " -m32";
-       $CXXFLAGS .= " -m32";
-       $CFLAGS   .= " -m32";
-       $FFLAGS   .= " -m32";
-     }
-     if ($FC eq 'ifort') {# To use cernlib done with gfortran
-       $FEXTEND = "-132";
-     }
    }
-   $LIBG2C  = `$CC $CFLAGS  -print-file-name=libg2c.a | awk '{ if (\$1 != "libg2c.a") print \$1}'`;
-   chomp($LIBG2C);
  }
+ if (! $USE_64BITS and $STAR_HOST_SYS =~ /darwin/) { $USE_64BITS = "1";}
+ if ($USE_64BITS){
+   $LLIB = "lib64";
+   $CERNLIB_FPPFLAGS .= " -DCERNLIB_QMLXIA64 -DCERNLIB_LXIA64";
+   $LDFLAGS  .= " -m64";
+   $SOFLAGS  .= " -m64";
+   $CXXFLAGS .= " -m64";
+   $CFLAGS   .= " -m64";
+   $FFLAGS   .= " -m64";
+ } else {
+   $LDFLAGS  .= " -m32";
+   $SOFLAGS  .= " -m32";
+   $CXXFLAGS .= " -m32";
+   $CFLAGS   .= " -m32";
+   $FFLAGS   .= " -m32";
+ }
+ if ($FC eq 'ifort') {# To use cernlib done with gfortran
+   $FEXTEND = "-132";
+ }
+ $LIBG2C  = `$CC $CFLAGS  -print-file-name=libg2c.a | awk '{ if (\$1 != "libg2c.a") print \$1}'`;
+ chomp($LIBG2C);
+ # Fortran 90 compiler settings (use same compiler as FC, typically gfortran)
+ $F90           = $FC;
+ # F90FLAGS compatible with F77 flags but without -std=legacy (F77-specific)
+ if ( defined( $ARG{NODEBUG} ) || $NODEBUG )  {
+   $F90FLAGS  = "-fd-lines-as-comments ";
+ }
+ *F90DEBUG      = *FDEBUG;
+ $F90PATH       = "";
+ $EXTRA_F90PATH = "";
+ $F90PPFLAGS    = "";
+ $EXTRA_F90PPFLAGS = "";
+ # gfortran: -J <dir> writes .mod files to <dir> and adds <dir> to the
+ # module search path.  Both effects are needed: output goes to the build
+ # OBJ directory (not the repo root) and subsequent compilations in the
+ # same package can find those modules.
+ $F90MODOUT     = "-J ";
  if    ($FC eq 'gfortran') {
    $FLIBS .= " -lgfortran";
  } elsif ( $FC eq 'ifort') {
@@ -349,7 +344,6 @@
  $CERNLIBS =~ s/packlib\./$packl\./g;
  $CERNLIBS =~ s/kernlib\./$kernl\./g;
  $CERNLIBS =~ s/$strip//g     if ($strip ne "");
- #	$CERNLIBS =~ s/lib /lib64 /g if ($USE_64BITS);
  chop($CERNLIBS);
  if ( $STAR_HOST_SYS =~ /al9/ ) {
    $CERNLIBS =~ s#-lnsl##;
@@ -682,6 +676,7 @@
    if ($FDEBUG !~ /-g/) {$FDEBUG .=  " -g";}
 #   print "CXX_VERSION = $CXX_VERSION reset FDEBUG = $FDEBUG ========================================\n";
  }
+ $ARCOM  = "%AR %ARFLAGS %> %< ; %RANLIB %>"; # "%AR %ARFLAGS %> %<;%RANLIB %>";
  $CXXCOM = 
  "%CXX %CXXFLAGS %EXTRA_CXXFLAGS %DEBUG %CPPFLAGS %EXTRA_CPPFLAGS %_IFLAGS %EXTRA_CPPPATH -c %CXXinp%< %Cout%>";
  # print "CXXCOM : $CXXCOM\n";
@@ -747,6 +742,14 @@
 	       'Lout'           => "-o ",
 	       'SoOUT'          => "-o ",
 	       'FCCOM'          => $FCCOM,
+	       'F90'            => $F90,
+	       'F90FLAGS'       => $F90FLAGS,
+	       'F90DEBUG'       => $F90DEBUG,
+	       'F90PATH'        => $F90PATH,
+	       'EXTRA_F90PATH'  => $EXTRA_F90PATH,
+	       'F90PPFLAGS'     => $F90PPFLAGS,
+	       'EXTRA_F90PPFLAGS' => $EXTRA_F90PPFLAGS,
+	       'F90MODOUT'      => $F90MODOUT,
 	       'F90COM'         => $F90COM,
 	       'AGETOF'         => $AGETOF,
 	       'AGETOFLAGS'     => $AGETOFLAGS,

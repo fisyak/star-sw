@@ -1,7 +1,10 @@
-// Standalone Pipeline job: SCM fixed to main, Script Path Jenkinsfile.reminders.
-// Uses the existing Jenkins executors and global E-mail Notification settings.
+import com.cloudbees.groovy.cps.NonCPS
+import groovy.json.JsonSlurper
+
+// Standalone job, lightweight SCM checkout, Script Path Jenkinsfile.reminders.
+// Requires HTTP Request (Apache HttpClient 5) and global E-mail Notification settings.
 pipeline {
-  agent any
+  agent none
 
   options {
     timestamps()
@@ -22,96 +25,327 @@ pipeline {
       description: 'Minimum age of the PR and its outstanding review request, in hours.')
     string(name: 'GITEA_CREDENTIALS_ID', defaultValue: 'gitea-test-ci-http2',
       description: 'Jenkins username/password credential; password is the Gitea API token.')
-    text(name: 'REVIEWER_EMAIL_OVERRIDES', defaultValue: '{}',
-      description: 'Optional JSON mapping of Gitea handles to deliverable email addresses when profiles hide them.')
+    string(name: 'REVIEWER_HANDLES', defaultValue: '',
+      description: 'Optional Gitea handles separated by commas or whitespace, e.g. jeromel, smirnovd. Blank includes all eligible reviewers. Applies to dry runs and real email.')
   }
 
   environment {
     GITEA_BASE_URL = 'https://git.racf.bnl.gov/gitea'
     GITEA_REPOSITORY = 'STAR/star-sw'
-    PYTHONDONTWRITEBYTECODE = '1'
   }
 
   stages {
-    stage('Checkout') {
+    stage('Reviewer reminders') {
       steps {
         script {
-          if (env.CHANGE_ID?.trim()) {
-            error('Use a standalone reminder job with SCM fixed to main.')
-          }
-          if (!params.GITEA_CREDENTIALS_ID?.trim()) {
-            error('GITEA_CREDENTIALS_ID must identify the Gitea API credential.')
-          }
-        }
-        checkout scm
-      }
-    }
-
-    stage('Prepare reminders') {
-      steps {
-        dir('reviewer-reminders') {
-          deleteDir()
-        }
-        withCredentials([usernamePassword(
-          credentialsId: params.GITEA_CREDENTIALS_ID.trim(),
-          usernameVariable: 'GITEA_USERNAME',
-          passwordVariable: 'GITEA_TOKEN'
-        )]) {
-          // Newly installed parameter defaults exist in params on the first
-          // build but are not necessarily exported into its shell environment.
-          withEnv([
-            "MIN_AGE_HOURS=${params.MIN_AGE_HOURS}",
-            "REVIEWER_EMAIL_OVERRIDES=${params.REVIEWER_EMAIL_OVERRIDES}"
-          ]) {
-            sh(label: 'Read Gitea review requests', script: '''#!/bin/sh
-set -eu
-set +x
-python3 mgr/reviewer_reminders.py \
-  --base-url "$GITEA_BASE_URL" \
-  --repository "$GITEA_REPOSITORY" \
-  --min-age-hours "$MIN_AGE_HOURS" \
-  --output-dir reviewer-reminders
-''')
-          }
-        }
-      }
-    }
-
-    stage('Send reminders') {
-      steps {
-        script {
-          def count = readFile(file: 'reviewer-reminders/count.txt', encoding: 'UTF-8').trim().toInteger()
-          for (int index = 0; index < count; index++) {
-            def prefix = "reviewer-reminders/message-${index}"
-            def body = readFile(file: "${prefix}.txt", encoding: 'UTF-8')
-            if (params.DRY_RUN) {
-              echo "DRY RUN: ${body}"
-            } else {
-              mail(
-                to: readFile(file: "${prefix}.to", encoding: 'UTF-8').trim(),
-                subject: readFile(file: "${prefix}.subject", encoding: 'UTF-8'),
-                body: body,
-                mimeType: 'text/plain',
-                charset: 'UTF-8'
-              )
-            }
-          }
-          echo "${params.DRY_RUN ? 'Prepared' : 'Sent'} ${count} personalized reviewer reminder(s)."
-          def unresolved = readFile(file: 'reviewer-reminders/unresolved.txt', encoding: 'UTF-8').trim()
-          if (unresolved) {
-            unstable("No deliverable email for: ${unresolved.replace('\n', ', ')}. Configure REVIEWER_EMAIL_OVERRIDES.")
-          }
+          runReminderJob()
         }
       }
     }
   }
+}
 
-  post {
-    always {
-      // Addresses stay out of build artifacts and are removed even after a failed send.
-      dir('reviewer-reminders') {
-        deleteDir()
-      }
+def runReminderJob() {
+  if (env.CHANGE_ID?.trim()) {
+    error('Use a standalone reminder job with SCM fixed to main.')
+  }
+  if (!params.GITEA_CREDENTIALS_ID?.trim()) {
+    error('GITEA_CREDENTIALS_ID must identify the Gitea API credential.')
+  }
+  def report
+  withCredentials([usernamePassword(
+    credentialsId: params.GITEA_CREDENTIALS_ID.trim(),
+    usernameVariable: 'GITEA_USERNAME', passwordVariable: 'GITEA_TOKEN'
+  )]) {
+    // Finish all API lookups before sending any messages. No workspace is needed.
+    report = collectReminders(env.GITEA_BASE_URL, env.GITEA_REPOSITORY,
+      params.MIN_AGE_HOURS, params.REVIEWER_HANDLES, new Date().time)
+  }
+  for (def message : report.messages) {
+    echo "Prepared reminder for @${message.handle}, PRs ${message.pr_numbers}"
+    if (params.DRY_RUN) {
+      echo "DRY RUN: ${message.body}"
+    } else {
+      mail(to: message.to, subject: message.subject, body: message.body,
+        mimeType: 'text/plain', charset: 'UTF-8')
     }
   }
+  echo "${params.DRY_RUN ? 'Prepared' : 'Sent'} ${report.messages.size()} personalized reviewer reminder(s)."
+  if (report.unresolved) {
+    unstable("No deliverable Gitea profile email for ${report.unresolved.join(', ')}. Check their profile email settings.")
+  }
+}
+
+// All retained API data is converted to ordinary serializable maps and lists.
+// Parsing, sorting, and date calculations stay outside Pipeline CPS execution.
+@NonCPS
+def plainJson(value) {
+  if (value instanceof Map) {
+    return value.collectEntries { key, item -> [(key.toString()): plainJson(item)] }
+  }
+  if (value instanceof List) {
+    return value.collect { plainJson(it) }
+  }
+  return value
+}
+
+@NonCPS
+def parseJson(String text) {
+  try {
+    return plainJson(new JsonSlurper().parseText(text))
+  } catch (RuntimeException ignored) {
+    throw new Exception('Invalid JSON in Gitea response.')
+  }
+}
+
+@NonCPS
+def reminderSettings(String base, String repository, String age, String reviewerHandles, long now) {
+  if (!(base ==~ /https:\/\/[^\s\/?#@]+(?:\/[^\s?#]*)?/)) {
+    throw new Exception('Use an HTTPS Gitea base URL without credentials, query, or fragment.')
+  }
+  def parts = repository.split('/', -1)
+  if (parts.size() != 2 || parts.any { !it || it in ['.', '..'] }) {
+    throw new Exception('Repository must have the form owner/name.')
+  }
+  double hours
+  try {
+    hours = age.toDouble()
+  } catch (RuntimeException ignored) {
+    throw new Exception('Minimum age must be a finite, non-negative number of hours.')
+  }
+  if (hours < 0 || hours.toString() in ['NaN', 'Infinity', '-Infinity']) {
+    throw new Exception('Minimum age must be a finite, non-negative number of hours.')
+  }
+  def reviewers = (reviewerHandles ?: '').split(/[\s,]+/).findAll { it }.collect {
+    it.replaceFirst(/^@/, '').toLowerCase(Locale.ROOT)
+  }.unique()
+  if ((reviewerHandles?.trim() && !reviewers) ||
+      reviewers.any { !(it ==~ /[\p{L}\p{N}_.-]+/) || it in ['.', '..'] }) {
+    throw new Exception('REVIEWER_HANDLES must contain Gitea handles separated by commas or whitespace.')
+  }
+  return [base: base.replaceAll('/+$', ''), repository: repository, hours: hours,
+    cutoff: now - hours * 3600000, now: now,
+    path: '/repos/' + parts.collect { encodePath(it) }.join('/'),
+    reviewers: reviewers]
+}
+
+@NonCPS
+String encodePath(String value) {
+  return java.net.URLEncoder.encode(value, 'UTF-8').replace('+', '%20')
+}
+
+@NonCPS
+long timestamp(value) {
+  try {
+    def instant = java.time.Instant.parse(value)
+    return instant.epochSecond * 1000L + instant.nano.intdiv(1000000)
+  } catch (RuntimeException ignored) {
+    throw new Exception('Gitea returned an invalid timestamp or one without a timezone.')
+  }
+}
+
+@NonCPS
+String handleOf(user) {
+  def handle = user?.login
+  if (!(handle instanceof String) || !handle || handle in ['.', '..'] || handle =~ /[\s\/\\]/) {
+    throw new Exception('Gitea returned an invalid reviewer handle.')
+  }
+  return handle
+}
+
+@NonCPS
+def decodeResponse(int status, String content, Map headers, String path) {
+  if (status != 200) {
+    throw new Exception("Gitea GET ${path} failed, HTTP ${status}.")
+  }
+  def links = headers.findAll { key, value -> key.equalsIgnoreCase('Link') }.values().join(',')
+  return [data: parseJson(content), next: (links =~ /rel=["']?next\b/).find()]
+}
+
+def giteaRequest(String base, String path, String query = '') {
+  // HttpClient 5 blocks cross-authority redirects when Authorization is present.
+  def response = httpRequest(
+    url: "${base}/api/v1${path}${query}", httpMode: 'GET',
+    customHeaders: [[name: 'Authorization', value: 'token ' + env.GITEA_TOKEN, maskValue: true],
+                    [name: 'Accept', value: 'application/json']],
+    timeout: 30, quiet: true,
+    consoleLogResponseBody: false, validResponseCodes: '100:599')
+  return decodeResponse(response.status, response.content, response.headers, path)
+}
+
+def giteaObject(String base, String path) {
+  def data = giteaRequest(base, path).data
+  if (!(data instanceof Map)) {
+    error("Gitea GET ${path} did not return an object.")
+  }
+  return data
+}
+
+def giteaPages(String base, String path, String filter = '') {
+  def items = []
+  def seen = []
+  for (int page = 1; page <= 1000; page++) {
+    // Construct page URLs locally. Never forward the token to a Link target.
+    def response = giteaRequest(base, path, "?${filter ? filter + '&' : ''}page=${page}&limit=50")
+    def data = response.data
+    if (!(data instanceof List) || data.any { !(it instanceof Map) }) {
+      error("Gitea GET ${path} did not return a list of objects.")
+    }
+    if (!data && !response.next) {
+      return items
+    }
+    if (data) {
+      if (seen.contains(data)) {
+        error("Gitea pagination repeated a page for ${path}.")
+      }
+      seen.add(data)
+      items.addAll(data)
+    }
+  }
+  error("Gitea pagination exceeded 1000 pages for ${path}.")
+}
+
+@NonCPS
+def latestReviews(List reviews, long created) {
+  def latest = [:]
+  for (def review : reviews) {
+    def state = review.state
+    if (state == 'PENDING' || review.dismissed) {
+      continue
+    }
+    if (!(state in ['REQUEST_REVIEW', 'APPROVED', 'REQUEST_CHANGES', 'REJECTED', 'COMMENT'])) {
+      throw new Exception('Gitea returned an unsupported review state.')
+    }
+    def key
+    if (review.team) {
+      long teamId = review.team.id as long
+      if (teamId <= 0) {
+        throw new Exception('Gitea returned an invalid team ID.')
+      }
+      key = "team:${teamId}".toString()
+    } else {
+      key = 'user:' + handleOf(review.user).toLowerCase(Locale.ROOT)
+    }
+    def updated = review.updated_at ?: review.submitted_at
+    long when = updated ? timestamp(updated) : created
+    long id = review.id as long
+    def previous = latest[key]
+    if (!previous || when > previous.when || (when == previous.when && id > previous.id)) {
+      latest[key] = [when: when, id: id, review: review]
+    }
+  }
+  return latest
+}
+
+@NonCPS
+boolean eligiblePull(Map pr, cutoff) {
+  return pr.state == 'open' && !pr.merged && !pr.draft &&
+    !(pr.title ==~ /(?is)\s*(?:\[wip\]|wip:|draft:).*/) && timestamp(pr.created_at) <= cutoff
+}
+
+@NonCPS
+boolean deliverableEmail(value) {
+  if (!(value instanceof String) || !(value ==~ /[a-zA-Z0-9.!#$%&'*+\/?=^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+/)) {
+    return false
+  }
+  def parts = value.toLowerCase(Locale.ROOT).split('@')
+  return !(parts[0] in ['noreply', 'no-reply']) &&
+    !parts[1].startsWith('noreply.') && !parts[1].startsWith('no-reply.')
+}
+
+@NonCPS
+def messageFor(Map entry, String email, Map settings) {
+  def prs = entry.prs.sort { it.number }
+  def lines = ["Hello @${entry.handle},", '',
+    "Please review these pull requests in ${settings.repository}.", '']
+  for (def pr : prs) {
+    def days = String.format(Locale.ROOT, '%.1f', (settings.now - pr.created) / 86400000.0)
+    lines.addAll(["#${pr.number} ${pr.title}", "Author @${pr.author}, PR age ${days} days",
+      "${settings.base}/${settings.repository}/pulls/${pr.number}", ''])
+  }
+  lines.addAll(["These review requests have been pending for at least ${settings.hours} hours.",
+    'This weekday reminder stops when you submit your review, the request is removed,',
+    'or the PR is closed or marked as a draft.', ''])
+  return [handle: entry.handle, to: email,
+    subject: "[${settings.repository}] ${prs.size()} pull request(s) awaiting your review".toString(),
+    body: lines.join('\n'), pr_numbers: prs.collect { it.number }]
+}
+
+def collectReminders(String base, String repository, String age, String reviewerHandles, long now) {
+  def settings = reminderSettings(base, repository, age, reviewerHandles, now)
+  if (!env.GITEA_TOKEN || env.GITEA_TOKEN =~ /\s/) {
+    error('GITEA_TOKEN must contain an API token.')
+  }
+  def grouped = [:]
+  def teams = [:]
+  def seenPrs = []
+  for (def summary : giteaPages(settings.base, settings.path + '/pulls', 'state=open')) {
+    long number = summary.number as long
+    if (number <= 0) {
+      error('Gitea returned an invalid PR number.')
+    }
+    if (seenPrs.contains(number)) {
+      continue
+    }
+    seenPrs.add(number)
+    // Re-fetch details in case a PR closed or became a draft during pagination.
+    def path = settings.path + '/pulls/' + number
+    def pr = giteaObject(settings.base, path)
+    if (!eligiblePull(pr, settings.cutoff)) {
+      continue
+    }
+    long created = timestamp(pr.created_at)
+    def author = handleOf(pr.user)
+    def reviews = latestReviews(giteaPages(settings.base, path + '/reviews'), created)
+    def candidates = [:]
+    for (def key : reviews.keySet()) {
+      def request = reviews[key]
+      if (request.review.state != 'REQUEST_REVIEW' || request.when > settings.cutoff) {
+        continue
+      }
+      boolean team = key.startsWith('team:')
+      def members
+      if (team) {
+        if (!teams.containsKey(key)) {
+          teams[key] = giteaPages(settings.base, '/teams/' + request.review.team.id + '/members')
+        }
+        members = teams[key]
+      } else {
+        members = [request.review.user]
+      }
+      for (def member : members) {
+        def handle = handleOf(member)
+        def canonical = handle.toLowerCase(Locale.ROOT)
+        def individual = reviews['user:' + canonical]
+        if (team && individual &&
+            ((individual.review.state != 'REQUEST_REVIEW' && individual.when >= request.when) ||
+             (individual.review.state == 'REQUEST_REVIEW' && individual.when > settings.cutoff))) {
+          continue
+        }
+        if (canonical != author.toLowerCase(Locale.ROOT) &&
+            (!settings.reviewers || settings.reviewers.contains(canonical))) {
+          candidates[canonical] = handle
+        }
+      }
+    }
+    for (def canonical : candidates.keySet()) {
+      if (!grouped.containsKey(canonical)) {
+        grouped[canonical] = [handle: candidates[canonical], prs: []]
+      }
+      grouped[canonical].prs.add([number: number, title: pr.title.replaceAll(/\s+/, ' ').trim(),
+        author: author, created: created])
+    }
+  }
+  def messages = []
+  def unresolved = []
+  for (def canonical : grouped.keySet().sort()) {
+    def entry = grouped[canonical]
+    def email = giteaObject(settings.base, '/users/' + encodePath(entry.handle)).email
+    if (deliverableEmail(email)) {
+      messages.add(messageFor(entry, email, settings))
+    } else {
+      unresolved.add(entry.handle)
+    }
+  }
+  return [messages: messages, unresolved: unresolved]
 }
