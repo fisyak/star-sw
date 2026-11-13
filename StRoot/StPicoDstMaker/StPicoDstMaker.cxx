@@ -1521,7 +1521,7 @@ void StPicoDstMaker::fillTracks() {
 	}
 	StPhysicalHelixD outerHelix = gTrk->outerHelix();
 	double dlTOF = fabs( outerHelix.pathLength( StThreeVector<double>(tofPoint.x(),
-									  tofPoint.y(), еofPoint.z()) ) );
+									  tofPoint.y(), tofPoint.z()) ) );
        
 	double l = gTrk->length();
 	lengthTof = l + dlDCA + dlTOF;
