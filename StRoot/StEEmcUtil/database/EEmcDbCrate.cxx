@@ -24,14 +24,14 @@ int EEmcDbCrate::isEmpty() const{
 //--------------------------------------------------
 //--------------------------------------------------
 void EEmcDbCrate::print() const{
-  LOG_INFO<<"EEmcDbCrate::print():"<<endm;
+  LOG_DEBUG<<"EEmcDbCrate::print():"<<endm;
 
   if(name[0]==0) {
     LOG_WARN<<" item not defined ???"<<endm;
     return;
   }
 
-   LOG_INFO<<Form("EEmcDbCrate::%s crID=%3d crIDswitch=%3d fiber=%d nCh=%d nHead=%d type=%c useIt=%d\n",name, crID, crIDswitch,fiber,nCh,nHead,type,useIt)<<endm;
+   LOG_DEBUG<<Form("EEmcDbCrate::%s crID=%3d crIDswitch=%3d fiber=%d nCh=%d nHead=%d type=%c useIt=%d\n",name, crID, crIDswitch,fiber,nCh,nHead,type,useIt)<<endm;
 }
 
 ostream &

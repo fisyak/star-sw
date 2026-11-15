@@ -216,7 +216,7 @@ void StEEmcDb::loadTables(StMaker *anyMaker) {
     if ( mAsciiDbase.Length() > 0 ) {
 	LOG_WARN << "StEEmcDb::loadTables: Database not reloaded, values taken from " << mAsciiDbase.Data() << endm;
     } else {
-	LOG_INFO <<  "StEEmcDb::loadTables: use(flav='"<<dbFlavor.flavor <<"', mask='"<< dbFlavor.nameMask<<"')" <<endm;
+	LOG_DEBUG <<  "StEEmcDb::loadTables: use(flav='"<<dbFlavor.flavor <<"', mask='"<< dbFlavor.nameMask<<"')" <<endm;
 	clearItemArray();
 	requestDataBase(anyMaker);
 	 //............  reload all lookup tables ...............
@@ -239,9 +239,9 @@ void StEEmcDb::loadTables(StMaker *anyMaker) {
 		const EEmcDbCrate *fiber=getFiber(icr);
 		//printf(" eemcDB : ");
 		//fiber->print();
-		LOG_INFO<<(*fiber)<<endm; //JCW 01/26
+		LOG_DEBUG<<(*fiber)<<endm; //JCW 01/26
 	    }
-	    LOG_INFO <<  "StEEmcDb::loadTables  Found "<< nFound<<" EEMC related tables "<<endm;
+	    LOG_DEBUG <<  "StEEmcDb::loadTables  Found "<< nFound<<" EEMC related tables "<<endm;
 	}
     }
 }  
@@ -257,7 +257,7 @@ void  StEEmcDb::requestDataBase(StMaker *anyMaker){
   for(ifl=0;ifl<2;ifl++) { // loop over flavors
     if(ifl==1) {
       if( dbFlavor.flavor[0]==0) continue; // drop flavor change
-      LOG_INFO <<  "StEEmcDb::RequestDataBase()-->ifl="<<ifl<<" try flavor='"<<dbFlavor.flavor <<"' for  mask='"<< dbFlavor.nameMask<<"')" <<endm;
+      LOG_DEBUG <<  "StEEmcDb::RequestDataBase()-->ifl="<<ifl<<" try flavor='"<<dbFlavor.flavor <<"' for  mask='"<< dbFlavor.nameMask<<"')" <<endm;
       
       anyMaker->SetFlavor(dbFlavor.flavor,dbFlavor.nameMask);
       mask=dbFlavor.nameMask;
@@ -305,13 +305,13 @@ void  StEEmcDb::requestDataBase(StMaker *anyMaker){
 //--------------------------------------------------
 int  StEEmcDb::optimizeMapping(int is){
 
-  LOG_INFO <<" StEEmcDb::optimizeMapping  conf ADC map for sector="<< mDbsectorID[is] <<endm;
+  LOG_DEBUG <<" StEEmcDb::optimizeMapping  conf ADC map for sector="<< mDbsectorID[is] <<endm;
   assert(mDbsectorID[is]>0);
   
   eemcDbADCconf_st *t= mDbADCconf[is];
   
   if(t==0) return -2; // it is fatal error
-  LOG_INFO <<"mapping="<< t->comment <<endm;
+  LOG_DEBUG <<"mapping="<< t->comment <<endm;
   
   int j;
   for(j=0;j<EEMCDbMaxAdc; j++) { // loop over channels
@@ -327,7 +327,7 @@ int  StEEmcDb::optimizeMapping(int is){
     EEmcDbItem *x=&byIndex[key];
     if(!x->isEmpty()) {
       //x->print(); // it is only on special error, never happends, too much changes needed
-      LOG_INFO<<(*x)<<endm; // JCW 01/26
+      LOG_DEBUG<<(*x)<<endm; // JCW 01/26
       assert(x->isEmpty());
     }
     x->crate=t->crate[j];
@@ -374,18 +374,18 @@ void StEEmcDb::optimizeOthers(int is){
   assert(secID>0);
 
   eemcDbPMTcal_st  *calT=mDbPMTcal[is];  
-  if(calT)  LOG_INFO <<"StEEmcDb::optimizeOthers tower calib="<<calT->comment<<endm;
+  if(calT)  LOG_DEBUG <<"StEEmcDb::optimizeOthers tower calib="<<calT->comment<<endm;
   eemcDbPMTname_st *tubeTw=mDbPMTname[is];
-  if(tubeTw) LOG_INFO <<"StEEmcDb::optimizeOthers PMT names="<<tubeTw->comment<<endm;
+  if(tubeTw) LOG_DEBUG <<"StEEmcDb::optimizeOthers PMT names="<<tubeTw->comment<<endm;
 
   eemcDbPIXcal_st  *calM= mDbPIXcal[is];
-  if(calM) LOG_INFO <<"StEEmcDb::optimizeOthers MAPMT calib="<<calM->comment<<endm;
+  if(calM) LOG_DEBUG <<"StEEmcDb::optimizeOthers MAPMT calib="<<calM->comment<<endm;
 
   eemcDbPMTped_st  *ped=mDbPMTped[is];
-  if(ped) LOG_INFO <<"StEEmcDb::optimizeOthers ped tower & MAPMT="<<ped->comment<<endm;
+  if(ped) LOG_DEBUG <<"StEEmcDb::optimizeOthers ped tower & MAPMT="<<ped->comment<<endm;
 
   eemcDbPMTstat_st *stat=mDbPMTstat[is];
-  if(stat) LOG_INFO <<"StEEmcDb::optimizeOthers status tower & MAPMT="<<stat->comment<<endm;
+  if(stat) LOG_DEBUG <<"StEEmcDb::optimizeOthers status tower & MAPMT="<<stat->comment<<endm;
   
   int key; 
   for(key=ix1;key<ix2; key++) { // loop  in this sector
@@ -571,7 +571,7 @@ void  StEEmcDb::optimizeFibers  (){
     return;
 
  done:
-    LOG_INFO <<" StEEmcDb::optimizeFibers   mOptimizeFibers() map found for nFiber="<<nFiber<<endm; 
+    LOG_DEBUG <<" StEEmcDb::optimizeFibers   mOptimizeFibers() map found for nFiber="<<nFiber<<endm; 
    if(icr==nFiber)  return;
 
     LOG_FATAL <<" StEEmcDb::optimizeFibers   mOptimizeFibers() map nFiber missmatch is="<<icr<<" should be="<<nFiber<<endm;
@@ -803,7 +803,7 @@ void StEEmcDb::setAsciiDatabase( const Char_t *ascii )
 
       
   //--
-  LOG_INFO<<Form("setAsciiDataBase() done, found %d valid records",nd)<<endm;
+  LOG_DEBUG<<Form("setAsciiDataBase() done, found %d valid records",nd)<<endm;
 
   return;
 
@@ -874,7 +874,7 @@ void  StEEmcDb::changeGainsAction(const char *fname) {
   fclose(fd);
     
  end:
-  LOG_INFO <<"   ::changeGains('"<<fname<<"') done inpLines="<<nl<<" nChanged="<<nd<<endm;
+  LOG_DEBUG <<"   ::changeGains('"<<fname<<"') done inpLines="<<nl<<" nChanged="<<nd<<endm;
   return;
   
 } 
