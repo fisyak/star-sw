@@ -95,7 +95,8 @@ class StFwdTrackMaker : public StMaker {
     std::string mConfigFile;
 
     std::vector< genfit::GFRaveVertex * > mRaveVertices;
-    vector<float> mFttZFromGeom, mFstZFromGeom;
+    vector<float> mFttZFromGeom;   // FTT: from the geometry model
+    vector<float> mFstZ;           // FST: from StFstDb::diskNominalZ
 
     void ProcessFwdTracks();
     void FillEvent();

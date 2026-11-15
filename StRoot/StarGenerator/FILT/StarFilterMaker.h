@@ -53,7 +53,7 @@ class StarFilterMaker : public StMaker
 {
  public:
   StarFilterMaker( const Char_t *name="" );
-  ~StarFilterMaker() { /* nothing to see here */ };
+  virtual ~StarFilterMaker() { /* nothing to see here */ };
 
   Int_t Init();
   Int_t Make();
