@@ -162,11 +162,9 @@ foreach $h (@h_files) {#print "h = $h\n";
 }
 if ($#Defs > -1) {
   my @CintFiles = ("${PKG}_Cint.cxx");
-  if ($env->{ENV}->{ROOT_VERSION_MAJOR} < 6) {
-    push @CintFiles, "${PKG}_Cint.h";
-  }
-
-  if ($env->{ENV}->{ROOT_VERSION_MAJOR} >= 6) {
+  if ( ! $env->{Packages}->{ROOT}->{ROOTCLING}) {
+#    push @CintFiles, "${PKG}_Cint.h";
+  } else {
     push @CintFiles, "${PKG}_Cint_rdict.pcm";
     Install $env $LIB, File::Basename::basename("${PKG}_Cint_rdict.pcm");
   }
