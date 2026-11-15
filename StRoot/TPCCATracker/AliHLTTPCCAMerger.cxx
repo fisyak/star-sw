@@ -62,6 +62,7 @@ using std::endl;
 
 #include "AliHLTTPCCATrackParamVector.h"
 #include "AliHLTTPCCATrackLinearisationVector.h"
+#include "StDetectorDbMaker/St_beamSpotC.h"
 
 /*struct AliHLTTPCCAMerger::AliHLTTPCCATrackMemory
 {
@@ -734,7 +735,14 @@ void AliHLTTPCCAMerger::UnpackSlices()
         auto inTrPar = AliHLTTPCCATrackParam( vStartPoint, iV );
         track.SetInnerParam( inTrPar );
         point_3d dca;
-        inTrPar.GetDCAPoint( 0.f, 0.f, 0.f, dca.x, dca.y, dca.z, fSliceParam.cBz( ) );
+#ifdef  St_beamSpotC_h
+	float X = St_beamSpotC::instance()->X();
+	float Y = St_beamSpotC::instance()->Y();
+	float Z = St_beamSpotC::instance()->Z();
+#else
+	float X = 0.f, Y = 0.f, Z = 0.f;
+#endif
+        inTrPar.GetDCAPoint( X, Y, Z, dca.x, dca.y, dca.z, fSliceParam.cBz( ) );
 	Bool_t alreadyOn = kFALSE;
 	for (unsigned int iv = 0; iv < iV; iv++) {
 	  float diff2 = 
