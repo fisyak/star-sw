@@ -150,14 +150,14 @@ Bfc_st BFC[] = { // standard chains
   {"pp2003"      , "" ,"","B2003,Corr2,ppOpt,-PreVtx,l3onl,ToF,emcDY2,svt_daq,SvtD,ftpc,trgd","",""
    ,                 "Production chain for Spring 2003 data (+ tof, svt (no est), ftpc, emc, trgd)",kFALSE},
   {"------------","-----------","-----------","------------------------------------------","","","",kFALSE},
-  {"B2003I"      ,"","","ry2003,in,TpxRaw,TpxClu,Idst,l0,tags,Tree,evout,svtDb"
+  {"B2003I"      ,"","","ry2003,in,TpxRaw,TpxClu,Idst,tags,Tree,evout,svtDb"
    ,                                                               "","","Base chain for 2003 ITTF",kFALSE},
 
   {"dau2003i"    ,"","","B2003I,IAna,CtbMatchVtx,Corr2,ppOpt,l3onl,tofDat,emcDY2,svt_daq,SvtD,ftpc,trgd"
    ,                               "","","Production chain for winter 2003 data dau2003a with ITTF",kFALSE},
   {"pp2003i","","","B2003I,IAna,CtbMatchVtx,Corr2,ppOpt,-PreVtx,l3onl,ToF,emcDY2,svt_daq,SvtD,ftpc,trgd"
    ,                               "","","Production chain for winter 2003 data dau2003a with ITTF",kFALSE},
-  {"B2004"       ,"","","ry2004,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,l0,tags,Tree,evout,ssdDb","",""
+  {"B2004"       ,"","","ry2004,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,tags,Tree,evout,ssdDb","",""
    ,                                                           "Base chain for 2004 ITTF (tpc+svt)",kFALSE},
   // Notes:
   //  fcf was not added by default to allow switching if needed
@@ -169,13 +169,13 @@ Bfc_st BFC[] = { // standard chains
    "B2004,IAna,fcf,ppOpt,VFppLMV5,CtbMatchVtx,ToF,emcDY2,ftpc,trgd,ZDCvtx,svtIT,Corr4,OSpaceZ2"
    ,                   "","","Production chain for 2003/2004 data (+     tof, ftpc, e/b-emc, trgd)",kFALSE},
   // Year 5 Chains
-  {"B2005"       ,"","","ry2005b,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,l0,tags,Tree,evout,ssdDb","",""
+  {"B2005"       ,"","","ry2005b,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,tags,Tree,evout,ssdDb","",""
    ,                                                           "Base chain for 2005 ITTF (tpc+svt)",kFALSE},
-  {"B2005a"      ,""       ,"","ry2005b,in,tpc_daq,tpcI,Physics,Idst,l0,tags,Tree,evout,svtDb,ssdDb","",""
+  {"B2005a"      ,""       ,"","ry2005b,in,tpc_daq,tpcI,Physics,Idst,tags,Tree,evout,svtDb,ssdDb","",""
    ,                                                          "Base chain for 2005 ITTF (tpc only)",kFALSE},
-  {"B2005b"      ,"" ,"","ry2005i,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,l0,tags,Tree,evout,ssdDb","",""
+  {"B2005b"      ,"" ,"","ry2005i,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,tags,Tree,evout,ssdDb","",""
    ,                                                "Base chain for 2005 ITTF Geo f (tpc+svt only)",kFALSE},
-  {"B2005c"      ,"" ,"","ry2005i,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,l0,tags,Tree,evout,ssdDb","",""
+  {"B2005c"      ,"" ,"","ry2005i,in,tpc_daq,tpcI,svt_daq,SvtD,Physics,Idst,tags,Tree,evout,ssdDb","",""
    ,                                "Base chain for 2005 ITTF Geo g (tpc+svt only + dead material)",kFALSE},
 
   {"P2005"       ,"" ,"",   "B2005,IAna,fcf,VFMinuit,emcDY2,ftpc,trgd,ZDCvtx,svtIT,Corr3"
@@ -196,9 +196,9 @@ Bfc_st BFC[] = { // standard chains
    ,                                                           "Base chain for 2006 ITTF (tpc+svt)",kFALSE},
   {"B2006a"      ,""       ,"","ry2005i,in,tpc_daq,tpcI,UseXgeom,Idst,tags,Tree,evout,svtDb,ssdDb","",""
    ,                                          "Base chain for 2006 with 2005d geom ITTF (tpc only)",kFALSE},
-  {"B2006b"      ,""       ,"","ry2006,in,tpc_daq,tpcI,UseXgeom,Idst,l0,tags,Tree,evout,svtDb,ssdDb","",""
+  {"B2006b"      ,""       ,"","ry2006,in,tpc_daq,tpcI,UseXgeom,Idst,tags,Tree,evout,svtDb,ssdDb","",""
    ,                                                          "Base chain for 2006 ITTF (tpc only)",kFALSE},
-  {"B2006g"      ,""       ,"","ry2006g,in,tpc_daq,tpcI,UseXgeom,Idst,l0,tags,Tree,evout,svtDb,ssdDb","",""
+  {"B2006g"      ,""       ,"","ry2006g,in,tpc_daq,tpcI,UseXgeom,Idst,tags,Tree,evout,svtDb,ssdDb","",""
    ,                                                    "Base chain for 2006 ITTF geo g (tpc only)",kFALSE},
   {"pp2006a"      ,"" ,"",   // We cannot start with VFPPV as there are many asserts. ppLMV5 is safe until adjustment
    "B2006a,IAna,fcf,ppOpt,VFPPVnoCTB,beamline,emcDY2,ftpc,trgd,ZDCvtx,Corr3"
@@ -562,23 +562,23 @@ Bfc_st BFC[] = { // standard chains
   //  {"LaserDV.Chain","","","in,LaserCal,fcf,TpcHitMover,OGridLeak3D,OShortR,OSpaceZ2","","","get LDV",kFALSE},
   {"MC----------","-----------","-----------","------------------------------------------","","","",kFALSE},
   {"MC.y2000","","","MC,DQ.2000,RC.2000,geant,evout,IdTruth,tags,GeantOut,big"            ,"","","",kFALSE},
-  {"MC.y2001"        ,"","","MC.tpcRS,fss,rrs,y2001n,Idst,rich,IAna,l0,tpcI,tpxClu,ftpc,-Kink2,"
+  {"MC.y2001"        ,"","","MC.tpcRS,fss,rrs,y2001n,Idst,rich,IAna,tpcI,tpxClu,ftpc,-Kink2,"
    "VFMinuit,geant,evout,IdTruth,tags,GeantOut,big,useXGeom"                      ,"","","no emc2Y",kFALSE},
-  {"MC.pp.y2001"     ,"","","MC,tpcRS,rrs,fss,y2001n,Idst,rich,IAna,l0,tpcI,tpxClu,ftpc,-Kink2,"
+  {"MC.pp.y2001"     ,"","","MC,tpcRS,rrs,fss,y2001n,Idst,rich,IAna,tpcI,tpxClu,ftpc,-Kink2,"
    "VFMinuit,geant,evout,IdTruth,tags,MiniMcMk,GeantOut,big,useXGeom"                     ,"","","",kFALSE},
-  {"MC.y2003"        ,"","","MC,tpcRS,fss,y2003z,Idst,IAna,l0,tpcI,tpxClu,ftpc,VFMinuit,bbcSim,tofsim,"
+  {"MC.y2003"        ,"","","MC,tpcRS,fss,y2003z,Idst,IAna,tpcI,tpxClu,ftpc,VFMinuit,bbcSim,tofsim,"
    "tags,emcY2,evout,IdTruth,geantout,useXGeom"                                           ,"","","",kFALSE}, // EEfs,
-  {"MC.y2004"        ,"","","MC,tpcRS,srs,fss,y2004z,Idst,BAna,l0,tpcI,tpxClu,ftpc,VFMinuit,SvtIt,geant,evout,"
+  {"MC.y2004"        ,"","","MC,tpcRS,srs,fss,y2004z,Idst,BAna,tpcI,tpxClu,ftpc,VFMinuit,SvtIt,geant,evout,"
    "tags,bbcSim,tofsim,emcY2,EEfs,GeantOut,big,useXGeom"                                  ,"","","",kFALSE},
-  {"MC.y2004a"       ,"","","MC,tpcRS,srs,fss,y2004z,Idst,BAna,l0,tpcI,tpxClu,ftpc,VFMinuit,SvtIT,geant"
+  {"MC.y2004a"       ,"","","MC,tpcRS,srs,fss,y2004z,Idst,BAna,tpcI,tpxClu,ftpc,VFMinuit,SvtIT,geant"
    ",tags,bbcSim,tofsim,emcY2,EEfs,evout,GeantOut,big,useXGeom"                           ,"","","",kFALSE},
-  {"MC.y2005"        ,"","","MC,tpcRS,srs,fss,ssd,y2005z,Idst,IAna,l0,tpcI,tpxClu,ftpc,SvtCL,svtDb,"
+  {"MC.y2005"        ,"","","MC,tpcRS,srs,fss,ssd,y2005z,Idst,IAna,tpcI,tpxClu,ftpc,SvtCL,svtDb,"
    "SsdIt,SvtIt,VFMinuit,geant,evout,tags,bbcSim,tofsim,emcY2,EEfs,GeantOut,big,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2005.noSvt"        ,"","","MC,tpcRS,fss,y2005z,Idst,IAna,l0,tpcI,tpxClu,ftpc,"
+  {"MC.y2005.noSvt"        ,"","","MC,tpcRS,fss,y2005z,Idst,IAna,tpcI,tpxClu,ftpc,"
    "-SsdIt,-SvtIt,VFMinuit,geant,evout,tags,bbcSim,tofsim,emcY2,EEfs,GeantOut,big,useXGeom"
    ,                                                                                       "","","",kFALSE},
-  {"MC.y2006"        ,"","","MC,tpcRS,fss,y2006z,Idst,IAna,l0,tpcI,tpxClu,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
+  {"MC.y2006"        ,"","","MC,tpcRS,fss,y2006z,Idst,IAna,tpcI,tpxClu,ftpc,VFMinuit,NoSsdIt,NoSvtIt"
    ",MakeEvent,bbcSim,tofsim,tags,emcY2,EEfs,evout,IdTruth,geantout,big,useXGeom",         "","","",kFALSE},
   {"MC.y2007"        ,"","","MC,tpcRS,srs,ssd,fss,y2007z,Idst,BAna,tpcI,tpxClu,ftpc,SvtIt,SsdIt,"
    "VFMinuit,MakeEvent,IdTruth,geant,tags,bbcSim,tofsim,emcY2,EEfs,evout,GeantOut,big,useXGeom"
@@ -1140,11 +1140,11 @@ Bfc_st BFC[] = { // standard chains
   {"MakeMuDst","","","in,StEvent,CMuDST,Tree,nodefault,NoHistos,ReadAll","",""  ,"StEvent => MuDst",kFALSE},
   {"drawDst"     ,""  ,"","in,ry1h,globT,SCL,geant,display,NoDb,TbUtil"                   ,"","","",kFALSE},
   {"Cdst"        ,""  ,"","ITTF,event,analysis,EventQA"                                   ,"","","",kFALSE},
-  {"C1default"   ,""  ,"","rich,l0,Cdst,tags,Tree,EvOut,NoHits"               ,"","","Year 1 chain",kFALSE},
-  {"C2default"   ,""  ,"","rich,l0,Cdst,tags,Tree,EvOut,ftpc,svt,emcY2"       ,"","","Year 2 chain",kFALSE},
-  {"C3default"   ,""  ,"","l0,Cdst,tags,Tree,EvOut,NoHits,ftpc,svt,bbcsim,emcY2"
+  {"C1default"   ,""  ,"","rich,Cdst,tags,Tree,EvOut,NoHits"                  ,"","","Year 1 chain",kFALSE},
+  {"C2default"   ,""  ,"","rich,Cdst,tags,Tree,EvOut,ftpc,svt,emcY2"          ,"","","Year 2 chain",kFALSE},
+  {"C3default"   ,""  ,"","Cdst,tags,Tree,EvOut,NoHits,ftpc,svt,bbcsim,emcY2"
    ,                                                                 "","","Year 3 simu base chain",kFALSE},
-  {"CAdefault"   ,""  ,"","l0,Cdst,tags,Tree,EvOut,NoHits,ftpc,svt,emcY2","","","Assymptotic chain",kFALSE},
+  {"CAdefault"   ,""  ,"","Cdst,tags,Tree,EvOut,NoHits,ftpc,svt,emcY2",""   ,"","Assymptotic chain",kFALSE},
   {"Cy1a"        ,""  ,"","y1a,C1default"                                ,"","","Turn on chain y1a",kFALSE},
   {"Cy1b"        ,""  ,"","y1b,C1default"                                ,"","","Turn on chain y1b",kFALSE},
   {"Cy1s"        ,""  ,"","y1s,C1default"                                ,"","","Turn on chain y1s",kFALSE},
@@ -1539,7 +1539,7 @@ Bfc_st BFC[] = { // standard chains
   {"MakeEvent","0Event","","StEvent,detDb","StEventMaker","StEventMaker","<Early StEvent creation>",kFALSE},
   {"LaserAvEv"          ,"","",""             ,"StLaserAvEventMaker","StLaserAvEventMaker","Hejrad",kFALSE},
   {"LaserAvCl"          ,"","",""               ,"StLaserAvClusterMaker","StLaserAvClusterMaker","",kFALSE},
-  {"l0"          ,"l0Chain","","globT,ctf,trg"                              ,"StMaker","StChain","",kFALSE},
+  {"l0"          ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"ctf"         ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"mwc"         ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
   {"ppMCTrig"    ,"","","",                              "","","WARNING *** Option is OBSOLETE ***",kFALSE},
