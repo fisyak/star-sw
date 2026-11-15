@@ -1947,6 +1947,11 @@ int StiKalmanTrack::releaseHits(double rMin,double rMax)
 }
 //_____________________________________________________________________________
 Int_t StiKalmanTrack::ClearWorstHits(Int_t max) {
+#if __GNUC__ <= 4
+  struct customMore {
+    bool operator() (pair<StiKalmanTrackNode *, Double_t>& a, pair<StiKalmanTrackNode *, Double_t>& b) const { return a.second > b.second; }
+  };  
+#endif
   // Clear up to max hits with chi2 > Chi2HitCut()
   Int_t noHits = 0;
   // Declare vector of pairs 
@@ -1967,7 +1972,7 @@ Int_t StiKalmanTrack::ClearWorstHits(Int_t max) {
   }
   // Sort using comparator function 
 #if __GNUC__ <= 4
-  sort(A.begin(), A.end(), StiKalmanTrack_ClearWorstHits_comp);
+  sort(A.begin(), A.end(), customMore);
 #else
   sort(A.begin(), A.end(), [] (pair<StiKalmanTrackNode *, Double_t>& a, pair<StiKalmanTrackNode *, Double_t>& b) { return a.second > b.second;});
 #endif

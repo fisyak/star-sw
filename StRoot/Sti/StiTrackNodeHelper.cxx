@@ -197,6 +197,11 @@ int StiTrackNodeHelper::propagatePars(const StiNodePars &parPars
     sinCA2 = (sinCA2<0) ? -kMaxSin:kMaxSin;
     dsin = sinCA2-rotPars._sinCA;
     dx = (TMath::Abs(rho)>1e-5)? dsin/rho:0;
+    if (TMath::Abs(dx)<1e-5) { 
+      proPars = rotPars; 
+      proPars.dXeff() = dX;
+      return 0;
+    }
     x2 = x1 + dx;
   }
   cosCA2 = TMath::Sqrt((1.-sinCA2)*(1.+sinCA2));
@@ -238,8 +243,9 @@ int StiTrackNodeHelper::propagatePars(const StiNodePars &parPars
       }
       Double_t ddx = 0.5*(dx1 + dx2);
       dX = 0.5*TMath::Abs(dx1 - dx2);
-      Double_t scaleL = 1. + ddx/dx;
-      dl0 *= scaleL;
+      Double_t scaleL = 1.;
+      if (TMath::Abs(dx) > 1e-5) scaleL += ddx/dx;
+       dl0 *= scaleL;
       dl  *= scaleL;
       x2 = x2 + ddx;
       z2 = z2 + dZdX*ddx;
