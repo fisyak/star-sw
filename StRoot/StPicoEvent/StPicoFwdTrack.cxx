@@ -7,7 +7,12 @@
 
 ClassImp(StPicoFwdTrack)
 
-StPicoFwdTrack::StPicoFwdTrack() : TObject() {
+StPicoFwdTrack::StPicoFwdTrack() : TObject(), mId(0), mNumberOfSeedPoints(0), mNumberOfFitPoints(0),
+                                   mChi2(0), mPVal(0), mMomentumX(0), mMomentumY(0),
+                                   mMomentumZ(0), mStatus(0), mIdTruth(0), mQATruth(0),
+                                   mDCAXY(0), mDCAZ(0), mVtxIndex(0), mGlobalTrackIndex(0),
+                                   mECalX(0), mECalY(0), mECalZ(0), mHCalX(0), mHCalY(0),
+                                   mHCalZ(0) {
     /* No Op*/
 }
 

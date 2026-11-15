@@ -20,7 +20,10 @@ class StPicoFwdTrack : public TObject {
     
 
 public:
-    enum StPicoFwdTrackType { kGlobal=0, kBeamlineConstrained=1, kPrimaryVertexConstrained=2, kForwardVertexConstrained=3 };
+    // Deliberately duplicated from StEvent/StFwdTrack.h rather than included:
+    // StPicoEvent is kept readable without the StEvent libraries. KEEP IN SYNC --
+    // this list drifted once already, missing kFCSConstrained.
+    enum StPicoFwdTrackType { kGlobal=0, kBeamlineConstrained=1, kPrimaryVertexConstrained=2, kForwardVertexConstrained=3, kBLCVertexConstrained=4, kFCSConstrained=5 };
     /// Constructor
     StPicoFwdTrack(  );
     /// Copy constructor
@@ -66,12 +69,12 @@ public:
     Float_t dcaZ() const { return mDCAZ; }
     // Index of the primary vertex used in the fit
     UChar_t vertexIndex() const {
-        // extract bits 7…2:
-        return (mVtxIndex >> 2) & 0x3F;
+        // high 5 bits (0-31); was 6 bits before the track type needed a third bit
+        return (mVtxIndex >> 3) & 0x1F;
     }
     UChar_t trackType() const {
-        // extract bits 1…0:
-        return mVtxIndex & 0x03;
+        // low 3 bits (0-7); was 2 bits, which could not hold kBLCVertexConstrained=4
+        return mVtxIndex & 0x07;
     }
     // Index of the corresponding Global Track if Primary, BLC, or FwdVertex constrained tracks
     UShort_t globalTrackIndex() const { return mGlobalTrackIndex; }
@@ -79,6 +82,8 @@ public:
     bool isBeamLineConstrainedTrack() const { return (trackType() == StPicoFwdTrack::kBeamlineConstrained); }
     bool isPrimaryTrack() const { return (trackType() == StPicoFwdTrack::kPrimaryVertexConstrained); }
     bool isFwdVertexConstrainedTrack() const { return (trackType() == StPicoFwdTrack::kForwardVertexConstrained); }
+    bool isBLCVertexConstrainedTrack() const { return (trackType() == StPicoFwdTrack::kBLCVertexConstrained); }
+    bool isFCSConstrainedTrack() const { return (trackType() == StPicoFwdTrack::kFCSConstrained); }
 
      // access ecal match indices
      UChar_t ecalMatchIndex( Int_t i ) const { return (i < (Int_t)mEcalMatchIndex.size()) ? mEcalMatchIndex[i] : 0; }
@@ -161,7 +166,7 @@ protected:
     Short_t mHCalY;
     Short_t mHCalZ;
 
-    ClassDef(StPicoFwdTrack,1)
+    ClassDef(StPicoFwdTrack, 2)
 
 };
 
