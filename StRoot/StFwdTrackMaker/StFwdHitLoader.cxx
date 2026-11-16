@@ -1,4 +1,5 @@
 #include "StFwdTrackMaker/StFwdTrackMaker.h"
+#include "StFstDbMaker/StFstDb.h"
 #include "StFwdTrackMaker/StFwdHitLoader.h"
 
 // For StEvent
@@ -324,10 +325,14 @@ int StFwdHitLoader::loadFstHitsFromMuDst( FwdDataSource::McTrackMap_t &mcTrackMa
         float vPhi = muFstHit->localPosition(1);
         float vZ = muFstHit->localPosition(2);
 
-        int wedgeIndex  = muFstHit->getWedge();
-        int sensorIndex = muFstHit->getSensor();
-        int diskIndex   = muFstHit->getDisk();
-        int globalIndex = FwdHit::fstGlobalSensorIndex( diskIndex, wedgeIndex, sensorIndex );
+        int wedgeIndex  = muFstHit->getWedge();    // 1-36, global across the disks
+        int sensorIndex = muFstHit->getSensor();   // 0-2
+        int diskIndex   = muFstHit->getDisk();     // 1-3
+        // StFstDb packs (wedge, sensor) the one way everything else unpacks it.
+        // The helper this replaced wanted a 0-based disk and a per-disk 0-11
+        // wedge, and was being handed StMuFstHit's 1-3 and 1-36, so the index
+        // ran past the 108 planes it keys.
+        int globalIndex = StFstDb::sensorIndex( wedgeIndex, sensorIndex );
 
         float x0 = vR * cos( vPhi );
         float y0 = vR * sin( vPhi );
@@ -396,7 +401,8 @@ int StFwdHitLoader::loadFstHitsFromStEvent( FwdDataSource::McTrackMap_t &mcTrack
                     int wedgeIndex  = iw % kFstNumWedgePerDisk;
                     int sensorIndex = is % kFstNumSensorsPerWedge;
                     int diskIndex   = iw / kFstNumWedgePerDisk;
-                    int globalIndex = FwdHit::fstGlobalSensorIndex( diskIndex, wedgeIndex, sensorIndex );
+                    // iw is the 0-based global wedge, so iw+1 is StFstDb's 1-36
+                    int globalIndex = StFstDb::sensorIndex( iw + 1, sensorIndex );
 
                     if ( kLogLevel >= kLogVerbose ) {LOG_DEBUG << "diskIndex = " << diskIndex << ", wedgeIndex = " << wedgeIndex << ", sensorIndex = " << sensorIndex << ", globalIndex = " << globalIndex << endm;}
                     float x0 = vR * cos( vPhi );

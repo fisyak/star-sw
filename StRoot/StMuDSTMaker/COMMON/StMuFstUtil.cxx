@@ -49,6 +49,15 @@ StFstHitCollection* StMuFstUtil::getFst(StMuFstCollection* muFst)
     return fst;
 } //getFst
 
+StFstEvtCollection* StMuFstUtil::getFstEvt(StMuFstCollection* muFst)
+{
+    if(!muFst) return NULL;
+
+    StFstEvtCollection *fstevt=new StFstEvtCollection();
+    fillFstEvt(fstevt,muFst);
+    return fstevt;
+} //getFstEvt
+
 void StMuFstUtil::fillMuFst(StMuFstCollection *muFst,StFstHitCollection *fstcol,StFstEvtCollection *fstevtcol)
 {
     LOG_INFO << "fillMuFst" << endm;
@@ -65,6 +74,13 @@ void StMuFstUtil::fillFst(StFstHitCollection* fstcol,StMuFstCollection* muFst)
     if(!fstcol) return;
     fillFstHits(fstcol, muFst);
 } // fillFst
+
+void StMuFstUtil::fillFstEvt(StFstEvtCollection* fstevtcol,StMuFstCollection* muFst)
+{
+    if(!muFst) return;
+    if(!fstevtcol) return;
+    fillFstRawHits(fstevtcol, muFst);
+} // fillFstEvt
 
 void StMuFstUtil::fillMuFstHits(StMuFstCollection* muFst,
         StFstHitCollection* fstcol,
@@ -103,6 +119,36 @@ void StMuFstUtil::fillMuFstHits(StMuFstCollection* muFst,
     }  // for wedgeIdx
 
 } // fillMuFstHits
+
+// Rebuild StEvent raw hits from the MuDst. Counterpart of fillMuFstHits()'s raw-hit
+// half; mirrors StMuFttUtil::fillFttRawHits, which is what lets the FTT chain re-run
+// from a MuDst. Every member StMuFstRawHit::set() copies is restored here, so the
+// round trip is lossless.
+//
+// Uses TIter so a null array is handled without a special case, as on the FTT side.
+void StMuFstUtil::fillFstRawHits(StFstEvtCollection* fstevtcol,
+        StMuFstCollection* muFst)
+{
+    LOG_INFO << "fillFstRawHits" << endm;
+    TIter next(muFst->getRawHitArray());
+    StMuFstRawHit* muHit(NULL);
+    int n = 0;
+    while ((muHit = static_cast<StMuFstRawHit*>(next()))) {
+        StFstRawHit* hit = new StFstRawHit();
+        hit->setChannelId( muHit->getChannelId() );
+        hit->setGeoId( muHit->getGeoId() );
+        hit->setSeedhitflag( muHit->getSeedhitflag() );
+        for (int tb = 0; tb < kFstNumTimeBins; tb++) {
+            hit->setCharge( muHit->getCharge(tb), tb );
+            hit->setChargeErr( muHit->getChargeErr(tb), tb );
+        }
+        hit->setMaxTimeBin( muHit->getMaxTimeBin() );
+        hit->setIdTruth( muHit->getIdTruth() );
+        fstevtcol->addRawHit( hit );
+        n++;
+    }
+    LOG_DEBUG << "fillFstRawHits - restored " << n << " FST raw hits from the MuDst" << endm;
+} // fillFstRawHits
 
 void StMuFstUtil::fillFstHits(StFstHitCollection* fstcol,
         StMuFstCollection* muFst)
