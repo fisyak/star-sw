@@ -1,0 +1,16 @@
+/*    runConfiguration.idl
+*
+*  Table: runConfiguration
+*
+*       description: run configuration taken from Run*.pm built by 
+*       onl Run25 | SortRun.pl | tee RunXXVDefs.pm
+*/ 
+struct runConfiguration { 
+  short   idx; // active line number >= 1
+  short   nrows;// total no. of active rows;
+  long    runMin;
+  long    runMax;
+  char    trigger[32];
+  char    field[8];
+  char    beginTime[16];
+ };  
