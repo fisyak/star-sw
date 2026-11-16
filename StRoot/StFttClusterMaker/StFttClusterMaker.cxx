@@ -458,6 +458,31 @@ std::vector<StFttCluster*> StFttClusterMaker::FindClusters( std::vector< StFttRa
         clu->setRow         ( maxAdcHit->row         ( ) );
         clu->setOrientation ( maxAdcHit->orientation ( ) );
 
+        // These two were the only max-ADC-hit fields never copied onto the cluster,
+        // so StFttCluster::maxStripLength() and maxStripCenter() kept their -999
+        // defaults for every cluster ever written. Both are documented in
+        // StEvent/StFttCluster.h as filled by THIS maker; until now they were not.
+        //
+        // maxStripLength is the LENGTH of the max-ADC strip, i.e. the extent of the
+        // row band along the coordinate the strip does NOT measure. A point maker
+        // places the off-axis coordinate at the band centre,
+        // StFttDb::YX_StripGroupEdge[row] + maxStripLength()/2 (and the diagonal
+        // equivalent in the rotated frame), with an uncertainty of
+        // maxStripLength()/sqrt(12). With -999 that formula produced a large
+        // negative local value, which combined with the per-quadrant sign flips to
+        // swap which end of each row lands near versus far from y=0 -- the
+        // top/bottom plus north/south swap and the bowtie shape in the FTT hit maps
+        // both come from this one missing line. This is the fix the July 2026 FTT
+        // reprocessing was run with.
+        clu->setMaxStripLength( maxAdcHit->stripLength( ) );
+
+        // maxStripCenter is the centre of the max-ADC strip along the coordinate the
+        // strip DOES measure -- the same axis as cluster x(), from the same scMapXY
+        // table (see StFttRawHit::mStripCenter). It is a single-strip, unweighted
+        // version of x(), useful for diagnostics and alignment; it is NOT a position
+        // along the strip, so it must not be used for the off-axis coordinate.
+        clu->setMaxStripCenter( maxAdcHit->stripCenter( ) );
+
         // Now find the cluster edges
         size_t left = anchor, right = anchor;
         SearchClusterEdges( hits, anchor, left, right);
