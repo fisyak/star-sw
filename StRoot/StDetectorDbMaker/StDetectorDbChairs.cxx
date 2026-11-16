@@ -2518,6 +2518,30 @@ Float_t StDetectorDbTriggerID::getTotalPrescaleByTrgId(Int_t trgId) {
   }
 }
 //________________________________________________________________________________
+#include "St_runConfigurationC.h"
+St_runConfigurationC *St_runConfigurationC::fgInstance = 0;
+Int_t St_runConfigurationC::currentRun = -1;
+Int_t St_runConfigurationC::currentIndex = -1;
+//________________________________________________________________________________
+St_runConfigurationC *St_runConfigurationC::instance() {
+  if (! fgInstance) {
+    St_runConfiguration *table = (St_runConfiguration *) StMaker::GetChain()->GetDataBase("RunLog/runConfiguration");
+    assert(table);	  DEBUGTABLE(runConfiguration);
+    fgInstance = new St_runConfigurationC(table);
+  } 
+  UInt_t Nrows = fgInstance->getNumRows();
+  if (! Nrows) return fgInstance;
+  Int_t run = StMaker::GetChain()->GetRunNumber();
+  if (currentRun == run && currentIndex >= 0)   return fgInstance;
+  for (UInt_t i = 0; i < Nrows; i++) {
+    if (fgInstance->runMin(i) < run || run > fgInstance->runMax(i)) continue;
+    currentRun = run;
+    currentIndex = i;
+    break;
+  }
+  return fgInstance;
+}
+//________________________________________________________________________________
 #include "StDetectorDbIntegratedTriggerID.h"
 StDetectorDbIntegratedTriggerID *StDetectorDbIntegratedTriggerID::fgInstance = 0;
 //___________________Conditions/trg_____________________________________________________________

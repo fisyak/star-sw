@@ -80,6 +80,7 @@ using namespace units;
 #include "StDetectorDbMaker/St_trigDetSumsC.h"
 #include "StDetectorDbMaker/St_TpcSecRowBC.h"
 #include "StDetectorDbMaker/StDetectorDbTpcRDOMasks.h"
+#include "StDetectorDbMaker/St_runConfigurationC.h"
 #include "StTrackCombPiD.h"
 #include "dEdxHist.h"
 #if defined(__CHECK_LargedEdx__) || defined( __DEBUG_dEdx__) || defined( __DEBUG_dNdx__)
@@ -218,6 +219,17 @@ Int_t StdEdxY2Maker::InitRun(Int_t RunNumber){
   if (!gStTpcDb) {
     cout << "Database Missing! Can't initialize StdEdxY2Maker" << endl;
     return kStFatal;
+  }
+  // run Configuration
+  TString trigger = St_runConfigurationC::instance()->Trigger();
+  if (trigger.Contains("High",TString::kIgnoreCase) ||
+      trigger.Contains("HiLumi",TString::kIgnoreCase)) {
+    const Char_t *TFGTables[] = {"TpcSecRowB","TpcZCorrectionC","TpcLengthCorrectionMDN", 0};
+    LOG_INFO << "Activate High Luminosity flavor" << endm;
+    for (Int_t i = 0; TFGTables[i]; i++) {
+      LOG_INFO << "SetFlavor(\"\"sim+ofl+HighLumi\",\"" << TFGTables[i] << "\");" << endm; 
+      SetFlavor("sim+ofl+HighLumi",TFGTables[i]);
+    }
   }
   // 		TPG parameters
   numberOfSectors   = gStTpcDb->Dimensions()->numberOfSectors();
