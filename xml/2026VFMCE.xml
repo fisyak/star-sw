@@ -4,10 +4,8 @@
 <stderr URL="file:./sched$JOBID.err" />
 <command> 
   cd ${SUBMITTINGDIRECTORY}  
-#  setenv NODEBUG yes
   setenv STARFPE NO
-#  setup 64b
-#  starver TFG25e
+  starver TFG26n
   echo $INPUTFILE0 | grep ':'
   if (! $?) then
     set rung  = `echo $INPUTFILE0 | awk -F\: '{print $1}'`
@@ -76,5 +74,5 @@
   endif
 </command>
 <!-- <input URL="command:RunId.pl 1 500 500 K_S0" /> -->
-<input URL="command:RunId.pl 1 100 500 K_S0" /> 
+<input URL="command:RunId.pl 101 200 500 K_S0" /> 
 </job>
