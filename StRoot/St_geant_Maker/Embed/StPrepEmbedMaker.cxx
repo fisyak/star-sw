@@ -25,6 +25,7 @@
 #include "StPrepEmbedMaker.h"
 #include "StEvtHddr.h"
 #include "TTree.h"
+#include "TLeaf.h"
 #include "StGenericVertexMaker/StGenericVertexMaker.h"
 #include "StGenericVertexMaker/StGenericVertexFinder.h"
 
@@ -172,6 +173,20 @@ Int_t StPrepEmbedMaker::InitRun(const int runnum)
     return kStErr;
   }
 
+  mTree->SetBranchAddress("GlobalTag.uncorrectedNumberOfPrimaries", &mNumberOfPrimaries);
+  mTree->SetBranchAddress("GlobalTag.primaryVertexFlag",           &mPrimaryVertexFlag);
+  mTree->SetBranchAddress("GlobalTag.primaryVertexX",              &mPrimaryVertexX);
+  mTree->SetBranchAddress("GlobalTag.primaryVertexY",              &mPrimaryVertexY);
+  mTree->SetBranchAddress("GlobalTag.primaryVertexZ",              &mPrimaryVertexZ);
+  mTree->SetBranchAddress("GlobalTag.TriggerId",                   mTriggerId);
+  mTree->SetBranchAddress("GlobalTag.sigmaPVX",                    &mSigmaPVX);
+  mTree->SetBranchAddress("GlobalTag.sigmaPVY",                    &mSigmaPVY);
+  mTree->SetBranchAddress("GlobalTag.sigmaPVZ",                    &mSigmaPVZ);
+  if ( mTree->BuildIndex("EvtHddr.mRunNumber","EvtHddr.mEventNumber") < 0 ) {
+    LOG_ERROR << "StPrepEmbedMaker::Init  Cannot build run/event index on Tag tree" << endm;
+    return kStErr;
+  }
+
   // Check mode type, select settings
   if (mSpreadMode){
     LOG_INFO << "StPrepEmbedMaker::Init  Spreader mode set. Looking for MoreTags file ..."<<endm;
@@ -188,6 +203,18 @@ Int_t StPrepEmbedMaker::InitRun(const int runnum)
         LOG_ERROR << "StPrepEmbedMaker::Init  In MoreTagsFile : " << mMoreTagsFile << " cannot find TTree \"MoreTags\"" << endm;
         return kStErr;
       }//end if more tree 
+
+      mMoreTree->SetBranchAddress("nRefMult", &mMoreNumberOfPrimaries);
+      mMoreTree->SetBranchAddress("VX",       &mMoreVertexX);
+      mMoreTree->SetBranchAddress("VY",       &mMoreVertexY);
+      mMoreTree->SetBranchAddress("VZ",       &mMoreVertexZ);
+      mMoreTree->SetBranchAddress("VXsigma",  &mMoreSigmaPVX);
+      mMoreTree->SetBranchAddress("VYsigma",  &mMoreSigmaPVY);
+      mMoreTree->SetBranchAddress("VZsigma",  &mMoreSigmaPVZ);
+      if ( mMoreTree->BuildIndex("RunId","EvtId") < 0 ) {
+        LOG_ERROR << "StPrepEmbedMaker::Init  Cannot build run/event index on MoreTags tree" << endm;
+        return kStErr;
+      }
     }
     else {
       LOG_INFO << "StPrepEmbedMaker::Init  File moretags.root not found. If this embedding is for years 2007 through 2009, this will most likely cause the embedding to quit prematurely."<<endm;
@@ -257,20 +284,24 @@ Int_t StPrepEmbedMaker::Make()
     LOG_ERROR << "StPrepEmbedMaker::Make EvtHddr has not been found" << endm;
     return kStErr;
   }
-  Int_t nFound = mTree->Draw("uncorrectedNumberOfPrimaries:primaryVertexFlag",
-			     Form("mRunNumber==%i&&mEventNumber==%i",EvtHddr->GetRunNumber(),EvtHddr->GetEventNumber()),
-			     "goff");
-  if (nFound != 1) {
-    LOG_ERROR << "StPrepEmbedMaker::Make Run/Event = " << EvtHddr->GetRunNumber() << "/" << EvtHddr->GetEventNumber() 
-	      << " has been found in tag file" << nFound << " times" <<  endm;
+  const Int_t runNumber = EvtHddr->GetRunNumber();
+  const Int_t eventNumber = EvtHddr->GetEventNumber();
+  // VpdVz/PVRank are read through their leaves, so read all branches when those cuts are on
+  const Bool_t readAll = mSkipMode && (mVpdVzCutMode || mPVRankCutMode);
+  Int_t nFound = 0;
+
+  Long64_t entry = mTree->GetEntryNumberWithIndex(runNumber,eventNumber);
+  if (entry < 0) {
+    LOG_ERROR << "StPrepEmbedMaker::Make Run/Event = " << runNumber << "/" << eventNumber
+	      << " has not been found in tag file" << endm;
     return kStErr;
   }
-  LOG_INFO << "StPrepEmbedMaker::Make Run/Event = " << EvtHddr->GetRunNumber()
-	   << "/" << EvtHddr->GetEventNumber() 
-	   << " has been found with uncorrectedNumberOfPrimaries = " <<  mTree->GetV1()[0] 
-	   << " and primaryVertexFlag = " << mTree->GetV2()[0]  <<  endm; 
+  mTree->GetEntry(entry,readAll);
+  LOG_INFO << "StPrepEmbedMaker::Make Run/Event = " << runNumber << "/" << eventNumber
+	   << " has been found with uncorrectedNumberOfPrimaries = " << mNumberOfPrimaries
+	   << " and primaryVertexFlag = " << mPrimaryVertexFlag << endm;
 
-  if (mTree->GetV1()[0] <= 0 || mTree->GetV2()[0] )
+  if (mNumberOfPrimaries <= 0 || mPrimaryVertexFlag)
   {
     LOG_ERROR << "StPrepEmbedMaker::Make reject this event" << endm;
     return kStErr;
@@ -278,62 +309,44 @@ Int_t StPrepEmbedMaker::Make()
 
   if( mMoreTree )
   {
-     nFound = mMoreTree->Draw("nRefMult",
-	     Form("RunId==%i&&EvtId==%i",EvtHddr->GetRunNumber(),EvtHddr->GetEventNumber()),
-	     "goff");
-     if (nFound != 1) {
-	  LOG_ERROR << "StPrepEmbedMaker::Make Run/Event = " << EvtHddr->GetRunNumber() << "/" << EvtHddr->GetEventNumber()
-	     << " has been found in moretag file" << nFound << " times" <<  endm;
+     entry = mMoreTree->GetEntryNumberWithIndex(runNumber,eventNumber);
+     if (entry < 0) {
+	  LOG_ERROR << "StPrepEmbedMaker::Make Run/Event = " << runNumber << "/" << eventNumber
+	     << " has not been found in moretag file" << endm;
 	  return kStErr;
      }
-     LOG_INFO << "StPrepEmbedMaker::Make Run/Event = " << EvtHddr->GetRunNumber()
-	  << "/" << EvtHddr->GetEventNumber()
-	  << " has been found (in moretags) with uncorrectedNumberOfPrimaries = " <<  mMoreTree->GetV1()[0] << endm;
+     mMoreTree->GetEntry(entry,readAll);
+     LOG_INFO << "StPrepEmbedMaker::Make Run/Event = " << runNumber << "/" << eventNumber
+	  << " has been found (in moretags) with uncorrectedNumberOfPrimaries = " << mMoreNumberOfPrimaries << endm;
 
-     if (mMoreTree->GetV1()[0] <= 0 )
+     if (mMoreNumberOfPrimaries <= 0)
      {
 	  LOG_ERROR << "StPrepEmbedMaker::Make reject this event" << endm;
 	  return kStErr;
      }
-     if ( fabs(mMoreTree->GetV1()[0]- mTree->GetV1()[0]) > 0.1 )
+     if ( fabs(mMoreNumberOfPrimaries - mNumberOfPrimaries) > 0.1 )
      {
-	  LOG_INFO << "StPrepEmbedMaker::Make Run/Event = " << EvtHddr->GetRunNumber()
-	     << "/" << EvtHddr->GetEventNumber()
+	  LOG_INFO << "StPrepEmbedMaker::Make Run/Event = " << runNumber << "/" << eventNumber
 	     << " has different uncorrectedNumberOfPrimaries from tags and moretags" << endm;
      }
   }
 
   // Extract info for mult for this event
-  const Int_t numberOfPrimaryTracks = mMoreTree ? mMoreTree->GetV1()[0] : mTree->GetV1()[0];
+  const Int_t numberOfPrimaryTracks = mMoreTree ? mMoreNumberOfPrimaries : mNumberOfPrimaries;
   const Int_t npart = getMultiplicity( *EvtHddr, numberOfPrimaryTracks ) ;
-
-  nFound = (Int_t) mTree->Draw("primaryVertexX:primaryVertexY:primaryVertexZ:TriggerId",
-			       Form("mRunNumber==%i&&mEventNumber==%i",
-				    EvtHddr->GetRunNumber(),
-				    EvtHddr->GetEventNumber()),
-			       "goff");
-
-  if ( mMoreTree )
-  {
-     nFound = (Int_t) mMoreTree->Draw("VX:VY:VZ",
-	     Form("RunId==%i&&EvtId==%i",
-		  EvtHddr->GetRunNumber(),
-		  EvtHddr->GetEventNumber()),
-	     "goff");
-  }
 
   Double_t xyztmp[3];
   if ( mMoreTree )
   {
-     xyztmp[0] = mMoreTree->GetV1()[0];
-     xyztmp[1] = mMoreTree->GetV2()[0];
-     xyztmp[2] = mMoreTree->GetV3()[0];
+     xyztmp[0] = mMoreVertexX;
+     xyztmp[1] = mMoreVertexY;
+     xyztmp[2] = mMoreVertexZ;
   }
   else
   {
-     xyztmp[0] = mTree->GetV1()[0];
-     xyztmp[1] = mTree->GetV2()[0];
-     xyztmp[2] = mTree->GetV3()[0];
+     xyztmp[0] = mPrimaryVertexX;
+     xyztmp[1] = mPrimaryVertexY;
+     xyztmp[2] = mPrimaryVertexZ;
   }
 
   const Double_t xyz[3] = {xyztmp[0],xyztmp[1],xyztmp[2]};
@@ -370,14 +383,14 @@ Int_t StPrepEmbedMaker::Make()
     LOG_INFO << "StPrepEmbedMaker::Event " << EvtHddr->GetEventNumber()
       << " has Triggers: " << endm;
     for (Int_t iTrg=0 ; iTrg<mSettings->nTriggerId ; iTrg++){
-      LOG_INFO << mTree->GetV4()[iTrg] << " ";
+      LOG_INFO << mTriggerId[iTrg] << " ";
     }
     LOG_INFO << endm;
 
     Bool_t fired = kFALSE;
     for (Int_t iTrg=0 ; iTrg<mSettings->nTriggerId ; iTrg++){
       for (Int_t iReqTrg=0; iReqTrg<mSettings->NReqTrg ; iReqTrg++) {
-        if (mTree->GetV4()[iTrg] == mSettings->ReqTrgId[iReqTrg]){
+        if ((Int_t)mTriggerId[iTrg] == mSettings->ReqTrgId[iReqTrg]){
           LOG_INFO << "StPrepEmbedMaker::Requested trigger " << mSettings->ReqTrgId[iReqTrg] << " is fired!" << endm;
           fired = kTRUE;
         }
@@ -396,19 +409,14 @@ Int_t StPrepEmbedMaker::Make()
   {
       // (Run 10, 11 and 12) need an external file (moretags.root).
       nFound=0;
-      nFound = (Int_t) mTree->Draw("VpdVz",
-				   Form("mRunNumber==%i&&mEventNumber==%i",
-					EvtHddr->GetRunNumber(),
-					EvtHddr->GetEventNumber()),"goff");
-
-      //get primary vertex errors from moretags.root
-      if(nFound == -1 && mMoreTree) {
-        nFound = (Int_t) mMoreTree->Draw("VpdVz",
-             Form("RunId==%i&&EvtId==%i",
-                  EvtHddr->GetRunNumber(),
-                  EvtHddr->GetEventNumber()),
-             "goff");
-
+      TLeaf *leaf = mTree->GetLeaf("VpdVz");
+      if (leaf) {
+        vpdvz = leaf->GetValue();
+        nFound = 1;
+      }
+      else if (mMoreTree && (leaf = mMoreTree->GetLeaf("VpdVz"))) {
+        vpdvz = leaf->GetValue();
+        nFound = 1;
         LOG_INFO << "StPrepEmbedMaker::Make Use moretags file to extract VpdVz, nFound =" << nFound << endm ;
       }
 
@@ -417,7 +425,6 @@ Int_t StPrepEmbedMaker::Make()
              << " has been found in moretags file " << nFound << " times" <<  endm;
         return kStErr;
      }
-     vpdvz = mMoreTree->GetV1()[0];
      LOG_INFO << vpdvz << endm;
 
      //cut on events
@@ -451,19 +458,14 @@ Int_t StPrepEmbedMaker::Make()
   {
       // (Run 12, and before) need an external file (moretags.root).
       nFound=0;
-      nFound = (Int_t) mTree->Draw("PVRank",
-				   Form("mRunNumber==%i&&mEventNumber==%i",
-					EvtHddr->GetRunNumber(),
-					EvtHddr->GetEventNumber()),"goff");
-
-      //get primary vertex errors from moretags.root
-      if(nFound == -1 && mMoreTree) {
-        nFound = (Int_t) mMoreTree->Draw("PVRank",
-             Form("RunId==%i&&EvtId==%i",
-                  EvtHddr->GetRunNumber(),
-                  EvtHddr->GetEventNumber()),
-             "goff");
-
+      TLeaf *leaf = mTree->GetLeaf("PVRank");
+      if (leaf) {
+        pvrank = leaf->GetValue();
+        nFound = 1;
+      }
+      else if (mMoreTree && (leaf = mMoreTree->GetLeaf("PVRank"))) {
+        pvrank = leaf->GetValue();
+        nFound = 1;
         LOG_INFO << "StPrepEmbedMaker::Make Use moretags file to extract PVRank, nFound =" << nFound << endm ;
       }
 
@@ -472,7 +474,6 @@ Int_t StPrepEmbedMaker::Make()
              << " has been found in moretags file " << nFound << " times" <<  endm;
         return kStErr;
      }
-     pvrank = mMoreTree->GetV1()[0];
      LOG_INFO << pvrank << endm;
 
      //cut on events
@@ -494,30 +495,19 @@ Int_t StPrepEmbedMaker::Make()
   Double_t xyzerr[3] = {0.,0.,0.};
    
   //get primary vertex errors from tags.root (>= Run10)
-  if(EvtHddr->GetRunNumber()>10311000){
-     nFound=0;
-     nFound = (Int_t) mTree->Draw("sigmaPVX:sigmaPVY:sigmaPVZ",
-	     Form("mRunNumber==%i&&mEventNumber==%i",
-		  EvtHddr->GetRunNumber(),
-		  EvtHddr->GetEventNumber()),"goff");
-     xyzerr[0] = mTree->GetV1()[0];
-     xyzerr[1] = mTree->GetV2()[0];
-     xyzerr[2] = mTree->GetV3()[0];
+  if(runNumber>10311000){
+     xyzerr[0] = mSigmaPVX;
+     xyzerr[1] = mSigmaPVY;
+     xyzerr[2] = mSigmaPVZ;
   }
 
   //get primary vertex errors from moretags.root
   if( mMoreTree ) {
-     nFound = (Int_t) mMoreTree->Draw("VXsigma:VYsigma:VZsigma",
-	     Form("RunId==%i&&EvtId==%i",
-		  EvtHddr->GetRunNumber(),
-		  EvtHddr->GetEventNumber()),
-	     "goff");
+     LOG_INFO << "StPrepEmbedMaker::Make Use moretags file to extract vertex errors, nFound = 1" << endm ;
 
-     LOG_INFO << "StPrepEmbedMaker::Make Use moretags file to extract vertex errors, nFound =" << nFound << endm ;
-
-     xyzerr[0] = mMoreTree->GetV1()[0];
-     xyzerr[1] = mMoreTree->GetV2()[0];
-     xyzerr[2] = mMoreTree->GetV3()[0];
+     xyzerr[0] = mMoreSigmaPVX;
+     xyzerr[1] = mMoreSigmaPVY;
+     xyzerr[2] = mMoreSigmaPVZ;
   }
 
   LOG_INFO << "StPrepEmbedMaker::Make  Event " << EvtHddr->GetEventNumber()
