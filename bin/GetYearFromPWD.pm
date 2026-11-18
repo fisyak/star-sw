@@ -56,8 +56,8 @@ sub GetRuns($$) {
   if    ($i1 <  0)   {}
   elsif ($i1 == $nw) {$Day = $words[$i1];   $Run = "[0-9]???????";}
   elsif ($i1 <  $nw) {$Day = $words[$nw-1]; $Run = $words[$nw];}
-  if    ($pwd =~ /\/2001\//) {die;}
-  elsif ($pwd =~ /\/2002\//) {die;}
+  if    ($pwd =~ /\/2001\//) {$year = "2001"; require RunIDefs; die;}
+  elsif ($pwd =~ /\/2002\//) {$year = "2002"; require RunIIDefs; die;}
   elsif ($pwd =~ /\/2003\//) {$year = "2003"; require RunIIIDefs; die;}
   elsif ($pwd =~ /\/2004\//) {$year = "2004"; require RunIVDefs;}
   elsif ($pwd =~ /\/2005\//) {$year = "2005"; require RunVDefs;}

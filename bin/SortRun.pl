@@ -53,7 +53,7 @@ while ($line = <>) {
   elsif ($scaleFactor >  0.8 && $scaleFactor <  1.2) {$field = "FF";}
   if ($rtsStatus != 0                           ) {next;}
   if ($run < 27000000 && $shiftLeaderStatus != 0) {next;}
-  if ($trig !~  /production/ and $trig !~  /^tune/ and $trig !~ /^Cosmic/ and $trig !~ /Aligment/) {next;}
+  if ($trig !~  /production/ and $trig !~  /Production/ and $trig !~ /MinBias/ and $trig !~  /^tune/ and $trig !~ /^Cosmic/ and $trig !~ /Aligment/) {next;}
   if ($trig =~ /^ped/) {next;}
   if ($trig =~ /^las/) {next;}
   if ($trig =~ /^jml/) {next;}
