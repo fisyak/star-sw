@@ -5,8 +5,8 @@
  * Author: Florian Seck, April 2018
  ***************************************************************************
  *
- * Description: StFttClusterMaker - class to fill the StEvent from DAQ reader:
- * unpack raw data & save StETofHeader & StETofDigis in StETofCollection 
+ * Description: StFttClusterMaker - group adjacent StFttRawHits in StEvent's
+ * StFttCollection into StFttClusters, one set per strip orientation per ROB
  *
  ***************************************************************************/
 #include <vector>
@@ -516,16 +516,13 @@ std::vector<StFttCluster*> StFttClusterMaker::FindClusters( std::vector< StFttRa
             clu->addRawHit( hits[i] );
         }
 
-        // Take ownership before CalculateClusterInfo so the cluster is not leaked
-        // if anything inside the calculation throws.
-        clusters.push_back( clu );
-
         // Compute cluster information from the added hits
         CalculateClusterInfo( clu );
 
         if (mDebug){
             LOG_DEBUG << *clu << endm;;
         }
+        clusters.push_back( clu );
 
         // Now erase all hits from this cluster so that we can move on to find the next one
         hits.erase( hits.begin() + left, hits.begin() + right + 1 );
