@@ -367,46 +367,67 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
 
     clu->setNStrips( clu->rawHits().size() );
 
-    // Compute the sumAdc, strip gravity center, and variance
-    float m0Sum = 0;
-    float m1Sum = 0;
-    float m2Sum = 0;
+    // Compute the sumAdc, strip gravity center, and variance.
+    //
+    // Accumulated in DOUBLE, and the variance taken in TWO passes rather than
+    // one. x is an ABSOLUTE strip position, up to ~530 mm from the quadrant
+    // origin, so SUM q*x*x and (SUM q*x)^2 / SUM q are two large and nearly
+    // equal numbers and the one-pass variance ( m2 - m1*m1/m0 ) / m0 is their
+    // difference. In float that difference loses most of its significance:
+    // measured on 334k clusters from a Run 22 production MuDst
+    // (script/fttClusterSigma.C, fcstrk11), a SINGLE-strip cluster, whose
+    // variance is exactly zero, came out NEGATIVE 46% of the time and wrong by
+    // up to 0.042 mm^2. Subtracting the centroid strip by strip keeps every
+    // term small and non-negative, so no cancellation happens and the clamp
+    // below becomes belt and braces instead of load-bearing.
+    double m0Sum = 0;
+    double m1Sum = 0;
 
     std::for_each (clu->rawHits().begin(), clu->rawHits().end(), [&](const StFttRawHit *h) {
-        float x = ( h->strip() * 3.2 - 1.6 ); // replace with CONST
-        
+        double x = ( h->strip() * 3.2 - 1.6 ); // replace with CONST
+
         m0Sum += h->adc();
-        m1Sum += (h->adc() * x); 
-        m2Sum += ( h->adc() * x * x );
+        m1Sum += (h->adc() * x);
     });
 
     if ( mDebug ) {
         LOG_DEBUG << "m0Sum = " << m0Sum << endm;
         LOG_DEBUG << "m1Sum = " << m1Sum << endm;
-        LOG_DEBUG << "m2Sum = " << m2Sum << endm;
     }
 
     // m0Sum = sumAdc
     // m1Sum / m0Sum = gravity center (1st moment)
-    // m2Sum = accumulated variance (2nd moment)
 
     clu->setSumAdc( m0Sum );
     if ( m0Sum > 0 ){
-        clu->setX( m1Sum / m0Sum );
-        // (m2Sum - m1Sum^2/m0Sum)/m0Sum is a difference of two nearly equal numbers for
-        // a narrow cluster and can come out slightly negative from rounding alone, even
-        // though the true variance cannot be. sqrt() of that is NaN, so clamp at zero.
-        float var = (m2Sum - m1Sum*m1Sum / m0Sum) / m0Sum;
-        // Clamping the variance at zero stops the NaN but still allows sigma == 0
-        // exactly, and that is not an edge case -- it is every SINGLE-STRIP cluster.
-        // All the charge sits in one strip, so m2Sum/m0Sum is exactly the mean
-        // squared and the variance is 0, not merely negative from rounding. A zero
-        // sigma gives GenFit an infinite weight in the precise direction, forcing
-        // the track through the strip centre exactly and making the fit unstable.
+        const double xBar = m1Sum / m0Sum;
+        clu->setX( xBar );
+
+        // Second pass for the 2nd moment: SUM q*(x-xBar)^2, so every term is
+        // small and non-negative. The clamp at zero below is kept because a
+        // variance that is zero to the last bit is still possible, but it no
+        // longer has rounding to catch.
+        double s2Sum = 0;
+        std::for_each (clu->rawHits().begin(), clu->rawHits().end(), [&](const StFttRawHit *h) {
+            double dx = ( h->strip() * 3.2 - 1.6 ) - xBar;
+            s2Sum += h->adc() * dx * dx;
+        });
+        double var = s2Sum / m0Sum;
+        // The variance is still zero EXACTLY for every SINGLE-STRIP cluster --
+        // all the charge sits in one strip, so there is nothing for a 2nd moment
+        // to measure, and that is 18% of the clusters in Run 22 data, not an edge
+        // case. A zero sigma gives GenFit an infinite weight in the precise
+        // direction, forcing the track through the strip centre exactly and
+        // making the fit unstable.
         // Floor it at the resolution one strip actually carries, pitch/sqrt(12).
         // StFttDb::stripPitch is mm, which is the unit setX()/setSigma() use here.
-        const float kSigmaMin = StFttDb::stripPitch / sqrt( 12.0 ); // 0.924 mm
-        const float sig = sqrt( var < 0 ? 0 : var );
+        //
+        // NOTE this sigma is the cluster's CHARGE WIDTH, not the uncertainty on
+        // its centroid, and StFttClusterPointMaker uses it as the latter. The
+        // two differ by an order of magnitude; which number belongs in the
+        // covariance is a separate, open question (script/fttClusterSigma.C).
+        const double kSigmaMin = StFttDb::stripPitch / sqrt( 12.0 ); // 0.924 mm
+        const double sig = sqrt( var < 0 ? 0 : var );
         clu->setSigma( sig < kSigmaMin ? kSigmaMin : sig );
     } else {
         // No charge accumulated; assign a sentinel rather than NaN from divide-by-zero.
