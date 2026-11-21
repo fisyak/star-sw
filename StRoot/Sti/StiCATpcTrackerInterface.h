@@ -7,6 +7,7 @@
 #include "KFParticle/KFParticle.h"
 #include "KFParticle/KFVertex.h"
 #include "TF1.h"
+#include "TVector3.h"
 class StiCATpcTrackerInterface : public StTPCCAInterface {
  public:
  StiCATpcTrackerInterface() : StTPCCAInterface() {}
@@ -21,7 +22,6 @@ class StiCATpcTrackerInterface : public StTPCCAInterface {
   virtual void MakeSeeds();    // fill fSeeds & fTrackParameters
   virtual void ConvertPars(const AliHLTTPCCATrackParam& caPar, const Double_t _alpha, StiNodePars& nodePars, StiNodeErrs& nodeErrs); // convert caPars into NodePars
   KFParticle  &MakeParticle(const AliHLTTPCCATrackParam &trParam, const Double_t &alpha, Int_t kg = 0, Int_t pdg = 0);
-  virtual void MakeParticles(std::vector<trackInSector> Tracks, std::vector<int>* pdg = 0, Int_t NDFcut = 14, Double_t dpTcut = 0.05);
   virtual void getXYZ(const StiNodePars &pars, const StiNodeErrs &errs, const Float_t &alpha,  Float_t xyzp[6], Float_t CovXyzp[21]) const;
   virtual void TriggerOffSet();
   virtual void FindCAWEPrimaryVertices();
@@ -29,10 +29,13 @@ class StiCATpcTrackerInterface : public StTPCCAInterface {
   HitMapToVectorAndEndType *fHitsMap;
   vector<Seed_t>            fSeeds;
   StiCATpcSeedFinder       *fSeedFinder;
-  vector<SeedHit_t>         fSeedHits;          // hits to make seeds
-  vector<KFParticle>        fParticles;
+  vector<SeedHit_t>         fSeedHits;        // hits to make seeds
+  vector<KFParticle>        fParticlesDca[3]; // 0 - east, 1 - west, 2 - all at DCA
+  vector<KFParticle>        fParticlesIn[3];  // 0 - east, 1 - west, 2 - all 
+  vector<KFParticle>        fParticlesOut[3]; // 0 - east, 1 - west, 2 - all
   static StiCATpcTrackerInterface *fgStiCATpcTrackerInterface;
   static Bool_t             fgUseCAVxFinder;
-  static Double_t           fgzFXT;
+  static TVector3           fgBeamSpot;
+  static Double_t           fgJI[5]; // jacobian integral coef
 };
 #endif //  __StiCATpcTrackerInterface_h__
