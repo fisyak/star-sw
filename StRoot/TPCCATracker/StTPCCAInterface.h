@@ -11,7 +11,7 @@
 #include "TSpectrum.h"
 class StTPCCAInterface {
  public:
- StTPCCAInterface() : fTracker(0) {}
+ StTPCCAInterface() : fTracker(0) {fgStTPCCAInterface = this;}
   virtual ~StTPCCAInterface() {
     SafeDelete(fTracker); 
     for (Int_t i = 0; i < 3; i++) {
@@ -19,7 +19,9 @@ class StTPCCAInterface {
       SafeDelete(fVertexXYPlots[i]);
     }
     SafeDelete(fSpectrum);
+    fgStTPCCAInterface = 0;
   }
+  StTPCCAInterface *instance() {return fgStTPCCAInterface;}
   virtual void SetNewEvent(); // clean and initialize before new event
   virtual void Run(); 
   virtual void RunPerformance();
@@ -53,6 +55,7 @@ class StTPCCAInterface {
   static TH2F *fVertexXYPlots[3];
   static TSpectrum *fSpectrum;
   static Double_t fSigmaSmooth;
+  static StTPCCAInterface *fgStTPCCAInterface;
 
 };
 #endif //  __StTPCCAInterface_h__

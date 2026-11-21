@@ -9,7 +9,8 @@ class trackInSector {// Inner parameters for track segment reconstruceted in a s
   float                 x, y, z;  // dca
   int                   sector;
   float                 alpha;
-  AliHLTTPCCATrackParam Track;
+  AliHLTTPCCATrackParam In;
+  AliHLTTPCCATrackParam Out;
 };
 std::ostream&  operator<<(std::ostream& os, const trackInSector& v);
 #endif /* CALC_DCA_ON */

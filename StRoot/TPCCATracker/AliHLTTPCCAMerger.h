@@ -121,17 +121,8 @@ class AliHLTTPCCAMerger
   void UnpackSlices();
   void Reconstruct();
 #ifdef CALC_DCA_ON
-#if 0
-  vector<point_3d>& GetLeftDCA() { return dca_left; }
-  vector<point_3d>& GetRightDCA() { return dca_right; }
-  vector<AliHLTTPCCATrackParam> &GetLeftTracks() { return leftTracks;}
-  vector<AliHLTTPCCATrackParam> &GetRightTracks(){ return rightTracks;}
-  vector<float>& GetLeftAlpha()  { return alpha_left; }
-  vector<float>& GetRightAlpha() { return alpha_right; }
-#else
   vector<trackInSector> GetLeft()  { return left; }
   vector<trackInSector> GetRight() { return right;}
-#endif
 #endif
  private:
   void FindNeighbourTracks(int number=0);
@@ -141,16 +132,6 @@ class AliHLTTPCCAMerger
 
   void MergingFix(int number=0);
 
-#if 0
-  // --- PT ---
-  void UnpackSlicesPT();
-  void ClearMemoryPT();
-  void MergeUpPT( int s );
-  void MergingPT( int number );
-  bool AddNeighbourPTSimple( int_v iTr, int_v jTr, int hits[2000][uint_v::Size], uint_v& vNHits );
-  void MergingPTmultimap();
-  // ---
-#endif
 
   void MakeBorderTracks( AliHLTTPCCABorderTrack B[], unsigned int &nB, unsigned char &iSlice );
 
@@ -211,76 +192,10 @@ class AliHLTTPCCAMerger
 
   AliHLTTPCCAMergerOutput *fOutput;       //* array of output merged tracks
 
-#if 0
-  int GetFirstMappedTrackID( unsigned int islice, unsigned int irow ) {
-    for( int iRow = irow; iRow < irow + sMaxGape; iRow++ ) {
-      if( iRow > 45 ) return -1;
-      if( sTrackMap[islice][iRow] != -1 ) return vTrackID[sTrackMap[islice][iRow]];
-    }
-    return -1;
-  }
-  int GetFirstMappedTrackN( unsigned int islice, unsigned int irow ) {
-    for( int iRow = irow; iRow < irow + sMaxGape; iRow++ ) {
-      if( iRow > 45 ) return -1;
-      if( sTrackMap[islice][iRow] != -1 ) return sTrackMap[islice][iRow];
-    }
-    return -1;
-  }
-
-  SliceTrackInfoPTSimpleSOA *fptTrackInfoPT;
-  float* vInnerX;
-  float* vOuterX;
-  float* vInnerY;
-  float* vOuterY;
-  float* vInnerZ;
-  float* vOuterZ;
-  float* vTeta;
-  int* vTrackID;
-  int* vLastRow;
-  int fptSliceFirstTrack[fgkNSlices + 1];
-  int fptSliceFirstTrackV[fgkNSlices + 1];
-  int fptSliceFirstHit[fgkNSlices + 1];
-  int sTrackMap[fgkNSlices][46];
-  int sMaxGape;
-  int tracksOnSlice[fgkNSlices];
-  int fTracksTotal;
-  struct TrSort {
-
-    int nHits, trId, iSlice;
-    bool operator() ( const TrSort& a, const TrSort& b ) { return (a.nHits > b.nHits);}
-    static bool trComp( const TrSort& a, const TrSort& b ) { return (a.nHits > b.nHits); }
-  };
-  TrSort* fTrList;
-
-  Vc::vector<AliHLTTPCCASliceTrackInfoV> fTrackInfosV; //* additional information for slice tracks
-
-  struct HitInfo {
-    int id;
-    int slice;
-    HitInfo( int ID, int SLICE ) { id = ID; slice = SLICE; }
-    bool operator< ( const HitInfo& a ) const { return (this->id < a.id); }
-  };
-  std::multimap<HitInfo, HitInfo> fTrackLinks;
-  std::multimap<HitInfo, HitInfo> fTrackLinksV;
-  HitInfo* sliceTrackId;
-  unsigned short fMaxMerged[2];
-  struct TrMerge {
-    int nTracks, iTrack[3], iSlice[3];
-  };
-#endif
 
 #ifdef CALC_DCA_ON
-#if 0
-  std::vector<point_3d> dca_left;
-  std::vector<point_3d> dca_right;
-  std::vector<AliHLTTPCCATrackParam> leftTracks;
-  std::vector<AliHLTTPCCATrackParam> rightTracks;
-  std::vector<float> alpha_left;
-  std::vector<float> alpha_right;
-#else
   vector<trackInSector> left; 
   vector<trackInSector> right;
-#endif  
 #endif
 
   int fNMergedSegments;
@@ -355,9 +270,6 @@ class AliHLTTPCCAMerger::AliHLTTPCCASliceTrackInfo
     , fMerged(false)
     , fInnerParam()
     , fOuterParam()
-#if 0
-    , fPrevdTeta(-1)
-#endif
  {}
 
     const AliHLTTPCCATrackParam &InnerParam() const { return fInnerParam;      }
@@ -386,12 +298,6 @@ class AliHLTTPCCAMerger::AliHLTTPCCASliceTrackInfo
 
     void SetMerged() { fMerged = true; }
     bool IsMerged() const { return fMerged; }
-#if 0
-    float PrevdTeta() { return fPrevdTeta; }			//TODO: add next dTeta
-    void SetPrevdTeta( float dT ) { fPrevdTeta = dT; }
-    float PrevdPhi() { return fPrevdPhi; }			//TODO: add next dTeta
-    void SetPrevdPhi( float dT ) { fPrevdPhi = dT; }
-#endif
     void SetId( int id ) { fId = id; }
     int Id() { return fId; }
 #ifdef DO_TPCCATRACKER_EFF_PERFORMANCE
@@ -416,15 +322,6 @@ class AliHLTTPCCAMerger::AliHLTTPCCASliceTrackInfo
     unsigned int fSlicePrevNeighbour; // The number of the sector, which contains inner neighbour
     unsigned int fSliceNextNeighbour; // The number of the sector, which contains outer neighbour
     int fUsed;            // is the slice track already merged (=1 -> merged, 0 -> not merged)
-#if 0
-    float fPrevdTeta;
-    float fPrevdPhi;
-    // ---
-    float QPt0;
-    float DzDs0;
-    float QPt1;
-    float DzDs1;
-#endif
     int fId;
 #ifdef CALC_DCA_ON
     float DCA[3];
@@ -808,144 +705,5 @@ class AliHLTTPCCAMerger::SliceTrackInfoPT
   AliHLTTPCCATrackParam fInnerParam; // Parameters of the track at the inner point
 };
 
-#if 0
-#include "MemoryAssignmentHelpers.h"
-
-class SliceTrackInfoPTSimpleSOA
-{
- public:
-  SliceTrackInfoPTSimpleSOA()
- {}
-
-  SliceTrackInfoPTSimpleSOA( int nTracks )
-  {
-    sNTracks = nTracks;
-    CreateStorage(nTracks);
-  }
-
-  ~SliceTrackInfoPTSimpleSOA()
-  {
-  }
-
-  void Clear()
-  {
-    if (fMemory) delete[] fMemory;
-  }
-
-  void SetPointers()
-  {
-    // set all pointers
-
-    char *mem = &fMemory[0];
-  }
-
-  void CreateStorage( int nTracks )
-  {
-    sNTracks = nTracks;
-    for( int iSlice = 0; iSlice < AliHLTTPCCAParameters::NumberOfSlices; iSlice++ ) {
-      for( int iRow = 1; iRow <= 45; iRow++) {
-	sTrackMap[iSlice][iRow] = -1;
-      }
-    }
-    sMaxGape = 5;
-  }
-
-  void CalculateTeta()
-  {
-    for( unsigned int iV = 0; iV < sNTracks; iV+= float_v::Size ) {
-      float_v& vX0 = reinterpret_cast<float_v&>(vInnerX[iV]);
-      float_v& vX1 = reinterpret_cast<float_v&>(vOuterX[iV]);
-      float_v& vZ0 = reinterpret_cast<float_v&>(vInnerZ[iV]);
-      float_v& vZ1 = reinterpret_cast<float_v&>(vOuterZ[iV]);
-      float_v& teta = reinterpret_cast<float_v&>(vTeta[iV]);
-
-      float_v x = vX1 - vX0;
-      float_v z = vZ1 - vZ0;
-      teta = atan( x / z );
-    }
-  }
-
-  void CalculateTetaScalar()
-  {
-      for( unsigned int iV = 0; iV < sNTracks; iV++ ) {
-        float& vX0 = reinterpret_cast<float&>(vInnerX[iV]);
-        float& vX1 = reinterpret_cast<float&>(vOuterX[iV]);
-        float& vZ0 = reinterpret_cast<float&>(vInnerZ[iV]);
-        float& vZ1 = reinterpret_cast<float&>(vOuterZ[iV]);
-        float& teta = reinterpret_cast<float&>(vTeta[iV]);
-
-        float x = vX1 - vX0;
-        float z = vZ1 - vZ0;
-        teta = atan( x / z );
-      }
-  }
-
-  void SetInnerCoord( unsigned int itr, float x, float2 yz ) {
-    vInnerX[itr] = x;
-  }
-
-  void SetOuterCoord( unsigned int itr, float x, float2 yz ) {
-    vOuterX[itr] = x;
-    vOuterY[itr] = yz.x;
-    vOuterZ[itr] = yz.y;
-  }
-
-  void SetZero( unsigned int itr ) {
-    vInnerX[itr] = 0;
-    vInnerY[itr] = 0;
-    vInnerZ[itr] = 0;
-    vOuterX[itr] = 0;
-    vOuterY[itr] = 0;
-    vOuterZ[itr] = 0;
-  }
-
-  void SetTrackID( unsigned int itr, int trid ) { vTrackID[itr] = trid; }
-  void SetLastRow( unsigned int itr, int lrow ) { vLastRow[itr] = lrow; }
-
-  void SetMappedTrack( unsigned int islice, unsigned int irow, unsigned int itr ) { sTrackMap[islice][irow] = itr; }
-  void SetMaxGape( int m ) { sMaxGape = m; }
-
-  float GetInnerX( unsigned int itr )	const { return vInnerX[itr]; }
-  float GetInnerY( unsigned int itr )	const { return vInnerY[itr]; }
-  float GetInnerZ( unsigned int itr )	const { return vInnerZ[itr]; }
-  float GetOuterX( unsigned int itr )	const { return vOuterX[itr]; }
-  float GetOuterY( unsigned int itr )	const { return vOuterY[itr]; }
-  float GetOuterZ( unsigned int itr )	const { return vOuterZ[itr]; }
-  float GetTeta( unsigned int itr )	const { return vTeta[itr]; }
-  int GetTrackID( unsigned int itr )	const { return vTrackID[itr]; }
-  int GetLastRow( unsigned int itr )	const { return vLastRow[itr]; }
-  int GetFirstMappedTrackID( unsigned int islice, unsigned int irow ) {
-    for( int iRow = irow; iRow < irow + sMaxGape; iRow++ ) {
-      if( iRow > 45 ) return -1;
-      if( sTrackMap[islice][iRow] != -1 ) return vTrackID[sTrackMap[islice][iRow]];
-    }
-    return -1;
-  }
-  int GetFirstMappedTrackN( unsigned int islice, unsigned int irow ) {
-    for( int iRow = irow; iRow < irow + sMaxGape; iRow++ ) {
-      if( iRow > 45 ) return -1;
-      if( sTrackMap[islice][iRow] != -1 ) return sTrackMap[islice][iRow];
-    }
-    return -1;
-  }
-
-  //
-  float* vInnerX;
-  float* vOuterX;
-  float* vInnerY;
-  float* vOuterY;
-  float* vInnerZ;
-  float* vOuterZ;
-  float* vTeta;
-  int* vTrackID;
-  int* vLastRow;
- private:
-  //
-  int sNTracks;
-  int sTrackMap[AliHLTTPCCAParameters::NumberOfSlices][46];
-  int sMaxGape;
-  char fMemory[1]; // the memory where the pointers above point into
-};
-#endif
 
 #endif
