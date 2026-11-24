@@ -24,6 +24,7 @@
 #include "THStack.h"
 #include "StDetectorDbMaker/St_tpcT0BXC.h"
 #include "StDetectorDbMaker/St_beamInfoC.h"
+#include "StDetectorDbMaker/St_beamSpotC.h"
 #include "StEvent/StTriggerData.h"
 #include "StEvent/StDcaGeometry.h"
 #include "Sti/StiKalmanTrackNode.h"
@@ -40,8 +41,7 @@
 #include "KFParticle/KFParticleSIMD.h"
 #include "KFParticle/KFParticleTopoReconstructor.h"
 #include "KFParticle/KFParticlePVReconstructor.h"
-#include "TRMatrix.h"
-#include "TRVector.h"
+#include "TCernLib.h"
 using std::vector;
 StiCATpcTrackerInterface *StiCATpcTrackerInterface::fgStiCATpcTrackerInterface = 0;
 Bool_t StiCATpcTrackerInterface::fgUseCAVxFinder = kFALSE;
@@ -50,8 +50,10 @@ static Int_t _debug = 0;
 #define PrPP2(B)  if (_debug)   {cout << (#B) << " = \t" << (*B) << endl;}
 #define PrPP3(A,B)  if (_debug)   {cout << (#A) << " = \t" << (A) << "\t" << (#B) << " = \t" << (B) << endl;}
 #define PrPP4(A,B)  if (_debug)   {cout << (#A) << " = \t" << (A) << "\t" << (#B) << " = \t" << (*B) << endl;}
-//Double_t StiCATpcTrackerInterface::fgzFXT =  199.983; // xyzW_z Fit 3p85GeV_fixedTarget_2019P6; 199.63; // RF/TFG/3p85GeV_fixedTarget_2019B/MuL4Vx.root
-Double_t StiCATpcTrackerInterface::fgzFXT =  199.9875; // = (200. - 0.025/2);
+TVector3 StiCATpcTrackerInterface::fgBeamSpot(0,0,199.9875);
+// set jacobian integral coef
+//                                           y   z eta ptin tanl  
+Double_t StiCATpcTrackerInterface::fgJI[5] {-1, -1, -1,   1, -1};
 //________________________________________________________________________________
 StiCATpcTrackerInterface &StiCATpcTrackerInterface::Instance() {
   if (! fgStiCATpcTrackerInterface) fgStiCATpcTrackerInterface = new StiCATpcTrackerInterface(); 
@@ -189,16 +191,13 @@ void StiCATpcTrackerInterface::MakeHits() {
 //________________________________________________________________________________
 void StiCATpcTrackerInterface::ConvertPars(const AliHLTTPCCATrackParam& caPar, double _alpha, StiNodePars& nodePars, StiNodeErrs& nodeErrs)
 {
-  // set jacobian integral coef
-  //                      y   z eta ptin tanl  
-  static Double_t JI[5] {-1, -1, -1,   1, -1};
     // get parameters
-  nodePars.x()    =         caPar.GetX();
-  nodePars.y()    = JI[0] * caPar.GetY();
-  nodePars.z()    = JI[1] * caPar.GetZ();
-  nodePars.eta()  = JI[2] * asin(caPar.GetSinPhi()); // (signed curvature)*(local Xc of helix axis - X current point on track)
-  nodePars.ptin() = JI[3] * caPar.GetQPt();        // signed invert pt [sign = sign(-qB)]
-  nodePars.tanl() = JI[4] * caPar.GetDzDs();         // tangent of the track momentum dip angle
+  nodePars.x()    =           caPar.GetX();
+  nodePars.y()    = fgJI[0] * caPar.GetY();
+  nodePars.z()    = fgJI[1] * caPar.GetZ();
+  nodePars.eta()  = fgJI[2] * asin(caPar.GetSinPhi()); // (signed curvature)*(local Xc of helix axis - X current point on track)
+  nodePars.ptin() = fgJI[3] * caPar.GetQPt();        // signed invert pt [sign = sign(-qB)]
+  nodePars.tanl() = fgJI[4] * caPar.GetDzDs();         // tangent of the track momentum dip angle
   
     // get h & signB
   static const double EC = 2.99792458e-4, ZEROHZ = 2e-6;
@@ -227,11 +226,11 @@ void StiCATpcTrackerInterface::ConvertPars(const AliHLTTPCCATrackParam& caPar, d
   nodePars.ready(); // set cosCA, sinCA & curv
   // set jacobian integral coef
   double J[5]; 
-  J[0] = JI[0];                    // y
-  J[1] = JI[1];                    // z
-  J[2] = JI[2]/cos(nodePars.eta()); // eta
-  J[3] = JI[3];                    // ptin
-  J[4] = JI[4];                    // tanl
+  J[0] = fgJI[0];                    // y
+  J[1] = fgJI[1];                    // z
+  J[2] = fgJI[2]/cos(nodePars.eta()); // eta
+  J[3] = fgJI[3];                    // ptin
+  J[4] = fgJI[4];                    // tanl
   
   // get cov matrises
   const float *caCov = caPar.GetCov();
@@ -260,7 +259,7 @@ void StiCATpcTrackerInterface::ConvertPars(const AliHLTTPCCATrackParam& caPar, d
   A[6] = 0;
   A[10] = 0;
   A[15] = 0;
-  if (_debug > 1) {
+  if (_debug > 3) {
     cout << nodePars << endl;
   }
 }
@@ -351,23 +350,6 @@ KFParticle &StiCATpcTrackerInterface::MakeParticle(const AliHLTTPCCATrackParam &
   return tempParticle;
 }
 //________________________________________________________________________________
-void StiCATpcTrackerInterface::MakeParticles(std::vector<trackInSector> Tracks, std::vector<int>* pdg, Int_t NDFcut, Double_t dpTcut) { // init array of particles
-  fParticles.clear();
-  // create and fill array of tracks to init KFParticleTopoReconstructor
-  const int nTracks = Tracks.size(); // tracker->NTracks();
-  for ( int iTr = 0; iTr < nTracks; iTr++ ) {
-    AliHLTTPCCATrackParam &trParam = Tracks[ iTr ].Track;
-    if (trParam.NDF() < NDFcut) continue;
-    Double_t alpha = Tracks[ iTr ].alpha;
-    KFParticle &tempParticle = MakeParticle(trParam, alpha, iTr+1);
-    Float_t P, dP;
-    tempParticle.GetMomentum(P,dP);
-    if (dP/P > dpTcut) continue;
-    //    PrPP(tempParticle);
-    fParticles.push_back(tempParticle);
-  }
-} // void KFParticleTopoReconstructor::Init(std::vector<AliHLTTPCCATrackParam> tracks, std::vector<int>* pdg=0); // init array of particles
-//________________________________________________________________________________
 void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt Trigger
   if (! gROOT->IsBatch()) {
     TCanvas *c1 = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("UseCAVxFinder");
@@ -393,90 +375,78 @@ void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt
     l4Vx[i]->X     = fVertexXYPlots[i]->GetMean(1);
     l4Vx[i]->Y     = fVertexXYPlots[i]->GetMean(2);
   }
-  KFVertex *PV[2] = {&summary->KFVxEast, &summary->KFVxWest};
-  if (l4Vx[2]->Ndf > 0) {
-    vector<trackInSector> Tracks[2]  = { fTracker->GetLeft(), fTracker->GetRight()};
-    for (UInt_t side = 0; side < 2; side++) {
-      vector<trackInSector> tracks;
-      for (UInt_t it = 0; it < Tracks[side].size(); it++) {
-	if (TMath::Abs(l4Vx[side]->Mu +  Tracks[side][it].z) > 20) continue; // swap sign og Z for internal sector parameters
-	tracks.push_back(Tracks[side][it]);
+  for (UInt_t side = east; side <= west; side++) {
+    KFVertex *PV[side] = {&summary->KFVxEast, &summary->KFVxWest};
+    if (l4Vx[side]->Ndf <= 0) continue;
+    PV[side]->Z() = l4Vx[side]->Mu;
+    PV[side]->X() = l4Vx[side]->X;
+    PV[side]->Y() = l4Vx[side]->Y;
+    PrPP4(side,PV[side]);
+    UInt_t N = fParticlesDca[side].size();
+    if (!N) continue;
+    KFParticle **parts = new KFParticle*[N];
+#if 0
+    sort(fParticlesDca[side].begin(), fParticlesDca[side].end(), 
+	 [](const KFParticle & a, const KFParticle & b)
+	 { 
+	   //	     return a.GetNDF() > b.GetNDF(); 
+	   Float_t pta, dpta, ptb, dptb;
+	   a.GetPt(pta,dpta);
+	   b.GetPt(ptb,dptb);
+	   return pta/dpta*a.NDF() > ptb/dptb*b.NDF();
+	 });
+#endif
+    Int_t Np = 0;
+    for (UInt_t i = 0; i < N; i++) {
+      parts[Np] = &fParticlesDca[side][i];
+      // add time dependence
+      if (_debug > 2) {cout << "Before "; PrPP2(parts[Np]);}
+      Float_t P, dP;
+      parts[Np]->GetMomentum(P,dP);
+      Float_t dsdrI[6] = {0};
+      Float_t dSIn  = parts[Np]->GetDStoPoint(&fParticlesIn[side][i].X(), dsdrI);
+      Float_t dsdrO[6] = {0};
+      Float_t dSOut = parts[Np]->GetDStoPoint(&fParticlesOut[side][i].X(), dsdrO);
+      Float_t dS    = (dSIn + dSOut)*P/2.;
+      Double_t dZdS = 2.0/((dsdrI[2] + dsdrO[2])*P);
+      static Double_t PiMass = TDatabasePDG::Instance()->GetParticle(211)->Mass();
+      static Double_t PMass = TDatabasePDG::Instance()->GetParticle(2212)->Mass();
+      Double_t bgPi = P/PiMass;
+      Double_t bgP  = P/PMass;
+      Double_t betaPi = bgPi/TMath::Sqrt(1 + bgPi*bgPi); 
+      Double_t betaP  = bgP /TMath::Sqrt(1 + bgP *bgP ); 
+      Double_t ss = 1 - 2.*side; // flip sign because dS < 0
+      Float_t  dzPi   = ss*dS*DVoveC/betaPi;
+      Float_t  dzP    = ss*dS*DVoveC/betaP ;
+      Float_t  dpzPi  = ss*P *DVoveC/betaPi;
+      Float_t  dpzP   = ss*P *DVoveC/betaP ;
+      if (_debug > 2) {
+	cout << "dS = " << dS << "\tdZdS = " << dZdS 
+	     << "\tdzPi = " << dzPi << "\tdpZPi = " << dpzPi
+	     << "\tdzP  = " << dzP  << "\tdpzP  = " << dpzP  << endl;
+	cout << "ToF   "; PrPP2(parts[Np]);
       }
-      if (tracks.size() < 1) continue;
-      PV[side]->Z() = l4Vx[side]->Mu;
-      PrPP4(side,PV[side]);
-      MakeParticles(tracks);
-      UInt_t N = fParticles.size();
-      if (!N) continue;
-      KFParticle **parts = new KFParticle*[N];
-      sort(fParticles.begin(), fParticles.end(), 
-	   [](const KFParticle & a, const KFParticle & b)
-	   { 
-	     //	     return a.GetNDF() > b.GetNDF(); 
-	     Float_t pta, dpta, ptb, dptb;
-	     a.GetPt(pta,dpta);
-	     b.GetPt(ptb,dptb);
-	     return pta/dpta*a.NDF() > ptb/dptb*b.NDF();
-	   });
-      Int_t Np = 0;
-      for (UInt_t i = 0; i < N; i++) {
-	parts[Np] = &fParticles[i];
-	// add time dependence
-	if (_debug > 2) {cout << "Before "; PrPP2(parts[Np]);}
-	Float_t dsdr[6] = {0};
-	Float_t dS = parts[Np]->GetDStoPoint(&PV[side]->X(), dsdr);
-	Double_t dZdS = 1./dsdr[2];
-	static Double_t PiMass = TDatabasePDG::Instance()->GetParticle(211)->Mass();
-	static Double_t PMass = TDatabasePDG::Instance()->GetParticle(2212)->Mass();
-	Float_t P, dP;
-	parts[Np]->GetMomentum(P,dP);
-	Double_t bgPi = P/PiMass;
-	Double_t bgP  = P/PMass;
-	Double_t betaPi = bgPi/TMath::Sqrt(1 + bgPi*bgPi); 
-	Double_t betaP  = bgP /TMath::Sqrt(1 + bgP *bgP ); 
-        Double_t ss = 1. - 2.*side; // flip sign because dS < 0
-	Float_t  zPi   = parts[Np]->GetZ()  + ss*dS*DVoveC/betaPi;
-	Float_t  zP    = parts[Np]->GetZ()  + ss*dS*DVoveC/betaP ;
-        Float_t  pzPi  = parts[Np]->GetPz() - ss*P *DVoveC/betaPi;
-        Float_t  pzP   = parts[Np]->GetPz() - ss*P *DVoveC/betaP ;
-	if (_debug > 2) {
-	  cout << "dS = " << dS << "\tdZdS = " << dZdS 
-	       << "\tzPi = " << zPi << "\tpZPi = " << pzPi
-	       << "\tzP  = " << zP  << "\tpZP  = " << pzP  << endl;
-	  cout << "ToF   "; PrPP2(parts[Np]);
-	}
-	parts[Np]->Z()  = zPi ;
-	parts[Np]->Pz() = pzPi;
-	Float_t dSnew = parts[Np]->GetDStoPoint(&PV[side]->X(), dsdr);
-	if (_debug > 1) {cout << "dSnew = " << dSnew << endl;}
-	parts[Np]->TransportToDS( dSnew, dsdr );
-	if (_debug > 1) {cout << "After  "; PrPP2(parts[Np]);}
-	Double_t dX = parts[Np]->GetX() -  PV[side]->GetX();
-	Double_t dY = parts[Np]->GetY() -  PV[side]->GetY();
-	Double_t dZ = parts[Np]->GetZ() -  PV[side]->GetZ();
-	Double_t dR = TMath::Sqrt(dX*dX + dY*dY);
-	if (TMath::Abs(dZ) > 20) continue;
-	if (           dR  >  5) continue;
-	Np++;
-      }
-      if (Np < 2) continue;
-      TF1 *gaus = DrawKFWEPrimaryVertices(side);
-      if (! gaus) continue;
-      PV[side]->Z() = gaus->GetParameter(1) + fgzFXT;
-      static Double_t Chi2Cut = 10.0;
-      TArrayC Flag(N);
-      PV[side]->ConstructPrimaryVertex((const KFParticle **) parts, Np, 
-				      (Bool_t*) Flag.GetArray(), Chi2Cut/2);
-      PrPP4(side,PV[side]);
+      parts[Np]->Z()  += dzPi ;
+      parts[Np]->Pz() += dpzPi;
+      if (_debug > 2) {cout << "After  "; PrPP2(parts[Np]);}
+      Np++;
     }
-    DrawKFWEPrimaryVertices(-1, PV);
+    if (Np < 2) continue;
+    static Double_t Chi2Cut = 10.0;
+    TArrayC Flag(N);
+    PrPP4(side,PV[side]);
+    PV[side]->ConstructPrimaryVertex((const KFParticle **) parts, Np, 
+				     (Bool_t*) Flag.GetArray(), Chi2Cut/2);
+    PrPP4(side,PV[side]);
   }
+  //    DrawKFWEPrimaryVertices(-1, PV);
   // Trigger stuff
   Int_t NoTrigDet = 0;
   enum {kvpd = 0, kbbc, kepd, kzdc, kTAC, kCAV, kZwKFXT, kTrgTotal};
   Double_t trgV[kTrgTotal][2] = {0};
   Double_t trgSum[kTrgTotal] = {0};
   StTriggerData *trigger = pEvent->triggerData();
+  StiKalmanTrackNode::SetExternalTriggerOffset(0);
   if (trigger) {
     trgV[kvpd][east] = trigger->vpdEarliestTDC(east); trgV[kvpd][west] = trigger->vpdEarliestTDC(west);
     trgV[kbbc][east] = trigger->bbcEarliestTDC(east); trgV[kbbc][west] = trigger->bbcEarliestTDC(west);
@@ -510,7 +480,7 @@ void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt
     // KF CA
     KFVertex &PVkfW = summary->KFVxWest; PrPP(PVkfW);
     if (PVkfW.GetNDF() > 10) {
-      Double_t dZ = PVkfW.GetZ() - fgzFXT;
+      Double_t dZ = PVkfW.GetZ() - fgBeamSpot.Z();
       Double_t ddZ = TMath::Sqrt(PVkfW.GetCovariance(2,2));
       if (ddZ > 0 && ddZ < 1.0) { //0.5 && TMath::Abs(dZ/ddZ) > 1.0) {
 	trgSum[kZwKFXT] = dZ/driftVel;
@@ -521,37 +491,46 @@ void StiCATpcTrackerInterface::TriggerOffSet() {// Estimate Interaction time wrt
       Double_t T0 = - St_tpcT0BXC::instance()->getT0(trgSum);
       StiKalmanTrackNode::SetExternalTriggerOffset(T0);
     } else {
-      StiKalmanTrackNode::SetExternalTriggerOffset(0);
     }
   }
 }
 //________________________________________________________________________________
 void StiCATpcTrackerInterface::FindCAWEPrimaryVertices() {
+  Float_t xyzB[3] = {St_beamSpotC::instance()->X(),  St_beamSpotC::instance()->Y(), St_beamSpotC::instance()->Z()};
+  fgBeamSpot = TVector3(xyzB);
   if (fSpectrum) {
-
+    for (Int_t i = 0; i < 3; i++) {fParticlesDca[i].clear(); fParticlesIn[i].clear(); fParticlesOut[i].clear();}
     // --- DCA test ---
     std::cout<<" ------- FindTracks - done - dca test -------\n";
-    auto dca_left = fTracker->GetLeft();	// dca_right, GetRight
-    //    std::cout<<" - sca_left.size: "<<dca_left.size()<<"\n";
-    for( UInt_t i = 0; i < dca_left.size(); i++ ) {
-      if (_debug > 1) {
-	std::cout<<"left  - > i: "<<i << "\t" << dca_left[i] << std::endl;
+    vector<trackInSector> dca[2] = {fTracker->GetLeft(), fTracker->GetRight()};
+    Int_t kg = 0;
+    for (UInt_t side = east; side <= west; side++) {
+      for( UInt_t i = 0; i < dca[side].size(); i++ ) {
+	if (_debug > 1) {
+	  static const Char_t *sideName[2] = {"east", "west"};
+	  std::cout << sideName[side] << "  - > i: "<< i << "\t" << dca[side][i] << std::endl;
+	}
+	kg++;
+	KFParticle inParticle = MakeParticle(dca[side][i].In, dca[side][i].alpha, kg);
+	PrPP(inParticle);
+	KFParticle dcaParticle = inParticle;
+	dcaParticle.TransportToPoint(xyzB);
+	PrPP(dcaParticle);
+	TVector3 dR(dcaParticle.X(),dcaParticle.Y(),dcaParticle.Z());
+	dR -= fgBeamSpot;
+	if (dR.Pt() > 4) continue;
+	KFParticle outParticle = MakeParticle(dca[side][i].Out, dca[side][i].alpha, kg);
+	PrPP(outParticle);
+	fParticlesDca[side].push_back(dcaParticle);
+	fParticlesDca[2].push_back(dcaParticle);
+	fParticlesIn[side].push_back(inParticle);
+	fParticlesIn[2].push_back(inParticle);
+	fParticlesOut[side].push_back(outParticle);
+	fParticlesOut[2].push_back(outParticle);
+	
+	FillZHist(fVertexZPlots[side],dcaParticle.Z(), fSigmaSmooth);
+	FillZHist(fVertexZPlots[2],dcaParticle.Z(), fSigmaSmooth);
       }
-      if (TMath::Sqrt(dca_left[i].x*dca_left[i].x + dca_left[i].y*dca_left[i].y) > 4.0) continue;
-      FillZHist(fVertexZPlots[0],-dca_left[i].z, fSigmaSmooth);
-      FillZHist(fVertexZPlots[2],-dca_left[i].z, fSigmaSmooth);
-    }
-    auto dca_right = fTracker->GetRight();
-    if (_debug > 1) {
-      std::cout<<" - sca_right.size: "<<dca_right.size()<<"\n";
-    }
-    for( UInt_t i = 0; i < dca_right.size(); i++ ) {
-      if (_debug > 1) {
-	std::cout<<"right - > i: "<<i << "\t" << dca_right[i] << std::endl;
-      }
-      if (TMath::Sqrt(dca_right[i].x*dca_right[i].x + dca_right[i].y*dca_right[i].y) > 4.0) continue;
-      FillZHist(fVertexZPlots[1],-dca_right[i].z, fSigmaSmooth);
-      FillZHist(fVertexZPlots[2],-dca_right[i].z, fSigmaSmooth);
     }
     // --- Find Z of primary vertex
     TString opt("new");
@@ -616,20 +595,10 @@ void StiCATpcTrackerInterface::FindCAWEPrimaryVertices() {
 	    }
 	    mu = gaus->GetParameter(1);
 	    sigma = gaus->GetParameter(2);
-	    if (i == 0 || i == 2) {
-	      for( UInt_t j = 0; j < dca_left.size(); j++ ) {
-		Double_t z = -dca_left[j].z;
-		if (TMath::Abs(z - mu) < 3*sigma) {
-		  fVertexXYPlots[i]->Fill(dca_left[j].x,dca_left[j].y);
-		}
-	      }
-	    }
-	    if (i == 1 || i == 2) {
-	      for( UInt_t j = 0; j < dca_right.size(); j++ ) {
-		Double_t z = -dca_right[j].z;
-		if (TMath::Abs(z - mu) < 3*sigma) {
-		  fVertexXYPlots[i]->Fill(dca_right[j].x,dca_right[j].y);
-		}
+	    for( UInt_t j = 0; j < fParticlesDca[i].size(); j++ ) {
+	      Double_t z = fParticlesDca[i][j].Z();
+	      if (TMath::Abs(z - mu) < 3*sigma) {
+		fVertexXYPlots[i]->Fill(fParticlesDca[i][j].X(),fParticlesDca[i][j].Y());
 	      }
 	    }
 	  }
@@ -668,7 +637,7 @@ TF1 *StiCATpcTrackerInterface::DrawKFWEPrimaryVertices(Int_t side, KFVertex **PV
       TString same;
       for (Int_t k = 0; k < 2; k++) {
 	Int_t side = 1 - k;
-	PositionX = PV[side]->GetZ() - fgzFXT;
+	PositionX = PV[side]->GetZ() - fgBeamSpot.Z();
 	TPolyMarker *pm = new TPolyMarker(1, &PositionX, &PositionY);
 	fVertexZPlots[3+side]->GetListOfFunctions()->Add(pm);
 	pm->SetMarkerStyle(20);
@@ -679,7 +648,7 @@ TF1 *StiCATpcTrackerInterface::DrawKFWEPrimaryVertices(Int_t side, KFVertex **PV
 	same = "[]sames";
 	lwe[side] = new TLegend(0.1 + 0.5*side, 0.6,  0.3 + 0.5*side, 0.7);
 	lwe[side]->AddEntry(pm,Form("z = %7.3f +/- %5.3f %6.2f/%3i", 
-				    PV[side]->GetZ() - fgzFXT, 
+				    PV[side]->GetZ() - fgBeamSpot.Z(), 
 				    TMath::Sqrt(PV[side]->GetCovariance(2,2)),
 				    PV[side]->GetChi2(),PV[side]->NDF()));
       }
@@ -691,8 +660,8 @@ TF1 *StiCATpcTrackerInterface::DrawKFWEPrimaryVertices(Int_t side, KFVertex **PV
       return gausF;
     }
   }
-  for (auto particle : fParticles) {
-    FillZHist(fVertexZPlots[3+side], particle.GetZ() - fgzFXT, TMath::Sqrt(particle.GetCovariance(5)));
+  for (auto particle : fParticlesDca[2]) {
+    FillZHist(fVertexZPlots[3+side], particle.GetZ() - fgBeamSpot.Z(), TMath::Sqrt(particle.GetCovariance(5)));
   }
   // --- Find Z of primary vertex
   Double_t zmax =  20;

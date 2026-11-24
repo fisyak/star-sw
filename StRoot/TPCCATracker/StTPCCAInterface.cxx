@@ -34,6 +34,7 @@ Double_t StTPCCAInterface::fSigmaSmooth = 1;
 TH1F *StTPCCAInterface::fVertexZPlots[5] = {0};
 TH2F *StTPCCAInterface::fVertexXYPlots[3] = {0};
 TSpectrum *StTPCCAInterface::fSpectrum = 0;
+StTPCCAInterface *StTPCCAInterface::fgStTPCCAInterface = 0;
 //________________________________________________________________________________
 void StTPCCAInterface::FillZHist(TH1F *hist, Double_t Z, Double_t sigmaZ) {
   static Double_t fzWindow = 2.0;

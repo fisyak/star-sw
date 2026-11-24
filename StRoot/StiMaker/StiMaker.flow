@@ -59,7 +59,11 @@ StiMaker::Make
 |      |  |  | |  StiCATpcTrackerInterface::SetHits
 |      |  |  | |  StiCATpcTrackerInterface::Run
 |      |  |  | |  | AliHLTTPCCAGBTracker::FindTracks
+|      |  |  | |  | |    AliHLTTPCCAGBTracker::ReconstructSliceTracks
 |      |  |  | |  | |    AliHLTTPCCATracker::Reconstruct
+|      |  |  | |  | |    AliHLTTPCCATracker::Merge
+|      |  |  | |  | |      AliHLTTPCCAMerger::Reconstruct
+|      |  |  | |  | |        AliHLTTPCCAMerger::UnpackSlices
 |      |  |  | |  | |    AliHLTTPCCATracker::Reconstructor::Reconstruct
 |      |  |  | |  | |      AliHLTTPCCATracker::Reconstructor::execute 
 |      |  |  | |  | |	AliHLTTPCCATracker::NeighboursFinder::NeighboursFinder
