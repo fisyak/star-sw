@@ -7,11 +7,19 @@
 
 ClassImp(StPicoFwdTrack)
 
+// The initialiser list below MUST stay in the same order as the member
+// declarations in the header, or gcc raises -Wreorder, which the CI build turns
+// into an error with -Werror for gcc485. Members are initialised in declaration
+// order regardless of what is written here, so the mismatch was harmless at
+// runtime and invisible to a local `cons` build, which does not pass -Werror.
+//
+// Fix the ORDER OF THIS LIST, never the order of the declarations: the
+// declaration order is the on-disk layout of a streamed ClassDef object, so
+// permuting it would silently change how existing picoDst files are read.
 StPicoFwdTrack::StPicoFwdTrack() : TObject(), mId(0), mNumberOfSeedPoints(0), mNumberOfFitPoints(0),
-                                   mChi2(0), mMomentumX(0), mMomentumY(0),
-                                   mMomentumZ(0), mStatus(0), 
-                                   mDCAXY(0), mDCAZ(0), mVtxIndex(0), mGlobalTrackIndex(0),
-                                   mIdTruth(0), mQATruth(0), mPVal(0), 
+                                   mChi2(0), mMomentumX(0), mMomentumY(0), mMomentumZ(0),
+                                   mStatus(0), mDCAXY(0), mDCAZ(0), mVtxIndex(0),
+                                   mGlobalTrackIndex(0), mIdTruth(0), mQATruth(0), mPVal(0),
                                    mECalX(0), mECalY(0), mECalZ(0), mHCalX(0), mHCalY(0),
                                    mHCalZ(0) {
     /* No Op*/

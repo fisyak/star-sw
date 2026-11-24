@@ -5,21 +5,25 @@
  * Author: Florian Seck, April 2018
  ***************************************************************************
  *
- * Description: StFttClusterMaker - class to fill the StEvent from DAQ reader:
- * unpack raw data & save StETofHeader & StETofDigis in StETofCollection 
+ * Description: StFttClusterMaker - group adjacent StFttRawHits in StEvent's
+ * StFttCollection into StFttClusters, one set per strip orientation per ROB
  *
  ***************************************************************************/
 #include <vector>
-#include <set>
 #include <map>
 #include <array>
-#include <algorithm>    // std::is_sorted
+#include <algorithm>
 #include <climits>
 
 #include "StEvent.h"
 #include "StEnumerations.h"
 
 #include "StFttClusterMaker.h"
+
+// Value written to a cluster's x / sigma when no charge was accumulated, so the
+// divide-by-zero never happens and downstream consumers have one value to test
+// against instead of a bare -999 appearing twice.
+static const float kNoChargeSentinel = -999.0f;
 
 
 #include "StEvent/StFttRawHit.h"
@@ -44,7 +48,6 @@
 //_____________________________________________________________
 StFttClusterMaker::StFttClusterMaker( const char* name )
 : StMaker( name ),
-  mEvent( 0 ),          /// pointer to StEvent
   mRunYear( 0 ),        /// year in which the data was taken (switch at 1st Oct)
   mDebug( false ),       /// print out of all full messages for debugging
   mFttDb( nullptr )
@@ -97,17 +100,30 @@ StFttClusterMaker::Finish()
 Int_t
 StFttClusterMaker::Make()
 { 
-    mEvent = (StEvent*)GetInputDS("StEvent");
-    if(mEvent) {
-    } else {
+    StEvent *event = (StEvent*)GetInputDS("StEvent");
+    if(!event) {
         LOG_WARN<<"No StEvent!"<<endm;
         return kStWarn;
     }
-    mFttCollection=mEvent->fttCollection();
+    mFttCollection=event->fttCollection();
     if(!mFttCollection) {
         LOG_WARN << "No StFttCollection" << endm;
         return kStOk;
     }
+    // Clear any clusters from a previous event so the collection doesn't
+    // accumulate across events when it survives event boundaries.
+    //
+    // Points MUST go first. StFttCollection::clusters() is an StSPtrVec, i.e. an
+    // owning container whose clear() deletes the elements (StStrArray::clear), while
+    // StFttPoint keeps its parents as raw StFttCluster* (StFttPoint::mClusters[4]).
+    // Clearing clusters alone therefore leaves every surviving point pointing at freed
+    // memory, and point->cluster(i) reads it. That is exactly the case this clear()
+    // exists for -- a collection that survived the event boundary, or an StEvent
+    // rebuilt from a MuDst that already carries production points -- so the two must
+    // be cleared together. Downstream point makers rebuild points from the new
+    // clusters in the same event.
+    mFttCollection->points().clear();
+    mFttCollection->clusters().clear();
 
     mFttDb = static_cast<StFttDb*>(GetDataSet("fttDb"));
     assert( mFttDb );
@@ -140,16 +156,13 @@ StFttClusterMaker::Make()
         if ( kFttHorizontal == so ){
             hStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
-        }
-        if ( kFttVertical   == so ){
+        } else if ( kFttVertical   == so ){
             vStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
-        }
-        if ( kFttDiagonalH   == so ){
+        } else if ( kFttDiagonalH  == so ){
             dhStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
-        }
-        if ( kFttDiagonalV   == so ){
+        } else if ( kFttDiagonalV  == so ){
             dvStripsPerRob[ rob ].push_back(hit);
             nStripsHit++;
         }
@@ -157,29 +170,41 @@ StFttClusterMaker::Make()
 
     size_t nClusters = 0;
     LOG_DEBUG << "StFttClusterMaker::Make{ nStripsHit = " << nStripsHit << " }" << endm;
+
+    // Look up per-ROB hits without mutating the maps. std::map::operator[] would
+    // default-construct an empty vector for every missing ROB key, growing the map
+    // while merely reading it. The maps are local to Make(), so nothing escapes the
+    // call; the benefit is avoiding the needless insertions and allowing the lookup
+    // to take the map by const reference.
+    static const std::vector<StFttRawHit*> emptyHits;
+    auto getHits = []( const std::map<UChar_t, std::vector<StFttRawHit*>>& m, UChar_t key ) -> const std::vector<StFttRawHit*>& {
+        auto it = m.find( key );
+        return it != m.end() ? it->second : emptyHits;
+    };
+
     if ( nStripsHit > 0 ){ // could make more strict?
         for ( UChar_t iRob = 1; iRob < StFttDb::nRob+1; iRob++ ){
 
-            auto hClusters = FindClusters( hStripsPerRob[iRob] );
-            // Add them to StEvent  
+            auto hClusters = FindClusters( getHits( hStripsPerRob, iRob ) );
+            // Add them to StEvent
             for ( StFttCluster * clu : hClusters ){
                 mFttCollection->addCluster( clu );
                 nClusters++;
             }
-            auto vClusters = FindClusters( vStripsPerRob[iRob] );
-            // Add them to StEvent  
+            auto vClusters = FindClusters( getHits( vStripsPerRob, iRob ) );
+            // Add them to StEvent
             for ( StFttCluster * clu : vClusters ){
                 mFttCollection->addCluster( clu );
                 nClusters++;
             }
-            auto hdClusters = FindClusters( dhStripsPerRob[iRob] );
-            // Add them to StEvent  
+            auto hdClusters = FindClusters( getHits( dhStripsPerRob, iRob ) );
+            // Add them to StEvent
             for ( StFttCluster * clu : hdClusters ){
                 mFttCollection->addCluster( clu );
                 nClusters++;
             }
-            auto vdClusters = FindClusters( dvStripsPerRob[iRob] );
-            // Add them to StEvent  
+            auto vdClusters = FindClusters( getHits( dvStripsPerRob, iRob ) );
+            // Add them to StEvent
             for ( StFttCluster * clu : vdClusters ){
                 mFttCollection->addCluster( clu );
                 nClusters++;
@@ -268,7 +293,7 @@ bool StFttClusterMaker::PassTimeCut( StFttRawHit * hit ){
 } // PassTimeCut
 
 
-StFttRawHit * StFttClusterMaker::FindMaxAdc( std::vector<StFttRawHit *> hits, size_t &pos ){
+StFttRawHit * StFttClusterMaker::FindMaxAdc( const std::vector<StFttRawHit *>& hits, size_t &pos ){
     auto itMax = std::max_element(hits.begin(),
                              hits.end(),
                              [](const StFttRawHit* a,const StFttRawHit* b) { return a->adc() < b->adc(); });
@@ -278,7 +303,7 @@ StFttRawHit * StFttClusterMaker::FindMaxAdc( std::vector<StFttRawHit *> hits, si
     return *itMax;
 }
 
-void StFttClusterMaker::SearchClusterEdges( std::vector< StFttRawHit * > hits, 
+void StFttClusterMaker::SearchClusterEdges( const std::vector< StFttRawHit * >& hits,
                                             size_t start, // start index at MaxADC
                                             size_t &left, size_t &right ){
     // set initial values
@@ -342,33 +367,73 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
 
     clu->setNStrips( clu->rawHits().size() );
 
-    // Compute the sumAdc, strip gravity center, and variance
-    float m0Sum = 0;
-    float m1Sum = 0;
-    float m2Sum = 0;
+    // Compute the sumAdc, strip gravity center, and variance.
+    //
+    // Accumulated in DOUBLE, and the variance taken in TWO passes rather than
+    // one. x is an ABSOLUTE strip position, up to ~530 mm from the quadrant
+    // origin, so SUM q*x*x and (SUM q*x)^2 / SUM q are two large and nearly
+    // equal numbers and the one-pass variance ( m2 - m1*m1/m0 ) / m0 is their
+    // difference. In float that difference loses most of its significance:
+    // measured on 334k clusters from a Run 22 production MuDst
+    // (script/fttClusterSigma.C, fcstrk11), a SINGLE-strip cluster, whose
+    // variance is exactly zero, came out NEGATIVE 46% of the time and wrong by
+    // up to 0.042 mm^2. Subtracting the centroid strip by strip keeps every
+    // term small and non-negative, so no cancellation happens and the clamp
+    // below becomes belt and braces instead of load-bearing.
+    double m0Sum = 0;
+    double m1Sum = 0;
 
     std::for_each (clu->rawHits().begin(), clu->rawHits().end(), [&](const StFttRawHit *h) {
-        float x = ( h->strip() * 3.2 - 1.6 ); // replace with CONST
-        
+        double x = ( h->strip() * 3.2 - 1.6 ); // replace with CONST
+
         m0Sum += h->adc();
-        m1Sum += (h->adc() * x); 
-        m2Sum += ( h->adc() * x * x );
+        m1Sum += (h->adc() * x);
     });
 
     if ( mDebug ) {
         LOG_DEBUG << "m0Sum = " << m0Sum << endm;
         LOG_DEBUG << "m1Sum = " << m1Sum << endm;
-        LOG_DEBUG << "m2Sum = " << m2Sum << endm;
     }
 
     // m0Sum = sumAdc
     // m1Sum / m0Sum = gravity center (1st moment)
-    // m2Sum = accumulated variance (2nd moment)
 
     clu->setSumAdc( m0Sum );
-    clu->setX( m1Sum / m0Sum );
-    float var = (m2Sum - m1Sum*m1Sum / m0Sum) / m0Sum;
-    clu->setSigma( sqrt( var < 0 ? 0 : var ) );
+    if ( m0Sum > 0 ){
+        const double xBar = m1Sum / m0Sum;
+        clu->setX( xBar );
+
+        // Second pass for the 2nd moment: SUM q*(x-xBar)^2, so every term is
+        // small and non-negative. The clamp at zero below is kept because a
+        // variance that is zero to the last bit is still possible, but it no
+        // longer has rounding to catch.
+        double s2Sum = 0;
+        std::for_each (clu->rawHits().begin(), clu->rawHits().end(), [&](const StFttRawHit *h) {
+            double dx = ( h->strip() * 3.2 - 1.6 ) - xBar;
+            s2Sum += h->adc() * dx * dx;
+        });
+        double var = s2Sum / m0Sum;
+        // The variance is still zero EXACTLY for every SINGLE-STRIP cluster --
+        // all the charge sits in one strip, so there is nothing for a 2nd moment
+        // to measure, and that is 18% of the clusters in Run 22 data, not an edge
+        // case. A zero sigma gives GenFit an infinite weight in the precise
+        // direction, forcing the track through the strip centre exactly and
+        // making the fit unstable.
+        // Floor it at the resolution one strip actually carries, pitch/sqrt(12).
+        // StFttDb::stripPitch is mm, which is the unit setX()/setSigma() use here.
+        //
+        // NOTE this sigma is the cluster's CHARGE WIDTH, not the uncertainty on
+        // its centroid, and StFttClusterPointMaker uses it as the latter. The
+        // two differ by an order of magnitude; which number belongs in the
+        // covariance is a separate, open question (script/fttClusterSigma.C).
+        const double kSigmaMin = StFttDb::stripPitch / sqrt( 12.0 ); // 0.924 mm
+        const double sig = sqrt( var < 0 ? 0 : var );
+        clu->setSigma( sig < kSigmaMin ? kSigmaMin : sig );
+    } else {
+        // No charge accumulated; assign a sentinel rather than NaN from divide-by-zero.
+        clu->setX( kNoChargeSentinel );
+        clu->setSigma( kNoChargeSentinel );
+    }
 }
 
 
@@ -376,29 +441,8 @@ void StFttClusterMaker::CalculateClusterInfo( StFttCluster * clu ){
 std::vector<StFttCluster*> StFttClusterMaker::FindClusters( std::vector< StFttRawHit * > hits ){
     std::vector<StFttCluster*> clusters;
 
-    /* early data (i.e. cosmic data pre dec 10 2021)
-     * had duplicates where the hits are identical except 
-     * a different tb. Tonko fixed at some point
-     * So this could be wrapped in a run range block, but
-     * does no harm.
-     */
-    const bool dedup = false;
-    if ( dedup ){
-        auto cmp = [](StFttRawHit* a, StFttRawHit* b) { 
-            
-            return  a->plane() < b->plane() ||
-                    a->quadrant() < b->quadrant() ||
-                    a->row() < b->row() ||
-                    a->strip() < b->strip() ||
-                    a->orientation() < b->orientation(); 
-        };
-    
-        // NOTE according to SO this is faster than using ctor
-        set<StFttRawHit*, decltype(cmp)> s(cmp);
-	//        unsigned size = hits.size();
-        for( auto h : hits ) s.insert( h );
-        hits.assign( s.begin(), s.end() );
-    }
+    // No de-duplication here: early cosmic data (pre 2021-12-10) had hits that were
+    // identical except for the timebin, but Tonko fixed that in the DAQ reader.
 
     // Sort the hits by row and strip
     sort(hits.begin(), hits.end(), [](const StFttRawHit * a, const StFttRawHit * b) -> bool { 
@@ -434,6 +478,31 @@ std::vector<StFttCluster*> StFttClusterMaker::FindClusters( std::vector< StFttRa
         clu->setQuadrant    ( maxAdcHit->quadrant    ( ) );
         clu->setRow         ( maxAdcHit->row         ( ) );
         clu->setOrientation ( maxAdcHit->orientation ( ) );
+
+        // These two were the only max-ADC-hit fields never copied onto the cluster,
+        // so StFttCluster::maxStripLength() and maxStripCenter() kept their -999
+        // defaults for every cluster ever written. Both are documented in
+        // StEvent/StFttCluster.h as filled by THIS maker; until now they were not.
+        //
+        // maxStripLength is the LENGTH of the max-ADC strip, i.e. the extent of the
+        // row band along the coordinate the strip does NOT measure. A point maker
+        // places the off-axis coordinate at the band centre,
+        // StFttDb::YX_StripGroupEdge[row] + maxStripLength()/2 (and the diagonal
+        // equivalent in the rotated frame), with an uncertainty of
+        // maxStripLength()/sqrt(12). With -999 that formula produced a large
+        // negative local value, which combined with the per-quadrant sign flips to
+        // swap which end of each row lands near versus far from y=0 -- the
+        // top/bottom plus north/south swap and the bowtie shape in the FTT hit maps
+        // both come from this one missing line. This is the fix the July 2026 FTT
+        // reprocessing was run with.
+        clu->setMaxStripLength( maxAdcHit->stripLength( ) );
+
+        // maxStripCenter is the centre of the max-ADC strip along the coordinate the
+        // strip DOES measure -- the same axis as cluster x(), from the same scMapXY
+        // table (see StFttRawHit::mStripCenter). It is a single-strip, unweighted
+        // version of x(), useful for diagnostics and alignment; it is NOT a position
+        // along the strip, so it must not be used for the off-axis coordinate.
+        clu->setMaxStripCenter( maxAdcHit->stripCenter( ) );
 
         // Now find the cluster edges
         size_t left = anchor, right = anchor;
